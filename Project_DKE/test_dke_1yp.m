@@ -13,11 +13,8 @@ prec0_f,nit_f,dtn,prec0_g,nit_g,initguess,invproc,param_inv,dp_cyl,display_mode,
 %
 %  Test function of the 3-D relativistic bounce-averaged electron drift kinetic equation solver 
 %  for the LH and EC absorption problem in presence of an Ohmic electric field.
-%	Toroidal magnetic ripple losses included for the Fokker-Planck part only.  
-%	Small inverse aspect ratio and circular plasma cross-section. No Shafranov shift accounted
+%	Arbitrary axisymmetric plasma equilibrium
 %  See dke_1_4yp.m, ptok_dke_1yp.m
-%   
-%Last update: 30/04/2003
 %
 %by Y.PEYSSON CEA-DRFC 30/07/1997 <yves.peysson@cea.fr>
 %Drift kinetic calculations done by J. Decker and Y. Peysson
@@ -27,8 +24,6 @@ format long e;
 global nfig;
 version_dke = 1.4;
 time_pause = 1;
-%
-% modified j.d. 11/20/03
 %
 % Plasma parameters
 %
@@ -190,8 +185,6 @@ if diary_mode == 1,
 end
 disp('-------------------------------------------------------------------------------------------------------------------');
 %
-% Modified j.d. 11/20/03
-%
 %Local plasma parameters (calculated on the half radial grid)
 %
 xTe = interp1(prho,pTe,xrho);
@@ -200,7 +193,6 @@ xzTi = interp1(prho,pzTi',xrho)';
 xzni = interp1(prho,pzni',xrho)';
 xq = interp1(prho,pq,xrho);
 xZeff = interp1(prho,pZeff,xrho);
-%
 %
 %Reference plasma parameters (for the normalization: pth_ref, nhuth_ref)
 %
