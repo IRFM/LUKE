@@ -1,0 +1,79 @@
+
+The determination of the Ohmic electrical conductivity is a fundamental test
+for such kinetic codes. Extensive analysis have been performed to
+investigate code capabilities. To avoid the runaway problem,  $\overline{E}%
+=0.01,$ and $\overline{p}_{\max }=15.$ Machine parameters are corresponding
+to non-relativistic limit $T_{e}^{\dag }=0.1keV,$ and a rather low density $%
+n_{e}^{\dag }=10^{+19}m^{-3}$ at the plasma center. Here, $T_{i}^{\dag
+}=n_{i}^{\dag }=0.$Except if it is specified, all profiles are flat. The
+dominant ion species is usually hydrogen, though some simulations have been
+done for deuterium. No impurities are considered, except for investigating
+the role of the effective charge. In order to investigate the effect of
+trapped particle even in the limit $\epsilon \simeq 1,$ the minor radius is
+set to $a_{p}=2.3899m$ and the major one is $R_{p}=2.39m.$ Therefore, the
+normalized radius $\rho $ is very close to $\epsilon $ value. The
+corresponding tokamak parameter file is names ``CQL3D\_OHM'', since it
+corresponds to conditions that have been used for code comparison with the
+well know CQL3D program (\cite{har93c1_IAEA}).
+
+First local analysis have been performed, without considering bounce
+averaging. The role played by the collision operator is crucial on the
+driven current as shown in Table \ref{table_cond1}
+\begin{mathletters}
+\begin{equation}
+\begin{tabular}{lll}
+Collision operator & $\sigma $ [DKE code] & $\sigma $ [Karney (\cite{kar86})]
+\\ 
+Maxwellian & $3.7655$ & $3.773$ \\ 
+High velocity & $3.0158$ & $2.837$ \\ 
+Exact & $7.4406$ & $7.429$%
+\end{tabular}
+\label{table_cond1}
+\end{equation}
+
+An excellent agreement is found with Karney's results, even with a coarse
+numerical grid corresponding to $n_{p}=88$ and $n_{\xi _{0}}=120.$ In that
+case, the code is running in a fully conservative mode, namely with
+normalization of the density at each time step $\left( \Delta \overline{t}%
+=1000\right) ,$ or by forcing the Maxwellian solution at $i=1/2$ for the
+momentum grid. When a more refined grid is used, slight evolution are
+observed, and the conductivity decreases from $\sigma =7.4406$ down to $%
+\sigma =7.4343$, less than $0.1\%$ for the exact collision operator when $%
+n_{p}=165,$ while $n_{\xi _{0}}$ is kept constant. The role of the mass is
+also fairly weak, since for the deuterium case, $\sigma =7.4471$ for $%
+n_{p}=88.$ Finally, by increasing the integration domain up to $\overline{p}%
+_{\max }=20$, $\sigma =7.4387.$ The very small variation confirms that no
+particle are leaving the domain of integration. which confirms that 7.4387
+
+As far as $Z_{eff}$ is increased, the Lorentz limit is progressively
+reached, since the pitch-angle predominates. This is clearly shown in Table 
+\ref{Table_cond2}
+\end{mathletters}
+\begin{equation}
+\begin{tabular}{lll}
+$Z_{eff}$ & $\sigma $ [DKE code] & $\sigma $ [Karney (\cite{kar86})] \\ 
+$1$ & $7.4353$ & $7.429$ \\ 
+$2$ & $4.3697$ & $4.377$ \\ 
+$5$ & $2.0619$ & $2.078$ \\ 
+$10$ & $1.1147$ & $1.133$%
+\end{tabular}
+\label{Table_cond2}
+\end{equation}
+and in the limit $Z_{eff}\gg 1,$ the result is well independent of the
+collision operator. 
+
+A full $3-D$ calculation has been performed with flat profiles at normalized
+radial positions on the spatial flux grid $\left[ 0.2,0.4,0.6,0.8\right] ,$
+giving the following radial positions $\rho =\left[
+0.14142,0.31623,0.5099,0.70711,0.90554\right] $. In that case, the code
+calculates itself the pitch-angle grid and the number of step is $n_{\xi
+_{0}}=168,$ while $n_{p}=125.$The conductivity is found to be independent of
+the method of calculations, and the value $\sigma =7.4353$ is well
+recovered. However, it is found that the code is no more fully conservative
+without forcing the Maxwellian solution at $i=1/2$ and without normalizing
+the density at each iteration. This problem appears when the number of
+spatial points exceeds $1$. It has been cross-checked that it has no
+consequence on the final solution, but slightly reduce the rate of
+convergence. Further investigations are needed to clarify this point. 
+
+Bounce averaged calculations have be performed first locally. 

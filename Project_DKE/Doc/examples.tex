@@ -1,0 +1,80 @@
+
+This chapter is dedicated to the code performances. Since numerous
+combinations are possible, it is not the purpose to give an exhaustive list
+of results, but to select different problems that have been addressed by
+existing codes in simplified magnetic configuration, a condition that allows
+interesting benchmarks. Moreover, in some cases, analytical expressions are
+available, and consequently accurate comparisons may be performed.
+
+It is well known that all codes contain numerous hidden bugs, that are
+difficult to track, even if a careful attention as been paid to avoid as
+much as possible such problems. The only way to reduce them is to run
+extensively the code for different purposes. It is the reason why both the
+documentation and the code have been made as transparent as possible, so
+that its robustness may be continuously improved. When some difficulties
+have been encountered, they are reported in the different sections dedicated
+to benchmarking. However, none of them have made the code so far unable to
+determine the correct solution, providing input parameters corresponds to
+assumptions used to derive the equations and their numerical counterpart. It
+is well known that such kind of codes are often missused, using input
+parameters well beyond the acceptable range. In some cases, warnings are
+indicated by the code, but it is the duty of users to take care of this
+problem before considering that the code gives a wrong answer.
+
+The kernel of the kinetic calculations is contained by the MatLab routine
+``dke\_1\_4yp.m'', whish contains both the $3-D$ zero-order Fokker-Planck
+solver, and the first-order neoclassical corrections. Only this routine and
+all related subroutines must be used in a chain of codes like in CRONOS
+simulation package (\cite{bas03}). In order to help how to make this link,
+and to benchmark the code, a test routine ``testdke\_1yp.m'' has been
+written. Main global input parameters can be modified in the subroutine
+``psim\_dke\_1yp.m'' that is called by ``testdke\_1yp.m'', while parameter
+that are specific to a machine (Tore Supra, JET, ITER, C-MOD,\ldots ) are
+gathered in the subroutine ``ptok\_dke\_1yp.m''. The machine may be virtual,
+for benchmarking purposes. The input parameters for the RF wave physics
+problem have be put in separate files, sinces they are quite independent of
+the global input parameters. The corresponding file names for simplified RF
+wave physics are called ``psim\_idealhcd\_jd.m'' or ``psim\_coldlhcd\_jd.m''
+for the Lower Hybrid wave, or ``psim\_ideaeccd\_jd.m'' or
+``psim\_coldeccd\_jd.m'' for the Electron Cyclotron wave. Other types of
+waves are also available as well as input parameter files for more realistic
+ray-tracing calculations. 
+
+Once input parameters have been set, one runs the code by executing the
+MatLab script ``script\_dke\_1yp.m''. This structure allows to run several
+cases in a single run, for systematic studies of the influence of one given
+parameter on the final result. For example, the role played by the Ohmic
+electric field may be investigated for a single value ``epsi0= 0.01 and
+epsia= 0.01'', or multiple ones ``epsi0= [0.01:0.01:0.05] and epsia=
+[0.01:0.01:0.05]''. In that case, all the results are saved in different
+.mat binary MatLab files, in the directory that contains ``dke\_1\_4yp.m'',
+under the generic name ``RESULTS\_X\_SY.mat'' where X is the machine name,
+and Y the index number of the simulation. The magnetic equilibrium
+calculated by HELENA is stored in an separate file named ``EQUIL\_X.mat'',
+so that it may be used independently by another program for calculating
+various moments of the electron distribution function like the non-thermal
+bremsstrahlung emission.
+
+All the results may be displayed using the MatLab routine
+``display\_dke\_1yp.m'', with or without graphical outputs. A special
+interface has been also written for an easy transfer of selected binary data
+to IGOR scientific display program for final reports. 
+
+The full list of routines is given in Appendix \ref{listfiles}. Except for
+arbitrary equilibrium cases that require the use of the FORTRAN F77 mexfiles
+``helmex77.f'' and ``separatrix.f'' which both must be compiled\footnote{%
+The code may use a simplified magnetic equilibrium with circular plasma
+cross-sections, that is valid in the large aspect ration limit $\epsilon \ll
+1.$ More realistic equilibria are determined numericaly. First, the external
+shape of the plasma equilibrium is evaluated by specifying positions of
+X-points and derivatives at this point. Then the full magnetic equilibrium
+is calculated using pressure and current density profiles, in agreemnt with
+the shape required at the plasma boundary. This procedure avoids numerical
+instabilities that may arise from coarse estimate of the plasma shape.}, all
+files are standard MatLab scripts. No external functions are used, and once
+MatLab path is correctly set-up to load text files in the ``Project\_DKE''
+directory, the code can be run immediatly on any computer without additional
+needs. 
+
+All benchmark results discussed in the text are gathered in the file
+``Benchmark.txt'', with the corresponding input parameters.
