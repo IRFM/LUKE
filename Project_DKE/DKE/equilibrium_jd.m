@@ -157,8 +157,8 @@ if display_mode >= 2
 %       
 % displays the magnetic flux-surfaces geometry
 %       
-    srho = [0:0.1:1];
-    stheta = [0:0.25:2]*pi;
+    srho = linspace(0,1,21);
+    stheta = linspace(0,2*pi,31);
     sR = interp1(prho,R,srho);  
     sZ = interp1(prho,Z,srho); 
     stR = interp1(theta,R',stheta)';  
@@ -171,8 +171,8 @@ if display_mode >= 2
     %
     figure(51),clf
 %    
-    [ax] = graph1D_jd(sR',sZ','','','',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','r',2);
-    [ax] = graph1D_jd(stR,stZ,'R','Z','Flux-surfaces labeled by \rho=0,0.1,0.2...1',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','b',0.5);
+    [ax] = graph1D_jd(sR',sZ','','','',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','r',2);pause(0.5)
+    [ax] = graph1D_jd(stR,stZ,'R','Z','Flux-surfaces labeled by \rho=0,0.1,0.2...1',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','b',0.5);pause(0.5)
     axis('equal');    
 end
     
