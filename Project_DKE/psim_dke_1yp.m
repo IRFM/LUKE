@@ -63,7 +63,7 @@ spfac = 20;%reduction factor for the supergrid used in collision integrals
 %Values of the radial flux grid [1,p] (If one radial value: local calculation only)
 %
 psin_S = [];%5.286742555900838e-002; %[0.1]%(rho = 0.25 in CMOD)
-rho_S = [0.6];%[0.05:0.07:0.9];%;0.03322100141578101;0.71365;
+rho_S = [0.7];%[0.05:0.07:0.9];%;0.03322100141578101;0.71365;
 %
 psin_display = NaN;%Approximate radial value at which results are displayed if display_mode >= 1 [1,1]
 rho_display = 0.1;
@@ -82,9 +82,9 @@ eepsi = 0;%Exponent for Ohmic electric field
 % RF Waves
 %
 rf_list(1) = 0;%(1): include LH test calculations (see psim_ideallhcd_jd); (0) do not include
-rf_list(2) = 1;%(1): include EC  calculations (see psim_idealeccd_jd); (0) do not include
-rf_list(3) = 0;%*** to be implemented *** (1): include cold LHCD calculations (see psim_coldlhcd_jd); (0) do not include
-rf_list(4) = 0;%*** to be implemented *** (1): include cold ECCD calculations (see psim_coldeccd_jd); (0) do not include
+rf_list(2) = 0;%(1): include EC  calculations (see psim_idealeccd_jd); (0) do not include
+rf_list(3) = 1;%(1): include cold LHCD calculations (see psim_coldlhcd_jd); (0) do not include
+rf_list(4) = 0;%(1): include cold ECCD calculations (see psim_coldeccd_jd); (0) do not include
 rf_list(5) = 0;%*** to be implemented *** (1): include hot ECCD calculations (see psim_warmeccd_jd); (0) do not include
 rf_list(6) = 0;%*** to be implemented *** (1): include EBW calculations (see psim_ebw_jd); (0) do not include
 %

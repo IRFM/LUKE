@@ -637,7 +637,7 @@ xyPabs_tot_rf_fsav_in = 0;
 %
 for it_rf=1:nit_rf % convergence in the ray-tracing mode
 %
-	[waveparam,nb_list] = rfwave_dke_jd(xrho,xpsin,xpsin_dke,xdpsin_dke,xyPabs_tot_rf_fsav_in,betath_ref,ne_ref,xrbetath,xrnhuth,xTe_norm,xne_norm,xzni_norm,zZi,zmi,ap,Rp,Zp,theta,XR,XZ,XBR,XBZ,XBphi,xB0,bounce_mode,rf_list);%Look at the function for the RF wave input parameters
+	[waveparam,nb_list] = rfwave_dke_jd(xrho,xpsin,xpsin_dke,xdpsin_dke,xyPabs_tot_rf_fsav_in,betath_ref,ne_ref,lnc_e_ref,xrbetath,xrnhuth,xTe_norm,xne_norm,xzni_norm,zZi,zmi,ap,Rp,Zp,theta,XR,XZ,XBR,XBZ,XBphi,xB0,bounce_mode,rf_list);%Look at the function for the RF wave input parameters
 %    
     [XXheaviside,...
         XXf0_ref,XXf0_tp_ref,XXf0_g_ref,XXf0_L_tp_ref,XXf0_L_g_ref,...
