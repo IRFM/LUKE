@@ -1,4 +1,9 @@
-\label{normalization}\subsection{Temperature and density} \label{normtene}
+
+\label{normalization}
+
+\subsection{Temperature and density}
+
+\label{normtene}
 
 In order to use parameters without dimensions in the calculations, all of
 them are normalized to reference values. Here temperature and densities
@@ -196,7 +201,8 @@ with
 v_{th}^{\dag }/c=\beta _{th}^{\dag }
 \end{equation}
 
-\subsection{Maxwellian electron momentum distribution} 
+\subsection{Maxwellian electron momentum distribution}
+
 \label{normmaxwellian}
 
 With the definition of $\overline{p}$, the approximate relativistic
@@ -208,7 +214,7 @@ f_{M}\left( \psi ,p\right) \simeq \frac{n_{e}\left( \psi \right) }{\left[
 2\pi T_{e}\left( \psi \right) \right] ^{3/2}}\exp \left[ -\frac{p^{2}}{%
 \left( 1+\gamma \right) T_{e}\left( \psi \right) }\right]
 \end{equation}
-where $T_{e}\left( \psi \right) $ is expressed in electron rest mass energy $
+where $T_{e}\left( \psi \right) $ is expressed in electron rest mass energy $%
 m_{e}c^{2}$ unit, and providing that $\gamma -1\ll 1.$ Therefore, the
 condition 
 \begin{equation}
@@ -285,96 +291,100 @@ to the plasma edge. For
 
 \subsection{Drift kinetic coefficient}
 
-The first order drift kinetic equation requires to calculate $\widetilde{f}$
-defined as 
+The first order drift kinetic equation requires to calculate $\widetilde{f}%
+^{\left( 0\right) }$ defined as 
 \begin{equation}
-\widetilde{f}=\frac{v_{\Vert }I\left( \psi \right) }{\Omega }\frac{\partial
-f_{0}}{\partial \psi }
+\widetilde{f}^{\left( 0\right) }=\frac{v_{\Vert 0}I_{0}\left( \psi \right) }{%
+\Omega _{e0}}\frac{\partial f_{0}^{\left( 0\right) }}{\partial \psi }
 \end{equation}
-where by definition $B_{T}\left( \psi \right) =\left| I\left( \psi \right)
-\right| /R$ and $\Omega =-\frac{\left| e\right| B}{\gamma m_{e}}$. Since 
+where by definition $B_{T0}\left( \psi \right) =\left| I_{0}\left( \psi
+\right) \right| /R_{0}$ and $\Omega _{e0}=-\frac{\left| e\right| B_{0}}{%
+\gamma m_{e}}$ is the electron Larmor frequency, all quantities being
+determined at the poloidal location where the magnetic field B is minimum,
+as discussed in Sec. \ref{dkefluxconsmomentum}. Since 
 \begin{equation}
-\overline{v}v_{th}^{\dag }/c=\overline{p}\beta _{th}^{\dag }/\gamma
+\overline{v}v_{th}^{\dag }/c=\overline{p}\beta _{th}^{\dag }/\gamma 
 \end{equation}
 one obtains in normalized units 
 \begin{eqnarray}
-\overline{\widetilde{f}} &=&v\xi \frac{\gamma m_{e}}{q_{e}}R\frac{%
-B_{T}\left( \psi \right) }{B}\frac{\partial \overline{f}_{0}}{\partial \psi }
-\nonumber \\
-&=&\overline{v}v_{th}^{\dag }\xi \frac{\gamma m_{e}}{q_{e}}\frac{B_{T}\left(
-\psi \right) }{B}\frac{R}{\psi _{a}}\frac{\partial \overline{f}_{0}}{%
-\partial \overline{\psi }}  \nonumber \\
-&=&\overline{p}\xi \frac{cm_{e}}{q_{e}}\beta _{th}^{\dag }\frac{B_{T}\left(
-\psi \right) }{B}\frac{R}{\psi _{a}}\frac{\partial \overline{f}_{0}}{%
-\partial \overline{\psi }}
+\overline{\widetilde{f}}^{\left( 0\right) } &=&v\xi _{0}\frac{\gamma m_{e}}{%
+q_{e}}R_{0}\frac{B_{T0}}{B_{0}}\frac{\partial \overline{f}_{0}^{\left(
+0\right) }}{\partial \psi }  \nonumber \\
+&=&\overline{v}v_{th}^{\dag }\xi _{0}\frac{\gamma m_{e}}{q_{e}}\frac{B_{T0}}{%
+B_{0}}\frac{R_{0}}{\psi _{a}}\frac{\partial \overline{f}_{0}^{\left(
+0\right) }}{\partial \overline{\psi }}  \nonumber \\
+&=&\overline{p}\xi _{0}\frac{cm_{e}}{q_{e}}\beta _{th}^{\dag }\frac{B_{T0}}{%
+B_{0}}\frac{R_{0}}{\psi _{a}}\frac{\partial \overline{f}_{0}^{\left(
+0\right) }}{\partial \overline{\psi }}
 \end{eqnarray}
 
 Therefore, 
 \begin{equation}
-\overline{\widetilde{f}}=\overline{p}\xi \widetilde{C}\frac{\partial 
-\overline{f}_{0}}{\partial \overline{\psi }}
+\overline{\widetilde{f}}^{\left( 0\right) }=\overline{p}\xi _{0}\widetilde{C}%
+_{0}\frac{\partial \overline{f}_{0}^{\left( 0\right) }}{\partial \overline{%
+\psi }}
 \end{equation}
 where 
 \begin{equation}
-\widetilde{C}=\frac{cm_{e}}{q_{e}}\beta _{th}^{\dag }\frac{B_{T}\left( \psi
-\right) }{B}\frac{R}{\psi _{a}}
+\widetilde{C}_{0}=\frac{cm_{e}}{q_{e}}\beta _{th}^{\dag }\frac{B_{T0}}{B_{0}}%
+\frac{R_{0}}{\psi _{a}}
 \end{equation}
-
-It is important to notice that values for calculating $\widetilde{C}$ must
-be determined on the location where $B$ is minimum, according to the bounce
-average procedure, as discussed in Sec.***.
 
 For circular concentric flux surfaces, since $\partial /\partial \psi
 =\left( 1/\nabla \psi \right) \partial /\partial r$ and $\,\nabla \psi
 =RB_{P},$ it turns out that 
 \begin{equation}
-\widetilde{f}=v\xi \frac{\gamma m_{e}}{q_{e}}\frac{B_{T}\left( \psi \right) 
-}{B_{P}}\frac{1}{B}\frac{\partial f_{0}}{\partial r}
+\widetilde{f}^{\left( 0\right) }=v\xi \frac{\gamma m_{e}}{q_{e}}\frac{B_{T0}%
+}{B_{P0}}\frac{1}{B_{0}}\frac{\partial f_{0}^{\left( 0\right) }}{\partial r}
 \end{equation}
 and naturaly
 
 \begin{equation}
-\widetilde{C}\approx \frac{cm_{e}}{q_{e}}\beta _{th}^{\dag }\frac{q_{cyl.}}{%
-a_{p}\epsilon }\frac{1}{B}
+\widetilde{C}_{\left( 0\right) }\approx \frac{cm_{e}}{q_{e}}\beta
+_{th}^{\dag }\frac{q}{a_{p}\epsilon }\frac{1}{B_{0}}
 \end{equation}
-where the safety factor $q$ is approximated by its cylindrical expression $%
-q_{cyl.}=\frac{rB_{T}\left( \psi \right) }{RB_{P}}$, $a_{p}$ the plasma
-minor radius, and $\epsilon =r/R_{0}$ the inverse aspect ratio.
+where the safety factor $q$ is approximated by its cylindrical expression $q=%
+\frac{rB_{T}}{RB_{P}}$, $a_{p}$ the plasma minor radius, and $\epsilon
+=r/R_{p}$ the inverse aspect ratio.
 
 \subsection{Momentum convection and diffusion}
 
 From the conservative form of the Fokker-Planck equation in momentum space 
 \begin{equation}
-\frac{\partial f_{0}}{\partial t}\propto \frac{\partial }{\partial p}\left(
-S_{\mathbf{p}}\right)
+\frac{\partial f_{0}^{\left( 0\right) }}{\partial t}\propto \frac{\partial }{%
+\partial p}\left( S_{\mathbf{p}}^{\left( 0\right) }\right) 
 \end{equation}
 where 
 \begin{equation}
-S_{\mathbf{p}}\propto -\Bbb{D}_{\mathbf{p}}\frac{\partial f_{0}}{\partial p}+%
-\mathbf{F}_{\mathbf{p}}f_{0}
+S_{\mathbf{p}}^{\left( 0\right) }\propto -\Bbb{D}_{\mathbf{p}}^{\left(
+0\right) }\frac{\partial f_{0}^{\left( 0\right) }}{\partial p}+\mathbf{F}_{%
+\mathbf{p}}^{\left( 0\right) }f_{0}^{\left( 0\right) }
 \end{equation}
 
 Introducing normalized coordinates, it turns out that 
 \begin{eqnarray}
-\frac{\partial \overline{f}_{0}}{\partial \overline{t}} &\propto &\frac{1}{%
-\nu _{e}^{\dag }p_{th}^{\dag }}\frac{\partial }{\partial \overline{p}}\left(
--\frac{\Bbb{D}_{\mathbf{p}}}{p_{th}^{\dag }}\frac{\partial \overline{f}_{0}}{%
-\partial \overline{p}}+\mathbf{F}_{\mathbf{p}}\overline{f}_{0}\right) 
-\nonumber \\
-&=&\frac{\partial }{\partial \overline{p}}\left( -\frac{\Bbb{D}_{\mathbf{p}}%
-}{\nu _{e}^{\dag }p_{th}^{\dag 2}}\frac{\partial \overline{f}_{0}}{\partial 
-\overline{p}}+\frac{\mathbf{F}_{\mathbf{p}}}{\nu _{e}^{\dag }p_{th}^{\dag }}%
-\overline{f}_{0}\right)  \nonumber \\
+\frac{\partial \overline{f}_{0}^{\left( 0\right) }}{\partial \overline{t}}
+&\propto &\frac{1}{\nu _{e}^{\dag }p_{th}^{\dag }}\frac{\partial }{\partial 
+\overline{p}}\left( -\frac{\Bbb{D}_{\mathbf{p}}^{\left( 0\right) }}{%
+p_{th}^{\dag }}\frac{\partial \overline{f}_{0}^{\left( 0\right) }}{\partial 
+\overline{p}}+\mathbf{F}_{\mathbf{p}}^{\left( 0\right) }\overline{f}%
+_{0}^{\left( 0\right) }\right)   \nonumber \\
+&=&\frac{\partial }{\partial \overline{p}}\left( -\frac{\Bbb{D}_{\mathbf{p}%
+}^{\left( 0\right) }}{\nu _{e}^{\dag }p_{th}^{\dag 2}}\frac{\partial 
+\overline{f}_{0}^{\left( 0\right) }}{\partial \overline{p}}+\frac{\mathbf{F}%
+_{\mathbf{p}}^{\left( 0\right) }}{\nu _{e}^{\dag }p_{th}^{\dag }}\overline{f}%
+_{0}^{\left( 0\right) }\right)   \nonumber \\
 &=&\frac{\partial }{\partial \overline{p}}\left( -\overline{\Bbb{D}}_{%
-\mathbf{p}}\frac{\partial \overline{f}_{0}}{\partial \overline{p}}+\overline{%
-\mathbf{F}}_{\mathbf{p}}\overline{f}_{0}\right)
+\mathbf{p}}^{\left( 0\right) }\frac{\partial \overline{f}_{0}^{\left(
+0\right) }}{\partial \overline{p}}+\overline{\mathbf{F}}_{\mathbf{p}
+}^{\left( 0\right) }\overline{f}_{0}^{\left( 0\right) }\right) 
 \end{eqnarray}
 where normalized diffusive and convective coefficients are 
 \begin{eqnarray}
-\overline{\Bbb{D}}_{\mathbf{p}} &=&\Bbb{D}_{\mathbf{p}}/\Bbb{D}_{\mathbf{p}%
-}^{\dag } \\
-\overline{\mathbf{F}}_{\mathbf{p}} &=&\mathbf{F}_{\mathbf{p}}/\mathbf{F}_{%
-\mathbf{p}}^{\dag }
+\overline{\Bbb{D}}_{\mathbf{p}}^{\left( 0\right) } &=&\Bbb{D}_{\mathbf{p}%
+}^{\left( 0\right) }/\Bbb{D}_{\mathbf{p}}^{\dag } \\
+\overline{\mathbf{F}}_{\mathbf{p}}^{\left( 0\right) } &=&\mathbf{F}_{\mathbf{
+p}}^{\left( 0\right) }/\mathbf{F}_{\mathbf{p}}^{\dag }
 \end{eqnarray}
 with 
 \begin{eqnarray}
@@ -389,7 +399,7 @@ E^{\dag }=\nu _{e}^{\dag }p_{th}^{\dag }/q_{e}
 \end{equation}
 the electric field being normalized according to the relation 
 \begin{equation}
-\overline{E}=E/E^{\dag }
+\overline{E}_{\Vert 0}=E_{\Vert 0}/E^{\dag }
 \end{equation}
 
 \subsection{Radial convection and diffusion}
@@ -397,35 +407,43 @@ the electric field being normalized according to the relation
 From the conservative form of the Fokker-Planck equation in configuration
 space 
 \begin{equation}
-\frac{\partial f_{0}}{\partial t}\propto \frac{\partial }{\partial \psi }
-\left( \left| \nabla \psi \right| S_{\psi }\right)
+\frac{\partial f_{0}^{\left( 0\right) }}{\partial t}\propto \frac{\partial }{%
+\partial \psi }\left( \left| \nabla \psi \right| _{0}S_{\psi }^{\left(
+0\right) }\right) 
 \end{equation}
 where
 
 \begin{equation}
-S_{\psi }\propto -\Bbb{D}_{\psi }\left| \nabla \psi \right| \frac{\partial
-f_{0}}{\partial \psi }+\mathbf{F}_{\psi }f_{0}
+S_{\psi }^{\left( 0\right) }\propto -\Bbb{D}_{\psi }^{\left( 0\right)
+}\left| \nabla \psi \right| _{0}\frac{\partial f_{0}^{\left( 0\right) }}{%
+\partial \psi }+\mathbf{F}_{\psi }^{\left( 0\right) }f_{0}^{\left( 0\right) }
 \end{equation}
 
 Introducing normalized coordinates, it turns out that 
 \begin{eqnarray}
-\frac{\partial \overline{f}_{0}}{\partial \overline{t}} &\propto &\frac{1}{%
-\nu _{e}^{\dag }\psi _{a}}\frac{\partial }{\partial \overline{\psi }}\left(
-\left| \nabla \psi \right| S_{\psi }\right)  \nonumber \\
-&=&\frac{1}{\nu _{e}^{\dag }\psi _{a}}\frac{\partial }{\partial \overline{%
-\psi }}\left( \frac{\Bbb{D}_{\psi }}{\psi _{a}}\left| \nabla \psi \right|
-^{2}\frac{\partial \overline{f}_{0}}{\partial \overline{\psi }}+\left|
-\nabla \psi \right| \mathbf{F}_{\psi }\overline{f}_{0}\right)  \nonumber \\
-&=&\frac{\partial }{\partial \overline{\psi }}\left( \frac{\Bbb{D}_{\psi }}{%
-\nu _{e}^{\dag }\psi _{a}^{2}}\left| \nabla \psi \right| ^{2}\frac{\partial 
-\overline{f}_{0}}{\partial \overline{\psi }}+\left| \nabla \psi \right| 
-\frac{\mathbf{F}_{\psi }}{\nu _{e}^{\dag }\psi _{a}}\overline{f}_{0}\right)
+\frac{\partial \overline{f}_{0}^{\left( 0\right) }}{\partial \overline{t}}
+&\propto &\frac{1}{\nu _{e}^{\dag }\psi _{a}}\frac{\partial }{\partial 
+\overline{\psi }}\left( \left| \nabla \psi \right| _{0}S_{\psi }^{\left(
+0\right) }\right)   \nonumber \\
+&=&\frac{1}{\nu _{e}^{\dag }\psi _{a}}\frac{\partial }{\partial \overline{
+\psi }}\left( \frac{\Bbb{D}_{\psi }^{\left( 0\right) }}{\psi _{a}}\left|
+\nabla \psi \right| _{0}^{2}\frac{\partial \overline{f}_{0}^{\left( 0\right)
+}}{\partial \overline{\psi }}+\left| \nabla \psi \right| _{0}\mathbf{F}%
+_{\psi }^{\left( 0\right) }\overline{f}_{0}^{\left( 0\right) }\right)  
+\nonumber \\
+&=&\frac{\partial }{\partial \overline{\psi }}\left( \frac{\Bbb{D}_{\psi
+}^{\left( 0\right) }}{\nu _{e}^{\dag }\psi _{a}^{2}}\left| \nabla \psi
+\right| _{0}^{2}\frac{\partial \overline{f}_{0}^{\left( 0\right) }}{\partial 
+\overline{\psi }}+\left| \nabla \psi \right| _{0}\frac{\mathbf{F}_{\psi
+}^{\left( 0\right) }}{\nu _{e}^{\dag }\psi _{a}}\overline{f}_{0}^{\left(
+0\right) }\right) 
 \end{eqnarray}
 with 
 \begin{eqnarray}
-\overline{\Bbb{D}}_{\psi } &=&\Bbb{D}_{\psi }/\Bbb{D}_{\psi }^{\dag } \\
-\overline{\mathbf{F}}_{\psi } &=&\mathbf{F}_{\psi }/\mathbf{F}_{\psi }^{\dag
-}
+\overline{\Bbb{D}}_{\psi }^{\left( 0\right) } &=&\Bbb{D}_{\psi }^{\left(
+0\right) }/\Bbb{D}_{\psi }^{\dag } \\
+\overline{\mathbf{F}}_{\psi }^{\left( 0\right) } &=&\mathbf{F}_{\psi
+}^{\left( 0\right) }/\mathbf{F}_{\psi }^{\dag }
 \end{eqnarray}
 with 
 \begin{eqnarray}
@@ -442,13 +460,13 @@ coefficients. Let
 \mathbf{F}_{\psi }^{\dag *} &=&\nu _{e}^{\dag }a_{p}
 \end{eqnarray}
 the reference diffusion and convection, where $a_{p}$ is the plasma minor
-radius as defined i\ss n Sec.***. The relation is
+radius as defined in Sec.\ref{coordinatesystemsection}. The relation is
 
 \begin{eqnarray}
-\overline{\Bbb{D}}_{\psi } &=&\alpha _{\Bbb{D}}\Bbb{D}_{\psi }/\Bbb{D}_{\psi
-}^{\dag *} \\
-\overline{\mathbf{F}}_{\psi } &=&\alpha _{\mathbf{F}}\mathbf{F}_{\psi }/%
-\mathbf{F}_{\psi }^{\dag *}
+\overline{\Bbb{D}}_{\psi }^{\left( 0\right) } &=&\alpha _{\Bbb{D}}\Bbb{D}%
+_{\psi }^{\left( 0\right) }/\Bbb{D}_{\psi }^{\dag *} \\
+\overline{\mathbf{F}}_{\psi }^{\left( 0\right) } &=&\alpha _{\mathbf{F}}%
+\mathbf{F}_{\psi }^{\left( 0\right) }/\mathbf{F}_{\psi }^{\dag *}
 \end{eqnarray}
 where 
 \begin{eqnarray}
@@ -462,25 +480,30 @@ where
 
 In momentum space, 
 \begin{eqnarray}
-S_{\mathbf{p}} &\propto &-\Bbb{D}_{\mathbf{p}}\frac{\partial f_{0}}{\partial
-p}+\mathbf{F}_{\mathbf{p}}f_{0}  \nonumber \\
-&=&-\overline{\Bbb{D}}_{\mathbf{p}}\Bbb{D}_{\mathbf{p}}^{\dag }\frac{%
-n_{e}^{\dag }}{p_{th}^{\dag 3}}\frac{\partial \overline{f}_{0}}{p_{th}^{\dag
-}\partial \overline{p}}+\overline{\mathbf{F}}_{\mathbf{p}}\mathbf{F}_{%
-\mathbf{p}}^{\dag }\frac{n_{e}^{\dag }}{p_{th}^{\dag 3}}\overline{f}_{0} 
+S_{\mathbf{p}}^{\left( 0\right) } &\propto &-\Bbb{D}_{\mathbf{p}}^{\left(
+0\right) }\frac{\partial f_{0}^{\left( 0\right) }}{\partial p}+\mathbf{F}_{%
+\mathbf{p}}^{\left( 0\right) }f_{0}^{\left( 0\right) }  \nonumber \\
+&=&-\overline{\Bbb{D}}_{\mathbf{p}}^{\left( 0\right) }\Bbb{D}_{\mathbf{p}%
+}^{\dag }\frac{n_{e}^{\dag }}{p_{th}^{\dag 3}}\frac{\partial \overline{f}%
+_{0}^{\left( 0\right) }}{p_{th}^{\dag }\partial \overline{p}}+\overline{%
+\mathbf{F}}_{\mathbf{p}}^{\left( 0\right) }\mathbf{F}_{\mathbf{p}}^{\dag }%
+\frac{n_{e}^{\dag }}{p_{th}^{\dag 3}}\overline{f}_{0}^{\left( 0\right) } 
 \nonumber \\
-&=&-\overline{\Bbb{D}}_{\mathbf{p}}\left( \frac{\nu _{e}^{\dag }n_{e}^{\dag }%
-}{p_{th}^{\dag 2}}\right) \frac{\partial \overline{f}_{0}}{\partial 
-\overline{p}}+\overline{\mathbf{F}}_{\mathbf{p}}\left( \frac{\nu _{e}^{\dag
-}n_{e}^{\dag }}{p_{th}^{\dag 2}}\right) \overline{f}_{0}  \nonumber \\
+&=&-\overline{\Bbb{D}}_{\mathbf{p}}^{\left( 0\right) }\left( \frac{\nu
+_{e}^{\dag }n_{e}^{\dag }}{p_{th}^{\dag 2}}\right) \frac{\partial \overline{f%
+}_{0}^{\left( 0\right) }}{\partial \overline{p}}+\overline{\mathbf{F}}_{%
+\mathbf{p}}^{\left( 0\right) }\left( \frac{\nu _{e}^{\dag }n_{e}^{\dag }}{%
+p_{th}^{\dag 2}}\right) \overline{f}_{0}^{\left( 0\right) }  \nonumber \\
 &=&\left( \frac{\nu _{e}^{\dag }n_{e}^{\dag }}{p_{th}^{\dag 2}}\right)
-\left( -\overline{\Bbb{D}}_{\mathbf{p}}\frac{\partial \overline{f}_{0}}{%
-\partial \overline{p}}+\overline{\mathbf{F}}_{\mathbf{p}}\overline{f}%
-_{0}\right)
+\left( -\overline{\Bbb{D}}_{\mathbf{p}}^{\left( 0\right) }\frac{\partial 
+\overline{f}_{0}^{\left( 0\right) }}{\partial \overline{p}}+\overline{%
+\mathbf{F}}_{\mathbf{p}}^{\left( 0\right) }\overline{f}_{0}^{\left( 0\right)
+}\right) 
 \end{eqnarray}
 and 
 \begin{equation}
-S_{\mathbf{p}}=\overline{S}_{\mathbf{p}}S_{\mathbf{p}}^{\dag }
+S_{\mathbf{p}}^{\left( 0\right) }=\overline{S}_{\mathbf{p}}^{\left( 0\right)
+}S_{\mathbf{p}}^{\dag }
 \end{equation}
 where 
 \begin{equation}
@@ -488,33 +511,40 @@ S_{\mathbf{p}}^{\dag }=\frac{\nu _{e}^{\dag }n_{e}^{\dag }}{p_{th}^{\dag 2}}
 \end{equation}
 and with these definitions, 
 \[
-\overline{S}_{\mathbf{p}}\propto -\overline{\Bbb{D}}_{\mathbf{p}}\frac{%
-\partial \overline{f}_{0}}{\partial \overline{p}}+\overline{\mathbf{F}}_{%
-\mathbf{p}}\overline{f}_{0} 
+\overline{S}_{\mathbf{p}}^{\left( 0\right) }\propto -\overline{\Bbb{D}}_{%
+\mathbf{p}}^{\left( 0\right) }\frac{\partial \overline{f}_{0}^{\left(
+0\right) }}{\partial \overline{p}}+\overline{\mathbf{F}}_{\mathbf{p}%
+}^{\left( 0\right) }\overline{f}_{0}^{\left( 0\right) }
 \]
 
 A similar procedure is applied for dynamics in configuration space, 
 \begin{eqnarray}
-S_{\psi } &\propto &-\Bbb{D}_{\psi \psi }\left| \nabla \psi \right| \frac{%
-\partial f_{0}}{\partial \psi }+\mathbf{F}_{\psi }f_{0}  \nonumber \\
-&=&-\overline{\Bbb{D}}_{\psi \psi }\Bbb{D}_{\psi \psi }^{\dag }\frac{%
-n_{e}^{\dag }}{p_{th}^{\dag 3}}\left| \nabla \psi \right| \frac{\partial 
-\overline{f}_{0}}{\psi _{a}\partial \overline{\psi }}+\mathbf{F}_{\psi }%
-\mathbf{F}_{\psi }^{\dag }\frac{n_{e}^{\dag }}{p_{th}^{\dag 3}}\overline{f}%
-_{0}  \nonumber \\
-&=&-\overline{\Bbb{D}}_{\psi \psi }\left( \frac{n_{e}^{\dag }}{p_{th}^{\dag
-3}}\nu _{e}^{\dag }\psi _{a}\right) \left| \nabla \psi \right| \frac{%
-\partial \overline{f}_{0}}{\partial \overline{\psi }}+\mathbf{F}_{\psi
-}\left( \frac{n_{e}^{\dag }}{p_{th}^{\dag 3}}\nu _{e}^{\dag }\psi
-_{a}\right) \overline{f}_{0}  \nonumber \\
+S_{\psi }^{\left( 0\right) } &\propto &-\Bbb{D}_{\psi \psi }^{\left(
+0\right) }\left| \nabla \psi \right| _{0}\frac{\partial f_{0}^{\left(
+0\right) }}{\partial \psi }+\mathbf{F}_{\psi }^{\left( 0\right)
+}f_{0}^{\left( 0\right) }  \nonumber \\
+&=&-\overline{\Bbb{D}}_{\psi \psi }^{\left( 0\right) }\Bbb{D}_{\psi \psi
+}^{\dag }\frac{n_{e}^{\dag }}{p_{th}^{\dag 3}}\left| \nabla \psi \right| _{0}%
+\frac{\partial \overline{f}_{0}^{\left( 0\right) }}{\psi _{a}\partial 
+\overline{\psi }}+\mathbf{F}_{\psi }^{\left( 0\right) }\mathbf{F}_{\psi
+}^{\dag }\frac{n_{e}^{\dag }}{p_{th}^{\dag 3}}\overline{f}_{0}^{\left(
+0\right) }  \nonumber \\
+&=&-\overline{\Bbb{D}}_{\psi \psi }^{\left( 0\right) }\left( \frac{%
+n_{e}^{\dag }}{p_{th}^{\dag 3}}\nu _{e}^{\dag }\psi _{a}\right) \left|
+\nabla \psi \right| _{0}\frac{\partial \overline{f}_{0}^{\left( 0\right) }}{%
+\partial \overline{\psi }}+\mathbf{F}_{\psi }^{\left( 0\right) }\left( \frac{%
+n_{e}^{\dag }}{p_{th}^{\dag 3}}\nu _{e}^{\dag }\psi _{a}\right) \overline{f}%
+_{0}^{\left( 0\right) }  \nonumber \\
 &=&\left( \frac{n_{e}^{\dag }}{p_{th}^{\dag 3}}\nu _{e}^{\dag }\psi
-_{a}\right) \left( -\overline{\Bbb{D}}_{\psi \psi }\left| \nabla \psi
-\right| \frac{\partial \overline{f}_{0}}{\partial \overline{\psi }}+\mathbf{F%
-}_{\psi }\overline{f}_{0}\right)
+_{a}\right) \left( -\overline{\Bbb{D}}_{\psi \psi }^{\left( 0\right) }\left|
+\nabla \psi \right| _{0}\frac{\partial \overline{f}_{0}^{\left( 0\right) }}{%
+\partial \overline{\psi }}+\mathbf{F}_{\psi }^{\left( 0\right) }\overline{f}
+_{0}^{\left( 0\right) }\right) 
 \end{eqnarray}
 and 
 \begin{equation}
-S_{\psi }=\overline{S}_{\psi }S_{\psi }^{\dag }
+S_{\psi }^{\left( 0\right) }=\overline{S}_{\psi }^{\left( 0\right) }S_{\psi
+}^{\dag }
 \end{equation}
 with 
 \begin{equation}
@@ -523,25 +553,28 @@ _{a}
 \end{equation}
 and with these definitions, 
 \begin{equation}
-\overline{S}_{\psi }\propto -\overline{\Bbb{D}}_{\psi \psi }\left| \nabla
-\psi \right| \frac{\partial \overline{f}_{0}}{\partial \overline{\psi }}+%
-\overline{\mathbf{F}}_{\psi }\overline{f}_{0}
+\overline{S}_{\psi }^{\left( 0\right) }\propto -\overline{\Bbb{D}}_{\psi
+\psi }^{\left( 0\right) }\left| \nabla \psi \right| _{0}\frac{\partial 
+\overline{f}_{0}^{\left( 0\right) }}{\partial \overline{\psi }}+\overline{%
+\mathbf{F}}_{\psi }^{\left( 0\right) }\overline{f}_{0}^{\left( 0\right) }
 \end{equation}
 
 \subsection{Current density}
 
-The current density is given by the relation 
+The local current density at the minimum $\mathbf{B}$ value on the flux
+surface is given by the relation 
 \begin{eqnarray}
-J &\propto &2\pi q_{e}\int p^{2}dp\int_{-1}^{+1}\xi vf_{0}d\xi  \nonumber \\
-&=&2\pi q_{e}\int \frac{p^{3}}{\gamma m_{e}}dp\int_{-1}^{+1}\xi f_{0}d\xi 
-\nonumber \\
+J^{\left( 0\right) } &\propto &2\pi q_{e}\int p^{2}dp\int_{-1}^{+1}\xi
+_{0}vf_{0}^{\left( 0\right) }d\xi _{0}  \nonumber \\
+&=&2\pi q_{e}\int \frac{p^{3}}{\gamma m_{e}}dp\int_{-1}^{+1}\xi
+_{0}f_{0}^{\left( 0\right) }d\xi _{0}  \nonumber \\
 &=&2\pi \frac{q_{e}}{m_{e}}p_{th}^{\dag 4}\frac{n_{e}^{\dag }}{\beta
 _{th}^{\dag 3}}\int \frac{\overline{p}^{3}}{\gamma }d\overline{p}%
-\int_{-1}^{+1}\xi \overline{f}_{0}d\xi
+\int_{-1}^{+1}\xi _{0}\overline{f}_{0}^{\left( 0\right) }d\xi _{0}
 \end{eqnarray}
 Therefore, 
 \begin{equation}
-\overline{J}=J/J^{\dag }
+\overline{J}^{\left( 0\right) }=J^{\left( 0\right) }/J^{\dag }
 \end{equation}
 where 
 \begin{equation}
@@ -550,23 +583,24 @@ J^{\dag }=\frac{q_{e}}{m_{e}}p_{th}^{\dag }n_{e}^{\dag }
 
 With this definition 
 \begin{equation}
-\overline{J}\propto 2\pi \int \frac{\overline{p}^{3}}{\gamma }d\overline{p}%
-\int_{-1}^{+1}\xi \overline{f}_{0}d\xi
+\overline{J}^{\left( 0\right) }\propto 2\pi \int \frac{\overline{p}^{3}}{
+\gamma }d\overline{p}\int_{-1}^{+1}\xi _{0}\overline{f}_{0}^{\left( 0\right)
+}d\xi _{0}
 \end{equation}
 
 \subsection{Power density}
 
 The power density is deduced from the integral 
 \begin{eqnarray}
-P &\propto &2\pi \int_{-1}^{+1}d\xi \int_{0}^{\infty }\frac{p^{3}}{\gamma
-m_{e}}S_{\mathbf{p}}dp  \nonumber \\
+P^{\left( 0\right) } &\propto &2\pi \int_{-1}^{+1}d\xi _{0}\int_{0}^{\infty }%
+\frac{p^{3}}{\gamma m_{e}}S_{\mathbf{p}}^{\left( 0\right) }dp  \nonumber \\
 &=&2\pi \frac{p_{th}^{\dag 4}}{m_{e}}\frac{\nu _{e}^{\dag }n_{e}^{\dag }}{%
-p_{th}^{\dag 2}}\int_{-1}^{+1}d\xi \int_{0}^{\infty }\frac{\overline{p}^{3}}{%
-\gamma }\overline{S}_{\mathbf{p}}d\overline{p}
+p_{th}^{\dag 2}}\int_{-1}^{+1}d\xi _{0}\int_{0}^{\infty }\frac{\overline{p}
+^{3}}{\gamma }\overline{S}_{\mathbf{p}}^{\left( 0\right) }d\overline{p}
 \end{eqnarray}
 and defining 
 \begin{equation}
-\overline{P}=P/P^{\dag }
+\overline{P}^{\left( 0\right) }=P^{\left( 0\right) }/P^{\dag }
 \end{equation}
 one has 
 \begin{equation}
@@ -575,23 +609,27 @@ P^{\dag }=\frac{\nu _{e}^{\dag }p_{th}^{\dag 3}n_{e}^{\dag }}{m_{e}}
 
 With this definition 
 \begin{equation}
-\overline{P}\propto 2\pi \int_{-1}^{+1}d\xi \int_{0}^{\infty }\frac{%
-\overline{p}^{3}}{\gamma }\overline{S}_{\mathbf{p}}d\overline{p}
+\overline{P}^{\left( 0\right) }\propto 2\pi \int_{-1}^{+1}d\xi _{0}\int_{0}^{%
+\infty }\frac{\overline{p}^{3}}{\gamma }\overline{S}_{\mathbf{p}}^{\left(
+0\right) }d\overline{p}
 \end{equation}
 
 \subsection{Electron runaway rate}
 
-The electron runaway rate $\Gamma _{R}$ is given by the relation 
+The electron runaway rate $\Gamma _{R}^{\left( 0\right) }$ is given by the
+relation 
 \begin{eqnarray}
-\Gamma _{R} &\propto &2\pi p^{2}\int_{-1}^{+1}S_{\mathbf{p}}d\xi  \nonumber
-\\
+\Gamma _{R}^{\left( 0\right) } &\propto &2\pi p^{2}\int_{-1}^{+1}S_{\mathbf{p%
+}}^{\left( 0\right) }d\xi _{0}  \nonumber \\
 &=&2\pi \overline{p}^{2}p_{th}^{\dag 2}\frac{\nu _{e}^{\dag }n_{e}^{\dag }}{%
-p_{th}^{\dag 2}}\int_{-1}^{+1}\overline{S}_{\mathbf{p}}d\xi
+p_{th}^{\dag 2}}\int_{-1}^{+1}\overline{S}_{\mathbf{p}}^{\left( 0\right)
+}d\xi _{0}
 \end{eqnarray}
 
 Therefore, normalized expression is 
 \begin{equation}
-\overline{\Gamma }_{R}=\Gamma _{R}/\Gamma _{R}^{\dag }
+\overline{\Gamma }_{R}^{\left( 0\right) }=\Gamma _{R}^{\left( 0\right)
+}/\Gamma _{R}^{\dag }
 \end{equation}
 with 
 \begin{equation}
@@ -599,34 +637,36 @@ with
 \end{equation}
 so that 
 \begin{equation}
-\overline{\Gamma }_{R}\propto 2\pi \overline{p}^{2}\int_{-1}^{+1}\overline{S}%
-_{\mathbf{p}}d\xi
+\overline{\Gamma }_{R}^{\left( 0\right) }\propto 2\pi \overline{p}%
+^{2}\int_{-1}^{+1}\overline{S}_{\mathbf{p}}^{\left( 0\right) }d\xi _{0}
 \end{equation}
 
 The consistency of the normalized units may be benchmarked by the
 approximate relation between the total current and the bulk current, the
 difference coming from the electron runaway tail. For small $\Gamma _{R},$
 the runaway distribution is independent of $v_{\Vert },$ so that it may be
-approximated by the simple expression $f_{0}\left( v_{\Vert }\gg
-v_{th}\right) \approx \left( \gamma /E\right) \delta \left( p_{\bot }\right)
-.$ By integrating the current integral $v_{\Vert }f_{0}$ out to $p_{\max },$
-one obtains 
+approximated by the simple expression $f_{0}^{\left( 0\right) }\left(
+v_{\Vert }\gg v_{th}\right) \approx \left( \gamma /E\right) \delta \left(
+p_{\bot }\right) .$ By integrating the current integral $v_{\Vert
+}f_{0}^{\left( 0\right) }$ out to $p_{\max },$ one obtains 
 \begin{equation}
-J\left( v_{\max }\right) \approx J_{bulk}+\frac{1}{2m_{e}}\left( \frac{%
-\Gamma _{R}}{E}\right) p_{\max }^{2}
+J^{\left( 0\right) }\left( v_{\max }\right) \approx J_{bulk}^{\left(
+0\right) }+\frac{1}{2m_{e}}\left( \frac{\Gamma _{R}^{\left( 0\right) }}{
+E_{\Vert 0}}\right) p_{\max }^{2}
 \end{equation}
 and in normalized units, 
 \begin{equation}
-\overline{J}\left( v_{\max }\right) J^{\dag }\approx \overline{J}%
-_{bulk}J^{\dag }+\frac{1}{2m_{e}}\left( \frac{\overline{\Gamma }_{R}\Gamma
-_{R}^{\dag }}{\overline{E}E^{\dag }}\right) p_{th}^{\dag 2}\overline{p}%
-_{\max }^{2}
+\overline{J}^{\left( 0\right) }\left( v_{\max }\right) J^{\dag }\approx 
+\overline{J}_{bulk}^{\left( 0\right) }J^{\dag }+\frac{1}{2m_{e}}\left( \frac{%
+\overline{\Gamma }_{R}^{\left( 0\right) }\Gamma _{R}^{\dag }}{\overline{E}%
+_{\Vert 0}E^{\dag }}\right) p_{th}^{\dag 2}\overline{p}_{\max }^{2}
 \end{equation}
 so that 
 \begin{equation}
-\overline{J}\left( v_{\max }\right) \approx \overline{J}_{bulk}+\frac{1}{%
-2m_{e}}\frac{p_{th}^{\dag 2}\Gamma _{R}^{\dag }}{E^{\dag }J^{\dag }}\left( 
-\frac{\overline{\Gamma }_{R}}{\overline{E}}\right) \overline{p}_{\max }^{2}
+\overline{J}^{\left( 0\right) }\left( v_{\max }\right) \approx \overline{J}%
+_{bulk}^{\left( 0\right) }+\frac{1}{2m_{e}}\frac{p_{th}^{\dag 2}\Gamma
+_{R}^{\dag }}{E^{\dag }J^{\dag }}\left( \frac{\overline{\Gamma }_{R}^{\left(
+0\right) }}{\overline{E}_{\Vert 0}}\right) \overline{p}_{\max }^{2}
 \end{equation}
 According to their respective expression, 
 \begin{equation}
@@ -639,12 +679,14 @@ different quantities calculated by the code.
 
 \subsection{Electron magnetic ripple loss rate}
 
-By definition, the electron magnetic ripple loss rate $\Gamma _{ST}$ is
-given by a relation relation similar to $\Gamma _{R},$ except that integrals
-of fluxes are calculated for different boundaries. Therefore, the normalized
-expression is simply given by the relation 
+By definition, the electron magnetic ripple loss rate $\Gamma _{ST}^{\left(
+0\right) }$ is given by a relation relation similar to $\Gamma _{R}^{\left(
+0\right) },$ except that integrals of fluxes are calculated for different
+boundaries. Therefore, the normalized expression is simply given by the
+relation 
 \begin{equation}
-\overline{\Gamma }_{ST}=\Gamma _{ST}/\Gamma _{ST}^{\dag }
+\overline{\Gamma }_{ST}^{\left( 0\right) }=\Gamma _{ST}^{\left( 0\right)
+}/\Gamma _{ST}^{\dag }
 \end{equation}
 where 
 \begin{equation}
