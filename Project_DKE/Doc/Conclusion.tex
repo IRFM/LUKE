@@ -1,0 +1,122 @@
+
+The determination of the current density profile is a crucial issue for next
+step tokamaks like ITER, since it may directly modify plasma performances.
+Up to now, most of the tools where designed for simplified magnetic
+configuration, or using crude physical assumptions that consequently reduce
+considerably the confidence in the results. Accurate and realistic kinetic
+calculations for the electron population in magnetized plasmas where
+therefore an important step towards a consistent modeling of the current
+drive process. 
+
+For this purpose, a completely new numerical solver has been designed which
+contains most of the salient features of the physics in hot plasmas, where
+the weak collision regime holds: relativistic collision operator,
+bounce-averaging for trapped and passing particles, arbitrary magnetic
+configuration, first order neoclassical corrections. A special attention has
+been paid to derive in a rigorous and consistent manner all the equations,
+in particular for the interplay between inductive, non-inductive and
+bootstrap currents. The conservative nature of the equations has been the
+guideline in this work, especially to have a clear derivation of radial
+transport equation for the fast electron population in arbitrary magnetic
+configuration when bounce averaging is concerned. 
+
+The numerical part has been derived with the same spirit, keeping a
+systematic approach for all types of operators in the discretization
+technique. This point is especially important for a consistent evaluation of
+the current drive efficiency, a key parameter in order to evaluate
+performances of the method used for driving current. In particular, the
+formalism is general so that arbitrary type of mechanismes may be
+incorporated for possible synergistic effect. As for the analytical part, a
+detail analysis of the conservative nature of the numerical code has been
+performed. A clear and comprehensive discussion of all the aspects is
+presented, which is crucial for a reliable numerical tool. It is shown that
+the both for the zero- and first-order equations, the numerical solver is
+naturally conservative, in the sense that no need of arbitrary external
+source or normalization factor is necessary in order to compensate possible
+hidden numerical particle leaks which are the consequence of an incorrect
+discrete projection of the equations on the numerical grids. This reference
+work is critical in order to make the code transparent for possible further
+evolutions.
+
+Advanced numerical matrix factorization techniques have shown that
+considerable savings may be expected, not only for storage purposes but also
+for the time duration needed in determining the steady-state current drive
+solution on the collision and fast electron transport time scales. The
+pionneering work performed initially for the $2-D$ problem in velocity space
+in a fully implicit manner (reverse time scheme that is inconditionnaly
+stable with respect to the integration time step)(\cite{sho94},\cite{shk97}
+and \cite{pey98}) has been fully extended to the $3-D$ case (\cite
+{pey03c1_RF15}), including the complexity arising from the radial dependence
+of the trapped-passing boundary for bounce-averaged equations. With the
+incomplete $LU$ technique (\cite{saa03}), it has been possible to converge
+in few iterations towards the steady-state current drive solution on
+standard computers, taking advantage of the high sparcity of the
+Fokker-Planck and electron drift kinetic equation matrices. This tool is
+therefore fully designed to be incorporated in a chain of codes, for
+realistic self-consistent calculations, in which plasma magnetic
+equilibrium, wave propagation and absorption, energy and particle transport
+must be evaluating as a function of time and space (\cite{bas03}). In is
+important to notice that special attention has been paid to the delicate
+problem of coupling the kinetic solver with ray-tracing. This amazing feat
+has been made easily possible with the use of the compact MatLab numerical
+environment for solving the huge linear system of equations (\cite{mat02}). 
+
+Furthermore, numerous moments of the electron distribution function are
+evaluated like the RF power, magnetic ripple and runaway losses, fast
+electron bremsstrahlung and trapped fraction. Moreover, the code may also be
+used for specific physical studies which imply time evolution, and a
+standard Crank-Nicholson time-scheme has been also incorporated. In the same
+spirit, simplified collision models may be used, like the Lorentz operator,
+for which analytical expressions may be easily derived. This point is
+crucial for an effective benchmarking, even in a complex magnetic topology,
+like for ITER.
+
+At this stage, the code may be considered as mature for the initial goal
+that was considered. Several additional benchmarking must be certainly done
+in order to enhance the realibility on several quantities, but most of the
+resultats obtained by the code are already robust. The domain of stabitility
+related to the drop tolerance parameter for the approximate matrix
+factorization technique needs also refined estimates for optimizing the
+numerical method.
+
+Several enhancement of the code may be easily foreseen in a near future. In
+the framework, one of the most important issue is to use a correct
+quasilinear diffusion operator for the wave-particle interaction. Indeed,
+like for most kinetic solvers available today, the code use the well known
+Kennel-Engelman-Lerche expression that is derived for plane waves in
+homogenous plasmas. Regarding the assumptions, it is necessary to use a more
+precise quasilinear diffusion operator that is decuded from the Hamiltonian
+theory in toroidal configuration (\cite{eri94}). This requires further
+analytical developments, using the appropriate coordinate system, where the
+effective banana width of the particle is fully taken into account. In this
+framework, the description of the wave-induced particle transport becomes
+natural, and the code in its present conservative form fully allows this
+kind of description that may play a fundamental role for the RF power
+absorption, but also for thermal particle pinch in steady-state conditions (%
+\cite{hoa03}). Furthermore, once the bounce-averaging is replaced by
+trajectory-averaging, it is natural to extend the code for multiple ion
+dynamics. In that case, parallel processing may be foreseen for each
+species, in order to optimize calculations. 
+
+Finally, an ultimate though important evolution for the code may concern
+non-linear problems. So far, the collision operator is linearized for a
+Maxwellian bulk, that is a reasonable assumption in most tokamak conditions
+today. However, some experimental evidences that the bulk could be
+non-Maxwellian in presence of strong electron cyclotron heating and current
+drive suggest that non-linear effects could take place. This may be also the
+case in reactor conditions when $\alpha $-particle population is damping on
+the electrons. In that case, the neoclassical theory for non-Maxwellian
+distribution must be previously revisited before any numerical
+implementation.
+
+Besides the development of modern tools that is effectively described in
+this document and will be useful for a detailed understanding of the current
+drive in tokamak, this work has allowed to highlight the subtile interplay
+between physics and numerics. This is an good example of what should be
+performed for advanced realistic simulations of complex dynamical systems.
+It enables to draw in a very clear manner paths for refined studies, based
+on robust formalisms that takes into account in a rigorous way the physics
+principles. The method here presented has therefore broad potential
+applications for other challenging physics domains, like for the numerical
+determination of the full-wave problem when very short wavelengths must be
+considered as compared to the machine size and the gradient lengths.
