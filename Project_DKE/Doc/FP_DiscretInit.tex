@@ -14,7 +14,8 @@ f_{M}\left( \psi ,p\right) \simeq \frac{n_{e}\left( \psi \right) }{\left[ 2%
 \end{equation}
 where $T_{e}\left( \psi \right) $ and $n_{e}\left( \psi \right) $ are the
 electron temperature and density respectively. Details on the notation are
-given in Sec. ***. Projected on the numerical grids, the discrete form is
+given in Sec. \ref{normtene}. Projected on the numerical grids, as defined
+in Sec.\ref{Griddef}, the discrete form is 
 \begin{equation}
 f_{M,l+1/2,i+1/2,j+1/2}\simeq \frac{n_{e,l+1/2}}{\left[ 2\pi %
 T_{e,l+1/2}\right] ^{3/2}}\exp \left[ -\frac{p_{i+1/2}^{2}}{\left( 1+\gamma
@@ -23,17 +24,17 @@ _{i+1/2}\right) T_{e,l+1/2}}\right]
 
 When the Lower Hybrid current drive problem is addressed, it is possible to
 start from a guess that already incorporate the existence of a plateau
-region, using the formulation given in Ref. *** in the non-relativistic
-limit. When relativistic corrections must be considered, the effective
-perpendicular temperature $T_{\bot }$ in the resonance domain must be
-multipled by $2$, according to the prescription given in Sec. ***. Though
-this elegant approach seems attractive in order to reduce the total number
-of iterations for reaching the steady-state solution, its effectiveness is
-usualy poor when large time step are considered. Indeed, the total number of
-time steps is merely determined by the relaxation time of the most energetic
-part of the fast electron tail prodiced by the wave. Since electrons are
-very weakly collisional, their relaxation time is very long as compared to
-the thermal one. Therefore, the gain for the rate of convergence is usually
-very small since the distribution model does not describe accurately the
-region above the plateau of the momentum space. Consequently, even if this
-method is implemented in the code, it is almost never used.
+region, using the formulation given in Ref. \cite{fuc85} in the
+non-relativistic limit. When relativistic corrections must be considered,
+the effective perpendicular temperature $T_{\bot }$ in the resonance domain
+must be usualy  multipled by $2$. Though this elegant approach seems
+attractive in order to reduce the total number of iterations for reaching
+the steady-state solution, its effectiveness is usualy poor when large time
+step $\Delta t$ are considered. Indeed, the total number of time steps is
+merely determined by the relaxation time of the most energetic part of the
+fast electron tail prodiced by the wave. Since electrons are very weakly
+collisional, their relaxation time is very long as compared to the thermal
+one. Therefore, the gain for the rate of convergence is usually very small
+since the distribution model does not describe accurately the region above
+the plateau of the momentum space. Consequently, even if this method is
+implemented in the code, it is almost never used.
