@@ -49,7 +49,16 @@ end
 ns = abs(ns);%Force ns to be always positive
 nchords = length(HXR{1,1});%chord number
 %
+coefr = 1;%For reducing the number of poloidal positions
 [theta,ppsin,psia,ptR,ptZ,ptBR,ptBZ,ptBphi,ptB0,ptR0,ptBT0,ptBp0,ptrho] = equilibrium_jd(tokamak,NaN*xpsin,xpsin_S,display,method,mfactor);%NaN
+ppsin = ppsin(:);
+nreduc = min([coefr,length(theta)]);%For reducing the number of poloidal positions
+theta = theta(1:nreduc:end);
+ptR=ptR(:,1:nreduc:end);
+ptZ=ptZ(:,1:nreduc:end);
+ptBR=ptBR(:,1:nreduc:end);
+ptBZ=ptBZ(:,1:nreduc:end);
+ptBphi=ptBphi(:,1:nreduc:end);
 %
 Rp = ptR(1,1);%Plasma major radius (m)
 Zp = ptZ(1,1);%Plasma vertical position (m)
