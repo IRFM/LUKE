@@ -66,7 +66,16 @@ if ~isnan(xlim)
     set(gca,'xlim',xlim);
 end
 if ~isnan(ylim)
-    set(gca,'ylim',ylim);
+    if length(ylim) == 1
+        ylim_old = get(gca,'ylim');
+        if ylim_old(2) > ylim
+            set(gca,'ylim',[ylim,ylim_old(2)]);
+        else
+            set(gca,'ylim',[ylim_old(1),ylim]);
+        end            
+    else
+        set(gca,'ylim',ylim);
+    end
 end
 
 xl = xlabel(xlab);set(xl,'fontsize',14);
