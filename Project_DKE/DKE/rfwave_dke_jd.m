@@ -118,9 +118,11 @@ for iw = 1:length(waves),%
             end
             ns = length(sR);
             ss(1) = 0;
-            sRh = (sR(1:ns-1) + sR(2:ns))/2;
-            ds = sqrt(diff(sR).^2 + (sRh.*diff(sphi)).^2 + diff(sZ).^2);
-            ss(2:ns) = cumsum(ds);
+            if ns > 1,
+                sRh = (sR(1:ns-1) + sR(2:ns))/2;
+                ds = sqrt(diff(sR).^2 + (sRh.*diff(sphi)).^2 + diff(sZ).^2);
+                ss(2:ns) = cumsum(ds);
+            end
         else 
             ns = length(ss);
         end
@@ -225,8 +227,21 @@ for iw = 1:length(waves),%
                 %%%%%%%%%% to be implemented %%%%%%%%%%
                 error('model not yet implemented');
             elseif opt_disp == 3, % non-relativistic hot plasma dispersion tensor for sepol_pmz, sNperp and phi_pmz (R2D2) 
-                %%%%%%%%%% to be implemented %%%%%%%%%%
-                error('model not yet implemented');
+                [smask_ht,sNperp_ht,sepol_pmz_ht,sPflow_ht,sPabs_at] = ...
+                    disp_hot_jd(ss,sB,sne,sTe,sNpar,omega_rf,sNperp,0); 
+                %
+                ns = length(smask_ht);
+                ss = ss(smask_ht);
+                spsin = spsin(smask_ht);
+                stheta = stheta(smask_ht);
+                sNpar = sNpar(smask_ht);
+                sNperp = sNperp_ht;
+                sdNpar = sdNpar(smask_ht);
+                sepol_pmz = sepol_pmz_ht;
+                sphi_pmz(1,:) = abs(2*sPflow_ht/e0/clum);
+                sphi_pmz(2,:) = zeros(1,ns);
+                sphi_pmz(3,:) = zeros(1,ns);            
+                %
             elseif opt_disp == 4, % relativistic hot plasma dispersion tensor for sepol_pmz, sNperp and phi_pmz (R2D2)
                 %%%%%%%%%% to be implemented %%%%%%%%%%
                 error('model not yet implemented');
