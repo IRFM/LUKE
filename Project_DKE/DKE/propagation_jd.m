@@ -99,7 +99,7 @@ for ib = 1:nb_rf
                 isextr = 1;
                 break
             else % ray "turns before" xpsin
-                irextrfs(1) = [];
+                ipextrfs(1) = [];
             end
         end
 %        
@@ -142,8 +142,3 @@ for ib = 1:nb_rf
     end
 end
 %
-
-
-
-
-
