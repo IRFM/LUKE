@@ -40,34 +40,34 @@ The electric field associated with a given ray is described by a plane wave,
 with given frequency $\omega _{b}$ and wave number $\mathbf{k}_{b}$:
 
 \begin{eqnarray}
-\mathbf{E}_{b}\left( \mathbf{x},t\right) &=&\text{Re}\left[ \mathbf{E}%
+\mathbf{E}_{b}\left( \mathbf{x},t\right)  &=&\text{Re}\left[ \mathbf{E}%
 _{b0}e^{i\left( \mathbf{k}_{b}\cdot \mathbf{x}-\omega _{b}t\right) }\right] =%
-\text{Re}\left[ \widetilde{\mathbf{E}}_{b}\right] \\
+\text{Re}\left[ \widetilde{\mathbf{E}}_{b}\right]   \nonumber \\
 &=&\frac{1}{2}\left[ \mathbf{E}_{b0}e^{i\left( \mathbf{k}_{b}\cdot \mathbf{x}%
 -\omega _{b}t\right) }+\mathbf{E}_{b0}^{*}e^{-i\left( \mathbf{k}_{b}\cdot 
-\mathbf{x}-\omega _{b}t\right) }\right]
+\mathbf{x}-\omega _{b}t\right) }\right] 
 \end{eqnarray}
 so that 
 \begin{eqnarray}
-\mathbf{E}_{b\mathbf{k}}\left( \mathbf{k},t\right) &\equiv &\iiint
+\mathbf{E}_{b\mathbf{k}}\left( \mathbf{k},t\right)  &\equiv &\iiint
 d^{3}x\;e^{-i\mathbf{k}\cdot \mathbf{x}}\mathbf{E}_{b}\left( \mathbf{x}%
-,t\right)  \nonumber \\
+,t\right)   \nonumber \\
 &=&\frac{1}{2}\left[ \mathbf{E}_{b0}e^{-i\omega _{b}t}\iiint
 d^{3}x\;e^{i\left( \mathbf{k}_{b}-\mathbf{k}\right) \cdot \mathbf{x}}+%
 \mathbf{E}_{b0}^{*}e^{i\omega _{b}t}\iiint d^{3}x\;e^{i\left( \mathbf{k}_{b}+%
-\mathbf{k}\right) \cdot \mathbf{x}}\right]  \nonumber \\
+\mathbf{k}\right) \cdot \mathbf{x}}\right]   \nonumber \\
 &=&\frac{1}{2}\left[ \mathbf{E}_{b0}e^{-i\omega _{b}t}\delta \left( \mathbf{k%
 }_{b}-\mathbf{k}\right) +\mathbf{E}_{b0}^{*}e^{i\omega _{b}t}\delta \left( 
-\mathbf{k}_{b}+\mathbf{k}\right) \right]
+\mathbf{k}_{b}+\mathbf{k}\right) \right] 
 \end{eqnarray}
 
 The term $\left| \mathbf{E}_{b\mathbf{k}}\right| ^{2}$ in expression (\ref
 {dn}) is then
 
 \begin{eqnarray}
-\left| \mathbf{E}_{b\mathbf{k}}\right| ^{2} &=&\frac{1}{4}\left| \mathbf{E}%
+\left| \mathbf{E}_{b\mathbf{k}}\right| ^{2} &=&\frac{1}{4}\left| \mathbf{E}
 _{b0}e^{-i\omega _{b}t}\delta \left( \mathbf{k}_{b}-\mathbf{k}\right) +%
-\mathbf{E}_{b0}^{*}e^{i\omega _{b}t}\delta \left( \mathbf{k}_{b}+\mathbf{k}%
+\mathbf{E}_{b0}^{*}e^{i\omega _{b}t}\delta \left( \mathbf{k}_{b}+\mathbf{k}
 \right) \right| ^{2}  \nonumber \\
 &=&\frac{1}{4}\left( \mathbf{E}_{b0}e^{-i\omega _{b}t}\delta \left( \mathbf{k%
 }_{b}-\mathbf{k}\right) +\mathbf{E}_{b0}^{*}e^{i\omega _{b}t}\delta \left( 
@@ -77,7 +77,7 @@ _{b0}^{*}e^{i\omega _{b}t}\delta \left( \mathbf{k}_{b}-\mathbf{k}\right) +%
 \right) \right)  \nonumber \\
 &=&\frac{1}{4}\left( \left| \mathbf{E}_{b0}\right| ^{2}\delta ^{2}\left( 
 \mathbf{k}_{b}-\mathbf{k}\right) +\left| \mathbf{E}_{b0}\right| ^{2}\delta
-^{2}\left( \mathbf{k}_{b}+\mathbf{k}\right) +2\text{Re}\left[ \mathbf{E}%
+^{2}\left( \mathbf{k}_{b}+\mathbf{k}\right) +2\text{Re}\left[ \mathbf{E}
 _{b0}^{2}e^{-i\omega _{b}t}\right] \delta \left( \mathbf{k}_{b}-\mathbf{k}%
 \right) \delta \left( \mathbf{k}_{b}+\mathbf{k}\right) \right)
 \end{eqnarray}
@@ -91,8 +91,8 @@ _{b}-k_{\Vert b}v_{\Vert }-n\Omega \right) \lim_{V\rightarrow \infty }\frac{1%
 }{V}\iiint \frac{d^{3}k}{(2\pi )^{3}}  \nonumber \\
 &&\left[ \left| \mathbf{E}_{b0}\right| ^{2}\delta ^{2}\left( \mathbf{k}_{b}-%
 \mathbf{k}\right) +\left| \mathbf{E}_{b0}\right| ^{2}\delta ^{2}\left( 
-\mathbf{k}_{b}+\mathbf{k}\right) +2\text{Re}\left[ \mathbf{E}%
-_{b0}^{2}e^{-i\omega _{b}t}\right] \delta \left( \mathbf{k}_{b}-\mathbf{k}%
+\mathbf{k}_{b}+\mathbf{k}\right) +2\text{Re}\left[ \mathbf{E}
+_{b0}^{2}e^{-i\omega _{b}t}\right] \delta \left( \mathbf{k}_{b}-\mathbf{k}
 \right) \delta \left( \mathbf{k}_{b}+\mathbf{k}\right) \right]
 \end{eqnarray}
 
@@ -100,7 +100,7 @@ The term $\delta \left( \mathbf{k}_{b}-\mathbf{k}\right) \delta \left(
 \mathbf{k}_{b}+\mathbf{k}\right) $ has no contribution when the limit $%
 V\rightarrow \infty $ is taken. Using Parseval's theorem, 
 \begin{eqnarray}
-\lim_{V\rightarrow \infty }\frac{1}{V}\iiint \frac{d^{3}k}{(2\pi )^{3}}%
+\lim_{V\rightarrow \infty }\frac{1}{V}\iiint \frac{d^{3}k}{(2\pi )^{3}}
 \left( \delta ^{2}\left( \mathbf{k}_{b}-\mathbf{k}\right) +\delta ^{2}\left( 
 \mathbf{k}_{b}+\mathbf{k}\right) \right) &=&2\lim_{V\rightarrow \infty }%
 \frac{1}{V}\iiint d^{3}x  \nonumber \\
@@ -150,22 +150,29 @@ The time-averaged energy flow density in the beam is in general given by
 where 
 \begin{equation}
 \mathbf{P}_{b}=\frac{1}{2}\text{Re}\left[ \widetilde{\mathbf{E}}_{b}\times 
-\widetilde{\mathbf{H}}_{b}^{*}\right]
+\widetilde{\mathbf{H}}_{b}^{*}\right] 
 \end{equation}
-(***** definir $\widetilde{\mathbf{H}}_{b}^{*}$******) is the flow of the
-electromagnetic energy or Poynting vector, and 
+is the flow of the electromagnetic energy or Poynting vector, and 
 \begin{equation}
-\mathbf{T}_{b}=-\frac{\epsilon _{0}\omega _{b}}{4}\widetilde{\mathbf{E}}
+\mathbf{T}_{b}=-\frac{\epsilon _{0}\omega _{b}}{4}\widetilde{\mathbf{E}}%
 _{b}^{*}\cdot \frac{\partial \Bbb{K}^{H}}{\partial \mathbf{k}}\cdot 
 \widetilde{\mathbf{E}}_{b}
 \end{equation}
-is the kinetic energy flow density. $\widetilde{\mathbf{E}}_{b}$ is the
-complex form of the electric field 
+is the kinetic energy flow density where $\Bbb{K}^{H}$ is the Hermitian part
+of the dielectric tensor.
+
+$\widetilde{\mathbf{E}}_{b}$ is the complex form of the electric field 
 \begin{equation}
 \widetilde{\mathbf{E}}_{b}=\mathbf{E}_{b0}e^{i\mathbf{k}_{b}\mathbf{\cdot x}%
 -i\omega _{b}t}
 \end{equation}
-and $\Bbb{K}^{H}$ is the Hermitian part of the dielectric tensor.
+and the magnetic field $\widetilde{\mathbf{H}}_{b}^{*}$ is given by
+\begin{equation}
+\widetilde{\mathbf{H}}_{b}^{*}=\frac{\mathbf{k}_{b}\times \widetilde{\mathbf{%
+E}}_{b}}{\mu _{0}\omega _{b}}=\frac{\mathbf{N}_{b}\times \widetilde{\mathbf{E%
+}}_{b}}{\mu _{0}c}
+\end{equation}
+using the relation $\mathbf{N}_{b}=\mathbf{k}_{b}\omega _{b}/c.$
 
 The energy flow density (\ref{sb}) can be formally rewritten as 
 \begin{equation}
@@ -199,16 +206,29 @@ _{b0}\right| ^{2}\left| \mathbf{\Phi }_{b}\cdot \widehat{\psi }\right|
 \end{equation}
 where $\widehat{\psi }$ is the\ local vector normal to the flux-surface.
 
-\subsection{Approximation of a Narrow Beam}
+\subsection{Narrow Beam Approximation}
 
-We consider a ray which crosses the flux surface at the respective poloidal
-and toroidal locations $\theta _{b}$ and $\phi _{b}$.\ If we make the
-assumption that the extension of the beam power on the flux-surface is very
-small in both the poloidal and the toroidal directions, we can approximate 
+Let consider a ray which crosses the flux surface at the respective poloidal
+locations $\theta _{b}$. Here, it is assumed that all electrons interact
+with the beam, whatever its toroidal location, because of the axisymmetry.
+Therefore, calculations are only valid for circulating electrons, except for
+those localized on low order rational $q$-surfaces, since their trajectories
+are exactly periodic in configuration space. Consequently, either they may
+never crosses the beam or if they cross it, the quasilinear assumption might
+likely fail, since some correlations could remain between two momentum
+kicks.  However, the total weight of these electrons is marginal, and their
+contribution to RF power absorption and current generation is simply
+neglected. It is important to recal that trapped particle interaction with
+RF wave is not addressed in this code for similar arguments. For all
+particles whose trajectory is periodic, a specific treatment of the
+quasilinear interaction is necessary, which is at this stage beyond the
+scope of this development.
+
+If the assumption that the extension of the beam power on the flux-surface
+is very small in the poloidal directions is done, we can approximate 
 \begin{equation}
 \overline{\mathbf{s}}_{b\text{inc}}\simeq \frac{P_{b,\text{inc}}}{\mathcal{A}%
-}\delta \left( \theta -\theta _{b}\right) \delta \left( \phi -\phi
-_{b}\right)
+_{b}}\delta \left( \theta -\theta _{b}\right) 
 \end{equation}
 
 This assumption is in contradication with the plane-wave decomposition of
@@ -216,56 +236,55 @@ the RF beam, since plane waves are essentially present in the entire
 configuration space. However, it is assumed that plane waves interfere
 destructively everywhere except in the beam region, which can be limited to
 a narrow poloidal and toroidal extention.Only a full-wave approach may help
-to justify this assumption. By definition, $A_{b}$ is just the elementary
-surface of the beam at the poloidal and toroidal locations $\theta _{b}$ and 
-$\phi _{b},$ and is determined so that $P_{\text{inc}}$ is the total
-incident power on the flux-surface 
+to justify this assumption. By definition, $\mathcal{A}_{b}$ is just the
+elementary surface of the beam at the poloidal locations $\theta _{b},$ and
+is determined so that $P_{\text{inc}}$ is the total incident power on the
+flux-surface 
 \begin{equation}
 \iint dS\;\overline{\mathbf{s}}_{b\text{inc}}=P_{b,\text{inc}}
 \end{equation}
 which gives in the system $\left( \psi ,\theta ,\phi \right) $%
 \begin{equation}
-1=\int_{0}^{2\pi }d\phi \;\int_{0}^{2\pi }\frac{rR}{\mathcal{A}\left| \cos
-\alpha \right| }\delta \left( \theta -\theta _{b}\right) \delta \left( \phi
--\phi _{b}\right) d\theta
+1=\int_{0}^{2\pi }d\phi \;\int_{0}^{2\pi }\frac{rR}{\mathcal{A}_{b}\left|
+\cos \alpha \right| }\delta \left( \theta -\theta _{b}\right) d\theta 
 \end{equation}
 or 
 \begin{equation}
-1=\int_{0}^{2\pi }d\phi \;\int_{0}^{2\pi }\frac{rR}{\mathcal{A}\left| 
+1=\int_{0}^{2\pi }d\phi \;\int_{0}^{2\pi }\frac{rR}{\mathcal{A}_{b}\left| 
 \widehat{\psi }\cdot \widehat{r}\right| }\delta \left( \theta -\theta
-_{b}\right) \delta \left( \phi -\phi _{b}\right) d\theta
+_{b}\right) d\theta 
 \end{equation}
 
 Hence, 
 \begin{equation}
-\mathcal{A}=\frac{rR}{\left| \widehat{\psi }\cdot \widehat{r}\right| }
+\mathcal{A}_{b}=\frac{2\pi rR}{\left| \widehat{\psi }\cdot \widehat{r}%
+\right| }
 \end{equation}
 and the incident power flux is simply
 
 \begin{equation}
-\overline{\mathbf{s}}_{b\text{inc}}=\frac{P_{b,\text{inc}}}{rR}\left| 
+\overline{\mathbf{s}}_{b\text{inc}}=\frac{P_{b,\text{inc}}}{2\pi rR}\left| 
 \widehat{\psi }\cdot \widehat{r}\right| \delta \left( \theta -\theta
-_{b}\right) \delta \left( \phi -\phi _{b}\right)  \label{sbinc2}
+_{b}\right)   \label{sbinc2}
 \end{equation}
 
 Using (\ref{sbinc}) and (\ref{sbinc2}), 
 \begin{equation}
 \frac{\left| \mathbf{E}_{b0}\right| ^{2}}{2}=\frac{1}{\epsilon _{0}c}\frac{1%
-}{rR}\frac{\left| \widehat{\psi }\cdot \widehat{r}\right| }{\left| \mathbf{%
-\Phi }_{b}\cdot \widehat{\psi }\right| }\delta \left( \theta -\theta
-_{b}\right) \delta \left( \phi -\phi _{b}\right) P_{b,\text{inc}}  \label{e0}
+}{2\pi rR}\frac{\left| \widehat{\psi }\cdot \widehat{r}\right| }{\left| 
+\mathbf{\Phi }_{b}\cdot \widehat{\psi }\right| }\delta \left( \theta -\theta
+_{b}\right) P_{b,\text{inc}}  \label{e0}
 \end{equation}
 
 Since for concentric circular flux surfaces, $\widehat{\psi }=\widehat{r}$ ,
-then $\left| \widehat{\psi }\cdot \widehat{r}\right| =1$ and $\mathcal{A}%
-=rR. $ In the limit of small inverse aspect ratio $\epsilon =\frac{r}{R}%
-\simeq \frac{r}{R_{0}}\ll 1,$ 
+then $\left| \widehat{\psi }\cdot \widehat{r}\right| =1$ and $\mathcal{A}=rR.
+$ In the limit of small inverse aspect ratio $\epsilon =\frac{r}{R}\simeq 
+\frac{r}{R_{0}}\ll 1,$ 
 \begin{equation}
 \frac{\left| \mathbf{E}_{b0}\right| ^{2}}{2}=\frac{1}{\epsilon _{0}c}\frac{1%
-}{rR_{0}}\frac{\Psi \left( r,\theta \right) }{\Psi \left( r,\pi /2\right) }%
-\frac{1}{\left| \mathbf{\Phi }_{b}\cdot \widehat{r}\right| }\delta \left(
-\theta -\theta _{b}\right) \delta \left( \phi -\phi _{b}\right) P_{b,\text{
-inc}}
+}{2\pi rR_{0}}\frac{\Psi \left( r,\theta \right) }{\Psi \left( r,\pi %
+/2\right) }\frac{1}{\left| \mathbf{\Phi }_{b}\cdot \widehat{r}\right| }
+\delta \left( \theta -\theta _{b}\right) P_{b,\text{ inc}}
 \end{equation}
 where $\Psi \left( r,\theta \right) =\frac{1+\epsilon }{1+\epsilon \cos
 \theta }.$
@@ -290,16 +309,16 @@ Using (\ref{diffcoef}) and (\ref{e0}), the diffusion coefficient (\ref
 \overline{D}_{b,n}^{\text{RF}}(p,\xi )=\overline{D}_{b,n,0}^{\text{RF}%
 }\left| \Theta _{\mathbf{k}}^{b,n}\left( \mathbf{k}_{b}\right) \right| ^{2}%
 \frac{\gamma p_{Te}}{p\left| \xi \right| }\delta \left( N_{\Vert b}-N_{\Vert 
-\text{res}}\right) \delta \left( \theta -\theta _{b}\right) \delta \left(
-\phi -\phi _{b}\right)  \label{difcoeffnorm2}
+\text{res}}\right) \delta \left( \theta -\theta _{b}\right) 
+\label{difcoeffnorm2}
 \end{equation}
 with 
 \begin{eqnarray}
 \overline{D}_{b,n,0}^{\text{RF}} &=&\frac{1}{\nu _{e}p_{Te}^{2}}\frac{1}{%
-v_{Te}}\frac{\pi }{\omega _{b}}\frac{e^{2}}{\epsilon _{0}}\frac{1}{rR}\frac{%
-\left| \widehat{\psi }\cdot \widehat{r}\right| }{\left| \mathbf{\Phi }%
+v_{Te}}\frac{\pi }{\omega _{b}}\frac{e^{2}}{\epsilon _{0}}\frac{1}{2\pi rR}%
+\frac{\left| \widehat{\psi }\cdot \widehat{r}\right| }{\left| \mathbf{\Phi }%
 _{b}\cdot \widehat{\psi }\right| }P_{b,\text{inc}}  \nonumber \\
-&=&\frac{4\pi ^{2}}{rR}\frac{1}{m_{e}\ln \Lambda }\frac{1}{\omega _{b}\omega
+&=&\frac{2\pi }{rR}\frac{1}{m_{e}\ln \Lambda }\frac{1}{\omega _{b}\omega
 _{pe}^{2}}\frac{\left| \widehat{\psi }\cdot \widehat{r}\right| }{\left| 
 \mathbf{\Phi }_{b}\cdot \widehat{\psi }\right| }P_{b,\text{inc}}
 \end{eqnarray}
@@ -310,7 +329,7 @@ where $\omega _{pe}$ is the electron plasma frequency
 
 For concentric circular flux surfaces, 
 \begin{equation}
-\overline{D}_{b,n,0}^{\text{RF}}=\frac{4\pi ^{2}}{rR_{0}}\frac{\Psi \left(
+\overline{D}_{b,n,0}^{\text{RF}}=\frac{2\pi }{rR_{0}}\frac{\Psi \left(
 r,\theta \right) }{\Psi \left( r,\pi /2\right) }\frac{1}{m_{e}\ln \Lambda }%
 \frac{1}{\omega _{b}\omega _{pe}^{2}}\frac{1}{\left| \mathbf{\Phi }_{b}\cdot 
 \widehat{r}\right| }P_{b,\text{inc}}  \label{drf0}
