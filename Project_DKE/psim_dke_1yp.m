@@ -45,7 +45,7 @@ grid_power = 1.5; % power for mhu grid step varations (grid_power > 1) (Note: fo
 %Momentum Grid
 %
 snp = 10;%pgridfactor (Uniform grid: pgridfactor << 1, non-uniform grid: pgridfactor >= 1) 
-spfac = 200;%reduction factor for the supergrid used in collision integrals
+spfac = 100;%reduction factor for the supergrid used in collision integrals
 %
 %Normalized radii at which the distribution is calculated (DKE or FP)
 %The syntax rho='all' may be also used if all mhu values are considered. 
@@ -53,10 +53,10 @@ spfac = 200;%reduction factor for the supergrid used in collision integrals
 %Values of the radial flux grid [1,p] (If one radial value: local calculation only)
 %
 psin_S = [];5.286742555900838e-002; %[0.1]%(rho = 0.25 in CMOD)
-rho_S = [0.2,0.6];0.03322100141578101;0.71365;
+rho_S = [0.2,0.6];%[0.1:0.05:0.9];%[0.2,0.6],%;0.03322100141578101;0.71365;
 %
 psin_display = NaN;%Approximate radial value at which results are displayed if display_mode >= 1 [1,1]
-rho_display = 0.7;
+rho_display = 0.1;
 %
 dpsin_dke = 0.01;%maximum difference between two consecutive positions used for radial derivatives
 %
@@ -65,13 +65,13 @@ norm_ref = 1;%Normalization procedure for the ohmic electric field, LH and EC qu
 %
 % WARNING: Not yet implemented. (see test_dke_yp)
 %
-epsi0 = 0.01;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
-epsia = 0.01;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
+epsi0 = 0.02;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
+epsia = 0.02;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
 eepsi = 0;%Exponent for Ohmic electric field
 %
 % WARNING: Not yet implemented. (see test_dke_yp)
 %
-vparmin_r = 3;%Lower limit of the parallel velocity dependence of the radial diffusion and pinch (vth_ref or vth)
+vparmin_r = 3.5;%Lower limit of the parallel velocity dependence of the radial diffusion and pinch (vth_ref or vth)
 Dr0 = 0;%Core  radial diffusion coefficient (m^2/s)
 pDr = 0;%Coefficient for the Dr radial profile
 Dr_model = 1;%Radial diffusion type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth), 
@@ -88,7 +88,7 @@ dke_mode = 0;%Fokker-Planck equation (0), Drift Kinetic equation (1)
 equil_mode = 1;%Equilibrium option: (0) circular concentric flux-surfaces, (1) numerical equilibrium
 %
 norm_mode = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
-boundary_mode = 1;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
+boundary_mode = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 prec0_f = 1e-10;%Convergence level of the residu
 nit_f = 50;%Maximum number of iterations for f
 dtn = 1000;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
@@ -99,7 +99,7 @@ invproc = [3];%Matrix inversion method: (1) Full LU factorization, (2) qmr itera
 param_inv = [1e-3,30];%Parameters for the matrix inversion procedure when invproc > 1. Precision of the partial LU decomposition, and maximum number of iteration for iterative methods (param_inv(1) depends of boundary_mode)
 %
 dp_cyl = 0.1;%Cylindrical momentum step (pth_ref)
-display_mode = 1;%Display mode: (0): no, (1): partial, (2): full
+display_mode = 2;%Display mode: (0): no, (1): partial, (2): full
 nlevel = 30;%Number of level for contour plots
 store_mode = 0;%Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight
 diary_mode = 1;%Write in a file named "diary_dke_xx" the output of the code in the MatLab command window: (0) no save, (1) save
