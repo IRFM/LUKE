@@ -3,38 +3,6 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{graphicx}%
-\setcounter{MaxMatrixCols}{30}
-%TCIDATA{OutputFilter=latex2.dll}
-%TCIDATA{Version=5.00.0.2606}
-%TCIDATA{CSTFile=40 LaTeX article.cst}
-%TCIDATA{Created=Tuesday, December 07, 2004 16:19:07}
-%TCIDATA{LastRevised=Wednesday, December 08, 2004 10:44:15}
-%TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
-%TCIDATA{<META NAME="SaveForMode" CONTENT="1">}
-%TCIDATA{BibliographyScheme=Manual}
-%TCIDATA{<META NAME="DocumentShell" CONTENT="Standard LaTeX\Blank - Standard LaTeX Article">}
-\newtheorem{theorem}{Theorem}
-\newtheorem{acknowledgement}[theorem]{Acknowledgement}
-\newtheorem{algorithm}[theorem]{Algorithm}
-\newtheorem{axiom}[theorem]{Axiom}
-\newtheorem{case}[theorem]{Case}
-\newtheorem{claim}[theorem]{Claim}
-\newtheorem{conclusion}[theorem]{Conclusion}
-\newtheorem{condition}[theorem]{Condition}
-\newtheorem{conjecture}[theorem]{Conjecture}
-\newtheorem{corollary}[theorem]{Corollary}
-\newtheorem{criterion}[theorem]{Criterion}
-\newtheorem{definition}[theorem]{Definition}
-\newtheorem{example}[theorem]{Example}
-\newtheorem{exercise}[theorem]{Exercise}
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{notation}[theorem]{Notation}
-\newtheorem{problem}[theorem]{Problem}
-\newtheorem{proposition}[theorem]{Proposition}
-\newtheorem{remark}[theorem]{Remark}
-\newtheorem{solution}[theorem]{Solution}
-\newtheorem{summary}[theorem]{Summary}
-\newenvironment{proof}[1][Proof]{\noindent\textbf{#1.} }{\ \rule{0.5em}{0.5em}}
 \begin{document}
 \section{\bigskip Correspondance between the DKE\ code and the Delphine
 absorption code}
@@ -53,15 +21,15 @@ quasilinear operator in DKE is given by [1]-()
 \end{equation}
 with
 \begin{align}
-\overline{D}_{b,n,0}^{\text{RF}} &  =\frac{1}{\nu_{e}p_{Te}^{2}}\frac
+\overline{D}_{b,n,0}^{\text{RF}}  &  =\frac{1}{\nu_{e}p_{Te}^{2}}\frac
 {1}{v_{Te}}\frac{\pi}{\omega_{b}}\frac{e^{2}}{\epsilon_{0}}\frac{1}{4\pi
 ^{2}rR}\left\vert \widehat{\psi}\cdot\widehat{r}\right\vert \frac
 {f_{\text{inc},b}^{l+1/2}}{\left\vert \mathbf{\Phi}_{b}\right\vert
 }P_{b,\text{inc}}\nonumber\\
 &  =\frac{1}{rR}\frac{1}{m_{e}\ln\Lambda}\frac{1}{\omega_{b}\omega_{pe}^{2}%
 }\left\vert \widehat{\psi}\cdot\widehat{r}\right\vert \frac{f_{\text{inc}%
-,b}^{l+1/2}}{\left\vert \mathbf{\Phi}_{b}\right\vert }P_{b,\text{inc}%
-}\label{drf0}%
+,b}^{l+1/2}}{\left\vert \mathbf{\Phi}_{b}\right\vert }P_{b,\text{inc}}
+\label{drf0}%
 \end{align}
 where $\omega_{pe}$ is the electron plasma frequency
 \begin{equation}
@@ -84,12 +52,12 @@ N_{\Vert\text{res}}=\frac{c}{v_{\Vert}}\left(  1-\frac{n\Omega}{\omega_{b}%
 -\frac{n^{\prime}\omega_{ce}}{\omega_{b}}\right)  \label{nparres2}%
 \end{equation}%
 \begin{align}
-\mathbf{\Phi}_{b} &  =\mathbf{\Phi}_{bP}+\mathbf{\Phi}_{bT}\label{phib3}\\
-\mathbf{\Phi}_{bP} &  =\text{Re}\left[  \mathbf{N}_{b}-\left(  \mathbf{N}%
-_{b}\cdot\mathbf{e}_{b}\right)  \mathbf{e}_{b}^{\ast}\right]  \label{phibp3}\\
-\mathbf{\Phi}_{bT} &  =\mathbf{-}\frac{1}{2}\mathbf{e}_{b}^{\ast}\cdot
-\frac{\partial\mathbb{{K}^{H}}}{\partial\mathbf{N}}\cdot\mathbf{e}%
-_{b}\label{phibt3}%
+\mathbf{\Phi}_{b}  &  =\mathbf{\Phi}_{bP}+\mathbf{\Phi}_{bT}\label{phib3}\\
+\mathbf{\Phi}_{bP}  &  =\text{Re}\left[  \mathbf{N}_{b}-\left(  \mathbf{N}%
+_{b}\cdot\mathbf{e}_{b}\right)  \mathbf{e}_{b}^{\ast}\right] \label{phibp3}\\
+\mathbf{\Phi}_{bT}  &  =\mathbf{-}\frac{1}{2}\mathbf{e}_{b}^{\ast}\cdot
+\frac{\partial\mathbb{{K}^{H}}}{\partial\mathbf{N}}\cdot\mathbf{e}_{b}
+\label{phibt3}%
 \end{align}
 
 
@@ -133,13 +101,13 @@ and, under the asumption that the lower hybrid wave is mostly electrostatic
 Note that we can modify the expression of the resonance condition as such:%
 \begin{align*}
 \frac{c}{\omega_{b}}\frac{\gamma m_{e}}{p\left\vert \xi\right\vert }%
-\delta\left(  N_{b\Vert}-N_{\Vert\text{res}}\right)    & =\delta\left(
+\delta\left(  N_{b\Vert}-N_{\Vert\text{res}}\right)   &  =\delta\left(
 \frac{\omega_{b}}{c}v_{\Vert}N_{b\Vert}-\frac{\omega_{b}}{c}v_{\Vert}%
-N_{\Vert\text{res}}\right)  \\
-& =\delta\left(  \omega_{b}-v_{\Vert}k_{b\Vert}\right)  \\
-& =\frac{1}{\left\vert k_{b\Vert}\right\vert }\delta\left(  \frac{\omega_{b}%
-}{k_{b\Vert}}-\frac{p_{\Vert}}{\gamma m_{e}}\right)  \\
-& =\frac{1}{v_{Te}\left\vert k_{b\Vert}\right\vert }\delta\left(
+N_{\Vert\text{res}}\right) \\
+&  =\delta\left(  \omega_{b}-v_{\Vert}k_{b\Vert}\right) \\
+&  =\frac{1}{\left\vert k_{b\Vert}\right\vert }\delta\left(  \frac{\omega_{b}%
+}{k_{b\Vert}}-\frac{p_{\Vert}}{\gamma m_{e}}\right) \\
+&  =\frac{1}{v_{Te}\left\vert k_{b\Vert}\right\vert }\delta\left(
 \frac{p_{\Vert}}{\gamma p_{Te}}-\frac{c}{v_{Te}N_{b\Vert}}\right)
 \end{align*}
 
@@ -164,12 +132,12 @@ k_{b\Vert}\right\vert }\frac{1}{\sqrt{\pi}\Delta_{\text{lis}}}\exp\left[
 Putting all terms together in (), we find%
 \begin{align}
 \frac{\overline{D}_{b,0}^{\text{RF}}(p,\xi)}{2\pi\delta\left(  \theta
--\theta_{b}\right)  }  & =\frac{\omega_{b}}{c}\frac{1}{4\pi^{2}rR}\left\vert
+-\theta_{b}\right)  }  &  =\frac{\omega_{b}}{c}\frac{1}{4\pi^{2}rR}\left\vert
 \widehat{\psi}\cdot\widehat{r}\right\vert \frac{f_{\text{inc},b}^{l+1/2}%
 }{\left\vert \mathbf{\Phi}_{b}\right\vert }P_{b,\text{inc}}\left\vert
 \frac{p_{\Vert}}{p_{\bot}}e_{b0,\Vert}\right\vert ^{2}\\
-& \times\left[  J_{0}\left(  N_{b\bot}\frac{v_{Te}}{c}\frac{\omega_{b}}%
-{\omega_{ce}}\frac{p_{\bot}}{p_{Te}}\right)  \right]  ^{2}\frac{\sqrt{\pi}%
+&  \times\left[  J_{0}\left(  N_{b\bot}\frac{v_{Te}}{c}\frac{\omega_{b}%
+}{\omega_{ce}}\frac{p_{\bot}}{p_{Te}}\right)  \right]  ^{2}\frac{\sqrt{\pi}%
 }{\Delta_{\text{lis}}}\frac{e^{2}}{\omega_{b}\epsilon_{0}m_{e}^{2}\nu
 _{e}v_{Te}^{3}}\frac{1}{\left\vert k_{b\Vert}\right\vert }\exp\left[
 -\frac{1}{\Delta_{\text{lis}}^{2}}\left(  \frac{p_{\Vert}}{\gamma p_{Te}%
@@ -240,10 +208,6 @@ for. (not the $\Delta_{\text{lis}}$ effect)
 
 \item apparently, no appropriate flux-surface averaging
 \end{itemize}
-
-
-
-
 
 
 \end{document}
