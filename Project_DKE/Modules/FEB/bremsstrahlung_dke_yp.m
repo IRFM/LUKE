@@ -1,6 +1,6 @@
-function  [brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi] = bremsstrahlung_dke_yp(XXheaviside,zZi,xzni_norm,xne_norm,ne_ref,xrho,dmhu,mhu,dpn,pn,pn2,gamma,Ec,XXf0,XXf0_tp,XXf0_g,display_mode,ir)
+function  [brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi] = bremsstrahlung_dke_yp(tokamak,HXR,vschords,xpsin,xpsin_S,XXheaviside,zZi,xzni_norm,xne_norm,ne_ref,xrho,dmhu,mhu,dpn,pn,pn2,gamma,Ec,XXf0,XXf0_tp,XXf0_g,display_mode,ir)
 %
-% Calculates the bremsstrahlung emission 
+% Calculates the bremsstrahlung emission. Call first the function bremchord_dke_yp.m for calculating "vschords" used in line integration
 %
 %   INPUTS:
 %
@@ -16,7 +16,7 @@ function  [brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi] = bremsstr
 % by Joan Decker <jodecker@mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 %
     
-%%%%%%[brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi] = bremsstrahlung_dke_yp(XXheaviside,zZi,xzni_norm,xne_norm,ne_ref,xrho_dke,dmhu,mhu,dpn_ref,pn_ref,pn2_ref,gamma_ref,Ec_ref,XXf0_ref,XXf0_tp_ref,XXf0_g_ref,display_mode,ir_display_dke)   
+%%%%%%[brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi] = bremsstrahlung_dke_yp('TS',HXR,vschords,xpsin_dke,xpsin_S_dke,XXheaviside,zZi,xzni_norm,xne_norm,ne_ref,xrho,dmhu,mhu,dpn_ref,pn_ref,pn2_ref,gamma_ref,Ec_ref,XXf0_ref,XXf0_tp_ref,XXf0_g_ref,display_mode,ir_display_dke)   
 % 
 [qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;%Physics constant
 %
