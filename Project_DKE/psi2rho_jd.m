@@ -25,7 +25,8 @@ end
 %
 filename = ['EQUIL_',tokamak,'.mat'];
 %
-eval(['load ',filename,' ppsi R Z BR BZ BPHI']);
+[s,dossier,machine] = comput_dke_yp;
+eval(['load ',dossier,s,filename,' ppsi R Z BR BZ BPHI']);
 %
 npsi = size(R,1);
 nr = length(psin);
