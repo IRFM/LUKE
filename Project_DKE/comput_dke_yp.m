@@ -24,7 +24,7 @@ elseif strcmp(machine,'PC') == 1,
 	mex = '.dll';
 elseif strcmp(machine,'PCWIN') == 1,
 	s = '\';
-   dossier = 'c:\work\temp';
+   dossier = 'c:\temp';
 	mex = '.dll';
 elseif strcmp(machine,'MAC') == 1,
 	s = '/';
