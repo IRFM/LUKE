@@ -45,7 +45,7 @@ _{n_{r}-1/2}}{2}\right] ,l\rightarrow \left\{ 0,n_{\psi }-1\right\}
 \right.
 \end{equation}
 
-\subsubsection{Grid definitions in momentum space}
+\subsection{Momentum space}
 
 Momentum dynamic in $p$ and pitch-angle $\xi _{0}$ being independent, the
 position of $p_{i+1/2}$ in between $p_{i}$ and $p_{i+1},$ and of $\xi
@@ -148,7 +148,7 @@ Note that the exact value of $\Delta p_{\max }$ has no importance, since the
 numerical problem simplifies into an hyperbolic one at this particular
 point, and therefore, it is not necessary to specify boundary conditions.
 
-\subsubsection{Grid definitions in configuration space}
+\subsection{Configuration space}
 
 By an appropriate bounce averaging, the number of dimension is reduced to
 one, i.e. the radial one. As for the dynamics in momentum space, the point
@@ -225,9 +225,9 @@ et $\xi _{0}\leq 0$ domains. In addition, accurate calculations must be
 performed at $\xi _{0}$ (3 points) et at $\left| \xi _{0}\right| =1$ (4
 points). Hence, for $n_{\psi }=30,$ $n_{\xi _{0}}\geq 187.$
 
-\subsubsection{Time grid definition}
+\subsection{Time grid definition}
 
-Time evolution is also projected on a numerical grid,
+Time evolution is also projected on a numerical grid, 
 \begin{equation}
 t_{k}=k\Delta t
 \end{equation}
@@ -241,8 +241,8 @@ the iterative procedure because of the weak non-linearities of the collision
 operator, acts mainly as a regularization parameter, when matrix to be
 inverted is close to be ill-conditionned. Furthermore, with a non-uniform
 time grid, matrix must be calculated at each time step, which prevents the
-use of the very efficient $LU$ matrix factorization technique, a procedure
-that allows to reduce considerably computer time consumption. Since the code
-is expected to be incorporate in a chain of codes, in order to obtain
-self-consistent magnetic equilibrium, wave propagation and kinetic
+use of the very efficient incomplete $LU$ matrix factorization technique, a
+procedure that allows to reduce considerably computer time consumption.
+Since the code is expected to be incorporate in a chain of codes, in order
+to obtain self-consistent magnetic equilibrium, wave propagation and kinetic
 calculations, this is therefore the only choice that can be considered.
