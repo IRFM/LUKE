@@ -1385,9 +1385,9 @@ for ir = 1:nr,
 		XDmm_tp_ijp,XDmm_tp_ijm,...
 		XFp_tp_ippj,XFp_tp_ipj,XFp_tp_ij,XFp_tp_imj,XFp_tp_immj,...
 		XFm_tp_ijp,XFm_tp_ijm); 		
-%		save toto4.mat Xa_tp Xb_tp Xc_tp Xd_tp Xe_tp Xf_tp Xg_tp Xh_tp Xi_tp Xpnmm Xpnm Xpn Xpnp Xpnpp Xpn2m Xpn2p Xdpnmm Xdpnm Xdpn Xdpnp Xdpnpp Xmhumm Xmhum Xmhu Xmhup Xmhupp X1mmhu2 X1mmhu2m X1mmhu2p Xdmhumm Xdmhum Xdmhu Xdmhup Xdmhupp
+%		save toto4.mat Xa Xb Xc Xd Xe Xa_tp Xb_tp Xc_tp Xd_tp Xe_tp Xf_tp Xg_tp Xh_tp Xi_tp Xpnmm Xpnm Xpn Xpnp Xpnpp Xpn2m Xpn2p Xdpnmm Xdpnm Xdpn Xdpnp Xdpnpp Xmhumm Xmhum Xmhu Xmhup Xmhupp X1mmhu2 X1mmhu2m X1mmhu2p Xdmhumm Xdmhum Xdmhu Xdmhup Xdmhupp
 %		save toto4.mat XDmm_c_tp_ijp XDmm_c_tp_ijm XXRlambda_b_p3m2_p XXRlambda_b_p3m2_m XXRlambda_b_p1m1 XFpp XFp XF XFm XFmm XXRlambda_b_p1m2_m XXRlambda_b_p1m2_p -append
-%	load Desktop/toto1.mat Xa_tp Xb_tp Xc_tp Xd_tp Xe_tp Xf_tp Xg_tp Xh_tp Xi_tp
+%	load toto1.mat Xa Xb Xc Xd Xe Xa_tp Xb_tp Xc_tp Xd_tp Xe_tp Xf_tp Xg_tp Xh_tp Xi_tp
 %
 %Loss matrix coefficients
 %
@@ -1999,6 +1999,18 @@ if dke_mode == 1,
 	end
 %
 	MMXq_tp_t = -MMXP_tp_t*MMXf0_tp_t + MMXI_tp_t;%********************Verifier le signe de MMXI_tp_t***********
+
+%modified j.d. 04/05/04
+                
+for ir = 1:nr_dke,
+	jr2 = rdke(ir);
+    Xq_tp_t = reshape(MMXq_tp_t((ir-1)*(nmhu - ns_g(jr2))*npn + 1:ir*(nmhu - ns_g(jr2))*npn),(nmhu - ns_tp(jr2)),npn)';
+    Xq_tp_t(1,:) = 0;
+    Xq_tp_t(:,(nmhu - ns_g(jr2))/2) = 0;%g(pn,mhu = -mhut) = 0
+    Xq_tp_t(:,(nmhu - ns_g(jr2))/2 + 1) = 0;%g(pn,mhu = mhut) = 0
+    MMXq_tp_t((ir-1)*(nmhu - ns_g(jr2))*npn + 1:ir*(nmhu - ns_g(jr2))*npn) = reshape(Xq_tp_t',(nmhu - ns_g(jr2))*npn,1);
+end
+    
 %
 %Resolution of the first order Fokker-Planck equation
 %
