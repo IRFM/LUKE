@@ -1,0 +1,90 @@
+We consider a kinetic equation generally expressed in conservative form in
+the phase space $\left( p,\xi ,\psi ,\theta \right) $. The gyroangle $%
+\varphi $ can be ignored since the kinetic equation was gyroaveraged. $f$ is
+the guiding-center distribution function. In addition, the toroidal angle $%
+\phi $ is ignored unsder the assumption of axisymmetry. The kinetic equation
+can be expressed as
+\begin{equation}
+\frac{\partial f}{\partial t}+\nabla _{\left( p,\xi ,\psi ,\theta \right) }%
+\cdot {\bf S}\left( f\right) =0
+\end{equation}
+where the phase space flux ${\bf S}$ is decomposed into a diffusive and a
+convective part
+\begin{equation}
+{\bf S}\left( f\right) =-{\Bbb D}\nabla f+{\bf F}f
+\end{equation}
+${\Bbb D}$ and ${\bf F}$ being respectively the diffusion tensor and
+convection vector in phase space. They can be cexpressed generally as 
+\begin{equation}
+{\Bbb D}=\left( 
+\begin{array}{llll}
+D_{pp} & D_{p\xi } & D_{p\psi } & D_{p\theta } \\ 
+D_{\xi p} & D_{\xi \xi } & D_{\xi \psi } & D_{\xi \theta } \\ 
+D_{\psi p} & D_{\psi \xi } & D_{\psi \psi } & D_{\psi \theta } \\ 
+D_{\theta p} & D_{\theta \xi } & D_{\theta \psi } & D_{\theta \theta }
+\end{array}
+\right) 
+\end{equation}
+and 
+\begin{equation}
+{\bf F}=\left( 
+\begin{array}{l}
+F_{p} \\ 
+F_{\xi } \\ 
+F_{\psi } \\ 
+F_{\theta }
+\end{array}
+\right) 
+\end{equation}
+where each element is function of $\left( p,\xi ,\psi ,\theta \right) $. We
+make the assumption (to be verified for the kincetic equation under
+consideration) that all cross-coupling terms are higher order terms and
+therefore can be neglected; hence $D_{p\psi }=D_{\psi p}=0,$ $D_{\xi \psi
+}=D_{\psi \xi }=0,$ $D_{p\theta }=D_{\theta p}=0$ et $D_{\xi \theta
+}=D_{\theta \xi }=0.$ In these conditions, dynamics in momentum and
+configuration spaces are decoupled, 
+\begin{equation}
+\frac{\partial f}{\partial t}+\nabla _{{\bf p}}\cdot {\bf S}_{{\bf p}%
+}+\nabla _{{\bf r}}\cdot {\bf S}_{{\bf r}}=0  \label{consform}
+\end{equation}
+where the fluxes in momentum and configuration space are respectively
+
+\begin{eqnarray}
+{\bf S}_{{\bf p}} &=&-{\Bbb D}_{{\bf p}}\nabla _{{\bf p}}f+{\bf F}_{{\bf p}}f
+\label{momflux} \\
+{\bf S}_{{\bf r}} &=&-{\Bbb D}_{{\bf r}}\nabla _{{\bf r}}f+{\bf F}_{{\bf r}}f
+\label{conflux}
+\end{eqnarray}
+
+With this ordering assumption, the diffusion tensor becomes 
+\begin{equation}
+{\Bbb D}=\left( 
+\begin{array}{ll}
+{\Bbb D}_{{\bf p}} & 0 \\ 
+0 & {\Bbb D}_{{\bf r}}
+\end{array}
+\right) =\left( 
+\begin{array}{llll}
+D_{pp} & D_{p\xi } & 0 & 0 \\ 
+D_{\xi p} & D_{\xi \xi } & 0 & 0 \\ 
+0 & 0 & D_{\psi \psi } & D_{\psi \theta } \\ 
+0 & 0 & D_{\theta \psi } & D_{\theta \theta }
+\end{array}
+\right) 
+\end{equation}
+while the convective vector becomes
+\begin{equation}
+{\bf F}=\left( 
+\begin{array}{l}
+{\bf F}_{{\bf p}} \\ 
+{\bf F}_{{\bf r}}
+\end{array}
+\right) =\left( 
+\begin{array}{l}
+F_{p} \\ 
+F_{\xi } \\ 
+F_{\psi } \\ 
+F_{\theta }
+\end{array}
+\right) 
+\end{equation}
