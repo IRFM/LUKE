@@ -28,7 +28,7 @@ end
 R_hxr = (Ri + ai*cos(tv*pi/180))/1000;% reference major radius (m)
 Z_hxr = ai*sin(tv*pi/180)/1000;% reference vertical position (m)
 %
-alpha_hxr = kv*pi/180;%horizontal angle (with respect to R) [-pi...pi]
+alpha_hxr = -kv*pi/180;%horizontal angle (with respect to R) [-pi...pi]. The negative sign comes from the fact that kv is defined in a direct frame, while alpha_hxr corresponds to an indirect frame
 beta_hxr = pi/2 - mv*pi/180;%vertical angle (with respect to Z) [0...pi]
 %
 EG_hxr = EG*1e-6;%geometrical extend (m^2) [1,nchord]
