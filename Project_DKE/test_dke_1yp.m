@@ -53,7 +53,8 @@ nit = [nit_f,nit_g];
 %
 % Plasma equilibrium
 %
-[theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,psia,xmhu0T2,HXR] = equilibrium_jd(tokname,xpsin,display_mode);
+[theta,xpsin,psia,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,xmhu0T2,xdV_dke,xdA_dke,HXR] = ...
+    equilibrium_jd(tokname,xpsin,xpsin_S_dke,display_mode,'spline',10);
 %
 if diary_mode == 1, 
 	diaryfile = ['diary_dke_',int2str(iloop)];
@@ -629,15 +630,33 @@ if radial_mode == 1 & display_mode == 2,
 	pause(time_pause);
 end
 %
+%   RF Wave parameters calculations
+%
+[waveparam,xyprop_dke,xyPinc_in,nb_list,yb] = ...
+    rfwave_dke_jd(tokname,xrho,xpsin,xpsin_dke,xdpsin_dke,xpsin_S_dke,r_dke,...
+    betath_ref,ne_ref,lnc_e_ref,xrbetath,xrnhuth,xTe_norm,xne_norm,xzni_norm,...
+    zZi,zmi,ap,Rp,Zp,theta,XR,XZ,XBR,XBZ,XBphi,xB0,bounce_mode,rf_list,dke_mode);%Look at the function for the RF wave input parameters
+%
 %   Drift Kinetic calculations
 %
 time0 = clock;
 %
-xyPabs_tot_rf_fsav_in = 0;
+xyPabs_tot_rf_fsav_in = 0;%initial absorbed power density estimate (Note, future work: could use linear theory)
+%
+xymask = (xyPinc_in == 0);
+xyPinc_in(xymask) = eps; %to avoid singularities
+%
+xyD0_rf_in = waveparam(:,:,5); %initial value of the constant dissusion coefficient
+%
+%xymask_prop_dke = (xyprop_dke ~= 0);
 %
 for it_rf=1:nit_rf % convergence in the ray-tracing mode
 %
-	[waveparam,nb_list] = rfwave_dke_jd(xrho,xpsin,xpsin_dke,xdpsin_dke,xyPabs_tot_rf_fsav_in,betath_ref,ne_ref,lnc_e_ref,xrbetath,xrnhuth,xTe_norm,xne_norm,xzni_norm,zZi,zmi,ap,Rp,Zp,theta,XR,XZ,XBR,XBZ,XBphi,xB0,bounce_mode,rf_list);%Look at the function for the RF wave input parameters
+    [xyPinc_out,xyPinc_mod] = rfprop_dke_jd(yb,xyprop_dke,xyPinc_in,xyPabs_tot_rf_fsav_in,xdV_dke,xpsin,xpsin_dke,r_dke,dke_mode);
+%    
+% The diffusion coefficient is proportional to the incident power
+%
+    waveparam(:,:,5) = xyD0_rf_in.*xyPinc_mod./xyPinc_in; 
 %    
     [XXheaviside,...
         XXf0_ref,XXf0_tp_ref,XXf0_g_ref,XXf0_L_tp_ref,XXf0_L_g_ref,...
@@ -662,10 +681,11 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
         xftp_norm_ref,bounce,coll_mode,...
         norm_mode_f,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,snumber,XXfinit_ref);
 %
-    if sum(rf_list) > 0
+    if ~isempty(waveparam)
         xyPabs_rf_dke_fsav_out = ZP0_ref_fsav{3,1} + ZP0_ref_fsav{3,2} + ZP0_ref_fsav{3,3}; % flux-surface averaged density of absorbed power.
-        residue_rf = max(max(abs(xyPabs_rf_dke_fsav_out - xyPabs_tot_rf_fsav_in)./(abs(xyPabs_rf_dke_fsav_out) + eps)));
         xyPabs_tot_rf_fsav_in = xyPabs_rf_dke_fsav_out;
+%
+        residue_rf = max(max(abs(xyPinc_out - xyPinc_mod)./(xyPinc_mod + eps)));
         if residue_rf <= prec_rf
             info_dke_yp(2,['Successfull convergence achieved for ray-tracing coupling after ',int2str(it_rf),' iterations !']);
             break
