@@ -72,7 +72,7 @@ end
 %
 %Calculation of the flux averaged Maxwellian bootstrap current from Hirshman, Sauter, Hinton & Hazeltine models (bulk contribution)
 %
-[prho,pcurr_hir_mksa_fsav,pcurr_sau_mksa_fsav,pcurr_hin_mksa_fsav,pcurr_i_mksa_fsav] = hsneomodels_dke_jd(tokname);
+[prho,pcurr_hir_mksa_fsav,pcurr_sau_mksa_fsav,pcurr_hin_mksa_fsav,pcurr_i_mksa_fsav,L31] = hsneomodels_dke_jd(tokname);
 %
 xcurr_hir_mksa_fsav = interp1(prho,pcurr_hir_mksa_fsav,xrho_dke);
 xcurr_sau_mksa_fsav = interp1(prho,pcurr_sau_mksa_fsav,xrho_dke);
@@ -876,11 +876,15 @@ while 1,
 %
 				figure(205),clf
 				[ax] = graph1D_jd(xrho_dke,xfteff_fsav,'\rho','','Effective trapped fraction',NaN,[0,1],[0,1],'none','o','r',2,14,gca,0.8,0.7,0.6);
+				hold on
 				if exist('ftra') == 0,%In case of ideal magnetic equilibrium only
-					[ax] = graph1D_jd(xrho_dke,xfteff_llm,'\rho','ft-eff (DKE: o, LLM: x)','Effective trapped fraction',NaN,[0,1],[0,1],'none','x','g',2,14);
-				else
+				   [ax] = graph1D_jd(xrho_dke,xfteff_llm,'\rho','ft-eff (DKE: o)','Effective trapped fraction',NaN,[0,1],[0,1],'none','x','g',2,14);
+					else
 %					[ax] = graph1D_jd(xrho_dke,xfteff_llm,'\rho','','Effective trapped fraction',NaN,[0,1],[0,1],'none','x','g',2,14);
 					[ax] = graph1D_jd(xrho_dke,xftra,'\rho','ft-eff (DKE: o, HELENA: +)','Effective trapped fraction',NaN,[0,1],[0,1],'none','+','b',2,14);				
+				end
+				if coll_mode== 3
+						[ax] = graph1D_jd(prho,L31,'\rho','ft-eff (DKE: o, L31: .)','Effective trapped fraction',NaN,[0,1],[0,1],'none','.','b',2,14);
 				end
 %
 				figure(206),clf
