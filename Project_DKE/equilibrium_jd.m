@@ -174,7 +174,7 @@ if ~isnan(xpsin_S_dke)
     hmBZ = (mBZ(1:npsi-1,1:nmtheta-1) + mBZ(2:npsi,1:nmtheta-1) + mBZ(1:npsi-1,2:nmtheta) + mBZ(2:npsi,2:nmtheta))/4;
     hmBPHI = (mBPHI(1:npsi-1,1:nmtheta-1) + mBPHI(2:npsi,1:nmtheta-1) + mBPHI(1:npsi-1,2:nmtheta) + mBPHI(2:npsi,2:nmtheta))/4;
 %
-    dpsi = abs(diff(ppsi));
+    dpsi = abs(diff(equil.ppsi));
     dmtheta = diff(mtheta);
 % FS Volume
     hmFV = 2*pi*((hmR - Rp).^2 + (hmZ - Zp).^2)./abs(hmBR.*(hmZ - Zp) - hmBZ.*(hmR - Rp));
@@ -253,7 +253,9 @@ if display_mode >= 2
     [ax] = graph1D_jd(stR,stZ,0,0,'R','Z','Flux-surfaces labeled by \rho=0,0.1,0.2...1',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','b',0.5);pause(0.5)
     axis('equal');    
 end
-    
+%
+zZi = equil.zZi;
+zmi = equil.zmi;
 
 
 
