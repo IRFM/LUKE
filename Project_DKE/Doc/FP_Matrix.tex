@@ -19,20 +19,20 @@ _{\psi ,l^{\prime }+1/2,i+1/2,j+1/2}^{\left( 0\right) }f_{0,l^{\prime
 _{l+1/2}\right) }p_{i+1/2}^{2}\frac{\overline{\lambda }_{1,1,0}^{l+1/2,j+1/2}%
 }{\lambda ^{l+1/2,j+1/2}}\frac{3}{2}\xi _{0,j+1/2}\mathcal{I}\left(
 f_{M,l+1/2,i+1/2,j+1/2},f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right)
-(m=1)}\right) 
+(m=1)}\right)
 \end{eqnarray}
 using upwind differencing that corresponds to the fully implicit scheme
 which is usually numerically stable for arbitrary values of $\Delta t.$ Here 
 $\mathcal{I}$ is the first order Legendre correction that ensures momentum
 conservation, as discussed in Sec. ***, and introduce a weak non-linear
-dependence. 
+dependence.
 
 In compact matrix form, the differential equation in the reduced momentum
 phase space has the following symbolic form 
 \begin{equation}
 \left( \frac{\widehat{\Bbb{A}}}{\Delta t}+\widehat{\Bbb{B}}\right)
 X^{(k+1)}=\left( \frac{\widehat{\Bbb{A}}}{\Delta t}\right) X^{(k)}+\widehat{C%
-}\left( X_{M},X^{(k)}\right)   \label{Matrixeq}
+}\left( X_{M},X^{(k)}\right)  \label{Matrixeq}
 \end{equation}
 where $\widehat{\Bbb{A}}$ is the matrix associated to the time differencing, 
 $\widehat{\Bbb{B}}$ corresponds to the flux divergence and $\widehat{C}$ is
@@ -47,41 +47,50 @@ l=0\rightarrow \left\{
 i=0\rightarrow \left\{ 
 \begin{array}{l}
 j^{\prime }=0 \\ 
-j^{\prime }=\ldots  \\ 
+j^{\prime }=\ldots \\ 
 j^{\prime }=n_{\xi _{0}}-n_{\xi _{0T,l+1/2}}-1
 \end{array}
-\right.  \\ 
-i=\ldots  \\ 
+\right. \\ 
+i=\ldots \\ 
 i=n_{p}-1
 \end{array}
-\right.  \\ 
-l=\ldots  \\ 
+\right. \\ 
+l=\ldots \\ 
 l=n_{\psi }-1
 \end{array}
-\right. 
+\right.
 \end{equation}
 
-Consequently, $\widehat{\Bbb{A}}$ is a banded matrix, as shown in Fig. ***,
-whose main diagonal is dominant because collisions predominate over other
-physical processes. It is made of blocks 
+Without radial transport, $\widehat{\Bbb{A}}$ is a block diagonal matrix.
+Each block, which describes the momentum dynamics at location $\psi _{l+1/2},
+$ is a square matrice of $15$ diagonals. The block size $\left( n_{\xi
+_{0}}-n_{\xi _{0T,l+1/2}}\right) n_{p}\times $ $\left( n_{\xi _{0}}-n_{\xi
+_{0T,l+1/2}}\right) n_{p}$ progressively decreases from $\psi _{1/2}$ to $%
+\psi _{n_{\xi _{0}}-1/2}$  because of the trapped/passing boundary, as shown
+in Fig. ***$.$ The main diagonal of $\widehat{\Bbb{A}}$ is dominant because
+collisions predominate over other physical processes at each plasma radius.
 
-When trapped electron dynamics is not considered, the total number of
-diagonal is $11$, $9$ of them for describing the dynamics in momentum space,
-and the $2$ remaining for the spatial transport of fast electrons. In that
-simple case, $\widehat{\Bbb{A}}$ is a $n_{\psi }n_{p}n_{\xi _{0}}\times %
-n_{\psi }n_{p}n_{\xi _{0}}$ matrix, whose sparcity is extremely high. This
-property will be extensively used to the linear system of equation (\ref
-{Matrixeq}), otherwise, the computer memory requirement is fully
-prohibitive. Indeed, for a standard case, $n_{\psi }=20,$ $n_{p}=200$ and $%
-n_{\xi _{0}}=200,$ the total number of coefficients reaches $64\times %
-10^{+12},$ and the memory capacity that is needed is $512TBytes$ !
-Hopefully, this number may be drastically reduced down to $11\times n_{\psi
-}n_{p}n_{\xi _{0}},$ and for the example here considered, the required
-memory is of the order of $70.4MBytes$, a level that is standard for most
-computers, today. 
-
-When trapped particle are considered, new non-zero coefficients take place,
-and the number of diagonals is exceeds usually $17$, $15$ of them for the
-momentum dynamics itself, the remaining part for the spatial dynamics.
-Indeed, since the trapped passing boundary changes with the position in the
-plasma $\psi ,$ blocks that describe the momentum dynamics tends to shrink
+The introduction of the radial dynamics adds several extra off-diagonals,
+which connect neighboring blocks, in addition to the main diagonal which is
+also modified accordingly. The complexity arises from the fact that trapped
+electrons may become passing by the radial transport process, and
+conversely. Therefore, matrix $\widehat{\Bbb{A}}$ keeps a global banded
+structure with an extremely high sparcity, a property that is extensively
+used for the storage in the computer memory. Indeed, the size of $\widehat{%
+\Bbb{A}}$ is 
+\begin{equation}
+size\left( \widehat{\Bbb{A}}\right) =n_{p}^{2}\left[ \sum_{l=0}^{l=n_{\psi
+}-1}\left( n_{\xi _{0}}-n_{\xi _{0T,l+1/2}}\right) \right] ^{2}\leq n_{\psi
+}^{2}n_{p}^{2}n_{\xi _{0}}^{2}
+\end{equation}
+For tokamak with very large aspect ratio, $size\left( \widehat{\Bbb{A}}%
+\right) \approx n_{\psi }^{2}n_{p}^{2}n_{\xi _{0}}^{2}$ since trapped
+particle contribution is fairly negligible. In this limit, an upper boundary
+of the memory size requirement may be estimated. For a standard case, $%
+n_{\psi }=20,$ $n_{p}=200$ and $n_{\xi _{0}}=200,$ the total number of
+coefficients reaches $64\times 10^{+12},$ and the memory capacity that is
+needed is $512TBytes$ ! Hopefully, this huge number may be drastically
+reduced down to $11\times n_{\psi }n_{p}n_{\xi _{0}},$ since $\widehat{\Bbb{A%
+}}$ becomes in that limit a simple banded matrix with exactly $11$
+diagonals. The required memory falls down to $70.4MBytes$, a level which can
+be easily handled by most computers today.
