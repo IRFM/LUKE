@@ -2540,6 +2540,15 @@ if coll_mode == 3,%Lorentz model (test mode only, see documentation)
 	clear xnorm_L_tp_fsav xnorm_L_g_fsav
 end 
 %
+% When radial transport is turned off, the distribution function is renormalized before calculating all other
+% moments. This makes physical sense since no electron is meant to be lost
+% or gained (! still need to include run-away contribution - Yves?)
+%
+if radial_mode ~= 1,
+    XXf0 = XXf0.*shiftdim(repmat(xne_norm'./xnorm_0_fsav',[1,npn,nmhu]),1);
+end
+%
+%
 xc_g = -(xnorm_tp_fsav + xnorm_g_fsav)./xne_norm(rdke);%Flux surface averaged density conservation
 XXxc_g = shiftdim(repmat(repmat(xc_g(:),[1,npn,1]),[1,1,nmhu]),1);
 XXf0_g(:,:,rdke) = XXf0_g(:,:,rdke) + XXxc_g.*XXf0(:,:,rdke);%Normalisation in order to maintain the flux surface averaged density at the right level
