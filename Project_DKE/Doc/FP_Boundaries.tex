@@ -1,0 +1,309 @@
+
+\subsubsection{Momentum dynamics}
+
+\paragraph{Global internal boundaries}
+
+Momentum dynamics is described in spherical coordinates, because collisions
+is the dominant physical process for current drive and matrices are
+therefore expected to be well conditionned. Consequently, internal
+boundaries must be specified at $p=0$ and $\left| \xi _{0}\right| =1$ which
+corresponds to the conditions 
+\begin{equation}
+\left\{ 
+\begin{array}{l}
+f_{0}^{\left( 0\right) }\left( \psi ,-p,\arccos \xi _{0}\right)
+=f_{0}^{\left( 0\right) }\left( \psi ,-p,\pi -\arccos \xi _{0}\right) \\ 
+f_{0}^{\left( 0\right) }\left( \psi ,p,-\arccos \xi _{0}\right)
+=f_{0}^{\left( 0\right) }\left( \psi ,p,\arccos \xi _{0}\right) \\ 
+f_{0}^{\left( 0\right) }\left( \psi ,p,\pi +\arccos \xi _{0}\right)
+=f_{0}^{\left( 0\right) }\left( \psi ,p,\pi -\arccos \xi _{0}\right)
+\end{array}
+\right\}
+\end{equation}
+
+Since the type of equation to be solved correspond to a Neuman problem,
+gradients must be specified at the internal boundaries. To fullfil above
+conditions, one must thus determine $\left( \Delta p,\Delta \xi _{0}\right) $
+at $p=0$ and $\left| \xi _{0}\right| =1$ for the flux grid only, since the
+distribution grid is interlaced by definition with the flux one. Therefore,
+starting from grids definition given in Sec. ***, 
+\begin{equation}
+\Delta \xi _{0,0}=\frac{\Delta \xi _{0,1/2}+\Delta \xi _{0,-1/2}}{2}=\Delta
+\xi _{0,1/2}=\xi _{0,1}-\xi _{0,0}=2\xi _{0,1/2}+1
+\end{equation}
+as $\Delta \xi _{0,1/2}=\Delta \xi _{0,-1/2},$ $\xi _{0,1/2}=\frac{\xi
+_{0,1}+\xi _{0,0}}{2}$et $\xi _{0,0}=-1.$
+
+Much in the same way, 
+\begin{equation}
+\Delta \xi _{0,n_{\xi }}=\frac{\Delta \xi _{0,n_{\xi }+1/2}+\Delta \xi
+_{0,n_{\xi }-1/2}}{2}=\Delta \xi _{0,n_{\xi }-1/2}=\xi _{0,n_{\xi }}-\xi
+_{0,n_{\xi }-1}=1-\xi _{0,n_{\xi }-1}
+\end{equation}
+since $\Delta \xi _{0,n_{\xi }+1/2}=\Delta \xi _{0,n_{\xi }-1/2}.$
+Furthermore, since by definition, 
+\begin{equation}
+\xi _{0,n_{\xi }-1/2}=\frac{\xi _{0,n_{\xi }}+\xi _{0,n_{\xi }-1}}{2}=\frac{%
+1+\xi _{0,n_{\xi }-1}}{2}
+\end{equation}
+one obtains finally
+
+\begin{equation}
+\Delta \xi _{0,n_{\xi }}=2\left( 1-\xi _{0,n_{\xi }-1/2}\right)
+\end{equation}
+
+A similar technique may be used for the momentum grid $p$. Hence 
+\begin{equation}
+\Delta p_{0}=\frac{1}{2}\left( \Delta p_{1/2}+\Delta p_{-1/2}\right) =\Delta
+p_{1/2}
+\end{equation}
+using $\Delta p_{-1/2}=\Delta p_{1/2}.$ Since $\Delta p_{1/2}=p_{1}-p_{0}$,
+and $p_{1/2}=\frac{p_{1}+p_{0}}{2}$ one obtains finally, 
+\begin{equation}
+\Delta p_{0}=2p_{1/2}
+\end{equation}
+because $p_{0}=0.$
+
+It is important to note that internal boundary conditions are only needed in
+the evaluation of the cross-derivative terms, since in the discrete form of
+the Fokker-Planck equation using two grids, as shown, in Sec. ***, it is
+automatically fullfiled. Indeed, at fixed $\psi _{l+1/2},$%
+\begin{eqnarray}
+\left. \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) 
+}p^{2}\frac{\partial f^{\left( 0\right) }}{\partial p}\right|
+_{l+1/2,1/2,j+1/2}^{(k+1)} &=&\frac{\widetilde{q}\left( \psi _{l+1/2}\right) 
+}{B_{\min }\left( \psi _{l+1/2}\right) }\left. \frac{\partial \left( p^{2}%
+\mathbf{S}_{p}^{\left( 0\right) }\right) }{\partial p}\right|
+_{l+1/2,1/2,j+1/2}^{(k+1)}  \nonumber \\
+&&-\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
+_{l+1/2}\right) }\frac{p_{1/2}}{\lambda \left( \psi _{l+1/2},\xi
+_{0,j+1/2}\right) }\times  \nonumber \\
+&&\left. \frac{\partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}%
+\lambda \left( \psi ,\xi _{0}\right) \mathbf{S}_{\xi }^{\left( 0\right)
+}\right) \right| _{l+1/2,1/2,j+1/2}^{(k+1)}
+\end{eqnarray}
+which gives
+
+\begin{eqnarray}
+\left. \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) 
+}p^{2}\frac{\partial f^{\left( 0\right) }}{\partial p}\right|
+_{l+1/2,1/2,j+1/2}^{(k+1)} &=&\frac{\widetilde{q}\left( \psi _{l+1/2}\right) 
+}{B_{\min }\left( \psi _{l+1/2}\right) }\frac{p_{1}^{2}\mathbf{S}%
+_{p,l+1/2,1,j+1/2}^{\left( 0\right) (k+1)}}{\Delta p_{1/2}}  \nonumber \\
+&&-\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
+_{l+1/2}\right) }\frac{p_{1/2}}{\lambda \left( \psi _{l+1/2},\xi
+_{0,j+1/2}\right) }\times  \nonumber \\
+&&\left. \frac{\partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}%
+\lambda \left( \psi ,\xi _{0}\right) \mathbf{S}_{\xi }^{\left( 0\right)
+}\right) \right| _{l+1/2,1/2,j+1/2}^{(k+1)}  \label{boundary_p}
+\end{eqnarray}
+since $p_{0}^{2}\mathbf{S}_{p,l+1/2,0,j+1/2}^{\left( 0\right) (k+1)}=0$ with
+the flux grid here considered, with $p_{0}=0$. Much in the same way, 
+\begin{eqnarray}
+\left. \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) 
+}p^{2}\frac{\partial f^{\left( 0\right) }}{\partial p}\right|
+_{l+1/2,i+1/2,1/2}^{(k+1)} &=&\frac{\widetilde{q}\left( \psi _{l+1/2}\right) 
+}{B_{\min }\left( \psi _{l+1/2}\right) }\left. \frac{\partial \left( p^{2}%
+\mathbf{S}_{p}^{\left( 0\right) }\right) }{\partial p}\right|
+_{l+1/2,i+1/2,1/2}^{(k+1)}  \nonumber \\
+&&-\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
+_{l+1/2}\right) }\frac{p_{i+1/2}}{\lambda \left( \psi _{l+1/2},\xi
+_{0,1/2}\right) }\times  \nonumber \\
+&&\frac{\sqrt{1-\xi _{0,1}^{2}}\lambda \left( \psi ,\xi _{0,1}\right) 
+\mathbf{S}_{\xi ,l+1/2,i+1/2,1}^{\left( 0\right) (k+1)}}{\Delta \xi _{0,1/2}}
+\end{eqnarray}
+and 
+\begin{eqnarray}
+\left. \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) 
+}p^{2}\frac{\partial f^{\left( 0\right) }}{\partial p}\right|
+_{l+1/2,i+1/2,n_{\xi _{0}}-1/2}^{(k+1)} &=&\frac{\widetilde{q}\left( \psi
+_{l+1/2}\right) }{B_{\min }\left( \psi _{l+1/2}\right) }\left. \frac{%
+\partial \left( p^{2}\mathbf{S}_{p}^{\left( 0\right) }\right) }{\partial p}%
+\right| _{l+1/2,i+1/2,n_{\xi _{0}}-1/2}^{(k+1)}  \nonumber \\
+&&+\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
+_{l+1/2}\right) }\frac{p_{i+1/2}}{\lambda \left( \psi _{l+1/2},\xi
+_{0,n_{\xi _{0}}-1/2}\right) }\times  \nonumber \\
+&&\frac{\sqrt{1-\xi _{0,n_{\xi _{0}}-1}^{2}}\lambda \left( \psi ,\xi
+_{0,n_{\xi _{0}}-1}\right) \mathbf{S}_{\xi ,l+1/2,i+1/2,n_{\xi
+_{0}}-1}^{\left( 0\right) (k+1)}}{\Delta \xi _{0,n_{\xi _{0}}-1/2}}
+\end{eqnarray}
+since $\sqrt{1-\xi _{0,0}^{2}}\lambda \left( \psi ,\xi _{0,0}\right) \mathbf{%
+S}_{\xi ,l+1/2,i+1/2,0}^{\left( 0\right) }=0$ and $\sqrt{1-\xi _{0,n_{\xi
+_{0}}}^{2}}\lambda \left( \psi ,\xi _{0,n_{\xi _{0}}}\right) \mathbf{S}_{\xi
+,l+1/2,i+1/2,n_{\xi _{0}}}^{\left( 0\right) }=0,$ because $\xi
+_{0,0}^{2}=\xi _{0,n_{\xi _{0}}}^{2}=1$ by construction.
+
+\paragraph{Trapped-passing internal boundaries}
+
+Since the bounce time is much less than all other characteristics times of
+physical processes that are involved in the kinetic calculations,
+
+\paragraph{External boundaries}
+
+The other boundaries are inserted into the problem in violation of the true
+physical picture, mainly because the momentum domain extends off to
+infinity, while only a subspace is considered in computations. The upper
+limit of the domain is therefore chosen so that the interesting physics may
+be accurately described, i.e. $p_{\max }\gg p_{th}$ for studying the
+Maxwellian distribution function, $p_{\max }\gg \gamma \left( \omega
+/k\right) _{\max }$ for the RF waves and $p_{\max }\gg p_{Dreicer}$ for the
+runaway electrons. These conditions must ensure the conservative nature of
+the problem here addressed, i.e. that plasma cannot enter or leave the
+domain of integration. This corresponds to the local condition 
+\begin{equation}
+\mathbf{S}_{\mathbf{p}}\cdot \widehat{n}=0  \label{Externboundary}
+\end{equation}
+where $\widehat{n}$ is the normal to the external boundary. Since for
+symmetry reasons related to the nature of the collision operator, the
+subspace considered for computations is a sphere of radius $p_{\max },$ $%
+\widehat{n}=\widehat{p}.$ When the condition (\ref{Externboundary}) is
+fullfiled, external boundary conditions have almost a negligible influence,
+and the numerical solution in the subspace is usually close to the
+theoretical one. It is usually the case for the RF problem, since the range
+of resonant interaction between the wave and the electrons is well localized
+in momentum space, far enough from the boundary so that no electron can
+leave the domain of integration.
+
+The Fokker-Planck equation reduces an hyperbolic equation in the vicinity of 
+$p_{\max }$ (high velocity limit), and therefore no boundary condition must
+be specified, and the standard upstream differencing applies. Indeed, since
+for collisions, $D_{pp}^{C\left( 0\right) }/v\sim 1/v^{4},$ while $%
+F_{p}^{C\left( 0\right) }\sim 1/v^{2},$ and one can consider that $%
+D_{pp}^{C\left( 0\right) }=0$ at $p=p_{\max }.$ Here, the pitch-angle
+scattering term $D_{\xi \xi }^{C\left( 0\right) }$requires no special
+handling, because it causes parallel diffusion to the boundary.
+
+Nevertheless, since cross-derivative terms potentially involves points
+outside the computation domain, the following rule is used, even if the
+exact value of $\Delta p_{\max }$ has no importance,
+
+\begin{equation}
+\Delta p_{n_{p}}=\Delta p_{\max }=\frac{1}{2}\left( \Delta
+p_{n_{p}+1/2}+\Delta p_{n_{p}-1/2}\right) =\Delta
+p_{n_{p}-1/2}=p_{n_{p}}-p_{n_{p}-1}
+\end{equation}
+
+As by definition $p_{n_{p}+1/2}=\frac{p_{n_{p}}+p_{n_{p}-1}}{2}=\frac{%
+p_{\max }+p_{n_{p}-1}}{2},$ it results 
+\begin{equation}
+\Delta p_{n_{p}}=2\left( p_{n_{p}}-p_{n_{p}-1/2}\right)
+\end{equation}
+or in equivalent manner, 
+\begin{equation}
+\Delta p_{\max }=2\left( p_{\max }-p_{n_{p}-1/2}\right)
+\end{equation}
+
+If an electric field is present, then in the real problem, some electrons
+will runaway and leave the domain of integration. In that case, the
+condition $\mathbf{S}_{\mathbf{p}}\cdot \widehat{p}=0$ is no more fullfiled,
+leading to an effective loss of electrons. Since the Fokker-planck equation
+is still of hyperbolic type, no specific modification must be applied to the
+limit of the integration domain. However, one must ensure that the total
+number of electrons is kept constant. Several techniques may be used to
+avoid a decay of the number of electrons at the runaway rate $\Gamma _{R}$,
+as defined in Sec. ***.
+
+A possibility is to substitute $f_{0}^{\left( 0\right) }$ by $f_{0}^{\left(
+0\right) }\exp \left[ -\int_{0}^{t}\Gamma _{R}^{\left( 0\right) }\left(
+t^{\prime }\right) dt^{\prime }\right] $ in the Fokker-Planck equation, so
+that $f_{0}^{\left( 0\right) }\left( t\rightarrow \infty \right) $ is
+independent of $t$. In that case, $\overline{\overline{M}}%
+_{p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }$ must just be replaced by $%
+\overline{\overline{M}}_{p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }-\Gamma
+_{R,l+1/2}^{\left( 0\right) },$ where $\Gamma _{R}^{\left( 0\right) }$ is
+the runaway rate calculated at the minimum of the magnetic field $B$, as
+defined in Sec. ***. The Fokker-Planck equation becomes therefore slightly
+non-linear, since $\Gamma _{R}^{\left( 0\right) }$ is an integral over the
+distribution function $f_{0}^{\left( 0\right) }.$ However, since the
+population that is concerned is usually very small, the non-linearity is
+fairly weak. Nevertheless, the main drawback of this approach is that it
+makes the Fokker-Planck equation non-conservative. Furthermore, it
+necessitates to recalculate periodically the matrix to be inverted, that can
+be very time consuming. Therefore this method is not considered in the
+calculations.
+
+Another technique is to inject cold electrons at $p=0$, in order to
+compensate runaway losses and maintain the density. Such an approach has the
+main advantage to have a clear meaning. By definition, the number of
+electrons leaving the integration domain is simply $\Gamma _{R}^{\left(
+0\right) }.$ In principle, without particle losses, $%
+p_{0}^{2}S_{p,l+1/2,0,j+1/2}^{\left( 0\right) }=0,$ though $%
+S_{p,l+1/2,0,j+1/2}^{\left( 0\right) }$ is infinite at $p=0$. Compensation
+of hot electron losses by cold ones leads to the relation 
+\begin{eqnarray}
+2\pi \sum_{j=0}^{n_{\xi _{0}}-1}p_{0}^{2}S_{p,l+1/2,0,j+1/2}^{\left(
+0\right) }\Delta \xi _{0,j+1/2} &=&\Gamma _{R,l+1/2}^{\left( 0\right) } 
+\nonumber \\
+&=&2\pi \sum_{j=0}^{n_{\xi
+_{0}}-1}p_{n_{p}-1/2}^{2}S_{p,l+1/2,n_{p}-1/2,j+1/2}^{\left( 0\right)
+}\Delta \xi _{0,j+1/2}
+\end{eqnarray}
+
+Since the pitch-angle grid is non-uniform, one must consider $S_{p}^{\left(
+0\right) }$ for each pitch-angle value, and one obtains 
+\begin{equation}
+p_{0}^{2}S_{p,l+1/2,0,j+1/2}^{\left( 0\right)
+}=p_{n_{p}-1/2}^{2}S_{p,l+1/2,n_{p}-1/2,j+1/2}^{\left( 0\right) }
+\end{equation}
+
+Therefore, expression (\ref{boundary_p}) is modified according to the
+relation 
+\begin{eqnarray}
+\left. \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) 
+}p^{2}\frac{\partial f^{\left( 0\right) }}{\partial p}\right|
+_{l+1/2,1/2,j+1/2}^{(k+1)} &=&\frac{\widetilde{q}\left( \psi _{l+1/2}\right) 
+}{B_{\min }\left( \psi _{l+1/2}\right) }\left( \frac{p_{1}^{2}\mathbf{S}%
+_{p,l+1/2,1,j+1/2}^{\left( 0\right) (k+1)}}{\Delta p_{1/2}}-\frac{p_{0}^{2}%
+\mathbf{S}_{p,l+1/2,0,j+1/2}^{\left( 0\right) (k+1)}}{\Delta p_{1/2}}\right)
+\nonumber \\
+&&-\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
+_{l+1/2}\right) }\frac{p_{1/2}}{\lambda \left( \psi _{l+1/2},\xi
+_{0,j+1/2}\right) }\times  \nonumber \\
+&&\left. \frac{\partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}%
+\lambda \left( \psi ,\xi _{0}\right) \mathbf{S}_{\xi }^{\left( 0\right)
+}\right) \right| _{l+1/2,1/2,j+1/2}^{(k+1)}
+\end{eqnarray}
+or 
+\begin{eqnarray}
+\left. \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) 
+}p^{2}\frac{\partial f^{\left( 0\right) }}{\partial p}\right|
+_{l+1/2,1/2,j+1/2}^{(k+1)} &=&\frac{\widetilde{q}\left( \psi _{l+1/2}\right) 
+}{B_{\min }\left( \psi _{l+1/2}\right) }\left( \frac{p_{1}^{2}\mathbf{S}%
+_{p,l+1/2,1,j+1/2}^{\left( 0\right) (k+1)}}{\Delta p_{1/2}}-\frac{%
+p_{n_{p}-1/2}^{2}S_{p,l+1/2,n_{p}-1/2,j+1/2}^{\left( 0\right) (k+1)}}{\Delta
+p_{1/2}}\right)  \nonumber \\
+&&-\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
+_{l+1/2}\right) }\frac{p_{1/2}}{\lambda \left( \psi _{l+1/2},\xi
+_{0,j+1/2}\right) }\times  \nonumber \\
+&&\left. \frac{\partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}%
+\lambda \left( \psi ,\xi _{0}\right) \mathbf{S}_{\xi }^{\left( 0\right)
+}\right) \right| _{l+1/2,1/2,j+1/2}^{(k+1)}
+\end{eqnarray}
+
+Since $\Gamma _{R,l+1/2}^{\left( 0\right) (k+1)}$ is a weak function of $%
+f_{0}^{\left( 0\right) },$ it is possible to replace $%
+S_{p,l+1/2,n_{p}-1/2,j+1/2}^{\left( 0\right) (k+1)}$ by its explicit form $%
+S_{p,l+1/2,n_{p}-1/2,j+1/2}^{\left( 0\right) (k)}$, so that one may avoid to
+recalculate the matrix $\overline{\overline{M}}_{p,l+1/2,i+1/2,j+1/2}^{%
+\left( 0\right) }$ at each iteration which is extremely computer time
+consuming. Consequently, with this scheme, the zero order Fokker-Planck
+equation becomes 
+\begin{eqnarray}
+&&\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
+_{l+1/2}\right) }p_{i+1/2}^{2}\frac{f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right)
+(k+1)}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k)}}{\Delta t}  \nonumber \\
+&&+\left. \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi
+\right) }p^{2}\frac{\partial f^{\left( 0\right) }}{\partial p}\right|
+_{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
+&&+\left. \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi
+\right) }p^{2}\frac{\partial f^{\left( 0\right) }}{\partial \psi }\right|
+_{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
+&&-\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
+_{l+1/2}\right) }\frac{p_{n_{p}-1/2}^{2}S_{p,l+1/2,n_{p}-1/2,j+1/2}^{\left(
+0\right) (k)}}{\Delta p_{1/2}}  \nonumber \\
+&=&0
+\end{eqnarray}
+
+\subsubsection{Spatial dynamics}
+
+For the spatial dynamics, 

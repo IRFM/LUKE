@@ -88,66 +88,6 @@ where
 &=&\frac{\Delta \xi _{0,j+3/2}}{2}+\frac{\Delta \xi _{0,j+1/2}}{2}  \nonumber
 \end{eqnarray}
 
-It is important to note that boundary conditions play a crucial role in the
-type of equation to be solved, since it corresponds to a Neuman type
-problem, where gradients are specified along the perpendicular direction of
-the volume of integration. Therefore, $\left( \Delta p,\Delta \xi
-_{0,0}\right) $ must be specified accurately at each volume boundary. Since $%
-p_{\bot }=0$ corresponds to the cylindrical axis of symmetry of the problem
-in the momentum space, 
-\begin{equation}
-\Delta \xi _{0,0}=\frac{\Delta \xi _{0,1/2}+\Delta \xi _{0,-1/2}}{2}=\Delta
-\xi _{0,1/2}=\xi _{0,1}-\xi _{0,0}=2\xi _{0,1/2}+1
-\end{equation}
-as $\Delta \xi _{0,1/2}=\Delta \xi _{0,-1/2},$ $\xi _{0,1/2}=\frac{\xi
-_{0,1}+\xi _{0,0}}{2}$et $\xi _{0,0}=-1.$ Much in the same way, 
-\begin{equation}
-\Delta \xi _{0,n_{\xi }}=\frac{\Delta \xi _{0,n_{\xi }+1/2}+\Delta \xi
-_{0,n_{\xi }-1/2}}{2}=\Delta \xi _{0,n_{\xi }-1/2}=\xi _{0,n_{\xi }}-\xi
-_{0,n_{\xi }-1}=1-\xi _{0,n_{\xi }-1}
-\end{equation}
-since $\Delta \xi _{0,n_{\xi }+1/2}=\Delta \xi _{0,n_{\xi }-1/2}.$
-Furthermore, since by definition, 
-\begin{equation}
-\xi _{0,n_{\xi }-1/2}=\frac{\xi _{0,n_{\xi }}+\xi _{0,n_{\xi }-1}}{2}=\frac{%
-1+\xi _{0,n_{\xi }-1}}{2}
-\end{equation}
-one obtains finally
-
-\begin{equation}
-\Delta \xi _{0,n_{\xi }}=2\left( 1-\xi _{0,n_{\xi }-1/2}\right)
-\end{equation}
-
-A similar technique may be used for the momentum grid $p$. Hence 
-\begin{equation}
-\Delta p_{0}=\frac{1}{2}\left( \Delta p_{1/2}+\Delta p_{-1/2}\right) =\Delta
-p_{1/2}
-\end{equation}
-using $\Delta p_{-1/2}=\Delta p_{1/2}.$ Since $\Delta p_{1/2}=p_{1}-p_{0}$,
-and $p_{1/2}=\frac{p_{1}+p_{0}}{2}$ one obtains finally, 
-\begin{equation}
-\Delta p_{0}=2p_{1/2}
-\end{equation}
-because $p_{0}=0.$ Much in the same way, 
-\begin{equation}
-\Delta p_{n_{p}}=\Delta p_{\max }=\frac{1}{2}\left( \Delta
-p_{n_{p}+1/2}+\Delta p_{n_{p}-1/2}\right) =\Delta
-p_{n_{p}-1/2}=p_{n_{p}}-p_{n_{p}-1}
-\end{equation}
-and since by definition $p_{n_{p}+1/2}=\frac{p_{n_{p}}+p_{n_{p}-1}}{2}=\frac{
-p_{\max }+p_{n_{p}-1}}{2},$ it results 
-\begin{equation}
-\Delta p_{n_{p}}=2\left( p_{n_{p}}-p_{n_{p}-1/2}\right)
-\end{equation}
-or in equivalent manner, 
-\begin{equation}
-\Delta p_{\max }=2\left( p_{\max }-p_{n_{p}-1/2}\right)
-\end{equation}
-
-Note that the exact value of $\Delta p_{\max }$ has no importance, since the
-numerical problem simplifies into an hyperbolic one at this particular
-point, and therefore, it is not necessary to specify boundary conditions.
-
 \subsection{Configuration space}
 
 By an appropriate bounce averaging, the number of dimension is reduced to
