@@ -122,11 +122,11 @@ B_{\min }\left( \psi \right) }  \label{mhu}
 
 The pitch-angle cosine is defined as 
 \[
-\xi =\frac{p_{\Vert }}{p}
+\xi =\frac{p_{\Vert }}{p} 
 \]
 so that 
 \begin{eqnarray*}
-p_{\Vert } &=&p\xi  \\
+p_{\Vert } &=&p\xi \\
 p_{\bot } &=&p\sqrt{1-\xi ^{2}}
 \end{eqnarray*}
 and the system (\ref{mom}-\ref{mhu}) becomes 
@@ -159,18 +159,18 @@ The turning points are
 \begin{equation}
 \theta _{\min }\left( \psi ,\xi _{0}\right) =\left| 
 \begin{array}{cc}
--\pi  & \text{for passing particles} \\ 
+-\pi & \text{for passing particles} \\ 
 \theta _{T\min } & \text{for trapped particles}
 \end{array}
-\right. 
+\right.
 \end{equation}
 \begin{equation}
 \theta _{\max }\left( \psi ,\xi _{0}\right) =\left| 
 \begin{array}{cc}
-\pi  & \text{for passing particles} \\ 
+\pi & \text{for passing particles} \\ 
 \theta _{T\max } & \text{for trapped particles}
 \end{array}
-\right. 
+\right.
 \end{equation}
 
 We can determine the turning angles $\theta _{T\min }\left( \psi ,\xi
@@ -298,7 +298,7 @@ This will be used to calculate $\lambda $ numerically.
 The (averaged) safety factor is generally defined by [callen 11.5.6] 
 \begin{equation}
 q\left( \psi \right) =\frac{I\left( \psi \right) }{4\pi ^{2}}\frac{\delta V}{%
-\delta \psi }\left\langle R^{-2}\right\rangle 
+\delta \psi }\left\langle R^{-2}\right\rangle
 \end{equation}
 where $V$ is the volume enclosed by a flux-surface and $\left\langle
 \;\right\rangle $ denotes the flux-surface average.
@@ -350,26 +350,30 @@ define an average over the poloidal motion, which anihilates the term that
 accounts for the time evolution of the variations of the distribution
 function along the field lines. The natural average is 
 \begin{equation}
-\left\{ \mathcal{A}\right\} =\frac{1}{\tau _{b}}\int_{s_{\min }}^{s_{\max }}%
-\frac{ds}{\left| v_{s}\right| }\mathcal{A}
+\left\{ \mathcal{A}\right\} =\frac{1}{\tau _{b}}\left[ \frac{1}{2}%
+\sum_{\sigma }\right] _{T}\int_{s_{\min }}^{s_{\max }}\frac{ds}{\left|
+v_{s}\right| }\mathcal{A}
 \end{equation}
+where $\sigma =$sign$\left( v_{\Vert }\right) $ and the sum over $\sigma $
+applies to trapped particles only.
 
 It can be rewritten in terms of the normalized bounce time $\lambda $ (\ref
 {lambda0}) 
 \begin{equation}
-\left\{ \mathcal{A}\right\} =\frac{1}{\lambda \widetilde{q}}\int_{\theta
-_{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }\frac{\sqrt{g_{22}}}{R_{0}}%
-\frac{\xi _{0}}{\xi }\frac{B}{B_{P}}\mathcal{A}
+\left\{ \mathcal{A}\right\} =\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2%
+}\sum_{\sigma }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{%
+d\theta }{2\pi }\frac{\sqrt{g_{22}}}{R_{0}}\frac{\xi _{0}}{\xi }\frac{B}{%
+B_{P}}\mathcal{A}  \label{bav}
 \end{equation}
 
 Another expression uses the output data from equilibrium codes. Following
 the work in the previous section, we find 
 \begin{equation}
-\left\{ \mathcal{A}\right\} =\frac{1}{\lambda \widetilde{q}}\int_{\theta
-_{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }\frac{B\left[ \left(
-R-R_{0}\right) ^{2}+\left( Z-Z_{0}\right) ^{2}\right] }{R_{0}\left|
-B_{R}\left( Z-Z_{0}\right) -B_{Z}\left( R-R_{0}\right) \right| }\frac{\xi
-_{0}}{\xi }\mathcal{A}
+\left\{ \mathcal{A}\right\} =\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2%
+}\sum_{\sigma }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{%
+d\theta }{2\pi }\frac{B\left[ \left( R-R_{0}\right) ^{2}+\left(
+Z-Z_{0}\right) ^{2}\right] }{R_{0}\left| B_{R}\left( Z-Z_{0}\right)
+-B_{Z}\left( R-R_{0}\right) \right| }\frac{\xi _{0}}{\xi }\mathcal{A}
 \end{equation}
 or explicitely 
 \begin{equation}
@@ -377,10 +381,11 @@ or explicitely
 \frac{d\theta }{2\pi }\frac{B\left[ \left( R-R_{0}\right) ^{2}+\left(
 Z-Z_{0}\right) ^{2}\right] }{R_{0}\left| B_{R}\left( Z-Z_{0}\right)
 -B_{Z}\left( R-R_{0}\right) \right| }\frac{\xi _{0}}{\xi }\right]
-^{-1}\int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }\frac{%
-B\left[ \left( R-R_{0}\right) ^{2}+\left( Z-Z_{0}\right) ^{2}\right] }{%
-R_{0}\left| B_{R}\left( Z-Z_{0}\right) -B_{Z}\left( R-R_{0}\right) \right| }%
-\frac{\xi _{0}}{\xi }\mathcal{A}
+^{-1}\left[ \frac{1}{2}\sum_{\sigma }\right] _{T}\int_{\theta _{\min
+}}^{\theta _{\max }}\frac{d\theta }{2\pi }\frac{B\left[ \left(
+R-R_{0}\right) ^{2}+\left( Z-Z_{0}\right) ^{2}\right] }{R_{0}\left|
+B_{R}\left( Z-Z_{0}\right) -B_{Z}\left( R-R_{0}\right) \right| }\frac{\xi
+_{0}}{\xi }\mathcal{A}
 \end{equation}
 
 \subsubsection{Numerical Integration over $\theta $}
