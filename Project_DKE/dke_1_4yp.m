@@ -396,22 +396,16 @@ if radial_mode == 1,
 	XXdrhopp = repmat(xdrhopp,[npn*nmhu,1]);
 	XXdrhopp = reshape(XXdrhopp,[npn,nmhu,nr]);
 end
+%
 %Bounce average coefficients
 %
-%[xmhubounce2,...
-%	Xxlambda,Xxlambdap,Xxlambdam,...
-%	XXlambda,XXRlambdam,XXRlambdap,...
-%	XXRlambda_p2m1_m,XXRlambda_p2m1_p,...
-%	XXsssl,XXssslm,XXssslp,...
-%	XXheaviside,...
-%	XXsstar,...
-%	XXlambda_p2p0,XXlambda_p2p0_p,XXlambda_p2p0_m] = bounceparam_dke_yp(tokname,bounce_mode,xia,delta,Nq,mhu,mhum,mhup,Xmhu,Xmhum,Xmhup);
 [R0,xBmin,xRBmin,xBTBmin,...
-   xq,xqtilde,xqbar,xqhat,...
-   xmhubounce2,XXheaviside,...
+        xq,xqtilde,xqbar,xqhat,...
+        xmhubounce2,XXheaviside,...
 	Xxlambda,Xxlambda_p,Xxlambda_m,...
 	XXlambda,XXRlambda_m,XXRlambda_p,...
 	XXRlambda_p2m1_m,XXRlambda_p2m1_p,...
+	XXRlambda_b_p1p1,...
 	XXlambda_b_p1m1p2,XXRlambda_b_p1m1p2,XXRlambda_b_p1m1p2_m,XXRlambda_b_p1m1p2_p,...
 	XXRlambda_b_p1m1,XXRlambda_b_p1m1_m,XXRlambda_b_p1m1_p,...
 	XXRlambda_b_p1m2_m,XXRlambda_b_p1m2_p,...
@@ -1706,20 +1700,21 @@ for it = 2:nit_f,
             		eval(['load MXPmat.mat Xmask_',int2str(ir),'_f0']);
         	end
 %
-			eval(['Xmask_f0 = Xmask_',int2str(ir),'_f0;']);%Load local value
-			Xf0_t = Xf0(:,Xmask_f0);
-            %modified j.d. 02/16/03
-            if radial_mode == 1
-			    Xmask_r_edge_t = Xmask_r_edge(:,Xmask_f0);
-            end
-			XfM_t = XfM(:,Xmask_f0);
-			Xpn2_t = Xpn2(:,Xmask_f0);	
+		eval(['Xmask_f0 = Xmask_',int2str(ir),'_f0;']);%Load local value
+		Xf0_t = Xf0(:,Xmask_f0);
 %
-			MMXf0_t = [MMXf0_t;reshape(Xf0_t',(nmhu - ns(ir))*npn,1)];
+		if radial_mode == 1,
+			Xmask_r_edge_t = Xmask_r_edge(:,Xmask_f0);
+		end
 %
-			Xq = (XI + time_scheme*Xf0/dtn).*Xpn2;
-			Xq_t = Xq(:,Xmask_f0);%Symmetric trapped domain removed
-			if bounce_mode == 1,Xq_t(2:npn,nmhu/2 + 1 - ns(ir)) = 0;end;%df/dmhu(mhu == pi/2) = 0   
+		XfM_t = XfM(:,Xmask_f0);
+		Xpn2_t = Xpn2(:,Xmask_f0);	
+%
+		MMXf0_t = [MMXf0_t;reshape(Xf0_t',(nmhu - ns(ir))*npn,1)];
+%
+		Xq = (XI + time_scheme*Xf0/dtn).*Xpn2;
+		Xq_t = Xq(:,Xmask_f0);%Symmetric trapped domain removed
+		if bounce_mode == 1,Xq_t(2:npn,nmhu/2 + 1 - ns(ir)) = 0;end;%df/dmhu(mhu == pi/2) = 0   
 			MMXq_t = [MMXq_t;xrho(ir)*reshape(Xq_t',(nmhu - ns(ir))*npn,1)];
 		end
 %
@@ -1749,27 +1744,27 @@ for it = 2:nit_f,
 			Xf1_t = reshape(MMXf1_t(sm_f(ir)+1:sm_f(ir+1)),nmhu - ns(ir),npn)';
 			Xf0 = squeeze(XXf0(:,:,ir));%Load value only
 			XfM = squeeze(XXfM(:,:,ir));
-        	fM = XfM(:,1)';
+			fM = XfM(:,1)';
 %
 			if bounce_mode == 0,
 				Xf1 = Xf1_t;
 			elseif bounce_mode == 1,
 				Xf1 = zeros(size(Xf0));
-            	Xf1(:,1:nmhu/2 - ns(ir)) = Xf1_t(:,1:nmhu/2 - ns(ir));
-            	Xf1(:,nmhu/2 + 1:nmhu) = Xf1_t(:,nmhu/2 + 1 - ns(ir):nmhu - ns(ir));
+				Xf1(:,1:nmhu/2 - ns(ir)) = Xf1_t(:,1:nmhu/2 - ns(ir));
+				Xf1(:,nmhu/2 + 1:nmhu) = Xf1_t(:,nmhu/2 + 1 - ns(ir):nmhu - ns(ir));
 				Xf1(:,nmhu/2 + 1 - ns(ir):nmhu/2) = fliplr(Xf1_t(:,nmhu/2 + 1 - ns(ir):nmhu/2));
 			end
 %
-            normf0(ir,it) = 2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,Xf0,2),1);
+			normf0(ir,it) = 2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,Xf0,2),1);
  			normf1(ir,it) = 2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,Xf1,2),1);
 			curr0(ir,it) = 2*pi*integral_dke_jd(dpn',pn2'.*(pn'./gamma').*integral_dke_jd(dmhu,Xmhu.*Xf0,2),1)*xne_norm(ir)/normf0(ir,it);
 			curr1(ir,it) = 2*pi*integral_dke_jd(dpn',pn2'.*(pn'./gamma').*integral_dke_jd(dmhu,Xmhu.*Xf1,2),1)*xne_norm(ir)/normf1(ir,it);
-            prec_curr(ir,it) = abs((curr1(ir,it) - curr0(ir,it))/curr0(ir,it));
-        	residu_f(ir,it) = sqrt(2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,(Xf1-Xf0).^2.*Xf0,2),1)/normf1(ir,it)/dtn/dtn);%As done by J.P. Bizarro et al., Nuclear Fusion, 37 (1997) 1509
-            prec_residu_f(ir,it) = abs((residu_f(ir,it) - residu_f(ir,it-1))/residu_f(ir,it));%For radial transport calculations	
+			prec_curr(ir,it) = abs((curr1(ir,it) - curr0(ir,it))/curr0(ir,it));
+			residu_f(ir,it) = sqrt(2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,(Xf1-Xf0).^2.*Xf0,2),1)/normf1(ir,it)/dtn/dtn);%As done by J.P. Bizarro et al., Nuclear Fusion, 37 (1997) 1509
+			prec_residu_f(ir,it) = abs((residu_f(ir,it) - residu_f(ir,it-1))/residu_f(ir,it));%For radial transport calculations	
 %
-         	if display_mode >= 1,
-          		info_dke_yp(2,['Normalized minor radius: ',num2str(xrho(ir)),', Inverse aspect ratio: ',num2str(xia(ir)),', iteration : ',int2str(it),' / ',int2str(nit_f),', Residu = ',num2str(residu_f(ir,it))]);
+			if display_mode >= 1,
+				info_dke_yp(2,['Normalized minor radius: ',num2str(xrho(ir)),', Inverse aspect ratio: ',num2str(xia(ir)),', iteration : ',int2str(it),' / ',int2str(nit_f),', Residu = ',num2str(residu_f(ir,it))]);
 				disp(['   - Density [t-1]: ',num2str(normf0(ir,it-1)),' - [t]: ',num2str(normf1(ir,it))]);;
 				disp(['   - Current [t-1]: ',num2str(curr0(ir,it-1)),' - [t]: ',num2str(curr1(ir,it))]);
 				disp(['   - Current relative accuracy [t]: ',num2str(prec_curr(ir,it))]);
@@ -1779,74 +1774,74 @@ for it = 2:nit_f,
 				if dke_mode == 1,
 					if ir == rdke(ir_display)-1,
 						figure(100),subplot(321),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
-              		axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
-            		title(['Iteration: ',int2str(it)]);xlabel('pn-ref');ylabel('f(pperp=0)')
-         			hold on;zoom on
-         			figure(100),subplot(322),semilogy([1:it],residu_f(ir,1:it),'r+',[1:it],prec0_f*ones(size([1:it])),'b--');
-            		axis('square');axis([0,it,prec0_f/10,1e-4]);
-           			title(['Convergence - f (r/a=',num2str(xrho(ir)),')']);xlabel('Iteration');ylabel('Residu')
-              		hold on;zoom on
-               	pause(0.1);
-            	elseif ir == rdke(ir_display),
-        				figure(100),subplot(323),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
-     					axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
-       				title(['Iteration: ',int2str(it)]);xlabel('pn-ref');ylabel('f(pperp=0)')
-       				hold on;zoom on
-             		figure(100),subplot(324),semilogy([1:it],residu_f(ir,1:it),'r+',[1:it],prec0_f*ones(size([1:it])),'b--');
-           			axis('square');axis([0,it,prec0_f/10,1e-4]);
-         			title(['Convergence - f (r/a=',num2str(xrho(ir)),')']);xlabel('Iteration');ylabel('Residu')
-         			hold on;zoom on
-      				pause(0.1);
-      			elseif ir == rdke(ir_display)+1,
-       				figure(100),subplot(325),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
-           			axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
+						axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
 						title(['Iteration: ',int2str(it)]);xlabel('pn-ref');ylabel('f(pperp=0)')
-              		hold on;zoom on
-     					figure(100),subplot(326),semilogy([1:it],residu_f(ir,1:it),'r+',[1:it],prec0_f*ones(size([1:it])),'b--');
-            		axis('square');axis([0,it,prec0_f/10,1e-4]);
-            		title(['Convergence - f (r/a=',num2str(xrho(ir)),')']);xlabel('Iteration');ylabel('Residu')
-            		hold on;zoom on
-           			pause(0.1);
-      			end
-      		else
+						hold on;zoom on
+						figure(100),subplot(322),semilogy([1:it],residu_f(ir,1:it),'r+',[1:it],prec0_f*ones(size([1:it])),'b--');
+						axis('square');axis([0,it,prec0_f/10,1e-4]);
+						title(['Convergence - f (r/a=',num2str(xrho(ir)),')']);xlabel('Iteration');ylabel('Residu')
+						hold on;zoom on
+						pause(0.1);
+					elseif ir == rdke(ir_display),
+						figure(100),subplot(323),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
+						axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
+						title(['Iteration: ',int2str(it)]);xlabel('pn-ref');ylabel('f(pperp=0)')
+						hold on;zoom on
+						figure(100),subplot(324),semilogy([1:it],residu_f(ir,1:it),'r+',[1:it],prec0_f*ones(size([1:it])),'b--');
+						axis('square');axis([0,it,prec0_f/10,1e-4]);
+						title(['Convergence - f (r/a=',num2str(xrho(ir)),')']);xlabel('Iteration');ylabel('Residu')
+						hold on;zoom on
+						pause(0.1);
+					elseif ir == rdke(ir_display)+1,
+						figure(100),subplot(325),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
+						axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
+						title(['Iteration: ',int2str(it)]);xlabel('pn-ref');ylabel('f(pperp=0)')
+						hold on;zoom on
+						figure(100),subplot(326),semilogy([1:it],residu_f(ir,1:it),'r+',[1:it],prec0_f*ones(size([1:it])),'b--');
+						axis('square');axis([0,it,prec0_f/10,1e-4]);
+						title(['Convergence - f (r/a=',num2str(xrho(ir)),')']);xlabel('Iteration');ylabel('Residu')
+						hold on;zoom on
+						pause(0.1);
+					end
+				else
   					if ir == rdke(ir_display),
-     					figure(100),subplot(121),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
-        				axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
-               	title(['Iteration: ',int2str(it)]);xlabel('pn-ref');ylabel('f(pperp=0)')
-              		hold on;
-              		figure(100),subplot(122),semilogy([1:it],residu_f(ir,1:it),'r+',[1:it],max(residu_f(:,1:it)),'gx',[1:it],prec0_f*ones(size([1:it])),'b--');
-                	axis('square');axis([0,it,prec0_f/10,1e-4]);
-             		title(['Convergence - f (r/a=',num2str(xrho(ir)),')']);xlabel('Iteration');ylabel('Residu')
-             		hold on;
-              		pause(0.1);
-             	end
-        		end
-    		end
+  						figure(100),subplot(121),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
+  						axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
+  						title(['Iteration: ',int2str(it)]);xlabel('pn-ref');ylabel('f(pperp=0)')
+  						hold on;
+  						figure(100),subplot(122),semilogy([1:it],residu_f(ir,1:it),'r+',[1:it],max(residu_f(:,1:it)),'gx',[1:it],prec0_f*ones(size([1:it])),'b--');
+  						axis('square');axis([0,it,prec0_f/10,1e-4]);
+  						title(['Convergence - f (r/a=',num2str(xrho(ir)),')']);xlabel('Iteration');ylabel('Residu')
+  						hold on;
+  						pause(0.1);
+  					end
+  				end
+			end
 %
-   		    if coll_mode == 2,
-      		    f1 = 1.5*integral_dke_jd(dmhu,Xf1.*(ones(npn,1)*mhu),2)';
-      		    xf1 = f1'*ones(1,length(f1));
-       		    I1 = integral_dke_jd(dpn,xf1.*masku.*xpn3./xgamma,1)'/3/xTe_norm(ir) ...
-      			    - integral_dke_jd(dpn,xf1.*masku.*xpn3,1)'.*gamma*2/3/xTe_norm(ir) ...
-      			    + integral_dke_jd(dpn,xf1.*masku.*xpn3.*xpn2./xgamma,1)'.*gamma/5/xTe_norm(ir)/xTe_norm(ir) ...
-           		    + integral_dke_jd(dpn,xf1.*masku.*(xgamma - xsigma./xz).*xpn./xgamma,1)' ...
-             	    - integral_dke_jd(dpn,xf1.*masku.*xpn3.*xJ2./xgamma./xz2,1)'.*gamma/xTe_norm(ir) ...
-             	    + integral_dke_jd(dpn,xf1.*masku.*xpn3.*(1 + 3.0./xz2 - 3*xgamma.*xsigma./xz2./xz)./xgamma,1)'.*(gamma.*pn2 - 5*xTe_norm(ir))/6/xTe_norm(ir)/xTe_norm(ir) ...   
-          		    + integral_dke_jd(dpn,xf1.*masku.*xpn3.*xJ3./xz./xgamma,1)'.*gamma/2/betath_ref/betath_ref/xTe_norm(ir)/xTe_norm(ir) ...
-         		    + integral_dke_jd(dpn,xf1.*masku.*xpn3.*xJ1./xz2./xgamma,1)'.*gamma/2/xTe_norm(ir) ...
-           		    + integral_dke_jd(dpn,xf1.*masku.*xpn.*(xgamma.*xsigma./xz - 1)./xgamma,1)'.*pn2/xTe_norm(ir) ...
-           		    - integral_dke_jd(dpn,xf1.*masku.*xpn3.*xJ4./xz./xgamma,1)'.*gamma/12/betath_ref/betath_ref/xTe_norm(ir)/xTe_norm(ir);
-      		    I2 = integral_dke_jd(dpn,xf1.*maskl./xgamma,1)'/3/xTe_norm(ir) ...        
-      		       + integral_dke_jd(dpn,xf1.*maskl,1)'.*(-2*gamma/3/xTe_norm(ir) + pn2/5/xTe_norm(ir)/xTe_norm(ir)) ...   
-           		    + integral_dke_jd(dpn,xf1.*maskl./xgamma,1)'.*(gamma - sigma./z)./pn2 ...
-           		    - integral_dke_jd(dpn,xf1.*maskl,1)'.*J2./z2/xTe_norm(ir) ...                 
-            	    + integral_dke_jd(dpn,xf1.*maskl.*(xgamma.*xpn2 - 5*xTe_norm(ir))./xgamma,1)'.*(1 + 3.0./z2 - 3*gamma.*sigma./z2./z)/6/xTe_norm(ir)/xTe_norm(ir) ...
-         		    + integral_dke_jd(dpn,xf1.*maskl,1)'.*(J3./z/2/betath_ref/betath_ref/xTe_norm(ir)/xTe_norm(ir) + J1./z2/2/xTe_norm(ir) - J4./z/12/betath_ref/betath_ref/xTe_norm(ir)/xTe_norm(ir)) ...
-          		    + integral_dke_jd(dpn,xf1.*maskl.*xpn2./xgamma,1)'.*(gamma.*sigma./z - 1)./pn2/xTe_norm(ir);
-                XI = 4*pi*((fM.*(f1 + I1./pn2 + I2.*pn)./gamma)'*mhu).*squeeze(XXRlambda_b_p1m1p2(:,:,ir));   
-                XI(1,:) = 0;%Boundary conditions at p = 0
-                XXI(:,:,ir) = XI;
-  		    end
+			if coll_mode == 2,
+				f1 = 1.5*integral_dke_jd(dmhu,Xf1.*(ones(npn,1)*mhu),2)';
+				xf1 = f1'*ones(1,length(f1));
+				I1 = integral_dke_jd(dpn,xf1.*masku.*xpn3./xgamma,1)'/3/xTe_norm(ir) ...
+				      - integral_dke_jd(dpn,xf1.*masku.*xpn3,1)'.*gamma*2/3/xTe_norm(ir) ...
+				      + integral_dke_jd(dpn,xf1.*masku.*xpn3.*xpn2./xgamma,1)'.*gamma/5/xTe_norm(ir)/xTe_norm(ir) ...
+				      + integral_dke_jd(dpn,xf1.*masku.*(xgamma - xsigma./xz).*xpn./xgamma,1)' ...
+				      - integral_dke_jd(dpn,xf1.*masku.*xpn3.*xJ2./xgamma./xz2,1)'.*gamma/xTe_norm(ir) ...
+				      + integral_dke_jd(dpn,xf1.*masku.*xpn3.*(1 + 3.0./xz2 - 3*xgamma.*xsigma./xz2./xz)./xgamma,1)'.*(gamma.*pn2 - 5*xTe_norm(ir))/6/xTe_norm(ir)/xTe_norm(ir) ...   
+				      + integral_dke_jd(dpn,xf1.*masku.*xpn3.*xJ3./xz./xgamma,1)'.*gamma/2/betath_ref/betath_ref/xTe_norm(ir)/xTe_norm(ir) ...
+				      + integral_dke_jd(dpn,xf1.*masku.*xpn3.*xJ1./xz2./xgamma,1)'.*gamma/2/xTe_norm(ir) ...
+				      + integral_dke_jd(dpn,xf1.*masku.*xpn.*(xgamma.*xsigma./xz - 1)./xgamma,1)'.*pn2/xTe_norm(ir) ...
+				      - integral_dke_jd(dpn,xf1.*masku.*xpn3.*xJ4./xz./xgamma,1)'.*gamma/12/betath_ref/betath_ref/xTe_norm(ir)/xTe_norm(ir);
+				I2 = integral_dke_jd(dpn,xf1.*maskl./xgamma,1)'/3/xTe_norm(ir) ...        
+				      + integral_dke_jd(dpn,xf1.*maskl,1)'.*(-2*gamma/3/xTe_norm(ir) + pn2/5/xTe_norm(ir)/xTe_norm(ir)) ...   
+				      + integral_dke_jd(dpn,xf1.*maskl./xgamma,1)'.*(gamma - sigma./z)./pn2 ...
+				      - integral_dke_jd(dpn,xf1.*maskl,1)'.*J2./z2/xTe_norm(ir) ...                 
+				      + integral_dke_jd(dpn,xf1.*maskl.*(xgamma.*xpn2 - 5*xTe_norm(ir))./xgamma,1)'.*(1 + 3.0./z2 - 3*gamma.*sigma./z2./z)/6/xTe_norm(ir)/xTe_norm(ir) ...
+				      + integral_dke_jd(dpn,xf1.*maskl,1)'.*(J3./z/2/betath_ref/betath_ref/xTe_norm(ir)/xTe_norm(ir) + J1./z2/2/xTe_norm(ir) - J4./z/12/betath_ref/betath_ref/xTe_norm(ir)/xTe_norm(ir)) ...
+				      + integral_dke_jd(dpn,xf1.*maskl.*xpn2./xgamma,1)'.*(gamma.*sigma./z - 1)./pn2/xTe_norm(ir);
+				XI = 4*pi*((fM.*(f1 + I1./pn2 + I2.*pn)./gamma)'*mhu).*XXRlambda_b_p1p1(:,:,ir);   
+				XI(1,:) = 0;%Boundary conditions at p = 0
+				XXI(:,:,ir) = XI;
+			end
 %
 			XXf0(:,:,ir) = xne_norm(ir)*Xf1/normf1(ir,it);%Normalization to the local density
 			normf0(ir,it) = normf1(ir,it);
@@ -1855,8 +1850,8 @@ for it = 2:nit_f,
 	else			
 		if sum(prec_residu_f(:,it-1)) < prec0_f,info_dke_yp(2,['WARNING: stationnary residu but convergence not achieved for f0 after ',int2str(it),' iterations. Time step likely too large !']);end
 		if sum(residu_f(:,it-1) >= prec0_f) == 0 & display_mode > 0,
-            info_dke_yp(2,['Successfull convergence achieved for f0 after ',int2str(it),' iterations !']);
-        end
+			info_dke_yp(2,['Successfull convergence achieved for f0 after ',int2str(it),' iterations !']);
+		end
 		break;
 	end
 	if it == nit_f,info_dke_yp(2,['WARNING: convergence not achieved for f0 after ',int2str(nit_f),' iterations. Time step too small !']);end
@@ -1872,185 +1867,203 @@ if display_mode == 2,
 end
 % 
 if dke_mode == 1,
-    for ir = 1:nr_dke,
-        jr1 = rdke(ir)-1;
-        jr2 = rdke(ir);
-        jr3 = rdke(ir)+1;
+	for ir = 1:nr_dke,
+		jr1 = rdke(ir)-1;
+		jr2 = rdke(ir);
+		jr3 = rdke(ir)+1;
 %           
-        Xf0m = squeeze(XXf0(:,:,jr1));
-        Xf0  = squeeze(XXf0(:,:,jr2));  
-        Xf0p = squeeze(XXf0(:,:,jr3));
+		Xf0m = squeeze(XXf0(:,:,jr1));
+		Xf0  = squeeze(XXf0(:,:,jr2));  
+		Xf0p = squeeze(XXf0(:,:,jr3));
 %
-        XfM = squeeze(XXfM(:,:,jr2));
-        fM = XfM(:,1)';
-        Xsstar_tp  = squeeze(XXsstar_tp(:,:,jr2));
-        Xsssl  = squeeze(XXsssl(:,:,jr2));
-        Xlambda  = squeeze(XXlambda(:,:,jr2));
-        Xf0_g_th = squeeze(XXf0_g_th(:,:,jr2)); 
+		XfM = squeeze(XXfM(:,:,jr2));
+		fM = XfM(:,1)';
+		Xsstar_tp  = squeeze(XXsstar_tp(:,:,jr2));%*****************************
+		Xsssl  = squeeze(XXsssl(:,:,jr2));%*****************************
+		Xlambda  = squeeze(XXlambda(:,:,jr2));%*****************************
+		Xf0_g_th = squeeze(XXf0_g_th(:,:,jr2)); 
 		Xheaviside = squeeze(XXheaviside(:,:,jr2));
 %
-        if store_mode == 1,
-            eval(['load MXPmat.mat MXPDI_',int2str(jr2),'_g_t MXPC_',int2str(jr2),'_g_t Xmask_',int2str(jr2),'_g']);
-            eval(['load MXPmat.mat MXP_',int2str(jr2),'_tp_t']);
-			   eval(['load MXPmat.mat MXP_',int2str(jr2),'_tp_c_t']);
-        end
+		if store_mode == 1,
+			eval(['load MXPmat.mat MXPDI_',int2str(jr2),'_g_t MXPC_',int2str(jr2),'_g_t Xmask_',int2str(jr2),'_g']);
+			eval(['load MXPmat.mat MXP_',int2str(jr2),'_tp_t']);
+			eval(['load MXPmat.mat MXP_',int2str(jr2),'_tp_c_t']);
+		end
 %
-        eval(['MXP_tp_t = MXP_',int2str(jr2),'_tp_t;']);
-		  eval(['MXP_tp_c_t = MXP_',int2str(jr2),'_tp_c_t;']);
-        eval(['MXPDI_g_t = MXPDI_',int2str(jr2),'_g_t;']);
-        eval(['MXPC_g_t = MXPC_',int2str(jr2),'_g_t;']);
-        eval(['Xmask_g = Xmask_',int2str(jr2),'_g;']);
-        Xmask_tp = Xmask_g;
+		eval(['MXP_tp_t = MXP_',int2str(jr2),'_tp_t;']);
+		eval(['MXP_tp_c_t = MXP_',int2str(jr2),'_tp_c_t;']);
+		eval(['MXPDI_g_t = MXPDI_',int2str(jr2),'_g_t;']);
+		eval(['MXPC_g_t = MXPC_',int2str(jr2),'_g_t;']);
+		eval(['Xmask_g = Xmask_',int2str(jr2),'_g;']);
+		Xmask_tp = Xmask_g;
 %
-        eval(['clear MXPDI',int2str(jr2),'_g_t MXPC',int2str(jr2),'_g_t Xmask',int2str(jr2),'_g']);
-        eval(['clear MXP',int2str(jr2),'_tp_t']);
+		eval(['clear MXPDI',int2str(jr2),'_g_t MXPC',int2str(jr2),'_g_t Xmask',int2str(jr2),'_g']);
+		eval(['clear MXP',int2str(jr2),'_tp_t']);
 %           
-        if invproc == 1,%MatLab built-in full LU factorization
-            [MXL_g_t,MXU_g_t] = lu(MXPC_g_t);
-        elseif invproc >= 2,%MatLab built-in iterative inversion method
-            [MXL_g_t,MXU_g_t] = luinc(MXPC_g_t,prec_inv);
-			end
-		  if display_mode >= 1,info_dke_yp(2,['   - Size of the LU matrices for g: ',num2str((getfield(whos('MXL_g_t'),'bytes')+getfield(whos('MXU_g_t'),'bytes'))/1000000),' MBytes']);end
+		if invproc == 1,%MatLab built-in full LU factorization
+			[MXL_g_t,MXU_g_t] = lu(MXPC_g_t);
+		elseif invproc >= 2,%MatLab built-in iterative inversion method
+			[MXL_g_t,MXU_g_t] = luinc(MXPC_g_t,prec_inv);
+		end
+		if display_mode >= 1,info_dke_yp(2,['   - Size of the LU matrices for g: ',num2str((getfield(whos('MXL_g_t'),'bytes')+getfield(whos('MXU_g_t'),'bytes'))/1000000),' MBytes']);end
 
 %
-        dr = (xia(jr3) - xia(jr1))*Rp_norm;%Radial step for gradient calculations (dke)
-        drm = (xia(jr1) - xia(jr2))*Rp_norm;
-        drp = (xia(jr3) - xia(jr2))*Rp_norm;      
+%		dr = (xia(jr3) - xia(jr1))*Rp_norm;%Radial step for gradient calculations (dke)
+%		drm = (xia(jr1) - xia(jr2))*Rp_norm;
+%		drp = (xia(jr3) - xia(jr2))*Rp_norm;      
 %
-        Xdf0drho = -drm*Xf0p/dr/drp + drp*Xf0m/dr/drm - (drp + drm)*Xf0/drp/drm;%Calculation of the radial gradient of f (parabolic interpolation) 
-        Xf0_tp = - ftp_norm(jr2)*(Xpn.*Xmhu.*Xdf0drho);
-        XXf0_tp(:,:,jr2) = Xf0_tp;
+%		Xdf0drho = -drm*Xf0p/dr/drp + drp*Xf0m/dr/drm - (drp + drm)*Xf0/drp/drm;%Calculation of the radial gradient of f (parabolic interpolation) 
+%		Xf0_tp = - ftp_norm(jr2)*(Xpn.*Xmhu.*Xdf0drho);
+%		XXf0_tp(:,:,jr2) = Xf0_tp;
+
+		
+		dpsi = (xia(jr3) - xia(jr1))*Rp_norm;%Radial step for gradient calculations (dke)
+		dpsim = (xia(jr1) - xia(jr2))*Rp_norm;
+		dpsip = (xia(jr3) - xia(jr2))*Rp_norm;      
 %
-        Xf0_tp_c_t = Xf0(:,Xmask_tp);
+		Xdf0dpsi = -dpsim*Xf0p/dpsi/dpsip + dpsip*Xf0m/dpsi/dpsim - (dpsip + dpsim)*Xf0/dpsip/dpsim;%Calculation of the radial gradient of f (parabolic interpolation) 
+		Xf0_tp = - ftp_norm(jr2)*(Xpn.*Xmhu.*Xdf0dpsi);
+		XXf0_tp(:,:,jr2) = Xf0_tp;
+
+		
+		
+		
+		%
+		Xf0_tp_c_t = Xf0(:,Xmask_tp);
 %
 %First order Legendre correction for ftp
 %
-        f1_tp = 1.5*integral_dke_jd(mhu,Xf0_tp.*Xheaviside.*Xsstar_tp.*Xlambda.*(ones(npn,1)*mhu),2);
-        xf1_tp = f1_tp'*ones(1,length(f1_tp));
+
+		Xsstar_tp = 0;%************A calculer + terme lambda
+		
+		
+		
+		f1_tp = 1.5*integral_dke_jd(mhu,Xf0_tp.*Xheaviside.*Xsstar_tp.*Xlambda.*(ones(npn,1)*mhu),2);
+		xf1_tp = f1_tp'*ones(1,length(f1_tp));
 %   
-        XI_tp = zeros(size(Xf0_tp));
-        if coll_mode == 2,            
-            I1_tp = integral_dke_jd(dpn,xf1_tp.*masku.*xpn3./xgamma,1)'/3/xTe_norm(jr2) ...
-                - integral_dke_jd(dpn,xf1_tp.*masku.*xpn3,1)'.*gamma*2/3/xTe_norm(jr2) ...
-                + integral_dke_jd(dpn,xf1_tp.*masku.*xpn3.*xpn2./xgamma,1)'.*gamma/5/xTe_norm(jr2)/xTe_norm(jr2) ...
-                + integral_dke_jd(dpn,xf1_tp.*masku.*(xgamma - xsigma./xz).*xpn./xgamma,1)' ...
-                - integral_dke_jd(dpn,xf1_tp.*masku.*xpn3.*xJ2./xgamma./xz2,1)'.*gamma/xTe_norm(jr2) ...
-                + integral_dke_jd(dpn,xf1_tp.*masku.*xpn3.*(1 + 3.0./xz2 - 3*xgamma.*xsigma./xz2./xz)./xgamma,1)'.*(gamma.*pn2 - 5*xTe_norm(jr2))/6/xTe_norm(jr2)/xTe_norm(jr2) ... 
-                + integral_dke_jd(dpn,xf1_tp.*masku.*xpn3.*xJ3./xz./xgamma,1)'.*gamma/2/betath_ref/betath_ref/xTe_norm(jr2)/xTe_norm(jr2) ...
-                + integral_dke_jd(dpn,xf1_tp.*masku.*xpn3.*xJ1./xz2./xgamma,1)'.*gamma/2/xTe_norm(jr2) ...
-                + integral_dke_jd(dpn,xf1_tp.*masku.*xpn.*(xgamma.*xsigma./xz - 1)./xgamma,1)'.*pn2/xTe_norm(jr2) ...
-                - integral_dke_jd(dpn,xf1_tp.*masku.*xpn3.*xJ4./xz./xgamma,1)'.*gamma/12/betath_ref/betath_ref/xTe_norm(jr2)/xTe_norm(jr2);
-            I2_tp = integral_dke_jd(dpn,xf1_tp.*maskl./xgamma,1)'/3/xTe_norm(jr2) ...     
-                + integral_dke_jd(dpn,xf1_tp.*maskl,1)'.*(-2*gamma/3/xTe_norm(jr2) + pn2/5/xTe_norm(jr2)/xTe_norm(jr2)) ...
-                + integral_dke_jd(dpn,xf1_tp.*maskl./xgamma,1)'.*(gamma - sigma./z)./pn2 ...
-                - integral_dke_jd(dpn,xf1_tp.*maskl,1)'.*J2./z2/xTe_norm(jr2) ...                 
-                + integral_dke_jd(dpn,xf1_tp.*maskl.*(xgamma.*xpn2 - 5*xTe_norm(jr2))./xgamma,1)'.*(1 + 3.0./z2 - 3*gamma.*sigma./z2./z)/6/xTe_norm(jr2)/xTe_norm(jr2) ...
-                + integral_dke_jd(dpn,xf1_tp.*maskl,1)'.*(J3./z/2/betath_ref/betath_ref/xTe_norm(jr2)/xTe_norm(jr2) + J1./z2/2/xTe_norm(jr2) - J4./z/12/betath_ref/betath_ref/xTe_norm(jr2)/xTe_norm(jr2)) ...
-                + integral_dke_jd(dpn,xf1_tp.*maskl.*xpn2./xgamma,1)'.*(gamma.*sigma./z - 1)./pn2/xTe_norm(jr2);
- 			XI_tp = 4*pi*((fM.*(f1_tp + I1_tp./pn2 + I2_tp.*pn)./gamma)'*mhu).*Xheaviside./Xlambda;
-        end
-        XI_tp_t = XI_tp(:,Xmask_tp);
+		XI_tp = zeros(size(Xf0_tp));
+		if coll_mode == 2,            
+			I1_tp = integral_dke_jd(dpn,xf1_tp.*masku.*xpn3./xgamma,1)'/3/xTe_norm(jr2) ...
+			         - integral_dke_jd(dpn,xf1_tp.*masku.*xpn3,1)'.*gamma*2/3/xTe_norm(jr2) ...
+			         + integral_dke_jd(dpn,xf1_tp.*masku.*xpn3.*xpn2./xgamma,1)'.*gamma/5/xTe_norm(jr2)/xTe_norm(jr2) ...
+			         + integral_dke_jd(dpn,xf1_tp.*masku.*(xgamma - xsigma./xz).*xpn./xgamma,1)' ...
+			         - integral_dke_jd(dpn,xf1_tp.*masku.*xpn3.*xJ2./xgamma./xz2,1)'.*gamma/xTe_norm(jr2) ...
+			         + integral_dke_jd(dpn,xf1_tp.*masku.*xpn3.*(1 + 3.0./xz2 - 3*xgamma.*xsigma./xz2./xz)./xgamma,1)'.*(gamma.*pn2 - 5*xTe_norm(jr2))/6/xTe_norm(jr2)/xTe_norm(jr2) ... 
+			         + integral_dke_jd(dpn,xf1_tp.*masku.*xpn3.*xJ3./xz./xgamma,1)'.*gamma/2/betath_ref/betath_ref/xTe_norm(jr2)/xTe_norm(jr2) ...
+			         + integral_dke_jd(dpn,xf1_tp.*masku.*xpn3.*xJ1./xz2./xgamma,1)'.*gamma/2/xTe_norm(jr2) ...
+			         + integral_dke_jd(dpn,xf1_tp.*masku.*xpn.*(xgamma.*xsigma./xz - 1)./xgamma,1)'.*pn2/xTe_norm(jr2) ...
+			         - integral_dke_jd(dpn,xf1_tp.*masku.*xpn3.*xJ4./xz./xgamma,1)'.*gamma/12/betath_ref/betath_ref/xTe_norm(jr2)/xTe_norm(jr2);
+			I2_tp = integral_dke_jd(dpn,xf1_tp.*maskl./xgamma,1)'/3/xTe_norm(jr2) ...     
+			         + integral_dke_jd(dpn,xf1_tp.*maskl,1)'.*(-2*gamma/3/xTe_norm(jr2) + pn2/5/xTe_norm(jr2)/xTe_norm(jr2)) ...
+			         + integral_dke_jd(dpn,xf1_tp.*maskl./xgamma,1)'.*(gamma - sigma./z)./pn2 ...
+			         - integral_dke_jd(dpn,xf1_tp.*maskl,1)'.*J2./z2/xTe_norm(jr2) ...                 
+			         + integral_dke_jd(dpn,xf1_tp.*maskl.*(xgamma.*xpn2 - 5*xTe_norm(jr2))./xgamma,1)'.*(1 + 3.0./z2 - 3*gamma.*sigma./z2./z)/6/xTe_norm(jr2)/xTe_norm(jr2) ...
+			         + integral_dke_jd(dpn,xf1_tp.*maskl,1)'.*(J3./z/2/betath_ref/betath_ref/xTe_norm(jr2)/xTe_norm(jr2) + J1./z2/2/xTe_norm(jr2) - J4./z/12/betath_ref/betath_ref/xTe_norm(jr2)/xTe_norm(jr2)) ...
+			         + integral_dke_jd(dpn,xf1_tp.*maskl.*xpn2./xgamma,1)'.*(gamma.*sigma./z - 1)./pn2/xTe_norm(jr2);
+			XI_tp = 4*pi*((fM.*(f1_tp + I1_tp./pn2 + I2_tp.*pn)./gamma)'*mhu).*Xheaviside./Xlambda;
+		end
+		XI_tp_t = XI_tp(:,Xmask_tp);
 %
-        XI_g_t = zeros(size(XI_tp_t));
+		XI_g_t = zeros(size(XI_tp_t));
 %
-        Xf0_tp_t = Xf0_tp(:,Xmask_tp);
-        Xf0_g_th_t = Xf0_g_th(:,Xmask_tp);
+		Xf0_tp_t = Xf0_tp(:,Xmask_tp);
+		Xf0_g_th_t = Xf0_g_th(:,Xmask_tp);
 %               
-        for it_g = 2:nit_g,         
-            Xf0_g = squeeze(XXf0_g(:,:,jr2));%Load value only
-            Xf0_g_t = Xf0_g(:,Xmask_g);
+		for it_g = 2:nit_g,         
+			Xf0_g = squeeze(XXf0_g(:,:,jr2));%Load value only
+			Xf0_g_t = Xf0_g(:,Xmask_g);
 %
-            if residu_g(jr2,it_g-1) >= prec0_g, 
-                Xq_g_t = reshape(-MXP_tp_t*reshape(Xf0_tp_t',(nmhu - ns_tp(jr2))*npn,1),(nmhu - ns_tp(jr2)),npn)'; 	
+			if residu_g(jr2,it_g-1) >= prec0_g, 
+				Xq_g_t = reshape(-MXP_tp_t*reshape(Xf0_tp_t',(nmhu - ns_tp(jr2))*npn,1),(nmhu - ns_tp(jr2)),npn)'; 	
 				Xq_g_c_t = reshape(-MXP_tp_c_t*reshape(Xf0_tp_c_t',(nmhu - ns_tp(jr2))*npn,1),(nmhu - ns_tp(jr2)),npn)';%Radial gradient correction matrix (Chang and Cooper radial derivative)
-                Xq_g_t = Xq_g_t + Xq_g_c_t + (XI_g_t + XI_tp_t).*Xpn2(:,Xmask_g);
-                Xq_g_t(1,:) = Xf0_g_th_t(1,:);%Boundary conditions at p = 0
-                Xq_g_t(:,(nmhu - ns_g(jr2))/2) = 0;%g(pn,mhu = -mhut) = 0
-                Xq_g_t(:,(nmhu - ns_g(jr2))/2 + 1) = 0;%g(pn,mhu = mhut) = 0
+				Xq_g_t = Xq_g_t + Xq_g_c_t + (XI_g_t + XI_tp_t).*Xpn2(:,Xmask_g);
+				Xq_g_t(1,:) = Xf0_g_th_t(1,:);%Boundary conditions at p = 0
+				Xq_g_t(:,(nmhu - ns_g(jr2))/2) = 0;%g(pn,mhu = -mhut) = 0
+				Xq_g_t(:,(nmhu - ns_g(jr2))/2 + 1) = 0;%g(pn,mhu = mhut) = 0
 %
-                XR_t = reshape(MXPDI_g_t*reshape(Xq_g_t',(nmhu - ns_tp(jr2))*npn,1),(nmhu - ns_g(jr2)),npn)' - reshape(MXPC_g_t*reshape(Xf0_g_t',(nmhu - ns_g(jr2))*npn,1),(nmhu - ns_g(jr2)),npn)';
+				XR_t = reshape(MXPDI_g_t*reshape(Xq_g_t',(nmhu - ns_tp(jr2))*npn,1),(nmhu - ns_g(jr2)),npn)' - reshape(MXPC_g_t*reshape(Xf0_g_t',(nmhu - ns_g(jr2))*npn,1),(nmhu - ns_g(jr2)),npn)';
 %
-                if invproc == 1,%Full LU factorization
-                    XY_t = reshape(MXL_g_t\reshape(XR_t',(nmhu - ns_tp(jr2))*npn,1),(nmhu - ns_g(jr2)),npn)';%Solving the simultaneous linear equations 
-                    XS_t = reshape(MXU_g_t\reshape(XY_t',(nmhu - ns_tp(jr2))*npn,1),(nmhu - ns_g(jr2)),npn)';%Solving the simultaneous linear equations 
-                elseif invproc == 2,%qmr iterative method
-                    XS_t = reshape(qmr(MXPC_g_t,reshape(XR_t',(nmhu - ns_g(jr2))*npn,1),prec_inv,maxit_inv,MXL_g_t,MXU_g_t),(nmhu - ns_g(jr2)),npn)';
-                elseif invproc == 3,%bicgstab iterative method
-                    XS_t = reshape(bicgstab(MXPC_g_t,reshape(XR_t',(nmhu - ns_g(jr2))*npn,1),prec_inv,maxit_inv,MXL_g_t,MXU_g_t),(nmhu - ns_g(jr2)),npn)';
-                elseif invproc == 4,%cgs iterative method
-                    XS_t = reshape(cgs(MXPC_g_t,reshape(XR_t',(nmhu - ns_g(jr2))*npn,1),prec_inv,maxit_inv,MXL_g_t,MXU_g_t),(nmhu - ns_g(jr2)),npn)';
-                end
+				if invproc == 1,%Full LU factorization
+					XY_t = reshape(MXL_g_t\reshape(XR_t',(nmhu - ns_tp(jr2))*npn,1),(nmhu - ns_g(jr2)),npn)';%Solving the simultaneous linear equations 
+					XS_t = reshape(MXU_g_t\reshape(XY_t',(nmhu - ns_tp(jr2))*npn,1),(nmhu - ns_g(jr2)),npn)';%Solving the simultaneous linear equations 
+				elseif invproc == 2,%qmr iterative method
+					XS_t = reshape(qmr(MXPC_g_t,reshape(XR_t',(nmhu - ns_g(jr2))*npn,1),prec_inv,maxit_inv,MXL_g_t,MXU_g_t),(nmhu - ns_g(jr2)),npn)';
+				elseif invproc == 3,%bicgstab iterative method
+					XS_t = reshape(bicgstab(MXPC_g_t,reshape(XR_t',(nmhu - ns_g(jr2))*npn,1),prec_inv,maxit_inv,MXL_g_t,MXU_g_t),(nmhu - ns_g(jr2)),npn)';
+				elseif invproc == 4,%cgs iterative method
+					XS_t = reshape(cgs(MXPC_g_t,reshape(XR_t',(nmhu - ns_g(jr2))*npn,1),prec_inv,maxit_inv,MXL_g_t,MXU_g_t),(nmhu - ns_g(jr2)),npn)';
+				end
 %
-                Xf1_g_t = Xf0_g_t + XS_t;   
+				Xf1_g_t = Xf0_g_t + XS_t;   
 %
-%Expansion of the function g
+%Expansion of the function g on the pitch-angle grid
 %
-                Xf2_g(1:npn,1:nmhu/2 - ns_g(jr2)/2) = Xf1_g_t(1:npn,1:(nmhu - ns_g(jr2))/2);
-                Xf2_g(1:npn,nmhu/2 + ns_g(jr2)/2 + 1:nmhu) = Xf1_g_t(1:npn,(nmhu - ns_g(jr2))/2 + 1:nmhu - ns_g(jr2));
-                for is = 1:ns_g(jr2),
-                    Xf2_g(1:npn,Xmask_g((nmhu - ns_g(jr2))/2) + is) = 0;
-                end
-                Xf1_g = Xf2_g;  
+				Xf2_g(1:npn,1:nmhu/2 - ns_g(jr2)/2) = Xf1_g_t(1:npn,1:(nmhu - ns_g(jr2))/2);
+				Xf2_g(1:npn,nmhu/2 + ns_g(jr2)/2 + 1:nmhu) = Xf1_g_t(1:npn,(nmhu - ns_g(jr2))/2 + 1:nmhu - ns_g(jr2));
+				for is = 1:ns_g(jr2),
+					Xf2_g(1:npn,Xmask_g((nmhu - ns_g(jr2))/2) + is) = 0;
+				end
+				Xf1_g = Xf2_g;  
 %
-                norm1_g(jr2,it_g) = 2*pi*integral_dke_jd(pn',pn2'.*integral_dke_jd(mhu,Xf1_g,2),1);
-                residu_g(jr2,it_g) = sqrt(abs(2*pi*integral_dke_jd(pn',pn2'.*integral_dke_jd(mhu,(Xf1_g - Xf0_g).^2.*Xf1_g,2),1)/norm1_g(jr2,it_g)));
+				norm1_g(jr2,it_g) = 2*pi*integral_dke_jd(pn',pn2'.*integral_dke_jd(mhu,Xf1_g,2),1);
+				residu_g(jr2,it_g) = sqrt(abs(2*pi*integral_dke_jd(pn',pn2'.*integral_dke_jd(mhu,(Xf1_g - Xf0_g).^2.*Xf1_g,2),1)/norm1_g(jr2,it_g)));
 %
-                if display_mode >= 1,
-                    info_dke_yp(2,['Normalized minor radius: ',num2str(xrho(jr2)),', Inverse aspect ratio: ',num2str(xia(jr2)),', iteration : ',int2str(it_g),' / ',int2str(nit_g),', Residu = ',num2str(residu_g(jr2,it_g))]);
-                end
+				if display_mode >= 1,
+					info_dke_yp(2,['Normalized minor radius: ',num2str(xrho(jr2)),', Inverse aspect ratio: ',num2str(xia(jr2)),', iteration : ',int2str(it_g),' / ',int2str(nit_g),', Residu = ',num2str(residu_g(jr2,it_g))]);
+				end
 %
-                if display_mode == 2,
-                    if jr2 == rdke(ir_display),
-                        figure(101),subplot(121),plot(-pn,Xf1_g(:,1),'r-',pn,Xf1_g(:,nmhu),'r-');%g(perp = 0)
-                        axis('square');set(gca,'xlim',[-10,10]);
-                        title(['Iteration: ',int2str(it_g)]);xlabel('pn-ref');ylabel('g(pperp=0)')
-                        hold on;zoom on
-                        figure(101),subplot(122),semilogy([1:it_g],residu_g(jr2,1:it_g),'r+',[1:it_g],prec0_g*ones(size([1:it_g])),'b--');
-                        axis('square');axis([0,it_g,prec0_g/10,1e-4]);
-                        title(['Convergence - g (r/a=',num2str(xrho(jr2)),')']);xlabel('Iteration');ylabel('Residu')
-                        hold on;zoom on
-                        pause(0.1);
-                    end
-                end
+				if display_mode == 2,
+					if jr2 == rdke(ir_display),
+						figure(101),subplot(121),plot(-pn,Xf1_g(:,1),'r-',pn,Xf1_g(:,nmhu),'r-');%g(perp = 0)
+						axis('square');set(gca,'xlim',[-10,10]);
+						title(['Iteration: ',int2str(it_g)]);xlabel('pn-ref');ylabel('g(pperp=0)')
+						hold on;zoom on
+						figure(101),subplot(122),semilogy([1:it_g],residu_g(jr2,1:it_g),'r+',[1:it_g],prec0_g*ones(size([1:it_g])),'b--');
+						axis('square');axis([0,it_g,prec0_g/10,1e-4]);
+						title(['Convergence - g (r/a=',num2str(xrho(jr2)),')']);xlabel('Iteration');ylabel('Residu')
+						hold on;zoom on
+						pause(0.1);
+					end
+				end
 %
 %First order Legendre correction for g
 %
-                XI_g_t = zeros(size(XI_tp_t));
-                if coll_mode == 2,
-                    f1_g = 1.5*integral_dke_jd(mhu,Xf1_g.*(ones(npn,1)*mhu),2);
-                    xf1_g = f1_g'*ones(1,length(f1_g));
+				XI_g_t = zeros(size(XI_tp_t));
+				if coll_mode == 2,
+					f1_g = 1.5*integral_dke_jd(mhu,Xf1_g.*(ones(npn,1)*mhu),2);
+					xf1_g = f1_g'*ones(1,length(f1_g));
 %           
-                    I1_g = integral_dke_jd(dpn,xf1_g.*masku.*xpn3./xgamma,1)'/3/xTe_norm(jr2) ...
-                        - integral_dke_jd(dpn,xf1_g.*masku.*xpn3,1)'.*gamma*2/3/xTe_norm(jr2) ...
-                        + integral_dke_jd(dpn,xf1_g.*masku.*xpn3.*xpn2./xgamma,1)'.*gamma/5/xTe_norm(jr2)/xTe_norm(jr2) ...
-                        + integral_dke_jd(dpn,xf1_g.*masku.*(xgamma - xsigma./xz).*xpn./xgamma,1)' ...
-                        - integral_dke_jd(dpn,xf1_g.*masku.*xpn3.*xJ2./xgamma./xz2,1)'.*gamma/xTe_norm(jr2) ...
-                        + integral_dke_jd(dpn,xf1_g.*masku.*xpn3.*(1 + 3.0./xz2 - 3*xgamma.*xsigma./xz2./xz)./xgamma,1)'.*(gamma.*pn2 - 5*xTe_norm(jr2))/6/xTe_norm(jr2)/xTe_norm(jr2) ...  
-                        + integral_dke_jd(dpn,xf1_g.*masku.*xpn3.*xJ3./xz./xgamma,1)'.*gamma/2/betath_ref/betath_ref/xTe_norm(jr2)/xTe_norm(jr2) ...
-                        + integral_dke_jd(dpn,xf1_g.*masku.*xpn3.*xJ1./xz2./xgamma,1)'.*gamma/2/xTe_norm(jr2) ...
-                        + integral_dke_jd(dpn,xf1_g.*masku.*xpn.*(xgamma.*xsigma./xz - 1)./xgamma,1)'.*pn2/xTe_norm(jr2) ...
-                        - integral_dke_jd(dpn,xf1_g.*masku.*xpn3.*xJ4./xz./xgamma,1)'.*gamma/12/betath_ref/betath_ref/xTe_norm(jr2)/xTe_norm(jr2);
-                    I2_g = integral_dke_jd(dpn,xf1_g.*maskl./xgamma,1)'/3/xTe_norm(jr2) ...       
-                        + integral_dke_jd(dpn,xf1_g.*maskl,1)'.*(-2*gamma/3/xTe_norm(jr2) + pn2/5/xTe_norm(jr2)/xTe_norm(jr2)) ...  
-                        + integral_dke_jd(dpn,xf1_g.*maskl./xgamma,1)'.*(gamma - sigma./z)./pn2 ...
-                        - integral_dke_jd(dpn,xf1_g.*maskl,1)'.*J2./z2/xTe_norm(jr2) ...                  
-                        + integral_dke_jd(dpn,xf1_g.*maskl.*(xgamma.*xpn2 - 5*xTe_norm(jr2))./xgamma,1)'.*(1 + 3.0./z2 - 3*gamma.*sigma./z2./z)/6/xTe_norm(jr2)/xTe_norm(jr2) ...
-                        + integral_dke_jd(dpn,xf1_g.*maskl,1)'.*(J3./z/2/betath_ref/betath_ref/xTe_norm(jr2)/xTe_norm(jr2) + J1./z2/2/xTe_norm(jr2) - J4./z/12/betath_ref/betath_ref/xTe_norm(jr2)/xTe_norm(jr2)) ...
-                        + integral_dke_jd(dpn,xf1_g.*maskl.*xpn2./xgamma,1)'.*(gamma.*sigma./z - 1)./pn2/xTe_norm(jr2);
-                    XI_g = 4*pi*((fM.*(f1_g + I1_g./pn2 + I2_g.*pn)./gamma)'*mhu).*Xsssl;   
-                    XI_g_t = XI_g(:,Xmask_g);
-                end
+					I1_g = integral_dke_jd(dpn,xf1_g.*masku.*xpn3./xgamma,1)'/3/xTe_norm(jr2) ...
+					        - integral_dke_jd(dpn,xf1_g.*masku.*xpn3,1)'.*gamma*2/3/xTe_norm(jr2) ...
+					        + integral_dke_jd(dpn,xf1_g.*masku.*xpn3.*xpn2./xgamma,1)'.*gamma/5/xTe_norm(jr2)/xTe_norm(jr2) ...
+					        + integral_dke_jd(dpn,xf1_g.*masku.*(xgamma - xsigma./xz).*xpn./xgamma,1)' ...
+					        - integral_dke_jd(dpn,xf1_g.*masku.*xpn3.*xJ2./xgamma./xz2,1)'.*gamma/xTe_norm(jr2) ...
+					        + integral_dke_jd(dpn,xf1_g.*masku.*xpn3.*(1 + 3.0./xz2 - 3*xgamma.*xsigma./xz2./xz)./xgamma,1)'.*(gamma.*pn2 - 5*xTe_norm(jr2))/6/xTe_norm(jr2)/xTe_norm(jr2) ...  
+					        + integral_dke_jd(dpn,xf1_g.*masku.*xpn3.*xJ3./xz./xgamma,1)'.*gamma/2/betath_ref/betath_ref/xTe_norm(jr2)/xTe_norm(jr2) ...
+					        + integral_dke_jd(dpn,xf1_g.*masku.*xpn3.*xJ1./xz2./xgamma,1)'.*gamma/2/xTe_norm(jr2) ...
+					        + integral_dke_jd(dpn,xf1_g.*masku.*xpn.*(xgamma.*xsigma./xz - 1)./xgamma,1)'.*pn2/xTe_norm(jr2) ...
+					        - integral_dke_jd(dpn,xf1_g.*masku.*xpn3.*xJ4./xz./xgamma,1)'.*gamma/12/betath_ref/betath_ref/xTe_norm(jr2)/xTe_norm(jr2);
+					I2_g = integral_dke_jd(dpn,xf1_g.*maskl./xgamma,1)'/3/xTe_norm(jr2) ...       
+					        + integral_dke_jd(dpn,xf1_g.*maskl,1)'.*(-2*gamma/3/xTe_norm(jr2) + pn2/5/xTe_norm(jr2)/xTe_norm(jr2)) ...  
+					        + integral_dke_jd(dpn,xf1_g.*maskl./xgamma,1)'.*(gamma - sigma./z)./pn2 ...
+					        - integral_dke_jd(dpn,xf1_g.*maskl,1)'.*J2./z2/xTe_norm(jr2) ...                  
+					        + integral_dke_jd(dpn,xf1_g.*maskl.*(xgamma.*xpn2 - 5*xTe_norm(jr2))./xgamma,1)'.*(1 + 3.0./z2 - 3*gamma.*sigma./z2./z)/6/xTe_norm(jr2)/xTe_norm(jr2) ...
+					        + integral_dke_jd(dpn,xf1_g.*maskl,1)'.*(J3./z/2/betath_ref/betath_ref/xTe_norm(jr2)/xTe_norm(jr2) + J1./z2/2/xTe_norm(jr2) - J4./z/12/betath_ref/betath_ref/xTe_norm(jr2)/xTe_norm(jr2)) ...
+					        + integral_dke_jd(dpn,xf1_g.*maskl.*xpn2./xgamma,1)'.*(gamma.*sigma./z - 1)./pn2/xTe_norm(jr2);
+					XI_g = 4*pi*((fM.*(f1_g + I1_g./pn2 + I2_g.*pn)./gamma)'*mhu).*XXRlambda_b_p1p1(:,:,jr2);   
+					XI_g_t = XI_g(:,Xmask_g);
+				end
 %
-                XXf0_g(:,:,jr2) = Xf1_g;
-            else
-                residu_g(jr2,it_g) = residu_g(jr2,it_g-1);
-            end
-        end 
+				XXf0_g(:,:,jr2) = Xf1_g;
+			else
+				residu_g(jr2,it_g) = residu_g(jr2,it_g-1);
+			end
+		end 
 %
-        c_g(jr2) = -1/xne_norm(jr2) * 2*pi*integral_dke_jd(pn',pn2'.*integral_dke_jd(mhu,(Xf0_g + Xf0_tp),2),1);%Density conservation for g
-        Xf0_g = Xf0_g + c_g(jr2)*Xf0;
-        XXf0_g(:,:,jr2) = Xf0_g;
-    end
+		c_g(jr2) = -1/xne_norm(jr2) * 2*pi*integral_dke_jd(pn',pn2'.*integral_dke_jd(mhu,(Xf0_g + Xf0_tp),2),1);%Density conservation for g
+		Xf0_g = Xf0_g + c_g(jr2)*Xf0;
+		XXf0_g(:,:,jr2) = Xf0_g;
+	end
 else
     XXf0_tp = zeros(size(XXf0));
     XXf0_g = zeros(size(XXf0));
@@ -2063,58 +2076,57 @@ clear f1_g xf1_g I1_g I2_g XI_g XI_g_t
 clear f1_tp xf1_tp I1_tp I2_tp XI_tp XI_g_tp 
 %
 if display == 2,
-		if dke_mode == 1,
+	if dke_mode == 1,
 %           
-        XfM = squeeze(XXfM(:,:,rdke(ir_display)-1));
-        Xf0 = squeeze(XXf0(:,:,rdke(ir_display)-1));
-        figure(102),subplot(321),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf0(:,2),'r-',pn,Xf0(:,nmhu-1),'r-');%f(perp = 0)
-        axis('square');axis([-max(pn),max(pn),1e-20,10]);zoom on
-        title(['Iteration: ',int2str(nit_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
-        hold on;zoom on
-        figure(102),subplot(322),plot([1:nit_f],curr1(rdke(ir_display)-1,:),'r-');
-        axis('square');if max(max(curr1(rdke(ir_display)-1,:))) ~= 0,axis([0,nit_f,0,1.1*max(max(curr1(rdke(ir_display)-1,:)))]);end
-        title('Convergence');xlabel('Iteration');ylabel('Current')
-        hold on;zoom on
-        pause(0.1);
+		XfM = squeeze(XXfM(:,:,rdke(ir_display)-1));
+		Xf0 = squeeze(XXf0(:,:,rdke(ir_display)-1));
+		figure(102),subplot(321),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf0(:,2),'r-',pn,Xf0(:,nmhu-1),'r-');%f(perp = 0)
+		axis('square');axis([-max(pn),max(pn),1e-20,10]);zoom on
+		title(['Iteration: ',int2str(nit_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
+		hold on;zoom on
+		figure(102),subplot(322),plot([1:nit_f],curr1(rdke(ir_display)-1,:),'r-');
+		axis('square');if max(max(curr1(rdke(ir_display)-1,:))) ~= 0,axis([0,nit_f,0,1.1*max(max(curr1(rdke(ir_display)-1,:)))]);end
+		title('Convergence');xlabel('Iteration');ylabel('Current')
+		hold on;zoom on
+		pause(0.1);
 %
-        XfM = squeeze(XXfM(:,:,rdke(ir_display)));
-        Xf0 = squeeze(XXf0(:,:,rdke(ir_display)));
-        figure(102),subplot(323),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf0(:,2),'r-',pn,Xf0(:,nmhu-1),'r-');%f(perp = 0)
-        axis('square');axis([-max(pn),max(pn),1e-20,10]);zoom on
-        title(['Iteration: ',int2str(nit_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
-        hold on;zoom on
-        figure(102),subplot(324),plot([1:nit_f],curr1(rdke(ir_display),:),'r-');
-        axis('square');if max(max(curr1(rdke(ir_display),:))) ~= 0,axis([0,nit_f,0,1.1*max(max(curr1(rdke(ir_display),:)))]);end
-        title('Convergence');xlabel('Iteration');ylabel('Current')
-        hold on;zoom on
-        pause(0.1);
+		XfM = squeeze(XXfM(:,:,rdke(ir_display)));
+		Xf0 = squeeze(XXf0(:,:,rdke(ir_display)));
+		figure(102),subplot(323),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf0(:,2),'r-',pn,Xf0(:,nmhu-1),'r-');%f(perp = 0)
+		axis('square');axis([-max(pn),max(pn),1e-20,10]);zoom on
+		title(['Iteration: ',int2str(nit_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
+		hold on;zoom on
+		figure(102),subplot(324),plot([1:nit_f],curr1(rdke(ir_display),:),'r-');
+		axis('square');if max(max(curr1(rdke(ir_display),:))) ~= 0,axis([0,nit_f,0,1.1*max(max(curr1(rdke(ir_display),:)))]);end
+		title('Convergence');xlabel('Iteration');ylabel('Current')
+		hold on;zoom on
+		pause(0.1);
 %
-        XfM = squeeze(XXfM(:,:,rdke(ir_display)+1));
-        Xf0 = squeeze(XXf0(:,:,rdke(ir_display)+1));
-        figure(102),subplot(325),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf0(:,2),'r-',pn,Xf0(:,nmhu-1),'r-');%f(perp = 0)
-        axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
-        title(['Iteration: ',int2str(nit_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
-        hold on;zoom on
-        figure(102),subplot(326),plot([1:nit_f],curr1(rdke(ir_display)+1,:),'r-');
-        axis('square');if max(max(curr1(rdke(ir_display)+1,:))) ~= 0,axis([0,nit_f,0,1.1*max(max(curr1(rdke(ir_display)+1,:)))]);end
-        title('Convergence');xlabel('Iteration');ylabel('Current')
-        hold on;zoom on
-        pause(0.1);
+		XfM = squeeze(XXfM(:,:,rdke(ir_display)+1));
+		Xf0 = squeeze(XXf0(:,:,rdke(ir_display)+1));
+		figure(102),subplot(325),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf0(:,2),'r-',pn,Xf0(:,nmhu-1),'r-');%f(perp = 0)
+		axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
+		title(['Iteration: ',int2str(nit_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
+		hold on;zoom on
+		figure(102),subplot(326),plot([1:nit_f],curr1(rdke(ir_display)+1,:),'r-');
+		axis('square');if max(max(curr1(rdke(ir_display)+1,:))) ~= 0,axis([0,nit_f,0,1.1*max(max(curr1(rdke(ir_display)+1,:)))]);end
+		title('Convergence');xlabel('Iteration');ylabel('Current')
+		hold on;zoom on
+		pause(0.1);
+	else
+    	        XfM = squeeze(XXfM(:,:,rdke(ir_display)));
+    	        Xf0 = squeeze(XXf0(:,:,rdke(ir_display)));
 %
-    else
-        XfM = squeeze(XXfM(:,:,rdke(ir_display)));
-        Xf0 = squeeze(XXf0(:,:,rdke(ir_display)));
-%
-        figure(102),subplot(121),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf0(:,2),'r-',pn,Xf0(:,nmhu-1),'r-');%f(perp = 0)
-        axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
-        title(['Iteration: ',int2str(nit_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
-        hold on;
-        figure(102),subplot(122),plot([1:nit_f],curr1(rdke(ir_display),:),'r-');
-        axis('square');if max(max(curr1(rdke(ir_display),:))) ~= 0,axis([0,nit_f,0,1.1*max(max(curr1(rdke(ir_display),:)))]);end
-        title('Current convergence');xlabel('Iteration');ylabel('Current')
-        hold on;
-        pause(0.1);
-    end
+    	        figure(102),subplot(121),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf0(:,2),'r-',pn,Xf0(:,nmhu-1),'r-');%f(perp = 0)
+    	        axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
+    	        title(['Iteration: ',int2str(nit_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
+    	        hold on;
+    	        figure(102),subplot(122),plot([1:nit_f],curr1(rdke(ir_display),:),'r-');
+    	        axis('square');if max(max(curr1(rdke(ir_display),:))) ~= 0,axis([0,nit_f,0,1.1*max(max(curr1(rdke(ir_display),:)))]);end
+    	        title('Current convergence');xlabel('Iteration');ylabel('Current')
+    	        hold on;
+    	        pause(0.1);
+       end
 end
 %
 clear ir XfM Xf0
