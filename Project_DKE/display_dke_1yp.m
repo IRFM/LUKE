@@ -349,7 +349,16 @@ while 1,
 	    		else
 					info_dke_yp(2,'No magnetic ripple loss calculations');
 					disp('-------------------------------------------------------------------------------------------------------------------');
+	    			xpndetrap_ref = NaN;
+        			xmhusupertrap = NaN;
+    				pparsupertrap_ref = NaN;
+        			pperpsupertrap_ref = NaN;
 	    		end
+	    	else
+	    		xpndetrap_ref = NaN;
+        		xmhusupertrap = NaN;
+    			pparsupertrap_ref = NaN;
+        		pperpsupertrap_ref = NaN;
 	    	end
 	    else
 	    	xpndetrap_ref = NaN;

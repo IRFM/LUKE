@@ -1,4 +1,4 @@
-function  [kphot,brem_bd_plasma,brem_bd_diag,tphot_plasma,afit_plasma,tphot_plasma_exp,afit_plasma_exp,meanabsx] = bremdiag_dke_yp(tokamak,HXR,kphot,brem_bd_in,display_mode,c_display)
+function  [kphot,brem_bd_plasma,brem_bd_diag,tphot_plasma,afit_plasma,tphot_plasma_exp,afit_plasma_exp,meanabsx] = bremdiag_dke_yp(equil,hxr,kphot,brem_bd_in,display_mode,c_display)
 %
 % Calculates the bremsstrahlung emission as merasured by the HXR diagnostic
 %taking inot account of the detector's response function. 

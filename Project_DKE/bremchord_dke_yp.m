@@ -1,4 +1,4 @@
-function [vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr] = bremchord_dke_yp(equil,hxr,xpsin,xpsin_S,mfactor,method,display,ns);
+function [vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr] = bremchord_dke_yp(equil,hxr,xpsin,xpsin_S,mfactor,method,display,ns,mtheta);
 %
 % This function calculates chord positions fro bremsstrahlung tomography in a torus along unit vector g. 
 %
@@ -8,8 +8,8 @@ function [vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr] = bremchord_dke_yp(equil
 %       - hxr: Bremsstrahlung structure 
 %       - xpsin: poloidal flux surfaces for f used by DKE code [1,npsi]
 %       - xpsin_S: poloidal flux surfaces used for S by DKE code [1,npsi+1]
-%       - mfactor:
-%         (default = 10)
+%       - mfactor: amplification number of poloidal angles compared to the value of the equilbrium code (>1) [1,1]
+%         (default = 1)
 %       - method: interpolation method
 %         (default = 'spline')
 %       - display: display chords [1,1]
@@ -31,8 +31,8 @@ function [vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr] = bremchord_dke_yp(equil
 if nargin < 4,
     error('Not enough arguments in bremchord_dke_yp')
 elseif nargin == 4,
-   	mfactor = 1;
-		method = 'spline'; 	
+   	  mfactor = 1;
+	  method = 'spline'; 	
       display = 2;
       ns = 2000;
 elseif nargin == 5,
@@ -49,16 +49,7 @@ end
 ns = abs(ns);%Force ns to be always positive
 nchords = length(hxr.alpha_hxr);%chord number
 %
-coefr = 1;%For reducing the number of poloidal positions
-[theta,ppsin,psia,ptR,ptZ,ptBR,ptBZ,ptBphi,ptB0,ptR0,ptBT0,ptBp0,ptrho] = equilibrium_jd(equil);
-ppsin = ppsin(:);
-nreduc = min([coefr,length(theta)]);%For reducing the number of poloidal positions
-theta = theta(1:nreduc:end);
-ptR=ptR(:,1:nreduc:end);
-ptZ=ptZ(:,1:nreduc:end);
-ptBR=ptBR(:,1:nreduc:end);
-ptBZ=ptBZ(:,1:nreduc:end);
-ptBphi=ptBphi(:,1:nreduc:end);
+[theta,ppsin,psia,ptR,ptZ,ptBR,ptBZ,ptBphi,ptB0,ptR0,ptBT0,ptBp0,ptrho] = equilibrium_jd(equil,NaN,NaN,0,method,mfactor);
 %
 Rp = ptR(1,1);%Plasma major radius (m)
 Zp = ptZ(1,1);%Plasma vertical position (m)
