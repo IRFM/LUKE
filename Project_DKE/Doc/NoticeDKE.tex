@@ -38,7 +38,7 @@
 
 \chapter{Introduction}
 
-      %\input{Introduction.tex}
+      \input{Introduction.tex}
 		
 \chapter{Tokamak geometry and particle dynamic}
 
@@ -70,7 +70,7 @@
 
 		\input{DriftOrdering.tex}
 
-	\section{Low collisionality limit and bounce averaging}
+	\section{Low collision limit and bounce averaging}
 
 		\input{LowCollisionality.tex}
 
@@ -94,23 +94,19 @@
 
 		\subsection{Zero order term: the Fokker-Planck equation}
 
-			\subsubsection{Dynamics in Momentum Space}
+			\subsubsection{Fluxes in Momentum Space}
 
 				\input{FP_FluxConsMomentum.tex}
 
-			\subsubsection{Dynamics in Configuration Space}
+			\subsubsection{Fluxes in Configuration Space}
 
 				%\input{FP_FluxConsConfiguration.tex}
 
 			\subsection{Up to first order term: the Drift Kinetic equation}
 
-				\subsubsection{Dynamics in Momentum Space}
+				\subsubsection{Fluxes in Momentum Space}
 
 					\input{DKE_FluxConsMomentum.tex}
-
-				\subsubsection{Dynamics in Configuration Space}
-
-					%\input{DKE_FluxConsConfiguration.tex}
 
 	\section{Moments of the distribution function}
 
@@ -168,7 +164,7 @@
 
 		\input{DiscreteProcedure.tex}
 
-	\section{Zero order Fokker-Planck Equation}
+	\section{Zero order term: the Fokker-Planck equation}
 	
 		\subsection{Momentum dynamics}
 
@@ -186,7 +182,7 @@
 		
 			\input{FP_DiscretePhysProc.tex}
 	
-	\section{First order Drift Kinetic Equation}
+	\section{Up to first order term: the Drift Kinetic equation}
 	
 		\subsection{Grid interpolation}
 
@@ -200,35 +196,39 @@
 
 			\input{DKE_DiscretePhysProc.tex}
 			
+	\section{Boundary conditions}
+	
+	        \subsection{Zero order term: the Fokker-Planck equation}
+		
+		        \input{FP_Boundaries.tex}
+	 
+	        \subsection{Up to first order term: the Drift Kinetic equation}
+			
+	     	        \input{DKE_Boundaries.tex}
+
 	\section{Numerical integrals for moment calculations}
 	
-		\subsection{Plasma Current}
-
-			%\input{DiscreteCurrent.tex}
-
-		\subsection{Absorbed Power}
-
-			%\input{DiscretePower.tex}
+		%\input{DiscreteMoments.tex}
 
 \chapter{Algorithm}
 
 	\section{Matrix representation}
 	
-		\subsection{Zero order Fokker-Planck Equation}
+		\subsection{Zero order term: the Fokker-Planck equation}
 
 			\input{FP_Matrix.tex}
 		
-		\subsection{First order Drift Kinetic Equation}
+		\subsection{Up to first order term: the Drift Kinetic equation}
 
 			%\input{DKE_Matrix.tex}
 
 	\section{Inversion procedure}
 	
-		\subsection{Zero order Fokker-Planck Equation}
+		\subsection{Zero order term: the Fokker-Planck equation}
 
 			%\input{FP_Inversion.tex}
 
-		\subsection{First order Drift Kinetic Equation}
+		\subsection{Up to first order term: the Drift Kinetic equation}
 
 			%\input{DKE_Inversion.tex}
 			
