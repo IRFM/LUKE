@@ -70,7 +70,7 @@ power density, generally noted $\mathbf{\Phi }\left( \psi ,\theta \right) $.
 It is defined as the average value of $\mathbf{\Gamma }$ within the
 infinitesimal volume $dV\left( \psi \right) $ 
 \begin{equation}
-\left\langle \Gamma \right\rangle _{V}\left( \psi \right) =\frac{%
+\left\langle \mathbf{\Phi }\right\rangle _{V}\left( \psi \right) =\frac{%
 \iint_{dV\left( \psi \right) }\mathbf{\Phi }\left( \psi ,\theta \right) dV}{%
 \iint_{dV\left( \psi \right) }dV}
 \end{equation}
@@ -315,7 +315,7 @@ B_{P}}\frac{J_{\Vert }\left( \psi ,\theta \right) }{\Psi \left( \psi ,\theta
 
 \subsubsection{Fokker-Planck Equation}
 
-When we consider only the zero order distribution function, we have that $
+When we consider only the zero order distribution function, we have that $%
 f_{0}$ is constant along a field line, so that 
 \begin{equation}
 f_{0}\left( p,\xi ,\psi ,\theta \right) =f_{0}^{(0)}\left( p,\xi _{0},\psi
@@ -346,7 +346,7 @@ where the condition
 \end{equation}
 results from the equation (\ref{xi0}) and means that only the particle who
 reach the position $\theta $ must be considered. Note that the integrand in
-the equation (\ref{jpar}) is odd in $\xi _{0}$ for trapped electrons, since $
+the equation (\ref{jpar}) is odd in $\xi _{0}$ for trapped electrons, since $%
 f_{0}^{(0)}$ is symmetric in the trapped region. As a consequence, the
 contribution from trapped electrons vanishes, and (\ref{jpar}) can be
 rewritten as 
@@ -418,12 +418,16 @@ In addition, $\overline{q}\left( \psi \right) $ becomes
 
 We have then 
 \begin{equation}
-\frac{q\left( \psi \right) }{\overline{q}\left( \psi \right) }=\sqrt{\frac{
+\frac{q\left( \psi \right) }{\overline{q}\left( \psi \right) }=\sqrt{\frac{%
 1+\epsilon }{1-\epsilon }}\frac{B_{T}}{B}
 \end{equation}
 
 In the case when $B_{T}\gg B_{P}$, we retrieve the bounce-averaged
-coefficient $s^{*}$.
+coefficient $s^{*}$ and in the limit $\epsilon \ll 1,$%
+\begin{equation}
+\lim_{\epsilon \rightarrow 0}\frac{q\left( \psi \right) }{\overline{q}\left(
+\psi \right) }=\left( 1+\epsilon \right) \frac{B_{T}}{B}
+\end{equation}
 
 \subsubsection{Drift Kinetic Equation}
 
@@ -613,8 +617,8 @@ When the operator is described in conservative form, as the divergence of a
 flux
 
 \begin{equation}
-\left. \frac{\partial f}{\partial t}\right| _{\mathcal{O}}=-\nabla _{\mathbf{
-p} }\cdot \mathbf{S}_{\mathbf{p}}^{\mathcal{O}}=-\frac{1}{p^{2}}\frac{%
+\left. \frac{\partial f}{\partial t}\right| _{\mathcal{O}}=-\nabla _{\mathbf{%
+\ p} }\cdot \mathbf{S}_{\mathbf{p}}^{\mathcal{O}}=-\frac{1}{p^{2}}\frac{%
 \partial }{\partial p}\left( p^{2}S_{p}^{\mathcal{O}}\right) +\frac{1}{p}%
 \frac{\partial }{\partial \xi }\left( \sqrt{1-\xi ^{2}}S_{\xi }^{\mathcal{O}
 }\right)
@@ -1004,15 +1008,15 @@ electric field $\left\langle E_{\Vert }\right\rangle _{\phi },$%
 By definition, 
 \begin{eqnarray}
 \left\langle E_{\Vert }\right\rangle _{\phi }\left( \psi \right) &=&\frac{1}{%
-\overline{q}\left( \psi \right) }\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{
+\overline{q}\left( \psi \right) }\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{%
 1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R}\frac{B_{\min
 }\left( \psi \right) }{B_{P}}E_{\Vert }\left( \psi ,\theta \right) \left[ 
 \widehat{\phi }\mathbf{\cdot }\widehat{b}\right]  \nonumber \\
-&=&\frac{1}{\overline{q}\left( \psi \right) }\int_{0}^{2\pi }\frac{d\theta }{
+&=&\frac{1}{\overline{q}\left( \psi \right) }\int_{0}^{2\pi }\frac{d\theta }{%
 2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R}%
 \frac{B_{\min }\left( \psi \right) }{B_{P}}E_{\Vert }\left( \psi ,\theta
 \right) \frac{B_{T}}{B}  \nonumber \\
-&=&\frac{1}{\overline{q}\left( \psi \right) }\int_{0}^{2\pi }\frac{d\theta }{
+&=&\frac{1}{\overline{q}\left( \psi \right) }\int_{0}^{2\pi }\frac{d\theta }{%
 2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R}%
 \frac{B_{T}}{B_{P}}\frac{E_{\Vert }\left( \psi ,\theta \right) }{\Psi \left(
 \psi ,\theta \right) }
@@ -1027,47 +1031,103 @@ where $E_{\Vert }^{\left( 0\right) }\left( \psi \right) =E_{\Vert }\left(
 \psi ,\theta _{0}\right) $ is the value at $B_{\min }$, one obtains 
 \begin{eqnarray}
 \left\langle E_{\Vert }\right\rangle _{\phi }\left( \psi \right) &=&\frac{1}{%
-\overline{q}\left( \psi \right) }\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{
-1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R}\frac{B_{T}}{
+\overline{q}\left( \psi \right) }\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{%
+1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R}\frac{B_{T}}{%
 B_{P}}\frac{E_{\Vert }^{\left( 0\right) }\left( \psi \right) }{\Psi
 ^{2}\left( \psi ,\theta \right) }\frac{R^{2}\left( \psi ,\theta _{0}\right) 
 }{R^{2}\left( \psi ,\theta \right) }  \nonumber \\
-&=&\frac{E_{\Vert }^{\left( 0\right) }\left( \psi \right) }{\overline{q}%
+&=&E_{\Vert }^{\left( 0\right) }\left( \psi \right) \frac{1}{\overline{q}%
 \left( \psi \right) }\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{1}{\left| 
 \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R}\frac{B_{T}}{B_{P}}\frac{%
 1}{\Psi ^{2}\left( \psi ,\theta \right) }\frac{R^{2}\left( \psi ,\theta
 _{0}\right) }{R^{2}\left( \psi ,\theta \right) }
 \end{eqnarray}
+or 
+\begin{eqnarray}
+\left\langle E_{\Vert }\right\rangle _{\phi }\left( \psi \right) &=&E_{\Vert
+}^{\left( 0\right) }\left( \psi \right) \frac{1}{\overline{q}\left( \psi
+\right) }\frac{R_{0}}{R\left( \psi ,\theta _{0}\right) }\int_{0}^{2\pi }%
+\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}%
+\right| }\frac{r}{R_{0}}\frac{B}{B_{P}}\frac{\xi _{0}}{\xi }\left[ \frac{\xi 
+}{\xi _{0}}\frac{B_{T}}{B}\frac{1}{\Psi ^{2}\left( \psi ,\theta \right) }%
+\frac{R^{3}\left( \psi ,\theta _{0}\right) }{R^{3}\left( \psi ,\theta
+\right) }\right]  \nonumber \\
+&=&E_{\Vert }^{\left( 0\right) }\left( \psi \right) \frac{1}{\overline{q}%
+\left( \psi \right) }\frac{R_{0}}{R\left( \psi ,\theta _{0}\right) }%
+\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot 
+\widehat{r}\right| }\frac{r}{R_{0}}\frac{B}{B_{P}}\frac{\xi _{0}}{\xi }\times
+\nonumber \\
+&&\left[ \frac{\xi }{\xi _{0}}\frac{B_{T}}{B_{T}\left( \psi ,\theta
+_{0}\right) }\frac{B_{T}\left( \psi ,\theta _{0}\right) }{B\left( \psi
+,\theta _{0}\right) }\frac{B\left( \psi ,\theta _{0}\right) }{B}\frac{1}{%
+\Psi ^{2}\left( \psi ,\theta \right) }\frac{R^{3}\left( \psi ,\theta
+_{0}\right) }{R^{3}\left( \psi ,\theta \right) }\right]  \nonumber \\
+&=&E_{\Vert }^{\left( 0\right) }\left( \psi \right) \frac{1}{\overline{q}%
+\left( \psi \right) }\frac{R_{0}}{R\left( \psi ,\theta _{0}\right) }\frac{%
+B_{T}\left( \psi ,\theta _{0}\right) }{B\left( \psi ,\theta _{0}\right) }%
+\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot 
+\widehat{r}\right| }\frac{r}{R_{0}}\frac{B}{B_{P}}\frac{\xi _{0}}{\xi }%
+\left[ \frac{\xi }{\xi _{0}}\frac{1}{\Psi ^{3}\left( \psi ,\theta \right) }%
+\frac{R^{4}\left( \psi ,\theta _{0}\right) }{R^{4}\left( \psi ,\theta
+\right) }\right]  \nonumber \\
+&=&E_{\Vert }^{\left( 0\right) }\left( \psi \right) \frac{\widetilde{q}%
+\left( \psi \right) }{\overline{q}\left( \psi \right) }\frac{R_{0}}{R\left(
+\psi ,\theta _{0}\right) }\frac{B_{T}\left( \psi ,\theta _{0}\right) }{%
+B\left( \psi ,\theta _{0}\right) }\lambda \sigma \left\{ \sigma \frac{\xi }{
+\xi _{0}}\frac{1}{\Psi ^{3}\left( \psi ,\theta \right) }\frac{R^{4}\left(
+\psi ,\theta _{0}\right) }{R^{4}\left( \psi ,\theta \right) }\right\} 
+\nonumber \\
+&=&E_{\Vert }^{\left( 0\right) }\left( \psi \right) \frac{\widetilde{q}%
+\left( \psi \right) }{\overline{q}\left( \psi \right) }\frac{R_{0}}{R\left(
+\psi ,\theta _{0}\right) }\frac{B_{T}\left( \psi ,\theta _{0}\right) }{%
+B\left( \psi ,\theta _{0}\right) }\overline{\lambda }_{1,-3,4}
+\end{eqnarray}
 
 \paragraph{Case of circular concentric flux-surfaces}
 
 In that case, 
-\[
-\frac{B_{T}}{B_{P}}=q\left( r\right) \frac{\sqrt{1-\epsilon ^{2}}}{\epsilon }
-\]
-with $\epsilon =r/R_{p}.$ Therefore, 
 \begin{equation}
-\left\langle E_{\Vert }\right\rangle _{\phi }\left( r\right) =\frac{q\left(
-r\right) }{\overline{q}\left( r\right) }\sqrt{1-\epsilon ^{2}}E_{\Vert
-}^{\left( 0\right) }\left( r\right)
+\frac{\widetilde{q}\left( r\right) }{\overline{q}\left( r\right) }%
+=1+\epsilon 
 \end{equation}
-since $\Psi ^{2}\left( \psi ,\theta \right) =R^{2}\left( \psi ,\theta
-\right) /R^{2}\left( \psi ,\theta _{0}\right) ,$ and using the fact that 
+and since $R_{0}/R\left( r,\theta _{0}\right) =1/\left( 1+\epsilon \right) ,$%
+\begin{eqnarray}
+\left\langle E_{\Vert }\right\rangle _{\phi }\left( r\right)  &=&\frac{B_{T}%
+}{B}\overline{\lambda }_{1,-1,2}E_{\Vert }^{\left( 0\right) }\left( r\right) 
+\nonumber \\
+&=&\frac{B_{T}}{B}\overline{\lambda }_{1,1,0}E_{\Vert }^{\left( 0\right)
+}\left( r\right) 
+\end{eqnarray}
+using relation $\Psi \left( r,\theta \right) =R\left( r,\theta \right)
+/R\left( r,\theta _{0}\right) .$ Therefore, 
 \begin{equation}
-\frac{q\left( r\right) }{\overline{q}\left( r\right) }=\sqrt{\frac{%
-1+\epsilon }{1-\epsilon }}\frac{B_{T}}{B}
+\left\langle E_{\Vert }\right\rangle _{\phi }\left( r\right) =\frac{B_{T}}{B}%
+\sqrt{\frac{1+\epsilon }{1-\epsilon }}E_{\Vert }^{\left( 0\right) }\left(
+r\right) 
 \end{equation}
-one finds 
+as $\overline{\lambda }_{1,-1,2}=\sqrt{\frac{1+\epsilon }{1-\epsilon }}$ for
+circular concentric flux-surfaces. Moreover, in this limit, 
 \begin{equation}
-\left\langle E_{\Vert }\right\rangle _{\phi }\left( r\right) =\left(
-1+\epsilon \right) \frac{B_{T}}{B}E_{\Vert }^{\left( 0\right) }\left(
-r\right)
+\sigma _{e}=\frac{\left\langle J_{\Vert }\right\rangle _{\phi }^{0}}{%
+\left\langle E_{\Vert }\right\rangle _{\phi }}=\frac{J_{\Vert }^{0\left(
+0\right) }}{E_{\Vert }^{\left( 0\right) }}
 \end{equation}
-and in the limit $B_{P}\ll B_{T,}$ 
+since
 \begin{equation}
-\left\langle E_{\Vert }\right\rangle _{\phi }\left( r\right) \simeq \left(
-1+\epsilon \right) E_{\Vert }^{\left( 0\right) }\left( r\right)
+\left\langle J_{\Vert }\right\rangle _{\phi }^{\left( 0\right) }\left( \psi
+,\theta \right) =\frac{B_{T}}{B}\sqrt{\frac{1+\epsilon }{1-\epsilon }}%
+J_{\Vert }^{0\left( 0\right) }
 \end{equation}
+with
+\begin{equation}
+J_{\Vert }^{0\left( 0\right) }=\frac{2\pi q_{e}}{m}\int_{0}^{\infty %
+}p^{2}dp\int_{-1}^{1}d\xi _{0}H\left( \left| \xi _{0}\right| -\xi
+_{0T}\right) \;\frac{p\xi _{0}}{\gamma m}f_{0}^{(0)}\left( p,\xi _{0},\psi
+\right) 
+\end{equation}
+
+In that case, the neo-classical conductivity can be either calculated from
+flux surface averaged quantity, or local values at $B=B_{\min }$. 
 
 \subsection{Fraction of trapped electrons}
 
@@ -1224,7 +1284,7 @@ shown in Appendix ***. Here,
 \end{equation}
 with $\epsilon =r/R.$
 
-It is interesting to estimate the parametric dependence of $\mathcal{F}%
+It is interesting to estimate the parametric dependence of $\mathcal{F}
 _{t0}^{M}$ for $\epsilon \ll 1.$ For trapped particles, 
 \begin{equation}
 \lambda \left( \xi _{0}\right) \simeq \frac{2}{\pi }\frac{\left| \xi
@@ -1307,7 +1367,7 @@ recovered, as expected from an intuitive explanation.
 
 It is worth noting that this result is well recovered by a simple
 Monte-Carlo technique, where the poloidal angle $\theta $ is taken to be a
-uniform random variable between $0$ and $2\pi ,$ as well as $\xi $ between $
+uniform random variable between $0$ and $2\pi ,$ as well as $\xi $ between $%
 -1$ and $1$. Using the relation which translates $\xi $ to $\xi _{0}$ at the
 minimum $B$ value, and considering that the particle is trapped when $\left|
 \xi _{0}\right| \leq \xi _{0T},$ the fraction of trapped particle found
@@ -1330,30 +1390,30 @@ the onset of the bootstrap current.
 
 When the Ohmic electric field exceeds the Dreicer level, a fraction of the
 electron population run away. The conservation of the total number of
-electrons is therefore no more conserved, since the flux $S_{p}\neq 0$ at $
-p=p_{\max }$.  The runaway rate $\Gamma _{R}$ is given by the relation 
+electrons is therefore no more conserved, since the flux $S_{p}\neq 0$ at $%
+p=p_{\max }$. The runaway rate $\Gamma _{R}$ is given by the relation 
 \begin{equation}
-\Gamma _{R}\left( \psi ,\theta ,p\right) =2\pi p^{2}\int_{-1}^{+1}S_{p}d\xi 
+\Gamma _{R}\left( \psi ,\theta ,p\right) =2\pi p^{2}\int_{-1}^{+1}S_{p}d\xi
 \end{equation}
 
 The flux-surface averaged runaway rate $\left\langle \Gamma
-_{R}\right\rangle _{V}$ is given by the relation
+_{R}\right\rangle _{V}$ is given by the relation 
 \begin{equation}
 \left\langle \Gamma _{R}\right\rangle _{V}\left( \psi ,p\right) =\frac{2\pi 
 }{\widehat{q}\left( \psi \right) }p^{2}\int_{0}^{2\pi }\frac{d\theta }{2\pi }%
 \frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}}%
-\frac{B_{\min }\left( \psi \right) }{B_{P}}\int_{-1}^{+1}S_{p}d\xi 
+\frac{B_{\min }\left( \psi \right) }{B_{P}}\int_{-1}^{+1}S_{p}d\xi
 \end{equation}
-and since
+and since 
 \begin{equation}
 \int_{-1}^{+1}d\xi =\int_{-1}^{+1}\;\Psi \left( \psi ,\theta \right) \frac{%
 \xi _{0}}{\xi }H\left( \left| \xi _{0}\right| -\sqrt{1-\frac{1}{\Psi \left(
 \psi ,\theta \right) }}\right) d\xi _{0}
 \end{equation}
-one obtains
+one obtains 
 \begin{eqnarray}
-\left\langle \Gamma _{R}\right\rangle _{V}\left( \psi ,p\right)  &=&\frac{2%
-\pi }{\widehat{q}\left( \psi \right) }p^{2}\int_{-1}^{+1}d\xi _{0}\left[ 
+\left\langle \Gamma _{R}\right\rangle _{V}\left( \psi ,p\right) &=&\frac{%
+2\pi }{\widehat{q}\left( \psi \right) }p^{2}\int_{-1}^{+1}d\xi _{0}\left[ 
 \frac{1}{2}\sum_{\sigma }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}%
 \frac{d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}%
 \right| }\frac{r}{R_{0}}\frac{B}{B_{P}}\frac{\xi _{0}}{\xi }S_{p}  \nonumber
