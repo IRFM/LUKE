@@ -1,143 +1,133 @@
-As in many applications in plasma physics, collisions dominate the thermal
-particles, and therefore, the distribution function may be expanded about a
-Maxwellian
-\begin{equation}
-f_{0}=f_{0M}+\widehat{f}_{0}
-\end{equation}
-and the self-collision operator $\mathcal{C}\left( f_{0}\right) \equiv 
-\mathcal{C}\left( f_{0},f_{0}\right) $may be approximated by the linearized
-operator 
-\begin{equation}
-\mathcal{C}\left( f_{0},f_{0}\right) \simeq \mathcal{C}_{lin}\left(
-f_{0},f_{0}\right) \simeq \mathcal{C}\left( f_{0},f_{0M}\right) +\mathcal{C}%
-\left( f_{0M},f_{0}\right) 
-\end{equation}
-where one have made use of the fact that $\mathcal{C}\left(
-f_{0M},f_{0M}\right) =0$ while  $\widehat{f}_{0}^{2}$ terms are ignored. 
-
-The usual approach is to express $\mathcal{C}\left( f_{0M},f_{0}\right) $ as
-a sum of Legendre harmonics, 
-\begin{equation}
-\mathcal{C}(f_{0M},f_{0})=\sum_{l=0}^{\infty }\mathcal{C}\left(
-f_{0M},f_{0,l}P_{l}\left( \xi \right) \right) 
-\end{equation}
-where
-\begin{equation}
-f_{0}\left( p,\xi ,\psi ,\theta \right) =\sum_{l=0}^{\infty %
-}f_{0,l}P_{l}\left( \xi \right) 
-\end{equation}
-with
-\begin{equation}
-f_{0,l}\left( p,\xi ,\psi ,\theta \right) =\left( l+\frac{1}{2}\right)
-\int_{-1}^{+1}f_{0}\left( p,\xi ,\psi ,\theta \right) P_{l}\left( \xi
-\right) d\xi 
-\end{equation}
-
-Here, 
-\begin{equation}
-\mathcal{C}\left( f_{0},f_{0}\right) =\mathcal{C}_{ee}\left(
-f_{0},f_{0}\right) +\mathcal{C}_{ei}\left( f_{0},f_{0}\right) 
-\end{equation}
-where $\mathcal{C}_{ei}$ and $\mathcal{C}_{ee}$ describe respectively the
-electron-ion and electron-electron collision processes. Because of the large
-difference of mass between electrons and ions, $\mathcal{C}%
-_{ei}(f_{0M},f_{0})\simeq 0,$ while higher order terms must be kept for
-electron-electron interactions, in order to conserve momentum transfer
-during the collisions. For neary all current drive problems in tokamak
-physics, the sum may be truncated up to the first term\footnote{%
-Second order calculations have shown negligible modifications on the
-numerical solution of the drift kinetic euqation for the current drive
-problem.}, and therefore,
-\begin{equation}
-\mathcal{C}_{ee}\left( f_{0M},f_{0}\right) \simeq \mathcal{C}_{ee}\left(
-f_{0M},\xi f_{0_{1}}\right) \simeq \xi \mathcal{I}\left(
-f_{0M},f_{0,l=1}\right) 
-\end{equation}
-where
-\begin{equation}
-f_{0,l=1}\left( p,\xi ,\psi ,\theta \right) =\frac{3}{2}\int_{-1}^{+1}\xi
-f_{0}\left( p,\xi ,\psi ,\theta \right) d\xi 
-\end{equation}
-
-As a consequence, the collision operator conserves number and momentum, but
-not energy, so there is no need to introduce an energy loss term in the
-equations. In its general form, the expression of $\mathcal{C}\left(
-f_{0}\right) $is then
-\begin{equation}
-\mathcal{C}\left( f_{0}\right) \simeq \mathcal{C}_{ee}\left(
-f_{0},f_{0M}\right) +\mathcal{C}_{ei}\left( f_{0},f_{0M}\right) +\mathcal{C}%
-_{ee}\left( f_{0M},\xi f_{0,l=1}\right) 
-\end{equation}
-where the first two terms may be cast as the divergence of a flux as follows 
-\begin{equation}
-\mathcal{C}_{ee}(f_{0},f_{0M})+\mathcal{C}_{ei}(f_{0},f_{0M})=-\nabla _{%
-\mathbf{p}}\cdot \mathbf{S}^{\text{C}}=-\frac{1}{p^{2}}\frac{\partial }{%
-\partial p}\left( p^{2}S_{p}^{\text{C}}\right) +\frac{1}{p}\frac{\partial }{%
-\partial \xi }\left( \sqrt{1-\xi ^{2}}S_{\xi }^{\text{C}}\right) 
-\end{equation}
-with the components 
+In the Fokker-Planck equation, the diffusion and convection elements are
+bounce-averaged according to the expressions (\ref{diffbav})-(\ref{convbav}%
+), which gives, using (\ref{Dcoll})-(\ref{Fcoll}), 
 \begin{eqnarray}
-S_{p}^{\text{C}} &=&-\left[ A\left( p,\psi ,\theta \right) \frac{\partial %
-f_{0}}{\partial p}+F\left( p,\psi ,\theta \right) f_{0}\right]  \\
-S_{\xi }^{\text{C}} &=&\frac{B_{t}\left( p,\psi ,\theta \right) }{p}\sqrt{%
-1-\xi ^{2}}\frac{\partial f_{0}}{\partial \xi }
+D_{pp}^{\text{C}(0)} &=&\left\{ A\left( p,\psi ,\theta \right) \right\} \\
+D_{p\xi }^{\text{C}(0)} &=&0  \nonumber \\
+D_{\xi p}^{\text{C}(0)} &=&0  \nonumber \\
+D_{\xi \xi }^{\text{C}(0)} &=&\left\{ \frac{\xi ^{2}}{\Psi \xi _{0}^{2}}%
+B_{t}\left( p,\psi ,\theta \right) \right\}  \nonumber
+\end{eqnarray}
+and the convection components 
+\begin{eqnarray}
+F_{p}^{\text{C}(0)} &=&-\left\{ F\left( p,\psi ,\theta \right) \right\} \\
+F_{\xi }^{\text{C}(0)} &=&0  \nonumber
+\end{eqnarray}
+and therefore 
+\begin{eqnarray}
+D_{pp}^{\text{C}(0)} &=&A^{\left( 0\right) }\left( p,\psi \right) \\
+D_{p\xi }^{\text{C}(0)} &=&0  \nonumber \\
+D_{\xi p}^{\text{C}(0)} &=&0  \nonumber \\
+D_{\xi \xi }^{\text{C}(0)} &=&\frac{\lambda _{2,-1,0}}{\lambda }%
+B_{t}^{\left( 0\right) }\left( p,\psi \right)  \nonumber
+\end{eqnarray}
+and 
+\begin{eqnarray}
+F_{p}^{\text{C}(0)} &=&-F^{\left( 0\right) }\left( p,\psi \right) \\
+F_{\xi }^{\text{C}(0)} &=&0  \nonumber
 \end{eqnarray}
 
-Coefficients $A\left( p,\psi ,\theta \right) $ and  $F\left( p,\psi ,\theta
-\right) $ describes respectively momentum diffusion and convection, while $%
-B_{t}\left( p,\psi ,\theta \right) $corresponds to pitch-angle scattering.
-There values as well as that of $\mathcal{I}\left( p,\psi ,\theta \right)
-\equiv \mathcal{I}\left( f_{0M},f_{0,l=1\ss }\right) $depend of a model of
-collision. Simplified expressions may be obtained for an isotropic or
-Maxwellian backgrounds and also in the high velocity limit, when $v\gg
-v_{th}.$ The latter case has been fruitfuly used for the current drive
-problem involving very energetic or runaway electrons. Detailed expressions
-of  $A\left( p,\psi ,\theta \right) ,$ $F\left( p,\psi ,\theta \right) $,  $%
-B_{t}\left( p,\psi ,\theta \right) $and $\mathcal{I}\left( p,\psi ,\theta
-\right) $are given in Appendix *** for this useful limit. 
+Here, coefficients $A^{\left( 0\right) }\left( p,\psi \right) ,$ $%
+B_{t}^{\left( 0\right) }\left( p,\psi \right) $ and $F^{\left( 0\right)
+}\left( p,\psi \right) $ are determined at the location where $B=B_{min}$ on
+the magnetic flux surface. The bounce coefficient $\lambda _{2,-1,0}$ is
+defined as (\ref{lkm}) 
+\begin{equation}
+\lambda _{2,-1,0}=\lambda \left\{ \frac{\xi ^{2}}{\Psi \xi _{0}^{2}}\right\}
+\end{equation}
 
-In the code, the coefficients are deduced from the Beliaev-Budker collision
-operator which is a fully relativistic formulation of the Landau expression
-which is only valid for weakly energetic particles. Despite its complex
-tensorial form, it has been successfuly expressed as pseudo-Rosenbluth
-potentials using a Legendre harmonics expansion [B. Brams and C. F. Karney,
-Phys. Fluids B1 (1989) 1355], a formulation that opens the possibility to
-incorporate this operator in numerical calculations, since integrals may be
-determined in a fast and accurate manner. As compared to methods used in
-most of the kinetic codes dedicated to the current drive problem, which
-usually use several approximate expressions for the collision operator only
-valid in limited range of energy, the use of the  Beliaev-Budker collision
-operator represents a great advantage. Indeed, the whole momentum dynamics
-from non-relativistic to highly relativistic limit may be described by a
-single operator, which strongly enhance simulation reliability, when both
-limits come simultaneously into play,like for self-consistent bootstrap
-current calculations in presence of RF waves. Exact expressions of  $A\left(
-p,\psi ,\theta \right) $, $F\left( p,\psi ,\theta \right) $, $B_{t}\left(
-p,\psi ,\theta \right) $and $\mathcal{I}\left( p,\psi ,\theta \right) $are
-given in Appendix ****. 
+For reference to the litterature, note that we could also perform the
+following transformation
 
-Finally, it is important to point out that the drift kinetic equation is no
-more a simple partial differential equation, but an integro-differential
-equation. However, since the term  $\mathcal{C}_{ee}\left(
-f_{0M},f_{0}\right) $introduce only a weak non-linearity, it may be
-considered as an additional source tem in the equations.  
-
-According to the conservative formulation, the collisional flux can be
-divided into diffusive and convective contributions, which in tensorial form
-gives 
+\begin{eqnarray*}
+\left\{ \frac{\xi ^{2}}{\Psi \xi _{0}^{2}}\right\} &=&\left\{ \frac{1-\Psi
+\left( 1-\xi _{0}^{2}\right) }{\Psi \xi _{0}^{2}}\right\} \\
+&=&\left\{ 1-\frac{1}{\xi _{0}^{2}}\left( 1-\frac{1}{\Psi }\right) \right\}
+\\
+&=&1-\frac{\Delta _{b}}{\xi _{0}^{2}}
+\end{eqnarray*}
+with 
 \[
-\mathbf{S}^{\text{C}}=-\Bbb{D}_{\mathbf{p}}^{\text{C}}\cdot \nabla _{p}f_{0}+%
-\mathbf{F}_{\mathbf{p}}^{\text{C}}f_{0}
+\Delta _{b}\equiv \left\{ 1-\frac{1}{\Psi }\right\} 
 \]
-with the diffusion tensor components 
+
+Concerning the term that ensures momentum conservation in the collision
+operator, one must evaluate $\left\{ \xi \mathcal{I}\left( p,\psi ,\theta
+\right) \right\} =\left\{ \xi \mathcal{I}\left( f_{0M},f_{0,l=1}\right)
+\right\} $. Making the substitution $\Psi \xi _{0}d\xi _{0}=\xi d\xi $ in
+the integral $\int_{-1}^{+1}\xi f_{0}\left( p,\xi ,\psi ,\theta \right) d\xi
+,$ one obtains 
+\begin{equation}
+f_{0,l=1}\left( p,\xi ,\psi ,\theta \right) =\frac{3}{2}\int_{-1}^{-\sqrt{%
+1-1/\Psi }}\Psi \xi _{0}f_{0}^{\left( 0\right) }\left( p,\xi _{0},\psi
+\right) d\xi _{0}+\frac{3}{2}\int_{\sqrt{1-1/\Psi }}^{+1}\Psi \xi
+_{0}f_{0}^{\left( 0\right) }\left( p,\xi _{0},\psi \right) d\xi _{0}
+\end{equation}
+where the limits of integration come from the relation $\xi \left( \psi
+,\theta ,\xi _{0}\right) =\sigma \sqrt{1-\Psi \left( \psi ,\theta \right)
+\left( 1-\xi _{0}^{2}\right) }.$ Since $f_{0}^{\left( 0\right) }$ is
+symmetric in the region of the phase space $\xi _{0}\in \left( -\sqrt{%
+1-1/\Psi },\sqrt{1-1/\Psi }\right) $which corresponds to trapped orbits, 
+\begin{equation}
+\frac{3}{2}\int_{-\sqrt{1-1/\Psi }}^{+\sqrt{1-1/\Psi }}\Psi \xi
+_{0}f_{0}^{\left( 0\right) }\left( p,\xi _{0},\psi \right) d\xi _{0}=0
+\end{equation}
+one get 
 \begin{eqnarray}
-D_{pp}^{\text{C}} &=&A\left( p,\psi ,\theta \right)   \label{Dcoll} \\
-D_{p\xi }^{\text{C}} &=&0 \\
-D_{\xi p}^{\text{C}} &=&0 \\
-D_{\xi \xi }^{\text{C}} &=&B_{t}\left( p,\psi ,\theta \right) 
+f_{0,l=1}\left( p,\xi ,\psi ,\theta \right)  &=&\frac{3}{2}%
+\int_{-1}^{+1}\Psi \xi _{0}f_{0}^{\left( 0\right) }\left( p,\xi _{0},\psi
+\right) d\xi _{0}  \nonumber \\
+&=&\Psi \frac{3}{2}\int_{-1}^{+1}\xi _{0}f_{0}^{\left( 0\right) }\left(
+p,\xi _{0},\psi \right) d\xi _{0}  \nonumber \\
+&=&\Psi f_{0,l=1}^{\left( 0\right) }\left( p,\xi _{0},\psi \right) 
 \end{eqnarray}
-and the convection vector components 
+where $f_{0,l=1}^{\left( 0\right) }\left( p,\xi _{0},\psi \right) $is the
+Legendre integral evaluated at $B_{min}=B\left( \psi ,\theta _{0}\right) $,
+independent of $\theta .$ Since the operator $\mathcal{I}$ is linear and $%
+f_{0M}$ is independant of $\theta $, 
 \begin{eqnarray}
-F_{p}^{\text{C}} &=&-F\left( p,\psi ,\theta \right)   \label{Fcoll} \\
-F_{\xi }^{\text{C}} &=&0
+\left\{ \xi \mathcal{I}\left( f_{0M},f_{0,l=1}\right) \right\}  &=&\left\{
+\xi \Psi \right\} \mathcal{I}\left( f_{0M},f_{0,l=1}^{\left( 0\right)
+}\right)   \nonumber \\
+&=&\sigma \left\{ \sigma \frac{\xi }{\xi _{0}}\Psi \right\} \xi _{0}\mathcal{%
+I}\left( f_{0M},f_{0,l=1}^{\left( 0\right) }\right)   \nonumber \\
+&=&\frac{\overline{\lambda }_{1,1,0}}{\lambda }\xi _{0}\mathcal{I}\left(
+f_{0M},f_{0,l=1}^{\left( 0\right) }\right) 
 \end{eqnarray}
+
+\paragraph{Expression of $\overline{\lambda }_{1,1,0}$}
+
+This coefficient is expressed as 
+\begin{equation}
+\overline{\lambda }_{1,1,0}=\frac{\sigma }{\widetilde{q}}\left[ \frac{1}{2}%
+\sum_{\sigma }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{%
+d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }%
+\frac{r}{R_{0}}\frac{B}{B_{P}}\sigma \Psi
+\end{equation}
+
+Since the integral is odd in $\sigma ,$ the sum over trapped particles
+vanishes, $\overline{\lambda }_{1,1,0}=0$ for trapped electrons, and $%
+\overline{\lambda }_{1,1,0}=\overline{\lambda }_{1,1,0}^{P}\neq 0$ for
+circulating ones. Hence 
+\begin{eqnarray}
+\overline{\lambda }_{1,1,0}^{P} &=&\frac{1}{\widetilde{q}}\int_{0}^{2\pi }%
+\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}%
+\right| }\frac{r}{R_{0}}\frac{B}{B_{P}}\Psi  \nonumber \\
+&=&\frac{1}{\widetilde{q}}\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{1}{%
+\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}}\frac{%
+B^{2}\left( \psi ,\theta \right) }{B_{P}B\left( \psi ,\theta _{0}\right) }
+\end{eqnarray}
+
+\paragraph{Case of circular concentric flux-surfaces}
+
+In this case, $\epsilon =r/R_{0},$ $\widehat{\psi }\cdot \widehat{r}=1$ and
+since the ratio $B/B_{P}$ is a function of $r$ only 
+\begin{eqnarray}
+\overline{\lambda }_{1,1,0}^{P} &=&\frac{1}{\widetilde{q}}\frac{B}{B_{P}}%
+\epsilon \int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{1+\epsilon }{1+\epsilon
+\cos \theta } \\
+&=&\sqrt{\frac{1+\epsilon }{1-\epsilon }}=s^{*}
+\end{eqnarray}
+using the relation $\widetilde{q}\frac{B_{P}}{B}=\epsilon .$ In this limit, $%
+\overline{\lambda }_{1,1,0}^{P}=\overline{\lambda }_{1,-1,2}^{P},$ as shown
+in *****.
