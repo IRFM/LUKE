@@ -24,12 +24,12 @@ dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode] = psim_dke_1yp
 %
 snumber = 1;%Simulation number
 tokname = 'CMOD';%Tokamak equilibrium scenario (see ptok_dke_1yp.m) in EQUIL_tokname file)
-loadequil = 2;%0: Load already existing equilibrium file, 1: create equilibrium with HELENA (needs mex file), 2: create equilibrium file (with idealequil_f_jd.m function)
-qopt = 1;%Option for q profile. (0): constant (default), (1): from qmin and eq (for HELENA, it is used only for the psi grid guess)
+loadequil = 2;%0: Load already existing equilibrium file, 1: create equilibrium with HELMEX77 (HELENA mex file), 2: create equilibrium file (with idealequil_f_jd.m function), 3: create equilibrium with HELENA (HELENA FORTRAN version), 
+qopt = 1;%Option for q profile. (0): constant (default), (1): from qmin and eq (for HELMEX77, it is used only for the psi grid guess)
 %
 %Additional specific parameters for ideal cylindrical magnetic equilibrium with circular concentric flux surfaces (used if loadequil = 2 only)
 %
-npsi = 101;%Size of the psi grid for the magnetic equilibrium (ntheta is fixed for HELENA)
+npsi = 101;%Size of the psi grid for the magnetic equilibrium (ntheta is fixed for HELMEX77)
 ntheta = 65;%Size of the theta grid for the magnetic equilibrium (ntheta ~= npsi)
 %
 %Mesh size calculation
@@ -200,13 +200,17 @@ if loadequil == 0,%Already existing magnetic equilibrium file
 	else
 		error('Equilibrium file is not found !')
 	end
-elseif loadequil == 1,%Create magnetic equilibrium file with HELENA
+elseif loadequil == 1,%Create magnetic equilibrium file with HELMEX77 (HELENA mex file)
 	equil_mode = 1;%Numerical bounce integral calculation enforced
-	filename = helenaequil_f_jd(tokname,qopt);%Calculate the equibrium parameters if tokamak name exists
-	info_dke_yp(2,['HELENA magnetic equilibrium file ',filename,' has been created.']);
+	filename = helmex77equil_f_jd(tokname,qopt);%Calculate the equibrium parameters if tokamak name exists
+	info_dke_yp(2,['HELMEX77 magnetic equilibrium file ',filename,' has been created.']);
 elseif loadequil == 2,%Create ideal cylindrical magnetic equilibrium
 	filename = idealequil_f_jd(tokname,qopt,npsi,ntheta);%Calculate the equibrium parameters if tokamak name exists
 	info_dke_yp(2,['Ideal magnetic equilibrium file ',filename,' has been created.']);
+elseif loadequil == 3,%Create magnetic equilibrium file with HELENA (HELENA FORTRAN file)
+	equil_mode = 1;%Numerical bounce integral calculation enforced
+	filename = helenaequil_f_jd(tokname);%Calculate the equibrium parameters if tokamak name exists
+	info_dke_yp(2,['HELENA magnetic equilibrium file ',filename,' has been created.']);
 end
 %
 psin_S = sort([psin_S,rho2psi_jd(tokname,rho_S)]);
