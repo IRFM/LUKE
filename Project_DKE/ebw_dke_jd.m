@@ -27,7 +27,7 @@ xyomega_ebw(xytest_maskY_ebw) = xyn_ebw(xytest_maskY_ebw).*xywceb_ebw(xytest_mas
 %
 %********** only ideal circular concentric FS
 %
-xrho = psi2rho_jd(tokamak,xpsin);
+xrho = psi2rho_jd(tokamak,xpsin)';
 %
 for ib = 1:nb_ebw
     somega = num2str(round(xyomega_ebw(1,ib)/(2*pi*1e9)*10));
@@ -83,7 +83,7 @@ for ib = 1:nb_ebw
             xnpar_EBW = interp1(xrho,xynpar_ebw(:,ib),xrho_EBW);
             xomega_EBW = interp1(xrho,xyomega_ebw(:,ib),xrho_EBW);
         else
-            xtheta_EBW = repmat(xythetab(:,ib),[1,nr_EBW]);
+            xtheta_EBW = repmat(xythetab_ebw(:,ib),[1,nr_EBW]);
             xnpar_EBW = repmat(xynpar_ebw(:,ib),[1,nr_EBW]);
             xomega_EBW = repmat(xyomega_ebw(:,ib),[1,nr_EBW]);
         end    
@@ -100,15 +100,9 @@ for ib = 1:nb_ebw
         xMPabs =  interp1(xrho_out_EBW_ht,xMPabs_EBW_at,xrho);
     end
     xynperp_ebw(:,ib) = xMNperp;
-    if length(xrho) == 1
-        xyepolp_ebw(:,ib) = xM3eps_pmz(:,1);  
-        xyepolm_ebw(:,ib) = xM3eps_pmz(:,2);  
-        xyepolz_ebw(:,ib) = xM3eps_pmz(:,3);  
-    else        
-        xyepolp_ebw(:,ib) = xM3eps_pmz(:,1,1);  
-        xyepolm_ebw(:,ib) = xM3eps_pmz(:,1,2);  
-        xyepolz_ebw(:,ib) = xM3eps_pmz(:,1,3); 
-    end
+    xyepolp_ebw(:,ib) = xM3eps_pmz(:,1);  
+    xyepolm_ebw(:,ib) = xM3eps_pmz(:,2);  
+    xyepolz_ebw(:,ib) = xM3eps_pmz(:,3);  
     xyPflow(:,ib) = xMPflow;
     xyPabs(:,ib) = xMPabs;
 end
