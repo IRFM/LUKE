@@ -138,9 +138,14 @@ B_{\min }\left( \psi \right) }
 
 We get an expression for $\xi $ as a function of $\xi _{0}$: 
 \begin{equation}
-\xi \left( \psi ,\theta ,\xi _{0}\right) = \text{sign}\left( \xi _{0}\right) 
-\sqrt{1-\frac{B\left( \psi ,\theta \right) }{B_{\min }\left( \psi \right) }%
-\left( 1-\xi _{0}^{2}\right) }  \label{xi}
+\xi \left( \psi ,\theta ,\xi _{0}\right) =\text{sign}\left( \xi _{0}\right) 
+\sqrt{1-\Psi \left( \psi ,\theta \right) \left( 1-\xi _{0}^{2}\right) }
+\label{xi}
+\end{equation}
+where we define the ratio 
+\begin{equation}
+\Psi \left( \psi ,\theta \right) \equiv \frac{B\left( \psi ,\theta \right) }{%
+B_{\min }\left( \psi \right) }
 \end{equation}
 
 The trapping condition is given by $\left| \xi _{0}\right| <\xi _{0T}\left(
@@ -365,7 +370,7 @@ It can be rewritten in terms of the normalized bounce time $\lambda $ (\ref
 d\theta }{2\pi }\frac{\sqrt{g_{22}}}{R_{0}}\frac{B}{B_{P}}\frac{\xi _{0}}{%
 \xi }\mathcal{A}  \label{bav}
 \end{equation}
-or, expressing the metric coefficient,
+or, expressing the metric coefficient, 
 \begin{equation}
 \left\{ \mathcal{A}\right\} =\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2%
 }\sum_{\sigma }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{%
@@ -394,6 +399,25 @@ R-R_{0}\right) ^{2}+\left( Z-Z_{0}\right) ^{2}\right] }{R_{0}\left|
 B_{R}\left( Z-Z_{0}\right) -B_{Z}\left( R-R_{0}\right) \right| }\frac{\xi
 _{0}}{\xi }\mathcal{A}
 \end{equation}
+
+The bounce averaging of momentum-space operators in the kinetic equations
+leads to coefficients with similar structure, denoted $\lambda _{k,m}$ and $%
+\overline{\lambda }_{k,m}$, which we define as 
+\begin{equation}
+\left\{ \left( \frac{\xi \left( \psi ,\theta ,\xi _{0}\right) }{\xi _{0}}%
+\right) ^{l}\Psi ^{m}\left( \psi ,\theta \right) \right\} =\frac{\lambda
+_{k,m}\left( \psi ,\xi _{0}\right) }{\lambda \left( \psi ,\xi _{0}\right) }
+\label{lkm}
+\end{equation}
+and 
+\begin{equation}
+\sigma \left\{ \sigma \left( \frac{\xi \left( \psi ,\theta ,\xi _{0}\right) 
+}{\xi _{0}}\right) ^{l}\Psi ^{m}\left( \psi ,\theta \right) \right\} =\frac{%
+\overline{\lambda }_{k,m}\left( \psi ,\xi _{0}\right) }{\lambda \left( \psi
+,\xi _{0}\right) }  \label{lkmb}
+\end{equation}
+
+Note that $\lambda _{0,0}=\lambda $.
 
 \subsubsection{Numerical Integration over $\theta $}
 
