@@ -43,7 +43,7 @@ if alpha_L <= -pi | alpha_L > pi
     error('need -pi < alpha_L <= pi')
 end
 if beta_L < 0 | beta_L > pi
-    error('need 0 <= alpha_L <= pi')
+    error('need 0 <= beta_L <= pi')
 end    
 %
 s = 0:ds:smax;
