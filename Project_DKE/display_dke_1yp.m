@@ -107,7 +107,7 @@ while 1,
 		if nb > 0
 			YXDrf_ref = squeeze(YXXDrf_ref(:,:,ir_display,:));%Display results at the required radial value
 		end
-		[XAstr_ipjp_ref] = stream_dke_jd(ZSp0_ref,XxRR_ref_fsav,dmhu,pnp,ir_display_dke,nb);
+		[XAstr_S_Pm_ref,XAstr_S_Pp_ref,XAstr_S_T_ref] = stream_dke_jd(ZSp0_ref,XxRR_ref_fsav,mhu,xmhubounce2,dmhu,pnp,ir_display_dke,nb);
 %
 		disp('-------------------------------------------------------------------------------------------------------------------');
 		disp('-------------------------------------------------------------------------------------------------------------------');
@@ -176,10 +176,14 @@ while 1,
             [ax] = graph1D_jd(xrho_dke,xMRR_flux_mksa,'\rho','\Gamma_{ST} (m^-3.s^-1)','Magnetic ripple loss rate at Bmin',NaN,[0,1],NaN,'none','x','b',2,14,gca,0.8,0.7,0.6);
 			hold off
 			axis([0,1,0,1.1*max([xMRR_tau_mksa,xMRR_flux_mksa])]);
-	   else
+	    else
+            xpndetrap_ref = NaN;
+            xmhusupertrap = NaN;
+    	    pparsupertrap_ref = NaN;
+            pperpsupertrap_ref = NaN;
 			info_dke_yp(2,'No magnetic ripple loss calculations');
 			disp('-------------------------------------------------------------------------------------------------------------------');
-	   end
+	    end
 %
 %Spherical to cylindrical coordinate transformation
 %
@@ -192,7 +196,9 @@ while 1,
 			[YXDrf_cyl_ref(:,:,ib),ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(YXDrf_ref(:,:,ib),pn_ref,mhu,dp_cyl);%Spherical to cylindrical coordinate transformation
 		end
 %
-		[XAstr_cyl_ref,ppar_cyl_S_ref,dppar_cyl_S_ref,pperp_cyl_S_ref,dpperp_S_cyl_ref] = s2c_dke_yp(XAstr_ipjp_ref,pnp_ref,mhup,dp_cyl);%Spherical to cylindrical coordinate transformation
+		[XAstr_Pp_cyl_ref,ppar_cyl_S_ref,dppar_cyl_S_ref,pperp_cyl_S_ref,dpperp_S_cyl_ref] = s2c_dke_yp(XAstr_S_Pp_ref,pn_S,mhu_S,dp_cyl);%Spherical to cylindrical coordinate transformation
+		[XAstr_Pm_cyl_ref,ppar_cyl_S_ref,dppar_cyl_S_ref,pperp_cyl_S_ref,dpperp_S_cyl_ref] = s2c_dke_yp(XAstr_S_Pm_ref,pn_S,mhu_S,dp_cyl);%Spherical to cylindrical coordinate transformation
+		[XAstr_T_cyl_ref,ppar_cyl_S_ref,dppar_cyl_S_ref,pperp_cyl_S_ref,dpperp_S_cyl_ref] = s2c_dke_yp(XAstr_S_T_ref,pn_S,mhu_S,dp_cyl);%Spherical to cylindrical coordinate transformation
 %
 		Xppar_cyl_ref = ones(length(pperp_cyl_ref),1)*ppar_cyl_ref(:)';%Grid for the distribution functions only
 		Xpperp_cyl_ref = pperp_cyl_ref(:)*ones(1,length(ppar_cyl_ref));
@@ -223,9 +229,13 @@ while 1,
 			XDlh_cyl_ref = integral_dke_jd(ones(1,nb_lh),YXDrf_cyl_ref(:,:,blist_lh),3);
 			XDec_cyl_ref = integral_dke_jd(ones(1,nb_ec),YXDrf_cyl_ref(:,:,blist_ec),3);
 		end        
-		XAstr_cyl_ref = XAstr_cyl_ref.*(Xp_cyl_S_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
-		XAstr_cyl_ref = XAstr_cyl_ref.*(XAstr_cyl_ref>0);%Remove negative values
-		XAstr_cyl_ref(isnan(XAstr_cyl_ref)) = 0;%Remove NaN values
+		XAstr_cyl_Pp_ref = XAstr_Pp_cyl_ref.*(Xp_cyl_S_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
+		XAstr_cyl_Pm_ref = XAstr_Pm_cyl_ref.*(Xp_cyl_S_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
+		XAstr_cyl_T_ref = XAstr_T_cyl_ref.*(Xp_cyl_S_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
+		%XAstr_cyl_ref = XAstr_cyl_ref.*(XAstr_cyl_ref>0);%Remove negative values
+		XAstr_Pp_cyl_ref(isnan(XAstr_Pp_cyl_ref)) = 0;%Remove NaN values
+		XAstr_Pm_cyl_ref(isnan(XAstr_Pm_cyl_ref)) = 0;%Remove NaN values
+		XAstr_T_cyl_ref(isnan(XAstr_T_cyl_ref)) = 0;%Remove NaN values
 %
 %Calculations in cylindrical coordinates
 %
@@ -255,177 +265,200 @@ while 1,
 			Tparn_cyl_ref = betath_ref*betath_ref*Tpar_cyl_ref*mc2/Te_ref;
 			Tparinitn_cyl_ref = betath_ref*betath_ref*Tparinit_cyl_ref*mc2/Te_ref;
 %
-%Display results
+%   Display results
 %
-			figure(3);clf
-			subplot(131),semilogy(ppar_cyl_ref,Fparinit_cyl_ref,'b--',ppar_cyl_ref,Fpar0_cyl_ref,'r.');grid on;
-			axis([-max(pn_ref),max(pn_ref),1e-20,10]);zoom on
-			ylabel('F0//');xlabel('ppar/pth-ref');title(['(rho = ',num2str(xrho_dke(ir_display_dke)),')']);
-			legend('finit','f0'); 
-			subplot(132),plot(ppar_cyl_ref,Tperpinitn_cyl_ref,'b--',ppar_cyl_ref,Tperpn_cyl_ref,'r.');grid on;zoom on
-			axis([-max(pn_ref),max(pn_ref),min(Tperpn_cyl_ref),max(Tperpn_cyl_ref)]);zoom on
-			ylabel('Tperp/Te-ref');xlabel('ppar/pth-ref');title(['(rho = ',num2str(xrho_dke(ir_display_dke)),')']);
-			legend('finit','f0'); 
-			subplot(133),plot(pperp_cyl_ref,Tparinitn_cyl_ref,'b--',pperp_cyl_ref,Tparn_cyl_ref,'r.');grid on;zoom on
-			axis([0,max(pn_ref),min(Tparn_cyl_ref),max(Tparn_cyl_ref)*1.1]);zoom on
-			ylabel('Tpar/Te-ref');xlabel('pperp/pth-ref');title(['(rho = ',num2str(xrho_dke(ir_display_dke)),')']);
-			legend('finit','f0'); 
+%
+%   General graph properties
+%
+            x1 = ppar_cyl_ref;
+            xlab1 = 'p_{//}/p_{Te}^{ref}';
+            xlim1 = [-pnmax_S,pnmax_S];
+            x2 = pperp_cyl_ref;
+            xlab2 = 'p_{\perp}/p_{Te}^{ref}';
+            xlim2 = [0,pnmax_S];
+            leg = ['f_{init}';'f_0     '];
+            style1 = '--';
+            style2 = '-';
+            style3 = 'none';
+            marker = 'none';
+            marker1 = 'x';
+            marker2 = '+';
+            color1 = 'b';
+            color2 = 'r';
+            color3 = 'g';
+            color4 = 'm';
+            width1 = 0.5;
+            width2 = 2;
+            siz = 20;
+            red = 0.95;
+            lspace = 0.7;
+            bspace1 = 0.7;
+            bspace2 = 0.5;
+%            
+            rhostr = num2str(xrho_dke(ir_display_dke));
+            rhostr = rhostr(1:5);
+%
+% ---------- parallel distribution -----------
+%
+            figure(301),clf
+            %
+            y1 = Fparinit_cyl_ref;
+            y2 = Fpar0_cyl_ref;
+            ylab = 'F_{0//}';
+            ylim = [1e-20,1];
+            %
+            graph1D_jd(x1,y1,0,1,'','','',NaN,xlim1,ylim,style1,marker,color1,width1,siz,gca,red,lspace,bspace1);
+            graph1D_jd(x1,y2,0,1,xlab1,ylab,'',leg,xlim1,ylim,style2,marker,color2,width2,siz);
+            text(0.05,0.95,['\rho = ',rhostr],'units','normalized');
+%
 			pause(time_pause);
 %
-			figure(4);clf
-			subplot(121),
-			C = contour(ppar_cyl_ref,pperp_cyl_ref,log(Xfinit_cyl_ref),[-20:20/nlevel:0]);grid on;zoom on;%Distribution function and wave quasilinear diffusion coefficient contour plot
-			axis('equal')
-			title('2-D initial electron distribution function finit');
-			xlabel('ppar/pth-ref');
-			ylabel('pperp/pth-ref');
-			if bounce_mode >= 1,%Draw bounce domain boundaries
-				line([0,pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
-				line([0,-pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
-				if isnan(nhuloss) == 0,%Draw the magnetic ripple loss cone
-					hold on,plot(pparsupertrap_ref,pperpsupertrap_ref,'r'),hold off
-					line([xpndetrap_ref(ir_display)*xmhusupertrap(ir_display),pnmax_S*xmhusupertrap(ir_display)],[xpndetrap_ref(ir_display)*sqrt(1-xmhusupertrap(ir_display)^2),pnmax_S*sqrt(1-xmhusupertrap(ir_display)^2)],'LineStyle','-','color','r');
-					line([-xpndetrap_ref(ir_display)*xmhusupertrap(ir_display),-pnmax_S*xmhusupertrap(ir_display)],[xpndetrap_ref(ir_display)*sqrt(1-xmhusupertrap(ir_display)^2),pnmax_S*sqrt(1-xmhusupertrap(ir_display)^2)],'LineStyle','-','color','r');					
-				end
-			end
+% ---------- perpendicular temperature -----------
 %
-			faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
-			text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['rho = ',num2str(xrho_dke(ir_display_dke))]);
+            figure(302),clf
+            %
+            y1 = Tperpinitn_cyl_ref;
+            y2 = Tperpn_cyl_ref;
+            ylab = 'T_{\perp}/T_e^{ref}';
+            ylim = NaN;
+            %
+            graph1D_jd(x1,y1,0,0,'','','',NaN,xlim1,ylim,style1,marker,color1,width1,siz,gca,red,lspace,bspace1);
+            graph1D_jd(x1,y2,0,0,xlab1,ylab,'',leg,xlim1,ylim,style2,marker,color2,width2,siz);
+            text(0.05,0.95,['\rho = ',rhostr],'units','normalized');
+%
 			pause(time_pause);
 %
-			subplot(122),
-			C = contour(ppar_cyl_ref,pperp_cyl_ref,log(Xf0_cyl_ref),[-20:20/nlevel:0]);grid on;zoom on;%Distribution function and wave quasilinear diffusion coefficient contour plot
-			axis('equal')
-			title('2-D steady state 1st order electron distribution function f0');
-			xlabel('ppar/pth-ref');
-			ylabel('pperp/pth-ref');
-			if bounce_mode >= 1,%Draw bounce domain boundaries
-				line([0,pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
-				line([0,-pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
-				if isnan(nhuloss) == 0,%Draw the magnetic ripple loss cone
-					hold on,plot(pparsupertrap_ref,pperpsupertrap_ref,'r'),hold off
-					line([xpndetrap_ref(ir_display)*xmhusupertrap(ir_display),pnmax_S*xmhusupertrap(ir_display)],[xpndetrap_ref(ir_display)*sqrt(1-xmhusupertrap(ir_display)^2),pnmax_S*sqrt(1-xmhusupertrap(ir_display)^2)],'LineStyle','-','color','r');
-					line([-xpndetrap_ref(ir_display)*xmhusupertrap(ir_display),-pnmax_S*xmhusupertrap(ir_display)],[xpndetrap_ref(ir_display)*sqrt(1-xmhusupertrap(ir_display)^2),pnmax_S*sqrt(1-xmhusupertrap(ir_display)^2)],'LineStyle','-','color','r');					
-				end
-			end
+% ---------- parallel temperature -----------
+%
+            figure(303),clf
+            %
+            y1 = Tparinitn_cyl_ref;
+            y2 = Tparn_cyl_ref;
+            ylab = 'T_{//}/T_e^{ref}';
+            ylim = NaN;
+            %
+            graph1D_jd(x2,y1,0,0,'','','',NaN,xlim2,ylim,style1,marker,color1,width1,siz,gca,red,lspace,bspace1);
+            graph1D_jd(x2,y2,0,0,xlab2,ylab,'',leg,xlim2,ylim,style2,marker,color2,width2,siz);
+            legend('f_{init}','f_0')
+            text(0.05,0.95,['\rho = ',rhostr],'units','normalized');
+%
+			pause(time_pause);
+%
+% ---------- 2D distribution f0 -----------
+%
+            figure(4),clf
+            %
+            y1 = Xfinit_cyl_ref;
+            y2 = Xf0_cyl_ref;
+            %
+            graph2D_jd(x1,x2,y1','','','',xlim1,xlim2,0,betath_ref,[0:0.5:pnmax_S],0,style2,color1,width1,siz,red,max(max(y1)));
+            graph2D_jd(x1,x2,y2',xlab1,xlab2,'2D Distribution function f_0',xlim1,xlim2,0,betath_ref,[0:pnmax_S],0,style2,color2,width2,siz,1,max(max(y1)));
+            text(0.05,0.95,['\rho = ',rhostr],'units','normalized');
+            axis('equal');axis([xlim1,xlim2])
+            bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,nhuloss,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap);
+%
+			pause(time_pause);
 %
 			if igor_mode == 1,
 				eval(['save ',filenameroot,'_data_fig4_',int2str(ir_display_dke),'.mat xrho_dke xia r_dke ir_display_dke ppar_cyl_ref pperp_cyl_ref Xfinit_cyl_ref Xf0_cyl_ref xmhubounce2 pnmax_S'])
 			end
-%	
-			if nb_lh > 0,
-				figure(4),
-				if initguess_f == 1 & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0,
-					subplot(121)
-					if xvparmax_lh_ref(ir_display) - xvparmin_lh_ref(ir_display) ~= 0  & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0,,
-						pparresmin_lh_cyl_ref = xvparmin_lh_ref(ir_display)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmin_lh_ref(ir_display)^2*betath_ref^2);%LH resonance condition
-						pparresmax_lh_cyl_ref = xvparmax_lh_ref(ir_display)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmax_lh_ref(ir_display)^2*betath_ref^2);%LH resonance condition
-						hold on;
-						plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--');
-						plot(pparresmax_lh_cyl_ref,pperp_cyl_ref,'k--');
-						hold off;
-					end
-				end
 %
-				if xvparmax_lh_ref(ir_display) - xvparmin_lh_ref(ir_display) ~= 0  & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0,,
-					subplot(122)
-					pparresmin_lh_cyl_ref = xvparmin_lh_ref(ir_display)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmin_lh_ref(ir_display)^2*betath_ref^2);%LH resonance condition
-					pparresmax_lh_cyl_ref = xvparmax_lh_ref(ir_display)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmax_lh_ref(ir_display)^2*betath_ref^2);%LH resonance condition
-					hold on;
-					plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--');
-					plot(pparresmax_lh_cyl_ref,pperp_cyl_ref,'k--');
-					hold off;
-				end
+% ---------- Stream function -----------
 %
+            figure(5),clf
+            %
+            y1 = XAstr_S_Pm_ref';
+            y2 = XAstr_S_T_ref';
+            y3 = XAstr_S_Pp_ref';
+            mhu0T = sqrt(xmhubounce2(ir_display));
+            %
+            ymin = min(min([y1,y2,y3]));
+            ymax = max(max([y1,y2,y3]));
+            dy = (ymax - ymin)/(2*nlevel);
+            if ymin*ymax < 0
+                cont = sort([-dy/2:-dy:ymin-dy/2,dy/2:dy:ymax+dy/2]);
+            else
+                cont = ymin:dy:ymax;
+            end
+            %
+            graph_cyl_jd(pn_S,mhu_S,y1,'',xlim1,xlim2,NaN,cont,style2,NaN,width1,red,NaN,[0,pnmax_S,-1,-mhu0T+eps]);
+            graph_cyl_jd(pn_S,mhu_S,y2,'',xlim1,xlim2,NaN,cont,style2,NaN,width1,1,NaN,[0,pnmax_S,-mhu0T-eps,mhu0T+eps]);
+            graph_cyl_jd(pn_S,mhu_S,y3,'Stream function',xlim1,xlim2,NaN,cont,style2,NaN,width1,1,NaN,[0,pnmax_S,mhu0T-eps,1]);
+            text(0.05,0.95,['\rho = ',rhostr],'units','normalized');
+            axis('equal');axis([xlim1,xlim2])
+            bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,nhuloss,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap);
+%            
+			pause(time_pause);
+%
+% ----------- LH domain if applicable
+%
+			if nb_lh > 0 & xvparmax_lh_ref(ir_display) - xvparmin_lh_ref(ir_display) ~= 0  & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0,
+				pparresmin_lh_cyl_ref = xvparmin_lh_ref(ir_display)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmin_lh_ref(ir_display)^2*betath_ref^2);%LH resonance condition
+				pparresmax_lh_cyl_ref = xvparmax_lh_ref(ir_display)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmax_lh_ref(ir_display)^2*betath_ref^2);%LH resonance condition
+                %
 				if igor_mode == 1,
 					eval(['save ',filenameroot,'_data_fig_',int2str(ir_display_dke),'lh.mat xrho_dke xia r_dke ir_display_dke pparresmin_lh_cyl_ref pparresmax_lh_cyl_ref pperp_cyl_ref'])
 				end
+                %
+                figure(4),
+				hold on;
+				plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--');
+				plot(pparresmax_lh_cyl_ref,pperp_cyl_ref,'k--');
+				hold off;
+                %
+                figure(5),
+				hold on;
+				plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--');
+				plot(pparresmax_lh_cyl_ref,pperp_cyl_ref,'k--');
+				hold off;
 %
-				figure(7);clf
-				C = contour(ppar_cyl_ref,pperp_cyl_ref,XDlh_cyl_ref,nlevel);grid on;zoom on;%LH diffusion coefficient
-				axis('equal')
-				title('Lower Hybrid diffusion coefficient (nhu-ref*pth-ref^2)');
-				xlabel('ppar/pth-ref');
-				ylabel('pperp/pth-ref');
-				if xvparmax_lh_ref(ir_display) - xvparmin_lh_ref(ir_display) ~= 0 & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0,,
-					hold on,
-					pparresmin_lh_cyl_ref = xvparmin_lh_ref(ir_display)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmin_lh_ref(ir_display)^2*betath_ref^2);%LH resonance condition
-					pparresmax_lh_cyl_ref = xvparmax_lh_ref(ir_display)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmax_lh_ref(ir_display)^2*betath_ref^2);%LH resonance condition
-					plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--');
-					plot(pparresmax_lh_cyl_ref,pperp_cyl_ref,'k--');
-					hold off,
-				end
-				if bounce_mode >= 1,%Draw bounce domain boundaries
-					line([0,pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
-					line([0,-pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
-					if isnan(nhuloss) == 0,%Draw the magnetic ripple loss cone
-						hold on,plot(pparsupertrap_ref,pperpsupertrap_ref,'r'),hold off
-						line([xpndetrap_ref(ir_display)*xmhusupertrap(ir_display),pnmax_S*xmhusupertrap(ir_display)],[xpndetrap_ref(ir_display)*sqrt(1-xmhusupertrap(ir_display)^2),pnmax_S*sqrt(1-xmhusupertrap(ir_display)^2)],'LineStyle','-','color','r');
-						line([-xpndetrap_ref(ir_display)*xmhusupertrap(ir_display),-pnmax_S*xmhusupertrap(ir_display)],[xpndetrap_ref(ir_display)*sqrt(1-xmhusupertrap(ir_display)^2),pnmax_S*sqrt(1-xmhusupertrap(ir_display)^2)],'LineStyle','-','color','r');					
-					end
-				end
-				faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
-				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['rho = ',num2str(xrho_dke(ir_display_dke))]);
-				pause(time_pause);
+% ---------- LH coefficient if applicable -----------
 %
+                figure(7),clf
+                %
+                y1 = XDlh_cyl_ref;
+                %
+                graph2D_jd(x1,x2,y1',xlab1,xlab2,'LH dif. coef. [\nu^{ref}(p_{Te}^{ref})^2]',xlim1,xlim2,0,NaN,nlevel,0,style2,NaN,width1,siz,red);
+                text(0.05,0.95,['\rho = ',rhostr],'units','normalized');
+                axis('equal');axis([xlim1,xlim2])
+                bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,nhuloss,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap);
+				hold on;
+				plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--');
+				plot(pparresmax_lh_cyl_ref,pperp_cyl_ref,'k--');
+				hold off;
+                %            
+			    pause(time_pause);
+                %
 				if igor_mode == 1,
 					eval(['save ',filenameroot,'_data_fig7_',int2str(ir_display_dke),'.mat xrho_dke xia r_dke ir_display_dke ppar_cyl_ref pperp_cyl_ref XDlh_cyl_ref xmhubounce2 pnmax_S'])
 				end
-%
 			end
 %
-			if nb_ec > 0,
-				figure(8);clf
-				C = contour(ppar_cyl_ref,pperp_cyl_ref,XDec_cyl_ref,nlevel);grid on;zoom on;%EC diffusion coefficient
-				axis('equal')
-				title('Electron cyclotron diffusion coefficient (nhu-ref*pth-ref^2)');
-				xlabel('ppar/pth-ref');
-				ylabel('pperp/pth-ref');
-				if bounce_mode >= 1,%Draw bounce domain boundaries
-					line([0,pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
-					line([0,-pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
-					if isnan(nhuloss) == 0,%Draw the magnetic ripple loss cone
-						hold on,plot(pparsupertrap_ref,pperpsupertrap_ref,'r'),hold off
-						line([xpndetrap_ref(ir_display)*xmhusupertrap(ir_display),pnmax_S*xmhusupertrap(ir_display)],[xpndetrap_ref(ir_display)*sqrt(1-xmhusupertrap(ir_display)^2),pnmax_S*sqrt(1-xmhusupertrap(ir_display)^2)],'LineStyle','-','color','r');
-						line([-xpndetrap_ref(ir_display)*xmhusupertrap(ir_display),-pnmax_S*xmhusupertrap(ir_display)],[xpndetrap_ref(ir_display)*sqrt(1-xmhusupertrap(ir_display)^2),pnmax_S*sqrt(1-xmhusupertrap(ir_display)^2)],'LineStyle','-','color','r');					
-					end
-				end
-				faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
-				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['rho = ',num2str(xrho_dke(ir_display_dke))]);
-				pause(time_pause);
+% ----------- EC coefficient if applicable -----------
+%
+			if nb_ec > 0 
+                y3 = XDec_cyl_ref;
+                %
+                figure(4),
+                graph2D_jd(x1,x2,y3',xlab1,xlab2,'2D Distribution function f_0',xlim1,xlim2,0,NaN,4,0,style1,color3,width2,siz);
+                %
+                figure(5),
+                graph2D_jd(x1,x2,y3',xlab1,xlab2,'Stream function',xlim1,xlim2,0,NaN,4,0,style1,color3,width2,siz);
+                %
+                figure(8),clf
+                %
+                graph2D_jd(x1,x2,y3',xlab1,xlab2,'EC dif. coef. [\nu^{ref}(p_{Te}^{ref})^2]',xlim1,xlim2,0,NaN,nlevel/2,0,style2,NaN,width1,siz,red);
+                text(0.05,0.95,['\rho = ',rhostr],'units','normalized');
+                axis('equal');axis([xlim1,xlim2])
+                bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,nhuloss,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap);
+                %            
+			    pause(time_pause);
+                %
+			    if igor_mode == 1,
+				    eval(['save ',filenameroot,'_data_fig8_',int2str(ir_display_dke),'.mat xrho_dke xia r_dke ir_display_dke ppar_cyl_ref pperp_cyl_ref xmhubounce2 pnmax_S'])
+			    end
 			end
 %
-			if igor_mode == 1,
-				eval(['save ',filenameroot,'_data_fig8_',int2str(ir_display_dke),'.mat xrho_dke xia r_dke ir_display_dke ppar_cyl_ref pperp_cyl_ref xmhubounce2 pnmax_S'])
-			end
-%
-			figure(5);clf
-    		maxXAstr_cyl_ref = max(max(XAstr_cyl_ref)) + eps;
-    		minXAstr_cyl_ref = min(min(XAstr_cyl_ref)) + eps;
-			lev = fliplr(minXAstr_cyl_ref*exp(-[0:1:4*nlevel]/(-4*nlevel/log(maxXAstr_cyl_ref/minXAstr_cyl_ref))));%Because of a bug in Matlab 6.5
-   		C = contour(ppar_cyl_S_ref,pperp_cyl_S_ref,XAstr_cyl_ref,lev(1:2:40));colorbar;grid on;zoom on;%Stream function
-    		axis('equal')
-    		title('Stream Function');
-    		xlabel('ppar/pth-ref');
-    		ylabel('pperp/pth-ref');
-    		if bounce_mode >= 1,%Draw bounce domain boundaries
-    			line([0,pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
-    			line([0,-pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
-    		end
-%
-    		if nb_lh > 0 & xvparmax_lh_ref(ir_display) - xvparmin_lh_ref(ir_display) ~= 0 & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0,
-    			pparresmin_lh_cyl_ref = xvparmin_lh_ref(ir_display)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmin_lh_ref(ir_display)^2*betath_ref^2);%LH resonance condition
-    			pparresmax_lh_cyl_ref = xvparmax_lh_ref(ir_display)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmax_lh_ref(ir_display)^2*betath_ref^2);%LH resonance condition
-    			hold on;
-    			plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--');
-    
-    			plot(pparresmax_lh_cyl_ref,pperp_cyl_ref,'k--');
-    			hold off;
-		end
-		faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
-		text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['rho = ',num2str(xrho_dke(ir_display_dke))]);
-		pause(time_pause);
-%        
 		end
 %
 % Current
@@ -460,7 +493,7 @@ while 1,
 		xJrfB_fsav_mksa = xcurrB_ref_fsav*j_ref;
 		xJboot_e_fsav_mksa = xcurr_boot_ref_fsav*j_ref;
 		xJboot_i_fsav_mksa = xcurr_i_mksa_fsav;
-      xJboot_tot_fsav_mksa = xJboot_e_fsav_mksa + xJboot_i_fsav_mksa;
+        xJboot_tot_fsav_mksa = xJboot_e_fsav_mksa + xJboot_i_fsav_mksa;
 		xJtot_fsav_mksa = xcurr_tot_ref_fsav*j_ref + xJboot_i_fsav_mksa;
 		if coll_mode == 3,
 			xJboot_L_e_fsav_mksa = xcurr_L_boot_ref_fsav*j_ref;
@@ -622,134 +655,133 @@ while 1,
 			end			
 %   
 			if display_mode >= 2, 
+%
+% ---------- DKE parallel distribution -----------
+%
 				figure(9);clf
-				plot(ppar_cyl_ref,F1bootstrap_cyl_ref,'ro');
-				xlabel('ppar');zoom on		
+                %
+                y1 = F1bootstrap_cyl_ref;
+                ylab = 'F_{1//}';
+                ylim = NaN;
+                %
+                graph1D_jd(x1,y1,0,0,xlab1,ylab,'',NaN,xlim1,ylim,style3,marker1,color2,width2,siz,gca,red,lspace,bspace1);
+                %
 				if coll_mode == 3,%Lorentz model
-					hold on;
-					plot(ppar_cyl_ref,F1bootstrap_L_cyl_ref,'b+')
-					hold off
-					ylabel('F1// - code (o),theory (+)');
-				else
-					ylabel('F1// - code (o)');
+                    y2 = F1bootstrap_L_cyl_ref;
+                    leg = ['code  ';'theory'];
+                    graph1D_jd(x1,y2,0,0,xlab1,ylab,'',leg,xlim1,ylim,style2,marker,color1,width1,siz);
 				end
-				title('Parallel first order distribution');
-				faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
-				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['rho = ',num2str(xrho_dke(ir_display_dke))]);
+                text(0.05,0.95,['\rho = ',rhostr],'units','normalized');
+                %
 				pause(time_pause);
+%
+% ---------- DKE distribution at p=4  -----------
 %
 				ipnplot_ref = min(find(pn_ref>=4));
 				figure(10);clf
-				plot(mhu,Xf0_tp_ref(ipnplot_ref,:),'bo',mhu,Xf0_g_ref(ipnplot_ref,:),'ro');
-				line([sqrt(xmhubounce2(ir_display)),sqrt(xmhubounce2(ir_display))],[min(Xf0_tp_ref(ipnplot_ref,:)),max(Xf0_tp_ref(ipnplot_ref,:))]);
-				line([-sqrt(xmhubounce2(ir_display)),-sqrt(xmhubounce2(ir_display))],[min(Xf0_tp_ref(ipnplot_ref,:)),max(Xf0_tp_ref(ipnplot_ref,:))]);
+                %
+                y1 = Xf0_tp_ref(ipnplot_ref,:);
+                y2 = Xf0_g_ref(ipnplot_ref,:);
+                ylab = 'f_1';
+                ylim = NaN;
+                %
+                graph1D_jd(mhu,y1,0,0,'','','',NaN,[-1,1],ylim,style3,marker1,color1,width2,siz,gca,red,lspace,bspace1);
+                graph1D_jd(mhu,y2,0,0,xlab1,ylab,'',NaN,[-1,1],ylim,style3,marker2,color2,width2,siz);
+                %
 				if coll_mode == 3,%Lorentz model
-					hold on;
-					plot(mhu,Xf0_L_tp_ref(ipnplot_ref,:),'b+')
-					plot(mhu,Xf0_L_g_ref(ipnplot_ref,:),'rx')
-					hold off
-					ylabel('ftp (blue),g (red) - code (o),theory (+,x)');
-				else
-					ylabel('ftp (blue),g (red) - code (o)');
+                    y3 = Xf0_L_tp_ref(ipnplot_ref,:);
+                    y4 = Xf0_L_g_ref(ipnplot_ref,:);
+                    leg = ['f_{tp} (code)  ';'g (code)       ';'f_{tp} (theory)';'g (theory)     '];
+                    graph1D_jd(mhu,y3,0,0,'','','',NaN,[-1,1],ylim,style1,marker,color1,width1,siz);
+                    graph1D_jd(mhu,y4,0,0,xlab1,ylab,'',leg,[-1,1],ylim,style2,marker,color2,width1,siz);
+                else
+                    leg = ['f_{tp}';'g     '];
+                    legend(leg,'fontsize',14)
 				end
-%
-				xlabel('mhu');zoom on
-				title(['pn-ref = ',num2str(pn_ref(ipnplot_ref))])
-				faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
-				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['rho = ',num2str(xrho_dke(ir_display_dke))]);
+                ylim = get(gca,'ylim');
+				line([mhu0T,mhu0T],ylim,'color','k');
+				line([-mhu0T,-mhu0T],ylim,'color','k');
+                text(0.05,0.95,['\rho = ',rhostr],'units','normalized');
+                ipnstr = num2str(pn_ref(ipnplot_ref));
+                ipnstr = ipnstr(1:5);
+                text(0.05,0.85,['p^{ref}/p_{te} = ',ipnstr],'units','normalized');
+                %
 				pause(time_pause);
 %
-				figure(11),clf
-				C = contour(ppar_cyl_ref,pperp_cyl_ref,log(Xf0_tp_cyl_ref),[-20:20/nlevel:0]);grid on;zoom on;%Distribution function ftp and wave quasilinear diffusion coefficient contour plot
-				axis('equal')
-				title('2-D steady state electron distribution function ftp');
-				xlabel('ppar/pth-ref');
-				ylabel('pperp/pth-ref');
-				if bounce_mode >= 1,%Draw bounce domain boundaries
-					line([0,pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
-					line([0,-pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
-					if isnan(nhuloss) == 0,%Draw the magnetic ripple loss cone
-						hold on,plot(pparsupertrap_ref,pperpsupertrap_ref,'r'),hold off
-						line([xpndetrap_ref(ir_display)*xmhusupertrap(ir_display),pnmax_S*xmhusupertrap(ir_display)],[xpndetrap_ref(ir_display)*sqrt(1-xmhusupertrap(ir_display)^2),pnmax_S*sqrt(1-xmhusupertrap(ir_display)^2)],'LineStyle','-','color','r');
-						line([-xpndetrap_ref(ir_display)*xmhusupertrap(ir_display),-pnmax_S*xmhusupertrap(ir_display)],[xpndetrap_ref(ir_display)*sqrt(1-xmhusupertrap(ir_display)^2),pnmax_S*sqrt(1-xmhusupertrap(ir_display)^2)],'LineStyle','-','color','r');					
-					end
-				end
-				if nb_lh > 0,
-					hold on,plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--'),plot(pparresmax_lh_cyl_ref,pperp_cyl_ref,'k--'),hold off    
-				end
-				if nb_ec > 0,
-					hold on;plot(pparres_cy_cyl_ref,pperpres_cy_cyl_ref,'k-.');hold off
-					hold on,plot(pparres_cy_cyl0_ref,0,'k*'),hold off;  
-				end
-				faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
-				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['rho = ',num2str(xrho_dke(ir_display_dke))]);
-				pause(time_pause);
+% ---------- 2D distribution ftp -----------
 %
-				figure(12),clf
-				C = contour(ppar_cyl_ref,pperp_cyl_ref,log(Xf0_g_cyl_ref),[-20:20/nlevel:0]);grid on;zoom on;%Distribution function g and wave quasilinear diffusion coefficient contour plot
-				axis('equal')
-				title('2-D steady state electron distribution function g');
-				xlabel('ppar/pth-ref');
-				ylabel('pperp/pth-ref');
-				if bounce_mode >= 1,%Draw bounce domain boundaries
-					line([0,pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
-					line([0,-pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
-					if isnan(nhuloss) == 0,%Draw the magnetic ripple loss cone
-						hold on,plot(pparsupertrap_ref,pperpsupertrap_ref,'r'),hold off
-						line([xpndetrap_ref(ir_display)*xmhusupertrap(ir_display),pnmax_S*xmhusupertrap(ir_display)],[xpndetrap_ref(ir_display)*sqrt(1-xmhusupertrap(ir_display)^2),pnmax_S*sqrt(1-xmhusupertrap(ir_display)^2)],'LineStyle','-','color','r');
-						line([-xpndetrap_ref(ir_display)*xmhusupertrap(ir_display),-pnmax_S*xmhusupertrap(ir_display)],[xpndetrap_ref(ir_display)*sqrt(1-xmhusupertrap(ir_display)^2),pnmax_S*sqrt(1-xmhusupertrap(ir_display)^2)],'LineStyle','-','color','r');					
-					end
-				end
+                figure(11),clf
+                %
+                y1 = log10(abs(Xf0_tp_cyl_ref));
+                cont = [-14.5:14.5];
+                %
+                graph2D_jd(x1,x2,y1',xlab1,xlab2,'2D Distribution function f_{tp}',xlim1,xlim2,0,NaN,cont,0,style2,NaN,width1,siz,red);
+                text(0.05,0.95,['\rho = ',rhostr],'units','normalized');
+                axis('equal');axis([xlim1,xlim2])
+                bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,nhuloss,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap);
+%                
+			    if nb_lh > 0 & xvparmax_lh_ref(ir_display) - xvparmin_lh_ref(ir_display) ~= 0  & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0,
+    				hold on;
+    				plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--');
+    				plot(pparresmax_lh_cyl_ref,pperp_cyl_ref,'k--');
+    				hold off;
+                end
+			    if nb_ec > 0 
+                    y3 = XDec_cyl_ref;
+                    graph2D_jd(x1,x2,y3',xlab1,xlab2,'2D Distribution function f_{tp}',xlim1,xlim2,0,NaN,4,0,style1,color3,width2,siz);
+                end
 %
-				if nb_lh > 0,
-					hold on
-					Dlhmax = max(max(XDlh_cyl_ref));
-					contour(ppar_cyl_ref,pperp_cyl_ref,XDlh_cyl_ref',[0,eps],'r--')
-					hold off
-				end
+                pause(time_pause);
 %
-				if nb_ec > 0,
-					hold on
-					Decmax = max(max(XDec_cyl_ref));
-					contour(ppar_cyl_ref,pperp_cyl_ref,XDec_cyl_ref',[Decmax/5:Decmax/5:Decmax],'b--')
-					hold off
-				end
-				faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
-				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['rho = ',num2str(xrho_dke(ir_display_dke))]);
-				pause(time_pause);
+% ---------- 2D distribution g -----------
 %
-				figure(13),clf
-				C = contour(ppar_cyl_ref,pperp_cyl_ref,log(Xf0_cyl_ref+Xf0_tp_cyl_ref+Xf0_g_cyl_ref),[-20:20/nlevel:0]);grid on;zoom on;%Distribution function f and wave quasilinear diffusion coefficient contour plot
-				axis('equal')
-				title('2-D steady state total electron distribution function f');
-				xlabel('ppar/pth-ref');
-				ylabel('pperp/pth-ref');
-				if bounce_mode >= 1,%Draw bounce domain boundaries
-					line([0,pnmax_S*sqrt(xmhubounce2(ir_display_dke))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display_dke))]);
-					line([0,-pnmax_S*sqrt(xmhubounce2(ir_display_dke))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display_dke))]);
-					if isnan(nhuloss) == 0,%Draw the magnetic ripple loss cone
-						hold on,plot(pparsupertrap_ref,pperpsupertrap_ref,'r'),hold off
-						line([xpndetrap_ref(ir_display)*xmhusupertrap(ir_display),pnmax_S*xmhusupertrap(ir_display)],[xpndetrap_ref(ir_display)*sqrt(1-xmhusupertrap(ir_display)^2),pnmax_S*sqrt(1-xmhusupertrap(ir_display)^2)],'LineStyle','-','color','r');
-						line([-xpndetrap_ref(ir_display)*xmhusupertrap(ir_display),-pnmax_S*xmhusupertrap(ir_display)],[xpndetrap_ref(ir_display)*sqrt(1-xmhusupertrap(ir_display)^2),pnmax_S*sqrt(1-xmhusupertrap(ir_display)^2)],'LineStyle','-','color','r');					
-					end
-				end
+                figure(12),clf
+                %
+                y1 = log10(abs(Xf0_g_cyl_ref));
+                cont = [-14.5:14.5];
+                %
+                graph2D_jd(x1,x2,y1',xlab1,xlab2,'2D Distribution function g',xlim1,xlim2,0,NaN,cont,0,style2,NaN,width1,siz,red);
+                text(0.05,0.95,['\rho = ',rhostr],'units','normalized');
+                axis('equal');axis([xlim1,xlim2])
+                bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,nhuloss,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap);
+%                
+			    if nb_lh > 0 & xvparmax_lh_ref(ir_display) - xvparmin_lh_ref(ir_display) ~= 0  & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0,
+    				hold on;
+    				plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--');
+    				plot(pparresmax_lh_cyl_ref,pperp_cyl_ref,'k--');
+    				hold off;
+                end
+			    if nb_ec > 0 
+                    y3 = XDec_cyl_ref;
+                    graph2D_jd(x1,x2,y3',xlab1,xlab2,'2D Distribution function g',xlim1,xlim2,0,NaN,4,0,style1,color3,width2,siz);
+                end
 %
-				if nb_lh > 0
-					hold on
-					Dlhmax = max(max(XDlh_cyl_ref));
-					contour(ppar_cyl_ref,pperp_cyl_ref,XDlh_cyl_ref',[0,eps],'r--')
-					hold off
-				end
+                pause(time_pause);
 %
-				 if nb_ec > 0
-					hold on
-					Decmax = max(max(XDec_cyl_ref));
-					contour(ppar_cyl_ref,pperp_cyl_ref,XDec_cyl_ref',[Decmax/5:Decmax/5:Decmax],'b--')
-					hold off
-				end
-				faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
-				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['rho = ',num2str(xrho_dke(ir_display_dke))]);
-				pause(time_pause);
+% ---------- 2D total distribution f0 + ftp + g -----------
+%
+                figure(13),clf
+                %
+                y1 = Xf0_cyl_ref + Xf0_tp_cyl_ref + Xf0_g_cyl_ref;
+                %
+                graph2D_jd(x1,x2,y1',xlab1,xlab2,'2D total distribution function f_0 + f_1',xlim1,xlim2,0,betath_ref,[0:0.5:pnmax_S],0,style2,NaN,width1,siz,red,max(max(y1)));
+                text(0.05,0.95,['\rho = ',rhostr],'units','normalized');
+                axis('equal');axis([xlim1,xlim2])
+                bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,nhuloss,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap);
+%                
+			    if nb_lh > 0 & xvparmax_lh_ref(ir_display) - xvparmin_lh_ref(ir_display) ~= 0  & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0,
+    				hold on;
+    				plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--');
+    				plot(pparresmax_lh_cyl_ref,pperp_cyl_ref,'k--');
+    				hold off;
+                end
+			    if nb_ec > 0 
+                    y3 = XDec_cyl_ref;
+                    graph2D_jd(x1,x2,y3',xlab1,xlab2,'2D total distribution function f_0 + f_1',xlim1,xlim2,0,NaN,4,0,style1,color3,width2,siz);
+                end
+%
+                pause(time_pause);
+%
 			end
 %
 			disp('-------------------------------------------------------------------------------------------------------------------');
@@ -825,17 +857,17 @@ while 1,
 %
 			for ib=1:nb_lh,
 					disp(['   - LH beam #',num2str(ib),': v1 = ',num2str(1/waveparam_lh(ir_display_dke,ib,7)/betath_ref),', v2 = ',num2str(1/waveparam_lh(ir_display_dke,ib,6)/betath_ref),',D0lh = ',num2str(waveparam_lh(ir_display_dke,ib,5))])
-					disp(['        LH Power absorbed (MW/m3) [spherical]: ',num2str(xyPabs0_lh_mksa(ir_display_dke,ib))]) 
+					disp(['        LH Power absorbed (MW/m3) [spherical]: ',num2str(xyPabs0_lh_fsav_mksa(ir_display_dke,ib))]) 
 			end
 %
 			for ib=1:nb_ec,
 					disp(['   - EC beam #',num2str(ib),': n// = ',num2str(waveparam_ec(ir_display_dke,ib,8)),...
 					', Y = ',num2str(waveparam_ec(ir_display_dke,ib,1)*waveparam_ec(ir_display_dke,ib,3)/waveparam_ec(ir_display_dke,ib,2)),',D0ec = ',num2str(waveparam_ec(ir_display_dke,ib,5))])
-					disp(['        EC Power absorbed (MW/m3) [spherical]: ',num2str(xyPabs0_ec_mksa(ir_display_dke,ib))]) 
+					disp(['        EC Power absorbed (MW/m3) [spherical]: ',num2str(xyPabs0_ec_fsav_mksa(ir_display_dke,ib))]) 
 			end
 %
 			if nb > 0,
-					disp(['   - RF current drive efficiency (A.m/W) [spherical]: ',num2str(xeta0_mksa(ir_display_dke))])
+					disp(['   - RF current drive efficiency (A.m/W) [spherical]: ',num2str(xeta0_fsav_mksa(ir_display_dke))])
 			end
 			disp(['   - Ohmic eletric field (V/m): ',num2str(xepsi_fsav_mksa(ir_display_dke))])
 			disp(['   - Runaway loss rate [spherical] (m-3.s-1): ',num2str(XxRR_mksa_fsav(np-1,ir_display_dke))])
@@ -846,50 +878,57 @@ while 1,
 %
 	if display_mode == 2,
 %
+        xlim = [0,1];
+        xlab = '\rho';
+        style4 = '-.';
+        marker3 = '*';
+        marker4 = 'o';
+%        
 	    figure(253),clf
-		 [ax] = graph1D_jd(xrho_dke,xne(r_dke)./(xnormf_ref_fsav*ne_ref),'\rho','<ne>_{in}/<ne>_{out}','Electron density conservation',NaN,[0,1],[0.5,1.5],'none','x','r',2,14,gca,0.8,0.7,0.6);		 
-%
+		[ax] = graph1D_jd(xrho_dke,xne(r_dke)./(xnormf_ref_fsav*ne_ref),0,0,xlab,'<ne>_{in}/<ne>_{out}','Electron density conservation',NaN,xlim,[0.5,1.5],style3,marker1,color2,width2,siz,gca,red,lspace,bspace2);		 
+% 
         figure(200),clf
-        [ax] = graph1D_jd(xrho_dke,xJrf0_fsav_mksa,'\rho','<J_{RF}> (MA/m^2)','RF + Ohmic Current Density',NaN,[0,1],NaN,'none','+','r',2,14,gca,0.8,0.7,0.6);
+        [ax] = graph1D_jd(xrho_dke,xJrf0_fsav_mksa,0,0,xlab,'<J_{RF}> (MA/m^2)','RF + Ohmic Current Density',NaN,xlim,NaN,style3,marker2,color2,width2,siz,gca,red,lspace,bspace2);
 %
         figure(203),clf
-        [ax] = graph1D_jd(xrho_dke,-xPcoll_tot_fsav_mksa,'','','',NaN,[0,1],NaN,'none','*','r',2,14,gca,0.8,0.7,0.6);
-        hold on
-        [ax] = graph1D_jd(xrho_dke,xPelec_tot_fsav_mksa,'','','',NaN,[0,1],NaN,'none','+','b',2,14);
-        [ax] = graph1D_jd(xrho_dke,xPabs_tot_fsav_mksa,'\rho','<P_{abs}> (MW/m^3)','Density of Absorbed Power',['Collisions';'Ohmic     ';'RF Waves  '],[0,1],0,'none','x','m',2,14);
+        [ax] = graph1D_jd(xrho_dke,-xPcoll_tot_fsav_mksa,0,0,'','','',NaN,xlim,NaN,style3,marker3,color2,width2,siz,gca,red,lspace,bspace2);
+        [ax] = graph1D_jd(xrho_dke,xPelec_tot_fsav_mksa,0,0,'','','',NaN,xlim,NaN,style3,marker2,color3,width2,siz);
+        [ax] = graph1D_jd(xrho_dke,xPabs_tot_fsav_mksa,0,0,xlab,'<P_{abs}> (MW/m^3)','Density of Absorbed Power',['Collisions';'Ohmic     ';'RF Waves  '],xlim,0,style3,marker1,color1,width2,siz);
 %
         figure(204),clf
-        [ax] = graph1D_jd(xrho_dke,XxRR_mksa_fsav(np-1,ir_display_dke),'\rho','<\Gamma_{R}> (m^-3.s^-1)','Runaway loss rate',NaN,[0,1],NaN,'none','+','r',2,14,gca,0.8,0.7,0.6);
-        axis([0,1,0,1.1*max(XxRR_mksa_fsav(np-1,ir_display_dke)+eps)])
+        [ax] = graph1D_jd(xrho_dke,XxRR_mksa_fsav(np-1,ir_display_dke),0,0,xlab,'<\Gamma_{R}> (m^-3.s^-1)','Runaway loss rate',NaN,xlim,0,style3,marker2,color2,width2,siz,gca,red,lspace,bspace2);
 %
 		if dke_mode == 1,  
 %
             figure(201),clf
-            [ax] = graph1D_jd(xrho_dke,xJboot_tot_fsav_mksa,'','','',NaN,[0,1],NaN,'none','+','r',2,14,gca,0.8,0.7,0.6);
-            hold on
-            [ax] = graph1D_jd(prho,pcurr_hin_mksa_fsav,'','','',NaN,[0,1],NaN,'--','none','g',2,14);
-            [ax] = graph1D_jd(prho,pcurr_hir_mksa_fsav,'','','',NaN,[0,1],NaN,'-.','none','b',2,14);
-            [ax] = graph1D_jd(prho,pcurr_sau_mksa_fsav,'\rho','<J_B> (MA/m^2)',['Bootstrap current in ',tokname],['DKE code';'Hinton  ';'Hirshman';'Sauter  '],[0,1],0,'-','none','m',2,14);
+            [ax] = graph1D_jd(xrho_dke,xJboot_tot_fsav_mksa,0,0,'','','',NaN,xlim,NaN,style3,marker2,color2,width2,siz,gca,red,lspace,bspace2);
+            [ax] = graph1D_jd(prho,pcurr_hin_mksa_fsav,0,0,'','','',NaN,xlim,NaN,style1,marker,color3,width2,siz);
+            [ax] = graph1D_jd(prho,pcurr_hir_mksa_fsav,0,0,'','','',NaN,xlim,NaN,style4,marker,color1,width2,siz);
+            [ax] = graph1D_jd(prho,pcurr_sau_mksa_fsav,0,0,xlab,'<J_B> (MA/m^2)',['Bootstrap current in ',tokname],['DKE code';'Hinton  ';'Hirshman';'Sauter  '],xlim,0,style2,marker,color4,width2,siz);
 %
             figure(202),clf
-            [ax] = graph1D_jd(xrho_dke,xJtot_fsav_mksa,'\rho','<J_{tot}> (MA/m^2)','Total Current Density',NaN,[0,1],0,'none','+','r',2,14,gca,0.8,0.7,0.6);
+            [ax] = graph1D_jd(xrho_dke,xJtot_fsav_mksa,0,0,xlab,'<J_{tot}> (MA/m^2)','Total Current Density',NaN,xlim,0,style3,marker2,color2,width2,siz,gca,red,lspace,bspace2);
 %
-				figure(205),clf
-				[ax] = graph1D_jd(xrho_dke,xfteff_fsav,'\rho','','Effective trapped fraction',NaN,[0,1],[0,1],'none','o','r',2,14,gca,0.8,0.7,0.6);
-				hold on
-				if exist('ftra') == 0,%In case of ideal magnetic equilibrium only
-				   [ax] = graph1D_jd(xrho_dke,xfteff_llm,'\rho','ft-eff (DKE: o)','Effective trapped fraction',NaN,[0,1],[0,1],'none','x','g',2,14);
-					else
-%					[ax] = graph1D_jd(xrho_dke,xfteff_llm,'\rho','','Effective trapped fraction',NaN,[0,1],[0,1],'none','x','g',2,14);
-					[ax] = graph1D_jd(xrho_dke,xftra,'\rho','ft-eff (DKE: o, HELENA: +)','Effective trapped fraction',NaN,[0,1],[0,1],'none','+','b',2,14);				
-				end
-				if coll_mode== 3
-						[ax] = graph1D_jd(prho,L31,'\rho','ft-eff (DKE: o, L31: .)','Effective trapped fraction',NaN,[0,1],[0,1],'none','.','b',2,14);
-				end
+			figure(205),clf
+			[ax] = graph1D_jd(xrho_dke,xfteff_fsav,0,0,'','','',NaN,xlim,[0,1],style3,marker4,color2,width2,siz,gca,red,lspace,bspace2);
+			hold on
+            if ~isnan(xftra)
+                leg = ['DKE code';'HELENA  '];
+%				[ax] = graph1D_jd(xrho_dke,xfteff_llm,0,0,xlab,'','Effective trapped fraction',NaN,xlim,[0,1],'none','x','g',2,14);
+				[ax] = graph1D_jd(xrho_dke,xftra,0,0,xlab,'f_t','Effective trapped fraction',leg,xlim,[0,1],style3,marker2,color1,width2,siz);				
+            else,%In case of ideal magnetic equilibrium only
+                leg = ['DKE code';'Lin-Liu '];
+				[ax] = graph1D_jd(xrho_dke,xfteff_llm,0,0,xlab,'f_t','Effective trapped fraction',leg,xlim,[0,1],style3,marker2,color1,width2,siz);
+			end
+			if coll_mode== 3
+                leg = [leg;'L31     '];
+				[ax] = graph1D_jd(prho,L31,0,0,xlab,'ft-eff (DKE: o, L31: .)','Effective trapped fraction',leg,xlim,[0,1],style3,marker1,color3,width2,siz);
+			end
 %
-				figure(206),clf
-				[ax] = graph1D_jd(xrho_dke,xft_fsav,'\rho','ft-exact','Exact trapped fraction (DKE)',NaN,[0,1],[0,1],'none','o','r',2,14,gca,0.8,0.7,0.6);    
-      end
+			figure(206),clf
+			[ax] = graph1D_jd(xrho_dke,xft_fsav,0,0,xlab,'ft-exact','Exact trapped fraction (DKE)',NaN,xlim,[0,1],style3,marker4,color2,width2,siz,gca,red,lspace,bspace2);    
+        end
+%      
 		if igor_mode == 1,
 			eval(['save ',filenameroot,'_data_fig200.mat xrho_dke xia r_dke j_ref xcurr_tot_ref_fsav P_ref xPabs_tot_ref_fsav xTe xTi xne xnhyd xft xft_llm'])
 		end
@@ -902,11 +941,11 @@ while 1,
 		 info_dke_yp(2,['The diary file  : ',dossier,s,'diary_dke_s','_',int2str(snumber),'_',int2str(iloop),' has been successfully saved !']);
 	 end
 %
-	if auto_mode == 1, break, end	
+	if auto_mode_in == 1, break, end	
 end
 %
-if auto_mode == 0 & nr > 1,
-	 disp('  ');
+if auto_mode_in == 0 & nr > 1,
+	disp('  ');
 	ie_display = 1;
 	Ec_r_ref_in = xEc_r_ref_threshold(1);
 	info_dke_yp(1,'Radial profile plot of F//');
@@ -930,10 +969,10 @@ if auto_mode == 0 & nr > 1,
 			Ec_r_ref_out = mc2*(sqrt(1 + ppar_r_cyl_ref(ippar_r_cyl_ref_in).*ppar_r_cyl_ref(ippar_r_cyl_ref_in)*betath_ref^2) - 1);%Fast electron kinetic energy in keV    
 			prof_r_Fpar_ref(ir1) = Fpar0_r_cyl_ref(ippar_r_cyl_ref_in);
 		end
-		figure(h_figure),plot(xrho_dke,prof_r_Fpar_ref,'r+',xrho_dke,prof_r_Fpar_ref,'b-');
-		grid on, zoom on
-		xlabel('rho'),ylabel('F//')
-		title(['Electron kinetic energy: ',num2str(Ec_r_ref_out),' (keV), threshold: ',num2str(xEc_r_ref_threshold(1)),' (keV)']);
+		figure(h_figure),clf
+        
+		tit = ['Electron kinetic energy: ',num2str(Ec_r_ref_out),' (keV), threshold: ',num2str(xEc_r_ref_threshold(1)),' (keV)'];
+        graph1D_jd(xrho_dke,prof_r_Fpar_ref,0,0,xlab,'F_{//}',tit,NaN,xlim,NaN,style2,marker1,color1,width1,siz,gca,red,lspace,bspace2);
 %
 		if igor_mode == 1,
 			if exist([filenameroot,'_Fparprof_',int2str(ie_display),'_out.mat']) == 2,
@@ -950,3 +989,23 @@ if auto_mode == 0 & nr > 1,
 	end
 end
 %
+%--------------------------------------------------------------------------
+%
+function bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,nhuloss,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap)
+%
+% Draws the bounce and ripple loss domains
+%
+if bounce_mode >= 1,%Draw bounce domain boundaries
+    line([0,pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))],'color','k');
+    line([0,-pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))],'color','k');
+    if isnan(nhuloss) == 0,%Draw the magnetic ripple loss cone
+    	hold on,plot(pparsupertrap_ref,pperpsupertrap_ref,'r'),hold off
+    	line([xpndetrap_ref(ir_display)*xmhusupertrap(ir_display),pnmax_S*xmhusupertrap(ir_display)],[xpndetrap_ref(ir_display)*sqrt(1-xmhusupertrap(ir_display)^2),pnmax_S*sqrt(1-xmhusupertrap(ir_display)^2)],'LineStyle','-','color','r');
+    	line([-xpndetrap_ref(ir_display)*xmhusupertrap(ir_display),-pnmax_S*xmhusupertrap(ir_display)],[xpndetrap_ref(ir_display)*sqrt(1-xmhusupertrap(ir_display)^2),pnmax_S*sqrt(1-xmhusupertrap(ir_display)^2)],'LineStyle','-','color','r');					
+    end
+end
+%
+%--------------------------------------------------------------------------
+%
+
+
