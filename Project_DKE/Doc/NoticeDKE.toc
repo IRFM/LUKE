@@ -1,36 +1,66 @@
-\select@language {english}
-\contentsline {chapter}{\numberline {1}Tokamak geometry and particle dynamic}{2}
-\contentsline {section}{\numberline {1.1}Arbitrary configuration}{2}
-\contentsline {subsection}{\numberline {1.1.1}Coordinate system}{2}
-\contentsline {subsection}{\numberline {1.1.2}Particle motion}{2}
-\contentsline {section}{\numberline {1.2}Circular configuration}{2}
-\contentsline {subsection}{\numberline {1.2.1}Coordinate system}{2}
-\contentsline {subsection}{\numberline {1.2.2}Particle motion}{2}
-\contentsline {chapter}{\numberline {2}Kinetic description of electrons}{3}
-\contentsline {section}{\numberline {2.1}Boltzman equation}{3}
-\contentsline {section}{\numberline {2.2}Gyro and radiofrequency averaging}{3}
-\contentsline {section}{\numberline {2.3}Small drift approximation}{3}
-\contentsline {subsection}{\numberline {2.3.1}Zero order term: the Fokker-Planck equation}{3}
-\contentsline {subsection}{\numberline {2.3.2}First order term: the Drift Kinetic equation}{3}
-\contentsline {section}{\numberline {2.4}Low collisionality limit and bounce averaging}{3}
-\contentsline {subsection}{\numberline {2.4.1}Zero order term: the Fokker-Planck equation}{3}
-\contentsline {subsection}{\numberline {2.4.2}First order term: the Drift Kinetic equation}{3}
-\contentsline {section}{\numberline {2.5}Flux conservative representation}{3}
-\contentsline {subsection}{\numberline {2.5.1}General formulation}{3}
-\contentsline {subsection}{\numberline {2.5.2}Zero order term: the Fokker-Planck equation}{3}
-\contentsline {subsection}{\numberline {2.5.3}First order term: the Drift Kinetic equation}{3}
-\contentsline {section}{\numberline {2.6}Anomalous transport in configuration space}{3}
-\contentsline {chapter}{\numberline {3}Detailed description of physical processes}{4}
-\contentsline {section}{\numberline {3.1}Collisions}{4}
-\contentsline {section}{\numberline {3.2}Ohmic electric field}{4}
-\contentsline {section}{\numberline {3.3}Radio frequency waves}{4}
-\contentsline {chapter}{\numberline {4}Numerical calculations}{5}
-\contentsline {section}{\numberline {4.1}Grid definitions}{5}
-\contentsline {section}{\numberline {4.2}Momentum dynamics}{5}
-\contentsline {subsection}{\numberline {4.2.1}Discretization procedure}{5}
-\contentsline {subsection}{\numberline {4.2.2}Grid interpolation}{5}
-\contentsline {section}{\numberline {4.3}Spatial dynamics}{5}
-\contentsline {subsection}{\numberline {4.3.1}Discretization procedure}{5}
-\contentsline {subsection}{\numberline {4.3.2}Grid interpolation}{5}
-\contentsline {chapter}{\numberline {5}Algorithm}{6}
-\contentsline {chapter}{\numberline {6}Examples}{7}
+\contentsline {chapter}{\numberline {1}Tokamak geometry and particle dynamic}{5}
+\contentsline {section}{\numberline {1.1}Coordinate system}{5}
+\contentsline {section}{\numberline {1.2}Particle motion}{6}
+\contentsline {subsection}{\numberline {1.2.1}Arbitrary configuration}{6}
+\contentsline {subsubsection}{Transit or Bounce Time}{6}
+\contentsline {paragraph}{Normalized Expression}{6}
+\contentsline {paragraph}{Particle Motion in the Magnetic Field}{7}
+\contentsline {paragraph}{Calculation of $\lambda \left ( \psi ,\xi _{0}\right ) $ From the Output Data of Equilibrium Codes}{9}
+\contentsline {paragraph}{Safety Factor $q\left ( \psi \right ) $}{10}
+\contentsline {subsubsection}{Bounce Average}{10}
+\contentsline {subsubsection}{Numerical Integration over $\theta $}{11}
+\contentsline {paragraph}{Domain of Integration}{11}
+\contentsline {paragraph}{Numerical Integration}{13}
+\contentsline {subsection}{\numberline {1.2.2}Circular configuration}{13}
+\contentsline {subsubsection}{Parametrization of the Flux-Surfaces}{13}
+\contentsline {subsubsection}{Magnetic Field}{13}
+\contentsline {subsubsection}{Safety factor}{14}
+\contentsline {subsubsection}{Particle Motion}{14}
+\contentsline {subsubsection}{Bounce Time}{15}
+\contentsline {chapter}{\numberline {2}Kinetic description of electrons}{17}
+\contentsline {section}{\numberline {2.1}Boltzman equation}{17}
+\contentsline {section}{\numberline {2.2}Gyro and radiofrequency averaging}{17}
+\contentsline {section}{\numberline {2.3}Small drift approximation}{17}
+\contentsline {subsection}{\numberline {2.3.1}Zero order term: the Fokker-Planck equation}{17}
+\contentsline {subsection}{\numberline {2.3.2}Up to first order term: the Drift Kinetic equation}{17}
+\contentsline {section}{\numberline {2.4}Low collisionality limit and bounce averaging}{17}
+\contentsline {subsection}{\numberline {2.4.1}Zero order term: the Fokker-Planck equation}{17}
+\contentsline {subsection}{\numberline {2.4.2}Up to first order term: the Drift Kinetic equation}{17}
+\contentsline {section}{\numberline {2.5}Anomalous transport in configuration space}{17}
+\contentsline {section}{\numberline {2.6}Flux conservative representation}{17}
+\contentsline {subsection}{\numberline {2.6.1}General formulation}{17}
+\contentsline {subsubsection}{Dynamics in Momentum Space}{17}
+\contentsline {subsubsection}{Dynamics in Configuration Space}{18}
+\contentsline {subsection}{\numberline {2.6.2}Zero order term: the Fokker-Planck equation}{18}
+\contentsline {subsubsection}{Dynamics in Momentum Space}{18}
+\contentsline {subsubsection}{Dynamics in Configuration Space}{20}
+\contentsline {subsection}{\numberline {2.6.3}Up to first order term: the Drift Kinetic equation}{20}
+\contentsline {subsubsection}{Dynamics in Momentum Space}{20}
+\contentsline {subsubsection}{Dynamics in Configuration Space}{23}
+\contentsline {section}{\numberline {2.7}Moments of the distribution function}{23}
+\contentsline {subsection}{\numberline {2.7.1}Current density}{23}
+\contentsline {subsection}{\numberline {2.7.2}Power density}{23}
+\contentsline {subsection}{\numberline {2.7.3}Bremsstrahlung emission}{23}
+\contentsline {chapter}{\numberline {3}Detailed description of physical processes}{25}
+\contentsline {section}{\numberline {3.1}Collisions}{25}
+\contentsline {subsection}{\numberline {3.1.1}Bounce Averaged Fokker-Planck Equation}{25}
+\contentsline {subsection}{\numberline {3.1.2}Bounce Averaged Drift Kinetic Equation}{26}
+\contentsline {subsubsection}{Case of circular concentric flux-surfaces}{27}
+\contentsline {section}{\numberline {3.2}Ohmic electric field}{27}
+\contentsline {subsection}{\numberline {3.2.1}Conservative Form for the Ohmic Electric Field Operator}{29}
+\contentsline {subsection}{\numberline {3.2.2}Bounce Averaged Fokker-Planck Equation}{29}
+\contentsline {subsubsection}{Expression of $\@@overline {\lambda }_{1,-1,2}$}{30}
+\contentsline {subsubsection}{Case of circular concentric flux-surfaces}{30}
+\contentsline {subsection}{\numberline {3.2.3}Bounce Averaged Drift Kinetic Equation}{30}
+\contentsline {section}{\numberline {3.3}Radio frequency waves}{31}
+\contentsline {chapter}{\numberline {4}Numerical calculations}{33}
+\contentsline {section}{\numberline {4.1}Grid definitions}{33}
+\contentsline {section}{\numberline {4.2}Momentum dynamics}{33}
+\contentsline {subsection}{\numberline {4.2.1}Discretization procedure}{33}
+\contentsline {subsection}{\numberline {4.2.2}Grid interpolation}{33}
+\contentsline {section}{\numberline {4.3}Spatial dynamics}{33}
+\contentsline {subsection}{\numberline {4.3.1}Discretization procedure}{33}
+\contentsline {subsection}{\numberline {4.3.2}Grid interpolation}{33}
+\contentsline {section}{\numberline {4.4}Numical integrals for moment calculations}{33}
+\contentsline {chapter}{\numberline {5}Algorithm}{35}
+\contentsline {chapter}{\numberline {6}Examples}{37}
