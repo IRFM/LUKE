@@ -142,31 +142,30 @@ by definition, xRR_fsav* = xRR_fsav./(xnhu/nhu_ref)./(xne/ne_ref) and the local 
 One radial location -> eTe = 0, eTe = 0, ref_mode = 1, norm_ref = 1, bounce_mode = 1 (drop tolerance = 1e-4)
 ---------------------------------------------------------------------------------------
 Z = 1, no imp, (H), xRR_fsav = 0.00021418 (local norm., Maxwellian, E/ED_fsav = 0.08, xRR_fsav (no bounce) = 0.00028454, rho = 0.031848, np=125, nmhu=120, pnmax_S = 15)
-xRR_fsav/xRR_fsav(no bounce) = 0.00021418/0.00028454 = 0.7527 [Eriksson-Helander = 0.747]
+xRR_fsav/xRR_fsav(no bounce) = 0.00021418/0.00028454 = 0.7527 
 Z = 1, no imp, (H), xRR_fsav = 0.00019165  (local norm., lMaxwellian, E/ED_fsav = 0.08,xRR_fsav (no bounce) = 0.00028454 , rho = 0.05, np=125, nmhu=120, pnmax_S = 15)
-xRR_fsav/xRR_fsav(no bounce) =  0.00019165/0.00028454 = 0.6735 [Eriksson-Helander = 0.683]
+xRR_fsav/xRR_fsav(no bounce) =  0.00019165/0.00028454 = 0.6735 
 Z = 1, no imp, (H), xRR_fsav =  0.00014337 (local norm., Maxwellian, E/ED_fsav = 0.08,xRR_fsav = 0.00028454, rho = 0.1, np=125, nmhu=120, pnmax_S = 15)
-xRR_fsav/xRR_fsav(no bounce) =  0.00014337/0.00028454 = 0.5038 [Eriksson-Helander = 0.552]
+xRR_fsav/xRR_fsav(no bounce) =  0.00014337/0.00028454 = 0.5038 
 Z = 1, no imp, (H), xRR_fsav =  7.3178e-06 (local norm., Maxwellian, E/ED_fsav = 0.08,xRR_fsav = 0.00028454, rho = 0.5, np=125, nmhu=120, pnmax_S = 15)
-xRR_fsav/xRR_fsav(no bounce) =  7.3178e-06/0.00028454 = 0.0257 [Eriksson-Helander = 0]
+xRR_fsav/xRR_fsav(no bounce) =  7.3178e-06/0.00028454 = 0.0257 
 Z = 1, no imp, (H), xRR_fsav =  3.9169e-13 (local norm., Maxwellian, E/ED_fsav = 0.08,xRR_fsav = 0.00028454, rho = 0.95, np=125, nmhu=120, pnmax_S = 15)
-xRR_fsav/xRR_fsav(no bounce) =  3.9169e-13//0.00028454 = 1.37e-9 [Eriksson-Helander  = NaN]
+xRR_fsav/xRR_fsav(no bounce) =  3.9169e-13//0.00028454 = 1.37e-9 
 
-[Eriksson-Helander heuristic formula = 1-sqrt(2*r/R)]
 ---------------------------------------------------------------------------------------
 One radial location -> eTe = 1, eTe = 1, ref_mode = 1, norm_ref = 1, bounce_mode = 1
 ---------------------------------------------------------------------------------------
 Z = 1, no imp, (H), xRR_fsav = 0.00011278 (local norm., linearized, E/ED_fsav = 0.08,xRR_fsav (no bounce) = 0.00028462, rho = 0.14142, np=125, nmhu=120, pnmax_S = 15)
-xRR_fsav/xRR_fsav(no bounce) = 0.00011278/0.00028462 = 0.396 [Eriksson-Helander = 0.468]
+xRR_fsav/xRR_fsav(no bounce) = 0.00011278/0.00028462 = 0.396 
 Z = 1, no imp, (H), xRR_fsav = 3.5426e-05  (local norm., linearized, E/ED_fsav = 0.08,xRR_fsav (no bounce) = 0.00028476 , rho = 0.31623, np=125, nmhu=120, pnmax_S = 15)
-xRR_fsav/xRR_fsav(no bounce) =  3.5426e-05/0.00028476 = 0.124 [Eriksson-Helander = 0.2047]
+xRR_fsav/xRR_fsav(no bounce) =  3.5426e-05/0.00028476 = 0.124 
 Z = 1, no imp, (H), xRR_fsav = 6.6112e-06  (local norm., linearized, E/ED_fsav = 0.08,xRR_fsav (no bounce) = 0.00028505 , rho = 0.5099, np=125, nmhu=120, pnmax_S = 15)
-xRR_fsav/xRR_fsav(no bounce) = 6.6112e-06/0.00028505 = 0.0231 [Eriksson-Helander = NaN]
+xRR_fsav/xRR_fsav(no bounce) = 6.6112e-06/0.00028505 = 0.0231 
 Z = 1, no imp, (H), xRR_fsav = 3.5951e-07 (local norm., linearized, E/ED_fsav = 0.08,xRR_fsav (no bounce) = 0.00028543, rho = 0.70711, np=125, nmhu=120, pnmax_S = 15)
-xRR_fsav/xRR_fsav(no bounce) = 3.5951e-07/0.00028543 = 1.26e-3 [Eriksson-Helander = NaN]
+xRR_fsav/xRR_fsav(no bounce) = 3.5951e-07/0.00028543 = 1.26e-3 
 Z = 1, no imp, (H), xRR_fsav = 1.1531e-10 (local norm., linearized, E/ED_fsav = 0.08,xRR_fsav (no bounce) = 0.00028589 , rho = 0.90554, np=125, nmhu=120, pnmax_S = 15)
-xRR_fsav/xRR_fsav(no bounce) = 1.1531e-10/0.00028589 = 4.03e-7 [Eriksson-Helander = NaN]
-[Eriksson-Helander heuristic formula = 1-sqrt(2*r/R)]
+xRR_fsav/xRR_fsav(no bounce) = 1.1531e-10/0.00028589 = 4.03e-7 
+
 ---------------------------------------------------------------------------------------
 Multiple radial locations -> rho_S = [0.2,0.4,0.6,0.8], eTe = 1, ene = 1, bounce_mode = 1
 ---------------------------------------------------------------------------------------

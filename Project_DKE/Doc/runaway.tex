@@ -1,20 +1,22 @@
 
 The runaway loss rate $\overline{\Gamma }_{R}$ is also an important physical
-quantity that is determined by the code. It becomes significant when the
+quantity that can be determined by the code. It becomes significant when the
 Ohmic electric field is large. For the benchmarking procedure, the Ohmic
-electric field is then set to $\overline{E}=0.08.$ All other parameters are
-kept constant as compared to the benchmarking of the Ohmic conductivity done
-in Sec. \ref{conducsection}. The corresponding tokamak parameter file is
-nevertheless named ``CQL3D\_RUNAWAY'', since it corresponds to conditions
-that have been used for code comparison with the well know CQL3D program (%
-\cite{har93c1_IAEA}). By definition, the code is no more conservative since
-runaway electrons are leaving the domain of integration. Consequently, the
-particle loss must be compensated in order to keep the totalnumber of
-particle constant. In addition, in $3-D$ mode, there are numerical losses,
-as shown in the previous section, that overcome physical ones. Consequently,
-the same procedure is used and the Maxwellian solution is enforced at $i=1/2$
-while the density is normalized at each iteration. It has been cros-checked
-that the compensation of losses has no influence on the final solution and
+electric field is then set to $\overline{E}=0.08,$ which corresponds to a
+standard value for such studies. Usually, runaway losses become significant
+above $\overline{E}=0.03.$ All other parameters are kept constant as
+compared to the benchmarking procedure done for the Ohmic conductivity in
+Sec. \ref{conducsection}. The corresponding tokamak parameter file is named
+``CQL3D\_RUNAWAY'', since it corresponds to conditions that have been used
+for code comparison with the well know CQL3D program (\cite{har93c1_IAEA}).
+By definition, the code is no more conservative since runaway electrons are
+leaving the domain of integration. Consequently, the particle losses must be
+compensated in order to keep constant the total number of particle. In
+addition, in $3-D$ mode, there are numerical losses, as shown in the
+previous section, that overcome physical ones. Consequently, the same
+procedure is used and the Maxwellian solution is enforced at $i=1/2$ while
+the density is normalized at each iteration. It has been cros-checked that
+the compensation of losses has no influence on the final solution and
 therefore the runaway rate.
 
 In a first step, a local analysis is performed, without considering bounce
@@ -41,48 +43,126 @@ Maxwellian e-e collision model}
 
 The agreement between numerical results obtained with the drift kinetic code
 and the code written by Kulsrud and coauthors is reasonably good \cite{kul73}%
-, a systematic difference of $-15\%$ being observed  for all $Z_{eff}$
+, a modest systematic difference of $-15\%$ being observed for all $Z_{eff}$
 values. For $Z_{eff}=1$, the agreement is slightly better with the model of
 Kruskal-Bernstein \cite{kul73}, and the relative difference is now positive
 and less than $7\%$. The role played by the numerical grid is marginal, less
-than $1\%$. when  $n_{p}$ is varying from $88\ $to $125\ $or $165$ while $%
+than $1\%$. when $n_{p}$ is varying from $88\ $to $125\ $or $165$ while $%
 n_{\xi _{0}}$ is kept constant at $120.$
 
 A full $3-D$ calculation has been performed with flat profiles at normalized
 radial positions on the spatial flux grid $\left[ 0.2,0.4,0.6,0.8\right] ,$
 giving the following radial positions $\rho =\left[
 0.14142,0.31623,0.5099,0.70711,0.90554\right] $. In that case, the code
-calculates itself the pitch-angle grid and the number of step is $n_{\xi
+calculates itself the pitch-angle grid and the number of step is now $n_{\xi
 _{0}}=168,$ while $n_{p}=125.$The runaway rate is found to be independent of
 the method of calculations, and the Kruskal-Bernstein is well recovered when 
-$Z_{eff}=1$ at all plasma radii. 
+$Z_{eff}=1$ at all plasma radii. In Fig.\ref{fpcontrun} , and example of a
+runaway distribution at Bmin is given, for $\rho =0.31623.$ The trapped
+domain is large, and the region where the electric field may accelerate fast
+electrons above the Dreicer limit is quite narrow in pitch-angle. The stream
+lines given in Fig.\ref{streamcontrun} along with electrons are moving in
+the momentum space show the clear boundary between close loops for regular
+electrons that remain in the integration domain because of collisions, and
+the open loops, for runaways that continuously accelerated by the Ohmic
+electric field up to the integration domain. 
+
+%TCIMACRO{
+%\TeXButton{Fig_fpcontrun}{\fig{figures/fpcontrun.eps}{Contour plot of the electron distribution function at $\epsilon=0.31623$}{fpcontrun}{7cm} }}
+%BeginExpansion
+\fig{figures/fpcontrun.eps}{Contour plot of the electron distribution function at $\epsilon=0.31623$}{fpcontrun}{7cm} %
+%EndExpansion
+
+%TCIMACRO{
+%\TeXButton{Fig_streamcontrun}{\fig{figures/streamcontrun.eps}{Contour plot of the stream lines at $\epsilon=0.31623$}{streamcontrun}{7cm} }}
+%BeginExpansion
+\fig{figures/streamcontrun.eps}{Contour plot of the stream lines at $\epsilon=0.31623$}{streamcontrun}{7cm} %
+%EndExpansion
+
+In Fig. \ref{fpprojrun}, the parallel component of the electron distribution
+function 
+\begin{equation}
+F_{\Vert }{}_{0}^{\left( 0\right) }\left( p_{\Vert }\right) =2\pi \int_{0}^{%
+\infty }f_{0}^{\left( 0\right) }\left( p_{\Vert },p_{\bot }\right) p_{\bot
+}dp_{\bot }  \label{Fpar}
+\end{equation}
+the normalized perpendicular temperature $\overline{T}_{\bot }\left( \psi
+,p_{\Vert }\right) =T_{\bot }\left( \psi ,p_{\Vert }\right) /T_{e}^{\dag }$
+where
+\begin{equation}
+T_{\bot }\left( \psi ,p_{\Vert }\right) =\frac{1}{2}\frac{\int_{0}^{\infty %
+}f_{0}^{\left( 0\right) }\left( p_{\Vert },p_{\bot }\right) p_{\bot
+}^{3}dp_{\bot }}{\int_{0}^{\infty }f_{0}^{\left( 0\right) }\left( p_{\Vert
+},p_{\bot }\right) p_{\bot }dp_{\bot }}  \label{Tperpnorm}
+\end{equation}
+and the parallel one $\overline{T}_{\Vert }\left( \psi ,p_{\bot }\right)
+=T_{\Vert }\left( \psi ,p_{\bot }\right) /T_{e}^{\dag }$ defined as 
+\begin{equation}
+T_{\Vert }\left( \psi ,p_{\bot }\right) =\frac{\int_{-\infty }^{\infty %
+}f_{0}^{\left( 0\right) }\left( p_{\Vert },p_{\bot }\right) p_{\Vert
+}^{2}dp_{\Vert }}{\int_{-\infty }^{\infty }f_{0}^{\left( 0\right) }\left(
+p_{\Vert },p_{\bot }\right) dp_{\Vert }}  \label{Tparnorm}
+\end{equation}
+are also given to illustrate the deformations of the electron distribution
+function with respect to the Maxwellian shape.
+
+%TCIMACRO{
+%\TeXButton{Fig_fpprojrun}{\fig{figures/fpprojrun.eps}{Parallel projection, parallel and perpendicular temperatures of the electron distribution function at $\epsilon=0.31623$}{fpprojrun}{7cm} }}
+%BeginExpansion
+\fig{figures/fpprojrun.eps}{Parallel projection, parallel and perpendicular temperatures of the electron distribution function at $\epsilon=0.31623$}{fpprojrun}{7cm} %
+%EndExpansion
 
 Bounce averaged calculations have be performed first locally. As shown in
 Fig. \ref{ohmrun}, it is observed $\overline{\Gamma }_{R}$ decreases with
 the inverse aspect ratio $\epsilon .$ The influence of toroidicity on
 Dreicer generation, which is not predicted by the theory of Gurevitch \cite
 {gur61}, is in good agreement with never published calculations using the
-CQL3D code, but also simulations of runaways during tokamak disruptions \cite
-{eri03}. It is shown in Ref. \cite{eri03} that trapping effects may be
-approximately described by the relation
+CQL3D code. The explanation for such an effect is quite complex, since it
+arises from the combination of the poloidal dependence of the electric field
+value and the fact that trapped electrons do not contribute to the runaway
+generation process. As shown in Sec. \ref{moments}, the electric field on
+the low magnetic field side is lower than the flux surface value, while it
+is larger on the high field side, by a ratio $R_{0}/R$ for circular
+concentric magnetic flux surfaces. So we could expect that these electrons
+are more efficiently accelerated along bthe magnetic field line. But since
+they are close to trapped/passing boundary, their probability to be trapped
+before reaching the Dreicer limit is fairly high, and therefore, the density
+close to the Dreicer boundary is likely significantly lowered. Consequently,
+the relative reduction of the runaway rate 
 \begin{equation}
-\overline{\Gamma }_{R}\left( \epsilon \right) \simeq \overline{\Gamma }%
-_{R}\left( \epsilon =0\right) \sqrt{1-2\epsilon }
+\Delta \overline{\Gamma }_{R}=\frac{\overline{\Gamma }_{R}\left( \epsilon
+\right) -\overline{\Gamma }_{R}\left( \epsilon =0\right) }{\overline{\Gamma }%
+_{R}\left( \epsilon =0\right) }
 \end{equation}
-when $\epsilon \leq 0.5\ $while  $\overline{\Gamma }_{R}\left( \epsilon \geq %
-0.5\right) =0.$ The drift kinetic code confirms therefore this important
-result, that the runaway generation is nearly cancelled when $\epsilon \geq %
-0.5.$ 
+must be roughly given by a factor proportional to the effective fraction of
+trapped electron $\mathcal{F}_{t}^{eff.},$ since not only trapped but also
+barely trapped electron dynamics are concerned. A fit of the numerical
+results confirms this coarse analysis, since 
+\begin{equation}
+\Delta \overline{\Gamma }_{R}\simeq -1.2\sqrt{\frac{2\epsilon }{1+\epsilon }}
+\end{equation}
+for $\epsilon \lesssim 0.53$ and  lim$_{\epsilon \rightarrow 0}\Delta 
+\overline{\Gamma }_{R}\left( \epsilon \right) \simeq 1.7\sqrt{\epsilon }%
+\simeq -1.16\mathcal{F}_{t}^{eff.}\footnote{%
+The reduction factor of the runaway losses as predicted by the drift kinetic
+code is much larger than calculations done using Monte-Carlo technique, as
+shown in Ref. \cite{eri03}, since the reduction factor that scales like $%
+\Delta \overline{\Gamma }_{R}\simeq -0.5\sqrt{2\epsilon }.$ This discrepancy
+has not been resolved so far.}.$ This result is important, since it
+indicates that runaway generation is nearly cancelled when the inverse
+aspect ratio is larger than $\epsilon \simeq 0.5.$ The trapped particles
+have therefore a beneficial effect by preventing runaways, that may cause
+severe damages to machine walls in case of disruptions.
 
 Similar results are obtained in $3-D$ mode, whatever the normalization
 reference of the electric field, at the plasma center, or at the local
 position. As expected, the runaway rate $\overline{\Gamma }_{R}$ is nearly
 independent of the sign of the electric field, and moreover, but also of the
 method (analytical or numerical) for calculating the bounce integrals. The
-relative accuracy which is less than 1\% close to the plasma center, tends
-to decrease down to 50\% at the plasma edge, but since $\overline{\Gamma }%
+relative accuracy which is less than $1\%$ close to the plasma center, tends
+to decrease down to $50\%$ at the plasma edge, but since $\overline{\Gamma }%
 _{R}$ is very small the error has only a weak influence\footnote{%
-It is important to note that the order of magnitude is always correct.}. 
+It is important to note that the order of magnitude is always correct.}.
 
 %TCIMACRO{
 %\TeXButton{Fig_runaway}{\fig{figures/runaway.eps}{Normalized Ohmic runaway rate as function of the inverse aspect ratio $\epsilon$}{ohmrun}{7cm} }}
