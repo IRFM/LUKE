@@ -1,21 +1,24 @@
 function [XXf0,XXf0_tp,XXf0_g,...
-xnormf,xnormf_fsav,...
-YXXDrf_ij,...
-Zcurr,Zcurr_fsav,...
-ZSp0,ZP0,...
-XxRR_fsav,...
-xTe_out_norm,xft_fsav,xmhubounce2,...
-memoryLU] = ... 
-dke_1_4yp(tokname,mhu,dmhu,mhum,dmhum,mhup,dmhup,mhu_S,...
-xia,xrho,xdrho,xrhom,xdrhom,xrhop,xdrhop,rdke,xrho_S,...
-pn,dpn,pnm,dpnm,pnp,dpnp,pn_S,...
-xTe_norm,xne_norm,zZi,zmi,xzni_norm,xzTi_norm,...
-betath_ref,Rp_norm,...
-epsi,waveparam,xq,...
-XXDr,XXVr,...
-XXnhuloss,delta,Nq,...
-ftp_norm,bounce,coll_mode,...
-dtn,prec0,nit,invproc,param_inv,display,store_mode,XXfinit);%
+    xnormf,xnormf_fsav,...
+    YXXDrf_ij,...
+    Zcurr,Zcurr_fsav,...
+    ZSp0,ZP0,...
+    XxRR_fsav,...
+    xTe_out_norm,xft_fsav,xmhubounce2,...
+    memoryLU] = ... 
+dke_1_4yp(tokname,theta,...
+    XR,XZ,XBR,XBZ,XBphi,...
+    xB0,xR0,xBT0,Rp,Zp,...
+    mhu,dmhu,mhum,dmhum,mhup,dmhup,mhu_S,...
+    xmhubounce2,xpsin,xdpsin,xpsinm,xdpsinm,xpsinp,xdpsinp,rdke,xpsin_S,...
+    pn,dpn,pnm,dpnm,pnp,dpnp,pn_S,...
+    xTe_norm,xne_norm,zZi,zmi,xzni_norm,xzTi_norm,...
+    betath_ref,epsi,waveparam,...
+    XXDr,XXVr,...
+    XXnhuloss,delta,Nq,...
+    ftp_norm,bounce,coll_mode,...
+    dtn,prec0,nit,invproc,param_inv,display,store_mode,XXfinit)
+%
 %
 %   Self-consistent 3-D relativistic solver of the drift kinetic equation in momentum space with Beliaev-Budker collision integrals 
 %   Includes toroidal magnetic losses for the Fokker-Planck equation only for circular plasma cross-section (TS)
@@ -195,8 +198,7 @@ spparms('rreduce',4);
 prec0_f = prec0(1);
 prec0_g = prec0(2);
 display_mode = display(1);
-rho_display = display(2);
-ir_display = display(3);
+ir_display = display(2);
 nit_f = nit(1);
 nit_g = nit(2);
 bounce_mode = bounce(1);
@@ -210,7 +212,7 @@ if dke_mode == 1,bounce_mode = 1;end
 %
 npn = length(pn);%Size of the momentum grid for the distribution function (half grid)
 nmhu = length(mhu);%Size of the pitch-angle grid for the distribution function (half grid)
-nr = length(xrho);%Size of the radial grid for the distribution function (half grid)
+nr = length(xpsin);%Size of the radial grid for the distribution function (half grid)
 nr_dke = length(rdke);%Size of the effective radial grid (nr_dke = nr for FPE equation only)
 %
 testDrVr = sum(sum(sum(abs(XXDr)))) + sum(sum(sum(abs(XXVr))));
@@ -376,42 +378,45 @@ xv2 = xv.*xv;
 %Radial grid
 %
 if radial_mode == 1,
-	xdrhomm = [0,xdrho(1:nr-1)];
-	xdrhopp = [xdrho(2:nr),0];
+	xdpsinmm = [0,xdpsin(1:nr-1)];
+	xdpsinpp = [xdpsin(2:nr),0];
 %
-	XXrho = repmat(xrho,[npn*nmhu,1]);
-	XXrho = reshape(XXrho,[npn,nmhu,nr]);
-	XXdrho = repmat(xdrho,[npn*nmhu,1]);
-	XXdrho = reshape(XXdrho,[npn,nmhu,nr]);	
-	XXrhom = repmat(xrhom,[npn*nmhu,1]);
-	XXrhom = reshape(XXrhom,[npn,nmhu,nr]);	
-	XXdrhom = repmat(xdrhom,[npn*nmhu,1]);
-	XXdrhom = reshape(XXdrhom,[npn,nmhu,nr]);	
-	XXrhop = repmat(xrhop,[npn*nmhu,1]);
-	XXrhop = reshape(XXrhop,[npn,nmhu,nr]);	
-	XXdrhop = repmat(xdrhop,[npn*nmhu,1]);
-	XXdrhop = reshape(XXdrhop,[npn,nmhu,nr]);	
-	XXdrhomm = repmat(xdrhomm,[npn*nmhu,1]);
-	XXdrhomm = reshape(XXdrhomm,[npn,nmhu,nr]);	
-	XXdrhopp = repmat(xdrhopp,[npn*nmhu,1]);
-	XXdrhopp = reshape(XXdrhopp,[npn,nmhu,nr]);
+	XXpsin = repmat(xpsin,[npn*nmhu,1]);
+	XXpsin = reshape(XXpsin,[npn,nmhu,nr]);
+	XXdpsin = repmat(xdpsin,[npn*nmhu,1]);
+	XXdpsin = reshape(XXdpsin,[npn,nmhu,nr]);	
+	XXpsinm = repmat(xpsinm,[npn*nmhu,1]);
+	XXpsinm = reshape(XXpsinm,[npn,nmhu,nr]);	
+	XXdpsinm = repmat(xdpsinm,[npn*nmhu,1]);
+	XXdpsinm = reshape(XXdpsinm,[npn,nmhu,nr]);	
+	XXpsinp = repmat(xpsinp,[npn*nmhu,1]);
+	XXpsinp = reshape(XXpsinp,[npn,nmhu,nr]);	
+	XXdpsinp = repmat(xdpsinp,[npn*nmhu,1]);
+	XXdpsinp = reshape(XXdpsinp,[npn,nmhu,nr]);	
+	XXdpsinmm = repmat(xdpsinmm,[npn*nmhu,1]);
+	XXdpsinmm = reshape(XXdpsinmm,[npn,nmhu,nr]);	
+	XXdpsinpp = repmat(xdpsinpp,[npn*nmhu,1]);
+	XXdpsinpp = reshape(XXdpsinpp,[npn,nmhu,nr]);
 end
 %
 %Bounce average coefficients
 %
-[R0,xBmin,xRBmin,xBTBmin,...
-        xq,xqtilde,xqbar,xqhat,...
-        xmhubounce2,XXheaviside,...
-	Xxlambda,Xxlambda_p,Xxlambda_m,...
-	XXlambda,XXRlambda_m,XXRlambda_p,...
-	XXRlambda_p2m1_m,XXRlambda_p2m1_p,...
-	XXRlambda_b_p1p1,...
-	XXlambda_b_p1m1p2,XXRlambda_b_p1m1p2,XXRlambda_b_p1m1p2_m,XXRlambda_b_p1m1p2_p,...
-	XXRlambda_b_p1m1,XXRlambda_b_p1m1_m,XXRlambda_b_p1m1_p,...
-	XXRlambda_b_p1m2_m,XXRlambda_b_p1m2_p,...
-	XXlambda_b_p2m2p2,XXRlambda_b_p2m2p2_m,XXRlambda_b_p2m2p2_p,...
-	XXRlambda_b_p3m2_m,XXRlambda_b_p3m2_p,...
-	XXlambda_b_p2] = bounceparam_dke_yp(tokname,bounce_mode,xia,delta,Nq,mhu,mhum,mhup,Xmhu,Xmhum,Xmhup);
+[xq,xqtilde,xqbar,xqhat,...
+    XXheaviside,...
+    Xxlambda,Xxlambda_p,Xxlambda_m,...
+    XXlambda,XXRlambda_m,XXRlambda_p,...
+    XXRlambda_p2m1_m,XXRlambda_p2m1_p,...
+    XXRlambda_b_p1p1,...
+    XXlambda_b_p1m1p2,XXRlambda_b_p1m1p2,XXRlambda_b_p1m1p2_m,XXRlambda_b_p1m1p2_p,...
+    XXRlambda_b_p1m1,XXRlambda_b_p1m1_m,XXRlambda_b_p1m1_p,...
+    XXRlambda_b_p1m2_m,XXRlambda_b_p1m2_p,...
+    XXlambda_b_p2m2p2,XXRlambda_b_p2m2p2_m,XXRlambda_b_p2m2p2_p,...
+    XXRlambda_b_p3m2_m,XXRlambda_b_p3m2_p,...
+    XXlambda_b_p2]...
+=  bounceparam_dke_yp(bounce_mode,...
+    mhu,mhum,mhup,Xmhu,Xmhum,Xmhup,...
+    XR,XZ,XBR,XBZ,XBphi,...
+    xB0,xR0,xBT0,Rp,Zp);
 %
 %Super matrices size calculation
 %
@@ -499,8 +504,8 @@ XXMrp = zeros(nmhu,npn,nr);
 %Radial coefficients
 %
 if radial_mode == 1,
-	XXdeltalp = XXdrhopp./(XXdrhopp + XXdrho);
-	XXdeltalm = XXdrho./(XXdrhomm + XXdrho);
+	XXdeltalp = XXdpsinpp./(XXdpsinpp + XXdpsin);
+	XXdeltalm = XXdpsin./(XXdpsinmm + XXdpsin);
 %
 	XXDrmm = zeros(npn,nmhu,nr);
 	XXDrmm(:,:,2:nr) = XXDr(:,:,1:nr-1);
@@ -525,9 +530,9 @@ time0 = clock;
 %
 if radial_mode == 1,
 %	
-	XXMrm = -(XXrhom./XXdrhom./XXdrho).*XXDrm - (XXrhom./XXdrho).*XXVrm.*XXdeltalm;
-	XXMr = (XXrhop./XXdrhop./XXdrho).*XXDrp + (XXrhop./XXdrho).*XXVrp.*XXdeltalp + (XXrhom./XXdrhom./XXdrho).*XXDrm - (XXrhom./XXdrho).*XXVrm.*(1 - XXdeltalm);				
-	XXMrp = -(XXrhop./XXdrhop./XXdrho).*XXDrp + (XXrhop./XXdrho).*XXVrp.*(1 - XXdeltalp);
+	XXMrm = -(XXpsinm./XXdpsinm./XXdpsin).*XXDrm - (XXpsinm./XXdpsin).*XXVrm.*XXdeltalm;
+	XXMr = (XXpsinp./XXdpsinp./XXdpsin).*XXDrp + (XXpsinp./XXdpsin).*XXVrp.*XXdeltalp + (XXpsinm./XXdpsinm./XXdpsin).*XXDrm - (XXpsinm./XXdpsin).*XXVrm.*(1 - XXdeltalm);				
+	XXMrp = -(XXpsinp./XXdpsinp./XXdpsin).*XXDrp + (XXpsinp./XXdpsin).*XXVrp.*(1 - XXdeltalp);
 %
 	XXMrm = XXMrm.*XXpn2;
 	XXMr = XXMr.*XXpn2;
@@ -686,7 +691,7 @@ end
 %
 if ~isempty(waveparam),
    
-	ZYXXD_rf = rfdiff_dke_jd(waveparam,xrho,...
+	ZYXXD_rf = rfdiff_dke_jd(waveparam,xpsin,...
 	Xmhup,Xmhu,Xmhum,Xmhu2p,Xmhu2,Xmhu2m,X1mmhu2p,X1mmhu2,X1mmhu2m,...
 	pnpp,pnp,pn,pnm,pnmm,Xpnpp,Xpnp,Xpn,Xpnm,Xpnmm,Xgammapp,Xgammap,Xgamma,Xgammam,Xgammamm,...
 	Xxlambda_p,Xxlambda,Xxlambda_m,...
@@ -1137,7 +1142,7 @@ for ir = 1:nr,
 			ns(ir) = 0;%Number of mhu values that are removed for implicit bounce averaged calculations
 			bounce_mode = 0;
 			if display_mode>=0,
-				info_dke_yp(2,['WARNING: Not enough grid point in the bounce region for accurate bounce-averaged calculations at r/a = ',num2str(xrho(ir)),' !'])
+				info_dke_yp(2,['WARNING: Not enough grid point in the bounce region for accurate bounce-averaged calculations at psin = ',num2str(xpsin(ir)),' !'])
 			end
 			Xa_t = Xa;
 			Xb_t = Xb;
@@ -1449,7 +1454,7 @@ for ir = 1:nr,
 		MXP_f_t = MXP_f_t + sparse([1:(nmhu-ns(ir))*npn-(nmhu-ns(ir))-djmhut],[1+(nmhu-ns(ir))+djmhut:(nmhu-ns(ir))*npn],MXo(1:length(MXo)-(nmhu-ns(ir))-djmhut),(nmhu-ns(ir))*npn,(nmhu-ns(ir))*npn);      
 	end
 %
-	MXP_f_t = xrho(ir)*MXP_f_t;
+	MXP_f_t = xpsin(ir)*MXP_f_t;
 %    
 	sm_f(ir+1) = sm_f(ir) + blocksize_f_t(ir);
 	[i0_f,j0_f,s0_f] = find(MMXP_f_t);		
@@ -1715,11 +1720,11 @@ for it = 2:nit_f,
 		Xq = (XI + time_scheme*Xf0/dtn).*Xpn2;
 		Xq_t = Xq(:,Xmask_f0);%Symmetric trapped domain removed
 		if bounce_mode == 1,Xq_t(2:npn,nmhu/2 + 1 - ns(ir)) = 0;end;%df/dmhu(mhu == pi/2) = 0   
-			MMXq_t = [MMXq_t;xrho(ir)*reshape(Xq_t',(nmhu - ns(ir))*npn,1)];
+			MMXq_t = [MMXq_t;xpsin(ir)*reshape(Xq_t',(nmhu - ns(ir))*npn,1)];
 		end
 %
 		if radial_mode == 1,%Edge radial boundary condition: f(r/a = 1) = fM(r/a) where transport operates
-			MMXq_t(nMMXP_f_t-npn*(nmhu - ns(nr))+1:nMMXP_f_t) = xrho(nr)*time_scheme*reshape((Xf0_t'.*~Xmask_r_edge_t' + XfM_t'.*Xmask_r_edge_t').*Xpn2_t',(nmhu - ns(nr))*npn,1)/dtn; 
+			MMXq_t(nMMXP_f_t-npn*(nmhu - ns(nr))+1:nMMXP_f_t) = xpsin(nr)*time_scheme*reshape((Xf0_t'.*~Xmask_r_edge_t' + XfM_t'.*Xmask_r_edge_t').*Xpn2_t',(nmhu - ns(nr))*npn,1)/dtn; 
 		end
 %
 		MMXR_t = MMXPDI_f_t*MMXq_t - MMXPC_f_t*MMXf0_t;
@@ -1764,7 +1769,7 @@ for it = 2:nit_f,
 			prec_residu_f(ir,it) = abs((residu_f(ir,it) - residu_f(ir,it-1))/residu_f(ir,it));%For radial transport calculations	
 %
 			if display_mode >= 1,
-				info_dke_yp(2,['Normalized minor radius: ',num2str(xrho(ir)),', Inverse aspect ratio: ',num2str(xia(ir)),', iteration : ',int2str(it),' / ',int2str(nit_f),', Residu = ',num2str(residu_f(ir,it))]);
+				info_dke_yp(2,['Normalized poloidal flux: ',num2str(xpsin(ir)),', iteration : ',int2str(it),' / ',int2str(nit_f),', Residu = ',num2str(residu_f(ir,it))]);
 				disp(['   - Density [t-1]: ',num2str(normf0(ir,it-1)),' - [t]: ',num2str(normf1(ir,it))]);;
 				disp(['   - Current [t-1]: ',num2str(curr0(ir,it-1)),' - [t]: ',num2str(curr1(ir,it))]);
 				disp(['   - Current relative accuracy [t]: ',num2str(prec_curr(ir,it))]);
@@ -1779,7 +1784,7 @@ for it = 2:nit_f,
 						hold on;zoom on
 						figure(100),subplot(322),semilogy([1:it],residu_f(ir,1:it),'r+',[1:it],prec0_f*ones(size([1:it])),'b--');
 						axis('square');axis([0,it,prec0_f/10,1e-4]);
-						title(['Convergence - f (r/a=',num2str(xrho(ir)),')']);xlabel('Iteration');ylabel('Residu')
+						title(['Convergence - f (psi=',num2str(xpsin(ir)),')']);xlabel('Iteration');ylabel('Residu')
 						hold on;zoom on
 						pause(0.1);
 					elseif ir == rdke(ir_display),
@@ -1789,7 +1794,7 @@ for it = 2:nit_f,
 						hold on;zoom on
 						figure(100),subplot(324),semilogy([1:it],residu_f(ir,1:it),'r+',[1:it],prec0_f*ones(size([1:it])),'b--');
 						axis('square');axis([0,it,prec0_f/10,1e-4]);
-						title(['Convergence - f (r/a=',num2str(xrho(ir)),')']);xlabel('Iteration');ylabel('Residu')
+						title(['Convergence - f (psi=',num2str(xpsin(ir)),')']);xlabel('Iteration');ylabel('Residu')
 						hold on;zoom on
 						pause(0.1);
 					elseif ir == rdke(ir_display)+1,
@@ -1799,7 +1804,7 @@ for it = 2:nit_f,
 						hold on;zoom on
 						figure(100),subplot(326),semilogy([1:it],residu_f(ir,1:it),'r+',[1:it],prec0_f*ones(size([1:it])),'b--');
 						axis('square');axis([0,it,prec0_f/10,1e-4]);
-						title(['Convergence - f (r/a=',num2str(xrho(ir)),')']);xlabel('Iteration');ylabel('Residu')
+						title(['Convergence - f (psi=',num2str(xpsin(ir)),')']);xlabel('Iteration');ylabel('Residu')
 						hold on;zoom on
 						pause(0.1);
 					end
@@ -1811,7 +1816,7 @@ for it = 2:nit_f,
   						hold on;
   						figure(100),subplot(122),semilogy([1:it],residu_f(ir,1:it),'r+',[1:it],max(residu_f(:,1:it)),'gx',[1:it],prec0_f*ones(size([1:it])),'b--');
   						axis('square');axis([0,it,prec0_f/10,1e-4]);
-  						title(['Convergence - f (r/a=',num2str(xrho(ir)),')']);xlabel('Iteration');ylabel('Residu')
+  						title(['Convergence - f (psi=',num2str(xpsin(ir)),')']);xlabel('Iteration');ylabel('Residu')
   						hold on;
   						pause(0.1);
   					end
@@ -2000,7 +2005,7 @@ if dke_mode == 1,
 				residu_g(jr2,it_g) = sqrt(abs(2*pi*integral_dke_jd(pn',pn2'.*integral_dke_jd(mhu,(Xf1_g - Xf0_g).^2.*Xf1_g,2),1)/norm1_g(jr2,it_g)));
 %
 				if display_mode >= 1,
-					info_dke_yp(2,['Normalized minor radius: ',num2str(xrho(jr2)),', Inverse aspect ratio: ',num2str(xia(jr2)),', iteration : ',int2str(it_g),' / ',int2str(nit_g),', Residu = ',num2str(residu_g(jr2,it_g))]);
+					info_dke_yp(2,['Normalized minor radius: ',num2str(xpsin(jr2)),', Inverse aspect ratio: ',num2str(xia(jr2)),', iteration : ',int2str(it_g),' / ',int2str(nit_g),', Residu = ',num2str(residu_g(jr2,it_g))]);
 				end
 %
 				if display_mode == 2,
@@ -2011,7 +2016,7 @@ if dke_mode == 1,
 						hold on;zoom on
 						figure(101),subplot(122),semilogy([1:it_g],residu_g(jr2,1:it_g),'r+',[1:it_g],prec0_g*ones(size([1:it_g])),'b--');
 						axis('square');axis([0,it_g,prec0_g/10,1e-4]);
-						title(['Convergence - g (r/a=',num2str(xrho(jr2)),')']);xlabel('Iteration');ylabel('Residu')
+						title(['Convergence - g (r/a=',num2str(xpsin(jr2)),')']);xlabel('Iteration');ylabel('Residu')
 						hold on;zoom on
 						pause(0.1);
 					end
@@ -2061,7 +2066,7 @@ else
 end
 %
 clear fM XfM Xsssl Xsstar_tp Xlambda MXP_tp_t MXPC_g_t MXPDI_g_t Xmask_g MXL_g_t MXU_g_t 
-clear Xdf0drho Xf0_tp Xf0_tp_t ir jr1 jr2 jr3 dr drm drp 
+clear Xdf0dpsin Xf0_tp Xf0_tp_t ir jr1 jr2 jr3 dr drm drp 
 clear Xf0 Xf0m Xf0p Xf0_g Xf0_g_t Xf0_g_th_t Xq_g Xq_g_t Xf1_g Xf2_g Xf1_g_t XR_t XS_t XY_t
 clear f1_g xf1_g I1_g I2_g XI_g XI_g_t 
 clear f1_tp xf1_tp I1_tp I2_tp XI_tp XI_g_tp 

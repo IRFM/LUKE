@@ -3,7 +3,7 @@ xPabs0_mksa_out,xPabs_tot_mksa_out,...
 xeta0_mksa_out,xepsi_mksa_out,xia_out,xft_out,...
 time_out,memoryLU_out] =...
 test_dke_1yp(tokname,snumber,...
-grid_uniformity,grid_method,nmhu_S,np_S,pnmax_S,sfac,snmhu,snp,rho_S,rho_display,...
+grid_uniformity,grid_power,nmhu_S,np_S,pnmax_S,sfac,snmhu,snp,psin_S,psin_display,dpsin_dke,...
 ref_mode,norm_ref,...
 epsi0_fsav,epsia_fsav,eepsi_fsav,...
 coll_mode,bounce_mode,dke_mode,...
@@ -13,7 +13,7 @@ prec0_f,nit_f,dtn,prec0_g,nit_g,initguess,invproc,param_inv,dp_cyl,display_mode,
 %
 %  Test function of the 3-D relativistic bounce-averaged electron drift kinetic equation solver 
 %  for the LH and EC absorption problem in presence of an Ohmic electric field.
-%	Arbitrary axisymmetric plasma equilibrium
+%  Arbitrary axisymmetric plasma equilibrium
 %  See dke_1_4yp.m, ptok_dke_1yp.m
 %
 %by Y.PEYSSON CEA-DRFC 30/07/1997 <yves.peysson@cea.fr>
@@ -24,48 +24,6 @@ format long e;
 global nfig;
 version_dke = 1.4;
 time_pause = 1;
-%
-% Plasma parameters
-%
-loadstr = ['PARAM_',tokname];
-%
-eval(['load ',loadstr,' ap Rp Ip Bt Ncoils BeLi pq pTe pne Zi mi fi pzTi pzni prho']);
-nprho = length(prho);
-pZeff = sum(pzni.*repmat((Zi.^2)',[1,nprho]))./pne;%Effective charge (a.u.)
-%
-if diary_mode == 1, 
-	diaryfile = ['diary_dke_',int2str(iloop)];
-	eval(['delete ',diaryfile]);
-	diary(diaryfile);
-	diary on;
-%
-	disp(['----------------------------------------------- Plasma parameters ------------------------------------------------']);
-	disp(['- Plasma minor radius (m) ap = ',num2str(ap)]);
-	disp(['- Plasma major radius (m) Rp = ',num2str(Rp)]);
-	disp(['- Plasma current (MA) Ip = ',num2str(Ip)]);
-	disp(['- Toroidal magnetic field (T) Bt = ',num2str(Bt)]);
-	disp(['- Toroidal magnetic field coil number Ncoils = ',num2str(Ncoils)]);
-	disp(['- Main ion charge Zi = ',num2str(Zi)]);
-	disp(['- Main ion mass (uma) mi = ',num2str(mi)]);
-	disp(['- Hydrogen isotopic fraction = ',num2str(fi(1))]); 
-	disp(['- Deuterium isotopic fraction = ',num2str(fi(2))]); 
-	disp(['- Tritium isotopic fraction = ',num2str(fi(3))]); 
-	disp(['- Beta+li factor = ',num2str(BeLi)]);
-	%
-	% modified j.d. 11/20/03
-	%
-	disp(['- Minimum safety factor qmin = ',num2str(min(pq))]);
-	disp(['- Core Safety factor q0 = ',num2str(pq(1))]);
-	disp(['- Edge Safety factor qa = ',num2str(pq(nprho))]);
-	disp(['- Core electron temperature (keV) Te0 = ',num2str(pTe(1))]);
-	disp(['- Edge electron temperature (keV) Tea = ',num2str(pTe(nprho))]);
-	disp(['- Core electron density (m-3) ne0 = ',num2str(pne(1))]);
-	disp(['- Edge electron density (m-3) nea = ',num2str(pne(nprho))]);
-	disp(['- Core ion temperature (keV) Ti0 = ',num2str(pzTi(1,1))]);
-	disp(['- Edge ion temperature (keV) Tia = ',num2str(pzTi(1,nprho))]);
-	disp(['- Core effective charge Zeff0 = ',num2str(pZeff(1))]);
-	disp(['- Edge effective charge (keV) Zeffa = ',num2str(pZeff(nprho))]);
-end
 %
 [s,dossier,machine] = comput_dke_yp;
 %
@@ -89,17 +47,47 @@ bounce = [bounce_mode,dke_mode];
 prec0 = [prec0_f,prec0_g];
 nit = [nit_f,nit_g];
 %
-Rp_norm = Rp/ap;%Normalized major radius
+% Radial grid
 %
-%Grids calculation
+[xpsin,xpsin_dke,xdpsin_dke,xpsinm_dke,xdpsinm_dke,xpsinp_dke,xdpsinp_dke,xpsin_S_dke,r_dke,ir_display]...
+    = radialgrid_dke_jd(dke_mode,psin_S,dpsin_dke,psin_display);
 %
-[pn,dpn,pnm,dpnm,pnp,dpnp,pn_S,mhu,dmhu,mhum,dmhum,mhup,dmhup,mhu_S,xia,xrho,xdrho,xrhom,xdrhom,xrhop,xdrhop,xrho_S,rdke,rho_display,ir_display] = grid_dke_yp(grid_method,grid_uniformity,dke_mode,Rp_norm,rho_S,nmhu_S,np_S,pnmax_S,sfac,snmhu,snp,rho_display);%Grid calculations
+% Plasma equilibrium
+%
+[theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,Ncoils,BeLi,psia,xmhu0T2]...
+    = equilibrium_jd(tokname,xpsin);
+%
+if diary_mode == 1, 
+	diaryfile = ['diary_dke_',int2str(iloop)];
+	eval(['delete ',diaryfile]);
+	diary(diaryfile);
+	diary on;
+%
+    disp('-------------------------------------------------------------------------------------------------------------------');
+    disp(['- Scenario name = ',tokname]);
+    disp('-------------------------------------------------------------------------------------------------------------------');
+%
+	disp(['----------------------------------------------- Plasma parameters ------------------------------------------------']);
+	disp(['- Plasma minor radius on LFS midplane (m) ap = ',num2str(ap)]);
+	disp(['- Plasma major radius on axis (m) Rp = ',num2str(Rp)]);
+	disp(['- Plasma elevation on axis (m) Zp = ',num2str(Zp)]);
+	disp(['- Toroidal magnetic field coil number Ncoils = ',num2str(Ncoils)]);
+	disp(['- Beta+li factor = ',num2str(BeLi)]);
+	disp(['- Edge poloidal flux = ',num2str(psia)]);
+	disp(' ');
+end
+%
+% Momentum Grid 
+%
+[pn,dpn,pnm,dpnm,pnp,dpnp,pn_S,...
+    mhu,dmhu,mhum,dmhum,mhup,dmhup,mhu_S]...
+= momentumgrid_dke_jd(grid_uniformity,grid_power,dke_mode,r_dke,xmhu0T2,nmhu_S,np_S,pnmax_S,sfac,snmhu,snp);
 %
 nmhu = length(mhu);
 np = length(pn);
-nr = length(xrho);
-nr_dke = length(rdke);%number of points for dke calculations
-display = [display_mode,rho_display,ir_display];%Display parameters
+nr = length(xpsin);
+nr_dke = length(r_dke);%number of points for dke calculations
+display = [display_mode,ir_display];%Display parameters
 %
 if (Dr0 ~= 0 | Vr0 ~= 0) & nr > 1,
 	dke_mode = 0;
@@ -125,30 +113,61 @@ if display_mode == 2,
 	ylabel('pn');
 %	
 	h1002 = figure(1002);tilefigs_dke_yp(h1002);
-	plot(1:nr,xrho,'bo',1:nr,xrhom,'g*',1:nr,xrhop,'r+');grid on;zoom on; 
-	axis([1,nr+1,0,1])
+	plot(1:nr,xpsin,'bo',1:nr_dke,xpsin(r_dke),'r+');grid on;zoom on; 
+	axis([0,nr+1,0,1])
 	title('Radial mesh');
 	xlabel('Index');
 	ylabel('Rho');
+end
+%
+%Reference plasma parameters (for the normalization: pth_ref, nhuth_ref)
+%
+if nr_dke > 1 | ref_mode == 0,
+    Te_ref = max(xTe);%Core temperature
+    ne_ref = max(xne);%Core density
+    if display_mode >= 1
+        info_dke_yp(2,'Core reference temperature and density');
+        disp('-------------------------------------------------------------------------------------------------------------------');
+    end 
+    ref_mode = 0;%ref_mode enforced in case of length(rho_S) > 1 and ref_mode == 1
+else
+    if dke_mode == 0,
+        Te_ref = xTe(1);%Local temperature
+        ne_ref = xne(1);%Local density
+        if display_mode >= 1
+            info_dke_yp(2,'Local reference temperature and density');
+            disp('-------------------------------------------------------------------------------------------------------------------');
+        end     
+    else
+        Te_ref = xTe(2);%Local temperature
+        ne_ref = xne(2);%Local density
+        if display_mode >= 1
+            info_dke_yp(2,'Local reference temperature and density');
+            disp('-------------------------------------------------------------------------------------------------------------------');
+        end     
+    end
 end
 %
 if diary_mode == 1,
 	disp(['--------------------------------------------- Simulation parameters ----------------------------------------------']);
 	disp(['- Code version = ',num2str(version_dke)]);
 	disp(['- Simulation number = ',num2str(snumber)]);
-   disp(['- Pitch-angle and momentum grids uniformity: (0) no, (1) yes = ',num2str(grid_uniformity)]);
-   disp(['- Pitch-angle grid calculation method: (0): old method, (1) new method = ',num2str(grid_method)]);
+    disp(['- Pitch-angle and momentum grids uniformity: (0) no, (1) yes = ',num2str(grid_uniformity)]);
+    disp(['- Pitch-angle grid calculation method: (0): old method, (1) new method = ',num2str(grid_power ~= 0)]);
+    if grid_power ~= 0
+        disp(['- Pitch-angle grid step variation power: ',num2str(grid_power)]);
+    end
 	disp(['- Effective number of pitch-angle values for the distribution function grid (half grid) nmhu = ',num2str(nmhu)]);
 	disp(['- Effective number of momentum values for the distribution function grid (half grid) np = ',num2str(np)]);
 	disp(['- Maximum value of the momentum grid (pth_ref) pnmax =  ',num2str(pn(np))]);
 	disp(' ');
 	disp(['- Number of radial values for the distribution function grid (half grid) nr = ',num2str(nr)]);
 	for ir = 1:nr,
-		disp(['- Normalized radii at which the distribution is calculated xrho = ',num2str(xrho(ir))]);
+		disp(['- Normalized poloidal flux at which the distribution is calculated xpsin = ',num2str(xpsin(ir))]);
 	end
-	disp(['- Radial value that is displayed rho_display = ',num2str(rho_display)]);
-	disp(['- Reference values: (0) from core Te and ne, (1) from Te and ne at the normalized radius (paramater only active for a single radial value, otherwise ref_mode = 0)',num2str(ref_mode)]);
-	disp(['- Normalization procedure for the ohmic electric field, LH and EC quasilinear diffusion: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref norm_ref = ',num2str(norm_ref)]);
+	disp(['- Position that is displayed psin_display = ',num2str(xpsin(ir_display))]);
+	disp(['- Reference values: (0) from core Te and ne, (1) from Te and ne at the normalized poloidal flux (paramater only active for a single radial value, otherwise ref_mode = 0)',num2str(ref_mode)]);
+	disp(['- Normalization procedure for the ohmic electric field, RF quasilinear diffusion: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref norm_ref = ',num2str(norm_ref)]);
 	disp(' ');
 	disp(['- Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e) epsi0_fsav = ',num2str(epsi0_fsav)]);
 	disp(['- Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e) epsia_fsav = ',num2str(epsia_fsav)]);
@@ -185,48 +204,9 @@ if diary_mode == 1,
 end
 disp('-------------------------------------------------------------------------------------------------------------------');
 %
-%Local plasma parameters (calculated on the half radial grid)
-%
-xTe = interp1(prho,pTe,xrho);
-xne = interp1(prho,pne,xrho);
-xzTi = interp1(prho,pzTi',xrho)';
-xzni = interp1(prho,pzni',xrho)';
-xq = interp1(prho,pq,xrho);
-xZeff = interp1(prho,pZeff,xrho);
-%
-%Reference plasma parameters (for the normalization: pth_ref, nhuth_ref)
-%
-if length(rho_S) > 1 | ref_mode == 0,
-    Te_ref = max(xTe);%Core temperature
-    ne_ref = max(xne);%Core density
-    if display_mode >= 1
-        info_dke_yp(2,'Core reference temperature and density');
-        disp('-------------------------------------------------------------------------------------------------------------------');
-    end 
-    ref_mode = 0;%ref_mode enforced in case of length(rho_S) > 1 and ref_mode == 1
-else
-    if nr_dke == 0 | dke_mode == 0,
-        Te_ref = xTe(1);%Local temperature
-        ne_ref = xne(1);%Local density
-        if display_mode >= 1
-            info_dke_yp(2,'Local reference temperature and density');
-            disp('-------------------------------------------------------------------------------------------------------------------');
-        end     
-    else
-        Te_ref = xTe(2);%Local temperature
-        ne_ref = xne(2);%Local density
-        if display_mode >= 1
-            info_dke_yp(2,'Local reference temperature and density');
-            disp('-------------------------------------------------------------------------------------------------------------------');
-        end     
-    end
-end
-%
-%
 %
 Xmhu = ones(np,1)*mhu;%Half pitch-angle grid for the distribution function
 mhu2p = mhup.^2;
-xmhutrap2 = bounce_mode*2*xia./(1+xia);
 %
 Ten_ref = Te_ref/mc2;
 betath_ref = sqrt(Ten_ref);%Normalized pth_ref/mc as prescribed by Karney
@@ -243,7 +223,7 @@ Xpnperp2_ref = Xpn2_ref - Xpnpar_ref.*Xpnpar_ref;
 %
 lnc_ref = 15.2 - 0.5*log(ne_ref/1e20) + log(Te_ref);%Reference Coulomb logarithm (in "Tokamaks" textbook by Wesson)
 nhu_ref = qe^4*ne_ref*lnc_ref/(4*pi*e0^2*me^2*(clum*betath_ref)^3);%Reference electron collision frequency (s-1)
-xftp_norm_ref = (me/qe)*xq*clum*betath_ref/ap/Bt./xia;%Normalization factor for drift kinetic equation (ftilde)
+xftp_norm_ref = me*clum*betath_ref*xR0.*xBT0./xB0/qe/psia;%Normalization factor for drift kinetic equation (ftilde)
 %
 z_ref = betath_ref*pn_ref;
 z2_ref = z_ref.*z_ref;
@@ -283,7 +263,9 @@ xnhuloss_ref = nhuloss*xrnhuth;
 %
 %   RF wave quasilinear diffusion
 %
-waveparam = rfwave_dke_jd(tokname,xrho',betath_ref,ne_ref,xrbetath',xrnhuth',xTe_norm,xne_norm',xzni_norm,Zi',mi',Bt,xq',Rp,ap,bounce_mode);%Look at the function for the RF wave input parameters
+waveparam = zeros(nr,0,14);
+% changes in waveparam not yet implemented
+%waveparam = rfwave_dke_jd(tokname,xrho',betath_ref,ne_ref,xrbetath',xrnhuth',xTe_norm,xne_norm',xzni_norm,Zi',mi',Bt,xq',Rp,ap,bounce_mode);%Look at the function for the RF wave input parameters
 nb = size(waveparam,2);
 blist_lh = find(waveparam(1,:,1)==0);
 nb_lh = length(blist_lh);
@@ -305,16 +287,16 @@ end
 %    
 for ir = 1:nr,	
 %
-%   Ohmic electric field
+%   Ohmic electric field: WARNING: Not yet implemented.
 %
-   xepsi_ref_fsav(ir) = (xepsi0_ref_fsav(ir) - xepsia_ref_fsav(ir))*(1.0-xrho(ir)).^eepsi_fsav + xepsia_ref_fsav(ir);
+   xepsi_ref_fsav(ir) = (xepsi0_ref_fsav(ir) - xepsia_ref_fsav(ir))*(1.0-xpsin(ir)).^eepsi_fsav + xepsia_ref_fsav(ir);
 	if bounce_mode == 0,
 		xepsi_ref(ir) = xepsi_ref_fsav(ir);%Value at Bmin for FP or DKE calculations
 	elseif bounce_mode == 1,	
-		xepsi_ref(ir) = xepsi_ref_fsav(ir)/sqrt((1 + xia(ir))/(1 - xia(ir)));%Value at Bmin for FP or DKE calculations
+		xepsi_ref(ir) = xepsi_ref_fsav(ir);%/sqrt((1 + xia(ir))/(1 - xia(ir)));%Value at Bmin for FP or DKE calculations
 	end
 %
-%	Fast electron radial diffusion and pinch coefficients
+%	Fast electron radial diffusion and pinch coefficients: WARNING: Not yet implemented.
 %
 	ivpar_r_ref_threshold = min(find(abs(Xvpar_ref) >= xvparmin_r_ref(ir)));
    xEc_r_ref_threshold(ir) = mc2*(sqrt(1+pn_ref(ivpar_r_ref_threshold).*pn_ref(ivpar_r_ref_threshold)*betath_ref^2) - 1);%in keV
@@ -324,7 +306,7 @@ for ir = 1:nr,
 	elseif Dr_model==1,%Magnetic turbulence model: Dr(r) = Dr0(r)*vpar_ref/vth_ref
 		XDrv_ref = Dr0*(abs(Xvpar_ref) - xvparmin_r_ref(ir)).*(abs(Xvpar_ref) >= xvparmin_r_ref(ir))/xvparmin_r_ref(ir)/nhu_ref/ap/ap;%Normalized to the central collision frequency
 	end
-	XXDr_ref(:,:,ir) = XDrv_ref*(1 + pDr*xrho(ir)^2);%3-D radial diffusion matrix (radial profile dependence)
+	XXDr_ref(:,:,ir) = XDrv_ref;%*(1 + pDr*xrho(ir)^2);%3-D radial diffusion matrix (radial profile dependence)
 	xmaxDr_ref(ir) = max(max(XXDr_ref(:,:,ir)));%Maximum value of the radial diffusion coefficient
 %
 	if Vr_model==0,%Standard model : Vr(r) = Vr0(r)
@@ -333,10 +315,13 @@ for ir = 1:nr,
 		XVrv_ref = Vr0*(abs(Xvpar_ref) - xvparmin_r_ref(ir)).*(abs(Xvpar_ref) >= xvparmin_r_ref(ir))/xvparmin_r_ref(ir)/nhu_ref/ap;%Normalized to the central collision frequency
 	end
 	XVrv_ref = XVrv_ref.*(abs(Xvpar_ref) >= xvparmin_r_ref(ir));
-	XXVr_ref(:,:,ir) = XVrv_ref*(1 + pVr*xrho(ir)^2);%3-D radial pinch matrix (radial profile dependence)
+	XXVr_ref(:,:,ir) = XVrv_ref;%*(1 + pVr*xrho(ir)^2);%3-D radial pinch matrix (radial profile dependence)
 	xmaxVr_ref(ir) = max(max(XXVr_ref(:,:,ir)));%Maximum value of the radial convection coefficient
 %
 %Loss term for the electrons trapped in the toroidal magnetic ripple (WARNING: Only valid for the TORE SUPRA tokamak)
+%
+%
+% WARNING: Not yet implemented. (see test_dke_yp)
 %
 	if bounce_mode == 1 & isnan(xnhuloss_ref(ir)) == 0,
 		Ncoils = 1;%Ncoils is here forced to 1, as prescribed in Ref. M. Ju et al., Phys. Plasmas, 9 (2002) 493. Upper bound of ripple losses is then calculated
@@ -349,7 +334,7 @@ for ir = 1:nr,
 		Xnhuloss_ref = Xmaskrip_ref*xnhuloss_ref(ir);
 	else
 		xdeltaripple(ir) = 0;
-		xNq(ir) = Ncoils*xq(ir);
+		xNq(ir) = Ncoils;%*xq(ir);
 		Xnhuloss_ref = zeros(length(pn_ref),length(mhu));
 	end
 	XXnhuloss_ref(:,:,ir) = Xnhuloss_ref;
@@ -411,13 +396,13 @@ for ir = 1:nr,
 		if dke_mode == 1,
 %
 			view = 0;
-			if ir == rdke(ir_display)-1,
+			if ir == r_dke(ir_display)-1,
 				figure(1),subplot(131);zoom on
 				view = 1;
-			elseif ir == rdke(ir_display),
+			elseif ir == r_dke(ir_display),
 				figure(1),subplot(132);zoom on
 				view = 1;
-			elseif ir == rdke(ir_display)+1,
+			elseif ir == r_dke(ir_display)+1,
 				figure(1),subplot(133);zoom on
 				view = 1;
 			end	
@@ -462,13 +447,13 @@ for ir = 1:nr,
 			end
 %
 			view = 0;
-			if ir == rdke(ir_display)-1,
+			if ir == r_dke(ir_display)-1,
 				figure(2),subplot(231);zoom on
 				view = 1;
-			elseif ir == rdke(ir_display),
+			elseif ir == r_dke(ir_display),
 				figure(2),subplot(232);zoom on
 				view = 1;
-			elseif ir == rdke(ir_display)+1,
+			elseif ir == r_dke(ir_display)+1,
 				figure(2),subplot(233);zoom on
 				view = 1;
 			end
@@ -481,13 +466,13 @@ for ir = 1:nr,
 			end
 %           
 			view = 0;
-			if ir == rdke(ir_display)-1,
+			if ir == r_dke(ir_display)-1,
 				figure(2),subplot(234);zoom on
 				view = 1;
-			elseif ir == rdke(ir_display),
+			elseif ir == r_dke(ir_display),
 				figure(2),subplot(235);zoom on
 				view = 1;
-			elseif ir == rdke(ir_display)+1,
+			elseif ir == r_dke(ir_display)+1,
 				figure(2),subplot(236);zoom on
 				view = 1;
 			end  
@@ -499,7 +484,7 @@ for ir = 1:nr,
 			end
 		else
 			view = 0;
-			if ir == rdke(ir_display)
+			if ir == r_dke(ir_display)
 				figure(1),subplot(132);zoom on
 				view = 1;
 			end
@@ -528,7 +513,7 @@ for ir = 1:nr,
 %
 				C = contour(ppar_cyl_ref,pperp_cyl_ref,log(Xf0_cyl_ref),[-20:20/nlevel:0]);axis('equal');
 				faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
-				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['r/a = ',num2str(xrho(ir))]);
+				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['psin = ',num2str(xpsin(ir))]);
 				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*10,['Te(norm) = ',num2str(xTe_norm(ir))]);
 				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*15,['ne(norm) = ',num2str(xne_norm(ir))]);
 				xlabel('ppar/pth-ref');ylabel('pperp/pth-ref');title(title_initguess);
@@ -543,7 +528,7 @@ for ir = 1:nr,
 			end
 %
 			view = 0;
-			if ir == rdke(ir_display),
+			if ir == r_dke(ir_display),
 				figure(2),subplot(232);zoom on
 				view = 1;
 			end
@@ -551,12 +536,12 @@ for ir = 1:nr,
 			if view == 1,
 				semilogy(-v_ref,XfM_ref(:,1),'g--',v_ref,XfM_ref(:,nmhu),'g--',-v_ref,Xf0_ref(:,1),'c-',v_ref,Xf0_ref(:,nmhu),'c-');%Forward and backward directions only
 				axis([-max(v_ref),max(v_ref),1e-20,10]);grid on;zoom on
-				xlabel('vpar/vth-ref');ylabel('f(pperp = 0)');title(['Norm.(',num2str(xrho(ir)),') = ',num2str(normf0_ref)]);
+				xlabel('vpar/vth-ref');ylabel('f(pperp = 0)');title(['Norm.(',num2str(xpsin(ir)),') = ',num2str(normf0_ref)]);
 				pause(time_pause);
 			end
 %           
 			view = 0;
-			if ir == rdke(ir_display),
+			if ir == r_dke(ir_display),
 				figure(2),subplot(235);zoom on;pause(time_pause)
 				view = 1;
 			end    
@@ -570,7 +555,7 @@ for ir = 1:nr,
 %
 		if radial_mode == 1,
 			view = 0;
-			if ir == rdke(ir_display)
+			if ir == r_dke(ir_display)
 				figure(1007),subplot(121);zoom on
 				view = 1;
 			end
@@ -587,7 +572,7 @@ for ir = 1:nr,
  %
  				C = contour(ppar_cyl_ref,pperp_cyl_ref,XDrv_cyl_ref,nlevel);axis('equal');
 				faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
-				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['r/a = ',num2str(xrho(ir))]);
+				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['psin = ',num2str(xpsin(ir))]);
 				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*10,['v//-threshold(norm) = ',num2str(xvparmin_r_ref(ir))]);
 				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*15,['Ec-threshold = ',num2str(xEc_r_ref_threshold(ir)),' (keV)']);
 				xlabel('ppar/pth-ref');ylabel('pperp/pth-ref');title('Radial diffusion coefficient (nhu-ref*ap*ap)');
@@ -601,7 +586,7 @@ for ir = 1:nr,
 			end
 %
 			view = 0;
-			if ir == rdke(ir_display)
+			if ir == r_dke(ir_display)
 				figure(1008),subplot(121);zoom on
 				view = 1;
 			end
@@ -618,7 +603,7 @@ for ir = 1:nr,
 %
  				C = contour(ppar_cyl_ref,pperp_cyl_ref,XVrv_cyl_ref,nlevel);axis('equal');
 				faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
-				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['r/a = ',num2str(xrho(ir))]);
+				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['psin = ',num2str(xpsin(ir))]);
 				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*10,['v//-threshold(norm) = ',num2str(xvparmin_r_ref(ir))]);
 				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*15,['Ec-threshold = ',num2str(xEc_r_ref_threshold(ir)),' (keV)']);
 				xlabel('ppar/pth-ref');ylabel('pperp/pth-ref');title('Radial convection coefficient (nhu-ref*ap)');
@@ -636,12 +621,12 @@ end
 %
 if radial_mode == 1 & display_mode == 2,
 	h1005 = figure(1005);tilefigs_dke_yp(h1005);
-	subplot(121),plot(xrho,xvparmin_r_ref,'g-x');grid on;zoom on;
+	subplot(121),plot(xpsin,xvparmin_r_ref,'g-x');grid on;zoom on;
 	axis([0,1,0,1.1*max(xvparmin_r_ref)]);
 	xlabel('r/a');
 	ylabel('v// threshold (vth-ref)');
 	title('Radial transport');
-	subplot(122),plot(xrho,xEc_r_ref_threshold,'c-x');grid on;zoom on;
+	subplot(122),plot(xpsin,xEc_r_ref_threshold,'c-x');grid on;zoom on;
 	axis([0,1,0,1.1*max(xEc_r_ref_threshold)]);
 	xlabel('r/a');
 	ylabel('Kinetic energy threshold (keV)');
@@ -649,12 +634,12 @@ if radial_mode == 1 & display_mode == 2,
 	pause(time_pause);
 %
 	h1006 = figure(1006);tilefigs_dke_yp(h1006);
-	subplot(121),plot(xrho,xmaxDr_ref,'b-o');grid on;zoom on;
+	subplot(121),plot(xpsin,xmaxDr_ref,'b-o');grid on;zoom on;
 	if sum(xmaxDr_ref) ~= 0,axis([0,1,0,1.1*max(xmaxDr_ref)]);end
 	xlabel('r/a');
 	ylabel('Maximum value (nhu-ref*ap*ap)');
 	title('Radial diffusion');
-	subplot(122),plot(xrho,xmaxVr_ref,'r-o');grid on;zoom on;
+	subplot(122),plot(xpsin,xmaxVr_ref,'r-o');grid on;zoom on;
 	if sum(xmaxVr_ref) ~= 0,axis([0,1,0,1.1*max(xmaxVr_ref)]);end
 	xlabel('r/a');
 	ylabel('Maximum value (nhu-ref*ap)');
@@ -667,23 +652,25 @@ end
 time0 = clock;
 %
 [XXf0_ref,XXf0_tp_ref,XXf0_g_ref,...
-xnormf_ref,xnormf_ref_fsav,...
-YXXDrf_ref,...
-Zcurr_ref,Zcurr_ref_fsav,...
-ZSp0_ref,ZP0_ref,...
-XxRR_ref_fsav,...
-xTe_norm_out,xft_fsav,xmhubounce2,...
-memoryLU] = ...
-dke_1_4yp(tokname,mhu,dmhu,mhum,dmhum,mhup,dmhup,mhu_S,...
-xia,xrho,xdrho,xrhom,xdrhom,xrhop,xdrhop,rdke,xrho_S,...
-pn,dpn,pnm,dpnm,pnp,dpnp,pn_S,...
-xTe_norm,xne_norm,Zi,mi,xzni_norm,xzTi_norm,...
-betath_ref,Rp_norm,...
-xepsi_ref,waveparam,xq,...
-XXDr_ref,XXVr_ref,...
-XXnhuloss_ref,xdeltaripple,xNq,...
-xftp_norm_ref,bounce,coll_mode,...
-dtn,prec0,nit,invproc,param_inv,display,store_mode,XXfinit_ref);
+    xnormf_ref,xnormf_ref_fsav,...
+    YXXDrf_ref,...
+    Zcurr_ref,Zcurr_ref_fsav,...
+    ZSp0_ref,ZP0_ref,...
+    XxRR_ref_fsav,...
+    xTe_norm_out,xft_fsav,xmhubounce2,...
+    memoryLU]...
+= dke_1_4yp(tokname,theta,...
+    XR,XZ,XBR,XBZ,XBphi,...
+    xB0,xR0,xBT0,Rp,Zp,...
+    mhu,dmhu,mhum,dmhum,mhup,dmhup,mhu_S,...
+    xmhu0T2,xpsin,xdpsin_dke,xpsinm_dke,xdpsinm_dke,xpsinp_dke,xdpsinp_dke,r_dke,xpsin_S_dke,...
+    pn,dpn,pnm,dpnm,pnp,dpnp,pn_S,...
+    xTe_norm,xne_norm,zZi,zmi,xzni_norm,xzTi_norm,...
+    betath_ref,xepsi_ref,waveparam,...
+    XXDr_ref,XXVr_ref,...
+    XXnhuloss_ref,xdeltaripple,xNq,...
+    xftp_norm_ref,bounce,coll_mode,...
+    dtn,prec0,nit,invproc,param_inv,display,store_mode,XXfinit_ref);
 %
 time_out = etime(clock,time0);
 memoryLU_out = memoryLU;
