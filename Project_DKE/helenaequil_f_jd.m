@@ -31,7 +31,7 @@ end
 %
 if nargin < 4,savename = tokamak;end
 %
-[ap,Rp,Zp,elong,triang_up,triang_down,Bt,...
+[ap,Rp,Zp,xpoint,Bt,...
 	 Ip,j0,ja,ej,qmin,eq,...
 	 Te0,Tea,eTe,ne0,nea,ene,Ti0,Tia,eTi,...
 	 Zi,mi,fi,Zeff0,Zeffa,eZeff] = ptok_dke_1yp(tokamak);        
@@ -78,11 +78,27 @@ if exist(['helmex77',mexext]) == 3,
 	ptot_guess = pTe_guess.*pne_guess + sum(pzni_guess.*pzTi_guess);%Total plasma pressure profile
 	pj_guess = (j0 - ja)*(1 - ppsin_guess.^2).^ej + ja;%Current density profile
 %
-	if (triang_up == triang_down),
-		lsc = 0;
-	else
-		lsc = 1;
+	lim_top = atan(0.5*xpoint(1)/(1-xpoint(2)))*180/pi;%In order to avoid convergence problem in separatrix MEX file
+	if xpoint(4) > lim_top,xpoint(4) = lim_top - 0.1;end
+	lim_bottom = atan(0.5*xpoint(5)/(1-xpoint(6)))*180/pi;%In order to avoid convergence problem in separatrix MEX file
+	if xpoint(8) > lim_bottom,xpoint(8) = lim_bottom - 0.1;end
+%
+	[x1,y1]=separatrice(xpoint,1);%The LCS is approximated by four ellipses (mode = 1)
+%
+	rr = x1*ap + Rp;
+	zz = y1*ap;
+	alpha  = unwrap(angle((rr-Rp)+ i .* (zz)));%poloidal angle
+	if alpha(end) < -5
+		alpha = alpha - alpha(end);
 	end
+%
+	theta_sep  = linspace(0,2*pi,201);%201 poloidal points
+	ind = find(diff(alpha) == 0);
+	alpha(ind) = [];
+	rr(ind) = [];
+	zz(ind) = [];
+	R_sep = spline(alpha',rr',theta_sep);%resampling on 201 points
+	Z_sep = spline(alpha',zz',theta_sep);%resampling on 201 points
 %
 	npsi = 101;%ONLY 101 radial profile grid points for HELENA
 	ntheta = 65;%ONLY 65 poloidal grid points for HELENA
@@ -90,12 +106,12 @@ if exist(['helmex77',mexext]) == 3,
 	ppsi_in = interp1(1:npsi_guess,ppsi_guess,linspace(1,201,101));%ONLY 101 radial profile grid points for HELENA
 	ptot_in = interp1(1:npsi_guess,ptot_guess,linspace(1,201,101));%ONLY 101 radial profile grid points for HELENA
 	pj_in = interp1(1:npsi_guess,pj_guess,linspace(1,201,101));%ONLY 101 radial profile grid points for HELENA 
-
+%
 	[C2,C3,rho2m,R,Zout,rho,Vp,drhoor,qpsi,ppsi,ftra,Fdia,psiT,B2,invB2,Sp, ...
-	   rav,oor,drhoav,xshift,xrad,xell,xtriapos,xtrianeg,jout,iout,pout, ...
-	   r2,oor2,r2tau2,drho2ob2,r3otau3,r3otau,BR,BZ,b,df2,kkbig,li, ...
-	   dimerc,drmerc,balcrit,ifail]=...
-	   helmex77(ppsi_in,ptot_in,pj_in,Rp,Bt,Ip*1e6,lsc,ap,elong,triang_up,triang_down,zeros(1,101),zeros(1,101),0,[],[],[],2);
+			rav,oor,drhoav,xshift,xrad,xell,xtriapos,xtrianeg,jout,iout,pout, ...
+			r2,oor2,r2tau2,drho2ob2,r3otau3,r3otau,BR,BZ,b,df2,kkbig,li, ...
+			dimerc,drmerc,balcrit,ifail]=...
+			helmex77(ppsi_in,ptot_in,pj_in,Rp,Bt,Ip*1e6,2,ap,0,0,0,R_sep,Z_sep,0,[],[],[],2);
 %	  
 		BPHI = (Fdia*ones(1,ntheta))./R;
 %
