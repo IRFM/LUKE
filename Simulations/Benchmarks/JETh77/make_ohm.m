@@ -14,8 +14,8 @@ path_equil = '';%if nothing is specified, the working directory is first used an
 % (WARNING: norm_ref = 0 by default when multiple radial positions are studied simultaneously, whatever the value in this file 
 % -> normalization with pth_ref*nhuth_ref/e)
 % 
-epsi0 = 0.05;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e) 
-epsia = 0.05;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
+epsi0 = 0.00;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e) 
+epsia = 0.00;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
 eepsi = 0;%Exponent for Ohmic electric field (WARNING: psi coordinate and not rho)
 %
 norm_ref = 1;%Normalization procedure for the ohmic electric field: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref 

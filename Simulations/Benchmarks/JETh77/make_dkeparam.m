@@ -5,7 +5,7 @@
 %by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
 %
 clear all
-dkeparam_id = 'JETh77';%Set here the name (identifier) of the drift kinetic code parameters
+dkeparam_id = 'TSh77';%Set here the name (identifier) of the drift kinetic code parameters
 %
 %Mesh size calculation
 %
@@ -13,7 +13,7 @@ dkeparam.grid_uniformity = 0;%Pitch-angle and momentum grids uniformity: (0) no,
 dkeparam.grid_method = 1;%Pitch-angle grid calculation technique: (0): old method, (1) new method
 dkeparam.nmhu_S = 151;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
 dkeparam.np_S = 151;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run) WARNING: must be adjusted so that effective momentum point number is larger than thepitch-angle one.
-dkeparam.pnmax_S = 30;%Maximum value of the flux momentum grid (pth_ref)
+dkeparam.pnmax_S = 15;%Maximum value of the flux momentum grid (pth_ref)
 %
 %Pitch-angle grid
 %
@@ -54,7 +54,7 @@ dkeparam.nmax_rf = 10;%Maximum number of harmonics in the Dql calculations
 % Run mode
 %
 dkeparam.bounce_mode = 1;%Bounce averaging option: (0) no bounce averaging, (1) bounce averaging full implicit method with 15 diagonals
-dkeparam.dke_mode = 1;%Fokker-Planck equation (0), Drift Kinetic equation (1)
+dkeparam.dke_mode = 0;%Fokker-Planck equation (0), Drift Kinetic equation (1)
 dkeparam.equil_mode = 1;%Equilibrium option: (0) circular concentric flux-surfaces, (1) numerical equilibrium
 dkeparam.syn_mode = 0;%Synergy calculation: (0) none, (1) yes: the code runs twice, including once without RF or electric fields. (only if dke_mode = 1)
 %
@@ -76,7 +76,7 @@ dkeparam.nit_g = 100;%Maximum number of iterations for g
 %
 dkeparam.dtn = 10000;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
 dkeparam.invproc = 1;%Iterative matrix inversion method: (1) cgs iterative method, (2) bicg iterative method, (3) qmr iterative method
-dkeparam.param1_inv = 1e-4;%Parameters for the matrix inversion procedure. Minimum value of the drop tolerance for the partial LU decomposition (drop tol = max(1/dtn/nr,param_inv(1)))
+dkeparam.param1_inv = 1e-5;%Parameters for the matrix inversion procedure. Minimum value of the drop tolerance for the partial LU decomposition (drop tol = max(1/dtn/nr,param_inv(1)))
 dkeparam.param2_inv = 4;%Parameters for the matrix inversion procedure. Maximum number of iteration for iterative method< 20 (param_inv(1) depends of boundary_mode, if param_inv(1)=0, full LU factorization)
 dkeparam.store_mode = 0;%Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight
 %
