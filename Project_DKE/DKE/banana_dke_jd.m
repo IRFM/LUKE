@@ -1,4 +1,4 @@
-function [YMdt,YMmask,YMF,YMPSIB,YMmhu0,YMmhu,YMR,YMRBmin,xymaskT] = banana_dke_jd(ymhu0,R0,Z0,XR,XZ,XBR,XBZ,XBphi);
+function [R0,xBmin,xRBmin,xBTBmin,YMdt,YMmask,YMF,YMPSIB,YMmhu0,YMmhu,YMR,YMRBmin,xymaskT] = banana_dke_jd(ymhu0,R0,Z0,XR,XZ,XBR,XBZ,XBphi);
 %
 % Calculation of the poloidal positions of the two banana tips for accurate numerical integration over the poloidal angle
 % close to the trapped/passing limit. All output quantities are given on this new grid (see the notice for explanations concerning notations)
@@ -10,6 +10,10 @@ function [YMdt,YMmask,YMF,YMPSIB,YMmhu0,YMmhu,YMR,YMRBmin,xymaskT] = banana_dke_
 %
 %   OUTPUT:
 %   
+%       - R0 : Major radius at the center of the nested flux surfaces [1,1]
+%       - xBmin : Minimum of B on flux surface [1,nr]
+%       - xRBmin : Major radius at the minimum of B on flux surface [1,nr]
+%       - xBTBmin : Toroidal magnetic field at the minimum of B on flux surface [1,nr]
 %       - YMdt : dtheta/2/pi
 %       - YMmask : Mask on the integration over B
 %       - YMF : B*[(R-R0)^2+(Z-Z0)^2]/|BR*(Z-Z0)-BZ*(R-R0)|/R0, integrant that appears in the numerical bounce integrals (see notice)
@@ -33,7 +37,9 @@ XB = sqrt(XBT.^2 + XBP.^2);%Total B-field
 [xBmin,ixBmin_col] = min(XB',[],1);%Minimum of B on flux surface
 xBmax = max(XB');%Maximum of B on flux surface
 XRt = XR';
+XBTt = XBT';
 xRBmin = XRt([0:length(ixBmin_col)-1]*nt + ixBmin_col);%Major radius at the minimum of B on flux surface
+xBTBmin = XBTt([0:length(ixBmin_col)-1]*nt + ixBmin_col);%Toroidal magnetic field at the minimum of B on flux surface
 %
 YB = repmat(XB',[1,1,nmhu]);
 %
