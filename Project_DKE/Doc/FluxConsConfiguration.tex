@@ -1,103 +1,61 @@
+
 \paragraph{Configuration space operator}
 
-The configuration space dynamics of the kinetic equation can be expressed in
-conservative form as 
+The operator that describes the spatial transport is given by relation
 \begin{equation}
-\left. \frac{\partial f_{0}}{\partial t}\right| _{\mathbf{r}}=\nabla _{%
-\mathbf{r}}\cdot \mathbf{S}_{\mathbf{r}}
+\left. \frac{\partial f_{0}^{\left( 0\right) }}{\partial t}\right| _{\mathbf{%
+r}}=\frac{B_{\min }\left( \psi \right) }{\lambda \left( \psi ,\xi
+_{0}\right) \widetilde{q}\left( \psi \right) }\frac{\partial }{\partial \psi 
+}\left( \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi
+\right) }\lambda \left( \psi ,\xi _{0}\right) \left| \nabla \psi \right|
+_{\min }\mathbf{S}_{\psi }^{\left( 0\right) }\right) 
 \end{equation}
-which expands as 
+and since $B_{P}=\left| \nabla \psi \right| /R,$ it may be rewritten in the
+form
 \begin{equation}
-\left. \frac{\partial f_{0}}{\partial t}\right| _{\mathbf{r}}=\frac{1}{J_{%
-\mathbf{r}}}\frac{\partial }{\partial u^{i}}\left( J_{\mathbf{r}}S_{\mathbf{r%
-}}^{i}\right)
+\left. \frac{\partial f_{0}^{\left( 0\right) }}{\partial t}\right| _{\mathbf{%
+r}}=\frac{B_{\min }\left( \psi \right) }{\lambda \left( \psi ,\xi
+_{0}\right) \widetilde{q}\left( \psi \right) }\frac{\partial }{\partial \psi 
+}\left( R_{\min }\left( \psi \right) \widetilde{q}\left( \psi \right) \frac{%
+B_{P\min }\left( \psi \right) }{B_{\min }\left( \psi \right) }\lambda \left(
+\psi ,\xi _{0}\right) \mathbf{S}_{\psi }^{\left( 0\right) }\right) 
 \end{equation}
-where $J_{\mathbf{r}}$ is the configuration space Jacobian.
+where $R_{\min }$ and $B_{P\min }$ are taken at the poloidal location where $%
+B=B_{\min }$. 
 
-The configuration space coordinate system is $\left( \psi ,s,\phi \right) $,
-and is described in (\ref{psisdef}). This is the natural system to work on
-flux-surface geometry. The configuration space Jacobian is (\ref{jacpsis}) 
-\begin{equation}
-J_{\mathbf{r}}=\frac{R}{\left| \nabla \psi \right| }
-\end{equation}
-so that, under the assumption of axisymmetry, we get the following
-expression for the divergence (\ref{psisdiv}) 
-\begin{equation}
-\left. \frac{\partial f_{0}}{\partial t}\right| _{\mathbf{r}}=\frac{\left|
-\nabla \psi \right| }{R}\frac{\partial }{\partial \psi }\left( RS_{\psi
-}\right) +\frac{\left| \nabla \psi \right| }{R}\frac{\partial }{\partial s}%
-\left( \frac{R}{\left| \nabla \psi \right| }S_{s}\right)
-\end{equation}
-where we define 
+It is interesting at this stage to estimate the expression of $\left. \frac{%
+\partial f_{0}^{\left( 0\right) }}{\partial t}\right| _{\mathbf{r}}$ for
+circular concentric magnetic flux surfaces. In that case, since $\widehat{%
+\psi }=\widehat{r},$ $\mathbf{S}_{\psi }^{\left( 0\right) }=\mathbf{S}%
+_{r}^{\left( 0\right) }$ and as $\widetilde{q}\left( r\right) =\frac{r}{R_{0}%
+}\frac{B_{\min }}{B_{P\min }},$ it comes
 \begin{eqnarray}
-S_{\psi } &=&\mathbf{S}_{\mathbf{r}}\cdot \widehat{\psi } \\
-S_{s} &=&\mathbf{S}_{\mathbf{r}}\cdot \widehat{s}  \nonumber
+\left. \frac{\partial f_{0}^{\left( 0\right) }}{\partial t}\right| _{\mathbf{%
+r}}^{circ.} &=&\frac{R_{0}B_{P\min }\left( \psi \right) }{\lambda \left(
+r,\xi _{0}\right) r}\frac{\partial }{\partial \psi }\left( r\lambda \left(
+r,\xi _{0}\right) \mathbf{S}_{r}^{\left( 0\right) }\right)  \\
+&=&\frac{\left| \nabla \psi \right| _{\min }}{\lambda \left( r,\xi
+_{0}\right) r}\frac{\partial }{\partial \psi }\left( r\lambda \left( r,\xi
+_{0}\right) \mathbf{S}_{r}^{\left( 0\right) }\right)  \\
+&=&\frac{1}{\lambda \left( r,\xi _{0}\right) r}\frac{\partial }{\partial r}%
+\left( r\lambda \left( r,\xi _{0}\right) \mathbf{S}_{r}^{\left( 0\right)
+}\right) 
 \end{eqnarray}
-
-\paragraph{Bounce-averaged operator}
-
-The bounce averaged operator is 
+since $R_{\min }\left( \psi \right) =R_{0}$ and $\left| \nabla \psi \right|
+_{\min }\frac{\partial }{\partial \psi }=\frac{\partial }{\partial r}.$
+Since in this simplified limit, dynamics in momentum and configuration
+spaces are not decoupled, through the normalized bounce time. On for
+strongly circulating electrons,
 \begin{equation}
-\left\{ \left. \frac{\partial f_{0}}{\partial t}\right| _{\mathbf{r}
-}\right\} =\left\{ \frac{\left| \nabla \psi \right| }{R}\frac{\partial }{%
-\partial \psi }\left( RS_{\psi }\right) \right\} +\left\{ \frac{\left|
-\nabla \psi \right| }{R}\frac{\partial }{\partial s}\left( \frac{R}{\left|
-\nabla \psi \right| }S_{s}\right) \right\}  \label{kinbavr}
+\lim_{\left| \xi _{0}\right| \rightarrow 1}\left. \frac{\partial %
+f_{0}^{\left( 0\right) }}{\partial t}\right| _{\mathbf{r}}^{circ.}=\frac{1}{r%
+}\frac{\partial }{\partial r}\left( r\mathbf{S}_{r}^{\left( 0\right)
+}\right) 
 \end{equation}
-where the bounce averaging operation was defined in (\ref{bav0}) 
-\begin{equation}
-\left\{ \mathcal{A}\right\} =\frac{1}{\tau _{b}}\left[ \frac{1}{2}%
-\sum_{\sigma }\right] _{T}\int_{s_{\min }}^{s_{\max }}\frac{ds}{\left|
-v_{s}\right| }\mathcal{A}
-\end{equation}
+the usual cylindrical conservative expression of the radial transport is
+found, since $\lim_{\left| \xi _{0}\right| \rightarrow 1}\lambda \left(
+r,\xi _{0}\right) =1.$
 
-Because the parallel dynamics is described in our model, we know the fluxes
-along the magnetic field lines, which is simply 
-\begin{equation}
-S_{\mathbf{r}}^{s}=v_{s}f\left( v_{s}\right)
-\end{equation}
-
-Since $f$ is constant along a field line, $\partial f/\partial s=0$ and we
-have simply 
-\begin{eqnarray}
-\left\{ \frac{\left| \nabla \psi \right| }{R}\frac{\partial }{\partial s}%
-\left( \frac{R}{\left| \nabla \psi \right| }S_{s}\right) \right\} &=&\frac{1%
-}{\tau _{b}}\left[ \frac{1}{2}\sum_{\sigma }\right] _{T}\int_{s_{\min
-}}^{s_{\max }}\frac{ds}{\left| v_{s}\right| }\frac{\left| \nabla \psi
-\right| }{R}\frac{\partial }{\partial s}\left( \frac{R}{\left| \nabla \psi
-\right| }S_{s}\right)  \nonumber \\
-&=&f\frac{1}{\tau _{b}}\left[ \frac{1}{2}\sum_{\sigma }\right] _{T}\sigma
-\int_{s_{\min }}^{s_{\max }}ds\frac{\left| \nabla \psi \right| }{v_{s}R}%
-\frac{\partial }{\partial s}\left( \frac{Rv_{s}}{\left| \nabla \psi \right| }%
-\right) \\
-&=&f\frac{1}{\tau _{b}}\left[ \frac{1}{2}\sum_{\sigma }\right] _{T}\sigma
-\int_{s_{\min }}^{s_{\max }}ds\frac{\partial }{\partial s}\ln \left[ \frac{%
-R\left( \psi ,s\right) v_{s}\left( \psi ,s,v_{s0}\right) }{R\left( \psi
-,0\right) v_{s}\left( \psi ,0,v_{s0}\right) }\frac{\left| \nabla \psi
-\right| \left( \psi ,0\right) }{\left| \nabla \psi \right| \left( \psi
-,s\right) }\right] \\
-&=&f\frac{1}{\tau _{b}}\left[ \frac{1}{2}\sum_{\sigma }\right] _{T}\sigma
-\left( \ln \left[ \frac{R\left( \psi ,s_{\max }\right) }{R\left( \psi
-,s_{\min }\right) }\right] +\ln \left[ \frac{v_{s}\left( \psi ,s_{\max
-},v_{s0}\right) }{v_{s}\left( \psi ,s_{\min },v_{s0}\right) }\right] -\ln
-\left[ \frac{\left| \nabla \psi \right| \left( \psi ,s_{\max }\right) }{%
-\left| \nabla \psi \right| \left( \psi ,s_{\min }\right) }\right] \right)
-\end{eqnarray}
-
-For passing particles, the positions $\left( \psi ,s_{\min }\right) $ and $%
-\left( \psi ,s_{\max }\right) $ coincide and therefore the term vanishes.
-Because the factor is an odd function of $\sigma $, the sum over $\sigma $
-for trapped particle also leads to $0$. Consequently, 
-\begin{equation}
-\left\{ \frac{\left| \nabla \psi \right| }{R}\frac{\partial }{\partial s}%
-\left( \frac{R}{\left| \nabla \psi \right| }S_{s}\right) \right\} =0
-\end{equation}
-
-We are left with 
-\begin{equation}
-\left\{ \left. \frac{\partial f_{0}}{\partial t}\right| _{\mathbf{r}%
-}\right\} =\left\{ \frac{\left| \nabla \psi \right| }{R}\frac{\partial }{%
-\partial \psi }\left( RS_{\psi }\right) \right\} 
-\end{equation}
-
-Work to be done......
+Finally, it is more convenient to work with a parameter that has a length
+dimension, since diffusion and convection coefficient are expressed
+naturally in $m^{2}/s$ and $m/s$ respectively.
