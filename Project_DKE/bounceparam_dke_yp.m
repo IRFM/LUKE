@@ -169,5 +169,7 @@ else
 	XXlambda_b_p2 = ones(npn,nmhu,nr);
 	XXlambda_b_p2_p = ones(npn,nmhu,nr);
 	XXlambda_b_p2_m = ones(npn,nmhu,nr);
+%
+	XXlambda_b_p1m3p4 = ones(npn,nmhu,nr);
 end
 
