@@ -23,9 +23,9 @@ dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode] = psim_dke_1yp;
 %by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
 %
 snumber = 1;%Simulation number
-tokname = 'CQL3D_LH';%Tokamak equilibrium scenario (see ptok_dke_1yp.m) in EQUIL_tokname file)
-loadequil = 2;%0: Load already existing equilibrium file, 1: create equilibrium with HELENA (needs mex file), 2: create equilibrium file (with idealequil_f_jd.m function)
-qopt = 0;%Option for q profile. (0): constant (default), (1): from qmin and eq (for HELENA, it is used only for the psi grid guess)
+tokname = 'JET';%Tokamak equilibrium scenario (see ptok_dke_1yp.m) in EQUIL_tokname file)
+loadequil = 1;%0: Load already existing equilibrium file, 1: create equilibrium with HELENA (needs mex file), 2: create equilibrium file (with idealequil_f_jd.m function)
+qopt = 1;%Option for q profile. (0): constant (default), (1): from qmin and eq (for HELENA, it is used only for the psi grid guess)
 %
 %Additional specific parameters for ideal cylindrical magnetic equilibrium with circular concentric flux surfaces (used if loadequil = 2 only)
 %
@@ -36,7 +36,7 @@ ntheta = 65;%Size of the theta grid for the magnetic equilibrium (ntheta ~= npsi
 %
 grid_uniformity = 0;%Pitch-angle and momentum grids uniformity: (0) no, (1) yes (-1 for specific test for DKE, transient and pitch-angle grid only)
 grid_method = 1;%Pitch-angle grid calculation technique: (0): old method, (1) new method
-nmhu_S = 201;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
+nmhu_S = 81;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
 np_S = 201;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run) WARNING: must be adjusted so that effective momentum point number is larger than thepitch-angle one.
 pnmax_S = 30;%Maximum value of the flux momentum grid (pth_ref)
 %
@@ -64,7 +64,7 @@ spfac = 20;%reduction factor for the momentum supergrid used in collision integr
 %Values of the radial flux grid [1,p] (If one radial value: local calculation only)
 %
 psin_S = [];%5.286742555900838e-002; %[0.1]%(rho = 0.25 in CMOD)
-rho_S = [0.2,0.4,0.6,0.8];%[0.05:0.07:0.9];%;0.03322100141578101;0.71365;
+rho_S = [0.1:0.05:0.9];%[0.05:0.07:0.9];%;0.03322100141578101;0.71365;
 %
 psin_display = NaN;%Approximate radial value at which results are displayed if display_mode >= 1 [1,1]
 rho_display = 0.4;
@@ -98,7 +98,7 @@ prec_rf = 1e-4;%relative precision in RT-DKE iterations
 % Fast electron radial transport
 %
 vparmin_r = 3.5;%Lower limit of the parallel velocity dependence of the radial diffusion and pinch (vth_ref or vth)
-Dr0 = 0;%Core  radial diffusion coefficient (m^2/s)
+Dr0 = 10;%Core  radial diffusion coefficient (m^2/s)
 pDr = 0;%Coefficient for the Dr radial profile
 Dr_model = 1;%Radial diffusion type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth), 
 Vr0 = 0;%Core radial pinch coefficient (m/s)
@@ -141,9 +141,9 @@ param_inv = [1e-4,4];%Parameters for the matrix inversion procedure. Minimum val
 dp_cyl = 0.1;%Cylindrical momentum step (pth_ref)
 nlevel = 30;%Number of level for contour plots
 %
-display_mode = 0;%Display mode: (0): no, (1): partial, (2): full
+display_mode = 1;%Display mode: (0): no, (1): partial, (2): full
 store_mode = 0;%Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight
-diary_mode = 1;%Write in a file named "diary_dke_xx" the output of the code in the MatLab command window: (0) no save, (1) save
+diary_mode = 0;%Write in a file named "diary_dke_xx" the output of the code in the MatLab command window: (0) no save, (1) save
 auto_mode = 0;%(0): Interactive mode for multiple radius output display, (1): automatic mode for one output display at rho_display
 %
 sfac = [sfac0,sfac1,sfact];
