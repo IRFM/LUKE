@@ -1,4 +1,4 @@
-function [alpha_hxr,beta_hxr,R_hxr,Z_hxr,EG_hxr] = bremTSconvert_dke_yp(day,month,year);
+function [alpha_hxr,beta_hxr,R_hxr,Z_hxr,EG_hxr,ef_hxr,tf_hxr,ea_hxr,ta_hxr,ec_hxr,tc_hxr,ed_hxr,td_hxr,kdiag_hxr] = bremTSconvert_dke_yp(day,month,year);
 %
 % Convert old coodinate system used for DPSX (in partokyp.m for displaytt.m) in the new one used by DKE. Only useful for Tore Supra HXR diagnostic
 % For other tokamak, use directly the correct system of coordinate
@@ -23,7 +23,7 @@ if nargin < 3,
     error('Not enough arguments in bremTSconvert_dke_yp')
 end	
 %	
-[tok,Rp,ap,epsip,hp,Rm,Ri,ai,fi,nv,nv0,tv,kv,mv,sd,r1,r2,lc,lf,lfp,EG,kdiag,ef,tf,ea,ta,ec,tc,td,res,lod,lad,ed,lpm,phf,kd,Gain,Offset,pur,chordstatus] = partokyp('TS',day,month,year);
+[tok,Rp,ap,epsip,hp,Rm,Ri,ai,fi,nv,nv0,tv,kv,mv,sd,r1,r2,lc,lf,lfp,EG,kdiag,ef,tf,ea,ta,ec,tc,td,res,lod,lad,ed,lpm,phf,kd,Gain,Offset,pur,chordstatus] = partok_dke_yp('TS',day,month,year);
 %
 R_hxr = (Ri + ai*cos(tv*pi/180))/1000;% reference major radius (m)
 Z_hxr = ai*sin(tv*pi/180)/1000;% reference vertical position (m)
@@ -32,3 +32,21 @@ alpha_hxr = -kv*pi/180;%horizontal angle (with respect to R) [-pi...pi]. The neg
 beta_hxr = pi/2 - mv*pi/180;%vertical angle (with respect to Z) [0...pi]
 %
 EG_hxr = EG*1e-6;%geometrical extend (m^2) [1,nchord]
+%
+ef_hxr = ef;% thickness of the vacuum window (mm) [1,m]
+%
+tf_hxr = tf;%type of material for the vacuum window (Al ou Be) [1,m]
+%
+ea_hxr = ea;%thickness of the absorber (mm) [1,m]
+%
+ta_hxr = ta;%type of material for the absorber (Al,Fe,Ge,Be ou Pb) [1,m]
+%
+ec_hxr = ec;%thickness of the detector shield (mm) [1,m]
+%
+tc_hxr = tc;%type of material for the detector shield (Al ou Be) [1,m]
+%
+ed_hxr = ed;%thickness of the detector (mm) [1,m]
+%
+td_hxr = td;%type of material for the detector (BGO,CsI,NaI,Ge or CdTe) [1,m]
+%
+kdiag_hxr = kdiag;%Measured photon energy spectrum (keV) [1,k]
