@@ -53,13 +53,13 @@ for iw = 1:length(waves),%
 	  %(3): solved in DKE, non-relativistic hot plasma model -R2D2- (Warning: so far, electrons only)
 	  %(4): solved in DKE, relativistic hot plasma model -R2D2- (Warning: so far, electrons only)
     % 
-    for iw = 1:length(waves),% 
+    for iray = 1:length(rays),% 
         %
         % ======================================================================
         %                       treats each ray individually
         % ======================================================================
         %
-        ray = rays{iw};
+        ray = rays{iray};
         %
         % The following information is necessary for including the
         % contribution of the ray in DKE:
@@ -148,6 +148,13 @@ for iw = 1:length(waves),%
             for is = 1:ns 
                 spsin(is) = interp1(pstr(:,is),ppsin,sr(is),method);%psi(s)
             end
+            %
+            % positive values only for spsin
+            %
+            if min(spsin) < -0.05
+                error('The psin interpolation has produced negative values')
+            end
+            spsin(spsin <= 0) = eps;
         end    
         %
         % Calculates Npar and Nperp from kR,n and kZ if needed.
@@ -184,7 +191,7 @@ for iw = 1:length(waves),%
         %
         % Solves the dispersion relation for sepol_pmz, sNperp and phi_pmz 
         %
-            sB = interp2(theta,ppsin,ptB,st,spsin,method);
+            sB = interp2(theta,ppsin,ptB,stheta,spsin,method);
             sne = interp1(ppsin,pne,spsin,method);
             szni = interp1(ppsin,pzni',spsin,method)';
             sTe = interp1(ppsin,pTe,spsin,method);
@@ -200,8 +207,8 @@ for iw = 1:length(waves),%
                 if length(sNperp) == ns,
                     smaskp = (abs(sNperpp - sNperp) <= abs(sNperpm - sNperp));
                     sNperp = sNperpp.*smaskp + sNperpm.*~smaskp;
-                    sepol_pmz = sep_pmz.*((1:3)'*smaskp) + sem_pmz.*((1:3)'*~smaskp);
-                    sphi_pmz = sphip_pmz.*((1:3)'*smaskp) + sphim_pmz.*((1:3)'*~smaskp);
+                    sepol_pmz = sep_pmz.*(ones(3,1)*smaskp) + sem_pmz.*(ones(3,1)*~smaskp);
+                    sphi_pmz = sphip_pmz.*(ones(3,1)*smaskp) + sphim_pmz.*(ones(3,1)*~smaskp);
                 elseif length(sNperp) == 1
                     %mask0 = (sNperp == 0)%O-mode;
                     %%%%%%%%%% to be implemented %%%%%%%%%%
@@ -326,6 +333,7 @@ xyNparmax_rf(xymaskSquare_rf) = xyNpar_in(xymaskSquare_rf) + imag(xydNpar_in(xym
 wpe_ref = sqrt(ne_ref*qe^2/e0/me);
 %
 xyabsphi_pmz_rf = sqrt(abs(xyphip_rf).^2 + abs(xyphim_rf).^2 + abs(xyphiz_rf).^2);
+xyabsphi_pmz_rf(xyabsphi_pmz_rf == 0) = eps;
 %
 [xyBb_rf,xyBPb_rf,xyrb_rf,xyRb_rf] = mg_interp_jd(theta,XR,XZ,XBR,XBZ,XBphi,Rp,Zp,xythetab_rf,method);
 %
