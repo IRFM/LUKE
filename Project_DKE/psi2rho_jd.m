@@ -1,6 +1,7 @@
 function [rho] = psi2rho_jd(tokamak,psin,method)
 %
-% gives the normalized rho grid corresponding to the input normalized psi grid.
+% gives the normalized rho grid corresponding to the input normalized psi
+% grid.
 %
 %   INPUTS:
 %
@@ -12,7 +13,8 @@ function [rho] = psi2rho_jd(tokamak,psin,method)
 %
 %       - rho: normalized radius [1:nr]
 %
-% by Joan Decker <jodecker@alum.mit.edu> (MIT/RLE) and  Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC) 
+% by Joan Decker <jodecker@alum.mit.edu> (MIT/RLE) and  Yves Peysson
+% <yves.peysson@cea.fr> (CEA/DRFC) 
 %
 if nargin < 3
     method = 'linear';%Interpolation method 
