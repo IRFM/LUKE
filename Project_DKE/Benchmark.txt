@@ -142,11 +142,11 @@ by definition, xRR_fsav* = xRR_fsav./(xnhu/nhu_ref)./(xne/ne_ref) and the local 
 One radial location -> eTe = 0, eTe = 0, ref_mode = 1, norm_ref = 1, bounce_mode = 1 (drop tolerance = 1e-4)
 ---------------------------------------------------------------------------------------
 Z = 1, no imp, (H), xRR_fsav = 0.00021418 (local norm., Maxwellian, E/ED_fsav = 0.08, xRR_fsav (no bounce) = 0.00028454, rho = 0.031848, np=125, nmhu=120, pnmax_S = 15)
-xRR_fsav/xRR_fsav(no bounce) = 0.00021418/0.00028454 = 0.7527 [Eriksson-Helander = 07476]
+xRR_fsav/xRR_fsav(no bounce) = 0.00021418/0.00028454 = 0.7527 [Eriksson-Helander = 0.747]
 Z = 1, no imp, (H), xRR_fsav = 0.00019165  (local norm., lMaxwellian, E/ED_fsav = 0.08,xRR_fsav (no bounce) = 0.00028454 , rho = 0.05, np=125, nmhu=120, pnmax_S = 15)
-xRR_fsav/xRR_fsav(no bounce) =  0.00019165/0.00028454 = 0.6735 [Eriksson-Helander = 0.6838]
+xRR_fsav/xRR_fsav(no bounce) =  0.00019165/0.00028454 = 0.6735 [Eriksson-Helander = 0.683]
 Z = 1, no imp, (H), xRR_fsav =  0.00014337 (local norm., Maxwellian, E/ED_fsav = 0.08,xRR_fsav = 0.00028454, rho = 0.1, np=125, nmhu=120, pnmax_S = 15)
-xRR_fsav/xRR_fsav(no bounce) =  0.00014337/0.00028454 = 0.5038 [Eriksson-Helander = 0.5527]
+xRR_fsav/xRR_fsav(no bounce) =  0.00014337/0.00028454 = 0.5038 [Eriksson-Helander = 0.552]
 Z = 1, no imp, (H), xRR_fsav =  7.3178e-06 (local norm., Maxwellian, E/ED_fsav = 0.08,xRR_fsav = 0.00028454, rho = 0.5, np=125, nmhu=120, pnmax_S = 15)
 xRR_fsav/xRR_fsav(no bounce) =  7.3178e-06/0.00028454 = 0.0257 [Eriksson-Helander = 0]
 Z = 1, no imp, (H), xRR_fsav =  3.9169e-13 (local norm., Maxwellian, E/ED_fsav = 0.08,xRR_fsav = 0.00028454, rho = 0.95, np=125, nmhu=120, pnmax_S = 15)

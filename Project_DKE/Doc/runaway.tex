@@ -1,0 +1,99 @@
+
+The runaway loss rate $\overline{\Gamma }_{R}$ is also an important physical
+quantity that is determined by the code. It becomes significant when the
+Ohmic electric field is large. For the benchmarking procedure, the Ohmic
+electric field is then set to $\overline{E}=0.08.$ All other parameters are
+kept constant as compared to the benchmarking of the Ohmic conductivity done
+in Sec. \ref{conducsection}. The corresponding tokamak parameter file is
+nevertheless named ``CQL3D\_RUNAWAY'', since it corresponds to conditions
+that have been used for code comparison with the well know CQL3D program (%
+\cite{har93c1_IAEA}). By definition, the code is no more conservative since
+runaway electrons are leaving the domain of integration. Consequently, the
+particle loss must be compensated in order to keep the totalnumber of
+particle constant. In addition, in $3-D$ mode, there are numerical losses,
+as shown in the previous section, that overcome physical ones. Consequently,
+the same procedure is used and the Maxwellian solution is enforced at $i=1/2$
+while the density is normalized at each iteration. It has been cros-checked
+that the compensation of losses has no influence on the final solution and
+therefore the runaway rate.
+
+In a first step, a local analysis is performed, without considering bounce
+averaging. Here, only the Maxwellian electron-electron collision operator is
+considered, for allowing comparisons with analytical solutions, as shown in 
+\ref{table_run1}
+
+\begin{table}[tbp]
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+$Z_{eff}$ & $\overline{\Gamma }_{R}$ [DKE code] & $\overline{\Gamma }_{R}$
+[Kulsrud et al.] \\ \hline
+$1$ & $2.8487\times 10^{-4}$ & $3.177\times 10^{-4}$ \\ \hline
+$2$ & $1.5904\times 10^{-4}$ & $1.735\times 10^{-4}$ \\ \hline
+$3$ & $9.6565\times 10^{-5}$ & $1.047\times 10^{-4}$ \\ \hline
+$10$ & $8.1878\times 10^{-6}$ & $9.0\times 10^{-6}$ \\ \hline
+\end{tabular}
+\end{center}
+\caption{Runaway rate as function of the effective charge using the
+Maxwellian e-e collision model}
+\label{table_run1}
+\end{table}
+
+The agreement between numerical results obtained with the drift kinetic code
+and the code written by Kulsrud and coauthors is reasonably good \cite{kul73}%
+, a systematic difference of $-15\%$ being observed  for all $Z_{eff}$
+values. For $Z_{eff}=1$, the agreement is slightly better with the model of
+Kruskal-Bernstein \cite{kul73}, and the relative difference is now positive
+and less than $7\%$. The role played by the numerical grid is marginal, less
+than $1\%$. when  $n_{p}$ is varying from $88\ $to $125\ $or $165$ while $%
+n_{\xi _{0}}$ is kept constant at $120.$
+
+A full $3-D$ calculation has been performed with flat profiles at normalized
+radial positions on the spatial flux grid $\left[ 0.2,0.4,0.6,0.8\right] ,$
+giving the following radial positions $\rho =\left[
+0.14142,0.31623,0.5099,0.70711,0.90554\right] $. In that case, the code
+calculates itself the pitch-angle grid and the number of step is $n_{\xi
+_{0}}=168,$ while $n_{p}=125.$The runaway rate is found to be independent of
+the method of calculations, and the Kruskal-Bernstein is well recovered when 
+$Z_{eff}=1$ at all plasma radii. 
+
+Bounce averaged calculations have be performed first locally. As shown in
+Fig. \ref{ohmrun}, it is observed $\overline{\Gamma }_{R}$ decreases with
+the inverse aspect ratio $\epsilon .$ The influence of toroidicity on
+Dreicer generation, which is not predicted by the theory of Gurevitch \cite
+{gur61}, is in good agreement with never published calculations using the
+CQL3D code, but also simulations of runaways during tokamak disruptions \cite
+{eri03}. It is shown in Ref. \cite{eri03} that trapping effects may be
+approximately described by the relation
+\begin{equation}
+\overline{\Gamma }_{R}\left( \epsilon \right) \simeq \overline{\Gamma }%
+_{R}\left( \epsilon =0\right) \sqrt{1-2\epsilon }
+\end{equation}
+when $\epsilon \leq 0.5\ $while  $\overline{\Gamma }_{R}\left( \epsilon \geq %
+0.5\right) =0.$ The drift kinetic code confirms therefore this important
+result, that the runaway generation is nearly cancelled when $\epsilon \geq %
+0.5.$ 
+
+Similar results are obtained in $3-D$ mode, whatever the normalization
+reference of the electric field, at the plasma center, or at the local
+position. As expected, the runaway rate $\overline{\Gamma }_{R}$ is nearly
+independent of the sign of the electric field, and moreover, but also of the
+method (analytical or numerical) for calculating the bounce integrals. The
+relative accuracy which is less than 1\% close to the plasma center, tends
+to decrease down to 50\% at the plasma edge, but since $\overline{\Gamma }%
+_{R}$ is very small the error has only a weak influence\footnote{%
+It is important to note that the order of magnitude is always correct.}. 
+
+%TCIMACRO{
+%\TeXButton{Fig_runaway}{\fig{figures/runaway.eps}{Normalized Ohmic runaway rate as function of the inverse aspect ratio $\epsilon$}{ohmrun}{7cm} }}
+%BeginExpansion
+\fig{figures/runaway.eps}{Normalized Ohmic runaway rate as function of the inverse aspect ratio $\epsilon$}{ohmrun}{7cm} %
+%EndExpansion
+
+Once more, this demonstrates that numerical calculations of the bounce
+integrals is very accurate, even for finite inverse aspect ratio. The drop
+tolerance has been lowered in that case to $10^{-4}$ for ensuring a stable
+convergence, leading to a modest increase of the matrix sizes. However the
+rate of convergence is not affected, and the final result is obtained
+usually after $11-13$ iterations, even when several radial positions are
+considered.
