@@ -68,7 +68,7 @@ end
 %
 drmin = min(min(sqrt(diff(XR_S_dke).^2 + diff(XZ_S_dke).^2))); %close to lower bound on FS width
 ds = drmin/nsmin; %increment along ray path (m)
-smax = 2*max(sqrt(XR_S_dke(nr_dke,:).^2 + XZ_S_dke(nr_dke,:).^2)); %tokamak diagonal size
+smax = max(sqrt(XR_S_dke(nr_dke,:).^2 + XZ_S_dke(nr_dke,:).^2)); %tokamak diagonal size (I removed the 2*)
 %
 for ib = 1:nb_rf
     [s,sh,sZ,R,Z,phi,alpha,beta,gR,gZ,gphi] = raypath_prop_jd(yR_L(ib),yZ_L(ib),yalpha_L(ib),ybeta_L(ib),ds,smax);
@@ -170,6 +170,6 @@ xydnpar_rf(xytest_maskwaist_rf) = clum.*sqrt(1 - xynpar_rf(xytest_maskwaist_rf).
 %
 xyomega_ce_b_rf = qe*xyBb_rf/me;
 %
-xyn_rf = ceil(sqrt(1 - xynpar_rf.^2).*xyomega_rf./xyomega_ce_b_rf);
+xyn_rf = ceil(sqrt(1 - (xynpar_rf + xydnpar_rf).^2).*xyomega_rf./xyomega_ce_b_rf);
 %
 yb_rf = yb(1,:);
