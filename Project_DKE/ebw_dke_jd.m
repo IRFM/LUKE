@@ -66,11 +66,11 @@ for ib = 1:nb_ebw
 %    loadintstr = ['INT_',tokamak,'_',snpar,'.mat'];
     %
     if ~isnan(loadstr) & exist(loadstr) == 2
-        eval(['load ',loadstr,' xpsin_EBW_ht xNperp_EBW_ht x3eps_pmz_EBW_ht xPflow_EBW_ht xPabs_EBW_at']);
+        eval(['load ',loadstr,' xpsin_EBW_ht xtheta_EBW_ht xNperp_EBW_ht x3eps_pmz_EBW_ht xPflow_EBW_ht xPabs_EBW_at']);
 %    elseif exist(loadintstr) == 2
-%        eval(['load ',loadintstr,' xpsin_EBW_ht xNperp_EBW_ht x3eps_pmz_EBW_ht xPflow_EBW_ht xPabs_EBW_at']);
+%        eval(['load ',loadintstr,' xpsin_EBW_ht xtheta_EBW_ht xNperp_EBW_ht x3eps_pmz_EBW_ht xPflow_EBW_ht xPabs_EBW_at']);
 %    elseif exist(loadseekstr) == 2
-%        eval(['load ',loadseekstr,' xpsin_EBW_ht xNperp_EBW_ht x3eps_pmz_EBW_ht xPflow_EBW_ht xPabs_EBW_at']);
+%        eval(['load ',loadseekstr,' xpsin_EBW_ht xtheta_EBW_ht xNperp_EBW_ht x3eps_pmz_EBW_ht xPflow_EBW_ht xPabs_EBW_at']);
     else
         prec = 5e-4;
         xpsin_EBW = 0:prec:1;
@@ -83,14 +83,22 @@ for ib = 1:nb_ebw
             xnpar_EBW = repmat(xynpar_ebw(:,ib),[1,nr_EBW]);
         end    
 %
-        [xpsin_EBW_ht,xNperp_EBW_ht,x3eps_pmz_EBW_ht,xPflow_EBW_ht,xPabs_EBW_at] = ...
+        [xpsin_EBW_ht,xtheta_EBW_ht,xNperp_EBW_ht,x3eps_pmz_EBW_ht,xPflow_EBW_ht,xPabs_EBW_at] = ...
             disp_ebw_jd(tokamak,xpsin_EBW,xtheta_EBW,xnpar_EBW,omega_EBW);
 %
     end
-    xNperp = interp1(xpsin_EBW_ht,xNperp_EBW_ht,xpsin,'spline');
-    x3eps_pmz = interp1(xpsin_EBW_ht,x3eps_pmz_EBW_ht,xpsin,'spline');
-    xPflow = interp1(xpsin_EBW_ht,xPflow_EBW_ht,xpsin,'spline');
-    xPabs = interp1(xpsin_EBW_ht,xPabs_EBW_at,xpsin,'spline');       
+    for ir=1:nr
+        theta = xythetab_ebw(ir,ib);
+        mask = find(abs(xtheta_EBW_ht - theta) < 1e-5);
+        if isempty(mask),
+            error('The DKE and dispersion data are incompatible')
+        else
+            xNperp(ir,1) = interp1(xpsin_EBW_ht(mask),xNperp_EBW_ht(mask),xpsin(ir),'spline');
+            x3eps_pmz(ir,1:3) = interp1(xpsin_EBW_ht(mask),x3eps_pmz_EBW_ht(mask,:),xpsin(ir),'spline');
+            xPflow(ir,1) = interp1(xpsin_EBW_ht(mask),xPflow_EBW_ht(mask),xpsin(ir),'spline');
+            xPabs(ir,1) = interp1(xpsin_EBW_ht(mask),xPabs_EBW_at(mask),xpsin(ir),'spline');   
+        end
+    end
 %
     xynperp_ebw(:,ib) = xNperp;
     xyepolp_ebw(:,ib) = x3eps_pmz(:,1);  
