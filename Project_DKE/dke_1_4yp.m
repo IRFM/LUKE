@@ -266,9 +266,9 @@ if display_mode >=1,
 	if (store_mode == 0), disp('   - Matrices storage in RAM (fast mode)');
 	else                  disp('   - Matrices storage in disk file (slow mode)');end
 %Numerical matrix inversion procedure
-	if (invproc == 1),  disp('   - QMR iterative matrix inversion method');
-	elseif (invproc == 2),  disp('   - GMRES iterative matrix inversion method');
-	elseif (invproc == 3),  disp('   - CGS iterative matrix inversion method');end
+	if (invproc == 1),  disp('   - CGS iterative matrix inversion method');
+	elseif (invproc == 2),  disp('   - BICG iterative matrix inversion method');
+	elseif (invproc == 3),  disp('   - QMR iterative matrix inversion method');end
 	disp(['   - Recommended drop tolerance: ',num2str(prec_inv_recommanded),' [input: ',num2str(param_inv(1)),']']);
 	disp(['   - Maximum number of iterations for the matrix inversion method: ',num2str(maxit_inv)]);	
 %Boundary and normalization conditions
@@ -539,6 +539,7 @@ normf1 = zeros(nr,nit_f);
 curr0 = zeros(nr,nit_f);
 curr1 = zeros(nr,nit_f);
 prec_curr = zeros(nr,nit_f);
+prec_normf = zeros(nr,nit_f);
 residu_f = ones(nr,nit_f);
 prec_residu_f = ones(nr,nit_f);
 %
@@ -2118,17 +2119,15 @@ for it_f = 2:nit_f,
 %
 		MMXR_t = MMXPDI_f_t*MMXq_t - MMXPC_f_t*MMXf0_t;%Residu calculation for matrix inversion
 %
-		if invproc == 1,%qmr iterative method
-			[MMXS_t,flaginv_f] = qmr(MMXPC_f_t,MMXR_t,prec_inv,maxit_inv,MMXL_f_t,MMXU_f_t);
-		elseif invproc == 2,%gmres iterative method		
-			[MMXS_t,flaginv_f] = gmres(MMXPC_f_t,MMXR_t,prec_inv,maxit_inv,MMXL_f_t,MMXU_f_t); 
-		elseif invproc == 3,%cgs iterative method
+		if invproc == 1,%cgs iterative method
 			[MMXS_t,flaginv_f] = cgs(MMXPC_f_t,MMXR_t,prec_inv,maxit_inv,MMXL_f_t,MMXU_f_t);
+		elseif invproc == 2,%bicg iterative method		
+			[MMXS_t,flaginv_f] = bicg(MMXPC_f_t,MMXR_t,prec_inv,maxit_inv,MMXL_f_t,MMXU_f_t); 
+		elseif invproc == 3,%qmr iterative method
+			[MMXS_t,flaginv_f] = qmr(MMXPC_f_t,MMXR_t,prec_inv,maxit_inv,MMXL_f_t,MMXU_f_t);
 		end
 %
-		if flaginv_f == 1,
-			info_dke_yp(2,'WARNING: No convergence in the matrix inversion subroutine for the zero order Fokker-Planck equation');
-		elseif flaginv_f == 2,
+      if flaginv_f == 2,
 			error('WARNING: Matrix ill-conditionned. No inversion possible for the zero order Fokker-Planck equation. Try to reduce drop tolerance parameter for LU factorization...!');
 		end
 %
@@ -2150,7 +2149,8 @@ for it_f = 2:nit_f,
  			normf1(ir,it_f) = 2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,Xf1,2),1);
 			curr0(ir,it_f) = 2*pi*integral_dke_jd(dpn',pn2'.*(pn'./gamma').*integral_dke_jd(dmhu,Xmhu.*XXf0(:,:,ir),2),1)*xne_norm(ir)/normf0(ir,it_f);
 			curr1(ir,it_f) = 2*pi*integral_dke_jd(dpn',pn2'.*(pn'./gamma').*integral_dke_jd(dmhu,Xmhu.*Xf1,2),1)*xne_norm(ir)/normf1(ir,it_f);
-			prec_curr(ir,it_f) = abs((curr1(ir,it_f) - curr0(ir,it_f))/curr0(ir,it_f));
+			prec_curr(ir,it_f) = (curr1(ir,it_f) - curr0(ir,it_f))/curr0(ir,it_f);
+			prec_normf(ir,it_f) = (normf1(ir,it_f) - normf0(ir,1))/normf0(ir,1);
 			residu_f(ir,it_f) = sqrt(2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,(Xf1-XXf0(:,:,ir)).^2.*XXf0(:,:,ir),2),1)/normf1(ir,it_f)/dtn/dtn);%As done by J.P. Bizarro et al., Nuclear Fusion, 37 (1997) 1509
 			prec_residu_f(ir,it_f) = abs((residu_f(ir,it_f) - residu_f(ir,it_f-1))/residu_f(ir,it_f));%For radial transport calculations	
 %
@@ -2158,9 +2158,8 @@ for it_f = 2:nit_f,
 				info_dke_yp(2,['Iteration : ',int2str(it_f),' / ',int2str(nit_f),', Residu = ',num2str(residu_f(ir,it_f))]);
 				info_dke_yp(2,['   Normalized poloidal magnetic flux: ',num2str(xpsin(ir))]);
 				info_dke_yp(2,['      Normalized radius on LFS midplane: ',num2str(xrho(ir))]);
-				disp(['                - Density [t-1]: ',num2str(normf0(ir,it_f-1)),' - [t]: ',num2str(normf1(ir,it_f))]);;
-				disp(['                - Current [t-1]: ',num2str(curr0(ir,it_f-1)),' - [t]: ',num2str(curr1(ir,it_f))]);
-				disp(['                - Current relative accuracy [t]: ',num2str(prec_curr(ir,it_f))]);
+				disp(['                - Density [t-1]: ',num2str(normf0(ir,it_f-1)),' - [t]: ',num2str(normf1(ir,it_f)),' / Relative variation [t-t0]: ',num2str(prec_normf(ir,it_f))]);               
+				disp(['                - Current [t-1]: ',num2str(curr0(ir,it_f-1)),' - [t]: ',num2str(curr1(ir,it_f)),' / Current relative accuracy [dt]: ',num2str(prec_curr(ir,it_f))]);
 			end
 %
 			if display_mode == 2,
@@ -2357,12 +2356,12 @@ if dke_mode == 1,
 %
 			MMXR_t = MMXPDI_g_t*(MMXq_g_t + MMXq_tp_t) - MMXPC_g_t*MMXf0_g_t;
 %
-			if invproc == 1,%qmr iterative method
-				[MMXS_t,flaginv_g] = qmr(MMXPC_g_t,MMXR_t,prec_inv,maxit_inv,MMXL_g_t,MMXU_g_t);
-			elseif invproc == 2,%bicgstab iterative method
-				[MMXS_t,flaginv_g] = bicgstab(MMXPC_g_t,MMXR_t,prec_inv,maxit_inv,MMXL_g_t,MMXU_g_t);
-			elseif invproc == 3,%cgs iterative method
+			if invproc == 1,%cgs iterative method
 				[MMXS_t,flaginv_g] = cgs(MMXPC_g_t,MMXR_t,prec_inv,maxit_inv,MMXL_g_t,MMXU_g_t);
+			elseif invproc == 2,%bicg iterative method
+				[MMXS_t,flaginv_g] = bicg(MMXPC_g_t,MMXR_t,prec_inv,maxit_inv,MMXL_g_t,MMXU_g_t);
+			elseif invproc == 3,%qmr iterative method
+				[MMXS_t,flaginv_g] = qmr(MMXPC_g_t,MMXR_t,prec_inv,maxit_inv,MMXL_g_t,MMXU_g_t);
 			end
 %
 			if flaginv_g == 1,
