@@ -1,4 +1,4 @@
-function [theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,Ncoils,BeLi,psia,xmhu0T2] = equilibrium_jd(tokamak,xpsin,method)
+function [theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,Ncoils,BeLi,psia,xmhu0T2] = equilibrium_jd(tokamak,xpsin,method)
 %
 %   This function interpolates the equilibrium data on the radial grid.
 %   It also calculates several quantities linked to the equilibrium, such
@@ -36,6 +36,7 @@ function [theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xTe,xne,xzTi,xzni,zZi,zmi,xZeff
 %       - xB0: minimum magnetic field on a flux-surface [1,nr]
 %       - xR0: corresponding major radius [1,nr]
 %       - xBT0: corresponding toroidal field [1,nr]
+%       - xrho: normalized radius on the horizontal LFS midplane [1,nr]
 %       - xTe: electron temperature [1,nr]
 %       - xne: electron density [1,nr]
 %       - xzTi: ion temperatures [ni,nr]
@@ -90,6 +91,9 @@ XZ = interp1(ppsin,Z,xpsin);
 XBR = interp1(ppsin,BR,xpsin);
 XBZ = interp1(ppsin,BZ,xpsin);
 XBphi = interp1(ppsin,BPHI,xpsin);
+%
+xrho = (XR(:,1)' - Rp)/ap;%Normalized radius on the horizontal LFS midplane 
+%xdrhodpsi =                         
 %
 xTe = interp1(ppsin,pTe,xpsin);
 xne = interp1(ppsin,pne,xpsin);
