@@ -130,8 +130,22 @@ if rf_list(5) == 1 % hot plasma ECCD***** to be implemented *****
     nb_list(5) = size(waveparam_ecw,2);
 end
 %
-if rf_list(6) == 1 % hot plasma EBWCD***** to be implemented *****
-    waveparam_ebw = ebw_dke_jd(tokname,xpsin,xpsin_dke,xdpsin_dke,xyPabs_tot_rf_fsav_in,betath_ref,ne_ref,xrbetath',xrnhuth',xTe_norm,xne_norm',xzni_norm,zZi',zmi',Rp,ap,bounce_mode);
+if rf_list(6) >= 1 % hot plasma EBWCD
+    if rf_list(6) == 1 % no RT calculations
+        [xyY_ebw,xyomega_ebw,xynpar_ebw,xydnpar_ebw,xynparmin_ebw,xynparmax_ebw,...
+                xyP0_in_ebw,xyfinc_ebw,xythetab_ebw,xyopt_ebw,xyn_ebw] = psim_ebw_jd(xrho);
+        nb_list(6) = size(xyn_ebw,2);
+        xyprop_dke = [xyprop_dke,zeros(nr_dke,nb_list(6))];
+        xyPinc_in = [xyPinc_in,zeros(nr,nb_list(6))];
+        ibb = ibb + nb_list(6);
+        %waveparam_ecc = coldeccd_dke_jd(ne_ref,xne_norm,xzni_norm,zZi,zmi,lnc_e_ref,theta,XR,XZ,XBR,XBZ,XBphi,Rp,Zp,...
+        %    xyY_ec,xyomega_ec,xynpar_ec,xydnpar_ec,xynparmin_ec,xynparmax_ec,xyP0_in_ec,xyfinc_ec,xythetab_ec,xyopt_ec,xyepolc_ec,xyn_ec);
+        waveparam_ebw = ebw_dke_jd(tokamak,xpsin,ne_ref,lnc_e_ref,theta,XR,XZ,XBR,XBZ,XBphi,Rp,Zp,...
+                xyY_ebw,xyomega_ebw,xynpar_ebw,xydnpar_ebw,xynparmin_ebw,xynparmax_ebw,xyP0_in_ebw,xyfinc_ebw,xythetab_ebw,xyopt_ebw,xyn_ebw);
+ %                                (tokname,xpsin,xpsin_dke,xdpsin_dke,xyPabs_tot_rf_fsav_in,betath_ref,ne_ref,xrbetath',xrnhuth',xTe_norm,xne_norm',xzni_norm,zZi',zmi',Rp,ap,bounce_mode);
+    elseif rf_list(6) == 2 % RT calculations 
+        %********* to be implemented **********
+    end
     waveparam = [waveparam,waveparam_ebw];
     nb_list(6) = size(waveparam_ebw,2);
 end
