@@ -1,9 +1,12 @@
-function print_jd(opt,savename,fignum)
+function print_jd(opt,savename,fignum,res)
 %
 % prints (opt = 0) and (opt = 1) / or (opt = 2, default) saves to file the current figure under the name savename
 %
 % by J. Decker (jodecker@alum.mit.edu) 09/28/04
 %
+if nargin < 4
+    res = 600;
+end
 if nargin < 3
     fignum = NaN;
 end
@@ -39,7 +42,8 @@ if opt >= 1,
         mkdir('figures')
     end
     cd figures
-    eval(['print -depsc -loose ',savename,'.eps']); 
+    eval(['print -depsc -loose -r',num2str(res),' ',savename,'.eps']); 
+    eval(['print -dmeta -r',num2str(res),' ',savename,'.emf']); 
     saveas(gcf,savename,'fig')
     cd ..
 end
