@@ -152,12 +152,12 @@ elseif strcmp(name,'TS') == 1,
 %
 %Fast electron bremsstrahlung tomography (if exists)
 %
-	HXR{1} = [4,4];%Major radius on the HXR chord (m) [1,nchord]
-	HXR{2} = [0,0];%Vertical position on the HXR chord (m) [1,nchord]
-	HXR{3} = [4.5,4.5];%Major position of one point on HXR chord (R_hxr_2 > R_hxr_1) (m) [1,nchord]
-	HXR{4} = [0.3,-0.3];%Vertical position on the HXR chord (m) [1,nchord]
+%	HXR{1} = [4,4];%Major radius on the HXR chord (m) [1,nchord]
+%	HXR{2} = [0,0];%Vertical position on the HXR chord (m) [1,nchord]
+%	HXR{3} = [4.5,4.5];%Major position of one point on HXR chord (R_hxr_2 > R_hxr_1) (m) [1,nchord]
+%	HXR{4} = [0.3,-0.3];%Vertical position on the HXR chord (m) [1,nchord]
 %
-	HXR{5} = [2.1010 2.1422]*1e-9;
+%	HXR{5} = [2.1010 2.1422]*1e-9;
 %	Parameters for (date >= 19980501 & date < 19991118),%shot numbers >24000 and <=28353
 %	HXR{5} = [2.1010 2.1422 2.1794 2.2160 2.2557 2.2912 2.3261 2.3641 2.3978 2.4308 2.4597];%Geometrical factor (m^2/str) [1,nchord]
 %	HXR{5} = [HXR{5} 2.4308 2.3978 2.3641 2.3261 2.2912 2.2557 2.2160 2.1794 2.1422 2.1010];		
