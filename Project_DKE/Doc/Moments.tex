@@ -1897,7 +1897,7 @@ for angle relation between $\chi ,$ $\theta _{e}$ and $\theta _{d}$,
 P_{m}\left( \cos \chi \right) =P_{m}\left( \cos \theta _{d}\right)
 P_{l}\left( \xi \right) +2\sum_{n=m}^{n=m}\frac{\left( m-n\right) !}{\left(
 m+n\right) !}P_{m}^{n}\left( \cos \theta _{d}\right) P_{m}^{n}\left( \xi
-\right) \cos n\varphi
+\right) \cos\left( n\varphi\right)
 \end{equation}
 where $P_{m}^{n}\left( x\right) $ is the associated Legendre function of
 degree $m$ and order $n$, expression (\ref{LegendreProj1}) becomes
@@ -1916,7 +1916,7 @@ since
 \begin{equation}
 2\int_{0}^{2\pi }d\varphi \int_{-1}^{+1}\sum_{n=m}^{n=m}\frac{\left(
 m-n\right) !}{\left( m+n\right) !}P_{m}^{n}\left( \cos \theta _{d}\right)
-P_{m}^{n}\left( \xi \right) \cos n\varphi d\xi =0
+P_{m}^{n}\left( \xi \right) \cos\left( n\varphi\right) d\xi =0
 \end{equation}
 after permutation of integrals over $\xi $ and $\varphi .$ Using finally the
 orthogonality relation
@@ -1989,20 +1989,21 @@ when the distribution function and the plasma equilibrium, i.e. $\widehat{b}%
 
 From expression (\ref{bremLegendre}), it is also possible to extract
 interesting local quantities about the bremsstrahlung, like the mean
-radiation level in all directions of the configuration space $dn_{k}\left(
+radiation level in all directions of the configuration space $dn_{k}^{4\pi}\left(
 t,k,\mathbf{X}\right) /dtdkd\Omega $
 \begin{eqnarray}
-\frac{dn_{k}\left( t,k,\mathbf{X}\right) }{dtdkd\Omega } &=&2\pi
+\frac{dn_{k}^{4\pi}\left( t,k,\mathbf{X}\right) }{dtdk d\Omega} &=&\frac{2\pi}{4\pi}
 \int_{0}^{\pi }\frac{dn_{k}\left( t,k,\mathbf{X},\cos \theta _{d}\right) }{%
 dtdkd\Omega }d\theta _{d}  \nonumber \\
-&=&2\pi \sum_{m=0}^{\infty }\left( m+1/2\right) I_{B}^{\left( m\right)
+&=&\frac{1}{2} \sum_{m=0}^{\infty }\left( m+1/2\right) I_{B}^{\left( m\right)
 }\left( t,\mathbf{X},p,k\right) \int_{0}^{\pi }P_{m}\left( \cos \theta
 _{d}\right) d\theta _{d}
 \end{eqnarray}
+
 and since $P_{0}\left( x\right) =1,$ using the orthogonality relation (\ref
 {orthoLegendre}), one obtains
 \begin{equation}
-\frac{dn_{k}\left( t,k,\mathbf{X}\right) }{dtdkd\Omega }=2\pi I_{B}^{\left(
+\frac{dn_{k}^{4\pi}\left( t,k,\mathbf{X}\right) }{dtdkd\Omega }=\frac{1}{2} I_{B}^{\left(
 m=0\right) }\left( t,\mathbf{X},p,k\right)
 \end{equation}
 
