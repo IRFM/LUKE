@@ -23,7 +23,7 @@ dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode] = psim_dke_1yp;
 %by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
 %
 snumber = 1;%Simulation number
-tokname = 'CMOD';%Tokamak equilibrium scenario (see ptok_dke_1yp.m) in EQUIL_tokname file)
+tokname = 'D3D';%Tokamak equilibrium scenario (see ptok_dke_1yp.m) in EQUIL_tokname file)
 loadequil = 2;%0: Load already existing equilibrium file, 1: create equilibrium with HELENA (needs mex file), 2: create equilibrium file (with idealequil_f_jd.m function)
 qopt = 1;%Option for q profile. (0): constant (default), (1): from qmin and eq (for HELENA, it is used only for the psi grid guess)
 %
@@ -62,8 +62,8 @@ spfac = 20;%reduction factor for the supergrid used in collision integrals
 %
 %Values of the radial flux grid [1,p] (If one radial value: local calculation only)
 %
-psin_S = [];%5.286742555900838e-002; %[0.1]%(rho = 0.25 in CMOD)
-rho_S = [0.7];%[0.05:0.07:0.9];%;0.03322100141578101;0.71365;
+psin_S = [0.50:0.025:0.65];%5.286742555900838e-002; %[0.1]%(rho = 0.25 in CMOD)
+rho_S = [];%[0.05:0.07:0.9];%;0.03322100141578101;0.71365;
 %
 psin_display = NaN;%Approximate radial value at which results are displayed if display_mode >= 1 [1,1]
 rho_display = 0.1;
@@ -86,8 +86,8 @@ eepsi = 0;%Exponent for Ohmic electric field
 %
 rf_list(1) = 0;%[0 or 1] LH test calculations (see psim_ideallhcd_jd) 
 rf_list(2) = 0;%[0 or 1] EC test calculations (see psim_idealeccd_jd) 
-rf_list(3) = 1;%[0 or 1] Cold plasma LHCD calculations (see psim_coldlhcd_jd); 
-rf_list(4) = 0;%[0,1 or 2] Cold plasma ECCD calculations (see psim_coldeccd_jd); (2): RT calculations in wpe << wce limit (see ??) 
+rf_list(3) = 0;%[0 or 1] Cold plasma LHCD calculations (see psim_coldlhcd_jd); 
+rf_list(4) = 2;%[0,1 or 2] Cold plasma ECCD calculations (see psim_coldeccd_jd); (2): RT calculations in wpe << wce limit (see psim_straightray_jd) 
 rf_list(5) = 0;%*** to be implemented *** Hot plasma ECCD calculations (see psim_warmeccd_jd)
 rf_list(6) = 0;%*** to be implemented *** (1): EBW calculations (see psim_ebw_jd)
 %
