@@ -1393,17 +1393,17 @@ more conserved, since the flux $S_{p}\neq 0$ at $p=p_{\max }$, on the
 boundary of the integration domain. The runaway rate $\Gamma _{R}$ is given
 by the relation 
 \begin{equation}
-\Gamma _{R}\left( \psi ,\theta ,p\right) =2\pi p^{2}\int_{-1}^{+1}S_{p}d\xi 
+\Gamma _{R}\left( \psi ,\theta ,p\right) =2\pi p^{2}\int_{-1}^{+1}S_{p}d\xi
 \end{equation}
 
 Since all quantities are calculated at the spatial location where $B$ is
-minimum, one have by definition in a straightforward manner
+minimum, one have by definition in a straightforward manner 
 \begin{equation}
-\Gamma _{R}^{\left( 0\right) }\left( \psi ,p\right) =2\pi %
+\Gamma _{R}^{\left( 0\right) }\left( \psi ,p\right) =2\pi
 p^{2}\int_{-1}^{+1}S_{p}^{\left( 0\right) }d\xi _{0}
 \end{equation}
 where $S_{p}^{\left( 0\right) }$ results from the solution of the
-bounce-averaged Fokker-Planck equation. 
+bounce-averaged Fokker-Planck equation.
 
 The flux-surface averaged runaway rate $\left\langle \Gamma
 _{R}\right\rangle _{V}$ is given by the relation 
@@ -1433,5 +1433,82 @@ S_{p}\right\} \lambda \widetilde{q}\left( \psi \right) d\xi _{0}  \nonumber
 &=&\frac{\widetilde{q}\left( \psi \right) }{\widehat{q}\left( \psi \right) }2%
 \pi p^{2}\int_{-1}^{+1}\lambda S_{p}^{\left( 0\right) }d\xi _{0}
 \end{eqnarray}
+
+\subsection{Magnetic ripple losses}
+
+Though magnetic ripple losses is a full $4-D$ problem, it can be considered
+in a simple manner by defining a super-trapped region in which particle
+escape the plasma. An heuristic description of this procress may be obtained
+by considering a Krook term in the Fokker-Planck equation,
+\begin{equation}
+\left. \frac{\partial f_{0}^{\left( 0\right) }}{\partial t}\right| =\frac{%
+f_{0}^{\left( 0\right) }\left( \psi ,p,\xi _{0}\right) }{\tau _{MR}\left(
+\psi ,p,\xi _{0}\right) }
+\end{equation}
+where $\tau _{MR}\left( \psi ,p,\xi _{0}\right) $ is the time for electrons
+for leaving the magnetic configuration. The momentum dependence arises from
+the detrapping probability by collisions, while the pitch-angle variation is
+related to the condition that only electrons whose banana tip enter this
+region are locally trapped in the magnetic well. This defines a bounded area
+in momentum space that depends from radial position, where electrons, once
+entering this domain, do not contribute anymore to the overall momentum
+dynamics. Therefore, a simple method is to consider that $\tau _{MR}\ll \tau
+_{b}.$ Conversely, in order to neglect this effect, $\tau _{MR}$ value must
+be much larger that all time scales. 
+
+Obviously, by introducing a Krook term, the Fokker-Planck equation is no
+more conservative, since a fraction of fast electrons is leaving the plasma
+definitively. Assuming the loss rate is small, a steady-state solution may
+be found, provided some external source of electron is added, in order to
+keep the density locally constant. This important point is discussed in
+Sec.***. The new form of the bounce-averaged Fokker-Planck equation is 
+\begin{equation}
+\frac{\partial f_{0}^{\left( 0\right) }}{\partial t}+\nabla _{\left( \psi
+,p,\xi _{0}\right) }\cdot \mathbf{S}^{\left( 0\right) }+\frac{f_{0}^{\left(
+0\right) }}{\tau _{MR}}=0
+\end{equation}
+and in this stationnary limit $\lim_{t\rightarrow \infty }\partial %
+f_{0}^{\left( 0\right) }/\partial t=0,$
+
+\begin{equation}
+\nabla _{\left( \psi ,p,\xi _{0}\right) }\cdot \mathbf{S}^{\left( 0\right)
+}=-\frac{f_{0}^{\left( 0\right) }}{\tau _{MR}}  \label{Steadyripple}
+\end{equation}
+
+Losses are assumed to be mainly local, since they occur on a very short time
+scale as compared to the fast electron transport one. Therefore, only the
+momentum dynamics is considered. Integrating equation (\ref{Steadyripple})
+over the volume $V_{MR}^{\mathbf{p}}$ in momentum space corresponding to $%
+\tau _{MR}\ll \tau _{b},$ 
+\begin{equation}
+2\pi \iint_{V_{MR}^{\mathbf{p}}}\nabla _{\left( p,\xi _{0}\right) }\cdot 
+\mathbf{S}^{\left( 0\right) }Jdpd\xi _{0}=-2\pi \iint_{V_{MR}^{\mathbf{p}}}%
+\frac{f_{0}^{\left( 0\right) }}{\tau _{MR}}Jdpd\xi _{0}
+\end{equation}
+wher $J$ is the Jacobian of the bounce-averaging transform. Using the
+Green-Ostrogradsky theorem, 
+\begin{equation}
+2\pi \iint_{S_{MR}^{\mathbf{p}}}dS\cdot \mathbf{S}^{\left( 0\right) }Jdpd\xi
+_{0}=-2\pi \iint_{V_{MR}^{\mathbf{p}}}\frac{f_{0}^{\left( 0\right) }}{\tau
+_{MR}}Jdpd\xi _{0}
+\end{equation}
+Let the supertrapped domain being defined by the double Heaviside function
+\begin{equation}
+H_{MR}\left( \psi ,p,\xi _{0}\right) =H\left( p-p_{c}\right) H\left( \left|
+\xi _{0}\right| -\xi _{ST0}\right) 
+\end{equation}
+
+Two methods may allow to calculate the magnetic ripple loss rate. The first
+one is 
+\[
+\Gamma _{MR}^{\left( 0\right) }\left( \psi ,p\right) =2\pi %
+p_{c}^{2}\int_{-\xi _{0ST}}^{+\xi _{0ST}}S_{p}d\xi +2\pi p_{c}^{2}\int_{-\xi
+_{0ST}}^{+\xi _{0ST}}S_{p}d\xi 
+\]
+while the second is
+\[
+\Gamma _{MR}^{\left( 0\right) }\left( \psi ,p\right) =-2\pi %
+\int_{p_{c}}p\max \frac{f_{0}^{\left( 0\right) }}{\tau _{MR}}Jdpd\xi _{0}
+\]
 
 \subsection{ Bremsstrahlung emission}

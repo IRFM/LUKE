@@ -7,29 +7,23 @@ Momentum dynamics is described in spherical coordinates, because collisions
 is the dominant physical process for current drive and matrices are
 therefore expected to be well conditionned. Consequently, internal
 boundaries must be specified at $p=0$ and $\left| \xi _{0}\right| =1$ which
-corresponds to the conditions 
+correspond to the condition 
 \begin{equation}
-\left\{ 
 \begin{array}{l}
-f_{0}^{\left( 0\right) }\left( \psi ,-p,\arccos \xi _{0}\right)
-=f_{0}^{\left( 0\right) }\left( \psi ,-p,\pi -\arccos \xi _{0}\right) \\ 
-f_{0}^{\left( 0\right) }\left( \psi ,p,-\arccos \xi _{0}\right)
-=f_{0}^{\left( 0\right) }\left( \psi ,p,\arccos \xi _{0}\right) \\ 
-f_{0}^{\left( 0\right) }\left( \psi ,p,\pi +\arccos \xi _{0}\right)
-=f_{0}^{\left( 0\right) }\left( \psi ,p,\pi -\arccos \xi _{0}\right)
+f_{0}^{\left( 0\right) }\left( \psi ,-p,\xi _{0}\right) =f_{0}^{\left(
+0\right) }\left( \psi ,p,-\xi _{0}\right) 
 \end{array}
-\right\}
 \end{equation}
 
-Since the type of equation to be solved correspond to a Neuman problem,
-gradients must be specified at the internal boundaries. To fullfil above
-conditions, one must thus determine $\left( \Delta p,\Delta \xi _{0}\right) $
-at $p=0$ and $\left| \xi _{0}\right| =1$ for the flux grid only, since the
-distribution grid is interlaced by definition with the flux one. Therefore,
-starting from grids definition given in Sec. ***, 
+Here Neumann type boundary conditions are used, and therefore only gradients
+must be specified at the internal boundaries. One must thus determine $%
+\left( \Delta p,\Delta \xi _{0}\right) $ at $p=0$ and $\left| \xi
+_{0}\right| =1$ for the flux grid only, since the distribution and flux
+grids are interlaced by definition. Therefore, starting from grids
+definition given in Sec. ***, 
 \begin{equation}
-\Delta \xi _{0,0}=\frac{\Delta \xi _{0,1/2}+\Delta \xi _{0,-1/2}}{2}=\Delta
-\xi _{0,1/2}=\xi _{0,1}-\xi _{0,0}=2\xi _{0,1/2}+1
+\Delta \xi _{0,0}=\frac{\Delta \xi _{0,1/2}+\Delta \xi _{0,-1/2}}{2}=\Delta %
+\xi _{0,1/2}=\xi _{0,1}-\xi _{0,0}=2\left( \xi _{0,1/2}+1\right) 
 \end{equation}
 as $\Delta \xi _{0,1/2}=\Delta \xi _{0,-1/2},$ $\xi _{0,1/2}=\frac{\xi
 _{0,1}+\xi _{0,0}}{2}$et $\xi _{0,0}=-1.$
@@ -43,7 +37,7 @@ _{0,n_{\xi }-1}=1-\xi _{0,n_{\xi }-1}
 since $\Delta \xi _{0,n_{\xi }+1/2}=\Delta \xi _{0,n_{\xi }-1/2}.$
 Furthermore, since by definition, 
 \begin{equation}
-\xi _{0,n_{\xi }-1/2}=\frac{\xi _{0,n_{\xi }}+\xi _{0,n_{\xi }-1}}{2}=\frac{%
+\xi _{0,n_{\xi }-1/2}=\frac{\xi _{0,n_{\xi }}+\xi _{0,n_{\xi }-1}}{2}=\frac{
 1+\xi _{0,n_{\xi }-1}}{2}
 \end{equation}
 one obtains finally
@@ -66,18 +60,16 @@ because $p_{0}=0.$
 
 It is important to note that internal boundary conditions are only needed in
 the evaluation of the cross-derivative terms, since in the discrete form of
-the Fokker-Planck equation using two grids, as shown, in Sec. ***, it is
-automatically fullfiled. Indeed, at fixed $\psi _{l+1/2},$%
+the Fokker-Planck equation using two grids, as shown, in Sec. ***, they are
+automatically fullfiled for other terms. Indeed, at fixed $\psi _{l+1/2},$%
 \begin{eqnarray}
 \left. \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) 
-}p^{2}\frac{\partial f^{\left( 0\right) }}{\partial p}\right|
-_{l+1/2,1/2,j+1/2}^{(k+1)} &=&\frac{\widetilde{q}\left( \psi _{l+1/2}\right) 
-}{B_{\min }\left( \psi _{l+1/2}\right) }\left. \frac{\partial \left( p^{2}%
-\mathbf{S}_{p}^{\left( 0\right) }\right) }{\partial p}\right|
-_{l+1/2,1/2,j+1/2}^{(k+1)}  \nonumber \\
-&&-\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
-_{l+1/2}\right) }\frac{p_{1/2}}{\lambda \left( \psi _{l+1/2},\xi
-_{0,j+1/2}\right) }\times   \nonumber \\
+}p^{2}\nabla _{\mathbf{p}}\cdot \mathbf{S}_{\mathbf{p}}^{\left( 0\right)
+}\right| _{l+1/2,1/2,j+1/2}^{(k+1)} &=&\frac{\widetilde{q}_{l+1/2}}{B_{\min
+,l+1/2}}\left. \frac{\partial \left( p^{2}\mathbf{S}_{p}^{\left( 0\right)
+}\right) }{\partial p}\right| _{l+1/2,1/2,j+1/2}^{(k+1)}  \nonumber \\
+&&-\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}\frac{p_{1/2}}{\lambda
+^{l+1/2,j+1/2}}\times  \nonumber \\
 &&\left. \frac{\partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}%
 \lambda \left( \psi ,\xi _{0}\right) \mathbf{S}_{\xi }^{\left( 0\right)
 }\right) \right| _{l+1/2,1/2,j+1/2}^{(k+1)}
@@ -86,13 +78,12 @@ gives
 
 \begin{eqnarray}
 \left. \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) 
-}p^{2}\frac{\partial f^{\left( 0\right) }}{\partial p}\right|
-_{l+1/2,1/2,j+1/2}^{(k+1)} &=&\frac{\widetilde{q}\left( \psi _{l+1/2}\right) 
-}{B_{\min }\left( \psi _{l+1/2}\right) }\frac{p_{1}^{2}\mathbf{S}%
-_{p,l+1/2,1,j+1/2}^{\left( 0\right) (k+1)}}{\Delta p_{1/2}}  \nonumber \\
-&&-\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
-_{l+1/2}\right) }\frac{p_{1/2}}{\lambda \left( \psi _{l+1/2},\xi
-_{0,j+1/2}\right) }\times   \nonumber \\
+}p^{2}\nabla _{\mathbf{p}}\cdot \mathbf{S}_{\mathbf{p}}^{\left( 0\right)
+}\right| _{l+1/2,1/2,j+1/2}^{(k+1)} &=&\frac{\widetilde{q}_{l+1/2}}{B_{\min
+,l+1/2}}\frac{p_{1}^{2}\mathbf{S}_{p,l+1/2,1,j+1/2}^{\left( 0\right) (k+1)}}{%
+\Delta p_{1/2}}  \nonumber \\
+&&-\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}\frac{p_{1/2}}{\lambda
+^{l+1/2,j+1/2}}\times  \nonumber \\
 &&\left. \frac{\partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}%
 \lambda \left( \psi ,\xi _{0}\right) \mathbf{S}_{\xi }^{\left( 0\right)
 }\right) \right| _{l+1/2,1/2,j+1/2}^{(k+1)}  \label{boundary_p}
@@ -101,45 +92,42 @@ since $p_{0}^{2}\mathbf{S}_{p,l+1/2,0,j+1/2}^{\left( 0\right) (k+1)}=0$ with
 the flux grid here considered, at $p_{0}=0$. In a similar way, 
 \begin{eqnarray}
 &&\left. \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi
-\right) }p^{2}\frac{\partial f^{\left( 0\right) }}{\partial p}\right|
-_{l+1/2,i+1/2,1/2}^{(k+1)}  \nonumber \\
-&=&\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
-_{l+1/2}\right) }\left. \frac{\partial \left( p^{2}\mathbf{S}_{p}^{\left(
-0\right) }\right) }{\partial p}\right| _{l+1/2,i+1/2,1/2}^{(k+1)} \\
-&&-\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
-_{l+1/2}\right) }\frac{p_{i+1/2}}{\lambda \left( \psi _{l+1/2},\xi
-_{0,1/2}\right) }\times   \nonumber \\
+\right) }p^{2}\nabla _{\mathbf{p}}\cdot \mathbf{S}_{\mathbf{p}}^{\left(
+0\right) }\right| _{l+1/2,i+1/2,1/2}^{(k+1)}  \nonumber \\
+&=&\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}\left. \frac{\partial \left(
+p^{2}\mathbf{S}_{p}^{\left( 0\right) }\right) }{\partial p}\right|
+_{l+1/2,i+1/2,1/2}^{(k+1)} \\
+&&-\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}\frac{p_{i+1/2}}{\lambda
+^{l+1/2,j+1/2}}\times  \nonumber \\
 &&\frac{\sqrt{1-\xi _{0,1}^{2}}\lambda \left( \psi ,\xi _{0,1}\right) 
 \mathbf{S}_{\xi ,l+1/2,i+1/2,1}^{\left( 0\right) (k+1)}}{\Delta \xi _{0,1/2}}
 \end{eqnarray}
 and 
 \begin{eqnarray}
 &&\left. \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi
-\right) }p^{2}\frac{\partial f^{\left( 0\right) }}{\partial p}\right|
+\right) }p^{2}\nabla _{\mathbf{p}}\cdot \mathbf{S}_{\mathbf{p}}^{\left(
+0\right) }\right| _{l+1/2,i+1/2,n_{\xi _{0}}-1/2}^{(k+1)}  \nonumber \\
+&=&\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}\left. \frac{\partial \left(
+p^{2}\mathbf{S}_{p}^{\left( 0\right) }\right) }{\partial p}\right|
 _{l+1/2,i+1/2,n_{\xi _{0}}-1/2}^{(k+1)}  \nonumber \\
-&=&\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
-_{l+1/2}\right) }\left. \frac{\partial \left( p^{2}\mathbf{S}_{p}^{\left(
-0\right) }\right) }{\partial p}\right| _{l+1/2,i+1/2,n_{\xi
-_{0}}-1/2}^{(k+1)}  \nonumber \\
-&&+\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
-_{l+1/2}\right) }\frac{p_{i+1/2}}{\lambda \left( \psi _{l+1/2},\xi
-_{0,n_{\xi _{0}}-1/2}\right) }\times   \nonumber \\
-&&\frac{\sqrt{1-\xi _{0,n_{\xi _{0}}-1}^{2}}\lambda \left( \psi ,\xi
-_{0,n_{\xi _{0}}-1}\right) \mathbf{S}_{\xi ,l+1/2,i+1/2,n_{\xi
-_{0}}-1}^{\left( 0\right) (k+1)}}{\Delta \xi _{0,n_{\xi _{0}}-1/2}}
+&&+\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}\frac{p_{i+1/2}}{\lambda
+^{l+1/2,j+1/2}}\times  \nonumber \\
+&&\frac{\sqrt{1-\xi _{0,n_{\xi _{0}}-1}^{2}}\lambda ^{l+1/2,n_{\xi _{0}}-1}%
+\mathbf{S}_{\xi ,l+1/2,i+1/2,n_{\xi _{0}}-1}^{\left( 0\right) (k+1)}}{\Delta
+\xi _{0,n_{\xi _{0}}-1/2}}
 \end{eqnarray}
-since by construction.
+as 
 \begin{equation}
 \left\{ 
 \begin{array}{l}
-\sqrt{1-\xi _{0,0}^{2}}\lambda \left( \psi ,\xi _{0,0}\right) \mathbf{S}%
-_{\xi ,l+1/2,i+1/2,0}^{\left( 0\right) }=0 \\ 
-\sqrt{1-\xi _{0,n_{\xi _{0}}}^{2}}\lambda \left( \psi ,\xi _{0,n_{\xi
-_{0}}}\right) \mathbf{S}_{\xi ,l+1/2,i+1/2,n_{\xi _{0}}}^{\left( 0\right) }=0
+\sqrt{1-\xi _{0,0}^{2}}\lambda ^{l+1/2,0}\mathbf{S}_{\xi
+,l+1/2,i+1/2,0}^{\left( 0\right) }=0 \\ 
+\sqrt{1-\xi _{0,n_{\xi _{0}}}^{2}}\lambda ^{l+1/2,n_{\xi _{0}}}\mathbf{S}%
+_{\xi ,l+1/2,i+1/2,n_{\xi _{0}}}^{\left( 0\right) }=0
 \end{array}
-\right. 
+\right.
 \end{equation}
-because $\xi _{0,0}^{2}=\xi _{0,n_{\xi _{0}}}^{2}=1$ 
+with $\xi _{0,0}^{2}=\xi _{0,n_{\xi _{0}}}^{2}=1$
 
 \paragraph{External boundaries}
 
@@ -162,22 +150,24 @@ is a sphere of radius $p_{\max },$ $\widehat{n}=\widehat{p}.$ When the
 condition (\ref{Externboundaryp}) is fullfiled, external boundary conditions
 have almost a negligible influence, and the numerical solution in the
 subspace is usually close to the theoretical one. It is usually the case for
-the RF problem, since the range of resonant interaction between the wave and
-the electrons is well localized in momentum space, far enough from the
-boundary so that no electron can leave the domain of integration.
+most RF problems except for the Lower Hybrid wave in very hot plasmas, since
+the range of resonant interaction between the wave and the electrons is well
+localized in momentum space, far enough from the boundary so that no
+electron can leave the domain of integration.
 
-The Fokker-Planck equation reduces an hyperbolic equation in the vicinity of 
-$p_{\max }$ (high velocity limit), and therefore no boundary condition must
-be specified, and the standard upstream differencing applies.Since for
-collisions, $D_{pp}^{C\left( 0\right) }/v\sim 1/v^{4}$ and $F_{p}^{C\left(
-0\right) }\sim 1/v^{2},$ one can consider that $D_{pp}^{C\left( 0\right) }%
-\approx 0$ at $p=p_{\max }.$ Here, the pitch-angle scattering term $D_{\xi
-\xi }^{C\left( 0\right) }$requires no special handling, because it causes
-diffusion in a direction which is parallel to the boundary.
+The Fokker-Planck equation reduces to an hyperbolic equation in the vicinity
+of $p_{\max }$ (high velocity limit), and therefore no boundary condition
+must be specified. In this condition, the standard upstream differencing
+applies. Since for collisions, $D_{pp}^{C\left( 0\right) }/v\sim 1/v^{4}$
+and $F_{p}^{C\left( 0\right) }\sim 1/v^{2},$ one can consider that $%
+D_{pp}^{C\left( 0\right) }\approx 0$ at $p=p_{\max }.$ Here, the pitch-angle
+scattering term $D_{\xi \xi }^{C\left( 0\right) }$requires no special
+handling, because it causes diffusion in a direction which is parallel to
+the boundary.
 
 Nevertheless, since cross-derivative terms potentially involves points
-outside the computation domain, the following rule is used, even if the
-exact value of $\Delta p_{\max }$ has no importance,
+outside the computational domain, the following rule is used, even if the
+exact value of $\Delta p_{\max }$ has no specific importance,
 
 \begin{equation}
 \Delta p_{n_{p}}=\Delta p_{\max }=\frac{1}{2}\left( \Delta
@@ -185,7 +175,7 @@ p_{n_{p}+1/2}+\Delta p_{n_{p}-1/2}\right) =\Delta
 p_{n_{p}-1/2}=p_{n_{p}}-p_{n_{p}-1}
 \end{equation}
 
-As by definition $p_{n_{p}+1/2}=\frac{p_{n_{p}}+p_{n_{p}-1}}{2}=\frac{
+As by definition $p_{n_{p}+1/2}=\frac{p_{n_{p}}+p_{n_{p}-1}}{2}=\frac{%
 p_{\max }+p_{n_{p}-1}}{2},$ it results 
 \begin{equation}
 \Delta p_{n_{p}}=2\left( p_{n_{p}}-p_{n_{p}-1/2}\right)
@@ -195,181 +185,424 @@ or in equivalent manner,
 \Delta p_{\max }=2\left( p_{\max }-p_{n_{p}-1/2}\right)
 \end{equation}
 
+\subparagraph{Runaway electron problem}
+
 If an electric field is present, then in the real problem, some electrons
 will runaway and leave the domain of integration. In that case, the
 condition $\mathbf{S}_{\mathbf{p}}\cdot \widehat{p}=0$ is no more fullfiled,
-leading to an effective loss of electrons. Since the Fokker-planck equation
-is still of hyperbolic type, no specific modification must be applied to the
-limit of the integration domain. However, one must ensure that the total
-number of electrons is kept constant. Several techniques may be used to
-avoid a decay of the number of electrons at the runaway rate $\Gamma _{R}$,
-as defined in Sec. ***.
+leading to an effective loss of electrons. Since the Fokker-planck
+differential equation is of hyperbolic type, no specific modification must
+be applied to the limit of the integration domain. However, one must ensure
+that the total number of electrons is kept constant. Several techniques may
+be used to avoid a decay of the number of electrons at the runaway rate $
+\Gamma _{R}^{\left( 0\right) }$, as defined in Sec. ***.
 
-A possibility is to substitute $f_{0}^{\left( 0\right) }$ by $f_{0}^{\left(
-0\right) }\exp \left[ -\int_{0}^{t}\Gamma _{R}^{\left( 0\right) }\left(
-t^{\prime }\right) dt^{\prime }\right] $ in the Fokker-Planck equation, so
-that $f_{0}^{\left( 0\right) }\left( t\rightarrow \infty \right) $ is
-independent of $t$. In that case, the following replacement must be
-performed for the momentum matrix coefficient $\overline{\overline{M}}%
-_{p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) },$ 
+A possibility is to perform the following substitution 
 \begin{equation}
-\overline{\overline{M}}_{p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }\rightarrow 
-\overline{\overline{M}}_{p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }-\Gamma
-_{R,l+1/2}^{\left( 0\right) }
+f_{0}^{\left( 0\right) }\left( t,\psi ,p,\xi _{0}\right) \rightarrow
+f_{0}^{\left( 0\right) }\left( \psi ,p,\xi _{0}\right) \exp \left[
+-\int_{0}^{t}\frac{\Gamma _{R}^{\left( 0\right) }\left( \psi ,t^{\prime
+}\right) }{n_{e}\left( \psi \right) }dt^{\prime }\right] 
 \end{equation}
-where $\Gamma _{R}^{\left( 0\right) }$ is the runaway rate calculated at the
-minimum of the magnetic field $B$, as defined in Sec. ***. The Fokker-Planck
-equation becomes therefore slightly non-linear, since $\Gamma _{R}^{\left(
-0\right) }$ is an integral over the distribution function $f_{0}^{\left(
-0\right) }.$ However, since the population that is concerned is usually very
-small, the non-linearity is fairly weak. Nevertheless, the main drawback of
-this approach is that it makes the Fokker-Planck equation non-conservative.
-Furthermore, it necessitates to recalculate periodically the matrix to be
-inverted, which is a very time consuming, because of the matrix
-factorization. Therefore this method is not considered in the calculations.
+in the Fokker-Planck equation, so that $f_{0}^{\left( 0\right) }\left(
+t\rightarrow \infty \right) $ is independent of $t$. In that case, the
+momentum matrix coefficients $\overline{\overline{M}}%
+_{p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }$ must be modified according to the
+prescription 
+\begin{equation}
+\overline{\overline{M}}_{p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) \left(
+k\right) }\rightarrow \overline{\overline{M}}_{p,l+1/2,i+1/2,j+1/2}^{\left(
+0\right) }-\Gamma _{R,l+1/2}^{\left( 0\right) \left( k\right) }
+\end{equation}
+where $\Gamma _{R,l+1/2}^{\left( 0\right) \left( k\right) }$ is the runaway
+rate calculated at $\psi _{l+1/2}$ and time step $k$ as defined in Sec. ***.
+As a consequence, the Fokker-Planck equation becomes slightly non-linear,
+since $\Gamma _{R,l+1/2}^{\left( 0\right) \left( k\right) }$ is an integral
+over the distribution function $f_{0}^{\left( 0\right) \left( k\right) }$
+determined at time step $k$. However, since the runaway population is
+usually very small as compared to the bulk, the non-linearity remains fairly
+weak. Nevertheless, this approach has two major drawbacks: the Fokker-Planck
+equation has no more an intrinsic conservative form, and in addition matrix $%
+\overline{\overline{M}}_{p}^{\left( 0\right) }$ must be recalculated at each
+time step, since it is time dependent. All the advantages of the numerical
+implicit time scheme for a fast and stable rate of convergence are therefore
+lost. For this reason, this method is not considered in the code.
 
 Another technique is to inject cold electrons at $p=0$, in order to
-compensate runaway losses and maintain the density. Such an approach has the
-main advantage to have a clear physical meaning. Indeed, the loss of
-electrons will generate locally an electric field which in turn will force a
-flux of particles to compensate this local depletion. By definition, the
-number of electrons leaving the integration domain is simply $\Gamma
-_{R}^{\left( 0\right) }.$ In principle, without particle losses, $%
-p_{0}^{2}S_{p,l+1/2,0,j+1/2}^{\left( 0\right) }=0,$ though $%
-S_{p,l+1/2,0,j+1/2}^{\left( 0\right) }$ is infinite at $p=0$, since the
-Maxwellian distribution is by definition an exact eigenfunction of the
+compensate runaway losses and keep the electron density constant at $\psi
+_{l+1/2}$. Such an approach has the main advantage to have a clear physical
+meaning. Indeed, the loss of electrons will generate locally an electric
+field which in turn will force a flux of particles to compensate this local
+depletion. By definition, the number of electrons leaving the integration
+domain is simply $\Gamma _{R}^{\left( 0\right) }.$ In principle, without
+particle losses, $p_{0}^{2}S_{p,l+1/2,0,j+1/2}^{\left( 0\right) }=0,$ though 
+$S_{p,l+1/2,0,j+1/2}^{\left( 0\right) }$ is infinite at $p=0$, since, by
+definition, the Maxwellian distribution is an exact eigenfunction of the
 Fokker-Planck operator. Compensation of hot electron losses by cold ones
 leads to the relation 
 \begin{equation}
 2\pi \sum_{j=0}^{n_{\xi _{0}}-1}p_{0}^{2}S_{p,l+1/2,0,j+1/2}^{\left(
-0\right) }\Delta \xi _{0,j+1/2}=\Gamma _{R,l+1/2}^{\left( 0\right) }
+0\right) \left( k+1\right) }\Delta \xi _{0,j+1/2}=\Gamma _{R,l+1/2}^{\left(
+0\right) \left( k+1\right) }
 \end{equation}
 
-By definition, $S_{p,l+1/2,0,j+1/2}^{\left( 0\right) }$ is considered
-uniform in pitch-angle, since no specific direction can be physically
+By definition, $S_{p,l+1/2,0,j+1/2}^{\left( 0\right) \left( k+1\right) }$ is
+assumed uniform in pitch-angle, since no specific direction can be physicaly
 priviledged. Therefore, 
 \begin{equation}
-2\pi p_{0}^{2}S_{p,l+1/2,0,j+1/2}^{\left( 0\right) }\sum_{j=0}^{n_{\xi
-_{0}}-1}\Delta \xi _{0,j+1/2}=4\pi p_{0}^{2}S_{p,l+1/2,0,j+1/2}^{\left(
-0\right) }=\Gamma _{R,l+1/2}^{\left( 0\right) }
+2\pi p_{0}^{2}S_{p,l+1/2,0,j+1/2}^{\left( 0\right) \left( k+1\right)
+}\sum_{j=0}^{n_{\xi _{0}}-1}\Delta \xi _{0,j+1/2}=4\pi 
+p_{0}^{2}S_{p,l+1/2,0,j+1/2}^{\left( 0\right) \left( k+1\right) }=\Gamma
+_{R,l+1/2}^{\left( 0\right) \left( k+1\right) }
 \end{equation}
 and 
 \begin{equation}
-p_{0}^{2}S_{p,l+1/2,0,j+1/2}^{\left( 0\right) }=\frac{\Gamma
-_{R,l+1/2}^{\left( 0\right) }}{4\pi }
+p_{0}^{2}S_{p,l+1/2,0,j+1/2}^{\left( 0\right) \left( k+1\right) }=\frac{%
+\Gamma _{R,l+1/2}^{\left( 0\right) \left( k+1\right) }}{4\pi }
 \end{equation}
+for all $j$ values.
 
 Expression (\ref{boundary_p}) is then modified according to the relation 
 \begin{eqnarray}
-\left. \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) 
-}p^{2}\frac{\partial f^{\left( 0\right) }}{\partial p}\right|
-_{l+1/2,1/2,j+1/2}^{(k+1)} &=&\frac{\widetilde{q}\left( \psi _{l+1/2}\right) 
-}{B_{\min }\left( \psi _{l+1/2}\right) }\left( \frac{p_{1}^{2}\mathbf{S}%
+\left. \frac{\widetilde{q}}{B_{\min }}p^{2}\nabla _{\mathbf{p}}\cdot \mathbf{%
+S}_{\mathbf{p}}^{\left( 0\right) }\right| _{l+1/2,1/2,j+1/2}^{(k+1)} &=&%
+\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}\left( \frac{p_{1}^{2}\mathbf{S}%
 _{p,l+1/2,1,j+1/2}^{\left( 0\right) (k+1)}}{\Delta p_{1/2}}-\frac{p_{0}^{2}%
 \mathbf{S}_{p,l+1/2,0,j+1/2}^{\left( 0\right) (k+1)}}{\Delta p_{1/2}}\right) 
 \nonumber \\
-&&-\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
-_{l+1/2}\right) }\frac{p_{1/2}}{\lambda \left( \psi _{l+1/2},\xi
-_{0,j+1/2}\right) }\times   \nonumber \\
-&&\left. \frac{\partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}
-\lambda \left( \psi ,\xi _{0}\right) \mathbf{S}_{\xi }^{\left( 0\right)
-}\right) \right| _{l+1/2,1/2,j+1/2}^{(k+1)}
+&&-\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}\frac{p_{1/2}}{\lambda
+^{l+1/2,j+1/2}}\times   \nonumber \\
+&&\left. \frac{\partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}%
+\lambda \mathbf{S}_{\xi }^{\left( 0\right) }\right) \right|
+_{l+1/2,1/2,j+1/2}^{(k+1)}
 \end{eqnarray}
 or 
 \begin{eqnarray}
-\left. \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) 
-}p^{2}\frac{\partial f^{\left( 0\right) }}{\partial p}\right|
-_{l+1/2,1/2,j+1/2}^{(k+1)} &=&\frac{\widetilde{q}\left( \psi _{l+1/2}\right) 
-}{B_{\min }\left( \psi _{l+1/2}\right) }\left( \frac{p_{1}^{2}\mathbf{S}%
+\left. \frac{\widetilde{q}}{B_{\min }}p^{2}\nabla _{\mathbf{p}}\cdot \mathbf{%
+S}_{\mathbf{p}}^{\left( 0\right) }\right| _{l+1/2,1/2,j+1/2}^{(k+1)} &=&%
+\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}\left( \frac{p_{1}^{2}\mathbf{S}%
 _{p,l+1/2,1,j+1/2}^{\left( 0\right) (k+1)}}{\Delta p_{1/2}}-\frac{\Gamma
 _{R,l+1/2}^{\left( 0\right) (k+1)}}{4\pi \Delta p_{1/2}}\right)   \nonumber
 \\
-&&-\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
-_{l+1/2}\right) }\frac{p_{1/2}}{\lambda \left( \psi _{l+1/2},\xi
-_{0,j+1/2}\right) }\times   \nonumber \\
+&&-\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}\frac{p_{1/2}}{\lambda
+^{l+1/2,j+1/2}}\times   \nonumber \\
 &&\left. \frac{\partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}%
-\lambda \left( \psi ,\xi _{0}\right) \mathbf{S}_{\xi }^{\left( 0\right)
-}\right) \right| _{l+1/2,1/2,j+1/2}^{(k+1)}
+\lambda \mathbf{S}_{\xi }^{\left( 0\right) }\right) \right|
+_{l+1/2,1/2,j+1/2}^{(k+1)}
 \end{eqnarray}
 
 Since $\Gamma _{R,l+1/2}^{\left( 0\right) (k+1)}$ is a weak function of $%
 f_{0}^{\left( 0\right) },$ it is possible to replace $\Gamma
 _{R,l+1/2}^{\left( 0\right) (k+1)}$ by its explicit form $\Gamma
-_{R,l+1/2}^{\left( 0\right) (k)}$, so that one may avoid to recalculate the
+_{R,l+1/2}^{\left( 0\right) (k)}$, so that one may avoid to recalculate
 matrix $\overline{\overline{M}}_{p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }$ at
-each iteration, an extremely computer time consuming procedure.
-Consequently, with this scheme, the zero order Fokker-Planck equation
-becomes 
+each iteration, an extremely time consuming procedure. Consequently, with
+this scheme, the zero order Fokker-Planck equation becomes simply 
 \begin{eqnarray}
-&&\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
-_{l+1/2}\right) }p_{i+1/2}^{2}\frac{f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right)
+&&\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}p_{i+1/2}^{2}\frac{%
+f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right)
 (k+1)}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k)}}{\Delta t}  \nonumber \\
-&&+\left. \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi
-\right) }p^{2}\frac{\partial f^{\left( 0\right) }}{\partial p}\right|
+&&+\left. \frac{\widetilde{q}}{B_{\min }}p^{2}\nabla _{\mathbf{p}}\cdot 
+\mathbf{S}_{\mathbf{p}}^{\left( 0\right) }\right|
 _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
-&&+\left. \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi
-\right) }p^{2}\frac{\partial f^{\left( 0\right) }}{\partial \psi }\right|
-_{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
-&&-\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
-_{l+1/2}\right) }\frac{\Gamma _{R,l+1/2}^{\left( 0\right) (k)}}{4\pi \Delta %
-p_{1/2}}  \nonumber \\
+&&+\left. \frac{\widetilde{q}}{B_{\min }}p^{2}\nabla _{\psi }\cdot \mathbf{S}%
+_{\psi }^{\left( 0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
+&&-\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}\frac{\Gamma
+_{R,l+1/2}^{\left( 0\right) (k)}}{4\pi \Delta p_{1/2}}  \nonumber \\
 &=&0
 \end{eqnarray}
 
-The condition to maintain density constant at each radial location leads
-therefore to an additional term, that adds to the operator that describe
-damping of Maxwellian electrons on suprathermal ones. With this approach,
-the Fokker-Planck equation is slightly non-linear, provided fraction of
-runaway electrons remain small as compared to the bulk one.
+The condition to maintain density constant at each radial location $\psi
+_{l+1/2}$ leads therefore to an additional term, that adds to the operator
+which describes damping of Maxwellian electrons on suprathermal ones. With
+this approach, the Fokker-Planck equation is slightly non-linear, provided
+the fraction of runaway electrons remain small as compared to the bulk one.
 
-With this technique, the electron distribution function is no more a
-Maxwellian in the vicinity of $p=0$, since an ad-hoc source term of particle
-with no velocity is added. This approach is therefore questionable for its
-validity, owing to the assumptions to derive the linearized Fokker-Planck
+Furthermore, the electron distribution function is not a Maxwellian in the
+vicinity of $p=0$, since an ad-hoc source term of particle with no velocity
+is added. This approach is therefore questionable for its validity, owing to
+the basic assumptions that are used to derive the linearized Fokker-Planck
 equation around a Maxwellian bulk. Therefore, in order to avoid this
 singularity, an alternative approach may be to add a source term normalized
-to $\frac{\Gamma _{R,l+1/2}^{\left( 0\right) (k)}}{4\pi }$ but, whose
-distribution function is an exact Maxwellian corresponding to the electron
-temperature at $\psi _{l+1/2}.$
+to $\Gamma _{R,l+1/2}^{\left( 0\right) (k)}$ but, whose distribution
+function is an exact Maxwellian corresponding to the electron temperature at 
+$\psi _{l+1/2}.$
 
-In that case, 
+In that case, in steady-state regime, the flux divergence $\nabla _{\mathbf{p%
+}}\cdot \mathbf{S}_{\mathbf{p}}^{\left( 0\right) }$ is no more null at each
+plasma location, but is given by the relation 
+\begin{equation}
+\left. p^{2}\nabla _{\mathbf{p}}\cdot \mathbf{S}_{\mathbf{p}}^{\left(
+0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)}=p_{i+1/2}^{2}\frac{\Gamma
+_{R,l+1/2}^{\left( 0\right) (k)}}{\left[ 2\pi T_{e,l+1/2}\right] ^{3/2}}\exp
+\left[ -\frac{p_{i+1/2}^{2}}{\left( 1+\gamma _{l+1/2,i+1/2}\right)
+T_{e,l+1/2}}\right] 
+\end{equation}
+where $T_{e}\left( \psi _{l+1/2}\right) =T_{e,l+1/2},$ which corresponds to
+the existence of an external Maxwellian source term. By definition, 
+\begin{equation}
+2\pi \sum_{j=0}^{n_{\xi _{0}}-1}\sum_{i=0}^{n_{p}-1}\frac{\Gamma
+_{R,l+1/2}^{\left( 0\right) (k)}}{\left[ 2\pi T_{e,l+1/2}\right] ^{3/2}}\exp
+\left[ -\frac{p_{i+1/2}^{2}}{\left( 1+\gamma _{l+1/2,i+1/2}\right)
+T_{e,l+1/2}}\right] p_{i+1/2}^{2}\Delta p_{i+1/2}\Delta \xi
+_{0,j+1/2}=\Gamma _{R,l+1/2}^{\left( 0\right) (k)}
+\end{equation}
+and the Fokker-Planck equation becomes simply 
 \begin{eqnarray}
-&&\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
-_{l+1/2}\right) }p_{i+1/2}^{2}\frac{f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right)
+&&\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}p_{i+1/2}^{2}\frac{%
+f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right)
 (k+1)}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k)}}{\Delta t}  \nonumber \\
-&&+\left. \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi
-\right) }p^{2}\frac{\partial f^{\left( 0\right) }}{\partial p}\right|
+&&+\left. \frac{\widetilde{q}}{B_{\min }}p^{2}\nabla _{\mathbf{p}}\cdot 
+\mathbf{S}_{\mathbf{p}}^{\left( 0\right) }\right|
 _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
-&&+\left. \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi
-\right) }p^{2}\frac{\partial f^{\left( 0\right) }}{\partial \psi }\right|
-_{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
-&&-\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
-_{l+1/2}\right) }\frac{\Gamma _{R,l+1/2}^{\left( 0\right) }}{4\pi %
-n_{e}\left( \psi _{l+1/2}\right) }\frac{f_{0M,l+1/2,i+1/2,j+1/2}^{\left(
-0\right) }}{\Delta p_{1/2}}  \nonumber \\
+&&+\left. \frac{\widetilde{q}}{B_{\min }}p^{2}\nabla _{\psi }\cdot \mathbf{S}%
+_{\psi }^{\left( 0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
+&&-\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}\frac{p_{i+1/2}^{2}\Gamma
+_{R,l+1/2}^{\left( 0\right) (k)}}{\left[ 2\pi T_{e,l+1/2}\right] ^{3/2}}\exp
+\left[ -\frac{p_{i+1/2}^{2}}{\left( 1+\gamma _{l+1/2,i+1/2}\right)
+T_{e,l+1/2}}\right]   \nonumber \\
 &=&0
 \end{eqnarray}
-where $f_{0M,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }$ is the numerical
-Maxwellian whose expression is
+
+Though this technique is in principle the most consistent with the
+underlying physics, it has also still some numerical drawbacks, because of
+the forward time differencing. It is well known that such terms put strong
+limitations on the time step value $\Delta t,$ in order to preserve
+numerical stability. A coarse estimate of its level can be deduced from the
+condition 
 \begin{equation}
-f_{0M,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }=\frac{n_{e}\left( \psi
-_{l+1/2}\right) }{\left[ 2\pi T_{e}\left( \psi _{l+1/2}\right) \right] ^{3/2}%
-}\exp \left[ -\frac{p_{i+1/2}^{2}}{\left( 1+\gamma _{l+1/2,i+1/2}\right)
-T_{e}\left( \psi _{l+1/2}\right) }\right] 
+\frac{\Gamma _{R,l+1/2}^{\left( 0\right) (k)}}{\left[ 2\pi %
+T_{e,l+1/2}\right] ^{3/2}}\exp \left[ -\frac{p_{i+1/2}^{2}}{\left( 1+\gamma
+_{l+1/2,i+1/2}\right) T_{e,l+1/2}}\right] \ll \frac{%
+f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k)}}{\Delta t}
 \end{equation}
+
+Assuming $f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k)}\simeq
+f_{0M,l+1/2,i+1/2,j+1/2}^{\left( 0\right) },$ it turns out that 
+\begin{equation}
+\frac{\Delta t\Gamma _{R,l+1/2}^{\left( 0\right) (k)}}{n_{e,l+1/2}}\ll 1
+\end{equation}
+where $n_{e,l+1/2}=n_{e}\left( \psi _{l+1/2}\right) $ is the local electron
+density. In normalized units, as defined in Sec.***, time step of the order
+of $\Delta t\sim 10^{+3}-10^{+4}$ are used to reach in few iterations the
+steady-state solution. Therefore, $\Gamma _{R,l+1/2}^{\left( 0\right)
+(k)}/n_{e,l+1/2}$ must be lower than $10^{-5}-10^{-6}$ in order to avoid
+onset of numerical instabilities, which corresponds usually to normalized
+Ohmic electric field less than $0.05$.
+
+Finally, the ultimate and most simple approach to deal with the loss of
+runaway electrons is to enforce the electron distribution function at each
+time step. Defining a numerical density $n_{e,l+1/2}^{(k)}$ at time step $k$
+, 
+\begin{equation}
+2\pi \sum_{j=0}^{n_{\xi
+_{0}}-1}\sum_{i=0}^{n_{p}-1}f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right)
+(k)}p_{i+1/2}^{2}\Delta p_{i+1/2}\Delta \xi _{0,j+1/2}=n_{e,l+1/2}^{(k)}
+\end{equation}
+this procedure corresponds to the following replacement 
+\begin{equation}
+f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k)}\rightarrow \frac{n_{e,l+1/2}}{%
+n_{e,l+1/2}^{(k)}}f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k)}
+\end{equation}
+
+This procedure is equivalent to reinject electrons in the plasma so that
+local density is steadily maintained. The main advantage of this method is
+that it preserves the implicit or backward numerical time advancing.
+Furthermore, it avoids flux calculations in order to determine the runaway
+rate at ech time step, a procedure which slows down the rate of convergence.
+Finally, the normalization procedure is general and may be applied for any
+process that leads to local electron losses, like radial transport, magnetic
+ripple losses. For this reason, this method is chosen, if needed, for the
+code. However, even if this technique is numericaly very powerful, and
+physicaly justified, it may hinder some artificial numerical electron losses
+resulting from an improper numerical flux balance in each cell.
+Consequently, it is crucial to benchmark the Fokker-Planck code without this
+option, in order to verify that the conservative scheme is well satisfied
+and that electron losses remain always small.
+
+\subparagraph{Lower hybrid wave and very high temperature plasmas}
+
+For the Lower Hybrid current drive problem, difficulties similar to the
+runaway problem may take place in the core region of the plasma, when the
+electron temperature is very high. For this quasi-electrostatic wave, the
+resonant interaction with the plasma takes place along the magnetic field
+line, as discussed in Sec. ***, and therefore, a tail of very energetic
+electrons is pulled out from the bulk in the parallel direction $p_{\Vert }$
+as for the Ohmic electric field. Unlike the Ohmic case, the domain of
+interaction for the Lower Hybrid wave is bounded in momentum space, and is
+given by the well known wave-particle resonance condition 
+\begin{equation}
+v_{\Vert \min }^{LH}\leq \frac{p_{\Vert }}{\gamma }\leq v_{\Vert \max }^{LH}
+\end{equation}
+where the relativistic factor $\gamma =\sqrt{1+\left( \beta _{th}p\right)
+^{2}},$ $\beta _{th}=v_{th}/c$ and $p^{2}=p_{\Vert }^{2}+p_{\bot }^{2}.$ On
+the axis $p_{\bot }=0,$ the resonance domain is given by the relation 
+\begin{equation}
+p_{\Vert \min }^{LH,0}\leq p_{\Vert }^{0}\leq p_{\Vert \max }^{LH,0}
+\end{equation}
+where 
+\begin{equation}
+p_{\Vert \min }^{LH,0}=\frac{v_{\Vert \min }^{LH}}{\sqrt{1-\left( \beta
+_{th}v_{\Vert \min }^{LH}\right) ^{2}}}
+\end{equation}
+and 
+\begin{equation}
+p_{\Vert \max }^{LH,0}=\frac{v_{\Vert \max }^{LH}}{\sqrt{1-\left( \beta
+_{th}v_{\Vert \max }^{LH}\right) ^{2}}}
+\end{equation}
+
+When $p_{\bot }\neq 0,$ the lower bound of the resonance condition becomes 
+\begin{equation}
+\left( \frac{p_{\Vert \min }^{LH}}{p_{\Vert \min }^{LH,0}}\right) ^{2}-\beta
+_{th}^{2}p_{\bot }^{2}=1
+\end{equation}
+while the upper limit is
+
+\begin{equation}
+\left( \frac{p_{\Vert \max }^{LH}}{p_{\Vert \max }^{LH,0}}\right) ^{2}-\beta
+_{th}^{2}p_{\bot }^{2}=1
+\end{equation}
+
+For very cold plasmas, i.e. when $\beta _{th}^{2}p_{\max }^{2}\ll 1$ since $%
+p_{\bot }\leq p_{\max },$%
+\begin{equation}
+\left\{ 
+\begin{array}{l}
+p_{\Vert \min }^{LH}\simeq p_{\Vert \min }^{LH,0} \\ 
+p_{\Vert \max }^{LH}\simeq p_{\Vert \max }^{LH,0}
+\end{array}
+\right. 
+\end{equation}
+and resonance domain boundaries are straight lines parallel to $p_{\Vert }=0$
+axis. In that case, electron losses are naturally very weak, since at the
+intersection of the resonance and integration domains, the wave-induced flux
+is nearly tangent to the boundary of the integration domain. Since $p_{\max }
+$ ranges usualy between $20-30,$ $\beta _{th}$ must be much less than $0.01$%
+, which corresponds to electron temperatures less than $0.06keV$. Such a
+condition is never encountered in tokamak plasmas, except close to the very
+edge.
+
+%TCIMACRO{
+%\TeXButton{Fig_lhboundary}{\fig{figures/lhboundary.eps}{Lower Hybrid boundary problem}{lhboundary}{10cm}}}
+%BeginExpansion
+\fig{figures/lhboundary.eps}{Lower Hybrid boundary problem}{lhboundary}{10cm}%
+%EndExpansion
+
+Because of relativistic corrections, lower and upper boundaries of the Lower
+Hybrid resonance domain are hyperbolic functions of $p_{\bot },$ which
+indicates that the wave induced particle flux always crosses the integration
+domain. The curvature of the resonance domain boundaries as a function of $%
+p_{\bot }$ depends directly of $\beta _{th}$ as shown in Fig.*** and
+therefore, one may expect that particle flux induced by the wave may be
+nearly perpendicular to the integration domain boundary. This is the worst
+situation, for which important losses of electrons may take place if the
+quasilinear diffusion is very large between $p_{\Vert \min }^{LH}$ and $%
+p_{\Vert \max }^{LH}$, as for the runaway problem$.$ In such a regime, a
+tail of very energetic electrons is pulled out from the bulk up to the
+integration domain, and the accuracy of the current driven by the wave as
+calculated by the code is highly questionable, when a significant fraction
+of this population leaves the integration domain.
+
+This difficulty becomes rapidly important when $\beta _{th}$ increases as a
+consequence of the forward peaking of the electron dynamic because of the
+relativistic corrections. In that case, the total kinetic energy comes into
+play, and therefore electrons with a high $p_{\bot }$ component will
+interact resonantly with the wave at larger $p$ values because of their
+increasing mass.
+
+It is difficult to introduce an unambiguous criterion which defines limits
+beyond which electron losses become important, since there is an interplay
+between the shape of the resonant domain, and also the absolute level of the
+quasilinear diffusion rate. As discussed in Sec.***, its value is given by
+the relation 
+\begin{eqnarray}
+\overline{D}_{b,n}^{\text{RF}(0)}(p,\xi _{0}) &=&\frac{\gamma p_{Te}}{%
+p\left| \xi _{0}\right| }\frac{1}{\lambda \widetilde{q}}\frac{r_{\theta _{b}}%
+}{R_{0}}\frac{B^{\theta _{b}}}{B_{P}^{\theta _{b}}}\frac{\xi _{0}^{2}}{\xi
+_{\theta _{b}}^{2}}\Psi _{\theta _{b}}\overline{D}_{b,n,0}^{\text{RF,}\theta
+_{b}}\left| \Theta _{\mathbf{k,}\theta _{b}}^{b,n}\left( \mathbf{k}%
+_{b}\right) \right| ^{2}\times   \nonumber \\
+&&H\left( \theta _{b}-\theta _{\min }\right) H\left( \theta _{\max }-\theta
+_{b}\right) \left[ \frac{1}{2}\sum\limits_{\sigma }\right] _{T}\delta \left(
+N_{\Vert b}-N_{\Vert \text{res}}^{\theta _{b}}\right) 
+\end{eqnarray}
+which roughly decreases as $p_{\Vert }^{-1}$. This dependence, usually
+neglected since the shape of the plateau in the distribution function is
+independent of the value of $\overline{D}_{b,n}^{\text{RF}(0)}$ when the
+quasilinear diffusion rate is very large, is however very important when the 
+$2-D$ momentum dynamics is fully taken into account. This is in fact the
+only way to avoid unacceptable electrons losses, and $p_{\max }$  must
+determined so that $\overline{D}_{b,n}^{\text{RF}(0)}\ll 1$ at the boundary
+of the integration domain. Indeed, curvatures of the resonance domain
+boundaries as $p_{\Vert }$ increases are not favorable for a reduction of
+the losses, since at high energy, the flux of particles induced by the Lower
+Hybrid wave becomes more and more perpendicular to the integration domain. 
+
+As shown in Fig. ***, the only possibility for particle losses to remain at
+an acceptable small level whatever the quasilinear diffusion level, is that
+the upper boundary of the Lower Hybrid resonance domain crosses the
+integration domain at $p_{\bot }/p_{\max }>1/\sqrt{2}.$ This purely
+geometrical effect put very strong limitations on the lowest level of the
+parallel refractive index $n_{\Vert \min }^{LH}$ that can be studied.
+Indeed, , $p_{\Vert \max }^{LH,0}\left( p_{\bot }=0\right) $ is therefore
+given by the relation, 
+\begin{equation}
+p_{\Vert \max }^{LH,0}=1/\sqrt{\frac{2}{p_{\max }^{2}}+\beta _{th}^{2}}
+\end{equation}
+or 
+\begin{equation}
+v_{\Vert \max }^{LH}=\frac{1}{\sqrt{2}}\frac{p_{\max }}{\sqrt{1+\beta
+_{th}^{2}p_{\max }^{2}}}
+\end{equation}
+
+In term of parallel refractive wave index, the previous condition is
+equivalent to the simple relation 
+\begin{equation}
+n_{\Vert \min }^{LH}=\sqrt{2}\frac{\sqrt{1+\beta _{th}^{2}p_{\max }^{2}}}{%
+\beta _{th}p_{\max }}
+\end{equation}
+where the usual resonance relation 
+\begin{equation}
+v_{\Vert \max }^{LH}=\frac{1}{\beta _{th}}\frac{1}{n_{\Vert \min }^{LH}}
+\end{equation}
+is used. In the limit $\beta _{th}^{2}p_{\max }^{2}\gg 1,$ $v_{\Vert \max
+}^{LH}$ becomes independent of $p_{\max }$%
+\begin{equation}
+v_{\Vert \max }^{LH}\simeq \frac{1}{\sqrt{2}}\frac{1}{\beta _{th}}
+\end{equation}
+which equivalent to 
+\begin{equation}
+n_{\Vert \min }^{LH}\gtrsim \sqrt{2}\simeq 1.4
+\end{equation}
+
+This result confirms that increasing  $p_{\max }$ is useless in order to
+reduce particle losses, if the quasilinear diffusion coefficient $\overline{D%
+}_{b,n}^{\text{LH}(0)}$ remains very large over all the quasilinear
+resonance domain, except if the parallel refractive index is small. In most
+calculations, $p_{\max }\simeq 20-30,$ and since in the core of the plasma $%
+\beta _{th}$ ranges between $0.14$ and $0.17$, $\beta _{th}^{2}p_{\max
+}^{2}\simeq 7.8-26$, which fully justify this approximation.
+
+As discussed for the runaway problem, particle losses are compensated by the
+normalization of the electron distribution function at each time step.
+However, when  $n_{\Vert \min }^{LH}$ exceeds $\sqrt{2},$ a warning is send
+by the code, in order to indicate that strong particle losses may take place
+if the quasilinear diffusion coefficient is large at the boundary of the
+integration domain.
 
 \paragraph{Treatment of the trapped region}
 
-Since collision, RF quasilinear diffusion and Ohmic electric field
-acceleration times are all much larger than the bounce time in the weak
-collision ''banana'' regime, $f_{0}^{\left( 0\right) }\left( \psi ,p,\xi
-_{0}\right) =$ $f_{0}^{\left( 0\right) }\left( \psi ,p,-\xi _{0}\right) $
-when $\left| \xi _{0}\right| \leq \xi _{0T}.$ Therefore, symmetrically place
-points around $\xi _{0}=0$ are equivalent in the trapped region, a physical
-property that is described by the term $\left[ \frac{1}{2}\sum_{\sigma
-}\right] _{T}$ in the bounce averaging procedure in Sec.***. This effect
-introduces a new internal boundary corresponding to the trapped-passing
-transition, and an external one at $\xi _{0}=0,$ since by symmetry, 
+Since characteristic times for collision, RF quasilinear diffusion and Ohmic
+electric field acceleration are all much larger than the bounce time in the
+weak collision ``banana'' regime, $f_{0}^{\left( 0\right) }\left( \psi
+,p,\xi _{0}\right) =$ $f_{0}^{\left( 0\right) }\left( \psi ,p,-\xi
+_{0}\right) $ when $\left| \xi _{0}\right| \leq \xi _{0T}.$ Therefore,
+symmetrically place points around $\xi _{0}=0$ are equivalent in the trapped
+region, a physical property that is described by the term $\left[ \frac{1}{2}%
+\sum_{\sigma }\right] _{T}$ in the bounce averaging procedure in Sec.***.
+This effect introduces a new internal boundary corresponding to the
+trapped-passing transition, and an external one at $\xi _{0}=0,$ since by
+symmetry, 
 \begin{equation}
 \frac{\partial f_{0}^{\left( 0\right) }}{\partial \xi _{0}}\left( \xi
 _{0}=0\right) =0
@@ -378,7 +611,7 @@ _{0}=0\right) =0
 The Fokker-Planck equation is then solved in a reduced domain of
 integration, where the momentum phase space corresponding to $-\xi _{0T}\leq
 \xi _{0}\leq 0$ is removed. Once determined in this reduced domain, the
-distribution function is then recovered on the whole space, by enforcing the
+distribution function is recovered on the whole space, by enforcing the
 condition $f_{0}^{\left( 0\right) }\left( \psi ,p,-\xi _{0}\right) =$ $%
 f_{0}^{\left( 0\right) }\left( \psi ,p,\xi _{0}\right) $ in the interval $%
 \left| \xi _{0}\right| \leq \xi _{0T}.$
@@ -392,24 +625,24 @@ f_{0}^{\left( 0\right) }\left( \psi ,p,\xi _{0}\right) $ in the interval $%
 A specific treatment of the new internal boundary must be considered, so
 that flux continuity is correctly described between co- and counter-passing
 regions, despite the reduction of the phase space domain. Let define grid
-points
+points 
 \begin{equation}
 \left\{ 
 \begin{array}{l}
-1:\left( l+1/2,i+1/2,j_{T,l+1/2}^{+}-1/2\right)  \\ 
-2:\left( l+1/2,i+1/2,j_{T,l+1/2}^{+}+1/2\right)  \\ 
-3:\left( l+1/2,i+1/2,j_{T,l+1/2}^{-}+1/2\right)  \\ 
-4:\left( l+1/2,i+1/2,j_{T,l+1/2}^{-}-1/2\right)  \\ 
-5:\left( l+1/2,i+1/2,j_{T_{0}}+1/2\right) 
+1:\left( l+1/2,i+1/2,j_{T,l+1/2}^{+}-1/2\right) \\ 
+2:\left( l+1/2,i+1/2,j_{T,l+1/2}^{+}+1/2\right) \\ 
+3:\left( l+1/2,i+1/2,j_{T,l+1/2}^{-}+1/2\right) \\ 
+4:\left( l+1/2,i+1/2,j_{T,l+1/2}^{-}-1/2\right) \\ 
+5:\left( l+1/2,i+1/2,j_{T_{0}}+1/2\right)
 \end{array}
-\right. 
+\right.
 \end{equation}
 where $j_{T_{0}}=\left( n_{\xi _{0}}+1\right) /2=\left(
 j_{T,l+1/2}^{+}+j_{T,l+1/2}^{-}\right) /2,$ as indicated in Fig.***. Here $%
 j_{T,l+1/2}^{-}$ is the index that corresponds to the trapped/passing
 boundary $\xi _{0}=-\xi _{0T},$ while $j_{T,l+1/2}^{+}$ corresponds to the
 symmetric boundary with respect to the axis $\xi _{0}=0,$ i.e. $\xi _{0}=\xi
-_{0T}.$ 
+_{0T}.$
 
 By definition, grid points $1$ and $3$ are in the trapped region, just
 placed below and above co- and counter-passing boundaries respectively at
@@ -447,7 +680,7 @@ wich link grid points $4$ and $1.$ Much in the same way, flux relations
 between grid points $2$ and $3$ no more exist, and therefore, the flux
 relation between grid points $2$ and $1$ must be modified accordingly. This
 procedure leads to add six new set of coefficients to the matrix $\widehat{%
-\overline{M}}_{p}^{\left( 0\right) }$, namely
+\overline{M}}_{p}^{\left( 0\right) }$, namely 
 \begin{equation}
 \left\{ 
 \begin{array}{l}
@@ -458,9 +691,9 @@ _{0T,l+1/2}}}^{\left( 0\right) } \\
 \widehat{\overline{M}}_{p,l+1/2,i+3/2,j_{T,l+1/2}^{\prime -}-1/2+n_{\xi
 _{0T,l+1/2}}}^{\left( 0\right) }
 \end{array}
-\right. 
+\right.
 \end{equation}
-and
+and 
 \begin{equation}
 \left\{ 
 \begin{array}{l}
@@ -471,9 +704,9 @@ _{0T,l+1/2}}}^{\left( 0\right) } \\
 \widehat{\overline{M}}_{p,l+1/2,i+3/2,j_{T,l+1/2}^{\prime +}-1/2-n_{\xi
 _{0T,l+1/2}}}^{\left( 0\right) }
 \end{array}
-\right. 
+\right.
 \end{equation}
-while matrix coefficients
+while matrix coefficients 
 \begin{equation}
 \left\{ 
 \begin{array}{l}
@@ -484,9 +717,9 @@ while matrix coefficients
 \widehat{\overline{M}}_{p,l+1/2,i+3/2,j_{T,l+1/2}^{\prime -}-1/2+1}^{\left(
 0\right) }
 \end{array}
-\right. 
+\right.
 \end{equation}
-and
+and 
 \begin{equation}
 \left\{ 
 \begin{array}{l}
@@ -497,7 +730,7 @@ and
 \widehat{\overline{M}}_{p,l+1/2,i+3/2,j_{T,l+1/2}^{\prime +}-1/2+1}^{\left(
 0\right) }
 \end{array}
-\right. 
+\right.
 \end{equation}
 where $j_{T,l+1/2}^{\prime -}=j_{T,l+1/2}^{-}$ and $j_{T,l+1/2}^{\prime
 +}=j_{T,l+1/2}^{+}-n_{\xi _{0T,l+1/2}}$ must be modified accordingly.
@@ -527,11 +760,11 @@ Therefore,
 0\right) } &=&\overline{\overline{M}}_{p,l+1/2,i-1/2,j_{T,l+1/2}^{\prime
 +}-1/2+1+n_{\xi _{0T,l+1/2}}}^{\left( 0\right) }/2  \nonumber \\
 \widehat{\overline{M}}_{p,l+1/2,i+1/2,j_{T,l+1/2}^{\prime +}-1/2+1}^{\left(
-0\right) } &=&\overline{\overline{M}}%
+0\right) } &=&\overline{\overline{M}}
 _{p,l+1/2,i+1/2,j_{T,l+1/2}^{+}-1/2+1+n_{\xi _{0T,l+1/2}}}^{\left( 0\right)
 }/2 \\
 \widehat{\overline{M}}_{p,l+1/2,i+3/2,j_{T,l+1/2}^{\prime +}-1/2+1}^{\left(
-0\right) } &=&\overline{\overline{M}}%
+0\right) } &=&\overline{\overline{M}}
 _{p,l+1/2,i+3/2,j_{T,l+1/2}^{+}-1/2+1+n_{\xi _{0T,l+1/2}}}^{\left( 0\right)
 }/2  \nonumber
 \end{eqnarray}
@@ -556,15 +789,15 @@ _{p,l+1/2,i+3/2,j_{T,l+1/2}^{\prime +}-1/2+1+n_{\xi _{0T,l+1/2}}}^{\left(
 and 
 \begin{eqnarray}
 \widehat{\overline{M}}_{p,l+1/2,i-1/2,j_{T,l+1/2}^{\prime +}-1/2-n_{\xi
-_{0T,l+1/2}}}^{\left( 0\right) } &=&\overline{\overline{M}}%
+_{0T,l+1/2}}}^{\left( 0\right) } &=&\overline{\overline{M}}
 _{p,l+1/2,i-1/2,j_{T,l+1/2}^{\prime +}-1/2+1+n_{\xi _{0T,l+1/2}}}^{\left(
 0\right) }/2  \nonumber \\
 \widehat{\overline{M}}_{p,l+1/2,i+1/2,j_{T,l+1/2}^{\prime +}-1/2-n_{\xi
-_{0T,l+1/2}}}^{\left( 0\right) } &=&\overline{\overline{M}}%
+_{0T,l+1/2}}}^{\left( 0\right) } &=&\overline{\overline{M}}
 _{p,l+1/2,i+1/2,j_{T,l+1/2}^{\prime +}-1/2+1+n_{\xi _{0T,l+1/2}}}^{\left(
 0\right) }/2 \\
 \widehat{\overline{M}}_{p,l+1/2,i+3/2,j_{T,l+1/2}^{\prime +}-1/2-n_{\xi
-_{0T,l+1/2}}}^{\left( 0\right) } &=&\overline{\overline{M}}%
+_{0T,l+1/2}}}^{\left( 0\right) } &=&\overline{\overline{M}}
 _{p,l+1/2,i+3/2,j_{T,l+1/2}^{\prime +}-1/2+1+n_{\xi _{0T,l+1/2}}}^{\left(
 0\right) }/2  \nonumber
 \end{eqnarray}
@@ -580,20 +813,83 @@ _{0T,l+1/2}}}^{\left( 0\right) } &=&-1
 since $j_{T_{,l+1/2}}^{\prime -}=j_{T_{0}}-n_{\xi
 _{0T,l+1/2}}=j_{T_{0}}^{\prime }.$
 
+\paragraph{Magnetic ripple losses}
+
+Super-trapped electrons with $p_{\Vert }/p_{\bot }\ll 1$ are very sensitive
+to all the details of the magnetic configuration, and may be lossed in the
+local magnetic wells because of the finite number of toroidal magnetic field
+coils. This effect requires in principle a full $3-D$ spatial calculation,
+that is beyond the present theoretical frame here described, as for the
+stellarator magnetic configuration. Nevertheless, some interesting results
+may be obtained, by considering that super-trapped electrons whose banana
+tips fall in the magnetic well drift vertically in an irreversible manner
+and leave therefore the plasma. This process takes place provided their
+kinetic energy is large enough so that the detrapping probability by
+collisions remain negligible.
+
+Describing this effect is consequently equivalent to introduce new external
+boundaries in the trapped region, in order to describe in an ad-hoc manner
+this physical effect. This approach is justified because the drifting time
+across the plasma is short enough for the locally trapped electrons in the
+magnetic ripple to neglect their contributions to the overall momentum
+dynamics.
+
+%TCIMACRO{
+%\TeXButton{Fig_magneticripple}{\fig{figures/magneticripple.eps}{ Heuristic magnetic ripple modeling at different plasma radii }{magneticripple}{10cm}}}
+%BeginExpansion
+\fig{figures/magneticripple.eps}{ Heuristic magnetic ripple modeling at different plasma radii }{magneticripple}{10cm}%
+%EndExpansion
+
+For this purpose, an Krook term is introduced in the Fokker-Planck equation 
+\begin{equation}
+\left. \frac{\partial f_{0}^{\left( 0\right) }}{\partial t}\right|
+_{l+1/2,i+1/2,j+1/2}^{(k+1)}=\frac{f_{0,l+1/2,i+1/2,j^{\prime }+1/2}^{\left(
+0\right) (k+1)}}{\tau _{MR,l+1/2,i+1/2,j^{\prime }+1/2}}
+\end{equation}
+where $\tau _{MR,l+1/2,i+1/2,j^{\prime }+1/2}$ is an effective loss time,
+whose value is a function of the super-trapped domain as shown in Fig. ***.
+This loss time varies therefore with the radial location $\psi _{l+1/2},$
+but also with momentum $p_{i+1/2}$ and pitch-angle  $\xi _{0,j^{\prime }+1/2}
+$. Outside this domain, $\tau _{MR,l+1/2,i+1/2,j^{\prime }+1/2}$ is set to a
+very large value so that losses are always negligible on the time scale for
+the steady-state distribution function to build-up. Conversely, inside the
+domain characterized by the pitch-angle boundary $0\leq \xi _{0,j^{\prime
+}+1/2}\leq \xi _{0,j_{MR,l+1/2}^{\prime +}+1/2}$ and $p_{i+1/2}\geq %
+p_{MR,l+1/2},$ where $j_{MR,l+1/2}^{\prime +}$ is the index below which
+particle are lossed in the magnetic ripple, and $p_{MR,l+1/2}$ is the
+momentum detrapping threshold by collisions, $\tau
+_{MR,l+1/2,i+1/2,j^{\prime }+1/2}$ is usually taken constant and much
+shorter than the smallest time scale here considered, namely the transit
+time $\tau _{t}.$ The matrix is then simply modified according to the
+following rule 
+\begin{equation}
+\widehat{\overline{M}}_{p,l+1/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right)
+}\rightarrow \widehat{\overline{M}}_{p,l+1/2,i+1/2,j^{\prime }+1/2}^{\left(
+0\right) }-\frac{1}{\tau _{MR,l+1/2,i+1/2,j^{\prime }+1/2}}
+\end{equation}
+
+With this method, it is not necessary to introduce additional specific
+conditions and moreover the implicit time scheme is fully preserved. By
+definition, the Fokker-Planck equation is no more conservative, but particle
+losses are compensated by the normalization technique at each time step, as
+for the runaway problem. This is an acceptable technique, provided level of
+losses due to magnetic ripple is small as compared to the electron bulk
+density.
+
 \subsubsection{Spatial dynamics}
 
 \paragraph{Internal boundary}
 
 For the dynamics in configuration space, since the problem has only one
-dimension, the internal boundary must be specified at $\psi =0$, which
-corresponds to the condition 
+dimension, the internal boundary must be specified at $\psi =\psi _{0}=0$,
+which corresponds to the condition 
 \begin{equation}
 f_{0}^{\left( 0\right) }\left( \psi ,p,\xi _{0}\right) =f_{0}^{\left(
 0\right) }\left( -\psi ,p,\xi _{0}\right) 
 \end{equation}
 
-Using a similar approach as for the momentum dynamics, $\Delta \psi $ must
-be defined at this location. Hence 
+Using the same approach as for the momentum dynamics, $\Delta \psi $ must be
+defined at this location. Hence 
 \begin{equation}
 \Delta \psi _{0}=\frac{1}{2}\left( \Delta \psi _{1/2}+\Delta \psi
 _{-1/2}\right) =\Delta \psi _{1/2}
@@ -606,115 +902,110 @@ one obtains finally,
 \end{equation}
 because $\psi _{0}=0.$
 
-It is important to note that internal boundary conditions are only needed in
-the evaluation of the cross-derivative terms, since in the discrete form of
-the Fokker-Planck equation using two grids, as shown, in Sec. ***, it is
-automatically fullfiled. Indeed, at fixed $p_{i+1/2},\xi _{0,j+1/2},$%
+It is important to note that internal boundary conditions are also only
+needed for the evaluation of cross-derivative terms, since in the discrete
+form of the Fokker-Planck equation using two grids, as shown, in Sec. ***,
+it is automatically fullfiled for other terms. Indeed, at fixed $%
+p_{i+1/2},\xi _{0,j+1/2},$%
 \begin{eqnarray}
-&&\left. \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi
-\right) }p^{2}\frac{\partial f^{\left( 0\right) }}{\partial \psi }\right|
-_{1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
-&=&\frac{p_{i+1/2}^{2}}{\lambda \left( \psi _{1/2},\xi _{0,j+1/2}\right) }%
-\times   \nonumber \\
-&&\left. \frac{\partial }{\partial \psi }\left( R_{\min }\left( \psi \right) 
-\widetilde{q}\left( \psi \right) \frac{B_{P\min }\left( \psi \right) }{%
-B_{\min }\left( \psi \right) }\lambda \left( \psi ,\xi _{0}\right) \mathbf{S}
-_{\psi }^{\left( 0\right) }\right) \right| _{1/2,i+1/2,j+1/2}^{(k+1)}
+&&\left. \frac{\widetilde{q}}{B_{\min }}p^{2}\nabla _{\psi }\cdot \mathbf{S}%
+_{\psi }^{\left( 0\right) }\right| _{1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
+=\frac{p_{i+1/2}^{2}}{\lambda ^{1/2,j+1/2}}\times  &&\left. \frac{\partial }{%
+\partial \psi }\left( R_{\min }\widetilde{q}\frac{B_{P\min }}{B_{\min }}%
+\lambda \mathbf{S}_{\psi }^{\left( 0\right) }\right) \right|
+_{1/2,i+1/2,j+1/2}^{(k+1)}
 \end{eqnarray}
 or 
 \begin{eqnarray}
-&&\left. \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi
-\right) }p^{2}\frac{\partial f^{\left( 0\right) }}{\partial \psi }\right|
-_{1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
-&=&\frac{p_{i+1/2}^{2}}{\lambda \left( \psi _{1/2},\xi _{0,j+1/2}\right) }%
-\times   \nonumber \\
-&&R_{\min }\left( \psi _{1}\right) \widetilde{q}\left( \psi _{1}\right) 
-\frac{B_{P\min }\left( \psi _{1}\right) }{B_{\min }\left( \psi _{1}\right) }%
-\lambda \left( \psi _{1},\xi _{0,j+1/2}\right) \mathbf{S}_{\psi
+&&\left. \frac{\widetilde{q}}{B_{\min }}p^{2}\nabla _{\psi }\cdot \mathbf{S}%
+_{\psi }^{\left( 0\right) }\right| _{1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
+=\frac{p_{i+1/2}^{2}}{\lambda ^{1/2,j+1/2}}\times  &&R_{\min ,1}\widetilde{q}%
+_{1}\frac{B_{P\min ,1}}{B_{\min ,1}}\lambda ^{1,j+1/2}\mathbf{S}_{\psi
 _{1,i+1/2,j+1/2}}^{\left( 0\right) (k+1)}
 \end{eqnarray}
-since $R_{\min }\left( \psi _{0}\right) B_{P\min }\left( \psi _{0}\right) 
-\mathbf{S}_{\psi _{0,i+1/2,j+1/2}}^{\left( 0\right) (k+1)}=0.$ Indeed, $%
-B_{P\min }\left( \psi _{0}\right) $ is exactly zero on the magnetic axis.
+since $R_{\min ,0}B_{P\min ,0}\mathbf{S}_{\psi _{0,i+1/2,j+1/2}}^{\left(
+0\right) (k+1)}=0.$ Indeed, $B_{P\min ,0}=0$ on the magnetic axis.
 
 \paragraph{External boundary}
 
 As discussed for the momentum dynamics, a primary condition of the code is
-that electron density profile is preserved. In the runaway regime, this is
-fullfiled by compensating the particle flux leaving the integration domain
-by injecting an equivalent number of particles at $p=0$. The problem is
-equivalent for the radial transport, and the density profile being modified
-because of the electron population which diffuses across the magnetic flux
-surfaces. In order to keep electron density profile constant, one must
-therefore reinject or remove cold electrons, an effect which has a simple
-physical meaning. It corresponds to a reaction of the bulk, because of the
-occurence of a small electric field, generated by the electron transport. By
-this method, a steady state regime may be achieved, and it is not necessary
-to specify which type of mechanism is at play, diffusion or convection. Let
-define the local variation of the electron density because of spatial
-transport,
+that electron density profile is preserved. As for the particle losses in
+momentum space, this can be performed by injecting an equivalent number of
+particles at  $p=0,$ in order to compensate the particle flux leaving the
+integration domain because of diffusion across magnetic flux surfaces. It
+corresponds to a reaction of the bulk, because of the occurence of a small
+electric field, generated by the electron transport so that the overall
+electron density profile is kept constant. By this method, a steady state
+regime may be achieved, and it is not necessary to specify which type of
+mechanism is at play, diffusion or convection. 
+
+Let define the local variation of the electron density $\Delta %
+n_{e,l+1/2}^{\left( k\right) }$ at time step $k$ because of spatial
+transport by the simple relation
 \begin{equation}
-\Gamma _{T}^{\left( 0\right) (k)}\left( \psi \right) =\iint \left[
+\Delta n_{e}^{\left( k\right) }\left( \psi \right) =\iint \left[
 f_{0}^{\left( 0\right) (k)}\left( \psi ,p,\xi _{0}\right) -f_{0}^{\left(
 0\right) (k-1)}\left( \psi ,p,\xi _{0}\right) \right] \lambda \left( \psi
 ,\xi _{0}\right) p^{2}dpd\xi _{0}
 \end{equation}
-and the balance
-\begin{eqnarray}
+It can be expressed in term of a loss rate 
+\[
+\Gamma _{T}^{\left( 0\right) (k)}\left( \psi \right) =\Delta n_{e}^{\left(
+k\right) }\left( \psi \right) /\Delta t
+\]
+by introducing the integration time step $\Delta t$ and the flux balance
+gives on the discrete mesh is
+\begin{equation}
 2\pi p_{0}^{2}S_{p,l+1/2,0,j+1/2}^{\left( 0\right) }\sum_{j=0}^{n_{\xi
-_{0}}-1}\Delta \xi _{0,j+1/2} &=&4\pi p_{0}^{2}S_{p,l+1/2,0,j+1/2}^{\left(
-0\right) }  \nonumber \\
-&=&\Gamma _{T,l+1/2}^{\left( 0\right) }
-\end{eqnarray}
-since no pitch-angle direction is preferred, the zero order Fokker-Planck
-equation becomes simply
+_{0}}-1}\Delta \xi _{0,j+1/2}=4\pi p_{0}^{2}S_{p,l+1/2,0,j+1/2}^{\left(
+0\right) }=\Gamma _{T,l+1/2}^{\left( 0\right) }
+\end{equation}
+assuming like for losses in momentum space that the flux has no pitch-angle
+dependence at $p_{0}$. The zero order Fokker-Planck equation becomes simply 
 \begin{eqnarray}
-&&\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
-_{l+1/2}\right) }p_{i+1/2}^{2}\frac{f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right)
+&&\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}p_{i+1/2}^{2}\frac{%
+f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right)
 (k+1)}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k)}}{\Delta t}  \nonumber \\
-&&+\left. \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi
-\right) }p^{2}\frac{\partial f^{\left( 0\right) }}{\partial p}\right|
+&&+\left. \frac{\widetilde{q}}{B_{\min }}p^{2}\nabla _{\mathbf{p}}\cdot 
+\mathbf{S}_{\mathbf{p}}^{\left( 0\right) }\right|
 _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
-&&+\left. \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi
-\right) }p^{2}\frac{\partial f^{\left( 0\right) }}{\partial \psi }\right|
-_{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
-&&-\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
-_{l+1/2}\right) }\frac{\Gamma _{R,l+1/2}^{\left( 0\right) (k)}+\Gamma
-_{T,l+1/2}^{\left( 0\right) (k)}}{4\pi \Delta p_{1/2}}  \nonumber \\
+&&+\left. \frac{\widetilde{q}}{B_{\min }}p^{2}\nabla _{\psi }\cdot \mathbf{S}%
+_{\psi }^{\left( 0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
+&&-\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}\frac{\Gamma
+_{R,l+1/2}^{\left( 0\right) (k)}+\Gamma _{T,l+1/2}^{\left( 0\right) (k)}}{4%
+\pi \Delta p_{1/2}}  \nonumber \\
 &=&0
 \end{eqnarray}
 in order to maintain electron density at each time step. By definition,
 radial transport or runaway play a similar role, and as a result their
 respective contributions are equivalent in the Fokker-Planck equation. If
-the electrons that are reinjected have a Maxwellian distribution
+the electrons that are reinjected have a Maxwellian distribution function
 corresponding to the electron temperature at $\psi _{l+1/2},$ one may
-obtain, as for the runaway problem, 
+obtain, as for the runaway problem,
 
 \begin{eqnarray}
-&&\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
-_{l+1/2}\right) }p_{i+1/2}^{2}\frac{f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right)
+&&\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}p_{i+1/2}^{2}\frac{%
+f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right)
 (k+1)}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k)}}{\Delta t}  \nonumber \\
-&&+\left. \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi
-\right) }p^{2}\frac{\partial f^{\left( 0\right) }}{\partial p}\right|
+&&+\left. \frac{\widetilde{q}}{B_{\min }}p^{2}\nabla _{\mathbf{p}}\cdot 
+\mathbf{S}_{\mathbf{p}}^{\left( 0\right) }\right|
 _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
-&&+\left. \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi
-\right) }p^{2}\frac{\partial f^{\left( 0\right) }}{\partial \psi }\right|
-_{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
-&&-\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
-_{l+1/2}\right) }\frac{\Gamma _{R,l+1/2}^{\left( 0\right) }+\Gamma
-_{T,l+1/2}^{\left( 0\right) (k)}}{4\pi n_{e}\left( \psi _{l+1/2}\right) }%
-\frac{f_{0M,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }}{\Delta p_{1/2}}  \nonumber
-\\
+&&+\left. \frac{\widetilde{q}}{B_{\min }}p^{2}\nabla _{\psi }\cdot \mathbf{S}%
+_{\psi }^{\left( 0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
+&&-\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}p_{i+1/2}^{2}\frac{\Gamma
+_{R,l+1/2}^{\left( 0\right) (k)}++\Gamma _{T,l+1/2}^{\left( 0\right) (k)}}{%
+\left[ 2\pi T_{e,l+1/2}\right] ^{3/2}}\exp \left[ -\frac{p_{i+1/2}^{2}}{%
+\left( 1+\gamma _{l+1/2,i+1/2}\right) T_{e,l+1/2}}\right]   \nonumber \\
 &=&0
 \end{eqnarray}
 
 Finally, for cross-derivative terms, one have to determine $\Delta \psi
 _{n_{\psi }}$ at the boundary of the integration domain. It is readily given
-by relation, 
+by relation,
 
 \begin{equation}
 \Delta \psi _{n_{\psi }}=2\left( \psi _{n_{\psi }}-\psi _{n_{\psi
-}-1/2}\right) =2\left( \psi _{a}-\psi _{n_{\psi }-1/2}\right) 
+}-1/2}\right) =2\left( \psi _{a}-\psi _{n_{\psi }-1/2}\right)
 \end{equation}
 as done for $p$, since $\psi _{n_{\psi }}=\psi _{a}$.
 
@@ -725,9 +1016,8 @@ trapped electrons, since the diffusion across magnetic field lines may
 contribute to trap or detrap particles who are in the close vicinity of the
 trapped/passing boundary, because of the radial dependence of this boundary,
 as shown in Fig. ***. By definition, this process takes place intrinsically
-at fixed magnetic moment, a fundamental initial assumption of the flux
-conservative form of the bounce averaged Fokker-Planck equation, as shown in
-Sec.***. 
+at fixed magnetic moment, a fundamental assumption of the flux conservative
+form of the bounce averaged Fokker-Planck equation, as shown in Sec.***.
 
 %TCIMACRO{
 %\TeXButton{Fig_traptransport}{\fig{figures/traptransport.eps}{ Transport induced trapping and detrapping}{traptransport}{8cm}}}
@@ -766,7 +1056,7 @@ only six regions, namely corresponding to
 \begin{equation}
 j_{T,l+3/2}^{-}<j_{T,l+1/2}^{-}
 \end{equation}
-and
+and 
 \begin{equation}
 j_{T_{0}}<j_{T,l-1/2}^{+}<j_{T,l+1/2}^{+}<j_{T,l+3/2}^{+}
 \end{equation}
@@ -780,13 +1070,13 @@ j_{T,l+3/2}^{\prime -}<j_{T,l+1/2}^{\prime -}<j_{T,l-1/2}^{\prime
 As for the momentum dynamics, the reduction of the domain of integration in
 the momentum phase space leads to introduce a new matrix, $\widehat{%
 \overline{M}}_{\psi }^{\left( 0\right) }.$ Obviously, the main diagonal is
-fully preserved, and therefore
+fully preserved, and therefore 
 \begin{equation}
 \widehat{\overline{M}}_{\psi ,l+1/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right)
 }=\overline{\overline{M}}_{\psi ,l+1/2,i+1/2,j^{\prime }+1/2}^{\left(
 0\right) }
 \end{equation}
-provided $j^{\prime }<j_{T,l+1/2}^{\prime -},$ while  
+provided $j^{\prime }<j_{T,l+1/2}^{\prime -},$ while 
 \begin{equation}
 \widehat{\overline{M}}_{\psi ,l+1/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right)
 }=\overline{\overline{M}}_{\psi ,l+1/2,i+1/2,j^{\prime }+1/2+n_{\xi
@@ -808,26 +1098,26 @@ If $j^{\prime }<j_{T,l+3/2}^{\prime -}$, matrix coefficients are given by
 }=\overline{\overline{M}}_{\psi ,l+3/2,i+1/2,j^{\prime }+1/2}^{\left(
 0\right) }
 \end{array}
-\right. 
+\right.
 \end{equation}
 and for $j_{T,l+3/2}^{\prime -}<j^{\prime }<j_{T,l+1/2}^{\prime -},$ the
-simple relation still holds for one matrix coefficient only
+simple relation still holds for one matrix coefficient only 
 \begin{equation}
 \widehat{\overline{M}}_{\psi ,l-1/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right)
 }=\overline{\overline{M}}_{\psi ,l-1/2,i+1/2,j^{\prime }+1/2}^{\left(
 0\right) }
 \end{equation}
-since the trapped region is narrower at $\psi _{l-1/2}$ as compared to  $%
-\psi _{l+1/2}.$ But since counter-circulating electrons become trapped by
+since the trapped region is narrower at $\psi _{l-1/2}$ as compared to $\psi
+_{l+1/2}.$ But since counter-circulating electrons become trapped by
 diffusion from $\psi _{l+1/2}\rightarrow \psi _{l+3/2}$ and electron
 dynamics in the domain $j_{T,l+3/2}^{-}<j<j_{T_{0}}$ is removed and replaced
 by its counterpart in the positive pitch-angle region $%
-j_{T_{0}}<j<j_{T,l+3/2}^{+},$ it turns out that
+j_{T_{0}}<j<j_{T,l+3/2}^{+},$ it turns out that 
 \begin{equation}
 \widehat{\overline{M}}_{\psi ,l+3/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right)
 }=0
 \end{equation}
-and the flux link must be replaced by
+and the flux link must be replaced by 
 \begin{equation}
 \widehat{\overline{M}}_{\psi ,l+3/2,i+1/2,j^{\prime }+1/2+2\left(
 j_{T_{0}}-\left( j^{\prime }+1/2\right) \right) -n_{\xi
@@ -836,10 +1126,10 @@ _{0T,l+3/2}}}^{\left( 0\right) }=\overline{\overline{M}}_{\psi
 \end{equation}
 taking into account of the mirror indexing around the axis $\xi _{0}=0,$ and
 the fact that matrix blocks corresponding to different radii have different
-sizes. 
+sizes.
 
-In a general way, when  $j^{\prime }>j_{T,l+1/2}^{\prime -},$ the following
-rule applies
+In a general way, when $j^{\prime }>j_{T,l+1/2}^{\prime -},$ the following
+rule applies 
 \begin{equation}
 \left\{ 
 \begin{array}{l}
@@ -848,10 +1138,10 @@ rule applies
 \widehat{\overline{M}}_{\psi ,l+3/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right)
 }=0
 \end{array}
-\right. 
+\right.
 \end{equation}
 all corresponding matrix coefficients being replaced by new ones according
-to the relations
+to the relations 
 \begin{equation}
 \left\{ 
 \begin{array}{l}
@@ -864,7 +1154,7 @@ _{0T,l+1/2}}-n_{\xi _{0T,l+3/2}}\right) }^{\left( 0\right) }=\overline{%
 \overline{M}}_{\psi ,l+3/2,i+1/2,j^{\prime }+1/2+n_{\xi
 _{0T,l+1/2}}}^{\left( 0\right) }
 \end{array}
-\right. 
+\right.
 \end{equation}
 wether electrons remains trapped or co-passing, or become trapped by the
 outward radial transport or detrapped by the inward cross-field diffusion.
@@ -878,10 +1168,36 @@ j^{\prime }+1/2+\left( n_{\xi _{0T,l+1/2}}-n_{\xi _{0T,l-1/2}}\right)
 j^{\prime }+1/2+\left( n_{\xi _{0T,l+1/2}}-n_{\xi _{0T,l+3/2}}\right)
 <j^{\prime }+1/2
 \end{array}
-\right. 
+\right.
 \end{equation}
 which indicates that diagonals shrink when trapped/passing boundary is
 crossed, i.e. $j^{\prime }>j_{T,l+1/2}^{\prime -}.$ Therefore, matrix $%
 \widehat{\overline{M}}_{\psi }^{\left( 0\right) }$ contains much more
 diagonals than $\overline{\overline{M}}_{\psi }^{\left( 0\right) }$ which
-has only three ones. 
+has only three ones.
+
+At $\psi =0$, there is no need to specify the spatial flux $S_{\psi
+}^{\left( 0\right) }$, with the two grids technique. Since by construction $%
+R_{\min ,0}B_{P\min ,0}\mathbf{S}_{\psi _{0,i+1/2,j+1/2}}^{\left( 0\right)
+(k+1)}=0,$  no particle accumulation occurs naturaly at $\psi $ , and at
+this singular point $f_{0,1/2,i+1/2,j+1/2}^{\left( 0\right)
+(k+1)}=f_{0,-1/2,i+1/2,j+1/2}^{\left( 0\right) (k+1)}$ is well fullfiled.
+
+At the plasma edge $\psi _{a},$ i.e. at the boundary of the integration
+domain, there is also no need to specify any condition on the flux of  fast
+particles are leaving the plasma definitively, as for the runaway problem.
+Consequently, even without any external perturbation, the fact that radial
+transport of fast transport leads to strong departure from the Maxwellian
+momentum dependence at all radius. 
+
+As for the dynamics in momentum space, $\Delta \psi $ must be specified at
+the boundaries of the domain of integration. One finds that 
+\begin{equation}
+\Delta \psi _{0}=2\psi _{1/2}
+\end{equation}
+since $\psi _{0}=0$, and 
+\begin{equation}
+\Delta \psi _{n_{\psi }}=2\left( \psi _{n_{\psi }}-\psi _{n_{\psi
+}-1/2}\right) =2\left( \psi _{a}-\psi _{n_{\psi }-1/2}\right) 
+\end{equation}
+noting that $\psi _{n_{\psi }}=\psi _{a}$.
