@@ -645,14 +645,14 @@ xyPabs_tot_rf_fsav_in = 0;%initial absorbed power density estimate (Note, future
 %
 xymask = (xyPinc_in == 0);
 xyPinc_in(xymask) = eps; %to avoid singularities
+xyPinc_mod = xyPinc_in;
 %
 xyD0_rf_in = waveparam(:,:,5); %initial value of the constant dissusion coefficient
+P_ref = me*(clum*betath_ref)^2*nhu_ref*ne_ref; %power normalization constant
 %
 %xymask_prop_dke = (xyprop_dke ~= 0);
 %
 for it_rf=1:nit_rf % convergence in the ray-tracing mode
-%
-    [xyPinc_out,xyPinc_mod] = rfprop_dke_jd(yb,xyprop_dke,xyPinc_in,xyPabs_tot_rf_fsav_in,xdV_dke,xpsin,xpsin_dke,r_dke,dke_mode);
 %    
 % The diffusion coefficient is proportional to the incident power
 %
@@ -683,7 +683,9 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
 %
     if ~isempty(waveparam)
         xyPabs_rf_dke_fsav_out = ZP0_ref_fsav{3,1} + ZP0_ref_fsav{3,2} + ZP0_ref_fsav{3,3}; % flux-surface averaged density of absorbed power.
-        xyPabs_tot_rf_fsav_in = xyPabs_rf_dke_fsav_out;
+        xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav_out*P_ref;
+%
+        [xyPinc_out,xyPinc_mod] = rfprop_dke_jd(yb,xyprop_dke,xyPinc_mod,xyPabs_rf_dke_fsav_mksa,xdV_dke,xpsin,xpsin_dke,r_dke,dke_mode);
 %
         residue_rf = max(max(abs(xyPinc_out - xyPinc_mod)./(xyPinc_mod + eps)));
         if residue_rf <= prec_rf
@@ -712,7 +714,7 @@ end
 %For displaying RF quasilinear domain only
 %
 if nb_ec > 0,
-    xDperp_cy_ref = waveparam_ec(:,1,6);
+    xDperp_cy_ref = waveparam_ec(:,1,5);
 end
 if nb_lh > 0,
     xD0_lh_ref = waveparam_lh(:,1,5);
