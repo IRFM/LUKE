@@ -1,0 +1,9 @@
+make_equil_TScirc
+make_dkeparam
+make_display
+make_ohm
+make_ripple
+make_transpfaste
+make_hxr_TS99
+%
+rundke_TScirc
