@@ -22,22 +22,26 @@ the partial Jacobians introduced in Sec. \ref{fluxcons}\footnote{%
 The possibility to define a fully $3-D$ criterion has been foreseen.
 However, since collision rates may change drasticaly from plasma center to
 the edge, this choice ensures that convergence is well achieved at the right
-level at all plasma locations. }. 
+level at all plasma locations. }.
 
 Projected on the numerical grid, the criterion (\ref{dkeconvcrit}) becomes
 
-\begin{equation}
-\sqrt{\left| \frac{\sum_{i=0}^{i=n_{p}-1}\sum_{j=0}^{j=n_{\xi _{0}}-1}\left[
+\begin{align}
+&\left| \sum_{i=0}^{i=n_{p}-1}\sum_{j=0}^{j=n_{\xi _{0}}-1}\left[
 g_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) \left( k+1\right)
-}-g_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) \left( k\right) }\right]
-^{2}g_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) \left( k\right) }p_{i+1/2}^{2}%
-\Delta p_{i+1/2}\Delta \xi _{0,j+1/2}}{\sum_{i=0}^{i=n_{p}-1}%
+}-g_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) \left( k\right)
+}\right]
+^{2}\right.\nonumber\\&\left.\quad\times g_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) \left( k\right) }p_{i+1/2}^{2}%
+\Delta p_{i+1/2}\Delta \xi
+_{0,j+1/2}\right|^{1/2}\nonumber\\&\quad\times\left|
+\sum_{i=0}^{i=n_{p}-1}%
 \sum_{j=0}^{j=n_{\xi _{0}}-12}g_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right)
-\left( k\right) }p_{i+1/2}^{2}\Delta p_{i+1/2}\Delta \xi _{0,j+1/2}}\right| }%
+\left( k\right) }p_{i+1/2}^{2}\Delta p_{i+1/2}\Delta \xi _{0,j+1/2}\right|^{-1/2} %
 <\mathcal{R}_{\mathcal{C}}^{g}
-\end{equation}
-where $\left( k\right) $ is the iteration step number. Since all quantities
-are normalized, this definition is fully acceptable. If the number of
-iterations reaches $\mathcal{N}_{\mathcal{C}}^{g},$ the program warns that
-convergence is not achieved and that something is going wrong in the
-calculations, as for the Fokker-Planck part.
+\end{align}
+where $\left( k\right) $ is the iteration step number. Since all
+quantities are normalized, this definition is fully acceptable. If
+the number of iterations reaches $\mathcal{N}_{\mathcal{C}}^{g},$
+the program warns that convergence is not achieved and that
+something is going wrong in the calculations, as for the
+Fokker-Planck part.

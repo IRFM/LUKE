@@ -9,13 +9,15 @@ D_{b,n}^{\text{RF}}(p,\xi)=\lim_{V\rightarrow\infty}\frac{e^{2}\pi}{V}%
 \delta\left(  \omega_{b}-k_{\Vert}v_{\Vert}-n\Omega\right)  \label{dn}%
 \end{equation}
 where,
-\begin{equation}
-\Theta_{\mathbf{k}}^{b,\left(  n\right)  }=\frac{1}{\sqrt{2}}e_{b\mathbf{k}%
-,+}e^{-i\alpha}J_{n-1}\left(  \frac{k_{\bot}v_{\bot}}{\Omega}\right)
-+\frac{1}{\sqrt{2}}e_{b\mathbf{k},-}e^{+i\alpha}J_{n+1}\left(  \frac{k_{\bot
-}v_{\bot}}{\Omega}\right)  +\frac{p_{\Vert}}{p_{\bot}}e_{b\mathbf{k},\Vert
+\begin{align}
+\Theta_{\mathbf{k}}^{b,\left(  n\right)  }&=\frac{1}{\sqrt{2}}e_{b\mathbf{k}%
+,+}e^{-i\alpha}J_{n-1}\left(
+\frac{k_{\bot}v_{\bot}}{\Omega}\right)
++\frac{1}{\sqrt{2}}e_{b\mathbf{k},-}e^{+i\alpha}J_{n+1}\left(
+\frac{k_{\bot }v_{\bot}}{\Omega}\right)\nonumber\\&
++\frac{p_{\Vert}}{p_{\bot}}e_{b\mathbf{k},\Vert
 }J_{n}\left(  \frac{k_{\bot}v_{\bot}}{\Omega}\right)  \label{thetak}%
-\end{equation}
+\end{align}
 
 Here, the polarization vector in Fourier space
 \begin{equation}
@@ -93,13 +95,13 @@ with, using (\ref{thetak})%
 \Theta_{\mathbf{k}}^{b+,\left(  n\right)  }  &  =\frac{1}{\sqrt{2}}%
 e_{b^{+}\mathbf{k},+}e^{-i\alpha}J_{n-1}\left(  \frac{k_{\bot}v_{\bot}}%
 {\Omega}\right)  +\frac{1}{\sqrt{2}}e_{b^{+}\mathbf{k},-}e^{+i\alpha}%
-J_{n+1}\left(  \frac{k_{\bot}v_{\bot}}{\Omega}\right)  +\frac{p_{\Vert}%
+J_{n+1}\left(  \frac{k_{\bot}v_{\bot}}{\Omega}\right)  \nonumber\\&\qquad+\frac{p_{\Vert}%
 }{p_{\bot}}e_{b^{+}\mathbf{k},\Vert}J_{n}\left(  \frac{k_{\bot}v_{\bot}%
 }{\Omega}\right) \label{thetakp}\\
 \Theta_{\mathbf{k}}^{b-,\left(  n\right)  }  &  =\frac{1}{\sqrt{2}}%
 e_{b^{-}\mathbf{k},+}e^{-i\alpha}J_{n-1}\left(  \frac{k_{\bot}v_{\bot}}%
 {\Omega}\right)  +\frac{1}{\sqrt{2}}e_{b^{-}\mathbf{k},-}e^{+i\alpha}%
-J_{n+1}\left(  \frac{k_{\bot}v_{\bot}}{\Omega}\right)  +\frac{p_{\Vert}%
+J_{n+1}\left(  \frac{k_{\bot}v_{\bot}}{\Omega}\right)  \nonumber\\&\qquad+\frac{p_{\Vert}%
 }{p_{\bot}}e_{b^{-}\mathbf{k},\Vert}J_{n}\left(  \frac{k_{\bot}v_{\bot}%
 }{\Omega}\right) \nonumber
 \end{align}
@@ -142,19 +144,23 @@ with now (\ref{thetakp}) being%
 \Theta_{\mathbf{k}}^{b+,\left(  n\right)  }  &  =\frac{1}{\sqrt{2}}%
 e_{b0,+}e^{-i\alpha_{b}}J_{n-1}\left(  \frac{k_{b\bot}v_{\bot}}{\Omega
 }\right)  +\frac{1}{\sqrt{2}}e_{b0,-}e^{+i\alpha_{b}}J_{n+1}\left(
-\frac{k_{b\bot}v_{\bot}}{\Omega}\right)  +\frac{p_{\Vert}}{p_{\bot}%
+\frac{k_{b\bot}v_{\bot}}{\Omega}\right)  \nonumber\\&\qquad+\frac{p_{\Vert}}{p_{\bot}%
 }e_{b0,\Vert}J_{n}\left(  \frac{k_{b\bot}v_{\bot}}{\Omega}\right)
 \label{thetaknp}\\
 \Theta_{\mathbf{k}}^{b-,\left(  n\right)  }  &  =\frac{1}{\sqrt{2}}%
 e_{b0,-}^{\ast}e^{-i\left(  \alpha_{b}+\pi\right)  }J_{n-1}\left(
 \frac{k_{b\bot}v_{\bot}}{\Omega}\right)  +\frac{1}{\sqrt{2}}e_{b0,+}^{\ast
 }e^{+i\left(  \alpha_{b}+\pi\right)  }J_{n+1}\left(  \frac{k_{b\bot}v_{\bot}%
-}{\Omega}\right)  +\frac{p_{\Vert}}{p_{\bot}}e_{b0,\Vert}^{\ast}J_{n}\left(
+}{\Omega}\right) \nonumber\\&\qquad
++\frac{p_{\Vert}}{p_{\bot}}e_{b0,\Vert}^{\ast}J_{n}\left(
 \frac{k_{b\bot}v_{\bot}}{\Omega}\right) \nonumber\\
-&  =-\frac{1}{\sqrt{2}}e_{b0,-}^{\ast}e^{-i\alpha_{b}}J_{n-1}\left(
-\frac{k_{b\bot}v_{\bot}}{\Omega}\right)  -\frac{1}{\sqrt{2}}e_{b0,+}^{\ast
-}e^{+i\alpha_{b}}J_{n+1}\left(  \frac{k_{b\bot}v_{\bot}}{\Omega}\right)
-+\frac{p_{\Vert}}{p_{\bot}}e_{b0,\Vert}^{\ast}J_{n}\left(  \frac{k_{b\bot
+&
+=-\frac{1}{\sqrt{2}}e_{b0,-}^{\ast}e^{-i\alpha_{b}}J_{n-1}\left(
+\frac{k_{b\bot}v_{\bot}}{\Omega}\right)
+-\frac{1}{\sqrt{2}}e_{b0,+}^{\ast }e^{+i\alpha_{b}}J_{n+1}\left(
+\frac{k_{b\bot}v_{\bot}}{\Omega}\right)
+\nonumber\\&\qquad+\frac{p_{\Vert}}{p_{\bot}}e_{b0,\Vert}^{\ast}J_{n}\left(
+\frac{k_{b\bot
 }v_{\bot}}{\Omega}\right)  \label{thetaknm}%
 \end{align}
 where we used the fact that $\mathbf{k}_{b}$ is transformed into
@@ -173,7 +179,8 @@ so that (\ref{thetaknm}) becomes%
 ^{n}\left[  \frac{1}{\sqrt{2}}e_{b0,-}^{\ast}e^{-i\alpha_{b}}J_{n^{\prime}%
 +1}\left(  \frac{k_{b\bot}v_{\bot}}{\Omega}\right)  +\frac{1}{\sqrt{2}%
 }e_{b0,+}^{\ast}e^{+i\alpha_{b}}J_{n^{\prime}-1}\left(  \frac{k_{b\bot}%
-v_{\bot}}{\Omega}\right)  +\frac{p_{\Vert}}{p_{\bot}}e_{b0,\Vert}^{\ast
+v_{\bot}}{\Omega}\right) \right.\nonumber\\&\qquad\left.
++\frac{p_{\Vert}}{p_{\bot}}e_{b0,\Vert}^{\ast
 }J_{n^{\prime}}\left(  \frac{k_{b\bot}v_{\bot}}{\Omega}\right)  \right] \\
 &  =\left(  -1\right)  ^{n}\left(  \Theta_{\mathbf{k}}^{b+,\left(  n\right)
 ^{\prime}}\right)  ^{\ast}%

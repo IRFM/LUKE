@@ -162,7 +162,8 @@ d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }%
 &=&\frac{2\pi }{\widehat{q}}\int_{0}^{\infty }p^{2}dp\int_{0}^{2\pi }\frac{%
 d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }%
 \frac{r}{R_{p}}\frac{B_{0}}{B_{P}}\int_{-1}^{+1}\left[ \frac{1}{2}%
-\sum_{\sigma =\pm 1}\right] _{T}d\xi \;f\left( \psi ,\theta ,p,\xi \right)
+\sum_{\sigma =\pm 1}\right] _{T}d\xi \;f\left( \psi ,\theta ,p,\xi
+\right)\nonumber\\
 \end{eqnarray}
 where the trapping condition evaluated at the location $\theta $ is given by
 \begin{equation}
@@ -964,9 +965,11 @@ d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }%
 2\pi }H\left( B_{b}-B\right) \frac{1}{\left| \widehat{\psi }\cdot \widehat{r}%
 \right| }\frac{r}{R_{p}}\frac{B}{B_{P}}\frac{\xi _{0}^{\prime }}{\xi
 ^{\prime }}\frac{\partial A}{\partial \xi ^{\prime }}  \nonumber \\
-&=&\;\frac{\sigma }{\lambda \widetilde{q}}\left[ \frac{1}{2}\sum_{\sigma
-}\right] _{T}\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{
-\psi }\cdot \widehat{r}\right| }\frac{r}{R_{p}}\frac{B}{B_{P}}\int_{-1}^{\xi
+&=&\;\frac{\sigma }{\lambda \widetilde{q}}\left[
+\frac{1}{2}\sum_{\sigma }\right] _{T}\int_{0}^{2\pi }\frac{d\theta
+}{2\pi }\frac{1}{\left| \widehat{ \psi }\cdot \widehat{r}\right|
+}\frac{r}{R_{p}}\frac{B}{B_{P}}\nonumber
+\\&&\qquad\qquad\int_{-1}^{\xi
 _{0}}d\xi _{0}^{\prime }H\left( \left| \xi _{0}\right| -\sqrt{1-\frac{1}{%
 \Psi }}\right) \sigma \frac{\xi _{0}^{\prime }}{\xi ^{\prime }}\frac{%
 \partial A}{\partial \xi ^{\prime }}  \nonumber \\
@@ -1022,24 +1025,25 @@ and we find the same function $A^{\left( 0\right) }$. The existence of a
 function $A^{\left( 0\right) }$ verifying (\ref{A0}) is therefore
 demonstrated. We need now to demonstrate that $A^{\left( 0\right) }$
 verifying (\ref{A0}) leads to the bounce-averaged Fokker-Planck equation (%
-\ref{kinbav2} ):
+\ref{kinbav2}):
 \begin{eqnarray}
 \left\{ \nabla _{\mathbf{p}}\cdot \mathbf{S}_{\mathbf{p}}\right\} &=&\frac{1%
 }{p^{2}}\frac{\partial }{\partial p}\left( p^{2}S_{p}^{\left( 0\right)
 }\right) -\frac{1}{\lambda p}\frac{\partial }{\partial \xi _{0}}\left( \sqrt{%
 1-\xi _{0}^{2}}\lambda S_{\xi _{0}}^{\left( 0\right) }\right)
-\label{kinbav4} \\
-&=&\frac{1}{p^{2}}\frac{\partial }{\partial p}\left( p^{2}\frac{n_{e}\left(
-\psi \right) }{2\pi p^{2}}\frac{\partial A^{\left( 0\right) }}{\partial \xi
-_{0}}\right) -\frac{1}{\lambda p}\frac{\partial }{\partial \xi _{0}}\left(
+ \nonumber\\
+&=&\frac{1}{p^{2}}\frac{\partial }{\partial p}\left(
+p^{2}\frac{n_{e}\left( \psi \right) }{2\pi p^{2}}\frac{\partial
+A^{\left( 0\right) }}{\partial \xi _{0}}\right) -\frac{1}{\lambda
+p}\frac{\partial }{\partial \xi _{0}}\left(
 \sqrt{1-\xi _{0}^{2}}\lambda \frac{n_{e}\left( \psi \right) }{2\pi p\sqrt{%
-1-\xi _{0}^{2}}}\frac{\partial A^{\left( 0\right) }}{\partial p}\right) \\
+1-\xi _{0}^{2}}}\frac{\partial A^{\left( 0\right) }}{\partial p}\right) \nonumber\\
 &=&\frac{1}{\lambda p^{2}}\frac{\partial ^{2}}{\partial p\xi _{0}}\left[
 \frac{\lambda n_{e}\left( \psi \right) A^{\left( 0\right) }}{2\pi }\right] -%
 \frac{1}{\lambda p^{2}}\frac{\partial ^{2}}{\partial \xi _{0}\partial p}%
 \left[ \frac{\lambda n_{e}\left( \psi \right) A^{\left( 0\right) }}{2\pi }%
-\right] \\
-&=&0
+\right] \nonumber\\
+&=&0\label{kinbav4}
 \end{eqnarray}
 
 In conclusion, a stream function verifying
@@ -1937,10 +1941,10 @@ dtdkd\Omega }f^{\left( m\right) }\left( t,\mathbf{X},p\right) P_{m}\left(
 \end{eqnarray}
 or
 \begin{eqnarray}
-\frac{dn_{k}^{ei}\left( t,k,\mathbf{X},\widehat{b}\cdot \widehat{d}%
-,Z_{s}\right) }{dtdkd\Omega } &=&2\pi n_{s}\left( t,\psi \right)
+&&\frac{dn_{k}^{ei}\left( t,k,\mathbf{X},\widehat{b}\cdot \widehat{d}%
+,Z_{s}\right) }{dtdkd\Omega } =2\pi n_{s}\left( t,\psi \right)
 \sum_{m=0}^{\infty }\left( m+1/2\right) \times  \nonumber \\
-&&P_{m}\left( \widehat{b}\cdot \widehat{d}\right) \int_{0}^{\infty }vp^{2}%
+&&\quad\quad P_{m}\left( \widehat{b}\cdot \widehat{d}\right) \int_{0}^{\infty }vp^{2}%
 \frac{d\sigma _{ei}^{\left( m\right) }\left( k,p,Z_{s}\right) }{dtdkd\Omega }%
 f^{\left( m\right) }\left( t,\mathbf{X},p\right) dp
 \end{eqnarray}
@@ -2110,7 +2114,7 @@ for $f_{0}$. Because $\widetilde{f}$ has an explicit dependence upon $\theta
 P_{m}\left( \xi \right) d\xi  \nonumber \\
 &=&\int_{-1}^{+1}\widetilde{f}^{\left( 0\right) }\left( t,\psi ,p,\xi
 _{0}\right) H\left( \left| \xi _{0}\right| -\sqrt{1-\frac{1}{\Psi \left(
-\psi ,\theta \right) }}\right) P_{m}\left( \xi \right) d\xi _{0}
+\psi ,\theta \right) }}\right) P_{m}\left( \xi \right) d\xi _{0} \nonumber \\
 \label{LegCoeffftilde}
 \end{eqnarray}
 

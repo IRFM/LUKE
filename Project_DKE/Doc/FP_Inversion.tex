@@ -1,7 +1,7 @@
 
 \label{fpinversionsection}The matrix inversion procedure is based on the
 possibility of matrix factorization as discussed in Sec.\ref{LUsection}.
-Formally, the iterative method may be expressed in the simple form 
+Formally, the iterative method may be expressed in the simple form
 \begin{equation}
 \widehat{\Bbb{N}}^{\prime }Z^{(k+1)}=\widehat{\Bbb{N}}^{\prime
 }Z^{(k)}-\beta _{C}\left( \widehat{\Bbb{N}}^{\prime }Z^{(k)}-\widehat{\Bbb{P}%
@@ -14,9 +14,9 @@ for the main diagonal precondiotiong as explained in Sec.\ref{LUsection} .
 However, it has been shown that values of $\beta _{C}$ other than unity do
 not give much better results in general for implicit methods (\cite{pey98}),
 and therefore, only the case $\beta _{C}=1$ is considered. Then Eq. \ref
-{fpitequation} is equivalent to Eq. \ref{generalmatrixform} given in Sec. 
+{fpitequation} is equivalent to Eq. \ref{generalmatrixform} given in Sec.
 \ref{LUsection}. Replacing $\widehat{\Bbb{N}}^{\prime }$ by $\widehat{\Bbb{L}%
-}\widehat{\Bbb{U}}$, one obtains 
+}\widehat{\Bbb{U}}$, one obtains
 \begin{equation}
 \widehat{\Bbb{L}}\widehat{\Bbb{U}}Z^{(k+1)}=\widehat{\Bbb{P}}%
 _{N}^{-1}\Upsilon ^{(k)}  \label{LUfpitequation}
@@ -31,20 +31,20 @@ and the residual $R_{Z}^{(k)}$%
 R_{Z}^{(k)}=\widehat{\Bbb{P}}_{N}^{-1}\Upsilon ^{(k)}-\widehat{\Bbb{N}}%
 ^{\prime }Z^{(k)}
 \end{equation}
-Eq.\ref{LUfpitequation} becomes simply 
+Eq.\ref{LUfpitequation} becomes simply
 \begin{equation}
 \widehat{\Bbb{L}}\widehat{\Bbb{U}}\Delta _{Z}^{(k+1)}=R_{Z}^{(k)}
 \end{equation}
 which can be solved by two successive inversion steps, evaluating
 respectively forward and backward solutions from triangular systems of
-equations 
+equations
 \begin{eqnarray}
 \widehat{\Bbb{L}}V_{Z}^{(k+1)} &=&R_{Z}^{(k)} \\
 \widehat{\Bbb{U}}\Delta _{Z}^{(k+1)} &=&V_{Z}^{(k+1)}
 \end{eqnarray}
 
 For achieving convergence towards the steady state solution $Z^{(\infty )}$,
-various iterative methods may be used, like the Conjugate Gradient Squared 
+various iterative methods may be used, like the Conjugate Gradient Squared
 (CGS), the BiConjigate Gradient (BICG) or the Quasi-Minimal Residual (QMR)
 methods. These methods, which both give equivalent results in term of
 convergence rate, are preferred to the BiConjigate Gradient Stabilized
@@ -65,14 +65,14 @@ hinder more serious problems regarding the overall numerical conservative
 scheme. So far, a very robust and fully conservative scheme is achieved with
 the following rule of thumb
 \begin{equation}
-\left\{ 
+\left\{
 \begin{array}{l}
-\delta _{lu}=10^{-5}:MAXIT<2-3 \\ 
-\delta _{lu}=10^{-4}:MAXIT<4-5 \\ 
-\delta _{lu}=10^{-3}:MAXIT<9-10 \\ 
+\delta _{lu}=10^{-5}:MAXIT<2-3 \\
+\delta _{lu}=10^{-4}:MAXIT<4-5 \\
+\delta _{lu}=10^{-3}:MAXIT<9-10 \\
 \delta _{lu}=10^{-2}:MAXIT<19-20
 \end{array}
-\right. 
+\right.
 \end{equation}
 for all cases addressed by the code, including the in presence of RF waves.
 More detailed studied are necessary to clarify this point.
@@ -87,7 +87,7 @@ the number of iterations never exceeds $10$ in most cases.
 
 According to Ref. \cite{biz97}, convergence towards $Z^{(\infty )}$ is
 considered to be achieved and the iteration is stopped when the following
-criterion is fullfiled 
+criterion is fullfiled
 \begin{equation}
 \sqrt{\frac{2\pi \iint \left[ \partial f_{0}^{\left( 0\right) }/\partial
 t\right] ^{2}f_{0}^{\left( 0\right) }J_{p}J_{\xi _{0}}dpd\xi _{0}}{2\pi
@@ -104,17 +104,21 @@ level at all plasma locations.}.
 
 Projected on the numerical grid, the criterion (\ref{fpconvcrit}) becomes
 
-\begin{equation}
-\sqrt{\frac{\sum_{i=0}^{i=n_{p}-1}\sum_{j=0}^{j=n_{\xi _{0}}-1}\left[
+\begin{align}
+&\left[\sum_{i=0}^{i=n_{p}-1}\sum_{j=0}^{j=n_{\xi _{0}}-1}\left[
 f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) \left( k+1\right)
-}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) \left( k\right) }\right]
-^{2}f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) \left( k\right)
-}p_{i+1/2}^{2}\Delta p_{i+1/2}\Delta \xi _{0,j+1/2}}{\Delta
+}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) \left( k\right)
+}\right] ^{2}\right.\nonumber\\&\left.\quad\times
+f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) \left( k\right)
+}p_{i+1/2}^{2}\Delta p_{i+1/2}\Delta \xi _{0,j+1/2}\right]^{1/2}
+\nonumber\\&\quad\times \left[\Delta
 t^{2}\sum_{i=0}^{i=n_{p}-1}\sum_{j=0}^{j=n_{\xi
 _{0}}-12}f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) \left( k\right)
-}p_{i+1/2}^{2}\Delta p_{i+1/2}\Delta \xi _{0,j+1/2}}}<\mathcal{R}_{\mathcal{C%
+}p_{i+1/2}^{2}\Delta p_{i+1/2}\Delta \xi
+_{0,j+1/2}\right]^{-1/2}\nonumber\\&
+<\mathcal{R}_{\mathcal{C%
 }}^{f}
-\end{equation}
+\end{align}
 
 The criterion introduced in Ref. \cite{kar86} has the main advantage to
 ensure that convergence is achieved not for electrons whose energy is close
@@ -138,7 +142,7 @@ solutions. This point is extensively discussed in Sec.\ref{lhcdsection}.
 Conversely, when time step is very large, i.e. $\Delta \overline{t}\geq 1000,
 $ the convergence may be achieved for a given value $\mathcal{R}_{\mathcal{C}%
 }^{f}$  before the current level is fully established. Such an event may
-arise because there is a too reduced number of iterations which involves the 
+arise because there is a too reduced number of iterations which involves the
 $1^{st}$ order Legendre non-linear correction term for momentum
 conservation. Consequently, to avoid this problem, a minimum number of
 iterations has been set to $6$, which turns out to be enough for giving

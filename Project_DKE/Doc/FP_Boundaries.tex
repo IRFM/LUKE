@@ -6,7 +6,7 @@ Momentum dynamics is described in spherical coordinates, because collisions
 is the dominant physical process for current drive and matrices are
 therefore expected to be well conditionned. Consequently, internal
 boundaries must be specified at $p=0$ and $\left| \xi _{0}\right| =1$ which
-correspond to the condition 
+correspond to the condition
 \begin{equation}
 \begin{array}{l}
 f_{0}^{\left( 0\right) }\left( \psi ,-p,\xi _{0}\right) =f_{0}^{\left(
@@ -24,22 +24,22 @@ that the conservative nature of the code is well satisfied}. One must thus
 determine $\left( \Delta p,\Delta \xi _{0}\right) $ at $p=0$ and $\left| \xi
 _{0}\right| =1$ for the flux grid only, since the distribution and flux
 grids are interlaced by definition. Therefore, starting from grids
-definition given in Sec. \ref{Griddef}, 
+definition given in Sec. \ref{Griddef},
 \begin{equation}
 \Delta \xi _{0,0}=\frac{\Delta \xi _{0,1/2}+\Delta \xi _{0,-1/2}}{2}=\Delta %
-\xi _{0,1/2}=\xi _{0,1}-\xi _{0,0}=2\left( \xi _{0,1/2}+1\right) 
+\xi _{0,1/2}=\xi _{0,1}-\xi _{0,0}=2\left( \xi _{0,1/2}+1\right)
 \end{equation}
 as $\Delta \xi _{0,1/2}=\Delta \xi _{0,-1/2},$ $\xi _{0,1/2}=\frac{\xi
 _{0,1}+\xi _{0,0}}{2}$et $\xi _{0,0}=-1.$
 
-Much in the same way, 
+Much in the same way,
 \begin{equation}
 \Delta \xi _{0,n_{\xi }}=\frac{\Delta \xi _{0,n_{\xi }+1/2}+\Delta \xi
 _{0,n_{\xi }-1/2}}{2}=\Delta \xi _{0,n_{\xi }-1/2}=\xi _{0,n_{\xi }}-\xi
 _{0,n_{\xi }-1}=1-\xi _{0,n_{\xi }-1}
 \end{equation}
 since $\Delta \xi _{0,n_{\xi }+1/2}=\Delta \xi _{0,n_{\xi }-1/2}.$
-Furthermore, since by definition, 
+Furthermore, since by definition,
 \begin{equation}
 \xi _{0,n_{\xi }-1/2}=\frac{\xi _{0,n_{\xi }}+\xi _{0,n_{\xi }-1}}{2}=\frac{
 1+\xi _{0,n_{\xi }-1}}{2}
@@ -50,13 +50,13 @@ one obtains finally
 \Delta \xi _{0,n_{\xi }}=2\left( 1-\xi _{0,n_{\xi }-1/2}\right)
 \end{equation}
 
-A similar technique may be used for the momentum grid $p$. Hence 
+A similar technique may be used for the momentum grid $p$. Hence
 \begin{equation}
 \Delta p_{0}=\frac{1}{2}\left( \Delta p_{1/2}+\Delta p_{-1/2}\right) =\Delta
 p_{1/2}
 \end{equation}
 using $\Delta p_{-1/2}=\Delta p_{1/2}.$ Since $\Delta p_{1/2}=p_{1}-p_{0}$,
-and $p_{1/2}=\frac{p_{1}+p_{0}}{2}$ one obtains finally, 
+and $p_{1/2}=\frac{p_{1}+p_{0}}{2}$ one obtains finally,
 \begin{equation}
 \Delta p_{0}=2p_{1/2}
 \end{equation}
@@ -95,7 +95,7 @@ B_{0,l+1/2}}\frac{p_{1}^{2}\mathbf{S}_{p,l+1/2,1,j+1/2}^{\left( 0\right)
 }\right) \right| _{l+1/2,1/2,j+1/2}^{(k+1)}  \label{boundary_p}
 \end{eqnarray}
 since $p_{0}^{2}\mathbf{S}_{p,l+1/2,0,j+1/2}^{\left( 0\right) (k+1)}=0$ with
-the flux grid here considered, at $p_{0}=0$. In a similar way, 
+the flux grid here considered, at $p_{0}=0$. In a similar way,
 \begin{eqnarray}
 &&\left. \frac{\widetilde{q}\left( \psi \right) }{B_{0}\left( \psi \right) }%
 p^{2}\nabla _{\mathbf{p}}\cdot \mathbf{S}_{\mathbf{p}}^{\left( 0\right)
@@ -105,10 +105,10 @@ p^{2}\mathbf{S}_{p}^{\left( 0\right) }\right) }{\partial p}\right|
 _{l+1/2,i+1/2,1/2}^{(k+1)} \\
 &&-\frac{\widetilde{q}_{l+1/2}}{B_{0,l+1/2}}\frac{p_{i+1/2}}{\lambda
 ^{l+1/2,j+1/2}}\times   \nonumber \\
-&&\frac{\sqrt{1-\xi _{0,1}^{2}}\lambda \left( \psi ,\xi _{0,1}\right) 
+&&\frac{\sqrt{1-\xi _{0,1}^{2}}\lambda \left( \psi ,\xi _{0,1}\right)
 \mathbf{S}_{\xi ,l+1/2,i+1/2,1}^{\left( 0\right) (k+1)}}{\Delta \xi _{0,1/2}}
 \end{eqnarray}
-and 
+and
 \begin{eqnarray}
 &&\left. \frac{\widetilde{q}\left( \psi \right) }{B_{0}\left( \psi \right) }%
 p^{2}\nabla _{\mathbf{p}}\cdot \mathbf{S}_{\mathbf{p}}^{\left( 0\right)
@@ -122,16 +122,16 @@ _{l+1/2,i+1/2,n_{\xi _{0}}-1/2}^{(k+1)}  \nonumber \\
 \mathbf{S}_{\xi ,l+1/2,i+1/2,n_{\xi _{0}}-1}^{\left( 0\right) (k+1)}}{\Delta %
 \xi _{0,n_{\xi _{0}}-1/2}}
 \end{eqnarray}
-as 
+as
 \begin{equation}
-\left\{ 
+\left\{
 \begin{array}{l}
 \sqrt{1-\xi _{0,0}^{2}}\lambda ^{l+1/2,0}\mathbf{S}_{\xi
-,l+1/2,i+1/2,0}^{\left( 0\right) }=0 \\ 
+,l+1/2,i+1/2,0}^{\left( 0\right) }=0 \\
 \sqrt{1-\xi _{0,n_{\xi _{0}}}^{2}}\lambda ^{l+1/2,n_{\xi _{0}}}\mathbf{S}%
 _{\xi ,l+1/2,i+1/2,n_{\xi _{0}}}^{\left( 0\right) }=0
 \end{array}
-\right. 
+\right.
 \end{equation}
 with $\xi _{0,0}^{2}=\xi _{0,n_{\xi _{0}}}^{2}=1$
 
@@ -146,7 +146,7 @@ Maxwellian distribution function, $p_{\max }\gg \gamma \left( \omega
 /k\right) _{\max }$ for the RF waves and $p_{\max }\gg p_{Dreicer}$ for the
 runaway electrons. These conditions must ensure the conservative nature of
 the problem here addressed, i.e. that plasma cannot enter or leave the
-domain of integration. This corresponds to the local condition 
+domain of integration. This corresponds to the local condition
 \begin{equation}
 \mathbf{S}_{\mathbf{p}}\cdot \widehat{n}=0  \label{Externboundaryp}
 \end{equation}
@@ -182,11 +182,11 @@ p_{n_{p}-1/2}=p_{n_{p}}-p_{n_{p}-1}
 \end{equation}
 
 As by definition $p_{n_{p}+1/2}=\frac{p_{n_{p}}+p_{n_{p}-1}}{2}=\frac{%
-p_{\max }+p_{n_{p}-1}}{2},$ it results 
+p_{\max }+p_{n_{p}-1}}{2},$ it results
 \begin{equation}
 \Delta p_{n_{p}}=2\left( p_{n_{p}}-p_{n_{p}-1/2}\right)
 \end{equation}
-or in equivalent manner, 
+or in equivalent manner,
 \begin{equation}
 \Delta p_{\max }=2\left( p_{\max }-p_{n_{p}-1/2}\right)
 \end{equation}
@@ -203,18 +203,18 @@ that the total number of electrons is kept constant. Several techniques may
 be used to avoid a decay of the number of electrons at the runaway rate $%
 \Gamma _{R}^{\left( 0\right) }$, as defined in Sec. \ref{moments}.
 
-A possibility is to perform the following substitution 
+A possibility is to perform the following substitution
 \begin{equation}
 f_{0}^{\left( 0\right) }\left( t,\psi ,p,\xi _{0}\right) \rightarrow
 f_{0}^{\left( 0\right) }\left( \psi ,p,\xi _{0}\right) \exp \left[
 -\int_{0}^{t}\frac{\Gamma _{R}^{\left( 0\right) }\left( \psi ,t^{\prime
-}\right) }{n_{e}\left( \psi \right) }dt^{\prime }\right] 
+}\right) }{n_{e}\left( \psi \right) }dt^{\prime }\right]
 \end{equation}
 in the Fokker-Planck equation, so that $f_{0}^{\left( 0\right) }\left(
 t\rightarrow \infty \right) $ is independent of $t$. In that case, the
 momentum matrix coefficients $\overline{\overline{M}}%
 _{p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }$ must be modified according to the
-prescription 
+prescription
 \begin{equation}
 \overline{\overline{M}}_{p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) \left(
 k\right) }\rightarrow \overline{\overline{M}}_{p,l+1/2,i+1/2,j+1/2}^{\left(
@@ -242,11 +242,11 @@ meaning. Indeed, the loss of electrons will generate locally an electric
 field which in turn will force a flux of particles to compensate this local
 depletion. By definition, the number of electrons leaving the integration
 domain is simply $\Gamma _{R}^{\left( 0\right) }.$ In principle, without
-particle losses, $p_{0}^{2}S_{p,l+1/2,0,j+1/2}^{\left( 0\right) }=0,$ though 
+particle losses, $p_{0}^{2}S_{p,l+1/2,0,j+1/2}^{\left( 0\right) }=0,$ though
 $S_{p,l+1/2,0,j+1/2}^{\left( 0\right) }$ is infinite at $p=0$, since, by
 definition, the Maxwellian distribution is an exact eigenfunction of the
 Fokker-Planck operator. Compensation of hot electron losses by cold ones
-leads to the relation 
+leads to the relation
 \begin{equation}
 2\pi \sum_{j=0}^{n_{\xi _{0}}-1}p_{0}^{2}S_{p,l+1/2,0,j+1/2}^{\left(
 0\right) \left( k+1\right) }\Delta \xi _{0,j+1/2}=\Gamma _{R,l+1/2}^{\left(
@@ -255,27 +255,27 @@ leads to the relation
 
 By definition, $S_{p,l+1/2,0,j+1/2}^{\left( 0\right) \left( k+1\right) }$ is
 assumed uniform in pitch-angle, since no specific direction can be physicaly
-priviledged. Therefore, 
+priviledged. Therefore,
 \begin{equation}
 2\pi p_{0}^{2}S_{p,l+1/2,0,j+1/2}^{\left( 0\right) \left( k+1\right)
 }\sum_{j=0}^{n_{\xi _{0}}-1}\Delta \xi _{0,j+1/2}=4\pi
 p_{0}^{2}S_{p,l+1/2,0,j+1/2}^{\left( 0\right) \left( k+1\right) }=\Gamma
 _{R,l+1/2}^{\left( 0\right) \left( k+1\right) }
 \end{equation}
-and 
+and
 \begin{equation}
 p_{0}^{2}S_{p,l+1/2,0,j+1/2}^{\left( 0\right) \left( k+1\right) }=\frac{
 \Gamma _{R,l+1/2}^{\left( 0\right) \left( k+1\right) }}{4\pi }
 \end{equation}
 for all $j$ values.
 
-Expression (\ref{boundary_p}) is then modified according to the relation 
+Expression (\ref{boundary_p}) is then modified according to the relation
 \begin{eqnarray}
 \left. \frac{\widetilde{q}}{B_{0}}p^{2}\nabla _{\mathbf{p}}\cdot \mathbf{S}_{%
 \mathbf{p}}^{\left( 0\right) }\right| _{l+1/2,1/2,j+1/2}^{(k+1)} &=&\frac{%
 \widetilde{q}_{l+1/2}}{B_{0,l+1/2}}\left( \frac{p_{1}^{2}\mathbf{S}%
 _{p,l+1/2,1,j+1/2}^{\left( 0\right) (k+1)}}{\Delta p_{1/2}}-\frac{p_{0}^{2}%
-\mathbf{S}_{p,l+1/2,0,j+1/2}^{\left( 0\right) (k+1)}}{\Delta p_{1/2}}\right) 
+\mathbf{S}_{p,l+1/2,0,j+1/2}^{\left( 0\right) (k+1)}}{\Delta p_{1/2}}\right)
 \nonumber \\
 &&-\frac{\widetilde{q}_{l+1/2}}{B_{0,l+1/2}}\frac{p_{1/2}}{\lambda
 ^{l+1/2,j+1/2}}\times   \nonumber \\
@@ -283,7 +283,7 @@ _{p,l+1/2,1,j+1/2}^{\left( 0\right) (k+1)}}{\Delta p_{1/2}}-\frac{p_{0}^{2}%
 \lambda \mathbf{S}_{\xi }^{\left( 0\right) }\right) \right|
 _{l+1/2,1/2,j+1/2}^{(k+1)}
 \end{eqnarray}
-or 
+or
 \begin{eqnarray}
 \left. \frac{\widetilde{q}}{B_{0}}p^{2}\nabla _{\mathbf{p}}\cdot \mathbf{S}_{%
 \mathbf{p}}^{\left( 0\right) }\right| _{l+1/2,1/2,j+1/2}^{(k+1)} &=&\frac{%
@@ -304,13 +304,13 @@ _{R,l+1/2}^{\left( 0\right) (k+1)}$ by its explicit form $\Gamma
 _{R,l+1/2}^{\left( 0\right) (k)}$, so that one may avoid to recalculate
 matrix $\overline{\overline{M}}_{p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }$ at
 each iteration, an extremely time consuming procedure. Consequently, with
-this scheme, the zero order Fokker-Planck equation becomes simply 
+this scheme, the zero order Fokker-Planck equation becomes simply
 \begin{eqnarray}
 &&\frac{\widetilde{q}_{l+1/2}}{B_{0,l+1/2}}p_{i+1/2}^{2}\frac{%
 f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right)
 (k+1)}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k)}}{\Delta t}  \nonumber \\
 &&+\left. \frac{\widetilde{q}}{B_{0}}p^{2}\nabla _{\mathbf{p}}\cdot \mathbf{S%
-}_{\mathbf{p}}^{\left( 0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)} 
+}_{\mathbf{p}}^{\left( 0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)}
 \nonumber \\
 &&+\left. \frac{\widetilde{q}}{B_{0}}p^{2}\nabla _{\psi }\cdot \mathbf{S}%
 _{\psi }^{\left( 0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
@@ -332,35 +332,36 @@ the basic assumptions that are used to derive the linearized Fokker-Planck
 equation around a Maxwellian bulk. Therefore, in order to avoid this
 singularity, an alternative approach may be to add a source term normalized
 to $\Gamma _{R,l+1/2}^{\left( 0\right) (k)}$ but, whose distribution
-function is an exact Maxwellian corresponding to the electron temperature at 
+function is an exact Maxwellian corresponding to the electron temperature at
 $\psi _{l+1/2}.$
 
 In that case, in steady-state regime, the flux divergence $\nabla _{\mathbf{p%
 }}\cdot \mathbf{S}_{\mathbf{p}}^{\left( 0\right) }$ is no more null at each
-plasma location, but is given by the relation 
+plasma location, but is given by the relation
 \begin{equation}
 \left. p^{2}\nabla _{\mathbf{p}}\cdot \mathbf{S}_{\mathbf{p}}^{\left(
 0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)}=p_{i+1/2}^{2}\frac{\Gamma
 _{R,l+1/2}^{\left( 0\right) (k)}}{\left[ 2\pi T_{e,l+1/2}\right] ^{3/2}}\exp
 \left[ -\frac{p_{i+1/2}^{2}}{\left( 1+\gamma _{l+1/2,i+1/2}\right)
-T_{e,l+1/2}}\right] 
+T_{e,l+1/2}}\right]
 \end{equation}
 where $T_{e}\left( \psi _{l+1/2}\right) =T_{e,l+1/2},$ which corresponds to
-the existence of an external Maxwellian source term. By definition, 
-\begin{equation}
-2\pi \sum_{j=0}^{n_{\xi _{0}}-1}\sum_{i=0}^{n_{p}-1}\frac{\Gamma
-_{R,l+1/2}^{\left( 0\right) (k)}}{\left[ 2\pi T_{e,l+1/2}\right] ^{3/2}}\exp
-\left[ -\frac{p_{i+1/2}^{2}}{\left( 1+\gamma _{l+1/2,i+1/2}\right)
-T_{e,l+1/2}}\right] p_{i+1/2}^{2}\Delta p_{i+1/2}\Delta \xi
-_{0,j+1/2}=\Gamma _{R,l+1/2}^{\left( 0\right) (k)}
-\end{equation}
-and the Fokker-Planck equation becomes simply 
+the existence of an external Maxwellian source term. By definition,
+\begin{align}
+&2\pi \sum_{j=0}^{n_{\xi _{0}}-1}\sum_{i=0}^{n_{p}-1}\frac{\Gamma
+_{R,l+1/2}^{\left( 0\right) (k)}}{\left[ 2\pi T_{e,l+1/2}\right]
+^{3/2}}\exp \left[ -\frac{p_{i+1/2}^{2}}{\left( 1+\gamma
+_{l+1/2,i+1/2}\right) T_{e,l+1/2}}\right]\nonumber\\&\times
+p_{i+1/2}^{2}\Delta p_{i+1/2}\Delta \xi _{0,j+1/2}=\Gamma
+_{R,l+1/2}^{\left( 0\right) (k)}
+\end{align}
+and the Fokker-Planck equation becomes simply
 \begin{eqnarray}
 &&\frac{\widetilde{q}_{l+1/2}}{B_{0,l+1/2}}p_{i+1/2}^{2}\frac{%
 f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right)
 (k+1)}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k)}}{\Delta t}  \nonumber \\
 &&+\left. \frac{\widetilde{q}}{B_{0}}p^{2}\nabla _{\mathbf{p}}\cdot \mathbf{S%
-}_{\mathbf{p}}^{\left( 0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)} 
+}_{\mathbf{p}}^{\left( 0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)}
 \nonumber \\
 &&+\left. \frac{\widetilde{q}}{B_{0}}p^{2}\nabla _{\psi }\cdot \mathbf{S}%
 _{\psi }^{\left( 0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
@@ -376,7 +377,7 @@ underlying physics, it has also still some numerical drawbacks, because of
 the forward time differencing. It is well known that such terms put strong
 limitations on the time step value $\Delta t,$ in order to preserve
 numerical stability. A coarse estimate of its level can be deduced from the
-condition 
+condition
 \begin{equation}
 \frac{\Gamma _{R,l+1/2}^{\left( 0\right) (k)}}{\left[ 2\pi
 T_{e,l+1/2}\right] ^{3/2}}\exp \left[ -\frac{p_{i+1/2}^{2}}{\left( 1+\gamma
@@ -385,7 +386,7 @@ f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k)}}{\Delta t}
 \end{equation}
 
 Assuming $f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k)}\simeq
-f_{0M,l+1/2,i+1/2,j+1/2}^{\left( 0\right) },$ it turns out that 
+f_{0M,l+1/2,i+1/2,j+1/2}^{\left( 0\right) },$ it turns out that
 \begin{equation}
 \frac{\Delta t\Gamma _{R,l+1/2}^{\left( 0\right) (k)}}{n_{e,l+1/2}}\ll 1
 \end{equation}
@@ -400,13 +401,13 @@ normalized Ohmic electric field less than $0.05$.
 Finally, the ultimate and most simple approach to deal with the loss of
 runaway electrons is to enforce the electron distribution function at each
 time step. Defining a numerical density $n_{e,l+1/2}^{(k)}$ at time step $k$
-, 
+,
 \begin{equation}
 2\pi \sum_{j=0}^{n_{\xi
 _{0}}-1}\sum_{i=0}^{n_{p}-1}f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right)
 (k)}p_{i+1/2}^{2}\Delta p_{i+1/2}\Delta \xi _{0,j+1/2}=n_{e,l+1/2}^{(k)}
 \end{equation}
-this procedure corresponds to the following replacement 
+this procedure corresponds to the following replacement
 \begin{equation}
 f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k)}\rightarrow \frac{n_{e,l+1/2}}{%
 n_{e,l+1/2}^{(k)}}f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k)}
@@ -438,28 +439,28 @@ line, as discussed in Sec. \ref{RFdiff}, and therefore, a tail of very
 energetic electrons is pulled out from the bulk in the parallel direction $%
 p_{\Vert }$ as for the Ohmic electric field. Unlike the Ohmic case, the
 domain of interaction for the Lower Hybrid wave is bounded in momentum
-space, and is given by the well known wave-particle resonance condition 
+space, and is given by the well known wave-particle resonance condition
 \begin{equation}
 v_{\Vert \min }^{LH}\leq \frac{p_{\Vert }}{\gamma }\leq v_{\Vert \max }^{LH}
 \end{equation}
 where the relativistic factor $\gamma =\sqrt{1+\left( \beta _{th}p\right)
 ^{2}},$ $\beta _{th}=v_{th}/c$ and $p^{2}=p_{\Vert }^{2}+p_{\bot }^{2}.$ On
-the axis $p_{\bot }=0,$ the resonance domain is given by the relation 
+the axis $p_{\bot }=0,$ the resonance domain is given by the relation
 \begin{equation}
 p_{\Vert \min }^{LH,0}\leq p_{\Vert }^{0}\leq p_{\Vert \max }^{LH,0}
 \end{equation}
-where 
+where
 \begin{equation}
 p_{\Vert \min }^{LH,0}=\frac{v_{\Vert \min }^{LH}}{\sqrt{1-\left( \beta
 _{th}v_{\Vert \min }^{LH}\right) ^{2}}}
 \end{equation}
-and 
+and
 \begin{equation}
 p_{\Vert \max }^{LH,0}=\frac{v_{\Vert \max }^{LH}}{\sqrt{1-\left( \beta
 _{th}v_{\Vert \max }^{LH}\right) ^{2}}}
 \end{equation}
 
-When $p_{\bot }\neq 0,$ the lower bound of the resonance condition becomes 
+When $p_{\bot }\neq 0,$ the lower bound of the resonance condition becomes
 \begin{equation}
 \left( \frac{p_{\Vert \min }^{LH}}{p_{\Vert \min }^{LH,0}}\right) ^{2}-\beta
 _{th}^{2}p_{\bot }^{2}=1
@@ -474,9 +475,9 @@ _{th}^{2}p_{\bot }^{2}=1
 For very cold plasmas, i.e. when $\beta _{th}^{2}p_{\max }^{2}\ll 1$ since $%
 p_{\bot }\leq p_{\max },$%
 \begin{equation}
-\left\{ 
+\left\{
 \begin{array}{l}
-p_{\Vert \min }^{LH}\simeq p_{\Vert \min }^{LH,0} \\ 
+p_{\Vert \min }^{LH}\simeq p_{\Vert \min }^{LH,0} \\
 p_{\Vert \max }^{LH}\simeq p_{\Vert \max }^{LH,0}
 \end{array}
 \right.
@@ -522,7 +523,7 @@ It is difficult to introduce an unambiguous criterion which defines limits
 beyond which electron losses become important, since there is an interplay
 between the shape of the resonant domain, and also the absolute level of the
 quasilinear diffusion rate. As discussed in Sec. \ref{RFdiff}, its value is
-given by the relation 
+given by the relation
 \begin{eqnarray}
 \overline{D}_{b,n}^{\text{RF}(0)}(p,\xi _{0}) &=&\frac{\gamma p_{Te}}{%
 p\left| \xi _{0}\right| }\frac{1}{\lambda \widetilde{q}}\frac{r_{\theta _{b}}%
@@ -532,12 +533,12 @@ _{b}}\left| \Theta _{\mathbf{k,}\theta _{b}}^{b,n}\left( \mathbf{k}%
 _{b}\right) \right| ^{2}\times   \nonumber \\
 &&H\left( \theta _{b}-\theta _{\min }\right) H\left( \theta _{\max }-\theta
 _{b}\right) \left[ \frac{1}{2}\sum\limits_{\sigma }\right] _{T}\delta \left(
-N_{\Vert b}-N_{\Vert \text{res}}^{\theta _{b}}\right) 
+N_{\Vert b}-N_{\Vert \text{res}}^{\theta _{b}}\right)
 \end{eqnarray}
 which roughly decreases as $p_{\Vert }^{-1}$. This dependence, usually
 neglected since the shape of the plateau in the distribution function is
 independent of the value of $\overline{D}_{b,n}^{\text{RF}(0)}$ when the
-quasilinear diffusion rate is very large, is however very important when the 
+quasilinear diffusion rate is very large, is however very important when the
 $2-D$ momentum dynamics is fully taken into account. This is in fact the
 only way to avoid unacceptable electrons losses, and $p_{\max }$ must
 determined so that $\overline{D}_{b,n}^{\text{RF}(0)}\ll 1$ at the boundary
@@ -553,23 +554,23 @@ crosses the integration domain at $p_{\bot }/p_{\max }>1/\sqrt{2}.$ This
 purely geometrical effect put very strong limitations on the lowest level of
 the parallel refractive index $n_{\Vert \min }^{LH}$ that can be studied.
 Indeed, , $p_{\Vert \max }^{LH,0}\left( p_{\bot }=0\right) $ is therefore
-given by the relation, 
+given by the relation,
 \begin{equation}
 p_{\Vert \max }^{LH,0}=1/\sqrt{\frac{2}{p_{\max }^{2}}+\beta _{th}^{2}}
 \end{equation}
-or 
+or
 \begin{equation}
 v_{\Vert \max }^{LH}=\frac{1}{\sqrt{2}}\frac{p_{\max }}{\sqrt{1+\beta
 _{th}^{2}p_{\max }^{2}}}
 \end{equation}
 
 In term of parallel refractive wave index, the previous condition is
-equivalent to the simple relation 
+equivalent to the simple relation
 \begin{equation}
 n_{\Vert \min }^{LH}=\sqrt{2}\frac{\sqrt{1+\beta _{th}^{2}p_{\max }^{2}}}{%
 \beta _{th}p_{\max }}
 \end{equation}
-where the usual resonance relation 
+where the usual resonance relation
 \begin{equation}
 v_{\Vert \max }^{LH}=\frac{1}{\beta _{th}}\frac{1}{n_{\Vert \min }^{LH}}
 \end{equation}
@@ -578,7 +579,7 @@ is used. In the limit $\beta _{th}^{2}p_{\max }^{2}\gg 1,$ $v_{\Vert \max
 \begin{equation}
 v_{\Vert \max }^{LH}\simeq \frac{1}{\sqrt{2}}\frac{1}{\beta _{th}}
 \end{equation}
-which equivalent to 
+which equivalent to
 \begin{equation}
 n_{\Vert \min }^{LH}\gtrsim \sqrt{2}\simeq 1.4
 \end{equation}
@@ -610,7 +611,7 @@ region, a physical property that is described by the term $\left[ \frac{1}{2}%
 \sum_{\sigma }\right] _{T}$ in the bounce averaging procedure in Sec. \ref
 {bouncegeneral}. This effect introduces a new internal boundary
 corresponding to the trapped-passing transition, and an external one at $\xi
-_{0}=0,$ since by symmetry, 
+_{0}=0,$ since by symmetry,
 \begin{equation}
 \frac{\partial f_{0}^{\left( 0\right) }}{\partial \xi _{0}}\left( \xi
 _{0}=0\right) =0
@@ -633,17 +634,17 @@ f_{0}^{\left( 0\right) }\left( \psi ,p,\xi _{0}\right) $ in the interval $%
 A specific treatment of the new internal boundary must be considered, so
 that flux continuity is correctly described between co- and counter-passing
 regions, despite the reduction of the phase space domain. Let define grid
-points 
+points
 \begin{equation}
-\left\{ 
+\left\{
 \begin{array}{l}
-1:\left( l+1/2,i+1/2,j_{T,l+1/2}^{+}-1/2\right)  \\ 
-2:\left( l+1/2,i+1/2,j_{T,l+1/2}^{+}+1/2\right)  \\ 
-3:\left( l+1/2,i+1/2,j_{T,l+1/2}^{-}+1/2\right)  \\ 
-4:\left( l+1/2,i+1/2,j_{T,l+1/2}^{-}-1/2\right)  \\ 
-5:\left( l+1/2,i+1/2,j_{T_{0}}+1/2\right) 
+1:\left( l+1/2,i+1/2,j_{T,l+1/2}^{+}-1/2\right)  \\
+2:\left( l+1/2,i+1/2,j_{T,l+1/2}^{+}+1/2\right)  \\
+3:\left( l+1/2,i+1/2,j_{T,l+1/2}^{-}+1/2\right)  \\
+4:\left( l+1/2,i+1/2,j_{T,l+1/2}^{-}-1/2\right)  \\
+5:\left( l+1/2,i+1/2,j_{T_{0}}+1/2\right)
 \end{array}
-\right. 
+\right.
 \end{equation}
 where $j_{T_{0}}=\left( n_{\xi _{0}}+1\right) /2=\left(
 j_{T,l+1/2}^{+}+j_{T,l+1/2}^{-}\right) /2,$ as indicated in Fig.\ref
@@ -662,9 +663,9 @@ the axis $\xi _{0}=0,$ in the trapped sub-domain $0\leq \xi _{0}\leq \xi
 _{0T}$.
 
 Before performing the reduction of the domain of integration, the symmetry
-inside the trapped region must be enforced according to the relation 
+inside the trapped region must be enforced according to the relation
 \begin{equation}
-\overline{\overline{M}}_{p,l+1/2,i+1/2,j^{+}+1/2}^{\left( 0\right) }=\left( 
+\overline{\overline{M}}_{p,l+1/2,i+1/2,j^{+}+1/2}^{\left( 0\right) }=\left(
 \overline{\overline{M}}_{p,l+1/2,i+1/2,j^{+}+1/2}^{\left( 0\right) }+%
 \overline{\overline{M}}_{p,l+1/2,i+1/2,j^{-}+1/2}^{\left( 0\right) }\right)
 /2
@@ -677,7 +678,7 @@ wave-particle interaction.
 
 The reduction of the domain of integration in the momentum phase space leads
 to introduce a new matrix, $\widehat{\overline{M}}_{p}^{\left( 0\right) }$
-whose coefficients are defined as follows 
+whose coefficients are defined as follows
 \begin{equation}
 \widehat{\overline{M}}_{p,l+1/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right) }=%
 \overline{\overline{M}}_{p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }
@@ -702,53 +703,53 @@ wich link grid points $4$ and $1.$ Much in the same way, flux relations
 between grid points $2$ and $3$ no more exist, and therefore, the flux
 relation between grid points $2$ and $1$ must be modified accordingly. This
 procedure leads to add six new set of coefficients to the matrix $\widehat{%
-\overline{M}}_{p}^{\left( 0\right) }$, namely 
+\overline{M}}_{p}^{\left( 0\right) }$, namely
 \begin{equation}
-\left\{ 
+\left\{
 \begin{array}{l}
 \widehat{\overline{M}}_{p,l+1/2,i-1/2,\left[ j_{T,l+1/2}^{\prime
--}-1/2\right] +n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } \\ 
+-}-1/2\right] +n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } \\
 \widehat{\overline{M}}_{p,l+1/2,i+1/2,\left[ j_{T,l+1/2}^{\prime
--}-1/2\right] +n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } \\ 
+-}-1/2\right] +n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } \\
 \widehat{\overline{M}}_{p,l+1/2,i+3/2,\left[ j_{T,l+1/2}^{\prime
 -}-1/2\right] +n_{\xi _{0T,l+1/2}}}^{\left( 0\right) }
 \end{array}
 \right.
 \end{equation}
-and 
+and
 \begin{equation}
-\left\{ 
+\left\{
 \begin{array}{l}
 \widehat{\overline{M}}_{p,l+1/2,i-1/2,\left[ j_{T,l+1/2}^{\prime
-+}-1/2\right] -n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } \\ 
++}-1/2\right] -n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } \\
 \widehat{\overline{M}}_{p,l+1/2,i+1/2,\left[ j_{T,l+1/2}^{\prime
-+}-1/2\right] -n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } \\ 
++}-1/2\right] -n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } \\
 \widehat{\overline{M}}_{p,l+1/2,i+3/2,\left[ j_{T,l+1/2}^{\prime
 +}-1/2\right] -n_{\xi _{0T,l+1/2}}}^{\left( 0\right) }
 \end{array}
 \right.
 \end{equation}
-while matrix coefficients 
+while matrix coefficients
 \begin{equation}
-\left\{ 
+\left\{
 \begin{array}{l}
 \widehat{\overline{M}}_{p,l+1/2,i-1/2,\left[ j_{T,l+1/2}^{\prime
--}-1/2\right] +1}^{\left( 0\right) } \\ 
+-}-1/2\right] +1}^{\left( 0\right) } \\
 \widehat{\overline{M}}_{p,l+1/2,i+1/2,\left[ j_{T,l+1/2}^{\prime
--}-1/2\right] +1}^{\left( 0\right) } \\ 
+-}-1/2\right] +1}^{\left( 0\right) } \\
 \widehat{\overline{M}}_{p,l+1/2,i+3/2,\left[ j_{T,l+1/2}^{\prime
 -}-1/2\right] +1}^{\left( 0\right) }
 \end{array}
 \right.
 \end{equation}
-and 
+and
 \begin{equation}
-\left\{ 
+\left\{
 \begin{array}{l}
 \widehat{\overline{M}}_{p,l+1/2,i-1/2,\left[ j_{T,l+1/2}^{\prime
-+}-1/2\right] +1}^{\left( 0\right) } \\ 
++}-1/2\right] +1}^{\left( 0\right) } \\
 \widehat{\overline{M}}_{p,l+1/2,i+1/2,\left[ j_{T,l+1/2}^{\prime
-+}-1/2\right] +1}^{\left( 0\right) } \\ 
++}-1/2\right] +1}^{\left( 0\right) } \\
 \widehat{\overline{M}}_{p,l+1/2,i+3/2,\left[ j_{T,l+1/2}^{\prime
 +}-1/2\right] +1}^{\left( 0\right) }
 \end{array}
@@ -767,12 +768,12 @@ As shown in a graphic form in Figs. \ref{ninepointscheme1} and \ref
 {ninepointscheme4},
 
 \begin{equation}
-\left\{ 
+\left\{
 \begin{array}{l}
 \widehat{\overline{M}}_{p,l+1/2,i-1/2,\left[ j_{T,l+1/2}^{\prime
--}-1/2\right] +1}^{\left( 0\right) }=0 \\ 
+-}-1/2\right] +1}^{\left( 0\right) }=0 \\
 \widehat{\overline{M}}_{p,l+1/2,i+1/2,\left[ j_{T,l+1/2}^{\prime
--}-1/2\right] +1}^{\left( 0\right) }=0 \\ 
+-}-1/2\right] +1}^{\left( 0\right) }=0 \\
 \widehat{\overline{M}}_{p,l+1/2,i+3/2,\left[ j_{T,l+1/2}^{\prime
 -}-1/2\right] +1}^{\left( 0\right) }=0
 \end{array}
@@ -782,7 +783,7 @@ since the distribution function at grid $4$ is no more connected with the
 one at grid point $3$ or $5$, but to the grid point $1$ only. Furthermore,
 since grid points $1$ and $3$ are equivalent, their clockwise flux links
 with grid point $2$ are only half in order to avoid counting them twice.
-Therefore, 
+Therefore,
 \begin{eqnarray}
 \widehat{\overline{M}}_{p,l+1/2,i-1/2,\left[ j_{T,l+1/2}^{\prime
 +}-1/2\right] +1}^{\left( 0\right) } &=&\overline{\overline{M}}%
@@ -791,16 +792,16 @@ _{0T,l+1/2}}}^{\left( 0\right) }/2  \nonumber \\
 \widehat{\overline{M}}_{p,l+1/2,i+1/2,\left[ j_{T,l+1/2}^{\prime
 +}-1/2\right] +1}^{\left( 0\right) } &=&\overline{\overline{M}}%
 _{p,l+1/2,i+1/2,\left[ j_{T,l+1/2}^{+}-1/2\right] +1+n_{\xi
-_{0T,l+1/2}}}^{\left( 0\right) }/2 \\
+_{0T,l+1/2}}}^{\left( 0\right) }/2 \nonumber\\
 \widehat{\overline{M}}_{p,l+1/2,i+3/2,\left[ j_{T,l+1/2}^{\prime
 +}-1/2\right] +1}^{\left( 0\right) } &=&\overline{\overline{M}}%
 _{p,l+1/2,i+3/2,\left[ j_{T,l+1/2}^{+}-1/2\right] +1+n_{\xi
-_{0T,l+1/2}}}^{\left( 0\right) }/2  \nonumber
+_{0T,l+1/2}}}^{\left( 0\right) }/2  \nonumber\\
 \end{eqnarray}
 
 Moreover, since counterclockwise flux that links grid points $3$ and $4$ is
 equivalent by symmetry with clockwise flux that links grid points $1$ and $2$
-, one obtains, 
+, one obtains,
 \begin{eqnarray}
 \widehat{\overline{M}}_{p,l+1/2,i-1/2,\left[ j_{T,l+1/2}^{\prime
 -}-1/2\right] +n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } &=&\overline{%
@@ -809,13 +810,13 @@ equivalent by symmetry with clockwise flux that links grid points $1$ and $2$
 \widehat{\overline{M}}_{p,l+1/2,i+1/2,\left[ j_{T,l+1/2}^{\prime
 -}-1/2\right] +n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } &=&\overline{%
 \overline{M}}_{p,l+1/2,i+1/2,\left[ j_{T,l+1/2}^{\prime +}-1/2\right]
-+1+n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } \\
++1+n_{\xi _{0T,l+1/2}}}^{\left( 0\right) }\nonumber\\
 \widehat{\overline{M}}_{p,l+1/2,i+3/2,\left[ j_{T,l+1/2}^{\prime
 -}-1/2\right] +n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } &=&\overline{%
 \overline{M}}_{p,l+1/2,i+3/2,\left[ j_{T,l+1/2}^{\prime +}-1/2\right]
-+1+n_{\xi _{0T,l+1/2}}}^{\left( 0\right) }  \nonumber
++1+n_{\xi _{0T,l+1/2}}}^{\left( 0\right) }  \nonumber\\
 \end{eqnarray}
-and 
+and
 \begin{eqnarray}
 \widehat{\overline{M}}_{p,l+1/2,i-1/2,\left[ j_{T,l+1/2}^{\prime
 +}-1/2\right] -n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } &=&\overline{%
@@ -824,15 +825,15 @@ and
 \widehat{\overline{M}}_{p,l+1/2,i+1/2,\left[ j_{T,l+1/2}^{\prime
 +}-1/2\right] -n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } &=&\overline{%
 \overline{M}}_{p,l+1/2,i+1/2,\left[ j_{T,l+1/2}^{\prime +}-1/2\right]
-+1+n_{\xi _{0T,l+1/2}}}^{\left( 0\right) }/2 \\
++1+n_{\xi _{0T,l+1/2}}}^{\left( 0\right) }/2 \nonumber\\
 \widehat{\overline{M}}_{p,l+1/2,i+3/2,\left[ j_{T,l+1/2}^{\prime
 +}-1/2\right] -n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } &=&\overline{%
 \overline{M}}_{p,l+1/2,i+3/2,\left[ j_{T,l+1/2}^{\prime +}-1/2\right]
-+1+n_{\xi _{0T,l+1/2}}}^{\left( 0\right) }/2  \nonumber
++1+n_{\xi _{0T,l+1/2}}}^{\left( 0\right) }/2  \nonumber\\
 \end{eqnarray}
 
 Finally, for the external boundary at $\xi _{0}=0,$ all matrix coefficients
-at grid point $j_{T_{0}}+1/2$ are forced to zero, except two, 
+at grid point $j_{T_{0}}+1/2$ are forced to zero, except two,
 \begin{eqnarray}
 \widehat{\overline{M}}_{p,l+1/2,i-1/2,\left[ j_{T_{,l+1/2}}^{\prime
 -}+1/2\right] +n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } &=&1  \nonumber \\
@@ -864,10 +865,10 @@ magnetic ripple to neglect their contributions to the overall momentum
 dynamics.
 
 %TCIMACRO{
-%\TeXButton{Fig_magneticripple}{\fig{figures/magneticripple.eps}{ Heuristic magnetic ripple modeling. The trapped/supertrapped 
+%\TeXButton{Fig_magneticripple}{\fig{figures/magneticripple.eps}{ Heuristic magnetic ripple modeling. The trapped/supertrapped
 %boundary varies as well as the collision detrapping threshold are both functions of the radial location}{magneticripple}{10cm}}}
 %BeginExpansion
-\fig{figures/magneticripple.eps}{ Heuristic magnetic ripple modeling. The trapped/supertrapped 
+\fig{figures/magneticripple.eps}{ Heuristic magnetic ripple modeling. The trapped/supertrapped
 boundary varies as well as the collision detrapping threshold are both functions of the radial location}{magneticripple}{10cm}%
 %EndExpansion
 
@@ -892,7 +893,7 @@ magnetic ripple, and $p_{MR,l+1/2}$ is the momentum detrapping threshold by
 collisions, $\nu _{MR,l+1/2,i+1/2,j^{\prime }+1/2}$ is usually taken
 constant and much larger than $\tau _{t}^{-1}$ which is the smallest time
 scale here considered, namely the transit time$.$ The matrix is then simply
-modified according to the following rule 
+modified according to the following rule
 \begin{equation}
 \widehat{\overline{M}}_{p,l+1/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right)
 }\rightarrow \widehat{\overline{M}}_{p,l+1/2,i+1/2,j^{\prime }+1/2}^{\left(
@@ -913,21 +914,21 @@ density.
 
 For the dynamics in configuration space, since the problem has only one
 dimension, the internal boundary must be only specified at $\psi =\psi
-_{0}=0 $, which corresponds to the condition 
+_{0}=0 $, which corresponds to the condition
 \begin{equation}
 f_{0}^{\left( 0\right) }\left( \psi ,p,\xi _{0}\right) =f_{0}^{\left(
 0\right) }\left( -\psi ,p,\xi _{0}\right)
 \end{equation}
 
 Using the same approach as for the momentum dynamics, $\Delta \psi $ must be
-defined at this location. Hence 
+defined at this location. Hence
 \begin{equation}
 \Delta \psi _{0}=\frac{1}{2}\left( \Delta \psi _{1/2}+\Delta \psi
 _{-1/2}\right) =\Delta \psi _{1/2}
 \end{equation}
 using $\Delta \psi _{-1/2}=\Delta \psi _{1/2}.$ Since $\Delta \psi
 _{1/2}=\psi _{1}-\psi _{0}$, and $\psi _{1/2}=\frac{\psi _{1}+\psi _{0}}{2}$
-one obtains finally, 
+one obtains finally,
 \begin{equation}
 \Delta \psi _{0}=2\psi _{1/2}
 \end{equation}
@@ -945,7 +946,7 @@ _{\psi }^{\left( 0\right) }\right| _{1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
 \partial \psi }\left( R_{0}\widetilde{q}\frac{B_{P0}}{B_{0}}\lambda \mathbf{S%
 }_{\psi }^{\left( 0\right) }\right) \right| _{1/2,i+1/2,j+1/2}^{(k+1)}
 \end{eqnarray}
-or 
+or
 \begin{eqnarray}
 &&\left. \frac{\widetilde{q}}{B_{0}}p^{2}\nabla _{\psi }\cdot \mathbf{S}%
 _{\psi }^{\left( 0\right) }\right| _{1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
@@ -971,38 +972,38 @@ mechanism is at play, diffusion or convection.
 
 Let define the local variation of the electron density $\Delta %
 n_{e,l+1/2}^{\left( k\right) }$ at time step $k$ because of spatial
-transport by the simple relation 
+transport by the simple relation
 \begin{equation}
 \Delta n_{e}^{\left( k\right) }\left( \psi \right) =\iint \left[
 f_{0}^{\left( 0\right) (k)}\left( \psi ,p,\xi _{0}\right) -f_{0}^{\left(
 0\right) (k-1)}\left( \psi ,p,\xi _{0}\right) \right] \lambda \left( \psi
 ,\xi _{0}\right) p^{2}dpd\xi _{0}
 \end{equation}
-It can be expressed in term of a loss rate 
+It can be expressed in term of a loss rate
 \[
 \Gamma _{T}^{\left( 0\right) (k)}\left( \psi \right) =\Delta n_{e}^{\left(
 k\right) }\left( \psi \right) /\Delta t
 \]
 by introducing the integration time step $\Delta t$ and the flux balance
-gives on the discrete mesh is 
+gives on the discrete mesh is
 \begin{equation}
 2\pi p_{0}^{2}S_{p,l+1/2,0,j+1/2}^{\left( 0\right) }\sum_{j=0}^{n_{\xi
 _{0}}-1}\Delta \xi _{0,j+1/2}=4\pi p_{0}^{2}S_{p,l+1/2,0,j+1/2}^{\left(
 0\right) }=\Gamma _{T,l+1/2}^{\left( 0\right) }
 \end{equation}
 assuming like for losses in momentum space that the flux has no pitch-angle
-dependence at $p_{0}$. The zero order Fokker-Planck equation becomes simply 
+dependence at $p_{0}$. The zero order Fokker-Planck equation becomes simply
 \begin{eqnarray}
 &&\frac{\widetilde{q}_{l+1/2}}{B_{0,l+1/2}}p_{i+1/2}^{2}\frac{%
 f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right)
 (k+1)}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k)}}{\Delta t}  \nonumber \\
 &&+\left. \frac{\widetilde{q}}{B_{0}}p^{2}\nabla _{\mathbf{p}}\cdot \mathbf{S%
-}_{\mathbf{p}}^{\left( 0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)} 
+}_{\mathbf{p}}^{\left( 0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)}
 \nonumber \\
 &&+\left. \frac{\widetilde{q}}{B_{0}}p^{2}\nabla _{\psi }\cdot \mathbf{S}%
 _{\psi }^{\left( 0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
 &&-\frac{\widetilde{q}_{l+1/2}}{B_{0,l+1/2}}\frac{\Gamma _{R,l+1/2}^{\left(
-0\right) (k)}+\Gamma _{T,l+1/2}^{\left( 0\right) (k)}}{4\pi \Delta p_{1/2}} 
+0\right) (k)}+\Gamma _{T,l+1/2}^{\left( 0\right) (k)}}{4\pi \Delta p_{1/2}}
 \nonumber \\
 &=&0
 \end{eqnarray}
@@ -1018,7 +1019,7 @@ obtain, as for the runaway problem,
 f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right)
 (k+1)}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k)}}{\Delta t}  \nonumber \\
 &&+\left. \frac{\widetilde{q}}{B_{0}}p^{2}\nabla _{\mathbf{p}}\cdot \mathbf{S%
-}_{\mathbf{p}}^{\left( 0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)} 
+}_{\mathbf{p}}^{\left( 0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)}
 \nonumber \\
 &&+\left. \frac{\widetilde{q}}{B_{0}}p^{2}\nabla _{\psi }\cdot \mathbf{S}%
 _{\psi }^{\left( 0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
@@ -1067,13 +1068,13 @@ $\psi _{l+1/2}$ and $\psi _{l+3/2}$ and corresponding trapped/passing
 boundaries $\xi _{0T,j_{T,l-1/2}^{\pm },}$ $\xi _{0T,j_{T,l+1/2}^{\pm },}$
 and $\xi _{0T,j_{T,l+3/2}^{\pm }},$ since non-uniform pitch-angle grid mesh
 is designed so that each boundary is exactly placed on the flux grid. By
-definition, since 
+definition, since
 \begin{equation}
 -\xi _{0T,j_{T,l+3/2}^{-}}<-\xi _{0T,j_{T,l+1/2}^{-}}<-\xi
 _{0T,j_{T,l-1/2}^{-}}<\xi _{0T,j_{T,l-1/2}^{+}}<\xi
 _{0T,j_{T,l+1/2}^{+}}<\xi _{0T,j_{T,l+3/2}^{+}}
 \end{equation}
-the following relation holds 
+the following relation holds
 \begin{equation}
 j_{T,l+3/2}^{-}<j_{T,l+1/2}^{-}<j_{T,l-1/2}^{-}<j_{T_{0}}<j_{T,l-1/2}^{+}<j_{T,l+1/2}^{+}<j_{T,l+3/2}^{+}
 \end{equation}
@@ -1083,16 +1084,16 @@ eight different regions in momentum space at $\psi _{l+1/2},$ where spatial
 fluxes must be considered. Since matrix is reduced in momentum space,
 because the region $j_{l+1/2}^{-}<j_{l-1/2}^{-}<j_{T_{0,l+1/2}}$ is not
 considered in the calculations, one has therefore to consider effectively
-only six regions, namely corresponding to 
+only six regions, namely corresponding to
 \begin{equation}
 j_{T,l+3/2}^{-}<j_{T,l+1/2}^{-}
 \end{equation}
-and 
+and
 \begin{equation}
 j_{T_{0}}<j_{T,l-1/2}^{+}<j_{T,l+1/2}^{+}<j_{T,l+3/2}^{+}
 \end{equation}
 or using relations $j_{T,l+1/2}^{\prime -}=j_{T,l+1/2}^{-}$ and $%
-j_{T,l+1/2}^{\prime +}=j_{T,l+1/2}^{+}-n_{\xi _{0T,l+1/2}}$ 
+j_{T,l+1/2}^{\prime +}=j_{T,l+1/2}^{+}-n_{\xi _{0T,l+1/2}}$
 \begin{equation}
 j_{T,l+3/2}^{\prime -}<j_{T,l+1/2}^{\prime -}<j_{T,l-1/2}^{\prime
 +}<j_{T,l+1/2}^{\prime +}<j_{T,l+3/2}^{\prime +}
@@ -1101,13 +1102,13 @@ j_{T,l+3/2}^{\prime -}<j_{T,l+1/2}^{\prime -}<j_{T,l-1/2}^{\prime
 As for the momentum dynamics, the reduction of the domain of integration in
 the momentum phase space leads to introduce a new matrix, $\widehat{%
 \overline{M}}_{\psi }^{\left( 0\right) }.$ Obviously, the main diagonal is
-fully preserved, and therefore 
+fully preserved, and therefore
 \begin{equation}
 \widehat{\overline{M}}_{\psi ,l+1/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right)
 }=\overline{\overline{M}}_{\psi ,l+1/2,i+1/2,j^{\prime }+1/2}^{\left(
 0\right) }
 \end{equation}
-provided $j^{\prime }<j_{T,l+1/2}^{\prime -},$ while 
+provided $j^{\prime }<j_{T,l+1/2}^{\prime -},$ while
 \begin{equation}
 \widehat{\overline{M}}_{\psi ,l+1/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right)
 }=\overline{\overline{M}}_{\psi ,l+1/2,i+1/2,\left[ j^{\prime }+1/2\right]
@@ -1118,13 +1119,13 @@ coefficients have to be modified, because of the presence of trapped and
 circulating electrons. Indeed, these coefficients reflect the particle flux
 transfer between different location.
 
-If $j^{\prime }<j_{T,l+3/2}^{\prime -}$, matrix coefficients are given by 
+If $j^{\prime }<j_{T,l+3/2}^{\prime -}$, matrix coefficients are given by
 \begin{equation}
-\left\{ 
+\left\{
 \begin{array}{l}
 \widehat{\overline{M}}_{\psi ,l-1/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right)
 }=\overline{\overline{M}}_{\psi ,l-1/2,i+1/2,j^{\prime }+1/2}^{\left(
-0\right) } \\ 
+0\right) } \\
 \widehat{\overline{M}}_{\psi ,l+3/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right)
 }=\overline{\overline{M}}_{\psi ,l+3/2,i+1/2,j^{\prime }+1/2}^{\left(
 0\right) }
@@ -1132,7 +1133,7 @@ If $j^{\prime }<j_{T,l+3/2}^{\prime -}$, matrix coefficients are given by
 \right.
 \end{equation}
 and for $j_{T,l+3/2}^{\prime -}<j^{\prime }<j_{T,l+1/2}^{\prime -},$ the
-simple relation still holds for one matrix coefficient only 
+simple relation still holds for one matrix coefficient only
 \begin{equation}
 \widehat{\overline{M}}_{\psi ,l-1/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right)
 }=\overline{\overline{M}}_{\psi ,l-1/2,i+1/2,j^{\prime }+1/2}^{\left(
@@ -1143,12 +1144,12 @@ _{l+1/2}.$ But since counter-circulating electrons become trapped by
 diffusion from $\psi _{l+1/2}\rightarrow \psi _{l+3/2}$ and electron
 dynamics in the domain $j_{T,l+3/2}^{-}<j<j_{T_{0}}$ is removed and replaced
 by its counterpart in the positive pitch-angle region $%
-j_{T_{0}}<j<j_{T,l+3/2}^{+},$ it turns out that 
+j_{T_{0}}<j<j_{T,l+3/2}^{+},$ it turns out that
 \begin{equation}
 \widehat{\overline{M}}_{\psi ,l+3/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right)
 }=0
 \end{equation}
-and the flux link must be replaced by 
+and the flux link must be replaced by
 \begin{equation}
 \widehat{\overline{M}}_{\psi ,l+3/2,i+1/2,\left[ j^{\prime }+1/2\right]
 +2\left( j_{T_{0}}-\left( j^{\prime }+1/2\right) \right) -n_{\xi
@@ -1160,26 +1161,26 @@ the fact that matrix blocks corresponding to different radii have different
 sizes.
 
 In a general way, when $j^{\prime }>j_{T,l+1/2}^{\prime -},$ the following
-rule applies 
+rule applies
 \begin{equation}
-\left\{ 
+\left\{
 \begin{array}{l}
 \widehat{\overline{M}}_{\psi ,l-1/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right)
-}=0 \\ 
+}=0 \\
 \widehat{\overline{M}}_{\psi ,l+3/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right)
 }=0
 \end{array}
 \right.
 \end{equation}
 all corresponding matrix coefficients being replaced by new ones according
-to the relations 
+to the relations
 \begin{equation}
-\left\{ 
+\left\{
 \begin{array}{l}
 \widehat{\overline{M}}_{\psi ,l-1/2,i+1/2,\left[ j^{\prime }+1/2\right]
 +\left( n_{\xi _{0T,l+1/2}}-n_{\xi _{0T,l-1/2}}\right) }^{\left( 0\right) }=%
 \overline{\overline{M}}_{\psi ,l-1/2,i+1/2,\left[ j^{\prime }+1/2\right]
-+n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } \\ 
++n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } \\
 \widehat{\overline{M}}_{\psi ,l+3/2,i+1/2,\left[ j^{\prime }+1/2\right]
 +\left( n_{\xi _{0T,l+1/2}}-n_{\xi _{0T,l+3/2}}\right) }^{\left( 0\right) }=%
 \overline{\overline{M}}_{\psi ,l+3/2,i+1/2,\left[ j^{\prime }+1/2\right]
@@ -1190,12 +1191,12 @@ to the relations
 wether electrons remains trapped or co-passing, or become trapped by the
 outward radial transport or detrapped by the inward cross-field diffusion.
 Since $n_{\xi _{0T,l+1/2}}-n_{\xi _{0T,l-1/2}}>0$ and $n_{\xi
-_{0T,l+1/2}}-n_{\xi _{0T,l+3/2}}<0,$ 
+_{0T,l+1/2}}-n_{\xi _{0T,l+3/2}}<0,$
 \begin{equation}
-\left\{ 
+\left\{
 \begin{array}{l}
 \left[ j^{\prime }+1/2\right] +\left( n_{\xi _{0T,l+1/2}}-n_{\xi
-_{0T,l-1/2}}\right) >j^{\prime }+1/2 \\ 
+_{0T,l-1/2}}\right) >j^{\prime }+1/2 \\
 \left[ j^{\prime }+1/2\right] +\left( n_{\xi _{0T,l+1/2}}-n_{\xi
 _{0T,l+3/2}}\right) <j^{\prime }+1/2
 \end{array}
@@ -1222,11 +1223,11 @@ transport of fast transport leads to strong departure from the Maxwellian
 momentum dependence at all radius.
 
 As for the dynamics in momentum space, $\Delta \psi $ must be specified at
-the boundaries of the domain of integration. One finds that 
+the boundaries of the domain of integration. One finds that
 \begin{equation}
 \Delta \psi _{0}=2\psi _{1/2}
 \end{equation}
-since $\psi _{0}=0$, and 
+since $\psi _{0}=0$, and
 \begin{equation}
 \Delta \psi _{n_{\psi }}=2\left( \psi _{n_{\psi }}-\psi _{n_{\psi
 }-1/2}\right) =2\left( \psi _{a}-\psi _{n_{\psi }-1/2}\right)

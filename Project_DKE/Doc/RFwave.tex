@@ -9,8 +9,10 @@ Q\left(  f\right)   &  =-\frac{e^{2}}{\left(  2\pi\right)  ^{3}}%
 d^{3}k\label{qloporig}\\
 &  \left[  \left(  P_{\Vert}^{\ast}E_{\mathbf{k},\Vert}^{\ast}J_{n}+\left[
 P_{\bot}^{\ast}-\frac{1}{p_{\bot}}\left(  \frac{k_{\Vert}v_{\Vert}}%
-{\omega^{\ast}}-1\right)  \right]  E_{\mathbf{k},\bot}^{\ast}\right)
-\cdot\frac{i}{\left[  n\Omega+k_{\Vert}v_{\Vert}-\omega\right]  }\left(
+{\omega^{\ast}}-1\right)  \right]
+E_{\mathbf{k},\bot}^{\ast}\right)
+\right.\nonumber\\&\qquad\left.\cdot\frac{i}{\left[
+n\Omega+k_{\Vert}v_{\Vert}-\omega\right]  }\left(
 E_{\mathbf{k},\Vert}J_{n}P_{\Vert}+E_{\mathbf{k},\bot}P_{\bot}\right)
 f\right]  \nonumber
 \end{align}
@@ -145,8 +147,10 @@ S_{p}^{\text{RF}}  &  =\lim_{V\rightarrow\infty}\frac{e^{2}}{\left(
 }\right)  f\right]  \label{fluxRFp}%
 \end{align}%
 \begin{align}
-S_{\xi}^{\text{RF}}  &  =\lim_{V\rightarrow\infty}\frac{e^{2}}{\left(
-2\pi\right)  ^{3}}\frac{1}{V}\sum_{n=-\infty}^{\infty}\iiint d^{3}k\left[
+S_{\xi}^{\text{RF}}  &
+=\lim_{V\rightarrow\infty}\frac{e^{2}}{\left( 2\pi\right)
+^{3}}\frac{1}{V}\sum_{n=-\infty}^{\infty}\iiint
+d^{3}k\nonumber\\&\left[
 \left(  \frac{-1}{\sqrt{1-\xi^{2}}}\left(  1-\xi^{2}-\frac{n\Omega}%
 {\omega^{\ast}}\right)  E_{\mathbf{k},\Vert}^{\ast}J_{n}+\frac{1}{\xi}\left(
 \xi^{2}-\frac{k_{\Vert}v_{\Vert}}{\omega^{\ast}}\right)  E_{\mathbf{k},\bot
@@ -200,8 +204,10 @@ D_{p\xi}^{\text{RF}}  &  =\lim_{V\rightarrow\infty}\frac{e^{2}}{\left(
 }\right)  E_{\mathbf{k},\Vert}J_{n}-\frac{1}{\xi}\left(  \xi^{2}%
 -\frac{k_{\Vert}v_{\Vert}}{\omega}\right)  E_{\mathbf{k},\bot}\right)  \right]
 \\
-D_{\xi p}^{\text{RF}}  &  =-\lim_{V\rightarrow\infty}\frac{e^{2}}{\left(
-2\pi\right)  ^{3}}\frac{1}{V}\sum_{n=-\infty}^{\infty}\iiint d^{3}k\left[
+D_{\xi p}^{\text{RF}}  &
+=-\lim_{V\rightarrow\infty}\frac{e^{2}}{\left( 2\pi\right)
+^{3}}\frac{1}{V}\sum_{n=-\infty}^{\infty}\iiint
+d^{3}k\nonumber\\&\left[
 \left(  \frac{-1}{\sqrt{1-\xi^{2}}}\left(  1-\xi^{2}-\frac{n\Omega}%
 {\omega^{\ast}}\right)  E_{\mathbf{k},\Vert}^{\ast}J_{n}+\frac{1}{\xi}\left(
 \xi^{2}-\frac{k_{\Vert}v_{\Vert}}{\omega^{\ast}}\right)  E_{\mathbf{k},\bot
@@ -209,8 +215,10 @@ D_{\xi p}^{\text{RF}}  &  =-\lim_{V\rightarrow\infty}\frac{e^{2}}{\left(
 &  \left.  \cdot\frac{i}{\left[  n\Omega+k_{\Vert}v_{\Vert}-\omega\right]
 }\left(  E_{\mathbf{k},\Vert}J_{n}\xi+E_{\mathbf{k},\bot}\sqrt{1-\xi^{2}%
 }\right)  \right] \\
-D_{\xi\xi}^{\text{RF}}  &  =\lim_{V\rightarrow\infty}\frac{e^{2}}{\left(
-2\pi\right)  ^{3}}\frac{1}{V}\sum_{n=-\infty}^{\infty}\iiint d^{3}k\left[
+D_{\xi\xi}^{\text{RF}}  &
+=\lim_{V\rightarrow\infty}\frac{e^{2}}{\left( 2\pi\right)
+^{3}}\frac{1}{V}\sum_{n=-\infty}^{\infty}\iiint
+d^{3}k\nonumber\\&\left[
 \left(  \frac{-1}{\sqrt{1-\xi^{2}}}\left(  1-\xi^{2}-\frac{n\Omega}%
 {\omega^{\ast}}\right)  E_{\mathbf{k},\Vert}^{\ast}J_{n}+\frac{1}{\xi}\left(
 \xi^{2}-\frac{k_{\Vert}v_{\Vert}}{\omega^{\ast}}\right)  E_{\mathbf{k},\bot
@@ -255,13 +263,15 @@ e^{2}}{V}\iiint\frac{d^{3}k}{\left(  2\pi\right)  ^{3}}\delta\left(
 \end{equation}
 
 Using (\ref{eperp}), we can define
-\begin{equation}
-D_{\mathbf{k}}^{(n)}=e^{2}\left|  \frac{1}{\sqrt{2}}E_{\mathbf{k}%
-,+}e^{-i\alpha}J_{n-1}\left(  \frac{k_{\bot}v_{\bot}}{\Omega}\right)
-+\frac{1}{\sqrt{2}}E_{\mathbf{k},-}e^{+i\alpha}J_{n+1}\left(  \frac{k_{\bot
-}v_{\bot}}{\Omega}\right)  +\frac{p_{\Vert}}{p_{\bot}}E_{\mathbf{k},\Vert
+\begin{align}
+D_{\mathbf{k}}^{(n)}&=e^{2}\left|  \frac{1}{\sqrt{2}}E_{\mathbf{k}%
+,+}e^{-i\alpha}J_{n-1}\left(
+\frac{k_{\bot}v_{\bot}}{\Omega}\right)
++\frac{1}{\sqrt{2}}E_{\mathbf{k},-}e^{+i\alpha}J_{n+1}\left(
+\frac{k_{\bot }v_{\bot}}{\Omega}\right)
+\right.\nonumber\\&\left.+\frac{p_{\Vert}}{p_{\bot}}E_{\mathbf{k},\Vert
 }J_{n}\left(  \frac{k_{\bot}v_{\bot}}{\Omega}\right)  \right|  ^{2} \label{dk}%
-\end{equation}
+\end{align}
 so that (\ref{dnrf}) becomes
 \begin{equation}
 D_{n}^{\text{RF}}(p,\xi)=\lim_{V\rightarrow\infty}\frac{\pi}{V}\int\frac
@@ -294,13 +304,13 @@ D_{n,b}^{\text{RF}}(p,\xi)=\lim_{V\rightarrow\infty}\frac{\pi}{V}\int
 \end{equation}
 and $D_{\mathbf{k}}^{b,(n)}$ accounts for the polarization and the intensity
 of the RF wave. It is given by
-\begin{equation}
-D_{\mathbf{k}}^{b,(n)}=e^{2}\left|  \frac{1}{\sqrt{2}}E_{\mathbf{k}%
+\begin{align}
+D_{\mathbf{k}}^{b,(n)}&=e^{2}\left|  \frac{1}{\sqrt{2}}E_{\mathbf{k}%
 ,b,+}e^{-i\alpha}J_{n-1}\left(  \frac{k_{b\bot}v_{\bot}}{\Omega}\right)
 +\frac{1}{\sqrt{2}}E_{\mathbf{k},b,-}e^{+i\alpha}J_{n+1}\left(  \frac
-{k_{b\bot}v_{\bot}}{\Omega}\right)  +\frac{p_{\Vert}}{p_{\bot}}E_{\mathbf{k}%
+{k_{b\bot}v_{\bot}}{\Omega}\right)  \right.\nonumber\\&\left.+\frac{p_{\Vert}}{p_{\bot}}E_{\mathbf{k}%
 ,b,\Vert}J_{n}\left(  \frac{k_{b\bot}v_{\bot}}{\Omega}\right)  \right|  ^{2}%
-\end{equation}
+\end{align}
 
 \subsubsection{Cylindrical coordinates representation}
 

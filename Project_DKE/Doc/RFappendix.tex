@@ -776,11 +776,12 @@ and renaming $n^{\prime}\rightarrow n\geq0$, we get
 \Theta_{\mathbf{k}}^{b,\text{EC}n} &  =\frac{1}{\sqrt{2}}e_{b,+}e^{-i\alpha
 }J_{-n-1}\left(  z_{b}\right)  +\frac{1}{\sqrt{2}}e_{b,-}e^{+i\alpha}%
 J_{-n+1}\left(  z_{b}\right)  +\frac{p_{\Vert}}{p_{\bot}}e_{b,\Vert}%
-J_{-n}\left(  z_{b}\right)  \label{thetaEC}\\
+J_{-n}\left(  z_{b}\right) \nonumber\\
 &  =\frac{1}{\sqrt{2}}e_{b,+}e^{-i\alpha}\left(  -1\right)  ^{n+1}%
 J_{n+1}\left(  z_{b}\right)  +\frac{1}{\sqrt{2}}e_{b,-}e^{+i\alpha}\left(
--1\right)  ^{n-1}J_{n-1}\left(  z_{b}\right)  +\frac{p_{\Vert}}{p_{\bot}%
+-1\right)  ^{n-1}J_{n-1}\left(  z_{b}\right) \nonumber\\&\quad +\frac{p_{\Vert}}{p_{\bot}%
 }e_{b,\Vert}\left(  -1\right)  ^{n}J_{n}\left(  z_{b}\right)
+\label{thetaEC}
 \end{align}
 
 We have
@@ -812,14 +813,14 @@ In this case, for $n\geq0$, the following approximate expression can be used
 J_{n}\left(  z\right)  \simeq\frac{1}{n!}\left(  \frac{z}{2}\right)  ^{n}%
 \end{equation}
 and we have
-\begin{equation}
-\Theta_{\mathbf{k}}^{b,\text{EC}n}\simeq\frac{e_{b,+}}{\sqrt{2}}e^{-i\alpha
+\begin{align}
+\Theta_{\mathbf{k}}^{b,\text{EC}n}\simeq&\frac{e_{b,+}}{\sqrt{2}}e^{-i\alpha
 }\left(  -1\right)  ^{n+1}\frac{1}{\left(  n+1\right)  !}\left(  \frac{z_{b}%
 }{2}\right)  ^{n+1}+\frac{e_{b,-}}{\sqrt{2}}e^{+i\alpha}\left(  -1\right)
 ^{n-1}\frac{1}{\left(  n-1\right)  !}\left(  \frac{z_{b}}{2}\right)
-^{n-1}+\frac{p_{\Vert}}{p_{\bot}}e_{b,\Vert}\frac{1}{n!}\left(  \frac{z_{b}%
+^{n-1}\nonumber\\&\ +\frac{p_{\Vert}}{p_{\bot}}e_{b,\Vert}\frac{1}{n!}\left(  \frac{z_{b}%
 }{2}\right)  ^{n} \label{thetaklowz}%
-\end{equation}
+\end{align}
 
 \subsubsection{X-mode, $n\geq2$}
 
@@ -951,25 +952,28 @@ written as%
 \overline{D}_{b}^{\text{EC-Xn}(0)}(p,\xi_{0}) &  =\frac{\gamma p_{Te}%
 }{p\left|  \xi_{0}\right|  }\frac{1}{\lambda}\frac{\xi_{0}^{2}}{\xi
 _{\theta_{b}}^{2}}\Psi_{\theta_{b}}\overline{D}_{b,n,0}^{\text{EC,}\theta_{b}%
-}\frac{1}{4\left[  \left(  n-1\right)  !\right]  ^{2}}\left(  \frac{p}{p_{Te}%
-}\right)  ^{2\left(  n-1\right)  }\left(  \frac{1-\xi_{0}^{2}}{\Psi
-_{\theta_{b}}}\right)  ^{\left(  n-1\right)  }\left(  \frac{1}{2}N_{b\bot
-}\beta_{Te}\frac{\omega_{b}}{\omega_{ce,0}}\right)  ^{2\left(  n-1\right)
-}\nonumber\\
-&  H\left(  \theta_{b}-\theta_{\min}\right)  H\left(  \theta_{\max}-\theta
+}\frac{1}{4\left[  \left(  n-1\right)  !\right]  ^{2}}\nonumber\\&\times\quad \left(  \frac{p}{p_{Te}%
+}\right)  ^{2\left(  n-1\right)  }\left(
+\frac{1-\xi_{0}^{2}}{\Psi _{\theta_{b}}}\right)  ^{\left(
+n-1\right)  }\left(  \frac{1}{2}N_{b\bot
+}\beta_{Te}\frac{\omega_{b}}{\omega_{ce,0}}\right)  ^{2\left(
+n-1\right) }\nonumber\\&\times\quad   H\left(
+\theta_{b}-\theta_{\min}\right)  H\left(  \theta_{\max}-\theta
 _{b}\right)  \frac{1}{\sqrt{\pi}\Delta N_{\Vert}}\left[  \frac{1}{2}%
 \sum\limits_{\sigma}\right]  _{T}\exp\left[  \frac{-\left(  N_{\Vert
 \text{res}}-N_{b\Vert,0}\right)  ^{2}}{\Delta N_{\Vert}^{2}}\right]
 \end{align}%
 \begin{align}
 \overline{D}_{b}^{\text{EC-On}(0)}(p,\xi_{0}) &  =\frac{\gamma p_{Te}%
-}{p\left|  \xi_{0}\right|  }\frac{1}{\lambda}\frac{\xi_{0}^{2}}{\left(
-1-\xi_{0}^{2}\right)  }\overline{D}_{b,n,0}^{\text{EC,}\theta_{b}}\frac
-{1}{\left[  n!\right]  ^{2}}\left(  \frac{p}{p_{Te}}\right)  ^{2n}\left(
+}{p\left|  \xi_{0}\right|
+}\frac{1}{\lambda}\frac{\xi_{0}^{2}}{\left( 1-\xi_{0}^{2}\right)
+}\overline{D}_{b,n,0}^{\text{EC,}\theta_{b}}\frac {1}{\left[
+n!\right]  ^{2}}\nonumber\\&\times\quad \left(
+\frac{p}{p_{Te}}\right)  ^{2n}\left(
 \frac{1-\xi_{0}^{2}}{\Psi_{\theta_{b}}}\right)  ^{n}\left(  \frac{1}%
 {2}N_{b\bot}\beta_{Te}\frac{\omega_{b}}{\omega_{ce,0}}\right)  ^{2n}%
-\nonumber\\
-&  H\left(  \theta_{b}-\theta_{\min}\right)  H\left(  \theta_{\max}-\theta
+\nonumber\\&\times\quad  H\left( \theta_{b}-\theta_{\min}\right)
+H\left(  \theta_{\max}-\theta
 _{b}\right)  \frac{1}{\sqrt{\pi}\Delta N_{\Vert}}\left[  \frac{1}{2}%
 \sum\limits_{\sigma}\right]  _{T}\exp\left[  \frac{-\left(  N_{\Vert
 \text{res}}-N_{b\Vert,0}\right)  ^{2}}{\Delta N_{\Vert}^{2}}\right]

@@ -1,6 +1,6 @@
 
 The numerical calculation of bounce coefficients requires an integration
-over $\theta $ which can be expressed symbolically as 
+over $\theta $ which can be expressed symbolically as
 \begin{equation}
 I\left( \psi ,\xi _{0}\right) =\int_{\theta _{\min }}^{\theta _{\max }}\frac{%
 d\theta }{2\pi }F\left( \psi ,\theta ,\xi _{0};B_{R},B_{Z},B_{\phi
@@ -8,7 +8,7 @@ d\theta }{2\pi }F\left( \psi ,\theta ,\xi _{0};B_{R},B_{Z},B_{\phi
 \end{equation}
 where $B_{R},B_{Z},B_{\phi },R,Z$ are functions of $\left( \psi ,\theta
 \right) $. They are given on a uniform grid of $N_{\theta }$ points in $%
-\theta $ 
+\theta $
 \begin{equation}
 \theta _{j}=\frac{2\pi j}{N_{\theta }-1},\;j=0,1,\cdots ,N_{\theta }-1
 \end{equation}
@@ -16,7 +16,7 @@ where $B_{R},B_{Z},B_{\phi },R,Z$ are functions of $\left( \psi ,\theta
 \paragraph{Domain of Integration}
 
 It is very important to account for the entire bounce path of the particle,
-including in particular the tip of banana orbits near $\theta _{T\min }$ and 
+including in particular the tip of banana orbits near $\theta _{T\min }$ and
 $\theta _{T\max }$. The contribution of these banana tips is often larger
 than the $d\theta =2\pi /(N_{\theta }-1)$ accuracy level, because $F\left(
 \theta \right) $ can become very large near the turning points. This is true
@@ -24,7 +24,7 @@ for example in the calculation of $\lambda $, since $F\left( \theta \right)
 \sim $ $1/\xi $ and $\xi \rightarrow 0$ at the turning points. It is
 therefore crucial to perform the integration up to $\theta _{T\min }$ and $%
 \theta _{T\max }$. However, these boundaries are defined by (\ref{thetamin})
-and (\ref{thetamax}) 
+and (\ref{thetamax})
 \begin{equation}
 B\left( \psi ,\theta _{T}\right) =B_{b}\left( \psi ,\xi _{0}\right) =\frac{%
 B_{0}\left( \psi \right) }{1-\xi _{0}^{2}}
@@ -39,7 +39,7 @@ turning point $\theta _{T\min }$ to be located between the two (consecutive)
 values $B_{1}\left( \psi ,\theta _{1}\right) $ and $B_{2}\left( \psi ,\theta
 _{2}\right) $ on the $\left( \psi ,\theta \right) $ grid. These values are
 determined from the three components issued by the equilibrium code simply
-by 
+by
 \begin{eqnarray}
 B_{1}\left( \psi ,\theta _{1}\right)  &=&\sqrt{B_{R}^{2}\left( \psi ,\theta
 _{1}\right) +B_{Z}^{2}\left( \psi ,\theta _{1}\right) +B_{\phi }^{2}\left(
@@ -50,53 +50,53 @@ _{2}\right) +B_{Z}^{2}\left( \psi ,\theta _{2}\right) +B_{\phi }^{2}\left(
 \end{eqnarray}
 
 We choose to define the values of $B_{R}$, $B_{Z}\ $and $B_{\phi }$ at the
-location $\theta _{T}$ by linear interpolation: 
+location $\theta _{T}$ by linear interpolation:
 \begin{equation}
 B_{i}\left( \psi ,\theta _{T}\right) =B_{i1}+\frac{\left( \theta _{T}-\theta
 _{1}\right) }{\left( \theta _{2}-\theta _{1}\right) }\left(
 B_{i2}-B_{i1}\right)
 \end{equation}
 where $i=R,Z,\phi $. Then, the location $\theta _{T}$ of the turning point
-can be calculated by requiring that the relation 
+can be calculated by requiring that the relation
 \begin{equation}
 B_{b}\left( \psi ,\xi _{0}\right) =B\left( \psi ,\theta _{T}\right) =\sqrt{%
 B_{R}^{2}\left( \psi ,\theta _{T}\right) +B_{Z}^{2}\left( \psi ,\theta
 _{T}\right) +B_{\phi }^{2}\left( \psi ,\theta _{T}\right) }
 \end{equation}
-be satisfied. This implies 
+be satisfied. This implies
 \begin{equation}
 B_{R}^{2}\left( \psi ,\theta _{T}\right) +B_{Z}^{2}\left( \psi ,\theta
 _{T}\right) +B_{\phi }^{2}\left( \psi ,\theta _{T}\right) =B_{b}^{2}\left(
 \psi ,\xi _{0}\right)
 \end{equation}
-and then 
+and then
 \begin{equation}
-\sum_{i=R,Z,\phi }\left[ B_{i1}+\frac{\left( \theta _{T}-\theta _{1}\right) 
+\sum_{i=R,Z,\phi }\left[ B_{i1}+\frac{\left( \theta _{T}-\theta _{1}\right)
 }{\left( \theta _{2}-\theta _{1}\right) }\left( B_{i2}-B_{i1}\right) \right]
 ^{2}-B_{b}^{2}\left( \psi ,\xi _{0}\right) =0
 \end{equation}
 
-Defining 
+Defining
 \begin{equation}
 \alpha =\frac{\left( \theta _{T}-\theta _{1}\right) }{\left( \theta
 _{2}-\theta _{1}\right) }
 \end{equation}
-we find 
+we find
 \begin{equation}
 \left[ \sum_{i=R,Z,\phi }\left( B_{i2}-B_{i1}\right) ^{2}\right] \alpha
 ^{2}+2\left[ \sum_{i=R,Z,\phi }B_{i1}\left( B_{i2}-B_{i1}\right) \right]
 \alpha +\sum_{i=R,Z,\phi }B_{i1}^{2}-B_{b}^{2}\left( \psi ,\xi _{0}\right) =0
 \end{equation}
-which solves as 
+which solves as
 \begin{equation}
 \alpha =\frac{\pm \sqrt{\left[ \sum_{i}B_{i1}\left( B_{i2}-B_{i1}\right)
 \right] ^{2}-\left[ \sum_{i}\left( B_{i2}-B_{i1}\right) ^{2}\right] \left[
-\sum_{i}B_{i1}^{2}-B_{b}^{2}\left( \psi ,\xi _{0}\right) \right] }%
+\sum_{i}B_{i1}^{2}-B_{b}^{2}\right] }%
 -\sum_{i}B_{i1}\left( B_{i2}-B_{i1}\right) }{\sum_{i}\left(
 B_{i2}-B_{i1}\right) ^{2}}
 \end{equation}
 
-We have 
+We have
 \begin{eqnarray}
 &&\sqrt{\left[ \sum_{i}B_{i1}\left( B_{i2}-B_{i1}\right) \right] ^{2}-\left[
 \sum_{i}\left( B_{i2}-B_{i1}\right) ^{2}\right] \left[
@@ -105,57 +105,57 @@ We have
 &=&\sqrt{%
 \begin{array}{c}
 \left( B_{R1}B_{R2}+B_{Z1}B_{Z2}+B_{\phi 1}B_{\phi 2}\right)
-^{2}-B_{1}^{2}B_{2}^{2} \\ 
+^{2}-B_{1}^{2}B_{2}^{2} \\
 +\left[ B_{2}^{2}+B_{1}^{2}-2\left( B_{R2}B_{R1}+B_{Z2}B_{Z1}+B_{\phi
-2}B_{\phi 1}\right) \right] B_{b}^{2}\left( \psi ,\xi _{0}\right) 
+2}B_{\phi 1}\right) \right] B_{b}^{2}\left( \psi ,\xi _{0}\right)
 \end{array}
 }  \nonumber \\
 &=&\sqrt{\left( Y-B_{b}^{2}\right) ^{2}-\left( B_{b}^{2}-B_{1}^{2}\right)
 \left( B_{b}^{2}-B_{2}^{2}\right) }
 \end{eqnarray}
-with 
+with
 \begin{equation}
 Y=B_{R1}B_{R2}+B_{Z1}B_{Z2}+B_{\phi 1}B_{\phi 2}
 \end{equation}
-so that 
+so that
 \begin{equation}
 \alpha _{b}=\frac{\pm \sqrt{\left( Y-B_{b}^{2}\right) ^{2}-\left(
 B_{b}^{2}-B_{1}^{2}\right) \left( B_{b}^{2}-B_{2}^{2}\right) }+B_{1}^{2}-Y}{%
 B_{1}^{2}+B_{2}^{2}-2Y}
 \end{equation}
-and finally 
+and finally
 \begin{equation}
-\theta _{T}=\theta _{1}+\left( \theta _{2}-\theta _{1}\right) \frac{\pm 
+\theta _{T}=\theta _{1}+\left( \theta _{2}-\theta _{1}\right) \frac{\pm
 \sqrt{\left( Y-B_{b}^{2}\right) ^{2}-\left( B_{b}^{2}-B_{1}^{2}\right)
 \left( B_{b}^{2}-B_{2}^{2}\right) }+B_{1}^{2}-Y}{B_{1}^{2}+B_{2}^{2}-2Y}
 \end{equation}
 
 We must choose (numerically) the solution that gives $0\leq \alpha _{b}\leq 1
-$. Note that if the magnetic fields in points $1$ and $2$ are equal, we have 
+$. Note that if the magnetic fields in points $1$ and $2$ are equal, we have
 $Y=B_{1}^{2}=B_{2}^{2}=B_{b}^{2}$.
 
 \paragraph{Numerical Integration}
 
-Once the two turning points have been added to the $\theta $ grid, now noted 
+Once the two turning points have been added to the $\theta $ grid, now noted
 $\widetilde{\theta }_{j}$, $j=0,1,2,\cdots N_{\theta }+1$, we define the
-half grid 
+half grid
 \begin{equation}
 \overline{\theta }_{k}=\frac{\left( \widetilde{\theta }_{k+1}+\widetilde{%
 \theta }_{k}\right) }{2},\;k=0,1,2,\cdots N_{\theta }
 \end{equation}
-and calculate the discrete function 
+and calculate the discrete function
 \begin{equation}
 F_{k}=F\left( \psi ,\overline{\theta }_{k},\xi _{0};B_{Rk},B_{Zk},B_{\phi
 k},R_{k},Z_{k}\right)
 \end{equation}
 where $B_{Rk},B_{Zk},B_{\phi k},R_{k},Z_{k}$ have been calculated on the
 grid $\overline{\theta }_{k}$ by linear interpolation, and the step $%
-\overline{d\theta }_{k}$, defined by 
+\overline{d\theta }_{k}$, defined by
 \begin{equation}
 \overline{d\theta }_{k}=\widetilde{\theta }_{k+1}-\widetilde{\theta }
 _{k},\;k=0,1,2,\cdots N_{\theta }
 \end{equation}
-so that the integral becomes 
+so that the integral becomes
 \begin{equation}
 I\left( \psi ,\xi _{0}\right) =\frac{1}{2\pi }\sum_{k=0}^{N_{\theta }}%
 \overline{d\theta }_{k}F_{k}
