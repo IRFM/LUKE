@@ -638,11 +638,12 @@ elseif strcmp(name,'JET') == 1,
 %
 %Fast electron bremsstrahlung tomography (if exists)
 %
-	HXR{1} = [];%Major radius on the HXR chord (m) [1,nchord]
-	HXR{2} = [];%Vertical position on the HXR chord (m) [1,nchord]
-	HXR{3} = [];%Major position of one point on HXR chord (R_hxr_2 > R_hxr_1) (m) [1,nchord]
-	HXR{4} = [];%Vertical position on the HXR chord (m) [1,nchord]
-	HXR{5} = [];%Geometrical factor (m^2/str) [1,nchord]
+%	HXR{1} = [4,4];%Major radius on the HXR chord (m) [1,nchord]
+%	HXR{2} = [0,0];%Vertical position on the HXR chord (m) [1,nchord]
+%	HXR{3} = [4.5,4.5];%Major position of one point on HXR chord (R_hxr_2 > R_hxr_1) (m) [1,nchord]
+%	HXR{4} = [0.3,-0.3];%Vertical position on the HXR chord (m) [1,nchord]
+%
+%	HXR{5} = [2.1010 2.1422]*1e-9;
 elseif strcmp(name,'TEST_LORENTZ') == 1,%Values based on NSTX case but circular plasma cross-section
 	ap = 0.67;
 	Rp = 0.86;
