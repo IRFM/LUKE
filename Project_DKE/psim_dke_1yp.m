@@ -51,7 +51,7 @@ snp = 10; % pgridfactor
 %Values of the radial flux grid [1,p] (If one radial value: local calculation only)
 %
 psin_S = [];
-rho_S = [0.1];
+rho_S = [0.4];
 %
 psin_display = NaN;%Approximate radial value at which results are displayed if display_mode >= 1 [1,1]
 rho_display = 0.45;

@@ -58,7 +58,7 @@ xmhu0T = sqrt(1 - xBmin./xBmax);%Pitch-angle at the trapped-passing boundary
 xymhu0 = repmat(ymhu0,[np,1]);
 xymhu0T = repmat(xmhu0T',[1,nmhu]);
 %
-xymaskT = abs(xymhu0) < xymhu0T - 5*eps;%Select trapped particles
+xymaskT = abs(xymhu0) < xymhu0T;%Select trapped particles
 %
 YCS = cumsum(ones(nt,np,nmhu));
 %
@@ -272,6 +272,7 @@ YMB = sqrt(YMBR.^2 + YMBZ.^2 + YMBphi.^2);
 %
 nm2 = nt2 - 1;
 %
+
 YMBmin = repmat(xBmin,[nm2,1,nmhu]);
 YMmhu0 = repmat(reshape(ymhu0,[1,1,nmhu]),[nm2,np,1]);
 YM1mmhu02 = repmat(reshape(y1mmhu02,[1,1,nmhu]),[nm2,np,1]);
@@ -291,4 +292,5 @@ clear YMBb
 YMmhu = sign(YMmhu0).*sqrt(1 - YMPSIB.*(1 - YMmhu0.^2));%Pitch-angle cosine of (psi,theta,mhu)
 YMmhu(~YMmask) = eps;%Avoid numerical singularities
 YMF = YMB.*((YMR - Rp).^2 + (YMZ - Zp).^2).*YMmhu0./abs(YMBR.*(YMZ - Zp) - YMBZ.*(YMR - Rp))./YMmhu/Rp;
+YMF(find(isinf(YMF))) = 1;%To avoid Inf and NaN
 YMdt = diff(YTtheta);

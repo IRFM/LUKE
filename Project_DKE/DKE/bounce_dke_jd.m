@@ -1,5 +1,5 @@
 function [xq,xqtilde,xqbar,xqhat,xymaskT,...
-    xylambda_p0p0,xylambda_p2m1,xylambda_b_p1p1,xylambda_b_p1m1p2,xylambda_b_p1m1,xylambda_b_p1m2,xylambda_b_p2m2p2,xylambda_b_p3m2,xylambda_b_p2]...
+    xylambda_p0p0,xylambda_p2m1,xylambda_b_p1p1,xylambda_b_p1m1p2,xylambda_b_p1m1,xylambda_b_p1m2,xylambda_b_p2m2p2,xylambda_b_p3m2,xylambda_b_p2,xylambda_b_p1m3p4]...
 = bounce_dke_jd(ymhu0,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,Rp,Zp)
 %
 % calculates bounce averaging coefficients needed for solving the electron drift-kinetic-equation. 
@@ -31,6 +31,12 @@ YMR0 = repmat(xR0,[nm2,1,nmhu]);
 Yweight_p0p0 = (YMmhu./YMmhu0).^(0).*YMPSIB.^(0);
 xylambda_p0p0 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p0p0)/(2*pi),[nr,nmhu])./xyqtilde;
 %
+%For flux surface averaged Ohmic electric field
+%
+Yweight_p1m3p4 = (YMmhu./YMmhu0).^(1).*YMPSIB.^(-3).*(YMR0./YMR).^(4);
+xylambda_p1m3p4 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p1m3p4)/(2*pi),[nr,nmhu])./xyqtilde;
+xylambda_b_p1m3p4 = ~xymaskT.*xylambda_p1m3p4;
+%
 %Fokker-Planck weights
 %
 Yweight_p2m1 = (YMmhu./YMmhu0).^(2).*YMPSIB.^(-1);
@@ -42,7 +48,7 @@ xylambda_b_p1p1 = ~xymaskT.*xylambda_p1p1;
 %
 Yweight_p1m1p2 = (YMmhu./YMmhu0).^(1).*YMPSIB.^(-1).*(YMR0./YMR).^(2);
 xylambda_p1m1p2 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p1m1p2)/(2*pi),[nr,nmhu])./xyqtilde;
-xylambda_b_p1m1p2 = ~xymaskT.*xylambda_p1m1p2;%Equivalent form: xq.*xRmin.*xB0./xqtilde/R0./xBTmin
+xylambda_b_p1m1p2 = ~xymaskT.*xylambda_p1m1p2;%Equivalent form: xq.*xRmin.*xB0./xqtilde/R0./xBTmin                                              
 %
 %Drift kinetic weights
 %

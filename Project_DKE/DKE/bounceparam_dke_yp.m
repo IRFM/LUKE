@@ -9,7 +9,8 @@ function [xq,xqtilde,xqbar,xqhat,...
     XXRlambda_b_p1m2_m,XXRlambda_b_p1m2_p,...
     XXlambda_b_p2m2p2,XXRlambda_b_p2m2p2_m,XXRlambda_b_p2m2p2_p,...
     XXRlambda_b_p3m2_m,XXRlambda_b_p3m2_p,...
-    XXlambda_b_p2]...
+    XXlambda_b_p2,...
+	 XXlambda_b_p1m3p4]...
 =  bounceparam_dke_yp(bounce_mode,...
     mhu,mhum,mhup,Xmhu,Xmhum,Xmhup,...
     XR,XZ,XBR,XBZ,XBphi,...
@@ -22,13 +23,13 @@ function [xq,xqtilde,xqbar,xqhat,...
 %
 if bounce_mode == 1,	
     [xq,xqtilde,xqbar,xqhat,xymaskT,...
-    xylambda,xylambda_p2m1,xylambda_b_p1p1,xylambda_b_p1m1p2,xylambda_b_p1m1,xylambda_b_p1m2,xylambda_b_p2m2p2,xylambda_b_p3m2,xylambda_b_p2]...
+    xylambda,xylambda_p2m1,xylambda_b_p1p1,xylambda_b_p1m1p2,xylambda_b_p1m1,xylambda_b_p1m2,xylambda_b_p2m2p2,xylambda_b_p3m2,xylambda_b_p2,xylambda_b_p1m3p4]...
 = bounce_dke_jd(mhu,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,Rp,Zp);
-    [xq,xqtilde,xqbar,xqhat,xymaskT,...
-    xylambda_p,xylambda_p2m1_p,xylambda_b_p1p1_p,xylambda_b_p1m1p2_p,xylambda_b_p1m1_p,xylambda_b_p1m2_p,xylambda_b_p2m2p2_p,xylambda_b_p3m2_p,xylambda_b_p2_p]...
+    [xq,xqtilde,xqbar,xqhat,xymaskT_p,...
+    xylambda_p,xylambda_p2m1_p,xylambda_b_p1p1_p,xylambda_b_p1m1p2_p,xylambda_b_p1m1_p,xylambda_b_p1m2_p,xylambda_b_p2m2p2_p,xylambda_b_p3m2_p,xylambda_b_p2_p,xylambda_b_p1m3p4_p]...
 = bounce_dke_jd(mhup,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,Rp,Zp);
-    [xq,xqtilde,xqbar,xqhat,xymaskT,...
-    xylambda_m,xylambda_p2m1_m,xylambda_b_p1p1_m,xylambda_b_p1m1p2_m,xylambda_b_p1m1_m,xylambda_b_p1m2_m,xylambda_b_p2m2p2_m,xylambda_b_p3m2_m,xylambda_b_p2_m]...
+    [xq,xqtilde,xqbar,xqhat,xymaskT_m,...
+    xylambda_m,xylambda_p2m1_m,xylambda_b_p1p1_m,xylambda_b_p1m1p2_m,xylambda_b_p1m1_m,xylambda_b_p1m2_m,xylambda_b_p2m2p2_m,xylambda_b_p3m2_m,xylambda_b_p2_m,xylambda_b_p1m3p4_m]...
 = bounce_dke_jd(mhum,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,Rp,Zp);
 %
 	XXheaviside = repmat(reshape(~xymaskT',[1,nmhu,nr]),[npn,1,1]);%For selecting the circulating population only
@@ -43,12 +44,18 @@ if bounce_mode == 1,
 	Xxlambda_p = xylambda_p';
 	Xxlambda_m = xylambda_m'; 
 %
+%For flux surface averaged Ohmic electric field
+%
+	XXlambda_b_p1m3p4 = repmat(reshape(xylambda_b_p1m3p4',[1,nmhu,nr]),[npn,1,1]);
+%
 %Fokker-Planck terms
 %
 	XXlambda_p2m1_p = repmat(reshape(xylambda_p2m1_p',[1,nmhu,nr]),[npn,1,1]);
 	XXlambda_p2m1_m = repmat(reshape(xylambda_p2m1_m',[1,nmhu,nr]),[npn,1,1]);
-	XXRlambda_p2m1_p = XXlambda_p2m1_p./XXlambda_p;%***********Check that it is correct to divide by XXlambda_p instead of XXlambda ************
-	XXRlambda_p2m1_m = XXlambda_p2m1_m./XXlambda_m;%***********Check that it is correct to divide by XXlambda_m instead of XXlambda ************
+	XXRlambda_p2m1_p = XXlambda_p2m1_p./XXlambda_p;
+	XXRlambda_p2m1_p(find(isnan(XXRlambda_p2m1_p))) = eps;
+	XXRlambda_p2m1_m = XXlambda_p2m1_m./XXlambda_m;
+	XXRlambda_p2m1_m(find(isnan(XXRlambda_p2m1_m))) = eps;
 %
 	XXlambda_b_p1p1 = repmat(reshape(xylambda_b_p1p1',[1,nmhu,nr]),[npn,1,1]);
 	XXRlambda_b_p1p1 = XXlambda_b_p1p1./XXlambda;	
@@ -57,35 +64,45 @@ if bounce_mode == 1,
 	XXlambda_b_p1m1p2_p = repmat(reshape(xylambda_b_p1m1p2_p',[1,nmhu,nr]),[npn,1,1]);
 	XXlambda_b_p1m1p2_m = repmat(reshape(xylambda_b_p1m1p2_m',[1,nmhu,nr]),[npn,1,1]);
 	XXRlambda_b_p1m1p2 = XXlambda_b_p1m1p2./XXlambda;	
-	XXRlambda_b_p1m1p2_p = XXlambda_b_p1m1p2_p./XXlambda_p;%*********Idem*********
-	XXRlambda_b_p1m1p2_m = XXlambda_b_p1m1p2_m./XXlambda_m;%*********Idem*********
+	XXRlambda_b_p1m1p2_p = XXlambda_b_p1m1p2_p./XXlambda_p;
+	XXRlambda_b_p1m1p2_p(find(isnan(XXRlambda_b_p1m1p2_p))) = eps;
+	XXRlambda_b_p1m1p2_m = XXlambda_b_p1m1p2_m./XXlambda_m;
+	XXRlambda_b_p1m1p2_m(find(isnan(XXRlambda_b_p1m1p2_m))) = eps;
 %
 %Drift kinetic terms
 %
 	XXlambda_b_p1m1 = repmat(reshape(xylambda_b_p1m1',[1,nmhu,nr]),[npn,1,1]);
 	XXlambda_b_p1m1_p = repmat(reshape(xylambda_b_p1m1_p',[1,nmhu,nr]),[npn,1,1]);
 	XXlambda_b_p1m1_m = repmat(reshape(xylambda_b_p1m1_m',[1,nmhu,nr]),[npn,1,1]);
-	XXRlambda_b_p1m1 = XXlambda_b_p1m1./XXlambda;%*********Idem*********
-	XXRlambda_b_p1m1_p = XXlambda_b_p1m1_p./XXlambda_p;%*********Idem*********
-	XXRlambda_b_p1m1_m = XXlambda_b_p1m1_m./XXlambda_m;%*********Idem*********
+	XXRlambda_b_p1m1 = XXlambda_b_p1m1./XXlambda;
+	XXRlambda_b_p1m1_p = XXlambda_b_p1m1_p./XXlambda_p;
+	XXRlambda_b_p1m1_p(find(isnan(XXRlambda_b_p1m1_p))) = eps;
+	XXRlambda_b_p1m1_m = XXlambda_b_p1m1_m./XXlambda_m;
+	XXRlambda_b_p1m1_m(find(isnan(XXRlambda_b_p1m1_m))) = eps;
 %
 	XXlambda_b_p1m2 = repmat(reshape(xylambda_b_p1m2',[1,nmhu,nr]),[npn,1,1]);
 	XXlambda_b_p1m2_p = repmat(reshape(xylambda_b_p1m2_p',[1,nmhu,nr]),[npn,1,1]);
 	XXlambda_b_p1m2_m = repmat(reshape(xylambda_b_p1m2_m',[1,nmhu,nr]),[npn,1,1]);
-	XXRlambda_b_p1m2_p = XXlambda_b_p1m2_p./XXlambda_p;%*********Idem*********
-	XXRlambda_b_p1m2_m = XXlambda_b_p1m2_m./XXlambda_m;%*********Idem*********
+	XXRlambda_b_p1m2_p = XXlambda_b_p1m2_p./XXlambda_p;
+	XXRlambda_b_p1m2_p(find(isnan(XXRlambda_b_p1m2_p))) = eps;
+	XXRlambda_b_p1m2_m = XXlambda_b_p1m2_m./XXlambda_m;
+	XXRlambda_b_p1m2_m(find(isnan(XXRlambda_b_p1m2_m))) = eps;
 %
 	XXlambda_b_p2m2p2 = repmat(reshape(xylambda_b_p2m2p2',[1,nmhu,nr]),[npn,1,1]);
 	XXlambda_b_p2m2p2_p = repmat(reshape(xylambda_b_p2m2p2_p',[1,nmhu,nr]),[npn,1,1]);
 	XXlambda_b_p2m2p2_m = repmat(reshape(xylambda_b_p2m2p2_m',[1,nmhu,nr]),[npn,1,1]);
-	XXRlambda_b_p2m2p2_p = XXlambda_b_p2m2p2_p./XXlambda_p;%*********Idem*********
-	XXRlambda_b_p2m2p2_m = XXlambda_b_p2m2p2_m./XXlambda_m;%*********Idem*********
+	XXRlambda_b_p2m2p2_p = XXlambda_b_p2m2p2_p./XXlambda_p;
+	XXRlambda_b_p2m2p2_p(find(isnan(XXRlambda_b_p2m2p2_p))) = eps;
+	XXRlambda_b_p2m2p2_m = XXlambda_b_p2m2p2_m./XXlambda_m;
+	XXRlambda_b_p2m2p2_m(find(isnan(XXRlambda_b_p2m2p2_m))) = eps;
 %
 	XXlambda_b_p3m2 = repmat(reshape(xylambda_b_p3m2',[1,nmhu,nr]),[npn,1,1]);
 	XXlambda_b_p3m2_p = repmat(reshape(xylambda_b_p3m2_p',[1,nmhu,nr]),[npn,1,1]);
 	XXlambda_b_p3m2_m = repmat(reshape(xylambda_b_p3m2_m',[1,nmhu,nr]),[npn,1,1]);
-	XXRlambda_b_p3m2_p = XXlambda_b_p3m2_p./XXlambda_p;%*********Idem*********
-	XXRlambda_b_p3m2_m = XXlambda_b_p3m2_m./XXlambda_m;%*********Idem*********
+	XXRlambda_b_p3m2_p = XXlambda_b_p3m2_p./XXlambda_p;
+	XXRlambda_b_p3m2_p(find(isnan(XXRlambda_b_p3m2_p))) = eps;
+	XXRlambda_b_p3m2_m = XXlambda_b_p3m2_m./XXlambda_m;
+	XXRlambda_b_p3m2_m(find(isnan(XXRlambda_b_p3m2_m))) = eps;
 %
 	XXlambda_b_p2 = repmat(reshape(xylambda_b_p2',[1,nmhu,nr]),[npn,1,1]);
    XXlambda_b_p2_p = repmat(reshape(xylambda_b_p2_p',[1,nmhu,nr]),[npn,1,1]);

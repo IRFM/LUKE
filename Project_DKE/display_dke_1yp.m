@@ -40,7 +40,7 @@ xnormf_ref_fsav = Znorm_ref_fsav{1,1};
 xia = xrho*ap/Rp;%Pseudo inverse aspect ratio (has a meanin only for circular plasma equilibrium)
 xft_out = xft_fsav(r_dke);
 %
-xRR_KB = 0.35*abs(xepsi_ref).^(-3/8).*exp(-(sqrt(2./abs(xepsi_ref))+1./4./abs(xepsi_ref)));%Kulsrud fit of the theoretical Kruskal-Bernstein runaway rate (PRL 31,11 (1973) 690)
+xRR_KB_fsav = 0.35*abs(xepsi_ref_fsav).^(-3/8).*exp(-(sqrt(2./abs(xepsi_ref_fsav))+1./4./abs(xepsi_ref_fsav)));%Kulsrud fit of the theoretical Kruskal-Bernstein runaway rate (PRL 31,11 (1973) 690)
 %
 P_ref = me*(clum*betath_ref)^2*nhu_ref*ne_ref/1e6;%MKSA power unit
 j_ref = qe*clum*betath_ref*ne_ref/1e6;%MKSA current unit
