@@ -34,13 +34,14 @@ function [xcurr_hir_ref_fsav,xcurr_sau_ref_fsav,xcurr_hin_ref_fsav,xcurr_i_ref_f
 qe = 1.6e-19;
 %
 nr = length(xTe);
+drho = diff(xrho);
 %
-dTedr = diff(xTe(1:nr-1) + xTe(2:nr))/2/ap;
-dTedr = [dTedr(1),dTedr,dTedr(nr-2)]; 
-dnedr = diff(xne(1:nr-1) + xne(2:nr))/2/ap;
-dnedr = [dnedr(1),dnedr,dnedr(nr-2)]; 
-dTidr = diff(xTi(1:nr-1) + xTi(2:nr))/2/ap;
-dTidr = [dTidr(1),dTidr,dTidr(nr-2)]; 
+dTedr = diff(xTe)./drho/ap;
+dTedr = [dTedr(1),(dTedr(1:nr-2) + dTedr(2:nr-1))/2,dTedr(nr-1)]; 
+dnedr = diff(xne)./drho/ap;
+dnedr = [dnedr(1),(dnedr(1:nr-2) + dnedr(2:nr-1))/2,dnedr(nr-1)]; 
+dTidr = diff(xTi)./drho/ap;
+dTidr = [dTidr(1),(dTidr(1:nr-2) + dTidr(2:nr-1))/2,dTidr(nr-1)]; 
 %
 dlnTedr = 1./(xTe+eps).*dTedr;
 dlnnedr = 1./(xne+eps).*dnedr;
