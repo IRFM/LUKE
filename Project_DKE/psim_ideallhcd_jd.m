@@ -26,7 +26,7 @@ yD0_in_c_lh = [1.0,1.0,1.0];%Central LH QL diffusion coefficient (nhuth_ref*pth_
 %     
 yD0_in_lh_prof = [0,0,0];%Quasilinear diffusion coefficient radial profile: (0) uniform , (1) gaussian radial profile [1,n_scenario_lh]
 ypeak_lh = [0.5,0.5,0.5];%Radial peak position of the LH quasi-linear diffusion coefficient (r/a on midplane) [1,n_scenario_lh]
-ywidth_lh = [0.2,0.2,0.2];%Radial width of the LH quasi-linear diffusion coefficient (r/a on midplane) [1,n_scenario_lh]
+ywidth_lh = [0.1,0.1,0.1];%Radial width of the LH quasi-linear diffusion coefficient (r/a on midplane) [1,n_scenario_lh]
 %
 ythetab_lh = [0,0,0];%Poloidal location of LH beam (Degree) [1,n_scenario_lh]
 %

@@ -305,7 +305,7 @@ if max(YXXold(:)) > 0
 end
 %
 YXXdeltares_old_ij = YXXdeltares_ij;
-YXXdeltares_old_ij(npn-2:npn,:) = 0;%Baranov condition for avoiding particle leaks at the boundary when relativistic effects are karge at the high velocity limit
+%YXXdeltares_old_ij(npn-2:npn,:) = 0;%Baranov condition for avoiding particle leaks at the boundary when relativistic effects are karge at the high velocity limit
 %
 YXXdeltares_old_ippj = zeros(size(YXXdeltares_old_ij)); 
 YXXdeltares_old_ipj = zeros(size(YXXdeltares_old_ij));
