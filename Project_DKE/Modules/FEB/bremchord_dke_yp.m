@@ -1,4 +1,4 @@
-function [vschords] = bremchord_dke_yp(tokamak,HXR,xpsin,xpsin_S,mfactor,method,display,ns);
+function [vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr] = bremchord_dke_yp(tokamak,HXR,xpsin,xpsin_S,mfactor,method,display,ns);
 %
 % This function calculates chord positions fro bremsstrahlung tomography in a torus along unit vector g. 
 %
@@ -18,16 +18,20 @@ function [vschords] = bremchord_dke_yp(tokamak,HXR,xpsin,xpsin_S,mfactor,method,
 %
 % OUTPUTS
 %       
-%       - vschords: chords parameter [12,n,nchords]
+%       - vschords: chords parameter [16,n,nchords]
+%       - psi_hxr: magnetic flux surface coordinate where the distribution function is calculated for the bremsstrahlung emission [npsi,ntheta]
+%       - theta_hxr: poloidal angle values where the distribution function is calculated for the bremsstrahlung emission [npsi,ntheta]
+%       - PSI_hxr: B/Bmin where the distribution function is calculated for the bremsstrahlung emission [npsi,ntheta]
+%       - mask_hxr: locations where the distribution function is calculated for the bremsstrahlung emission [npsi,ntheta]
 %
 % by J. Decker (jodecker@alum.mit.edu) and Y. Peysson (yves.peysson@cea.fr)
 %
 
-%[vschords] = bremchord_dke_yp('TS',HXR,xpsin_dke,xpsin_S_dke,1,'spline',2);
+%[vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr] = bremchord_dke_yp('TS',HXR,xpsin_dke,xpsin_S_dke,1,'spline',2);
 if nargin < 4,
     error('Not enough arguments in bremchord_dke_yp')
 elseif nargin == 4,
-   	mfactor = 10;
+   	mfactor = 1;
 		method = 'spline'; 	
       display = 2;
       ns = 2000;
@@ -45,8 +49,7 @@ end
 ns = abs(ns);%Force ns to be always positive
 nchords = length(HXR{1,1});%chord number
 %
-[theta,ppsin,psia,ptR,ptZ,ptBR,ptBZ,ptBphi] = equilibrium_jd(tokamak,NaN*xpsin,xpsin_S,display,method,mfactor);	
-
+[theta,ppsin,psia,ptR,ptZ,ptBR,ptBZ,ptBphi,ptB0,ptR0,ptBT0,ptBp0,ptrho] = equilibrium_jd(tokamak,NaN*xpsin,xpsin_S,display,method,mfactor);%NaN
 %
 Rp = ptR(1,1);%Plasma major radius (m)
 Zp = ptZ(1,1);%Plasma vertical position (m)
@@ -119,7 +122,8 @@ sR = sqrt(R_hxr.^2 + sh.^2 + 2*R_hxr.*sh.*cos(alpha_hxr));
 sR = sR + eps*(sR == Rp);%to avoid singularities
 sZ = Z_hxr + sZ;
 sZ = sZ + eps*(sZ == Zp);%to avoid singularities
-sphi = rem(2*pi - acos((sR.^2 + R_hxr.^2 - sh.^2)./(2*sR.*R_hxr)).*sign(alpha_hxr),2*pi);
+sphi = rem(2*pi - acos((sR.^2 + R_hxr.^2 - sh.^2)./(2*sR.*R_hxr)).*sign(alpha_hxr),2*pi);%Toroidal angle
+spsi = griddata(ptR,ptZ,ppsin*ones(1,length(theta)),sR,sZ);%Flux surface value
 %
 gX_hxr = sin(beta_hxr).*cos(alpha_hxr);%Chord vector
 gY_hxr = sin(beta_hxr).*sin(alpha_hxr);%Chord vector
@@ -136,11 +140,12 @@ for ic = 1:nchords,
    	mask(1:imask(1),ic) = logical(0);
    end
 end	
-sR(~mask)=NaN;
-sZ(~mask)=NaN; 
-sphi(~mask)=NaN; 
-sr(~mask)=NaN;
-st(~mask)=NaN; 
+sR(~mask) = NaN;
+sZ(~mask) = NaN; 
+sphi(~mask) = NaN; 
+sr(~mask) = NaN;
+st(~mask) = NaN;
+spsi(~mask) = NaN;
 sBR=griddata(ptR,ptZ,ptBR,sR,sZ);
 sBZ=griddata(ptR,ptZ,ptBZ,sR,sZ);
 sBphi=griddata(ptR,ptZ,ptBphi,sR,sZ);
@@ -189,18 +194,45 @@ if display >= 1
 	set(gca,'YDir','rev');%Because the reference is indirect by definition
 end
 %
-vschords = zeros(12,ns,nchords);
+ir_spsi = spsi*0;
+for i = length(xpsin_S)-1:-1:1,
+	ir_spsi = ir_spsi + (spsi > xpsin_S(i));	
+end
+%
+it_st = st*0;
+for i = length(theta)-1:-1:1,
+	it_st = it_st + (st > theta(i));	
+end
+%
+mask_hxr = zeros(length(xpsin_S)-1,length(theta)-1);%Location where the distribution function is calculated
+for i = 1:length(xpsin_S)-1,
+   for j= 1:length(theta)-1,
+   	if isempty(find(it_st(:,1:59) == j & ir_spsi(:,1:59) == i)) ~= 1,
+   		mask_hxr(i,j) = 1;
+   	end
+   end
+end
+%
+theta_hxr = ones(length(xpsin),1)*(theta(1:end-1) + diff(theta)/2);
+psin_hxr = xpsin'*ones(1,length(theta)-1);
+B0_hxr = interp1(ppsin,ptB0,xpsin,method);%Bmin
+PSI_hxr = griddata(ppsin*ones(1,length(theta)),ones(length(ppsin),1)*theta,sqrt(ptBR.^2 + ptBZ.^2 + ptBphi.^2),psin_hxr,theta_hxr)./(B0_hxr'*ones(1,length(theta)-1));%B/Bmin
+%
+vschords = zeros(16,ns,nchords);
 vschords(1,:,:) = s;
 vschords(2,:,:) = sR;
 vschords(3,:,:) = sZ;
 vschords(4,:,:) = sphi;
 vschords(5,:,:) = sr;
 vschords(6,:,:) = st;
-vschords(7,:,:) = sksid;
-vschords(8,:,:) = sBR;
-vschords(9,:,:) = sBZ;
-vschords(10,:,:) = sBphi;
-vschords(11,:,:) = gX_hxr;
-vschords(12,:,:) = gY_hxr;
-vschords(13,:,:) = gZ_hxr;
+vschords(7,:,:) = spsi;
+vschords(8,:,:) = ir_spsi;
+vschords(9,:,:) = it_st;
+vschords(10,:,:) = sksid;
+vschords(11,:,:) = sBR;
+vschords(12,:,:) = sBZ;
+vschords(13,:,:) = sBphi;
+vschords(14,:,:) = gX_hxr;
+vschords(15,:,:) = gY_hxr;
+vschords(16,:,:) = gZ_hxr;
 
