@@ -23,7 +23,7 @@ so that the infinitesimal poloidal surface element $dS_{p}\left( \psi
 \right) $ is 
 \begin{equation}
 \int_{dS_{p}\left( \psi \right) }dS=\int_{dS_{p}\left( \psi \right) }\frac{r%
-}{\left| \nabla \psi \right| \left| \widehat{\psi }\cdot \widehat{r}\right| }%
+}{\left| \nabla \psi \right| \left| \widehat{\psi }\cdot \widehat{r}\right| }
 d\psi d\theta =d\psi \int_{0}^{2\pi }d\theta \frac{r}{\left| \nabla \psi
 \right| \left| \widehat{\psi }\cdot \widehat{r}\right| }
 \end{equation}
@@ -85,7 +85,7 @@ so that the infinitesimal volume element $dV\left( \psi \right) $ of a
 flux-surface is 
 \begin{equation}
 \iint_{dV\left( \psi \right) }dV=\iint_{dV\left( \psi \right) }\frac{Rr}{%
-\left| \nabla \psi \right| \left| \widehat{\psi }\cdot \widehat{r}\right| }%
+\left| \nabla \psi \right| \left| \widehat{\psi }\cdot \widehat{r}\right| }
 d\psi d\theta d\phi =d\psi \int_{0}^{2\pi }d\theta \int_{0}^{2\pi }d\phi 
 \frac{Rr}{\left| \nabla \psi \right| \left| \widehat{\psi }\cdot \widehat{r}%
 \right| }
@@ -139,6 +139,134 @@ and finally
 B_{\min }\left( \psi \right) }{B_{P}}\mathbf{\Phi }\left( \psi ,\theta
 \right)
 \end{equation}
+
+\subsection{Density}
+
+\subsubsection{Definition}
+
+The electron density $n_{e}\left( \psi ,\theta \right) $ is given by the
+relation 
+\begin{equation}
+n_{e}\left( \psi ,\theta \right) =2\pi \int_{-1}^{+1}d\xi \int_{0}^{\infty
+}p^{2}dp\;f\left( p,\xi ,\psi ,\theta \right)
+\end{equation}
+
+Using the general expression (\ref{fluxsurfaveravolumic}) of the
+flux-surface averaging of a volumic quantity 
+\begin{eqnarray}
+\left\langle n_{e}\right\rangle _{V}\left( \psi \right) &=&\frac{1}{\widehat{%
+q}\left( \psi \right) }\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{1}{\left| 
+\widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}}\frac{B_{\min
+}\left( \psi \right) }{B_{P}}n_{e}\left( \psi ,\theta \right)  \nonumber \\
+&=&\frac{2\pi }{\widehat{q}\left( \psi \right) }\int_{0}^{\infty
+}p^{2}dp\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }%
+\cdot \widehat{r}\right| }\frac{r}{R_{0}}\frac{B_{\min }\left( \psi \right) 
+}{B_{P}}\int_{-1}^{+1}d\xi \;f\left( p,\xi ,\psi ,\theta \right)  \nonumber
+\\
+&=&\frac{2\pi }{\widehat{q}\left( \psi \right) }\int_{0}^{\infty
+}p^{2}dp\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }
+\cdot \widehat{r}\right| }\frac{r}{R_{0}}\frac{B_{\min }\left( \psi \right) 
+}{B_{P}}\int_{-1}^{+1}\left[ \frac{1}{2}\sum_{\sigma =\pm 1}\right] _{T}d\xi
+\;f\left( p,\xi ,\psi ,\theta \right)
+\end{eqnarray}
+where the trapping condition evaluated at the location $\theta $ is given by 
+\begin{equation}
+\left| \xi \right| <\xi _{T}=\sqrt{1-\frac{B\left( \psi ,\theta \right) }{
+B_{\max }\left( \psi \right) }}
+\end{equation}
+
+Using $\xi d\xi =\Psi \xi _{0}d\xi _{0}$ with the condition (\ref{xi0cond})
+on $\xi _{0}$%
+\begin{equation}
+\left| \xi _{0}\right| \geq \sqrt{1-\frac{1}{\Psi \left( \psi ,\theta
+\right) }}  \label{xi0cond2}
+\end{equation}
+one get 
+\begin{equation}
+\int_{-1}^{+1}\left[ \frac{1}{2}\sum_{\sigma =\pm 1}\right] _{T}d\xi
+=\int_{-1}^{+1}\left[ \frac{1}{2}\sum_{\sigma =\pm 1}\right] _{T}\;\Psi
+\left( \psi ,\theta \right) \frac{\xi _{0}}{\xi }H\left( \left| \xi
+_{0}\right| -\sqrt{1-\frac{1}{\Psi \left( \psi ,\theta \right) }}\right)
+d\xi _{0}
+\end{equation}
+
+Note that the condition (\ref{xi0cond2}) is equivalent to 
+\begin{equation}
+\theta _{\min }\left( \psi ,\xi _{0}\right) \leq \theta \leq \theta _{\max
+}\left( \psi ,\xi _{0}\right)
+\end{equation}
+so that, the integrals over $\theta $ and $\xi _{0}$ may be permuted, 
+\begin{eqnarray}
+\left\langle n_{e}\right\rangle _{V}\left( \psi \right) &=&\frac{2\pi }{%
+\widehat{q}\left( \psi \right) }\int_{0}^{\infty
+}p^{2}dp\;\int_{-1}^{+1}d\xi _{0}  \nonumber \\
+&&\left[ \frac{1}{2}\sum_{\sigma =\pm 1}\right] _{T}\int_{\theta _{\min
+}}^{\theta _{\max }}\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }%
+\cdot \widehat{r}\right| }\frac{r}{R_{0}}\frac{B}{B_{P}}\frac{\xi _{0}}{\xi }%
+f\left( p,\xi _{0},\psi ,\theta \right)
+\end{eqnarray}
+where the bounce-averaging of the distribution appears naturally. Therefore,
+expression (\ref{volumeaveragebounce}) can be rewriten in the simple form 
+\begin{equation}
+\left\langle n_{e}\right\rangle _{V}\left( \psi \right) =2\pi \frac{%
+\widetilde{q}\left( \psi \right) }{\widehat{q}\left( \psi \right) }%
+\int_{0}^{\infty }p^{2}dp\;\int_{-1}^{+1}d\xi _{0}\lambda \left( \xi
+_{0}\right) \left\{ f\left( p,\xi _{0},\psi ,\theta \right) \right\}
+\end{equation}
+
+\subsubsection{Fokker-Planck Equation}
+
+When we consider only the zero order distribution function, we have that $%
+f_{0}$ is constant along a field line, so that 
+\begin{equation}
+f_{0}\left( p,\xi ,\psi ,\theta \right) =f_{0}^{(0)}\left( p,\xi _{0},\psi
+\right)
+\end{equation}
+and 
+\begin{equation}
+\left\langle n_{e}\right\rangle _{V}^{0}\left( \psi \right) =2\pi \frac{%
+\widetilde{q}\left( \psi \right) }{\widehat{q}\left( \psi \right) }%
+\int_{0}^{\infty }p^{2}dp\;\int_{-1}^{+1}d\xi _{0}\lambda \left( \xi
+_{0}\right) f_{0}^{(0)}\left( p,\xi _{0},\psi \right)
+\end{equation}
+
+\subsubsection{Drift Kinetic Equation}
+
+When we consider the first order distribution function, we have $f_{1}=%
+\widetilde{f}+g$, where $g$ is constant along a field line, and therefore
+its contribution has the same expression as for $f_{0}$. However, $%
+\widetilde{f}$ has an explicit dependence upon $\theta $, which is given by (%
+\ref{ftilde}) 
+\begin{equation}
+\widetilde{f}(p,\xi ,\psi ,\theta )=\frac{\xi (\psi ,\theta ,\xi _{0})}{\Psi
+(\psi ,\theta )\xi _{0}}\widetilde{f}^{(0)}(p,\xi _{0},\psi )
+\end{equation}
+
+Therefore, the flux-surface averaged density contribution of $\widetilde{f}$
+is 
+\begin{eqnarray}
+\left\langle \widetilde{n}_{e}\right\rangle _{V}^{1}\left( \psi \right)
+&=&2\pi \frac{\widetilde{q}\left( \psi \right) }{\widehat{q}\left( \psi
+\right) }\int_{0}^{\infty }p^{2}dp\;\int_{-1}^{+1}d\xi _{0}\lambda \left(
+\xi _{0}\right) \left\{ \frac{\xi }{\Psi (\psi ,\theta )\xi _{0}}\right\} 
+\widetilde{f}^{(0)}(p,\xi _{0},\psi ) \\
+&=&2\pi \frac{\widetilde{q}\left( \psi \right) }{\widehat{q}\left( \psi
+\right) }\int_{0}^{\infty }p^{2}dp\;\int_{-1}^{+1}d\xi _{0}\overline{\lambda 
+}_{1,-1,0}\widetilde{f}^{(0)}(p,\xi _{0},\psi )
+\end{eqnarray}
+where 
+\begin{equation}
+\overline{\lambda }_{1,-1,0}=\sigma \left\{ \sigma \frac{\xi }{\Psi (\psi
+,\theta )\xi _{0}}\right\}
+\end{equation}
+according to the notation in paragraph ****, since $\widetilde{f}^{(0)}$ is
+antisymmetric in the trapped region.
+
+Since $\widetilde{f}^{(0)}$ and $g$ have no definite symmetry properties,
+they can contribute to the density. 
+\[
+\left\langle n_{e}\right\rangle _{V}^{0}\left( \psi \right) 
+\]
 
 \subsection{Current Density}
 
@@ -252,7 +380,7 @@ _{0}\right| -\xi _{0T}\right) \;\xi _{0}f_{0}^{(0)}\left( p,\xi _{0},\psi
 The integrals over $\theta $ and $\xi _{0}$ can be permuted 
 \begin{eqnarray}
 \left\langle J_{\Vert }\right\rangle _{\phi }^{0}\left( \psi \right) &=&%
-\frac{2\pi q_{e}}{m}\int_{0}^{\infty }dp\;\frac{p^{3}}{\gamma }%
+\frac{2\pi q_{e}}{m}\int_{0}^{\infty }dp\;\frac{p^{3}}{\gamma }
 \int_{-1}^{1}d\xi _{0}\;H\left( \left| \xi _{0}\right| -\xi _{0T}\right)
 \;\xi _{0}f_{0}^{(0)}\left( p,\xi _{0},\psi \right) \\
 &&\frac{1}{\overline{q}\left( \psi \right) }\int_{0}^{2\pi }\frac{d\theta }{%
@@ -369,7 +497,7 @@ so that, permuting the integrals over $\theta $ and $\xi _{0}$, we find
 \int_{-1}^{1}d\xi _{0}\;\xi _{0}\widetilde{f}^{(0)}\left( p,\xi _{0},\psi
 \right)  \nonumber \\
 &&\frac{1}{\overline{q}\left( \psi \right) }\int_{\theta _{\min }}^{\theta
-_{\max }}\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{%
+_{\max }}\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{
 r}\right| }\frac{r}{R}\frac{B_{T}}{B_{P}}\frac{1}{\Psi \left( \psi ,\theta
 \right) }\frac{\xi }{\xi _{0}}  \label{J1tilde}
 \end{eqnarray}
@@ -397,11 +525,11 @@ obtain
 _{\max }}\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{%
 r}\right| }\frac{r}{R_{0}}\frac{B}{B_{P}}\frac{\xi _{0}}{\xi }\left[ \frac{%
 R\left( \psi ,\theta _{0}\right) }{R\left( \psi ,\theta \right) }\right]
-^{2}\Psi ^{-2}\left( \psi ,\theta \right) \left[ \frac{\xi }{\xi _{0}}%
+^{2}\Psi ^{-2}\left( \psi ,\theta \right) \left[ \frac{\xi }{\xi _{0}}
 \right] ^{2}
 \end{eqnarray}
 
-We recognize the expression of a bounce coefficient as defined in (\ref{lkm}%
+We recognize the expression of a bounce coefficient as defined in (\ref{lkm}
 ) so that we get finally 
 \begin{equation}
 \left\langle \widetilde{J}_{\Vert }\right\rangle _{\phi }^{1}\left( \psi
@@ -665,7 +793,7 @@ S_{\varphi } &=&-\frac{1}{p}\frac{\partial }{\partial p}\left( pT_{\xi
 
 Because $S_{\varphi }=0$, we can choose $T_{\xi }=T_{p}=0$, which leads to 
 \begin{eqnarray}
-S_{p} &=&\frac{1}{p}\frac{\partial }{\partial \xi }\left( \sqrt{1-\xi ^{2}}%
+S_{p} &=&\frac{1}{p}\frac{\partial }{\partial \xi }\left( \sqrt{1-\xi ^{2}}
 T_{\varphi }\right) \\
 S_{\xi } &=&\frac{1}{p}\frac{\partial }{\partial p}\left( pT_{\varphi
 }\right)
@@ -697,7 +825,7 @@ in $\varphi $, is given by
 By rotational symmetry in $\varphi $, and using (\ref{dlphipxi}), we get
 that 
 \begin{equation}
-\Gamma _{12}=2\pi p_{2}\sqrt{1-\xi _{2}^{2}}T_{\varphi 2}\;-2\pi p_{1}\sqrt{%
+\Gamma _{12}=2\pi p_{2}\sqrt{1-\xi _{2}^{2}}T_{\varphi 2}\;-2\pi p_{1}\sqrt{
 1-\xi _{1}^{2}}T_{\varphi 1}
 \end{equation}
 If we define 
@@ -715,7 +843,7 @@ call $A\left( p,\xi ,\psi \right) $ the stream function, and we get finally
 \begin{eqnarray}
 S_{p} &=&\frac{n\left( \psi \right) }{2\pi p^{2}}\frac{\partial A}{\partial
 \xi } \\
-S_{\xi } &=&\frac{n\left( \psi \right) }{2\pi p\sqrt{1-\xi ^{2}}}\frac{%
+S_{\xi } &=&\frac{n\left( \psi \right) }{2\pi p\sqrt{1-\xi ^{2}}}\frac{
 \partial A}{\partial p}
 \end{eqnarray}
 
@@ -728,7 +856,7 @@ A\left( 0,\xi \right) =A\left( p,\pm 1\right) =0
 Then $A$ can be calculated by any of the integrals 
 \begin{eqnarray}
 A\left( p,\xi ,\psi \right) &=&\frac{2\pi p^{2}}{n\left( \psi \right) }%
-\int_{-1}^{\xi }d\xi \;S_{p}=\frac{2\pi p^{2}}{n\left( \psi \right) }%
+\int_{-1}^{\xi }d\xi \;S_{p}=\frac{2\pi p^{2}}{n\left( \psi \right) }
 \int_{1}^{\xi }d\xi ^{\prime }\;S_{p} \\
 A\left( p,\xi ,\psi \right) &=&\frac{2\pi \sqrt{1-\xi ^{2}}}{n\left( \psi
 \right) }\int_{0}^{p}p^{\prime }dp^{\prime }\;S_{\xi }
@@ -754,7 +882,7 @@ A^{\left( 0\right) }\left( p,\xi _{0},\psi \right) &=&\frac{2\pi p^{2}}{
 n\left( \psi \right) }\int_{-1}^{\xi _{0}}d\xi _{0}^{\prime }\;\left\{
 S_{p}\right\} \\
 &=&\frac{2\pi p^{2}}{n\left( \psi \right) }\int_{-1}^{\xi _{0}}d\xi
-_{0}^{\prime }\;\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2}%
+_{0}^{\prime }\;\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2}
 \sum_{\sigma }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{%
 d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }%
 \frac{r}{R_{0}}\frac{B}{B_{P}}\frac{\xi _{0}^{\prime }}{\xi ^{\prime }}S_{p}
@@ -767,8 +895,8 @@ d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }%
 &=&\;\frac{\sigma }{\lambda \widetilde{q}}\left[ \frac{1}{2}\sum_{\sigma
 }\right] _{T}\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{
 \psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}}\frac{B}{B_{P}}\int_{-1}^{\xi
-_{0}}d\xi _{0}^{\prime }H\left( \left| \xi _{0}\right| -\sqrt{1-\frac{1}{%
-\Psi }}\right) \sigma \frac{\xi _{0}^{\prime }}{\xi ^{\prime }}\frac{%
+_{0}}d\xi _{0}^{\prime }H\left( \left| \xi _{0}\right| -\sqrt{1-\frac{1}{
+\Psi }}\right) \sigma \frac{\xi _{0}^{\prime }}{\xi ^{\prime }}\frac{
 \partial A}{\partial \xi ^{\prime }} \\
 &=&\;\frac{\sigma }{\lambda \widetilde{q}}\left[ \frac{1}{2}\sum_{\sigma
 }\right] _{T}\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{%
@@ -795,7 +923,7 @@ A^{\left( 0\right) }\left( p,\xi _{0},\psi \right) &=&\frac{2\pi \sqrt{1-\xi
 _{0}^{2}}}{n\left( \psi \right) }\int_{0}^{p}p^{\prime }dp^{\prime }\;\sigma
 \left\{ \frac{\sigma \xi }{\sqrt{\Psi }\xi _{0}}S_{\xi }\right\} \\
 &=&\frac{2\pi \sqrt{1-\xi _{0}^{2}}}{n\left( \psi \right) }%
-\int_{0}^{p}p^{\prime }dp^{\prime }\;\sigma \frac{1}{\lambda \widetilde{q}}%
+\int_{0}^{p}p^{\prime }dp^{\prime }\;\sigma \frac{1}{\lambda \widetilde{q}}
 \left[ \frac{1}{2}\sum_{\sigma }\right] _{T}\int_{\theta _{\min }}^{\theta
 _{\max }}\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{%
 r}\right| }\frac{r}{R_{0}}\frac{B}{B_{P}}\frac{\sigma }{\sqrt{\Psi }}S_{\xi }
@@ -837,7 +965,7 @@ verifying (\ref{A0}) leads to the bounce-averaged FP equation (\ref{kinbav2}%
 _{0}^{2}}}\frac{\partial A^{\left( 0\right) }}{\partial p}\right) \\
 &=&\frac{1}{\lambda p^{2}}\frac{\partial ^{2}}{\partial p\xi _{0}}\left[ 
 \frac{\lambda n\left( \psi \right) A^{\left( 0\right) }}{2\pi }\right] -%
-\frac{1}{\lambda p^{2}}\frac{\partial ^{2}}{\partial \xi _{0}\partial p}%
+\frac{1}{\lambda p^{2}}\frac{\partial ^{2}}{\partial \xi _{0}\partial p}
 \left[ \frac{\lambda n\left( \psi \right) A^{\left( 0\right) }}{2\pi }\right]
 \\
 &=&0
@@ -875,34 +1003,33 @@ electric field $\left\langle E_{\Vert }\right\rangle _{\phi },$%
 
 By definition, 
 \begin{eqnarray}
-\left\langle E_{\Vert }\right\rangle _{\phi }\left( \psi \right)  &=&\frac{1%
-}{\overline{q}\left( \psi \right) }\int_{0}^{2\pi }\frac{d\theta }{2\pi }%
-\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R}\frac{%
-B_{\min }\left( \psi \right) }{B_{P}}E_{\Vert }\left( \psi ,\theta \right)
-\left[ \widehat{\phi }\mathbf{\cdot }\widehat{b}\right]   \nonumber \\
+\left\langle E_{\Vert }\right\rangle _{\phi }\left( \psi \right) &=&\frac{1}{%
+\overline{q}\left( \psi \right) }\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{%
+1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R}\frac{B_{\min
+}\left( \psi \right) }{B_{P}}E_{\Vert }\left( \psi ,\theta \right) \left[ 
+\widehat{\phi }\mathbf{\cdot }\widehat{b}\right]  \nonumber \\
 &=&\frac{1}{\overline{q}\left( \psi \right) }\int_{0}^{2\pi }\frac{d\theta }{%
 2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R}%
 \frac{B_{\min }\left( \psi \right) }{B_{P}}E_{\Vert }\left( \psi ,\theta
 \right) \frac{B_{T}}{B}  \nonumber \\
-&=&\frac{1}{\overline{q}\left( \psi \right) }\int_{0}^{2\pi }\frac{d\theta }{%
+&=&\frac{1}{\overline{q}\left( \psi \right) }\int_{0}^{2\pi }\frac{d\theta }{
 2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R}%
 \frac{B_{T}}{B_{P}}\frac{E_{\Vert }\left( \psi ,\theta \right) }{\Psi \left(
 \psi ,\theta \right) }
 \end{eqnarray}
-
-\paragraph{Using relation 
+Using 
 \begin{equation}
 E_{\Vert }\left( \psi ,\theta \right) =\frac{1}{\Psi \left( \psi ,\theta
 \right) }\frac{R^{2}\left( \psi ,\theta _{0}\right) }{R^{2}\left( \psi
-,\theta \right) }E_{\Vert }^{\left( 0\right) }\left( \psi \right) 
+,\theta \right) }E_{\Vert }^{\left( 0\right) }\left( \psi \right)
 \end{equation}
 where $E_{\Vert }^{\left( 0\right) }\left( \psi \right) =E_{\Vert }\left(
-\psi ,\theta _{0}\right) $ is the value at $B_{\min }$, one obtains
+\psi ,\theta _{0}\right) $ is the value at $B_{\min }$, one obtains 
 \begin{eqnarray}
-\left\langle E_{\Vert }\right\rangle _{\phi }\left( \psi \right)  &=&\frac{1%
-}{\overline{q}\left( \psi \right) }\int_{0}^{2\pi }\frac{d\theta }{2\pi }%
-\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R}\frac{%
-B_{T}}{B_{P}}\frac{E_{\Vert }^{\left( 0\right) }\left( \psi \right) }{\Psi
+\left\langle E_{\Vert }\right\rangle _{\phi }\left( \psi \right) &=&\frac{1}{%
+\overline{q}\left( \psi \right) }\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{%
+1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R}\frac{B_{T}}{%
+B_{P}}\frac{E_{\Vert }^{\left( 0\right) }\left( \psi \right) }{\Psi
 ^{2}\left( \psi ,\theta \right) }\frac{R^{2}\left( \psi ,\theta _{0}\right) 
 }{R^{2}\left( \psi ,\theta \right) }  \nonumber \\
 &=&\frac{E_{\Vert }^{\left( 0\right) }\left( \psi \right) }{\overline{q}%
@@ -911,34 +1038,35 @@ B_{T}}{B_{P}}\frac{E_{\Vert }^{\left( 0\right) }\left( \psi \right) }{\Psi
 1}{\Psi ^{2}\left( \psi ,\theta \right) }\frac{R^{2}\left( \psi ,\theta
 _{0}\right) }{R^{2}\left( \psi ,\theta \right) }
 \end{eqnarray}
-Case of circular concentric flux-surfaces}
+
+\paragraph{Case of circular concentric flux-surfaces}
 
 In that case, 
 \[
 \frac{B_{T}}{B_{P}}=q\left( r\right) \frac{\sqrt{1-\epsilon ^{2}}}{\epsilon }
 \]
-with $\epsilon =r/R_{p}.$ Therefore,
+with $\epsilon =r/R_{p}.$ Therefore, 
 \begin{equation}
 \left\langle E_{\Vert }\right\rangle _{\phi }\left( r\right) =\frac{q\left(
 r\right) }{\overline{q}\left( r\right) }\sqrt{1-\epsilon ^{2}}E_{\Vert
-}^{\left( 0\right) }\left( r\right) 
+}^{\left( 0\right) }\left( r\right)
 \end{equation}
 since $\Psi ^{2}\left( \psi ,\theta \right) =R^{2}\left( \psi ,\theta
-\right) /R^{2}\left( \psi ,\theta _{0}\right) ,$ and using the fact that
+\right) /R^{2}\left( \psi ,\theta _{0}\right) ,$ and using the fact that 
 \begin{equation}
 \frac{q\left( r\right) }{\overline{q}\left( r\right) }=\sqrt{\frac{%
 1+\epsilon }{1-\epsilon }}\frac{B_{T}}{B}
 \end{equation}
-one finds
+one finds 
 \begin{equation}
 \left\langle E_{\Vert }\right\rangle _{\phi }\left( r\right) =\left(
 1+\epsilon \right) \frac{B_{T}}{B}E_{\Vert }^{\left( 0\right) }\left(
-r\right) 
+r\right)
 \end{equation}
 and in the limit $B_{P}\ll B_{T,}$ 
 \begin{equation}
 \left\langle E_{\Vert }\right\rangle _{\phi }\left( r\right) \simeq \left(
-1+\epsilon \right) E_{\Vert }^{\left( 0\right) }\left( r\right) 
+1+\epsilon \right) E_{\Vert }^{\left( 0\right) }\left( r\right)
 \end{equation}
 
 \subsection{Fraction of trapped electrons}
@@ -1071,7 +1199,7 @@ which reduces to
 \begin{equation}
 \mathcal{F}_{t0}^{M}\left( \psi \right) =\frac{\int_{-\xi _{0T}\left( \psi
 \right) }^{+\xi _{0T}\left( \psi \right) }\lambda \left( \xi _{0}\right)
-d\xi _{0}\;}{\int_{-1}^{+1}\lambda \left( \xi _{0}\right) d\xi _{0}}=\frac{%
+d\xi _{0}\;}{\int_{-1}^{+1}\lambda \left( \xi _{0}\right) d\xi _{0}}=\frac{
 \int_{0}^{+\xi _{0T}\left( \psi \right) }\lambda \left( \xi _{0}\right) d\xi
 _{0}\;}{\int_{0}^{+1}\lambda \left( \xi _{0}\right) d\xi _{0}}
 \end{equation}
@@ -1100,7 +1228,7 @@ It is interesting to estimate the parametric dependence of $\mathcal{F}%
 _{t0}^{M}$ for $\epsilon \ll 1.$ For trapped particles, 
 \begin{equation}
 \lambda \left( \xi _{0}\right) \simeq \frac{2}{\pi }\frac{\left| \xi
-_{0}\right| }{\xi _{0T}}\left[ K\left( \frac{\xi _{0}^{2}}{\xi _{0T}^{2}}%
+_{0}\right| }{\xi _{0T}}\left[ K\left( \frac{\xi _{0}^{2}}{\xi _{0T}^{2}}
 \right) -\frac{1}{2}\xi _{0T}^{2}\left[ K\left( \frac{\xi _{0}^{2}}{\xi
 _{0T}^{2}}\right) -E\left( \frac{\xi _{0}^{2}}{\xi _{0T}^{2}}\right) \right]
 \right]
@@ -1148,13 +1276,13 @@ _{0} &=&\frac{2\sqrt{2}}{\pi }\sqrt{\epsilon }\left( \frac{E\left( \sqrt{%
 2\epsilon }\right) }{\sqrt{2\epsilon }}-1\right) +\frac{2\sqrt{2}}{\pi }%
 \epsilon \sqrt{\epsilon }\int_{\sqrt{2\epsilon }}^{1}\frac{K\left( x\right)
 -E\left( x\right) }{x^{4}}dx  \nonumber \\
-&\simeq &1-\frac{2\sqrt{2}}{\pi }\sqrt{\epsilon }+\frac{2\sqrt{2}}{\pi }%
+&\simeq &1-\frac{2\sqrt{2}}{\pi }\sqrt{\epsilon }+\frac{2\sqrt{2}}{\pi }
 \epsilon \sqrt{\epsilon }\int_{\sqrt{2\epsilon }}^{1}\frac{K\left( x\right)
 -E\left( x\right) }{x^{4}}dx
 \end{eqnarray}
 and using the indefinite integrals $\int \frac{K\left( x\right) -E\left(
 x\right) }{x}dx=-E\left( x\right) $,(Gradshteyn and Ryzhik, p627,
-\#5.113.1), and $\int \frac{E\left( x\right) }{x^{4}}dx=\frac{1}{9x^{3}}%
+\#5.113.1), and $\int \frac{E\left( x\right) }{x^{4}}dx=\frac{1}{9x^{3}}
 \left[ 2(x^{2}-2)E\left( x\right) +\left( 1-x^{2}\right) K\left( x\right)
 \right] $,(Gradshteyn and Ryzhik, p627, \#5.112.12), 
 \begin{equation}
@@ -1196,6 +1324,6 @@ found repeatedly in the litterature for the bootstrap current or the
 neoclassical conductivity, where $h=B/B_{max}$ and $B_{max}$ is the maximum
 value of the magnetic field $B$ along the particle trajectory. This quantity
 results from the reduction of the conductivity due to trapped particles, or
-the onset of the bootstrap current. 
+the onset of the bootstrap current.
 
-\subsection{Bremsstrahlung emission}
+\subsection{Bremsstrahlung emission }
