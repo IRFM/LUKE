@@ -40,8 +40,9 @@ dkeparam.dpsin_dke = 0.01;%maximum difference between two consecutive positions 
 %
 dkeparam.ref_mode = 0;%Reference values: (0) from core Te and ne, (1) from Te and ne at the normalized radius (paramater only active for a single radial value, otherwise ref_mode = 0)
 %
-% Collision operator
+% Dql and collision operator
 %
+dkeparam.Dqlmax = 1;% Maximum value of Dql. All values larger are enforced to Dqlmax.
 dkeparam.coll_mode = 2;%Relativistic collision operator: (0) Relativistic Maxwellian background, (1) High-velocity limit, (2) Linearized Belaiev-Budker (3) Non-relativistic Lorentz model, (4) Non-relativistic Maxwellian background
 %
 % Ray-tracing and RF waves

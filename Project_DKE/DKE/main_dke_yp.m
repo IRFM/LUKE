@@ -35,6 +35,7 @@ snp = dkeparam.snp;
 spfac = dkeparam.spfac;
 dpsin_dke = dkeparam.dpsin_dke;
 ref_mode = dkeparam.ref_mode;
+Dqlmax = dkeparam.Dqlmax;
 coll_mode = dkeparam.coll_mode;
 bounce_mode = dkeparam.bounce_mode;
 dke_mode = dkeparam.dke_mode;
@@ -827,7 +828,7 @@ if syn_mode == 1
         betath_ref,xepsi_bc_ref_fsav_in,waveparam_bc,...
         XXDr_ref,XXVr_ref,...
         XXnhuloss_ref,xdeltaripple,...
-        xftp_norm_ref,bounce,coll_mode,...
+        xftp_norm_ref,bounce,Dqlmax,coll_mode,...
         norm_mode_f,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,snumber,XXfinit_ref);
 %
     time_bc_out = etime(clock,time0_bc);

@@ -18,7 +18,7 @@ dke_1_4yp(tokname,theta,...
     betath_ref,xepsi_fsav,waveparam,nmax_rf,...
     XXDr,XXVr,...
     XXnhuloss,delta,...
-    xftp_norm,bounce,coll_mode,...
+    xftp_norm,bounce,Dqlmax,coll_mode,...
     norm_mode,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,snumber,XXfinit)
 %
 %
@@ -123,9 +123,10 @@ dke_1_4yp(tokname,theta,...
 %Fokker-Planck part originally done by Y. Peysson 
 %Drift kinetic calculations for arbitrary magnetic equilibrium done by J. Decker (MIT-RLE) <jodecker@mit.edu> and Y. Peysson (CEA-DRFC) <yves.peysson@cea.fr>
 %
-if nargin < 33,
+if nargin < 56,
 	error('Wrong number of input arguments in dke_1_4yp')
-elseif nargin == 39,
+elseif nargin == 56,
+   Dqlmax = 1;
 	coll_mode = 2;
 	norm_mode = 0;
 	boundary_mode = [1,1];
@@ -137,7 +138,7 @@ elseif nargin == 39,
 	display = [0,1,1];
 	store_mode = 0;
 	snumber = 1;
-elseif nargin == 40,
+elseif nargin == 57,
 	norm_mode = 0;
 	boundary_mode = [1,1];
 	dtn = 1000;
@@ -148,7 +149,7 @@ elseif nargin == 40,
 	display = [0,1,1];
 	store_mode = 0;
 	snumber = 1;
-elseif nargin == 41,
+elseif nargin == 58,
 	boundary_mode = [1,1];
 	prec0 = [1e-10,1e-10];
 	nit = [50,200];
@@ -157,7 +158,7 @@ elseif nargin == 41,
 	display = [0,1,1];
 	store_mode = 0;
 	snumber = 1;
-elseif nargin == 42,
+elseif nargin == 59,
 	dtn = 1000;
 	prec0 = [1e-10,1e-10];
 	nit = [50,200];
@@ -166,7 +167,7 @@ elseif nargin == 42,
 	display = [0,1,1];
 	store_mode = 0;
 	snumber = 1;
-elseif nargin == 43,
+elseif nargin == 60,
 	prec0 = [1e-10,1e-10];
 	nit = [50,200];
 	invproc = 1;
@@ -174,36 +175,36 @@ elseif nargin == 43,
 	display = [0,1,1];
 	store_mode = 0;
 	snumber = 1;
-elseif nargin == 44,
+elseif nargin == 61,
 	nit = [50,200];
 	invproc = 1;
 	param_inv = [1e-3,20];
 	display = [0,1,1];
 	store_mode = 0;
 	snumber = 1;
-elseif nargin == 45,
+elseif nargin == 62,
 	invproc = 1;
 	param_inv = [1e-3,20];
 	display = [0,1,1];
 	store_mode = 0;
 	snumber = 1;
-elseif nargin == 46,
+elseif nargin == 63,
 	param_inv = [1e-3,20];	
 	display = [0,1,1];
 	store_mode = 0;
 	snumber = 1;
-elseif nargin == 47,
+elseif nargin == 64,
 	display = [0,1,1];	
 	store_mode = 0;
 	snumber = 1;
-elseif nargin == 48,	
+elseif nargin == 65,	
 	store_mode = 0;
 	snumber = 1;
-elseif nargin == 49,	
+elseif nargin == 66,	
 	snumber = 1;
 end
 %
-narginmax = 49;
+narginmax = 66;
 %
 timeCPU0 = cputime;
 %
@@ -898,19 +899,19 @@ if ~isempty(waveparam),
 	    Xxlambda_p,Xxlambda,Xxlambda_m,...
 	    betath_ref,bounce_mode,dke_mode);
 %            
-	YXXDpp_rf_ippj = ZYXXD_rf{1};
-	YXXDpp_rf_ipj = ZYXXD_rf{2};
-	YXXDpp_rf_ij = ZYXXD_rf{3};
-	YXXDpp_rf_imj = ZYXXD_rf{4};
-	YXXDpp_rf_immj = ZYXXD_rf{5};
-	YXXDpm_rf_ipj = ZYXXD_rf{6};
-	YXXDpm_rf_ij = ZYXXD_rf{7};
-	YXXDpm_rf_imj = ZYXXD_rf{8};
-	YXXDmp_rf_ijp = ZYXXD_rf{9};
-	YXXDmp_rf_ij = ZYXXD_rf{10};
-	YXXDmp_rf_ijm = ZYXXD_rf{11};
-	YXXDmm_rf_ijp = ZYXXD_rf{12};
-	YXXDmm_rf_ijm = ZYXXD_rf{13};
+	YXXDpp_rf_ippj = ZYXXD_rf{1};YXXDpp_rf_ippj(YXXDpp_rf_ippj > Dqlmax) = Dqlmax;
+	YXXDpp_rf_ipj = ZYXXD_rf{2};YXXDpp_rf_ipj(YXXDpp_rf_ipj > Dqlmax) = Dqlmax;
+	YXXDpp_rf_ij = ZYXXD_rf{3};YXXDpp_rf_ij(YXXDpp_rf_ij > Dqlmax) = Dqlmax;
+	YXXDpp_rf_imj = ZYXXD_rf{4};YXXDpp_rf_imj(YXXDpp_rf_imj > Dqlmax) = Dqlmax;
+	YXXDpp_rf_immj = ZYXXD_rf{5};YXXDpp_rf_immj(YXXDpp_rf_immj > Dqlmax) = Dqlmax;
+	YXXDpm_rf_ipj = ZYXXD_rf{6};YXXDpm_rf_ipj(YXXDpm_rf_ipj > Dqlmax) = Dqlmax;
+	YXXDpm_rf_ij = ZYXXD_rf{7};YXXDpm_rf_ij(YXXDpm_rf_ij > Dqlmax) = Dqlmax;
+	YXXDpm_rf_imj = ZYXXD_rf{8};YXXDpm_rf_imj(YXXDpm_rf_imj > Dqlmax) = Dqlmax;
+	YXXDmp_rf_ijp = ZYXXD_rf{9};YXXDmp_rf_ijp(YXXDmp_rf_ijp > Dqlmax) = Dqlmax;
+	YXXDmp_rf_ij = ZYXXD_rf{10};YXXDmp_rf_ij(YXXDmp_rf_ij > Dqlmax) = Dqlmax;
+	YXXDmp_rf_ijm = ZYXXD_rf{11};YXXDmp_rf_ijm(YXXDmp_rf_ijm > Dqlmax) = Dqlmax;
+	YXXDmm_rf_ijp = ZYXXD_rf{12};YXXDmm_rf_ijp(YXXDmm_rf_ijp > Dqlmax) = Dqlmax;
+	YXXDmm_rf_ijm = ZYXXD_rf{13};YXXDmm_rf_ijm(YXXDmm_rf_ijm > Dqlmax) = Dqlmax;
 %    
 	YXXDrf_ij = ZYXXD_rf{14};   
 %
