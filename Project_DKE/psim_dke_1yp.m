@@ -24,13 +24,13 @@ dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode] = psim_dke_1yp;
 %
 snumber = 1;%Simulation number
 tokname = 'TS';%Tokamak equilibrium scenario (see ptok_dke_1yp.m) in EQUIL_tokname file)
-loadequil = 1;%0: Load already existing equilibrium file, 1: create equilibrium with HELENA (needs mex file), 2: create equilibrium file (with idealequil_f_jd.m function)
-npsi = 201;%Size of the psi grid for the magnetic equilibrium (ntheta is fixed for HELENA)
+loadequil = 2;%0: Load already existing equilibrium file, 1: create equilibrium with HELENA (needs mex file), 2: create equilibrium file (with idealequil_f_jd.m function)
 qopt = 1;%Option for q profile. (0): constant (default), (1): from qmin and eq (for HELENA, it is used only for the psi grid guess)
 %
-%Additional specific parameter for ideal cylindrical magnetic equilibrium with circular concentric flux surfaces (used if loadequil = 2 only)
+%Additional specific parameters for ideal cylindrical magnetic equilibrium with circular concentric flux surfaces (used if loadequil = 2 only)
 %
-ntheta = 201;%Size of the theta grid for the magnetic equilibrium
+npsi = 101;%Size of the psi grid for the magnetic equilibrium (ntheta is fixed for HELENA)
+ntheta = 65;%Size of the theta grid for the magnetic equilibrium (ntheta ~= npsi)
 %
 %Mesh size calculation
 %
@@ -54,7 +54,7 @@ grid_power = 1.5; % power for mhu grid step varations (grid_power > 1) (Note: fo
 %
 %Momentum grid
 %
-snp = 10*eps;%pgridfactor (Uniform grid: pgridfactor << 1, non-uniform grid: pgridfactor >= 1) 
+snp = 10;%pgridfactor (Uniform grid: pgridfactor << 1, non-uniform grid: pgridfactor >= 1) 
 spfac = 20;%reduction factor for the supergrid used in collision integrals
 %
 %Normalized radii at which the distribution is calculated (DKE or FP)
@@ -63,7 +63,7 @@ spfac = 20;%reduction factor for the supergrid used in collision integrals
 %Values of the radial flux grid [1,p] (If one radial value: local calculation only)
 %
 psin_S = [];%5.286742555900838e-002; %[0.1]%(rho = 0.25 in CMOD)
-rho_S = [0.2];%[0.2,0.6],%;0.03322100141578101;0.71365;
+rho_S = [0.2,0.6];%;0.03322100141578101;0.71365;
 %
 psin_display = NaN;%Approximate radial value at which results are displayed if display_mode >= 1 [1,1]
 rho_display = 0.1;
@@ -108,7 +108,7 @@ nhuloss = NaN;%Magnetic ripple loss frequency, nhuloss > 1000 (or NaN if no ripp
 %
 % Collision operator
 %
-coll_mode = 3;%Relativistic collision operator: (0) Maxwellian, (1) High-velocity limit, (2) Linearized Belaiev-Budker - (3) No relativistic Lorentz model
+coll_mode = 2;%Relativistic collision operator: (0) Maxwellian, (1) High-velocity limit, (2) Linearized Belaiev-Budker - (3) No relativistic Lorentz model
 %
 % Run mode
 %
@@ -117,12 +117,12 @@ dke_mode = 1;%Fokker-Planck equation (0), Drift Kinetic equation (1)
 equil_mode = 0;%Equilibrium option: (0) circular concentric flux-surfaces, (1) numerical equilibrium
 %
 norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
-boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
+boundary_mode_f = 1;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 prec0_f = 1e-10;%Convergence level of the residu
 nit_f = 50;%Maximum number of iterations for f
 initguess_f = 0;%Initial guess for the distribution function: (0) Maxwellian, (1) Fuchs model with Tperp for LH current drive only, (2) from a file
 %
-boundary_mode_g = 0;%Number of points where the first distribution function for the Lorentz model is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
+boundary_mode_g = 1;%Number of points where the first distribution function for the Lorentz model is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 prec0_g = 1e-10;%Convergence level of the residu (if NaN, iterations stop with nit_g)
 nit_g = 50;%Maximum number of iterations for g
 %
@@ -146,6 +146,7 @@ end
 %
 if coll_mode == 3 & strcmp(tokname,'TEST_LORENTZ')==0,
 	tokname = 'TEST_LORENTZ';
+	loadequil = 2;
 	epsi0 = 0.0;
 	epsia = 0.0;
 	rf_list(1) = 0;
@@ -162,6 +163,7 @@ if coll_mode == 3 & strcmp(tokname,'TEST_LORENTZ')==0,
 end
 if strcmp(tokname,'TEST_LORENTZ')==1 & coll_mode ~= 3;
 	coll_mode = 3;
+	loadequil = 2;
 	epsi0 = 0.0;
 	epsia = 0.0;
 	rf_list(1) = 0;
@@ -174,7 +176,7 @@ if strcmp(tokname,'TEST_LORENTZ')==1 & coll_mode ~= 3;
 	Dr0 = 0;
 	Vr0 = 0;
 	nhuloss = NaN;
-	info_dke_yp(2,'WARNING: Lorentz model enforced !')	
+	info_dke_yp(2,'WARNING: Lorentz model enforced with cylindrical magnetic equilibrium and circular magnetic flux surfaces !')	
 end
 %
 [s,dossier,machine] = comput_dke_yp;
@@ -187,7 +189,7 @@ if loadequil == 0,%Already existing magnetic equilibrium file
 	end
 elseif loadequil == 1,%Create magnetic equilibrium file with HELENA
 	equil_mode = 1;%Numerical bounce integral calculation enforced
-	filename = helenaequil_f_jd(tokname,qopt,npsi);%Calculate the equibrium parameters if tokamak name exists
+	filename = helenaequil_f_jd(tokname,qopt);%Calculate the equibrium parameters if tokamak name exists
 	info_dke_yp(2,['HELENA magnetic equilibrium file ',filename,' has been created.']);
 elseif loadequil == 2,%Create ideal cylindrical magnetic equilibrium
 	filename = idealequil_f_jd(tokname,qopt,npsi,ntheta);%Calculate the equibrium parameters if tokamak name exists

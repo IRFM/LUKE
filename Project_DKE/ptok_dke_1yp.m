@@ -97,17 +97,17 @@ elseif strcmp(name,'TS') == 1,
 	Zeffa = 1;
 	eZeff = 0;
 %
-	Ip = 0.61;
-	j0 = 0.2;
+	Ip = 1.0;
+	j0 = 0.6;
 	ja = 0;
 	ej = 2;
 	qmin = 1.13;
 	eq = 2;
 %
-	Te0 = 2.7;
+	Te0 = 4.7;
 	Tea = 0;
 	eTe = 1.1;
-	Ti0 = 1.5;
+	Ti0 = 4.7;
 	Tia = 0;
 	eTi = 1.1;
 	ne0 = 1.0e+19;
@@ -229,31 +229,36 @@ elseif strcmp(name,'CMOD') == 1,
 elseif strcmp(name,'NSTX') == 1,
 	ap = 0.67;
 	Rp = 0.86;
-	Ip = 0.8;
-	Bt = 0.45;
-	Ncoils = NaN;
-	Zi = [1 1 1 ];
-	mi = [1 2 3 ];
-	fi = [0,1,0];
+	Zp = 0.0;
+	elong = 1;
+	triang_up = 0;
+	triang_down = 0;
 %
-	BeLi = NaN;
+	Bt = 0.45;	
+%
+	Zi = [1 1 1];
+	mi = [1 2 3];
+	fi = [0,1,0];
+	Zeff0 = 1;
+	Zeffa = 1;
+	eZeff = 0;
+%	
+	Ip = 0.8;
+	j0 = 0.4;
+	ja = 0;
+	ej = 2;
 	qmin = 1;
 	eq = 1;
 %
 	Te0 = 1.5;
 	Tea = 0.001*Te0;
 	eTe = 2;
-	eTe_ref = 2;
-	ne0 = 2.0e+19;
-	nea = 0.001*ne0;
-	ene = 0.5;
-	ene_ref = 0.5;
 	Ti0 = 1.5;
 	Tia = 0.001*Ti0;
-	eTi = 2;
-	Zeff0 = 1;
-	Zeffa = 1;
-	eZeff = 0;
+	eTi = 2;	
+	ne0 = 2.0e+19;
+	nea = 0.001*ne0;
+	ene = 0.5;	
 elseif strcmp(name,'D3D') == 1,
 	ap = 0.67;
 	Rp = 1.67;
@@ -506,6 +511,39 @@ elseif strcmp(name,'CQL3D_ECCD') == 1,
 	Zeff0 = 1;
 	Zeffa = 1;
 	eZeff = 0;
+elseif strcmp(name,'JET') == 1,
+		ap = 0.9;
+		Rp = 3.00;
+		Zp = 0.0;
+		elong = 1.7;
+		triang_up = 0.24;
+		triang_down = 0.24;
+	%
+		Bt = 3.5;	
+	%
+		Zi = [1 1 1 6];
+		mi = [1 2 3 12];
+		fi = [0,1,0];
+		Zeff0 = 1.5;
+		Zeffa = 1.5;
+		eZeff = 0;
+	%	
+		Ip = 1.3;
+		j0 = 0.4;
+		ja = 0;
+		ej = 2;
+		qmin = 1;
+		eq = 1;
+	%
+		Te0 = 5;
+		Tea = 0.1*Te0;
+		eTe = 2;
+		Ti0 = 2;
+		Tia = 0.1*Ti0;
+		eTi = 2;	
+		ne0 = 1.0e+19;
+		nea = 0.001*ne0;
+		ene = 0.5;	
 elseif strcmp(name,'TEST_LORENTZ') == 1,%Values based on NSTX case
 	ap = 0.67;
 	Rp = 0.86;

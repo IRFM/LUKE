@@ -29,8 +29,7 @@ function [xpsin_f,xpsin_f_dke,xdpsin_f_dke,xpsinm_S_dke,xdpsinm_S_dke,xpsinp_S_d
 %		- ir_display_out: index of the radial location at which data are
 %		displayed (graphic mode)
 %
-% by Joan Decker <jodecker@alum.mit.edu> (MIT/RLE) and Yves Peysson
-% <yves.peysson@cea.fr> (CEA/DRFC)
+% by Joan Decker <jodecker@alum.mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 %
 xpsin_S_dke = sort(xpsin_S_dke);
 nr_S = length(xpsin_S_dke);

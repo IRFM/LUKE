@@ -103,8 +103,7 @@ XBR = interp1(ppsin,BR,xpsin);
 XBZ = interp1(ppsin,BZ,xpsin);
 XBphi = interp1(ppsin,BPHI,xpsin);
 %
-xrho = (XR(:,1)' - Rp)/ap;%Normalized radius on the horizontal LFS midplane 
-%xdrhodpsi =                         
+xrho = (XR(:,1)' - Rp)/ap;%Normalized radius on the horizontal LFS midplane                          
 %
 xTe = interp1(ppsin,pTe,xpsin);
 xne = interp1(ppsin,pne,xpsin);
