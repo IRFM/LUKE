@@ -88,7 +88,7 @@ if equil_mode == 1
     xylambda_b_p1m2 = ~xymaskT.*xylambda_p1m2;%In old notation: 1-delta/mhu0^2
 %
     Yweight_p2m2p2 = (YMmhu./YMmhu0).^(2).*YMPSIB.^(-2).*(YMR0./YMR).^(2);    
-    xylambda_p2m2p2 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p2m2p2)/(2*pi),[nr,nmhu])./xyqtilde;%************problème sur le courant en mode numérique (grille uniforme ou non)
+    xylambda_p2m2p2 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p2m2p2)/(2*pi),[nr,nmhu])./xyqtilde;%************probl?me sur le courant en mode numérique (grille uniforme ou non)
     xylambda_b_p2m2p2 = ~xymaskT.*xylambda_p2m2p2;
 %
     Yweight_p3m2 = (YMmhu./YMmhu0).^(3).*YMPSIB.^(-2);
@@ -177,14 +177,5 @@ else,%Ideal equilibrium with circular concentric flux-surfaces.
     xylambda_b_p2 = xylambda_b_p2m2p2;
     xylambda_b_p1m1p2 = xylambda_b_p1p1;
     xylambda_b_p1m3p4 = xylambda_b_p1p1;
- end   
-
-    
-    
- 
-    
-    figure(7000),plot(ymhu0,xylambda_p2m2p2,'r+');axis('square');title('probleme sur p2m2p2 mode numerique');zoom on
-
-    
-    
+ end      
   
