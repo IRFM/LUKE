@@ -1,34 +1,143 @@
-The collisional operator can be expressed as the divergence of a flux as
-follows 
-\[
-{\cal C}(f_{0})=-\nabla _{{\bf p}}\cdot {\bf S}^{\text{C}}=-\frac{1}{p^{2}}%
-\frac{\partial }{\partial p}\left( p^{2}S_{p}^{\text{C}}\right) +\frac{1}{p}%
-\frac{\partial }{\partial \xi }\left( \sqrt{1-\xi ^{2}}S_{\xi }^{\text{C}%
-}\right) 
-\]
+As in many applications in plasma physics, collisions dominate the thermal
+particles, and therefore, the distribution function may be expanded about a
+Maxwellian
+\begin{equation}
+f_{0}=f_{0M}+\widehat{f}_{0}
+\end{equation}
+and the self-collision operator $\mathcal{C}\left( f_{0}\right) \equiv 
+\mathcal{C}\left( f_{0},f_{0}\right) $may be approximated by the linearized
+operator 
+\begin{equation}
+\mathcal{C}\left( f_{0},f_{0}\right) \simeq \mathcal{C}_{lin}\left(
+f_{0},f_{0}\right) \simeq \mathcal{C}\left( f_{0},f_{0M}\right) +\mathcal{C}%
+\left( f_{0M},f_{0}\right) 
+\end{equation}
+where one have made use of the fact that $\mathcal{C}\left(
+f_{0M},f_{0M}\right) =0$ while  $\widehat{f}_{0}^{2}$ terms are ignored. 
+
+The usual approach is to express $\mathcal{C}\left( f_{0M},f_{0}\right) $ as
+a sum of Legendre harmonics, 
+\begin{equation}
+\mathcal{C}(f_{0M},f_{0})=\sum_{l=0}^{\infty }\mathcal{C}\left(
+f_{0M},f_{0,l}P_{l}\left( \xi \right) \right) 
+\end{equation}
+where
+\begin{equation}
+f_{0}\left( p,\xi ,\psi ,\theta \right) =\sum_{l=0}^{\infty %
+}f_{0,l}P_{l}\left( \xi \right) 
+\end{equation}
+with
+\begin{equation}
+f_{0,l}\left( p,\xi ,\psi ,\theta \right) =\left( l+\frac{1}{2}\right)
+\int_{-1}^{+1}f_{0}\left( p,\xi ,\psi ,\theta \right) P_{l}\left( \xi
+\right) d\xi 
+\end{equation}
+
+Here, 
+\begin{equation}
+\mathcal{C}\left( f_{0},f_{0}\right) =\mathcal{C}_{ee}\left(
+f_{0},f_{0}\right) +\mathcal{C}_{ei}\left( f_{0},f_{0}\right) 
+\end{equation}
+where $\mathcal{C}_{ei}$ and $\mathcal{C}_{ee}$ describe respectively the
+electron-ion and electron-electron collision processes. Because of the large
+difference of mass between electrons and ions, $\mathcal{C}%
+_{ei}(f_{0M},f_{0})\simeq 0,$ while higher order terms must be kept for
+electron-electron interactions, in order to conserve momentum transfer
+during the collisions. For neary all current drive problems in tokamak
+physics, the sum may be truncated up to the first term\footnote{%
+Second order calculations have shown negligible modifications on the
+numerical solution of the drift kinetic euqation for the current drive
+problem.}, and therefore,
+\begin{equation}
+\mathcal{C}_{ee}\left( f_{0M},f_{0}\right) \simeq \mathcal{C}_{ee}\left(
+f_{0M},\xi f_{0_{1}}\right) \simeq \xi \mathcal{I}\left(
+f_{0M},f_{0,l=1}\right) 
+\end{equation}
+where
+\begin{equation}
+f_{0,l=1}\left( p,\xi ,\psi ,\theta \right) =\frac{3}{2}\int_{-1}^{+1}\xi
+f_{0}\left( p,\xi ,\psi ,\theta \right) d\xi 
+\end{equation}
+
+As a consequence, the collision operator conserves number and momentum, but
+not energy, so there is no need to introduce an energy loss term in the
+equations. In its general form, the expression of $\mathcal{C}\left(
+f_{0}\right) $is then
+\begin{equation}
+\mathcal{C}\left( f_{0}\right) \simeq \mathcal{C}_{ee}\left(
+f_{0},f_{0M}\right) +\mathcal{C}_{ei}\left( f_{0},f_{0M}\right) +\mathcal{C}%
+_{ee}\left( f_{0M},\xi f_{0,l=1}\right) 
+\end{equation}
+where the first two terms may be cast as the divergence of a flux as follows 
+\begin{equation}
+\mathcal{C}_{ee}(f_{0},f_{0M})+\mathcal{C}_{ei}(f_{0},f_{0M})=-\nabla _{%
+\mathbf{p}}\cdot \mathbf{S}^{\text{C}}=-\frac{1}{p^{2}}\frac{\partial }{%
+\partial p}\left( p^{2}S_{p}^{\text{C}}\right) +\frac{1}{p}\frac{\partial }{%
+\partial \xi }\left( \sqrt{1-\xi ^{2}}S_{\xi }^{\text{C}}\right) 
+\end{equation}
 with the components 
 \begin{eqnarray}
-S_{p}^{\text{C}} &=&-\left[ A(p)\frac{\partial f_{0}}{\partial p}%
-+F(p)f_{0}\right] \\
-S_{\xi }^{\text{C}} &=&\frac{B_{t}(p)}{p}\sqrt{1-\xi ^{2}}\frac{\partial
-f_{0}}{\partial \xi }
+S_{p}^{\text{C}} &=&-\left[ A\left( p,\psi ,\theta \right) \frac{\partial %
+f_{0}}{\partial p}+F\left( p,\psi ,\theta \right) f_{0}\right]  \\
+S_{\xi }^{\text{C}} &=&\frac{B_{t}\left( p,\psi ,\theta \right) }{p}\sqrt{%
+1-\xi ^{2}}\frac{\partial f_{0}}{\partial \xi }
 \end{eqnarray}
 
-The collisional flux can be divided into diffusive and convective
-contributions, which in tensorial form gives 
+Coefficients $A\left( p,\psi ,\theta \right) $ and  $F\left( p,\psi ,\theta
+\right) $ describes respectively momentum diffusion and convection, while $%
+B_{t}\left( p,\psi ,\theta \right) $corresponds to pitch-angle scattering.
+There values as well as that of $\mathcal{I}\left( p,\psi ,\theta \right)
+\equiv \mathcal{I}\left( f_{0M},f_{0,l=1\ss }\right) $depend of a model of
+collision. Simplified expressions may be obtained for an isotropic or
+Maxwellian backgrounds and also in the high velocity limit, when $v\gg
+v_{th}.$ The latter case has been fruitfuly used for the current drive
+problem involving very energetic or runaway electrons. Detailed expressions
+of  $A\left( p,\psi ,\theta \right) ,$ $F\left( p,\psi ,\theta \right) $,  $%
+B_{t}\left( p,\psi ,\theta \right) $and $\mathcal{I}\left( p,\psi ,\theta
+\right) $are given in Appendix *** for this useful limit. 
+
+In the code, the coefficients are deduced from the Beliaev-Budker collision
+operator which is a fully relativistic formulation of the Landau expression
+which is only valid for weakly energetic particles. Despite its complex
+tensorial form, it has been successfuly expressed as pseudo-Rosenbluth
+potentials using a Legendre harmonics expansion [B. Brams and C. F. Karney,
+Phys. Fluids B1 (1989) 1355], a formulation that opens the possibility to
+incorporate this operator in numerical calculations, since integrals may be
+determined in a fast and accurate manner. As compared to methods used in
+most of the kinetic codes dedicated to the current drive problem, which
+usually use several approximate expressions for the collision operator only
+valid in limited range of energy, the use of the  Beliaev-Budker collision
+operator represents a great advantage. Indeed, the whole momentum dynamics
+from non-relativistic to highly relativistic limit may be described by a
+single operator, which strongly enhance simulation reliability, when both
+limits come simultaneously into play,like for self-consistent bootstrap
+current calculations in presence of RF waves. Exact expressions of  $A\left(
+p,\psi ,\theta \right) $, $F\left( p,\psi ,\theta \right) $, $B_{t}\left(
+p,\psi ,\theta \right) $and $\mathcal{I}\left( p,\psi ,\theta \right) $are
+given in Appendix ****. 
+
+Finally, it is important to point out that the drift kinetic equation is no
+more a simple partial differential equation, but an integro-differential
+equation. However, since the term  $\mathcal{C}_{ee}\left(
+f_{0M},f_{0}\right) $introduce only a weak non-linearity, it may be
+considered as an additional source tem in the equations.  
+
+According to the conservative formulation, the collisional flux can be
+divided into diffusive and convective contributions, which in tensorial form
+gives 
 \[
-{\bf S}^{\text{C}}=-{\Bbb D}_{{\bf p}}^{\text{C}}\cdot \nabla _{p}f_{0}+{\bf %
-F}_{{\bf p}}^{\text{C}}f_{0}
+\mathbf{S}^{\text{C}}=-\Bbb{D}_{\mathbf{p}}^{\text{C}}\cdot \nabla _{p}f_{0}+%
+\mathbf{F}_{\mathbf{p}}^{\text{C}}f_{0}
 \]
 with the diffusion tensor components 
 \begin{eqnarray}
-D_{pp}^{\text{C}} &=&A(p)  \label{Dcoll} \\
+D_{pp}^{\text{C}} &=&A\left( p,\psi ,\theta \right)   \label{Dcoll} \\
 D_{p\xi }^{\text{C}} &=&0 \\
 D_{\xi p}^{\text{C}} &=&0 \\
-D_{\xi \xi }^{\text{C}} &=&B_{t}(p)
+D_{\xi \xi }^{\text{C}} &=&B_{t}\left( p,\psi ,\theta \right) 
 \end{eqnarray}
 and the convection vector components 
 \begin{eqnarray}
-F_{p}^{\text{C}} &=&-F(p)  \label{Fcoll} \\
+F_{p}^{\text{C}} &=&-F\left( p,\psi ,\theta \right)   \label{Fcoll} \\
 F_{\xi }^{\text{C}} &=&0
 \end{eqnarray}
