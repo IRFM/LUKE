@@ -133,11 +133,11 @@ elseif strcmp(name,'TS') == 1,
 %
 	Bt = 3.65;
 %
-	Zi = [1,1,1,6];	
-	mi = [1,2,3,12];
+	Zi = [1,1,1];%Zi = [1,1,1,6];	
+	mi = [1,2,3];%mi = [1,2,3,12];
 	fi = [0,1,0.0];
-	Zeff0 = 1.5;
-	Zeffa = 1.5;
+	Zeff0 = 1.0;%Zeff0 = 1.5;
+	Zeffa = 1.0;%Zeff0 = 1.5;
 	eZeff = 0;
 %
 	Ip = 1.0;
@@ -147,15 +147,15 @@ elseif strcmp(name,'TS') == 1,
 	qmin = 1.13;
 	eq = 2;
 %
-	Te0 = 4.7;
-	Tea = 0.1*Te0;
-	eTe = 1.1;
-	Ti0 = 3;
-	Tia = 0.1*Ti0;
-	eTi = 1.1;
-	ne0 = 2.0e+19;
-	nea = 0.24*ne0;
-	ene = 1.3;
+	Te0 = 6;%Te0 = 4.7;
+	Tea = 0*Te0;%Tea = 0.1*Te0;
+	eTe = 0;%eTe = 1.1
+	Ti0 = 6;%Ti0 = 3;
+	Tia = 0*Ti0;%Tia = 0.1*Ti0;
+	eTi = 0;%eTi = 1.1;
+	ne0 = 2.0e+19;%ne0 = 2.0e+19;
+	nea = 0*ne0;%nea = 0.24*ne0;
+	ene = 0;%ene = 1.3;
 % diagnostics
 %
 %Fast electron bremsstrahlung tomography (if exists)

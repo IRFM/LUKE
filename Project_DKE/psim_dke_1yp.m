@@ -22,8 +22,8 @@ dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode] = psim_dke_1yp
 %
 %by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
 %
-snumber = 1;%Simulation number
-tokname = 'CMOD';%Tokamak equilibrium scenario (see ptok_dke_1yp.m) in EQUIL_tokname file)
+snumber = 2;%Simulation number
+tokname = 'TS';%Tokamak equilibrium scenario (see ptok_dke_1yp.m) in EQUIL_tokname file)
 loadequil = 2;%0: Load already existing equilibrium file, 1: create equilibrium with HELMEX77 (HELENA mex file), 2: create equilibrium file (with idealequil_f_jd.m function), 3: create equilibrium with HELENA (HELENA FORTRAN version), 
 qopt = 1;%Option for q profile. (0): constant (default), (1): from qmin and eq (for HELMEX77, it is used only for the psi grid guess)
 %
@@ -38,7 +38,7 @@ grid_uniformity = 0;%Pitch-angle and momentum grids uniformity: (0) no, (1) yes 
 grid_method = 1;%Pitch-angle grid calculation technique: (0): old method, (1) new method
 nmhu_S = 151;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
 np_S = 151;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run) WARNING: must be adjusted so that effective momentum point number is larger than thepitch-angle one.
-pnmax_S = 15;%Maximum value of the flux momentum grid (pth_ref)
+pnmax_S = 30;%Maximum value of the flux momentum grid (pth_ref)
 %
 %Pitch-angle grid
 %
@@ -64,7 +64,7 @@ spfac = 20;%reduction factor for the momentum supergrid used in collision integr
 %Values of the radial flux grid [1,p] (If one radial value: local calculation only)
 %
 psin_S = [];%5.286742555900838e-002; %[0.1]%(rho = 0.25 in CMOD)
-rho_S = [0.7];%;0.03322100141578101;0.71365;
+rho_S = [0.3,0.6];%;0.03322100141578101;0.71365;
 %
 psin_display = NaN;%Approximate radial value at which results are displayed if display_mode >= 1 [1,1]
 rho_display = rho_S(1);
@@ -116,7 +116,7 @@ coll_mode = 2;%Relativistic collision operator: (0) Relativistic Maxwellian back
 %
 % Run mode
 %
-bounce_mode = 1;%Bounce averaging option: (0) no bounce averaging, (1) bounce averaging full implicit method with 15 diagonals
+bounce_mode = 0;%Bounce averaging option: (0) no bounce averaging, (1) bounce averaging full implicit method with 15 diagonals
 dke_mode = 0;%Fokker-Planck equation (0), Drift Kinetic equation (1)
 equil_mode = 1;%Equilibrium option: (0) circular concentric flux-surfaces, (1) numerical equilibrium
 syn_mode = 1;%Synergy calculation: (0) none, (1) yes: the code runs twice, including once without RF or electric fields. (only if dke_mode = 1)
