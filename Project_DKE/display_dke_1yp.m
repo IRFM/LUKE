@@ -80,8 +80,7 @@ while 1,
 		if nb > 0
 			YXDrf_ref = squeeze(YXXDrf_ref(:,:,rdke(ir_display),:));%Display results at the required radial value
 		end
-%		[XAstr_imj_S_ref] = stream_dke_jd(ZSp0_ref,XxRR_ref_fsav,mhup,mhum,mhu_S,dmhu,dpn_ref,Xpn_ref,pnmax_S,xmhubounce2,bounce_mode,xia,rdke,ir_display,nb);%Display results at the required radial value
-		[XAstr_ipjp_ref] = stream_dke_jd(ZSp0_ref,XxRR_ref_fsav,mhu,dmhu,pnp,xmhubounce2,bounce_mode,xia,rdke,ir_display,nb);
+		[XAstr_ipjp_ref] = stream_dke_jd(ZSp0_ref,XxRR_ref_fsav,dmhu,pnp,rdke,ir_display,nb);
 %
 		disp('-------------------------------------------------------------------------------------------------------------------');
 		disp('-------------------------------------------------------------------------------------------------------------------');
@@ -336,7 +335,7 @@ while 1,
 			end
 %
 			if igor_mode == 1,
-				eval(['save ',filenameroot,'_data_fig8_',int2str(ir_display),'.mat xrho xia rdke ir_display ppar_cyl_ref pperp_cyl_ref XDec_cyl_ref xmhubounce2 pnmax_S'])
+				eval(['save ',filenameroot,'_data_fig8_',int2str(ir_display),'.mat xrho xia rdke ir_display ppar_cyl_ref pperp_cyl_ref xmhubounce2 pnmax_S'])
 			end
 		end
 %
