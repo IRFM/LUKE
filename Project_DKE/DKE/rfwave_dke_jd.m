@@ -77,10 +77,15 @@ if rf_list(4) >= 1 % cold plasma EC
         % checks for evanescent rays
         %
         xynperp_ec = waveparam_ecc(:,:,10);
+        xyD0_rf_in = waveparam_ecc(:,:,5);
         nb_ec = size(waveparam_ecc,2);
         ymask_ec = ones(1,nb_ec);
+        ybb_ec = zeros(1,nb_ec);
         for ibb_ec = 1:nb_ec
             ib_ec = max(find(yb_ec <= ibb_ec));
+            if yb_ec(ib_ec) == ibb_ec
+                ybb_ec(ibb_ec) = 1;
+            end
             ir_dke_im_list = find(xyprop_dke_ec(:,ibb_ec) ~= 0 & imag(xynperp_ec(r_dke,ibb_ec)) ~= 0 );
             if isempty(ir_dke_im_list) %the ray is not evanescent
                 continue
@@ -97,6 +102,7 @@ if rf_list(4) >= 1 % cold plasma EC
         %    
                 end
                 xyP0_in_ec(mask_im,ibb_ec) = 0;
+                xyD0_rf_in(mask_im,ibb_ec) = 0;
                 xyprop_dke_ec(mask_dke_im,ibb_ec) = 0;
         %        
         % next ray subdivisions are removed
@@ -105,10 +111,13 @@ if rf_list(4) >= 1 % cold plasma EC
                 ymask_ec(ibb+1:ibp-1) = 0;
             end
         end
+        waveparam_ecc(:,:,5) = xyD0_rf_in;
+        ymask_ec = logical(ymask_ec);
         waveparam_ecc = waveparam_ecc(:,ymask_ec,:);
         xyprop_dke = [xyprop_dke,xyprop_dke_ec(:,ymask_ec)];
         xyPinc_in = [xyPinc_in,xyP0_in_ec(:,ymask_ec)];
-        yb_ec = yb_ec(ymask_ec);
+        ybb_ec = ybb_ec(ymask_ec);
+        yb_ec = find(ybb_ec);
         yb = [yb,ibb + yb_ec];
     end
     waveparam = [waveparam,waveparam_ecc];
