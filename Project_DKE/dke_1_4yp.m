@@ -2022,7 +2022,7 @@ if dke_mode == 1,
 			for ir = 1:nr_dke,
 				jr2 = rdke(ir);
 %
-				Xq_g_t = XXI_g(:,Zmask_g{jr2}).*Xpn2(:,Zmask_g{jr2});%First order expansion of the Beliaev-Budker collision operator (current drive problem only)
+				Xq_g_t = XXI_g(:,Zmask_g{jr2},jr2).*Xpn2(:,Zmask_g{jr2});%First order expansion of the Beliaev-Budker collision operator (current drive problem only)
 				Xq_g_t(1,:) = XXf0_g_th(1,Zmask_g{jr2},jr2);%Boundary conditions at p = 0 (large aspect ratio limit, Lorentz model)
 				Xq_g_t(:,(nmhu - ns_g(jr2))/2) = 0;%g(pn,mhu = -mhut) = 0
 				Xq_g_t(:,(nmhu - ns_g(jr2))/2 + 1) = 0;%g(pn,mhu = mhut) = 0
