@@ -64,7 +64,8 @@ meanabsx = zeros(size(wbrem_bd_plasma));%Mean attenuation per channel
 brem_bd_diag_interp = zeros(size(brem_bd_interp));
 brem_bd_diag = zeros(size(brem_bd_plasma));
 %
-for ic = 1:size(brem_bd_interp,1),
+dbstop 68
+for ic = 1:size(brem_bd_interp,1)*0+1,
 	if ic == 1,
 		gkEinterp = dresp_dke_yp(res(ic,:),phf(ic,:),kd(ic,:),ic,kinterp);
 		absxinterp = absx_dke_yp(kinterp,0,0,ef(ic),tf(ic,:),ea(ic),ta(ic,:),ec(ic),tc(ic,:),ed(ic),td(ic,:));%Air contribution is neglected (k > 10 keV only)
@@ -80,7 +81,7 @@ for ic = 1:size(brem_bd_interp,1),
 		end		
 	end
 %
-	brem_bd_diag_interp(ic,:) = (fix(((gkEinterp'.*Tabsxinterp)*dkinterp*(brem_bd_interp(ic,:))')))'; 
+%	brem_bd_diag_interp(ic,:) = (fix(((gkEinterp'.*Tabsxinterp)*dkinterp*(brem_bd_interp(ic,:))')))'; 
 %	brem_bd_diag_interp(ic,:) = (fix(((eye(size(gkEinterp')).*Tabsxinterp)*(brem_bd_interp(ic,:))')))';%detector response neglected
 %	
 	for ik = 1:size(HXR{17},2)-1,
@@ -97,6 +98,10 @@ for ic = 1:size(wbrem_bd_plasma_exp,1),
 	pfit = polyfit(kfit(ikfitmin:ikfitmax),log(wbrem_bd_plasma_exp(ic,ikfitmin:ikfitmax)),1);
 	tphot_plasma_exp(ic) = -1/pfit(1);
 	afit_plasma_exp(ic) = exp(pfit(2));
+%	if tphot_plasma_exp(ic) <=0, %Remove negative or null values
+%		tphot_plasma_exp(ic) = NaN;
+%		afit_plasma_exp(ic) = NaN;
+%	end
 end
 %
 
