@@ -72,17 +72,17 @@ BREM_c1 = BHE_c1 + HC_c1;
 pn_c1 = permute(repmat(pn(:),[1,n_gauleg+1,length(kphot),1]),[2,1,3,4]);
 gamma_c1 = permute(repmat(gamma(:),[1,n_gauleg+1,length(kphot),1]),[2,1,3,4]);
 %
-%for i = 1:size(psin_hxr,1),%radial position
-%	for j = 1:size(psin_hxr,2),%Poloidal position
-for i = 10,%radial position
-	for j = 30,%Poloidal position
+for i = 1:size(psin_hxr,1),%radial position
+	for j = 1:size(psin_hxr,2),%Poloidal position
+%for i = 10,%radial position
+%	for j = 30,%Poloidal position
 
 		if mask_hxr(i,j),%A chord is going through the elementary plasma volume. So the distribution function is calculated
 			mhu_hxr = sign(mhu(:)).*sqrt(1-PSI_hxr(i,j)*(1 - mhu(:).^2));%mhu at a poloidal position that is different from Bmin
-			mhu_hxr = mhu_hxr(imag(mhu_hxr) == 0);
-			Xf0_hxr = interp1(mhu(:),XXf0(:,:,i)',mhu_hxr,method)';%Distribution function at poloidal location
-			Xf0_tp_hxr = interp1(mhu(:),XXf0_tp(:,:,i)',mhu_hxr,method)';
-			Xf0_g_hxr = interp1(mhu(:),XXf0_g(:,:,i)',mhu_hxr,method)';
+			mhu_hxr = mhu_hxr(1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0);
+			Xf0_hxr = XXf0(:,1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0,i);%Distribution function at poloidal location
+			Xf0_tp_hxr = XXf0_tp(:,1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0,i);
+			Xf0_g_hxr = XXf0_g(:,1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0,i);
 %
 			Xf0_i = interp1(mhu_hxr(:),Xf0_hxr',x_leg(:),method)';
 			Xf0_tp_i = interp1(mhu_hxr(:),Xf0_tp_hxr',x_leg(:),method)';
@@ -104,7 +104,7 @@ for i = 10,%radial position
 			norm0_hxr(i,j) = 2*pi*integral_dke_jd(dpn',pn2'.*trapz_dke_yp([mhu_hxr,Xf0_hxr'])',1);
 			normi_hxr(i,j) = 2*pi*integral_dke_jd(dpn',pn2'.*trapz_dke_yp([x_leg,Xf0_i'])',1);
 %			
-			info_dke_yp(2,['Iteration ',int2str((i-1)*size(psin_hxr,2) + j),'/',int2str(size(psin_hxr,1)*size(psin_hxr,2)),' done']);
+			info_dke_yp(2,['Bremsstrahlung integral #',int2str((i-1)*size(psin_hxr,2) + j),'/',int2str(size(psin_hxr,1)*size(psin_hxr,2)),' done']);
 %
 			if i_test == i & j_test == j,
 %
@@ -136,6 +136,7 @@ for i = 10,%radial position
 				faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
 				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['rho = ',num2str(xrho(i_test)),', theta = 0']);
 				xlabel('ppar/pth-ref');ylabel('pperp/pth-ref');title('');
+%				bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,nhuloss,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap);
 %
 				[logXf_hxr_cyl,ppar_cyl,dppar_cyl,pperp_cyl,dpperp_cyl] = s2c_dke_yp(log(Xf0_hxr),pn,mhu_hxr,dp_cyl);
 				Xf_hxr_cyl = exp(logXf_hxr_cyl);%For accurate representation in figures 
@@ -146,7 +147,8 @@ for i = 10,%radial position
 				figure,C = contour(ppar_cyl,pperp_cyl,log(Xf_hxr_cyl),[-20:20/nlevel:0]);axis('equal');
 				faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
 				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['rho = ',num2str(xrho(i_test)),', theta = ',num2str(theta_hxr(i_test,j_test)*180/pi),' (Deg)']);
-				xlabel('ppar/pth-ref');ylabel('pperp/pth-ref');title('');				
+				xlabel('ppar/pth-ref');ylabel('pperp/pth-ref');title('');
+%           bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,nhuloss,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap);
 %
 % Local bremsstrahlung properties
 %
@@ -179,6 +181,7 @@ for i = 10,%radial position
 	end
 end
 %
+disp('-------------------------------------------------------------------------------------------------------------------');
 if display_mode >= 1,%Display the quality of the reconstruction of the electron distribution function
 	figure,
 	plot(xrho,xne_norm,'g'),hold on,
@@ -191,15 +194,28 @@ if display_mode >= 1,%Display the quality of the reconstruction of the electron 
 	hold off
 end
 %
-dbstop 195
-for ic = 1:size(vschords,3),%loop on each chord
-
-
-
-
+brem_bd_out = zeros(size(vschords,3),length(kphot));
+dbstop 199
+for ic = size(vschords,3)-1:size(vschords,3)-2,%loop on each chord  
+	s_mask = ~isnan(vschords(7,:,ic));%Location where chord is inside the plasma
+	ir_spsi = vschords(8,s_mask,ic);
+	it_st = vschords(9,s_mask,ic);
+   IB = ZZIB(ir_spsi,it_st,:,:);
+   IB1 = permute(squeeze(IB(:,1,:,:)),[2,1,3]);
+%
+	sksid = vschords(10,s_mask,ic);
+	[Pm_bd] = leg_dke_yp(sksid,n_pol);%Legendre polynomial for the cosine of the angle between magnetic field line and line of sight
+	Pm_bd1 = repmat(Pm_bd,[1,1,length(kphot)]);
+%	
+	cL1 = repmat(cL,[1,length(ir_spsi),length(kphot)]);
+%
+	brem_bd = squeeze(sum(Pm_bd1.*IB1.*cL1,1));%Local bremsstrahlung emission in the direction of the detector
+%	
+	s = vschords(1,s_mask,ic);
+   s = s - s(1);%s=0 where the chord enter the plasma towards the detector
+   s1 = repmat(s',[1,length(kphot)]);
+%
+	brem_bd_out(ic,:) = sum(s1.*brem_bd,1);%Integration along the chord
+%
+	info_dke_yp(2,['Line integration for chord #',int2str(ic),'/',int2str(size(vschords,3)),' done']);
 end	
-
-x_bd = zeros(size(xne_norm(:)'));%Cosine of the angle between magnetic field line and line of sight 
-[Pm_bd] = leg_dke_yp(x_bd(:)',n_pol);%Legendre polynomial for the cosine of the angle between magnetic field line and line of sight
-brem_bd = Pm_bd'*(IB_c2'.*(ones(size(IB_c1,2)*size(IB_c1,3),1)*cL'))';%Forward emission
-brem_bd_out = permute(reshape(brem_bd,length(x_bd),size(IB_c1,2),size(IB_c1,3)),[2,3,1]);
