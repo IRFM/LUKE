@@ -261,7 +261,10 @@ xepsi0_ref_fsav = epsi0_fsav*xrbetath.*xrnhuth;
 xepsia_ref_fsav = epsia_fsav*xrbetath.*xrnhuth;
 xvparmin_r_ref = vparmin_r*xrbetath;
 xnhuloss_ref = nhuloss*xrnhuth;
-%    
+% 
+alphaD = ap*ap/psia/psia;%For radial diffusion normalization
+alphaV = ap/psia;%For radial convection normalization
+%
 for ir = 1:nr,	
 %
 %   Ohmic electric field
@@ -274,17 +277,17 @@ for ir = 1:nr,
    xEc_r_ref_threshold(ir) = mc2*(sqrt(1+pn_ref(ivpar_r_ref_threshold).*pn_ref(ivpar_r_ref_threshold)*betath_ref^2) - 1);%in keV
 %
    if Dr_model==0,%Standard model : Dr(r) = Dr0(r)
-		XDrv_ref = Dr0*ones(size(np,nmhu)).*(abs(Xvpar_ref) >= xvparmin_r_ref(ir))/nhu_ref/ap/ap;%Normalized to the central collision frequency
+		XDrv_ref = alphaD*Dr0*ones(size(np,nmhu)).*(abs(Xvpar_ref) >= xvparmin_r_ref(ir))/nhu_ref/ap/ap;%Normalized to the central collision frequency
 	elseif Dr_model==1,%Magnetic turbulence model: Dr(r) = Dr0(r)*vpar_ref/vth_ref
-		XDrv_ref = Dr0*(abs(Xvpar_ref) - xvparmin_r_ref(ir)).*(abs(Xvpar_ref) >= xvparmin_r_ref(ir))/xvparmin_r_ref(ir)/nhu_ref/ap/ap;%Normalized to the central collision frequency
+		XDrv_ref = alphaD*Dr0*(abs(Xvpar_ref) - xvparmin_r_ref(ir)).*(abs(Xvpar_ref) >= xvparmin_r_ref(ir))/xvparmin_r_ref(ir)/nhu_ref/ap/ap;%Normalized to the central collision frequency
 	end
 	XXDr_ref(:,:,ir) = XDrv_ref;%*(1 + pDr*xrho(ir)^2);%3-D radial diffusion matrix (radial profile dependence)
 	xmaxDr_ref(ir) = max(max(XXDr_ref(:,:,ir)));%Maximum value of the radial diffusion coefficient
 %
 	if Vr_model==0,%Standard model : Vr(r) = Vr0(r)
-		XVrv_ref = Vr0*ones(size(np,nmhu)).*(abs(Xvpar_ref) >= xvparmin_r_ref(ir))/nhu_ref/ap;%Normalized to the central collision frequency
+		XVrv_ref = alphaV*Vr0*ones(size(np,nmhu)).*(abs(Xvpar_ref) >= xvparmin_r_ref(ir))/nhu_ref/ap;%Normalized to the central collision frequency
 	elseif Vr_model==1,%Magnetic turbulence model: Vr(r) = Vr0(r)*vpar_ref/vth_ref
-		XVrv_ref = Vr0*(abs(Xvpar_ref) - xvparmin_r_ref(ir)).*(abs(Xvpar_ref) >= xvparmin_r_ref(ir))/xvparmin_r_ref(ir)/nhu_ref/ap;%Normalized to the central collision frequency
+		XVrv_ref = alphaV*Vr0*(abs(Xvpar_ref) - xvparmin_r_ref(ir)).*(abs(Xvpar_ref) >= xvparmin_r_ref(ir))/xvparmin_r_ref(ir)/nhu_ref/ap;%Normalized to the central collision frequency
 	end
 	XVrv_ref = XVrv_ref.*(abs(Xvpar_ref) >= xvparmin_r_ref(ir));
 	XXVr_ref(:,:,ir) = XVrv_ref;%*(1 + pVr*xrho(ir)^2);%3-D radial pinch matrix (radial profile dependence)
