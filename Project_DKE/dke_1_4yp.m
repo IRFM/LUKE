@@ -129,7 +129,7 @@ if nargin < 33,
 elseif nargin == 39,
 	coll_mode = 0;
 	norm_mode = 0;
-	boundary_mode = 1;
+	boundary_mode = [1,1];
 	dtn = 1000;
 	prec0 = [1e-10,1e-10];
 	nit = [50,200];
@@ -139,7 +139,7 @@ elseif nargin == 39,
 	store_mode = 0;
 elseif nargin == 40,
 	norm_mode = 0;
-	boundary_mode = 1;
+	boundary_mode = [1,1];
 	dtn = 1000;
 	prec0 = [1e-10,1e-10];
 	nit = [50,200];
@@ -148,7 +148,7 @@ elseif nargin == 40,
 	display = [0,1,1];
 	store_mode = 0;
 elseif nargin == 41,
-	boundary_mode = 1;
+	boundary_mode = [1,1];
 	prec0 = [1e-10,1e-10];
 	nit = [50,200];
 	invproc = 1;
@@ -214,6 +214,8 @@ spparms('rreduce',4);
 %
 prec0_f = prec0(1);
 prec0_g = prec0(2);
+boundary_mode_f = boundary_mode(1);
+boundary_mode_g = boundary_mode(2);
 display_mode = display(1);
 ir_display = display(2);
 time_pause = display(3);%Pause delay for figure display (s)
@@ -257,9 +259,10 @@ if display_mode >=1,
 	elseif (invproc == 4),  disp('   - CGS iterative method');end
 	if (norm_mode == 1),    disp('   - Normalization of f0 at each iteration and radius');
 	elseif (norm_mode == 0),disp('   - No normalization of f0 at each iteration and radius: fully natural conservative mode');end
-	if (boundary_mode >= 1),    disp(['   - Maxwellian distribution enforced on ',int2str(boundary_mode),' momentum grid point around p = 0']);
-	elseif (boundary_mode == 0),disp('   - No Maxwellian distribution enforced around p = 0');end
-
+	if (boundary_mode_f >= 1),    disp(['   - Maxwellian distribution for FPE enforced on ',int2str(boundary_mode_f),' momentum grid point around p = 0']);
+	elseif (boundary_mode_f == 0),disp('   - No Maxwellian distribution for FPE enforced around p = 0');end
+	if (boundary_mode_g >= 1) & (dke_mode == 1),    disp(['   - Lorentz model distribution for DKE enforced on ',int2str(boundary_mode_g),' momentum grid point around p = 0']);
+	elseif (boundary_mode_g == 0) & (dke_mode == 1),disp('   - No Lorentz model distribution for DKE enforced around p = 0');end
 %Time scheme
 	if (time_scheme == 1),    disp(['   - Implicit time differencing scheme']);
 	elseif (time_scheme == 2),disp(['   - Crank-Nicholson time differencing scheme']);end
@@ -1413,23 +1416,23 @@ for ir = 1:nr,
 %
 %Local boundary conditions at p = p(1/2): not necessary but help for the density conservation (Dirichlet boundary condition)
 %
-	if boundary_mode > 0,
-		Xa_t(1:boundary_mode,:) = 0;
-		Xb_t(1:boundary_mode,:) = 0;
-		Xc_t(1:boundary_mode,:) = Xpn2(1:boundary_mode,ymask_f0_t)/dtn;%Maxwellian solution enforced at p = p(1/2) (More accurate but not fully necessary)
-		Xd_t(1:boundary_mode,:) = 0;
-		Xe_t(1:boundary_mode,:) = 0;
-		Xf_t(1:boundary_mode,:) = 0;
-		Xg_t(1:boundary_mode,:) = 0;
-		Xh_t(1:boundary_mode,:) = 0;
-		Xi_t(1:boundary_mode,:) = 0;
+	if boundary_mode_f > 0,
+		Xa_t(1:boundary_mode_f,:) = 0;
+		Xb_t(1:boundary_mode_f,:) = 0;
+		Xc_t(1:boundary_mode_f,:) = Xpn2(1:boundary_mode_f,ymask_f0_t)/dtn;%Maxwellian solution enforced at p = p(1/2) (More accurate but not fully necessary)
+		Xd_t(1:boundary_mode_f,:) = 0;
+		Xe_t(1:boundary_mode_f,:) = 0;
+		Xf_t(1:boundary_mode_f,:) = 0;
+		Xg_t(1:boundary_mode_f,:) = 0;
+		Xh_t(1:boundary_mode_f,:) = 0;
+		Xi_t(1:boundary_mode_f,:) = 0;
 		if bounce_mode == 1,
-			Xj_t(1:boundary_mode,:) = 0;
-			Xk_t(1:boundary_mode,:) = 0;
-			Xl_t(1:boundary_mode,:) = 0;
-			Xm_t(1:boundary_mode,:) = 0;
-			Xn_t(1:boundary_mode,:) = 0;
-			Xo_t(1:boundary_mode,:) = 0;      
+			Xj_t(1:boundary_mode_f,:) = 0;
+			Xk_t(1:boundary_mode_f,:) = 0;
+			Xl_t(1:boundary_mode_f,:) = 0;
+			Xm_t(1:boundary_mode_f,:) = 0;
+			Xn_t(1:boundary_mode_f,:) = 0;
+			Xo_t(1:boundary_mode_f,:) = 0;      
 		end 
 	else
 		if prec_inv(1) > 1e-4,
@@ -1621,7 +1624,7 @@ for ir = 1:nr,
 		Xh_tp_t = Xh_tp(:,Xmask_tp);
 		Xi_tp_t = Xi_tp(:,Xmask_tp);
 %       
-		Xf_tp_t(:,(nmhu - ns_tp(ir))/2 + 1) = 0;%ftp(i-1/2,j-1/2) (trapped domain removed)
+		Xf_tp_t(:,(nmhu - ns_tp(ir))/2 + 1) = 0;%ftp(i-1/2,j-1/2) (because trapped domain removed)
 		Xa_tp_t(:,(nmhu - ns_tp(ir))/2 + 1) = 0;%ftp(i+1/2,j-1/2) (trapped domain removed)
 		Xi_tp_t(:,(nmhu - ns_tp(ir))/2 + 1) = 0;%ftp(i+3/2,j-1/2) (trapped domain removed)   
 		Xh_tp_t(:,(nmhu - ns_tp(ir))/2) = 0;%ftp(i-1/2,j+3/2) (trapped domain removed)
@@ -1642,15 +1645,17 @@ for ir = 1:nr,
 %
 %Boundary conditions for g (the Lorentz model is enforced at p = 0)
 %
-		Xa_g(1,:) = 0;%g(i+1/2,j-1/2)
-		Xb_g(1,:) = 0;%g(i-1/2,j+1/2)
-		Xc_g(1,:) = 1;%g(i+1/2,j+1/2)
-		Xd_g(1,:) = 0;%g(i+3/2,j+1/2)
-		Xe_g(1,:) = 0;%g(i+1/2,j+3/2)
-		Xf_g(1,:) = 0;%g(i-1/2,j-1/2)
-		Xg_g(1,:) = 0;%g(i+3/2,j+3/2)
-		Xh_g(1,:) = 0;%g(i-1/2,j+3/2)
-		Xi_g(1,:) = 0;%g(i+3/2,j-1/2)
+		if boundary_mode_g > 0,
+			Xa_g(1:boundary_mode_g,:) = 0;%g(i+1/2,j-1/2)
+			Xb_g(1:boundary_mode_g,:) = 0;%g(i-1/2,j+1/2)
+			Xc_g(1:boundary_mode_g,:) = 1;%g(i+1/2,j+1/2)
+			Xd_g(1:boundary_mode_g,:) = 0;%g(i+3/2,j+1/2)
+			Xe_g(1:boundary_mode_g,:) = 0;%g(i+1/2,j+3/2)
+			Xf_g(1:boundary_mode_g,:) = 0;%g(i-1/2,j-1/2)
+			Xg_g(1:boundary_mode_g,:) = 0;%g(i+3/2,j+3/2)
+			Xh_g(1:boundary_mode_g,:) = 0;%g(i-1/2,j+3/2)
+			Xi_g(1:boundary_mode_g,:) = 0;%g(i+3/2,j-1/2)
+		end
 %
 %Boundaries of the bounce domain for g
 %
@@ -1995,15 +2000,15 @@ for it_f = 2:nit_f,
 		for ir = 1:nr,
 			if store_mode == 1,load MXPmat.mat Zmask_f0_t;end	
 %
-			if boundary_mode == 0,
+			if boundary_mode_f == 0,
 				Xq = (XXI(:,:,ir) + time_scheme*XXf0(:,:,ir)/dtn).*Xpn2;%Xpn2 is here as part of the partial Jacobian used to avoid singularities at p = 0
 				Xq_t = Xq(:,Zmask_f0_t{ir});%Symmetric trapped domain removed (-ksi0T< ksi0 <0)
 				if bounce_mode == 1,Xq_t(:,nmhu/2 + 1 - ns(ir)) = 0;end;%Pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2 
 			else, 
 				Xq = (XXI(:,:,ir) + time_scheme*XXf0(:,:,ir)/dtn).*Xpn2;%Xpn2 is here as part of the partial Jacobian used to avoid singularities at p = 0
-				Xq(1:boundary_mode,:) = Xpn2(1:boundary_mode,:).*XXf0(1:boundary_mode,:,ir)/dtn;%Xpn2 is here as part of the partial Jacobian used to avoid singularities at p = 0
+				Xq(1:boundary_mode_f,:) = Xpn2(1:boundary_mode_f,:).*XXf0(1:boundary_mode_f,:,ir)/dtn;%Xpn2 is here as part of the partial Jacobian used to avoid singularities at p = 0
 				Xq_t = Xq(:,Zmask_f0_t{ir});%Symmetric trapped domain removed (-ksi0T< ksi0 <0)
-				if bounce_mode == 1,Xq_t(boundary_mode+1:npn,nmhu/2 + 1 - ns(ir)) = 0;end;%Pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2 		
+				if bounce_mode == 1,Xq_t(boundary_mode_f+1:npn,nmhu/2 + 1 - ns(ir)) = 0;end;%Pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2 		
 			end
 			MMXq_t = [MMXq_t;(xqtilde(ir)/xB0(ir))*reshape(Xq_t',(nmhu - ns(ir))*npn,1)];%Multiplication by the partial Jacobian to avoid singularities at psi = 0
 			MMXf0_t = [MMXf0_t;reshape(XXf0(:,Zmask_f0_t{ir},ir)',(nmhu - ns(ir))*npn,1)];
@@ -2187,7 +2192,7 @@ if dke_mode == 1,
 		Xf0_tp = -ftp_norm(jr2)*(Xpn.*Xmhu.*Xdf0dpsi);	
 		XXf0_tp(:,:,jr2) = Xf0_tp;
 %
-% Boundary conditions for g at p = 0
+% Initial guess for the iterative loop (Lorentz model)
 %
 		XdfMdpsi = -dpsim*XfMp/dpsi/dpsip - (dpsip + dpsim)*XfM/dpsip/dpsim + dpsip*XfMm/dpsi/dpsim;%Calculation of the radial gradient of fM (parabolic interpolation) 
 		XfM_tp = -ftp_norm(jr2)*(Xpn.*Xmhu.*XdfMdpsi);	
@@ -2248,9 +2253,11 @@ if dke_mode == 1,
 				jr2 = rdke(ir);
 %
 				Xq_g_t = XXI_g(:,Zmask_g{jr2},jr2).*Xpn2(:,Zmask_g{jr2});%First order expansion of the Beliaev-Budker collision operator (current drive problem only)
-				Xq_g_t(1,:) = XXf0_g_th(1,Zmask_g{jr2},jr2);%Boundary conditions at p = 0 (large aspect ratio limit, Lorentz model)
-				Xq_g_t(:,(nmhu - ns_g(jr2))/2) = 0;%g(pn,mhu = -mhut) = 0
-				Xq_g_t(:,(nmhu - ns_g(jr2))/2 + 1) = 0;%g(pn,mhu = mhut) = 0
+				if boundary_mode_g ~= 0,
+						Xq_g_t(1:boundary_mode_g,:) = XXf0_g_th(1:boundary_mode_g,Zmask_g{jr2},jr2);%Boundary conditions at p = 0 (large aspect ratio limit, Lorentz model)
+				end
+%%%%				Xq_g_t(:,(nmhu - ns_g(jr2))/2) = 0;%g(pn,mhu = -mhut) = 0
+%%%%				Xq_g_t(:,(nmhu - ns_g(jr2))/2 + 1) = 0;%g(pn,mhu = mhut) = 0
 %
 				MMXf0_g_t = [MMXf0_g_t;reshape(XXf0_g(:,Zmask_g{jr2},jr2)',(nmhu - ns_g(jr2))*npn,1)];
 				MMXq_g_t = [MMXq_g_t;reshape(Xq_g_t',(nmhu - ns_g(jr2))*npn,1)];
@@ -2796,16 +2803,19 @@ end
 %
 %   Magnetic ripple loss rate calculation (for Tore Supra tokamak only)
 %
-if isnan(XXnhuloss) == 0 & strcmp(tokname,'TS')==1,	
+if sum(sum(sum(XXnhuloss))) ~= 0 & strcmp(tokname,'TS')==1,	
 	xMRR_tau_ref = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXnhuloss(:,:,rdke).*XXf0(:,:,rdke).*XXpn2(:,:,rdke).*XXlambda(:,:,rdke),1),1)';%Flux of electrons leaving the plasma through the loss cone
 %
 	XXmaskMRR_im = [zeros(1,nmhu,nr);abs(diff(XXnhuloss~=0))];%Mask in p
 	XXmaskMRR_jm = [zeros(npn,1,nr),abs(permute(diff(permute(XXnhuloss~=0,[2,1,3])),[2,1,3]))];%Mask in mhu (mhu < 0 only because of symmetry)
 	XXmaskMRR_jm(:,mhu>0,:)=0;%mhu < 0 only because of symmetry)
-	XxMRR_flux_p_ref = 2*pi*integral_dke_jd(dmhum,XXmaskMRR_im(:,:,rdke).*XXSp0_imj(:,:,rdke).*XXpn2m(:,:,rdke).*XXlambda(:,:,rdke).*XXRlambda_m(:,:,rdke),2);
-	XxMRR_flux_mhu_ref = 2*2*pi*integral_dke_jd(dpnm,XXmaskMRR_jm(:,:,rdke).*XXSm0_ijm(:,:,rdke).*XXpnm(:,:,rdke).*sqrt(XX1mmhu2m(:,:,rdke)).*XXlambda(:,:,rdke).*XXRlambda_m(:,:,rdke),1);
+	XxMRR_flux_p_ref = 2*pi*integral_dke_jd(dmhum,XXmaskMRR_im(:,:,rdke).*XXSp0_imj.*XXpn2m(:,:,rdke).*XXlambda(:,:,rdke).*XXRlambda_m(:,:,rdke),2);
+	XxMRR_flux_mhu_ref = 2*2*pi*integral_dke_jd(dpnm,XXmaskMRR_jm(:,:,rdke).*XXSm0_ijm.*XXpnm(:,:,rdke).*sqrt(XX1mmhu2m(:,:,rdke)).*XXlambda(:,:,rdke).*XXRlambda_m(:,:,rdke),1);
 	xMRR_flux_p_ref = XxMRR_flux_p_ref(XxMRR_flux_p_ref~=0)';
 	xMRR_flux_mhu_ref = XxMRR_flux_mhu_ref(XxMRR_flux_mhu_ref~=0)';
 	xMRR_flux_ref = xMRR_flux_p_ref - xMRR_flux_mhu_ref;
+else
+	xMRR_tau_ref = NaN*ones(1,nr_dke);
+	xMRR_flux_ref = NaN*ones(1,nr_dke);
 end
 
