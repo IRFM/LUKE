@@ -9,7 +9,7 @@ function [blist_lh,yvparmin_lh,yvparmax_lh,ynparmin_lh,ynparmax_lh,ynpar_lh,ydnp
 %
 % by J. Decker (RLE/MIT) <jodecker@mit.edu> and Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr>
 %
-blist_lh = [3]; %Index of selected scenarios for the LH wave. [1,n_scenario_lh]
+blist_lh = [2]; %Index of selected scenarios for the LH wave. [1,n_scenario_lh]
 %
 % Choose (vparmin_lh,vparmax_lh) or (nparmin_lh,nparmax_lh) for square n// LH wave power spectrum,
 % or (npar_lh,dnpar_lh) for Gaussian shape

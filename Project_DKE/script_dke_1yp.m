@@ -46,6 +46,7 @@ disp('--------------------------------------------------------------------------
 %
 iloop = 0;
 for nmhu_S = nmhu_S_in,
+np_S = nmhu_S
 for np_S = np_S_in,
 for pnmax_S = pnmax_S_in,
 for psin_display = psin_display_in,

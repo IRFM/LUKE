@@ -200,7 +200,7 @@ if diary_mode == 1,
 	disp(['- Convergence level of the residu (if NaN, iterations stop with nit_g) nit_g = ',num2str(nit_g)]);
 	disp(['- Maximum /number of iterations for g nit_g = ',num2str(nit_g)]);
 	disp(['- Initial guess for the distribution function: (0) Maxwellian, (1) Fuchs model with Tperp for LH current drive only, (2) from a file initguess_f = ',num2str(initguess_f)]);
-	disp(['- Matrix inversion method: (1) Full LU factorization, (2) qmr iterative method, (3) bicgstab iterative method, (4) cgs iterative method invproc = ',num2str(invproc)]);
+	disp(['- Matrix inversion method: (1) cgs iterative method, (2) bicg iterative method, (3) qmr iterative method invproc = ',num2str(invproc)]);
 	disp(['- Cylindrical momentum step (pth_ref) = ',num2str(dp_cyl)]);
 	disp(['- Display mode: (0): no, (1): partial, (2): full display_mode = ',num2str(display_mode)]);
 	disp(['- Number of level for contour plots nlevel = ',num2str(nlevel)]);

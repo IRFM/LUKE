@@ -2092,7 +2092,7 @@ end
 ZXXf0{1} = XXfinit;%Time evolution of the distribution function is stored
 %
 for it_f = 2:nit_f,   	
-	if sum(residu_f(:,it_f-1) >= prec0_f) >= 1 & sum(prec_residu_f(:,it_f-1)) >= prec0_f | it_f < 5,
+	if sum(residu_f(:,it_f-1) >= prec0_f) >= 1 & sum(prec_residu_f(:,it_f-1)) >= prec0_f | it_f < 7,
 %	
 		MMXf0_t = [];
 		MMXq_t = [];
