@@ -1,4 +1,4 @@
-function [xpsin_out_EBW_ht,xMNperp_EBW_ht,xM3eps_pmz_EBW_ht,xMPflow_EBW_ht,xMPabs_EBW_at,...
+function [xpsin_out_EBW_ht,xtheta_EBW_ht,xMNperp_EBW_ht,xM3eps_pmz_EBW_ht,xMPflow_EBW_ht,xMPabs_EBW_at,...
         xpsin_out_EBW_ft,xMNperp_EBW_ft,xM3eps_pmz_EBW_ft] = ...
     disp_ebw_jd(tokamak,xpsin,xtheta,xNpar,omega);
 %
@@ -55,17 +55,20 @@ knr_EBW = 1;
 nrt_nr_EBW = 1;
 nrt_fr_EBW = 0;
 kflag_EBW = 1;
-nn_nr_EBW = 20;
+nn_nr_EBW = 50;
 %
 [xpsin_out_EBW_ft,xMNperp_EBW_ft,xM3eps_pmz_EBW_ft,xpsin_out_EBW_ht,xMNperp_EBW_ht,xM3eps_pmz_EBW_ht,xMPflow_EBW_ht,xMPabs_EBW_at] = ...
     disp_jd(xpsin_in_EBW,xB_in_EBW,xTe_in_EBW,xne_in_EBW,xNpar_in_EBW,omega,knr_EBW,nrt_nr_EBW,nrt_fr_EBW,kflag_EBW,GNperp_EBW,nn_nr_EBW);
-nr_out_EBW = length(xpsin_out_EBW_ft);
-if nr_out_EBW ~= nr_in_EBW
-    diff = num2str(100 - nr_out_EBW*100/nr_in_EBW);
-    warning(['disp. calc. have been truncated by ',diff(1:2),' %'])
+nr_out_EBW_ft = length(xpsin_out_EBW_ft);
+nr_out_EBW_ht = length(xpsin_out_EBW_ht);
+if nr_out_EBW_ht ~= nr_in_EBW
+    diff = num2str(100 - nr_out_EBW_ht*100/nr_in_EBW);
+    disp(['Warning: disp. calc. have been truncated by ',diff(1:2),' %'])
 end
 %
 xM3eps_pmz_EBW_ft = squeeze(xM3eps_pmz_EBW_ft);%since nrt=1
 xM3eps_pmz_EBW_ht = squeeze(xM3eps_pmz_EBW_ht);
 %
-
+mask_out_EBW_ht = ir0:-1:ir0-nr_out_EBW_ht+1;
+xtheta_EBW_ht = xtheta(mask_out_EBW_ht);
+%
