@@ -2934,14 +2934,15 @@ end
 if sum(sum(sum(XXnhuloss))) ~= 0 & strcmp(tokname,'TS')==1,	
 	xMRR_tau_ref = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXnhuloss(:,:,rdke).*XXf0(:,:,rdke).*XXpn2(:,:,rdke).*XXlambda(:,:,rdke),1),1)';%Flux of electrons leaving the plasma through the loss cone
 %
-	XXmaskMRR_im = [zeros(1,nmhu,nr);abs(diff(XXnhuloss~=0))];%Mask in p
-	XXmaskMRR_jm = [zeros(npn,1,nr),abs(permute(diff(permute(XXnhuloss~=0,[2,1,3])),[2,1,3]))];%Mask in mhu (mhu < 0 only because of symmetry)
+	XXmaskMRR_im = [zeros(1,nmhu,nr);abs(diff(XXnhuloss~=0))];%Mask in p (only nhuloss ~=0 is considered)
+	XXmaskMRR_jm = [zeros(npn,1,nr),abs(permute(diff(permute(XXnhuloss~=0,[2,1,3])),[2,1,3]))];%Mask in mhu (mhu < 0 only because of symmetry) (only nhuloss ~=0 is considered)
 	XXmaskMRR_jm(:,mhu>0,:)=0;%mhu < 0 only because of symmetry)
 	XxMRR_flux_p_ref = 2*pi*integral_dke_jd(dmhum,XXmaskMRR_im(:,:,rdke).*XXSp0_imj.*XXpn2m(:,:,rdke).*XXlambda(:,:,rdke).*XXRlambda_m(:,:,rdke),2);
 	XxMRR_flux_mhu_ref = 2*2*pi*integral_dke_jd(dpnm,XXmaskMRR_jm(:,:,rdke).*XXSm0_ijm.*XXpnm(:,:,rdke).*sqrt(XX1mmhu2m(:,:,rdke)).*XXlambda(:,:,rdke).*XXRlambda_m(:,:,rdke),1);
 	xMRR_flux_p_ref = XxMRR_flux_p_ref(XxMRR_flux_p_ref~=0)';
 	xMRR_flux_mhu_ref = XxMRR_flux_mhu_ref(XxMRR_flux_mhu_ref~=0)';
-	xMRR_flux_ref = xMRR_flux_p_ref - xMRR_flux_mhu_ref;
+	xMRR_flux_ref = xMRR_flux_p_ref - xMRR_flux_mhu_ref;%Reduce number of points since only nhuloss ~=0 is considered
+	xMRR_flux_ref =[xMRR_tau_ref(find(xMRR_tau_ref==0)),xMRR_flux_ref];%Restore the points for nhuloss =0 	
 else
 	xMRR_tau_ref = NaN*ones(1,nr_dke);
 	xMRR_flux_ref = NaN*ones(1,nr_dke);
