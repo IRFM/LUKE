@@ -63,8 +63,8 @@ norm_ref = 0;%Normalization procedure for the ohmic electric field, LH and EC qu
 %
 % WARNING: Not yet implemented. (see test_dke_yp)
 %
-epsi0 = 0.00;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
-epsia = 0.00;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
+epsi0 = 0.001;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
+epsia = 0.001;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
 eepsi = 0;%Exponent for Ohmic electric field
 %
 % WARNING: Not yet implemented. (see test_dke_yp)

@@ -22,7 +22,7 @@ prec0_f,nit_f,dtn,prec0_g,nit_g,initguess,invproc,param_inv,dp_cyl,display_mode,
 %
 format long e;
 global nfig;
-version_dke = 1.4;
+version_dke = 2.0;
 time_pause = 1;
 %
 [s,dossier,machine] = comput_dke_yp;
@@ -47,15 +47,13 @@ bounce = [bounce_mode,dke_mode];
 prec0 = [prec0_f,prec0_g];
 nit = [nit_f,nit_g];
 %
-% Radial grid
+% Spatial grid
 %
-[xpsin,xpsin_dke,xdpsin_dke,xpsinm_dke,xdpsinm_dke,xpsinp_dke,xdpsinp_dke,xpsin_S_dke,r_dke,ir_display]...
-    = radialgrid_dke_jd(dke_mode,psin_S,dpsin_dke,psin_display);
+[xpsin,xpsin_dke,xdpsin_dke,xpsinm_dke,xdpsinm_dke,xpsinp_dke,xdpsinp_dke,xpsin_S_dke,r_dke,ir_display] = radialgrid_dke_jd(dke_mode,psin_S,dpsin_dke,psin_display);
 %
 % Plasma equilibrium
 %
-[theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,Ncoils,BeLi,psia,xmhu0T2]...
-    = equilibrium_jd(tokname,xpsin);
+[theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,Ncoils,BeLi,psia,xmhu0T2] = equilibrium_jd(tokname,xpsin);
 %
 if diary_mode == 1, 
 	diaryfile = ['diary_dke_',int2str(iloop)];
@@ -73,15 +71,13 @@ if diary_mode == 1,
 	disp(['- Plasma elevation on axis (m) Zp = ',num2str(Zp)]);
 	disp(['- Toroidal magnetic field coil number Ncoils = ',num2str(Ncoils)]);
 	disp(['- Beta+li factor = ',num2str(BeLi)]);
-	disp(['- Edge poloidal flux = ',num2str(psia)]);
+	disp(['- Edge poloidal flux (Wb) = ',num2str(psia)]);
 	disp(' ');
 end
 %
 % Momentum Grid 
 %
-[pn,dpn,pnm,dpnm,pnp,dpnp,pn_S,...
-    mhu,dmhu,mhum,dmhum,mhup,dmhup,mhu_S]...
-= momentumgrid_dke_jd(grid_uniformity,grid_power,dke_mode,r_dke,xmhu0T2,nmhu_S,np_S,pnmax_S,sfac,snmhu,snp);
+[pn,dpn,pnm,dpnm,pnp,dpnp,pn_S,mhu,dmhu,mhum,dmhum,mhup,dmhup,mhu_S] = momentumgrid_dke_jd(grid_uniformity,grid_power,dke_mode,r_dke,xmhu0T2,nmhu_S,np_S,pnmax_S,sfac,snmhu,snp);
 %
 nmhu = length(mhu);
 np = length(pn);
@@ -113,11 +109,11 @@ if display_mode == 2,
 	ylabel('pn');
 %	
 	h1002 = figure(1002);tilefigs_dke_yp(h1002);
-	plot(1:nr,xpsin,'bo',1:nr_dke,xpsin(r_dke),'r+');grid on;zoom on; 
+	plot(1:nr,xpsin,'bo',1:nr_dke,xpsin(r_dke),'r+',1:nr_dke,xrho(r_dke),'bx');grid on;zoom on; 
 	axis([0,nr+1,0,1])
 	title('Radial mesh');
 	xlabel('Index');
-	ylabel('Rho');
+	ylabel('(psin: +,rho: x)');
 end
 %
 %Reference plasma parameters (for the normalization: pth_ref, nhuth_ref)
@@ -160,13 +156,15 @@ if diary_mode == 1,
 	disp(['- Effective number of pitch-angle values for the distribution function grid (half grid) nmhu = ',num2str(nmhu)]);
 	disp(['- Effective number of momentum values for the distribution function grid (half grid) np = ',num2str(np)]);
 	disp(['- Maximum value of the momentum grid (pth_ref) pnmax =  ',num2str(pn(np))]);
-	disp(' ');
 	disp(['- Number of radial values for the distribution function grid (half grid) nr = ',num2str(nr)]);
 	for ir = 1:nr,
-		disp(['- Normalized poloidal flux at which the distribution is calculated xpsin = ',num2str(xpsin(ir))]);
+		disp(['      - Normalized poloidal magnetic flux at which the distribution is calculated, point ',int2str(ir),' -> psin = ',num2str(xpsin(ir))]);
+		disp(['      - Normalized radius on the LFS midplane at which the distribution is calculated, point ',int2str(ir),' ->  rho = ',num2str(xrho(ir))]);
 	end
-	disp(['- Position that is displayed psin_display = ',num2str(xpsin(ir_display))]);
-	disp(['- Reference values: (0) from core Te and ne, (1) from Te and ne at the normalized poloidal flux (paramater only active for a single radial value, otherwise ref_mode = 0)',num2str(ref_mode)]);
+	disp(['- Normalized poloidal magnetic flux at which the distribution is displayed psin_display = ',num2str(xpsin(ir_display))]);
+	disp(['- Normalized radius on the LFS midplane at which the distribution is displayed rho_display = ',num2str(xrho(ir_display))]);
+	disp(' ');	
+	disp(['- Reference values: (0) from core Te and ne, (1) from Te and ne at the normalized poloidal flux (parameter only active for a single radial value, otherwise ref_mode = 0)',num2str(ref_mode)]);
 	disp(['- Normalization procedure for the ohmic electric field, RF quasilinear diffusion: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref norm_ref = ',num2str(norm_ref)]);
 	disp(' ');
 	disp(['- Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e) epsi0_fsav = ',num2str(epsi0_fsav)]);
@@ -373,14 +371,14 @@ for ir = 1:nr,
 		Xfsth_ref = Xfsth0_ref+Xfsth1_ref+Xfsth2_ref;
 		fM_ref = xne_norm(ir)*exp(-pn_ref.*pn_ref./(1+gamma_ref)/xTe_norm(ir))/2/pi/xTe_norm(ir)/sqrt(2*pi*xTe_norm(ir));
 		XfM_ref = fM_ref'*ones(1,nmhu);
-      	normfM_ref = 2*pi*integral_dke_jd(dpn_ref(:),pn2_ref(:).*integral_dke_jd(dmhu,XfM_ref,2),1);
+      normfM_ref = 2*pi*integral_dke_jd(dpn_ref(:),pn2_ref(:).*integral_dke_jd(dmhu,XfM_ref,2),1);
 		normfsth_ref = 2*pi*integral_dke_jd(dpn_ref(:),pn2_ref(:).*integral_dke_jd(dmhu,Xfsth_ref,2),1);
 		XfM_ref = XfM_ref/normfM_ref;
 		Xfsth_ref = Xfsth_ref/normfsth_ref;
 		lambda_ref = 1/(1 + Xfsth_ref(min(find(Xmaskplat_ref(:,nmhu-1)==1)),nmhu-1)/XfM_ref(min(find(Xmaskplat_ref(:,nmhu-1)==1)),nmhu-1));
 		if (nb_lh == 0),lambda_ref = 0;end
 		Xf0_ref = XfM_ref + Xfsth_ref*lambda_ref;   
-        normf0_ref = 2*pi*integral_dke_jd(dpn_ref(:),pn2_ref(:).*integral_dke_jd(dmhu,Xf0_ref,2),1);
+      normf0_ref = 2*pi*integral_dke_jd(dpn_ref(:),pn2_ref(:).*integral_dke_jd(dmhu,Xf0_ref,2),1);
 		Xf0_ref = xne_norm(ir)*Xf0_ref/normf0_ref;
 		title_initguess = 'Fuchs et al. LH model';
 	elseif initguess == 2,
@@ -409,30 +407,30 @@ for ir = 1:nr,
 %		
 			if view == 1,		
                 normf0_ref = 2*pi*integral_dke_jd(dpn_ref(:),pn2_ref(:).*integral_dke_jd(dmhu,Xf0_ref,2),1);
-        		[logXf0_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(log(Xf0_ref),pn_ref,mhu,dp_cyl);
+                [logXf0_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(log(Xf0_ref),pn_ref,mhu,dp_cyl);
                 Xf0_cyl_ref = exp(logXf0_cyl_ref);%For accurate representation in figures 
 %
-    	        Xppar_cyl_ref = ones(length(pperp_cyl_ref),1)*ppar_cyl_ref(:)';
-    	        Xpperp_cyl_ref = pperp_cyl_ref(:)*ones(1,length(ppar_cyl_ref));
-        		Xp_cyl_ref = sqrt(Xppar_cyl_ref.*Xppar_cyl_ref + Xpperp_cyl_ref.*Xpperp_cyl_ref);
-        		Xmhu_cyl_ref = Xppar_cyl_ref./sqrt(Xppar_cyl_ref.^2+Xpperp_cyl_ref.^2);
-        		Xgamma_cyl_ref = sqrt(1 + Xp_cyl_ref.*Xp_cyl_ref*betath_ref*betath_ref);
-        		Xvpar_cyl_ref = Xppar_cyl_ref./Xgamma_cyl_ref;
-        		if nb_lh > 0  & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0 & initguess == 1,,
-					pparresmin_lh_cyl_ref = xvparmin_lh_ref(ir)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmin_lh_ref(ir)^2*betath_ref^2);%LH resonance condition
-					pparresmax_lh_cyl_ref = xvparmax_lh_ref(ir)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmax_lh_ref(ir)^2*betath_ref^2);%LH resonance condition
-        		end
+                Xppar_cyl_ref = ones(length(pperp_cyl_ref),1)*ppar_cyl_ref(:)';
+                Xpperp_cyl_ref = pperp_cyl_ref(:)*ones(1,length(ppar_cyl_ref));
+                Xp_cyl_ref = sqrt(Xppar_cyl_ref.*Xppar_cyl_ref + Xpperp_cyl_ref.*Xpperp_cyl_ref);
+                Xmhu_cyl_ref = Xppar_cyl_ref./sqrt(Xppar_cyl_ref.^2+Xpperp_cyl_ref.^2);
+                Xgamma_cyl_ref = sqrt(1 + Xp_cyl_ref.*Xp_cyl_ref*betath_ref*betath_ref);
+                Xvpar_cyl_ref = Xppar_cyl_ref./Xgamma_cyl_ref;
+                if nb_lh > 0  & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0 & initguess == 1,,
+                	  pparresmin_lh_cyl_ref = xvparmin_lh_ref(ir)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmin_lh_ref(ir)^2*betath_ref^2);%LH resonance condition
+                	  pparresmax_lh_cyl_ref = xvparmax_lh_ref(ir)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmax_lh_ref(ir)^2*betath_ref^2);%LH resonance condition
+    	        	 end
 %
         		Xf0_cyl_ref = Xf0_cyl_ref.*(Xf0_cyl_ref>0);%Remove negative values
         		Xf0_cyl_ref = Xf0_cyl_ref.*(Xp_cyl_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
-                Xf0_cyl_ref(isnan(Xf0_cyl_ref)) = 0;%Remove NaN values
+            Xf0_cyl_ref(isnan(Xf0_cyl_ref)) = 0;%Remove NaN values
 %
         		curr0_ref = 2*pi*integral_dke_jd(dpn_ref(:),pn2_ref(:).*(pn_ref(:)./gamma_ref(:)).*integral_dke_jd(dmhu,Xmhu.*Xf0_ref,2),1);
         		curr0_cyl_ref = 2*pi*integral_dke_jd(dpperp_cyl_ref(:),pperp_cyl_ref(:).*integral_dke_jd(dppar_cyl_ref,Xvpar_cyl_ref.*Xf0_cyl_ref,1),1);		
                 %
 				C = contour(ppar_cyl_ref,pperp_cyl_ref,log(Xf0_cyl_ref),[-20:20/nlevel:0]);axis('equal');
 				faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
-				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['r/a = ',num2str(xrho(ir))]);
+				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['rho = ',num2str(xrho(ir))]);
 				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*10,['Te(norm) = ',num2str(xTe_norm(ir))]);
 				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*15,['ne(norm) = ',num2str(xne_norm(ir))]);
 				xlabel('ppar/pth-ref');ylabel('pperp/pth-ref');title(title_initguess);
@@ -461,7 +459,7 @@ for ir = 1:nr,
 			if view == 1,
 				semilogy(-v_ref,XfM_ref(:,1),'g--',v_ref,XfM_ref(:,nmhu),'g--',-v_ref,Xf0_ref(:,1),'c-',v_ref,Xf0_ref(:,nmhu),'c-');%Forward and backward directions only
 				axis([-max(v_ref),max(v_ref),1e-20,10]);grid on;zoom on
-				xlabel('vpar/vth-ref');ylabel('f(pperp = 0)');title(['Norm.(',num2str(xrho(ir)),') = ',num2str(normf0_ref)]);
+				xlabel('vpar/vth-ref');ylabel('f(pperp = 0)');title(['Norm.(rho',num2str(xrho(ir)),') = ',num2str(normf0_ref)]);
 				pause(time_pause);
 			end
 %           
@@ -490,20 +488,20 @@ for ir = 1:nr,
 			end
 %
 			if view == 1,
-                normf0_ref = 2*pi*integral_dke_jd(dpn_ref(:),pn2_ref(:).*integral_dke_jd(dmhu,Xf0_ref,2),1);
+				normf0_ref = 2*pi*integral_dke_jd(dpn_ref(:),pn2_ref(:).*integral_dke_jd(dmhu,Xf0_ref,2),1);
         		[logXf0_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(log(Xf0_ref),pn_ref,mhu,dp_cyl);
-                Xf0_cyl_ref = exp(logXf0_cyl_ref);%For accurate representation in figures 
+        		Xf0_cyl_ref = exp(logXf0_cyl_ref);%For accurate representation in figures 
 %
-    	        Xppar_cyl_ref = ones(length(pperp_cyl_ref),1)*ppar_cyl_ref(:)';
-    	        Xpperp_cyl_ref = pperp_cyl_ref(:)*ones(1,length(ppar_cyl_ref));
+        		Xppar_cyl_ref = ones(length(pperp_cyl_ref),1)*ppar_cyl_ref(:)';
+        		Xpperp_cyl_ref = pperp_cyl_ref(:)*ones(1,length(ppar_cyl_ref));
         		Xp_cyl_ref = sqrt(Xppar_cyl_ref.*Xppar_cyl_ref + Xpperp_cyl_ref.*Xpperp_cyl_ref);
         		Xmhu_cyl_ref = Xppar_cyl_ref./sqrt(Xppar_cyl_ref.^2 + Xpperp_cyl_ref.^2);
         		Xgamma_cyl_ref = sqrt(1 + Xp_cyl_ref.*Xp_cyl_ref*betath_ref*betath_ref);
         		Xvpar_cyl_ref = Xppar_cyl_ref./Xgamma_cyl_ref;
-      		    if nb_lh > 0  & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0,
-					pparresmin_lh_cyl_ref = xvparmin_lh_ref(ir)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmin_lh_ref(ir)^2*betath_ref^2);%LH resonance condition
+        		if nb_lh > 0  & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0,
+        			pparresmin_lh_cyl_ref = xvparmin_lh_ref(ir)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmin_lh_ref(ir)^2*betath_ref^2);%LH resonance condition
 					pparresmax_lh_cyl_ref = xvparmax_lh_ref(ir)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmax_lh_ref(ir)^2*betath_ref^2);%LH resonance condition
-          	    end
+				end
 %
         		Xf0_cyl_ref = Xf0_cyl_ref.*(Xf0_cyl_ref>0);%Remove negative values
         		Xf0_cyl_ref = Xf0_cyl_ref.*(Xp_cyl_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
@@ -513,7 +511,7 @@ for ir = 1:nr,
 %
 				C = contour(ppar_cyl_ref,pperp_cyl_ref,log(Xf0_cyl_ref),[-20:20/nlevel:0]);axis('equal');
 				faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
-				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['psin = ',num2str(xpsin(ir))]);
+				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['rho = ',num2str(xrho(ir))]);
 				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*10,['Te(norm) = ',num2str(xTe_norm(ir))]);
 				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*15,['ne(norm) = ',num2str(xne_norm(ir))]);
 				xlabel('ppar/pth-ref');ylabel('pperp/pth-ref');title(title_initguess);
@@ -536,7 +534,7 @@ for ir = 1:nr,
 			if view == 1,
 				semilogy(-v_ref,XfM_ref(:,1),'g--',v_ref,XfM_ref(:,nmhu),'g--',-v_ref,Xf0_ref(:,1),'c-',v_ref,Xf0_ref(:,nmhu),'c-');%Forward and backward directions only
 				axis([-max(v_ref),max(v_ref),1e-20,10]);grid on;zoom on
-				xlabel('vpar/vth-ref');ylabel('f(pperp = 0)');title(['Norm.(',num2str(xpsin(ir)),') = ',num2str(normf0_ref)]);
+				xlabel('vpar/vth-ref');ylabel('f(pperp = 0)');title(['Norm.(rho=',num2str(xrho(ir)),') = ',num2str(normf0_ref)]);
 				pause(time_pause);
 			end
 %           
@@ -551,7 +549,16 @@ for ir = 1:nr,
 				xlabel('p/pth-ref');ylabel('v/vth-ref');title(['j = ',num2str(curr0_ref)]);
 				pause(time_pause);
 			end
+%						
 		end
+%
+		if view == 1,
+			figure(2000),subplot(121),plot(xpsin,xrho,'r-.',xpsin,xrho,'b+');grid on;zoom on
+			xlabel('psi/psia');ylabel('rho');title('Metric relation');
+			figure(2000),subplot(122),plot(xrho,xpsin,'r-.',xrho,xpsin,'b+');grid on;zoom on
+			xlabel('rho');ylabel('psi/psia');title('Metric relation');
+			pause(time_pause);
+		end	
 %
 		if radial_mode == 1,
 			view = 0;
@@ -561,14 +568,14 @@ for ir = 1:nr,
 			end
 %
 			if view == 1,
-        				[XDrv_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(XXDr_ref(:,:,ir),pn_ref,mhu,dp_cyl);
+				[XDrv_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(XXDr_ref(:,:,ir),pn_ref,mhu,dp_cyl);
 %
 				Xppar_cyl_ref = ones(length(pperp_cyl_ref),1)*ppar_cyl_ref(:)';
 				Xpperp_cyl_ref = pperp_cyl_ref(:)*ones(1,length(ppar_cyl_ref));
 				Xp_cyl_ref = sqrt(Xppar_cyl_ref.*Xppar_cyl_ref + Xpperp_cyl_ref.*Xpperp_cyl_ref);
 %
-        				XDrv_cyl_ref = XDrv_cyl_ref.*(XDrv_cyl_ref>0);%Remove negative values
-        				XDrv_cyl_ref = XDrv_cyl_ref.*(Xp_cyl_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
+				XDrv_cyl_ref = XDrv_cyl_ref.*(XDrv_cyl_ref>0);%Remove negative values
+				XDrv_cyl_ref = XDrv_cyl_ref.*(Xp_cyl_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
  %
  				C = contour(ppar_cyl_ref,pperp_cyl_ref,XDrv_cyl_ref,nlevel);axis('equal');
 				faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
@@ -592,14 +599,14 @@ for ir = 1:nr,
 			end
 %
 			if view == 1,
-      				[XVrv_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(XXVr_ref(:,:,ir),pn_ref,mhu,dp_cyl);
+				[XVrv_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(XXVr_ref(:,:,ir),pn_ref,mhu,dp_cyl);
 %
 				Xppar_cyl_ref = ones(length(pperp_cyl_ref),1)*ppar_cyl_ref(:)';
 				Xpperp_cyl_ref = pperp_cyl_ref(:)*ones(1,length(ppar_cyl_ref));
 				Xp_cyl_ref = sqrt(Xppar_cyl_ref.*Xppar_cyl_ref + Xpperp_cyl_ref.*Xpperp_cyl_ref);
 %
-       				XVrv_cyl_ref = XVrv_cyl_ref.*(XVrv_cyl_ref>0);%Remove negative values
-        				XVrv_cyl_ref = XVrv_cyl_ref.*(Xp_cyl_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
+				XVrv_cyl_ref = XVrv_cyl_ref.*(XVrv_cyl_ref>0);%Remove negative values
+				XVrv_cyl_ref = XVrv_cyl_ref.*(Xp_cyl_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
 %
  				C = contour(ppar_cyl_ref,pperp_cyl_ref,XVrv_cyl_ref,nlevel);axis('equal');
 				faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
@@ -652,8 +659,8 @@ end
 time0 = clock;
 %
 [XXf0_ref,XXf0_tp_ref,XXf0_g_ref,...
-    xnormf_ref,xnormf_ref_fsav,...
     YXXDrf_ref,...
+    Znorm_ref,Znorm_ref_fsav,...
     Zcurr_ref,Zcurr_ref_fsav,...
     ZSp0_ref,ZP0_ref,...
     XxRR_ref_fsav,...
@@ -663,7 +670,7 @@ time0 = clock;
     XR,XZ,XBR,XBZ,XBphi,...
     xB0,xR0,xBT0,Rp,Zp,...
     mhu,dmhu,mhum,dmhum,mhup,dmhup,mhu_S,...
-    xmhu0T2,xpsin,xdpsin_dke,xpsinm_dke,xdpsinm_dke,xpsinp_dke,xdpsinp_dke,r_dke,xpsin_S_dke,...
+    xmhu0T2,xrho,xpsin,xdpsin_dke,xpsinm_dke,xdpsinm_dke,xpsinp_dke,xdpsinp_dke,r_dke,xpsin_S_dke,...
     pn,dpn,pnm,dpnm,pnp,dpnp,pn_S,...
     xTe_norm,xne_norm,zZi,zmi,xzni_norm,xzTi_norm,...
     betath_ref,xepsi_ref,waveparam,...
