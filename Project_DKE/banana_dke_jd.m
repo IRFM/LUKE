@@ -58,7 +58,7 @@ xmhu0T = sqrt(1 - xBmin./xBmax);%Pitch-angle at the trapped-passing boundary
 xymhu0 = repmat(ymhu0,[np,1]);
 xymhu0T = repmat(xmhu0T',[1,nmhu]);
 %
-xymaskT = abs(xymhu0) < xymhu0T;%Select trapped particles
+xymaskT = abs(xymhu0) < xymhu0T - 5*eps;%Select trapped particles
 %
 YCS = cumsum(ones(nt,np,nmhu));
 %

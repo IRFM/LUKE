@@ -13,12 +13,12 @@ close all
 % -------------------- test parameters ----------------------------
 %
 tokname = 'CMOD';
-dke_mode = 0;
+dke_mode = 1;
 %
 % Radial grid
 %
-psin_S = [];%Values of the poloidal flux grid [1,p] (If one radial value: local calculation only)
-rho_S = [0.3,0.5];
+psin_S = [0.1:0.1:1];%Values of the poloidal flux grid [1,p] (If one radial value: local calculation only)
+rho_S = [];
 %
 dpsin_dke = 0.02;%maximum difference between two consecutive positions used for radial derivatives
 %
@@ -147,10 +147,10 @@ grid on
 zoom on
 %
 figure(4),clf
-plot([1:nr_dke]-1+1/2,xpsin_dke,'b+',[1:nr_S_dke]-1,xpsin_S_dke,'rx',[1:nr]-1+1/2,xpsin,'go'),grid on
+plot(r_dke-1+1/2,xpsin_dke,'b+',[1:nr]-1+1/2,xpsin,'go'),grid on
 xlabel('Index')
 title('Radial grid')
-legend('\psi_n^{DKE}','\psi_n^{S, DKE}','\psi_n^{FP}')
+legend('\psi_n^{DKE}','\psi_n^{FP}')
 zoom on
 %
 figure(5),clf

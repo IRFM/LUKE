@@ -53,11 +53,8 @@ snp = 10; % pgridfactor
 psin_S = [];
 rho_S = [0.4,0.6];
 %
-psin_S = sort([psin_S,rho2psi_jd(tokname,rho_S)]);
-%
 psin_display = NaN;%Approximate radial value at which results are displayed if display_mode >= 1 [1,1]
 rho_display = 0.45;
-if isnan(psin_display), psin_display=rho2psi_jd(tokname,rho_display);,end
 %
 dpsin_dke = 0.02;%maximum difference between two consecutive positions used for radial derivatives
 %
@@ -105,6 +102,14 @@ auto_mode = 0;%(0): Interactive mode for multiple radius output display, (1): au
 %
 sfac = [sfac0,sfac1,sfact];
 snmhu = [snmhu0,snmhu1,snmhut];
+%
 if grid_method == 0
     grid_power = 0;
 end
+%
+psin_S = sort([psin_S,rho2psi_jd(tokname,rho_S)]);
+if isnan(psin_display), 
+    psin_display=rho2psi_jd(tokname,rho_display);
+end
+%
+

@@ -213,116 +213,20 @@ else
     sdmhut = dmhu/sfact; % fine grid step near mhut
 %
     xmhut = sqrt(xmhu0T2);
-    mhutmin = min([xmhut,1]);
-    mhutmax = max([0,xmhut]);
     N = length(xmhut);
 %
-    if snmhut > 1, 
-        nrhot = 1;
-    else
-        nrhot = round(1/snmhut);%number of radial points per grid point
-    end    
-%    
-% ------ ensures that there are always enough points near mhu = 0 and  mhu = 1 --------
-%
-    nymax = nmhu_S_in;
-    yn = grid_power.^(0:nymax-1);
-    yyn = repmat(yn',[1,nymax]);
-    lyn = sum(triu(yyn));
-%
-    if N == 1 | snmhut == 0
-        dmhutmin = sdmhut;
-        dmhutmax = sdmhut;
-    else
-        dmhutmin = min([(xmhut(2) - xmhut(1))/snmhut,sdmhut,mhutmin/(snmhut + 1/4)]);
-        dmhutmax = min([(xmhut(N) - xmhut(N-1))/snmhut,sdmhut,(1-mhutmax)/(snmhut + 3/4)]);
+    mhu = makegrid_dke_jd(0,snmhu0,sdmhu0,xmhut(1),snmhut,sdmhut,snmhu0,dmhu,grid_power);
+    for ix=1:N-1,
+        %sdmhutmin = diff(mhu(length(mhu) - 1:length(mhu)));
+        %snmhut_new = max([snmhut - fix(log(sdmhut/sdmhutmin)/log(grid_power)),1]);
+        mhu = [mhu,makegrid_dke_jd(xmhut(ix),snmhut,sdmhut,xmhut(ix+1),snmhut,sdmhut,1,dmhu,grid_power)];
     end
-%
-% dmhu ramp near mhu=0
-%
-    smhu0 = [];
-    dmhu0 = dmhu;
-    snmhu0 = max(snmhu0 - snmhut,0);
-    xramp0 = (mhutmin - (snmhut + 1/4)*dmhutmin);
-    smhu0 = [0,powerdiff_dke_jd(sdmhu0,sdmhu0,xramp0,dmhutmin,dmhu0,grid_power),xramp0 + (1:snmhut)*dmhutmin];
-    while length(smhu0) < snmhu0 + snmhut + 1
-        dmhu0 = max(sdmhu0,dmhutmin);
-        xramp0 = (mhutmin - (snmhut + 1/4)*dmhutmin);
-        smhu0 = [0,powerdiff_dke_jd(sdmhu0,sdmhu0,xramp0,dmhutmin,dmhu0,grid_power),xramp0 + (1:snmhut)*dmhutmin];
-        if length(smhu0) < snmhu0 + snmhut + 1
-            if dmhutmin < sdmhu0
-                sdmhu0 = max(sdmhu0/grid_power, dmhutmin);
-            elseif dmhutmin > sdmhu0
-                dmhutmin = max(sdmhu0, dmhutmin/grid_power);
-            else 
-                dmhutmin = mhutmin/(1/4 + snmhut  + snmhu0);
-                sdmhu0 = dmhutmin;
-            end
-        end
-    end
-%
-% dmhu ramp near mhu=1
-%
-    smhu1 = [];
-    dmhu1 = dmhu;
-    snmhu1 = max(snmhu1 - snmhut,0);
-    xramp1 = 1 - (mhutmax + (snmhut + 3/4)*dmhutmax);
-    smhu1 = [mhutmax + (3/4 + (0:snmhut))*dmhutmax,powerdiff_dke_jd((mhutmax + (3/4 + snmhut)*dmhutmax),dmhutmax,1 - sdmhu1,sdmhu1,dmhu1,grid_power) 1];
-    while length(smhu1) < snmhu1 + snmhut + 1
-        dmhu1 = max(sdmhu1,dmhutmax);
-        xramp1 = 1 - (mhutmax + (snmhut + 3/4)*dmhutmax);
-        smhu1 = [mhutmax + (3/4 + (0:snmhut))*dmhutmax,...
-        powerdiff_dke_jd((mhutmax + (3/4 + snmhut)*dmhutmax),dmhutmax,1 - sdmhu1,sdmhu1,dmhu1,grid_power) 1];
-        if length(smhu1) < snmhu1 + snmhut + 1
-            if dmhutmax < sdmhu1
-                sdmhu1 = max(sdmhu1/grid_power, dmhutmax);
-            elseif dmhutmax > sdmhu1
-                dmhutmax = max(sdmhu1, dmhutmax/grid_power);
-            else 
-                dmhutmax = (1 - mhutmax)/(3/4 + snmhut  + snmhu1);
-                sdmhu1 = dmhutmax;
-            end
-        end
-    end
-%
-% --------------- generates half mhu grid ---------------------------
-%
-    mhu = smhu0;
-    rmhumin = max(mhu);
-    drmhumin = mhu(length(mhu)) - mhu(length(mhu)-1);
-    for i=1:N-1,
-        drmhu = xmhut(i+1)-xmhut(i);
-        rdmhut = min(sdmhut,drmhu);
-        rmhumax = xmhut(i+1)-rdmhut/4;
-        dmhut = dmhu;
-        rmhu = powerdiff_dke_jd(rmhumin,drmhumin,rmhumax,rdmhut,dmhut,grid_power);
-        while length(rmhu) < snmhut + 1,
-            dmhut = max(drmhumin,rdmhut);
-            rmhumax = xmhut(i+1)-rdmhut/4;
-            rmhu = powerdiff_dke_jd(rmhumin,drmhumin,rmhumax,rdmhut,dmhut,grid_power);
-            if length(rmhu) < snmhut + 1;
-                if drmhumin < rdmhut
-                    rdmhut = max(rdmhut/grid_power, drmhumin);
-                elseif drmhumin > rdmhut
-                    drmhumin = max(rdmhut, drmhumin/grid_power);
-                else 
-                    rdmhut = ((3*xmhut(i+1) + xmhut(i))/4 - rmhumin)/snmhut;
-                    drmhumin = rdmhut;
-                end
-            end
-        end
-        mhu = [mhu,rmhu(2:length(rmhu))];
-        rmhumin = max(mhu);
-        drmhumin = mhu(length(mhu)) - mhu(length(mhu)-1);
-    end
-    mhu = [mhu,smhu1];
+    %sdmhutmin = diff(mhu(length(mhu) - 1:length(mhu)));
+    mhu = [mhu,makegrid_dke_jd(xmhut(N),snmhut,sdmhut,1,snmhu1,sdmhu1,sdmhu1,dmhu,grid_power)];
 %
     mhu = mhu(find(diff([-1,mhu]) > eps));
     mhu_S = [-fliplr(mhu(2:length(mhu))),mhu];
 %
-    if dke_mode == 1
-%case yet to be implemented
-    end
 end
 %
 nmhu_S = length(mhu_S);
@@ -350,11 +254,11 @@ else
 	pgridfactor = snp;%Non-uniform grid pgridfactor > 1
 end
 %
-if np_S_in < nmhu_S, 
-    np_S = nmhu_S;
-else
+%if np_S_in < nmhu_S, 
+%    np_S = nmhu_S;
+%else
     np_S = np_S_in;
-end
+%end
 %
 pn_S(1) = 0;
 dpn_S_ref = pnmax_S/np_S;
