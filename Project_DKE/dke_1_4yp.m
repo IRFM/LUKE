@@ -2299,7 +2299,7 @@ if dke_mode == 1,
 % Initial guess for the iterative loop (Lorentz model)
 %
 		XdfMdpsi = -dpsim*XfMp/dpsi/dpsip - (dpsip + dpsim)*XfM/dpsip/dpsim + dpsip*XfMm/dpsi/dpsim;%Calculation of the radial gradient of fM (parabolic interpolation) 
-		XXf0_g_th(:,:,jr2) = -xftp_norm(jr2).*Xpn.*(Xmhu./abs(Xmhu)).*XXfM(:,:,jr2).*abs(XXILor(:,:,jr2));%
+		XXf0_g_th(:,:,jr2) = +xftp_norm(jr2)*(xdlnnedpsi(jr2) + xdlnTedpsi(jr2)*(Xpn2/xTe_norm(jr2)/2 - 1.5)).*Xpn.*(Xmhu./abs(Xmhu)).*XXfM(:,:,jr2).*abs(XXILor(:,:,jr2));%
 %
 %First order Legendre correction for ftp
 %	  
