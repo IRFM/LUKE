@@ -13,7 +13,7 @@ which expands as
 \begin{equation}
 \left. \frac{\partial f}{\partial t}\right| _{\mathbf{p}}=\frac{1}{J_{%
 \mathbf{p}}}\frac{\partial }{\partial p^{i}}\left( J_{\mathbf{p}}S_{\mathbf{p%
-}}^{i}\right) 
+}}^{i}\right)
 \end{equation}
 where $J_{\mathbf{p}}$ is the momentum space Jacobian , and using the
 momentum space coordinate system is $\left( p,\xi ,\varphi \right) $,
@@ -28,7 +28,7 @@ expression for the divergence (\ref{pxidiv})
 \begin{equation}
 \left. \frac{\partial f_{0}}{\partial t}\right| _{\mathbf{p}}=\frac{1}{p^{2}}%
 \frac{\partial }{\partial p}\left( p^{2}S_{p}\right) -\frac{1}{p}\frac{%
-\partial }{\partial \xi }\left( \sqrt{1-\xi ^{2}}S_{\xi }\right) 
+\partial }{\partial \xi }\left( \sqrt{1-\xi ^{2}}S_{\xi }\right)
 \end{equation}
 where we define 
 \begin{eqnarray}
@@ -120,25 +120,25 @@ and we also get
 Then, keeping in mind that $\left| \xi _{0}\right| =\sigma \xi _{0}$ is
 independent of $\sigma $, we can transform as follows, 
 \begin{eqnarray}
-\left\{ \frac{1}{p}\frac{\partial }{\partial \xi }\left( \sqrt{1-\xi ^{2}}
-S_{\xi }\right) \right\} &=&\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2}%
-\sum_{\sigma }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{%
-d\theta }{2\pi }\frac{rB/\left( R_{0}B_{P}\right) }{\left| \widehat{\psi }%
-\cdot \widehat{r}\right| }\frac{\xi _{0}}{\xi }\frac{1}{p}\frac{\partial }{
-\partial \xi }\left( \sqrt{1-\xi ^{2}}S_{\xi }\right)  \nonumber \\
+\left\{ \frac{1}{p}\frac{\partial }{\partial \xi }\left( \sqrt{1-\xi ^{2}}%
+S_{\xi }\right) \right\}  &=&\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2%
+}\sum_{\sigma }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{%
+d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }%
+\frac{r}{R_{0}}\frac{B}{B_{P}}\frac{\xi _{0}}{\xi }\frac{1}{p}\frac{\partial 
+}{\partial \xi }\left( \sqrt{1-\xi ^{2}}S_{\xi }\right)   \nonumber \\
 &=&\frac{1}{\lambda p}\frac{\partial }{\partial \sigma \xi _{0}}\frac{1}{%
 \widetilde{q}}\left[ \frac{1}{2}\sum_{\sigma }\right] _{T}\int_{\theta
-_{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }\frac{rB/\left(
-R_{0}B_{P}\right) }{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{%
-\sigma }{\Psi }\left( \sqrt{1-\xi ^{2}}S_{\xi }\right)  \nonumber \\
+_{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{%
+\psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}}\frac{B}{B_{P}}\frac{\sigma }{%
+\Psi }\left( \sqrt{1-\xi ^{2}}S_{\xi }\right)   \nonumber \\
 &=&\frac{1}{\lambda p}\frac{\partial }{\partial \xi _{0}}\sqrt{1-\xi _{0}^{2}%
-}\sigma \frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2}\sum_{\sigma
-}\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }%
-\frac{rB/\left( R_{0}B_{P}\right) }{\left| \widehat{\psi }\cdot \widehat{r}
-\right| }\frac{\sigma }{\sqrt{\Psi }}\left( S_{\xi }\right)  \nonumber \\
+}\sigma \frac{1}{\widetilde{q}}\left[ \frac{1}{2}\sum_{\sigma }\right]
+_{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }\frac{1}{%
+\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}}\frac{B}{B_{P}%
+}\frac{\sigma }{\sqrt{\Psi }}\left( S_{\xi }\right)   \nonumber \\
 &=&\frac{1}{\lambda p}\frac{\partial }{\partial \xi _{0}}\sqrt{1-\xi _{0}^{2}%
 }\lambda \sigma \left\{ \frac{\sigma \xi }{\sqrt{\Psi }\xi _{0}}S_{\xi
-}\right\}
+}\right\} 
 \end{eqnarray}
 
 Finally, we can rewrite (\ref{kinbav}) under a conservative form as 
@@ -146,14 +146,14 @@ Finally, we can rewrite (\ref{kinbav}) under a conservative form as
 \left\{ \left. \frac{\partial f}{\partial t}\right| _{\mathbf{p}}\right\} =%
 \frac{1}{p^{2}}\frac{\partial }{\partial p}\left( p^{2}S_{p}^{\left(
 0\right) }\right) -\frac{1}{\lambda p}\frac{\partial }{\partial \xi _{0}}%
-\left( \sqrt{1-\xi _{0}^{2}}\lambda S_{\xi _{0}}^{\left( 0\right) }\right) 
+\left( \sqrt{1-\xi _{0}^{2}}\lambda S_{\xi _{0}}^{\left( 0\right) }\right)
 \label{kinbav2}
 \end{equation}
 where the following components are defined 
 \begin{eqnarray}
-S_{p}^{\left( 0\right) } &=&\left\{ S_{p}\right\}   \label{sp0} \\
+S_{p}^{\left( 0\right) } &=&\left\{ S_{p}\right\}  \label{sp0} \\
 S_{\xi _{0}}^{\left( 0\right) } &=&\sigma \left\{ \frac{\sigma \xi }{\sqrt{%
-\Psi }\xi _{0}}S_{\xi }\right\}   \nonumber
+\Psi }\xi _{0}}S_{\xi }\right\}  \nonumber
 \end{eqnarray}
 
 Here, expression (\ref{kinbav2}) is completely equivalent to the momentum
