@@ -136,6 +136,8 @@ else
 	XXRlambda_p2m1_p = ones(npn,nmhu,nr);
 	XXRlambda_p2m1_m = ones(npn,nmhu,nr);
 %
+	XXlambda_p2m2p2 = ones(npn,nmhu,nr);
+%
 	XXRlambda_b_p1p1 = ones(npn,nmhu,nr);
 %
 	XXlambda_b_p1m1p2 = ones(npn,nmhu,nr);
@@ -175,6 +177,6 @@ else
 	XXlambda_b_p2_p = ones(npn,nmhu,nr);
 	XXlambda_b_p2_m = ones(npn,nmhu,nr);
 %
-	XXlambda_b_p1m3p4 = ones(npn,nmhu,nr);
+	XXlambda_b_p1m3p4 = ones(npn,nmhu,nr);	
 end
 
