@@ -1,90 +1,257 @@
-We consider a kinetic equation generally expressed in conservative form in
-the phase space $\left( p,\xi ,\psi ,\theta \right) $. The gyroangle $%
-\varphi $ can be ignored since the kinetic equation was gyroaveraged. $f$ is
-the guiding-center distribution function. In addition, the toroidal angle $%
-\phi $ is ignored unsder the assumption of axisymmetry. The kinetic equation
-can be expressed as
+
+The starting point of the flux conservative representation is the
+conservation of the total number of particles in the plasma,
 \begin{equation}
-\frac{\partial f}{\partial t}+\nabla _{\left( p,\xi ,\psi ,\theta \right) }%
-\cdot {\bf S}\left( f\right) =0
+N=\idotsint f\left( \mathbf{X},P\right) d^{3}\mathbf{X}d^{3}\mathbf{P}
 \end{equation}
-where the phase space flux ${\bf S}$ is decomposed into a diffusive and a
-convective part
+where $\mathbf{X}$ and $\mathbf{P}$ are respectively coordinates in
+configuration and momentum spaces. According to the systems which are used
+in the calculations, $\mathbf{X=}\left( \psi ,\theta ,\phi \right) $ and $%
+\mathbf{P=}\left( p,\xi ,\varphi \right) ,$%
 \begin{equation}
-{\bf S}\left( f\right) =-{\Bbb D}\nabla f+{\bf F}f
+\left\{ 
+\begin{array}{l}
+d^{3}\mathbf{X=}\frac{Rr}{\left| \nabla \psi \right| \left| \widehat{\psi }%
+\cdot \widehat{r}\right| }d\psi d\theta d\phi  \\ 
+d^{3}\mathbf{P=}p^{2}dpd\xi d\varphi 
+\end{array}
+\right. 
 \end{equation}
-${\Bbb D}$ and ${\bf F}$ being respectively the diffusion tensor and
-convection vector in phase space. They can be cexpressed generally as 
+as shown in Appendix ****, on obtains
 \begin{equation}
-{\Bbb D}=\left( 
-\begin{array}{llll}
-D_{pp} & D_{p\xi } & D_{p\psi } & D_{p\theta } \\ 
-D_{\xi p} & D_{\xi \xi } & D_{\xi \psi } & D_{\xi \theta } \\ 
-D_{\psi p} & D_{\psi \xi } & D_{\psi \psi } & D_{\psi \theta } \\ 
-D_{\theta p} & D_{\theta \xi } & D_{\theta \psi } & D_{\theta \theta }
+N=\idotsint f\left( \psi ,\theta ,\phi ,p,\xi ,\varphi \right) \frac{Rr}{%
+\left| \nabla \psi \right| \left| \widehat{\psi }\cdot \widehat{r}\right| }%
+p^{2}d\psi d\theta d\phi dpd\xi d\varphi 
+\end{equation}
+
+Using the transformation 
+\begin{equation}
+\frac{1-\xi ^{2}}{B\left( \psi ,\theta \right) }=\frac{1-\xi _{0}^{2}}{
+B_{\min }\left( \psi \right) }
+\end{equation}
+that results from conservation of the magnetic moment and the energy, 
+\begin{equation}
+N=\idotsint f\left( \psi ,\theta ,\phi ,p,\xi ,\varphi \right) \frac{Rr}{%
+\left| \nabla \psi \right| \left| \widehat{\psi }\cdot \widehat{r}\right| }%
+p^{2}\frac{\xi _{0}}{\xi }\frac{B\left( \psi ,\theta \right) }{B_{\min
+}\left( \psi \right) }d\psi d\theta d\phi dpd\xi _{0}d\varphi 
+\end{equation}
+since $\frac{\xi d\xi }{B\left( \psi ,\theta \right) }=\frac{\xi _{0}d\xi
+_{0}}{B_{\min }\left( \psi \right) }.$ Since at the order, $f_{0}$ is
+constant along a magnetic field line, it is independent of the poloidal
+angle $\theta ,$ and  $f_{0}=f_{0}^{\left( 0\right) }$ where $f_{0}^{\left(
+0\right) }$ is the bounce averaged distribution function. Hence
+\begin{eqnarray}
+N &=&\iiint f_{0}^{\left( 0\right) }\left( \psi ,p,\xi _{0}\right)
+p^{2}d\psi dpd\xi _{0}\int_{\theta _{\min }}^{\theta _{\max }}\frac{Rr}{%
+\left| \nabla \psi \right| \left| \widehat{\psi }\cdot \widehat{r}\right| }%
+\frac{\xi _{0}}{\xi }\frac{B\left( \psi ,\theta \right) }{B_{\min }\left(
+\psi \right) }d\theta \int_{0}^{2\pi }d\phi \int_{0}^{2\pi }d\varphi  
+\nonumber \\
+&=&4\pi ^{2}\iiint f_{0}^{\left( 0\right) }\left( \psi ,p,\xi _{0}\right) 
+\frac{1}{B_{\min }\left( \psi \right) }p^{2}d\psi dpd\xi _{0}\int_{\theta
+_{\min }}^{\theta _{\max }}\frac{Rr}{\left| \nabla \psi \right| \left| 
+\widehat{\psi }\cdot \widehat{r}\right| }\frac{\xi _{0}}{\xi }B\left( \psi
+,\theta \right) d\theta 
+\end{eqnarray}
+taking into account, in addition, of the toroidal aximmetry, and cylindrical
+symmetry of the distribution along the magnetic field line direction. Here, $%
+\theta _{\min }$ and $\theta _{\max }$ depends of the particle trajectory in
+the configuration space, wether they are passing or trapped. 
+
+From plasma equilibrium, since 
+\begin{equation}
+\frac{\left| \nabla \psi \right| }{R}=B_{P}
+\end{equation}
+where $B_{P}$ is the poloidal magnetic field, 
+\begin{equation}
+\int_{\theta _{\min }}^{\theta _{\max }}\frac{Rr}{\left| \nabla \psi \right|
+\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{\xi _{0}}{\xi }B\left(
+\psi ,\theta \right) d\theta =\int_{\theta _{\min }}^{\theta _{\max }}\frac{r%
+}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{\xi _{0}}{\xi }\frac{%
+B}{B_{P}}d\theta =2\pi \lambda \left( \psi ,\xi _{0}\right) \widetilde{q}%
+\left( \psi \right) 
+\end{equation}
+
+Here, appears, as expected the normalized bounce time $\lambda \left( \psi
+,\xi _{0}\right) $ and the factor $\widetilde{q}\left( \psi \right) $ which
+in conjunction with $B_{\min }\left( \psi \right) $ characterizes the local
+shape of magnetic flux surface. Hence, 
+\begin{equation}
+N=8\pi ^{3}\iiint f_{0}^{\left( 0\right) }\left( \psi ,p,\xi _{0}\right) 
+\frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) }%
+\lambda \left( \psi ,\xi _{0}\right) p^{2}d\psi dpd\xi _{0}
+\end{equation}
+
+From this expression, the Jacobian $J$ of the coordinate system $\left( \psi
+,p,\xi _{0}\right) $ may be  simply defined as,
+\begin{equation}
+J=\frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) }%
+\lambda \left( \psi ,\xi _{0}\right) p^{2}
+\end{equation}
+and the generic conservative form of the kinetic equation may be immediatly
+deduced 
+\begin{equation}
+\frac{\partial f_{0}^{\left( 0\right) }}{\partial t}+\nabla _{\left( \psi
+,p,\xi _{0}\right) }\cdot \mathbf{S}^{\left( 0\right) }\left( f_{0}^{\left(
+0\right) }\right) =0
+\end{equation}
+where the phase space flux $\mathbf{S}^{\left( 0\right) }$ is decomposed
+into a diffusive and a convective part 
+\begin{equation}
+\mathbf{S}^{\left( 0\right) }\left( f_{0}^{\left( 0\right) }\right) =-\Bbb{D}%
+^{\left( 0\right) }\nabla f_{0}^{\left( 0\right) }+\mathbf{F}^{\left(
+0\right) }f_{0}^{\left( 0\right) }
+\end{equation}
+$\Bbb{D}^{\left( 0\right) }$ and $\mathbf{F}^{\left( 0\right) }$ being
+respectively the diffusion tensor and convection vector in phase space. They
+can be expressed generally as 
+\begin{equation}
+\Bbb{D}^{\left( 0\right) }=\left( 
+\begin{array}{lll}
+D_{pp}^{\left( 0\right) } & D_{p\xi }^{\left( 0\right) } & D_{p\psi
+}^{\left( 0\right) } \\ 
+D_{\xi p}^{\left( 0\right) } & D_{\xi \xi }^{\left( 0\right) } & D_{\xi \psi
+}^{\left( 0\right) } \\ 
+D_{\psi p}^{\left( 0\right) } & D_{\psi \xi }^{\left( 0\right) } & D_{\psi
+\psi }^{\left( 0\right) }
 \end{array}
 \right) 
 \end{equation}
 and 
 \begin{equation}
-{\bf F}=\left( 
+\mathbf{F}^{\left( 0\right) }=\left( 
 \begin{array}{l}
-F_{p} \\ 
-F_{\xi } \\ 
-F_{\psi } \\ 
-F_{\theta }
+F_{p}^{\left( 0\right) } \\ 
+F_{\xi }^{\left( 0\right) } \\ 
+F_{\psi }^{\left( 0\right) }
 \end{array}
 \right) 
 \end{equation}
-where each element is function of $\left( p,\xi ,\psi ,\theta \right) $. We
-make the assumption (to be verified for the kincetic equation under
-consideration) that all cross-coupling terms are higher order terms and
-therefore can be neglected; hence $D_{p\psi }=D_{\psi p}=0,$ $D_{\xi \psi
-}=D_{\psi \xi }=0,$ $D_{p\theta }=D_{\theta p}=0$ et $D_{\xi \theta
-}=D_{\theta \xi }=0.$ In these conditions, dynamics in momentum and
-configuration spaces are decoupled, 
-\begin{equation}
-\frac{\partial f}{\partial t}+\nabla _{{\bf p}}\cdot {\bf S}_{{\bf p}%
-}+\nabla _{{\bf r}}\cdot {\bf S}_{{\bf r}}=0  \label{consform}
-\end{equation}
-where the fluxes in momentum and configuration space are respectively
-
+where each element is function of $\left( \psi ,p,\xi _{0}\right) $. So,
+following calculations given in Appendix ***,
 \begin{eqnarray}
-{\bf S}_{{\bf p}} &=&-{\Bbb D}_{{\bf p}}\nabla _{{\bf p}}f+{\bf F}_{{\bf p}}f
-\label{momflux} \\
-{\bf S}_{{\bf r}} &=&-{\Bbb D}_{{\bf r}}\nabla _{{\bf r}}f+{\bf F}_{{\bf r}}f
-\label{conflux}
+\nabla _{\left( \psi ,p,\xi _{0}\right) }\cdot \mathbf{S}^{\left( 0\right)
+}\left( f_{0}^{\left( 0\right) }\right)  &=&\frac{1}{J}\frac{\partial }{%
+\partial p}\left( J\mathbf{S}^{\left( 0\right) }\cdot \mathbf{e}^{p}\right) +%
+\frac{1}{J}\frac{\partial }{\partial \xi _{0}}\left( J\mathbf{S}^{\left(
+0\right) }\cdot \mathbf{e}^{\xi }\right) +\frac{1}{J}\frac{\partial }{%
+\partial \psi }\left( J\mathbf{S}^{\left( 0\right) }\cdot \mathbf{e}^{\psi
+}\right)   \nonumber \\
+&=&\frac{1}{J}\frac{\partial }{\partial p}\left( J\mathbf{S}^{\left(
+0\right) }\cdot \widehat{p}\right) -\frac{1}{J}\frac{1}{p}\frac{\partial }{%
+\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}J\mathbf{S}^{\left( 0\right) }%
+\cdot \widehat{\xi }\right) +\frac{1}{J}\frac{\partial }{\partial \psi }%
+\left( J\left| \nabla \psi \right| \mathbf{S}^{\left( 0\right) }\cdot 
+\widehat{\psi }\right)   \nonumber \\
+&=&\frac{1}{p^{2}}\frac{\partial }{\partial p}\left( p^{2}\mathbf{S}%
+_{p}^{\left( 0\right) }\right) -\frac{1}{\lambda }\frac{1}{p}\frac{\partial 
+}{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}\lambda \mathbf{S}_{\xi
+}^{\left( 0\right) }\right) +\frac{B_{\min }\left( \psi \right) }{\lambda 
+\widetilde{q}\left( \psi \right) }\frac{\partial }{\partial \psi }\left( 
+\frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) }%
+\lambda \left( \psi ,\xi _{0}\right) \left| \nabla \psi \right| \mathbf{S}%
+_{\psi }^{\left( 0\right) }\right) 
 \end{eqnarray}
 
-With this ordering assumption, the diffusion tensor becomes 
+The first two terms correspond to the usual dynamics in momentum space,
+while the third one is associated to spatial transport. It is interesting to
+note that spatial transport is not independent of the momentum dynamics
+through the parameter $\lambda \left( \psi ,\xi _{0}\right) .$ It corrects
+the spatial transport from the particle dynamics along the magnetic field
+line. In the limit of strongly passing particles, $\lambda \left( \psi ,\xi
+_{0}\right) $ $\simeq 1$, and the spatial term becomes independent of $\xi
+_{0}.$
+
+It is interesting to cross-check the conservative nature of the transport
+equation is well ensured by performing the integral
+\begin{eqnarray}
+\iiint \left[ \frac{\partial f_{0}^{\left( 0\right) }}{\partial t}+\nabla
+_{\left( \psi ,p,\xi _{0}\right) }\cdot \mathbf{S}^{\left( 0\right) }\left(
+f_{0}^{\left( 0\right) }\right) \right] Jdpd\xi _{0}d\psi  &=&0  \nonumber \\
+\frac{\partial N}{\partial t}+\iiint \nabla _{\left( \psi ,p,\xi _{0}\right)
+}\cdot \mathbf{S}^{\left( 0\right) }\left( f_{0}^{\left( 0\right) }\right)
+Jdpd\xi _{0}d\psi  &=&0
+\end{eqnarray}
+
+Indeed, in that case, the variation of the total number of particles $\frac{%
+\partial N}{\partial t}$ as a function of time depends only from boundary
+conditions. 
 \begin{equation}
-{\Bbb D}=\left( 
-\begin{array}{ll}
-{\Bbb D}_{{\bf p}} & 0 \\ 
-0 & {\Bbb D}_{{\bf r}}
-\end{array}
-\right) =\left( 
-\begin{array}{llll}
-D_{pp} & D_{p\xi } & 0 & 0 \\ 
-D_{\xi p} & D_{\xi \xi } & 0 & 0 \\ 
-0 & 0 & D_{\psi \psi } & D_{\psi \theta } \\ 
-0 & 0 & D_{\theta \psi } & D_{\theta \theta }
-\end{array}
-\right) 
+\iiint \nabla _{\left( \psi ,p,\xi _{0}\right) }\cdot \mathbf{S}^{\left(
+0\right) }\left( f_{0}^{\left( 0\right) }\right) Jdpd\xi _{0}d\psi =\mathcal{%
+I}_{p}-\mathcal{I}_{\xi _{0}}+\mathcal{I}_{\psi }
 \end{equation}
-while the convective vector becomes
+where
 \begin{equation}
-{\bf F}=\left( 
+\left\{ 
 \begin{array}{l}
-{\bf F}_{{\bf p}} \\ 
-{\bf F}_{{\bf r}}
+\mathcal{I}_{p}=\iiint \frac{1}{p^{2}}\frac{\partial }{\partial p}\left(
+p^{2}\mathbf{S}_{p}^{\left( 0\right) }\right) Jdpd\xi _{0}d\psi  \\ 
+\mathcal{I}_{\xi _{0}}=\iiint \frac{1}{\lambda }\frac{1}{p}\frac{\partial }{%
+\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}\lambda \mathbf{S}_{\xi
+}^{\left( 0\right) }\right) Jdpd\xi _{0}d\psi  \\ 
+\mathcal{I}_{\psi }=\iiint \frac{B_{\min }\left( \psi \right) }{\lambda 
+\widetilde{q}\left( \psi \right) }\frac{\partial }{\partial \psi }\left( 
+\frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) }%
+\lambda \left( \psi ,\xi _{0}\right) \left| \nabla \psi \right| \mathbf{S}%
+_{\psi }^{\left( 0\right) }\right) Jdpd\xi _{0}d\psi 
 \end{array}
-\right) =\left( 
-\begin{array}{l}
-F_{p} \\ 
-F_{\xi } \\ 
-F_{\psi } \\ 
-F_{\theta }
-\end{array}
-\right) 
+\right. 
 \end{equation}
+
+For $\mathcal{I}_{p},$ 
+\begin{eqnarray}
+\iiint \frac{1}{p^{2}}\frac{\partial }{\partial p}\left( p^{2}\mathbf{S}%
+_{p}^{\left( 0\right) }\right) Jdpd\xi _{0}d\psi  &=&\iint \left[ p^{2}%
+\mathbf{S}_{p}^{\left( 0\right) }\right] _{0}^{p_{\max }}\frac{\widetilde{q}%
+\left( \psi \right) }{B_{\min }\left( \psi \right) }\lambda \left( \psi ,\xi
+_{0}\right) d\xi _{0}d\psi   \nonumber \\
+&=&p_{\max }^{2}\iint \mathbf{S}_{p}^{\left( 0\right) }\left( p_{\max
+}\right) \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi
+\right) }\lambda \left( \psi ,\xi _{0}\right) d\xi _{0}d\psi 
+\end{eqnarray}
+and assuming that $\lim_{p\rightarrow \infty }p^{2}\mathbf{S}_{p}^{\left(
+0\right) }=0,$ one finds $\mathcal{I}_{p}=0.$ This condition is generally
+well fullfiled, except in strong runaway regimes, where above the Dreicer
+limit characterized by critical momentum $p_{D},$ electrons gain energy up
+to very high energies, that are usually well beyond the domain of
+integration addressed in numerical calculations for the current drive
+problem. However, in this case, $\mathcal{I}_{p}$ is given by $\mathbf{S}%
+_{p}^{\left( 0\right) }$ at $p_{\max }$, where $p_{\max }$ corresponds to
+the boundary of the momentum domain of integration. Its conservative nature
+is well, since $\frac{\partial N}{\partial t}$ only depends of this
+parameter for $p$. 
+
+The integration of $\xi _{0}$ leads to
+\begin{eqnarray}
+\mathcal{I}_{\xi _{0}} &=&\iiint \frac{1}{\lambda }\frac{1}{p}\frac{\partial 
+}{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}\lambda \mathbf{S}_{\xi
+}^{\left( 0\right) }\right) Jdpd\xi _{0}d\psi =\iint \left[ \sqrt{1-\xi
+_{0}^{2}}\lambda \mathbf{S}_{\xi }^{\left( 0\right) }\right] _{-1}^{+1}\frac{%
+\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) }pdpd\psi  
+\nonumber \\
+&=&0
+\end{eqnarray}
+which indicates that pitch-angle scattering never contributes to variations
+of $N$, and therefore the conservative nature of this term in the  transport
+equation is well demonstrated.
+
+Finally, 
+\begin{eqnarray}
+\mathcal{I}_{\psi } &=&\iiint \frac{B_{\min }\left( \psi \right) }{\lambda 
+\widetilde{q}\left( \psi \right) }\frac{\partial }{\partial \psi }\left( 
+\frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) }%
+\lambda \left( \psi ,\xi _{0}\right) \left| \nabla \psi \right| \mathbf{S}%
+_{\psi }^{\left( 0\right) }\right) Jdpd\xi _{0}d\psi =\iint \left[ \frac{%
+\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) }\lambda
+\left( \psi ,\xi _{0}\right) \left| \nabla \psi \right| \mathbf{S}_{\psi
+}^{\left( 0\right) }\right] _{0}^{\psi _{a}}p^{2}dpd\xi _{0}  \nonumber \\
+&=&\frac{\widetilde{q}\left( \psi _{a}\right) }{B_{\min }\left( \psi
+_{a}\right) }\left| \nabla \psi \right| _{\psi _{a}}\iint \lambda \left(
+\psi _{a},\xi _{0}\right) \mathbf{S}_{\psi }^{\left( 0\right) }\left( \psi
+_{a}\right) p^{2}dpd\xi _{0}
+\end{eqnarray}
+which only depends of edge values at $\psi _{a}.$ Again, if $\mathbf{S}%
+_{\psi }^{\left( 0\right) }\left( \psi _{a}\right) =0,$ $\mathcal{I}_{\psi
+}=0,$ and the total number of particles is conserved in the discharge.
