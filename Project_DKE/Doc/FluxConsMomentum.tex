@@ -33,8 +33,8 @@ where the bounce averaging operation was defined in (\ref{bav})
 \begin{equation}
 \left\{ {\cal A}\right\} =\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2}%
 \sum_{\sigma }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{%
-d\theta }{2\pi }\frac{\sqrt{g_{22}}}{R_{0}}\frac{\xi _{0}}{\xi }\frac{B}{%
-B_{P}}{\cal A}
+d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }%
+\frac{r}{R_{0}}\frac{B}{B_{P}}\frac{\xi _{0}}{\xi }{\cal A}
 \end{equation}
 and $\xi $ is given along the trajectory by
 \begin{equation}
@@ -62,17 +62,19 @@ independent of $\sigma $, we can transform as follows,
 \left\{ p\frac{\partial }{\partial \xi }\left( \sqrt{1-\xi ^{2}}S_{\xi
 }\right) \right\}  &=&\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2}%
 \sum_{\sigma }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{%
-d\theta }{2\pi }\frac{\sqrt{g_{22}}B}{R_{0}B_{P}}\frac{\xi _{0}}{\xi }p\frac{%
-\partial }{\partial \xi }\left( \sqrt{1-\xi ^{2}}S_{\xi }\right)  \\
+d\theta }{2\pi }\frac{rB/\left( R_{0}B_{P}\right) }{\left| \widehat{\psi }%
+\cdot \widehat{r}\right| }\frac{\xi _{0}}{\xi }p\frac{\partial }{\partial %
+\xi }\left( \sqrt{1-\xi ^{2}}S_{\xi }\right)  \\
 &=&\frac{p}{\lambda }\frac{\partial }{\partial \sigma \xi _{0}}\frac{1}{%
 \widetilde{q}}\left[ \frac{1}{2}\sum_{\sigma }\right] _{T}\int_{\theta
-_{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }\frac{\sqrt{g_{22}}B}{%
-R_{0}B_{P}}\frac{\sigma }{\Psi }\left( \sqrt{1-\xi ^{2}}S_{\xi }\right)  \\
+_{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }\frac{rB/\left(
+R_{0}B_{P}\right) }{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{%
+\sigma }{\Psi }\left( \sqrt{1-\xi ^{2}}S_{\xi }\right)  \\
 &=&\frac{p}{\lambda }\frac{\partial }{\partial \xi _{0}}\sqrt{1-\xi _{0}^{2}}%
 \sigma \frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2}\sum_{\sigma
 }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }%
-\frac{\sqrt{g_{22}}B}{R_{0}B_{P}}\frac{\sigma }{\sqrt{\Psi }}\left( S_{\xi
-}\right)  \\
+\frac{rB/\left( R_{0}B_{P}\right) }{\left| \widehat{\psi }\cdot \widehat{r}%
+\right| }\frac{\sigma }{\sqrt{\Psi }}\left( S_{\xi }\right)  \\
 &=&\frac{p}{\lambda }\frac{\partial }{\partial \xi _{0}}\sqrt{1-\xi _{0}^{2}}%
 \lambda \sigma \left\{ \frac{\sigma \xi }{\sqrt{\Psi }\xi _{0}}S_{\xi
 }\right\} 
