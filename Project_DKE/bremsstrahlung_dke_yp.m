@@ -1,4 +1,4 @@
-function  [kphot,brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi,lchord,rho_out,theta_out] = bremsstrahlung_dke_yp(equil,hxr,vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr,XXheaviside,zZi,xzni_norm,xne_norm,ne_ref,xrho,dmhu,mhu,dpn,pn,pn2,gamma,Ec,dp_cyl,pnmax_S,XXf0,XXf0_tp,XXf0_g,nlevel,bounce_mode,display_mode,r_display,t_display)
+function  [kphot,brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi,lchord,rho_out,theta_out] = bremsstrahlung_dke_yp(equil,hxr,vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr,XXheaviside,zZi,xzni_norm,xne_norm,ne_ref,betath_ref,xrho,dmhu,mhu,dpn,pn,pn2,gamma,Ec,dp_cyl,pnmax_S,XXfinit,XXf0,XXf0_tp,XXf0_g,nlevel,bounce_mode,display_mode,r_display,t_display)
 %
 % Calculates the bremsstrahlung emission. Call first the function bremchord_dke_yp.m for calculating "vschords" used in line integration
 %
@@ -81,7 +81,7 @@ for i = 1:size(psin_hxr,1),%radial position
 %%%%%%		PSI_hxr(i,j) = 1;%low field side only
 			mhu_hxr = sign(mhu(:)).*sqrt(1-PSI_hxr(i,j)*(1 - mhu(:).^2));%mhu at a poloidal position that is different from Bmin
 			mhu_hxr = mhu_hxr(1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0);
-			Xf0_hxr = XXf0(:,1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0,i);%Distribution function at poloidal location
+			Xf0_hxr = XXf0(:,1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0,i);%Non-thermal distribution function at poloidal location
 			Xf0_tp_hxr = XXf0_tp(:,1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0,i);
 			Xf0_g_hxr = XXf0_g(:,1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0,i);
 %
@@ -98,7 +98,7 @@ for i = 1:size(psin_hxr,1),%radial position
 			Xf0_g_c1 = permute(repmat(reshape(Xf0_g_c',n_gauleg+1,size(XXf0_g,1),1),[1,1,1,length(kphot)]),[1,2,4,3]);
 			dIB_c1 = 2*pi*pn_c1.*pn_c1.*pn_c1.*BREM_c1(:,:,:,i).*(Xf0_c1 + Xf0_tp_c1 + Xf0_g_c1)./gamma_c1;
 			IB_c1 = 2*pi*integral_dke_jd(dpn,dIB_c1,2);%Momentum integration
-			ZZIB(i,j,:,:) = reshape(IB_c1,n_gauleg+1,size(IB_c1,2)*size(IB_c1,3))*ne_ref^2*clum/mc2;%Units(s-1*m-3*kev-1*str-1)
+			ZZIB(i,j,:,:) = reshape(IB_c1,n_gauleg+1,size(IB_c1,2)*size(IB_c1,3))*ne_ref^2*betath_ref*clum/mc2;%MKSA units(s-1*m-3*kev-1*str-1)
 %
 			Xf0_i1 = (Pm'*(Xf0_c.*(ones(size(Xf0_i,1),1)*cL'))')';
 			epsif0 = (Xf0_i-Xf0_i1)./Xf0_i;epsif0(isnan(epsif0)==1)=0;
@@ -109,17 +109,24 @@ for i = 1:size(psin_hxr,1),%radial position
 %
 % Test of the reconstruction of the distribution function on the Legendre polynomial basis
 %
-				figure,semilogy(pn,Xf0_i1(:,1),'r+',pn,Xf0_i(:,1),'b',pn,Xf0_i1(:,size(Xf0_i1,2)),'cx',pn,Xf0_i(:,size(Xf0_i,2)),'k')
-				grid on
-				zoom on
-				title(['Distribution function at rho = ',num2str(rho_out),' and theta = ',num2str(theta_out*180/pi),' (Deg)'])
-				xlabel('p/pth-ref')
-				ylabel(['f(norm initial: ',num2str(norm0_hxr(i_test,j_test)),', norm recontructed: ',num2str(normi_hxr(i_test,j_test)),')'])
-				legend('Forward reconstructed (Legendre)','Forward initial','Backward reconstructed (Legendre)','Backward initial')
+				figure(10003),
+				ylab = ['f(norm initial: ',num2str(norm0_hxr(i_test,j_test)),', norm recontructed: ',num2str(normi_hxr(i_test,j_test)),')'];
+				tit = ['Distribution function at {\rho} = ',num2str(rho_out),' and {\theta}_{pol} = ',num2str(theta_out*180/pi),' (Deg)'];
+%				
+				graph1D_jd(pn,Xf0_i(:,1),0,1,'','','',NaN,'','','-','non','b',2);
+				hold on			
+				graph1D_jd(pn,Xf0_i1(:,1),0,1,'','','',NaN,'','','--','non','r',2);
+				graph1D_jd(pn,Xf0_i(:,size(Xf0_i1,2)),0,1,'','','',NaN,'','','-','non','c',2);
+				graph1D_jd(pn,Xf0_i1(:,size(Xf0_i,2)),0,1,'p_{||}/p_{Te}^{ref}',ylab,tit,NaN,'','','--','non','k',2);
+				grid on,zoom on
+				legend('Forward initial','Forward reconstructed (Legendre)','Backward initial','Backward reconstructed (Legendre)')
 %
 % Contour plot of the electron distribution function
 %
+				[logXfinit_cyl,ppar_cyl,dppar_cyl,pperp_cyl,dpperp_cyl] = s2c_dke_yp(log(XXfinit(:,:,i_test)),pn,mhu,dp_cyl);
 				[logXf0_cyl,ppar_cyl,dppar_cyl,pperp_cyl,dpperp_cyl] = s2c_dke_yp(log(XXf0(:,:,i_test) + XXf0_tp(:,:,i_test) + XXf0_g(:,:,i_test)),pn,mhu,dp_cyl);
+				[logXf_hxr_cyl,ppar_cyl,dppar_cyl,pperp_cyl,dpperp_cyl] = s2c_dke_yp(log(Xf0_hxr),pn,mhu_hxr,dp_cyl);
+%
 				Xppar_cyl = ones(length(pperp_cyl),1)*ppar_cyl(:)';
 				Xpperp_cyl = pperp_cyl(:)*ones(1,length(ppar_cyl));
 				Xp_cyl = sqrt(Xppar_cyl.*Xppar_cyl + Xpperp_cyl.*Xpperp_cyl);
@@ -128,13 +135,27 @@ for i = 1:size(psin_hxr,1),%radial position
 				Xf0_cyl = Xf0_cyl.*(Xf0_cyl>0);%Remove negative values
 				Xf0_cyl = Xf0_cyl.*(Xp_cyl<max(ppar_cyl));%Remove values above max(ppar)
 				Xf0_cyl(isnan(Xf0_cyl)) = 0;%Remove NaN values
+				Xfinit_cyl = exp(logXfinit_cyl);%For accurate representation in figures 
+				Xfinit_cyl = Xfinit_cyl.*(Xfinit_cyl>0);%Remove negative values
+				Xfinit_cyl = Xfinit_cyl.*(Xp_cyl<max(ppar_cyl));%Remove values above max(ppar)
+				Xfinit_cyl(isnan(Xfinit_cyl)) = 0;%Remove NaN values
+				Xf_hxr_cyl = exp(logXf_hxr_cyl);%For accurate representation in figures 
+				Xf_hxr_cyl = Xf_hxr_cyl.*(Xf_hxr_cyl>0);%Remove negative values
+				Xf_hxr_cyl = Xf_hxr_cyl.*(Xp_cyl<max(ppar_cyl));%Remove values above max(ppar)
+				Xf_hxr_cyl(isnan(Xf_hxr_cyl)) = 0;%Remove NaN values
+
 				Xppar_cyl = ones(length(pperp_cyl),1)*ppar_cyl(:)';
 				Xpperp_cyl = pperp_cyl(:)*ones(1,length(ppar_cyl));
 %
-				figure,C = contour(ppar_cyl,pperp_cyl,log(Xf0_cyl),[-20:20/nlevel:0]);axis('equal');
+				xlim1 = [-pnmax_S,pnmax_S];xlim2 = [0,pnmax_S];
+				siz = 20;red = 0.95;
+%
+				figure(10004)				
+				graph2D_jd(ppar_cyl,pperp_cyl,Xfinit_cyl','','','',xlim1,xlim2,0,betath_ref,[0:0.5:pnmax_S],0,'-','b',0.5,siz,red,max(max(Xf0_cyl)));
+				graph2D_jd(ppar_cyl,pperp_cyl,Xf0_cyl','p_{||}/p_{Te}^{ref}','p_{\perp}/p_{Te}^{ref}','Distribution function',xlim1,xlim2,0,betath_ref,[0:0.5:pnmax_S],0,'-','r',2,siz,red,max(max(Xfinit_cyl)));
+				axis('equal');
 				faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
-				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['rho = ',num2str(rho_out),', theta = 0']);
-				xlabel('ppar/pth-ref');ylabel('pperp/pth-ref');title('');
+				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['{\rho} = ',num2str(rho_out),', {\theta}_{pol} = 0']);
 %
 				if bounce_mode >= 1,%Draw bounce domain boundaries
 				    mhubounce2_0 = 1 - 1/max(PSI_hxr(i_test,:));
@@ -142,16 +163,12 @@ for i = 1:size(psin_hxr,1),%radial position
 					 line([0,-pnmax_S*sqrt(mhubounce2_0)],[0,pnmax_S*sqrt(1 - mhubounce2_0)],'color','k');
 			   end				
 %
-				[logXf_hxr_cyl,ppar_cyl,dppar_cyl,pperp_cyl,dpperp_cyl] = s2c_dke_yp(log(Xf0_hxr),pn,mhu_hxr,dp_cyl);
-				Xf_hxr_cyl = exp(logXf_hxr_cyl);%For accurate representation in figures 
-				Xf_hxr_cyl = Xf_hxr_cyl.*(Xf_hxr_cyl>0);%Remove negative values
-				Xf_hxr_cyl = Xf_hxr_cyl.*(Xp_cyl<max(ppar_cyl));%Remove values above max(ppar)
-				Xf_hxr_cyl(isnan(Xf_hxr_cyl)) = 0;%Remove NaN values
-%
-				figure,C = contour(ppar_cyl,pperp_cyl,log(Xf_hxr_cyl),[-20:20/nlevel:0]);axis('equal');
+				figure(10005),
+				graph2D_jd(ppar_cyl,pperp_cyl,Xfinit_cyl','','','',xlim1,xlim2,0,betath_ref,[0:0.5:pnmax_S],0,'-','b',0.5,siz,red,max(max(Xf_hxr_cyl)));
+				graph2D_jd(ppar_cyl,pperp_cyl,Xf_hxr_cyl','p_{||}/p_{Te}^{ref}','p_{\perp}/p_{Te}^{ref}','Distribution function',xlim1,xlim2,0,betath_ref,[0:0.5:pnmax_S],0,'-','r',2,siz,red,max(max(Xfinit_cyl)));
+				axis('equal');
 				faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
-				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['rho = ',num2str(rho_out),', theta = ',num2str(theta_out*180/pi),' (Deg)']);
-				xlabel('ppar/pth-ref');ylabel('pperp/pth-ref');title('');
+				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['{\rho} = ',num2str(rho_out),', {\theta}_{pol} = ',num2str(theta_out*180/pi),' (Deg)']);
 %
 				if bounce_mode >= 1,%Draw bounce domain boundaries
 				    mhubounce2 = 1 - PSI_hxr(i_test,j_test)/max(PSI_hxr(i_test,:));
@@ -174,16 +191,13 @@ for i = 1:size(psin_hxr,1),%radial position
 				brem_4pi = permute(reshape(squeeze(ZZIB(i,j,1,:))/2,1,size(IB_c1,2),size(IB_c1,3)),[2,3,1]);%Mean 4pi emission per steradian				
 %
 				if display_mode >= 1,
-					figure
-					plot(kphot,log10(brem_forward),'r+'),hold on
-					plot(kphot,log10(brem_backward),'b+')
-					plot(kphot,log10(brem_4pi),'g*')
-					plot(kphot,log10(brem_perp),'c+'),hold off
-					legend('Forward','Backward','Mean 4*pi','Perp')
+				   figure(10006),
+					graph1D_jd(kphot,brem_forward,0,1,'','','',NaN,'','','-','non','r',2);
+					graph1D_jd(kphot,brem_backward,0,1,'','','',NaN,'','','-','non','b',2);
+					graph1D_jd(kphot,brem_4pi,0,1,'','','',NaN,'','','-.','non','g',2);
+					graph1D_jd(kphot,brem_perp,0,1,'Photon energy (keV)','Photon density (s-1*m-3*keV-1*str-1)',['Bremsstrahlung emission at {\rho} = ',num2str(rho_out),' and {\theta}_{pol} = ',num2str(theta_out*180/pi),' (Deg)'],NaN,'','','-','non','k',2);
+					legend('Forward','Backward','Mean 4{\pi}','Perp.')
 					grid on
-					xlabel('Photon energy (keV)');
-					ylabel('log10(nphot) (s-1*m-3*keV-1*str-1)');
-					title(['Bremsstrahlung emission at Bmin and psin = ',num2str(rho_out),' and theta = ',num2str(theta_out*180/pi),' (Deg)']);
 				end
 			end
 		end
@@ -194,14 +208,11 @@ end
 %
 disp('-------------------------------------------------------------------------------------------------------------------');
 if display_mode >= 1,%Display the quality of the reconstruction of the electron distribution function
-	figure,
-	plot(xrho,xne_norm,'g'),hold on,
-	legend('Density profile')
-	plot(xrho,norm0_hxr,'r+'),
-	plot(xrho,normi_hxr,'bx'),
-	xlabel('Normalized radius');
-	ylabel('Distribution function normalization');
-	title('Normalization of the electron distribution function (+: initial,x: reconstructed)');
+	figure(10007),
+	graph1D_jd(xrho,xne_norm,0,0,'','','',NaN,'','','-','non','b',2);
+	graph1D_jd(xrho,norm0_hxr,0,0,'','','',NaN,'','','--','non','r',2);
+	graph1D_jd(xrho,normi_hxr,0,0,'Normalized radius {\rho}','Normalization (local density)','Normalization of the electron distribution function',NaN,'','','-.','non','g',2);
+	legend('Density','Norm f','Norm reconstructed f');
 	hold off
 end
 %

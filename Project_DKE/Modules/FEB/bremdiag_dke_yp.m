@@ -1,4 +1,4 @@
-function  [kphot,brem_bd_plasma,brem_bd_diag,tphot_plasma,afit_plasma,tphot_plasma_exp,afit_plasma_exp,meanabsx] = bremdiag_dke_yp(equil,hxr,kphot,brem_bd_in,display_mode,c_display)
+function  [kinterp,gkEinterp_out,kfit,dkfit,brem_bd_plasma,brem_bd_diag,tphot_plasma,afit_plasma,tphot_plasma_exp,afit_plasma_exp,meanabsx] = bremdiag_dke_yp(equil,hxr,kphot,brem_bd_in,display_mode,chord_display)
 %
 % Calculates the bremsstrahlung emission as merasured by the HXR diagnostic
 %taking inot account of the detector's response function. 
@@ -64,7 +64,14 @@ brem_bd_diag = zeros(size(brem_bd_plasma));
 %
 for ic = 1:size(brem_bd_interp,1),
 	if ic == 1,
-		gkEinterp = dresp_dke_yp(res(ic,:),phf(ic,:),kd(ic,:),ic,kinterp);
+		gkEinterp1 = dresp_dke_yp(res(ic,:),phf(ic,:),kd(ic,:),ic,kinterp);		
+		normgkEinterp1 = trapz(kinterp,gkEinterp1');%To enforce that the norm is unity
+		gkEinterp = (gkEinterp1'./(normgkEinterp1(:)*ones(1,length(kinterp)))')';
+%		trapz(kinterp,gkEinterp'),%test of the norm	
+		if ic == chord_display,
+		      gkEinterp_out = gkEinterp;%For display of the response function
+		end
+%
 		absxinterp = absx_dke_yp(kinterp,0,0,ef(ic),tf(ic,:),ea(ic),ta(ic,:),ec(ic),tc(ic,:),ed(ic),td(ic,:));%Air contribution is neglected (k > 10 keV only)
 		Tabsxinterp = repmat(absxinterp(:),[1,size(brem_bd_interp,2)]);
 	else
