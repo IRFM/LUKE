@@ -1,115 +1,114 @@
-
-General and specific properties of curvilinear coordinate systems are
-detailed in Appendix \ref{curvilinear}. In this work, vectors are written in
-bold characters, like $\mathbf{v}$, except unit vectors, which are covered
-with a hat, like $\widehat{v}$.
+General and specific properties of curvilinear coordinate systems
+are detailed in Appendix \ref{curvilinear}. In this work, vectors
+are written in bold characters, like $\mathbf{v}$, except unit
+vectors, which are covered with a hat, like $\widehat{v}$.
 
 \subsection{Momentum Space}
 
 Because we consider gyro-averaged kinetic equations, it is important to use
-coordinates with rotational symmetry in order to reduce the dimensionality
-of the problem. Two different momentum space coordinates system are
-considered here:
+coordinates with rotational symmetry in order to reduce the dimensionality of
+the problem. Two different momentum space coordinates system are considered here:
 
 \begin{itemize}
-\item  First, the cylindrical coordinate system $\left( p_{\Vert },p_{\bot
-},\varphi \right) $, where $p_{\Vert }$ is the component of the momentum
-along the magnetic field, and $p_{\bot }$ is the component perpendicular. $%
-\varphi $ is the gyroangle. This system is defined in (\ref{pparpperpdef})
-and shown on Fig. \ref{momentum}. The cylindrical coordinate system is the
-natural system for wave-particle interaction, or also the effect of the
-electric field.
+\item  First, the cylindrical coordinate system $\left(  p_{\Vert},p_{\bot
+},\varphi\right)  $, where $p_{\Vert}$ is the component of the momentum along
+the magnetic field, and $p_{\bot}$ is the component perpendicular. $\varphi$
+is the gyroangle. This system is defined in (\ref{pparpperpdef}) and shown on
+Fig. \ref{momentum}. The cylindrical coordinate system is the natural system
+for wave-particle interaction, or also the effect of the electric field.
 
 %\fig{momentum.eps}{Coordinates Systems $(p_{\Vert },p_{\bot },\varphi )$ and $(p,\xi ,\varphi )$.}{momentum}{10cm}
+%
 
-\item  Second, the spherical coordinate system $\left( p,\xi ,\varphi
-\right) $, where $p$ is the magnitude of the momentum, and $\xi $ is the
-cosine of the pitch-angle. This system is defined in (\ref{pxidef}) and
-shown on Fig. \ref{momentum} as well. The spherical coordinate system is the
-natural system for collisions. It is the primary system, used in the
-Fokker-Planck code, for an accurate description of collisions.
+\item  Second, the spherical coordinate system $\left(  p,\xi,\varphi\right)
+$, where $p$ is the magnitude of the momentum, and $\xi$ is the cosine of the
+pitch-angle. This system is defined in (\ref{pxidef}) and shown on Fig.
+\ref{momentum} as well. The spherical coordinate system is the natural system
+for collisions. It is the primary system, used in the Fokker-Planck code, for
+an accurate description of collisions.
 \end{itemize}
 
 \subsection{Configuration Space}
 
 The particular toroidal geometry of tokamaks requires to use specific
-coordinates, in order to make use of symmetry properties such as
-axisymmetry, and take into account the flux-surface geometry. Three
-different configuration space coordinates system are considered here:
+coordinates, in order to make use of symmetry properties such as axisymmetry,
+and take into account the flux-surface geometry. Three different configuration
+space coordinates system are considered here:
 
 \begin{itemize}
-\item  First, the toroidal coordinate system $\left( R,Z,\phi \right) $,
+\item  First, the toroidal coordinate system $\left(  R,Z,\phi\right)  $,
 where $R$ is the distance from the axis of the torus, and $Z$ the distance
 along this axis. This coordinates system and the corresponding local
-orthogonal basis vectors $\left( \widehat{R},\widehat{Z},\widehat{\phi }%
-\right) $ are defined in (\ref{RZphidef}) and shown on Fig. \ref{RZphi}.
-This coordinate system conserves the largest generality in the magnetic
-geometry.
+orthogonal basis vectors $\left(  \widehat{R},\widehat{Z},\widehat{\phi
+}\right)  $ are defined in (\ref{RZphidef}) and shown on Fig. \ref{RZphi}.
+This coordinate system conserves the largest generality in the magnetic geometry.
 
 \fig{figures/RZphi.eps}{Coordinates System $( R,Z,\phi)$.}{RZphi}{10cm}
 
-\item  Second, the poloidal (polar) coordinate system $\left( r,\theta ,\phi
-\right) $ assumes the existence of a toroidal axis at constant position $%
-\left( R_{0},Z_{0}\right) $, which is typically the magnetic axis,
-corresponding to the position of an extremum of $\psi $ (which can be
-arbitrarily chosen as $\psi =0$). This coordinates system and the
-corresponding local orthogonal basis vectors $\left( \widehat{r},\widehat{%
-\theta },\widehat{\phi }\right) $ are defined in (\ref{rthetadef}) and shown
-on Fig. \ref{rthetaphi}.
+\item  Second, the poloidal (polar) coordinate system $\left(  r,\theta
+,\phi\right)  $ assumes the existence of a toroidal axis at constant position
+$\left(  R_{p},Z_{p}\right)  $, which is typically the plasma magnetic axis,
+corresponding to the position of an extremum of $\psi$ (which can be
+arbitrarily chosen as $\psi=0$). This coordinates system and the corresponding
+local orthogonal basis vectors $\left(  \widehat{r},\widehat{\theta}%
+,\widehat{\phi}\right)  $ are defined in (\ref{rthetadef}) and shown on Fig.
+\ref{rthetaphi}.
 
 \fig{figures/rthetaphi.eps}{Coordinates System $( r,\theta
 ,\phi)$.}{rthetaphi}{10cm}
 
-\item  Third, the flux coordinate system $\left( \psi ,s,\phi \right) $ is
-the natural system when we describe particles which are confined to a given
-flux surface $\psi $. This coordinates system and the corresponding local
-orthogonal basis vectors $\left( \widehat{\psi },\widehat{s},\widehat{\phi }%
-\right) $ are defined in (\ref{psisdef}) and shown on Fig. \ref{psisphi}.
-The vector $\widehat{\psi }$ is perpendicular to the flux surface, while $%
-\widehat{s}$ is parallel to the surface, and included in the poloidal plane.
-The distance $s$ is the length along the poloidal magnetic field lines. We
-can choose its origin as being at the position of minimum $B$-field
-amplitude within a flux-surface. 
+\item  Third, the flux coordinate system $\left(  \psi,s,\phi\right)  $ is the
+natural system when we describe particles which are confined to a given flux
+surface $\psi$. This coordinates system and the corresponding local orthogonal
+basis vectors $\left(  \widehat{\psi},\widehat{s},\widehat{\phi}\right)  $ are
+defined in (\ref{psisdef}) and shown on Fig. \ref{psisphi}. The vector
+$\widehat{\psi}$ is perpendicular to the flux surface, while $\widehat{s}$ is
+parallel to the surface, and included in the poloidal plane. The distance $s$
+is the length along the poloidal magnetic field lines. We can choose its
+origin as being at the position of minimum $B$-field amplitude within a
+flux-surface.
 \begin{equation}
-B\left( \psi ,s\equiv 0\right) =\min \left\{ B\left( \psi ,s\right) \right\}
-=B_{\min }\left( \psi \right) 
+B\left(  \psi,s\equiv0\right)  =\min_{s}\left\{  B\left(  \psi,s\right)
+\right\}  =B_{0}\left(  \psi\right)
 \end{equation}
-The direction is counter-clockwise and the limits $s_{\min }\left( \psi
-\right) $ and $s_{\max }\left( \psi \right) $ are set at the position of
-maximum magnetic field
+
+Note that from now on, and all along this paper, the subscript $0$ refers to
+quantities evaluated at the position of minimum $B$-field on a given
+flux-surface. The direction of evolution of $s$ is counter-clockwise and the
+limits $s_{\min}\left(  \psi\right)  $ and $s_{\max}\left(  \psi\right)  $ are
+set at the position of maximum magnetic field%
 
 \begin{equation}
-B\left( \psi ,s\equiv s_{\min }\right) =B\left( \psi ,s\equiv s_{\max
-}\right) =\max \left\{ B\left( \psi ,s\right) \right\} =B_{\max }\left( \psi
-\right)   \label{bmax}
+B\left(  \psi,s\equiv s_{\min}\right)  =B\left(  \psi,s\equiv s_{\max}\right)
+=\max\left\{  B\left(  \psi,s\right)  \right\}  =B_{\max}\left(  \psi\right)
+\label{bmax}%
 \end{equation}
 
 \fig{figures/psisphi.eps}{Coordinates System $(\psi
 ,s,\phi)$.}{psisphi}{10cm}
 
-\item  The system $\left( \psi ,\theta ,\phi \right) $ is an alternative to
-the previous system, which is used to implement numerically the calculation
-of the bounce coefficients. One advantage is that the $\theta $ grid is now
-independent of $\psi $, which simplifies the numerical calculations. On the
-other hand, the contravariant vectors $\nabla \psi $ and $\nabla \theta $
-are not orthogonal, and therefore are not respectively colinear with the
-covariant vectors $\partial \mathbf{X}/\partial \psi $ and $\partial \mathbf{%
-X}/\partial \theta $. The properties of this curvilinear system are detailed
-in Appendix \ref{curvilinear}. We also define, for geometrical purposes, a
-flux-function $\rho \left( \psi \right) $ which coincides with the
-normalized radius on the horizontal LFS midplane. Indeed, in an axisymmetric
-system, using the functions $R\left( \psi ,\theta \right) $ and $Z\left(
-\psi ,\theta \right) $, we define $\rho \left( \psi \right) $ as 
+\item  The system $\left(  \psi,\theta,\phi\right)  $ is an alternative to the
+previous system, which is used to implement numerically the calculation of the
+bounce coefficients. One advantage is that the $\theta$ grid is now
+independent of $\psi$, which simplifies the numerical calculations. On the
+other hand, the contravariant vectors $\nabla\psi$ and $\nabla\theta$ are not
+orthogonal, and therefore are not respectively colinear with the covariant
+vectors $\partial\mathbf{X}/\partial\psi$ and $\partial\mathbf{X}%
+/\partial\theta$. The properties of this curvilinear system are detailed in
+Appendix \ref{curvilinear}. We also define, for geometrical purposes, a
+flux-function $\rho\left(  \psi\right)  $ which coincides with the normalized
+radius on the horizontal LFS midplane. Indeed, in an axisymmetric system,
+using the functions $R\left(  \psi,\theta\right)  $ and $Z\left(  \psi
+,\theta\right)  $, we define $\rho\left(  \psi\right)  $ as
 \begin{equation}
-\rho \left( \psi \right) =\frac{R\left( \psi ,0\right) -R_{0}}{R_{\max
-}-R_{0}}  \label{rhodef}
+\rho\left(  \psi\right)  =\frac{R\left(  \psi,0\right)  -R_{p}}{R_{\max}%
+-R_{p}}\label{rhodef}%
 \end{equation}
-with $0\leq \rho \leq 1$ by construction, and where $R_{\max }=R\left( \psi
-_{\max },0\right) $ is the value of $R$ on the separatrix as it crosses the
-midplane. Here $a_{p}=R_{\max }-R_{0}$ is defined arbitrarily as the plasma
+with $0\leq\rho\leq1$ by construction, and where $R_{\max}=R\left(  \psi
+_{\max},0\right)  $ is the value of $R$ on the separatrix as it crosses the
+midplane. Here $a_{p}=R_{\max}-R_{p}$ is defined arbitrarily as the plasma
 minor radius since this definition merges with the exact one for circular
-concentric flux-surfaces. The local orthogonal vectors are the same as (\ref
-{psih}-\ref{phih}). The 2-D outputs from the axisymmetric equilibrium code
-HELENA\ are given on the $\left( \psi ,\theta \right) $ grid. The system $%
-\left( \psi ,\theta ,\phi \right) $ will be used from now on.
+concentric flux-surfaces. The 2-D outputs from the axisymmetric equilibrium
+code HELENA\ are given on the $\left(  \psi,\theta\right)  $ grid. The system
+$\left(  \psi,\theta,\phi\right)  $ will be used from now on.
 \end{itemize}
