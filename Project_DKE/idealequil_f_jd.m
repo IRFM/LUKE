@@ -1,4 +1,4 @@
-function idealequil_f_jd(tokamak,npsi,ntheta,qopt,shift,kappa,delta,savename)
+function idealequil_f_jd(tokamak,qopt,npsi,ntheta,shift,kappa,delta,savename)
 %
 %   This function generates the data file of an ideal equilibrium based on
 %   the information stored in ptok_dke_1yp.
@@ -6,6 +6,7 @@ function idealequil_f_jd(tokamak,npsi,ntheta,qopt,shift,kappa,delta,savename)
 %   INPUTS:
 %
 %       - tokamak: tokamak scenario selected (in ptok_dke_1yp)
+%       - qopt: option for q profile. (0): constant (default), (1): from qmin and eq
 %       - npsi: size of the psi grid (default: 101)
 %       - ntheta: size of the theta grid (default: 101)
 %       - shift: Shafranov shift [1,npsi] (default: zeros(1,npsi))
@@ -13,7 +14,6 @@ function idealequil_f_jd(tokamak,npsi,ntheta,qopt,shift,kappa,delta,savename)
 %       - delta: triangularity (default: 0)
 %       - savename: file name for storing the equilibrium 
 %           (default: same as tokamak)
-%       - qopt: option for q profile. (0): constant (default), (1): from qmin and eq
 %
 %   NOTE: 
 %
@@ -31,29 +31,29 @@ function idealequil_f_jd(tokamak,npsi,ntheta,qopt,shift,kappa,delta,savename)
 %   By J. Decker <jodecker@alum.mit.edu> and Y. Peysson <yves.peysson@cea.fr>
 %   Created Feb. 17, 2004
 %
-if nargin < 8
-	savename = tokamak;
+if nargin < 1
+	error('Tokamak not specified');
 end
-if nargin < 7
-	delta = 0;
+if nargin < 2
+	qopt = 0;
 end
-if nargin < 6
-	kappa = 1;
+if nargin < 3
+	npsi = 201;
+end
+if nargin < 4
+	ntheta = 201;
 end
 if nargin < 5
 	shift = zeros(1,npsi);
 end
-if nargin < 4
-	qopt = 0;
+if nargin < 6
+	kappa = 1;
 end
-if nargin < 3
-	ntheta = 201;
+if nargin < 7
+	delta = 0;
 end
-if nargin < 2
-	npsi = 201;
-end
-if nargin < 1
-	error('Tokamak not specified');
+if nargin < 8
+	savename = tokamak;
 end
 %
 [ap,Rp,Ip,Bt,Ncoils,Zi,mi,fi,BeLi,...
