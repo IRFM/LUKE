@@ -1,27 +1,27 @@
 The quasilinear diffusion operator for radiofrequency was developped by
 Kennel and Engelmann. The relativistic treatment was performed by Lerche,
-who proposes the following operator
+who proposes the following operator 
 \begin{eqnarray}
-Q\left( f\right)  &=&-\frac{e^{2}}{\left( 2\pi \right) ^{3}}%
+Q\left( f\right) &=&-\frac{e^{2}}{\left( 2\pi \right) ^{3}}%
 \lim_{V\rightarrow \infty }\frac{1}{V}\sum_{n=-\infty }^{\infty }\iiint
 d^{3}k\left[ \left( P_{\Vert }^{*}E_{\mathbf{k},\Vert }^{*}J_{n}+\left[
 P_{\bot }^{*}-\frac{1}{p_{\bot }}\left( \frac{k_{\Vert }v_{\Vert }}{\omega
-^{*}}-1\right) \right] E_{\mathbf{k},\bot }^{*}\right) \right. 
+^{*}}-1\right) \right] E_{\mathbf{k},\bot }^{*}\right) \right.
 \label{qloporig} \\
 &&\left. \cdot \frac{i}{\left[ n\Omega +k_{\Vert }v_{\Vert }-\omega \right] }%
 \left( E_{\mathbf{k},\Vert }J_{n}P_{\Vert }+E_{\mathbf{k},\bot }P_{\bot
-}\right) f\right]   \nonumber
+}\right) f\right]  \nonumber
 \end{eqnarray}
 with 
 \begin{eqnarray}
 P_{\Vert } &=&\frac{\partial }{\partial p_{\Vert }}-\frac{n\Omega }{\omega
 v_{\bot }}\left( v_{\bot }\frac{\partial }{\partial p_{\Vert }}-v_{\Vert }%
-\frac{\partial }{\partial p_{\bot }}\right)   \label{ppar} \\
+\frac{\partial }{\partial p_{\bot }}\right)  \label{ppar} \\
 P_{\bot } &=&\frac{\partial }{\partial p_{\bot }}+\frac{k_{\Vert }}{\omega }%
 \left( v_{\bot }\frac{\partial }{\partial p_{\Vert }}-v_{\Vert }\frac{%
-\partial }{\partial p_{\bot }}\right)   \label{pperp} \\
+\partial }{\partial p_{\bot }}\right)  \label{pperp} \\
 E_{\mathbf{k},\bot } &=&\frac{1}{\sqrt{2}}\left( E_{\mathbf{k},-}e^{i\alpha
-}J_{n+1}+E_{\mathbf{k},+}e^{-i\alpha }J_{n-1}\right)   \label{eperp}
+}J_{n+1}+E_{\mathbf{k},+}e^{-i\alpha }J_{n-1}\right)  \label{eperp}
 \end{eqnarray}
 
 The electric field is decomposed into its Fourier components 
@@ -52,7 +52,7 @@ The relativistic cyclotron frequency is
 
 In order to incorporate the RF wave physics in the Fokker-Planck or Drift
 Kinetic solvers, the operator (\ref{qloporig}) must be cast in a
-conservative form. 
+conservative form.
 
 \subsubsection{Spherical coordinates representation}
 
@@ -70,11 +70,11 @@ given by
 Since 
 \begin{eqnarray}
 p &=&\sqrt{p_{\Vert }^{2}+p_{\bot }^{2}} \\
-\xi  &=&\frac{p_{\Vert }}{\sqrt{p_{\Vert }^{2}+p_{\bot }^{2}}}
+\xi &=&\frac{p_{\Vert }}{\sqrt{p_{\Vert }^{2}+p_{\bot }^{2}}}
 \end{eqnarray}
-one obtains
+one obtains 
 \begin{eqnarray}
-\frac{\partial p}{\partial p_{\Vert }} &=&\xi  \\
+\frac{\partial p}{\partial p_{\Vert }} &=&\xi \\
 \frac{\partial p}{\partial p_{\bot }} &=&\sqrt{1-\xi ^{2}} \\
 \frac{\partial \xi }{\partial p_{\Vert }} &=&\frac{1-\xi ^{2}}{p} \\
 \frac{\partial \xi }{\partial p_{\bot }} &=&-\frac{\xi \sqrt{1-\xi ^{2}}}{p}
@@ -92,12 +92,12 @@ P_{\bot } &=&\sqrt{1-\xi ^{2}}\frac{\partial }{\partial p}-\frac{\sqrt{1-\xi
 \end{eqnarray}
 
 In order to permute derivatives and the integral in expression (\ref
-{qloporig}) and obtain a conservative formulation, one must express both $%
+{qloporig}) and obtain a conservative formulation, one must express both $
 P_{\Vert }$ and $P_{\bot }$ in terms of the derivatives $\frac{1}{p^{2}}%
 \frac{\partial }{\partial p}p^{2}$ and $-\frac{1}{p}\frac{\partial }{%
-\partial \xi }.$ Since
+\partial \xi }.$ Since 
 \begin{eqnarray}
-\xi \frac{\partial }{\partial p} &=&\frac{1}{p^{2}}\frac{\partial }{\partial %
+\xi \frac{\partial }{\partial p} &=&\frac{1}{p^{2}}\frac{\partial }{\partial
 p}p^{2}\xi -\frac{2\xi }{p} \\
 \sqrt{1-\xi ^{2}}\frac{\partial }{\partial p} &=&\frac{1}{p^{2}}\frac{%
 \partial }{\partial p}p^{2}\sqrt{1-\xi ^{2}}-\frac{2\sqrt{1-\xi ^{2}}}{p}
@@ -110,7 +110,7 @@ and
 -\frac{\sqrt{1-\xi ^{2}}}{p\xi }\left( \xi ^{2}-\frac{k_{\Vert }v_{\Vert }}{%
 \omega }\right) \frac{\partial }{\partial \xi } &=&-\frac{1}{p}\frac{%
 \partial }{\partial \xi }\frac{\sqrt{1-\xi ^{2}}}{\xi }\left( \xi ^{2}-\frac{%
-k_{\Vert }v_{\Vert }}{\omega }\right)   \nonumber \\
+k_{\Vert }v_{\Vert }}{\omega }\right)  \nonumber \\
 &&+\frac{1}{p_{\bot }}\left( \frac{k_{\Vert }v_{\Vert }}{\omega }-1\right) +%
 \frac{2\sqrt{1-\xi ^{2}}}{p}
 \end{eqnarray}
@@ -118,38 +118,38 @@ the operators in (\ref{qloporig}) can be expressed in a divergence form
 \begin{eqnarray}
 P_{\Vert } &=&\frac{1}{p^{2}}\frac{\partial }{\partial p}p^{2}\xi -\frac{1}{p%
 }\frac{\partial }{\partial \xi }\left( -1+\xi ^{2}+\frac{n\Omega }{\omega }%
-\right)  \\
+\right) \\
 P_{\bot }-\frac{1}{p_{\bot }}\left( \frac{k_{\Vert }v_{\Vert }}{\omega }%
--1\right)  &=&\frac{1}{p^{2}}\frac{\partial }{\partial p}p^{2}\sqrt{1-\xi
-^{2}}-\frac{1}{p}\frac{\partial }{\partial \xi }\frac{\sqrt{1-\xi ^{2}}}{\xi 
-}\left( \xi ^{2}-\frac{k_{\Vert }v_{\Vert }}{\omega }\right) 
+-1\right) &=&\frac{1}{p^{2}}\frac{\partial }{\partial p}p^{2}\sqrt{1-\xi ^{2}%
+}-\frac{1}{p}\frac{\partial }{\partial \xi }\frac{\sqrt{1-\xi ^{2}}}{\xi }%
+\left( \xi ^{2}-\frac{k_{\Vert }v_{\Vert }}{\omega }\right)
 \end{eqnarray}
 so that (\ref{qloporig}) can be rewritten as 
 \begin{equation}
 Q\left( f\right) =-\nabla \cdot S^{\text{RF}}=-\frac{1}{p^{2}}\frac{\partial 
 }{\partial p}\left( p^{2}S_{p}^{\text{RF}}\right) +\frac{1}{p}\frac{\partial 
-}{\partial \xi }\left( \sqrt{1-\xi ^{2}}S_{\xi }^{\text{RF}}\right) 
+}{\partial \xi }\left( \sqrt{1-\xi ^{2}}S_{\xi }^{\text{RF}}\right)
 \end{equation}
 with 
 \begin{eqnarray}
-S_{p}^{\text{RF}} &=&\lim_{V\rightarrow \infty }\frac{e^{2}}{\left( 2\pi %
+S_{p}^{\text{RF}} &=&\lim_{V\rightarrow \infty }\frac{e^{2}}{\left( 2\pi
 \right) ^{3}}\frac{1}{V}\sum_{n=-\infty }^{\infty }\iiint d^{3}k\left[
 \left( \xi E_{\mathbf{k},\Vert }^{*}J_{n}+\sqrt{1-\xi ^{2}}E_{\mathbf{k}%
-,\bot }^{*}\right) \right.   \nonumber \\
+,\bot }^{*}\right) \right.  \nonumber \\
 &&\left. \cdot \frac{i}{\left[ n\Omega +k_{\Vert }v_{\Vert }-\omega \right] }%
 \left( E_{\mathbf{k},\Vert }J_{n}P_{\Vert }+E_{\mathbf{k},\bot }P_{\bot
-}\right) f\right]   \label{fluxRFp}
+}\right) f\right]  \label{fluxRFp}
 \end{eqnarray}
 \begin{eqnarray}
-S_{\xi }^{\text{RF}} &=&\lim_{V\rightarrow \infty }\frac{e^{2}}{\left( 2\pi %
+S_{\xi }^{\text{RF}} &=&\lim_{V\rightarrow \infty }\frac{e^{2}}{\left( 2\pi
 \right) ^{3}}\frac{1}{V}\sum_{n=-\infty }^{\infty }\iiint d^{3}k\left[
 \left( \frac{-1}{\sqrt{1-\xi ^{2}}}\left( 1-\xi ^{2}-\frac{n\Omega }{\omega
 ^{*}}\right) E_{\mathbf{k},\Vert }^{*}J_{n}+\frac{1}{\xi }\left( \xi ^{2}-%
 \frac{k_{\Vert }v_{\Vert }}{\omega ^{*}}\right) E_{\mathbf{k},\bot
-}^{*}\right) \right.   \nonumber \\
+}^{*}\right) \right.  \nonumber \\
 &&\left. \cdot \frac{i}{\left[ n\Omega +k_{\Vert }v_{\Vert }-\omega \right] }%
 \left( E_{\mathbf{k},\Vert }J_{n}P_{\Vert }+E_{\mathbf{k},\bot }P_{\bot
-}\right) f\right]   \label{fluxRFksi}
+}\right) f\right]  \label{fluxRFksi}
 \end{eqnarray}
 
 Considering the above expressions of the fluxes and the operators (\ref
@@ -158,20 +158,20 @@ and therefore
 \begin{equation}
 \mathbf{S}^{\text{RF}}=-\Bbb{D}^{\text{RF}}\cdot \nabla _{p}f
 \end{equation}
-with
+with 
 \begin{equation}
 \Bbb{D}^{\text{RF}}=\left( 
 \begin{array}{ll}
 D_{pp}^{\text{RF}} & D_{p\xi }^{\text{RF}} \\ 
 D_{\xi p}^{\text{RF}} & D_{\xi \xi }^{\text{RF}}
 \end{array}
-\right) 
+\right)
 \end{equation}
 
 Hence, using the expression of the gradient in spherical coordinates, 
 \begin{eqnarray}
 S_{p}^{\text{RF}} &=&-D_{pp}^{\text{RF}}\frac{\partial f}{\partial p}%
-+D_{p\xi }^{\text{RF}}\frac{\sqrt{1-\xi ^{2}}}{p}\frac{\partial f}{\partial %
++D_{p\xi }^{\text{RF}}\frac{\sqrt{1-\xi ^{2}}}{p}\frac{\partial f}{\partial
 \xi } \\
 S_{\xi }^{\text{RF}} &=&-D_{\xi p}^{\text{RF}}\frac{\partial f}{\partial p}%
 +D_{\xi \xi }^{\text{RF}}\frac{\sqrt{1-\xi ^{2}}}{p}\frac{\partial f}{%
@@ -179,70 +179,70 @@ S_{\xi }^{\text{RF}} &=&-D_{\xi p}^{\text{RF}}\frac{\partial f}{\partial p}%
 \end{eqnarray}
 with 
 \begin{eqnarray}
-D_{pp}^{\text{RF}} &=&-\lim_{V\rightarrow \infty }\frac{e^{2}}{\left( 2\pi %
+D_{pp}^{\text{RF}} &=&-\lim_{V\rightarrow \infty }\frac{e^{2}}{\left( 2\pi
 \right) ^{3}}\frac{1}{V}\sum_{n=-\infty }^{\infty }\iiint d^{3}k\left[
 \left( \xi E_{\mathbf{k},\Vert }^{*}J_{n}+\sqrt{1-\xi ^{2}}E_{\mathbf{k}%
-,\bot }^{*}\right) \right.  \\
+,\bot }^{*}\right) \right. \\
 &&\left. \cdot \frac{i}{\left[ n\Omega +k_{\Vert }v_{\Vert }-\omega \right] }%
 \left( \xi E_{\mathbf{k},\Vert }J_{n}+\sqrt{1-\xi ^{2}}E_{\mathbf{k},\bot
-}\right) \right]   \nonumber \\
-D_{p\xi }^{\text{RF}} &=&\lim_{V\rightarrow \infty }\frac{e^{2}}{\left( 2\pi %
+}\right) \right]  \nonumber \\
+D_{p\xi }^{\text{RF}} &=&\lim_{V\rightarrow \infty }\frac{e^{2}}{\left( 2\pi
 \right) ^{3}}\frac{1}{V}\sum_{n=-\infty }^{\infty }\iiint d^{3}k\left[
 \left( \xi E_{\mathbf{k},\Vert }^{*}J_{n}+\sqrt{1-\xi ^{2}}E_{\mathbf{k}%
-,\bot }^{*}\right) \right.  \\
+,\bot }^{*}\right) \right. \\
 &&\left. \cdot \frac{i}{\left[ n\Omega +k_{\Vert }v_{\Vert }-\omega \right] }%
 \left( \frac{1}{\sqrt{1-\xi ^{2}}}\left( 1-\xi ^{2}-\frac{n\Omega }{\omega }%
 \right) E_{\mathbf{k},\Vert }J_{n}-\frac{1}{\xi }\left( \xi ^{2}-\frac{%
-k_{\Vert }v_{\Vert }}{\omega }\right) E_{\mathbf{k},\bot }\right) \right]  
+k_{\Vert }v_{\Vert }}{\omega }\right) E_{\mathbf{k},\bot }\right) \right] 
 \nonumber \\
-D_{\xi p}^{\text{RF}} &=&-\lim_{V\rightarrow \infty }\frac{e^{2}}{\left( 2%
-\pi \right) ^{3}}\frac{1}{V}\sum_{n=-\infty }^{\infty }\iiint d^{3}k\left[
+D_{\xi p}^{\text{RF}} &=&-\lim_{V\rightarrow \infty }\frac{e^{2}}{\left(
+2\pi \right) ^{3}}\frac{1}{V}\sum_{n=-\infty }^{\infty }\iiint d^{3}k\left[
 \left( \frac{-1}{\sqrt{1-\xi ^{2}}}\left( 1-\xi ^{2}-\frac{n\Omega }{\omega
 ^{*}}\right) E_{\mathbf{k},\Vert }^{*}J_{n}+\frac{1}{\xi }\left( \xi ^{2}-%
 \frac{k_{\Vert }v_{\Vert }}{\omega ^{*}}\right) E_{\mathbf{k},\bot
-}^{*}\right) \right.  \\
+}^{*}\right) \right. \\
 &&\left. \cdot \frac{i}{\left[ n\Omega +k_{\Vert }v_{\Vert }-\omega \right] }%
 \left( E_{\mathbf{k},\Vert }J_{n}\xi +E_{\mathbf{k},\bot }\sqrt{1-\xi ^{2}}%
-\right) \right]   \nonumber \\
-D_{\xi \xi }^{\text{RF}} &=&\lim_{V\rightarrow \infty }\frac{e^{2}}{\left( 2%
-\pi \right) ^{3}}\frac{1}{V}\sum_{n=-\infty }^{\infty }\iiint d^{3}k\left[
+\right) \right]  \nonumber \\
+D_{\xi \xi }^{\text{RF}} &=&\lim_{V\rightarrow \infty }\frac{e^{2}}{\left(
+2\pi \right) ^{3}}\frac{1}{V}\sum_{n=-\infty }^{\infty }\iiint d^{3}k\left[
 \left( \frac{-1}{\sqrt{1-\xi ^{2}}}\left( 1-\xi ^{2}-\frac{n\Omega }{\omega
 ^{*}}\right) E_{\mathbf{k},\Vert }^{*}J_{n}+\frac{1}{\xi }\left( \xi ^{2}-%
 \frac{k_{\Vert }v_{\Vert }}{\omega ^{*}}\right) E_{\mathbf{k},\bot
-}^{*}\right) \right.  \\
+}^{*}\right) \right. \\
 &&\left. \cdot \frac{i}{\left[ n\Omega +k_{\Vert }v_{\Vert }-\omega \right] }%
 \left( \frac{1}{\sqrt{1-\xi ^{2}}}\left( 1-\xi ^{2}-\frac{n\Omega }{\omega }%
 \right) E_{\mathbf{k},\Vert }J_{n}-\frac{1}{\xi }\left( \xi ^{2}-\frac{%
-k_{\Vert }v_{\Vert }}{\omega }\right) E_{\mathbf{k},\bot }\right) \right]  
+k_{\Vert }v_{\Vert }}{\omega }\right) E_{\mathbf{k},\bot }\right) \right] 
 \nonumber
 \end{eqnarray}
 
-\bigskip In the limit of a resonant diffusion,
+\bigskip In the limit of a resonant diffusion, 
 \begin{equation}
-\frac{1}{\left[ n\Omega +k_{\Vert }v_{\Vert }-\omega \right] }\rightarrow i%
-\pi \delta \left( \omega -k_{\Vert }v_{\Vert }-n\Omega \right) 
+\frac{1}{\left[ n\Omega +k_{\Vert }v_{\Vert }-\omega \right] }\rightarrow
+i\pi \delta \left( \omega -k_{\Vert }v_{\Vert }-n\Omega \right)
 \end{equation}
 and with the resonance condition 
 \begin{equation}
-k_{\Vert }v_{\Vert }=\omega -n\Omega 
+k_{\Vert }v_{\Vert }=\omega -n\Omega
 \end{equation}
-RF diffusion coefficients may be expressed in a simple form
+RF diffusion coefficients may be expressed in a simple form 
 \begin{eqnarray}
 D_{pp}^{\text{RF}} &=&\sum_{n=-\infty }^{\infty }\left( 1-\xi ^{2}\right)
-D_{n}^{\text{RF}}\left( p,\xi \right)  \\
+D_{n}^{\text{RF}}\left( p,\xi \right) \\
 D_{p\xi }^{\text{RF}} &=&\sum_{n=-\infty }^{\infty }-\frac{\sqrt{1-\xi ^{2}}%
 }{\xi }\left( 1-\xi ^{2}-\frac{n\Omega }{\omega }\right) D_{n}^{\text{RF}%
-}\left( p,\xi \right)  \\
+}\left( p,\xi \right) \\
 D_{\xi p}^{\text{RF}} &=&\sum_{n=-\infty }^{\infty }-\frac{\sqrt{1-\xi ^{2}}%
 }{\xi }\left( 1-\xi ^{2}-\frac{n\Omega }{\omega }\right) D_{n}^{\text{RF}%
-}\left( p,\xi \right)  \\
+}\left( p,\xi \right) \\
 D_{\xi \xi }^{\text{RF}} &=&\sum_{n=-\infty }^{\infty }\frac{1}{\xi ^{2}}%
 \left( 1-\xi ^{2}-\frac{n\Omega }{\omega }\right) ^{2}D_{n}^{\text{RF}%
-}\left( p,\xi \right) 
+}\left( p,\xi \right)
 \end{eqnarray}
 with 
 \begin{equation}
-D_{n}^{\text{RF}}\left( p,\xi \right) =\lim_{V\rightarrow \infty }\frac{\pi %
+D_{n}^{\text{RF}}\left( p,\xi \right) =\lim_{V\rightarrow \infty }\frac{\pi
 e^{2}}{V}\iiint \frac{d^{3}k}{\left( 2\pi \right) ^{3}}\delta \left( \omega
 -k_{\Vert }v_{\Vert }-n\Omega \right) \left| E_{\mathbf{k},\bot }+\frac{\xi 
 }{\sqrt{1-\xi ^{2}}}E_{\mathbf{k},\Vert }J_{n}\right| ^{2}  \label{dnrf}
@@ -273,15 +273,15 @@ D_{pp}^{\text{RF}} &=&\sum_{n=-\infty }^{+\infty }\sum_{b}(1-\xi
 ^{2})D_{b,n}^{\text{RF}}(p,\xi )  \label{dtensor} \\
 D_{p\xi }^{\text{RF}} &=&\sum_{n=-\infty }^{+\infty }\sum_{b}-\frac{\sqrt{%
 1-\xi ^{2}}}{\xi }\left[ 1-\xi ^{2}-\frac{n\Omega }{\omega _{b}}\right]
-D_{b,n}^{\text{RF}}(p,\xi )  \nonumber \\
+D_{b,n}^{\text{RF}}(p,\xi ) \\
 D_{\xi p}^{\text{RF}} &=&\sum_{n=-\infty }^{+\infty }\sum_{b}-\frac{\sqrt{%
 1-\xi ^{2}}}{\xi }\left[ 1-\xi ^{2}-\frac{n\Omega }{\omega _{b}}\right]
-D_{b,n}^{\text{RF}}(p,\xi )  \nonumber \\
+D_{b,n}^{\text{RF}}(p,\xi ) \\
 D_{\xi \xi }^{\text{RF}} &=&\sum_{n=-\infty }^{+\infty }\sum_{b}\frac{1}{\xi
 ^{2}}\left[ 1-\xi ^{2}-\frac{n\Omega }{\omega _{b}}\right] ^{2}D_{b,n}^{%
-\text{RF}}(p,\xi )  \nonumber
+\text{RF}}(p,\xi )
 \end{eqnarray}
-where
+where 
 \begin{equation}
 D_{n,b}^{\text{RF}}(p,\xi )=\lim_{V\rightarrow \infty }\frac{\pi }{V}\int 
 \frac{d^{3}k}{(2\pi )^{3}}D_{\mathbf{k}}^{b,(n)}\delta (\omega _{b}-k_{\Vert
@@ -310,12 +310,12 @@ system, in order to get a more physical insight of the wave-particle
 interaction. Starting from the general expression of the flux divergence in
 cylindrical coordinates, 
 \begin{equation}
-\nabla _{p}\cdot \mathbf{S}=\frac{1}{p_{\bot }}\frac{\partial }{\partial %
-p_{\bot }}\left( p_{\bot }S_{\bot }\right) +\frac{\partial }{\partial %
-p_{\Vert }}\left( S_{\Vert }\right)   \label{divcyl}
+\nabla _{p}\cdot \mathbf{S}=\frac{1}{p_{\bot }}\frac{\partial }{\partial
+p_{\bot }}\left( p_{\bot }S_{\bot }\right) +\frac{\partial }{\partial
+p_{\Vert }}\left( S_{\Vert }\right)  \label{divcyl}
 \end{equation}
 and taking into account of the diffusive nature of the wave-particle
-interaction,
+interaction, 
 \begin{equation}
 \mathbf{S}^{\text{RF}}=-\Bbb{D}^{\text{RF}}\cdot \nabla f=-\left( 
 \begin{array}{cc}
@@ -327,7 +327,7 @@ D_{\Vert \bot } & D_{\Vert \Vert }
 \partial f/\partial p_{\bot } \\ 
 \partial f/\partial p_{\Vert }
 \end{array}
-\right) 
+\right)
 \end{equation}
 where the cylindrical tensor elements are related to the spherical ones by 
 \begin{equation}
@@ -340,14 +340,14 @@ D_{\Vert \Vert }
 \end{array}
 \right) =\left( 
 \begin{array}{cccc}
-\left( 1-\xi ^{2}\right)  & \xi \sqrt{1-\xi ^{2}} & \xi \sqrt{1-\xi ^{2}} & 
+\left( 1-\xi ^{2}\right) & \xi \sqrt{1-\xi ^{2}} & \xi \sqrt{1-\xi ^{2}} & 
 \xi ^{2} \\ 
-\xi \sqrt{1-\xi ^{2}} & -\left( 1-\xi ^{2}\right)  & \xi ^{2} & -\xi \sqrt{%
+\xi \sqrt{1-\xi ^{2}} & -\left( 1-\xi ^{2}\right) & \xi ^{2} & -\xi \sqrt{%
 1-\xi ^{2}} \\ 
-\xi \sqrt{1-\xi ^{2}} & \xi ^{2} & -\left( 1-\xi ^{2}\right)  & -\xi \sqrt{%
+\xi \sqrt{1-\xi ^{2}} & \xi ^{2} & -\left( 1-\xi ^{2}\right) & -\xi \sqrt{%
 1-\xi ^{2}} \\ 
 \xi ^{2} & -\xi \sqrt{1-\xi ^{2}} & -\xi \sqrt{1-\xi ^{2}} & \left( 1-\xi
-^{2}\right) 
+^{2}\right)
 \end{array}
 \right) \cdot \left( 
 \begin{array}{c}
@@ -356,7 +356,7 @@ D_{p\xi } \\
 D_{\xi p} \\ 
 D_{\xi \xi }
 \end{array}
-\right) 
+\right)
 \end{equation}
 
 Applying this transformation, one obtains, 
@@ -376,7 +376,7 @@ D_{\Vert \Vert }^{\text{RF}} &=&\sum_{n=-\infty }^{+\infty }\sum_{b}\frac{%
 \end{eqnarray}
 
 For $n=0$ (which corresponds to the Lower Hybrid wave) the quasilinear
-diffusion is strictly along the parallel  direction (i.e. magnetic field
+diffusion is strictly along the parallel direction (i.e. magnetic field
 line). Also, at a cyclotron harmonic, where $\omega _{b}=n\Omega $, the
-diffusion is only perpendicular, when  relativistic corrections are not
+diffusion is only perpendicular, when relativistic corrections are not
 considered.
