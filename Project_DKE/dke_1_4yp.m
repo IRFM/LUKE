@@ -1116,6 +1116,8 @@ else
 	XXDmm_rf_ijm = zeros(npn,nmhu,nr);
 %
 	XXDrf_ij = zeros(npn,nmhu,nr);
+	XXDrf_tp_ij = zeros(npn,nmhu,nr);
+	XXFrf_tp_ij = zeros(npn,nmhu,nr);
 %
    if dke_mode == 1
     	XXDpp_rf_tp_ippj = zeros(npn,nmhu,nr);
