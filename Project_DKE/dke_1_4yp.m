@@ -258,7 +258,10 @@ if display_mode >=1,
 	elseif (invproc == 3),  disp('   - BICGSTAB iterative method');
 	elseif (invproc == 4),  disp('   - CGS iterative method');end
 	if (norm_mode == 1),    disp('   - Normalization of f0 at each iteration and radius');
-	elseif (norm_mode == 0),disp('   - No normalization of f0 at each iteration and radius: fully natural conservative mode');
+	elseif (norm_mode == 0),disp('   - No normalization of f0 at each iteration and radius: fully natural conservative mode');end
+	if (boundary_mode >= 1),    disp(['   - Maxwellian distribution enforced on ',int2str(boundary_mode),' momentum grid point around p = 0']);
+	elseif (boundary_mode == 0),disp('   - No Maxwellian distribution enforced around p = 0');end
+
 %Time scheme
 	if (time_scheme == 1),    disp(['   - Implicit time differencing scheme']);
 	elseif (time_scheme == 2),disp(['   - Crank-Nicholson time differencing scheme']);end
@@ -418,14 +421,16 @@ xv2 = xv.*xv;
 %
 %Super momentum grid definitions for collision integrals
 %
-spnm = linspace(pn(1)/spfac,pnm(1),spfac);%In order to start from a point not to close to zero
+spnm = linspace(pn(1)/spfac,pnm(2),spfac);%In order to start from a point not to close to zero
+for ip=3:npn,
+	spnm = [spnm(1:length(spnm)-1),linspace(pnm(ip-1),pnm(ip),spfac)];	
+end
+%
 spn = linspace(pn(1)/spfac,pn(1),spfac);
 spnp = linspace(pn(1)/spfac,pnp(1),spfac);
-%
 for ip=2:npn,
-	spnm = [spnm(1:spfac-1),linspace(pnm(ip-1),pnm(ip),spfac)];	
-	spn = [spn(1:spfac-1),linspace(pn(ip-1),pn(ip),spfac)];	
-	spnp = [spnp(1:spfac-1),linspace(pnp(ip-1),pnp(ip),spfac)];	
+	spn = [spn(1:length(spn)-1),linspace(pn(ip-1),pn(ip),spfac)];	
+	spnp = [spnp(1:length(spnp)-1),linspace(pnp(ip-1),pnp(ip),spfac)];	
 end
 %
 spnm = spnm(:);%for numerical integration by trapz_dke_yp subroutine
@@ -479,7 +484,6 @@ end
 %
 %Bounce average coefficients
 %
-
 [xq,xqtilde,xqbar,xqhat,...
     XXheaviside,...
     Xxlambda,Xxlambda_p,Xxlambda_m,...
@@ -497,8 +501,7 @@ end
 =  bounceparam_dke_yp(bounce_mode,equil_mode,...
     mhu,mhum,mhup,Xmhu,Xmhum,Xmhup,...
     XR,XZ,XBR,XBZ,XBphi,...
-    xmhubounce2,xB0,xR0,xBT0,xBp0,Rp,Zp,ap);
-    
+    xmhubounce2,xB0,xR0,xBT0,xBp0,Rp,Zp,ap);    
 %
 %Super matrices size calculation
 %
@@ -1089,12 +1092,12 @@ for ir = 1:nr,
 %
 	XDmm_e_ijp = zeros(npn,nmhu);
 	XDmm_e_ijm = zeros(npn,nmhu);
-%
+%	
 	XFp_e_ippj = +Xmhu.*XXRlambda_b_p1m1p2(:,:,ir)*xepsi(ir);
 	XFp_e_ipj = +Xmhu.*XXRlambda_b_p1m1p2(:,:,ir)*xepsi(ir);
 	XFp_e_ij = +Xmhu.*XXRlambda_b_p1m1p2(:,:,ir)*xepsi(ir);	
 	XFp_e_imj = +Xmhu.*XXRlambda_b_p1m1p2(:,:,ir)*xepsi(ir);
-	XFp_e_immj = +Xmhu.*XXRlambda_b_p1m1p2(:,:,ir)*xepsi(ir); 
+	XFp_e_immj = +Xmhu.*XXRlambda_b_p1m1p2(:,:,ir)*xepsi(ir); 	
 %
 	xEfield_validity(ir) = max(XFp_e_ij(ip_th_ref,[1,nmhu])./XFp_c_ij(ip_th_ref,[1,nmhu]));%Comparison between electric field and collisions pinches at pth_ref (if above 1, the code validity breaks close to p = 0 leading to numerical particle leak)                 
 %
@@ -1195,7 +1198,7 @@ for ir = 1:nr,
 	XDmp_ijp,XDmp_ij,XDmp_ijm,...
 	XDmm_ijp,XDmm_ijm,...
 	XFp_ippj,XFp_ipj,XFp_ij,XFp_imj,XFp_immj,...
-	XFm_ijp,XFm_ijm);	   
+	XFm_ijp,XFm_ijm);
 % 
 %
 %Loss matrix coefficients (fro ripple losses for example)
@@ -1310,12 +1313,12 @@ for ir = 1:nr,
 			Xn_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
 			Xo_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
 %
-			Xj_t(2:npn,3) = 0;Xj_t(2:npn,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
-			Xk_t(2:npn,3) = 0;Xk_t(2:npn,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
-			Xl_t(2:npn,3) = 0;Xl_t(2:npn,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
-			Xm_t(2:npn,3) = 0;Xm_t(2:npn,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
-			Xn_t(2:npn,3) = 0;Xn_t(2:npn,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
-			Xo_t(2:npn,3) = 0;Xo_t(2:npn,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
+			Xj_t(:,3) = 0;Xj_t(:,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
+			Xk_t(:,3) = 0;Xk_t(:,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
+			Xl_t(:,3) = 0;Xl_t(:,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
+			Xm_t(:,3) = 0;Xm_t(:,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
+			Xn_t(:,3) = 0;Xn_t(:,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
+			Xo_t(:,3) = 0;Xo_t(:,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
 %       
 			mhu_t = mhu(Xmask_f0);
 %           
@@ -1339,8 +1342,9 @@ for ir = 1:nr,
 			mhu_t = mhu;
 		end
 	end
-	%Local boundary conditions at p = p(1/2): not necessary but help for the density conservation
-	%
+%
+%Local boundary conditions at p = p(1/2): not necessary but help for the density conservation
+%
 	if boundary_mode > 0,
 		Xa_t(1:boundary_mode,:) = 0;
 		Xb_t(1:boundary_mode,:) = 0;
