@@ -1,49 +1,55 @@
-function [ax] = graph1D_jd(x,y,xlab,ylab,tit,leg,xlim,ylim,style,marker,color,width,siz,ax,red,lspace,bspace);
+function [ax] = graph1D_jd(x,y,logx,logy,xlab,ylab,tit,leg,xlim,ylim,style,marker,color,width,siz,ax,red,lspace,bspace);
 
-if nargin < 17
+if nargin < 19
     bspace = NaN;
 end
-if nargin < 16
+if nargin < 18
     lspace = NaN;
 end
-if nargin < 15
+if nargin < 17
     red = 1;
 end
-if nargin < 14
+if nargin < 16
     ax = gca;
 end
-if nargin < 13
-    siz = 14;
+if nargin < 15
+    siz = 20;
 end
-if nargin < 12
+if nargin < 14
     width = 0.5;
 end
-if nargin < 11
+if nargin < 13
     color = NaN;
 end
-if nargin < 10
+if nargin < 12
     marker = 'none';
 end
-if nargin < 9
+if nargin < 11
     style = '-';
 end
-if nargin < 8
+if nargin < 10
     ylim = NaN;
 end
-if nargin < 7
+if nargin < 9
     xlim = NaN;
 end
-if nargin < 6
+if nargin < 8
     leg = NaN;
 end
-if nargin < 5
+if nargin < 7
     tit = '';
 end
-if nargin < 4
+if nargin < 6
     ylab = '';
 end
-if nargin < 3
+if nargin < 5
     xlab = '';
+end
+if nargin < 4
+    logy = 0;
+end
+if nargin < 3
+    logx = 0;
 end
 if nargin < 2
     y = x(:);
@@ -52,16 +58,30 @@ end
 if nargin == 0
     error('no argument')
 end
-
-gcl = line(x,y,'parent',ax);
-
+%
+hold on
+if logx == 1 & logy ~= 1
+    set(ax,'xscale','log');
+    gcl = semilogx(x,y,'parent',ax);
+elseif logx ~= 1 & logy == 1
+    set(ax,'yscale','log');
+    gcl = semilogy(x,y,'parent',ax);
+elseif logx == 1 & logy == 1
+    set(ax,'xscale','log');
+    set(ax,'yscale','log');
+    gcl = loglog(x,y,'parent',ax);
+else
+    gcl = plot(x,y,'parent',ax);
+end
+hold off
+%
 set(gcl,'linewidth',width);
 set(gcl,'linestyle',style);
 set(gcl,'marker',marker);
 if ~isnan(color)
     set(gcl,'color',color);
 end
-
+%
 if ~isnan(xlim)
     set(gca,'xlim',xlim);
 end
@@ -77,22 +97,22 @@ if ~isnan(ylim)
         set(gca,'ylim',ylim);
     end
 end
-
-xl = xlabel(xlab);set(xl,'fontsize',14);
-yl = ylabel(ylab);set(yl,'fontsize',14);
-tl = title(tit);set(tl,'fontsize',14);
+%
+xl = xlabel(xlab);set(xl,'fontsize',siz);
+yl = ylabel(ylab);set(yl,'fontsize',siz);
+tl = title(tit);set(tl,'fontsize',siz);
 if ~isnan(leg)
     lg = legend(leg);
-    set(lg,'fontsize',14);
+    set(lg,'fontsize',siz);
 end
-
-set(gca,'fontsize',14);
-
+%
+set(gca,'fontsize',siz);
+%
 ax = gca;
-
+%
 set(gcf,'PaperPositionMode','auto');
-
-[lspace_out,bspace_out,fpos_new,apos_new] = resizejd(gca,red);
+%
+[lspace_out,bspace_out,apos_new] = resizejd(gca,red);
 if isnan(lspace)
     lspace = lspace_out;
 end
@@ -100,7 +120,7 @@ if isnan(bspace)
     bspace = bspace_out;
 end
 
-[lspace_out,bspace_out,fpos_new,apos_new] = resizejd(gca,1,lspace,bspace);
+[lspace_out,bspace_out,apos_new] = resizejd(gca,1,lspace,bspace);
 
 box on
 grid on
