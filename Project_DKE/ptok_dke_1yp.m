@@ -485,7 +485,7 @@ elseif strcmp(name,'CQL3D_LH') == 1,
 	eTe = 1;
 	Ti0 = 5.11/10000;
 	Tia = 0;
-	eTi = 0;
+	eTi = 1;
 	ne0 = 1.0e+19;
 	nea = 0;
 	ene = 1;	
@@ -522,9 +522,9 @@ elseif strcmp(name,'CQL3D_OHM') == 1,
 	Te0 = 0.1;
 	Tea = 0;
 	eTe = 1;
-	Ti0 = 0;
+	Ti0 = 0.1;
 	Tia = 0;
-	eTi = 0;
+	eTi = 1;
 	ne0 = 1.0e+19;
 	nea = 0;
 	ene = 1;	
@@ -561,9 +561,9 @@ elseif strcmp(name,'CQL3D_RUNAWAY') == 1,
 	Te0 = 0.1;
 	Tea = 0;
 	eTe = 1;
-	Ti0 = 0;
+	Ti0 = 0.1;
 	Tia = 0;
-	eTi = 0;
+	eTi = 1;
 	ne0 = 1.0e+19;
 	nea = 0;
 	ene = 1;	
