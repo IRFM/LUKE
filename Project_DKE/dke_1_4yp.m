@@ -1112,9 +1112,9 @@ for ir = 1:nr,
 %
 %Electron-ion collision term (non-relativistic limit)
 %
-   [Fei,Aei,Btei] = eicoll_dke_yp(v,zZi,zmi,xzni_norm,xzTi_norm,ir,coll_mode);
-	[Feim,Aeim] = eicoll_dke_yp(vm,zZi,zmi,xzni_norm,xzTi_norm,ir,coll_mode);
-	[Feip,Aeip] = eicoll_dke_yp(vp,zZi,zmi,xzni_norm,xzTi_norm,ir,coll_mode);
+   [Fei,Aei,Btei] = eicoll_dke_yp(v,zZi,zmi,xzni_norm,xzTi_norm,ir,coll_mode*0+1);
+	[Feim,Aeim] = eicoll_dke_yp(vm,zZi,zmi,xzni_norm,xzTi_norm,ir,coll_mode*0+1);
+	[Feip,Aeip] = eicoll_dke_yp(vp,zZi,zmi,xzni_norm,xzTi_norm,ir,coll_mode*0+1);
 %	
 	Feim(1) = 1;%Avoid singularity at p = 0, but the value is not used	
 	Feimm = [0,Fei(1:npn-1)];
@@ -1384,8 +1384,7 @@ for ir = 1:nr,
 	XXdeltam_ijp(:,:,ir) = Xdeltam_ijp;
 	XXdeltam_ijm(:,:,ir) = Xdeltam_ijm;		
 %
-%	if display_mode == 2,
-	if 1,
+	if display_mode == 2,
 		figure(3100),plot(pn,Xdeltap_imj(:,:));hold on
 		zoom on;
 		axis('square');xlabel('pn');ylabel('Interpolation coefficient');
