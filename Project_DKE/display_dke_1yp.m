@@ -733,13 +733,13 @@ while 1,
 			disp(['   - RF current density: [spherical]: ',num2str(xcurr0_ref_fsav(ir_display_dke))])
 			disp(['   - RF power density lost on collisions (coll) [spherical]: ',num2str(-xPcoll0_ref_fsav(ir_display_dke))])
 			for ib=1:nb_lh
-					disp(['   - LH beam #',num2str(ib),': v1 = ',num2str(1/waveparam_lh(ir_display_dke,ib,7)/betath_ref),', v2 = ',num2str(1/waveparam_lh(ir_display_dke,ib,6)/betath_ref),',D0lh = ',num2str(waveparam_lh(ir_display_dke,ib,5))])
+					disp(['   - LH beam #',num2str(ib),': v1 = ',num2str(1/waveparam_lh(ir_display_dke,ib,6)/betath_ref),', v2 = ',num2str(1/waveparam_lh(ir_display_dke,ib,5)/betath_ref),',D0lh = ',num2str(waveparam_lh(ir_display_dke,ib,4))])
 					disp(['        LH Power absorbed [spherical]: ',num2str(xyPabs0_lh_ref_fsav(ir_display_dke,ib))]) 
 			end
 %
 			for ib=1:nb_ec
-					disp(['   - EC beam #',num2str(ib),': n|| = ',num2str(waveparam_ec(ir_display_dke,ib,8)),...
-				', Y = ',num2str(waveparam_ec(ir_display_dke,ib,1)*waveparam_ec(ir_display_dke,ib,3)/waveparam_ec(ir_display_dke,ib,2)),',D0ec = ',num2str(waveparam_ec(ir_display_dke,ib,5))])
+					disp(['   - EC beam #',num2str(ib),': n|| = ',num2str(waveparam_ec(ir_display_dke,ib,7)),...
+				', Y = ',num2str(waveparam_ec(ir_display_dke,ib,1)*waveparam_ec(ir_display_dke,ib,2)/waveparam_ec(ir_display_dke,ib,1)),',D0ec = ',num2str(waveparam_ec(ir_display_dke,ib,4))])
 					disp(['        EC Power absorbed [spherical]: ',num2str(xyPabs0_ec_ref_fsav(ir_display_dke,ib))]) 
 			end
 %
@@ -757,13 +757,13 @@ while 1,
 			disp(['   - RF current density (MA/m2) [spherical]: ',num2str(xJrf0_fsav_mksa(ir_display_dke))])
 			disp(['   - RF power density lost on collisions (MW/m3) (coll) [spherical]: ',num2str(-xPcoll0_fsav_mksa(ir_display_dke))])
 			for ib = 1:nb_lh
-					disp(['   - LH beam #',num2str(ib),': v1 = ',num2str(1/waveparam_lh(ir_display_dke,ib,7)/betath_ref),', v2 = ',num2str(1/waveparam_lh(ir_display_dke,ib,6)/betath_ref),',D0lh = ',num2str(waveparam_lh(ir_display_dke,ib,5))])
+					disp(['   - LH beam #',num2str(ib),': v1 = ',num2str(1/waveparam_lh(ir_display_dke,ib,6)/betath_ref),', v2 = ',num2str(1/waveparam_lh(ir_display_dke,ib,5)/betath_ref),',D0lh = ',num2str(waveparam_lh(ir_display_dke,ib,4))])
 					disp(['        LH Power absorbed (MW/m3) [spherical]: ',num2str(xyPabs0_lh_fsav_mksa(ir_display_dke,ib))]) 
 			end
 %
 			for ib = 1:nb_ec
-					disp(['   - EC beam #',num2str(ib),': n|| = ',num2str(waveparam_ec(ir_display_dke,ib,8)),...
-					', Y = ',num2str(waveparam_ec(ir_display_dke,ib,1)*waveparam_ec(ir_display_dke,ib,3)/waveparam_ec(ir_display_dke,ib,2)),',D0ec = ',num2str(waveparam_ec(ir_display_dke,ib,5))])
+					disp(['   - EC beam #',num2str(ib),': n|| = ',num2str(waveparam_ec(ir_display_dke,ib,7)),...
+					', Y = ',num2str(waveparam_ec(ir_display_dke,ib,1)*waveparam_ec(ir_display_dke,ib,2)/waveparam_ec(ir_display_dke,ib,1)),',D0ec = ',num2str(waveparam_ec(ir_display_dke,ib,4))])
 					disp(['        EC Power absorbed (MW/m3) [spherical]: ',num2str(xyPabs0_ec_fsav_mksa(ir_display_dke,ib))]) 
 			end
 %
