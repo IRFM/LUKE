@@ -58,6 +58,7 @@ store_mode = dkeparam.store_mode;
 rt_mode = dkeparam.rt_mode;
 nit_rf = dkeparam.nit_rf;
 prec_rf = dkeparam.prec_rf;
+nmax_rf = dkeparam.nmax_rf;
 %-------------------------------------------
 psin_display = display.psin_display;
 rho_display = display.rho_display;
@@ -881,7 +882,7 @@ if diary_mode == 1,%Automatic data saving when diary mode is called
 	del = 1;
 else,%Manual data saving
 	while 1,
-		if exist([dossier,s,filename]) == 2 & auto_mode == 0,%Only in manual mode
+		if exist(filename) == 2 & auto_mode == 0,%Only in manual mode
 			del = input_dke_yp(['File ',filename,' already exists ! Do you want to overwrite it (yes:1, no:0)'],0);
 			if del == 1,
 				break;
@@ -897,9 +898,9 @@ else,%Manual data saving
 end
 %
 if del == 1	,
-	delete([dossier,s,filename]);
-	eval(['save ',dossier,s,filename]);
-	if exist([dossier,s,filename]) == 2,
+	delete(filename);
+	eval(['save ',filename]);
+	if exist(filename) == 2,
 		disp('-------------------------------------------------------------------------------------------------------------------');
 		info_dke_yp(2,['The data file : ',filename,' has been successfully saved !']);
 %
