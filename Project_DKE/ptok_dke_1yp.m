@@ -645,8 +645,8 @@ elseif strcmp(name,'JET') == 1,
 %
 %	HXR{5} = [2.1010 2.1422]*1e-9;
 elseif strcmp(name,'TEST_LORENTZ') == 1,%Values based on NSTX case but circular plasma cross-section
-	ap = 0.67;
-	Rp = 0.86;
+   ap = 2.3899;
+   Rp = 2.39; 
 	Zp = 0.0;
 %
 	xpoint(1) = 1;%Vertical position of the top X point
@@ -660,8 +660,8 @@ elseif strcmp(name,'TEST_LORENTZ') == 1,%Values based on NSTX case but circular 
 %
 	Bt = 0.45;	
 %
-	Zi = [30 1 1 ];
-	mi = [30 2 3 ];
+	Zi = [1 1 1 30];
+	mi = [1 2 3 30];
 	fi = [1,0,0];
 	Zeff0 = 30;
 	Zeffa = 30;
@@ -675,22 +675,22 @@ elseif strcmp(name,'TEST_LORENTZ') == 1,%Values based on NSTX case but circular 
 	eq = 1;
 %
 	Te0 = 0.15;
-	Tea = 0.001*Te0;
+	Tea = Te0;
 	eTe = 0;
 	Ti0 = 0.0015;
-	Tia = 0.001*Ti0;
+	Tia = Ti0;
 	eTi = 0;	
 	ne0 = 2.0e+19;
 	nea = 0.001*ne0;
-	ene = 0.5;
-%
+	ene = 2;
+%%
 %Fast electron bremsstrahlung tomography (if exists)
 %
-	HXR{1} = [];%Major radius on the HXR chord (m) [1,nchord]
-	HXR{2} = [];%Vertical position on the HXR chord (m) [1,nchord]
-	HXR{3} = [];%Major position of one point on HXR chord (R_hxr_2 > R_hxr_1) (m) [1,nchord]
-	HXR{4} = [];%Vertical position on the HXR chord (m) [1,nchord]
-	HXR{5} = [];%Geometrical factor (m^2/str) [1,nchord]
+%	HXR{1} = [];%Major radius on the HXR chord (m) [1,nchord]
+%	HXR{2} = [];%Vertical position on the HXR chord (m) [1,nchord]
+%	HXR{3} = [];%Major position of one point on HXR chord (R_hxr_2 > R_hxr_1) (m) [1,nchord]
+%	HXR{4} = [];%Vertical position on the HXR chord (m) [1,nchord]
+%	HXR{5} = [];%Geometrical factor (m^2/str) [1,nchord]
 else
 	error('Wrong input name in ptok_dke_1yp.m')
 end	
