@@ -55,11 +55,12 @@ function [ap,Rp,Zp,xpoint,Bt,...
 %-------------------------------------------------------------------------------------------------------------
 %Fast electron bremsstrahlung diagnostic parameters (if exists)
 %		 
-%     - HXR{1}: Major radius on the HXR chord (m) [1,nchord]
-%     - HXR{2}: Vertical position on the HXR chord (m) [1,nchord]
-%   	- HXR{3}: Major position of one point on HXR chord (R_hxr_2 > R_hxr_1) (m) [1,nchord]
-%   	- HXR{4}: Vertical position on the HXR chord (m) [1,nchord]
-%     - HXR{5}: Geometrical factor (m^2/str) [1,nchord]
+%     - HXR{1,1}: Angular position of the intersection between detector axis direction and the reference toroidal surface (degrees)  [1,nchord]
+%     - HXR{1,2}: Horizontal rotation for each chord (degrees) [1,nchord]
+%   	- HXR{1,3}: Vertical rotation for each chord [1,nchord]
+%   	- HXR{1,4}: Major radius of the reference toroidal surface (m) [1,1]
+%   	- HXR{1,5}: Minor radius of the reference toroidal surface (m) [1,1]
+%     - HXR{1,6}: Geometrical factor for each chord (m^2/str) [1,nchord]
 %
 %	Warning: none
 %
@@ -110,6 +111,8 @@ if strcmp(name,'CTORUS') == 1,
 	Zeff0 = 1;
 	Zeffa = 1;
 	eZeff = 0;
+% diagnostics
+	HXR{1,1} = NaN;%No HXR tomographic system
 elseif strcmp(name,'TS') == 1,
 	ap = 0.72;
 	Rp = 2.39;%Separatrix major radius
@@ -149,21 +152,39 @@ elseif strcmp(name,'TS') == 1,
 	ne0 = 2.0e+19;
 	nea = 0.24*ne0;
 	ene = 1.3;
+% diagnostics
 %
 %Fast electron bremsstrahlung tomography (if exists)
 %
-%	HXR{1} = [4,4];%Major radius on the HXR chord (m) [1,nchord]
-%	HXR{2} = [0,0];%Vertical position on the HXR chord (m) [1,nchord]
-%	HXR{3} = [4.5,4.5];%Major position of one point on HXR chord (R_hxr_2 > R_hxr_1) (m) [1,nchord]
-%	HXR{4} = [0.3,-0.3];%Vertical position on the HXR chord (m) [1,nchord]
+	mv_hxr = [-1.5000,-2.4500,-3.4000,-4.3500,-5.3000,-6.2500,-7.2000,-8.1500,-9.1000,-10.0500,-11.0000,-11.9500,-12.9000,-13.8500,-14.8000,-15.7500,-16.7000,-17.6500,-18.6000,-19.5500,-20.5000];
+	mv_hxr = [mv_hxr,-71.0000,-71.9756,-72.9513,-73.9270,-74.9027,-75.8783,-76.8540,-77.8297,-78.8054,-79.7810,-80.7567];% (deg)
+	mv_hxr = [mv_hxr,-81.7324,-82.7081,-83.6837,-84.6594,-85.6351,-86.6108,-87.5864,-88.5621,-89.5378,-90.5135,-91.4891];% (deg)
+	mv_hxr = [mv_hxr,-92.4648,-93.4405,-94.4162,-95.3918,-96.3675,-97.3432,-98.3189,-99.2945,-100.2702,-101.2459,-102.2216,-103.1972,-104.1729,-105.1486,-106.1243,-107.1000];% (deg)		
 %
-%	HXR{5} = [2.1010 2.1422]*1e-9;
-%	Parameters for (date >= 19980501 & date < 19991118),%shot numbers >24000 and <=28353
-%	HXR{5} = [2.1010 2.1422 2.1794 2.2160 2.2557 2.2912 2.3261 2.3641 2.3978 2.4308 2.4597];%Geometrical factor (m^2/str) [1,nchord]
-%	HXR{5} = [HXR{5} 2.4308 2.3978 2.3641 2.3261 2.2912 2.2557 2.2160 2.1794 2.1422 2.1010];		
-%	HXR{5} = [HXR{5} 1.7150 1.7656 1.8101 1.8542 1.8980 1.9414 1.9812 2.0238 2.0627 2.1010 2.1422 2.1794 2.2160 2.2557];%Etendue gŽomŽtrique grande camera
-%	HXR{5} = [HXR{5} 2.2912 2.3261 2.3641 2.3978 2.4308 2.4597 2.4308 2.3978 2.3641 2.3261 2.2912 2.2557 2.2160 2.1794 2.1422 2.1010];
-%	HXR{5} = [HXR{5} 2.0627 2.0238 1.9812 1.9414 1.8980 1.8542 1.8101 1.7656]*1e-9;			
+	tv_hxr = [-16.2113,-14.5156,-12.8425,-11.1865,-9.5429,-7.9067,-6.2735,-4.6386,-2.9976,-1.3456,0.3222,2.0109,3.7263,5.4746,7.2625,9.0981,10.9904,12.9503,14.9909,17.1281,19.3825];% (deg)
+	tv_hxr = [tv_hxr,-126.4985,-123.5939,-120.9769,-118.5775,-116.3486,-114.2569,-112.2775,-110.3915,-108.5837,-106.8400,-105.1564,-103.5184,-101.9207,-100.3570,-98.8216,-97.3096,-95.8164,-94.3375,-92.8692,-91.4074];
+	tv_hxr = [tv_hxr,-89.9484,-88.4886,-87.0242,-85.5515,-84.0665,-82.5651,-81.0428,-79.4950,-77.9162,-76.3006,-74.6415,-72.9310,-71.1600,-69.3175,-67.3903,-65.3614,-63.2095,-60.9063];%Vertical camera
+%
+	kv_hxr = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];% (deg) Small camera
+	kv_hxr = [kv_hxr,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];% (deg) Large camera 
+%
+	R_hxr = 2.360;%Reference major radius for the chord frame (m)
+	a_hxr = 0.80;%Reference minor radius for the chord frame (m)
+%
+	EG_hxr = [2.1010 2.1422 2.1794 2.2160 2.2557 2.2912 2.3261 2.3641 2.3978 2.4308 2.4597];%Geometrical extend of the small camera
+	EG_hxr = [EG_hxr 2.4308 2.3978 2.3641 2.3261 2.2912 2.2557 2.2160 2.1794 2.1422 2.1010];		
+%
+	EG_hxr = [EG_hxr 1.7150 1.7656 1.8101 1.8542 1.8980 1.9414 1.9812 2.0238 2.0627 2.1010 2.1422 2.1794 2.2160 2.2557];%Geometrical extend of the large camera
+	EG_hxr = [EG_hxr 2.2912 2.3261 2.3641 2.3978 2.4308 2.4597 2.4308 2.3978 2.3641 2.3261 2.2912 2.2557 2.2160 2.1794 2.1422 2.1010];
+	EG_hxr = [EG_hxr 2.0627 2.0238 1.9812 1.9414 1.8980 1.8542 1.8101 1.7656]*1e-3;			
+%
+	HXR{1,1} = mv_hxr;
+	HXR{1,2} = tv_hxr;
+	HXR{1,3} = kv_hxr;
+	HXR{1,4} = R_hxr;
+	HXR{1,5} = a_hxr;
+	HXR{1,6} = EG_hxr;
+%
 elseif strcmp(name,'RTP') == 1,
 	ap = 0.165;
 	Rp = 0.72;
@@ -192,63 +213,39 @@ elseif strcmp(name,'RTP') == 1,
 	Zeff0 = 1;
 	Zeffa = 1;
 	eZeff = 0;
-elseif strcmp(name,'TCV') == 1,%some parameters are incorrect for TCV
-	ap = 0.25;
-	Rp = 0.88;
-	Ip = 0.12;
-	Bt = 1.4;
-	Ncoils = NaN;
-	Zi = [1,1,1,6];
-	mi = [1,2,3,12];
-	fi = [0,1,0.0];
-%
-	BeLi = NaN;
-	qmin = 1.0;
-	eq = 0;%Parabolic dependence
-%
-	Te0 = 3.5;
-	Tea = 0.0;
-	eTe = 3;
-	eTe_ref = 3;
-	ne0 = 1e+19;
-	nea = 1;
-	ene = 0;
-	ene_ref = 0;
-	Ti0 = 1;
-	Tia = 0;
-	eTi = 3;
-	Zeff0 = 1;
-	Zeffa = 1;
-	eZeff = 0;
+% diagnostics
+	HXR{1,1} = NaN;%No HXR tomographic system
 elseif strcmp(name,'JT60_exp') == 1,%PoP 7 1927 (2000)
-        ap = 0.8;
-        Rp = 3.35;
-        Ip = 0.8;
-        Bt = 3.4;
-        Ncoils = NaN;
-        Zi = [1 1 1 6];
-        mi = [1 2 3 12];
-        fi = [0,1,0];
+   ap = 0.8;
+   Rp = 3.35;
+   Ip = 0.8;
+   Bt = 3.4;
+   Ncoils = NaN;
+   Zi = [1 1 1 6];
+   mi = [1 2 3 12];
+   fi = [0,1,0];
 %
-        BeLi = NaN;
-        qmin = [1.0];% wrong!!.... not to be used for dke calculations
-                 % for exact q profile, see tokparams       
-        eq = 1;
+   BeLi = NaN;
+   qmin = [1.0];% wrong!!.... not to be used for dke calculations
+                % for exact q profile, see tokparams       
+   eq = 1;
 %
-        Te0 = 6.2;
-        Tea = 1.5;
-        eTe = 1.55;
-        eTe_ref = eTe;
-        ne0 = 3.8e+19;
-        nea = 0.25e+19;
-        ene = 1.5;
-        ene_ref = ene;
-        Ti0 = 7.6;
-        Tia = 0.6;
-        eTi = 1;
-        Zeff0 = 3;%PoP 7 1935 (1999)
-        Zeffa = 3;
-        eZeff = 0;
+   Te0 = 6.2;
+   Tea = 1.5;
+   eTe = 1.55;
+   eTe_ref = eTe;
+   ne0 = 3.8e+19;
+   nea = 0.25e+19;
+   ene = 1.5;
+   ene_ref = ene;
+   Ti0 = 7.6;
+   Tia = 0.6;
+   eTi = 1;
+   Zeff0 = 3;%PoP 7 1935 (1999)
+   Zeffa = 3;
+   eZeff = 0;
+% diagnostics
+   HXR{1,1} = NaN;%No HXR tomographic system
 elseif strcmp(name,'CMOD') == 1,
 	ap = 0.22;
 	Rp = 0.68;
@@ -277,6 +274,8 @@ elseif strcmp(name,'CMOD') == 1,
 	Zeff0 = 1;
 	Zeffa = 1;
 	eZeff = 0;
+% diagnostics
+	HXR{1,1} = NaN;%No HXR tomographic system
 elseif strcmp(name,'NSTX') == 1,
 	ap = 0.67;
 	Rp = 0.86;
@@ -310,6 +309,8 @@ elseif strcmp(name,'NSTX') == 1,
 	ne0 = 2.0e+19;
 	nea = 0.001*ne0;
 	ene = 0.5;	
+% diagnostics
+	HXR{1,1} = NaN;%No HXR tomographic system
 elseif strcmp(name,'D3D') == 1,
 	ap = 0.67;
 	Rp = 1.67;
@@ -338,6 +339,8 @@ elseif strcmp(name,'D3D') == 1,
 	Zeff0 = 2;
 	Zeffa = 2;
 	eZeff = 0;
+% diagnostics
+	HXR{1,1} = NaN;%No HXR tomographic system
 elseif strcmp(name,'D3D_test4') == 1,
 	ap = 0.67;
 	Rp = 1.67;
@@ -366,6 +369,8 @@ elseif strcmp(name,'D3D_test4') == 1,
 	Zeff0 = 2;
 	Zeffa = 2;
 	eZeff = 0;
+% diagnostics
+	HXR{1,1} = NaN;%No HXR tomographic system
 elseif strcmp(name,'D3D_test4_CST') == 1,
 	ap = 0.67;
 	Rp = 1.67;
@@ -394,6 +399,8 @@ elseif strcmp(name,'D3D_test4_CST') == 1,
 	Zeff0 = 2;
 	Zeffa = 2;
 	eZeff = 0;
+% diagnostics
+	HXR{1,1} = NaN;%No HXR tomographic system
 elseif strcmp(name,'FTU') == 1,
 	ap = 0.29;
 	Rp = 0.935;
@@ -422,6 +429,8 @@ elseif strcmp(name,'FTU') == 1,
 	Zeff0 = 3;
 	Zeffa = 3;
 	eZeff = 0;
+% diagnostics
+	HXR{1,1} = NaN;%No HXR tomographic system
 elseif strcmp(name,'TEST0') == 1,
 	ap = 0.22;
 	Rp = 0.68;
@@ -450,6 +459,8 @@ elseif strcmp(name,'TEST0') == 1,
 	Zeff0 = 1;
 	Zeffa = 1;
 	eZeff = 0;
+% diagnostics
+	HXR{1,1} = NaN;%No HXR tomographic system
 elseif strcmp(name,'TEST15') == 1,
 	ap = 0.22;
 	Rp = 0.68;
@@ -478,6 +489,8 @@ elseif strcmp(name,'TEST15') == 1,
 	Zeff0 = 1;
 	Zeffa = 1;
 	eZeff = 0;
+% diagnostics
+	HXR{1,1} = NaN;%No HXR tomographic system
 elseif strcmp(name,'TEST51') == 1,
 	ap = 0.22;
 	Rp = 0.68;
@@ -506,6 +519,8 @@ elseif strcmp(name,'TEST51') == 1,
 	Zeff0 = 1;
 	Zeffa = 1;
 	eZeff = 0;
+% diagnostics
+	HXR{1,1} = NaN;%No HXR tomographic system
 elseif strcmp(name,'CQL3D_LH') == 1,
 	ap = 2.3899;
 	Rp = 2.39;%Separatrix major radius
@@ -545,6 +560,8 @@ elseif strcmp(name,'CQL3D_LH') == 1,
 	ne0 = 1.0e+19;
 	nea = 0;
 	ene = 0;	
+% diagnostics
+	HXR{1,1} = NaN;%No HXR tomographic system
 elseif strcmp(name,'CQL3D_OHM') == 1,	
 	ap = 2.3899;
 	Rp = 2.39;%Separatrix major radius
@@ -584,6 +601,8 @@ elseif strcmp(name,'CQL3D_OHM') == 1,
 	ne0 = 1.0e+19;
 	nea = 0;
 	ene = 1;	
+% diagnostics
+	HXR{1,1} = NaN;%No HXR tomographic system
 elseif strcmp(name,'CQL3D_RUNAWAY') == 1,
 	ap = 2.3899;
 	Rp = 2.39;%Separatrix major radius
@@ -623,6 +642,8 @@ elseif strcmp(name,'CQL3D_RUNAWAY') == 1,
 	ne0 = 1.0e+19;
 	nea = 0;
 	ene = 1;	
+% diagnostics
+	HXR{1,1} = NaN;%No HXR tomographic system
 elseif strcmp(name,'CQL3D_ECCD') == 1,
 	ap = 2.3899;
 	Rp = 2.39; 
@@ -651,6 +672,8 @@ elseif strcmp(name,'CQL3D_ECCD') == 1,
 	Zeff0 = 1;
 	Zeffa = 1;
 	eZeff = 0;
+% diagnostics
+	HXR{1,1} = NaN;%No HXR tomographic system
 elseif strcmp(name,'JET') == 1,
 	ap = 0.9;
 	Rp = 3.00;
@@ -690,118 +713,90 @@ elseif strcmp(name,'JET') == 1,
 	ne0 = 2.0e+19;
 	nea = 0.01*ne0;
 	ene = 0.5;
-%
-%
-%Fast electron bremsstrahlung tomography (if exists)
-%
-%	HXR{1} = [4,4];%Major radius on the HXR chord (m) [1,nchord]
-%	HXR{2} = [0,0];%Vertical position on the HXR chord (m) [1,nchord]
-%	HXR{3} = [4.5,4.5];%Major position of one point on HXR chord (R_hxr_2 > R_hxr_1) (m) [1,nchord]
-%	HXR{4} = [0.3,-0.3];%Vertical position on the HXR chord (m) [1,nchord]
-%
-%	HXR{5} = [2.1010 2.1422]*1e-9;
+% diagnostics
+	HXR{1,1} = NaN;%No HXR tomographic system
 elseif strcmp(name,'JETb') == 1,
-		ap = 0.9;
-		Rp = 3.00;
-		Zp = 0.0;
-	%
-		xpoint(1) = 1.687;%Vertical position of the top X point
-		xpoint(2) = 0.466;%Horizontal position of the top X point
-		xpoint(3) = 0;%Angle between the separatrix and the horizontal plane for the top X point (degree)
-		xpoint(4) = 0;%Angle between the separatrix and the horizontal plane for the top X point (degree)
-		xpoint(5) = 2.001;%Vertical position of the bottom X point (always positive value)
-		xpoint(6) = 0.568;%Horizontal position of the bottom X point
-		xpoint(7) = 22.46;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
-		xpoint(8) = 67.92;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
-	%
-		Bt = 3.5;	
-	%
-		Zi = [1 1 1 6];
-		mi = [1 2 3 12];
-		fi = [0,1,0];
-		Zeff0 = 1.5;
-		Zeffa = 1.5;
-		eZeff = 0;
-	%	
-		Ip = 1.3;
-		j0 = 0.4;
-		ja = 0;
-		ej = 2;
-		qmin = 1;
-		eq = 1;
-	%
-		Te0 = 10;
-		Tea = 0.1*Te0;
-		eTe = 0.5;
-		Ti0 = 10;
-		Tia = 0.1*Ti0;
-		eTi = 0.5;	
-		ne0 = 4.0e+19;
-		nea = 0.01*ne0;
-		ene = 0.5;
-	%
-	%
-	%Fast electron bremsstrahlung tomography (if exists)
-	%
-	%	HXR{1} = [4,4];%Major radius on the HXR chord (m) [1,nchord]
-	%	HXR{2} = [0,0];%Vertical position on the HXR chord (m) [1,nchord]
-	%	HXR{3} = [4.5,4.5];%Major position of one point on HXR chord (R_hxr_2 > R_hxr_1) (m) [1,nchord]
-	%	HXR{4} = [0.3,-0.3];%Vertical position on the HXR chord (m) [1,nchord]
-	%
-	%	HXR{5} = [2.1010 2.1422]*1e-9;
-
-
-
-
+	ap = 0.9;
+	Rp = 3.00;
+	Zp = 0.0;
+%
+	xpoint(1) = 1.687;%Vertical position of the top X point
+	xpoint(2) = 0.466;%Horizontal position of the top X point
+	xpoint(3) = 0;%Angle between the separatrix and the horizontal plane for the top X point (degree)
+	xpoint(4) = 0;%Angle between the separatrix and the horizontal plane for the top X point (degree)
+	xpoint(5) = 2.001;%Vertical position of the bottom X point (always positive value)
+	xpoint(6) = 0.568;%Horizontal position of the bottom X point
+	xpoint(7) = 22.46;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
+	xpoint(8) = 67.92;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
+%
+	Bt = 3.5;	
+%
+	Zi = [1 1 1 6];
+	mi = [1 2 3 12];
+	fi = [0,1,0];
+	Zeff0 = 1.5;
+	Zeffa = 1.5;
+	eZeff = 0;
+%	
+	Ip = 1.3;
+	j0 = 0.4;
+	ja = 0;
+	ej = 2;
+	qmin = 1;
+	eq = 1;
+%
+	Te0 = 10;
+	Tea = 0.1*Te0;
+	eTe = 0.5;
+	Ti0 = 10;
+	Tia = 0.1*Ti0;
+	eTi = 0.5;	
+	ne0 = 4.0e+19;
+	nea = 0.01*ne0;
+	ene = 0.5;
+% diagnostics
+	HXR{1,1} = NaN;%No HXR tomographic system
 elseif strcmp(name,'JET_C') == 1,%Counter current LH experiments (see Marc Goniche)
-		ap = 0.98;
-		Rp = 2.87;
-		Zp = 0.0;
-	%
-		xpoint(1) = 1.687;%Vertical position of the top X point
-		xpoint(2) = 0.466;%Horizontal position of the top X point
-		xpoint(3) = 0;%Angle between the separatrix and the horizontal plane for the top X point (degree)
-		xpoint(4) = 0;%Angle between the separatrix and the horizontal plane for the top X point (degree)
-		xpoint(5) = 2.001;%Vertical position of the bottom X point (always positive value)
-		xpoint(6) = 0.568;%Horizontal position of the bottom X point
-		xpoint(7) = 22.46;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
-		xpoint(8) = 67.92;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
-	%
-		Bt = 3.1;	
-	%
-		Zi = [1 1 1 6];
-		mi = [1 2 3 12];
-		fi = [0,1,0];
-		Zeff0 = 4;
-		Zeffa = 4;
-		eZeff = 0;
-	%	
-		Ip = 1.5;
-		j0 = 1.0;
-		ja = 0;
-		ej = 2;
-		qmin = 1;
-		eq = 1;
-	%
-		Te0 = 8;
-		Tea = 0.04*Te0;
-		eTe = 3;
-		Ti0 = 3;
-		Tia = 0.04*Ti0;
-		eTi = 3;	
-		ne0 = 1.5e+19;
-		nea = 0.05*ne0;
-		ene = 0.5;
+	ap = 0.98;
+	Rp = 2.87;
+	Zp = 0.0;
 %
+	xpoint(1) = 1.687;%Vertical position of the top X point
+	xpoint(2) = 0.466;%Horizontal position of the top X point
+	xpoint(3) = 0;%Angle between the separatrix and the horizontal plane for the top X point (degree)
+	xpoint(4) = 0;%Angle between the separatrix and the horizontal plane for the top X point (degree)
+	xpoint(5) = 2.001;%Vertical position of the bottom X point (always positive value)
+	xpoint(6) = 0.568;%Horizontal position of the bottom X point
+	xpoint(7) = 22.46;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
+	xpoint(8) = 67.92;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
 %
-%Fast electron bremsstrahlung tomography (if exists)
+	Bt = 3.1;	
 %
-%	HXR{1} = [4,4];%Major radius on the HXR chord (m) [1,nchord]
-%	HXR{2} = [0,0];%Vertical position on the HXR chord (m) [1,nchord]
-%	HXR{3} = [4.5,4.5];%Major position of one point on HXR chord (R_hxr_2 > R_hxr_1) (m) [1,nchord]
-%	HXR{4} = [0.3,-0.3];%Vertical position on the HXR chord (m) [1,nchord]
+	Zi = [1 1 1 6];
+	mi = [1 2 3 12];
+	fi = [0,1,0];
+	Zeff0 = 4;
+	Zeffa = 4;
+	eZeff = 0;
+%	
+	Ip = 1.5;
+	j0 = 1.0;
+	ja = 0;
+	ej = 2;
+	qmin = 1;
+	eq = 1;
 %
-%	HXR{5} = [2.1010 2.1422]*1e-9;
+	Te0 = 8;
+	Tea = 0.04*Te0;
+	eTe = 3;
+	Ti0 = 3;
+	Tia = 0.04*Ti0;
+	eTi = 3;	
+	ne0 = 1.5e+19;
+	nea = 0.05*ne0;
+   ene = 0.5;
+% diagnostics
+   HXR{1,1} = NaN;%No HXR tomographic system
 elseif strcmp(name,'TEST_LORENTZ') == 1,%Values based on NSTX case but circular plasma cross-section
    ap = 2.3899;
    Rp = 2.39; 
@@ -841,14 +836,8 @@ elseif strcmp(name,'TEST_LORENTZ') == 1,%Values based on NSTX case but circular 
 	ne0 = 2.0e+19;
 	nea = 0.001*ne0;
 	ene = 2;
-%%
-%Fast electron bremsstrahlung tomography (if exists)
-%
-%	HXR{1} = [];%Major radius on the HXR chord (m) [1,nchord]
-%	HXR{2} = [];%Vertical position on the HXR chord (m) [1,nchord]
-%	HXR{3} = [];%Major position of one point on HXR chord (R_hxr_2 > R_hxr_1) (m) [1,nchord]
-%	HXR{4} = [];%Vertical position on the HXR chord (m) [1,nchord]
-%	HXR{5} = [];%Geometrical factor (m^2/str) [1,nchord]
+% diagnostics
+		HXR{1,1} = NaN;%No HXR tomographic system
 elseif strcmp(name,'RELAX_ECCD') == 1,
 	ap = 1.125;
 	Rp = 2.25;
@@ -877,6 +866,8 @@ elseif strcmp(name,'RELAX_ECCD') == 1,
 	Zeff0 = 1;
 	Zeffa = 1;
 	eZeff = 0;
+% diagnostics
+	HXR{1,1} = NaN;%No HXR tomographic system
 else
 	error('Wrong input name in ptok_dke_1yp.m')
 end	
