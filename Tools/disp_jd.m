@@ -1,5 +1,5 @@
-function [xrho_out_ft,xMNperp_ft,xM3eps_pmz_ft,xrho_out_ht,xMNperp_ht,xM3eps_pmz_ht,xMPflow_ht,xMPabs_at] = ...
-    disp_jd(tokamak,xrho,rho0,xtheta,xNpar,omega,knr,nrt_nr,nrt_fr,kflag,GNperp,nn_nr);
+function [xpsin_out_ft,xMNperp_ft,xM3eps_pmz_ft,xpsin_out_ht,xMNperp_ht,xM3eps_pmz_ht,xMPflow_ht,xMPabs_at] = ...
+    disp_jd(xpsin,xB,xTe,xne,xNpar,omega,knr,nrt_nr,nrt_fr,kflag,GNperp,nn_nr);
 %
 % This function calls R2D2 and solves the wave equation for relativistic
 % and non-relativistic maxwellian distribution, using the Hermitian
@@ -12,7 +12,7 @@ function [xrho_out_ft,xMNperp_ft,xM3eps_pmz_ft,xrho_out_ht,xMNperp_ht,xM3eps_pmz
 %   INPUTS:
 %
 %       - tokamak: 
-%       - xrho: 
+%       - xpsin: 
 %       - rho0: 
 %       - xtheta: 
 %       - xNpar: 
@@ -26,10 +26,10 @@ function [xrho_out_ft,xMNperp_ft,xM3eps_pmz_ft,xrho_out_ht,xMNperp_ht,xM3eps_pmz
 %
 %   OUTPUTS:    
 %
-%       - xrho_out_ft: 
+%       - xpsin_out_ft: 
 %       - xMNperp_ft: 
 %       - xM3eps_pmz_ft: 
-%       - xrho_out_ht: 
+%       - xpsin_out_ht: 
 %       - xMNperp_ht: 
 %       - xM3eps_pmz_ht: 
 %       - xMPflow_ht: 
@@ -50,9 +50,7 @@ pathname = getpath_jd(exename);%
 wd = cd;
 eval(['cd ',pathname]);
 %
-makedisp_tokparam_jd(tokamak);
-makedisp_simparam_jd(tokamak,xrho,rho0,knr,nrt_nr,nrt_fr,kflag,GNperp,nn_nr);%
-makedisp_waveparam_jd(omega,xrho,xtheta,xNpar);
+makedisp_simparam_jd(xpsin,xB,xTe,xne,xNpar,omega,knr,nrt_nr,nrt_fr,kflag,GNperp,nn_nr);%
 %
 [s,w] = execute_jd(exename);
 %
@@ -60,17 +58,9 @@ load nr1.m -ascii
 %
 [nr_ft,nn] = size(nr1);
 %
-xrho_out_ft = nr1(:,1)';
-rmask_ft = [1,find(abs(diff(xrho_out_ft)) > eps) + 1];
-nr_ft = length(rmask_ft);
+xpsin_out_ft = nr1(:,1)';
 %
-xrho_out_ft = xrho_out_ft(rmask_ft);
-nr1 = nr1(rmask_ft,:);
 nn = (nn-1)/2;
-%
-loadstr = ['PARAM_',tokamak,'.mat'];
-eval(['load ',loadstr,' ap']);
-xrho_out_ft = xrho_out_ft/ap/100;
 %
 xMNperp_re_ft = nr1(:,2:2:2*nn);
 xMNperp_im_ft = nr1(:,3:2:2*nn+1);
@@ -89,15 +79,7 @@ end
 
 nd_ft = size(difu,1);
 
-dmask_ft = [];
-for in = 1:nn
-    dmask_ft = [dmask_ft,rmask_ft*nn - (in - 1)];
-end
-dmask_ft = sort(dmask_ft);
-
-difu = difu(dmask_ft,:);
-nd_ft = length(dmask_ft);
-
+%
 for in = 1:nn
     xMepsp_re_ft(:,in) = difu(in:nn:nd_ft,4); 
     xMepsp_im_ft(:,in) = difu(in:nn:nd_ft,5); 
@@ -127,22 +109,8 @@ load pf.m -ascii
 %
 nd_ht = size(pf,1);
 %
-xrho_out_ht = pf(1:nn:nd_ht,1)';
-nr_ht = length(xrho_out_ht);
-rmask_ht = [1,find(abs(diff(xrho_out_ht)) > eps) + 1];
-nr_ht = length(rmask_ht);
-%
-xrho_out_ht = xrho_out_ht(rmask_ht);
-xrho_out_ht = xrho_out_ht/ap/100;
-%
-dmask_ht = [];
-for in = 1:nn
-    dmask_ht = [dmask_ht,rmask_ht*nn - (in - 1)];
-end
-dmask_ht = sort(dmask_ht);
-%
-pf = pf(dmask_ht,:);
-nd_ht = length(dmask_ht);
+xpsin_out_ht = pf(1:nn:nd_ht,1)';
+nr_ht = length(xpsin_out_ht);
 %
 for in = 1:nn
     xMNperp_re_ht(:,in) = pf(in:nn:nd_ht,2);
