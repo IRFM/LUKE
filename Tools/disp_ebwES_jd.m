@@ -1,7 +1,15 @@
-function [xNperp] = disp_ebwES_jd(xB,xTe,xne,omega);
+function [xNperp] = disp_ebwES_jd(xB,xTe,xne,omega,guess_lambda,xguess_Nperp);
 %
+if nargin >= 6
+    isNperp = 1;
+else
+    isNperp = 0;
+end    
+if nargin < 5
+    guess_lambda = 10;
+end
+%    
 N = 100;
-xguess = 10*ones(size(xB));
 %
 [qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;
 %
@@ -11,9 +19,15 @@ xbetath = sqrt(xTe/mc2);
 %
 xabr = xwpe./xwce;
 %
-xq = omega/xwce;
+xq = omega./xwce;
 %
-[lambda,Yval,Yflag] = inv_ebwES_jd(xq,N,xabr,xguess);
+if isNperp == 1
+    xguess_lambda = (xguess_Nperp.*xq.*xbetath).^2;
+else
+    xguess_lambda = guess_lambda*ones(size(xB));
+end
+%
+[lambda,Yval,Yflag] = inv_ebwES_jd(xq,N,xabr,xguess_lambda);
 %
 kprho = sqrt(lambda);
 xNperp = kprho./xq./xbetath;
