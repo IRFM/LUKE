@@ -1,6 +1,7 @@
 function [alpha_hxr,beta_hxr,R_hxr,Z_hxr,EG_hxr] = bremTSconvert_dke_yp(day,month,year);
 %
-% 
+% Convert old coodinate system used for DPSX (in partokyp.m for displaytt.m) in the new one used by DKE. Only useful for Tore Supra HXR diagnostic
+% For other tokamak, use directly the correct system of coordinate
 %
 % INPUTS
 %
