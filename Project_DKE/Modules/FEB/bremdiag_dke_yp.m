@@ -16,8 +16,10 @@ function  [kphot,brem_bd_plasma,brem_bd_diag,tphot_plasma,afit_plasma,tphot_plas
 %      
 % by Joan Decker <jodecker@mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 %
-    
+%non-thermal    
 %%%%%% [kphot,brem_bd_plasma,brem_bd_diag,tphot_plasma,afit_plasma,tphot_plasma_exp,afit_plasma_exp,meanabsx] = bremdiag_dke_yp('TS',HXR,kphot,brem_bd_out,2,1);
+%thermal
+%%%%%% [kphot,brem_bd_plasma_th,brem_bd_diag_th,tphot_plasma_th,afit_plasma_th,tphot_plasma_th_exp,afit_plasma_th_exp,meanabsx] = bremdiag_dke_yp('TS',HXR,kphot,brem_th_out,2,1);
 %
 method = 'cubic';
 %
@@ -99,5 +101,7 @@ for ic = 1:size(brem_bd_interp,1),
 		tphot_plasma_exp(ic) = NaN;
 		afit_plasma_exp(ic) = NaN;
 	end
+%
+	info_dke_yp(2,['Convolution with detector''s response function for chord #',int2str(ic),'/',int2str(size(brem_bd_interp,1)),' done']);		
 end
 %
