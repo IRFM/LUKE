@@ -901,26 +901,20 @@ if ~isempty(waveparam),
 %            
 % Dql is enforced to a maximum value in order to avoid numerical instabilities (bad matrix conditionning)
 %
-	if isnan(Dqlmax) == 0,
-	   YXXDpp_rf_ippj = ZYXXD_rf{1};testDqlmax1 = sum(sum(sum(sum(YXXDpp_rf_ippj > Dqlmax))));YXXDpp_rf_ippj(YXXDpp_rf_ippj > Dqlmax) = Dqlmax;
-	   YXXDpp_rf_ipj = ZYXXD_rf{2};testDqlmax2 = sum(sum(sum(sum(YXXDpp_rf_ipj > Dqlmax))));YXXDpp_rf_ipj(YXXDpp_rf_ipj > Dqlmax) = Dqlmax;
-	   YXXDpp_rf_ij = ZYXXD_rf{3};testDqlmax3 = sum(sum(sum(sum(YXXDpp_rf_ij > Dqlmax))));YXXDpp_rf_ij(YXXDpp_rf_ij > Dqlmax) = Dqlmax;
-	   YXXDpp_rf_imj = ZYXXD_rf{4};testDqlmax4 = sum(sum(sum(sum(YXXDpp_rf_imj > Dqlmax))));YXXDpp_rf_imj(YXXDpp_rf_imj > Dqlmax) = Dqlmax;
-	   YXXDpp_rf_immj = ZYXXD_rf{5};testDqlmax5 = sum(sum(sum(sum(YXXDpp_rf_immj > Dqlmax))));YXXDpp_rf_immj(YXXDpp_rf_immj > Dqlmax) = Dqlmax;
-	   YXXDpm_rf_ipj = ZYXXD_rf{6};testDqlmax6 = sum(sum(sum(sum(YXXDpm_rf_ipj > Dqlmax))));YXXDpm_rf_ipj(YXXDpm_rf_ipj > Dqlmax) = Dqlmax;
-	   YXXDpm_rf_ij = ZYXXD_rf{7};testDqlmax7 = sum(sum(sum(sum(YXXDpm_rf_ij > Dqlmax))));YXXDpm_rf_ij(YXXDpm_rf_ij > Dqlmax) = Dqlmax;
-	   YXXDpm_rf_imj = ZYXXD_rf{8};testDqlmax8 = sum(sum(sum(sum(YXXDpm_rf_imj > Dqlmax))));YXXDpm_rf_imj(YXXDpm_rf_imj > Dqlmax) = Dqlmax;
-	   YXXDmp_rf_ijp = ZYXXD_rf{9};testDqlmax9 = sum(sum(sum(sum(YXXDmp_rf_ijp > Dqlmax))));YXXDmp_rf_ijp(YXXDmp_rf_ijp > Dqlmax) = Dqlmax;
-	   YXXDmp_rf_ij = ZYXXD_rf{10};testDqlmax10 = sum(sum(sum(sum(YXXDmp_rf_ij > Dqlmax))));YXXDmp_rf_ij(YXXDmp_rf_ij > Dqlmax) = Dqlmax;
-	   YXXDmp_rf_ijm = ZYXXD_rf{11};testDqlmax11 = sum(sum(sum(sum(YXXDmp_rf_ijm > Dqlmax))));YXXDmp_rf_ijm(YXXDmp_rf_ijm > Dqlmax) = Dqlmax;
-	   YXXDmm_rf_ijp = ZYXXD_rf{12};testDqlmax12 = sum(sum(sum(sum(YXXDmm_rf_ijp > Dqlmax))));YXXDmm_rf_ijp(YXXDmm_rf_ijp > Dqlmax) = Dqlmax;
-	   YXXDmm_rf_ijm = ZYXXD_rf{13};testDqlmax13 = sum(sum(sum(sum(YXXDmm_rf_ijm > Dqlmax))));YXXDmm_rf_ijm(YXXDmm_rf_ijm > Dqlmax) = Dqlmax;
-%
-	   testDqlmax = testDqlmax1 + testDqlmax2 + testDqlmax3 + testDqlmax4 + testDqlmax5 + testDqlmax6 + testDqlmax7 + testDqlmax8;
-	   testDqlmax = testDqlmax + testDqlmax9 + testDqlmax10 + testDqlmax11 + testDqlmax12 + testDqlmax13;
-	   if display_mode >= 1,info_dke_yp(2,['WARNING: Dql exceeds the maximum allowed value ',num2str(Dqlmax),'. It is enforced to this level !']);end
-    end    
-	   	
+	YXXDpp_rf_ippj = ZYXXD_rf{1};
+	YXXDpp_rf_ipj = ZYXXD_rf{2};
+	YXXDpp_rf_ij = ZYXXD_rf{3};
+    YXXDpp_rf_imj = ZYXXD_rf{4};
+    YXXDpp_rf_immj = ZYXXD_rf{5};
+    YXXDpm_rf_ipj = ZYXXD_rf{6};
+    YXXDpm_rf_ij = ZYXXD_rf{7};
+    YXXDpm_rf_imj = ZYXXD_rf{8};
+    YXXDmp_rf_ijp = ZYXXD_rf{9};
+    YXXDmp_rf_ij = ZYXXD_rf{10};
+    YXXDmp_rf_ijm = ZYXXD_rf{11};
+    YXXDmm_rf_ijp = ZYXXD_rf{12};
+    YXXDmm_rf_ijm = ZYXXD_rf{13};
+%	   	
 	YXXDrf_ij = ZYXXD_rf{14};   
 %
    if dke_mode == 1
@@ -971,6 +965,26 @@ if ~isempty(waveparam),
 %	
 	XXDmm_rf_ijp = integral_dke_jd(ones(1,nb),YXXDmm_rf_ijp,4);
 	XXDmm_rf_ijm = integral_dke_jd(ones(1,nb),YXXDmm_rf_ijm,4);
+%
+	if isnan(Dqlmax) == 0,
+	   testDqlmax1 = sum(sum(sum(XXDpp_rf_ippj > Dqlmax)));XXDpp_rf_ippj(XXDpp_rf_ippj > Dqlmax) = Dqlmax;
+	   testDqlmax2 = sum(sum(sum(XXDpp_rf_ipj > Dqlmax)));XXDpp_rf_ipj(XXDpp_rf_ipj > Dqlmax) = Dqlmax;
+	   testDqlmax3 = sum(sum(sum(XXDpp_rf_ij > Dqlmax)));XXDpp_rf_ij(XXDpp_rf_ij > Dqlmax) = Dqlmax;
+	   testDqlmax4 = sum(sum(sum(XXDpp_rf_imj > Dqlmax)));XXDpp_rf_imj(XXDpp_rf_imj > Dqlmax) = Dqlmax;
+	   testDqlmax5 = sum(sum(sum(XXDpp_rf_immj > Dqlmax)));XXDpp_rf_immj(XXDpp_rf_immj > Dqlmax) = Dqlmax;
+	   testDqlmax6 = sum(sum(sum(XXDpm_rf_ipj > Dqlmax)));XXDpm_rf_ipj(XXDpm_rf_ipj > Dqlmax) = Dqlmax;
+	   testDqlmax7 = sum(sum(sum(XXDpm_rf_ij > Dqlmax)));XXDpm_rf_ij(XXDpm_rf_ij > Dqlmax) = Dqlmax;
+	   testDqlmax8 = sum(sum(sum(XXDpm_rf_imj > Dqlmax)));XXDpm_rf_imj(XXDpm_rf_imj > Dqlmax) = Dqlmax;
+	   testDqlmax9 = sum(sum(sum(XXDmp_rf_ijp > Dqlmax)));XXDmp_rf_ijp(XXDmp_rf_ijp > Dqlmax) = Dqlmax;
+	   testDqlmax10 = sum(sum(sum(XXDmp_rf_ij > Dqlmax)));XXDmp_rf_ij(XXDmp_rf_ij > Dqlmax) = Dqlmax;
+	   testDqlmax11 = sum(sum(sum(XXDmp_rf_ijm > Dqlmax)));XXDmp_rf_ijm(XXDmp_rf_ijm > Dqlmax) = Dqlmax;
+	   testDqlmax12 = sum(sum(sum(XXDmm_rf_ijp > Dqlmax)));XXDmm_rf_ijp(XXDmm_rf_ijp > Dqlmax) = Dqlmax;
+	   testDqlmax13 = sum(sum(sum(XXDmm_rf_ijm > Dqlmax)));XXDmm_rf_ijm(XXDmm_rf_ijm > Dqlmax) = Dqlmax;
+%
+	   testDqlmax = testDqlmax1 + testDqlmax2 + testDqlmax3 + testDqlmax4 + testDqlmax5 + testDqlmax6 + testDqlmax7 + testDqlmax8;
+	   testDqlmax = testDqlmax + testDqlmax9 + testDqlmax10 + testDqlmax11 + testDqlmax12 + testDqlmax13;
+	   if testDqlmax>0 & display_mode >= 1,info_dke_yp(2,['WARNING: Dql exceeds the maximum allowed value ',num2str(Dqlmax),'. It is enforced to this level !']);end
+    end    
 %
    if dke_mode == 1
       XXDpp_rf_tp_ippj = integral_dke_jd(ones(1,nb),YXXDpp_rf_tp_ippj,4);
