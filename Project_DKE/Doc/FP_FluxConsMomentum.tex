@@ -1,22 +1,6 @@
 
-In the Fokker-Planck equation, the momentum space operator is 
-\begin{equation}
-\nabla _{\mathbf{p}}\cdot \mathbf{S}_{\mathbf{p}}\left( f_{0}\right) 
-\label{momentumfpe}
-\end{equation}
-where fluxes are expressed as (\ref{momflux2}). 
-\begin{equation}
-\mathbf{S}_{\mathbf{p}}\left( f_{0}\right) =-\Bbb{D}_{\mathbf{p}}\cdot %
-\nabla _{\mathbf{p}}f_{0}+\mathbf{F}_{\mathbf{p}}f_{0}
-\end{equation}
-with the components (\ref{momflux3}) 
-\begin{eqnarray}
-S_{p} &=&-D_{pp}\frac{\partial f_{0}}{\partial p}+\frac{\sqrt{1-\xi ^{2}}}{p}
-D_{p\xi }\frac{\partial f_{0}}{\partial \xi }+F_{p}f_{0} \\
-S_{\xi } &=&-D_{\xi p}\frac{\partial f_{0}}{\partial p}+\frac{\sqrt{1-\xi
-^{2}}}{p}D_{\xi \xi }\frac{\partial f_{0}}{\partial \xi }+F_{\xi }f_{0}
-\end{eqnarray}
-and we need to evaluate the bounce-averaged fluxes (\ref{sp0}) 
+The bounce averaged Fokker-Planck equation is is given in the conservative form 
+by relation (\ref{kinbav2}), with the bounce-averaged fluxes (\ref{sp0}) and (\ref{smu0})
 \begin{eqnarray}
 S_{p}^{\left( 0\right) } &=&\left\{ S_{p}\right\}  \\
 S_{\xi _{0}}^{\left( 0\right) } &=&\sigma \left\{ \frac{\sigma \xi }{\sqrt{%
@@ -65,28 +49,28 @@ with
 S_{p}^{(0)} &=&-D_{pp}^{(0)}\frac{\partial f_{0}^{(0)}}{\partial p}+\frac{%
 \sqrt{1-\xi _{0}^{2}}}{p}D_{p\xi }^{(0)}\frac{\partial f_{0}^{(0)}}{\partial %
 \xi _{0}}+F_{p}^{(0)}f_{0}^{(0)} \\
-S_{\xi _{0}}^{(0)} &=&-D_{\xi p}^{(0)}\frac{\partial f_{0}^{(0)}}{\partial p}
+S_{\xi _{0}}^{(0)} &=&-D_{\xi p}^{(0)}\frac{\partial f_{0}^{(0)}}{\partial p}%
 +\frac{\sqrt{1-\xi _{0}^{2}}}{p}D_{\xi \xi }^{(0)}\frac{\partial f_{0}^{(0)}%
 }{\partial \xi _{0}}+F_{\xi }^{(0)}f_{0}^{(0)}
 \end{eqnarray}
 by defining the diffusion components 
 \begin{eqnarray}
-D_{pp}^{(0)} &=&\left\{ D_{pp}\right\}   \label{diffbav} \\
-D_{p\xi }^{(0)} &=&\sigma \left\{ \frac{\sigma \xi }{\sqrt{\Psi }\xi _{0}}%
-D_{p\xi }\right\}   \nonumber \\
-D_{\xi p}^{(0)} &=&\sigma \left\{ \frac{\sigma \xi }{\sqrt{\Psi }\xi _{0}}%
-D_{\xi p}\right\}   \nonumber \\
+D_{pp}^{(0)} &=&\left\{ D_{pp}\right\}   \label{diffbavpp} \\
+D_{p\xi }^{(0)} &=&\sigma \left\{ \frac{\sigma \xi }{\sqrt{\Psi }\xi _{0}}
+D_{p\xi }\right\}   \label{diffbavpm} \\
+D_{\xi p}^{(0)} &=&\sigma \left\{ \frac{\sigma \xi }{\sqrt{\Psi }\xi _{0}}
+D_{\xi p}\right\}   \label{diffbavmp} \\
 D_{\xi \xi }^{(0)} &=&\left\{ \frac{\xi ^{2}}{\Psi \xi _{0}^{2}}D_{\xi \xi
-}\right\}   \nonumber
+}\right\}   \label{diffbavmm}
 \end{eqnarray}
 and the convection components 
 \begin{eqnarray}
-F_{p}^{(0)} &=&\left\{ F_{p}\right\}   \label{convbav} \\
-F_{\xi }^{(0)} &=&\sigma \left\{ \frac{\sigma \xi }{\sqrt{\Psi }\xi _{0}}
-F_{\xi }\right\}   \nonumber
+F_{p}^{(0)} &=&\left\{ F_{p}\right\}   \label{convbavp} \\
+F_{\xi }^{(0)} &=&\sigma \left\{ \frac{\sigma \xi }{\sqrt{\Psi }\xi _{0}}%
+F_{\xi }\right\}   \label{convbavm}
 \end{eqnarray}
-where the gradient vector in the reduced $\left( p,\xi _{0}\right) $ space
-is 
+where the gradient vector in the reduced $\left( p,\xi _{0}\right) $
+momentum space is 
 \begin{equation}
 \nabla _{p,\xi _{0}}=\left( 
 \begin{array}{l}
