@@ -846,14 +846,17 @@ while 1,
 %
 	if display_mode == 2,
 %
+	    figure(253),clf
+		 [ax] = graph1D_jd(xrho_dke,xne(r_dke)./(xnormf_ref_fsav*ne_ref),'\rho','<ne>_{in}/<ne>_{out}','Electron density conservation',NaN,[0,1],[0.5,1.5],'none','x','r',2,14,gca,0.8,0.7,0.6);		 
+%
         figure(200),clf
         [ax] = graph1D_jd(xrho_dke,xJrf0_fsav_mksa,'\rho','<J_{RF}> (MA/m^2)','RF + Ohmic Current Density',NaN,[0,1],NaN,'none','+','r',2,14,gca,0.8,0.7,0.6);
 %
         figure(203),clf
-        [ax] = graph1D_jd(xrho_dke,-xPcoll_tot_fsav_mksa,'','','',NaN,[0,1],NaN,'none','+','r',2,14,gca,0.8,0.7,0.6);
+        [ax] = graph1D_jd(xrho_dke,-xPcoll_tot_fsav_mksa,'','','',NaN,[0,1],NaN,'none','*','r',2,14,gca,0.8,0.7,0.6);
         hold on
         [ax] = graph1D_jd(xrho_dke,xPelec_tot_fsav_mksa,'','','',NaN,[0,1],NaN,'none','+','b',2,14);
-        [ax] = graph1D_jd(xrho_dke,xPabs_tot_fsav_mksa,'\rho','<P_{abs}> (MW/m^3)','Density of Absorbed Power',['Collisions';'Ohmic     ';'RF Waves  '],[0,1],0,'none','+','m',2,14);
+        [ax] = graph1D_jd(xrho_dke,xPabs_tot_fsav_mksa,'\rho','<P_{abs}> (MW/m^3)','Density of Absorbed Power',['Collisions';'Ohmic     ';'RF Waves  '],[0,1],0,'none','x','m',2,14);
 %
         figure(204),clf
         [ax] = graph1D_jd(xrho_dke,XxRR_mksa_fsav(np-1,ir_display_dke),'\rho','<\Gamma_{R}> (m^-3.s^-1)','Runaway loss rate',NaN,[0,1],NaN,'none','+','r',2,14,gca,0.8,0.7,0.6);
