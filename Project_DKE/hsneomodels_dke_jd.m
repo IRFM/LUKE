@@ -1,4 +1,4 @@
-function [prho,pcurr_hir_ref_fsav,pcurr_sau_ref_fsav,pcurr_hin_ref_fsav,pcurr_i_ref_fsav] = ...
+function [prho,pcurr_hir_ref_fsav,pcurr_sau_ref_fsav,pcurr_hin_ref_fsav,pcurr_i_ref_fsav,L31] = ...
     hsneomodels_dke_jd(tokname)
 % 
 % Calculates the bootstrap current from neoclassical models by Hinton & Hazeltine, Hirshman and Sauter 
@@ -27,13 +27,61 @@ qe = 1.6e-19;
 filename = ['EQUIL_',tokname,'.mat'];
 [s,dossier,machine] = comput_dke_yp;
 eval(['load ',dossier,s,filename,' BPHI BR BZ R Z ppsi pTe pne pzTi zZi']);
-np = length(ppsi);
 Bt = BPHI(1,1);
-Rp = R(1,1);
-Zp = Z(1,1);
-ap = R(np,1) - Rp;
+%
+[npsi,ntheta] = size(R);
+np = length(ppsi);
+%
+% FFT interpolation on R,Z, BR, BZ, BPHI as a function of theta (very precise, works for uniform theta grids only)
+%
+mfactor = 10;
+mtheta = 0:2*pi/((ntheta-1)*mfactor):2*pi*((ntheta-1)*mfactor-1)/((ntheta-1)*mfactor); %super theta grid
+%
+mR = interpft(R(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
+mZ = interpft(Z(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
+mBR = interpft(BR(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
+mBZ = interpft(BZ(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
+mBPHI = interpft(BPHI(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
+%
+mtheta = [mtheta,2*pi]; %2*pi point retrieved (for future interpolation)
+mR = [mR,mR(:,1)]; %2*pi point retrieved
+mZ = [mZ,mZ(:,1)]; %2*pi point retrieved
+mBR = [mBR,mBR(:,1)]; %2*pi point retrieved
+mBZ = [mBZ,mBZ(:,1)]; %2*pi point retrieved
+mBPHI = [mBPHI,mBPHI(:,1)]; %2*pi point retrieved
+%
+nmtheta = length(mtheta);
+%
+Rp = mR(1,1);%Major radius of magnetic Axis
+Zp = mZ(1,1);%Elevation of magnetic Axis
+%
+Rmax = mR(npsi,1);%Major radius where the last close flux-surface crosses the LFS midplane
+ap =  Rmax - Rp;%Plasma minor radius on the LFS midplane 
 prho = (R(:,1) - Rp)'/ap;
-pq = qfactors_dke_yp(Rp,Zp,R,Z,BR,BZ,BPHI);
+%
+psia = ppsi(npsi);%Poloidal flux at the edge
+ppsin = ppsi/psia;%Normalized poloidal flux
+%
+pR = mR;
+pZ = mZ;
+pBR = mBR;
+pBZ = mBZ;
+pBphi = mBPHI;
+pBT = abs(pBphi);%Toroidal B-field
+pBp = sqrt(pBR.^2 + pBZ.^2);%Poloidal B-field
+pB = sqrt(pBphi.^2 + pBR.^2 + pBZ.^2);%Total B-field
+%
+%index 0 refers to the minimum of the magnetic field
+%
+[pB0,piB0] = min(pB'); %Minimum of B on flux surface
+pBmax = max(pB'); %Maximum of B on flux surface
+%
+pmhu0T2 = 1 - pB0./pBmax; %Pitch-angle (squared) at the trapped-passing boundary
+%
+piB0 = (piB0 - 1)*npsi + (1:npsi);%Indices in (psi,theta) grid corresponding of B=Bmin
+pBT0 = pBT(piB0);%Toroidal field at B=Bmin
+pBp0 = pBp(piB0);%Poroidal field at B=Bmin
+pR0 = pR(piB0);%Major radius at B=Bmin
 %
 % note: model with one ion species only. to be completed
 %
@@ -96,9 +144,9 @@ A1 = dlnpedr + pTi./(Zi*pTe).*dlnpidr;
 A2 = dlnTedr;
 A4 = alpha.*pTi./(Zi*pTe).*dlnTidr;
 %
-Jbavnorm = -ppe.*pq./pia.*(L31.*A1 + L32.*A2 + L34.*A4); 
-Jbavnorm_s = -ppe.*pq./pia.*(L31.*A1 + L32_s.*A2 + L34.*A4); 
-Jbavnorm_hh = -ppe.*pq./sqrt(pia).*(0.69*dlnTedr + 2.44*dlnnedr); 
+Jbavnorm = -ppe.*pBT0./pBp0.*(L31.*A1 + L32.*A2 + L34.*A4);%WARNING: pBT0./pBp0 not equal to pq./pia when pia becomes large (i.e. > 0.2)
+Jbavnorm_s = -ppe.*pBT0./pBp0.*(L31.*A1 + L32_s.*A2 + L34.*A4); 
+Jbavnorm_hh = -ppe.*pBT0./pBp0.*(0.69*dlnTedr + 2.44*dlnnedr); 
 %
 pcurr_hir_ref_fsav = Jbavnorm/Bt*qe*1e-6*1e3; 
 pcurr_sau_ref_fsav = Jbavnorm_s/Bt*qe*1e-6*1e3;
@@ -107,7 +155,7 @@ pcurr_hin_ref_fsav_e = Jbavnorm_hh/Bt*qe*1e-6*1e3;
 % Ion Flux to be added in the fluid limit: Hinton & Hazeltine, Hirshman and Sauter relations use the same term
 %
 A1_i = pTi./(Zi*pTe).*dlnpidr;
-Jbavnorm_i = -ppe.*pq./pia.*(L31.*A1_i + L34.*A4);
+Jbavnorm_i = -ppe.*pBT0./pBp0.*(L31.*A1_i + L34.*A4);
 pcurr_i_ref_fsav = Jbavnorm_i/Bt*qe*1e-6*1e3; 
 %
 pcurr_hin_ref_fsav = pcurr_hin_ref_fsav_e + pcurr_i_ref_fsav;

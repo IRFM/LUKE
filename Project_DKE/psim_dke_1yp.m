@@ -22,8 +22,8 @@ dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode] = psim_dke_1yp
 %
 %by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
 %
-snumber = 203;%Simulation number
-tokname = 'TS';%Tokamak equilibrium scenario (see ptok_dke_1yp.m) in EQUIL_tokname file)
+snumber = 204;%Simulation number
+tokname = 'LORENTZ_MODEL';%Tokamak equilibrium scenario (see ptok_dke_1yp.m) in EQUIL_tokname file)
 loadequil = 1;%0: Load already existing equilibrium file, 1: create equilibrium with HELENA (needs mex file), 2: create equilibrium file (with idealequil_f_jd.m function)
 qopt = 1;%Option for q profile. (0): constant (default), (1): from qmin and eq (for HELENA, it is used only for the psi grid guess)
 %
