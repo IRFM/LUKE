@@ -65,7 +65,7 @@ spfac = 20;%reduction factor for the supergrid used in collision integrals
 %Values of the radial flux grid [1,p] (If one radial value: local calculation only)
 %
 psin_S = [];%5.286742555900838e-002; %[0.1]%(rho = 0.25 in CMOD)
-rho_S = [0.2,0.6];%[0.1:0.05:0.9];%[0.2,0.6],%;0.03322100141578101;0.71365;
+rho_S = [0.2];%[0.1:0.05:0.9];%[0.2,0.6],%;0.03322100141578101;0.71365;
 %
 psin_display = NaN;%Approximate radial value at which results are displayed if display_mode >= 1 [1,1]
 rho_display = 0.1;
@@ -73,7 +73,7 @@ rho_display = 0.1;
 dpsin_dke = 0.01;%maximum difference between two consecutive positions used for radial derivatives
 %
 ref_mode = 1;%Reference values: (0) from core Te and ne, (1) from Te and ne at the normalized radius (paramater only active for a single radial value, otherwise ref_mode = 0)
-norm_ref = 1;%Normalization procedure for the ohmic electric field, LH and EC quasilinear diffusion: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref 
+norm_ref = 0;%Normalization procedure for the ohmic electric field, LH and EC quasilinear diffusion: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref 
 %
 % Ohmic electric field
 %
@@ -83,7 +83,7 @@ eepsi = 0;%Exponent for Ohmic electric field
 %
 % RF Waves
 %
-rf_list(1) = 0;%(1): include LH test calculations (see psim_ideallhcd_jd); (0) do not include
+rf_list(1) = 1;%(1): include LH test calculations (see psim_ideallhcd_jd); (0) do not include
 rf_list(2) = 0;%(1): include EC  calculations (see psim_idealeccd_jd); (0) do not include
 rf_list(3) = 0;%(1): include cold LHCD calculations (see psim_coldlhcd_jd); (0) do not include
 rf_list(4) = 0;%(1): include cold ECCD calculations (see psim_coldeccd_jd); (0) do not include
@@ -110,16 +110,16 @@ nhuloss = NaN;%Magnetic ripple loss frequency, nhuloss > 1000 (or NaN if no ripp
 %
 % Collision operator
 %
-coll_mode = 2;%Relativistic electron-electron collision operator: (0) Maxwellian, (1) High-velocity limit, (2) Linearizeded Belaiev-Budker 
+coll_mode = 0;%Relativistic electron-electron collision operator: (0) Maxwellian, (1) High-velocity limit, (2) Linearizeded Belaiev-Budker 
 %
 % Run mode
 %
-bounce_mode = 1;%Bounce averaging option: (0) no bounce averaging, (1) bounce averaging full implicit method with 15 diagonals
-dke_mode = 1;%Fokker-Planck equation (0), Drift Kinetic equation (1)
+bounce_mode = 0;%Bounce averaging option: (0) no bounce averaging, (1) bounce averaging full implicit method with 15 diagonals
+dke_mode = 0;%Fokker-Planck equation (0), Drift Kinetic equation (1)
 equil_mode = 1;%Equilibrium option: (0) circular concentric flux-surfaces, (1) numerical equilibrium
 %
 norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
-boundary_mode_f = 2;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
+boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 prec0_f = 1e-10;%Convergence level of the residu
 nit_f = 50;%Maximum number of iterations for f
 initguess_f = 0;%Initial guess for the distribution function: (0) Maxwellian, (1) Fuchs model with Tperp for LH current drive only, (2) from a file
@@ -129,8 +129,8 @@ prec0_g = 1e-10;%Convergence level of the residu (if NaN, iterations stop with n
 nit_g = 50;%Maximum number of iterations for g
 %
 dtn = 1000;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
-invproc = [3];%Matrix inversion method: (1) Full LU factorization, (2) qmr iterative method, (3) bicgstab iterative method, (4) cgs iterative method
-param_inv = [2e-3,30];%Parameters for the matrix inversion procedure when invproc > 1. Precision of the partial LU decomposition, and maximum number of iteration for iterative methods (param_inv(1) depends of boundary_mode)
+invproc = [3];%Iterative matrix inversion method: (1) qmr iterative method, (2) bicgstab iterative method, (3) cgs iterative method
+param_inv = [2e-3,30];%Parameters for the matrix inversion procedure. Precision of the partial LU decomposition, and maximum number of iteration for iterative methods (param_inv(1) depends of boundary_mode, if param_inv(1)=0, full LU factorization)
 %
 dp_cyl = 0.1;%Cylindrical momentum step (pth_ref)
 display_mode = 1;%Display mode: (0): no, (1): partial, (2): full
