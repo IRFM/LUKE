@@ -3,7 +3,6 @@ xPabs0_mksa_out,xPabs_tot_mksa_out,...
 xeta0_mksa_out,xepsi_mksa_out,xia_out,xft_out,...
 time_out,memoryLU_out] =...
 test_dke_1yp(tokname,snumber,...
-ap,Rp,Ip,Bt,Ncoils,Zi,mi,fi,BeLi,qmin,eq,Te0,Tea,eTe,eTe_ref,ne0,nea,ene,ene_ref,Ti0,Tia,eTi,Zeff0,Zeffa,eZeff,...
 grid_uniformity,grid_method,nmhu_S,np_S,pnmax_S,sfac,snmhu,snp,rho_S,rho_display,...
 ref_mode,norm_ref,...
 epsi0_fsav,epsia_fsav,eepsi_fsav,...
@@ -29,6 +28,16 @@ global nfig;
 version_dke = 1.4;
 time_pause = 1;
 %
+% modified j.d. 11/20/03
+%
+% Plasma parameters
+%
+loadstr = ['PARAM_',tokname];
+%
+eval(['load ',loadstr,' ap Rp Ip Bt Ncoils BeLi pq pTe pne Zi mi fi pzTi pzni prho']);
+nprho = length(prho);
+pZeff = sum(pzni.*repmat((Zi.^2)',[1,nprho]))./pne;%Effective charge (a.u.)
+%
 if diary_mode == 1, 
 	diaryfile = ['diary_dke_',int2str(iloop)];
 	eval(['delete ',diaryfile]);
@@ -47,22 +56,20 @@ if diary_mode == 1,
 	disp(['- Deuterium isotopic fraction = ',num2str(fi(2))]); 
 	disp(['- Tritium isotopic fraction = ',num2str(fi(3))]); 
 	disp(['- Beta+li factor = ',num2str(BeLi)]);
-	disp(['- Minimum safety factor qmin = ',num2str(qmin)]);
-	disp(['- Safety factor profile factor eq = ',num2str(eq)]);
-	disp(['- Core electron temperature (keV) Te0 = ',num2str(Te0)]);
-	disp(['- Edge electron temperature (keV) Tea = ',num2str(Tea)]);
-	disp(['- Electron temperature profile peaking factor eTe = ',num2str(eTe)]);
-	disp(['- Reference electron temperature profile peaking factor eTe_ref = ',num2str(eTe_ref)]);
-	disp(['- Core electron density (m-3) ne0 = ',num2str(ne0)]);
-	disp(['- Edge electron density (m-3) nea = ',num2str(nea)]);
-	disp(['- Electron density profile peaking factor ene = ',num2str(ene)]);
-	disp(['- Reference electron density profile peaking factor ene_ref = ',num2str(ene_ref)]);
-	disp(['- Core ion temperature (keV) Ti0 = ',num2str(Ti0)]);
-	disp(['- Edge ion temperature (keV) Tia = ',num2str(Tia)]);
-	disp(['- Ion temperature profile peaking factor eTi = ',num2str(eTi)]);
-	disp(['- Core effective charge Zeff0 = ',num2str(Zeff0)]);
-	disp(['- Edge effective charge (keV) Zeffa = ',num2str(Zeffa)]);
-	disp(['- Effective charge profile peaking factor eZeff = ',num2str(eZeff)]);
+	%
+	% modified j.d. 11/20/03
+	%
+	disp(['- Minimum safety factor qmin = ',num2str(min(pq))]);
+	disp(['- Core Safety factor q0 = ',num2str(pq(1))]);
+	disp(['- Edge Safety factor qa = ',num2str(pq(nprho))]);
+	disp(['- Core electron temperature (keV) Te0 = ',num2str(pTe(1))]);
+	disp(['- Edge electron temperature (keV) Tea = ',num2str(pTe(nprho))]);
+	disp(['- Core electron density (m-3) ne0 = ',num2str(pne(1))]);
+	disp(['- Edge electron density (m-3) nea = ',num2str(pne(nprho))]);
+	disp(['- Core ion temperature (keV) Ti0 = ',num2str(pzTi(1,1))]);
+	disp(['- Edge ion temperature (keV) Tia = ',num2str(pzTi(1,nprho))]);
+	disp(['- Core effective charge Zeff0 = ',num2str(pZeff(1))]);
+	disp(['- Edge effective charge (keV) Zeffa = ',num2str(pZeff(nprho))]);
 end
 %
 [s,dossier,machine] = comput_dke_yp;
@@ -183,73 +190,23 @@ if diary_mode == 1,
 end
 disp('-------------------------------------------------------------------------------------------------------------------');
 %
+% Modified j.d. 11/20/03
+%
 %Local plasma parameters (calculated on the half radial grid)
 %
-if dke_mode == 0,
-	c_Te = (1 - xrho(1)^2)^(eTe_ref - eTe);%Coefficient for Te for studying gradient at fixed local electron pressure (set to 1 normally)
-	c_ne = (1 - xrho(1)^2)^(ene_ref - ene);%Coefficient for ne for studying gradient at fixed local electron pressure (set to 1 normally)
-else
-	c_Te = (1 - xrho(2)^2)^(eTe_ref - eTe);%Coefficient for Te for studying gradient at fixed local electron pressure (set to 1 normally)
-	c_ne = (1 - xrho(2)^2)^(ene_ref - ene);%Coefficient for ne for studying gradient at fixed local electron pressure (set to 1 normally)
-end
-xTe = (Te0 - Tea)*c_Te*(1 - xrho.^2).^eTe + Tea;%Electron temperature (keV)
-xne = (ne0 - nea)*c_ne*(1 - xrho.^2).^ene + nea;%Electron density (m-3)
+xTe = interp1(prho,pTe,xrho);
+xne = interp1(prho,pne,xrho);
+xzTi = interp1(prho,pzTi',xrho)';
+xzni = interp1(prho,pzni',xrho)';
+xq = interp1(prho,pq,xrho);
+xZeff = interp1(prho,pZeff,xrho);
 %
-xZeff = (Zeff0 - Zeffa)*(1 - xrho.^2).^eZeff + Zeffa;%Effective charge (a.u.)
-%
-%Local safety factor value
-%
-qmax = ap*ap*Bt/Rp/Ip/0.2;%Ampere's theorem at the plasma edge (circular plasma cross-section)
-xq = (qmax - qmin)*xrho.^eq + qmin;
-%
-%Ion density calculation (m-3)
-%
-%Ion parameters
-%
-nz = length(Zi);
-%
-%Ion temperatures
-% 
-if length(Ti0) < nz,
-    xTi = (Ti0 - Tia).*(1 - xrho.^2).^eTi + Tia;
-    xzTi = repmat(xTi,[nz,1]);%Same temperature for all ion species
-else
-    xzTi0 = repmat(Ti0',[1,nr]);
-    xzTia = repmat(Tia',[1,nr]);
-    xzeTi = repmat(eTi',[1,nr]);
-    xzrho = repmat(xrho,[nz,1]);
-    xzTi = (xzTi0 - xzTia).*(1 - xzrho.^2).^xzeTi + xzTia;%Dominant ion and impurity temperatures (usually, Ti = Te/2) (keV)
-end
-%
-%Ion densities
-%
-if sum(Zi>1) > 1,%More than one impurity species
-	error('Full impurity model not yet implemented');%Need each species density (Coronal or impurity transport model)
-elseif sum(Zi>1) == 1 & nz > 1,%One fully stripped impurity species 
-   Zimp = max(Zi);
-   xnhyd = xne.*(Zimp - xZeff)/(Zimp - 1);
-   xzni(nz,:)= xne.*(xZeff - 1)/(Zimp - 1)/Zimp;
-elseif sum(Zi>1) == 1 & nz == 1,%Non hydrogen plasma (for testing the Lorentz model Zi >> 1 only)
-	xnhyd = xne.*0;
-   xzni(nz,:) = xne/Zi;
-else,%No Impurity
-   xnhyd = xne;
-	zni = zeros(nz,nr);
-end
-%
-if ~(sum(Zi>1) == 1 & nz == 1),%Only hydrogen plasma with or without impurities
-	if sum(fi) == 1
-		xzni(1:3,:) = fi'*xnhyd;
-	else
-    	error('Hydrogen isotopic fractions do not add to 1 ! ')
-	end
-end    
 %
 %Reference plasma parameters (for the normalization: pth_ref, nhuth_ref)
 %
 if length(rho_S) > 1 | ref_mode == 0,
-    Te_ref = Te0;%Core temperature
-    ne_ref = ne0;%Core density
+    Te_ref = max(xTe);%Core temperature
+    ne_ref = max(xne);%Core density
     if display_mode >= 1
         info_dke_yp(2,'Core reference temperature and density');
         disp('-------------------------------------------------------------------------------------------------------------------');
@@ -334,7 +291,7 @@ xnhuloss_ref = nhuloss*xrnhuth;
 %
 %   RF wave quasilinear diffusion
 %
-waveparam = rfwave_dke_jd(tokname,xrho',betath_ref,ne_ref,xrbetath',xrnhuth',xTe_norm,xne_norm,xzni_norm,Zi',mi',Bt,Rp,ap,bounce_mode);%Look at the function for the RF wave input parameters
+waveparam = rfwave_dke_jd(tokname,xrho',betath_ref,ne_ref,xrbetath',xrnhuth',xTe_norm,xne_norm,xzni_norm,Zi',mi',Bt,xq,Rp,ap,bounce_mode);%Look at the function for the RF wave input parameters
 nb = size(waveparam,2);
 blist_lh = find(waveparam(1,:,1)==0);
 nb_lh = length(blist_lh);
