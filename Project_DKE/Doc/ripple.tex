@@ -1,3 +1,122 @@
 
-\label{ripplesection} This simulation is here presented to illustrate
-code capabilities for a realistic 
+\label{ripplesection} This simulation is here again presented to illustrate
+code capabilities for a realistic magnetic configuration and a hot plasma.
+The problem addressed corresponds to fast electron losses in magnetic
+ripple, between two consecutive toroidal magnetic field coils. The case
+studied correponds only for the Tore Supra tokamak, which exhibits a very
+large magnetic ripple on the outer plasma edge, of the order of $7\%$ \cite
+{ju02}. Though the description of the physical process is not fully
+consistent with the basic assumptions of the code, and the bounce-averaged
+theory especially, calculations are expected to give valuable informations
+of the loss rate profile. 
+
+Simulations parameters are exactly those used in Sec.\ref
+{fasttransportsection} for fast electron transport studies, except that the
+magnetic configuration corresponds to the tokamak Tore Supra which has a
+circular plasma cross-section, and that fast electron radial transport is
+here neglected. Moreover, the magnetic ripple losses are modelized by a
+characteristic loss (drift) time $\nu _{d_{ST}}^{-1}=1000$ inside the
+supertrapped domain bounded by $\left| \xi _{0}\right| \leq \xi _{0ST}$ and $%
+p\gtrsim p_{c}$ as discussed in Sec.\ref{moments}.
+
+Temperature and density profiles used as input for the magnetic equilibrium
+calculations done by HELENA code are presented in Fig. \ref{profTSrip}. As
+usual in current drive regime at low density, the electron temperature
+profile is peaked, and its value is much larger than ion temperature. The
+dominant ion (deuterium) profile is determined selfconsistently from the
+electron density and effective charge profiles, the latter being taken flat
+at a level of $Z_{eff}=1.5$. In the calculations which are based on
+electroneutrality, only one fully stripped impurity is considered, i.e.
+carbon $Z_{s}=6$, in order to avoid the use of an impurity transport code.
+The resulting $2-D$ contour plot of the magnetic poloidal flux surfaces is
+given in Fig. \ref{equilTSrip}, where the Shafranov shift is clearly
+visible. Here, calculations are performed for a monotonic safety factor
+profile, like for the JET case discussed in the previous section.
+
+%TCIMACRO{
+%\TeXButton{Fig_profTSrip}{\fig{figures/profTSrip.eps}{Ion and electron temperature and density profiles, and effective charge profile used for calculating the Tore Supra magnetic equilibrium with HELENA. 
+%Here hydrogen and tritium densities are zero (pure deuterium plasma) . The poloidal flux coordinate $\psi $ as function of the normalized radius $\rho $ 
+%in the equatorial mid-plane corresponds to the magnetic equilibrium code output}{profTSrip}{7cm} }}
+%BeginExpansion
+\fig{figures/profTSrip.eps}{Ion and electron temperature and density profiles, and effective charge profile used for calculating the Tore Supra magnetic equilibrium with HELENA. 
+Here hydrogen and tritium densities are zero (pure deuterium plasma) . The poloidal flux coordinate $\psi $ as function of the normalized radius $\rho $ 
+in the equatorial mid-plane corresponds to the magnetic equilibrium code output}{profTSrip}{7cm} %
+%EndExpansion
+
+%TCIMACRO{
+%\TeXButton{Fig_equilTSrip}{\fig{figures/equilTSrip.eps}{$2-D$ contour plot of the poloidal magnetic flux surfaces as calculated for Tore Supra tokamak by the code HELENA}
+%{equilTSrip}{7cm} }}
+%BeginExpansion
+\fig{figures/equilTSrip.eps}{$2-D$ contour plot of the poloidal magnetic flux surfaces as calculated for Tore Supra tokamak by the code HELENA}
+{equilTSrip}{7cm} %
+%EndExpansion
+
+In order to be concerned by more energetic electrons in this simulation, the
+Lower Hybrid quasilinear resonance domain is slightly at higher energy, i.e. 
+$\left( v_{1}=4,v_{2}=7\right) $, with the same radial profile dependence of 
+$\overline{D}_{0,new}^{LH}\left( \psi ,p\right) $ as discussed in Sec. \ref
+{fasttransportsection}.  The RF power absorption takes place close to $\rho
+\simeq 0.4$ as shown in Fig.\ref{currentprofTSrip}. In this case, the
+current density and RF power absorption profiles are aligned, since the
+physics is basically local (slowing-down).
+
+%TCIMACRO{
+%\TeXButton{Fig_currentprofTSrip}{\fig{figures/currentprofTSrip.eps}{ Flux surface averaged current density profiles for the $3-D$
+%Tore Supra Lower Hybrid current drive simulation. }
+%{currentprofTSrip}{7cm} }}
+%BeginExpansion
+\fig{figures/currentprofTSrip.eps}{ Flux surface averaged current density profiles for the $3-D$
+Tore Supra Lower Hybrid current drive simulation. }
+{currentprofTSrip}{7cm} %
+%EndExpansion
+
+As shown in Fig. \ref{lossprofTSrip}, the fact electron loss rate exhibits a
+clear peak at $\rho \simeq 0.7,$ as observed experimentaly. The $3-D$
+calculations reproduce therefore correctly the profiles given by previous
+studies with a $2-D$ Fokker-Planck code \cite{ju02}. In addition, the two
+methods used to evaluate the magnetic ripple loss rate profile, as discussed
+in Sec.\ref{moments} gives very similar quantitative results, that makes the
+code very reliable concerning this problem.
+
+%TCIMACRO{
+%\TeXButton{Fig_lossprofTSrip}{\fig{figures/lossprofTSrip.eps}{Magnetic ripple loss rate profile for Tore Supra tokamak
+% in Lower Hybridcurrent drive regime, as calculated by two different methods
+% (see the text for more details)}{lossprofTSrip}{7cm} }}
+%BeginExpansion
+\fig{figures/lossprofTSrip.eps}{Magnetic ripple loss rate profile for Tore Supra tokamak
+ in Lower Hybridcurrent drive regime, as calculated by two different methods
+ (see the text for more details)}{lossprofTSrip}{7cm} %
+%EndExpansion
+
+The detailed dynamics in momentum space is given by the $2-D$ contour plot.
+As shown in Fig.\ref{f2DTSrip} at the radial position $\rho \simeq 0.44$,
+the supertrapped domain defined by $\left| \xi _{0}\right| \leq \xi _{0ST}$
+in which electrons are considered as lost lies well inside the domain where
+electrons are trapped $\left| \xi _{0}\right| \leq \xi _{0T}$. The
+collisional detrapping threshold is approximately $p_{c}=5$ at the local
+density here presented. The effect of the magnetic ripple losses may be
+clearly seen on the distribution function $f_{0}^{\left( 0\right) }$ which
+drops dramatically above $p_{c}$ provided $\left| \xi _{0}\right| \leq \xi
+_{0ST}.$ It is important to show that outside from this domain, the electron
+distribution function is nearly similar to the one without magnetic ripple
+losses. This is particularly clear in Fig.\ref{FparTSrip}. This confirms
+that losses are very small, and this is the reason why the code remains
+globally conservative at each radial location.
+
+%TCIMACRO{
+%\TeXButton{Fig_f2DTSrip}{\fig{figures/f2DTSrip.eps}{$2-D$ contour plot of the electron distribution function at $\rho\simeq 0.44$ for Tore Supra Lower Hybrid current drive}
+%{f2DTSrip}{7cm} }}
+%BeginExpansion
+\fig{figures/f2DTSrip.eps}{$2-D$ contour plot of the electron distribution function at $\rho\simeq 0.44$ for Tore Supra Lower Hybrid current drive}
+{f2DTSrip}{7cm} %
+%EndExpansion
+
+%TCIMACRO{
+%\TeXButton{Fig_FparTSrip}{\fig{figures/FparTSrip.eps}{Electron distribution function averaged over the perpendicular momentum direction at $\rho\simeq 0.44$
+% for Tore Supra Lower Hybrid current drive.  The perpendicular and parallel temperatures are also shown}
+%{FparTSrip}{7cm} }}
+%BeginExpansion
+\fig{figures/FparTSrip.eps}{Electron distribution function averaged over the perpendicular momentum direction at $\rho\simeq 0.44$
+ for Tore Supra Lower Hybrid current drive.  The perpendicular and parallel temperatures are also shown}
+{FparTSrip}{7cm} %
+%EndExpansion
