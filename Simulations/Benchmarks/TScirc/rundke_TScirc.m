@@ -27,16 +27,16 @@ path_dkeparam = '';%if nothing is specified, the working directory is first used
 id_display = 'TScirc';%For output code display
 path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_ohm = 'TScirc';%For Ohmic electric contribution
+id_ohm = '';%For Ohmic electric contribution
 path_ohm = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-ids_wave = {''};%For RF waves contribution (put all the type of waves needed)
+ids_wave = {'LH_test'};%For RF waves contribution (put all the type of waves needed)
 paths_wave = {''};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_transpfaste = '';%For fast electron radial transport
 path_transpfaste = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_ripple = 'TScirc';%For fast electron magnetic ripple losses
+id_ripple = '';%For fast electron magnetic ripple losses
 path_ripple = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 %************************************************************************************************************************************
@@ -67,22 +67,22 @@ else
 	info_dke_yp(2,'Structure ''display'' succesfully loaded');
 end
 %
-if exist([path_ohm,'OHM_',id_ohm,'.mat']) == 0,%Ohmic electric field 
+if exist([path_ohm,'OHM_',id_equil,'_',id_ohm,'.mat']) == 0,%Ohmic electric field 
 	info_dke_yp(2,['Simulations are performed without Ohmic Efield']);
-	display = '';
+	ohm = '';
 else
-	eval(['load ',path_ohm,'OHM_',id_ohm,'.mat']);
-	info_dke_yp(2,'Structure ''ohm'' succesfully loaded');
+	eval(['load ',path_ohm,'OHM_',id_equil,'_',id_ohm,'.mat']);
+	info_dke_yp(2,['Structure ''ohm'' ',id_ohm,' succesfully loaded']);
 end
 %
 ii=1;
 waves = '';%List of structure for multiple RF waves
 for iw = 1:length(ids_wave),
-	if exist([paths_wave{iw},'WAVE_',ids_wave{iw},'.mat']) == 0,%RF waves
+	if exist([paths_wave{iw},'WAVE_',id_equil,'_',ids_wave{iw},'.mat']) == 0,%RF waves
 		info_dke_yp(2,['Simulations are performed without the RF wave number: ',int2str(iw)]);
 	else
-		eval(['load ',paths_wave{iw},'WAVE_',ids_wave{iw},'.mat']);
-		info_dke_yp(2,['Structure ''wave'',ids_wave{iw},' succesfully loaded']);
+		eval(['load ',paths_wave{iw},'WAVE_',id_equil,'_',ids_wave{iw},'.mat']);
+		info_dke_yp(2,['Structure ''wave'' ',ids_wave{iw},' succesfully loaded']);
 		waves{ii} = wave;
 		ii = ii + 1;
 	end
