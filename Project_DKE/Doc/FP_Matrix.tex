@@ -1,0 +1,29 @@
+
+Projected on the numerical distribution function grid, the electron dynamics
+is expressed 
+\begin{eqnarray}
+&&\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
+_{l+1/2}\right) }p_{i+1/2}^{2}\frac{f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right)
+(k+1)}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k)}}{\Delta t}  \nonumber \\
+&=&\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
+_{l+1/2}\right) }\sum_{i^{\prime }=i-1}^{i^{\prime }=i+1}\sum_{j^{\prime
+}=j-1}^{j^{\prime }=j+1}\overline{\overline{M}}_{p,l+1/2,i^{\prime
+}+1/2,j^{\prime }+1/2}^{\left( 0\right) }f_{0,l+1/2,i^{\prime
+}+1/2,j^{\prime }+1/2}^{\left( 0\right) (k+1)}  \nonumber \\
+&&+\frac{p_{i+1/2}^{2}}{\lambda \left( \psi _{l+1/2},\xi _{0,j+1/2}\right) }%
+\sum_{l^{\prime }=l-1}^{l^{\prime }=l+1}\overline{\overline{M}}_{\psi
+,l^{\prime }+1/2,i+1/2,j+1/2}^{\left( 0\right) }f_{0,l^{\prime
+}+1/2,i+1/2,j+1/2}^{\left( 0\right) (k+1)}
+\end{eqnarray}
+where the first right handside term represents the dynamics in momentum
+space while the second one concerns the spatial dynamics. Here upwind
+differencing is performed, that corresponds to the fully implicit scheme
+that is usually numerically stable for arbitrary values of $\Delta t.$ 
+
+In matrix form, 
+\[
+I
+\]
+
+By definition, $\overline{\overline{M}}_{p}^{\left( 0\right) }$ corresponds
+to 
