@@ -2144,7 +2144,7 @@ for it_f = 2:nit_f,
 				Xf1(:,nmhu/2 + 1 - ns_f(ir):nmhu/2) = fliplr(Xf1_t(:,nmhu/2 + 1 - ns_f(ir):nmhu/2));
 			end
 %
-			normf0(ir,it_f) = 2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,XXf0(:,:,ir),2),1);
+            normf0(ir,it_f) = 2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,XXf0(:,:,ir),2),1);
  			normf1(ir,it_f) = 2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,Xf1,2),1);
 			curr0(ir,it_f) = 2*pi*integral_dke_jd(dpn',pn2'.*(pn'./gamma').*integral_dke_jd(dmhu,Xmhu.*XXf0(:,:,ir),2),1)*xne_norm(ir)/normf0(ir,it_f);
 			curr1(ir,it_f) = 2*pi*integral_dke_jd(dpn',pn2'.*(pn'./gamma').*integral_dke_jd(dmhu,Xmhu.*Xf1,2),1)*xne_norm(ir)/normf1(ir,it_f);
@@ -2288,10 +2288,10 @@ if dke_mode == 1,
 		dpsi = (xpsin(jr3) - xpsin(jr1));%Radial step for parabolic gradient calculations (dke)
 		dpsip = (xpsin(jr3) - xpsin(jr2));%Radial step for parabolic gradient calculations (dke)      
 %
-		if coll_mode == 3,%Normalized gradients of ne and Te for the Lorentz model (test mode only, see documentation)
+		%if coll_mode == 3,%Normalized gradients of ne and Te for the Lorentz model (test mode only, see documentation)
 			xdlnnedpsi(jr2) = (-dpsim*xne_norm(jr3)/dpsi/dpsip - (dpsip + dpsim)*xne_norm(jr2)/dpsip/dpsim + dpsip*xne_norm(jr1)/dpsi/dpsim)/xne_norm(jr2);
 			xdlnTedpsi(jr2) = (-dpsim*xTe_norm(jr3)/dpsi/dpsip - (dpsip + dpsim)*xTe_norm(jr2)/dpsip/dpsim + dpsip*xTe_norm(jr1)/dpsi/dpsim)/xTe_norm(jr2);
-		end	
+        %end	
 %
 		Xdf0dpsi = -dpsim*Xf0p/dpsi/dpsip - (dpsip + dpsim)*Xf0/dpsip/dpsim + dpsip*Xf0m/dpsi/dpsim;%Calculation of the radial gradient of f0 (parabolic interpolation) 
 		XXf0_tp(:,:,jr2) = -xftp_norm(jr2)*(Xpn.*Xmhu.*Xdf0dpsi);
