@@ -19,7 +19,7 @@ dke_1_4yp(tokname,theta,...
     XXDr,XXVr,...
     XXnhuloss,delta,Nq,...
     ftp_norm,bounce,coll_mode,...
-    norm_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,XXfinit)
+    norm_mode,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,XXfinit)
 %
 %
 %   Self-consistent 3-D relativistic solver of the drift kinetic equation in momentum space with Beliaev-Budker collision integrals 
@@ -129,6 +129,7 @@ if nargin < 33,
 elseif nargin == 39,
 	coll_mode = 0;
 	norm_mode = 0;
+	boundary_mode = 1;
 	dtn = 1000;
 	prec0 = [1e-10,1e-10];
 	nit = [50,200];
@@ -138,6 +139,7 @@ elseif nargin == 39,
 	store_mode = 0;
 elseif nargin == 40,
 	norm_mode = 0;
+	boundary_mode = 1;
 	dtn = 1000;
 	prec0 = [1e-10,1e-10];
 	nit = [50,200];
@@ -146,7 +148,7 @@ elseif nargin == 40,
 	display = [0,1,1];
 	store_mode = 0;
 elseif nargin == 41,
-	dtn = 1000;
+	boundary_mode = 1;
 	prec0 = [1e-10,1e-10];
 	nit = [50,200];
 	invproc = 1;
@@ -154,6 +156,7 @@ elseif nargin == 41,
 	display = [0,1,1];
 	store_mode = 0;
 elseif nargin == 42,
+	dtn = 1000;
 	prec0 = [1e-10,1e-10];
 	nit = [50,200];
 	invproc = 1;
@@ -161,24 +164,31 @@ elseif nargin == 42,
 	display = [0,1,1];
 	store_mode = 0;
 elseif nargin == 43,
+	prec0 = [1e-10,1e-10];
 	nit = [50,200];
 	invproc = 1;
 	param_inv = [1e-3,20];
 	display = [0,1,1];
 	store_mode = 0;
 elseif nargin == 44,
+	nit = [50,200];
 	invproc = 1;
 	param_inv = [1e-3,20];
 	display = [0,1,1];
 	store_mode = 0;
 elseif nargin == 45,
+	invproc = 1;
 	param_inv = [1e-3,20];
 	display = [0,1,1];
 	store_mode = 0;
 elseif nargin == 46,
+	param_inv = [1e-3,20];	
 	display = [0,1,1];
 	store_mode = 0;
 elseif nargin == 47,
+	display = [0,1,1];	
+	store_mode = 0;
+elseif nargin == 48,	
 	store_mode = 0;
 end
 %
@@ -318,7 +328,7 @@ Xdmhupp= ones(npn,1)*[dmhu(2:nmhu),dmhu(nmhu)];
 %Momentum grid
 %
 pth = betath_ref;
-ip_th_ref = min(find(pn >= pth));
+ip_th_ref = min(find(pn >= 1));
 Xdpn = dpn'*ones(1,nmhu);
 pn2 = pn.*pn;
 pn3 = pn2.*pn;
@@ -1304,6 +1314,32 @@ for ir = 1:nr,
 			mhu_t = mhu;
 		end
 	end
+	%Local boundary conditions at p = p(1/2): not necessary but help for the density conservation
+	%
+	if boundary_mode > 0,
+		Xa_t(1:boundary_mode,:) = 0;
+		Xb_t(1:boundary_mode,:) = 0;
+		Xc_t(1:boundary_mode,:) = Xpn2(1:boundary_mode,Xmask_f0)/dtn;%Maxwellian solution enforced at p = p(1/2) (More accurate but not fully necessary)
+		Xd_t(1:boundary_mode,:) = 0;
+		Xe_t(1:boundary_mode,:) = 0;
+		Xf_t(1:boundary_mode,:) = 0;
+		Xg_t(1:boundary_mode,:) = 0;
+		Xh_t(1:boundary_mode,:) = 0;
+		Xi_t(1:boundary_mode,:) = 0;
+		if bounce_mode == 1,
+			Xj_t(1:boundary_mode,:) = 0;
+			Xk_t(1:boundary_mode,:) = 0;
+			Xl_t(1:boundary_mode,:) = 0;
+			Xm_t(1:boundary_mode,:) = 0;
+			Xn_t(1:boundary_mode,:) = 0;
+			Xo_t(1:boundary_mode,:) = 0;      
+		end 
+	else
+		if prec_inv(1) > 1e-4,
+			prec_inv(1) = 1e-4;%LU facorisation increased in that case. It is perhaps not enough to avoid ill-conditionned matrix
+		end
+	end
+	%
 %
 % Drift kinetic calculations
 %
@@ -1836,9 +1872,16 @@ for it_f = 2:nit_f,
 			if store_mode == 1,load MXPmat.mat Zmask_f0;end	
 			if radial_mode == 1,Xmask_r_edge_t = Xmask_r_edge(:,Zmask_f0{ir});end
 %
-			Xq = (XXI(:,:,ir) + time_scheme*XXf0(:,:,ir)/dtn).*Xpn2;%Xpn2 is here as part of the partial Jacobian used to avoid singularities at p = 0
-			Xq_t = Xq(:,Zmask_f0{ir});%Symmetric trapped domain removed (-ksi0T< ksi0 <0)
-			if bounce_mode == 1,Xq_t(:,nmhu/2 + 1 - ns(ir)) = 0;end;%Pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2 
+			if boundary_mode == 0,
+				Xq = (XXI(:,:,ir) + time_scheme*XXf0(:,:,ir)/dtn).*Xpn2;%Xpn2 is here as part of the partial Jacobian used to avoid singularities at p = 0
+				Xq_t = Xq(:,Zmask_f0{ir});%Symmetric trapped domain removed (-ksi0T< ksi0 <0)
+				if bounce_mode == 1,Xq_t(:,nmhu/2 + 1 - ns(ir)) = 0;end;%Pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2 
+			else, 
+				Xq = (XXI(:,:,ir) + time_scheme*XXf0(:,:,ir)/dtn).*Xpn2;%Xpn2 is here as part of the partial Jacobian used to avoid singularities at p = 0
+				Xq(1:boundary_mode,:) = Xpn2(1:boundary_mode,:).*XXf0(1:boundary_mode,:,ir)/dtn;%Xpn2 is here as part of the partial Jacobian used to avoid singularities at p = 0
+				Xq_t = Xq(:,Zmask_f0{ir});%Symmetric trapped domain removed (-ksi0T< ksi0 <0)
+				if bounce_mode == 1,Xq_t(boundary_mode+1:npn,nmhu/2 + 1 - ns(ir)) = 0;end;%Pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2 		
+			end
 			MMXq_t = [MMXq_t;(xqtilde(ir)/xB0(ir))*reshape(Xq_t',(nmhu - ns(ir))*npn,1)];%Multiplication by the partial Jacobian to avoid singularities at psi = 0
 			MMXf0_t = [MMXf0_t;reshape(XXf0(:,Zmask_f0{ir},ir)',(nmhu - ns(ir))*npn,1)];
 		end
@@ -1861,7 +1904,7 @@ for it_f = 2:nit_f,
 		if flaginv_f == 1,
 			info_dke_yp(2,'WARNING: No convergence in the matrix inversion subroutine for the zero order Fokker-Planck equation');
 		elseif flaginv_f == 2,
-			error('WARNING: Matrix ill-conditionned. No inversion possible for the zero order Fokker-Planck equation');
+			error('WARNING: Matrix ill-conditionned. No inversion possible for the zero order Fokker-Planck equation. Try to reduce drop tolerance parameter for LU factorization...!');
 		end
 %
 		MMXf1_t = MMXf0_t + MMXS_t;
