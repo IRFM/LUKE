@@ -1385,13 +1385,20 @@ value of the magnetic field $B$ along the particle trajectory. This quantity
 results from the reduction of the conductivity due to trapped particles, or
 the onset of the bootstrap current.
 
-\subsection{Runaway rate}
+\subsection{Runaway loss rate}
 
 When the Ohmic electric field exceeds the Dreicer level, a fraction of the
 electron population run away. The total number of electrons is therefore no
 more conserved, since the flux $S_{p}\neq 0$ at $p=p_{\max }$, on the
-boundary of the integration domain. The runaway rate $\Gamma _{R}$ is given
-by the relation 
+boundary of the integration domain. The runaway loss rate $\Gamma _{R}$ is
+given by the relation 
+\begin{equation}
+\Gamma _{R}\left( \psi ,\theta \right) =\iint \mathbf{S}_{\mathbf{p}}\left(
+\psi ,p_{\max },\xi \right) \cdot d\mathbf{S}\left( p_{\max }\right) 
+\end{equation}
+where element of surface $d\mathbf{S}\left( p\right) =p2d\xi d\varphi 
+\widehat{p}$ according to the Appendix ***. Therefore, since $\int d\varphi
+=2\pi $ by symmetry, one obtains immediately
 \begin{equation}
 \Gamma _{R}\left( \psi ,\theta \right) =2\pi p_{\max
 }^{2}\int_{-1}^{+1}S_{p}\left( \psi ,p_{\max },\xi \right) d\xi 
@@ -1402,10 +1409,12 @@ minimum, one have by definition in a straightforward manner
 \begin{equation}
 \Gamma _{R}^{\left( 0\right) }\left( \psi \right) =2\pi p_{\max
 }^{2}\int_{-1}^{+1}S_{p}^{\left( 0\right) }\left( \psi ,p_{\max },\xi
-_{0}\right) d\xi _{0}
+_{0}\right) \lambda \left( \psi ,\xi _{0}\right) d\xi _{0}
 \end{equation}
 where $S_{p}^{\left( 0\right) }\left( \psi ,p_{\max },\xi _{0}\right) $
-results from the solution of the bounce-averaged Fokker-Planck equation.
+results from the solution of the bounce-averaged Fokker-Planck equation. The
+term $\lambda \left( \psi ,\xi _{0}\right) $ arises from the Jacobian $%
+J_{\xi }.$
 
 The flux-surface averaged runaway rate $\left\langle \Gamma
 _{R}\right\rangle _{V}$ is given by the relation 
@@ -1479,20 +1488,21 @@ An heuristic description of this process may be obtained by introducing a
 Krook term restricted to the volume $V_{ST}^{\mathbf{p}}$ in the
 Fokker-Planck equation 
 \begin{equation}
-\left. \frac{\partial f_{0}^{\left( 0\right) }}{\partial t}\right| =\frac{%
-f_{0}^{\left( 0\right) }\left( \psi ,p,\xi _{0}\right) }{\tau _{d_{ST}}}
-H\left( p-p_{c}\right) \left( 1-H\left( \left| \xi _{0}\right| -\xi
-_{0ST}\right) \right)
+\left. \frac{\partial f_{0}^{\left( 0\right) }}{\partial t}\right| =\nu
+_{d_{ST}}f_{0}^{\left( 0\right) }\left( \psi ,p,\xi _{0}\right) H\left(
+p-p_{c}\right) \left( 1-H\left( \left| \xi _{0}\right| -\xi _{0ST}\right)
+\right) 
 \end{equation}
-where $\tau _{d_{ST}}$ is the drifting time taken by super-trapped electrons
-for leaving the plasma. In order to reproduce the fact that super-trapped
-electrons are decoupled from the momentum dynamics, a simple method is to
-force $\tau _{d_{ST}}\ll \tau _{b}.$ Without detailed knowledge of the local
-dynamics, $\tau _{d_{ST}}$ is taken constant in $V_{ST}^{\mathbf{p}},$ which
-is obviously a coarse approximation. However, in the limit $\tau
-_{d_{ST}}\ll \tau _{b},$ the shape of the distribution function becomes
-independent of $\tau _{d_{ST}},$ since by definition $f_{0}^{\left( 0\right)
-}\left( \psi ,p,\xi _{0}\right) \simeq 0$ in the super-trapped domain.
+where $\nu _{d_{ST}}^{-1}$ is the drifting time taken by super-trapped
+electrons for leaving the plasma. In order to reproduce the fact that
+super-trapped electrons are decoupled from the momentum dynamics, a simple
+method is to force $\nu _{d_{ST}}^{-1}\ll \tau _{b}.$ Without detailed
+knowledge of the local dynamics, $\nu _{d_{ST}}$ is taken constant in $%
+V_{ST}^{\mathbf{p}},$ which is obviously a coarse approximation. However, in
+the limit $\nu _{d_{ST}}^{-1}\ll \tau _{b},$ the shape of the distribution
+function becomes independent of $\nu _{d_{ST}},$ since by definition $%
+f_{0}^{\left( 0\right) }\left( \psi ,p,\xi _{0}\right) \simeq 0$ in the
+super-trapped domain.
 
 Obviously, when a Krook term is introduced, the Fokker-Planck equation is no
 more conservative, since a fraction of fast electrons is definitively
@@ -1503,17 +1513,17 @@ important point is discussed in Sec.***. The new form of the bounce-averaged
 Fokker-Planck equation is 
 \begin{equation}
 \frac{\partial f_{0}^{\left( 0\right) }}{\partial t}+\nabla _{\left( \psi
-,p,\xi _{0}\right) }\cdot \mathbf{S}^{\left( 0\right) }+\frac{f_{0}^{\left(
-0\right) }}{\tau _{d_{ST}}}H\left( p-p_{c}\right) \left( 1-H\left( \left|
-\xi _{0}\right| -\xi _{0ST}\right) \right) =0
+,p,\xi _{0}\right) }\cdot \mathbf{S}^{\left( 0\right) }+\nu
+_{d_{ST}}f_{0}^{\left( 0\right) }H\left( p-p_{c}\right) \left( 1-H\left(
+\left| \xi _{0}\right| -\xi _{0ST}\right) \right) =0
 \end{equation}
-and in this stationnary limit $\lim_{t\rightarrow \infty }\partial
+and in this stationnary limit $\lim_{t\rightarrow \infty }\partial %
 f_{0}^{\left( 0\right) }/\partial t=0,$
 
 \begin{equation}
 \nabla _{\left( \psi ,p,\xi _{0}\right) }\cdot \mathbf{S}^{\left( 0\right)
-}=-\frac{f_{0}^{\left( 0\right) }}{\tau _{d_{ST}}}H\left( p-p_{c}\right)
-\left( 1-H\left( \left| \xi _{0}\right| -\xi _{0ST}\right) \right)
+}=-\nu _{d_{ST}}f_{0}^{\left( 0\right) }H\left( p-p_{c}\right) \left(
+1-H\left( \left| \xi _{0}\right| -\xi _{0ST}\right) \right) 
 \label{Steadyripple}
 \end{equation}
 
@@ -1522,44 +1532,53 @@ scale as compared to the fast electron transport one. Therefore, only the
 momentum dynamics is considered, and integrating equation (\ref{Steadyripple}%
 ), one obtains 
 \begin{equation}
-2\pi \iint \nabla _{\left( p,\xi _{0}\right) }\cdot \mathbf{S}_{\mathbf{p}%
-}^{\left( 0\right) }J_{p}J_{_{\xi _{0}}}dpd\xi _{0}=-2\pi \iint \frac{%
-f_{0}^{\left( 0\right) }}{\tau _{d_{ST}}}H\left( p-p_{c}\right) \left(
-1-H\left( \left| \xi _{0}\right| -\xi _{0ST}\right) \right) J_{p}J_{_{\xi
-_{0}}}dpd\xi _{0}
+\iiint_{V_{ST}^{\mathbf{p}}}\nabla _{\left( p,\xi _{0}\right) }\cdot \mathbf{%
+S}_{\mathbf{p}}^{\left( 0\right) }J_{p}J_{_{\xi _{0}}}dpd\xi _{0}d\varphi
+=-\iiint_{V_{ST}^{\mathbf{p}}}\nu _{d_{ST}}f_{0}^{\left( 0\right) }H\left(
+p-p_{c}\right) \left( 1-H\left( \left| \xi _{0}\right| -\xi _{0ST}\right)
+\right) J_{p}J_{_{\xi _{0}}}dpd\xi _{0}d\varphi 
 \end{equation}
 where $J_{p}$ and $J_{_{\xi _{0}}}$are the Jacobians as defined in Sec. ***.
 The magnetic ripple loss rate $\Gamma _{ST}^{\left( 0\right) }\left( \psi
 \right) $ on the $B_{\min }$ axis is simply given by 
 \begin{equation}
-\Gamma _{ST}^{\left( 0\right) }\left( \psi \right) =2\pi \iint \frac{%
-f_{0}^{\left( 0\right) }}{\tau _{d_{ST}}}H\left( p-p_{c}\right) \left(
-1-H\left( \left| \xi _{0}\right| -\xi _{0ST}\right) \right) Jdpd\xi _{0}
+\Gamma _{ST}^{\left( 0\right) }\left( \psi \right) =\iiint_{V_{ST}^{\mathbf{p%
+}}}\nu _{d_{ST}}f_{0}^{\left( 0\right) }H\left( p-p_{c}\right) \left(
+1-H\left( \left| \xi _{0}\right| -\xi _{0ST}\right) \right) Jdpd\xi
+_{0}d\varphi 
 \end{equation}
 or 
 \begin{equation}
 \Gamma _{ST}^{\left( 0\right) }\left( \psi \right) =2\pi \int_{p_{c}}^{p_{%
-\max }}p^{2}dp\int_{-\xi _{0ST}}^{+\xi _{0ST}}\frac{f_{0}^{\left( 0\right) }%
-}{\tau _{d_{ST}}}\lambda \left( \psi ,\xi _{0}\right) d\xi _{0}
+\max }}p^{2}dp\int_{-\xi _{0ST}}^{+\xi _{0ST}}\nu _{d_{ST}}f_{0}^{\left(
+0\right) }\lambda \left( \psi ,\xi _{0}\right) d\xi _{0}
 \end{equation}
+since $\int d\varphi =2\pi .$ 
 
 An equivalent form can be deduced from the flux of particle leaving the
 integration domain, 
 \begin{eqnarray}
-\Gamma _{ST}^{\left( 0\right) }\left( \psi \right)  &=&2\pi \iint \nabla
-_{\left( p,\xi _{0}\right) }\cdot \mathbf{S}_{\mathbf{p}}^{\left( 0\right)
-}J_{p}J_{_{\xi _{0}}}dpd\xi _{0}  \nonumber \\
-&=&2\pi \iint \widehat{n}\cdot \mathbf{S}_{\mathbf{p}}^{\left( 0\right)
-}J_{p}J_{_{\xi _{0}}}dpd\xi _{0}
+\Gamma _{ST}^{\left( 0\right) }\left( \psi \right)  &=&\iiint_{V_{ST}^{%
+\mathbf{p}}}\nabla _{\left( p,\xi _{0}\right) }\cdot \mathbf{S}_{\mathbf{p}%
+}^{\left( 0\right) }J_{p}J_{_{\xi _{0}}}dpd\xi _{0}d\varphi   \nonumber \\
+&=&\iint_{S_{ST}^{\mathbf{p}}}\mathbf{S}_{\mathbf{p}}^{\left( 0\right) }%
+\cdot d\mathbf{S}
 \end{eqnarray}
-using the Green-Ostrogradsky theorem, where $\widehat{n}$ is the normal to
-the surface $S_{ST}^{\mathbf{p}}$ that encloses the volume $V_{ST}^{\mathbf{p%
-}}$ as shown in Fig.***. Hence, 
+using the Green-Ostrogradsky theorem. Since
+\begin{equation}
+\mathbf{S}_{\mathbf{p}}^{\left( 0\right) }\cdot d\mathbf{S=}S_{p}^{\left(
+0\right) }p^{2}\lambda \left( \psi ,\xi _{0}\right) d\xi _{0}d\varphi
+-S_{\xi _{0}}^{\left( 0\right) }p\lambda \left( \psi ,\xi _{0}\right) \sqrt{%
+1-\xi _{0}^{2}}dpd\varphi 
+\end{equation}
+according to the Appendix ***. Taking into account of the shape of the
+surface $S_{ST}^{\mathbf{p}}$ that encloses volume $V_{ST}^{\mathbf{p}}$ as
+shown in Fig.***, one obtains, 
 \begin{equation}
 \Gamma _{ST}^{\left( 0\right) }\left( \psi \right) =2\pi p_{c}^{2}\int_{-\xi
 _{0ST}}^{+\xi _{0ST}}\lambda \left( \psi ,\xi _{0}\right) S_{p}^{\left(
-0\right) }d\xi _{0}+4\pi \lambda \left( \psi ,+\xi _{0ST}\right)
-\int_{p_{c}}^{p_{\max }}pS_{\xi _{0}}^{\left( 0\right) }dp
+0\right) }d\xi _{0}+4\pi \lambda \left( \psi ,+\xi _{0ST}\right) \sqrt{1-\xi
+_{0ST}^{2}}\int_{p_{c}}^{p_{\max }}pS_{\xi _{0}}^{\left( 0\right) }dp
 \end{equation}
 since the flux $S_{\xi _{0}}^{\left( 0\right) }$ is a symmetric function of $%
 \xi _{0}.$

@@ -16,14 +16,19 @@ f_{0}^{\left( 0\right) }\left( \psi ,-p,\xi _{0}\right) =f_{0}^{\left(
 \end{equation}
 
 Here Neumann type boundary conditions are used, and therefore only gradients
-must be specified at the internal boundaries. One must thus determine $%
-\left( \Delta p,\Delta \xi _{0}\right) $ at $p=0$ and $\left| \xi
+must be specified at the internal boundaries\footnote{%
+In some specific cases, it is possible to consider Dirichlet type boundary
+conditions, espcially at $p=0$. In that case, the Maxwellian distribution
+function is enforced. However, in most cases, this type of condition must
+avoided, to keep the most general approach, and in particular to cross-check
+that the conservative nature of the code is well satisfied}. One must thus
+determine $\left( \Delta p,\Delta \xi _{0}\right) $ at $p=0$ and $\left| \xi
 _{0}\right| =1$ for the flux grid only, since the distribution and flux
 grids are interlaced by definition. Therefore, starting from grids
 definition given in Sec. ***, 
 \begin{equation}
-\Delta \xi _{0,0}=\frac{\Delta \xi _{0,1/2}+\Delta \xi _{0,-1/2}}{2}=\Delta
-\xi _{0,1/2}=\xi _{0,1}-\xi _{0,0}=2\left( \xi _{0,1/2}+1\right)
+\Delta \xi _{0,0}=\frac{\Delta \xi _{0,1/2}+\Delta \xi _{0,-1/2}}{2}=\Delta %
+\xi _{0,1/2}=\xi _{0,1}-\xi _{0,0}=2\left( \xi _{0,1/2}+1\right) 
 \end{equation}
 as $\Delta \xi _{0,1/2}=\Delta \xi _{0,-1/2},$ $\xi _{0,1/2}=\frac{\xi
 _{0,1}+\xi _{0,0}}{2}$et $\xi _{0,0}=-1.$
@@ -122,7 +127,7 @@ as
 \begin{array}{l}
 \sqrt{1-\xi _{0,0}^{2}}\lambda ^{l+1/2,0}\mathbf{S}_{\xi
 ,l+1/2,i+1/2,0}^{\left( 0\right) }=0 \\ 
-\sqrt{1-\xi _{0,n_{\xi _{0}}}^{2}}\lambda ^{l+1/2,n_{\xi _{0}}}\mathbf{S}%
+\sqrt{1-\xi _{0,n_{\xi _{0}}}^{2}}\lambda ^{l+1/2,n_{\xi _{0}}}\mathbf{S}
 _{\xi ,l+1/2,i+1/2,n_{\xi _{0}}}^{\left( 0\right) }=0
 \end{array}
 \right.
@@ -257,7 +262,7 @@ _{R,l+1/2}^{\left( 0\right) \left( k+1\right) }
 \end{equation}
 and 
 \begin{equation}
-p_{0}^{2}S_{p,l+1/2,0,j+1/2}^{\left( 0\right) \left( k+1\right) }=\frac{%
+p_{0}^{2}S_{p,l+1/2,0,j+1/2}^{\left( 0\right) \left( k+1\right) }=\frac{
 \Gamma _{R,l+1/2}^{\left( 0\right) \left( k+1\right) }}{4\pi }
 \end{equation}
 for all $j$ values.
@@ -476,10 +481,10 @@ and resonance domain boundaries are straight lines parallel to $p_{\Vert }=0$
 axis. In that case, electron losses are naturally very weak, since at the
 intersection of the resonance and integration domains, the wave-induced flux
 is nearly tangent to the boundary of the integration domain. Since $p_{\max
-} $ ranges usualy between $20-30,$ $\beta _{th}$ must be much less than $0.01
-$, which corresponds to electron temperatures less than $0.06keV$. Such a
-condition is never encountered in tokamak plasmas, except close to the very
-edge.
+} $ ranges usualy between $20-30,$ $\beta _{th}$ must be much less than $%
+0.01 $, which corresponds to electron temperatures less than $0.06keV$. Such
+a condition is never encountered in tokamak plasmas, except close to the
+very edge.
 
 %TCIMACRO{
 %\TeXButton{Fig_lhboundary}{\fig{figures/lhboundary.eps}{Lower Hybrid boundary problem}{lhboundary}{10cm}}}
@@ -611,7 +616,7 @@ The Fokker-Planck equation is then solved in a reduced domain of
 integration, where the momentum phase space corresponding to $-\xi _{0T}\leq
 \xi _{0}\leq 0$ is removed. Once determined in this reduced domain, the
 distribution function is recovered on the whole space, by enforcing the
-condition $f_{0}^{\left( 0\right) }\left( \psi ,p,-\xi _{0}\right) =$ $%
+condition $f_{0}^{\left( 0\right) }\left( \psi ,p,-\xi _{0}\right) =$ $
 f_{0}^{\left( 0\right) }\left( \psi ,p,\xi _{0}\right) $ in the interval $%
 \left| \xi _{0}\right| \leq \xi _{0T}.$
 
@@ -651,6 +656,20 @@ placed in the co- and counter-passing regions respectively right after the
 trapped-passing boundary. The grid point $5$ is placed on the right side of
 the axis $\xi _{0}=0,$ in the trapped sub-domain $0\leq \xi _{0}\leq \xi
 _{0T}$.
+
+Before performing the reduction of the domain of integration, the symmetry
+inside the trapped region must be enforced according to the relation 
+\begin{equation}
+\overline{\overline{M}}_{p,l+1/2,i+1/2,j^{+}+1/2}^{\left( 0\right) }=\left( 
+\overline{\overline{M}}_{p,l+1/2,i+1/2,j^{+}+1/2}^{\left( 0\right) }+%
+\overline{\overline{M}}_{p,l+1/2,i+1/2,j^{-}+1/2}^{\left( 0\right) }\right)
+/2
+\end{equation}
+where $j_{T_{0}}=\left( j^{+}+j^{-}\right) /2,$ with $%
+j_{T,l+1/2}^{-}<j^{-}<j_{T_{0}}$ or an in equivalent manner $j_{T_{0}}<j^{+}<
+$ $j_{T,l+1/2}^{+}.$ This procedure allows to correctly account for some
+processes that are not symmetric in $p_{\Vert },$ like wave-particle
+interaction.
 
 The reduction of the domain of integration in the momentum phase space leads
 to introduce a new matrix, $\widehat{\overline{M}}_{p}^{\left( 0\right) }$
@@ -855,13 +874,14 @@ _{0,j^{\prime }+1/2}$. Outside this domain, $\nu _{MR,l+1/2,i+1/2,j^{\prime
 }+1/2}$ is set to a zero so that losses are always negligible on the time
 scale for the steady-state distribution function to build-up. Conversely,
 inside the domain characterized by the pitch-angle boundary $0\leq \xi
-_{0,j^{\prime }+1/2}\leq \xi _{0,j_{MR,l+1/2}^{\prime +}+1/2}$ and $p_{i+1/2}%
-\geq p_{MR,l+1/2},$ where $j_{MR,l+1/2}^{\prime +}$ is the index below which
-particle are lossed in the magnetic ripple, and $p_{MR,l+1/2}$ is the
-momentum detrapping threshold by collisions, $\nu _{MR,l+1/2,i+1/2,j^{\prime
-}+1/2}$ is usually taken constant and much larger than $\tau _{t}^{-1}$
-which is the smallest time scale here considered, namely the transit time$.$
-The matrix is then simply modified according to the following rule 
+_{0,j^{\prime }+1/2}\leq \xi _{0,j_{MR,l+1/2}^{\prime +}+1/2}$ and $%
+p_{i+1/2}\geq p_{MR,l+1/2},$ where $j_{MR,l+1/2}^{\prime +}$ is the index
+below which particle are lossed in the magnetic ripple, and $p_{MR,l+1/2}$
+is the momentum detrapping threshold by collisions, $\nu
+_{MR,l+1/2,i+1/2,j^{\prime }+1/2}$ is usually taken constant and much larger
+than $\tau _{t}^{-1}$ which is the smallest time scale here considered,
+namely the transit time$.$ The matrix is then simply modified according to
+the following rule 
 \begin{equation}
 \widehat{\overline{M}}_{p,l+1/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right)
 }\rightarrow \widehat{\overline{M}}_{p,l+1/2,i+1/2,j^{\prime }+1/2}^{\left(
@@ -881,11 +901,11 @@ density.
 \paragraph{Internal boundary}
 
 For the dynamics in configuration space, since the problem has only one
-dimension, the internal boundary must be only specified at $\psi =\psi _{0}=0
-$, which corresponds to the condition 
+dimension, the internal boundary must be only specified at $\psi =\psi
+_{0}=0 $, which corresponds to the condition 
 \begin{equation}
 f_{0}^{\left( 0\right) }\left( \psi ,p,\xi _{0}\right) =f_{0}^{\left(
-0\right) }\left( -\psi ,p,\xi _{0}\right) 
+0\right) }\left( -\psi ,p,\xi _{0}\right)
 \end{equation}
 
 Using the same approach as for the momentum dynamics, $\Delta \psi $ must be
@@ -908,7 +928,7 @@ form of the Fokker-Planck equation using two grids, as shown, in Sec. ***,
 it is automatically fullfiled for other terms. Indeed, at fixed $%
 p_{i+1/2},\xi _{0,j+1/2},$%
 \begin{eqnarray}
-&&\left. \frac{\widetilde{q}}{B_{\min }}p^{2}\nabla _{\psi }\cdot \mathbf{S}%
+&&\left. \frac{\widetilde{q}}{B_{\min }}p^{2}\nabla _{\psi }\cdot \mathbf{S}
 _{\psi }^{\left( 0\right) }\right| _{1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
 =\frac{p_{i+1/2}^{2}}{\lambda ^{1/2,j+1/2}}\times &&\left. \frac{\partial }{%
 \partial \psi }\left( R_{\min }\widetilde{q}\frac{B_{P\min }}{B_{\min }}%
@@ -995,7 +1015,7 @@ _{\psi }^{\left( 0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
 &&-\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}p_{i+1/2}^{2}\frac{\Gamma
 _{R,l+1/2}^{\left( 0\right) (k)}+\Gamma _{T,l+1/2}^{\left( 0\right) (k)}}{%
 \left[ 2\pi T_{e,l+1/2}\right] ^{3/2}}\exp \left[ -\frac{p_{i+1/2}^{2}}{%
-\left( 1+\gamma _{l+1/2,i+1/2}\right) T_{e,l+1/2}}\right]   \nonumber \\
+\left( 1+\gamma _{l+1/2,i+1/2}\right) T_{e,l+1/2}}\right]  \nonumber \\
 &=&0
 \end{eqnarray}
 
@@ -1060,7 +1080,7 @@ and
 \begin{equation}
 j_{T_{0}}<j_{T,l-1/2}^{+}<j_{T,l+1/2}^{+}<j_{T,l+3/2}^{+}
 \end{equation}
-or using relations $j_{T,l+1/2}^{\prime -}=j_{T,l+1/2}^{-}$ and $%
+or using relations $j_{T,l+1/2}^{\prime -}=j_{T,l+1/2}^{-}$ and $
 j_{T,l+1/2}^{\prime +}=j_{T,l+1/2}^{+}-n_{\xi _{0T,l+1/2}}$ 
 \begin{equation}
 j_{T,l+3/2}^{\prime -}<j_{T,l+1/2}^{\prime -}<j_{T,l-1/2}^{\prime
