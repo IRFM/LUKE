@@ -555,8 +555,10 @@ for ir = 1:nr,
 		if view == 1,
 			figure(2000),subplot(121),plot(xpsin,xrho,'r-.',xpsin,xrho,'b+');grid on;zoom on
 			xlabel('psi/psia');ylabel('rho');title('Metric relation');
+			axis('square');axis([0,1,0,1]);
 			figure(2000),subplot(122),plot(xrho,xpsin,'r-.',xrho,xpsin,'b+');grid on;zoom on
 			xlabel('rho');ylabel('psi/psia');title('Metric relation');
+			axis('square');axis([0,1,0,1]);
 			pause(time_pause);
 		end	
 %

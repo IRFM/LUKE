@@ -37,6 +37,7 @@ disp('--------------------------------------------------------------------------
 xnormf_ref = Znorm_ref{1,1};
 xnormf_ref_fsav = Znorm_ref_fsav{1,1};
 %
+xia = xrho*ap/Rp;%Pseudo inverse aspect ratio (has a meanin only for circular plasma equilibrium)
 xft_out = xft_fsav(r_dke);
 %
 xRR_KB = 0.35*abs(xepsi_ref).^(-3/8).*exp(-(sqrt(2./abs(xepsi_ref))+1./4./abs(xepsi_ref)));%Kulsrud fit of the theoretical Kruskal-Bernstein runaway rate (PRL 31,11 (1973) 690)
@@ -63,7 +64,7 @@ end
 %xcurr_i_mksa_fsav = interp1(prho,pcurr_i_mksa_fsav,xrho);
 %
 while 1,
-	if auto_mode == 0,
+	if auto_mode_in == 0,
 		disp(' ')
 		disp('**************************************************************************')
 		ir_display = input_dke_yp(['*********************************** Radial index value (1-',int2str(max(r_dke)),') (exit: <=0)'],ir_display);
@@ -101,8 +102,12 @@ while 1,
 		disp('-------------------------------------------------------------------------------------------------------------------');
 		info_dke_yp(2,['Integration time step: ',num2str(dtn/nhu_ref),' (s)'])
 		disp('-------------------------------------------------------------------------------------------------------------------');
+		info_dke_yp(2,['Major plasma radius on the LFS midplane (Rp) : ',num2str(Rp)])
+		info_dke_yp(2,['Major plasma radius on the LFS midplane (ap) : ',num2str(ap)])
+		disp('-------------------------------------------------------------------------------------------------------------------');
 		info_dke_yp(2,['Normalized radius on the LFS midplane where results are displayed (rho) : ',num2str(xrho(r_dke(ir_display)))])
 		info_dke_yp(2,['Normalized poloidal magnetic flux where results are displayed (psin) : ',num2str(xpsin(r_dke(ir_display)))])
+		info_dke_yp(2,['Pseudo inverse aspect ratio (rho*ap/Rp) : ',num2str(xia(r_dke(ir_display)))])
 		disp('-------------------------------------------------------------------------------------------------------------------');
 		info_dke_yp(2,['Electron temperature (keV): ',num2str(xTe(r_dke(ir_display)))])
 		info_dke_yp(2,['Electron temperature increment (keV): ',num2str((xTe_norm_out(r_dke(ir_display)) - xTe_norm(r_dke(ir_display)))*Ten_ref*mc2)])

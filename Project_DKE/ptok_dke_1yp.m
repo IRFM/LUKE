@@ -412,14 +412,14 @@ elseif strcmp(name,'CQL3D_LH') == 1,
 	Zeffa = 1;
 	eZeff = 0;
 elseif strcmp(name,'CQL3D_OHM') == 1,
-	ap = 2.3899;
+	ap = 0.72;
 	Rp = 2.39; 
 	Ip = 0.61;
 	Bt = 3.65;
 	Ncoils = 18;
 	Zi = [1,1,1];
 	mi = [1,2,3];
-	fi = [0,1,0.0];
+	fi = [1,0,0];
 %
 	BeLi = 1.0;
 	qmin = 1.13;
@@ -427,11 +427,11 @@ elseif strcmp(name,'CQL3D_OHM') == 1,
 %
 	Te0 = 0.1;
 	Tea = 0;
-	eTe = 0;
+	eTe = 1;
 	eTe_ref = 0;
 	ne0 = 1.0e+19;
 	nea = 0*ne0;
-	ene = 0;
+	ene = 1;
 	ene_ref = 0;
 	Ti0 = 0.0;
 	Tia = 0;

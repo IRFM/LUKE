@@ -81,12 +81,12 @@ if sum(zZi>1) > 1 %More than one impurity species
     % need each species density
 elseif sum(zZi>1) == 1 % One impurity species
     Zimp = max(zZi);
-    pnhyd = pne.*(Zimp - pZeff)/(Zimp - 1);
+    pnhyd = pne.*(Zimp - pZeff)/(Zimp - 1);  
     pnimp = pne.*(pZeff - 1)/(Zimp - 1)/Zimp;
     pzni(nz,:) = pnimp;
 else % No Impurity
     pnhyd = pne;
-	pnimp = 0*pne;
+    pnimp = 0*pne;
 end
 if sum(fi) == 1
     pzni(1:3,:) = fi'*pnhyd;

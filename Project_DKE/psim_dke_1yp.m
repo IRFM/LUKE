@@ -18,15 +18,15 @@ prec0_f,nit_f,dtn,prec0_g,nit_g,initguess,invproc,param_inv,dp_cyl,display_mode,
 %
 %by Y.Peysson CEA-DRFC 15/10/2002 <yves.peysson@cea.fr>
 %
-tokname = 'CMOD';%Tokamak equilibrium scenario (in EQUIL_tokname file)
+tokname = 'CQL3D_OHM';%Tokamak equilibrium scenario (in EQUIL_tokname file)
 snumber = 1;%Simulation number
 %
 %Mesh size calculation
 %
 grid_uniformity = 0;%Pitch-angle and momentum grids uniformity: (0) no, (1) yes
 grid_method = 1;%Pitch-angle grid calculation technique: (0): old method, (1) new method
-nmhu_S = 89;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
-np_S = 70;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run)
+nmhu_S = 101;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
+np_S = 100;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run)
 pnmax_S = 15;%Maximum value of the flux momentum grid (pth_ref)
 %
 %Pitch-angle grid
@@ -51,20 +51,20 @@ snp = 10; % pgridfactor
 %Values of the radial flux grid [1,p] (If one radial value: local calculation only)
 %
 psin_S = [];
-rho_S = [0.4,0.6];
+rho_S = [0.1];
 %
 psin_display = NaN;%Approximate radial value at which results are displayed if display_mode >= 1 [1,1]
 rho_display = 0.45;
 %
 dpsin_dke = 0.02;%maximum difference between two consecutive positions used for radial derivatives
 %
-ref_mode = 1;%Reference values: (0) from core Te and ne, (1) from Te and ne at the normalized radius (paramater only active for a single radial value, otherwise ref_mode = 0)
-norm_ref = 0;%Normalization procedure for the ohmic electric field, LH and EC quasilinear diffusion: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref 
+ref_mode = 0;%Reference values: (0) from core Te and ne, (1) from Te and ne at the normalized radius (paramater only active for a single radial value, otherwise ref_mode = 0)
+norm_ref = 1;%Normalization procedure for the ohmic electric field, LH and EC quasilinear diffusion: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref 
 %
 % WARNING: Not yet implemented. (see test_dke_yp)
 %
-epsi0 = 0.001;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
-epsia = 0.001;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
+epsi0 = 0.01;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
+epsia = 0.01;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
 eepsi = 0;%Exponent for Ohmic electric field
 %
 % WARNING: Not yet implemented. (see test_dke_yp)
