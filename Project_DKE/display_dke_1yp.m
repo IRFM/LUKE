@@ -55,7 +55,7 @@ Edreicer_ref = me*clum*betath_ref*nhu_ref/qe;%MKSA Dreicer field unit
 XxRR_mksa_fsav = XxRR_ref_fsav*nhu_ref*ne_ref;%Runaway loss rate in mksa units
 %
 if bounce_mode > 0,
-	xcollisionnality = 0.012*(xne/1e20).*xZeff.*xq*Rp./xia.^1.5./xTe.^2;%From O. Sauter et al., Phys. Plasma 6 (1999) 2834
+	xcollisionnality = 0.012*(xne(r_dke)/1e20).*xZeff(r_dke).*xq*Rp./xia.^1.5./xTe(r_dke).^2;%From O. Sauter et al., Phys. Plasma 6 (1999) 2834
 %	[xft_llm] = ft_llm_dke_yp(xia,1000);%From Y.R. Lin-Liu and R.L. Miller, Phys. Plasma 2 (1995) 1666
 else
 	xcollisionnality = NaN*ones(size(xia));
