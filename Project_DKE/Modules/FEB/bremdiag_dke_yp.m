@@ -1,10 +1,10 @@
-function [xyvray,xythetab,xyfinc,xyprop,yb] = bremdiag_dke_yp(tokamak,vschord,xpsin,xdpsin,xpsin_S,method);
+function [] = bremdiag_dke_yp(tokamak,vschords,xpsin,xdpsin,xpsin_S,method);
 %
 % This function couples the DKE code with a HXR tomographic system for line-integrated non-thermal bremsstrahlung calculations.
 % 
 %   INPUTS: 
 %
-%       - vschord: list of RF rays. {1,nb_rf}. vsrays{ib} = ray [nv,ns] is an
+%       - vschord: list of RF rays. {1,nb_rf}. vschord{ib} = ray [nv,ns] is an
 %           array of nv variables evaluated at ns propagation steps. It is
 %           requires that nv=1 is "s", distance along the ray, nv=2 is "R" 
 %           toroidal radius and nv=3 is "Z" vertical position.  
@@ -25,19 +25,20 @@ function [xyvray,xythetab,xyfinc,xyprop,yb] = bremdiag_dke_yp(tokamak,vschord,xp
 %
 
 
+%[xyvray,xythetab,xyfinc,xyprop,yb]
+%%%%%%%%Appel temporaire fonction bremdiag_dke_yp('TS',vschords,xpsin_dke,xdpsin_dke,xpsin_S_dke);
 
-%%%%%%%%Appel fonction [] = bremdiag_dke_yp(tokamak,vschord,xpsin_dke,xdpsin_dke,xpsin_S_dke,method);
 
 
-
-if nargin < 4
+if nargin < 6
     method = 'spline';%interpolation technique in psi
 end
 %
 [theta,ppsin,psia,ptR,ptZ,ptBR,ptBZ] = equilibrium_jd(tokamak);
 %
 nt = length(theta);
-nb_rf = length(vsrays);
+nb_chord = size(vschords,3);
+n_f = length(xdpsin);
 %
 Rp = ptR(1,1);
 Zp = ptZ(1,1);
@@ -45,138 +46,118 @@ Zp = ptZ(1,1);
 ptr = sqrt((ptR - Rp).^2 + (ptZ - Zp).^2); %minor radius on the (psi,stheta) grid
 ptBP = sqrt(ptBR.^2 + ptBZ.^2); %poloidal magntic field on the (psi,stheta) grid
 %
-xyvray = []; %ray parameters
-xythetab = []; %ray poloidal location
-xyfinc = []; %incidence factor
-xyprop = []; %propagation factor (NaN is ray start, +1 is increasing psi, -1 is decreasing psi, 0 is non-applicable)
-yb = []; %list of ray starts
+chord_param = zeros(2*n_f-1,3,nb_chord);%Chord parameters
 %
-ibb = 0; %counting global number of ray
+% Each chord has to be treated separately, because their lengths differ.
 %
-% Each ray has to be treated separately, because their lengths differ.
+for i_chord = 20:22;%nb_chord,
+    vschord = vschords(:,:,i_chord);%chord characteristics
+	 vschord = vschord(:,~isnan(vschord(2,:)));%Remove part of chord that is outside the reference circle
+    [nv,ns] = size(vschord);
 %
-for ib = 1:nb_rf
-    vsray = vsrays{ib};%ray characteristics
-    [nv,ns] = size(vsray);
+    ss = vschord(1,:);
+    sR = vschord(2,:);
+    sZ = vschord(3,:);
 %
-    ss = vsray(1,:);
-    sR = vsray(2,:);
-    sZ = vsray(3,:);
+% chord position in (r,theta) coordinates
 %
-% ray position in (r,theta) coordinates
+    sR = sR + eps*(sR == Rp);%to avoid singularities
+    sZ = sZ + eps*(sZ == Zp);%to avoid singularities
+    sr = sqrt((sR - Rp).^2 + (sZ - Zp).^2);%minor radius
+    st = atan((sZ - Zp)./(sR - Rp)) + pi - pi*(sR > Rp).*sign(sZ - Zp);%poloidal angle [0,2*pi]
 %
-    sR = sR + eps*(sR == Rp); %to avoid singularities
-    sZ = sZ + eps*(sZ == Zp); %to avoid singularities
-    sr = sqrt((sR - Rp).^2 + (sZ - Zp).^2); %minor radius
-    st = atan((sZ - Zp)./(sR - Rp)) + pi - pi*(sR > Rp).*sign(sZ - Zp); %poloidal angle [0,2*pi]
-%
-% interpolation for r at ray poloidal locations            
+% Interpolation for r at chord poloidal locations            
 %
     pstr = interp1(theta,ptr',st,method)';%r(psi,st)
 %
-% interpolation for psi at ray position (along cst theta lines)
+% Interpolation for psi at chord position (along cst theta lines)
 %
 %    spsin = interp1(pstr,ppsin,sr,method);%psi(s)
-    for is = 1:ns 
+    for is = 1:ns, 
         spsin(is) = interp1(pstr(:,is),ppsin,sr(is),method);%psi(s)
     end
 %    
-% positions where the ray enters and exits the plasma (at last closed FS)  
+% positions where the chord enters and exits the plasma (at last closed FS)  
 %
-    is0 = min(find(spsin <= 1)); %position where the ray enters the plasma 
+    is0 = min(find(spsin <= 1));% Position where the chord enters the plasma 
     if isempty(is0)
-        disp('Warning: one ray did not enter the plasma and was rejected')
-        continue
-    else
-        ibb = ibb + 1;%starting a new ray in xy matrices
+        info_dke_yp(2,['WARNING: chord #',int2str(i_chord),' don''t enter the plasma and is rejected'])
+        continue;
     end
-    ismax = min([find(spsin > 1 & ss > ss(is0)) - 1,ns]); %position where the ray leaves the plasma (if applicable)
+       dbstop 88
+    ismax = min([find(spsin > 1 & ss > ss(is0)) - 1,ns]);%Position where the chord leaves the plasma
 %
 % throw away path outside the last closed FS   
 %
-    vsray = vsray(:,is0:ismax);
-    ss = ss(is0:ismax);
+    vschord = vschord(:,is0:ismax);
+    ss = ss(is0:ismax);ns = length(ss);  
     sR = sR(is0:ismax);
     sZ = sZ(is0:ismax);
     sr = sr(is0:ismax);
     st = st(is0:ismax);
     spsin = spsin(is0:ismax);
-%    
-    ns = length(ss);   
+% 
+    i_chord
+    lchord1(i_chord) = sqrt(sR(length(sR))^2+sZ(length(sZ))^2) - sqrt(sR(1)^2+sZ(1)^2);%Total chord length in the plasma
+	 lchord2(i_chord) = ss(length(ss)) - ss(1);%Total chord length in the plasma
 %    
     is = 1;
 %
-    ipsin = max(find(xpsin_S < spsin(is)));%initial FS on ray trajectory (generally last FS, but not necessarily (ex: EBW))
-    yb = [yb,[ibb;ib]];
-    bdir = 0;
+    ipsin = max(find(xpsin_S < spsin(is)));%initial FS on chord (generally last FS)
+    ipsin_f = n_f + 1 - ipsin;%Index for position in the matrix chord_param
 %
-% distribution of the ray on flux-surfaces
+% distribution of the chord on flux-surfaces
 %
-    while is < ns 
-        bpsinm = xpsin_S(ipsin); % lower bound of the current FS
-        bpsin = xpsin(ipsin); % center of the current FS
-        bpsinp = xpsin_S(ipsin + 1); % upper bound of the current FS
+    while is < ns, 
+        bpsinm = xpsin_S(ipsin);% Lower bound of the current FS
+        bpsin = xpsin(ipsin);% Center of the current FS
+        bpsinp = xpsin_S(ipsin + 1);% Upper bound of the current FS
 %        
-% position where ray exits the current FS (or last point on the ray path if last visited FS is reached)
+% position where chord exits the current FS (or last point on the chord if last visited FS is reached)
 %
-        islim = min([find((ss > ss(is)) & (spsin < bpsinm | spsin > bpsinp)),ns]); 
-%        
-        maskfs = is:islim; %ray trajectory within current FS
+        islim = min([find((ss > ss(is)) & (spsin < bpsinm | spsin > bpsinp)),ns]);         
+        maskfs = is:islim;% Chord within current FS
 %
-% dealing with extremums of spsin: if ray goes "around" the fs center within one fs, it is split at the extremum. 
+% dealing with extremums of spsin: if chord goes "around" the fs center within one fs 
 %    
         dspfs = sign(diff(spsin(maskfs)));% "direction" of the ray in psi
         ndspfs = length(dspfs);
         ipextrfs = find(dspfs(1:ndspfs-1).*dspfs(2:ndspfs) < 0); %extremum positions in spsin(s)
         isextr = 0;
-        while ~isempty(ipextrfs)
-            if dspfs(ipextrfs(1))*(bpsin - spsin(ipextrfs(1) + is)) < 0 %ray goes "around" xpsin
-                islim = is + ipextrfs(1); %split into two contributions
-                maskfs = is:islim;
-                isextr = 1;
-                break
-            else % ray "turns before" xpsin
-                irextrfs(1) = [];
-            end
-        end
+%        while ~isempty(ipextrfs)
+%            if dspfs(ipextrfs(1))*(bpsin - spsin(ipextrfs(1) + is)) < 0 %chord goes "around" xpsin
+%                islim = is + ipextrfs(1); %split into two contributions
+%                maskfs = is:islim;
+%                isextr = 1;
+%                break
+%            else % ray "turns before" xpsin
+%                irextrfs(1) = [];
+%            end
+%        end
 %        
-% propagation factor        
-%        
-        bdir_new = sign(spsin(islim) - spsin(is));
-        if bdir_new*bdir == -1 %change of direction in psi leads to splitting of ray
-            ibb = ibb + 1;
-        end
-        xyprop(ipsin,ibb) = bdir_new;
-%        
-% position where the ray reaches the center of the FS   
+% position where the chord reaches the center of the FS   
 %
         is_f = min(find(abs(spsin(maskfs) - bpsin) == min(abs(spsin(maskfs) - bpsin)))) + is - 1;
-%
-        xyvray(ipsin,ibb,:) = reshape(vsray(:,is_f),[1,1,nv]); %parameters vrays at center of FS
-        xythetab(ipsin,ibb) = st(is_f); %poloidal angle of ray at center of FS
-%
-        bds = ss(islim) - ss(is);%path length of ray within the current FS
-%
-% local width of the FS: |dl| = |dpsi|/|grad psi| = |dpsin.psia|/|R.BP|
-%
-        pbBP = interp1(theta,ptBP',st(is_f),method);%BP(psi,thetab)
-        bBP = interp1(ppsin,pbBP,bpsin,method); %poloidal field along the ray at center of FS
-        bdl = abs(xdpsin(ipsin)*psia./sR(is_f)./bBP); %width of the FS at theta = thetab
-        xyfinc(ipsin,ibb) = bds/bdl; %incidence factor
+		  chord_param(ipsin_f,1,i_chord) = ss(islim) - ss(is);%path length of chord within the current FS
+%		  chord_param(ipsin_f,2,i_chord) = ;%Poloidal angle of chord within the current FS
+%		  chord_param(ipsin_f,3,i_chord) = ;%Cosine between the chord direction and the opposite direction (because electron charge is negative) of the local current density within the current FS	  
 %
 % next FS
 %
-        if isextr == 0 % ray is not split at an extremum in psi: it either reaches another FS or stops
-            if spsin(islim) < bpsin %reaches a more inward FS
-                ipsin = ipsin - 1;
-            else %reaches a more outward FS
-                ipsin = ipsin + 1;
-            end
-        end
-        is = islim;
-        bdir = bdir_new;
+       if spsin(islim) < bpsin %reaches a more inward FS
+          ipsin = ipsin - 1;
+			 ipsin_f = n_f + 1 - ipsin;		 
+       else %reaches a more outward FS
+          ipsin = ipsin + 1;
+			 ipsin_f = n_f - 1 + ipsin;
+      end
+      is = islim;
     end
 end
+    
+dbstop 158  
+disp('fin')    
+
 %
 
 
