@@ -1,33 +1,37 @@
-In the Fokker-Planck equation, the diffusion and covection elements are
+In the Fokker-Planck equation, the diffusion and convection elements are
 bounce-averaged according to the expressions (\ref{diffbav})-(\ref{convbav}%
-), which gives, using (\ref{Dcoll})-(\ref{Fcoll}),  
+), which gives, using (\ref{Dcoll})-(\ref{Fcoll}), 
 \begin{eqnarray}
-D_{pp}^{\text{C}(0)} &=&\left\{ A(p)\right\}  \\
+D_{pp}^{\text{C}(0)} &=&\left\{ A\left( p,\psi ,\theta \right) \right\}  \\
 D_{p\xi }^{\text{C}(0)} &=&0  \nonumber \\
 D_{\xi p}^{\text{C}(0)} &=&0  \nonumber \\
 D_{\xi \xi }^{\text{C}(0)} &=&\left\{ \frac{\xi ^{2}}{\Psi \xi _{0}^{2}}%
-B_{t}(p)\right\}   \nonumber
+B_{t}\left( p,\psi ,\theta \right) \right\}   \nonumber
 \end{eqnarray}
 and the convection components 
 \begin{eqnarray}
-F_{p}^{\text{C}(0)} &=&-\left\{ F(p)\right\}  \\
+F_{p}^{\text{C}(0)} &=&-\left\{ F\left( p,\psi ,\theta \right) \right\}  \\
 F_{\xi }^{\text{C}(0)} &=&0  \nonumber
 \end{eqnarray}
 and therefore 
 \begin{eqnarray}
-D_{pp}^{\text{C}(0)} &=&A(p) \\
+D_{pp}^{\text{C}(0)} &=&A^{\left( 0\right) }\left( p,\psi \right)  \\
 D_{p\xi }^{\text{C}(0)} &=&0  \nonumber \\
 D_{\xi p}^{\text{C}(0)} &=&0  \nonumber \\
-D_{\xi \xi }^{\text{C}(0)} &=&\frac{\lambda _{2,-1,0}}{\lambda }B_{t}(p) 
-\nonumber
+D_{\xi \xi }^{\text{C}(0)} &=&\frac{\lambda _{2,-1,0}}{\lambda }%
+B_{t}^{\left( 0\right) }\left( p,\psi \right)   \nonumber
 \end{eqnarray}
 and 
 \begin{eqnarray}
-F_{p}^{\text{C}(0)} &=&-F(p) \\
+F_{p}^{\text{C}(0)} &=&-F^{\left( 0\right) }\left( p,\psi \right)  \\
 F_{\xi }^{\text{C}(0)} &=&0  \nonumber
 \end{eqnarray}
 
-The bounce coefficient $\lambda _{2,-1,0}$ is defined as (\ref{lkm}) 
+Here, coefficients $A^{\left( 0\right) }\left( p,\psi \right) ,$ $%
+B_{t}^{\left( 0\right) }\left( p,\psi \right) $ and $F^{\left( 0\right)
+}\left( p,\psi \right) $ are determined at the location where $B=B_{min}$ on
+the magnetic flux surface. The bounce coefficient $\lambda _{2,-1,0}$ is
+defined as (\ref{lkm}) 
 \begin{equation}
 \lambda _{2,-1,0}=\lambda \left\{ \frac{\xi ^{2}}{\Psi \xi _{0}^{2}}\right\} 
 \end{equation}
@@ -36,9 +40,9 @@ For reference to the litterature, note that we could also perform the
 following transformation
 
 \begin{eqnarray*}
-\left\{ \frac{\xi ^{2}}{\Psi \xi _{0}^{2}}\right\} &=&\left\{ \frac{1-\Psi
-\left( 1-\xi _{0}^{2}\right) }{\Psi \xi _{0}^{2}}\right\} \\
-&=&\left\{ 1-\frac{1}{\xi _{0}^{2}}\left( 1-\frac{1}{\Psi }\right) \right\}
+\left\{ \frac{\xi ^{2}}{\Psi \xi _{0}^{2}}\right\}  &=&\left\{ \frac{1-\Psi
+\left( 1-\xi _{0}^{2}\right) }{\Psi \xi _{0}^{2}}\right\}  \\
+&=&\left\{ 1-\frac{1}{\xi _{0}^{2}}\left( 1-\frac{1}{\Psi }\right) \right\} 
 \\
 &=&1-\frac{\Delta _{b}}{\xi _{0}^{2}}
 \end{eqnarray*}
@@ -46,3 +50,83 @@ with
 \[
 \Delta _{b}\equiv \left\{ 1-\frac{1}{\Psi }\right\} 
 \]
+
+Concerning the term that ensures momentum conservation in the collision
+operator, one must evaluate $\left\{ \xi \mathcal{I}\left( p,\psi ,\theta
+\right) \right\} =\left\{ \xi \mathcal{I}\left( f_{0M},f_{0,l=1}\right)
+\right\} $. Making the substitution $\Psi \xi _{0}d\xi _{0}=\xi d\xi $ in
+the integral $\int_{-1}^{+1}\xi f_{0}\left( p,\xi ,\psi ,\theta \right) d\xi
+,$ one obtains
+\begin{equation}
+f_{0,l=1}\left( p,\xi ,\psi ,\theta \right) =\frac{3}{2}\int_{-1}^{-\sqrt{%
+1-1/\Psi }}\Psi \xi _{0}f_{0}^{\left( 0\right) }\left( p,\xi _{0},\psi
+\right) d\xi _{0}+\frac{3}{2}\int_{\sqrt{1-1/\Psi }}^{+1}\Psi \xi
+_{0}f_{0}^{\left( 0\right) }\left( p,\xi _{0},\psi \right) d\xi _{0}
+\end{equation}
+where the limits of integration come from the relation $\xi \left( \psi
+,\theta ,\xi _{0}\right) =\sigma \sqrt{1-\Psi \left( \psi ,\theta \right)
+\left( 1-\xi _{0}^{2}\right) }.$ Since $f_{0}^{\left( 0\right) }$ is
+symmetric in the region of the phase space $\xi _{0}\in \left( -\sqrt{%
+1-1/\Psi },\sqrt{1-1/\Psi }\right) $which corresponds to trapped orbits, 
+\begin{equation}
+\frac{3}{2}\int_{-\sqrt{1-1/\Psi }}^{+\sqrt{1-1/\Psi }}\Psi \xi
+_{0}f_{0}^{\left( 0\right) }\left( p,\xi _{0},\psi \right) d\xi _{0}=0
+\end{equation}
+one get
+\begin{eqnarray}
+f_{0,l=1}\left( p,\xi ,\psi ,\theta \right)  &=&\frac{3}{2}%
+\int_{-1}^{+1}\Psi \xi _{0}f_{0}^{\left( 0\right) }\left( p,\xi _{0},\psi
+\right) d\xi _{0}  \nonumber \\
+&=&\Psi \frac{3}{2}\int_{-1}^{+1}\xi _{0}f_{0}^{\left( 0\right) }\left(
+p,\xi _{0},\psi \right) d\xi _{0}  \nonumber \\
+&=&\Psi f_{0,l=1}^{\left( 0\right) }\left( p,\xi _{0},\psi \right) 
+\end{eqnarray}
+where $f_{0,l=1}^{\left( 0\right) }\left( p,\xi _{0},\psi \right) $is the
+Legendre integral evaluated at $B_{min}=B\left( \psi ,\theta _{0}\right) $,
+independent of $\theta .$ Since the operator $\mathcal{I}$ is linear, 
+\begin{eqnarray}
+\left\{ \xi \mathcal{I}\left( f_{0M},f_{0,l=1}\right) \right\}  &=&\left\{
+\xi \Psi \right\} \mathcal{I}\left( f_{0M},f_{0,l=1}^{\left( 0\right)
+}\right)   \nonumber \\
+&=&\sigma \left\{ \sigma \frac{\xi }{\xi _{0}}\Psi \right\} \xi _{0}\mathcal{%
+I}\left( f_{0M},f_{0,l=1}^{\left( 0\right) }\right)   \nonumber \\
+&=&\frac{\overline{\lambda }_{1,1,0}}{\lambda }\xi _{0}\mathcal{I}\left(
+f_{0M},f_{0,l=1}^{\left( 0\right) }\right) 
+\end{eqnarray}
+
+\paragraph{Expression of $\overline{\lambda }_{1,1,0}$}
+
+This coefficient is expressed as
+\begin{equation}
+\overline{\lambda }_{1,1,0}=\frac{\sigma }{\widetilde{q}}\left[ \frac{1}{2}%
+\sum_{\sigma }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{%
+d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }%
+\frac{r}{R_{0}}\frac{B}{B_{P}}\sigma \Psi 
+\end{equation}
+
+Since the integral is odd in $\sigma ,$ the sum over trapped particles
+vanishes, $\overline{\lambda }_{1,1,0}=0$ for trapped electrons, and $%
+\overline{\lambda }_{1,1,0}=\overline{\lambda }_{1,1,0}^{P}\neq 0$ for
+circulating ones. Hence
+\begin{eqnarray}
+\overline{\lambda }_{1,1,0}^{P} &=&\frac{1}{\widetilde{q}}\int_{0}^{2\pi }%
+\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}%
+\right| }\frac{r}{R_{0}}\frac{B}{B_{P}}\Psi   \nonumber \\
+&=&\frac{1}{\widetilde{q}}\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{1}{%
+\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}}\frac{%
+B^{2}\left( \psi ,\theta \right) }{B_{P}B\left( \psi ,\theta _{0}\right) }
+\end{eqnarray}
+
+\paragraph{Case of circular concentric flux-surfaces}
+
+In this case, $\epsilon =r/R_{0},$ $\widehat{\psi }\cdot \widehat{r}=1$ and
+since the ratio $B/B_{P}$ is a function of $r$ only
+\begin{eqnarray}
+\overline{\lambda }_{1,1,0}^{P} &=&\frac{1}{\widetilde{q}}\frac{B}{B_{P}}%
+\epsilon \int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{1+\epsilon }{1+\epsilon
+\cos \theta } \\
+&=&\sqrt{\frac{1+\epsilon }{1-\epsilon }}=s^{*}
+\end{eqnarray}
+using the relation $\widetilde{q}\frac{B_{P}}{B}=\epsilon .$ In this limit, $%
+\overline{\lambda }_{1,1,0}^{P}=\overline{\lambda }_{1,-1,2}^{P},$ as shown
+in *****.
