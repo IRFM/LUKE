@@ -32,7 +32,7 @@ end
 %
 nb_rf = length(vsrays);
 %
-xythetab = []; %ray poloidal location
+xyvray = []; %ray properties
 xyfinc = []; %incidence factor
 xyprop = []; %propagation factor (NaN is ray start, +1 is increasing psi, -1 is decreasing psi, 0 is non-applicable)
 yb = []; %list of ray starts
