@@ -1,7 +1,7 @@
-\label{dkematrixsection}
-Projected on the numerical distribution function grid, and taking into
-account of the internal and external boundaries, the $3-D$ electron drift
-kinetic equation may be expressed as 
+
+\label{dkematrixsection} Projected on the numerical distribution function
+grid, and taking into account of the internal and external boundaries, the $%
+3-D$ electron drift kinetic equation may be expressed as 
 \begin{eqnarray}
 &&\sum_{i^{\prime }=i-1}^{i^{\prime }=i+1}\sum_{j^{\prime \prime }=j^{\prime
 }-1}^{j^{\prime \prime }=j^{\prime }+1}\widehat{\overline{M}}%
@@ -62,18 +62,18 @@ l=0\rightarrow \left\{
 i=0\rightarrow \left\{ 
 \begin{array}{l}
 j^{\prime }=0 \\ 
-j^{\prime }=\ldots  \\ 
+j^{\prime }=\ldots \\ 
 j^{\prime }=n_{\xi _{0}}-m_{\xi _{0T,l+1/2}}-1
 \end{array}
-\right.  \\ 
-i=\ldots  \\ 
+\right. \\ 
+i=\ldots \\ 
 i=n_{p}-1
 \end{array}
-\right.  \\ 
-l=\ldots  \\ 
+\right. \\ 
+l=\ldots \\ 
 l=n_{\psi }-1
 \end{array}
-\right. 
+\right.
 \end{equation}
 and vector $X_{M}$ is corresponding to the Maxwellian distribution function,
 as defined in Sec. \ref{fpmatrixsection}.
@@ -89,15 +89,16 @@ main diagonal of $\widehat{\Bbb{G}}$ is also dominant because collisions
 predominate over other physical processes at each plasma radius.
 
 %TCIMACRO{
-%\TeXButton{Fig_dkematrix}{\fig{figures/dkematrix.eps}{Qualitative shape of the matrix for the drift kinetic equation}{dkematrix}{10cm}}}
+%\TeXButton{Fig_dkematrix}{\fig{figures/dkematrix.eps}{Qualitative shape of matrix $\widehat{\QTR{Bbb}{G}}$ for the drift kinetic equation}{dkematrix}{10cm}}}
 %BeginExpansion
-\fig{figures/dkematrix.eps}{Qualitative shape of the matrix for the drift kinetic equation}{dkematrix}{10cm}%
+\fig{figures/dkematrix.eps}{Qualitative shape of matrix 
+$\widehat{\Bbb{G}}$ for the drift kinetic equation}{dkematrix}{5cm}%
 %EndExpansion
 
 The matrix $\widehat{\Bbb{G}}$ has a global banded structure with an
 extremely high sparcity, a property that is also extensively used for memory
 storage, like for the Fokker-Planck equation (see Sec. \ref{fpmatrixsection}%
-). Indeed, the size of $\widehat{\Bbb{G}}$ is roughlu given by relation
+). Indeed, the size of $\widehat{\Bbb{G}}$ is roughlu given by relation 
 \begin{equation}
 size\left( \widehat{\Bbb{G}}\right) =n_{p}^{2}\left[ \sum_{l=0}^{l=n_{\psi
 }-1}\left( n_{\xi _{0}}-m_{\xi _{0T,l+1/2}}\right) \right] ^{2}\leq n_{\psi
@@ -112,4 +113,4 @@ $\widehat{\Bbb{B}}$ is the flux matrix of the Fokker-Planck equation. For
 the values of $n_{\psi }$, $n_{p}$ and $n_{\xi _{0}}$ taken in Sec. \ref
 {fpmatrixsection}, the required memory is approximately $57.6MBytes$, a
 lower level than for the Fokker-Planck equation, since the trapped region is
-completely removed in the calculations. 
+completely removed in the calculations.

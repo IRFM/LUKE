@@ -1,4 +1,7 @@
-\subsubsection{Implicit time scheme}\label{fpmatrixsection}
+
+\subsubsection{Implicit time scheme}
+
+\label{fpmatrixsection}
 
 Projected on the numerical distribution function grid, and taking into
 account of the internal and external boundaries, the $3-D$ electron
@@ -52,7 +55,7 @@ phase space has the following symbolic form
 \begin{equation}
 \left( \frac{\widehat{\Bbb{A}}}{\Delta t}+\widehat{\Bbb{B}}\right)
 X^{(k+1)}=\left( \frac{\widehat{\Bbb{A}}}{\Delta t}\right) X^{(k)}+\widehat{C%
-}\left( X_{M},X^{(k)}\right)   \label{Matrixeq}
+}\left( X_{M},X^{(k)}\right)  \label{Matrixeq}
 \end{equation}
 where $\widehat{\Bbb{A}}$ is a single diagonal matrix associated to time
 differencing, $\widehat{\Bbb{B}}$ corresponds to the flux divergence and $%
@@ -68,24 +71,24 @@ l=0\rightarrow \left\{
 i=0\rightarrow \left\{ 
 \begin{array}{l}
 j^{\prime }=0 \\ 
-j^{\prime }=\ldots  \\ 
+j^{\prime }=\ldots \\ 
 j^{\prime }=n_{\xi _{0}}-n_{\xi _{0T,l+1/2}}-1
 \end{array}
-\right.  \\ 
-i=\ldots  \\ 
+\right. \\ 
+i=\ldots \\ 
 i=n_{p}-1
 \end{array}
-\right.  \\ 
-l=\ldots  \\ 
+\right. \\ 
+l=\ldots \\ 
 l=n_{\psi }-1
 \end{array}
-\right. 
+\right.
 \end{equation}
-while $X_{M}$ corresponds to the Maxwellian distribution function. 
+while $X_{M}$ corresponds to the Maxwellian distribution function.
 
 Without radial transport, $\widehat{\Bbb{B}}$ is a block diagonal matrix.
-Each block, which describes the momentum dynamics at location $\psi _{l+1/2},
-$ is a square matrice of $15$ diagonals whose size $\left( n_{\xi
+Each block, which describes the momentum dynamics at location $\psi
+_{l+1/2}, $ is a square matrice of $15$ diagonals whose size $\left( n_{\xi
 _{0}}-n_{\xi _{0T,l+1/2}}\right) n_{p}\times $ $\left( n_{\xi _{0}}-n_{\xi
 _{0T,l+1/2}}\right) n_{p}$ progressively decreases from $\psi _{1/2}$ to $%
 \psi _{n_{\xi _{0}}-1/2}$ because of the trapped/passing boundary enlarges
@@ -94,9 +97,9 @@ main diagonal of $\widehat{\Bbb{B}}$ is dominant because collisions
 predominate over other physical processes at each plasma radius.
 
 %TCIMACRO{
-%\TeXButton{Fig_fpmatrix}{\fig{figures/fpmatrix.eps}{Qualitative shape of the matrix for the Fokker-Planck equation}{fpmatrix}{10cm}}}
+%\TeXButton{Fig_fpmatrix}{\fig{figures/fpmatrix.eps}{Qualitative shape of matrix $\widehat{{Bbb}{B}}$ for the Fokker-Planck equation}{fpmatrix}{10cm}}}
 %BeginExpansion
-\fig{figures/fpmatrix.eps}{Qualitative shape of the matrix for the Fokker-Planck equation}{fpmatrix}{10cm}%
+\fig{figures/fpmatrix.eps}{Qualitative shape of matrix $\widehat{\Bbb{B}}$ for the Fokker-Planck equation}{fpmatrix}{5cm}%
 %EndExpansion
 
 The introduction of the radial dynamics adds several extra off-diagonals,
@@ -105,9 +108,9 @@ positions, in addition to the main diagonal which is also modified
 accordingly. The complexity arises from the fact that trapped electrons may
 become passing as a result of the radial transport process, and conversely.
 However, matrix $\widehat{\Bbb{B}}$ keeps a global banded structure and is
-still highly sparce, a property that is extensively used for reducing 
-memory storage requirement. Indeed, size of $\widehat{\Bbb{B}}$ is roughly
-given by relation 
+still highly sparce, a property that is extensively used for reducing memory
+storage requirement. Indeed, size of $\widehat{\Bbb{B}}$ is roughly given by
+relation 
 \begin{equation}
 size\left( \widehat{\Bbb{B}}\right) =n_{p}^{2}\left[ \sum_{l=0}^{l=n_{\psi
 }-1}\left( n_{\xi _{0}}-n_{\xi _{0T,l+1/2}}\right) \right] ^{2}\leq n_{\psi
