@@ -574,10 +574,12 @@ end
 XXILor =  zeros(npn,nmhu,nr);
 for ir_dke = 1:nr_dke,
 	jr2 = rdke(ir_dke);
-	ILor_p = Zmask_f0_P{jr2}.*sum(((dmhu.*(mhu>=0).*XXlambda_b_p3m2(1,:,jr2)./XXlambda_p2m1(1,:,jr2))'*ones(1,nmhu)).*triu(ones(nmhu,nmhu)));
-	ILor_m = fliplr(ILor_p);
-	ILor = ILor_m + ILor_p;
-	XXILor(:,:,jr2) = ones(npn,1)*ILor;
+    if dke_mode>= 1
+	    ILor_p = Zmask_f0_P{jr2}.*sum(((dmhu.*(mhu>=0).*XXlambda_b_p3m2(1,:,jr2)./XXlambda_p2m1(1,:,jr2))'*ones(1,nmhu)).*triu(ones(nmhu,nmhu)));
+	    ILor_m = fliplr(ILor_p);
+	    ILor = ILor_m + ILor_p;
+    	XXILor(:,:,jr2) = ones(npn,1)*ILor;
+    end
 end	
 %
 if nargin < narginmax,XXfinit = zeros(np,nmhu,nr);end;%For the initial guess of f0
