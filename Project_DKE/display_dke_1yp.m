@@ -58,12 +58,14 @@ end
 %
 %Calculation of the flux averaged Maxwellian bootstrap current from Hirshman, Sauter, Hinton & Hazeltine models (bulk contribution)
 %*************Multiple ion species as done bu Houlberg et al not implemented here********************
-%[xcurr_hir_mksa_fsav,xcurr_sau_mksa_fsav,xcurr_hin_mksa_fsav,xcurr_i_mksa_fsav] = hsneomodels_dke_jd(xrho_dke,ap,Rp,zZi(1),xq(r_dke),Bt,Te0,Tea,eTe,ne0,nea,ene,zTi0(1),zTia(1),eTi(1));
-%[pcurr_hir_mksa_fsav,pcurr_sau_mksa_fsav,pcurr_hin_mksa_fsav,pcurr_i_mksa_fsav] = hsneomodels_dke_jd(prho,ap,Rp,zZi(1),pq,Bt,pTe,pne,pzTi(1,:));
-%xcurr_hir_mksa_fsav = interp1(prho,pcurr_hir_mksa_fsav,xrho_dke);
-%xcurr_sau_mksa_fsav = interp1(prho,pcurr_sau_mksa_fsav,xrho_dke);
-%xcurr_hin_mksa_fsav = interp1(prho,pcurr_hin_mksa_fsav,xrho_dke);
-%xcurr_i_mksa_fsav = interp1(prho,pcurr_i_mksa_fsav,xrho_dke);
+%
+[prho,pcurr_hir_mksa_fsav,pcurr_sau_mksa_fsav,pcurr_hin_mksa_fsav,pcurr_i_mksa_fsav] = ...
+    hsneomodels_dke_jd(tokname);
+%
+xcurr_hir_mksa_fsav = interp1(prho,pcurr_hir_mksa_fsav,xrho);
+xcurr_sau_mksa_fsav = interp1(prho,pcurr_sau_mksa_fsav,xrho);
+xcurr_hin_mksa_fsav = interp1(prho,pcurr_hin_mksa_fsav,xrho);
+xcurr_i_mksa_fsav = interp1(prho,pcurr_i_mksa_fsav,xrho);
 %
 while 1,
 	ir_display_dke = find(r_dke == ir_display);
@@ -351,33 +353,34 @@ while 1,
 			if igor_mode == 1,
 				eval(['save ',filenameroot,'_data_fig8_',int2str(ir_display_dke),'.mat xrho_dke xia r_dke ir_display_dke ppar_cyl_ref pperp_cyl_ref xmhubounce2 pnmax_S'])
 			end
-		end
 %
-		figure(5),clf
-		maxXAstr_cyl_ref = max(max(XAstr_cyl_ref));
-		minXAstr_cyl_ref = min(min(XAstr_cyl_ref)) + eps;
-		C = contour(ppar_cyl_S_ref,pperp_cyl_S_ref,XAstr_cyl_ref,minXAstr_cyl_ref*exp(-[0:1:4*nlevel]/(-4*nlevel/log(maxXAstr_cyl_ref/minXAstr_cyl_ref))));colorbar;grid on;zoom on;%Stream function
-		axis('equal')
-		title('Stream Function');
-		xlabel('ppar/pth-ref');
-		ylabel('pperp/pth-ref');
-		if bounce_mode >= 1,%Draw bounce domain boundaries
-			line([0,pnmax_S*sqrt(xmhubounce2(ir_display_dke))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display_dke))]);
-			line([0,-pnmax_S*sqrt(xmhubounce2(ir_display_dke))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display_dke))]);
-		end
+		    figure(5),clf
+    		maxXAstr_cyl_ref = max(max(XAstr_cyl_ref));
+    		minXAstr_cyl_ref = min(min(XAstr_cyl_ref)) + eps;
+    		C = contour(ppar_cyl_S_ref,pperp_cyl_S_ref,XAstr_cyl_ref,minXAstr_cyl_ref*exp(-[0:1:4*nlevel]/(-4*nlevel/log(maxXAstr_cyl_ref/minXAstr_cyl_ref))));colorbar;grid on;zoom on;%Stream function
+    		axis('equal')
+    		title('Stream Function');
+    		xlabel('ppar/pth-ref');
+    		ylabel('pperp/pth-ref');
+    		if bounce_mode >= 1,%Draw bounce domain boundaries
+    			line([0,pnmax_S*sqrt(xmhubounce2(ir_display_dke))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display_dke))]);
+    			line([0,-pnmax_S*sqrt(xmhubounce2(ir_display_dke))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display_dke))]);
+    		end
 %
-		if nb_lh > 0 & xvparmax_lh_ref(ir_display_dke) - xvparmin_lh_ref(ir_display_dke) ~= 0 & isnan(xvparmin_lh_ref(ir_display_dke)) == 0 & isnan(xvparmax_lh_ref(ir_display_dke)) == 0,
-			pparresmin_lh_cyl_ref = xvparmin_lh_ref(ir_display_dke)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmin_lh_ref(ir_display_dke)^2*betath_ref^2);%LH resonance condition
-			pparresmax_lh_cyl_ref = xvparmax_lh_ref(ir_display_dke)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmax_lh_ref(ir_display_dke)^2*betath_ref^2);%LH resonance condition
-			hold on;
-			plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--');
-
-			plot(pparresmax_lh_cyl_ref,pperp_cyl_ref,'k--');
-			hold off;
+    		if nb_lh > 0 & xvparmax_lh_ref(ir_display_dke) - xvparmin_lh_ref(ir_display_dke) ~= 0 & isnan(xvparmin_lh_ref(ir_display_dke)) == 0 & isnan(xvparmax_lh_ref(ir_display_dke)) == 0,
+    			pparresmin_lh_cyl_ref = xvparmin_lh_ref(ir_display_dke)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmin_lh_ref(ir_display_dke)^2*betath_ref^2);%LH resonance condition
+    			pparresmax_lh_cyl_ref = xvparmax_lh_ref(ir_display_dke)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmax_lh_ref(ir_display_dke)^2*betath_ref^2);%LH resonance condition
+    			hold on;
+    			plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--');
+    
+    			plot(pparresmax_lh_cyl_ref,pperp_cyl_ref,'k--');
+    			hold off;
 		end
 		faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
 		text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['rho = ',num2str(xrho_dke(ir_display_dke))]);
 		pause(time_pause);
+%        
+		end
 %
 % Current
 %
@@ -398,7 +401,7 @@ while 1,
 		xJrf_tot_fsav_mksa = xcurr_tot_ref_fsav*j_ref;
 		xJrfB_fsav_mksa = xcurrB_ref_fsav*j_ref;
 		xJboot_e_fsav_mksa = xcurr_boot_ref_fsav*j_ref;
-%		xJboot_i_fsav_mksa = xcurr_i_fsav_mksa;
+		xJboot_i_fsav_mksa = xcurr_i_mksa_fsav;
 		xJtot_fsav_mksa = xcurr_tot_ref_fsav*j_ref;%+ xcurr_i_fsav_mksa;
 %
 % Power
@@ -427,13 +430,13 @@ while 1,
 			xPabs0_ref_fsav = integral_dke_jd(ones(1,nb),xyPabs0_ref_fsav,2)';
 			xPabs_tot_ref_fsav = integral_dke_jd(ones(1,nb),xyPabs_tot_ref_fsav,2)';
 		else
-			xyPabs0_lh_ref_fsav = zeros(1,nr);
-			xyPabs0_ec_ref_fsav = zeros(1,nr);
-			xyPabs_tot_lh_ref_fsav = zeros(1,nr);
-			xyPabs_tot_ec_ref_fsav = zeros(1,nr);
+			xyPabs0_lh_ref_fsav = zeros(1,nr_dke);
+			xyPabs0_ec_ref_fsav = zeros(1,nr_dke);
+			xyPabs_tot_lh_ref_fsav = zeros(1,nr_dke);
+			xyPabs_tot_ec_ref_fsav = zeros(1,nr_dke);
 %
-			xPabs0_ref_fsav = zeros(1,nr);
-			xPabs_tot_ref_fsav = zeros(1,nr);
+			xPabs0_ref_fsav = zeros(1,nr_dke);
+			xPabs_tot_ref_fsav = zeros(1,nr_dke);
 		end      
 %
 		xPcoll0_fsav_mksa = xPcoll0_ref_fsav*P_ref;
@@ -662,12 +665,12 @@ while 1,
 			disp(['   - RF only current density: [spherical]: ',num2str(xcurr0_ref_fsav(ir_display_dke))])
 			disp(['   - Electron Bootstrap current density: [spherical]: ',num2str(xcurr_boot_ref_fsav(ir_display_dke))])
 			disp(['   - RF + electron bootstrap current density: [spherical]: ',num2str(xcurr_tot_ref_fsav(ir_display_dke))])
-%			disp(['   - Ion bootstrap current density: ',num2str(xcurr_i_mksa_fsav(ir_display_dke)/j_ref)])
-%			disp(['   - Total bootstrap current density [spherical]: ',num2str(xcurr_boot_ref(ir_display_dke) + xcurr_i_mksa_fsav(ir_display_dke)/j_ref)]);
-%			disp(['   - Hinton & Hazeltine model for bootstrap: ',num2str(xcurr_hin_mksa_fsav(ir_display_dke)/j_ref)])  
-%			disp(['   - Hirshman model for bootstrap: ',num2str(xcurr_hir_mksa_fsav(ir_display_dke)/j_ref)])        
-%			disp(['   - Sauter model for bootstrap: ',num2str(xcurr_sau_mksa_fsav(ir_display_dke)/j_ref)])        
-%			disp(['   - RF + total bootstrap current density [spherical]: ',num2str(xcurr_tot_ref_fsav(ir_display_dke) + xcurr_i_mksa_fsav(ir_display_dke)/j_ref)]);
+			disp(['   - Ion bootstrap current density: ',num2str(xcurr_i_mksa_fsav(ir_display_dke)/j_ref)])
+			disp(['   - Total bootstrap current density [spherical]: ',num2str(xcurr_boot_ref(ir_display_dke) + xcurr_i_mksa_fsav(ir_display_dke)/j_ref)]);
+			disp(['   - Hinton & Hazeltine model for bootstrap: ',num2str(xcurr_hin_mksa_fsav(ir_display_dke)/j_ref)])  
+			disp(['   - Hirshman model for bootstrap: ',num2str(xcurr_hir_mksa_fsav(ir_display_dke)/j_ref)])        
+			disp(['   - Sauter model for bootstrap: ',num2str(xcurr_sau_mksa_fsav(ir_display_dke)/j_ref)])        
+			disp(['   - RF + total bootstrap current density [spherical]: ',num2str(xcurr_tot_ref_fsav(ir_display_dke) + xcurr_i_mksa_fsav(ir_display_dke)/j_ref)]);
 			disp(['   - RF power density lost on collisions (coll) [spherical]: ',num2str(-xPcoll0_ref_fsav(ir_display_dke))])
 %
 			for ib=1:nb_lh,
@@ -694,11 +697,11 @@ while 1,
 			disp(['   - RF only current density (MA/m2) [spherical]: ',num2str(xJrf0_fsav_mksa(ir_display_dke))])
 			disp(['   - Electron bootstrap current density (MA/m2) [spherical]: ',num2str(xJboot_e_fsav_mksa(ir_display_dke))])
 			disp(['   - RF + electron bootstrap current density (MA/m2) [spherical]: ',num2str(xJrf_tot_fsav_mksa(ir_display_dke))])
-%			disp(['   - Ion bootstrap current density (MA/m2): ',num2str(xJboot_i_mksa(ir_display_dke))])
-%			disp(['   - Total bootstrap current density (MA/m2) [spherical]: ',num2str(xJboot_e_mksa(ir_display_dke) + xJboot_i_mksa(ir_display_dke))])        
-%			disp(['   - Hinton & Hazeltine model for bootstrap (MA/m2): ',num2str(xcurr_hin_mksa_fsav(ir_display_dke))])        
-%			disp(['   - Hirshman model for bootstrap (MA/m2): ',num2str(xcurr_hir_mksa_fsav(ir_display_dke))])        
-%			disp(['   - Sauter model for bootstrap (MA/m2): ',num2str(xcurr_sau_mksa_fsav(ir_display_dke))])  
+			disp(['   - Ion bootstrap current density (MA/m2): ',num2str(xJboot_i_fsav_mksa(ir_display_dke))])
+			disp(['   - Total bootstrap current density (MA/m2) [spherical]: ',num2str(xJboot_e_fsav_mksa(ir_display_dke) + xJboot_i_fsav_mksa(ir_display_dke))])        
+			disp(['   - Hinton & Hazeltine model for bootstrap (MA/m2): ',num2str(xcurr_hin_mksa_fsav(ir_display_dke))])        
+			disp(['   - Hirshman model for bootstrap (MA/m2): ',num2str(xcurr_hir_mksa_fsav(ir_display_dke))])        
+			disp(['   - Sauter model for bootstrap (MA/m2): ',num2str(xcurr_sau_mksa_fsav(ir_display_dke))])  
 			disp(['   - RF + total bootstrap current density (MA/m2) [spherical]: ',num2str(xJtot_fsav_mksa(ir_display_dke))])
 			disp(['   - RF power density lost on collisions (MW/m3) (coll) [spherical]: ',num2str(-xPcoll0_fsav_mksa(ir_display_dke))])
 %
@@ -833,14 +836,10 @@ while 1,
 			title('Exact trapped fraction')
 			legend('Code');
 %
-%Calculation of the flux averaged bootstrap current from Hinton & Hazeltine, Hirshman, Sauter and Taguchi models (bulk contribution)
-%
-			[scurr_hir_mksa_fsav,scurr_sau_mksa_fsav,scurr_hin_mksa_fsav,scurr_i_mksa_fsav] = hsneomodels_dke_jd(srho,ap,Rp,Zi,sq,Bt,Te0,Tea,eTe,ne0,nea,ene,Ti0,Tia,eTi);
-%
 			figure(201),
 			plot(xrho_dke,j_ref*xcurr_tot_ref_fsav(r_dke) + xcurr_i_mksa_fsav(r_dke),'ro',xrho_dke,j_ref*xcurr0_ref_fsav(r_dke),'bx',...
 			xrho_dke,j_ref*(xcurr_tot_ref_fsav(r_dke) - xcurr0_ref_fsav(r_dke)) + xcurr_i_mksa_fsav(r_dke),'k+',...
-				srho,scurr_sau_mksa_fsav,'k-',srho,scurr_hir_mksa_fsav,'k:',srho,scurr_hin_mksa_fsav,'k-.');
+				prho,pcurr_sau_mksa_fsav,'k-',prho,pcurr_hir_mksa_fsav,'k:',prho,pcurr_hin_mksa_fsav,'k-.');
 			set(gca,'xlim',[0,1])
 			legend('J^{tot}','J^{RF}','J^{BS}','J^{BS} (Sauter)','J^{BS} (Hirshman)','J^{BS} (Hinton-Hazeltine)'); 
 			zoom on;grid on;
