@@ -1,5 +1,5 @@
 function [R0,xBmin,xRBmin,xBTBmin,xq,xqtilde,xqbar,xqhat,...
-xylambda_p0p0,xylambda_p2m1,xylambda_b_p1p1,xylambda_b_p1m1p2,xylambda_b_p1m1,xylambda_b_p1m2,xylambda_b_p2m2p2,xylambda_b_p3m2,xylambda_p2p0,xymaskT,xmhu0T2] = bounce_dke_jd(tokamak,xia,ymhu0)
+xylambda_p0p0,xylambda_p2m1,xylambda_b_p1p1,xylambda_b_p1m1p2,xylambda_b_p1m1,xylambda_b_p1m2,xylambda_b_p2m2p2,xylambda_b_p3m2,xylambda_b_p2,xymaskT,xmhu0T2] = bounce_dke_jd(tokamak,xia,ymhu0)
 %
 % calculates bounce averaging coefficients needed for solving the electron drift-kinetic-equation. 
 %
@@ -91,8 +91,9 @@ Yweight_p3m2 = (YMmhu./YMmhu0).^(3).*YMPSIB.^(-2);
 xylambda_p3m2 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p3m2)/(2*pi),[np,nmhu])./xyqtilde;
 xylambda_b_p3m2 = ~xymaskT.*xylambda_p3m2;
 %
-Yweight_p2p0 = (YMmhu./YMmhu0).^(2).*YMPSIB.^(0);
-xylambda_p2p0 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p2p0)/(2*pi),[np,nmhu])./xyqtilde;%In old notation: s*_tilde
+Yweight_p2 = (YMmhu./YMmhu0).^(2);
+xylambda_p2 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p2)/(2*pi),[np,nmhu])./xyqtilde;%In old notation: s*_tilde
+xylambda_b_p2 = ~xymaskT.*xylambda_p2;
 %
 ymask = find(ymhu0 == 0);
 if ~isempty(ymask),
@@ -105,5 +106,5 @@ if ~isempty(ymask),
 	xylambda_b_p1m2(:,ymask) = eps;
 	xylambda_b_p2m2p2(:,ymask) = eps;
 	xylambda_b_p3m2(:,ymask) = eps;
-	xylambda_p2p0(:,ymask) = eps;
+	xylambda_b_p2(:,ymask) = eps;
 end

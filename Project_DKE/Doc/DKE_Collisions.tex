@@ -52,28 +52,155 @@ We also have the following relation, by expanding $\xi ^{2}$%
 _{0}^{2}\right) \overline{\lambda }_{1,-1,0}}{\xi _{0}^{2}}
 \end{equation}
 
+Concerning the term that ensures momentum conservation in the collision
+operator, one must evaluate $\left\{ \xi \mathcal{I}\left( p,\psi ,\theta
+\right) \right\} _{\widetilde{f}}=\left\{ \xi \mathcal{I}\left( f_{0M},%
+\widetilde{f}_{l=1}\right) \right\} .$ Making like for the Fokker-Planck
+term the substitution $\Psi \xi _{0}d\xi _{0}=\xi d\xi $ in the integral $%
+\int_{-1}^{+1}\xi \widetilde{f}\left( p,\xi ,\psi ,\theta \right) d\xi ,$
+one obtains 
+\begin{equation}
+\widetilde{f}_{l=1}\left( p,\xi ,\psi ,\theta \right) =\frac{3}{2}%
+\int_{-1}^{-\sqrt{1-1/\Psi }}\Psi \xi _{0}\left( \frac{\xi }{\Psi \xi _{0}}%
+\right) \widetilde{f}^{\left( 0\right) }\left( p,\xi _{0},\psi \right) d\xi
+_{0}+\frac{3}{2}\int_{\sqrt{1-1/\Psi }}^{+1}\Psi \xi _{0}\left( \frac{\xi }{%
+\Psi \xi _{0}}\right) \widetilde{f}^{\left( 0\right) }\left( p,\xi _{0},\psi
+\right) d\xi _{0}
+\end{equation}
+which becomes
+\begin{equation}
+\widetilde{f}_{l=1}\left( p,\xi ,\psi ,\theta \right) =\frac{3}{2}%
+\int_{-1}^{1}H\left( \left| \xi _{0}\right| -\xi _{0T}\right) \xi \widetilde{%
+f}^{\left( 0\right) }\left( p,\xi _{0},\psi \right) d\xi _{0}
+\end{equation}
+
+Then,
+\begin{equation}
+\left\{ \xi \mathcal{I}\left( f_{0M},\widetilde{f}_{l=1}\right) \right\} =%
+\mathcal{I}\left( f_{0M},\left\{ \xi \widetilde{f}_{l=1}\right\} \right) 
+\end{equation}
+since $f_{0M}$ and $\mathcal{I}$ are independent of $\theta .$ It is
+therefore necessary to evaluate 
+\begin{eqnarray}
+\left\{ \xi \widetilde{f}_{l=1}\right\}  &=&\frac{1}{\lambda \widetilde{q}}%
+\left[ \frac{1}{2}\sum_{\sigma }\right] _{T}\int_{\theta _{\min }}^{\theta
+_{\max }}\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{%
+r}\right| }\frac{r}{R_{0}}\frac{B}{B_{P}}\frac{\xi _{0}}{\xi }\xi \widetilde{%
+f}_{l=1}  \nonumber \\
+&=&\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2}\sum_{\sigma }\right]
+_{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }\frac{1}{%
+\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}}\frac{B}{B_{P}%
+}\xi _{0}\widetilde{f}_{l=1}  \nonumber \\
+&=&\frac{\xi _{0}}{\lambda \widetilde{q}}H\left( \left| \xi _{0}\right| -\xi
+_{0T}\right) \int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{%
+\psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}}\frac{B}{B_{P}}\widetilde{f}%
+_{l=1}
+\end{eqnarray}
+since $\widetilde{f}_{l=1}$ is independent of $\sigma $ because of the
+integration over $\xi _{0},$ while $\left[ \frac{1}{2}\sum_{\sigma }\right]
+_{T}\xi _{0}=0$ for trapped orbits. Hence, 
+\begin{eqnarray}
+\left\{ \xi \widetilde{f}_{l=1}\right\}  &=&\frac{\xi _{0}}{\lambda 
+\widetilde{q}}H\left( \left| \xi _{0}\right| -\xi _{0T}\right) \int_{0}^{2%
+\pi }\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}%
+\right| }\frac{r}{R_{0}}\frac{B}{B_{P}}\left[ \frac{3}{2}\int_{-1}^{1}H%
+\left( \left| \xi _{0}\right| -\xi _{0T}\right) \xi \widetilde{f}^{\left(
+0\right) }d\xi _{0}\right]   \nonumber \\
+&=&\frac{\xi _{0}}{\lambda }H\left( \left| \xi _{0}\right| -\xi _{0T}\right) 
+\frac{3}{2}\int_{-1}^{1}H\left( \left| \xi _{0}\right| -\xi _{0T}\right) 
+\widetilde{f}^{\left( 0\right) }d\xi _{0}\left[ \frac{1}{\widetilde{q}}%
+\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot 
+\widehat{r}\right| }\frac{r}{R_{0}}\frac{B}{B_{P}}\xi \right]   \nonumber \\
+&=&\frac{\xi _{0}}{\lambda }H\left( \left| \xi _{0}\right| -\xi _{0T}\right) 
+\frac{3}{2}\int_{-1}^{1}H\left( \left| \xi _{0}\right| -\xi _{0T}\right) 
+\widetilde{f}^{\left( 0\right) }\xi _{0}\lambda d\xi _{0}\left[ \frac{1}{%
+\lambda \widetilde{q}}\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{1}{\left| 
+\widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}}\frac{B}{B_{P}}\frac{%
+\xi _{0}}{\xi }\frac{\xi ^{2}}{\xi _{0}^{2}}\right]   \nonumber \\
+&=&\frac{\xi _{0}}{\lambda }H\left( \left| \xi _{0}\right| -\xi _{0T}\right) 
+\frac{3}{2}\int_{-1}^{1}\xi _{0}H\left( \left| \xi _{0}\right| -\xi
+_{0T}\right) \widetilde{f}^{\left( 0\right) }\lambda \left\{ \frac{\xi ^{2}}{%
+\xi _{0}^{2}}\right\} d\xi _{0}  \nonumber \\
+&=&\frac{\xi _{0}}{\lambda }H\left( \left| \xi _{0}\right| -\xi _{0T}\right) 
+\frac{3}{2}\int_{-1}^{1}\xi _{0}H\left( \left| \xi _{0}\right| -\xi
+_{0T}\right) \widetilde{f}^{\left( 0\right) }\lambda _{2,0,0}d\xi _{0}
+\end{eqnarray}
+
+Defining
+\begin{eqnarray}
+\widetilde{f}_{l=1}^{\left( 0\right) } &\equiv &\frac{3}{2}\int_{-1}^{1}\xi
+_{0}H\left( \left| \xi _{0}\right| -\xi _{0T}\right) \widetilde{f}^{\left(
+0\right) }\lambda _{2,0,0}d\xi _{0} \\
+&=&\frac{3}{2}\int_{-1}^{1}\xi _{0}\widetilde{f}^{\left( 0\right) }\overline{%
+\lambda }_{2,0,0}d\xi _{0}
+\end{eqnarray}
+\begin{equation}
+\left\{ \xi \mathcal{I}\left( f_{0M},\widetilde{f}_{l=1}\right) \right\} =%
+\frac{\xi _{0}}{\lambda }H\left( \left| \xi _{0}\right| -\xi _{0T}\right) 
+\mathcal{I}\left( f_{0M},\widetilde{f}_{l=1}^{\left( 0\right) }\right) 
+\end{equation}
+
 \subsubsection{Case of circular concentric flux-surfaces}
 
 Note that in the case of circular concentric flux-surfaces, we can find
 analytical expressions for the bounce coefficients 
-\begin{eqnarray*}
+\begin{eqnarray}
 \overline{\lambda }_{1,-1,0} &=&H(|\xi _{0}|-\xi _{0T})\int_{0}^{2\pi }\frac{%
-d\theta }{2\pi }\frac{1}{\Psi } \\
+d\theta }{2\pi }\frac{1}{\Psi }  \nonumber \\
 &=&\frac{1}{\left( 1+\epsilon \right) }H(|\xi _{0}|-\xi _{0T})\int_{0}^{\pi }%
-\frac{d\theta }{\pi }\left( 1+\epsilon \cos \theta \right)  \\
+\frac{d\theta }{\pi }\left( 1+\epsilon \cos \theta \right)   \nonumber \\
 &=&\frac{1}{\left( 1+\epsilon \right) }H(|\xi _{0}|-\xi _{0T})
-\end{eqnarray*}
-\begin{eqnarray*}
+\end{eqnarray}
+\begin{eqnarray}
 \overline{\lambda }_{1,-2,0} &=&H(|\xi _{0}|-\xi _{0T})\int_{0}^{2\pi }\frac{%
-d\theta }{2\pi }\frac{1}{\Psi ^{2}} \\
+d\theta }{2\pi }\frac{1}{\Psi ^{2}}  \nonumber \\
 &=&\frac{H(|\xi _{0}|-\xi _{0T})}{\left( 1+\epsilon \right) ^{2}}\int_{0}^{%
-\pi }\frac{d\theta }{\pi }\left( 1+\epsilon \cos \theta \right) ^{2} \\
+\pi }\frac{d\theta }{\pi }\left( 1+\epsilon \cos \theta \right) ^{2} 
+\nonumber \\
 &=&\frac{H(|\xi _{0}|-\xi _{0T})}{\left( 1+\epsilon \right) ^{2}}\left( 1+%
 \frac{\epsilon ^{2}}{2}\right) 
-\end{eqnarray*}
+\end{eqnarray}
 so that 
 \begin{equation}
 \overline{\lambda }_{3,-2,0}=\frac{H(|\xi _{0}|-\xi _{0T})}{\left(
 1+\epsilon \right) \xi _{0}^{2}}\left( \xi _{0}^{2}-\frac{\epsilon \left(
 1-\epsilon /2\right) }{\left( 1+\epsilon \right) }\right) 
+\end{equation}
+
+Furthermore,
+\begin{eqnarray}
+\overline{\lambda }_{2,0,0} &=&H(|\xi _{0}|-\xi _{0T})\int_{0}^{2\pi }\frac{%
+d\theta }{2\pi }\frac{\xi }{\xi _{0}}  \nonumber \\
+&=&H(|\xi _{0}|-\xi _{0T})\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{\xi
+_{0}}{\xi }\frac{\xi ^{2}}{\xi _{0}^{2}}  \nonumber \\
+&=&H(|\xi _{0}|-\xi _{0T})\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{\xi
+_{0}}{\xi }\frac{1-\Psi \left( 1-\xi _{0}^{2}\right) }{\xi _{0}^{2}} 
+\nonumber \\
+&=&H(|\xi _{0}|-\xi _{0T})\frac{\lambda }{\xi _{0}^{2}}\left[ 1-\left( 1-\xi
+_{0}^{2}\right) \left\{ \Psi \right\} \right] 
+\end{eqnarray}
+and using the expression of $\left\{ \Psi \right\} $ given in Appendix *****
+\begin{equation}
+\left\{ \Psi \right\} =\frac{1}{\lambda }\frac{2}{\pi }\sum_{m=0}^{\infty }%
+\widetilde{\chi }_{m}\xi _{0T}^{2m}J_{2m}
+\end{equation}
+where $J_{2m}$ is expressed in terms of complete elliptic integrals of the
+first and second kind, as shown in Appendix ****, and $\widetilde{\chi }_{m}$
+is given by the recurrence relation $\widetilde{\chi }_{m}=\frac{2m-1}{2m}%
+\widetilde{\chi }_{m-1}$ with $\widetilde{\chi }_{0}=1,$%
+\begin{equation}
+\overline{\lambda }_{2,0,0}=\frac{2}{\pi }H(|\xi _{0}|-\xi _{0T})\sum_{m=0}^{%
+\infty }\left[ \chi _{m}-\widetilde{\chi }_{m}\left( 1-\xi _{0}^{2}\right)
+\right] \frac{\xi _{0T}^{2m}}{\xi _{0}^{2}}J_{2m}
+\end{equation}
+
+Here $\chi _{m}$ is defined in Appendix **** The series expansion is
+concerging less rapidly than for $\lambda _{0,0,0}=\lambda ,$ therefore, at
+least first three terms have to be kept for accurate calculations, so that
+the truncated expression is
+\begin{equation}
+\overline{\lambda }_{2,0,0}\simeq \frac{2}{\pi }H(|\xi _{0}|-\xi
+_{0T})\left[ J_{0}+\left( \frac{1}{2}-\frac{1}{\xi _{0}^{2}}\right) \xi
+_{0T}^{2}J_{2}+\left( \frac{3}{8}-\frac{1}{2\xi _{0}^{2}}\right) \xi
+_{0T}^{4}J_{4}\right] 
 \end{equation}
