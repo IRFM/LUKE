@@ -1,5 +1,5 @@
-function [blist_lh,yomega_lh,yvparmin_lh,yvparmax_lh,ynparmin_lh,ynparmax_lh,ynpar_lh,ydnpar_lh,...
-    yP0_in_c_lh,yP0_in_lh_prof,ypeak_lh,ywidth_lh,yfinc_lh,ythetab_lh,yopt_lh] = psim_coldlhcd_jd;
+function [xyomega_lh,xyvparmin_lh,xyvparmax_lh,xynparmin_lh,xynparmax_lh,xynpar_lh,xydnpar_lh,...
+    xyP0_in_lh,xyfinc_lh,xythetab_lh,xyopt_lh] = psim_coldlhcd_jd(xrho);
 %
 % Parameters for LHCD calculations with cold plasma wave model
 % Note: these calculations do not include any coupling to ray-tracing 
@@ -9,7 +9,7 @@ function [blist_lh,yomega_lh,yvparmin_lh,yvparmax_lh,ynparmin_lh,ynparmax_lh,ynp
 %
 blist_lh = [3]; %Index of selected scenarios for the LH wave. [1,n_scenario_lh]
 %
-yomega_lh = [NaN,NaN,4.6];%LH wave frequency (GHz) [1,n_scenario_lh]
+yomega_lh = [4.6,4.6,4.6];%LH wave frequency (GHz) [1,n_scenario_lh]
 %
 % Choose (vparmin_lh,vparmax_lh) or (nparmin_lh,nparmax_lh) for square n// LH wave power spectrum,
 % or (npar_lh,dnpar_lh) for Gaussian shape
@@ -40,3 +40,34 @@ ythetab_lh = [0,90,0];%Poloidal location of LH beam (Degree) [1,n_scenario_lh]
 %	- (2): small FLR expansion without 1/vpar dependence and old grid technique for Dlh calculations (Karney, Shoucri) (see rfdiff_dke_jd)
 %
 yopt_lh = [1,2,0]; % [1,n_scenario_lh]
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+%
+nr = length(xrho);
+nb_lh = length(blist_lh);
+if nb_lh == 0, 
+    blist_lh=ones(1,nb_lh); %for correct empty matrix size management
+end
+%
+xyvparmin_lh = ones(nr,1)*yvparmin_lh(blist_lh);
+xyvparmax_lh = ones(nr,1)*yvparmax_lh(blist_lh);
+xynparmin_lh = ones(nr,1)*ynparmin_lh(blist_lh);
+xynparmax_lh = ones(nr,1)*ynparmax_lh(blist_lh);
+xyomega_lh = 2*pi*1e9*ones(nr,1)*yomega_lh(blist_lh);%(GHz -> rad/s)
+xynpar_lh = ones(nr,1)*ynpar_lh(blist_lh);
+xydnpar_lh = ones(nr,1)*ydnpar_lh(blist_lh);
+xyP0_in_c_lh = ones(nr,1)*yP0_in_c_lh(blist_lh)*1e6;%(MW -> W)
+xypeak_lh = ones(nr,1)*ypeak_lh(blist_lh);
+xywidth_lh = ones(nr,1)*ywidth_lh(blist_lh);
+xyfinc_lh = ones(nr,1)*yfinc_lh(blist_lh);
+xythetab_lh = ones(nr,1)*ythetab_lh(blist_lh)*pi/180;%(deg -> rad)
+xyopt_lh = ones(nr,1)*yopt_lh(blist_lh); 
+%
+xyrho = repmat(xrho',[1,nb_lh]);
+%
+yP0_in_lh_prof = logical(yP0_in_lh_prof(blist_lh));
+%
+xyP0_in_lh = zeros(nr,nb_lh);
+xyP0_in_lh(:,yP0_in_lh_prof) = exp(-(xyrho(:,yP0_in_lh_prof) - xypeak_lh(:,yP0_in_lh_prof)).^2./(xywidth_lh(:,yP0_in_lh_prof)/2/sqrt(log(2))).^2).*xyP0_in_c_lh(:,yP0_in_lh_prof);%Gaussian radial profile on midplane
+xyP0_in_lh(:,~yP0_in_lh_prof) = xyP0_in_c_lh(:,~yP0_in_lh_prof);%Uniform radial profile
+%
