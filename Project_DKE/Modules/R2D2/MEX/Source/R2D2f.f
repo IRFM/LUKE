@@ -81,7 +81,7 @@ C
       common /pperp/ p_perp_min,p_perp_max
       common /weerr/ errabs1,errrel1,irule1
 C
-      common /nrts1/ knr,nrt_nr,nrt_fr
+      common /nrts1/ knr,nrt_nr,nrt_fr,tol_ht,nd_ht
 C
       common /chck1/ kparam
       common /chck2/ cnpa_in,cnpa_fi,n_cnpa
@@ -223,7 +223,7 @@ C.. knr = 0 solves the fully relativistic dispersion relation also ...
 C..... number of roots to be found in the non-relativistic case ......
 C....... number of roots to be found in the relativistic case ........
 C
-      read (20,*) knr,nrt_nr,nrt_fr 
+      read (20,*) knr,nrt_nr,nrt_fr,tol_ht,nd_ht 
 C
 C.......... number of terms to be used in the sums for the ...........
 C............ non-relativistic dielectric tensor elements ............
@@ -375,7 +375,7 @@ C
       common /para2/ npos
       common /para8/ wp,wc,vte
       common /para9/ alpha,omega,vt,besk2
-      common /nrts1/ knr,nrt_nr,nrt_fr
+      common /nrts1/ knr,nrt_nr,nrt_fr,tol_ht,nd_ht
       common /guinp/ guesr,guesi,kgues
       common /prnt/  kpr
 C
@@ -500,7 +500,7 @@ C
       double complex frtgues(n_rts),frt(n_rts)
 C
       common /para9/ alpha,omega,vt,besk2
-      common /nrts1/ knr,nrt_nr,nrt_fr
+      common /nrts1/ knr,nrt_nr,nrt_fr,tol_ht,nd_ht
       common /chck1/ kparam
       common /chck2/ cnpa_in,cnpa_fi,n_cnpa
       common /chck3/ omega_in,omega_fi,n_omega
@@ -3388,6 +3388,7 @@ C
 C
       common /rterr/ errt_abs,errt_rel,it_max
       common /nrels/ nr_nterms
+      common /nrts1/ knr,nrt_nr,nrt_fr,tol_ht,nd_ht
       common /prnt/  kpr
 C
       external nr_func_herm,dzbren,umach,erset
@@ -3407,13 +3408,13 @@ C
         rtmax=dmax1(rtmax,re_rt(i))
     2 continue
 C
-      rtmin=(1.d0-0.2*dabs(rtmin)/rtmin)*rtmin
-      rtmax=(1.d0+0.2*dabs(rtmax)/rtmax)*rtmax
+      rtmin=(1.d0-tol_ht*dabs(rtmin)/rtmin)*rtmin
+      rtmax=(1.d0+tol_ht*dabs(rtmax)/rtmax)*rtmax
 C
 C....... finding the real n_perp roots for the hermitian tensor ......
 C
       newrt=0
-      nu_int=11
+      nu_int=nd_ht
       drt=(rtmax-rtmin)/dfloat(nu_int)
       rti=rtmin-drt
       do 3 i=1,nu_int

@@ -1,5 +1,5 @@
 function [xpsin_out_ft,xMNperp_ft,xM3eps_pmz_ft,xpsin_out_ht,xMNperp_ht,xM3eps_pmz_ht,xMPflow_ht,xMPabs_at] = ...
-    disp_jd(xpsin,xB,xTe,xne,xNpar,omega,knr,nrt_nr,nrt_fr,kflag,GNperp,nn_nr);
+    disp_jd(xpsin,xB,xTe,xne,xNpar,omega,knr,nrt_nr,nrt_fr,kflag,GNperp,nn_nr,tol_ht,nd_ht);
 %
 % This function calls R2D2 and solves the wave equation for relativistic
 % and non-relativistic maxwellian distribution, using the Hermitian
@@ -40,6 +40,13 @@ function [xpsin_out_ft,xMNperp_ft,xM3eps_pmz_ft,xpsin_out_ht,xMNperp_ht,xM3eps_p
 % 
 % Updated 10/14/03
 %
+if nargin < 14
+    nd_ht = 11;
+end
+if nargin < 13
+    tol_ht = 0.2;
+end
+%
 nr1 = [];
 pf = [];
 %
@@ -50,7 +57,7 @@ pathname = getpath_jd(exename);%
 wd = cd;
 eval(['cd ',pathname]);
 %
-makedisp_simparam_jd(xpsin,xB,xTe,xne,xNpar,omega,knr,nrt_nr,nrt_fr,kflag,GNperp,nn_nr);%
+makedisp_simparam_jd(xpsin,xB,xTe,xne,xNpar,omega,knr,nrt_nr,nrt_fr,kflag,GNperp,nn_nr,tol_ht,nd_ht);%
 %
 [s,w] = execute_jd(exename);
 %
