@@ -7,7 +7,7 @@ space is the Boltzmann equation
 \begin{equation}
 \frac{\partial f}{\partial t}+\mathbf{v}\cdot \nabla _{\mathbf{r}%
 }f+q_{e}\left[ \mathbf{E}\left( \mathbf{r},t\right) +\mathbf{v}\times 
-\mathbf{B}\left( \mathbf{r},t\right) \right] \cdot \nabla _{\mathbf{p}
+\mathbf{B}\left( \mathbf{r},t\right) \right] \cdot \nabla _{\mathbf{p}%
 }f=\left. \frac{\partial f}{\partial t}\right| _{\text{C}}  \label{kin1}
 \end{equation}
 where 
@@ -21,12 +21,12 @@ time-independent macroscopic fields $\mathbf{E}_{0}\left( \mathbf{r}\right) $
 and $\mathbf{B}_{0}\left( \mathbf{r}\right) $ and fields associated with
 plane waves. 
 \begin{eqnarray}
-\mathbf{E}\left( \mathbf{r},t\right)  &=&\overline{\mathbf{E}}\left( \mathbf{%
-r}\right) +\sum_{k}\widetilde{\mathbf{E}}_{k}e^{i\left( \mathbf{k}\cdot 
-\mathbf{r}-\omega t\right) } \\
+\mathbf{E}\left( \mathbf{r},t\right)  &=&\overline{\mathbf{E}}\left( \mathbf{
+r}\right) +\int \widetilde{\mathbf{E}}_{\mathbf{k}}e^{i\left( \mathbf{k}%
+\cdot \mathbf{r}-\omega t\right) }d\mathbf{k} \\
 \mathbf{B}\left( \mathbf{r},t\right)  &=&\overline{\mathbf{B}}\left( \mathbf{%
-r}\right) +\sum_{k}\widetilde{\mathbf{B}}_{k}e^{i\left( \mathbf{k}\cdot 
-\mathbf{r}-\omega t\right) }
+r}\right) +\int \widetilde{\mathbf{B}}_{\mathbf{k}}e^{i\left( \mathbf{k}%
+\cdot \mathbf{r}-\omega t\right) }d\mathbf{k}
 \end{eqnarray}
 
 Because we are interested in solving the kinetic equation on the bounce and
@@ -38,12 +38,12 @@ Performing a time-averaging $\int_{0}^{2\pi /\omega }dt$ of the equation (%
 \begin{eqnarray}
 &&\frac{\partial \overline{f}}{\partial t}+\mathbf{v}\cdot \nabla _{\mathbf{r%
 }}\overline{f}+q_{e}\left[ \overline{\mathbf{E}}\left( \mathbf{r}\right) +%
-\mathbf{v}\times \overline{\mathbf{B}}\left( \mathbf{r}\right) \right] \cdot %
+\mathbf{v}\times \overline{\mathbf{B}}\left( \mathbf{r}\right) \right] \cdot
 \nabla _{\mathbf{p}}\overline{f}  \nonumber \\
 &=&\left. \frac{\partial \overline{f}}{\partial t}\right| _{\text{C}%
 }-\int_{0}^{2\pi /\omega }dt\;\sum_{k}\left( q_{e}\left[ \widetilde{\mathbf{E%
 }}_{k}+\mathbf{v}\times \widetilde{\mathbf{B}}_{k}\right] \cdot \nabla _{%
-\mathbf{p}}f\right)   \label{kin2}
+\mathbf{p}}f\right)  \label{kin2}
 \end{eqnarray}
 where 
 \begin{equation}
@@ -61,7 +61,7 @@ $\Omega _{e}$%
 is much larger than both the collisional frequency and the bounce frequency,
 we can expand the distribution function 
 \begin{equation}
-\overline{f}=\overline{f}_{0}+\overline{f}_{1}+\overline{f}_{2}+\cdots 
+\overline{f}=\overline{f}_{0}+\overline{f}_{1}+\overline{f}_{2}+\cdots
 \end{equation}
 with a small parameter 
 \begin{equation}
@@ -70,12 +70,12 @@ with a small parameter
 
 The zero order equation becomes 
 \begin{equation}
-q_{e}\mathbf{v}\times \overline{\mathbf{B}}\left( \mathbf{r}\right) \cdot %
+q_{e}\mathbf{v}\times \overline{\mathbf{B}}\left( \mathbf{r}\right) \cdot
 \nabla _{\mathbf{p}}\overline{f}_{0}=0  \label{kinexp0}
 \end{equation}
 
 We have, in the $\left( p_{\Vert },p_{\bot },\varphi \right) $ space defined
-in Appendix \ref{curvilinear},
+in Appendix \ref{curvilinear}, 
 \begin{equation}
 \mathbf{v}=\frac{\mathbf{p}}{\gamma \left( p_{\Vert },p_{\bot }\right) m_{e}}
 \end{equation}
@@ -85,9 +85,9 @@ with the momentum being given by relation (\ref{pparperp})
 \end{equation}
 and the gradient by expression (\ref{gradparperp}) 
 \begin{equation}
-\nabla _{\mathbf{p}}\overline{f}=\frac{\partial \overline{f}}{\partial %
+\nabla _{\mathbf{p}}\overline{f}=\frac{\partial \overline{f}}{\partial
 p_{\Vert }}\widehat{\Vert }+\frac{\partial \overline{f}}{\partial p_{\bot }}%
-\widehat{\bot }+\frac{1}{p_{\bot }}\frac{\partial \overline{f}}{\partial %
+\widehat{\bot }+\frac{1}{p_{\bot }}\frac{\partial \overline{f}}{\partial
 \varphi }\widehat{\varphi }  \label{gradparperp2}
 \end{equation}
 
@@ -98,13 +98,13 @@ In this system, by definition,
 \end{equation}
 so that the gyromotion operator becomes 
 \begin{eqnarray}
-q_{e}\mathbf{v}\times \overline{\mathbf{B}}\left( \mathbf{r}\right) \cdot %
+q_{e}\mathbf{v}\times \overline{\mathbf{B}}\left( \mathbf{r}\right) \cdot
 \nabla _{\mathbf{p}} &=&\Omega _{e}\left( \mathbf{p}\times \widehat{\Vert }
 \right) \cdot \nabla _{\mathbf{p}}\overline{f}  \nonumber \\
 &=&-\Omega _{e}\frac{\partial }{\partial \varphi }  \label{gyromotion}
 \end{eqnarray}
 
-The equation (\ref{kinexp0}) becomes consequently
+The equation (\ref{kinexp0}) becomes consequently 
 \begin{equation}
 \frac{\partial \overline{f}_{0}}{\partial \varphi }=0  \label{ftilde0phi}
 \end{equation}
@@ -112,14 +112,14 @@ and therefore $\overline{f}_{0}$ is independent of $\varphi $. The first
 order equation is 
 \begin{eqnarray}
 &&\frac{\partial \overline{f}_{0}}{\partial t}+\mathbf{v}\cdot \nabla _{%
-\mathbf{r}\overline{f}0}+q_{e}\overline{\mathbf{E}}\left( \mathbf{r}\right) 
+\mathbf{r}\overline{f}0}+q_{e}\overline{\mathbf{E}}\left( \mathbf{r}\right)
 \cdot \nabla _{\mathbf{p}}\overline{f}_{0}+q_{e}\mathbf{v}\times \overline{%
 \mathbf{B}}\left( \mathbf{r}\right) \cdot \nabla _{\mathbf{p}}\overline{f}%
 _{1}  \nonumber \\
 &=&\left. \frac{\partial \overline{f}_{0}}{\partial t}\right| _{\text{C}%
 }-\int_{0}^{2\pi /\omega }dt\;\sum_{k}\left( q_{e}\left[ \widetilde{\mathbf{E%
 }}_{k}+\mathbf{v}\times \widetilde{\mathbf{B}}_{k}\right] \cdot \nabla _{%
-\mathbf{p}}f\right)   \label{kinexp}
+\mathbf{p}}f\right)  \label{kinexp}
 \end{eqnarray}
 
 The last term in the equation (\ref{kinexp}) has been calculated by Lerche
@@ -132,7 +132,7 @@ f}_{0}}{\partial t}\right| _{\text{C}}
 \begin{equation}
 \mathcal{Q}\left( \overline{f}_{0}\right) =-\;\int_{0}^{2\pi /\omega
 }dt\;\sum_{k}\left( q_{e}\left[ \widetilde{\mathbf{E}}_{k}+\mathbf{v}\times 
-\widetilde{\mathbf{B}}_{k}\right] \cdot \nabla _{\mathbf{p}}f\right) 
+\widetilde{\mathbf{B}}_{k}\right] \cdot \nabla _{\mathbf{p}}f\right)
 \end{equation}
 
 Performing the gyro-averaging $\int_{0}^{2\pi }d\varphi $ on the kinetic
@@ -154,20 +154,20 @@ center.
 Concerning the electric field, we decompose the gradient in momentum space
 using (\ref{gradparperp2}) 
 \begin{eqnarray}
-\int_{0}^{2\pi }d\varphi \;q_{e}\overline{\mathbf{E}}\left( \mathbf{r}%
+\int_{0}^{2\pi }d\varphi \;q_{e}\overline{\mathbf{E}}\left( \mathbf{r}
 \right) \cdot \nabla _{\mathbf{p}}\overline{f}_{0} &=&q_{e}\overline{\mathbf{%
 E}}\left( \mathbf{r}\right) \cdot \int_{0}^{2\pi }d\varphi \left[ \frac{%
 \partial \overline{f}_{0}}{\partial p_{\Vert }}\widehat{\Vert }+\frac{%
 \partial \overline{f}_{0}}{\partial p_{\bot }}\widehat{\bot }+\frac{1}{%
 p_{\bot }}\frac{\partial \overline{f}_{0}}{\partial \varphi }\widehat{%
-\varphi }\right]  \\
+\varphi }\right] \\
 &=&q_{e}\frac{\partial \overline{f}_{0}}{\partial p_{\Vert }}\overline{%
 \mathbf{E}}\left( \mathbf{r}\right) \cdot \widehat{\Vert }  \nonumber \\
 &&+q_{e}\frac{\partial \overline{f}_{0}}{\partial p_{\bot }}\overline{%
 \mathbf{E}}\left( \mathbf{r}\right) \cdot \int_{0}^{2\pi }d\varphi \widehat{%
 \bot }  \nonumber \\
-&&+\frac{q_{e}}{p_{\bot }}\overline{\mathbf{E}}\left( \mathbf{r}\right) 
-\cdot \int_{0}^{2\pi }d\varphi \frac{\partial \overline{f}_{0}}{\partial %
+&&+\frac{q_{e}}{p_{\bot }}\overline{\mathbf{E}}\left( \mathbf{r}\right)
+\cdot \int_{0}^{2\pi }d\varphi \frac{\partial \overline{f}_{0}}{\partial
 \varphi }\widehat{\varphi }
 \end{eqnarray}
 and, using 
@@ -175,8 +175,8 @@ and, using
 \int_{0}^{2\pi }d\varphi \widehat{\bot } &=&0 \\
 \int_{0}^{2\pi }d\varphi \frac{\partial \overline{f}_{0}}{\partial \varphi }%
 \widehat{\varphi } &=&-\overline{f}_{0}\int_{0}^{2\pi }d\varphi \frac{%
-\partial \widehat{\varphi }}{\partial \varphi }=\overline{f}_{0}\int_{0}^{2%
-\pi }d\varphi \widehat{\bot }=0
+\partial \widehat{\varphi }}{\partial \varphi }=\overline{f}%
+_{0}\int_{0}^{2\pi }d\varphi \widehat{\bot }=0
 \end{eqnarray}
 we obtain 
 \begin{equation}
@@ -189,16 +189,16 @@ we obtain
 The gyromotion term is averaged to zero 
 \begin{equation}
 \int_{0}^{2\pi }d\varphi \;q_{e}\mathbf{v}\times \overline{\mathbf{B}}\left( 
-\mathbf{r}\right) \cdot \nabla _{\mathbf{p}}\overline{f}_{1}=-\Omega %
-_{e}\int_{0}^{2\pi }d\varphi \;\frac{\partial \overline{f}_{1}}{\partial %
+\mathbf{r}\right) \cdot \nabla _{\mathbf{p}}\overline{f}_{1}=-\Omega
+_{e}\int_{0}^{2\pi }d\varphi \;\frac{\partial \overline{f}_{1}}{\partial
 \varphi }=0
 \end{equation}
 so that we get finally 
 \begin{equation}
-\frac{\partial \widetilde{f}_{0}}{\partial t}+\mathbf{v}_{\text{gc}}\cdot %
+\frac{\partial \widetilde{f}_{0}}{\partial t}+\mathbf{v}_{\text{gc}}\cdot
 \nabla _{\mathbf{r}}\widetilde{f}_{0}+\frac{\partial }{\partial p_{\Vert }}%
 q_{e}E_{0\Vert }\left( \mathbf{r}\right) \widetilde{f}_{0}=\mathcal{C}\left( 
-\widetilde{f}_{0}\right) +\mathcal{Q}\left( \widetilde{f}_{0}\right) 
+\widetilde{f}_{0}\right) +\mathcal{Q}\left( \widetilde{f}_{0}\right)
 \end{equation}
 
 This equation is called electron drift-kinetic equation. Renaming the
@@ -209,7 +209,7 @@ guiding-center distribution function $\overline{f}_{0}=f\left( \mathbf{r}%
 get 
 \begin{equation}
 \frac{\partial f}{\partial t}+\mathbf{v}_{\text{gc}}\cdot \nabla f=\mathcal{C%
-}\left( f\right) +\mathcal{Q}\left( f\right) +\mathcal{E}\left( f\right) 
+}\left( f\right) +\mathcal{Q}\left( f\right) +\mathcal{E}\left( f\right)
 \end{equation}
 where we define an electric field operator 
 \begin{equation}
@@ -217,5 +217,5 @@ where we define an electric field operator
 q_{e}E_{\Vert }\left( \mathbf{r}\right) f
 \end{equation}
 
-Implicitely, the time scale here considered is so that $t\gg \left( 2\pi %
+Implicitely, the time scale here considered is so that $t\gg \left( 2\pi
 /\omega ,2\pi /\Omega _{e}\right) .$

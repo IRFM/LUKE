@@ -1,178 +1,183 @@
-For axisymmetric plasmas, The Drift-Kinetic Equation is given by
+
+As shwon in previous section, for axisymmetric plasmas, the electron drift
+kinetic equation may be expressed in the general form
 \begin{equation}
-\frac{\partial f}{\partial t}+{\bf v}_{\text{gc}}\cdot \nabla f={\cal C}%
-\left( f\right) +{\cal Q}\left( f\right) +{\cal E}\left( f\right)
+\frac{\partial f}{\partial t}+\mathbf{v}_{\text{gc}}\cdot \nabla f=\mathcal{C%
+}\left( f\right) +\mathcal{Q}\left( f\right) +\mathcal{E}\left( f\right) 
 \label{dke1}
 \end{equation}
 where $f=f\left( p,\xi ,\psi ,\theta ,t\right) $ is the guiding-center
-distribution function, and the guiding center velocity is decomposed into
-the fast parallel motion along the field lines, and a drift velocity ${\bf v}%
-_{D}$.
+distribution function.
+
+In tokamaks, it can be shwon that the guiding center velocity $\mathbf{v}_{%
+\text{gc}}$ may be decomposed into a fast parallel motion along the field
+lines, and a vertical drift velocity $\mathbf{v}_{D}$ across the magnetic
+flux surfaces
 \begin{equation}
-{\bf v}_{\text{gc}}=v_{\Vert }\widehat{b}+{\bf v}_{D}  \label{vgc}
+\mathbf{v}_{\text{gc}}=v_{\Vert }\widehat{b}+\mathbf{v}_{D}  \label{vgc}
 \end{equation}
 
-The magnetic field is generally expressed as
+From the general expression (\ref{B}) of the magnetic field $\mathbf{B}$,  
 \begin{equation}
-{\bf B}=I\left( \psi \right) \nabla \phi +\nabla \psi \times \nabla \phi
+\mathbf{B}=I\left( \psi \right) \nabla \phi +\nabla \psi \times \nabla \phi 
 \label{bexp}
 \end{equation}
-which becomes; in $\left( \psi ,s,\phi \right) $ coordinates,
+one obtains in the $\left( \psi ,s,\phi \right) $ coordinates system,
 \begin{equation}
-{\bf B}=\frac{I\left( \psi \right) }{R}\widehat{\phi }-\frac{\left| \nabla
-\psi \right| }{R}\widehat{s}  \label{bexp2}
+\mathbf{B}=\frac{I\left( \psi \right) }{R}\widehat{\phi }-\frac{\left|
+\nabla \psi \right| }{R}\widehat{s}  \label{bexp2}
 \end{equation}
 
-The gradient in $\left( \psi ,s,\phi \right) $ coordinates is
-\begin{eqnarray}
-\nabla &=&\nabla \psi \frac{\partial }{\partial \psi }+\nabla s\frac{%
-\partial }{\partial s}+\nabla \phi \frac{\partial }{\partial \phi } \\
-&=&\nabla \psi \frac{\partial }{\partial \psi }+\widehat{s}\frac{\partial }{%
-\partial s}+\frac{\widehat{\phi }}{R}\frac{\partial }{\partial \phi }
-\label{gradient}
-\end{eqnarray}
-
-The constants of the motion are the total energy
+As shown in Appendix \ref{curvilinear}, the gradient in $\left( \psi ,s,\phi
+\right) $ coordinates is 
 \begin{equation}
-\varepsilon =\frac{1}{2}m\left( v_{\Vert }^{2}+v_{\bot }^{2}\right)
+\nabla =\nabla \psi \frac{\partial }{\partial \psi }+\nabla s\frac{\partial 
+}{\partial s}+\nabla \phi \frac{\partial }{\partial \phi }=\nabla \psi \frac{%
+\partial }{\partial \psi }+\widehat{s}\frac{\partial }{\partial s}+\frac{%
+\widehat{\phi }}{R}\frac{\partial }{\partial \phi }  \label{gradient}
 \end{equation}
-and the magnetic moment
+and recalling that the constants of the motion are the total energy (or
+momentum $\mathbf{p}$) as defined in (\ref{pdef}) and the magnetic moment $%
+\mu $ as given by relation (\ref{mudef}), following conservations laws 
 \begin{equation}
-\mu =\frac{mv_{\bot }^{2}}{2B}  \label{mudef}
+\frac{\partial \mu }{\partial s}=0  \label{mucons}
 \end{equation}
-so that we have the conservations laws
-\begin{eqnarray}
-\frac{\partial \mu }{\partial s} &=&0  \label{mucons} \\
-\frac{\partial }{\partial s}\left[ v_{\Vert }^{2}+\frac{2\mu B}{m}\right]
-&=&0  \label{encons}
-\end{eqnarray}
+\begin{equation}
+\frac{\partial }{\partial s}\left[ p_{\Vert }^{2}+2\mu Bm_{e}\right] =0
+\label{encons}
+\end{equation}
+are satisfied.
 
 \subsection{Drift Velocity from the Conservation of Canonical Momentum}
 
 The toroidal canonical momentum is also a constant of the motion because of
-axisymmetry. It is expressed as
+axisymmetry. It is expressed as 
 \begin{equation}
-P_{\phi }=R\left[ \gamma mv_{\phi }+q_{e}A_{\phi }\right]
+P_{\phi }=R\left[ \gamma m_{e}v_{\phi }+q_{e}A_{\phi }\right] 
 \end{equation}
 where $A_{\phi }$ is the toroidal component of the vector potential. From
-the relation
+the relation 
 \begin{equation}
-{\bf B}=\nabla \times {\bf A}
+\mathbf{B}=\nabla \times \mathbf{A}
 \end{equation}
 and the expression (\ref{curlpsis}) of a rotational in $\left( \psi ,s,\phi
-\right) $ coordinates, we get
+\right) $ coordinates, we get 
 \begin{eqnarray}
-{\bf B} &=&\left[ \frac{1}{R}\frac{\partial }{\partial s}\left( RA_{\phi
+\mathbf{B} &=&\left[ \frac{1}{R}\frac{\partial }{\partial s}\left( RA_{\phi
 }\right) -\frac{1}{R}\frac{\partial }{\partial \phi }\left( A_{s}\right)
-\right] \widehat{\psi } \\
+\right] \widehat{\psi }  \nonumber \\
 &&+\left[ \frac{1}{R}\frac{\partial }{\partial \phi }\left( A_{\psi }\right)
 -\frac{\left| \nabla \psi \right| }{R}\frac{\partial }{\partial \psi }\left(
-RA_{\phi }\right) \right] \widehat{s} \\
+RA_{\phi }\right) \right] \widehat{s}  \nonumber \\
 &&+\left[ \left| \nabla \psi \right| \frac{\partial }{\partial \psi }\left(
-A_{s}\right) -\left| \nabla \psi \right| \frac{\partial }{\partial s}\left(
+A_{s}\right) -\left| \nabla \psi \right| \frac{\partial }{\partial s}\left( 
 \frac{A_{\psi }}{\left| \nabla \psi \right| }\right) \right] \widehat{\phi }
 \end{eqnarray}
-with
+with 
 \begin{eqnarray}
-A_{\psi } &=&{\bf A}\cdot \widehat{\psi } \\
-A_{s} &=&{\bf A}\cdot \widehat{s} \\
-A_{\phi } &=&{\bf A}\cdot \widehat{\phi }
+A_{\psi } &=&\mathbf{A}\cdot \widehat{\psi } \\
+A_{s} &=&\mathbf{A}\cdot \widehat{s} \\
+A_{\phi } &=&\mathbf{A}\cdot \widehat{\phi }
 \end{eqnarray}
 
-In axisymmetric plasma, this reduces to
+In axisymmetric plasma, this reduces to 
 \begin{eqnarray}
-{\bf B} &=&\frac{1}{R}\frac{\partial }{\partial s}\left( RA_{\phi }\right)
-\widehat{\psi }  \label{bpsi} \\
+\mathbf{B} &=&\frac{1}{R}\frac{\partial }{\partial s}\left( RA_{\phi
+}\right) \widehat{\psi }  \nonumber \\
 &&-\frac{\left| \nabla \psi \right| }{R}\frac{\partial }{\partial \psi }%
-\left( RA_{\phi }\right) \widehat{s} \\
+\left( RA_{\phi }\right) \widehat{s}  \nonumber \\
 &&+\left[ \left| \nabla \psi \right| \frac{\partial }{\partial \psi }\left(
-A_{s}\right) -\left| \nabla \psi \right| \frac{\partial }{\partial s}\left(
+A_{s}\right) -\left| \nabla \psi \right| \frac{\partial }{\partial s}\left( 
 \frac{A_{\psi }}{\left| \nabla \psi \right| }\right) \right] \widehat{\phi }
+\label{bpsi}
 \end{eqnarray}
-so that
+so that 
 \begin{equation}
 B_{s}=-\frac{\left| \nabla \psi \right| }{R}\frac{\partial }{\partial \psi }%
-\left( RA_{\phi }\right)
+\left( RA_{\phi }\right) 
 \end{equation}
 
-In addition, we know from (\ref{bexp2}) that
+In addition, we know from expression (\ref{bexp2}) that 
 \begin{equation}
 B_{s}=-\frac{\left| \nabla \psi \right| }{R}
 \end{equation}
-so that be obtain
+so that be obtain 
 \begin{equation}
 \frac{\partial RA_{\phi }}{\partial \psi }=1  \label{raphi}
 \end{equation}
 
 Because the toroidal canonical momentum is a constant of the motion, we have
-that \thinspace
+\thinspace 
 \begin{equation}
-{\bf v}_{\text{gc}}\cdot \nabla P_{\phi }=0
+\mathbf{v}_{\text{gc}}\cdot \nabla P_{\phi }=0
 \end{equation}
-which can be decomposed into
+which can be decomposed into 
 \begin{equation}
-{\bf v}_{\text{gc}}\cdot \nabla \left( R\gamma mv_{\phi }\right) +{\bf v}_{%
-\text{gc}}\cdot \nabla \left( q_{e}RA_{\phi }\right) =0  \label{eqpphi}
-\end{equation}
-
-Using (\ref{psisgrad}), we get
-\begin{equation}
-{\bf v}_{\text{gc}}\cdot \nabla \left( qRA_{\phi }\right) ={\bf v}_{\text{gc}%
-}\cdot \left[ \nabla \psi \frac{\partial }{\partial \psi }+\widehat{s}\frac{%
-\partial }{\partial s}+\frac{\widehat{\phi }}{R}\frac{\partial }{\partial
-\phi }\right] \left( qRA_{\phi }\right)
-\end{equation}
-which in axisymmetric systems gives
-\begin{equation}
-{\bf v}_{\text{gc}}\cdot \nabla \left( qA_{\phi }\right) =q{\bf v}_{\text{gc}%
-}\cdot \left[ \nabla \psi \frac{\partial RA_{\phi }}{\partial \psi }+%
-\widehat{s}\frac{\partial RA_{\phi }}{\partial s}\right]
+\mathbf{v}_{\text{gc}}\cdot \nabla \left( R\gamma m_{e}v_{\phi }\right) +%
+\mathbf{v}_{\text{gc}}\cdot \nabla \left( q_{e}RA_{\phi }\right) =0
+\label{eqpphi}
 \end{equation}
 
-Since $B_{\psi }=0$, we have from (\ref{bpsi}) that $\partial \left(
-RA_{\phi }\right) /\partial s=0$ and therefore, using (\ref{raphi}),
+Using relation (\ref{psisgrad}), we get 
 \begin{equation}
-{\bf v}_{\text{gc}}\cdot \nabla \left( qA_{\phi }\right) =q{\bf v}_{\text{gc}%
-}\cdot \nabla \psi
+\mathbf{v}_{\text{gc}}\cdot \nabla \left( q_{e}RA_{\phi }\right) =\mathbf{v}%
+_{\text{gc}}\cdot \left[ \nabla \psi \frac{\partial }{\partial \psi }+%
+\widehat{s}\frac{\partial }{\partial s}+\frac{\widehat{\phi }}{R}\frac{%
+\partial }{\partial \phi }\right] \left( q_{e}RA_{\phi }\right) 
+\end{equation}
+which in axisymmetric systems gives 
+\begin{equation}
+\mathbf{v}_{\text{gc}}\cdot \nabla \left( q_{e}A_{\phi }\right) =q_{e}%
+\mathbf{v}_{\text{gc}}\cdot \left[ \nabla \psi \frac{\partial RA_{\phi }}{%
+\partial \psi }+\widehat{s}\frac{\partial RA_{\phi }}{\partial s}\right] 
 \end{equation}
 
-The only velocity accross the flux-surfaces is the drift we are looking for,
-so that we get, using (\ref{vgc})
+Since $B_{\psi }=0$, we have from relation (\ref{bpsi}) $\partial \left(
+RA_{\phi }\right) /\partial s=0$ and therefore, using expression (\ref{raphi}%
+), 
 \begin{equation}
-{\bf v}_{\text{gc}}\cdot \nabla \left( qA_{\phi }\right) =q{\bf v}_{D}\cdot
-\nabla \psi
-\end{equation}
-and the equation (\ref{eqpphi}) becomes
-\begin{equation}
-q{\bf v}_{D}\cdot \nabla \psi =-{\bf v}_{\text{gc}}\cdot \nabla \left(
-R\gamma mv_{\phi }\right)
+\mathbf{v}_{\text{gc}}\cdot \nabla \left( qA_{\phi }\right) =q_{e}\mathbf{v}%
+_{\text{gc}}\cdot \nabla \psi 
 \end{equation}
 
-Assuming a priori that $\left| v_{\Vert }\right| \gg \left| {\bf v}%
-_{D}\right| $, this equation reduces to
+The only velocity accross the flux-surfaces is the drift velocity we are
+looking for, so that we get, using relation (\ref{vgc}) 
+\begin{equation}
+\mathbf{v}_{\text{gc}}\cdot \nabla \left( qA_{\phi }\right) =q_{e}\mathbf{v}%
+_{D}\cdot \nabla \psi 
+\end{equation}
+and the equation (\ref{eqpphi}) becomes 
+\begin{equation}
+q_{e}\mathbf{v}_{D}\cdot \nabla \psi =-\mathbf{v}_{\text{gc}}\cdot \nabla
+\left( R\gamma m_{e}v_{\phi }\right) 
+\end{equation}
+
+Assuming a priori that $\left| v_{\Vert }\right| \gg \left| \mathbf{v}
+_{D}\right| $, a condition that holds in tokamaks, this equation reduces to 
 \begin{eqnarray}
-{\bf v}_{D}\cdot \nabla \psi &=&-\frac{1}{q}\frac{v_{\Vert }}{B}{\bf B}\cdot
-\nabla \left( R\gamma mv_{\phi }\right) \\
-&=&-\frac{v_{\Vert }}{\Omega }{\bf B}\cdot \nabla \left( Rv_{\phi }\right)
+\mathbf{v}_{D}\cdot \nabla \psi  &=&-\frac{1}{q_{e}}\frac{v_{\Vert }}{B}%
+\mathbf{B}\cdot \nabla \left( R\gamma m_{e}v_{\phi }\right)   \nonumber \\
+&=&-\frac{v_{\Vert }}{\Omega _{e}}\mathbf{B}\cdot \nabla \left( Rv_{\phi
+}\right) 
 \end{eqnarray}
 where we used that $\partial \gamma /\partial s=0$ because of the
-conservation of energy
+conservation of energy.
 
-The toroidal velocity is related to the parallel velocity by
+The toroidal velocity is related to the parallel velocity by 
 \begin{equation}
 v_{\phi }=\frac{B_{\phi }}{B}v_{\Vert }=\frac{I\left( \psi \right) }{RB}%
 v_{\Vert }
 \end{equation}
-so that
+so that 
 \begin{equation}
 Rv_{\phi }=\frac{I\left( \psi \right) }{B}v_{\Vert }
 \end{equation}
 
 Since $I\left( \psi \right) $ is a flux function, it can be taken out of the
-gradient, so that
+gradient, so that 
 \begin{equation}
-{\bf v}_{D}\cdot \nabla \psi =-\frac{v_{\Vert }}{\Omega }I\left( \psi
-\right) {\bf B}\cdot \nabla \left( \frac{v_{\Vert }}{B}\right)
+\mathbf{v}_{D}\cdot \nabla \psi =-\frac{v_{\Vert }}{\Omega _{e}}I\left( \psi
+\right) \mathbf{B}\cdot \nabla \left( \frac{v_{\Vert }}{B}\right) 
 \label{vdpsi1}
 \end{equation}
 
@@ -182,158 +187,160 @@ The guiding-center drift velocity due to the magnetic field gradient and
 curvature is
 
 \begin{equation}
-{\bf v}_{D}=\frac{1}{\Omega }\left( v_{\Vert }^{2}+\frac{v_{\bot }^{2}}{2}%
-\right) \frac{{\bf B}\times \nabla B}{B^{2}}
+\mathbf{v}_{D}=\frac{1}{\Omega _{e}}\left( v_{\Vert }^{2}+\frac{v_{\bot }^{2}%
+}{2}\right) \frac{\mathbf{B}\times \nabla B}{B^{2}}
 \end{equation}
-and its component perpendicular to the flux-surface can be written as
+and its component perpendicular to the flux-surface can be written as 
 \begin{equation}
-{\bf v}_{D}\cdot \nabla \psi =\frac{1}{\Omega }\left( v_{\Vert }^{2}+\frac{%
-v_{\bot }^{2}}{2}\right) \frac{1}{B^{2}}\nabla \psi \times {\bf B}\cdot
-\nabla B
-\end{equation}
-
-Inserting the expression (\ref{bexp2}) of the magnetic field, we find
-\begin{equation}
-{\bf v}_{D}\cdot \nabla \psi =-\frac{1}{\Omega }\left( v_{\Vert }^{2}+\frac{%
-v_{\bot }^{2}}{2}\right) \frac{\left| \nabla \psi \right| }{B^{2}R}\left[
-I\left( \psi \right) \widehat{s}+\left| \nabla \psi \right| \widehat{\phi }%
-\right] \cdot \nabla B  \label{drift}
+\mathbf{v}_{D}\cdot \nabla \psi =\frac{1}{\Omega _{e}}\left( v_{\Vert }^{2}+%
+\frac{v_{\bot }^{2}}{2}\right) \frac{1}{B^{2}}\nabla \psi \times \mathbf{B}%
+\cdot \nabla B
 \end{equation}
 
-Using (\ref{gradient}), the equation (\ref{drift}) becomes
+Inserting the expression (\ref{bexp2}) of the magnetic field, we find 
 \begin{equation}
-{\bf v}_{D}\cdot \nabla \psi =-\frac{1}{\Omega }\left( v_{\Vert }^{2}+\frac{%
-v_{\bot }^{2}}{2}\right) \frac{\left| \nabla \psi \right| }{B^{2}R}\left[
-I\left( \psi \right) \frac{\partial B}{\partial s}+\frac{\left| \nabla \psi
-\right| }{R}\frac{\partial B}{\partial \phi }\right]
+\mathbf{v}_{D}\cdot \nabla \psi =-\frac{1}{\Omega _{e}}\left( v_{\Vert }^{2}+%
+\frac{v_{\bot }^{2}}{2}\right) \frac{\left| \nabla \psi \right| }{B^{2}R}%
+\left[ I\left( \psi \right) \widehat{s}+\left| \nabla \psi \right| \widehat{%
+\phi }\right] \cdot \nabla B  \label{drift}
 \end{equation}
 
-Under the assumption of axisymmetry, we are left with
+Using (\ref{gradient}), the equation (\ref{drift}) becomes 
 \begin{equation}
-{\bf v}_{D}\cdot \nabla \psi =-\frac{1}{\Omega }\left( v_{\Vert }^{2}+\frac{%
-v_{\bot }^{2}}{2}\right) \frac{\left| \nabla \psi \right| I\left( \psi
+\mathbf{v}_{D}\cdot \nabla \psi =-\frac{1}{\Omega _{e}}\left( v_{\Vert }^{2}+%
+\frac{v_{\bot }^{2}}{2}\right) \frac{\left| \nabla \psi \right| }{B^{2}R}%
+\left[ I\left( \psi \right) \frac{\partial B}{\partial s}+\frac{\left|
+\nabla \psi \right| }{R}\frac{\partial B}{\partial \phi }\right] 
+\end{equation}
+
+Under the assumption of axisymmetry, we are left with 
+\begin{equation}
+\mathbf{v}_{D}\cdot \nabla \psi =-\frac{1}{\Omega _{e}}\left( v_{\Vert }^{2}+%
+\frac{v_{\bot }^{2}}{2}\right) \frac{\left| \nabla \psi \right| I\left( \psi
 \right) }{B^{2}R}\frac{\partial B}{\partial s}
 \end{equation}
 
-With the definition (\ref{mudef }) of the magnetic moment $\mu $, we rewrite
+With the definition (\ref{mudef}) of the magnetic moment $\mu $, we rewrite 
 \begin{equation}
-{\bf v}_{D}\cdot \nabla \psi =-\frac{1}{\Omega }\frac{\left| \nabla \psi
-\right| I\left( \psi \right) }{B^{2}R}\left( v_{\Vert }^{2}+\frac{\mu B}{m}%
-\right) \frac{\partial B}{\partial s}  \label{drift2}
+\mathbf{v}_{D}\cdot \nabla \psi =-\frac{1}{\Omega _{e}}\frac{\left| \nabla
+\psi \right| I\left( \psi \right) }{B^{2}R}\left( v_{\Vert }^{2}+\frac{\mu B%
+}{m_{e}}\right) \frac{\partial B}{\partial s}  \label{drift2}
 \end{equation}
-We have, using the conservation of magnetic momentum (\ref{mucons}),
+We have, using the conservation of magnetic momentum (\ref{mucons}), 
 \begin{equation}
-\left( v_{\Vert }^{2}+\frac{\mu B}{m}\right) \frac{\partial B}{\partial s}%
-=v_{\Vert }^{2}\frac{\partial B}{\partial s}+B\frac{\partial }{\partial s}
-\left( \frac{\mu B}{m}\right)
+\left( v_{\Vert }^{2}+\frac{\mu B}{m_{e}}\right) \frac{\partial B}{\partial s%
+}=v_{\Vert }^{2}\frac{\partial B}{\partial s}+B\frac{\partial }{\partial s}%
+\left( \frac{\mu B}{m_{e}}\right) 
 \end{equation}
 
-Using the conservation of energy (\ref{encons}), we get
+Using the conservation of energy (\ref{encons}), we get 
 \begin{eqnarray}
-\left( v_{\Vert }^{2}+\frac{\mu B}{m}\right) \frac{\partial B}{\partial s}
-&=&v_{\Vert }^{2}\frac{\partial B}{\partial s}-B\frac{\partial }{\partial s}%
-\left( \frac{v_{\Vert }^{2}}{2}\right) \\
+\left( v_{\Vert }^{2}+\frac{\mu B}{m_{e}}\right) \frac{\partial B}{\partial s%
+} &=&v_{\Vert }^{2}\frac{\partial B}{\partial s}-B\frac{\partial }{\partial s%
+}\left( \frac{v_{\Vert }^{2}}{2}\right)  \\
 &=&-v_{\Vert }\left[ B\frac{\partial v_{\Vert }}{\partial s}-v_{\Vert }\frac{%
-\partial B}{\partial s}\right] \\
+\partial B}{\partial s}\right]  \\
 &=&-v_{\Vert }B^{2}\frac{\partial }{\partial s}\left( \frac{v_{\Vert }}{B}%
-\right)
+\right) 
 \end{eqnarray}
-and finally, the equation (\ref{drift2}) becomes
+and finally, the equation (\ref{drift2}) becomes 
 \begin{equation}
-{\bf v}_{D}\cdot \nabla \psi =\frac{v_{\Vert }}{\Omega }I\left( \psi \right)
-\frac{\left| \nabla \psi \right| }{R}\frac{\partial }{\partial s}\left(
-\frac{v_{\Vert }}{B}\right)  \label{drift3}
+\mathbf{v}_{D}\cdot \nabla \psi =\frac{v_{\Vert }}{\Omega _{e}}I\left( \psi
+\right) \frac{\left| \nabla \psi \right| }{R}\frac{\partial }{\partial s}%
+\left( \frac{v_{\Vert }}{B}\right)   \label{drift3}
 \end{equation}
 
-In addition,
+In addition, 
 \begin{eqnarray}
-{\bf B}\cdot \nabla &=&I\left( \psi \right) \nabla \phi \cdot \nabla +\nabla
-\psi \times \nabla \phi \cdot \nabla \\
+\mathbf{B}\cdot \nabla  &=&I\left( \psi \right) \nabla \phi \cdot \nabla
++\nabla \psi \times \nabla \phi \cdot \nabla   \nonumber \\
 &=&\frac{I\left( \psi \right) }{R}\frac{\partial }{\partial \phi }-\frac{%
 \left| \nabla \psi \right| }{R}\frac{\partial }{\partial s}
 \end{eqnarray}
-and, using axisymmetry,
+and, using axisymmetry, 
 \begin{equation}
-{\bf B}\cdot \nabla =-\frac{\left| \nabla \psi \right| }{R}\frac{\partial }{%
-\partial s}
+\mathbf{B}\cdot \nabla =-\frac{\left| \nabla \psi \right| }{R}\frac{\partial 
+}{\partial s}
 \end{equation}
-so that we can rewrite (\ref{drift3}) as
+so that we can rewrite (\ref{drift3}) as 
 \begin{equation}
-{\bf v}_{D}\cdot \nabla \psi =-\frac{v_{\Vert }}{\Omega }I\left( \psi
-\right) {\bf B}\cdot \nabla \left( \frac{v_{\Vert }}{B}\right)
+\mathbf{v}_{D}\cdot \nabla \psi =-\frac{v_{\Vert }}{\Omega _{e}}I\left( \psi
+\right) \mathbf{B}\cdot \nabla \left( \frac{v_{\Vert }}{B}\right) 
 \label{vdpsi2}
 \end{equation}
+expression which is the same as (\ref{vdpsi1}).
 
 \subsection{Case of Circular concentric flux-surfaces}
 
-In this case, $\psi =$ $\psi \left( r\right) $ and therefore
+In this case, $\psi =$ $\psi \left( r\right) $ and therefore 
 \begin{equation}
 \nabla \psi =\psi ^{\prime }\left( r\right) \widehat{r}
 \end{equation}
-and
+and 
 \begin{equation}
-v_{Dr}={\bf v}_{D}\cdot \widehat{r}=\frac{{\bf v}_{D}\cdot \nabla \psi }{%
-\psi ^{\prime }}
+v_{Dr}=\mathbf{v}_{D}\cdot \widehat{r}=\frac{\mathbf{v}_{D}\cdot \nabla \psi 
+}{\psi ^{\prime }}
 \end{equation}
-which gives
+which gives 
 \begin{equation}
-v_{Dr}=-\frac{v_{\Vert }}{\Omega }\frac{I\left( \psi \right) }{\psi ^{\prime
-}}{\bf B}\cdot \nabla \left( \frac{v_{\Vert }}{B}\right)
+v_{Dr}=-\frac{v_{\Vert }}{\Omega _{e}}\frac{I\left( \psi \right) }{\psi
+^{\prime }}\mathbf{B}\cdot \nabla \left( \frac{v_{\Vert }}{B}\right) 
 \end{equation}
 
-In addition,
+In addition, 
 \begin{equation}
-{\bf B}\cdot \nabla =-\frac{\left| \nabla \psi \right| }{R}\frac{\partial }{
-\partial s}=-\frac{\left| \psi ^{\prime }\right| }{R}\frac{\partial }{%
+\mathbf{B}\cdot \nabla =-\frac{\left| \nabla \psi \right| }{R}\frac{\partial 
+}{\partial s}=-\frac{\left| \psi ^{\prime }\right| }{R}\frac{\partial }{%
 \partial s}
 \end{equation}
-and, because
+and, because 
 \begin{equation}
 \widehat{s}\cdot \widehat{\theta }=\widehat{\psi }\cdot \widehat{r}=\sigma
 _{\psi }
 \end{equation}
-we find
+we find 
 \begin{equation}
 \frac{\partial }{\partial s}=\frac{\sigma _{\psi }}{r}\frac{\partial }{%
 \partial \theta }
 \end{equation}
-and
+and 
 \begin{equation}
-{\bf B}\cdot \nabla =-\frac{\psi ^{\prime }}{Rr}\frac{\partial }{\partial
+\mathbf{B}\cdot \nabla =-\frac{\psi ^{\prime }}{Rr}\frac{\partial }{\partial %
 \theta }
 \end{equation}
-so that finally
+so that finally 
 \begin{equation}
-v_{Dr}=\frac{v_{\Vert }}{\Omega }\frac{I\left( \psi \right) }{Rr}\frac{
+v_{Dr}=\frac{v_{\Vert }}{\Omega _{e}}\frac{I\left( \psi \right) }{Rr}\frac{%
 \partial }{\partial \theta }\left( \frac{v_{\Vert }}{B}\right) =\frac{%
-v_{\Vert }}{r}\frac{I\left( \psi \right) }{RB}\frac{\partial }{\partial
-\theta }\left( \frac{v_{\Vert }}{\Omega }\right)
+v_{\Vert }}{r}\frac{I\left( \psi \right) }{RB}\frac{\partial }{\partial %
+\theta }\left( \frac{v_{\Vert }}{\Omega }\right) 
 \end{equation}
 
-When the toroidal field dominates, $B\simeq I\left( \psi \right) /R$ and
+When the toroidal field dominates, $B\simeq I\left( \psi \right) /R$ and 
 \begin{equation}
-v_{Dr}\simeq \frac{v_{\Vert }}{r}\frac{\partial }{\partial \theta }\left(
+v_{Dr}\simeq \frac{v_{\Vert }}{r}\frac{\partial }{\partial \theta }\left( 
 \frac{v_{\Vert }}{\Omega }\right)
 \end{equation}
 
 \subsection{Steady-State Drift-Kinetic Equation}
 
-Using (\ref{dke1}), (\ref{vgc}) and (\ref{vdpsi1}) or (\ref{vdpsi2}), we
-obtain in steady-state
+Using expressions (\ref{dke1}), (\ref{vgc}) and (\ref{vdpsi1}) or (\ref
+{vdpsi2}), we obtain in steady-state 
 \begin{equation}
-v_{\Vert }\widehat{b}\cdot \nabla f-\frac{v_{\Vert }}{\Omega }I\left( \psi
-\right) {\bf B}\cdot \nabla \left( \frac{v_{\Vert }}{B}\right) \frac{%
-\partial f}{\partial \psi }={\cal C}\left( f\right) +{\cal Q}\left( f\right)
-+{\cal E}\left( f\right)
+v_{\Vert }\widehat{b}\cdot \nabla f-\frac{v_{\Vert }}{\Omega _{e}}I\left(
+\psi \right) \mathbf{B}\cdot \nabla \left( \frac{v_{\Vert }}{B}\right) \frac{%
+\partial f}{\partial \psi }=\mathcal{C}\left( f\right) +\mathcal{Q}\left(
+f\right) +\mathcal{E}\left( f\right) 
 \end{equation}
-which can be rewritten as
+which can be rewritten as 
 \begin{equation}
-v_{s}\frac{\partial f}{\partial s}+\frac{v_{\Vert }}{\Omega }I\left( \psi
-\right) \frac{\left| \nabla \psi \right| }{R}\frac{\partial }{\partial s}%
-\left( \frac{v_{\Vert }}{B}\right) \frac{\partial f}{\partial \psi }={\cal C}%
-\left( f\right) +{\cal Q}\left( f\right) +{\cal E}\left( f\right)
+v_{s}\frac{\partial f}{\partial s}+\frac{v_{\Vert }}{\Omega _{e}}I\left(
+\psi \right) \frac{\left| \nabla \psi \right| }{R}\frac{\partial }{\partial s%
+}\left( \frac{v_{\Vert }}{B}\right) \frac{\partial f}{\partial \psi }=%
+\mathcal{C}\left( f\right) +\mathcal{Q}\left( f\right) +\mathcal{E}\left(
+f\right) 
 \end{equation}
-with
+with 
 \begin{equation}
-v_{s}=v_{\Vert }\left( \widehat{b}\cdot \widehat{s}\right)
+v_{s}=v_{\Vert }\left( \widehat{b}\cdot \widehat{s}\right) 
 \end{equation}
