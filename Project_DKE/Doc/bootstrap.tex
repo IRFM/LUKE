@@ -94,15 +94,15 @@ enforced in the vicinity of $p=0$.
 
 A comparison between results given by the drift kinetic code and well known
 analytical expressions that may be found in Refs. \cite{hin76}\cite{hir81}%
-\cite{hir88}\cite{kes94}\cite{sau99}\cite{sau02} is performe. For
-Maxwellian plasmas circular magnetic flux surfaces, in the low aspect ratio
-limit $\epsilon \rightarrow 0$ and low collisionality limit $\nu
-^{*}\rightarrow 0,$ flux surface-averaged parallel current may be expressed
-in the general simple form 
+\cite{hir88}\cite{kes94}\cite{sau99}\cite{sau02} is performe. For Maxwellian
+plasmas circular magnetic flux surfaces, in the low aspect ratio limit $%
+\epsilon \rightarrow 0$ and low collisionality limit $\nu ^{*}\rightarrow 0,$
+flux surface-averaged parallel current may be expressed in the general
+simple form 
 \begin{equation}
 \left\langle J_{\Vert }\right\rangle _{\phi }\left( \rho \right) \propto
 -p_{e}\left( \rho \right) \frac{B_{T}\left( \rho \right) }{B_{P}\left( \rho
-\right) }\left( L_{31}A_{1}+L_{32}A_{2}+L_{34}A_{4}\right) 
+\right) }\left( L_{31}A_{1}+L_{32}A_{2}+L_{34}A_{4}\right)
 \label{bootstrapthermalanalytic}
 \end{equation}
 where 
@@ -185,26 +185,27 @@ It is important toi note that replacing $B_{T}\left( \rho \right)
 /B_{P}\left( \rho \right) $ by $q/\epsilon $ leads to strong errors in the
 bootstrap current profile, especially when $\epsilon \rightarrow 1.$ In
 particular, the radial localtion where the bootstrap current peak is
-significantly shifted outward. }$ 
+significantly shifted outward.}$
 
 As shown in Fig.\ref{currentprofLor}, the agreement between the bootstrap
-current calculated by the code and determined by the Hirchman or Sauter
-models is excellent for $\rho \simeq \epsilon \leq 0.2\footnote{%
+current calculated by the code and determined by the Hirshman or Sauter
+models is excellent for all $\rho $ values $\footnote{%
 Both models use the same parameter $L_{31}$ in this limit.}.$ The model
 given in Ref. \cite{hin76} strongly fails, since it corresponds only to the
-case $Z_{i}=1$. As $\rho $ increases, the value given by the code
-progressively exceeds the analytical result, the maximum relative difference
-being of the order of $20\%$ close to $\rho \simeq \epsilon =0.6.$ This
-result is consistent with the fact that the effective trapped fraction $%
-\mathcal{F}_{t}^{eff.}\left( \rho \right) $, which is in good agreement with
-alanytical results also below $\rho \simeq \epsilon \leq 0.2,$ presents a
-significant departure above this value, of the order of 20\% also as shown
-in Fig. \ref{efftrapprofLor}. It is well known that the integral $%
+case $Z_{i}=1$. A confirmation of the robustness of the code is the very
+good agreement between numerical caclualtions and analytical expressions of
+the effective trapped fraction $\mathcal{F}_{t}^{eff.}\left( \rho \right) $
+at all plasma radii, as shown in Fig. \ref{efftrapprofLor}, despite the fact
+that the integral $\int_{-1}^{1}\sigma H\left( \left| \xi _{0}\right| -\xi
+_{0T}\right) \xi _{0}I_{\mathcal{L}}\left( \psi ,\left| \xi _{0}\right|
+\right) d\xi _{0}$ is fairly difficult to evaluate numerically, since $I_{%
+\mathcal{L}}\left( \psi ,\left| \xi _{0}\right| \right) $ is itself an
+integral, as discussed in Sec. \ref{dkediscretinit}. A small departure is
+observed for the largest $\epsilon $ value, since in that case $%
 \int_{-1}^{1}\sigma H\left( \left| \xi _{0}\right| -\xi _{0T}\right) \xi
-_{0}I_{\mathcal{L}}\left( \psi ,\left| \xi _{0}\right| \right) d\xi _{0}$ is
-fairly difficult to evaluate numerically, since $I_{\mathcal{L}}\left( \psi
-,\left| \xi _{0}\right| \right) $ is itself an integral, as discussed in
-Sec. \ref{dkediscretinit}. 
+_{0}I_{\mathcal{L}}\left( \psi ,\left| \xi _{0}\right| \right) d\xi
+_{0}\simeq 0,$ and its numerical evaluation may have a large error on the
+chosen numerical grid.
 
 %TCIMACRO{
 %\TeXButton{Fig_currentprofLor}{\fig{figures/currentprofLor.eps}{Bootstrap current profile given in the Lorentz model limit by the drift kinetic code
@@ -222,12 +223,21 @@ and different analytical formulaes}{currentprofLor}{7cm} %
 and by coefficient $L_{31}$ from analytical expression (see the text for more details)}{efftrapprofLor}{7cm} %
 %EndExpansion
 
-This is likely this reason, since the exact trapped fraction $\mathcal{F}_{t}
-$ is fairly well reproduced by the code, far from the limit $\epsilon \ll 1,$
-as presented in Fig.\ref{exactftprofLor}. Further investigation are
-necessary to investigate this point and improve the code regarding $\mathcal{%
-F}_{t}^{eff.}\left( \rho \right) $ and the accuracy of bounce integrals for
-bootstrap calculations.
+The exact trapped fraction $\mathcal{F}_{t}$ calculated by the code is
+increasing smoothly from $0$ to $1$ with a radial dependence that is very
+different from $\mathcal{F}_{t}^{eff.}\left( \rho \right) $ which should
+scale as $L_{31}$ in the simulation here studied. At the lowest $\epsilon
+\approx 0.034$ value determined by the code, the ratio $\mathcal{F}%
+_{t}^{eff.}\left( \rho \right) /\mathcal{F}_{t}\approx 2$ is larger than the
+expected value $1.46/0.9\approx 1.62,$ which indicates that the well known
+limit value $\mathcal{F}_{t}^{eff.}\left( \rho \right) \simeq 1.46\sqrt{%
+\epsilon }$ is only only valid for very small inverse aspect ratio $\epsilon 
+$. Indeed, $\mathcal{F}_{t}$ is very well reproduced by the asymptotic
+expression $\mathcal{F}_{t}\left( \rho \right) \simeq 0.9\sqrt{\epsilon }$
+quite far from the limit $\epsilon \ll 1,$ as presented in Fig.\ref
+{exactftprofLor}. There is also very good confidence in the simulation
+results since $\mathcal{F}_{t}^{eff.}\left( \rho \right) \simeq L_{31}$ is
+well verified numericaly, as expected from Hirshman theory.
 
 %TCIMACRO{
 %\TeXButton{Fig_exactftprofLor}{\fig{figures/exactftprofLor.eps}{Exact trapped fraction as given by the by the drift kinetic code in the Lorentz limit
@@ -240,8 +250,8 @@ and by analytical expression (see the text for more details)}{exactftprofLor}{7c
 At $\rho \simeq \epsilon \leq 0.4354,$ and for $p=4.08,$ the agreement for $%
 \widetilde{f}^{(0)}$ and $g^{\left( 0\right) }$ is excellent for all $\xi
 _{0}$ values, as seen in Fig \ref{ftpgLor}. The difference is so small
-between the code and the analytical expressions given in Sec.  \ref
-{dkediscretinit}, that it cannot be identify on the figure. 
+between the code and the analytical expressions given in Sec. \ref
+{dkediscretinit}, that it cannot be identify on the figure.
 
 %TCIMACRO{
 %\TeXButton{Fig_ftpgLor}{\fig{figures/ftpgLor.eps}{Pitch-angle dependence of  $\widetilde{f}^{(0)}$ and $g^{\left( 0\right) }$ at
@@ -255,9 +265,9 @@ This excellent agreement is confirmed for first order distribution $F_{\Vert
 }{}_{0}^{\left( 1\right) }$ averaged over the perpendicular momentum
 direction $p_{\bot }$%
 \begin{equation}
-F_{\Vert }{}_{0}^{\left( 1\right) }\left( p_{\Vert }\right) =2\pi \int_{0}^{%
-\infty }\left( \widetilde{f}^{\left( 0\right) }+g^{\left( 0\right) }\right)
-p_{\bot }dp_{\bot }  \label{Fpar1}
+F_{\Vert }{}_{0}^{\left( 1\right) }\left( p_{\Vert }\right) =2\pi
+\int_{0}^{\infty }\left( \widetilde{f}^{\left( 0\right) }+g^{\left( 0\right)
+}\right) p_{\bot }dp_{\bot }  \label{Fpar1}
 \end{equation}
 as shown in Fig. \ref{Fpar1Lor}.
 
@@ -269,7 +279,7 @@ as shown in Fig. \ref{Fpar1Lor}.
 as fonction of $p_{\Vert }$ at $\rho \simeq 0.4354$ , as given by the drift kinetic code and analytical expressions, for the Lorentz model limit}{Fpar1Lor}{7cm} %
 %EndExpansion
 
-In Figs. \ref{ftp2DLor} and \ref{g2DLor}, the 2-D contour plot of  $%
+In Figs. \ref{ftp2DLor} and \ref{g2DLor}, the 2-D contour plot of $%
 \widetilde{f}^{(0)}$ and $g^{\left( 0\right) }$ are represented. As expected
 for a Maxwellian distribution function, $g^{\left( 0\right) }=0$ in the
 trapped region while $\widetilde{f}^{(0)}$ is clearly antisymmetric.
@@ -294,18 +304,18 @@ The overall results confirm that the drift kinetic solver gives the correct
 dependences and level of the first order neoclaissicla corrections. The
 robustness of the code is remarkable, since no specific boundary conditions
 have to be imposed at the limits of the domain to ensure the determination
-of the correct solution. 
+of the correct solution.
 
 \subsubsection{Full simulation}
 
 The Maxwellian bootstrap current for a realistic tokamak magnetic
 configuration has been calculated. Here the Tore Supra tokamak is studied,
-with numerical parameters that are similar to the case of the  discussed in
+with numerical parameters that are similar to the case of the discussed in
 the previous section, while physical parameters, in particular pressure
 profiles, are those taken for magnetic ripple losses studies (see Sec. \ref
 {ripplesection}). The full first order Legendre collision term for momentum
 conservation is now considered, which is crucial to estimate the right
-current level. 
+current level.
 
 As shown in Fig. \ref{currentprofTSboot}, an excellent agreement with both
 Hirschman and Sauter models given in Refs. \cite{hir88} and \cite{sau99} is
@@ -325,11 +335,11 @@ and different corresponding analytical formulas (see the text for more details)}
 The exact $\mathcal{F}_{t}\left( \psi \right) $ and effective $\mathcal{F}%
 _{t}^{eff.}\left( \psi \right) $ trapped fraction are given respectively in
 Figs. \ref{efftrapprofTSboot} and \ref{exactftprofTSboot}. In that case, the
-exact trapped fraction reaches $\mathcal{F}_{t}\left( \psi \right) \simeq 0.5
-$ at the edge, while the effective one $\mathcal{F}_{t}^{eff.}\left( \psi
-\right) \simeq 0.7$. This difference may be easily understood, since in the
-calculation of the effective trapped fraction, the time spend on the banana
-orbit is considered, while it is not for the exact trapped fraction. 
+exact trapped fraction reaches $\mathcal{F}_{t}\left( \psi \right) \simeq
+0.5 $ at the edge, while the effective one $\mathcal{F}_{t}^{eff.}\left(
+\psi \right) \simeq 0.7$. This difference may be easily understood, since in
+the calculation of the effective trapped fraction, the time spend on the
+banana orbit is considered, while it is not for the exact trapped fraction.
 
 For the exact trapped fraction, the level at the limit $\epsilon \ll 1$ is
 very consistent with the analytical expression given in Sec.\ref{moments}. A
@@ -354,8 +364,8 @@ for the tokamak Tore Supra}
 %EndExpansion
 
 As for the case of the Lorentz model, the pitch-angle dependence at $\rho
-=0.435$ and for $p=4.08$ of first order distribution functions  $\widetilde{f%
-}^{(0)}$ and $g^{\left( 0\right) }$ is given as function of  $\xi _{0}$.
+=0.435$ and for $p=4.08$ of first order distribution functions $\widetilde{f}%
+^{(0)}$ and $g^{\left( 0\right) }$ is given as function of $\xi _{0}$.
 Similar dependences are observed in Fig \ref{ftpgTSboot} as well as for the
 first order distribution $F_{\Vert }{}_{0}^{\left( 1\right) }$ averaged over
 the perpendicular momentum direction $p_{\bot }$ shown in Fig. \ref
@@ -404,4 +414,4 @@ expression given in the fluid limit as given in Ref. \cite{hir88} is taken.
 This is the same value taken in Ref. \cite{sau99}, only the coefficent $%
 L_{32}$ being different. However, for this case, results are very similar,
 though the drift kinetic code results seem more closer to the one given by
-bthe Sauter formula \cite{sau99}\cite{sau02}.
+the Sauter formula \cite{sau99}\cite{sau02}.
