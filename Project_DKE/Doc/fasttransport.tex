@@ -1,0 +1,290 @@
+
+\label{fasttransportsection} This simulation is here presented to illustrate
+code capabilities for a realistic magnetic configuration and a hot deuterium
+plasma. It corresponds to a typical JET Lower Hybrid current drive
+discharge, where both bounce-averaging and fast electron particle transport
+are considered. Global parameters of the discharge are gathered in section
+``JET'' of the tokamak parameter M-file ``ptok\_dke\_1yp.m''.
+
+As shown in Fig.\ref{radialgridJET} , the spatial $\psi $ half-grid, on
+which the electron distribution function is calculated, is non-uniform,
+though grid steps $\Delta \rho $ for the normalized radius defined in Sec. 
+\ref{coordinatesystemsection} are constant for this example. The spatial
+mesh size for $f_{0}^{\left( 0\right) }$ has $n_{\psi }-1=14$ points, which
+is the typical number of spatial grid points considered in most of the
+current drive simulations. The corresponding pitch-angle grid is strongly
+non uniform, as indicated in Fig.\ref{pitchanglegridJET}, since
+trapped/passing boundaries corresponding to all radial positions are exactly
+placed on the flux grid in momentum space. The total number of pitch-angle
+points for $f_{0}^{\left( 0\right) }$ is $n_{\xi _{0}}-1=206$. Finally the
+momentum grid is also taken no uniform with $n_{p}-1=210$ points. As shown
+in Fig.\ref{momentumgridJET} the momentum grid is first nearly uniform in
+the vicinity of $p=0$ for the first twenty points, with a small step $\Delta %
+p\simeq 0.07$ , as indicated in Fig. \ref{momentumgridstepJET}. For $%
+p\gtrsim 1.5,$ the grid is also uniform, but with larger momentum step $%
+\Delta p\simeq 0.15$. The smooth transition between the two grids involves $7
+$ grid points.
+
+%TCIMACRO{
+%\TeXButton{Fig_radialgridJET}{\fig{figures/radialgridJET.eps}{Radial grid for 3-D JET current drive simulation. Circles correspond to the normalized poloidal flux coordinate $\psi $,
+%while crosses correspond to normalized radius $\rho $}{radialgridJET}{7cm} }}
+%BeginExpansion
+\fig{figures/radialgridJET.eps}{Radial grid for 3-D JET current drive simulation. Circles correspond to the normalized poloidal flux coordinate $\psi $,
+while crosses correspond to normalized radius $\rho $}{radialgridJET}{7cm} %
+%EndExpansion
+
+%TCIMACRO{
+%\TeXButton{Fig_pitchanglegridJET}{\fig{figures/pitchanglegridJET.eps}{Pitch-angle grid for 3-D JET current drive simulation. }{pitchanglegridJET}{7cm} }}
+%BeginExpansion
+\fig{figures/pitchanglegridJET.eps}{Pitch-angle grid for 3-D JET current drive simulation. }{pitchanglegridJET}{7cm} %
+%EndExpansion
+
+%TCIMACRO{
+%\TeXButton{Fig_momentumgridJET}{\fig{figures/momentumgridJET.eps}{Momentum grid for 3-D JET current drive simulation. }{momentumgridJET}{7cm} }}
+%BeginExpansion
+\fig{figures/momentumgridJET.eps}{Momentum grid for 3-D JET current drive simulation. }{momentumgridJET}{7cm} %
+%EndExpansion
+
+%TCIMACRO{
+%\TeXButton{Fig_momentumgridstepJET}{\fig{figures/momentumgridstepJET.eps}{Momentum grid step for 3-D JET current drive simulation.  Circles correspond to the flux grid,
+%while stars to the distribution function half-grid}{momentumgridstepJET}{7cm} }}
+%BeginExpansion
+\fig{figures/momentumgridstepJET.eps}{Momentum grid step for 3-D JET current drive simulation.  Circles correspond to the flux grid,
+while stars to the distribution function half-grid}{momentumgridstepJET}{7cm} %
+%EndExpansion
+
+Temperature and density profiles used as input for the magnetic equilibrium
+calculations done by HELENA code are presented in Fig. \ref{profJET}. As
+usual in current drive regime at low density, the electron temperature
+profile is peaked, and its value is much larger than ion temperature. The
+dominant ion (deuterium) profile is determined selfconsistently from the
+electron density and effective charge profiles, the latter being taken flat
+at a level of $Z_{eff}=1.5$. In the calculations which are based on
+electroneutrality, only one fully stripped impurity is considered, i.e.
+carbon $Z_{s}=6$, in order to avoid the use of an impurity transport code.
+The resulting $2-D$ contour plot of the magnetic poloidal flux surfaces is
+given in Fig. \ref{equilJET}, for a configuration with a bottom X-point
+close to the divertor. Here, calculations are performed for a monotonic
+safety factor profile.
+
+%TCIMACRO{
+%\TeXButton{Fig_profJET}{\fig{figures/profJET.eps}{Ion and electron temperature and density profiles, and effective charge profile used for calculating the JET magnetic equilibrium with HELENA. 
+%Here hydrogen and tritium densities are zero (pure deuterium plasma) . The poloidal flux coordinate $\psi $ as function of the normalized radius $\rho $ 
+%in the equatorial mid-plane corresponds to the magnetic equilibrium code output}{profJET}{7cm} }}
+%BeginExpansion
+\fig{figures/profJET.eps}{Ion and electron temperature and density profiles, and effective charge profile used for calculating the JET magnetic equilibrium with HELENA. 
+Here hydrogen and tritium densities are zero (pure deuterium plasma) . The poloidal flux coordinate $\psi $ as function of the normalized radius $\rho $ 
+in the equatorial mid-plane corresponds to the magnetic equilibrium code output}{profJET}{7cm} %
+%EndExpansion
+
+%TCIMACRO{
+%\TeXButton{Fig_equilJET}{\fig{figures/equilJET.eps}{$2-D$ contour plot of the poloidal magnetic flux surfaces as calculated for JET tokamak by the code HELENA}{equilJET}{7cm} }}
+%BeginExpansion
+\fig{figures/equilJET.eps}{$2-D$ contour plot of the poloidal magnetic flux surfaces as calculated for JET tokamak by the code HELENA}{equilJET}{7cm} %
+%EndExpansion
+
+In the calculations, fully relativistic corrections are considered. In Fig.%
+\ref{vvspJET}, the deviation from the relation $v=p$ clearly indicates that
+relativistic corrections come into play when $p\gtrsim 4\footnote{%
+Here $v$ and $p$ are normalized respectively to $p_{th}/m_{e}$ and $p_{th}$,
+where $m_{e}$ is the electron rest mass and $p_{th}$ the thermal
+momentum.All reference values in the calculations are taken at the plasma
+center, including  $p_{th}$ as discussed in Sec.\ref{normalization}.}.$
+Consequently, since a simplified expression for the Lower Hybrid quasilinear
+diffusion operator is considered, as described in Appendix \ref
+{simplifiedlhcd} and used in Sec. \ref{lhcdsection}, boundary values of the
+resonance domain which correspond to $\left( v_{1}=3.5,v_{2}=6\right) $
+exhibit strong curvature as a function of $p$, as shown in Fig. \ref
+{DlhpeakJET}. In order to simulate a spatialy localized off-axis absorption
+of the RF power, the quasilinear diffusion coefficient $\overline{D}%
+_{0,new}^{LH}\left( \psi ,p\right) $is defined as 
+\begin{equation}
+\overline{D}_{0,new}^{LH}\left( \psi ,p\right) =\overline{D}%
+_{0,new}^{LH}\left( 0,p\right) \frac{2\sqrt{\ln 2}}{\sqrt{\pi }}\exp \left[ -%
+\frac{\left( \rho -\rho _{LH}^{peak}\right) ^{2}}{\left( \frac{\Delta \rho
+_{LH}}{2\sqrt{\ln 2}}\right) ^{2}}\right] 
+\end{equation}
+where $\overline{D}_{0,new}^{LH}\left( 0,p\right) =1$ in the interval $v_{1}%
+\leq v_{\Vert }\leq v_{2},$ and $\rho _{LH}^{peak}=0.5$ is the radial
+position at which absorption is maximum, and $\Delta \rho _{LH}=0.2$ the
+half-width. For $\rho \leq 0.2$ and $\rho \geq 0.65,$ power absorption is
+null. 
+
+%TCIMACRO{
+%\TeXButton{Fig_vvspJET}{\fig{figures/vvspJET.eps}{Momentum dependence of the relativistic Maxwellian distribution function at $\rho\simeq 0.36$, 
+%and relation between velocity $v$ and momentum $p$. The deviation from the main diagonal indicates that above $p=4$,
+%relativistic effects become important}{vvspJET}{7cm} }}
+%BeginExpansion
+\fig{figures/vvspJET.eps}{Momentum dependence of the relativistic Maxwellian distribution function at $\rho\simeq 0.36$, 
+and relation between velocity $v$ and momentum $p$. The deviation from the main diagonal indicates that above $p=4$,
+relativistic effects become important}{vvspJET}{7cm} %
+%EndExpansion
+
+%TCIMACRO{
+%\TeXButton{Fig_DlhpeakJET}{\fig{figures/DlhpeakJET.eps}{$2-D$ contour plot in momentum space of the Lower Hybrid quasilinear diffusion cofficient at $\rho\simeq 0.36$.
+%The relativistic curvature of the lower bound of the resonance domain avoid intersection with the region of trapped electrons. 
+%The two full straight lines correspond to trapped/passing boundaries at that radial position}{DlhpeakJET}{7cm} }}
+%BeginExpansion
+\fig{figures/DlhpeakJET.eps}{$2-D$ contour plot in momentum space of the Lower Hybrid quasilinear diffusion cofficient at $\rho\simeq 0.36$.
+The relativistic curvature of the lower bound of the resonance domain avoid intersection with the region of trapped electrons. 
+The two full straight lines correspond to trapped/passing boundaries at that radial position}{DlhpeakJET}{7cm} %
+%EndExpansion
+
+Fast electron radial transport that could result from magnetic turbulence is
+expressed in the usual form
+\begin{equation}
+D_{\psi }^{\left( 0\right) }\left( \psi ,p\right) =D_{\psi }^{\left(
+0\right) }\left( 0,p\right) H\left( \left| v_{\Vert }\right| -v_{\Vert
+c}\right) \left( \left| v_{\Vert }\right| -v_{\Vert c}\right) /v_{\Vert c}
+\end{equation}
+where $D_{\psi }^{\left( 0\right) }$ is the radial diffusion coefficient as
+defined in Sec.\ref{normalization}. Here, $D_{\psi }^{\left( 0\right) }$
+scales like $\left| v_{\Vert }\right| $ as expected from theory \cite{pey93}%
+, with a velocity threshold which is set to $3.5$. The simulation is
+performed with $D_{\psi }^{\left( 0\right) }=5m^{2}/s$, its value and the
+threshold level being uniform throughout the plasma, while any convection is
+neglected. The $2-D$ contour plot of the $D_{\psi }^{\left( 0\right) }$ is
+shown in Fig. \ref{DradialJET}
+
+%TCIMACRO{
+%\TeXButton{Fig_DradialJET}{\fig{figures/DradialJET.eps}{On the left side, $2-D$ contour plot of the radial diffusion rate at $\rho\simeq 0.36$. The velocity threshold corresponds to a kinetic energy
+%of 35 keV approximately in the $MKSA$ units. On the right side, the velocity dependence of $D_{\psi }^{\left( 0\right) }$ at
+%$\xi_{0}=1$}{DradialJET}{7cm} }}
+%BeginExpansion
+\fig{figures/DradialJET.eps}{On the left side, $2-D$ contour plot of the radial diffusion rate at $\rho\simeq 0.36$. The velocity threshold corresponds to a kinetic energy
+of 35 keV approximately in the $MKSA$ units. On the right side, the velocity dependence of $D_{\psi }^{\left( 0\right) }$ at $\xi_{0}=1$}{DradialJET}{7cm} %
+%EndExpansion
+
+The $3-D$ simulation is performed in the fully implicit mode with usual
+parameters, i.e. $\Delta \overline{t}=10000,$ using the linearized
+electron-electron Belaiev-Budker collision operator for momentum
+conservation. While the time taken to calculate all matrix coefficients
+associated to momentum dynamics is extremely fast, of the order of $120s%
+\footnote{%
+Absolute computer time values may depend significantly from the charge of
+the computers. A reduction by $50\%$ is likely for a workstation with few
+jobs.}$, since calculations may be performed in a vectorial form that is
+very convenient for MatLab, coefficients for radial transport needs a much
+longer computer time is this version of the code, typically an order of
+magnitude more. This limitation results from the fact that loops have been
+used in MatLab as a consequence of the complexity of the coefficients
+arrangement in the matrix related to the change of the trapped/passing
+boundary with radial position. In that case, a specific MEX-file written in
+C or FORTRAN should considerably reduce time consumption, at a level
+comparable to the one needed for calculating the coefficients which result
+from momentum dynamics. 
+
+In the case of full $3-D$ calculation, the Maxwellian solution is imposed at 
+$i=1/2$. Though this condition is not necessary in principle, it turns out
+to increase matrix conditionning, and reduce significantly the memory
+required to store $LU$ matrices. However, no normalization of the density at
+each time step is performed. Consequently, the drop tolerance for incomplete 
+$LU$ matrix factorization may be increased from $10^{-4}$ to $10^{-3}$ as
+compared to the case without radial transport, a important advantage since
+it reduces considerably computer time consumption for performing the
+incomplete factorization\footnote{%
+It is interesting to note that the presence of a radial transport
+contributes also to use larger drop tolerance parameter, by smoothing out
+the momentum dynamics. It acts like a regularization process which increases
+the matrix conditionning.}. On a Compaq workstation, the characteristic time
+used for this calculation is around $1500s,$ and the memory required to
+store $LU$ matrices is $214MBytes$ in the example here studied.
+
+Once $LU$ matrices are calculated, the convergence is very fast. it is
+achieved after $6$ iterations, corresponding to the minimum value required
+for a correct convergence with the explicit momentum conservation term
+(first Legendre truncated term) as discussed in Sec.\ref{fpinversionsection}%
+. As shown in Fig.\ref{conservationprofJET}, the code is fully conservative,
+within less than $1\%$.
+
+%TCIMACRO{
+%\TeXButton{Fig_conservationprofJET}{\fig{figures/conservationprofJET.eps}{Relative particle conservation of the drift kinetic code for the $3-D$ JET Lower Hybrid current drive simulation}
+%{conservationprofJET}{7cm} }}
+%BeginExpansion
+\fig{figures/conservationprofJET.eps}{Relative particle conservation of the drift kinetic code for the $3-D$ JET Lower Hybrid current drive simulation}
+{conservationprofJET}{7cm} %
+%EndExpansion
+
+While the absorbed RF power density profile given in Fig.\ref{powerprofJET}
+shows a localized peak around $\rho =0.5,$ the current density profile is
+much broader, as indicated in Fig.\ref{currentprofJET}. In the direction of
+the plasma center, the broadening effect is weak, since collisional slowing
+down prevails over radial transport when density is high. Towards plasma
+edge, the effect of radial transport is much more visible, and for $\rho 
+\geq 0.6,$ all the fast electrons are driven by this mechanism instead of
+direct kinetic resonance. The effect of plasma magnetic equibrium on radial
+transport is fully considered in the calculations. 
+
+%TCIMACRO{
+%\TeXButton{Fig_powerprofJET}{\fig{figures/powerprofJET.eps}{ Flux surface averaged power density profiles for collision, RF and Ohmic electric field absorption for the $3-D$
+% JET Lower Hybrid current drive simulation. }
+%{powerprofJET}{7cm} }}
+%BeginExpansion
+\fig{figures/powerprofJET.eps}{ Flux surface averaged power density profiles for collision, RF and Ohmic electric field absorption for the $3-D$
+ JET Lower Hybrid current drive simulation. }
+{powerprofJET}{7cm} %
+%EndExpansion
+
+%TCIMACRO{
+%\TeXButton{Fig_currentprofJET}{\fig{figures/currentprofJET.eps}{ Flux surface averaged current density profiles for collision, RF and Ohmic electric field absorption for the $3-D$
+% JET Lower Hybrid current drive simulation. }
+%{currentprofJET}{7cm} }}
+%BeginExpansion
+\fig{figures/currentprofJET.eps}{ Flux surface averaged current density profiles for collision, RF and Ohmic electric field absorption for the $3-D$
+ JET Lower Hybrid current drive simulation. }
+{currentprofJET}{7cm} %
+%EndExpansion
+
+Comparison between distributions at radial positions where RF absorption
+peaks (Figs.\ref{f2DpeakJET} and \ref{FparpeakJET}) and in the region where
+radial transport predominates (Figs.\ref{f2DedgeJET} and \ref{FparedgeJET})
+clearly shows the difference of dynamics in momentum space. While a plateau
+is clearly formed at $\rho \simeq 0.36,$ the distribution exibits a bump at $%
+\rho \simeq 0.78.$ There are nevertheless some reminiscence of the Lower
+Hybrid quasilinear resonance boundaries. In all figures, the output of the
+code is clean from numerical instabilities, even far from the resonance
+domain, which confirms the robustness of the numerical scheme here employed
+for $3-D$ calculations.
+
+%TCIMACRO{
+%\TeXButton{Fig_f2DpeakJET}{\fig{figures/f2DpeakJET.eps}{$2-D$ contour plot of the electron distribution function at $\rho\simeq 0.36$ for JET Lower Hybrid current drive}
+%{f2DpeakJET}{7cm} }}
+%BeginExpansion
+\fig{figures/f2DpeakJET.eps}{$2-D$ contour plot of the electron distribution function at $\rho\simeq 0.36$ for JET Lower Hybrid current drive}
+{f2DpeakJET}{7cm} %
+%EndExpansion
+
+%TCIMACRO{
+%\TeXButton{Fig_FparpeakJET}{\fig{figures/FparpeakJET.eps}{Electron distribution function averaged over the perpendicular momentum direction at $\rho\simeq 0.36$
+% for JET Lower Hybrid current drive.  The perpendicular and parallel temperatures are also shown}
+%{FparpeakJET}{7cm} }}
+%BeginExpansion
+\fig{figures/FparpeakJET.eps}{Electron distribution function averaged over the perpendicular momentum direction at $\rho\simeq 0.36$
+ for JET Lower Hybrid current drive.  The perpendicular and parallel temperatures are also shown}
+{FparpeakJET}{7cm} %
+%EndExpansion
+
+%TCIMACRO{
+%\TeXButton{Fig_f2DedgeJET}{\fig{figures/f2DedgeJET.eps}{$2-D$ contour plot of the electron distribution function at $\rho\simeq 0.78$ for JET Lower Hybrid current drive}
+%{f2DedgeJET}{7cm} }}
+%BeginExpansion
+\fig{figures/f2DedgeJET.eps}{$2-D$ contour plot of the electron distribution function at $\rho\simeq 0.78$ for JET Lower Hybrid current drive}
+{f2DedgeJET}{7cm} %
+%EndExpansion
+
+%TCIMACRO{
+%\TeXButton{Fig_FparedgeJET}{\fig{figures/FparedgeJET.eps}{Electron distribution function averaged over the perpendicular momentum direction at $\rho\simeq 0.78$
+% for JET Lower Hybrid current drive.  The perpendicular and parallel temperatures are also shown}
+%{FparedgeJET}{7cm} }}
+%BeginExpansion
+\fig{figures/FparedgeJET.eps}{Electron distribution function averaged over the perpendicular momentum direction at $\rho\simeq 0.78$
+ for JET Lower Hybrid current drive.  The perpendicular and parallel temperatures are also shown}
+{FparedgeJET}{7cm} %
+%EndExpansion
+
+Finally, it is important to mention that the power density absorbed by
+collisions is much broader than the RF contribution, as shown in Fig. \ref
+{powerprofJET}. Since radial fast electron transport makes the current
+response non-local, in that case the current drive efficiency may be only
+defined as the ratio of the total current driven by the wave and the total
+RF absorbed power in the plasma. 
