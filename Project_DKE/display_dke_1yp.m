@@ -383,13 +383,15 @@ while 1,
 %
       mhu_X = [-1,mhu,1];
 %************************************erreur dans la ligne d'en dessous ***********************
-      n_rf = max(waveparam(ir_display,:,1));
-      if n_rf >= 2,  	
-         XDrf_X_ref = [zeros(np,1),XDrf_ref,zeros(np,1)];
-	      [XDrf_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_S_dke_yp(XDrf_X_ref,pn_ref,mhu_X,dp_cyl);%Spherical to cylindrical coordinate transformation
-      else
-			[XDrf_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(XDrf_ref,pn_ref,mhu,dp_cyl);%Spherical to cylindrical coordinate transformation
-      end
+      if ~isempty(waveparam) == 1,
+         n_rf = max(waveparam(ir_display,:,1));
+         if n_rf >= 2,  	
+            XDrf_X_ref = [zeros(np,1),XDrf_ref,zeros(np,1)];
+	         [XDrf_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_S_dke_yp(XDrf_X_ref,pn_ref,mhu_X,dp_cyl);%Spherical to cylindrical coordinate transformation
+         else
+			   [XDrf_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(XDrf_ref,pn_ref,mhu,dp_cyl);%Spherical to cylindrical coordinate transformation
+		   end
+	   end
 %
 		[XAstr_Pp_cyl_ref,ppar_cyl_S_ref,dppar_cyl_S_ref,pperp_cyl_S_ref,dpperp_S_cyl_ref] = s2c_S_dke_yp(XAstr_S_Pp_ref,pn_S,mhu_S,dp_cyl);%Spherical to cylindrical coordinate transformation
 		[XAstr_Pm_cyl_ref,ppar_cyl_S_ref,dppar_cyl_S_ref,pperp_cyl_S_ref,dpperp_S_cyl_ref] = s2c_S_dke_yp(XAstr_S_Pm_ref,pn_S,mhu_S,dp_cyl);%Spherical to cylindrical coordinate transformation
