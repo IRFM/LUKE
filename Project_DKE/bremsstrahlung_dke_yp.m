@@ -20,7 +20,7 @@ function  [kphot,brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi,lchor
 % by Joan Decker <jodecker@mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 %
     
-%%%%%%[kphot,brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi,lchord,rho_out,theta_out] = bremsstrahlung_dke_yp('TS',HXR,vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr,XXheaviside,zZi,xzni_norm,xne_norm,ne_ref,xrho,dmhu,mhu,dpn_ref,pn_ref,pn2_ref,gamma_ref,Ec_ref,dp_cyl,pnmax_S,XXf0_ref,XXf0_tp_ref,XXf0_g_ref,nlevel,bounce_mode,2,0.7,120);
+%%%%%%[kphot,brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi,lchord,rho_out,theta_out] = bremsstrahlung_dke_yp('TS',HXR,vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr,XXheaviside,zZi,xzni_norm,xne_norm,ne_ref,xrho,dmhu,mhu,dpn_ref,pn_ref,pn2_ref,gamma_ref,Ec_ref,dp_cyl,pnmax_S,XXf0_ref,XXf0_tp_ref,XXf0_g_ref,nlevel,bounce_mode,2,0.7,180);
 % 
 [qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;%Physics constant
 %
@@ -100,7 +100,7 @@ for i = 1:size(psin_hxr,1),%radial position
 			Xf0_g_c1 = permute(repmat(reshape(Xf0_g_c',n_gauleg+1,size(XXf0_g,1),1),[1,1,1,length(kphot)]),[1,2,4,3]);
 			dIB_c1 = 2*pi*pn_c1.*pn_c1.*pn_c1.*BREM_c1(:,:,:,i).*(Xf0_c1 + Xf0_tp_c1 + Xf0_g_c1)./gamma_c1;
 			IB_c1 = 2*pi*integral_dke_jd(dpn,dIB_c1,2);%Momentum integration
-			ZZIB(i,j,:,:) = reshape(IB_c1,n_gauleg+1,size(IB_c1,2)*size(IB_c1,3))*ne_ref^2/mc2;%Units(s-1*m-3*kev-1*str-1)
+			ZZIB(i,j,:,:) = reshape(IB_c1,n_gauleg+1,size(IB_c1,2)*size(IB_c1,3))*ne_ref^2*clum/mc2;%Units(s-1*m-3*kev-1*str-1)
 %
 			Xf0_i1 = (Pm'*(Xf0_c.*(ones(size(Xf0_i,1),1)*cL'))')';
 			epsif0 = (Xf0_i-Xf0_i1)./Xf0_i;epsif0(isnan(epsif0)==1)=0;
@@ -177,10 +177,10 @@ for i = 1:size(psin_hxr,1),%radial position
 %
 				if display_mode >= 1,
 					figure
-					stairs(kphot-gradient(kphot)/2,log10(brem_forward),'r'),hold on
-					stairs(kphot-gradient(kphot)/2,log10(brem_backward),'b')
-					stairs(kphot-gradient(kphot)/2,log10(brem_4pi),'g')
-					stairs(kphot-gradient(kphot)/2,log10(brem_perp),'c'),hold off
+					plot(kphot,log10(brem_forward),'r+'),hold on
+					plot(kphot,log10(brem_backward),'b+')
+					plot(kphot,log10(brem_4pi),'g*')
+					plot(kphot,log10(brem_perp),'c+'),hold off
 					legend('Forward','Backward','Mean 4*pi','Perp')
 					grid on
 					xlabel('Photon energy (keV)');
@@ -228,7 +228,7 @@ for ic = 1:size(vschords,3),%loop on each chord
 		end
    end
 %
-	sksid = vschords(10,s_mask,ic);
+	sksid = vschords(10,s_mask,ic);%Zero for exact perpendicular observation or +1 forward, -1 backward, nothing when taking the exct magnetic topology
 	[Pm_bd] = leg_dke_yp(sksid,n_pol);%Legendre polynomial for the cosine of the angle between magnetic field line and line of sight
 	Pm_bd1 = repmat(Pm_bd,[1,1,length(kphot)]);
 %	
@@ -237,11 +237,17 @@ for ic = 1:size(vschords,3),%loop on each chord
 	brem_bd = squeeze(sum(Pm_bd1.*IB1.*cL1,1));%Local bremsstrahlung emission in the direction of the detector
 %	
 	s = vschords(1,s_mask,ic);
-   s = s - s(1);%s=0 where the chord enter the plasma towards the detector
-   s1 = repmat(s',[1,length(kphot)]);
+   if size(s,2) > 0
+       s = s - s(1);%s=0 where the chord enter the plasma towards the detector
+       ds = [diff(s),0];%Elementary chord length for integration
+       ds1 = repmat(ds',[1,length(kphot)]);
 %
-	brem_bd_out(ic,:) = sum(s1.*brem_bd,1)*HXR{1,5}(ic);%Integration along the chord and multiplication by the geometrical factor
-	lchord(ic) = sum(s);%Chord length calculation
-%
+	    brem_bd_out(ic,:) = sum(ds1.*brem_bd,1)*HXR{1,5}(ic);%Integration along the chord and multiplication by the geometrical factor
+	    lchord(ic) = sum(ds);%Chord length calculation
+	else
+		brem_bd_out(ic,:) = 0;%Integration along the chord and multiplication by the geometrical factor
+		lchord(ic) = 0;%Chord length calculation	   	
+	end
+	    %
 	info_dke_yp(2,['Line integration for chord #',int2str(ic),'/',int2str(size(vschords,3)),' done']);
 end	
