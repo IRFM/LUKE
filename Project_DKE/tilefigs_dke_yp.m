@@ -1,0 +1,1 @@
+function tilefigs_dke_yp(h) %%global nfig%%returnwidth = 260;height = 210;pos1 = 10;pos2 = 520;%nfig = nfig + 1;%v = get(h,'position');v(1) = pos1+width;v(2) = pos2-height;v(3) = width;v(4) = height;set(h,'position',v);%

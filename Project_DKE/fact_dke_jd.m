@@ -1,0 +1,1 @@
+function Nfact = fact_dke_jd(N)%% computes the factorial of N for multidimensional elements%% by J. Decker 05/01/03%if max(N(:) - floor(N(:))) > 0 | min(N(:)) < 0    error('N must be non-negative integers')end%N = N + (N == 0);Nfact = ones(size(N));%while max(N(:)) > 1      Nfact = Nfact.*N;      N = N - 1;    N = N + (N == 0);end        
