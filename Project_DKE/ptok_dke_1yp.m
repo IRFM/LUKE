@@ -313,30 +313,30 @@ elseif strcmp(name,'NSTX') == 1,
 elseif strcmp(name,'D3D') == 1,
 	ap = 0.67;
 	Rp = 1.67;
-	Ip = 1.0;
-	Bt = 2.0;
+	Ip = 1.2;
+	Bt = 2.1;
 	Ncoils = NaN;
-	Zi = [1,1,1];
-	mi = [1,2,3];
-	fi = [0,1,0.0];
+	Zi = [1,1,1,6];
+	mi = [1,2,3,12];
+	fi = [0,1,0];
 %
 	BeLi = NaN;
 	qmin = 1;
 	eq = 2;
 %
-	Te0 = 7.8+0.76368;
-	Tea = 0+0.76368;
-	eTe = 1.1;
-	eTe_ref = 1.1;
-	ne0 = 4.3e+19;
-	nea = 0.24*ne0;
-	ene = 1.3;
-	ene_ref = 1.3;
-	Ti0 = 6.2;
+	Te0 = 4;
+	Tea = 0;
+	eTe = 2;
+	eTe_ref = 2;
+	ne0 = 3e+19;
+	nea = 0.2*ne0;
+	ene = 0.5;
+	ene_ref = 0.5;
+	Ti0 = 2;
 	Tia = 0;
-	eTi = 1.1;
-	Zeff0 = 1;
-	Zeffa = 1;
+	eTi = 2;
+	Zeff0 = 2;
+	Zeffa = 2;
 	eZeff = 0;
 elseif strcmp(name,'D3D_test4') == 1,
 	ap = 0.67;
