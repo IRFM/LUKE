@@ -288,7 +288,18 @@ dpnp_S = [dpn_S,2*(pn_S(npn_S) - pn_f(npn_f))];
 testdpn_f = find(dpn_f > dpn_threshold);
 if isempty(testdpn_f) == 0, info_dke_yp(2,'WARNING: momentum step too large, results may be inaccurate !');end
 %
-
+if uniform == -1,%for test only with uniform grid
+	mhu_Smin = -1;
+	mhu_Smax = 1;
+	dmhu_S = ((mhu_Smax - mhu_Smin)/nmhu_S_in)*ones(1,nmhu_S_in);
+	mhu_f = [mhu_Smin + dmhu_S(1)/2:dmhu_S(1):mhu_Smax - dmhu_S(1)/2];
+	mhum_S = mhu_f - dmhu_S(1)/2;mhum_S(1) = -1;
+	mhup_S = mhu_f + dmhu_S(1)/2;mhup_S(nmhu_S_in) = 1;
+	dmhum_S = dmhu_S;dmhum_S(1)=dmhu_S(1);
+	dmhup_S = dmhu_S;dmhup_S(nmhu_S_in)=dmhu_S(1);
+	dmhu_f = dmhu_S;
+   mhu_S = [mhu_S,1];
+end
 
 
 
