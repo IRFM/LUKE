@@ -141,12 +141,12 @@ elseif strcmp(name,'TS') == 1,
 	eq = 2;
 %
 	Te0 = 4.7;
-	Tea = 0.01*Te0;
+	Tea = 0.1*Te0;
 	eTe = 1.1;
-	Ti0 = 4.7;
-	Tia = 0.01*Ti0;
+	Ti0 = 3;
+	Tia = 0.1*Ti0;
 	eTi = 1.1;
-	ne0 = 1.0e+19;
+	ne0 = 2.0e+19;
 	nea = 0.24*ne0;
 	ene = 1.3;
 %
@@ -628,11 +628,11 @@ elseif strcmp(name,'JET') == 1,
 	Te0 = 5;
 	Tea = 0.1*Te0;
 	eTe = 2;
-	Ti0 = 2;
+	Ti0 = 3;
 	Tia = 0.1*Ti0;
 	eTi = 2;	
-	ne0 = 1.0e+19;
-	nea = 0.001*ne0;
+	ne0 = 2.0e+19;
+	nea = 0.01*ne0;
 	ene = 0.5;
 %
 %

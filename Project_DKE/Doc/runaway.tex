@@ -6,7 +6,8 @@ electric field is then set to $\overline{E}=0.08,$ which corresponds to a
 standard value for such studies. Usually, runaway losses become significant
 above $\overline{E}=0.03.$ All other parameters are kept constant as
 compared to the benchmarking procedure done for the Ohmic conductivity in
-Sec. \ref{conducsection}. The corresponding tokamak parameter file is named
+Sec. \ref{conducsection}. In the tokamak parameter M-file
+``ptok\_dke\_1yp.m'', the corresponding section for these simulations is named
 ``CQL3D\_RUNAWAY'', since it corresponds to conditions that have been used
 for code comparison with the well know CQL3D program (\cite{har93c1_IAEA}).
 By definition, the code is no more conservative since runaway electrons are
@@ -109,7 +110,9 @@ function with respect to the Maxwellian shape.
 %TCIMACRO{
 %\TeXButton{Fig_fpprojrun}{\fig{figures/fpprojrun.eps}{Parallel projection, parallel and perpendicular temperatures of the electron distribution function at $\epsilon=0.31623$}{fpprojrun}{7cm} }}
 %BeginExpansion
-\fig{figures/fpprojrun.eps}{Parallel projection, parallel and perpendicular temperatures of the electron distribution function at $\epsilon=0.31623$}{fpprojrun}{7cm} %
+\fig{figures/fpprojrun.eps}{Electron distribution function averaged over the perpendicular momentum direction
+at $\epsilon=0.31623$. Parallel and perpendicular temperatures of the electron distribution function
+are also shown}{fpprojrun}{7cm} %
 %EndExpansion
 
 Bounce averaged calculations have be performed first locally. As shown in
