@@ -32,12 +32,19 @@ function [xpsin_f,xpsin_f_dke,xdpsin_f_dke,xpsinm_S_dke,xdpsinm_S_dke,xpsinp_S_d
 % by Joan Decker <jodecker@alum.mit.edu> (MIT/RLE) and Yves Peysson
 % <yves.peysson@cea.fr> (CEA/DRFC)
 %
+xpsin_S_dke = sort(xpsin_S_dke);
 nr_S = length(xpsin_S_dke);
+psinmin = 1e-3;
+psinmax = 1-psinmin;
 %
 if nr_S == 1,%Case of local studies, no fast electron transport
-	if xpsin_S_dke == 0, 
-        xpsin_S_dke = 0.05;
-        info_dke_yp(2,'WARNING: psin = 0 not allowed, psin = 0.05 enforced !');
+	if xpsin_S_dke < psinmin, 
+        xpsin_S_dke = psinmin;
+        info_dke_yp(2,['WARNING: psin = 0 not allowed, psin = ',num2str(psinmin),' enforced !']);
+    end
+	if xpsin_S_dke > psinmax, 
+        xpsin_S_dke = psinmax;
+        info_dke_yp(2,['WARNING: psin = 0 not allowed, psin = ',num2str(psinmax),' enforced !']);
     end
 %
 	xpsin_f_dke = xpsin_S_dke;
@@ -57,6 +64,16 @@ else%Case of global studies, fast electron transport allowed
 		xpsin_S_dke = [xpsin_S_dke,1];
 		nr_S = nr_S + 1;
 	end
+    maskmin = max(find((xpsin_S_dke(1) + xpsin_S_dke(2:nr_S))/2 <= psinmin)) + 1;
+    if ~isempty(maskmin), %remove points too close from 0: ensures xpsin_f_dke >= psimin;
+        xpsin_S_dke = [xpsin_S_dke(1), 2*psinmin - xpsin_S_dke(1), xpsin_S_dke(maskmin+1:nr_S)];
+    end
+    nr_S = length(xpsin_S_dke);
+    maskmax = min(find((xpsin_S_dke(1:nr_S-1) + xpsin_S_dke(nr_S))/2 >= psinmax));
+    if ~isempty(maskmax), %remove points too close from 1: ensures xpsin_f_dke <= psimax;
+        xpsin_S_dke = [xpsin_S_dke(1:maskmax-1), 2*psinmax - xpsin_S_dke(nr_S), xpsin_S_dke(nr_S)];
+    end  
+    nr_S = length(xpsin_S_dke);
 	nr_f = nr_S - 1;
 %
 	xpsin_f_dke = (xpsin_S_dke(1:nr_S-1) + xpsin_S_dke(2:nr_S))/2;%point l+1/2 (f grid)
@@ -76,8 +93,11 @@ ir_dke_display_out = find(abs(xpsin_f_dke - psin_display_in) == min(abs(xpsin_f_
 %   position for the purpose of radial derivative
 %
 if dke_mode == 1%DKE calculations
+    if (xpsin_f_dke(1) - dpsin_dke < psinmin) | (xpsin_f_dke(nr_f) + dpsin_dke > psinmax)
+        dpsin_dke = psinmin/2;
+    end
    % first left dke point
-    xpsin_f = [max(0,xpsin_f_dke(1) - dpsin_dke),xpsin_f_dke(1)];
+    xpsin_f = [xpsin_f_dke(1) - dpsin_dke,xpsin_f_dke(1)];
     ir_dke = 2;
     r_dke = ir_dke;
     if (nr_f > 1) & (xpsin_f_dke(2) > xpsin_f_dke(1) + dpsin_dke + eps)
@@ -103,7 +123,7 @@ if dke_mode == 1%DKE calculations
         end
     end
    % last right dke point
-    xpsin_f = [xpsin_f,min(1,xpsin_f_dke(nr_f) + dpsin_dke)];
+    xpsin_f = [xpsin_f,xpsin_f_dke(nr_f) + dpsin_dke];
     ir_dke = ir_dke + 1;
 else%FP calculations only
     xpsin_f = xpsin_f_dke;
