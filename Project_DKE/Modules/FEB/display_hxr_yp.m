@@ -71,39 +71,39 @@ while 1,
 %
 %  Display results
 %
-	figure(10008),
+	figure(10009),
 	graph1D_jd(kfit,brem_bd_plasma(chord_display,:),0,1,'Photon energy k (keV)','dN_{phot}/dk.dt [keV^{-1}.s^{-1}]',['Non-thermal Bremsstrahlung, chord #',num2str(chord_display)],NaN,'','','-','non','b',2);
 
 %	
-	figure(10009),
+	figure(10010),
 	graph1D_jd(kfit,brem_bd_diag(chord_display,:),0,1,'Pulse energy channel E (keV)','dN_{pulse}/dE.dt [keV^{-1}.s^{-1}]',['HXR diagnostic count rate, chord #',num2str(chord_display)],NaN,'','','-','non','b',2);
 	
 %	
 	ikphot_display = max(find(kfit <= kphot_display));
 %
-	figure(10010),
+	figure(10011),
 	graph1D_jd([1:length(tphot_plasma)],brem_bd_plasma(:,ikphot_display),0,0,'Chord number','dN_{phot}/dk.dt [keV^{-1}.s^{-1}]',['HXR diagnostic count rate, k=',num2str(kfit(ikphot_display)),' (keV)'],NaN,'','','-','non','b',2);
 
 %	
-	figure(10011),
+	figure(10012),
 	graph1D_jd([1:length(tphot_plasma)],brem_bd_diag(:,ikphot_display),0,0,'Chord number','dN_{pulse}/dE.dt [keV^{-1}.s^{-1}]',['HXR diagnostic count rate, E=',num2str(kfit(ikphot_display)),' (keV)'],NaN,'','','-','non','b',2);
 %
-	figure(10012),
+	figure(10013),
 	graph1D_jd([1:length(tphot_plasma)],tphot_plasma,0,0,'Chord number','T_{phot} [keV]','k.dN_{phot}/dk.dt = A.exp(-k/T_{phot}) [50-110 keV]',NaN,'','','-','non','b',2);
 %	
-	figure(10013),
+	figure(10014),
 	graph1D_jd([1:length(tphot_plasma)],tphot_plasma_exp,0,0,'Chord number','T_{phot}^{*} [keV]','E.dN_{pulse}/dE.dt.{\eta}_{E} = A.exp(-E/T_{phot}^{*}) [50-110 keV]',NaN,'','','-','non','r',2);
 %
-	figure(10014),
+	figure(10015),
 	graph1D_jd([1:length(tphot_plasma)],afit_plasma,0,0,'Chord number','A(k=0) [s^{-1}]','k.dN_{phot}/dk.dt = A.exp(-k/T_{phot})@k=0 [50-110 keV]',NaN,'','','-','non','b',2);
 %
-	figure(10015),
+	figure(10016),
 	graph1D_jd([1:length(tphot_plasma)],afit_plasma_exp,0,0,'Chord number','A^{*}(E=0) [s^{-1}]','E.dN_{pulse}/dE.dt.{\eta}_{E} = A.exp(-E/T_{phot}^{*})@E=0 [50-110 keV]',NaN,'','','-','non','r',2);
 %
-	figure(10016),
-	graph1D_jd(kfit,meanabsx,0,0,'Chord number','{\eta}_{E}','Mean stopping efficiency {\eta}_{E}',NaN,'','','-','non','r',2);
-%
 	figure(10017),
+	graph1D_jd(kfit,meanabsx,0,0,'Photon energy channel (keV)','{\eta}_{E}','Mean stopping efficiency {\eta}_{E}',NaN,'','','-','non','r',2);
+%
+	figure(10018),
 	ikinterp_display = max(find(kinterp <= kphot_display));
 	graph1D_jd(kinterp,gkEinterp(ikinterp_display,:),0,0,'Photon energy k','G_{kE}',['Detector response function @k=',num2str(kinterp(ikinterp_display)),' (keV), chord#',int2str(chord_display)],NaN,'','','-','non','r',2);
 	faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 

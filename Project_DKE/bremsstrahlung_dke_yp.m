@@ -34,6 +34,19 @@ normi_hxr = zeros(size(psin_hxr,1),size(psin_hxr,2)) + NaN;%Norm of the reconstr
 %
 i_test = max(find(xrho <= r_display));%Normalized radius index for output and display
 j_test = max(find(theta_hxr(1,:) <= t_display*pi/180));%Poloidal angle index for output and display
+%
+if ~mask_hxr(i_test,j_test),
+	info_dke_yp(2,'WARNING: no chord is going through the plasma volume at the chosen radial and poloidal positions !');
+   [i_test1,j_test1]=find(mask_hxr==1);
+	disp('Choose one of these index values (i,j) for which one chord crosses the plasma volume')
+   for ii=1:length(i_test1),
+      disp([int2str(ii),' - (i,j) : ',int2str(i_test1(ii)),'/',int2str(j_test1(ii)),' - (rho,theta[deg.]) : ',num2str(xrho(i_test1(ii))),'/',num2str(180*theta_hxr(1,j_test1(ii))/pi)]);
+   end
+	ii1 = input_dke_yp(['Give the index (between 1 and ',int2str(max(ii)),')'],1);
+	i_test = i_test1(ii1);
+	j_test = j_test1(ii1);
+end
+%
 rho_out = xrho(i_test);
 theta_out = theta_hxr(1,j_test);
 %
@@ -109,7 +122,7 @@ for i = 1:size(psin_hxr,1),%radial position
 %
 % Test of the reconstruction of the distribution function on the Legendre polynomial basis
 %
-				figure(10003),
+				figure(10004),
 				ylab = ['f(norm initial: ',num2str(norm0_hxr(i_test,j_test)),', norm recontructed: ',num2str(normi_hxr(i_test,j_test)),')'];
 				tit = ['Distribution function at {\rho} = ',num2str(rho_out),' and {\theta}_{pol} = ',num2str(theta_out*180/pi),' (Deg)'];
 %				
@@ -150,7 +163,7 @@ for i = 1:size(psin_hxr,1),%radial position
 				xlim1 = [-pnmax_S,pnmax_S];xlim2 = [0,pnmax_S];
 				siz = 20;red = 0.95;
 %
-				figure(10004)				
+				figure(10005)				
 				graph2D_jd(ppar_cyl,pperp_cyl,Xfinit_cyl','','','',xlim1,xlim2,0,betath_ref,[0:0.5:pnmax_S],0,'-','b',0.5,siz,red,max(max(Xf0_cyl)));
 				graph2D_jd(ppar_cyl,pperp_cyl,Xf0_cyl','p_{||}/p_{Te}^{ref}','p_{\perp}/p_{Te}^{ref}','Distribution function',xlim1,xlim2,0,betath_ref,[0:0.5:pnmax_S],0,'-','r',2,siz,red,max(max(Xfinit_cyl)));
 				axis('equal');
@@ -163,7 +176,7 @@ for i = 1:size(psin_hxr,1),%radial position
 					 line([0,-pnmax_S*sqrt(mhubounce2_0)],[0,pnmax_S*sqrt(1 - mhubounce2_0)],'color','k');
 			   end				
 %
-				figure(10005),
+				figure(10006),
 				graph2D_jd(ppar_cyl,pperp_cyl,Xfinit_cyl','','','',xlim1,xlim2,0,betath_ref,[0:0.5:pnmax_S],0,'-','b',0.5,siz,red,max(max(Xf_hxr_cyl)));
 				graph2D_jd(ppar_cyl,pperp_cyl,Xf_hxr_cyl','p_{||}/p_{Te}^{ref}','p_{\perp}/p_{Te}^{ref}','Distribution function',xlim1,xlim2,0,betath_ref,[0:0.5:pnmax_S],0,'-','r',2,siz,red,max(max(Xfinit_cyl)));
 				axis('equal');
@@ -191,7 +204,7 @@ for i = 1:size(psin_hxr,1),%radial position
 				brem_4pi = permute(reshape(squeeze(ZZIB(i,j,1,:))/2,1,size(IB_c1,2),size(IB_c1,3)),[2,3,1]);%Mean 4pi emission per steradian				
 %
 				if display_mode >= 1,
-				   figure(10006),
+				   figure(10007),
 					graph1D_jd(kphot,brem_forward,0,1,'','','',NaN,'','','-','non','r',2);
 					graph1D_jd(kphot,brem_backward,0,1,'','','',NaN,'','','-','non','b',2);
 					graph1D_jd(kphot,brem_4pi,0,1,'','','',NaN,'','','-.','non','g',2);
@@ -199,6 +212,12 @@ for i = 1:size(psin_hxr,1),%radial position
 					legend('Forward','Backward','Mean 4{\pi}','Perp.')
 					grid on
 				end
+			else
+				info_dke_yp(2,'WARNING: no chord is going through the plasma volume at the chosen radial and poloidal positions ! Local emission values are not displayed.');		
+			   brem_forward = NaN;%Forward emission
+			   brem_backward = NaN;%Backward emission
+			   brem_perp = NaN;%Perpendicular emission
+			   brem_4pi = NaN;%Mean 4pi emission per steradian				
 			end
 		end
 %
@@ -208,7 +227,7 @@ end
 %
 disp('-------------------------------------------------------------------------------------------------------------------');
 if display_mode >= 1,%Display the quality of the reconstruction of the electron distribution function
-	figure(10007),
+	figure(10008),
 	graph1D_jd(xrho,xne_norm,0,0,'','','',NaN,'','','-','non','b',2);
 	graph1D_jd(xrho,norm0_hxr,0,0,'','','',NaN,'','','--','non','r',2);
 	graph1D_jd(xrho,normi_hxr,0,0,'Normalized radius {\rho}','Normalization (local density)','Normalization of the electron distribution function',NaN,'','','-.','non','g',2);
