@@ -13,9 +13,13 @@ accounted for. We define then
 v_{s}\right| }=\int_{s_{\min }}^{s_{\max }}\frac{ds}{\left| v_{\Vert
 }\right| }\frac{B}{B_{P}}
 \end{equation}
-where $v_{s}$ is the guiding center velocity along the poloidal field lines,
-and $v_{\Vert }$ is its velocity parallel to the magnetic field. $B$ is the
-magnitude of the magnetic field, while $B_{P}$ is the magnitude of its
+where $v_{s}$ \nomenclature{$v_{s}$}{Guiding center velocity along the poloidal field lines}
+is the guiding center velocity along the poloidal field lines,
+and $v_{\Vert }$ \nomenclature{$v_{\Vert }$}{Guiding center velocity parallel to the magnetic field}
+is its velocity parallel to the magnetic field. $B$ is the
+magnitude of the magnetic field, while $B_{P}$
+\nomenclature{$B_{P}$}{Poloidal component of the magnetic field}
+is the magnitude of its
 poloidal component as shown in Fig. \ref{figvpar}. The limits $s_{\min }$
 and $s_{\max }$ are defined in (\ref{bmax}) for passing electrons, and are
 the positions, along the field lines, of turning points for trapped
@@ -23,13 +27,16 @@ electrons.
 
 \fig{figures/vpar.eps}{Guiding center velocity definition}{figvpar}{7cm}
 
-The differential arc length $ds$ along the poloidal field line is generally
+The differential arc length $ds$ \nomenclature{$ds$}{Differential arc length
+along the poloidal field line}
+along the poloidal field line is generally
 expressed in curvilinear coordinates $\left( u^{1},u^{2},u^{3}\right) $ as (%
 \ref{dl}) 
 \begin{equation}
 ds=\sqrt{g_{ij}du^{i}du^{j}}  \label{dl2}
 \end{equation}
-where the $g_{ij}$ are the metric coefficients, defined in (\ref{met}). In
+where the $g_{ij}$ \nomenclature{$g_{ij}$}{Metric coefficients along
+directions $u^{i}$ and $u^{j}$} are the metric coefficients, defined in (\ref{met}). In
 the $\left( \psi ,\theta ,\phi \right) $ coordinates, the variations $d\psi $
 and $d\phi $ are essentially zero along the poloidal field line. As a
 consequence, (\ref{dl2}) becomes 
@@ -43,6 +50,9 @@ therefore, we have
 \begin{equation}
 \frac{v_{\Vert }}{v}\simeq \frac{p_{\Vert }}{p}=\xi 
 \end{equation}
+\nomenclature{$v$}{Module of the velocity vector}
+\nomenclature{$v_{\Vert }$}{Component of the velocity along the local magnetic field
+direction}
 in the weak relativistic regime of tokamak plasmas, where the pitch-angle
 cosine $\xi $ is defined in (\ref{pxidef})
 
@@ -52,14 +62,24 @@ We get
 \int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }\sqrt{g_{22}}%
 \frac{\xi _{0}}{\xi }\frac{B}{B_{P}}
 \end{equation}
+\nomenclature{$\tau _{b}$}{Generalized bounce time (trapped and
+circulating electrons)}
 where $\xi _{0}$ is the pitch angle cosine at the position $\theta _{0}$ of
 minimum $B$-field 
+\nomenclature{$\xi _{0}$}{Cosine of the pitch-angle at the position of
+minimum $B$-field}
+\nomenclature{$\theta _{0}$}{Poloidal angle at the position of
+minimum $B$-field}
 \begin{equation}
 \theta _{0}\equiv \theta \left( B=B_{0}\left( \psi \right) \right)
 \label{theta0ref}
 \end{equation}
 and the limits$\ \theta _{\min }$ and $\theta _{\max }$ will be calculated
 in the next subsection.
+\nomenclature{$\theta _{\min }$}{Lower value of the poloidal angle of the turning point
+of trapped electrons, $\left(\theta _{\min }=0\right)$ for circulating electrons}
+\nomenclature{$\theta _{\max }$}{Upper value of the poloidal angle of the turning point
+of trapped electrons, $\left(\theta _{\min }=2\pi\right)$ for circulating electrons}
 
 The bounce time can be normalized as such: 
 \begin{equation}
@@ -78,7 +98,10 @@ and
 \widetilde{q}\left( \psi\right) \equiv\int_{0}^{2\pi}\frac{d\theta}{2\pi }%
 \frac{\sqrt{g_{22}}}{R_{p}}\frac{B}{B_{P}}
 \end{equation}
-
+\nomenclature{$\widetilde{q}$}{Pseudo-safety factor introduced for normalized bounce time
+definition}
+\nomenclature{$\lambda$}{Bounce time normalized to transit time of
+electron with parallel momentum only}
 The bounce time is normalized to the transit time of particles with parallel
 momentum only, such that $\lambda\left( \psi,\pm1\right) =1$.
 
@@ -113,10 +136,16 @@ invariant, the magnetic moment $\mu $. They are given by the equations
 p^{2}=p_{\bot }^{2}+p_{\Vert }^{2} \label{pdef}
 \end{equation}
 \begin{equation}
-\mu =\frac{p_{\bot }^{2}}{2mB} \label{mudef}
+\mu =\frac{p_{\bot }^{2}}{2m_{e}B} \label{mudef}
 \end{equation}
+\nomenclature{$\mu$}{Magnetic moment}
+\nomenclature{$m_{e}$}{Electron mass}
 such that, as a function of the moment component $\left( p_{\Vert 0},p_{\bot
-0}\right) $ at the location $\theta _{0}$ of minimum $B$-field, we have 
+0}\right) $ \nomenclature{$p_{\Vert 0}$}{Component of the momentum along the local magnetic field
+direction at the position of minimum $B$-field}%
+\nomenclature{$p_{\bot 0}$}{Component of the momentum along the local magnetic field
+direction at the position of minimum $B$-field}%
+at the location $\theta _{0}$ of minimum $B$-field, we have 
 \begin{align}
 p_{\bot }^{2}+p_{\Vert }^{2}& =p_{\bot 0}^{2}+p_{\Vert 0}^{2}  \label{mom} \\
 \frac{p_{\bot }^{2}}{B\left( \psi ,\theta \right) }& =\frac{p_{\bot 0}^{2}}{%
