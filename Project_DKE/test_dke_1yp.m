@@ -55,7 +55,7 @@ nit = [nit_f,nit_g];
 %
 % Plasma equilibrium
 %
-[theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,Ncoils,BeLi,psia,xmhu0T2] = equilibrium_jd(tokname,xpsin,display_mode);
+[theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,Ip,Ncoils,BeLi,psia,xmhu0T2] = equilibrium_jd(tokname,xpsin,display_mode);
 %
 if diary_mode == 1, 
 	diaryfile = ['diary_dke_',int2str(iloop)];
@@ -294,10 +294,9 @@ for ir = 1:nr,
 %
 	if bounce_mode == 1 & isnan(xnhuloss_ref(ir)) == 0 & strcmp(tokname,'TS')==1,%WARNING: only valid for the TORE SUPRA tokamak with large magnetic ripple
 		info_dke_yp(2,'WARNING: Ripple losses calculations only valid for Tore Supra tokamak');
+		disp('-------------------------------------------------------------------------------------------------------------------');
 %		Ncoils = 1;%Ncoils is here forced to 1, as prescribed in Ref. M. Ju et al., Phys. Plasmas, 9 (2002) 493. Upper bound of ripple losses is then calculated
 %		xNq(ir) = Ncoils*xq(ir);%Exact N may be used but large values may lead to numerical instabilities due to round-off errors
-Ip = 0.61
-BeLi 
 		[xthetabanana(ir),xthetaloss(ir),xpndetrap(ir),xEseuil(ir),xdeltaripple(ir)] = detrapmj3(xZeff(ir),ap,xBT0(ir),Rp,BeLi,Ip,xne(ir),xrho(ir));%WARNING: Only valid for the TORE SUPRA tokamak
 		xpndetrap_ref(ir) = xpndetrap(ir)/betath_ref;
 %
@@ -305,7 +304,10 @@ BeLi
 		Xmaskrip_ref = (Xpn_ref > xpndetrap_ref(ir)).*(abs(Xmhu) < xmhusupertrap(ir));
 		Xnhuloss_ref = Xmaskrip_ref*xnhuloss_ref(ir);
 	else
-		if strcmp(tokname,'TS') == 0, info_dke_yp(2,'WARNING: Ripple losses calculations only valid for Tore Supra tokamak. Wrong tokamak name');end
+		if strcmp(tokname,'TS') == 0, 
+			info_dke_yp(2,'WARNING: Ripple losses calculations only valid for Tore Supra tokamak. Wrong tokamak name');
+			disp('-------------------------------------------------------------------------------------------------------------------');
+		end
 		xdeltaripple(ir) = 0;
 		xNq(ir) = Ncoils;%*xq(ir);
 		Xnhuloss_ref = zeros(length(pn_ref),length(mhu));
@@ -631,7 +633,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
         Zcurr_ref,Zcurr_ref_fsav,...
         ZP0_ref_fsav,...
         ZSp0_ref,...
-        XxRR_ref_fsav,...
+        XxRR_ref_fsav,xMRR_flux_ref,xMRR_tau_ref,...
         xTe_norm_out,xft_fsav,xmhubounce2,xepsi_ref,...
         memoryLU_f,memoryLU_g]...
     = dke_1_4yp(tokname,theta,...

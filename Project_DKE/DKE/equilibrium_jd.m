@@ -1,4 +1,4 @@
-function [theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,Ncoils,BeLi,psia,xmhu0T2] = ...
+function [theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,Ip,Ncoils,BeLi,psia,xmhu0T2] = ...
     equilibrium_jd(tokamak,xpsin,display_mode,method)
 %
 %   This function interpolates the equilibrium data on the radial grid.
@@ -54,6 +54,7 @@ function [theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi
 %       - Rp: major radius on axis [1,1]
 %       - Zp: elevation on axis [1,1]
 %       - ap: minor radius on LFS midplane [1,1]
+%       - Ip: Toroidal plasma current [1,1]
 %       - Ncoils: Number of toroidal magnetic field coils [1,1]
 %       - BeLi: Beta + li/2 [1,1]
 %       - psia: poloidal flux at the edge [1,1]
@@ -79,7 +80,7 @@ filename = ['EQUIL_',tokamak,'.mat'];
 %
 [s,dossier,machine] = comput_dke_yp;
 %
-eval(['load ',dossier,s,filename,' ppsi theta R Z BR BZ BPHI pTe pne pzTi pzni zZi zmi Ncoils BeLi']);
+eval(['load ',dossier,s,filename,' ppsi theta R Z BR BZ BPHI pTe pne pzTi pzni zZi zmi Ncoils BeLi Ip']);
 %
 [npsi,ntheta] = size(R);
 nr = length(xpsin);

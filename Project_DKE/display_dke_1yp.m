@@ -131,22 +131,28 @@ while 1,
 		end
 		disp('-------------------------------------------------------------------------------------------------------------------');
 %
-%   Magnetic ripple losses
+%Magnetic ripple losses
 %
-		pparsupertrap_ref = xpndetrap_ref(ir_display)*mhu(abs(mhu)<=xmhusupertrap(ir_display));%For contour plot of the supertrapped domain
-		pperpsupertrap_ref = xpndetrap_ref(ir_display)*sqrt(1-mhu(abs(mhu)<=xmhusupertrap(ir_display)).^2);%For contour plot of the supertrapped domain
-
-if 0,
-%    	if bounce_mode >= 1 & isnan(xnhuloss_ref(r_dke(ir_display))) == 0,     
-			Gripmhu_ref = 2*pi*integral_dke_yp([dpn_ref',Xmaskrip_ref.*XSmhu0_ref.*Xpn_ref])*sqrt(1-min(mhu(find(abs(mhu)<xmhusupertrap(rdke(ir_display)))))^2);        
-			Grippn_ref = 2*pi*pn(max(find(pn_ref<xpndetrap_ref(rdke(ir_display)))))^2*integral_dke_yp([dmhu',Xmaskrip_ref'.*XSp0_ref']);    
-			Gripflux_ref = Gripmhu_ref(max(find(abs(mhu)<xmhusupertrap(rdke(ir_display))))) - Gripmhu_ref(min(find(abs(mhu)<xmhusupertrap(rdke(ir_display))))) + Grippn_ref(max(find(pn_ref<xpndetrap_ref(rdke(ir_display))))+1);
-        	Griptau0_ref = integral_dke_yp([dpn_ref',Xnhuloss_ref.*Xf0_ref.*Xpn_ref.*Xpn_ref]);
-        	Griptau_ref = 2*pi*integral_dke_yp([dmhu',Griptau0_ref']);%Flux of electrons leaving the plasma through the loss cone
-        	info_dke_yp(2,['Ripple loss (s-1.m-3): ',num2str(Griptau_ref*nhu_ref*xne(rdke(ir_display)))]);
-			info_dke_yp(2,['Ripple loss (flux calculations) (s-1.m-3): ',num2str(Gripflux_ref*nhu_ref*xne(rdke(ir_display)))]);
-        	disp('-------------------------------------------------------------------------------------------------------------------');
-    	end
+    	if bounce_mode >= 1 & isnan(xnhuloss_ref(ir_display)) == 0 & strcmp(tokname,'TS')==1,
+    		pparsupertrap_ref = xpndetrap_ref(ir_display)*mhu(abs(mhu)<=xmhusupertrap(ir_display));%For contour plot of the supertrapped domain
+    		pperpsupertrap_ref = xpndetrap_ref(ir_display)*sqrt(1-mhu(abs(mhu)<=xmhusupertrap(ir_display)).^2);%For contour plot of the supertrapped domain
+%
+    		disp('-------------------------------------------------------------------------------------------------------------------');
+			info_dke_yp(2,'Global results (normalized to reference units) at Bmin [theta_pol = 0 (deg)]:');
+			info_dke_yp(2,['Ripple loss : ',num2str(xMRR_tau_ref(ir_display))]);
+			info_dke_yp(2,['Ripple loss (flux calculations) : ',num2str(xMRR_flux_ref(ir_display))]);
+%
+			disp('-------------------------------------------------------------------------------------------------------------------');
+			info_dke_yp(2,'Global results (normalized to MKSA units) at Bmin [theta_pol = 0 (deg)]:');
+    		info_dke_yp(2,['Ripple loss (s-1.m-3): ',num2str(xMRR_tau_ref(ir_display)*nhu_ref*ne_ref)]);
+			info_dke_yp(2,['Ripple loss (flux calculations) (s-1.m-3): ',num2str(xMRR_flux_ref(ir_display)*nhu_ref*ne_ref)]);
+			disp('-------------------------------------------------------------------------------------------------------------------');
+		else
+			info_dke_yp(2,'No magnetic ripple loss calculations');
+			disp('-------------------------------------------------------------------------------------------------------------------');
+	   end
+%
+%Spherical to cylindrical coordinate transformation
 %
 		[logXfinit_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(log(Xfinit_ref),pn_ref,mhu,dp_cyl);%Spherical to cylindrical coordinate transformation
 		Xfinit_cyl_ref = exp(logXfinit_cyl_ref);%For accurate representation in figures 
@@ -219,6 +225,8 @@ if 0,
 			Tparinit_cyl_ref = Fperpinit2_cyl_ref./Fperpinit_cyl_ref;
 			Tparn_cyl_ref = betath_ref*betath_ref*Tpar_cyl_ref*mc2/Te_ref;
 			Tparinitn_cyl_ref = betath_ref*betath_ref*Tparinit_cyl_ref*mc2/Te_ref;
+%
+%Display results
 %
 			figure(3);clf
 			subplot(131),semilogy(ppar_cyl_ref,Fparinit_cyl_ref,'b--',ppar_cyl_ref,Fpar0_cyl_ref,'r.');grid on;
@@ -511,7 +519,7 @@ if 0,
 			end
 			disp(['   - Ohmic eletric field: ',num2str(xepsi_ref_fsav(ir_display_dke))])
 			disp(['   - Runaway rate [spherical]: ',num2str(XxRR_ref_fsav(np-1,ir_display_dke))])
-			  disp(['   - Kruskal-Berstein runaway rate (Z = 1) [spherical]: ',num2str(xRR_KB_fsav(ir_display_dke))])
+			disp(['   - Kruskal-Berstein runaway rate (Z = 1) [spherical]: ',num2str(xRR_KB_fsav(ir_display_dke))])
 			disp(['   - Bulk current [spherical]: ',num2str(xcurrB_ref_fsav(ir_display_dke))])
 %
 			disp('-------------------------------------------------------------------------------------------------------------------');
@@ -522,7 +530,7 @@ if 0,
 			for ib = 1:nb_lh
 					disp(['   - LH beam #',num2str(ib),': v1 = ',num2str(1/waveparam_lh(ir_display_dke,ib,7)/betath_ref),', v2 = ',num2str(1/waveparam_lh(ir_display_dke,ib,6)/betath_ref),',D0lh = ',num2str(waveparam_lh(ir_display_dke,ib,5))])
 					disp(['        LH Power absorbed (MW/m3) [spherical]: ',num2str(xyPabs0_lh_fsav_mksa(ir_display_dke,ib))]) 
-				end
+			end
 %
 			for ib = 1:nb_ec
 					disp(['   - EC beam #',num2str(ib),': n// = ',num2str(waveparam_ec(ir_display_dke,ib,8)),...
@@ -534,8 +542,8 @@ if 0,
 					disp(['   - RF current drive efficiency (A.m/W) [spherical]: ',num2str(xeta0_fsav_mksa(ir_display_dke))])
 			end
 			disp(['   - Ohmic eletric field (V/m): ',num2str(xepsi_fsav_mksa(ir_display_dke))])
-			disp(['   - Runaway rate [spherical]: ',num2str(XxRR_ref_fsav(np-1,ir_display_dke)*nhu_ref*ne_ref*me)])
-			disp(['   - Kruskal-Berstein runaway rate (Z = 1) [spherical]: ',num2str(xRR_KB_fsav(ir_display_dke)*nhu_ref*ne_ref*me)])
+			disp(['   - Runaway rate [spherical]: ',num2str(XxRR_ref_fsav(np-1,ir_display_dke)*nhu_ref*ne_ref)])
+			disp(['   - Kruskal-Berstein runaway rate (Z = 1) [spherical]: ',num2str(xRR_KB_fsav(ir_display_dke)*nhu_ref*ne_ref)])
 			disp(['   - Bulk current (MA/m2) [spherical]: ',num2str(xJrfB_fsav_mksa(ir_display_dke))])
 		else
 			[Xf0_g_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(Xf0_g_ref,pn_ref,mhu,dp_cyl);
@@ -568,9 +576,10 @@ if 0,
 				if bounce_mode >= 1,%Draw bounce domain boundaries
 					line([0,pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
 					line([0,-pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
-					if isnan(nhuloss) == 0,%Draw the loss cone
-						line([0,pnmax_S*sqrt(1-cos(xthetaloss(ir_display_dke)*pi/180)^2)],[0,pnmax_S*cos(xthetaloss(ir_display_dke)*pi/180)],'LineStyle','-','color','r');
-						line([0,-pnmax_S*sqrt(1-cos(xthetaloss(ir_display_dke)*pi/180)^2)],[0,pnmax_S*cos(xthetaloss(ir_display_dke)*pi/180)],'LineStyle','-','color','r');
+					if isnan(nhuloss) == 0,%Draw the magnetic ripple loss cone
+						hold on,plot(pparsupertrap_ref,pperpsupertrap_ref,'r'),hold off
+						line([xpndetrap_ref(ir_display)*xmhusupertrap(ir_display),pnmax_S*xmhusupertrap(ir_display)],[xpndetrap_ref(ir_display)*sqrt(1-xmhusupertrap(ir_display)^2),pnmax_S*sqrt(1-xmhusupertrap(ir_display)^2)],'LineStyle','-','color','r');
+						line([-xpndetrap_ref(ir_display)*xmhusupertrap(ir_display),-pnmax_S*xmhusupertrap(ir_display)],[xpndetrap_ref(ir_display)*sqrt(1-xmhusupertrap(ir_display)^2),pnmax_S*sqrt(1-xmhusupertrap(ir_display)^2)],'LineStyle','-','color','r');					
 					end
 				end
 				if nb_lh > 0,
@@ -593,10 +602,10 @@ if 0,
 				if bounce_mode >= 1,%Draw bounce domain boundaries
 					line([0,pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
 					line([0,-pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
-
-					if isnan(nhuloss) == 0,%Draw the loss cone
-						line([0,pnmax_S*sqrt(1-cos(xthetaloss(ir_display_dke)*pi/180)^2)],[0,pnmax_S*cos(xthetaloss(ir_display_dke)*pi/180)],'LineStyle','-','color','r');
-						line([0,-pnmax_S*sqrt(1-cos(xthetaloss(ir_display_dke)*pi/180)^2)],[0,pnmax_S*cos(xthetaloss(ir_display_dke)*pi/180)],'LineStyle','-','color','r');
+					if isnan(nhuloss) == 0,%Draw the magnetic ripple loss cone
+						hold on,plot(pparsupertrap_ref,pperpsupertrap_ref,'r'),hold off
+						line([xpndetrap_ref(ir_display)*xmhusupertrap(ir_display),pnmax_S*xmhusupertrap(ir_display)],[xpndetrap_ref(ir_display)*sqrt(1-xmhusupertrap(ir_display)^2),pnmax_S*sqrt(1-xmhusupertrap(ir_display)^2)],'LineStyle','-','color','r');
+						line([-xpndetrap_ref(ir_display)*xmhusupertrap(ir_display),-pnmax_S*xmhusupertrap(ir_display)],[xpndetrap_ref(ir_display)*sqrt(1-xmhusupertrap(ir_display)^2),pnmax_S*sqrt(1-xmhusupertrap(ir_display)^2)],'LineStyle','-','color','r');					
 					end
 				end
 %
@@ -626,9 +635,10 @@ if 0,
 				if bounce_mode >= 1,%Draw bounce domain boundaries
 					line([0,pnmax_S*sqrt(xmhubounce2(ir_display_dke))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display_dke))]);
 					line([0,-pnmax_S*sqrt(xmhubounce2(ir_display_dke))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display_dke))]);
-					if isnan(nhuloss) == 0,%Draw the loss cone
-						line([0,pnmax_S*sqrt(1-cos(xthetaloss(ir_display_dke)*pi/180)^2)],[0,pnmax_S*cos(xthetaloss(ir_display_dke)*pi/180)],'LineStyle','-','color','r');
-						line([0,-pnmax_S*sqrt(1-cos(xthetaloss(ir_display_dke)*pi/180)^2)],[0,pnmax_S*cos(xthetaloss(ir_display_dke)*pi/180)],'LineStyle','-','color','r');
+					if isnan(nhuloss) == 0,%Draw the magnetic ripple loss cone
+						hold on,plot(pparsupertrap_ref,pperpsupertrap_ref,'r'),hold off
+						line([xpndetrap_ref(ir_display)*xmhusupertrap(ir_display),pnmax_S*xmhusupertrap(ir_display)],[xpndetrap_ref(ir_display)*sqrt(1-xmhusupertrap(ir_display)^2),pnmax_S*sqrt(1-xmhusupertrap(ir_display)^2)],'LineStyle','-','color','r');
+						line([-xpndetrap_ref(ir_display)*xmhusupertrap(ir_display),-pnmax_S*xmhusupertrap(ir_display)],[xpndetrap_ref(ir_display)*sqrt(1-xmhusupertrap(ir_display)^2),pnmax_S*sqrt(1-xmhusupertrap(ir_display)^2)],'LineStyle','-','color','r');					
 					end
 				end
 %
@@ -729,7 +739,7 @@ if 0,
 					disp(['   - RF current drive efficiency (A.m/W) [spherical]: ',num2str(xeta0_mksa(ir_display_dke))])
 			end
 			disp(['   - Ohmic eletric field (V/m): ',num2str(xepsi_fsav_mksa(ir_display_dke))])
-			disp(['   - Runaway rate (Kg.m-3.s-1) [spherical]: ',num2str(XxRR_ref_fsav(np-1,ir_display_dke)*nhu_ref*ne_ref*me)])
+			disp(['   - Runaway rate (Kg.m-3.s-1) [spherical]: ',num2str(XxRR_ref_fsav(np-1,ir_display_dke)*nhu_ref*ne_ref)])
 			disp(['   - Bulk current (MA/m2) [spherical]: ',num2str(xJrfB_fsav_mksa(ir_display_dke))])
 %
 		end
