@@ -69,22 +69,16 @@ Email: yves.peysson@cea.fr
 Tokamak geometry and particle dynamic
 \layout Section
 
+Coordinate system
+\layout Section
+
+Particle motion
+\layout Subsection
+
 Arbitrary configuration
 \layout Subsection
 
-Coordinate system
-\layout Subsection
-
-Particle motion
-\layout Section
-
 Circular configuration
-\layout Subsection
-
-Coordinate system
-\layout Subsection
-
-Particle motion
 \layout Chapter
 
 Kinetic description of electrons
@@ -102,7 +96,7 @@ Small drift approximation
 Zero order term: the Fokker-Planck equation
 \layout Subsection
 
-First order term: the Drift Kinetic equation
+Up to first order term: the Drift Kinetic equation
 \layout Section
 
 Low collisionality limit and bounce averaging
@@ -111,7 +105,10 @@ Low collisionality limit and bounce averaging
 Zero order term: the Fokker-Planck equation
 \layout Subsection
 
-First order term: the Drift Kinetic equation
+Up to first order term: the Drift Kinetic equation
+\layout Section
+
+Anomalous transport in configuration space
 \layout Section
 
 Flux conservative representation
@@ -123,10 +120,19 @@ General formulation
 Zero order term: the Fokker-Planck equation
 \layout Subsection
 
-First order term: the Drift Kinetic equation
+Up to first order term: the Drift Kinetic equation
 \layout Section
 
-Anomalous transport in configuration space
+Moments of the distribution function
+\layout Subsection
+
+Current density
+\layout Subsection
+
+Power density
+\layout Subsection
+
+Bremsstrahlung emission
 \layout Chapter
 
 Detailed description of physical processes
@@ -163,6 +169,9 @@ Discretization procedure
 \layout Subsection
 
 Grid interpolation
+\layout Section
+
+Numical integrals for moment calculations
 \layout Chapter
 
 Algorithm
