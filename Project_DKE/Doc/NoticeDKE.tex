@@ -1,186 +1,184 @@
-\documentclass{book}
-\usepackage{amsmath}
-\usepackage{amssymb}
+% -- The Drift Kinetic code -- %
+% -- J. Decker and Y. Peysson -- %
+
+\documentclass[11pt,a4paper]{report}
+
+\bibliographystyle{DocumentBibStyle}
+\usepackage{cite}
 \usepackage{graphicx}
+\usepackage{latexsym}
+\usepackage{amssymb}
+\usepackage{amsmath}
+%\usepackage{epstopdf}
+\usepackage{fancyheadings}
 
-\addtolength{\voffset}{-3.0cm} \addtolength{\textheight}{6.0cm}
-\addtolength{\hoffset}{-1.5cm} \addtolength{\textwidth}{3.0cm}
 
-\newcommand{\fig}[4]{
-\begin{figure}
-\begin{center}
-\includegraphics[width = #4 cm]{#1}
-\caption{#2}\label{#3}
-\end{center}
-\end{figure}
-}
+% -- Style de page -- %
+%\addtolength{\voffset}{-3.0cm} \addtolength{\textheight}{6.0cm}
+%\addtolength{\hoffset}{-1.5cm} \addtolength{\textwidth}{3.0cm}
+\addtolength{\headwidth}{\marginparsep}
+\addtolength{\headwidth}{\marginparwidth}
+\pagestyle{fancyplain}
+
+% -- Format -- %
+\renewcommand{\chaptermark}[1]{\markboth{\thechapter. #1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection. #1}{}}
+%\include{myAbbrevs}
+\include{DocumentDimensions}
+
+
+\title{\hrule\bigbreak DKE: a fast numerical solver for the 3-D relativistic electron Drift Kinetic Equation \hrule\bigbreak}
+\author{Joan Decker (RLE/MIT)\footnote{Email: jodecker@mit.edu} and Yves Peysson (DRFC/DSM/CEA)\footnote{Email: yves.peysson@cea.fr}}
+\date{\today}
 
 \begin{document}
 
-\title{A fast numerical solver for the 3-D relativistic electron Drift Kinetic
-Equation}
-
-
-\author{Joan Decker%
-\footnote{Email: jodecker@mit.edu%
-} and Yves Peysson%
-\footnote{Email: yves.peysson@cea.fr%
-}}
- 
-
-\date{November 20, 2003}
-
 \maketitle
-\tableofcontents{}
-
+\tableofcontents
 
 \chapter{Tokamak geometry and particle dynamic}
 
+	\section{Coordinate system}
 
-\section{Coordinate system}
+		\input{CoordinateSystem.tex}
 
-\input{CoordinateSystem.tex}
+	\section{Particle motion}
 
-\section{Particle motion}
+		\subsection{Arbitrary configuration}
 
+			\input{BounceGeneral.tex}
 
-\subsection{Arbitrary configuration}
+		\subsection{Circular configuration}
 
-\input{BounceGeneral.tex}
-
-\subsection{Circular configuration}
-
-\input{BounceCircular.tex}
+			\input{BounceCircular.tex}
 
 \chapter{Kinetic description of electrons}
 
+	\section{Boltzman equation; Gyro- and Wave-averaging}
 
-\section{Boltzman equation; Gyro- and Wave-averaging}
+		\input{Boltzmann.tex}
 
-\input{Boltzmann.tex}
+	\section{Guiding-Center Drifts and Drift-Kinetic Equation}
 
-\section{Guiding-Center Drifts and Drift-Kinetic Equation}
+		\input{Drift.tex}
 
-\input{Drift.tex}
+	\section{Small drift approximation}
 
-\section{Small drift approximation}
+		\input{DriftOrdering.tex}
 
-\input{DriftOrdering.tex}
+	\section{Low collisionality limit and bounce averaging}
 
-\section{Low collisionality limit and bounce averaging}
+		\input{LowCollisionality.tex}
 
-\input{LowCollisionality.tex}
+	\section{Anomalous transport in configuration space}
 
-\section{Anomalous transport in configuration space}
+%********************
 
+	\section{Flux conservative representation}
 
-\section{Flux conservative representation}
+		\subsection{General formulation}
 
-\subsection{General formulation}
+			\input{FluxCons.tex}
 
-\input{FluxCons.tex}
+			\subsubsection{Dynamics in Momentum Space}
 
-\subsubsection{Dynamics in Momentum Space}
+				\input{FluxConsMomentum.tex}
 
-\input{FluxConsMomentum.tex}
+			\subsubsection{Dynamics in Configuration Space}
 
-\subsubsection{Dynamics in Configuration Space}
+				\input{FluxConsConfiguration.tex}
 
-\input{FluxConsConfiguration.tex}
+		\subsection{Zero order term: the Fokker-Planck equation}
 
-\subsection{Zero order term: the Fokker-Planck equation}
+			\subsubsection{Dynamics in Momentum Space}
 
-\subsubsection{Dynamics in Momentum Space}
+				\input{FP_FluxConsMomentum.tex}
 
-\input{FP_FluxConsMomentum.tex}
+			\subsubsection{Dynamics in Configuration Space}
 
-\subsubsection{Dynamics in Configuration Space}
+				%\input{FP_FluxConsConfiguration.tex}
 
-%\input{FP_FluxConsConfiguration.tex}
+			\subsection{Up to first order term: the Drift Kinetic equation}
 
-\subsection{Up to first order term: the Drift Kinetic equation}
+				\subsubsection{Dynamics in Momentum Space}
 
-\subsubsection{Dynamics in Momentum Space}
+					\input{DKE_FluxConsMomentum.tex}
 
-\input{DKE_FluxConsMomentum.tex}
+				\subsubsection{Dynamics in Configuration Space}
 
-\subsubsection{Dynamics in Configuration Space}
+					%\input{DKE_FluxConsConfiguration.tex}
 
-%\input{DKE_FluxConsConfiguration.tex}
+	\section{Moments of the distribution function}
 
-\section{Moments of the distribution function}
-
-\input{Moments.tex}
+		\input{Moments.tex}
 
 \chapter{Detailed description of physical processes}
 
-\section{Collisions}
+	\section{Collisions}
 
-\input{Collisions.tex}
+		\input{Collisions.tex}
 
-\subsection{Bounce Averaged Fokker-Planck Equation}
+		\subsection{Bounce Averaged Fokker-Planck Equation}
 
-\input{FP_Collisions.tex}
+			\input{FP_Collisions.tex}
 
-\subsection{Bounce Averaged Drift Kinetic Equation}
+		\subsection{Bounce Averaged Drift Kinetic Equation}
 
-\input{DKE_Collisions.tex}
+			\input{DKE_Collisions.tex}
 
-\section{Ohmic electric field}
+	\section{Ohmic electric field}
 
-\input{Efield.tex}
+		\input{Efield.tex}
 
-\subsection{Bounce Averaged Fokker-Planck Equation}
+		\subsection{Bounce Averaged Fokker-Planck Equation}
 
-\input{FP_Efield.tex}
+			\input{FP_Efield.tex}
 
-\subsection{Bounce Averaged Drift Kinetic Equation}
+		\subsection{Bounce Averaged Drift Kinetic Equation}
 
-\input{DKE_Efield.tex}
+			\input{DKE_Efield.tex}
 
-\section{Radio frequency waves}
+	\section{Radio frequency waves}
 
-\input{RFwave.tex}
+		\input{RFwave.tex}
 
-\subsection{RF Diffusion coefficient for a Plane Wave}
+		\subsection{RF Diffusion coefficient for a Plane Wave}
 
-\input{RFdiff.tex}
+			\input{RFdiff.tex}
 
-\subsection{Bounce Averaged Fokker-Planck Equation}
+		\subsection{Bounce Averaged Fokker-Planck Equation}
 
-\input{FP_RFwave.tex}
+			\input{FP_RFwave.tex}
 
-\subsection{Bounce Averaged Fokker-Planck Equation}
+		\subsection{Bounce Averaged Fokker-Planck Equation}
 
-\input{DKE_RFwave.tex}
+			\input{DKE_RFwave.tex}
 
 \chapter{Numerical calculations}
 
-\section{Grid definitions}
+	\section{Grid definitions}
 
-\input{GridDefinition.tex}
+		\input{GridDefinition.tex}
 
-\section{Discretization procedure}
+	\section{Discretization procedure}
 
-\input{DiscreteProcedure.tex}
+		\input{DiscreteProcedure.tex}
 
-\subsection{Momentum dynamics}
+		\subsection{Momentum dynamics}
 
-\input{FP_DiscretMomentum.tex}
+			\input{FP_DiscretMomentum.tex}
 
-\subsection{Spatial dynamics}
+		\subsection{Spatial dynamics}
 
-\input{FP_DiscretSpatial.tex}
+			\input{FP_DiscretSpatial.tex}
 
-\subsection{Grid interpolation}
+		\subsection{Grid interpolation}
 
-\input{GridInterpolation.tex}
+			\input{GridInterpolation.tex}
 
-\section{Numical integrals for moment calculations}
-
+		\section{Numical integrals for moment calculations}
 
 \chapter{Algorithm}
-
 
 \chapter{Examples}
 
@@ -188,10 +186,14 @@ Equation}
 
 \chapter{Curvilinear Coordinate Systems}
 
-\input{curvilinear.tex}
+	\input{curvilinear.tex}
 
 \chapter{Calculation of Bounce Coefficients for Circular Concentric FS}
 
-\input{BounceCoef.tex}
+	\input{BounceCoef.tex}
+
+\newpage
+
+  \bibliography{dke}
 
 \end{document}
