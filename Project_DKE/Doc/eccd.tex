@@ -1,87 +1,284 @@
-\begin{figure}[htb]
+\subsection{\bigskip Introduction}
+
+Fast and accurate kinetic calculations of electron cyclotron current drive
+(ECCD) are of great importance given that ECCD provides the most controllable
+and adjustable known source of CD in tokamaks, and is used in a wide range of
+advanced tokamak experiments, including to achieve fully non-inductive steady
+state operation
+%\cite{sau00}
+%
+and stabilize neoclassical tearing modes
+%\cite{d3d}\cite{germany}
+%
+. The calculation of ECCD requires to use all the features and power of the
+the DKE code, including the fast implicit treatment of trapped particles and
+momentum space fluxes at the trapped/passing boundary. Indeed, wave-induced
+trapping and momentum exchange with trapped particles are a dominant aspect of
+off-axis ECCD as they explain the Ohkawa effect.
+
+\begin{figure}[tbh]
 \begin{center}
-(a)\hspace{1cm}\includegraphics[width = 2in,height = 1in]{figures/test4_np_nmhu_010_neout.eps}\\
-(b)\hspace{1cm}\includegraphics[width = 2in,height = 1in]{figures/test4_np_nmhu_010_j.eps}\\
-(c)\hspace{1cm}\includegraphics[width = 2in,height = 1in]{figures/test4_np_nmhu_010_p.eps}\\
-(d)\hspace{1cm}\includegraphics[width = 2in,height = 1in]{figures/test4_np_nmhu_010_eta.eps}\\
-(e)\hspace{1cm}\includegraphics[width = 2in,height = 1in]{figures/test4_np_nmhu_010_rf_col.eps}\\
-\caption{ECCD in DIII-D ($\rho = 0.1,\ D_{\text{EC}} = 0.15,\
-N_{\parallel} = 0.3,\ Y = 0.98$). Output density (a), normalized
-current density (b), normalized absorbed power density (c),
-normalized current drive efficiency (d), ratio of power absorbed
-to power lost on collisions (e), as a function of grid size ($n_p
-= n_{\xi}$).}
-%\label{ebw_es}
+(a)\hspace{1cm}\includegraphics
+[width = 2in,height = 1in]{figures/test4_np_nmhu_010_neout.eps}\newline
+(b)\hspace{1cm}\includegraphics
+[width = 2in,height = 1in]{figures/test4_np_nmhu_010_j.eps}\newline
+(c)\hspace{1cm}\includegraphics
+[width = 2in,height = 1in]{figures/test4_np_nmhu_010_p.eps}\newline
+(d)\hspace{1cm}\includegraphics
+[width = 2in,height = 1in]{figures/test4_np_nmhu_010_eta.eps}\newline
+(e)\hspace{1cm}\includegraphics
+[width = 2in,height = 1in]{figures/test4_np_nmhu_010_rf_col.eps}\newline
 \end{center}
+\caption{ECCD in DIII-D ($\rho= 0.1,\ D_{\text{EC}} = 0.15,\ N_{\parallel} =
+0.3,\ Y = 0.98$). Output density (a), normalized current density (b),
+normalized absorbed power density (c), normalized current drive efficiency
+(d), ratio of power absorbed to power lost on collisions (e), as a function of
+grid size ($n_{p} = n_{\xi}$).}%
+\label{npnmhu}%
 \end{figure}
 
-\begin{figure}[htb]
+We illustrate ECCD calculations using an idealized DIII-D scenario with
+$R_{p}=1.67$ m, $a_{p}=0.67$ m, $B_{t}=2$ T, $Z_{\text{eff}}=2$, $T_{e0}=4$
+keV and $n_{e0}=3\times10^{19}$ m$^{-3}$. The temperature and density profiles
+are either parabolic or constant, as specified for each following simulation.
+The poloidal magnetic field is assumed to be negligible. For simplicity, the
+plasma is assumed to be circular without Shafranov shift. The primary ECCD
+parameters are X-mode polarization, $N_{\Vert}=0.3$, $f_{\text{EC}}=110$ MHz
+$P_{0\text{EC}}=1.0$ MW and Gaussian spectrum width $\Delta N_{\Vert}=0.02$.
+For these parameters, an ideal EC beam propagating from the low field side on
+the outboard midplane ($\theta_{b}=0$) would be absorbed at second harmonic
+near the plasma center, and the peak in the power deposition profile would be
+located at a normalized radius $\rho=0.1$. At this location, the frequency
+ratio $y_{2}=2\omega_{ce}/\omega$, which defines the position of the resonance
+curve in momentum space (along with $N_{\Vert}$), is $y_{2}=0.98$. The
+normalized diffusion coefficient is $D_{0\text{EC}}^{\text{new}}=0.15$. In the
+following sets of calculation, the relaxation is let to evolve completely
+freely: no normalization between time steps and no forced Maxwellian at $p=0$.
+
+\subsection{\bigskip Grid size effects}
+
+In the first set of calculations, we consider the primary ECCD case
+($\rho=0.1$, $\theta_{b}=0$, $N_{\Vert}=0.3$, $\Delta N_{\Vert}=0.02$,
+$y_{2}=0.98$, $D_{0\text{EC}}^{\text{new}}=0.15$) and vary the size of the
+momentum grid $\left(  n_{p},n_{\xi}\right)  $, which is taken to be uniform
+(Fig \ref{npnmhu}). The maximum momentum grid point is set at $p_{\max}=10$.
+The computed electron density increases slightly then stabilizes during the
+relaxation and reaches an output value $n_{e\text{out}}$ with ($\left(
+n_{e\text{out}}-n_{e}\right)  /n_{e}\leq6$\%). This difference is quite small
+given that a EC diffusion coefficient of $D_{0\text{EC}}^{\text{new}}=0.15$ is
+rather large. The output density does not rapidly converge to 1 when the grid
+size in increased (graph a) which indicates that the primary reason for the
+density increase is not the precision of the discretization scheme. The the
+flux-surface averaged driven current densiry (graph b) converges towards a
+normalized asymptotic value $j_{\infty}^{\text{EC}}=2.4\times10^{-2}$
+($en_{e}v_{Te}$). However, there are oscillations in the evolution of
+$j^{\text{EC}}$ with $\left(  n_{p},n_{\xi}\right)  $ which account for most
+of the disparity with $j_{\infty}$. These oscillations can be attributed to
+the sharp Gaussian-like evolution of the diffusion coefficient in momentum
+space, with a characteristic variation size that is smaller than a grid step.
+The gaussian shape of the spectrum being somewhat smoother than the LH square
+spectrum, the variations in $j^{\text{EC}}$ are less important than for the
+previous LH case. The calculation of the the flux-surface averaged density of
+power absorbed (graph c) is however quite robust and does not depend much on
+the grid size. It rapidly converges to a value $p_{\infty}^{\text{EC}%
+}=1.8\times10^{-2}$ ($n_{e}m_{e}\nu_{e}v_{Te}^{2}$). The evolution of the
+normalized figure of merit $\eta^{\text{EC}}\equiv j^{\text{EC}}/p^{\text{EC}%
+}$ mostly follows the variations of $j^{\text{EC}}$ (graph d). It converges to
+a value of $\eta_{\infty}^{\text{EC}}=1.3$ ($e/m_{e}\nu_{e}v_{Te}$). For a
+$100\times100$ grid, the mean error on $j^{\text{EC}}$ and $\eta^{\text{EC}}$
+is about $10$\%. It reduces to less than $5$\% for a $200\times200$ grid. The
+ratio of the power absorbed from ECW to the power lost on collisions
+expectedly tends to $1$ as the grid size increases (graph e), until the grid
+size reaches about $150\times150$, where it undergoes an unexplained jump to
+about $1.1$.
+
+\begin{figure}[tbh]
 \begin{center}
-(a)\hspace{1cm}\includegraphics[width = 2in,height = 1in]{figures/test4_pmax_010_neout.eps}\\
-(b)\hspace{1cm}\includegraphics[width = 2in,height = 1in]{figures/test4_pmax_010_j.eps}\\
-(c)\hspace{1cm}\includegraphics[width = 2in,height = 1in]{figures/test4_pmax_010_p.eps}\\
-(d)\hspace{1cm}\includegraphics[width = 2in,height = 1in]{figures/test4_pmax_010_eta.eps}\\
-(e)\hspace{1cm}\includegraphics[width = 2in,height = 1in]{figures/test4_pmax_010_rf_col.eps}\\
-\caption{ECCD in DIII-D ($\rho = 0.1,\ D_{\text{EC}} = 0.15,\
-N_{\parallel} = 0.3,\ Y = 0.98$). Output density (a), normalized
-current density (b), normalized absorbed power density (c),
-normalized current drive efficiency (d), ratio of power absorbed
-to power lost on collisions (e), as a function of momentum grid
-limit $p_{\max}$ ($n_p = 10p_{\max},\ n_{\xi} = 100$).}
-%\label{ebw_es}
+(a)\hspace{1cm}\includegraphics
+[width = 2in,height = 1in]{figures/test4_pmax_010_neout.eps}\newline
+(b)\hspace{1cm}\includegraphics
+[width = 2in,height = 1in]{figures/test4_pmax_010_j.eps}\newline
+(c)\hspace{1cm}\includegraphics
+[width = 2in,height = 1in]{figures/test4_pmax_010_p.eps}\newline
+(d)\hspace{1cm}\includegraphics
+[width = 2in,height = 1in]{figures/test4_pmax_010_eta.eps}\newline
+(e)\hspace{1cm}\includegraphics
+[width = 2in,height = 1in]{figures/test4_pmax_010_rf_col.eps}\newline
 \end{center}
+\caption{ECCD in DIII-D ($\rho= 0.1,\ D_{\text{EC}} = 0.15,\ N_{\parallel} =
+0.3,\ Y = 0.98$). Output density (a), normalized current density (b),
+normalized absorbed power density (c), normalized current drive efficiency
+(d), ratio of power absorbed to power lost on collisions (e), as a function of
+momentum grid limit $p_{\max}$ ($n_{p} = 10p_{\max},\ n_{\xi} = 100$).}%
+\label{pmax}%
 \end{figure}
 
-\begin{figure}[htb]
+The requirements of ECCD calculations on the maximum momentum $p_{\max}$ are
+far more easily satisfied than for LHCD. To illustrate this, we consider the
+same case ($\rho=0.1$, $\theta_{b}=0$, $N_{\Vert}=0.3$, $\Delta N_{\Vert
+}=0.02$, $y_{2}=0.98$, $D_{0\text{EC}}^{\text{new}}=0.15$) and fix $n_{\xi
+}=100$. The maximum momentum $p_{\max}$ and the momentum grid size $n_{p}$ are
+varied proportionally so that the momentum step size remains unchanged and the
+discretization effects are therefore removed. The results are shown on Fig.
+\ref{pmax}. None of the relevant integral quantities ($n_{e\text{out}}$,
+$j^{\text{EC}}$, $p^{\text{EC}}$, $p^{\text{EC}}/p^{\text{col.}}$,
+$\eta^{\text{EC}}$) varies significantly for $p_{\max}/p_{Te}\geq7$. For
+comparison, the maximum value of $p_{\bot}$ on the resonance curve is
+$p_{\bot,\max}^{\text{res}}=2.7p_{Te}$ and the maximum value of $p$ is
+$p_{\max}^{\text{res}}=6.4p_{Te}$.
+
+\subsection{Electron trapping effects}
+
+In the next set of calculation (Fig. \ref{ia}), we keep the same
+ECCD\ parameters ($\theta_{b}=0$, $N_{\Vert}=0.3$, $\Delta N_{\Vert}=0.02$,
+$y_{2}=0.98$, $D_{0\text{EC}}^{\text{new}}=0.15$) but vary the radial location
+of ECCD. The density and temperature profiles are kept constant such that the
+only effect to consider is the increasing number of trapped particles as
+$\epsilon=r/R_{p}$ increases. The output density increases slightly with
+$\epsilon$ (graph a) but remains acceptable. The density of driven current
+steadily decreases and reverses signs for $\epsilon\geq0.16$ (graph b). This
+evolution indicates that the Ohkawa effect, which is due to ECW-induced
+trapping and drives a counter-current, eventually compensates and even
+dominates the Fisch-Boozer effect. In fact, the Ohkawa current density peaks
+at $\epsilon\simeq0.25$ and then $\left|  j^{\text{EC}}\right|  $ goes back to
+$0$ as $\epsilon$ further increases. The ohkawa effect is maximum where the EC
+resonance curve in momentum space is tangent to the trapped passing boundary,
+so that wave-induced trapping is maximum. For larger $\epsilon$ - or wider
+trapping region - most of the EC power is transferred directly to trapped
+electrons, which do not drive current. This explains why $\left|
+j^{\text{EC}}\right|  \rightarrow0$ as $\epsilon\geq0.25$ increases. The
+density of power absorbed slowly increases with $\epsilon$ (graph c). The
+increases is faster for $\epsilon\geq0.25$, which can be expected since at
+these location, increasing coupling with trapped particles occur. Indeed,
+because of the fast bounce motion, this coupling is effectively distributed
+between trapped electrons travelling in both directions. This distribution
+divides the effective magnitude of the diffusion coefficient by two but also
+doubles the amount of resonant particles in the trapped region. As a result,
+quasilinear effects on ECCD with trapped particles are reduced, which explains
+the larger density of power absorbed. The evolution of the normalized figure
+of merit is similar as that of $\left|  j^{\text{EC}}\right|  $ (graph d) and
+the ratio of he power absorbed from ECW to the power lost on collisions is
+quite stable, and very close to $1$.
+
+\begin{figure}[tbh]
 \begin{center}
-(a)\hspace{1cm}\includegraphics[width = 2in,height = 1in]{figures/test4_CST_ia_neout.eps}\\
-(b)\hspace{1cm}\includegraphics[width = 2in,height = 1in]{figures/test4_CST_ia_j.eps}\\
-(c)\hspace{1cm}\includegraphics[width = 2in,height = 1in]{figures/test4_CST_ia_p.eps}\\
-(d)\hspace{1cm}\includegraphics[width = 2in,height = 1in]{figures/test4_CST_ia_eta.eps}\\
-(e)\hspace{1cm}\includegraphics[width = 2in,height = 1in]{figures/test4_CST_ia_rf_col.eps}\\
-\caption{ECCD in DIII-D ($D_{\text{EC}} = 0.15,\ N_{\parallel} =
-0.3,\ Y = 0.98$). Output density (a), normalized current density
-(b), normalized absorbed power density (c), normalized current
-drive efficiency (d), ratio of power absorbed to power lost on
-collisions (e), as a function of the inverse aspect ratio
-$\epsilon = r/R_p$; temperatures, densities and $Z_{\text{eff}}$
-are kept constant across the plasma.}
-%\label{ebw_es}
+(a)\hspace{1cm}\includegraphics
+[width = 2in,height = 1in]{figures/test4_CST_ia_neout.eps}\newline
+(b)\hspace{1cm}\includegraphics
+[width = 2in,height = 1in]{figures/test4_CST_ia_j.eps}\newline (c)\hspace
+{1cm}\includegraphics[width = 2in,height = 1in]{figures/test4_CST_ia_p.eps}%
+\newline (d)\hspace{1cm}\includegraphics
+[width = 2in,height = 1in]{figures/test4_CST_ia_eta.eps}\newline
+(e)\hspace{1cm}\includegraphics
+[width = 2in,height = 1in]{figures/test4_CST_ia_rf_col.eps}\newline
 \end{center}
+\caption{ECCD in DIII-D ($D_{\text{EC}}=0.15,\ N_{\parallel}=0.3,\ Y=0.98$).
+Output density (a), normalized current density (b), normalized absorbed power
+density (c), normalized current drive efficiency (d), ratio of power absorbed
+to power lost on collisions (e), as a function of the inverse aspect ratio
+$\epsilon=r/R_{p}$; temperatures, densities and $Z_{\text{eff}}$ are kept
+constant across the plasma.}%
+\label{ia}%
 \end{figure}
 
-\begin{figure}[htb]
+\subsection{Momentum-space dynamics}
+
+In order to illustrate the momentum-space dynamics of ECCD, the 2D
+distribution function is plotted in the $\left(  p_{\Vert},p_{\bot}\right)  $
+space (Fig. \ref{fdis}). The case considered here is again our primary example
+($\rho=0.1$, $\theta_{b}=0$, $N_{\Vert}=0.3$, $\Delta N_{\Vert}=0.02$,
+$y_{2}=0.98$, $D_{0\text{EC}}^{\text{new}}=0.15$). On graph a, the initial
+Maxwellian (thin blue contours) and the steady-state ECCD distribution (thick
+red contours) are displayed, as well as contour of the magnitude of the EC
+diffusion coefficient (green dashed contours). The distortion of the
+distribution from a Maxwellian in the vicinity of the resonant region is
+clearly visible. Collisions are trying to restore the Maxwellian and induce
+momentum-space fluxes that affect the entire momentum space. By integrating
+over $p_{\bot}$, we obtain the parallel distribution%
+\begin{equation}
+F_{\Vert}\left(  p_{\Vert}\right)  =2\pi\int_{0}^{\infty}p_{\bot}dp_{\bot
+}\;f\left(  p_{\Vert},p_{\bot}\right)
+\end{equation}
+shown on graph b. In the non-relativistic limit, the integration of $\left(
+ep_{\Vert}/m_{e}\right)  F_{\Vert}\left(  p_{\Vert}\right)  $ over $p_{\Vert}$
+gives the driven current density. The Fisch-Boozer effect, resulting in an
+accumulation of particles with large, positive $p_{\Vert}$, appears clearly.
+This effect - understood as an asymmetric resistivity due to EC heating - is
+also illustrated on graph c, where the perpendicular temperature is plotted as
+a function of $p_{\Vert}$; the difference in temperature, due to asymmetric EC
+heating, induces the asymmetric resistivity and driven current. Note that
+EC\ induced diffusion in momentum space is mostly in the perpendicular
+direction, and therefore does not directly drive any current. It is always the
+collisional response to this diffusion which drives a current.
+
+\begin{figure}[tbh]
 \begin{center}
-(a)\hspace{1cm}\includegraphics[width = 4in,height = 3in]{figures/D3D_test4_CST_f.eps}\\
-(b)\hspace{1cm}\includegraphics[width = 4in,height = 3in]{figures/D3D_test4_CST_fpar.eps}\\
-(c)\hspace{1cm}\includegraphics[width = 4in,height = 3in]{figures/D3D_test4_CST_tperp.eps}\\
-\caption{ECCD in DIII-D ($\rho = 0.1,\ D_{\text{EC}} = 0.15,\
-N_{\parallel} = 0.3,\ Y = 0.98$). 2D electron distribution
-function (a), parallel distribution function (b) and perpendicular
-temperature (c); blue thin lines represent $f_{\text{init}}$, red
-thick lines represent $f_0$, and green dashed contours represent
-$D_{\text{EC}}$.}
-%\label{ebw_es}
+(a)\hspace{1cm}\includegraphics
+[width = 4in,height = 3in]{figures/D3D_test4_CST_f.eps}\newline
+(b)\hspace{1cm}\includegraphics
+[width = 4in,height = 3in]{figures/D3D_test4_CST_fpar.eps}\newline
+(c)\hspace{1cm}\includegraphics
+[width = 4in,height = 3in]{figures/D3D_test4_CST_tperp.eps}\newline
 \end{center}
+\caption{ECCD in DIII-D ($\rho=0.1,\ D_{\text{EC}}=0.15,\ N_{\parallel
+}=0.3,\ Y=0.98$). 2D electron distribution function (a), parallel distribution
+function (b) and perpendicular temperature (c); blue thin lines represent
+$f_{\text{init}}$, red thick lines represent $f_{0}$, and green dashed
+contours represent $D_{\text{EC}}$.}%
+\label{fdis}%
 \end{figure}
 
-\begin{figure}[htb]
-\begin{center}
-\includegraphics[width = 4in,height = 3in]{figures/D3D_test4_CST_A.eps}
-\caption{ECCD in DIII-D ($\rho = 0.1,\ D_{\text{EC}} = 0.15,\
-N_{\parallel} = 0.3,\ Y = 0.98$). Stream function for the momentum
-space fluxes. Green dashed contours represent $D_{\text{EC}}$.}
-%\label{ebw_es}
-\end{center}
-\end{figure}
+\subsection{Coupling to propagation models}
 
-\begin{figure}[htb]
+The code can be coupled to ray-tracing calculations. Iterations on the 3D ECCD
+calculations ensure that the power absorbed from the EC\ wave is consistent
+with the power travelling in the EC beam. Such calculations are very fast,
+thanks to the fully-implicit 3D algorithm. To illustrate this, we consider a
+simplified ECCD scenario with X-mode polarization, $N_{\Vert}=0.3$,
+$f_{\text{EC}}=110$ MHz, $P_{0\text{EC}}=1.0$ MW and Gaussian spectrum width
+$\Delta N_{\Vert}=0.02$. The EC beam propagates from the low field side on the
+outboard midplane ($\theta_{b}=0$). The evolution of $N_{\Vert}$ due to
+toroidicity is neglected, and the cold plasma model is used to solve the
+dispersion relation. The DKE calculations are performed on a $n\psi\times
+n_{p}\times n_{\xi}=26\times100\times100$ grid, and consistency between
+travelling and absorbed power is reached after 4 iterations. The resultant
+current density and absorbed power density profiles are shown on Fig.
+\ref{jp}. The current profile appears to be shifted slightly to the right
+compared to te power profile. This shift results from the fact that at
+$\rho\geq0.1$, resonant electrons are further in the tail of the distribution
+- meaning that they are less collisional - than at $\rho\leq0.1$, and
+therefore the local efficiency is higher for $\rho\geq0.1$. The location
+$\rho=0.1$ corresponds to the peak in the absorbed power profile, which
+justifies taking this value for the previous simulations.
+
+%\begin{figure}[htb]
+%\begin{center}
+%\includegraphics[width = 4in,height = 3in]{figures/D3D_test4_CST_A.eps}
+%\caption{ECCD in DIII-D ($\rho = 0.1,\ D_{\text{EC}} = 0.15,\
+%N_{\parallel} = 0.3,\ Y = 0.98$). Stream function for the momentum
+%space fluxes. Green dashed contours represent $D_{\text{EC}}$.}
+%\label{ebw_es}
+%\end{center}
+%\end{figure}
+%
+
+\begin{figure}[tbh]
 \begin{center}
 \includegraphics[width = 4in,height = 3in]{figures/JP_test4_030_110.eps}
-\caption{ECCD in DIII-D ($\theta_b = 0,\ P_{\text{EC}} = 1 \text{
-MW},\ N_{\parallel} = 0.3,\ f_{\text{EC}} = 110 \text{ MHz}$).
-Current and power densities deposition profiles. 3D calculation
-with $n_p = n_{\xi} = 100, n_{\psi} = 26$.}
-%\label{ebw_es}
 \end{center}
+\caption{ECCD in DIII-D ($\theta_{b}=0,\ P_{\text{EC}}=1\text{ MW}%
+,\ N_{\parallel}=0.3,\ f_{\text{EC}}=110\text{ MHz}$). Current and power
+densities deposition profiles. 3D calculation with $n_{p}=n_{\xi}=100,n_{\psi
+}=26$.}%
+\label{jp}%
 \end{figure}
+
+\subsection{Conclusion}
+
+To sum up, we have shown that the DKE code accurately describes and calculates
+ECCD. It runs robustly in the free conservative mode. Grid parametric
+requirements are somewhat less restrictive than for LHCD, because the EC
+diffusion coefficient variations are somewhat smoother. It accounts correctly
+for trapped electron effects, such as the Ohkawa current. It can be used to
+simulate actual ECCD\ scenarios, including coupling and consistency with
+ray-tracing calculations.
