@@ -236,7 +236,7 @@ clear YXXopt
 %
 % SUM OVER HARMONIC NUMBERS
 %
-for n_rf = 1:nmax_rf
+for n_rf = 0:nmax_rf;
     %
     % Polarization term 
     %
