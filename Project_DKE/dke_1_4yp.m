@@ -866,13 +866,13 @@ for ir = 1:nr,
 		F = 4*pi*(F1 + F2) + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)')./v2;
 		XF = F'*ones(1,nmhu);
 %
-		F1m = (F1_1 - 0.50*dpnm.*fM.*pn.*v)./v2m + (F1_2 - 0.50*dpnm.*fM.*pn.*v.*(1 - gamma.*sigma./z))./pn2m;  
-		F2m = (1 - sigmam./zm./gammam).*(F2_1 + 0.50*dpnm.*fM.*pn)./vm;
+		F1m = (F1_1 - 0.50*dpn.*fM.*pn.*v)./v2m + (F1_2 - 0.50*dpn.*fM.*pn.*v.*(1 - gamma.*sigma./z))./pn2m;  
+		F2m = (1 - sigmam./zm./gammam).*(F2_1 + 0.50*dpn.*fM.*pn)./vm;
 		Fm = 4*pi*(F1m + F2m) + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)')./v2m;
 		Fm(1) = 1;%Avoid singularity at p = 0, but the value is not used
 %   
-		F1p = (F1_1 + 0.50*dpnp.*fM.*pn.*v)./v2p + (F1_2 + 0.50*dpnp.*fM.*pn.*v.*(1 - gamma.*sigma./z))./pn2p;   
-		F2p = (1 - sigmap./zp./gammap).*(F2_1 - 0.50*dpnp.*fM.*pn)./vp;
+		F1p = (F1_1 + 0.50*dpn.*fM.*pn.*v)./v2p + (F1_2 + 0.50*dpn.*fM.*pn.*v.*(1 - gamma.*sigma./z))./pn2p;   
+		F2p = (1 - sigmap./zp./gammap).*(F2_1 - 0.50*dpn.*fM.*pn)./vp;
 		Fp = 4*pi*(F1p + F2p) + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)')./v2p;
 	end
 %
@@ -2014,7 +2014,7 @@ if dke_mode == 1,
 		MMXI_tp_t = [MMXI_tp_t;reshape(XI_tp(:,Zmask_tp{jr2})'.*Xpn2(:,Zmask_tp{jr2})',(nmhu - ns_tp(jr2))*npn,1)];%Matrix reduction because of trapped electrons + multiplication by the Jacobian of momentum coordinates
 	end
 %
-	MMXq_tp_t = -MMXP_tp_t*MMXf0_tp_t + MMXI_tp_t;%********************Verifier le signe de MMXI_tp_t***********
+	MMXq_tp_t = -MMXP_tp_t*MMXf0_tp_t + MMXI_tp_t;
 %
 	for ir = 1:nr_dke,
 		jr2 = rdke(ir);
