@@ -141,7 +141,7 @@ else,%Ideal equilibrium with circular concentric flux-surfaces.
         mhutrap2m(1) = 1;
         for i = 1:m,
         	chim(i+1) = (2*i - 3)/(2*i)*chim(i);
-        	chim_tp(i+1) = (2*i - 1)/(2*i)*chim(i);
+        	chim_tp(i+1) = (2*i - 1)/(2*i)*chim_tp(i);
         	mhutrap2m(i+1) = xmhubounce2(ir)*mhutrap2m(i);
         end
 %
