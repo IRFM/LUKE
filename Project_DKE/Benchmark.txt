@@ -10,26 +10,24 @@ Te0 = 0.1;Tea = 0;eTe = 0;eTe_ref = 0;
 ne0 = 1.0e+19;nea = 0*ne0;ene = 0;ene_ref = 0;
 Ti0 = 0.0;Tia = 0;eTi = 0;
 Zeff0 = 1;Zeffa = 1;eZeff = 0;
-
-
+drop_tol= 2e-3 if not specified
 ********************************************************** Neoclassic and Spitzer conductivity *************************************************************
-
 One radial location -> rho_S = [0.4];eTe = 0, eTe = 0;ref_mode = 1, norm_ref = 0, bounce_mode = 0
 ---------------------------------------------------------------------------------------
-*Z = 1, no imp, (H), sigma_spitzer = 7.4406 [Karney=7.429] (local norm., linearized, E/ED = 0.01, rho = 0.4, np=88, nmhu=120, pnmax_S = 15)
-*Z = 1, no imp, (D), sigma_spitzer = 7.4471 (local norm., linearized, E/ED = 0.01, rho = 0.4, np=88, nmhu=120, pnmax_S = 15)
+Z = 1, no imp, (H), sigma_spitzer = 7.4406 [Karney=7.429] (local norm., linearized, E/ED = 0.01, rho = 0.4, np=88, nmhu=120, pnmax_S = 15)
+Z = 1, no imp, (D), sigma_spitzer = 7.4471 (local norm., linearized, E/ED = 0.01, rho = 0.4, np=88, nmhu=120, pnmax_S = 15)
 ---------------------------------------------------------------------------------------
-*Z = 1, no imp, (H), sigma_spitzer = 3.7655 [Karney=3.773] (local norm., Maxwellian, E/ED = 0.01, rho = 0.4, np=88, nmhu=120, pnmax_S = 15) 
-*Z = 1, no imp, (H), sigma_spitzer = 3.0158 [Karney=2.837] (local norm., High-velocity, E/ED = 0.01, rho = 0.4, np=88, nmhu=120, pnmax_S = 15)
+Z = 1, no imp, (H), sigma_spitzer = 3.7655 [Karney=3.773] (local norm., Maxwellian, E/ED = 0.01, rho = 0.4, np=88, nmhu=120, pnmax_S = 15) 
+Z = 1, no imp, (H), sigma_spitzer = 3.0158 [Karney=2.837] (local norm., High-velocity, E/ED = 0.01, rho = 0.4, np=88, nmhu=120, pnmax_S = 15)
 ---------------------------------------------------------------------------------------
-*Z = 1, no imp, (H), sigma_spitzer = 7.4353 (local norm., linearized, E/ED = 0.01, rho = 0.4, np=125, nmhu=120, pnmax_S = 15)
-*Z = 1, no imp, (H), sigma_spitzer = 7.4343 (local norm., linearized, E/ED = 0.01, rho = 0.4, np=165, nmhu=120, pnmax_S = 15)
+Z = 1, no imp, (H), sigma_spitzer = 7.4353 (local norm., linearized, E/ED = 0.01, rho = 0.4, np=125, nmhu=120, pnmax_S = 15)
+Z = 1, no imp, (H), sigma_spitzer = 7.4343 (local norm., linearized, E/ED = 0.01, rho = 0.4, np=165, nmhu=120, pnmax_S = 15)
 ---------------------------------------------------------------------------------------
-*Z = 1, no imp, (H), sigma_spitzer = 7.4387 (local norm., linearized, E/ED = 0.01, rho = 0.4, np=125, nmhu=120, pnmax_S = 20)
+Z = 1, no imp, (H), sigma_spitzer = 7.4387 (local norm., linearized, E/ED = 0.01, rho = 0.4, np=125, nmhu=120, pnmax_S = 20)
 ---------------------------------------------------------------------------------------
-*Z = 1, Zimp = 2, Zeff = 2, sigma_spitzer = 4.3697 [Karney=4.377] (local norm., linearized, E/ED = 0.01, rho = 0.4, np=125, nmhu=120, pnmax_S = 15)
-*Z = 1, Zimp = 5, Zeff = 5, sigma_spitzer = 2.0619 [Karney=2.078] (local norm., linearized, E/ED = 0.01, rho = 0.4, np=125, nmhu=120, pnmax_S = 15)
-*Z = 1, Zimp = 10, Zeff = 10, sigma_spitzer = 1.1147 [Karney=1.133] (local norm., linearized, E/ED = 0.01, rho = 0.4, np=125, nmhu=120, pnmax_S = 15)
+Z = 1, Zimp = 2, Zeff = 2, sigma_spitzer = 4.3697 [Karney=4.377] (local norm., linearized, E/ED = 0.01, rho = 0.4, np=125, nmhu=120, pnmax_S = 15)
+Z = 1, Zimp = 5, Zeff = 5, sigma_spitzer = 2.0619 [Karney=2.078] (local norm., linearized, E/ED = 0.01, rho = 0.4, np=125, nmhu=120, pnmax_S = 15)
+Z = 1, Zimp = 10, Zeff = 10, sigma_spitzer = 1.1147 [Karney=1.133] (local norm., linearized, E/ED = 0.01, rho = 0.4, np=125, nmhu=120, pnmax_S = 15)
 ---------------------------------------------------------------------------------------
 Multiple radial locations -> rho_S = [0.2,0.4,0.6,0.8], eTe = 1,ene = 1, bounce_mode = 0
 ---------------------------------------------------------------------------------------
@@ -63,84 +61,137 @@ Z = 1, no imp, (H), sigma_neo = 0.85308 (local norm., linearized, E/ED_fsav = 0.
 sigma_neo_Bmin/sigma_spitzer = 0.85308/7.4356 = 0.114 [Coppi-Sigmar=0.0961] [CQL3D = 0.1]
 Z = 1, no imp, (H), sigma_neo = 0.023884 (local norm., linearized, E/ED_fsav = 0.01,j_fsav= 0.00023884, <E/ED_Bmin = 0.0016021, j_Bmin = 3.8265e-05> rho = 0.95, np=125, nmhu=120, pnmax_S = 15)
 sigma_neo_Bmin/sigma_spitzer = 0.023884/7.4356 = 3.21e-3 [Coppi-Sigmar=0.00187] [CQL3D = 0.00312]
-
-*******A faire **********
 ---------------------------------------------------------------------------------------
 Multiple radial locations -> rho_S = [0.2,0.4,0.6,0.8], eTe = 0, ene = 0, bounce_mode = 1
 ---------------------------------------------------------------------------------------
-Z = 1, no imp, (H), sigma_spitzer = 7.5239 (central norm., linearized, E/ED = 0.01, np=109, nmhu=158, pnmax_S = 15)
-ref_mode = 0, norm_ref = 1
-xrho           = 1.413793103448276e-01     3.161904761904763e-01     5.099009900990099e-01     7.070921985815601e-01     9.055248618784534e-01
-xepsi_fsav     = 0.01                      0.01                      0.01                      0.01                      0.01
-xj_fsav        = 0.030609                  0.016427                  0.0082761                 0.0034468                 0.00067847
-xepsi_Bmin     = 0.0086747                 0.0072111                 0.0057025                 0.004151                  0.0022517
-xj_Bmin        = 0.026552                  0.011844                  0.004717                  0.0014286                 0.0001513
-xsineo_fsav    = 3.0609                    1.6427                    0.82761                   0.34468                   0.067847
-xsineo_Bmin    = 3.0608                    1.6425                    0.82718                   0.34416                   0.067193
-xsineo/xsigsp  = 0.406                     0.218                     0.1099                    0.0458                    0.009017
-[coppi-sigmar] = 0.401                     0.204                     0.09197                   0.03201                   0.004649
+Z = 1, no imp, (H), sigma_spitzer = 7.4356 (central norm., linearized, E/ED = 0.01, np=125, nmhu=168, pnmax_S = 15)
+ref_mode = 0, norm_ref = 1 (drop_tol = 1e-4)
+xrho           = 0.14142     0.31623     0.5099        0.70711     0.90554
+xepsi_fsav     = 0.01        0.01        0.01          0.01        0.01
+xj_fsav        = 0.030226    0.016405    0.0080197     0.0033393   0.00059006
+xepsi_Bmin     = 0.008673    0.0072078   0.0056976     0.0041426   0.0022299
+xj_Bmin        = 0.026215    0.011824    0.0045693     0.0013833   0.00013141
+xsineo_fsav    = 3.0226      1.6405      0.80197       0.33393     0.059006
+xsineo_Bmin    = 3.0226      1.6404      0.80197       0.33392     0.05893
+xsineo/xsigsp  = 0.406       0.221       0.1078        0.0449      0.0079255
+[coppi-sigmar] = 0.401       0.204       0.09197       0.03201     0.004649
 ---------------------------------------------------------------------------------------
 Multiple radial locations -> rho_S = [0.2,0.4,0.6,0.8], eTe = 1, ene = 1, bounce_mode = 1
 ---------------------------------------------------------------------------------------
-ref_mode = 0, norm_ref = 1
-xrho           = 1.413793103448276e-01     3.161904761904763e-01     5.099009900990099e-01     7.070921985815601e-01     9.055248618784534e-01
-xepsi_fsav     = 0.01                      0.01                      0.01                      0.01                      0.01
-xj_fsav        = 3.060918476182590e-02     1.445437939029076e-02     5.423154896571431e-03     1.250007110858986e-03     5.236377944389226e-05
-xepsi_Bmin     = 8.674727261278528e-03     7.211141705473355e-03     5.702543835996841e-03     4.151765338175795e-03     2.251651541069221e-03
-xj_Bmin        = 2.655203971187823e-02     1.042142642444012e-02     3.090962671921282e-03     5.180914199623696e-04     1.167690862408914e-05
-xsineo_fsav    = 3.060918476182589e+00     1.445437939029076e+00     5.423154896571432e-01     1.250007110858986e-01     5.236377944389226e-03
-xsineo_Bmin    = 3.060850089247053e+00     1.445183973645964e+00     5.420322510122295e-01     1.247882232645665e-01     5.185930598543783e-03
-xsigsp*        = 7.523900000000000e+00     6.621672013259301e+00     4.936867606598540e+00     2.741946064139944e+00     5.922603498542277e-01
-xsineo/xsigsp* = 0.406                     0.218                     0.1098                    0.0455                    0.008756
-[coppi-sigmar] = 0.401                     0.204                     0.09197                   0.03201                   0.004649
+ref_mode = 0, norm_ref = 1 (drop_tol = 1e-4)
+xrho           = 0.14142     0.31623     0.5099        0.70711     0.90554
+xepsi_fsav     = 0.01        0.01        0.01          0.01        0.01
+xj_fsav        = 0.030226    0.014436    0.0052594     0.0012145   4.5958e-05
+xepsi_Bmin     = 0.008673    0.0072078   0.0056976     0.0041426   0.0022299
+xj_Bmin        = 0.026215    0.010405    0.0029966     0.00050312  1.0235e-05
+xsineo_fsav    = 3.0226      1.4436      0.52594       0.12145     4.5958e-03
+xsineo_Bmin    = 3.0226      1.4436      0.52594       0.12145     4.5876e-03
+xsigsp*        = 7.4356      6.544       4.8789        2.7098      0.58531
+xsineo/xsigsp* = 0.406       0.221       0.1078        0.0448      0.0078519
+[coppi-sigmar] = 0.401       0.204       0.09197       0.03201     0.004649
 Here xsigsp* = xsigsp*((xbetath/betath_ref).*(xne/ne_ref)) is order to correct from temperature dependence. Correct conductivity reduction is found.
+---------------------------------------------------------------------------------------
+Multiple radial locations -> rho_S = [0.2,0.4,0.6,0.8], eTe = 1, ene = 1, bounce_mode = 1
+---------------------------------------------------------------------------------------
+ref_mode = 0, norm_ref = 1 (drop_tol = 1e-4 et E/ED = -0.01)
+xrho           = 0.14142     0.31623     0.5099        0.70711        0.90554
+xepsi_fsav     = -0.01       -0.01       -0.01         -0.01         -0.01
+xj_Bmin        = -0.026215   -0.010405  -0.0029966     -0.00050312   -1.0235e-05
+---------------------------------------------------------------------------------------
+Multiple radial locations -> rho_S = [0.2,0.4,0.6,0.8], eTe = 1, ene = 1, bounce_mode = 1
+---------------------------------------------------------------------------------------
+ref_mode = 0, norm_ref = 1 (drop_tol = 1e-4 et E/ED = -0.01 et equilibre numérique)
+xrho           = 0.14142     0.31623     0.5099        0.70711        0.90554
+xepsi_fsav     = -0.01       -0.01       -0.01         -0.01         -0.01
+xj_Bmin        = -0.026642   -0.010405  -0.0031127     -0.00050313   -1.0237e-05
 
+************************************************************************************************************************************************************
 ******************************************************************* Run-away rate **************************************************************************
-
+************************************************************************************************************************************************************
+with norm_mode_f = 1 and boundary_mode_f=1. (if norm_mode_f = 0, the density decreases, but normalized to the density, the result is the same)
 One radial location -> rho_S = [0.4], eTe = 0, eTe = 0;ref_mode = 0, norm_ref = 1, bounce_mode = 0
 ---------------------------------------------------------------------------------------
-Z = 1, no imp, (H), RR_ref_fsav = 0.00027949 [Kruskal-Bernstein=0.00026716,Kulsrud et al=3.177e-4] (central norm., Maxwellian, E/ED = 0.08, rho = 0.4, np=79, nmhu=104, pnmax_S = 15)
-Z = 2, RR_ref_fsav = 0.00015806 [Kulsrud et al=1.735e-4] (central norm., Maxwellian, E/ED = 0.08, rho = 0.4, np=79, nmhu=104, pnmax_S = 15)
-Z = 3, RR_ref_fsav = 9.6845e-05 [Kulsrud et al=1.047e-4] (central norm., Maxwellian, E/ED = 0.08, rho = 0.4, np=79, nmhu=104, pnmax_S = 15)
-Z = 10, RR_ref_fsav = 8.7538e-06 [Kulsrud et al=9e-6] (central norm., Maxwellian, E/ED = 0.08, rho = 0.4, np=79, nmhu=104, pnmax_S = 15)
+Z = 1, no imp, (H), RR_ref_fsav = 0.00028618 [Kruskal-Bernstein=0.00026716,Kulsrud et al=3.177e-4] (central norm., Maxwellian, E/ED = 0.08, rho = 0.4, np=88, nmhu=120, pnmax_S = 15)
+Z = 1, no imp, (H), RR_ref_fsav = 0.00028487 [Kruskal-Bernstein=0.00026716,Kulsrud et al=3.177e-4] (central norm., Maxwellian, E/ED = 0.08, rho = 0.4, np=125, nmhu=120, pnmax_S = 15)
+Z = 1, no imp, (H), RR_ref_fsav = 0.00028426 [Kruskal-Bernstein=0.00026716,Kulsrud et al=3.177e-4] (central norm., Maxwellian, E/ED = 0.08, rho = 0.4, np=165, nmhu=120, pnmax_S = 15)
+Z = 2, RR_ref_fsav = 0.00015904 [Kulsrud et al=1.735e-4] (central norm., Maxwellian, E/ED = 0.08, rho = 0.4, np=125, nmhu=120, pnmax_S = 15)
+Z = 3, RR_ref_fsav = 9.6565e-05 [Kulsrud et al=1.047e-4] (central norm., Maxwellian, E/ED = 0.08, rho = 0.4, np=125, nmhu=120, pnmax_S = 15)
+Z = 10, RR_ref_fsav = 8.1878e-06 [Kulsrud et al=9e-6] (central norm., Maxwellian, E/ED = 0.08, rho = 0.4, np=125, nmhu=120, pnmax_S = 15)
 ---------------------------------------------------------------------------------------
 Multiple radial locations -> rho_S = [0.2,0.4,0.6,0.8], eTe = 1,ene = 1, bounce_mode = 0
 ---------------------------------------------------------------------------------------
-Z = 1, no imp, (H), (central norm., linearized, E/ED = 0.01, np=109, nmhu=158, pnmax_S = 15)
-by definition, xsigsp = sigma_spitzer = Zcurr_ref{1,1}./((xbetath/betath_ref).*(xne/ne_ref))./xepsi_ref must be independent of the plasma radius
+Z = 1, no imp, (H), (central norm., Maxwellian, E/ED = 0.08, np=125, nmhu=168, pnmax_S = 15)
 ---------------------------------------------------------------------------------------
 ref_mode = 0, norm_ref = 1
-xrho           = 1.413793103448276e-01     3.161904761904763e-01     5.099009900990099e-01     7.070921985815601e-01     9.055248618784534e-01
-xepsi_ref_fsav = 8.000000000000000e-02     8.000000000000000e-02     8.000000000000000e-02     8.000000000000000e-02     8.000000000000000e-02
-xRR_KB_fsav    = 2.671570466223034e-04     2.671570466223034e-04     2.671570466223034e-04     2.671570466223034e-04     2.671570466223034e-04
-xRR_fsav       = 2.750532463130379e-04     2.629657335862499e-04     2.376778494241222e-04     1.921292138141247e-04     1.054416223828635e-04
-xRR_fsav*      = 2.750532463130379e-04     2.752391160413997e-04     2.762820869242267e-04     2.755860460791563e-04     2.618333636572724e-04
-by definition, xRR_ref_fsav* = XxRR_ref_fsav(np-1,:)./(xnhu/nhu_ref)./(xne/ne_ref)
-the local Kruskal-Berstein level is well recovered.
+xrho           = 0.14142        0.31623        0.5099         0.70711        0.90554
+xepsi_fsav     = 0.08           0.08           0.08           0.08           0.08
+xRR_KB_fsav    = 0.00026716     0.00026716     0.00026716     0.00026716     0.00026716
+xRR_fsav       = 0.00028465     0.00027223     0.0002458      0.0002002      0.00011576
+xRR_fsav*      = 0.00028465     0.00028494     0.0002857      0.00028717     0.00028748
+by definition, xRR_fsav* = xRR_fsav./(xnhu/nhu_ref)./(xne/ne_ref) and the local Kruskal-Berstein level is well recovered.
 ---------------------------------------------------------------------------------------
 ref_mode = 0, norm_ref = 0
-xrho           = 1.413793103448276e-01     3.161904761904763e-01     5.099009900990099e-01     7.070921985815601e-01     9.055248618784534e-01
-xepsi_ref_fsav = 8.000000000000000e-02     8.000000000000000e-02     8.000000000000000e-02     8.000000000000000e-02     8.000000000000000e-02
-xRR_KB_fsav    = 2.671570466223034e-04     2.629250728660722e-04     2.533637005048352e-04     2.349041925837223e-04     1.910199987737158e-04
-xRR_fsav       = 2.750532363467833e-04     2.587541098375563e-04     2.251636327512738e-04     1.694032919745622e-04     7.501768879178331e-05
-xRR_fsav*      = 2.750532363467833e-04     2.708309234534129e-04     2.617352795251625e-04     2.429884685481928e-04     1.862844420093004e-04
-by definition, xRR_ref_fsav* = XxRR_ref_fsav(np-1,:)./(xnhu/nhu_ref)./(xne/ne_ref)
-the local Kruskal-Berstein level is well recovered.
+xrho           = 0.14142     0.31623           0.5099         0.70711        0.90554
+xepsi_fsav     = 0.08        0.08              0.08           0.08           0.08
+xRR_KB_fsav    = 0.00026716  0.00026292        0.00025335     0.00023486     0.00019093
+xRR_fsav       = 0.00028465  0.00026803        0.0002331      0.00017623     0.000084205
+xRR_fsav*      = 0.00028465  0.00028055        0.00027095     0.00025279     0.000209118
+by definition, xRR_fsav* = xRR_fsav./(xnhu/nhu_ref)./(xne/ne_ref) and the local Kruskal-Berstein level is well recovered.
 ---------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------
-One radial location -> eTe = 0, eTe = 0, ref_mode = 1, norm_ref = 1, bounce_mode = 1
+One radial location -> eTe = 0, eTe = 0, ref_mode = 1, norm_ref = 1, bounce_mode = 1 (drop tolerance = 1e-4)
 ---------------------------------------------------------------------------------------
-Z = 1, no imp, (H), xRR_fsav = 0.00018967 (local norm., linearized, E/ED_fsav = 0.08,xRR_fsav (no bounce) = 0.0002661, rho = 0.01, np=109, nmhu=116, pnmax_S = 15)
-xRR_fsav/xRR_fsav(no bounce) = 0.00018967/0.0002661 = 0.7127 [Eriksson-Helander = 0.858]
-Z = 1, no imp, (H), xRR_fsav = 0.00010391  (local norm., linearized, E/ED_fsav = 0.08,xRR_fsav (no bounce) = 0.00028128 , rho = 0.1, np=109, nmhu=116, pnmax_S = 15)
-xRR_fsav/xRR_fsav(no bounce) =  0.00010391/0.00028128 = 0.369 [Eriksson-Helander = 0.552]
-Z = 1, no imp, (H), xRR_fsav =  (local norm., linearized, E/ED_fsav = 0.08,xRR_fsav= , rho = 0.2, np=109, nmhu=116, pnmax_S = 15)
-xRR_fsav/xRR_fsav(no bounce) =  [Eriksson-Helander =]
-Z = 1, no imp, (H), xRR_fsav =  (local norm., linearized, E/ED_fsav = 0.08,xRR_fsav= , rho = 0.3, np=109, nmhu=116, pnmax_S = 15)
-xRR_fsav/xRR_fsav(no bounce) =  [Eriksson-Helander =]
-Z = 1, no imp, (H), xRR_fsav =  (local norm., linearized, E/ED_fsav = 0.08,xRR_fsav= , rho = 0.4, np=109, nmhu=116, pnmax_S = 15)
-xRR_fsav/xRR_fsav(no bounce) =  [Eriksson-Helander =]
-Z = 1, no imp, (H), xRR_fsav =  (local norm., linearized, E/ED_fsav = 0.08,xRR_fsav= , rho = 0.5, np=109, nmhu=116, pnmax_S = 15)
-xRR_fsav/xRR_fsav(no bounce) =  [Eriksson-Helander =]
-[Eriksson-Helander = 1-sqrt(2*r/R)]
+Z = 1, no imp, (H), xRR_fsav = 0.00021418 (local norm., Maxwellian, E/ED_fsav = 0.08, xRR_fsav (no bounce) = 0.00028454, rho = 0.031848, np=125, nmhu=120, pnmax_S = 15)
+xRR_fsav/xRR_fsav(no bounce) = 0.00021418/0.00028454 = 0.7527 [Eriksson-Helander = 07476]
+Z = 1, no imp, (H), xRR_fsav = 0.00019165  (local norm., lMaxwellian, E/ED_fsav = 0.08,xRR_fsav (no bounce) = 0.00028454 , rho = 0.05, np=125, nmhu=120, pnmax_S = 15)
+xRR_fsav/xRR_fsav(no bounce) =  0.00019165/0.00028454 = 0.6735 [Eriksson-Helander = 0.6838]
+Z = 1, no imp, (H), xRR_fsav =  0.00014337 (local norm., Maxwellian, E/ED_fsav = 0.08,xRR_fsav = 0.00028454, rho = 0.1, np=125, nmhu=120, pnmax_S = 15)
+xRR_fsav/xRR_fsav(no bounce) =  0.00014337/0.00028454 = 0.5038 [Eriksson-Helander = 0.5527]
+Z = 1, no imp, (H), xRR_fsav =  7.3178e-06 (local norm., Maxwellian, E/ED_fsav = 0.08,xRR_fsav = 0.00028454, rho = 0.5, np=125, nmhu=120, pnmax_S = 15)
+xRR_fsav/xRR_fsav(no bounce) =  7.3178e-06/0.00028454 = 0.0257 [Eriksson-Helander = 0]
+Z = 1, no imp, (H), xRR_fsav =  3.9169e-13 (local norm., Maxwellian, E/ED_fsav = 0.08,xRR_fsav = 0.00028454, rho = 0.95, np=125, nmhu=120, pnmax_S = 15)
+xRR_fsav/xRR_fsav(no bounce) =  3.9169e-13//0.00028454 = 1.37e-9 [Eriksson-Helander  = NaN]
+
+[Eriksson-Helander heuristic formula = 1-sqrt(2*r/R)]
+---------------------------------------------------------------------------------------
+One radial location -> eTe = 1, eTe = 1, ref_mode = 1, norm_ref = 1, bounce_mode = 1
+---------------------------------------------------------------------------------------
+Z = 1, no imp, (H), xRR_fsav = 0.00011278 (local norm., linearized, E/ED_fsav = 0.08,xRR_fsav (no bounce) = 0.00028462, rho = 0.14142, np=125, nmhu=120, pnmax_S = 15)
+xRR_fsav/xRR_fsav(no bounce) = 0.00011278/0.00028462 = 0.396 [Eriksson-Helander = 0.468]
+Z = 1, no imp, (H), xRR_fsav = 3.5426e-05  (local norm., linearized, E/ED_fsav = 0.08,xRR_fsav (no bounce) = 0.00028476 , rho = 0.31623, np=125, nmhu=120, pnmax_S = 15)
+xRR_fsav/xRR_fsav(no bounce) =  3.5426e-05/0.00028476 = 0.124 [Eriksson-Helander = 0.2047]
+Z = 1, no imp, (H), xRR_fsav = 6.6112e-06  (local norm., linearized, E/ED_fsav = 0.08,xRR_fsav (no bounce) = 0.00028505 , rho = 0.5099, np=125, nmhu=120, pnmax_S = 15)
+xRR_fsav/xRR_fsav(no bounce) = 6.6112e-06/0.00028505 = 0.0231 [Eriksson-Helander = NaN]
+Z = 1, no imp, (H), xRR_fsav = 3.5951e-07 (local norm., linearized, E/ED_fsav = 0.08,xRR_fsav (no bounce) = 0.00028543, rho = 0.70711, np=125, nmhu=120, pnmax_S = 15)
+xRR_fsav/xRR_fsav(no bounce) = 3.5951e-07/0.00028543 = 1.26e-3 [Eriksson-Helander = NaN]
+Z = 1, no imp, (H), xRR_fsav = 1.1531e-10 (local norm., linearized, E/ED_fsav = 0.08,xRR_fsav (no bounce) = 0.00028589 , rho = 0.90554, np=125, nmhu=120, pnmax_S = 15)
+xRR_fsav/xRR_fsav(no bounce) = 1.1531e-10/0.00028589 = 4.03e-7 [Eriksson-Helander = NaN]
+[Eriksson-Helander heuristic formula = 1-sqrt(2*r/R)]
+---------------------------------------------------------------------------------------
+Multiple radial locations -> rho_S = [0.2,0.4,0.6,0.8], eTe = 1, ene = 1, bounce_mode = 1
+---------------------------------------------------------------------------------------
+ref_mode = 0, norm_ref = 1 (drop_tol = 1e-4 et E/ED = 0.08)
+xrho           = 0.14142     0.31623     0.5099        0.70711        0.90554
+xepsi_fsav     = 0.08        0.08        0.08          0.08           0.08
+xRR_fsav       = 0.0001115   3.4913e-05  5.4775e-06    2.7227e-07     1.0067e-10
+---------------------------------------------------------------------------------------
+Multiple radial locations -> rho_S = [0.2,0.4,0.6,0.8], eTe = 1, ene = 1, bounce_mode = 1
+---------------------------------------------------------------------------------------
+ref_mode = 0, norm_ref = 1 (drop_tol = 1e-4 et E/ED = -0.08)
+xrho           = 0.14142     0.31623     0.5099        0.70711        0.90554
+xepsi_fsav     = -0.08       -0.08       -0.08         -0.08          -0.08
+xRR_fsav       = 0.0001115   3.4913e-05  5.4775e-06    2.7227e-07     1.0067e-10
+---------------------------------------------------------------------------------------
+Multiple radial locations -> rho_S = [0.2,0.4,0.6,0.8], eTe = 1, ene = 1, bounce_mode = 1
+---------------------------------------------------------------------------------------
+ref_mode = 0, norm_ref = 1 (drop_tol = 1e-4 et E/ED = -0.08 et equilibre numérique)
+xrho           = 0.14142     0.31623     0.5099        0.70711        0.90554
+xepsi_fsav     = -0.08       -0.08       -0.08         -0.08          -0.08
+xRR_fsav       = 0.00011401  3.5038e-05  5.977e-06     2.7406e-07     1.022e-10
+************************************************************************************************************************************************************
+******************************************************************* Lower Hybrid Current drive *************************************************************
+************************************************************************************************************************************************************
+
+
+
 

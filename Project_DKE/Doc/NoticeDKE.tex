@@ -37,6 +37,7 @@
 \maketitle
 \tableofcontents
 \listoffigures
+\listoftables
 \printglossary
 
 \chapter{Introduction}
@@ -220,13 +221,13 @@ processes}\label{physproc}
 
     \section{Moments of the Distribution Function}
 
-    \subsection{Flux discretization for moment calculations}
+             \subsection{Flux discretization for moment calculations}
 
-        \input{DiscreteFluxes.tex}
+                     \input{DiscreteFluxes.tex}
 
-    \subsection{Numerical integrals for moment calculations}
+              \subsection{Numerical integrals for moment calculations}
 
-        \input{DiscreteMoments.tex}
+                     \input{DiscreteMoments.tex}
 
 \chapter{Algorithm}
 
@@ -275,12 +276,19 @@ processes}\label{physproc}
     \section{Ohmic conductivity}
 
             \input{conductivity.tex}
+	    
+    \section{Runaway losses}
+
+            %\input{runaway.tex}
 
     \section{Lower Hybrid Current drive}
 
-
+           %\input{lhcd.tex}
+    
     \section{Electron Cyclotron Current drive}
-
+            
+            %\input{eccd.tex}
+    
 \chapter{Conclusion}
 
      \input{Conclusion.tex}
@@ -303,11 +311,11 @@ processes}\label{physproc}
 
     \input{EffTrappedFrac.tex}
 
-\chapter{Cold Plasma Model for RF Waves}\label{cold}
+\chapter{Cold Plasma Model for RF Waves}
 
     \input{RFappendix.tex}
     
-\chapter{MatLab File List}\label{cold}
+\chapter{MatLab File List}
 
      \input{listfiles.tex}
 

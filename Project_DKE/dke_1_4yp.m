@@ -1222,7 +1222,7 @@ for ir = 1:nr,
 	elseif bounce_mode == 1,
 	   xepsi(ir) = xepsi_fsav(ir)*(xqbar(ir)/xqtilde(ir))*(xB0(ir)/xBT0(ir))*(xR0(ir)/Rp)/XXlambda_b_p1m3p4(1,1,ir);%Value at Bmin for FP or DKE calculations
 	end
-	if xepsi(ir) > 0.05, 
+	if xepsi(ir) > 0.1, 
 		error('Ohmic electric field too large');%To be consistent with the assumption of the linearized Fokker-Planck equation
 	end	
 %	

@@ -14,8 +14,8 @@ blist_lh = [3]; %Index of selected scenarios for the LH wave. [1,n_scenario_lh]
 % Choose (vparmin_lh,vparmax_lh) or (nparmin_lh,nparmax_lh) for square n// LH wave power spectrum,
 % or (npar_lh,dnpar_lh) for Gaussian shape
 %
-yvparmin_lh = [3,4,3.5];%LH wave square N// Spectrum: Lower limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
-yvparmax_lh = [5,7,5];%LH wave square N// Spectrum: Upper limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
+yvparmin_lh = [3,4,3];%LH wave square N// Spectrum: Lower limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
+yvparmax_lh = [5,7,6];%LH wave square N// Spectrum: Upper limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
 ynparmin_lh = [NaN,NaN,NaN];%LH wave square N// Spectrum: Lower limit [1,n_scenario_lh]
 ynparmax_lh = [NaN,NaN,NaN];%LH wave square N// Spectrum: Upper limit [1,n_scenario_lh]
 ynpar_lh = [NaN,NaN,NaN];%LH wave Gaussian N// Spectrum: peak [1,n_scenario_lh]
