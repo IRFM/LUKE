@@ -29,6 +29,10 @@ function [xyvray,xyfinc,xyprop,yb] = propagation_jd(vsrays,xpsin,xdpsin,xpsin_S,
 if nargin < 9
     method = 'spline';%interpolation technique in psi
 end
+if length(xpsin) == 1,
+    xpsin_S = [0,1];
+    xdpsin = 1;
+end
 %
 nb_rf = length(vsrays);
 %
