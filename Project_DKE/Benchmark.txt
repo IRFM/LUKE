@@ -11,6 +11,9 @@ ne0 = 1.0e+19;nea = 0*ne0;ene = 0;ene_ref = 0;
 Ti0 = 0.0;Tia = 0;eTi = 0;
 Zeff0 = 1;Zeffa = 1;eZeff = 0;
 
+
+********************************************************** Neoclassic and Spitzer conductivity *************************************************************
+
 One radial location -> rho_S = [0.4];eTe = 0, eTe = 0;ref_mode = 1, norm_ref = 0, bounce_mode = 0
 ---------------------------------------------------------------------------------------
 Z = 1, no imp, (H), sigma_spitzer = 7.5754 [Karney=7.429] (local norm., linearized, E/ED = 0.01, rho = 0.4, np=79, nmhu=104, pnmax_S = 15)
@@ -31,7 +34,7 @@ Z = 1, Zimp = 10, Zeff = 10, sigma_spitzer = 1.1354 [Karney=1.133] (local norm.,
 ---------------------------------------------------------------------------------------
 Multiple radial locations -> rho_S = [0.2,0.4,0.6,0.8], eTe = 1,ene = 1, bounce_mode = 0
 ---------------------------------------------------------------------------------------
-Z = 1, no imp, (H), sigma_spitzer = 7.5239 (central norm., linearized, E/ED = 0.01, rho = 0.4, np=109, nmhu=158, pnmax_S = 15)
+Z = 1, no imp, (H), sigma_spitzer = 7.5239 (central norm., linearized, E/ED = 0.01, np=109, nmhu=158, pnmax_S = 15)
 by definition, xsigsp = sigma_spitzer = Zcurr_ref{1,1}./((xbetath/betath_ref).*(xne/ne_ref))./xepsi_ref must be independent of the plasma radius
 ---------------------------------------------------------------------------------------
 ref_mode = 0, norm_ref = 1
@@ -46,11 +49,48 @@ xepsi_ref = 1.000000000000000e-02     9.969670134009510e-03     9.89995360526943
 xsigsp    = 7.524171419173914e+00     7.529327827873931e+00     7.542147965343560e+00     7.572497577913010e+00     7.692697985297981e+00
 ---------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------
-One radial location -> eTe = 0;eTe = 0, ref_mode = 1, norm_ref = 1, bounce_mode = 1
+One radial location -> eTe = 0, eTe = 0, ref_mode = 1, norm_ref = 1, bounce_mode = 1
 ---------------------------------------------------------------------------------------
-Z = 1, no imp, (H), sigma_neo = 6.1427 (local norm., linearized, E/ED_Bmin = 0.01, rho = 0.01, np=109, nmhu=114, pnmax_S = 15)
-sigma_neo_Bmin/sigma_spitzer = 6.1427/7.5239 = 0.816 [Coppi-Sigmar=0.815]
-Z = 1, no imp, (H), sigma_neo = 3.627 (local norm., linearized, E/ED_Bmin = 0.01, rho = 0.1, np=109, nmhu=116, pnmax_S = 15)
-sigma_neo_Bmin/sigma_spitzer = 3.627/7.5239 = 0.482 [Coppi-Sigmar=0.478]
+Z = 1, no imp, (H), sigma_neo = 6.1428 (local norm., linearized, E/ED_fsav = 0.01,j_fsav= 0.061428, <E/ED_Bmin = 0.0099006, j_Bmin = 0.060817> rho = 0.01, np=109, nmhu=116, pnmax_S = 15)
+sigma_neo_Bmin/sigma_spitzer = 6.1428/7.5239 = 0.816 [Coppi-Sigmar=0.814]
+Z = 1, no imp, (H), sigma_neo = 4.6175 (local norm., linearized, E/ED_fsav = 0.01,j_fsav= 0.046175, <E/ED_Bmin = 0.0095124, j_Bmin = 0.043923> rho = 0.05, np=109, nmhu=116, pnmax_S = 15)
+sigma_neo_Bmin/sigma_spitzer = 4.6175/7.5239 = 0.613 [Coppi-Sigmar=0.611]
+Z = 1, no imp, (H), sigma_neo = 3.628 (local norm., linearized, E/ED_fsav = 0.01,j_fsav= 0.03628, <E/ED_Bmin = 0.0090463, j_Bmin = 0.03282> rho = 0.1, np=109, nmhu=116, pnmax_S = 15)
+sigma_neo_Bmin/sigma_spitzer = 3.628/7.5239 = 0.482 [Coppi-Sigmar=0.478]
+Z = 1, no imp, (H), sigma_neo = 0.76643 (local norm., linearized, E/ED_fsav = 0.01,j_fsav= 0.0076643, <E/ED_Bmin = 0.005548, j_Bmin = 0.0042497> rho = 0.53, np=109, nmhu=116, pnmax_S = 15)
+sigma_neo_Bmin/sigma_spitzer = 0.76643/7.5239 = 0.101 [Coppi-Sigmar=0.0838] [CQL3D = 0.1]
+Z = 1, no imp, (H), sigma_neo = 0.0239 (local norm., linearized, E/ED_fsav = 0.01,j_fsav= 0.00023925, <E/ED_Bmin = 0.0016286, j_Bmin = 3.8439e-05> rho = 0.95, np=109, nmhu=110, pnmax_S = 15)
+sigma_neo_Bmin/sigma_spitzer = 0.0239/7.5239 = 3.14e-3 [Coppi-Sigmar=0.00187] [CQL3D = 0.00312]
+---------------------------------------------------------------------------------------
+Multiple radial locations -> rho_S = [0.2,0.4,0.6,0.8], eTe = 0, ene = 0, bounce_mode = 1
+---------------------------------------------------------------------------------------
+Z = 1, no imp, (H), sigma_spitzer = 7.5239 (central norm., linearized, E/ED = 0.01, np=109, nmhu=158, pnmax_S = 15)
+ref_mode = 0, norm_ref = 1
+xrho           = 1.413793103448276e-01     3.161904761904763e-01     5.099009900990099e-01     7.070921985815601e-01     9.055248618784534e-01
+xepsi_fsav     = 0.01                      0.01                      0.01                      0.01                      0.01
+xj_fsav        = 0.030609                  0.016427                  0.0082761                 0.0034468                 0.00067847
+xepsi_Bmin     = 0.0086747                 0.0072111                 0.0057025                 0.004151                  0.0022517
+xj_Bmin        = 0.026552                  0.011844                  0.004717                  0.0014286                 0.0001513
+xsineo_fsav    = 3.0609                    1.6427                    0.82761                   0.34468                   0.067847
+xsineo_Bmin    = 3.0608                    1.6425                    0.82718                   0.34416                   0.067193
+xsineo/xsigsp  = 0.406                     0.218                     0.1099                    0.0458                    0.009017
+[coppi-sigmar] = 0.401                     0.204                     0.09197                   0.03201                   0.004649
+---------------------------------------------------------------------------------------
+Multiple radial locations -> rho_S = [0.2,0.4,0.6,0.8], eTe = 1, ene = 1, bounce_mode = 1
+---------------------------------------------------------------------------------------
+ref_mode = 0, norm_ref = 1
+xrho           = 1.413793103448276e-01     3.161904761904763e-01     5.099009900990099e-01     7.070921985815601e-01     9.055248618784534e-01
+xepsi_fsav     = 0.01                      0.01                      0.01                      0.01                      0.01
+xj_fsav        = 3.060918476182590e-02     1.445437939029076e-02     5.423154896571431e-03     1.250007110858986e-03     5.236377944389226e-05
+xepsi_Bmin     = 8.674727261278528e-03     7.211141705473355e-03     5.702543835996841e-03     4.151765338175795e-03     2.251651541069221e-03
+xj_Bmin        = 2.655203971187823e-02     1.042142642444012e-02     3.090962671921282e-03     5.180914199623696e-04     1.167690862408914e-05
+xsineo_fsav    = 3.060918476182589e+00     1.445437939029076e+00     5.423154896571432e-01     1.250007110858986e-01     5.236377944389226e-03
+xsineo_Bmin    = 3.060850089247053e+00     1.445183973645964e+00     5.420322510122295e-01     1.247882232645665e-01     5.185930598543783e-03
+xsigsp*        = 7.523900000000000e+00     6.621672013259301e+00     4.936867606598540e+00     2.741946064139944e+00     5.922603498542277e-01
+xsineo/xsigsp* = 0.406                     0.218                     0.1098                    0.0455                    0.008756
+[coppi-sigmar] = 0.401                     0.204                     0.09197                   0.03201                   0.004649
+Here xsigsp* = xsigsp*((xbetath/betath_ref).*(xne/ne_ref)) is order to correct from temperature dependence. Correct conductivity reduction is found.
+
+******************************************************************* Run-away rate **************************************************************************
 
 
