@@ -52,11 +52,15 @@ if bounce_mode == 0 %
     xywce_out = xywce0.*xypsib;
     xyrpsi = ones(nr,nb);
 else
-    xywce_out = xywce0;
+   xywce_out = xywce0;
     xyrpsi = xypsib./xypsic;
 end
 %
-xyKperp = 1 + xywpe.^2./xywce.^2 - squeeze(sum(zxywpi.^2))./xyomega_rf.^2;
+if nb > 1,
+	xyKperp = 1 + xywpe.^2./xywce.^2 - squeeze(sum(zxywpi.^2))./xyomega_rf.^2;
+else
+	xyKperp = 1 + xywpe.^2./xywce.^2 - sum(zxywpi.^2)'./xyomega_rf.^2;%For the matrix to be well oriented when a single ray is chosen
+end
 xyKpar = - xywpe.^2./xyomega_rf.^2; 
 xyNperpLH = sqrt(-xyKpar./xyKperp).*xyNpar_disp;
 %

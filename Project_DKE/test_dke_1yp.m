@@ -291,7 +291,7 @@ xnhuloss_ref = nhuloss*xrnhuth;
 %
 %   RF wave quasilinear diffusion
 %
-waveparam = rfwave_dke_jd(tokname,xrho',betath_ref,ne_ref,xrbetath',xrnhuth',xTe_norm,xne_norm,xzni_norm,Zi',mi',Bt,xq,Rp,ap,bounce_mode);%Look at the function for the RF wave input parameters
+waveparam = rfwave_dke_jd(tokname,xrho',betath_ref,ne_ref,xrbetath',xrnhuth',xTe_norm,xne_norm',xzni_norm,Zi',mi',Bt,xq',Rp,ap,bounce_mode);%Look at the function for the RF wave input parameters
 nb = size(waveparam,2);
 blist_lh = find(waveparam(1,:,1)==0);
 nb_lh = length(blist_lh);

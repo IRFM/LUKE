@@ -286,7 +286,7 @@ xythetab = [xythetab_lh(:,blist_lh),xythetab_ec(:,blist_ec)];
 xywce0 = repmat(xwce0,[1,nb_test]);
 xyia = repmat(xia,[1,nb_test]);
 %
-if bounce_mode == 0,
+if bounce_mode == 0,	
     xypsib = (1 + xyia)./(1 + xyia.*cos(xythetab));
     xywce_out = xywce0.*xypsib;
 else
@@ -342,7 +342,7 @@ xywidth_lhc = ones(nr,1)*ywidth_lhc;%Radial width of the LH quasi-linear diffusi
 %
 xyrho_lhc = repmat(xrho,[1,ns_lhc]);
 mask_p0_lhc = (xyP0_lhc_prof == 1);
-xyPinc_lhc_gauss = xyPinc_lhc.*exp(-(xyrho_lhc - xypeak_lhc).^2./(xywidth_lhc/2/sqrt(log(2)))^2);
+xyPinc_lhc_gauss = xyPinc_lhc.*exp(-(xyrho_lhc - xypeak_lhc).^2./(xywidth_lhc/2/sqrt(log(2))).^2);
 %
 xyPinc_lhc(mask_p0_lhc) = xyPinc_lhc_gauss(mask_p0_lhc);
 %
