@@ -710,7 +710,7 @@ xymask = (xyPinc_in == 0);
 xyPinc_in(xymask) = eps; %to avoid singularities
 xyPinc_mod = xyPinc_in;
 %
-if length(waveparam) > 0, xyD0_rf_in = waveparam(:,:,5);end  %initial value of the constant diffusion coefficient
+if length(waveparam) > 0, xyD0_rf_in = waveparam(:,:,4);end  %initial value of the constant diffusion coefficient
 P_ref = me*(clum*betath_ref)^2*nhu_ref*ne_ref; %power normalization constant
 %
 %xymask_prop_dke = (xyprop_dke ~= 0);
@@ -721,7 +721,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
 %    
 % The diffusion coefficient is proportional to the incident power
 %
-    if length(waveparam) > 0, waveparam(:,:,5) = xyD0_rf_in.*xyPinc_mod./xyPinc_in;end 
+    if length(waveparam) > 0, waveparam(:,:,4) = xyD0_rf_in.*xyPinc_mod./xyPinc_in;end 
 %    
     [XXheaviside,...
         XXf0_ref,XXf0_tp_ref,XXf0_g_ref,XXf0_L_tp_ref,XXf0_L_g_ref,...
@@ -778,12 +778,12 @@ end
 %For displaying RF quasilinear domain only
 %
 if nb_ec > 0,
-    xDperp_cy_ref = waveparam_ec(:,1,5);
+    xDperp_cy_ref = waveparam_ec(:,1,4);
 end
 if nb_lh > 0,
-    xD0_lh_ref = waveparam_lh(:,1,5);
-    xvparmin_lh_ref = 1./waveparam_lh(:,1,7)/betath_ref;
-    xvparmax_lh_ref = 1./waveparam_lh(:,1,6)/betath_ref;
+    xD0_lh_ref = waveparam_lh(:,1,4);
+    xvparmin_lh_ref = 1./waveparam_lh(:,1,6)/betath_ref;
+    xvparmax_lh_ref = 1./waveparam_lh(:,1,5)/betath_ref;
 end
 %
 time_out = etime(clock,time0);
