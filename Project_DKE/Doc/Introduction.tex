@@ -1,142 +1,141 @@
-
-The determination of the electron distribution function has a crucial
-importance in the tokamak plasma physics, since the toroidal current density
-profile that is mainly driven by electrons is intimately linked to the
-magnetic equilibrium and confinement performances. Therefore, accurate and
-realistic calculations must be carried out, with the additional requirement
-of an optimized numerical approach, in order to reduce as much as possible
-both memory storage and computer time consumption. The latter is especially
-important, since kinetic calculations must be incorporated in a chain of
-codes for self-consistent determination of all plasma properties.
+The determination of the electron distribution function has a
+crucial importance in the tokamak plasma physics, since the
+toroidal current density profile that is mainly driven by
+electrons is intimately linked to the magnetic equilibrium and
+confinement performances. Therefore, accurate and realistic
+calculations must be carried out, with the additional requirement
+of an optimized numerical approach, in order to reduce as much as
+possible both memory storage and computer time consumption. The
+latter is especially important, since kinetic calculations must be
+incorporated in a chain of codes for self-consistent determination
+of all plasma properties.
 
 In this documentation, an extensive presentation of the fast solver for the
-linearized eelctron drift kinetic is presented. This is a completely new
-tool, that is designed for realistic calculations of the electron
-distribution function in the plasma region where the weak collision banana
-regime holds. It incorporates the major physical ingredients that must be
-taken into account for describing the corresponding physics in a fusion
-reactor, namely relativistic corrections, trapped particle effects,
-arbitrary magnetic equilibrium for high $\beta _{p}$ regimes. For this
-purpose, both zero and first order kinetic equations with respect to the
-small drift approximation are solved, which allows to determine
-self-consistently boostrap current with any type of external current source
-(RF, Ohmic,...) at any point of the momentum space, and not only at the
-trapped-passing boundary. Basically, the code gives access to the
-neoclassical physics dominated by collisions between charged particles, for
-non-Maxwellian electron distribution functions. Therefore, it is
-particularly well suited for accurate current drive estimates in advanced
-tokamak regimes, where locally, bootstrap current may strongly interplay
-with external current sources.
+linearized eelctron drift kinetic is presented. This is a completely new tool,
+that is designed for realistic calculations of the electron distribution
+function in the plasma region where the weak collision banana regime holds. It
+incorporates the major physical ingredients that must be taken into account
+for describing the corresponding physics in a fusion reactor, namely
+relativistic corrections, trapped particle effects, arbitrary magnetic
+equilibrium for high $\beta_{p}$ regimes. For this purpose, both zero and
+first order kinetic equations with respect to the small drift approximation
+are solved, which allows to determine self-consistently boostrap current with
+any type of external current source (RF, Ohmic,...) at any point of the
+momentum space, and not only at the trapped-passing boundary. Basically, the
+code gives access to the neoclassical physics dominated by collisions between
+charged particles, for non-Maxwellian electron distribution functions.
+Therefore, it is particularly well suited for accurate current drive estimates
+in advanced tokamak regimes, where locally, bootstrap current may strongly
+interplay with external current sources.
 
 Besides these physical properties, the code offer also the possibility to
-incorporate any type of fast electron radial transport (collision,
-turbulence or wave induced), which may be a key ingredient for the local
-control of plasma properties. Written in a fully conservative form, the code
-naturally conserve the electron density, but also momentum for the current
-drive problem, keeping first order term of the Legendre polynomial expansion
-of the Beliaev-Budker collision operator. As usual, several useful moments
-of the electron distribution function are calculated, namely the current
-density, the absorbed power, the fraction of trapped electrons and the
+incorporate any type of fast electron radial transport (collision, turbulence
+or wave induced), which may be a key ingredient for the local control of
+plasma properties. Written in a fully conservative form, the code naturally
+conserve the electron density, but also momentum for the current drive
+problem, keeping first order term of the Legendre polynomial expansion of the
+Beliaev-Budker collision operator \cite{bra89}. As usual, several useful
+moments of the electron distribution function are calculated, namely the
+current density, the absorbed power, the fraction of trapped electrons and the
 bremsstrahlung emission.
 
 Advanced numerical techniques have been used, so that memory storage
-requirement can be strongly reduced, while keeping fast convergence rate.
-For this purpose the electron drift kinetic equation is solved by the
-standard finite difference technique, which has proven so far to be the
-fastest numerical approach among all possible alternative techniques.
-Furthermore, this method is particularly well suited when large
-discontinuities of the diffusion or convection rates have to be considered,
-a case that occurs frequently when kinetic and ray-tracing calculations are
-coupled. 
+requirement can be strongly reduced, while keeping fast convergence rate. For
+this purpose the electron drift kinetic equation is solved by the standard
+finite difference technique, which has proven so far to be the fastest
+numerical approach among all possible alternative techniques. Furthermore,
+this method is particularly well suited when large discontinuities of the
+diffusion or convection rates have to be considered, a case that occurs
+frequently when kinetic and ray-tracing calculations are coupled.
 
 Since in most cases, the steady-state solution is seeked with respect to the
-largest time scale (collision or radial transport), the appropriate
-technique is the well known upwind time differencing, corresponding to the
-fully implicit time scheme, whose characteristic is to be almost
-unconditionaly stable with respect to the time step value. Nevertheless, the
-code offers also the possibility to investigate time dependent problems,
-with the usual Crank-Nicholson time differencing, which enables accurate
-time evolution.
+largest time scale (collision or radial transport), the appropriate technique
+is the well known upwind time differencing, corresponding to the fully
+implicit time scheme, whose characteristic is to be almost unconditionaly
+stable with respect to the time step value. Nevertheless, the code offers also
+the possibility to investigate time dependent problems, with the usual
+Crank-Nicholson time differencing, which enables accurate time evolution.
 
 The bounce-averaged drift kinetic equation is basically a $3-D$ problem, $2-D
 $ in momentum space (slowing down, pitch-angle) et $1-D$ in configuration
 space (radial dimension). Up to now, in order to reduce memory storage
 requirements, the numerical time scheme was based on the operator splitting
 technique, where both momentum and spatial dynamics evolved separately. If
-this approach turns out to be very fruitful, it has the drawback to slow
-down considerably the convergence towards the steady state solution, since
-only small time steps may be used for numericaly stable convergence.
-Therefore, the advantage to use fully implicit time scheme for each space in
-hindered by this strong limitation, especially when radial transport of fast
-electrons must be taken into account. In order to avoid this problem, a
-fully implicit time scheme is considered, where both momentum and spatial
-dynamics are simultaneaously considered, so that no limitation occurs on the
-time step, which may be several order of magnitude larger than the collision
-reference time. However, this method requires a new technique for matrix
-inversion, in order to keep at an acceptable level memory storage. Indeed,
-with usual mesh sizes, the standard $LU$ matrix factorization techniques
-does not hold anymore since matrices requirement may reach several
-giga-bytes. An alternative approach is therefore absolutely necessary.
+this approach turns out to be very fruitful, it has the drawback to slow down
+considerably the convergence towards the steady state solution, since only
+small time steps may be used for numericaly stable convergence. Therefore, the
+advantage to use fully implicit time scheme for each space in hindered by this
+strong limitation, especially when radial transport of fast electrons must be
+taken into account. In order to avoid this problem, a fully implicit time
+scheme is considered, where both momentum and spatial dynamics are
+simultaneaously considered, so that no limitation occurs on the time step,
+which may be several order of magnitude larger than the collision reference
+time. However, this method requires a new technique for matrix inversion, in
+order to keep at an acceptable level memory storage. Indeed, with usual mesh
+sizes, the standard $LU$ matrix factorization techniques does not hold anymore
+since matrices requirement may reach several giga-bytes. An alternative
+approach is therefore absolutely necessary.
 
 This critical point has been fixed by using advanced inversion techniques,
-based on incomplete $LU$ factorization with drop tolerance. Since most of
-the off-diagonal coefficients of the matrices $L$ and $U$ are very small,
-one may take advantage to remove them so that the sparsity of the matrices
-can be greatly enhanced. Memory storage requirements can be therefore
-reduced drastically by one or two orders of magnitude with this pruning
-method, depending upon the initial matrix conditioning, while only keeping
-coefficients that are relevant of the physics problem that is here
-addressed. Furthermore, computer time consumption can be also reduced, since
-the number of non-zero coefficients that has to be handled is considerably
-reduced. This method is similar to the strongly implicit method used for
-factorizing nine diagonal matrices (SIP-9d) (Ref***), except that in this
-case, no restriction takes place regarding the number of diagonals. However,
-to take the full benefit of this approach, the non-zero elements of the
-matrix to be inverted must lie predominantly along diagonals. Therefore, it
-may be applied for solving the zero and first order bounce-averaged
-Fokker-Planck equations, whose structures are quite complex, owing to the
-radial dependence of the internal trapped-passing boundary in momentum
-space, especially when radial transport has to be considered.
+based on incomplete $LU$ factorization with drop tolerance. Since most of the
+off-diagonal coefficients of the matrices $L$ and $U$ are very small, one may
+take advantage to remove them so that the sparsity of the matrices can be
+greatly enhanced. Memory storage requirements can be therefore reduced
+drastically by one or two orders of magnitude with this pruning method,
+depending upon the initial matrix conditioning, while only keeping
+coefficients that are relevant of the physics problem that is here addressed.
+Furthermore, computer time consumption can be also reduced, since the number
+of non-zero coefficients that has to be handled is considerably reduced. This
+method is similar to the strongly implicit method used for factorizing nine
+diagonal matrices (SIP-9d) (Ref***), except that in this case, no restriction
+takes place regarding the number of diagonals. However, to take the full
+benefit of this approach, the non-zero elements of the matrix to be inverted
+must lie predominantly along diagonals. Therefore, it may be applied for
+solving the zero and first order bounce-averaged Fokker-Planck equations,
+whose structures are quite complex, owing to the radial dependence of the
+internal trapped-passing boundary in momentum space, especially when radial
+transport has to be considered.
 
 This approach has been very successfuly implemented for the electron drift
 kinetic problem in tokamaks, using the MatLab\ language, which provides a
 built-in function for incomplete LU factorization with drop tolerance, and
 several very efficient iterative inversion tools, like the biconjugate
-gradients stabilized method for solving the system of linear equations. It
-is important to recall that this method is also available in FORTRAN
-programming language, under the package name SPARSEKIT (Ref***) that has
-also parallel processing capabilities. Moreover, the very compact MatLab
-programming syntax allows to design the code structure in an original way,
-using multidimensional objects that describe simultaneously momentum and
-configuration space dynamics, but also wave-particle interaction without
-managing all index numbers. This makes the code particularly robust and easy
-to maintain. 
+gradients stabilized method for solving the system of linear equations. It is
+important to recall that this method is also available in FORTRAN programming
+language, under the package name SPARSEKIT (Ref***) that has also parallel
+processing capabilities. Moreover, the very compact MatLab programming syntax
+allows to design the code structure in an original way, using multidimensional
+objects that describe simultaneously momentum and configuration space
+dynamics, but also wave-particle interaction without managing all index
+numbers. This makes the code particularly robust and easy to maintain.
 
 In this documentation, the physics and numerics issues of the code are
 presented in details, and an extensive discussion of the underlying
 assumptions is presented. A specific attention is paid to derive matrix
 coefficients in a consistent manner. Some examples are shown to illustrate
-code performances, though still numerous possibilities remain to be
-investigated.
+code performances, though still numerous possibilities remain to be investigated.
 
-Aside from present day code capabilities, it is important to notice that the
-new numerical approach here used gives access to new physical domains that
-have never been studied accurately like wave-induce radial transport.
-Furthermore, since the algorithm used is fast and stable, possible
-extensions to $4-D$ problems may be foreseen like in the plateau collision
-regime (current drive at the plasma edge), as well as studies to the
-difficult problem of electrons that are locally trapped at different spatial
-positions, like in stellarator. In addition the code may be extended quite
-in a straightforward manner to the multi-species problem, taking into
-account for example of the non-linear damping of the $\alpha $-particles
-produced by fusion reactions on the electron population. However, the ion
-physics requires to perform trajectory averaging instead of
-bounce-averaging, because of the large banana width of some particles, a
-challenging issue for kinetic solver based on a finite difference technique.
-However, such a requirement is crucial for describing torque induced by
-waves. Nevertheless, beside this difficulty, the code is alsready fully
-designed to take benefit from parallel processing, if the dynamics of
-various species must be studied. In particular, non uniform grid momentum
-and pitch-angle grids are implemented, so that refined calculations can be
-performed for the ions at low velocity, while accurate ones up to
-relativistic energies may be considered for the electrons.
+Aside from present day code capabilities, it is important to
+notice that the new numerical approach here used gives access to
+new physical domains that have never been studied accurately like
+wave-induce radial transport. Furthermore, since the algorithm
+used is fast and stable, possible extensions to $4-D$ problems may
+be foreseen like in the plateau collision regime (current drive at
+the plasma edge), as well as studies to the difficult problem of
+electrons that are locally trapped at different spatial positions,
+like in stellarator. In addition the code may be extended quite in
+a straightforward manner to the multi-species problem, taking into
+account for example of the non-linear damping of the
+$\alpha$-particles produced by fusion reactions on the electron
+population. However, the ion physics requires to perform
+trajectory averaging instead of bounce-averaging, because of the
+large banana width of some particles, a challenging issue for
+kinetic solver based on a finite difference technique. However,
+such a requirement is crucial for describing torque induced by
+waves. Nevertheless, beside this difficulty, the code is alsready
+fully designed to take benefit from parallel processing, if the
+dynamics of various species must be studied. In particular, non
+uniform grid momentum and pitch-angle grids are implemented, so
+that refined calculations can be performed for the ions at low
+velocity, while accurate ones up to relativistic energies may be
+considered for the electrons.

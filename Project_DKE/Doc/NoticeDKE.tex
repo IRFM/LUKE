@@ -3,8 +3,8 @@
 
 \documentclass[11pt,a4paper]{report}
 
-\bibliographystyle{DocumentBibStyle}
-\usepackage{cite}
+%\bibliographystyle{DocumentBibStyle}
+%\usepackage{cite}
 \usepackage{graphicx}
 \usepackage{latexsym}
 \usepackage{amssymb}
@@ -39,251 +39,251 @@
 \chapter{Introduction}
 
       \input{Introduction.tex}
-		
+
 \chapter{Tokamak geometry and particle dynamic}
 
-	\section{Coordinate system}
+    \section{Coordinate system}
 
-		\input{CoordinateSystem.tex}
+        \input{CoordinateSystem.tex}
 
-	\section{Particle motion}
+    \section{Particle motion}
 
-		\subsection{Arbitrary configuration}
+        \subsection{Arbitrary configuration}
 
-			\input{BounceGeneral.tex}
+            \input{BounceGeneral.tex}
 
-		\subsection{Circular configuration}
+        \subsection{Circular configuration}
 
-			\input{BounceCircular.tex}
+            \input{BounceCircular.tex}
 
 \chapter{Kinetic description of electrons}
 
-	\section{Boltzman equation; Gyro- and Wave-averaging}
+    \section{Boltzman equation; Gyro- and Wave-averaging}
 
-		\input{Boltzmann.tex}
+        \input{Boltzmann.tex}
 
-	\section{Guiding-Center Drifts and Drift-Kinetic Equation}
+    \section{Guiding-Center Drifts and Drift-Kinetic Equation}
 
-		\input{Drift.tex}
+        \input{Drift.tex}
 
-	\section{Small drift approximation}
+    \section{Small drift approximation}
 
-		\input{DriftOrdering.tex}
+        \input{DriftOrdering.tex}
 
-	\section{Low collision limit and bounce averaging}
+    \section{Low collision limit and bounce averaging}
 
-		\input{LowCollisionality.tex}
+        \input{LowCollisionality.tex}
 
-	\section{Flux conservative representation}
+    \section{Flux conservative representation}
 
-		\subsection{General formulation}
+        \subsection{General formulation}
 
-			\input{FluxCons.tex}
+            \input{FluxCons.tex}
 
-		\subsection{Dynamics in Momentum Space}
+        \subsection{Dynamics in Momentum Space}
 
-			\input{FluxConsMomentum.tex}
+            \input{FluxConsMomentum.tex}
 
-		\subsection{Dynamics in Configuration Space}
+        \subsection{Dynamics in Configuration Space}
 
-			\input{FluxConsConfiguration.tex}
+            \input{FluxConsConfiguration.tex}
 
-		\subsection{Bounce-averaged flux calculation}
+        \subsection{Bounce-averaged flux calculation}
 
-			\subsubsection{Zero order term: the Fokker-Planck equation}
+            \subsubsection{Zero order term: the Fokker-Planck equation}
 
-				\input{FP_FluxConsMomentum.tex}
+                \input{FP_FluxConsMomentum.tex}
 
-			\subsection{Up to first order term: the Drift Kinetic equation}
+            \subsection{Up to first order term: the Drift Kinetic equation}
 
-				\input{DKE_FluxConsMomentum.tex}
+                \input{DKE_FluxConsMomentum.tex}
 
-	\section{Moments of the distribution function}
+    \section{Moments of the distribution function}
 
-		\input{Moments.tex}
+        \input{Moments.tex}
 
 \chapter{Detailed description of physical processes}
 
-	\section{Collisions}
+    \section{Collisions}
 
-	       \input{Collisions.tex}
+           \input{Collisions.tex}
 
-		\subsection{Bounce Averaged Fokker-Planck Equation}
+        \subsection{Bounce Averaged Fokker-Planck Equation}
 
-			\input{FP_Collisions.tex}
+            \input{FP_Collisions.tex}
 
-		\subsection{Bounce Averaged Drift Kinetic Equation}
+        \subsection{Bounce Averaged Drift Kinetic Equation}
 
-			\input{DKE_Collisions.tex}
+            \input{DKE_Collisions.tex}
 
-	\section{Ohmic electric field}
+    \section{Ohmic electric field}
 
-		\input{Efield.tex}
+        \input{Efield.tex}
 
-		\subsection{Bounce Averaged Fokker-Planck Equation}
+        \subsection{Bounce Averaged Fokker-Planck Equation}
 
-			\input{FP_Efield.tex}
+            \input{FP_Efield.tex}
 
-		\subsection{Bounce Averaged Drift Kinetic Equation}
+        \subsection{Bounce Averaged Drift Kinetic Equation}
 
-			\input{DKE_Efield.tex}
+            \input{DKE_Efield.tex}
 
-	\section{Radio frequency waves}
+    \section{Radio frequency waves}
 
-		\input{RFwave.tex}
+        \input{RFwave.tex}
 
-		\subsection{RF Diffusion coefficient for a Plane Wave}
+        \subsection{RF Diffusion coefficient for a Plane Wave}
 
-			\input{RFdiff.tex}
+            \input{RFdiff.tex}
 
-		\subsection{Bounce Averaged Fokker-Planck Equation}
+        \subsection{Bounce Averaged Fokker-Planck Equation}
 
-			\input{FP_RFwave.tex}
+            \input{FP_RFwave.tex}
 
-		\subsection{Bounce Averaged Fokker-Planck Equation}
+        \subsection{Bounce Averaged Fokker-Planck Equation}
 
-			\input{DKE_RFwave.tex}
+            \input{DKE_RFwave.tex}
 
 \chapter{Numerical calculations}
 
         \section{Bounce integrals}
 
-	        \input{DiscreteBounce.tex}
-		
-	\section{Grid definitions}
+            \input{DiscreteBounce.tex}
 
-		\input{GridDefinition.tex}
+    \section{Grid definitions}
 
-	\section{Discretization procedure}
+        \input{GridDefinition.tex}
 
-		\input{DiscreteProcedure.tex}
+    \section{Discretization procedure}
 
-	\section{Zero order term: the Fokker-Planck equation}
-	
-		\subsection{Momentum dynamics}
+        \input{DiscreteProcedure.tex}
 
-			\input{FP_DiscretMomentum.tex}
+    \section{Zero order term: the Fokker-Planck equation}
 
-		\subsection{Spatial dynamics}
+        \subsection{Momentum dynamics}
 
-			\input{FP_DiscretSpatial.tex}
+            \input{FP_DiscretMomentum.tex}
 
-		\subsection{Grid interpolation}
+        \subsection{Spatial dynamics}
 
-			\input{FP_GridInterpolation.tex}
-			
-		\subsection{Discrete description of physical processes}
-		
-			\input{FP_DiscretePhysProc.tex}
-	
-	\section{Up to first order term: the Drift Kinetic equation}
-	
-		\subsection{Grid interpolation}
+            \input{FP_DiscretSpatial.tex}
 
-			\input{DKE_GridInterpolation.tex}
-		
-		\subsection{Momentum dynamics}
+        \subsection{Grid interpolation}
 
-			\input{DKE_DiscretMomentum.tex}
-			
-		\subsection{Discrete description of physical processes}
+            \input{FP_GridInterpolation.tex}
 
-			\input{DKE_DiscretePhysProc.tex}
-			
-	\section{Initial solution}
+        \subsection{Discrete description of physical processes}
 
-	        \subsection{Zero order term: the Fokker-Planck equation}
+            \input{FP_DiscretePhysProc.tex}
 
-		        \input{FP_DiscretInit.tex}
-	
-		\subsection{Up to first order term: the Drift Kinetic equation}
-	
-		        \input{DKE_DiscretInit.tex}
-		        
-	\section{Boundary conditions}
-	
-	        \subsection{Zero order term: the Fokker-Planck equation}
-		
-		        \input{FP_Boundaries.tex}
-	 
-	        \subsection{Up to first order term: the Drift Kinetic equation}
-			
-	     	        \input{DKE_Boundaries.tex}
+    \section{Up to first order term: the Drift Kinetic equation}
 
-	\section{Numerical integrals for moment calculations}
-	
-		\input{DiscreteMoments.tex}
+        \subsection{Grid interpolation}
+
+            \input{DKE_GridInterpolation.tex}
+
+        \subsection{Momentum dynamics}
+
+            \input{DKE_DiscretMomentum.tex}
+
+        \subsection{Discrete description of physical processes}
+
+            \input{DKE_DiscretePhysProc.tex}
+
+    \section{Initial solution}
+
+            \subsection{Zero order term: the Fokker-Planck equation}
+
+                \input{FP_DiscretInit.tex}
+
+        \subsection{Up to first order term: the Drift Kinetic equation}
+
+                \input{DKE_DiscretInit.tex}
+
+    \section{Boundary conditions}
+
+            \subsection{Zero order term: the Fokker-Planck equation}
+
+                \input{FP_Boundaries.tex}
+
+            \subsection{Up to first order term: the Drift Kinetic equation}
+
+                    \input{DKE_Boundaries.tex}
+
+    \section{Numerical integrals for moment calculations}
+
+        \input{DiscreteMoments.tex}
 
 \chapter{Algorithm}
 
-	\section{Matrix representation}
-	
-		\subsection{Zero order term: the Fokker-Planck equation}
+    \section{Matrix representation}
 
-			\input{FP_Matrix.tex}
-		
-		\subsection{Up to first order term: the Drift Kinetic equation}
+        \subsection{Zero order term: the Fokker-Planck equation}
 
-			%\input{DKE_Matrix.tex}
+            \input{FP_Matrix.tex}
 
-	\section{Inversion procedure}
-	
-		\subsection{Zero order term: the Fokker-Planck equation}
+        \subsection{Up to first order term: the Drift Kinetic equation}
 
-			%\input{FP_Inversion.tex}
+            %\input{DKE_Matrix.tex}
 
-		\subsection{Up to first order term: the Drift Kinetic equation}
+    \section{Inversion procedure}
 
-			%\input{DKE_Inversion.tex}
-			
-	\section{Incomplete matrix factorization}
+        \subsection{Zero order term: the Fokker-Planck equation}
 
-			%\input{IncompleteLU.tex}
-			
-	\section{Normalization and definitions}
+            %\input{FP_Inversion.tex}
 
-			\input{Normalization.tex}
+        \subsection{Up to first order term: the Drift Kinetic equation}
+
+            %\input{DKE_Inversion.tex}
+
+    \section{Incomplete matrix factorization}
+
+            %\input{IncompleteLU.tex}
+
+    \section{Normalization and definitions}
+
+            \input{Normalization.tex}
 
 \chapter{Examples}
 
-	\section{Maxwellian bootstrap current}
-	
-		\subsection{Lorentz collision operator}
+    \section{Maxwellian bootstrap current}
 
-			%\input{Bootstrap_MaxwellLorentz.tex}
+        \subsection{Lorentz collision operator}
 
-		\subsection{Comparison with analytical expressions}
-		
-		        %\input{Bootstrap_Comparison.tex}
+            %\input{Bootstrap_MaxwellLorentz.tex}
 
-	\section{Ohmic conductivity}
+        \subsection{Comparison with analytical expressions}
 
-		\subsection{Lorentz collision operator}
+                %\input{Bootstrap_Comparison.tex}
 
-			%\input{Conductivity_MaxwellLorentz.tex}
+    \section{Ohmic conductivity}
 
-		\subsection{Comparison with other codes}
+        \subsection{Lorentz collision operator}
 
-		        %\input{Conductivity_Comparison.tex}
+            %\input{Conductivity_MaxwellLorentz.tex}
 
-	\section{Lower Hybrid Current drive}
+        \subsection{Comparison with other codes}
+
+                %\input{Conductivity_Comparison.tex}
+
+    \section{Lower Hybrid Current drive}
 
 
-	\section{Electron Cyclotron Current drive}
+    \section{Electron Cyclotron Current drive}
 
 
 \appendix
 
 \chapter{Curvilinear Coordinate Systems}
 
-	\input{curvilinear.tex}
+    \input{curvilinear.tex}
 
 \chapter{Calculation of Bounce Coefficients for Circular Concentric FS}
 
-	\input{BounceCoef.tex}
+    \input{BounceCoef.tex}
 
 \newpage
 
-  \bibliography{dke}
-
+\bibliographystyle{unsrt}
+\bibliography{biblio}
 \end{document}
