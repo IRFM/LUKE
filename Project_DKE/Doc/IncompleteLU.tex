@@ -1,1 +1,103 @@
-\label{incompletelusection}
+
+According to Sec. \ref{fpmatrixsection}, the electron Fokker-Planck equation
+may be expressed in a general symbolic matrix form
+\begin{equation}
+\widehat{\Bbb{N}}X^{(k+1)}=Z^{(k)}  \label{generalmatrixform}
+\end{equation}
+where 
+\begin{eqnarray}
+\widehat{\Bbb{N}} &=&\frac{\widehat{\Bbb{A}}}{\Delta t}+\widehat{\Bbb{B}} \\
+Z^{(k)} &=&\left( \frac{\widehat{\Bbb{A}}}{\Delta t}\right) X^{(k)}+\widehat{%
+C}\left( X_{M},X^{(k)}\right) 
+\end{eqnarray}
+for the fully implicit time difference scheme, and 
+\begin{eqnarray}
+\widehat{\Bbb{N}} &=&\frac{\widehat{\Bbb{A}}}{\Delta t}+\frac{\widehat{\Bbb{B%
+}}}{2} \\
+Y^{(k)} &=&\left( \frac{\widehat{\Bbb{A}}}{\Delta t}-\frac{\widehat{\Bbb{B}}%
+}{2}\right) X^{(k)}+\widehat{C}\left( X_{M},X^{(k)}\right) 
+\end{eqnarray}
+for the the Crank-Nicholson time scheme. 
+
+The formal expression (\ref{generalmatrixform}) may be also used for the
+electron drift kinetic equation as shown in Sec. \ref{dkematrixsection}, and
+in this case, 
+\begin{eqnarray}
+\widehat{\Bbb{N}} &=&\widehat{\Bbb{G}} \\
+Z^{(k)} &=&\widehat{\Bbb{G}}Y^{(k)}+\widehat{C}\left( X_{M},Y^{(k)}\right) +%
+\widehat{\widetilde{W}}
+\end{eqnarray}
+
+In all cases, the matrices are square with similar structures, i.e. non-zero
+elements are aligned along several diagonals which are roughly symmetricaly
+placed around the main one\footnote{%
+The lack of symmetry between upper and lower diagonals arises usually from
+boundary conditions.}. 
+
+The determination of $X^{(k+1)}$ requires to invert the system of equation (%
+\ref{generalmatrixform}). The usual method based on a direct inversion by
+the well known Gaussian elimination is ruled out, since the number of
+operations for each direction inversion by Gaussian elimination is $\mathcal{%
+O}\left( N^{3}\right) ,$ where $N$ is the number of rows (or columns) of
+matrix $\widehat{\Bbb{N}}.$ Indeed, with $N$ that may reach $800000,$ the
+number of operations become rapidly prohibitive. In addition, memory
+requirements grow as $\mathcal{O}\left( N^{2}\right) $ since matrix $%
+\widehat{\Bbb{N}}^{-1}$ is not sparse as matrix $\widehat{\Bbb{N}}$, leading
+also to unacceptable storage constraints. 
+
+Consequently, alternative methods must be used, in order to perform a fast
+matrix inversion with a reduced storage capacity. The basic idea is to
+factorize $\widehat{\Bbb{N}}$ into a upper and lower triangular matrices $%
+\widehat{\Bbb{U}}$ and $\widehat{\Bbb{L}}$ respectively 
+\begin{equation}
+\widehat{\Bbb{N}}=\widehat{\Bbb{L}}\widehat{\Bbb{U}}
+\end{equation}
+as shown in Fig. \ref{figfactmatrix}, that are themselves highly sparse
+matrices. A strong reduction of the computational effort may then be
+foreseen, since the number of operations is considerably lower. This elegant
+approach has been first considered for Fokker-Planck calculations for a five
+diagonals operator as shown in Ref. \cite{sho94}, since in that case $%
+\widehat{\Bbb{U}}$ and $\widehat{\Bbb{L}}$ are both triangular and
+tridiagonal matrices. However, as discussed in Ref. \cite{pey98}, the fact
+that cross-derivatives are considered explicitely with respect to the time
+differencing scheme which puts strong limitations on the integration time
+step $\Delta t,$ since it must be much lower than one, for an accurate
+determination of the solution of the set of linear equations. Consequently,
+the overall time duration for calculating the steady-state solution is very
+long, an important drawback when the kinetic solver must be incorporated in
+a chain of codes for realistic tokamak simulations. 
+
+For this purpose, this method has be succesfully extended to the nine
+diagonals operator case, allowing the use of much larger $\Delta t$ values
+while the numerical scheme remains still stable, as shown in Ref. \cite
+{pey98}. However, this approach is only useful for local kinetic
+calculations, where trapped particle contribution is negligible, i.e. close
+to the plasma center. When off-axis electron dynamics must be described, one
+must in that case fully consider both circulating and trapped electron
+dynamics which leads to a number of diagonals with non-zero elements that is
+much larger, fifteen diagonals at each radial location as shown in Fig. \ref
+{fpmatrix}. Therefore, the method developped for nine diagonal operators may
+no more be used, since the number of operations to determine $\widehat{\Bbb{U%
+}}$ and $\widehat{\Bbb{L}}$ increases dramaticaly. The fully 3-D approach
+with radial transport makes this method unusable. 
+
+However, an equivalent form of the approximate matrix factorization may
+still be employed, noting that exact $\widehat{\Bbb{U}}$ and $\widehat{\Bbb{L%
+}}$ matrices are made of a large number of very small coefficients, close to
+zero. This indicates that information on the electron dynamics is fully
+contained in a few set of coefficients, whose number is several order of
+magnitude lower than the total one. Such a structure results in fact from
+the well conditionning of the matrix $\widehat{\Bbb{N}},$ a physical
+consequence that collisions predominate over all other physical processes.
+Consequently, the general approach is to introduce a drop tolerance
+parameter $\delta _{lu}$, below which small coefficients of exact $\widehat{%
+\Bbb{U}}$ and $\widehat{\Bbb{L}}$ matrices are forced to zero. Since
+coefficients of $\widehat{\Bbb{N}}$ lie between $0$ and $1$ because of the
+main diagonal preconditioning, 
+\begin{equation}
+0\leq \delta _{lu}\leq 1
+\end{equation}
+
+When $\delta _{lu}$ is chosen close to $1$, approximate and exact matrices $%
+\widehat{\Bbb{U}}$ and $\widehat{\Bbb{L}}$ are roughly equivalent, while
+they differ strongly when $\delta _{lu}$ tends to zero. 
