@@ -723,33 +723,33 @@ while 1,
 			xlabel('r/a');ylabel('P_{abs} (MW/m^3)');
 			title('Density of Absorbed Power'); 
 %   
-			figure(200),subplot(233),plot(xrho(rdke),xTe(rdke),'ro',xrho(rdke),xTi(rdke),'bx');
+			figure(200),subplot(233),plot(xrho(rdke),xTe(rdke),'ro',xrho(rdke),xzTi(rdke),'bx');
 			set(gca,'xlim',[0,1])
 			zoom on;grid on;
 			xlabel('r/a');ylabel('T (keV)');
 			title('Temperature')
 			legend('Electron','Ion'); 
 %
-			figure(200),subplot(234),plot(xrho(rdke),xne(rdke)/1e20,'ro',xrho(rdke),xnhyd(rdke)/1e20,'bx');
+			figure(200),subplot(234),plot(xrho(rdke),xne(rdke)/1e20,'ro',xrho(rdke),xzni(rdke)/1e20,'bx');
 			set(gca,'xlim',[0,1])
 			zoom on;grid on;
 			xlabel('r/a');ylabel('n (m-3)\times 10^20');
 			title('Densities')
 			legend('Electron','Ion');
 %
-			figure(200),subplot(235),plot(xrho(rdke),xft(rdke)./sqrt(xia(rdke)),'ro',xrho(rdke),xft_llm(rdke)./sqrt(xia(rdke)),'bx');
-			set(gca,'xlim',[0,1],'ylim',[1,1.6])
+			figure(200),subplot(235),plot(xrho(rdke),xft_fsav(rdke),'ro');
+			set(gca,'xlim',[0,1],'ylim',[0,1])
 			zoom on;grid on;
 			xlabel('r/a');ylabel('ft/sqrt(iar)');
-			title('Trapped fraction')
-			legend('Code','Lin-Liu/Miller');
+			title('Exact trapped fraction')
+			legend('Code');
 %
 			figure(200),subplot(236),plot(xia(rdke),xft_fsav(rdke)./sqrt(xia(rdke)),'ro');
-			set(gca,'xlim',[0,1],'ylim',[1,1.6])
+			set(gca,'xlim',[0,1],'ylim',[0,1])
 			zoom on;grid on;
 			xlabel('iar');ylabel('ft/sqrt(iar)');
-			title('Trapped fraction')
-			legend('Code','Lin-Liu/Miller');
+			title('Exact trapped fraction')
+			legend('Code');
 %
 			if igor_mode == 1,
 				eval(['save ',filenameroot,'_data_fig200.mat xrho xia rdke j_ref xcurr_tot_ref_fsav P_ref xPabs_tot_ref_fsav xTe xTi xne xnhyd xft xft_llm'])
@@ -809,14 +809,14 @@ while 1,
 			xlabel('r/a');ylabel('nhue*');
 			title('Electron collisionnality');
 		  %
-			[sft_llm] = ft_llm_dke_yp(sia,1000);%From Y.R. Lin-Liu and R.L. Miller, Phys. Plasma 2 (1995) 1666
-			figure(200),subplot(428),plot(xrho(rdke),xft(rdke)./sqrt(xia(rdke)),'ro',srho,sft_llm./sqrt(sia),'k-');
+%			[sft_llm] = ft_llm_dke_yp(sia,1000);%From Y.R. Lin-Liu and R.L. Miller, Phys. Plasma 2 (1995) 1666
+			figure(200),subplot(428),plot(xrho(rdke),xft_fsav(rdke)./sqrt(xia(rdke)),'ro');
 			set(gca,'xlim',[0,1]);
 			set(gca,'ylim',[1,1.5]);
 			zoom on;grid on;
-			xlabel('r/a');ylabel('ft/sqrt(iar)');
-			title('Trapped fraction')
-			legend('Code','Lin-Liu/Miller');
+			xlabel('r/a');ylabel('xft_fsav/sqrt(iar)');
+			title('Exact trapped fraction')
+			legend('Code');
 %
 %Calculation of the flux averaged bootstrap current from Hinton & Hazeltine, Hirshman, Sauter and Taguchi models (bulk contribution)
 %
