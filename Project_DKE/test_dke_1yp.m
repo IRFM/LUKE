@@ -289,12 +289,12 @@ for ir = 1:nr,
 %
    xepsi_ref_fsav(ir) = (xepsi0_ref_fsav(ir) - xepsia_ref_fsav(ir))*(1.0-xpsin(ir)).^eepsi_fsav + xepsia_ref_fsav(ir);
 %
-%	Fast electron radial diffusion and pinch coefficients
+%	Anomalous fast electron radial diffusion and pinch
 %
 	ivpar_r_ref_threshold = min(find(abs(Xvpar_ref) >= xvparmin_r_ref(ir)));
    xEc_r_ref_threshold(ir) = mc2*(sqrt(1+pn_ref(ivpar_r_ref_threshold).*pn_ref(ivpar_r_ref_threshold)*betath_ref^2) - 1);%in keV
 %
-	if Dr_model==0,%Standard model : Dr(r) = Dr0(r)
+   if Dr_model==0,%Standard model : Dr(r) = Dr0(r)
 		XDrv_ref = Dr0*ones(size(np,nmhu)).*(abs(Xvpar_ref) >= xvparmin_r_ref(ir))/nhu_ref/ap/ap;%Normalized to the central collision frequency
 	elseif Dr_model==1,%Magnetic turbulence model: Dr(r) = Dr0(r)*vpar_ref/vth_ref
 		XDrv_ref = Dr0*(abs(Xvpar_ref) - xvparmin_r_ref(ir)).*(abs(Xvpar_ref) >= xvparmin_r_ref(ir))/xvparmin_r_ref(ir)/nhu_ref/ap/ap;%Normalized to the central collision frequency

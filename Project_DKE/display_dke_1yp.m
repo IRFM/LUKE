@@ -224,7 +224,7 @@ while 1,
 			legend('finit','f0'); 
 			pause(time_pause);
 %
-			figure(4),clf
+			figure(4);clf
 			subplot(121),
 			C = contour(ppar_cyl_ref,pperp_cyl_ref,log(Xfinit_cyl_ref),[-20:20/nlevel:0]);grid on;zoom on;%Distribution function and wave quasilinear diffusion coefficient contour plot
 			axis('equal')
