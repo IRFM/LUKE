@@ -1,0 +1,220 @@
+En discretisant, puis en les regroupant comme dans le cas non-moyenne,
+onobtient 
+\begin{eqnarray*}
+&&r_{l+1/2}p_{i+1/2}^{2}\frac{f_{0,i+1/2,j+1/2}^{\left( 0\right)
+(k+1)}-f_{0,i+1/2,j+1/2}^{\left( 0\right) (k)}}{\Delta t} \\
+&&+r_{l+1/2}\frac{-p_{i+1}^{2}D_{pp,i+1,j+1/2}^{\left( 0\right) }\left. 
+\frac{\partial f_{0}^{\left( 0\right) }}{\partial p}\right|
+_{i+1,j+1/2}^{(k+1)}+p_{i+1}^{2}F_{p,i+1,j+1/2}^{\left( 0\right)
+}f_{0,i+1,j+1/2}^{\left( 0\right) (k+1)}}{\Delta p_{i+1/2}} \\
+&&+r_{l+1/2}\frac{p_{i}^{2}D_{pp,i,j+1/2}^{\left( 0\right) }\left. \frac{%
+\partial f_{0}^{\left( 0\right) }}{\partial p}\right|
+_{i,j+1/2}^{(k+1)}-p_{i}^{2}F_{p,i,j+1/2}^{\left( 0\right)
+}f_{0,i,j+1/2}^{\left( 0\right) (k+1)}}{\Delta p_{i+1/2}} \\
+&&+r_{l+1/2}\sqrt{1-\xi _{0j+1/2}^{2}}p_{i+1/2}D_{p\xi ,i+1/2,j+1/2}^{\left(
+0\right) }\left. \frac{\partial ^{2}f_{0}^{\left( 0\right) }}{\partial p%
+\partial \xi _{0}}\right| _{i+1/2,j+1/2}^{(k+1)} \\
+&&+r_{l+1/2}\sqrt{1-\xi _{0j+1/2}^{2}}\left. \frac{\partial \left( pD_{p\xi
+}^{\left( 0\right) }\right) }{\partial p}\right| _{i+1/2,j+1/2}\left. \frac{%
+\partial f_{0}^{\left( 0\right) }}{\partial \xi _{0}}\right|
+_{i+1/2,j+1/2}^{(k+1)} \\
+&&-r_{l+1/2}\frac{D_{\xi \xi ,i+1/2,j+1}^{\left( 0\right) }\left( 1-\xi
+_{0j+1}^{2}\right) \left. \frac{\partial f_{0}^{\left( 0\right) }}{\partial %
+\xi _{0}}\right| _{i+1/2,j+1}^{(k+1)}+p_{i+1/2}\sqrt{1-\xi _{0j+1}^{2}}%
+F_{\xi ,i+1/2,j+1}^{\left( 0\right) }f_{0,i+1/2,j+1}^{\left( 0\right) (k+1)}%
+}{\Delta \xi _{0j+1/2}}\frac{\lambda \left( \xi _{0j+1}\right) }{\lambda
+\left( \xi _{0j+1/2}\right) } \\
+&&+r_{l+1/2}\frac{D_{\xi \xi ,i+1/2,j}^{\left( 0\right) }\left( 1-\xi
+_{0j}^{2}\right) \left. \frac{\partial f_{0}^{\left( 0\right) }}{\partial %
+\xi _{0}}\right| _{i+1/2,j}^{(k+1)}+p_{i+1/2}\sqrt{1-\xi _{0j}^{2}}F_{\xi
+,i+1/2,j}^{\left( 0\right) }f_{0,i+1/2,j}^{\left( 0\right) (k+1)}}{\Delta %
+\xi _{0j+1/2}}\frac{\lambda \left( \xi _{0j}\right) }{\lambda \left( \xi
+_{0j+1/2}\right) } \\
+&&+r_{l+1/2}p_{i+1/2}\sqrt{1-\xi _{0j+1}^{2}}D_{\xi p,i+1/2,j+1/2}^{\left(
+0\right) }\left. \frac{\partial ^{2}f_{0}^{\left( 0\right) }}{\partial \xi
+_{0}\partial p}\right| _{i+1/2,j+1/2}^{(k+1)} \\
+&&+r_{l+1/2}p_{i+1/2}\left. \frac{\partial }{\partial \xi _{0}}\left(
+\lambda \left( \xi _{0}\right) \sqrt{1-\xi _{0}^{2}}D_{\xi p}^{\left(
+0\right) }\right) \right| _{i+1/2,j+1/2}\left. \frac{\partial f_{0}^{\left(
+0\right) }}{\partial p}\right| _{i+1/2,j+1/2}^{(k+1)} \\
+&=&0
+\end{eqnarray*}
+ou l'indice $(k)$indique que la variable est prise au temps $t=k\Delta t,$ $%
+\Delta t$etant le pas de temps.Le terme de droite est pris au temps $(k+1)$,
+ce qui correspond a un schema totalement implicite ou temps inverse,
+inconditionnellement stable numeriquement, point qui sera rediscute dans un
+chapitresuivant.On discretise egalement 
+\begin{eqnarray*}
+\left. \frac{\partial ^{2}f_{0}^{\left( 0\right) }}{\partial p\partial \xi
+_{0}}\right| _{i+1/2,j+1/2}^{(k+1)} &=&\left. \frac{\partial %
+^{2}f_{0}^{\left( 0\right) }}{\partial \xi _{0}\partial p}\right|
+_{i+1/2,j+1/2}^{(k+1)} \\
+&=&\frac{f_{0,i+3/2,j+3/2}^{\left( 0\right) (k+1)}-f_{0,i+3/2,j-1/2}^{\left(
+0\right) (k+1)}-f_{0,i-1/2,j+3/2}^{\left( 0\right)
+(k+1)}+f_{0,i-1/2,j-1/2}^{\left( 0\right) (k+1)}}{\left( \Delta p_{i+1}+%
+\Delta p_{i}\right) \left( \Delta \xi _{0j+1}+\Delta \xi _{0j}\right) }
+\end{eqnarray*}
+tandis que 
+\begin{eqnarray*}
+\left. \frac{\partial \left( pD_{p\xi }^{\left( 0\right) }\right) }{\partial %
+p}\right| _{i+1/2,j+1/2} &=&\frac{p_{i+1}D_{p\xi ,i+1,j+1/2}^{\left(
+0\right) }-p_{i}D_{p\xi ,i,j+1/2}^{\left( 0\right) }}{\Delta p_{i+1/2}} \\
+\left. \frac{\partial }{\partial \xi _{0}}\left( \lambda \left( \xi
+_{0}\right) \sqrt{1-\xi _{0}^{2}}D_{\xi p}^{\left( 0\right) }\right) \right|
+_{i+1/2,j+1/2} &=&\frac{\lambda \left( \xi _{0j+1}\right) \sqrt{1-\xi
+_{0j+1}^{2}}D_{\xi p,i+1/2,j+1}^{\left( 0\right) }-\lambda \left( \xi
+_{0j}\right) \sqrt{1-\xi _{0j}^{2}}D_{\xi p,i+1/2,j}^{\left( 0\right) }}{%
+\Delta \xi _{0j+1/2}\lambda \left( \xi _{0j+1/2}\right) }
+\end{eqnarray*}
+
+L'equation de Fokker-Planck moyennee sur la periode de rebond devient alors
+sous forme discrete 
+\[
+r_{l+1/2}p_{i+1/2}^{2}\frac{f_{0,i+1/2,j+1/2}^{\left(0\right)\left(k+1%
+\right)}-f_{0,i+1/2,j+1/2}^{\left(0\right)\left(k\right)}}{\Delta t}%
++r_{l+1/2}\sum_{i^{\prime}=i-1}^{i^{\prime}=i+1}\sum_{j^{\prime}=j-1}^{j^{%
+\prime}=j+1}\overline{\overline{M}}_{p,i^{\prime}+1/2,j^{\prime}+1/2}^{%
+\left(0\right)}f_{0,i^{\prime}+1/2,j^{\prime}+1/2}^{\left(0\right)(k+1)}=0
+\]
+, les coefficients de la matrice valant 
+\begin{eqnarray*}
+\overline{\overline{M}}_{p,i+3/2,j+3/2}^{\left(0\right)} & = & \frac{%
+p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{%
+\Delta\xi_{0j+1}+\Delta\xi_{0j}}D_{p\xi,i+1/2,j+1/2}^{\left(0\right)} \\
+& & +\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{%
+1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}D_{\xi
+p,i+1/2,j+1/2}^{\left(0\right)}
+\end{eqnarray*}
+\begin{eqnarray*}
+\overline{\overline{M}}_{p,i+1/2,j+3/2}^{\left(0\right)} & = & \frac{p_{i+1}%
+}{\Delta p_{i+1/2}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta%
+\xi_{0j}}D_{p\xi,i+1,j+1/2}^{\left(0\right)} \\
+& & -\frac{p_{i}}{\Delta p_{i+1/2}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{%
+\Delta\xi_{0j+1}+\Delta\xi_{0j}}D_{p\xi,i,j+1/2}^{\left(0\right)} \\
+& & -\frac{1-\xi_{0j+1}^{2}}{\Delta\xi_{0j+1/2}\Delta\xi_{0j+1}}\frac{%
+\lambda\left(\xi_{0j+1}\right)}{\lambda\left(\xi_{0j+1/2}\right)}%
+D_{\xi\xi,i+1/2,j+1}^{\left(0\right)} \\
+& & -p_{i+1/2}\frac{\sqrt{1-\xi_{0j+1}^{2}}}{\Delta\xi_{0j+1/2}}%
+\left(1-\delta_{\xi,i+1/2,j+1}^{\left(0\right)}\right)\frac{%
+\lambda\left(\xi_{0j+1}\right)}{\lambda\left(\xi_{0j+1/2}\right)}%
+F_{\xi,i+1/2,j+1}^{\left(0\right)}
+\end{eqnarray*}
+\begin{eqnarray*}
+\overline{\overline{M}}_{p,i-1/2,j+3/2}^{\left(0\right)} & = & -\frac{%
+p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{%
+\Delta\xi_{0j+1}+\Delta\xi_{0j}}D_{p\xi,i+1/2,j+1/2}^{\left(0\right)} \\
+& & -\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{%
+1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}D_{\xi
+p,i+1/2,j+1/2}^{\left(0\right)}
+\end{eqnarray*}
+\begin{eqnarray*}
+\overline{\overline{M}}_{p,i+3/2,j+1/2}^{\left(0\right)} & = & -\frac{%
+p_{i+1}^{2}}{\Delta p_{i+1}\Delta p_{i+1/2}}D_{pp,i+1,j+1/2}^{\left(0\right)}
+\\
+& & +\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{%
+1-\xi_{0j+1}^{2}}}{\Delta\xi_{0j+1/2}}\frac{\lambda\left(\xi_{0j+1}\right)}{%
+\lambda\left(\xi_{0j+1/2}\right)}D_{\xi p,i+1/2,j+1}^{\left(0\right)} \\
+& & -\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j}^{2}}%
+}{\Delta\xi_{0j+1/2}}\frac{\lambda\left(\xi_{0j}\right)}{\lambda\left(%
+\xi_{0j+1/2}\right)}D_{\xi p,i+1/2,j}^{\left(0\right)} \\
+& & +\frac{p_{i+1}^{2}}{\Delta p_{i+1/2}}\left(1-\delta_{p,i+1,j+1/2}^{%
+\left(0\right)}\right)F_{p,i+1,j+1/2}^{\left(0\right)}
+\end{eqnarray*}
+\begin{eqnarray*}
+\overline{\overline{M}}_{p,i+1/2,j+1/2}^{\left(0\right)} & = & \frac{%
+p_{i+1}^{2}}{\Delta p_{i+1/2}\Delta p_{i+1}}D_{pp,i+1,j+1/2}^{\left(0\right)}
+\\
+& & +\frac{p_{i+1}^{2}}{\Delta p_{i+1/2}}F_{p,i+1,j+1/2}^{\left(0\right)}%
+\delta_{p,i+1,j+1/2} \\
+& & +\frac{p_{i}^{2}}{\Delta p_{i+1/2}\Delta p_{i}}D_{pp,i,j+1/2}^{\left(0%
+\right)} \\
+& & -\frac{p_{i}^{2}}{\Delta p_{i+1/2}}\left(1-\delta_{p,i,j+1/2}^{\left(0%
+\right)}\right)F_{p,i,j+1/2}^{\left(0\right)} \\
+& & +\frac{1-\xi_{0j+1}^{2}}{\Delta\xi_{0j+1/2}\Delta\xi_{0j+1}}\frac{%
+\lambda\left(\xi_{0j+1}\right)}{\lambda\left(\xi_{0j+1/2}\right)}%
+D_{\xi\xi,i+1/2,j+1}^{\left(0\right)} \\
+& & -p_{i+1/2}\frac{\sqrt{1-\xi_{0j+1}^{2}}}{\Delta\xi_{0j+1/2}}%
+\delta_{\xi,i+1/2,j+1}^{\left(0\right)}\frac{\lambda\left(\xi_{0j+1}\right)}{%
+\lambda\left(\xi_{0j+1/2}\right)}F_{\xi,i+1/2,j+1}^{\left(0\right)} \\
+& & +\frac{1-\xi_{0j}^{2}}{\Delta\xi_{0j}\Delta\xi_{0j+1/2}}\frac{%
+\lambda\left(\xi_{0j}\right)}{\lambda\left(\xi_{0j+1/2}\right)}%
+D_{\xi\xi,i+1/2,j}^{\left(0\right)} \\
+& & +p_{i+1/2}\frac{\sqrt{1-\xi_{0j}^{2}}}{\Delta\xi_{0j+1/2}}%
+\left(1-\delta_{\xi,i+1/2,j}^{\left(0\right)}\right)\frac{%
+\lambda\left(\xi_{0j}\right)}{\lambda\left(\xi_{0j+1/2}\right)}%
+F_{\xi,i+1/2,j}^{\left(0\right)}
+\end{eqnarray*}
+\begin{eqnarray*}
+\overline{\overline{M}}_{i-1/2,j+1/2}^{\left(0\right)} & = & -\frac{p_{i}^{2}%
+}{\Delta p_{i+1/2}\Delta p_{i}}D_{pp,i,j+1/2}^{\left(0\right)} \\
+& & -\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{%
+1-\xi_{0j+1}^{2}}}{\Delta\xi_{0j+1/2}}\frac{\lambda\left(\xi_{0j+1}\right)}{%
+\lambda\left(\xi_{0j+1/2}\right)}D_{\xi p,i+1/2,j+1}^{\left(0\right)} \\
+& & +\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j}^{2}}%
+}{\Delta\xi_{0j+1/2}}\frac{\lambda\left(\xi_{0j}\right)}{\lambda\left(%
+\xi_{0j+1/2}\right)}D_{\xi p,i+1/2,j}^{\left(0\right)} \\
+& & -\frac{p_{i}^{2}}{\Delta p_{i+1/2}}\delta_{p,i,j+1/2}^{\left(0%
+\right)}F_{p,i,j+1/2}^{\left(0\right)}
+\end{eqnarray*}
+\begin{eqnarray*}
+\overline{\overline{M}}_{p,i+3/2,j-1/2}^{\left(0\right)} & = & -\frac{%
+p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{%
+\Delta\xi_{0j+1}+\Delta\xi_{0j}}D_{p\xi,i+1/2,j+1/2}^{\left(0\right)} \\
+& & -\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{%
+1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}D_{\xi
+p,i+1/2,j+1/2}^{\left(0\right)}
+\end{eqnarray*}
+\begin{eqnarray*}
+\overline{\overline{M}}_{p,i+1/2,j-1/2}^{\left(0\right)} & = & -\frac{p_{i+1}%
+}{\Delta p_{i+1/2}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta%
+\xi_{0j}}D_{p\xi,i+1,j+1/2}^{\left(0\right)} \\
+& & +\frac{p_{i}}{\Delta p_{i+1/2}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{%
+\Delta\xi_{0j+1}+\Delta\xi_{0j}}D_{p\xi,i,j+1/2}^{\left(0\right)} \\
+& & -\frac{1-\xi_{0j}^{2}}{\Delta\xi_{0j+1/2}\Delta\xi_{0j}}\frac{%
+\lambda\left(\xi_{0j}\right)}{\lambda\left(\xi_{0j+1/2}\right)}%
+D_{\xi\xi,i+1/2,j}^{\left(0\right)} \\
+& & +p_{i+1/2}\frac{\sqrt{1-\xi_{0j}^{2}}}{\Delta\xi_{0j+1/2}}%
+\delta_{\xi,i+1/2,j}^{\left(0\right)}\frac{\lambda\left(\xi_{0j}\right)}{%
+\lambda\left(\xi_{0j+1/2}\right)}F_{\xi,i+1/2,j}^{\left(0\right)}
+\end{eqnarray*}
+\begin{eqnarray*}
+\overline{\overline{M}}_{p,i-1/2,j-1/2}^{\left(0\right)} & = & \frac{%
+p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{%
+\Delta\xi_{0j+1}+\Delta\xi_{0j}}D_{p\xi,i+1/2,j+1/2}^{\left(0\right)} \\
+& & +\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{%
+1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}D_{\xi
+p,i+1/2,j+1/2}^{\left(0\right)}
+\end{eqnarray*}
+avec les coefficients de diffusion et de convection 
+\[
+\overline{\overline{D}}_{p}^{\left(0\right)}\rightarrow\left\{ 
+\begin{array}{l}
+D_{pp,i+1,j+1/2}^{\left(0\right)} \\ 
+D_{pp,i,j+1/2}^{\left(0\right)} \\ 
+D_{p\xi,i+1,j+1/2}^{\left(0\right)} \\ 
+D_{\xi p,i+1/2,j+1}^{\left(0\right)} \\ 
+D_{p\xi,i+1/2,j+1/2}^{\left(0\right)} \\ 
+D_{\xi p,i+1/2,j+1/2}^{\left(0\right)} \\ 
+D_{p\xi,i,j+1/2}^{\left(0\right)} \\ 
+D_{\xi p,i+1/2,j}^{\left(0\right)} \\ 
+D_{\xi\xi,i+1/2,j+1}^{\left(0\right)} \\ 
+D_{\xi\xi,i+1/2,j}^{\left(0\right)}
+\end{array}
+\right.
+\]
+et 
+\[
+\overline{\overline{F}}_{p}^{\left(0\right)}\rightarrow\left\{ 
+\begin{array}{l}
+F_{p,i+1,j+1/2}^{\left(0\right)} \\ 
+F_{p,i,j+1/2}^{\left(0\right)} \\ 
+F_{\xi,i+1/2,j+1}^{\left(0\right)} \\ 
+F_{\xi,i+1/2,j}^{\left(0\right)}
+\end{array}
+\right.
+\]
+
+Les coefficients $\delta _{p}^{\left( 0\right) }$sont maintenant definis a
+partir de $\left. \frac{F_{p}^{\left( 0\right) }}{D_{pp}^{\left( 0\right) }}%
+\right| _{effectif}$, les termes $\delta _{\xi }^{\left( 0\right) }$restant
+quant a eux identiques a $\delta _{\xi },$car $\Delta \xi =\Delta \xi _{0}.$
