@@ -1,4 +1,4 @@
-function eqdsk_jd(filename,display_mode,p_opt);
+function [R,Z,psin,psia,xpsin,xF,xp,xq,Rv,Zv,Bv,Rp,Zp,Ip] = eqdsk_jd(filename,display_mode,p_opt);
 %
 % This function reads the equilibrium parameters from eqdsk files created
 % by EFIT and saved in the formatted text file "filename"
@@ -59,13 +59,32 @@ ccoil = fscanf(fid,'%e',[ncoil(1),length(ncoil)]);% not used
 %
 fclose(fid);
 %
+Rv = radmaj;
+Zv = ymideqd;
+Bv = btor;
+Rp = raxis;
+Zp = zaxis;
+Ip = toteqd;
 %
 R = rboxdst + linspace(0,rbox,nnr);
+iRp = find(abs(R - Rp) == min(abs(R - Rp)));
+if abs(R(iRp) - Rp)/Rp < 1/(100*nnr) %one R point is very close to Rp 
+    R = R + Rp - R(iRp);
+    psimag = min(min(epsi));
+else
+    warning('No R = Rp point');
+end
+%
 Z = ymideqd + linspace(-zbox/2,zbox/2,nnz);
 psi = (epsi - psimag);
 psia = (psilim - psimag);
 psin = psi/psia;
 xpsin = linspace(0,1,nnv);
+%
+xF = fpsiar;
+xp = prar;
+xq = qar;
+
 %
 if display_mode >= 2,
     %
@@ -139,6 +158,30 @@ if display_mode >= 2,
     graph1D_jd(xpsin,qar,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color,width,siz,gca,red,lspace,bspace);
     set(gca,'XTick',[0:0.2:1]);
     print_jd(p_opt,[name,'_q_psi']);
+    %
+    figure(10),clf
+    %
+    rho_list = [0:0.05:0.999];
+    iZ0 = find(abs(Z) == min(abs(Z)));
+    R0max = interp1(psin(iRp:nnr,iZ0),R(iRp:nnr),1,'spline');
+    rrho = (R(iRp:nnr) - Rp)./(R0max - Rp);
+    rpsi = interp1(rrho,psin(iRp:nnr,iZ0),rho_list,'spline');
+    %
+    xlab = 'R';
+    ylab = 'Z';
+    xlim = [0,max(R)];
+    ylim = [min(Z),max(Z)];
+    tit = [name];
+    %
+    set(gcf,'position',[1,1,6,8])
+    graph2D_jd(R,Z,psin,xlab,ylab,tit,xlim,ylim,0,NaN,rpsi,0,style,color,width,siz,red);
+    axis('equal');
+    axis([xlim,ylim]);
+    set(gca,'XTick',[0:1:2],'YTick',[-2:2]);
+    print_jd(p_opt,[name,'_rho_RZ']);
+    
+    
+    
  end
 
 
