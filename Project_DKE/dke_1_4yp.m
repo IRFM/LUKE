@@ -1112,9 +1112,9 @@ for ir = 1:nr,
 %
 %Electron-ion collision term (non-relativistic limit)
 %
-   [Fei,Aei,Btei] = eicoll_dke_yp(v,zZi,zmi,xzni_norm,xzTi_norm,ir,coll_mode*0+1);
-	[Feim,Aeim] = eicoll_dke_yp(vm,zZi,zmi,xzni_norm,xzTi_norm,ir,coll_mode*0+1);
-	[Feip,Aeip] = eicoll_dke_yp(vp,zZi,zmi,xzni_norm,xzTi_norm,ir,coll_mode*0+1);
+   [Fei,Aei,Btei] = eicoll_dke_yp(v,zZi,zmi,xzni_norm,xzTi_norm,ir,coll_mode);
+	[Feim,Aeim] = eicoll_dke_yp(vm,zZi,zmi,xzni_norm,xzTi_norm,ir,coll_mode);
+	[Feip,Aeip] = eicoll_dke_yp(vp,zZi,zmi,xzni_norm,xzTi_norm,ir,coll_mode);
 %	
 	Feim(1) = 1;%Avoid singularity at p = 0, but the value is not used	
 	Feimm = [0,Fei(1:npn-1)];
@@ -1260,7 +1260,7 @@ for ir = 1:nr,
 	XXFm_c_ijm(:,:,ir) = XFm_c_ijm;
 	XXDmm_c_ijp(:,:,ir) = XDmm_c_ijp;
 	XXDmp_c_ijp(:,:,ir) = XDmp_c_ijp;
-	XXFm_c_ijp(:,:,ir) = XFm_c_ijp;
+	XXFm_c_ijp(:,:,ir) = XFm_c_ijp;	
 %	
 % Electric field
 %
@@ -2092,7 +2092,7 @@ end
 ZXXf0{1} = XXfinit;%Time evolution of the distribution function is stored
 %
 for it_f = 2:nit_f,   	
-	if sum(residu_f(:,it_f-1) >= prec0_f) >= 1 & sum(prec_residu_f(:,it_f-1)) >= prec0_f,
+	if sum(residu_f(:,it_f-1) >= prec0_f) >= 1 & sum(prec_residu_f(:,it_f-1)) >= prec0_f | it_f < 5,
 %	
 		MMXf0_t = [];
 		MMXq_t = [];
@@ -2337,7 +2337,7 @@ if dke_mode == 1,
 %
 	XXf0_g = XXf0_g_th;%Initial guess (thermal limit, large aspect ratio, Lorentz model)
 	for it_g = 2:nit_g, 
-		if sum(residu_g(:,it_g-1) >= prec0_g) >= 1 & sum(prec_residu_g(:,it_g-1)) >= prec0_g,
+		if sum(residu_g(:,it_g-1) >= prec0_g) >= 1 & sum(prec_residu_g(:,it_g-1)) >= prec0_g | it_g < 5,
 %
 			MMXf0_g_t = [];
 			MMXq_g_t = [];

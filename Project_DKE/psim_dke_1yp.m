@@ -34,11 +34,11 @@ ntheta = 65;%Size of the theta grid for the magnetic equilibrium (ntheta ~= npsi
 %
 %Mesh size calculation
 %
-grid_uniformity = 0;%Pitch-angle and momentum grids uniformity: (0) no, (1) yes (-1 for specific test for DKE, transient and pitch-angle grid only)
+grid_uniformity = -1;%Pitch-angle and momentum grids uniformity: (0) no, (1) yes (-1 for specific test for DKE, transient and pitch-angle grid only)
 grid_method = 1;%Pitch-angle grid calculation technique: (0): old method, (1) new method
-nmhu_S = 73;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
-np_S = 150;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run) WARNING: must be adjusted so that effective momentum point number is larger than thepitch-angle one.
-pnmax_S = 15;%Maximum value of the flux momentum grid (pth_ref)
+nmhu_S = [50:1:250];%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
+np_S = 200;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run) WARNING: must be adjusted so that effective momentum point number is larger than thepitch-angle one.
+pnmax_S = 20;%Maximum value of the flux momentum grid (pth_ref)
 %
 %Pitch-angle grid
 %
@@ -55,7 +55,7 @@ grid_power = 1.5; % power for mhu grid step varations (grid_power > 1) (Note: fo
 %Momentum grid
 %
 np_S_ref = 20;%position in the mpomentum grid where dpn_S is twice the minimum value(must be ajusted with snp parameter)
-snp = 2;%pgridfactor (Uniform grid: pgridfactor = 1, non-uniform grid: pgridfactor >= 1) 
+snp = 1;%pgridfactor (Uniform grid: pgridfactor = 1, non-uniform grid: pgridfactor >= 1) 
 spfac = 20;%reduction factor for the momentum supergrid used in collision integrals
 %
 %Normalized radii at which the distribution is calculated (DKE or FP)
@@ -64,7 +64,7 @@ spfac = 20;%reduction factor for the momentum supergrid used in collision integr
 %Values of the radial flux grid [1,p] (If one radial value: local calculation only)
 %
 psin_S = [];%5.286742555900838e-002; %[0.1]%(rho = 0.25 in CMOD)
-rho_S = [0.2,0.4,0.6,0.8];%[0.05:0.07:0.9];%;0.03322100141578101;0.71365;
+rho_S = [0.2];%[0.05:0.07:0.9];%;0.03322100141578101;0.71365;
 %
 psin_display = NaN;%Approximate radial value at which results are displayed if display_mode >= 1 [1,1]
 rho_display = 0.4;
@@ -76,8 +76,8 @@ norm_ref = 1;%Normalization procedure for the ohmic electric field, LH and EC qu
 %
 % Ohmic electric field
 %
-epsi0 = 0.01;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e) (WARNING: ref_mode = 0 by default when multiple radial positions are studied simultaneously, whatever the value in this file)
-epsia = 0.01;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
+epsi0 = 0.0;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e) (WARNING: ref_mode = 0 by default when multiple radial positions are studied simultaneously, whatever the value in this file)
+epsia = 0.0;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
 eepsi = 0;%Exponent for Ohmic electric field
 %
 % RF Waves: For each of the following calculations:
@@ -111,23 +111,23 @@ nhuloss = NaN;%Magnetic ripple loss frequency, nhuloss > 1000 (or NaN if no ripp
 %
 % Collision operator
 %
-coll_mode = 2;%Relativistic collision operator: (0) Relativistic Maxwellian background, (1) High-velocity limit, (2) Linearized Belaiev-Budker (3) Non-relativistic Lorentz model, (4) Non-relativistic Maxwellian background
+coll_mode = 0;%Relativistic collision operator: (0) Relativistic Maxwellian background, (1) High-velocity limit, (2) Linearized Belaiev-Budker (3) Non-relativistic Lorentz model, (4) Non-relativistic Maxwellian background
 %
 % Run mode
 %
-bounce_mode = 1;%Bounce averaging option: (0) no bounce averaging, (1) bounce averaging full implicit method with 15 diagonals
+bounce_mode = 0;%Bounce averaging option: (0) no bounce averaging, (1) bounce averaging full implicit method with 15 diagonals
 dke_mode = 0;%Fokker-Planck equation (0), Drift Kinetic equation (1)
 equil_mode = 0;%Equilibrium option: (0) circular concentric flux-surfaces, (1) numerical equilibrium
 %
 norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
 boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
-prec0_f = 1e-10;%Convergence level of the residu
+prec0_f = 1e-11;%Convergence level of the residu
 nit_f = 50;%Maximum number of iterations for f (> 1)
 initguess_f = 0;%Initial guess for the distribution function: (0) Maxwellian, (1) Fuchs model with Tperp for LH current drive only, (2) from a file
 initfile_f = 'RESULTS_TS_S1.mat';%If initguess_f = 2. The file must be in the directory Project_DKE, and created by dke_4_1yp.m 
 %
-boundary_mode_g = 1;%Number of points where the first distribution function for the Lorentz model is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
-prec0_g = 1e-10;%Convergence level of the residu (if NaN, iterations stop with nit_g)
+boundary_mode_g = 0;%Number of points where the first distribution function for the Lorentz model is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
+prec0_g = 1e-11;%Convergence level of the residu (if NaN, iterations stop with nit_g)
 nit_g = 100;%Maximum number of iterations for g
 %
 %WARNING: param_inv must evolve like [1e-5,<2-3],[1e-4,<4-5],[1e-3,<9-10],[1e-2,<19-20] when RF waves are applied. Otherwise, density is not conserved !
@@ -140,10 +140,10 @@ invproc = 1;%Iterative matrix inversion method: (1) cgs iterative method, (2) bi
 param_inv = [1e-4,4];%Parameters for the matrix inversion procedure. Minimum value of the drop tolerance for the partial LU decomposition (drop tol = max(1/dtn/nr,param_inv(1))), and maximum number of iteration for iterative method< 20 (param_inv(1) depends of boundary_mode, if param_inv(1)=0, full LU factorization)
 %
 dp_cyl = 0.1;%Cylindrical momentum step (pth_ref)
-display_mode = 1;%Display mode: (0): no, (1): partial, (2): full
+display_mode = 0;%Display mode: (0): no, (1): partial, (2): full
 nlevel = 30;%Number of level for contour plots
 store_mode = 0;%Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight
-diary_mode = 0;%Write in a file named "diary_dke_xx" the output of the code in the MatLab command window: (0) no save, (1) save
+diary_mode = 1;%Write in a file named "diary_dke_xx" the output of the code in the MatLab command window: (0) no save, (1) save
 auto_mode = 0;%(0): Interactive mode for multiple radius output display, (1): automatic mode for one output display at rho_display
 %
 sfac = [sfac0,sfac1,sfact];
