@@ -1,0 +1,83 @@
+Three different coordinates system are considered here. Unit vectors are
+covered with a hat like $\widehat{v}$. 
+
+\begin{itemize}
+\item  First, the toroidal coordinate system $\left( R,Z,\phi \right) $ with
+local orthogonal vectors 
+\begin{eqnarray}
+\widehat{R} &=&\nabla R \\
+\widehat{Z} &=&\nabla Z \\
+\widehat{\phi } &=&R\nabla \phi 
+\end{eqnarray}
+This coordinate system conserves the largest generality in the magnetic
+geometry
+
+\item  Second, the poloidal (polar) coordinate system $\left( r,\theta ,\phi
+\right) $, centered around the magnetic axis $\left( R_{0},Z_{0}\right) $
+defined as the position of an extremum of $\psi $ (can be arbitrarily chosen
+as $\psi =0$), and with local orthogonal vectors 
+\begin{eqnarray}
+\widehat{r} &=&\nabla r \\
+\widehat{\theta } &=&r\nabla \theta  \\
+\widehat{\phi } &=&R\nabla \phi 
+\end{eqnarray}
+and the relations 
+\begin{eqnarray}
+R &=&R_{0}+r\cos \theta  \\
+Z &=&Z_{0}+r\sin \theta 
+\end{eqnarray}
+which can be inverted as 
+\begin{eqnarray}
+r &=&\sqrt{\left( R-R_{0}\right) ^{2}+\left( Z-Z_{0}\right) ^{2}} \\
+\theta  &=&\arctan \left( \frac{Z-Z_{0}}{R-R_{0}}\right) +\pi \text{sign}%
+\left( R-R_{0}\right)   \label{theta}
+\end{eqnarray}
+
+\item  Third, the flux coordinate system $\left( \psi ,s,\phi \right) $ is
+the natural system for Fokker-Planck simulations, since the particles are
+essentially confined to a given flux surface $\psi $. The distance $s$ is
+the length along the poloidal magnetic field lines. We can choose its origin
+as being at the position of minimum $B$-field amplitude within a
+flux-surface. 
+\begin{equation}
+B\left( \psi ,s\equiv 0\right) =\min \left\{ B\left( \psi ,s\right) \right\}
+=B_{\min }\left( \psi \right) 
+\end{equation}
+The direction is counter-clockwise and the limits $s_{\min }$ and $s_{\max }$
+are set at the position of maximum magnetic field
+
+\begin{equation}
+B\left( \psi ,s\equiv s_{\min }\right) =B\left( \psi ,s\equiv s_{\max
+}\right) =\max \left\{ B\left( \psi ,s\right) \right\} =B_{\max }\left( \psi
+\right)   \label{bmax}
+\end{equation}
+The local orthogonal vectors are 
+\begin{eqnarray}
+\widehat{\psi } &=&\frac{\nabla \psi }{\left| \nabla \psi \right| }
+\label{psih} \\
+\widehat{s} &=&\frac{\nabla \phi \times \nabla \psi }{\left| \nabla \psi
+\right| \left| \nabla \phi \right| }=-\widehat{b}_{p} \\
+\widehat{\phi } &=&R\nabla \phi   \label{phih}
+\end{eqnarray}
+where $\widehat{b}_{p}$ is the unit vector in the direction of the poloidal
+magnetic field.
+
+\item  An alternative to the previous system may be easier to implement
+numerically for the calculation of the bounce coefficients. This is the
+system $\left( \psi ,\theta ,\phi \right) $. The $\theta $ grid is defined
+in (\ref{theta}). We also define, for geometrical purposes, a flux-function $%
+\rho \left( \psi \right) $ which coincides with the normalized radius on the
+horizontal LFS midplane. Indeed, in an axisymmetric system, using the
+functions $R\left( \psi ,\theta \right) $ and $Z\left( \psi ,\theta \right) $%
+, we define $\rho \left( \psi \right) $ as 
+\[
+\rho \left( \psi \right) =\frac{R\left( \psi ,0\right) -R_{0}}{R_{\max
+}-R_{0}}
+\]
+where $R_{\max }=R\left( \psi _{\max },0\right) $ is the value of $R$ on the
+separatrix as it crosses the midplane. The local orthogonal vectors are the
+same as (\ref{psih}-\ref{phih}). The 2-D outputs from the axisymmetric
+equilibrium code HELENA\ are given on the $\left( \psi ,\theta \right) $
+grid. The system $\left( \psi ,\theta ,\phi \right) $ will be used from now
+on.
+\end{itemize}
