@@ -1,5 +1,5 @@
 function [tokname,snumber,...
-grid_uniformity,grid_power,nmhu_S,np_S,pnmax_S,sfac,snmhu,snp,...
+grid_uniformity,grid_power,nmhu_S,np_S,pnmax_S,sfac,spfac,snmhu,snp,...
 psin_S,psin_display,dpsin_dke,...
 ref_mode,norm_ref,...
 epsi0,epsia,eepsi,...
@@ -44,14 +44,15 @@ grid_power = 1.5; % power for mhu grid step varations (grid_power > 1) (Note: fo
 %Momentum Grid
 %
 snp = 10;%pgridfactor (Uniform grid: pgridfactor << 1, non-uniform grid: pgridfactor >= 1) 
+spfac = 20;%reduction factor for the supergrid used in collision integrals
 %
 %Normalized radii at which the distribution is calculated (DKE or FP)
 %The syntax rho='all' may be also used if all mhu values are considered. 
 %
 %Values of the radial flux grid [1,p] (If one radial value: local calculation only)
 %
-psin_S = [];5.286742555900838e-002; %(rho = 0.25 in CMOD)
-rho_S = [0:0.1:1];0.03322100141578101;0.71365;
+psin_S = [0.1];5.286742555900838e-002; %(rho = 0.25 in CMOD)
+rho_S = [];0.03322100141578101;0.71365;
 %
 psin_display = NaN;%Approximate radial value at which results are displayed if display_mode >= 1 [1,1]
 rho_display = 0.7;
@@ -95,7 +96,7 @@ initguess = 0;%Initial guess for the distribution function: (0) Maxwellian, (1) 
 invproc = [3];%Matrix inversion method: (1) Full LU factorization, (2) qmr iterative method, (3) bicgstab iterative method, (4) cgs iterative method
 param_inv = [2e-3,30];%Parameters for the matrix inversion procedure when invproc > 1. Precision of the partial LU decomposition, and maximum number of iteration for iterative methods
 dp_cyl = 0.1;%Cylindrical momentum step (pth_ref)
-display_mode = 2;%Display mode: (0): no, (1): partial, (2): full
+display_mode = 1;%Display mode: (0): no, (1): partial, (2): full
 nlevel = 30;%Number of level for contour plots
 store_mode = 0;%Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight
 diary_mode = 1;%Write in a file named "diary_dke_xx" the output of the code in the MatLab command window: (0) no save, (1) save
