@@ -18,7 +18,7 @@ if coll_mode == 1,%High-velocity limit
 elseif coll_mode == 3,%Lorentz model
 	Fei = zeros(size(v));
 	Aei = zeros(size(v));
-	Btei = zeros(size(v));
+	Btei = ones(size(v))/2;
 else,%Maxwellian background (non-relativistic limit)
 	u = (ones(size(xzTi_norm(:,ir)))*v)./(sqrt(xzTi_norm(:,ir).*(me./zmi'))*ones(1,length(v)))./sqrt(2);	
 	Fei = sum(((zZi'.^2.*(me./zmi').*xzni_norm(:,ir))*ones(1,length(v))).*(erf(u)-2*u.*exp(-u.^2)/sqrt(pi)))./v2;

@@ -1210,7 +1210,7 @@ for ir = 1:nr,
 		B2 = B2_1/2 + B2_2.*(-gamma2/6 + J1./z2./gamma/8 - gamma.*J2./z2/4) - B2_3.*(gamma - sigma./z)./pn2./gamma/4;   
 		Btee = 4*pi*(B1 + B2);  	
 	elseif coll_mode == 3,%Lorentz model
-		Btee = ones(1,npn)/2;
+		Btee = zeros(1,npn);
 	elseif coll_mode == 4,%Maxwellian background
 	   u = v/sqrt(2)/xTe_norm(ir)';                  
 	   Btee = xne_norm(ir)'.*((2*u.^2-1).*erf(u)+2*u.*exp(-u.^2)/sqrt(pi))./v./u./u/4;
