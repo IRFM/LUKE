@@ -10,18 +10,19 @@ rf_list,nit_rf,prec_rf,...
 coll_mode,bounce_mode,dke_mode,equil_mode,...
 vparmin_r,Dr0,pDr,Dr_model,Vr0,pVr,Vr_model,...
 nhuloss,...
-norm_mode_f,boundary_mode_f,prec0_f,nit_f,initguess_f,...
+norm_mode_f,boundary_mode_f,prec0_f,nit_f,initguess_f,initfile_f,...
 boundary_mode_g,prec0_g,nit_g,...
 dtn,invproc,param_inv,...
 dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode,iloop)
 %
 %  Test function of the 3-D relativistic bounce-averaged electron drift kinetic equation solver 
-%  for the LH and EC absorption problem in presence of an Ohmic electric field.
-%  Arbitrary axisymmetric plasma equilibrium
-%  See dke_1_4yp.m, ptok_dke_1yp.m
+%  for the RF wave absorption problem in presence of an Ohmic electric field (electron bootstrap current consistent with non-Maxwellian distribution)
+%  Small banana width approximation
+%  Arbitrary axisymmetric plasma equilibrium (linked to HELENA equlibrium code, via mexfile)
+%  Plasma current, RF power absorption, runaway rate, magnetic ripple loss and fast electron bremsstrahlung calculations
+%  See dke_1_4yp.m, psim_dke_1yp.m, ptok_dke_1yp.m
 %
-%by Y.PEYSSON CEA-DRFC 30/07/1997 <yves.peysson@cea.fr>
-%Drift kinetic calculations done by J. Decker and Y. Peysson
+%by Y.Peysson (CEA-DRFC) <yves.peysson@cea.fr> and J. Decker (MIT/RLE) <jodecker@mit.edu>
 %
 format long e;
 global nfig;
@@ -32,7 +33,7 @@ time_pause = 1;%Pause delay for figure display (s)
 %
 %Physical constants
 %
-[qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;
+[qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;%Universal physics constants
 %
 if bounce_mode == 0,dke_mode = 0;end
 if dke_mode == 1,bounce_mode = 1;end
@@ -52,7 +53,7 @@ nit = [nit_f,nit_g];
 %
 % Plasma equilibrium
 %
-[theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,psia,xmhu0T2] = equilibrium_jd(tokname,xpsin,display_mode);
+[theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,psia,xmhu0T2,HXR] = equilibrium_jd(tokname,xpsin,display_mode);
 %
 if diary_mode == 1, 
 	diaryfile = ['diary_dke_',int2str(iloop)];
@@ -326,6 +327,7 @@ for ir = 1:nr,
 	XXnhuloss_ref(:,:,ir) = Xnhuloss_ref;
 %
    if initguess_f == 1  & (isnan(xvparmin_lh_ref(ir_display)) == 1 | isnan(xvparmax_lh_ref(ir_display)) == 1 | nb_lh ~= 1 ),initguess_f = 0 ;end
+%
 	if initguess_f == 0,
 		fM_ref = exp(-pn_ref.*pn_ref./(1 + gamma_ref)/xTe_norm(ir))/2/pi/xTe_norm(ir)/sqrt(2*pi*xTe_norm(ir));%Maxwellian distribution normalized to normalized density ne_norm (1st order gamma corrections)
 		XfM_ref = fM_ref'*ones(1,nmhu);
@@ -370,9 +372,9 @@ for ir = 1:nr,
 		Xf0_ref = xne_norm(ir)*Xf0_ref/normf0_ref;
 		title_initguess = 'Fuchs et al. LH model';
 	elseif initguess_f == 2,
-		eval(['load ',dossier,s,'XXfinit.mat'])
-		Xf0_ref = squeeze(XXfinit(:,:,ir));
-		title_initguess = 'Initial distribution from data file';
+		eval(['load ',dossier,s,initfile_f,' XXf0_ref ']);
+		Xf0_ref = XXf0_ref(:,:,ir);
+		title_initguess = 'Initial distribution from a file';
 	end
 	XXfinit_ref(:,:,ir) = Xf0_ref;
 %
@@ -635,7 +637,7 @@ xyPabs_tot_rf_fsav_in = 0;
 %
 for it_rf=1:nit_rf % convergence in the ray-tracing mode
 %
-    [waveparam,nb_list] = rfwave_dke_jd(xrho,xpsin,xpsin_dke,xdpsin_dke,xyPabs_tot_rf_fsav_in,betath_ref,ne_ref,xrbetath,xrnhuth,xTe_norm,xne_norm,xzni_norm,zZi,zmi,ap,Rp,Zp,theta,XR,XZ,XBR,XBZ,XBphi,xB0,bounce_mode,rf_list);%Look at the function for the RF wave input parameters
+	[waveparam,nb_list] = rfwave_dke_jd(xrho,xpsin,xpsin_dke,xdpsin_dke,xyPabs_tot_rf_fsav_in,betath_ref,ne_ref,xrbetath,xrnhuth,xTe_norm,xne_norm,xzni_norm,zZi,zmi,ap,Rp,Zp,theta,XR,XZ,XBR,XBZ,XBphi,xB0,bounce_mode,rf_list);%Look at the function for the RF wave input parameters
 %    
     [XXheaviside,...
         XXf0_ref,XXf0_tp_ref,XXf0_g_ref,XXf0_L_tp_ref,XXf0_L_g_ref,...
@@ -658,7 +660,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
         XXDr_ref,XXVr_ref,...
         XXnhuloss_ref,xdeltaripple,...
         xftp_norm_ref,bounce,coll_mode,...
-        norm_mode_f,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,XXfinit_ref);
+        norm_mode_f,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,snumber,XXfinit_ref);
 %
     if sum(rf_list) > 0
         xyPabs_rf_dke_fsav_out = ZP0_ref_fsav{3,1} + ZP0_ref_fsav{3,2} + ZP0_ref_fsav{3,3}; % flux-surface averaged density of absorbed power.
@@ -711,19 +713,43 @@ if display_mode >= 1,
     disp('-------------------------------------------------------------------------------------------------------------------');
 end
 %
+filename = ['RESULTS_',tokname,'_S',int2str(snumber),'.mat'];
 [s,dossier,machine] = comput_dke_yp;
-if exist([dossier,s,'dke_',int2str(ir_display),'_s',int2str(snumber),'_out.mat']) == 2,
-	delete([dossier,s,'dke_',int2str(ir_display),'_s',int2str(snumber),'_out.mat']);
-end
-eval(['save ',dossier,s,'dke_',int2str(ir_display),'_s',int2str(snumber),'_out.mat']);
-if exist([dossier,s,'dke_',int2str(ir_display),'_s',int2str(snumber),'_out.mat']) == 2,
-	disp('-------------------------------------------------------------------------------------------------------------------');
-	info_dke_yp(2,['The data file : dke_',int2str(ir_display),'_s',int2str(snumber),'_out.mat has been successfully saved !']);
+while 1,
+	if exist([dossier,s,filename]) == 2 & auto_mode == 0,%Only in manual mode
+		del = input_dke_yp(['File ',filename,' already exists ! Do you want to overwrite it (yes:1, no:0)'],0);
+		if del == 1,
+			break;
+		else
+			snumber = input_dke_yp('New simulation number',snumber+1);
+			filename = ['RESULTS_',tokname,'_S',int2str(snumber),'.mat'];	
+		end
+	else
+		del = 1;
+		break;
+	end
 end
 %
-[xJrf0_mksa_out,xJboot_e_mksa_out,xJboot_i_mksa_out,xJtot_mksa_out,...
-xPabs0_mksa_out,xPabs_tot_mksa_out,...
- xeta0_mksa_out,xepsi_mksa_out,xia_out,xft_out] = display_dke_1yp(['dke_',int2str(ir_display),'_s',int2str(snumber),'_out.mat']);
+if del == 1	,
+	delete([dossier,s,filename]);
+	eval(['save ',dossier,s,filename]);
+	if exist([dossier,s,filename]) == 2,
+		disp('-------------------------------------------------------------------------------------------------------------------');
+		info_dke_yp(2,['The data file : ',filename,' has been successfully saved !']);
+%
+		if auto_mode == 0,%Only in manual mode
+			dispres = input_dke_yp(['0: No display, 1: Display all results, 2: Display time evolution'],1); 
+			if dispres == 1,
+				[xJrf0_mksa_out,xJboot_e_mksa_out,xJboot_i_mksa_out,xJtot_mksa_out,xPabs0_mksa_out,xPabs_tot_mksa_out,xeta0_mksa_out,xepsi_mksa_out,xia_out,xft_out] = display_dke_1yp(filename);
+			elseif dispres == 2,
+				display_time_dke_1yp(filename)
+			end
+		end
+	else
+		info_dke_yp(2,['The data file : ',filename,' has not been saved, an unknown error occurs on the disk !']);	
+	end
+end
+%
 
 
 

@@ -121,7 +121,7 @@ while 1,
 		info_dke_yp(2,['MKSA Dreicer field unit (Edreicer_ref): ',num2str(Edreicer_ref),' (V/m)'])
 %
 		disp('-------------------------------------------------------------------------------------------------------------------');
-		info_dke_yp(2,['Integration time step: ',num2str(dtn/nhu_ref),' (s)'])
+		info_dke_yp(2,['Integration time step: ',num2str(abs(dtn)/nhu_ref),' (s)'])
 		disp('-------------------------------------------------------------------------------------------------------------------');
 		info_dke_yp(2,['Major plasma radius on the LFS midplane (Rp) : ',num2str(Rp)])
 		info_dke_yp(2,['Major plasma radius on the LFS midplane (ap) : ',num2str(ap)])

@@ -34,7 +34,8 @@ if nargin < 4,savename = tokamak;end
 [ap,Rp,Zp,xpoint,Bt,...
 	 Ip,j0,ja,ej,qmin,eq,...
 	 Te0,Tea,eTe,ne0,nea,ene,Ti0,Tia,eTi,...
-	 Zi,mi,fi,Zeff0,Zeffa,eZeff] = ptok_dke_1yp(tokamak);        
+	 Zi,mi,fi,Zeff0,Zeffa,eZeff,...
+	 HXR] = ptok_dke_1yp(tokamak);        
 %
 % Initial calculations to set up the guess for HELENA
 %
@@ -153,7 +154,7 @@ if exist(['helmex77',mexext]) == 3,
 %		
 		filename = ['EQUIL_',savename,'.mat'];
 %
-	eval(['save ',dossier,s,filename,' ppsi theta R Z BR BZ BPHI pTe pne pzTi pzni zZi zmi ftra'])   
+	eval(['save ',dossier,s,filename,' ppsi theta R Z BR BZ BPHI pTe pne pzTi pzni zZi zmi ftra HXR'])   
 else
 	error(['The mexfile helmex77',mexext,' does not exists ! Compile it for the computer you are using...']);
 end

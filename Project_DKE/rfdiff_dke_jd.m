@@ -2,7 +2,10 @@ function [ZYXXD_rf,ZYXXD_rf_tp,ZYXXF_rf_tp] = rfdiff_dke_jd(waveparam,...
     theta,XR,XZ,XBR,XBZ,XBphi,xB0,Rp,Zp,xqtilde,...
     XXheaviside,XXheaviside_p,XXheaviside_m,... 
     Xmhup,Xmhu,Xmhum,Xmhu2p,Xmhu2,Xmhu2m,X1mmhu2p,X1mmhu2,X1mmhu2m,...
-    pnpp,pnp,pn,pnm,pnmm,Xpnpp,Xpnp,Xpn,Xpnm,Xpnmm,Xgammapp,Xgammap,Xgamma,Xgammam,Xgammamm,...
+	 Xdmhumm,Xdmhum,Xdmhu,Xdmhup,Xdmhupp,...
+    pnpp,pnp,pn,pnm,pnmm,Xpnpp,Xpnp,Xpn,Xpnm,Xpnmm,...
+	 Xdpnmm,Xdpnm,Xdpn,Xdpnp,Xdpnpp,...
+    Xgammapp,Xgammap,Xgamma,Xgammam,Xgammamm,...
     Xxlambdap,Xxlambda,Xxlambdam,...
     betath_ref,bounce_mode,dke_mode)
 %
@@ -38,14 +41,20 @@ function [ZYXXD_rf,ZYXXD_rf_tp,ZYXXF_rf_tp] = rfdiff_dke_jd(waveparam,...
 %
 %   refer to documentation for detailed description    
 %
-% by J. Decker (MIT/RLE, jodecker@mit.edu) 02/05/03 
+% by J. Decker (MIT/RLE) <jodecker@mit.edu> and Y. Peysson CEA/DRFC <yves.peysson@cea.fr>
 %
-qe = 1.60217733e-19;%Absolute value of the electron charge (C)
-me = 9.1093897e-31;%Electron rest mass (Kg)
+[qe,me] = pc_dke_yp;%Universal physics constant
 %
 [npn,nmhu] = size(Xpn);
 nr = length(xB0);
 nb = size(waveparam,2);
+%
+%Linear interpolation coefficient in p and mhu for LH wave only (old technique Karney-Shoucri)
+% 
+Xdeltap_ipj = Xdpnpp./(Xdpn + Xdpnpp);
+Xdeltap_imj = Xdpn./(Xdpn + Xdpnmm);
+Xdeltam_ijp = Xdmhupp./(Xdmhu + Xdmhupp);
+Xdeltam_ijm = Xdmhu./(Xdmhu + Xdmhumm);
 %
 % 4D duplications
 %
@@ -72,6 +81,11 @@ YXXgammap = repmat(Xgammap,[1,1,nr,nb]);
 YXXgamma = repmat(Xgamma,[1,1,nr,nb]);
 YXXgammam = repmat(Xgammam,[1,1,nr,nb]);
 YXXgammamm = repmat(Xgammamm,[1,1,nr,nb]);
+%
+YXXdeltap_ipj = repmat(Xdeltap_ipj,[1,1,nr,nb]);
+YXXdeltap_imj = repmat(Xdeltap_imj,[1,1,nr,nb]);
+YXXdeltam_ijp = repmat(Xdeltam_ijp,[1,1,nr,nb]);
+YXXdeltam_ijm = repmat(Xdeltam_ijm,[1,1,nr,nb]);
 %
 YXXqtilde = shiftdim(repmat(xqtilde',[1,nb,npn,nmhu]),2);
 YXXB0 = shiftdim(repmat(xB0',[1,nb,npn,nmhu]),2);
@@ -109,8 +123,7 @@ YXXepolz_rf = shiftdim(repmat(xyepolz_rf,[1,1,npn,nmhu]),2);
 %
 % Magnetic geometry parameters at theta = thetab_rf
 %
-[xyBb_rf,xyBPb_rf,xyrb_rf] = mg_interp_jd(theta,XR,XZ,XBR,XBZ,XBphi,Rp,Zp,xythetab_rf);
-%
+[xyBb_rf,xyBPb_rf,xyrb_rf] = mg_interp_jd(theta,XR,XZ,XBR,XBZ,XBphi,Rp,Zp,xythetab_rf);%
 YXXBb_rf = shiftdim(repmat(xyBb_rf,[1,1,npn,nmhu]),2);
 %
 YXXsigmap = sign(YXXmhup);
@@ -299,12 +312,14 @@ YXXdeltares_old_immj = zeros(size(YXXdeltares_old_ij));
 YXXdeltares_old_ijp = zeros(size(YXXdeltares_old_ij)); 
 YXXdeltares_old_ijm = zeros(size(YXXdeltares_old_ij)); 
 %
-YXXdeltares_old_ippj(1:npn-1,:,:,:) = YXXdeltares_old_ij(2:npn,:,:,:); YXXdeltares_old_ippj(npn,:,:,:) = 0;
-YXXdeltares_old_ipj(1:npn-1,:,:,:) = (YXXdeltares_old_ij(1:npn-1,:,:,:) + YXXdeltares_old_ij(2:npn,:,:,:))/2; YXXdeltares_old_ipj(npn,:,:,:) = YXXdeltares_old_ij(npn,:,:,:)/2;
-YXXdeltares_old_imj(2:npn,:,:,:) = (YXXdeltares_old_ij(1:npn-1,:,:,:) + YXXdeltares_old_ij(2:npn,:,:,:))/2;YXXdeltares_old_imj(1,:,:,:) = YXXdeltares_old_ij(1,:,:,:)/2;
+YXXdeltares_old_ippj(1:npn-1,:,:,:) = YXXdeltares_old_ij(2:npn,:,:,:);YXXdeltares_old_ippj(npn,:,:,:) = 0;
 YXXdeltares_old_immj(2:npn,:,:,:) = YXXdeltares_old_ij(1:npn-1,:,:,:);YXXdeltares_old_immj(1,:,:,:) = 0;
-YXXdeltares_old_ijp(:,1:nmhu-1,:,:) = (YXXdeltares_old_ij(:,1:nmhu-1,:,:) + YXXdeltares_old_ij(:,2:nmhu,:,:))/2;YXXdeltares_old_ijp(:,nmhu,:,:) = YXXdeltares_old_ij(:,nmhu,:,:)/2;   
-YXXdeltares_old_ijm(:,2:nmhu,:,:) = (YXXdeltares_old_ij(:,1:nmhu-1,:,:) + YXXdeltares_old_ij(:,2:nmhu,:,:))/2;YXXdeltares_old_ijm(:,1,:,:) = YXXdeltares_old_ij(:,1,:,:)/2;
+YXXdeltares_old_ijpp(:,1:nmhu-1,:,:) = YXXdeltares_old_ij(:,2:nmhu,:,:);YXXdeltares_old_ijpp(:,nmhu,:,:,:) = 0;
+YXXdeltares_old_ijmm(:,2:nmhu,:,:) = YXXdeltares_old_ij(:,1:nmhu-1,:,:);YXXdeltares_old_ijmm(:,1,:,:) = 0;
+YXXdeltares_old_ipj = YXXdeltares_old_ippj.*(1-YXXdeltap_ipj) + YXXdeltares_old_ij.*YXXdeltap_ipj; 
+YXXdeltares_old_imj = YXXdeltares_old_ij.*(1-YXXdeltap_imj) + YXXdeltares_old_immj.*YXXdeltap_imj;
+YXXdeltares_old_ijp = YXXdeltares_old_ijpp.*(1-YXXdeltam_ijp) + YXXdeltares_old_ij.*YXXdeltam_ijp;
+YXXdeltares_old_ijm = YXXdeltares_old_ij.*(1-YXXdeltam_ijm) + YXXdeltares_old_ijmm.*YXXdeltam_ijm;
 %
 %Old LH operator: 1/vpar dependence removed (Karney, Shoucri)
 %

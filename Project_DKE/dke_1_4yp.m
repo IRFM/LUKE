@@ -19,7 +19,7 @@ dke_1_4yp(tokname,theta,...
     XXDr,XXVr,...
     XXnhuloss,delta,...
     xftp_norm,bounce,coll_mode,...
-    norm_mode,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,XXfinit)
+    norm_mode,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,snumber,XXfinit)
 %
 %
 %   Self-consistent 3-D relativistic solver of the drift kinetic equation in momentum space with Beliaev-Budker collision integrals 
@@ -136,6 +136,7 @@ elseif nargin == 39,
 	param_inv = [1e-3,20];
 	display = [0,1,1];
 	store_mode = 0;
+	snumber = 1;
 elseif nargin == 40,
 	norm_mode = 0;
 	boundary_mode = [1,1];
@@ -146,6 +147,7 @@ elseif nargin == 40,
 	param_inv = [1e-3,20];
 	display = [0,1,1];
 	store_mode = 0;
+	snumber = 1;
 elseif nargin == 41,
 	boundary_mode = [1,1];
 	prec0 = [1e-10,1e-10];
@@ -154,6 +156,7 @@ elseif nargin == 41,
 	param_inv = [1e-3,20];
 	display = [0,1,1];
 	store_mode = 0;
+	snumber = 1;
 elseif nargin == 42,
 	dtn = 1000;
 	prec0 = [1e-10,1e-10];
@@ -162,6 +165,7 @@ elseif nargin == 42,
 	param_inv = [1e-3,20];
 	display = [0,1,1];
 	store_mode = 0;
+	snumber = 1;
 elseif nargin == 43,
 	prec0 = [1e-10,1e-10];
 	nit = [50,200];
@@ -169,29 +173,37 @@ elseif nargin == 43,
 	param_inv = [1e-3,20];
 	display = [0,1,1];
 	store_mode = 0;
+	snumber = 1;
 elseif nargin == 44,
 	nit = [50,200];
 	invproc = 1;
 	param_inv = [1e-3,20];
 	display = [0,1,1];
 	store_mode = 0;
+	snumber = 1;
 elseif nargin == 45,
 	invproc = 1;
 	param_inv = [1e-3,20];
 	display = [0,1,1];
 	store_mode = 0;
+	snumber = 1;
 elseif nargin == 46,
 	param_inv = [1e-3,20];	
 	display = [0,1,1];
 	store_mode = 0;
+	snumber = 1;
 elseif nargin == 47,
 	display = [0,1,1];	
 	store_mode = 0;
+	snumber = 1;
 elseif nargin == 48,	
 	store_mode = 0;
+	snumber = 1;
+elseif nargin == 49,	
+	snumber = 1;
 end
 %
-narginmax = 48;
+narginmax = 49;
 %
 timeCPU0 = cputime;
 %
@@ -298,8 +310,10 @@ maskl = tril(ones(npn,npn)) - 0.5*diag(ones(1,npn));
 %Temporary data saving on disk
 %
 if store_mode == 1,
-	delete MXPmat.mat;
-	save MXPmat.mat nr;
+	filename = ['MXP_',tokname,'.mat'];
+	[s,dossier,machine] = comput_dke_yp;
+	eval(['delete ',dossier,s,filename])
+	eval(['save ',dossier,s,filename,' nr'])
 end
 %
 %Angular grid
@@ -514,6 +528,18 @@ if display_mode >= 1,info_dke_yp(2,['Bounce integrals calculations done. Elapsed
 %
 %Super matrices size definition and masks calculations for trapped electrons in the bounce mode
 %
+MMXP_f_t = [];	
+MMXT_f_t = [];
+sm_f = zeros(1,nr+1);
+sm_T_f = zeros(1,nr+1);
+normf0 = zeros(nr,nit_f);
+normf1 = zeros(nr,nit_f);
+curr0 = zeros(nr,nit_f);
+curr1 = zeros(nr,nit_f);
+prec_curr = zeros(nr,nit_f);
+residu_f = ones(nr,nit_f);
+prec_residu_f = ones(nr,nit_f);
+%
 for ir = 1:nr,
 	if bounce_mode == 1,
 		Zmask_f0_P{ir} = logical(XXheaviside(1,:,ir));%Passing electrons are selected
@@ -530,20 +556,13 @@ for ir = 1:nr,
 		Zmask_f0_t{ir} = logical(ones(1,nmhu));%All electrons are selected
 		ns_f(ir) = 0;%Number of mhu values that are removed for implicit bounce averaged calculations		
 	end
-	blocksize_f_t(ir) = (nmhu-ns_f(ir))*npn;
+%
+	blocksize_f_t(ir) = (nmhu-ns_f(ir))*npn;%For supermatrix construction
+	blocksize_T_f_t(ir) = (nmhu-ns_f(ir))*npn;%For supermatrix construction
 end
 %
 nMMXP_f_t = max(cumsum(blocksize_f_t));
-MMXP_f_t = [];	
-MMXP_f_r_t = sparse(nMMXP_f_t,nMMXP_f_t);
-sm_f = zeros(1,nr+1);
-normf0 = zeros(nr,nit_f);
-normf1 = zeros(nr,nit_f);
-curr0 = zeros(nr,nit_f);
-curr1 = zeros(nr,nit_f);
-prec_curr = zeros(nr,nit_f);
-residu_f = ones(nr,nit_f);
-prec_residu_f = ones(nr,nit_f);
+MMXR_f_t = sparse(nMMXP_f_t,nMMXP_f_t);
 %
 if dke_mode == 1,
 	for ir_dke = 1:nr_dke,
@@ -574,12 +593,14 @@ end
 XXILor =  zeros(npn,nmhu,nr);
 for ir_dke = 1:nr_dke,
 	jr2 = rdke(ir_dke);
-    if dke_mode>= 1
-	    ILor_p = Zmask_f0_P{jr2}.*sum(((dmhu.*(mhu>=0).*XXlambda_b_p3m2(1,:,jr2)./XXlambda_p2m1(1,:,jr2))'*ones(1,nmhu)).*triu(ones(nmhu,nmhu)));
-	    ILor_m = fliplr(ILor_p);
-	    ILor = ILor_m + ILor_p;
-    	XXILor(:,:,jr2) = ones(npn,1)*ILor;
-    end
+	if bounce_mode == 1
+		ILor_p = Zmask_f0_P{jr2}.*sum(((dmhu.*(mhu>=0).*XXlambda_b_p3m2(1,:,jr2)./XXlambda_p2m1(1,:,jr2))'*ones(1,nmhu)).*triu(ones(nmhu,nmhu)));
+		ILor_m = fliplr(ILor_p);
+		ILor = ILor_m + ILor_p;
+		XXILor(:,:,jr2) = ones(npn,1)*ILor;
+	else
+		XXILor(:,:,jr2) = zeros(npn,nmhu);
+	end	
 end	
 %
 if nargin < narginmax,XXfinit = zeros(np,nmhu,nr);end;%For the initial guess of f0
@@ -734,9 +755,9 @@ if radial_mode == 1,
 		XXMrp = permute(XXMrp,[2,1,3]);
 		MMrp_t = reshape(XXMrp,npn*nmhu*nr,1,1);
 %
-		MMXP_f_r_t = MMXP_f_r_t + sparse([1+nmhu*npn:nMMXP_f_t],[1:nMMXP_f_t-nmhu*npn],MMrm_t(1+npn*nmhu:nMMXP_f_t),nMMXP_f_t,nMMXP_f_t);
-		MMXP_f_r_t = MMXP_f_r_t + sparse([1:nMMXP_f_t],[1:nMMXP_f_t],MMr_t,nMMXP_f_t,nMMXP_f_t);	
-		MMXP_f_r_t = MMXP_f_r_t + sparse([1:nMMXP_f_t-nmhu*npn],[1+npn*nmhu:nMMXP_f_t],MMrp_t(1:nMMXP_f_t-nmhu*npn),nMMXP_f_t,nMMXP_f_t);
+		MMXR_f_t = MMXR_f_t + sparse([1+nmhu*npn:nMMXP_f_t],[1:nMMXP_f_t-nmhu*npn],MMrm_t(1+npn*nmhu:nMMXP_f_t),nMMXP_f_t,nMMXP_f_t);
+		MMXR_f_t = MMXR_f_t + sparse([1:nMMXP_f_t],[1:nMMXP_f_t],MMr_t,nMMXP_f_t,nMMXP_f_t);	
+		MMXR_f_t = MMXR_f_t + sparse([1:nMMXP_f_t-nmhu*npn],[1+npn*nmhu:nMMXP_f_t],MMrp_t(1:nMMXP_f_t-nmhu*npn),nMMXP_f_t,nMMXP_f_t);
 		if display_mode >= 1,info_dke_yp(2,['Configuration space matrix calculations done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
 	elseif bounce_mode == 1,	
 		ir = 1;
@@ -754,7 +775,7 @@ if radial_mode == 1,
 		XMr = XXMr(:,:,ir);
 		XMr_t = XMr(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
 		MMr_t = reshape(XMr_t',npn*(nmhu-ns_f(ir)),1,1);
-		MMXP_f_r_t = MMXP_f_r_t + sparse([1+ib0:ibp],[1+ib0:ibp],MMr_t,nMMXP_f_t,nMMXP_f_t);
+		MMXR_f_t = MMXR_f_t + sparse([1+ib0:ibp],[1+ib0:ibp],MMr_t,nMMXP_f_t,nMMXP_f_t);
 %			
 		XMrp = XXMrp(:,:,ir);
 		XMrp_t = XMrp(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
@@ -763,9 +784,9 @@ if radial_mode == 1,
 		XMrp3_t = XMrp_t.*(Xmhu(:,Xmask_f0) > 0);
 %			
 		for ip = 1:npn,	
-			MMXP_f_r_t = MMXP_f_r_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhup],[ibp+(nmhu-ns_f(ir+1))*(ip-1)+1:ibp+(nmhu-ns_f(ir+1))*(ip-1)+imhup],XMrp1_t(ip,[1:imhup]),nMMXP_f_t,nMMXP_f_t);
-			MMXP_f_r_t = MMXP_f_r_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*ip],[ibp+(nmhu-ns_f(ir+1))*(ip-1)+imhup+1:ibp+(nmhu-ns_f(ir+1))*ip],XMrp3_t(ip,[imhu0+1:nmhu-ns_f(ir)]),nMMXP_f_t,nMMXP_f_t);
-			MMXP_f_r_t = MMXP_f_r_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+imhup+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0],...
+			MMXR_f_t = MMXR_f_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhup],[ibp+(nmhu-ns_f(ir+1))*(ip-1)+1:ibp+(nmhu-ns_f(ir+1))*(ip-1)+imhup],XMrp1_t(ip,[1:imhup]),nMMXP_f_t,nMMXP_f_t);
+			MMXR_f_t = MMXR_f_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*ip],[ibp+(nmhu-ns_f(ir+1))*(ip-1)+imhup+1:ibp+(nmhu-ns_f(ir+1))*ip],XMrp3_t(ip,[imhu0+1:nmhu-ns_f(ir)]),nMMXP_f_t,nMMXP_f_t);
+			MMXR_f_t = MMXR_f_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+imhup+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0],...
 			[ibp+(nmhu-ns_f(ir+1))*(ip-1)+((nmhu-ns_f(ir+1))-imhup):-1:ibp+(nmhu-ns_f(ir+1))*(ip-1)+((nmhu-ns_f(ir+1))-imhu0)+1],XMrp2_t(ip,[imhup+1:imhu0]),nMMXP_f_t,nMMXP_f_t);
 		end	
 %
@@ -794,7 +815,7 @@ if radial_mode == 1,
 			XMr = XXMr(:,:,ir);
 			XMr_t = XMr(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
 			MMr_t = reshape(XMr_t',npn*(nmhu-ns_f(ir)),1,1);
-			MMXP_f_r_t = MMXP_f_r_t + sparse([1+ib0:ibp],[1+ib0:ibp],MMr_t,nMMXP_f_t,nMMXP_f_t);
+			MMXR_f_t = MMXR_f_t + sparse([1+ib0:ibp],[1+ib0:ibp],MMr_t,nMMXP_f_t,nMMXP_f_t);
 %			
 			XMrp = XXMrp(:,:,ir);
 			XMrp_t = XMrp(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
@@ -808,13 +829,13 @@ if radial_mode == 1,
 			XMrm2_t = XMrm_t.*(Xmhu(:,Xmask_f0) > 0);
 %	
 			for ip = 1:npn,	
-				MMXP_f_r_t = MMXP_f_r_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhup],[ibp+(nmhu-ns_f(ir+1))*(ip-1)+1:ibp+(nmhu-ns_f(ir+1))*(ip-1)+imhup],XMrp1_t(ip,[1:imhup]),nMMXP_f_t,nMMXP_f_t);
-				MMXP_f_r_t = MMXP_f_r_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*ip],[ibp+(nmhu-ns_f(ir+1))*(ip-1)+imhup+1:ibp+(nmhu-ns_f(ir+1))*ip],XMrp3_t(ip,[imhu0+1:nmhu-ns_f(ir)]),nMMXP_f_t,nMMXP_f_t);
-				MMXP_f_r_t = MMXP_f_r_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+imhup+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0],...
+				MMXR_f_t = MMXR_f_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhup],[ibp+(nmhu-ns_f(ir+1))*(ip-1)+1:ibp+(nmhu-ns_f(ir+1))*(ip-1)+imhup],XMrp1_t(ip,[1:imhup]),nMMXP_f_t,nMMXP_f_t);
+				MMXR_f_t = MMXR_f_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*ip],[ibp+(nmhu-ns_f(ir+1))*(ip-1)+imhup+1:ibp+(nmhu-ns_f(ir+1))*ip],XMrp3_t(ip,[imhu0+1:nmhu-ns_f(ir)]),nMMXP_f_t,nMMXP_f_t);
+				MMXR_f_t = MMXR_f_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+imhup+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0],...
 				[ibp+(nmhu-ns_f(ir+1))*(ip-1)+((nmhu-ns_f(ir+1))-imhup):-1:ibp+(nmhu-ns_f(ir+1))*(ip-1)+((nmhu-ns_f(ir+1))-imhu0)+1],XMrp2_t(ip,[imhup+1:imhu0]),nMMXP_f_t,nMMXP_f_t);
 %
-				MMXP_f_r_t = MMXP_f_r_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0],[ibm+(nmhu-ns_f(ir-1))*(ip-1)+1:ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhu0],XMrm1_t(ip,[1:imhu0]),nMMXP_f_t,nMMXP_f_t);				
-				MMXP_f_r_t = MMXP_f_r_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*ip],[ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhum+1:ibm+(nmhu-ns_f(ir-1))*ip],XMrm2_t(ip,[imhu0+1:nmhu-ns_f(ir)]),nMMXP_f_t,nMMXP_f_t);				
+				MMXR_f_t = MMXR_f_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0],[ibm+(nmhu-ns_f(ir-1))*(ip-1)+1:ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhu0],XMrm1_t(ip,[1:imhu0]),nMMXP_f_t,nMMXP_f_t);				
+				MMXR_f_t = MMXR_f_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*ip],[ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhum+1:ibm+(nmhu-ns_f(ir-1))*ip],XMrm2_t(ip,[imhu0+1:nmhu-ns_f(ir)]),nMMXP_f_t,nMMXP_f_t);				
 			end	
 %
     		if display_mode >= 1,info_dke_yp(2,['Configuration space matrix calculations (',int2str(ir),'/',int2str(nr),') done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
@@ -836,7 +857,7 @@ if radial_mode == 1,
 		XMr = XXMr(:,:,ir);
 		XMr_t = XMr(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
 		MMr_t = reshape(XMr_t',npn*(nmhu-ns_f(ir)),1,1);
-		MMXP_f_r_t = MMXP_f_r_t + sparse([1+ib0:ibp],[1+ib0:ibp],MMr_t,nMMXP_f_t,nMMXP_f_t);
+		MMXR_f_t = MMXR_f_t + sparse([1+ib0:ibp],[1+ib0:ibp],MMr_t,nMMXP_f_t,nMMXP_f_t);
 %			
 		XMrm = XXMrm(:,:,ir);
 		XMrm_t = XMrm(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
@@ -844,8 +865,8 @@ if radial_mode == 1,
 		XMrm2_t = XMrm_t.*(Xmhu(:,Xmask_f0) > 0);
 %	
 		for ip = 1:npn,	
-			MMXP_f_r_t = MMXP_f_r_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0],[ibm+(nmhu-ns_f(ir-1))*(ip-1)+1:ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhu0],XMrm1_t(ip,[1:imhu0]),nMMXP_f_t,nMMXP_f_t);				
-			MMXP_f_r_t = MMXP_f_r_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*ip],[ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhum+1:ibm+(nmhu-ns_f(ir-1))*ip],XMrm2_t(ip,[imhu0+1:nmhu-ns_f(ir)]),nMMXP_f_t,nMMXP_f_t);				
+			MMXR_f_t = MMXR_f_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0],[ibm+(nmhu-ns_f(ir-1))*(ip-1)+1:ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhu0],XMrm1_t(ip,[1:imhu0]),nMMXP_f_t,nMMXP_f_t);				
+			MMXR_f_t = MMXR_f_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*ip],[ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhum+1:ibm+(nmhu-ns_f(ir-1))*ip],XMrm2_t(ip,[imhu0+1:nmhu-ns_f(ir)]),nMMXP_f_t,nMMXP_f_t);				
 		end	
 %
 		if display_mode >= 1,info_dke_yp(2,['Configuration space matrix calculations (',int2str(ir),'/',int2str(nr),') done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
@@ -860,7 +881,10 @@ if ~isempty(waveparam),
        theta,XR,XZ,XBR,XBZ,XBphi,xB0,Rp,Zp,xqtilde,...       
        XXheaviside,XXheaviside_p,XXheaviside_m,...  
 	    Xmhup,Xmhu,Xmhum,Xmhu2p,Xmhu2,Xmhu2m,X1mmhu2p,X1mmhu2,X1mmhu2m,...
-	    pnpp,pnp,pn,pnm,pnmm,Xpnpp,Xpnp,Xpn,Xpnm,Xpnmm,Xgammapp,Xgammap,Xgamma,Xgammam,Xgammamm,...
+		 Xdmhumm,Xdmhum,Xdmhu,Xdmhup,Xdmhupp,...
+	    pnpp,pnp,pn,pnm,pnmm,Xpnpp,Xpnp,Xpn,Xpnm,Xpnmm,...
+		 Xdpnmm,Xdpnm,Xdpn,Xdpnp,Xdpnpp,...
+		 Xgammapp,Xgammap,Xgamma,Xgammam,Xgammamm,...
 	    Xxlambda_p,Xxlambda,Xxlambda_m,...
 	    betath_ref,bounce_mode,dke_mode);
 %            
@@ -1020,7 +1044,9 @@ for ir = 1:nr,
 	fM = fM*xne_norm(ir)/normfM;
 	xfM = fM'*ones(1,length(fM));
 	XXfM(:,:,ir) = fM'*ones(1,nmhu);
-	if nargin < narginmax,XXfinit(:,:,ir) = fM'*ones(1,nmhu);end;%Initial guess (normalized to xne_norm)
+	if nargin < narginmax,
+		XXfinit(:,:,ir) = fM'*ones(1,nmhu);%Initial guess (normalized to xne_norm)
+	end
 %
 	fMm = exp(-pn2m./(1 + gammam)/xTe_norm(ir))/2/pi/xTe_norm(ir)/sqrt(2*pi*xTe_norm(ir));
 	normfMm = 4*pi*integral_dke_jd(dpnm,pnm.*pnm.*fMm,2);
@@ -1258,7 +1284,7 @@ for ir = 1:nr,
 %	
 	XDmm_rf_ijp = XXDmm_rf_ijp(:,:,ir);
 	XDmm_rf_ijm = XXDmm_rf_ijm(:,:,ir);	
-%
+%	
 	XFp_rf_ippj = zeros(npn,nmhu);
 	XFp_rf_ipj = zeros(npn,nmhu);
 	XFp_rf_ij = zeros(npn,nmhu);
@@ -1298,21 +1324,22 @@ for ir = 1:nr,
 %
 %Momentum weights calculations (for f0 and ftp also)
 %
+%
 	[Xdeltap_imj,Xdeltap_ipj,...
 	    Xdeltam_ijm,Xdeltam_ijp] = ...
-	    fppgridweights_dke_yp(Xdpnmm,Xdpnm,Xdpn,Xdpnp,Xdpnpp,...
-	    Xdmhumm,Xdmhum,Xdmhu,Xdmhup,Xdmhupp,...
-	    XDpp_ippj,XDpp_ipj,XDpp_ij,XDpp_imj,XDpp_immj,...
-	    XFp_ippj,XFp_ipj,XFp_ij,XFp_imj,XFp_immj);
+		 fppgridweights_dke_yp(Xdpnmm,Xdpnm,Xdpn,Xdpnp,Xdpnpp,...
+		 Xdmhumm,Xdmhum,Xdmhu,Xdmhup,Xdmhupp,...
+		 XDpp_ippj,XDpp_ipj,XDpp_ij,XDpp_imj,XDpp_immj,...
+		 XFp_ippj,XFp_ipj,XFp_ij,XFp_imj,XFp_immj);
 %
-	XXdeltap_imj(:,:,ir) = Xdeltap_imj;
+	XXdeltap_imj(:,:,ir) = Xdeltap_imj; 
 	XXdeltap_ipj(:,:,ir) = Xdeltap_ipj;
 	XXdeltam_ijp(:,:,ir) = Xdeltam_ijp;
-	XXdeltam_ijm(:,:,ir) = Xdeltam_ijm;
+	XXdeltam_ijm(:,:,ir) = Xdeltam_ijm;		
 %
 %Momentum dynamics matrix coefficients calculations
 %	
-	[Xa,Xb,Xc,Xd,Xe,Xf,Xg,Xh,Xi] = ...
+	[XXa(:,:,ir),XXb(:,:,ir),XXc(:,:,ir),XXd(:,:,ir),XXe(:,:,ir),XXf(:,:,ir),XXg(:,:,ir),XXh(:,:,ir),XXi(:,:,ir)] = ...
   	fpengine_dke_yp(0,...
 	XXdeltap_imj(:,:,ir),XXdeltap_ipj(:,:,ir),XXdeltam_ijm(:,:,ir),XXdeltam_ijp(:,:,ir),...
 	XXRlambda_m(:,:,ir),XXRlambda_p(:,:,ir),...
@@ -1327,45 +1354,22 @@ for ir = 1:nr,
 % 
 %Loss matrix coefficients (for magnetic ripple losses but may be used for other effects if necessary)
 %
-	Xc = Xc + XXnhuloss(:,:,ir).*Xpn2;
-%
-%For g calculations (drift kinetic equation)
-%
-	XXa(:,:,ir) = Xa;
-	XXb(:,:,ir) = Xb;
-	XXc(:,:,ir) = Xc;
-	XXd(:,:,ir) = Xd;
-	XXe(:,:,ir) = Xe;
-	XXf(:,:,ir) = Xf;
-	XXg(:,:,ir) = Xg;
-	XXh(:,:,ir) = Xh;
-	XXi(:,:,ir) = Xi;
-%
-%Time differencing scheme (implicit or Crank-Nicholson)
-%
-	Xa = Xa/time_scheme;
-	Xb = Xb/time_scheme;
-	Xc = Xc/time_scheme + Xpn2/dtn;
-	Xd = Xd/time_scheme;
-	Xe = Xe/time_scheme;
-	Xf = Xf/time_scheme;
-	Xg = Xg/time_scheme;
-	Xh = Xh/time_scheme;
-	Xi = Xi/time_scheme;
+	XXc(:,:,ir) = XXc(:,:,ir) + XXnhuloss(:,:,ir).*Xpn2;
 %
 %Boundaries of the bounce domain for f0
 %
 	if bounce_mode == 0,%No bounce averaging
-		Xa_t = Xa;
-		Xb_t = Xb;
-		Xc_t = Xc;
-		Xd_t = Xd;
-		Xe_t = Xe;
-		Xf_t = Xf;
-		Xg_t = Xg;
-		Xh_t = Xh;
-		Xi_t = Xi;              
-		mhu_t = mhu;		
+		Xa_t = XXa(:,:,ir);
+		Xb_t = XXb(:,:,ir);
+		Xc_t = XXc(:,:,ir);
+		Xd_t = XXd(:,:,ir);
+		Xe_t = XXe(:,:,ir);
+		Xf_t = XXf(:,:,ir);
+		Xg_t = XXg(:,:,ir);
+		Xh_t = XXh(:,:,ir);
+		Xi_t = XXi(:,:,ir);              
+		mhu_t = mhu;
+		Xpn2_t = Xpn2;
 	elseif bounce_mode == 1,%Full implicit bounce-averaging calculations, fifteen diagonals mode
 		if djmhut(ir) > 3,%At least three points needed in the bounce domain
 			Xa_t = zeros(npn,nmhu - djmhut(ir));
@@ -1384,27 +1388,27 @@ for ir = 1:nr,
 			Xn_t = zeros(npn,nmhu - djmhut(ir));
 			Xo_t = zeros(npn,nmhu - djmhut(ir));
 %
-			Xa_t(:,Zmask_f0_t_P{ir}) = Xa(:,Zmask_f0_P{ir});
-			Xb_t(:,Zmask_f0_t_P{ir}) = Xb(:,Zmask_f0_P{ir});
-			Xc_t(:,Zmask_f0_t_P{ir}) = Xc(:,Zmask_f0_P{ir});
-			Xd_t(:,Zmask_f0_t_P{ir}) = Xd(:,Zmask_f0_P{ir});
-			Xe_t(:,Zmask_f0_t_P{ir}) = Xe(:,Zmask_f0_P{ir});
-			Xf_t(:,Zmask_f0_t_P{ir}) = Xf(:,Zmask_f0_P{ir});
-			Xg_t(:,Zmask_f0_t_P{ir}) = Xg(:,Zmask_f0_P{ir});
-			Xh_t(:,Zmask_f0_t_P{ir}) = Xh(:,Zmask_f0_P{ir});
-			Xi_t(:,Zmask_f0_t_P{ir}) = Xi(:,Zmask_f0_P{ir});
+			Xa_t(:,Zmask_f0_t_P{ir}) = XXa(:,Zmask_f0_P{ir},ir);
+			Xb_t(:,Zmask_f0_t_P{ir}) = XXb(:,Zmask_f0_P{ir},ir);
+			Xc_t(:,Zmask_f0_t_P{ir}) = XXc(:,Zmask_f0_P{ir},ir);
+			Xd_t(:,Zmask_f0_t_P{ir}) = XXd(:,Zmask_f0_P{ir},ir);
+			Xe_t(:,Zmask_f0_t_P{ir}) = XXe(:,Zmask_f0_P{ir},ir);
+			Xf_t(:,Zmask_f0_t_P{ir}) = XXf(:,Zmask_f0_P{ir},ir);
+			Xg_t(:,Zmask_f0_t_P{ir}) = XXg(:,Zmask_f0_P{ir},ir);
+			Xh_t(:,Zmask_f0_t_P{ir}) = XXh(:,Zmask_f0_P{ir},ir);
+			Xi_t(:,Zmask_f0_t_P{ir}) = XXi(:,Zmask_f0_P{ir},ir);
 %
 %Symmetrization of the trapped region
 %
-			Xa_t(:,Zmask_f0_t_Tp{ir}) = (Xa(:,Zmask_f0_Tp{ir}) + fliplr(Xe(:,Zmask_f0_Tm{ir})))/2;
-			Xb_t(:,Zmask_f0_t_Tp{ir}) = (Xb(:,Zmask_f0_Tp{ir}) + fliplr(Xb(:,Zmask_f0_Tm{ir})))/2;
-			Xc_t(:,Zmask_f0_t_Tp{ir}) = (Xc(:,Zmask_f0_Tp{ir}) + fliplr(Xc(:,Zmask_f0_Tm{ir})))/2;
-			Xd_t(:,Zmask_f0_t_Tp{ir}) = (Xd(:,Zmask_f0_Tp{ir}) + fliplr(Xd(:,Zmask_f0_Tm{ir})))/2;
-			Xe_t(:,Zmask_f0_t_Tp{ir}) = (Xe(:,Zmask_f0_Tp{ir}) + fliplr(Xa(:,Zmask_f0_Tm{ir})))/2;
-			Xf_t(:,Zmask_f0_t_Tp{ir}) = (Xf(:,Zmask_f0_Tp{ir}) + fliplr(Xh(:,Zmask_f0_Tm{ir})))/2;
-			Xg_t(:,Zmask_f0_t_Tp{ir}) = (Xg(:,Zmask_f0_Tp{ir}) + fliplr(Xi(:,Zmask_f0_Tm{ir})))/2;
-			Xh_t(:,Zmask_f0_t_Tp{ir}) = (Xh(:,Zmask_f0_Tp{ir}) + fliplr(Xf(:,Zmask_f0_Tm{ir})))/2;
-			Xi_t(:,Zmask_f0_t_Tp{ir}) = (Xi(:,Zmask_f0_Tp{ir}) + fliplr(Xg(:,Zmask_f0_Tm{ir})))/2;
+			Xa_t(:,Zmask_f0_t_Tp{ir}) = (XXa(:,Zmask_f0_Tp{ir},ir) + fliplr(XXe(:,Zmask_f0_Tm{ir},ir)))/2;
+			Xb_t(:,Zmask_f0_t_Tp{ir}) = (XXb(:,Zmask_f0_Tp{ir},ir) + fliplr(XXb(:,Zmask_f0_Tm{ir},ir)))/2;
+			Xc_t(:,Zmask_f0_t_Tp{ir}) = (XXc(:,Zmask_f0_Tp{ir},ir) + fliplr(XXc(:,Zmask_f0_Tm{ir},ir)))/2;
+			Xd_t(:,Zmask_f0_t_Tp{ir}) = (XXd(:,Zmask_f0_Tp{ir},ir) + fliplr(XXd(:,Zmask_f0_Tm{ir},ir)))/2;
+			Xe_t(:,Zmask_f0_t_Tp{ir}) = (XXe(:,Zmask_f0_Tp{ir},ir) + fliplr(XXa(:,Zmask_f0_Tm{ir},ir)))/2;
+			Xf_t(:,Zmask_f0_t_Tp{ir}) = (XXf(:,Zmask_f0_Tp{ir},ir) + fliplr(XXh(:,Zmask_f0_Tm{ir},ir)))/2;
+			Xg_t(:,Zmask_f0_t_Tp{ir}) = (XXg(:,Zmask_f0_Tp{ir},ir) + fliplr(XXi(:,Zmask_f0_Tm{ir},ir)))/2;
+			Xh_t(:,Zmask_f0_t_Tp{ir}) = (XXh(:,Zmask_f0_Tp{ir},ir) + fliplr(XXf(:,Zmask_f0_Tm{ir},ir)))/2;
+			Xi_t(:,Zmask_f0_t_Tp{ir}) = (XXi(:,Zmask_f0_Tp{ir},ir) + fliplr(XXg(:,Zmask_f0_Tm{ir},ir)))/2;
 %
 			Xh_t(:,jmhut_max(ir) - djmhut(ir)) = Xh_t(:,jmhut_max(ir) - djmhut(ir))/2;
 			Xe_t(:,jmhut_max(ir) - djmhut(ir)) = Xe_t(:,jmhut_max(ir) - djmhut(ir))/2;
@@ -1414,9 +1418,9 @@ for ir = 1:nr,
 			Xk_t(:,jmhut_max(ir) - djmhut(ir)) = Xe_t(:,jmhut_max(ir) - djmhut(ir));%f0(i+1/2,j+1/2-djmhut)
 			Xl_t(:,jmhut_max(ir) - djmhut(ir)) = Xg_t(:,jmhut_max(ir) - djmhut(ir));%f0(i+3/2,j+1/2-djmhut)
 %
-			Xm_t(:,jmhut_min(ir) - 1) = Xh(:,jmhut_min(ir) - 1);%f0(i-1/2,j+1/2+djmhut)
-			Xn_t(:,jmhut_min(ir) - 1) = Xe(:,jmhut_min(ir) - 1);%f0(i+1/2,j+1/2+djmhut)
-			Xo_t(:,jmhut_min(ir) - 1) = Xg(:,jmhut_min(ir) - 1);%f0(i+3/2,j+1/2+djmhut)
+			Xm_t(:,jmhut_min(ir) - 1) = XXh(:,jmhut_min(ir) - 1,ir);%f0(i-1/2,j+1/2+djmhut)
+			Xn_t(:,jmhut_min(ir) - 1) = XXe(:,jmhut_min(ir) - 1,ir);%f0(i+1/2,j+1/2+djmhut)
+			Xo_t(:,jmhut_min(ir) - 1) = XXg(:,jmhut_min(ir) - 1,ir);%f0(i+3/2,j+1/2+djmhut)
 %   
 			Xh_t(:,jmhut_min(ir) - 1) = 0;
 			Xe_t(:,jmhut_min(ir) - 1) = 0;
@@ -1438,8 +1442,9 @@ for ir = 1:nr,
 			Xn_t(:,nmhu/2 + 1 - djmhut(ir)) = 0;%df0(pn,mhu=pi/2) = 0
 			Xo_t(:,nmhu/2 + 1 - djmhut(ir)) = 0;%df0(pn,mhu=pi/2) = 0
 %       
-			mhu_t = mhu(Zmask_f0_t{ir});
-%           
+			mhu_t = mhu(Zmask_f0_t{ir});			
+			Xpn2_t = Xpn2(:,Zmask_f0_t{ir});
+			
 		else
 			error(['WARNING: Not enough grid point in the bounce region for accurate bounce-averaged calculations at psin = ',num2str(xpsin(ir)),' !'])
 		end
@@ -1450,7 +1455,7 @@ for ir = 1:nr,
 	if boundary_mode_f > 0,
 		Xa_t(1:boundary_mode_f,:) = 0;
 		Xb_t(1:boundary_mode_f,:) = 0;
-		Xc_t(1:boundary_mode_f,:) = Xpn2(1:boundary_mode_f,Zmask_f0_t{ir})/dtn;%Maxwellian solution enforced at p = p(1/2) (More accurate but not fully necessary)
+		Xc_t(1:boundary_mode_f,:) = 0;%Maxwellian solution enforced at p = p(1/2 -> boundary_mode_f-1/2) (More accurate but not fully necessary)
 		Xd_t(1:boundary_mode_f,:) = 0;
 		Xe_t(1:boundary_mode_f,:) = 0;
 		Xf_t(1:boundary_mode_f,:) = 0;
@@ -1463,11 +1468,19 @@ for ir = 1:nr,
 			Xl_t(1:boundary_mode_f,:) = 0;
 			Xm_t(1:boundary_mode_f,:) = 0;
 			Xn_t(1:boundary_mode_f,:) = 0;
-			Xo_t(1:boundary_mode_f,:) = 0;      
+			Xo_t(1:boundary_mode_f,:) = 0;   
+%
+			Xpn2_t(boundary_mode_f+1:npn,nmhu/2 + 1 - djmhut(ir)) = 0;%df0(pn,mhu=pi/2) = 0 only for p values where the Maxwellian solution is not enforced
 		end 
+	else
+		if bounce_mode == 1,
+			Xpn2_t(:,nmhu/2 + 1 - djmhut(ir)) = 0;%df0(pn,mhu=pi/2) = 0	
+		end
 	end
 %
-%Matrix calculation
+	Zpn2_t{ir} = Xpn2_t;	
+%
+%Momentum flux matrix calculation
 %
 	if bounce_mode == 0,
 		MXc = reshape(Xc_t',(nmhu-ns_f(ir))*npn,1);
@@ -1529,6 +1542,18 @@ for ir = 1:nr,
 	[i1_f,j1_f,s1_f] = find(MXP_f_t);
 	[m1_f,n1_f] = size(MXP_f_t);
 	MMXP_f_t = sparse(i0_f,j0_f,s0_f,m0_f+m1_f,m0_f+m1_f) + sparse(m0_f+i1_f,m0_f+j1_f,s1_f,m0_f+m1_f,m0_f+m1_f);
+%
+%Time diagonal matrix calculation
+%	
+	MXT = reshape(Zpn2_t{ir}',(nmhu-ns_f(ir))*npn,1)/dtn;%Partial momentum Jacobian 
+	MXT_f_t = (xqtilde(ir)/xB0(ir))*sparse([1:(nmhu-ns_f(ir))*npn],[1:(nmhu-ns_f(ir))*npn],MXT,(nmhu-ns_f(ir))*npn,(nmhu-ns_f(ir))*npn);%Resizing for 3D calculations + multiplication by the remaining Jacobian
+%	
+	sm_T_f(ir+1) = sm_T_f(ir) + blocksize_T_f_t(ir);
+	[i0_T_f,j0_T_f,s0_T_f] = find(MMXT_f_t);		
+	[m0_T_f,n0_T_f] = size(MMXT_f_t);
+	[i1_T_f,j1_T_f,s1_T_f] = find(MXT_f_t);
+	[m1_T_f,n1_T_f] = size(MXT_f_t);
+	MMXT_f_t = sparse(i0_T_f,j0_T_f,s0_T_f,m0_T_f+m1_T_f,m0_T_f+m1_T_f) + sparse(m0_T_f+i1_T_f,m0_T_f+j1_T_f,s1_T_f,m0_T_f+m1_T_f,m0_T_f+m1_T_f);	
 %	
 	if display_mode >= 1,info_dke_yp(2,['Zero order momentum space matrix calculations (',int2str(ir),'/',int2str(nr),') done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
 end
@@ -1876,23 +1901,31 @@ clear F1 F2 F XF F1m F2m Fm F1p F2p Fp XFm XFp A XA Am Ap XAm XAp B1 B2 Bt XBt
 clear MXP_f_t MXPC_f_t MXPDI_f_t MXP_tp_t MXP_tp_c_t MXP_g_t MXPC_g_t MXPDI_g_t
 clear Xmask Xmask_g Xmask_tp
 clear Xnhuloss XI_th Xf0_g_th
-clear jmhut_min jmhut_max djmhut
+clear jmhut_min jmhut_max
 %
 if display_mode >= 1,info_dke_yp(2,['Full elapsed time for matrix calculation: ',num2str(etime(clock,time00)),' (s)']);end
 %
 if store_mode == 1,
-	save MXPmat.mat Zmask_f0_t Zmask_g -append;
+	filename = ['MXP_',tokname,'.mat'];
+	[s,dossier,machine] = comput_dke_yp;
+	eval(['save ',dossier,s,filename,'Zmask_f0_t Zmask_g -append'])
 end
 %
 time0 = clock;
-MMXPDI_f_t = inv(diag(diag(MMXP_f_t + MMXP_f_r_t)));
-MMXPC_f_t = MMXPDI_f_t*(MMXP_f_t + MMXP_f_r_t);%Main diagonal matrix preconditionning
-[MMXL_f_t,MMXU_f_t] = luinc(MMXPC_f_t,prec_inv); 
-time_f = etime(clock,time0);
-memoryLU_f = (getfield(whos('MMXL_f_t'),'bytes') + getfield(whos('MMXU_f_t'),'bytes'))/1000000;
+%
+MMXdiag = diag(MMXP_f_t/time_scheme + MMXR_f_t/time_scheme + MMXT_f_t);
+if isempty(find(MMXdiag==0)) == 1,
+	MMXPDI_f_t = inv(diag(MMXdiag));
+	MMXPC_f_t = MMXPDI_f_t*(MMXP_f_t/time_scheme + MMXR_f_t/time_scheme + MMXT_f_t);%Main diagonal matrix preconditionning
+	[MMXL_f_t,MMXU_f_t] = luinc(MMXPC_f_t,prec_inv); 
+	time_f = etime(clock,time0);
+	memoryLU_f = (getfield(whos('MMXL_f_t'),'bytes') + getfield(whos('MMXU_f_t'),'bytes'))/1000000;
+else
+	error('Fokker-Planck matrix has a null element on the main diagonal');%Matrxi must be main diagonal dominant
+end
 %
 if dke_mode == 1,
-	time0 = clock;
+	time0 = clock;	
 	MMXPDI_g_t = inv(diag(diag(MMXP_g_t)));
 	MMXPC_g_t = MMXPDI_g_t*MMXP_g_t;%Main diagonal matrix preconditionning
 	[MMXL_g_t,MMXU_g_t] = luinc(MMXPC_g_t,prec_inv);
@@ -1918,7 +1951,7 @@ if display_mode == 2 & strcmp(computer,'MAC') == 0,%Spy function seems to crash 
 	title('Momentum space matrix');
 %
 	if radial_mode == 1,
-		figure(3001),spy(MMXP_f_r_t);
+		figure(3001),spy(MMXR_f_t);
 		zoom on;
 		axis('square');
 		title('Configuration space matrix');	
@@ -1946,30 +1979,39 @@ end
 %
 time0 = clock;
 XXf0 = XXfinit;%Initial guess (normalized to xne_norm)
+for ir = 1:nr,
+	normf0(ir,1) = 2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,XXfinit(:,:,ir),2),1);
+	curr0(ir,1) = 2*pi*integral_dke_jd(dpn',pn2'.*(pn'./gamma').*integral_dke_jd(dmhu,Xmhu.*XXfinit(:,:,ir),2),1)*xne_norm(ir)/normf0(ir,1);
+end
+%
+ZXXf0{1} = XXfinit;%Time evolution of the distribution function is stored
 %
 for it_f = 2:nit_f,   	
 	if sum(residu_f(:,it_f-1) >= prec0_f) >= 1 & sum(prec_residu_f(:,it_f-1)) >= prec0_f,
 %	
 		MMXf0_t = [];
 		MMXq_t = [];
+		MMXIpn2_t = [];
+%
 		for ir = 1:nr,
-			if store_mode == 1,load MXPmat.mat Zmask_f0_t;end	
+			if store_mode == 1,
+				filename = ['MXP_',tokname,'.mat'];
+				[s,dossier,machine] = comput_dke_yp;
+				eval(['load ',dossier,s,filename,' Zmask_f0_t'])
+			end	
 %
-			if boundary_mode_f == 0,
-				Xq = (XXI(:,:,ir) + time_scheme*XXf0(:,:,ir)/dtn).*Xpn2;%Xpn2 is here as part of the partial Jacobian used to avoid singularities at p = 0
-				Xq_t = Xq(:,Zmask_f0_t{ir});%Symmetric trapped domain removed (-ksi0T< ksi0 <0)
-				if bounce_mode == 1,Xq_t(:,nmhu/2 + 1 - ns_f(ir)) = 0;end;%Pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2 
-			else, 
-				Xq = (XXI(:,:,ir) + time_scheme*XXf0(:,:,ir)/dtn).*Xpn2;%Xpn2 is here as part of the partial Jacobian used to avoid singularities at p = 0
-				Xq(1:boundary_mode_f,:) = Xpn2(1:boundary_mode_f,:).*XXf0(1:boundary_mode_f,:,ir)/dtn;%Xpn2 is here as part of the partial Jacobian used to avoid singularities at p = 0
-				Xq_t = Xq(:,Zmask_f0_t{ir});%Symmetric trapped domain removed (-ksi0T< ksi0 <0)
-				if bounce_mode == 1,Xq_t(boundary_mode_f+1:npn,nmhu/2 + 1 - ns_f(ir)) = 0;end;%Pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2 		
+			XI_t = XXI(:,Zmask_f0_t{ir},ir);
+			if boundary_mode_f > 0,
+				XI_t(1:boundary_mode_f,:) = 0;
 			end
-			MMXq_t = [MMXq_t;(xqtilde(ir)/xB0(ir))*reshape(Xq_t',(nmhu - ns_f(ir))*npn,1)];%Multiplication by the partial Jacobian to avoid singularities at psi = 0
-			MMXf0_t = [MMXf0_t;reshape(XXf0(:,Zmask_f0_t{ir},ir)',(nmhu - ns_f(ir))*npn,1)];
-		end
 %
-		MMXR_t = MMXPDI_f_t*MMXq_t - MMXPC_f_t*MMXf0_t;
+			MMXf0_t = [MMXf0_t;reshape(XXf0(:,Zmask_f0_t{ir},ir)',(nmhu - ns_f(ir))*npn,1)];
+			MMXIpn2_t = [MMXIpn2_t;(xqtilde(ir)/xB0(ir))*reshape((XI_t.*Zpn2_t{ir})',(nmhu - ns_f(ir))*npn,1)];%Zpn2_t is here as part of the partial Jacobian used to avoid singularities at p = 0 and psi = 0, and for pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2
+		end 
+%
+		MMXq_t = MMXIpn2_t + (MMXT_f_t - (time_scheme - 1)*(MMXP_f_t + MMXR_f_t)/time_scheme)*MMXf0_t;%Right handside term of the Fokker-Planck equation
+%
+		MMXR_t = MMXPDI_f_t*MMXq_t - MMXPC_f_t*MMXf0_t;%Residu calculation for matrix inversion
 %
 		if invproc == 1,%qmr iterative method
 			[MMXS_t,flaginv_f] = qmr(MMXPC_f_t,MMXR_t,prec_inv,maxit_inv,MMXL_f_t,MMXU_f_t);
@@ -2086,6 +2128,8 @@ for it_f = 2:nit_f,
 %
 			normf0(ir,it_f) = normf1(ir,it_f);
 			curr0(ir,it_f) = curr1(ir,it_f);
+%			
+			ZXXf0{it_f} = XXf0(:,:,ir);%For time evolution studies
 		end
 	else			
 		if sum(prec_residu_f(:,it_f-1)) < prec0_f,info_dke_yp(2,['WARNING: stationnary residu but convergence not achieved for f0 after ',int2str(it_f),' iterations. Time step likely too large !']);end
@@ -2096,6 +2140,10 @@ for it_f = 2:nit_f,
 	end
 	if it_f == nit_f,info_dke_yp(2,['WARNING: convergence not achieved for f0 after ',int2str(nit_f),' iterations. Time step too small !']);end
 end
+%
+filename = ['TIME_',tokname,'_S',int2str(snumber),'.mat'];%Time evolution is stored in a separated file
+[s,dossier,machine] = comput_dke_yp;
+eval(['save ',dossier,s,filename,' dtn normf0 curr0 ZXXf0'])
 %
 clear ir fM XfM MMXPC_f_t MMXPDI_f_t Xmask_f0 MMXL_f_t MMXU_f_t
 clear Xf0 Xf0_t Xq Xq_t Xf1 Xf1_t Xf1_tp Xf1_tm Xf1_ts XR_t XS_t XY_t
@@ -2127,7 +2175,11 @@ if dke_mode == 1,
 		XfM = XXfM(:,:,jr2);%Central radial value for gradient calculation (where ftp and g are calculated)
 		XfMp = XXfM(:,:,jr3);%Upper radial value for gradient calculation
 %
-		if store_mode == 1,load MXPmat.mat Zmask_g;end
+		if store_mode == 1,
+			filename = ['MXP_',tokname,'.mat'];
+			[s,dossier,machine] = comput_dke_yp;
+			eval(['load ',dossier,s,filename,' Zmask_g'])
+		end
 %           		
 		dpsim = (xpsin(jr1) - xpsin(jr2));%Radial step for parabolic gradient calculations (dke)
 		dpsi = (xpsin(jr3) - xpsin(jr1));%Radial step for parabolic gradient calculations (dke)
@@ -2172,8 +2224,8 @@ if dke_mode == 1,
 		Xq_tp = reshape(MMXq_tp(sm_tp(ir_dke)+1:sm_tp(ir_dke+1)),nmhu,npn)';
 		Xq_tp_c = reshape(MMXq_tp_c(npn*nmhu*rdke(ir_dke)+1:npn*nmhu*(rdke(ir_dke)+1)),nmhu,npn)';
 		if boundary_mode_g ~= 0,
-				Xq_tp(1:boundary_mode_g,:) = zeros(1:boundary_mode_g,nmhu);%Boundary conditions at p = 0 enforced for g
-				Xq_tp_c(1:boundary_mode_g,:) = zeros(1:boundary_mode_g,nmhu);%Boundary conditions at p = 0 enforced for g
+			Xq_tp(1:boundary_mode_g,:) = zeros(1:boundary_mode_g,nmhu);%Boundary conditions at p = 0 enforced for g
+			Xq_tp_c(1:boundary_mode_g,:) = zeros(1:boundary_mode_g,nmhu);%Boundary conditions at p = 0 enforced for g
 		end
 		MMXq_tp_t = [MMXq_tp_t;reshape(Xq_tp(:,Zmask_g{ir_dke})' + 0*Xq_tp_c(:,Zmask_g{ir_dke})',(nmhu - ns_g(ir_dke))*npn,1)];%Matrix reduction since the trapped region is removed
 	end   

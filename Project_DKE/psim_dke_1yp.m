@@ -7,7 +7,7 @@ rf_list,nit_rf,prec_rf,...
 coll_mode,bounce_mode,dke_mode,equil_mode,...
 vparmin_r,Dr0,pDr,Dr_model,Vr0,pVr,Vr_model,...
 nhuloss,...
-norm_mode_f,boundary_mode_f,prec0_f,nit_f,initguess_f,...
+norm_mode_f,boundary_mode_f,prec0_f,nit_f,initguess_f,initfile_f,...
 boundary_mode_g,prec0_g,nit_g,...
 dtn,invproc,param_inv,...
 dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode] = psim_dke_1yp;
@@ -43,12 +43,12 @@ pnmax_S = 10;%Maximum value of the flux momentum grid (pth_ref)
 %Pitch-angle grid
 %
 sfac0 = 1; % reduction factor for fine grid near mhu = 0
-sfac1 = 3; % reduction factor for fine grid near mhu = 1
-sfact = 3; % reduction factor for fine grid near mhu = mhut
+sfac1 = 3; % reduction factor for fine grid near abs(mhu) = 1
+sfact = 3; % reduction factor for fine grid near abs(mhu) = mhut
 %
 snmhu0 = 3; % number of fine grid points near mhu = 0
-snmhu1 = 3; % number of fine grid points near mhu = 1
-snmhut = 3; % number of fine grid points near mhu = mhut
+snmhu1 = 3; % number of fine grid points near abs(mhu) = 1
+snmhut = 3; % number of fine grid points near abs(mhu) = mhut
 %
 grid_power = 1.5; % power for mhu grid step varations (grid_power > 1) (Note: for grid_method = 1 only)
 %
@@ -119,15 +119,16 @@ equil_mode = 1;%Equilibrium option: (0) circular concentric flux-surfaces, (1) n
 norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
 boundary_mode_f = 1;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 prec0_f = 1e-10;%Convergence level of the residu
-nit_f = 50;%Maximum number of iterations for f
+nit_f = 100;%Maximum number of iterations for f
 initguess_f = 0;%Initial guess for the distribution function: (0) Maxwellian, (1) Fuchs model with Tperp for LH current drive only, (2) from a file
+initfile_f = 'RESULTS_TS_S1.mat';%If initguess_f = 2. The file must be in the directory Project_DKE, and created by dke_4_1yp.m 
 %
 boundary_mode_g = 1;%Number of points where the first distribution function for the Lorentz model is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 prec0_g = 1e-10;%Convergence level of the residu (if NaN, iterations stop with nit_g)
-nit_g = 50;%Maximum number of iterations for g
+nit_g = 100;%Maximum number of iterations for g
 %
 dtn = 1000;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
-invproc = [2];%Iterative matrix inversion method: (1) qmr iterative method, (2) bicgstab iterative method, (3) cgs iterative method
+invproc = 2;%Iterative matrix inversion method: (1) qmr iterative method, (2) bicgstab iterative method, (3) cgs iterative method
 param_inv = [1e-5,30];%Parameters for the matrix inversion procedure. Minimum value of the drop tolerance for the partial LU decomposition (drop tol = max(1/dtn/nr,param_inv(1))), and maximum number of iteration for iterative methods (param_inv(1) depends of boundary_mode, if param_inv(1)=0, full LU factorization)
 %
 dp_cyl = 0.1;%Cylindrical momentum step (pth_ref)
@@ -184,10 +185,10 @@ if loadequil == 0,%Already existing magnetic equilibrium file
 	filename = ['EQUIL_',tokname,'.mat'];
 	if exist([dossier,s,filename]) == 2,
 		info_dke_yp(2,['Equilibrium file ',filename,' is well found.']);
-    elseif exist(filename) == 2,
-        copyfile(filename,[dossier,s,filename]);
+	elseif exist(filename) == 2,
+		copyfile(filename,[dossier,s,filename]);
 		info_dke_yp(2,['Equilibrium file ',filename,' is well found.']);
-    else
+	else
 		error('Equilibrium file is not found !')
 	end
 elseif loadequil == 1,%Create magnetic equilibrium file with HELENA

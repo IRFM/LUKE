@@ -39,7 +39,8 @@ if nargin < 5,savename = tokamak;end
 [ap,Rp,Zp,xpoint,Bt,...
 	 Ip,j0,ja,ej,qmin,eq,...
 	 Te0,Tea,eTe,ne0,nea,ene,Ti0,Tia,eTi,...
-	 Zi,mi,fi,Zeff0,Zeffa,eZeff] = ptok_dke_1yp(tokamak);        
+	 Zi,mi,fi,Zeff0,Zeffa,eZeff,...
+	 HXR] = ptok_dke_1yp(tokamak);        
 %
 zZi = Zi;%[1,ni]
 zmi = mi;%[1,ni]
@@ -95,8 +96,10 @@ BR = -XBpp.*sin(Xtheta)*Rp./R;
 BZ = XBpp.*cos(Xtheta)*Rp./R;
 BPHI = Bt*Rp./R;
 %
+ftra = [];%Approximate trapped fraction
+%
 filename = ['EQUIL_',savename,'.mat'];
 %
 [s,dossier,machine] = comput_dke_yp;
-eval(['save ',dossier,s,filename,' ppsi theta R Z BR BZ BPHI pTe pne pzTi pzni zZi zmi'])
+eval(['save ',dossier,s,filename,' ppsi theta R Z BR BZ BPHI pTe pne pzTi pzni zZi zmi ftra HXR'])
 

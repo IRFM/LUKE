@@ -3,11 +3,11 @@ function [blist_lh,yvparmin_lh,yvparmax_lh,ynparmin_lh,ynparmax_lh,ynpar_lh,ydnp
 %
 % Parameters for test mode LHCD calculations
 % This function has a benchmarking purpose only
-% Aproximations: 
+% Approximations: 
 %   - The polarization is purely electrostatic: in that case, only the parallel polarization term is non-zero.
 %   - Small FLR limit: J0(z) -> 1. 
 %
-% by J. Decker (jodecker@mit.edu) and Y. Peysson (yves.peysson@cea.fr)
+% by J. Decker (RLE/MIT) <jodecker@mit.edu> and Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr>
 %
 blist_lh = [3]; %Index of selected scenarios for the LH wave. [1,n_scenario_lh]
 %

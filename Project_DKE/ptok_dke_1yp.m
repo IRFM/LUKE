@@ -1,7 +1,8 @@
 function [ap,Rp,Zp,xpoint,Bt,...
 	 Ip,j0,ja,ej,qmin,eq,...
 	 Te0,Tea,eTe,ne0,nea,ene,Ti0,Tia,eTi,...
-	 Zi,mi,fi,Zeff0,Zeffa,eZeff] = ptok_dke_1yp(name);
+	 Zi,mi,fi,Zeff0,Zeffa,eZeff,...
+	 HXR] = ptok_dke_1yp(name);
 % 
 %Global plasma and tokamak parameters for script_dke_1yp (Drift Kinetic equation solver)
 % 
@@ -51,10 +52,18 @@ function [ap,Rp,Zp,xpoint,Bt,...
 %		- Zeff0: Core effective charge (a.u.) [1,1]
 %		- Zeffa: Edge effective charge (a.u.) [1,1]
 %		- eZeff: Exponent for the effective charge -> Zeff(psin) = (Zeff0-Zeffa)*(1-(psin)^2)^eZeff + Zeffa) [1,1]
-%  
+%-------------------------------------------------------------------------------------------------------------
+%Fast electron bremsstrahlung diagnostic parameters (if exists)
+%		 
+%     - HXR{1}: Major radius on the HXR chord (m) [1,nchord]
+%     - HXR{2}: Vertical position on the HXR chord (m) [1,nchord]
+%   	- HXR{3}: Major position of one point on HXR chord (R_hxr_2 > R_hxr_1) (m) [1,nchord]
+%   	- HXR{4}: Vertical position on the HXR chord (m) [1,nchord]
+%     - HXR{5}: Geometrical factor (m^2/str) [1,nchord]
+%
 %	Warning: none
 %
-%by Y.Peysson CEA-DRFC <yves.peysson@cea.fr>
+%by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and J.Decker RLE-MIT <jodecker@mit.edu>
 %
 if nargin < 1,
 	error('Wrong number of input arguments in ptok_dke_1yp')
@@ -108,7 +117,7 @@ elseif strcmp(name,'TS') == 1,
 %
 	Bt = 3.65;
 %
-	Zi = [1,1,1];
+	Zi = [1,1,1];	
 	mi = [1,2,3];
 	fi = [0,1,0.0];
 	Zeff0 = 1;
@@ -131,6 +140,21 @@ elseif strcmp(name,'TS') == 1,
 	ne0 = 1.0e+19;
 	nea = 0.24*ne0;
 	ene = 1.3;
+%
+%Fast electron bremsstrahlung tomography (if exists)
+%
+	HXR{1} = [4,4];%Major radius on the HXR chord (m) [1,nchord]
+	HXR{2} = [0,0];%Vertical position on the HXR chord (m) [1,nchord]
+	HXR{3} = [4.5,4.5];%Major position of one point on HXR chord (R_hxr_2 > R_hxr_1) (m) [1,nchord]
+	HXR{4} = [0.3,-0.3];%Vertical position on the HXR chord (m) [1,nchord]
+%
+	HXR{5} = [2.1010 2.1422]*1e-9;
+%	Parameters for (date >= 19980501 & date < 19991118),%shot numbers >24000 and <=28353
+%	HXR{5} = [2.1010 2.1422 2.1794 2.2160 2.2557 2.2912 2.3261 2.3641 2.3978 2.4308 2.4597];%Geometrical factor (m^2/str) [1,nchord]
+%	HXR{5} = [HXR{5} 2.4308 2.3978 2.3641 2.3261 2.2912 2.2557 2.2160 2.1794 2.1422 2.1010];		
+%	HXR{5} = [HXR{5} 1.7150 1.7656 1.8101 1.8542 1.8980 1.9414 1.9812 2.0238 2.0627 2.1010 2.1422 2.1794 2.2160 2.2557];%Etendue gŽomŽtrique grande camera
+%	HXR{5} = [HXR{5} 2.2912 2.3261 2.3641 2.3978 2.4308 2.4597 2.4308 2.3978 2.3641 2.3261 2.2912 2.2557 2.2160 2.1794 2.1422 2.1010];
+%	HXR{5} = [HXR{5} 2.0627 2.0238 1.9812 1.9414 1.8980 1.8542 1.8101 1.7656]*1e-9;			
 elseif strcmp(name,'RTP') == 1,
 	ap = 0.165;
 	Rp = 0.72;
@@ -567,7 +591,16 @@ elseif strcmp(name,'JET') == 1,
 	eTi = 2;	
 	ne0 = 1.0e+19;
 	nea = 0.001*ne0;
-	ene = 0.5;	
+	ene = 0.5;
+%
+%
+%Fast electron bremsstrahlung tomography (if exists)
+%
+	HXR{1} = [];%Major radius on the HXR chord (m) [1,nchord]
+	HXR{2} = [];%Vertical position on the HXR chord (m) [1,nchord]
+	HXR{3} = [];%Major position of one point on HXR chord (R_hxr_2 > R_hxr_1) (m) [1,nchord]
+	HXR{4} = [];%Vertical position on the HXR chord (m) [1,nchord]
+	HXR{5} = [];%Geometrical factor (m^2/str) [1,nchord]
 elseif strcmp(name,'TEST_LORENTZ') == 1,%Values based on NSTX case but circular plasma cross-section
 	ap = 0.67;
 	Rp = 0.86;
@@ -606,7 +639,15 @@ elseif strcmp(name,'TEST_LORENTZ') == 1,%Values based on NSTX case but circular 
 	eTi = 0;	
 	ne0 = 2.0e+19;
 	nea = 0.001*ne0;
-	ene = 0.5;	
+	ene = 0.5;
+%
+%Fast electron bremsstrahlung tomography (if exists)
+%
+	HXR{1} = [];%Major radius on the HXR chord (m) [1,nchord]
+	HXR{2} = [];%Vertical position on the HXR chord (m) [1,nchord]
+	HXR{3} = [];%Major position of one point on HXR chord (R_hxr_2 > R_hxr_1) (m) [1,nchord]
+	HXR{4} = [];%Vertical position on the HXR chord (m) [1,nchord]
+	HXR{5} = [];%Geometrical factor (m^2/str) [1,nchord]
 else
 	error('Wrong input name in ptok_dke_1yp.m')
 end	

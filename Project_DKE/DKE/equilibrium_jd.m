@@ -1,4 +1,4 @@
-function [theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,psia,xmhu0T2] = ...
+function [theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,psia,xmhu0T2,HXR] = ...
     equilibrium_jd(tokamak,xpsin,display_mode,method)
 %
 %   This function interpolates the equilibrium data on the radial grid.
@@ -58,12 +58,10 @@ function [theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi
 %       - Ncoils: Number of toroidal magnetic field coils [1,1]
 %       - BeLi: Beta + li/2 [1,1]
 %       - psia: poloidal flux at the edge [1,1]
-%       - xmhu0T2: pitch-angle (squared) at the trapped/passing boundary
-%       [1,nr]
+%       - xmhu0T2: pitch-angle (squared) at the trapped/passing boundary [1,nr]
+%       - HXR: Fast electron bremsstrahlung
 %
-%   By J. Decker <jodecker@alum.mit.edu> and Y. Peysson
-%   <yves.peysson@cea.fr>
-%   Created Feb. 17, 2004
+%   By J. Decker RLE-MIT <jodecker@alum.mit.edu> and Y. Peysson DRFC-CEA <yves.peysson@cea.fr>
 %
 if nargin < 3
     method = 'linear';%Interpolation method 
@@ -72,14 +70,12 @@ if nargin < 2
     error('no radial grid specified');
 end
 %
-qe = 1.60217733e-19;%Electron charge (C)
-me = 9.1093897e-31;%Electron rest mass (Kg)
-clum = 299792458;%Speed of light (m/s)
+[qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;
 %
 filename = ['EQUIL_',tokamak,'.mat'];
 %
 [s,dossier,machine] = comput_dke_yp;
-eval(['load ',dossier,s,filename,' ppsi theta R Z BR BZ BPHI pTe pne pzTi pzni zZi zmi']);
+eval(['load ',dossier,s,filename,' ppsi theta R Z BR BZ BPHI pTe pne pzTi pzni zZi zmi ftra HXR']);
 %
 [npsi,ntheta] = size(R);
 nr = length(xpsin);
