@@ -17,15 +17,20 @@ xrho = sqrt(x.^2 + y.^2);
 Nr = length(xrho);
 %
 loadstr = ['PARAM_',tokamak];
-eval(['load ',loadstr,' ap Rp Ip Bt pne Zi mi fi pzTi pzni prho']);
+eval(['load ',loadstr,' ap Rp Ip Bt pne Zi mi fi pzTi pzni prho pq']);
 %
 xne = interp1(prho,pne,xrho);
 zxni = interp1(prho,pzni',xrho)';
+xq = interp1(prho,pq,xrho);
+xq(xq == 0) = eps;
 %
 qe = 1.60217733e-19;%Electron charge (C)
 me = 9.1093897e-31;%Electron rest mass (Kg)
 %
-xB = Bt./(1 + x*ap/Rp);
+xBt = Bt./(1 + x*ap/Rp);
+xBp = xrho*ap/Rp.*xBt./xq;
+xB = sqrt(xBt.^2 + xBp.^2);
+%
 xwce0 = qe*xB/me;
 %
 for ir=1:Nr
