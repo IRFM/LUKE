@@ -315,7 +315,7 @@ B_{P}}\frac{J_{\Vert }\left( \psi ,\theta \right) }{\Psi \left( \psi ,\theta
 
 \subsubsection{Fokker-Planck Equation}
 
-When we consider only the zero order distribution function, we have that $
+When we consider only the zero order distribution function, we have that $%
 f_{0}$ is constant along a field line, so that 
 \begin{equation}
 f_{0}\left( p,\xi ,\psi ,\theta \right) =f_{0}^{(0)}\left( p,\xi _{0},\psi
@@ -1393,16 +1393,16 @@ more conserved, since the flux $S_{p}\neq 0$ at $p=p_{\max }$, on the
 boundary of the integration domain. The runaway rate $\Gamma _{R}$ is given
 by the relation 
 \begin{equation}
-\Gamma _{R}\left( \psi ,\theta \right) =2\pi p^{2}\int_{-1}^{+1}S_{p}\left(
-\psi ,p_{\max },\xi \right) d\xi 
+\Gamma _{R}\left( \psi ,\theta \right) =2\pi p_{\max
+}^{2}\int_{-1}^{+1}S_{p}\left( \psi ,p_{\max },\xi \right) d\xi 
 \end{equation}
 
 Since all quantities are calculated at the spatial location where $B$ is
 minimum, one have by definition in a straightforward manner 
 \begin{equation}
-\Gamma _{R}^{\left( 0\right) }\left( \psi \right) =2\pi p^{2}%
-\int_{-1}^{+1}S_{p}^{\left( 0\right) }\left( \psi ,p_{\max },\xi _{0}\right)
-d\xi _{0}
+\Gamma _{R}^{\left( 0\right) }\left( \psi \right) =2\pi p_{\max
+}^{2}\int_{-1}^{+1}S_{p}^{\left( 0\right) }\left( \psi ,p_{\max },\xi
+_{0}\right) d\xi _{0}
 \end{equation}
 where $S_{p}^{\left( 0\right) }\left( \psi ,p_{\max },\xi _{0}\right) $
 results from the solution of the bounce-averaged Fokker-Planck equation.
@@ -1414,7 +1414,7 @@ _{R}\right\rangle _{V}$ is given by the relation
 \widehat{q}\left( \psi \right) }p_{\max }^{2}\int_{0}^{2\pi }\frac{d\theta }{
 2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}%
 }\frac{B_{\min }\left( \psi \right) }{B_{P}}\int_{-1}^{+1}S_{p}\left( \psi
-,p_{\max },\xi _{0}\right) d\xi 
+,p_{\max },\xi _{0}\right) d\xi
 \end{equation}
 and since 
 \begin{equation}
@@ -1424,18 +1424,18 @@ and since
 \end{equation}
 one obtains 
 \begin{eqnarray}
-\left\langle \Gamma _{R}\right\rangle _{V}\left( \psi \right)  &=&\frac{2\pi 
+\left\langle \Gamma _{R}\right\rangle _{V}\left( \psi \right) &=&\frac{2\pi 
 }{\widehat{q}\left( \psi \right) }p_{\max }^{2}\int_{-1}^{+1}d\xi _{0}\left[ 
 \frac{1}{2}\sum_{\sigma }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}%
 \frac{d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}%
 \right| }\frac{r}{R_{0}}\frac{B}{B_{P}}\frac{\xi _{0}}{\xi }S_{p}\left( \psi
-,p_{\max },\xi _{0}\right)   \nonumber \\
+,p_{\max },\xi _{0}\right)  \nonumber \\
 &=&\frac{2\pi }{\widehat{q}\left( \psi \right) }p_{\max
 }^{2}\int_{-1}^{+1}\left\{ S_{p}\left( \psi ,p_{\max },\xi \right) \right\}
 \lambda \left( \psi ,\xi _{0}\right) \widetilde{q}\left( \psi \right) d\xi
 _{0}  \nonumber \\
-&=&\frac{\widetilde{q}\left( \psi \right) }{\widehat{q}\left( \psi \right) }2%
-\pi p_{\max }^{2}\int_{-1}^{+1}\lambda \left( \psi ,\xi _{0}\right)
+&=&\frac{\widetilde{q}\left( \psi \right) }{\widehat{q}\left( \psi \right) }%
+2\pi p_{\max }^{2}\int_{-1}^{+1}\lambda \left( \psi ,\xi _{0}\right)
 S_{p}^{\left( 0\right) }\left( \psi ,p_{\max },\xi _{0}\right) d\xi _{0}
 \end{eqnarray}
 
@@ -1445,18 +1445,18 @@ Though magnetic ripple losses is a full $4-D$ problem, it can be considered
 in a simple manner by defining a super-trapped volume $V_{ST}^{\mathbf{p}}$
 in momentum space, 
 \begin{equation}
-V_{ST}^{\mathbf{p}}\left( \psi \right) =2\pi \int_{0}^{\infty %
+V_{ST}^{\mathbf{p}}\left( \psi \right) =2\pi \int_{0}^{\infty
 }p^{2}dp\int_{-1}^{+1}H\left( p-p_{c}\right) \left( 1-H\left( \left| \xi
 _{0}\right| -\xi _{0ST}\right) \right) d\xi _{0}
 \end{equation}
 in which particle escape the plasma. A low energy, it is bounded by the
 collision detrapping when $p\leq p_{c}$, while the pitch-angle dependence
 results from the condition that only electrons whose banana tip enter the
-bad confinement region characterized by the well known criterion $\alpha ^{*}%
-\leq 1$ are trapped in the magnetic well, in an irreversible manner. As
+bad confinement region characterized by the well known criterion $\alpha
+^{*}\leq 1$ are trapped in the magnetic well, in an irreversible manner. As
 shown in Fig. ***, even if this is a rather crude modeling, it captures most
 of the salient features of the physics. Therefore, all trapped electrons
-which in addition fullfils the condition  $p_{\Vert }/p\leq \xi _{0ST}$ are
+which in addition fullfils the condition $p_{\Vert }/p\leq \xi _{0ST}$ are
 super-trapped. Here, $\xi _{0ST}$ is deduced from the intersection between
 the poloidal extend of the banana and the good confinement domain $\alpha
 ^{*}\geq 1$ on a given flux surface. The pitch-angle threshold $\xi _{0ST}$
@@ -1477,12 +1477,12 @@ dynamics, which is obviously a very crude approximation.
 
 An heuristic description of this process may be obtained by introducing a
 Krook term restricted to the volume $V_{ST}^{\mathbf{p}}$ in the
-Fokker-Planck equation
+Fokker-Planck equation 
 \begin{equation}
 \left. \frac{\partial f_{0}^{\left( 0\right) }}{\partial t}\right| =\frac{%
 f_{0}^{\left( 0\right) }\left( \psi ,p,\xi _{0}\right) }{\tau _{d_{ST}}}
 H\left( p-p_{c}\right) \left( 1-H\left( \left| \xi _{0}\right| -\xi
-_{0ST}\right) \right) 
+_{0ST}\right) \right)
 \end{equation}
 where $\tau _{d_{ST}}$ is the drifting time taken by super-trapped electrons
 for leaving the plasma. In order to reproduce the fact that super-trapped
@@ -1492,7 +1492,7 @@ dynamics, $\tau _{d_{ST}}$ is taken constant in $V_{ST}^{\mathbf{p}},$ which
 is obviously a coarse approximation. However, in the limit $\tau
 _{d_{ST}}\ll \tau _{b},$ the shape of the distribution function becomes
 independent of $\tau _{d_{ST}},$ since by definition $f_{0}^{\left( 0\right)
-}\left( \psi ,p,\xi _{0}\right) \simeq 0$ in the super-trapped domain. 
+}\left( \psi ,p,\xi _{0}\right) \simeq 0$ in the super-trapped domain.
 
 Obviously, when a Krook term is introduced, the Fokker-Planck equation is no
 more conservative, since a fraction of fast electrons is definitively
@@ -1507,20 +1507,20 @@ Fokker-Planck equation is
 0\right) }}{\tau _{d_{ST}}}H\left( p-p_{c}\right) \left( 1-H\left( \left|
 \xi _{0}\right| -\xi _{0ST}\right) \right) =0
 \end{equation}
-and in this stationnary limit $\lim_{t\rightarrow \infty }\partial %
+and in this stationnary limit $\lim_{t\rightarrow \infty }\partial
 f_{0}^{\left( 0\right) }/\partial t=0,$
 
 \begin{equation}
 \nabla _{\left( \psi ,p,\xi _{0}\right) }\cdot \mathbf{S}^{\left( 0\right)
 }=-\frac{f_{0}^{\left( 0\right) }}{\tau _{d_{ST}}}H\left( p-p_{c}\right)
-\left( 1-H\left( \left| \xi _{0}\right| -\xi _{0ST}\right) \right) 
+\left( 1-H\left( \left| \xi _{0}\right| -\xi _{0ST}\right) \right)
 \label{Steadyripple}
 \end{equation}
 
 Losses are assumed to be mainly local, since they occur on a very short time
 scale as compared to the fast electron transport one. Therefore, only the
 momentum dynamics is considered, and integrating equation (\ref{Steadyripple}%
-), one obtains
+), one obtains 
 \begin{equation}
 2\pi \iint \nabla _{\left( p,\xi _{0}\right) }\cdot \mathbf{S}_{\mathbf{p}%
 }^{\left( 0\right) }J_{p}J_{_{\xi _{0}}}dpd\xi _{0}=-2\pi \iint \frac{%
@@ -1530,13 +1530,13 @@ _{0}}}dpd\xi _{0}
 \end{equation}
 where $J_{p}$ and $J_{_{\xi _{0}}}$are the Jacobians as defined in Sec. ***.
 The magnetic ripple loss rate $\Gamma _{ST}^{\left( 0\right) }\left( \psi
-\right) $ on the $B_{\min }$ axis is simply given by
+\right) $ on the $B_{\min }$ axis is simply given by 
 \begin{equation}
 \Gamma _{ST}^{\left( 0\right) }\left( \psi \right) =2\pi \iint \frac{%
 f_{0}^{\left( 0\right) }}{\tau _{d_{ST}}}H\left( p-p_{c}\right) \left(
 1-H\left( \left| \xi _{0}\right| -\xi _{0ST}\right) \right) Jdpd\xi _{0}
 \end{equation}
-or
+or 
 \begin{equation}
 \Gamma _{ST}^{\left( 0\right) }\left( \psi \right) =2\pi \int_{p_{c}}^{p_{%
 \max }}p^{2}dp\int_{-\xi _{0ST}}^{+\xi _{0ST}}\frac{f_{0}^{\left( 0\right) }%
@@ -1544,7 +1544,7 @@ or
 \end{equation}
 
 An equivalent form can be deduced from the flux of particle leaving the
-integration domain,
+integration domain, 
 \begin{eqnarray}
 \Gamma _{ST}^{\left( 0\right) }\left( \psi \right)  &=&2\pi \iint \nabla
 _{\left( p,\xi _{0}\right) }\cdot \mathbf{S}_{\mathbf{p}}^{\left( 0\right)
@@ -1554,12 +1554,14 @@ _{\left( p,\xi _{0}\right) }\cdot \mathbf{S}_{\mathbf{p}}^{\left( 0\right)
 \end{eqnarray}
 using the Green-Ostrogradsky theorem, where $\widehat{n}$ is the normal to
 the surface $S_{ST}^{\mathbf{p}}$ that encloses the volume $V_{ST}^{\mathbf{p%
-}}.$ Hence, 
+}}$ as shown in Fig.***. Hence, 
 \begin{equation}
 \Gamma _{ST}^{\left( 0\right) }\left( \psi \right) =2\pi p_{c}^{2}\int_{-\xi
 _{0ST}}^{+\xi _{0ST}}\lambda \left( \psi ,\xi _{0}\right) S_{p}^{\left(
-0\right) }d\xi _{0}+4\pi \lambda \left( \psi ,\xi _{0ST}\right)
-\int_{p_{c}}^{p_{\max }}p^{2}S_{\xi _{0}}^{\left( 0\right) }dp
+0\right) }d\xi _{0}+4\pi \lambda \left( \psi ,+\xi _{0ST}\right)
+\int_{p_{c}}^{p_{\max }}pS_{\xi _{0}}^{\left( 0\right) }dp
 \end{equation}
+since the flux $S_{\xi _{0}}^{\left( 0\right) }$ is a symmetric function of $%
+\xi _{0}.$
 
 \subsection{ Bremsstrahlung emission}
