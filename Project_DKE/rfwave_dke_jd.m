@@ -1,4 +1,4 @@
-function [waveparam,nb_list] = rfwave_dke_jd(tokname,xrho,xpsin,xpsin_dke,xdpsin_dke,xyPabs_tot_rf_fsav_in,betath_ref,ne_ref,xrbetath,xrnhuth,xTe_norm,xne_norm,xzni_norm,zZi,zmi,Rp,ap,bounce_mode,rf_list);
+function [waveparam,nb_list] = rfwave_dke_jd(xrho,xpsin,xpsin_dke,xdpsin_dke,xyPabs_tot_rf_fsav_in,betath_ref,ne_ref,xrbetath,xrnhuth,xTe_norm,xne_norm,xzni_norm,zZi,zmi,ap,Rp,Zp,theta,XR,XZ,XBR,XBZ,XBphi,xB0,bounce_mode,rf_list);
 % 
 %	RF input parameters for the Drift Kinetic equation solver (dke_4_1yp.m). Manual method, or with the cold plasma dispersion relation
 % 
@@ -15,13 +15,13 @@ function [waveparam,nb_list] = rfwave_dke_jd(tokname,xrho,xpsin,xpsin_dke,xdpsin
 waveparam = [];
 nb_list = zeros(1,6);
 if rf_list(1) == 1 % test_mode LHCD
-    waveparam_lh = ideallhcd_dke_jd(tokname,xrho,betath_ref,xrbetath,xrnhuth);
+    waveparam_lh = ideallhcd_dke_jd(xrho,betath_ref,xrbetath,xrnhuth);
     waveparam = [waveparam;waveparam_lh];
     nb_list(1) = size(waveparam_lh,2);
 end
 %
 if rf_list(2) == 1 % test_mode ECCD
-    waveparam_ec = idealeccd_dke_jd(tokname,xpsin,xpsin_dke,xdpsin_dke,xyPabs_tot_rf_fsav_in,betath_ref,ne_ref,xrbetath',xrnhuth',xTe_norm,xne_norm',xzni_norm,zZi',zmi',Rp,ap,bounce_mode);
+    waveparam_ec = idealeccd_dke_jd(xrho,betath_ref,xrbetath,xrnhuth,theta,XR,XZ,XBR,XBZ,XBphi,Rp,Zp,xB0);
     waveparam = [waveparam;waveparam_ec];
     nb_list(2) = size(waveparam_ec,2);
 end
