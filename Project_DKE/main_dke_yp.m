@@ -59,6 +59,7 @@ rt_mode = dkeparam.rt_mode;
 nit_rf = dkeparam.nit_rf;
 prec_rf = dkeparam.prec_rf;
 nmax_rf = dkeparam.nmax_rf;
+temppath = dkeparam.temppath;
 %-------------------------------------------
 psin_display = display.psin_display;
 rho_display = display.rho_display;
@@ -746,7 +747,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
         XXDr_ref,XXVr_ref,...
         XXnhuloss_ref,xdeltaripple,...
         xftp_norm_ref,bounce,Dqlmax,coll_mode,...
-        norm_mode_f,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,snumber,XXfinit1_ref);
+        norm_mode_f,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,temppath,snumber,XXfinit1_ref);
 %
     if ~isempty(waveparam) & nit_rf > 1,
         xyPabs_rf_dke_fsav_out = ZP0_ref_fsav{3,1} + ZP0_ref_fsav{3,2} + ZP0_ref_fsav{3,3}; % flux-surface averaged density of absorbed power.
@@ -833,11 +834,11 @@ if syn_mode == 1
         xmhu0T2,xrho,xpsin,xdpsin_dke,xpsinm_dke,xdpsinm_dke,xpsinp_dke,xdpsinp_dke,r_dke,xpsin_S_dke,...
         pn,dpn,pnm,dpnm,pnp,dpnp,pn_S,spfac,...
         xTe_norm,xne_norm,zZi,zmi,xzni_norm,xzTi_norm,...
-        betath_ref,xepsi_bc_ref_fsav_in,waveparam_bc,...
+        betath_ref,xepsi_bc_ref_fsav_in,waveparam_bc,nmax_rf,...
         XXDr_ref,XXVr_ref,...
         XXnhuloss_ref,xdeltaripple,...
         xftp_norm_ref,bounce,Dqlmax,coll_mode,...
-        norm_mode_f,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,snumber,XXfinit_ref);
+        norm_mode_f,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,temppath,snumber,XXfinit_ref);
 %
     time_bc_out = etime(clock,time0_bc);
     memoryLU_bc_f_out = memoryLU_bc_f;
@@ -882,7 +883,7 @@ end
 %
 if del == 1	,
 	delete(filename);
-	eval(['save ',filename]);
+	save(filename);
 	if exist(filename) == 2,
 		disp('-------------------------------------------------------------------------------------------------------------------');
 		info_dke_yp(2,['The data file : ',filename,' has been successfully saved !']);

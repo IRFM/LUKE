@@ -14,7 +14,7 @@ function [nb,XXD_rf_ij,XXD_rf_tp_ij,XXF_rf_tp_ij,...
 	 Xdpnmm,Xdpnm,Xdpn,Xdpnp,Xdpnpp,...
     Xgammapp,Xgammap,Xgamma,Xgammam,Xgammamm,...
     Xxlambdap,Xxlambda,Xxlambdam,...
-    betath_ref,bounce_mode,dke_mode,display_mode)
+    betath_ref,temppath,bounce_mode,dke_mode,display_mode)
 %
 % Calculates the RF quasilinear diffusion coefficient and the diffusion tensor elements 
 % on a 4-D Grid: 2-D (p,mhu) in momentum; 1-D (rho) in space; 1-D for the series of RF rays.
@@ -550,7 +550,7 @@ if it_rf == 1,
 %
 % Save ray temporary files that can be very large for power calculations in dke_1_4yp.m
 %
-      eval(['save temp_ray_#',int2str(iray),' ZYXXD_rf ZYXXD_rf_tp ZYXXF_rf_tp']);   
+		save(fullfile(temppath,['temp_ray_#',int2str(iray)]),'ZYXXD_rf','ZYXXD_rf_tp','ZYXXF_rf_tp');
 %
 % Sum over all rays
 %
@@ -605,7 +605,7 @@ else
 %
    	xyD0_rf = waveparam(:,iray,4);% RF quasi-linear diffusion coefficient (nhuth_ref*pth_ref^2)
    	YXXD0_rf = shiftdim(repmat(xyD0_rf,[1,1,npn,nmhu]),2);
-   	eval(['load temp_ray_#',int2str(iray),' ZYXXD_rf ZYXXD_rf_tp ZYXXF_rf_tp']);   
+   	load(fullfile(temppath,['temp_ray_#',int2str(iray)]),'ZYXXD_rf','ZYXXD_rf_tp','ZYXXF_rf_tp');   
 %
 % Sum over all rays
 %

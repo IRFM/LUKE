@@ -1169,9 +1169,9 @@ while 1,
 %
             figure(201),clf
             [ax] = graph1D_jd(xrho_dke,xJbc_tot_fsav_mksa,0,0,'','','',NaN,xlim,NaN,style3,marker2,color2,width2,siz,gca,red,lspace,bspace2);
-            [ax] = graph1D_jd(prho,pcurr_hin_mksa_fsav,0,0,'','','',NaN,xlim,NaN,style1,marker,color3,width2,siz);
+            %[ax] = graph1D_jd(prho,pcurr_hin_mksa_fsav,0,0,'','','',NaN,xlim,NaN,style1,marker,color3,width2,siz);
             [ax] = graph1D_jd(prho,pcurr_hir_mksa_fsav,0,0,'','','',NaN,xlim,NaN,style4,marker,color1,width2,siz);
-            [ax] = graph1D_jd(prho,pcurr_sau_mksa_fsav,0,0,xlab,'<J_B> (MA/m^2)',['Bootstrap current in ',tokname],['DKE code';'Hinton  ';'Hirshman';'Sauter  '],xlim,0,style2,marker,color4,width2,siz);
+            [ax] = graph1D_jd(prho,pcurr_sau_mksa_fsav,0,0,xlab,'<J_B> (MA/m^2)',['Bootstrap current in ',tokname],['DKE code';'Hirshman';'Sauter  '],xlim,0,style2,marker,color4,width2,siz);
 %
             figure(202),clf
             [ax] = graph1D_jd(xrho_dke,xJrf0_fsav_mksa,0,0,xlab,'','',NaN,xlim,NaN,style3,marker1,color1,width2,siz,gca,red,lspace,bspace2);

@@ -19,7 +19,7 @@ dke_1_4yp(it_rf,tokname,theta,...
     XXDr,XXVr,...
     XXnhuloss,delta,...
     xftp_norm,bounce,Dqlmax,coll_mode,...
-    norm_mode,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,snumber,XXfinit)
+    norm_mode,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,temppath,snumber,XXfinit)
 %
 %
 %   Self-consistent 3-D relativistic solver of the drift kinetic equation in momentum space with Beliaev-Budker collision integrals 
@@ -137,6 +137,7 @@ elseif nargin == 57,
 	param_inv = [1e-3,20];
 	display = [0,1,1];
 	store_mode = 0;
+	temppath = '';
 	snumber = 1;
 elseif nargin == 58,
 	norm_mode = 0;
@@ -148,6 +149,7 @@ elseif nargin == 58,
 	param_inv = [1e-3,20];
 	display = [0,1,1];
 	store_mode = 0;
+	temppath = '';
 	snumber = 1;
 elseif nargin == 59,
 	boundary_mode = [1,1];
@@ -157,6 +159,7 @@ elseif nargin == 59,
 	param_inv = [1e-3,20];
 	display = [0,1,1];
 	store_mode = 0;
+	temppath = '';
 	snumber = 1;
 elseif nargin == 60,
 	dtn = 1000;
@@ -166,6 +169,7 @@ elseif nargin == 60,
 	param_inv = [1e-3,20];
 	display = [0,1,1];
 	store_mode = 0;
+	temppath = '';
 	snumber = 1;
 elseif nargin == 61,
 	prec0 = [1e-10,1e-10];
@@ -174,6 +178,7 @@ elseif nargin == 61,
 	param_inv = [1e-3,20];
 	display = [0,1,1];
 	store_mode = 0;
+	temppath = '';
 	snumber = 1;
 elseif nargin == 62,
 	nit = [50,200];
@@ -181,12 +186,14 @@ elseif nargin == 62,
 	param_inv = [1e-3,20];
 	display = [0,1,1];
 	store_mode = 0;
+	temppath = '';
 	snumber = 1;
 elseif nargin == 63,
 	invproc = 1;
 	param_inv = [1e-3,20];
 	display = [0,1,1];
 	store_mode = 0;
+	temppath = '';
 	snumber = 1;
 elseif nargin == 64,
 	param_inv = [1e-3,20];	
@@ -196,15 +203,20 @@ elseif nargin == 64,
 elseif nargin == 65,
 	display = [0,1,1];	
 	store_mode = 0;
+	temppath = '';
 	snumber = 1;
 elseif nargin == 66,	
 	store_mode = 0;
+	temppath = '';
 	snumber = 1;
 elseif nargin == 67,	
+   temppath = '';
+	snumber = 1;
+elseif nargin == 68,	
 	snumber = 1;
 end
 %
-narginmax = 67;
+narginmax = 68;
 %
 timeCPU0 = cputime;
 %
@@ -1068,10 +1080,10 @@ for ir = 1:nr,
 end
 if display_mode >= 1,info_dke_yp(2,['D and F tensor calculations for collisions and Ohmic electric done in ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
 %
-  save temp_data1
+  save(fullfile(temppath,'temp_data1'));
   if display_mode >= 1,info_dke_yp(2,['Data saving on disk done in ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
 else
-   load temp_data1;
+   load(fullfile(temppath,'temp_data1'));
 	if display_mode >= 1,info_dke_yp(2,['Data reloading from disk done in ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
 end
 %
@@ -1094,7 +1106,7 @@ if ~isempty(waveparam),
 	 Xdpnmm,Xdpnm,Xdpn,Xdpnp,Xdpnpp,...
 	 Xgammapp,Xgammap,Xgamma,Xgammam,Xgammamm,...
 	 Xxlambda_p,Xxlambda,Xxlambda_m,...
-	 betath_ref,bounce_mode,dke_mode,display_mode);    
+	 betath_ref,temppath,bounce_mode,dke_mode,display_mode);    
 else
 	nb = 0;
 %    
@@ -1626,6 +1638,7 @@ if dke_mode == 1,
 		XXDpp_c_tp_imj(:,:,jr2) = XDpp_c_tp_imj;
 		XXDpm_c_tp_imj(:,:,jr2) = XDpm_c_tp_imj;
 		XXFp_c_tp_imj(:,:,jr2) = XFp_c_tp_imj;
+		
 		XXDpp_c_tp_ipj(:,:,jr2) = XDpp_c_tp_ipj;
 		XXDpm_c_tp_ipj(:,:,jr2) = XDpm_c_tp_ipj;
 		XXFp_c_tp_ipj(:,:,jr2) = XFp_c_tp_ipj;
@@ -1900,51 +1913,51 @@ else
 %
 % for collisions
 %
-   XXDpp_tp_c_imj = zeros(npn,nmhu,nr);
-   XXDpm_tp_c_imj = zeros(npn,nmhu,nr);
-   XXFp_tp_c_imj = zeros(npn,nmhu,nr);
-   XXDpp_tp_c_ipj = zeros(npn,nmhu,nr);
-   XXDpm_tp_c_ipj = zeros(npn,nmhu,nr);
-   XXFp_tp_c_ipj = zeros(npn,nmhu,nr);
+   XXDpp_c_tp_imj = zeros(npn,nmhu,nr);
+   XXDpm_c_tp_imj = zeros(npn,nmhu,nr);
+   XXFp_c_tp_imj = zeros(npn,nmhu,nr);
+   XXDpp_c_tp_ipj = zeros(npn,nmhu,nr);
+   XXDpm_c_tp_ipj = zeros(npn,nmhu,nr);
+   XXFp_c_tp_ipj = zeros(npn,nmhu,nr);
 %
-   XXDmm_tp_c_ijm = zeros(npn,nmhu,nr);
-   XXDmp_tp_c_ijm = zeros(npn,nmhu,nr);
-   XXFm_tp_c_ijm = zeros(npn,nmhu,nr);
-   XXDmm_tp_c_ijp = zeros(npn,nmhu,nr);
-   XXDmp_tp_c_ijp = zeros(npn,nmhu,nr);
-   XXFm_tp_c_ijp = zeros(npn,nmhu,nr);
+   XXDmm_c_tp_ijm = zeros(npn,nmhu,nr);
+   XXDmp_c_tp_ijm = zeros(npn,nmhu,nr);
+   XXFm_c_tp_ijm = zeros(npn,nmhu,nr);
+   XXDmm_c_tp_ijp = zeros(npn,nmhu,nr);
+   XXDmp_c_tp_ijp = zeros(npn,nmhu,nr);
+   XXFm_c_tp_ijp = zeros(npn,nmhu,nr);
 %
 % For Ohmic electric field
 %
-	XXDpp_tp_e_imj = zeros(npn,nmhu,nr);
-	XXDpm_tp_e_imj = zeros(npn,nmhu,nr);
-	XXFp_tp_e_imj = zeros(npn,nmhu,nr);
-	XXDpp_tp_e_ipj = zeros(npn,nmhu,nr);
-	XXDpm_tp_e_ipj = zeros(npn,nmhu,nr);
-	XXFp_tp_e_ipj = zeros(npn,nmhu,nr);
+	XXDpp_e_tp_imj = zeros(npn,nmhu,nr);
+	XXDpm_e_tp_imj = zeros(npn,nmhu,nr);
+	XXFp_e_tp_imj = zeros(npn,nmhu,nr);
+	XXDpp_e_tp_ipj = zeros(npn,nmhu,nr);
+	XXDpm_e_tp_ipj = zeros(npn,nmhu,nr);
+	XXFp_e_tp_ipj = zeros(npn,nmhu,nr);
 %
-	XXDmm_tp_e_ijm = zeros(npn,nmhu,nr);
-	XXDmp_tp_e_ijm = zeros(npn,nmhu,nr);
-	XXFm_tp_e_ijm = zeros(npn,nmhu,nr);
-	XXDmm_tp_e_ijp = zeros(npn,nmhu,nr);
-	XXDmp_tp_e_ijp = zeros(npn,nmhu,nr);
-	XXFm_tp_e_ijp = zeros(npn,nmhu,nr);
+	XXDmm_e_tp_ijm = zeros(npn,nmhu,nr);
+	XXDmp_e_tp_ijm = zeros(npn,nmhu,nr);
+	XXFm_e_tp_ijm = zeros(npn,nmhu,nr);
+	XXDmm_e_tp_ijp = zeros(npn,nmhu,nr);
+	XXDmp_e_tp_ijp = zeros(npn,nmhu,nr);
+	XXFm_e_tp_ijp = zeros(npn,nmhu,nr);
 %
 % For RF waves
 %
-	XXDpp_tp_rf_imj = zeros(npn,nmhu,nr);
-	XXDpm_tp_rf_imj = zeros(npn,nmhu,nr);
-	XXFp_tp_rf_imj = zeros(npn,nmhu,nr);
-	XXDpp_tp_rf_ipj = zeros(npn,nmhu,nr);
-	XXDpm_tp_rf_ipj = zeros(npn,nmhu,nr);
-	XXFp_tp_rf_ipj = zeros(npn,nmhu,nr);
+	XXDpp_rf_tp_imj = zeros(npn,nmhu,nr);
+	XXDpm_rf_tp_imj = zeros(npn,nmhu,nr);
+	XXFp_rf_tp_imj = zeros(npn,nmhu,nr);
+	XXDpp_rf_tp_ipj = zeros(npn,nmhu,nr);
+	XXDpm_rf_tp_ipj = zeros(npn,nmhu,nr);
+	XXFp_rf_tp_ipj = zeros(npn,nmhu,nr);
 %
-	XXDmm_tp_rf_ijm = zeros(npn,nmhu,nr);
-	XXDmp_tp_rf_ijm = zeros(npn,nmhu,nr);
-	XXFm_tp_rf_ijm = zeros(npn,nmhu,nr);
-	XXDmm_tp_rf_ijp = zeros(npn,nmhu,nr);
-	XXDmp_tp_rf_ijp = zeros(npn,nmhu,nr);
-	XXFm_tp_rf_ijp = zeros(npn,nmhu,nr);
+	XXDmm_rf_tp_ijm = zeros(npn,nmhu,nr);
+	XXDmp_rf_tp_ijm = zeros(npn,nmhu,nr);
+	XXFm_rf_tp_ijm = zeros(npn,nmhu,nr);
+	XXDmm_rf_tp_ijp = zeros(npn,nmhu,nr);
+	XXDmp_rf_tp_ijp = zeros(npn,nmhu,nr);
+	XXFm_rf_tp_ijp = zeros(npn,nmhu,nr);
 end
 %
 %Second order radial gradient correction for ftp (radial derivative of the Chang and Cooper momentum terms) 
@@ -1989,7 +2002,7 @@ clear Xdummy1 Xdummy2 Xdummy3 Xdummy4
 %clear Xa_tm Xb_tm Xc_tm Xd_tm Xe_tm Xf_tm Xg_tm Xh_tm Xi_tm
 %clear Xa_tp Xb_tp Xc_tp Xd_tp Xe_tp Xf_tp Xg_tp Xh_tp Xi_tp
 %clear Xa_tp_t Xb_tp_t Xc_tp_t Xd_tp_t Xe_tp_t Xf_tp_t Xg_tp_t Xh_tp_t Xi_tp_t
-%clear Xb_tp_c_t Xc_tp_c_t Xd_tp_c_t
+%clear Xb_c_tp_t Xc_c_tp_t Xd_c_tp_t
 clear Xa_g Xb_g Xc_g Xd_g Xe_g Xf_g Xg_g Xh_g Xi_g
 clear Xa_g_t Xb_g_t Xc_g_t Xd_g_t Xe_g_t Xf_g_t Xg_g_t Xh_g_t Xi_g_t
 clear MXa MXb MXc MXd MXe MXf MXg MXh MXi MXj MXk MXl MXm MXn MXo 
@@ -2002,7 +2015,7 @@ clear Xmhu_t Xmhub Xmhubm Xmhubp Xcym Xcyp Xcy0m Xcy0p
 clear Xdeltaip Xdeltaim Xdeltajp Xdeltajm
 clear F1_1 F2_1 F1_2 B1_1 B1_2 B1_3 B1_4 B1_5 B2_1 B2_2 B2_3 
 clear F1 F2 F XF F1m F2m Fm F1p F2p Fp XFm XFp A XA Am Ap XAm XAp B1 B2 Bt XBt 
-clear MXP_f_t MXPC_f_t MXPDI_f_t MXP_tp_t MXP_tp_c_t MXP_g_t MXPC_g_t MXPDI_g_t
+clear MXP_f_t MXPC_f_t MXPDI_f_t MXP_tp_t MXP_c_tp_t MXP_g_t MXPC_g_t MXPDI_g_t
 clear Xmask Xmask_g Xmask_tp
 clear Xnhuloss XI_th Xf0_g_th
 clear jmhut_min jmhut_max
@@ -2239,7 +2252,7 @@ end
 if display_mode >= 1,info_dke_yp(2,['Convergence achieved for zero order Fokker-Planck calculations in ',num2str(etime(clock,time0)),' (s)']);end
 %
 filename = ['TIME_',tokname,'_S',int2str(snumber),'.mat'];%Time evolution is stored in a separated file
-eval(['save ',filename,' dtn normf0 curr0 ZXXf0'])
+save(filename,'dtn','normf0','curr0','ZXXf0');
 %
 clear ir fM XfM MMXPC_f_t MMXPDI_f_t Xmask_f0 MMXL_f_t MMXU_f_t
 clear Xf0 Xf0_t Xq Xq_t Xf1 Xf1_t Xf1_tp Xf1_tm Xf1_ts XR_t XS_t XY_t
@@ -2543,7 +2556,7 @@ end
 % or gained (! still need to include run-away contribution - Yves?)
 %
 if radial_mode ~= 1,
-    XXf0 = XXf0.*shiftdim(repmat(xne_norm'./xnorm_0_fsav',[1,npn,nmhu]),1);
+    XXf0(:,:,rdke) = XXf0(:,:,rdke).*shiftdim(repmat(xne_norm(rdke)'./xnorm_0_fsav',[1,npn,nmhu]),1);
 end
 %
 %
@@ -2618,20 +2631,20 @@ xP0_c_fsav = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dk
 %
 %f0_tp contribution
 %
-[XXSp0_tp_c_imj,XXSp0_tp_c_ipj,XXSm0_tp_c_ijm,XXSm0_tp_c_ijp] = ...
-    fluxes_dke_jd(XXDpp_tp_c_imj(:,:,rdke),XXDpp_tp_c_ipj(:,:,rdke),XXDpm_tp_c_imj(:,:,rdke),XXDpm_tp_c_ipj(:,:,rdke),...
-    XXFp_tp_c_imj(:,:,rdke),XXFp_tp_c_ipj(:,:,rdke),...
-    XXDmm_tp_c_ijm(:,:,rdke),XXDmm_tp_c_ijp(:,:,rdke),XXDmp_tp_c_ijm(:,:,rdke),XXDmp_tp_c_ijp(:,:,rdke),...
-    XXFm_tp_c_ijm(:,:,rdke),XXFm_tp_c_ijp(:,:,rdke),...
+[XXSp0_c_tp_imj,XXSp0_c_tp_ipj,XXSm0_c_tp_ijm,XXSm0_c_tp_ijp] = ...
+    fluxes_dke_jd(XXDpp_c_tp_imj(:,:,rdke),XXDpp_c_tp_ipj(:,:,rdke),XXDpm_c_tp_imj(:,:,rdke),XXDpm_c_tp_ipj(:,:,rdke),...
+    XXFp_c_tp_imj(:,:,rdke),XXFp_c_tp_ipj(:,:,rdke),...
+    XXDmm_c_tp_ijm(:,:,rdke),XXDmm_c_tp_ijp(:,:,rdke),XXDmp_c_tp_ijm(:,:,rdke),XXDmp_c_tp_ijp(:,:,rdke),...
+    XXFm_c_tp_ijm(:,:,rdke),XXFm_c_tp_ijp(:,:,rdke),...
     XXf0_tp(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
     XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
     XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
 %    
-xP0_tp_c_fsav = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).*XXpn2m(:,:,rdke)./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*XXSp0_tp_c_imj,1),1)';       
+xP0_c_tp_fsav = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).*XXpn2m(:,:,rdke)./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*XXSp0_c_tp_imj,1),1)';       
 %
 %f0_g contribution
 %
-[XXSp0_g_c_imj,XXSp0_g_c_ipj,XXSm0_g_c_ijm,XXSm0_g_c_ijp] = ...
+[XXSp0_c_g_imj,XXSp0_c_g_ipj,XXSm0_c_g_ijm,XXSm0_c_g_ijp] = ...
     fluxes_dke_jd(XXDpp_c_imj(:,:,rdke),XXDpp_c_ipj(:,:,rdke),XXDpm_c_imj(:,:,rdke),XXDpm_c_ipj(:,:,rdke),...
     XXFp_c_imj(:,:,rdke),XXFp_c_ipj(:,:,rdke),...
     XXDmm_c_ijm(:,:,rdke),XXDmm_c_ijp(:,:,rdke),XXDmp_c_ijm(:,:,rdke),XXDmp_c_ijp(:,:,rdke),...
@@ -2640,33 +2653,33 @@ xP0_tp_c_fsav = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral
     XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
     XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
 %    
-xP0_g_c_fsav = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).*XXpn2m(:,:,rdke)./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*XXSp0_g_c_imj,1),1)';       
+xP0_c_g_fsav = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).*XXpn2m(:,:,rdke)./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*XXSp0_c_g_imj,1),1)';       
 %
 ZSp0{1,1} = XXSp0_c_imj;
-ZSp0{1,2} = XXSp0_tp_c_imj;
-ZSp0{1,3} = XXSp0_g_c_imj;
+ZSp0{1,2} = XXSp0_c_tp_imj;
+ZSp0{1,3} = XXSp0_c_g_imj;
 %
 ZSp0{1,4} = XXSp0_c_ipj;
-ZSp0{1,5} = XXSp0_tp_c_ipj;
-ZSp0{1,6} = XXSp0_g_c_ipj;
+ZSp0{1,5} = XXSp0_c_tp_ipj;
+ZSp0{1,6} = XXSp0_c_g_ipj;
 %
 ZSp0{1,7} = XXSm0_c_ijm;
-ZSp0{1,8} = XXSm0_tp_c_ijm;
-ZSp0{1,9} = XXSm0_g_c_ijm;
+ZSp0{1,8} = XXSm0_c_tp_ijm;
+ZSp0{1,9} = XXSm0_c_g_ijm;
 %
 ZSp0{1,10} = XXSm0_c_ijp;
-ZSp0{1,11} = XXSm0_tp_c_ijp;
-ZSp0{1,12} = XXSm0_g_c_ijp;
+ZSp0{1,11} = XXSm0_c_tp_ijp;
+ZSp0{1,12} = XXSm0_c_g_ijp;
 %
 ZP0_fsav{1,1} = xP0_c_fsav;
-ZP0_fsav{1,2} = xP0_tp_c_fsav;
-ZP0_fsav{1,3} = xP0_g_c_fsav;
+ZP0_fsav{1,2} = xP0_c_tp_fsav;
+ZP0_fsav{1,3} = xP0_c_g_fsav;
 %
 XXSp0_imj = XXSp0_c_imj;
 XXSm0_ijm = XXSm0_c_ijm;
 %
-clear XXSp0_c_imj XXSp0_tp_c_imj XXSp0_g_c_imj
-clear xP0_c_fsav xP0_tp_c_fsav xP0_g_c_fsav
+clear XXSp0_c_imj XXSp0_c_tp_imj XXSp0_c_g_imj
+clear xP0_c_fsav xP0_c_tp_fsav xP0_c_g_fsav
 %
 %   Ohmic fluxes and power
 %
@@ -2685,20 +2698,20 @@ xP0_e_fsav = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dk
 %
 %f0_tp contribution
 %
-[XXSp0_tp_e_imj,XXSp0_tp_e_ipj,XXSm0_tp_e_ijm,XXSm0_tp_e_ijp] = ...
-    fluxes_dke_jd(XXDpp_tp_e_imj(:,:,rdke),XXDpp_tp_e_ipj(:,:,rdke),XXDpm_tp_e_imj(:,:,rdke),XXDpm_tp_e_ipj(:,:,rdke),...
-    XXFp_tp_e_imj(:,:,rdke),XXFp_tp_e_ipj(:,:,rdke),...
-    XXDmm_tp_e_ijm(:,:,rdke),XXDmm_tp_e_ijp(:,:,rdke),XXDmp_tp_e_ijm(:,:,rdke),XXDmp_tp_e_ijp(:,:,rdke),...
-    XXFm_tp_e_ijm(:,:,rdke),XXFm_tp_e_ijp(:,:,rdke),...
+[XXSp0_e_tp_imj,XXSp0_e_tp_ipj,XXSm0_e_tp_ijm,XXSm0_e_tp_ijp] = ...
+    fluxes_dke_jd(XXDpp_e_tp_imj(:,:,rdke),XXDpp_e_tp_ipj(:,:,rdke),XXDpm_e_tp_imj(:,:,rdke),XXDpm_e_tp_ipj(:,:,rdke),...
+    XXFp_e_tp_imj(:,:,rdke),XXFp_e_tp_ipj(:,:,rdke),...
+    XXDmm_e_tp_ijm(:,:,rdke),XXDmm_e_tp_ijp(:,:,rdke),XXDmp_e_tp_ijm(:,:,rdke),XXDmp_e_tp_ijp(:,:,rdke),...
+    XXFm_e_tp_ijm(:,:,rdke),XXFm_e_tp_ijp(:,:,rdke),...
     XXf0_tp(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
     XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
     XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
 %
-xP0_tp_e_fsav = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).*XXpn2m(:,:,rdke)./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*XXSp0_tp_e_imj,1),1)';       
+xP0_e_tp_fsav = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).*XXpn2m(:,:,rdke)./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*XXSp0_e_tp_imj,1),1)';       
 %
 %f0_g contribution
 %
-[XXSp0_g_e_imj,XXSp0_g_e_ipj,XXSm0_g_e_ijm,XXSm0_g_e_ijp] = ...
+[XXSp0_e_g_imj,XXSp0_e_g_ipj,XXSm0_e_g_ijm,XXSm0_e_g_ijp] = ...
     fluxes_dke_jd(XXDpp_e_imj(:,:,rdke),XXDpp_e_ipj(:,:,rdke),XXDpm_e_imj(:,:,rdke),XXDpm_e_ipj(:,:,rdke),...
     XXFp_e_imj(:,:,rdke),XXFp_e_ipj(:,:,rdke),...
     XXDmm_e_ijm(:,:,rdke),XXDmm_e_ijp(:,:,rdke),XXDmp_e_ijm(:,:,rdke),XXDmp_e_ijp(:,:,rdke),...
@@ -2707,33 +2720,33 @@ xP0_tp_e_fsav = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral
     XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
     XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
 % 
-xP0_g_e_fsav = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).*XXpn2m(:,:,rdke)./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*XXSp0_g_e_imj,1),1)';       
+xP0_e_g_fsav = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).*XXpn2m(:,:,rdke)./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*XXSp0_e_g_imj,1),1)';       
 %
 ZSp0{2,1} = XXSp0_e_imj;
-ZSp0{2,2} = XXSp0_tp_e_imj;
-ZSp0{2,3} = XXSp0_g_e_imj;
+ZSp0{2,2} = XXSp0_e_tp_imj;
+ZSp0{2,3} = XXSp0_e_g_imj;
 %
 ZSp0{2,4} = XXSp0_e_ipj;
-ZSp0{2,5} = XXSp0_tp_e_ipj;
-ZSp0{2,6} = XXSp0_g_e_ipj;
+ZSp0{2,5} = XXSp0_e_tp_ipj;
+ZSp0{2,6} = XXSp0_e_g_ipj;
 %
 ZSp0{2,7} = XXSm0_e_ijm;
-ZSp0{2,8} = XXSm0_tp_e_ijm;
-ZSp0{2,9} = XXSm0_g_e_ijm;
+ZSp0{2,8} = XXSm0_e_tp_ijm;
+ZSp0{2,9} = XXSm0_e_g_ijm;
 %
 ZSp0{2,10} = XXSm0_e_ijp;
-ZSp0{2,11} = XXSm0_tp_e_ijp;
-ZSp0{2,12} = XXSm0_g_e_ijp;
+ZSp0{2,11} = XXSm0_e_tp_ijp;
+ZSp0{2,12} = XXSm0_e_g_ijp;
 %
 ZP0_fsav{2,1} = xP0_e_fsav;
-ZP0_fsav{2,2} = xP0_tp_e_fsav;
-ZP0_fsav{2,3} = xP0_g_e_fsav;
+ZP0_fsav{2,2} = xP0_e_tp_fsav;
+ZP0_fsav{2,3} = xP0_e_g_fsav;
 %
 XXSp0_imj = XXSp0_imj + XXSp0_e_imj;
 XXSm0_ijm = XXSm0_ijm + XXSm0_e_ijm;
 %
-clear XXSp0_e_imj XXSp0_tp_e_imj XXSp0_g_e_imj
-clear xP0_e_fsav xP0_tp_e_fsav xP0_g_e_fsav
+clear XXSp0_e_imj XXSp0_e_tp_imj XXSp0_e_g_imj
+clear xP0_e_fsav xP0_e_tp_fsav xP0_e_g_fsav
 %
 %   RF fluxes and power
 %      
@@ -2805,20 +2818,20 @@ if nb > 0,
 %
 %f0_tp contribution for each ray
 %
-      [XXSp0_tp_rf_imj,XXSp0_tp_rf_ipj,XXSm0_tp_rf_ijm,XXSm0_tp_rf_ijp] = ...
-         fluxes_dke_jd(XXDpp_tp_rf_imj(:,:,rdke),XXDpp_tp_rf_ipj(:,:,rdke),XXDpm_tp_rf_imj(:,:,rdke),XXDpm_tp_rf_ipj(:,:,rdke),...
-         XXFp_tp_rf_imj(:,:,rdke),XXFp_tp_rf_ipj(:,:,rdke),...
-         XXDmm_tp_rf_ijm(:,:,rdke),XXDmm_tp_rf_ijp(:,:,rdke),XXDmp_tp_rf_ijm(:,:,rdke),XXDmp_tp_rf_ijp(:,:,rdke),...
-         XXFm_tp_rf_ijm(:,:,rdke),XXFm_tp_rf_ijp(:,:,rdke),...
+      [XXSp0_rf_tp_imj,XXSp0_rf_tp_ipj,XXSm0_rf_tp_ijm,XXSm0_rf_tp_ijp] = ...
+         fluxes_dke_jd(XXDpp_rf_tp_imj(:,:,rdke),XXDpp_rf_tp_ipj(:,:,rdke),XXDpm_rf_tp_imj(:,:,rdke),XXDpm_rf_tp_ipj(:,:,rdke),...
+         XXFp_rf_tp_imj(:,:,rdke),XXFp_rf_tp_ipj(:,:,rdke),...
+         XXDmm_rf_tp_ijm(:,:,rdke),XXDmm_rf_tp_ijp(:,:,rdke),XXDmp_rf_tp_ijm(:,:,rdke),XXDmp_rf_tp_ijp(:,:,rdke),...
+         XXFm_rf_tp_ijm(:,:,rdke),XXFm_rf_tp_ijp(:,:,rdke),...
          XXf0_tp(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
          XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
          XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
 %            
-      xyP0_tp_rf_fsav(rdke,ib) = 2*pi*(xqtilde(rdke)'./xqhat(rdke)').*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).^3./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*XXSp0_tp_rf_imj,1),1);       
+      xyP0_rf_tp_fsav(rdke,ib) = 2*pi*(xqtilde(rdke)'./xqhat(rdke)').*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).^3./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*XXSp0_rf_tp_imj,1),1);       
 %
 %f0_g contribution for each ray
 %
-      [XXSp0_g_rf_imj,XXSp0_g_rf_ipj,XXSm0_g_rf_ijm,XXSm0_g_rf_ijp] = ...
+      [XXSp0_rf_g_imj,XXSp0_rf_g_ipj,XXSm0_rf_g_ijm,XXSm0_rf_g_ijp] = ...
          fluxes_dke_jd(XXDpp_rf_imj(:,:,rdke),XXDpp_rf_ipj(:,:,rdke),XXDpm_rf_imj(:,:,rdke),XXDpm_rf_ipj(:,:,rdke),...
          XXFp_rf_imj(:,:,rdke),XXFp_rf_ipj(:,:,rdke),...
          XXDmm_rf_ijm(:,:,rdke),XXDmm_rf_ijp(:,:,rdke),XXDmp_rf_ijm(:,:,rdke),XXDmp_rf_ijp(:,:,rdke),...
@@ -2827,35 +2840,35 @@ if nb > 0,
          XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
          XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
 %    
-      xyP0_g_rf_fsav(rdke,ib) = 2*pi*(xqtilde(rdke)'./xqhat(rdke)').*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).^3./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*XXSp0_g_rf_imj,1),1);       
+      xyP0_rf_g_fsav(rdke,ib) = 2*pi*(xqtilde(rdke)'./xqhat(rdke)').*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).^3./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*XXSp0_rf_g_imj,1),1);       
 %
 		XXSp0_imj = XXSp0_imj + XXSp0_rf_imj;
 		XXSm0_ijm = XXSm0_ijm + XXSm0_rf_ijm;
 %
 		ZSp0{3,1} = ZSp0{3,1} + XXSp0_rf_imj;
-		ZSp0{3,2} = ZSp0{3,2} + XXSp0_tp_rf_imj;
-		ZSp0{3,3} = ZSp0{3,3} + XXSp0_g_rf_imj;
+		ZSp0{3,2} = ZSp0{3,2} + XXSp0_rf_tp_imj;
+		ZSp0{3,3} = ZSp0{3,3} + XXSp0_rf_g_imj;
 %
 		ZSp0{3,4} = ZSp0{3,4} + XXSp0_rf_ipj;
-		ZSp0{3,5} = ZSp0{3,5} + XXSp0_tp_rf_ipj;
-		ZSp0{3,6} = ZSp0{3,6} + XXSp0_g_rf_ipj;
+		ZSp0{3,5} = ZSp0{3,5} + XXSp0_rf_tp_ipj;
+		ZSp0{3,6} = ZSp0{3,6} + XXSp0_rf_g_ipj;
 %
 		ZSp0{3,7} = ZSp0{3,7} + XXSm0_rf_ijm;
-		ZSp0{3,8} = ZSp0{3,8} + XXSm0_tp_rf_ijm;
-		ZSp0{3,9} = ZSp0{3,9} + XXSm0_g_rf_ijm;
+		ZSp0{3,8} = ZSp0{3,8} + XXSm0_rf_tp_ijm;
+		ZSp0{3,9} = ZSp0{3,9} + XXSm0_rf_g_ijm;
 %
 		ZSp0{3,10} = ZSp0{3,10} + XXSm0_rf_ijp;
-		ZSp0{3,11} = ZSp0{3,11} + XXSm0_tp_rf_ijp;
-		ZSp0{3,12} = ZSp0{3,12} + XXSm0_g_rf_ijp;
+		ZSp0{3,11} = ZSp0{3,11} + XXSm0_rf_tp_ijp;
+		ZSp0{3,12} = ZSp0{3,12} + XXSm0_rf_g_ijp;
 %
 	end
 %
 	ZP0_fsav{3,1} = xyP0_rf_fsav;
-	ZP0_fsav{3,2} = xyP0_tp_rf_fsav;
-	ZP0_fsav{3,3} = xyP0_g_rf_fsav;
+	ZP0_fsav{3,2} = xyP0_rf_tp_fsav;
+	ZP0_fsav{3,3} = xyP0_rf_g_fsav;
 end
 %
-    clear xyP0_rf_fsav xyP0_tp_rf_fsav xyP0_g_rf_fsav
+    clear xyP0_rf_fsav xyP0_rf_tp_fsav xyP0_rf_g_fsav
 end
 %
 % run-away rate
