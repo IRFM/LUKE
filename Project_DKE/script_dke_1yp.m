@@ -1,5 +1,5 @@
 %Script for testing the DKE solver
-%by Y. PEYSSON, CEA/DRFC, 23/04/2003
+%by Y. Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 %
 clear all;pause(0.5);
 clear mex;pause(0.5);
@@ -11,8 +11,8 @@ pause(1);
 %
 disp('-------------------------------------------------------------------------------------------------------------------');
 disp('-------------------------------------------------------------------------------------------------------------------');
-disp(['Kinetic calculations for the electron population during current drive in tokamaks']);
-disp(['Version 1 for nested circular poloidal magnetic flux surfaces']);
+disp(['Drift Kinetic calculations for the electron population during current drive in tokamaks']);
+disp(['for arbitrary plasma equilibrium']);
 disp(['Authors:  - Yves Peysson (CEA-DSM-DRFC, France, yves.peysson@cea.fr)']);
 disp(['          - Joan Decker (MIT-RLE, USA, jodecker@mit.edu)']);
 disp('-------------------------------------------------------------------------------------------------------------------');
