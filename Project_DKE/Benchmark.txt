@@ -93,4 +93,50 @@ Here xsigsp* = xsigsp*((xbetath/betath_ref).*(xne/ne_ref)) is order to correct f
 
 ******************************************************************* Run-away rate **************************************************************************
 
+One radial location -> rho_S = [0.4], eTe = 0, eTe = 0;ref_mode = 0, norm_ref = 1, bounce_mode = 0
+---------------------------------------------------------------------------------------
+Z = 1, no imp, (H), RR_ref_fsav = 0.00027949 [Kruskal-Bernstein=0.00026716,Kulsrud et al=3.177e-4] (central norm., Maxwellian, E/ED = 0.08, rho = 0.4, np=79, nmhu=104, pnmax_S = 15)
+Z = 2, RR_ref_fsav = 0.00015806 [Kulsrud et al=1.735e-4] (central norm., Maxwellian, E/ED = 0.08, rho = 0.4, np=79, nmhu=104, pnmax_S = 15)
+Z = 3, RR_ref_fsav = 9.6845e-05 [Kulsrud et al=1.047e-4] (central norm., Maxwellian, E/ED = 0.08, rho = 0.4, np=79, nmhu=104, pnmax_S = 15)
+Z = 10, RR_ref_fsav = 8.7538e-06 [Kulsrud et al=9e-6] (central norm., Maxwellian, E/ED = 0.08, rho = 0.4, np=79, nmhu=104, pnmax_S = 15)
+---------------------------------------------------------------------------------------
+Multiple radial locations -> rho_S = [0.2,0.4,0.6,0.8], eTe = 1,ene = 1, bounce_mode = 0
+---------------------------------------------------------------------------------------
+Z = 1, no imp, (H), (central norm., linearized, E/ED = 0.01, np=109, nmhu=158, pnmax_S = 15)
+by definition, xsigsp = sigma_spitzer = Zcurr_ref{1,1}./((xbetath/betath_ref).*(xne/ne_ref))./xepsi_ref must be independent of the plasma radius
+---------------------------------------------------------------------------------------
+ref_mode = 0, norm_ref = 1
+xrho           = 1.413793103448276e-01     3.161904761904763e-01     5.099009900990099e-01     7.070921985815601e-01     9.055248618784534e-01
+xepsi_ref_fsav = 8.000000000000000e-02     8.000000000000000e-02     8.000000000000000e-02     8.000000000000000e-02     8.000000000000000e-02
+xRR_KB_fsav    = 2.671570466223034e-04     2.671570466223034e-04     2.671570466223034e-04     2.671570466223034e-04     2.671570466223034e-04
+xRR_fsav       = 2.750532463130379e-04     2.629657335862499e-04     2.376778494241222e-04     1.921292138141247e-04     1.054416223828635e-04
+xRR_fsav*      = 2.750532463130379e-04     2.752391160413997e-04     2.762820869242267e-04     2.755860460791563e-04     2.618333636572724e-04
+by definition, xRR_ref_fsav* = XxRR_ref_fsav(np-1,:)./(xnhu/nhu_ref)./(xne/ne_ref)
+the local Kruskal-Berstein level is well recovered.
+---------------------------------------------------------------------------------------
+ref_mode = 0, norm_ref = 0
+xrho           = 1.413793103448276e-01     3.161904761904763e-01     5.099009900990099e-01     7.070921985815601e-01     9.055248618784534e-01
+xepsi_ref_fsav = 8.000000000000000e-02     8.000000000000000e-02     8.000000000000000e-02     8.000000000000000e-02     8.000000000000000e-02
+xRR_KB_fsav    = 2.671570466223034e-04     2.629250728660722e-04     2.533637005048352e-04     2.349041925837223e-04     1.910199987737158e-04
+xRR_fsav       = 2.750532363467833e-04     2.587541098375563e-04     2.251636327512738e-04     1.694032919745622e-04     7.501768879178331e-05
+xRR_fsav*      = 2.750532363467833e-04     2.708309234534129e-04     2.617352795251625e-04     2.429884685481928e-04     1.862844420093004e-04
+by definition, xRR_ref_fsav* = XxRR_ref_fsav(np-1,:)./(xnhu/nhu_ref)./(xne/ne_ref)
+the local Kruskal-Berstein level is well recovered.
+---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
+One radial location -> eTe = 0, eTe = 0, ref_mode = 1, norm_ref = 1, bounce_mode = 1
+---------------------------------------------------------------------------------------
+Z = 1, no imp, (H), xRR_fsav = 0.00018967 (local norm., linearized, E/ED_fsav = 0.08,xRR_fsav (no bounce) = 0.0002661, rho = 0.01, np=109, nmhu=116, pnmax_S = 15)
+xRR_fsav/xRR_fsav(no bounce) = 0.00018967/0.0002661 = 0.7127 [Eriksson-Helander = 0.858]
+Z = 1, no imp, (H), xRR_fsav = 0.00010391  (local norm., linearized, E/ED_fsav = 0.08,xRR_fsav (no bounce) = 0.00028128 , rho = 0.1, np=109, nmhu=116, pnmax_S = 15)
+xRR_fsav/xRR_fsav(no bounce) =  0.00010391/0.00028128 = 0.369 [Eriksson-Helander = 0.552]
+Z = 1, no imp, (H), xRR_fsav =  (local norm., linearized, E/ED_fsav = 0.08,xRR_fsav= , rho = 0.2, np=109, nmhu=116, pnmax_S = 15)
+xRR_fsav/xRR_fsav(no bounce) =  [Eriksson-Helander =]
+Z = 1, no imp, (H), xRR_fsav =  (local norm., linearized, E/ED_fsav = 0.08,xRR_fsav= , rho = 0.3, np=109, nmhu=116, pnmax_S = 15)
+xRR_fsav/xRR_fsav(no bounce) =  [Eriksson-Helander =]
+Z = 1, no imp, (H), xRR_fsav =  (local norm., linearized, E/ED_fsav = 0.08,xRR_fsav= , rho = 0.4, np=109, nmhu=116, pnmax_S = 15)
+xRR_fsav/xRR_fsav(no bounce) =  [Eriksson-Helander =]
+Z = 1, no imp, (H), xRR_fsav =  (local norm., linearized, E/ED_fsav = 0.08,xRR_fsav= , rho = 0.5, np=109, nmhu=116, pnmax_S = 15)
+xRR_fsav/xRR_fsav(no bounce) =  [Eriksson-Helander =]
+[Eriksson-Helander = 1-sqrt(2*r/R)]
 
