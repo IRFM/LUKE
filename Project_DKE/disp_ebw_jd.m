@@ -34,7 +34,13 @@ iLco_app = max(find(omega < xwL));
 iOco_app = max(find(omega < sqrt(sum(xwps.^2))));
 iCmin_app = min([iRco_app,iLco_app,iOco_app]);
 %
-ir0 = iCmin_app;
+Npar_lim = 1/sqrt(1+abs(xwps(1,iOco_app))/xwps(1,iOco_app));
+%
+if xNpar(iOco_app) > Npar_lim,
+    ir0 = iOco_app;
+else
+    ir0 = iCmin_app;
+end
 %
 % ES approximation
 %
