@@ -23,12 +23,12 @@ t_{k}\in \left[ 0,+\infty \right] ,k\rightarrow \left\{ 0,n_{t}\right\}
 \right.
 \end{equation}
 
-This grid system defines a set of cells of non-uniform sizescharacterized by
-index numbers which, by definition, are integers. The distribution function $%
-f$ is represented by its values inside these cells, as shown in Fig. *****.
-With this form, the conservative nature of the problem is preserved
-numerically, avoiding the occurence of spurious numerical fluxes which lead
-to wrong estimate of the solution.
+This grid system defines a set of cells of non-uniform sizes characterized
+by index numbers which, by definition, are integers. The distribution
+function $f$ is represented by its values inside these cells, as shown in
+Fig. *****. With this form, the conservative nature of the problem is
+preserved numerically, avoiding the occurence of spurious numerical fluxes
+which lead to wrong estimate of the solution.
 
 \begin{equation}
 f\left( p_{i+1/2},\xi _{0j+1/2},\psi _{l+1/2},t_{k}\right) \rightarrow
@@ -78,15 +78,24 @@ Then, intervals on the different grids are
 
 where 
 \begin{eqnarray}
-\Delta p_{i+1} &=&p_{i+3/2}-p_{i+1/2} \\
+\Delta p_{i+1} &=&p_{i+3/2}-p_{i+1/2}  \nonumber \\
 &=&p_{i+3/2}-p_{i+1}+p_{i+1}-p_{i+1/2}  \nonumber \\
-&=&\frac{\Delta p_{i+3/2}}{2}+\frac{\Delta p_{i+1/2}}{2}  \nonumber
+&=&\frac{\Delta p_{i+3/2}}{2}+\frac{\Delta p_{i+1/2}}{2}
 \end{eqnarray}
 \begin{eqnarray}
-\Delta \xi _{0,j+1} &=&\xi _{0,j+3/2}-\xi _{0,j+1/2} \\
+\Delta \xi _{0,j+1} &=&\xi _{0,j+3/2}-\xi _{0,j+1/2}  \nonumber \\
 &=&\xi _{0,j+3/2}+\xi _{0,j+1}-\xi _{0,j+1}-\xi _{0,j+1/2}  \nonumber \\
-&=&\frac{\Delta \xi _{0,j+3/2}}{2}+\frac{\Delta \xi _{0,j+1/2}}{2}  \nonumber
+&=&\frac{\Delta \xi _{0,j+3/2}}{2}+\frac{\Delta \xi _{0,j+1/2}}{2}
 \end{eqnarray}
+
+It is important to note that the need of a non-uniform momentum grid is
+justified by the $3-D$ approach of the numerical code. Indeed, since all
+radii are considered at each time step, ans since plasma temperature is
+usually much lower at the edage than at the plasma center, this requires a
+finer mesh close to $p=0$, in order to describe momentum dynamics at all
+radii with a single $p$ grid. Moreover, this argument holds for the case of
+multi-species drift kinetic calculations, since ion velocities are much
+lower than electron ones.
 
 \subsection{Configuration space}
 
@@ -115,19 +124,6 @@ where
 &=&\frac{\Delta \psi _{l+3/2}}{2}+\frac{\Delta \psi _{l+1/2}}{2}  \nonumber
 \end{eqnarray}
 
-Much in the same way, $\Delta \psi $ must be specified at the boundaries of
-the domain of integration. Using a similar approach as for the momentum $p$,
-one finds that 
-\begin{equation}
-\Delta \psi _{0}=2\psi _{1/2}
-\end{equation}
-since $\psi _{0}=0$, and 
-\begin{equation}
-\Delta \psi _{n_{\psi }}=2\left( \psi _{n_{\psi }}-\psi _{n_{\psi
-}-1/2}\right) =2\left( \psi _{a}-\psi _{n_{\psi }-1/2}\right)
-\end{equation}
-en remarquant que $\psi _{n_{\psi }}=\psi _{a}$.
-
 \subsubsection{Link between momentum and configuration grids}
 
 When the bounce averaged drift kinetic equation is solved, the distribution
@@ -144,17 +140,21 @@ B_{\max }\left( \psi \right) }  \label{Trapcond}
 \end{equation}
 
 From relation (\ref{Trapcond}), it is clear that momentum and radial grids
-are no more fully independent, if one enforces for ensuring numerical
-accuracy, that at each radial position $\psi _{l}$ corresponds an index
-number $j_{l}$ of the pitch-angle grid, so that 
+are no more fully independent. In order to achieve calculations with a high
+numerical accuracy, the pitch-angle flux grid is therefore chosen so that
+there exists an index number $j_{l}$ where the following condition is
+exactly fullfiled\footnote{%
+This choice is possible, since bounce integrals are determined numerically
+from magnetic equilibrium codes, and therefore, no singularity is
+encountered.},
 \begin{equation}
 \xi _{0T,j_{l}}^{2}\left( \psi _{l}\right) =1-\frac{B_{\min }\left( \psi
 _{l}\right) }{B_{\max }\left( \psi _{l}\right) }
 \end{equation}
-the trapped passing boundary is set exactly on the pitch-angle grid\footnote{%
-This choice is possible, since bounce integrals are determined numerically
-from magnetic equilibrium codes, and therefore, no singularity is
-encountered.}. Hence, if the number of radial points for the flux grid is
+With this definition, the trapped passing boundaries are consistent with
+both pitch-angle and spatial flux grids. Obviously, the use of a non-uniform
+pitch-angle flux grid is fully necessary, because of this numerical
+requirement. Hence, if the number of radial points for the flux grid is
 arbitrary by definition, the number of points for the pitch-angle grid has a
 lower limit. It is straightforward to give a rough estimate, in order to
 evaluate the numerical size of the objects in the code. Let $n_{\psi }$
@@ -162,8 +162,8 @@ being the number of flux grid points, $n_{\xi _{0}}\geq 6n_{\psi }+7,$ since
 at least each trapped passing boundary on the pitch-angle flux grid must be
 framed by two consecutive neighbors points, on each side, for $\xi _{0}>0$
 et $\xi _{0}\leq 0$ domains. In addition, accurate calculations must be
-performed at $\xi _{0}$ (3 points) et at $\left| \xi _{0}\right| =1$ (4
-points). Hence, for $n_{\psi }=30,$ $n_{\xi _{0}}\geq 187.$
+performed at $\xi _{0}$ ($\ss $ points) et at $\left| \xi _{0}\right| =1$ (4
+points). Hence, for $n_{\psi }=30,$ $n_{\xi _{0}}\geq 187.$ 
 
 \subsection{Time grid definition}
 
@@ -172,17 +172,18 @@ Time evolution is also projected on a numerical grid,
 t_{k}=k\Delta t
 \end{equation}
 which is taken uniform for two reasons. First, in the numerical approach
-here considered, the algorithm, as discussed in Section****, is mainly
+here considered, the algorithm, as discussed in Sec. ****, is mainly
 dedicated to the fast determination of the asymptotic stationary solution $%
-\lim_{t\rightarrow +\infty }f\left( p,\xi _{0},\psi ,t\right) =\overline{f}%
-\left( p,\xi _{0},\psi \right) ,$ and therefore time step values must
-fulfill the condition $\Delta t\gg 1.$ In this limit, the time $t$ used in
-the iterative procedure because of the weak non-linearities of the collision
-operator, acts mainly as a regularization parameter, when matrix to be
-inverted is close to be ill-conditionned. Furthermore, with a non-uniform
-time grid, matrix must be calculated at each time step, which prevents the
-use of the very efficient incomplete $LU$ matrix factorization technique, a
-procedure that allows to reduce considerably computer time consumption.
-Since the code is expected to be incorporate in a chain of codes, in order
-to obtain self-consistent magnetic equilibrium, wave propagation and kinetic
-calculations, this is therefore the only choice that can be considered.
+\lim_{t\rightarrow +\infty }f\left( p,\xi _{0},\psi ,t\right) =f^{\left( 
+\infty \right) }\left( p,\xi _{0},\psi \right) ,$ and therefore time step
+values must fulfill the condition $\Delta t\gg 1.$ In this limit, the time $t
+$ used in the iterative procedure because of the weak non-linearities of the
+collision operator, acts mainly as a regularization parameter, when matrix
+to be inverted is close to be ill-conditionned. Furthermore, with a
+non-uniform time grid, matrix must be calculated at each time step, which
+prevents the use of the very efficient incomplete $LU$ matrix factorization
+technique, as discussed in Sec. ***, a procedure that allows to reduce
+considerably computer time consumption. Since the code is expected to be
+incorporate in a chain of codes, in order to obtain self-consistent magnetic
+equilibrium, wave propagation and kinetic calculations, this is therefore
+the only choice that can be considered.
