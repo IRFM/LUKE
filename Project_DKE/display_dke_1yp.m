@@ -493,7 +493,7 @@ while 1,
 			end
 			disp(['   - Ohmic eletric field: ',num2str(xepsi_ref_fsav(r_dke(ir_display)))])
 			disp(['   - Runaway rate [spherical]: ',num2str(XxRR_ref_fsav(np-1,r_dke(ir_display)))])
-			  disp(['   - Kruskal-Berstein runaway rate (Z = 1) [spherical]: ',num2str(xRR_KB(r_dke(ir_display)))])
+			  disp(['   - Kruskal-Berstein runaway rate (Z = 1) [spherical]: ',num2str(xRR_KB_fsav(r_dke(ir_display)))])
 			disp(['   - Bulk current [spherical]: ',num2str(xcurrB_ref_fsav(r_dke(ir_display)))])
 %
 			disp('-------------------------------------------------------------------------------------------------------------------');
@@ -517,7 +517,7 @@ while 1,
 			end
 			disp(['   - Ohmic eletric field (V/m): ',num2str(xepsi_mksa(r_dke(ir_display)))])
 			disp(['   - Runaway rate [spherical]: ',num2str(XxRR_ref_fsav(np-1,r_dke(ir_display))*nhu_ref*ne_ref*me)])
-			disp(['   - Kruskal-Berstein runaway rate (Z = 1) [spherical]: ',num2str(xRR_KB(r_dke(ir_display))*nhu_ref*ne_ref*me)])
+			disp(['   - Kruskal-Berstein runaway rate (Z = 1) [spherical]: ',num2str(xRR_KB_fsav(r_dke(ir_display))*nhu_ref*ne_ref*me)])
 			disp(['   - Bulk current (MA/m2) [spherical]: ',num2str(xJrfB_mksa(r_dke(ir_display)))])
 		else
 			[Xf0_g_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(Xf0_g_ref,pn_ref,mhu,dp_cyl);

@@ -5,7 +5,7 @@ function [XXheaviside,...
     Zcurr,Zcurr_fsav,...
     ZSp0,ZP0,...
     XxRR_fsav,...
-    xTe_out_norm,xft_fsav,xmhubounce2,...
+    xTe_out_norm,xft_fsav,xmhubounce2,xepsi,...
     memoryLU] = ... 
 dke_1_4yp(tokname,theta,...
     XR,XZ,XBR,XBZ,XBphi,...
@@ -14,7 +14,7 @@ dke_1_4yp(tokname,theta,...
     xmhubounce2,xrho,xpsin,xdpsin,xpsinm,xdpsinm,xpsinp,xdpsinp,rdke,xpsin_S,...
     pn,dpn,pnm,dpnm,pnp,dpnp,pn_S,...
     xTe_norm,xne_norm,zZi,zmi,xzni_norm,xzTi_norm,...
-    betath_ref,epsi_fsav,waveparam,...
+    betath_ref,xepsi_fsav,waveparam,...
     XXDr,XXVr,...
     XXnhuloss,delta,Nq,...
     ftp_norm,bounce,coll_mode,...
@@ -57,7 +57,7 @@ dke_1_4yp(tokname,theta,...
 %       - XXDcy: EC normalized quasi-linear diffusion coefficient (nhuth_ref*pth_ref^2) [np,nmhu,nr]
 %       - param_cy: *******************normalized EC frequency [1,nr]
 %       - XXnhuloss: normalized loss frequency (nhuth_ref) [np,nmhu,nr]
-%       - epsi: normalized ohmic electric field at Bmin(pth_ref*nhuth_ref/e) [1,nr]
+%       - xepsi_fsav: flux surface averaged normalized ohmic electric field (pth_ref*nhuth_ref/e) [1,nr]
 %       - rdke: list of radial positions indexes at which FP or DKE are solved [1,nr_dke].  
 %		- bounce: First argument: bounce averaged option, (0) no trapping, (1) trapping full implicit calculations, second argument: Fokker-Planck (0) or Drift Kinetic Equation (1 or 2) [1,2]
 %       - ia: inverse aspect ratio [1,nr]
@@ -105,8 +105,8 @@ dke_1_4yp(tokname,theta,...
 %       - curr_tot_fsav:  FS averaged  Total current density (RF + ohmic + boostrap current) [1,nr]
 %       - currB: Bulk current (RF + ohmic + boostrap - runway current) [1,nr]
 %       - RR: Runaway rate through the surface of a sphere of radius p [nr,np]
-%       - epsi_fsav: Flux surface average normalized ohmic electric field (pth_ref*nhuth_ref/e) [1,nr]
-%		  - trapped_fraction: fraction of trapped electrosn ft [1,nr]
+%       - xepsi: normalized ohmic electric field at Bmin (pth_ref*nhuth_ref/e) [1,nr]
+%	- trapped_fraction: exact fraction of trapped electrons ft [1,nr]
 %       - Ten_out: New temperature of the bulk (mec2) [1,nr]
 %       - normf_tot_fsav: Flux surface averaged norm of the distribution function [1,nr]
 %       - curr0_fsav: Flux surface averaged RF + ohmic current density [1,nr]
@@ -114,19 +114,13 @@ dke_1_4yp(tokname,theta,...
 %       - Xpn: Momentum grid normalized to the reference momentum value [np,nmhu]
 %       - Xmhu: Angular grid [np,nmhu]
 %       - mhubounce2: Square of the bounce averaged cosine angle [1,1]
-%		  - memoryLU: memory size of the L+U matrices for f0 in MBytes[1,1]
+%       - memoryLU: memory size of the L+U matrices for f0 in MBytes[1,1]
 %  
 %   Warning: none
 %
-%	 Remain to do:
-%		- full numerical description for arbitrary equilibrium (R,Z,phi coordinates)
-%		- 4D calculations (Pfirsch-Scluter limit (at the edge)
-%	    - extend to ion FP by changing the collision operator
-%    
-%Last Update: 23/04/2003
 %
-%by Y. Peysson CEA-DRFC 22/07/1997 <peysson@drfc.cad.cea.fr>
-%Update for the drift kinetic calculations done by J. Decker and Y. Peysson 2001-2002-2003
+%Fokker-Planck part originally done by Y. Peysson 
+%Drift kinetic calculations for arbitrary magnetic equilibrium done by J. Decker (MIT-RLE) <jodecker@mit.edu> and Y. Peysson (CEA-DRFC) <yves.peysson@cea.fr>
 %
 if nargin < 33,
 	error('Wrong number of input arguments in dke_1_4yp')
@@ -907,11 +901,13 @@ for ir = 1:nr,
 % Electric field
 %
 	if bounce_mode == 0,
-		epsi(ir) = epsi_fsav(ir);
-	elseif bounce_mode == 1,	%************* A finir ***********
-	                        	disp('Flux surface averaged Ohmic Efield to do here')	
-%	        epsi(ir) = epsi_fsav(ir)/XXlambda_b_p1m3p4(1,1,ir);%Value at Bmin for FP or DKE calculations
-		epsi(ir) = epsi_fsav(ir)
+		xepsi(ir) = xepsi_fsav(ir);
+	elseif bounce_mode == 1,
+	(xqbar(ir)/xqtilde(ir))
+	(xB0(ir)/xBT0(ir))
+	(xR0(ir)/Rp)
+	XXlambda_b_p1m3p4(1:10,1:10,ir)
+	        xepsi(ir) = xepsi_fsav(ir)*(xqbar(ir)/xqtilde(ir))*(xB0(ir)/xBT0(ir))*(xR0(ir)/Rp)/XXlambda_b_p1m3p4(1,1,ir);%Value at Bmin for FP or DKE calculations
 	end	
 %	
 	XDpp_e_ippj = zeros(npn,nmhu);
@@ -931,14 +927,14 @@ for ir = 1:nr,
 	XDmm_e_ijp = zeros(npn,nmhu);
 	XDmm_e_ijm = zeros(npn,nmhu);
 %
-	XFp_e_ippj = +Xmhu.*XXRlambda_b_p1m1p2(:,:,ir)*epsi(ir);
-	XFp_e_ipj = +Xmhu.*XXRlambda_b_p1m1p2(:,:,ir)*epsi(ir);
-	XFp_e_ij = +Xmhu.*XXRlambda_b_p1m1p2(:,:,ir)*epsi(ir);	
-	XFp_e_imj = +Xmhu.*XXRlambda_b_p1m1p2(:,:,ir)*epsi(ir);
-	XFp_e_immj = +Xmhu.*XXRlambda_b_p1m1p2(:,:,ir)*epsi(ir);
+	XFp_e_ippj = +Xmhu.*XXRlambda_b_p1m1p2(:,:,ir)*xepsi(ir);
+	XFp_e_ipj = +Xmhu.*XXRlambda_b_p1m1p2(:,:,ir)*xepsi(ir);
+	XFp_e_ij = +Xmhu.*XXRlambda_b_p1m1p2(:,:,ir)*xepsi(ir);	
+	XFp_e_imj = +Xmhu.*XXRlambda_b_p1m1p2(:,:,ir)*xepsi(ir);
+	XFp_e_immj = +Xmhu.*XXRlambda_b_p1m1p2(:,:,ir)*xepsi(ir);
 %
-	XFm_e_ijp = -sqrt(X1mmhu2p).*XXRlambda_b_p1m1p2_p(:,:,ir)*epsi(ir);
-	XFm_e_ijm = -sqrt(X1mmhu2m).*XXRlambda_b_p1m1p2_m(:,:,ir)*epsi(ir);
+	XFm_e_ijp = -sqrt(X1mmhu2p).*XXRlambda_b_p1m1p2_p(:,:,ir)*xepsi(ir);
+	XFm_e_ijm = -sqrt(X1mmhu2m).*XXRlambda_b_p1m1p2_m(:,:,ir)*xepsi(ir);
 %
 	XXDpp_e_imj(:,:,ir) = XDpp_e_imj;
 	XXDpm_e_imj(:,:,ir) = XDpm_e_imj;
@@ -1252,14 +1248,14 @@ for ir = 1:nr,
 		XDmm_e_tp_ijp = zeros(npn,nmhu);
 		XDmm_e_tp_ijm = zeros(npn,nmhu);
 %
-		XFp_e_tp_ippj = +Xmhu.*XXRlambda_b_p2m2p2(:,:,ir)*epsi(ir);
-		XFp_e_tp_ipj = +Xmhu.*XXRlambda_b_p2m2p2(:,:,ir)*epsi(ir);
-		XFp_e_tp_ij = +Xmhu.*XXRlambda_b_p2m2p2(:,:,ir)*epsi(ir);	
-		XFp_e_tp_imj = +Xmhu.*XXRlambda_b_p2m2p2(:,:,ir)*epsi(ir);
-		XFp_e_tp_immj = +Xmhu.*XXRlambda_b_p2m2p2(:,:,ir)*epsi(ir);
+		XFp_e_tp_ippj = +Xmhu.*XXRlambda_b_p2m2p2(:,:,ir)*xepsi(ir);
+		XFp_e_tp_ipj = +Xmhu.*XXRlambda_b_p2m2p2(:,:,ir)*xepsi(ir);
+		XFp_e_tp_ij = +Xmhu.*XXRlambda_b_p2m2p2(:,:,ir)*xepsi(ir);	
+		XFp_e_tp_imj = +Xmhu.*XXRlambda_b_p2m2p2(:,:,ir)*xepsi(ir);
+		XFp_e_tp_immj = +Xmhu.*XXRlambda_b_p2m2p2(:,:,ir)*xepsi(ir);
 %
-		XFm_e_tp_ijp = -sqrt(X1mmhu2p).*XXRlambda_b_p2m2p2_p(:,:,ir)*epsi(ir);
-		XFm_e_tp_ijm = -sqrt(X1mmhu2m).*XXRlambda_b_p2m2p2_m(:,:,ir)*epsi(ir);
+		XFm_e_tp_ijp = -sqrt(X1mmhu2p).*XXRlambda_b_p2m2p2_p(:,:,ir)*xepsi(ir);
+		XFm_e_tp_ijm = -sqrt(X1mmhu2m).*XXRlambda_b_p2m2p2_m(:,:,ir)*xepsi(ir);
 %
 		XXDpp_e_tp_imj(:,:,ir) = XDpp_e_tp_imj;
 		XXDpm_e_tp_imj(:,:,ir) = XDpm_e_tp_imj;
@@ -1611,9 +1607,9 @@ if dke_mode == 1,%******************A corriger
 %
 %Radial gradient correction DC electric field matrix coefficients for ftp
 %
-		Xb_tp_c = Xb_tp_c - epsi(jr2)*Xpn2m.*Xmhu.*Xsstar_tp.*Xddeltaimdrho_tp_c./Xdpn;%f0(i-1,j) 
-		Xc_tp_c = Xc_tp_c + epsi(jr2)*Xsstar_tp.*Xmhu.*(Xpn2m.*Xddeltaimdrho_tp_c + Xpn2p.*Xddeltaipdrho_tp_c)./Xdpn;%f0(i,j)
-		Xd_tp_c = Xd_tp_c - epsi(jr2)*Xsstar_tp.*Xpn2p.*Xmhu.*Xddeltaipdrho_tp_c./Xdpn;%f0(i+1,j)
+		Xb_tp_c = Xb_tp_c - xepsi(jr2)*Xpn2m.*Xmhu.*Xsstar_tp.*Xddeltaimdrho_tp_c./Xdpn;%f0(i-1,j) 
+		Xc_tp_c = Xc_tp_c + xepsi(jr2)*Xsstar_tp.*Xmhu.*(Xpn2m.*Xddeltaimdrho_tp_c + Xpn2p.*Xddeltaipdrho_tp_c)./Xdpn;%f0(i,j)
+		Xd_tp_c = Xd_tp_c - xepsi(jr2)*Xsstar_tp.*Xpn2p.*Xmhu.*Xddeltaipdrho_tp_c./Xdpn;%f0(i+1,j)
 %
 %Boundaries of the bounce domain for ftp
 %
@@ -2507,14 +2503,14 @@ end
 %
 % run-away rate
 %
-epsi_rdke = epsi(rdke);
+xepsi_rdke = xepsi(rdke);
 Xxqtilde = repmat(xqtilde,npn,1);
 Xxqhat = repmat(xqtilde,npn,1);
 XxRR_fsav = 2*pi*(Xxqtilde./Xxqhat).*integral_dke_jd(dmhu,XXSp0_imj.*XXpn2m.*XXlambda(:,:,rdke),2);%Run-away rate
 %
-mask_epsi = find(epsi_rdke~=0);
-if ~isempty(mask_epsi)
-    currB_fsav = xcurr_tot_fsav - 0.5*XxRR_fsav(npn-1,mask_epsi)*max(v2)./epsi_rdke(mask_epsi);%Bulk current as defined by Karney (useful for non-zero large dc electric field only)
+mask_xepsi = find(xepsi_rdke~=0);
+if ~isempty(mask_xepsi)
+    currB_fsav = xcurr_tot_fsav - 0.5*XxRR_fsav(npn-1,mask_xepsi)*max(v2)./xepsi_rdke(mask_xepsi);%Bulk current as defined by Karney (useful for non-zero large dc electric field only)
 else
     currB_fsav = xcurr_tot_fsav;
 end
