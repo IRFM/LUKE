@@ -14,7 +14,7 @@ disp('--------------------------------------------------------------------------
 disp(['Drift Kinetic calculations for the electron population during current drive in tokamaks']);
 disp(['for arbitrary plasma equilibrium']);
 disp(['Authors:  - Yves Peysson (CEA-DSM-DRFC, France, yves.peysson@cea.fr)']);
-disp(['          - Joan Decker (MIT-RLE, USA, jodecker@alum.mit.edu)']);
+disp(['          - Joan Decker (MIT-RLE, USA, jodecker@mit.edu)']);
 disp('-------------------------------------------------------------------------------------------------------------------');
 %
 %
@@ -57,9 +57,9 @@ for sparam_inv = 1:size(param_inv_in,1),
  %
 	iloop = iloop + 1;
     disp(['- Loop number: ',int2str(iloop),'/',int2str(nloop)]);
-%
-	[Jrf0(iloop,:),Jboot_e(iloop,:),Jboot_i(iloop,:),Jtot(iloop,:),Pabs0(iloop,:),Pabs_tot(iloop,:),efficiency(iloop,:),epsi_fsav(iloop,:),...
-	    ia(iloop,:),ft(iloop,:),time(iloop),memoryLU_f(iloop),memoryLU_g(iloop)] =...
+%    
+	[Znorm_ref,Znorm_ref_fsav,Zcurr_ref,Zcurr_ref_fsav,ZP0_ref_fsav...
+	    time,memoryLU_f,memoryLU_g] =...
 	    test_dke_1yp(tokname,snumber,...
 	    grid_uniformity,grid_power,nmhu_S,np_S,pnmax_S,sfac,spfac,snmhu,snp,np_S_ref,psin_S,psin_display,dpsin_dke,...
 	    ref_mode,norm_ref,...
@@ -72,6 +72,19 @@ for sparam_inv = 1:size(param_inv_in,1),
 	    boundary_mode_g,prec0_g,nit_g,...
 	    dtn,invproc,param_inv,...
 	    dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode,iloop);
+%	    
+	    for j = 1:3
+	    	norm_ref_out(iloop,j) = Znorm_ref{j};
+	    	norm_ref_fsav_out(iloop,j) = Znorm_ref{j};
+	    	curr_ref_out(iloop,j) = Zcurr_ref{j};
+	    	curr_ref_fsav_out(iloop,j) = Zcurr_ref{j};
+	    	P0_ref_coll_fsav_out(iloop,j) = ZP0_ref_fsav{1,j};
+			P0_ref_e_fsav_out(iloop,j) = ZP0_ref_fsav{2,j};
+			P0_ref_rf_fsav_out(iloop,j) = ZP0_ref_fsav{3,j};
+		 end
+		 time_out(iloop) = time;
+		 memoryLU_f_out(iloop) = memoryLU_f;
+		 memoryLU_g_out(iloop) = memoryLU_g;
     disp('-------------------------------------------------------------------------------------------------------------------');
 end
 end

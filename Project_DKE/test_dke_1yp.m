@@ -1,6 +1,6 @@
-function [xJrf0_mksa_out,xJboot_e_mksa_out,xJboot_i_mksa_out,xJtot_mksa_out,...
-xPabs0_mksa_out,xPabs_tot_mksa_out,...
-xeta0_mksa_out,xepsi_mksa_out,xia_out,xft_out,...
+function [Znorm_ref,Znorm_ref_fsav,...
+Zcurr_ref,Zcurr_ref_fsav,...
+ZP0_ref_fsav,...
 time_out,memoryLU_f_out,memoryLU_g_out] =...
 test_dke_1yp(tokname,snumber,...
 grid_uniformity,grid_power,nmhu_S,np_S,pnmax_S,sfac,spfac,snmhu,snp,np_S_ref,psin_S,psin_display,dpsin_dke,...
@@ -744,18 +744,24 @@ end
 %
 filename = ['RESULTS_',tokname,'_S',int2str(snumber),'.mat'];
 [s,dossier,machine] = comput_dke_yp;
-while 1,
-	if exist([dossier,s,filename]) == 2 & auto_mode == 0,%Only in manual mode
-		del = input_dke_yp(['File ',filename,' already exists ! Do you want to overwrite it (yes:1, no:0)'],0);
-		if del == 1,
-			break;
+if diary_mode == 1,%Automatic data saving when diary mode is called
+	filename = ['RESULTS_',tokname,'_S',int2str(snumber),'.mat'];		
+	snumber=snumber+1;
+	del = 1;
+else,%Manual data saving
+	while 1,
+		if exist([dossier,s,filename]) == 2 & auto_mode == 0,%Only in manual mode
+			del = input_dke_yp(['File ',filename,' already exists ! Do you want to overwrite it (yes:1, no:0)'],0);
+			if del == 1,
+				break;
+			else
+				snumber = input_dke_yp('New simulation number',snumber+1);
+				filename = ['RESULTS_',tokname,'_S',int2str(snumber),'.mat'];	
+			end
 		else
-			snumber = input_dke_yp('New simulation number',snumber+1);
-			filename = ['RESULTS_',tokname,'_S',int2str(snumber),'.mat'];	
+			del = 1;
+			break;
 		end
-	else
-		del = 1;
-		break;
 	end
 end
 %
@@ -766,12 +772,14 @@ if del == 1	,
 		disp('-------------------------------------------------------------------------------------------------------------------');
 		info_dke_yp(2,['The data file : ',filename,' has been successfully saved !']);
 %
-		if auto_mode == 0,%Only in manual mode
-			dispres = input_dke_yp(['0: No display, 1: Display all results, 2: Display time evolution'],1); 
-			if dispres == 1,
-				[xJrf0_mksa_out,xJboot_e_mksa_out,xJboot_i_mksa_out,xJtot_mksa_out,xPabs0_mksa_out,xPabs_tot_mksa_out,xeta0_mksa_out,xepsi_mksa_out,xia_out,xft_out] = display_dke_1yp(filename);
-			elseif dispres == 2,
-				display_time_dke_1yp(filename)
+		if diary_mode == 0,
+			if auto_mode == 0,%Only in manual mode
+				dispres = input_dke_yp(['0: No display, 1: Display all results, 2: Display time evolution'],1); 
+				if dispres == 1,
+					[xJrf0_mksa_out,xJboot_e_mksa_out,xJboot_i_mksa_out,xJtot_mksa_out,xPabs0_mksa_out,xPabs_tot_mksa_out,xeta0_mksa_out,xepsi_mksa_out,xia_out,xft_out] = display_dke_1yp(filename);
+				elseif dispres == 2,
+					display_time_dke_1yp(filename)
+				end
 			end
 		end
 	else
