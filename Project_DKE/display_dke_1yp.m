@@ -1,4 +1,4 @@
-function [xJrf0_fsav_mksa,xJboot_e_fsav_mksa,xJboot_i_fsav_mksa,xJtot_fsav_mksa,...
+function [xJrf0_fsav_mksa,xJbc_e_fsav_mksa,xJbc_i_fsav_mksa,xJtot_fsav_mksa,...
 xPabs0_fsav_mksa,xPabs_tot_fsav_mksa,...
 xeta0_fsav_mksa,xepsi_fsav_mksa,xia,xft_fsav] = display_dke_1yp(filename,auto_mode_in,igor_mode)
 %
@@ -78,6 +78,162 @@ xcurr_hir_mksa_fsav = interp1(prho,pcurr_hir_mksa_fsav,xrho_dke);
 xcurr_sau_mksa_fsav = interp1(prho,pcurr_sau_mksa_fsav,xrho_dke);
 xcurr_hin_mksa_fsav = interp1(prho,pcurr_hin_mksa_fsav,xrho_dke);
 xcurr_i_mksa_fsav = interp1(prho,pcurr_i_mksa_fsav,xrho_dke);
+%
+% Current
+%
+xcurr0_ref = Zcurr_ref{1,1};    
+xcurr_tp_ref = Zcurr_ref{1,2};    
+xcurr_g_ref = Zcurr_ref{1,3};  
+xcurr_tot_ref = xcurr0_ref + xcurr_tp_ref + xcurr_g_ref;
+if syn_mode == 1,
+    xcurr_bc_tp_ref = Zcurr_bc_ref{1,2};    
+    xcurr_bc_g_ref = Zcurr_bc_ref{1,3};  
+    xcurr_bc_ref = xcurr_bc_tp_ref + xcurr_bc_g_ref;
+    xcurr_syn_ref = xcurr_tot_ref - xcurr0_ref - xcurr_bc_ref;
+else
+    xcurr_bc_ref = xcurr_tot_ref - xcurr0_ref;
+end
+if coll_mode == 3,
+	xcurr_L_tp_ref = Zcurr_ref{1,4};    
+	xcurr_L_g_ref = Zcurr_ref{1,5};  
+	xcurr_L_tot_ref = xcurr0_ref + xcurr_L_tp_ref + xcurr_L_g_ref;
+	xcurr_L_bc_ref = xcurr_L_tot_ref - xcurr0_ref;
+end
+%
+% FSAV current
+%
+xcurr0_ref_fsav = Zcurr_ref_fsav{1,1};    
+xcurr_tp_ref_fsav = Zcurr_ref_fsav{1,2};    
+xcurr_g_ref_fsav = Zcurr_ref_fsav{1,3};  
+xcurrB_ref_fsav = Zcurr_ref_fsav{2,1};%Bulk current in case of run-away electrons leaving the domain of integration
+xcurr_tot_ref_fsav = xcurr0_ref_fsav + xcurr_tp_ref_fsav + xcurr_g_ref_fsav;
+if syn_mode == 1,
+    xcurr_bc_tp_ref_fsav = Zcurr_bc_ref_fsav{1,2};    
+    xcurr_bc_g_ref_fsav = Zcurr_bc_ref_fsav{1,3};  
+    xcurr_bc_ref_fsav = xcurr_bc_tp_ref_fsav + xcurr_bc_g_ref_fsav;
+    xcurr_syn_ref_fsav = xcurr_tot_ref_fsav - xcurr0_ref_fsav - xcurr_bc_ref_fsav;
+else
+    xcurr_bc_ref_fsav = xcurr_tot_ref_fsav - xcurr0_ref_fsav;
+end
+if coll_mode == 3,
+	xcurr_L_tp_ref_fsav = Zcurr_ref_fsav{1,4};    
+	xcurr_L_g_ref_fsav = Zcurr_ref_fsav{1,5};  
+	xcurr_L_tot_ref_fsav = xcurr0_ref_fsav + xcurr_L_tp_ref_fsav + xcurr_L_g_ref_fsav;
+	xcurr_L_bc_ref_fsav = xcurr_L_tot_ref_fsav - xcurr0_ref_fsav;
+end
+%    
+% MKSA units
+%
+xJrf0_mksa = xcurr0_ref*j_ref;
+xJrf_tot_mksa = xcurr_tot_ref*j_ref;
+xJbc_e_mksa = xcurr_bc_ref*j_ref;
+if syn_mode == 1,
+    xJsyn_mksa = xcurr_syn_ref*j_ref;
+end
+if coll_mode == 3,
+	xJbc_L_e_mksa = xcurr_L_bc_ref*j_ref;
+end
+%
+% FSAV current
+%
+xJrf0_fsav_mksa = xcurr0_ref_fsav*j_ref;
+xJrf_tot_fsav_mksa = xcurr_tot_ref_fsav*j_ref;
+xJrfB_fsav_mksa = xcurrB_ref_fsav*j_ref;
+xJbc_e_fsav_mksa = xcurr_bc_ref_fsav*j_ref;
+xJbc_i_fsav_mksa = xcurr_i_mksa_fsav;
+xJbc_tot_fsav_mksa = xJbc_e_fsav_mksa + xJbc_i_fsav_mksa;
+xJtot_fsav_mksa = xcurr_tot_ref_fsav*j_ref + xJbc_i_fsav_mksa;
+if syn_mode == 1,
+    xJsyn_fsav_mksa = xcurr_syn_ref_fsav*j_ref;
+end
+if coll_mode == 3,
+	xJbc_L_e_fsav_mksa = xcurr_L_bc_ref_fsav*j_ref;
+	xJbc_L_tot_fsav_mksa = xJbc_L_e_fsav_mksa + xJbc_i_fsav_mksa;
+	xJtot_L_fsav_mksa = xcurr_L_tot_ref_fsav*j_ref + xJbc_i_fsav_mksa;
+end
+%
+% Power
+%
+xPcoll0_ref_fsav = ZP0_ref_fsav{1,1};
+xPcoll_tp_ref_fsav = ZP0_ref_fsav{1,2};
+xPcoll_g_ref_fsav = ZP0_ref_fsav{1,3};
+xPcoll_tot_ref_fsav = xPcoll0_ref_fsav + xPcoll_tp_ref_fsav + xPcoll_g_ref_fsav;
+% 
+xPelec0_ref_fsav = ZP0_ref_fsav{2,1};
+xPelec_tp_ref_fsav = ZP0_ref_fsav{2,2};
+xPelec_g_ref_fsav = ZP0_ref_fsav{2,3};
+xPelec_tot_ref_fsav = xPelec0_ref_fsav + xPelec_tp_ref_fsav + xPelec_g_ref_fsav;
+%
+if syn_mode == 1,
+    xPelec_syn_ref_fsav = xPelec_tp_ref_fsav + xPelec_g_ref_fsav;
+end
+if nb > 0,
+	xyPabs0_ref_fsav = ZP0_ref_fsav{3,1};
+	xyPabs_tp_ref_fsav = ZP0_ref_fsav{3,2};
+	xyPabs_g_ref_fsav = ZP0_ref_fsav{3,3};    
+	xyPabs_tot_ref_fsav = xyPabs0_ref_fsav + xyPabs_tp_ref_fsav + xyPabs_g_ref_fsav;
+% 
+	xyPabs0_lh_ref_fsav = xyPabs0_ref_fsav(:,blist_lh);
+	xyPabs0_ec_ref_fsav = xyPabs0_ref_fsav(:,blist_ec);
+	xyPabs_tot_lh_ref_fsav = xyPabs_tot_ref_fsav(:,blist_lh);
+	xyPabs_tot_ec_ref_fsav = xyPabs_tot_ref_fsav(:,blist_ec);
+%
+	xPabs0_ref_fsav = integral_dke_jd(ones(1,nb),xyPabs0_ref_fsav,2)';
+    xPabs_tot_ref_fsav = integral_dke_jd(ones(1,nb),xyPabs_tot_ref_fsav,2)';
+    if syn_mode == 1,
+        xyPabs_syn_ref_fsav = xyPabs_tp_ref_fsav + xyPabs_g_ref_fsav;
+        xyPabs_syn_lh_ref_fsav = xyPabs_syn_ref_fsav(:,blist_lh);
+        xyPabs_syn_ec_ref_fsav = xyPabs_syn_ref_fsav(:,blist_ec);
+        xPabs_syn_ref_fsav = integral_dke_jd(ones(1,nb),xyPabs_syn_ref_fsav,2)';
+    end
+else
+	xyPabs0_lh_ref_fsav = zeros(1,nr_dke);
+	xyPabs0_ec_ref_fsav = zeros(1,nr_dke);
+	xyPabs_tot_lh_ref_fsav = zeros(1,nr_dke);
+	xyPabs_tot_ec_ref_fsav = zeros(1,nr_dke);
+%
+	xPabs0_ref_fsav = zeros(1,nr_dke);
+	xPabs_tot_ref_fsav = zeros(1,nr_dke);
+    if syn_mode == 1,
+        xyPabs_syn_ref_fsav = zeros(1,nr_dke);
+        xyPabs_syn_lh_ref_fsav = zeros(1,nr_dke);
+        xyPabs_syn_ec_ref_fsav = zeros(1,nr_dke);
+        xPabs_syn_ref_fsav = zeros(1,nr_dke);
+    end
+end      
+%
+xPcoll0_fsav_mksa = xPcoll0_ref_fsav*P_ref;
+xPcoll_tot_fsav_mksa = xPcoll_tot_ref_fsav*P_ref;
+%
+xPelec0_fsav_mksa = xPelec0_ref_fsav*P_ref;
+xPelec_tot_fsav_mksa = xPelec_tot_ref_fsav*P_ref;
+%
+xyPabs0_lh_fsav_mksa = xyPabs0_lh_ref_fsav*P_ref;
+xyPabs_tot_lh_fsav_mksa = xyPabs_tot_lh_ref_fsav*P_ref;
+xyPabs0_ec_fsav_mksa = xyPabs0_ec_ref_fsav*P_ref;
+xyPabs_tot_ec_fsav_mksa = xyPabs_tot_ec_ref_fsav*P_ref;
+%
+xPabs0_fsav_mksa = xPabs0_ref_fsav*P_ref;
+xPabs_tot_fsav_mksa = xPabs_tot_ref_fsav*P_ref;
+if syn_mode == 1,
+    xPelec_syn_fsav_mksa = xPelec_syn_ref_fsav*P_ref;
+    xyPabs_syn_fsav_mksa = xyPabs_syn_ref_fsav*P_ref;
+    xyPabs_syn_lh_fsav_mksa = xyPabs_syn_lh_ref_fsav*P_ref;
+    xyPabs_syn_ec_fsav_mksa = xyPabs_syn_ec_ref_fsav*P_ref;
+    xPabs_syn_fsav_mksa = xPabs_syn_ref_fsav*P_ref;
+end
+%
+% Efficiency (j/p)
+%
+xeta0_ref_fsav = xcurr0_ref_fsav./(xPabs0_ref_fsav + eps);
+%
+xeta0_fsav_mksa = xeta0_ref_fsav*j_ref/P_ref;	
+if syn_mode == 1,
+    xeta_tot_ref_fsav = (xcurr0_ref_fsav + xcurr_syn_ref_fsav)./(xPabs0_ref_fsav + xPabs_syn_ref_fsav + eps);
+    xeta_tot_fsav_mksa = xeta_tot_ref_fsav*j_ref/P_ref;	
+end
+%
+xepsi_fsav_mksa = xepsi_ref_fsav*Edreicer_ref;	
 %
 while 1,
 	ir_display_dke = find(r_dke == ir_display);
@@ -526,165 +682,11 @@ while 1,
 %
 		end
 %
-% Current
-%
-		xcurr0_ref = Zcurr_ref{1,1};    
-		xcurr_tp_ref = Zcurr_ref{1,2};    
-		xcurr_g_ref = Zcurr_ref{1,3};  
-		xcurr_tot_ref = xcurr0_ref + xcurr_tp_ref + xcurr_g_ref;
-        if syn_mode == 1,
-    		xcurr_bc_tp_ref = Zcurr_bc_ref{1,2};    
-		    xcurr_bc_g_ref = Zcurr_bc_ref{1,3};  
-    		xcurr_bc_ref = xcurr_bc_tp_ref + xcurr_bc_g_ref;
-            xcurr_syn_ref = xcurr_tot_ref - xcurr0_ref - xcurr_bc_ref;
-        else
-    		xcurr_bc_ref = xcurr_tot_ref - xcurr0_ref;
-        end
-		if coll_mode == 3,
-			xcurr_L_tp_ref = Zcurr_ref{1,4};    
-			xcurr_L_g_ref = Zcurr_ref{1,5};  
-			xcurr_L_tot_ref = xcurr0_ref + xcurr_L_tp_ref + xcurr_L_g_ref;
-			xcurr_L_bc_ref = xcurr_L_tot_ref - xcurr0_ref;
-		end		
-%
-% FSAV current
-%
-		xcurr0_ref_fsav = Zcurr_ref_fsav{1,1};    
-		xcurr_tp_ref_fsav = Zcurr_ref_fsav{1,2};    
-		xcurr_g_ref_fsav = Zcurr_ref_fsav{1,3};  
-		xcurrB_ref_fsav = Zcurr_ref_fsav{2,1};%Bulk current in case of run-away electrons leaving the domain of integration
-		xcurr_tot_ref_fsav = xcurr0_ref_fsav + xcurr_tp_ref_fsav + xcurr_g_ref_fsav;
-        if syn_mode == 1,
-    		xcurr_bc_tp_ref_fsav = Zcurr_bc_ref_fsav{1,2};    
-		    xcurr_bc_g_ref_fsav = Zcurr_bc_ref_fsav{1,3};  
-    		xcurr_bc_ref_fsav = xcurr_bc_tp_ref_fsav + xcurr_bc_g_ref_fsav;
-            xcurr_syn_ref_fsav = xcurr_tot_ref_fsav - xcurr0_ref_fsav - xcurr_bc_ref_fsav;
-        else
-    		xcurr_bc_ref_fsav = xcurr_tot_ref_fsav - xcurr0_ref_fsav;
-        end
-		if coll_mode == 3,
-			xcurr_L_tp_ref_fsav = Zcurr_ref_fsav{1,4};    
-			xcurr_L_g_ref_fsav = Zcurr_ref_fsav{1,5};  
-			xcurr_L_tot_ref_fsav = xcurr0_ref_fsav + xcurr_L_tp_ref_fsav + xcurr_L_g_ref_fsav;
-			xcurr_L_bc_ref_fsav = xcurr_L_tot_ref_fsav - xcurr0_ref_fsav;
-		end
-%    
 % MKSA units
 %
-		xJrf0_mksa = xcurr0_ref*j_ref;
-		xJrf_tot_mksa = xcurr_tot_ref*j_ref;
-		xJbc_e_mksa = xcurr_bc_ref*j_ref;
-        if syn_mode == 1,
-            xJsyn_mksa = xcurr_syn_ref*j_ref;
-        end
-		if coll_mode == 3,
-			xJbc_L_e_mksa = xcurr_L_bc_ref*j_ref;
-		end
-%    
-		xJrf0_cyl_mksa = xcurr0_cyl_ref*j_ref;
+        xJrf0_cyl_mksa = xcurr0_cyl_ref*j_ref;
 %
-% FSAV current
-%
-		xJrf0_fsav_mksa = xcurr0_ref_fsav*j_ref;
-		xJrf_tot_fsav_mksa = xcurr_tot_ref_fsav*j_ref;
-		xJrfB_fsav_mksa = xcurrB_ref_fsav*j_ref;
-		xJbc_e_fsav_mksa = xcurr_bc_ref_fsav*j_ref;
-		xJbc_i_fsav_mksa = xcurr_i_mksa_fsav;
-        xJbc_tot_fsav_mksa = xJbc_e_fsav_mksa + xJbc_i_fsav_mksa;
-		xJtot_fsav_mksa = xcurr_tot_ref_fsav*j_ref + xJbc_i_fsav_mksa;
-        if syn_mode == 1,
-            xJsyn_fsav_mksa = xcurr_syn_ref_fsav*j_ref;
-        end
-		if coll_mode == 3,
-			xJbc_L_e_fsav_mksa = xcurr_L_bc_ref_fsav*j_ref;
-			xJbc_L_tot_fsav_mksa = xJbc_L_e_fsav_mksa + xJbc_i_fsav_mksa;
-			xJtot_L_fsav_mksa = xcurr_L_tot_ref_fsav*j_ref + xJbc_i_fsav_mksa;
-		end
-%
-% Power
-%
-		xPcoll0_ref_fsav = ZP0_ref_fsav{1,1};
-		xPcoll_tp_ref_fsav = ZP0_ref_fsav{1,2};
-		xPcoll_g_ref_fsav = ZP0_ref_fsav{1,3};
-		xPcoll_tot_ref_fsav = xPcoll0_ref_fsav + xPcoll_tp_ref_fsav + xPcoll_g_ref_fsav;
-% 
-		xPelec0_ref_fsav = ZP0_ref_fsav{2,1};
-		xPelec_tp_ref_fsav = ZP0_ref_fsav{2,2};
-		xPelec_g_ref_fsav = ZP0_ref_fsav{2,3};
-		xPelec_tot_ref_fsav = xPelec0_ref_fsav + xPelec_tp_ref_fsav + xPelec_g_ref_fsav;
-%
-        if syn_mode == 1,
-            xPelec_syn_ref_fsav = xPelec_tp_ref_fsav + xPelec_g_ref_fsav;
-        end
-		if nb > 0,
-			xyPabs0_ref_fsav = ZP0_ref_fsav{3,1};
-			xyPabs_tp_ref_fsav = ZP0_ref_fsav{3,2};
-			xyPabs_g_ref_fsav = ZP0_ref_fsav{3,3};    
-			xyPabs_tot_ref_fsav = xyPabs0_ref_fsav + xyPabs_tp_ref_fsav + xyPabs_g_ref_fsav;
-% 
-			xyPabs0_lh_ref_fsav = xyPabs0_ref_fsav(:,blist_lh);
-			xyPabs0_ec_ref_fsav = xyPabs0_ref_fsav(:,blist_ec);
-			xyPabs_tot_lh_ref_fsav = xyPabs_tot_ref_fsav(:,blist_lh);
-			xyPabs_tot_ec_ref_fsav = xyPabs_tot_ref_fsav(:,blist_ec);
-%
-			xPabs0_ref_fsav = integral_dke_jd(ones(1,nb),xyPabs0_ref_fsav,2)';
-    		xPabs_tot_ref_fsav = integral_dke_jd(ones(1,nb),xyPabs_tot_ref_fsav,2)';
-            if syn_mode == 1,
-                xyPabs_syn_ref_fsav = xyPabs_tp_ref_fsav + xyPabs_g_ref_fsav;
-                xyPabs_syn_lh_ref_fsav = xyPabs_syn_ref_fsav(:,blist_lh);
-                xyPabs_syn_ec_ref_fsav = xyPabs_syn_ref_fsav(:,blist_ec);
-        		xPabs_syn_ref_fsav = integral_dke_jd(ones(1,nb),xyPabs_syn_ref_fsav,2)';
-            end
-		else
-			xyPabs0_lh_ref_fsav = zeros(1,nr_dke);
-			xyPabs0_ec_ref_fsav = zeros(1,nr_dke);
-			xyPabs_tot_lh_ref_fsav = zeros(1,nr_dke);
-			xyPabs_tot_ec_ref_fsav = zeros(1,nr_dke);
-%
-			xPabs0_ref_fsav = zeros(1,nr_dke);
-			xPabs_tot_ref_fsav = zeros(1,nr_dke);
-            if syn_mode == 1,
-                xyPabs_syn_ref_fsav = zeros(1,nr_dke);
-                xyPabs_syn_lh_ref_fsav = zeros(1,nr_dke);
-                xyPabs_syn_ec_ref_fsav = zeros(1,nr_dke);
-                xPabs_syn_ref_fsav = zeros(1,nr_dke);
-            end
-		end      
-%
-		xPcoll0_fsav_mksa = xPcoll0_ref_fsav*P_ref;
-		xPcoll_tot_fsav_mksa = xPcoll_tot_ref_fsav*P_ref;
-%
-		xPelec0_fsav_mksa = xPelec0_ref_fsav*P_ref;
-		xPelec_tot_fsav_mksa = xPelec_tot_ref_fsav*P_ref;
-%
-		xyPabs0_lh_fsav_mksa = xyPabs0_lh_ref_fsav*P_ref;
-		xyPabs_tot_lh_fsav_mksa = xyPabs_tot_lh_ref_fsav*P_ref;
-		xyPabs0_ec_fsav_mksa = xyPabs0_ec_ref_fsav*P_ref;
-		xyPabs_tot_ec_fsav_mksa = xyPabs_tot_ec_ref_fsav*P_ref;
-%
-		xPabs0_fsav_mksa = xPabs0_ref_fsav*P_ref;
-		xPabs_tot_fsav_mksa = xPabs_tot_ref_fsav*P_ref;
-        if syn_mode == 1,
-            xPelec_syn_fsav_mksa = xPelec_syn_ref_fsav*P_ref;
-            xyPabs_syn_fsav_mksa = xyPabs_syn_ref_fsav*P_ref;
-            xyPabs_syn_lh_fsav_mksa = xyPabs_syn_lh_ref_fsav*P_ref;
-            xyPabs_syn_ec_fsav_mksa = xyPabs_syn_ec_ref_fsav*P_ref;
-            xPabs_syn_fsav_mksa = xPabs_syn_ref_fsav*P_ref;
-        end
-%
-% Efficiency (j/p)
-%
-		xeta0_ref_fsav = xcurr0_ref_fsav./(xPabs0_ref_fsav + eps);
-%
-		xeta0_fsav_mksa = xeta0_ref_fsav*j_ref/P_ref;	
-        if syn_mode == 1,
-            xeta_tot_ref_fsav = (xcurr0_ref_fsav + xcurr_syn_ref_fsav)./(xPabs0_ref_fsav + xPabs_syn_ref_fsav + eps);
-		    xeta_tot_fsav_mksa = xeta_tot_ref_fsav*j_ref/P_ref;	
-        end
-%
-		xepsi_fsav_mksa = xepsi_ref_fsav*Edreicer_ref;	
-%
-		if dke_mode == 0,
+        if dke_mode == 0,
 %
 %
 			disp('-------------------------------------------------------------------------------------------------------------------');
@@ -1144,15 +1146,15 @@ while 1,
             [ax] = graph1D_jd(prho,pcurr_sau_mksa_fsav,0,0,xlab,'<J_B> (MA/m^2)',['Bootstrap current in ',tokname],['DKE code';'Hinton  ';'Hirshman';'Sauter  '],xlim,0,style2,marker,color4,width2,siz);
 %
             figure(202),clf
-            [ax] = graph1D_jd(xrho_dke,xJrf0_fsav_mksa,0,0,xlab,'','',NaN,xlim,0,style3,marker1,color1,width2,siz,gca,red,lspace,bspace2);
-            [ax] = graph1D_jd(xrho_dke,xJbc_tot_fsav_mksa,0,0,xlab,'','',NaN,xlim,0,style3,marker2,color2,width2,siz);
+            [ax] = graph1D_jd(xrho_dke,xJrf0_fsav_mksa,0,0,xlab,'','',NaN,xlim,NaN,style3,marker1,color1,width2,siz,gca,red,lspace,bspace2);
+            [ax] = graph1D_jd(xrho_dke,xJbc_tot_fsav_mksa,0,0,xlab,'','',NaN,xlim,NaN,style3,marker2,color2,width2,siz);
             if syn_mode == 1,
                 leg = ['RF + Ohmic ';'Bootstrap  ';'Synergistic';'Total      '];
-                [ax] = graph1D_jd(xrho_dke,xJsyn_fsav_mksa,0,0,xlab,'','',NaN,xlim,0,style3,marker3,color3,width2,siz);
+                [ax] = graph1D_jd(xrho_dke,xJsyn_fsav_mksa,0,0,xlab,'','',NaN,xlim,NaN,style3,marker3,color3,width2,siz);
             else
                 leg = ['RF + Ohmic';'Bootstrap ';'Total     '];
             end
-            [ax] = graph1D_jd(xrho_dke,xJtot_fsav_mksa,0,0,xlab,'<J> (MA/m^2)','Total Current Density',leg,xlim,0,style3,marker4,color4,width2,siz);
+            [ax] = graph1D_jd(xrho_dke,xJtot_fsav_mksa,0,0,xlab,'<J> (MA/m^2)','Total Current Density',leg,xlim,NaN,style3,marker4,color4,width2,siz);
 %
 			figure(205),clf
 			[ax] = graph1D_jd(xrho_dke,xfteff_fsav,0,0,'','','',NaN,xlim,[0,1],style3,marker4,color2,width2,siz,gca,red,lspace,bspace2);
