@@ -870,8 +870,8 @@ for ir = 1:nr,
 	XDmp_c_ij = zeros(npn,nmhu);
 	XDmp_c_ijm = zeros(npn,nmhu);
 %
-	XDmm_c_ijp = XBt.*XXRlambda_p2m1_p;
-	XDmm_c_ijm = XBt.*XXRlambda_p2m1_m;
+	XDmm_c_ijp = XBt.*XXRlambda_p2m1_p(:,:,ir);
+	XDmm_c_ijm = XBt.*XXRlambda_p2m1_m(:,:,ir);
 %
 	XFp_c_ippj = -XFpp;
 	XFp_c_ipj = -XFp;
