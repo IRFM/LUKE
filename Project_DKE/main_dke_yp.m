@@ -84,10 +84,11 @@ if bounce_mode > 1,bounce_mode = 1;end
 if diary_mode == 1,auto_mode = 1;end
 if dke_mode > 1,dke_mode = 1;end
 if dke_mode == 0, syn_mode =0;end
+if rt_mode == 0,nit_rf = 1;end
 %	
 sfac = [sfac0,sfac1,sfact];
 snmhu = [snmhu0,snmhu1,snmhut];
-param_inv = [param1_inv,param1_inv];
+param_inv = [param1_inv,param2_inv];
 bounce = [bounce_mode,dke_mode,equil_mode];
 boundary_mode = [boundary_mode_f,boundary_mode_g];
 %
@@ -283,6 +284,13 @@ xzTi_norm = xzTi/Te_ref;
 xne_norm = xne/ne_ref;
 xzni_norm = xzni/ne_ref;
 %
+xTen = xTe/mc2;
+xzTin = xzTi/mc2;
+%
+xbetath = sqrt(xTen);%Normalized pth/mc as prescribed by Karney
+xlnc_e = 31.3 - 0.5*log(xne) + log(xTe*1000);%Coulomb logarithm (Sauter et al. Phys. Plasmas, 6 (1999) 2834)
+xnhu = qe^4*xne.*xlnc_e./(4*pi*e0^2*me^2.*(clum*xbetath).^3);%Electron collision frequency (s-1)
+%
 %***************************************** Ohmic electric field **********************************************
 %
 xepsi_ref_fsav_in = zeros(size(xrho));
@@ -337,7 +345,7 @@ if ~isempty(ripple),
 	for ir = 1:nr,	
 		if isnan(xnhuloss_ref(ir)) == 0 & bounce_mode == 1 & isempty(findstr(tokname,'TS')) == 0,%WARNING: only valid for the TORE SUPRA tokamak with large magnetic ripple
 			if ir == 1, 
-				info_dke_yp(2,'WARNING: Ripple losses calculations only valid for Tore Supra tokamak, see test_dke_1yp.m for BeLi, Ip and Ncoils values');
+				info_dke_yp(2,'WARNING: Ripple losses calculations only valid for Tore Supra tokamak, see main_dke_1yp.m for BeLi, Ip and Ncoils values');
 				disp('-------------------------------------------------------------------------------------------------------------------');
 				Ip = 0.61;%MA (For magnetic equilibrium in the magnetic ripple routine)
 				BeLi = 1.0;%For magnetic equilibrium in the magnetic ripple routine

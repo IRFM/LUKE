@@ -28,15 +28,15 @@ fi = [0,1,0];%  Hydrogen isotopic fraction (H/D/T) [1,3] (WARNING: only used whe
 qmin = 1.13;%  Safety factor q0 at plasma center
 eq = 2;%  Exponent for q radial profile (q = (qmax - qmin)*(r/a).^eq + qmin, qmax calaculated by the Ampere's theorem at the plasma edge with a circular plasma cross-section)
 %
-Te0 = 4.7;%  Core electron temperature (keV)
+Te0 = 4.6;%  Core electron temperature (keV)
 Tea = 0.1*Te0;%  Edge electron temperature (keV)
 eTe = 1.1;%  Exponent for Te profile (Te(r) = (Te0-Tea)*(1-(r/a)^2)^eTe + Tea)
 %
-ne0 = 2.0e19;%  Core electron density (m-3)
-nea = 0.24*ne0;%  Edge electron density (m-3)
-ene = 1.3;%  Exponent for ne profile (ne(r) = (ne0-nea)*(1-(r/a)^2)^ene + nea)
+ne0 =2.0e19;%  Core electron density (m-3)
+nea = 0.1*ne0;%  Edge electron density (m-3)
+ene = 0.5;%  Exponent for ne profile (ne(r) = (ne0-nea)*(1-(r/a)^2)^ene + nea)
 %
-Ti0 = 3;%  Core ion temperature (keV)
+Ti0 = 2.3;%  Core ion temperature (keV)
 Tia = 0.1*Ti0;%  Edge ion temperature (keV)
 eTi = 1.1;%  Exponent for Ti profile (Ti(r) = (Ti0-Tia)*(1-(r/a)^2)^eTi + Tia)
 %

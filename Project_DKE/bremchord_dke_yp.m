@@ -50,7 +50,7 @@ ns = abs(ns);%Force ns to be always positive
 nchords = length(hxr.alpha_hxr);%chord number
 %
 coefr = 1;%For reducing the number of poloidal positions
-[theta,ppsin,psia,ptR,ptZ,ptBR,ptBZ,ptBphi,ptB0,ptR0,ptBT0,ptBp0,ptrho] = equilibrium_jd(equil,NaN*xpsin,xpsin_S,display,method,mfactor);%NaN
+[theta,ppsin,psia,ptR,ptZ,ptBR,ptBZ,ptBphi,ptB0,ptR0,ptBT0,ptBp0,ptrho] = equilibrium_jd(equil);
 ppsin = ppsin(:);
 nreduc = min([coefr,length(theta)]);%For reducing the number of poloidal positions
 theta = theta(1:nreduc:end);

@@ -316,11 +316,6 @@ while 1,
 %
 % Magnetic ripple losses
 %
-        xpndetrap_ref = NaN;
-        xmhusupertrap = NaN;
-    	pparsupertrap_ref = NaN;
-        pperpsupertrap_ref = NaN;
-%
     	if bounce_mode >= 1 & isempty(findstr(tokname,'TS')) == 0,
     		if ~isempty(ripple),
 				if isnan(ripple.nhuloss) == 0
@@ -342,9 +337,9 @@ while 1,
 					disp('-------------------------------------------------------------------------------------------------------------------');
 %
             		figure(207),clf
-            		[ax] = graph1D_jd(xrho_dke,xMRR_tau_mksa,'','','',NaN,[0,1],NaN,'none','+','r',2,14,gca,0.8,0.7,0.6);
+            		[ax] = graph1D_jd(xrho_dke,xMRR_tau_mksa,0,0,'','','',NaN,[0,1],NaN,'none','+','r',2,14,gca,0.8,0.7,0.6);
 					hold on
-            		[ax] = graph1D_jd(xrho_dke,xMRR_flux_mksa,'\rho','\Gamma_{ST} (m^-3.s^-1)','Magnetic ripple loss rate at Bmin',NaN,[0,1],NaN,'none','x','b',2,14,gca,0.8,0.7,0.6);
+            		[ax] = graph1D_jd(xrho_dke,xMRR_flux_mksa,0,0,'\rho','\Gamma_{ST} (m^-3.s^-1)','Magnetic ripple loss rate at Bmin',NaN,[0,1],NaN,'none','x','b',2,14,gca,0.8,0.7,0.6);
 					hold off
 					axis([0,1,0,1.1*max([xMRR_tau_mksa,xMRR_flux_mksa])]);
 	    		else
@@ -352,6 +347,11 @@ while 1,
 					disp('-------------------------------------------------------------------------------------------------------------------');
 	    		end
 	    	end
+	    else
+	    	xpndetrap_ref = NaN;
+        	xmhusupertrap = NaN;
+    		pparsupertrap_ref = NaN;
+        	pperpsupertrap_ref = NaN;
 	    end
 %
 %Spherical to cylindrical coordinate transformation

@@ -2931,7 +2931,7 @@ end
 %
 %   Magnetic ripple loss rate calculation (for Tore Supra tokamak only)
 %
-if sum(sum(sum(XXnhuloss))) ~= 0 & strcmp(tokname,'TS')==1,	
+if sum(sum(sum(XXnhuloss))) ~= 0 & isempty(findstr(tokname,'TS')) == 0,
 	xMRR_tau_ref = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXnhuloss(:,:,rdke).*XXf0(:,:,rdke).*XXpn2(:,:,rdke).*XXlambda(:,:,rdke),1),1)';%Flux of electrons leaving the plasma through the loss cone
 %
 	XXmaskMRR_im = [zeros(1,nmhu,nr);abs(diff(XXnhuloss~=0))];%Mask in p (only nhuloss ~=0 is considered)

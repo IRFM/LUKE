@@ -14,8 +14,8 @@ path_equil = '';%if nothing is specified, the working directory is first used an
 % (WARNING: norm_ref = 0 by default when multiple radial positions are studied simultaneously, whatever the value in this file 
 % -> normalization with pth_ref*nhuth_ref/e)
 % 
-epsi0 = 0.05;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e) 
-epsia = 0.05;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
+epsi0 = 0.01;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e) 
+epsia = 0.01;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
 eepsi = 0;%Exponent for Ohmic electric field (WARNING: psi coordinate and not rho)
 %
 norm_ref = 1;%Normalization procedure for the ohmic electric field: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref 
@@ -30,7 +30,7 @@ else
 	info_dke_yp(2,'Structure ''equil'' succesfully loaded');
 end
 %
-[theta,ppsin,psia,XR,XZ,XBR,XBZ,XBphi,pB0,pR0,pBT0,pBp0,prho,pTe,pne,pzTi,pzni,zZi,zmi,pZeff,Rp,Zp,ap,pmhu0T2,pdV_dke,pdA_dke] = equilibrium_jd(equil,NaN*xpsin,xpsin_S_dke,0,'spline',10);
+[theta,ppsin,psia,XR,XZ,XBR,XBZ,XBphi,pB0,pR0,pBT0,pBp0,prho,pTe,pne,pzTi,pzni,zZi,zmi,pZeff,Rp,Zp,ap,pmhu0T2,pdV_dke,pdA_dke] = equilibrium_jd(equil);
 [qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;%Universal physics constants
 %
 Te_ref = pTe(1);

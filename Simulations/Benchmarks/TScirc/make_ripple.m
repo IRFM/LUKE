@@ -10,7 +10,7 @@ clear all
 id_equil = 'TScirc';%For loading the plasma equilibrium
 path_equil = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-nhuloss = NaN;%Magnetic ripple loss frequency, nhuloss > 1000 (or NaN if no ripple losses) (nhu_th) (WARNING: only valid for TORE SUPRA magentic equilibrium)
+nhuloss = 1000;%Magnetic ripple loss frequency, nhuloss > 1000 (or NaN if no ripple losses) (nhu_th) (WARNING: only valid for TORE SUPRA magentic equilibrium)
 Ncoils = 18;%Number of coils for the toroidal magnetic field
 %
 norm_ref = 1;%Normalization procedure for the magnetic ripple loss frequency: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref 
@@ -25,7 +25,7 @@ else
 	info_dke_yp(2,'Structure ''equil'' succesfully loaded');
 end
 %
-[theta,ppsin,psia,XR,XZ,XBR,XBZ,XBphi,pB0,pR0,pBT0,pBp0,prho,pTe,pne,pzTi,pzni,zZi,zmi,pZeff,Rp,Zp,ap,pmhu0T2,pdV_dke,pdA_dke] = equilibrium_jd(equil,NaN*xpsin,xpsin_S_dke,0,'spline',10);
+[theta,ppsin,psia,XR,XZ,XBR,XBZ,XBphi,pB0,pR0,pBT0,pBp0,prho,pTe,pne,pzTi,pzni,zZi,zmi,pZeff,Rp,Zp,ap,pmhu0T2,pdV_dke,pdA_dke] = equilibrium_jd(equil);
 [qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;%Universal physics constants
 %
 Te_ref = pTe(1);
