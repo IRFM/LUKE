@@ -105,10 +105,10 @@ elseif strcmp(name,'TS') == 1,
 	eq = 2;
 %
 	Te0 = 4.7;
-	Tea = 0;
+	Tea = 0.01*Te0;
 	eTe = 1.1;
 	Ti0 = 4.7;
-	Tia = 0;
+	Tia = 0.01*Ti0;
 	eTi = 1.1;
 	ne0 = 1.0e+19;
 	nea = 0.24*ne0;
