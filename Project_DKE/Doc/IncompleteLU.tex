@@ -1,85 +1,132 @@
 
 According to Sec. \ref{fpmatrixsection}, the electron Fokker-Planck equation
-may be expressed in a general symbolic matrix form
+may be expressed in a general symbolic matrix form 
 \begin{equation}
-\widehat{\Bbb{N}}X^{(k+1)}=Z^{(k)}  \label{generalmatrixform}
+\widehat{\Bbb{N}}Z^{(k+1)}=\Upsilon ^{(k)}  \label{generalmatrixform}
 \end{equation}
-where 
+where $Z=X$ with 
 \begin{eqnarray}
 \widehat{\Bbb{N}} &=&\frac{\widehat{\Bbb{A}}}{\Delta t}+\widehat{\Bbb{B}} \\
-Z^{(k)} &=&\left( \frac{\widehat{\Bbb{A}}}{\Delta t}\right) X^{(k)}+\widehat{%
-C}\left( X_{M},X^{(k)}\right) 
+\Upsilon ^{(k)} &=&\left( \frac{\widehat{\Bbb{A}}}{\Delta t}\right) X^{(k)}+%
+\widehat{C}\left( X_{M},X^{(k)}\right)
 \end{eqnarray}
 for the fully implicit time difference scheme, and 
 \begin{eqnarray}
 \widehat{\Bbb{N}} &=&\frac{\widehat{\Bbb{A}}}{\Delta t}+\frac{\widehat{\Bbb{B%
 }}}{2} \\
-Y^{(k)} &=&\left( \frac{\widehat{\Bbb{A}}}{\Delta t}-\frac{\widehat{\Bbb{B}}%
-}{2}\right) X^{(k)}+\widehat{C}\left( X_{M},X^{(k)}\right) 
+\Upsilon ^{(k)} &=&\left( \frac{\widehat{\Bbb{A}}}{\Delta t}-\frac{\widehat{%
+\Bbb{B}}}{2}\right) X^{(k)}+\widehat{C}\left( X_{M},X^{(k)}\right)
 \end{eqnarray}
-for the the Crank-Nicholson time scheme. 
+for the the Crank-Nicholson time scheme.
 
 The formal expression (\ref{generalmatrixform}) may be also used for the
 electron drift kinetic equation as shown in Sec. \ref{dkematrixsection}, and
-in this case, 
+in this case, $Z=Y$ with 
 \begin{eqnarray}
 \widehat{\Bbb{N}} &=&\widehat{\Bbb{G}} \\
-Z^{(k)} &=&\widehat{\Bbb{G}}Y^{(k)}+\widehat{C}\left( X_{M},Y^{(k)}\right) +%
-\widehat{\widetilde{W}}
+\Upsilon ^{(k)} &=&\widehat{\Bbb{G}}Y^{(k)}+\widehat{C}\left(
+X_{M},Y^{(k)}\right) +\widehat{\widetilde{W}}
 \end{eqnarray}
 
-In all cases, the matrices are square with similar structures, i.e. non-zero
-elements are aligned along several diagonals which are roughly symmetricaly
-placed around the main one\footnote{%
+In all cases, matrices are square with similar structures, i.e. non-zero
+elements are aligned along a reduced number of diagonals which are roughly
+symmetricaly placed around the main one\footnote{%
 The lack of symmetry between upper and lower diagonals arises usually from
-boundary conditions.}. 
+boundary conditions.}, as shown in Fig.\ref{fpmatrixstruct1}. Consequently,
+the method for determining the asymptotic solution
 
-The determination of $X^{(k+1)}$ requires to invert the system of equation (%
+%TCIMACRO{
+%\TeXButton{Fig_fpmatrixstruct1}{\fig{figures/fpmatrixstruct1.eps}{Typical arrangement of the non-zero matrix coefficients for the Fokker-Planck equation}{fpmatrixstruct1}{10cm}}}
+%BeginExpansion
+\fig{figures/fpmatrixstruct1.eps}{Typical arrangement of the non-zero matrix coefficients for the Fokker-Planck equation}{fpmatrixstruct1}{10cm}%
+%EndExpansion
+\begin{equation}
+Z^{(\infty )}=\lim_{k\rightarrow \infty }Z^{(k)}
+\end{equation}
+of the system of equations (\ref{generalmatrixform}) will be the same,
+either for the Fokker-Planck or the drift kinetic equations.
+
+In order to avoid manipulation of large matrix coefficients that may reduce
+the numerical accuracy and also leads to numerical instabilities, main
+diagonal matrix preconditioning is first performed. The modified system of
+equation to solve is then 
+\begin{equation}
+\left( \widehat{\Bbb{I}}_{N}^{-1}\widehat{\Bbb{N}}\right) Z^{(k+1)}=\widehat{%
+\Bbb{I}}_{N}^{-1}\Upsilon ^{(k)}
+\end{equation}
+where all the coefficients of the main diagonal of matrix $\widehat{\Bbb{N}}
+^{\prime }$%
+\begin{equation}
+\widehat{\Bbb{N}}^{\prime }=\widehat{\Bbb{I}}_{N}^{-1}\widehat{\Bbb{N}}
+\end{equation}
+are one by definition. Here $\widehat{\Bbb{I}}_{N}$ is a diagonal matrix
+whose coefficients are those of the main diagonal of $\widehat{\Bbb{N}}.$
+Since collision is the dominant physics process, all off-diagonal
+coefficients are usualy less than one, as shown in Fig.\ref{fpmatrixstruct2}%
+, except when specific internal boundary conditions apply, like at $\xi
+_{0}=0$ in the trapped region.
+
+%TCIMACRO{
+%\TeXButton{Fig_fpmatrixstruct2}{\fig{figures/fpmatrixstruct2.eps}{Non-zero matrix coefficients for the Fokker-Planck equation. Dot points correspond to pitch-angle while full line for slowing-down. }{fpmatrixstruct2}{10cm}}}
+%BeginExpansion
+\fig{figures/fpmatrixstruct2.eps}{Non-zero matrix coefficients for the Fokker-Planck equation. Dot points correspond to pitch-angle while full line for slowing-down. }{fpmatrixstruct2}{10cm}%
+%EndExpansion
+
+The determination of $Z^{(k+1)}$ requires to invert the system of equation (%
 \ref{generalmatrixform}). The usual method based on a direct inversion by
-the well known Gaussian elimination is ruled out, since the number of
-operations for each direction inversion by Gaussian elimination is $\mathcal{%
-O}\left( N^{3}\right) ,$ where $N$ is the number of rows (or columns) of
-matrix $\widehat{\Bbb{N}}.$ Indeed, with $N$ that may reach $800000,$ the
-number of operations become rapidly prohibitive. In addition, memory
-requirements grow as $\mathcal{O}\left( N^{2}\right) $ since matrix $%
-\widehat{\Bbb{N}}^{-1}$ is not sparse as matrix $\widehat{\Bbb{N}}$, leading
-also to unacceptable storage constraints. 
+the well known Gaussian elimination is immediately ruled out, since the
+number of operations for each direction is $\mathcal{O}\left( N^{3}\right) ,$
+where $N$ is the number of rows (or columns) of matrix $\widehat{\Bbb{N}}.$
+For the example $n_{\psi }=20,$ $n_{p}=200$ and $n_{\xi _{0}}=200$ discussed
+in Sec. \ref{fpmatrixsection}, $N$ $=n_{\psi }n_{p}n_{\xi _{0}}=800000,$ $%
+\mathcal{O}\left( N^{3}\right) \simeq 10^{+17},$ corresponding to a
+prohibitive number of operations. In addition, since memory requirements
+grow as $\mathcal{O}\left( N^{2}\right) $ unacceptable storage constraints
+take also place.
 
 Consequently, alternative methods must be used, in order to perform a fast
-matrix inversion with a reduced storage capacity. The basic idea is to
-factorize $\widehat{\Bbb{N}}$ into a upper and lower triangular matrices $%
-\widehat{\Bbb{U}}$ and $\widehat{\Bbb{L}}$ respectively 
+matrix inversion without the need of a large memory storage requirement. The
+basic principle is to factorize $\widehat{\Bbb{N}}^{\prime }$ into upper and
+lower triangular matrices $\widehat{\Bbb{U}}$ and $\widehat{\Bbb{L}}$
+respectively 
 \begin{equation}
-\widehat{\Bbb{N}}=\widehat{\Bbb{L}}\widehat{\Bbb{U}}
+\widehat{\Bbb{N}}^{\prime }=\widehat{\Bbb{L}}\widehat{\Bbb{U}}
 \end{equation}
 as shown in Fig. \ref{figfactmatrix}, that are themselves highly sparse
 matrices. A strong reduction of the computational effort may then be
-foreseen, since the number of operations is considerably lower. This elegant
-approach has been first considered for Fokker-Planck calculations for a five
-diagonals operator as shown in Ref. \cite{sho94}, since in that case $%
-\widehat{\Bbb{U}}$ and $\widehat{\Bbb{L}}$ are both triangular and
-tridiagonal matrices. However, as discussed in Ref. \cite{pey98}, the fact
-that cross-derivatives are considered explicitely with respect to the time
-differencing scheme which puts strong limitations on the integration time
-step $\Delta t,$ since it must be much lower than one, for an accurate
-determination of the solution of the set of linear equations. Consequently,
-the overall time duration for calculating the steady-state solution is very
-long, an important drawback when the kinetic solver must be incorporated in
-a chain of codes for realistic tokamak simulations. 
+foreseen, since the number of coefficients that are considered in the
+calculations is considerably lower. This elegant approach has been first
+considered for Fokker-Planck calculations for a five diagonals operator as
+presented in Ref. \cite{sho94}, since in that case $\widehat{\Bbb{U}}$ and $%
+\widehat{\Bbb{L}}$ are both triangular and tridiagonal matrices. However, as
+discussed in Ref. \cite{pey98}, the fact that cross-derivatives are
+considered explicitely with respect to the time differencing scheme puts
+strong limitations. Indeed, the integration time step $\Delta t$ must be
+much lower than one for an accurate determination of the solution of the set
+of linear equations. Consequently, the overall time duration for calculating
+the steady-state solution is very long, an important drawback when the
+kinetic solver must be incorporated in a chain of codes for realistic
+tokamak simulations.
 
-For this purpose, this method has be succesfully extended to the nine
+%TCIMACRO{
+%\TeXButton{Fig_factmatrix}{\fig{figures/factmatrix.eps}{Matrix factorization principle. Dashed areas correspond to non-zero coefficients.} }}
+%BeginExpansion
+\fig{figures/factmatrix.eps}{Matrix factorization principle. Dashed areas correspond to non-zero coefficients.}{figfactmatrix}{10cm}%
+%EndExpansion
+
+For this purpose, this method has been succesfully extended to the nine
 diagonals operator case, allowing the use of much larger $\Delta t$ values
-while the numerical scheme remains still stable, as shown in Ref. \cite
-{pey98}. However, this approach is only useful for local kinetic
-calculations, where trapped particle contribution is negligible, i.e. close
-to the plasma center. When off-axis electron dynamics must be described, one
-must in that case fully consider both circulating and trapped electron
-dynamics which leads to a number of diagonals with non-zero elements that is
-much larger, fifteen diagonals at each radial location as shown in Fig. \ref
-{fpmatrix}. Therefore, the method developped for nine diagonal operators may
-no more be used, since the number of operations to determine $\widehat{\Bbb{U%
-}}$ and $\widehat{\Bbb{L}}$ increases dramaticaly. The fully 3-D approach
-with radial transport makes this method unusable. 
+while the numerical scheme remains stable, as shown in Ref. \cite{pey98}.
+However, this approach is only useful for local kinetic calculations, where
+trapped particle contribution is negligible, i.e. close to the plasma
+center. When off-axis electron dynamics must be described, one must in that
+case fully consider both circulating and trapped electron dynamics which
+leads to a number of diagonals with non-zero elements that is much larger,
+fifteen diagonals at each radial location as shown in Fig. \ref{fpmatrix}.
+Therefore, the method developped for nine diagonal operators may no more be
+used, since the number of operations to determine $\widehat{\Bbb{U}}$ and $%
+\widehat{\Bbb{L}}$ increases dramaticaly. The fully $3-D$ approach with
+radial transport makes also this method unusable.
 
 However, an equivalent form of the approximate matrix factorization may
 still be employed, noting that exact $\widehat{\Bbb{U}}$ and $\widehat{\Bbb{L%
@@ -87,17 +134,71 @@ still be employed, noting that exact $\widehat{\Bbb{U}}$ and $\widehat{\Bbb{L%
 zero. This indicates that information on the electron dynamics is fully
 contained in a few set of coefficients, whose number is several order of
 magnitude lower than the total one. Such a structure results in fact from
-the well conditionning of the matrix $\widehat{\Bbb{N}},$ a physical
-consequence that collisions predominate over all other physical processes.
-Consequently, the general approach is to introduce a drop tolerance
-parameter $\delta _{lu}$, below which small coefficients of exact $\widehat{%
-\Bbb{U}}$ and $\widehat{\Bbb{L}}$ matrices are forced to zero. Since
-coefficients of $\widehat{\Bbb{N}}$ lie between $0$ and $1$ because of the
-main diagonal preconditioning, 
+the well conditionning of the matrix $\widehat{\Bbb{N}}^{\prime },$ a
+physical consequence that collisions predominate over all other physical
+processes. Consequently, the general approach is to introduce a drop
+tolerance parameter $\delta _{lu}$, below which small coefficients of exact $%
+\widehat{\Bbb{U}}$ and $\widehat{\Bbb{L}}$ matrices are forced to zero. The
+only exception to the dropping rule is the diagonal of the upper triangular
+matrix which remains even if coefficients are too small. Since coefficients
+of $\widehat{\Bbb{N}}^{\prime }$ lie between $0$ and $1$ in the limit where
+the model holds, because of the main diagonal preconditioning, the drop
+tolerance parameter $\delta _{lu}$ may be arbitrarily chosen in the same
+interval, i.e. 
 \begin{equation}
 0\leq \delta _{lu}\leq 1
 \end{equation}
-
-When $\delta _{lu}$ is chosen close to $1$, approximate and exact matrices $%
+and when $\delta _{lu}$ is close to $0$, approximate and exact matrices $%
 \widehat{\Bbb{U}}$ and $\widehat{\Bbb{L}}$ are roughly equivalent, while
-they differ strongly when $\delta _{lu}$ tends to zero. 
+they differ strongly when $\delta _{lu}$ tends to one. In the latter case,
+considerable saving may be foreseen for the memory requirement, as well as a
+significant reduction of the computer time consumption, since less non-zero
+coefficients must be considered. An example is shown in Fig. \ref{LUmat},
+where $\delta _{lu}$ varies from zero to $10^{-2}.$ Consequently, from the
+exact matrix factorization to the approximate one, the number of non-zero
+elements drops by a factor $20$.
+
+%TCIMACRO{
+%\TeXButton{Fig_LUmat}{\fig{figures/LUmat.eps}{Reduction of the non-zero elements for the L and U matrices, by increasing  delta LU}{LUmat}{10cm}}}
+%BeginExpansion
+\fig{figures/LUmat.eps}{Reduction of the non-zero elements for the 
+$\widehat{\Bbb{L}}$ and $\widehat{\Bbb{U}}$ matrices, by increasing 
+the $\delta _{lu}$ parameter. The number on non-zero elements is 
+indicated below each subfigure.}{LUmat}{10cm}%
+%EndExpansion
+
+The rule is therefore to find the smallest $\delta _{lu}$ value that is
+compatible with a stable inversion procedure, even in presence of a large
+Ohmic electric field or a high RF power. An example is given in Fig. \ref
+{figincompleteLUlh}, which illustrates the effectiveness of the method, for
+the Lower Hybrid current drive local problem. For $\delta _{lu}\simeq 2\times %
+10^{-3},$ memory size requirement to store matrices $\widehat{\Bbb{U}}$ and $%
+\widehat{\Bbb{L}}$ does not exceed $2.2MBytes$, while it reaches $66MBytes$
+when $\delta _{lu}=0.$ It is interesting to observe that the convergence
+rate towards the steady-state solution $Z^{(\infty )}$ is reduced by $50\%$,
+and that the result is moreover independent of $\delta _{lu}.$ For larger $%
+\delta _{lu}$ values, the inversion scheme becomes progressively unstable,
+and the benefit gains on the memory storage requirement is therefore
+cancelled by a reduced rate of convergence. For this reason, the upper value
+used in the code is usually $\delta _{lu}\simeq 2\times 10^{-3}.$ More
+refined methods may be used to optimized the choice of $\delta _{lu}.$ The
+trade-off that must be found between memory saving and stability of the
+inversion procedure requires extensive investigations that are beyond the
+scope of this document. Hopefully, it turns out that the domain $1\times %
+10^{-4}\leq \delta _{lu}\leq 2\times 10^{-3}$ covers must of the parameter
+range for the current drive problem in tokamaks, even in presence of radial
+transport. Since the local problems needs only $2.2MBytes$, it is 
+therefore possible to extrapolate that the full $3-D$ problem with 20 
+radial positions will only require approximately $44MBytes$. This 
+result has justified the development of this new approach.
+
+%TCIMACRO{
+%\TeXButton{Fig_incompleteLUlh}{\fig{figures/incompleteLUlh.eps}{Memory storage requirement reduction by increasing the $\delta _{lu}$ parameter, for the Lower Hybrid current drive problem. Local analysis. The rate of convergence towards the staeady state solution is given, using the biconjugate gradients stabilized method to solve the system of linear equations.}{figincompleteLUlh}{10cm}}}
+%BeginExpansion
+\fig{figures/incompleteLUlh.eps}{Memory storage requirement reduction by increasing 
+the $\delta _{lu}$ parameter, for the Lower Hybrid current drive 
+problem. Local analysis. The rate of convergence towards the staeady 
+state solution is given, using the biconjugate gradients stabilized 
+method to solve the system of linear equations.}{figincompleteLUlh}{10cm}%
+%EndExpansion
+

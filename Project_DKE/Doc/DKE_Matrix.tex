@@ -1,4 +1,5 @@
-\label{dkematrixsection}Projected on the numerical distribution function grid, and taking into
+\label{dkematrixsection}
+Projected on the numerical distribution function grid, and taking into
 account of the internal and external boundaries, the $3-D$ electron drift
 kinetic equation may be expressed as 
 \begin{eqnarray}
@@ -39,7 +40,7 @@ considered, since function $g^{\left( 0\right) }$ is only determined for
 steady-state value of $\widetilde{f}^{\left( 0\right) }.$ Therefore,
 iterations to reach the solution only result from the non-linear electron
 self-collision operator $C^{\left( 0\right) }$, that ensures momentum
-conservation.
+conservation, in order to find a self-consistent solution.
 
 In compact matrix form, the differential equation in the reduced momentum
 phase space has the following symbolic form 
@@ -61,19 +62,21 @@ l=0\rightarrow \left\{
 i=0\rightarrow \left\{ 
 \begin{array}{l}
 j^{\prime }=0 \\ 
-j^{\prime }=\ldots \\ 
+j^{\prime }=\ldots  \\ 
 j^{\prime }=n_{\xi _{0}}-m_{\xi _{0T,l+1/2}}-1
 \end{array}
-\right. \\ 
-i=\ldots \\ 
+\right.  \\ 
+i=\ldots  \\ 
 i=n_{p}-1
 \end{array}
-\right. \\ 
-l=\ldots \\ 
+\right.  \\ 
+l=\ldots  \\ 
 l=n_{\psi }-1
 \end{array}
-\right.
+\right. 
 \end{equation}
+and vector $X_{M}$ is corresponding to the Maxwellian distribution function,
+as defined in Sec. \ref{fpmatrixsection}.
 
 By construction, $\widehat{\Bbb{G}}$ is simply a block diagonal matrix. Each
 block, which describes the momentum dynamics at location $\psi _{l+1/2},$ is
@@ -92,9 +95,9 @@ predominate over other physical processes at each plasma radius.
 %EndExpansion
 
 The matrix $\widehat{\Bbb{G}}$ has a global banded structure with an
-extremely high sparcity, a property that is extensively used for the storage
-in the computer memory, like for the Fokker-Planck equation. Indeed, the
-size of $\widehat{\Bbb{G}}$ is 
+extremely high sparcity, a property that is also extensively used for memory
+storage, like for the Fokker-Planck equation (see Sec. \ref{fpmatrixsection}%
+). Indeed, the size of $\widehat{\Bbb{G}}$ is roughlu given by relation
 \begin{equation}
 size\left( \widehat{\Bbb{G}}\right) =n_{p}^{2}\left[ \sum_{l=0}^{l=n_{\psi
 }-1}\left( n_{\xi _{0}}-m_{\xi _{0T,l+1/2}}\right) \right] ^{2}\leq n_{\psi
@@ -108,4 +111,5 @@ particle contribution is fairly negligible. In this limit, $size\left(
 $\widehat{\Bbb{B}}$ is the flux matrix of the Fokker-Planck equation. For
 the values of $n_{\psi }$, $n_{p}$ and $n_{\xi _{0}}$ taken in Sec. \ref
 {fpmatrixsection}, the required memory is approximately $57.6MBytes$, a
-lower level than for the Fokker-Planck equation.
+lower level than for the Fokker-Planck equation, since the trapped region is
+completely removed in the calculations. 

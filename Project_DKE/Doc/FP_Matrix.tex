@@ -1,4 +1,4 @@
-\label{fpmatrixsection}\subsubsection{Implicit time scheme}
+\subsubsection{Implicit time scheme}\label{fpmatrixsection}
 
 Projected on the numerical distribution function grid, and taking into
 account of the internal and external boundaries, the $3-D$ electron
@@ -52,13 +52,14 @@ phase space has the following symbolic form
 \begin{equation}
 \left( \frac{\widehat{\Bbb{A}}}{\Delta t}+\widehat{\Bbb{B}}\right)
 X^{(k+1)}=\left( \frac{\widehat{\Bbb{A}}}{\Delta t}\right) X^{(k)}+\widehat{C%
-}\left( X_{M},X^{(k)}\right)  \label{Matrixeq}
+}\left( X_{M},X^{(k)}\right)   \label{Matrixeq}
 \end{equation}
 where $\widehat{\Bbb{A}}$ is a single diagonal matrix associated to time
 differencing, $\widehat{\Bbb{B}}$ corresponds to the flux divergence and $%
 \widehat{C}$ is the first order Legendre correction. Here $X^{(k)}$ is a
-vector whose components are the discrete values of the distribution function
-at time step $\left( k\right) ,$ organized as follows 
+vector whose components are the discrete values of the distribution function 
+$f_{0}^{\left( 0\right) }$ at time step $\left( k\right) ,$ organized as
+follows 
 \begin{equation}
 X^{(k)}\rightarrow \left\{ 
 \begin{array}{l}
@@ -67,25 +68,26 @@ l=0\rightarrow \left\{
 i=0\rightarrow \left\{ 
 \begin{array}{l}
 j^{\prime }=0 \\ 
-j^{\prime }=\ldots \\ 
+j^{\prime }=\ldots  \\ 
 j^{\prime }=n_{\xi _{0}}-n_{\xi _{0T,l+1/2}}-1
 \end{array}
-\right. \\ 
-i=\ldots \\ 
+\right.  \\ 
+i=\ldots  \\ 
 i=n_{p}-1
 \end{array}
-\right. \\ 
-l=\ldots \\ 
+\right.  \\ 
+l=\ldots  \\ 
 l=n_{\psi }-1
 \end{array}
-\right.
+\right. 
 \end{equation}
+while $X_{M}$ corresponds to the Maxwellian distribution function. 
 
 Without radial transport, $\widehat{\Bbb{B}}$ is a block diagonal matrix.
-Each block, which describes the momentum dynamics at location $\psi
-_{l+1/2}, $ is a square matrice of $15$ diagonals whose size $\left( n_{\xi
+Each block, which describes the momentum dynamics at location $\psi _{l+1/2},
+$ is a square matrice of $15$ diagonals whose size $\left( n_{\xi
 _{0}}-n_{\xi _{0T,l+1/2}}\right) n_{p}\times $ $\left( n_{\xi _{0}}-n_{\xi
-_{0T,l+1/2}}\right) n_{p}$ progressively decreases from $\psi _{1/2}$ to $
+_{0T,l+1/2}}\right) n_{p}$ progressively decreases from $\psi _{1/2}$ to $%
 \psi _{n_{\xi _{0}}-1/2}$ because of the trapped/passing boundary enlarges
 from the center to the plasma edge, as shown in Fig. \ref{fpmatrix}$.$ The
 main diagonal of $\widehat{\Bbb{B}}$ is dominant because collisions
@@ -98,13 +100,14 @@ predominate over other physical processes at each plasma radius.
 %EndExpansion
 
 The introduction of the radial dynamics adds several extra off-diagonals,
-which connect neighboring blocks, in addition to the main diagonal which is
-also modified accordingly. The complexity arises from the fact that trapped
-electrons may become passing as a result of the radial transport process,
-and conversely. Therefore, matrix $\widehat{\Bbb{B}}$ keeps a global banded
-structure with an extremely high sparcity, a property that is extensively
-used for the storage in the computer memory. Indeed, the size of $\widehat{%
-\Bbb{B}}$ is 
+which connect neighboring blocks corresponding to different radial
+positions, in addition to the main diagonal which is also modified
+accordingly. The complexity arises from the fact that trapped electrons may
+become passing as a result of the radial transport process, and conversely.
+However, matrix $\widehat{\Bbb{B}}$ keeps a global banded structure and is
+still highly sparce, a property that is extensively used for reducing 
+memory storage requirement. Indeed, size of $\widehat{\Bbb{B}}$ is roughly
+given by relation 
 \begin{equation}
 size\left( \widehat{\Bbb{B}}\right) =n_{p}^{2}\left[ \sum_{l=0}^{l=n_{\psi
 }-1}\left( n_{\xi _{0}}-n_{\xi _{0T,l+1/2}}\right) \right] ^{2}\leq n_{\psi
@@ -114,16 +117,18 @@ size\left( \widehat{\Bbb{B}}\right) =n_{p}^{2}\left[ \sum_{l=0}^{l=n_{\psi
 For tokamak with very large aspect ratio, $size\left( \widehat{\Bbb{B}}%
 \right) \approx n_{\psi }^{2}n_{p}^{2}n_{\xi _{0}}^{2}$ since trapped
 particle contribution is fairly negligible. In this limit, an upper boundary
-of the memory size requirement may be estimated. For a standard case, $%
+of the memory size requirement may be estimated. For the reference case, $%
 n_{\psi }=20,$ $n_{p}=200$ and $n_{\xi _{0}}=200,$ the total number of
 coefficients reaches $64\times 10^{+10},$ and the needed memory capacity%
 \footnote{%
-On a basis that a double precision real number is described by $8$ bytes.}
+On a basis that a double precision real number is described by $8$ Bytes.}
 is $5.12TBytes$ ! Hopefully, this huge number may be drastically reduced
 down to $11\times n_{\psi }n_{p}n_{\xi _{0}},$ since $\widehat{\Bbb{A}}$
 becomes in that limit a simple banded matrix with exactly $11$ diagonals.
-The required memory falls therefore down to $70.4MBytes$, a level which can
-be easily handled by most computers today.
+The required memory falls down therefore to $70.4MBytes\footnote{%
+This number is usualy slightly larger, in order to store index values of all
+non-zero coefficients. However, the order of magnitude is not modified}$, a
+level which can be easily handled by most computers today.
 
 \subsubsection{Crank-Nicholson time scheme}
 
