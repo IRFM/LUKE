@@ -2017,11 +2017,11 @@ for it_f = 2:nit_f,
 %
 		MMXR_t = MMXPDI_f_t*MMXq_t - MMXPC_f_t*MMXf0_t;
 %
-		if invproc == 2,%qmr iterative method
+		if invproc == 1,%qmr iterative method
 			[MMXS_t,flaginv_f] = qmr(MMXPC_f_t,MMXR_t,prec_inv,maxit_inv,MMXL_f_t,MMXU_f_t);
-		elseif invproc == 3,%bicgstab iterative method
+		elseif invproc == 2,%bicgstab iterative method
 			[MMXS_t,flaginv_f] = bicgstab(MMXPC_f_t,MMXR_t,prec_inv,maxit_inv,MMXL_f_t,MMXU_f_t); 
-		elseif invproc == 4,%cgs iterative method
+		elseif invproc == 3,%cgs iterative method
 			[MMXS_t,flaginv_f] = cgs(MMXPC_f_t,MMXR_t,prec_inv,maxit_inv,MMXL_f_t,MMXU_f_t);
 		end
 %
@@ -2256,8 +2256,6 @@ if dke_mode == 1,
 				if boundary_mode_g ~= 0,
 						Xq_g_t(1:boundary_mode_g,:) = XXf0_g_th(1:boundary_mode_g,Zmask_g{jr2},jr2);%Boundary conditions at p = 0 (large aspect ratio limit, Lorentz model)
 				end
-%%%%				Xq_g_t(:,(nmhu - ns_g(jr2))/2) = 0;%g(pn,mhu = -mhut) = 0
-%%%%				Xq_g_t(:,(nmhu - ns_g(jr2))/2 + 1) = 0;%g(pn,mhu = mhut) = 0
 %
 				MMXf0_g_t = [MMXf0_g_t;reshape(XXf0_g(:,Zmask_g{jr2},jr2)',(nmhu - ns_g(jr2))*npn,1)];
 				MMXq_g_t = [MMXq_g_t;reshape(Xq_g_t',(nmhu - ns_g(jr2))*npn,1)];
@@ -2265,11 +2263,11 @@ if dke_mode == 1,
 %
 			MMXR_t = MMXPDI_g_t*(MMXq_g_t + MMXq_tp_t) - MMXPC_g_t*MMXf0_g_t;
 %
-			if invproc == 2,%qmr iterative method
+			if invproc == 1,%qmr iterative method
 				[MMXS_t,flaginv_g] = qmr(MMXPC_g_t,MMXR_t,prec_inv,maxit_inv,MMXL_g_t,MMXU_g_t);
-			elseif invproc == 3,%bicgstab iterative method
+			elseif invproc == 2,%bicgstab iterative method
 				[MMXS_t,flaginv_g] = bicgstab(MMXPC_g_t,MMXR_t,prec_inv,maxit_inv,MMXL_g_t,MMXU_g_t);
-			elseif invproc == 4,%cgs iterative method
+			elseif invproc == 3,%cgs iterative method
 				[MMXS_t,flaginv_g] = cgs(MMXPC_g_t,MMXR_t,prec_inv,maxit_inv,MMXL_g_t,MMXU_g_t);
 			end
 %

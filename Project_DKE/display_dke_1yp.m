@@ -298,7 +298,7 @@ while 1,
 %	
 			if nb_lh > 0,
 				figure(4),
-				if initguess == 1 & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0,
+				if initguess_f == 1 & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0,
 					subplot(121)
 					if xvparmax_lh_ref(ir_display) - xvparmin_lh_ref(ir_display) ~= 0  & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0,,
 						pparresmin_lh_cyl_ref = xvparmin_lh_ref(ir_display)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmin_lh_ref(ir_display)^2*betath_ref^2);%LH resonance condition
