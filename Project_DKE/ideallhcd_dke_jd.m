@@ -45,7 +45,7 @@ xyrnhuth_lh = repmat(xrnhuth',[1,nb_lh]);
 yD0_in_lh_prof = logical(yD0_in_lh_prof(blist_lh));
 %
 xyD0_in_lh = zeros(nr,nb_lh);
-xyD0_in_lh(:,yD0_in_lh_prof) = exp(-(xyrho(:,yD0_in_lh_prof) - xypeak_lh(:,yD0_in_lh_prof)).^2./(xywidth_lh(:,yD0_in_lh_prof)/2/sqrt(log(2))).^2).*xyD0_in_c_lh(:,yD0_in_lh_prof);%Gaussian radial profile on midplane
+xyD0_in_lh(:,yD0_in_lh_prof) = 2*sqrt(log(2))*exp(-(xyrho(:,yD0_in_lh_prof) - xypeak_lh(:,yD0_in_lh_prof)).^2./(xywidth_lh(:,yD0_in_lh_prof)/2/sqrt(log(2))).^2).*xyD0_in_c_lh(:,yD0_in_lh_prof)/sqrt(pi);%Gaussian radial profile on midplane
 xyD0_in_lh(:,~yD0_in_lh_prof) = xyD0_in_c_lh(:,~yD0_in_lh_prof);%Uniform radial profile
 %
 xyvparmin_lh_ref = xyvparmin_lh.*xyrbetath_lh;%Normalization when norm_ref = 0
