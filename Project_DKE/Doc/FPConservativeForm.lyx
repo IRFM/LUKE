@@ -1,146 +1,126 @@
-#LyX 1.3 created this file. For more info see http://www.lyx.org/
-\lyxformat 221
+# The reLyX bundled with LyX 1.3 created this file.
+# For more info see http://www.lyx.org/
+\lyxformat 2.15
 \textclass revtex4
 \language english
-\inputencoding auto
-\fontscheme pslatex
-\graphics default
-\paperfontsize default
-\spacing single 
-\papersize Default
-\paperpackage a4
-\use_geometry 0
+\inputencoding latin1
 \use_amsmath 1
+\fontscheme pslatex
 \use_natbib 0
 \use_numerical_citations 0
-\paperorientation portrait
-\secnumdepth 3
-\tocdepth 3
-\paragraph_separation indent
-\defskip medskip
-\quotes_language english
-\quotes_times 2
-\papercolumns 1
-\papersides 1
-\paperpagestyle default
 
 \layout Standard
 
 In its general form, the Fokker-planck equation may be expressed in the
  conservative form
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \frac{\partial f_{0}}{\partial t}+\nabla\cdot\mathbf{S}\left(f_{0}\right)=0\]
-
 \end_inset 
 
  where the flux 
-\begin_inset Formula $\mathbf{S}$
+\begin_inset Formula \( \mathbf{S}\)
 \end_inset 
 
  is
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \mathbf{S}=-\overline{\overline{D}}\nabla f_{0}+\overline{\overline{F}}f_{0}\]
-
 \end_inset 
 
  
-\begin_inset Formula $\overline{\overline{D}}$
+\begin_inset Formula \( \overline{\overline{D}}\)
 \end_inset 
 
  and 
-\begin_inset Formula $\overline{\overline{F}}$
+\begin_inset Formula \( \overline{\overline{F}}\)
 \end_inset 
 
  being respectively the diffusion and convection tensors.
  One may express 
-\begin_inset Formula $\overline{\overline{D}}$
+\begin_inset Formula \( \overline{\overline{D}}\)
 \end_inset 
 
  and 
-\begin_inset Formula $\overline{\overline{F}}$
+\begin_inset Formula \( \overline{\overline{F}}\)
 \end_inset 
 
  in the general matrix form 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \overline{\overline{D}}=\left(\begin{array}{llll}
 D_{pp} & D_{p\xi} & D_{pr} & D_{p\theta}\\
 D_{\xi p} & D_{\xi\xi} & D_{\xi r} & D_{\xi\theta}\\
 D_{rp} & D_{r\xi} & D_{rr} & D_{r\theta}\\
 D_{\theta p} & D_{\theta\xi} & D_{\theta r} & D_{\theta\theta}\end{array}\right)\]
-
 \end_inset 
 
  and 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \overline{\overline{F}}=\left(\begin{array}{l}
 F_{p}\\
 F_{\xi}\\
 F_{r}\\
 F_{\theta}\end{array}\right)\]
-
 \end_inset 
 
  where each element is function of the momentum 
-\begin_inset Formula $p$
+\begin_inset Formula \( p\)
 \end_inset 
 
  
-\begin_inset Formula $\in\left[0,+\infty\right]$
+\begin_inset Formula \( \in\left[0,+\infty\right]\)
 \end_inset 
 
  and the cosine of the pitch-angle 
-\begin_inset Formula $\xi\in\left[-1,+1\right]$
+\begin_inset Formula \( \xi\in\left[-1,+1\right]\)
 \end_inset 
 
  in the momentum space, but also depends of the radial position 
-\begin_inset Formula $r\in\left[0,a\right]$
+\begin_inset Formula \( r\in\left[0,a\right]\)
 \end_inset 
 
- and the polo\i \"{\i}
+ and the polo
+\i \"{\i}
 dal angle 
-\begin_inset Formula $\theta\in\left[0,2\pi\right]$
+\begin_inset Formula \( \theta\in\left[0,2\pi\right]\)
 \end_inset 
 
  in the configuration space.
  All cross-coupling terms are neglected, hence 
-\begin_inset Formula $D_{pr}=D_{rp}=0,$
+\begin_inset Formula \( D_{pr}=D_{rp}=0,\)
 \end_inset 
 
  
-\begin_inset Formula $D_{\xi r}=D_{r\xi}=0,$
+\begin_inset Formula \( D_{\xi r}=D_{r\xi}=0,\)
 \end_inset 
 
  
-\begin_inset Formula $D_{p\theta}=D_{\theta p}=0$
+\begin_inset Formula \( D_{p\theta}=D_{\theta p}=0\)
 \end_inset 
 
  et 
-\begin_inset Formula $D_{\xi\theta}=D_{\theta\xi}=0.$
+\begin_inset Formula \( D_{\xi\theta}=D_{\theta\xi}=0.\)
 \end_inset 
 
  In these conditions, dynamics in momentum and configuration spaces are
  decoupled, 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \frac{\partial f}{\partial t}+\nabla_{p}\cdot\mathbf{S}_{\mathbf{p}}+\nabla_{r}\cdot\mathbf{S}_{\mathbf{r}}=0\]
-
 \end_inset 
 
  where
 \layout Standard
 
 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \left\{ \begin{array}{l}
 \mathbf{S}_{\mathbf{p}}=-\overline{\overline{D}}_{p}\nabla_{p}f_{0}+\overline{\overline{F}}_{p}f_{0}\\
 \mathbf{S}_{\mathbf{r}}=-\overline{\overline{D}}_{r}\nabla_{r}f_{0}+\overline{\overline{F}}_{r}f_{0}\end{array}\right.\]
-
 \end_inset 
 
  the flux components being defined by the relations,
 \layout Standard
 
 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \left\{ \begin{array}{l}
 \mathbf{S}_{\mathbf{p}}=\left(\begin{array}{l}
 S_{p}\\
@@ -148,14 +128,13 @@ S_{\xi}\end{array}\right)\\
 \mathbf{S}_{\mathbf{r}}=\left(\begin{array}{l}
 S_{r}\\
 S_{\theta}\end{array}\right)\end{array}\right.\]
-
 \end_inset 
 
 
 \layout Standard
 
 With this simplifying assumption, the diffusion tensor becomes 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \overline{\overline{D}}=\left(\begin{array}{ll}
 \overline{\overline{D}}_{p} & \overline{\overline{0}}\\
 \overline{\overline{0}} & \overline{\overline{D}}_{r}\end{array}\right)=\left(\begin{array}{llll}
@@ -163,11 +142,10 @@ D_{pp} & D_{p\xi} & 0 & 0\\
 D_{\xi p} & D_{\xi\xi} & 0 & 0\\
 0 & 0 & D_{rr} & D_{r\theta}\\
 0 & 0 & D_{\theta r} & D_{\theta\theta}\end{array}\right)\]
-
 \end_inset 
 
  while the convective term remains unchanged 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \overline{\overline{F}}=\left(\begin{array}{l}
 \overline{\overline{F}}_{p}\\
 \overline{\overline{F}}_{r}\end{array}\right)=\left(\begin{array}{l}
@@ -175,7 +153,6 @@ F_{p}\\
 F_{\xi}\\
 F_{r}\\
 F_{\theta}\end{array}\right)\]
-
 \end_inset 
 
 
@@ -189,20 +166,18 @@ Since the collision operator has a spherical symmetry, it is adequate to
 \layout Standard
 
 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \nabla_{\mathbf{p}}\cdot\mathbf{S}_{\mathbf{p}}=\frac{1}{p^{2}}\frac{\partial\left(p^{2}S_{p}\right)}{\partial p}-\frac{1}{p}\frac{\partial\left(\sqrt{1-\xi^{2}}S_{\xi}\right)}{\partial\xi}\]
-
 \end_inset 
 
  where
 \layout Standard
 
 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \nabla_{\mathbf{p}}f_{0}=\left(\begin{array}{l}
 \frac{\partial f_{0}}{\partial p}\\
 -\frac{\sqrt{1-\xi^{2}}}{p}\frac{\partial f_{0}}{\partial\xi}\end{array}\right)\]
-
 \end_inset 
 
 
@@ -210,56 +185,50 @@ Since the collision operator has a spherical symmetry, it is adequate to
 
 Conversely, for the dynamic in the configuration space, the cylindrical
  symmetry is more appropriate, and 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \nabla_{\mathbf{r}}\cdot\mathbf{S}_{\mathbf{r}}=\frac{1}{r}\frac{\partial\left(rS_{r}\right)}{\partial r}+\frac{1}{r}\frac{\partial S_{\theta}}{\partial\theta}\]
-
 \end_inset 
 
  where 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \nabla_{\mathbf{r}}f_{0}=\left(\begin{array}{l}
 \frac{\partial f_{0}}{\partial r}\\
 \frac{1}{r}\frac{\partial f_{0}}{\partial\theta}\end{array}\right)\]
-
 \end_inset 
 
 
 \layout Standard
 
 The partial differential equation that must be solved is therefore, 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \frac{\partial f_{0}}{\partial t}+\frac{1}{p^{2}}\frac{\partial\left(p^{2}S_{p}\right)}{\partial p}-\frac{1}{p}\frac{\partial\left(\sqrt{1-\xi^{2}}S_{\xi}\right)}{\partial\xi}+\frac{1}{r}\frac{\partial\left(rS_{r}\right)}{\partial r}+\frac{1}{r}\frac{\partial S_{\theta}}{\partial\theta}=0\]
-
 \end_inset 
 
  where, in order to avoid spurious singularities at 
-\begin_inset Formula $p=r=0$
+\begin_inset Formula \( p=r=0\)
 \end_inset 
 
 , it is useful to multiply both sides by 
-\begin_inset Formula $p^{2}$
+\begin_inset Formula \( p^{2}\)
 \end_inset 
 
  and 
-\begin_inset Formula $r$
+\begin_inset Formula \( r\)
 \end_inset 
 
 ,
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \frac{\partial\left(rp^{2}f_{0}\right)}{\partial t}+r\frac{\partial\left(p^{2}S_{p}\right)}{\partial p}-rp\frac{\partial\left(\sqrt{1-\xi^{2}}S_{\xi}\right)}{\partial\xi}+p^{2}\frac{\partial\left(rS_{r}\right)}{\partial r}+p^{2}\frac{\partial S_{\theta}}{\partial\theta}=0\]
-
 \end_inset 
 
  The exact value of 
-\begin_inset Formula $f_{0}$
+\begin_inset Formula \( f_{0}\)
 \end_inset 
 
  at 
-\begin_inset Formula $p=r=0$
+\begin_inset Formula \( p=r=0\)
 \end_inset 
 
  is therefore never known exactly, but just asymptotically approached, depending
  upon the size of the mesh grid.
-\layout Standard
-
 \the_end

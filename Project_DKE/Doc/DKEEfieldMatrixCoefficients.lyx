@@ -1,37 +1,20 @@
-#LyX 1.3 created this file. For more info see http://www.lyx.org/
-\lyxformat 221
+# The reLyX bundled with LyX 1.3 created this file.
+# For more info see http://www.lyx.org/
+\lyxformat 2.15
 \textclass revtex4
 \language english
-\inputencoding auto
-\fontscheme pslatex
-\graphics default
-\paperfontsize default
-\spacing single 
-\papersize Default
-\paperpackage a4
-\use_geometry 0
+\inputencoding latin1
 \use_amsmath 1
+\fontscheme pslatex
 \use_natbib 0
 \use_numerical_citations 0
-\paperorientation portrait
-\secnumdepth 3
-\tocdepth 3
-\paragraph_separation indent
-\defskip medskip
-\quotes_language english
-\quotes_times 2
-\papercolumns 1
-\papersides 1
-\paperpagestyle default
-
 
 \layout Standard
 
 L'operateur du champ electrique est caracterise par 
-\begin_inset Formula \begin{eqnarray*}
+\begin_inset Formula \begin{eqnarray*} 
 \widetilde{F}_{p}^{\text{E}} & = & q_{e}\xi E_{\Vert}\\
 \widetilde{F}_{\xi}^{\text{E}} & = & -q_{e}\sqrt{1-\xi^{2}}E_{\Vert}\end{eqnarray*}
-
 \end_inset 
 
 
@@ -41,28 +24,26 @@ On obtient ainsi
 \layout Standard
 
 
-\begin_inset Formula \begin{eqnarray*}
+\begin_inset Formula \begin{eqnarray*} 
 \widetilde{F}_{p}^{\text{E}(0)} & = & \sigma q_{e}\left\{ \frac{\sigma\xi}{\Psi(\theta)\xi_{0}}\xi E_{\Vert}\right\} \\
  & = & q_{e}\left\{ \frac{\xi^{2}}{\xi_{0}^{2}}\right\} \xi_{0}E_{\Vert,0}\\
  & = & \xi_{0}\frac{\widetilde{s}^{*}}{\lambda\left(\xi_{0}\right)}q_{e}E_{\Vert,0}\end{eqnarray*}
-
 \end_inset 
 
 
-\begin_inset Formula \begin{eqnarray*}
+\begin_inset Formula \begin{eqnarray*} 
 \widetilde{F}_{\xi}^{\text{E}(0)} & = & -q_{e}\left\{ \frac{\xi^{2}}{\Psi^{3/2}\xi_{0}^{2}}\sqrt{1-\xi^{2}}E_{\Vert}\right\} \\
  & = & -q_{e}\left\{ \frac{\xi^{2}}{\xi_{0}^{2}}\right\} \sqrt{1-\xi_{0}^{2}}E_{\Vert}\\
  & = & -\sqrt{1-\xi_{0}^{2}}\frac{\widetilde{s}^{*}}{\lambda\left(\xi_{0}\right)}q_{e}E_{\Vert,0}\end{eqnarray*}
-
 \end_inset 
 
  Sous forme discrete, les coefficients lies au champ electrique constant
  qui interviennent dans la matrice 
-\begin_inset Formula $\widetilde{\overline{\overline{M}}}^{\left(0\right)}$
+\begin_inset Formula \( \widetilde{\overline{\overline{M}}}^{\left(0\right)}\)
 \end_inset 
 
  sont 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \widetilde{\overline{\overline{D}}}^{\text{E}(0)}\rightarrow\left\{ \begin{array}{l}
 \widetilde{D}_{pp,i+1,j+1/2}^{\text{E}(0)}=0\\
 \widetilde{D}_{pp,i,j+1/2}^{\text{E}(0)}=0\\
@@ -74,25 +55,16 @@ On obtient ainsi
 \widetilde{D}_{\xi p,i+1/2,j-1/2}^{\text{E}\left(0\right)}=0\\
 \widetilde{D}_{\xi\xi,i+1/2,j+1}^{\text{E}(0)}=0\\
 \widetilde{D}_{\xi\xi,i+1/2,j}^{\text{E}(0)}=0\end{array}\right.\]
-
 \end_inset 
 
  et 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \widetilde{\overline{\overline{F}}}^{\text{E}(0)}\rightarrow\left\{ \begin{array}{l}
 \widetilde{F}_{p,i+1,j+1/2}^{\text{E}(0)}=\xi_{0j+1/2}\frac{\widetilde{s}_{j+1/2}^{*}}{\lambda\left(\xi_{0j+1/2}\right)}(q_{e}E_{\Vert,0})\\
 \widetilde{F}_{p,i,j+1/2}^{\text{E}(0)}=\xi_{0j+1/2}\frac{\widetilde{s}_{j+1/2}^{*}}{\lambda\left(\xi_{0j+1/2}\right)}(q_{e}E_{\Vert,0})\\
 \widetilde{F}_{\xi,i+1/2,j+1}^{\text{E}(0)}=-\sqrt{1-\xi_{0j+1}^{2}}\frac{\widetilde{s}_{j+1}^{*}}{\lambda\left(\xi_{0j+1}\right)}(q_{e}E_{\Vert,0})\\
 \widetilde{F}_{\xi,i+1/2,j}^{\text{E}(0)}=-\sqrt{1-\xi_{0j}^{2}}\frac{\widetilde{s}_{j}^{*}}{\lambda\left(\xi_{0j}\right)}(q_{e}E_{\Vert,0})\end{array}\right.\]
-
 \end_inset 
-
-
-
-
-
-
-
 
 
 \the_end

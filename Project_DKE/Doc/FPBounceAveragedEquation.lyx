@@ -1,220 +1,193 @@
-#LyX 1.3 created this file. For more info see http://www.lyx.org/
-\lyxformat 221
+# The reLyX bundled with LyX 1.3 created this file.
+# For more info see http://www.lyx.org/
+\lyxformat 2.15
 \textclass revtex4
 \language english
-\inputencoding auto
-\fontscheme pslatex
-\graphics default
-\paperfontsize default
-\spacing single 
-\papersize Default
-\paperpackage a4
-\use_geometry 0
+\inputencoding latin1
 \use_amsmath 1
+\fontscheme pslatex
 \use_natbib 0
 \use_numerical_citations 0
-\paperorientation portrait
-\secnumdepth 3
-\tocdepth 3
-\paragraph_separation indent
-\defskip medskip
-\quotes_language english
-\quotes_times 2
-\papercolumns 1
-\papersides 1
-\paperpagestyle default
 
 \layout Standard
 
 Dans le cas ou l'on prend en compte le type de trajectoire il faut moyenner
  les equations selon la relation 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \left\{ \mathcal{A}\right\} =\frac{1}{\lambda\left(\xi_{0}\right)}\left[\frac{1}{2}\sum_{\sigma=\pm1}\right]_{T}\int_{-\theta_{c}}^{\theta_{c}}\frac{d\theta}{2\pi}\frac{\xi_{0}}{\xi}\mathcal{A}\]
-
 \end_inset 
 
 
 \layout Standard
 
 ou 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \lambda\left(\xi_{0}\right)=\int_{-\theta_{c}}^{\theta_{c}}\frac{d\theta}{2\pi}\frac{\xi_{0}}{\xi}\]
-
 \end_inset 
 
-et 
-\begin_inset Formula $\sigma=\frac{p_{\Vert}}{\left|p_{\Vert}\right|}$
+ et 
+\begin_inset Formula \( \sigma=\frac{p_{\Vert}}{\left|p_{\Vert}\right|}\)
 \end_inset 
 
 est le signe de 
-\begin_inset Formula $p_{\Vert}$
+\begin_inset Formula \( p_{\Vert}\)
 \end_inset 
 
 et 
-\begin_inset Formula $\theta$
+\begin_inset Formula \( \theta\)
 \end_inset 
 
 est l'angle poloidal.Ici 
-\begin_inset Formula $\theta_{c}$
+\begin_inset Formula \( \theta_{c}\)
 \end_inset 
 
 vaut 
-\begin_inset Formula $\pi$
+\begin_inset Formula \( \pi\)
 \end_inset 
 
 pour les particules circulantes et 
-\begin_inset Formula $\theta_{T}=$
+\begin_inset Formula \( \theta_{T}=\)
 \end_inset 
 
-
-\begin_inset Formula $\cos^{-1}\left(1-2\xi_{0}^{2}/\xi_{0T}^{2}\right)$
+ 
+\begin_inset Formula \( \cos^{-1}\left(1-2\xi_{0}^{2}/\xi_{0T}^{2}\right)\)
 \end_inset 
 
 pour les particules piegees, avec 
-\begin_inset Formula $\xi_{0T}^{2}=$
+\begin_inset Formula \( \xi_{0T}^{2}=\)
 \end_inset 
 
-
-\begin_inset Formula $\frac{2\varepsilon}{1+\varepsilon},$
+ 
+\begin_inset Formula \( \frac{2\varepsilon}{1+\varepsilon},\)
 \end_inset 
 
-
-\begin_inset Formula $\varepsilon=r/R_{0}$
+ 
+\begin_inset Formula \( \varepsilon=r/R_{0}\)
 \end_inset 
 
 etant l'inverse du rapport d'aspect.L'equation de Fokker-Planck moyennee
  devient alors
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \left\{ \frac{\partial\left(rp^{2}f_{0}\right)}{\partial t}\right\} +\left\{ r\frac{\partial\left(p^{2}S_{p}\right)}{\partial p}\right\} -\left\{ rp\frac{\partial\left(\sqrt{1-\xi^{2}}S_{\xi}\right)}{\partial\xi}\right\} =0\]
-
 \end_inset 
 
-ou le parametre temps 
-\begin_inset Formula $t$
+ ou le parametre temps 
+\begin_inset Formula \( t\)
 \end_inset 
 
 evolue sur une echelle bien plus longue que la periode de rebond 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \tau_{t,b}=\frac{2\pi R_{0}q\left(r\right)}{\left|\xi_{0}\right|v}\lambda\left(\xi_{0}\right)\]
-
 \end_inset 
 
-On definit ici le facteur de securite 
-\begin_inset Formula $q\left(r\right)$
+ On definit ici le facteur de securite 
+\begin_inset Formula \( q\left(r\right)\)
 \end_inset 
 
 de la surface de flux magnetique situee au rayon 
-\begin_inset Formula $r$
+\begin_inset Formula \( r\)
 \end_inset 
 
 sur laquelle la moyenne est effectuee et 
-\begin_inset Formula $R_{0}$
+\begin_inset Formula \( R_{0}\)
 \end_inset 
 
 le grand rayon du plasma.Toutes les valeurs sont determinees au point ou
  le champ magnetique estminimum, la ou toutes les particules passent, soit
  notamment 
-\begin_inset Formula $\xi_{0}$
+\begin_inset Formula \( \xi_{0}\)
 \end_inset 
 
 pour l'angle de diffusion angulaire et la fonction de distribution 
-\begin_inset Formula $f_{0}^{\left(0\right)}$
+\begin_inset Formula \( f_{0}^{\left(0\right)}\)
 \end_inset 
 
 .On a ainsi 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \left\{ \frac{\partial\left(rp^{2}f_{0}\right)}{\partial t}\right\} =rp^{2}\frac{\partial}{\partial t}\left[\frac{1}{\lambda\left(\xi_{0}\right)}\left[\frac{1}{2}\sum_{\sigma=\pm1}\right]_{T}\int_{-\theta_{c}}^{\theta_{c}}\frac{d\theta}{2\pi}\frac{\xi_{0}}{\xi}f_{0}\right]\]
-
 \end_inset 
 
-et comme 
-\begin_inset Formula $f_{0}$
+ et comme 
+\begin_inset Formula \( f_{0}\)
 \end_inset 
 
 est par definition symetrique en 
-\begin_inset Formula $\theta,$
+\begin_inset Formula \( \theta,\)
 \end_inset 
 
 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \left\{ \frac{\partial\left(rp^{2}f_{0}\right)}{\partial t}\right\} =\frac{\partial\left(rp^{2}f_{0}^{(0)}\right)}{\partial t}\]
-
 \end_inset 
 
 
 \layout Standard
 
 De maniere evidente 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \left\{ r\frac{\partial\left(p^{2}S_{p}\right)}{\partial p}\right\} =r\frac{\partial\left(p^{2}\left\{ S_{p}\right\} \right)}{\partial p}\]
-
 \end_inset 
 
-et pour le second terme de droite il faut utiliser la relation 
-\begin_inset Formula $\frac{\partial}{\partial\xi}=$
+ et pour le second terme de droite il faut utiliser la relation 
+\begin_inset Formula \( \frac{\partial}{\partial\xi}=\)
 \end_inset 
 
-
-\begin_inset Formula $\frac{\xi}{\Psi\xi_{0}}\frac{\partial}{\partial\xi_{0}},$
+ 
+\begin_inset Formula \( \frac{\xi}{\Psi\xi_{0}}\frac{\partial}{\partial\xi_{0}},\)
 \end_inset 
 
 sachant que 
-\begin_inset Formula $\xi=$
+\begin_inset Formula \( \xi=\)
 \end_inset 
 
-
-\begin_inset Formula $\sigma\sqrt{1-\Psi\left(1-\xi_{0}^{2}\right)}$
+ 
+\begin_inset Formula \( \sigma\sqrt{1-\Psi\left(1-\xi_{0}^{2}\right)}\)
 \end_inset 
 
 avec 
-\begin_inset Formula $\Psi\left(r,\theta\right)=\frac{1+\varepsilon}{1+\varepsilon\cos\theta}.$
+\begin_inset Formula \( \Psi\left(r,\theta\right)=\frac{1+\varepsilon}{1+\varepsilon\cos\theta}.\)
 \end_inset 
 
 Il vient alors 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \left\{ rp\frac{\partial\left(\sqrt{1-\xi^{2}}S_{\xi}\right)}{\partial\xi}\right\} =\frac{rp}{\lambda\left(\xi_{0}\right)}\left[\frac{1}{2}\sum_{\sigma=\pm1}\right]_{T}\int_{-\theta_{c}}^{\theta_{c}}\frac{d\theta}{2\pi}\frac{\xi_{0}}{\xi}\frac{\partial\left(\sqrt{1-\xi^{2}}S_{\xi}\right)}{\partial\xi}\]
-
 \end_inset 
 
-soit apres le changement de variable 
-\begin_inset Formula \[
+ soit apres le changement de variable 
+\begin_inset Formula \[ 
 \left\{ rp\frac{\partial\left(\sqrt{1-\xi^{2}}S_{\xi}\right)}{\partial\xi}\right\} =\frac{rp}{\lambda\left(\xi_{0}\right)}\left[\frac{1}{2}\sum_{\sigma=\pm1}\right]_{T}\int_{-\theta_{c}}^{\theta_{c}}\frac{d\theta}{2\pi}\frac{1}{\Psi}\frac{\partial\left(\sqrt{1-\xi^{2}}S_{\xi}\right)}{\partial\xi_{0}}\]
-
 \end_inset 
 
-Afin de permuter la derivee en 
-\begin_inset Formula $\xi_{0}$
+ Afin de permuter la derivee en 
+\begin_inset Formula \( \xi_{0}\)
 \end_inset 
 
 et la somme sur 
-\begin_inset Formula $\sigma$
+\begin_inset Formula \( \sigma\)
 \end_inset 
 
 pour les particules piegees, il faut introduire 
-\begin_inset Formula $\sigma$
+\begin_inset Formula \( \sigma\)
 \end_inset 
 
 , de sorte que 
-\begin_inset Formula \begin{eqnarray*}
+\begin_inset Formula \begin{eqnarray*} 
 \left\{ rp\frac{\partial\left(\sqrt{1-\xi^{2}}S_{\xi}\right)}{\partial\xi}\right\}  & = & \frac{rp}{\lambda\left(\xi_{0}\right)}\frac{\partial\left(\left[\frac{1}{2}\sum_{\sigma=\pm1}\right]_{T}\int_{-\theta_{c}}^{\theta_{c}}\frac{d\theta}{2\pi}\frac{\sigma}{\Psi}\sqrt{1-\xi^{2}}S_{\xi}\right)}{\partial\left|\xi_{0}\right|}\\
  & = & \frac{rp}{\lambda\left(\xi_{0}\right)}\frac{\partial\left(\sigma\left[\frac{1}{2}\sum_{\sigma=\pm1}\right]_{T}\int_{-\theta_{c}}^{\theta_{c}}\frac{d\theta}{2\pi}\frac{\sigma}{\Psi}\sqrt{1-\xi^{2}}S_{\xi}\right)}{\partial\xi_{0}}\end{eqnarray*}
-
 \end_inset 
 
-et il est possible d'exprimer le terme dans la derivee partielle 
-\begin_inset Formula $\frac{\partial}{\partial\xi_{0}}$
+ et il est possible d'exprimer le terme dans la derivee partielle 
+\begin_inset Formula \( \frac{\partial}{\partial\xi_{0}}\)
 \end_inset 
 
 sous la forme simple 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \sigma\left[\frac{1}{2}\sum_{\sigma=\pm1}\right]_{T}\int_{-\theta_{c}}^{\theta_{c}}\frac{d\theta}{2\pi}\frac{\sigma}{\Psi}\sqrt{1-\xi^{2}}S_{\xi}=\lambda\left(\xi_{0}\right)\sqrt{1-\xi_{0}^{2}}\sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}S_{\xi}\right\} \]
-
 \end_inset 
 
-ce qui donne 
-\begin_inset Formula \[
+ ce qui donne 
+\begin_inset Formula \[ 
 \left\{ rp\frac{\partial\left(\sqrt{1-\xi^{2}}S_{\xi}\right)}{\partial\xi}\right\} =\frac{rp}{\lambda\left(\xi_{0}\right)}\frac{\partial\left(\lambda\left(\xi_{0}\right)\sqrt{1-\xi_{0}^{2}}\sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}S_{\xi}\right\} \right)}{\partial\xi_{0}}\]
-
 \end_inset 
 
 
@@ -222,21 +195,19 @@ ce qui donne
 
 En posant formellement les nouvelles definitions des flux moyennes sousla
  forme de leur valeur ou le champ magnetique 
-\begin_inset Formula $B$
+\begin_inset Formula \( B\)
 \end_inset 
 
 est minimum, 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \mathbf{S}_{\mathbf{p}}^{(0)}=\left\{ \begin{array}{l}
 S_{p}^{(0)}=\left\{ S_{p}\right\} \\
 S_{\xi_{0}}^{(0)}=\sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}S_{\xi}\right\} \end{array}\right.\]
-
 \end_inset 
 
-on peut garder une forme conservative simple pour l'equation de Fokker-Planck
-\begin_inset Formula \[
+ on peut garder une forme conservative simple pour l'equation de Fokker-Planck
+\begin_inset Formula \[ 
 \frac{\partial\left(rp^{2}f_{0}^{(0)}\right)}{\partial t}+r\frac{\partial}{\partial p}(p^{2}S_{p}^{(0)})-\frac{rp}{\lambda\left(\xi_{0}\right)}\frac{\partial}{\partial\xi_{0}}\left(\sqrt{1-\xi_{0}^{2}}\lambda\left(\xi_{0}\right)S_{\xi_{0}}^{(0)}\right)=0\]
-
 \end_inset 
 
 
@@ -244,81 +215,74 @@ on peut garder une forme conservative simple pour l'equation de Fokker-Planck
 
 Il est egalement possible de garder la forme originale pour l'expressiondes
  flux, 
-\begin_inset Formula \begin{eqnarray*}
+\begin_inset Formula \begin{eqnarray*} 
 S_{p} & = & -D_{pp}\frac{\partial f_{0}}{\partial p}+D_{p\xi}\frac{\sqrt{1-\xi^{2}}}{p}\frac{\partial f_{0}}{\partial\xi}+F_{p}f_{0}\\
 S_{\xi} & = & -D_{\xi p}\frac{\partial f_{0}}{\partial p}+D_{\xi\xi}\frac{\sqrt{1-\xi^{2}}}{p}\frac{\partial f_{0}}{\partial\xi}+F_{\xi}f_{0}\end{eqnarray*}
-
 \end_inset 
 
 
 \layout Standard
 
 Les moyennes sur la trajectoire des flux definies ci-dessus donnent alors
-\begin_inset Formula \begin{eqnarray*}
+\begin_inset Formula \begin{eqnarray*} 
 \left\{ -D_{pp}\frac{\partial f_{0}}{\partial p}\right\}  & = & -\left\{ D_{pp}\right\} \frac{\partial f_{0}^{(0)}}{\partial p}\\
 \left\{ D_{p\xi}\frac{\sqrt{1-\xi^{2}}}{p}\frac{\partial f_{0}}{\partial\xi}\right\}  & = & \frac{\sqrt{1-\xi_{0}^{2}}}{p}\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}D_{p\xi}\right\} \frac{\partial f_{0}^{(0)}}{\sigma\partial\xi_{0}}\\
 \left\{ F_{p}f_{0}\right\}  & = & \left\{ F_{p}\right\} f_{0}^{(0)}\\
 -\sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}D_{\xi p}\frac{\partial f_{0}}{\partial p}\right\}  & = & -\sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}D_{\xi p}\right\} \frac{\partial f_{0}^{(0)}}{\partial p}\\
 -\sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}D_{\xi\xi}\frac{\sqrt{1-\xi^{2}}}{p}\frac{\partial f_{0}}{\partial\xi}\right\}  & = & -\sigma\frac{\sqrt{1-\xi_{0}^{2}}}{p}\left\{ \frac{\xi^{2}}{\Psi\xi_{0}^{2}}D_{\xi\xi}\right\} \frac{\partial f_{0}^{(0)}}{\sigma\partial\xi_{0}}\\
 \sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}F_{\xi}f_{0}\right\}  & = & \sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}F_{\xi}\right\} f_{0}^{(0)}\end{eqnarray*}
-
 \end_inset 
 
-de sorte que l'on peut reecrire 
-\begin_inset Formula \[
+ de sorte que l'on peut reecrire 
+\begin_inset Formula \[ 
 \mathbf{S}_{\mathbf{p}}^{(0)}=-\overline{\overline{D}}_{p}^{(0)}\cdot\nabla_{p,\xi_{0}}f_{0}^{(0)}+\overline{\overline{F}}_{p}^{(0)}f_{0}^{(0)}\]
-
 \end_inset 
 
-avec les elements de la matrice de diffusion 
-\begin_inset Formula \begin{eqnarray*}
+ avec les elements de la matrice de diffusion 
+\begin_inset Formula \begin{eqnarray*} 
 D_{pp}^{(0)} & = & \left\{ D_{pp}\right\} \\
 D_{p\xi}^{(0)} & = & \sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}D_{p\xi}\right\} \\
 D_{\xi p}^{(0)} & = & \sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}D_{\xi p}\right\} \\
 D_{\xi\xi}^{(0)} & = & \left\{ \frac{\xi^{2}}{\Psi\xi_{0}^{2}}D_{\xi\xi}\right\} \end{eqnarray*}
-
 \end_inset 
 
-et les termes de convection 
-\begin_inset Formula \begin{eqnarray*}
+ et les termes de convection 
+\begin_inset Formula \begin{eqnarray*} 
 F_{p}^{(0)} & = & \left\{ F_{p}\right\} \\
 F_{\xi}^{(0)} & = & \sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}F_{\xi}\right\} \end{eqnarray*}
-
 \end_inset 
 
 
 \layout Standard
 
 Le gradient s'exprime alors suivant 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \nabla_{p,\xi_{0}}=\left\{ \begin{array}{l}
 \nabla_{p}=\frac{\partial}{\partial p}\\
 \nabla_{\xi_{0}}=-\frac{\sqrt{1-\xi_{0}^{2}}}{p}\frac{\partial}{\partial\xi_{0}}\end{array}\right.\]
-
 \end_inset 
 
 
 \layout Standard
 
 Les composantes du flux moyenne sur la periode de rebond dans l'espace desimpuls
-ions valent donc 
-\begin_inset Formula \[
+ions
+ valent donc 
+\begin_inset Formula \[ 
 \mathbf{S}_{\mathbf{p}}^{(0)}=\left\{ \begin{array}{l}
 S_{p}^{(0)}=-D_{pp}^{(0)}\frac{\partial f_{0}^{(0)}}{\partial p}+\frac{\sqrt{1-\xi_{0}^{2}}}{p}D_{p\xi}^{(0)}\frac{\partial f_{0}^{(0)}}{\partial\xi_{0}}+F_{p}^{(0)}f_{0}^{(0)}\\
 S_{\xi_{0}}^{(0)}=-D_{\xi p}^{(0)}\frac{\partial f_{0}^{(0)}}{\partial p}+\frac{\sqrt{1-\xi_{0}^{2}}}{p}D_{\xi\xi}^{(0)}\frac{\partial f_{0}^{(0)}}{\partial\xi_{0}}+F_{\xi}^{(0)}f_{0}^{(0)}\end{array}\right.\]
-
 \end_inset 
 
 
 \layout Standard
 
 L'equation de flux devient alors 
-\begin_inset Formula \begin{eqnarray*}
+\begin_inset Formula \begin{eqnarray*} 
 \frac{\partial\left(p^{2}S_{p}^{(0)}\right)}{\partial p} & = & \frac{\partial}{\partial p}\left(-p^{2}D_{pp}^{(0)}\frac{\partial f_{0}^{(0)}}{\partial p}+p^{2}F_{p}^{(0)}f_{0}^{(0)}\right)\\
  &  & +\sqrt{1-\xi_{0}^{2}}\frac{\partial}{\partial p}\left(pD_{p\xi}^{(0)}\right)\frac{\partial f_{0}^{(0)}}{\partial\xi_{0}}+\sqrt{1-\xi_{0}^{2}}pD_{p\xi}^{(0)}\frac{\partial^{2}f_{0}^{(0)}}{\partial p\partial\xi_{0}}\\
 \frac{1}{\lambda\left(\xi_{0}\right)}\frac{\partial\left(\lambda\left(\xi_{0}\right)\sqrt{1-\xi_{0}^{2}}S_{\xi}^{(0)}\right)}{\partial\xi_{0}} & = & \frac{1}{\lambda\left(\xi_{0}\right)}\frac{\partial}{\partial\xi_{0}}\left(\lambda\left(\xi_{0}\right)D_{\xi\xi}^{(0)}\frac{1-\xi_{0}^{2}}{p}\frac{\partial f_{0}^{(0)}}{\partial\xi_{0}}+\lambda\left(\xi_{0}\right)\sqrt{1-\xi_{0}^{2}}F_{\xi}f_{0}^{(0)}\right)\\
  &  & -\frac{1}{\lambda\left(\xi_{0}\right)}\frac{\partial}{\partial\xi_{0}}\left(\lambda\left(\xi_{0}\right)\sqrt{1-\xi_{0}^{2}}D_{\xi p}^{(0)}\right)\frac{\partial f_{0}^{(0)}}{\partial p}-\sqrt{1-\xi_{0}^{2}}D_{\xi p}^{(0)}\frac{\partial^{2}f_{0}^{(0)}}{\partial\xi_{0}\partial p}\end{eqnarray*}
-
 \end_inset 
 
 
@@ -326,7 +290,7 @@ L'equation de flux devient alors
 
 En discretisant, puis en les regroupant comme dans le cas non-moyenne, onobtient
  
-\begin_inset Formula \begin{eqnarray*}
+\begin_inset Formula \begin{eqnarray*} 
  &  & r_{l+1/2}p_{i+1/2}^{2}\frac{f_{0,i+1/2,j+1/2}^{\left(0\right)(k+1)}-f_{0,i+1/2,j+1/2}^{\left(0\right)(k)}}{\Delta t}\\
  &  & +r_{l+1/2}\frac{-p_{i+1}^{2}D_{pp,i+1,j+1/2}^{\left(0\right)}\left.\frac{\partial f_{0}^{\left(0\right)}}{\partial p}\right|_{i+1,j+1/2}^{(k+1)}+p_{i+1}^{2}F_{p,i+1,j+1/2}^{\left(0\right)}f_{0,i+1,j+1/2}^{\left(0\right)(k+1)}}{\Delta p_{i+1/2}}\\
  &  & +r_{l+1/2}\frac{p_{i}^{2}D_{pp,i,j+1/2}^{\left(0\right)}\left.\frac{\partial f_{0}^{\left(0\right)}}{\partial p}\right|_{i,j+1/2}^{(k+1)}-p_{i}^{2}F_{p,i,j+1/2}^{\left(0\right)}f_{0,i,j+1/2}^{\left(0\right)(k+1)}}{\Delta p_{i+1/2}}\\
@@ -337,39 +301,37 @@ En discretisant, puis en les regroupant comme dans le cas non-moyenne, onobtient
  &  & +r_{l+1/2}p_{i+1/2}\sqrt{1-\xi_{0j+1}^{2}}D_{\xi p,i+1/2,j+1/2}^{\left(0\right)}\left.\frac{\partial^{2}f_{0}^{\left(0\right)}}{\partial\xi_{0}\partial p}\right|_{i+1/2,j+1/2}^{(k+1)}\\
  &  & +r_{l+1/2}p_{i+1/2}\left.\frac{\partial}{\partial\xi_{0}}\left(\lambda\left(\xi_{0}\right)\sqrt{1-\xi_{0}^{2}}D_{\xi p}^{\left(0\right)}\right)\right|_{i+1/2,j+1/2}\left.\frac{\partial f_{0}^{\left(0\right)}}{\partial p}\right|_{i+1/2,j+1/2}^{(k+1)}\\
  & = & 0\end{eqnarray*}
-
 \end_inset 
 
-ou l'indice 
-\begin_inset Formula $(k)$
+ ou l'indice 
+\begin_inset Formula \( (k)\)
 \end_inset 
 
 indique que la variable est prise au temps 
-\begin_inset Formula $t=k\Delta t,$
+\begin_inset Formula \( t=k\Delta t,\)
 \end_inset 
 
-
-\begin_inset Formula $\Delta t$
+ 
+\begin_inset Formula \( \Delta t\)
 \end_inset 
 
 etant le pas de temps.Le terme de droite est pris au temps 
-\begin_inset Formula $(k+1)$
+\begin_inset Formula \( (k+1)\)
 \end_inset 
 
 , ce qui correspond a un schema totalement implicite ou temps inverse, inconditi
-onnellement stable numeriquement, point qui sera rediscute dans un chapitresuiva
-nt.On discretise egalement 
-\begin_inset Formula \begin{eqnarray*}
+onnellement
+ stable numeriquement, point qui sera rediscute dans un chapitresuivant.On
+ discretise egalement 
+\begin_inset Formula \begin{eqnarray*} 
 \left.\frac{\partial^{2}f_{0}^{\left(0\right)}}{\partial p\partial\xi_{0}}\right|_{i+1/2,j+1/2}^{(k+1)} & = & \left.\frac{\partial^{2}f_{0}^{\left(0\right)}}{\partial\xi_{0}\partial p}\right|_{i+1/2,j+1/2}^{(k+1)}\\
  & = & \frac{f_{0,i+3/2,j+3/2}^{\left(0\right)(k+1)}-f_{0,i+3/2,j-1/2}^{\left(0\right)(k+1)}-f_{0,i-1/2,j+3/2}^{\left(0\right)(k+1)}+f_{0,i-1/2,j-1/2}^{\left(0\right)(k+1)}}{\left(\Delta p_{i+1}+\Delta p_{i}\right)\left(\Delta\xi_{0j+1}+\Delta\xi_{0j}\right)}\end{eqnarray*}
-
 \end_inset 
 
-tandis que 
-\begin_inset Formula \begin{eqnarray*}
+ tandis que 
+\begin_inset Formula \begin{eqnarray*} 
 \left.\frac{\partial\left(pD_{p\xi}^{\left(0\right)}\right)}{\partial p}\right|_{i+1/2,j+1/2} & = & \frac{p_{i+1}D_{p\xi,i+1,j+1/2}^{\left(0\right)}-p_{i}D_{p\xi,i,j+1/2}^{\left(0\right)}}{\Delta p_{i+1/2}}\\
 \left.\frac{\partial}{\partial\xi_{0}}\left(\lambda\left(\xi_{0}\right)\sqrt{1-\xi_{0}^{2}}D_{\xi p}^{\left(0\right)}\right)\right|_{i+1/2,j+1/2} & = & \frac{\lambda\left(\xi_{0j+1}\right)\sqrt{1-\xi_{0j+1}^{2}}D_{\xi p,i+1/2,j+1}^{\left(0\right)}-\lambda\left(\xi_{0j}\right)\sqrt{1-\xi_{0j}^{2}}D_{\xi p,i+1/2,j}^{\left(0\right)}}{\Delta\xi_{0j+1/2}\lambda\left(\xi_{0j+1/2}\right)}\end{eqnarray*}
-
 \end_inset 
 
 
@@ -377,45 +339,40 @@ tandis que
 
 L'equation de Fokker-Planck moyennee sur la periode de rebond devient alors
  sous forme discrete 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 r_{l+1/2}p_{i+1/2}^{2}\frac{f_{0,i+1/2,j+1/2}^{\left(0\right)\left(k+1\right)}-f_{0,i+1/2,j+1/2}^{\left(0\right)\left(k\right)}}{\Delta t}+r_{l+1/2}\sum_{i^{\prime}=i-1}^{i^{\prime}=i+1}\sum_{j^{\prime}=j-1}^{j^{\prime}=j+1}\overline{\overline{M}}_{p,i^{\prime}+1/2,j^{\prime}+1/2}^{\left(0\right)}f_{0,i^{\prime}+1/2,j^{\prime}+1/2}^{\left(0\right)(k+1)}=0\]
-
 \end_inset 
 
-, les coefficients de la matrice valant 
-\begin_inset Formula \begin{eqnarray*}
+ , les coefficients de la matrice valant 
+\begin_inset Formula \begin{eqnarray*} 
 \overline{\overline{M}}_{p,i+3/2,j+3/2}^{\left(0\right)} & = & \frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}D_{p\xi,i+1/2,j+1/2}^{\left(0\right)}\\
  &  & +\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}D_{\xi p,i+1/2,j+1/2}^{\left(0\right)}\end{eqnarray*}
-
 \end_inset 
 
 
-\begin_inset Formula \begin{eqnarray*}
+\begin_inset Formula \begin{eqnarray*} 
 \overline{\overline{M}}_{p,i+1/2,j+3/2}^{\left(0\right)} & = & \frac{p_{i+1}}{\Delta p_{i+1/2}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}D_{p\xi,i+1,j+1/2}^{\left(0\right)}\\
  &  & -\frac{p_{i}}{\Delta p_{i+1/2}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}D_{p\xi,i,j+1/2}^{\left(0\right)}\\
  &  & -\frac{1-\xi_{0j+1}^{2}}{\Delta\xi_{0j+1/2}\Delta\xi_{0j+1}}\frac{\lambda\left(\xi_{0j+1}\right)}{\lambda\left(\xi_{0j+1/2}\right)}D_{\xi\xi,i+1/2,j+1}^{\left(0\right)}\\
  &  & -p_{i+1/2}\frac{\sqrt{1-\xi_{0j+1}^{2}}}{\Delta\xi_{0j+1/2}}\left(1-\delta_{\xi,i+1/2,j+1}^{\left(0\right)}\right)\frac{\lambda\left(\xi_{0j+1}\right)}{\lambda\left(\xi_{0j+1/2}\right)}F_{\xi,i+1/2,j+1}^{\left(0\right)}\end{eqnarray*}
-
 \end_inset 
 
 
-\begin_inset Formula \begin{eqnarray*}
+\begin_inset Formula \begin{eqnarray*} 
 \overline{\overline{M}}_{p,i-1/2,j+3/2}^{\left(0\right)} & = & -\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}D_{p\xi,i+1/2,j+1/2}^{\left(0\right)}\\
  &  & -\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}D_{\xi p,i+1/2,j+1/2}^{\left(0\right)}\end{eqnarray*}
-
 \end_inset 
 
 
-\begin_inset Formula \begin{eqnarray*}
+\begin_inset Formula \begin{eqnarray*} 
 \overline{\overline{M}}_{p,i+3/2,j+1/2}^{\left(0\right)} & = & -\frac{p_{i+1}^{2}}{\Delta p_{i+1}\Delta p_{i+1/2}}D_{pp,i+1,j+1/2}^{\left(0\right)}\\
  &  & +\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j+1}^{2}}}{\Delta\xi_{0j+1/2}}\frac{\lambda\left(\xi_{0j+1}\right)}{\lambda\left(\xi_{0j+1/2}\right)}D_{\xi p,i+1/2,j+1}^{\left(0\right)}\\
  &  & -\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j}^{2}}}{\Delta\xi_{0j+1/2}}\frac{\lambda\left(\xi_{0j}\right)}{\lambda\left(\xi_{0j+1/2}\right)}D_{\xi p,i+1/2,j}^{\left(0\right)}\\
  &  & +\frac{p_{i+1}^{2}}{\Delta p_{i+1/2}}\left(1-\delta_{p,i+1,j+1/2}^{\left(0\right)}\right)F_{p,i+1,j+1/2}^{\left(0\right)}\end{eqnarray*}
-
 \end_inset 
 
 
-\begin_inset Formula \begin{eqnarray*}
+\begin_inset Formula \begin{eqnarray*} 
 \overline{\overline{M}}_{p,i+1/2,j+1/2}^{\left(0\right)} & = & \frac{p_{i+1}^{2}}{\Delta p_{i+1/2}\Delta p_{i+1}}D_{pp,i+1,j+1/2}^{\left(0\right)}\\
  &  & +\frac{p_{i+1}^{2}}{\Delta p_{i+1/2}}F_{p,i+1,j+1/2}^{\left(0\right)}\delta_{p,i+1,j+1/2}\\
  &  & +\frac{p_{i}^{2}}{\Delta p_{i+1/2}\Delta p_{i}}D_{pp,i,j+1/2}^{\left(0\right)}\\
@@ -424,43 +381,38 @@ r_{l+1/2}p_{i+1/2}^{2}\frac{f_{0,i+1/2,j+1/2}^{\left(0\right)\left(k+1\right)}-f
  &  & -p_{i+1/2}\frac{\sqrt{1-\xi_{0j+1}^{2}}}{\Delta\xi_{0j+1/2}}\delta_{\xi,i+1/2,j+1}^{\left(0\right)}\frac{\lambda\left(\xi_{0j+1}\right)}{\lambda\left(\xi_{0j+1/2}\right)}F_{\xi,i+1/2,j+1}^{\left(0\right)}\\
  &  & +\frac{1-\xi_{0j}^{2}}{\Delta\xi_{0j}\Delta\xi_{0j+1/2}}\frac{\lambda\left(\xi_{0j}\right)}{\lambda\left(\xi_{0j+1/2}\right)}D_{\xi\xi,i+1/2,j}^{\left(0\right)}\\
  &  & +p_{i+1/2}\frac{\sqrt{1-\xi_{0j}^{2}}}{\Delta\xi_{0j+1/2}}\left(1-\delta_{\xi,i+1/2,j}^{\left(0\right)}\right)\frac{\lambda\left(\xi_{0j}\right)}{\lambda\left(\xi_{0j+1/2}\right)}F_{\xi,i+1/2,j}^{\left(0\right)}\end{eqnarray*}
-
 \end_inset 
 
 
-\begin_inset Formula \begin{eqnarray*}
+\begin_inset Formula \begin{eqnarray*} 
 \overline{\overline{M}}_{i-1/2,j+1/2}^{\left(0\right)} & = & -\frac{p_{i}^{2}}{\Delta p_{i+1/2}\Delta p_{i}}D_{pp,i,j+1/2}^{\left(0\right)}\\
  &  & -\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j+1}^{2}}}{\Delta\xi_{0j+1/2}}\frac{\lambda\left(\xi_{0j+1}\right)}{\lambda\left(\xi_{0j+1/2}\right)}D_{\xi p,i+1/2,j+1}^{\left(0\right)}\\
  &  & +\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j}^{2}}}{\Delta\xi_{0j+1/2}}\frac{\lambda\left(\xi_{0j}\right)}{\lambda\left(\xi_{0j+1/2}\right)}D_{\xi p,i+1/2,j}^{\left(0\right)}\\
  &  & -\frac{p_{i}^{2}}{\Delta p_{i+1/2}}\delta_{p,i,j+1/2}^{\left(0\right)}F_{p,i,j+1/2}^{\left(0\right)}\end{eqnarray*}
-
 \end_inset 
 
 
-\begin_inset Formula \begin{eqnarray*}
+\begin_inset Formula \begin{eqnarray*} 
 \overline{\overline{M}}_{p,i+3/2,j-1/2}^{\left(0\right)} & = & -\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}D_{p\xi,i+1/2,j+1/2}^{\left(0\right)}\\
  &  & -\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}D_{\xi p,i+1/2,j+1/2}^{\left(0\right)}\end{eqnarray*}
-
 \end_inset 
 
 
-\begin_inset Formula \begin{eqnarray*}
+\begin_inset Formula \begin{eqnarray*} 
 \overline{\overline{M}}_{p,i+1/2,j-1/2}^{\left(0\right)} & = & -\frac{p_{i+1}}{\Delta p_{i+1/2}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}D_{p\xi,i+1,j+1/2}^{\left(0\right)}\\
  &  & +\frac{p_{i}}{\Delta p_{i+1/2}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}D_{p\xi,i,j+1/2}^{\left(0\right)}\\
  &  & -\frac{1-\xi_{0j}^{2}}{\Delta\xi_{0j+1/2}\Delta\xi_{0j}}\frac{\lambda\left(\xi_{0j}\right)}{\lambda\left(\xi_{0j+1/2}\right)}D_{\xi\xi,i+1/2,j}^{\left(0\right)}\\
  &  & +p_{i+1/2}\frac{\sqrt{1-\xi_{0j}^{2}}}{\Delta\xi_{0j+1/2}}\delta_{\xi,i+1/2,j}^{\left(0\right)}\frac{\lambda\left(\xi_{0j}\right)}{\lambda\left(\xi_{0j+1/2}\right)}F_{\xi,i+1/2,j}^{\left(0\right)}\end{eqnarray*}
-
 \end_inset 
 
 
-\begin_inset Formula \begin{eqnarray*}
+\begin_inset Formula \begin{eqnarray*} 
 \overline{\overline{M}}_{p,i-1/2,j-1/2}^{\left(0\right)} & = & \frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}D_{p\xi,i+1/2,j+1/2}^{\left(0\right)}\\
  &  & +\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}D_{\xi p,i+1/2,j+1/2}^{\left(0\right)}\end{eqnarray*}
-
 \end_inset 
 
-avec les coefficients de diffusion et de convection 
-\begin_inset Formula \[
+ avec les coefficients de diffusion et de convection 
+\begin_inset Formula \[ 
 \overline{\overline{D}}_{p}^{\left(0\right)}\rightarrow\left\{ \begin{array}{l}
 D_{pp,i+1,j+1/2}^{\left(0\right)}\\
 D_{pp,i,j+1/2}^{\left(0\right)}\\
@@ -472,40 +424,38 @@ D_{p\xi,i,j+1/2}^{\left(0\right)}\\
 D_{\xi p,i+1/2,j}^{\left(0\right)}\\
 D_{\xi\xi,i+1/2,j+1}^{\left(0\right)}\\
 D_{\xi\xi,i+1/2,j}^{\left(0\right)}\end{array}\right.\]
-
 \end_inset 
 
-et 
-\begin_inset Formula \[
+ et 
+\begin_inset Formula \[ 
 \overline{\overline{F}}_{p}^{\left(0\right)}\rightarrow\left\{ \begin{array}{l}
 F_{p,i+1,j+1/2}^{\left(0\right)}\\
 F_{p,i,j+1/2}^{\left(0\right)}\\
 F_{\xi,i+1/2,j+1}^{\left(0\right)}\\
 F_{\xi,i+1/2,j}^{\left(0\right)}\end{array}\right.\]
-
 \end_inset 
 
 
 \layout Standard
 
 Les coefficients 
-\begin_inset Formula $\delta_{p}^{\left(0\right)}$
+\begin_inset Formula \( \delta_{p}^{\left(0\right)}\)
 \end_inset 
 
 sont maintenant definis a partir de 
-\begin_inset Formula $\left.\frac{F_{p}^{\left(0\right)}}{D_{pp}^{\left(0\right)}}\right|_{effectif}$
+\begin_inset Formula \( \left.\frac{F_{p}^{\left(0\right)}}{D_{pp}^{\left(0\right)}}\right|_{effectif}\)
 \end_inset 
 
 , les termes 
-\begin_inset Formula $\delta_{\xi}^{\left(0\right)}$
+\begin_inset Formula \( \delta_{\xi}^{\left(0\right)}\)
 \end_inset 
 
 restant quant a eux identiques a 
-\begin_inset Formula $\delta_{\xi},$
+\begin_inset Formula \( \delta_{\xi},\)
 \end_inset 
 
 car 
-\begin_inset Formula $\Delta\xi=\Delta\xi_{0}.$
+\begin_inset Formula \( \Delta\xi=\Delta\xi_{0}.\)
 \end_inset 
 
 

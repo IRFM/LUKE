@@ -1,29 +1,13 @@
-#LyX 1.3 created this file. For more info see http://www.lyx.org/
-\lyxformat 221
+# The reLyX bundled with LyX 1.3 created this file.
+# For more info see http://www.lyx.org/
+\lyxformat 2.15
 \textclass revtex4
 \language english
-\inputencoding auto
-\fontscheme pslatex
-\graphics default
-\paperfontsize default
-\spacing single 
-\papersize Default
-\paperpackage a4
-\use_geometry 0
+\inputencoding latin1
 \use_amsmath 1
+\fontscheme pslatex
 \use_natbib 0
 \use_numerical_citations 0
-\paperorientation portrait
-\secnumdepth 3
-\tocdepth 3
-\paragraph_separation indent
-\defskip medskip
-\quotes_language english
-\quotes_times 2
-\papercolumns 1
-\papersides 1
-\paperpagestyle default
-
 
 \layout Subsection
 
@@ -35,106 +19,100 @@ Moyenne sur la periode de rebond
 
 Les corrections neoclassiques de premier ordre sont la somme de deux termes
  
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 f_{1}=\widetilde{f}+g\]
-
 \end_inset 
 
  ou 
-\begin_inset Formula $\widetilde{f}$
+\begin_inset Formula \( \widetilde{f}\)
 \end_inset 
 
- est un terme source d\i \^{u}
+ est un terme source d
+\i \^{u}
  aux gradients radiaux 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \widetilde{f}=-\frac{v_{\Vert}}{\Omega_{\theta}}\frac{\partial f_{0}}{\partial r}\]
-
 \end_inset 
 
  et 
-\begin_inset Formula $g$
+\begin_inset Formula \( g\)
 \end_inset 
 
  est la reponse du plasma en presence de collisions et de diffusion quasi-lineai
 re.
  Le calcul de 
-\begin_inset Formula $g$
+\begin_inset Formula \( g\)
 \end_inset 
 
  peut egalement etre mis sous forme conservative 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \left\{ r\nabla\cdot\mathbf{S}_{\mathbf{p}}^{g}\right\} +\left\{ r\nabla\cdot\mathbf{S}_{\mathbf{p}}^{\widetilde{f}}\right\} =0\]
-
 \end_inset 
 
  ou 
-\begin_inset Formula $g$
+\begin_inset Formula \( g\)
 \end_inset 
 
  est une fonction explicitement independente de 
-\begin_inset Formula $\theta$
+\begin_inset Formula \( \theta\)
 \end_inset 
 
  au meme titre que 
-\begin_inset Formula $f_{0}$
+\begin_inset Formula \( f_{0}\)
 \end_inset 
 
 , et les flux sur 
-\begin_inset Formula $g$
+\begin_inset Formula \( g\)
 \end_inset 
 
  sont donc discretises de la meme maniere.
  En revanche, 
-\begin_inset Formula $\widetilde{f}$
+\begin_inset Formula \( \widetilde{f}\)
 \end_inset 
 
  possede une dependence explicite en 
-\begin_inset Formula $\theta$
+\begin_inset Formula \( \theta\)
 \end_inset 
 
  qui peut etre isolee comme suit: 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \widetilde{f}(p,\xi,r,\theta)=\frac{\xi}{\Psi(\theta)\xi_{0}}\widetilde{f}^{(0)}(p,\xi_{0},r)\]
-
 \end_inset 
 
  avec 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \widetilde{f}^{(0)}(p,\xi_{0},r)=-\frac{p\xi_{0}}{q_{e}B_{\theta,0}}\frac{\partial f_{0}^{(0)}(p,\xi_{0},r)}{\partial r}\]
-
 \end_inset 
 
  ou 
-\begin_inset Formula $r$
+\begin_inset Formula \( r\)
 \end_inset 
 
  est la valeur du petit rayon plasma.
 \layout Standard
 
 L'expression de la divergence des flux sur 
-\begin_inset Formula $\widetilde{f}$
+\begin_inset Formula \( \widetilde{f}\)
 \end_inset 
 
 , que l'on notera 
-\begin_inset Formula $\widetilde{S}$
+\begin_inset Formula \( \widetilde{S}\)
 \end_inset 
 
  est identique formellement a celle de 
-\begin_inset Formula $f_{0}:$
+\begin_inset Formula \( f_{0}:\)
 \end_inset 
 
 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \left\{ r\nabla\cdot\widetilde{\mathbf{S}}_{\mathbf{p}}\right\} =\frac{r}{p^{2}}\frac{\partial}{\partial p}(p^{2}\widetilde{S}_{p}^{(0)})-\frac{r}{\lambda\left(\xi_{0}\right)p}\frac{\partial}{\partial\xi_{0}}\left(\sqrt{1-\xi_{0}^{2}}\lambda\left(\xi_{0}\right)\widetilde{S}_{\xi_{0}}^{(0)}\right)\]
-
 \end_inset 
 
  avec les composantes 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \widetilde{\mathbf{S}}_{\mathbf{p}}=\left\{ \begin{array}{l}
 \widetilde{S}_{p}^{(0)}=\left\{ \widetilde{S}_{p}\right\} \\
 \widetilde{S}_{\xi_{0}}^{(0)}=\sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}\widetilde{S}_{\xi}\right\} \end{array}\right.\]
-
 \end_inset 
 
 
@@ -142,79 +120,63 @@ L'expression de la divergence des flux sur
 
 On considere les flux comme resultant d'un terme diffusif et d'un terme
  de convection: 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \widetilde{\mathbf{S}}_{\mathbf{p}}=-\overline{\overline{\widetilde{D}}}\cdot\nabla\widetilde{f}+\overline{\widetilde{F}}\widetilde{f}\]
-
 \end_inset 
 
 
 \layout Standard
 
 On a alors 
-\begin_inset Formula \begin{eqnarray*}
+\begin_inset Formula \begin{eqnarray*} 
 \left\{ \widetilde{S}_{p}\right\}  & = & \left\{ -\widetilde{D}_{pp}\cdot\nabla_{p}\widetilde{f}-\widetilde{D}_{p\xi}\cdot\nabla_{\xi}\widetilde{f}+\widetilde{F}_{p}\widetilde{f}\right\} \\
  & = & -\left\{ \widetilde{D}_{pp}\cdot\nabla_{p}\left(\frac{\xi}{\Psi(\theta)\xi_{0}}\widetilde{f}^{(0)}\right)\right\} -\left\{ \widetilde{D}_{p\xi}\cdot\frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}\nabla_{\left|\xi_{0}\right|}\left(\frac{\xi}{\Psi(\theta)\xi_{0}}\widetilde{f}^{(0)}\right)\right\} +\left\{ \widetilde{F}_{p}\frac{\xi}{\Psi(\theta)\xi_{0}}\widetilde{f}^{(0)}\right\} \\
  & = & -\left\{ \frac{\sigma\xi}{\Psi(\theta)\xi_{0}}\widetilde{D}_{pp}\right\} \cdot\sigma\nabla_{p}\widetilde{f}^{(0)}-\left\{ \widetilde{D}_{p\xi}\cdot\frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}\left(\frac{\xi}{\Psi(\theta)\xi_{0}}\right)\nabla_{\left|\xi_{0}\right|}\widetilde{f}^{(0)}\right\} \\
  &  & \;\;-\left\{ \widetilde{D}_{p\xi}\cdot\frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}\nabla_{\left|\xi_{0}\right|}\left(\frac{\xi}{\Psi(\theta)\xi_{0}}\right)\widetilde{f}^{(0)}\right\} +\left\{ \frac{\sigma\xi}{\Psi(\theta)\xi_{0}}\widetilde{F}_{p}\right\} \sigma\widetilde{f}^{(0)}\\
  & = & -\widetilde{D}_{pp}^{(0)}\cdot\nabla_{p}\widetilde{f}^{(0)}-\widetilde{D}_{p\xi}^{(0)}\cdot\nabla_{\xi_{0}}\widetilde{f}^{(0)}+\widetilde{F}_{p}^{(0)}\widetilde{f}^{(0)}\end{eqnarray*}
-
 \end_inset 
 
  avec 
-\begin_inset Formula \begin{eqnarray*}
+\begin_inset Formula \begin{eqnarray*} 
 \widetilde{D}_{pp}^{(0)} & = & \sigma\left\{ \frac{\sigma\xi}{\Psi(\theta)\xi_{0}}\widetilde{D}_{pp}\right\} \\
 \widetilde{D}_{p\xi}^{(0)} & = & \left\{ \frac{\xi^{2}}{\Psi^{3/2}\xi_{0}^{2}}\widetilde{D}_{p\xi}\right\} \\
 \widetilde{F}_{p}^{(0)} & = & \sigma\left[\left\{ \frac{\sigma\xi}{\Psi(\theta)\xi_{0}}\widetilde{F}_{p}\right\} -\left\{ \frac{\xi}{\sqrt{\Psi}\xi_{0}}\nabla_{\left|\xi_{0}\right|}\left(\frac{\xi}{\Psi(\theta)\xi_{0}}\right)\widetilde{D}_{p\xi}\right\} \right]\\
  & = & \left[\sigma\left\{ \frac{\sigma\xi}{\Psi(\theta)\xi_{0}}\widetilde{F}_{p}\right\} +\frac{\sqrt{1-\xi_{0}^{2}}}{p\xi_{0}^{3}}\left\{ \frac{\left(\Psi(\theta)-1\right)}{\Psi^{3/2}}\widetilde{D}_{p\xi}\right\} \right]\end{eqnarray*}
-
 \end_inset 
 
  ou on a utilise 
-\begin_inset Formula \begin{eqnarray*}
+\begin_inset Formula \begin{eqnarray*} 
 \nabla_{\left|\xi_{0}\right|}\left(\frac{\xi}{\Psi(\theta)\xi_{0}}\right) & = & -\frac{\sqrt{1-\xi_{0}^{2}}}{p}\frac{\partial}{\partial\left|\xi_{0}\right|}\left(\frac{\xi}{\Psi(\theta)\xi_{0}}\right)\\
  & = & -\frac{\sqrt{1-\xi_{0}^{2}}}{p\Psi(\theta)}\frac{\partial}{\partial\left|\xi_{0}\right|}\left(\frac{\sqrt{1-\Psi(\theta)(1-\left|\xi_{0}\right|^{2})}}{\left|\xi_{0}\right|}\right)\\
  & = & -\frac{\sqrt{1-\xi_{0}^{2}}}{p\Psi(\theta)}\left(\frac{\Psi(\theta)}{\left|\xi\right|}-\frac{\left|\xi\right|}{\xi_{0}^{2}}\right)\\
  & = & -\frac{\sqrt{1-\xi_{0}^{2}}\left(\Psi(\theta)-1\right)}{p\Psi(\theta)\left|\xi\right|\xi_{0}^{2}}\end{eqnarray*}
-
 \end_inset 
 
 
 \layout Standard
 
 On a de meme 
-\begin_inset Formula \begin{eqnarray*}
+\begin_inset Formula \begin{eqnarray*} 
 \sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}\widetilde{S}_{\xi}\right\}  & = & \sigma\left\{ -\frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}\widetilde{D}_{\xi p}\cdot\nabla_{p}\widetilde{f}-\frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}\widetilde{D}_{\xi\xi}\cdot\nabla_{\xi}\widetilde{f}+\frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}\widetilde{F}_{\xi}\widetilde{f}\right\} \\
  & = & -\sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}\widetilde{D}_{\xi p}\cdot\nabla_{p}\left(\frac{\xi}{\Psi(\theta)\xi_{0}}\widetilde{f}^{(0)}\right)\right\} -\sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}\widetilde{D}_{\xi\xi}\cdot\frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}\nabla_{\left|\xi_{0}\right|}\left(\frac{\xi}{\Psi(\theta)\xi_{0}}\widetilde{f}^{(0)}\right)\right\} \\
  &  & \;\;+\sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}\widetilde{F}_{\xi}\frac{\xi}{\Psi(\theta)\xi_{0}}\widetilde{f}^{(0)}\right\} \\
  & = & -\left\{ \frac{\xi^{2}}{\Psi^{3/2}\xi_{0}^{2}}\widetilde{D}_{\xi p}\right\} \cdot\nabla_{p}\widetilde{f}^{(0)}-\sigma\left\{ \widetilde{D}_{\xi\xi}\cdot\frac{\xi^{2}}{\Psi\xi_{0}^{2}}\left(\frac{\xi}{\Psi(\theta)\xi_{0}}\right)\nabla_{\left|\xi_{0}\right|}\widetilde{f}^{(0)}\right\} \\
  &  & \;\;-\sigma\left\{ \widetilde{D}_{\xi\xi}\cdot\frac{\xi^{2}}{\Psi\xi_{0}^{2}}\nabla_{\left|\xi_{0}\right|}\left(\frac{\xi}{\Psi(\theta)\xi_{0}}\right)\widetilde{f}^{(0)}\right\} +\left\{ \frac{\xi^{2}}{\Psi^{3/2}\xi_{0}^{2}}\widetilde{F}_{\xi}\right\} \widetilde{f}^{(0)}\\
  & = & -\widetilde{D}_{\xi p}^{(0)}\cdot\nabla_{p}\widetilde{f}^{(0)}-\widetilde{D}_{\xi\xi}^{(0)}\cdot\nabla_{\xi_{0}}\widetilde{f}^{(0)}+\widetilde{F}_{\xi}^{(0)}\widetilde{f}^{(0)}\end{eqnarray*}
-
 \end_inset 
 
  avec 
-\begin_inset Formula \begin{eqnarray*}
+\begin_inset Formula \begin{eqnarray*} 
 \widetilde{D}_{\xi p}^{(0)} & = & \left\{ \frac{\xi^{2}}{\Psi^{3/2}\xi_{0}^{2}}\widetilde{D}_{\xi p}\right\} \\
 \widetilde{D}_{\xi\xi}^{(0)} & = & \sigma\left\{ \frac{\sigma\xi^{3}}{\Psi^{2}\xi_{0}^{3}}\widetilde{D}_{\xi\xi}\right\} \\
 \widetilde{F}_{\xi}^{(0)} & = & \left[\left\{ \frac{\xi^{2}}{\Psi^{3/2}\xi_{0}^{2}}\widetilde{F}_{\xi}\right\} -\left\{ \frac{\sigma\xi^{2}}{\Psi\xi_{0}^{2}}\nabla_{\left|\xi_{0}\right|}\left(\frac{\xi}{\Psi(\theta)\xi_{0}}\right)\widetilde{D}_{\xi\xi}\right\} \right]\\
  & = & \left[\left\{ \frac{\xi^{2}}{\Psi^{3/2}\xi_{0}^{2}}\widetilde{F}_{\xi}\right\} +\sigma\frac{\sqrt{1-\xi_{0}^{2}}}{p\xi_{0}^{3}}\left\{ \frac{\sigma\xi\left(\Psi(\theta)-1\right)}{\Psi^{2}\xi_{0}}\widetilde{D}_{\xi\xi}\right\} \right]\end{eqnarray*}
-
 \end_inset 
 
  de sorte que finalement on puisse reecrire 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \widetilde{\mathbf{S}}_{\mathbf{p}}^{(0)}=-\overline{\overline{\widetilde{D}}}^{(0)}\cdot\nabla_{p,\xi_{0}}\widetilde{f}^{(0)}+\overline{\widetilde{F}}^{(0)}\widetilde{f}^{(0)}\]
-
 \end_inset 
 
- avec les elements definis ci-dessus.
-
-
-
-
-
-
-
-
-
+ avec les elements definis ci-dessus. 
 \the_end

@@ -5,17 +5,17 @@ moyenner les equations selon la relation \[
 
 ou \[
 \lambda\left(\xi_{0}\right)=\int_{-\theta_{c}}^{\theta_{c}}\frac{d\theta}{2\pi}\frac{\xi_{0}}{\xi}\]
-et $\sigma=\frac{p_{\Vert}}{\left|p_{\Vert}\right|}$est le signe
+ et $\sigma=\frac{p_{\Vert}}{\left|p_{\Vert}\right|}$est le signe
 de $p_{\Vert}$et $\theta$est l'angle poloidal.Ici $\theta_{c}$vaut
-$\pi$pour les particules circulantes et $\theta_{T}=$$\cos^{-1}\left(1-2\xi_{0}^{2}/\xi_{0T}^{2}\right)$pour
-les particules piegees, avec $\xi_{0T}^{2}=$$\frac{2\varepsilon}{1+\varepsilon},$$\varepsilon=r/R_{0}$etant
-l'inverse du rapport d'aspect.L'equation de Fokker-Planck moyennee
-devient alors\[
+$\pi$pour les particules circulantes et $\theta_{T}=$ $\cos^{-1}\left(1-2\xi_{0}^{2}/\xi_{0T}^{2}\right)$pour
+les particules piegees, avec $\xi_{0T}^{2}=$ $\frac{2\varepsilon}{1+\varepsilon},$
+$\varepsilon=r/R_{0}$etant l'inverse du rapport d'aspect.L'equation
+de Fokker-Planck moyennee devient alors\[
 \left\{ \frac{\partial\left(rp^{2}f_{0}\right)}{\partial t}\right\} +\left\{ r\frac{\partial\left(p^{2}S_{p}\right)}{\partial p}\right\} -\left\{ rp\frac{\partial\left(\sqrt{1-\xi^{2}}S_{\xi}\right)}{\partial\xi}\right\} =0\]
-ou le parametre temps $t$evolue sur une echelle bien plus longue
+ ou le parametre temps $t$evolue sur une echelle bien plus longue
 que la periode de rebond \[
 \tau_{t,b}=\frac{2\pi R_{0}q\left(r\right)}{\left|\xi_{0}\right|v}\lambda\left(\xi_{0}\right)\]
-On definit ici le facteur de securite $q\left(r\right)$de la surface
+ On definit ici le facteur de securite $q\left(r\right)$de la surface
 de flux magnetique situee au rayon $r$sur laquelle la moyenne est
 effectuee et $R_{0}$le grand rayon du plasma.Toutes les valeurs sont
 determinees au point ou le champ magnetique estminimum, la ou toutes
@@ -23,27 +23,28 @@ les particules passent, soit notamment $\xi_{0}$pour l'angle de diffusion
 angulaire et la fonction de distribution $f_{0}^{\left(0\right)}$.On
 a ainsi \[
 \left\{ \frac{\partial\left(rp^{2}f_{0}\right)}{\partial t}\right\} =rp^{2}\frac{\partial}{\partial t}\left[\frac{1}{\lambda\left(\xi_{0}\right)}\left[\frac{1}{2}\sum_{\sigma=\pm1}\right]_{T}\int_{-\theta_{c}}^{\theta_{c}}\frac{d\theta}{2\pi}\frac{\xi_{0}}{\xi}f_{0}\right]\]
-et comme $f_{0}$est par definition symetrique en $\theta,$\[
+ et comme $f_{0}$est par definition symetrique en $\theta,$\[
 \left\{ \frac{\partial\left(rp^{2}f_{0}\right)}{\partial t}\right\} =\frac{\partial\left(rp^{2}f_{0}^{(0)}\right)}{\partial t}\]
 
 
 De maniere evidente \[
 \left\{ r\frac{\partial\left(p^{2}S_{p}\right)}{\partial p}\right\} =r\frac{\partial\left(p^{2}\left\{ S_{p}\right\} \right)}{\partial p}\]
-et pour le second terme de droite il faut utiliser la relation $\frac{\partial}{\partial\xi}=$$\frac{\xi}{\Psi\xi_{0}}\frac{\partial}{\partial\xi_{0}},$sachant
-que $\xi=$$\sigma\sqrt{1-\Psi\left(1-\xi_{0}^{2}\right)}$avec $\Psi\left(r,\theta\right)=\frac{1+\varepsilon}{1+\varepsilon\cos\theta}.$Il
+ et pour le second terme de droite il faut utiliser la relation $\frac{\partial}{\partial\xi}=$
+$\frac{\xi}{\Psi\xi_{0}}\frac{\partial}{\partial\xi_{0}},$sachant
+que $\xi=$ $\sigma\sqrt{1-\Psi\left(1-\xi_{0}^{2}\right)}$avec $\Psi\left(r,\theta\right)=\frac{1+\varepsilon}{1+\varepsilon\cos\theta}.$Il
 vient alors \[
 \left\{ rp\frac{\partial\left(\sqrt{1-\xi^{2}}S_{\xi}\right)}{\partial\xi}\right\} =\frac{rp}{\lambda\left(\xi_{0}\right)}\left[\frac{1}{2}\sum_{\sigma=\pm1}\right]_{T}\int_{-\theta_{c}}^{\theta_{c}}\frac{d\theta}{2\pi}\frac{\xi_{0}}{\xi}\frac{\partial\left(\sqrt{1-\xi^{2}}S_{\xi}\right)}{\partial\xi}\]
-soit apres le changement de variable \[
+ soit apres le changement de variable \[
 \left\{ rp\frac{\partial\left(\sqrt{1-\xi^{2}}S_{\xi}\right)}{\partial\xi}\right\} =\frac{rp}{\lambda\left(\xi_{0}\right)}\left[\frac{1}{2}\sum_{\sigma=\pm1}\right]_{T}\int_{-\theta_{c}}^{\theta_{c}}\frac{d\theta}{2\pi}\frac{1}{\Psi}\frac{\partial\left(\sqrt{1-\xi^{2}}S_{\xi}\right)}{\partial\xi_{0}}\]
-Afin de permuter la derivee en $\xi_{0}$et la somme sur $\sigma$pour
+ Afin de permuter la derivee en $\xi_{0}$et la somme sur $\sigma$pour
 les particules piegees, il faut introduire $\sigma$, de sorte que
 \begin{eqnarray*}
 \left\{ rp\frac{\partial\left(\sqrt{1-\xi^{2}}S_{\xi}\right)}{\partial\xi}\right\}  & = & \frac{rp}{\lambda\left(\xi_{0}\right)}\frac{\partial\left(\left[\frac{1}{2}\sum_{\sigma=\pm1}\right]_{T}\int_{-\theta_{c}}^{\theta_{c}}\frac{d\theta}{2\pi}\frac{\sigma}{\Psi}\sqrt{1-\xi^{2}}S_{\xi}\right)}{\partial\left|\xi_{0}\right|}\\
  & = & \frac{rp}{\lambda\left(\xi_{0}\right)}\frac{\partial\left(\sigma\left[\frac{1}{2}\sum_{\sigma=\pm1}\right]_{T}\int_{-\theta_{c}}^{\theta_{c}}\frac{d\theta}{2\pi}\frac{\sigma}{\Psi}\sqrt{1-\xi^{2}}S_{\xi}\right)}{\partial\xi_{0}}\end{eqnarray*}
-et il est possible d'exprimer le terme dans la derivee partielle $\frac{\partial}{\partial\xi_{0}}$sous
-la forme simple \[
+ et il est possible d'exprimer le terme dans la derivee partielle
+$\frac{\partial}{\partial\xi_{0}}$sous la forme simple \[
 \sigma\left[\frac{1}{2}\sum_{\sigma=\pm1}\right]_{T}\int_{-\theta_{c}}^{\theta_{c}}\frac{d\theta}{2\pi}\frac{\sigma}{\Psi}\sqrt{1-\xi^{2}}S_{\xi}=\lambda\left(\xi_{0}\right)\sqrt{1-\xi_{0}^{2}}\sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}S_{\xi}\right\} \]
-ce qui donne \[
+ ce qui donne \[
 \left\{ rp\frac{\partial\left(\sqrt{1-\xi^{2}}S_{\xi}\right)}{\partial\xi}\right\} =\frac{rp}{\lambda\left(\xi_{0}\right)}\frac{\partial\left(\lambda\left(\xi_{0}\right)\sqrt{1-\xi_{0}^{2}}\sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}S_{\xi}\right\} \right)}{\partial\xi_{0}}\]
 
 
@@ -53,7 +54,7 @@ sousla forme de leur valeur ou le champ magnetique $B$est minimum,
 \mathbf{S}_{\mathbf{p}}^{(0)}=\left\{ \begin{array}{l}
 S_{p}^{(0)}=\left\{ S_{p}\right\} \\
 S_{\xi_{0}}^{(0)}=\sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}S_{\xi}\right\} \end{array}\right.\]
-on peut garder une forme conservative simple pour l'equation de Fokker-Planck\[
+ on peut garder une forme conservative simple pour l'equation de Fokker-Planck\[
 \frac{\partial\left(rp^{2}f_{0}^{(0)}\right)}{\partial t}+r\frac{\partial}{\partial p}(p^{2}S_{p}^{(0)})-\frac{rp}{\lambda\left(\xi_{0}\right)}\frac{\partial}{\partial\xi_{0}}\left(\sqrt{1-\xi_{0}^{2}}\lambda\left(\xi_{0}\right)S_{\xi_{0}}^{(0)}\right)=0\]
 
 
@@ -71,14 +72,14 @@ alors\begin{eqnarray*}
 -\sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}D_{\xi p}\frac{\partial f_{0}}{\partial p}\right\}  & = & -\sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}D_{\xi p}\right\} \frac{\partial f_{0}^{(0)}}{\partial p}\\
 -\sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}D_{\xi\xi}\frac{\sqrt{1-\xi^{2}}}{p}\frac{\partial f_{0}}{\partial\xi}\right\}  & = & -\sigma\frac{\sqrt{1-\xi_{0}^{2}}}{p}\left\{ \frac{\xi^{2}}{\Psi\xi_{0}^{2}}D_{\xi\xi}\right\} \frac{\partial f_{0}^{(0)}}{\sigma\partial\xi_{0}}\\
 \sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}F_{\xi}f_{0}\right\}  & = & \sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}F_{\xi}\right\} f_{0}^{(0)}\end{eqnarray*}
-de sorte que l'on peut reecrire \[
+ de sorte que l'on peut reecrire \[
 \mathbf{S}_{\mathbf{p}}^{(0)}=-\overline{\overline{D}}_{p}^{(0)}\cdot\nabla_{p,\xi_{0}}f_{0}^{(0)}+\overline{\overline{F}}_{p}^{(0)}f_{0}^{(0)}\]
-avec les elements de la matrice de diffusion \begin{eqnarray*}
+ avec les elements de la matrice de diffusion \begin{eqnarray*}
 D_{pp}^{(0)} & = & \left\{ D_{pp}\right\} \\
 D_{p\xi}^{(0)} & = & \sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}D_{p\xi}\right\} \\
 D_{\xi p}^{(0)} & = & \sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}D_{\xi p}\right\} \\
 D_{\xi\xi}^{(0)} & = & \left\{ \frac{\xi^{2}}{\Psi\xi_{0}^{2}}D_{\xi\xi}\right\} \end{eqnarray*}
-et les termes de convection \begin{eqnarray*}
+ et les termes de convection \begin{eqnarray*}
 F_{p}^{(0)} & = & \left\{ F_{p}\right\} \\
 F_{\xi}^{(0)} & = & \sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}F_{\xi}\right\} \end{eqnarray*}
 
@@ -115,14 +116,14 @@ onobtient \begin{eqnarray*}
  &  & +r_{l+1/2}p_{i+1/2}\sqrt{1-\xi_{0j+1}^{2}}D_{\xi p,i+1/2,j+1/2}^{\left(0\right)}\left.\frac{\partial^{2}f_{0}^{\left(0\right)}}{\partial\xi_{0}\partial p}\right|_{i+1/2,j+1/2}^{(k+1)}\\
  &  & +r_{l+1/2}p_{i+1/2}\left.\frac{\partial}{\partial\xi_{0}}\left(\lambda\left(\xi_{0}\right)\sqrt{1-\xi_{0}^{2}}D_{\xi p}^{\left(0\right)}\right)\right|_{i+1/2,j+1/2}\left.\frac{\partial f_{0}^{\left(0\right)}}{\partial p}\right|_{i+1/2,j+1/2}^{(k+1)}\\
  & = & 0\end{eqnarray*}
-ou l'indice $(k)$indique que la variable est prise au temps $t=k\Delta t,$$\Delta t$etant
-le pas de temps.Le terme de droite est pris au temps $(k+1)$, ce
-qui correspond a un schema totalement implicite ou temps inverse,
-inconditionnellement stable numeriquement, point qui sera rediscute
-dans un chapitresuivant.On discretise egalement \begin{eqnarray*}
+ ou l'indice $(k)$indique que la variable est prise au temps $t=k\Delta t,$
+$\Delta t$etant le pas de temps.Le terme de droite est pris au temps
+$(k+1)$, ce qui correspond a un schema totalement implicite ou temps
+inverse, inconditionnellement stable numeriquement, point qui sera
+rediscute dans un chapitresuivant.On discretise egalement \begin{eqnarray*}
 \left.\frac{\partial^{2}f_{0}^{\left(0\right)}}{\partial p\partial\xi_{0}}\right|_{i+1/2,j+1/2}^{(k+1)} & = & \left.\frac{\partial^{2}f_{0}^{\left(0\right)}}{\partial\xi_{0}\partial p}\right|_{i+1/2,j+1/2}^{(k+1)}\\
  & = & \frac{f_{0,i+3/2,j+3/2}^{\left(0\right)(k+1)}-f_{0,i+3/2,j-1/2}^{\left(0\right)(k+1)}-f_{0,i-1/2,j+3/2}^{\left(0\right)(k+1)}+f_{0,i-1/2,j-1/2}^{\left(0\right)(k+1)}}{\left(\Delta p_{i+1}+\Delta p_{i}\right)\left(\Delta\xi_{0j+1}+\Delta\xi_{0j}\right)}\end{eqnarray*}
-tandis que \begin{eqnarray*}
+ tandis que \begin{eqnarray*}
 \left.\frac{\partial\left(pD_{p\xi}^{\left(0\right)}\right)}{\partial p}\right|_{i+1/2,j+1/2} & = & \frac{p_{i+1}D_{p\xi,i+1,j+1/2}^{\left(0\right)}-p_{i}D_{p\xi,i,j+1/2}^{\left(0\right)}}{\Delta p_{i+1/2}}\\
 \left.\frac{\partial}{\partial\xi_{0}}\left(\lambda\left(\xi_{0}\right)\sqrt{1-\xi_{0}^{2}}D_{\xi p}^{\left(0\right)}\right)\right|_{i+1/2,j+1/2} & = & \frac{\lambda\left(\xi_{0j+1}\right)\sqrt{1-\xi_{0j+1}^{2}}D_{\xi p,i+1/2,j+1}^{\left(0\right)}-\lambda\left(\xi_{0j}\right)\sqrt{1-\xi_{0j}^{2}}D_{\xi p,i+1/2,j}^{\left(0\right)}}{\Delta\xi_{0j+1/2}\lambda\left(\xi_{0j+1/2}\right)}\end{eqnarray*}
 
@@ -130,7 +131,7 @@ tandis que \begin{eqnarray*}
 L'equation de Fokker-Planck moyennee sur la periode de rebond devient
 alors sous forme discrete \[
 r_{l+1/2}p_{i+1/2}^{2}\frac{f_{0,i+1/2,j+1/2}^{\left(0\right)\left(k+1\right)}-f_{0,i+1/2,j+1/2}^{\left(0\right)\left(k\right)}}{\Delta t}+r_{l+1/2}\sum_{i^{\prime}=i-1}^{i^{\prime}=i+1}\sum_{j^{\prime}=j-1}^{j^{\prime}=j+1}\overline{\overline{M}}_{p,i^{\prime}+1/2,j^{\prime}+1/2}^{\left(0\right)}f_{0,i^{\prime}+1/2,j^{\prime}+1/2}^{\left(0\right)(k+1)}=0\]
-, les coefficients de la matrice valant \begin{eqnarray*}
+ , les coefficients de la matrice valant \begin{eqnarray*}
 \overline{\overline{M}}_{p,i+3/2,j+3/2}^{\left(0\right)} & = & \frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}D_{p\xi,i+1/2,j+1/2}^{\left(0\right)}\\
  &  & +\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}D_{\xi p,i+1/2,j+1/2}^{\left(0\right)}\end{eqnarray*}
 \begin{eqnarray*}
@@ -171,7 +172,7 @@ r_{l+1/2}p_{i+1/2}^{2}\frac{f_{0,i+1/2,j+1/2}^{\left(0\right)\left(k+1\right)}-f
 \begin{eqnarray*}
 \overline{\overline{M}}_{p,i-1/2,j-1/2}^{\left(0\right)} & = & \frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}D_{p\xi,i+1/2,j+1/2}^{\left(0\right)}\\
  &  & +\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}D_{\xi p,i+1/2,j+1/2}^{\left(0\right)}\end{eqnarray*}
-avec les coefficients de diffusion et de convection \[
+ avec les coefficients de diffusion et de convection \[
 \overline{\overline{D}}_{p}^{\left(0\right)}\rightarrow\left\{ \begin{array}{l}
 D_{pp,i+1,j+1/2}^{\left(0\right)}\\
 D_{pp,i,j+1/2}^{\left(0\right)}\\
@@ -183,7 +184,7 @@ D_{p\xi,i,j+1/2}^{\left(0\right)}\\
 D_{\xi p,i+1/2,j}^{\left(0\right)}\\
 D_{\xi\xi,i+1/2,j+1}^{\left(0\right)}\\
 D_{\xi\xi,i+1/2,j}^{\left(0\right)}\end{array}\right.\]
-et \[
+ et \[
 \overline{\overline{F}}_{p}^{\left(0\right)}\rightarrow\left\{ \begin{array}{l}
 F_{p,i+1,j+1/2}^{\left(0\right)}\\
 F_{p,i,j+1/2}^{\left(0\right)}\\

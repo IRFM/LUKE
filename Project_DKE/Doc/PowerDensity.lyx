@@ -1,160 +1,123 @@
-#LyX 1.3 created this file. For more info see http://www.lyx.org/
-\lyxformat 221
+# The reLyX bundled with LyX 1.3 created this file.
+# For more info see http://www.lyx.org/
+\lyxformat 2.15
 \textclass revtex4
 \language english
-\inputencoding auto
-\fontscheme pslatex
-\graphics default
-\paperfontsize default
-\spacing single 
-\papersize Default
-\paperpackage a4
-\use_geometry 0
+\inputencoding latin1
 \use_amsmath 1
+\fontscheme pslatex
 \use_natbib 0
 \use_numerical_citations 0
-\paperorientation portrait
-\secnumdepth 3
-\tocdepth 3
-\paragraph_separation indent
-\defskip medskip
-\quotes_language english
-\quotes_times 2
-\papercolumns 1
-\papersides 1
-\paperpagestyle default
-
 
 \layout Standard
 
 L'energie cinetique d'un electron relativiste ayant une quantite de mouvement
  
-\begin_inset Formula $p$
+\begin_inset Formula \( p\)
 \end_inset 
 
  vaut 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \mathcal{e}=m_{e}c^{2}\left(\gamma-1\right)\]
-
 \end_inset 
 
  ou 
-\begin_inset Formula $\gamma=\frac{1}{\sqrt{1-\frac{v^{2}}{c^{2}}}}$
+\begin_inset Formula \( \gamma=\frac{1}{\sqrt{1-\frac{v^{2}}{c^{2}}}}\)
 \end_inset 
 
  est le facteur de correction relativiste, 
-\begin_inset Formula $v$
+\begin_inset Formula \( v\)
 \end_inset 
 
  etant la vitesse de l'electron, et 
-\begin_inset Formula $c$
+\begin_inset Formula \( c\)
 \end_inset 
 
  la vitesse de la lumiere.
  La densite locale d'energie electronique vaut alors 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 E=\int d^{3}pf\left(\mathbf{p}\right)m_{e}c^{2}\left(\gamma-1\right)\]
-
 \end_inset 
 
 
 \layout Standard
 
 La densite de puissance absorbee resultant du processus 
-\begin_inset Formula $\mathcal{O}$
+\begin_inset Formula \( \mathcal{O}\)
 \end_inset 
 
  est alors donnee par l'expression 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 P_{abs}^{\mathcal{O}}=\left.\frac{\partial\mathcal{E}}{\partial t}\right|_{\mathcal{O}}=\int d^{3}p\left.\frac{\partial f\left(\mathbf{p}\right)}{\partial t}\right|_{\mathcal{O}}m_{e}c^{2}\left(\gamma-1\right)\]
-
 \end_inset 
 
  ou en terme de divergence de flux 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \left.\frac{\partial f\left(\mathbf{p}\right)}{\partial t}\right|_{\mathcal{O}}=-\mathbf{\nabla}_{\mathbf{p}}\cdot\mathbf{S}_{\mathbf{p}}^{\mathcal{O}}=-\frac{1}{p^{2}}\frac{\partial\left(p^{2}S_{p}^{\mathcal{O}}\right)}{\partial p}+\frac{1}{p}\frac{\partial\left(\sqrt{1-\xi^{2}}S_{\xi}^{\mathcal{O}}\right)}{\partial\xi}\]
-
 \end_inset 
 
 
 \layout Standard
 
 La puissance absorbee vaut donc 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 P_{abs}^{\mathcal{O}}=-2\pi m_{e}c^{2}\int_{0}^{\infty}p^{2}\left(\gamma-1\right)dp\int_{-1}^{+1}d\xi\left[\frac{1}{p^{2}}\frac{\partial\left(p^{2}S_{p}^{\mathcal{O}}\right)}{\partial p}-\frac{1}{p}\frac{\partial\left(\sqrt{1-\xi^{2}}S_{\xi}^{\mathcal{O}}\right)}{\partial\xi}\right]\]
-
 \end_inset 
 
 
 \layout Standard
 
 L'integration du terme en 
-\begin_inset Formula $S_{\xi}$
+\begin_inset Formula \( S_{\xi}\)
 \end_inset 
 
  ne donne pas de contribution puisque la diffusion angulaire ne change pas
  l'energie ou la quantite de mouvement 
-\begin_inset Formula $p$
+\begin_inset Formula \( p\)
 \end_inset 
 
- de la particule.
- 
-\begin_inset Formula \[
+ de la particule. 
+\begin_inset Formula \[ 
 \int_{-1}^{+1}\frac{\partial\left(\sqrt{1-\xi^{2}}S_{\xi}^{\mathcal{O}}\right)}{\partial\xi}d\xi=\left[\sqrt{1-\xi^{2}}S_{\xi}^{\mathcal{O}}\right]_{-1}^{+1}=0\]
-
 \end_inset 
 
 
 \layout Standard
 
 L'integrale se reduit alors a 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 P_{abs}^{\mathcal{O}}=-2\pi m_{e}c^{2}\int_{-1}^{+1}d\xi\int_{0}^{\infty}\left(\gamma-1\right)\frac{\partial\left(p^{2}S_{p}^{\mathcal{O}}\right)}{\partial p}dp\]
-
 \end_inset 
 
 
 \layout Standard
 
 En effectuant une integration par parties 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 P_{abs}^{\mathcal{O}}=-2\pi m_{e}c^{2}\int_{-1}^{+1}d\xi\left(\left[\left(\gamma-1\right)p^{2}S_{p}^{\mathcal{O}}\right]_{0}^{\infty}-\int_{0}^{\infty}\frac{\partial\gamma}{\partial p}p^{2}S_{p}^{\mathcal{O}}dp\right)\]
-
 \end_inset 
 
 
 \layout Standard
 
 on obtient 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 P_{abs}^{\mathcal{O}}=2\pi\int_{-1}^{+1}d\xi\int_{0}^{\infty}\frac{p^{3}}{\gamma m_{e}}S_{p}^{\mathcal{O}}dp\]
-
 \end_inset 
 
 
 \layout Standard
 
 en faisant l'hypothese que 
-\begin_inset Formula $\lim_{p\rightarrow\infty}p^{2}S_{p}^{\mathcal{O}}=0,$
+\begin_inset Formula \( \lim_{p\rightarrow\infty}p^{2}S_{p}^{\mathcal{O}}=0,\)
 \end_inset 
 
  ce qui suppose que le domaine sur lequel est calcule le flux est assez
  grand pour que la puissance perdue aux frontieres soit negligeable, et
  en remarquant que 
-\begin_inset Formula \[
+\begin_inset Formula \[ 
 \frac{\partial\gamma}{\partial p}=\frac{p}{\gamma m_{e}^{2}c^{2}}\]
-
 \end_inset 
-
-
-
-
-
-
-
-
-
-
 
 
 \the_end

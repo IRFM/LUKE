@@ -1,28 +1,13 @@
-#LyX 1.3 created this file. For more info see http://www.lyx.org/
-\lyxformat 221
+# The reLyX bundled with LyX 1.3 created this file.
+# For more info see http://www.lyx.org/
+\lyxformat 2.15
 \textclass revtex4
 \language english
-\inputencoding auto
-\fontscheme pslatex
-\graphics default
-\paperfontsize default
-\spacing single 
-\papersize Default
-\paperpackage a4
-\use_geometry 0
+\inputencoding latin1
 \use_amsmath 1
+\fontscheme pslatex
 \use_natbib 0
 \use_numerical_citations 0
-\paperorientation portrait
-\secnumdepth 3
-\tocdepth 3
-\paragraph_separation indent
-\defskip medskip
-\quotes_language english
-\quotes_times 2
-\papercolumns 1
-\papersides 1
-\paperpagestyle default
 
 \layout Title
 
@@ -47,7 +32,7 @@ Association EURATOM-CEA, CEA-Cadarache, 13108 St Paul-lez-Durance, France
 \layout Standard
 
 
-\begin_inset LatexCommand \tableofcontents{}
+\begin_inset LatexCommand \tableofcontents
 
 \end_inset 
 
@@ -61,12 +46,12 @@ Calculations for a circular plasma equilibrium
 \layout Subsection
 
 Conservative formulation of the transport equations in momentum and configuratio
-n spaces
+n
+ spaces
 \layout Standard
 
 
 \begin_inset Include \input{FPConservativeForm.lyx}
-preview false
 
 \end_inset 
 
@@ -78,7 +63,6 @@ Grids definition
 
 
 \begin_inset Include \input{GridDefinition.lyx}
-preview false
 
 \end_inset 
 
@@ -90,7 +74,6 @@ Dynamics in momentum space
 
 
 \begin_inset Include \input{FPMomentumDynamics.lyx}
-preview false
 
 \end_inset 
 
@@ -102,7 +85,6 @@ Grid interpolation technique
 
 
 \begin_inset Include \input{GridInterpolationTechnique.lyx}
-preview false
 
 \end_inset 
 
@@ -117,7 +99,6 @@ Derivation of the numerical form
 
 
 \begin_inset Include \input{FPBounceAveragedEquation.lyx}
-preview false
 
 \end_inset 
 
@@ -129,7 +110,6 @@ Matrix coefficients for collisions
 
 
 \begin_inset Include \input{FPCollisionMatrixCoefficients.lyx}
-preview false
 
 \end_inset 
 
@@ -141,7 +121,6 @@ Matrix coefficients for a constant Ohmic electric field
 
 
 \begin_inset Include \input{FPEfieldMatrixCoefficients.lyx}
-preview false
 
 \end_inset 
 
@@ -153,7 +132,6 @@ Matrix coefficients for quasilinear interaction between RF waves and electrons
 
 
 \begin_inset Include \input{FPRFMatrixCoefficients.lyx}
-preview false
 
 \end_inset 
 
@@ -165,7 +143,6 @@ Matrix coefficients for the case of the Lower Hybrid wave
 
 
 \begin_inset Include \input{FPLHwaveMatrixCoefficients.lyx}
-preview false
 
 \end_inset 
 
@@ -177,7 +154,6 @@ Matrix coefficients for the case of the Electron cyclotron wave
 
 
 \begin_inset Include \input{FPECwaveMatrixCoefficients.lyx}
-preview false
 
 \end_inset 
 
@@ -188,11 +164,11 @@ Dynamics in configuration space
 \layout Subsubsection
 
 Radial transport at fixed 
-\begin_inset Formula $p_{\Vert}$
+\begin_inset Formula \( p_{\Vert}\)
 \end_inset 
 
  and 
-\begin_inset Formula $p_{\bot}$
+\begin_inset Formula \( p_{\bot}\)
 \end_inset 
 
 
@@ -200,7 +176,6 @@ Radial transport at fixed
 
 
 \begin_inset Include \input{RadialDynamicsFixedp.lyx}
-preview false
 
 \end_inset 
 
@@ -212,7 +187,6 @@ Radial transport at fixed energy and magnetic moment
 
 
 \begin_inset Include \input{RadialDynamicsFixedEm.lyx}
-preview false
 
 \end_inset 
 
@@ -227,7 +201,6 @@ Flux conservative formulation
 
 
 \begin_inset Include \input{DKEFluxFormulation.lyx}
-preview false
 
 \end_inset 
 
@@ -239,7 +212,6 @@ Derivation of the numerical form
 
 
 \begin_inset Include \input{DKENumericalForm.lyx}
-preview false
 
 \end_inset 
 
@@ -251,7 +223,6 @@ Matrix coefficients for collisions
 
 
 \begin_inset Include \input{DKECollisionMatrixCoefficients.lyx}
-preview false
 
 \end_inset 
 
@@ -263,7 +234,6 @@ Matrix coefficients for a constant Ohmic electric field
 
 
 \begin_inset Include \input{DKEEfieldMatrixCoefficients.lyx}
-preview false
 
 \end_inset 
 
@@ -275,7 +245,6 @@ Matrix coefficients for quasilinear interaction between RF waves and electrons
 
 
 \begin_inset Include \input{DKERFMatrixCoefficients.lyx}
-preview false
 
 \end_inset 
 
@@ -287,7 +256,6 @@ Matrix coefficients for the case of the Lower Hybrid wave
 
 
 \begin_inset Include \input{DKELHwaveMatrixCoefficients.lyx}
-preview false
 
 \end_inset 
 
@@ -299,7 +267,6 @@ Matrix coefficients for the case of the Electron cyclotron wave
 
 
 \begin_inset Include \input{DKEECwaveMatrixcoefficients.lyx}
-preview false
 
 \end_inset 
 
@@ -314,7 +281,6 @@ General formulation
 
 
 \begin_inset Include \input{PowerDensity.lyx}
-preview false
 
 \end_inset 
 
@@ -326,7 +292,6 @@ Power density calculations for the Fokker-Planck equation
 
 
 \begin_inset Include \input{FPPowerDensity.lyx}
-preview false
 
 \end_inset 
 
@@ -342,7 +307,6 @@ Flux surface averaged power density calculations for the Fokker Planck equation
 
 
 \begin_inset Include \input{FPFluxSurfaceAveragedPowerDensity.lyx}
-preview false
 
 \end_inset 
 
@@ -358,7 +322,6 @@ Trapped particle fraction
 
 
 \begin_inset Include \input{TrappedFraction.lyx}
-preview false
 
 \end_inset 
 
@@ -376,7 +339,6 @@ Code structure
 
 
 \begin_inset Include \input{CodeStructure.lyx}
-preview false
 
 \end_inset 
 
@@ -391,7 +353,6 @@ Collision operator for the current drive problem
 
 
 \begin_inset Include \input{CollisionOperator.lyx}
-preview false
 
 \end_inset 
 
