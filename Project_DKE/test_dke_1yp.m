@@ -2,25 +2,39 @@ function [Znorm_ref,Znorm_ref_fsav,...
 Zcurr_ref,Zcurr_ref_fsav,...
 ZP0_ref_fsav,...
 time_out,memoryLU_f_out,memoryLU_g_out] =...
-test_dke_1yp(tokname,snumber,...
-grid_uniformity,grid_power,nmhu_S,np_S,pnmax_S,sfac,spfac,snmhu,snp,np_S_ref,psin_S,psin_display,dpsin_dke,...
-ref_mode,norm_ref,...
-epsi0_fsav,epsia_fsav,eepsi_fsav,...
-rf_list,nit_rf,prec_rf,...
-coll_mode,bounce_mode,dke_mode,equil_mode,syn_mode,...
-vparmin_r,Dr0,pDr,Dr_model,Vr0,pVr,Vr_model,...
-nhuloss,...
-norm_mode_f,boundary_mode_f,prec0_f,nit_f,initguess_f,initfile_f,...
-boundary_mode_g,prec0_g,nit_g,...
-dtn,invproc,param_inv,...
-dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode,iloop)
+test_dke_1yp(snumber,dkeparam,equil,wave,ohm,ripple,transfaste,hxr,display);
+
+
+
+
+%function [Znorm_ref,Znorm_ref_fsav,...
+%Zcurr_ref,Zcurr_ref_fsav,...
+%ZP0_ref_fsav,...
+%time_out,memoryLU_f_out,memoryLU_g_out] =...
+%test_dke_1yp(tokname,snumber,...
+%grid_uniformity,grid_power,nmhu_S,np_S,pnmax_S,sfac,spfac,snmhu,snp,np_S_ref,psin_S,psin_display,dpsin_dke,...
+%ref_mode,norm_ref,...
+%epsi0_fsav,epsia_fsav,eepsi_fsav,...
+%rf_list,nit_rf,prec_rf,...
+%coll_mode,bounce_mode,dke_mode,equil_mode,syn_mode,...
+%vparmin_r,Dr0,pDr,Dr_model,Vr0,pVr,Vr_model,...
+%nhuloss,...
+%norm_mode_f,boundary_mode_f,prec0_f,nit_f,initguess_f,initfile_f,...
+%boundary_mode_g,prec0_g,nit_g,...
+%dtn,invproc,param_inv,...
+%dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode,iloop)
+
+
+
+
+
 %
-%  Test function of the 3-D relativistic bounce-averaged electron drift kinetic equation solver 
+%  Main function of the 3-D relativistic bounce-averaged electron drift kinetic equation solver 
 %  for the RF wave absorption problem in presence of an Ohmic electric field (electron bootstrap current consistent with non-Maxwellian distribution)
 %  Small banana width approximation
-%  Arbitrary axisymmetric plasma equilibrium (linked to HELENA equlibrium code, via mexfile)
+%  Arbitrary axisymmetric plasma equilibrium (linked arbitrary tokamak magnetic equilibrium code, via mexfile)
 %  Plasma current, RF power absorption, runaway rate, magnetic ripple loss and fast electron bremsstrahlung calculations
-%  See dke_1_4yp.m, psim_dke_1yp.m, ptok_dke_1yp.m
+%  See dke_1_4yp.m
 %
 %by Y.Peysson (CEA-DRFC) <yves.peysson@cea.fr> and J. Decker (MIT/RLE) <jodecker@mit.edu>
 %
@@ -28,6 +42,84 @@ format long e;
 global nfig;
 version_dke = 2.0;
 time_pause = 1;%Pause delay for figure display (s)
+%
+tokname = equil.id;
+%
+% DKE parameters extraction from the structure
+%
+grid_uniformity = dkeparam.grid_uniformity;
+grid_method = dkeparam.grid_method;
+nmhu_S = dkeparam.nmhu_S;
+np_S = dkeparam.np_S;
+pnmax_S = dkeparam.pnmax_S;
+sfac0 = dkeparam.sfac0;
+sfac1 = dkeparam.sfac1;
+sfact = dkeparam.sfact;
+snmhu0 = dkeparam.snmhu0;
+snmhu1 = dkeparam.snmhu1;
+snmhut = dkeparam.snmhut;
+grid_power = dkeparam.grid_power;
+np_S_ref = dkeparam.np_S_ref;
+snp = dkeparam.snp; 
+spfac = dkeparam.spfac;
+dpsin_dke = dkeparam.dpsin_dke;
+ref_mode = dkeparam.ref_mode;
+norm_ref = dkeparam.norm_ref;
+nit_rf = dkeparam.nit_rf;
+prec_rf = dkeparam.prec_rf;
+coll_mode = dkeparam.coll_mode;
+bounce_mode = dkeparam.bounce_mode;
+dke_mode = dkeparam.dke_mode;
+equil_mode = dkeparam.equil_mode;
+syn_mode = dkeparam.syn_mode;
+norm_mode_f = dkeparam.norm_mode_f;
+boundary_mode_f = dkeparam.boundary_mode_f;
+prec0_f = dkeparam.prec0_f;
+nit_f = dkeparam.nit_f;
+initguess_f = dkeparam.initguess_f;
+initfile_f = dkeparam.initfile_f;
+boundary_mode_g = dkeparam.boundary_mode_g;
+prec0_g = dkeparam.prec0_g;
+nit_g = dkeparam.nit_g;
+dtn = dkeparam.dtn;
+invproc  = dkeparam.invproc;
+param1_inv = dkeparam.param1_inv;
+param2_inv = dkeparam.param2_inv;
+store_mode = dkeparam.store_mode;
+%
+% Fast electron bremsstrahlung
+%
+HXR{1,1} = hxr.alpha_hxr;
+HXR{1,2} = hxr.beta_hxr;
+HXR{1,3} = hxr.R_hxr;
+HXR{1,4} = hxr.Z_hxr;
+HXR{1,5} = hxr.EG_hxr;
+HXR{1,6} = hxr.kd_hxr;
+HXR{1,7} = hxr.phf_hxr;
+HXR{1,8} = hxr.res_hxr;
+HXR{1,9} = hxr.ef_hxr;
+HXR{1,10} = hxr.tf_hxr;
+HXR{1,11} = hxr.ea_hxr;
+HXR{1,12} = hxr.ta_hxr;
+HXR{1,13} = hxr.ec_hxr;
+HXR{1,14} = hxr.tc_hxr;
+HXR{1,15} = hxr.ed_hxr;
+HXR{1,16} = hxr.td_hxr;
+HXR{1,17} = hxr.kdiag_hxr;
+%
+% Magnetic ripple
+%
+nhuloss = ripple.nhuloss;
+Ncoils = ripple.Ncoils;
+%
+% Display
+%
+
+
+
+
+%
+% Main calculations
 %
 [s,dossier,machine] = comput_dke_yp;
 %
@@ -41,7 +133,8 @@ if bounce_mode > 1,bounce_mode = 1;end
 if diary_mode == 1,auto_mode = 1;end
 if dke_mode > 1,dke_mode = 1;end
 if dke_mode == 0, syn_mode =0;end
-%		
+%	
+param_inv = [param_inv1,param_inv2];
 bounce = [bounce_mode,dke_mode,equil_mode];
 boundary_mode = [boundary_mode_f,boundary_mode_g];
 %
@@ -54,8 +147,8 @@ nit = [nit_f,nit_g];
 %
 % Plasma equilibrium
 %
-[theta,xpsin,psia,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,xmhu0T2,xdV_dke,xdA_dke,HXR] = ...
-    equilibrium_jd(tokname,xpsin,xpsin_S_dke,display_mode,'spline',10);
+[theta,xpsin,psia,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,xmhu0T2,xdV_dke,xdA_dke] = ...
+    equilibrium_jd(equil,xpsin,xpsin_S_dke,display_mode,'spline',10);
 %
 if diary_mode == 1, 
 	diaryfile = ['diary_dke_',int2str(iloop)];
@@ -267,9 +360,6 @@ else
     xrbetath = ones(1,nr);
     xrnhuth = ones(1,nr);
 end
-%xepsi0_ref_fsav = epsi0_fsav*xrbetath.*xrnhuth;
-%xepsia_ref_fsav = epsia_fsav*xrbetath.*xrnhuth;
-xvparmin_r_ref = vparmin_r*xrbetath;
 xnhuloss_ref = nhuloss*xrnhuth;
 % 
 alphaD = ap*ap/psia/psia;%For radial diffusion normalization
@@ -278,30 +368,34 @@ alphaV = ap/psia;%For radial convection normalization
 %
 %   Ohmic electric field
 %
-xepsi_ref_fsav_in = ((epsi0_fsav - epsia_fsav)*(1.0-xpsin.^2).^eepsi_fsav + epsia_fsav).*xrbetath.*xrnhuth;
-%
-for ir = 1:nr,	
+xepsi_ref_fsav_in = interp1(ppsin,ohm.epsi,rho2psi_jd(tokname,ohm.rho),method).*xrbetath.*xrnhuth;
 %
 %	Anomalous fast electron radial diffusion and pinch
 %
-	ivpar_r_ref_threshold = min(find(abs(Xvpar_ref) >= xvparmin_r_ref(ir)));
+xvparmin_r_ref = interp1(ppsin,transpfaste.vparmin_r,rho2psi_jd(tokname,transpfaste.rho),method).*xrbetath;
+xDr = interp1(ppsin,transpfaste.Dr,rho2psi_jd(tokname,transpfaste.rho),method);
+xVr = interp1(ppsin,transpfaste.Vr,rho2psi_jd(tokname,transpfaste.rho),method);
+%
+for ir = 1:nr,	
+
+   ivpar_r_ref_threshold = min(find(abs(Xvpar_ref) >= xvparmin_r_ref(ir)));
    xEc_r_ref_threshold(ir) = mc2*(sqrt(1+pn_ref(ivpar_r_ref_threshold).*pn_ref(ivpar_r_ref_threshold)*betath_ref^2) - 1);%in keV
 %
-   if Dr_model==0,%Standard model : Dr(r) = Dr0(r)
-		XDrv_ref = alphaD*Dr0*ones(size(np,nmhu)).*(abs(Xvpar_ref) >= xvparmin_r_ref(ir))/nhu_ref/ap/ap;%Normalized to the central collision frequency
-	elseif Dr_model==1,%Magnetic turbulence model: Dr(r) = Dr0(r)*vpar_ref/vth_ref
-		XDrv_ref = alphaD*Dr0*(abs(Xvpar_ref) - xvparmin_r_ref(ir)).*(abs(Xvpar_ref) >= xvparmin_r_ref(ir))/xvparmin_r_ref(ir)/nhu_ref/ap/ap;%Normalized to the central collision frequency
+   if transpfaste.Dr_model==0,%No vpar dependence
+		XDrv_ref = alphaD*xDr(ir)*ones(size(np,nmhu)).*(abs(Xvpar_ref) >= xvparmin_r_ref(ir))/nhu_ref/ap/ap;%Normalized to the central collision frequency
+	elseif transpfaste.Dr_model==1,%Magnetic turbulence model: Dr(r)*vpar_ref/vth_ref
+		XDrv_ref = alphaD*xDr(ir)*(abs(Xvpar_ref) - xvparmin_r_ref(ir)).*(abs(Xvpar_ref) >= xvparmin_r_ref(ir))/xvparmin_r_ref(ir)/nhu_ref/ap/ap;%Normalized to the central collision frequency
 	end
-	XXDr_ref(:,:,ir) = XDrv_ref;%*(1 + pDr*xrho(ir)^2);%3-D radial diffusion matrix (radial profile dependence)
+	XXDr_ref(:,:,ir) = XDrv_ref;%3-D radial diffusion matrix (radial profile dependence)
 	xmaxDr_ref(ir) = max(max(XXDr_ref(:,:,ir)));%Maximum value of the radial diffusion coefficient
 %
-	if Vr_model==0,%Standard model : Vr(r) = Vr0(r)
-		XVrv_ref = alphaV*Vr0*ones(size(np,nmhu)).*(abs(Xvpar_ref) >= xvparmin_r_ref(ir))/nhu_ref/ap;%Normalized to the central collision frequency
-	elseif Vr_model==1,%Magnetic turbulence model: Vr(r) = Vr0(r)*vpar_ref/vth_ref
-		XVrv_ref = alphaV*Vr0*(abs(Xvpar_ref) - xvparmin_r_ref(ir)).*(abs(Xvpar_ref) >= xvparmin_r_ref(ir))/xvparmin_r_ref(ir)/nhu_ref/ap;%Normalized to the central collision frequency
+	if transpfaste.Vr_model==0,%No vpar dependence
+		XVrv_ref = alphaV*xVr(ir)*ones(size(np,nmhu)).*(abs(Xvpar_ref) >= xvparmin_r_ref(ir))/nhu_ref/ap;%Normalized to the central collision frequency
+	elseif transpfaste.Vr_model==1,%Magnetic turbulence model: Vr(r) = Vr0(r)*vpar_ref/vth_ref
+		XVrv_ref = alphaV*xVr(ir)*(abs(Xvpar_ref) - xvparmin_r_ref(ir)).*(abs(Xvpar_ref) >= xvparmin_r_ref(ir))/xvparmin_r_ref(ir)/nhu_ref/ap;%Normalized to the central collision frequency
 	end
 	XVrv_ref = XVrv_ref.*(abs(Xvpar_ref) >= xvparmin_r_ref(ir));
-	XXVr_ref(:,:,ir) = XVrv_ref;%*(1 + pVr*xrho(ir)^2);%3-D radial pinch matrix (radial profile dependence)
+	XXVr_ref(:,:,ir) = XVrv_ref;%3-D radial pinch matrix (radial profile dependence)
 	xmaxVr_ref(ir) = max(max(XXVr_ref(:,:,ir)));%Maximum value of the radial convection coefficient
 %
 %Loss term for the electrons trapped in the toroidal magnetic ripple 
@@ -311,7 +405,6 @@ for ir = 1:nr,
 			info_dke_yp(2,'WARNING: Ripple losses calculations only valid for Tore Supra tokamak, see test_dke_1yp.m for BeLi, Ip and Ncoils values');
 			disp('-------------------------------------------------------------------------------------------------------------------');
 			Ip = 0.61;%MA (For magnetic equilibrium in the magnetic ripple routine)
-			Ncoils = 18;
 			BeLi = 1.0;%For magnetic equilibrium in the magnetic ripple routine
 		end
 %		Ncoils = 1;%Ncoils is here forced to 1, as prescribed in Ref. M. Ju et al., Phys. Plasmas, 9 (2002) 493. Upper bound of ripple losses is then calculated
@@ -647,7 +740,7 @@ end
 %   RF Wave parameters calculations
 %
 [waveparam,xyprop_dke,xyPinc_in,nb_list,yb] = ...
-    rfwave_dke_jd(tokname,xrho,xpsin,xpsin_dke,xdpsin_dke,xpsin_S_dke,r_dke,...
+    rfwave_dke_jd(equil,wave,xrho,xpsin,xpsin_dke,xdpsin_dke,xpsin_S_dke,r_dke,...
     betath_ref,ne_ref,lnc_e_ref,xrbetath,xrnhuth,xTe_norm,xne_norm,xzni_norm,...
     zZi,zmi,ap,Rp,Zp,theta,XR,XZ,XBR,XBZ,XBphi,xB0,bounce_mode,rf_list,dke_mode);%Look at the function for the RF wave input parameters
 %
