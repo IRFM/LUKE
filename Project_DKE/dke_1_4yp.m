@@ -262,8 +262,8 @@ end
 %
 %Masks for collision integrals
 %
-masku = triu(ones(npn,npn));
-maskl = tril(ones(npn,npn));
+masku = triu(ones(npn,npn)) - 0.5*diag(ones(1,npn));
+maskl = tril(ones(npn,npn)) - 0.5*diag(ones(1,npn));
 %
 %Temporary data saving on disk
 %
