@@ -1,15 +1,15 @@
 \paragraph{ Momentum space operator}
 
 The momentum space dynamics of the kinetic equation can be expressed in
-conservative form as (\ref{consform})
+conservative form as (\ref{consform}) 
 \begin{equation}
-\left. \frac{\partial f}{\partial t}\right| _{{\bf p}}=\nabla _{{\bf p}}%
-\cdot {\bf S}_{{\bf p}}
+\left. \frac{\partial f}{\partial t}\right| _{{\bf p}}=\nabla _{{\bf p}%
+}\cdot {\bf S}_{{\bf p}}
 \end{equation}
 which expands as 
 \begin{equation}
 \left. \frac{\partial f}{\partial t}\right| _{{\bf p}}=\frac{1}{J_{{\bf p}}}%
-\frac{\partial }{\partial p^{i}}\left( J_{{\bf p}}S_{{\bf p}}^{i}\right) 
+\frac{\partial }{\partial p^{i}}\left( J_{{\bf p}}S_{{\bf p}}^{i}\right)
 \end{equation}
 where $J_{{\bf p}}$ is the momentum space Jacobian .
 
@@ -25,7 +25,7 @@ expression for the divergence (\ref{pxidiv})
 \begin{equation}
 \left. \frac{\partial f_{0}}{\partial t}\right| _{{\bf p}}=\frac{1}{p^{2}}%
 \frac{\partial }{\partial p}\left( p^{2}S_{p}\right) -\frac{1}{p}\frac{%
-\partial }{\partial \xi }\left( \sqrt{1-\xi ^{2}}S_{\xi }\right) 
+\partial }{\partial \xi }\left( \sqrt{1-\xi ^{2}}S_{\xi }\right)
 \end{equation}
 where we define 
 \begin{eqnarray}
@@ -34,43 +34,43 @@ S_{\xi } &=&{\bf S}_{{\bf p}}\cdot \widehat{\xi }  \nonumber
 \end{eqnarray}
 
 We can generally decompose the momentum space fluxes into diffusive and
-convective parts (\ref{momflux})
+convective parts (\ref{momflux}) 
 \begin{equation}
 {\bf S}_{{\bf p}}=-{\Bbb D}_{{\bf p}}\nabla _{{\bf p}}f+{\bf F}_{{\bf p}}f
 \label{momflux2}
 \end{equation}
-with
+with 
 \begin{eqnarray}
 {\Bbb D}_{{\bf p}} &=&\left( 
 \begin{array}{ll}
 D_{pp} & D_{p\xi } \\ 
 D_{\xi p} & D_{\xi \xi }
 \end{array}
-\right)  \\
+\right) \\
 {\bf F}_{{\bf p}} &=&\left( 
 \begin{array}{l}
 F_{p} \\ 
 F_{\xi }
 \end{array}
-\right) 
+\right)
 \end{eqnarray}
 
 The gradient in $\left( p,\xi \right) $ coordinates in given by (\ref
-{pxigrad})
+{pxigrad}) 
 \begin{equation}
 \nabla _{{\bf p}}=\left( 
 \begin{array}{l}
 \nabla _{p} \\ 
 \nabla _{\xi }
 \end{array}
-\right) 
+\right)
 \end{equation}
-with
+with 
 \begin{eqnarray}
 \nabla _{p} &=&\frac{\partial }{\partial p} \\
 \nabla _{\xi } &=&-\frac{\sqrt{1-\xi ^{2}}}{p}\frac{\partial }{\partial \xi }
 \end{eqnarray}
-so that we finally get
+so that we finally get 
 \begin{eqnarray}
 S_{p} &=&-D_{pp}\frac{\partial f}{\partial p}+\frac{\sqrt{1-\xi ^{2}}}{p}%
 D_{p\xi }\frac{\partial f}{\partial \xi }+F_{p}f  \label{momflux3} \\
@@ -85,7 +85,7 @@ The bounce averaged operator is
 \left\{ \left. \frac{\partial f}{\partial t}\right| _{{\bf p}}\right\}
 =\left\{ \frac{1}{p^{2}}\frac{\partial }{\partial p}\left( p^{2}S_{p}\right)
 \right\} -\left\{ \frac{1}{p}\frac{\partial }{\partial \xi }\left( \sqrt{%
-1-\xi ^{2}}S_{\xi }\right) \right\}   \label{kinbav}
+1-\xi ^{2}}S_{\xi }\right) \right\}  \label{kinbav}
 \end{equation}
 where the bounce averaging operation was defined in (\ref{bav}) 
 \begin{equation}
@@ -101,7 +101,7 @@ and $\xi $ is given along the trajectory by
 \end{equation}
 with 
 \begin{equation}
-\Psi \left( \psi ,\theta \right) =\frac{B\left( \psi ,\theta \right) }{%
+\Psi \left( \psi ,\theta \right) =\frac{B\left( \psi ,\theta \right) }{
 B_{\min }\left( \psi \right) }
 \end{equation}
 
@@ -121,7 +121,7 @@ independent of $\sigma $, we can transform as follows,
 S_{\xi }\right) \right\} &=&\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2}%
 \sum_{\sigma }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{%
 d\theta }{2\pi }\frac{rB/\left( R_{0}B_{P}\right) }{\left| \widehat{\psi }%
-\cdot \widehat{r}\right| }\frac{\xi _{0}}{\xi }\frac{1}{p}\frac{\partial }{%
+\cdot \widehat{r}\right| }\frac{\xi _{0}}{\xi }\frac{1}{p}\frac{\partial }{
 \partial \xi }\left( \sqrt{1-\xi ^{2}}S_{\xi }\right)  \nonumber \\
 &=&\frac{1}{\lambda p}\frac{\partial }{\partial \sigma \xi _{0}}\frac{1}{%
 \widetilde{q}}\left[ \frac{1}{2}\sum_{\sigma }\right] _{T}\int_{\theta
@@ -131,7 +131,7 @@ R_{0}B_{P}\right) }{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{%
 &=&\frac{1}{\lambda p}\frac{\partial }{\partial \xi _{0}}\sqrt{1-\xi _{0}^{2}%
 }\sigma \frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2}\sum_{\sigma
 }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }%
-\frac{rB/\left( R_{0}B_{P}\right) }{\left| \widehat{\psi }\cdot \widehat{r}%
+\frac{rB/\left( R_{0}B_{P}\right) }{\left| \widehat{\psi }\cdot \widehat{r}
 \right| }\frac{\sigma }{\sqrt{\Psi }}\left( S_{\xi }\right)  \nonumber \\
 &=&\frac{1}{\lambda p}\frac{\partial }{\partial \xi _{0}}\sqrt{1-\xi _{0}^{2}%
 }\lambda \sigma \left\{ \frac{\sigma \xi }{\sqrt{\Psi }\xi _{0}}S_{\xi
@@ -142,13 +142,13 @@ Finally, we can rewrite (\ref{kinbav}) under a conservative form as
 \begin{equation}
 \left\{ \left. \frac{\partial f}{\partial t}\right| _{{\bf p}}\right\} =%
 \frac{1}{p^{2}}\frac{\partial }{\partial p}\left( p^{2}S_{p}^{\left(
-0\right) }\right) -\frac{1}{\lambda p}\frac{\partial }{\partial \xi _{0}}%
+0\right) }\right) -\frac{1}{\lambda p}\frac{\partial }{\partial \xi _{0}}
 \left( \sqrt{1-\xi _{0}^{2}}\lambda S_{\xi _{0}}^{\left( 0\right) }\right) 
 \label{kinbav2}
 \end{equation}
 where the following components are defined 
 \begin{eqnarray}
 S_{p}^{\left( 0\right) } &=&\left\{ S_{p}\right\}   \label{sp0} \\
-S_{\xi _{0}}^{\left( 0\right) } &=&\sigma \left\{ \frac{\sigma \xi }{\sqrt{%
+S_{\xi _{0}}^{\left( 0\right) } &=&\sigma \left\{ \frac{\sigma \xi }{\sqrt{
 \Psi }\xi _{0}}S_{\xi }\right\}   \nonumber
 \end{eqnarray}

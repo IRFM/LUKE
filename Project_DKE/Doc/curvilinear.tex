@@ -1276,11 +1276,10 @@ J=\frac{Rr}{\left| \nabla \psi \right| \cos \alpha }  \label{jacpsitheta}
 \subsubsection{Differential elements}
 
 \begin{eqnarray}
-dl\left( \psi \right)  &=&\frac{d\psi }{\left| \nabla \psi \right| \cos
+dl\left( \psi \right) &=&\frac{d\psi }{\left| \nabla \psi \right| \cos
 \alpha } \\
-dl\left( \theta \right)  &=&\frac{r}{\cos \alpha }d\theta   \label{dltheta}
-\\
-dl\left( \phi \right)  &=&Rd\phi   \label{dlphi}
+dl\left( \theta \right) &=&\frac{r}{\cos \alpha }d\theta  \label{dltheta} \\
+dl\left( \phi \right) &=&Rd\phi  \label{dlphi}
 \end{eqnarray}
 
 \begin{eqnarray}
@@ -1700,9 +1699,9 @@ J=p^{2}  \label{jacpxi}
 \subsubsection{Differential elements}
 
 \begin{eqnarray}
-dl\left( p\right) &=&dp \\
-dl\left( \xi \right) &=&\frac{p}{\sqrt{1-\xi ^{2}}}d\xi \\
-dl\left( \varphi \right) &=&p\sqrt{1-\xi ^{2}}d\varphi
+dl\left( p\right)  &=&dp \\
+dl\left( \xi \right)  &=&\frac{p}{\sqrt{1-\xi ^{2}}}d\xi  \\
+dl\left( \varphi \right)  &=&p\sqrt{1-\xi ^{2}}d\varphi   \label{dlphipxi}
 \end{eqnarray}
 
 \begin{eqnarray}
@@ -1744,16 +1743,16 @@ They are defined in (\ref{chris}) and are all zero here except
 \paragraph{Curl}
 
 \begin{eqnarray}
-\left( \nabla \times {\bf A}\right) \cdot \widehat{p} &=&\frac{1}{p}\frac{
-\partial }{\partial \xi }\left( \sqrt{1-\xi ^{2}}{\bf A}\cdot \widehat{
-\varphi }\right) +\frac{1}{p\sqrt{1-\xi ^{2}}}\frac{\partial }{\partial
-\varphi }\left( {\bf A}\cdot \widehat{\xi }\right) \\
-\left( \nabla \times {\bf A}\right) \cdot \widehat{\xi } &=&\frac{1}{p}\frac{
+\left( \nabla \times {\bf A}\right) \cdot \widehat{p} &=&\frac{1}{p}\frac{%
+\partial }{\partial \xi }\left( \sqrt{1-\xi ^{2}}{\bf A}\cdot \widehat{%
+\varphi }\right) +\frac{1}{p\sqrt{1-\xi ^{2}}}\frac{\partial }{\partial %
+\varphi }\left( {\bf A}\cdot \widehat{\xi }\right)   \label{pxicurl} \\
+\left( \nabla \times {\bf A}\right) \cdot \widehat{\xi } &=&\frac{1}{p}\frac{%
 \partial }{\partial p}\left( p{\bf A}\cdot \widehat{\varphi }\right) -\frac{1%
 }{p\sqrt{1-\xi ^{2}}}\frac{\partial }{\partial \varphi }\left( {\bf A}\cdot 
-\widehat{p}\right) \\
+\widehat{p}\right)   \nonumber \\
 \left( \nabla \times {\bf A}\right) \cdot \widehat{\varphi } &=&-\frac{1}{p}%
 \frac{\partial }{\partial p}\left( p{\bf A}\cdot \widehat{\xi }\right) -%
-\frac{\sqrt{1-\xi ^{2}}}{p}\frac{\partial \left( {\bf A}\cdot \widehat{p}
-\right) }{\partial \xi }
+\frac{\sqrt{1-\xi ^{2}}}{p}\frac{\partial \left( {\bf A}\cdot \widehat{p}%
+\right) }{\partial \xi }  \nonumber
 \end{eqnarray}
