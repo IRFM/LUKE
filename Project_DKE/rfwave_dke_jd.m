@@ -62,6 +62,10 @@ for iw = 1:length(waves),%
         %
         ray = rays{iray};
         %
+        % ======================================================================
+        %                   calculates missing ray info if needed
+        % ======================================================================
+        %
         % The following information is necessary for including the
         % contribution of the ray in DKE:
         % - P0: Power launched in the ray (W) [1,1]
@@ -85,6 +89,8 @@ for iw = 1:length(waves),%
         % - sNpar -> sdNpar
         % - opt_disp, sNpar, omega_rf, equil -> sepol_pmz, sNperp, sphi_pmz
         %
+        ray = rayprocess_jd(ray,equil,opt_disp,omega_rf,method);
+        %
         P0 = ray.P0;% Power launched in the ray (W) [1,1]
         %
         sR = ray.sR;% Ray location (major radius) along the propagation [1,ns]
@@ -105,150 +111,6 @@ for iw = 1:length(waves),%
         %
         sepol_pmz = ray.sepol_pmz;% polarization vector [3,ns] complex
         sphi_pmz = ray.sphi_pmz;% normalized power flow [3,ns]
-        %
-        % ======================================================================
-        %                   calculates missing ray info if needed
-        % ======================================================================
-        %
-        % Calculates ss (distance along the ray) if missing.
-        %
-        if isempty(ss),
-            if isempty(sR) | isempty(sphi) | isempty(sZ)
-                error('Ray-tracing data incomplete')
-            end
-            ns = length(sR);
-            ss(1) = 0;
-            if ns > 1,
-                sRh = (sR(1:ns-1) + sR(2:ns))/2;
-                ds = sqrt(diff(sR).^2 + (sRh.*diff(sphi)).^2 + diff(sZ).^2);
-                ss(2:ns) = cumsum(ds);
-            end
-        else 
-            ns = length(ss);
-        end
-        %
-        % Calculates spsin and stheta (normalized flux and poloidal angle, location along the ray) if missing.
-        %
-        if isempty(spsin) | isempty(stheta),
-            if isempty(sR) | isempty(sZ)
-                error('Ray-tracing data incomplete')
-            end
-            %
-            % ray position in (r,theta) coordinates
-            %
-            sR = sR + eps*(sR == Rp); %to avoid singularities
-            sZ = sZ + eps*(sZ == Zp); %to avoid singularities
-            sr = sqrt((sR - Rp).^2 + (sZ - Zp).^2); %minor radius
-            stheta = atan((sZ - Zp)./(sR - Rp)) + pi - pi*(sR > Rp).*sign(sZ - Zp); %poloidal angle [0,2*pi]
-            %
-            % interpolation for r at ray poloidal locations            
-            %
-            pstr = interp1(theta,ptr',stheta,method)';%r(psi,st)
-            %
-            % interpolation for psi at ray position (along cst theta lines)
-            %
-            %spsin = interp1(pstr,ppsin,sr,method);%psi(s)
-            method2 = 'linear';
-            for is = 1:ns 
-                spsin(is) = interp1(pstr(:,is),ppsin,sr(is),method2);%psi(s)
-            end
-            spsin(isnan(spsin)) = 1;%part of ray outside the last flux-surface
-            %
-            % positive values only for spsin
-            %
-            if min(spsin) < -0
-                error('The psin interpolation has produced negative values')
-            end
-            spsin(spsin <= 0) = eps;
-        end    
-        %
-        % Calculates Npar and Nperp from kR,n and kZ if needed.
-        %
-        if isempty(sNpar),
-            if isempty(skR) | isempty(sn) | isempty(skZ) 
-                error('Ray-tracing data incomplete')
-            end
-            if isempty(sR)
-                sR = interp2(theta,ppsin,ptR,st,spsin,method);
-            end
-            sBR = interp2(theta,ppsin,ptBR,stheta,spsin,method);
-            sBphi = interp2(theta,ppsin,ptBphi,stheta,spsin,method);
-            sBZ = interp2(theta,ppsin,ptBZ,stheta,spsin,method);
-            %
-            skpar = (skR.*sBR + sn.*sBphi./sR + skZ.*sBZ)./sqrt(sBR.^2 + sBphi.^2 + sBZ.^2);
-            sNpar = skpar*clum/omega_rf;
-            %
-            if isempty(sNperp), 
-                skperp = sqrt(skR.^2 + (sn./sR).^2 + skZ.^2 - skpar.^2);
-                sNperp = skperp*clum/omega_rf;
-            end
-        end
-        %
-        % Calculates sdNpar if needed.
-        %
-        if isempty(sdNpar),
-            sdNpar = 0.01*ones(1,ns);%assume a gaussian spectrum with this arbitrary width
-        end
-        %
-        if opt_disp == 0, %sepol_pmz, sNperp and phi_pmz given by ray-tracing
-            if isempty(sepol_pmz) | isempty(sNperp) | isempty(sphi_pmz) 
-                error('Ray-tracing data incomplete')
-            end
-        else
-        %
-        % Solves the dispersion relation for sepol_pmz, sNperp and phi_pmz 
-        %
-            sB = interp2(theta,ppsin,ptB,stheta,spsin,method);
-            sne = interp1(ppsin,pne,spsin,method);
-            szni = interp1(ppsin,pzni',spsin,method)';
-            sTe = interp1(ppsin,pTe,spsin,method);
-            szTi = interp1(ppsin,pzTi',spsin,method)';
-            %
-            if opt_disp == 1, % cold plasma dispersion tensor for sepol_pmz, sNperp and phi_pmz (colddisp_dke_jd)
-                for is = 1:ns
-                    [sNperpp(is),sNperpm(is),sKxyz(1:3,1:3,is),...
-                        sep_xyz(1:3,is),sem_xyz(1:3,is),sep_pmz(1:3,is),sem_pmz(1:3,is),sep_pyk(1:3,is),sem_pyk(1:3,is),...
-                        sphip_xyz(1:3,is),sphim_xyz(1:3,is),sphip_pmz(1:3,is),sphim_pmz(1:3,is),sphip_pyk(1:3,is),sphim_pyk(1:3,is)]...
-                    = colddisp_dke_jd(sNpar(is),omega_rf,sne(is),szni(:,is),zZi,zmi,sB(is));
-                end
-                if length(sNperp) == ns,
-                    smaskp = (abs(sNperpp - sNperp) <= abs(sNperpm - sNperp));
-                    sNperp = sNperpp.*smaskp + sNperpm.*~smaskp;
-                    sepol_pmz = sep_pmz.*(ones(3,1)*smaskp) + sem_pmz.*(ones(3,1)*~smaskp);
-                    sphi_pmz = sphip_pmz.*(ones(3,1)*smaskp) + sphim_pmz.*(ones(3,1)*~smaskp);
-                elseif length(sNperp) == 1
-                    %mask0 = (sNperp == 0)%O-mode;
-                    %%%%%%%%%% to be implemented %%%%%%%%%%
-                    error('model not yet implemented');
-                else
-                    error('No information was given to choose between the two cold modes')
-                end
-            elseif opt_disp == 2, % warm plasma dispersion tensor for sepol_pmz, sNperp and phi_pmz (warmdisp_dke_jd)
-                %%%%%%%%%% to be implemented %%%%%%%%%%
-                error('model not yet implemented');
-            elseif opt_disp == 3, % non-relativistic hot plasma dispersion tensor for sepol_pmz, sNperp and phi_pmz (R2D2) 
-                [smask_ht,sNperp_ht,sepol_pmz_ht,sPflow_ht,sPabs_at] = ...
-                    disp_hot_jd(ss,sB,sne,sTe,sNpar,omega_rf,sNperp,0); 
-                %
-                ns = length(smask_ht);
-                ss = ss(smask_ht);
-                spsin = spsin(smask_ht);
-                stheta = stheta(smask_ht);
-                sNpar = sNpar(smask_ht);
-                sNperp = sNperp_ht;
-                sdNpar = sdNpar(smask_ht);
-                sepol_pmz = sepol_pmz_ht;
-                sphi_pmz(1,:) = abs(2*sPflow_ht/e0/clum);
-                sphi_pmz(2,:) = zeros(1,ns);
-                sphi_pmz(3,:) = zeros(1,ns);            
-                %
-            elseif opt_disp == 4, % relativistic hot plasma dispersion tensor for sepol_pmz, sNperp and phi_pmz (R2D2)
-                %%%%%%%%%% to be implemented %%%%%%%%%%
-                error('model not yet implemented');
-            else
-                error('invalid disp option');
-            end
-        end
         %
         % Store useful information for DKE in a vsray matrix
         %
