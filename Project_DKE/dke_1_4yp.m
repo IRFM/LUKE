@@ -503,19 +503,16 @@ end
 	 XR,XZ,XBR,XBZ,XBphi,...
 	 xmhubounce2,xB0,xR0,xBT0,xBp0,Rp,Zp,ap);   
 %	
-%Pitch-angle integral for the Lorentz model (test mode only, see documentation)
+%Pitch-angle integral for the Lorentz model (test mode only or initial guess for the drift kinetic equation, see documentation)
 %	
-if coll_mode == 3,	
-	for ir = 1:nr_dke,
-		jr1 = rdke(ir)-1;
-		jr2 = rdke(ir);
-		jr3 = rdke(ir)+1;
-		ILor_p = -XXheaviside(1,:,jr2).*sum(((dmhu.*(mhu>=0).*XXlambda_b_p3m2(1,:,jr2)./XXlambda_p2m1(1,:,jr2))'*ones(1,nmhu)).*triu(ones(nmhu,nmhu)));
-		ILor_m = -fliplr(ILor_p);
-		ILor = ILor_m + ILor_p;
-		xXILor(jr2,:) = ILor;
-	end	
-end
+XXILor =  zeros(npn,nmhu,nr);
+for ir = 1:nr_dke,
+	jr2 = rdke(ir);
+	ILor_p = XXheaviside(1,:,jr2).*sum(((dmhu.*(mhu>=0).*XXlambda_b_p3m2(1,:,jr2)./XXlambda_p2m1(1,:,jr2))'*ones(1,nmhu)).*triu(ones(nmhu,nmhu)));
+	ILor_m = fliplr(ILor_p);
+	ILor = ILor_m + ILor_p;
+	XXILor(:,:,jr2) = ones(npn,1)*ILor;
+end	
 %
 %Super matrices size calculation
 %
@@ -2138,7 +2135,7 @@ if dke_mode == 1,
 % Initial guess for the iterative loop (Lorentz model)
 %
 		XdfMdpsi = -dpsim*XfMp/dpsi/dpsip - (dpsip + dpsim)*XfM/dpsip/dpsim + dpsip*XfMm/dpsi/dpsim;%Calculation of the radial gradient of fM (parabolic interpolation) 
-		XXf0_g_th(:,:,jr2) = xftp_norm(jr2)*Xpn.*XdfMdpsi.*(XXlambda_b_p3m2(:,:,jr2)./XXlambda_p2m1(:,:,jr2));
+		XXf0_g_th(:,:,jr2) = xftp_norm(jr2).*Xpn.*(Xmhu./abs(Xmhu)).*XXfM(:,:,jr2).*abs(XXILor(:,:,jr2));%**********signe ??????
 %
 %First order Legendre correction for ftp
 %	
@@ -2270,7 +2267,7 @@ if coll_mode == 3,%Lorentz model (test mode only, see documentation)
 	for ir = 1:nr_dke,
 		jr2 = rdke(ir);
 		XXf0_L_tp(:,:,jr2) = -xftp_norm(jr2)*(xdlnnedpsi(jr2) + xdlnTedpsi(jr2)*(Xpn2/xTe_norm(jr2)/2 - 1.5)).*Xpn.*Xmhu.*XXfM(:,:,jr2);
-		XXf0_L_g(:,:,jr2) =  -xftp_norm(jr2)*(xdlnnedpsi(jr2) + xdlnTedpsi(jr2)*(Xpn2/xTe_norm(jr2)/2 - 1.5)).*Xpn.*XXfM(:,:,jr2).*(ones(npn,1)*xXILor(jr2,:));%Terme à vérifier pour ia proche de 1
+		XXf0_L_g(:,:,jr2) =  xftp_norm(jr2)*(xdlnnedpsi(jr2) + xdlnTedpsi(jr2)*(Xpn2/xTe_norm(jr2)/2 - 1.5)).*Xpn.*(Xmhu./abs(Xmhu)).*XXfM(:,:,jr2).*abs(XXILor(:,:,jr2));%Signe ********
 	end
 else	
 	for ir = 1:nr,
@@ -2764,9 +2761,10 @@ end
 if bounce_mode == 0,
 	xfteff_fsav= zeros(1,nr_dke);%Effective fraction of trapped electrons
 elseif bounce_mode == 1,
-	disp('WARNING: xfteff_fsav a corriger en 3D')
-	xfteff_fsav = 1.5*(xBT0(rdke)./xB0(rdke)).*((xqtilde(rdke)./xqbar(rdke)).*(xBT0(rdke)./xB0(rdke)).*integral_dke_jd(dmhu,XXmhu(1,:,rdke).*XXmhu(1,:,rdke).*XXlambda_p2m2p2(1,:,rdke),2)');
-	xfteff_fsav = xfteff_fsav - 1.5*(xBT0(rdke)./xB0(rdke)).*((xq(rdke)./xqbar(rdke)).*(xR0(rdke)/Rp).*integral_dke_jd(dmhu,XXmhu(1,:,rdke).*XXmhu(1,:,rdke).*XXheaviside(1,:,rdke).*abs(xXILor(rdke,:))./abs(XXmhu(1,:,rdke)),2)');
+%	xfteff_fsav1 = XXmhu(1,:,rdke).*XXmhu(1,:,rdke).*XXlambda_p2m2p2(1,:,rdke);
+%	xfteff_fsav2 = abs(XXmhu(1,:,rdke)).*XXheaviside(1,:,rdke).*abs(XXILor(1,:,rdke));
+	xfteff_fsav = 1.5*(xBT0(rdke)./xB0(rdke)).*((xqtilde(rdke)./xqbar(rdke)).*(xBT0(rdke)./xB0(rdke)).*integral_dke_jd(dmhu,XXmhu(1,:,rdke).*XXmhu(1,:,rdke).*XXlambda_p2m2p2(1,:,rdke),2));	
+	xfteff_fsav = xfteff_fsav - 1.5*(xBT0(rdke)./xB0(rdke)).*((xq(rdke)./xqbar(rdke)).*(xR0(rdke)/Rp).*integral_dke_jd(dmhu,abs(XXmhu(1,:,rdke)).*XXheaviside(1,:,rdke).*abs(XXILor(1,:,rdke)),2));
 end
 %
 %   Magnetic ripple loss rate calculation (for Tore Supra tokamak only)

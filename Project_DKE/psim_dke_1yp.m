@@ -24,19 +24,19 @@ dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode] = psim_dke_1yp;
 %
 snumber = 1;%Simulation number
 tokname = 'TS';%Tokamak equilibrium scenario (see ptok_dke_1yp.m) in EQUIL_tokname file)
-loadequil = 2;%0: Load already existing equilibrium file, 1: create equilibrium with HELENA (needs mex file), 2: create equilibrium file (with idealequil_f_jd.m function)
+loadequil = 1;%0: Load already existing equilibrium file, 1: create equilibrium with HELENA (needs mex file), 2: create equilibrium file (with idealequil_f_jd.m function)
 npsi = 201;%Size of the psi grid for the magnetic equilibrium (ntheta is fixed for HELENA)
+qopt = 1;%Option for q profile. (0): constant (default), (1): from qmin and eq (for HELENA, it is used only for the psi grid guess)
 %
-%Additional specific parameters for ideal cylindrical magnetic equilibrium with circular concentric flux surfaces (used if loadequil = 2 only)
+%Additional specific parameter for ideal cylindrical magnetic equilibrium with circular concentric flux surfaces (used if loadequil = 2 only)
 %
-qopt = 1;%Option for q profile. (0): constant (default), (1): from qmin and eq
 ntheta = 201;%Size of the theta grid for the magnetic equilibrium
 %
 %Mesh size calculation
 %
 grid_uniformity = 0;%Pitch-angle and momentum grids uniformity: (0) no, (1) yes (-1 for specific test DKE, transient)
 grid_method = 1;%Pitch-angle grid calculation technique: (0): old method, (1) new method
-nmhu_S = 201;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
+nmhu_S = 101;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
 np_S = 101;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run)
 pnmax_S = 15;%Maximum value of the flux momentum grid (pth_ref)
 %
@@ -63,7 +63,7 @@ spfac = 20;%reduction factor for the supergrid used in collision integrals
 %Values of the radial flux grid [1,p] (If one radial value: local calculation only)
 %
 psin_S = [];%5.286742555900838e-002; %[0.1]%(rho = 0.25 in CMOD)
-rho_S = [0.05];%[0.2,0.6],%;0.03322100141578101;0.71365;
+rho_S = [0.2];%[0.2,0.6],%;0.03322100141578101;0.71365;
 %
 psin_display = NaN;%Approximate radial value at which results are displayed if display_mode >= 1 [1,1]
 rho_display = 0.1;
@@ -186,7 +186,8 @@ if loadequil == 0,%Already existing magnetic equilibrium file
 		error('Equilibrium file is not found !')
 	end
 elseif loadequil == 1,%Create magnetic equilibrium file with HELENA
-	filename = helenaequil_f_jd(tokname,npsi);%Calculate the equibrium parameters if tokamak name exists
+	equil_mode = 1;%Numerical bounce integral calculation enforced
+	filename = helenaequil_f_jd(tokname,qopt,npsi);%Calculate the equibrium parameters if tokamak name exists
 	info_dke_yp(2,['HELENA magnetic equilibrium file ',filename,' has been created.']);
 elseif loadequil == 2,%Create ideal cylindrical magnetic equilibrium
 	filename = idealequil_f_jd(tokname,qopt,npsi,ntheta);%Calculate the equibrium parameters if tokamak name exists

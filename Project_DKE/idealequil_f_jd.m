@@ -59,24 +59,7 @@ pZeff = (Zeff0 - Zeffa)*(1 - prho.^2).^eZeff + Zeffa;% Effective charge (a.u.)
 %
 nz = length(zZi);
 pzTi = repmat(pTi,[nz,1]);% Same temperature for all ion species
-pzni = zeros(nz,npsi);
-%
-if sum(zZi>1) > 1,% More than one impurity species
-    % need each species density (***** to be implemented *****)
-elseif sum(zZi>1) == 1,% One impurity species
-    Zimp = max(zZi);
-    pnhyd = pne.*(Zimp - pZeff)/(Zimp - 1);  
-    pnimp = pne.*(pZeff - 1)/(Zimp - 1)/Zimp;
-    pzni(nz,:) = pnimp;
-else,% No impurity
-    pnhyd = pne;
-    pnimp = 0*pne;
-end
-if sum(fi) == 1
-    pzni(1:3,:) = fi'*pnhyd;
-else
-    error('Hydrogen isotopic fractions do not add to 1')
-end    
+pzni = species_dke_yp(pne,pZeff,zZi,fi);
 %
 %Magnetic equilibrium
 %

@@ -608,7 +608,7 @@ while 1,
 				figure(9),plot(ppar_cyl_ref,F1bootstrap_cyl_ref),ylabel('F1(bootstrap)'),xlabel('ppar');zoom on
 				ipnplot_ref = min(find(pn_ref>=4));
 %
-				figure(10),plot(mhu,Xf0_tp_ref(ipnplot_ref,:)','bo',mhu,Xf0_g_ref(ipnplot_ref,:)','ro')
+				figure(10),plot(mhu,Xf0_tp_ref(ipnplot_ref,:)','bo',mhu,Xf0_g_ref(ipnplot_ref,:)','ro'),hold off
 				line([sqrt(xmhubounce2(r_dke(ir_display_dke))),sqrt(xmhubounce2(r_dke(ir_display_dke)))],[min(Xf0_tp_ref(ipnplot_ref,:)),max(Xf0_tp_ref(ipnplot_ref,:))]);
 				line([-sqrt(xmhubounce2(r_dke(ir_display_dke))),-sqrt(xmhubounce2(r_dke(ir_display_dke)))],[min(Xf0_tp_ref(ipnplot_ref,:)),max(Xf0_tp_ref(ipnplot_ref,:))]);
 				if coll_mode == 3,%Lorentz model
