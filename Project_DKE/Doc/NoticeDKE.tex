@@ -11,7 +11,8 @@
 \usepackage{amsmath}
 %\usepackage{epstopdf}
 \usepackage{fancyheadings}
-
+\usepackage{nomencl}
+\makeglossary
 
 % -- Style de page -- %
 %\addtolength{\voffset}{-3.0cm} \addtolength{\textheight}{6.0cm}
@@ -26,7 +27,6 @@
 %\include{myAbbrevs}
 \include{DocumentDimensions}
 
-
 \title{\hrule\bigbreak DKE: a fast numerical solver for the 3-D relativistic electron Drift Kinetic Equation \hrule\bigbreak}
 \author{Joan Decker (RLE/MIT)\footnote{Email: jodecker@mit.edu} and Yves Peysson (DRFC/DSM/CEA)\footnote{Email: yves.peysson@cea.fr}}
 \date{\today}
@@ -35,6 +35,8 @@
 
 \maketitle
 \tableofcontents
+\listoffigures 
+\printglossary
 
 \chapter{Introduction}
 
@@ -275,7 +277,14 @@
 
     \section{Electron Cyclotron Current drive}
 
+\chapter{Conclusion}
 
+     \input{Conclusion.tex}
+     
+\chapter{Acknowledgements}
+    
+     \input{Acknowledgements.tex}
+     
 \appendix
 
 \chapter{Curvilinear Coordinate Systems}
