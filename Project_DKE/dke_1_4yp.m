@@ -891,6 +891,7 @@ else
 end
 %
 for ir = 1:nr,
+    Xheaviside = XXheaviside(:,:,ir);
 %
 %Relativistic Maxwellian distribution function for collision integrals
 %
@@ -1249,45 +1250,66 @@ for ir = 1:nr,
 		Xi_t = Xi;              
 		mhu_t = mhu;		
 	elseif bounce_mode == 1,%Full implicit bounce-averaging calculations, fifteen diagonals mode
-		jmhut_min = min(find(mhu2 < xmhubounce2(ir)));
-		jmhut_max = max(find(mhu2 < xmhubounce2(ir)));
-		djmhut = (jmhut_max - jmhut_min+1)/2;
+%
+        ymask_P = Xheaviside(1,:);% passing electrons
+        ymask_Tm = ~Xheaviside(1,:) & (mhu < 0);% trapped electrons with mhu>0
+        ymask_Tp = ~Xheaviside(1,:) & (mhu > 0);% trapped electrons with mhu<0
+%
+        ymask_f0_t = (ymask_P + ymask_Tp) > 0;% keep passing and half of trapped eelctrons
+        ymask_f0_t_P = ymask_P(ymask_f0_t);
+        ymask_f0_t_Tp = ymask_Tp(ymask_f0_t);
+%        
+		jmhut_min = min(find(ymask_Tm));
+		jmhut_max = max(find(ymask_Tp));
+		djmhut = (jmhut_max - jmhut_min + 1)/2;
+        ns(ir) = djmhut;
 		if djmhut > 3,%At least three points in the bounce domain
 %
-			Xj = zeros(npn,nmhu);%Extra diagonals
-			Xk = zeros(npn,nmhu);%Extra diagonals
-			Xl = zeros(npn,nmhu);%Extra diagonals
-			Xm = zeros(npn,nmhu);%Extra diagonals
-			Xn = zeros(npn,nmhu);%Extra diagonals
-			Xo = zeros(npn,nmhu);%Extra diagonals
+            Xa_t = zeros(npn,nmhu - djmhut);
+            Xb_t = zeros(npn,nmhu - djmhut);
+            Xc_t = zeros(npn,nmhu - djmhut);
+            Xd_t = zeros(npn,nmhu - djmhut);
+            Xe_t = zeros(npn,nmhu - djmhut);
+            Xf_t = zeros(npn,nmhu - djmhut);
+            Xg_t = zeros(npn,nmhu - djmhut);
+            Xh_t = zeros(npn,nmhu - djmhut);
+            Xi_t = zeros(npn,nmhu - djmhut);
+            Xj_t = zeros(npn,nmhu - djmhut);
+            Xk_t = zeros(npn,nmhu - djmhut);
+            Xl_t = zeros(npn,nmhu - djmhut);
+            Xm_t = zeros(npn,nmhu - djmhut);
+            Xn_t = zeros(npn,nmhu - djmhut);
+            Xo_t = zeros(npn,nmhu - djmhut);
 %
-			Xmask_f0 = (Xmhu2 < xmhubounce2(ir)) & (Xmhu < 0);%Only the half-bounce region is removed
-			Xmask_f0 = nonzeros(~(Xmask_f0(2,:)==1).*cumsum(ones(1,nmhu)))';
-			ns(ir) = nmhu - length(Xmask_f0);%number of mhu values that are removed
+            Xa_t(:,ymask_f0_t_P) = Xa(:,ymask_P);
+            Xb_t(:,ymask_f0_t_P) = Xb(:,ymask_P);
+            Xc_t(:,ymask_f0_t_P) = Xc(:,ymask_P);
+            Xd_t(:,ymask_f0_t_P) = Xd(:,ymask_P);
+            Xe_t(:,ymask_f0_t_P) = Xe(:,ymask_P);
+            Xf_t(:,ymask_f0_t_P) = Xf(:,ymask_P);
+            Xg_t(:,ymask_f0_t_P) = Xg(:,ymask_P);
+            Xh_t(:,ymask_f0_t_P) = Xh(:,ymask_P);
+            Xi_t(:,ymask_f0_t_P) = Xi(:,ymask_P);
 %
-			Xa_t = Xa(:,Xmask_f0);%Matrix reduction along the angular direction
-			Xb_t = Xb(:,Xmask_f0);
-			Xc_t = Xc(:,Xmask_f0);
-			Xd_t = Xd(:,Xmask_f0);
-			Xe_t = Xe(:,Xmask_f0);
-			Xf_t = Xf(:,Xmask_f0);
-			Xg_t = Xg(:,Xmask_f0);
-			Xh_t = Xh(:,Xmask_f0);
-			Xi_t = Xi(:,Xmask_f0);             
-			Xj_t = Xj(:,Xmask_f0);
-			Xk_t = Xk(:,Xmask_f0);
-			Xl_t = Xl(:,Xmask_f0);
-			Xm_t = Xm(:,Xmask_f0);
-			Xn_t = Xn(:,Xmask_f0);
-			Xo_t = Xo(:,Xmask_f0); 
+%   symmetrization of the trapped region
 %
-			Xh_t(:,jmhut_max - ns(ir)) = Xh(:,jmhut_max)/2;
-			Xe_t(:,jmhut_max - ns(ir)) = Xe(:,jmhut_max)/2;
-			Xg_t(:,jmhut_max - ns(ir)) = Xg(:,jmhut_max)/2;
+            Xa_t(:,ymask_f0_t_Tp) = (Xa(:,ymask_Tp) + fliplr(Xe(:,ymask_Tm)))/2;
+            Xb_t(:,ymask_f0_t_Tp) = (Xb(:,ymask_Tp) + fliplr(Xb(:,ymask_Tm)))/2;
+            Xc_t(:,ymask_f0_t_Tp) = (Xc(:,ymask_Tp) + fliplr(Xc(:,ymask_Tm)))/2;
+            Xd_t(:,ymask_f0_t_Tp) = (Xd(:,ymask_Tp) + fliplr(Xd(:,ymask_Tm)))/2;
+            Xe_t(:,ymask_f0_t_Tp) = (Xe(:,ymask_Tp) + fliplr(Xa(:,ymask_Tm)))/2;
+            Xf_t(:,ymask_f0_t_Tp) = (Xf(:,ymask_Tp) + fliplr(Xh(:,ymask_Tm)))/2;
+            Xg_t(:,ymask_f0_t_Tp) = (Xg(:,ymask_Tp) + fliplr(Xi(:,ymask_Tm)))/2;
+            Xh_t(:,ymask_f0_t_Tp) = (Xh(:,ymask_Tp) + fliplr(Xf(:,ymask_Tm)))/2;
+            Xi_t(:,ymask_f0_t_Tp) = (Xi(:,ymask_Tp) + fliplr(Xg(:,ymask_Tm)))/2;
 %
-			Xj_t(:,jmhut_max - ns(ir)) = Xh(:,jmhut_max)/2;%f0(i-1/2,j+1/2-djmhut) 
-			Xk_t(:,jmhut_max - ns(ir)) = Xe(:,jmhut_max)/2;%f0(i+1/2,j+1/2-djmhut)
-			Xl_t(:,jmhut_max - ns(ir)) = Xg(:,jmhut_max)/2;%f0(i+3/2,j+1/2-djmhut)
+			Xh_t(:,jmhut_max - djmhut) = Xh_t(:,jmhut_max - djmhut)/2;
+			Xe_t(:,jmhut_max - djmhut) = Xe_t(:,jmhut_max - djmhut)/2;
+			Xg_t(:,jmhut_max - djmhut) = Xg_t(:,jmhut_max - djmhut)/2;
+%
+			Xj_t(:,jmhut_max - djmhut) = Xh_t(:,jmhut_max - djmhut);%f0(i-1/2,j+1/2-djmhut) 
+			Xk_t(:,jmhut_max - djmhut) = Xe_t(:,jmhut_max - djmhut);%f0(i+1/2,j+1/2-djmhut)
+			Xl_t(:,jmhut_max - djmhut) = Xg_t(:,jmhut_max - djmhut);%f0(i+3/2,j+1/2-djmhut)
 %
 			Xm_t(:,jmhut_min - 1) = Xh(:,jmhut_min - 1);%f0(i-1/2,j+1/2+djmhut)
 			Xn_t(:,jmhut_min - 1) = Xe(:,jmhut_min - 1);%f0(i+1/2,j+1/2+djmhut)
@@ -1297,33 +1319,26 @@ for ir = 1:nr,
 			Xe_t(:,jmhut_min - 1) = 0;
 			Xg_t(:,jmhut_min - 1) = 0;
 %
-			Xa_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
-			Xb_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
-			Xc_t(:,nmhu/2 + 1 - ns(ir)) = 1;%df0(pn,mhu=pi/2) = 0
-			Xd_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
-			Xe_t(:,nmhu/2 + 1 - ns(ir)) = -1;%df0(pn,mhu=pi/2) = 0
-			Xf_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
-			Xg_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
-			Xh_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
-			Xi_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
-			Xj_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
-			Xk_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
-			Xl_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
-			Xm_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
-			Xn_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
-			Xo_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
-%
-%			Xj_t(:,3) = 0;Xj_t(:,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
-%			Xk_t(:,3) = 0;Xk_t(:,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
-%			Xl_t(:,3) = 0;Xl_t(:,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
-%			Xm_t(:,3) = 0;Xm_t(:,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
-%			Xn_t(:,3) = 0;Xn_t(:,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
-%			Xo_t(:,3) = 0;Xo_t(:,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
+			Xa_t(:,nmhu/2 + 1 - djmhut) = 0;%df0(pn,mhu=pi/2) = 0
+			Xb_t(:,nmhu/2 + 1 - djmhut) = 0;%df0(pn,mhu=pi/2) = 0
+			Xc_t(:,nmhu/2 + 1 - djmhut) = 1;%df0(pn,mhu=pi/2) = 0
+			Xd_t(:,nmhu/2 + 1 - djmhut) = 0;%df0(pn,mhu=pi/2) = 0
+			Xe_t(:,nmhu/2 + 1 - djmhut) = -1;%df0(pn,mhu=pi/2) = 0
+			Xf_t(:,nmhu/2 + 1 - djmhut) = 0;%df0(pn,mhu=pi/2) = 0
+			Xg_t(:,nmhu/2 + 1 - djmhut) = 0;%df0(pn,mhu=pi/2) = 0
+			Xh_t(:,nmhu/2 + 1 - djmhut) = 0;%df0(pn,mhu=pi/2) = 0
+			Xi_t(:,nmhu/2 + 1 - djmhut) = 0;%df0(pn,mhu=pi/2) = 0
+			Xj_t(:,nmhu/2 + 1 - djmhut) = 0;%df0(pn,mhu=pi/2) = 0
+			Xk_t(:,nmhu/2 + 1 - djmhut) = 0;%df0(pn,mhu=pi/2) = 0
+			Xl_t(:,nmhu/2 + 1 - djmhut) = 0;%df0(pn,mhu=pi/2) = 0
+			Xm_t(:,nmhu/2 + 1 - djmhut) = 0;%df0(pn,mhu=pi/2) = 0
+			Xn_t(:,nmhu/2 + 1 - djmhut) = 0;%df0(pn,mhu=pi/2) = 0
+			Xo_t(:,nmhu/2 + 1 - djmhut) = 0;%df0(pn,mhu=pi/2) = 0
 %       
-			mhu_t = mhu(Xmask_f0);
+			mhu_t = mhu(ymask_f0_t);
 %           
 		else
-			Xmask_f0 = [1:1:nmhu];
+			ymask_f0_t = ones(1,nmhu);
 			ns(ir) = 0;%Number of mhu values that are removed for implicit bounce averaged calculations
 			bounce_mode = 0;
 			if display_mode>=0,
@@ -1348,7 +1363,7 @@ for ir = 1:nr,
 	if boundary_mode > 0,
 		Xa_t(1:boundary_mode,:) = 0;
 		Xb_t(1:boundary_mode,:) = 0;
-		Xc_t(1:boundary_mode,:) = Xpn2(1:boundary_mode,Xmask_f0)/dtn;%Maxwellian solution enforced at p = p(1/2) (More accurate but not fully necessary)
+		Xc_t(1:boundary_mode,:) = Xpn2(1:boundary_mode,ymask_f0_t)/dtn;%Maxwellian solution enforced at p = p(1/2) (More accurate but not fully necessary)
 		Xd_t(1:boundary_mode,:) = 0;
 		Xe_t(1:boundary_mode,:) = 0;
 		Xf_t(1:boundary_mode,:) = 0;
@@ -1645,7 +1660,7 @@ for ir = 1:nr,
 	[m1_f,n1_f] = size(MXP_f_t);
 	MMXP_f_t = sparse(i0_f,j0_f,s0_f,m0_f+m1_f,m0_f+m1_f) + sparse(m0_f+i1_f,m0_f+j1_f,s1_f,m0_f+m1_f,m0_f+m1_f);
 %
-	Zmask_f0{ir} = Xmask_f0;
+	Zmask_f0_t{ir} = ymask_f0_t;
 %
 	if dke_mode == 1 & ~isempty(find(ir==rdke)),
 %
@@ -1827,8 +1842,7 @@ clear jmhut_min jmhut_max djmhut
 if display_mode >= 1,info_dke_yp(2,['Full elapsed time for matrix calculation: ',num2str(etime(clock,time0)),' (s)']);end
 %
 if store_mode == 1,
-	save MXPmat.mat Zmask_f0 Zmask_ftp Zmask_g -append;
-	clear XXmask_f0
+	save MXPmat.mat Zmask_f0_t Zmask_ftp Zmask_g -append;
 end
 %
 time0 = clock;
@@ -1898,25 +1912,25 @@ for it_f = 2:nit_f,
 		MMXf0_t = [];
 		MMXq_t = [];
 		for ir = 1:nr,
-			if store_mode == 1,load MXPmat.mat Zmask_f0;end	
-			if radial_mode == 1,Xmask_r_edge_t = Xmask_r_edge(:,Zmask_f0{ir});end
+			if store_mode == 1,load MXPmat.mat Zmask_f0_t;end	
+			if radial_mode == 1,Xmask_r_edge_t = Xmask_r_edge(:,Zmask_f0_t{ir});end
 %
 			if boundary_mode == 0,
 				Xq = (XXI(:,:,ir) + time_scheme*XXf0(:,:,ir)/dtn).*Xpn2;%Xpn2 is here as part of the partial Jacobian used to avoid singularities at p = 0
-				Xq_t = Xq(:,Zmask_f0{ir});%Symmetric trapped domain removed (-ksi0T< ksi0 <0)
+				Xq_t = Xq(:,Zmask_f0_t{ir});%Symmetric trapped domain removed (-ksi0T< ksi0 <0)
 				if bounce_mode == 1,Xq_t(:,nmhu/2 + 1 - ns(ir)) = 0;end;%Pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2 
 			else, 
 				Xq = (XXI(:,:,ir) + time_scheme*XXf0(:,:,ir)/dtn).*Xpn2;%Xpn2 is here as part of the partial Jacobian used to avoid singularities at p = 0
 				Xq(1:boundary_mode,:) = Xpn2(1:boundary_mode,:).*XXf0(1:boundary_mode,:,ir)/dtn;%Xpn2 is here as part of the partial Jacobian used to avoid singularities at p = 0
-				Xq_t = Xq(:,Zmask_f0{ir});%Symmetric trapped domain removed (-ksi0T< ksi0 <0)
+				Xq_t = Xq(:,Zmask_f0_t{ir});%Symmetric trapped domain removed (-ksi0T< ksi0 <0)
 				if bounce_mode == 1,Xq_t(boundary_mode+1:npn,nmhu/2 + 1 - ns(ir)) = 0;end;%Pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2 		
 			end
 			MMXq_t = [MMXq_t;(xqtilde(ir)/xB0(ir))*reshape(Xq_t',(nmhu - ns(ir))*npn,1)];%Multiplication by the partial Jacobian to avoid singularities at psi = 0
-			MMXf0_t = [MMXf0_t;reshape(XXf0(:,Zmask_f0{ir},ir)',(nmhu - ns(ir))*npn,1)];
+			MMXf0_t = [MMXf0_t;reshape(XXf0(:,Zmask_f0_t{ir},ir)',(nmhu - ns(ir))*npn,1)];
 		end
 %
 		if radial_mode == 1,%Edge radial boundary condition: f(r/a = 1) = fM(r/a) where transport operates	
-			MMXq_t(nMMXP_f_t-npn*(nmhu - ns(nr))+1:nMMXP_f_t) = xpsin(nr)*time_scheme*reshape((XXf0(:,Zmask_f0{nr},nr)'.*~Xmask_r_edge_t' + XXfM(:,Zmask_f0{nr},nr)'.*Xmask_r_edge_t').*Xpn2(:,Zmask_f0{nr})',(nmhu - ns(nr))*npn,1)/dtn; 
+			MMXq_t(nMMXP_f_t-npn*(nmhu - ns(nr))+1:nMMXP_f_t) = xpsin(nr)*time_scheme*reshape((XXf0(:,Zmask_f0_t{nr},nr)'.*~Xmask_r_edge_t' + XXfM(:,Zmask_f0_t{nr},nr)'.*Xmask_r_edge_t').*Xpn2(:,Zmask_f0_t{nr})',(nmhu - ns(nr))*npn,1)/dtn; 
 		end
 %
 %
