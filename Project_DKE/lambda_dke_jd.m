@@ -6,8 +6,8 @@ tokamak = 'test';
 filename = 'equihelena';
 method = 'linear';
 %super = 1;
-nmhu = 41;
-ymhu0 = linspace(0,1,nmhu); % Pitch-angle cosine at minimum of B-field
+nmhu = 81;
+ymhu0 = linspace(-1,1,nmhu); % Pitch-angle cosine at minimum of B-field
 
 
 eval(['load ',filename,'.mat'])
@@ -194,6 +194,9 @@ xyBRT2 = xyBR2min + (xyBR2max - xyBR2min).*(xyTthetaT2 - xytheta2min)./(xytheta2
 xyBZT1 = xyBZ1min + (xyBZ1max - xyBZ1min).*(xyTthetaT1 - xytheta1min)./(xytheta1max - xytheta1min);
 xyBZT2 = xyBZ2min + (xyBZ2max - xyBZ2min).*(xyTthetaT2 - xytheta2min)./(xytheta2max - xytheta2min);
 
+xyBphiT1 = xyBphi1min + (xyBphi1max - xyBphi1min).*(xyTthetaT1 - xytheta1min)./(xytheta1max - xytheta1min);
+xyBphiT2 = xyBphi2min + (xyBphi2max - xyBphi2min).*(xyTthetaT2 - xytheta2min)./(xytheta2max - xytheta2min);
+
 xyRT1 = xyR1min + (xyR1max - xyR1min).*(xyTthetaT1 - xytheta1min)./(xytheta1max - xytheta1min);
 xyRT2 = xyR2min + (xyR2max - xyR2min).*(xyTthetaT2 - xytheta2min)./(xytheta2max - xytheta2min);
 
@@ -206,6 +209,9 @@ xyBRT2(~xymaskT) = xyBR2min(~xymaskT);
 xyBZT1(~xymaskT) = xyBZ1min(~xymaskT);
 xyBZT2(~xymaskT) = xyBZ2min(~xymaskT);
 
+xyBphiT1(~xymaskT) = xyBphi1min(~xymaskT);
+xyBphiT2(~xymaskT) = xyBphi2min(~xymaskT);
+
 xyRT1(~xymaskT) = xyR1min(~xymaskT);
 xyRT2(~xymaskT) = xyR2min(~xymaskT);
 
@@ -216,6 +222,7 @@ Ytheta = repmat(theta',[1,np,nmhu]);
 
 YBR = repmat(XBR',[1,1,nmhu]);	
 YBZ = repmat(XBZ',[1,1,nmhu]);
+YBphi = repmat(XBphi',[1,1,nmhu]);
 YR = repmat(XR',[1,1,nmhu]);
 YZ = repmat(XZ',[1,1,nmhu]);
 
@@ -228,17 +235,19 @@ YTtheta = [Ytheta;reshape(xyTthetaT1,[1,np,nmhu]);reshape(xyTthetaT2,[1,np,nmhu]
 YTB = [YB;reshape(xyBT1,[1,np,nmhu]);reshape(xyBT2,[1,np,nmhu])];
 YTBR = [YBR;reshape(xyBRT1,[1,np,nmhu]);reshape(xyBRT2,[1,np,nmhu])];
 YTBZ = [YBZ;reshape(xyBZT1,[1,np,nmhu]);reshape(xyBZT2,[1,np,nmhu])];
+YTBphi = [YBphi;reshape(xyBphiT1,[1,np,nmhu]);reshape(xyBphiT2,[1,np,nmhu])];
 YTR = [YR;reshape(xyRT1,[1,np,nmhu]);reshape(xyRT2,[1,np,nmhu])];
 YTZ = [YZ;reshape(xyZT1,[1,np,nmhu]);reshape(xyZT2,[1,np,nmhu])];
 
 nt2 = nt + 2;
 
-clear YB YBR YBZ YR YZ Ytheta
+clear YB YBR YBZ YBphi YR YZ Ytheta
 
 [YTtheta,YTiT] = sort(YTtheta);
 ZTB = reshape(YTB,[nt2*np*nmhu,1]);
 ZTBR = reshape(YTBR,[nt2*np*nmhu,1]);
 ZTBZ = reshape(YTBZ,[nt2*np*nmhu,1]);
+ZTBphi = reshape(YTBphi,[nt2*np*nmhu,1]);
 ZTR = reshape(YTR,[nt2*np*nmhu,1]);
 ZTZ = reshape(YTZ,[nt2*np*nmhu,1]);
 
@@ -247,33 +256,54 @@ ZTiT = reshape(YTiT + shiftdim(nt2*(cumsum(ones(np,nmhu,nt2)) - 1),2) + shiftdim
 YTB = reshape(ZTB(ZTiT),[nt2,np,nmhu]);
 YTBR = reshape(ZTBR(ZTiT),[nt2,np,nmhu]);
 YTBZ = reshape(ZTBZ(ZTiT),[nt2,np,nmhu]);
+YTBphi = reshape(ZTBphi(ZTiT),[nt2,np,nmhu]);
 YTR = reshape(ZTR(ZTiT),[nt2,np,nmhu]);
 YTZ = reshape(ZTZ(ZTiT),[nt2,np,nmhu]);
 
-clear ZTB ZTBR ZTBZ ZTR ZTZ ZTiT
+clear ZTB ZTBR ZTBZ ZTBphi ZTR ZTZ ZTiT
 
-YTBmin = repmat(xBmin,[nt2,1,nmhu]);
-YTmhu0 = shiftdim(repmat(ymhu0',[1,nt2,np]),1);
+% Half grid in theta for integration
 
-YT1mmhu02 = shiftdim(repmat(y1mmhu02',[1,nt2,np]),1);
+YMBR = (YTBR(1:nt2-1,:,:) + YTBR(2:nt2,:,:))/2;
+clear YTBR
 
-YTPSIB = YTB./YTBmin; % Ratio of B-field to its minimum on FS
-YTBb = YTBmin./YT1mmhu02; % B-field at turning point
-clear YT1mmhu02 YTBmin
+YMBZ = (YTBZ(1:nt2-1,:,:) + YTBZ(2:nt2,:,:))/2;
+clear YTBZ
 
-YTmask = YTB <= YTBb; % mask on the intergration over B
+YMBphi = (YTBphi(1:nt2-1,:,:) + YTBphi(2:nt2,:,:))/2;
+clear YTBphi
 
-clear YTBb
+YMR = (YTR(1:nt2-1,:,:) + YTR(2:nt2,:,:))/2;
+clear YTR
 
-YTmhu = sign(YTmhu0).*sqrt(1 - YTPSIB.*(1 - YTmhu0.^2)); % Pitch-angle cosine of (psi,theta,mhu)
-YTmhu(~YTmask) = eps;
+YMZ = (YTZ(1:nt2-1,:,:) + YTZ(2:nt2,:,:))/2;
+clear YTZ
+
+nm2 = nt2 - 1;
+
+YMB = sqrt(YMBR.^2 + YMBZ.^2 + YMBphi.^2); 
+
+YMBmin = repmat(xBmin,[nm2,1,nmhu]);
+YMmhu0 = shiftdim(repmat(ymhu0',[1,nm2,np]),1);
+
+YM1mmhu02 = shiftdim(repmat(y1mmhu02',[1,nm2,np]),1);
+
+YMPSIB = YMB./YMBmin; % Ratio of B-field to its minimum on FS
+YMBb = YMBmin./YM1mmhu02; % B-field at turning point
+clear YM1mmhu02 YMBmin
+
+YMmask = YMB <= YMBb; % mask on the intergration over B
+
+clear YMBb
+
+YMmhu = sign(YMmhu0).*sqrt(1 - YMPSIB.*(1 - YMmhu0.^2)); % Pitch-angle cosine of (psi,theta,mhu)
+YMmhu(~YMmask) = eps;
 
 clear YTPSIB
 
-YTF = YTmask.*YTB.*((YTR - R0).^2 + (YTZ - Z0).^2).*YTmhu0./abs(YTBR.*(YTZ - Z0) - YTBZ.*(YTR - R0))./YTmhu;
-YMF = (YTF(1:nt2-1,:,:) + YTF(2:nt2,:,:))/2;
+YMF = YMmask.*YMB.*((YMR - R0).^2 + (YMZ - Z0).^2).*YMmhu0./abs(YMBR.*(YMZ - Z0) - YMBZ.*(YMR - R0))./YMmhu;
 
-clear YTmask YTB YTR YTZ YTBR YTBZ YTmhu0 YTmhu
+clear YTmask YMB YMR YMZ YMBR YMBZ YMmhu0 YMmhu
 
 YMdt = diff(YTtheta);
 
@@ -295,10 +325,10 @@ psimax = max(xpsi);
 
 figure(1),clf
 
-[ax] = graph2Djd(xr,ymhu0,xylambda,'','','',[0,a],[min(ymhu0),max(ymhu0)],0,NaN,[0:0.2:2],1,'-','r',2,0.9,NaN);
-hold on
-[ax] = graph1Djd(xr,xmhu0T,'r','\xi','\lambda',[0,a],[min(ymhu0),max(ymhu0)],'--','none','b',2,gca,1,0.7,0.5);
-hold off
+%[ax] = graph2Djd(xr,ymhu0,xylambda,'','','',[0,a],[min(ymhu0),max(ymhu0)],0,NaN,[0:0.2:2],1,'-','r',2,0.9,NaN);
+%hold on
+%[ax] = graph1Djd(xr,xmhu0T,'r','\xi','\lambda',[0,a],[min(ymhu0),max(ymhu0)],'--','none','b',2,gca,1,0.7,0.5);
+%hold off
 
 figure(2),clf
 
