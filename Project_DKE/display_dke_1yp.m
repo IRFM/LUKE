@@ -867,8 +867,8 @@ while 1,
             figure(201),clf
             [ax] = graph1D_jd(xrho_dke,xJboot_tot_fsav_mksa,'','','',NaN,[0,1],NaN,'none','+','r',2,14,gca,0.8,0.7,0.6);
             hold on
-            [ax] = graph1D_jd(prho,pcurr_hin_mksa_fsav,'','','',NaN,[0,1],NaN,'-','none','g',2,14);
-            [ax] = graph1D_jd(prho,pcurr_hir_mksa_fsav,'','','',NaN,[0,1],NaN,'-','none','b',2,14);
+            [ax] = graph1D_jd(prho,pcurr_hin_mksa_fsav,'','','',NaN,[0,1],NaN,'--','none','g',2,14);
+            [ax] = graph1D_jd(prho,pcurr_hir_mksa_fsav,'','','',NaN,[0,1],NaN,'-.','none','b',2,14);
             [ax] = graph1D_jd(prho,pcurr_sau_mksa_fsav,'\rho','<J_B> (MA/m^2)',['Bootstrap current in ',tokname],['DKE code';'Hinton  ';'Hirshman';'Sauter  '],[0,1],0,'-','none','m',2,14);
 %
             figure(202),clf
@@ -879,8 +879,8 @@ while 1,
 				if exist('ftra') == 0,%In case of ideal magnetic equilibrium only
 					[ax] = graph1D_jd(xrho_dke,xfteff_llm,'\rho','ft-eff (DKE: o, LLM: x)','Effective trapped fraction',NaN,[0,1],[0,1],'none','x','g',2,14);
 				else
-					[ax] = graph1D_jd(xrho_dke,xfteff_llm,'\rho','','Effective trapped fraction',NaN,[0,1],[0,1],'none','x','g',2,14);
-					[ax] = graph1D_jd(xrho_dke,xftra,'\rho','ft-eff (DKE: o, HELENA: +, LLM: x)','Effective trapped fraction',NaN,[0,1],[0,1],'none','+','b',2,14);				
+%					[ax] = graph1D_jd(xrho_dke,xfteff_llm,'\rho','','Effective trapped fraction',NaN,[0,1],[0,1],'none','x','g',2,14);
+					[ax] = graph1D_jd(xrho_dke,xftra,'\rho','ft-eff (DKE: o, HELENA: +)','Effective trapped fraction',NaN,[0,1],[0,1],'none','+','b',2,14);				
 				end
 %
 				figure(206),clf
