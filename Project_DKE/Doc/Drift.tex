@@ -1,19 +1,20 @@
-The Drift-Kinetic Equation is given by
+For axisymmetric plasmas, The Drift-Kinetic Equation is given by 
 \begin{equation}
-\frac{\partial f}{\partial t}+{\bf v}_{\text{gc}}\cdot \nabla f=C\left(
-f\right) +Q\left( f\right)   \label{dke1}
+\frac{\partial f}{\partial t}+{\bf v}_{\text{gc}}\cdot \nabla f={\cal C}%
+\left( f\right) +{\cal Q}\left( f\right) +{\cal E}\left( f\right) 
+\label{dke1}
 \end{equation}
-where $f=f\left( p,\xi ,\psi ,\theta \right) $ is the guiding-center
+where $f=f\left( p,\xi ,\psi ,\theta ,t\right) $ is the guiding-center
 distribution function, and the guiding center velocity is decomposed into
 the fast parellel motion along the field lines, and a drift velocity ${\bf v}%
-_{D}$.
+_{D}$. 
 \begin{equation}
 {\bf v}_{\text{gc}}=v_{\Vert }\widehat{b}+{\bf v}_{D}  \label{vgc}
 \end{equation}
 
 The magnetic field is generally expressed as 
 \begin{equation}
-{\bf B}=I\left( \psi \right) \nabla \phi +\nabla \psi \times \nabla \phi 
+{\bf B}=I\left( \psi \right) \nabla \phi +\nabla \psi \times \nabla \phi
 \label{bexp}
 \end{equation}
 which becomes; in $\left( \psi ,s,\phi \right) $ coordinates, 
@@ -33,7 +34,7 @@ The gradient in $\left( \psi ,s,\phi \right) $ coordinates is
 
 The constants of the motion are the total energy 
 \begin{equation}
-{\cal E}=\frac{1}{2}m\left( v_{\Vert }^{2}+v_{\bot }^{2}\right)
+\varepsilon =\frac{1}{2}m\left( v_{\Vert }^{2}+v_{\bot }^{2}\right) 
 \end{equation}
 and the magnetic moment 
 \begin{equation}
@@ -42,7 +43,7 @@ and the magnetic moment
 so that we have the conservations laws 
 \begin{eqnarray}
 \frac{\partial \mu }{\partial s} &=&0  \label{mucons} \\
-\frac{\partial }{\partial s}\left[ v_{\Vert }^{2}+\frac{2\mu B}{m}\right]
+\frac{\partial }{\partial s}\left[ v_{\Vert }^{2}+\frac{2\mu B}{m}\right] 
 &=&0  \label{encons}
 \end{eqnarray}
 
@@ -51,7 +52,7 @@ so that we have the conservations laws
 The toroidal canonical momentum is also a constant of the motion because of
 axisymmetry. It is expressed as 
 \begin{equation}
-P_{\phi }=R\left[ \gamma mv_{\phi }+q_{e}A_{\phi }\right] 
+P_{\phi }=R\left[ \gamma mv_{\phi }+q_{e}A_{\phi }\right]
 \end{equation}
 where $A_{\phi }$ is the toroidal component of the vector potential. From
 the relation 
@@ -59,7 +60,7 @@ the relation
 {\bf B}=\nabla \times {\bf A}
 \end{equation}
 and the expression (\ref{curlpsis}) of a rotational in $\left( \psi ,s,\phi
-\right) $ coordinates, we get
+\right) $ coordinates, we get 
 \begin{eqnarray}
 {\bf B} &=&\left[ \frac{1}{R}\frac{\partial }{\partial s}\left( RA_{\phi
 }\right) -\frac{1}{R}\frac{\partial }{\partial \phi }\left( A_{s}\right)
@@ -71,7 +72,7 @@ RA_{\phi }\right) \right] \widehat{s} \\
 A_{s}\right) -\left| \nabla \psi \right| \frac{\partial }{\partial s}\left( 
 \frac{A_{\psi }}{\left| \nabla \psi \right| }\right) \right] \widehat{\phi }
 \end{eqnarray}
-with
+with 
 \begin{eqnarray}
 A_{\psi } &=&{\bf A}\cdot \widehat{\psi } \\
 A_{s} &=&{\bf A}\cdot \widehat{s} \\
@@ -91,7 +92,7 @@ A_{s}\right) -\left| \nabla \psi \right| \frac{\partial }{\partial s}\left(
 so that 
 \begin{equation}
 B_{s}=-\frac{\left| \nabla \psi \right| }{R}\frac{\partial }{\partial \psi }%
-\left( RA_{\phi }\right) 
+\left( RA_{\phi }\right)
 \end{equation}
 
 In addition, we know from (\ref{bexp2}) that 
@@ -118,33 +119,33 @@ Using (\ref{psisgrad}), we get
 \begin{equation}
 {\bf v}_{\text{gc}}\cdot \nabla \left( qRA_{\phi }\right) ={\bf v}_{\text{gc}%
 }\cdot \left[ \nabla \psi \frac{\partial }{\partial \psi }+\widehat{s}\frac{%
-\partial }{\partial s}+\frac{\widehat{\phi }}{R}\frac{\partial }{\partial %
-\phi }\right] \left( qRA_{\phi }\right) 
+\partial }{\partial s}+\frac{\widehat{\phi }}{R}\frac{\partial }{\partial
+\phi }\right] \left( qRA_{\phi }\right)
 \end{equation}
 which in axisymmetric systems gives 
 \begin{equation}
 {\bf v}_{\text{gc}}\cdot \nabla \left( qA_{\phi }\right) =q{\bf v}_{\text{gc}%
 }\cdot \left[ \nabla \psi \frac{\partial RA_{\phi }}{\partial \psi }+%
-\widehat{s}\frac{\partial RA_{\phi }}{\partial s}\right] 
+\widehat{s}\frac{\partial RA_{\phi }}{\partial s}\right]
 \end{equation}
 
 Since $B_{\psi }=0$, we have from (\ref{bpsi}) that $\partial \left(
 RA_{\phi }\right) /\partial s=0$ and therefore, using (\ref{raphi}), 
 \begin{equation}
 {\bf v}_{\text{gc}}\cdot \nabla \left( qA_{\phi }\right) =q{\bf v}_{\text{gc}%
-}\cdot \nabla \psi 
+}\cdot \nabla \psi
 \end{equation}
 
 The only velocity accross the flux-surfaces is the drift we are looking for,
 so that we get, using (\ref{vgc}) 
 \begin{equation}
-{\bf v}_{\text{gc}}\cdot \nabla \left( qA_{\phi }\right) =q{\bf v}_{D}\cdot %
-\nabla \psi 
+{\bf v}_{\text{gc}}\cdot \nabla \left( qA_{\phi }\right) =q{\bf v}_{D}\cdot
+\nabla \psi
 \end{equation}
 and the equation (\ref{eqpphi}) becomes 
 \begin{equation}
 q{\bf v}_{D}\cdot \nabla \psi =-{\bf v}_{\text{gc}}\cdot \nabla \left(
-R\gamma mv_{\phi }\right) 
+R\gamma mv_{\phi }\right)
 \end{equation}
 
 Assuming a priori that $\left| v_{\Vert }\right| \gg \left| {\bf v}%
@@ -171,7 +172,7 @@ Since $I\left( \psi \right) $ is a flux function, it can be taken out of the
 gradient, so that 
 \begin{equation}
 {\bf v}_{D}\cdot \nabla \psi =-\frac{v_{\Vert }}{\Omega }I\left( \psi
-\right) {\bf B}\cdot \nabla \left( \frac{v_{\Vert }}{B}\right) 
+\right) {\bf B}\cdot \nabla \left( \frac{v_{\Vert }}{B}\right)
 \label{vdpsi1}
 \end{equation}
 
@@ -246,8 +247,8 @@ and finally, the equation (\ref{drift2}) becomes
 
 In addition, 
 \begin{eqnarray}
-{\bf B}\cdot \nabla  &=&I\left( \psi \right) \nabla \phi \cdot \nabla
-+\nabla \psi \times \nabla \phi \cdot \nabla  \\
+{\bf B}\cdot \nabla &=&I\left( \psi \right) \nabla \phi \cdot \nabla +\nabla
+\psi \times \nabla \phi \cdot \nabla \\
 &=&\frac{I\left( \psi \right) }{R}\frac{\partial }{\partial \phi }-\frac{%
 \left| \nabla \psi \right| }{R}\frac{\partial }{\partial s}
 \end{eqnarray}
@@ -259,7 +260,7 @@ and, using axisymmetry,
 so that we can rewrite (\ref{drift3}) as 
 \begin{equation}
 {\bf v}_{D}\cdot \nabla \psi =-\frac{v_{\Vert }}{\Omega }I\left( \psi
-\right) {\bf B}\cdot \nabla \left( \frac{v_{\Vert }}{B}\right) 
+\right) {\bf B}\cdot \nabla \left( \frac{v_{\Vert }}{B}\right)
 \label{vdpsi2}
 \end{equation}
 
@@ -312,23 +313,27 @@ v_{\Vert }}{r}\frac{I\left( \psi \right) }{RB}\frac{\partial }{\partial
 When the toroidal field dominates, $B\simeq I\left( \psi \right) /R$ and 
 \begin{equation}
 v_{Dr}\simeq \frac{v_{\Vert }}{r}\frac{\partial }{\partial \theta }\left( 
-\frac{v_{\Vert }}{\Omega }\right) 
+\frac{v_{\Vert }}{\Omega }\right)
 \end{equation}
 
 \subsection{Steady-State Drift-Kinetic Equation}
 
 Using (\ref{dke1}), (\ref{vgc}) and (\ref{vdpsi1}) or (\ref{vdpsi2}), we
-obtain in steady-state
+obtain in steady-state 
 \begin{equation}
-v_{\Vert }\left( \widehat{b}\cdot \widehat{s}\right) \frac{\partial f}{%
-\partial s}-\frac{v_{\Vert }}{\Omega }I\left( \psi \right) {\bf B}\cdot %
-\nabla \left( \frac{v_{\Vert }}{B}\right) \frac{\partial f}{\partial \psi }%
-=C\left( f\right) +Q\left( f\right) 
+v_{\Vert }\widehat{b}\cdot \nabla f-\frac{v_{\Vert }}{\Omega }I\left( \psi
+\right) {\bf B}\cdot \nabla \left( \frac{v_{\Vert }}{B}\right) \frac{%
+\partial f}{\partial \psi }={\cal C}\left( f\right) +{\cal Q}\left( f\right)
++{\cal E}\left( f\right) 
 \end{equation}
-which can be rewritten as
+which can be rewritten as 
 \begin{equation}
 v_{s}\frac{\partial f}{\partial s}+\frac{v_{\Vert }}{\Omega }I\left( \psi
 \right) \frac{\left| \nabla \psi \right| }{R}\frac{\partial }{\partial s}%
-\left( \frac{v_{\Vert }}{B}\right) \frac{\partial f}{\partial \psi }=C\left(
-f\right) +Q\left( f\right) 
+\left( \frac{v_{\Vert }}{B}\right) \frac{\partial f}{\partial \psi }={\cal C}%
+\left( f\right) +{\cal Q}\left( f\right) +{\cal E}\left( f\right) 
+\end{equation}
+with 
+\begin{equation}
+v_{s}=v_{\Vert }\left( \widehat{b}\cdot \widehat{s}\right) 
 \end{equation}

@@ -2,20 +2,79 @@ We recall the drift-kinetic equation
 \begin{equation}
 v_{s}\frac{\partial f}{\partial s}+\frac{v_{\Vert }}{\Omega }I\left( \psi
 \right) \frac{\left| \nabla \psi \right| }{R}\frac{\partial }{\partial s}%
-\left( \frac{v_{\Vert }}{B}\right) \frac{\partial f}{\partial \psi }=C\left(
-f\right) +Q\left( f\right) 
+\left( \frac{v_{\Vert }}{B}\right) \frac{\partial f}{\partial \psi }={\cal C}%
+\left( f\right) +{\cal Q}\left( f\right) +{\cal E}\left( f\right) 
 \end{equation}
 
-In the small drift expansion, the first order equation is
+Each of these terms corresponds to a time evolution, and is therefore
+associated with a time-scale:
+
+\begin{itemize}
+\item  Motion along the field lines. The time scale here is the bounce or
+transit time 
+\begin{eqnarray}
+\tau _{b} &=&\int_{s_{\min }}^{s_{\max }}\frac{ds}{\left| v_{s}\right| } \\
+&\sim &\frac{2\pi R_{0}\widetilde{q}\left( \psi \right) }{v\left| \xi
+_{0}\right| }\sim \frac{2\pi \epsilon R_{0}}{v\left| \xi _{0}\right| }\frac{B%
+}{B_{P}}
+\end{eqnarray}
+
+\item  Drift across the field lines. The time scale here is the drift time,
+which corresponds to the time for an electron to drift across the plasma. It
+is 
+\begin{eqnarray}
+\tau _{d} &=&\int_{0}^{\psi _{a}}d\psi \frac{\Omega }{v_{\Vert }I\left( \psi
+\right) }\frac{R}{\left| \nabla \psi \right| }\left[ \frac{\partial }{%
+\partial s}\left( \frac{v_{\Vert }}{B}\right) \right] ^{-1} \\
+&\sim &2\pi \Omega \epsilon \frac{aR_{0}}{v^{2}\xi _{0}^{2}}\frac{B}{B_{T}}
+\end{eqnarray}
+so that the small drift parameter is
 \begin{equation}
-v_{s}\frac{\partial f_{0}}{\partial s}=C\left( f_{0}\right) +Q\left(
-f_{0}\right) 
+\delta _{d}=\frac{\tau _{b}}{\tau _{d}}\sim \frac{\rho _{L}}{a}\frac{q}{%
+\epsilon }\frac{v\left| \xi _{0}\right| }{v_{Te}}
 \end{equation}
+with the Larmor radius being $\rho _{L}=$ $v_{Te}/\Omega $.
+
+\item  Electric field acceleration. The time scale here is
+\begin{eqnarray}
+\tau _{e} &\sim &\frac{mv\left| \xi _{0}\right| }{\left| q_{e}\right|
+E_{0\Vert }} \\
+&\sim &\tau _{c}\frac{v\left| \xi _{0}\right| }{v_{Te}}\frac{E_{D}}{%
+E_{0\Vert }}
+\end{eqnarray}
+where the Dreicer field is
+\begin{equation}
+E_{D}=\frac{m\nu _{c}v_{Te}}{e}
+\end{equation}
+
+\item  Collisions. The time scale is the collision time 
+\begin{equation}
+\tau _{c}=\nu _{c}^{-1}=\frac{4\pi \varepsilon _{0}^{2}m_{e}^{2}v_{Te}^{3}}{%
+e^{4}n_{e}\ln \Lambda }
+\end{equation}
+
+\item  Quasilinear diffusion.
+\end{itemize}
+
+\subsection{Small Drift Ordering}
+
+In the small drift expansion $\delta _{d}\ll 1$%
+\begin{equation}
+f=f_{0}+f_{1}+\cdots 
+\end{equation}
+the first order equation is
+\begin{equation}
+v_{s}\frac{\partial f_{0}}{\partial s}={\cal C}\left( f_{0}\right) +{\cal Q}%
+\left( f_{0}\right) +{\cal E}\left( f_{0}\right) 
+\end{equation}
+and is usually referred to as the Fokker-Planck Equation.
 
 The second order equation is
 \begin{equation}
 v_{s}\frac{\partial f_{1}}{\partial s}+\frac{v_{\Vert }}{\Omega }I\left(
 \psi \right) \frac{\left| \nabla \psi \right| }{R}\frac{\partial }{\partial s%
-}\left( \frac{v_{\Vert }}{B}\right) \frac{\partial f_{0}}{\partial \psi }%
-=C\left( f_{1}\right) +Q\left( f_{1}\right) 
+}\left( \frac{v_{\Vert }}{B}\right) \frac{\partial f_{0}}{\partial \psi }=%
+{\cal C}\left( f_{1}\right) +{\cal Q}\left( f_{1}\right) +{\cal E}\left(
+f_{1}\right) 
 \end{equation}
+and is referred to as the Drift-Kinetic Equation.
