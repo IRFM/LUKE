@@ -237,7 +237,7 @@ xTen = xTe/mc2;
 xzTin = xzTi/mc2;
 %
 xbetath = sqrt(xTen);%Normalized pth/mc as prescribed by Karney
-xlnc_e = 31.3 - 0.5*log(xne) + log(xTe);%Coulomb logarithm (Sauter et al. Phys. Plasmas, 6 (1999) 2834)
+xlnc_e = 31.3 - 0.5*log(xne) + log(xTe*1000);%Coulomb logarithm (Sauter et al. Phys. Plasmas, 6 (1999) 2834)
 xnhu = qe^4*xne.*xlnc_e./(4*pi*e0^2*me^2.*(clum*xbetath).^3);%Electron collision frequency (s-1)
 %
 XXfinit_ref = zeros(np,nmhu,nr);%Defined on the distribution function grid (half grid)
@@ -635,7 +635,7 @@ xyPabs_tot_rf_fsav_in = 0;
 %
 for it_rf=1:nit_rf % convergence in the ray-tracing mode
 %
-    [waveparam,nb_list] = rfwave_dke_jd(tokname,xrho,xpsin,xpsin_dke,xdpsin_dke,xyPabs_tot_rf_fsav_in,betath_ref,ne_ref,xrbetath,xrnhuth,xTe_norm,xne_norm,xzni_norm,zZi,zmi,Rp,ap,bounce_mode,rf_list);%Look at the function for the RF wave input parameters
+    [waveparam,nb_list] = rfwave_dke_jd(xrho,xpsin,xpsin_dke,xdpsin_dke,xyPabs_tot_rf_fsav_in,betath_ref,ne_ref,xrbetath,xrnhuth,xTe_norm,xne_norm,xzni_norm,zZi,zmi,ap,Rp,Zp,theta,XR,XZ,XBR,XBZ,XBphi,xB0,bounce_mode,rf_list);%Look at the function for the RF wave input parameters
 %    
     [XXheaviside,...
         XXf0_ref,XXf0_tp_ref,XXf0_g_ref,XXf0_L_tp_ref,XXf0_L_g_ref,...
