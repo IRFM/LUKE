@@ -1287,7 +1287,7 @@ for ir = 1:nr,
 	XFm_ijp,XFm_ijm);
 % 
 %
-%Loss matrix coefficients (fro ripple losses for example)
+%Loss matrix coefficients (for magnetic ripple losses but may be used for other effects if necessary)
 %
 	Xc = Xc + XXnhuloss(:,:,ir).*Xpn2;
 %
