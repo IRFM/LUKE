@@ -1388,15 +1388,7 @@ for ir = 1:nr,
 		XDmp_tp_ijp,XDmp_tp_ij,XDmp_tp_ijm,...
 		XDmm_tp_ijp,XDmm_tp_ijm,...
 		XFp_tp_ippj,XFp_tp_ipj,XFp_tp_ij,XFp_tp_imj,XFp_tp_immj,...
-		XFm_tp_ijp,XFm_tp_ijm); 
-		
-save testdke_new.mat Xa_t Xb_t Xc_t Xd_t Xe_t Xf_t Xg_t Xh_t Xi_t
-save testdke_new.mat Xa_tp Xb_tp Xc_tp Xd_tp Xe_tp xTe_norm xne_norm xbetath betath_ref XBt XFp XAp xmhubounce2 fM xzTi_norm xzni_norm zZi ir -append
-save testdke_new.mat Xpnmm Xpnm Xpn Xpnp Xpnpp Xpn2m Xpn2 Xpn2p Xdpnmm Xdpnm Xdpn Xdpnp Xdpnpp -append
-save testdke_new.mat Xmhumm Xmhum Xmhu Xmhup Xmhupp X1mmhu2 X1mmhu2m X1mmhu2p Xdmhumm Xdmhum Xdmhu Xdmhup Xdmhupp -append
-save testdke_new.mat XDmm_c_tp_ijp XDmm_c_tp_ijm XXRlambda_b_p3m2_p XXRlambda_b_p3m2_m XXRlambda_b_p1m1 XFpp XFp XF XFm XFmm -append 
-save testdke_new.mat XXRlambda_b_p1m2_m XXRlambda_b_p1m2_p dtn -append
-		
+		XFm_tp_ijp,XFm_tp_ijm); 		
 %
 %Loss matrix coefficients
 %
@@ -1528,13 +1520,6 @@ save testdke_new.mat XXRlambda_b_p1m2_m XXRlambda_b_p1m2_p dtn -append
 		MXP_f_t = MXP_f_t + sparse([1:(nmhu-ns(ir))*npn-(nmhu-ns(ir))-djmhut],[1+(nmhu-ns(ir))+djmhut:(nmhu-ns(ir))*npn],MXo(1:length(MXo)-(nmhu-ns(ir))-djmhut),(nmhu-ns(ir))*npn,(nmhu-ns(ir))*npn);      
 	end
 %
-	if dke_mode == 1 & ~isempty(find(ir==rdke)),
-		disp('save 2')
-		save testdke_new.mat MXP_f_t   -append
-%		break
-	end
-	
-	
 	MXP_f_t = (xqtilde(ir)/xB0(ir))*MXP_f_t;%Partial Jacobian multiplication to avoid numerical singularities at p = 0	
 %    
 	sm_f(ir+1) = sm_f(ir) + blocksize_f_t(ir);

@@ -58,7 +58,7 @@ xmhu0T = sqrt(1 - xBmin./xBmax);%Pitch-angle at the trapped-passing boundary
 xymhu0 = repmat(ymhu0,[np,1]);
 xymhu0T = repmat(xmhu0T',[1,nmhu]);
 %
-xymaskT = abs(xymhu0) < xymhu0T - 0.5*eps;%Select trapped particles (the 0.5*eps is for access to very core plasma calculations)
+xymaskT = abs(xymhu0) <= xymhu0T - eps;%Select trapped particles (the eps is for access to very core plasma calculations)
 %
 YCS = cumsum(ones(nt,np,nmhu));
 %
@@ -75,7 +75,7 @@ xyi1min = reshape(min(Yimin - 1).*Y1maskl + min(Yimax - 1).*Y1maskg,[np,nmhu]);
 xyi2min = reshape(max(Yimin).*Y1maskl + max(Yimax).*Y1maskg,[np,nmhu]);
 xyi2max = reshape(max(Yimin + 1).*Y1maskl + max(Yimax + 1).*Y1maskg,[np,nmhu]);
 %
-clear Yimin Yimax
+%clear Yimin Yimax
 %
 xyi1min(~xymaskT) = 1;
 xyi1max(~xymaskT) = 1;
