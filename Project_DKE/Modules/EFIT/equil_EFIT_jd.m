@@ -1,17 +1,20 @@
-%function equil_EFIT_jd(filename,display_mode,p_opt)
-filename = 'TCV';
-display_mode = 2;
-p_opt = 2;
+function equil_EFIT_jd(filename,type,display_mode,p_opt)
 %
 % This function reads the equilibrium parameters from eqdsk files created
 % by EFIT and saved in the formatted text file "filename.efit", as well as
 % the temperature and density parameters from the (fully numerical) text
 % file "filename". It creates a DKE equilibrium file "EQUIL_filename.mat"
 %
+%	INPUTS:
+%
+%		- filename: equilibrium data and save name
+%		- type: profile data type:(0) for ascii; (1) for .mat
+%		- display_mode: option for figure display
+%		- p_opt: option for printing
+%
 % by J. Decker (jodecke@alum.mit.edu) 11/01/04
 %
 method = 'spline';
-type = 1;%profile data type:(0) for ascii; (1) for .mat
 np = 101;
 nt = 65;
 %

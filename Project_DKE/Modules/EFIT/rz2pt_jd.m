@@ -102,8 +102,8 @@ hrztheta = atan((hrzZ - Zp)./(hrzR - Rp)) + pi*(hrzR < Rp) + 2*pi*(hrzR > Rp & h
 %
 % need to select more generally... this is a temporary solution    
 %
-sRa = x1c{3};
-sZa = x2c{3};
+sRa = x1c{1};
+sZa = x2c{1};
 %
 % change to (r,theta) grid
 %
