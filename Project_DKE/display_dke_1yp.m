@@ -7,6 +7,7 @@ xeta0_fsav_mksa,xepsi_fsav_mksa,xia,xft_fsav] = display_dke_1yp(filename,auto_mo
 %by Y.Peysson CEA-DRFC 02/08/2003 <yves.peysson@cea.fr>
 %
 %
+warning off;
 [s,dossier,machine] = comput_dke_yp;
 if nargin == 0,	
 	eval(['dir ',dossier,s,'dke_*.mat']);
@@ -43,7 +44,6 @@ xnormf_ref_fsav = Znorm_ref_fsav{1,1};
 xepsi_ref_fsav = xepsi_ref_fsav_in(r_dke);%Only radial positions at which bootstrap current is calculated are used
 xrho_dke = xrho(r_dke);%Only radial positions at which bootstrap current is calculated are used
 xia = xrho_dke*ap/Rp;%Pseudo inverse aspect ratio (has a meaning only for circular plasma equilibrium)
-xft_out = xft_fsav;
 %
 xRR_KB_fsav = 0.35*abs(xepsi_ref_fsav).^(-3/8).*exp(-(sqrt(2./abs(xepsi_ref_fsav))+1./4./abs(xepsi_ref_fsav)));%Kulsrud fit of the theoretical Kruskal-Bernstein runaway rate (PRL 31,11 (1973) 690)
 %
@@ -56,6 +56,13 @@ XxRR_mksa_fsav = XxRR_ref_fsav*nhu_ref*ne_ref;%Runaway loss rate in mksa units
 if bounce_mode > 0,
 	xnhu_e_star = 0.012*(xne(r_dke)/1e20).*xZeff(r_dke).*xq*Rp./xia.^1.5./xTe(r_dke).^2;%From O. Sauter et al., Phys. Plasma 6 (1999) 2834
 	[xfteff_llm] = ft_llm_dke_yp(xia,1000);%From Y.R. Lin-Liu and R.L. Miller, Phys. Plasma 2 (1995) 1666
+%
+	[s,dossier,machine] = comput_dke_yp;
+	filename = ['EQUIL_',tokname,'.mat'];
+	eval(['load ',dossier,s,filename,' ppsi ftra']);%Load effective trapped fraction given by HELENA
+	if exist('ftra') == 1,
+		xftra = interp1(ppsi,ftra,xpsin(r_dke));
+	end
 else
 	xnhu_e_star = NaN*ones(size(xia));
 	xfteff_llm = zeros(size(xia));
@@ -131,9 +138,12 @@ while 1,
 		info_dke_yp(2,['Normalized Coulomb logarithm: ',num2str(xlnc_e(ir_display)/lnc_e_ref)])
 		info_dke_yp(2,['Normalized electron collision frequency: ',num2str(xnhu(ir_display)/nhu_ref)])
 		if bounce_mode > 0,
-			info_dke_yp(2,['Exact trapped fraction: ',num2str(xft_fsav(ir_display_dke))])
-			info_dke_yp(2,['Effective trapped fraction: ',num2str(xfteff_fsav(ir_display_dke))])
-			info_dke_yp(2,['Approximate effective trapped fraction: ',num2str(xfteff_llm(ir_display_dke))])
+			info_dke_yp(2,['Exact trapped fraction from DKE: ',num2str(xft_fsav(ir_display_dke))])
+			info_dke_yp(2,['Effective trapped fraction from DKE: ',num2str(xfteff_fsav(ir_display_dke))])
+			info_dke_yp(2,['Approximate effective trapped fraction from from DKE (Lin-Liu-Miller): ',num2str(xfteff_llm(ir_display_dke))])
+			if exist('ftra') == 1,
+				info_dke_yp(2,['Effective trapped fraction from HELENA: ',num2str(xftra(ir_display_dke))])
+			end
 			info_dke_yp(2,['Collisionality parameter: ',num2str(xnhu_e_star(ir_display_dke))])
 		end
 		disp('-------------------------------------------------------------------------------------------------------------------');
@@ -158,7 +168,7 @@ while 1,
 			info_dke_yp(2,['Magnetic ripple loss rate (flux calculations) (s-1.m-3): ',num2str(xMRR_flux_mksa(ir_display))]);
 			disp('-------------------------------------------------------------------------------------------------------------------');
 %
-            figure(205),clf
+            figure(207),clf
             [ax] = graph1D_jd(xrho_dke,xMRR_tau_mksa,'','','',NaN,[0,1],NaN,'none','+','r',2,14,gca,0.8,0.7,0.6);
 			hold on
             [ax] = graph1D_jd(xrho_dke,xMRR_flux_mksa,'\rho','\Gamma_{ST} (m^-3.s^-1)','Magnetic ripple loss rate at Bmin',NaN,[0,1],NaN,'none','x','b',2,14,gca,0.8,0.7,0.6);
@@ -387,10 +397,10 @@ while 1,
 				eval(['save ',filenameroot,'_data_fig8_',int2str(ir_display_dke),'.mat xrho_dke xia r_dke ir_display_dke ppar_cyl_ref pperp_cyl_ref xmhubounce2 pnmax_S'])
 			end
 %
-		   figure(5),clf
-    		maxXAstr_cyl_ref = max(max(XAstr_cyl_ref));
+			figure(5);clf
+    		maxXAstr_cyl_ref = max(max(XAstr_cyl_ref)) + eps;
     		minXAstr_cyl_ref = min(min(XAstr_cyl_ref)) + eps;
-   % 		C = contour(ppar_cyl_S_ref,pperp_cyl_S_ref,XAstr_cyl_ref,minXAstr_cyl_ref*exp(-[0:1:4*nlevel]/(-4*nlevel/log(maxXAstr_cyl_ref/minXAstr_cyl_ref))));colorbar;grid on;zoom on;%Stream function
+   		C = contour(ppar_cyl_S_ref,pperp_cyl_S_ref,XAstr_cyl_ref,minXAstr_cyl_ref*exp(-[0:1:4*nlevel]/(-4*nlevel/log(maxXAstr_cyl_ref/minXAstr_cyl_ref))));colorbar;grid on;zoom on;%Stream function
     		axis('equal')
     		title('Stream Function');
     		xlabel('ppar/pth-ref');
@@ -582,9 +592,11 @@ while 1,
 		else
 			[Xf0_g_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(Xf0_g_ref,pn_ref,mhu,dp_cyl);
 			Xf0_g_cyl_ref = Xf0_g_cyl_ref.*(Xp_cyl_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
+			Xf0_g_cyl_ref(isnan(Xf0_g_cyl_ref)) = 0;%Remove NaN values
 %			                                                              
 			[Xf0_tp_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(Xf0_tp_ref,pn_ref,mhu,dp_cyl);
 			Xf0_tp_cyl_ref = Xf0_tp_cyl_ref.*(Xp_cyl_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
+			Xf0_tp_cyl_ref(isnan(Xf0_tp_cyl_ref)) = 0;%Remove NaN values
 %
 			Xf0_tpg_cyl_ref = Xf0_g_cyl_ref + Xf0_tp_cyl_ref;
 			F1bootstrap_cyl_ref = 2*pi*integral_dke_jd(dpperp_cyl_ref,Xpperp_cyl_ref.*Xf0_tpg_cyl_ref,1);
@@ -594,9 +606,11 @@ while 1,
 			if coll_mode == 3,%Lorentz model
 				[Xf0_L_g_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(Xf0_L_g_ref,pn_ref,mhu,dp_cyl);
 				Xf0_L_g_cyl_ref = Xf0_L_g_cyl_ref.*(Xp_cyl_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
+				Xf0_L_g_cyl_ref(isnan(Xf0_L_g_cyl_ref)) = 0;%Remove NaN values
 %
 				[Xf0_L_tp_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(Xf0_L_tp_ref,pn_ref,mhu,dp_cyl);
 				Xf0_L_tp_cyl_ref = Xf0_L_tp_cyl_ref.*(Xp_cyl_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
+				Xf0_L_tp_cyl_ref(isnan(Xf0_L_tp_cyl_ref)) = 0;%Remove NaN values
 %
 				Xf0_L_tpg_cyl_ref = Xf0_L_g_cyl_ref + Xf0_L_tp_cyl_ref;	
 				F1bootstrap_L_cyl_ref = 2*pi*integral_dke_jd(dpperp_cyl_ref,Xpperp_cyl_ref.*Xf0_L_tpg_cyl_ref,1);
@@ -604,13 +618,28 @@ while 1,
 				xcurr_tot_L_cyl_ref(ir_display_dke) = 2*pi*integral_dke_jd(dpperp_cyl_ref,pperp_cyl_ref'.*integral_dke_jd(ppar_cyl_ref,Xvpar_cyl_ref.*Xf0_tot_L_cyl_ref,2),1);  
 			end			
 %   
-			if display_mode >= 2 
-				figure(9),plot(ppar_cyl_ref,F1bootstrap_cyl_ref),ylabel('F1(bootstrap)'),xlabel('ppar');zoom on
-				ipnplot_ref = min(find(pn_ref>=4));
+			if display_mode >= 2, 
+				figure(9);clf
+				plot(ppar_cyl_ref,F1bootstrap_cyl_ref,'ro');
+				xlabel('ppar');zoom on		
+				if coll_mode == 3,%Lorentz model
+					hold on;
+					plot(ppar_cyl_ref,F1bootstrap_L_cyl_ref,'b+')
+					hold off
+					ylabel('F1// - code (o),theory (+)');
+				else
+					ylabel('F1// - code (o)');
+				end
+				title('Parallel first order distribution');
+				faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
+				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['rho = ',num2str(xrho_dke(ir_display_dke))]);
+				pause(time_pause);
 %
-				figure(10),plot(mhu,Xf0_tp_ref(ipnplot_ref,:)','bo',mhu,Xf0_g_ref(ipnplot_ref,:)','ro'),hold off
-				line([sqrt(xmhubounce2(r_dke(ir_display_dke))),sqrt(xmhubounce2(r_dke(ir_display_dke)))],[min(Xf0_tp_ref(ipnplot_ref,:)),max(Xf0_tp_ref(ipnplot_ref,:))]);
-				line([-sqrt(xmhubounce2(r_dke(ir_display_dke))),-sqrt(xmhubounce2(r_dke(ir_display_dke)))],[min(Xf0_tp_ref(ipnplot_ref,:)),max(Xf0_tp_ref(ipnplot_ref,:))]);
+				ipnplot_ref = min(find(pn_ref>=4));
+				figure(10);clf
+				plot(mhu,Xf0_tp_ref(ipnplot_ref,:),'bo',mhu,Xf0_g_ref(ipnplot_ref,:),'ro');
+				line([sqrt(xmhubounce2(ir_display)),sqrt(xmhubounce2(ir_display))],[min(Xf0_tp_ref(ipnplot_ref,:)),max(Xf0_tp_ref(ipnplot_ref,:))]);
+				line([-sqrt(xmhubounce2(ir_display)),-sqrt(xmhubounce2(ir_display))],[min(Xf0_tp_ref(ipnplot_ref,:)),max(Xf0_tp_ref(ipnplot_ref,:))]);
 				if coll_mode == 3,%Lorentz model
 					hold on;
 					plot(mhu,Xf0_L_tp_ref(ipnplot_ref,:),'b+')
@@ -621,8 +650,10 @@ while 1,
 					ylabel('ftp (blue),g (red) - code (o)');
 				end
 %
-				xlabel('mhu')
+				xlabel('mhu');zoom on
 				title(['pn-ref = ',num2str(pn_ref(ipnplot_ref))])
+				faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
+				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['rho = ',num2str(xrho_dke(ir_display_dke))]);
 				pause(time_pause);
 %
 				figure(11),clf
@@ -823,7 +854,7 @@ while 1,
 %
         figure(204),clf
         [ax] = graph1D_jd(xrho_dke,XxRR_mksa_fsav(np-1,ir_display_dke),'\rho','<\Gamma_{R}> (m^-3.s^-1)','Runaway loss rate',NaN,[0,1],NaN,'none','+','r',2,14,gca,0.8,0.7,0.6);
-		axis([0,1,0,1.1*max(XxRR_mksa_fsav(np-1,ir_display_dke))])
+        axis([0,1,0,1.1*max(XxRR_mksa_fsav(np-1,ir_display_dke)+eps)])
 %
 		if dke_mode == 1,  
 %
@@ -837,7 +868,18 @@ while 1,
             figure(202),clf
             [ax] = graph1D_jd(xrho_dke,xJtot_fsav_mksa,'\rho','<J_{tot}> (MA/m^2)','Total Current Density',NaN,[0,1],0,'none','+','r',2,14,gca,0.8,0.7,0.6);
 %
-		end
+				figure(205),clf
+				[ax] = graph1D_jd(xrho_dke,xfteff_fsav,'\rho','','Effective trapped fraction',NaN,[0,1],[0,1],'none','o','r',2,14,gca,0.8,0.7,0.6);
+				if exist('ftra') == 0,%In case of ideal magnetic equilibrium only
+					[ax] = graph1D_jd(xrho_dke,xfteff_llm,'\rho','ft-eff (DKE: o, LLM: x)','Effective trapped fraction',NaN,[0,1],[0,1],'none','x','g',2,14);
+				else
+					[ax] = graph1D_jd(xrho_dke,xfteff_llm,'\rho','','Effective trapped fraction',NaN,[0,1],[0,1],'none','x','g',2,14);
+					[ax] = graph1D_jd(xrho_dke,xftra,'\rho','ft-eff (DKE: o, HELENA: +, LLM: x)','Effective trapped fraction',NaN,[0,1],[0,1],'none','+','b',2,14);				
+				end
+%
+				figure(206),clf
+				[ax] = graph1D_jd(xrho_dke,xft_fsav,'\rho','ft-exact','Exact trapped fraction (DKE)',NaN,[0,1],[0,1],'none','o','r',2,14,gca,0.8,0.7,0.6);    
+      end
 		if igor_mode == 1,
 			eval(['save ',filenameroot,'_data_fig200.mat xrho_dke xia r_dke j_ref xcurr_tot_ref_fsav P_ref xPabs_tot_ref_fsav xTe xTi xne xnhyd xft xft_llm'])
 		end
