@@ -1,4488 +1,2244 @@
 %\input{tcilatex}
 
 
-
-
-
 \documentclass{article}
-
 \usepackage{amssymb}
 
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \usepackage{graphicx}
-
 \usepackage{amsmath}
 
-
-
 %TCIDATA{OutputFilter=LATEX.DLL}
-
 %TCIDATA{Created=Tue Apr 29 19:13:34 2003}
-
 %TCIDATA{LastRevised=Tue Jul 29 10:45:01 2003}
-
 %TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
-
 %TCIDATA{<META NAME="DocumentShell" CONTENT="General\Latex_article">}
-
 %TCIDATA{CSTFile=article.cst}
 
-
-
 \newcommand{\fig}[4]{
-
 \begin{figure}
-
 \begin{center}
-
 \includegraphics[width = #4 cm]{#1}
-
 \caption{#2}\label{#3}
-
 \end{center}
-
 \end{figure}
-
 }
-
 \addtolength{\voffset}{-2.5cm} \addtolength{\textheight}{5.0cm}
-
 \addtolength{\hoffset}{-2.0cm} \addtolength{\textwidth}{5.0cm}
-
 \input{tcilatex}
-
-
 
 \begin{document}
 
-
-
 \title{Bounce-Averaged Quasilinear Description of RFCD}
-
 \date{April 29, 2003\\
-
 \vspace{0.5cm} Updated July 2, 2003}
-
 \author{Joan Decker and Yves Peysson}
-
 \maketitle
-
 \tableofcontents
-
-
 
 \section{Original Formulation}
 
-
-
 The quasilinear diffusion operator was developped by Kennel and Engelmann 
-
 \cite{ken66}. The relativistic treatment was performed by Lerche \cite{ler68}%
-
 , who proposes the following operator 
-
 \begin{eqnarray}
-
 Q\left( f\right) &=&-\frac{e^{2}}{\left( 2\pi \right) ^{3}}%
-
 \lim_{V\rightarrow \infty }\frac{1}{V}\sum_{n=-\infty }^{\infty }\iiint
-
 d^{3}k\left[ \left\{ P_{\Vert }^{\ast }E_{\mathbf{k},\Vert }^{\ast }J_{n}+%
-
 \left[ P_{\bot }^{\ast }-\frac{1}{p_{\bot }}\left( \frac{k_{\Vert }v_{\Vert }%
-
 }{\omega ^{\ast }}-1\right) \right] E_{\mathbf{k},\bot }^{\ast }\right\}
-
 \right.  \label{qloporig} \\
-
 &&\left. \cdot \frac{i}{\left[ n\Omega +k_{\Vert }v_{\Vert }-\omega \right] }%
-
 \left\{ E_{\mathbf{k},\Vert }J_{n}P_{\Vert }+E_{\mathbf{k},\bot }P_{\bot
-
 }\right\} f\right]  \notag
-
 \end{eqnarray}
-
 with 
-
 \begin{eqnarray}
-
 P_{\Vert } &=&\frac{\partial }{\partial p_{\Vert }}-\frac{n\Omega }{\omega
-
 v_{\bot }}\left( v_{\bot }\frac{\partial }{\partial p_{\Vert }}-v_{\Vert }%
-
 \frac{\partial }{\partial p_{\bot }}\right)  \label{ppar} \\
-
 P_{\bot } &=&\frac{\partial }{\partial p_{\bot }}+\frac{k_{\Vert }}{\omega }%
-
 \left( v_{\bot }\frac{\partial }{\partial p_{\Vert }}-v_{\Vert }\frac{%
-
 \partial }{\partial p_{\bot }}\right)  \label{pperp} \\
-
 E_{\mathbf{k},\bot } &=&\frac{1}{\sqrt{2}}\left( E_{\mathbf{k},-}e^{i\alpha
-
 }J_{n+1}+E_{\mathbf{k},+}e^{-i\alpha }J_{n-1}\right)  \label{eperp}
-
 \end{eqnarray}
-
-
 
 The electric field is decomposed into its Fourier components 
-
 \begin{equation}
-
 \mathbf{E}(\mathbf{x},t)=\iiint \frac{d^{3}k}{(2\pi )^{3}}e^{i\mathbf{k}%
-
 \cdot \mathbf{x}-i\omega t}\mathbf{E}_{\mathbf{k}}\left( \mathbf{k}\right)
-
 \end{equation}
-
 which are projected on the rotating field frame 
-
 \begin{eqnarray}
-
 E_{\mathbf{k},\pm } &=&\frac{1}{\sqrt{2}}\left( E_{\mathbf{k},x}\pm iE_{%
-
 \mathbf{k},y}\right)  \label{ekpm} \\
-
 E_{\mathbf{k},\Vert } &=&E_{\mathbf{k},z}
-
 \end{eqnarray}
-
-
 
 The wave vector is expressed in cylindrical coordinates as 
-
 \begin{eqnarray}
-
 k_{x} &=&k_{\bot }\cos \alpha \\
-
 k_{y} &=&k_{\bot }\sin \alpha  \notag \\
-
 k_{z} &=&k_{\Vert }  \notag
-
 \end{eqnarray}
-
 and the argument of the Bessel functions is $k_{\bot }v_{\bot }/\Omega $.
-
 The relativistic cyclotron frequency is 
-
 \begin{equation}
-
 \Omega =\frac{q_{e}B}{\gamma m_{e}}
-
 \end{equation}
-
-
 
 \section{Expression as the Divergence of a Flux}
 
-
-
 \subsection{In Spherical Coordinates}
 
-
-
 After some manipulations (Appendix \ref{fluxexp}), the quasilinear operator (%
-
 \ref{qloporig}) can be expressed in a divergence form in the $\left( p,\xi
-
 \right) $ momentum space 
-
 \begin{equation}
-
 Q(f)=-\nabla \cdot \mathbf{S}^{\text{RF}}=-\frac{1}{p^{2}}\frac{\partial }{%
-
 \partial p}\left( p^{2}S_{p}^{\text{RF}}\right) +\frac{1}{p}\frac{\partial }{%
-
 \partial \xi }\left( \sqrt{1-\xi ^{2}}S_{\xi }^{\text{RF}}\right)
-
 \label{qlop}
-
 \end{equation}
-
 where the flux has a purely diffusive form 
-
 \begin{equation}
-
 \mathbf{S}^{\text{RF}}=-\mathbb{D}^{\text{RF}}\cdot \nabla _{\mathbf{p}}f
-
 \end{equation}
-
-
 
 The components of the diffusion tensor are given by 
-
 \begin{equation}
-
 \mathbb{D}^{\text{RF}}=\left( 
-
 \begin{array}{cc}
-
 D_{pp}^{\text{RF}} & D_{p\xi }^{\text{RF}} \\ 
-
 D_{\xi p}^{\text{RF}} & D_{\xi \xi }^{\text{RF}}
-
 \end{array}
-
 \right)
-
 \end{equation}
-
 with 
-
 \begin{eqnarray}
-
 D_{pp}^{\text{RF}} &=&\sum_{n=-\infty }^{+\infty }\sum_{b}(1-\xi
-
 ^{2})D_{b,n}^{\text{RF}}(p,\xi )  \label{dtensor} \\
-
 D_{p\xi }^{\text{RF}} &=&\sum_{n=-\infty }^{+\infty }\sum_{b}-\frac{\sqrt{%
-
 1-\xi ^{2}}}{\xi }\left[ 1-\xi ^{2}-\frac{n\Omega }{\omega _{b}}\right]
-
 D_{b,n}^{\text{RF}}(p,\xi )  \notag \\
-
 D_{\xi p}^{\text{RF}} &=&\sum_{n=-\infty }^{+\infty }\sum_{b}-\frac{\sqrt{%
-
 1-\xi ^{2}}}{\xi }\left[ 1-\xi ^{2}-\frac{n\Omega }{\omega _{b}}\right]
-
 D_{b,n}^{\text{RF}}(p,\xi )  \notag \\
-
 D_{\xi \xi }^{\text{RF}} &=&\sum_{n=-\infty }^{+\infty }\sum_{b}\frac{1}{\xi
-
 ^{2}}\left[ 1-\xi ^{2}-\frac{n\Omega }{\omega _{b}}\right] ^{2}D_{b,n}^{%
-
 \text{RF}}(p,\xi )  \notag
-
 \end{eqnarray}
-
 where the contributions from the rays are formally separated. Note that the
-
 rays may describe several RF beams, so that their frequency $\omega _{b}$
-
 can be different.
 
-
-
 The gradient in momentum space is the vector 
-
 \begin{equation}
-
 \nabla _{\mathbf{p}}=\left( 
-
 \begin{array}{l}
-
 \nabla _{p} \\ 
-
 \nabla _{\xi }
-
 \end{array}
-
 \right)
-
 \end{equation}
-
 with 
-
 \begin{eqnarray}
-
 \nabla _{p} &=&\frac{\partial f}{\partial p} \\
-
 \nabla _{\xi } &=&-\frac{\sqrt{1-\xi ^{2}}}{p}\frac{\partial f}{\partial \xi 
-
 }
-
 \end{eqnarray}
 
-
-
 The quasilinear diffusion coefficient in (\ref{dtensor}), describing the
-
 interaction of the electrons with a given beam $b$ at an harmonic $n$, is
-
 given by 
-
 \begin{equation}
-
 D_{b,n}^{\text{RF}}(p,\xi )=\lim_{V\rightarrow \infty }\frac{\pi }{V}\iiint 
-
 \frac{d^{3}k}{(2\pi )^{3}}D_{\mathbf{k}}^{b,\left( n\right) }\delta (\omega
-
 _{b}-k_{\Vert }v_{\Vert }-n\Omega )  \label{drf}
-
 \end{equation}
-
 where $D_{\mathbf{k}}^{b,(n)}$ accounts for the polarization and the
-
 intensity of the RF wave. It is given by 
-
 \begin{equation}
-
 D_{\mathbf{k}}^{b,(n)}=e^{2}\left| \frac{1}{\sqrt{2}}E_{\mathbf{k}%
-
 ,b,+}e^{-i\alpha }J_{n-1}\left( \frac{k_{\bot ,b}v_{\bot }}{\Omega }\right) +%
-
 \frac{1}{\sqrt{2}}E_{\mathbf{k},b,-}e^{+i\alpha }J_{n+1}\left( \frac{k_{\bot
-
 ,b}v_{\bot }}{\Omega }\right) +\frac{p_{\Vert }}{p_{\bot }}E_{\mathbf{k}%
-
 ,b,\Vert }J_{n}\left( \frac{k_{\bot ,b}v_{\bot }}{\Omega }\right) \right|
-
 ^{2}  \label{dk2}
-
 \end{equation}
-
-
 
 \subsection{In Cylindrical Coordinates}
 
-
-
 The FP equation is usually solved numerically in spherical coordinates,
-
 because of the spherical structure of the collisional operator. However, in
-
 many case the RF QL Operator has a more cylindrical structure, which is
-
 useful in order to get a physical picture of the wave-particle interaction.
-
 The expression of the divergence in cylindrical coordinates is 
-
 \begin{equation}
-
 \nabla \cdot \mathbf{S}=\frac{1}{p_{\bot }^{2}}\frac{\partial }{\partial
-
 p_{\bot }}\left( p_{\bot }S_{\bot }\right) +\frac{\partial }{\partial
-
 p_{\Vert }}\left( S_{\Vert }\right)  \label{divcyl}
-
 \end{equation}
-
 If the fluxes have a diffusive form 
-
 \begin{equation}
-
 \mathbf{S}=-\mathbb{D}\cdot \nabla f=-\left( 
-
 \begin{array}{cc}
-
 D_{\bot \bot } & D_{\bot \Vert } \\ 
-
 D_{\Vert \bot } & D_{\Vert \Vert }
-
 \end{array}
-
 \right) \cdot \left( 
-
 \begin{array}{c}
-
 \partial f/\partial p_{\bot } \\ 
-
 \partial f/\partial p_{\Vert }
-
 \end{array}
-
 \right)
-
 \end{equation}
-
 the cylindrical tensor elements are related to the spherical tensor elements
-
 by 
-
 \begin{equation}
-
 \left( 
-
 \begin{array}{c}
-
 D_{\bot \bot } \\ 
-
 D_{\bot \Vert } \\ 
-
 D_{\Vert \bot } \\ 
-
 D_{\Vert \Vert }
-
 \end{array}
-
 \right) =\left( 
-
 \begin{array}{cccc}
-
 \left( 1-\xi ^{2}\right) & \xi \sqrt{1-\xi ^{2}} & \xi \sqrt{1-\xi ^{2}} & 
-
 \xi ^{2} \\ 
-
 \xi \sqrt{1-\xi ^{2}} & -\left( 1-\xi ^{2}\right) & \xi ^{2} & -\xi \sqrt{%
-
 1-\xi ^{2}} \\ 
-
 \xi \sqrt{1-\xi ^{2}} & \xi ^{2} & -\left( 1-\xi ^{2}\right) & -\xi \sqrt{%
-
 1-\xi ^{2}} \\ 
-
 \xi ^{2} & -\xi \sqrt{1-\xi ^{2}} & -\xi \sqrt{1-\xi ^{2}} & \left( 1-\xi
-
 ^{2}\right)
-
 \end{array}
-
 \right) \cdot \left( 
-
 \begin{array}{c}
-
 D_{pp} \\ 
-
 D_{p\xi } \\ 
-
 D_{\xi p} \\ 
-
 D_{\xi \xi }
-
 \end{array}
-
 \right)
-
 \end{equation}
-
-
 
 Applying this transformation to the RF diffusion tensor elements above gives 
-
 \begin{eqnarray}
-
 D_{\bot \bot }^{\text{RF}} &=&\sum_{n=-\infty }^{+\infty }\sum_{b}\left[ 
-
 \frac{n\Omega }{\omega _{b}}\right] ^{2}D_{b,n}^{\text{RF}}(p,\xi )
-
 \label{dcyl} \\
-
 D_{\bot \Vert }^{\text{RF}} &=&\sum_{n=-\infty }^{+\infty }\sum_{b}\frac{%
-
 \sqrt{1-\xi ^{2}}}{\xi }\frac{n\Omega }{\omega _{b}}\left[ 1-\frac{n\Omega }{%
-
 \omega _{b}}\right] D_{b,n}^{\text{RF}}(p,\xi )  \notag \\
-
 D_{\Vert \bot }^{\text{RF}} &=&\sum_{n=-\infty }^{+\infty }\sum_{b}\frac{%
-
 \sqrt{1-\xi ^{2}}}{\xi }\frac{n\Omega }{\omega _{b}}\left[ 1-\frac{n\Omega }{%
-
 \omega _{b}}\right] D_{b,n}^{\text{RF}}(p,\xi )  \notag \\
-
 D_{\Vert \Vert }^{\text{RF}} &=&\sum_{n=-\infty }^{+\infty }\sum_{b}\frac{%
-
 (1-\xi ^{2})}{\xi ^{2}}\left[ 1-\frac{n\Omega }{\omega _{b}}\right]
-
 ^{2}D_{b,n}^{\text{RF}}(p,\xi )  \notag
-
 \end{eqnarray}
 
-
-
 We see immediately that for $n=0$ (for example, LHCD) the QL diffusion is
-
 strictly in the parallel direction. Also, at a cyclotron harmonic, where $%
-
 \omega _{b}=n\Omega $, the diffusion is only perpendicular (not considering
-
 relativistic effects).
-
-
 
 \section{Bounce Averaging of the RF Quasilinear Operator}
 
-
-
 The RF Quasilinear Operator is bounce averaged in order to revove the
-
 dependence on the poloidal angle. The bounce averaging operation in both
-
 toroidal and poloidal directions is defined as 
-
 \begin{equation}
-
 \left\{ \mathcal{A}\right\} =\frac{1}{\lambda \left( \xi _{0}\right) }\left[ 
-
 \frac{1}{2}\sum_{\sigma =\pm 1}\right] _{T}\int_{-\theta _{c}}^{\theta _{c}}%
-
 \frac{d\theta }{2\pi }\int_{\varsigma _{0}-\varsigma _{c}}^{\varsigma
-
 _{0}+\varsigma _{c}}\frac{d\varsigma }{2\pi }\frac{\xi _{0}}{\xi }\mathcal{A}
-
 \end{equation}
-
 where $\xi _{0}$ is the value of $\xi $ and $\varsigma _{0}$ is the toroidal
-
 position of the particle as it crosses the low field side midplane. More
-
 generally, the subscript $_{0}$ refers to quantities evaluated on the low
-
 field side midplane. The sign of $\xi $ and $\xi _{0}$ is
 
-
-
 \begin{equation}
-
 \sigma =\frac{\xi _{0}}{\left| \xi _{0}\right| }
-
 \end{equation}
-
 and the sum over $\sigma $\ applies only to trapped particles.
 
-
-
 The poloidal integration boundary is 
-
 \begin{eqnarray}
-
 \theta _{c} &=&\pi \text{ for passing particles} \\
-
 \theta _{c} &=&\theta _{T}\text{ for trapped particles}
-
 \end{eqnarray}
-
 where 
-
 \begin{equation}
-
 \theta _{T}=\cos ^{-1}\left( 1-\frac{2\xi _{0}^{2}}{\xi _{0T}^{2}}\right)
-
 \end{equation}
-
 is the poloidal angle at the turning point. The trapping occurs for
-
 electrons with $\left| \xi _{0}\right| <\xi _{0T}\ $with 
-
 \begin{equation}
-
 \xi _{0T}^{2}=\frac{2\epsilon }{1+\epsilon }
-
 \end{equation}
-
 where 
-
 \begin{equation}
-
 \epsilon =\frac{r}{R_{0}}
-
 \end{equation}
-
 is the local inverse aspeect ratio. The normalized bounce time is 
-
 \begin{equation}
-
 \lambda \left( \xi _{0}\right) =\int_{-\theta _{c}}^{\theta _{c}}\frac{%
-
 d\theta }{2\pi }\frac{\xi _{0}}{\xi }
-
 \end{equation}
-
-
 
 We have
 
-
-
 \begin{equation}
-
 \frac{d\varsigma }{d\theta }=\frac{B_{\varsigma }\left( r,\theta \right) }{%
-
 B_{\theta }\left( r,\theta \right) }=\frac{R_{0}}{r}q\left( r\right) =\frac{%
-
 q\left( r\right) }{\epsilon }
-
 \end{equation}
-
 so that 
-
 \begin{equation}
-
 \varsigma _{c}=\left\{ 
-
 \begin{array}{cc}
-
 \pi & \text{ if }\theta _{c}=\pi \text{ or }\theta _{T}/\pi >\epsilon /q \\ 
-
 \theta _{T}q/\epsilon & \text{ if }\theta _{c}<\pi \text{ and }\theta
-
 _{T}/\pi <\epsilon /q
-
 \end{array}
-
 \right.
-
 \end{equation}
-
-
 
 In the second case, particles are so trapped that the extent of their orbit
-
 in the toroidal direction is less that $2\pi $.
 
-
-
 Defining the ratio of magnetic fields 
-
 \begin{equation}
-
 \Psi \left( r,\theta \right) =\frac{B\left( r,\theta \right) }{B_{0}\left(
-
 r,\theta \right) }=\frac{R_{0}}{R}=\frac{1+\epsilon }{1+\epsilon \cos \theta 
-
 }  \label{psidef}
-
 \end{equation}
-
 we have 
-
 \begin{equation}
-
 \xi =\sigma \sqrt{1-\Psi \left( r,\theta \right) \left( 1-\xi
-
 _{0}^{2}\right) }
-
 \end{equation}
-
-
 
 The bounce-averaged RF quasilinear operator conserves its divergence form in
-
 the in the $\left( p,\xi _{0}\right) $ momentum space 
-
 \begin{equation}
-
 \left\{ Q(f_{0})\right\} =\left\{ -\nabla \cdot \mathbf{S}^{\text{RF}%
-
 }\right\} =-\frac{1}{p^{2}}\frac{\partial }{\partial p}\left( p^{2}S_{p}^{%
-
 \text{RF}(0)}\right) +\frac{1}{\lambda \left( \xi _{0}\right) p}\frac{%
-
 \partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}\lambda \left( \xi
-
 _{0}\right) S_{\xi _{0}}^{\text{RF}(0)}\right)
-
 \end{equation}
-
 where the flux in momentum space is still purely diffusive 
-
 \begin{equation}
-
 \mathbf{S}^{\text{RF}(0)}=-\mathbb{D}^{\text{RF}(0)}\cdot \nabla _{\mathbf{p}%
-
 }^{(0)}f^{(0)}
-
 \end{equation}
-
 where the component of the diffusion tensor are given by 
-
 \begin{eqnarray}
-
 D_{pp}^{\text{RF}(0)} &=&\sum_{n=-\infty }^{+\infty }\sum_{b}(1-\xi
-
 _{0}^{2})D_{b,n}^{\text{RF}(0)}(p,\xi _{0}) \\
-
 D_{p\xi }^{\text{RF}(0)} &=&\sum_{n=-\infty }^{+\infty }\sum_{b}-\frac{\sqrt{%
-
 1-\xi _{0}^{2}}}{\xi _{0}}\left[ 1-\xi _{0}^{2}-\frac{n\Omega _{0}}{\omega
-
 _{b}}\right] D_{b,n}^{\text{RF}(0)}(p,\xi _{0})  \notag \\
-
 D_{\xi p}^{\text{RF}(0)} &=&\sum_{n=-\infty }^{+\infty }\sum_{b}-\frac{\sqrt{%
-
 1-\xi _{0}^{2}}}{\xi _{0}}\left[ 1-\xi _{0}^{2}-\frac{n\Omega _{0}}{\omega
-
 _{b}}\right] D_{b,n}^{\text{RF}(0)}(p,\xi _{0})  \notag \\
-
 D_{\xi \xi }^{\text{RF}(0)} &=&\sum_{n=-\infty }^{+\infty }\sum_{b}\frac{1}{%
-
 \xi _{0}^{2}}\left[ 1-\xi _{0}^{2}-\frac{n\Omega _{0}}{\omega _{b}}\right]
-
 ^{2}D_{b,n}^{\text{RF}(0)}(p,\xi _{0})  \notag
-
 \end{eqnarray}
-
 with the cyclotron frequency taken at the LFS midplane 
-
 \begin{equation}
-
 \Omega _{0}=\frac{q_{e}B_{0}}{\gamma m_{e}}=\frac{\Omega }{\Psi }
-
 \label{omega0}
-
 \end{equation}
-
-
 
 The gradient in momentum space is now the vector 
-
 \begin{equation}
-
 \nabla _{\mathbf{p}}^{(0)}=\left( 
-
 \begin{array}{l}
-
 \nabla _{p} \\ 
-
 \nabla _{\xi _{0}}
-
 \end{array}
-
 \right)
-
 \end{equation}
-
 with 
-
 \begin{eqnarray}
-
 \nabla _{p} &=&\frac{\partial f}{\partial p} \\
-
 \nabla _{\xi } &=&-\frac{\sqrt{1-\xi _{0}^{2}}}{p}\frac{\partial f}{\partial
-
 \xi _{0}}
-
 \end{eqnarray}
 
-
-
 This formulation for the bounce-averaged RF quasilinear operator conserves
-
 the structure of the operator (\ref{qlop}), and a bounce-averaged
-
 quasilinear diffusion coefficient is defined: 
-
 \begin{equation}
-
 D_{b,n}^{\text{RF}(0)}(p,\xi _{0})=\left\{ \Psi D_{b,n}^{\text{RF}}(p,\xi
-
 )\right\}  \label{dbounce}
-
 \end{equation}
-
-
 
 \section{Diffusion coefficient for a Plane Wave\label{beam}}
 
-
-
 \subsection{Integration in $k$-space}
 
-
-
 The quasilinear diffusion coefficient (\ref{drf}), describing the
-
 interaction of the electrons with a given beam $b$ at an harmonic $n$, is
-
 rewritten as 
-
 \begin{equation}
-
 D_{b,n}^{\text{RF}}(p,\xi )=\lim_{V\rightarrow \infty }\frac{q_{e}^{2}\pi }{V%
-
 }\iiint \frac{d^{3}k}{(2\pi )^{3}}\left| \mathbf{E}_{b\mathbf{k}}\right|
-
 ^{2}\left| \Theta _{\mathbf{k}}^{b,n}\right| ^{2}\delta \left( \omega
-
 _{b}-k_{\Vert }v_{\Vert }-n\Omega \right)  \label{dn}
-
 \end{equation}
-
 where we define 
-
 \begin{equation}
-
 \Theta _{\mathbf{k}}^{b,n}=\frac{1}{\sqrt{2}}e_{b\mathbf{k},+}e^{-i\alpha
-
 }J_{n-1}\left( \frac{k_{\bot }v_{\bot }}{\Omega }\right) +\frac{1}{\sqrt{2}}%
-
 e_{b\mathbf{k},-}e^{+i\alpha }J_{n+1}\left( \frac{k_{\bot }v_{\bot }}{\Omega 
-
 }\right) +\frac{p_{\Vert }}{p_{\bot }}e_{b\mathbf{k},\Vert }J_{n}\left( 
-
 \frac{k_{\bot }v_{\bot }}{\Omega }\right)  \label{thetak}
-
 \end{equation}
-
 and the polarization vector 
-
 \begin{equation}
-
 \mathbf{e}_{b\mathbf{k}}=\frac{\mathbf{E}_{b\mathbf{k}}}{\left| \mathbf{E}_{b%
-
 \mathbf{k}}\right| }  \label{polvec}
-
 \end{equation}
-
 with the components 
-
 \begin{eqnarray}
-
 e_{b\mathbf{k},+} &=&\frac{E_{b\mathbf{k},+}}{\left| \mathbf{E}_{b\mathbf{k}%
-
 }\right| }=\frac{E_{b\mathbf{k},x}+iE_{b\mathbf{k},y}}{\sqrt{2}\left| 
-
 \mathbf{E}_{b\mathbf{k}}\right| } \\
-
 e_{b\mathbf{k},-} &=&\frac{E_{b\mathbf{k},-}}{\left| \mathbf{E}_{b\mathbf{k}%
-
 }\right| }=\frac{E_{b\mathbf{k},x}-iE_{b\mathbf{k},y}}{\sqrt{2}\left| 
-
 \mathbf{E}_{b\mathbf{k}}\right| } \\
-
 e_{b\mathbf{k},\Vert } &=&\frac{E_{b\mathbf{k},\Vert }}{\left| \mathbf{E}_{b%
-
 \mathbf{k}}\right| }=\frac{E_{b\mathbf{k},z}}{\left| \mathbf{E}_{b\mathbf{k}%
-
 }\right| }
-
 \end{eqnarray}
-
-
 
 We electric field associated with a given ray is described by a plane wave,
-
 with given frequency $\omega _{b}$ and wave number $\mathbf{k}_{b}$: 
-
 \begin{equation}
-
 \mathbf{E}_{b}\left( \mathbf{x},t\right) =\text{Re}\left[ \mathbf{E}%
-
 _{b0}e^{i\left( \mathbf{k}_{b}\cdot \mathbf{x}-\omega _{b}t\right) }\right]
-
 \end{equation}
-
-
 
 We then get (See Appendix \ref{plane}) 
-
 \begin{equation}
-
 D_{b,n}^{\text{RF}}(p,\xi )=q_{e}^{2}\pi \frac{\left| \mathbf{E}_{b0}\right|
-
 ^{2}}{2}\left| \Theta _{\mathbf{k}}^{b,n}\left( \mathbf{k}_{b}\right)
-
 \right| ^{2}\delta \left( \omega _{b}-k_{\Vert b}v_{\Vert }-n\Omega \right)
-
 \end{equation}
-
 which can be rewritten as\qquad \qquad \qquad \qquad 
-
 \begin{eqnarray}
-
 D_{b,n}^{\text{RF}}(p,\xi ) &=&q_{e}^{2}\pi \frac{\left| \mathbf{E}%
-
 _{b0}\right| ^{2}}{2}\left| \Theta _{\mathbf{k}}^{b,n}\left( \mathbf{k}%
-
 _{b}\right) \right| ^{2}\frac{1}{\left| v_{\Vert }\right| }\delta \left(
-
 k_{\Vert b}-\frac{\omega _{b}}{v_{\Vert }}+\frac{n\Omega }{v_{\Vert }}\right)
-
 \notag \\
-
 &=&q_{e}^{2}\pi \frac{\left| \mathbf{E}_{b0}\right| ^{2}}{2}\left| \Theta _{%
-
 \mathbf{k}}^{b,n}\left( \mathbf{k}_{b}\right) \right| ^{2}\frac{1}{\left|
-
 v_{\Vert }\right| }\frac{c}{\omega _{b}}\delta \left( N_{\Vert b}-N_{\Vert 
-
 \text{res}}\right)  \label{diffcoef}
-
 \end{eqnarray}
-
 with 
-
 \begin{eqnarray}
-
 N_{\Vert b} &=&\frac{k_{\Vert b}c}{\omega _{b}} \\
-
 N_{\Vert \text{res}} &=&\frac{c}{v_{\Vert }}\left( 1-\frac{n\Omega }{\omega
-
 _{b}}\right)  \notag \\
-
 &=&\frac{1}{\beta _{Te}}\frac{p_{Te}}{p_{\Vert }}\left( \gamma -\frac{%
-
 n^{\prime }\omega _{ce}}{\omega _{b}}\right)
-
 \end{eqnarray}
-
 where 
-
 \begin{eqnarray}
-
 \Omega &=&\frac{q_{e}B}{\gamma m_{e}}=\frac{-\omega _{ce}}{\gamma }\text{
-
 with }\omega _{ce}=\frac{eB}{m_{e}} \\
-
 n^{\prime } &=&-n \\
-
 \beta _{Te} &=&\frac{p_{Te}}{m_{e}c}=\frac{v_{Te}}{c}=\sqrt{\frac{kT_{e}}{%
-
 m_{e}c^{2}}}
-
 \end{eqnarray}
-
-
 
 \subsection{Incident Energy Flow Density and Relation to the Electric Field}
 
-
-
 The time-averaged energy flow density in the beam is in general given by 
-
 \cite{sti92} 
-
 \begin{equation}
-
 \overline{\mathbf{s}_{b}}=\mathbf{P}_{b}+\mathbf{T}_{b}  \label{sb}
-
 \end{equation}
-
 where 
-
 \begin{equation}
-
 \mathbf{P}_{b}=\frac{1}{2}\text{Re}\left[ \widetilde{\mathbf{E}}_{b}\times 
-
 \widetilde{\mathbf{H}}_{b}^{\ast }\right]
-
 \end{equation}
-
 is the flow of electromagnetic energy, or Poynting vector, and 
-
 \begin{equation}
-
 \mathbf{T}_{b}=-\frac{\epsilon _{0}\omega _{b}}{4}\widetilde{\mathbf{E}}%
-
 _{b}^{\ast }\cdot \frac{\partial \mathbb{K}^{H}}{\partial \mathbf{k}}\cdot 
-
 \widetilde{\mathbf{E}}_{b}
-
 \end{equation}
-
 is the kinetic energy flow density. $\widetilde{\mathbf{E}}_{b}$ is the
-
 complex form of the electric field 
-
 \begin{equation}
-
 \widetilde{\mathbf{E}}_{b}=\mathbf{E}_{b0}e^{i\mathbf{k\cdot x}-i\omega t}
-
 \end{equation}
-
 and $\mathbb{K}^{H}$ is the Hermitian part of the dielectric tensor.
 
-
-
 The energy flow density (\ref{sb}) can be formally rewritten as 
-
 \begin{equation}
-
 \overline{\mathbf{s}_{b}}=\frac{\epsilon _{0}c}{2}\left| \mathbf{E}%
-
 _{b0}\right| ^{2}\mathbf{\Phi }_{b}
-
 \end{equation}
-
 where $\mathbf{\Phi }_{b}$ is a non dimensional vector defined as 
-
 \begin{equation}
-
 \mathbf{\Phi }_{b}=\mathbf{\Phi }_{bP}+\mathbf{\Phi }_{bT}  \label{phib2}
-
 \end{equation}
-
 with 
-
 \begin{equation}
-
 \mathbf{\Phi }_{bP}=\frac{\mu _{0}c}{\left| \mathbf{E}_{b0}\right| ^{2}}%
-
 \text{Re}\left[ \widetilde{\mathbf{E}}_{b}\times \widetilde{\mathbf{H}}%
-
 _{b}^{\ast }\right]  \label{phib}
-
 \end{equation}
-
 and 
-
 \begin{equation}
-
 \mathbf{\Phi }_{bT}=\mathbf{-}\frac{1}{2}\mathbf{e}_{b}^{\ast }\cdot \frac{%
-
 \partial \mathbb{K}^{H}}{\partial \mathbf{N}}\cdot \mathbf{e}_{b}
-
 \label{phit}
-
 \end{equation}
-
-
 
 In vacuum, $\mathbf{\Phi }_{b}=\widehat{k}$ , unit vector in the direction
-
 of propagation, and $\mathbf{\Phi }_{bT}=0$. The vector $\mathbf{e}_{b}$ is
-
 the polarization vector, defined in (\ref{polvec}).
 
-
-
 The incident power flux on a flux-surface is therefore given by 
-
 \begin{equation}
-
 \overline{\mathbf{s}_{b}}_{\text{inc}}=\frac{\epsilon _{0}c}{2}\left| 
-
 \mathbf{E}_{b0}\right| ^{2}\left| \mathbf{\Phi }_{b}\cdot \widehat{n}\right|
-
 \label{sbinc}
-
 \end{equation}
-
 where $\widehat{n}$ is the\ local vector normal to the flux-surface.
-
-
 
 \subsection{Approximation of a Narrow Beam}
 
-
-
 We consider a ray which crosses the flux surface at the respective poloidal
-
 and toroidal locations $\theta _{b}$ and $\varsigma _{b}$.\ If we make the
-
 asumption that the extension of the beam power on the flux-surface is very
-
 small in both the poloidal and the toroidal directions, we can approximate 
-
 \begin{equation}
-
 \overline{\mathbf{s}_{b}}_{\text{inc}}\simeq \frac{4\pi ^{2}}{A_{b}}\delta
-
 \left( \theta -\theta _{b}\right) \delta \left( \varsigma -\varsigma
-
 _{b}\right) P_{b,\text{inc}}
-
 \end{equation}
-
-
 
 Note that this asumption is in contradication with the plane-wave
-
 decomposition of the RF beam, since plane waves are essentially present in
-
 the entire configuration space. However, these plane waves interfere
-
 destructively everywhere except in the beam region, which can be limited to
-
 a narrow poloidal and toroidal extention.
 
-
-
 $A_{b}$ is to be determined such that $P_{\text{inc}}$ is the total incident
-
 power on the flux-surface 
-
 \begin{equation}
-
 \iint dS\;\overline{\mathbf{s}_{b}}_{\text{inc}}=P_{b,\text{inc}}
-
 \end{equation}
-
 which gives 
-
 \begin{eqnarray}
-
 1 &=&\int_{0}^{2\pi }rd\theta \;\int_{0}^{2\pi }Rd\varsigma \;\frac{4\pi ^{2}%
-
 }{A_{b}}\delta \left( \theta -\theta _{b}\right) \delta \left( \varsigma
-
 -\varsigma _{b}\right)  \notag \\
-
 &=&\frac{4\pi ^{2}rR_{c}}{A_{b}}\int_{0}^{2\pi }d\theta \;\frac{\Psi _{c}}{%
-
 \Psi }\delta \left( \theta -\theta _{b}\right)  \notag \\
-
 &=&\frac{4\pi ^{2}rR_{c}}{A_{b}}\;\frac{\Psi _{c}}{\Psi _{b}}
-
 \end{eqnarray}
-
 where we used (\ref{psidef}) so that 
-
 \begin{equation}
-
 R\left( r,\theta \right) =R_{c}\frac{\Psi _{c}}{\Psi \left( r,\theta \right) 
-
 }  \label{psi}
-
 \end{equation}
-
 and defined 
-
 \begin{eqnarray}
-
 \Psi _{b} &\equiv &\Psi \left( r,\theta _{b}\right) \\
-
 \Psi _{c} &\equiv &\Psi \left( r,\pi /2\right) =\frac{B_{c}}{B_{0}}
-
 \end{eqnarray}
-
 where $B_{c}$ is the field on axis ($R=R_{c}$). For concentric cylindrical
-
 flux-surfaces, we have 
-
 \begin{eqnarray}
-
 \Psi _{b} &=&\frac{1+\epsilon }{1+\epsilon \cos \theta _{b}} \\
-
 \Psi _{c} &=&1+\epsilon
-
 \end{eqnarray}
-
-
 
 Finally 
-
 \begin{equation}
-
 A_{b}=4\pi ^{2}rR_{c}\frac{\Psi _{c}}{\Psi _{b}}  \label{psi0}
-
 \end{equation}
-
 and the incident power flux is 
-
 \begin{equation}
-
 \overline{\mathbf{s}_{b}}_{\text{inc}}\simeq \frac{1}{rR_{c}}\frac{\Psi _{b}%
-
 }{\Psi _{c}}\delta \left( \theta -\theta _{b}\right) \delta \left( \varsigma
-
 -\varsigma _{b}\right) P_{b,\text{inc}}  \label{sbinc2}
-
 \end{equation}
-
-
 
 Using (\ref{sbinc}) and (\ref{sbinc2}), we find 
-
 \begin{equation}
-
 \frac{\left| \mathbf{E}_{b0}\right| ^{2}}{2}=\frac{1}{\epsilon _{0}c}\frac{1%
-
 }{\left| \mathbf{\Phi }_{b}\cdot \widehat{n}\right| }\frac{1}{rR_{c}}\frac{%
-
 \Psi _{b}}{\Psi _{c}}\delta \left( \theta -\theta _{b}\right) \delta \left(
-
 \varsigma -\varsigma _{b}\right) P_{b,\text{inc}}  \label{e0}
-
 \end{equation}
-
-
 
 \subsection{Normalized Diffusion Coefficient}
 
-
-
 The diffusion coefficient is usually normalized to the collisional diffusion
-
 coefficient $\nu _{e}p_{Te}^{2}$, thus defining 
-
 \begin{equation}
-
 \overline{D}_{b,n}^{\text{RF}}(p,\xi )\equiv \frac{D_{b,n}^{\text{RF}}(p,\xi
-
 )}{\nu _{e}p_{Te}^{2}}  \label{difcoeffnorm}
-
 \end{equation}
-
 with 
-
 \begin{equation}
-
 \nu _{e}=\frac{e^{4}n_{e}\ln \Lambda }{4\pi \epsilon
-
 _{0}^{2}m_{e}^{2}v_{Te}^{3}}
-
 \end{equation}
-
-
 
 Using (\ref{diffcoef}) and (\ref{e0}), the diffusion coefficient (\ref
-
 {difcoeffnorm}) becomes 
-
 \begin{equation}
-
 \overline{D}_{b,n}^{\text{RF}}(p,\xi )=2\pi \delta \left( \theta -\theta
-
 _{b}\right) 2\pi \delta \left( \varsigma -\varsigma _{b}\right) \left|
-
 \Theta _{\mathbf{k}}^{b,n}\left( \mathbf{k}_{b}\right) \right| ^{2}\frac{%
-
 \gamma p_{Te}}{p\left| \xi \right| }\overline{D}_{b,n,0}^{\text{RF}}\delta
-
 \left( N_{\Vert b}-N_{\Vert \text{res}}\right)  \label{difcoeffnorm2}
-
 \end{equation}
-
 with 
-
 \begin{eqnarray}
-
 \overline{D}_{b,n,0}^{\text{RF}} &=&\frac{1}{\nu _{e}p_{Te}^{2}}\frac{%
-
 q_{e}^{2}\pi }{\epsilon _{0}c}\frac{P_{b,\text{inc}}}{4\pi ^{2}rR_{c}}\frac{%
-
 \Psi _{b}}{\Psi _{c}}\frac{1}{\left| \mathbf{\Phi }_{b}\cdot \widehat{n}%
-
 \right| }\frac{1}{v_{Te}}\frac{c}{\omega _{b}} \\
-
 &=&\frac{4\pi }{m_{e}\omega _{pe}^{2}\ln \Lambda }\frac{\pi }{\omega _{b}}%
-
 \frac{\Psi _{b}}{\Psi _{c}}\frac{1}{\left| \mathbf{\Phi }_{b}\cdot \widehat{n%
-
 }\right| }\frac{P_{b,\text{inc}}}{4\pi ^{2}rR_{c}}
-
 \end{eqnarray}
-
 where we introduce the plasma frequency 
-
 \begin{equation}
-
 \omega _{pe}=\sqrt{\frac{e^{2}n_{e}}{\epsilon _{0}m_{e}}}
-
 \end{equation}
-
-
 
 \subsection{Bounce-Averaging of the Diffusion Coefficient}
 
-
-
 The bounce-averaged diffusion coefficient is obtained from (\ref
-
 {difcoeffnorm2}) and (\ref{dbounce}) as 
-
 \begin{equation}
-
 \overline{D}_{b,n}^{\text{RF}(0)}(p,\xi _{0})=\left\{ \Psi 2\pi \delta
-
 \left( \theta -\theta _{b}\right) 2\pi \delta \left( \varsigma -\varsigma
-
 _{b}\right) \left| \Theta _{\mathbf{k}}^{b,n}\left( \mathbf{k}_{b}\right)
-
 \right| ^{2}\frac{\gamma p_{Te}}{p\left| \xi \right| }\overline{D}_{b,n,0}^{%
-
 \text{RF}}\delta \left( N_{\Vert b}-N_{\Vert \text{res}}\right) \right\}
-
 \end{equation}
-
-
 
 Recalling the expression of bounce-averaging 
-
 \begin{equation}
-
 \left\{ \mathcal{A}\right\} =\frac{1}{\lambda \left( \xi _{0}\right) }\left[ 
-
 \frac{1}{2}\sum_{\sigma =\pm 1}\right] _{T}\int_{-\theta _{c}}^{\theta _{c}}%
-
 \frac{d\theta }{2\pi }\int_{\varsigma _{0}-\varsigma _{c}}^{\varsigma
-
 _{0}+\varsigma _{c}}\frac{d\varsigma }{2\pi }\frac{\xi _{0}}{\xi }\mathcal{A}
-
 \end{equation}
-
 we do the integrals, which gives 
-
 \begin{eqnarray}
-
 \overline{D}_{b,n}^{\text{RF}(0)}(p,\xi _{0}) &=&\frac{\gamma p_{Te}}{%
-
 p\left| \xi _{0}\right| }\frac{\Psi _{b}^{2}}{\Psi _{c}}\frac{\xi _{0}^{2}}{%
-
 \xi _{b}^{2}}\left| \Theta _{\mathbf{k},b}^{b,n}\left( \mathbf{k}_{b}\right)
-
 \right| ^{2}\overline{D}_{b,n,0}^{\text{RF},b}\frac{1}{\lambda \left( \xi
-
 _{0}\right) } \\
-
 &&H\left( \varsigma _{c}-\left| \varsigma _{b}-\varsigma _{0}\right| \right)
-
 H\left( \theta _{c}-\left| \theta _{b}\right| \right) \left[ \frac{1}{2}%
-
 \sum_{\sigma =\pm 1}\right] _{T}\delta \left( N_{\Vert b}-N_{\Vert \text{res}%
-
 ,b}\right)
-
 \end{eqnarray}
-
 where we define: 
-
 \begin{eqnarray}
-
 \overline{D}_{b,n,0}^{\text{RF},b} &=&\frac{1}{\nu _{e}p_{Te}^{2}}\frac{%
-
 q_{e}^{2}\pi }{\epsilon _{0}\omega _{b}}\frac{P_{b,\text{inc}}}{4\pi
-
 ^{2}rR_{c}}\frac{\Psi _{b}}{\Psi _{c}}\frac{1}{\left| \mathbf{\Phi }%
-
 _{b}\cdot \widehat{n}_{b}\right| }\frac{1}{v_{Te}} \\
-
 &=&\frac{4\pi }{m_{e}\omega _{pe}^{2}\ln \Lambda }\frac{\pi }{\omega _{b}}%
-
 \frac{\Psi _{b}}{\Psi _{c}}\frac{1}{\left| \mathbf{\Phi }_{b}\cdot \widehat{n%
-
 }_{b}\right| }\frac{P_{b,\text{inc}}}{4\pi ^{2}rR_{c}}
-
 \end{eqnarray}
-
 \begin{eqnarray}
-
 \widehat{n}_{b} &=&\widehat{n}\left( \theta _{b}\right) \\
-
 N_{\Vert \text{res},b} &=&\frac{1}{\beta _{Te}}\frac{p_{Te}}{p\xi _{b}}%
-
 \left( \gamma -\frac{n^{\prime }\Psi _{b}\omega _{ce,0}}{\omega _{b}}\right)
-
 \\
-
 \xi _{b} &=&\sigma \sqrt{1-\Psi _{b}\left( 1-\xi _{0}^{2}\right) }
-
 \end{eqnarray}
-
 and 
-
 \begin{equation}
-
 \Theta _{\mathbf{k},b}^{b,n}\left( \mathbf{k}_{b}\right) =\frac{1}{\sqrt{2}}%
-
 \varepsilon _{b\mathbf{k},+}e^{-i\alpha }J_{n-1}\left( z_{b}\right) +\frac{1%
-
 }{\sqrt{2}}\varepsilon _{b\mathbf{k},-}e^{+i\alpha }J_{n+1}\left(
-
 z_{b}\right) +\frac{\xi _{b}}{\sqrt{\Psi _{b}\left( 1-\xi _{0}^{2}\right) }}%
-
 \varepsilon _{b\mathbf{k},\Vert }J_{n}\left( z_{b}\right)  \label{zb}
-
 \end{equation}
-
 with 
-
 \begin{equation}
-
 z_{b}=\frac{k_{\bot b}v_{\bot b}}{\Omega _{b}}=-N_{\bot b}\frac{p}{m_{e}c}%
-
 \sqrt{1-\xi _{b}^{2}}\frac{\omega _{b}}{\omega _{ce}}=-N_{\bot b}\frac{p}{%
-
 m_{e}c}\frac{\sqrt{1-\xi _{0}^{2}}}{\sqrt{\Psi _{b}}}\frac{\omega _{b}}{%
-
 \omega _{ce,0}}  \label{zb2}
-
 \end{equation}
-
 where we used (\ref{omega0}).
 
-
-
 Averaging over $\varsigma _{0}$ gives 
-
 \begin{equation}
-
 \overline{D}_{b,n}^{\text{RF}(0)}(p,\xi _{0})=\frac{\gamma p_{Te}}{p\left|
-
 \xi _{0}\right| }\left| \Theta _{\mathbf{k},b}^{b,n}\left( \mathbf{k}%
-
 _{b}\right) \right| ^{2}\overline{D}_{b,n,0}^{\text{RF},b}\Psi _{b}\frac{\xi
-
 _{0}^{2}}{\xi _{b}^{2}}\frac{H_{\text{T}}\left( \xi _{0}\right) }{\lambda
-
 \left( \xi _{0}\right) }\left[ \frac{1}{2}\sum_{\sigma =\pm 1}\right]
-
 _{T}\delta \left( N_{\Vert b}-N_{\Vert \text{res},b}\right)
-
 \label{diffcoefnorm3}
-
 \end{equation}
-
 with 
-
 \begin{equation}
-
 H_{\text{T}}\left( \xi _{0}\right) \equiv \frac{\varsigma _{c}}{\pi }H\left(
-
 \theta _{c}-\left| \theta _{b}\right| \right) =\left\{ 
-
 \begin{array}{cc}
-
 1 & \text{if }\left| \xi _{0}\right| >\xi _{0T}\text{ (passing electrons)}
-
 \\ 
-
 1 & \text{if }\left| \xi _{0}\right| <\xi _{0T}\text{ , }\theta _{T}>\left|
-
 \theta _{b}\right| \text{ and }\theta _{T}>\epsilon \pi /q \\ 
-
 \theta _{T}q/\epsilon & \text{if }\left| \xi _{0}\right| <\xi _{0T}\text{ , }%
-
 \theta _{T}>\left| \theta _{b}\right| \text{ and }\theta _{T}<\epsilon \pi /q
-
 \\ 
-
 0 & \text{if }\left| \xi _{0}\right| <\xi _{0T}\text{ \ and }\theta
-
 _{T}<\left| \theta _{b}\right|
-
 \end{array}
-
 \right.
-
 \end{equation}
-
-
 
 \subsection{Conclusion}
 
-
-
 In the general case, the dispersion relation must be solved for each ray $b$
-
 in order to determine $k_{\bot b}$ in (\ref{zb2}) as a function of $k_{\Vert
-
 b}$ and $\omega _{b}$; then, the polarization components $\varepsilon _{b%
-
 \mathbf{k},+}$, $\varepsilon _{b\mathbf{k},-}$ and $\varepsilon _{b\mathbf{k}%
-
 ,\Vert }$\ of the electric field must be evaluated from the elements of the
-
 dielectric tensor. Therefore, both $\Theta _{\mathbf{k},b}^{b,n}\left( 
-
 \mathbf{k}_{b}\right) $ (\ref{zb}) and $\mathbf{\Phi }_{b}$ (\ref{phib2})
-
 can be determined from the dielectric tensor, knowing $k_{\Vert b}$, which
-
 can be determined along the ray path by ray-tracing techniques.
 
-
-
 A numerical code is required to solve the wave equation, and evaluate the
-
 diffusion coefficient\ (\ref{diffcoefnorm3}) in the general case. However,
-
 it is possible to obtain analytic expressions in some cases, assuming that
-
 the waves can be treated in the cold plasma limit.
-
-
 
 \section{Diffusion coefficient for Lower Hybrid Current Drive}
 
-
-
 Analytic expression for characteristics (spectrum and polarization) of LH
-
 waves can be obtained in the Cold Plasma description. These are derived in
-
 Appendix \ref{lhw}, and the useful expressions are summarized below. Then,
-
 an analytical expression can be obtained for the LH diffusion coefficient.
-
-
 
 \subsection{ Cold Plasma Characteristics of LH waves (Appendix \ref{lhw})}
 
-
-
 \subsubsection{Dispersion Relation}
 
-
-
 The electrostatic approximation (\ref{esapprox}) is usually valid for LHW of
-
 concern. Solving the electrostatic dispersion relation (\ref{dispreles})
-
 gives $N_{b\perp }$ as a function of $N_{b\parallel }$ and $\omega _{b}$ (%
-
 \ref{nperplh0}-\ref{nperplh2}): 
-
 \begin{eqnarray}
-
 N_{b\perp } &=&\sqrt{\frac{-K_{\parallel }}{K_{\perp }}}N_{b\parallel } 
-
 \notag \\
-
 &=&\frac{1}{\sqrt{\omega _{b}^{2}/\omega _{\text{LH}}^{2}-1}}\frac{\omega
-
 _{pe}}{\omega _{pi}}N_{b\parallel }  \label{nperplh1}
-
 \end{eqnarray}
-
 where $\omega _{\text{LH}}$\ is the lower-hybrid frequency 
-
 \begin{equation}
-
 \omega _{\text{LH}}=\frac{\omega _{pi}}{\sqrt{1+\omega _{pe}^{2}/\omega
-
 _{ce}^{2}}}
-
 \end{equation}
-
-
 
 We can verify that LHW encounter a resonance at the lower-hybrid frequency.
-
 However, in most LHCD scenarios, wave frequency are sensibly higher than the
-
 lower-hybrid frequency in order to avoid conversion to IBW. Typically, in
-
 Alcator C-Mod, we have 
-
 \begin{equation}
-
 \frac{\omega }{\omega _{\text{LH}}}\sim 2\text{ or }3
-
 \end{equation}
-
-
 
 The cold plasma description therefore remains valid.
 
-
-
 \subsubsection{Polarization}
 
-
-
 The LH Waves of concern for LHCD are quasi-electrostatic, and therefore the
-
 electric field is quasi-longitudinal ($\mathbf{E}\parallel \mathbf{N}$) and
-
 we have\textbf{\ (}\ref{eratio}\textbf{)} 
-
 \begin{equation}
-
 e_{b\mathbf{k},i}=\frac{E_{b\mathbf{k},i}}{\left| \mathbf{E}_{b\mathbf{k}%
-
 }\right| }\simeq \frac{k_{b,i}}{\left| \mathbf{k}_{b}\right| }
-
 \end{equation}
-
 for any component $i$, so that the polarization elements become 
-
 \begin{eqnarray}
-
 e_{b\mathbf{k},+} &\equiv &\frac{E_{b\mathbf{k},x}+iE_{b\mathbf{k},y}}{\sqrt{%
-
 2}\left| \mathbf{E}_{b\mathbf{k}}\right| }=\frac{k_{b\bot }}{\sqrt{2}k_{b}}%
-
 \left( \cos \alpha +i\sin \alpha \right) =\frac{k_{b\bot }}{\sqrt{2}k_{b}}%
-
 e^{+i\alpha }  \label{pollh} \\
-
 e_{b\mathbf{k},-} &\equiv &\frac{E_{b\mathbf{k},x}-iE_{b\mathbf{k},y}}{\sqrt{%
-
 2}\left| \mathbf{E}_{b\mathbf{k}}\right| }=\frac{k_{b\bot }}{\sqrt{2}k_{b}}%
-
 \left( \cos \alpha -i\sin \alpha \right) =\frac{k_{b\bot }}{\sqrt{2}k_{b}}%
-
 e^{-i\alpha }  \notag \\
-
 e_{b\mathbf{k},\Vert } &\equiv &\frac{E_{b\mathbf{k},z}}{\left| \mathbf{E}_{b%
-
 \mathbf{k}}\right| }=\frac{k_{b\parallel }}{k_{b}}  \notag
-
 \end{eqnarray}
-
-
 
 \subsection{Determination of $\Theta _{\mathbf{k}}^{b,\text{LH}}$}
 
-
-
 Lower Hybrid Current Drive (LHCD) results from momentum exchange from the LH
-
 wave to the plasma through Landau damping (harmonic $n=0$). In this case,
-
 the coefficient (\ref{thetak}) becomes 
-
 \begin{eqnarray}
-
 \Theta _{\mathbf{k}}^{b,0} &=&\frac{1}{\sqrt{2}}e_{b\mathbf{k},+}e^{-i\alpha
-
 }J_{-1}\left( \frac{k_{\bot }v_{\bot }}{\Omega }\right) +\frac{1}{\sqrt{2}}%
-
 e_{b\mathbf{k},-}e^{+i\alpha }J_{1}\left( \frac{k_{\bot }v_{\bot }}{\Omega }%
-
 \right) +\frac{p_{\Vert }}{p_{\bot }}e_{b\mathbf{k},\Vert }J_{0}\left( \frac{%
-
 k_{\bot }v_{\bot }}{\Omega }\right)  \notag \\
-
 &=&\frac{1}{\sqrt{2}}\left( e_{b\mathbf{k},-}e^{+i\alpha }-e_{b\mathbf{k}%
-
 ,+}e^{-i\alpha }\right) J_{1}\left( \frac{k_{b\bot }v_{\bot }}{\Omega }%
-
 \right) +\frac{p_{\Vert }}{p_{\bot }}e_{b\mathbf{k},\Vert }J_{0}\left( \frac{%
-
 k_{b\bot }v_{\bot }}{\Omega }\right)
-
 \end{eqnarray}
 
-
-
 Using (\ref{pollh}), we see that the perpendicular components cancel and we
-
 are left with 
-
 \begin{equation}
-
 \Theta _{\mathbf{k}}^{b,\text{LH}}=\frac{p_{\Vert }}{p_{\bot }}\frac{%
-
 k_{b\parallel }}{k_{b}}J_{0}\left( \frac{k_{b\bot }v_{\bot }}{\Omega }\right)
-
 \label{thetaklh}
-
 \end{equation}
-
-
 
 The argument of the Bessel function in (\ref{thetaklh}) is 
-
 \begin{equation}
-
 \frac{k_{b\bot }v_{\bot }}{\Omega }=N_{b\bot }\frac{v_{\bot }}{c}\frac{%
-
 \omega _{b}}{\Omega }
-
 \end{equation}
-
 where an expression for $N_{\bot }$ is given by (\ref{nperplh1}). The
-
 argument of the Bessel function becomes 
-
 \begin{equation}
-
 \left| \frac{k_{b\bot }v_{\bot }}{\Omega }\right| =\frac{1}{\sqrt{\omega
-
 _{b}^{2}/\omega _{\text{LH}}^{2}-1}}\frac{\omega _{pe}}{\omega _{pi}}\frac{%
-
 \omega _{b}}{\omega _{ce}}N_{b\parallel }\frac{p_{\bot }}{p_{Te}}\beta _{Te}
-
 \end{equation}
-
 and we see that for $\omega _{pe}\sim \omega _{ce}$ and $\omega _{b}\sim
-
 2\omega _{\text{LH}}$, we get 
-
 \begin{equation}
-
 \left| \frac{k_{b\bot }v_{\bot }}{\Omega }\right| \sim \beta
-
 _{Te}N_{b\parallel }\frac{p_{\bot }}{p_{Te}}
-
 \end{equation}
-
-
 
 Given that most electrons concerned with LHCD have $p_{\bot }\leq p_{Te}$,
-
 and that for LHCD we have typically $N_{b\parallel }\sim 2$, we see that it
-
 is reasonable to take the limit 
-
 \begin{equation}
-
 \left| \frac{k_{b\bot }v_{\bot }}{\Omega }\right| \ll 1
-
 \end{equation}
-
 as long as the plasma is not too relativistic ($\beta _{Te}\ll 1$). This
-
 limit is consistent with the validity condition of the cold plasma
-
 description. In this limit, valid for most LHCD scenarios, we have 
-
 \begin{equation}
-
 \Theta _{\mathbf{k}}^{b,\text{LH}}\simeq \frac{p_{\Vert }}{p_{\bot }}\frac{%
-
 k_{b\parallel }}{k_{b}}  \label{thetaklh2}
-
 \end{equation}
-
-
 
 \subsection{Determination of $\mathbf{\Phi }_{b}^{\text{LH}}$}
 
-
-
 The vector $\mathbf{\Phi }_{b}^{\text{LH}}$ describes the relation between
-
 the energy flux and the electric field. Although LHW are almost
-
 electrostatic, the dominant contribution to the power flux is the wave
-
 Poynting flux, assuming that the wave frequency remains sensibly higher than
-
 the LH frequency. The contribution of the Kinetic power flux is calculated
-
 in Appendix \ref{kinetic}. In most LHCD scenarios, this contribution is not
-
 more than a few percents of the total flux and can therefore be neglected.
 
-
-
 In the cold plasma description, it is given by (\ref{phibres}). 
-
 \begin{equation}
-
 \mathbf{\Phi }_{b}=\left| e_{bT}\right| ^{2}\mathbf{N}_{b}-N_{b}\text{Re}%
-
 \left( e_{bL}\mathbf{e}_{bT}^{\ast }\right)  \label{phiblh}
-
 \end{equation}
-
-
 
 LH waves are quasi-electrostatic, so that the longitudinal and transverse
-
 components are given by (\ref{et}) 
-
 \begin{eqnarray}
-
 \left| e_{bL}\right| &\simeq &1 \\
-
 \mathbf{e}_{bT} &=&\frac{1}{N_{b}^{2}}\mathbb{K}\cdot \mathbf{e}_{bL}
-
 \end{eqnarray}
-
 so that the first term in (\ref{phiblh}) can be neglected, and 
-
 \begin{eqnarray}
-
 \mathbf{\Phi }_{b}^{\text{LH}} &\simeq &-N_{b}\text{Re}\left( \varepsilon
-
 _{bL}\frac{1}{N_{b}^{2}}\mathbb{K}^{\ast }\cdot \mathbf{e}_{bL}^{\ast
-
 }\right)  \notag \\
-
 &=&-\frac{\left| e_{bL}\right| ^{2}}{N_{b}}\text{Re}\left( \mathbb{K}^{\ast
-
 }\cdot \widehat{N}\right)  \label{poyntinges}
-
 \end{eqnarray}
-
-
 
 Note from (\ref{poyntinges}) and (\ref{dispreles}) that the Poynting flux is
-
 in the direction perpendicular to the wave vector: 
-
 \begin{equation}
-
 \mathbf{\Phi }_{b}^{\text{LH}}\cdot \widehat{N}=0
-
 \end{equation}
-
-
 
 We finally find, using (\ref{ktensor}), 
-
 \begin{equation}
-
 \mathbf{\Phi }_{b}^{\text{LH}}=-\frac{1}{N_{b}^{2}}\left( K_{\perp }\mathbf{N%
-
 }_{b\perp }+K_{\Vert }N_{b\Vert }\widehat{z}\right)  \label{phiblh2}
-
 \end{equation}
-
-
 
 \subsection{LH Diffusion Coefficient}
 
-
-
 The normalized bounce-averaged diffusion coefficient is given by (\ref
-
 {diffcoefnorm3}) 
-
 \begin{equation}
-
 \overline{D}_{b,n}^{\text{RF}(0)}(p,\xi _{0})=\frac{\gamma p_{Te}}{p\left|
-
 \xi _{0}\right| }\left| \Theta _{\mathbf{k},b}^{b,n}\left( \mathbf{k}%
-
 _{b}\right) \right| ^{2}\overline{D}_{b,n,0}^{\text{RF},b}\Psi _{b}\frac{\xi
-
 _{0}^{2}}{\xi _{b}^{2}}\frac{H_{\text{T}}\left( \xi _{0}\right) }{\lambda
-
 \left( \xi _{0}\right) }\left[ \frac{1}{2}\sum_{\sigma =\pm 1}\right]
-
 _{T}\delta \left( N_{\Vert b}-N_{\Vert \text{res},b}\right)  \label{dlh2}
-
 \end{equation}
-
 with 
-
 \begin{equation}
-
 \overline{D}_{b,n,0}^{\text{RF},b}=\frac{4\pi }{m_{e}\omega _{pe}^{2}\ln
-
 \Lambda }\frac{\pi }{\omega _{b}}\frac{\Psi _{b}}{\Psi _{c}}\frac{1}{\left| 
-
 \mathbf{\Phi }_{b}\cdot \widehat{n}_{b}\right| }\frac{P_{b,\text{inc}}}{4\pi
-
 ^{2}rR_{c}}
-
 \end{equation}
-
-
 
 Using (\ref{thetaklh2}), (\ref{zb}) gives 
-
 \begin{equation}
-
 \Theta _{\mathbf{k},b}^{b,\text{LH}}\simeq \frac{\xi _{b}}{\sqrt{\Psi
-
 _{b}\left( 1-\xi _{0}^{2}\right) }}\frac{N_{b\parallel }}{N_{b}}
-
 \end{equation}
-
 so that (\ref{dlh2}) for LHCD\ can be written as 
-
 \begin{equation}
-
 \overline{D}_{b}^{\text{LH}(0)}(p,\xi _{0})=\frac{\gamma p_{Te}}{p\left| \xi
-
 _{0}\right| }\frac{\xi _{0}^{2}}{\left( 1-\xi _{0}^{2}\right) }\frac{%
-
 N_{b\parallel }^{2}}{N_{b}^{2}}\overline{D}_{b,0}^{\text{LH},b}\frac{H_{%
-
 \text{T}}\left( \xi _{0}\right) }{\lambda \left( \xi _{0}\right) }\left[ 
-
 \frac{1}{2}\sum_{\sigma =\pm 1}\right] _{T}\delta \left( N_{\Vert
-
 b}-N_{\Vert \text{res},b}\right)
-
 \end{equation}
-
 where we have, using (\ref{phiblh2}) 
-
 \begin{equation}
-
 \overline{D}_{b,0}^{\text{LH},b}=\frac{4\pi }{m_{e}\omega _{pe}^{2}\ln
-
 \Lambda }\frac{\pi }{\omega _{b}}\frac{N_{b}^{2}}{K_{\perp }N_{b\perp }}%
-
 \frac{\Psi _{b}}{\Psi _{c}}\frac{1}{\left| \widehat{N}\cdot \widehat{n}%
-
 _{b}\right| }\frac{P_{b,\text{inc}}}{4\pi ^{2}rR_{c}}
-
 \end{equation}
-
 and 
-
 \begin{equation}
-
 N_{\Vert \text{res},b}=\frac{1}{\beta _{Te}}\frac{\gamma p_{Te}}{p\xi _{b}}
-
 \end{equation}
-
-
 
 Using (\ref{nperplh1}), this becomes 
-
 \begin{equation}
-
 \overline{D}_{b}^{\text{LH}(0)}(p,\xi _{0})=\frac{\gamma p_{Te}}{p\left| \xi
-
 _{0}\right| }\frac{\xi _{0}^{2}}{\left( 1-\xi _{0}^{2}\right) }\frac{%
-
 K_{\perp }}{\left( -K_{\parallel }\right) }\overline{D}_{b,0}^{\text{LH},b}%
-
 \frac{H_{\text{T}}\left( \xi _{0}\right) }{\lambda \left( \xi _{0}\right) }%
-
 \left[ \frac{1}{2}\sum_{\sigma =\pm 1}\right] _{T}\delta \left( N_{\Vert
-
 b}-N_{\Vert \text{res},b}\right)
-
 \end{equation}
-
 with 
-
 \begin{equation}
-
 \overline{D}_{b,0}^{\text{LH},b}=\frac{4\pi }{m_{e}\omega _{pe}^{2}\ln
-
 \Lambda }\frac{\pi }{\omega _{b}}\frac{N_{b\parallel }}{K_{\perp }}\sqrt{%
-
 \frac{-K_{\parallel }}{K_{\perp }}}\frac{\Psi _{b}}{\Psi _{c}}\frac{1}{%
-
 \left| \widehat{N}\cdot \widehat{n}_{b}\right| }\frac{P_{b,\text{inc}}}{4\pi
-
 ^{2}rR_{c}}
-
 \end{equation}
-
 or, expliciting the dielectric tensor elements, 
-
 \begin{equation}
-
 \overline{D}_{b}^{\text{LH}(0)}(p,\xi _{0})=\frac{\gamma p_{Te}}{p\left| \xi
-
 _{0}\right| }\frac{\xi _{0}^{2}}{\left( 1-\xi _{0}^{2}\right) }\frac{\omega
-
 _{pi}^{2}}{\omega _{pe}^{2}}\left( \omega ^{2}/\omega _{\text{LH}%
-
 }^{2}-1\right) \overline{D}_{b,0}^{\text{LH},b}\frac{H_{\text{T}}\left( \xi
-
 _{0}\right) }{\lambda \left( \xi _{0}\right) }\left[ \frac{1}{2}\sum_{\sigma
-
 =\pm 1}\right] _{T}\delta \left( N_{\Vert b}-N_{\Vert \text{res},b}\right)
-
 \end{equation}
-
 with 
-
 \begin{equation}
-
 \overline{D}_{b,0}^{\text{LH},b}=\frac{4\pi ^{2}}{m_{e}\omega _{pe}\omega
-
 ^{2}\ln \Lambda }\frac{N_{b\parallel }}{\left[ \left( 1+\omega
-
 _{pe}^{2}/\omega _{ce}^{2}\right) \left( 1-\omega _{\text{LH}}^{2}/\omega
-
 ^{2}\right) \right] ^{3/2}}\frac{\Psi _{b}}{\Psi _{c}}\frac{1}{\left| 
-
 \widehat{N}\cdot \widehat{n}_{b}\right| }\frac{P_{b,\text{inc}}}{4\pi
-
 ^{2}rR_{c}}
-
 \end{equation}
-
-
 
 At this stage, the only wave characteristics needed to calculate the
-
 diffusion coefficient are $\theta _{b}$, $N_{\Vert b}$ and $P_{b,\text{inc}}$
-
 for each ray.
-
-
 
 \subsubsection{Square power spectrum in $k_{\Vert }$}
 
-
-
 \bigskip The power spectrum for LH waves is commonly taken as being constant
-
 in $N_{\Vert }$ between two limits $N_{\Vert \min }$ and $N_{\Vert \max }$\
-
 that are respectively given by the accessibility condition and the condition
-
 for strong linear Laudau damping. Strictly speaking, we should decompose
-
 this spectrum in a sum of rays with narrow $N_{\Vert }$ extension. If we
-
 make the approximation that the characteristics of each ray are quite
-
 similar, which is a good approximation only when 
-
 \begin{equation}
-
 \Delta N_{\Vert }=N_{\Vert \max }-N_{\Vert \min }\ll N_{\Vert }
-
 \end{equation}
-
 then it is possible to consider only one ray, by transforming 
-
 \begin{equation}
-
 \delta \left( N_{\Vert b}-N_{\Vert \text{res},b}\right) \rightarrow \frac{1}{%
-
 \Delta N_{\Vert }}H\left( N_{\Vert \text{res},b}-N_{\Vert \min }\right)
-
 H\left( N_{\Vert \max }-N_{\Vert \text{res},b}\right)
-
 \end{equation}
-
-
 
 The LH diffusion coefficient then becomes 
-
 \begin{equation}
-
 \overline{D}_{b}^{\text{LH}(0)}(p,\xi _{0})=\frac{\gamma p_{Te}}{p\left| \xi
-
 _{0}\right| }\frac{\xi _{0}^{2}}{\left( 1-\xi _{0}^{2}\right) }\overline{D}%
-
 _{b,0}^{\text{LH},b}\frac{N_{\parallel ,0}^{2}}{N_{0}^{2}}\frac{H_{\text{T}%
-
 }\left( \xi _{0}\right) }{\lambda \left( \xi _{0}\right) }\frac{1}{\Delta
-
 N_{\Vert }}\left[ \frac{1}{2}\sum_{\sigma =\pm 1}\right] _{T}H\left(
-
 N_{\Vert \text{res},b}-N_{\Vert \min }\right) H\left( N_{\Vert \max
-
 }-N_{\Vert \text{res},b}\right)  \label{dlh}
-
 \end{equation}
-
 with 
-
 \begin{equation}
-
 \overline{D}_{b,0}^{\text{LH},b}=\frac{4\pi ^{2}}{m_{e}\omega
-
 _{pe}^{2}\omega \ln \Lambda }\frac{N_{0}^{2}}{K_{\perp }N_{\perp ,0}}\frac{%
-
 \Psi _{b}}{\Psi _{c}}\frac{1}{\left| \widehat{N}\cdot \widehat{n}_{b}\right| 
-
 }\frac{P_{\text{inc}}}{4\pi ^{2}rR_{c}}  \label{d0lh}
-
 \end{equation}
-
-
 
 \subsubsection{Ignoring trapped particle effects.}
 
-
-
 Trapped particle effects can be readily ignored when $\epsilon \rightarrow 0$
-
 (central CD) where the trapped fraction vanishes. In this case, 
-
 \begin{eqnarray}
-
 \Psi _{b},\Psi _{c} &\rightarrow &1 \\
-
 \lambda \left( \xi _{0}\right) &\rightarrow &1 \\
-
 H_{\text{T}}\left( \xi _{0}\right) &\rightarrow &1 \\
-
 \xi _{b} &\rightarrow &\xi _{0}
-
 \end{eqnarray}
-
 and we find 
-
 \begin{equation}
-
 \overline{D}_{b}^{\text{LH}}(p,\xi _{0})=\frac{\gamma p_{Te}}{p\left| \xi
-
 _{0}\right| }\frac{\xi _{0}^{2}}{\left( 1-\xi _{0}^{2}\right) }\overline{D}%
-
 _{b,0}^{\text{LH},b}\frac{N_{\parallel ,0}^{2}}{N_{0}^{2}}\frac{1}{\Delta
-
 N_{\Vert }}H\left( N_{\Vert \text{res}}-N_{\Vert \min }\right) H\left(
-
 N_{\Vert \max }-N_{\Vert \text{res}}\right)  \label{dlh_notrap}
-
 \end{equation}
-
 where 
-
 \begin{equation}
-
 N_{\Vert \text{res}}=\frac{1}{\beta _{Te}}\frac{\gamma p_{Te}}{p\xi _{0}}
-
 \end{equation}
-
 and 
-
 \begin{equation}
-
 \overline{D}_{b,0}^{\text{LH},b}=\frac{4\pi ^{2}}{m_{e}\omega
-
 _{pe}^{2}\omega \ln \Lambda }\frac{N_{0}^{2}}{K_{\perp }N_{\perp ,0}}\frac{1%
-
 }{\left| \widehat{N}\cdot \widehat{n}_{b}\right| }\frac{P_{\text{inc}}}{4\pi
-
 ^{2}rR_{c}}
-
 \end{equation}
-
-
 
 \subsubsection{Common form of the LH coefficient in the Litterature}
 
-
-
 In order to retrieve a more common form for the LH QL Operator, we can
-
 rewritte (\ref{dlh_notrap}) as 
-
 \begin{equation}
-
 \overline{D}_{b}^{\text{LH}}(p,\xi _{0})=\frac{\gamma p_{Te}}{p\left| \xi
-
 _{0}\right| }\frac{\xi _{0}^{2}}{\left( 1-\xi _{0}^{2}\right) }\overline{D}%
-
 _{0}^{\text{LH}}H\left( N_{\Vert \text{res}}-N_{\Vert \min }\right) H\left(
-
 N_{\Vert \max }-N_{\Vert \text{res}}\right)
-
 \end{equation}
-
 where we define 
-
 \begin{eqnarray}
-
 \overline{D}_{0}^{\text{LH}} &=&\overline{D}_{b,0}^{\text{LH},b}\frac{%
-
 N_{\parallel ,0}^{2}}{N_{0}^{2}}\frac{1}{\Delta N_{\Vert }} \\
-
 &=&\frac{4\pi ^{2}}{m_{e}\omega _{pe}^{2}\omega \ln \Lambda }\frac{1}{\sqrt{%
-
 -K_{\parallel }K_{\perp }}}\frac{N_{\parallel ,0}}{\Delta N_{\Vert }}\frac{1%
-
 }{\left| \widehat{N}\cdot \widehat{n}_{b}\right| }\frac{P_{\text{inc}}}{4\pi
-
 ^{2}rR_{c}}  \notag \\
-
 &=&\frac{4\pi ^{2}}{m_{e}\omega _{pe}^{3}\ln \Lambda }\frac{1}{\sqrt{%
-
 1+\omega _{pe}^{2}/\omega _{ce}^{2}}\sqrt{1-\omega _{\text{LH}}^{2}/\omega
-
 ^{2}}}\frac{N_{\parallel ,0}}{\Delta N_{\Vert }}\frac{1}{\left| \widehat{N}%
-
 \cdot \widehat{n}_{b}\right| }\frac{P_{\text{inc}}}{4\pi ^{2}rR_{c}}
-
 \label{dlh1}
-
 \end{eqnarray}
-
-
 
 A familiar expression for the LH QL operator is obtained in cylindrical
-
 geometry. From (\ref{dcyl}) and (\ref{divcyl}) we see that for LHCD, the QL\
-
 operator can be rewritten as 
-
 \begin{eqnarray}
-
 Q^{\text{LH}}(f) &=&\frac{\partial }{\partial p_{\Vert }}D_{\Vert \Vert }^{%
-
 \text{RF}}\frac{\partial f}{\partial p_{\Vert }}  \notag \\
-
 &=&\frac{\partial }{\partial p_{\Vert }}D_{0}^{\text{LH}}\frac{v_{Te}}{%
-
 \left| v_{\Vert }\right| }H\left( \frac{c}{v_{\Vert }}-N_{\Vert \min
-
 }\right) H\left( N_{\Vert \max }-\frac{c}{v_{\Vert }}\right) \frac{\partial f%
-
 }{\partial p_{\Vert }}
-
 \end{eqnarray}
-
-
 
 \subsubsection{Simple Approximate Form of the LH QL Operator.}
 
-
-
 The factor $v_{Te}/\left| v_{\Vert }\right| $ has often been neglected in
-
 the litterature, which is an acceptable approximation when $D_{0}^{\text{LH}%
-
 }\gg \nu _{e}p_{Te}^{2}$ and $\Delta N_{\Vert }\ll N_{\Vert \min },N_{\Vert
-
 \max }$. In this case, the LH Operator reduces to 
-
 \begin{equation}
-
 Q^{\text{LH}}(f)\simeq \left\{ 
-
 \begin{array}{cc}
-
 \frac{\partial }{\partial p_{\Vert }}D_{0}^{\text{LH}}\frac{\partial f}{%
-
 \partial p_{\Vert }} & \text{for }v_{1}<v_{\Vert }/v_{Te}<v_{2} \\ 
-
 0 & \text{otherwise}
-
 \end{array}
-
 \right.
-
 \end{equation}
-
 with 
-
 \begin{eqnarray}
-
 v_{1} &=&\frac{1}{\beta _{Te}N_{\Vert \max }} \\
-
 v_{2} &=&\frac{1}{\beta _{Te}N_{\Vert \min }}
-
 \end{eqnarray}
 
-
-
 However, in a Fokker-Planck code, it is better to keep the exact formula (%
-
 \ref{dlh}). Note that $N_{\parallel ,0}$ is not really defined in (\ref{dlh1}%
-
 ). We can take 
-
 \begin{equation}
-
 N_{\parallel ,0}=\frac{N_{\Vert \min }+N_{\Vert \max }}{2}
-
 \end{equation}
-
 which leads approximately to 
-
 \begin{equation}
-
 \frac{N_{\parallel }}{\Delta N_{\parallel }}\simeq \frac{2v_{1}v_{2}}{%
-
 v_{2}^{2}-v_{1}^{2}}
-
 \end{equation}
-
-
 
 \section{Diffusion coefficient for Electron Cyclotron Current Drive}
 
-
-
 The Cold Plasma description is usually a good approximation to determine the
-
 EC Wave spectrum properties and polarization, as long as we stay away from
-
 the upper-hybrid resonance, where mode-conversion to EBW occurs. However,
-
 even in the cold plasma model, the polarizations are usually mixed for
-
 oblique propagation, and no simple analytical formulation is possible.
 
-
-
 The prescription is to decompose the $N_{\parallel }$ spectrum into many
-
 rays $b$, each of which has a narrow spectrum around $N_{\parallel b}$ and
-
 therefore can be associated to a plane wave and treated as described in
-
 Section \ref{beam}. Then, one needs to solve the dispersion relation to find 
-
 $N_{\bot b}$ as a function of $N_{\parallel b}$, and solve the wave equation
-
 to find the polarization components, as described in Appendix \ref{cold}.
-
 The quantities $\Theta _{\mathbf{k},b}^{b,n}\left( \mathbf{k}_{b}\right) $\
-
 and\ $\mathbf{\Phi }_{b}$ can then be evaluated to determine the diffusion
-
 coefficient (\ref{diffcoefnorm3}).
 
-
-
 Still, it is possible to find limit cases (small FLR effects, small $%
-
 N_{\Vert }$) for which a simple analytical derivation is possible. After
-
 simplifying the problem by introducing the finite size beam, some limit
-
 cases are investigated for the X-2 and the O-1 modes.
-
-
 
 \subsection{Finite size beam}
 
-
-
 When the total $k_{\parallel }$ spectrum is rather narrowly centered around
-
 some value $k_{\parallel ,0}$, that is 
-
 \begin{equation}
-
 \frac{\Delta k_{\parallel }}{k_{\parallel ,0}}\ll 1  \label{narrow}
-
 \end{equation}
-
 then the characteristics of the rays (spectrum and polarization) can be very
-
 similar, and decomposing may become unnecessary. This can be the case
-
 particularly for EC beams.
 
-
-
 In this case, we can consider only one ray, treated as described in Section 
-
 \ref{beam}, and replace the delta function by the actual spectrum, for
-
 example, a Gaussian spectrum 
-
 \begin{equation}
-
 \delta \left( N_{\Vert b}-N_{\Vert \text{res}}\right) \rightarrow \frac{1}{%
-
 \sqrt{\pi }\Delta N_{\Vert }}\exp \left[ \frac{-\left( N_{\Vert \text{res}%
-
 }-N_{\Vert b}\right) ^{2}}{\Delta N_{\Vert }^{2}}\right]
-
 \end{equation}
-
-
 
 By the properties of Fourier transform, the width $\Delta N_{\Vert }$ is
-
 related to the ray waist $d$, 
-
 \begin{equation}
-
 \Delta N_{\Vert }=\frac{N_{\bot b}}{N_{b}}\frac{c}{\omega _{b}d}
-
 \end{equation}
-
 and we can verify that for waist of a few centimeters, the condition (\ref
-
 {narrow}) is satisfied. For such beams, using (\ref{diffcoefnorm3}), the EC
-
 diffusion coefficient becomes 
-
 \begin{equation}
-
 \overline{D}_{b,n}^{\text{EC}(0)}(p,\xi _{0})=\frac{\gamma p_{Te}}{p\left|
-
 \xi _{0}\right| }\left| \Theta _{\mathbf{k},b}^{b,n}\left( \mathbf{k}%
-
 _{b}\right) \right| ^{2}\overline{D}_{b,n,0}^{\text{EC},b}\Psi _{b}\frac{\xi
-
 _{0}^{2}}{\xi _{b}^{2}}\frac{H_{\text{T}}\left( \xi _{0}\right) }{\lambda
-
 \left( \xi _{0}\right) }\frac{1}{\sqrt{\pi }\Delta N_{\Vert }}\left[ \frac{1%
-
 }{2}\sum_{\sigma =\pm 1}\right] _{T}\exp \left[ \frac{-\left( N_{\Vert \text{%
-
 res},b}-N_{\Vert b}\right) ^{2}}{\Delta N_{\Vert }^{2}}\right]  \label{dec}
-
 \end{equation}
-
 with 
-
 \begin{equation}
-
 \overline{D}_{b,n,0}^{\text{EC},b}=\frac{4\pi ^{2}}{m_{e}\omega
-
 _{pe}^{2}\omega _{b}\ln \Lambda }\frac{\Psi _{b}}{\Psi _{c}}\frac{1}{\left| 
-
 \mathbf{\Phi }_{b}\cdot \widehat{n}_{b}\right| }\frac{P_{b,\text{inc}}}{4\pi
-
 ^{2}rR_{c}}
-
 \end{equation}
-
-
 
 For realistic calculations, the polarization coefficient $\Theta _{\mathbf{k}%
-
 ,b}^{b,n}\left( \mathbf{k}_{b}\right) $ must be calculated exactly (See
-
 Appendix \ref{cold}). However, to get some physical insight, and also for
-
 the sake of comparison with other works, it can be useful to consider some
-
 limit cases.
-
-
 
 \subsection{Polarization: Limit of small FLR effects}
 
-
-
 Electron Cyclotron Current Drive (LHCD) results from momentum exchange from
-
 the LH wave to the plasma through Cyclotron damping at some harmonic $n$.
-
 For a beam $b$, considering a given harmonic $n$, the coefficient (\ref
-
 {thetak}) is 
-
 \begin{equation}
-
 \Theta _{\mathbf{k}}^{b,n}=\frac{1}{\sqrt{2}}e_{b\mathbf{k},+}e^{-i\alpha
-
 }J_{n-1}\left( z\right) +\frac{1}{\sqrt{2}}e_{b\mathbf{k},-}e^{+i\alpha
-
 }J_{n+1}\left( z\right) +\frac{p_{\Vert }}{p_{\bot }}e_{b\mathbf{k},\Vert
-
 }J_{n}\left( z\right)
-
 \end{equation}
-
-
 
 The resonance condition 
-
 \begin{equation}
-
 \omega -k_{\Vert }v_{\Vert }-n\Omega
-
 \end{equation}
-
 implies that resonant particles are those who verify 
-
 \begin{equation}
-
 \frac{v_{\Vert }}{c}=\frac{1}{N_{\Vert }}\left( 1-\frac{n\Omega }{\omega }%
-
 \right)
-
 \end{equation}
-
-
 
 Given that generally $N_{\Vert }\lesssim 1$, there are resonant electrons
-
 (with $v_{\Vert }<c$) only if 
-
 \begin{equation}
-
 \frac{n\Omega }{\omega }\sim 1  \label{ysim}
-
 \end{equation}
-
-
 
 Since 
-
 \begin{equation}
-
 \Omega =\frac{q_{e}B}{\gamma m_{e}}=-\frac{\omega _{ce}}{\gamma }<0
-
 \end{equation}
-
 the only harmonics to be considered for electrons are for 
-
 \begin{equation}
-
 n\leq -1
-
 \end{equation}
-
-
 
 Applying the substitution 
-
 \begin{equation}
-
 n^{\prime }=-n\geq 1
-
 \end{equation}
-
 and renaming $n^{\prime }\rightarrow n$, we get 
-
 \begin{eqnarray}
-
 \Theta _{\mathbf{k}}^{b,-n} &=&\frac{1}{\sqrt{2}}e_{b\mathbf{k}%
-
 ,+}e^{-i\alpha }J_{-n-1}\left( z\right) +\frac{1}{\sqrt{2}}e_{b\mathbf{k}%
-
 ,-}e^{+i\alpha }J_{-n+1}\left( z\right) +\frac{p_{\Vert }}{p_{\bot }}e_{b%
-
 \mathbf{k},\Vert }J_{-n}\left( z\right) \\
-
 &=&\frac{1}{\sqrt{2}}e_{b\mathbf{k},+}e^{-i\alpha }\left( -1\right)
-
 ^{n+1}J_{n+1}\left( z\right) +\frac{1}{\sqrt{2}}e_{b\mathbf{k},-}e^{+i\alpha
-
 }\left( -1\right) ^{n-1}J_{n-1}\left( z\right) +\frac{p_{\Vert }}{p_{\bot }}%
-
 e_{b\mathbf{k},\Vert }\left( -1\right) ^{n}J_{n}\left( z\right)
-
 \end{eqnarray}
 
-
-
 We have 
-
 \begin{equation}
-
 z=\frac{k_{\bot }v_{\bot }}{\Omega }=-N_{\bot }\frac{p_{\bot }}{m_{e}c}\frac{%
-
 \omega _{b}}{\omega _{ce}}
-
 \end{equation}
-
 Using (\ref{ysim}), we get an estimation for $\left| z\right| $%
-
 \begin{equation}
-
 \left| z\right| \sim nN_{\bot }\frac{p_{\bot }}{p_{Te}}\beta _{Te}
-
 \end{equation}
-
 Typically, for ECCD in tokamaks, we have 
-
 \begin{equation}
-
 N_{\bot }\lesssim 1,\;\beta _{Te}\lesssim 0.1
-
 \end{equation}
-
 and most electrons of concern have 
-
 \begin{equation}
-
 \frac{p_{\bot }}{p_{Te}}\leq 3
-
 \end{equation}
-
 so that for the first and second harmonics, the condition $z\ll 1$ is
-
 satisfied. In other words, the Larmor radius remains small compared to the
-
 perpendicular wavelength. This condition is consistent with the conditions
-
 of the cold plasma description of the EC waves. In this case, for $n\geq 0$,
-
 the following approximate expression can be used 
-
 \begin{equation}
-
 J_{n}\left( z\right) \simeq \frac{1}{n!}\left( \frac{z}{2}\right) ^{n}
-
 \end{equation}
-
 and we have 
-
 \begin{equation}
-
 \Theta _{\mathbf{k}}^{b,-n}\simeq \frac{e_{b\mathbf{k},+}}{\sqrt{2}}%
-
 e^{-i\alpha }\left( -1\right) ^{n+1}\frac{1}{\left( n+1\right) !}\left( 
-
 \frac{z}{2}\right) ^{n+1}+\frac{e_{b\mathbf{k},-}}{\sqrt{2}}e^{+i\alpha
-
 }\left( -1\right) ^{n-1}\frac{1}{\left( n-1\right) !}\left( \frac{z}{2}%
-
 \right) ^{n-1}+\frac{p_{\Vert }}{p_{\bot }}e_{b\mathbf{k},\Vert }\frac{1}{n!}%
-
 \left( \frac{z}{2}\right) ^{n}  \label{thetaklowz}
-
 \end{equation}
-
-
 
 \subsection{X-Mode, $n=2$}
 
-
-
 \subsubsection{Polarization}
 
-
-
 In the X-Mode polarization, the harmonic $n=1$ is particular in the sense
-
 that the polarization component $e_{b\mathbf{k},-}$ vanishes. In this case,
-
 absorption is significantly reduced, because $e_{b\mathbf{k},-}$ is related
-
 to the lowest power of $z$. Moreover, this harmonic can only be reached from
-
 the high field side, because of the right-hand cut-off. We therefore
-
 consider the second harmonic $n=2$. For this harmonic, $e_{b\mathbf{k},-}$
-
 is usually the largest component of the polarization, and, since it is
-
 associated with the lowest power of $z$ with $z\ll 1$, the corresponding
-
 term is the dominant term in (\ref{thetaklowz}), which reduces to 
-
 \begin{equation}
-
 \Theta _{\mathbf{k}}^{b,\text{X2}}\simeq N_{\bot }\frac{p_{\bot }}{m_{e}c}%
-
 \frac{\omega _{b}}{2\omega _{ce}}\frac{e_{b\mathbf{k},-}}{\sqrt{2}}%
-
 e^{+i\alpha }
-
 \end{equation}
-
-
 
 Then, using (\ref{zb}-\ref{zb2}), we find 
-
 \begin{equation}
-
 \Theta _{\mathbf{k},b}^{b,\text{X2}}\simeq N_{\bot b}\frac{p}{m_{e}c}\frac{%
-
 \sqrt{1-\xi _{0}^{2}}}{\sqrt{\Psi _{b}}}\frac{\omega _{b}}{2\omega _{ce,0}}%
-
 \frac{e_{b\mathbf{k},-}}{\sqrt{2}}e^{+i\alpha }
-
 \end{equation}
-
-
 
 Then, the diffusion coefficient (\ref{dec}) becomes 
-
 \begin{eqnarray}
-
 \overline{D}_{b}^{\text{EC-X2}(0)}(p,\xi _{0}) &=&\frac{\gamma p_{Te}}{%
-
 p\left| \xi _{0}\right| }\left( \frac{p}{p_{Te}}\right) ^{2}\left( 1-\xi
-
 _{0}^{2}\right) \beta _{Te}^{2}N_{\bot b}^{2}\left( \frac{\omega _{b}}{%
-
 2\omega _{ce,0}}\right) ^{2}\frac{\left| e_{b,-}\right| ^{2}}{2}\overline{D}%
-
 _{0}^{\text{EC-X2}(0)}\frac{\xi _{0}^{2}}{\xi _{b}^{2}}\frac{H_{\text{T}%
-
 }\left( \xi _{0}\right) }{\lambda \left( \xi _{0}\right) }  \label{decx2} \\
-
 &&\frac{1}{\sqrt{\pi }\Delta N_{\Vert }}\left[ \frac{1}{2}\sum_{\sigma =\pm
-
 1}\right] _{T}\exp \left[ \frac{-\left( N_{\Vert \text{res},b}-N_{\Vert
-
 b}\right) ^{2}}{\Delta N_{\Vert }^{2}}\right]  \notag
-
 \end{eqnarray}
-
 with 
-
 \begin{equation}
-
 \overline{D}_{0}^{\text{EC-X2}(0)}=\frac{4\pi }{m_{e}\omega _{pe}^{2}\ln
-
 \Lambda }\frac{\pi }{\omega _{b}}\frac{\Psi _{b}}{\Psi _{c}}\frac{1}{\left| 
-
 \mathbf{\Phi }_{b}\cdot \widehat{n}_{b}\right| }\frac{P_{b,\text{inc}}}{4\pi
-
 ^{2}rR_{c}}
-
 \end{equation}
-
-
 
 \subsubsection{Determination of $\mathbf{\Phi }_{b}^{\text{EC-X2}(0)}$ in
-
 the low density limit.}
 
-
-
 The vector $\mathbf{\Phi }_{b}$ describes the relation between the energy
-
 flux and the electric field. In the cold plasma description, it is given by (%
-
 \ref{phibres}). 
-
 \begin{equation}
-
 \mathbf{\Phi }_{b}=N_{b}\left[ \left| e_{bT}\right| ^{2}\widehat{N}_{b}-%
-
 \text{Re}\left( e_{bL}\mathbf{e}_{bT}^{\ast }\right) \right]
-
 \end{equation}
-
-
 
 In general, both terms must be kept. In the limit of low density 
-
 \begin{equation}
-
 \omega _{pe}\ll \omega _{ce}
-
 \end{equation}
-
 the longitudinal component of the polarization vanishes and 
-
 \begin{eqnarray}
-
 \left| e_{bL}\right| &\ll &\left| e_{bT}\right| \\
-
 \left| e_{bT}\right| &\simeq &1 \\
-
 N_{b} &\simeq &1
-
 \end{eqnarray}
-
 so that 
-
 \begin{equation}
-
 \mathbf{\Phi }_{b}^{\omega _{pe}\ll \omega _{ce}}\simeq \widehat{N}_{b}
-
 \end{equation}
-
-
 
 We then find 
-
 \begin{equation}
-
 \overline{D}_{0\text{,}\omega _{pe}\ll \omega _{ce}\text{ }}^{\text{EC-X2}%
-
 (0)}=\frac{4\pi }{m_{e}\omega _{pe}^{2}\ln \Lambda }\frac{\pi }{\omega _{b}}%
-
 \frac{\Psi _{b}}{\Psi _{c}}\frac{1}{\left| \widehat{N}_{b}\cdot \widehat{n}%
-
 _{b}\right| }\frac{P_{b,\text{inc}}}{4\pi ^{2}rR_{c}}
-
 \end{equation}
-
-
 
 \subsubsection{Common form of the EC-X2 coefficient in the Litterature}
 
-
-
 In order to retrieve a more common form for the LH EC-X2 Operator, we can
-
 rewritte (\ref{decx2}) as 
-
 \begin{equation}
-
 \overline{D}_{b}^{\text{EC-X2}(0)}(p,\xi _{0})=\frac{\gamma p_{Te}}{p\left|
-
 \xi _{0}\right| }\left( \frac{p}{p_{Te}}\right) ^{2}\left( 1-\xi
-
 _{0}^{2}\right) \overline{D}_{0,\text{redef}}^{\text{EC-X2}(0)}\frac{\xi
-
 _{0}^{2}}{\xi _{b}^{2}}\frac{H_{\text{T}}\left( \xi _{0}\right) }{\lambda
-
 \left( \xi _{0}\right) }\left[ \frac{1}{2}\sum_{\sigma =\pm 1}\right]
-
 _{T}\exp \left[ \frac{-\left( N_{\Vert \text{res},b}-N_{\Vert b}\right) ^{2}%
-
 }{\Delta N_{\Vert }^{2}}\right]  \notag
-
 \end{equation}
-
 with 
-
 \begin{eqnarray}
-
 \overline{D}_{0,\text{redef}}^{\text{EC-X2}(0)} &=&\frac{1}{\sqrt{\pi }%
-
 \Delta N_{\Vert }}\beta _{Te}^{2}N_{\bot b}^{2}\left( \frac{\omega _{b}}{%
-
 2\omega _{ce,0}}\right) ^{2}\frac{\left| e_{b,-}\right| ^{2}}{2}\overline{D}%
-
 _{0}^{\text{EC-X2}(0)} \\
-
 &=&\frac{4\pi }{m_{e}\omega _{pe}^{2}\ln \Lambda }\frac{\sqrt{\pi }}{\omega
-
 _{b}\Delta N_{\Vert }}\beta _{Te}^{2}N_{\bot b}^{2}\left( \frac{\omega _{b}}{%
-
 2\omega _{ce,0}}\right) ^{2}\frac{\Psi _{b}}{\Psi _{c}}\frac{\left|
-
 e_{b,-}\right| ^{2}}{2\left| \mathbf{\Phi }_{b}\cdot \widehat{n}_{b}\right| }%
-
 \frac{P_{b,\text{inc}}}{4\pi ^{2}rR_{c}}
-
 \end{eqnarray}
-
-
 
 \subsection{O-Mode, $n=1,N_{\Vert }\ll 1$}
 
-
-
 \subsubsection{Polarization}
 
-
-
 In the O-Mode polarization, the harmonic $n=1$ usually gives the largest
-
 absorption, and is accessible from the LFS, provided that $\omega
-
 _{pe}<\omega _{ce}$. For this harmonic, (\ref{thetaklowz}) becomes 
-
 \begin{equation}
-
 \Theta _{\mathbf{k}}^{b,\text{O1}}\simeq \frac{e_{b\mathbf{k},+}}{\sqrt{2}}%
-
 e^{-i\alpha }\frac{1}{2}\left( \frac{z}{2}\right) ^{2}+\frac{e_{b\mathbf{k}%
-
 ,-}}{\sqrt{2}}e^{+i\alpha }+\frac{p_{\Vert }}{p_{\bot }}e_{b\mathbf{k},\Vert
-
 }\frac{z}{2}
-
 \end{equation}
-
-
 
 Here the hierarchy between polarization components is more complicated. For
-
 small toroidal angle ($N_{\Vert }\ll 1$), the parallel component $e_{b%
-
 \mathbf{k},\Vert }$ dominates largely and, if the temperature is not too
-
 low, we can have 
-
 \begin{equation}
-
 \left| \frac{p_{\Vert }}{p_{\bot }}e_{b\mathbf{k},\Vert }\frac{z}{2}\right|
-
 \gg \frac{\left| e_{b\mathbf{k},-}\right| }{\sqrt{2}},\;\frac{\left| e_{b%
-
 \mathbf{k},+}\right| }{\sqrt{2}}\frac{1}{2}\left( \frac{z}{2}\right) ^{2}
-
 \end{equation}
-
-
 
 In this case, we can take 
-
 \begin{equation}
-
 \Theta _{\mathbf{k}}^{b,\text{O1,}N_{\Vert }\ll 1}\simeq e_{b\mathbf{k}%
-
 ,\Vert }N_{\bot }\frac{p_{\Vert }}{m_{e}c}\frac{\omega _{b}}{2\omega _{ce}}
-
 \end{equation}
-
 so that, using (\ref{zb}-\ref{zb2}), we find 
-
 \begin{equation}
-
 \Theta _{\mathbf{k},b}^{b,\text{O1,}N_{\Vert }\ll 1}\simeq N_{\bot b}\frac{p%
-
 }{m_{e}c}\frac{\xi _{b}}{\Psi _{b}}\frac{\omega _{b}}{2\omega _{ce,0}}e_{b%
-
 \mathbf{k},\Vert }
-
 \end{equation}
-
-
 
 Then, the diffusion coefficient (\ref{dec}) can be expressed as 
-
 \begin{eqnarray}
-
 \overline{D}_{b,N_{\Vert }\ll 1}^{\text{EC-O1}(0)}(p,\xi _{0}) &=&\frac{%
-
 \gamma p_{Te}}{p\left| \xi _{0}\right| }\left( \frac{p}{p_{Te}}\right)
-
 ^{2}N_{\bot b}^{2}\beta _{Te}^{2}\left( \frac{\omega _{b}}{2\omega _{ce,0}}%
-
 \right) ^{2}\left| e_{b\mathbf{k},\Vert }\right| ^{2}\overline{D}%
-
 _{0,N_{\Vert }\ll 1}^{\text{EC-O1}(0)}\frac{\xi _{0}^{2}}{\Psi _{b}}\frac{H_{%
-
 \text{T}}\left( \xi _{0}\right) }{\lambda \left( \xi _{0}\right) }
-
 \label{deco1} \\
-
 &&\frac{1}{\sqrt{\pi }\Delta N_{\Vert }}\left[ \frac{1}{2}\sum_{\sigma =\pm
-
 1}\right] _{T}\exp \left[ \frac{-\left( N_{\Vert \text{res},b}-N_{\Vert
-
 b}\right) ^{2}}{\Delta N_{\Vert }^{2}}\right]  \notag
-
 \end{eqnarray}
-
 with 
-
 \begin{equation}
-
 \overline{D}_{0,N_{\Vert }\ll 1}^{\text{EC-O1}(0)}=\frac{4\pi }{m_{e}\omega
-
 _{pe}^{2}\ln \Lambda }\frac{\pi }{\omega _{b}}\frac{\Psi _{b}}{\Psi _{c}}%
-
 \frac{1}{\left| \mathbf{\Phi }_{b}\cdot \widehat{n}_{b}\right| }\frac{P_{b,%
-
 \text{inc}}}{4\pi ^{2}rR_{c}}
-
 \end{equation}
-
-
 
 \subsubsection{Determination of $\mathbf{\Phi }_{b}^{\text{EC-O}(0)}$}
 
-
-
 The vector $\mathbf{\Phi }_{b}$ describes the relation between the energy
-
 flux and the electric field. In the cold plasma description, it is given by (%
-
 \ref{phibres}). 
-
 \begin{equation}
-
 \mathbf{\Phi }_{b}=N_{b}\left[ \left| e_{bT}\right| ^{2}\widehat{N}_{b}-%
-
 \text{Re}\left( e_{bL}\mathbf{e}_{bT}^{\ast }\right) \right]
-
 \end{equation}
-
-
 
 For small toroidal angle ($N_{\Vert }\ll 1$), we have 
-
 \begin{equation}
-
 \mathbf{e}_{b}\simeq e_{b\mathbf{k},\Vert }\widehat{z}
-
 \end{equation}
-
 and, since $N_{\Vert }\ll 1$, the longitudinal component of $\varepsilon _{b%
-
 \mathbf{k},\Vert }$ is very small, so that 
-
 \begin{equation}
-
 \mathbf{\Phi }_{b}^{\text{EC-O}(0)}\simeq \mathbf{N}_{b}
-
 \end{equation}
-
-
 
 We then find 
-
 \begin{equation}
-
 \overline{D}_{0,N_{\Vert }\ll 1}^{\text{EC-O1}(0)}=\frac{4\pi }{m_{e}\omega
-
 _{pe}^{2}\ln \Lambda }\frac{\pi }{\omega _{b}}\frac{1}{N_{b}}\frac{1}{\left| 
-
 \widehat{N}_{b}\cdot \widehat{n}_{b}\right| }\frac{P_{b,\text{inc}}}{4\pi
-
 ^{2}rR_{c}}
-
 \end{equation}
-
-
 
 \subsubsection{Common form of the EC-O1 coefficient in the Litterature}
 
-
-
 In order to retrieve a more common form for the LH EC-O1 Operator, we can
-
 rewritte (\ref{deco1}) as 
-
 \begin{equation}
-
 \overline{D}_{b,N_{\Vert }\ll 1}^{\text{EC-O1}(0)}(p,\xi _{0})=\frac{\gamma
-
 p_{Te}}{p\left| \xi _{0}\right| }\left( \frac{p}{p_{Te}}\right) ^{2}%
-
 \overline{D}_{0,N_{\Vert }\ll 1,\text{redef}}^{\text{EC-O1}(0)}\frac{\xi
-
 _{0}^{2}}{\Psi _{b}}\frac{H_{\text{T}}\left( \xi _{0}\right) }{\lambda
-
 \left( \xi _{0}\right) }\left[ \frac{1}{2}\sum_{\sigma =\pm 1}\right]
-
 _{T}\exp \left[ \frac{-\left( N_{\Vert \text{res},b}-N_{\Vert b}\right) ^{2}%
-
 }{\Delta N_{\Vert }^{2}}\right]  \notag
-
 \end{equation}
-
 with 
-
 \begin{eqnarray}
-
 \overline{D}_{0,N_{\Vert }\ll 1,\text{redef}}^{\text{EC-O1}(0)} &=&\frac{1}{%
-
 \sqrt{\pi }\Delta N_{\Vert }}N_{\bot b}^{2}\beta _{Te}^{2}\left( \frac{%
-
 \omega _{b}}{2\omega _{ce,0}}\right) ^{2}\left| e_{b\mathbf{k},\Vert
-
 }\right| ^{2}\overline{D}_{0,N_{\Vert }\ll 1}^{\text{EC-O1}(0)} \\
-
 &=&\frac{4\pi }{m_{e}\omega _{pe}^{2}\ln \Lambda }\frac{\sqrt{\pi }}{\omega
-
 _{b}\Delta N_{\Vert }}\frac{N_{\bot b}^{2}}{N_{b}}\beta _{Te}^{2}\left( 
-
 \frac{\omega _{b}}{2\omega _{ce,0}}\right) ^{2}\frac{\Psi _{b}}{\Psi _{c}}%
-
 \frac{1}{\left| \widehat{N}_{b}\cdot \widehat{n}_{b}\right| }\frac{P_{b,%
-
 \text{inc}}}{4\pi ^{2}rR_{c}}
-
 \end{eqnarray}
-
-
 
 \appendix
 
-
-
 \section{Transformation of the QL Operator\label{fluxexp}}
 
-
-
 The transformation from cylindrical to spherical momentum derivatives is
-
 given by 
-
 \begin{eqnarray}
-
 \frac{\partial }{\partial p_{\Vert }} &=&\frac{\partial p}{\partial p_{\Vert
-
 }}\frac{\partial }{\partial p}+\frac{\partial \xi }{\partial p_{\Vert }}%
-
 \frac{\partial }{\partial \xi }  \label{dppar} \\
-
 \frac{\partial }{\partial p_{\bot }} &=&\frac{\partial p}{\partial p_{\bot }}%
-
 \frac{\partial }{\partial p}+\frac{\partial \xi }{\partial p_{\bot }}\frac{%
-
 \partial }{\partial \xi }  \label{dpperp}
-
 \end{eqnarray}
-
-
 
 We have 
-
 \begin{eqnarray}
-
 p &=&\sqrt{p_{\Vert }^{2}+p_{\bot }^{2}} \\
-
 \xi &=&\frac{p_{\Vert }}{\sqrt{p_{\Vert }^{2}+p_{\bot }^{2}}}
-
 \end{eqnarray}
-
 so that 
-
 \begin{eqnarray}
-
 \frac{\partial p}{\partial p_{\Vert }} &=&\xi \\
-
 \frac{\partial p}{\partial p_{\bot }} &=&\sqrt{1-\xi ^{2}} \\
-
 \frac{\partial \xi }{\partial p_{\Vert }} &=&\frac{1-\xi ^{2}}{p} \\
-
 \frac{\partial \xi }{\partial p_{\bot }} &=&-\frac{\xi \sqrt{1-\xi ^{2}}}{p}
-
 \end{eqnarray}
-
-
 
 We rewritte (\ref{ppar}-\ref{pperp}) in cylindrical coordinates using (\ref
-
 {dppar}-\ref{dpperp}) 
-
 \begin{eqnarray}
-
 P_{\Vert } &=&\xi \frac{\partial }{\partial p}+\frac{1}{p}\left( 1-\xi ^{2}-%
-
 \frac{n\Omega }{\omega }\right) \frac{\partial }{\partial \xi }
-
 \label{ppar2} \\
-
 P_{\bot } &=&\sqrt{1-\xi ^{2}}\frac{\partial }{\partial p}-\frac{\sqrt{1-\xi
-
 ^{2}}}{p\xi }\left( \xi ^{2}-\frac{k_{\Vert }v_{\Vert }}{\omega }\right) 
-
 \frac{\partial }{\partial \xi }  \label{pperp2}
-
 \end{eqnarray}
-
-
 
 After some manipulation, the operators in (\ref{qloporig}) can be expressed
-
 in a divergence form 
-
 \begin{eqnarray}
-
 P_{\Vert } &=&\frac{1}{p^{2}}\frac{\partial }{\partial p}p^{2}\xi -\frac{1}{p%
-
 }\frac{\partial }{\partial \xi }\left( -1+\xi ^{2}+\frac{n\Omega }{\omega }%
-
 \right) \\
-
 P_{\bot }-\frac{1}{p_{\bot }}\left( \frac{k_{\Vert }v_{\Vert }}{\omega }%
-
 -1\right) &=&\frac{1}{p^{2}}\frac{\partial }{\partial p}p^{2}\sqrt{1-\xi ^{2}%
-
 }-\frac{1}{p}\frac{\partial }{\partial \xi }\frac{\sqrt{1-\xi ^{2}}}{\xi }%
-
 \left( \xi ^{2}-\frac{k_{\Vert }v_{\Vert }}{\omega }\right)
-
 \end{eqnarray}
-
 so that (\ref{qloporig}) can be rewritten as 
-
 \begin{equation}
-
 Q\left( f\right) =-\frac{1}{p^{2}}\frac{\partial }{\partial p}\left(
-
 p^{2}S_{p}^{\text{RF}}\right) +\frac{1}{p}\frac{\partial }{\partial \xi }%
-
 \left( \sqrt{1-\xi ^{2}}S_{\xi }^{\text{RF}}\right)  \notag
-
 \end{equation}
-
 with 
-
 \begin{eqnarray}
-
 S_{p}^{\text{RF}} &=&\lim_{V\rightarrow \infty }\frac{e^{2}}{\left( 2\pi
-
 \right) ^{3}}\frac{1}{V}\sum_{n=-\infty }^{\infty }\iiint d^{3}k\left[
-
 \left\{ \xi E_{\mathbf{k},\Vert }^{\ast }J_{n}+\sqrt{1-\xi ^{2}}E_{\mathbf{k}%
-
 ,\bot }^{\ast }\right\} \right. \\
-
 &&\left. \cdot \frac{i}{\left[ n\Omega +k_{\Vert }v_{\Vert }-\omega \right] }%
-
 \left\{ E_{\mathbf{k},\Vert }J_{n}P_{\Vert }+E_{\mathbf{k},\bot }P_{\bot
-
 }\right\} f\right]  \notag
-
 \end{eqnarray}
-
 \begin{eqnarray}
-
 S_{\xi }^{\text{RF}} &=&\lim_{V\rightarrow \infty }\frac{e^{2}}{\left( 2\pi
-
 \right) ^{3}}\frac{1}{V}\sum_{n=-\infty }^{\infty }\iiint d^{3}k\left[
-
 \left\{ \frac{-1}{\sqrt{1-\xi ^{2}}}\left( 1-\xi ^{2}-\frac{n\Omega }{\omega
-
 ^{\ast }}\right) E_{\mathbf{k},\Vert }^{\ast }J_{n}+\frac{1}{\xi }\left( \xi
-
 ^{2}-\frac{k_{\Vert }v_{\Vert }}{\omega ^{\ast }}\right) E_{\mathbf{k},\bot
-
 }^{\ast }\right\} \right. \\
-
 &&\left. \cdot \frac{i}{\left[ n\Omega +k_{\Vert }v_{\Vert }-\omega \right] }%
-
 \left\{ E_{\mathbf{k},\Vert }J_{n}P_{\Vert }+E_{\mathbf{k},\bot }P_{\bot
-
 }\right\} f\right]  \notag
-
 \end{eqnarray}
-
-
 
 Considering the operators (\ref{ppar2}-\ref{pperp2}), we wee that the fluxes
-
 in momentum space have a purely diffusive form, and can be expressed in the
-
 form 
-
 \begin{eqnarray}
-
 S_{p}^{\text{RF}} &=&-D_{pp}^{\text{RF}}\frac{\partial f}{\partial p}%
-
 +D_{p\xi }^{\text{RF}}\frac{\sqrt{1-\xi ^{2}}}{p}\frac{\partial f}{\partial
-
 \xi } \\
-
 S_{\xi }^{\text{RF}} &=&-D_{\xi p}^{\text{RF}}\frac{\partial f}{\partial p}%
-
 +D_{\xi \xi }^{\text{RF}}\frac{\sqrt{1-\xi ^{2}}}{p}\frac{\partial f}{%
-
 \partial \xi }
-
 \end{eqnarray}
-
 with 
-
 \begin{eqnarray}
-
 D_{pp}^{\text{RF}} &=&-\lim_{V\rightarrow \infty }\frac{e^{2}}{\left( 2\pi
-
 \right) ^{3}}\frac{1}{V}\sum_{n=-\infty }^{\infty }\iiint d^{3}k\left[
-
 \left\{ \xi E_{\mathbf{k},\Vert }^{\ast }J_{n}+\sqrt{1-\xi ^{2}}E_{\mathbf{k}%
-
 ,\bot }^{\ast }\right\} \right. \\
-
 &&\left. \cdot \frac{i}{\left[ n\Omega +k_{\Vert }v_{\Vert }-\omega \right] }%
-
 \left\{ \xi E_{\mathbf{k},\Vert }J_{n}+\sqrt{1-\xi ^{2}}E_{\mathbf{k},\bot
-
 }\right\} \right]  \notag \\
-
 D_{p\xi }^{\text{RF}} &=&\lim_{V\rightarrow \infty }\frac{e^{2}}{\left( 2\pi
-
 \right) ^{3}}\frac{1}{V}\sum_{n=-\infty }^{\infty }\iiint d^{3}k\left[
-
 \left\{ \xi E_{\mathbf{k},\Vert }^{\ast }J_{n}+\sqrt{1-\xi ^{2}}E_{\mathbf{k}%
-
 ,\bot }^{\ast }\right\} \right. \\
-
 &&\left. \cdot \frac{i}{\left[ n\Omega +k_{\Vert }v_{\Vert }-\omega \right] }%
-
 \left\{ \frac{1}{\sqrt{1-\xi ^{2}}}\left( 1-\xi ^{2}-\frac{n\Omega }{\omega }%
-
 \right) E_{\mathbf{k},\Vert }J_{n}-\frac{1}{\xi }\left( \xi ^{2}-\frac{%
-
 k_{\Vert }v_{\Vert }}{\omega }\right) E_{\mathbf{k},\bot }\right\} \right] 
-
 \notag \\
-
 D_{\xi p}^{\text{RF}} &=&-\lim_{V\rightarrow \infty }\frac{e^{2}}{\left(
-
 2\pi \right) ^{3}}\frac{1}{V}\sum_{n=-\infty }^{\infty }\iiint d^{3}k\left[
-
 \left\{ \frac{-1}{\sqrt{1-\xi ^{2}}}\left( 1-\xi ^{2}-\frac{n\Omega }{\omega
-
 ^{\ast }}\right) E_{\mathbf{k},\Vert }^{\ast }J_{n}+\frac{1}{\xi }\left( \xi
-
 ^{2}-\frac{k_{\Vert }v_{\Vert }}{\omega ^{\ast }}\right) E_{\mathbf{k},\bot
-
 }^{\ast }\right\} \right. \\
-
 &&\left. \cdot \frac{i}{\left[ n\Omega +k_{\Vert }v_{\Vert }-\omega \right] }%
-
 \left\{ E_{\mathbf{k},\Vert }J_{n}\xi +E_{\mathbf{k},\bot }\sqrt{1-\xi ^{2}}%
-
 \right\} \right]  \notag \\
-
 D_{\xi \xi }^{\text{RF}} &=&\lim_{V\rightarrow \infty }\frac{e^{2}}{\left(
-
 2\pi \right) ^{3}}\frac{1}{V}\sum_{n=-\infty }^{\infty }\iiint d^{3}k\left[
-
 \left\{ \frac{-1}{\sqrt{1-\xi ^{2}}}\left( 1-\xi ^{2}-\frac{n\Omega }{\omega
-
 ^{\ast }}\right) E_{\mathbf{k},\Vert }^{\ast }J_{n}+\frac{1}{\xi }\left( \xi
-
 ^{2}-\frac{k_{\Vert }v_{\Vert }}{\omega ^{\ast }}\right) E_{\mathbf{k},\bot
-
 }^{\ast }\right\} \right. \\
-
 &&\left. \cdot \frac{i}{\left[ n\Omega +k_{\Vert }v_{\Vert }-\omega \right] }%
-
 \left\{ \frac{1}{\sqrt{1-\xi ^{2}}}\left( 1-\xi ^{2}-\frac{n\Omega }{\omega }%
-
 \right) E_{\mathbf{k},\Vert }J_{n}-\frac{1}{\xi }\left( \xi ^{2}-\frac{%
-
 k_{\Vert }v_{\Vert }}{\omega }\right) E_{\mathbf{k},\bot }\right\} \right] 
-
 \notag
-
 \end{eqnarray}
-
-
 
 \bigskip In the limit of resonant diffusion, we have 
-
 \begin{equation}
-
 \frac{1}{\left[ n\Omega +k_{\Vert }v_{\Vert }-\omega \right] }\rightarrow
-
 i\pi \delta \left( \omega -k_{\Vert }v_{\Vert }-n\Omega \right)
-
 \end{equation}
-
 and we express the resonance condition 
-
 \begin{equation}
-
 k_{\Vert }v_{\Vert }=\omega -n\Omega
-
 \end{equation}
-
 so that we get 
-
 \begin{eqnarray}
-
 D_{pp}^{\text{RF}} &=&\sum_{n=-\infty }^{\infty }\left( 1-\xi ^{2}\right)
-
 D_{n}^{\text{RF}}\left( p,\xi \right)  \notag \\
-
 D_{p\xi }^{\text{RF}} &=&\sum_{n=-\infty }^{\infty }-\frac{\sqrt{1-\xi ^{2}}%
-
 }{\xi }\left( 1-\xi ^{2}-\frac{n\Omega }{\omega }\right) D_{n}^{\text{RF}%
-
 }\left( p,\xi \right) \\
-
 D_{\xi p}^{\text{RF}} &=&\sum_{n=-\infty }^{\infty }-\frac{\sqrt{1-\xi ^{2}}%
-
 }{\xi }\left( 1-\xi ^{2}-\frac{n\Omega }{\omega }\right) D_{n}^{\text{RF}%
-
 }\left( p,\xi \right)  \notag \\
-
 D_{\xi \xi }^{\text{RF}} &=&\sum_{n=-\infty }^{\infty }\frac{1}{\xi ^{2}}%
-
 \left( 1-\xi ^{2}-\frac{n\Omega }{\omega }\right) ^{2}D_{n}^{\text{RF}%
-
 }\left( p,\xi \right)  \notag
-
 \end{eqnarray}
-
 with 
-
 \begin{equation}
-
 D_{n}^{\text{RF}}\left( p,\xi \right) =\lim_{V\rightarrow \infty }\frac{\pi
-
 e^{2}}{V}\iiint \frac{d^{3}k}{\left( 2\pi \right) ^{3}}\delta \left( \omega
-
 -k_{\Vert }v_{\Vert }-n\Omega \right) \left| E_{\mathbf{k},\bot }+\frac{\xi 
-
 }{\sqrt{1-\xi ^{2}}}E_{\mathbf{k},\Vert }J_{n}\right| ^{2}  \label{dnrf}
-
 \end{equation}
-
-
 
 Using (\ref{eperp}), we can define 
-
 \begin{equation}
-
 D_{\mathbf{k}}^{(n)}=e^{2}\left| \frac{1}{\sqrt{2}}E_{\mathbf{k}%
-
 ,+}e^{-i\alpha }J_{n-1}\left( \frac{k_{\bot }v_{\bot }}{\Omega }\right) +%
-
 \frac{1}{\sqrt{2}}E_{\mathbf{k},-}e^{+i\alpha }J_{n+1}\left( \frac{k_{\bot
-
 }v_{\bot }}{\Omega }\right) +\frac{p_{\Vert }}{p_{\bot }}E_{\mathbf{k},\Vert
-
 }J_{n}\left( \frac{k_{\bot }v_{\bot }}{\Omega }\right) \right| ^{2}
-
 \label{dk}
-
 \end{equation}
-
 so that (\ref{dnrf}) becomes 
-
 \begin{equation}
-
 D_{n}^{\text{RF}}(p,\xi )=\lim_{V\rightarrow \infty }\frac{\pi }{V}\int 
-
 \frac{d^{3}k}{(2\pi )^{3}}D_{\mathbf{k}}^{(n)}\delta (\omega -k_{\Vert
-
 }v_{\Vert }-n\Omega )
-
 \end{equation}
-
-
 
 \section{\protect\bigskip QL Diffusion Coefficient for a Plane Wave\label%
-
 {plane}}
 
-
-
 We take the limit case of a plane wave for a given ray, with given frequency 
-
 $\omega _{b}$ and wave number $\mathbf{k}_{b}$. If we assume
 
-
-
 \begin{eqnarray}
-
 \mathbf{E}_{b}\left( \mathbf{x},t\right) &=&\text{Re}\left[ \mathbf{E}%
-
 _{b0}e^{i\left( \mathbf{k}_{b}\cdot \mathbf{x}-\omega _{b}t\right) }\right]
-
 \\
-
 &=&\frac{1}{2}\left[ \mathbf{E}_{b0}e^{i\left( \mathbf{k}_{b}\cdot \mathbf{x}%
-
 -\omega _{b}t\right) }+\mathbf{E}_{b0}^{\ast }e^{-i\left( \mathbf{k}%
-
 _{b}\cdot \mathbf{x}-\omega _{b}t\right) }\right]
-
 \end{eqnarray}
-
 so that 
-
 \begin{eqnarray}
-
 \mathbf{E}_{b\mathbf{k}}\left( \mathbf{k},t\right) &\equiv &\iiint
-
 d^{3}x\;e^{-i\mathbf{k}\cdot \mathbf{x}}\mathbf{E}_{b}\left( \mathbf{x}%
-
 ,t\right)  \notag \\
-
 &=&\frac{1}{2}\left[ \mathbf{E}_{b0}e^{-i\omega _{b}t}\iiint
-
 d^{3}x\;e^{i\left( \mathbf{k}_{b}-\mathbf{k}\right) \cdot \mathbf{x}}+%
-
 \mathbf{E}_{b0}^{\ast }e^{i\omega _{b}t}\iiint d^{3}x\;e^{i\left( \mathbf{k}%
-
 _{b}+\mathbf{k}\right) \cdot \mathbf{x}}\right]  \notag \\
-
 &=&\frac{1}{2}\left[ \mathbf{E}_{b0}e^{-i\omega _{b}t}\delta \left( \mathbf{k%
-
 }_{b}-\mathbf{k}\right) +\mathbf{E}_{b0}^{\ast }e^{i\omega _{b}t}\delta
-
 \left( \mathbf{k}_{b}+\mathbf{k}\right) \right]
-
 \end{eqnarray}
-
-
 
 We therefore get 
-
 \begin{equation}
-
 D_{b,n}^{\text{RF}}(p,\xi )=\lim_{V\rightarrow \infty }\frac{q_{e}^{2}\pi }{V%
-
 }\iiint \frac{d^{3}k}{(2\pi )^{3}}\left| \mathbf{E}_{b\mathbf{k}}\right|
-
 ^{2}\left| \Theta _{\mathbf{k}}^{b,n}\left( \mathbf{k}\right) \right|
-
 ^{2}\delta \left( \omega _{b}-k_{\Vert }v_{\Vert }-n\Omega \right)
-
 \end{equation}
-
-
 
 We have 
-
 \begin{eqnarray}
-
 \left| \mathbf{E}_{b\mathbf{k}}\right| ^{2} &=&\frac{1}{4}\left| \mathbf{E}%
-
 _{b0}e^{-i\omega _{b}t}\delta \left( \mathbf{k}_{b}-\mathbf{k}\right) +%
-
 \mathbf{E}_{b0}^{\ast }e^{i\omega _{b}t}\delta \left( \mathbf{k}_{b}+\mathbf{%
-
 k}\right) \right| ^{2}  \notag \\
-
 &=&\frac{1}{4}\left( \mathbf{E}_{b0}e^{-i\omega _{b}t}\delta \left( \mathbf{k%
-
 }_{b}-\mathbf{k}\right) +\mathbf{E}_{b0}^{\ast }e^{i\omega _{b}t}\delta
-
 \left( \mathbf{k}_{b}+\mathbf{k}\right) \right) \left( \mathbf{E}_{b0}^{\ast
-
 }e^{i\omega _{b}t}\delta \left( \mathbf{k}_{b}-\mathbf{k}\right) +\mathbf{E}%
-
 _{b0}e^{-i\omega _{b}t}\delta \left( \mathbf{k}_{b}+\mathbf{k}\right) \right)
-
 \notag \\
-
 &=&\frac{1}{4}\left( \left| \mathbf{E}_{b0}\right| ^{2}\delta ^{2}\left( 
-
 \mathbf{k}_{b}-\mathbf{k}\right) +\left| \mathbf{E}_{b0}\right| ^{2}\delta
-
 ^{2}\left( \mathbf{k}_{b}+\mathbf{k}\right) +2 \text{Re}\left[ \mathbf{E}%
-
 _{b0}^{2}e^{-i\omega _{b}t}\right] \delta \left( \mathbf{k}_{b}-\mathbf{k}%
-
 \right) \delta \left( \mathbf{k}_{b}+\mathbf{k}\right) \right)
-
 \end{eqnarray}
-
-
 
 Expressing the condition $\mathbf{k}=\pm \mathbf{k}_{b}$ from the first
-
 delta function, we get 
-
 \begin{eqnarray}
-
 D_{b,n}^{\text{RF}}(p,\xi ) &=&\frac{1}{4}q_{e}^{2}\pi \left| \Theta _{%
-
 \mathbf{k}}^{b,n}\left( \mathbf{k}_{b}\right) \right| ^{2}\delta \left(
-
 \omega _{b}-k_{\Vert b}v_{\Vert }-n\Omega \right) \lim_{V\rightarrow \infty }%
-
 \frac{1}{V}\iiint \frac{d^{3}k}{(2\pi )^{3}} \\
-
 &&\left[ \left| \mathbf{E}_{b0}\right| ^{2}\delta ^{2}\left( \mathbf{k}_{b}-%
-
 \mathbf{k}\right) +\left| \mathbf{E}_{b0}\right| ^{2}\delta ^{2}\left( 
-
 \mathbf{k}_{b}+\mathbf{k}\right) +2\text{Re}\left[ \mathbf{E}%
-
 _{b0}^{2}e^{-i\omega _{b}t}\right] \delta \left( \mathbf{k}_{b}-\mathbf{k}%
-
 \right) \delta \left( \mathbf{k}_{b}+\mathbf{k}\right) \right]
-
 \end{eqnarray}
-
-
 
 The term $\delta \left( \mathbf{k}_{b}-\mathbf{k}\right) \delta \left( 
-
 \mathbf{k}_{b}+\mathbf{k}\right) $ has no contribution when the limit $%
-
 V\rightarrow \infty $ is taken. Now, using Parseval's theorem, 
-
 \begin{eqnarray}
-
 \lim_{V\rightarrow \infty }\frac{1}{V}\iiint \frac{d^{3}k}{(2\pi )^{3}}%
-
 \left( \delta ^{2}\left( \mathbf{k}_{b}-\mathbf{k}\right) +\delta ^{2}\left( 
-
 \mathbf{k}_{b}+\mathbf{k}\right) \right) &=&2\lim_{V\rightarrow \infty }%
-
 \frac{1}{V}\iiint d^{3}x  \notag \\
-
 &=&2
-
 \end{eqnarray}
 
-
-
 We finally get 
-
 \begin{equation}
-
 D_{b,n}^{\text{RF}}(p,\xi )=q_{e}^{2}\pi \frac{\left| \mathbf{E}_{b0}\right|
-
 ^{2}}{2}\left| \Theta _{\mathbf{k}}^{b,n}\left( \mathbf{k}_{b}\right)
-
 \right| ^{2}\delta \left( \omega _{b}-k_{\Vert b}v_{\Vert }-n\Omega \right)
-
 \end{equation}
-
-
 
 \section{Cold Plasma Description for RF Waves\label{cold}}
 
-
-
 \subsection{Introduction}
 
-
-
 In the cold plasma description, a fluid-like response of the plasma to the
-
 field is assumed. This description requires that
 
-
-
 \begin{itemize}
-
 \item  We remain far from resonances, where $k_{\Vert }\rightarrow \infty $.
-
 Near resonances, mode conversion to electrostatic waves (IBW, EBW) occur,
-
 which are not described by cold plasma wave theory. LHCD and ECCD usually
-
 take place far enough from the LH and UH resonances, respectively, so that
-
 the cold plasma description is valid.
 
-
-
 \item  Also, when $\omega /k_{\Vert }\sim v_{Te},v_{Ti}$, strong dissipation
-
 accurs trough Landau Damping and must be considered. In LHCD, the
-
 wave-particle interaction usually takes place for $\omega /k_{\Vert
-
 }>3v_{Te} $ and therefore cold plasma description still holds for LHW.
 
-
-
 \item  FLR effects must be small, that is, we must have 
-
 \begin{equation}
-
 \left| z\right| =\left| \frac{k_{\perp }v_{\perp }}{\Omega }\right| \ll 1
-
 \end{equation}
 
-
-
 As we saw in previous sections, this condition usually holds for LHCD, given
-
 that the temperature is not too high, and also for ECCD, if in addition the
-
 harmonic is low ($n=1$ or $2$).
-
 \end{itemize}
-
-
 
 \subsection{Power Flux}
 
-
-
 The relation between power flux and electric field was described using the
-
 vector $\mathbf{\Phi }_{b}$ defined in (\ref{phib}) 
-
 \begin{equation}
-
 \mathbf{\Phi }_{b}=\mathbf{\Phi }_{bP}+\mathbf{\Phi }_{bT}
-
 \end{equation}
-
 with 
-
 \begin{equation}
-
 \mathbf{\Phi }_{bP}=\frac{\mu _{0}c}{\left| \mathbf{E}_{b0}\right| ^{2}}%
-
 \text{Re}\left[ \widetilde{\mathbf{E}}_{b}\times \widetilde{\mathbf{H}}%
-
 _{b}^{\ast }\right]  \label{phibp}
-
 \end{equation}
-
 and 
-
 \begin{equation}
-
 \mathbf{\Phi }_{bT}=\mathbf{-}\frac{1}{2}\mathbf{e}_{b}^{\ast }\cdot \frac{%
-
 \partial \mathbb{K}^{H}}{\partial \mathbf{N}}\cdot \mathbf{e}_{b}
-
 \end{equation}
-
-
 
 In the cold plasma model, the dielectric tensor $\mathbb{K}$ is independent
-
 of $\mathbf{N}$ and the contribution $\mathbf{\Phi }_{bT}$, from the
-
 coherent motion of particles, vanishes. It is usually a very good
-
 approximation to neglect this kinetic power flux, even for
-
 quasi-electrostatic waves like Lower-Hybrid waves (See Appendix \ref{kinetic}%
-
 ). 
-
 \begin{equation}
-
 \mathbf{\Phi }_{bT}=0
-
 \end{equation}
-
-
 
 The complex electric field is 
-
 \begin{equation}
-
 \widetilde{\mathbf{E}}_{b}\left( x,t\right) =\mathbf{E}_{b0}e^{i\mathbf{k}%
-
 _{b}\cdot \mathbf{x-}\omega _{b}t}
-
 \end{equation}
-
 and the magnetic field is given by 
-
 \begin{equation}
-
 \widetilde{\mathbf{H}}_{b}^{\ast }\mathbf{=}\frac{\mathbf{k}_{b}\times 
-
 \widetilde{\mathbf{E}}_{b}}{\mu _{0}\omega _{b}}=\frac{\mathbf{N}_{b}\times 
-
 \widetilde{\mathbf{E}}_{b}}{\mu _{0}c}
-
 \end{equation}
-
 so that (\ref{phibp}) becomes 
-
 \begin{eqnarray}
-
 \mathbf{\Phi }_{bP} &=&\text{Re}\left[ \mathbf{e}_{b}\times \left( \mathbf{N}%
-
 _{b}\times \mathbf{e}_{b}^{\ast }\right) \right]  \notag \\
-
 &=&\text{Re}\left[ \left| e_{b}\right| ^{2}\mathbf{N}_{b}-\left( \mathbf{N}%
-
 _{b}\cdot \mathbf{e}_{b}\right) \mathbf{e}_{b}^{\ast }\right]  \label{phibp2}
-
 \end{eqnarray}
-
 where $\mathbf{\varepsilon }$ is the polarization vector, which can be
-
 decomposed into its components parallel and perpendicular to $\mathbf{N}_{b}$%
-
 : 
-
 \begin{eqnarray}
-
 \mathbf{e}_{bL} &=&\left( \mathbf{e}_{b}\cdot \widehat{N}_{b}\right) 
-
 \widehat{N}_{b} \\
-
 \mathbf{e}_{bT} &=&\mathbf{e}_{b}-\mathbf{e}_{bL}
-
 \end{eqnarray}
-
-
 
 Then (\ref{phibp2}) becomes 
-
 \begin{eqnarray}
-
 \mathbf{\Phi }_{bP} &=&\text{Re}\left[ \left( \left| e_{bL}\right|
-
 ^{2}+\left| e_{bT}\right| ^{2}\right) \mathbf{N}_{b}-Ne_{bL}\left( \mathbf{e}%
-
 _{bL}^{\ast }+\mathbf{e}_{bT}^{\ast }\right) \right]  \notag \\
-
 &=&\text{Re}\left[ \left| e_{bT}\right| ^{2}\mathbf{N}_{b}-N_{b}e_{bL}%
-
 \mathbf{e}_{bT}^{\ast }\right]  \notag \\
-
 &=&\left| e_{bT}\right| ^{2}\mathbf{N}_{b}-N_{b}\text{Re}\left( e_{bL}%
-
 \mathbf{e}_{bT}^{\ast }\right)  \label{phibpres}
-
 \end{eqnarray}
-
 so that finally 
-
 \begin{equation}
-
 \mathbf{\Phi }_{b}=\left| e_{bT}\right| ^{2}\mathbf{N}_{b}-N_{b}\text{Re}%
-
 \left( e_{bL}\mathbf{e}_{bT}^{\ast }\right)  \label{phibres}
-
 \end{equation}
-
-
 
 \subsection{Wave Equation and Dispersion Tensor}
 
-
-
 We consider the two-fluids description of a non relativistic plasma in a
-
 constant magnetic field $\mathbf{B}_{0}=B_{0}\widehat{z}$. In a continuous
-
 homogeneous linear medium, a Fourier component $\mathbf{E}\left( \mathbf{k}%
-
 ,\omega \right) $ verifies the wave equation \cite{ber01c6}
 
-
-
 \begin{equation}
-
 \mathbf{N}\times (\mathbf{N}\times \mathbf{E})+\mathbb{K}\cdot \mathbf{E}=0
-
 \end{equation}
-
 or equivalently 
-
 \begin{equation}
-
 (\mathbf{N}\cdot \mathbf{E})\mathbf{N}-N^{2}\mathbf{E}+\mathbb{K}\cdot 
-
 \mathbf{E}=0
-
 \end{equation}
-
 where $\mathbf{N}=c\mathbf{k}/\omega $ is the wave refractive index and $%
-
 \mathbb{K}$ is the dielectric tensor. This equation can be expressed in
-
 tensorial form as 
-
 \begin{equation}
-
 \mathbb{D}\cdot \mathbf{E}=0  \label{waveeq3}
-
 \end{equation}
-
 where the dispersion tensor is 
-
 \begin{equation}
-
 \mathbb{D=}\mathbf{NN-}N^{2}\mathbb{I}+\mathbb{K}
-
 \end{equation}
-
-
 
 By evaluating the susceptibilities in the cold plasma limit, the following
-
 dielectric tensor is obtained \cite{bon84} in the frame $\left( x,y,z\right) 
-
 $: 
-
 \begin{equation}
-
 \mathbb{K}= 
-
 \begin{pmatrix}
-
 K_{\perp } & -iK_{xy} & 0 \\ 
-
 iK_{xy} & K_{\perp } & 0 \\ 
-
 0 & 0 & K_{\Vert }
-
 \end{pmatrix}
-
 \label{ktensor}
-
 \end{equation}
-
 whose elements in a plasma made of species $s$ are given by 
-
 \begin{eqnarray}
-
 K_{\perp } &=&1-\sum_{s}\frac{\omega _{ps}^{2}}{\omega ^{2}-\Omega _{s}^{2}}
-
 \notag \\
-
 K_{\parallel } &=&1-\sum_{s}\frac{\omega _{ps}^{2}}{\omega ^{2}}  \notag \\
-
 K_{xy} &=&\sum_{s}\frac{\omega _{ps}^{2}\Omega }{\omega (\omega ^{2}-\Omega
-
 _{s}^{2})}
-
 \end{eqnarray}
-
 where 
-
 \begin{equation}
-
 \omega _{ps}=\sqrt{\frac{n_{s}q_{s}^{2}}{\varepsilon _{0}m_{s}}}
-
 \end{equation}
-
 is the plasma frequency and 
-
 \begin{equation}
-
 \Omega _{s}=\frac{q_{s}B_{0}}{m_{s}}
-
 \end{equation}
-
 the cyclotron frequency for the species $s$.
-
-
 
 \subsection{Dispersion Relation}
 
-
-
 In order to have a non-trivial solution to the wave equation, the dispersion
-
 relation must therefore be satisfied: 
-
 \begin{equation}
-
 D\left( \mathbf{k,}\omega \right) =\left| \mathbb{D}\right| =0
-
 \label{disprel}
-
 \end{equation}
-
-
 
 The axis $\widehat{x}$ is chosen such that 
-
 \begin{equation}
-
 \mathbf{N=}N_{\perp }\widehat{x}+N_{\parallel }\widehat{z}
-
 \end{equation}
-
-
 
 Taking the parallel component $N_{\parallel }$ as given, (\ref{disprel})
-
 lead to the following equation for $N_{\perp }$%
-
 \begin{equation}
-
 AN_{\perp }^{4}+BN_{\perp }^{2}+C=0
-
 \end{equation}
-
 with 
-
 \begin{eqnarray}
-
 A &=&K_{\perp } \\
-
 B &=&\left( N_{\parallel }^{2}-K_{\perp }\right) \left( K_{\perp
-
 }+K_{\parallel }\right) +K_{xy}^{2} \\
-
 C &=&K_{\parallel }\left[ \left( N_{\parallel }^{2}-K_{\perp }\right)
-
 ^{2}-K_{xy}^{2}\right]
-
 \end{eqnarray}
-
 or equivalently 
-
 \begin{eqnarray}
-
 A &=&K_{\perp } \\
-
 B &=&\left( K_{\perp }+K_{\parallel }\right) N_{\parallel }^{2}-\left(
-
 K_{R}K_{L}+K_{\perp }K_{\parallel }\right) \\
-
 C &=&K_{\parallel }\left( N_{\parallel }^{2}-K_{R}\right) \left(
-
 N_{\parallel }^{2}-K_{L}\right)
-
 \end{eqnarray}
-
 with 
-
 \begin{eqnarray}
-
 K_{R} &=&K_{\perp }+K_{xy} \\
-
 K_{L} &=&K_{\perp }-K_{xy}
-
 \end{eqnarray}
-
-
 
 We find the expression for $N_{\perp }$ as a function of $N_{\parallel }$
-
 and $\omega $: 
-
 \begin{equation}
-
 N_{\perp }^{2}=\frac{-B\pm \sqrt{B^{2}-4AC}}{2A}
-
 \end{equation}
-
-
 
 We see immediately that the resonances occur for $A=0$, that is, 
-
 \begin{equation}
-
 K_{\perp }=0
-
 \end{equation}
-
 and that cut-off occur for $C=0$, that is, 
-
 \begin{equation}
-
 K_{R}=N_{\parallel }^{2}
-
 \end{equation}
-
 \begin{equation}
-
 K_{L}=N_{\parallel }^{2}
-
 \end{equation}
-
 or 
-
 \begin{equation}
-
 K_{\parallel }=0
-
 \end{equation}
-
-
 
 \subsection{Polarization components}
 
-
-
 Once $N_{\perp }$ has been evaluated, the components of the polarization of
-
 the electric field are simply given as the eigenvector of the wave equation (%
-
 \ref{waveeq3}) 
-
 \begin{equation}
-
 \mathbb{D}\cdot \mathbf{E}=0
-
 \end{equation}
-
-
 
 \section{Electrostatic Approximation for LH Waves\label{lhw}}
 
-
-
 \subsection{Electrostatic Dispersion Relation}
 
-
-
 We consider the wave equation (\ref{waveeq3}) 
-
 \begin{equation}
-
 (\mathbf{N}\cdot \mathbf{E})\mathbf{N}-N^{2}\mathbf{E}+\mathbb{K}\cdot 
-
 \mathbf{E}=0  \label{waveeq}
-
 \end{equation}
-
-
 
 The electric field can be separated into its longitudinal and transverse
-
 components with respect to the normalized wave vector $\mathbf{N}$: 
-
 \begin{equation}
-
 \mathbf{E}=\mathbf{E}_{L}+\mathbf{E}_{T}  \label{edecomp}
-
 \end{equation}
-
 so that the wave equation (\ref{waveeq}) becomes 
-
 \begin{equation}
-
 (N^{2}-\mathbb{K})\mathbf{E}_{T}-\mathbb{K}\cdot \mathbf{E}_{L}=0
-
 \label{waveeq2}
-
 \end{equation}
-
-
 
 Electrostatic waves, and also electromagnetic waves approaching resonances,
-
 can satisfy the condition 
-
 \begin{equation}
-
 N^{2}\gg |K_{ij}|  \label{esapprox}
-
 \end{equation}
-
 and therefore (\ref{waveeq2}) reduces to 
-
 \begin{equation}
-
 N^{2}\mathbf{E}_{T}-\mathbb{K}\cdot \mathbf{E}_{L}\simeq 0  \label{waveeqes}
-
 \end{equation}
-
-
 
 Dot-multiplying (\ref{waveeqes}) by $\widehat{N}=\mathbf{N}/N$ leads to the
-
 electrostatic dispersion relation 
-
 \begin{equation}
-
 D_{L}\equiv \widehat{N}\cdot \mathbb{K}\cdot \widehat{N}=0  \label{dispreles}
-
 \end{equation}
-
 and the transverse electric field is given by 
-
 \begin{equation}
-
 \mathbf{E}_{T}=\frac{1}{N^{2}}\mathbb{K}\cdot \mathbf{E}_{L}  \label{et}
-
 \end{equation}
-
-
 
 We note from (\ref{et}) and (\ref{esapprox}) that $|\mathbf{E}_{T}|\ll |%
-
 \mathbf{E}_{L}|$. The electric field is quasi longitudinal, which justify
-
 the term electrostatic approximation given to the condition (\ref{esapprox}).
-
-
 
 \subsection{Cold Plasma Limit}
 
-
-
 Using (\ref{ktensor}), the electrostatic dispersion relation (\ref{dispreles}%
-
 ) in the cold plasma limit is then given by 
-
 \begin{equation}
-
 D_{L}=N_{\perp }^{2}K_{\perp }+N_{\parallel }^{2}K_{\parallel }=0
-
 \label{disprelescpl}
-
 \end{equation}
-
 which gives an expression for $N_{\perp }$ as a function of $N_{\parallel }$
-
 and $\omega $: 
-
 \begin{equation}
-
 N_{\perp }^{2}=\frac{-K_{\parallel }}{K_{\perp }}N_{\parallel }^{2}
-
 \label{nperplh0}
-
 \end{equation}
-
-
 
 Since the electric field is quasi-longitudinal ($\mathbf{E}\parallel \mathbf{%
-
 N}$), we also have the following relation for the polarization vector $%
-
 \mathbf{e}$ 
-
 \begin{equation}
-
 \frac{\left| e_{\parallel }\right| }{\left| e_{\perp }\right| }=\frac{\left|
-
 N_{\parallel }\right| }{\left| N_{\perp }\right| }  \label{eratio}
-
 \end{equation}
-
-
 
 \subsection{Lower Hybrid Waves}
 
-
-
 We consider the lower-hybrid range of frequency in a electron-ion plasma ,
-
 where the following ordering applies 
-
 \begin{equation}
-
 \omega _{ci}\ll \omega \ll \omega _{ce}
-
 \end{equation}
-
-
 
 Assuming in addition that 
-
 \begin{equation}
-
 \omega \ll \omega _{pe}
-
 \end{equation}
-
 leads to approximate expressions of the dielectric tensor components given
-
 by: 
-
 \begin{eqnarray}
-
 K_{\perp } &\simeq &1+\frac{\omega _{pe}^{2}}{\omega _{ce}^{2}}-\frac{\omega
-
 _{pi}^{2}}{\omega ^{2}}  \notag \\
-
 K_{\parallel } &\simeq &-\frac{\omega _{pe}^{2}}{\omega ^{2}}  \notag \\
-
 K_{xy} &\simeq &\frac{\omega _{pe}^{2}}{\omega \omega _{ce}}
-
 \label{disptenlh}
-
 \end{eqnarray}
-
 The perpendicular index of refraction becomes 
-
 \begin{equation}
-
 N_{\perp }^{2}=\frac{\omega _{pe}^{2}}{\omega ^{2}}\left( 1+\frac{\omega
-
 _{pe}^{2}}{\omega _{ce}^{2}}-\frac{\omega _{pi}^{2}}{\omega ^{2}}\right)
-
 ^{-1}N_{\parallel }^{2}
-
 \end{equation}
-
 which can be rewritten as 
-
 \begin{eqnarray}
-
 N_{\perp }^{2} &=&\frac{\omega _{pe}^{2}/\omega ^{2}}{\left( 1+\omega
-
 _{pe}^{2}/\omega _{ce}^{2}\right) \left( 1-\omega _{\text{LH}}^{2}/\omega
-
 ^{2}\right) }N_{\parallel }^{2} \\
-
 &=&\frac{\omega _{pe}^{2}/\omega _{pi}^{2}}{\left( \omega ^{2}/\omega _{%
-
 \text{LH}}^{2}-1\right) }N_{\parallel }^{2}  \label{nperplh2}
-
 \end{eqnarray}
-
 where 
-
 \begin{equation}
-
 \omega _{\text{LH}}^{2}=\frac{\omega _{pi}^{2}}{1+\omega _{pe}^{2}/\omega
-
 _{ce}^{2}}
-
 \end{equation}
-
 is the lower hybrid frequency. We recognize that $N_{\perp }\rightarrow
-
 \infty $ as the the lower-hybrid frequency approaches the wave frequency.
-
-
 
 \section{Kinetic Power Flux for LHW \label{kinetic}}
 
-
-
 \bigskip In the analysis above the kinetic part of the power flux, due to
-
 the coherent motion of charge carriers, has been neglected. This
-
 approximation must be justified by comparing the Poynting and the kinetic
-
 fluxes.
 
-
-
 The normalized expression for the kinetic power flux associated with an
-
 electromagnetic wave in a kinetic plasma is given by (\ref{phit}) 
-
 \begin{equation}
-
 \mathbf{\Phi }_{bT}=\mathbf{-}\frac{\omega }{2c}\mathbf{\varepsilon }%
-
 _{b}^{\ast }\cdot \frac{\partial \mathbb{K}^{H}}{\partial \mathbf{k}}\cdot 
-
 \mathbf{\varepsilon }_{b}  \label{kinflux}
-
 \end{equation}
-
-
 
 \subsection{Electrostatic Waves}
 
-
-
 In the electrostatic approximation, the electric field is quasi-longitudinal
-
 (\ref{et}) 
-
 \begin{equation}
-
 \left| \mathbf{\varepsilon }_{bT}\right| \ll \left| \varepsilon _{bL}\right|
-
 \simeq 1
-
 \end{equation}
-
 and (\ref{kinflux}) becomes 
-
 \begin{equation}
-
 \mathbf{\Phi }_{bT}=\mathbf{-}\frac{\omega }{2c}\widehat{k}\cdot \frac{%
-
 \partial \mathbb{K}^{H}}{\partial \mathbf{k}}\cdot \widehat{k}
-
 \label{kinfluxes1}
-
 \end{equation}
-
-
 
 In the frame of the wave vector $\vec{k}$, (\ref{kinfluxes1}) can then be
-
 expressed as 
-
 \begin{equation}
-
 \mathbf{\Phi }_{bT}=\mathbf{-}\frac{\omega }{2c}\frac{\partial K_{L}^{H}}{%
-
 \partial k}\widehat{k}  \label{kinfluxes2}
-
 \end{equation}
-
 where 
-
 \begin{equation}
-
 K_{L}=\widehat{k}\cdot \mathbb{K}\cdot \widehat{k}
-
 \end{equation}
-
 is the longitudinal (electrostatic) component of the dielectric tensor.
-
-
 
 \subsection{Lower Hybrid Waves}
 
-
-
 An expression of the electrostatic dispersion relation for LH waves that
-
 includes the first-order thermal corrections is given by \cite{por02}: 
-
 \begin{equation}
-
 K_{L}^{\text{LH}}(\omega ,k)\simeq 1+\frac{k_{\perp }^{2}}{k^{2}}\frac{%
-
 \omega _{pe}^{2}}{\Omega _{e}^{2}}\left( 1-\frac{3b_{e}}{4}\right) -\frac{%
-
 k_{\perp }^{2}}{k^{2}}\frac{\omega _{pi}^{2}}{\omega ^{2}}\left( 1+\frac{%
-
 3b_{i}\Omega _{i}^{2}}{\omega ^{2}}\right) -\frac{k_{\parallel }^{2}}{k^{2}}%
-
 \frac{\omega _{pe}^{2}}{\omega ^{2}}  \label{dispreleslhkin}
-
 \end{equation}
-
 where the finite Larmor radius (FRL) effects are scaled by the parameters 
-
 \begin{equation}
-
 b_{e}=\frac{k_{\perp }^{2}v_{Te}^{2}}{\Omega _{e}^{2}},\qquad b_{i}=\frac{%
-
 k_{\perp }^{2}v_{Ti}^{2}}{\Omega _{i}^{2}}  \label{flr}
-
 \end{equation}
-
 with $v_{T}^{2}=T/m$.
 
-
-
 The $k$-dependence of the dispersion relation is found in the thermal
-
 correction terms so that 
-
 \begin{equation}
-
 \frac{\partial K_{L}^{\text{LH}}}{\partial k}=-\frac{3}{4}\frac{k_{\perp
-
 }^{4}}{k^{4}}\frac{\omega _{pe}^{2}}{\Omega _{e}^{2}}\frac{2kv_{Te}^{2}}{%
-
 \Omega _{e}^{2}}-\frac{k_{\perp }^{4}}{k^{4}}\frac{\omega _{pi}^{2}}{\omega
-
 ^{2}}\frac{3\Omega _{i}^{2}}{\omega ^{2}}\frac{2kv_{Ti}^{2}}{\Omega _{i}^{2}}
-
 \label{kdepdispreleslhkin}
-
 \end{equation}
-
-
 
 Inside the plasma, we have $k_{\parallel }^{2}\ll k_{\perp }^{2}$ and
-
 therefore $k_{\perp }^{2}/k^{2}\simeq 1$. We finally get the following
-
 expression for the kinetic flux associated with quasi-electrostatic LH
-
 waves: 
-
 \begin{equation}
-
 \mathbf{\Phi }_{bT}^{\text{LH}}=\frac{1}{N}\left( \frac{1}{4}\frac{\omega
-
 _{pe}^{2}k^{2}v_{Te}^{2}}{\Omega _{e}^{4}}+\frac{\omega
-
 _{pi}^{2}k^{2}v_{Ti}^{2}}{\omega ^{4}}\right) \widehat{k}
-
 \label{kinfluxeslh}
-
 \end{equation}
-
-
 
 The kinetic flux is oriented in the direction of the wave vector, and the
-
 incident flux on the flux surface 
-
 \begin{equation}
-
 \mathbf{\Phi }_{bT\perp }^{\text{LH}}=\frac{1}{N}\left( \frac{1}{4}\frac{%
-
 \omega _{pe}^{2}k^{2}v_{Te}^{2}}{\Omega _{e}^{4}}+\frac{\omega
-
 _{pi}^{2}k^{2}v_{Ti}^{2}}{\omega ^{4}}\right) \left| \widehat{k}\cdot 
-
 \widehat{n}\right|  \label{kinfluxeslhperp}
-
 \end{equation}
-
 This incident kinetic flux must be compared to the incident Poynting flux
-
 taken in the cold plasma limit from (\ref{phiblh2}) 
-
 \begin{equation}
-
 \mathbf{\Phi }_{bP\perp }^{\text{LH}}=\frac{K_{\perp }}{N^{2}}\left| \mathbf{%
-
 N}_{\perp }\cdot \widehat{n}\right| \simeq \frac{K_{\perp }}{N}\left| 
-
 \widehat{k}\cdot \widehat{n}\right|  \label{poyntfluxeslhperp}
-
 \end{equation}
-
-
 
 The ratio of the kinetic power flux to the Poynting flux is given by 
-
 \begin{equation}
-
 \frac{\mathbf{\Phi }_{bT\perp }^{\text{LH}}}{\mathbf{\Phi }_{bP\perp }^{%
-
 \text{LH}}}=\frac{1}{K_{\perp }}\left( \frac{3}{4}\frac{\omega
-
 _{pe}^{2}v_{Te}^{2}k^{2}}{\Omega _{e}^{4}}+3\frac{\omega
-
 _{pi}^{2}v_{Ti}^{2}k^{2}}{\omega ^{4}}\right)  \label{fluxratio}
-
 \end{equation}
-
-
 
 Using ({\ref{nperplh0}) we have 
-
 \begin{equation}
-
 k^{2}\simeq \frac{\omega ^{2}}{c^{2}}N_{\perp }^{2}\simeq \frac{\omega ^{2}}{%
-
 c^{2}}\frac{\left( -K_{\parallel }\right) }{K_{\perp }}N_{\parallel
-
 }^{2}\simeq \frac{1}{K_{\perp }}\frac{\omega _{pe}^{2}}{c^{2}}N_{\parallel
-
 }^{2}
-
 \end{equation}
-
 so that 
-
 \begin{equation}
-
 \frac{\mathbf{\Phi }_{bT\perp }^{\text{LH}}}{\mathbf{\Phi }_{bP\perp }^{%
-
 \text{LH}}}=\frac{3\beta _{Te}^{2}N_{\parallel }^{2}}{(1+\omega
-
 _{pe}^{2}/\Omega _{e}^{2})(1-\omega _{\text{LH}}^{2}/\omega ^{2})}\left( 
-
 \frac{1}{4}\frac{\omega _{pe}^{4}}{\Omega _{e}^{4}}+\frac{\omega _{pi}^{4}}{%
-
 \omega ^{4}}\frac{T_{i}}{T_{e}}\right)  \label{fluxratio2}
-
 \end{equation}
-
 where $\beta _{Te}^{2}=T_{e}/mc^{2}$. }
 
-
-
 It can be seen from (\ref{fluxratio2}) that the kinetic part of the power
-
 flux becomes significant only as the wave approaches the lower-hybrid
-
 resonance very closely. In a typical LHCD context (for instance Alcator
-
 C-Mod, \cite{bon00}), we have 
-
 \begin{equation}
-
 \omega \sim 2\omega _{\text{LH}},\ \omega _{pe}\sim \Omega _{e},\ \omega
-
 _{pi}\sim \omega ,\ T_{e}\sim T_{i}\text{ and }\beta _{Te}\sim 0.1
-
 \label{cmod}
-
 \end{equation}
-
 so that the kinetic part of the power flux is not more than a few percents.
 
-
-
 \bibliographystyle{unsrt}
-
 \bibliography{c:/users/joan/papers/personal/bibliography/lhcdjd,c:/users/joan/papers/personal/bibliography/eccdjd,c:/users/joan/papers/personal/bibliography/fpqljd,c:/users/joan/papers/personal/bibliography/hxrsjd,c:/users/joan/papers/personal/bibliography/neocjd,c:/users/joan/papers/personal/bibliography/tranjd,c:/users/joan/papers/personal/bibliography/miscjd,c:/users/joan/papers/personal/bibliography/rawsjd,c:/users/joan/papers/personal/bibliography/rfbcjd}
 
-
-
 \end{document}
-
