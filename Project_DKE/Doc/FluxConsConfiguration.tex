@@ -10,13 +10,13 @@ which expands as
 \begin{equation}
 \left. \frac{\partial f_{0}}{\partial t}\right| _{\mathbf{r}}=\frac{1}{J_{%
 \mathbf{r}}}\frac{\partial }{\partial u^{i}}\left( J_{\mathbf{r}}S_{\mathbf{r%
-}}^{i}\right) 
+}}^{i}\right)
 \end{equation}
 where $J_{\mathbf{r}}$ is the configuration space Jacobian.
 
 The configuration space coordinate system is $\left( \psi ,s,\phi \right) $,
 and is described in (\ref{psisdef}). This is the natural system to work on
-flux-surface geometry. The configuration space Jacobian is (\ref{jacpsis})
+flux-surface geometry. The configuration space Jacobian is (\ref{jacpsis}) 
 \begin{equation}
 J_{\mathbf{r}}=\frac{R}{\left| \nabla \psi \right| }
 \end{equation}
@@ -26,9 +26,9 @@ expression for the divergence (\ref{psisdiv})
 \left. \frac{\partial f_{0}}{\partial t}\right| _{\mathbf{r}}=\frac{\left|
 \nabla \psi \right| }{R}\frac{\partial }{\partial \psi }\left( RS_{\psi
 }\right) +\frac{\left| \nabla \psi \right| }{R}\frac{\partial }{\partial s}%
-\left( \frac{R}{\left| \nabla \psi \right| }S_{s}\right) 
+\left( \frac{R}{\left| \nabla \psi \right| }S_{s}\right)
 \end{equation}
-where we define
+where we define 
 \begin{eqnarray}
 S_{\psi } &=&\mathbf{S}_{\mathbf{r}}\cdot \widehat{\psi } \\
 S_{s} &=&\mathbf{S}_{\mathbf{r}}\cdot \widehat{s}  \nonumber
@@ -42,7 +42,7 @@ The bounce averaged operator is
 }\right\} =\left\{ \frac{\left| \nabla \psi \right| }{R}\frac{\partial }{%
 \partial \psi }\left( RS_{\psi }\right) \right\} +\left\{ \frac{\left|
 \nabla \psi \right| }{R}\frac{\partial }{\partial s}\left( \frac{R}{\left|
-\nabla \psi \right| }S_{s}\right) \right\}   \label{kinbavr}
+\nabla \psi \right| }S_{s}\right) \right\}  \label{kinbavr}
 \end{equation}
 where the bounce averaging operation was defined in (\ref{bav0}) 
 \begin{equation}
@@ -54,34 +54,34 @@ v_{s}\right| }\mathcal{A}
 Because the parallel dynamics is described in our model, we know the fluxes
 along the magnetic field lines, which is simply 
 \begin{equation}
-S_{\mathbf{r}}^{s}=v_{s}f\left( v_{s}\right) 
+S_{\mathbf{r}}^{s}=v_{s}f\left( v_{s}\right)
 \end{equation}
 
 Since $f$ is constant along a field line, $\partial f/\partial s=0$ and we
 have simply 
 \begin{eqnarray}
 \left\{ \frac{\left| \nabla \psi \right| }{R}\frac{\partial }{\partial s}%
-\left( \frac{R}{\left| \nabla \psi \right| }S_{s}\right) \right\}  &=&\frac{1%
+\left( \frac{R}{\left| \nabla \psi \right| }S_{s}\right) \right\} &=&\frac{1%
 }{\tau _{b}}\left[ \frac{1}{2}\sum_{\sigma }\right] _{T}\int_{s_{\min
 }}^{s_{\max }}\frac{ds}{\left| v_{s}\right| }\frac{\left| \nabla \psi
 \right| }{R}\frac{\partial }{\partial s}\left( \frac{R}{\left| \nabla \psi
-\right| }S_{s}\right)   \nonumber \\
+\right| }S_{s}\right)  \nonumber \\
 &=&f\frac{1}{\tau _{b}}\left[ \frac{1}{2}\sum_{\sigma }\right] _{T}\sigma
 \int_{s_{\min }}^{s_{\max }}ds\frac{\left| \nabla \psi \right| }{v_{s}R}%
 \frac{\partial }{\partial s}\left( \frac{Rv_{s}}{\left| \nabla \psi \right| }%
-\right)  \\
+\right) \\
 &=&f\frac{1}{\tau _{b}}\left[ \frac{1}{2}\sum_{\sigma }\right] _{T}\sigma
 \int_{s_{\min }}^{s_{\max }}ds\frac{\partial }{\partial s}\ln \left[ \frac{%
 R\left( \psi ,s\right) v_{s}\left( \psi ,s,v_{s0}\right) }{R\left( \psi
 ,0\right) v_{s}\left( \psi ,0,v_{s0}\right) }\frac{\left| \nabla \psi
 \right| \left( \psi ,0\right) }{\left| \nabla \psi \right| \left( \psi
-,s\right) }\right]  \\
+,s\right) }\right] \\
 &=&f\frac{1}{\tau _{b}}\left[ \frac{1}{2}\sum_{\sigma }\right] _{T}\sigma
 \left( \ln \left[ \frac{R\left( \psi ,s_{\max }\right) }{R\left( \psi
 ,s_{\min }\right) }\right] +\ln \left[ \frac{v_{s}\left( \psi ,s_{\max
 },v_{s0}\right) }{v_{s}\left( \psi ,s_{\min },v_{s0}\right) }\right] -\ln
 \left[ \frac{\left| \nabla \psi \right| \left( \psi ,s_{\max }\right) }{%
-\left| \nabla \psi \right| \left( \psi ,s_{\min }\right) }\right] \right) 
+\left| \nabla \psi \right| \left( \psi ,s_{\min }\right) }\right] \right)
 \end{eqnarray}
 
 For passing particles, the positions $\left( \psi ,s_{\min }\right) $ and $%
@@ -95,25 +95,59 @@ for trapped particle also leads to $0$. Consequently,
 
 We are left with 
 \begin{equation}
-\left\{ \left. \frac{\partial f_{0}}{\partial t}\right| _{\mathbf{p}%
+\left\{ \left. \frac{\partial f_{0}}{\partial t}\right| _{\mathbf{r}%
 }\right\} =\left\{ \frac{\left| \nabla \psi \right| }{R}\frac{\partial }{%
 \partial \psi }\left( RS_{\psi }\right) \right\} 
 \end{equation}
 which can be expressed using (\ref{bav}) 
-\begin{equation}
-\left\{ \left. \frac{\partial f_{0}}{\partial t}\right| _{\mathbf{p}%
-}\right\} =\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2}\sum_{\sigma
+\begin{eqnarray}
+\left\{ \left. \frac{\partial f_{0}}{\partial t}\right| _{\mathbf{r}%
+}\right\}  &=&\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2}\sum_{\sigma
 }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }%
 \frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}}%
 \frac{B}{B_{P}}\frac{\xi _{0}}{\xi }\frac{\left| \nabla \psi \right| }{R}%
-\frac{\partial }{\partial \psi }\left( RS_{\psi }\right) 
-\end{equation}
+\frac{\partial }{\partial \psi }\left( RS_{\psi }\right)  \\
+&=&\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2}\sum_{\sigma }\right]
+_{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }\frac{1}{%
+\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}}B\frac{\xi
+_{0}}{\xi }\frac{\partial }{\partial \psi }\left( RS_{\psi }\right)  \\
+&=&\frac{1}{\lambda \widetilde{q}}\frac{\partial }{\partial \psi }\left[ 
+\frac{1}{2}\sum_{\sigma }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}%
+\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}%
+\right| }\frac{r}{R_{0}}B\frac{\xi _{0}}{\xi }RS_{\psi } \\
+&&-\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2}\sum_{\sigma }\right]
+_{T}\frac{\partial \theta _{\max }}{\partial \psi }\left[ \frac{1}{2\pi }%
+\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}}B%
+\frac{\xi _{0}}{\xi }RS_{\psi }\right] _{\theta =\theta _{\max }} \\
+&&+\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2}\sum_{\sigma }\right]
+_{T}\frac{\partial \theta _{\min }}{\partial \psi }\left[ \frac{1}{2\pi }%
+\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}}B%
+\frac{\xi _{0}}{\xi }RS_{\psi }\right] _{\theta =\theta _{\min }} \\
+&&-\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2}\sum_{\sigma }\right]
+_{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }RS_{\psi }%
+\frac{\partial }{\partial \psi }\left( \frac{1}{\left| \widehat{\psi }\cdot 
+\widehat{r}\right| }\frac{r}{R_{0}}B\frac{\xi _{0}}{\xi }\right) 
+\end{eqnarray}
+\begin{eqnarray}
+\left\{ \left. \frac{\partial f_{0}}{\partial t}\right| _{\mathbf{r}%
+}\right\}  &=&\frac{1}{\tau _{b}}\left[ \frac{1}{2}\sum_{\sigma }\right]
+_{T}\int_{s_{\min }}^{s_{\max }}\frac{ds}{\left| v_{s}\right| }\frac{\left|
+\nabla \psi \right| }{R}\frac{\partial }{\partial \psi }\left( RS_{\psi
+}\right)  \\
+&=&\frac{1}{\tau _{b}}\left[ \frac{1}{2}\sum_{\sigma }\right]
+_{T}\int_{s_{\min }}^{s_{\max }}\frac{ds}{\left| v_{s}\right| }\frac{\left|
+\nabla \psi \right| }{R}\frac{\partial }{\partial \psi }\left( RS_{\psi
+}\right) -\frac{1}{\tau _{b}}\left[ \frac{1}{2}\sum_{\sigma }\right]
+_{T}\int_{s_{\min }}^{s_{\max }}\frac{ds}{\left| v_{s}\right| }\frac{\left|
+\nabla \psi \right| }{R}\frac{\partial }{\partial \psi }\left( RS_{\psi
+}\right) 
+\end{eqnarray}
 
 Work to be done......
 
 Finally, we can rewrite (\ref{kinbavr}) under a conservative form as 
 \begin{equation}
-\left\{ \left. \frac{\partial f_{0}}{\partial t}\right| _{\mathbf{p}%
+\left\{ \left. \frac{\partial f_{0}}{\partial t}\right| _{\mathbf{r}%
 }\right\} =\left\langle \frac{\left| \nabla \psi \right| }{R}\right\rangle 
 \frac{\partial }{\partial \psi }\left( R\left( \psi ,0\right) S_{\psi
 }^{\left( 0\right) }\right)   \label{kinbavr2}

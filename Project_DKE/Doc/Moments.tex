@@ -1,0 +1,471 @@
+\subsection{ Flux-surface Averaging}
+
+\subsubsection{Surfacic densities}
+
+We consider the flux-surface averaging of a surfacic quantity, such as a
+flux of a current, generally noted ${\bf \Gamma }\left( \psi ,\theta \right) 
+$. It is defined as the averaged flux of ${\bf \Gamma }$ through the
+infinitesimal poloidal surface $dS\left( \psi \right) $ 
+\begin{equation}
+\left\langle \Gamma \right\rangle _{S}\left( \psi \right) =\frac{
+\int_{dS\left( \psi \right) }{\bf dS\cdot \Gamma }\left( \psi ,\theta
+\right) }{\int_{dS\left( \psi \right) }dS}
+\end{equation}
+
+In the $\left( \psi ,\theta ,\phi \right) $ system, the differential
+poloidal surface element is given by (\ref{dsphipsitheta}) 
+\begin{equation}
+{\bf dS}=\frac{r}{\left| \nabla \psi \right| \left| \widehat{\psi }\cdot 
+\widehat{r}\right| }d\psi d\theta \widehat{\phi }
+\end{equation}
+so that the infinitesimal poloidal surface element $dS_{p}\left( \psi
+\right) $ is 
+\begin{equation}
+\int_{dS_{p}\left( \psi \right) }dS=\int_{dS_{p}\left( \psi \right) }\frac{r%
+}{\left| \nabla \psi \right| \left| \widehat{\psi }\cdot \widehat{r}\right| }%
+d\psi d\theta =d\psi \int_{0}^{2\pi }d\theta \frac{r}{\left| \nabla \psi
+\right| \left| \widehat{\psi }\cdot \widehat{r}\right| }
+\end{equation}
+and the flux-surface averaged flux in the toroidal direction is 
+\begin{equation}
+\left\langle \Gamma \right\rangle _{\phi }\left( \psi \right) =\left( \frac{
+dS_{p}}{d\psi }\right) ^{-1}\int_{0}^{2\pi }d\theta \frac{r}{\left| \nabla
+\psi \right| \left| \widehat{\psi }\cdot \widehat{r}\right| }\left[ \widehat{
+\phi }{\bf \cdot \Gamma }\left( \psi ,\theta \right) \right]
+\label{fsavsurf}
+\end{equation}
+with 
+\begin{eqnarray}
+\frac{dS_{p}\left( \psi \right) }{d\psi } &=&\int_{0}^{2\pi }d\theta \frac{r%
+}{\left| \nabla \psi \right| \left| \widehat{\psi }\cdot \widehat{r}\right| }
+\\
+&=&\int_{0}^{2\pi }d\theta \frac{1}{\left| \widehat{\psi }\cdot \widehat{r}
+\right| }\frac{r}{R}\frac{1}{B_{P}}
+\end{eqnarray}
+Defining 
+\begin{equation}
+\overline{q}\left( \psi \right) \equiv \int_{0}^{2\pi }\frac{d\theta }{2\pi }%
+\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R}\frac{%
+B_{\min }\left( \psi \right) }{B_{P}}
+\end{equation}
+we get 
+\begin{equation}
+\frac{dS_{p}\left( \psi \right) }{d\psi }=\frac{2\pi \overline{q}\left( \psi
+\right) }{B_{\min }\left( \psi \right) }
+\end{equation}
+and 
+\begin{equation}
+\left\langle \Gamma \right\rangle _{\phi }\left( \psi \right) =\frac{1}{%
+\overline{q}\left( \psi \right) }\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{%
+1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R}\frac{B_{\min
+}\left( \psi \right) }{B_{P}}\left[ \widehat{\phi }{\bf \cdot \Gamma }\left(
+\psi ,\theta \right) \right]
+\end{equation}
+
+\subsubsection{Volumic densities}
+
+We consider the flux-surface averaging of a volumic quantity, such as a
+power density, generally noted ${\bf \Phi }\left( \psi ,\theta \right) $. It
+is defined as the average value of ${\bf \Gamma }$ within the infinitesimal
+volume $dV\left( \psi \right) $ 
+\begin{equation}
+\left\langle \Gamma \right\rangle _{V}\left( \psi \right) =\frac{%
+\iint_{dV\left( \psi \right) }{\bf \Phi }\left( \psi ,\theta \right) dV}{%
+\iint_{dV\left( \psi \right) }dV}
+\end{equation}
+
+In the $\left( \psi ,\theta ,\phi \right) $ system, the differential volume
+element is given by (\ref{dvpsitheta}) 
+\begin{equation}
+dV=\frac{Rr}{\left| \nabla \psi \right| \left| \widehat{\psi }\cdot \widehat{%
+r}\right| }d\psi d\theta d\phi 
+\end{equation}
+so that the infinitesimal volume element $dV\left( \psi \right) $ of a
+flux-surface is 
+\begin{equation}
+\iint_{dV\left( \psi \right) }dV=\iint_{dV\left( \psi \right) }\frac{Rr}{%
+\left| \nabla \psi \right| \left| \widehat{\psi }\cdot \widehat{r}\right| }%
+d\psi d\theta d\phi =d\psi \int_{0}^{2\pi }d\theta \int_{0}^{2\pi }d\phi 
+\frac{Rr}{\left| \nabla \psi \right| \left| \widehat{\psi }\cdot \widehat{r}%
+\right| }
+\end{equation}
+and the flux-surface averaged quantity in the toroidal direction is 
+\begin{equation}
+\left\langle {\bf \Phi }\right\rangle _{V}\left( \psi \right) =\left( \frac{%
+dV}{d\psi }\right) ^{-1}\int_{0}^{2\pi }d\theta \int_{0}^{2\pi }d\phi \frac{%
+Rr}{\left| \nabla \psi \right| \left| \widehat{\psi }\cdot \widehat{r}%
+\right| }{\bf \Phi }\left( \psi ,\theta \right) 
+\end{equation}
+\begin{equation}
+2\pi \left( \frac{dV}{d\psi }\right) ^{-1}\frac{2\pi R_{0}\widetilde{q}}{%
+B_{\min }\left( \psi \right) }
+\end{equation}
+with 
+\begin{eqnarray}
+\frac{dV\left( \psi \right) }{d\psi } &=&\int_{0}^{2\pi }d\theta \int_{0}^{2%
+\pi }d\phi \frac{Rr}{\left| \nabla \psi \right| \left| \widehat{\psi }\cdot 
+\widehat{r}\right| } \\
+&=&\int_{0}^{2\pi }d\theta \int_{0}^{2\pi }d\phi \frac{r}{\left| \widehat{%
+\psi }\cdot \widehat{r}\right| }\frac{1}{B_{P}}
+\end{eqnarray}
+
+Under the assumption of axisymmetry, we get
+\begin{eqnarray}
+\frac{dV\left( \psi \right) }{d\psi } &=&4\pi ^{2}\int_{0}^{2\pi }\frac{%
+d\theta }{2\pi }\frac{r}{\left| \widehat{\psi }\cdot \widehat{r}\right| }%
+\frac{1}{B_{P}} \\
+&=&\frac{4\pi ^{2}R_{0}}{B_{\min }\left( \psi \right) }\int_{0}^{2\pi }\frac{%
+d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }%
+\frac{r}{R_{0}}\frac{B_{\min }\left( \psi \right) }{B_{P}}
+\end{eqnarray}
+
+Defining 
+\begin{equation}
+\widehat{q}\left( \psi \right) \equiv \int_{0}^{2\pi }\frac{d\theta }{2\pi }%
+\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}}%
+\frac{B_{\min }\left( \psi \right) }{B_{P}}
+\end{equation}
+we get 
+\begin{equation}
+\frac{dV\left( \psi \right) }{d\psi }=\frac{4\pi ^{2}R_{0}\widehat{q}\left(
+\psi \right) }{B_{\min }\left( \psi \right) }
+\end{equation}
+and finally
+\begin{equation}
+\left\langle {\bf \Phi }\right\rangle _{V}\left( \psi \right) =\frac{1}{%
+\widehat{q}\left( \psi \right) }\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{1%
+}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}}\frac{%
+B_{\min }\left( \psi \right) }{B_{P}}{\bf \Phi }\left( \psi ,\theta \right) 
+\end{equation}
+
+\subsection{Current Density}
+
+\subsubsection{Definition}
+
+The density of current carried by electrons is given by 
+\begin{equation}
+{\bf J}\left( {\bf x}\right) =q_{e}\iiint d^{3}p\;{\bf v}f\left( {\bf x},%
+{\bf p}\right)
+\end{equation}
+so that the parallel current density is 
+\begin{equation}
+J_{\Vert }\left( {\bf x}\right) =q_{e}\iiint d^{3}p\;v_{\Vert }f\left( {\bf x%
+},{\bf p}\right)
+\end{equation}
+which becomes in $\left( p,\xi ,\psi ,\theta \right) $ phase space: 
+\begin{equation}
+J_{\Vert }\left( \psi ,\theta \right) =2\pi q_{e}\int_{0}^{\infty
+}p^{2}dp\int_{-1}^{1}d\xi \;\frac{p\xi }{\gamma m}f\left( p,\xi ,\psi
+,\theta \right)
+\end{equation}
+
+\subsubsection{Flux-Surface Averaging}
+
+We are usually interested in the flux-surface averaged current density in
+the toroidal direction. It is generally given by (\ref{fsavsurf}) 
+\begin{eqnarray}
+\left\langle J_{\Vert }\right\rangle _{\phi }\left( \psi \right) &=&\frac{1}{%
+\overline{q}\left( \psi \right) }\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{%
+1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R}\frac{ B_{\min
+}\left( \psi \right) }{B_{P}}J_{\Vert }\left( \psi ,\theta \right) \left[ 
+\widehat{\phi }{\bf \cdot }\widehat{b}\right] \\
+&=&\frac{1}{\overline{q}\left( \psi \right) }\int_{0}^{2\pi }\frac{d\theta }{
+2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R}%
+\frac{B_{\min }\left( \psi \right) }{B_{P}}J_{\Vert }\left( \psi ,\theta
+\right) \frac{B_{T}}{B}
+\end{eqnarray}
+and finally, using (\ref{Psidef}) 
+\begin{equation}
+\left\langle J_{\Vert }\right\rangle _{\phi }\left( \psi \right) =\frac{1}{%
+\overline{q}\left( \psi \right) }\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{
+1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R}\frac{B_{T}}{%
+B_{P}}\frac{J_{\Vert }\left( \psi ,\theta \right) }{\Psi \left( \psi ,\theta
+\right) }
+\end{equation}
+
+\subsubsection{Fokker-Planck Equation}
+
+When we consider only the zero order distribution function, we have that $%
+f_{0}$ is constant along a field line, so that 
+\begin{equation}
+f_{0}\left( p,\xi ,\psi ,\theta \right) =f_{0}^{(0)}\left( p,\xi _{0},\psi
+\right)
+\end{equation}
+where 
+\begin{equation}
+\xi _{0}=\sigma \sqrt{1-\frac{1}{\Psi \left( \psi ,\theta \right) }\left(
+1-\xi ^{2}\right) }  \label{xi0}
+\end{equation}
+
+Consequently, we find 
+\begin{eqnarray}
+J_{\Vert }^{0}\left( \psi ,\theta \right)  &=&2\pi q_{e}\int_{0}^{\infty %
+}p^{2}dp\int_{-1}^{1}d\xi \;\frac{p\xi }{\gamma m}f_{0}\left( p,\xi ,\psi
+,\theta \right)   \nonumber \\
+&=&2\pi q_{e}\int_{0}^{\infty }p^{2}dp\int_{-1}^{1}d\xi \;\frac{p\xi }{%
+\gamma m}f_{0}^{(0)}\left( p,\xi _{0},\psi \right)   \nonumber \\
+&=&2\pi q_{e}\int_{0}^{\infty }p^{2}dp\int_{-1}^{1}d\xi _{0}\Psi \left( \psi
+,\theta \right) H\left( \left| \xi _{0}\right| -\sqrt{1-\frac{1}{\Psi \left(
+\psi ,\theta \right) }}\right) \;\frac{p\xi _{0}}{\gamma m}f_{0}^{(0)}\left(
+p,\xi _{0},\psi \right)   \label{jpar}
+\end{eqnarray}
+where the condition 
+\begin{equation}
+\left| \xi _{0}\right| \geq \sqrt{1-\frac{1}{\Psi \left( \psi ,\theta
+\right) }}  \label{xi0cond}
+\end{equation}
+results from the equation (\ref{xi0}) and means that only the particle who
+reach the position $\theta $ must be considered. Note that the integrand in
+the equation (\ref{jpar}) is odd in $\xi _{0}$ for trapped electrons, since $%
+f_{0}^{(0)}$ is symmetric in the trapped region. As a consequence, the
+contribution from trapped electrons vanishes, and (\ref{jpar}) can be
+rewritten as 
+\begin{equation}
+J_{\Vert }^{0}\left( \psi ,\theta \right) =2\pi q_{e}\int_{0}^{\infty %
+}p^{2}dp\int_{-1}^{1}d\xi _{0}\Psi \left( \psi ,\theta \right) H\left(
+\left| \xi _{0}\right| -\xi _{0T}\right) \;\frac{p\xi _{0}}{\gamma m}%
+f_{0}^{(0)}\left( p,\xi _{0},\psi \right) 
+\end{equation}
+
+Therefore, the flux-surface averaged current density 
+\begin{equation}
+\left\langle J_{\Vert }\right\rangle _{\phi }^{0}\left( \psi \right) =\frac{1%
+}{\overline{q}\left( \psi \right) }\int_{0}^{2\pi }\frac{d\theta }{2\pi }%
+\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R}\frac{
+B_{T}}{B_{P}}\frac{J_{\Vert }^{0}\left( \psi ,\theta \right) }{\Psi \left(
+\psi ,\theta \right) }
+\end{equation}
+becomes 
+\begin{eqnarray}
+\left\langle J_{\Vert }\right\rangle _{\phi }^{0}\left( \psi \right) &=&%
+\frac{2\pi q_{e}}{m}\int_{0}^{\infty }dp\;\frac{p^{3}}{\gamma }\frac{1}{%
+\overline{q}\left( \psi \right) }\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{
+1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R}\frac{B_{T}}{
+B_{P}}\frac{1}{\Psi \left( \psi ,\theta \right) } \\
+&&\int_{-1}^{1}d\xi _{0}\Psi \left( \psi ,\theta \right) H\left( \left| \xi
+_{0}\right| -\xi _{0T}\right) \;\xi _{0}f_{0}^{(0)}\left( p,\xi _{0},\psi
+\right)
+\end{eqnarray}
+
+The integrals over $\theta $ and $\xi _{0}$ can be permuted 
+\begin{eqnarray}
+\left\langle J_{\Vert }\right\rangle _{\phi }^{0}\left( \psi \right) &=&%
+\frac{2\pi q_{e}}{m}\int_{0}^{\infty }dp\;\frac{p^{3}}{\gamma }%
+\int_{-1}^{1}d\xi _{0}\;H\left( \left| \xi _{0}\right| -\xi _{0T}\right)
+\;\xi _{0}f_{0}^{(0)}\left( p,\xi _{0},\psi \right) \\
+&&\frac{1}{\overline{q}\left( \psi \right) }\int_{0}^{2\pi }\frac{d\theta }{%
+2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R}%
+\frac{B_{T}}{B_{P}}
+\end{eqnarray}
+
+We recognize the expression of the safety factor (\ref{qfactor}) so that 
+\begin{equation}
+\left\langle J_{\Vert }\right\rangle _{\phi }^{0}\left( \psi \right) =\frac{%
+2\pi q_{e}}{m}\frac{q\left( \psi \right) }{\overline{q}\left( \psi \right) }%
+\int_{0}^{\infty }dp\;\frac{p^{3}}{\gamma }\int_{-1}^{1}d\xi _{0}\;H\left(
+\left| \xi _{0}\right| -\xi _{0T}\right) \;\xi _{0}f_{0}^{(0)}\left( p,\xi
+_{0},\psi \right) \;
+\end{equation}
+
+\paragraph{Case of circular concentric flux-surfaces}
+
+In that case, we showed in (\ref{qcirc}) that the safety factor is 
+\begin{equation}
+q\left( r\right) =\frac{\epsilon }{\sqrt{1-\epsilon ^{2}}}\frac{B_{T}}{B_{P}}
+\label{qcirc}
+\end{equation}
+with $\epsilon =r/R_{0}$.
+
+In addition, $\overline{q}\left( \psi \right) $ becomes 
+\begin{eqnarray}
+\overline{q}\left( \psi \right) &=&\int_{0}^{2\pi }\frac{d\theta }{2\pi }%
+\frac{r}{R}\frac{B_{\min }\left( \psi \right) }{B_{P}} \\
+&=&\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{r}{R}\frac{B_{\min }\left(
+\psi \right) }{B}\frac{B}{B_{P}} \\
+&=&\epsilon \frac{B}{B_{P}}\frac{R_{0}}{R_{\max }} \\
+&=&\frac{\epsilon }{1+\epsilon }\frac{B}{B_{P}}
+\end{eqnarray}
+
+We have then 
+\begin{equation}
+\frac{q\left( \psi \right) }{\overline{q}\left( \psi \right) }=\sqrt{\frac{
+1+\epsilon }{1-\epsilon }}\frac{B_{T}}{B}
+\end{equation}
+
+In the case when $B_{T}\gg B_{P}$, we retrieve the bounce-averaged
+coefficient $s^{*}$.
+
+\subsection{Power Density Associated with a Flux}
+
+\subsubsection{Definition}
+
+The kinetic energy associated with a relativistic electron of momentum $p$
+is 
+\begin{equation}
+\varepsilon =m_{e}c^{2}(\gamma -1)  \label{enelec}
+\end{equation}
+
+Then, the local energy density of electrons is 
+\begin{equation}
+{\cal E}\left( {\bf x}\right) =\int d^{3}p\ m_{e}c^{2}(\gamma -1)f({\bf x},%
+{\bf p})
+\end{equation}
+
+The density of power absorbed through the process ${\cal O}$ is 
+\begin{equation}
+P_{abs}^{{\cal O}}\left( {\bf x}\right) =\left. \frac{\partial {\cal E}}{%
+\partial t}\right| _{{\cal O}}=\int d^{3}p\ m_{e}c^{2}\left( \gamma
+-1\right) \left. \frac{\partial f({\bf x},{\bf p})}{\partial t}\right| _{%
+{\cal O}}
+\end{equation}
+
+When the operator is described in conservative form, as the divergence of a
+flux
+
+\begin{equation}
+\left. \frac{\partial f}{\partial t}\right| _{{\cal O}}=-\nabla _{{\bf p}%
+}\cdot {\bf S}_{{\bf p}}^{{\cal O}}=-\frac{1}{p^{2}}\frac{\partial }{%
+\partial p}\left( p^{2}S_{p}^{{\cal O}}\right) +\frac{1}{p}\frac{\partial }{%
+\partial \xi }\left( \sqrt{1-\xi ^{2}}S_{\xi }^{{\cal O}}\right)
+\end{equation}
+then the power density becomes
+
+\begin{equation}
+P_{abs}^{{\cal O}}=-2\pi m_{e}c^{2}\int_{0}^{\infty }p^{2}dp\;\left( \gamma
+-1\right) \int_{-1}^{+1}d\xi \left[ \frac{1}{p^{2}}\frac{\partial }{\partial
+p}\left( p^{2}S_{p}^{{\cal O}}\right) -\frac{1}{p}\frac{\partial }{\partial
+\xi }\left( \sqrt{1-\xi ^{2}}S_{\xi }^{{\cal O}}\right) \right]  \label{pabs}
+\end{equation}
+
+The integration of the $S_{\xi }^{{\cal O}}$ term gives no contribution,
+since the particle energy is function of $p$ only: 
+\begin{equation}
+\int_{-1}^{+1}d\xi \;\frac{\partial }{\partial \xi }\left( \sqrt{1-\xi ^{2}}
+S_{\xi }^{{\cal O}}\right) =\left[ \sqrt{1-\xi ^{2}}S_{\xi }^{{\cal O}%
+}\right] _{-1}^{+1}=0
+\end{equation}
+and the equation (\ref{pabs}) reduces to 
+\begin{equation}
+P_{abs}^{{\cal O}}=-2\pi m_{e}c^{2}\int_{-1}^{+1}d\xi \int_{0}^{\infty
+}\left( \gamma -1\right) \frac{\partial }{\partial p}\left( p^{2}S_{p}^{%
+{\cal O}}\right) dp
+\end{equation}
+
+Integrating by parts, we get 
+\begin{equation}
+P_{abs}^{{\cal O}}=-2\pi m_{e}c^{2}\int_{-1}^{+1}d\xi \left( \left[ \left(
+\gamma -1\right) p^{2}S_{p}^{{\cal O}}\right] _{0}^{\infty
+}-\int_{0}^{\infty }\frac{d\gamma }{dp}p^{2}S_{p}^{{\cal O}}dp\right)
+\label{pabsb}
+\end{equation}
+
+Assuming that $\lim_{p\rightarrow \infty }p^{2}S_{p}^{{\cal O}}=0$, and
+using 
+\begin{equation}
+\frac{d\gamma }{dp}=\frac{p}{\gamma m_{e}^{2}c^{2}}
+\end{equation}
+the equation (\ref{pabsb}) reduces to 
+\begin{equation}
+P_{abs}^{{\cal O}}\left( \psi ,\theta \right) =2\pi \int_{-1}^{+1}d\xi
+\int_{0}^{\infty }dp\;\frac{p^{3}}{\gamma m_{e}}S_{p}^{{\cal O}}
+\end{equation}
+
+\subsubsection{Flux-Surface Averaging}
+
+The flux-surface averaged power density is given by () 
+\begin{equation}
+\left\langle P_{abs}^{{\cal O}}\right\rangle _{V}\left( \psi \right) =\frac{1%
+}{\widehat{q}\left( \psi \right) }\int_{0}^{2\pi }\frac{d\theta }{2\pi }%
+\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}}%
+\frac{B_{\min }\left( \psi \right) }{B_{P}}P_{abs}^{{\cal O}}\left( \psi
+,\theta \right) 
+\end{equation}
+which becomes 
+\begin{equation}
+\left\langle P_{abs}^{{\cal O}}\right\rangle _{V}\left( \psi \right) =2\pi %
+\int_{0}^{\infty }dp\;\frac{p^{3}}{\gamma m_{e}}\frac{1}{\widehat{q}\left(
+\psi \right) }\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{%
+\psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}}\frac{B_{\min }\left( \psi
+\right) }{B_{P}}\int_{-1}^{+1}d\xi \;S_{p}^{{\cal O}}
+\end{equation}
+
+The sum over $\sigma $ for trapped electrons can be added, using
+\begin{eqnarray*}
+\int_{-1}^{1}d\xi \left[ \frac{1}{2}\sum_{\sigma =\pm 1}\right] _{T}S_{p}^{%
+{\cal O}} &=&\int_{-1}^{-\xi _{T}}d\xi S_{p}^{{\cal O}}+\int_{\xi
+_{T}}^{1}d\xi S_{p}^{{\cal O}}+\frac{1}{2}\int_{-\xi _{T}}^{\xi _{T}}d\xi
+\sum_{\sigma =\pm 1}S_{p}^{{\cal O}} \\
+&=&\int_{-1}^{-\xi _{T}}d\xi S_{p}^{{\cal O}}+\int_{\xi _{T}}^{1}d\xi S_{p}^{%
+{\cal O}}+\frac{1}{2}\int_{-\xi _{T}}^{\xi _{T}}d\xi \left[ S_{p}^{{\cal O}%
+}(\xi )+S_{p}^{{\cal O}}(-\xi )\right]  \\
+&=&\int_{-1}^{-\xi _{T}}d\xi S_{p}^{{\cal O}}+\int_{\xi _{T}}^{1}d\xi S_{p}^{%
+{\cal O}}+\int_{-\xi _{T}}^{\xi _{T}}d\xi S_{p}^{{\cal O}}(\xi ) \\
+&=&\int_{-1}^{1}d\xi S_{p}^{{\cal O}}
+\end{eqnarray*}
+where the trapping condition evaluated at the location $\theta $ is
+\begin{equation}
+\left| \xi \right| <\xi _{T}=\sqrt{1-\frac{B\left( \psi ,\theta \right) }{%
+B_{\max }\left( \psi \right) }}
+\end{equation}
+
+Using  $\xi d\xi =\Psi \xi _{0}d\xi _{0}$ with the condition (\ref{xi0cond})
+on $\xi _{0}$%
+\begin{equation}
+\left| \xi _{0}\right| \geq \sqrt{1-\frac{1}{\Psi \left( \psi ,\theta
+\right) }}  \label{xi0cond2}
+\end{equation}
+we get that 
+\begin{equation}
+\int_{-1}^{+1}d\xi =\int_{-1}^{+1}d\xi _{0}\;\frac{\Psi \left( \psi ,\theta
+\right) \xi _{0}}{\xi }H\left( \left| \xi _{0}\right| -\sqrt{1-\frac{1}{\Psi
+\left( \psi ,\theta \right) }}\right) 
+\end{equation}
+
+Note that the condition (\ref{xi0cond2}) is equivalent to 
+\begin{equation}
+\theta _{\min }\left( \psi ,\xi _{0}\right) \leq \theta \leq \theta _{\max
+}\left( \psi ,\xi _{0}\right)   \label{thetacond}
+\end{equation}
+so that, permuting the integrals over $\theta $ and $\xi _{0}$, we find 
+\begin{eqnarray}
+\left\langle P_{abs}^{{\cal O}}\right\rangle _{V}\left( \psi \right)  &=&2%
+\pi \int_{0}^{\infty }dp\;\frac{p^{3}}{\gamma m_{e}}\int_{-1}^{+1}d\xi _{0}
+\\
+&&\frac{1}{\widehat{q}\left( \psi \right) }\left[ \frac{1}{2}\sum_{\sigma =%
+\pm 1}\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2%
+\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}}%
+\frac{B}{B_{P}}\frac{\xi _{0}}{\xi }S_{p}^{{\cal O}}
+\end{eqnarray}
+
+We see that the bounce-averaging of the fluxes appears naturally, so that we
+can rewrite 
+\begin{equation}
+\left\langle P_{abs}^{{\cal O}}\right\rangle _{V}\left( \psi \right) =2\pi 
+\frac{\widetilde{q}\left( \psi \right) }{\widehat{q}\left( \psi \right) }%
+\int_{0}^{\infty }dp\;\frac{p^{3}}{\gamma m_{e}}\int_{-1}^{+1}d\xi
+_{0}\lambda \left\{ S_{p}^{{\cal O}}\right\} 
+\end{equation}
+
+\paragraph{Case of circular concentric flux-surfaces}
+
+In that case, we showed in (\ref{qcirc}) that the coefficient $\widetilde{q}$
+is 
+\begin{equation}
+\widetilde{q}\left( \psi \right) =\epsilon \frac{B}{B_{P}}  \label{qcirc}
+\end{equation}
+with $\epsilon =r/R_{0}$.
+
+In addition, $\widehat{q}\left( \psi \right) $ becomes 
+\begin{eqnarray}
+\widehat{q}\left( \psi \right)  &=&\int_{0}^{2\pi }\frac{d\theta }{2\pi }%
+\frac{r}{R_{0}}\frac{B_{\min }\left( \psi \right) }{B_{P}} \\
+&=&\epsilon \frac{B}{B_{P}}\frac{R_{0}}{R_{\max }}\int_{0}^{2\pi }\frac{%
+d\theta }{2\pi }\frac{R}{R_{0}} \\
+&=&\frac{\epsilon }{1+\epsilon }\frac{B}{B_{P}}
+\end{eqnarray}
+
+We have then 
+\begin{equation}
+\frac{\widetilde{q}\left( \psi \right) }{\widehat{q}\left( \psi \right) }%
+=1+\epsilon 
+\end{equation}
