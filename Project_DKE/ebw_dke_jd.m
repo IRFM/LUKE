@@ -2,8 +2,7 @@ function waveparam = ebw_dke_jd(tokamak,xpsin,ne_ref,lnc_e_ref,theta,XR,XZ,XBR,X
                 xyY_ebw,xyomega_ebw,xynpar_ebw,xydnpar_ebw,xynparmin_ebw,xynparmax_ebw,xyP0_in_ebw,xyfinc_ebw,xythetab_ebw,xyopt_ebw,xyn_ebw);
 %
 % Creates wave parameters for hot plasma EBWCD calculations based on 
-% dispersion code R2D2 results. Note that for now only ideal circular
-% concentric FS cases are considered.
+% dispersion code R2D2 results.
 %
 % by Joan Decker (jodecker@mit.edu) and Yves Peysson (yves.peysson@cea.fr)
 %
@@ -25,86 +24,80 @@ end
 xywceb_ebw = qe*xyBb_ebw/me;
 xyomega_ebw(xytest_maskY_ebw) = xyn_ebw(xytest_maskY_ebw).*xywceb_ebw(xytest_maskY_ebw)./xyY_ebw(xytest_maskY_ebw);%EBW wave frequency (GHz)
 %
-%********** only ideal circular concentric FS
-%
-xrho = psi2rho_jd(tokamak,xpsin)';
-%
 for ib = 1:nb_ebw
-    somega = num2str(round(xyomega_ebw(1,ib)/(2*pi*1e9)*10));
-    if length(somega) == 2
-        somega = ['0',somega];
-    end
-    snpar = num2str(round(xynpar_ebw(1,ib)*100));
-    if length(snpar) == 1
-        snpar = ['00',snpar];
-    elseif length(snpar) == 2
-        snpar = ['0',snpar];
-    end
-    loadstr = ['DISP_',tokamak,'_',somega,'_',snpar,'.mat'];
-    %
-    if min(xrho == repmat(xrho(1),[nr,1]))
-        rho_0 = xrho(1);
+    if xyomega_ebw ~= repmat(xyomega_ebw(1,ib),[nr,1])
+        error('Simulations with varying frequency not yet implemented')
     else
-        rho_0 = NaN;
+        omega_EBW = xyomega_ebw(1,ib);
     end
-    srho_0 = num2str(round(rho_0*1000));
-    if length(srho_0) == 1
-        srho_0 = ['00',srho_0];
-    elseif length(srho_0) == 2
-        srho_0 = ['0',srho_0];
+%   
+    if xynpar_ebw == repmat(xynpar_ebw(1,ib),[nr,1])
+        Npar_EBW = xynpar_ebw(1,ib);
+        %
+        somega = num2str(round(omega_EBW/(2*pi*1e9)*10));
+        if length(somega) == 2
+            somega = ['00',somega];
+        elseif length(somega) == 3
+            somega = ['0',somega];
+        end
+        snpar = num2str(round(Npar_EBW*100));
+        if length(snpar) == 1
+            snpar = ['00',snpar];
+        elseif length(snpar) == 2
+            snpar = ['0',snpar];
+        end
+        loadstr = ['DISP_',tokamak,'_',somega,'_',snpar,'.mat'];
+    else
+        loadstr = NaN;
     end
-    loadseekstr = ['SEEK_',tokamak,'_',snpar,'_',srho_0,'.mat'];
-    loadintstr = ['INT_',tokamak,'_',snpar,'.mat'];
     %
-    if exist(loadintstr) == 2
-        eval(['load ',loadintstr,' xrho_EBW xNperp_EBW x3eps_pmz_EBW xPflow_EBW xPabs_EBW']);
-        xMNperp = interp1(xrho_EBW,xNperp_EBW,xrho,'spline');
-        xM3eps_pmz = interp1(xrho_EBW,x3eps_pmz_EBW',xrho,'spline');
-        xMPflow = interp1(xrho_EBW,xPflow_EBW,xrho,'spline');
-        xMPabs = interp1(xrho_EBW,xPabs_EBW,xrho,'spline');       
-    elseif exist(loadstr) == 2
-        eval(['load ',loadstr,' xrho_EBW xNperp_EBW x3eps_pmz_EBW xPflow_EBW xPabs_EBW']);
-        xMNperp = interp1(xrho_EBW,xNperp_EBW,xrho,'spline');
-        xM3eps_pmz = interp1(xrho_EBW,x3eps_pmz_EBW',xrho,'spline');
-        xMPflow = interp1(xrho_EBW,xPflow_EBW,xrho,'spline');
-        xMPabs = interp1(xrho_EBW,xPabs_EBW,xrho,'spline');       
-    elseif exist(loadseekstr) == 2
-        eval(['load ',loadseekstr,' xrho_EBW xNperp_EBW x3eps_pmz_EBW xPflow_EBW xPabs_EBW omega']);
-        xMNperp = interp1(xrho_EBW,xNperp_EBW,xrho,'spline');
-        xM3eps_pmz = interp1(xrho_EBW,x3eps_pmz_EBW',xrho,'spline');
-        xMPflow = interp1(xrho_EBW,xPflow_EBW,xrho,'spline');
-        xMPabs = interp1(xrho_EBW,xPabs_EBW,xrho,'spline');       
+%    if min(xpsin == repmat(xpsin(1),[nr,1]))
+%        psin_0 = xpsin(1);
+%    else
+%        psin_0 = NaN;
+%    end
+%    spsin_0 = num2str(round(psin_0*1000));
+%    if length(spsin_0) == 1
+%        spsin_0 = ['00',spsin_0];
+%    elseif length(spsin_0) == 2
+%        spsin_0 = ['0',spsin_0];
+%    end
+%    loadseekstr = ['SEEK_',tokamak,'_',snpar,'_',spsin_0,'.mat'];
+%    loadintstr = ['INT_',tokamak,'_',snpar,'.mat'];
+    %
+    if ~isnan(loadstr) & exist(loadstr) == 2
+        eval(['load ',loadstr,' xpsin_EBW_ht xNperp_EBW_ht x3eps_pmz_EBW_ht xPflow_EBW_ht xPabs_EBW_at']);
+%    elseif exist(loadintstr) == 2
+%        eval(['load ',loadintstr,' xpsin_EBW_ht xNperp_EBW_ht x3eps_pmz_EBW_ht xPflow_EBW_ht xPabs_EBW_at']);
+%    elseif exist(loadseekstr) == 2
+%        eval(['load ',loadseekstr,' xpsin_EBW_ht xNperp_EBW_ht x3eps_pmz_EBW_ht xPflow_EBW_ht xPabs_EBW_at']);
     else
         prec = 5e-4;
-        xrho_EBW = 0:prec:1;
-        nr_EBW = length(xrho_EBW);
-        if length(xrho) > 1
-            xtheta_EBW = interp1(xrho,xythetab(:,ib),xrho_EBW);
-            xnpar_EBW = interp1(xrho,xynpar_ebw(:,ib),xrho_EBW);
-            xomega_EBW = interp1(xrho,xyomega_ebw(:,ib),xrho_EBW);
+        xpsin_EBW = 0:prec:1;
+        nr_EBW = length(xpsin_EBW);
+        if length(xpsin) > 1
+            xtheta_EBW = interp1(xpsin,xythetab(:,ib),xpsin_EBW);
+            xnpar_EBW = interp1(xpsin,xynpar_ebw(:,ib),xpsin_EBW);
         else
             xtheta_EBW = repmat(xythetab_ebw(:,ib),[1,nr_EBW]);
             xnpar_EBW = repmat(xynpar_ebw(:,ib),[1,nr_EBW]);
-            xomega_EBW = repmat(xyomega_ebw(:,ib),[1,nr_EBW]);
         end    
 %
-        [xrho_out_SX,xMNperp_SX,xM3eps_pmz_SX,...
-                xrho_out_EBB,xMNperp_EBB,xM3eps_pmz_EBB,...
-                xrho_out_EBW_ft,xMNperp_EBW_ft,xM3eps_pmz_EBW_ft,...
-                xrho_out_EBW_ht,xMNperp_EBW_ht,xM3eps_pmz_EBW_ht,xMPflow_EBW_ht,xMPabs_EBW_at] = ...
-            disp_ebw_jd(tokamak,xrho_EBW,xtheta_EBW,xnpar_EBW,xomega_EBW(1));
-%        [xMNperp,xM3eps_pmz] = disp_ebw_jd(tokamak,xrho,xythetab(:,ib),xynpar_ebw(:,ib),xyomega_ebw(:,ib),prec);
-        xMNperp = interp1(xrho_out_EBW_ht,xMNperp_EBW_ht,xrho);
-        xM3eps_pmz = interp1(xrho_out_EBW_ht,xM3eps_pmz_EBW_ht,xrho);
-        xMPflow =  interp1(xrho_out_EBW_ht,xMPflow_EBW_ht,xrho);
-        xMPabs =  interp1(xrho_out_EBW_ht,xMPabs_EBW_at,xrho);
+        [xpsin_EBW_ht,xNperp_EBW_ht,x3eps_pmz_EBW_ht,xPflow_EBW_ht,xPabs_EBW_at] = ...
+            disp_ebw_jd(tokamak,xpsin_EBW,xtheta_EBW,xnpar_EBW,omega_EBW);
+%
     end
-    xynperp_ebw(:,ib) = xMNperp;
-    xyepolp_ebw(:,ib) = xM3eps_pmz(:,1);  
-    xyepolm_ebw(:,ib) = xM3eps_pmz(:,2);  
-    xyepolz_ebw(:,ib) = xM3eps_pmz(:,3);  
-    xyPflow(:,ib) = xMPflow;
-    xyPabs(:,ib) = xMPabs;
+    xNperp = interp1(xpsin_EBW_ht,xNperp_EBW_ht,xpsin,'spline');
+    x3eps_pmz = interp1(xpsin_EBW_ht,x3eps_pmz_EBW_ht,xpsin,'spline');
+    xPflow = interp1(xpsin_EBW_ht,xPflow_EBW_ht,xpsin,'spline');
+    xPabs = interp1(xpsin_EBW_ht,xPabs_EBW_at,xpsin,'spline');       
+%
+    xynperp_ebw(:,ib) = xNperp;
+    xyepolp_ebw(:,ib) = x3eps_pmz(:,1);  
+    xyepolm_ebw(:,ib) = x3eps_pmz(:,2);  
+    xyepolz_ebw(:,ib) = x3eps_pmz(:,3);  
+    xyPflow(:,ib) = xPflow;
+    xyPabs(:,ib) = xPabs;
 end
 %
 xyabsphi_ebw = abs(2*xyPflow/e0/clum);
