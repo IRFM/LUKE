@@ -3,47 +3,52 @@ The drift kinetic equation may be solved by different numerical techniques.
 Here one of the most natural approach is described, namely the finite
 difference method, which is based on the transformation of a differential
 equation into an algebraic one. The volume $\mathcal{V}$ on which the drift
-kinetic equation is solved is characterized by three dimensions $\left(
-p,\xi _{0},\psi \right) ,$ and, the time evolution is introduced with the
+kinetic equation is solved is characterized by three dimensions $\left( \psi
+,p,\xi _{0}\right) ,$ and, the time evolution is introduced with the
 parameter $t$.
 
 Since the drift kinetic equation is expressed in conservative form, it is
 natural to define the grids for the flux $S$ grid as the starting point of
 the numerical calculations. 
 \begin{equation}
-S\left( p_{i},\xi _{0,j},\psi _{l},t_{k}\right) \rightarrow \left\{ 
+S\left( t_{k},\psi _{l},p_{i},\xi _{0,j}\right) \rightarrow \left\{ 
 \begin{array}{l}
-p_{i}\in \left[ 0,p_{\max }\right] ,i\rightarrow \left\{ 0,n_{p}\right\} \\ 
-\xi _{0,j}\in \left[ -1,1\right] ,j\rightarrow \left\{ 0,n_{\xi _{0}}\right\}
-\\ 
+t_{k}\in \left[ 0,+\infty \right] ,k\rightarrow \left\{ 0,n_{t}\right\}  \\ 
 \psi _{l}\in \left[ 0,\psi _{a}\right] ,l\rightarrow \left\{ 0,n_{\psi
-}\right\} \\ 
-t_{k}\in \left[ 0,+\infty \right] ,k\rightarrow \left\{ 0,n_{t}\right\}
+}\right\}  \\ 
+p_{i}\in \left[ 0,p_{\max }\right] ,i\rightarrow \left\{ 0,n_{p}\right\}  \\ 
+\xi _{0,j}\in \left[ -1,1\right] ,j\rightarrow \left\{ 0,n_{\xi
+_{0}}\right\} 
 \end{array}
-\right.
+\right. 
 \end{equation}
 
 This grid system defines a set of cells of non-uniform sizes characterized
 by index numbers which, by definition, are integers. The distribution
 function $f$ is represented by its values inside these cells, as shown in
-Fig. *****. With this form, the conservative nature of the problem is
-preserved numerically, avoiding the occurence of spurious numerical fluxes
-which lead to wrong estimate of the solution.
+Fig.\ref{griddefmom} for the momentum dynamics. With this form, the
+conservative nature of the problem is preserved numerically, avoiding the
+occurence of spurious numerical fluxes which lead to wrong estimate of the
+solution.
 
 \begin{equation}
-f\left( p_{i+1/2},\xi _{0j+1/2},\psi _{l+1/2},t_{k}\right) \rightarrow
+f\left( t_{k},\psi _{l+1/2},p_{i+1/2},\xi _{0j+1/2}\right) \rightarrow
 \left\{ 
 \begin{array}{l}
-p_{i+1/2}\in \left[ \frac{\Delta p_{1/2}}{2},p_{\max }-\frac{\Delta
-p_{n_{p}-1/2}}{2}\right] ,i\rightarrow \left\{ 0,n_{p}-1\right\} \\ 
+t_{k}\in \left[ 0,+\infty \right] ,k\rightarrow \left\{ 0,n_{t}\right\}  \\ 
+\psi _{l+1/2}\in \left[ 0+\frac{\Delta \psi _{1/2}}{2},a-\frac{\Delta \psi
+_{n_{r}-1/2}}{2}\right] ,l\rightarrow \left\{ 0,n_{\psi }-1\right\}  \\ 
+p_{i+1/2}\in \left[ \frac{\Delta p_{1/2}}{2},p_{\max }-\frac{\Delta %
+p_{n_{p}-1/2}}{2}\right] ,i\rightarrow \left\{ 0,n_{p}-1\right\}  \\ 
 \xi _{0j+1/2}\in \left[ -1+\frac{\Delta \xi _{0,1/2}}{2},1-\frac{\Delta \xi
 _{0,n_{\xi _{0}}-1/2}}{2}\right] ,j\rightarrow \left\{ 0,n_{\xi
-_{0}}-1\right\} \\ 
-\psi _{l+1/2}\in \left[ 0+\frac{\Delta \psi _{1/2}}{2},a-\frac{\Delta \psi
-_{n_{r}-1/2}}{2}\right] ,l\rightarrow \left\{ 0,n_{\psi }-1\right\}
+_{0}}-1\right\} 
 \end{array}
-\right.
+\right. 
 \end{equation}
+
+\fig{figures/griddefmom.eps}{Grid definition for the momentum
+dynamics}{griddefmom}{10cm}
 
 \subsection{Momentum space}
 
@@ -127,16 +132,17 @@ where
 \subsubsection{Link between momentum and configuration grids}
 
 When the bounce averaged drift kinetic equation is solved, the distribution
-function $f^{\left( 0\right) }\equiv f\left( B=B_{\min }\right) $ is
-determined by definition at the poloidal angle value where the magnetic
-field is minimal on a given magnetic flux surface. It is indeed the only
-common poloidal point on the magnetic flux surface that is crossed by
-trajectories of both trapped and circulating electrons. In momentum space,
-the dynamics of trapped and passing particles is characterized by an
-interval boundary which is defined by the relation 
+function $f^{\left( 0\right) }\equiv f\left( B=B_{0}\right) $ is determined
+by definition at the poloidal angle value where the magnetic field is
+minimal on a given magnetic flux surface as shown in Sec.\ref
+{NormBounceSection}. It is indeed the only common poloidal point on the
+magnetic flux surface that is crossed by trajectories of both trapped and
+circulating electrons. In momentum space, the dynamics of trapped and
+passing particles is characterized by an interval boundary which is defined
+by the relation 
 \begin{equation}
-\xi _{0T}^{2}\left( \psi \right) =1-\frac{B_{\min }\left( \psi \right) }{%
-B_{\max }\left( \psi \right) }  \label{Trapcond}
+\xi _{0T}^{2}\left( \psi \right) =1-\frac{B_{0}\left( \psi \right) }{B_{\max
+}\left( \psi \right) }  \label{Trapcond}
 \end{equation}
 
 From relation (\ref{Trapcond}), it is clear that momentum and radial grids
@@ -146,9 +152,9 @@ there exists an index number $j_{l}$ where the following condition is
 exactly fullfiled\footnote{%
 This choice is possible, since bounce integrals are determined numerically
 from magnetic equilibrium codes, and therefore, no singularity is
-encountered.},
+encountered.}, 
 \begin{equation}
-\xi _{0T,j_{l}}^{2}\left( \psi _{l}\right) =1-\frac{B_{\min }\left( \psi
+\xi _{0T,j_{l}}^{2}\left( \psi _{l}\right) =1-\frac{B_{0}\left( \psi
 _{l}\right) }{B_{\max }\left( \psi _{l}\right) }
 \end{equation}
 With this definition, the trapped passing boundaries are consistent with
@@ -162,8 +168,8 @@ being the number of flux grid points, $n_{\xi _{0}}\geq 6n_{\psi }+7,$ since
 at least each trapped passing boundary on the pitch-angle flux grid must be
 framed by two consecutive neighbors points, on each side, for $\xi _{0}>0$
 et $\xi _{0}\leq 0$ domains. In addition, accurate calculations must be
-performed at $\xi _{0}$ ($\ss $ points) et at $\left| \xi _{0}\right| =1$ (4
-points). Hence, for $n_{\psi }=30,$ $n_{\xi _{0}}\geq 187.$ 
+performed at $\xi _{0}$ ($3$ points) et at $\left| \xi _{0}\right| =1$ ($4$
+points). Hence, for $n_{\psi }=30,$ $n_{\xi _{0}}\geq 187.$
 
 \subsection{Time grid definition}
 
@@ -172,18 +178,18 @@ Time evolution is also projected on a numerical grid,
 t_{k}=k\Delta t
 \end{equation}
 which is taken uniform for two reasons. First, in the numerical approach
-here considered, the algorithm, as discussed in Sec. ****, is mainly
-dedicated to the fast determination of the asymptotic stationary solution $%
-\lim_{t\rightarrow +\infty }f\left( p,\xi _{0},\psi ,t\right) =f^{\left( 
-\infty \right) }\left( p,\xi _{0},\psi \right) ,$ and therefore time step
-values must fulfill the condition $\Delta t\gg 1.$ In this limit, the time $t
-$ used in the iterative procedure because of the weak non-linearities of the
-collision operator, acts mainly as a regularization parameter, when matrix
-to be inverted is close to be ill-conditionned. Furthermore, with a
-non-uniform time grid, matrix must be calculated at each time step, which
-prevents the use of the very efficient incomplete $LU$ matrix factorization
-technique, as discussed in Sec. ***, a procedure that allows to reduce
-considerably computer time consumption. Since the code is expected to be
-incorporate in a chain of codes, in order to obtain self-consistent magnetic
-equilibrium, wave propagation and kinetic calculations, this is therefore
-the only choice that can be considered.
+here considered, the algorithm, as discussed in Sec. \ref{FPmatrix}, is
+mainly dedicated to the fast determination of the asymptotic stationary
+solution $\lim_{t\rightarrow +\infty }f\left( \psi ,t,p,\xi _{0}\right)
+=f^{\left( \infty \right) }\left( \psi ,p,\xi _{0}\right) ,$ and therefore
+time step values must fulfill the condition $\Delta t\gg 1.$ In this limit,
+the time $t$ used in the iterative procedure because of the weak
+non-linearities of the collision operator, acts mainly as a regularization
+parameter, when matrix to be inverted is close to be ill-conditionned.
+Furthermore, with a non-uniform time grid, matrix must be calculated at each
+time step, which prevents the use of the very efficient incomplete $LU$
+matrix factorization technique, as discussed in Sec. \ref{FPmatrix}, a
+procedure that allows to reduce considerably computer time consumption.
+Since the code is expected to be incorporate in a chain of codes, in order
+to obtain self-consistent magnetic equilibrium, wave propagation and kinetic
+calculations, this is therefore the only choice that can be considered.
