@@ -1,0 +1,36 @@
+\select@language {english}
+\contentsline {chapter}{\numberline {1}Tokamak geometry and particle dynamic}{2}
+\contentsline {section}{\numberline {1.1}Arbitrary configuration}{2}
+\contentsline {subsection}{\numberline {1.1.1}Coordinate system}{2}
+\contentsline {subsection}{\numberline {1.1.2}Particle motion}{2}
+\contentsline {section}{\numberline {1.2}Circular configuration}{2}
+\contentsline {subsection}{\numberline {1.2.1}Coordinate system}{2}
+\contentsline {subsection}{\numberline {1.2.2}Particle motion}{2}
+\contentsline {chapter}{\numberline {2}Kinetic description of electrons}{3}
+\contentsline {section}{\numberline {2.1}Boltzman equation}{3}
+\contentsline {section}{\numberline {2.2}Gyro and radiofrequency averaging}{3}
+\contentsline {section}{\numberline {2.3}Small drift approximation}{3}
+\contentsline {subsection}{\numberline {2.3.1}Zero order term: the Fokker-Planck equation}{3}
+\contentsline {subsection}{\numberline {2.3.2}First order term: the Drift Kinetic equation}{3}
+\contentsline {section}{\numberline {2.4}Low collisionality limit and bounce averaging}{3}
+\contentsline {subsection}{\numberline {2.4.1}Zero order term: the Fokker-Planck equation}{3}
+\contentsline {subsection}{\numberline {2.4.2}First order term: the Drift Kinetic equation}{3}
+\contentsline {section}{\numberline {2.5}Flux conservative representation}{3}
+\contentsline {subsection}{\numberline {2.5.1}General formulation}{3}
+\contentsline {subsection}{\numberline {2.5.2}Zero order term: the Fokker-Planck equation}{3}
+\contentsline {subsection}{\numberline {2.5.3}First order term: the Drift Kinetic equation}{3}
+\contentsline {section}{\numberline {2.6}Anomalous transport in configuration space}{3}
+\contentsline {chapter}{\numberline {3}Detailed description of physical processes}{4}
+\contentsline {section}{\numberline {3.1}Collisions}{4}
+\contentsline {section}{\numberline {3.2}Ohmic electric field}{4}
+\contentsline {section}{\numberline {3.3}Radio frequency waves}{4}
+\contentsline {chapter}{\numberline {4}Numerical calculations}{5}
+\contentsline {section}{\numberline {4.1}Grid definitions}{5}
+\contentsline {section}{\numberline {4.2}Momentum dynamics}{5}
+\contentsline {subsection}{\numberline {4.2.1}Discretization procedure}{5}
+\contentsline {subsection}{\numberline {4.2.2}Grid interpolation}{5}
+\contentsline {section}{\numberline {4.3}Spatial dynamics}{5}
+\contentsline {subsection}{\numberline {4.3.1}Discretization procedure}{5}
+\contentsline {subsection}{\numberline {4.3.2}Grid interpolation}{5}
+\contentsline {chapter}{\numberline {5}Algorithm}{6}
+\contentsline {chapter}{\numberline {6}Examples}{7}
