@@ -7,6 +7,7 @@ brem_bd_plasma,brem_bd_diag,tphot_plasma,afit_plasma,tphot_plasma_exp,afit_plasm
 %by Y.Peysson CEA-DRFC 02/08/2003 <yves.peysson@cea.fr>
 %
 %
+close all
 warning off;
 [s,dossier,machine] = comput_dke_yp;
 if nargin == 0,	
@@ -45,6 +46,7 @@ disp('--------------------------------------------------------------------------
 nchords = length(hxr.alpha_hxr);
 theta_display = 180;
 chord_display = 1;
+kphot_display = 70;%keV
 while 1,
 	ir_display_dke = find(r_dke == ir_display);
 	if auto_mode_in == 0,
@@ -53,7 +55,7 @@ while 1,
 		ir_display_dke = input_dke_yp(['*********************************** Radial index value (1-',int2str(nr_dke),') (exit: <=0)'],ir_display_dke);
 		theta_display = input_dke_yp(['*********************************** Poloidal angle value (0-180 deg) (exit: <=0)'],theta_display);
 		chord_display = input_dke_yp(['*********************************** Chord index value (0-',int2str(nchords),') (exit: <=0)'],chord_display);
-
+		kphot_display = input_dke_yp(['*********************************** Photon energy (20-200 keV) (exit: <=0)'],kphot_display);
 		disp('**************************************************************************')
 		disp(' ')
 		if ir_display_dke < 1,
@@ -61,13 +63,52 @@ while 1,
 		end
 	end
 %
-	[vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr] = bremchord_dke_yp(equil,hxr,xpsin_dke,xpsin_S_dke,1,'spline',display_mode);
+	[vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr] = bremchord_dke_yp(equil,hxr,xpsin_dke,xpsin_S_dke,1,'spline',display_mode);%Calculation of the chord length and angle between magnetic field line and line-of-sight
 %
-	[kphot,brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi,lchord,rho_out,theta_out] = bremsstrahlung_dke_yp(equil,hxr,vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr,XXheaviside,zZi,xzni_norm,xne_norm,ne_ref,xrho,dmhu,mhu,dpn_ref,pn_ref,pn2_ref,gamma_ref,Ec_ref,dp_cyl,pnmax_S,XXf0_ref,XXf0_tp_ref,XXf0_g_ref,nlevel,bounce_mode,display_mode,xrho(ir_display_dke),theta_display);
+	[kphot,brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi,lchord,rho_out,theta_out] = bremsstrahlung_dke_yp(equil,hxr,vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr,XXheaviside,zZi,xzni_norm,xne_norm,ne_ref,betath_ref,xrho,dmhu,mhu,dpn_ref,pn_ref,pn2_ref,gamma_ref,Ec_ref,dp_cyl,pnmax_S,XXfinit_ref,XXf0_ref,XXf0_tp_ref,XXf0_g_ref,nlevel,bounce_mode,display_mode,xrho(ir_display_dke),theta_display);%Local and line-integrated bremsstrahlung calculation
 % 
-disp('*****verifiez amplitude absolue + mettre figure profils integres, et fonction convolution')
-dbstop 70
-	[kphot,brem_bd_plasma,brem_bd_diag,tphot_plasma,afit_plasma,tphot_plasma_exp,afit_plasma_exp,meanabsx] = bremdiag_dke_yp(equil,hxr,kphot,brem_bd_out,display_mode,chord_display);
+	[kinterp,gkEinterp,kfit,dkfit,brem_bd_plasma,brem_bd_diag,tphot_plasma,afit_plasma,tphot_plasma_exp,afit_plasma_exp,meanabsx] = bremdiag_dke_yp(equil,hxr,kphot,brem_bd_out,display_mode,chord_display);%Convolution with the diagnostic system response function for each chord
+%
+%  Display results
+%
+	figure(10008),
+	graph1D_jd(kfit,brem_bd_plasma(chord_display,:),0,1,'Photon energy k (keV)','dN_{phot}/dk.dt [keV^{-1}.s^{-1}]',['Non-thermal Bremsstrahlung, chord #',num2str(chord_display)],NaN,'','','-','non','b',2);
+
+%	
+	figure(10009),
+	graph1D_jd(kfit,brem_bd_diag(chord_display,:),0,1,'Pulse energy channel E (keV)','dN_{pulse}/dE.dt [keV^{-1}.s^{-1}]',['HXR diagnostic count rate, chord #',num2str(chord_display)],NaN,'','','-','non','b',2);
+	
+%	
+	ikphot_display = max(find(kfit <= kphot_display));
+%
+	figure(10010),
+	graph1D_jd([1:length(tphot_plasma)],brem_bd_plasma(:,ikphot_display),0,0,'Chord number','dN_{phot}/dk.dt [keV^{-1}.s^{-1}]',['HXR diagnostic count rate, k=',num2str(kfit(ikphot_display)),' (keV)'],NaN,'','','-','non','b',2);
+
+%	
+	figure(10011),
+	graph1D_jd([1:length(tphot_plasma)],brem_bd_diag(:,ikphot_display),0,0,'Chord number','dN_{pulse}/dE.dt [keV^{-1}.s^{-1}]',['HXR diagnostic count rate, E=',num2str(kfit(ikphot_display)),' (keV)'],NaN,'','','-','non','b',2);
+%
+	figure(10012),
+	graph1D_jd([1:length(tphot_plasma)],tphot_plasma,0,0,'Chord number','T_{phot} [keV]','k.dN_{phot}/dk.dt = A.exp(-k/T_{phot}) [50-110 keV]',NaN,'','','-','non','b',2);
+%	
+	figure(10013),
+	graph1D_jd([1:length(tphot_plasma)],tphot_plasma_exp,0,0,'Chord number','T_{phot}^{*} [keV]','E.dN_{pulse}/dE.dt.{\eta}_{E} = A.exp(-E/T_{phot}^{*}) [50-110 keV]',NaN,'','','-','non','r',2);
+%
+	figure(10014),
+	graph1D_jd([1:length(tphot_plasma)],afit_plasma,0,0,'Chord number','A(k=0) [s^{-1}]','k.dN_{phot}/dk.dt = A.exp(-k/T_{phot})@k=0 [50-110 keV]',NaN,'','','-','non','b',2);
+%
+	figure(10015),
+	graph1D_jd([1:length(tphot_plasma)],afit_plasma_exp,0,0,'Chord number','A^{*}(E=0) [s^{-1}]','E.dN_{pulse}/dE.dt.{\eta}_{E} = A.exp(-E/T_{phot}^{*})@E=0 [50-110 keV]',NaN,'','','-','non','r',2);
+%
+	figure(10016),
+	graph1D_jd(kfit,meanabsx,0,0,'Chord number','{\eta}_{E}','Mean stopping efficiency {\eta}_{E}',NaN,'','','-','non','r',2);
+%
+	figure(10017),
+	ikinterp_display = max(find(kinterp <= kphot_display));
+	graph1D_jd(kinterp,gkEinterp(ikinterp_display,:),0,0,'Photon energy k','G_{kE}',['Detector response function @k=',num2str(kinterp(ikinterp_display)),' (keV), chord#',int2str(chord_display)],NaN,'','','-','non','r',2);
+	faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
+	text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['Norm. = ',num2str(trapz(kinterp,gkEinterp(ikinterp_display,:)))]);
+	
 %
 %*********************************** Saving results ***************************************
 %

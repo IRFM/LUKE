@@ -186,43 +186,42 @@ sB = sqrt(sBR.^2 + sBZ.^2 + sBphi.^2);
 sksid = -Ipdir*((sBR.*cos(sphi) - sBphi.*sin(sphi)).*gX_hxr + (-sBR.*sin(sphi) + sBphi.*cos(sphi)).*gY_hxr + sBZ.*gZ_hxr)./sB;%cosine between magnetic field line and chord direction
 %
 if display >= 1
-   figure(2878),
+   figure(10000),
 	[ax] = graph1D_jd(sR,sZ,0,0,'','','',NaN,'','','-','none','b',2);pause(0.5);%Poloidal plot
-   xlabel('X=R (m)');ylabel('Z (m)');title('Bremsstrahlung tomography (Poloidal view)')
    hold on
    for ir = 1:length(xpsin_S),
-        plot(RR_pol(ir,:),ZZ_pol(ir,:),'r')
-   end
+			graph1D_jd(RR_pol(ir,:),ZZ_pol(ir,:),0,0,'','','',NaN,'','','-','non','r',1);
+	     end
    axis('equal');
-   plot(HHR_pol,HHZ_pol,'r-.')
-   plot(VVR_pol,VVZ_pol,'r-.')
-	plot(ptR,ptZ,'r-')
+	graph1D_jd(HHR_pol,HHZ_pol,0,0,'','','',NaN,'','','-.','non','r',1);
+	graph1D_jd(VVR_pol,VVZ_pol,0,0,'','','',NaN,'','','-.','non','r',1);
+	graph1D_jd(ptR,ptZ,0,0,'X=R (m)','Z (m)','Bremsstrahlung tomography (Poloidal view)',NaN,'','','-','non','r',1);
    hold off
 %
-	figure(2879),
+	figure(10001),
 	quiver(RR_pol,ZZ_pol,BR_pol,BZ_pol);
 	axis('equal');
-	xlabel('X=R (m)');ylabel('Z (m)');title('Poloidal field (T)')
 	hold on
-	plot(ptR,ptZ,'c-')
-	plot(HHR_pol,HHZ_pol,'r-.')
-	plot(VVR_pol,VVZ_pol,'r-.')
-	hold off  
+	graph1D_jd(ptR,ptZ,0,0,'','','',NaN,'','','-','non','c',1);
+	graph1D_jd(HHR_pol,HHZ_pol,0,0,'','','',NaN,'','','-.','non','r',1);
+	graph1D_jd(VVR_pol,VVZ_pol,0,0,'X=R (m)','Z (m)','Poloidal field (T)',NaN,'','','-.','non','r',1);
+	hold off  	
 %
-	figure(2880)
-	plot(sR.*cos(sphi),sR.*sin(sphi),'b','LineWidth',2);%Toroidal plot
-	xlabel('X (m)');ylabel('Y (m)');title('Bremsstrahlung tomography (Top toroidal view, Z = 0), Ip:green, B-field:black')
-	hold on
-	plot(XX_tor_min,YY_tor_min,'r',XX_tor,YY_tor,'r-.',XX_tor_max,YY_tor_max,'r','LineWidth',2)
-	axis('equal');
-	plot(VVX,VVY,'r-.')
-	plot(HHX,HHY,'r-.')
-	plot(X_mfl_lcs(1:3:end),Y_mfl_lcs(1:3:end),'k:');%Z < 0                                        
-	plot(X_mfl_lcs(find(Z_mfl_lcs>=0)),Y_mfl_lcs(find(Z_mfl_lcs>=0)),'k-');%Z >= 0
+	figure(10002)
 	h = quiver(X_mfl_lcs(1:40:end),Y_mfl_lcs(1:40:end),BX_mfl_lcs(1:40:end),BY_mfl_lcs(1:40:end),0.5);%Magnetic field line direction
 	set(h,'Color','k');
+	hold on
 	h = quiver(X_mfl_lcs(20:40:end),Y_mfl_lcs(20:40:end),Ipdir*BX_mfl_lcs(20:40:end),Ipdir*BY_mfl_lcs(20:40:end),0.5);%Current direction on magnetic field line direction
 	set(h,'Color','g');
+	axis('equal');	
+	graph1D_jd(sR.*cos(sphi),sR.*sin(sphi),0,0,'','','',NaN,'','','-','non','b',2);
+	graph1D_jd(XX_tor_min,YY_tor_min,0,0,'','','',NaN,'','','-','non','r',2);
+	graph1D_jd(XX_tor,YY_tor,0,0,'','','',NaN,'','','-.','non','r',2);
+	graph1D_jd(XX_tor_max,YY_tor_max,0,0,'','','',NaN,'','','-','non','r',2);
+	graph1D_jd(VVX,VVY,0,0,'','','',NaN,'','','-.','non','r',1);
+	graph1D_jd(HHX,HHY,0,0,'','','',NaN,'','','-.','non','r',1);
+	graph1D_jd(X_mfl_lcs(1:3:end),Y_mfl_lcs(1:3:end),0,0,'','','',NaN,'','',':','non','k',1);%Z < 0 
+	graph1D_jd(X_mfl_lcs(find(Z_mfl_lcs>=0)),Y_mfl_lcs(find(Z_mfl_lcs>=0)),0,0,'X (m)','Y (m)','Bremsstrahlung tomography (Top view, Z = 0)','B-field, (Ip: green)','','','-','non','k',1);%Z >= 0 
 	hold off
 	set(gca,'YDir','rev');%Because the reference is indirect by definition
 end
