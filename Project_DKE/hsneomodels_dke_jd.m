@@ -2,7 +2,7 @@ function [prho,pcurr_hir_ref_fsav,pcurr_sau_ref_fsav,pcurr_hin_ref_fsav,pcurr_i_
     hsneomodels_dke_jd(tokname)
 % 
 % Calculates the bootstrap current from neoclassical models by Hinton & Hazeltine, Hirshman and Sauter 
-% (in the limit of large aspect ratio)
+% in the limit of large aspect ratio ia << 1.  
 % Note: The calculation is based on the model of circular concentric
 % flux-surface, with parameters derived from the magnetic geometry.
 %
@@ -13,14 +13,14 @@ function [prho,pcurr_hir_ref_fsav,pcurr_sau_ref_fsav,pcurr_hin_ref_fsav,pcurr_i_
 %   OUTPUTS:
 %
 %       - prho: radial grid [1,np]
-%       - pcurr_hir_ref_fsav: Electron bootstrap current from Hirsman model (MA/m2) [1,np]
+%       - pcurr_hir_ref_fsav: Electron bootstrap current from Hirshman model, low collisionality limit (MA/m2) [1,np]
 %       - pcurr_sau_ref_fsav: Electron bootstrap current from Sauter model (MA/m2) [1,np]
 %       - pcurr_hin_ref_fsav: Electron bootstrap current from Hinton & Hazeltine model (MA/m2) [1,np]
 %       - pcurr_i_ref_fsav: Ion contribution to total bootstrap current for Hirschman, Sauter and Hinton & Hazeltine models (MA/m2) [1,np]
 %       - pcurr_tag_e_ref_fsav: Electron bootstrap current from Taguchi model (anistropic electron distribution) (MA/m2) [1,np] 
 %       - pcurr_tag_i_ref_fsav: Ion bootstrap current from Taguchi model (anistropic electron distribution) (MA/m2) [1,np] 
 %
-%by Joan Decker <jodecker@alum.mit.edu> and Y. Peysson CEA-DRFC <yves.peysson@cea.fr>
+%by Joan Decker <jodecker@mit.edu> and Y. Peysson CEA-DRFC <yves.peysson@cea.fr>
 %
 qe = 1.6e-19;
 %
@@ -60,7 +60,7 @@ dlnpidr = dlnTidr + dlnnidr;
 %
 pia = prho*ap/Rp;
 %
-px = (1.46*pia.^(0.5) + 2.40*pia)./(1 - pia).^(1.5);
+px = (1.46*pia.^(0.5) + 2.40*pia)./(1 - pia).^(1.5);%Small inverse aspect ratio expansion
 %
 Dx = 1.414*Zi + Zi^2 + px*(0.754 + 2.657*Zi + 2*Zi^2) + px.^2*(0.348 + 1.243*Zi + Zi^2);
 %
@@ -68,6 +68,20 @@ L31 = px.*(0.754 + 2.21*Zi + Zi^2 + px*(0.348 + 1.243*Zi + Zi^2))./Dx;
 L32 = -px*(0.884 + 2.074*Zi)./Dx;
 L34 = L31;
 alpha = -1.172./(1 + 0.462*Zi);
+%
+%From Sauter paper
+%
+%pft
+%pnhu_e_s
+%X = pft./(1 + (1-0.1*pft).*sqrt(pnhu_e_s) + 0.5*(1-pft).*pnhu_e_s/Zi);
+%L31_s = (1 + 1.4/(Zi+1))*X - 1.9/(Zi+1)*X.^2 + 0.3/(Zi+1)*X.^3 + 0.2/(Zi+1)*X.^4;
+%X = pft./(1 + 0.26*(1-pft).*sqrt(pnhu_e_s) + 0.18*(1-0.37*pft).*pnhu_e_s/sqrt(Zi));
+%F32_ee_s = (X-X.^4)*(0.05+0.62*Zi)/(Zi+0.44*Zi^2) + (X.^2-X.^4 - 1.2*(X.^3-X.^4))/(0.22*Zi+1) + 1.2/(0.5*Zi+1)*X.^4;
+%Y = pft./(1 + (1+0.6*pft).*sqrt(pnhu_e_s) + 0.85*(1-0.37*pft).*pnhu_e_s/(1+Zi));
+%F32_ei_s = -(Y-Y.^4)*(0.56+1.93*Zi)/(Zi+0.44*Zi^2) + 4.95*(Y.^2-Y.^4 - 0.55*(Y.^3-Y.^4))/(2.48*Zi+1) - 1.2/(0.5*Zi+1)*Y.^4;
+%L32_s = F32_ee_s + F32_ei_s;
+%X = pft./(1 + (1-0.1*pft).*sqrt(pnhu_e_s) + 0.5*(1-0.5*pft).*pnhu_e_s/Zi);
+%L34_s = (1 + 1.4/(Zi+1))*X - 1.9/(Zi+1)*X.^2 + 0.3/(Zi+1)*X.^3 + 0.2/(Zi+1)*X.^4;
 %
 % Sauter Correction for L32 in case of large aspect ratio limit (S.Schultz thesis p 92)
 %

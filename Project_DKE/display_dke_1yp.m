@@ -55,11 +55,11 @@ Edreicer_ref = me*clum*betath_ref*nhu_ref/qe;%MKSA Dreicer field unit
 XxRR_mksa_fsav = XxRR_ref_fsav*nhu_ref*ne_ref;%Runaway loss rate in mksa units
 %
 if bounce_mode > 0,
-	xcollisionnality = 0.012*(xne(r_dke)/1e20).*xZeff(r_dke).*xq*Rp./xia.^1.5./xTe(r_dke).^2;%From O. Sauter et al., Phys. Plasma 6 (1999) 2834
-%	[xft_llm] = ft_llm_dke_yp(xia,1000);%From Y.R. Lin-Liu and R.L. Miller, Phys. Plasma 2 (1995) 1666
+	xnhu_e_star = 0.012*(xne(r_dke)/1e20).*xZeff(r_dke).*xq*Rp./xia.^1.5./xTe(r_dke).^2;%From O. Sauter et al., Phys. Plasma 6 (1999) 2834
+	[xft_llm] = ft_llm_dke_yp(xia,1000);%From Y.R. Lin-Liu and R.L. Miller, Phys. Plasma 2 (1995) 1666
 else
-	xcollisionnality = NaN*ones(size(xia));
-%	xft_llm = zeros(size(xia));
+	xnhu_e_star = NaN*ones(size(xia));
+	xft_llm = zeros(size(xia));
 end
 %
 %Calculation of the flux averaged Maxwellian bootstrap current from Hirshman, Sauter, Hinton & Hazeltine models (bulk contribution)
@@ -103,7 +103,7 @@ while 1,
 		disp('-------------------------------------------------------------------------------------------------------------------');
 		info_dke_yp(2,['Reference electron temperature (keV): ',num2str(Ten_ref*mc2)])
 		info_dke_yp(2,['Reference electron density (10+19 m-3): ',num2str(ne_ref/1e19)])
-		info_dke_yp(2,['Reference Coulomb logarithm: ',num2str(lnc_ref)])
+		info_dke_yp(2,['Reference Coulomb logarithm: ',num2str(lnc_e_ref)])
 		info_dke_yp(2,['Reference electron collision frequency (kHz): ',num2str(nhu_ref/1000)])
 		info_dke_yp(2,['MKSA power unit (P_ref): ',num2str(P_ref),' (MW/m3)'])
 
@@ -125,11 +125,12 @@ while 1,
 		info_dke_yp(2,['Flux-surface averaged electron density (10+19 m-3): ',num2str(xne(ir_display)/1e19)])
 %
 		disp('-------------------------------------------------------------------------------------------------------------------');
-		info_dke_yp(2,['Normalized Coulomb logarithm: ',num2str(xlnc(ir_display)/lnc_ref)])
+		info_dke_yp(2,['Normalized Coulomb logarithm: ',num2str(xlnc_e(ir_display)/lnc_e_ref)])
 		info_dke_yp(2,['Normalized electron collision frequency: ',num2str(xnhu(ir_display)/nhu_ref)])
 		if bounce_mode > 0,
 			info_dke_yp(2,['Exact trapped fraction: ',num2str(xft_fsav(ir_display_dke))])
-			info_dke_yp(2,['Collisionality parameter: ',num2str(xcollisionnality(ir_display_dke))])
+			info_dke_yp(2,['Approximate effective trapped fraction: ',num2str(xft_llm(ir_display_dke))])
+			info_dke_yp(2,['Collisionality parameter: ',num2str(xnhu_e_star(ir_display_dke))])
 		end
 		disp('-------------------------------------------------------------------------------------------------------------------');
 %
@@ -779,7 +780,7 @@ while 1,
             hold on
             [ax] = graph1D_jd(prho,pcurr_hin_mksa_fsav,'','','',NaN,[0,1],NaN,'-','none','g',2,14);
             [ax] = graph1D_jd(prho,pcurr_hir_mksa_fsav,'','','',NaN,[0,1],NaN,'-','none','b',2,14);
-            [ax] = graph1D_jd(prho,pcurr_sau_mksa_fsav,'\rho','<J_B> (MA/m^2)',['Bootstrap current in ',tokname],['DKE code';'Hinton  ';'Hirchman';'Sauter  '],[0,1],0,'-','none','m',2,14);
+            [ax] = graph1D_jd(prho,pcurr_sau_mksa_fsav,'\rho','<J_B> (MA/m^2)',['Bootstrap current in ',tokname],['DKE code';'Hinton  ';'Hirshman';'Sauter  '],[0,1],0,'-','none','m',2,14);
 %
             figure(202),clf
             [ax] = graph1D_jd(xrho_dke,xJtot_fsav_mksa,'\rho','<J_{tot}> (MA/m^2)','Total Current Density',NaN,[0,1],0,'none','+','r',2,14,gca,0.8,0.7,0.6);
