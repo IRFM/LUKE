@@ -4,12 +4,13 @@
 The first order Drift Kinetic equation requires to calculate $\widetilde{f}%
 ^{(0)}$ defined as 
 \begin{equation}
-\widetilde{f}^{(0)}(p,\xi _{0},\psi )=\frac{p\xi _{0}I\left( \psi \right) }{
-q_{e}B_{\min }\left( \psi \right) }\frac{\partial f_{0}^{(0)}(p,\xi
-_{0},\psi )}{\partial \psi }
+\widetilde{f}^{(0)}(p,\xi _{0},\psi )=\frac{p\xi _{0}I\left( \psi \right) }{%
+q_{e}B_{0}\left( \psi \right) }\frac{\partial f_{0}^{(0)}(p,\xi _{0},\psi )}{%
+\partial \psi }
 \end{equation}
 where $\left| I\left( \psi \right) \right| =RB_{T}.$ Here all quantities are
-determined on the minimum $B$ axis.
+determined on the poloidal position where the magnetic field  $\mathbf{B}$
+is minimum.
 
 The spatial grid being non-uniform, radial derivative requires a specific
 treatment, for an accurate determination. Let $\psi _{-},\psi $ et $\psi
@@ -42,32 +43,32 @@ whose determinant is simply
 
 Therefore 
 \begin{equation}
-\left. \frac{dy}{d\psi }\right| _{r}=\frac{\Delta \psi _{+}}{\Delta \psi
+\left. \frac{dy}{d\psi }\right| _{r}=\frac{\Delta \psi _{+}}{\Delta \psi 
 \Delta \psi _{-}}y_{-}-\frac{\left( \Delta \psi _{+}+\Delta \psi _{-}\right) 
-}{\Delta \psi _{+}\Delta \psi _{-}}y-\frac{\Delta \psi _{-}}{\Delta \psi
+}{\Delta \psi _{+}\Delta \psi _{-}}y-\frac{\Delta \psi _{-}}{\Delta \psi 
 \Delta \psi _{+}}y_{+}
 \end{equation}
 and applying this result for $\widetilde{f}^{(0)},$%
 \begin{eqnarray}
 &&\widetilde{f}_{l+1/2,i+1/2,j+1/2}^{(0)(k+1)}=\frac{p_{i+1/2}\xi
-_{0,j+1/2}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\times  \nonumber \\
+_{0,j+1/2}I_{l+1/2}}{q_{e}B_{0,l+1/2}}\times   \nonumber \\
 &&\left[ \frac{\left( \psi _{l+3/2}-\psi _{l+1/2}\right) }{\left( \psi
-_{l+3/2}-\psi _{l-1/2}\right) \left( \psi _{l-1/2}-\psi _{l+1/2}\right) }
-f_{0,l-1/2,i+1/2,j+1/2}^{(0)(k+1)}\right.  \nonumber \\
+_{l+3/2}-\psi _{l-1/2}\right) \left( \psi _{l-1/2}-\psi _{l+1/2}\right) }%
+f_{0,l-1/2,i+1/2,j+1/2}^{(0)(k+1)}\right.   \nonumber \\
 &&-\frac{\left( \psi _{l+3/2}-2\psi _{l+1/2}+\psi _{l-1/2}\right) }{\left(
 \psi _{l+3/2}-\psi _{l+1/2}\right) \left( \psi _{l-1/2}-\psi _{l+1/2}\right) 
 }f_{0,l+1/2,i+1/2,j+1/2}^{(0)(k+1)}  \nonumber \\
 &&-\left. \frac{\left( \psi _{l-1/2}-\psi _{l+1/2}\right) }{\left( \psi
-_{l+3/2}-\psi _{l-1/2}\right) \left( \psi _{l+3/2}-\psi _{l+1/2}\right) }
-f_{0,l+3/2,i+1/2,j+1/2}^{(0)(k+1)}\right]
+_{l+3/2}-\psi _{l-1/2}\right) \left( \psi _{l+3/2}-\psi _{l+1/2}\right) }%
+f_{0,l+3/2,i+1/2,j+1/2}^{(0)(k+1)}\right] 
 \end{eqnarray}
 where $I_{l+1/2}=I\left( \psi _{l+1/2}\right) .$ In a compact form, 
 \begin{eqnarray}
 &&\widetilde{f}_{l+1/2,i+1/2,j+1/2}^{(0)(k+1)}=\frac{p_{i+1/2}\xi
-_{0,j+1/2}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\times  \nonumber \\
+_{0,j+1/2}I_{l+1/2}}{q_{e}B_{0,l+1/2}}\times   \nonumber \\
 &&\left[ \alpha _{l+1/2}^{-}f_{0,l-1/2,i+1/2,j+1/2}^{(0)(k+1)}+\alpha
-_{l+1/2}^{0}f_{0,l+1/2,i+1/2,j+1/2}^{(0)(k+1)}+\alpha
-_{l+1/2}^{+}f_{0,l+3/2,i+1/2,j+1/2}^{(0)(k+1)}\right]
+_{l+1/2}^{0}f_{0,l+1/2,i+1/2,j+1/2}^{(0)(k+1)}\right.   \nonumber \\
+&&\left. +\alpha _{l+1/2}^{+}f_{0,l+3/2,i+1/2,j+1/2}^{(0)(k+1)}\right] 
 \end{eqnarray}
 where coefficients are 
 \begin{equation}
@@ -89,43 +90,46 @@ _{l+1/2}\right) }
 
 \paragraph{Momentum grid interpolation}
 
-As indicated in Sec.***, it is possible to keep the conservative form for
-the first-order Drift Kinetic equation. The main advantage is that the
-numerical differencing technique used for the zero-order Fokker-Planck
-equation may be used. The determination of the momentum $\left. \frac{%
-\partial \left( p^{2}\widetilde{\mathbf{S}}_{p}^{\left( 0\right) }\right) }{%
-\partial p}\right| _{l+1/2,i+1/2,j+1/2}^{(k)}$ and pitch-angle $\left. \frac{%
-\partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}\lambda \widetilde{%
-\mathbf{S}}_{\xi }^{\left( 0\right) }\right) \right|
-_{l+1/2,i+1/2,j+1/2}^{(k)}$ derivatives requires, as for $f_{0}^{\left(
-0\right) },$ interpolation techniques in order to evaluate $\widetilde{f}
-^{(0)}$ on flux grid at the radial position $l+1/2.$ By analogy, one have to
-determine $\widetilde{f}^{(0)}$ on the following grid points 
+As indicated in Sec. \ref{dkefluxconsmomentum}, it is possible to keep the
+conservative form for the first-order drift kinetic equation. The main
+advantage is that the numerical differencing technique already used for the
+zero-order Fokker-Planck equation may be also employed for determining the
+numerical solution of this equation. The determination of the momentum $%
+\left. \frac{\partial \left( p^{2}\widetilde{\mathbf{S}}_{p}^{\left(
+0\right) }\right) }{\partial p}\right| _{l+1/2,i+1/2,j+1/2}^{(k)}$ and
+pitch-angle $\left. \frac{\partial }{\partial \xi _{0}}\left( \sqrt{1-\xi
+_{0}^{2}}\lambda \widetilde{\mathbf{S}}_{\xi }^{\left( 0\right) }\right)
+\right| _{l+1/2,i+1/2,j+1/2}^{(k)}$ derivatives requires, as for $%
+f_{0}^{\left( 0\right) },$ interpolation techniques in order to evaluate $%
+\widetilde{f}^{(0)}$ on flux grid at the radial position $l+1/2.$ By
+analogy, one have to determine $\widetilde{f}^{(0)}$ on the following grid
+points 
 \begin{equation}
 \widetilde{f}_{l+1/2,i+1,j+1/2}^{\left( 0\right) (k+1)}=\frac{p_{i+1}\xi
-_{0,j+1/2}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\left. \frac{\partial f_{0}^{(0)}}{%
+_{0,j+1/2}I_{l+1/2}}{q_{e}B_{0,l+1/2}}\left. \frac{\partial f_{0}^{(0)}}{%
 \partial \psi }\right| _{l+1/2,i+1,j+1/2}^{(k+1)}
 \end{equation}
 \begin{equation}
 \widetilde{f}_{l+1/2,i,j+1/2}^{\left( 0\right) (k+1)}=\frac{p_{i}\xi
-_{0,j+1/2}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\left. \frac{\partial f_{0}^{(0)}}{%
+_{0,j+1/2}I_{l+1/2}}{q_{e}B_{0,l+1/2}}\left. \frac{\partial f_{0}^{(0)}}{%
 \partial \psi }\right| _{l+1/2,i,j+1/2}^{(k+1)}
 \end{equation}
 \begin{equation}
 \widetilde{f}_{l+1/2,i+1/2,j+1}^{\left( 0\right) (k+1)}=\frac{p_{i+1/2}\xi
-_{0,j+1}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\left. \frac{\partial f_{0}^{(0)}}{%
+_{0,j+1}I_{l+1/2}}{q_{e}B_{0,l+1/2}}\left. \frac{\partial f_{0}^{(0)}}{%
 \partial \psi }\right| _{l+1/2,i+1/2,j+1}^{(k+1)}
 \end{equation}
 and 
 \begin{equation}
 \widetilde{f}_{l+1/2,i+1/2,j}^{\left( 0\right) (k+1)}=\frac{p_{i+1/2}\xi
-_{0,j}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\left. \frac{\partial f_{0}^{(0)}}{%
+_{0,j}I_{l+1/2}}{q_{e}B_{0,l+1/2}}\left. \frac{\partial f_{0}^{(0)}}{%
 \partial \psi }\right| _{l+1/2,i+1/2,j}^{(k+1)}
 \end{equation}
 
 Using the weighting factors $\delta _{p}^{(0)}$ introduced for $%
-f_{0}^{\left( 0\right) },$ which both are functions of $\psi ,$ one obtains
-for the grid point $\left( l+1/2,i+1,j+1/2\right) $%
+f_{0}^{\left( 0\right) },$ as shown in Sec. \ref{fpgridinterpolation} which
+both are functions of $\psi ,$ one obtains for the grid point $\left(
+l+1/2,i+1,j+1/2\right) $%
 \begin{eqnarray}
 \left. \frac{\partial f_{0}^{(0)}}{\partial \psi }\right|
 _{l+1/2,i+1,j+1/2}^{(k+1)} &=&\alpha
@@ -149,49 +153,51 @@ and
 
 \begin{eqnarray}
 \widetilde{f}_{l+1/2,i+1,j+1/2}^{\left( 0\right) (k+1)} &=&\frac{p_{i+1}\xi
-_{0,j+1/2}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\alpha _{l+1/2}^{-}\left( 1-\delta
+_{0,j+1/2}I_{l+1/2}}{q_{e}B_{0,l+1/2}}\alpha _{l+1/2}^{-}\left( 1-\delta
 _{p,l-1/2,i+1,j+1/2}^{(0)}\right) f_{0,l-1/2,i+3/2,j+1/2}^{(0)(k+1)} 
 \nonumber \\
-&&+\frac{p_{i+1}\xi _{0,j+1/2}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\alpha
+&&+\frac{p_{i+1}\xi _{0,j+1/2}I_{l+1/2}}{q_{e}B_{0,l+1/2}}\alpha
 _{l+1/2}^{-}\delta
 _{p,l-1/2,i+1,j+1/2}^{(0)}f_{0,l-1/2,i+1/2,j+1/2}^{(0)(k+1)}  \nonumber \\
-&&+\frac{p_{i+1}\xi _{0,j+1/2}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\alpha
+&&+\frac{p_{i+1}\xi _{0,j+1/2}I_{l+1/2}}{q_{e}B_{0,l+1/2}}\alpha
 _{l+1/2}^{0}\left( 1-\delta _{p,l+1/2,i+1,j+1/2}^{(0)}\right)
 f_{0,l+1/2,i+3/2,j+1/2}^{(0)(k+1)}  \nonumber \\
-&&+\frac{p_{i+1}\xi _{0,j+1/2}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\alpha
+&&+\frac{p_{i+1}\xi _{0,j+1/2}I_{l+1/2}}{q_{e}B_{0,l+1/2}}\alpha
 _{l+1/2}^{0}\delta
 _{p,l+1/2,i+1,j+1/2}^{(0)}f_{0,l+1/2,i+1/2,j+1/2}^{(0)(k+1)}  \nonumber \\
-&&+\frac{p_{i+1}\xi _{0,j+1/2}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\alpha
+&&+\frac{p_{i+1}\xi _{0,j+1/2}I_{l+1/2}}{q_{e}B_{0,l+1/2}}\alpha
 _{l+1/2}^{+}\left( 1-\delta _{p,l+3/2,i+1,j+1/2}^{(0)}\right)
 f_{0,l+3/2,i+3/2,j+1/2}^{(0)(k+1)}  \nonumber \\
-&&+\frac{p_{i+1}\xi _{0,j+1/2}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\alpha
+&&+\frac{p_{i+1}\xi _{0,j+1/2}I_{l+1/2}}{q_{e}B_{0,l+1/2}}\alpha
 _{l+1/2}^{+}\delta
 _{p,l+3/2,i+1,j+1/2}^{(0)}f_{0,l+3/2,i+1/2,j+1/2}^{(0)(k+1)}
 \end{eqnarray}
 which becomes 
 \begin{eqnarray}
 \widetilde{f}_{l+1/2,i+1,j+1/2}^{\left( 0\right) (k+1)} &=&\frac{p_{i+1}}{%
-p_{i+3/2}}\frac{p_{i+3/2}\xi _{0,j+1/2}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}%
-\alpha _{l+1/2}^{-}\times   \nonumber \\
+p_{i+3/2}}\frac{p_{i+3/2}\xi _{0,j+1/2}I_{l+1/2}}{q_{e}B_{0,l+1/2}}\alpha
+_{l+1/2}^{-}\times   \nonumber \\
 &&\left( 1-\delta _{p,l-1/2,i+1,j+1/2}^{(0)}\right)
 f_{0,l-1/2,i+3/2,j+1/2}^{(0)(k+1)}  \nonumber \\
 &&+\frac{p_{i+1}}{p_{i+3/2}}\frac{p_{i+3/2}\xi _{0,j+1/2}I_{l+1/2}}{%
-q_{e}B_{\min ,l+1/2}}\alpha _{l+1/2}^{0}\times   \nonumber \\
+q_{e}B_{0,l+1/2}}\alpha _{l+1/2}^{0}\times   \nonumber \\
 &&\left( 1-\delta _{p,l+1/2,i+1,j+1/2}^{(0)}\right)
 f_{0,l+1/2,i+3/2,j+1/2}^{(0)(k+1)}  \nonumber \\
-&&+\frac{p_{i+1}}{p_{i+3/2}}\frac{p_{i+3/2}\xi _{0,j+1/2}I_{l+1/2}}{
-q_{e}B_{\min ,l+1/2}}\alpha _{l+1/2}^{+}\times   \nonumber \\
+&&+\frac{p_{i+1}}{p_{i+3/2}}\frac{p_{i+3/2}\xi _{0,j+1/2}I_{l+1/2}}{%
+q_{e}B_{0,l+1/2}}\alpha _{l+1/2}^{+}\times   \nonumber \\
 &&\left( 1-\delta _{p,l+3/2,i+1,j+1/2}^{(0)}\right)
 f_{0,l+3/2,i+3/2,j+1/2}^{(0)(k+1)}  \nonumber \\
 &&+\frac{p_{i+1}}{p_{i+1/2}}\frac{p_{i+1/2}\xi _{0,j+1/2}I_{l+1/2}}{%
-q_{e}B_{\min ,l+1/2}}\alpha _{l+1/2}^{-}\delta
-_{p,l-1/2,i+1,j+1/2}^{(0)}f_{0,l-1/2,i+1/2,j+1/2}^{(0)(k+1)}  \nonumber \\
+q_{e}B_{0,l+1/2}}\alpha _{l+1/2}^{-}\times   \nonumber \\
+&&\delta _{p,l-1/2,i+1,j+1/2}^{(0)}f_{0,l-1/2,i+1/2,j+1/2}^{(0)(k+1)} 
+\nonumber \\
 &&+\frac{p_{i+1}}{p_{i+1/2}}\frac{p_{i+1/2}\xi _{0,j+1/2}I_{l+1/2}}{%
-q_{e}B_{\min ,l+1/2}}\alpha _{l+1/2}^{0}\delta
-_{p,l+1/2,i+1,j+1/2}^{(0)}f_{0,l+1/2,i+1/2,j+1/2}^{(0)(k+1)}  \nonumber \\
-&&+\frac{p_{i+1}}{p_{i+1/2}}\frac{p_{i+1/2}\xi _{0,j+1/2}I_{l+1/2}}{
-q_{e}B_{\min ,l+1/2}}\alpha _{l+1/2}^{+}\delta
-_{p,l+3/2,i+1,j+1/2}^{(0)}f_{0,l+3/2,i+1/2,j+1/2}^{(0)(k+1)}
+q_{e}B_{0,l+1/2}}\alpha _{l+1/2}^{0}\times   \nonumber \\
+&&\delta _{p,l+1/2,i+1,j+1/2}^{(0)}f_{0,l+1/2,i+1/2,j+1/2}^{(0)(k+1)} 
+\nonumber \\
+&&+\frac{p_{i+1}}{p_{i+1/2}}\frac{p_{i+1/2}\xi _{0,j+1/2}I_{l+1/2}}{%
+q_{e}B_{0,l+1/2}}\alpha _{l+1/2}^{+}\times   \nonumber \\
+&&\delta _{p,l+3/2,i+1,j+1/2}^{(0)}f_{0,l+3/2,i+1/2,j+1/2}^{(0)(k+1)}
 \end{eqnarray}
 or 
 \begin{eqnarray}
@@ -205,36 +211,39 @@ _{l+1/2,i+1/2,j+1/2}^{(0)(k+1)}  \nonumber \\
 where 
 \begin{eqnarray}
 \widetilde{h}_{l+1/2,i+1,j+1/2}^{\left( 0\right) (k+1)} &=&p_{i+1}\frac{\xi
-_{0,j+1/2}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\alpha _{l+1/2}^{-}\times  
-\nonumber \\
+_{0,j+1/2}I_{l+1/2}}{q_{e}B_{0,l+1/2}}\alpha _{l+1/2}^{-}\times   \nonumber
+\\
 &&\left( \delta _{p,l+1/2,i+1,j+1/2}^{(0)}-\delta
 _{p,l-1/2,i+1,j+1/2}^{(0)}\right) f_{0,l-1/2,i+3/2,j+1/2}^{(0)(k+1)} 
 \nonumber \\
-&&+p_{i+1}\frac{\xi _{0,j+1/2}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\alpha
-_{l+1/2}^{+}\times   \nonumber \\
+&&+p_{i+1}\frac{\xi _{0,j+1/2}I_{l+1/2}}{q_{e}B_{0,l+1/2}}\alpha _{l+1/2}^{+}%
+\times   \nonumber \\
 &&\left( \delta _{p,l+1/2,i+1,j+1/2}^{(0)}-\delta
 _{p,l+3/2,i+1,j+1/2}^{(0)}\right) f_{0,l+3/2,i+3/2,j+1/2}^{(0)(k+1)} 
 \nonumber \\
-&&-p_{i+1}\frac{\xi _{0,j+1/2}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\alpha
-_{l+1/2}^{-}\times   \nonumber \\
+&&-p_{i+1}\frac{\xi _{0,j+1/2}I_{l+1/2}}{q_{e}B_{0,l+1/2}}\alpha _{l+1/2}^{-}%
+\times   \nonumber \\
 &&\left( \delta _{p,l+1/2,i+1,j+1/2}^{(0)}-\delta
 _{p,l-1/2,i+1,j+1/2}^{(0)}\right) f_{0,l-1/2,i+1/2,j+1/2}^{(0)(k+1)} 
 \nonumber \\
-&&-p_{i+1}\frac{\xi _{0,j+1/2}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\alpha
-_{l+1/2}^{+}\times \left( \delta _{p,l+1/2,i+1,j+1/2}^{(0)}-\delta
+&&-p_{i+1}\frac{\xi _{0,j+1/2}I_{l+1/2}}{q_{e}B_{0,l+1/2}}\alpha _{l+1/2}^{+}%
+\times   \nonumber \\
+&&\left( \delta _{p,l+1/2,i+1,j+1/2}^{(0)}-\delta
 _{p,l+3/2,i+1,j+1/2}^{(0)}\right) f_{0,l+3/2,i+1/2,j+1/2}^{(0)(k+1)}
 \end{eqnarray}
 
 Reordering coefficients, one obtains, 
 \begin{eqnarray}
 \widetilde{h}_{l+1/2,i+1,j+1/2}^{\left( 0\right) (k+1)} &=&p_{i+1}\frac{\xi
-_{0,j+1/2}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\times   \nonumber \\
+_{0,j+1/2}I_{l+1/2}}{q_{e}B_{0,l+1/2}}\times   \nonumber \\
 &&\left[ \alpha _{l+1/2}^{-}\left( \delta _{p,l+1/2,i+1,j+1/2}^{(0)}-\delta
-_{p,l-1/2,i+1,j+1/2}^{(0)}\right) \left(
-f_{0,l-1/2,i+3/2,j+1/2}^{(0)(k+1)}-f_{0,l-1/2,i+1/2,j+1/2}^{(0)(k+1)}\right)
-\right.   \nonumber \\
-&&\left. +\alpha _{l+1/2}^{+}\left( \delta _{p,l+1/2,i+1,j+1/2}^{(0)}-\delta
-_{p,l+3/2,i+1,j+1/2}^{(0)}\right) \left(
+_{p,l-1/2,i+1,j+1/2}^{(0)}\right) \times \right.   \nonumber \\
+&&\left(
+f_{0,l-1/2,i+3/2,j+1/2}^{(0)(k+1)}-f_{0,l-1/2,i+1/2,j+1/2}^{(0)(k+1)}\right) 
+\nonumber \\
+&&+\alpha _{l+1/2}^{+}\left( \delta _{p,l+1/2,i+1,j+1/2}^{(0)}-\delta
+_{p,l+3/2,i+1,j+1/2}^{(0)}\right) \times   \nonumber \\
+&&\left. \left(
 f_{0,l+3/2,i+3/2,j+1/2}^{(0)(k+1)}-f_{0,l+3/2,i+1/2,j+1/2}^{(0)(k+1)}\right)
 \right]   \label{dkegridinterp1}
 \end{eqnarray}
@@ -242,7 +251,7 @@ f_{0,l+3/2,i+3/2,j+1/2}^{(0)(k+1)}-f_{0,l+3/2,i+1/2,j+1/2}^{(0)(k+1)}\right)
 This double difference makes coefficient $\widetilde{h}_{l+1/2,i+1,j+1/2}^{%
 \left( 0\right) }$ is second order correction, that is almost negligible
 when spatial gradients are weak. However, for strong gradients, this
-correction must must taken into account.
+correction must be, in principle, considered.
 
 A similar expression is obtained for the grid point $\left(
 l+1/2,i,j+1/2\right) ,$ by replacing $i+1\rightarrow i$ in all above
@@ -258,15 +267,17 @@ _{l+1/2,i-1/2,j+1/2}^{(0)(k+1)}  \nonumber \\
 where 
 \begin{eqnarray}
 \widetilde{h}_{l+1/2,i,j+1/2}^{\left( 0\right) (k+1)} &=&p_{i}\frac{\xi
-_{0,j+1/2}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\times   \nonumber \\
+_{0,j+1/2}I_{l+1/2}}{q_{e}B_{0,l+1/2}}\times   \nonumber \\
 &&\left[ \alpha _{l+1/2}^{-}\left( \delta _{p,l+1/2,i,j+1/2}^{(0)}-\delta
-_{p,l-1/2,i,j+1/2}^{(0)}\right) \left(
-f_{0,l-1/2,i+1/2,j+1/2}^{(0)(k+1)}-f_{0,l-1/2,i-1/2,j+1/2}^{(0)(k+1)}\right)
-\right.   \nonumber \\
-&&\left. +\alpha _{l+1/2}^{+}\left( \delta _{p,l+1/2,i,j+1/2}^{(0)}-\delta
-_{p,l+3/2,i,j+1/2}^{(0)}\right) \left(
+_{p,l-1/2,i,j+1/2}^{(0)}\right) \times \right.   \nonumber \\
+&&\left(
+f_{0,l-1/2,i+1/2,j+1/2}^{(0)(k+1)}-f_{0,l-1/2,i-1/2,j+1/2}^{(0)(k+1)}\right) 
+\nonumber \\
+&&+\alpha _{l+1/2}^{+}\left( \delta _{p,l+1/2,i,j+1/2}^{(0)}-\delta
+_{p,l+3/2,i,j+1/2}^{(0)}\right) \times   \nonumber \\
+&&\left. \left(
 f_{0,l+3/2,i+1/2,j+1/2}^{(0)(k+1)}-f_{0,l+3/2,i-1/2,j+1/2}^{(0)(k+1)}\right)
-\right.   \label{dkegridinterp2}
+\right]   \label{dkegridinterp2}
 \end{eqnarray}
 
 Finally, a similar approach may be used for the pitch-angle grid
@@ -282,15 +293,18 @@ interpolation. For grid points $\left( l+1/2,i+1/2,j+1\right) $,
 where 
 \begin{eqnarray}
 \widetilde{h}_{l+1/2,i+1/2,j+1}^{\left( 0\right) (k+1)} &=&p_{i+1/2}\frac{%
-\xi _{0,j+1}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\times   \nonumber \\
+\xi _{0,j+1}I_{l+1/2}}{q_{e}B_{0,l+1/2}}\times   \nonumber \\
 &&\left[ \alpha _{l+1/2}^{-}\left( \delta _{\xi
-,l+1/2,i+1/2,j+1}^{(0)}-\delta _{\xi ,l-1/2,i+1/2,j+1}^{(0)}\right) \left(
-f_{0,l-1/2,i+1/2,j+3/2}^{(0)(k+1)}-f_{0,l-1/2,i+1/2,j+1/2}^{(0)(k+1)}\right)
-\right.   \nonumber \\
-&&\left. +\alpha _{l+1/2}^{+}\left( \delta _{\xi
-,l+1/2,i+1/2,j+1}^{(0)}-\delta _{\xi ,l+3/2,i+1/2,j+1}^{(0)}\right) \left(
+,l+1/2,i+1/2,j+1}^{(0)}-\delta _{\xi ,l-1/2,i+1/2,j+1}^{(0)}\right) \right. 
+\times   \nonumber \\
+&&\left(
+f_{0,l-1/2,i+1/2,j+3/2}^{(0)(k+1)}-f_{0,l-1/2,i+1/2,j+1/2}^{(0)(k+1)}\right) 
+\nonumber \\
+&&+\alpha _{l+1/2}^{+}\left( \delta _{\xi ,l+1/2,i+1/2,j+1}^{(0)}-\delta
+_{\xi ,l+3/2,i+1/2,j+1}^{(0)}\right) \times   \nonumber \\
+&&\left. \left(
 f_{0,l+3/2,i+1/2,j+3/2}^{(0)(k+1)}-f_{0,l+3/2,i+1/2,j+1/2}^{(0)(k+1)}\right)
-\right. 
+\right] 
 \end{eqnarray}
 
 However, since by definition, $\delta _{\xi ,l+1/2,i+1/2,j+1}^{(0)}=\delta
