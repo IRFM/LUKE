@@ -23,8 +23,8 @@ elseif strcmp(machine,'PC') == 1,
    dossier = 'c:\';
 	mex = '.dll';
 elseif strcmp(machine,'PCWIN') == 1,
-	s = '\';
-   dossier = 'c:\temp';
+	s = '';
+   dossier = '';
 	mex = '.dll';
 elseif strcmp(machine,'MAC') == 1,
 	s = '/';
