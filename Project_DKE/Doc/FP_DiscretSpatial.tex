@@ -15,9 +15,9 @@ _{\psi }^{\left( 0\right) }\right) \right| _{l+1/2,i+1/2,j+1/2}^{(k+1)}
 \end{eqnarray}
 where 
 \begin{equation}
-\mathbf{S}_{\psi }^{\left( 0\right) }=-D_{\psi \psi }^{\left( 0\right) }%
-\frac{\partial f_{0}^{\left( 0\right) }}{\partial \psi }+F_{\psi }^{\left(
-0\right) }f_{0}^{\left( 0\right) }
+\mathbf{S}_{\psi }^{\left( 0\right) }=-D_{\psi \psi }^{\left( 0\right)
+}\left| \nabla \psi \right| _{\min }\frac{\partial f_{0}^{\left( 0\right) }}{%
+\partial \psi }+F_{\psi }^{\left( 0\right) }f_{0}^{\left( 0\right) }
 \end{equation}
 since cross-terms between momentum and configuration spaces are neglected,
 i.e. $D_{p\psi }^{\left( 0\right) }=D_{\psi p}^{\left( 0\right) }=D_{\xi
@@ -31,12 +31,12 @@ Therefore,
 _{l+1/2,i+1/2,j+1/2}^{(k+1)}=\frac{p_{i+1/2}^{2}}{\lambda \left( \psi
 _{l+1/2},\xi _{0,j+1/2}\right) }\sum_{m=1}^{m=4}T_{m}
 \end{equation}
-with
+with 
 \begin{eqnarray}
 T_{1} &=&-D_{\psi \psi ,l+1,i+1/2,j+1/2}^{\left( 0\right) }\left[ R_{\min
-}\left( \psi _{l+1}\right) \widetilde{q}\left( \psi _{l+1}\right) \frac{%
-B_{P\min }\left( \psi _{l+1}\right) }{B_{\min }\left( \psi _{l+1}\right) }%
-\lambda \left( \psi _{l+1},\xi _{0,j+1/2}\right) \right] \times   \nonumber
+}^{2}\left( \psi _{l+1}\right) \widetilde{q}\left( \psi _{l+1}\right) \frac{%
+B_{P\min }^{2}\left( \psi _{l+1}\right) }{B_{\min }\left( \psi _{l+1}\right) 
+}\lambda \left( \psi _{l+1},\xi _{0,j+1/2}\right) \right] \times   \nonumber
 \\
 &&\left. \frac{\partial f_{0}^{\left( 0\right) }}{\partial \psi }\right|
 _{l+1,i+1/2,j+1/2}^{\left( k+1\right) }/\Delta \psi _{l+1/2}
@@ -51,9 +51,10 @@ _{l+1/2}
 \end{eqnarray}
 \begin{eqnarray}
 T_{3} &=&+D_{\psi \psi ,l,i+1/2,j+1/2}^{\left( 0\right) }\left[ R_{\min
-}\left( \psi _{l}\right) \widetilde{q}\left( \psi _{l}\right) \frac{B_{P\min
-}\left( \psi _{l}\right) }{B_{\min }\left( \psi _{l}\right) }\lambda \left(
-\psi _{l},\xi _{0,j+1/2}\right) \right] \mathbf{\times }  \nonumber \\
+}^{2}\left( \psi _{l}\right) \widetilde{q}\left( \psi _{l}\right) \frac{%
+B_{P\min }^{2}\left( \psi _{l}\right) }{B_{\min }\left( \psi _{l}\right) }%
+\lambda \left( \psi _{l},\xi _{0,j+1/2}\right) \right] \mathbf{\times } 
+\nonumber \\
 &&\left. \frac{\partial f_{0}^{\left( 0\right) }}{\partial \psi }\right|
 _{l,i+1/2,j+1/2}^{\left( k+1\right) }/\Delta \psi _{l+1/2}
 \end{eqnarray}
@@ -65,7 +66,7 @@ _{l},\xi _{0,j+1/2}\right) \right] \mathbf{\times }  \nonumber \\
 &&f_{0,l,i+1/2,j+1/2}^{\left( 0\right) \left( k+1\right) }/\Delta \psi
 _{l+1/2}
 \end{eqnarray}
-and discrete expressions of the partial derivatives are,
+and discrete expressions of the partial derivatives are, 
 \begin{equation}
 \left. \frac{\partial f_{0}^{\left( 0\right) }}{\partial \psi }\right|
 _{l+1,i+1/2,j+1/2}^{(k+1)}=\frac{f_{0,l+3/2,i+1/2,j+1/2}^{\left( 0\right)
@@ -78,8 +79,8 @@ _{l,i+1/2,j+1/2}^{(k+1)}=\frac{f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right)
 \end{equation}
 
 As for the dynamics in momentum space, interpolation between full and half
-grids must be performed, when the value of the distribution function $%
-f_{0}^{\left( 0\right) }$ must be detrmined on the flux grid. Therefore
+grids must be performed, since some values of the distribution function $%
+f_{0}^{\left( 0\right) }$ must be determined on the flux grid. Therefore 
 \begin{eqnarray}
 f_{0,l+1,i+1/2,j+1/2}^{\left( 0\right) (k+1)} &=&\left( 1-\delta _{\psi
 ,l+1,i+1/2,j+1/2}^{\left( 0\right) }\right) f_{0,l+3/2,i+1/2,j+1/2}^{\left(
@@ -101,7 +102,7 @@ equation, according to the relation,
 \left. \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) 
 }p^{2}\frac{\partial f^{\left( 0\right) }}{\partial \psi }\right|
 _{l+1/2,i+1/2,j+1/2}^{(k+1)} &=&\frac{p_{i+1/2}^{2}}{\lambda \left( \psi
-_{l+1/2},\xi _{0,j+1/2}\right) }\times   \nonumber \\
+_{l+1/2},\xi _{0,j+1/2}\right) }\times  \nonumber \\
 &&\sum_{l^{\prime }=l-1}^{l^{\prime }=l+1}\overline{\overline{M}}_{\psi
 ,l^{\prime }+1/2,i+1/2,j+1/2}^{\left( 0\right) }f_{0,l^{\prime
 }+1/2,i+1/2,j+1/2}^{\left( 0\right) (k+1)}
@@ -111,7 +112,8 @@ are
 \begin{eqnarray}
 \overline{\overline{M}}_{\psi ,l+3/2,i+1/2,j+1/2}^{\left( 0\right) } &=&-%
 \frac{\alpha _{l+1,j+1/2}^{\left( 0\right) }}{\Delta \psi _{l+1/2}\Delta %
-\psi _{l+1}}D_{\psi \psi ,l+1,i+1/2,j+1/2}^{\left( 0\right) }  \nonumber \\
+\psi _{l+1}}R_{\min }\left( \psi _{l+1}\right) B_{P\min }\left( \psi
+_{l+1}\right) D_{\psi \psi ,l+1,i+1/2,j+1/2}^{\left( 0\right) }  \nonumber \\
 &&+\frac{\alpha _{l+1,j+1/2}^{\left( 0\right) }}{\Delta \psi _{l+1/2}}%
 F_{\psi ,l+1,i+1/2,j+1/2}^{\left( 0\right) }\left( 1-\delta _{\psi
 ,l+1,i+1/2,j+1/2}^{\left( 0\right) }\right) 
@@ -119,12 +121,14 @@ F_{\psi ,l+1,i+1/2,j+1/2}^{\left( 0\right) }\left( 1-\delta _{\psi
 \begin{eqnarray}
 \overline{\overline{M}}_{\psi ,l+1/2,i+1/2,j+1/2}^{\left( 0\right) } &=&+%
 \frac{\alpha _{l+1,j+1/2}^{\left( 0\right) }}{\Delta \psi _{l+1/2}\Delta %
-\psi _{l+1}}D_{\psi \psi ,l+1,i+1/2,j+1/2}^{\left( 0\right) }  \nonumber \\
+\psi _{l+1}}R_{\min }\left( \psi _{l+1}\right) B_{P\min }\left( \psi
+_{l+1}\right) D_{\psi \psi ,l+1,i+1/2,j+1/2}^{\left( 0\right) }  \nonumber \\
 &&+\frac{\alpha _{l+1,j+1/2}^{\left( 0\right) }}{\Delta \psi _{l+1/2}}%
 F_{\psi ,l+1,i+1/2,j+1/2}^{\left( 0\right) }\delta _{\psi
 ,l+1,i+1/2,j+1/2}^{\left( 0\right) }  \nonumber \\
 &&+\frac{\alpha _{l,j+1/2}^{\left( 0\right) }}{\Delta \psi _{l+1/2}\Delta %
-\psi _{l}}D_{\psi \psi ,l,i+1/2,j+1/2}^{\left( 0\right) }  \nonumber \\
+\psi _{l}}R_{\min }\left( \psi _{l}\right) B_{P\min }\left( \psi _{l}\right)
+D_{\psi \psi ,l,i+1/2,j+1/2}^{\left( 0\right) }  \nonumber \\
 &&-\frac{\alpha _{l,j+1/2}^{\left( 0\right) }}{\Delta \psi _{l+1/2}}F_{\psi
 ,l,i+1/2,j+1/2}^{\left( 0\right) }\left( 1-\delta _{\psi
 ,l,i+1/2,j+1/2}^{\left( 0\right) }\right) 
@@ -132,7 +136,8 @@ F_{\psi ,l+1,i+1/2,j+1/2}^{\left( 0\right) }\delta _{\psi
 \begin{eqnarray}
 \overline{\overline{M}}_{\psi ,l-1/2,i+1/2,j+1/2}^{\left( 0\right) } &=&-%
 \frac{\alpha _{l,j+1/2}^{\left( 0\right) }}{\Delta \psi _{l+1/2}\Delta \psi
-_{l}}D_{\psi \psi ,l,i+1/2,j+1/2}^{\left( 0\right) }  \nonumber \\
+_{l}}R_{\min }\left( \psi _{l}\right) B_{P\min }\left( \psi _{l}\right)
+D_{\psi \psi ,l,i+1/2,j+1/2}^{\left( 0\right) }  \nonumber \\
 &&-\frac{\alpha _{l,j+1/2}^{\left( 0\right) }}{\Delta \psi _{l+1/2}}F_{\psi
 ,l,i+1/2,j+1/2}^{\left( 0\right) }\delta _{\psi ,l,i+1/2,j+1/2}^{\left(
 0\right) }
