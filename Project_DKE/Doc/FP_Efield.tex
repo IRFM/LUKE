@@ -1,0 +1,105 @@
+In the Fokker-Planck equation, the diffusion and convection elements are
+bounce-averaged according to the expressions (\ref{diffbav})-(\ref{convbav}%
+), which gives, using (\ref{elec}),  
+\[
+{\Bbb D}_{{\bf p}}^{\text{E}(0)}=0
+\]
+and the convection components 
+\begin{eqnarray}
+F_{p}^{\text{E}(0)} &=&\left\{ q_{e}\xi E_{\Vert }\right\}  \\
+F_{\xi }^{\text{E}(0)} &=&-\sigma \left\{ \frac{\sigma \xi }{\sqrt{\Psi }\xi
+_{0}}q_{e}\sqrt{1-\xi ^{2}}E_{\Vert }\right\}   \nonumber
+\end{eqnarray}
+
+Since the poloidal dependence of the electric field on a flux-surface is
+given by () 
+\begin{equation}
+E_{\Vert }\left( \psi ,\theta \right) =\frac{1}{\Psi \left( \psi ,\theta
+\right) }\frac{R^{2}\left( \psi ,\theta _{0}\right) }{R^{2}\left( \psi
+,\theta \right) }E_{\Vert }^{\left( 0\right) }\left( \psi \right) 
+\end{equation}
+we find 
+\begin{eqnarray}
+F_{p}^{\text{E}(0)} &=&\frac{\overline{\lambda }_{1,-1,2}}{\lambda }q_{e}\xi
+_{0}E_{\Vert }^{\left( 0\right) }\left( \psi \right)  \\
+F_{\xi }^{\text{E}(0)} &=&-\frac{\overline{\lambda }_{1,-1,2}}{\lambda }q_{e}%
+\sqrt{1-\xi _{0}^{2}}E_{\Vert }^{\left( 0\right) }\left( \psi \right)  
+\nonumber
+\end{eqnarray}
+where we defined the bounce averaged coefficient (\ref{lkm})
+\begin{equation}
+\overline{\lambda }_{1,-1,2}=\lambda \sigma \left\{ \sigma \frac{\xi }{\xi
+_{0}}\frac{1}{\Psi \left( \psi ,\theta \right) }\frac{R^{2}\left( \psi
+,\theta _{0}\right) }{R^{2}\left( \psi ,\theta \right) }\right\} 
+\end{equation}
+
+\subsubsection{Expression of $\overline{\lambda }_{1,-1,2}$}
+
+This coefficient is sometimes noted $s^{*}$ in the litterature and is
+expressed as 
+\begin{equation}
+\overline{\lambda }_{1,-1,2}=\frac{\sigma }{\widetilde{q}}\left[ \frac{1}{2}%
+\sum_{\sigma }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{%
+d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }%
+\frac{r}{R_{0}}\frac{B}{B_{P}}\sigma \frac{1}{\Psi \left( \psi ,\theta
+\right) }\frac{R^{2}\left( \psi ,\theta _{0}\right) }{R^{2}\left( \psi
+,\theta \right) }
+\end{equation}
+
+Since the integral is odd in $\sigma $, the sum over trapped particles
+vanishes, and we have 
+\begin{equation}
+\overline{\lambda }_{1,-1,2}=\left| 
+\begin{array}{ll}
+0 & \text{for trapped particles} \\ 
+\overline{\lambda }_{1,-1,2}^{P} & \text{for passing particles}
+\end{array}
+\right. 
+\end{equation}
+\begin{eqnarray}
+\overline{\lambda }_{1,-1,2}^{P} &=&\frac{1}{\widetilde{q}}\int_{0}^{2\pi }%
+\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}%
+\right| }\frac{r}{R_{0}}\frac{B}{B_{P}}\frac{1}{\Psi \left( \psi ,\theta
+\right) }\frac{R^{2}\left( \psi ,\theta _{0}\right) }{R^{2}\left( \psi
+,\theta \right) } \\
+&=&\frac{1}{\widetilde{q}}\frac{R\left( \psi ,\theta _{0}\right) }{R_{0}}%
+\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot 
+\widehat{r}\right| }\frac{r}{R\left( \psi ,\theta \right) }\frac{B\left(
+\psi ,\theta _{0}\right) }{B_{P}}\frac{R\left( \psi ,\theta _{0}\right) }{%
+R\left( \psi ,\theta \right) } \\
+&=&\frac{1}{\widetilde{q}}\frac{R\left( \psi ,\theta _{0}\right) }{R_{0}}%
+\frac{B\left( \psi ,\theta _{0}\right) }{B_{T}\left( \psi ,\theta
+_{0}\right) }\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{%
+\psi }\cdot \widehat{r}\right| }\frac{r}{R\left( \psi ,\theta \right) }\frac{%
+B_{T}\left( \psi ,\theta _{0}\right) }{B_{P}}\frac{R\left( \psi ,\theta
+_{0}\right) }{R\left( \psi ,\theta \right) } \\
+&=&\frac{1}{\widetilde{q}}\frac{R\left( \psi ,\theta _{0}\right) }{R_{0}}%
+\frac{B\left( \psi ,\theta _{0}\right) }{B_{T}\left( \psi ,\theta
+_{0}\right) }\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{%
+\psi }\cdot \widehat{r}\right| }\frac{r}{R}\frac{B_{T}}{B_{P}} \\
+&=&\frac{q\left( \psi \right) }{\widetilde{q}}\frac{R\left( \psi ,\theta
+_{0}\right) }{R_{0}}\frac{B\left( \psi ,\theta _{0}\right) }{B_{T}\left(
+\psi ,\theta _{0}\right) }
+\end{eqnarray}
+
+\subsubsection{Case of circular concentric flux-surfaces}
+
+Note that in the case of circular concentric flux-surfaces, we have 
+\begin{eqnarray}
+\widetilde{q} &=&\frac{r}{R_{0}}\frac{B\left( \psi ,\theta _{0}\right) }{%
+B_{P}\left( \psi ,\theta _{0}\right) } \\
+q &=&\frac{r}{R\left( \psi ,\theta _{0}\right) }\frac{B_{T}\left( \psi
+,\theta _{0}\right) }{B_{P}\left( \psi ,\theta _{0}\right) }\int_{0}^{2\pi }%
+\frac{d\theta }{2\pi }\frac{R\left( \psi ,\theta _{0}\right) }{R}
+\end{eqnarray}
+so that 
+\begin{equation}
+\overline{\lambda }_{1,-1,2}^{P}=\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{%
+R\left( \psi ,\theta _{0}\right) }{R}=\int_{0}^{2\pi }\frac{d\theta }{2\pi }%
+\frac{1+\epsilon }{1+\epsilon \cos \theta }
+\end{equation}
+
+This integral can then be performed analytically, which gives 
+\begin{equation}
+\overline{\lambda }_{1,-1,2}^{P}=\sqrt{\frac{1+\epsilon }{1-\epsilon }}
+\end{equation}
