@@ -51,8 +51,6 @@ therefore, we have
 \frac{v_{\Vert }}{v}\simeq \frac{p_{\Vert }}{p}=\xi 
 \end{equation}
 \nomenclature{$v$}{Module of the velocity vector}
-\nomenclature{$v_{\Vert }$}{Component of the velocity along the local magnetic field
-direction}
 in the weak relativistic regime of tokamak plasmas, where the pitch-angle
 cosine $\xi $ is defined in (\ref{pxidef})
 
@@ -76,10 +74,11 @@ minimum $B$-field}
 \end{equation}
 and the limits$\ \theta _{\min }$ and $\theta _{\max }$ will be calculated
 in the next subsection.
-\nomenclature{$\theta _{\min }$}{Lower value of the poloidal angle of the turning point
-of trapped electrons, $\left(\theta _{\min }=0\right)$ for circulating electrons}
-\nomenclature{$\theta _{\max }$}{Upper value of the poloidal angle of the turning point
-of trapped electrons, $\left(\theta _{\min }=2\pi\right)$ for circulating electrons}
+\nomenclature{$\theta _{\min }$}{Lower bound for the poloidal angle in
+the bounce integrals ($\theta _{\min }=0$ for circulating electrons)}
+\nomenclature{$\theta _{\max }$}{Upper bound for the poloidal angle in
+the bounce integrals ($\theta _{\min }=2\pi$ for circulating
+electrons)}
 
 The bounce time can be normalized as such: 
 \begin{equation}
@@ -100,8 +99,8 @@ and
 \end{equation}
 \nomenclature{$\widetilde{q}$}{Pseudo-safety factor introduced for normalized bounce time
 definition}
-\nomenclature{$\lambda$}{Bounce time normalized to transit time of
-electron with parallel momentum only}
+\nomenclature{$\lambda$}{Bounce time normalized to the transit time of
+electrons with parallel momentum only}
 The bounce time is normalized to the transit time of particles with parallel
 momentum only, such that $\lambda\left( \psi,\pm1\right) =1$.
 
@@ -167,16 +166,24 @@ We get an expression for $\xi $ as a function of $\xi _{0}$:
 ,\theta \right) \left( 1-\xi _{0}^{2}\right) }  \label{xi}
 \end{equation}
 where $\sigma =$ $sign\left( \xi _{0}\right) =$ $sign\left( v_{\Vert
-}\right) ,$ and $\Psi \left( \psi ,\theta \right) $ is the ratio of the
-total magnetic field $B$ to its minimum value $B_{0}$%
+}\right) ,$ and $\Psi \left( \psi ,\theta \right) $
+\nomenclature{$\sigma$}{Sign of the pitch-angle $\xi$ or $\xi _{0}$ but also $p
+_{\Vert}$ or $p _{\Vert 0}$}
+is the ratio of the
+total magnetic field $B$ to its minimum value $B_{0}$
+ \nomenclature{$\Psi$}{Ratio of the total magnetic field $B$ to its minimum value $B_{0}$}
 \begin{equation}
 \Psi \left( \psi ,\theta \right) \equiv \frac{B\left( \psi ,\theta \right) }{%
 B_{0}\left( \psi \right) }  \label{Psidef}
 \end{equation}
 
 The trapping condition is given by $\left| \xi_{0}\right| <\xi_{0T}\left(
-\psi\right) $ , where $\xi_{0T}\left( \psi\right) $ is the pitch angle,
+\psi\right) $ , where $\xi_{0T}\left( \psi\right) $
+\nomenclature{$\xi_{0T}$}{Pitch-angle,
 defined at the minimum $B_{0}\left( \psi\right) $ on a given flux-surface,
+such that the parallel velocity of the particle vanishes at the maximum $
+B_{\max}\left( \psi\right) $}
+is the pitch angle, defined at the minimum $B_{0}\left( \psi\right) $ on a given flux-surface,
 such that the parallel velocity of the particle vanishes at the maximum $%
 B_{\max}\left( \psi\right) $. An expression for $\xi_{0T}\left( \psi\right) $
 can then be obtained from (\ref{xi}): setting $\xi\left(
@@ -204,11 +211,18 @@ The turning points are
 \right.
 \end{equation}
 
+\nomenclature{$\theta _{T\min }$}{Lower value of the poloidal angle at the turning point
+for trapped electrons}
+\nomenclature{$\theta _{T\max }$}{Upper value of the poloidal angle at the turning point
+for trapped electrons}
+
 We can determine the turning angles $\theta _{T\min }\left( \psi ,\xi
 _{0}\right) $ and $\theta _{T\max }\left( \psi ,\xi _{0}\right) $ as the
 position where $\xi \left( \psi ,\theta ,\xi _{0}\right) =0$. At this
 position, we have $B=B_{b}\left( \psi ,\xi _{0}\right) $, where $B_{b}\left(
 \psi ,\xi _{0}\right) $ is then given by (\ref{xi}) 
+\nomenclature{$B_{b}$}{Total magnetic field at the turning point
+for trapped electrons}
 \begin{equation}
 B_{b}\left( \psi ,\xi _{0}\right) =\frac{B_{0}\left( \psi \right) }{1-\xi
 _{0}^{2}} \label{Bbounce}
@@ -251,6 +265,13 @@ R_{p}& =R\left( 0,\theta \right) \\
 Z_{p}& =Z\left( 0,\theta \right)
 \end{align}
 
+\nomenclature{$B_{\phi}$}{Azimuthal component of the total magnetic field}
+\nomenclature{$B_{T}$}{Toroidal component of the total magnetic field. Here B_{T} =\left|B_{\phi }\right|
+because of axisymmetry}
+\nomenclature{$B_{R}$}{Radial component of the total magnetic field along
+the major radius direction}
+\nomenclature{$B_{Z}$}{Vertical component of the total magnetic field}
+
 We also have an expression for $r$ 
 \begin{equation}
 r\left( \psi ,\theta \right) =\sqrt{\left( R\left( \psi ,\theta \right)
@@ -279,6 +300,8 @@ generally as
 \mathbf{B}=I\left( \psi \right) \nabla \phi +\nabla \psi \times \nabla \phi
 \label{B}
 \end{equation}
+\nomenclature{$I$}{Toroidal magnetic field potential function: $B_{T} =\frac{\left| I\left( \psi \right) \right|
+}{R}$}
 so that 
 \begin{align}
 B_{T}& =\left| I\left( \psi \right) \right| \left| \nabla \phi \right| =%
@@ -339,14 +362,19 @@ general way as
 q\left( \psi \right) =\frac{I\left( \psi \right) }{4\pi ^{2}}\frac{\delta V}{%
 \delta \psi }\left\langle R^{-2}\right\rangle
 \end{equation}
+\nomenclature{$q$}{Safety factor}
+\nomenclature{$V$}{Volume enclosed by a flux-surface}
 where $V$ is the volume enclosed by a flux-surface and $\left\langle
 \;\right\rangle $ denotes the flux-surface average.
+\nomenclature{$\left\langle\ldots\right\rangle $}{Flux-surface average}
 
 It can be expressed as 
 \begin{equation}
 q\left( \psi \right) =I\left( \psi \right) \int_{0}^{2\pi }\frac{d\theta }{%
 2\pi }\int_{0}^{2\pi }\frac{d\phi }{2\pi }\frac{J}{R^{2}}
 \end{equation}
+\nomenclature{$J$}{Jacobian for the flux coordinate transformation}
+
 where the Jacobian $J$ is given by (\ref{jacpsitheta}) 
 \begin{align}
 J& =\left| \nabla \psi \times \nabla \theta \cdot \nabla \phi \right| ^{-1} 
@@ -390,26 +418,32 @@ between two turning points. It is given by
 \begin{equation}
 \Delta\phi=\phi_{\max}-\phi_{\min}=\int_{\phi_{\min}}^{\phi_{\max}}d\phi
 \end{equation}
-and can be expressed as a function of the length element along the path,
+
+\nomenclature{$\phi_{\min}$}{Lower value of the toroidal angle at the turning point
+for trapped electrons}
+\nomenclature{$\phi_{\max}$}{Upper value of the toroidal angle at the turning point
+for trapped electrons}
+
+and can be expressed as a function of the length element $ds$ along the path,
 using (\ref{dlphi}) 
 \begin{equation}
-\Delta\phi=\int_{l\left( \phi_{\min}\right) }^{l\left( \phi_{\max}\right)
-}dl\left( \phi\right) \frac{d\phi}{dl\left( \phi\right) }=\int_{l\left(
-\phi_{\min}\right) }^{l\left( \phi_{\max}\right) }\frac{dl\left( \phi\right) 
+\Delta\phi=\int_{s\left( \phi_{\min}\right) }^{s\left( \phi_{\max}\right)
+}ds\left( \phi\right) \frac{d\phi}{ds\left( \phi\right) }=\int_{s\left(
+\phi_{\min}\right) }^{s\left( \phi_{\max}\right) }\frac{ds\left( \phi\right) 
 }{R}
 \end{equation}
 
 The poloidal and toroidal elements are related through the local angle of
 the magnetic field, 
 \begin{equation}
-\frac{dl\left( \phi\right) }{dl\left( \theta\right) }=\frac{B_{T}}{B_{P}}
+\frac{ds\left( \phi\right) }{ds\left( \theta\right) }=\frac{B_{T}}{B_{P}}
 \end{equation}
 so that 
 \begin{equation}
-\Delta\phi=\int_{l\left( \phi_{\min}\right) }^{l\left( \phi_{\max}\right)
-}dl\left( \phi\right) \frac{d\phi}{dl\left( \phi\right) }=\int_{l\left(
-\theta_{\min}\right) }^{l\left( \theta_{\max}\right) }\frac{1}{R}\frac{B_{T}%
-}{B_{P}}dl\left( \theta\right)
+\Delta\phi=\int_{s\left( \phi_{\min}\right) }^{s\left( \phi_{\max}\right)
+}ds\left( \phi\right) \frac{d\phi}{ds\left( \phi\right) }=\int_{s\left(
+\theta_{\min}\right) }^{s\left( \theta_{\max}\right) }\frac{1}{R}\frac{B_{T}%
+}{B_{P}}ds\left( \theta\right)
 \end{equation}
 
 Using (\ref{dltheta}), we get 
@@ -424,6 +458,9 @@ q_{T}\left( \psi,\xi_{0}\right) =\int_{\theta_{\min}}^{\theta_{\max}}\frac{%
 d\theta}{2\pi}\;\frac{1}{\left| \widehat{\psi}\cdot\widehat{r} \right| }%
 \frac{r}{R}\frac{B_{T}}{B_{P}}  \label{qtdef}
 \end{equation}
+\nomenclature{$q_{T}$}{Generalized safety factor including toroidal
+extend of banana orbits}
+
 we find that the toroidal extent of banana orbits is 
 \begin{equation}
 \frac{\Delta\phi}{2\pi}=q_{T}\left( \psi,\xi_{0}\right)
@@ -449,6 +486,8 @@ function along the field lines. The natural average is
 v_{s}\right| }\mathcal{A}  \label{bav0}
 \end{equation}
 where the sum over $\sigma $ applies to trapped particles only.
+\nomenclature{$\left\{\ldots\right\}$}{Bounce average}
+
 
 It can be rewritten in terms of the normalized bounce time $\lambda $ using
 expression (\ref{lambda0}) 
@@ -508,6 +547,10 @@ R_{0}\left( \psi \right) }{R\left( \psi ,\theta \right) }\right)
 ^{m}\right\} =\frac{\overline{\lambda }_{k,l,m}\left( \psi ,\xi _{0}\right) 
 }{\lambda \left( \psi ,\xi _{0}\right) }  \label{lkmb}
 \end{equation}
+\nomenclature{$\lambda _{k,l,m}$}{Generalized normalized bounce
+integral for both trapped and circulating particles}
+\nomenclature{$\overline{\lambda} _{k,l,m}$}{Generalized normalized bounce
+integral for passing particles only ($=0$ for trapped electrons)}
 where 
 \begin{equation}
 R_{0}\left( \psi \right) \equiv R\left( \psi ,\theta _{0}\right)
