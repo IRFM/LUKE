@@ -113,11 +113,11 @@ Here uniform pitch-angle and momentum grids are considered. Detailed aspect of t
 %EndExpansion
 
 For a fixed number of grid points, the upper limit of the integration domain
-may have a crucial role, especially when entering relativistic regimes at $%
+may have a crucial role, especially when entering relativistic regimes at $
 \beta _{th}^{\dag }=0.1$ and when the resonance domain involves large values
 of $v_{\Vert }$. As shown in Fig. \ref{efflhpmax} for a pure hydrogen plasma 
 $\left( Z_{s}=1\right) ,$ $p_{\max }$ must be larger than $25$ for $\left(
-v_{1}=4,v_{2}=7\right) $ so that $\eta _{LH}$ becomes independent of $%
+v_{1}=4,v_{2}=7\right) $ so that $\eta _{LH}$ becomes independent of $
 p_{\max },$ while $p_{\max }\simeq 15$ is acceptable for $\left(
 v_{1}=3.5,v_{2}=6\right) .$ The ratio between the power absorbed by the
 Lower Hybrid wave and by collisions is also a good estimate of the
@@ -161,7 +161,7 @@ v_{1}=4,v_{2}=7\right) .$ Relativistic effects are almost negligible for the
 case $\left( v_{1}=3.5,v_{2}=6\right) $ but also for $\left(
 v_{1}=4,v_{2}=7\right) $ when the upper limit of the momentum integration
 domain is $p_{\max }=30.$ For $p_{\max }=20,$ the current drive efficiency
-is significantly underestimated, as discussed above, when large values of $%
+is significantly underestimated, as discussed above, when large values of $
 v_{\Vert }$ are considered, and when relativistic effects become
 significant, i.e. when $\beta _{th}^{\dag }=0.1$ in the case here
 considered. The current drive efficiency scales roughly with the $1-D$
@@ -171,7 +171,7 @@ non-relativistic model given in Ref. \cite{kar86}
 \left( v_{2}/v_{1}\right) }
 \end{equation}
 where the dependence $4/\left( 5+Z_{s}\right) $ with $Z_{s}$ is deduced from
-Langevin analysis. It is found that the coefficient $0.7$ is independent of $%
+Langevin analysis. It is found that the coefficient $0.7$ is independent of $
 \left( v_{1},v_{2}\right) $. This factor could arise from that fact that the 
 $1-D$ expression is obtained in the saturated limit corresponding to $%
 \overline{D}_{0,new}^{LH}=+\infty ,$ while numerical calculations are
@@ -206,67 +206,229 @@ performed. Results are given in Table \ref{table_lh1} for a uniform grid,
 
 \begin{table}[tbp]
 \begin{center}
-\begin{tabular}{|l|l|l|}
+\begin{tabular}{|l|l|l|l|}
 \hline
-$\left( v_{1},v_{2}\right) $ & $\eta _{LH}$ [DKE code] & $\eta _{LH}$ \cite
-{sho94} & $\eta _{LH}$ \cite{kar86} \\ \hline
+$\left(v_{1},v_{2}\right)$ & $\eta_{LH}$ [DKE code] & $\eta_{LH}$ \cite{sho94} &
+$\eta_{LH}$ \cite{kar86} \\ \hline
 $\left( 3.5,6\right) $ & $21.4$ & $22.3$ & $-$ \\ \hline
 $\left( 4,7\right) $ & $28.38$ & $28.8$ & $29.7$ \\ \hline
 \end{tabular}
 \end{center}
-\caption{Lower Hybrid current drive efficiencies in a pure hydrogen plasma
+\caption{Lower Hybrid current drive efficiencies $\eta_{LH}$ in a pure hydrogen plasma
 from various $2-D$ relativistic Fokker-Planck codes}
 \label{table_lh1}
 \end{table}
 considering the current efficiency in normalized units, but also an
 excellent agreement is found in absolute units, as shown in Table \ref
-{table_lh2}
+{table_lh2} 
 \begin{table}[tbp]
 \begin{center}
-\begin{tabular}{|l|l|l|}
+\begin{tabular}{|l|l|l|l|}
 \hline
-$\left( v_{1},v_{2}\right) $ & $\eta _{LH}$ [DKE code] & $\eta _{LH}$ \cite
-{kar79} & $\eta _{LH}$ \cite{har93c1_IAEA} \\ \hline
+$\left( v_{1},v_{2}\right) $ & $\eta_{LH}$ [DKE code] & $\eta_{LH}$
+\cite{kar79} & [CQL3D code] \cite{har93c1_IAEA}\\ \hline
 $\left( 4,7\right) $ & $32$ & $31.96$ & $31.34$ \\ \hline
 \end{tabular}
 \end{center}
 \caption{Lower Hybrid current drive efficiencies $\left( A\cdot m/W\right) $
-in a pure hydrogen plasma from various $2-D$ relativistic Fokker-Planck codes
-}
-\label{table_lh1}
+in a pure hydrogen plasma from various $2-D$ relativistic Fokker-Planck
+codes }
+\label{table_lh2}
 \end{table}
 taking the same value for the Coulomb logarithm, $\ln \Lambda \approx 15.$
 
-For a uniform grid in $p$ and $\xi _{0}$, $\overline{D}_{0,new}^{LH}$ may be
-increased significantly above unity, before onset of a spurious numerical
-behaviour. Simulation $\beta _{th}^{\dag }=0.1$ have been runned successfuly
-with $\overline{D}_{0,new}^{LH}=10,$ keeping a fully conservative code,
-while the criterion $\left\langle P_{coll}\right\rangle /\left\langle
-P_{LH}\right\rangle \approx 1$ is satisfied, which validates the physical
-nature of the solution found numericaly. This gives quite confortable
-margins for coupling the kinetic code within ray-tracing calculations in the
-weak absorption regime where $\overline{D}_{0,new}^{LH}$ my be large.
-However, there are natural limitations for $\overline{D}_{0,new}^{LH},$ that
-arise from the discrete projection of the differential equation on the
-numerical grid. Above $\overline{D}_{0,new}^{LH}=1,$ there is a risk that
-that code becomes unstable. In that case, typical signs are the lack of
-particle conservation, and the wrong balance between $\left\langle
-P_{coll}\right\rangle $ and $\left\langle P_{LH}\right\rangle .$ Several
-strategies may be considered to overcome this difficulty. As a first
-attempt, the reduction of $\Delta \overline{t}$ improves the matrix
-conditionning, since the main diagonal becomes more prominant over
-off-diagonal coefficients. If this approach fails, increasing the grid size
-may help to fix this problem in some limits. In any case, forcing the
-Maxwellian solution close to $p=0$ and normalizing the density at each
-iteration in this kind of regime is usualy useless, since the numerical
-solution may reamin fully non physical, though convergence is ensured. In
-that case, the overall absorption process fails, and the result has no
-meaning. A possible way to overcome this problem is to perform calculations
-with the upper acceptable $\overline{D}_{0,new}^{LH}$ value using an adhoc
-correcting factor, in order to recover the solution corresponding asymptotic
-limit at $\overline{D}_{0,new}^{LH}=+\infty .$ 
+An important question is the code reliability owing to the increase of $%
+\overline{D}_{0,new}^{LH}.$ Indeed, in weak absorption regime, as often
+encountered in Lower Hybrid current drive regime in present day tokamaks, $%
+\overline{D}_{0,new}^{LH}$ may exceed significantly unity. In principle,
+there is no limitation on the value of $\overline{D}_{0,new}^{LH},$ and
+numerous analytical results corresponds to the asymptotic solution $%
+\overline{D}_{0,new}^{LH}=+\infty .$ However, limitations do exist in
+numerical simulations, and it is important to qualify the robustness of the
+code regarding this problem. A systematic study has been performed for $
+\left( v_{1}=3.5,v_{2}=6\right) $ and $\left( v_{1}=4,v_{2}=7\right) ,$ with 
+$\beta _{th}^{\dag }=0.001$ and $\beta _{th}^{\dag }=0.1$. In these
+simulations, $p_{\max }=30,$ and uniform momentum and pitch-angle grids are
+taken, with a size $n_{p}=n_{\xi _{0}}\simeq 200$ except when specified. 
 
-When a non-uniform pitch-angle grid is used, most of the results that are
-obtained are similar, provided $\overline{D}_{0,new}^{LH}$ is close to $1$,
-and $Z_{s}\leq 2.$ For larger values of both parameters, the current drive
-efficiency is found to drop by a signficant factor. 
+As shown in Fig.\ref{efflhdql}, for all simulations with $\overline{D}%
+_{0,new}^{LH}$ ranging from $1$ to $10$, the conservative scheme is
+preserved, which clearly indicates the robustness of the discrete projection
+of the Fokker-Planck equation on the numerical grid. Furthermore, from the
+non-relativistic regime to the relativistic one, the ratio $\left\langle
+P_{coll}\right\rangle /\left\langle P_{LH}\right\rangle $ is close to $1$,
+as expected when the solution has a physical sense, i.e. when $\overline{D}%
+_{0,new}^{LH}\leq 2$ only. It is interesting to observe that the current
+drive efficiency does not vary significantly from $\overline{D}%
+_{0,new}^{LH}=1$ to $\overline{D}_{0,new}^{LH}=2$, which indicates that the
+saturated regime with a flat plateau is almost reached when $\overline{D}%
+_{0,new}^{LH}=1.$ 
+
+%TCIMACRO{
+%\TeXButton{Fig_efflhdql}{\fig{figures/efflhdql.eps}{Variation of the current drive efficiency with the amplitude of the quasilinear diffusion coefficient
+%for the Lower Hybrid current drive problem}{efflhdql}{7cm} }}
+%BeginExpansion
+\fig{figures/efflhdql.eps}{Variation of the current drive efficiency with the amplitude of the quasilinear diffusion coefficient
+for the Lower Hybrid current drive problem}{efflhdql}{7cm} %
+%EndExpansion
+
+When $\overline{D}_{0,new}^{LH}$ exceeds $5$, numerous numerical problems
+occur. For $\beta _{th}^{\dag }=0.001,$ the value of the driven current has
+no sense, and may have also the wrong direction, while the ratio $%
+\left\langle P_{coll}\right\rangle /\left\langle P_{LH}\right\rangle $ is
+always far from unity. This situation can never be recovered by increasing
+the grid size up to $n_{p}=n_{\xi _{0}}\simeq 300.$ The difference between
+distribution functions given by the code with $\overline{D}_{0,new}^{LH}=2$
+and $\overline{D}_{0,new}^{LH}=10$ is clearly visible between contour plots
+in Figs.\ref{contourfnr356dlh10} and \ref{contourfnr356dlh2}, for the case $%
+\left( v_{1}=3.5,v_{2}=6\right) $. Spurious shapes appear for $\overline{D}%
+_{0,new}^{LH}=10$ whose weight in the current drive efficiency calculation
+is dramatic. Conversely, for $\overline{D}_{0,new}^{LH}=2,$ the distribution
+function is well behaved, and the stream countours given in Fig.\ref
+{contourstreamnr356dlh2} clearly have the expected physical shape.
+
+%TCIMACRO{
+%\TeXButton{Fig_contourfnr356dlh10}{\fig{figures/contourfnr356dlh10.eps}{Contour plot of the electron distribution function for $D_{LH} = 10$}{contourfnr356dlh10}{7cm} }}
+%BeginExpansion
+\fig{figures/contourfnr356dlh10.eps}{Contour plot of the electron distribution function for $D_{LH} = 10$}{contourfnr356dlh10}{7cm} %
+%EndExpansion
+
+%TCIMACRO{
+%\TeXButton{Fig_contourfnr356dlh2}{\fig{figures/contourfnr356dlh2.eps}{Contour plot of the electron distribution function for $D_{LH} = 2$}{contourfnr356dlh2}{7cm} }}
+%BeginExpansion
+\fig{figures/contourfnr356dlh2.eps}{Contour plot of the electron distribution function for $D_{LH} = 2$}{contourfnr356dlh2}{7cm} %
+%EndExpansion
+
+%TCIMACRO{
+%\TeXButton{Fig_contourstreamnr356dlh2}{\fig{figures/contourstreamnr356dlh2.eps}{Contour plot of the electron stream function for $D_{LH} = 2$}{contourstreamnr356dlh2}{7cm} }}
+%BeginExpansion
+\fig{figures/contourstreamnr356dlh2.eps}{Contour plot of the electron stream function for $D_{LH} = 2$}{contourstreamnr356dlh2}{7cm} %
+%EndExpansion
+
+Attempt to reduce this problem by smoothing the momentum variation of $%
+\overline{D}_{0,new}^{LH}$, in particular the sharp transition at the
+resonance domain boundaries, turns out to be absolutely useless. With a $5$
+points smoothing, the onset of numerical instabilities remains similar to
+the one with sharp variations.
+
+For the relativistic regime $\beta _{th}^{\dag }=0.1$, the effect of
+increasing $\overline{D}_{0,new}^{LH}$ above $5$ is more subtile since in
+that case the current drive efficiency increases significantly, while $%
+\left\langle P_{coll}\right\rangle /\left\langle P_{LH}\right\rangle $
+remains close to $1$ within $20\%$. It is therefore very difficult to
+identify unambiguously that the solution has no physical sense. In order to
+cross-check that the solution is wrong, the grid size has been increased up
+to $n_{p}=n_{\xi _{0}}\simeq 300$. In that case, the effect is spectacular,
+and the current drive efficient drops down to an acceptable level, while $%
+\left\langle P_{coll}\right\rangle /\left\langle P_{LH}\right\rangle $ is
+very close to unity for $\overline{D}_{0,new}^{LH}=10$ as shown, in Fig. \ref
+{efflhdql}. Still visible, this effect is weaker for $\overline{D}%
+_{0,new}^{LH}=5.$ 
+
+From this analysis, it is clear that a too coarse grid leads to strong
+limitations on the upper value of $\overline{D}_{0,new}^{LH}$ that may be
+used for accurate estimate of the current drive level with sharp variation
+of the Lower Hybrid quasilinear diffusion coefficient. It is clear that this
+problem is enhanced in the non-relativistic regime, for an unknown reason
+yet. Finally, a smooth transition from a solution that has a physical sense
+to a solution that has no physical sense is clearly observed by increasing $%
+\overline{D}_{0,new}^{LH}.$ There is no evidence that this problem
+corresponds always to an increase of the current drive efficiency. This
+difficulty is particularly difficult to handle, since no clear criterion may
+help to reject the solution. Consequently, it is highly recommended to avoid
+the use of the code with $\overline{D}_{0,new}^{LH}$ larger $2$ to be free
+from numerical problems for almost all situations. In any case, forcing the
+Maxwellian solution close to $p=0$ and normalizing the density at each
+iteration when numerical problems occur is usualy useless, since the
+solution given by the code remain in general fully non physical, though
+convergence can be ensured. In that case, the overall absorption process
+fails, and the result has no meaning. A possible way to overcome this
+problem is to perform calculations with the upper acceptable $\overline{D}%
+_{0,new}^{LH}=2$ value, while using an adhoc correcting factor, in order to
+recover the solution corresponding asymptotic limit at $\overline{D}%
+_{0,new}^{LH}=+\infty .$ 
+
+From the physical point of view, it is not surprizing that the use of very
+large $\overline{D}_{0,new}^{LH}$ values leads to numerical instabilities.
+Indeed, in that case, the characteristic quasilinear time in the resonance
+domain is close to zero, with respect to the collision time. Consequently,
+there is some degeneracy in the corresponding part of the matrix, since
+different regions of the momentum space are instantaneoulsy connected at the
+collision scale. Therefore, parts of the matrix do not provide additionnal
+information, but the numerical errors related to the projection of the
+differential equations on the numerical grids act like a reservoir of
+numerical instabilities in that case. There are some similarities with the
+implicit description of the trapped electrons, when bounce-averaged
+Fokker-Planck equation  must be solved. The only and consistent way to solve
+this problem is to remove the domain where the time ordering fails, and
+establish correct internal boundary conditions so that the density of
+electron at $v_{1}$ is exactly equal to the one at $v_{2}$ at all
+pich-angles $\xi _{0}$ grid points. Obviously, this process adds new
+off-diagonal coefficients in the matrix, but in that case, the conditionning
+of the matrix is preserved even for $\overline{D}_{0,new}^{LH}=+\infty .$
+With the new general method of partial matrix factorization discussed in Sec.%
+\ref{LUsection}, such an approach may be in principle easily tractable,
+without prohibitive computational efforts. 
+
+The role played by a non-uniform pitch-angle grid is critical, since in
+realistic simulations, bounce-averaging must be considered with
+trapped-passing boundaries that moves in mometum space with the radial
+position. In that region, the pitch-angle gris step must be lower, for more
+accurate results. Concerning the momentum grid, as discussed in Sec.\ref
+{fpgridinterpolation}  the domain where the grid is non-uniform, is by
+construction far from the region where the quasilinear diffusion coefficient
+is different from zero, and consequently all the results obtain for the
+uniform grid are valid. It is found that a non-uniform pitch-angle grid has
+no effect for $\overline{D}_{0,new}^{LH}\leq 2,$ $n_{p}=n_{\xi _{0}}\simeq
+200$ and $p_{\max }=30$ on the solution found by the code, within less than $
+1\%$, which is an important result for $3-D$ operation, even when $Z_{s}$
+increases, and $2-D$ broadening by pitch-angle scattering plays
+progressively a dominant role over the parallel direction along the magnetic
+field line direction. 
+
+Ultimate benchmarks have been performed to validate the implementation of
+the Lower Hybrid current drive in the code in $3-D$ configuration and
+relativistic regime, in presence of bounce-averaging. The same radial grid
+introduced for the electrical conductivity calculations in Sec. \ref
+{conducsection} is used, and flat profiles are considered, so that only the
+role of trapped electrons comes into play. In Fig.\ref{f2d47ba} , a typical
+case for $\overline{D}_{0,new}^{LH}=1,$ $n_{p}=n_{\xi _{0}}\simeq 200$ and $%
+p_{\max }=20$ with  $\left( v_{1}=4,v_{2}=7\right) $ at $\rho =0.31623$ is
+shown. This corresponds to a similar inverse aspect ratio $\epsilon ,$ since
+in this calculation $a_{p}\simeq R_{p}.$ Only a part of the quasilinear
+domain at large $p_{\bot }$ intercepts the trapped-passing boundary, leading
+therefore to a modest reduction of the current drive efficiency, by $6\%$ in
+this case. The contour plot of the corresponding quasilinear domain is shown
+in Fig. \ref{dlh47ba}, and in Fig.\ref{Fpar47ba} the $1-D$ like distribution
+function $F_{\Vert 0}^{\left( 0\right) }\left( \psi ,p_{\Vert }\right) $
+averaged over the direction perpendicular to the magnetic field line
+direction, as well as the parallel and perpendicular temperatures $T_{\Vert }
+$ and $T_{\bot }.$ defined in Sec.  No anomalous numerical behaviour is
+observed. An important results is that the current drive efficiency does not
+vary when the resonance domain is replaced by $\left(
+v_{1}=-7,v_{2}=-4\right) .$ Only the sign of the current is reversed.
+Moreover, when a compound spectrum is launched, with $\left(
+v_{1}=4,v_{2}=7\right) $ and $\left( v_{1}=-7,v_{2}=-4\right) ,$ the current
+level given by the code is zero within the numerical accuracy, at least $3$
+orders of magnitude lower than for the case $\left( v_{1}=4,v_{2}=7\right) $
+or $\left( v_{1}=-7,v_{2}=-4\right) $ alone. This results confirm the
+robustness of the numerical scheme, for complex and realistic modeling of
+the Lower Hybrid current drive problem.
+
+%TCIMACRO{
+%\TeXButton{Fig_f2d47ba}{\fig{figures/f2d47ba.eps}{Contour plot of the electron distribution function at $\epsilon=0.31623$}{f2d47ba}{7cm} }}
+%BeginExpansion
+\fig{figures/f2d47ba.eps}{Contour plot of the electron distribution function at $\epsilon=0.31623$}{f2d47ba}{7cm} %
+%EndExpansion
+
+%TCIMACRO{
+%\TeXButton{Fig_dlhd47ba}{\fig{figures/dlh47ba.eps}{Contour plot of the Lower Hybrid qausilinear diffusion coefficient at $\epsilon=0.31623$}{dlh47ba}{7cm} }}
+%BeginExpansion
+\fig{figures/dlh47ba.eps}{Contour plot of the Lower Hybrid qausilinear diffusion coefficient at $\epsilon=0.31623$}{dlh47ba}{7cm} %
+%EndExpansion
+
+%TCIMACRO{
+%\TeXButton{Fig_Fpar47ba}{\fig{figures/Fpar47ba.eps}{Contour plot of the electron distribution function at $\epsilon=0.31623$}{Fpar47ba}{7cm} }}
+%BeginExpansion
+\fig{figures/Fpar47ba.eps}{Contour plot of the electron distribution function at $\epsilon=0.31623$}{Fpar47ba}{7cm} %
+%EndExpansion
