@@ -13,7 +13,7 @@ space is the Boltzmann equation
 where 
 \begin{equation}
 \left. \frac{\partial f}{\partial t}\right| _{\text{C}}\equiv C\left(
-f\right) 
+f\right)
 \end{equation}
 is the collision operator. The fields $\mathbf{E}\left( \mathbf{r},t\right) $
 and $\mathbf{B}\left( \mathbf{r},t\right) $ are assumed to consist of
@@ -21,12 +21,12 @@ time-independent macroscopic fields $\mathbf{E}_{0}\left( \mathbf{r}\right) $
 and $\mathbf{B}_{0}\left( \mathbf{r}\right) $ and fields associated with
 plane waves. 
 \begin{eqnarray}
-\mathbf{E}\left( \mathbf{r},t\right)  &=&\overline{\mathbf{E}}\left( \mathbf{
-r}\right) +\int \widetilde{\mathbf{E}}_{\mathbf{k}}e^{i\left( \mathbf{k}%
+\mathbf{E}\left( \mathbf{r},t\right) &=&\overline{\mathbf{E}}\left( \mathbf{%
+\ r}\right) +\int \widetilde{\mathbf{E}}_{\mathbf{k}}e^{i\left( \mathbf{k}%
 \cdot \mathbf{r}-\omega t\right) }d\mathbf{k} \\
-\mathbf{B}\left( \mathbf{r},t\right)  &=&\overline{\mathbf{B}}\left( \mathbf{%
-r}\right) +\int \widetilde{\mathbf{B}}_{\mathbf{k}}e^{i\left( \mathbf{k}%
-\cdot \mathbf{r}-\omega t\right) }d\mathbf{k}
+\mathbf{B}\left( \mathbf{r},t\right) &=&\overline{\mathbf{B}}\left( \mathbf{r%
+}\right) +\int \widetilde{\mathbf{B}}_{\mathbf{k}}e^{i\left( \mathbf{k}\cdot 
+\mathbf{r}-\omega t\right) }d\mathbf{k}
 \end{eqnarray}
 
 Because we are interested in solving the kinetic equation on the bounce and
@@ -189,16 +189,17 @@ we obtain
 The gyromotion term is averaged to zero 
 \begin{equation}
 \int_{0}^{2\pi }d\varphi \;q_{e}\mathbf{v}\times \overline{\mathbf{B}}\left( 
-\mathbf{r}\right) \cdot \nabla _{\mathbf{p}}\overline{f}_{1}=-\Omega
-_{e}\int_{0}^{2\pi }d\varphi \;\frac{\partial \overline{f}_{1}}{\partial
+\mathbf{r}\right) \cdot \nabla _{\mathbf{p}}\overline{f}_{1}=-\Omega %
+_{e}\int_{0}^{2\pi }d\varphi \;\frac{\partial \overline{f}_{1}}{\partial %
 \varphi }=0
 \end{equation}
 so that we get finally 
 \begin{equation}
-\frac{\partial \widetilde{f}_{0}}{\partial t}+\mathbf{v}_{\text{gc}}\cdot
-\nabla _{\mathbf{r}}\widetilde{f}_{0}+\frac{\partial }{\partial p_{\Vert }}%
-q_{e}E_{0\Vert }\left( \mathbf{r}\right) \widetilde{f}_{0}=\mathcal{C}\left( 
-\widetilde{f}_{0}\right) +\mathcal{Q}\left( \widetilde{f}_{0}\right)
+\frac{\partial \widetilde{f}_{0}}{\partial t}+\mathbf{v}_{\text{gc}}\cdot %
+\nabla _{\mathbf{r}}\widetilde{f}_{0}+q_{e}\overline{E}_{\Vert }\frac{%
+\partial }{\partial p_{\Vert }}\left( \mathbf{r}\right) \widetilde{f}_{0}=%
+\mathcal{C}\left( \widetilde{f}_{0}\right) +\mathcal{Q}\left( \widetilde{f}%
+_{0}\right) 
 \end{equation}
 
 This equation is called electron drift-kinetic equation. Renaming the
@@ -209,12 +210,12 @@ guiding-center distribution function $\overline{f}_{0}=f\left( \mathbf{r}%
 get 
 \begin{equation}
 \frac{\partial f}{\partial t}+\mathbf{v}_{\text{gc}}\cdot \nabla f=\mathcal{C%
-}\left( f\right) +\mathcal{Q}\left( f\right) +\mathcal{E}\left( f\right)
+}\left( f\right) +\mathcal{Q}\left( f\right) +\mathcal{E}\left( f\right) 
 \end{equation}
 where we define an electric field operator 
 \begin{equation}
-\mathcal{E}\left( f\right) =-\frac{\partial }{\partial p_{\Vert }}%
-q_{e}E_{\Vert }\left( \mathbf{r}\right) f
+\mathcal{E}\left( f\right) =-q_{e}E_{\Vert }\left( \mathbf{r}\right) \frac{%
+\partial }{\partial p_{\Vert }}f \label{EfieldFPterm}
 \end{equation}
 
 Implicitely, the time scale here considered is so that $t\gg \left( 2\pi
