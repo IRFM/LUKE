@@ -1,4 +1,4 @@
-function [ap,Rp,Zp,elong,triang_up,triang_down,Bt,...
+function [ap,Rp,Zp,xpoint,Bt,...
 	 Ip,j0,ja,ej,qmin,eq,...
 	 Te0,Tea,eTe,ne0,nea,ene,Ti0,Tia,eTi,...
 	 Zi,mi,fi,Zeff0,Zeffa,eZeff] = ptok_dke_1yp(name);
@@ -11,12 +11,24 @@ function [ap,Rp,Zp,elong,triang_up,triang_down,Bt,...
 %
 %	Output:
 %
-%		- ap: Plasma minor radius on the equatorial mid-plane of the last closed magnetic surface (m) [1,1]
-%		- Rp: Plasma major radius of the last closed magnetic surface (m) [1,1]
-%		- Zp: Plasma vertical shift (m) [1,1]
-%		- elong: Plasma elongation of the last closed magnetic surface [1,1]
-%		- triang_up: Plasma triangularity of the last closed magnetic surface above the equatorial mid-plane [1,1]
-%		- triang_down: Plasma triangularity of the last closed magnetic surface below the equatorial mid-plane [1,1]
+%		- ap: Plasma minor radius on the equatorial mid-plane of separatrix (m) [1,1]
+%		- Rp: Plasma major radius of the separatrix (m) [1,1]
+%		- Zp: Global plasma vertical shift (m) [1,1]
+%-------------------------------------------------------------------------------------------------------------
+%The plasma separatrix is determined by the vertical and horizontal positions of top and bottom X points
+%and the local angles between the separatrix and the horizontal plane. Note that when angles are locally 
+%zero on both side, there is no X point (elliptical plasma). The horizontal coordinate lies between -1 and 1,
+%0 being the major radius position of the separatrix
+%
+%		 xpoint(1): Vertical position of the top X point (always positive value)
+%		 xpoint(2): Horizontal position of the top X point
+%		 xpoint(3): Angle between the separatrix and the horizontal plane for the top X point (degree)
+%		 xpoint(4): Angle between the separatrix and the horizontal plane for the top X point (degree)
+%		 xpoint(5): Vertical position of the bottom X point (always positive value)
+%		 xpoint(6): Horizontal position of the bottom X point
+%		 xpoint(7): Angle between the separatrix and the horizontal plane for the bottom X point (degree)
+%		 xpoint(8): Angle between the separatrix and the horizontal plane for the bottom X point (degree)
+%-------------------------------------------------------------------------------------------------------------		 
 %		- Bt: Toroidal magnetic field on the magnetic axis (T) [1,1]
 %		- Ip: Toroidal plasma current (MA)  [1,1] 
 %		- j0: Core toroidal curent density (MA/m2) [1,1]
@@ -82,11 +94,17 @@ if strcmp(name,'CTORUS') == 1,
 	eZeff = 0;
 elseif strcmp(name,'TS') == 1,
 	ap = 0.72;
-	Rp = 2.39;
+	Rp = 2.39;%Separatrix major radius
 	Zp = 0.0;
-	elong = 1;
-	triang_up = 0;
-	triang_down = 0;
+%
+	xpoint(1) = 1;%Vertical position of the top X point
+	xpoint(2) = 0;%Horizontal position of the top X point
+	xpoint(3) = 0;%Angle between the separatrix and the horizontal plane for the top X point (degree)
+	xpoint(4) = 0;%Angle between the separatrix and the horizontal plane for the top X point (degree)
+	xpoint(5) = 1;%Vertical position of the bottom X point (always positive value)
+	xpoint(6) = 0;%Horizontal position of the bottom X point
+	xpoint(7) = 0;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
+	xpoint(8) = 0;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
 %
 	Bt = 3.65;
 %
@@ -512,45 +530,57 @@ elseif strcmp(name,'CQL3D_ECCD') == 1,
 	Zeffa = 1;
 	eZeff = 0;
 elseif strcmp(name,'JET') == 1,
-		ap = 0.9;
-		Rp = 3.00;
-		Zp = 0.0;
-		elong = 1.7;
-		triang_up = 0.24;
-		triang_down = 0.24;
-	%
-		Bt = 3.5;	
-	%
-		Zi = [1 1 1 6];
-		mi = [1 2 3 12];
-		fi = [0,1,0];
-		Zeff0 = 1.5;
-		Zeffa = 1.5;
-		eZeff = 0;
-	%	
-		Ip = 1.3;
-		j0 = 0.4;
-		ja = 0;
-		ej = 2;
-		qmin = 1;
-		eq = 1;
-	%
-		Te0 = 5;
-		Tea = 0.1*Te0;
-		eTe = 2;
-		Ti0 = 2;
-		Tia = 0.1*Ti0;
-		eTi = 2;	
-		ne0 = 1.0e+19;
-		nea = 0.001*ne0;
-		ene = 0.5;	
-elseif strcmp(name,'TEST_LORENTZ') == 1,%Values based on NSTX case
+	ap = 0.9;
+	Rp = 3.00;
+	Zp = 0.0;
+%
+	xpoint(1) = 1.687;%Vertical position of the top X point
+	xpoint(2) = 0.466;%Horizontal position of the top X point
+	xpoint(3) = 0;%Angle between the separatrix and the horizontal plane for the top X point (degree)
+	xpoint(4) = 0;%Angle between the separatrix and the horizontal plane for the top X point (degree)
+	xpoint(5) = 2.001;%Vertical position of the bottom X point (always positive value)
+	xpoint(6) = 0.568;%Horizontal position of the bottom X point
+	xpoint(7) = 22.46;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
+	xpoint(8) = 67.92;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
+%
+	Bt = 3.5;	
+%
+	Zi = [1 1 1 6];
+	mi = [1 2 3 12];
+	fi = [0,1,0];
+	Zeff0 = 1.5;
+	Zeffa = 1.5;
+	eZeff = 0;
+%	
+	Ip = 1.3;
+	j0 = 0.4;
+	ja = 0;
+	ej = 2;
+	qmin = 1;
+	eq = 1;
+%
+	Te0 = 5;
+	Tea = 0.1*Te0;
+	eTe = 2;
+	Ti0 = 2;
+	Tia = 0.1*Ti0;
+	eTi = 2;	
+	ne0 = 1.0e+19;
+	nea = 0.001*ne0;
+	ene = 0.5;	
+elseif strcmp(name,'TEST_LORENTZ') == 1,%Values based on NSTX case but circular plasma cross-section
 	ap = 0.67;
 	Rp = 0.86;
 	Zp = 0.0;
-	elong = 1;
-	triang_up = 0;
-	triang_down = 0;
+%
+	xpoint(1) = 1;%Vertical position of the top X point
+	xpoint(2) = 0;%Horizontal position of the top X point
+	xpoint(3) = 0;%Angle between the separatrix and the horizontal plane for the top X point (degree)
+	xpoint(4) = 0;%Angle between the separatrix and the horizontal plane for the top X point (degree)
+	xpoint(5) = 1;%Vertical position of the bottom X point (always positive value)
+	xpoint(6) = 0;%Horizontal position of the bottom X point
+	xpoint(7) = 0;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
+	xpoint(8) = 0;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
 %
 	Bt = 0.45;	
 %
