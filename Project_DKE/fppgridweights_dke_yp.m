@@ -32,7 +32,11 @@ Xdeltap_imj = g_dke_yp(-Xdpnm.*XFp_imj./XDpp_imj,-(Xdpn - Xdpnmm).*(XFp_ij./XDpp
 %Test if the interpolation is valid
 testp = isempty(find(abs(Xdeltap_ipj)>1));
 testm = isempty(find(abs(Xdeltap_imj)>1));
-if (testp+testm ~= 2),error('Interpolation coefficient on momentum flux grid larger than 1 ! Adjust snp and np_S_ref parameters');end
+if (testp+testm ~= 2),
+   figure(20000),plot(Xdpnp,Xdeltap_ipj),xlabel('pnp-ref'),ylabel('delta-ip')
+   figure(20001),plot(Xdpnm,Xdeltap_imj),xlabel('pnm-ref'),ylabel('delta-im')
+	error('Interpolation coefficient on momentum flux grid larger than 1 ! Adjust snp and np_S_ref parameters');	
+end
 %Pitch-angle grid interpolation
 Xdeltam_ijp = Xdmhupp./(Xdmhu + Xdmhupp);
 Xdeltam_ijm = Xdmhu./(Xdmhu + Xdmhumm);
