@@ -34,4 +34,8 @@ elseif strcmp(machine,'MAC2') == 1,
 	s = ':';
 	dossier = 'Ailefroide:CVS:Project_DKE';
 	mex = '.mexmac';
+elseif strcmp(machine,'GLNXA64') == 1,
+	s = '/';
+	dossier = '/usr/drfc/YP105119';
+	mex = '.mexa64';
 end
