@@ -43,14 +43,18 @@ function [xrho_out_ft,xMNperp_ft,xM3eps_pmz_ft,xrho_out_ht,xMNperp_ht,xM3eps_pmz
 nr1 = [];
 pf = [];
 %
-%wd = cd;
-%cd c:\work\dke\tools\disp
+exename = 'R2D2f.exe';
+%
+pathname = getpath_jd(exename);%
+%
+wd = cd;
+eval(['cd ',pathname]);
 %
 makedisp_tokparam_jd(tokamak);
 makedisp_simparam_jd(tokamak,xrho,rho0,knr,nrt_nr,nrt_fr,kflag,GNperp,nn_nr);%
 makedisp_waveparam_jd(omega,xrho,xtheta,xNpar);
 %
-[s,w] = execute_jd('R2D2');
+[s,w] = execute_jd(exename);
 %
 load nr1.m -ascii
 %
@@ -182,4 +186,4 @@ xM3eps_pmz_ht(:,:,3) = xMepsz_norm_ht;
 xMPflow_ht = xMPflow_ht_x.*abs(xMepsx_norm_ht).^2;
 xMPabs_at = xMPabs_at_x.*abs(xMepsx_norm_ht).^2;
 %
-%eval(['cd ',wd]);
+eval(['cd ',wd]);
