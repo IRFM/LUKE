@@ -4,17 +4,18 @@
 The collision operator used in the calculations may be expressed as 
 \begin{equation}
 \mathcal{C}\left( f\right) =\sum_{s}\sum_{s^{\prime }}C\left(
-f,f_{ss^{\prime }}\right) +C\left( f,f\right)
+f,f_{ss^{\prime }}\right) +C\left( f,f\right) 
 \end{equation}
 where $\sum_{s}\sum_{s^{\prime }}C\left( f,f_{ss^{\prime }}\right) $
 describe interactions between electrons and ions of species $s$ in the
 ionization state $s^{\prime }$ and $C\left( f,f\right) $ is the
-self-collision contribution. For the electron-ion collisions, it is
-considered that $f_{ss^{\prime }}$ is a Maxwellian distribution function,
-the corresponding temperature being $T_{ss^{\prime }}$. In the application
-of the code here foreseen, including RF heating and curent drive, collisions
-dominate thermal particles, and therefore the distribution function $f$ may
-be expanded about the Maxwellian $f_{M}$ according to the relation 
+self-collision contribution, as discussed in Ref. \cite{kar86}. For the
+electron-ion collisions, it is considered that $f_{ss^{\prime }}$ is a
+Maxwellian distribution function, the corresponding temperature being $%
+T_{ss^{\prime }}$. In the application of the code here foreseen, including
+RF heating and curent drive, collisions dominate thermal particles, and
+therefore the distribution function $f$ may be expanded about the Maxwellian 
+$f_{M}$ according to the relation 
 \begin{equation}
 f\simeq f_{M}+\delta f
 \end{equation}
@@ -51,7 +52,7 @@ D_{p\xi }=0 \\
 D_{\xi p}=0 \\ 
 D_{\xi \xi }=B_{t}\left( \psi ,p\right)
 \end{array}
-\right.
+\right. \label{Dcoll}
 \end{equation}
 and 
 \begin{equation}
@@ -60,7 +61,7 @@ and
 F_{p}=F\left( \psi ,p\right) \\ 
 F_{\xi }=0
 \end{array}
-\right.
+\right. \label{Fcoll}
 \end{equation}
 
 The term $C\left( f_{M},f\right) $ requires is specific treatment. By
@@ -88,7 +89,7 @@ $P_{0}\left( \xi \right) =1.$ The first non-zero term in the series is then
 kept, so that 
 \begin{equation}
 C\left( f_{M},f\right) \simeq C\left( f_{M},\frac{3}{2}\xi f^{\left(
-m=1\right) }\left( t,\mathbf{X},p\right) \right)
+m=1\right) }\left( t,\mathbf{X},p\right) \right) 
 \end{equation}
 since $P_{1}\left( \xi \right) =\xi .$ By construction the linearized
 electron-electron collision operator conserves momentum, but not energy, so
@@ -99,12 +100,12 @@ drift kinetic equation. However, even if it is crucial for the current drive
 problem, including the determination of the boostrap current level, this
 non-linearity remains weak, so that the rate of convergence towards the
 solution of the kinetic equation is not significantly affected. For the
-calculations, the notation used in Ref. ** is considered, and 
+calculations, the notation used in Ref. \cite{shk97} is considered, and 
 \begin{eqnarray}
 C\left( f_{M},\frac{3}{2}\xi f^{\left( m=1\right) }\left( t,\mathbf{X}%
-,p\right) \right) &=&-\frac{3}{2}\xi \mathcal{I}\left( f_{M},f^{\left(
-m=1\right) }\left( t,\mathbf{X},p\right) \right)  \nonumber \\
-&=&-\frac{3}{2}\xi \mathcal{I}\left( t,\mathbf{X},p\right)
+,p\right) \right)  &=&-\frac{3}{2}\xi \mathcal{I}\left( f_{M},f^{\left(
+m=1\right) }\left( t,\mathbf{X},p\right) \right)   \nonumber \\
+&=&-\frac{3}{2}\xi \mathcal{I}\left( t,\mathbf{X},p\right) 
 \end{eqnarray}
 
 \subsection{Belaiev-Budker collision operator}
@@ -114,35 +115,35 @@ relativistic plasmas. This operator ranges from non-relativistic to fully
 relativistic limits and is therefore very well suited for studying the
 heating and current drive problems. Its recent formulation in terms of
 Rosenbluth-like potential has open the possibility to use it in numerical
-calculations (Ref.***). Following the work done in Ref. ***, coefficients $%
-A\left( \psi ,p\right) $, $F\left( \psi ,p\right) $ and $B_{t}\left( \psi
-,p\right) $ are 
+calculations (Ref.\cite{bra89}). Following the work done in Ref. \cite{shk97}%
+, coefficients $A\left( \psi ,p\right) $, $F\left( \psi ,p\right) $ and $%
+B_{t}\left( \psi ,p\right) $ are 
 \begin{eqnarray}
-A\left( \psi ,p\right) &=&\frac{F_{1}\left( \psi ,p\right) +F_{2}\left( \psi
-,p\right) }{v}\overline{T}_{e}\left( \psi \right)  \nonumber \\
+A\left( \psi ,p\right)  &=&\frac{F_{1}\left( \psi ,p\right) +F_{2}\left(
+\psi ,p\right) }{v}\overline{T}_{e}\left( \psi \right)   \nonumber \\
 &&+\frac{1}{v^{3}}\sum_{s}\sum_{s^{\prime }}Z_{ss^{\prime }}^{2}\frac{%
 \overline{n}_{ss^{\prime }}\left( \psi \right) \overline{T}_{ss^{\prime
 }}\left( \psi \right) }{\overline{m}_{s}}
 \end{eqnarray}
 and 
 \begin{eqnarray}
-F_{2}\left( \psi ,p\right) &=&F_{1}\left( \psi ,p\right) +F_{2}\left( \psi
-,p\right)  \nonumber \\
+F_{2}\left( \psi ,p\right)  &=&F_{1}\left( \psi ,p\right) +F_{2}\left( \psi
+,p\right)   \nonumber \\
 &&+\frac{1}{v^{2}}\sum_{s}\sum_{s^{\prime }}Z_{ss^{\prime }}^{2}\frac{%
 \overline{n}_{ss^{\prime }}\left( \psi \right) }{\overline{m}_{s}}
 \end{eqnarray}
 where the double sum $\sum_{s}\sum_{s^{\prime }}$ takes into account of all
 ions species $s$ in ionization state $s^{\prime }.$ Here, $\overline{n}%
-_{ss^{\prime }}\left( \psi \right) $ is the normalized ion density at $\psi
-, $ as introduced in Sec. ***, and $\overline{m}_{s}$ is the ion rest mass
-normalized to the electron rest mass $m_{e}$. Here, 
+_{ss^{\prime }}\left( \psi \right) $ is the normalized ion density at $\psi ,
+$ as introduced in Sec. \ref{normtene}, and $\overline{m}_{s}$ is the ion
+rest mass normalized to the electron rest mass $m_{e}$. Here, 
 \begin{equation}
 F_{1}\left( \psi ,p\right) =\frac{4\pi }{v^{2}}F_{11}\left( \psi ,p\right) +%
-\frac{4\pi }{p^{2}}F_{12}\left( \psi ,p\right)
+\frac{4\pi }{p^{2}}F_{12}\left( \psi ,p\right) 
 \end{equation}
 \begin{equation}
 F_{2}\left( \psi ,p\right) =\frac{4\pi }{v}\left( 1-\frac{\gamma \zeta }{z}%
-\right) F_{21}\left( \psi ,p\right)
+\right) F_{21}\left( \psi ,p\right) 
 \end{equation}
 
 \begin{equation}
@@ -183,7 +184,7 @@ B_{t1}^{\left[ 1\right] }\left( \psi ,p\right) =\frac{1}{2v}%
 \int_{0}^{p}p^{\prime 2}f_{M}\left( \psi ,p^{\prime }\right) dp^{\prime }
 \end{equation}
 \begin{equation}
-B_{t1}^{\left[ 2\right] }\left( \psi ,p\right) =-\frac{1}{6vp^{2}}%
+B_{t1}^{\left[ 2\right] }\left( \psi ,p\right) =-\frac{1}{6vp^{2}}
 \int_{0}^{p}p^{\prime 4}f_{M}\left( \psi ,p^{\prime }\right) dp^{\prime }
 \end{equation}
 \begin{equation}
@@ -233,7 +234,7 @@ B_{t2}^{\left[ 5\right] }\left( \psi ,p\right) =-\frac{1}{4\gamma p^{2}}%
 
 Here, 
 \begin{equation}
-J_{1}\left( p\right) =-3\gamma +\zeta \left( \frac{3}{z}+2z\right)
+J_{1}\left( p\right) =-3\gamma +\zeta \left( \frac{3}{z}+2z\right) 
 \end{equation}
 \begin{equation}
 J_{2}\left( p\right) =\gamma +\frac{\zeta }{z}-\frac{2}{3}\gamma z^{2}
@@ -249,7 +250,7 @@ z=\beta _{th}^{\dag 2}p
 \zeta =\sinh ^{-1}z
 \end{equation}
 and $f_{M}\left( \psi ,p\right) $is the weakly relativistic Maxwellian
-distribution function given in Sec.***.
+distribution function given in Sec.\ref{normmaxwellian}.
 
 The first order Legendre correction of the collision operator $\mathcal{I}
 \left( t,\mathbf{X},p\right) $ is expressed as
@@ -401,9 +402,9 @@ benchmarking.
 
 Though the high velocity limit corresponds to a restricted range of
 application regarding the full collision operator, it can contribute to
-useful comparisons with some theoretical calculations. Therefore, this
-possibility has been implemented in the code. In that case, expressions of
-the coefficients are greatly simplified,
+useful comparisons with some theoretical calculations, as shown in Ref. \cite
+{kar86}. Therefore, this possibility has been implemented in the code. In
+that case, expressions of the coefficients are greatly simplified,
 
 \begin{eqnarray}
 A\left( \psi ,p\right) &=&\frac{1}{v^{3}}\overline{n}_{e}\left( \psi \right) 
