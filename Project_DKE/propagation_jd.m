@@ -54,14 +54,14 @@ for ib = 1:nb_rf
     %    
     % positions where the ray enters and exits the plasma (at last closed FS)  
     %
-    is0 = min(find(spsin <= 1)); %position where the ray enters the plasma 
+    is0 = min(find(spsin < 1)); %position where the ray enters the plasma 
     if isempty(is0)
         disp('Warning: one ray did not enter the plasma and was rejected')
         continue
     else
         ibb = ibb + 1;%starting a new ray in xy matrices
     end
-    ismax = min([find(spsin > 1 & ss > ss(is0)) - 1,ns]); %position where the ray leaves the plasma (if applicable)
+    ismax = min([find(spsin >= 1 & ss > ss(is0)) - 1,ns]); %position where the ray leaves the plasma (if applicable)
     %
     % throw away path outside the last closed FS   
     %
@@ -79,6 +79,11 @@ for ib = 1:nb_rf
 %
 % distribution of the ray on flux-surfaces
 %
+    if ns == 1%test case with local calculation on one flux-surface - no ray-tracing
+        xyprop(ipsin,ibb) = NaN;
+        xyfinc(ipsin,ibb) = 1;
+        xyvray(ipsin,ibb,:) = reshape(vsray(:,is),[1,1,12]);
+    end
     while is < ns 
         bpsinm = xpsin_S(ipsin); % lower bound of the current FS
         bpsin = xpsin(ipsin); % center of the current FS
@@ -94,6 +99,11 @@ for ib = 1:nb_rf
 %    
         dspfs = sign(diff(spsin(maskfs)));% "direction" of the ray in psi
         ndspfs = length(dspfs);
+        for is_maskfs = 1:ndspfs,
+            if dspfs(is_maskfs) == 0,
+                dspfs(is_maskfs) = dspfs(is_maskfs - 1);
+            end
+        end
         ipextrfs = find(dspfs(1:ndspfs-1).*dspfs(2:ndspfs) < 0); %extremum positions in spsin(s)
         isextr = 0;
         while ~isempty(ipextrfs)
