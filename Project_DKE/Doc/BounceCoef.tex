@@ -3,43 +3,43 @@
 \subsection{Series Expansion}
 
 The bounce-averaging normalization coefficient is defined in the case of
-circular concentric flux-surfaces as (\ref{lambdacirc}) 
+circular concentric flux-surfaces as (\ref{lambdacirc})
 \begin{equation}
 \lambda (\xi _{0})=\int_{-\theta _{c}}^{\theta _{c}}\frac{d\theta }{2\pi }%
-\frac{\xi _{0}}{\xi }  \label{lambda1}
+\frac{\xi _{0}}{\xi }  \label{lambdacirc1}
 \end{equation}
-with 
+with
 \begin{equation}
-\theta _{c}=\left\{ 
+\theta _{c}=\left\{
 \begin{array}{ll}
-\pi  & \text{for circulating particles} \\ 
+\pi  & \text{for circulating particles} \\
 \theta _{T}=\cos ^{-1}\left( 1-2\xi _{0}^{2}/\xi _{0T}^{2}\right)  & \text{
 for trapped particles}
 \end{array}
 \right.   \label{thetac}
 \end{equation}
 
-We use the expression of $\xi$ from (\ref{xi}): 
-\begin{equation}  \label{xi2}
+We use the expression of $\xi$ from (\ref{xi}):
+\begin{equation}  \label{xi3}
 \xi = \sigma\sqrt{1-\Psi(1-\xi_0^2)}
 \end{equation}
 where $\Psi$ has a simple expression for the case of circular flux-surface,
-given in (\ref{psi}): 
+given in (\ref{psi}):
 \begin{equation}  \label{psi1}
 \Psi(\theta) = \frac{1+\epsilon}{1+\epsilon \cos(\theta)}
 \end{equation}
 
 Defining $\alpha = \theta/2$, we have $\cos(\theta) = 1-2\sin^2(\alpha)$ and
-then (\ref{psi1}) becomes 
+then (\ref{psi1}) becomes
 \begin{eqnarray}  \label{psi2}
-\Psi(\theta) & = & \frac{1+\epsilon}{1+\epsilon -2\epsilon\sin^2(\alpha)} 
+\Psi(\theta) & = & \frac{1+\epsilon}{1+\epsilon -2\epsilon\sin^2(\alpha)}
 \nonumber \\
 & = & \frac{1}{1-\xi_{0T}^2\sin^2(\alpha)}
 \end{eqnarray}
 where $\xi_{0T}$ is the pitch-angle at the trapped passing boundary, defined
 in (\ref{xi0t}).
 
-Then, with $\alpha_c = \theta_c/2$, (\ref{lambda1}) becomes 
+Then, with $\alpha_c = \theta_c/2$, (\ref{lambdacirc1}) becomes
 \begin{eqnarray}  \label{lambda2}
 \lambda(\xi_0) & = & \int_{-\theta_c}^{\theta_c} \frac{d\theta}{2\pi} \frac{%
 \xi_0}{\sigma\sqrt{1-\Psi(\theta)(1-\xi_0^2)}}  \nonumber \\
@@ -49,22 +49,22 @@ Then, with $\alpha_c = \theta_c/2$, (\ref{lambda1}) becomes
 \sin^2(\alpha)}}{\sqrt{1-\xi_{0T}^2/\xi_0^2\ \sin^2(\alpha)}}
 \end{eqnarray}
 
-We have the following series expansion, valid for $|x|<1$: 
+We have the following series expansion, valid for $|x|<1$:
 \begin{equation}  \label{sqrtseries}
 \sqrt{1-x} = \sum_{m=0}^{\infty} \chi_m x^m
 \end{equation}
-with 
+with
 \begin{equation}
 \chi_0 = 1,\qquad \chi_m = \frac{2m-3}{2m} \chi_{m-1}
 \end{equation}
 
 Applying (\ref{sqrtseries}) to $\sqrt{1-\xi _{0T}^{2}\sin ^{2}(\alpha )}$, (%
-\ref{lambda2}) becomes: 
+\ref{lambda2}) becomes:
 \begin{equation}
 \lambda (\xi _{0})=\frac{2}{\pi }\sum_{m=0}^{\infty }\chi _{m}\xi
 _{0T}^{2m}J_{2m}  \label{lambdacalc}
 \end{equation}
-with 
+with
 \begin{equation}
 J_{2m}=\int_{0}^{\alpha _{c}}d\alpha \frac{\sin ^{2m}(\alpha )}{\sqrt{1-\xi
 _{0T}^{2}/\xi _{0}^{2}\ \sin ^{2}(\alpha )}}  \label{j2m}
@@ -73,7 +73,7 @@ _{0T}^{2}/\xi _{0}^{2}\ \sin ^{2}(\alpha )}}  \label{j2m}
 \subsection{Calculation of the Integrals $J_{2m}$}
 
 The integrals $J_{2m}$ can be expressed in terms of complete ellipstic
-integrals of the first and second kind \cite{mco86}: 
+integrals of the first and second kind \cite{mco86}:
 \begin{eqnarray}  \label{elliptic}
 K(k^2) & = & \int_0^{\pi/2} \frac{d\alpha}{\sqrt{1-k^2\sin^2(\alpha)}} =
 \int_0^1 \frac{dx}{\sqrt{(1-x^2)(1-k^2 x^2)}}  \nonumber \\
@@ -83,12 +83,12 @@ dx\ \frac{\sqrt{(1-k^2 x^2)}}{\sqrt{(1-x^2)}}
 
 \begin{itemize}
 \item  \textbf{For Trapped particles ($|\xi _{0}|<\xi _{0T}$)}, we have from
-(\ref{thetac}): 
+(\ref{thetac}):
 \begin{equation}
 \sin (\alpha _{c})=\sin (\theta _{T}/2)=\sqrt{\frac{1-\cos (\theta _{T})}{2}}%
 =\frac{|\xi _{0}|}{\xi _{0T}}
 \end{equation}
-so that 
+so that
 \begin{eqnarray}
 J_{0} &=&\int_{0}^{\alpha _{c}}\frac{d\alpha }{\sqrt{1-\xi _{0T}^{2}/\xi
 _{0}^{2}\ \sin ^{2}(\alpha )}}  \nonumber \\
@@ -97,56 +97,56 @@ _{0T}^{2}/\xi _{0}^{2}\ x^{2}}}  \nonumber \\
 &=&\frac{|\xi _{0}|}{\xi _{0T}}\int_{0}^{1}\frac{dx}{\sqrt{1-\xi
 _{0}^{2}/\xi _{0T}^{2}\ x^{2}}\sqrt{1-x^{2}}}  \nonumber \\
 &=&\frac{|\xi _{0}|}{\xi _{0T}}K\left( \frac{\xi _{0}^{2}}{\xi _{0T}^{2}}%
-\right) 
+\right)
 \end{eqnarray}
-and 
+and
 \begin{eqnarray}
 J_{2} &=&\int_{0}^{\alpha _{c}}d\alpha \ \frac{\sin ^{2}(\alpha )}{\sqrt{%
 1-\xi _{0T}^{2}/\xi _{0}^{2}\ \sin ^{2}(\alpha )}}  \nonumber \\
 &=&\int_{0}^{\sin (\alpha _{c})}dx\ \frac{x^{2}}{\sqrt{1-x^{2}}\sqrt{1-\xi
 _{0T}^{2}/\xi _{0}^{2}\ x^{2}}}  \nonumber \\
 &=&\frac{|\xi _{0}|}{\xi _{0T}}\int_{0}^{1}dx\ \frac{\xi _{0}^{2}/\xi
-_{0T}^{2}\ x^{2}}{\sqrt{1-\xi _{0}^{2}/\xi _{0T}^{2}\ x^{2}}\sqrt{1-x^{2}}} 
+_{0T}^{2}\ x^{2}}{\sqrt{1-\xi _{0}^{2}/\xi _{0T}^{2}\ x^{2}}\sqrt{1-x^{2}}}
 \nonumber \\
 &=&\frac{|\xi _{0}|}{\xi _{0T}}\left( \int_{0}^{1}dx\ \frac{1}{\sqrt{1-\xi
 _{0}^{2}/\xi _{0T}^{2}\ x^{2}}\sqrt{1-x^{2}}}-\int_{0}^{1}dx\frac{1-\xi
 _{0}^{2}/\xi _{0T}^{2}\ x^{2}}{\sqrt{1-\xi _{0}^{2}/\xi _{0T}^{2}\ x^{2}}%
 \sqrt{1-x^{2}}}\right)   \nonumber \\
 &=&\frac{|\xi _{0}|}{\xi _{0T}}\left[ K\left( \frac{\xi _{0}^{2}}{\xi
-_{0T}^{2}}\right) -E\left( \frac{\xi _{0}^{2}}{\xi _{0T}^{2}}\right) \right] 
+_{0T}^{2}}\right) -E\left( \frac{\xi _{0}^{2}}{\xi _{0T}^{2}}\right) \right]
 \end{eqnarray}
 
-\item  \textbf{For Circulating particles ($|\xi _{0}|>\xi _{0T}$)}, we have 
+\item  \textbf{For Circulating particles ($|\xi _{0}|>\xi _{0T}$)}, we have
 \begin{equation}
 \alpha _{c}=\frac{\theta _{c}}{2}=\frac{\pi }{2}
 \end{equation}
-so that 
+so that
 \begin{eqnarray}
 J_{0} &=&\int_{0}^{\pi /2}\frac{d\alpha }{\sqrt{1-\xi _{0T}^{2}/\xi
 _{0}^{2}\ \sin ^{2}(\alpha )}}  \nonumber \\
 &=&\int_{0}^{1}\frac{dx}{\sqrt{1-x^{2}}\sqrt{1-\xi _{0T}^{2}/\xi _{0}^{2}\
 x^{2}}}  \nonumber \\
-&=&K\left( \frac{\xi _{0T}^{2}}{\xi _{0}^{2}}\right) 
+&=&K\left( \frac{\xi _{0T}^{2}}{\xi _{0}^{2}}\right)
 \end{eqnarray}
-and 
+and
 \begin{eqnarray}
 J_{2} &=&\int_{0}^{\pi /2}d\alpha \ \frac{\sin ^{2}(\alpha )}{\sqrt{1-\xi
 _{0T}^{2}/\xi _{0}^{2}\ \sin ^{2}(\alpha )}}  \nonumber \\
 &=&\int_{0}^{1}dx\ \frac{x^{2}}{\sqrt{1-x^{2}}\sqrt{1-\xi _{0T}^{2}/\xi
 _{0}^{2}\ x^{2}}}  \nonumber \\
 &=&\frac{\xi _{0}^{2}}{\xi _{0T}^{2}}\int_{0}^{1}dx\ \frac{\xi _{0T}^{2}/\xi
-_{0}^{2}\ x^{2}}{\sqrt{1-x^{2}}\sqrt{1-\xi _{0T}^{2}/\xi _{0}^{2}\ x^{2}}} 
+_{0}^{2}\ x^{2}}{\sqrt{1-x^{2}}\sqrt{1-\xi _{0T}^{2}/\xi _{0}^{2}\ x^{2}}}
 \nonumber \\
 &=&\frac{\xi _{0}^{2}}{\xi _{0T}^{2}}\left( \int_{0}^{1}dx\ \frac{1}{\sqrt{%
 1-x^{2}}\sqrt{1-\xi _{0T}^{2}/\xi _{0}^{2}\ x^{2}}}-\int_{0}^{1}dx\frac{%
 1-\xi _{0T}^{2}/\xi _{0}^{2}\ x^{2}}{\sqrt{1-x^{2}}\sqrt{1-\xi _{0T}^{2}/\xi
 _{0}^{2}\ x^{2}}}\right)   \nonumber \\
 &=&\frac{\xi _{0}^{2}}{\xi _{0T}^{2}}\left[ K\left( \frac{\xi _{0T}^{2}}{\xi
-_{0}^{2}}\right) -E\left( \frac{\xi _{0T}^{2}}{\xi _{0}^{2}}\right) \right] 
+_{0}^{2}}\right) -E\left( \frac{\xi _{0T}^{2}}{\xi _{0}^{2}}\right) \right]
 \end{eqnarray}
 
 \item  \textbf{For all particles}, the integrals $J_{2m},m>1$ can be derived
-from $J_{0}$ and $J_{2}$ from the following recursive relation \cite{mco86}: 
+from $J_{0}$ and $J_{2}$ from the following recursive relation \cite{mco86}:
 \begin{equation}
 J_{2m}=\frac{(2m-2)}{(2m-1)}\left( 1+\frac{\xi _{0}^{2}}{\xi _{0T}^{2}}%
 \right) J_{2m-2}-\frac{(2m-3)}{(2m-1)}\frac{\xi _{0}^{2}}{\xi _{0T}^{2}}%
@@ -158,7 +158,7 @@ J_{2m-4}
 
 It can be shown (See Figure \ref{lambdaplot}) that keeping only the two
 first terms in the expansion is sufficient. Therefore $\lambda(\xi_0)$ can
-be evaluated with an excellent accuracy using: 
+be evaluated with an excellent accuracy using:
 \begin{equation}  \label{lambda4}
 \lambda(\xi_0) = \frac{2}{\pi} \left(J_0 - \frac{1}{2} \xi_{0T}^{2}
 J_2\right)
@@ -167,48 +167,48 @@ with $J_0$ and $J_2$ calculated above.
 
 \section{Calculation of $s^{\ast}$}
 
-The coefficient $s^{*}$ is defined for circular concentric flux-surfaces as 
+The coefficient $s^{*}$ is defined for circular concentric flux-surfaces as
 \begin{equation}
 s^{*}=\int_{-\pi }^{\pi }\frac{d\theta }{2\pi }\frac{R\left( r,0\right) }{%
 R\left( r,\theta \right) }=\int_{-\pi }^{\pi }\frac{d\theta }{2\pi }\frac{%
 1+\epsilon }{1+\epsilon \cos (\theta )}  \label{sstar1}
 \end{equation}
 
-Defining 
+Defining
 \begin{equation}
 z = e^{i\theta}
 \end{equation}
-we get 
+we get
 \begin{equation}
 d\theta = \frac{1}{iz} dz, \qquad cos(\theta) = \frac{1}{2}(z+1/z)
 \end{equation}
 
-and (\ref{sstar1}) becomes 
+and (\ref{sstar1}) becomes
 \begin{equation}
 s^{*}=\frac{2}{\epsilon }\frac{(1+\epsilon )}{2\pi i}\int_{\gamma }\frac{dz}{%
 z^{2}+2z/\epsilon +1}  \label{sstar2}
 \end{equation}
 where the contour $\gamma $ is the unity circle in the complex plane.
 
-The two roots of the denominator in (\ref{sstar2}) are 
+The two roots of the denominator in (\ref{sstar2}) are
 \begin{equation}
 z_{\pm} = -\frac{1}{\epsilon}(1\mp\sqrt{1-\epsilon^2})
 \end{equation}
 
 Only the greater root $z_{+}$ lies inside the contour $\gamma $, so that (%
-\ref{sstar2}) becomes 
+\ref{sstar2}) becomes
 \begin{equation}
 s^{*}=\frac{2}{\epsilon }\frac{(1+\epsilon )}{2\pi i}(2\pi i)\text{Res}%
 \left( \frac{1}{z^{2}+2z/\epsilon +1},z=z_{+}\right)   \label{sstar3}
 \end{equation}
-where 
+where
 \begin{equation}
 \text{Res}\left( \frac{1}{z^{2}+2z/\epsilon +1},z=z_{+}\right) =\frac{1}{%
 z_{+}-z_{-}}=\frac{1}{2/\epsilon \ \sqrt{1-\epsilon ^{2}}}  \label{sstar4}
 \end{equation}
 is the residue of the integral in (\ref{sstar2}) at $z=z_{+}$.
 
-Finally, inserting (\ref{sstar4}) in (\ref{sstar3}), we find 
+Finally, inserting (\ref{sstar4}) in (\ref{sstar3}), we find
 \begin{equation}
 s^{*}=H(|\xi _{0}|>\xi _{0T})\ \sqrt{\frac{1+\epsilon }{1-\epsilon }}
 \label{sstar}
