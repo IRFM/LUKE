@@ -1,7 +1,12 @@
-function [theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,psia,xmhu0T2,HXR] = ...
-    equilibrium_jd(tokamak,xpsin,display_mode,method)
+function [mtheta,xpsin,psia,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,xmhu0T2,xdV_dke,xdA_dke,HXR] = ...
+    equilibrium_jd(tokamak,xpsin,xpsin_S_dke,display_mode,method,mfactor)
 %
 %   This function interpolates the equilibrium data on the radial grid.
+%
+%   It first performs a very precise FFT-based interpolation in theta in
+%   order to obtain precise future interpolation and integration
+%   calculations in theta.
+%
 %   It also calculates several quantities linked to the equilibrium, such
 %   as the trapped/passing boundary in momentum space, the plasma minor
 %   radius on LFS midplane, and the effective charge. 
@@ -12,28 +17,30 @@ function [theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi
 %       - R Z BR BZ BPHI must be given on a (psi,theta) grid [npsi,ntheta].
 %       - ppsi(1) = 0 is the magnetic axis.
 %       - ppsi(npsi) is the poloidal flux on the last closed flux-surface.
-%       It can
-%           be either positive or negative depending on the sign of the
-%           current
-%           with respect to the toroidal angle phi.
+%           It can be either positive or negative depending on the sign of the
+%           current with respect to the toroidal angle phi.
 %       - theta(1) = 0 and theta(ntheta) = 2pi is required.
-%       - both grids can be non-uniform.
+%       - The psi can be non-uniform. The theta grid MUST be uniform
 %       - other equilibrium parameters (temperatures, densities) are
-%       assumed to 
-%           be uniform within a flux-surface, because of the fast parallel
+%           assumed to be uniform within a flux-surface, because of the fast parallel
 %           motion. They are therefore given on the psi grid.
 %
 %   INPUTS:
 %
 %       - tokamak: tokamak scenario selected
 %       - xpsin: positions for FP calculations on the normalized psi grid
+%           (NAN: ppsi grid)
+%       - xpsin_S_dke: radial flux grid used for the calculation of FS volume and poloidal surface 
 %       - display_mode: (0-1) text only (2) graphics
 %       - method: interpolation method (linear,cubic,spline,...) 
 %           (default: linear)
+%       - mfactor: factor for super theta grid (default: 50)
 %
 %   OUTPUTS:
 %
 %       - theta: poloidal angle grid [1,ntheta]
+%       - xpsin: normalized poloidal flux grid [1,nr]
+%       - psia: poloidal flux at the edge [1,1]
 %       - XR: major radius [nr,ntheta]
 %       - XZ: elevation [nr,ntheta]
 %       - XBR: B-field component in R direction [nr,ntheta]
@@ -57,17 +64,30 @@ function [theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi
 %       - Ip: Toroidal plasma current [1,1]
 %       - Ncoils: Number of toroidal magnetic field coils [1,1]
 %       - BeLi: Beta + li/2 [1,1]
-%       - psia: poloidal flux at the edge [1,1]
 %       - xmhu0T2: pitch-angle (squared) at the trapped/passing boundary [1,nr]
+%       - xdV_dke: incremental FS volume at dke positions
+%       - xdA_dke: incremental FS poloidal surface at dke positions
 %       - HXR: Fast electron bremsstrahlung
 %
 %   By J. Decker RLE-MIT <jodecker@alum.mit.edu> and Y. Peysson DRFC-CEA <yves.peysson@cea.fr>
 %
-if nargin < 3
+if nargin < 6
+    mfactor = 10;%Factor for super theta grid
+end
+if nargin < 5
     method = 'linear';%Interpolation method 
 end
+if nargin < 4
+    display_mode = 0;
+end
+if nargin < 3
+    xpsin_S_dke = NaN;%no incremental volume or surface calculations
+end
 if nargin < 2
-    error('no radial grid specified');
+    xpsin = NaN;%the radial grid is the equilibrium grid
+end
+if nargin < 1
+    error('no tokamak specified');
 end
 %
 [qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;
@@ -78,12 +98,30 @@ filename = ['EQUIL_',tokamak,'.mat'];
 eval(['load ',dossier,s,filename,' ppsi theta R Z BR BZ BPHI pTe pne pzTi pzni zZi zmi ftra HXR']);
 %
 [npsi,ntheta] = size(R);
-nr = length(xpsin);
 %
-Rp = R(1,1);%Major radius of magnetic Axis
-Zp = Z(1,1);%Elevation of magnetic Axis
+% FFT interpolation on R,Z, BR, BZ, BPHI as a function of theta (very precise, works for uniform theta grids only)
 %
-Rmax = R(npsi,1);%Major radius where the last close flux-surface crosses the LFS midplane
+mtheta = 0:2*pi/((ntheta-1)*mfactor):2*pi*((ntheta-1)*mfactor-1)/((ntheta-1)*mfactor); %super theta grid
+%
+mR = interpft(R(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
+mZ = interpft(Z(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
+mBR = interpft(BR(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
+mBZ = interpft(BZ(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
+mBPHI = interpft(BPHI(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
+%
+mtheta = [mtheta,2*pi]; %2*pi point retrieved (for future interpolation)
+mR = [mR,mR(:,1)]; %2*pi point retrieved
+mZ = [mZ,mZ(:,1)]; %2*pi point retrieved
+mBR = [mBR,mBR(:,1)]; %2*pi point retrieved
+mBZ = [mBZ,mBZ(:,1)]; %2*pi point retrieved
+mBPHI = [mBPHI,mBPHI(:,1)]; %2*pi point retrieved
+%
+nmtheta = length(mtheta);
+%
+Rp = mR(1,1);%Major radius of magnetic Axis
+Zp = mZ(1,1);%Elevation of magnetic Axis
+%
+Rmax = mR(npsi,1);%Major radius where the last close flux-surface crosses the LFS midplane
 ap =  Rmax - Rp;%Plasma minor radius on the LFS midplane 
 %
 psia = ppsi(npsi);%Poloidal flux at the edge
@@ -91,21 +129,27 @@ ppsin = ppsi/psia;%Normalized poloidal flux
 %
 pZeff = sum(pzni.*repmat((zZi.^2)',[1,npsi]))./pne;%Effective charge (a.u.)
 %
+if isnan(xpsin)
+    xpsin = ppsin;
+end
+%
+nr = length(xpsin);
+%
 % Interpolation of calculation grid
 %
-XR = interp1(ppsin,R,xpsin);
-XZ = interp1(ppsin,Z,xpsin);
-XBR = interp1(ppsin,BR,xpsin);
-XBZ = interp1(ppsin,BZ,xpsin);
-XBphi = interp1(ppsin,BPHI,xpsin);
+XR = interp1(ppsin,mR,xpsin,method);
+XZ = interp1(ppsin,mZ,xpsin,method);
+XBR = interp1(ppsin,mBR,xpsin,method);
+XBZ = interp1(ppsin,mBZ,xpsin,method);
+XBphi = interp1(ppsin,mBPHI,xpsin,method);
 %
 xrho = (XR(:,1)' - Rp)/ap;%Normalized radius on the horizontal LFS midplane                          
 %
-xTe = interp1(ppsin,pTe,xpsin);
-xne = interp1(ppsin,pne,xpsin);
-xzTi = interp1(ppsin,pzTi',xpsin)';
-xzni = interp1(ppsin,pzni',xpsin)';
-xZeff = interp1(ppsin,pZeff,xpsin);
+xTe = interp1(ppsin,pTe,xpsin,method);
+xne = interp1(ppsin,pne,xpsin,method);
+xzTi = interp1(ppsin,pzTi',xpsin,method)';
+xzni = interp1(ppsin,pzni',xpsin,method)';
+xZeff = interp1(ppsin,pZeff,xpsin,method);
 %
 XBT = abs(XBphi);%Toroidal B-field
 XBp = sqrt(XBR.^2 + XBZ.^2);%Poloidal B-field
@@ -122,7 +166,49 @@ xiB0 = (xiB0 - 1)*nr + (1:nr);%Indices in (psi,theta) grid corresponding of B=Bm
 xBT0 = XBT(xiB0);%Toroidal field at B=Bmin
 xBp0 = XBp(xiB0);%Poroidal field at B=Bmin
 xR0 = XR(xiB0);%Major radius at B=Bmin
-
+%
+% FS volume and poloidal surface
+%
+if ~isnan(xpsin_S_dke)
+% half grids in theta and psi (for trapezoidal integration avoiding singularities)
+    hmtheta = (mtheta(1:nmtheta-1) + mtheta(2:nmtheta))/2;
+    hppsin = (ppsin(1:npsi-1) + ppsin(2:npsi))/2;
+    hmR = (mR(1:npsi-1,1:nmtheta-1) + mR(2:npsi,1:nmtheta-1) + mR(1:npsi-1,2:nmtheta) + mR(2:npsi,2:nmtheta))/4;
+    hmZ = (mZ(1:npsi-1,1:nmtheta-1) + mZ(2:npsi,1:nmtheta-1) + mZ(1:npsi-1,2:nmtheta) + mZ(2:npsi,2:nmtheta))/4;
+    hmBR = (mBR(1:npsi-1,1:nmtheta-1) + mBR(2:npsi,1:nmtheta-1) + mBR(1:npsi-1,2:nmtheta) + mBR(2:npsi,2:nmtheta))/4;
+    hmBZ = (mBZ(1:npsi-1,1:nmtheta-1) + mBZ(2:npsi,1:nmtheta-1) + mBZ(1:npsi-1,2:nmtheta) + mBZ(2:npsi,2:nmtheta))/4;
+    hmBPHI = (mBPHI(1:npsi-1,1:nmtheta-1) + mBPHI(2:npsi,1:nmtheta-1) + mBPHI(1:npsi-1,2:nmtheta) + mBPHI(2:npsi,2:nmtheta))/4;
+%
+    dpsi = abs(diff(ppsi));
+    dmtheta = diff(mtheta);
+% FS Volume
+    hmFV = 2*pi*((hmR - Rp).^2 + (hmZ - Zp).^2)./abs(hmBR.*(hmZ - Zp) - hmBZ.*(hmR - Rp));
+%
+    pdV = integral_dke_jd(dmtheta,hmFV,2);
+    spdV = triu(repmat(pdV,[1,npsi-1]));
+    pV = [0,integral_dke_jd(dpsi,spdV,1)'];
+%    
+% FS poloidal surface
+    hmFA = ((hmR - Rp).^2 + (hmZ - Zp).^2)./abs(hmBR.*(hmZ - Zp) - hmBZ.*(hmR - Rp))./hmR;
+%
+    pdA = integral_dke_jd(dmtheta,hmFA,2);
+    spdA = triu(repmat(pdA,[1,npsi-1]));
+    pA = [0,integral_dke_jd(dpsi,spdA,1)'];
+%
+% DKE FS volume and poloidal surface
+    xV_S_dke = interp1(ppsin,pV,xpsin_S_dke,method);
+    xA_S_dke = interp1(ppsin,pA,xpsin_S_dke,method);
+%
+% DKE FS invremental volume and poloidal surface
+    xdV_dke = diff(xV_S_dke);
+    xdA_dke = diff(xA_S_dke);
+else
+    xdV_dke = NaN;
+    xdA_dke = NaN;
+end
+%
+% Display of equilibrium properties
+%
 if display_mode >= 2
 %    
     prho = (R(:,1)' - Rp)/ap;
@@ -155,10 +241,10 @@ if display_mode >= 2
 %       
     srho = linspace(0,1,21);
     stheta = linspace(0,2*pi,31);
-    sR = interp1(prho,R,srho);  
-    sZ = interp1(prho,Z,srho); 
-    stR = interp1(theta,R',stheta)';  
-    stZ = interp1(theta,Z',stheta)';    
+    sR = interp1(prho,mR,srho,method);  
+    sZ = interp1(prho,mZ,srho,method); 
+    stR = interp1(mtheta,mR',stheta,method)';  
+    stZ = interp1(mtheta,mZ',stheta,method)';    
 %
     Rmin = min(min(R));
     Rmax = max(max(R));
