@@ -443,7 +443,7 @@ if dke_mode == 1
     ZYXXF_rf_tp{6} = sqrt(YXX1mmhu2p).*(YXX1mmhu2p - YXXn_rf.*YXXomegac./YXXomega_rf).^2.*YXXDrf_F_tp_ijp./YXXmhu2p./YXXmhu2p./YXXmhup./YXXpn;%YXXFm_rf_ijp
     ZYXXF_rf_tp{7} = sqrt(YXX1mmhu2m).*(YXX1mmhu2m - YXXn_rf.*YXXomegac./YXXomega_rf).^2.*YXXDrf_F_tp_ijm./YXXmhu2m./YXXmhu2m./YXXmhum./YXXpn;%YXXFm_rf_ijm
 %    
-    ZYXXF_rf_tp{8} = YXXDrf_F_tp_ij
+    ZYXXF_rf_tp{8} = YXXDrf_F_tp_ij;
 else
     ZYXXD_rf_tp = NaN;
     ZYXXF_rf_tp = NaN;
