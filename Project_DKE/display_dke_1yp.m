@@ -10,7 +10,7 @@ xeta0_fsav_mksa,xepsi_fsav_mksa,xia,xft_fsav] = display_dke_1yp(filename,auto_mo
 warning off;
 [s,dossier,machine] = comput_dke_yp;
 if nargin == 0,	
-	eval(['dir ',dossier,s,'dke_*.mat']);
+	eval(['dir ',dossier,s,'RESULTS_*.mat']);
 	filename = [];
 	filename = input_dke_yp('Filename ',filename);
 	auto_mode_in = input_dke_yp('Automatic display mode (yes: 1, no: 0) ',0);
@@ -60,8 +60,10 @@ if bounce_mode > 0,
 	[s,dossier,machine] = comput_dke_yp;
 	filename = ['EQUIL_',tokname,'.mat'];
 	eval(['load ',dossier,s,filename,' ppsi ftra']);%Load effective trapped fraction given by HELENA
-	if exist('ftra') == 1,
+	if exist('ftra') == 1 && (length(ppsi)==length(ftra)),
 		xftra = interp1(ppsi,ftra,xpsin(r_dke));
+	else 
+		xftra=NaN*xpsin(r_dke);
 	end
 else
 	xnhu_e_star = NaN*ones(size(xia));

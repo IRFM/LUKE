@@ -647,7 +647,7 @@ xymask = (xyPinc_in == 0);
 xyPinc_in(xymask) = eps; %to avoid singularities
 xyPinc_mod = xyPinc_in;
 %
-xyD0_rf_in = waveparam(:,:,5); %initial value of the constant dissusion coefficient
+if length(waveparam) > 0, xyD0_rf_in = waveparam(:,:,5);end  %initial value of the constant diffusion coefficient
 P_ref = me*(clum*betath_ref)^2*nhu_ref*ne_ref; %power normalization constant
 %
 %xymask_prop_dke = (xyprop_dke ~= 0);
@@ -656,7 +656,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
 %    
 % The diffusion coefficient is proportional to the incident power
 %
-    waveparam(:,:,5) = xyD0_rf_in.*xyPinc_mod./xyPinc_in; 
+    if length(waveparam) > 0, waveparam(:,:,5) = xyD0_rf_in.*xyPinc_mod./xyPinc_in;end 
 %    
     [XXheaviside,...
         XXf0_ref,XXf0_tp_ref,XXf0_g_ref,XXf0_L_tp_ref,XXf0_L_g_ref,...

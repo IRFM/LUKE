@@ -478,34 +478,45 @@ elseif strcmp(name,'CQL3D_LH') == 1,
 	Zeff0 = 1;
 	Zeffa = 1;
 	eZeff = 0;
-elseif strcmp(name,'CQL3D_OHM') == 1,
+elseif strcmp(name,'CQL3D_OHM') == 1,	
 	ap = 2.3899;
-	Rp = 2.39; 
-	Ip = 0.61;
-	Bt = 3.65;
-	Ncoils = 18;
-	Zi = [1,1,1];
-	mi = [1,2,3];
-	fi = [1,0,0];
+	Rp = 2.39;%Separatrix major radius
+	Zp = 0.0;
 %
-	BeLi = 1.0;
+	xpoint(1) = 1;%Vertical position of the top X point
+	xpoint(2) = 0;%Horizontal position of the top X point
+	xpoint(3) = 0;%Angle between the separatrix and the horizontal plane for the top X point (degree)
+	xpoint(4) = 0;%Angle between the separatrix and the horizontal plane for the top X point (degree)
+	xpoint(5) = 1;%Vertical position of the bottom X point (always positive value)
+	xpoint(6) = 0;%Horizontal position of the bottom X point
+	xpoint(7) = 0;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
+	xpoint(8) = 0;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
+%
+	Bt = 3.65;
+%
+	Zi = [1,1,1];	
+	mi = [1,2,3];
+	fi = [1,0,0.0];
+	Zeff0 = 1;
+	Zeffa = 1;
+	eZeff = 0;
+%
+	Ip = 0.61;
+	j0 = 0.6;
+	ja = 0;
+	ej = 2;
 	qmin = 1.13;
 	eq = 2;
 %
 	Te0 = 0.1;
 	Tea = 0;
 	eTe = 0;
-	eTe_ref = 0;
-	ne0 = 1.0e+19;
-	nea = 0*ne0;
-	ene = 0;
-	ene_ref = 0;
 	Ti0 = 0;
 	Tia = 0;
 	eTi = 0;
-	Zeff0 = 1;
-	Zeffa = 1;
-	eZeff = 0;
+	ne0 = 1.0e+19;
+	nea = 0;
+	ene = 0;	
 elseif strcmp(name,'CQL3D_RUNAWAY') == 1,
 	ap = 2.3899;
 	Rp = 2.39; 
