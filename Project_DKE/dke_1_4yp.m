@@ -19,7 +19,7 @@ dke_1_4yp(tokname,theta,...
     XXDr,XXVr,...
     XXnhuloss,delta,Nq,...
     ftp_norm,bounce,coll_mode,...
-    dtn,prec0,nit,invproc,param_inv,display,store_mode,XXfinit)
+    norm_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,XXfinit)
 %
 %
 %   Self-consistent 3-D relativistic solver of the drift kinetic equation in momentum space with Beliaev-Budker collision integrals 
@@ -128,6 +128,7 @@ if nargin < 33,
 	error('Wrong number of input arguments in dke_1_4yp')
 elseif nargin == 39,
 	coll_mode = 0;
+	norm_mode = 0;
 	dtn = 1000;
 	prec0 = [1e-10,1e-10];
 	nit = [50,200];
@@ -136,6 +137,7 @@ elseif nargin == 39,
 	display = [0,1,1];
 	store_mode = 0;
 elseif nargin == 40,
+	norm_mode = 0;
 	dtn = 1000;
 	prec0 = [1e-10,1e-10];
 	nit = [50,200];
@@ -144,6 +146,7 @@ elseif nargin == 40,
 	display = [0,1,1];
 	store_mode = 0;
 elseif nargin == 41,
+	dtn = 1000;
 	prec0 = [1e-10,1e-10];
 	nit = [50,200];
 	invproc = 1;
@@ -151,24 +154,31 @@ elseif nargin == 41,
 	display = [0,1,1];
 	store_mode = 0;
 elseif nargin == 42,
+	prec0 = [1e-10,1e-10];
 	nit = [50,200];
 	invproc = 1;
 	param_inv = [1e-3,20];
 	display = [0,1,1];
 	store_mode = 0;
 elseif nargin == 43,
+	nit = [50,200];
 	invproc = 1;
 	param_inv = [1e-3,20];
 	display = [0,1,1];
 	store_mode = 0;
 elseif nargin == 44,
+	invproc = 1;
 	param_inv = [1e-3,20];
 	display = [0,1,1];
 	store_mode = 0;
 elseif nargin == 45,
+	param_inv = [1e-3,20];
 	display = [0,1,1];
 	store_mode = 0;
 elseif nargin == 46,
+	display = [0,1,1];
+	store_mode = 0;
+elseif nargin == 47,
 	store_mode = 0;
 end
 %
@@ -232,11 +242,13 @@ if display_mode >=1,
 %Numerical transient operation
 	if (store_mode == 0), disp('   - Matrices storage in RAM (fast mode)');
 	else                  disp('   - Matrices storage in disk file (slow mode)');end
-%Numercial matrix inversion procedure
+%Numerical matrix inversion procedure
 	if (invproc == 1),      disp('   - Full LU factorization method');
 	elseif (invproc == 2),  disp('   - QMR iterative method');
 	elseif (invproc == 3),  disp('   - BICGSTAB iterative method');
 	elseif (invproc == 4),  disp('   - CGS iterative method');end
+	if (norm_mode == 1),    disp('   - Normalization of f0 at each iteration and radius');
+	elseif (norm_mode == 0),disp('   - No normalization of f0 at each iteration and radius: fully natural conservative mode');
 %Time scheme
 	if (time_scheme == 1),    disp(['   - Implicit time differencing scheme']);
 	elseif (time_scheme == 2),disp(['   - Crank-Nicholson time differencing scheme']);end
@@ -306,6 +318,7 @@ Xdmhupp= ones(npn,1)*[dmhu(2:nmhu),dmhu(nmhu)];
 %Momentum grid
 %
 pth = betath_ref;
+ip_th_ref = min(find(pn >= pth));
 Xdpn = dpn'*ones(1,nmhu);
 pn2 = pn.*pn;
 pn3 = pn2.*pn;
@@ -869,25 +882,38 @@ for ir = 1:nr,
 %
 %Collision integrals
 %	
-    sfM = exp(-spn2./(1 + sgamma)/xTe_norm(ir))/2/pi/xTe_norm(ir)/sqrt(2*pi*xTe_norm(ir));
-    snormfM = 4*pi*integral_dke_jd(sdpn,spn.*spn.*sfM,2);
-    sfM = sfM*xne_norm(ir)/snormfM;
-    for ip = 1:npn,%Loop for very accurate collision integral calculation close to p = 0 especially
-        smasku = spn < pn(ip);
-        smaskl = spn > pn(ip);
- 	    F1_1(1,ip) = integral_dke_jd(sdpn,sfM.*spn.*sv.*smasku,2)';
-      	F1_2(1,ip) = integral_dke_jd(sdpn,sfM.*spn.*sv.*(1 - sgamma.*ssigma./sz).*smasku,2)';
-      	F2_1(1,ip) = integral_dke_jd(sdpn,sfM.*spn.*smaskl,2)';
+	sfM = exp(-spn2./(1 + sgamma)/xTe_norm(ir))/2/pi/xTe_norm(ir)/sqrt(2*pi*xTe_norm(ir));
+	snormfM = 4*pi*integral_dke_jd(sdpn,spn.*spn.*sfM,2);
+	sfM = sfM*xne_norm(ir)/snormfM;
+	for ip = 1:npn,%Loop for very accurate collision integral calculation close to p = 0 especially (crucial for numerical conservative scheme)
+		smasku = spn < pn(ip);
+		smaskl = spn > pn(ip);
+		smaskup = spn < pnp(ip);
+		smasklp = spn > pnp(ip);
+		smaskum = spn < pnm(ip);
+		smasklm = spn > pnm(ip);
 %
-    	B1_1(1,ip) = integral_dke_jd(sdpn,sfM.*smasku.*spn2,2)';
-    	B1_2(1,ip) = integral_dke_jd(sdpn,sfM.*smasku.*spn2.*spn2,2)';
-    	B1_3(1,ip) = integral_dke_jd(sdpn,sfM.*smasku.*spn2.*sJ1./sgamma,2)';
-    	B1_4(1,ip) = integral_dke_jd(sdpn,sfM.*smasku.*spn2.*sJ2./sgamma,2)';
-    	B1_5(1,ip) = integral_dke_jd(sdpn,sfM.*smasku.*spn2.*((sgamma - ssigma./sz)./sgamma),2)';
-    	B2_1(1,ip) = integral_dke_jd(sdpn,sfM.*smaskl.*spn2./sv,2)';
-    	B2_2(1,ip) = integral_dke_jd(sdpn,sfM.*smaskl.*spn2./sv./sgamma2,2)';
-    	B2_3(1,ip) = integral_dke_jd(sdpn,sfM.*smaskl.*spn2.*sv,2)';  
-    end
+		F1_1(1,ip) = integral_dke_jd(sdpn,sfM.*spn.*sv.*smasku,2)';
+		F1_2(1,ip) = integral_dke_jd(sdpn,sfM.*spn.*sv.*(1 - sgamma.*ssigma./sz).*smasku,2)';
+		F2_1(1,ip) = integral_dke_jd(sdpn,sfM.*spn.*smaskl,2)';
+%		
+		F1_1m(1,ip) = integral_dke_jd(sdpn,sfM.*spn.*sv.*smaskum,2)';
+		F1_2m(1,ip) = integral_dke_jd(sdpn,sfM.*spn.*sv.*(1 - sgamma.*ssigma./sz).*smaskum,2)';
+		F2_1m(1,ip) = integral_dke_jd(sdpn,sfM.*spn.*smasklm,2)';
+%		
+		F1_1p(1,ip) = integral_dke_jd(sdpn,sfM.*spn.*sv.*smaskup,2)';
+		F1_2p(1,ip) = integral_dke_jd(sdpn,sfM.*spn.*sv.*(1 - sgamma.*ssigma./sz).*smaskup,2)';
+		F2_1p(1,ip) = integral_dke_jd(sdpn,sfM.*spn.*smasklp,2)';
+%
+		B1_1(1,ip) = integral_dke_jd(sdpn,sfM.*smasku.*spn2,2)';
+		B1_2(1,ip) = integral_dke_jd(sdpn,sfM.*smasku.*spn2.*spn2,2)';
+		B1_3(1,ip) = integral_dke_jd(sdpn,sfM.*smasku.*spn2.*sJ1./sgamma,2)';
+		B1_4(1,ip) = integral_dke_jd(sdpn,sfM.*smasku.*spn2.*sJ2./sgamma,2)';
+		B1_5(1,ip) = integral_dke_jd(sdpn,sfM.*smasku.*spn2.*((sgamma - ssigma./sz)./sgamma),2)';
+		B2_1(1,ip) = integral_dke_jd(sdpn,sfM.*smaskl.*spn2./sv,2)';
+		B2_2(1,ip) = integral_dke_jd(sdpn,sfM.*smaskl.*spn2./sv./sgamma2,2)';
+		B2_3(1,ip) = integral_dke_jd(sdpn,sfM.*smaskl.*spn2.*sv,2)';  
+	end
 %
 	if coll_mode == 1,
 		F = xne_norm(ir)'./v2 + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)')./v2;
@@ -903,13 +929,14 @@ for ir = 1:nr,
 		F = 4*pi*(F1 + F2) + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)')./v2;
 		XF = F'*ones(1,nmhu);
 %
-		F1m = (F1_1 - 0.50*dpn.*fM.*pn.*v)./v2m + (F1_2 - 0.50*dpn.*fM.*pn.*v.*(1 - gamma.*sigma./z))./pn2m;  
-		F2m = (1 - sigmam./zm./gammam).*(F2_1 + 0.50*dpn.*fM.*pn)./vm;
+		F1m = F1_1m ./v2m + F1_2m./pn2m;  
+		F2m = (1 - sigmam./zm./gammam).*F2_1m./vm;
+		
 		Fm = 4*pi*(F1m + F2m) + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)')./v2m;
 		Fm(1) = 1;%Avoid singularity at p = 0, but the value is not used
 %   
-		F1p = (F1_1 + 0.50*dpn.*fM.*pn.*v)./v2p + (F1_2 + 0.50*dpn.*fM.*pn.*v.*(1 - gamma.*sigma./z))./pn2p;   
-		F2p = (1 - sigmap./zp./gammap).*(F2_1 - 0.50*dpn.*fM.*pn)./vp;
+		F1p = F1_1p./v2p + F1_2p./pn2p;   
+		F2p = (1 - sigmap./zp./gammap).*F2_1p./vp;
 		Fp = 4*pi*(F1p + F2p) + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)')./v2p;
 	end
 %
@@ -1006,6 +1033,9 @@ for ir = 1:nr,
 		xepsi(ir) = xepsi_fsav(ir);
 	elseif bounce_mode == 1,
 	   xepsi(ir) = xepsi_fsav(ir)*(xqbar(ir)/xqtilde(ir))*(xB0(ir)/xBT0(ir))*(xR0(ir)/Rp)/XXlambda_b_p1m3p4(1,1,ir);%Value at Bmin for FP or DKE calculations
+	end
+	if xepsi(ir) > 0.05, 
+		error('Ohmic electric field too large');%To be consistent with the assumption of the linearized Fokker-Planck equation
 	end	
 %	
 	XDpp_e_ippj = zeros(npn,nmhu);
@@ -1029,7 +1059,9 @@ for ir = 1:nr,
 	XFp_e_ipj = +Xmhu.*XXRlambda_b_p1m1p2(:,:,ir)*xepsi(ir);
 	XFp_e_ij = +Xmhu.*XXRlambda_b_p1m1p2(:,:,ir)*xepsi(ir);	
 	XFp_e_imj = +Xmhu.*XXRlambda_b_p1m1p2(:,:,ir)*xepsi(ir);
-	XFp_e_immj = +Xmhu.*XXRlambda_b_p1m1p2(:,:,ir)*xepsi(ir);
+	XFp_e_immj = +Xmhu.*XXRlambda_b_p1m1p2(:,:,ir)*xepsi(ir); 
+%
+	xEfield_validity(ir) = max(XFp_e_ij(ip_th_ref,[1,nmhu])./XFp_c_ij(ip_th_ref,[1,nmhu]));%Comparison between electric field and collisions pinches at pth_ref (if above 1, the code validity breaks close to p = 0 leading to numerical particle leak)                 
 %
 	XFm_e_ijp = -sqrt(X1mmhu2p).*XXRlambda_b_p1m1p2_p(:,:,ir)*xepsi(ir);
 	XFm_e_ijm = -sqrt(X1mmhu2m).*XXRlambda_b_p1m1p2_m(:,:,ir)*xepsi(ir);
@@ -1273,25 +1305,7 @@ for ir = 1:nr,
 		end
 	end
 %
-%Local boundary conditions at p = p(1/2): not necessary but help for the density conservation
-%
-	Xa_t(1,:) = 0;
-	Xb_t(1,:) = 0;
-	Xc_t(1,:) = Xpn2(1,Xmask_f0)/dtn;%Maxwellian solution enforced at p = p(1/2) (More accurate but not fully necessary)
-	Xd_t(1,:) = 0;
-	Xe_t(1,:) = 0;
-	Xf_t(1,:) = 0;
-	Xg_t(1,:) = 0;
-	Xh_t(1,:) = 0;
-	Xi_t(1,:) = 0;
-	if bounce_mode == 1,
-		Xj_t(1,:) = 0;
-		Xk_t(1,:) = 0;
-		Xl_t(1,:) = 0;
-		Xm_t(1,:) = 0;
-		Xn_t(1,:) = 0;
-		Xo_t(1,:) = 0;      
-	end   
+% Drift kinetic calculations
 %
 	if dke_mode == 1 & ~isempty(find(ir==rdke)),
 %
@@ -1804,6 +1818,12 @@ if display_mode >= 1,
     disp('-------------------------------------------------------------------------------------------------------------------');
 end
 %
+figure(6000),semilogy(xrho,abs(xEfield_validity),'r+')
+xlabel('r/a')
+ylabel('Fp_e/Fp_coll at pth_ref')
+zoom on, grid on
+title('Code validity with Ohmic electric field')
+%
 time0 = clock;
 XXf0 = XXfinit;%Initial guess (normalized to xne_norm)
 %
@@ -1813,19 +1833,20 @@ for it_f = 2:nit_f,
 		MMXf0_t = [];
 		MMXq_t = [];
 		for ir = 1:nr,
-			if store_mode == 1,load MXPmat.mat Zmask_f0;end
-        	if radial_mode == 1,Xmask_r_edge_t = Xmask_r_edge(:,Zmask_f0{ir});end
+			if store_mode == 1,load MXPmat.mat Zmask_f0;end	
+			if radial_mode == 1,Xmask_r_edge_t = Xmask_r_edge(:,Zmask_f0{ir});end
 %
-        	Xq = (XXI(:,:,ir) + time_scheme*XXf0(:,:,ir)/dtn).*Xpn2;%Xpn2 is here as part of the partial Jacobian used to avoid singularities at p = 0
-        	Xq_t = Xq(:,Zmask_f0{ir});%Symmetric trapped domain removed
-        	if bounce_mode == 1,Xq_t(2:npn,nmhu/2 + 1 - ns(ir)) = 0;end;%Pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2 
-        	MMXq_t = [MMXq_t;(xqtilde(ir)/xB0(ir))*reshape(Xq_t',(nmhu - ns(ir))*npn,1)];%Multiplication by the partial Jacobian to avoid singularities at p = 0
-        	MMXf0_t = [MMXf0_t;reshape(XXf0(:,Zmask_f0{ir},ir)',(nmhu - ns(ir))*npn,1)];
-      end
-%
-		if radial_mode == 1,%Edge radial boundary condition: f(r/a = 1) = fM(r/a) where transport operates
-			MMXq_t(nMMXP_f_t-npn*(nmhu - ns(nr))+1:nMMXP_f_t) = xpsin(nr)*time_scheme*reshape((XXf0(:,Zmask_f0{ir},ir)'.*~Xmask_r_edge_t' + XXfM(:,Zmask_f0{ir},ir)'.*Xmask_r_edge_t').*Xpn2(:,XXmask_f0(:,:,ir))',(nmhu - ns(nr))*npn,1)/dtn; 
+			Xq = (XXI(:,:,ir) + time_scheme*XXf0(:,:,ir)/dtn).*Xpn2;%Xpn2 is here as part of the partial Jacobian used to avoid singularities at p = 0
+			Xq_t = Xq(:,Zmask_f0{ir});%Symmetric trapped domain removed (-ksi0T< ksi0 <0)
+			if bounce_mode == 1,Xq_t(:,nmhu/2 + 1 - ns(ir)) = 0;end;%Pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2 
+			MMXq_t = [MMXq_t;(xqtilde(ir)/xB0(ir))*reshape(Xq_t',(nmhu - ns(ir))*npn,1)];%Multiplication by the partial Jacobian to avoid singularities at psi = 0
+			MMXf0_t = [MMXf0_t;reshape(XXf0(:,Zmask_f0{ir},ir)',(nmhu - ns(ir))*npn,1)];
 		end
+%
+		if radial_mode == 1,%Edge radial boundary condition: f(r/a = 1) = fM(r/a) where transport operates	
+			MMXq_t(nMMXP_f_t-npn*(nmhu - ns(nr))+1:nMMXP_f_t) = xpsin(nr)*time_scheme*reshape((XXf0(:,Zmask_f0{nr},nr)'.*~Xmask_r_edge_t' + XXfM(:,Zmask_f0{nr},nr)'.*Xmask_r_edge_t').*Xpn2(:,Zmask_f0{nr})',(nmhu - ns(nr))*npn,1)/dtn; 
+		end
+%
 %
 		MMXR_t = MMXPDI_f_t*MMXq_t - MMXPC_f_t*MMXf0_t;
 %
@@ -1947,7 +1968,12 @@ for it_f = 2:nit_f,
 				XXI(:,:,ir) = XI;
 			end
 %
-			XXf0(:,:,ir) = xne_norm(ir)*Xf1/normf1(ir,it_f);%Normalization to the local density
+			if norm_mode == 1,
+				XXf0(:,:,ir) = xne_norm(ir)*Xf1/normf1(ir,it_f);%Normalization to the local density
+			else
+				XXf0(:,:,ir) = Xf1;%The default value in principle. If OK, tells that the numerical conservative scheme is correct
+			end
+%
 			normf0(ir,it_f) = normf1(ir,it_f);
 			curr0(ir,it_f) = curr1(ir,it_f);
 		end

@@ -9,7 +9,8 @@ epsi0_fsav,epsia_fsav,eepsi_fsav,...
 coll_mode,bounce_mode,dke_mode,equil_mode,...
 vparmin_r,Dr0,pDr,Dr_model,Vr0,pVr,Vr_model,...
 nhuloss,...
-prec0_f,nit_f,dtn,prec0_g,nit_g,initguess,invproc,param_inv,dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode,iloop)
+norm_mode,prec0_f,nit_f,dtn,prec0_g,nit_g,initguess,invproc,param_inv,...
+dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode,iloop)
 %
 %  Test function of the 3-D relativistic bounce-averaged electron drift kinetic equation solver 
 %  for the LH and EC absorption problem in presence of an Ohmic electric field.
@@ -185,8 +186,9 @@ if diary_mode == 1,
 	disp(['- Reference fast electron radial pinch coefficient (m2/s) Vr0 (m/s) = ',num2str(Vr0)]);
 	disp(['- Fast electron radial pinch profile peaking factor pVr = ',num2str(pVr)]);
 	disp(' ');
-	disp('- Ripple parameter to be implemented ');
+	disp('- Ripple parameter to be reimplemented ');
 	disp(' ');
+	disp(['- Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes norm_mode = ',num2str(norm_mode)]);
 	disp(['- Convergence level of the residu prec0_f = ',num2str(prec0_f)]);
 	disp(['- Maximum number of iterations for f nit_f = ',num2str(nit_f)]);
 	disp(['- integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) dtn = ',num2str(dtn)]);
@@ -680,7 +682,7 @@ time0 = clock;
     XXDr_ref,XXVr_ref,...
     XXnhuloss_ref,xdeltaripple,xNq,...
     xftp_norm_ref,bounce,coll_mode,...
-    dtn,prec0,nit,invproc,param_inv,display,store_mode,XXfinit_ref);
+    norm_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,XXfinit_ref);
 %
 time_out = etime(clock,time0);
 memoryLU_f_out = memoryLU_f;
