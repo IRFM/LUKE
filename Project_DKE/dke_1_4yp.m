@@ -2544,6 +2544,7 @@ ZP0_fsav{1,2} = xP0_tp_c_fsav;
 ZP0_fsav{1,3} = xP0_g_c_fsav;
 %
 XXSp0_imj = XXSp0_c_imj;
+XXSm0_ijm = XXSm0_c_ijm;
 %
 clear XXSp0_c_imj XXSp0_tp_c_imj XXSp0_g_c_imj
 clear xP0_c_fsav xP0_tp_c_fsav xP0_g_c_fsav
@@ -2624,6 +2625,7 @@ ZP0_fsav{2,2} = xP0_tp_e_fsav;
 ZP0_fsav{2,3} = xP0_g_e_fsav;
 %
 XXSp0_imj = XXSp0_imj + XXSp0_e_imj;
+XXSm0_ijm = XXSm0_ijm + XXSm0_e_ijm;
 %
 clear XXSp0_e_imj XXSp0_tp_e_imj XXSp0_g_e_imj
 clear xP0_e_fsav xP0_tp_e_fsav xP0_g_e_fsav
@@ -2652,7 +2654,7 @@ YXXFm_rf_ijp = zeros(npn,nmhu,nr,nb);
 if nb > 0,
 	xyqtilde = repmat(xqtilde',[1,nb]);
 	xyqbar = repmat(xqbar',[1,nb]);
-    xyqhat = repmat(xqhat',[1,nb]);
+	xyqhat = repmat(xqhat',[1,nb]);
 %
 	YXXmhup = repmat(Xmhup,[1,1,nr,nb]);
 	YXXmhu = repmat(Xmhu,[1,1,nr,nb]);
@@ -2696,13 +2698,13 @@ if nb > 0,
         YXXdpnm(:,:,rdke,:),YXXdpnp(:,:,rdke,:),YXXdmhum(:,:,rdke,:),YXXdmhup(:,:,rdke,:),...
         YXXdeltap_imj(:,:,rdke,:),YXXdeltap_ipj(:,:,rdke,:),YXXdeltam_ijm(:,:,rdke,:),YXXdeltam_ijp(:,:,rdke,:));
 %
-   xyP0m_rf_fsav = 2*pi*(xyqtilde(rdke,:)./xyqhat(rdke,:)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,YXXpnm(:,:,rdke,:).^3./YXXgammam(:,:,rdke,:).*YXXlambda(:,:,rdke,:).*YXXSp0_rf_imj,1),1);       
-   xyP0p_rf_fsav = 2*pi*(xyqtilde(rdke,:)./xyqhat(rdke,:)).*integral_dke_jd(dmhu,integral_dke_jd(dpnp,YXXpnp(:,:,rdke,:).^3./YXXgammap(:,:,rdke,:).*YXXlambda(:,:,rdke,:).*YXXSp0_rf_ipj,1),1);       
-   xyP0_rf_fsav = (xyP0m_rf_fsav + xyP0p_rf_fsav)/2;
+        xyP0m_rf_fsav = 2*pi*(xyqtilde(rdke,:)./xyqhat(rdke,:)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,YXXpnm(:,:,rdke,:).^3./YXXgammam(:,:,rdke,:).*YXXlambda(:,:,rdke,:).*YXXSp0_rf_imj,1),1);       
+        xyP0p_rf_fsav = 2*pi*(xyqtilde(rdke,:)./xyqhat(rdke,:)).*integral_dke_jd(dmhu,integral_dke_jd(dpnp,YXXpnp(:,:,rdke,:).^3./YXXgammap(:,:,rdke,:).*YXXlambda(:,:,rdke,:).*YXXSp0_rf_ipj,1),1);       
+        xyP0_rf_fsav = (xyP0m_rf_fsav + xyP0p_rf_fsav)/2;
 %
 %f0_tp contribution
 %
-   [YXXSp0_tp_rf_imj,YXXSp0_tp_rf_ipj,YXXSm0_tp_rf_ijm,YXXSm0_tp_rf_ijp] = ...
+        [YXXSp0_tp_rf_imj,YXXSp0_tp_rf_ipj,YXXSm0_tp_rf_ijm,YXXSm0_tp_rf_ijp] = ...
         fluxes_dke_jd(YXXDpp_tp_rf_imj(:,:,rdke,:),YXXDpp_tp_rf_ipj(:,:,rdke,:),YXXDpm_tp_rf_imj(:,:,rdke,:),YXXDpm_tp_rf_ipj(:,:,rdke,:),...
         YXXFp_tp_rf_imj(:,:,rdke,:),YXXFp_tp_rf_ipj(:,:,rdke,:),...
         YXXDmm_tp_rf_ijm(:,:,rdke,:),YXXDmm_tp_rf_ijp(:,:,rdke,:),YXXDmp_tp_rf_ijm(:,:,rdke,:),YXXDmp_tp_rf_ijp(:,:,rdke,:),...
@@ -2711,11 +2713,11 @@ if nb > 0,
         YXXdpnm(:,:,rdke,:),YXXdpnp(:,:,rdke,:),YXXdmhum(:,:,rdke,:),YXXdmhup(:,:,rdke,:),...
         YXXdeltap_imj(:,:,rdke,:),YXXdeltap_ipj(:,:,rdke,:),YXXdeltam_ijm(:,:,rdke,:),YXXdeltam_ijp(:,:,rdke,:));
 %            
-   xyP0_tp_rf_fsav = 2*pi*(xyqtilde(rdke,:)./xyqhat(rdke,:)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,YXXpnm(:,:,rdke,:).^3./YXXgammam(:,:,rdke,:).*YXXlambda(:,:,rdke,:).*YXXSp0_tp_rf_imj,1),1);       
+        xyP0_tp_rf_fsav = 2*pi*(xyqtilde(rdke,:)./xyqhat(rdke,:)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,YXXpnm(:,:,rdke,:).^3./YXXgammam(:,:,rdke,:).*YXXlambda(:,:,rdke,:).*YXXSp0_tp_rf_imj,1),1);       
 %
 %f0_g contribution
 %
-    [YXXSp0_g_rf_imj,YXXSp0_g_rf_ipj,YXXSm0_g_rf_ijm,YXXSm0_g_rf_ijp] = ...
+        [YXXSp0_g_rf_imj,YXXSp0_g_rf_ipj,YXXSm0_g_rf_ijm,YXXSm0_g_rf_ijp] = ...
         fluxes_dke_jd(YXXDpp_rf_imj(:,:,rdke,:),YXXDpp_rf_ipj(:,:,rdke,:),YXXDpm_rf_imj(:,:,rdke,:),YXXDpm_rf_ipj(:,:,rdke,:),...
         YXXFp_rf_imj(:,:,rdke,:),YXXFp_rf_ipj(:,:,rdke,:),...
         YXXDmm_rf_ijm(:,:,rdke,:),YXXDmm_rf_ijp(:,:,rdke,:),YXXDmp_rf_ijm(:,:,rdke,:),YXXDmp_rf_ijp(:,:,rdke,:),...
@@ -2747,6 +2749,7 @@ if nb > 0,
     ZP0_fsav{3,3} = xyP0_g_rf_fsav;
 %
     XXSp0_imj = XXSp0_imj + integral_dke_jd(ones(1,nb),YXXSp0_rf_imj,4);
+    XXSm0_ijm = XXSm0_ijm + integral_dke_jd(ones(1,nb),YXXSm0_rf_ijm,4);
 %        
     clear YXXf0 YXXf0_tp YXXf0_g YXXdeltap_imj YXXdeltap_ipj YXXdeltam_ijp YXXdeltam_ijm YXXmhup 
     clear YXXmhu YXXmhum YXXmhu2p YXXmhu2 YXXmhu2m YXX1mmhu2p YXX1mmhu2 YXX1mmhu2m 
@@ -2793,14 +2796,16 @@ end
 %
 %   Magnetic ripple loss rate calculation (for Tore Supra tokamak only)
 %
-if isnan(XXnhuloss) == 0 & strcmp(tokname,'TS')==1,
-    		
-    		
-	%		Gripmhu_ref = 2*pi*integral_dke_yp([dpn_ref',Xmaskrip_ref.*XSmhu0_ref.*Xpn_ref])*sqrt(1-min(mhu(find(abs(mhu)<xmhusupertrap(rdke(ir_display)))))^2);        
-	%		Grippn_ref = 2*pi*pn(max(find(pn_ref<xpndetrap_ref(rdke(ir_display)))))^2*integral_dke_yp([dmhu',Xmaskrip_ref'.*XSp0_ref']);    
-	%		Gripflux_ref = Gripmhu_ref(max(find(abs(mhu)<xmhusupertrap(rdke(ir_display))))) - Gripmhu_ref(min(find(abs(mhu)<xmhusupertrap(rdke(ir_display))))) + Grippn_ref(max(find(pn_ref<xpndetrap_ref(rdke(ir_display))))+1);
- 
-     xMRR_tau_ref = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXnhuloss(:,:,rdke).*XXf0(:,:,rdke).*XXpn2(:,:,rdke).*XXlambda(:,:,rdke),1),1)';%Flux of electrons leaving the plasma through the loss cone
-     xMRR_flux_ref = xMRR_tau_ref;
+if isnan(XXnhuloss) == 0 & strcmp(tokname,'TS')==1,	
+	xMRR_tau_ref = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXnhuloss(:,:,rdke).*XXf0(:,:,rdke).*XXpn2(:,:,rdke).*XXlambda(:,:,rdke),1),1)';%Flux of electrons leaving the plasma through the loss cone
+%
+	XXmaskMRR_im = [zeros(1,nmhu,nr);abs(diff(XXnhuloss~=0))];%Mask in p
+	XXmaskMRR_jm = [zeros(npn,1,nr),abs(permute(diff(permute(XXnhuloss~=0,[2,1,3])),[2,1,3]))];%Mask in mhu (mhu < 0 only because of symmetry)
+	XXmaskMRR_jm(:,mhu>0,:)=0;%mhu < 0 only because of symmetry)
+	XxMRR_flux_p_ref = 2*pi*integral_dke_jd(dmhu,XXmaskMRR_im(:,:,rdke).*XXSp0_imj(:,:,rdke).*XXpn2m(:,:,rdke).*XXlambda(:,:,rdke),2);
+	XxMRR_flux_mhu_ref = 2*2*pi*integral_dke_jd(dpn,XXmaskMRR_jm(:,:,rdke).*XXSm0_ijm(:,:,rdke).*XXpn(:,:,rdke).*XXlambda(:,:,rdke).*XXRlambda_m(:,:,rdke),1);
+	xMRR_flux_p_ref = XxMRR_flux_p_ref(XxMRR_flux_p_ref~=0)';
+	xMRR_flux_mhu_ref = XxMRR_flux_mhu_ref(XxMRR_flux_mhu_ref~=0)';
+	xMRR_flux_ref = xMRR_flux_p_ref - xMRR_flux_mhu_ref;
 end
 
