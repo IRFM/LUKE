@@ -1,31 +1,50 @@
 
+\subsubsection{Implicit time scheme}
+
 Projected on the numerical distribution function grid, and taking into
-account of the internal and external boundaries, the electron Fokker-Planck
-equation may be expressed as 
+account of the internal and external boundaries, the $3-D$ electron
+Fokker-Planck equation may be expressed as 
 \begin{eqnarray}
-&&\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
-_{l+1/2}\right) }p_{i+1/2}^{2}\frac{f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right)
-(k+1)}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k)}}{\Delta t}  \nonumber \\
-&&+\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
-_{l+1/2}\right) }\sum_{i^{\prime }=i-1}^{i^{\prime }=i+1}\sum_{j^{\prime
-}=j-1}^{j^{\prime }=j+1}\widehat{\overline{\overline{M}}}_{p,l+1/2,i^{\prime
-}+1/2,j^{\prime }+1/2}^{\left( 0\right) }f_{0,l+1/2,i^{\prime
-}+1/2,j^{\prime }+1/2}^{\left( 0\right) (k+1)}  \nonumber \\
-&&+\frac{p_{i+1/2}^{2}}{\lambda \left( \psi _{l+1/2},\xi _{0,j+1/2}\right) }%
-\sum_{l^{\prime }=l-1}^{l^{\prime }=l+1}\widehat{\overline{\overline{M}}}%
-_{\psi ,l^{\prime }+1/2,i+1/2,j+1/2}^{\left( 0\right) }f_{0,l^{\prime
-}+1/2,i+1/2,j+1/2}^{\left( 0\right) (k+1)}  \nonumber \\
-&=&\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
-_{l+1/2}\right) }p_{i+1/2}^{2}\frac{\overline{\lambda }_{1,1,0}^{l+1/2,j+1/2}%
-}{\lambda ^{l+1/2,j+1/2}}\frac{3}{2}\xi _{0,j+1/2}\mathcal{I}\left(
-f_{M,l+1/2,i+1/2,j+1/2},f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right)
-(m=1)}\right)
+&&\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}p_{i+1/2}^{2}\frac{%
+f_{0,l+1/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right)
+(k+1)}-f_{0,l+1/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right) (k)}}{\Delta t} 
+\nonumber \\
+&&+\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}\sum_{i^{\prime
+}=i-1}^{i^{\prime }=i+1}\sum_{j^{\prime \prime }=j^{\prime }-1}^{j^{\prime
+\prime }=j^{\prime }+1}\widehat{\overline{M}}_{p,l+1/2,i^{\prime
+}+1/2,j^{\prime \prime }+1/2}^{\left( 0\right) }f_{0,l+1/2,i^{\prime
+}+1/2,j^{\prime \prime }+1/2}^{\left( 0\right) (k+1)}  \nonumber \\
+&&+\frac{p_{i+1/2}^{2}}{\lambda ^{l+1/2,j^{\prime }+1/2}}\sum_{l^{\prime
+}=l-1}^{l^{\prime }=l+1}\widehat{\overline{M}}_{\psi ,l^{\prime
+}+1/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right) }f_{0,l^{\prime
+}+1/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right) (k+1)}  \nonumber \\
+&&+\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}p_{i+1/2}^{2}C^{\left(
+0\right) }\left( f_{M,l+1/2,i+1/2,j^{\prime }+1/2},\frac{3}{2}\xi
+_{0,j+1/2}f_{0,l+1/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right) (m=1)\left(
+k\right) }\right)   \nonumber \\
+&=&0  \label{FPeq}
 \end{eqnarray}
-using upwind differencing that corresponds to the fully implicit scheme
-which is usually numerically stable for arbitrary values of $\Delta t.$ Here 
-$\mathcal{I}$ is the first order Legendre correction that ensures momentum
-conservation, as discussed in Sec. ***, and introduce a weak non-linear
-dependence.
+where $C^{\left( 0\right) }$ is the first order Legendre electron-electron
+self-collision term that ensures momentum conservation, as discussed in Sec.
+***, a contribution that introduces a weak non-linear dependence. Here, the
+Fokker-Planck equation (\ref{FPeq}) is evaluated on the reduced pitch-angle
+grid which is described by the index number $j^{\prime }$.
+
+Upwind differencing corresponding to the fully implicit time scheme is used,
+since it is usually numerically stable for arbitrary values of $\Delta t.$
+Therefore, with this method, a fast rate of convergence towards the
+steady-state solution $\lim_{k\rightarrow \infty }f_{0,l+1/2,i+1/2,j^{\prime
+}+1/2}^{\left( 0\right) (k+1)}=f_{0,l+1/2,i+1/2,j^{\prime }+1/2}^{\left(
+0\right) (\infty )}$ may be achieved, using extremely large time step $%
+\Delta t,$ with respect to the usual collision reference time $\tau
+_{c}^{\dagger }$ as discussed in Sec. ***. The fact that both momentum and
+spatial dynamics are considered simultaneously represents a considerable
+progress as compared to the standard operator splitting technique\footnote{%
+The Alternative Direction Implicit (ADI) belongs also to the operator
+splitting method, but with a slightly different twist. The limitation on the
+time step is therefore similar}, where alternatively, dynamics in each space
+are considered explicitely, a procedure which puts strong limitations on the
+time step $\Delta t/\tau _{c}^{\dagger }\approx 1.$
 
 In compact matrix form, the differential equation in the reduced momentum
 phase space has the following symbolic form 
@@ -34,11 +53,11 @@ phase space has the following symbolic form
 X^{(k+1)}=\left( \frac{\widehat{\Bbb{A}}}{\Delta t}\right) X^{(k)}+\widehat{C%
 }\left( X_{M},X^{(k)}\right)  \label{Matrixeq}
 \end{equation}
-where $\widehat{\Bbb{A}}$ is the matrix associated to the time differencing, 
-$\widehat{\Bbb{B}}$ corresponds to the flux divergence and $\widehat{C}$ is
-the first order Legendre correction. Here $X^{(k)}$ is a vector whose
-components are the discrete values of the distribution function at time step 
-$\left( k\right) ,$ organized as follows 
+where $\widehat{\Bbb{A}}$ is a single diagonal matrix associated to time
+differencing, $\widehat{\Bbb{B}}$ corresponds to the flux divergence and $%
+\widehat{C}$ is the first order Legendre correction. Here $X^{(k)}$ is a
+vector whose components are the discrete values of the distribution function
+at time step $\left( k\right) ,$ organized as follows 
 \begin{equation}
 X^{(k)}\rightarrow \left\{ 
 \begin{array}{l}
@@ -61,36 +80,62 @@ l=n_{\psi }-1
 \right.
 \end{equation}
 
-Without radial transport, $\widehat{\Bbb{A}}$ is a block diagonal matrix.
-Each block, which describes the momentum dynamics at location $\psi _{l+1/2},
-$ is a square matrice of $15$ diagonals. The block size $\left( n_{\xi
+Without radial transport, $\widehat{\Bbb{B}}$ is a block diagonal matrix.
+Each block, which describes the momentum dynamics at location $\psi
+_{l+1/2}, $ is a square matrice of $15$ diagonals whose size $\left( n_{\xi
 _{0}}-n_{\xi _{0T,l+1/2}}\right) n_{p}\times $ $\left( n_{\xi _{0}}-n_{\xi
 _{0T,l+1/2}}\right) n_{p}$ progressively decreases from $\psi _{1/2}$ to $%
-\psi _{n_{\xi _{0}}-1/2}$  because of the trapped/passing boundary, as shown
-in Fig. ***$.$ The main diagonal of $\widehat{\Bbb{A}}$ is dominant because
-collisions predominate over other physical processes at each plasma radius.
+\psi _{n_{\xi _{0}}-1/2}$ because of the trapped/passing boundary enlarges
+from the center to the plasma edge, as shown in Fig. ***$.$ The main
+diagonal of $\widehat{\Bbb{B}}$ is dominant because collisions predominate
+over other physical processes at each plasma radius.
 
 The introduction of the radial dynamics adds several extra off-diagonals,
 which connect neighboring blocks, in addition to the main diagonal which is
 also modified accordingly. The complexity arises from the fact that trapped
-electrons may become passing by the radial transport process, and
-conversely. Therefore, matrix $\widehat{\Bbb{A}}$ keeps a global banded
+electrons may become passing as a result of the radial transport process,
+and conversely. Therefore, matrix $\widehat{\Bbb{B}}$ keeps a global banded
 structure with an extremely high sparcity, a property that is extensively
 used for the storage in the computer memory. Indeed, the size of $\widehat{%
-\Bbb{A}}$ is 
+\Bbb{B}}$ is 
 \begin{equation}
-size\left( \widehat{\Bbb{A}}\right) =n_{p}^{2}\left[ \sum_{l=0}^{l=n_{\psi
+size\left( \widehat{\Bbb{B}}\right) =n_{p}^{2}\left[ \sum_{l=0}^{l=n_{\psi
 }-1}\left( n_{\xi _{0}}-n_{\xi _{0T,l+1/2}}\right) \right] ^{2}\leq n_{\psi
 }^{2}n_{p}^{2}n_{\xi _{0}}^{2}
 \end{equation}
-For tokamak with very large aspect ratio, $size\left( \widehat{\Bbb{A}}%
+
+For tokamak with very large aspect ratio, $size\left( \widehat{\Bbb{B}}
 \right) \approx n_{\psi }^{2}n_{p}^{2}n_{\xi _{0}}^{2}$ since trapped
 particle contribution is fairly negligible. In this limit, an upper boundary
 of the memory size requirement may be estimated. For a standard case, $%
 n_{\psi }=20,$ $n_{p}=200$ and $n_{\xi _{0}}=200,$ the total number of
-coefficients reaches $64\times 10^{+12},$ and the memory capacity that is
-needed is $512TBytes$ ! Hopefully, this huge number may be drastically
-reduced down to $11\times n_{\psi }n_{p}n_{\xi _{0}},$ since $\widehat{\Bbb{A%
-}}$ becomes in that limit a simple banded matrix with exactly $11$
-diagonals. The required memory falls down to $70.4MBytes$, a level which can
+coefficients reaches $64\times 10^{+10},$ and the needed memory capacity%
+\footnote{%
+On a basis that a double precision real number is described by $8$ bytes.}
+is $5.12TBytes$ ! Hopefully, this huge number may be drastically reduced
+down to $11\times n_{\psi }n_{p}n_{\xi _{0}},$ since $\widehat{\Bbb{A}}$
+becomes in that limit a simple banded matrix with exactly $11$ diagonals.
+The required memory falls therefore down to $70.4MBytes$, a level which can
 be easily handled by most computers today.
+
+\subsubsection{Crank-Nicholson time scheme}
+
+The Crank-Nicholson time scheme is used for time evolution studies of the
+distribution function $f_{0}^{\left( 0\right) }$. It is second order
+accurate in time, but this scheme requires usualy $\Delta t/\tau
+_{c}^{\dagger }\approx 1$, in order to avoid spurious numerical oscillations
+towards the steady-state solution $f_{0}^{\left( 0\right) \left( \infty
+\right) }.$ From Eq.\ref{Matrixeq}, it is straightforward to derive the new
+matrix form of the Fokker-Planck equation 
+\begin{equation}
+\left( \frac{\widehat{\Bbb{A}}}{\Delta t}+\frac{\widehat{\Bbb{B}}}{2}\right)
+X^{(k+1)}=\left( \frac{\widehat{\Bbb{A}}}{\Delta t}-\frac{\widehat{\Bbb{B}}}{%
+2}\right) X^{(k)}+\widehat{C}\left( X_{M},X^{(k)}\right)
+\end{equation}
+by just replacing
+
+\begin{equation}
+\widehat{\Bbb{B}}X^{(k+1)}\rightarrow \widehat{\Bbb{B}}\left( \frac{%
+X^{(k)}+X^{(k+1)}}{2}\right)
+\end{equation}
+since $\widehat{\Bbb{B}}$ is a linear operator.
