@@ -33,21 +33,12 @@ nhuloss,...
 prec0_f,nit_f,dtn,prec0_g,nit_g,initguess,invproc_in,param_inv_in,dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode]...
 = psim_dke_1yp;
 %
-%Global plasma parameters
-%
-[ap,Rp,Ip,Bt,Ncoils,Zi,mi,fi,BeLi,qmin,eq,Te0_in,Tea_in,eTe_in,eTe_ref,ne0,nea,ene_in,ene_ref,...
-Ti0,Tia,eTi,Zeff0,Zeffa,eZeff] = ptok_dke_1yp(tokname);%See ptok_dke_1yp.m file for changing global tokamak parameters
-%
-nloop = length(Te0_in)*length(eTe_in)*length(Tea_in)*length(ene_in)*length(nmhu_S_in)*length(np_S_in)*length(pnmax_S_in);
+nloop = length(nmhu_S_in)*length(np_S_in)*length(pnmax_S_in);
 nloop = nloop*length(rho_display_in)*length(epsi0_in)*length(epsia_in)*length(invproc_in)*size(param_inv_in,1);
 disp(['- Total number of loops: ',int2str(nloop)]);
 disp('-------------------------------------------------------------------------------------------------------------------');
 %
 iloop = 0;
-for Te0 = Te0_in,
-for eTe = eTe_in,
-for Tea = Tea_in,
-for ene = ene_in,
 for nmhu_S = nmhu_S_in,
 for np_S = np_S_in,
 for pnmax_S = pnmax_S_in,
@@ -63,7 +54,7 @@ for sparam_inv = 1:size(param_inv_in,1),
 %
 	[Jrf0(iloop,:),Jboot_e(iloop,:),Jboot_i(iloop,:),Jtot(iloop,:),Pabs0(iloop,:),Pabs_tot(iloop,:),efficiency(iloop,:),epsi_fsav(iloop,:),...
 	ia(iloop,:),ft(iloop,:),time(iloop),memoryLU(iloop)] =...
-	test_dke_1yp(tokname,snumber,ap,Rp,Ip,Bt,Ncoils,Zi,mi,fi,BeLi,qmin,eq,Te0,Tea,eTe,eTe_ref,ne0,nea,ene,ene_ref,Ti0,Tia,eTi,Zeff0,Zeffa,eZeff,...
+	test_dke_1yp(tokname,snumber,...
 	grid_uniformity,grid_method,nmhu_S,np_S,pnmax_S,sfac,snmhu,snp,rho_S,rho_display,...
 	ref_mode,norm_ref,...
 	epsi0,epsia,eepsi,...
@@ -72,10 +63,6 @@ for sparam_inv = 1:size(param_inv_in,1),
 	nhuloss,...
 	prec0_f,nit_f,dtn,prec0_g,nit_g,initguess,invproc,param_inv,dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode,iloop);
     disp('-------------------------------------------------------------------------------------------------------------------');
-end
-end
-end
-end
 end
 end
 end
