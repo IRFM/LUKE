@@ -45,16 +45,17 @@ dkeparam.norm_ref = 1;%Normalization procedure for the ohmic electric field, LH 
 %
 dkeparam.coll_mode = 2;%Relativistic collision operator: (0) Relativistic Maxwellian background, (1) High-velocity limit, (2) Linearized Belaiev-Budker (3) Non-relativistic Lorentz model, (4) Non-relativistic Maxwellian background
 %
-% Ray-tracing
+% Ray-tracing and RF waves
 %
 dkeparam.rt_mode = 0;%RT-DKE power consistency
 dkeparam.nit_rf = 20;%Maximum number of iteration in ray-tracing. Works only if rt_mode = 1 and more than one radial point (default = 1)
 dkeparam.prec_rf = 1e-4;%relative precision in RT-DKE iterations
+dkeparam.nmax_rf = 10;%Maximum number of harmonics in the Dql calculations
 %
 % Run mode
 %
-dkeparam.bounce_mode = 0;%Bounce averaging option: (0) no bounce averaging, (1) bounce averaging full implicit method with 15 diagonals
-dkeparam.dke_mode = 0;%Fokker-Planck equation (0), Drift Kinetic equation (1)
+dkeparam.bounce_mode = 1;%Bounce averaging option: (0) no bounce averaging, (1) bounce averaging full implicit method with 15 diagonals
+dkeparam.dke_mode = 1;%Fokker-Planck equation (0), Drift Kinetic equation (1)
 dkeparam.equil_mode = 1;%Equilibrium option: (0) circular concentric flux-surfaces, (1) numerical equilibrium
 dkeparam.syn_mode = 0;%Synergy calculation: (0) none, (1) yes: the code runs twice, including once without RF or electric fields. (only if dke_mode = 1)
 %
