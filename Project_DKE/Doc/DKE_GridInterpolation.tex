@@ -130,8 +130,8 @@ for the grid point $\left( l+1/2,i+1,j+1/2\right) $%
 \left. \frac{\partial f_{0}^{(0)}}{\partial \psi }\right|
 _{l+1/2,i+1,j+1/2}^{(k+1)} &=&\alpha
 _{l+1/2}^{-}f_{0,l-1/2,i+1,j+1/2}^{(0)(k+1)}+\alpha
-_{l+1/2}^{0}f_{0,l+1/2,i+1,j+1/2}^{(0)(k+1)}+\alpha
-_{l+1/2}^{+}f_{0,l+3/2,i+1,j+1/2}^{(0)(k+1)}  \nonumber \\
+_{l+1/2}^{0}f_{0,l+1/2,i+1,j+1/2}^{(0)(k+1)}  \nonumber \\
+&&+\alpha _{l+1/2}^{+}f_{0,l+3/2,i+1,j+1/2}^{(0)(k+1)}  \nonumber \\
 &=&\alpha _{l+1/2}^{-}\left( 1-\delta _{p,l-1/2,i+1,j+1/2}^{(0)}\right)
 f_{0,l-1/2,i+3/2,j+1/2}^{(0)(k+1)}  \nonumber \\
 &&+\alpha _{l+1/2}^{-}\delta
@@ -172,16 +172,17 @@ which becomes
 \begin{eqnarray}
 \widetilde{f}_{l+1/2,i+1,j+1/2}^{\left( 0\right) (k+1)} &=&\frac{p_{i+1}}{%
 p_{i+3/2}}\frac{p_{i+3/2}\xi _{0,j+1/2}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}%
-\alpha _{l+1/2}^{-}\left( 1-\delta _{p,l-1/2,i+1,j+1/2}^{(0)}\right)
+\alpha _{l+1/2}^{-}\times   \nonumber \\
+&&\left( 1-\delta _{p,l-1/2,i+1,j+1/2}^{(0)}\right)
 f_{0,l-1/2,i+3/2,j+1/2}^{(0)(k+1)}  \nonumber \\
 &&+\frac{p_{i+1}}{p_{i+3/2}}\frac{p_{i+3/2}\xi _{0,j+1/2}I_{l+1/2}}{%
-q_{e}B_{\min ,l+1/2}}\alpha _{l+1/2}^{0}\left( 1-\delta
-_{p,l+1/2,i+1,j+1/2}^{(0)}\right) f_{0,l+1/2,i+3/2,j+1/2}^{(0)(k+1)} 
-\nonumber \\
+q_{e}B_{\min ,l+1/2}}\alpha _{l+1/2}^{0}\times   \nonumber \\
+&&\left( 1-\delta _{p,l+1/2,i+1,j+1/2}^{(0)}\right)
+f_{0,l+1/2,i+3/2,j+1/2}^{(0)(k+1)}  \nonumber \\
 &&+\frac{p_{i+1}}{p_{i+3/2}}\frac{p_{i+3/2}\xi _{0,j+1/2}I_{l+1/2}}{
-q_{e}B_{\min ,l+1/2}}\alpha _{l+1/2}^{+}\left( 1-\delta
-_{p,l+3/2,i+1,j+1/2}^{(0)}\right) f_{0,l+3/2,i+3/2,j+1/2}^{(0)(k+1)} 
-\nonumber \\
+q_{e}B_{\min ,l+1/2}}\alpha _{l+1/2}^{+}\times   \nonumber \\
+&&\left( 1-\delta _{p,l+3/2,i+1,j+1/2}^{(0)}\right)
+f_{0,l+3/2,i+3/2,j+1/2}^{(0)(k+1)}  \nonumber \\
 &&+\frac{p_{i+1}}{p_{i+1/2}}\frac{p_{i+1/2}\xi _{0,j+1/2}I_{l+1/2}}{%
 q_{e}B_{\min ,l+1/2}}\alpha _{l+1/2}^{-}\delta
 _{p,l-1/2,i+1,j+1/2}^{(0)}f_{0,l-1/2,i+1/2,j+1/2}^{(0)(k+1)}  \nonumber \\
@@ -204,34 +205,38 @@ _{l+1/2,i+1/2,j+1/2}^{(0)(k+1)}  \nonumber \\
 where 
 \begin{eqnarray}
 \widetilde{h}_{l+1/2,i+1,j+1/2}^{\left( 0\right) (k+1)} &=&p_{i+1}\frac{\xi
-_{0,j+1/2}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\alpha _{l+1/2}^{-}\left( \delta
-_{p,l+1/2,i+1,j+1/2}^{(0)}-\delta _{p,l-1/2,i+1,j+1/2}^{(0)}\right)
-f_{0,l-1/2,i+3/2,j+1/2}^{(0)(k+1)}  \nonumber \\
+_{0,j+1/2}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\alpha _{l+1/2}^{-}\times  
+\nonumber \\
+&&\left( \delta _{p,l+1/2,i+1,j+1/2}^{(0)}-\delta
+_{p,l-1/2,i+1,j+1/2}^{(0)}\right) f_{0,l-1/2,i+3/2,j+1/2}^{(0)(k+1)} 
+\nonumber \\
 &&+p_{i+1}\frac{\xi _{0,j+1/2}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\alpha
-_{l+1/2}^{+}\left( \delta _{p,l+1/2,i+1,j+1/2}^{(0)}-\delta
+_{l+1/2}^{+}\times   \nonumber \\
+&&\left( \delta _{p,l+1/2,i+1,j+1/2}^{(0)}-\delta
 _{p,l+3/2,i+1,j+1/2}^{(0)}\right) f_{0,l+3/2,i+3/2,j+1/2}^{(0)(k+1)} 
 \nonumber \\
 &&-p_{i+1}\frac{\xi _{0,j+1/2}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\alpha
-_{l+1/2}^{-}\left( \delta _{p,l+1/2,i+1,j+1/2}^{(0)}-\delta
+_{l+1/2}^{-}\times   \nonumber \\
+&&\left( \delta _{p,l+1/2,i+1,j+1/2}^{(0)}-\delta
 _{p,l-1/2,i+1,j+1/2}^{(0)}\right) f_{0,l-1/2,i+1/2,j+1/2}^{(0)(k+1)} 
 \nonumber \\
 &&-p_{i+1}\frac{\xi _{0,j+1/2}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\alpha
-_{l+1/2}^{+}\left( \delta _{p,l+1/2,i+1,j+1/2}^{(0)}-\delta
+_{l+1/2}^{+}\times \left( \delta _{p,l+1/2,i+1,j+1/2}^{(0)}-\delta
 _{p,l+3/2,i+1,j+1/2}^{(0)}\right) f_{0,l+3/2,i+1/2,j+1/2}^{(0)(k+1)}
 \end{eqnarray}
 
 Reordering coefficients, one obtains, 
 \begin{eqnarray}
 \widetilde{h}_{l+1/2,i+1,j+1/2}^{\left( 0\right) (k+1)} &=&p_{i+1}\frac{\xi
-_{0,j+1/2}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\times \left[ \alpha
-_{l+1/2}^{-}\left( \delta _{p,l+1/2,i+1,j+1/2}^{(0)}-\delta
+_{0,j+1/2}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\times   \nonumber \\
+&&\left[ \alpha _{l+1/2}^{-}\left( \delta _{p,l+1/2,i+1,j+1/2}^{(0)}-\delta
 _{p,l-1/2,i+1,j+1/2}^{(0)}\right) \left(
 f_{0,l-1/2,i+3/2,j+1/2}^{(0)(k+1)}-f_{0,l-1/2,i+1/2,j+1/2}^{(0)(k+1)}\right)
 \right.   \nonumber \\
 &&\left. +\alpha _{l+1/2}^{+}\left( \delta _{p,l+1/2,i+1,j+1/2}^{(0)}-\delta
 _{p,l+3/2,i+1,j+1/2}^{(0)}\right) \left(
 f_{0,l+3/2,i+3/2,j+1/2}^{(0)(k+1)}-f_{0,l+3/2,i+1/2,j+1/2}^{(0)(k+1)}\right)
-\right.   \label{dkegridinterp1}
+\right]   \label{dkegridinterp1}
 \end{eqnarray}
 
 This double difference makes coefficient $\widetilde{h}_{l+1/2,i+1,j+1/2}^{%
@@ -243,18 +248,18 @@ A similar expression is obtained for the grid point $\left(
 l+1/2,i,j+1/2\right) ,$ by replacing $i+1\rightarrow i$ in all above
 relations. 
 \begin{eqnarray}
-\widetilde{f}_{l+1/2,i,j+1/2}^{\left( 0\right) (k+1)} &=&\frac{p_{i}}{
+\widetilde{f}_{l+1/2,i,j+1/2}^{\left( 0\right) (k+1)} &=&\frac{p_{i}}{%
 p_{i+1/2}}\left( 1-\delta _{p,l+1/2,i,j+1/2}^{(0)}\right) \widetilde{f}%
 _{l+1/2,i+1/2,j+1/2}^{(0)(k+1)}  \nonumber \\
-&&+\frac{p_{i}}{p_{i-1/2}}\delta _{p,l+1/2,i,j+1/2}^{(0)}\widetilde{f}
+&&+\frac{p_{i}}{p_{i-1/2}}\delta _{p,l+1/2,i,j+1/2}^{(0)}\widetilde{f}%
 _{l+1/2,i-1/2,j+1/2}^{(0)(k+1)}  \nonumber \\
 &&+\widetilde{h}_{l+1/2,i,j+1/2}^{\left( 0\right) }
 \end{eqnarray}
 where 
 \begin{eqnarray}
 \widetilde{h}_{l+1/2,i,j+1/2}^{\left( 0\right) (k+1)} &=&p_{i}\frac{\xi
-_{0,j+1/2}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\times \left[ \alpha
-_{l+1/2}^{-}\left( \delta _{p,l+1/2,i,j+1/2}^{(0)}-\delta
+_{0,j+1/2}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\times   \nonumber \\
+&&\left[ \alpha _{l+1/2}^{-}\left( \delta _{p,l+1/2,i,j+1/2}^{(0)}-\delta
 _{p,l-1/2,i,j+1/2}^{(0)}\right) \left(
 f_{0,l-1/2,i+1/2,j+1/2}^{(0)(k+1)}-f_{0,l-1/2,i-1/2,j+1/2}^{(0)(k+1)}\right)
 \right.   \nonumber \\
@@ -277,15 +282,15 @@ interpolation. For grid points $\left( l+1/2,i+1/2,j+1\right) $,
 where 
 \begin{eqnarray}
 \widetilde{h}_{l+1/2,i+1/2,j+1}^{\left( 0\right) (k+1)} &=&p_{i+1/2}\frac{%
-\xi _{0,j+1}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\times \left[ \alpha
-_{l+1/2}^{-}\left( \delta _{\xi ,l+1/2,i+1/2,j+1}^{(0)}-\delta _{\xi
-,l-1/2,i+1/2,j+1}^{(0)}\right) \left(
+\xi _{0,j+1}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\times   \nonumber \\
+&&\left[ \alpha _{l+1/2}^{-}\left( \delta _{\xi
+,l+1/2,i+1/2,j+1}^{(0)}-\delta _{\xi ,l-1/2,i+1/2,j+1}^{(0)}\right) \left(
 f_{0,l-1/2,i+1/2,j+3/2}^{(0)(k+1)}-f_{0,l-1/2,i+1/2,j+1/2}^{(0)(k+1)}\right)
-\right.  \nonumber \\
+\right.   \nonumber \\
 &&\left. +\alpha _{l+1/2}^{+}\left( \delta _{\xi
 ,l+1/2,i+1/2,j+1}^{(0)}-\delta _{\xi ,l+3/2,i+1/2,j+1}^{(0)}\right) \left(
 f_{0,l+3/2,i+1/2,j+3/2}^{(0)(k+1)}-f_{0,l+3/2,i+1/2,j+1/2}^{(0)(k+1)}\right)
-\right.
+\right. 
 \end{eqnarray}
 
 However, since by definition, $\delta _{\xi ,l+1/2,i+1/2,j+1}^{(0)}=\delta

@@ -1,13 +1,12 @@
 
 In the first-order Drift-Kinetic equation, the momentum space operator is 
 \begin{equation}
-\left. \frac{\partial f_{1}}{\partial t}\right| _{\mathbf{p}}=\nabla _{%
-\mathbf{p}}\cdot \mathbf{S}_{\mathbf{p}}\left( f_{1}\right)
+\nabla _{\mathbf{p}}\cdot \mathbf{S}_{\mathbf{p}}\left( f_{1}\right) 
 \label{momentumdke}
 \end{equation}
 where the fluxes are expressed as (\ref{momflux2}). 
 \begin{equation}
-\mathbf{S}_{\mathbf{p}}\left( f_{1}\right) =-\Bbb{D}_{\mathbf{p}}\cdot
+\mathbf{S}_{\mathbf{p}}\left( f_{1}\right) =-\Bbb{D}_{\mathbf{p}}\cdot %
 \nabla _{\mathbf{p}}f_{1}+\mathbf{F}_{\mathbf{p}}f_{1}
 \end{equation}
 with the components (\ref{momflux3}) 
@@ -15,8 +14,7 @@ with the components (\ref{momflux3})
 S_{p} &=&-D_{pp}\frac{\partial f_{1}}{\partial p}+D_{p\xi }\frac{\sqrt{1-\xi
 ^{2}}}{p}\frac{\partial f_{1}}{\partial \xi }+F_{p}f_{1} \\
 S_{\xi } &=&-D_{\xi p}\frac{\partial f_{1}}{\partial p}+D_{\xi \xi }\frac{%
-\sqrt{1-\xi ^{2}}}{p}\frac{\partial f_{1}}{\partial \xi }+F_{\xi }f_{1} 
-\nonumber
+\sqrt{1-\xi ^{2}}}{p}\frac{\partial f_{1}}{\partial \xi }+F_{\xi }f_{1}
 \end{eqnarray}
 
 The first-order distribution function $f_{1}$ is decomposed into 
@@ -25,7 +23,7 @@ f_{1}=\widetilde{f}+g
 \end{equation}
 where $\widetilde{f}$ is a source term due to spacial gradients 
 \begin{equation}
-\widetilde{f}=\frac{v_{\Vert }}{\Omega }I\left( \psi \right) \frac{\partial %
+\widetilde{f}=\frac{v_{\Vert }}{\Omega }I\left( \psi \right) \frac{\partial
 f_{0}}{\partial \psi }
 \end{equation}
 and $g$ is the response of the plasma.
@@ -33,36 +31,36 @@ and $g$ is the response of the plasma.
 All the operators in the conservative form above are readily linear, so that
 we can decompose (\ref{momentumdke}) as 
 \begin{equation}
-\left. \frac{\partial f_{1}}{\partial t}\right| _{\mathbf{p}}=\left. \frac{%
-\partial \widetilde{f}}{\partial t}\right| _{\mathbf{p}}+\left. \frac{%
-\partial g}{\partial t}\right| _{\mathbf{p}}
+\nabla _{\mathbf{p}}\cdot \mathbf{S}_{\mathbf{p}}\left( f_{1}\right) =\nabla
+_{\mathbf{p}}\cdot \mathbf{S}_{\mathbf{p}}\left( \widetilde{f}\right)
++\nabla _{\mathbf{p}}\cdot \mathbf{S}_{\mathbf{p}}\left( g\right) 
 \end{equation}
 
 According to (\ref{kinbav2}), we can express the bounce-averaged operator as 
 \begin{eqnarray}
-\left\{ J_{\mathbf{p}}\left. \frac{\partial \widetilde{f}}{\partial t}%
-\right| _{\mathbf{p}}\right\} &=&\frac{\partial }{\partial p}\left( p^{2}%
-\widetilde{S}_{p}^{\left( 0\right) }\right) -\frac{p}{\lambda }\frac{%
+\left\{ J_{\mathbf{p}}\nabla _{\mathbf{p}}\cdot \mathbf{S}_{\mathbf{p}%
+}\left( \widetilde{f}\right) \right\}  &=&\frac{\partial }{\partial p}\left(
+p^{2}\widetilde{S}_{p}^{\left( 0\right) }\right) -\frac{p}{\lambda }\frac{%
 \partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}\lambda \widetilde{S%
-}_{\xi _{0}}^{\left( 0\right) }\right) \\
-\left\{ J_{\mathbf{p}}\left. \frac{\partial g}{\partial t}\right| _{\mathbf{p%
-} }\right\} &=&\frac{\partial }{\partial p}\left( p^{2}S_{p}^{\left(
-0\right) }\right) -\frac{p}{\lambda }\frac{\partial }{\partial \xi _{0}}%
-\left( \sqrt{ 1-\xi _{0}^{2}}\lambda S_{\xi _{0}}^{\left( 0\right) }\right)
-\label{kinbav3}
+}_{\xi _{0}}^{\left( 0\right) }\right)  \\
+\left\{ J_{\mathbf{p}}\nabla _{\mathbf{p}}\cdot \mathbf{S}_{\mathbf{p}%
+}\left( g\right) \right\}  &=&\frac{\partial }{\partial p}\left(
+p^{2}S_{p}^{\left( 0\right) }\right) -\frac{p}{\lambda }\frac{\partial }{%
+\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}\lambda S_{\xi _{0}}^{\left(
+0\right) }\right)   \label{kinbav3}
 \end{eqnarray}
 where we need to evaluate the bounce-averaged fluxes (\ref{sp0}) 
 \begin{eqnarray}
-\widetilde{S}_{p}^{\left( 0\right) } &=&\left\{ S_{p}\left( \widetilde{f}
-\right) \right\} \\
+\widetilde{S}_{p}^{\left( 0\right) } &=&\left\{ S_{p}\left( \widetilde{f}%
+\right) \right\}  \\
 \widetilde{S}_{\xi _{0}}^{\left( 0\right) } &=&\sigma \left\{ \frac{\sigma
-\xi }{\sqrt{\Psi }\xi _{0}}S_{\xi }\left( \widetilde{f}\right) \right\}
+\xi }{\sqrt{\Psi }\xi _{0}}S_{\xi }\left( \widetilde{f}\right) \right\} 
 \end{eqnarray}
 and 
 \begin{eqnarray}
-S_{p}^{\left( 0\right) } &=&\left\{ S_{p}\left( g\right) \right\} \\
+S_{p}^{\left( 0\right) } &=&\left\{ S_{p}\left( g\right) \right\}  \\
 S_{\xi _{0}}^{\left( 0\right) } &=&\sigma \left\{ \frac{\sigma \xi }{\sqrt{%
-\Psi }\xi _{0}}S_{\xi }\left( g\right) \right\}
+\Psi }\xi _{0}}S_{\xi }\left( g\right) \right\} 
 \end{eqnarray}
 
 Because $g$ is constant along a field line, we have $g\left( p,\xi \right)
@@ -90,7 +88,7 @@ region, since $f_{0}^{(0)}$ is symmetric and $\xi _{0}$ is, of course,
 anti-symmetric. As a result, only $\sigma \widetilde{f}^{(0)}$ can be taken
 out of the bounce averaging operator. Taking the bounce-average of each
 term, we find 
-\begin{eqnarray*}
+\begin{eqnarray}
 \left\{ -D_{pp}\frac{\partial \widetilde{f}}{\partial p}\right\}  &=&-\sigma
 \left\{ \sigma \frac{\xi }{\Psi \xi _{0}}D_{pp}\right\} \frac{\partial 
 \widetilde{f}^{(0)}}{\partial p} \\
@@ -116,8 +114,8 @@ term, we find
 \sigma \left\{ \frac{\sigma \xi }{\sqrt{\Psi }\xi _{0}}F_{\xi }\widetilde{f}%
 \right\}  &=&\left\{ \frac{\xi ^{2}}{\Psi ^{3/2}\xi _{0}^{2}}F_{\xi
 }\right\} \widetilde{f}^{(0)}
-\end{eqnarray*}
-where we used 
+\end{eqnarray}
+where the following relation is used 
 \begin{eqnarray}
 \frac{\partial }{\partial \xi _{0}}\frac{\xi }{\xi _{0}} &=&\sigma \frac{%
 \partial }{\partial \left| \xi _{0}\right| }\frac{\sqrt{1-\Psi \left(
@@ -158,11 +156,11 @@ by defining the diffusion components
 \widetilde{D}_{pp}^{(0)} &=&\sigma \left\{ \sigma \frac{\xi }{\Psi \xi _{0}}%
 D_{pp}\right\}   \label{diffbavdke} \\
 \widetilde{D}_{p\xi }^{(0)} &=&\left\{ \frac{\xi ^{2}}{\Psi ^{3/2}\xi
-_{0}^{2}}D_{p\xi }\right\}   \nonumber \\
+_{0}^{2}}D_{p\xi }\right\}  \\
 \widetilde{D}_{\xi p}^{(0)} &=&\left\{ \frac{\xi ^{2}}{\Psi ^{3/2}\xi
-_{0}^{2}}D_{\xi p}\right\}   \nonumber \\
+_{0}^{2}}D_{\xi p}\right\}  \\
 \widetilde{D}_{\xi \xi }^{(0)} &=&\sigma \left\{ \frac{\sigma \xi ^{3}}{\Psi
-^{2}\xi _{0}^{3}}D_{\xi \xi }\right\}   \nonumber
+^{2}\xi _{0}^{3}}D_{\xi \xi }\right\} 
 \end{eqnarray}
 and the convection components 
 \begin{eqnarray}
@@ -172,11 +170,11 @@ F_{p}\right\} +\frac{\sqrt{1-\xi _{0}^{2}}}{p\xi _{0}^{3}}\left\{ \frac{%
 \widetilde{F}_{\xi }^{(0)} &=&\left\{ \frac{\xi ^{2}}{\Psi ^{3/2}\xi _{0}^{2}%
 }F_{\xi }\right\} +\frac{\sqrt{1-\xi _{0}^{2}}}{p\xi _{0}^{3}}\sigma \left\{ 
 \frac{\sigma \xi \left( \Psi -1\right) }{\xi _{0}\Psi ^{2}}D_{\xi \xi
-}\right\}   \nonumber
+}\right\} 
 \end{eqnarray}
 where we use that $\sigma \xi _{0}^{3}$ may be taken out of the bounce
 averaging operator, since $\xi _{0}^{3}$ is an odd function of $\xi _{0}.$
-The gradient in the $\left( p,\xi _{0}\right) $ space is 
+The gradient vector in the rediced $\left( p,\xi _{0}\right) $ space is 
 \begin{equation}
 \nabla _{p,\xi _{0}}=\left( 
 \begin{array}{l}
