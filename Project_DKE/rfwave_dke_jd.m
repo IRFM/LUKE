@@ -1,4 +1,4 @@
-function waveparam = rfwave_dke_jd(xrho,betath_ref,ne_ref,xrbetath,xrnhuth,xTe_norm,xne_norm,zxni_norm,Zi,mi,Bt,Rp,ap,bounce_mode);
+function waveparam = rfwave_dke_jd(tokname,xrho,betath_ref,ne_ref,xrbetath,xrnhuth,xTe_norm,xne_norm,zxni_norm,Zi,mi,Bt,Rp,ap,bounce_mode);
 % 
 %	RF input parameters for the Drift Kinetic equation solver (dke_4_1yp.m). Manual method, or with the cold plasma dispersion relation
 % 
@@ -121,7 +121,7 @@ yideal_lhc = [0]; %(0): cold dispersion model, (1): ideal case
 yfinc_lhc = [1];% incidence factor. In the limit of infinitely thin flux-surface, yfinc_ecc = 1/cos(alpha)
 %                                                       where alpha is the incidence angle of the ray on the surface 
 %
-%  ***************************** Cold plasma EC wave *****************************
+%  ***************************** Local ECCD Calculation *****************************
 %
 blist_ecc = [];
 nb_ecc = length(blist_ecc);
@@ -141,6 +141,27 @@ yPinc_ecc = [2]*1e6;%central EC incident power (W)
 yopt_ecc = [0]; %(0): exact, (1): small LRE
 yideal_ecc = [0]; %(0): cold dispersion model, (1): ideal case
 yfinc_ecc = [1];% incidence factor. In the limit of infinitely thin flux-surface, yfinc_ecc = 1/cos(alpha)
+%                                                       where alpha is the incidence angle of the ray on the surface 
+%
+%  ***************************** Local EBW Calculation *****************************
+%
+blist_ebw = [1];
+nb_ebw = length(blist_ebw);
+%
+yn_ebw = [3];%EBW resonance harmonic
+ythetab_ebw = [0]*pi/180;%poloidal location of EBW beam [rad]
+%    
+ynpar_ebw = [0.6];%EBW wave Gaussian N// Spectrum: peak n//
+ydnpar_ebw = [0.05];%EBW wave Gaussian N// Spectrum: width in n//
+ybwidth_ebw = [NaN];%EBW wave Gaussian width. Used when xydnpar_ebw == NaN
+yY_ebw = [NaN];%EBW wave frequency shift n.omega_ce/omega_rf
+yomega_ebw = [NaN]*2*pi*1e9;%EBW wave frequency [rad/s]
+%
+yPinc_ebw = [1]*1e6;%central EBW incident power (W)
+%
+yopt_ebw = [0]; %(0): exact, (1): small LRE
+yfinc_ebw = [1];% incidence factor. In the limit of infinitely thin flux-surface, yfinc_ebw = 1/cos(alpha)
+%                                                       where alpha is the incidence angle of the ray on the surface 
 %                                                       where alpha is the incidence angle of the ray on the surface 
 %
 %***************************** Wave matrix calculation *****************************
