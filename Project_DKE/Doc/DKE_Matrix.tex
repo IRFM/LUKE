@@ -1,0 +1,105 @@
+
+Projected on the numerical distribution function grid, and taking into
+account of the internal and external boundaries, the $3-D$ electron drift
+kinetic equation may be expressed as 
+\begin{eqnarray}
+&&\sum_{i^{\prime }=i-1}^{i^{\prime }=i+1}\sum_{j^{\prime \prime }=j^{\prime
+}-1}^{j^{\prime \prime }=j^{\prime }+1}\widehat{\overline{M}}%
+_{p,l+1/2,i^{\prime }+1/2,j^{\prime }+1/2}^{\left( 0\right)
+}g_{l+1/2,i^{\prime }+1/2,j^{\prime \prime }+1/2}^{\left( 0\right) (k)}= 
+\nonumber \\
+&&\widehat{\widetilde{W}}_{p,l+1/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right)
+}-p_{i+1/2}^{2}C^{\left( 0\right) }\left( f_{M,l+1/2,i+1/2,j^{\prime }+1/2},%
+\frac{3}{2}\xi _{0,j+1/2}g_{l+1/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right)
+(m=1)(k)}\right)   \label{DKeq1}
+\end{eqnarray}
+where 
+\begin{eqnarray}
+\widehat{\widetilde{W}}_{p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }
+&=&-\sum_{i^{\prime }=i-1}^{i^{\prime }=i+1}\sum_{j^{\prime \prime
+}=j-1}^{j^{\prime \prime }=j+1}\widetilde{\overline{M}}_{p,l+1/2,i^{\prime
+}+1/2,j^{\prime \prime }+1/2}^{\left( 0\right) }\widetilde{f}%
+_{l+1/2,i^{\prime }+1/2,j^{\prime \prime }+1/2}^{\left( 0\right) }  \nonumber
+\\
+&&-\sum_{i^{\prime }=i-1}^{i^{\prime }=i+1}\sum_{j^{\prime \prime
+}=j-1}^{j^{\prime \prime }=j+1}\widetilde{\overline{H}}_{\psi
+,l+1/2,i^{\prime }+1/2,j^{\prime \prime }+1/2}^{\left( 0\right) }\widetilde{f%
+}_{l+1/2,i^{\prime }+1/2,j^{\prime \prime }+1/2}^{\left( 0\right) } 
+\nonumber \\
+&&-p_{i+1/2}^{2}\widetilde{C}^{\left( 0\right) }\left(
+f_{M,l+1/2,i+1/2,j+1/2},\frac{3}{2}\xi _{0,j+1/2}\widetilde{f}%
+_{l+1/2,i+1/2,j+1/2}^{\left( 0\right) (m=1)}\right) 
+\end{eqnarray}
+
+As mentioned in Sec.***, $j\rightarrow \left\{ 0,n_{\xi _{0}}-1\right\} ,$
+while  $j^{\prime }\rightarrow \left\{ 0,n_{\xi _{0}}-m_{\xi
+_{0T,l+1/2}}-1\right\} $ corresponds to the reduced pitch-angle grid which
+depends of the radial position $\psi _{l+1/2}$, since all the trapped region
+has been removed.  In Eq.\ref{DKeq1}, time evolution is not considered,
+since function $g^{\left( 0\right) }$ is only determined for steady-state
+value of $\widetilde{f}^{\left( 0\right) }.$ Therefore, iterations to reach
+the solution only result from the non-linear electron self-collision
+operator $C^{\left( 0\right) }$, that ensures momentum conservation.
+
+In compact matrix form, the differential equation in the reduced momentum
+phase space has the following symbolic form 
+\begin{equation}
+\widehat{\Bbb{G}}Y^{(k+1)}=\widehat{\Bbb{G}}Y^{(k)}+\widehat{C}\left(
+X_{M},Y^{(k)}\right) +\widehat{\widetilde{W}}  \label{Matrixeqg}
+\end{equation}
+where $\widehat{\Bbb{G}}$ corresponds to the flux divergence, $\widehat{C}$
+is the first order Legendre correction and $\widehat{\widetilde{W}}$ to the
+contribution of the radial gradient of the distribution function $%
+f_{0}^{\left( 0\right) }$ . Here $Y^{(k)}$ is a vector whose components are
+the discrete values of the distribution function $g^{\left( 0\right) \left(
+k\right) }$ at iteration step $\left( k\right) ,$ organized as follows 
+\begin{equation}
+Y^{(k)}\rightarrow \left\{ 
+\begin{array}{l}
+l=0\rightarrow \left\{ 
+\begin{array}{l}
+i=0\rightarrow \left\{ 
+\begin{array}{l}
+j^{\prime }=0 \\ 
+j^{\prime }=\ldots  \\ 
+j^{\prime }=n_{\xi _{0}}-m_{\xi _{0T,l+1/2}}-1
+\end{array}
+\right.  \\ 
+i=\ldots  \\ 
+i=n_{p}-1
+\end{array}
+\right.  \\ 
+l=\ldots  \\ 
+l=n_{\psi }-1
+\end{array}
+\right. 
+\end{equation}
+
+By construction, $\widehat{\Bbb{G}}$ is simply a block diagonal matrix. Each
+block, which describes the momentum dynamics at location $\psi _{l+1/2},$ is
+a square matrice of $9$ diagonals whose size $\left( n_{\xi _{0}}-m_{\xi
+_{0T,l+1/2}}\right) n_{p}\times $ $\left( n_{\xi _{0}}-m_{\xi
+_{0T,l+1/2}}\right) n_{p}$ progressively decreases from $\psi _{1/2}$ to $%
+\psi _{n_{\xi _{0}}-1/2}$ because of the trapped/passing boundary enlarges
+from the center to the plasma edge, as shown in Fig. ***$.$ The main
+diagonal of $\widehat{\Bbb{G}}$ is also dominant because collisions
+predominate over other physical processes at each plasma radius.
+
+The matrix $\widehat{\Bbb{G}}$ has a global banded structure with an
+extremely high sparcity, a property that is extensively used for the storage
+in the computer memory, like for the Fokker-Planck equation. Indeed, the
+size of $\widehat{\Bbb{G}}$ is 
+\begin{equation}
+size\left( \widehat{\Bbb{G}}\right) =n_{p}^{2}\left[ \sum_{l=0}^{l=n_{\psi
+}-1}\left( n_{\xi _{0}}-m_{\xi _{0T,l+1/2}}\right) \right] ^{2}\leq n_{\psi
+}^{2}n_{p}^{2}n_{\xi _{0}}^{2}
+\end{equation}
+
+For tokamak with very large aspect ratio, $size\left( \widehat{\Bbb{G}}
+\right) \approx n_{\psi }^{2}n_{p}^{2}n_{\xi _{0}}^{2}$ since trapped
+particle contribution is fairly negligible. In this limit, $size\left( 
+\widehat{\Bbb{G}}\right) \simeq size\left( \widehat{\Bbb{B}}\right) ,$ where 
+$\widehat{\Bbb{B}}$ is the flux matrix of the Fokker-Planck equation. For
+the values of $n_{\psi }$, $n_{p}$ and $n_{\xi _{0}}$ taken in Sec. ***, the
+required memory is approximately $57.6MBytes$, a lower level than for the
+Fokker-Planck equation.
