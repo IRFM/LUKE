@@ -126,11 +126,11 @@ elseif strcmp(name,'TS') == 1,
 %
 	Bt = 3.65;
 %
-	Zi = [1,1,1];	
-	mi = [1,2,3];
+	Zi = [1,1,1,6];	
+	mi = [1,2,3,12];
 	fi = [0,1,0.0];
-	Zeff0 = 1;
-	Zeffa = 1;
+	Zeff0 = 1,5;
+	Zeffa = 1.5;
 	eZeff = 0;
 %
 	Ip = 1.0;
