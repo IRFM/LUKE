@@ -23,10 +23,10 @@ snumber = 1;%Simulation number
 %
 %Mesh size calculation
 %
-grid_uniformity = 0;%Pitch-angle and momentum grids uniformity: (0) no, (1) yes
+grid_uniformity = -1;%Pitch-angle and momentum grids uniformity: (0) no, (1) yes (-1 for specific test DKE, transient)
 grid_method = 1;%Pitch-angle grid calculation technique: (0): old method, (1) new method
-nmhu_S = 101;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
-np_S = 100;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run)
+nmhu_S = 120;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
+np_S = 109;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run)
 pnmax_S = 15;%Maximum value of the flux momentum grid (pth_ref)
 %
 %Pitch-angle grid
@@ -43,7 +43,7 @@ grid_power = 1.5; % power for mhu grid step varations (grid_power > 1) (Note: fo
 %
 %Momentum Grid
 %
-snp = 10; % pgridfactor
+snp = eps;%pgridfactor (Uniform grid: pgridfactor << 1, non-uniform grid: pgridfactor >= 1) 
 %
 %Normalized radii at which the distribution is calculated (DKE or FP)
 %The syntax rho='all' may be also used if all mhu values are considered. 
@@ -51,10 +51,10 @@ snp = 10; % pgridfactor
 %Values of the radial flux grid [1,p] (If one radial value: local calculation only)
 %
 psin_S = [];
-rho_S = [0.4];
+rho_S = [0.71365];
 %
 psin_display = NaN;%Approximate radial value at which results are displayed if display_mode >= 1 [1,1]
-rho_display = 0.4;
+rho_display = 0.7;
 %
 dpsin_dke = 0.02;%maximum difference between two consecutive positions used for radial derivatives
 %
