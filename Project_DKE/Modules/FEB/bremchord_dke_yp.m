@@ -132,6 +132,30 @@ gZ_hxr = cos(beta_hxr);%Chord vector
 sr = sqrt((sR - Rp).^2 + (sZ - Zp).^2);%Minor radius along the chords
 st = atan((sZ - Zp)./(sR - Rp)) + pi - pi*(sR > Rp).*sign(sZ - Zp);%poloidal angle [0,2*pi]
 %
+ir_spsi = spsi*0;
+for i = length(xpsin_S)-1:-1:1,
+	ir_spsi = ir_spsi + (spsi > xpsin_S(i));	
+end
+%
+it_st = st*0;
+for i = length(theta)-1:-1:1,
+	it_st = it_st + (st > theta(i));	
+end
+%
+mask_hxr = zeros(length(xpsin_S)-1,length(theta)-1);%Location where the distribution function is calculated
+for i = 1:length(xpsin_S)-1,
+	for j= 1:length(theta)-1,
+		if isempty(find(it_st(:,1:nchords) == j & ir_spsi(:,1:nchords) == i)) ~= 1,
+			mask_hxr(i,j) = 1;
+		end
+	end
+end
+%
+theta_hxr = ones(length(xpsin),1)*(theta(1:end-1) + diff(theta)/2);
+psin_hxr = xpsin'*ones(1,length(theta)-1);
+B0_hxr = interp1(ppsin,ptB0,xpsin,method);%Bmin
+PSI_hxr = griddata(ppsin*ones(1,length(theta)),ones(length(ppsin),1)*theta,sqrt(ptBR.^2 + ptBZ.^2 + ptBphi.^2),psin_hxr,theta_hxr)./(B0_hxr'*ones(1,length(theta)-1));%B/Bmin
+%
 sr_lcs = interp1(theta,r_lcs,st,method);
 mask = sr < sr_lcs;
 for ic = 1:nchords,
@@ -140,12 +164,21 @@ for ic = 1:nchords,
    	mask(1:imask(1),ic) = logical(0);
    end
 end	
+%
+s(~mask) = NaN;
 sR(~mask) = NaN;
 sZ(~mask) = NaN; 
 sphi(~mask) = NaN; 
 sr(~mask) = NaN;
 st(~mask) = NaN;
 spsi(~mask) = NaN;
+ir_spsi(~mask) = NaN;
+it_st(~mask) = NaN;
+sksid(~mask) = NaN;
+gX_hxr(~mask) = NaN;
+gY_hxr(~mask) = NaN;
+gZ_hxr(~mask) = NaN;
+%
 sBR=griddata(ptR,ptZ,ptBR,sR,sZ);
 sBZ=griddata(ptR,ptZ,ptBZ,sR,sZ);
 sBphi=griddata(ptR,ptZ,ptBphi,sR,sZ);
@@ -193,30 +226,6 @@ if display >= 1
 	hold off
 	set(gca,'YDir','rev');%Because the reference is indirect by definition
 end
-%
-ir_spsi = spsi*0;
-for i = length(xpsin_S)-1:-1:1,
-	ir_spsi = ir_spsi + (spsi > xpsin_S(i));	
-end
-%
-it_st = st*0;
-for i = length(theta)-1:-1:1,
-	it_st = it_st + (st > theta(i));	
-end
-%
-mask_hxr = zeros(length(xpsin_S)-1,length(theta)-1);%Location where the distribution function is calculated
-for i = 1:length(xpsin_S)-1,
-   for j= 1:length(theta)-1,
-   	if isempty(find(it_st(:,1:59) == j & ir_spsi(:,1:59) == i)) ~= 1,
-   		mask_hxr(i,j) = 1;
-   	end
-   end
-end
-%
-theta_hxr = ones(length(xpsin),1)*(theta(1:end-1) + diff(theta)/2);
-psin_hxr = xpsin'*ones(1,length(theta)-1);
-B0_hxr = interp1(ppsin,ptB0,xpsin,method);%Bmin
-PSI_hxr = griddata(ppsin*ones(1,length(theta)),ones(length(ppsin),1)*theta,sqrt(ptBR.^2 + ptBZ.^2 + ptBphi.^2),psin_hxr,theta_hxr)./(B0_hxr'*ones(1,length(theta)-1));%B/Bmin
 %
 vschords = zeros(16,ns,nchords);
 vschords(1,:,:) = s;
