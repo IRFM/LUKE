@@ -11,8 +11,8 @@ ohm_id = 'TScirc';%Set here the name (identifier) of the Ohmic electric field pr
 % (WARNING: norm_ref = 0 by default when multiple radial positions are studied simultaneously, whatever the value in this file 
 % -> normalization with pth_ref*nhuth_ref/e)
 % 
-epsi0 = 0;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e) 
-epsia = 0;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
+epsi0 = 0.05;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e) 
+epsia = 0.05;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
 eepsi = 0;%Exponent for Ohmic electric field (WARNING: psi coordinate and not rho)
 %
 ohm.rho = linspace(0,1,20);%Arbitrary normalized minor radius

@@ -41,12 +41,15 @@ dkeparam.dpsin_dke = 0.01;%maximum difference between two consecutive positions 
 dkeparam.ref_mode = 0;%Reference values: (0) from core Te and ne, (1) from Te and ne at the normalized radius (paramater only active for a single radial value, otherwise ref_mode = 0)
 dkeparam.norm_ref = 1;%Normalization procedure for the ohmic electric field, LH and EC quasilinear diffusion: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref 
 %
-dkeparam.nit_rf = 20;% maximum number of iteration in ray-tracing (only in RT mode)
-dkeparam.prec_rf = 1e-4;%relative precision in RT-DKE iterations
-%
 % Collision operator
 %
 dkeparam.coll_mode = 2;%Relativistic collision operator: (0) Relativistic Maxwellian background, (1) High-velocity limit, (2) Linearized Belaiev-Budker (3) Non-relativistic Lorentz model, (4) Non-relativistic Maxwellian background
+%
+% Ray-tracing
+%
+dkeparam.rt_mode = 0;%RT-DKE power consistency
+dkeparam.nit_rf = 20;%Maximum number of iteration in ray-tracing. Works only if rt_mode = 1 and more than one radial point (default = 1)
+dkeparam.prec_rf = 1e-4;%relative precision in RT-DKE iterations
 %
 % Run mode
 %
