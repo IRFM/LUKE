@@ -11,13 +11,14 @@ Since the drift kinetic equation is expressed in conservative form, it is
 natural to define the grids for the flux $S$ grid as the starting point of
 the numerical calculations. 
 \begin{equation}
-S\left( p_{i},\xi _{0,j},\psi _{l}\right) \rightarrow \left\{ 
+S\left( p_{i},\xi _{0,j},\psi _{l},t_{k}\right) \rightarrow \left\{ 
 \begin{array}{l}
 p_{i}\in \left[ 0,p_{\max }\right] ,i\rightarrow \left\{ 0,n_{p}\right\}  \\ 
 \xi _{0,j}\in \left[ -1,1\right] ,j\rightarrow \left\{ 0,n_{\xi
 _{0}}\right\}  \\ 
 \psi _{l}\in \left[ 0,\psi _{a}\right] ,l\rightarrow \left\{ 0,n_{\psi
-}\right\} 
+}\right\}  \\ 
+t_{k}\in \left[ 0,+\infty \right] ,k\rightarrow \left\{ 0,n_{t}\right\} 
 \end{array}
 \right. 
 \end{equation}
@@ -30,7 +31,8 @@ numerically, avoiding the occurence of spurious numerical fluxes which lead
 to wrong estimate of the solution.
 
 \begin{equation}
-f\left( p_{i+1/2},\xi _{0j+1/2},\psi _{l+1/2}\right) \rightarrow \left\{ 
+f\left( p_{i+1/2},\xi _{0j+1/2},\psi _{l+1/2},t_{k}\right) \rightarrow
+\left\{ 
 \begin{array}{l}
 p_{i+1/2}\in \left[ \frac{\Delta p_{1/2}}{2},p_{\max }-\frac{\Delta %
 p_{n_{p}-1/2}}{2}\right] ,i\rightarrow \left\{ 0,n_{p}-1\right\}  \\ 
@@ -56,7 +58,7 @@ distribution function $f$ is determined exactly in the middle of the cell,
 p_{i+1/2}=\frac{p_{i}+p_{i+1}}{2} \\ 
 \xi _{j+1/2}=\frac{\xi _{0,j}+\xi _{0,j+1}}{2}
 \end{array}
-\right. 
+\right.
 \end{equation}
 
 Then, intervals on the different grids are
@@ -71,7 +73,7 @@ Then, intervals on the different grids are
 \Delta \xi _{0,j+1/2}=\xi _{0,j+1}-\xi _{0,j} \\ 
 \Delta \xi _{0,j}=\xi _{0,j+1/2}-\xi _{0,j-1/2}
 \end{array}
-\right. 
+\right.
 \end{equation}
 
 where 
@@ -94,7 +96,7 @@ _{0,0}\right) $ must be specified accurately at each volume boundary. Since $%
 p_{\bot }=0$ corresponds to the cylindrical axis of symmetry of the problem
 in the momentum space, 
 \begin{equation}
-\Delta \xi _{0,0}=\frac{\Delta \xi _{0,1/2}+\Delta \xi _{0,-1/2}}{2}=\Delta %
+\Delta \xi _{0,0}=\frac{\Delta \xi _{0,1/2}+\Delta \xi _{0,-1/2}}{2}=\Delta
 \xi _{0,1/2}=\xi _{0,1}-\xi _{0,0}=2\xi _{0,1/2}+1
 \end{equation}
 as $\Delta \xi _{0,1/2}=\Delta \xi _{0,-1/2},$ $\xi _{0,1/2}=\frac{\xi
@@ -113,7 +115,7 @@ Furthermore, since by definition,
 one obtains finally
 
 \begin{equation}
-\Delta \xi _{0,n_{\xi }}=2\left( 1-\xi _{0,n_{\xi }-1/2}\right) 
+\Delta \xi _{0,n_{\xi }}=2\left( 1-\xi _{0,n_{\xi }-1/2}\right)
 \end{equation}
 
 A similar technique may be used for the momentum grid $p$. Hence 
@@ -132,7 +134,7 @@ because $p_{0}=0.$ Much in the same way,
 p_{n_{p}+1/2}+\Delta p_{n_{p}-1/2}\right) =\Delta
 p_{n_{p}-1/2}=p_{n_{p}}-p_{n_{p}-1}
 \end{equation}
-and since by definition $p_{n_{p}+1/2}=\frac{p_{n_{p}}+p_{n_{p}-1}}{2}=\frac{%
+and since by definition $p_{n_{p}+1/2}=\frac{p_{n_{p}}+p_{n_{p}-1}}{2}=\frac{
 p_{\max }+p_{n_{p}-1}}{2},$ it results 
 \begin{equation}
 \Delta p_{n_{p}}=2\left( p_{n_{p}}-p_{n_{p}-1/2}\right)
@@ -212,13 +214,32 @@ _{l}\right) }{B_{\max }\left( \psi _{l}\right) }
 the trapped passing boundary is set exactly on the pitch-angle grid\footnote{%
 This choice is possible, since bounce integrals are determined numerically
 from magnetic equilibrium codes, and therefore, no singularity is
-encountered. }. Hence, if the number of radial points for the flux grid is
+encountered.}. Hence, if the number of radial points for the flux grid is
 arbitrary by definition, the number of points for the pitch-angle grid has a
 lower limit. It is straightforward to give a rough estimate, in order to
 evaluate the numerical size of the objects in the code. Let $n_{\psi }$
-being the number of flux grid points,  $n_{\xi _{0}}\geq 6n_{\psi }+7,$
-since at least each trapped passing boundary on the pitch-angle flux grid
-must be framed by two consecutive neighbors points, on each side, for  $\xi
-_{0}>0$ et $\xi _{0}\leq 0$ domains. In addition, accurate calculations must
-be performed at $\xi _{0}$ (3 points) et at $\left| \xi _{0}\right| =1$ (4
-points). Hence, for $n_{\psi }=30,$ $n_{\xi _{0}}\geq 187.$ 
+being the number of flux grid points, $n_{\xi _{0}}\geq 6n_{\psi }+7,$ since
+at least each trapped passing boundary on the pitch-angle flux grid must be
+framed by two consecutive neighbors points, on each side, for $\xi _{0}>0$
+et $\xi _{0}\leq 0$ domains. In addition, accurate calculations must be
+performed at $\xi _{0}$ (3 points) et at $\left| \xi _{0}\right| =1$ (4
+points). Hence, for $n_{\psi }=30,$ $n_{\xi _{0}}\geq 187.$
+
+\subsubsection{Temporal grid definition}
+
+Time evolution is also projected on a numerical grid which is taken uniform
+for two reasons. First, in the numerical approach here considered, the
+algorithm, as discussed in Section****, is mainly dedicated to the fast
+determination of the asymptotic stationary solution $\lim_{t\rightarrow +%
+\infty }f\left( p,\xi _{0},\psi ,t\right) =\overline{f}\left( p,\xi
+_{0},\psi \right) ,$ and therefore time step values fulfill the condition $%
+\Delta t\gg 1.$ In this limit, the time $t$ used in the iterative procedure
+that results from weak non-linearities of the collision operator, acts
+mainly as a regularization parameter, when matrix to be inverted is close to
+be ill-conditionned.  Furthermore, with a non-uniform time grid, matrix must
+be calculated at each time step, which prevents the use of the very
+efficient $LU$ matrix factorization technique, a procedure that allows to
+reduce considerably computer time consumption. Since the code is expected to
+be incorporate in a chain of codes, in order to obtain self-consistent
+magnetic equilibrium, wave propagation and kinetic calculations, this is
+therefore the only choice that can be considered.
