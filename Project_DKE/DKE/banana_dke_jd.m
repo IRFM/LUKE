@@ -131,17 +131,25 @@ xymask1b = xyalpha1b >= 0 & xyalpha1b <= 1;
 xymask2a = xyalpha2a >= 0 & xyalpha2a <= 1;
 xymask2b = xyalpha2b >= 0 & xyalpha2b <= 1;
 
+xymaskid1a = (xyBb == xyB1min);
+xymaskid1b = (xyBb == xyB1max);
+xymaskid2a = (xyBb == xyB2min);
+xymaskid2b = (xyBb == xyB2max);
+
+xymaskid1 = xymaskid1a + xymaskid1b;
+xymaskid2 = xymaskid2a + xymaskid2b;
+
 xyones = ones(np,nmhu);
 
-if min(xymask1a.*xymaskT + xymask1b.*xymaskT == xyones.*xymaskT) == 0
+if min(xymask1a.*xymaskT.*~xymaskid1 + xymask1b.*xymaskT.*~xymaskid1 == xyones.*xymaskT.*~xymaskid1) == 0
 	error('root 1 not determined');
 end
-if min(xymask2a.*xymaskT + xymask2b.*xymaskT == xyones.*xymaskT) == 0
+if min(xymask2a.*xymaskT.*~xymaskid2 + xymask2b.*xymaskT.*~xymaskid2 == xyones.*xymaskT.*~xymaskid2) == 0
 	error('root 2 not determined');
 end
 
-xyalpha1 = xymask1a.*xyalpha1a + ~xymask1a.*xyalpha1b;
-xyalpha2 = xymask2a.*xyalpha2a + ~xymask2a.*xyalpha2b;
+xyalpha1 = (xymask1a.*xyalpha1a + ~xymask1a.*xyalpha1b).*~xymaskid1 + xymaskid1b;
+xyalpha2 = (xymask2a.*xyalpha2a + ~xymask2a.*xyalpha2b).*~xymaskid2 + xymaskid2b;
 
 xyTthetaT1 = xytheta1min + (xytheta1max - xytheta1min).*xyalpha1;
 xyTthetaT2 = xytheta2min + (xytheta2max - xytheta2min).*xyalpha2;

@@ -1,1 +1,171 @@
-function [Xxlambda,Xxlambdap,Xxlambdam,XXlambda,XXlambdam,...XXRlambdam,XXRlambdap,...XXDelta,XXDeltam,XXDeltap,...XXsssl,XXssslm,XXssslp,...XXheaviside,XXheavisidem,...XXsstar,XXsstarm,...XXsstar_tp,XXsstar_tpm] = bounceparam_dke_yp(bounce_mode,m_bounce,xia,mhubounce2,delta,Nq,mhu,mhum,mhup,Xmhu,Xmhum,Xmhup)%%%by Y.Peysson CEA-DRFC 05/02/2003 <yves.peysson@cea.fr>%nr = length(xia);npn = size(Xmhu,1);nmhu = size(Xmhu,2);%Xmhu2 = Xmhu.^2;Xmhu2m = Xmhum.^2;Xmhu2p = Xmhup.^2;%for ir=1:nr,    if bounce_mode == 1,        [lambda,Delta,sstar,sstar_tp] = bounce_dke_jd(mhubounce2(ir),mhu,m_bounce);        [lambdap,Deltap,sstarp,sstar_tpp] = bounce_dke_jd(mhubounce2(ir),mhup,m_bounce);        [lambdam,Deltam,sstarm,sstar_tpm] = bounce_dke_jd(mhubounce2(ir),mhum,m_bounce);        Xxlambda(1:nmhu,ir) = lambda';        Xxlambdap(1:nmhu,ir) = lambdap';        Xxlambdam(1:nmhu,ir) = lambdam';					Xlambda = ones(npn,1)*lambda;		Xlambdam = ones(npn,1)*lambdam;		Xlambdap = ones(npn,1)*lambdap;%					XRlambdam = Xlambdam./Xlambda;		XRlambdap = Xlambdap./Xlambda; %		Xheaviside = Xmhu2 > mhubounce2(ir);%Heaviside function (1 for circulating electrons, zero for banana ones)		Xheavisidem = Xmhu2m > mhubounce2(ir);		Xheavisidep = Xmhu2p > mhubounce2(ir);%		Xsstar = (ones(npn,1)*sstar).*Xheaviside;%s*		Xsstarm = (ones(npn,1)*sstarm).*Xheavisidem;		Xsstarp = (ones(npn,1)*sstarp).*Xheavisidep;%		Xsssl = Xsstar./Xlambda;%s*/lambda		Xssslm = Xsstarm./Xlambdam;		Xssslp = Xsstarp./Xlambdap;%		XDelta = (ones(npn,1)*Delta);%Delta		XDeltam = (ones(npn,1)*Deltam);		XDeltap = (ones(npn,1)*Deltap);		%				Xsstar_tp = (ones(npn,1)*sstar_tp);%s*_tilde/lambda		Xsstar_tpm = (ones(npn,1)*sstar_tpm);		Xsstar_tpp = (ones(npn,1)*sstar_tpp);%%Non-axisymmetric corrections as done by M. Ju et al. in Phys. Plasmas, 9 (2002) 493 (to be used only with FP calculations, and tested for TORE SUPRA only)%		if delta(ir) > 0,			XY = zeros(size(Xmhu));			XY(Xheaviside) = mhubounce2(ir)./Xmhu2(Xheaviside);			XY(~Xheaviside) = Xmhu2(~Xheaviside)/mhubounce2(ir);%			XYm = zeros(size(Xmhum));			XYm(Xheavisidem) = mhubounce2(ir)./Xmhu2m(Xheavisidem);			XYm(~Xheavisidem) = Xmhu2m(~Xheavisidem)/mhubounce2(ir);%			XYp = zeros(size(Xmhup));			XYp(Xheavisidep) = mhubounce2(ir)./Xmhu2p(Xheavisidep);			XYp(~Xheavisidep) = Xmhu2p(~Xheavisidep)/mhubounce2(ir);	%						Xlambda_rip = zeros(size(Xlambda));%Magnetic ripple correction			Xlambda_ripm = zeros(size(Xlambdam));%Magnetic ripple correction			Xlambda_ripp = zeros(size(Xlambdap));%Magnetic ripple correction			XDeltalambda_rip = zeros(size(Xlambda));%Magnetic ripple correction: <Delta>1*(lambda0+lambda1)			XDeltalambda_ripm = zeros(size(Xlambdam));%Magnetic ripple correction: <Delta>1*(lambda0+lambda1)			XDeltalambda_ripp = zeros(size(Xlambdap));%Magnetic ripple correction: <Delta>1*(lambda0+lambda1)%			theta0 = acos(Xmhu);%Pitch angle			theta0m = acos(Xmhum);			theta0p = acos(Xmhup);;%			thetaB = zeros(size(Xmhu));%Bounce angle				thetaBm = zeros(size(Xmhum));			thetaBp = zeros(size(Xmhup));				thetaB(Xheaviside) = pi;			thetaBm(Xheavisidem) = pi;			thetaBp(Xheavisidep) = pi;   			thetaB(~Xheaviside) = acos(1 - 2./(mhubounce2(ir)./cos(theta0(~Xheaviside)).^2));			thetaBm(~Xheavisidem) = acos(1 - 2./(mhubounce2(ir)./cos(theta0m(~Xheavisidem)).^2));			thetaBp(~Xheavisidep) = acos(1 - 2./(mhubounce2(ir)./cos(theta0p(~Xheavisidep)).^2));			thetaBm(find(thetaBm == 0)) = eps;			thetaBp(find(thetaBp == 0)) = eps;%			sstar_rip = -delta(ir)./sqrt(1 - mhubounce2(ir)).*((1 - sqrt(1 - mhubounce2(ir)))./sqrt(mhubounce2(ir))).^(2.*Nq(ir));%						Xsstar(Xheaviside) = Xsstar(Xheaviside) + sstar_rip;			Xsstarm(Xheavisidem) = Xsstarm(Xheavisidem) + sstar_rip;			Xsstarp(Xheavisidep) = Xsstarp(Xheavisidep) + sstar_rip;%						Xlambda_rip(Xheaviside) = -(delta(ir)/2).*tan(theta0(Xheaviside)).^2./sqrt(1 - XY(Xheaviside)).*((1 - sqrt(1 - XY(Xheaviside)))./sqrt(XY(Xheaviside))).^(2.*Nq(ir));			Xlambda_ripm(Xheavisidem) = -(delta(ir)/2).*tan(theta0m(Xheavisidem)).^2./sqrt(1 - XYm(Xheavisidem)).*((1 - sqrt(1 - XYm(Xheavisidem)))./sqrt(XYm(Xheavisidem))).^(2.*Nq(ir));			Xlambda_ripp(Xheavisidep) =  -(delta(ir)/2).*tan(theta0p(Xheavisidep)).^2./sqrt(1 - XYp(Xheavisidep)).*((1 - sqrt(1 - XYp(Xheavisidep)))./sqrt(XYp(Xheavisidep))).^(2.*Nq(ir));%			Xlambda_rip(~Xheaviside) = sqrt(Nq(ir)/pi)*delta(ir).*tan(theta0(~Xheaviside)).^2.*((1 - cos(thetaB(~Xheaviside)))./sin(thetaB(~Xheaviside))).^(3/2).*sin(pi/4 - Nq(ir).*thetaB(~Xheaviside));			Xlambda_ripm(~Xheavisidem) = sqrt(Nq(ir)/pi)*delta(ir).*tan(theta0m(~Xheavisidem)).^2.*((1 - cos(thetaBm(~Xheavisidem)))./sin(thetaBm(~Xheavisidem))).^(3/2).*sin(pi/4 - Nq(ir).*thetaBm(~Xheavisidem));			Xlambda_ripp(~Xheavisidep) = sqrt(Nq(ir)/pi)*delta(ir).*tan(theta0p(~Xheavisidep)).^2.*((1 - cos(thetaBp(~Xheavisidep)))./sin(thetaBp(~Xheavisidep))).^(3/2).*sin(pi/4 - Nq(ir).*thetaBp(~Xheavisidep));%			Xlambda = Xlambda + Xlambda_rip;			Xlambdam = Xlambdam + Xlambda_ripm;			Xlambdap = Xlambdap + Xlambda_ripp;		%			XRlambdam = Xlambdam./Xlambda;			XRlambdap = Xlambdap./Xlambda;%			Xsssl = Xsstar./Xlambda;			Xssslm = Xsstarm./Xlambdam;			Xssslp = Xsstarp./Xlambdap;%			XDeltalambda_rip(Xheaviside) = 3/8*delta(ir)*mhubounce2(ir).*tan(theta0(Xheaviside)).^2./sqrt(1 - XY(Xheaviside)).*((1 - sqrt(1-XY(Xheaviside)))./sqrt(XY(Xheaviside))).^(2.*Nq(ir));			XDeltalambda_ripp(Xheavisidep) = 3/8*delta(ir)*mhubounce2(ir)*tan(theta0p(Xheavisidep)).^2./sqrt(1 - XYp(Xheavisidep)).*((1 - sqrt(1 - XYp(Xheavisidep)))./sqrt(XYp(Xheavisidep))).^(2.*Nq(ir));			XDeltalambda_ripm(Xheavisidem) = 3/8*delta(ir)*mhubounce2(ir).*tan(theta0m(Xheavisidem)).^2./sqrt(1 - XYm(Xheavisidem)).*((1 - sqrt(1 - XYm(Xheavisidem)))./sqrt(XYm(Xheavisidem))).^(2.*Nq(ir));%			XDeltalambda_rip(~Xheaviside) = -3/4*delta(ir)*sqrt(Nq(ir)/pi)*mhubounce2(ir).*tan(theta0(~Xheaviside)).^2.*(1 - cos(thetaB(~Xheaviside))).^(5/2)./sin(thetaB(~Xheaviside)).^(3/2).*sin(pi/4 - Nq(ir).*thetaB(~Xheaviside));			XDeltalambda_ripp(~Xheavisidep) = -3/4*delta(ir)*sqrt(Nq(ir)/pi)*mhubounce2(ir).*tan(theta0p(~Xheavisidep)).^2.*(1 - cos(thetaBp(~Xheavisidep))).^(5/2)./sin(thetaBp(~Xheavisidep)).^(3/2).*sin(pi/4 - Nq(ir).*thetaBp(~Xheavisidep));			XDeltalambda_ripm(~Xheavisidem) = -3/4*delta(ir)*sqrt(Nq(ir)/pi)*mhubounce2(ir).*tan(theta0m(~Xheavisidem)).^2.*(1 - cos(thetaBm(~Xheavisidem))).^(5/2)./sin(thetaBm(~Xheavisidem)).^(3/2).*sin(pi/4 - Nq(ir).*thetaBm(~Xheavisidem));%			XDelta = XDelta + XDeltalambda_rip./Xlambda;			XDeltap = XDeltap + XDeltalambda_ripp./Xlambdap;			XDeltam = XDeltam + XDeltalambda_ripm./Xlambdam;		elseif delta(ir) > 0 & dke_mode ==1,			error('Ripple calculations are only valid for the Foker-Planck equation mode !');					end	else		mhubounce2(ir) = 0;		Xxlambda = ones(nmhu,nr);		Xxlambdap = ones(nmhu,nr);		Xxlambdam = ones(nmhu,nr);		Xlambda = ones(size(Xmhu));		Xlambdam = ones(size(Xmhu));		Xlambdap = ones(size(Xmhu));		XRlambdam = ones(size(Xmhu));		XRlambdap = ones(size(Xmhu));				Xsssl = ones(size(Xmhu));		Xssslm = Xsssl;		Xssslp = Xsssl;		XDelta = zeros(size(Xmhu));		XDeltam = XDelta;		XDeltap = XDelta;		Xheaviside = ones(size(Xmhu));		Xheavisidem = ones(size(Xmhu));		Xheavisidep = ones(size(Xmhu));		Xsstar = ones(size(Xmhu));		Xsstarm = ones(size(Xmhu));		Xsstarp = ones(size(Xmhu));		Xsstar_tp = ones(size(Xmhu));		Xsstar_tpm = ones(size(Xmhu));		Xsstar_tpp = ones(size(Xmhu));	end%		XXheaviside(:,:,ir) = Xheaviside;	XXlambda(:,:,ir) = Xlambda;	XXDelta(:,:,ir) = XDelta;	XXsstar(:,:,ir) = Xsstar;	XXsstar_tp(:,:,ir) = Xsstar_tp;	XXsssl(:,:,ir) = Xsssl;%	XXheavisidem(:,:,ir) = Xheavisidem;	XXlambdam(:,:,ir) = Xlambdam;	XXRlambdam(:,:,ir) = XRlambdam;	XXDeltam(:,:,ir) = XDeltam;	XXsstarm(:,:,ir) = Xsstarm;	XXsstar_tpm(:,:,ir) = Xsstar_tpm;		XXssslm(:,:,ir) = Xssslm;%	XXRlambdap(:,:,ir) = XRlambdap;	XXDeltap(:,:,ir) = XDeltap;	XXssslp(:,:,ir) = Xssslp;end
+function [xmhubounce2,...
+Xxlambda,Xxlambdap,Xxlambdam,...
+XXlambda,XXRlambdam,XXRlambdap,...
+XXRlambda_p2m1_m,XXRlambda_p2m1_p,...
+XXsssl,XXssslm,XXssslp,...
+XXheaviside,...
+XXsstar,...
+XXlambda_p2p0,XXlambda_p2p0_p,XXlambda_p2p0_m] = bounceparam_dke_yp(tokamak,bounce_mode,xia,delta,Nq,mhu,mhum,mhup,Xmhu,Xmhum,Xmhup)
+%
+%by Y.Peysson CEA-DRFC 05/02/2003 <yves.peysson@cea.fr>
+%
+% modified j.d. 11/26/03 for arbitrary geometry
+%
+% Note: ripple corrections not yet revisited. 
+%
+nr = length(xia);
+[npn,nmhu] = size(Xmhu);
+%
+%Xmhu2 = Xmhu.^2;
+%Xmhu2m = Xmhum.^2;
+%Xmhu2p = Xmhup.^2;
+%
+if bounce_mode == 1,
+	[xylambda,xylambda_p2m1,xylambda_p2p0,xysstar,xymaskT,xmhubounce2] = bounce_dke_jd(tokamak,xia,mhu);
+	[xylambdap,xylambda_p2m1_p,xylambda_p2p0_p,xysstarp,xymaskTp] = bounce_dke_jd(tokamak,xia,mhup);
+	[xylambdam,xylambda_p2m1_m,xylambda_p2p0_m,xysstarm,xymaskTm] = bounce_dke_jd(tokamak,xia,mhum);
+%
+	XXlambda = repmat(reshape(xylambda',[1,nmhu,nr]),[npn,1,1]);
+    XXlambdap = repmat(reshape(xylambdap',[1,nmhu,nr]),[npn,1,1]);
+    XXlambdam = repmat(reshape(xylambdam',[1,nmhu,nr]),[npn,1,1]);
+%
+	XXRlambdap = XXlambdap./XXlambda;
+	XXRlambdam = XXlambdam./XXlambda;
+%	
+	XXheaviside = repmat(reshape(~xymaskT',[1,nmhu,nr]),[npn,1,1]);
+%    XXheavisidep = repmat(reshape(~xymaskTp',[1,nmhu,nr]),[npn,1,1]);
+%    XXheavisidem = repmat(reshape(~xymaskTm',[1,nmhu,nr]),[npn,1,1]);
+%
+	Xxlambda = xylambda';
+	Xxlambdap = xylambdap';
+	Xxlambdam = xylambdam'; 
+%
+	XXsstar = repmat(reshape(xysstar',[1,nmhu,nr]),[npn,1,1]);%s*
+    XXsstarp = repmat(reshape(xysstarp',[1,nmhu,nr]),[npn,1,1]);
+    XXsstarm = repmat(reshape(xysstarm',[1,nmhu,nr]),[npn,1,1]);
+%
+	XXsssl = XXsstar./XXlambda;
+	XXssslp = XXsstarp./XXlambdap;
+	XXssslm = XXsstarm./XXlambdam;
+%
+%----- lambda_p2m1 (= 1-delta/mhu0^2) -----
+%
+%	XXlambda_p2m1 = repmat(reshape(xylambda_p2m1',[1,nmhu,nr]),[npn,1,1]);
+    XXlambda_p2m1_p = repmat(reshape(xylambda_p2m1_p',[1,nmhu,nr]),[npn,1,1]);
+    XXlambda_p2m1_m = repmat(reshape(xylambda_p2m1_m',[1,nmhu,nr]),[npn,1,1]);
+%	
+	XXRlambda_p2m1_p = XXlambda_p2m1_p./XXlambdap;
+	XXRlambda_p2m1_m = XXlambda_p2m1_m./XXlambdam;
+%
+%---------------- s*_tilde ----------------
+%
+	XXlambda_p2p0 = repmat(reshape(xylambda_p2p0',[1,nmhu,nr]),[npn,1,1]);
+    XXlambda_p2p0_p = repmat(reshape(xylambda_p2p0_p',[1,nmhu,nr]),[npn,1,1]);
+    XXlambda_p2p0_m = repmat(reshape(xylambda_p2p0_m',[1,nmhu,nr]),[npn,1,1]);
+%
+%Non-axisymmetric corrections as done by M. Ju et al. in Phys. Plasmas, 9 (2002) 493 (to be used only with FP calculations, and tested for TORE SUPRA only)
+%
+%	for ir=1:nr,
+%		if delta(ir) > 0,
+%			XY = zeros(size(Xmhu));
+%			XY(Xheaviside) = mhubounce2(ir)./Xmhu2(Xheaviside);
+%			XY(~Xheaviside) = Xmhu2(~Xheaviside)/mhubounce2(ir);
+%
+%			XYm = zeros(size(Xmhum));
+%			XYm(Xheavisidem) = mhubounce2(ir)./Xmhu2m(Xheavisidem);
+%			XYm(~Xheavisidem) = Xmhu2m(~Xheavisidem)/mhubounce2(ir);
+%
+%			XYp = zeros(size(Xmhup));
+%			XYp(Xheavisidep) = mhubounce2(ir)./Xmhu2p(Xheavisidep);
+%			XYp(~Xheavisidep) = Xmhu2p(~Xheavisidep)/mhubounce2(ir);	
+%			
+%			Xlambda_rip = zeros(size(Xlambda));%Magnetic ripple correction
+%			Xlambda_ripm = zeros(size(Xlambdam));%Magnetic ripple correction
+%			Xlambda_ripp = zeros(size(Xlambdap));%Magnetic ripple correction
+%			XDeltalambda_rip = zeros(size(Xlambda));%Magnetic ripple correction: <Delta>1*(lambda0+lambda1)
+%			XDeltalambda_ripm = zeros(size(Xlambdam));%Magnetic ripple correction: <Delta>1*(lambda0+lambda1)
+%			XDeltalambda_ripp = zeros(size(Xlambdap));%Magnetic ripple correction: <Delta>1*(lambda0+lambda1)
+%
+%			theta0 = acos(Xmhu);%Pitch angle
+%			theta0m = acos(Xmhum);
+%			theta0p = acos(Xmhup);;
+%
+%			thetaB = zeros(size(Xmhu));%Bounce angle	
+%			thetaBm = zeros(size(Xmhum));
+%			thetaBp = zeros(size(Xmhup));	
+%			thetaB(Xheaviside) = pi;
+%			thetaBm(Xheavisidem) = pi;
+%			thetaBp(Xheavisidep) = pi;   
+%			thetaBm(~Xheavisidem) = acos(1 - 2./(mhubounce2(ir)./cos(theta0m(~Xheavisidem)).^2));
+%			thetaBp(~Xheavisidep) = acos(1 - 2./(mhubounce2(ir)./cos(theta0p(~Xheavisidep)).^2));
+%			thetaBm(find(thetaBm == 0)) = eps;
+%			thetaBp(find(thetaBp == 0)) = eps;
+%
+%			sstar_rip = -delta(ir)./sqrt(1 - mhubounce2(ir)).*((1 - sqrt(1 - mhubounce2(ir)))./sqrt(mhubounce2(ir))).^(2.*Nq(ir));
+%			
+%			Xsstar(Xheaviside) = Xsstar(Xheaviside) + sstar_rip;
+%			Xsstarm(Xheavisidem) = Xsstarm(Xheavisidem) + sstar_rip;
+%			Xsstarp(Xheavisidep) = Xsstarp(Xheavisidep) + sstar_rip;
+%			
+%			Xlambda_rip(Xheaviside) = -(delta(ir)/2).*tan(theta0(Xheaviside)).^2./sqrt(1 - XY(Xheaviside)).*((1 - sqrt(1 - XY(Xheaviside)))./sqrt(XY(Xheaviside))).^(2.*Nq(ir));
+%			Xlambda_ripm(Xheavisidem) = -(delta(ir)/2).*tan(theta0m(Xheavisidem)).^2./sqrt(1 - XYm(Xheavisidem)).*((1 - sqrt(1 - XYm(Xheavisidem)))./sqrt(XYm(Xheavisidem))).^(2.*Nq(ir));
+%			Xlambda_ripp(Xheavisidep) =  -(delta(ir)/2).*tan(theta0p(Xheavisidep)).^2./sqrt(1 - XYp(Xheavisidep)).*((1 - sqrt(1 - XYp(Xheavisidep)))./sqrt(XYp(Xheavisidep))).^(2.*Nq(ir));
+%
+%			Xlambda_rip(~Xheaviside) = sqrt(Nq(ir)/pi)*delta(ir).*tan(theta0(~Xheaviside)).^2.*((1 - cos(thetaB(~Xheaviside)))./sin(thetaB(~Xheaviside))).^(3/2).*sin(pi/4 - Nq(ir).*thetaB(~Xheaviside));
+%			Xlambda_ripm(~Xheavisidem) = sqrt(Nq(ir)/pi)*delta(ir).*tan(theta0m(~Xheavisidem)).^2.*((1 - cos(thetaBm(~Xheavisidem)))./sin(thetaBm(~Xheavisidem))).^(3/2).*sin(pi/4 - Nq(ir).*thetaBm(~Xheavisidem));
+%			Xlambda_ripp(~Xheavisidep) = sqrt(Nq(ir)/pi)*delta(ir).*tan(theta0p(~Xheavisidep)).^2.*((1 - cos(thetaBp(~Xheavisidep)))./sin(thetaBp(~Xheavisidep))).^(3/2).*sin(pi/4 - Nq(ir).*thetaBp(~Xheavisidep));
+%
+%			Xlambda = Xlambda + Xlambda_rip;
+%			Xlambdam = Xlambdam + Xlambda_ripm;
+%			Xlambdap = Xlambdap + Xlambda_ripp;		
+%
+%			XRlambdam = Xlambdam./Xlambda;
+%			XRlambdap = Xlambdap./Xlambda;
+%
+%			Xsssl = Xsstar./Xlambda;
+%			Xssslm = Xsstarm./Xlambdam;
+%			Xssslp = Xsstarp./Xlambdap;
+%
+%			XDeltalambda_rip(Xheaviside) = 3/8*delta(ir)*mhubounce2(ir).*tan(theta0(Xheaviside)).^2./sqrt(1 - XY(Xheaviside)).*((1 - sqrt(1-XY(Xheaviside)))./sqrt(XY(Xheaviside))).^(2.*Nq(ir));
+%			XDeltalambda_ripp(Xheavisidep) = 3/8*delta(ir)*mhubounce2(ir)*tan(theta0p(Xheavisidep)).^2./sqrt(1 - XYp(Xheavisidep)).*((1 - sqrt(1 - XYp(Xheavisidep)))./sqrt(XYp(Xheavisidep))).^(2.*Nq(ir));
+%			XDeltalambda_ripm(Xheavisidem) = 3/8*delta(ir)*mhubounce2(ir).*tan(theta0m(Xheavisidem)).^2./sqrt(1 - XYm(Xheavisidem)).*((1 - sqrt(1 - XYm(Xheavisidem)))./sqrt(XYm(Xheavisidem))).^(2.*Nq(ir));
+%
+%			XDeltalambda_rip(~Xheaviside) = -3/4*delta(ir)*sqrt(Nq(ir)/pi)*mhubounce2(ir).*tan(theta0(~Xheaviside)).^2.*(1 - cos(thetaB(~Xheaviside))).^(5/2)./sin(thetaB(~Xheaviside)).^(3/2).*sin(pi/4 - Nq(ir).*thetaB(~Xheaviside));
+%			XDeltalambda_ripp(~Xheavisidep) = -3/4*delta(ir)*sqrt(Nq(ir)/pi)*mhubounce2(ir).*tan(theta0p(~Xheavisidep)).^2.*(1 - cos(thetaBp(~Xheavisidep))).^(5/2)./sin(thetaBp(~Xheavisidep)).^(3/2).*sin(pi/4 - Nq(ir).*thetaBp(~Xheavisidep));
+%			XDeltalambda_ripm(~Xheavisidem) = -3/4*delta(ir)*sqrt(Nq(ir)/pi)*mhubounce2(ir).*tan(theta0m(~Xheavisidem)).^2.*(1 - cos(thetaBm(~Xheavisidem))).^(5/2)./sin(thetaBm(~Xheavisidem)).^(3/2).*sin(pi/4 - Nq(ir).*thetaBm(~Xheavisidem));
+%
+%			XDelta = XDelta + XDeltalambda_rip./Xlambda;
+%			XDeltap = XDeltap + XDeltalambda_ripp./Xlambdap;
+%			XDeltam = XDeltam + XDeltalambda_ripm./Xlambdam;
+%		elseif delta(ir) > 0 & dke_mode ==1,
+%			error('Ripple calculations are only valid for the Foker-Planck equation mode !');			
+%		end
+%	end
+else
+	xmhubounce2 = zeros(1,nr);;
+	Xxlambda = ones(nmhu,nr);
+	Xxlambdap = ones(nmhu,nr);
+	Xxlambdam = ones(nmhu,nr);
+%	
+	XXlambda = ones(npn,nmhu,nr);
+%
+	XXRlambdam = ones(npn,nmhu,nr);
+	XXRlambdap =ones(npn,nmhu,nr);	
+%
+	XXsssl = ones(npn,nmhu,nr);
+	XXssslm = ones(npn,nmhu,nr);
+	XXssslp = ones(npn,nmhu,nr);
+%
+	XXlambda_p2m1_p = ones(npn,nmhu,nr);%lambda_p2m1 (= 1-delta/mhu0^2)
+	XXlambda_p2m1_m = ones(npn,nmhu,nr);
+%
+	XXlambda_p2p0 = ones(npn,nmhu,nr);%s*_tilde
+	XXlambda_p2p0_p = ones(npn,nmhu,nr);
+	XXlambda_p2p0_m = ones(npn,nmhu,nr);
+%
+	XXheaviside = ones(npn,nmhu,nr)
+%
+	XXsstar = ones(npn,nmhu,nr)
+%	XXsstarp = ones(npn,nmhu,nr)
+%	XXsstarm = ones(npn,nmhu,nr)
+end

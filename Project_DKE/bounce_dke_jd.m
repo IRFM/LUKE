@@ -1,1 +1,102 @@
-function [lambda,delta,sstar,sstar_tp,lambda_tp] = bounce_dke_jd(mhutrap2,mhu,m)%% calculates some bounce averaging coefficients needed for solving the % drift-kinetic-equation. %%   INPUTS:%%       - mhutrap2: = 2eps/(1+eps), squared cosine of the trapping-passing boundary pitch-angle %       - mhu: pitch angle grid [1,nmhu]%       - m: number of terms to be kept in the expansion%%   OUTPUTS:%   %       - lambda: = int_0^2pi dtheta/2pi xi0/xi, normalized bounce time %       - delta: = {1-1/psi}%       - sstar = lambda.{psi.xi/xi0}%       - sstar_tp = lambda.{xi^2/xi0^2}%       - lambda_tp = lambda.{xi^2/xi0^2.psi} = lambda.(1-delta/xi0^2)%%by Joan Decker 03/05/2002%modified by Y. Peysson CEA-DRFC 01/08/2002 <yves.peysson@cea.fr>%if nargin < 2,	error('Not enough arguments');elseif nargin == 2	m=2;end%if m < 2,	error('m>1 for accurate calculation')end%nmhu = length(mhu);mhu2 = mhu.^2;mhu2(mhu2==0) = eps;%XJ = jseries_dke_jd(sqrt(mhutrap2),mhu,m); %   chim =zeros(m+1,1);chim_tp =zeros(m+1,1);mhutrap2m =zeros(m+1,1);chim(1) = 1;chim_tp(1) = 1;mhutrap2m(1) = 1;for i = 1:m,	chim(i+1) = (2*i - 3)/(2*i)*chim(i);	chim_tp(i+1) = (2*i - 1)/(2*i)*chim(i);	mhutrap2m(i+1) = mhutrap2*mhutrap2m(i);end%Xmchim = chim*ones(1,nmhu);Xmchim_tp = chim_tp*ones(1,nmhu);Xmmhutrap2m = mhutrap2m*ones(1,nmhu);Xmmhu2 = ones(m-1,1)*mhu2;Xmhu2 = ones(m,1)*mhu2;Xmhu2(Xmhu2==0) = eps;Xmmhu2(Xmmhu2==0) = eps;%    sstar = 1/sqrt(1 - mhutrap2).*ones(1,nmhu);lambda = 2/pi*sum(Xmchim(1:m,:).*Xmmhutrap2m(1:m,:).*XJ(1:m,:));lambda(lambda==0) = eps;delta = 2/pi*sum(Xmchim(1:m,:).*Xmmhutrap2m(2:m+1,:).*XJ(2:m+1,:))./lambda;sstar_tp = 2/pi*sum((Xmchim(1:m,:) - Xmchim_tp(1:m,:).*(1-Xmhu2)).*Xmmhutrap2m(1:m,:)./Xmhu2.*XJ(1:m,:));%        if m > 2,	lambda_tp = 2/pi*(XJ(1,:) + sum((Xmchim(2:m,:) - Xmchim(1:m-1,:)./Xmmhu2).*Xmmhutrap2m(2:m,:).*XJ(2:m,:)) - Xmchim(m,:)./mhu2.*Xmmhutrap2m(m+1,:).*XJ(m+1,:));elseif m == 2,	lambda_tp = 2/pi*(XJ(1,:) + (Xmchim(2,:) - Xmchim(1,:)./Xmmhu2).*Xmmhutrap2m(2,:).*XJ(2,:) - Xmchim(2,:)./mhu2.*Xmmhutrap2m(3,:).*XJ(3,:));end%
+function [xylambda_p0p0,xylambda_p2m1,xylambda_p2p0,xysstar,xymaskT,xmhu0T2] = bounce_dke_jd(tokamak,xia,ymhu0)
+%
+% calculates some bounce averaging coefficients needed for solving the 
+% drift-kinetic-equation. 
+%
+%   INPUTS:
+%
+%       - tokamak: equilibrium data file name 
+%       - xia: radial grid [1,nr]
+%       - ymhu0: pitch angle grid [1,nmhu]
+%
+%   OUTPUTS:
+%   
+%       - lambda: = 1/qtilde int_thetamin^2thetamax dtheta/2pi F(rho,theta,xi) xi0/xi, normalized bounce time 
+%       - delta: = {1-1/psi}
+%       - sstar = lambda.{psi.xi/xi0}
+%       - sstar_tp = lambda.{xi^2/xi0^2}
+%       - lambda_tp = lambda.{xi^2/xi0^2.psi} = lambda.(1-delta/xi0^2)
+%
+% by Joan Decker 03/05/2002
+% modified for arbitrary equilibrium 11/24/03
+%
+% <jodecker@alum.mit.edu> and <yves.peysson@cea.fr>
+%
+if nargin < 3,
+	error('Not enough arguments');
+end
+%
+method = 'linear'; % interpolation method (linear,cubic,spline,...)
+%
+filename = ['EQUIL_',tokamak];
+%filename = 'equihelena';
+
+nmhu = length(ymhu0);
+
+eval(['load ',filename,'.mat R Z BR BZ BPHI'])
+
+R0 = R(1,1); % R of Magnetic Axix
+Z0 = Z(1,1); % Z of Magnetic Axix
+
+ia = (R(:,1) - R0)'/R0;
+
+XR = interp1(ia,R,xia);
+XZ = interp1(ia,Z,xia);
+XBR = interp1(ia,BR,xia);
+XBZ = interp1(ia,BZ,xia);
+XBphi = interp1(ia,BPHI,xia);
+
+[np,nt] = size(XR);
+
+xq = safetyf_dke_jd(R0,Z0,XR,XZ,XBR,XBZ,XBphi);
+xqtilde = qtilde_dke_jd(R0,Z0,XR,XZ,XBR,XBZ,XBphi);
+
+XBT = abs(XBphi); % Toroidal B-field
+XB = sqrt(XBphi.^2 + XBR.^2 + XBZ.^2); % Total B-field
+
+xBmin = min(XB'); % Minimum of B on FS
+xBmax = max(XB'); % Maximum of B on FS
+
+xmhu0T2 = 1 - xBmin./xBmax; % Pitch-angle (squared) at the trapped-passing boundary
+
+XBmin = repmat(xBmin',[1,nt-1]);
+iBmin = find(XBmin == XB(:,1:nt-1));
+xBTmin = XBT(iBmin)';
+xRmin = XR(iBmin)';
+
+xsstar = xq.*xRmin.*xBmin./xqtilde/R0./xBTmin;
+
+xyqtilde = repmat(xqtilde',[1,nmhu]);
+
+[YMdt,YMmask,YMF,YMPSIB,YMmhu0,YMmhu,xymaskT] = banana_dke_jd(ymhu0,R0,Z0,XR,XZ,XBR,XBZ,XBphi);
+
+Yweight_p0p0 = (YMmhu./YMmhu0).^(0).*YMPSIB.^(0);
+%Yweight_p1p1 = (YMmhu./YMmhu0).^(1).*YMPSIB.^(1);
+Yweight_p2m1 = (YMmhu./YMmhu0).^(2).*YMPSIB.^(-1);
+Yweight_p2p0 = (YMmhu./YMmhu0).^(2).*YMPSIB.^(0);
+%Yweight_p2p1 = (YMmhu./YMmhu0).^(2).*YMPSIB.^(1);
+
+clear YMmhu YMmhu0 YMPSIB
+
+xylambda_p0p0 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p0p0)/(2*pi),[np,nmhu])./xyqtilde;
+%xylambda_p1p1 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p1p1)/(2*pi),[np,nmhu])./xyqtilde;
+xylambda_p2m1 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p2m1)/(2*pi),[np,nmhu])./xyqtilde;
+xylambda_p2p0 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p2p0)/(2*pi),[np,nmhu])./xyqtilde;
+%xylambda_p2p1 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p2p1)/(2*pi),[np,nmhu])./xyqtilde;
+
+xysstar = ~xymaskT.*repmat(xsstar',[1,nmhu]);
+
+%xydelta = reshape(sum(YMmask.*YMdt.*YMF.*(1 - 1./YMPSIB))/(2*pi),[np,nmhu])./xylambdaqt;
+%xydelta = (1 - reshape(sum(YMmask.*YMdt.*YMF.*YMmhu.^2./YMmhu0.^2./YMPSIB)/(2*pi),[np,nmhu])./xylambdaqt).*xymhu0.^2;;
+%xysstar = reshape(sum(YMmask.*YMdt.*YMF.*YMPSIB.*YMmhu./YMmhu0)/(2*pi),[np,nmhu]).*~xymaskT./xyqtilde;
+%xysstar_tp = reshape(sum(YMmask.*YMdt.*YMF.*YMmhu.^2./YMmhu0.^2)/(2*pi),[np,nmhu])./xyqtilde;
+%xylambda_tp = reshape(sum(YMmask.*YMdt.*YMF.*YMPSIB.*YMmhu.^2./YMmhu0.^2)/(2*pi),[np,nmhu])./xyqtilde;
+	
+ymask = find(ymhu0 == 0);
+if ~isempty(ymask)
+	xylambda_p0p0(:,ymask) = eps;
+	%xylambda_p1p1(:,ymask) = 0;
+	xylambda_p2m1(:,ymask) = eps;
+	xylambda_p2p0(:,ymask) = eps;
+%	xylambda_p2p1(:,ymask) = eps;
+end
