@@ -765,10 +765,10 @@ end
 %
 nb = size(waveparam,2);
 if nb > 0
-    blist_lh = find(waveparam(1,:,1)==0);
+    blist_lh = find(round(waveparam(1,:,1)./(qe*min(xB0)/me)) == 0);
     nb_lh = length(blist_lh);
     waveparam_lh = waveparam(:,blist_lh,:);
-    blist_ec = find(waveparam(1,:,1) > 0);
+    blist_ec = find(round(waveparam(1,:,1)./(qe*min(xB0)/me)) > 0);
     nb_ec = length(blist_ec);
     waveparam_ec = waveparam(:,blist_ec,:);
 else 
