@@ -1,8 +1,8 @@
-function waveparam = ideallhcd_dke_jd(tokname,xrho,betath_ref,xrbetath,xrnhuth);
+function waveparam = ideallhcd_dke_jd(xrho,betath_ref,xrbetath,xrnhuth);
 %
 % Creates wave parameters for test mode LHCD calculations
 % This function has a benchmarking purpose only
-% Aproximation: 
+% Aproximations: 
 %   - The polarization is purely electrostatic: in that case, only the parallel polarization term is non-zero.
 %   - Small FLR limit: J0(z) -> 1. 
 %
@@ -57,7 +57,7 @@ xynparmin_lh(:,ytest_maskvpar_lh) = 1./xyvparmax_lh_ref(:,ytest_maskvpar_lh)/bet
 xynparmax_lh(:,ytest_maskvpar_lh) = 1./xyvparmin_lh_ref(:,ytest_maskvpar_lh)/betath_ref;%Conversion from vpar representation to npar one (if yvparmin_lh not a NaN)
 ytest_masknpars_lh = logical(ytest_masknpars_lh + ytest_maskvpar_lh);
 %
-%The quasilinear diffusion coefficient  xyD0_lh_ref is must be transformed to the general expression
+%The quasilinear diffusion coefficient xyD0_lh_ref is must be transformed to the general expression
 %Normalization of the diffusion coefficient for comparison with old calc. (Karney, Shoucri), see rfdiff_dke_jd
 %
 xyD0_lh_ref = zeros(nr,nb_lh);

@@ -45,7 +45,7 @@ if nargin < 11,
 end
 %
 if uniform == 1,%if uniform grid called, the old method is used for the mhu-grid
-	grid_power = 0;
+	%grid_power = 0;
 end
 %
 %Pitch-angle grid
@@ -231,6 +231,11 @@ end
 %
 nmhu_S = length(mhu_S);
 nmhu_f = nmhu_S - 1;
+%
+% added to avoid imaginary numbers later
+%
+mhu_S(1) = -1;
+mhu_S(nmhu_S) = 1;
 %
 mhum_S = mhu_S(1:nmhu_S-1);%point j (flux grid)
 mhup_S = mhu_S(2:nmhu_S);%point j+1 (flux grid)

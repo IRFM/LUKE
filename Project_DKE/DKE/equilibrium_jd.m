@@ -112,7 +112,7 @@ xzni = interp1(ppsin,pzni',xpsin)';
 xZeff = interp1(ppsin,pZeff,xpsin);
 %
 XBT = abs(XBphi);%Toroidal B-field
-XBp = sqrt(XBR.^2 + XBZ.^2);;%Poloidal B-field
+XBp = sqrt(XBR.^2 + XBZ.^2);%Poloidal B-field
 XB = sqrt(XBphi.^2 + XBR.^2 + XBZ.^2);%Total B-field
 %
 %index 0 refers to the minimum of the magnetic field
