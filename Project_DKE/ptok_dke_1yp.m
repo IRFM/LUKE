@@ -644,6 +644,55 @@ elseif strcmp(name,'JET') == 1,
 %	HXR{4} = [0.3,-0.3];%Vertical position on the HXR chord (m) [1,nchord]
 %
 %	HXR{5} = [2.1010 2.1422]*1e-9;
+elseif strcmp(name,'JET_C') == 1,%Counter current LH experiments (see Marc Goniche)
+		ap = 0.98;
+		Rp = 2.87;
+		Zp = 0.0;
+	%
+		xpoint(1) = 1.687;%Vertical position of the top X point
+		xpoint(2) = 0.466;%Horizontal position of the top X point
+		xpoint(3) = 0;%Angle between the separatrix and the horizontal plane for the top X point (degree)
+		xpoint(4) = 0;%Angle between the separatrix and the horizontal plane for the top X point (degree)
+		xpoint(5) = 2.001;%Vertical position of the bottom X point (always positive value)
+		xpoint(6) = 0.568;%Horizontal position of the bottom X point
+		xpoint(7) = 22.46;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
+		xpoint(8) = 67.92;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
+	%
+		Bt = 3.1;	
+	%
+		Zi = [1 1 1 6];
+		mi = [1 2 3 12];
+		fi = [0,1,0];
+		Zeff0 = 4;
+		Zeffa = 4;
+		eZeff = 0;
+	%	
+		Ip = 1.5;
+		j0 = 1.0;
+		ja = 0;
+		ej = 2;
+		qmin = 1;
+		eq = 1;
+	%
+		Te0 = 8;
+		Tea = 0.04*Te0;
+		eTe = 3;
+		Ti0 = 3;
+		Tia = 0.04*Ti0;
+		eTi = 3;	
+		ne0 = 1.5e+19;
+		nea = 0.05*ne0;
+		ene = 0.5;
+%
+%
+%Fast electron bremsstrahlung tomography (if exists)
+%
+%	HXR{1} = [4,4];%Major radius on the HXR chord (m) [1,nchord]
+%	HXR{2} = [0,0];%Vertical position on the HXR chord (m) [1,nchord]
+%	HXR{3} = [4.5,4.5];%Major position of one point on HXR chord (R_hxr_2 > R_hxr_1) (m) [1,nchord]
+%	HXR{4} = [0.3,-0.3];%Vertical position on the HXR chord (m) [1,nchord]
+%
+%	HXR{5} = [2.1010 2.1422]*1e-9;
 elseif strcmp(name,'TEST_LORENTZ') == 1,%Values based on NSTX case but circular plasma cross-section
    ap = 2.3899;
    Rp = 2.39; 
