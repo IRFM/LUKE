@@ -194,29 +194,29 @@ elseif strcmp(name,'RTP') == 1,
 	eZeff = 0;
 elseif strcmp(name,'TCV') == 1,%some parameters are incorrect for TCV
 	ap = 0.25;
-	Rp = 0.87;
-	Ip = 0.09;%****** calculated from f3din for C-mod(qmin = 3.2, qmax = 2.1, eq=1)
-	Bt = 2.0;
+	Rp = 0.88;
+	Ip = 0.12;
+	Bt = 1.4;
 	Ncoils = NaN;
-	Zi = [1,1,1];
-	mi = [1,2,3];
+	Zi = [1,1,1,6];
+	mi = [1,2,3,12];
 	fi = [0,1,0.0];
 %
 	BeLi = NaN;
 	qmin = 1.0;
-	eq = 2;%Parabolic dependence
+	eq = 0;%Parabolic dependence
 %
-	Te0 = 1.88;
-	Tea = 0.03;
-	eTe = 2;
-	eTe_ref = 2;
-	ne0 = 1.95e+19;
-	nea = 0;
-	ene = 1;
-	ene_ref = 1;
-	Ti0 = 0.94;
+	Te0 = 3.5;
+	Tea = 0.0;
+	eTe = 3;
+	eTe_ref = 3;
+	ne0 = 1e+19;
+	nea = 1;
+	ene = 0;
+	ene_ref = 0;
+	Ti0 = 1;
 	Tia = 0;
-	eTi = 2;
+	eTi = 3;
 	Zeff0 = 1;
 	Zeffa = 1;
 	eZeff = 0;
@@ -366,6 +366,62 @@ elseif strcmp(name,'D3D_test4') == 1,
 	Zeff0 = 2;
 	Zeffa = 2;
 	eZeff = 0;
+elseif strcmp(name,'D3D_test4_CST') == 1,
+	ap = 0.67;
+	Rp = 1.67;
+	Ip = 1.2e-3;
+	Bt = 2.0;
+	Ncoils = NaN;
+	Zi = [1,1,1,6];
+	mi = [1,2,3,12];
+	fi = [0,1,0];
+%
+	BeLi = NaN;
+	qmin = 1;
+	eq = 0;
+%
+	Te0 = 4;
+	Tea = Te0;
+	eTe = 0;
+	eTe_ref = 0;
+	ne0 = 3e+19;
+	nea = ne0;
+	ene = 0;
+	ene_ref = 0;
+	Ti0 = 4;
+	Tia = Ti0;
+	eTi = 0;
+	Zeff0 = 2;
+	Zeffa = 2;
+	eZeff = 0;
+elseif strcmp(name,'FTU') == 1,
+	ap = 0.29;
+	Rp = 0.935;
+	Ip = 0.001;%Poloidal feld therefore neglected
+	Bt = 5.5;
+	Ncoils = NaN;
+	Zi = [1,1,1,6];
+	mi = [1,2,3,12];
+	fi = [1,0,0];
+%
+	BeLi = NaN;
+	qmin = 1;
+	eq = 1;
+%
+	Te0 = 3.0;
+	Tea = 0;
+	eTe = 2;
+	eTe_ref = 2;
+	ne0 = 1.0e20;
+	nea = 0;
+	ene = 1;% Note: in order to match the equilibrium parameters from D. Farina (IFP 99/14), need to manually implement ne=ne0(1-(r/a)^3)
+	ene_ref = 1;
+	Ti0 = 1.5;
+	Tia = Ti0;
+	eTi = 0;
+	Zeff0 = 3;
+	Zeffa = 3;
+	eZeff = 0;
 elseif strcmp(name,'TEST0') == 1,
 	ap = 0.22;
 	Rp = 0.68;
@@ -380,17 +436,17 @@ elseif strcmp(name,'TEST0') == 1,
 	qmin = 3.2;
 	eq = 1;
 %
-	Te0 = 0.001;
-	Tea = 0.0;
-	eTe = 2*0;
-	eTe_ref = 2*0;
+	Te0 = 5.11e-4;
+	Tea = Te0;
+	eTe = 0;
+	eTe_ref = 0;
 	ne0 = 2.5e+19;
-	nea = 0.2*ne0;
-	ene = 0.5*0;
-	ene_ref = 0.5*0;
-	Ti0 = 0.0005;
+	nea = ne0;
+	ene = 0;
+	ene_ref = 0;
+	Ti0 = Te0;
 	Tia = 0;
-	eTi = 2*0;
+	eTi = 0;
 	Zeff0 = 1;
 	Zeffa = 1;
 	eZeff = 0;
@@ -740,6 +796,34 @@ elseif strcmp(name,'TEST_LORENTZ') == 1,%Values based on NSTX case but circular 
 %	HXR{3} = [];%Major position of one point on HXR chord (R_hxr_2 > R_hxr_1) (m) [1,nchord]
 %	HXR{4} = [];%Vertical position on the HXR chord (m) [1,nchord]
 %	HXR{5} = [];%Geometrical factor (m^2/str) [1,nchord]
+elseif strcmp(name,'RELAX_ECCD') == 1,
+	ap = 1.125;
+	Rp = 2.25;
+	Ip = 0.678;%****** calculated from f3din for C-mod(qmin = 3.2, qmax = 2.1, eq=1)
+	Bt = 4.0;
+	Ncoils = NaN;
+	Zi = [1,1,1];
+	mi = [1,2,3];
+	fi = [0,1,0.0];
+%
+	BeLi = NaN;
+	qmin = 3.2;
+	eq = 1;
+%
+	Te0 = 2.25;
+	Tea = Te0;
+	eTe = 0;
+	eTe_ref = 0;
+	ne0 = 4.13e+19;
+	nea = ne0;
+	ene = 0;
+	ene_ref = 0;
+	Ti0 = Te0;
+	Tia = Ti0;
+	eTi = 0;
+	Zeff0 = 1;
+	Zeffa = 1;
+	eZeff = 0;
 else
 	error('Wrong input name in ptok_dke_1yp.m')
 end	
