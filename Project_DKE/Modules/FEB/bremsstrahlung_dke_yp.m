@@ -1,4 +1,4 @@
-function  [brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi,rho_out,theta_out] = bremsstrahlung_dke_yp(tokamak,HXR,vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr,XXheaviside,zZi,xzni_norm,xne_norm,ne_ref,xrho,dmhu,mhu,dpn,pn,pn2,gamma,Ec,dp_cyl,pnmax_S,XXf0,XXf0_tp,XXf0_g,nlevel,bounce_mode,display_mode,r_display,t_display)
+function  [brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi,lchord,rho_out,theta_out] = bremsstrahlung_dke_yp(tokamak,HXR,vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr,XXheaviside,zZi,xzni_norm,xne_norm,ne_ref,xrho,dmhu,mhu,dpn,pn,pn2,gamma,Ec,dp_cyl,pnmax_S,XXf0,XXf0_tp,XXf0_g,nlevel,bounce_mode,display_mode,r_display,t_display)
 %
 % Calculates the bremsstrahlung emission. Call first the function bremchord_dke_yp.m for calculating "vschords" used in line integration
 %
@@ -16,7 +16,7 @@ function  [brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi,rho_out,the
 % by Joan Decker <jodecker@mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 %
     
-%%%%%%[brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi,rho_out,theta_out] = bremsstrahlung_dke_yp('TS',HXR,vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr,XXheaviside,zZi,xzni_norm,xne_norm,ne_ref,xrho,dmhu,mhu,dpn_ref,pn_ref,pn2_ref,gamma_ref,Ec_ref,dp_cyl,pnmax_S,XXf0_ref,XXf0_tp_ref,XXf0_g_ref,nlevel,bounce_mode,2,0.7,120)   
+%%%%%%[brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi,lchord,rho_out,theta_out] = bremsstrahlung_dke_yp('TS',HXR,vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr,XXheaviside,zZi,xzni_norm,xne_norm,ne_ref,xrho,dmhu,mhu,dpn_ref,pn_ref,pn2_ref,gamma_ref,Ec_ref,dp_cyl,pnmax_S,XXf0_ref,XXf0_tp_ref,XXf0_g_ref,nlevel,bounce_mode,2,0.7,120)   
 % 
 [qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;%Physics constant
 %
@@ -202,6 +202,7 @@ if display_mode >= 1,%Display the quality of the reconstruction of the electron 
 end
 %
 brem_bd_out = zeros(size(vschords,3),length(kphot));
+lchord = zeros(size(vschords,3));
 for ic = 1:size(vschords,3),%loop on each chord  
 	s_mask = ~isnan(vschords(7,:,ic));%Location where chord is inside the plasma
    s_length = sum(s_mask);%Number of points along the chord inside the plasma
@@ -232,6 +233,7 @@ for ic = 1:size(vschords,3),%loop on each chord
    s1 = repmat(s',[1,length(kphot)]);
 %
 	brem_bd_out(ic,:) = sum(s1.*brem_bd,1);%Integration along the chord
+	lchord(ic) = sum(s);%Chord length calculation
 %
 	info_dke_yp(2,['Line integration for chord #',int2str(ic),'/',int2str(size(vschords,3)),' done']);
 end	
