@@ -1,11 +1,14 @@
-function [ptR,ptZ,ptdpsindr,ptdpsindz,ppsin,ttheta] = rz2pt_jd(rR,zZ,Rp,Zp,rzpsin,ppsin,ttheta,method,display_mode,p_opt,sfac);
+function [ptR,ptZ,ptdpsindr,ptdpsindz,ppsin,ttheta] = rz2pt_jd(rR,zZ,Rp,Zp,rzpsin,ppsin,ttheta,method,display_mode,p_opt,filename,sfac);
 %
 % This function inverts the magnetic geometry data.
 %
 % by J. Decker (jodecker@alum.mit.edu) 11/02/04
 %
+if nargin < 12
+    sfac = 10;
+end
 if nargin < 11
-    sfac = 10;;
+    filename = 'tokamak';
 end
 if nargin < 10
     p_opt = -1;
@@ -102,8 +105,8 @@ hrztheta = atan((hrzZ - Zp)./(hrzR - Rp)) + pi*(hrzR < Rp) + 2*pi*(hrzR > Rp & h
 %
 % need to select more generally... this is a temporary solution    
 %
-sRa = x1c{1};
-sZa = x2c{1};
+sRa = x1c{1};%sRa = x1c{3};
+sZa = x2c{1};%sZa = x2c{3};
 %
 % change to (r,theta) grid
 %
@@ -262,5 +265,7 @@ if display_mode >= 2,
 %    
     [ax] = graph1D_jd(sR',sZ',0,0,'','','',NaN,[Rmin,Rmax],[Zmin,Zmax],style,marker,color1,width1,siz,gca,red);pause(0.5)
     [ax] = graph1D_jd(stR,stZ,0,0,'R','Z','Flux-surfaces labeled by \rho=0,0.1,0.2...1',NaN,[Rmin,Rmax],[Zmin,Zmax],style,marker,color2,width2);pause(0.5)
-    axis('equal');    
+    axis('equal');  
+    axis([Rmin,Rmax,Zmin,Zmax]);
+    print_jd(p_opt,[filename,'_rhotheta']);
 end

@@ -1,10 +1,13 @@
-function [R,Z,psin,psia,xpsin,xF,xp,xq,Rv,Zv,Bv,Rp,Zp,Ip] = eqdsk_jd(filename,display_mode,p_opt);
+function [R,Z,psin,psia,xpsin,xF,xp,xq,Rv,Zv,Bv,Rp,Zp,Ip] = eqdsk_jd(filename,display_mode,p_opt,dispname);
 %
 % This function reads the equilibrium parameters from eqdsk files created
 % by EFIT and saved in the formatted text file "filename"
 %
 % by J. Decker (jodecke@alum.mit.edu) 10/28/04
 %
+if nargin < 4
+    dispname = filename;
+end
 fid = fopen(filename);
 name = fscanf(fid,'%s',1);
 date = fscanf(fid,'%s',1);
@@ -96,20 +99,21 @@ if display_mode >= 2,
     red = 0.9;
     lspace = 0.7;
     bspace = 0.6;
+    tit = [dispname];
     %
     figure(1),clf
     %
     xlab = 'R';
     ylab = 'Z';
-    xlim = [0,max(R)];
+    %xlim = [0,max(R)];
+    xlim = [min(R),max(R)];
     ylim = [min(Z),max(Z)];
-    tit = [name];
     %
-    set(gcf,'position',[1,1,6,8])
+    %set(gcf,'position',[1,1,6,8])
     graph2D_jd(R,Z,psin,xlab,ylab,tit,xlim,ylim,0,NaN,[0:0.05:1],0,style,color,width,siz,red);
     axis('equal');
     axis([xlim,ylim]);
-    set(gca,'XTick',[0:1:2],'YTick',[-2:2]);
+    %set(gca,'XTick',[0:1:2],'YTick',[-2:2]);
     print_jd(p_opt,[name,'_psi_RZ']);
     %
     figure(2),clf
@@ -159,7 +163,7 @@ if display_mode >= 2,
     set(gca,'XTick',[0:0.2:1]);
     print_jd(p_opt,[name,'_q_psi']);
     %
-    figure(10),clf
+    figure(7),clf
     %
     rho_list = [0:0.05:0.999];
     iZ0 = find(abs(Z) == min(abs(Z)));
@@ -169,19 +173,17 @@ if display_mode >= 2,
     %
     xlab = 'R';
     ylab = 'Z';
-    xlim = [0,max(R)];
+    %xlim = [0,max(R)];
+    xlim = [min(R),max(R)];
     ylim = [min(Z),max(Z)];
-    tit = [name];
+    tit = [dispname];
     %
-    set(gcf,'position',[1,1,6,8])
+    %set(gcf,'position',[1,1,6,8])
     graph2D_jd(R,Z,psin,xlab,ylab,tit,xlim,ylim,0,NaN,rpsi,0,style,color,width,siz,red);
     axis('equal');
     axis([xlim,ylim]);
-    set(gca,'XTick',[0:1:2],'YTick',[-2:2]);
+    %set(gca,'XTick',[0:1:2],'YTick',[-2:2]);
     print_jd(p_opt,[name,'_rho_RZ']);
-    
-    
-    
  end
 
 
