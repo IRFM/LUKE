@@ -1411,7 +1411,31 @@ for ir = 1:nr,
 	XXc(:,:,ir) = XXc(:,:,ir) + XXnhuloss(:,:,ir).*Xpn2;
 %
 %Boundaries of the bounce domain for f0
+%	
+	XXc(:,1,ir) = XXc(:,1,ir) + XXa(:,1,ir);%Because of cross-derivatives
+	XXd(:,1,ir) = XXd(:,1,ir) + XXi(:,1,ir);%Because of cross-derivatives
+	XXb(:,1,ir) = XXb(:,1,ir) + XXf(:,1,ir);%Because of cross-derivatives
 %
+	XXa(:,1,ir) = 0;%Because of cross-derivatives
+	XXi(:,1,ir) = 0;%Because of cross-derivatives
+	XXf(:,1,ir) = 0;%Because of cross-derivatives
+%
+	XXc(:,nmhu,ir) = XXc(:,nmhu,ir) + XXe(:,nmhu,ir);%Because of cross-derivatives
+	XXd(:,nmhu,ir) = XXd(:,nmhu,ir) + XXg(:,nmhu,ir);%Because of cross-derivatives
+	XXb(:,nmhu,ir) = XXb(:,nmhu,ir) + XXh(:,nmhu,ir);%Because of cross-derivatives
+%
+	XXe(:,nmhu,ir) = 0;%Because of cross-derivatives
+	XXg(:,nmhu,ir) = 0;%Because of cross-derivatives
+	XXh(:,nmhu,ir) = 0;%Because of cross-derivatives
+%
+	XXc(1,:,ir) = XXc(1,:,ir) + fliplr(XXb(1,:,ir));%Because of cross-derivatives
+	XXa(1,:,ir) = XXa(1,:,ir) + fliplr(XXf(1,:,ir));%Because of cross-derivatives
+	XXe(1,:,ir) = XXe(1,:,ir) + fliplr(XXh(1,:,ir));%Because of cross-derivatives
+%
+	XXb(1,:,ir) = 0;%Because of cross-derivatives
+	XXh(1,:,ir) = 0;%Because of cross-derivatives
+	XXf(1,:,ir) = 0;%Because of cross-derivatives
+%	
 	if bounce_mode == 0,%No bounce averaging
 		Xa_t = XXa(:,:,ir);
 		Xb_t = XXb(:,:,ir);
@@ -1776,6 +1800,41 @@ if dke_mode == 1,
 		    XDmm_tp_ijp,XDmm_tp_ijm,...
 		    XFp_tp_ippj,XFp_tp_ipj,XFp_tp_ij,XFp_tp_imj,XFp_tp_immj,...
 		    XFm_tp_ijp,XFm_tp_ijm); 
+%
+%Boundary conditions because of cross-derivatives (symmetry of f: fj-1/2=fj+1/2)
+%
+		Xc_tp(:,1,ir) = Xc_tp(:,1,ir) + Xa_tp(:,1,ir);
+		Xd_tp(:,1,ir) = Xd_tp(:,1,ir) + Xi_tp(:,1,ir);
+		Xb_tp(:,1,ir) = Xb_tp(:,1,ir) + Xf_tp(:,1,ir);
+
+		Xa_tp(:,1,ir) = 0;
+		Xi_tp(:,1,ir) = 0;
+		Xf_tp(:,1,ir) = 0;
+
+		Xc_tp(:,nmhu,ir) = Xc_tp(:,nmhu,ir) + Xe_tp(:,nmhu,ir);
+		Xd_tp(:,nmhu,ir) = Xd_tp(:,nmhu,ir) + Xg_tp(:,nmhu,ir);
+		Xb_tp(:,nmhu,ir) = Xb_tp(:,nmhu,ir) + Xh_tp(:,nmhu,ir);
+
+		Xe_tp(:,nmhu,ir) = 0;
+		Xg_tp(:,nmhu,ir) = 0;
+		Xh_tp(:,nmhu,ir) = 0;
+
+		Xc_tp(1,:,ir) = Xc_tp(1,:,ir) + fliplr(Xb_tp(1,:,ir));
+		Xa_tp(1,:,ir) = Xa_tp(1,:,ir) + fliplr(Xf_tp(1,:,ir));
+		Xe_tp(1,:,ir) = Xe_tp(1,:,ir) + fliplr(Xh_tp(1,:,ir));
+
+		Xb_tp(1,:,ir) = 0;
+		Xh_tp(1,:,ir) = 0;
+		Xf_tp(1,:,ir) = 0;
+		    
+		    
+		    
+		    
+		    
+		    
+		    
+		    
+		    
 %
 %Correction matrix resulting from the radial gradient of Chang and Cooper interpolation coefficients
 %           		
