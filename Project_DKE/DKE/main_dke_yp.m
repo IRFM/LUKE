@@ -746,7 +746,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
         xftp_norm_ref,bounce,coll_mode,...
         norm_mode_f,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,snumber,XXfinit_ref);
 %
-    if ~isempty(waveparam)
+    if ~isempty(waveparam) & nit_rf > 1,
         xyPabs_rf_dke_fsav_out = ZP0_ref_fsav{3,1} + ZP0_ref_fsav{3,2} + ZP0_ref_fsav{3,3}; % flux-surface averaged density of absorbed power.
         xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav_out*P_ref;
 %
