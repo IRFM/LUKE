@@ -6,7 +6,7 @@ function waveparam = ideallhcd_dke_jd(tokname,xrho,betath_ref,xrbetath,xrnhuth);
 %   - The polarization is purely electrostatic: in that case, only the parallel polarization term is non-zero.
 %   - Small FLR limit: J0(z) -> 1. 
 %
-% by J. Decker (jodecker@alum.mit.edu) and Y. Peysson (yves.peysson@cea.fr)
+% by Joan Decker (jodecker@mit.edu) and Yves Peysson (yves.peysson@cea.fr)
 %
 [blist_lh,yvparmin_lh,yvparmax_lh,ynparmin_lh,ynparmax_lh,ynpar_lh,ydnpar_lh,...
     yD0_in_c_lh,yD0_in_lh_prof,ypeak_lh,ywidth_lh,ythetab_lh,yopt_lh] = psim_ideallhcd_jd;
@@ -50,7 +50,8 @@ xyD0_in_lh(:,~yD0_in_lh_prof) = xyD0_in_c_lh(:,~yD0_in_lh_prof);%Uniform radial 
 %
 xyvparmin_lh_ref = xyvparmin_lh.*xyrbetath_lh;%Normalization when norm_ref = 0
 xyvparmax_lh_ref = xyvparmax_lh.*xyrbetath_lh;%Normalization when norm_ref = 0
-xyD0_lh_ref_in = xyD0_in_lh.*xyrnhuth_lh.*xyrbetath_lh.*xyrbetath_lh;%Normalization when norm_ref = 0
+%
+xyD0_lh_ref_in = xyD0_in_lh.*xyrnhuth_lh.*xyrbetath_lh.*xyrbetath_lh,%Normalization when norm_ref = 0
 %
 xynparmin_lh(:,ytest_maskvpar_lh) = 1./xyvparmax_lh_ref(:,ytest_maskvpar_lh)/betath_ref;%Conversion from vpar representation to npar one (if yvparmax_lh not a NaN)
 xynparmax_lh(:,ytest_maskvpar_lh) = 1./xyvparmin_lh_ref(:,ytest_maskvpar_lh)/betath_ref;%Conversion from vpar representation to npar one (if yvparmin_lh not a NaN)

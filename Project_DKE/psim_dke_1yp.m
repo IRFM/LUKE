@@ -24,22 +24,20 @@ dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode] = psim_dke_1yp;
 %
 snumber = 1;%Simulation number
 tokname = 'TS';%Tokamak equilibrium scenario (see ptok_dke_1yp.m) in EQUIL_tokname file)
-loadequil = 0;%1: Load already existing equilibrium file, 0: create equilibrium file with idealequil_f_jd.m function
+loadequil = 2;%0: Load already existing equilibrium file, 1: create equilibrium with HELENA (needs mex file), 2: create equilibrium file (with idealequil_f_jd.m function)
+npsi = 201;%Size of the psi grid for the magnetic equilibrium (ntheta is fixed for HELENA)
 %
-%Ideal equilibrium parameters (if loadequil = 0 only)
+%Additional specific parameters for ideal cylindrical magnetic equilibrium with circular concentric flux surfaces (used if loadequil = 2 only)
 %
-qopt = 1;%option for q profile. (0): constant (default), (1): from qmin and eq
-npsi = 201;%size of the psi grid
-ntheta = 201;%size of the theta grid
-kappa = 1;%Plasma elongation
-delta = 0;%Plasma triangularity
+qopt = 1;%Option for q profile. (0): constant (default), (1): from qmin and eq
+ntheta = 201;%Size of the theta grid for the magnetic equilibrium
 %
 %Mesh size calculation
 %
 grid_uniformity = 0;%Pitch-angle and momentum grids uniformity: (0) no, (1) yes (-1 for specific test DKE, transient)
 grid_method = 1;%Pitch-angle grid calculation technique: (0): old method, (1) new method
-nmhu_S = 79;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
-np_S = 104;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run)
+nmhu_S = 201;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
+np_S = 101;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run)
 pnmax_S = 15;%Maximum value of the flux momentum grid (pth_ref)
 %
 %Pitch-angle grid
@@ -56,7 +54,7 @@ grid_power = 1.5; % power for mhu grid step varations (grid_power > 1) (Note: fo
 %
 %Momentum grid
 %
-snp = 10;%pgridfactor (Uniform grid: pgridfactor << 1, non-uniform grid: pgridfactor >= 1) 
+snp = 10*eps;%pgridfactor (Uniform grid: pgridfactor << 1, non-uniform grid: pgridfactor >= 1) 
 spfac = 20;%reduction factor for the supergrid used in collision integrals
 %
 %Normalized radii at which the distribution is calculated (DKE or FP)
@@ -65,7 +63,7 @@ spfac = 20;%reduction factor for the supergrid used in collision integrals
 %Values of the radial flux grid [1,p] (If one radial value: local calculation only)
 %
 psin_S = [];%5.286742555900838e-002; %[0.1]%(rho = 0.25 in CMOD)
-rho_S = [0.2];%[0.1:0.05:0.9];%[0.2,0.6],%;0.03322100141578101;0.71365;
+rho_S = [0.05];%[0.2,0.6],%;0.03322100141578101;0.71365;
 %
 psin_display = NaN;%Approximate radial value at which results are displayed if display_mode >= 1 [1,1]
 rho_display = 0.1;
@@ -83,7 +81,7 @@ eepsi = 0;%Exponent for Ohmic electric field
 %
 % RF Waves
 %
-rf_list(1) = 1;%(1): include LH test calculations (see psim_ideallhcd_jd); (0) do not include
+rf_list(1) = 0;%(1): include LH test calculations (see psim_ideallhcd_jd); (0) do not include
 rf_list(2) = 0;%(1): include EC  calculations (see psim_idealeccd_jd); (0) do not include
 rf_list(3) = 0;%(1): include cold LHCD calculations (see psim_coldlhcd_jd); (0) do not include
 rf_list(4) = 0;%(1): include cold ECCD calculations (see psim_coldeccd_jd); (0) do not include
@@ -110,13 +108,13 @@ nhuloss = NaN;%Magnetic ripple loss frequency, nhuloss > 1000 (or NaN if no ripp
 %
 % Collision operator
 %
-coll_mode = 0;%Relativistic electron-electron collision operator: (0) Maxwellian, (1) High-velocity limit, (2) Linearizeded Belaiev-Budker 
+coll_mode = 3;%Relativistic collision operator: (0) Maxwellian, (1) High-velocity limit, (2) Linearized Belaiev-Budker - (3) No relativistic Lorentz model
 %
 % Run mode
 %
-bounce_mode = 0;%Bounce averaging option: (0) no bounce averaging, (1) bounce averaging full implicit method with 15 diagonals
-dke_mode = 0;%Fokker-Planck equation (0), Drift Kinetic equation (1)
-equil_mode = 1;%Equilibrium option: (0) circular concentric flux-surfaces, (1) numerical equilibrium
+bounce_mode = 1;%Bounce averaging option: (0) no bounce averaging, (1) bounce averaging full implicit method with 15 diagonals
+dke_mode = 1;%Fokker-Planck equation (0), Drift Kinetic equation (1)
+equil_mode = 0;%Equilibrium option: (0) circular concentric flux-surfaces, (1) numerical equilibrium
 %
 norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
 boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
@@ -129,8 +127,8 @@ prec0_g = 1e-10;%Convergence level of the residu (if NaN, iterations stop with n
 nit_g = 50;%Maximum number of iterations for g
 %
 dtn = 1000;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
-invproc = [3];%Iterative matrix inversion method: (1) qmr iterative method, (2) bicgstab iterative method, (3) cgs iterative method
-param_inv = [2e-3,30];%Parameters for the matrix inversion procedure. Precision of the partial LU decomposition, and maximum number of iteration for iterative methods (param_inv(1) depends of boundary_mode, if param_inv(1)=0, full LU factorization)
+invproc = [2];%Iterative matrix inversion method: (1) qmr iterative method, (2) bicgstab iterative method, (3) cgs iterative method
+param_inv = [2e-5,30];%Parameters for the matrix inversion procedure. Precision of the partial LU decomposition, and maximum number of iteration for iterative methods (param_inv(1) depends of boundary_mode, if param_inv(1)=0, full LU factorization)
 %
 dp_cyl = 0.1;%Cylindrical momentum step (pth_ref)
 display_mode = 1;%Display mode: (0): no, (1): partial, (2): full
@@ -146,17 +144,53 @@ if grid_method == 0
     grid_power = 0;
 end
 %
+if coll_mode == 3 & strcmp(tokname,'TEST_LORENTZ')==0,
+	tokname = 'TEST_LORENTZ';
+	epsi0 = 0.0;
+	epsia = 0.0;
+	rf_list(1) = 0;
+	rf_list(2) = 0;
+	rf_list(3) = 0;
+	rf_list(4) = 0;
+	rf_list(5) = 0;
+	rf_list(6) = 0;
+	rt_mode = 0;
+	Dr0 = 0;
+	Vr0 = 0;
+	nhuloss = NaN;
+	info_dke_yp(2,'WARNING: Lorentz model enforced !')
+end
+if strcmp(tokname,'TEST_LORENTZ')==1 & coll_mode ~= 3;
+	coll_mode = 3;
+	epsi0 = 0.0;
+	epsia = 0.0;
+	rf_list(1) = 0;
+	rf_list(2) = 0;
+	rf_list(3) = 0;
+	rf_list(4) = 0;
+	rf_list(5) = 0;
+	rf_list(6) = 0;
+	rt_mode = 0;
+	Dr0 = 0;
+	Vr0 = 0;
+	nhuloss = NaN;
+	info_dke_yp(2,'WARNING: Lorentz model enforced !')	
+end
+%
 [s,dossier,machine] = comput_dke_yp;
-if loadequil == 0,
-	filename = idealequil_f_jd(tokname,qopt,npsi,ntheta,zeros(1,npsi),kappa,delta);%Calculate the equibrium parameters if tokamak name exists
-	info_dke_yp(2,['Equilibrium file ',filename,' has been created.']);
-else
+if loadequil == 0,%Already existing magnetic equilibrium file
 	filename = ['EQUIL_',tokname,'.mat'];
 	if exist([dossier,s,filename]) == 2,
 		info_dke_yp(2,['Equilibrium file ',filename,' is well found.']);
 	else
 		error('Equilibrium file is not found !')
 	end
+elseif loadequil == 1,%Create magnetic equilibrium file with HELENA
+	filename = helenaequil_f_jd(tokname,npsi);%Calculate the equibrium parameters if tokamak name exists
+	info_dke_yp(2,['HELENA magnetic equilibrium file ',filename,' has been created.']);
+elseif loadequil == 2,%Create ideal cylindrical magnetic equilibrium
+	filename = idealequil_f_jd(tokname,qopt,npsi,ntheta);%Calculate the equibrium parameters if tokamak name exists
+	info_dke_yp(2,['Ideal magnetic equilibrium file ',filename,' has been created.']);
 end
 %
 psin_S = sort([psin_S,rho2psi_jd(tokname,rho_S)]);

@@ -38,8 +38,6 @@ function [ZYXXD_rf,ZYXXD_rf_tp,ZYXXF_rf_tp] = rfdiff_dke_jd(waveparam,...
 %
 %   refer to documentation for detailed description    
 %
-% Last update: 02/07/03
-%
 % by J. Decker (MIT/RLE, jodecker@mit.edu) 02/05/03 
 %
 qe = 1.60217733e-19;%Absolute value of the electron charge (C)
@@ -135,11 +133,11 @@ YXXsigmam = sign(YXXmhum);
 % 
 if bounce_mode > 0,          
     YXXlambdap = shiftdim(repmat(Xxlambdap,[1,1,nb,npn]),3); %Normalized bounce time
-	YXXlambda = shiftdim(repmat(Xxlambda,[1,1,nb,npn]),3);
-	YXXlambdam = shiftdim(repmat(Xxlambdam,[1,1,nb,npn]),3);
+    YXXlambda = shiftdim(repmat(Xxlambda,[1,1,nb,npn]),3);
+    YXXlambdam = shiftdim(repmat(Xxlambdam,[1,1,nb,npn]),3);
 %  
-	YXXHPp = repmat(XXheaviside_p,[1,1,1,nb]); %Mask for passing (1) or trapped (0) 
-	YXXHP = repmat(XXheaviside,[1,1,1,nb]);
+    YXXHPp = repmat(XXheaviside_p,[1,1,1,nb]); %Mask for passing (1) or trapped (0) 
+    YXXHP = repmat(XXheaviside,[1,1,1,nb]);
     YXXHPm = repmat(XXheaviside_m,[1,1,1,nb]);
 % 
     xyqtildeb_rf = xyBb_rf.*xyrb_rf./xyBPb_rf/Rp;
@@ -173,8 +171,8 @@ else
     YXXmaskb = ones(npn,nmhu,nr,nb);
 %
     YXXmhubp = YXXmhup;
-	YXXmhub = YXXmhu;
-	YXXmhubm = YXXmhum;
+    YXXmhub = YXXmhu;
+    YXXmhubm = YXXmhum;
 %
     xyqtildeb_rf = ones(nr,nb);% local bounce-averaging factor qtilde at theta = thetab_rf
 %
@@ -216,11 +214,11 @@ YXXZb_ijm = -YXXnperp_rf*betath_ref.*YXXpn.*sqrt(YXX1mmhu2m).*YXXomega_rf./sqrt(
 %
 clear YXXnperp_rf
 %
-YXXlre = (YXXopt == 0); %(0): exact calculation for the bessel functions, otherwise, limit k_perp*rho_perp << 1
+YXXlre = (YXXopt == 0); %(0): exact calculation for the Bessel functions, otherwise, limit k_perp*rho_perp << 1
 %
 % Polarization term 
 %
-%   modified J.D. 07/02/03. Pol. vector is now norm. to 1.  
+% Polarization vector is normed to 1.  
 %
 YXXpolb_ippj = YXXepolp_rf.*besselj_dke_jd(YXXn_rf + 1,YXXZb_ippj,YXXlre)/sqrt(2) + YXXepolm_rf.*besselj_dke_jd(YXXn_rf - 1,YXXZb_ippj,YXXlre)/sqrt(2)...
            - YXXmhub.*YXXepolz_rf.*besselj_dke_jd(YXXn_rf,YXXZb_ippj,YXXlre)./sqrt(YXXpsib.*YXX1mmhu2);
@@ -305,7 +303,6 @@ if max(YXXold(:)) > 0
 end
 %
 YXXdeltares_old_ij = YXXdeltares_ij;
-%YXXdeltares_old_ij(npn-2:npn,:) = 0;%Baranov condition for avoiding particle leaks at the boundary when relativistic effects are karge at the high velocity limit
 %
 YXXdeltares_old_ippj = zeros(size(YXXdeltares_old_ij)); 
 YXXdeltares_old_ipj = zeros(size(YXXdeltares_old_ij));
@@ -314,7 +311,7 @@ YXXdeltares_old_immj = zeros(size(YXXdeltares_old_ij));
 YXXdeltares_old_ijp = zeros(size(YXXdeltares_old_ij)); 
 YXXdeltares_old_ijm = zeros(size(YXXdeltares_old_ij)); 
 %
-YXXdeltares_old_ippj(1:npn-1,:,:,:) = YXXdeltares_old_ij(2:npn,:,:,:); YXXdeltares_old_ijipp(npn,:,:,:) = 0;
+YXXdeltares_old_ippj(1:npn-1,:,:,:) = YXXdeltares_old_ij(2:npn,:,:,:); YXXdeltares_old_ippj(npn,:,:,:) = 0;
 YXXdeltares_old_ipj(1:npn-1,:,:,:) = (YXXdeltares_old_ij(1:npn-1,:,:,:) + YXXdeltares_old_ij(2:npn,:,:,:))/2; YXXdeltares_old_ipj(npn,:,:,:) = YXXdeltares_old_ij(npn,:,:,:)/2;
 YXXdeltares_old_imj(2:npn,:,:,:) = (YXXdeltares_old_ij(1:npn-1,:,:,:) + YXXdeltares_old_ij(2:npn,:,:,:))/2;YXXdeltares_old_imj(1,:,:,:) = YXXdeltares_old_ij(1,:,:,:)/2;
 YXXdeltares_old_immj(2:npn,:,:,:) = YXXdeltares_old_ij(1:npn-1,:,:,:);YXXdeltares_old_immj(1,:,:,:) = 0;
@@ -360,14 +357,6 @@ YXXrespol_imj = YXXHP.*(YXXdeltares_imj.*abs(YXXpolb_imj).^2) + ~YXXHP.*YXXsigma
 YXXrespol_immj = YXXHP.*(YXXdeltares_immj.*abs(YXXpolb_immj).^2) + ~YXXHP.*YXXsigma.*(YXXdeltares_immj.*abs(YXXpolb_immj).^2.*YXXsigma + flipdim(YXXdeltares_immj.*abs(YXXpolb_immj).^2.*YXXsigma,2))/2;      
 YXXrespol_ijp = YXXHPp.*(YXXdeltares_ijp.*abs(YXXpolb_ijp).^2) + ~YXXHPp.*YXXsigmap.*(YXXdeltares_ijp.*abs(YXXpolb_ijp).^2.*YXXsigmap + flipdim(YXXdeltares_ijm.*abs(YXXpolb_ijm).^2.*YXXsigmam,2))/2;% -mhup = fliplr(mhum)     
 YXXrespol_ijm = YXXHPm.*(YXXdeltares_ijm.*abs(YXXpolb_ijm).^2) + ~YXXHPm.*YXXsigmam.*(YXXdeltares_ijm.*abs(YXXpolb_ijm).^2.*YXXsigmam + flipdim(YXXdeltares_ijp.*abs(YXXpolb_ijp).^2.*YXXsigmap,2))/2;% -mhum = fliplr(mhup)        
-%
-%YXXrespol_ippj(npn-2:npn,:) = 0;%Baranov
-%YXXrespol_ipj(npn-2:npn,:) = 0;%Baranov
-%YXXrespol_ij(npn-2:npn,:) = 0;%Baranov
-%YXXrespol_imj(npn-2:npn,:) = 0;%Baranov
-%YXXrespol_immj(npn-2:npn,:) = 0;%Baranov
-%YXXrespol_ijp(npn-2:npn,:) = 0;%Baranov
-%YXXrespol_ijm(npn-2:npn,:) = 0;%Baranov
 %
 clear YXXHPp YXXHP YXXHPm
 clear YXXsigmap YXXsigma YXXsigmam

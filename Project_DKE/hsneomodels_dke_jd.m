@@ -61,6 +61,8 @@ dlnpidr = dlnTidr + dlnnidr;
 pia = prho*ap/Rp;
 %
 px = (1.46*pia.^(0.5) + 2.40*pia)./(1 - pia).^(1.5);%Small inverse aspect ratio expansion
+%[pft,pftu,pftl] = ft_llm_dke_yp(pia,1000);
+%px = pft./(1-pft);
 %
 Dx = 1.414*Zi + Zi^2 + px*(0.754 + 2.657*Zi + 2*Zi^2) + px.^2*(0.348 + 1.243*Zi + Zi^2);
 %

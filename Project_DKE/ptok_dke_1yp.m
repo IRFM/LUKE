@@ -1,42 +1,48 @@
-function [ap,Rp,Ip,Bt,Ncoils,Zi,mi,fi,BeLi,qmin,eq,Te0,Tea,eTe,eTe_ref,ne0,nea,ene,ene_ref,Ti0,Tia,eTi,Zeff0,Zeffa,eZeff] = ptok_dke_1yp(name);
+function [ap,Rp,Zp,elong,triang_up,triang_down,Bt,...
+	 Ip,j0,ja,ej,qmin,eq,...
+	 Te0,Tea,eTe,ne0,nea,ene,Ti0,Tia,eTi,...
+	 Zi,mi,fi,Zeff0,Zeffa,eZeff] = ptok_dke_1yp(name);
 % 
 %Global plasma and tokamak parameters for script_dke_1yp (Drift Kinetic equation solver)
 % 
 %	Input:
 %
-%		- name: tokamak name (TS, RTP, TCV, CMOD, D3D,TEST15,TEST51) [1,1]
+%		- name: tokamak name (TS, RTP, TCV, CMOD, D3D,TEST15,TEST51,...) [1,1]
 %
 %	Output:
 %
-%		- ap: Plasma minor radius (m) [1,1]
-%		- Rp: Plasma major radius (m) [1,1]
-%		- Ip: Plasma current (MA)  [1,1] 
-%		- Bt: Toroidal magnetic field on the magnetic axis (T)  [1,1]
-%		- Ncoils: Number of toroidal magnetic field coils [1,1]
+%		- ap: Plasma minor radius on the equatorial mid-plane of the last closed magnetic surface (m) [1,1]
+%		- Rp: Plasma major radius of the last closed magnetic surface (m) [1,1]
+%		- Zp: Plasma vertical shift (m) [1,1]
+%		- elong: Plasma elongation of the last closed magnetic surface [1,1]
+%		- triang_up: Plasma triangularity of the last closed magnetic surface above the equatorial mid-plane [1,1]
+%		- triang_down: Plasma triangularity of the last closed magnetic surface below the equatorial mid-plane [1,1]
+%		- Bt: Toroidal magnetic field on the magnetic axis (T) [1,1]
+%		- Ip: Toroidal plasma current (MA)  [1,1] 
+%		- j0: Core toroidal curent density (MA/m2) [1,1]
+%		- ja: Edge toroidal curent density (MA/m2) [1,1]
+%		- ej: Exponent for j profile -> j(psin) = (j0-ja)*(1-(psin)^2)^ej + ja) [1,1]
+%		- qmin: Safety factor q0 at plasma center [1,1]
+%		- eq: Exponent for q radial profile -> q(psin) = (qmax - qmin)*(psin).^eq + qmin, qmax calculated by the Ampere's theorem at the plasma edge for circular magnetic flux surface only [1,1]
+%		- Te0: Core electron temperature (keV) [1,1]
+%		- Tea: Edge electron temperature (keV) [1,1]
+%		- eTe: Exponent for Te profile -> Te(psin) = (Te0-Tea)*(1-(psin)^2)^eTe + Tea) [1,1]
+%		- ne0: %Core electron density (m-3) [1,1]
+%		- nea: %Edge electron density (m-3) [1,1]
+%		- ene: %Exponent for ne profile -> ne(psin) = (ne0-nea)*(1-(psin)^2)^ene + nea) [1,1]
+%		- Ti0: %Core ion temperature, same value for all species (keV) [1,1]
+%		- Tia: %Edge ion temperature, same value for all species (keV) [1,1]
+%		- eTi: %Exponent for Ti profile -> Ti(psin) = (Ti0-Tia)*(1-(psin)^2)^eTi + Tia) [1,1]
 %		- Zi: Ion types: (1) H/D/T, (2) He, ..., (6) C [1,p] (WARNING: Zi must be [1,1,1,imp1,imp2] for hydrogen plasmas)
 %		- mi: Ion mass (uma) [1,p] (WARNING: Zi must be [1,2,3,mimp1,mimp2] for hydrogen plasmas)
 %		- fi: Hydrogen isotopic fraction (H/D/T) [1,3] (WARNING: only used when hydrogen plasmas are considered)
-%		- BeLi: Beta + li/2 [1,1]
-%		- qmin: Safety factor q0 at plasma center [1,1]
-%		- eq: Exponent for q radial profile (q = (qmax - qmin)*(r/a).^eq + qmin, qmax calaculated by the Ampere's theorem at the plasma edge with a circular plasma cross-section) [1,1]
-%		- Te0: Core electron temperature (keV) [1,1]
-%		- Tea: Edge electron temperature (keV) [1,1]
-%		- eTe: Exponent for Te profile (Te(r) = (Te0-Tea)*(1-(r/a)^2)^eTe + Tea) [1,1]
-%		- eTe_ref: Reference exponent for relative Te gradient effects at fixed pressure level (ne*Te = Cte)
-%		- ne0: %Core electron density (m-3) [1,1]
-%		- nea: %Edge electron density (m-3) [1,1]
-%		- ene: %Exponent for ne profile (ne(r) = (ne0-nea)*(1-(r/a)^2)^ene + nea) [1,1]
-%		- ene_ref: Reference exponent for relative ne gradient effects at fixed pressure level (ne*Te = Cte)
-%		- Ti0: %Core ion temperature (keV) [1,1]
-%		- Tia: %Edge ion temperature (keV) [1,1]
-%		- eTi: %Exponent for Ti profile (Ti(r) = (Ti0-Tia)*(1-(r/a)^2)^eTi + Tia) [1,1]
-%		- Zeff0: %Core effective charge (a.u.) [1,1]
+%		- Zeff0: Core effective charge (a.u.) [1,1]
 %		- Zeffa: Edge effective charge (a.u.) [1,1]
-%		- eZeff: %Exponent for the effective charge (Zeff(r) = (Zeff0-Zeffa)*(1-(r/a)^2)^eZeff + Zeffa) [1,1]
+%		- eZeff: Exponent for the effective charge -> Zeff(psin) = (Zeff0-Zeffa)*(1-(psin)^2)^eZeff + Zeffa) [1,1]
 %  
 %	Warning: none
 %
-%by Y.Peysson CEA-DRFC 23/10/2001 <yves.peysson@cea.fr>
+%by Y.Peysson CEA-DRFC <yves.peysson@cea.fr>
 %
 if nargin < 1,
 	error('Wrong number of input arguments in ptok_dke_1yp')
@@ -76,32 +82,37 @@ if strcmp(name,'CTORUS') == 1,
 	eZeff = 0;
 elseif strcmp(name,'TS') == 1,
 	ap = 0.72;
-	Rp = 2.39; 
-	Ip = 0.61;
+	Rp = 2.39;
+	Zp = 0.0;
+	elong = 1;
+	triang_up = 0;
+	triang_down = 0;
+%
 	Bt = 3.65;
-	Ncoils = 18;
+%
 	Zi = [1,1,1];
 	mi = [1,2,3];
 	fi = [0,1,0.0];
+	Zeff0 = 1;
+	Zeffa = 1;
+	eZeff = 0;
 %
-	BeLi = 1.0;
+	Ip = 0.61;
+	j0 = 0.2;
+	ja = 0;
+	ej = 2;
 	qmin = 1.13;
 	eq = 2;
 %
 	Te0 = 2.7;
 	Tea = 0;
 	eTe = 1.1;
-	eTe_ref = 1.1;
-	ne0 = 1.0e+19;
-	nea = 0.24*ne0;
-	ene = 1.3;
-	ene_ref = 1.3;
 	Ti0 = 1.5;
 	Tia = 0;
 	eTi = 1.1;
-	Zeff0 = 1;
-	Zeffa = 1;
-	eZeff = 0;
+	ne0 = 1.0e+19;
+	nea = 0.24*ne0;
+	ene = 1.3;
 elseif strcmp(name,'RTP') == 1,
 	ap = 0.165;
 	Rp = 0.72;
@@ -193,8 +204,8 @@ elseif strcmp(name,'CMOD') == 1,
 	Ip = 0.678;%****** calculated from f3din for C-mod(qmin = 3.2, qmax = 2.1, eq=1)
 	Bt = 4.0;
 	Ncoils = NaN;
-	Zi = [1 1 1];
-	mi = [1 2 3];
+	Zi = [12 1 1];
+	mi = [12 2 3];
 	fi = [1,0,0];
 %
 	BeLi = NaN;
@@ -203,17 +214,17 @@ elseif strcmp(name,'CMOD') == 1,
 %
 	Te0 = 7.5;
 	Tea = 0.0;
-	eTe = 2;
-	eTe_ref = 2;
+	eTe = 2*0;
+	eTe_ref = 2*0;
 	ne0 = 2.5e+20;
 	nea = 0.2*ne0;
 	ene = 0.5;
 	ene_ref = 0.5;
-	Ti0 = 4;
+	Ti0 = 4*0.01;
 	Tia = 0;
-	eTi = 2;
-	Zeff0 = 1;
-	Zeffa = 1;
+	eTi = 2*0;
+	Zeff0 = 12;
+	Zeffa = 12;
 	eZeff = 0;
 elseif strcmp(name,'NSTX') == 1,
 	ap = 0.67;
@@ -221,8 +232,8 @@ elseif strcmp(name,'NSTX') == 1,
 	Ip = 0.8;
 	Bt = 0.45;
 	Ncoils = NaN;
-	Zi = [1 1 1];
-	mi = [1 2 3];
+	Zi = [1 1 1 ];
+	mi = [1 2 3 ];
 	fi = [0,1,0];
 %
 	BeLi = NaN;
@@ -433,7 +444,7 @@ elseif strcmp(name,'CQL3D_OHM') == 1,
 	nea = 0*ne0;
 	ene = 0;
 	ene_ref = 0;
-	Ti0 = 0.0;
+	Ti0 = 0;
 	Tia = 0;
 	eTi = 0;
 	Zeff0 = 1;
@@ -495,6 +506,39 @@ elseif strcmp(name,'CQL3D_ECCD') == 1,
 	Zeff0 = 1;
 	Zeffa = 1;
 	eZeff = 0;
+elseif strcmp(name,'TEST_LORENTZ') == 1,%Values based on NSTX case
+	ap = 0.67;
+	Rp = 0.86;
+	Zp = 0.0;
+	elong = 1;
+	triang_up = 0;
+	triang_down = 0;
+%
+	Bt = 0.45;	
+%
+	Zi = [30 1 1 ];
+	mi = [30 2 3 ];
+	fi = [1,0,0];
+	Zeff0 = 30;
+	Zeffa = 30;
+	eZeff = 0;
+%	
+	Ip = 0.8;
+	j0 = 0.2;
+	ja = 0;
+	ej = 2;
+	qmin = 1;
+	eq = 1;
+%
+	Te0 = 0.15;
+	Tea = 0.001*Te0;
+	eTe = 0;
+	Ti0 = 0.0015;
+	Tia = 0.001*Ti0;
+	eTi = 0;	
+	ne0 = 2.0e+19;
+	nea = 0.001*ne0;
+	ene = 0.5;	
 else
 	error('Wrong input name in ptok_dke_1yp.m')
 end	

@@ -36,9 +36,6 @@ boundary_mode_g,prec0_g,nit_g,...
 dtn,invproc_in,param_inv_in,...
 dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode]...
 = psim_dke_1yp;
-
-
-
 %
 disp('-------------------------------------------------------------------------------------------------------------------');
 %	

@@ -21,7 +21,7 @@ function [YMdt,YMmask,YMF,YMPSIB,YMmhu0,YMmhu,YMR,xymaskT,nm2] = banana_dke_jd(y
 %       - xymaskT: Trapped domain
 %       - nm2: number of points in the new theta grid
 %
-% by Joan Decker <jodecker@alum.mit.edu> (MIT/RLE) and  Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC) 
+% by Joan Decker <jodecker@mit.edu> (MIT/RLE) and  Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC) 
 %
 [np,nt] = size(XR);
 nmhu = length(ymhu0);
@@ -272,7 +272,6 @@ YMB = sqrt(YMBR.^2 + YMBZ.^2 + YMBphi.^2);
 %
 nm2 = nt2 - 1;
 %
-
 YMBmin = repmat(xBmin,[nm2,1,nmhu]);
 YMmhu0 = repmat(reshape(ymhu0,[1,1,nmhu]),[nm2,np,1]);
 YM1mmhu02 = repmat(reshape(y1mmhu02,[1,1,nmhu]),[nm2,np,1]);
@@ -294,3 +293,4 @@ YMmhu(~YMmask) = eps;%Avoid numerical singularities
 YMF = YMB.*((YMR - Rp).^2 + (YMZ - Zp).^2).*YMmhu0./abs(YMBR.*(YMZ - Zp) - YMBZ.*(YMR - Rp))./YMmhu/Rp;
 YMF(find(isinf(YMF))) = 1;%To avoid Inf and NaN
 YMdt = diff(YTtheta);
+%

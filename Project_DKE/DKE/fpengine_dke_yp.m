@@ -30,7 +30,7 @@ function 	 [Xa,Xb,Xc,Xd,Xe,Xf,Xg,Xh,Xi] = ...
 %	- Xi: Matrix coefficient for f0(i+3/2,j-1/2)
 %	  (Notations: _imjp -> (i,j+1);_imjm -> (i,j);_ijp -> (i+1/2,j+1);_ijm -> (i+1/2,j);_immjp -> (i-1/2,j+1);_immjm -> (i-1/2,j)
 %
-%By Joan Decker (MIT-RLE) and Yves Peysson (CEA-DRFC,yves.peysson@cea.fr)
+%By Joan Decker (MIT-RLE, jodecker@mit.edu) and Yves Peysson (CEA-DRFC, yves.peysson@cea.fr)
 %
 if nargin < 46,
 	error('Wrong number of input arguments in fpengine_dke_yp')
@@ -38,17 +38,17 @@ end
 %		
 if ftp_mode >= 1, ftp_mode = 1;end%Force ftp_mode to be 0 (FP) or 1 (DKE)
 %
-Xa = - Xpnp.*XDpm_ipj.*sqrt(X1mmhu2)./(Xdmhum + Xdmhup)./Xdpn;%ftp(i+1/2,j-1/2)
+Xa = - Xpnp.*XDpm_ipj.*sqrt(X1mmhu2)./(Xdmhum + Xdmhup)./Xdpn;%grid point (i+1/2,j-1/2)
 Xa = Xa + Xpnm.*XDpm_imj.*sqrt(X1mmhu2)./(Xdmhum + Xdmhup)./Xdpn;
 Xa = Xa - XDmm_ijm.*X1mmhu2m.*XRlambdam./Xdmhu./Xdmhum;
 Xa = Xa + Xpn.*sqrt(X1mmhu2m).*XFm_ijm.*Xdeltam_ijm.*(Xmhum./Xmhumm).^ftp_mode.*XRlambdam./Xdmhu;
 %	
-Xb = -Xpn2m.*XDpp_imj./Xdpn./Xdpnm;%ftp(i-1/2,j+1/2)	
+Xb = -Xpn2m.*XDpp_imj./Xdpn./Xdpnm;%grid point (i-1/2,j+1/2)	
 Xb = Xb - Xpn.*sqrt(X1mmhu2p).*XDmp_ijp.*XRlambdap./Xdmhu./(Xdpnm + Xdpnp);
 Xb = Xb + Xpn.*sqrt(X1mmhu2m).*XDmp_ijm.*XRlambdam./Xdmhu./(Xdpnm + Xdpnp);
 Xb = Xb - Xpn2m.*XFp_imj.*Xdeltap_imj.*(Xpnm./Xpnmm).^ftp_mode./Xdpn;	
 %
-Xc = Xpn2p.*XDpp_ipj./Xdpn./Xdpnp;%ftp(i+1/2,j+1/2)
+Xc = Xpn2p.*XDpp_ipj./Xdpn./Xdpnp;%grid point (i+1/2,j+1/2)
 Xc = Xc + Xpn2p.*XFp_ipj.*Xdeltap_ipj.*(Xpnp./Xpn).^ftp_mode./Xdpn;
 Xc = Xc + Xpn2m.*XDpp_imj./Xdpn./Xdpnm;
 Xc = Xc - Xpn2m.*XFp_imj.*(1 - Xdeltap_imj).*(Xpnm./Xpn).^ftp_mode./Xdpn;
@@ -57,24 +57,22 @@ Xc = Xc - Xpn.*sqrt(X1mmhu2p).*XFm_ijp.*XRlambdap.*Xdeltam_ijp.*(Xmhup./Xmhu).^f
 Xc = Xc + XDmm_ijm.*X1mmhu2m.*XRlambdam./Xdmhu./Xdmhum;
 Xc = Xc + Xpn.*sqrt(X1mmhu2m).*XFm_ijm.*(1 - Xdeltam_ijm).*(Xmhum./Xmhu).^ftp_mode.*XRlambdam./Xdmhu;
 %
-Xd = - Xpn2p.*XDpp_ipj./Xdpn./Xdpnp;%ftp(i+3/2,j+1/2)
+Xd = - Xpn2p.*XDpp_ipj./Xdpn./Xdpnp;%grid point (i+3/2,j+1/2)
 Xd = Xd + Xpn.*sqrt(X1mmhu2p).*XDmp_ijp.*XRlambdap./Xdmhu./(Xdpnm + Xdpnp);
 Xd = Xd - Xpn.*sqrt(X1mmhu2m).*XDmp_ijm.*XRlambdam./Xdmhu./(Xdpnm + Xdpnp);
 Xd = Xd + Xpn2p.*XFp_ipj.*(1 - Xdeltap_ipj).*(Xpnp./Xpnpp).^ftp_mode./Xdpn;	
 %
-Xe = Xpnp.*XDpm_ipj.*sqrt(X1mmhu2)./(Xdmhum + Xdmhup)./Xdpn;%ftp(i+1/2,j+3/2)
+Xe = Xpnp.*XDpm_ipj.*sqrt(X1mmhu2)./(Xdmhum + Xdmhup)./Xdpn;%grid point (i+1/2,j+3/2)
 Xe = Xe - Xpnm.*XDpm_imj.*sqrt(X1mmhu2)./(Xdmhum + Xdmhup)./Xdpn;
 Xe = Xe - XDmm_ijp.*X1mmhu2p.*XRlambdap./Xdmhu./Xdmhup;
 Xe = Xe - Xpn.*sqrt(X1mmhu2p).*XFm_ijp.*(1 - Xdeltam_ijp).*(Xmhup./Xmhupp).^ftp_mode.*XRlambdap./Xdmhu;	
 %
-Xf = XDpm_ij.*Xpn.*sqrt(X1mmhu2)./(Xdmhum + Xdmhup)./(Xdpnm + Xdpnp);%ftp(i-1/2,j-1/2)
+Xf = XDpm_ij.*Xpn.*sqrt(X1mmhu2)./(Xdmhum + Xdmhup)./(Xdpnm + Xdpnp);%grid point (i-1/2,j-1/2)
 Xf = Xf + XDmp_ij.*Xpn.*sqrt(X1mmhu2)./(Xdmhum + Xdmhup)./(Xdpnm + Xdpnp);
 %
-Xg = XDpm_ij.*Xpn.*sqrt(X1mmhu2)./(Xdmhum + Xdmhup)./(Xdpnm + Xdpnp);%ftp(i+3/2,j+3/2)
-Xg = Xg + XDmp_ij.*Xpn.*sqrt(X1mmhu2)./(Xdmhum + Xdmhup)./(Xdpnm + Xdpnp);	
+Xg = Xf;%grid point (i+3/2,j+3/2)
 %	
-Xh = -XDpm_ij.*Xpn.*sqrt(X1mmhu2)./(Xdmhum + Xdmhup)./(Xdpnm + Xdpnp);%ftp(i-1/2,j+3/2)
+Xh = -XDpm_ij.*Xpn.*sqrt(X1mmhu2)./(Xdmhum + Xdmhup)./(Xdpnm + Xdpnp);%grid point (i-1/2,j+3/2)
 Xh = Xh - XDmp_ij.*Xpn.*sqrt(X1mmhu2)./(Xdmhum + Xdmhup)./(Xdpnm + Xdpnp);	
 %
-Xi = -XDpm_ij.*Xpn.*sqrt(X1mmhu2)./(Xdmhum + Xdmhup)./(Xdpnm + Xdpnp);%ftp(i+3/2,j-1/2)
-Xi = Xi - XDmp_ij.*Xpn.*sqrt(X1mmhu2)./(Xdmhum + Xdmhup)./(Xdpnm + Xdpnp);
+Xi = Xh;%grid point (i+3/2,j-1/2)

@@ -1,7 +1,7 @@
-function [filename] = idealequil_f_jd(tokamak,qopt,npsi,ntheta,shift,kappa,delta,savename)
+function [filename] = idealequil_f_jd(tokamak,qopt,npsi,ntheta,savename)
 %
-%   This function generates the data file of an ideal equilibrium based on
-%   the information stored in ptok_dke_1yp.
+%   This function generates the data file of an ideal cylindrical magnetic equilibrium with concentric circular 
+%   magnetic flux surfaces based on the informations stored in ptok_dke_1yp.
 %
 %   INPUT:
 %
@@ -21,78 +21,54 @@ function [filename] = idealequil_f_jd(tokamak,qopt,npsi,ntheta,shift,kappa,delta
 %
 %   NOTE: 
 %
-%       - the psi grid is generated from the poloidal field on the basis 
-%           of a uniform corresponding rho grid.
-%       - the poloidal field is generated based on the total current. The
-%           current profile is assumed to be flat.
-%       - the plasma elevation with respect to the Z axis is taken to be
-%           zero.
+%       - the psi grid is generated from the poloidal field on the basis of a uniform corresponding rho grid.
+%       - the poloidal field is generated based on the total current.
 %
 %   WARNINGS: 
 %       - corrections based to ideal non-circular-concentric surface 
 %           parameters (shift, elongation, triangularity) are not yet implemented 
 %
-%   By J. Decker <jodecker@alum.mit.edu> and Y. Peysson <yves.peysson@cea.fr>
-%   Created Feb. 17, 2004
+%   By J. Decker <jodecker@mit.edu> and Y. Peysson <yves.peysson@cea.fr>
 %
-if nargin < 1
-	error('Tokamak not specified');
-end
-if nargin < 2
-	qopt = 0;
-end
-if nargin < 3
-	npsi = 201;
-end
-if nargin < 4
-	ntheta = 201;
-end
-if nargin < 5
-	shift = zeros(1,npsi);
-end
-if nargin < 6
-	kappa = 1;
-end
-if nargin < 7
-	delta = 0;
-end
-if nargin < 8
-	savename = tokamak;
-end
-%
-[ap,Rp,Ip,Bt,Ncoils,Zi,mi,fi,BeLi,...
-	qmin,eq,Te0,Tea,eTe,eTe_ref,...
-	ne0,nea,ene,ene_ref,Ti0,Tia,eTi,Zeff0,Zeffa,eZeff] = ...
-		ptok_dke_1yp(tokamak);
+if nargin < 1,error('Tokamak name not specified');end
+if nargin < 2,qopt = 0;end
+if nargin < 3,npsi = 201;end
+if nargin < 4,ntheta = 201;end
+if nargin < 5,savename = tokamak;end
+%    
+[ap,Rp,Zp,elong,triang_up,triang_down,Bt,...
+	 Ip,j0,ja,ej,qmin,eq,...
+	 Te0,Tea,eTe,ne0,nea,ene,Ti0,Tia,eTi,...
+	 Zi,mi,fi,Zeff0,Zeffa,eZeff] = ptok_dke_1yp(tokamak);        
 %
 zZi = Zi;%[1,ni]
 zmi = mi;%[1,ni]
 %
-prho = linspace(0,1,npsi);% uniform rho grid
-theta = linspace(0,2*pi,ntheta);% uniform theta grid
+prho = linspace(0,1,npsi);%Uniform rho grid
+theta = linspace(0,2*pi,ntheta);% Uniform theta grid
 %
-%Plasma parameters
+% Plasma parameters
 %
-pTe = (Te0 - Tea)*(1 - prho.^2).^eTe + Tea;%Electron temperature (keV)
-pne = (ne0 - nea)*(1 - prho.^2).^ene + nea;%Electron density (m-3)
-pTi = (Ti0 - Tia)*(1 - prho.^2).^eTi + Tia;%Ion temperatures (keV)
+pTe = (Te0 - Tea)*(1 - prho.^2).^eTe + Tea;% Electron temperature (keV)
+pne = (ne0 - nea)*(1 - prho.^2).^ene + nea;% Electron density (m-3)
+pTi = (Ti0 - Tia)*(1 - prho.^2).^eTi + Tia;% Ion temperatures (keV)
 %
-pZeff = (Zeff0 - Zeffa)*(1 - prho.^2).^eZeff + Zeffa;%Effective charge (a.u.)
+pZeff = (Zeff0 - Zeffa)*(1 - prho.^2).^eZeff + Zeffa;% Effective charge (a.u.)
 %
-%Ion parameters
+% Ion parameters
 %
 nz = length(zZi);
-pzTi = repmat(pTi,[nz,1]); %same temperature for all ion species
+pzTi = repmat(pTi,[nz,1]);% Same temperature for all ion species
 pzni = zeros(nz,npsi);
 %
-if sum(zZi>1) > 1 %More than one impurity species
-    % need each species density
-elseif sum(zZi>1) == 1 % One impurity species
+if sum(zZi>1) > 1,% More than one impurity species
+    % need each species density (***** to be implemented *****)
+elseif sum(zZi>1) == 1,% One impurity species
     Zimp = max(zZi);
     pnhyd = pne.*(Zimp - pZeff)/(Zimp - 1);  
     pnimp = pne.*(pZeff - 1)/(Zimp - 1)/Zimp;
     pzni(nz,:) = pnimp;
-else % No Impurity
+else,% No impurity
     pnhyd = pne;
     pnimp = 0*pne;
 end
@@ -104,7 +80,7 @@ end
 %
 %Magnetic equilibrium
 %
-Bpa = (4*pi*1e-7)*Ip*1e6/(2*pi*ap); %Poloidal Field at the edge, Ampere's theorem (circular plasma cross-section)
+Bpa = (4*pi*1e-7)*Ip*1e6/(2*pi*ap);% Poloidal Field at the edge, Ampere's theorem (circular plasma cross-section)
 %
 %Note: The following calculations are valid only for a circular concentric equilibrium. 
 %Moreover, in the following expressions, term of order (ap/Rp)^2 or higher are neglected.
@@ -112,21 +88,18 @@ Bpa = (4*pi*1e-7)*Ip*1e6/(2*pi*ap); %Poloidal Field at the edge, Ampere's theore
 Xrho = repmat(prho',[1,ntheta]);
 Xtheta = repmat(theta,[npsi,1]);
 %
-Zp = 0;
-%
 R = Rp + ap*Xrho.*cos(Xtheta);
 Z = Zp + ap*Xrho.*sin(Xtheta);
 %
-qmax = ap/Rp*Bt/Bpa;
+qmax = ap/Rp*Bt/Bpa;%Cylindrical safety factor at the plasma edge
 %
-if qopt == 1 %case with current profile defined by qmin and eq
-    pq = (qmax - qmin)*prho.^eq + qmin;
-else %case with constant q (uniform current density)
-    pq = qmax*ones(1,npsi);
+if qopt == 1,
+    pq = (qmax - qmin)*prho.^eq + qmin;% Current profile defined by qmin and eq
+else 
+    pq = qmax*ones(1,npsi);% Current profile defined with constant q (uniform current density)
 end
 pBpp = prho*ap/Rp*Bt./pq;
 %
-%sprho = repmat(prho',[1,npsi]);
 spBpp = triu(repmat((pBpp(1:npsi-1) + pBpp(2:npsi))'/2,[1,npsi-1]));
 pdprho = diff(prho);
 ppsi = [0,ap*Rp*integral_dke_jd(pdprho,spBpp,1)'];
@@ -142,6 +115,5 @@ BPHI = Bt*Rp./R;
 filename = ['EQUIL_',savename,'.mat'];
 %
 [s,dossier,machine] = comput_dke_yp;
-%
-eval(['save ',dossier,s,filename,' ppsi theta R Z BR BZ BPHI pTe pne pzTi pzni zZi zmi Ncoils BeLi Ip'])
+eval(['save ',dossier,s,filename,' ppsi theta R Z BR BZ BPHI pTe pne pzTi pzni zZi zmi'])
 

@@ -1,4 +1,4 @@
-function [theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,Ip,Ncoils,BeLi,psia,xmhu0T2] = ...
+function [theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,psia,xmhu0T2] = ...
     equilibrium_jd(tokamak,xpsin,display_mode,method)
 %
 %   This function interpolates the equilibrium data on the radial grid.
@@ -79,20 +79,19 @@ clum = 299792458;%Speed of light (m/s)
 filename = ['EQUIL_',tokamak,'.mat'];
 %
 [s,dossier,machine] = comput_dke_yp;
-%
-eval(['load ',dossier,s,filename,' ppsi theta R Z BR BZ BPHI pTe pne pzTi pzni zZi zmi Ncoils BeLi Ip']);
+eval(['load ',dossier,s,filename,' ppsi theta R Z BR BZ BPHI pTe pne pzTi pzni zZi zmi']);
 %
 [npsi,ntheta] = size(R);
 nr = length(xpsin);
 %
-Rp = R(1,1);%major radius of Magnetic Axis
-Zp = Z(1,1);%elevation of Magnetic Axis
+Rp = R(1,1);%Major radius of magnetic Axis
+Zp = Z(1,1);%Elevation of magnetic Axis
 %
-Rmax = R(npsi,1);%major radius where the last close flux-surface crosses the LFS midplane
-ap =  Rmax - Rp;%plasma radius on the LFS midplane 
+Rmax = R(npsi,1);%Major radius where the last close flux-surface crosses the LFS midplane
+ap =  Rmax - Rp;%Plasma minor radius on the LFS midplane 
 %
-psia = ppsi(npsi);%poloidal flux at the edge
-ppsin = ppsi/psia;%normalized poloidal flux
+psia = ppsi(npsi);%Poloidal flux at the edge
+ppsin = ppsi/psia;%Normalized poloidal flux
 %
 pZeff = sum(pzni.*repmat((zZi.^2)',[1,npsi]))./pne;%Effective charge (a.u.)
 %

@@ -57,7 +57,7 @@ nit = [nit_f,nit_g];
 %
 % Plasma equilibrium
 %
-[theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,Ip,Ncoils,BeLi,psia,xmhu0T2] = equilibrium_jd(tokname,xpsin,display_mode);
+[theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,psia,xmhu0T2] = equilibrium_jd(tokname,xpsin,display_mode);
 %
 if diary_mode == 1, 
 	diaryfile = ['diary_dke_',int2str(iloop)];
@@ -73,8 +73,6 @@ if diary_mode == 1,
 	disp(['- Plasma minor radius on LFS midplane (m) ap = ',num2str(ap)]);
 	disp(['- Plasma major radius on axis (m) Rp = ',num2str(Rp)]);
 	disp(['- Plasma elevation on axis (m) Zp = ',num2str(Zp)]);
-	disp(['- Toroidal magnetic field coil number Ncoils = ',num2str(Ncoils)]);
-	disp(['- Beta+li factor = ',num2str(BeLi)]);
 	disp(['- Edge poloidal flux (Wb) = ',num2str(psia)]);
 	disp(' ');
 end
@@ -294,12 +292,15 @@ for ir = 1:nr,
 %
 %Loss term for the electrons trapped in the toroidal magnetic ripple 
 %
-	if bounce_mode == 1 & isnan(xnhuloss_ref(ir)) == 0 & strcmp(tokname,'TS')==1,%WARNING: only valid for the TORE SUPRA tokamak with large magnetic ripple
+	if isnan(xnhuloss_ref(ir)) == 0 & bounce_mode == 1 & strcmp(tokname,'TS') == 1,%WARNING: only valid for the TORE SUPRA tokamak with large magnetic ripple
 		if ir == 1, 
-			info_dke_yp(2,'WARNING: Ripple losses calculations only valid for Tore Supra tokamak');
+			info_dke_yp(2,'WARNING: Ripple losses calculations only valid for Tore Supra tokamak, see test_dke_1yp.m for BeLi, Ip and Ncoils values');
 			disp('-------------------------------------------------------------------------------------------------------------------');
+			Ip = 0.61;%MA (For magnetic equilibrium in the magnetic ripple routine)
+			Ncoils = 18;
+			BeLi = 1.0;%For magnetic equilibrium in the magnetic ripple routine
 		end
-		%		Ncoils = 1;%Ncoils is here forced to 1, as prescribed in Ref. M. Ju et al., Phys. Plasmas, 9 (2002) 493. Upper bound of ripple losses is then calculated
+%		Ncoils = 1;%Ncoils is here forced to 1, as prescribed in Ref. M. Ju et al., Phys. Plasmas, 9 (2002) 493. Upper bound of ripple losses is then calculated
 %		xNq(ir) = Ncoils*xq(ir);%Exact N may be used but large values may lead to numerical instabilities due to round-off errors
 		[xthetabanana(ir),xthetaloss(ir),xpndetrap(ir),xEseuil(ir),xdeltaripple(ir)] = detrapmj3(xZeff(ir),ap,xBT0(ir),Rp,BeLi,Ip,xne(ir),xrho(ir));%WARNING: Only valid for the TORE SUPRA tokamak
 		xpndetrap_ref(ir) = xpndetrap(ir)/betath_ref;
@@ -308,12 +309,20 @@ for ir = 1:nr,
 		Xmaskrip_ref = (Xpn_ref > xpndetrap_ref(ir)).*(abs(Xmhu) < xmhusupertrap(ir));
 		Xnhuloss_ref = Xmaskrip_ref*xnhuloss_ref(ir);
 	else
-		if strcmp(tokname,'TS') == 0 & ir == 1, 
-			info_dke_yp(2,'WARNING: Ripple losses calculations only valid for Tore Supra tokamak. Wrong tokamak name');
-			disp('-------------------------------------------------------------------------------------------------------------------');
-		end
+		if isnan(xnhuloss_ref(ir)) == 0 & bounce_mode == 1 & strcmp(tokname,'TS') == 0
+			if ir == 1, 
+				info_dke_yp(2,'WARNING: Ripple losses calculations only valid for Tore Supra tokamak. Wrong tokamak name');
+				disp('-------------------------------------------------------------------------------------------------------------------');
+			end
+		elseif isnan(xnhuloss_ref(ir)) == 0 & bounce_mode == 0 & strcmp(tokname,'TS') == 1
+			if ir == 1, 
+				info_dke_yp(2,'WARNING: Ripple losses calculations only valid for bounce averaged calculations');
+				disp('-------------------------------------------------------------------------------------------------------------------');
+			end
+		end	
+%	
 		xdeltaripple(ir) = 0;
-		xNq(ir) = Ncoils;%*xq(ir);
+		xNq(ir) = 0;
 		Xnhuloss_ref = zeros(length(pn_ref),length(mhu));
 	end
 	XXnhuloss_ref(:,:,ir) = Xnhuloss_ref;
@@ -627,18 +636,18 @@ time0 = clock;
 xyPabs_tot_rf_fsav_in = 0;
 %
 for it_rf=1:nit_rf % convergence in the ray-tracing mode
-
+%
     [waveparam,nb_list] = rfwave_dke_jd(tokname,xrho,xpsin,xpsin_dke,xdpsin_dke,xyPabs_tot_rf_fsav_in,betath_ref,ne_ref,xrbetath,xrnhuth,xTe_norm,xne_norm,xzni_norm,zZi,zmi,Rp,ap,bounce_mode,rf_list);%Look at the function for the RF wave input parameters
-    
+%    
     [XXheaviside,...
-        XXf0_ref,XXf0_tp_ref,XXf0_g_ref,...
+        XXf0_ref,XXf0_tp_ref,XXf0_g_ref,XXf0_L_tp_ref,XXf0_L_g_ref,...
         YXXDrf_ref,...
         Znorm_ref,Znorm_ref_fsav,...
         Zcurr_ref,Zcurr_ref_fsav,...
         ZP0_ref_fsav,...
         ZSp0_ref,...
         XxRR_ref_fsav,xMRR_flux_ref,xMRR_tau_ref,...
-        xTe_norm_out,xft_fsav,xmhubounce2,xepsi_ref,...
+        xTe_norm_out,xft_fsav,xfteff_fsav,xmhubounce2,xepsi_ref,...
         memoryLU_f,memoryLU_g]...
     = dke_1_4yp(tokname,theta,...
         XR,XZ,XBR,XBZ,XBphi,...

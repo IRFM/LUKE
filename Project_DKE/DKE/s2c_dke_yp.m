@@ -18,7 +18,7 @@ function [f1,ppar,dppar,pperp,dpperp] = s2c_dke_yp(f0,p,mhu,dp)
 %		- pperp: perpendicular momentum [1,np_cyl]
 %		- dpperp: perpendicular momentum increment [1,np_cyl]
 %		
-%by Y.Peysson CEA-DRFC 22/07/2003 <yves.peysson@cea.fr>
+%by Y.Peysson CEA-DRFC <yves.peysson@cea.fr>
 %
 if nargin < 4,
 	error('Wrong number of input arguments for s2c_dke_yp');

@@ -7,8 +7,8 @@ xeta0_fsav_mksa,xepsi_fsav_mksa,xia,xft_fsav] = display_dke_1yp(filename,auto_mo
 %by Y.Peysson CEA-DRFC 02/08/2003 <yves.peysson@cea.fr>
 %
 %
-if nargin == 0,
-	[s,dossier,machine] = comput_dke_yp;
+[s,dossier,machine] = comput_dke_yp;
+if nargin == 0,	
 	eval(['dir ',dossier,s,'dke_*.mat']);
 	filename = [];
 	filename = input_dke_yp('Filename ',filename);
@@ -21,14 +21,13 @@ elseif nargin == 2,
 	igor_mode = 0;%Automatic mode when test_dke_1yp.m is running
 end
 %
-[s,dossier,machine] = comput_dke_yp;
-eval(['load ',dossier,s,filename]);%Load DKE data
+eval(['load ',dossier,s,filename]);%Load DKE output data
+%
+display_mode = input_dke_yp('Display graphics (yes: 1, no: 0)',1) + 1;
 %
 if nargin >= 2,
 	auto_mode = auto_mode_in;
 end
-%
-display_mode = 2,
 %
 filenameroot = filename(1:findstr(filename,'_out.mat')-1);
 %  
@@ -56,10 +55,10 @@ XxRR_mksa_fsav = XxRR_ref_fsav*nhu_ref*ne_ref;%Runaway loss rate in mksa units
 %
 if bounce_mode > 0,
 	xnhu_e_star = 0.012*(xne(r_dke)/1e20).*xZeff(r_dke).*xq*Rp./xia.^1.5./xTe(r_dke).^2;%From O. Sauter et al., Phys. Plasma 6 (1999) 2834
-	[xft_llm] = ft_llm_dke_yp(xia,1000);%From Y.R. Lin-Liu and R.L. Miller, Phys. Plasma 2 (1995) 1666
+	[xfteff_llm] = ft_llm_dke_yp(xia,1000);%From Y.R. Lin-Liu and R.L. Miller, Phys. Plasma 2 (1995) 1666
 else
 	xnhu_e_star = NaN*ones(size(xia));
-	xft_llm = zeros(size(xia));
+	xfteff_llm = zeros(size(xia));
 end
 %
 %Calculation of the flux averaged Maxwellian bootstrap current from Hirshman, Sauter, Hinton & Hazeltine models (bulk contribution)
@@ -91,6 +90,10 @@ while 1,
 		Xf0_ref = XXf0_ref(:,:,ir_display);%Display results at the required radial value
 		Xf0_tp_ref = XXf0_tp_ref(:,:,ir_display);%Display results at the required radial value
 		Xf0_g_ref = XXf0_g_ref(:,:,ir_display);%Display results at the required radial value
+		if coll_mode == 3,
+			Xf0_L_tp_ref = XXf0_L_tp_ref(:,:,ir_display);%Display results at the required radial value
+			Xf0_L_g_ref = XXf0_L_g_ref(:,:,ir_display);%Display results at the required radial value
+		end
 		Xfinit_ref = XXfinit_ref(:,:,ir_display);%Display results at the required radial value
 		if nb > 0
 			YXDrf_ref = squeeze(YXXDrf_ref(:,:,ir_display,:));%Display results at the required radial value
@@ -129,7 +132,8 @@ while 1,
 		info_dke_yp(2,['Normalized electron collision frequency: ',num2str(xnhu(ir_display)/nhu_ref)])
 		if bounce_mode > 0,
 			info_dke_yp(2,['Exact trapped fraction: ',num2str(xft_fsav(ir_display_dke))])
-			info_dke_yp(2,['Approximate effective trapped fraction: ',num2str(xft_llm(ir_display_dke))])
+			info_dke_yp(2,['Effective trapped fraction: ',num2str(xfteff_fsav(ir_display_dke))])
+			info_dke_yp(2,['Approximate effective trapped fraction: ',num2str(xfteff_llm(ir_display_dke))])
 			info_dke_yp(2,['Collisionality parameter: ',num2str(xnhu_e_star(ir_display_dke))])
 		end
 		disp('-------------------------------------------------------------------------------------------------------------------');
@@ -383,10 +387,10 @@ while 1,
 				eval(['save ',filenameroot,'_data_fig8_',int2str(ir_display_dke),'.mat xrho_dke xia r_dke ir_display_dke ppar_cyl_ref pperp_cyl_ref xmhubounce2 pnmax_S'])
 			end
 %
-		    figure(5),clf
+		   figure(5),clf
     		maxXAstr_cyl_ref = max(max(XAstr_cyl_ref));
     		minXAstr_cyl_ref = min(min(XAstr_cyl_ref)) + eps;
-    		C = contour(ppar_cyl_S_ref,pperp_cyl_S_ref,XAstr_cyl_ref,minXAstr_cyl_ref*exp(-[0:1:4*nlevel]/(-4*nlevel/log(maxXAstr_cyl_ref/minXAstr_cyl_ref))));colorbar;grid on;zoom on;%Stream function
+   % 		C = contour(ppar_cyl_S_ref,pperp_cyl_S_ref,XAstr_cyl_ref,minXAstr_cyl_ref*exp(-[0:1:4*nlevel]/(-4*nlevel/log(maxXAstr_cyl_ref/minXAstr_cyl_ref))));colorbar;grid on;zoom on;%Stream function
     		axis('equal')
     		title('Stream Function');
     		xlabel('ppar/pth-ref');
@@ -418,6 +422,12 @@ while 1,
 		xcurr_g_ref = Zcurr_ref{1,3};  
 		xcurr_tot_ref = xcurr0_ref + xcurr_tp_ref + xcurr_g_ref;
 		xcurr_boot_ref = xcurr_tot_ref - xcurr0_ref;
+		if coll_mode == 3,
+			xcurr_L_tp_ref = Zcurr_ref{1,4};    
+			xcurr_L_g_ref = Zcurr_ref{1,5};  
+			xcurr_L_tot_ref = xcurr0_ref + xcurr_L_tp_ref + xcurr_L_g_ref;
+			xcurr_L_boot_ref = xcurr_L_tot_ref - xcurr0_ref;
+		end		
 %
 		xcurr0_ref_fsav = Zcurr_ref_fsav{1,1};    
 		xcurr_tp_ref_fsav = Zcurr_ref_fsav{1,2};    
@@ -425,14 +435,25 @@ while 1,
 		xcurrB_ref_fsav = Zcurr_ref_fsav{2,1};%Bulk current in case of run-away electrons leaving the domain of integration
 		xcurr_tot_ref_fsav = xcurr0_ref_fsav + xcurr_tp_ref_fsav + xcurr_g_ref_fsav;
 		xcurr_boot_ref_fsav = xcurr_tot_ref_fsav - xcurr0_ref_fsav;
+		if coll_mode == 3,
+			xcurr_L_tp_ref_fsav = Zcurr_ref_fsav{1,4};    
+			xcurr_L_g_ref_fsav = Zcurr_ref_fsav{1,5};  
+			xcurr_L_tot_ref_fsav = xcurr0_ref_fsav + xcurr_L_tp_ref_fsav + xcurr_L_g_ref_fsav;
+			xcurr_L_boot_ref_fsav = xcurr_L_tot_ref_fsav - xcurr0_ref_fsav;
+		end
 %    
 		xJrf0_fsav_mksa = xcurr0_ref_fsav*j_ref;
 		xJrf_tot_fsav_mksa = xcurr_tot_ref_fsav*j_ref;
 		xJrfB_fsav_mksa = xcurrB_ref_fsav*j_ref;
 		xJboot_e_fsav_mksa = xcurr_boot_ref_fsav*j_ref;
 		xJboot_i_fsav_mksa = xcurr_i_mksa_fsav;
-        xJboot_tot_fsav_mksa = xJboot_e_fsav_mksa + xJboot_i_fsav_mksa;
+      xJboot_tot_fsav_mksa = xJboot_e_fsav_mksa + xJboot_i_fsav_mksa;
 		xJtot_fsav_mksa = xcurr_tot_ref_fsav*j_ref + xJboot_i_fsav_mksa;
+		if coll_mode == 3,
+			xJboot_L_e_fsav_mksa = xcurr_L_boot_ref_fsav*j_ref;
+			xJboot_L_tot_fsav_mksa = xJboot_L_e_fsav_mksa + xJboot_i_fsav_mksa;
+			xJtot_L_fsav_mksa = xcurr_L_tot_ref_fsav*j_ref + xJboot_i_fsav_mksa;
+		end
 %
 % Power
 %
@@ -519,7 +540,7 @@ while 1,
 			for ib=1:nb_lh
 					disp(['   - LH beam #',num2str(ib),': v1 = ',num2str(1/waveparam_lh(ir_display_dke,ib,7)/betath_ref),', v2 = ',num2str(1/waveparam_lh(ir_display_dke,ib,6)/betath_ref),',D0lh = ',num2str(waveparam_lh(ir_display_dke,ib,5))])
 					disp(['        LH Power absorbed [spherical]: ',num2str(xyPabs0_lh_ref_fsav(ir_display_dke,ib))]) 
-				end
+			end
 %
 			for ib=1:nb_ec
 					disp(['   - EC beam #',num2str(ib),': n// = ',num2str(waveparam_ec(ir_display_dke,ib,8)),...
@@ -560,24 +581,48 @@ while 1,
 			disp(['   - Bulk current (MA/m2) [spherical]: ',num2str(xJrfB_fsav_mksa(ir_display_dke))])
 		else
 			[Xf0_g_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(Xf0_g_ref,pn_ref,mhu,dp_cyl);
-			[Xf0_tp_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(Xf0_tp_ref,pn_ref,mhu,dp_cyl);
-%
-			Xf0_tp_cyl_ref = Xf0_tp_cyl_ref.*(Xp_cyl_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
-%        	Xf0_tp_cyl_ref = Xf0_tp_cyl_ref.*(Xmhu_cyl_ref<1-dmhu/2);%Remove values outside from the domain of calculation
-
 			Xf0_g_cyl_ref = Xf0_g_cyl_ref.*(Xp_cyl_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
-%        	Xf0_g_cyl_ref = Xf0_g_cyl_ref.*(Xmhu_cyl_ref<1-dmhu/2);%Remove values outside from the domain of calculation
+%			                                                              
+			[Xf0_tp_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(Xf0_tp_ref,pn_ref,mhu,dp_cyl);
+			Xf0_tp_cyl_ref = Xf0_tp_cyl_ref.*(Xp_cyl_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
+%
 			Xf0_tpg_cyl_ref = Xf0_g_cyl_ref + Xf0_tp_cyl_ref;
 			F1bootstrap_cyl_ref = 2*pi*integral_dke_jd(dpperp_cyl_ref,Xpperp_cyl_ref.*Xf0_tpg_cyl_ref,1);
 			Xf0_tot_cyl_ref = Xf0_cyl_ref + Xf0_g_cyl_ref + Xf0_tp_cyl_ref;
 			xcurr_tot_cyl_ref(ir_display_dke) = 2*pi*integral_dke_jd(dpperp_cyl_ref,pperp_cyl_ref'.*integral_dke_jd(ppar_cyl_ref,Xvpar_cyl_ref.*Xf0_tot_cyl_ref,2),1);  
+%		
+			if coll_mode == 3,%Lorentz model
+				[Xf0_L_g_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(Xf0_L_g_ref,pn_ref,mhu,dp_cyl);
+				Xf0_L_g_cyl_ref = Xf0_L_g_cyl_ref.*(Xp_cyl_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
+%
+				[Xf0_L_tp_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(Xf0_L_tp_ref,pn_ref,mhu,dp_cyl);
+				Xf0_L_tp_cyl_ref = Xf0_L_tp_cyl_ref.*(Xp_cyl_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
+%
+				Xf0_L_tpg_cyl_ref = Xf0_L_g_cyl_ref + Xf0_L_tp_cyl_ref;	
+				F1bootstrap_L_cyl_ref = 2*pi*integral_dke_jd(dpperp_cyl_ref,Xpperp_cyl_ref.*Xf0_L_tpg_cyl_ref,1);
+				Xf0_tot_L_cyl_ref = Xf0_cyl_ref + Xf0_L_g_cyl_ref + Xf0_L_tp_cyl_ref;
+				xcurr_tot_L_cyl_ref(ir_display_dke) = 2*pi*integral_dke_jd(dpperp_cyl_ref,pperp_cyl_ref'.*integral_dke_jd(ppar_cyl_ref,Xvpar_cyl_ref.*Xf0_tot_L_cyl_ref,2),1);  
+			end			
 %   
 			if display_mode >= 2 
 				figure(9),plot(ppar_cyl_ref,F1bootstrap_cyl_ref),ylabel('F1(bootstrap)'),xlabel('ppar');zoom on
-				pnplot_ref = min(find(pn_ref>=4));
-				figure(10),plot(mhu,Xf0_tp_ref(pnplot_ref,:)','b--',mhu,Xf0_g_ref(pnplot_ref,:)','r-.')
-				ylabel('ftp (b--) and g (r-.)');xlabel('mhu')
-				title('pn-ref = 4')
+				ipnplot_ref = min(find(pn_ref>=4));
+%
+				figure(10),plot(mhu,Xf0_tp_ref(ipnplot_ref,:)','bo',mhu,Xf0_g_ref(ipnplot_ref,:)','ro')
+				line([sqrt(xmhubounce2(r_dke(ir_display_dke))),sqrt(xmhubounce2(r_dke(ir_display_dke)))],[min(Xf0_tp_ref(ipnplot_ref,:)),max(Xf0_tp_ref(ipnplot_ref,:))]);
+				line([-sqrt(xmhubounce2(r_dke(ir_display_dke))),-sqrt(xmhubounce2(r_dke(ir_display_dke)))],[min(Xf0_tp_ref(ipnplot_ref,:)),max(Xf0_tp_ref(ipnplot_ref,:))]);
+				if coll_mode == 3,%Lorentz model
+					hold on;
+					plot(mhu,Xf0_L_tp_ref(ipnplot_ref,:),'b+')
+					plot(mhu,Xf0_L_g_ref(ipnplot_ref,:),'rx')
+					hold off
+					ylabel('ftp (blue),g (red) - code (o),theory (+,x)');
+				else
+					ylabel('ftp (blue),g (red) - code (o)');
+				end
+%
+				xlabel('mhu')
+				title(['pn-ref = ',num2str(pn_ref(ipnplot_ref))])
 				pause(time_pause);
 %
 				figure(11),clf
@@ -696,12 +741,16 @@ while 1,
 			disp(['   - Density: [spherical]: ',num2str(xnormf_ref_fsav(ir_display_dke))])
 			disp(['   - RF only current density: [spherical]: ',num2str(xcurr0_ref_fsav(ir_display_dke))])
 			disp(['   - Electron Bootstrap current density: [spherical]: ',num2str(xcurr_boot_ref_fsav(ir_display_dke))])
+			if coll_mode == 3,
+				disp(['   - Lorentz model for electron bootstrap: ',num2str(xcurr_L_boot_ref_fsav(ir_display_dke))]);
+			end
 			disp(['   - RF + electron bootstrap current density: [spherical]: ',num2str(xcurr_tot_ref_fsav(ir_display_dke))])
 			disp(['   - Ion bootstrap current density: ',num2str(xcurr_i_mksa_fsav(ir_display_dke)/j_ref)])
 			disp(['   - Total bootstrap current density [spherical]: ',num2str(xcurr_boot_ref(ir_display_dke) + xcurr_i_mksa_fsav(ir_display_dke)/j_ref)]);
-			disp(['   - Hinton & Hazeltine model for bootstrap: ',num2str(xcurr_hin_mksa_fsav(ir_display_dke)/j_ref)])  
 			disp(['   - Hirshman model for bootstrap: ',num2str(xcurr_hir_mksa_fsav(ir_display_dke)/j_ref)])        
 			disp(['   - Sauter model for bootstrap: ',num2str(xcurr_sau_mksa_fsav(ir_display_dke)/j_ref)])        
+			disp(['   - Hinton & Hazeltine model for bootstrap: ',num2str(xcurr_hin_mksa_fsav(ir_display_dke)/j_ref)])  
+				
 			disp(['   - RF + total bootstrap current density [spherical]: ',num2str(xcurr_tot_ref_fsav(ir_display_dke) + xcurr_i_mksa_fsav(ir_display_dke)/j_ref)]);
 			disp(['   - RF power density lost on collisions (coll) [spherical]: ',num2str(-xPcoll0_ref_fsav(ir_display_dke))])
 %
@@ -728,12 +777,15 @@ while 1,
 			disp(['   - Density (10+19 m-3) [spherical]: ',num2str(xnormf_ref_fsav(ir_display_dke)*ne_ref/1e19)])
 			disp(['   - RF only current density (MA/m2) [spherical]: ',num2str(xJrf0_fsav_mksa(ir_display_dke))])
 			disp(['   - Electron bootstrap current density (MA/m2) [spherical]: ',num2str(xJboot_e_fsav_mksa(ir_display_dke))])
+			if coll_mode == 3,
+				disp(['   - Lorentz model for electron bootstrap: ',num2str(xJboot_L_e_fsav_mksa(ir_display_dke))]);
+			end
 			disp(['   - RF + electron bootstrap current density (MA/m2) [spherical]: ',num2str(xJrf_tot_fsav_mksa(ir_display_dke))])
 			disp(['   - Ion bootstrap current density (MA/m2): ',num2str(xJboot_i_fsav_mksa(ir_display_dke))])
 			disp(['   - Total bootstrap current density (MA/m2) [spherical]: ',num2str(xJboot_tot_fsav_mksa(ir_display_dke))])        
-			disp(['   - Hinton & Hazeltine model for bootstrap (MA/m2): ',num2str(xcurr_hin_mksa_fsav(ir_display_dke))])        
 			disp(['   - Hirshman model for bootstrap (MA/m2): ',num2str(xcurr_hir_mksa_fsav(ir_display_dke))])        
 			disp(['   - Sauter model for bootstrap (MA/m2): ',num2str(xcurr_sau_mksa_fsav(ir_display_dke))])  
+			disp(['   - Hinton & Hazeltine model for bootstrap (MA/m2): ',num2str(xcurr_hin_mksa_fsav(ir_display_dke))])        
 			disp(['   - RF + total bootstrap current density (MA/m2) [spherical]: ',num2str(xJtot_fsav_mksa(ir_display_dke))])
 			disp(['   - RF power density lost on collisions (MW/m3) (coll) [spherical]: ',num2str(-xPcoll0_fsav_mksa(ir_display_dke))])
 %

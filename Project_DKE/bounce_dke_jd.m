@@ -12,7 +12,7 @@ function [xq,xqtilde,xqbar,xqhat,xymaskT,...
 %   OUTPUTS:
 %   
 %
-% by Joan Decker <jodecker@alum.mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
+% by Joan Decker <jodecker@mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 %
 if nargin < 16,
 	sign = 0;
@@ -29,22 +29,29 @@ end
 %
 nmhu = length(ymhu0);
 [nr,nt] = size(XR);
+%
+if equil_mode == 1,
+	[YMdt,YMmask,YMF,YMPSIB,YMmhu0,YMmhu,YMR,xymaskT,nm2] = banana_dke_jd(ymhu0,Rp,Zp,XR,XZ,XBR,XBZ,XBphi);	
+elseif equil_mode == 0,
+	for ir = 1:nr   
+		xymaskT(ir,:) = ymhu0.^2 < xmhubounce2(ir);		
+	end
+end			
+%
+if ~isnan(xymaskT_in),%for correct grid mask position 
+	xymaskT = xymaskT_in;
+	for ir = 1:size(xymaskT_in,1),
+		xjmhut_min(ir) = min(find(xymaskT_in(ir,:) == 1));
+		xjmhut_max(ir) = max(find(xymaskT_in(ir,:) == 1));
+	end
+	if sign == 1,xymaskT(:,xjmhut_min-1) = xymaskT_in(:,xjmhut_min);end
+	if sign == -1,xymaskT(:,xjmhut_max+1) = xymaskT_in(:,xjmhut_max);end
+end
+%
 if equil_mode == 1
 %
     [xq,xqtilde,xqbar,xqhat] = qfactors_dke_yp(Rp,Zp,XR,XZ,XBR,XBZ,XBphi);%q factors calculations
     xyqtilde = repmat(xqtilde',[1,nmhu]);
-%
-    [YMdt,YMmask,YMF,YMPSIB,YMmhu0,YMmhu,YMR,xymaskT,nm2] = banana_dke_jd(ymhu0,Rp,Zp,XR,XZ,XBR,XBZ,XBphi);
-%    
-    if ~isnan(xymaskT_in)
-		  xymaskT = xymaskT_in;
-		  for ir = 1:size(xymaskT_in,1),
-		  	    xjmhut_min(ir) = min(find(xymaskT_in(ir,:) == 1));
-		       xjmhut_max(ir) = max(find(xymaskT_in(ir,:) == 1));
-		  end
-        if sign == 1,xymaskT(:,xjmhut_min-1) = xymaskT_in(:,xjmhut_min);end
-		  if sign == -1,xymaskT(:,xjmhut_max+1) = xymaskT_in(:,xjmhut_max);end
-	 end
 %
     YMR0 = repmat(xR0,[nm2,1,nmhu]);
 %
@@ -80,8 +87,8 @@ if equil_mode == 1
     xylambda_p1m2 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p1m2)/(2*pi),[nr,nmhu])./xyqtilde;
     xylambda_b_p1m2 = ~xymaskT.*xylambda_p1m2;%In old notation: 1-delta/mhu0^2
 %
-    Yweight_p2m2p2 = (YMmhu./YMmhu0).^(2).*YMPSIB.^(-2).*(YMR0./YMR).^(2);
-    xylambda_p2m2p2 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p2m2p2)/(2*pi),[nr,nmhu])./xyqtilde;
+    Yweight_p2m2p2 = (YMmhu./YMmhu0).^(2).*YMPSIB.^(-2).*(YMR0./YMR).^(2);    
+    xylambda_p2m2p2 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p2m2p2)/(2*pi),[nr,nmhu])./xyqtilde;%************problme sur le courant en mode numŽrique (grille uniforme ou non)
     xylambda_b_p2m2p2 = ~xymaskT.*xylambda_p2m2p2;
 %
     Yweight_p3m2 = (YMmhu./YMmhu0).^(3).*YMPSIB.^(-2);
@@ -105,10 +112,7 @@ if equil_mode == 1
     	xylambda_b_p3m2(:,ymask) = eps;
     	xylambda_b_p2(:,ymask) = eps;
     end
-%
-% Case of an ideal equilibrium with circular concentric flux-surfaces.
-%
-else    
+else,%Ideal equilibrium with circular concentric flux-surfaces.
     m = 30;
     xrho = (xR0 - Rp)/ap; %note: for the sake of bounce-averaged calculations in the
                           %      analytical limit of circ. conc.
@@ -123,24 +127,22 @@ else
     xqbar = xia.*xB0./xBp0./(1 + xia);
     xqhat = xqbar;
 %
+    ymhu0(find(ymhu0==0)) = eps;%Avoid numerical singularities
     ymhu2 = ymhu0.^2;
-    ymhu2(ymhu2==0) = eps;
 %
     for ir = 1:nr 
-        ia = xia(ir);
-        mhutrap2 = xmhubounce2(ir);
-        YJ = jseries_dke_jd(sqrt(mhutrap2),ymhu0,m); 
+        YJ = jseries_dke_jd(sqrt(xmhubounce2(ir)),ymhu0,m); 
 %   
-        chim =zeros(m+1,1);
-        chim_tp =zeros(m+1,1);
-        mhutrap2m =zeros(m+1,1);
+        chim = zeros(m+1,1);
+        chim_tp = zeros(m+1,1);
+        mhutrap2m = zeros(m+1,1);
         chim(1) = 1;
         chim_tp(1) = 1;
         mhutrap2m(1) = 1;
         for i = 1:m,
         	chim(i+1) = (2*i - 3)/(2*i)*chim(i);
         	chim_tp(i+1) = (2*i - 1)/(2*i)*chim(i);
-        	mhutrap2m(i+1) = mhutrap2*mhutrap2m(i);
+        	mhutrap2m(i+1) = xmhubounce2(ir)*mhutrap2m(i);
         end
 %
         Ymchim = chim*ones(1,nmhu);
@@ -151,7 +153,7 @@ else
         Ymhu2(Ymhu2==0) = eps;
         Ymmhu2(Ymmhu2==0) = eps;
 %    
-        ysstar = 1/sqrt(1-mhutrap2).*ones(1,nmhu);
+        ysstar = 1/sqrt(1- xmhubounce2(ir)).*ones(1,nmhu);
         ylambda = 2/pi*sum(Ymchim(1:m,:).*Ymmhutrap2m(1:m,:).*YJ(1:m,:));
         ylambda(ylambda==0) = eps;
         ydeltalambda = 2/pi*sum(Ymchim(1:m,:).*Ymmhutrap2m(2:m+1,:).*YJ(2:m+1,:));
@@ -164,16 +166,25 @@ else
         end
 %
         xylambda_p0p0(ir,:) = ylambda;
-        xymaskT(ir,:) = ymhu2 <= mhutrap2;
         xylambda_p2m1(ir,:) = ylambda - ydeltalambda./ymhu2;
         xylambda_p2m2p2(ir,:) = ysstar_tp;
         xylambda_b_p1p1(ir,:) = ~xymaskT(ir,:).*ysstar;
-        xylambda_b_p1m1(ir,:) = ~xymaskT(ir,:)/(1 + ia);
-        xylambda_b_p1m2(ir,:) = ~xymaskT(ir,:)*(1 + ia^2/2)/(1 + ia).^2;
-        xylambda_b_p3m2(ir,:) = ~xymaskT(ir,:).*(ymhu2 - ia*(1 - ia/2)/(1 + ia))/(1 + ia)./ymhu2;
+        xylambda_b_p1m1(ir,:) = ~xymaskT(ir,:)/(1 + xia(ir));
+        xylambda_b_p1m2(ir,:) = ~xymaskT(ir,:)*(1 + xia(ir)^2/2)/(1 + xia(ir)).^2;
+        xylambda_b_p3m2(ir,:) = ~xymaskT(ir,:).*(ymhu2 - xia(ir)*(1 - xia(ir)/2)/(1 + xia(ir)))/(1 + xia(ir))./ymhu2; 
     end
     xylambda_b_p2m2p2 = ~xymaskT.*xylambda_p2m2p2;
     xylambda_b_p2 = xylambda_b_p2m2p2;
     xylambda_b_p1m1p2 = xylambda_b_p1p1;
     xylambda_b_p1m3p4 = xylambda_b_p1p1;
-end
+ end   
+
+    
+    
+ 
+    
+    figure(7000),plot(ymhu0,xylambda_p2m2p2,'r+');axis('square');title('probleme sur p2m2p2 mode numerique');zoom on
+
+    
+    
+  

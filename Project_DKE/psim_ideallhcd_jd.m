@@ -7,7 +7,7 @@ function [blist_lh,yvparmin_lh,yvparmax_lh,ynparmin_lh,ynparmax_lh,ynpar_lh,ydnp
 %   - The polarization is purely electrostatic: in that case, only the parallel polarization term is non-zero.
 %   - Small FLR limit: J0(z) -> 1. 
 %
-% by J. Decker (jodecker@alum.mit.edu) and Y. Peysson (yves.peysson@cea.fr)
+% by J. Decker (jodecker@mit.edu) and Y. Peysson (yves.peysson@cea.fr)
 %
 blist_lh = [3]; %Index of selected scenarios for the LH wave. [1,n_scenario_lh]
 %
@@ -22,9 +22,9 @@ ynpar_lh = [NaN,NaN,NaN];%LH wave Gaussian N// Spectrum: peak [1,n_scenario_lh]
 ydnpar_lh = [NaN,NaN,NaN];%LH wave Gaussian N// Spectrum: width [1,n_scenario_lh]
 %
 %   Note: this diffusion coefficient is different from the general QL D0. It has a benchmarking purpose only 
-yD0_in_c_lh = [1.0,1.0,1.0];%Central LH QL diffusion coefficient (nhuth_ref*pth_ref^2 or nhuth*pth^2) (for benchmarking only) [1,n_scenario_lh]
+yD0_in_c_lh = [1.0,1.0,0.2];%Central LH QL diffusion coefficient (nhuth_ref*pth_ref^2 or nhuth*pth^2) (for benchmarking only) [1,n_scenario_lh]
 %     
-yD0_in_lh_prof = [0,0,0];%Quasilinear diffusion coefficient radial profile: (0) uniform , (1) gaussian radial profile [1,n_scenario_lh]
+yD0_in_lh_prof = [0,0,0];%Quasilinear diffusion coefficient radial profile: (0) uniform, (1) gaussian radial profile [1,n_scenario_lh]
 ypeak_lh = [0.5,0.5,0.5];%Radial peak position of the LH quasi-linear diffusion coefficient (r/a on midplane) [1,n_scenario_lh]
 ywidth_lh = [0.1,0.1,0.1];%Radial width of the LH quasi-linear diffusion coefficient (r/a on midplane) [1,n_scenario_lh]
 %
