@@ -226,10 +226,10 @@ for $\mathbb{{D}}^{\text{RF}-}$, we can combine the two contributions of
 $\mathbb{{D}}^{\text{RF}+}$ and $\mathbb{{D}}^{\text{RF}-}$, and finally we
 obtain an expression with one diffusion coefficient:\qquad\qquad\qquad\qquad%
 \begin{align}
-D_{b,n}^{\text{RF}}(p,\xi) &  =e^{2}\pi\frac{1}{\left|  v_{\Vert}\right|
+D_{b,n}^{\text{RF}}(p,\xi)  &  =e^{2}\pi\frac{1}{\left|  v_{\Vert}\right|
 }\frac{\left|  \mathbf{E}_{b0}\right|  ^{2}}{2}\left|  \Theta_{\mathbf{k}%
 }^{b,\left(  n\right)  }\right|  ^{2}\delta\left(  k_{b\Vert}-\frac{\omega
-_{b}-n\Omega}{v_{\Vert}}\right)  \nonumber\\
+_{b}-n\Omega}{v_{\Vert}}\right) \nonumber\\
 &  =e^{2}\pi\frac{1}{\left|  v_{\Vert}\right|  }\frac{\left|  \mathbf{E}%
 _{b0}\right|  ^{2}}{2}\left|  \Theta_{\mathbf{k}}^{b,\left(  n\right)
 }\right|  ^{2}\frac{c}{\omega_{b}}\delta\left(  N_{b\Vert}-N_{\Vert\text{res}%
@@ -244,9 +244,9 @@ e^{-i\alpha_{b}}J_{n-1}\left(  \frac{k_{b\bot}v_{\bot}}{\Omega}\right)
 \frac{k_{b\bot}v_{\bot}}{\Omega}\right)  \label{thetakn}%
 \end{equation}%
 \begin{align}
-N_{b\Vert} &  =\frac{k_{b\Vert}c}{\omega_{b}}\\
-N_{\Vert\text{res}} &  =\frac{c}{v_{\Vert}}\left(  1-\frac{n\Omega}{\omega
-_{b}}\right)  \nonumber\\
+N_{b\Vert}  &  =\frac{k_{b\Vert}c}{\omega_{b}}\\
+N_{\Vert\text{res}}  &  =\frac{c}{v_{\Vert}}\left(  1-\frac{n\Omega}%
+{\omega_{b}}\right) \nonumber\\
 &  =\frac{1}{\beta_{Te}}\frac{p_{Te}}{p_{\Vert}}\left(  \gamma-\frac
 {n^{\prime}\omega_{ce}}{\omega_{b}}\right)  \label{nparres}%
 \end{align}
@@ -254,8 +254,8 @@ where
 \begin{align}
 \Omega &  =\frac{q_{e}B}{\gamma m_{e}}=\frac{-\omega_{ce}}{\gamma}\text{ with
 }\omega_{ce}=\frac{eB}{m_{e}}\\
-n^{\prime} &  =-n\\
-\beta_{Te} &  =\frac{p_{Te}}{m_{e}c}=\frac{v_{Te}}{c}=\sqrt{\frac{kT_{e}%
+n^{\prime}  &  =-n\\
+\beta_{Te}  &  =\frac{p_{Te}}{m_{e}c}=\frac{v_{Te}}{c}=\sqrt{\frac{kT_{e}%
 }{m_{e}c^{2}}}%
 \end{align}
 
@@ -362,14 +362,16 @@ and have a finite volume (). In consequence, the factor $\left|  \widehat
 {g}_{b}\cdot\widehat{\psi}\right|  $ must be ''integrated'' along the ray
 trajectory within this volume. We therefore define an incidence factor
 \begin{equation}
-f_{\text{inc},b}^{l+1/2}=\frac{1}{\Delta r_{l+1/2}^{\theta_{b}}}\int
+f_{\text{inc},b}^{l+1/2}=\frac{1}{\Delta l_{l+1/2}^{\theta_{b}}}\int
 _{\psi_{l+1/2}\mp\Delta\psi_{l+1/2}/2}^{\psi_{l+1/2}\pm\Delta\psi_{l+1/2}/2}ds
 \end{equation}
 where the $\pm$ sign accounts for the fact that the ray may be locally
-directed either inward or outward, and where $\Delta r_{l+1/2}^{\theta_{b}}$
+directed either inward or outward, and where $\Delta l_{l+1/2}^{\theta_{b}}$
 is the local thickness of the flux-surface.
 \begin{equation}
-\Delta r_{l+1/2}^{\theta_{b}}=r(\psi_{l+1,}\theta_{b})-r(\psi_{l,}\theta_{b})
+\Delta l_{l+1/2}^{\theta_{b}}=\frac{\Delta\psi_{l+1/2}}{\left|  \nabla
+\psi\right|  _{l+1/2}^{\theta_{b}}}=\frac{\Delta\psi_{l+1/2}}{R_{l+1/2}%
+^{\theta_{b}}B_{P,l+1/2}^{\theta_{b}}}%
 \end{equation}
 
 The factor $f_{\text{inc},b}^{l+1/2}$ can be numerically calculated from the
@@ -483,13 +485,13 @@ Using (\ref{diffcoef}) and (\ref{e0}), the diffusion coefficient
 \end{equation}
 with
 \begin{align}
-\overline{D}_{b,n,0}^{\text{RF}} &  =\frac{1}{\nu_{e}p_{Te}^{2}}\frac
+\overline{D}_{b,n,0}^{\text{RF}}  &  =\frac{1}{\nu_{e}p_{Te}^{2}}\frac
 {1}{v_{Te}}\frac{\pi}{\omega_{b}}\frac{e^{2}}{\epsilon_{0}}\frac{1}{4\pi
 ^{2}rR}\left|  \widehat{\psi}\cdot\widehat{r}\right|  \frac{f_{\text{inc}%
 ,b}^{l+1/2}}{\left|  \mathbf{\Phi}_{b}\right|  }P_{b,\text{inc}}\nonumber\\
 &  =\frac{1}{rR}\frac{1}{m_{e}\ln\Lambda}\frac{1}{\omega_{b}\omega_{pe}^{2}%
 }\left|  \widehat{\psi}\cdot\widehat{r}\right|  \frac{f_{\text{inc},b}%
-^{l+1/2}}{\left|  \mathbf{\Phi}_{b}\right|  }P_{b,\text{inc}}\label{drf0}%
+^{l+1/2}}{\left|  \mathbf{\Phi}_{b}\right|  }P_{b,\text{inc}} \label{drf0}%
 \end{align}
 where $\omega_{pe}$ is the electron plasma frequency
 \begin{equation}
