@@ -1,672 +1,335 @@
-
-
-\documentclass{article}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\usepackage{graphicx}
-
-\usepackage{amsmath}
-
-
-
-%TCIDATA{OutputFilter=LATEX.DLL}
-
-%TCIDATA{Created=Mon Nov 10 09:37:14 2003}
-
-%TCIDATA{LastRevised=Tue Nov 11 18:05:11 2003}
-
-%TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
-
-%TCIDATA{<META NAME="DocumentShell" CONTENT="General\Blank Document">}
-
-%TCIDATA{CSTFile=LaTeX article (bright).cst}
-
-
-
-\newtheorem{theorem}{Theorem}
-
-\newtheorem{acknowledgement}[theorem]{Acknowledgement}
-
-\newtheorem{algorithm}[theorem]{Algorithm}
-
-\newtheorem{axiom}[theorem]{Axiom}
-
-\newtheorem{case}[theorem]{Case}
-
-\newtheorem{claim}[theorem]{Claim}
-
-\newtheorem{conclusion}[theorem]{Conclusion}
-
-\newtheorem{condition}[theorem]{Condition}
-
-\newtheorem{conjecture}[theorem]{Conjecture}
-
-\newtheorem{corollary}[theorem]{Corollary}
-
-\newtheorem{criterion}[theorem]{Criterion}
-
-\newtheorem{definition}[theorem]{Definition}
-
-\newtheorem{example}[theorem]{Example}
-
-\newtheorem{exercise}[theorem]{Exercise}
-
-\newtheorem{lemma}[theorem]{Lemma}
-
-\newtheorem{notation}[theorem]{Notation}
-
-\newtheorem{problem}[theorem]{Problem}
-
-\newtheorem{proposition}[theorem]{Proposition}
-
-\newtheorem{remark}[theorem]{Remark}
-
-\newtheorem{solution}[theorem]{Solution}
-
-\newtheorem{summary}[theorem]{Summary}
-
-\newenvironment{proof}[1][Proof]{\textbf{#1.} }{\ \rule{0.5em}{0.5em}}
-
 %\input{tcilatex}
 
 
+\documentclass{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{graphicx}
+\usepackage{amsmath}
 
 \begin{document}
 
 
-
-
-
 \section{Flux-Surface and Bounce Geometry}
-
-
-
-In a toroidal axisymmetric geometry, the magnetic field can be expressed
-
-generally as
-
-\begin{equation}
-
-\mathbf{B}=I\left( \psi \right) \nabla \phi +\nabla \psi \times \nabla \phi
-
-\end{equation}
-
-
 
 Three different coordinates system are considered here.
 
-
-
 \begin{itemize}
-
 \item  First, the toroidal coordinate system $\left( R,Z,\phi \right) $ with
-
-local orthogonal vectors
-
+local orthogonal vectors 
 \begin{eqnarray}
-
 \widehat{R} &=&\nabla R \\
-
 \widehat{Z} &=&\nabla Z \\
-
-\widehat{\phi } &=&R\nabla \phi
-
+\widehat{\phi } &=&R\nabla \phi 
 \end{eqnarray}
-
 This coordinate system conserves the largest generality in the magnetic
-
 geometry
 
-
-
 \item  Second, the poloidal (polar) coordinate system $\left( r,\theta ,\phi
-
 \right) $, centered around the magnetic axis $\left( R_{0},Z_{0}\right) $
-
 defined as the position of an extremum of $\psi $ (can be arbitrarily chosen
-
-as $\psi =0$), and with local orthogonal vectors
-
+as $\psi =0$), and with local orthogonal vectors 
 \begin{eqnarray}
-
 \widehat{r} &=&\nabla r \\
-
 \widehat{\theta } &=&r\nabla \theta  \\
-
-\widehat{\phi } &=&R\nabla \phi
-
+\widehat{\phi } &=&R\nabla \phi 
 \end{eqnarray}
-
-and the relations
-
+and the relations 
 \begin{eqnarray}
-
 R &=&R_{0}+r\cos \theta  \\
-
-Z &=&Z_{0}+r\sin \theta
-
+Z &=&Z_{0}+r\sin \theta 
 \end{eqnarray}
-
-which can be inverted as
-
+which can be inverted as 
 \begin{eqnarray}
-
 r &=&\sqrt{\left( R-R_{0}\right) ^{2}+\left( Z-Z_{0}\right) ^{2}} \\
-
 \theta  &=&\arctan \left( \frac{Z-Z_{0}}{R-R_{0}}\right) +\pi \text{sign}%
-
-\left( R-R_{0}\right)
-
+\left( R-R_{0}\right)   \label{theta}
 \end{eqnarray}
-
-The outputs from CRONOS\ are expressed on this coordinate system
-
-
 
 \item  Third, the flux coordinate system $\left( \psi ,s,\phi \right) $ is
-
 the natural system for Fokker-Planck simulations, since the particles are
-
 essentially confined to a given flux surface $\psi $. The distance $s$ is
-
 the length along the poloidal magnetic field lines. We can choose its origin
-
 as being at the position of minimum $B$-field amplitude within a
-
-flux-surface.
-
+flux-surface. 
 \begin{equation}
-
 B\left( \psi ,s\equiv 0\right) =\min \left\{ B\left( \psi ,s\right) \right\}
-
-=B_{\min }\left( \psi \right)
-
+=B_{\min }\left( \psi \right) 
 \end{equation}
-
 The direction is counter-clockwise and the limits $s_{\min }$ and $s_{\max }$
-
 are set at the position of maximum magnetic field
 
-
-
 \begin{equation}
-
 B\left( \psi ,s\equiv s_{\min }\right) =B\left( \psi ,s\equiv s_{\max
-
 }\right) =\max \left\{ B\left( \psi ,s\right) \right\} =B_{\max }\left( \psi
-
-\right)
-
+\right) 
 \end{equation}
-
-The local orthogonal vectors are
-
+The local orthogonal vectors are 
 \begin{eqnarray}
-
 \widehat{\psi } &=&\frac{\nabla \psi }{\left| \nabla \psi \right| } \\
-
 \widehat{s} &=&\frac{\nabla \phi \times \nabla \psi }{\left| \nabla \psi
-
 \right| \left| \nabla \phi \right| }=\widehat{b}_{p} \\
-
-\widehat{\phi } &=&R\nabla \phi
-
+\widehat{\phi } &=&R\nabla \phi 
 \end{eqnarray}
 
-
-
 \item  An alternative to the previous system may be easier to implement
-
-numerically for the calculation of the bounce coefficients. This would be
-
-the system $\left( \psi ,\theta ,\phi \right) $.
-
+numerically for the calculation of the bounce coefficients. This is the
+system $\left( \psi ,\theta ,\phi \right) $. The $\theta $ grid is defined
+in (\ref{theta}). We also define, for geometrical purposes, a flux-function $%
+\rho \left( \psi \right) $ which coincides with the normalized radius on the
+horizontal LFS midplane. Indeed, we have
+\[
+\rho \left( R>R_{0},Z=Z_{0}\right) =\frac{R-R_{0}}{R_{\max }-R_{0}}
+\]
+where $R_{\max }$ is the value of $R$ on the separatrix as it crosses the
+midplane. The local orthogonal vectors are 
+\begin{eqnarray}
+\widehat{\psi } &=&\frac{\nabla \psi }{\left| \nabla \psi \right| } \\
+\widehat{\theta } &=&\frac{\nabla \phi \times \nabla \psi }{\left| \nabla
+\psi \right| \left| \nabla \phi \right| }=\widehat{s}=\widehat{b}_{p} \\
+\widehat{\phi } &=&R\nabla \phi 
+\end{eqnarray}
 \end{itemize}
 
-
-
-\section{Outputs from CRONOS-HELENA}
-
-
-
-The 2-D outputs from CRONOS-HELENA\ are given on the $\left( r,\theta
-
-\right) $ grid.
-
-
+The 2-D outputs from HELENA\ are given on the $\left( \psi ,\theta \right) $
+grid.
 
 \section{Bounce Time}
 
-
-
 \subsection{Normalized Expression}
 
-
-
-The transit, or bounce time is defined as
-
+The transit, or bounce time is defined as 
 \begin{eqnarray}
-
-\tau _{b}\left( \psi \right)  &=&\int_{s_{\min }}^{s_{\max }}\frac{ds}{%
-
-\left| v_{s}\right| } \\
-
+\tau _{b}\left( \psi \right) &=&\int_{s_{\min }}^{s_{\max }}\frac{ds}{\left|
+v_{s}\right| } \\
 &=&\int_{s_{\min }}^{s_{\max }}\frac{ds}{\left| v_{\Vert }\right| }\frac{B}{%
-
 \left| B_{P}\right| }
-
 \end{eqnarray}
 
-
-
-Using
-
+Using 
 \begin{equation}
-
-ds=Jd\theta
-
+ds=Jd\theta 
 \end{equation}
-
-and
-
+and 
 \begin{equation}
-
-v_{\Vert }=p\xi
-
+v_{\Vert }=v\xi 
 \end{equation}
-
-we find
-
+we find 
 \begin{equation}
-
-\tau _{b}\left( \psi \right) =\frac{2\pi }{p\left| \xi _{0}\right| }%
-
+\tau _{b}\left( \psi \right) =\frac{2\pi }{v\left| \xi _{0}\right| }%
 \int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }J\frac{\xi _{0}%
-
 }{\xi }\frac{B}{\left| B_{P}\right| }
-
 \end{equation}
-
-where $\xi _{0}$ is the pitch angle at the position $\theta _{0}$ of minimum
-
-$B$-field.
-
+where $\xi _{0}$ is the pitch angle at the position $\theta _{0}$ of minimum 
+$B$-field. 
 \begin{equation}
-
-\theta _{0}=\theta \left( B=B_{\min }\left( \psi \right) \right)
-
+\theta _{0}\equiv \theta \left( B=B_{\min }\left( \psi \right) \right) 
 \end{equation}
-
 $\ $
 
-
-
-The bounce time can be normalized as such:
-
+The bounce time can be normalized as such: 
 \begin{equation}
-
-\tau _{b}\left( \psi \right) =\frac{2\pi R_{0}q\left( \psi \right) }{p\left|
-
-\xi _{0}\right| }\lambda \left( \psi \right)
-
+\tau _{b}\left( \psi ,\xi _{0}\right) =\frac{2\pi a\rho \left( \psi \right) 
+}{v\left| \xi _{0}\right| }\sqrt{1+\left( \frac{R_{0}q\left( \psi \right) }{%
+a\rho \left( \psi \right) }\right) ^{2}}\lambda \left( \psi ,\xi _{0}\right) 
+\end{equation}
+with 
+\begin{equation}
+\lambda \left( \psi ,\xi _{0}\right) =\left[ 1+\left( \frac{R_{0}q\left(
+\psi \right) }{a\rho \left( \psi \right) }\right) ^{2}\right]
+^{-1/2}\int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }\frac{J%
+}{a\rho \left( \psi \right) }\frac{\xi _{0}}{\xi }\frac{B}{\left|
+B_{P}\right| }
 \end{equation}
 
-with
+This complicated-looking expression is defined such as to take a very simple
+intuitive form for the case of circular concentric flux-surfaces. See
+Section ?? for details. It ensures that the normalized transit time of a
+particle with only parallel velocity is exactly one.
 
+\subsection{Idealized Magnetic Field Structure}
+
+In a toroidal axisymmetric geometry, the magnetic field can be expressed
+generally as 
 \begin{equation}
-
-\lambda \left( \psi \right) =\int_{\theta _{\min }}^{\theta _{\max }}\frac{%
-
-d\theta }{2\pi }\frac{J}{R_{0}q\left( \psi \right) }\frac{\xi _{0}}{\xi }%
-
-\frac{B}{\left| B_{P}\right| }
-
+\mathbf{B}=I\left( \psi \right) \nabla \phi +\nabla \psi \times \nabla \phi 
 \end{equation}
+so that 
+\begin{eqnarray*}
+B_{T} &=&I\left( \psi \right) \left| \nabla \phi \right|  \\
+\left| B_{P}\right|  &=&\left| \nabla \psi \right| \left| \nabla \phi
+\right| 
+\end{eqnarray*}
+and
+\begin{eqnarray*}
+B &=&\sqrt{B_{T}^{2}+B_{P}^{2}} \\
+&=&\left| \nabla \phi \right| \sqrt{I^{2}\left( \psi \right) +\left| \nabla
+\psi \right| ^{2}}
+\end{eqnarray*}
 
-
+We then have the ratio
+\[
+\frac{B}{\left| B_{P}\right| }=\sqrt{1+\frac{I^{2}\left( \psi \right) }{%
+\left| \nabla \psi \right| ^{2}}}
+\]
+and we obtain
+\[
+\lambda \left( \psi \right) =\sqrt{1+\frac{I^{2}\left( \psi \right) }{\left|
+\nabla \psi \right| ^{2}}}\left[ 1+\left( \frac{R_{0}q\left( \psi \right) }{%
+a\rho \left( \psi \right) }\right) ^{2}\right] ^{-1/2}\int_{\theta _{\min
+}}^{\theta _{\max }}\frac{d\theta }{2\pi }\frac{J}{a\rho \left( \psi \right) 
+}\frac{\xi _{0}}{\xi }
+\]
 
 \subsection{Passing - Trapped particles}
 
-
-
-The turning points are
-
+The turning points are 
 \begin{equation}
-
-\theta _{\min }=\left|
-
+\theta _{\min }=\left| 
 \begin{array}{cc}
-
--\pi  & \text{for passing particles} \\
-
+-\pi & \text{for passing particles} \\ 
 \theta _{T\min } & \text{for trapped particles}
-
 \end{array}
-
 \right.
-
 \end{equation}
-
 \begin{equation}
-
-\theta _{\max }=\left|
-
+\theta _{\max }=\left| 
 \begin{array}{cc}
-
-\pi  & \text{for passing particles} \\
-
+\pi & \text{for passing particles} \\ 
 \theta _{T\max } & \text{for trapped particles}
-
 \end{array}
-
 \right.
-
 \end{equation}
-
-where the trapping condition is given by $\left| \xi _{0}\right| <\xi _{0T}$%
-
+where the trapping condition is given by $\left| \xi _{0}\right| <\xi _{0T}$
 , where $\xi _{0T}$ is the pitch angle, defined at the minimum $B_{\min
-
 }\left( \psi \right) $ on a given flux-surface, such that the parallel
-
 velocity of the particle vanishes at the maximum $B_{\max }\left( \psi
-
 \right) $. This can be expressed as a function of the two adiabatic
-
-invariants
-
+invariants 
 \begin{eqnarray}
-
-\mu  &=&\frac{p_{\bot }^{2}}{2mB} \\
-
+\mu &=&\frac{p_{\bot }^{2}}{2mB} \\
 p^{2} &=&p_{\bot }^{2}+p_{\Vert }^{2}
-
 \end{eqnarray}
-
-such that
-
+such that 
 \begin{eqnarray}
-
 p_{\bot 1}^{2}+p_{\Vert 1}^{2} &=&p_{\bot 0}^{2}+p_{\Vert 0}^{2} \\
-
 \frac{p_{\bot 1}^{2}}{B_{\max }} &=&\frac{p_{\bot 0}^{2}}{B_{\min }}
-
 \end{eqnarray}
 
-
-
-Then, setting $p_{\Vert 1T}=0$, we get
-
+Then, setting $p_{\Vert 1T}=0$, we get 
 \begin{equation}
-
 p_{\Vert 0T}^{2}=\left( \frac{B_{\max }}{B_{\min }}-1\right) p_{\bot 0T}^{2}
-
 \end{equation}
-
 \begin{equation}
-
 \xi _{0T}^{2}=1-\frac{B_{\min }}{B_{\max }}
-
 \end{equation}
-
-
 
 We can determine the turning angles $\theta _{T\min }$ and $\theta _{T\max }$
-
-from the same system, so that, for a given $\left| \xi _{0}\right| <\xi _{0T}
-
-$,
-
+from the same system, so that, for a given $\left| \xi _{0}\right| <\xi
+_{0T} $, 
 \begin{equation}
-
 \xi _{0}^{2}=1-\frac{B_{\min }}{B_{T\max }}
-
 \end{equation}
-
-so that
-
+so that 
 \begin{eqnarray}
-
-\theta _{T\min } &=&\theta \left( B=B_{T\max }\left| \theta <0\right.
-
-\right)  \\
-
-\theta _{T\max } &=&\theta \left( B=B_{T\max }\left| \theta >0\right.
-
-\right)
-
+\theta _{T\min } &=&\theta \left( B=B_{T\max }\left| \theta <0\right. \right)
+\\
+\theta _{T\max } &=&\theta \left( B=B_{T\max }\left| \theta >0\right. \right)
 \end{eqnarray}
-
-
 
 \subsection{Case of Circular, Concentric Flux-Surfaces}
 
-
-
-In this case, we have
-
+In this case, we have 
 \begin{equation}
-
-R=R_{0}+r\cos \theta
-
+R=R_{0}+r\cos \theta 
 \end{equation}
-
-and therefore the toroidal field is
-
+so that 
+\[
+\rho =\frac{r}{a}
+\]
+and therefore the toroidal field is 
 \begin{equation}
-
-B_{T}=B_{T0}\frac{R_{0}}{R}=\frac{B_{T0}}{1+r/R_{0}\cos \theta }
-
-\end{equation}
-
-the poloidal field is
-
-\begin{equation}
-
-B_{P}=B_{P0}\left( r\right) \frac{R_{0}}{R}=\frac{B_{P0}\left( r\right) }{%
-
+B_{T}=B_{T0}\left( r\right) \frac{R_{0}}{R}=\frac{B_{T0}\left( r\right) }{
 1+r/R_{0}\cos \theta }
-
 \end{equation}
-
-and the total field is
-
+where 
+\[
+B_{T0}\left( r\right) =\frac{I\left( r\right) }{R_{0}}
+\]
+the poloidal field is 
 \begin{equation}
-
+B_{P}=B_{P0}\left( r\right) \frac{R_{0}}{R}=\frac{B_{P0}\left( r\right) }{%
+1+r/R_{0}\cos \theta }
+\end{equation}
+where
+\[
+B_{P0}\left( r\right) =\frac{\left| \nabla \psi \right| }{R_{0}}
+\]
+and the total field is 
+\begin{equation}
 B=\frac{\sqrt{B_{P0}^{2}\left( r\right) +B_{T0}^{2}}}{1+r/R_{0}\cos \theta }=%
-
 \frac{B_{0}}{1+r/R_{0}\cos \theta }
-
 \end{equation}
-
-with
-
+with 
 \begin{equation}
-
 B_{0}=\sqrt{B_{P0}^{2}\left( r\right) +B_{T0}^{2}}
-
 \end{equation}
 
+Then, we have the ratio
+\[
+\frac{B}{B_{P}}=\frac{B_{0}}{B_{P0}\left( r\right) }=\sqrt{1+\frac{B_{T0}^{2}%
+}{B_{P0}^{2}\left( r\right) }}
+\]
 
-
-We also have
-
+We also have 
 \begin{equation}
-
-J=\frac{ds}{d\theta }=r
-
+J=\frac{ds}{d\theta }=r=a\rho 
 \end{equation}
-
-and
-
+and 
 \begin{equation}
-
-q\left( r\right) =\frac{r}{R_{0}}\frac{B_{T}}{B_{P}}
-
+q\left( r\right) =\frac{r}{R_{0}}\frac{B_{T}}{B_{P}}=\frac{r}{R_{0}}\frac{%
+B_{T0}}{B_{P0}}
 \end{equation}
+so that 
+\[
+\frac{B}{B_{P}}=\sqrt{1+\left( \frac{qR_{0}}{r}\right) ^{2}}
+\]
 
-so that
-
+The normalized bounce time then becomes simply
 \begin{equation}
-
-\lambda \left( \psi \right) =\sqrt{1+\frac{r^{2}}{q^{2}R_{0}^{2}}}%
-
-\int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }\frac{\xi _{0}%
-
-}{\xi }\frac{B}{B_{T}}
-
-\end{equation}
-
-
-
-In the limit $B_{T}\gg B_{P}$, we then have
-
-\begin{equation}
-
 \lambda \left( \psi \right) =\int_{\theta _{\min }}^{\theta _{\max }}\frac{%
-
 d\theta }{2\pi }\frac{\xi _{0}}{\xi }
-
 \end{equation}
 
-
-
-In addition, defining
-
+In addition, defining 
 \begin{equation}
-
 \epsilon =\frac{r}{R_{0}}
-
 \end{equation}
-
-, we find
-
+we find 
 \begin{eqnarray}
-
 B_{\min } &=&\frac{B_{0}}{1+\epsilon } \\
-
 B_{\max } &=&\frac{B_{0}}{1-\epsilon }
-
 \end{eqnarray}
-
-so that
-
+so that 
 \begin{equation}
-
 \xi _{0T}^{2}=\frac{2\epsilon }{1+\epsilon }
-
 \end{equation}
 
-
-
-The turning angles are determined by
-
+The turning angles are determined by 
 \begin{equation}
-
 \xi _{0}^{2}=\frac{\left( 1-\cos \theta _{T}\right) \epsilon }{1+\epsilon }
-
 \end{equation}
-
-so that
-
+so that 
 \begin{equation}
-
 \theta _{T}=\arccos \left[ 1-\frac{\xi _{0}^{2}}{2\xi _{0T}^{2}}\right]
-
 \end{equation}
-
 \begin{eqnarray}
-
 \theta _{T\min } &=&-\theta _{T} \\
-
 \theta _{T\max } &=&\theta _{T}
-
 \end{eqnarray}
 
-
-
-Of course, the position of minimum $B$-field is
-
+Of course, the position of minimum $B$-field is 
 \begin{equation}
-
 \theta _{0}=0
-
 \end{equation}
-
-
-
-\bigskip
-
-
-
-\bigskip
-
-
-
-\bigskip
-
-
-
-\bigskip
-
-
-
-\bigskip
-
-
-
-\bigskip
-
-
-
-\bigskip
-
-
-
-\bigskip
-
-
-
-\bigskip
-
-
-
-\bigskip
-
-
-
-\bigskip
-
-
-
-\bigskip
-
-
-
-\bigskip
-
-
-
-\bigskip
-
-
-
-If we define a uniform grid in $B\left( \psi ,s\right) $ between $B_{\min
-
-}\left( \psi \right) $ and $B_{\max }\left( \psi \right) $:
-
-\begin{equation}
-
-B_{k}\left( \psi \right) =B_{\min }\left( \psi \right) +\frac{k}{N-1}\left[
-
-B_{\max }\left( \psi \right) -B_{\min }\left( \psi \right) \right]
-
-\end{equation}
-
-we can then define the following grid in $s$
-
-
 
 \end{document}
-
