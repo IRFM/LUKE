@@ -16,7 +16,7 @@ function [s,dossier,machine,mex] = comput_dke_yp
 machine = computer;
 if strcmp(machine,'ALPHA') == 1,
 	s = '/';
-	dossier = '/usr/drfc/peysson';
+	dossier = '/usr/drfc/YP105119';
 	mex = '.mexaxp';
 elseif strcmp(machine,'PC') == 1,
 	s = '\';
