@@ -130,7 +130,7 @@ elseif nargin == 39,
 	coll_mode = 0;
 	dtn = 1000;
 	prec0 = [1e-10,1e-10];
-	nit = 50;
+	nit = [50,200];
 	invproc = 1;
 	param_inv = [1e-3,20];
 	display = [0,1,1];
@@ -138,20 +138,20 @@ elseif nargin == 39,
 elseif nargin == 40,
 	dtn = 1000;
 	prec0 = [1e-10,1e-10];
-	nit = [20,20];
+	nit = [50,200];
 	invproc = 1;
 	param_inv = [1e-3,20];
 	display = [0,1,1];
 	store_mode = 0;
 elseif nargin == 41,
 	prec0 = [1e-10,1e-10];
-	nit = [20,20];
+	nit = [50,200];
 	invproc = 1;
 	param_inv = [1e-3,20];
 	display = [0,1,1];
 	store_mode = 0;
 elseif nargin == 42,
-	nit = [20,20];
+	nit = [50,200];
 	invproc = 1;
 	param_inv = [1e-3,20];
 	display = [0,1,1];
@@ -179,7 +179,7 @@ timeCPU0 = cputime;
 %************************************************** Set grid and various parameters ******************************************************** 
 %
 me = 1/1860;%Electron mass (u.m.a.)
-m_bounce = 30;%m-1 is the order of the series expansion for lambda and lambda_tp (m>0, m=2 is enough, but higjer order are necessary for sstar_tp)
+m_bounce = 30;%m-1 is the order of the series expansion for lambda and lambda_tp (m>0, m=2 is enough, but higher order are necessary for sstar_tp). Circular magnetic flux surfaces
 %
 if dtn > 0,
 	time_scheme = 1;%Implicit differencing scheme
@@ -1724,7 +1724,7 @@ if dke_mode == 1,
 	time0 = clock;
 	MMXPDI_g_t = inv(diag(diag(MMXP_g_t)));
 	MMXPC_g_t = MMXPDI_g_t*MMXP_g_t;%Main diagonal matrix preconditionning
-	[MMXL_g_t,MMXU_g_t] = luinc(MMXPC_g_t,prec_inv); 
+	[MMXL_g_t,MMXU_g_t] = luinc(MMXPC_g_t,prec_inv);
 	time_g = etime(clock,time0);
 	memoryLU_g = (getfield(whos('MMXL_g_t'),'bytes') + getfield(whos('MMXU_g_t'),'bytes'))/1000000;
 else
@@ -1828,11 +1828,11 @@ for it_f = 2:nit_f,
 %
 			if display_mode >= 1,
 				info_dke_yp(2,['Iteration : ',int2str(it_f),' / ',int2str(nit_f),', Residu = ',num2str(residu_f(ir,it_f))]);
-				info_dke_yp(2,['Normalized poloidal magnetic flux: ',num2str(xpsin(ir))]);
-				info_dke_yp(2,['Normalized radius on LFS midplane: ',num2str(xrho(ir))]);
-				disp(['   - Density [t-1]: ',num2str(normf0(ir,it_f-1)),' - [t]: ',num2str(normf1(ir,it_f))]);;
-				disp(['   - Current [t-1]: ',num2str(curr0(ir,it_f-1)),' - [t]: ',num2str(curr1(ir,it_f))]);
-				disp(['   - Current relative accuracy [t]: ',num2str(prec_curr(ir,it_f))]);
+				info_dke_yp(2,['   Normalized poloidal magnetic flux: ',num2str(xpsin(ir))]);
+				info_dke_yp(2,['      Normalized radius on LFS midplane: ',num2str(xrho(ir))]);
+				disp(['                - Density [t-1]: ',num2str(normf0(ir,it_f-1)),' - [t]: ',num2str(normf1(ir,it_f))]);;
+				disp(['                - Current [t-1]: ',num2str(curr0(ir,it_f-1)),' - [t]: ',num2str(curr1(ir,it_f))]);
+				disp(['                - Current relative accuracy [t]: ',num2str(prec_curr(ir,it_f))]);
 			end
 %
 			if display_mode == 2,
@@ -1842,7 +1842,7 @@ for it_f = 2:nit_f,
 						axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
 						title(['Iteration: ',int2str(it_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
 						hold on;zoom on
-						figure(100),subplot(322),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
+						figure(100),subplot(322),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],max(residu_f(:,1:it_f)),'gx',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
 						axis('square');axis([0,it_f,prec0_f/10,1e-4]);
 						title(['Convergence - f (rho=',num2str(xrho(ir)),')']);xlabel('Iteration');ylabel('Residu')
 						hold on;zoom on
@@ -1852,7 +1852,7 @@ for it_f = 2:nit_f,
 						axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
 						title(['Iteration: ',int2str(it_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
 						hold on;zoom on
-						figure(100),subplot(324),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
+						figure(100),subplot(324),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],max(residu_f(:,1:it_f)),'gx',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
 						axis('square');axis([0,it_f,prec0_f/10,1e-4]);
 						title(['Convergence - f (rho=',num2str(xrho(ir)),')']);xlabel('Iteration');ylabel('Residu')
 						hold on;zoom on
@@ -1862,7 +1862,7 @@ for it_f = 2:nit_f,
 						axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
 						title(['Iteration: ',int2str(it_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
 						hold on;zoom on
-						figure(100),subplot(326),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
+						figure(100),subplot(326),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],max(residu_f(:,1:it_f)),'gx',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
 						axis('square');axis([0,it_f,prec0_f/10,1e-4]);
 						title(['Convergence - f (rho=',num2str(xrho(ir)),')']);xlabel('Iteration');ylabel('Residu')
 						hold on;zoom on
@@ -1964,10 +1964,8 @@ if dke_mode == 1,
 %
 		XdfMdpsi = -dpsim*XfMp/dpsi/dpsip - (dpsip + dpsim)*XfM/dpsip/dpsim + dpsip*XfMm/dpsi/dpsim;%Calculation of the radial gradient of fM (parabolic interpolation) 
 		XfM_tp = -ftp_norm(jr2)*(Xpn.*Xmhu.*XdfMdpsi);	
-		XI_g_th = (abs(Xmhu) - sqrt(xmhubounce2(jr2))).*(1 + 0.25*sqrt(xmhubounce2(jr2))./abs(Xmhu));%Large aspect ratio limit, Lorentz model
-		Xf0_g_th = - XI_g_th.*XfM_tp./abs(Xmhu);
-		Xf0_g_th(:,(nmhu - ns_g(jr2))/2+1:(nmhu + ns_g(jr2))/2) = 0;%Trapped domain set to zero
-		XXf0_g_th(:,:,jr2) = Xf0_g_th;
+		XI_g_th = XXheaviside(:,:,jr2).*(1 + 0.25*sqrt(xmhubounce2(jr2))./abs(Xmhu));%Large aspect ratio limit, Lorentz model
+		XXf0_g_th(:,:,jr2) =  - XI_g_th.*XfM_tp./abs(Xmhu);
 %
 %First order Legendre correction for ftp
 %	
@@ -2057,14 +2055,14 @@ if dke_mode == 1,
 				Xf2_g(1:npn,(nmhu + ns_g(jr2))/2 + 1:nmhu) = Xf1_g_t(1:npn,(nmhu - ns_g(jr2))/2 + 1:nmhu - ns_g(jr2));%Expansion of the function g on the pitch-angle grid
 				Xf1_g = Xf2_g.*XXheaviside(:,:,jr2);%g=0 in the trapped region
 %
-				norm1_g(jr2,it_g) = 2*pi*integral_dke_jd(pn',pn2'.*integral_dke_jd(mhu,Xf1_g,2),1);
-				residu_g(jr2,it_g) = sqrt(abs(2*pi*integral_dke_jd(pn',pn2'.*integral_dke_jd(mhu,(Xf1_g - XXf0_g(:,:,jr2)).^2.*Xf1_g,2),1)/norm1_g(jr2,it_g)));
+				norm1_g(jr2,it_g) = 2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,Xf1_g,2),1);
+				residu_g(jr2,it_g) = sqrt(abs(2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,(Xf1_g - XXf0_g(:,:,jr2)).^2.*XXf0_g(:,:,jr2),2),1)/norm1_g(jr2,it_g)));
 				prec_residu_g(jr2,it_g) = abs((residu_g(jr2,it_g) - residu_g(jr2,it_g-1))/residu_g(jr2,it_g));				
 %
 				if display_mode >= 1,	
 					info_dke_yp(2,['Iteration : ',int2str(it_g),' / ',int2str(nit_g),', Residu = ',num2str(residu_g(jr2,it_g))]);
-					info_dke_yp(2,['Normalized poloidal magnetic flux: ',num2str(xpsin(jr2))]);
-					info_dke_yp(2,['Normalized radius on LFS midplane: ',num2str(xrho(jr2))]);
+					info_dke_yp(2,['   Normalized poloidal magnetic flux: ',num2str(xpsin(jr2))]);
+					info_dke_yp(2,['      Normalized radius on LFS midplane: ',num2str(xrho(jr2))]);
 				end
 %
 				if jr2 == ir_display & display_mode == 2,
@@ -2072,7 +2070,7 @@ if dke_mode == 1,
 					axis('square');set(gca,'xlim',[-10,10]);
 					title(['Iteration: ',int2str(it_g)]);xlabel('pn-ref');ylabel('g(pperp=0)')
 					hold on;zoom on
-					figure(101),subplot(122),semilogy([1:it_g],residu_g(jr2,1:it_g),'r+',[1:it_g],prec0_g*ones(size([1:it_g])),'b--');
+					figure(101),subplot(122),semilogy([1:it_g],residu_g(jr2,1:it_g),'r+',[1:it_g],max(residu_g(rdke,1:it_g)),'gx',[1:it_g],prec0_g*ones(size([1:it_g])),'b--');
 					axis('square');axis([0,it_g,prec0_g/10,1e-4]);
 					title(['Convergence - g (rho=',num2str(xrho(jr2)),')']);xlabel('Iteration');ylabel('Residu')
 					hold on;zoom on
@@ -2535,7 +2533,7 @@ end
 xepsi_rdke = xepsi(rdke);
 Xxqtilde = repmat(xqtilde,npn,1);
 Xxqhat = repmat(xqtilde,npn,1);
-XxRR_fsav = 2*pi*(Xxqtilde(rdke)./Xxqhat(rdke)).*integral_dke_jd(dmhu,XXSp0_imj.*XXpn2m(:,:,rdke).*XXlambda(:,:,rdke),2);%Run-away rate
+XxRR_fsav = 2*pi*(Xxqtilde(:,rdke)./Xxqhat(:,rdke)).*integral_dke_jd(dmhu,XXSp0_imj.*XXpn2m(:,:,rdke).*XXlambda(:,:,rdke),2);%Run-away rate
 %
 mask_xepsi = find(xepsi_rdke~=0);
 if ~isempty(mask_xepsi)
@@ -2548,13 +2546,13 @@ clear currB_fsav
 %
 %
 Xxf0 = 0.5*integral_dke_jd(dmhu,XXf0(:,:,rdke),2);
-XxfM = XXfM(:,1,rdke);
+XxfM = squeeze(XXfM(:,1,rdke));
 Xxpn = repmat(pn',[1,nr_dke]);
 Xxv = repmat(v',[1,nr_dke]);
 %
 xvth20 = 4*pi*integral_dke_jd(dpn,Xxpn.*Xxpn.*Xxv.*Xxv.*Xxf0,1)'/3;
 xvth2M = 4*pi*integral_dke_jd(dpn,Xxpn.*Xxpn.*Xxv.*Xxv.*XxfM,1)'/3;
-xTe_out_norm = (xvth20./xvth2M).*xTe_norm;%New bulk temperature (bulk heating)
+xTe_out_norm = (xvth20./xvth2M).*xTe_norm(rdke);%New bulk temperature (bulk heating)
 %
 %Exact trapped fraction (not the effective trapped fraction that rely on simplified plasma modeling with Maxwellian background)
 %
