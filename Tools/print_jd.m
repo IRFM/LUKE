@@ -33,7 +33,7 @@ set(gca, 'YTickMode','manual');
 set(gca, 'ZTickMode','manual');
 %
 %
-if opt <= 1,
+if opt >= 0 & opt <= 1,
     print
 end
 %
