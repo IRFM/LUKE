@@ -51,7 +51,13 @@ end
 %
 %Calculation of the flux averaged Maxwellian bootstrap current from Hirshman, Sauter, Hinton & Hazeltine models (bulk contribution)
 %*************Multiple ion species as done bu Houlberg et al not implemented here********************
-[xcurr_hir_mksa_fsav,xcurr_sau_mksa_fsav,xcurr_hin_mksa_fsav,xcurr_i_mksa_fsav] = hsneomodels_dke_jd(xrho,ap,Rp,Zi(1),xq,Bt,Te0,Tea,eTe,ne0,nea,ene,Ti0(1),Tia(1),eTi(1));
+%[xcurr_hir_mksa_fsav,xcurr_sau_mksa_fsav,xcurr_hin_mksa_fsav,xcurr_i_mksa_fsav] = hsneomodels_dke_jd(xrho,ap,Rp,Zi(1),xq,Bt,Te0,Tea,eTe,ne0,nea,ene,Ti0(1),Tia(1),eTi(1));
+[pcurr_hir_mksa_fsav,pcurr_sau_mksa_fsav,pcurr_hin_mksa_fsav,pcurr_i_mksa_fsav] = ...
+    hsneomodels_dke_jd(prho,ap,Rp,Zi(1),pq,Bt,pTe,pne,pzTi(1,:));
+xcurr_hir_mksa_fsav = interp1(prho,pcurr_hir_mksa_fsav,xrho);
+xcurr_sau_mksa_fsav = interp1(prho,pcurr_sau_mksa_fsav,xrho);
+xcurr_hin_mksa_fsav = interp1(prho,pcurr_hin_mksa_fsav,xrho);
+xcurr_i_mksa_fsav = interp1(prho,pcurr_i_mksa_fsav,xrho);
 %
 while 1,
 	if auto_mode == 0,
