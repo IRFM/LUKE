@@ -43,7 +43,7 @@ grid_power = 1.5; % power for mhu grid step varations (grid_power > 1) (Note: fo
 %
 %Momentum Grid
 %
-snp = 10;%pgridfactor (Uniform grid: pgridfactor << 1, non-uniform grid: pgridfactor >= 1) 
+snp = eps;10;%pgridfactor (Uniform grid: pgridfactor << 1, non-uniform grid: pgridfactor >= 1) 
 %
 %Normalized radii at which the distribution is calculated (DKE or FP)
 %The syntax rho='all' may be also used if all mhu values are considered. 
@@ -51,7 +51,7 @@ snp = 10;%pgridfactor (Uniform grid: pgridfactor << 1, non-uniform grid: pgridfa
 %Values of the radial flux grid [1,p] (If one radial value: local calculation only)
 %
 psin_S = [];
-rho_S = [0.033221];0.033221;0.71365;
+rho_S = [0.03322100141578101];0.033221;0.71365;
 %
 psin_display = NaN;%Approximate radial value at which results are displayed if display_mode >= 1 [1,1]
 rho_display = 0.7;
