@@ -402,7 +402,8 @@ while 1,
 			figure(5);clf
     		maxXAstr_cyl_ref = max(max(XAstr_cyl_ref)) + eps;
     		minXAstr_cyl_ref = min(min(XAstr_cyl_ref)) + eps;
-%   		C = contour(ppar_cyl_S_ref,pperp_cyl_S_ref,XAstr_cyl_ref,minXAstr_cyl_ref*exp(-[0:1:4*nlevel]/(-4*nlevel/log(maxXAstr_cyl_ref/minXAstr_cyl_ref))));colorbar;grid on;zoom on;%Stream function
+			lev = fliplr(minXAstr_cyl_ref*exp(-[0:1:4*nlevel]/(-4*nlevel/log(maxXAstr_cyl_ref/minXAstr_cyl_ref))));%Because of a bug in Matlab 6.5
+   		C = contour(ppar_cyl_S_ref,pperp_cyl_S_ref,XAstr_cyl_ref,lev(1:2:40));colorbar;grid on;zoom on;%Stream function
     		axis('equal')
     		title('Stream Function');
     		xlabel('ppar/pth-ref');
