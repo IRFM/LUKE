@@ -1,4 +1,4 @@
-function  [brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi,lchord,rho_out,theta_out] = bremsstrahlung_dke_yp(tokamak,HXR,vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr,XXheaviside,zZi,xzni_norm,xne_norm,ne_ref,xrho,dmhu,mhu,dpn,pn,pn2,gamma,Ec,dp_cyl,pnmax_S,XXf0,XXf0_tp,XXf0_g,nlevel,bounce_mode,display_mode,r_display,t_display)
+function  [kphot,brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi,lchord,rho_out,theta_out] = bremsstrahlung_dke_yp(tokamak,HXR,vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr,XXheaviside,zZi,xzni_norm,xne_norm,ne_ref,xrho,dmhu,mhu,dpn,pn,pn2,gamma,Ec,dp_cyl,pnmax_S,XXf0,XXf0_tp,XXf0_g,nlevel,bounce_mode,display_mode,r_display,t_display)
 %
 % Calculates the bremsstrahlung emission. Call first the function bremchord_dke_yp.m for calculating "vschords" used in line integration
 %
@@ -7,16 +7,20 @@ function  [brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi,lchord,rho_
 %
 %   OUTPUTS:
 %   
+%      - kphot : photon energies (keV) [1,nk]
 %      - brem_bd_out : photon density per unit energy and solid angle [ntilt,nr,nk]
 %      - brem_forward : photon density per unit energy and solid angle forward emission with respect to the electron direction [nr,nk]
 %      - brem_backward : photon density per unit energy and solid angle backward emission with respect to the electron direction [nr,nk]
 %      - brem_perp : photon density per unit energy and solid angle perpendicular emission with respect to the electron direction [nr,nk]
 %      - brem_4pibrem :  photon density per unit energy and solid angle mean 4*pi emission [nr,nk]
-%      
+%      - lchord : chord length (m) [1,nchord]
+%      - rho_out: Normalized minor radius for the display of the elecron distribution function [1,1]
+%      - theta_out: Poloidal angle for the display of the elecron distribution function  [1,1]
+%
 % by Joan Decker <jodecker@mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 %
     
-%%%%%%[brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi,lchord,rho_out,theta_out] = bremsstrahlung_dke_yp('TS',HXR,vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr,XXheaviside,zZi,xzni_norm,xne_norm,ne_ref,xrho,dmhu,mhu,dpn_ref,pn_ref,pn2_ref,gamma_ref,Ec_ref,dp_cyl,pnmax_S,XXf0_ref,XXf0_tp_ref,XXf0_g_ref,nlevel,bounce_mode,2,0.7,120)   
+%%%%%%[kphot,brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi,lchord,rho_out,theta_out] = bremsstrahlung_dke_yp('TS',HXR,vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr,XXheaviside,zZi,xzni_norm,xne_norm,ne_ref,xrho,dmhu,mhu,dpn_ref,pn_ref,pn2_ref,gamma_ref,Ec_ref,dp_cyl,pnmax_S,XXf0_ref,XXf0_tp_ref,XXf0_g_ref,nlevel,bounce_mode,2,0.7,120);
 % 
 [qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;%Physics constant
 %
@@ -26,7 +30,7 @@ n_pol = n_gauleg;%Necessary for accurate reconstruction at ksi = -1
 epsi_gauleg = 1e-14;
 kphot = [20:10:160];%Photon energy in keV
 %   
-ZZIB = zeros(size(psin_hxr,1),size(psin_hxr,2),n_pol+1,length(kphot)) + NaN;%Legendre coefficients for the bremsstrahlung at all radii at poloidal positions (NaN if not used)
+ZZIB = zeros(size(psin_hxr,1),size(psin_hxr,2),n_pol+1,length(kphot));%Legendre coefficients for the bremsstrahlung at all radii at poloidal positions (NaN if not used)
 norm0_hxr = zeros(size(psin_hxr,1),size(psin_hxr,2)) + NaN;%Norm of the initial distribution function (NaN if not used)
 normi_hxr = zeros(size(psin_hxr,1),size(psin_hxr,2)) + NaN;%Norm of the reconstructed distribution function (NaN if not used)
 %
@@ -105,7 +109,7 @@ for i = 1:size(psin_hxr,1),%radial position
 %
 			if i_test == i & j_test == j,
 %
-% Test of the reconstruction of the distribution function on the Legendre polynomail basis
+% Test of the reconstruction of the distribution function on the Legendre polynomial basis
 %
 				figure,semilogy(pn,Xf0_i1(:,1),'r+',pn,Xf0_i(:,1),'b',pn,Xf0_i1(:,size(Xf0_i1,2)),'cx',pn,Xf0_i(:,size(Xf0_i,2)),'k')
 				grid on
@@ -211,13 +215,15 @@ for ic = 1:size(vschords,3),%loop on each chord
 %
 	IB1 = zeros(size(ZZIB,3),s_length,size(ZZIB,4));
 %
-	nstep = 300;%In order to avoid use of too large multidimensional tables (limitation of MatLab)
+	nstep = 200;%In order to avoid use of too large multidimensional tables (limitation of MatLab)
 	jmax = floor(s_length/nstep)+1;
 	for j = 1:jmax,
 		index = [(j-1)*nstep+1:j*nstep];
 		index = index(index<=s_length);
-		IB = ZZIB(ir_spsi(index),it_st(index),:,:);
-      IB1(:,index,:) = permute(squeeze(IB(:,1,:,:)),[2,1,3]);
+		if isempty(index) ~= 1
+			IB = ZZIB(ir_spsi(index),it_st(index),:,:);
+			IB1(:,index,:) = permute(squeeze(IB(:,1,:,:)),[2,1,3]);
+		end
    end
 %
 	sksid = vschords(10,s_mask,ic);

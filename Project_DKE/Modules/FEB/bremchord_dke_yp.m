@@ -157,7 +157,7 @@ B0_hxr = interp1(ppsin,ptB0,xpsin,method);%Bmin
 PSI_hxr = griddata(ppsin*ones(1,length(theta)),ones(length(ppsin),1)*theta,sqrt(ptBR.^2 + ptBZ.^2 + ptBphi.^2),psin_hxr,theta_hxr)./(B0_hxr'*ones(1,length(theta)-1));%B/Bmin
 %
 sr_lcs = interp1(theta,r_lcs,st,method);
-mask = sr < sr_lcs;
+mask = ~isnan(spsi);
 for ic = 1:nchords,
    imask = find(mask(1:end-1,ic)-mask(2:end,ic) == 1);
    if length(imask) == 2,%reject the case when chord go through the plasma twice
