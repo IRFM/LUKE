@@ -511,17 +511,6 @@ time0 = clock;
 	 xmhubounce2,xB0,xR0,xBT0,xBp0,Rp,Zp,ap);
 %
 if display_mode >= 1,info_dke_yp(2,['Bounce integrals calculations done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
-%	
-%Pitch-angle integral for the Lorentz model (test mode only and initial guess for the drift kinetic equation, see documentation)
-%	
-XXILor =  zeros(npn,nmhu,nr);
-for ir_dke = 1:nr_dke,
-	jr2 = rdke(ir_dke);
-	ILor_p = XXheaviside(1,:,jr2).*sum(((dmhu.*(mhu>=0).*XXlambda_b_p3m2(1,:,jr2)./XXlambda_p2m1(1,:,jr2))'*ones(1,nmhu)).*triu(ones(nmhu,nmhu)));
-	ILor_m = fliplr(ILor_p);
-	ILor = ILor_m + ILor_p;
-	XXILor(:,:,jr2) = ones(npn,1)*ILor;
-end	
 %
 %Super matrices size definition and masks calculations for trapped electrons in the bounce mode
 %
@@ -559,7 +548,7 @@ prec_residu_f = ones(nr,nit_f);
 if dke_mode == 1,
 	for ir_dke = 1:nr_dke,
 		jr2 = rdke(ir_dke);
-		Zmask_g{ir_dke} = logical(XXheaviside(1,:,jr2));%Passing electrons are selected
+		Zmask_g{ir_dke} = Zmask_f0_P{jr2};%Passing electrons are selected
 		ns_g(ir_dke)= max(find(~Zmask_g{ir_dke})) - min(find(~Zmask_g{ir_dke})) + 1;%number of mhu values that are removed
 %
 		blocksize_tp(ir_dke) = nmhu*npn;	
@@ -579,6 +568,17 @@ if dke_mode == 1,
 	residu_g = ones(nr_dke,nit_g);
 	prec_residu_g = ones(nr_dke,nit_g);
 end
+%	
+%Pitch-angle integral for the Lorentz model (test mode only and initial guess for the drift kinetic equation, see documentation)
+%	
+XXILor =  zeros(npn,nmhu,nr);
+for ir_dke = 1:nr_dke,
+	jr2 = rdke(ir_dke);
+	ILor_p = Zmask_f0_P{jr2}.*sum(((dmhu.*(mhu>=0).*XXlambda_b_p3m2(1,:,jr2)./XXlambda_p2m1(1,:,jr2))'*ones(1,nmhu)).*triu(ones(nmhu,nmhu)));
+	ILor_m = fliplr(ILor_p);
+	ILor = ILor_m + ILor_p;
+	XXILor(:,:,jr2) = ones(npn,1)*ILor;
+end	
 %
 if nargin < narginmax,XXfinit = zeros(np,nmhu,nr);end;%For the initial guess of f0
 %

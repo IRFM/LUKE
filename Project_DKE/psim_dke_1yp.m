@@ -63,7 +63,7 @@ spfac = 20;%reduction factor for the supergrid used in collision integrals
 %Values of the radial flux grid [1,p] (If one radial value: local calculation only)
 %
 psin_S = [];%5.286742555900838e-002; %[0.1]%(rho = 0.25 in CMOD)
-rho_S = [0.05:0.07:0.9];%;0.03322100141578101;0.71365;
+rho_S = [0.1];%[0.05:0.07:0.9];%;0.03322100141578101;0.71365;
 %
 psin_display = NaN;%Approximate radial value at which results are displayed if display_mode >= 1 [1,1]
 rho_display = 0.1;
@@ -81,7 +81,7 @@ eepsi = 0;%Exponent for Ohmic electric field
 %
 % RF Waves
 %
-rf_list(1) = 0;%(1): include LH test calculations (see psim_ideallhcd_jd); (0) do not include
+rf_list(1) = 1;%(1): include LH test calculations (see psim_ideallhcd_jd); (0) do not include
 rf_list(2) = 0;%(1): include EC  calculations (see psim_idealeccd_jd); (0) do not include
 rf_list(3) = 0;%(1): include cold LHCD calculations (see psim_coldlhcd_jd); (0) do not include
 rf_list(4) = 0;%(1): include cold ECCD calculations (see psim_coldeccd_jd); (0) do not include
@@ -113,7 +113,7 @@ coll_mode = 2;%Relativistic collision operator: (0) Maxwellian, (1) High-velocit
 % Run mode
 %
 bounce_mode = 1;%Bounce averaging option: (0) no bounce averaging, (1) bounce averaging full implicit method with 15 diagonals
-dke_mode = 1;%Fokker-Planck equation (0), Drift Kinetic equation (1)
+dke_mode = 0;%Fokker-Planck equation (0), Drift Kinetic equation (1)
 equil_mode = 0;%Equilibrium option: (0) circular concentric flux-surfaces, (1) numerical equilibrium
 %
 norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes

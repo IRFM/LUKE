@@ -32,12 +32,7 @@ time_pause = 1;%Pause delay for figure display (s)
 %
 %Physical constants
 %
-qe = 1.60217733e-19;%Absolute value of the electron charge (C)
-me = 9.1093897e-31;%Electron rest mass (Kg)
-e0 = 8.854187818e-12;%Free space permeability (F/m)
-re = 2.82e-15;%Classical electron radius (m)
-mc2 = 510.99905;%Electron energy rest mass (keV)
-clum = 299792458;%Speed of light (m/s)
+[qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;
 %
 if bounce_mode == 0,dke_mode = 0;end
 if dke_mode == 1,bounce_mode = 1;end
