@@ -1,7 +1,7 @@
 
 \label{fpinversionsection}The matrix inversion procedure is based on the
 possibility of matrix factorization as discussed in Sec.\ref{LUsection}.
-Formally, the iterative method may be expressed in the simple form
+Formally, the iterative method may be expressed in the simple form 
 \begin{equation}
 \widehat{\Bbb{N}}^{\prime }Z^{(k+1)}=\widehat{\Bbb{N}}^{\prime
 }Z^{(k)}-\beta _{C}\left( \widehat{\Bbb{N}}^{\prime }Z^{(k)}-\widehat{\Bbb{P}%
@@ -12,11 +12,11 @@ improvement of the rate of convergence, using a Chebyshev acceleration
 technique as shown in Ref. \cite{kar86}. Here $\widehat{\Bbb{P}}$ is used
 for the main diagonal precondiotiong as explained in Sec.\ref{LUsection} .
 However, it has been shown that values of $\beta _{C}$ other than unity do
-not give much better results i general for implicit methods (\cite{pey98}),
+not give much better results in general for implicit methods (\cite{pey98}),
 and therefore, only the case $\beta _{C}=1$ is considered. Then Eq. \ref
 {fpitequation} is equivalent to Eq. \ref{generalmatrixform} given in Sec. 
 \ref{LUsection}. Replacing $\widehat{\Bbb{N}}^{\prime }$ by $\widehat{\Bbb{L}%
-}\widehat{\Bbb{U}}$, one obtains
+}\widehat{\Bbb{U}}$, one obtains 
 \begin{equation}
 \widehat{\Bbb{L}}\widehat{\Bbb{U}}Z^{(k+1)}=\widehat{\Bbb{P}}%
 _{N}^{-1}\Upsilon ^{(k)}  \label{LUfpitequation}
@@ -31,40 +31,66 @@ and the residual $R_{Z}^{(k)}$%
 R_{Z}^{(k)}=\widehat{\Bbb{P}}_{N}^{-1}\Upsilon ^{(k)}-\widehat{\Bbb{N}}%
 ^{\prime }Z^{(k)}
 \end{equation}
-Eq.\ref{LUfpitequation} becomes simply
+Eq.\ref{LUfpitequation} becomes simply 
 \begin{equation}
 \widehat{\Bbb{L}}\widehat{\Bbb{U}}\Delta _{Z}^{(k+1)}=R_{Z}^{(k)}
 \end{equation}
 which can be solved by two successive inversion steps, evaluating
 respectively forward and backward solutions from triangular systems of
-equations
+equations 
 \begin{eqnarray}
 \widehat{\Bbb{L}}V_{Z}^{(k+1)} &=&R_{Z}^{(k)} \\
 \widehat{\Bbb{U}}\Delta _{Z}^{(k+1)} &=&V_{Z}^{(k+1)}
 \end{eqnarray}
 
 For achieving convergence towards the steady state solution $Z^{(\infty )}$,
-various iterative methods may be used, like the Quasi-Residual Minimum
-(QMR), or the BiConjigate Gradients Stabilized  (BICGSTAB) or the well known
-Conjugate Gradients Square (CGS) which both gives equivalent results in term
-of convergence rate. All methods are are build-in MatLab functions whose
-principle may be found in Refs. \cite{pre92} or \cite{axe94} for more
-detailed insights. 
+various iterative methods may be used, like the Conjugate Gradient Squared 
+(CGS), the BiConjigate Gradient (BICG) or the Quasi-Minimal Residual (QMR)
+methods. These methods, which both give equivalent results in term of
+convergence rate, are preferred to the BiConjigate Gradient Stabilized
+(BICGSTAB) method, since the conservative scheme is nearly always well
+fullfiled even for marginaly well-conditionned matrices, like in presence of
+RF waves whose intensity is large. All methods here considered are build-in
+MatLab functions whose principle may be found in Refs. \cite{pre92} or \cite
+{axe94} for more detailed insights.
 
-At each iteration, $Z^{(k+1)}$ is evaluated from the knowledge of $\Delta %
+After numerous tests, it has been found that the drop tolerance parameter $%
+\delta _{lu}$ has a close link with the maximum number of iterations $MAXIT$
+allowed inside the function that performs the iterative matrix inversion, in
+order to avoid cumulative numerical errors that lead usually to violation of
+the conservative nature of the code. Even if this problem may be cured by
+forcing the Maxwellian solution close to $p=0$ and normalizing the solution
+at each iteration, this approach has not been considered, because it may
+hinder more serious problems regarding the overall numerical conservative
+scheme. So far, a very robust and fully conservative scheme is achieved with
+the following rule of thumb
+\begin{equation}
+\left\{ 
+\begin{array}{l}
+\delta _{lu}=10^{-5}:MAXIT<2-3 \\ 
+\delta _{lu}=10^{-4}:MAXIT<4-5 \\ 
+\delta _{lu}=10^{-3}:MAXIT<9-10 \\ 
+\delta _{lu}=10^{-2}:MAXIT<19-20
+\end{array}
+\right. 
+\end{equation}
+for all cases addressed by the code, including the in presence of RF waves.
+More detailed studied are necessary to clarify this point.
+
+At each iteration, $Z^{(k+1)}$ is evaluated from the knowledge of $\Delta
 _{Z}^{(k+1)},$ and the electron distribution function $%
 f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }$ is reconstructed in order to
 evaluate the non-linear term $\widehat{C}\left( X_{M},Z^{(k)}\right) $ that
 arises from self-collisions. Though this procedure is quite time consuming,
 its incidence on the overall time for converging is fairly marginal, since
-the number of iterations never exceeds $10$ in most cases. 
+the number of iterations never exceeds $10$ in most cases.
 
 According to Ref. \cite{biz97}, convergence towards $Z^{(\infty )}$ is
 considered to be achieved and the iteration is stopped when the following
-criterion is fullfiled
+criterion is fullfiled 
 \begin{equation}
-\sqrt{\frac{2\pi \iint \left[ \partial f_{0}^{\left( 0\right) }/\partial %
-t\right] ^{2}f_{0}^{\left( 0\right) }J_{p}J_{\xi _{0}}dpd\xi _{0}}{2\pi %
+\sqrt{\frac{2\pi \iint \left[ \partial f_{0}^{\left( 0\right) }/\partial
+t\right] ^{2}f_{0}^{\left( 0\right) }J_{p}J_{\xi _{0}}dpd\xi _{0}}{2\pi
 \iint f_{0}^{\left( 0\right) }J_{p}J_{\xi _{0}}dpd\xi _{0}}}<\mathcal{R}_{%
 \mathcal{C}}^{f}  \label{fpconvcrit}
 \end{equation}
@@ -74,7 +100,7 @@ Jacobians as introduced in Sec. \ref{fluxcons}\footnote{%
 The possibility to define a fully $3-D$ criterion has been foreseen.
 However, since collision rates may change drasticaly from plasma center to
 the edge, this choice ensures that convergence is well achieved at the right
-level at all plasma locations. }. 
+level at all plasma locations.}.
 
 Projected on the numerical grid, the criterion (\ref{fpconvcrit}) becomes
 
@@ -82,29 +108,38 @@ Projected on the numerical grid, the criterion (\ref{fpconvcrit}) becomes
 \sqrt{\frac{\sum_{i=0}^{i=n_{p}-1}\sum_{j=0}^{j=n_{\xi _{0}}-1}\left[
 f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) \left( k+1\right)
 }-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) \left( k\right) }\right]
-^{2}f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) \left( k\right) }p_{i+1/2}^{2}%
-\Delta p_{i+1/2}\Delta \xi _{0,j+1/2}}{\Delta t^{2}\sum_{i=0}^{i=n_{p}-1}%
-\sum_{j=0}^{j=n_{\xi _{0}}-12}f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right)
-\left( k\right) }p_{i+1/2}^{2}\Delta p_{i+1/2}\Delta \xi _{0,j+1/2}}}<%
-\mathcal{R}_{\mathcal{C}}^{f}
+^{2}f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) \left( k\right)
+}p_{i+1/2}^{2}\Delta p_{i+1/2}\Delta \xi _{0,j+1/2}}{\Delta
+t^{2}\sum_{i=0}^{i=n_{p}-1}\sum_{j=0}^{j=n_{\xi
+_{0}}-12}f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) \left( k\right)
+}p_{i+1/2}^{2}\Delta p_{i+1/2}\Delta \xi _{0,j+1/2}}}<\mathcal{R}_{\mathcal{C%
+}}^{f}
 \end{equation}
 
 The criterion introduced in Ref. \cite{kar86} has the main advantage to
 ensure that convergence is achieved not for electrons whose energy is close
-to the thermal one, but also for the fastest in the tail. Usually, $\mathcal{%
-R}_{\mathcal{C}}^{f}$ ranges between $10^{-9}$ and $10^{-11},$ and in the
-code the standard value is $10^{-10}.$ The quantity (\ref{fpconvcrit}) may
-be viewed as a norm, and its definition is consequently independent of the
-level of current which results from the the lack of symmetry of $%
-f_{0}^{\left( 0\right) }$ in momentum space. It may therefore be used for
-strong deformations of the electron distribution function, even if the net
-current is close to zero. 
+to the thermal one, but also for the fastest when a tail is driven by an
+external source. Usually, $\mathcal{R}_{\mathcal{C}}^{f}$ ranges between $%
+10^{-10}$ and $10^{-12},$ and in the code the standard value is $10^{-11}.$
+The quantity (\ref{fpconvcrit}) may be viewed as a norm, and its definition
+is consequently independent of the level of current which results from the
+the lack of symmetry of $f_{0}^{\left( 0\right) }$ in momentum space. It may
+therefore be used for strong deformations of the electron distribution
+function, even if the net current is close to zero.
 
 In practice, the total number of iteration $\mathcal{N}_{\mathcal{C}}^{f}$
 is a free choice. It is usually set to $50$, so that inversion procedure
-stops when (\ref{fpconvcrit}) is fullfiled in quite al the cases. If the
-number of iterations reaches $\mathcal{N}_{\mathcal{C}}^{f},$ the program
-warns that convergence is not achieved and that something is going wrong in
-the calculations. This may occur sometimes when too large quasilinear RF
+stops when (\ref{fpconvcrit}) is fullfiled in quite all cases. If the number
+of iterations reaches $\mathcal{N}_{\mathcal{C}}^{f},$ the program warns
+that convergence is not achieved and that something is going wrong in the
+calculations. This may occur sometimes when too large quasilinear RF
 diffusion coefficient are used, leading to inconsistent and non physical
-solutions. 
+solutions. This point is extensively discussed in Sec.\ref{lhcdsection}.
+Conversely, when time step is very large, i.e. $\Delta \overline{t}\geq 1000,
+$ the convergence may be achieved for a given value $\mathcal{R}_{\mathcal{C}%
+}^{f}$  before the current level is fully established. Such an event may
+arise because there is a too reduced number of iterations which involves the 
+$1^{st}$ order Legendre non-linear correction term for momentum
+conservation. Consequently, to avoid this problem, a minimum number of
+iterations has been set to $6$, which turns out to be enough for giving
+reliable results, owing to the weakness of the non-linearity.
