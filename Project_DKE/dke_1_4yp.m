@@ -430,10 +430,6 @@ end
     XR,XZ,XBR,XBZ,XBphi,...
     xB0,xR0,xBT0,Rp,Zp);
     
-    dbstop 437
-    
-    
-    
 %
 %Super matrices size calculation
 %
@@ -1989,7 +1985,7 @@ if dke_mode == 1,
 %
 %First order Legendre correction for ftp
 %	
-		f1_tp = 1.5*integral_dke_jd(mhu,Xf0_tp.*XXlambda_b_p2(:,:,jr2).*(ones(npn,1)*mhu),2)';
+		f1_tp = 1.5*integral_dke_jd(dmhu,Xf0_tp.*XXlambda_b_p2(:,:,jr2).*(ones(npn,1)*mhu),2)';
 		xf1_tp = f1_tp'*ones(1,length(f1_tp));
 %   
 		XI_tp = zeros(npn,nmhu);
@@ -2100,7 +2096,7 @@ if dke_mode == 1,
 %First order Legendre correction for g
 %
 				if coll_mode == 2,
-					f1_g = 1.5*integral_dke_jd(mhu,Xf1_g.*(ones(npn,1)*mhu),2)';
+					f1_g = 1.5*integral_dke_jd(dmhu,Xf1_g.*(ones(npn,1)*mhu),2)';
 					xf1_g = f1_g'*ones(1,length(f1_g));
 %           
 					I1_g = integral_dke_jd(dpn,xf1_g.*masku.*xpn3./xgamma,1)'/3/xTe_norm(jr2) ...
