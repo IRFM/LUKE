@@ -17,9 +17,8 @@ XXnhuloss,delta,Nq,...
 ftp_norm,bounce,coll_mode,...
 dtn,prec0,nit,invproc,param_inv,display,store_mode,XXfinit);%
 %
-%   Self-consistent 3-D relativistic solver of the drift kinetic equation in momentum space
-%   with Beliaev-Budker collision integrals 
-%	 Includes toroidal magnetic losses for the Fokker-Planck equation only
+%   Self-consistent 3-D relativistic solver of the drift kinetic equation in momentum space with Beliaev-Budker collision integrals 
+%   Includes toroidal magnetic losses for the Fokker-Planck equation only for circular plasma cross-section (TS)
 %   Fully implicit or Crank-Nicholson time differencing schemes
 %   LH and EC wave quasilinear diffusion calculations + ohmic electric field 
 %   IMPORTANT: All input quantities are defined on the distribution function grid: half grid
@@ -126,51 +125,51 @@ dtn,prec0,nit,invproc,param_inv,display,store_mode,XXfinit);%
 %Update for the drift kinetic calculations done by J. Decker and Y. Peysson 2001-2002-2003
 %
 if nargin < 33,
-    error('Wrong number of input arguments in dke_1_4yp')
+	error('Wrong number of input arguments in dke_1_4yp')
 elseif nargin == 39,
-    coll_mode = 0;
-    dtn = 1000;
-    prec0 = [1e-10,1e-10];
-    nit = 50;
-    invproc = 1;
-	 param_inv = [1e-3,20];
-    display = [0,1];
-    store_mode = 0;
+	coll_mode = 0;
+	dtn = 1000;
+	prec0 = [1e-10,1e-10];
+	nit = 50;
+	invproc = 1;
+	param_inv = [1e-3,20];
+	display = [0,1];
+	store_mode = 0;
 elseif nargin == 40,
-    dtn = 1000;
-    prec0 = [1e-10,1e-10];
-    nit = [20,20];
-    invproc = 1;
-	 param_inv = [1e-3,20];
-    display = [0,1];
-    store_mode = 0;
+	dtn = 1000;
+	prec0 = [1e-10,1e-10];
+	nit = [20,20];
+	invproc = 1;
+	param_inv = [1e-3,20];
+	display = [0,1];
+	store_mode = 0;
 elseif nargin == 41,
-    prec0 = [1e-10,1e-10];
-    nit = [20,20];
-    invproc = 1;
-	 param_inv = [1e-3,20];
-    display = [0,1];
-    store_mode = 0;
+	prec0 = [1e-10,1e-10];
+	nit = [20,20];
+	invproc = 1;
+	param_inv = [1e-3,20];
+	display = [0,1];
+	store_mode = 0;
 elseif nargin == 42,
-    nit = [20,20];
-    invproc = 1;
-	 param_inv = [1e-3,20];
-    display = [0,1];
-    store_mode = 0;
+	nit = [20,20];
+	invproc = 1;
+	param_inv = [1e-3,20];
+	display = [0,1];
+	store_mode = 0;
 elseif nargin == 43,
-    invproc = 1;
-	 param_inv = [1e-3,20];
-    display = 1;
-    store_mode = 0;
+	invproc = 1;
+	param_inv = [1e-3,20];
+	display = 1;
+	store_mode = 0;
 elseif nargin == 44,
-	 param_inv = [1e-3,20];
-    display = [0,1];
-    store_mode = 0;
+	param_inv = [1e-3,20];
+	display = [0,1];
+	store_mode = 0;
 elseif nargin == 45,
-    display = [0,1];
-    store_mode = 0;
+	display = [0,1];
+	store_mode = 0;
 elseif nargin == 46,
-    store_mode = 0;
+	store_mode = 0;
 end
 %
 narginmax = 48;
@@ -183,10 +182,10 @@ me = 1/1860;%Electron mass (u.m.a.)
 m_bounce = 30;%m-1 is the order of the series expansion for lambda and lambda_tp (m>0, m=2 is enough, but higjer order are necessary for sstar_tp)
 %
 if dtn > 0,
-    time_scheme = 1;%Implicit differencing scheme
+	time_scheme = 1;%Implicit differencing scheme
 elseif dtn < 0,
-    dtn  = abs(dtn);
-    time_scheme = 2;%Crank-Nicholson differencing scheme
+	dtn  = abs(dtn);
+	time_scheme = 2;%Crank-Nicholson differencing scheme
 end 
 %
 spparms('default');%Set parameters for sparse matrix ordering algorithms and direct linear equation solver
@@ -205,8 +204,6 @@ dke_mode = bounce(2);
 prec_inv = param_inv(1);
 maxit_inv = param_inv(2);
 xbetath = betath_ref*sqrt(xTe_norm);
-%modified j.d. 11/26/03
-
 %
 if bounce_mode == 0,dke_mode = 0; xia = xia*0;end
 if dke_mode == 1,bounce_mode = 1;end
@@ -218,9 +215,9 @@ nr_dke = length(rdke);%Size of the effective radial grid (nr_dke = nr for FPE eq
 %
 testDrVr = sum(sum(sum(abs(XXDr)))) + sum(sum(sum(abs(XXVr))));
 if length(rdke) >= 4 & testDrVr > 0,
-    radial_mode = 1;
+	radial_mode = 1;
 elseif length(rdke) < 4 & testDrVr > 0,
-    radial_mode = -1;
+	radial_mode = -1;
 elseif testDrVr == 0,
 	radial_mode = 0;
 end 
@@ -228,38 +225,38 @@ end
 %************************************************** Simulation parameter display ******************************************************** 
 %
 if display_mode >=1,
-    disp('Calculation parameters:');
+	disp('Calculation parameters:');
 %
-	 disp('   - Code version 4: non-uniform momentum and pitch-angle grids + fully implicit 3D calculations');
-%
-    if (store_mode == 0), disp('   - Matrices storage in RAM (fast mode)');
-    else                  disp('   - Matrices storage in disk file (slow mode)');end
-%
-    if (invproc == 1),      disp('   - Full LU factorization method');
-    elseif (invproc == 2),  disp('   - QMR iterative method');
-    elseif (invproc == 3),  disp('   - BICGSTAB iterative method');
-    elseif (invproc == 4),  disp('   - CGS iterative method');end
-%
-    if (time_scheme == 1),    disp(['   - Implicit time differencing scheme']);
-    elseif (time_scheme == 2),disp(['   - Crank-Nicholson time differencing scheme']);end
-%
-    if (coll_mode == 0),     disp(['   - Maxwellian relativistic e-e collision operator']);
+	disp('   - Code version 4: non-uniform momentum and pitch-angle grids + fully implicit 3D calculations');
+%Numerical transient operation
+	if (store_mode == 0), disp('   - Matrices storage in RAM (fast mode)');
+	else                  disp('   - Matrices storage in disk file (slow mode)');end
+%Numercial matrix inversion procedure
+	if (invproc == 1),      disp('   - Full LU factorization method');
+	elseif (invproc == 2),  disp('   - QMR iterative method');
+	elseif (invproc == 3),  disp('   - BICGSTAB iterative method');
+	elseif (invproc == 4),  disp('   - CGS iterative method');end
+%Time scheme
+	if (time_scheme == 1),    disp(['   - Implicit time differencing scheme']);
+	elseif (time_scheme == 2),disp(['   - Crank-Nicholson time differencing scheme']);end
+%Momentum dynamics
+	if (coll_mode == 0),     disp(['   - Maxwellian relativistic e-e collision operator']);
 	elseif (coll_mode == 1), disp(['   - High velocity limit relativistic e-e collision operator']);	
 	elseif (coll_mode == 2), disp(['   - Linearized relativistic Belaiev-Budker e-e collision operator']);end
-    if (bounce_mode == 0),      disp(['   - No bounce averaging']);
-    elseif (bounce_mode == 1),  disp(['   - Bounce averaging + implicit symmetrization in the bounce domain (15 diagonals operator)']);end
-    if (dke_mode == 0),       disp(['   - Resolution of the electron Fokker-Planck Equation']);
+	if (bounce_mode == 0),      disp(['   - No bounce averaging']);
+	elseif (bounce_mode == 1),  disp(['   - Bounce averaging + implicit symmetrization in the bounce domain (15 diagonals operator)']);end
+	if (dke_mode == 0),       disp(['   - Resolution of the electron Fokker-Planck Equation']);
 	elseif (dke_mode == 1),   disp(['   - Resolution of the electron Drift Kinetic Equation']);end
-%
-    if (radial_mode == 1),      disp(['   - Fast electron radial diffusion or pinch']);
+%Spatial dynamics
+	if (radial_mode == 1),      disp(['   - Fast electron radial diffusion or pinch']);
 	elseif (radial_mode == -1), disp(['   - No fast electron radial diffusion or pinch: radial grid too coarse !']);
 	elseif (radial_mode == 0),  disp(['   - No fast electron radial diffusion or pinch']);end
 %
-    disp(['   - Momentum grid: ',int2str(npn)]);
-    disp(['   - Angular grid: ',int2str(nmhu)]);
-    disp(['   - Total radial grid: ',int2str(nr)]);
-    disp(['   - Effective radial grid: ',int2str(nr_dke)]);
-    disp('-------------------------------------------------------------------------------------------------------------------');
+	disp(['   - Momentum grid: ',int2str(npn)]);
+	disp(['   - Angular grid: ',int2str(nmhu)]);
+	disp(['   - Total radial grid: ',int2str(nr)]);
+	disp(['   - Effective radial grid: ',int2str(nr_dke)]);
+	disp('-------------------------------------------------------------------------------------------------------------------');
 end
 %
 %Masks for collision integrals
@@ -270,8 +267,8 @@ maskl = tril(ones(npn,npn));
 %Temporary data saving on disk
 %
 if store_mode == 1,
-    delete MXPmat.mat;
-    save MXPmat.mat nr;
+	delete MXPmat.mat;
+	save MXPmat.mat nr;
 end
 %
 %Angular grid
@@ -424,10 +421,10 @@ ns_g = zeros(1,nr);
 for ir = 1:nr,
 	if bounce_mode == 1,
 		Xmask_f0 = (Xmhu2 < xmhubounce2(ir)) & (Xmhu < 0);%Only the half-bounce region is removed
-    	ns(ir) = nmhu - length(nonzeros(~(Xmask_f0(2,:)==1).*cumsum(ones(1,nmhu)))');%number of mhu values that are removed
+		ns(ir) = nmhu - length(nonzeros(~(Xmask_f0(2,:)==1).*cumsum(ones(1,nmhu)))');%number of mhu values that are removed
 		if dke_mode == 1,
 			Xmask_tp = Xmhu2 < xmhubounce2(ir);
-        	ns_tp(ir) = nmhu - length(nonzeros(~(Xmask_tp(2,:)==1).*cumsum(ones(1,nmhu)))');%number of mhu values that are removed
+			ns_tp(ir) = nmhu - length(nonzeros(~(Xmask_tp(2,:)==1).*cumsum(ones(1,nmhu)))');%number of mhu values that are removed
 			ns_g(ir) = ns_tp(ir);
 		end	
 	end
@@ -546,8 +543,8 @@ if radial_mode == 1,
 		XXMrp = permute(XXMrp,[2,1,3]);
 		MMrp_t = reshape(XXMrp,npn*nmhu*nr,1,1);
 %
-    	MMXP_f_r_t = MMXP_f_r_t + sparse([1+nmhu*npn:nMMXP_f_t],[1:nMMXP_f_t-nmhu*npn],MMrm_t(1+npn*nmhu:nMMXP_f_t),nMMXP_f_t,nMMXP_f_t);
-    	MMXP_f_r_t = MMXP_f_r_t + sparse([1:nMMXP_f_t],[1:nMMXP_f_t],MMr_t,nMMXP_f_t,nMMXP_f_t);	
+		MMXP_f_r_t = MMXP_f_r_t + sparse([1+nmhu*npn:nMMXP_f_t],[1:nMMXP_f_t-nmhu*npn],MMrm_t(1+npn*nmhu:nMMXP_f_t),nMMXP_f_t,nMMXP_f_t);
+		MMXP_f_r_t = MMXP_f_r_t + sparse([1:nMMXP_f_t],[1:nMMXP_f_t],MMr_t,nMMXP_f_t,nMMXP_f_t);	
 		MMXP_f_r_t = MMXP_f_r_t + sparse([1:nMMXP_f_t-nmhu*npn],[1+npn*nmhu:nMMXP_f_t],MMrp_t(1:nMMXP_f_t-nmhu*npn),nMMXP_f_t,nMMXP_f_t);
 		if display_mode >= 1,info_dke_yp(2,['Configuration space matrix calculations done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);end
 	elseif bounce_mode == 1,
@@ -570,7 +567,7 @@ if radial_mode == 1,
 		XMr = XXMr(:,:,ir);
 		XMr_t = XMr(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
 		MMr_t = reshape(XMr_t',npn*(nmhu-ns(ir)),1,1);
-	    MMXP_f_r_t = MMXP_f_r_t + sparse([1+ib0:ibp],[1+ib0:ibp],MMr_t,nMMXP_f_t,nMMXP_f_t);
+		MMXP_f_r_t = MMXP_f_r_t + sparse([1+ib0:ibp],[1+ib0:ibp],MMr_t,nMMXP_f_t,nMMXP_f_t);
 %			
 		XMrp = XXMrp(:,:,ir);
 		XMrp_t = XMrp(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
@@ -585,7 +582,7 @@ if radial_mode == 1,
 			[ibp+(nmhu-ns(ir+1))*(ip-1)+((nmhu-ns(ir+1))-imhup):-1:ibp+(nmhu-ns(ir+1))*(ip-1)+((nmhu-ns(ir+1))-imhu0)+1],XMrp2_t(ip,[imhup+1:imhu0]),nMMXP_f_t,nMMXP_f_t);
 		end	
 %
-    	if display_mode >= 1,info_dke_yp(2,['Configuration space matrix calculations (',int2str(ir),'/',int2str(nr),') done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);end
+		if display_mode >= 1,info_dke_yp(2,['Configuration space matrix calculations (',int2str(ir),'/',int2str(nr),') done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);end
 %
 		for ir = 2:nr-1,
 			if ir == 2,
@@ -614,7 +611,7 @@ if radial_mode == 1,
 			XMr = XXMr(:,:,ir);
 			XMr_t = XMr(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
 			MMr_t = reshape(XMr_t',npn*(nmhu-ns(ir)),1,1);
-	    	MMXP_f_r_t = MMXP_f_r_t + sparse([1+ib0:ibp],[1+ib0:ibp],MMr_t,nMMXP_f_t,nMMXP_f_t);
+			MMXP_f_r_t = MMXP_f_r_t + sparse([1+ib0:ibp],[1+ib0:ibp],MMr_t,nMMXP_f_t,nMMXP_f_t);
 %			
 			XMrp = XXMrp(:,:,ir);
 			XMrp_t = XMrp(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
@@ -660,7 +657,7 @@ if radial_mode == 1,
 		XMr = XXMr(:,:,ir);
 		XMr_t = XMr(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
 		MMr_t = reshape(XMr_t',npn*(nmhu-ns(ir)),1,1);
-	    MMXP_f_r_t = MMXP_f_r_t + sparse([1+ib0:ibp],[1+ib0:ibp],MMr_t,nMMXP_f_t,nMMXP_f_t);
+		MMXP_f_r_t = MMXP_f_r_t + sparse([1+ib0:ibp],[1+ib0:ibp],MMr_t,nMMXP_f_t,nMMXP_f_t);
 %			
 		XMrm = XXMrm(:,:,ir);
 		XMrm_t = XMrm(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
@@ -685,31 +682,31 @@ end
 %
 if ~isempty(waveparam),
    
-    ZYXXD_rf = rfdiff_dke_jd(waveparam,xrho,...
-    Xmhup,Xmhu,Xmhum,Xmhu2p,Xmhu2,Xmhu2m,X1mmhu2p,X1mmhu2,X1mmhu2m,...
-    pnpp,pnp,pn,pnm,pnmm,Xpnpp,Xpnp,Xpn,Xpnm,Xpnmm,Xgammapp,Xgammap,Xgamma,Xgammam,Xgammamm,...
-    Xxlambdap,Xxlambda,Xxlambdam,...
-    xq,betath_ref,Rp_norm,bounce_mode);
+	ZYXXD_rf = rfdiff_dke_jd(waveparam,xrho,...
+	Xmhup,Xmhu,Xmhum,Xmhu2p,Xmhu2,Xmhu2m,X1mmhu2p,X1mmhu2,X1mmhu2m,...
+	pnpp,pnp,pn,pnm,pnmm,Xpnpp,Xpnp,Xpn,Xpnm,Xpnmm,Xgammapp,Xgammap,Xgamma,Xgammam,Xgammamm,...
+	Xxlambdap,Xxlambda,Xxlambdam,...
+	xq,betath_ref,Rp_norm,bounce_mode);
             
-    YXXDpp_rf_ippj = ZYXXD_rf{1};
-    YXXDpp_rf_ipj = ZYXXD_rf{2};
-    YXXDpp_rf_ij = ZYXXD_rf{3};
-    YXXDpp_rf_imj = ZYXXD_rf{4};
-    YXXDpp_rf_immj = ZYXXD_rf{5};
-    YXXDpm_rf_ipj = ZYXXD_rf{6};
-    YXXDpm_rf_ij = ZYXXD_rf{7};
-    YXXDpm_rf_imj = ZYXXD_rf{8};
-    YXXDmp_rf_ijp = ZYXXD_rf{9};
-    YXXDmp_rf_ij = ZYXXD_rf{10};
-    YXXDmp_rf_ijm = ZYXXD_rf{11};
-    YXXDmm_rf_ijp = ZYXXD_rf{12};
-    YXXDmm_rf_ijm = ZYXXD_rf{13};
+	YXXDpp_rf_ippj = ZYXXD_rf{1};
+	YXXDpp_rf_ipj = ZYXXD_rf{2};
+	YXXDpp_rf_ij = ZYXXD_rf{3};
+	YXXDpp_rf_imj = ZYXXD_rf{4};
+	YXXDpp_rf_immj = ZYXXD_rf{5};
+	YXXDpm_rf_ipj = ZYXXD_rf{6};
+	YXXDpm_rf_ij = ZYXXD_rf{7};
+	YXXDpm_rf_imj = ZYXXD_rf{8};
+	YXXDmp_rf_ijp = ZYXXD_rf{9};
+	YXXDmp_rf_ij = ZYXXD_rf{10};
+	YXXDmp_rf_ijm = ZYXXD_rf{11};
+	YXXDmm_rf_ijp = ZYXXD_rf{12};
+	YXXDmm_rf_ijm = ZYXXD_rf{13};
 %    
-    YXXDrf_ij = ZYXXD_rf{14};
+	YXXDrf_ij = ZYXXD_rf{14};
 %    
-    clear ZYXXD_rf
+	clear ZYXXD_rf
 %    
-    nb = size(YXXDrf_ij,4);   
+	nb = size(YXXDrf_ij,4);   
 %
 	XXDpp_rf_ippj = integral_dke_jd(ones(1,nb),YXXDpp_rf_ippj,4);
 	XXDpp_rf_ipj = integral_dke_jd(ones(1,nb),YXXDpp_rf_ipj,4);
@@ -728,8 +725,8 @@ if ~isempty(waveparam),
 	XXDmm_rf_ijp = integral_dke_jd(ones(1,nb),YXXDmm_rf_ijp,4);
 	XXDmm_rf_ijm = integral_dke_jd(ones(1,nb),YXXDmm_rf_ijm,4);
 else
-    nb = 0;
-    
+	nb = 0;
+%    
 	XXDpp_rf_ippj = zeros(npn,nmhu,nr);
 	XXDpp_rf_ipj = zeros(npn,nmhu,nr);
 	XXDpp_rf_ij = zeros(npn,nmhu,nr);
@@ -746,113 +743,114 @@ else
 %
 	XXDmm_rf_ijp = zeros(npn,nmhu,nr);
 	XXDmm_rf_ijm = zeros(npn,nmhu,nr);
- %
-    YXXDrf_ij = zeros(npn,nmhu,nr);
+%
+	YXXDrf_ij = zeros(npn,nmhu,nr);
 end
 %
 for ir = 1:nr,
 %
 %Relativistic Maxwellian distribution function for collision integrals
 %
-    fM = exp(-pn2./(1 + gamma)/xTe_norm(ir))/2/pi/xTe_norm(ir)/sqrt(2*pi*xTe_norm(ir));
-    normfM = 4*pi*integral_dke_jd(dpn,pn.*pn.*fM,2);
-    fM = fM*xne_norm(ir)/normfM;
-    xfM = fM'*ones(1,length(fM));
-    XXfM(:,:,ir) = fM'*ones(1,nmhu);
-    if nargin < narginmax,XXfinit(:,:,ir) = fM'*ones(1,nmhu);end;%Initial guess (normalized to xne_norm)
+	fM = exp(-pn2./(1 + gamma)/xTe_norm(ir))/2/pi/xTe_norm(ir)/sqrt(2*pi*xTe_norm(ir));
+	normfM = 4*pi*integral_dke_jd(dpn,pn.*pn.*fM,2);
+	fM = fM*xne_norm(ir)/normfM;
+	xfM = fM'*ones(1,length(fM));
+	XXfM(:,:,ir) = fM'*ones(1,nmhu);
+	if nargin < narginmax,XXfinit(:,:,ir) = fM'*ones(1,nmhu);end;%Initial guess (normalized to xne_norm)
 %
-    fMm = exp(-pn2m./(1 + gammam)/xTe_norm(ir))/2/pi/xTe_norm(ir)/sqrt(2*pi*xTe_norm(ir));
-    normfMm = 4*pi*integral_dke_jd(dpnm,pnm.*pnm.*fMm,2);
-    fMm = fMm*xne_norm(ir)/normfMm;
+	fMm = exp(-pn2m./(1 + gammam)/xTe_norm(ir))/2/pi/xTe_norm(ir)/sqrt(2*pi*xTe_norm(ir));
+	normfMm = 4*pi*integral_dke_jd(dpnm,pnm.*pnm.*fMm,2);
+	fMm = fMm*xne_norm(ir)/normfMm;
 %
-    fMp = exp(-pn2p./(1 + gammap)/xTe_norm(ir))/2/pi/xTe_norm(ir)/sqrt(2*pi*xTe_norm(ir));
-    normfMp = 4*pi*integral_dke_jd(dpnp,pnp.*pnp.*fMp,2);
-
-    fMp = fMp*xne_norm(ir)/normfMp;
+	fMp = exp(-pn2p./(1 + gammap)/xTe_norm(ir))/2/pi/xTe_norm(ir)/sqrt(2*pi*xTe_norm(ir));
+	normfMp = 4*pi*integral_dke_jd(dpnp,pnp.*pnp.*fMp,2);
+	fMp = fMp*xne_norm(ir)/normfMp;
 %
 %Collision integrals
 %	
  	F1_1 = integral_dke_jd(dpn,xfM.*xpn.*xv.*masku,1)';
   	F1_2 = integral_dke_jd(dpn,xfM.*xpn.*xv.*(1 - xgamma.*xsigma./xz).*masku,1)';
-    F2_1 = integral_dke_jd(dpn,xfM.*xpn.*maskl,1)';
+  	F2_1 = integral_dke_jd(dpn,xfM.*xpn.*maskl,1)';
 %
 	B1_1 = integral_dke_jd(dpn,xfM.*masku.*xpn2,1)';
-    B1_2 = integral_dke_jd(dpn,xfM.*masku.*xpn2.*xpn2,1)';
-    B1_3 = integral_dke_jd(dpn,xfM.*masku.*xpn2.*xJ1./xgamma,1)';
-    B1_4 = integral_dke_jd(dpn,xfM.*masku.*xpn2.*xJ2./xgamma,1)';
-    B1_5 = integral_dke_jd(dpn,xfM.*masku.*xpn2.*((xgamma - xsigma./xz)./xgamma),1)';
-    B2_1 = integral_dke_jd(dpn,xfM.*maskl.*xpn2./xv,1)';
-    B2_2 = integral_dke_jd(dpn,xfM.*maskl.*xpn2./xv./xgamma2,1)';
-    B2_3 = integral_dke_jd(dpn,xfM.*maskl.*xpn2.*xv,1)';  
+	B1_2 = integral_dke_jd(dpn,xfM.*masku.*xpn2.*xpn2,1)';
+	B1_3 = integral_dke_jd(dpn,xfM.*masku.*xpn2.*xJ1./xgamma,1)';
+	B1_4 = integral_dke_jd(dpn,xfM.*masku.*xpn2.*xJ2./xgamma,1)';
+	B1_5 = integral_dke_jd(dpn,xfM.*masku.*xpn2.*((xgamma - xsigma./xz)./xgamma),1)';
+	B2_1 = integral_dke_jd(dpn,xfM.*maskl.*xpn2./xv,1)';
+	B2_2 = integral_dke_jd(dpn,xfM.*maskl.*xpn2./xv./xgamma2,1)';
+	B2_3 = integral_dke_jd(dpn,xfM.*maskl.*xpn2.*xv,1)';  
 %
 % ion calculation modified j.d. 03/14/03
 %
-    if coll_mode == 1,
-    	F = xne_norm(ir)'./v2 + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)')./v2;
-    	XF = F'*ones(1,nmhu);
+	if coll_mode == 1,
+		F = xne_norm(ir)'./v2 + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)')./v2;
+		XF = F'*ones(1,nmhu);
 %
-    	Fm = xne_norm(ir)'./v2m + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)')./v2m;
-    	Fm(1) = 1;%Avoid singularity at p = 0, but the value is not used
+		Fm = xne_norm(ir)'./v2m + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)')./v2m;
+		Fm(1) = 1;%Avoid singularity at p = 0, but the value is not used
 %   
-    	Fp = xne_norm(ir)'./v2p + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)')./v2p;
-    else
-    	F1 = F1_1./v2 + F1_2./pn2;
-    	F2 = (1 - sigma./z./gamma).*F2_1./v;
-    	F = 4*pi*(F1 + F2) + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)')./v2;
-    	XF = F'*ones(1,nmhu);
+		Fp = xne_norm(ir)'./v2p + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)')./v2p;
+	else
+		F1 = F1_1./v2 + F1_2./pn2;
+		F2 = (1 - sigma./z./gamma).*F2_1./v;
+		F = 4*pi*(F1 + F2) + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)')./v2;
+		XF = F'*ones(1,nmhu);
 %
-    	F1m = (F1_1 - 0.50*dpnm.*fM.*pn.*v)./v2m + (F1_2 - 0.50*dpnm.*fM.*pn.*v.*(1 - gamma.*sigma./z))./pn2m;  
-    	F2m = (1 - sigmam./zm./gammam).*(F2_1 + 0.50*dpnm.*fM.*pn)./vm;
-    	Fm = 4*pi*(F1m + F2m) + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)')./v2m;
-    	Fm(1) = 1;%Avoid singularity at p = 0, but the value is not used
+		F1m = (F1_1 - 0.50*dpnm.*fM.*pn.*v)./v2m + (F1_2 - 0.50*dpnm.*fM.*pn.*v.*(1 - gamma.*sigma./z))./pn2m;  
+		F2m = (1 - sigmam./zm./gammam).*(F2_1 + 0.50*dpnm.*fM.*pn)./vm;
+		Fm = 4*pi*(F1m + F2m) + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)')./v2m;
+		Fm(1) = 1;%Avoid singularity at p = 0, but the value is not used
 %   
-    	F1p = (F1_1 + 0.50*dpnp.*fM.*pn.*v)./v2p + (F1_2 + 0.50*dpnp.*fM.*pn.*v.*(1 - gamma.*sigma./z))./pn2p;   
-    	F2p = (1 - sigmap./zp./gammap).*(F2_1 - 0.50*dpnp.*fM.*pn)./vp;
-    	Fp = 4*pi*(F1p + F2p) + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)')./v2p;
-    end
+		F1p = (F1_1 + 0.50*dpnp.*fM.*pn.*v)./v2p + (F1_2 + 0.50*dpnp.*fM.*pn.*v.*(1 - gamma.*sigma./z))./pn2p;   
+		F2p = (1 - sigmap./zp./gammap).*(F2_1 - 0.50*dpnp.*fM.*pn)./vp;
+		Fp = 4*pi*(F1p + F2p) + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)')./v2p;
+	end
 %
-    Fmm = [0,F(1:npn-1)];
-    Fpp = [F(2:npn),0];
+	Fmm = [0,F(1:npn-1)];
+	Fpp = [F(2:npn),0];
 %
-    XFm = Fm'*ones(1,nmhu);
-    XFp = Fp'*ones(1,nmhu);
-    XFmm = Fmm'*ones(1,nmhu);
-    XFpp = Fpp'*ones(1,nmhu);
-    XXF(:,:,ir) = XF;
-    XXFm(:,:,ir) = XFm;
-    XXFp(:,:,ir) = XFp;
+	XFm = Fm'*ones(1,nmhu);
+	XFp = Fp'*ones(1,nmhu);
+	XFmm = Fmm'*ones(1,nmhu);
+	XFpp = Fpp'*ones(1,nmhu);
+	XXF(:,:,ir) = XF;
+	XXFm(:,:,ir) = XFm;
+	XXFp(:,:,ir) = XFp;
 %
-    if coll_mode == 1,
-    	A = xne_norm(ir)'.*xTe_norm(ir)'./v./v2 + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)'.*xzTi_norm(:,ir)')./v./v2;
-    	Am = xne_norm(ir)'.*xTe_norm(ir)'./vm./v2m + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)'.*xzTi_norm(:,ir)')./vm./v2m;
-    	Am(1) = 1;%Avoid singularity at p = 0, but the value is not used
-    	Ap = xne_norm(ir)'.*xTe_norm(ir)'./vp./v2p + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)'.*xzTi_norm(:,ir)')./vp./v2p;
-    else
-    	A = 4*pi*xTe_norm(ir)*(F1 + F2)./v + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)'.*xzTi_norm(:,ir)')./v./v2;
-    	Am = 4*pi*xTe_norm(ir)*(F1m + F2m)./vm + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)'.*xzTi_norm(:,ir)')./vm./v2m;
-    	Am(1) = 1;%Avoid singularity at p = 0, but the value is not used
-    	Ap = 4*pi*xTe_norm(ir)*(F1p + F2p)./vp + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)'.*xzTi_norm(:,ir)')./vp./v2p;
-    end
-    Amm = [1,A(1:npn-1)];
-    App = [A(2:npn),1];
-    XA = A'*ones(1,nmhu);
-    XAm = Am'*ones(1,nmhu); 
-    XAp = Ap'*ones(1,nmhu);    
-    XAmm = Amm'*ones(1,nmhu); 
-    XApp = App'*ones(1,nmhu);    
-    XXA(:,:,ir) = XA;
-    XXAm(:,:,ir) = XAm;
-    XXAp(:,:,ir) = XAp;
+	if coll_mode == 1,%High-velocity limit
+		A = xne_norm(ir)'.*xTe_norm(ir)'./v./v2 + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)'.*xzTi_norm(:,ir)')./v./v2;
+		Am = xne_norm(ir)'.*xTe_norm(ir)'./vm./v2m + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)'.*xzTi_norm(:,ir)')./vm./v2m;
+		Am(1) = 1;%Avoid singularity at p = 0, but the value is not used
+		Ap = xne_norm(ir)'.*xTe_norm(ir)'./vp./v2p + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)'.*xzTi_norm(:,ir)')./vp./v2p;
+	else,%Linearizeded Belaiev-Budker
+		A = 4*pi*xTe_norm(ir)*(F1 + F2)./v + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)'.*xzTi_norm(:,ir)')./v./v2;
+		Am = 4*pi*xTe_norm(ir)*(F1m + F2m)./vm + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)'.*xzTi_norm(:,ir)')./vm./v2m;
+		Am(1) = 1;%Avoid singularity at p = 0, but the value is not used
+		Ap = 4*pi*xTe_norm(ir)*(F1p + F2p)./vp + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)'.*xzTi_norm(:,ir)')./vp./v2p;
+	end
 %
-    if coll_mode == 1,
-    	Bt = xne_norm(ir)'./v/2 - xne_norm(ir)'.*xTe_norm(ir)'./v./v2/2 + sum(zZi.^2.*xzni_norm(:,ir)')./v/2 - sum(zZi.^2.*xzni_norm(:,ir)'.*(me./zmi).*xzTi_norm(:,ir)')./v./v2/2;
-    else
-    	B1 = B1_1./v/2 - B1_2./v./pn2/6 + B1_3./v./gamma2./z2/8 - B1_4./v./z2/4 - B1_5./v./gamma2/4;
-    	B2 = B2_1/2 + B2_2.*(-gamma2/6 + J1./z2./gamma/8 - gamma.*J2./z2/4) - B2_3.*(gamma - sigma./z)./pn2./gamma/4;   
-    	Bt = 4*pi*(B1 + B2) + sum(zZi.^2.*xzni_norm(:,ir)')./v/2 - sum(zZi.^2.*xzni_norm(:,ir)'.*(me./zmi).*xzTi_norm(:,ir)')./v./v2/2;  	
-    end
-    XBt = Bt'*ones(1,nmhu);
-    XXBt(:,:,ir) = XBt;
+	Amm = [1,A(1:npn-1)];
+	App = [A(2:npn),1];
+	XA = A'*ones(1,nmhu);
+	XAm = Am'*ones(1,nmhu); 
+	XAp = Ap'*ones(1,nmhu);    
+	XAmm = Amm'*ones(1,nmhu); 
+	XApp = App'*ones(1,nmhu);    
+	XXA(:,:,ir) = XA;
+	XXAm(:,:,ir) = XAm;
+	XXAp(:,:,ir) = XAp;
+%
+	if coll_mode == 1,%High-velocity limit
+		Bt = xne_norm(ir)'./v/2 - xne_norm(ir)'.*xTe_norm(ir)'./v./v2/2 + sum(zZi.^2.*xzni_norm(:,ir)')./v/2 - sum(zZi.^2.*xzni_norm(:,ir)'.*(me./zmi).*xzTi_norm(:,ir)')./v./v2/2;
+	else,%Linearizeded Belaiev-Budker
+		B1 = B1_1./v/2 - B1_2./v./pn2/6 + B1_3./v./gamma2./z2/8 - B1_4./v./z2/4 - B1_5./v./gamma2/4;
+		B2 = B2_1/2 + B2_2.*(-gamma2/6 + J1./z2./gamma/8 - gamma.*J2./z2/4) - B2_3.*(gamma - sigma./z)./pn2./gamma/4;   
+		Bt = 4*pi*(B1 + B2) + sum(zZi.^2.*xzni_norm(:,ir)')./v/2 - sum(zZi.^2.*xzni_norm(:,ir)'.*(me./zmi).*xzTi_norm(:,ir)')./v./v2/2;  	
+	end
+%
+	XBt = Bt'*ones(1,nmhu);
+	XXBt(:,:,ir) = XBt;
 %	
 % Collisions
 %
@@ -939,7 +937,7 @@ for ir = 1:nr,
 	XXFm_e_ijp(:,:,ir) = XFm_e_ijp;
 
 %
-    XDpp_rf_ippj = XXDpp_rf_ippj(:,:,ir);
+	XDpp_rf_ippj = XXDpp_rf_ippj(:,:,ir);
 	XDpp_rf_ipj = XXDpp_rf_ipj(:,:,ir);
 	XDpp_rf_ij = XXDpp_rf_ij(:,:,ir);
 	XDpp_rf_imj = XXDpp_rf_imj(:,:,ir);
@@ -993,39 +991,38 @@ for ir = 1:nr,
 	XFm_ijp = XFm_c_ijp + XFm_e_ijp + XFm_rf_ijp;
 	XFm_ijm = XFm_c_ijm + XFm_e_ijm + XFm_rf_ijm;
 %
-	[Xa,Xb,Xc,Xd,Xe,Xf,Xg,Xh,Xi,...
-		Xdeltap_imj,Xdeltap_ipj,Xdeltam_ijm,Xdeltam_ijp] = ...
-  		fpengine_dke_yp(squeeze(XXRlambdam(:,:,ir)),squeeze(XXRlambdap(:,:,ir)),...
-		Xpn,Xpn2m,Xpn2p,Xpnm,Xpnp,Xdpnmm,Xdpnm,Xdpn,Xdpnp,Xdpnpp,...
-		Xmhu,X1mmhu2,X1mmhu2m,X1mmhu2p,Xdmhumm,Xdmhum,Xdmhu,Xdmhup,Xdmhupp,...
-		XDpp_ippj,XDpp_ipj,XDpp_ij,XDpp_imj,XDpp_immj,...
-		XDpm_ipj,XDpm_ij,XDpm_imj,...
-		XDmp_ijp,XDmp_ij,XDmp_ijm,...
-		XDmm_ijp,XDmm_ijm,...
-		XFp_ippj,XFp_ipj,XFp_ij,XFp_imj,XFp_immj,...
-		XFm_ijp,XFm_ijm);	    
+	[Xa,Xb,Xc,Xd,Xe,Xf,Xg,Xh,Xi,Xdeltap_imj,Xdeltap_ipj,Xdeltam_ijm,Xdeltam_ijp] = ...
+  	fpengine_dke_yp(squeeze(XXRlambdam(:,:,ir)),squeeze(XXRlambdap(:,:,ir)),...
+	Xpn,Xpn2m,Xpn2p,Xpnm,Xpnp,Xdpnmm,Xdpnm,Xdpn,Xdpnp,Xdpnpp,...
+	Xmhu,X1mmhu2,X1mmhu2m,X1mmhu2p,Xdmhumm,Xdmhum,Xdmhu,Xdmhup,Xdmhupp,...
+	XDpp_ippj,XDpp_ipj,XDpp_ij,XDpp_imj,XDpp_immj,...
+	XDpm_ipj,XDpm_ij,XDpm_imj,...
+	XDmp_ijp,XDmp_ij,XDmp_ijm,...
+	XDmm_ijp,XDmm_ijm,...
+	XFp_ippj,XFp_ipj,XFp_ij,XFp_imj,XFp_immj,...
+	XFm_ijp,XFm_ijm);	    
 % 
 	XXdeltap_imj(:,:,ir) = Xdeltap_imj;
 	XXdeltap_ipj(:,:,ir) = Xdeltap_ipj;
 	XXdeltam_ijp(:,:,ir) = Xdeltam_ijp;
 	XXdeltam_ijm(:,:,ir) = Xdeltam_ijm;
 %
-%Loss matrix coefficients
+%Loss matrix coefficients (fro ripple losses for example)
 %
-    Xnhuloss = squeeze(XXnhuloss(:,:,ir));
-    Xc = Xc + Xnhuloss.*Xpn2;
+	Xnhuloss = squeeze(XXnhuloss(:,:,ir));
+	Xc = Xc + Xnhuloss.*Xpn2;
 %
 %Time differencing scheme
 %
-    Xa = Xa/time_scheme;
-    Xb = Xb/time_scheme;
-    Xc = Xc/time_scheme + Xpn2/dtn;
-    Xd = Xd/time_scheme;
-    Xe = Xe/time_scheme;
-    Xf = Xf/time_scheme;
-    Xg = Xg/time_scheme;
-    Xh = Xh/time_scheme;
-    Xi = Xi/time_scheme;
+	Xa = Xa/time_scheme;
+	Xb = Xb/time_scheme;
+	Xc = Xc/time_scheme + Xpn2/dtn;
+	Xd = Xd/time_scheme;
+	Xe = Xe/time_scheme;
+	Xf = Xf/time_scheme;
+	Xg = Xg/time_scheme;
+	Xh = Xh/time_scheme;
+	Xi = Xi/time_scheme;
 %
 %Edge boundary conditions for radial transport (Maxwellian solution enforced where radial transport is non-zero)
 %
@@ -1043,148 +1040,332 @@ for ir = 1:nr,
 %
 %Boundaries of the bounce domain for f0
 %
-    if bounce_mode == 0,%No bounce averaging
-        Xmask_f0 = [1:1:nmhu];
-        ns(ir) = 0;%Number of mhu values that are removed for implicit bounce averaged calculations
+	if bounce_mode == 0,%No bounce averaging
+		Xmask_f0 = [1:1:nmhu];
+		ns(ir) = 0;%Number of mhu values that are removed for implicit bounce averaged calculations
 %
-        Xa_t = Xa;
-        Xb_t = Xb;
-        Xc_t = Xc;
-        Xd_t = Xd;
-        Xe_t = Xe;
-        Xf_t = Xf;
-        Xg_t = Xg;
-        Xh_t = Xh;
-        Xi_t = Xi;              
-        mhu_t = mhu;		
-    elseif bounce_mode == 1,%Full implicit bounce-averaging calculations, fifteen diagonals mode
-        jmhut_min = min(find(mhu2 < xmhubounce2(ir)));
-        jmhut_max = max(find(mhu2 < xmhubounce2(ir)));
-        djmhut = (jmhut_max - jmhut_min+1)/2;
-        if djmhut > 3,%At least three points in the bounce domain
+		Xa_t = Xa;
+		Xb_t = Xb;
+		Xc_t = Xc;
+		Xd_t = Xd;
+		Xe_t = Xe;
+		Xf_t = Xf;
+		Xg_t = Xg;
+		Xh_t = Xh;
+		Xi_t = Xi;              
+		mhu_t = mhu;		
+	elseif bounce_mode == 1,%Full implicit bounce-averaging calculations, fifteen diagonals mode
+		jmhut_min = min(find(mhu2 < xmhubounce2(ir)));
+		jmhut_max = max(find(mhu2 < xmhubounce2(ir)));
+		djmhut = (jmhut_max - jmhut_min+1)/2;
+		if djmhut > 3,%At least three points in the bounce domain
 %
-            Xj = zeros(npn,nmhu);%Extra diagonals
-            Xk = zeros(npn,nmhu);%Extra diagonals
-            Xl = zeros(npn,nmhu);%Extra diagonals
-            Xm = zeros(npn,nmhu);%Extra diagonals
-            Xn = zeros(npn,nmhu);%Extra diagonals
-            Xo = zeros(npn,nmhu);%Extra diagonals
+			Xj = zeros(npn,nmhu);%Extra diagonals
+			Xk = zeros(npn,nmhu);%Extra diagonals
+			Xl = zeros(npn,nmhu);%Extra diagonals
+			Xm = zeros(npn,nmhu);%Extra diagonals
+			Xn = zeros(npn,nmhu);%Extra diagonals
+			Xo = zeros(npn,nmhu);%Extra diagonals
 %
-            Xmask_f0 = (Xmhu2 < xmhubounce2(ir)) & (Xmhu < 0);%Only the half-bounce region is removed
-            Xmask_f0 = nonzeros(~(Xmask_f0(2,:)==1).*cumsum(ones(1,nmhu)))';
-            ns(ir) = nmhu - length(Xmask_f0);%number of mhu values that are removed
+			Xmask_f0 = (Xmhu2 < xmhubounce2(ir)) & (Xmhu < 0);%Only the half-bounce region is removed
+			Xmask_f0 = nonzeros(~(Xmask_f0(2,:)==1).*cumsum(ones(1,nmhu)))';
+			ns(ir) = nmhu - length(Xmask_f0);%number of mhu values that are removed
 %
-            Xa_t = Xa(:,Xmask_f0);%Matrix reduction along the angular direction
-            Xb_t = Xb(:,Xmask_f0);
-            Xc_t = Xc(:,Xmask_f0);
-            Xd_t = Xd(:,Xmask_f0);
-            Xe_t = Xe(:,Xmask_f0);
-            Xf_t = Xf(:,Xmask_f0);
-            Xg_t = Xg(:,Xmask_f0);
-            Xh_t = Xh(:,Xmask_f0);
-            Xi_t = Xi(:,Xmask_f0);             
-            Xj_t = Xj(:,Xmask_f0);
-            Xk_t = Xk(:,Xmask_f0);
-            Xl_t = Xl(:,Xmask_f0);
-            Xm_t = Xm(:,Xmask_f0);
-            Xn_t = Xn(:,Xmask_f0);
-            Xo_t = Xo(:,Xmask_f0); 
-            
-% modified j.d. 03/07/03
-
-            Xh_t(:,jmhut_max - ns(ir)) = Xh(:,jmhut_max)/2;
-            Xe_t(:,jmhut_max - ns(ir)) = Xe(:,jmhut_max)/2;
-            Xg_t(:,jmhut_max - ns(ir)) = Xg(:,jmhut_max)/2;
+			Xa_t = Xa(:,Xmask_f0);%Matrix reduction along the angular direction
+			Xb_t = Xb(:,Xmask_f0);
+			Xc_t = Xc(:,Xmask_f0);
+			Xd_t = Xd(:,Xmask_f0);
+			Xe_t = Xe(:,Xmask_f0);
+			Xf_t = Xf(:,Xmask_f0);
+			Xg_t = Xg(:,Xmask_f0);
+			Xh_t = Xh(:,Xmask_f0);
+			Xi_t = Xi(:,Xmask_f0);             
+			Xj_t = Xj(:,Xmask_f0);
+			Xk_t = Xk(:,Xmask_f0);
+			Xl_t = Xl(:,Xmask_f0);
+			Xm_t = Xm(:,Xmask_f0);
+			Xn_t = Xn(:,Xmask_f0);
+			Xo_t = Xo(:,Xmask_f0); 
 %
-%            Xj_t(:,jmhut_max - ns(ir)) = Xf(:,jmhut_min)/2;%f0(i-1/2,j+1/2-djmhut) 
-%            Xk_t(:,jmhut_max - ns(ir)) = Xa(:,jmhut_min)/2;%f0(i+1/2,j+1/2-djmhut)
-%            Xl_t(:,jmhut_max - ns(ir)) = Xi(:,jmhut_min)/2;%f0(i+3/2,j+1/2-djmhut)
+			Xh_t(:,jmhut_max - ns(ir)) = Xh(:,jmhut_max)/2;
+			Xe_t(:,jmhut_max - ns(ir)) = Xe(:,jmhut_max)/2;
+			Xg_t(:,jmhut_max - ns(ir)) = Xg(:,jmhut_max)/2;
 %
-            Xj_t(:,jmhut_max - ns(ir)) = Xh(:,jmhut_max)/2;%f0(i-1/2,j+1/2-djmhut) 
-            Xk_t(:,jmhut_max - ns(ir)) = Xe(:,jmhut_max)/2;%f0(i+1/2,j+1/2-djmhut)
-            Xl_t(:,jmhut_max - ns(ir)) = Xg(:,jmhut_max)/2;%f0(i+3/2,j+1/2-djmhut)
+			Xj_t(:,jmhut_max - ns(ir)) = Xh(:,jmhut_max)/2;%f0(i-1/2,j+1/2-djmhut) 
+			Xk_t(:,jmhut_max - ns(ir)) = Xe(:,jmhut_max)/2;%f0(i+1/2,j+1/2-djmhut)
+			Xl_t(:,jmhut_max - ns(ir)) = Xg(:,jmhut_max)/2;%f0(i+3/2,j+1/2-djmhut)
 %
-            Xm_t(:,jmhut_min - 1) = Xh(:,jmhut_min - 1);%f0(i-1/2,j+1/2+djmhut)
-            Xn_t(:,jmhut_min - 1) = Xe(:,jmhut_min - 1);%f0(i+1/2,j+1/2+djmhut)
-            Xo_t(:,jmhut_min - 1) = Xg(:,jmhut_min - 1);%f0(i+3/2,j+1/2+djmhut)
-%            Xm_t(:,jmhut_min - 1) = Xf(:,jmhut_max + 1);%f0(i-1/2,j+1/2+djmhut)
-%            Xn_t(:,jmhut_min - 1) = Xa(:,jmhut_max + 1);%f0(i+1/2,j+1/2+djmhut)
-%            Xo_t(:,jmhut_min - 1) = Xi(:,jmhut_max + 1);%f0(i+3/2,j+1/2+djmhut)
+			Xm_t(:,jmhut_min - 1) = Xh(:,jmhut_min - 1);%f0(i-1/2,j+1/2+djmhut)
+			Xn_t(:,jmhut_min - 1) = Xe(:,jmhut_min - 1);%f0(i+1/2,j+1/2+djmhut)
+			Xo_t(:,jmhut_min - 1) = Xg(:,jmhut_min - 1);%f0(i+3/2,j+1/2+djmhut)
 %   
-            Xh_t(:,jmhut_min - 1) = 0;
-            Xe_t(:,jmhut_min - 1) = 0;
-            Xg_t(:,jmhut_min - 1) = 0;
+			Xh_t(:,jmhut_min - 1) = 0;
+			Xe_t(:,jmhut_min - 1) = 0;
+			Xg_t(:,jmhut_min - 1) = 0;
 %
-            Xa_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
-            Xb_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
-            Xc_t(:,nmhu/2 + 1 - ns(ir)) = 1;%df0(pn,mhu=pi/2) = 0
-            Xd_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
-            Xe_t(:,nmhu/2 + 1 - ns(ir)) = -1;%df0(pn,mhu=pi/2) = 0
-            Xf_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
-            Xg_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
-            Xh_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
-            Xi_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
-            Xj_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
-            Xk_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
-            Xl_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
-            Xm_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
-            Xn_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
-            Xo_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
+			Xa_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
+			Xb_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
+			Xc_t(:,nmhu/2 + 1 - ns(ir)) = 1;%df0(pn,mhu=pi/2) = 0
+			Xd_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
+			Xe_t(:,nmhu/2 + 1 - ns(ir)) = -1;%df0(pn,mhu=pi/2) = 0
+			Xf_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
+			Xg_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
+			Xh_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
+			Xi_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
+			Xj_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
+			Xk_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
+			Xl_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
+			Xm_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
+			Xn_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
+			Xo_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
 %
-            Xj_t(2:npn,3) = 0;Xj_t(2:npn,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
-            Xk_t(2:npn,3) = 0;Xk_t(2:npn,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
-            Xl_t(2:npn,3) = 0;Xl_t(2:npn,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
-            Xm_t(2:npn,3) = 0;Xm_t(2:npn,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
-            Xn_t(2:npn,3) = 0;Xn_t(2:npn,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
-            Xo_t(2:npn,3) = 0;Xo_t(2:npn,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
+			Xj_t(2:npn,3) = 0;Xj_t(2:npn,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
+			Xk_t(2:npn,3) = 0;Xk_t(2:npn,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
+			Xl_t(2:npn,3) = 0;Xl_t(2:npn,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
+			Xm_t(2:npn,3) = 0;Xm_t(2:npn,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
+			Xn_t(2:npn,3) = 0;Xn_t(2:npn,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
+			Xo_t(2:npn,3) = 0;Xo_t(2:npn,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
 %       
-            mhu_t = mhu(Xmask_f0);
+			mhu_t = mhu(Xmask_f0);
 %           
-        else
-            Xmask_f0 = [1:1:nmhu];
-            ns(ir) = 0;%Number of mhu values that are removed for implicit bounce averaged calculations
-            bounce_mode = 0;
-            if display_mode>=0,
-                info_dke_yp(2,['WARNING: Not enough grid point in the bounce region for accurate bounce-averaged calculations at r/a = ',num2str(xrho(ir)),' !'])
-            end
-            Xa_t = Xa;
-            Xb_t = Xb;
-            Xc_t = Xc;
-            Xd_t = Xd;
-            Xe_t = Xe;
-            Xf_t = Xf;
-            Xg_t = Xg;
-            Xh_t = Xh;
-            Xi_t = Xi;              
+		else
+			Xmask_f0 = [1:1:nmhu];
+			ns(ir) = 0;%Number of mhu values that are removed for implicit bounce averaged calculations
+			bounce_mode = 0;
+			if display_mode>=0,
+				info_dke_yp(2,['WARNING: Not enough grid point in the bounce region for accurate bounce-averaged calculations at r/a = ',num2str(xrho(ir)),' !'])
+			end
+			Xa_t = Xa;
+			Xb_t = Xb;
+			Xc_t = Xc;
+			Xd_t = Xd;
+			Xe_t = Xe;
+			Xf_t = Xf;
+			Xg_t = Xg;
+			Xh_t = Xh;
+			Xi_t = Xi;              
 %
-            mhu_t = mhu;
-        end
-    end
+			mhu_t = mhu;
+		end
+	end
 %
 %Local boundary conditions at p = p(1/2): not necessary but help for the density conservation
 %
-    Xa_t(1,:) = 0;
-    Xb_t(1,:) = 0;
-    Xc_t(1,:) = Xpn2(1,Xmask_f0)/dtn;%Maxwellian solution enforced at p = p(1/2)
-    Xd_t(1,:) = 0;
-    Xe_t(1,:) = 0;
-    Xf_t(1,:) = 0;
-    Xg_t(1,:) = 0;
-    Xh_t(1,:) = 0;
-    Xi_t(1,:) = 0;
-    if bounce_mode == 1,
-        Xj_t(1,:) = 0;
-        Xk_t(1,:) = 0;
-        Xl_t(1,:) = 0;
-        Xm_t(1,:) = 0;
-        Xn_t(1,:) = 0;
-        Xo_t(1,:) = 0;      
-    end    
+	Xa_t(1,:) = 0;
+	Xb_t(1,:) = 0;
+	Xc_t(1,:) = Xpn2(1,Xmask_f0)/dtn;%Maxwellian solution enforced at p = p(1/2) (More accurate but not fully necessary)
+	Xd_t(1,:) = 0;
+	Xe_t(1,:) = 0;
+	Xf_t(1,:) = 0;
+	Xg_t(1,:) = 0;
+	Xh_t(1,:) = 0;
+	Xi_t(1,:) = 0;
+	if bounce_mode == 1,
+		Xj_t(1,:) = 0;
+		Xk_t(1,:) = 0;
+		Xl_t(1,:) = 0;
+		Xm_t(1,:) = 0;
+		Xn_t(1,:) = 0;
+		Xo_t(1,:) = 0;      
+	end    
 %
-   if dke_mode == 1 & ~isempty(find(ir==rdke)),
+	if dke_mode == 1 & ~isempty(find(ir==rdke)),
 %
 %Matrix coefficients calculations for ftp
 %
+
+	%	
+	% Collisions
+	%
+		XDpp_c_ippj = XApp;
+		XDpp_c_ipj = XAp;
+		XDpp_c_ij = XA;
+		XDpp_c_imj = XAm;
+		XDpp_c_immj = XAmm;
+	%
+		XDpm_c_ipj = zeros(npn,nmhu);
+		XDpm_c_ij = zeros(npn,nmhu);
+		XDpm_c_imj = zeros(npn,nmhu);
+	%
+		XDmp_c_ijp = zeros(npn,nmhu);
+		XDmp_c_ij = zeros(npn,nmhu);
+		XDmp_c_ijm = zeros(npn,nmhu);
+	%
+		XDmm_c_ijp = XBt.*XXRlambda_p2m1_p(:,:,ir);
+		XDmm_c_ijm = XBt.*XXRlambda_p2m1_m(:,:,ir);
+	%
+		XFp_c_ippj = -XFpp;
+		XFp_c_ipj = -XFp;
+		XFp_c_ij = -XF;
+		XFp_c_imj = -XFm;
+		XFp_c_immj = -XFmm;	
+	%
+		XFm_c_ijp = zeros(npn,nmhu);
+		XFm_c_ijm = zeros(npn,nmhu);
+	%    
+		XXDpp_c_imj(:,:,ir) = XDpp_c_imj;
+		XXDpm_c_imj(:,:,ir) = XDpm_c_imj;
+		XXFp_c_imj(:,:,ir) = XFp_c_imj;
+		XXDpp_c_ipj(:,:,ir) = XDpp_c_ipj;
+		XXDpm_c_ipj(:,:,ir) = XDpm_c_ipj;
+		XXFp_c_ipj(:,:,ir) = XFp_c_ipj;
+
+		XXDmm_c_ijm(:,:,ir) = XDmm_c_ijm;
+		XXDmp_c_ijm(:,:,ir) = XDmp_c_ijm;
+		XXFm_c_ijm(:,:,ir) = XFm_c_ijm;
+		XXDmm_c_ijp(:,:,ir) = XDmm_c_ijp;
+		XXDmp_c_ijp(:,:,ir) = XDmp_c_ijp;
+		XXFm_c_ijp(:,:,ir) = XFm_c_ijp;
+	%	
+	% Electric field
+	%
+		XDpp_e_ippj = zeros(npn,nmhu);
+		XDpp_e_ipj = zeros(npn,nmhu);
+		XDpp_e_ij = zeros(npn,nmhu); 	
+		XDpp_e_imj = zeros(npn,nmhu);
+		XDpp_e_immj = zeros(npn,nmhu);
+	%	
+		XDpm_e_ipj = zeros(npn,nmhu);
+		XDpm_e_ij = zeros(npn,nmhu);
+		XDpm_e_imj = zeros(npn,nmhu);
+	%
+		XDmp_e_ijp = zeros(npn,nmhu);
+		XDmp_e_ij = zeros(npn,nmhu);
+		XDmp_e_ijm = zeros(npn,nmhu);
+	%
+		XDmm_e_ijp = zeros(npn,nmhu);
+		XDmm_e_ijm = zeros(npn,nmhu);
+	%
+		XFp_e_ippj = +Xmhu.*squeeze(XXsssl(:,:,ir))*epsi(ir);
+		XFp_e_ipj = +Xmhu.*squeeze(XXsssl(:,:,ir))*epsi(ir);
+		XFp_e_ij = +Xmhu.*squeeze(XXsssl(:,:,ir))*epsi(ir);	
+		XFp_e_imj = +Xmhu.*squeeze(XXsssl(:,:,ir))*epsi(ir);
+		XFp_e_immj = +Xmhu.*squeeze(XXsssl(:,:,ir))*epsi(ir);
+	%
+		XFm_e_ijp = -sqrt(X1mmhu2p).*squeeze(XXssslp(:,:,ir))*epsi(ir);
+		XFm_e_ijm = -sqrt(X1mmhu2m).*squeeze(XXssslm(:,:,ir))*epsi(ir);
+	%
+		XXDpp_e_imj(:,:,ir) = XDpp_e_imj;
+		XXDpm_e_imj(:,:,ir) = XDpm_e_imj;
+		XXFp_e_imj(:,:,ir) = XFp_e_imj;
+		XXDpp_e_ipj(:,:,ir) = XDpp_e_ipj;
+		XXDpm_e_ipj(:,:,ir) = XDpm_e_ipj;
+		XXFp_e_ipj(:,:,ir) = XFp_e_ipj;
+
+		XXDmm_e_ijm(:,:,ir) = XDmm_e_ijm;
+		XXDmp_e_ijm(:,:,ir) = XDmp_e_ijm;
+		XXFm_e_ijm(:,:,ir) = XFm_e_ijm;
+		XXDmm_e_ijp(:,:,ir) = XDmm_e_ijp;
+		XXDmp_e_ijp(:,:,ir) = XDmp_e_ijp;
+		XXFm_e_ijp(:,:,ir) = XFm_e_ijp;
+
+	%
+		XDpp_rf_ippj = XXDpp_rf_ippj(:,:,ir);
+		XDpp_rf_ipj = XXDpp_rf_ipj(:,:,ir);
+		XDpp_rf_ij = XXDpp_rf_ij(:,:,ir);
+		XDpp_rf_imj = XXDpp_rf_imj(:,:,ir);
+		XDpp_rf_immj = XXDpp_rf_immj(:,:,ir);
+	%	
+		XDpm_rf_ipj = XXDpm_rf_ipj(:,:,ir);
+		XDpm_rf_ij = XXDpm_rf_ij(:,:,ir);	
+		XDpm_rf_imj = XXDpm_rf_imj(:,:,ir);
+
+		XDmp_rf_ijp = XXDmp_rf_ijp(:,:,ir);
+		XDmp_rf_ij = XXDmp_rf_ij(:,:,ir);
+		XDmp_rf_ijm = XXDmp_rf_ijm(:,:,ir);
+	%	
+		XDmm_rf_ijp = XXDmm_rf_ijp(:,:,ir);
+		XDmm_rf_ijm = XXDmm_rf_ijm(:,:,ir);
+	%
+		XFp_rf_ippj = zeros(npn,nmhu);
+		XFp_rf_ipj = zeros(npn,nmhu);
+		XFp_rf_ij = zeros(npn,nmhu);
+		XFp_rf_imj = zeros(npn,nmhu);
+		XFp_rf_immj = zeros(npn,nmhu);
+	%
+		XFm_rf_ijp = zeros(npn,nmhu);
+		XFm_rf_ijm = zeros(npn,nmhu);
+	%	
+	% D and F tensors
+	% 
+		XDpp_ippj = XDpp_c_ippj + XDpp_e_ippj + XDpp_rf_ippj;
+		XDpp_ipj = XDpp_c_ipj + XDpp_e_ipj + XDpp_rf_ipj;
+		XDpp_ij = XDpp_c_ij + XDpp_e_ij + XDpp_rf_ij;
+		XDpp_imj = XDpp_c_imj + XDpp_e_imj + XDpp_rf_imj;
+		XDpp_immj = XDpp_c_immj + XDpp_e_immj + XDpp_rf_immj;
+	%
+		XDpm_ipj = XDpm_c_ipj + XDpm_e_ipj + XDpm_rf_ipj;
+		XDpm_ij = XDpm_c_ij + XDpm_e_ij + XDpm_rf_ij;
+		XDpm_imj = XDpm_c_imj + XDpm_e_imj + XDpm_rf_imj;
+	%
+		XDmp_ijp = XDmp_c_ijp + XDmp_e_ijp + XDmp_rf_ijp;
+		XDmp_ij = XDmp_c_ij + XDmp_e_ij + XDmp_rf_ij;
+		XDmp_ijm = XDmp_c_ijm + XDmp_e_ijm + XDmp_rf_ijm;
+	%
+		XDmm_ijp = XDmm_c_ijp + XDmm_e_ijp + XDmm_rf_ijp;
+		XDmm_ijm = XDmm_c_ijm + XDmm_e_ijm + XDmm_rf_ijm;
+	%
+		XFp_ippj = XFp_c_ippj + XFp_e_ippj + XFp_rf_ippj;
+		XFp_ipj = XFp_c_ipj + XFp_e_ipj + XFp_rf_ipj;
+		XFp_ij = XFp_c_ij + XFp_e_ij + XFp_rf_ij;
+		XFp_imj = XFp_c_imj + XFp_e_imj + XFp_rf_imj;
+		XFp_immj = XFp_c_immj + XFp_e_immj + XFp_rf_immj;
+	%
+		XFm_ijp = XFm_c_ijp + XFm_e_ijp + XFm_rf_ijp;
+		XFm_ijm = XFm_c_ijm + XFm_e_ijm + XFm_rf_ijm;
+	%
+		[Xa,Xb,Xc,Xd,Xe,Xf,Xg,Xh,Xi,Xdeltap_imj,Xdeltap_ipj,Xdeltam_ijm,Xdeltam_ijp] = ...
+		fpengine_dke_yp(squeeze(XXRlambdam(:,:,ir)),squeeze(XXRlambdap(:,:,ir)),...
+		Xpn,Xpn2m,Xpn2p,Xpnm,Xpnp,Xdpnmm,Xdpnm,Xdpn,Xdpnp,Xdpnpp,...
+		Xmhu,X1mmhu2,X1mmhu2m,X1mmhu2p,Xdmhumm,Xdmhum,Xdmhu,Xdmhup,Xdmhupp,...
+		XDpp_ippj,XDpp_ipj,XDpp_ij,XDpp_imj,XDpp_immj,...
+		XDpm_ipj,XDpm_ij,XDpm_imj,...
+		XDmp_ijp,XDmp_ij,XDmp_ijm,...
+		XDmm_ijp,XDmm_ijm,...
+		XFp_ippj,XFp_ipj,XFp_ij,XFp_imj,XFp_immj,...
+		XFm_ijp,XFm_ijm);	    
+	% 
+		XXdeltap_imj(:,:,ir) = Xdeltap_imj;
+		XXdeltap_ipj(:,:,ir) = Xdeltap_ipj;
+		XXdeltam_ijp(:,:,ir) = Xdeltam_ijp;
+		XXdeltam_ijm(:,:,ir) = Xdeltam_ijm;
+	%		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
         Xa_tp = zeros(size(Xa));%ftp(i+1/2,j-1/2)
         Xb_tp = zeros(size(Xb));%ftp(i-1/2,j+1/2) 
         Xc_tp = zeros(size(Xc));%ftp(i+1/2,j+1/2)
