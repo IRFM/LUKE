@@ -1,8 +1,10 @@
-function ZYXXD_rf = rfdiff_dke_jd(waveparam,xrho,...
+function [ZYXXD_rf,ZYXXD_tp_rf] = rfdiff_dke_jd(waveparam,...
+    theta,XR,XZ,XBR,XBZ,XBphi,xB0,Rp,Zp,xqtilde,...
+    XXheaviside,XXheaviside_p,XXheaviside_m,... 
     Xmhup,Xmhu,Xmhum,Xmhu2p,Xmhu2,Xmhu2m,X1mmhu2p,X1mmhu2,X1mmhu2m,...
     pnpp,pnp,pn,pnm,pnmm,Xpnpp,Xpnp,Xpn,Xpnm,Xpnmm,Xgammapp,Xgammap,Xgamma,Xgammam,Xgammamm,...
     Xxlambdap,Xxlambda,Xxlambdam,...
-    xq,betath_ref,Rp_norm,bounce_mode)
+    betath_ref,bounce_mode,dke_mode)
 %
 % Calculates the RF quasilinear diffusion coefficient and the diffusion tensor elements 
 % on a 4-D Grid: 2-D (p,mhu) in momentum; 1-D (rho) in space; 1-D for the series of RF rays.
@@ -40,14 +42,12 @@ function ZYXXD_rf = rfdiff_dke_jd(waveparam,xrho,...
 %
 % by J. Decker (MIT/RLE, jodecker@mit.edu) 02/05/03 
 %
+qe = 1.60217733e-19;%Absolute value of the electron charge (C)
+me = 9.1093897e-31;%Electron rest mass (Kg)
+%
 [npn,nmhu] = size(Xpn);
-nr = length(xrho);
+nr = length(xB0);
 nb = size(waveparam,2);
-%
-% Radial grid
-%
-xia = xrho/Rp_norm; % Local inverse aspect ratio
-xmhubounce2 = 2*xia./(1 + xia); % Squared pitch-angle cosine at the trapped/passing boundary
 %
 % 4D duplications
 %
@@ -75,35 +75,30 @@ YXXgamma = repmat(Xgamma,[1,1,nr,nb]);
 YXXgammam = repmat(Xgammam,[1,1,nr,nb]);
 YXXgammamm = repmat(Xgammamm,[1,1,nr,nb]);
 %
-YXXia = shiftdim(repmat(xia',[1,nb,npn,nmhu]),2);
-YXXmhubounce2 = shiftdim(repmat(xmhubounce2',[1,nb,npn,nmhu]),2);
-YXXq = shiftdim(repmat(xq',[1,nb,npn,nmhu]),2);
-%
+YXXqtilde = shiftdim(repmat(xqtilde',[1,nb,npn,nmhu]),2);
+YXXB0 = shiftdim(repmat(xB0',[1,nb,npn,nmhu]),2);
 %
 % RF wave parameters
 %
 xyn_rf = waveparam(:,:,1);% RF resonance harmonic
 xyomega_rf = waveparam(:,:,2);% RF wave frequency 
-xyomegac = waveparam(:,:,3);% midplane cyclotron frequency (r,theta=0) at the radial position considered 
-                            % (!!) for bounce_mode = 0, enter cyclotron frequency at (r,theta)
-xyopt = waveparam(:,:,4);% options for Larmor radius effects and/or LH calc.
+xyopt = waveparam(:,:,3);% options for Larmor radius effects and/or LH calc.
                          % 0:exact, 1:approx (kperp*rhoe<<1), 2: kperp*rhoe<<1 and old LH calc. (Karney, Shoucri)
-xythetab_rf = waveparam(:,:,5);% poloidal location of RF beam  (bounce_mode>0 only)
-xyD0_rf = waveparam(:,:,6);% RF quasi-linear diffusion coefficient (nhuth_ref*pth_ref^2)
-xynparmin_rf = waveparam(:,:,7);% Square N// spectrum: Lower limit
-xynparmax_rf = waveparam(:,:,8);% Square N// spectrum: Upper limit
-xynpar_rf = waveparam(:,:,9);% Gaussian N// spectrum: peak n//
-xydnpar_rf = waveparam(:,:,10);% Gaussian N// spectrum: width in n//
-xynperp_rf = waveparam(:,:,11);% RF wave : n_perp
-xyepolp_rf = waveparam(:,:,12);% RF wave : polarization plus
-xyepolm_rf = waveparam(:,:,13);% RF wave : polarization minus
-xyepolz_rf = waveparam(:,:,14);% RF wave : polarization parallel
+xythetab_rf = waveparam(:,:,4);% poloidal location of RF beam  (bounce_mode>0 only)
+xyD0_rf = waveparam(:,:,5);% RF quasi-linear diffusion coefficient (nhuth_ref*pth_ref^2)
+xynparmin_rf = waveparam(:,:,6);% Square N// spectrum: Lower limit
+xynparmax_rf = waveparam(:,:,7);% Square N// spectrum: Upper limit
+xynpar_rf = waveparam(:,:,8);% Gaussian N// spectrum: peak n//
+xydnpar_rf = waveparam(:,:,9);% Gaussian N// spectrum: width in n//
+xynperp_rf = waveparam(:,:,10);% RF wave : n_perp
+xyepolp_rf = waveparam(:,:,11);% RF wave : polarization plus
+xyepolm_rf = waveparam(:,:,12);% RF wave : polarization minus
+xyepolz_rf = waveparam(:,:,13);% RF wave : polarization parallel
 %
 YXXn_rf = shiftdim(repmat(xyn_rf,[1,1,npn,nmhu]),2);
 YXXomega_rf = shiftdim(repmat(xyomega_rf,[1,1,npn,nmhu]),2);
-YXXomegac = shiftdim(repmat(xyomegac,[1,1,npn,nmhu]),2);
 YXXopt = shiftdim(repmat(xyopt,[1,1,npn,nmhu]),2);
-YXXthetab_rf = shiftdim(repmat(xythetab_rf,[1,1,npn,nmhu]),2);%	
+%YXXthetab_rf = shiftdim(repmat(xythetab_rf,[1,1,npn,nmhu]),2);	
 YXXD0_rf = shiftdim(repmat(xyD0_rf,[1,1,npn,nmhu]),2);
 YXXnparmin_rf = shiftdim(repmat(xynparmin_rf,[1,1,npn,nmhu]),2);
 YXXnparmax_rf = shiftdim(repmat(xynparmax_rf,[1,1,npn,nmhu]),2);
@@ -113,71 +108,79 @@ YXXnperp_rf = shiftdim(repmat(xynperp_rf,[1,1,npn,nmhu]),2);
 YXXepolp_rf = shiftdim(repmat(xyepolp_rf,[1,1,npn,nmhu]),2);
 YXXepolm_rf = shiftdim(repmat(xyepolm_rf,[1,1,npn,nmhu]),2);
 YXXepolz_rf = shiftdim(repmat(xyepolz_rf,[1,1,npn,nmhu]),2);
+%
+% Magnetic geometry parameters at theta = thetab_rf
+%
+for ir = 1:nr
+    xyRb_rf(ir,:) = interp1(theta,XR(ir,:),xythetab_rf(ir,:));
+    xyZb_rf(ir,:) = interp1(theta,XZ(ir,:),xythetab_rf(ir,:));
+%        
+    xyBRb_rf(ir,:) = interp1(theta,XBR(ir,:),xythetab_rf(ir,:));
+    xyBZb_rf(ir,:) = interp1(theta,XBZ(ir,:),xythetab_rf(ir,:));
+    xyBphib_rf(ir,:) = interp1(theta,XBphi(ir,:),xythetab_rf(ir,:));
+end
+xyrb_rf = sqrt((xyRb_rf - Rp).^2 + (xyZb_rf - Zp).^2);% minor radius at theta = thetab_rf
+xyBPb_rf = sqrt(xyBRb_rf.^2 + xyBZb_rf.^2);% poloidal magnetic field at theta = thetab_rf
+xyBb_rf = sqrt(xyBPb_rf.^2 + xyBphib_rf.^2);% magnetic field at theta = thetab_rf
+%
+YXXBb_rf = shiftdim(repmat(xyBb_rf,[1,1,npn,nmhu]),2);
 %    
 % Bounce averaging factors
 % 
 if bounce_mode > 0,          
     YXXlambdap = shiftdim(repmat(Xxlambdap,[1,1,nb,npn]),3); %Normalized bounce time
-	 YXXlambda = shiftdim(repmat(Xxlambda,[1,1,nb,npn]),3);
-	 YXXlambdam = shiftdim(repmat(Xxlambdam,[1,1,nb,npn]),3);
+	YXXlambda = shiftdim(repmat(Xxlambda,[1,1,nb,npn]),3);
+	YXXlambdam = shiftdim(repmat(Xxlambdam,[1,1,nb,npn]),3);
 %  
-	 YXXHPp = YXXmhu2p >= YXXmhubounce2; %Mask for passing (1) or trapped (0) 
-	 YXXHP = YXXmhu2 >= YXXmhubounce2;
-    YXXHPm = YXXmhu2m >= YXXmhubounce2;
+	%YXXHPp = repmat(XXheaviside_p,[1,1,1,nb]); %Mask for passing (1) or trapped (0) 
+	%YXXHP = repmat(XXheaviside,[1,1,1,nb]);
+    %YXXHPm = repmat(XXheaviside_m,[1,1,1,nb]);
 % 
-    YXXthetaCp = YXXHPp.*pi + ~YXXHPp.*acos(1 - 2*YXXmhu2p./YXXmhubounce2); %Poloidal angle at turning point (pi for passing el.)
-    YXXthetaC = YXXHP.*pi + ~YXXHP.*acos(1 - 2*YXXmhu2./YXXmhubounce2);
-    YXXthetaCm = YXXHPm.*pi + ~YXXHPm.*acos(1 - 2*YXXmhu2m./YXXmhubounce2);
-%   
-    YXXHZp = YXXthetaCp >= pi*YXXia./YXXq; %Mask for toroidal trapping effect
-    YXXHZ = YXXthetaC >= pi*YXXia./YXXq;
-    YXXHZm = YXXthetaCm >= pi*YXXia./YXXq;
-%   
-    YXXzetaCp = (YXXHPp + ~YXXHPp.*YXXHZp).*pi + ~YXXHPp.*~YXXHZp.*YXXthetaCp.*YXXq./YXXia; %Toroidal angle at turning point 
-                                                            % (pi for passing el. or trapped el. covering more than 2*pi toroidally) 
-    YXXzetaC = (YXXHP + ~YXXHP.*YXXHZ).*pi + ~YXXHP.*~YXXHZ.*YXXthetaC.*YXXq./YXXia;
-    YXXzetaCm = (YXXHPm + ~YXXHPm.*YXXHZm).*pi + ~YXXHPm.*~YXXHZm.*YXXthetaCm.*YXXq./YXXia;
-%    
-    YXXHBp = YXXthetaCp >= abs(YXXthetab_rf); %Mask for particle reaching (1) or not (0) the poloidal location of the ray 
-    YXXHB = YXXthetaC >= abs(YXXthetab_rf);
-    YXXHBm = YXXthetaCm >= abs(YXXthetab_rf);
+    xyqtildeb_rf = xyBb_rf.*xyrb_rf./xyBPb_rf/Rp;
 %
-    YXXHTp = YXXzetaCp.*YXXHBp/pi; %Trapping factors put together
-    YXXHT = YXXzetaC.*YXXHB/pi;
-    YXXHTm = YXXzetaCm.*YXXHBm/pi;
+    YXXBbp = YXXB0./YXX1mmhu2p;
+    YXXBb = YXXB0./YXX1mmhu2;
+    YXXBbm = YXXB0./YXX1mmhu2m;
+%   
+    YXXmaskb = (YXXBb_rf <= YXXBb) & (YXXBb_rf <= YXXBbp) & (YXXBb_rf <= YXXBbm); % condition thetab_rf < thetaT
 %    
-    YXXpsib = (1 + YXXia)./(1+YXXia.*cos(YXXthetab_rf)); %Ratio of magnetic fields
+    YXXpsib = YXXBb_rf./YXXB0; %Ratio of magnetic fields at theta = thetab_rf
 %    
-    YXXmhubp = YXXHBp.*sign(YXXmhup).*sqrt(1 - YXXpsib.*YXX1mmhu2p); %Pitch angle cosine at ray location
-    YXXmhub = YXXHB.*sign(YXXmhu).*sqrt(1 - YXXpsib.*YXX1mmhu2);
-    YXXmhubm = YXXHBm.*sign(YXXmhum).*sqrt(1 - YXXpsib.*YXX1mmhu2m);
+    YXXmhubp = YXXmaskb.*sign(YXXmhup).*sqrt(1 - YXXpsib.*YXX1mmhu2p); %Pitch angle cosine at ray location
+    YXXmhub = YXXmaskb.*sign(YXXmhu).*sqrt(1 - YXXpsib.*YXX1mmhu2);
+    YXXmhubm = YXXmaskb.*sign(YXXmhum).*sqrt(1 - YXXpsib.*YXX1mmhu2m);
 %
-    clear YXXthetaCp YXXthetaC YXXthetaCm
-    clear YXXzetaCp YXXzetaC YXXzetaCm
-    clear YXXHZp YXXHZ YXXHZm
-    clear YXXHBp YXXHB YXXHBm
+    YXXomegac = qe*YXXB0/me; % cyclotron frequency at B=Bmin 
+%
+    clear YXXBbp YXXBb YXXBbm
     clear Xxlambdap Xxlambda Xxlambdam
 else
-    YXXHPp = ones(npn,nmhu,nr,nb);
-    YXXHP = ones(npn,nmhu,nr,nb);
-    YXXHPm = ones(npn,nmhu,nr,nb);
+    %YXXHPp = ones(npn,nmhu,nr,nb);
+    %YXXHP = ones(npn,nmhu,nr,nb);
+    %YXXHPm = ones(npn,nmhu,nr,nb);
 %    
-    YXXHTp = ones(npn,nmhu,nr,nb);
-    YXXHT = ones(npn,nmhu,nr,nb);
-    YXXHTm = ones(npn,nmhu,nr,nb);
-%
     YXXlambdap = ones(npn,nmhu,nr,nb);
     YXXlambda = ones(npn,nmhu,nr,nb);
     YXXlambdam = ones(npn,nmhu,nr,nb);    
 %   
     YXXpsib = ones(npn,nmhu,nr,nb);
+    YXXmaskb = ones(npn,nmhu,nr,nb);
 %
     YXXmhubp = YXXmhup;
-	 YXXmhub = YXXmhu;
-	 YXXmhubm = YXXmhum;
+	YXXmhub = YXXmhu;
+	YXXmhubm = YXXmhum;
+%
+    xyqtildeb_rf = ones(nr,nb);% local bounce-averaging factor qtilde at theta = thetab_rf
+%
+%   when bounce_mode = 0, we need to take the cyclotron frequency at theta = thetab_rf 
+%
+    YXXomegac = qe*YXXBb_rf/me;% cyclotron frequency at theta = thetab_rf
+%    
 end
 %
-clear YXXmhubounce2 YXXia YXXthetab_rf YXXq
+clear YXXBb_rf
+%
+YXXqtildeb_rf = shiftdim(repmat(xyqtildeb_rf,[1,1,npn,nmhu]),2); % local bounce-averaging factor qtilde at theta = thetab_rf
 %
 YXXmhub2p = YXXmhubp.*YXXmhubp;
 YXXmhub2 = YXXmhub.*YXXmhub;
@@ -190,6 +193,10 @@ YXXmhubm(YXXmhubm == 0) = eps;
 YXXmhub2p(YXXmhub2p == 0) = eps;
 YXXmhub2(YXXmhub2 == 0) = eps;
 YXXmhub2m(YXXmhub2m == 0) = eps;
+%
+YXXlambdap(YXXlambdap == 0) = eps;
+YXXlambda(YXXlambda == 0) = eps;
+YXXlambdam(YXXlambdam == 0) = eps;
 %
 % FLR factor k_perp*rho_perp
 % 
@@ -224,15 +231,16 @@ YXXpolb_ijp = YXXepolp_rf.*besselj_dke_jd(YXXn_rf + 1,YXXZb_ijp,YXXlre)/sqrt(2) 
 YXXpolb_ijm = YXXepolp_rf.*besselj_dke_jd(YXXn_rf + 1,YXXZb_ijm,YXXlre)/sqrt(2) + YXXepolm_rf.*besselj_dke_jd(YXXn_rf - 1,YXXZb_ijm,YXXlre)/sqrt(2)...
            - YXXmhubm.*YXXepolz_rf.*besselj_dke_jd(YXXn_rf,YXXZb_ijm,YXXlre)./sqrt(YXXpsib.*YXX1mmhu2m);    
 %       
-YXXpolb_ippj = YXXHP.*YXXpolb_ippj + ~YXXHP.*(YXXpolb_ippj + flipdim(YXXpolb_ippj,2))/2;       
-YXXpolb_ipj = YXXHP.*YXXpolb_ipj + ~YXXHP.*(YXXpolb_ipj + flipdim(YXXpolb_ipj,2))/2;       
-YXXpolb_ij = YXXHP.*YXXpolb_ij + ~YXXHP.*(YXXpolb_ij + flipdim(YXXpolb_ij,2))/2;       
-YXXpolb_imj = YXXHP.*YXXpolb_imj + ~YXXHP.*(YXXpolb_imj + flipdim(YXXpolb_imj,2))/2;       
-YXXpolb_immj = YXXHP.*YXXpolb_immj + ~YXXHP.*(YXXpolb_immj + flipdim(YXXpolb_immj,2))/2;       
-YXXpolb_ijp = YXXHPp.*YXXpolb_ijp + ~YXXHPp.*(YXXpolb_ijp + flipdim(YXXpolb_ijp,2))/2;% -mhup = fliplr(mhum)       
-YXXpolb_ijm = YXXHPm.*YXXpolb_ijm + ~YXXHPm.*(YXXpolb_ijm + flipdim(YXXpolb_ijm,2))/2;% -mhum = fliplr(mhup) 
+%YXXpolb_ippj = YXXHP.*YXXpolb_ippj + ~YXXHP.*(YXXpolb_ippj + flipdim(YXXpolb_ippj,2))/2;       
+%YXXpolb_ipj = YXXHP.*YXXpolb_ipj + ~YXXHP.*(YXXpolb_ipj + flipdim(YXXpolb_ipj,2))/2;       
+%YXXpolb_ij = YXXHP.*YXXpolb_ij + ~YXXHP.*(YXXpolb_ij + flipdim(YXXpolb_ij,2))/2;       
+%YXXpolb_imj = YXXHP.*YXXpolb_imj + ~YXXHP.*(YXXpolb_imj + flipdim(YXXpolb_imj,2))/2;       
+%YXXpolb_immj = YXXHP.*YXXpolb_immj + ~YXXHP.*(YXXpolb_immj + flipdim(YXXpolb_immj,2))/2;       
+%YXXpolb_ijp = YXXHPp.*YXXpolb_ijp + ~YXXHPp.*(YXXpolb_ijp + flipdim(YXXpolb_ijp,2))/2;% -mhup = fliplr(mhum)       
+%YXXpolb_ijm = YXXHPm.*YXXpolb_ijm + ~YXXHPm.*(YXXpolb_ijm + flipdim(YXXpolb_ijm,2))/2;% -mhum = fliplr(mhup) 
 %       
 clear YXXlre 
+clear YXXZb_ippj YXXZb_ipj YXXZb_ij YXXZb_imj YXXZb_immj YXXZb_ijp YXXZb_ijm
 clear YXXepolp_rf YXXepolm_rf YXXepolz_rf        
 %
 % Resonance Condition: resonant Npar
@@ -244,8 +252,6 @@ YXXnparres_imj = (YXXgammam - YXXn_rf.*YXXomegac.*YXXpsib./YXXomega_rf)/betath_r
 YXXnparres_immj = (YXXgammamm - YXXn_rf.*YXXomegac.*YXXpsib./YXXomega_rf)/betath_ref./YXXpnmm./YXXmhub;
 YXXnparres_ijp = (YXXgamma - YXXn_rf.*YXXomegac.*YXXpsib./YXXomega_rf)/betath_ref./YXXpn./YXXmhubp;
 YXXnparres_ijm = (YXXgamma - YXXn_rf.*YXXomegac.*YXXpsib./YXXomega_rf)/betath_ref./YXXpn./YXXmhubm;
-%
-clear YXXmhubp YXXmhub YXXmhubm
 %
 YXXmask_square = ~isnan(YXXnparmin_rf) & ~isnan(YXXnparmax_rf);%Square power spectrum in N//
 YXXmask_gauss = ~isnan(YXXnpar_rf) & ~isnan(YXXdnpar_rf);%Gaussian power spectrum in N//  
@@ -295,13 +301,21 @@ clear YXXnparmin_rf YXXnparmax_rf YXXnpar_rf YXXdnpar_rf
 %
 %Sum over sigma for trapped particles
 %
-YXXres_ippj = YXXHP.*YXXdeltares_ippj + ~YXXHP.*(YXXdeltares_ippj + flipdim(YXXdeltares_ippj,2))/2;       
-YXXres_ipj = YXXHP.*YXXdeltares_ipj + ~YXXHP.*(YXXdeltares_ipj + flipdim(YXXdeltares_ipj,2))/2;       
-YXXres_ij = YXXHP.*YXXdeltares_ij + ~YXXHP.*(YXXdeltares_ij + flipdim(YXXdeltares_ij,2))/2;       
-YXXres_imj = YXXHP.*YXXdeltares_imj + ~YXXHP.*(YXXdeltares_imj + flipdim(YXXdeltares_imj,2))/2;       
-YXXres_immj = YXXHP.*YXXdeltares_immj + ~YXXHP.*(YXXdeltares_immj + flipdim(YXXdeltares_immj,2))/2;       
-YXXres_ijp = YXXHPp.*YXXdeltares_ijp + ~YXXHPp.*(YXXdeltares_ijp + flipdim(YXXdeltares_ijm,2))/2;% -mhup = fliplr(mhum)       
-YXXres_ijm = YXXHPm.*YXXdeltares_ijm + ~YXXHPm.*(YXXdeltares_ijm + flipdim(YXXdeltares_ijp,2))/2;% -mhum = fliplr(mhup) 
+%YXXres_ippj = YXXHP.*YXXdeltares_ippj + ~YXXHP.*(YXXdeltares_ippj + flipdim(YXXdeltares_ippj,2))/2;       
+%YXXres_ipj = YXXHP.*YXXdeltares_ipj + ~YXXHP.*(YXXdeltares_ipj + flipdim(YXXdeltares_ipj,2))/2;       
+%YXXres_ij = YXXHP.*YXXdeltares_ij + ~YXXHP.*(YXXdeltares_ij + flipdim(YXXdeltares_ij,2))/2;       
+%YXXres_imj = YXXHP.*YXXdeltares_imj + ~YXXHP.*(YXXdeltares_imj + flipdim(YXXdeltares_imj,2))/2;       
+%YXXres_immj = YXXHP.*YXXdeltares_immj + ~YXXHP.*(YXXdeltares_immj + flipdim(YXXdeltares_immj,2))/2;       
+%YXXres_ijp = YXXHPp.*YXXdeltares_ijp + ~YXXHPp.*(YXXdeltares_ijp + flipdim(YXXdeltares_ijm,2))/2;% -mhup = fliplr(mhum)       
+%YXXres_ijm = YXXHPm.*YXXdeltares_ijm + ~YXXHPm.*(YXXdeltares_ijm + flipdim(YXXdeltares_ijp,2))/2;% -mhum = fliplr(mhup) 
+%
+YXXres_ippj = YXXdeltares_ippj;       
+YXXres_ipj = YXXdeltares_ipj;       
+YXXres_ij = YXXdeltares_ij;       
+YXXres_imj = YXXdeltares_imj;       
+YXXres_immj = YXXdeltares_immj;       
+YXXres_ijp = YXXdeltares_ijp;      
+YXXres_ijm = YXXdeltares_ijm;
 %
 %YXXres_ippj(npn-2:npn,:) = 0;%Baranov
 %YXXres_ipj(npn-2:npn,:) = 0;%Baranov
@@ -311,7 +325,7 @@ YXXres_ijm = YXXHPm.*YXXdeltares_ijm + ~YXXHPm.*(YXXdeltares_ijm + flipdim(YXXde
 %YXXres_ijp(npn-2:npn,:) = 0;%Baranov
 %YXXres_ijm(npn-2:npn,:) = 0;%Baranov
 %
-clear YXXHPp YXXHP YXXHPm
+%clear YXXHPp YXXHP YXXHPm
 clear YXXdeltares_ippj YXXdeltares_ipj YXXdeltares_ij YXXdeltares_imj YXXdeltares_immj YXXdeltares_ijp YXXdeltares_ijm
 %
 %Old technique for calculating the LH matrix coefficients, for comparaison with previous versions (Karney, Shoucri)
@@ -361,18 +375,28 @@ clear YXXres_old_ippj YXXres_old_ipj YXXres_old_ij YXXres_old_imj YXXres_old_imm
 %
 %QL Diffusion Coefficient
 %    
-YXXDrf_ippj = YXXD0_rf.*abs(YXXpolb_ippj).^2.*YXXpsib.*YXXmhu2.*YXXHT.*YXXres_ippj.*YXXgammapp./YXXpnpp./abs(YXXmhu)./YXXmhub2./YXXlambda;
-YXXDrf_ipj = YXXD0_rf.*abs(YXXpolb_ipj).^2.*YXXpsib.*YXXmhu2.*YXXHT.*YXXres_ipj.*YXXgammap./YXXpnp./abs(YXXmhu)./YXXmhub2./YXXlambda;
-YXXDrf_ij = YXXD0_rf.*abs(YXXpolb_ij).^2.*YXXpsib.*YXXmhu2.*YXXHT.*YXXres_ij.*YXXgamma./YXXpn./abs(YXXmhu)./YXXmhub2./YXXlambda;
-YXXDrf_imj = YXXD0_rf.*abs(YXXpolb_imj).^2.*YXXpsib.*YXXmhu2.*YXXHT.*YXXres_imj.*YXXgammam./YXXpnm./abs(YXXmhu)./YXXmhub2./YXXlambda;
-YXXDrf_immj = YXXD0_rf.*abs(YXXpolb_immj).^2.*YXXpsib.*YXXmhu2.*YXXHT.*YXXres_immj.*YXXgammamm./YXXpnmm./abs(YXXmhu)./YXXmhub2./YXXlambda;
-YXXDrf_ijp = YXXD0_rf.*abs(YXXpolb_ijp).^2.*YXXpsib.*YXXmhu2p.*YXXHTp.*YXXres_ijp.*YXXgamma./YXXpn./abs(YXXmhup)./YXXmhub2p./YXXlambdap;
-YXXDrf_ijm = YXXD0_rf.*abs(YXXpolb_ijm).^2.*YXXpsib.*YXXmhu2m.*YXXHTm.*YXXres_ijm.*YXXgamma./YXXpn./abs(YXXmhum)./YXXmhub2m./YXXlambdam;   
+YXXDrf_ippj = YXXD0_rf.*abs(YXXpolb_ippj).^2.*YXXpsib.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXres_ippj.*YXXgammapp./YXXpnpp./abs(YXXmhu)./YXXmhub2./YXXlambda./YXXqtilde;
+YXXDrf_ipj = YXXD0_rf.*abs(YXXpolb_ipj).^2.*YXXpsib.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXres_ipj.*YXXgammap./YXXpnp./abs(YXXmhu)./YXXmhub2./YXXlambda./YXXqtilde;
+YXXDrf_ij = YXXD0_rf.*abs(YXXpolb_ij).^2.*YXXpsib.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXres_ij.*YXXgamma./YXXpn./abs(YXXmhu)./YXXmhub2./YXXlambda./YXXqtilde;
+YXXDrf_imj = YXXD0_rf.*abs(YXXpolb_imj).^2.*YXXpsib.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXres_imj.*YXXgammam./YXXpnm./abs(YXXmhu)./YXXmhub2./YXXlambda./YXXqtilde;
+YXXDrf_immj = YXXD0_rf.*abs(YXXpolb_immj).^2.*YXXpsib.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXres_immj.*YXXgammamm./YXXpnmm./abs(YXXmhu)./YXXmhub2./YXXlambda./YXXqtilde;
+YXXDrf_ijp = YXXD0_rf.*abs(YXXpolb_ijp).^2.*YXXpsib.*YXXmhu2p.*YXXqtildeb_rf.*YXXmaskb.*YXXres_ijp.*YXXgamma./YXXpn./abs(YXXmhup)./YXXmhub2p./YXXlambdap./YXXqtilde;
+YXXDrf_ijm = YXXD0_rf.*abs(YXXpolb_ijm).^2.*YXXpsib.*YXXmhu2m.*YXXqtildeb_rf.*YXXmaskb.*YXXres_ijm.*YXXgamma./YXXpn./abs(YXXmhum)./YXXmhub2m./YXXlambdam./YXXqtilde;   
 %
-clear YXXD0_rf YXXpsib YXXmhu2
+if dke_mode == 1
+    YXXDrf_tp_ippj = YXXD0_rf.*abs(YXXpolb_ippj).^2.*YXXmhu.*YXXqtildeb_rf.*YXXmaskb.*YXXres_ippj.*YXXgammapp./YXXpnpp./abs(YXXmhu)./YXXmhub./YXXlambda./YXXqtilde;
+    YXXDrf_tp_ipj = YXXD0_rf.*abs(YXXpolb_ipj).^2.*YXXmhu.*YXXqtildeb_rf.*YXXmaskb.*YXXres_ipj.*YXXgammap./YXXpnp./abs(YXXmhu)./YXXmhub./YXXlambda./YXXqtilde;
+    YXXDrf_tp_ij = YXXD0_rf.*abs(YXXpolb_ij).^2.*YXXmhu.*YXXqtildeb_rf.*YXXmaskb.*YXXres_ij.*YXXgamma./YXXpn./abs(YXXmhu)./YXXmhub./YXXlambda./YXXqtilde;
+    YXXDrf_tp_imj = YXXD0_rf.*abs(YXXpolb_imj).^2.*YXXmhu.*YXXqtildeb_rf.*YXXmaskb.*YXXres_imj.*YXXgammam./YXXpnm./abs(YXXmhu)./YXXmhub./YXXlambda./YXXqtilde;
+    YXXDrf_tp_immj = YXXD0_rf.*abs(YXXpolb_immj).^2.*YXXmhu.*YXXqtildeb_rf.*YXXmaskb.*YXXres_immj.*YXXgammamm./YXXpnmm./abs(YXXmhu)./YXXmhub./YXXlambda./YXXqtilde;
+    YXXDrf_tp_ijp = YXXD0_rf.*abs(YXXpolb_ijp).^2.*YXXmhup.*YXXqtildeb_rf.*YXXmaskb.*YXXres_ijp.*YXXgamma./YXXpn./abs(YXXmhup)./YXXmhubp./YXXlambdap./YXXqtilde;
+    YXXDrf_tp_ijm = YXXD0_rf.*abs(YXXpolb_ijm).^2.*YXXmhum.*YXXqtildeb_rf.*YXXmaskb.*YXXres_ijm.*YXXgamma./YXXpn./abs(YXXmhum)./YXXmhubm./YXXlambdam./YXXqtilde;   
+end
+% 
+clear YXXD0_rf YXXpsib YXXmhu2 YXXqtildeb_rf YXXmaskb YXXqtilde
+clear YXXmhubp YXXmhub YXXmhubm
 clear YXXpolb_ippj YXXpolb_ipj YXXpolb_ij YXXpolb_imj YXXpolb_immj YXXpolb_ijp YXXpolb_ijm 
 clear YXXres_ippj YXXres_ipj YXXres_ij YXXres_imj YXXres_immj YXXres_ijp YXXres_ijm 
-clear YXXHTp YXXHT YXXHTm
 clear YXXpnp YXXpn YXXpnm
 clear YXXgammap YXXgamma YXXgammam
 clear YXXlambdap YXXlambda YXXlambdam
@@ -397,3 +421,26 @@ ZYXXD_rf{12} = (YXX1mmhu2p - YXXn_rf.*YXXomegac./YXXomega_rf).^2.*YXXDrf_ijp./YX
 ZYXXD_rf{13} = (YXX1mmhu2m - YXXn_rf.*YXXomegac./YXXomega_rf).^2.*YXXDrf_ijm./YXXmhu2m;%YXXDmm_rf_ijm
 %
 ZYXXD_rf{14} =  YXXDrf_ij;
+%
+if dke_mode == 1
+    ZYXXD_tp_rf{1} = YXX1mmhu2.*YXXDrf_tp_ippj;%YXXDpp_rf_ippj
+    ZYXXD_tp_rf{2} = YXX1mmhu2.*YXXDrf_tp_ipj;%YXXDpp_rf_ipj
+    ZYXXD_tp_rf{3} = YXX1mmhu2.*YXXDrf_tp_ij;%YXXDpp_rf_ij
+    ZYXXD_tp_rf{4} = YXX1mmhu2.*YXXDrf_tp_imj;%YXXDpp_rf_imj
+    ZYXXD_tp_rf{5} = YXX1mmhu2.*YXXDrf_tp_immj;%YXXDpp_rf_immj
+%
+    ZYXXD_tp_rf{6} = -sqrt(YXX1mmhu2).*(YXX1mmhu2 - YXXn_rf.*YXXomegac./YXXomega_rf).*YXXDrf_tp_ipj./YXXmhu;%YXXDpm_rf_ipj
+    ZYXXD_tp_rf{7} = -sqrt(YXX1mmhu2).*(YXX1mmhu2 - YXXn_rf.*YXXomegac./YXXomega_rf).*YXXDrf_tp_ij./YXXmhu;%YXXDpm_rf_ij
+    ZYXXD_tp_rf{8} = -sqrt(YXX1mmhu2).*(YXX1mmhu2 - YXXn_rf.*YXXomegac./YXXomega_rf).*YXXDrf_tp_imj./YXXmhu;%YXXDpm_rf_imj
+%
+    ZYXXD_tp_rf{9} = -sqrt(YXX1mmhu2p).*(YXX1mmhu2p - YXXn_rf.*YXXomegac./YXXomega_rf).*YXXDrf_tp_ijp./YXXmhup;%YXXDmp_rf_ijp
+    ZYXXD_tp_rf{10} = -sqrt(YXX1mmhu2).*(YXX1mmhu2 - YXXn_rf.*YXXomegac./YXXomega_rf).*YXXDrf_tp_ij./YXXmhu;%YXXDmp_rf_ij
+    ZYXXD_tp_rf{11} = -sqrt(YXX1mmhu2m).*(YXX1mmhu2m - YXXn_rf.*YXXomegac./YXXomega_rf).*YXXDrf_tp_ijm./YXXmhum;%YXXDmp_rf_ijm
+%
+    ZYXXD_tp_rf{12} = (YXX1mmhu2p - YXXn_rf.*YXXomegac./YXXomega_rf).^2.*YXXDrf_tp_ijp./YXXmhu2p;%YXXDmm_rf_ijp
+    ZYXXD_tp_rf{13} = (YXX1mmhu2m - YXXn_rf.*YXXomegac./YXXomega_rf).^2.*YXXDrf_tp_ijm./YXXmhu2m;%YXXDmm_rf_ijm
+%
+    ZYXXD_tp_rf{14} =  YXXDrf_tp_ij;
+else
+    ZYXXD_tp_rf = NaN;
+end
