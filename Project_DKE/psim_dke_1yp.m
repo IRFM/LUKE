@@ -34,9 +34,9 @@ ntheta = 65;%Size of the theta grid for the magnetic equilibrium (ntheta ~= npsi
 %
 %Mesh size calculation
 %
-grid_uniformity = -1;%Pitch-angle and momentum grids uniformity: (0) no, (1) yes (-1 for specific test for DKE, transient and pitch-angle grid only)
+grid_uniformity = 0;%Pitch-angle and momentum grids uniformity: (0) no, (1) yes (-1 for specific test for DKE, transient and pitch-angle grid only)
 grid_method = 1;%Pitch-angle grid calculation technique: (0): old method, (1) new method
-nmhu_S = [50:1:250];%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
+nmhu_S = 200;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
 np_S = 200;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run) WARNING: must be adjusted so that effective momentum point number is larger than thepitch-angle one.
 pnmax_S = 20;%Maximum value of the flux momentum grid (pth_ref)
 %
@@ -55,7 +55,7 @@ grid_power = 1.5; % power for mhu grid step varations (grid_power > 1) (Note: fo
 %Momentum grid
 %
 np_S_ref = 20;%position in the mpomentum grid where dpn_S is twice the minimum value(must be ajusted with snp parameter)
-snp = 1;%pgridfactor (Uniform grid: pgridfactor = 1, non-uniform grid: pgridfactor >= 1) 
+snp = 2;%pgridfactor (Uniform grid: pgridfactor = 1, non-uniform grid: pgridfactor >= 1) 
 spfac = 20;%reduction factor for the momentum supergrid used in collision integrals
 %
 %Normalized radii at which the distribution is calculated (DKE or FP)
@@ -111,7 +111,7 @@ nhuloss = NaN;%Magnetic ripple loss frequency, nhuloss > 1000 (or NaN if no ripp
 %
 % Collision operator
 %
-coll_mode = 0;%Relativistic collision operator: (0) Relativistic Maxwellian background, (1) High-velocity limit, (2) Linearized Belaiev-Budker (3) Non-relativistic Lorentz model, (4) Non-relativistic Maxwellian background
+coll_mode = 2;%Relativistic collision operator: (0) Relativistic Maxwellian background, (1) High-velocity limit, (2) Linearized Belaiev-Budker (3) Non-relativistic Lorentz model, (4) Non-relativistic Maxwellian background
 %
 % Run mode
 %
@@ -138,12 +138,12 @@ nit_g = 100;%Maximum number of iterations for g
 dtn = 10000;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
 invproc = 1;%Iterative matrix inversion method: (1) cgs iterative method, (2) bicg iterative method, (3) qmr iterative method
 param_inv = [1e-4,4];%Parameters for the matrix inversion procedure. Minimum value of the drop tolerance for the partial LU decomposition (drop tol = max(1/dtn/nr,param_inv(1))), and maximum number of iteration for iterative method< 20 (param_inv(1) depends of boundary_mode, if param_inv(1)=0, full LU factorization)
-%
 dp_cyl = 0.1;%Cylindrical momentum step (pth_ref)
-display_mode = 0;%Display mode: (0): no, (1): partial, (2): full
 nlevel = 30;%Number of level for contour plots
+%
+display_mode = 1;%Display mode: (0): no, (1): partial, (2): full
 store_mode = 0;%Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight
-diary_mode = 1;%Write in a file named "diary_dke_xx" the output of the code in the MatLab command window: (0) no save, (1) save
+diary_mode = 0;%Write in a file named "diary_dke_xx" the output of the code in the MatLab command window: (0) no save, (1) save
 auto_mode = 0;%(0): Interactive mode for multiple radius output display, (1): automatic mode for one output display at rho_display
 %
 sfac = [sfac0,sfac1,sfact];
