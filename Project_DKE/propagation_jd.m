@@ -155,7 +155,7 @@ for ib = 1:nb_rf
           bdir = bdir_new;
        end
    end  
-	if display_mode >= 1,info_dke_yp(2,['Flux surface calculations for launched ray #',int2str(ib),'/',int2str(nb_rf),' done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
+	if display_mode >= 1,info_dke_yp(2,['Preprocessing of launched ray #',int2str(ib),'/',int2str(nb_rf),' done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
 
 end
 %

@@ -8,7 +8,7 @@ function [XXheaviside,...
     XxRR_fsav,xMRR_flux_ref,xMRR_tau_ref,...
     xTe_out_norm,xft_fsav,xfteff_fsav,xmhubounce2,xepsi_rdke,...
     memoryLU_f,memoryLU_g] = ... 
-dke_1_4yp(tokname,theta,...
+dke_1_4yp(it_rf,tokname,theta,...
     XR,XZ,XBR,XBZ,XBphi,...
     xB0,xR0,xBT0,xBp0,Rp,Zp,ap,...
     mhu,dmhu,mhum,dmhum,mhup,dmhup,mhu_S,...
@@ -123,9 +123,9 @@ dke_1_4yp(tokname,theta,...
 %Fokker-Planck part originally done by Y. Peysson 
 %Drift kinetic calculations for arbitrary magnetic equilibrium done by J. Decker (MIT-RLE) <jodecker@mit.edu> and Y. Peysson (CEA-DRFC) <yves.peysson@cea.fr>
 %
-if nargin < 56,
+if nargin < 57,
 	error('Wrong number of input arguments in dke_1_4yp')
-elseif nargin == 56,
+elseif nargin == 57,
    Dqlmax = 1;
 	coll_mode = 2;
 	norm_mode = 0;
@@ -138,7 +138,7 @@ elseif nargin == 56,
 	display = [0,1,1];
 	store_mode = 0;
 	snumber = 1;
-elseif nargin == 57,
+elseif nargin == 58,
 	norm_mode = 0;
 	boundary_mode = [1,1];
 	dtn = 1000;
@@ -149,7 +149,7 @@ elseif nargin == 57,
 	display = [0,1,1];
 	store_mode = 0;
 	snumber = 1;
-elseif nargin == 58,
+elseif nargin == 59,
 	boundary_mode = [1,1];
 	prec0 = [1e-10,1e-10];
 	nit = [50,200];
@@ -158,7 +158,7 @@ elseif nargin == 58,
 	display = [0,1,1];
 	store_mode = 0;
 	snumber = 1;
-elseif nargin == 59,
+elseif nargin == 60,
 	dtn = 1000;
 	prec0 = [1e-10,1e-10];
 	nit = [50,200];
@@ -167,7 +167,7 @@ elseif nargin == 59,
 	display = [0,1,1];
 	store_mode = 0;
 	snumber = 1;
-elseif nargin == 60,
+elseif nargin == 61,
 	prec0 = [1e-10,1e-10];
 	nit = [50,200];
 	invproc = 1;
@@ -175,44 +175,47 @@ elseif nargin == 60,
 	display = [0,1,1];
 	store_mode = 0;
 	snumber = 1;
-elseif nargin == 61,
+elseif nargin == 62,
 	nit = [50,200];
 	invproc = 1;
 	param_inv = [1e-3,20];
 	display = [0,1,1];
 	store_mode = 0;
 	snumber = 1;
-elseif nargin == 62,
+elseif nargin == 63,
 	invproc = 1;
 	param_inv = [1e-3,20];
 	display = [0,1,1];
 	store_mode = 0;
 	snumber = 1;
-elseif nargin == 63,
+elseif nargin == 64,
 	param_inv = [1e-3,20];	
 	display = [0,1,1];
 	store_mode = 0;
 	snumber = 1;
-elseif nargin == 64,
+elseif nargin == 65,
 	display = [0,1,1];	
 	store_mode = 0;
 	snumber = 1;
-elseif nargin == 65,	
+elseif nargin == 66,	
 	store_mode = 0;
 	snumber = 1;
-elseif nargin == 66,	
+elseif nargin == 67,	
 	snumber = 1;
 end
 %
-narginmax = 66;
+narginmax = 67;
 %
 timeCPU0 = cputime;
+%
+if it_rf == 1,
 %
 %************************************************** Set grid and various parameters ******************************************************** 
 %
 me = 1/1860;%Electron mass (u.m.a.)
 %
-time00 = clock;
+time00 = clock;%For overall matrix calculation
+time0 = clock;
 %
 if dtn > 0,
 	time_scheme = 1;%Implicit differencing scheme
@@ -262,7 +265,7 @@ end
 %************************************************** Simulation parameter display ******************************************************** 
 %
 if display_mode >=1,
-	disp('Calculation parameters: ');
+	disp('Kinetic calculation parameters: ');
 %Numerical transient operation
 	if (store_mode == 0), disp('   - Matrices storage in RAM (fast mode)');
 	else                  disp('   - Matrices storage in disk file (slow mode)');end
@@ -309,15 +312,6 @@ end
 %
 masku = triu(ones(npn,npn)) - 0.5*diag(ones(1,npn));
 maskl = tril(ones(npn,npn)) - 0.5*diag(ones(1,npn));
-%
-%Temporary data saving on disk
-%
-if store_mode == 1,
-	filename = ['MXP_',tokname,'.mat'];
-	[s,dossier,machine] = comput_dke_yp;
-	eval(['delete ',dossier,s,filename])
-	eval(['save ',dossier,s,filename,' nr'])
-end
 %
 %Angular grid
 %
@@ -514,25 +508,25 @@ end
 time0 = clock;
 %
 [xq,xqtilde,xqbar,xqhat,...
-	 XXheaviside,XXheaviside_p,XXheaviside_m,...
-	 Xxlambda,Xxlambda_p,Xxlambda_m,...
-	 XXlambda,XXRlambda_m,XXRlambda_p,...
-	 XXlambda_p2m1,XXRlambda_p2m1_m,XXRlambda_p2m1_p,...
-	 XXlambda_p2m2p2,...
-	 XXRlambda_b_p1p1,...
-	 XXlambda_b_p1m1p2,XXRlambda_b_p1m1p2,XXRlambda_b_p1m1p2_m,XXRlambda_b_p1m1p2_p,...
-	 XXlambda_b_p1m1,XXRlambda_b_p1m1,XXRlambda_b_p1m1_m,XXRlambda_b_p1m1_p,...
-	 XXRlambda_b_p1m2_m,XXRlambda_b_p1m2_p,...
-	 XXlambda_b_p2m2p2,XXRlambda_b_p2m2p2,XXRlambda_b_p2m2p2_m,XXRlambda_b_p2m2p2_p,...
-	 XXlambda_b_p3m2,XXRlambda_b_p3m2_m,XXRlambda_b_p3m2_p,...
-	 XXlambda_b_p2,...
-	 XXlambda_b_p1m3p4]...
+   XXheaviside,XXheaviside_p,XXheaviside_m,...
+   Xxlambda,Xxlambda_p,Xxlambda_m,...
+   XXlambda,XXRlambda_m,XXRlambda_p,...
+   XXlambda_p2m1,XXRlambda_p2m1_m,XXRlambda_p2m1_p,...
+   XXlambda_p2m2p2,...
+   XXRlambda_b_p1p1,...
+   XXlambda_b_p1m1p2,XXRlambda_b_p1m1p2,XXRlambda_b_p1m1p2_m,XXRlambda_b_p1m1p2_p,...
+   XXlambda_b_p1m1,XXRlambda_b_p1m1,XXRlambda_b_p1m1_m,XXRlambda_b_p1m1_p,...
+   XXRlambda_b_p1m2_m,XXRlambda_b_p1m2_p,...
+   XXlambda_b_p2m2p2,XXRlambda_b_p2m2p2,XXRlambda_b_p2m2p2_m,XXRlambda_b_p2m2p2_p,...
+   XXlambda_b_p3m2,XXRlambda_b_p3m2_m,XXRlambda_b_p3m2_p,...
+   XXlambda_b_p2,...
+   XXlambda_b_p1m3p4]...
 =  bounceparam_dke_yp(bounce_mode,equil_mode,...
-	 mhu,mhum,mhup,Xmhu,Xmhum,Xmhup,...
-	 XR,XZ,XBR,XBZ,XBphi,...
-	 xmhubounce2,xB0,xR0,xBT0,xBp0,Rp,Zp,ap);
+   mhu,mhum,mhup,Xmhu,Xmhum,Xmhup,...
+   XR,XZ,XBR,XBZ,XBphi,...
+   xmhubounce2,xB0,xR0,xBT0,xBp0,Rp,Zp,ap);
 %
-if display_mode >= 1,info_dke_yp(2,['Bounce integrals calculations done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
+if display_mode >= 1,info_dke_yp(2,['Bounce integrals calculations done in ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
 %
 %Super matrices size definition and masks calculations for trapped electrons in the bounce mode
 %
@@ -678,6 +672,7 @@ XXi = zeros(npn,nmhu,nr);
 %
 %Radial coefficients
 %
+etime_radial = 0;
 time0 = clock;
 %
 if radial_mode == 1,
@@ -774,7 +769,7 @@ if radial_mode == 1,
 		MMXR_f_t = MMXR_f_t + sparse([1+nmhu*npn:nMMXP_f_t],[1:nMMXP_f_t-nmhu*npn],MMrm_t(1+npn*nmhu:nMMXP_f_t),nMMXP_f_t,nMMXP_f_t);
 		MMXR_f_t = MMXR_f_t + sparse([1:nMMXP_f_t],[1:nMMXP_f_t],MMr_t,nMMXP_f_t,nMMXP_f_t);	
 		MMXR_f_t = MMXR_f_t + sparse([1:nMMXP_f_t-nmhu*npn],[1+npn*nmhu:nMMXP_f_t],MMrp_t(1:nMMXP_f_t-nmhu*npn),nMMXP_f_t,nMMXP_f_t);
-		if display_mode >= 1,info_dke_yp(2,['Configuration space matrix calculations done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
+		if display_mode >= 1,info_dke_yp(2,['Configuration space matrix calculations done in ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
 	elseif bounce_mode == 1,	
 		ir = 1;
 		ib0 = 0;
@@ -806,7 +801,7 @@ if radial_mode == 1,
 			[ibp+(nmhu-ns_f(ir+1))*(ip-1)+((nmhu-ns_f(ir+1))-imhup):-1:ibp+(nmhu-ns_f(ir+1))*(ip-1)+((nmhu-ns_f(ir+1))-imhu0)+1],XMrp2_t(ip,[imhup+1:imhu0]),nMMXP_f_t,nMMXP_f_t);
 		end	
 %
-		if display_mode >= 1,info_dke_yp(2,['Configuration space matrix calculations (',int2str(ir),'/',int2str(nr),') done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
+		if display_mode >= 1,info_dke_yp(2,['D and F tensor calculations for fast electron radial transport at radius number (',int2str(ir),'/',int2str(nr),') done in ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
 %
 		for ir = 2:nr-1,
 			if ir == 2,
@@ -854,7 +849,7 @@ if radial_mode == 1,
 				MMXR_f_t = MMXR_f_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*ip],[ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhum+1:ibm+(nmhu-ns_f(ir-1))*ip],XMrm2_t(ip,[imhu0+1:nmhu-ns_f(ir)]),nMMXP_f_t,nMMXP_f_t);				
 			end	
 %
-    		if display_mode >= 1,info_dke_yp(2,['Configuration space matrix calculations (',int2str(ir),'/',int2str(nr),') done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
+    		if display_mode >= 1,info_dke_yp(2,['Configuration space matrix calculations (',int2str(ir),'/',int2str(nr),') done in ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
 		end
 %
 		ir = nr;
@@ -883,89 +878,19 @@ if radial_mode == 1,
 		for ip = 1:npn,	
 			MMXR_f_t = MMXR_f_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0],[ibm+(nmhu-ns_f(ir-1))*(ip-1)+1:ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhu0],XMrm1_t(ip,[1:imhu0]),nMMXP_f_t,nMMXP_f_t);				
 			MMXR_f_t = MMXR_f_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*ip],[ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhum+1:ibm+(nmhu-ns_f(ir-1))*ip],XMrm2_t(ip,[imhu0+1:nmhu-ns_f(ir)]),nMMXP_f_t,nMMXP_f_t);				
-		end	
+		end
 %
-		if display_mode >= 1,info_dke_yp(2,['Configuration space matrix calculations (',int2str(ir),'/',int2str(nr),') done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
+		if display_mode >= 1,info_dke_yp(2,['D and F tensor calculations for fast electron radial transport at radius number (',int2str(ir),'/',int2str(nr),') done in ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
+		etime_radial = etime_radial + etime(clock,time0);
+		time0 = clock;
+%
 	end
+	if display_mode >= 1,info_dke_yp(2,['Zero order configuration space matrix calculations done in ',num2str(etime_radial),' (s)']);end
 end
 %
-% RF wave coefficients
+% Collisions
 %
-if ~isempty(waveparam),
-    [nb,XXDrf_ij,XXDrf_tp_ij,XXFrf_tp_ij,...
-    XXDpp_rf_ippj,XXDpp_rf_ipj,XXDpp_rf_ij,XXDpp_rf_imj,XXDpp_rf_immj,...
-	 XXDpm_rf_ipj,XXDpm_rf_ij,XXDpm_rf_imj,XXDmp_rf_ijp,XXDmp_rf_ij,XXDmp_rf_ijm,...
-	 XXDmm_rf_ijp,XXDmm_rf_ijm,...
-	 XXDpp_rf_tp_ippj,XXDpp_rf_tp_ipj,XXDpp_rf_tp_ij,XXDpp_rf_tp_imj,XXDpp_rf_tp_immj,...
-	 XXDpm_rf_tp_ipj,XXDpm_rf_tp_ij,XXDpm_rf_tp_imj,XXDmp_rf_tp_ijp,XXDmp_rf_tp_ij,XXDmp_rf_tp_ijm,...
-	 XXDmm_rf_tp_ijp,XXDmm_rf_tp_ijm,...
-	 XXFp_rf_tp_ippj,XXFp_rf_tp_ipj,XXFp_rf_tp_ij,XXFp_rf_tp_imj,XXFp_rf_tp_immj,XXFm_rf_tp_ijp,XXFm_rf_tp_ijm] = rfdiff_dke_jd(waveparam,nmax_rf,...
-    theta,XR,XZ,XBR,XBZ,XBphi,xB0,Rp,Zp,xqtilde,...       
-    XXheaviside,XXheaviside_p,XXheaviside_m,...  
-	 Xmhup,Xmhu,Xmhum,Xmhu2p,Xmhu2,Xmhu2m,X1mmhu2p,X1mmhu2,X1mmhu2m,...
-    Xdmhumm,Xdmhum,Xdmhu,Xdmhup,Xdmhupp,...
-	 pnpp,pnp,pn,pnm,pnmm,Xpnpp,Xpnp,Xpn,Xpnm,Xpnmm,...
-	 Xdpnmm,Xdpnm,Xdpn,Xdpnp,Xdpnpp,...
-	 Xgammapp,Xgammap,Xgamma,Xgammam,Xgammamm,...
-	 Xxlambda_p,Xxlambda,Xxlambda_m,...
-	 betath_ref,bounce_mode,dke_mode,display_mode);    
-else
-	nb = 0;
-%    
-	XXDpp_rf_ippj = zeros(npn,nmhu,nr);
-	XXDpp_rf_ipj = zeros(npn,nmhu,nr);
-	XXDpp_rf_ij = zeros(npn,nmhu,nr);
-	XXDpp_rf_imj = zeros(npn,nmhu,nr);
-	XXDpp_rf_immj = zeros(npn,nmhu,nr);
-%
-	XXDpm_rf_ipj = zeros(npn,nmhu,nr);
-	XXDpm_rf_ij = zeros(npn,nmhu,nr);
-	XXDpm_rf_imj = zeros(npn,nmhu,nr);
-%
-	XXDmp_rf_ijp = zeros(npn,nmhu,nr);
-	XXDmp_rf_ij = zeros(npn,nmhu,nr);
-	XXDmp_rf_ijm = zeros(npn,nmhu,nr);
-%
-	XXDmm_rf_ijp = zeros(npn,nmhu,nr);
-	XXDmm_rf_ijm = zeros(npn,nmhu,nr);
-%
-	XXDrf_ij = zeros(npn,nmhu,nr);
-%
-   if dke_mode == 1
-    	XXDpp_rf_tp_ippj = zeros(npn,nmhu,nr);
-    	XXDpp_rf_tp_ipj = zeros(npn,nmhu,nr);
-    	XXDpp_rf_tp_ij = zeros(npn,nmhu,nr);
-    	XXDpp_rf_tp_imj = zeros(npn,nmhu,nr);
-    	XXDpp_rf_tp_immj = zeros(npn,nmhu,nr);
-%
-    	XXDpm_rf_tp_ipj = zeros(npn,nmhu,nr);
-    	XXDpm_rf_tp_ij = zeros(npn,nmhu,nr);
-    	XXDpm_rf_tp_imj = zeros(npn,nmhu,nr);
-%
-    	XXDmp_rf_tp_ijp = zeros(npn,nmhu,nr);
-    	XXDmp_rf_tp_ij = zeros(npn,nmhu,nr);
-    	XXDmp_rf_tp_ijm = zeros(npn,nmhu,nr);
-%
-    	XXDmm_rf_tp_ijp = zeros(npn,nmhu,nr);
-    	XXDmm_rf_tp_ijm = zeros(npn,nmhu,nr);
-%
-    	XXDrf_tp_ij = zeros(npn,nmhu,nr);
-%    
-     	XXFp_rf_tp_ippj = zeros(npn,nmhu,nr);
-    	XXFp_rf_tp_ipj = zeros(npn,nmhu,nr);
-    	XXFp_rf_tp_ij = zeros(npn,nmhu,nr);
-    	XXFp_rf_tp_imj = zeros(npn,nmhu,nr);
-    	XXFp_rf_tp_immj = zeros(npn,nmhu,nr);
-%
-      XXFm_rf_tp_ijp = zeros(npn,nmhu,nr);
-    	XXFm_rf_tp_ijm = zeros(npn,nmhu,nr);
-%
-    	XXFrf_tp_ij = zeros(npn,nmhu,nr);
-   end  
-end
-if display_mode >= 1,info_dke_yp(2,['Wave matrix coefficients calculations done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
-
-%
+time0 = clock;%Timer
 for ir = 1:nr,
 %
 %Relativistic Maxwellian distribution function for collision integrals
@@ -1033,7 +958,7 @@ for ir = 1:nr,
 %
 %Electron-ion collision term (non-relativistic limit)
 %
-   [Fei,Aei,Btei] = eicoll_dke_yp(v,zZi,zmi,xzni_norm,xzTi_norm,ir,coll_mode);
+	[Fei,Aei,Btei] = eicoll_dke_yp(v,zZi,zmi,xzni_norm,xzTi_norm,ir,coll_mode);
 	[Feim,Aeim] = eicoll_dke_yp(vm,zZi,zmi,xzni_norm,xzTi_norm,ir,coll_mode);
 	[Feip,Aeip] = eicoll_dke_yp(vp,zZi,zmi,xzni_norm,xzTi_norm,ir,coll_mode);
 %	
@@ -1135,13 +1060,104 @@ for ir = 1:nr,
 	elseif coll_mode == 3,%Lorentz model
 		Btee = zeros(1,npn);
 	elseif coll_mode == 4,%Maxwellian background
-	   u = v/sqrt(2)/xTe_norm(ir)';                  
-	   Btee = xne_norm(ir)'.*((2*u.^2-1).*erf(u)+2*u.*exp(-u.^2)/sqrt(pi))./v./u./u/4;
+		u = v/sqrt(2)/xTe_norm(ir)';                  
+		Btee = xne_norm(ir)'.*((2*u.^2-1).*erf(u)+2*u.*exp(-u.^2)/sqrt(pi))./v./u./u/4;
 	end
 %
 	XXBtee(:,:,ir) = Btee'*ones(1,nmhu);	
+end
+if display_mode >= 1,info_dke_yp(2,['D and F tensor calculations for collisions and Ohmic electric done in ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
+%
+  save temp_data1
+  if display_mode >= 1,info_dke_yp(2,['Data saving on disk done in ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
+else
+   load temp_data1;
+	if display_mode >= 1,info_dke_yp(2,['Data reloading from disk done in ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
+end
+%
+% RF wave coefficients
+%
+if ~isempty(waveparam),
+    [nb,XXDrf_ij,XXDrf_tp_ij,XXFrf_tp_ij,...
+    XXDpp_rf_ippj,XXDpp_rf_ipj,XXDpp_rf_ij,XXDpp_rf_imj,XXDpp_rf_immj,...
+	 XXDpm_rf_ipj,XXDpm_rf_ij,XXDpm_rf_imj,XXDmp_rf_ijp,XXDmp_rf_ij,XXDmp_rf_ijm,...
+	 XXDmm_rf_ijp,XXDmm_rf_ijm,...
+	 XXDpp_rf_tp_ippj,XXDpp_rf_tp_ipj,XXDpp_rf_tp_ij,XXDpp_rf_tp_imj,XXDpp_rf_tp_immj,...
+	 XXDpm_rf_tp_ipj,XXDpm_rf_tp_ij,XXDpm_rf_tp_imj,XXDmp_rf_tp_ijp,XXDmp_rf_tp_ij,XXDmp_rf_tp_ijm,...
+	 XXDmm_rf_tp_ijp,XXDmm_rf_tp_ijm,...
+	 XXFp_rf_tp_ippj,XXFp_rf_tp_ipj,XXFp_rf_tp_ij,XXFp_rf_tp_imj,XXFp_rf_tp_immj,XXFm_rf_tp_ijp,XXFm_rf_tp_ijm] = rfdiff_dke_jd(it_rf,Dqlmax,waveparam,nmax_rf,...
+    theta,XR,XZ,XBR,XBZ,XBphi,xB0,Rp,Zp,xqtilde,...       
+    XXheaviside,XXheaviside_p,XXheaviside_m,...  
+	 Xmhup,Xmhu,Xmhum,Xmhu2p,Xmhu2,Xmhu2m,X1mmhu2p,X1mmhu2,X1mmhu2m,...
+    Xdmhumm,Xdmhum,Xdmhu,Xdmhup,Xdmhupp,...
+	 pnpp,pnp,pn,pnm,pnmm,Xpnpp,Xpnp,Xpn,Xpnm,Xpnmm,...
+	 Xdpnmm,Xdpnm,Xdpn,Xdpnp,Xdpnpp,...
+	 Xgammapp,Xgammap,Xgamma,Xgammam,Xgammamm,...
+	 Xxlambda_p,Xxlambda,Xxlambda_m,...
+	 betath_ref,bounce_mode,dke_mode,display_mode);    
+else
+	nb = 0;
+%    
+	XXDpp_rf_ippj = zeros(npn,nmhu,nr);
+	XXDpp_rf_ipj = zeros(npn,nmhu,nr);
+	XXDpp_rf_ij = zeros(npn,nmhu,nr);
+	XXDpp_rf_imj = zeros(npn,nmhu,nr);
+	XXDpp_rf_immj = zeros(npn,nmhu,nr);
+%
+	XXDpm_rf_ipj = zeros(npn,nmhu,nr);
+	XXDpm_rf_ij = zeros(npn,nmhu,nr);
+	XXDpm_rf_imj = zeros(npn,nmhu,nr);
+%
+	XXDmp_rf_ijp = zeros(npn,nmhu,nr);
+	XXDmp_rf_ij = zeros(npn,nmhu,nr);
+	XXDmp_rf_ijm = zeros(npn,nmhu,nr);
+%
+	XXDmm_rf_ijp = zeros(npn,nmhu,nr);
+	XXDmm_rf_ijm = zeros(npn,nmhu,nr);
+%
+	XXDrf_ij = zeros(npn,nmhu,nr);
+%
+   if dke_mode == 1
+    	XXDpp_rf_tp_ippj = zeros(npn,nmhu,nr);
+    	XXDpp_rf_tp_ipj = zeros(npn,nmhu,nr);
+    	XXDpp_rf_tp_ij = zeros(npn,nmhu,nr);
+    	XXDpp_rf_tp_imj = zeros(npn,nmhu,nr);
+    	XXDpp_rf_tp_immj = zeros(npn,nmhu,nr);
+%
+    	XXDpm_rf_tp_ipj = zeros(npn,nmhu,nr);
+    	XXDpm_rf_tp_ij = zeros(npn,nmhu,nr);
+    	XXDpm_rf_tp_imj = zeros(npn,nmhu,nr);
+%
+    	XXDmp_rf_tp_ijp = zeros(npn,nmhu,nr);
+    	XXDmp_rf_tp_ij = zeros(npn,nmhu,nr);
+    	XXDmp_rf_tp_ijm = zeros(npn,nmhu,nr);
+%
+    	XXDmm_rf_tp_ijp = zeros(npn,nmhu,nr);
+    	XXDmm_rf_tp_ijm = zeros(npn,nmhu,nr);
+%
+    	XXDrf_tp_ij = zeros(npn,nmhu,nr);
+%    
+     	XXFp_rf_tp_ippj = zeros(npn,nmhu,nr);
+    	XXFp_rf_tp_ipj = zeros(npn,nmhu,nr);
+    	XXFp_rf_tp_ij = zeros(npn,nmhu,nr);
+    	XXFp_rf_tp_imj = zeros(npn,nmhu,nr);
+    	XXFp_rf_tp_immj = zeros(npn,nmhu,nr);
+%
+      XXFm_rf_tp_ijp = zeros(npn,nmhu,nr);
+    	XXFm_rf_tp_ijm = zeros(npn,nmhu,nr);
+%
+    	XXFrf_tp_ij = zeros(npn,nmhu,nr);
+   end  
+end
+if display_mode >= 1,info_dke_yp(2,['D and F tensor calculations for RF waves done in ',num2str(etime(clock,time0)),' (s)']);end
+%
+% Fokker-Planck (zero order) matrix calculation
+%
+etime_fp = 0;
+time0 = clock;
+for ir = 1:nr,
 %	
-% Collisions
+% D and F tensors for collisions
 %
 	XDpp_c_ippj = XXAeepp(:,:,ir) + XXAeipp(:,:,ir);
 	XDpp_c_ipj = XXAeep(:,:,ir) + XXAeip(:,:,ir);
@@ -1183,7 +1199,7 @@ for ir = 1:nr,
 	XXDmp_c_ijp(:,:,ir) = XDmp_c_ijp;
 	XXFm_c_ijp(:,:,ir) = XFm_c_ijp;	
 %	
-% Electric field
+% D and F tensors for electric field
 %
 	if bounce_mode == 0,
 		xepsi(ir) = xepsi_fsav(ir);
@@ -1235,6 +1251,8 @@ for ir = 1:nr,
 	XXDmm_e_ijp(:,:,ir) = XDmm_e_ijp;
 	XXDmp_e_ijp(:,:,ir) = XDmp_e_ijp;
 	XXFm_e_ijp(:,:,ir) = XFm_e_ijp;
+%
+% D and F tensors for RF waves
 %
 	XDpp_rf_ippj = XXDpp_rf_ippj(:,:,ir);
 	XDpp_rf_ipj = XXDpp_rf_ipj(:,:,ir);
@@ -1555,10 +1573,16 @@ for ir = 1:nr,
 	[m1_T_f,n1_T_f] = size(MXT_f_t);
 	MMXT_f_t = sparse(i0_T_f,j0_T_f,s0_T_f,m0_T_f+m1_T_f,m0_T_f+m1_T_f) + sparse(m0_T_f+i1_T_f,m0_T_f+j1_T_f,s1_T_f,m0_T_f+m1_T_f,m0_T_f+m1_T_f);	
 %	
-	if display_mode >= 1,info_dke_yp(2,['Zero order momentum space matrix calculations (',int2str(ir),'/',int2str(nr),') done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
+	etime_fp = etime_fp + etime(clock,time0);
+	time0 = clock;
 end
 %
+if display_mode >= 1,info_dke_yp(2,['Zero order momentum space matrix calculations done in ',num2str(etime_fp),' (s)']);end
+%
 % Drift kinetic calculations
+%
+etime_dke = 0;
+time0 = clock;
 %
 if dke_mode == 1,
 	for ir_dke = 1:nr_dke,
@@ -1865,8 +1889,11 @@ if dke_mode == 1,
 		[m1_g,n1_g] = size(MXP_g_t);
 		MMXP_g_t = sparse(i0_g,j0_g,s0_g,m0_g+m1_g,m0_g+m1_g) + sparse(m0_g+i1_g,m0_g+j1_g,s1_g,m0_g+m1_g,m0_g+m1_g);
 %
-		if display_mode >= 1,info_dke_yp(2,['First order momentum space matrix calculations (',int2str(ir_dke),'/',int2str(nr_dke),') done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
+		etime_dke = etime_dke + etime(clock,time0);
+	   time0 = clock;
 	end
+	  
+	  
 else
 %
 % for collisions
@@ -1942,7 +1969,7 @@ if dke_mode == 1,
 	MMH_tp = MMH_tp + sparse([1:nMMH_tp-nmhu*npn],[1+nmhu*npn:nMMH_tp],MMH_tp_p(1:nMMH_tp-npn*nmhu),nMMH_tp,nMMH_tp);
 	MMH_tp = MMH_tp + sparse([1:nMMH_tp-(nmhu+1)*npn],[1+(nmhu+1)*npn:nMMH_tp],MMH_tp_pp(1:nMMH_tp-npn*(nmhu+1)),nMMH_tp,nMMH_tp);
 %
-	if display_mode >= 1,info_dke_yp(2,['Second order radial gradient correction for ftp matrix calculations done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
+	if display_mode >= 1,info_dke_yp(2,['Second order radial gradient correction for ftp matrix calculations done in ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
 end
 %
 clear ir sssl0 XY XYm XYp 
@@ -1980,12 +2007,6 @@ clear jmhut_min jmhut_max
 %
 if display_mode >= 1,info_dke_yp(2,['Full elapsed time for matrix calculation: ',num2str(etime(clock,time00)),' (s)']);end
 %
-if store_mode == 1,
-	filename = ['MXP_',tokname,'.mat'];
-	[s,dossier,machine] = comput_dke_yp;
-	eval(['save ',dossier,s,filename,'Zmask_f0_t Zmask_g -append'])
-end
-%
 time0 = clock;
 %
 MMXdiag = diag(MMXP_f_t/time_scheme + MMXR_f_t/time_scheme + MMXT_f_t);
@@ -1996,7 +2017,7 @@ if isempty(find(MMXdiag==0)) == 1,
 	time_f = etime(clock,time0);
 	memoryLU_f = (getfield(whos('MMXL_f_t'),'bytes') + getfield(whos('MMXU_f_t'),'bytes'))/1000000;
 else
-	error('Fokker-Planck matrix has a null element on the main diagonal');%Matrxi must be main diagonal dominant
+	error('Fokker-Planck matrix has a null element on the main diagonal');%Matrix must be main diagonal dominant
 end
 %
 if dke_mode == 1,
@@ -2059,7 +2080,7 @@ for ir = 1:nr,
 	curr0(ir,1) = 2*pi*integral_dke_jd(dpn',pn2'.*(pn'./gamma').*integral_dke_jd(dmhu,Xmhu.*XXfinit(:,:,ir),2),1)*xne_norm(ir)/normf0(ir,1);
 end
 %
-ZXXf0{1} = XXfinit;%Time evolution of the distribution function is stored
+ZXXf0{1} = XXfinit;%Time evolution of the distribution function is stored (only valid if no self-consistent calculations are done for Dql)
 %
 for it_f = 2:nit_f,   	
 	if sum(residu_f(:,it_f-1) >= prec0_f) >= 1 & sum(prec_residu_f(:,it_f-1)) >= prec0_f | it_f < 7,
@@ -2213,10 +2234,10 @@ for it_f = 2:nit_f,
 	end
 	if it_f == nit_f,info_dke_yp(2,['WARNING: convergence not achieved for f0 after ',int2str(nit_f),' iterations. Time step too small !']);end
 end
+if display_mode >= 1,info_dke_yp(2,['Convergence achieved for zero order Fokker-Planck calculations in ',num2str(etime(clock,time0)),' (s)']);end
 %
 filename = ['TIME_',tokname,'_S',int2str(snumber),'.mat'];%Time evolution is stored in a separated file
-[s,dossier,machine] = comput_dke_yp;
-eval(['save ',dossier,s,filename,' dtn normf0 curr0 ZXXf0'])
+eval(['save ',filename,' dtn normf0 curr0 ZXXf0'])
 %
 clear ir fM XfM MMXPC_f_t MMXPDI_f_t Xmask_f0 MMXL_f_t MMXU_f_t
 clear Xf0 Xf0_t Xq Xq_t Xf1 Xf1_t Xf1_tp Xf1_tm Xf1_ts XR_t XS_t XY_t
@@ -2227,6 +2248,8 @@ if display_mode == 2,
     figure(100),subplot(122),hold off;
 end
 % 
+time0 = clock;
+%
 if dke_mode == 1,
 	MMXf0_tp = [];
 	MMXf0 = [];
@@ -2396,7 +2419,9 @@ if dke_mode == 1,
 			break;	
 		end
 		if it_g == nit_g,info_dke_yp(2,['WARNING: convergence not achieved for g after ',int2str(nit_g),' iterations.']);end
-	end
+   end
+%
+	if display_mode >= 1,info_dke_yp(2,['Convergence achieved for first order Fokker-Planck calculations in ',num2str(etime(clock,time0)),' (s)']);end
 else
     XXf0_tp = zeros(size(XXf0));
     XXf0_g = zeros(size(XXf0));
@@ -2473,6 +2498,7 @@ end
 clear ir XfM Xf0
 %
 % Calculation of the various moments of the distribution function (density, current, power, bremsstrahlung)
+time0 = clock;
 %
 %   Density
 %
@@ -2728,32 +2754,37 @@ if nb > 0,
 %
    for ib=1:nb,
 	   eval(['load temp_ray_#',int2str(ib),' ZYXXD_rf ZYXXD_rf_tp ZYXXF_rf_tp']);%Load large data file for each ray
+%	   
+		xyD0_rf = waveparam(:,ib,4);% RF quasi-linear diffusion coefficient (nhuth_ref*pth_ref^2)
+		YXXD0_rf = shiftdim(repmat(xyD0_rf,[1,1,npn,nmhu]),2);
+%
+% Sum over all rays
 %	    
-		XXDpp_rf_imj = ZYXXD_rf{4};
-		XXDpp_rf_ipj = ZYXXD_rf{2};
-		XXDpm_rf_imj = ZYXXD_rf{8};
-		XXDpm_rf_ipj = ZYXXD_rf{6};
+		XXDpp_rf_imj = ZYXXD_rf{4}.*YXXD0_rf;
+		XXDpp_rf_ipj = ZYXXD_rf{2}.*YXXD0_rf;
+		XXDpm_rf_imj = ZYXXD_rf{8}.*YXXD0_rf;
+		XXDpm_rf_ipj = ZYXXD_rf{6}.*YXXD0_rf;
 		XXFp_rf_imj = zeros(npn,nmhu,nr);
 		XXFp_rf_ipj = zeros(npn,nmhu,nr);		
-		XXDmm_rf_ijm = ZYXXD_rf{13}; 
-		XXDmm_rf_ijp = ZYXXD_rf{12};
-		XXDmp_rf_ijm = ZYXXD_rf{11};
-		XXDmp_rf_ijp = ZYXXD_rf{9};
+		XXDmm_rf_ijm = ZYXXD_rf{13}.*YXXD0_rf; 
+		XXDmm_rf_ijp = ZYXXD_rf{12}.*YXXD0_rf;
+		XXDmp_rf_ijm = ZYXXD_rf{11}.*YXXD0_rf;
+		XXDmp_rf_ijp = ZYXXD_rf{9}.*YXXD0_rf;
 		XXFm_rf_ijm = zeros(npn,nmhu,nr);
 		XXFm_rf_ijp = zeros(npn,nmhu,nr);
 %
-		XXDpp_rf_tp_imj = ZYXXD_rf_tp{4};
-		XXDpp_rf_tp_ipj = ZYXXD_rf_tp{2};
-		XXDpm_rf_tp_imj = ZYXXD_rf_tp{8};
-		XXDpm_rf_tp_ipj = ZYXXD_rf_tp{6};
-		XXFp_rf_tp_imj = ZYXXF_rf_tp{4};
-		XXFp_rf_tp_ipj = ZYXXF_rf_tp{2};
-		XXDmm_rf_tp_ijm = ZYXXD_rf_tp{13}; 
-		XXDmm_rf_tp_ijp = ZYXXD_rf_tp{12};
-		XXDmp_rf_tp_ijm = ZYXXD_rf_tp{11};
-		XXDmp_rf_tp_ijp = ZYXXD_rf_tp{9};
-		XXFm_rf_tp_ijm = ZYXXF_rf_tp{7};
-		XXFm_rf_tp_ijp = ZYXXF_rf_tp{6};		
+		XXDpp_rf_tp_imj = ZYXXD_rf_tp{4}.*YXXD0_rf;
+		XXDpp_rf_tp_ipj = ZYXXD_rf_tp{2}.*YXXD0_rf;
+		XXDpm_rf_tp_imj = ZYXXD_rf_tp{8}.*YXXD0_rf;
+		XXDpm_rf_tp_ipj = ZYXXD_rf_tp{6}.*YXXD0_rf;
+		XXFp_rf_tp_imj = ZYXXF_rf_tp{4}.*YXXD0_rf;
+		XXFp_rf_tp_ipj = ZYXXF_rf_tp{2}.*YXXD0_rf;
+		XXDmm_rf_tp_ijm = ZYXXD_rf_tp{13}.*YXXD0_rf; 
+		XXDmm_rf_tp_ijp = ZYXXD_rf_tp{12}.*YXXD0_rf;
+		XXDmp_rf_tp_ijm = ZYXXD_rf_tp{11}.*YXXD0_rf;
+		XXDmp_rf_tp_ijp = ZYXXD_rf_tp{9}.*YXXD0_rf;
+		XXFm_rf_tp_ijm = ZYXXF_rf_tp{7}.*YXXD0_rf;
+		XXFm_rf_tp_ijp = ZYXXF_rf_tp{6}.*YXXD0_rf;		
 %
 %f0 contribution for each ray
 %
@@ -2815,8 +2846,6 @@ if nb > 0,
 		ZSp0{3,11} = ZSp0{3,11} + XXSm0_tp_rf_ijp;
 		ZSp0{3,12} = ZSp0{3,12} + XXSm0_g_rf_ijp;
 %
-		disp(['Power absorption for effective ray #',int2str(ib),'/',int2str(nb),' done']);
-
 	end
 %
 	ZP0_fsav{3,1} = xyP0_rf_fsav;
@@ -2890,4 +2919,7 @@ else
 	xMRR_tau_ref = NaN*ones(1,nr_dke);
 	xMRR_flux_ref = NaN*ones(1,nr_dke);
 end
+%
+if display_mode >= 1,info_dke_yp(2,['Moments of the distribution function calculated in ',num2str(etime(clock,time0)),' (s)']);end
+
 
