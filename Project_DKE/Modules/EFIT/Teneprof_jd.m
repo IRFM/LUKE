@@ -1,4 +1,4 @@
-function [prho,pTe,pne,pTi,pni] = Teneprof_jd(filename,display_mode,p_opt);
+function [prho,pTe,pne,pTi,pni] = Teneprof_jd(filename,type,display_mode,p_opt);
 %
 % This function reads the temperature and density parameters from text
 % files in which the columns are respectively the radial position r/a, Te,
@@ -6,7 +6,11 @@ function [prho,pTe,pne,pTi,pni] = Teneprof_jd(filename,display_mode,p_opt);
 %
 % by J. Decker (jodecke@alum.mit.edu) 11/01/04
 %
-[prho,pTe,pne,pTi,pni] = textread(filename,'%n%n%n%n%n');
+if type == 0%ascii
+    [prho,pTe,pne,pTi,pni] = textread(filename,'%n%n%n%n%n');
+elseif type == 1%.mat
+    eval(['load ',filename,' prho pTe pne pTi pni']);
+end
 %
 if display_mode >= 2,
     %
