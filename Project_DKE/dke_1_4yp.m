@@ -4,7 +4,7 @@ YXXDrf_ij,...
 Zcurr,Zcurr_fsav,...
 ZSp0,ZP0,...
 XxRR_fsav,...
-xTe_out_norm,xtrapped_fraction,xmhubounce2,...
+xTe_out_norm,xft_fsav,xmhubounce2,...
 memoryLU] = ... 
 dke_1_4yp(tokname,mhu,dmhu,mhum,dmhum,mhup,dmhup,mhu_S,...
 xia,xrho,xdrho,xrhom,xdrhom,xrhop,xdrhop,rdke,xrho_S,...
@@ -2103,7 +2103,6 @@ xnormf_fsav = 2*pi*(1+xia(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0(
 %
 %   Current
 %
-%modified j.d. 02/05/03
 xcurr_0 = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0(:,:,rdke).*XXpn2.*XXpn.*XXmhu./XXgamma,1),1)';
 xcurr_tp = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_tp(:,:,rdke).*XXpn2.*XXpn.*XXmhu./XXgamma,1),1)';
 xcurr_g = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_g(:,:,rdke).*XXpn2.*XXpn.*XXmhu./XXgamma,1),1)';
@@ -2440,7 +2439,6 @@ end
 %
 Xxia = repmat(xia(rdke),[npn,1]);
 epsi_rdke = epsi(rdke);
-%modified j.d. 03/19/03
 XxRR_fsav = 2*pi*(1 + Xxia).*integral_dke_jd(dmhu,XXSp0_imj.*XXpn2m.*XXlambda(:,:,rdke),2);%Run-away rate
 
 mask_epsi = find(epsi_rdke~=0);
@@ -2452,15 +2450,7 @@ end
 Zcurr_fsav{2,1} = currB_fsav;
 clear currB_fsav
 %
-
-if bounce_mode == 0,
-	xtrapped_fraction = zeros(1,nrdke);%Fraction of trapped electrons
-elseif bounce_mode == 1,
-	xtrapped_fraction = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXpn2.*XXf0(:,:,rdke).*(~XXheaviside(:,:,rdke)),1),1)'./xnormf;%Fraction of trapped electrons
-end
 %
-%modified j.d. 03/19/03
-
 Xxf0 = 0.5*integral_dke_jd(dmhu,XXf0(:,:,rdke),2);
 XxfM = squeeze(XXfM(:,1,rdke));
 Xxpn = repmat(pn',[1,nrdke]);
@@ -2469,4 +2459,15 @@ Xxv = repmat(v',[1,nrdke]);
 xvth20 = 4*pi*integral_dke_jd(dpn,Xxpn.*Xxpn.*Xxv.*Xxv.*Xxf0,1)'/3;
 xvth2M = 4*pi*integral_dke_jd(dpn,Xxpn.*Xxpn.*Xxv.*Xxv.*XxfM,1)'/3;
 xTe_out_norm = (xvth20./xvth2M).*xTe_norm;%New bulk temperature (bulk heating)
-
+%
+%Exact trapped fraction (not the effective trapped fraction that rely on simplified plasma modeling with Maxwellian background)
+%
+if bounce_mode == 0,
+	xft_fsav= zeros(1,nrdke);%Fraction of trapped electrons
+elseif bounce_mode == 1,
+	xne_trap_fsav = integral_dke_jd(dmhu,integral_dke_jd(dpn,(XXf0(:,:,rdke) + XXf0_g(:,:,rdke)).*~XXheaviside(:,:,rdke).*XXpn2.*XXlambda(:,:,rdke),1),1)';%trapped region only
+	xne_tot_fsav = integral_dke_jd(dmhu,integral_dke_jd(dpn,(XXf0(:,:,rdke) + XXf0_tp(:,:,rdke) + XXf0_g(:,:,rdke)).*XXpn2.*XXlambda(:,:,rdke),1),1)';%
+	xft_fsav = xne_trap_fsav./xne_tot_fsav;
+end
+%	xtrapped_fraction = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXpn2.*XXf0(:,:,rdke).*(~XXheaviside(:,:,rdke)),1),1)'./xnormf;%Fraction of trapped electrons
+%end

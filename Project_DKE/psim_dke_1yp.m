@@ -18,15 +18,15 @@ prec0_f,nit_f,dtn,prec0_g,nit_g,initguess,invproc,param_inv,dp_cyl,display_mode,
 %
 %by Y.Peysson CEA-DRFC 15/10/2002 <yves.peysson@cea.fr>
 %
-tokname = 'CMOD';%Tokamak name (see ptok_dke_1yp.m)
+tokname = 'TS';%Tokamak name (see ptok_dke_1yp.m)
 snumber = 1;%Simulation number
 %
 %Mesh size calculation
 %
 grid_uniformity = 0;%Pitch-angle and momentum grids uniformity: (0) no, (1) yes
 grid_method = 1;%Pitch-angle grid calculation technique: (0): old method, (1) new method
-nmhu_S = 69;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
-np_S = 80;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run)
+nmhu_S = 109;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
+np_S = 110;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run)
 pnmax_S = 10;%Maximum value of the flux momentum grid (pth_ref)
 %
 %Pitch-angle grid
@@ -47,14 +47,14 @@ snp = 10; % pgridfactor
 %WARNING: when dke_mode = 2, rho is recalculated by the program to match the mhu-grid in the close vicinity of positions selected by the user. 
 %The syntax rho='all' may be also used if all mhu values are considered. 
 %
-rho_S = 0.7;%[0:0.07:0.9];%Values of the radial flux grid [1,p] (If one radial value: local calculation only)
+rho_S = 0.01;%[0:0.07:0.9];%Values of the radial flux grid [1,p] (If one radial value: local calculation only)
 rho_display = rho_S(1);%Approximate radial value at which results are displayed if display_mode >= 1 [1,1]
 %
 ref_mode = 1;%Reference values: (0) from core Te and ne, (1) from Te and ne at the normalized radius (paramater only active for a single radial value, otherwise ref_mode = 0)
 norm_ref = 0;%Normalization procedure for the ohmic electric field, LH and EC quasilinear diffusion: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref 
 %
-epsi0 = 0.02;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
-epsia = 0.02;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
+epsi0 = 0.00;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
+epsia = 0.00;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
 eepsi = 0;%Exponent for Ohmic electric field
 %
 vparmin_r = 4.0;%Lower limit of the parallel velocity dependence of the radial diffusion and pinch (vth_ref or vth)

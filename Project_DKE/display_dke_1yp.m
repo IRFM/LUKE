@@ -33,7 +33,7 @@ disp('Display results of Drift Kinetic Equation solver (see test_dke_1yp.m)');
 disp('-------------------------------------------------------------------------------------------------------------------');
 %
 xia_out = xia(rdke);
-xft_out = xft(rdke);
+xft_out = xft_fsav(rdke);
 %
 xRR_KB = 0.35*abs(xepsi_ref).^(-3/8).*exp(-(sqrt(2./abs(xepsi_ref))+1./4./abs(xepsi_ref)));%Kulsrud fit of the theoretical Kruskal-Bernstein runaway rate (PRL 31,11 (1973) 690)
 %
@@ -43,17 +43,16 @@ Edreicer_ref = me*clum*betath_ref*nhu_ref/qe;%MKSA Dreicer field unit
 
 if bounce_mode > 0,
 	xcollisionnality = 0.012*(xne/1e20).*xZeff.*xq*Rp./xia.^1.5./xTe.^2;%From O. Sauter et al., Phys. Plasma 6 (1999) 2834
-	[xft_llm] = ft_llm_dke_yp(xia,1000);%From Y.R. Lin-Liu and R.L. Miller, Phys. Plasma 2 (1995) 1666
+%	[xft_llm] = ft_llm_dke_yp(xia,1000);%From Y.R. Lin-Liu and R.L. Miller, Phys. Plasma 2 (1995) 1666
 else
 	xcollisionnality = NaN*ones(size(xia));
-	xft_llm = zeros(size(xia));
+%	xft_llm = zeros(size(xia));
 end
 %
 %Calculation of the flux averaged Maxwellian bootstrap current from Hirshman, Sauter, Hinton & Hazeltine models (bulk contribution)
 %*************Multiple ion species as done bu Houlberg et al not implemented here********************
 %[xcurr_hir_mksa_fsav,xcurr_sau_mksa_fsav,xcurr_hin_mksa_fsav,xcurr_i_mksa_fsav] = hsneomodels_dke_jd(xrho,ap,Rp,Zi(1),xq,Bt,Te0,Tea,eTe,ne0,nea,ene,Ti0(1),Tia(1),eTi(1));
-[pcurr_hir_mksa_fsav,pcurr_sau_mksa_fsav,pcurr_hin_mksa_fsav,pcurr_i_mksa_fsav] = ...
-    hsneomodels_dke_jd(prho,ap,Rp,Zi(1),pq,Bt,pTe,pne,pzTi(1,:));
+[pcurr_hir_mksa_fsav,pcurr_sau_mksa_fsav,pcurr_hin_mksa_fsav,pcurr_i_mksa_fsav] = hsneomodels_dke_jd(prho,ap,Rp,Zi(1),pq,Bt,pTe,pne,pzTi(1,:));
 xcurr_hir_mksa_fsav = interp1(prho,pcurr_hir_mksa_fsav,xrho);
 xcurr_sau_mksa_fsav = interp1(prho,pcurr_sau_mksa_fsav,xrho);
 xcurr_hin_mksa_fsav = interp1(prho,pcurr_hin_mksa_fsav,xrho);
@@ -109,7 +108,7 @@ while 1,
 		info_dke_yp(2,['Normalized electron collision frequency: ',num2str(xnhu(rdke(ir_display))/nhu_ref)])
 		if bounce_mode > 0,
 			info_dke_yp(2,['Inverse aspect ratio: ',num2str(xia(rdke(ir_display)))])
-			info_dke_yp(2,['Trapped fraction: ',num2str(xft(rdke(ir_display))),', Lin-Liu/Miller formula: ',num2str(xft_llm(rdke(ir_display)))])
+			info_dke_yp(2,['Exact trapped fraction: ',num2str(xft_fsav(rdke(ir_display)))])
 			info_dke_yp(2,['Collisionality parameter: ',num2str(xcollisionnality(rdke(ir_display)))])
 		end
 		disp('-------------------------------------------------------------------------------------------------------------------');
@@ -745,7 +744,7 @@ while 1,
 			title('Trapped fraction')
 			legend('Code','Lin-Liu/Miller');
 %
-			figure(200),subplot(236),plot(xia(rdke),xft(rdke)./sqrt(xia(rdke)),'ro',xia(rdke),xft_llm(rdke)./sqrt(xia(rdke)),'bx');
+			figure(200),subplot(236),plot(xia(rdke),xft_fsav(rdke)./sqrt(xia(rdke)),'ro');
 			set(gca,'xlim',[0,1],'ylim',[1,1.6])
 			zoom on;grid on;
 			xlabel('iar');ylabel('ft/sqrt(iar)');
