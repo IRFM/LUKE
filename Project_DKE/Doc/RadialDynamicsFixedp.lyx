@@ -1,0 +1,493 @@
+#LyX 1.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 221
+\textclass revtex4
+\language english
+\inputencoding auto
+\fontscheme pslatex
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 1
+\use_natbib 0
+\use_numerical_citations 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Standard
+
+On ne considere dans cette section que le probleme de l'evolution de la
+ distribution des electrons dans l'espace des configurations.
+ On omet donc ici la dynamique des flux en 
+\begin_inset Formula $p$
+\end_inset 
+
+ et 
+\begin_inset Formula $\xi.$
+\end_inset 
+
+ C'est l'approche classique prise en compte dans tous les codes Fokker-Planck
+ 3D actuels.
+ Les valeurs des fonctions et des flux sont evaluees a la meme position
+ 
+\begin_inset Formula $p$
+\end_inset 
+
+ et 
+\begin_inset Formula $\xi$
+\end_inset 
+
+ dans l'espace des impulsions, soit a la demi-grille en impulsion 
+\begin_inset Formula $p_{i+1/2}$
+\end_inset 
+
+ et en diffusion angulaire 
+\begin_inset Formula $\xi_{j+1/2}$
+\end_inset 
+
+.
+ Elle presente l'avantage de la simplicite numerique, le transport dans
+ l'espace des configurations ne couplant que des electrons ayant les memes
+ valeurs en 
+\begin_inset Formula $p_{\Vert}$
+\end_inset 
+
+ et 
+\begin_inset Formula $p_{\bot}.$
+\end_inset 
+
+ L'energie des electrons proportionnelle a 
+\begin_inset Formula $p^{2}$
+\end_inset 
+
+ est donc bien conservee, mais le moment magnetique, qui est en principe
+ un invariant du mouvement, n'est en revanche pas conserve.
+ Compte tenu des hypotheses, on omettra de specifier les indices 
+\begin_inset Formula $i+1/2$
+\end_inset 
+
+ et 
+\begin_inset Formula $j+1/2$
+\end_inset 
+
+.
+ L'equation de transport de base est donnee par 
+\begin_inset Formula \[
+\frac{\partial\left(rp^{2}f_{0}\right)}{\partial t}+p^{2}\frac{\partial\left(rS_{r}\right)}{\partial r}+p^{2}\frac{\partial S_{\theta}}{\partial\theta}=0\]
+
+\end_inset 
+
+ avec 
+\begin_inset Formula \[
+S_{r}=-D_{rr}\frac{\partial f_{0}}{\partial r}-\frac{1}{r}D_{r\theta}\frac{\partial f_{0}}{\partial\theta}+F_{r}f_{0}\]
+
+\end_inset 
+
+ 
+\begin_inset Formula \[
+S_{\theta}=-D_{\theta r}\frac{\partial f_{0}}{\partial r}-\frac{1}{r}D_{\theta\theta}\frac{\partial f_{0}}{\partial\theta}+F_{\theta}f_{0}\]
+
+\end_inset 
+
+
+\layout Standard
+
+Sous forme discrete celle-ci devient 
+\begin_inset Formula \begin{eqnarray*}
+r_{l+1/2}p_{i+1/2}^{2}\frac{f_{0,l+1/2,m+1/2}^{(k+1)}-f_{0,l+1/2,m+1/2}^{(k)}}{\Delta t} & = & -p_{i+1/2}^{2}\frac{r_{l+1}\left.S_{r}\right|_{l+1,m+1/2}^{(k+1)}-r_{l}\left.S_{r}\right|_{l,m+1/2}^{(k+1)}}{\Delta r_{l+1/2}}\\
+ &  & -p_{i+1/2}^{2}\frac{\left.S_{\theta}\right|_{l+1/2,m+1}^{(k+1)}-\left.S_{\theta}\right|_{l+1/2,m}^{(k+1)}}{\Delta\theta_{m+1/2}}\end{eqnarray*}
+
+\end_inset 
+
+ avec 
+\begin_inset Formula \begin{eqnarray*}
+\left.S_{r}\right|_{l+1,m+1/2}^{(k+1)} & = & -D_{rr,l+1,m+1/2}\left.\frac{\partial f_{0}}{\partial r}\right|_{l+1,m+1/2}^{(k+1)}\\
+ &  & -D_{r\theta,l+1,m+1/2}\frac{1}{r_{l+1}}\left.\frac{\partial f_{0}}{\partial\theta}\right|_{l+1,m+1/2}^{(k+1)}+F_{r,l+1,m+1/2}f_{0,l+1,m+1/2}^{(k+1)}\\
+\left.S_{r}\right|_{l,m+1/2}^{(k+1)} & = & -D_{rr,l,m+1/2}\left.\frac{\partial f_{0}}{\partial r}\right|_{l,m+1/2}^{(k+1)}\\
+ &  & -D_{r\theta,l,m+1/2}\frac{1}{r_{l}}\left.\frac{\partial f_{0}}{\partial\theta}\right|_{l,m+1/2}^{(k+1)}+F_{r,l,m+1/2}f_{0,l,m+1/2}^{(k+1)}\\
+\left.S_{\theta}\right|_{l+1/2,m+1}^{(k+1)} & = & -D_{\theta r,l+1/2,m+1}\left.\frac{\partial f_{0}}{\partial r}\right|_{l+1/2,m+1}^{(k+1)}\\
+ &  & -D_{\theta\theta,l+1/2,m+1}\frac{1}{r_{l+1/2}}\left.\frac{\partial f_{0}}{\partial\theta}\right|_{l+1/2m+1}^{(k+1)}+F_{\theta,l+1/2,m+1}f_{0,l+1/2,m+1}^{(k+1)}\\
+\left.S_{\theta}\right|_{l+1/2,m}^{(k+1)} & = & -D_{\theta r,l+1/2,m}\left.\frac{\partial f_{0}}{\partial r}\right|_{l+1/2,m}^{(k+1)}\\
+ &  & -D_{\theta\theta,l+1/2,m}\frac{1}{r_{l+1/2}}\left.\frac{\partial f_{0}}{\partial\theta}\right|_{l+1/2m}^{(k+1)}+F_{\theta,l+1/2,m}f_{0,l+1/2,m}^{(k+1)}\end{eqnarray*}
+
+\end_inset 
+
+ Les expressions discretes des derivees partielles prennent la forme suivante,
+ 
+\begin_inset Formula \[
+\left\{ \begin{array}{l}
+\left.\frac{\partial f_{0}}{\partial r}\right|_{l+1,m+1/2}^{(k+1)}=\frac{f_{0,l+3/2,m+1/2}^{(k+1)}-f_{0,l+1/2,m+1/2}^{(k+1)}}{\Delta r_{l+1}}\\
+\left.\frac{\partial f_{0}}{\partial r}\right|_{l,m+1/2}^{(k+1)}=\frac{f_{0,l+1/2,m+1/2}^{(k+1)}-f_{0,l-1/2,m+1/2}^{(k+1)}}{\Delta r_{l}}\\
+\left.\frac{\partial f_{0}}{\partial\theta}\right|_{l+1,m+1/2}^{(k+1)}=\frac{f_{0,l+1,m+1}^{(k+1)}-f_{0,l+1,m}^{(k+1)}}{\Delta\theta_{m+1/2}}\\
+\left.\frac{\partial f_{0}}{\partial\theta}\right|_{l,m+1/2}^{(k+1)}=\frac{f_{0,l,m+1}^{(k+1)}-f_{0,l,m}^{(k+1)}}{\Delta\theta_{m+1/2}}\end{array}\right.\]
+
+\end_inset 
+
+ et 
+\begin_inset Formula \[
+\left\{ \begin{array}{l}
+\left.\frac{\partial f_{0}}{\partial r}\right|_{l+1/2,m+1}^{(k+1)}=\frac{f_{0,l+1,m+1}^{(k+1)}-f_{0,l,m+1}^{(k+1)}}{\Delta r_{l+1/2}}\\
+\left.\frac{\partial f_{0}}{\partial r}\right|_{l+1/2,m}^{(k+1)}=\frac{f_{0,l+1,m}^{(k+1)}-f_{0,,m}^{(k+1)}}{\Delta r_{l+1/2}}\\
+\left.\frac{\partial f_{0}}{\partial\theta}\right|_{l+1/2,m+1}^{(k+1)}=\frac{f_{0,l+1/2,m+3/2}^{(k+1)}-f_{0,l+1/2,m+1/2}^{(k+1)}}{\Delta\theta_{m+1}}\\
+\left.\frac{\partial f_{0}}{\partial\theta}\right|_{i+1/2,m}^{(k+1)}=\frac{f_{0,l+1/2,m+1/2}^{(k+1)}-f_{0,l+1/2,m-1/2}^{(k+1)}}{\Delta\theta_{m}}\end{array}\right.\]
+
+\end_inset 
+
+ ou 
+\begin_inset Formula $\Delta r_{l},$
+\end_inset 
+
+ 
+\begin_inset Formula $\Delta r_{l+1/2},$
+\end_inset 
+
+ 
+\begin_inset Formula $\Delta r_{l+1},$
+\end_inset 
+
+ 
+\begin_inset Formula $\Delta\theta_{m},$
+\end_inset 
+
+ 
+\begin_inset Formula $\Delta\theta_{m+1/2}$
+\end_inset 
+
+ et 
+\begin_inset Formula $\Delta\theta_{m+1}$
+\end_inset 
+
+ ont deja ete explicites au paragraphe consacre a la definition des grilles.
+\layout Standard
+
+En recombinant les differentes expressions on obtient
+\layout Standard
+
+
+\begin_inset Formula \begin{eqnarray*}
+\left.S_{r}\right|_{l+1,m+1/2}^{(k+1)} & = & -D_{rr,l+1,m+1/2}\frac{f_{0,l+3/2,m+1/2}^{(k+1)}-f_{0,l+1/2,m+1/2}^{(k+1)}}{\Delta r_{l+1}}\\
+ &  & -D_{r\theta,l+1,m+1/2}\frac{1}{r_{l+1}}\frac{f_{0,l+1,m+1}^{(k+1)}-f_{0,l+1,m}^{(k+1)}}{\Delta\theta_{m+1/2}}+F_{r,l+1,m+1/2}f_{0,l+1,m+1/2}^{(k+1)}\\
+\left.S_{r}\right|_{l,m+1/2}^{(k+1)} & = & -D_{rr,l,m+1/2}\frac{f_{0,l+1/2,m+1/2}^{(k+1)}-f_{0,l-1/2,m+1/2}^{(k+1)}}{\Delta r_{l}}\\
+ &  & -D_{r\theta,l,m+1/2}\frac{1}{r_{l}}\frac{f_{0,l,m+1}^{(k+1)}-f_{0,l,m}^{(k+1)}}{\Delta\theta_{m+1/2}}+F_{r,l,m+1/2}f_{0,l,m+1/2}^{(k+1)}\\
+\left.S_{\theta}\right|_{l+1/2,m+1}^{(k+1)} & = & -D_{\theta r,l+1/2,m+1}\frac{f_{0,l+1,m+1}^{(k+1)}-f_{0,l,m+1}^{(k+1)}}{\Delta r_{l+1/2}}\\
+ &  & -D_{\theta\theta,l+1/2,m+1}\frac{1}{r_{l+1/2}}\frac{f_{0,l+1/2,m+3/2}^{(k+1)}-f_{0,l+1/2,m+1/2}^{(k+1)}}{\Delta\theta_{m+1}}+F_{\theta,l+1/2,m+1}f_{0,l+1/2,m+1}^{(k+1)}\\
+\left.S_{\theta}\right|_{l+1/2,m}^{(k+1)} & = & -D_{\theta r,l+1/2,m}\frac{f_{0,l+1,m}^{(k+1)}-f_{0,l,m}^{(k+1)}}{\Delta r_{l+1/2}}\\
+ &  & -D_{\theta\theta,l+1/2,m}\frac{1}{r_{l+1/2}}\frac{f_{0,l+1/2,m+1/2}^{(k+1)}-f_{0,l+1/2,m-1/2}^{(k+1)}}{\Delta\theta_{m}}+F_{\theta,l+1/2,m}f_{0,l+1/2,m}^{(k+1)}\end{eqnarray*}
+
+\end_inset 
+
+
+\layout Standard
+
+Comme la fonction est definie sur la demi-grille et les flux sur la grille
+ entiere, il faut egalement effectuer une interpolation, puisque certaines
+ valeurs de 
+\begin_inset Formula $f_{0}$
+\end_inset 
+
+ apparaissent sur la grille entiere dans les relations precedentes.
+ De maniere generale, sans se preoccuper de l'expression precise du facteur
+ de ponderation 
+\begin_inset Formula $\delta$
+\end_inset 
+
+ qui sera discutee plus loin, on peut ecrire 
+\begin_inset Formula \[
+\left\{ \begin{array}{l}
+f_{0,l+1,m+1}^{(k+1)}=\left(1-\delta_{r,l+1,m+1}\right)f_{0,l+3/2,m+1}^{(k+1)}+\delta_{r,l+1,m+1}f_{0,l+1/2,m+1}^{(k+1)}\\
+f_{0,l+1,m+1/2}^{(k+1)}=\left(1-\delta_{r,l+1,m+1/2}\right)f_{0,l+3/2,m+1/2}^{(k+1)}+\delta_{r,l+1,m+1/2}f_{0,l+1/2,m+1/2}^{(k+1)}\\
+f_{0,l+1,m}^{(k+1)}=\left(1-\delta_{r,l+1,m}\right)f_{0,l+3/2,m}^{(k+1)}+\delta_{r,l+1,m}f_{0,l+1/2,m}^{(k+1)}\\
+f_{0,l+1/2,m+1}^{(k+1)}=\left(1-\delta_{\theta,l+1/2,m+1}\right)f_{0,l+1/2,m+3/2}^{(k+1)}+\delta_{\theta,l+1/2,m+1}f_{0,l+1/2,m+1/2}^{(k+1)}\\
+f_{0,l+1/2,m}^{(k+1)}=\left(1-\delta_{\theta,l+1/2,m}\right)f_{0,l+1/2,m+1/2}^{(k+1)}+\delta_{\theta,l+1/2,m}f_{0,l+1/2,m-1/2}^{(k+1)}\\
+f_{0,l,m+1}^{(k+1)}=\left(1-\delta_{r,l,m+1}\right)f_{0,l+1/2,m+1}^{(k+1)}+\delta_{r,l,m+1}f_{0,l-1/2,m+1}^{(k+1)}\\
+f_{0,l,m+1/2}^{(k+1)}=\left(1-\delta_{r,l,m+1/2}\right)f_{0,l+1/2,m+1/2}^{(k+1)}+\delta_{r,l,m+1/2}f_{0,l-1/2,m+1/2}^{(k+1)}\\
+f_{0,l,m}^{(k+1)}=\left(1-\delta_{r,l,m}\right)f_{0,l+1/2,m}^{(k+1)}+\delta_{r,l,m}f_{0,l-1/2,m}^{(k+1)}\end{array}\right.\]
+
+\end_inset 
+
+
+\layout Standard
+
+Comme on s'interesse principalement au cas de l'equation de Fokker-Planck
+ moyennee sur les trajectoires 
+\begin_inset Formula $\left(t\gg\tau_{t,b}\right)$
+\end_inset 
+
+, 
+\begin_inset Formula \[
+\left\{ \frac{\partial\left(rp^{2}f_{0}\right)}{\partial t}\right\} +\left\{ p^{2}\frac{\partial\left(rS_{r}\right)}{\partial r}\right\} +\left\{ p^{2}\frac{\partial S_{\theta}}{\partial\theta}\right\} =0\]
+
+\end_inset 
+
+ on elimine de fait la contribution polo\i \"{\i}
+dale en 
+\begin_inset Formula $\theta$
+\end_inset 
+
+ en raison des moyennes effectuees:
+\begin_inset Formula $\left\{ D_{r\theta}\right\} $
+\end_inset 
+
+ 
+\begin_inset Formula $=\left\{ D_{\theta r}\right\} =\left\{ D_{\theta\theta}\right\} =0$
+\end_inset 
+
+ et 
+\begin_inset Formula $\left\{ F_{\theta}\right\} $
+\end_inset 
+
+ 
+\begin_inset Formula $=0$
+\end_inset 
+
+ et on ne conserve que la dynamique radiale.
+ On pose par definition les moyennes des diffusion et convection radiales
+ sur les trajectoires des electrons 
+\begin_inset Formula $D_{rr}^{\left(0\right)}=\left\{ D_{rr}\right\} $
+\end_inset 
+
+ et 
+\begin_inset Formula $F_{r}^{\left(0\right)}=\left\{ F_{r}\right\} $
+\end_inset 
+
+ , ces valeurs etant determinees en 
+\begin_inset Formula $B_{min}$
+\end_inset 
+
+.
+ Dans cette limite, les equations en jeu sont considerablement simplifiees
+ car 
+\begin_inset Formula \[
+\left\{ \frac{\partial\left(rp^{2}f_{0}\right)}{\partial t}\right\} +\left\{ p^{2}\frac{\partial\left(rS_{r}\right)}{\partial r}\right\} =0\]
+
+\end_inset 
+
+ soit 
+\begin_inset Formula \[
+\left\{ \frac{\partial\left(rp^{2}f_{0}\right)}{\partial t}\right\} +p^{2}\frac{\partial\left(r\left\{ S_{r}\right\} \right)}{\partial r}=\left\{ \frac{\partial\left(rp^{2}f_{0}\right)}{\partial t}\right\} +p^{2}\frac{\partial\left(rS_{r}^{\left(0\right)}\right)}{\partial r}=0\]
+
+\end_inset 
+
+ avec 
+\begin_inset Formula \[
+\mathbf{S}_{\mathbf{r}}^{(0)}=\left\{ \begin{array}{l}
+S_{r}^{\left(0\right)}=\left\{ S_{r}\right\} \\
+S_{\theta}^{\left(0\right)}=0\end{array}\right.\]
+
+\end_inset 
+
+ On conserve ainsi toujours la forme conservative pour la composante radiale
+ 
+\begin_inset Formula \[
+S_{\mathbf{r}}^{(0)}=-\overline{\overline{D}}_{r}^{(0)}\cdot\nabla_{r,\theta}f_{0}^{(0)}+\overline{\overline{F}}_{r}^{(0)}f_{0}^{(0)}\]
+
+\end_inset 
+
+ avec les elements de la matrice de diffusion 
+\begin_inset Formula \[
+D_{rr}^{(0)}=\left\{ D_{rr}\right\} \]
+
+\end_inset 
+
+ 
+\begin_inset Formula \[
+F_{r}^{(0)}=\left\{ F_{r}\right\} \]
+
+\end_inset 
+
+ ou
+\layout Standard
+
+
+\begin_inset Formula \[
+\left\{ S_{r}\right\} =S_{r}^{\left(0\right)}=\left\{ -D_{rr}\frac{\partial f}{\partial r}+F_{r}f\right\} =-\left\{ D_{rr}\right\} \frac{\partial f_{0}^{\left(0\right)}}{\partial r}+\left\{ F_{r}\right\} f_{0}^{\left(0\right)}=-D_{rr}^{\left(0\right)}\frac{\partial f_{0}^{\left(0\right)}}{\partial r}+F_{r}^{\left(0\right)}f_{0}^{\left(0\right)}\]
+
+\end_inset 
+
+ Sous forme discrete, on obtient 
+\begin_inset Formula \[
+r_{l+1/2}p_{i+1/2}^{2}\frac{f_{0,l+1/2}^{\left(0\right)(k+1)}-f_{0,l+1/2}^{\left(0\right)(k)}}{\Delta t}=-p_{i+1/2}^{2}\frac{r_{l+1}\left.S_{r}^{\left(0\right)}\right|_{l+1}^{(k+1)}-r_{l}\left.S_{r}^{\left(0\right)}\right|_{l}^{(k+1)}}{\Delta r_{l+1/2}}\]
+
+\end_inset 
+
+ avec 
+\begin_inset Formula \begin{eqnarray*}
+\left.S_{r}^{\left(0\right)}\right|_{l+1}^{(k+1)} & = & -D_{rr,l+1}^{\left(0\right)}\frac{f_{0,l+3/2}^{\left(0\right)(k+1)}-f_{0,l+1/2}^{\left(0\right)(k+1)}}{\Delta r_{l+1}}+F_{r,l+1}^{\left(0\right)}f_{0,l+1}^{\left(0\right)(k+1)}\\
+\left.S_{r}^{\left(0\right)}\right|_{l}^{(k+1)} & = & -D_{rr,l}^{\left(0\right)}\frac{f_{0,l+1/2}^{\left(0\right)(k+1)}-f_{0,l-1/2}^{\left(0\right)(k+1)}}{\Delta r_{l}}+F_{r,l}^{\left(0\right)}f_{0,l}^{\left(0\right)(k+1)}\end{eqnarray*}
+
+\end_inset 
+
+ et pour les interpolations entre les grilles 
+\begin_inset Formula \[
+\left\{ \begin{array}{l}
+f_{0,l+1}^{\left(0\right)(k+1)}=\left(1-\delta_{r,l+1}^{\left(0\right)}\right)f_{0,l+3/2}^{\left(0\right)(k+1)}+\delta_{r,l+1}^{\left(0\right)}f_{0,l+1/2}^{\left(0\right)(k+1)}\\
+f_{0,l}^{\left(0\right)(k+1)}=\left(1-\delta_{r,l}^{\left(0\right)}\right)f_{0,l+1/2}^{\left(0\right)(k+1)}+\delta_{r,l}^{\left(0\right)}f_{0,l-1/2}^{\left(0\right)(k+1)}\end{array}\right.\]
+
+\end_inset 
+
+
+\layout Standard
+
+Il est utile a ce stade d'exprimer sous forme matricielle le transport radial,
+ qui peut etre mis sous la forme generale
+\layout Standard
+
+
+\begin_inset Formula \[
+r_{l+1/2}p_{i+1/2}^{2}\frac{f_{l+1/2}^{\left(0\right)(k+1)}-f_{l+1/2}^{\left(0\right)\left(k\right)}}{\Delta t}+p_{i+1/2}^{2}\sum_{l^{\prime}=l-1}^{l^{\prime}=l+1}\overline{\overline{M}}_{r,l^{\prime}+1/2}^{\left(0\right)}f_{0,l^{\prime}+1/2}^{\left(0\right)(k+1)}=0\]
+
+\end_inset 
+
+ les coefficients de matrice 
+\begin_inset Formula $\overline{\overline{M}}_{r}^{\left(0\right)}$
+\end_inset 
+
+ valant,
+\layout Standard
+
+
+\begin_inset Formula \[
+\overline{\overline{M}}_{r,l+3/2}^{\left(0\right)}=-\frac{r_{l+1}}{\Delta r_{l+1}\Delta r_{l+1/2}}D_{rr,l+1}^{\left(0\right)}+\frac{r_{l+1}}{\Delta r_{l+1/2}}F_{r,l+1}^{\left(0\right)}\left(1-\delta_{r,l+1}^{\left(0\right)}\right)\]
+
+\end_inset 
+
+
+\begin_inset Formula \begin{eqnarray*}
+\overline{\overline{M}}_{r,l+1/2}^{\left(0\right)} & = & +\frac{r_{l+1}}{\Delta r_{l+1}\Delta r_{l+1/2}}D_{rr,l+1}^{\left(0\right)}+\frac{r_{l+1}}{\Delta r_{l+1/2}}F_{r,l+1}^{\left(0\right)}\delta_{r,l+1}^{\left(0\right)}\\
+ &  & +\frac{r_{l}}{\Delta r_{l}\Delta r_{l+1/2}}D_{rr,l}^{\left(0\right)}-\frac{r_{l}}{\Delta r_{l+1/2}}F_{r,l}^{\left(0\right)}\left(1-\delta_{r,l}^{\left(0\right)}\right)\end{eqnarray*}
+
+\end_inset 
+
+ 
+\begin_inset Formula \[
+\overline{\overline{M}}_{r,l-1/2}^{\left(0\right)}=-\frac{r_{l}}{\Delta r_{l}\Delta r_{l+1/2}}D_{rr,l}^{\left(0\right)}-\frac{r_{l}}{\Delta r_{l+1/2}}F_{r,l}^{\left(0\right)}\delta_{r,l}^{\left(0\right)}\]
+
+\end_inset 
+
+
+\layout Standard
+
+Il s'agit donc d'une simple matrice tridiagonale.
+ Pour le choix de 
+\begin_inset Formula $\delta_{r}^{\left(0\right)}$
+\end_inset 
+
+, la demarche est analogue a celle utilisee pour 
+\begin_inset Formula $\delta_{\xi}$
+\end_inset 
+
+ puisque qu'il n'y a pas de contrainte particuliere a prendre en compte
+ sur la dependence radiale de la fonction de distribution 
+\begin_inset Formula $f_{0}^{\left(0\right)}$
+\end_inset 
+
+.
+ La fa\i \c{c}
+on la plus naturelle consiste donc a effectuer une simple interpolation
+ lineaire entre 
+\begin_inset Formula $f_{0,l+3/2}^{\left(0\right)(\infty)}$
+\end_inset 
+
+ et 
+\begin_inset Formula $f_{0,l+1/2}^{\left(0\right)(\infty)}$
+\end_inset 
+
+ ainsi qu'entre 
+\begin_inset Formula $f_{0,l+1/2}^{\left(0\right)(\infty)}$
+\end_inset 
+
+ et 
+\begin_inset Formula $f_{0,l-1/2}^{\left(0\right)(\infty)}$
+\end_inset 
+
+ selon les regles
+\layout Standard
+
+
+\begin_inset Formula \[
+\left\{ \begin{array}{l}
+f_{0,l+1}^{\left(0\right)(\infty)}=\left(\frac{\Delta r_{l+1/2}}{\Delta r_{l+1/2}+\Delta r_{l+3/2}}\right)f_{0,l+3/2}^{\left(0\right)(\infty)}+\left(\frac{\Delta r_{l+3/2}}{\Delta r_{l+1/2}+\Delta r_{l+3/2}}\right)f_{0,l+1/2}^{\left(0\right)(\infty)}\\
+f_{0,l}^{\left(0\right)(\infty)}=\left(\frac{\Delta r_{l-1/2}}{\Delta r_{l-1/2}+\Delta r_{l+1/2}}\right)f_{0,l+1/2}^{\left(0\right)(\infty)}+\left(\frac{\Delta r_{l+1/2}}{\Delta r_{l-1/2}+\Delta r_{l+1/2}}\right)f_{0,l-1/2}^{\left(0\right)(\infty)}\end{array}\right.\]
+
+\end_inset 
+
+ en tenant compte des pas de grille, ce qui donne 
+\begin_inset Formula \[
+\left\{ \begin{array}{l}
+\delta_{r,l+1}^{\left(0\right)}=\frac{\Delta r_{l+3/2}}{\Delta r_{l+1/2}+\Delta r_{l+3/2}}\\
+\delta_{r,l}^{\left(0\right)}=\frac{\Delta r_{l+1/2}}{\Delta r_{l-1/2}+\Delta r_{l+1/2}}\end{array}\right.\]
+
+\end_inset 
+
+ On retrouve bien que pour une grille uniforme, 
+\begin_inset Formula $\delta_{r,l+1}^{\left(0\right)}=\delta_{r,l}^{\left(0\right)}=1/2.$
+\end_inset 
+
+
+\layout Standard
+
+Au centre du plasma en 
+\begin_inset Formula $r=0$
+\end_inset 
+
+, le flux 
+\begin_inset Formula $S_{r}^{\left(0\right)}$
+\end_inset 
+
+ doit etre nul, puisque toutes les particules entrantes doivent ressortir.
+ Pour ce point singulier, on a donc 
+\begin_inset Formula \[
+\left.S_{r}^{\left(0\right)}\right|_{l=0}^{(k+1)}=-D_{rr,l=0}^{\left(0\right)}\frac{f_{0,l=1/2}^{\left(0\right)(k+1)}-f_{0,l=-1/2}^{\left(0\right)(k+1)}}{\Delta r_{l}}+F_{r,l=0}^{\left(0\right)}f_{0,l=0}^{\left(0\right)(k+1)}=0\]
+
+\end_inset 
+
+ et comme par symetrie 
+\begin_inset Formula $f_{0,l=1/2}^{\left(0\right)(k+1)}=f_{0,l=-1/2}^{\left(0\right)(k+1)},$
+\end_inset 
+
+ cela impose que 
+\begin_inset Formula \[
+F_{r,l=0}^{\left(0\right)}=0\]
+
+\end_inset 
+
+ car cette condition doit etre verifiee pour toute valeur de 
+\begin_inset Formula $f_{0,l=0}^{\left(0\right)(k+1)}$
+\end_inset 
+
+ qui n'est evidemment pas nulle au centre.
+ Il n'y a evidemment aucune contrainte sur la valeur de 
+\begin_inset Formula $D_{rr,l=0}^{\left(0\right)}$
+\end_inset 
+
+, car 
+\begin_inset Formula $\left.S_{r}^{\left(0\right)}\right|_{l=0}^{(k+1)}=0$
+\end_inset 
+
+ quelle que soit la valeur du coefficient de diffusion radiale.
+\layout Standard
+
+Au bord en 
+\begin_inset Formula $r=a$
+\end_inset 
+
+, la condition usuelle est d'imposer que les particules rapides quittent
+ definitivement le plasma.
+ La distribution est donc la Maxwelienne non perturbee d'ou 
+\begin_inset Formula \[
+f_{0,l=n_{r}}^{\left(0\right)(k+1)}=f_{M,l=n_{r}}^{\left(0\right)(k+1)}\]
+
+\end_inset 
+
+
+\the_end

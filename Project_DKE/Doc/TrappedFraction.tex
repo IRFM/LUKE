@@ -1,0 +1,70 @@
+La fraction de particules piegees $f_{t}$ est une donnee purement
+cinetique qui ne peut etre evaluee que localement au point ou toutes
+les particules passent, c.a.d. en $B_{min}$. Dans ces conditions
+\[
+f_{t}\left(r\right)=\frac{2\pi\int_{0}^{\infty}p^{2}dp\int_{-\xi_{0T}}^{+\xi_{0T}}f^{(0)}\left(r,p,\xi_{0}\right)d\xi_{0}}{2\pi\int_{0}^{\infty}p^{2}dp\int_{-1}^{+1}f^{(0)}\left(r,p,\xi_{0}\right)d\xi_{0}}\]
+ ou $\xi_{0T}=\sqrt{\frac{2\varepsilon}{1+\varepsilon}},$ $\varepsilon=r/R$
+l'inverse du rapport d'aspect, $p$ l'impulsion et $\xi_{0}$ le cosinus
+de l'angle de diffusion angulaire pris en $B_{min}$ et $\sigma=\xi/\left|\xi\right|=\xi_{0}/\left|\xi_{0}\right|.$
+
+Pour une distribution Maxwellienne,
+
+\[
+f_{t}^{M}\left(r\right)=\frac{\int_{-\xi_{0T}}^{+\xi_{0T}}d\xi_{0}}{\int_{-1}^{+1}d\xi_{0}}\]
+ soit dans le cadre du modele
+
+\[
+f_{t}^{M}\left(r\right)=\xi_{0T}=\sqrt{\frac{2\varepsilon}{1+\varepsilon}}\]
+ ce qui donne \[
+\lim_{\varepsilon\rightarrow0}f_{t}^{M}\left(r\right)=\sqrt{2}\sqrt{\varepsilon}\approx1.41\sqrt{\varepsilon}\]
+ a rapprocher de la formule plus exacte de Hinton, Hazeltine, Rosenbluth
+$f_{t}^{M}\left(r\right)=\gamma\sqrt{\varepsilon}$ avec $\gamma\approx1.46.$
+(voir reference Y. R. Lin-Liu et R. Miller, Phys. Plasma, 2 (1995)
+1666). L'ecart est de 3\% environ.
+
+Un calcul plus exact (voir reference Y. R. Lin-Liu et R. Miller, Phys.
+Plasma, 2 (1995) 1666) montre que pour tout rapport d'aspect, la valeur
+de $f_{t}\left(r\right)$ peut etre encadree entre deux bornes \[
+f_{tl}\left(r\right)\leq f_{t}\left(r\right)\leq f_{tu}\left(r\right)\]
+ ou \[
+f_{tu}\left(r\right)=1-\frac{\left\langle h^{2}\right\rangle }{\left\langle h\right\rangle ^{2}}\left[1-\sqrt{1-\left\langle h\right\rangle }\left(1+\frac{\left\langle h\right\rangle }{2}\right)\right]\]
+ et \[
+f_{tl}\left(r\right)=1-\left\langle h^{2}\right\rangle \left\langle \frac{1-\sqrt{1-h}\left(1+\frac{h}{2}\right)}{h^{2}}\right\rangle \]
+ ou dans le cadre du modele de surface de flux circulaire, \[
+\left\langle h\right\rangle =1-\varepsilon\]
+ et \[
+\left\langle h^{2}\right\rangle =\frac{\left(1-\varepsilon\right)^{3/2}}{\left(1+\varepsilon\right)^{1/2}}\]
+ avec $h=B/B_{max}$ et $\left\langle \ldots\right\rangle $ denotant
+la moyenne sur la surface de flux. Dans les notations du modele simplifie,
+\[
+h=\frac{1-\varepsilon}{1+\varepsilon}\Psi\left(r,\theta\right)\]
+ ou \[
+\Psi\left(r,\theta\right)=\frac{1+\varepsilon}{1+\varepsilon\cos\theta}\]
+
+
+Ainsi, \[
+\left\langle h\right\rangle =\frac{1}{2\pi}\int_{0}^{2\pi}\left(1+\varepsilon\cos\theta\right)\frac{1-\varepsilon}{1+\varepsilon}\Psi\left(r,\theta\right)d\theta=1-\varepsilon\]
+ qui est bien la valeur trouvee dans la reference citee. De meme \[
+\left\langle h^{2}\right\rangle =\frac{1}{2\pi}\int_{0}^{2\pi}\left(1+\varepsilon\cos\theta\right)\left(\frac{1-\varepsilon}{1+\varepsilon}\right)^{2}\Psi^{2}\left(r,\theta\right)d\theta\]
+ soit \[
+\left\langle h^{2}\right\rangle =\frac{\left(1-\varepsilon\right)^{2}}{1+\varepsilon}\frac{1}{2\pi}\int_{0}^{2\pi}\Psi\left(r,\theta\right)d\theta\]
+
+
+Sachant que \[
+s^{*}=\frac{1}{2\pi}\int_{0}^{2\pi}\Psi\left(r,\theta\right)d\theta=\sqrt{\frac{1+\varepsilon}{1-\varepsilon}}\]
+ on retrouve bien \[
+\left\langle h^{2}\right\rangle =\frac{\left(1-\varepsilon\right)^{3/2}}{\left(1+\varepsilon\right)^{1/2}}\]
+
+
+Enfin \[
+\left\langle \frac{1-\sqrt{1-h}\left(1+\frac{h}{2}\right)}{h^{2}}\right\rangle =\frac{1}{2\pi}\int_{0}^{2\pi}\left(1+\varepsilon\cos\theta\right)\frac{1-\sqrt{1-\frac{1-\varepsilon}{1+\varepsilon}\Psi\left(r,\theta\right)}\left(1+\frac{1}{2}\frac{1-\varepsilon}{1+\varepsilon}\Psi\left(r,\theta\right)\right)}{\left[\frac{1-\varepsilon}{1+\varepsilon}\Psi\left(r,\theta\right)\right]^{2}}d\theta\]
+ soit \[
+\left\langle \frac{1-\sqrt{1-h}\left(1+\frac{h}{2}\right)}{h^{2}}\right\rangle =\frac{1}{2\pi}\int_{0}^{2\pi}\left(\frac{1+\varepsilon}{\Psi\left(r,\theta\right)}\right)\frac{1-\sqrt{1-\frac{1-\varepsilon}{1+\varepsilon}\Psi\left(r,\theta\right)}\left(1+\frac{1}{2}\frac{1-\varepsilon}{1+\varepsilon}\Psi\left(r,\theta\right)\right)}{\left[\frac{1-\varepsilon}{1+\varepsilon}\Psi\left(r,\theta\right)\right]^{2}}d\theta\]
+ ou \[
+\left\langle \frac{1-\sqrt{1-h}\left(1+\frac{h}{2}\right)}{h^{2}}\right\rangle =\frac{1}{2\pi}\frac{\left(1+\varepsilon\right)^{3}}{\left(1-\varepsilon\right)^{2}}\int_{0}^{2\pi}\frac{1-\sqrt{1-\frac{1-\varepsilon}{1+\varepsilon}\Psi\left(r,\theta\right)}\left(1+\frac{1}{2}\frac{1-\varepsilon}{1+\varepsilon}\Psi\left(r,\theta\right)\right)}{\Psi^{3}\left(r,\theta\right)}d\theta\]
+
+
+Enfin, d'apres la meme reference, \[
+f_{t}^{interp}\left(r\right)\approx0.75f_{tu}\left(r\right)+0.25f_{tl}\left(r\right)\]
+ ce qui donne une evaluation a 0.3\% pres dans la plupart des equilibres
+de tokamak.

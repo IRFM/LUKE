@@ -1,0 +1,72 @@
+
+\subsection{Elements de matrice pour l'equation de derive cinetique}
+
+
+\subsubsection{Moyenne sur la periode de rebond}
+
+Les corrections neoclassiques de premier ordre sont la somme de deux
+termes \[
+f_{1}=\widetilde{f}+g\]
+ ou $\widetilde{f}$ est un terme source d\^{u} aux gradients radiaux
+\[
+\widetilde{f}=-\frac{v_{\Vert}}{\Omega_{\theta}}\frac{\partial f_{0}}{\partial r}\]
+ et $g$ est la reponse du plasma en presence de collisions et de
+diffusion quasi-lineaire. Le calcul de $g$ peut egalement etre mis
+sous forme conservative \[
+\left\{ r\nabla\cdot\mathbf{S}_{\mathbf{p}}^{g}\right\} +\left\{ r\nabla\cdot\mathbf{S}_{\mathbf{p}}^{\widetilde{f}}\right\} =0\]
+ ou $g$ est une fonction explicitement independente de $\theta$
+au meme titre que $f_{0}$, et les flux sur $g$ sont donc discretises
+de la meme maniere. En revanche, $\widetilde{f}$ possede une dependence
+explicite en $\theta$ qui peut etre isolee comme suit: \[
+\widetilde{f}(p,\xi,r,\theta)=\frac{\xi}{\Psi(\theta)\xi_{0}}\widetilde{f}^{(0)}(p,\xi_{0},r)\]
+ avec \[
+\widetilde{f}^{(0)}(p,\xi_{0},r)=-\frac{p\xi_{0}}{q_{e}B_{\theta,0}}\frac{\partial f_{0}^{(0)}(p,\xi_{0},r)}{\partial r}\]
+ ou $r$ est la valeur du petit rayon plasma.
+
+L'expression de la divergence des flux sur $\widetilde{f}$, que l'on
+notera $\widetilde{S}$ est identique formellement a celle de $f_{0}:$\[
+\left\{ r\nabla\cdot\widetilde{\mathbf{S}}_{\mathbf{p}}\right\} =\frac{r}{p^{2}}\frac{\partial}{\partial p}(p^{2}\widetilde{S}_{p}^{(0)})-\frac{r}{\lambda\left(\xi_{0}\right)p}\frac{\partial}{\partial\xi_{0}}\left(\sqrt{1-\xi_{0}^{2}}\lambda\left(\xi_{0}\right)\widetilde{S}_{\xi_{0}}^{(0)}\right)\]
+ avec les composantes \[
+\widetilde{\mathbf{S}}_{\mathbf{p}}=\left\{ \begin{array}{l}
+\widetilde{S}_{p}^{(0)}=\left\{ \widetilde{S}_{p}\right\} \\
+\widetilde{S}_{\xi_{0}}^{(0)}=\sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}\widetilde{S}_{\xi}\right\} \end{array}\right.\]
+
+
+On considere les flux comme resultant d'un terme diffusif et d'un
+terme de convection: \[
+\widetilde{\mathbf{S}}_{\mathbf{p}}=-\overline{\overline{\widetilde{D}}}\cdot\nabla\widetilde{f}+\overline{\widetilde{F}}\widetilde{f}\]
+
+
+On a alors \begin{eqnarray*}
+\left\{ \widetilde{S}_{p}\right\}  & = & \left\{ -\widetilde{D}_{pp}\cdot\nabla_{p}\widetilde{f}-\widetilde{D}_{p\xi}\cdot\nabla_{\xi}\widetilde{f}+\widetilde{F}_{p}\widetilde{f}\right\} \\
+ & = & -\left\{ \widetilde{D}_{pp}\cdot\nabla_{p}\left(\frac{\xi}{\Psi(\theta)\xi_{0}}\widetilde{f}^{(0)}\right)\right\} -\left\{ \widetilde{D}_{p\xi}\cdot\frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}\nabla_{\left|\xi_{0}\right|}\left(\frac{\xi}{\Psi(\theta)\xi_{0}}\widetilde{f}^{(0)}\right)\right\} +\left\{ \widetilde{F}_{p}\frac{\xi}{\Psi(\theta)\xi_{0}}\widetilde{f}^{(0)}\right\} \\
+ & = & -\left\{ \frac{\sigma\xi}{\Psi(\theta)\xi_{0}}\widetilde{D}_{pp}\right\} \cdot\sigma\nabla_{p}\widetilde{f}^{(0)}-\left\{ \widetilde{D}_{p\xi}\cdot\frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}\left(\frac{\xi}{\Psi(\theta)\xi_{0}}\right)\nabla_{\left|\xi_{0}\right|}\widetilde{f}^{(0)}\right\} \\
+ &  & \;\;-\left\{ \widetilde{D}_{p\xi}\cdot\frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}\nabla_{\left|\xi_{0}\right|}\left(\frac{\xi}{\Psi(\theta)\xi_{0}}\right)\widetilde{f}^{(0)}\right\} +\left\{ \frac{\sigma\xi}{\Psi(\theta)\xi_{0}}\widetilde{F}_{p}\right\} \sigma\widetilde{f}^{(0)}\\
+ & = & -\widetilde{D}_{pp}^{(0)}\cdot\nabla_{p}\widetilde{f}^{(0)}-\widetilde{D}_{p\xi}^{(0)}\cdot\nabla_{\xi_{0}}\widetilde{f}^{(0)}+\widetilde{F}_{p}^{(0)}\widetilde{f}^{(0)}\end{eqnarray*}
+ avec \begin{eqnarray*}
+\widetilde{D}_{pp}^{(0)} & = & \sigma\left\{ \frac{\sigma\xi}{\Psi(\theta)\xi_{0}}\widetilde{D}_{pp}\right\} \\
+\widetilde{D}_{p\xi}^{(0)} & = & \left\{ \frac{\xi^{2}}{\Psi^{3/2}\xi_{0}^{2}}\widetilde{D}_{p\xi}\right\} \\
+\widetilde{F}_{p}^{(0)} & = & \sigma\left[\left\{ \frac{\sigma\xi}{\Psi(\theta)\xi_{0}}\widetilde{F}_{p}\right\} -\left\{ \frac{\xi}{\sqrt{\Psi}\xi_{0}}\nabla_{\left|\xi_{0}\right|}\left(\frac{\xi}{\Psi(\theta)\xi_{0}}\right)\widetilde{D}_{p\xi}\right\} \right]\\
+ & = & \left[\sigma\left\{ \frac{\sigma\xi}{\Psi(\theta)\xi_{0}}\widetilde{F}_{p}\right\} +\frac{\sqrt{1-\xi_{0}^{2}}}{p\xi_{0}^{3}}\left\{ \frac{\left(\Psi(\theta)-1\right)}{\Psi^{3/2}}\widetilde{D}_{p\xi}\right\} \right]\end{eqnarray*}
+ ou on a utilise \begin{eqnarray*}
+\nabla_{\left|\xi_{0}\right|}\left(\frac{\xi}{\Psi(\theta)\xi_{0}}\right) & = & -\frac{\sqrt{1-\xi_{0}^{2}}}{p}\frac{\partial}{\partial\left|\xi_{0}\right|}\left(\frac{\xi}{\Psi(\theta)\xi_{0}}\right)\\
+ & = & -\frac{\sqrt{1-\xi_{0}^{2}}}{p\Psi(\theta)}\frac{\partial}{\partial\left|\xi_{0}\right|}\left(\frac{\sqrt{1-\Psi(\theta)(1-\left|\xi_{0}\right|^{2})}}{\left|\xi_{0}\right|}\right)\\
+ & = & -\frac{\sqrt{1-\xi_{0}^{2}}}{p\Psi(\theta)}\left(\frac{\Psi(\theta)}{\left|\xi\right|}-\frac{\left|\xi\right|}{\xi_{0}^{2}}\right)\\
+ & = & -\frac{\sqrt{1-\xi_{0}^{2}}\left(\Psi(\theta)-1\right)}{p\Psi(\theta)\left|\xi\right|\xi_{0}^{2}}\end{eqnarray*}
+
+
+On a de meme \begin{eqnarray*}
+\sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}\widetilde{S}_{\xi}\right\}  & = & \sigma\left\{ -\frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}\widetilde{D}_{\xi p}\cdot\nabla_{p}\widetilde{f}-\frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}\widetilde{D}_{\xi\xi}\cdot\nabla_{\xi}\widetilde{f}+\frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}\widetilde{F}_{\xi}\widetilde{f}\right\} \\
+ & = & -\sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}\widetilde{D}_{\xi p}\cdot\nabla_{p}\left(\frac{\xi}{\Psi(\theta)\xi_{0}}\widetilde{f}^{(0)}\right)\right\} -\sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}\widetilde{D}_{\xi\xi}\cdot\frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}\nabla_{\left|\xi_{0}\right|}\left(\frac{\xi}{\Psi(\theta)\xi_{0}}\widetilde{f}^{(0)}\right)\right\} \\
+ &  & \;\;+\sigma\left\{ \frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}\widetilde{F}_{\xi}\frac{\xi}{\Psi(\theta)\xi_{0}}\widetilde{f}^{(0)}\right\} \\
+ & = & -\left\{ \frac{\xi^{2}}{\Psi^{3/2}\xi_{0}^{2}}\widetilde{D}_{\xi p}\right\} \cdot\nabla_{p}\widetilde{f}^{(0)}-\sigma\left\{ \widetilde{D}_{\xi\xi}\cdot\frac{\xi^{2}}{\Psi\xi_{0}^{2}}\left(\frac{\xi}{\Psi(\theta)\xi_{0}}\right)\nabla_{\left|\xi_{0}\right|}\widetilde{f}^{(0)}\right\} \\
+ &  & \;\;-\sigma\left\{ \widetilde{D}_{\xi\xi}\cdot\frac{\xi^{2}}{\Psi\xi_{0}^{2}}\nabla_{\left|\xi_{0}\right|}\left(\frac{\xi}{\Psi(\theta)\xi_{0}}\right)\widetilde{f}^{(0)}\right\} +\left\{ \frac{\xi^{2}}{\Psi^{3/2}\xi_{0}^{2}}\widetilde{F}_{\xi}\right\} \widetilde{f}^{(0)}\\
+ & = & -\widetilde{D}_{\xi p}^{(0)}\cdot\nabla_{p}\widetilde{f}^{(0)}-\widetilde{D}_{\xi\xi}^{(0)}\cdot\nabla_{\xi_{0}}\widetilde{f}^{(0)}+\widetilde{F}_{\xi}^{(0)}\widetilde{f}^{(0)}\end{eqnarray*}
+ avec \begin{eqnarray*}
+\widetilde{D}_{\xi p}^{(0)} & = & \left\{ \frac{\xi^{2}}{\Psi^{3/2}\xi_{0}^{2}}\widetilde{D}_{\xi p}\right\} \\
+\widetilde{D}_{\xi\xi}^{(0)} & = & \sigma\left\{ \frac{\sigma\xi^{3}}{\Psi^{2}\xi_{0}^{3}}\widetilde{D}_{\xi\xi}\right\} \\
+\widetilde{F}_{\xi}^{(0)} & = & \left[\left\{ \frac{\xi^{2}}{\Psi^{3/2}\xi_{0}^{2}}\widetilde{F}_{\xi}\right\} -\left\{ \frac{\sigma\xi^{2}}{\Psi\xi_{0}^{2}}\nabla_{\left|\xi_{0}\right|}\left(\frac{\xi}{\Psi(\theta)\xi_{0}}\right)\widetilde{D}_{\xi\xi}\right\} \right]\\
+ & = & \left[\left\{ \frac{\xi^{2}}{\Psi^{3/2}\xi_{0}^{2}}\widetilde{F}_{\xi}\right\} +\sigma\frac{\sqrt{1-\xi_{0}^{2}}}{p\xi_{0}^{3}}\left\{ \frac{\sigma\xi\left(\Psi(\theta)-1\right)}{\Psi^{2}\xi_{0}}\widetilde{D}_{\xi\xi}\right\} \right]\end{eqnarray*}
+ de sorte que finalement on puisse reecrire \[
+\widetilde{\mathbf{S}}_{\mathbf{p}}^{(0)}=-\overline{\overline{\widetilde{D}}}^{(0)}\cdot\nabla_{p,\xi_{0}}\widetilde{f}^{(0)}+\overline{\widetilde{F}}^{(0)}\widetilde{f}^{(0)}\]
+ avec les elements definis ci-dessus.

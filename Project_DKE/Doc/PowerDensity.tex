@@ -1,0 +1,45 @@
+L'energie cinetique d'un electron relativiste ayant une quantite de
+mouvement $p$ vaut \[
+\mathcal{e}=m_{e}c^{2}\left(\gamma-1\right)\]
+ ou $\gamma=\frac{1}{\sqrt{1-\frac{v^{2}}{c^{2}}}}$ est le facteur
+de correction relativiste, $v$ etant la vitesse de l'electron, et
+$c$ la vitesse de la lumiere. La densite locale d'energie electronique
+vaut alors \[
+E=\int d^{3}pf\left(\mathbf{p}\right)m_{e}c^{2}\left(\gamma-1\right)\]
+
+
+La densite de puissance absorbee resultant du processus $\mathcal{O}$
+est alors donnee par l'expression \[
+P_{abs}^{\mathcal{O}}=\left.\frac{\partial\mathcal{E}}{\partial t}\right|_{\mathcal{O}}=\int d^{3}p\left.\frac{\partial f\left(\mathbf{p}\right)}{\partial t}\right|_{\mathcal{O}}m_{e}c^{2}\left(\gamma-1\right)\]
+ ou en terme de divergence de flux \[
+\left.\frac{\partial f\left(\mathbf{p}\right)}{\partial t}\right|_{\mathcal{O}}=-\mathbf{\nabla}_{\mathbf{p}}\cdot\mathbf{S}_{\mathbf{p}}^{\mathcal{O}}=-\frac{1}{p^{2}}\frac{\partial\left(p^{2}S_{p}^{\mathcal{O}}\right)}{\partial p}+\frac{1}{p}\frac{\partial\left(\sqrt{1-\xi^{2}}S_{\xi}^{\mathcal{O}}\right)}{\partial\xi}\]
+
+
+La puissance absorbee vaut donc \[
+P_{abs}^{\mathcal{O}}=-2\pi m_{e}c^{2}\int_{0}^{\infty}p^{2}\left(\gamma-1\right)dp\int_{-1}^{+1}d\xi\left[\frac{1}{p^{2}}\frac{\partial\left(p^{2}S_{p}^{\mathcal{O}}\right)}{\partial p}-\frac{1}{p}\frac{\partial\left(\sqrt{1-\xi^{2}}S_{\xi}^{\mathcal{O}}\right)}{\partial\xi}\right]\]
+
+
+L'integration du terme en $S_{\xi}$ ne donne pas de contribution
+puisque la diffusion angulaire ne change pas l'energie ou la quantite
+de mouvement $p$ de la particule. \[
+\int_{-1}^{+1}\frac{\partial\left(\sqrt{1-\xi^{2}}S_{\xi}^{\mathcal{O}}\right)}{\partial\xi}d\xi=\left[\sqrt{1-\xi^{2}}S_{\xi}^{\mathcal{O}}\right]_{-1}^{+1}=0\]
+
+
+L'integrale se reduit alors a \[
+P_{abs}^{\mathcal{O}}=-2\pi m_{e}c^{2}\int_{-1}^{+1}d\xi\int_{0}^{\infty}\left(\gamma-1\right)\frac{\partial\left(p^{2}S_{p}^{\mathcal{O}}\right)}{\partial p}dp\]
+
+
+En effectuant une integration par parties \[
+P_{abs}^{\mathcal{O}}=-2\pi m_{e}c^{2}\int_{-1}^{+1}d\xi\left(\left[\left(\gamma-1\right)p^{2}S_{p}^{\mathcal{O}}\right]_{0}^{\infty}-\int_{0}^{\infty}\frac{\partial\gamma}{\partial p}p^{2}S_{p}^{\mathcal{O}}dp\right)\]
+
+
+on obtient \[
+P_{abs}^{\mathcal{O}}=2\pi\int_{-1}^{+1}d\xi\int_{0}^{\infty}\frac{p^{3}}{\gamma m_{e}}S_{p}^{\mathcal{O}}dp\]
+
+
+en faisant l'hypothese que $\lim_{p\rightarrow\infty}p^{2}S_{p}^{\mathcal{O}}=0,$
+ce qui suppose que le domaine sur lequel est calcule le flux est assez
+grand pour que la puissance perdue aux frontieres soit negligeable,
+et en remarquant que \[
+\frac{\partial\gamma}{\partial p}=\frac{p}{\gamma m_{e}^{2}c^{2}}\]
+

@@ -1,0 +1,41 @@
+Comme il a ete montre, l'equation de Fokker-Planck peut etre exprimee
+sous une forme totalement matricielle, sous la forme symbolique implicite
+\begin{eqnarray*}
+ &  & r_{l+1/2}p_{i+1/2}^{2}\frac{f_{i+1/2,j+1/2,l+1/2}^{\left(0\right)\left(k+1\right)}-f_{i+1/2,j+1/2,l+1/2}^{\left(0\right)\left(k\right)}}{\Delta t}\\
+ &  & =-r_{l+1/2}\sum_{i^{\prime}=i-1}^{i^{\prime}=i+1}\sum_{j^{\prime}=j-1}^{j^{\prime}=j+1}\overline{\overline{M}}_{p,i^{\prime}+1/2,j^{\prime}+1/2,l+1/2}^{\left(0\right)}f_{i^{\prime}+1/2,j^{\prime}+1/2,l+1/2}^{\left(0\right)\left(k+1\right)}\\
+ &  & -p_{i+1/2}^{2}\sum_{l^{\prime}=l-1}^{l^{\prime}=l+1}\overline{\overline{M}}_{r,,i+1/2,j+1/2,l^{\prime}+1/2}^{\left(0\right)}f_{i+1/2,j+1/2,l^{\prime}+1/2}^{\left(0\right)\left(k+1\right)}\end{eqnarray*}
+Ordre zero: code Fokker-Planck
+
+En ordonnant les valeurs discretes de la distribution $f_{i+1/2,j+1/2,l+1/2}^{\left(0\right)\left(k+1\right)}$
+sous la forme d'un vecteur $\mathbf{X}$ selon la regle d'une suite
+$\left[l\rightarrow\left\{ 0,n_{r}-1\right\} ,i\rightarrow\left\{ 0,n_{p}-1\right\} ,j\rightarrow\left\{ 0,n_{\xi}-1\right\} \right],$
+on obtient une matrice diagonale $\overline{\overline{\mathbf{M}}}$
+par bandes,
+
+Methode implicite complete \[
+\left(\overline{\overline{\mathbf{M}}}+\frac{\overline{\overline{\mathbf{I}}}}{\Delta t}\right)\cdot\mathbf{X}^{\left(k+1\right)}\mathbf{=}\frac{\overline{\overline{\mathbf{I}}}}{\Delta t}\cdot\mathbf{X}^{\left(k\right)}-\mathbf{B}^{\left(k\right)}\]
+
+
+Methode Cranck-Nicholson \[
+\left(\frac{\overline{\overline{\mathbf{M}}}}{2}+\frac{\overline{\overline{\mathbf{I}}}}{\Delta t}\right)\mathbf{X}^{\left(k+1\right)}\mathbf{=\left(-\frac{\overline{\overline{\mathbf{M}}}}{2}+\frac{\overline{\overline{\mathbf{I}}}}{\Delta t}\right)X}^{\left(k\right)}-\mathbf{B}^{\left(k\right)}\]
+
+
+\[
+\overline{\overline{\mathbf{M}}}=\overline{\overline{\mathbf{L}}}\cdot\overline{\overline{\mathbf{U}}}\]
+
+
+\[
+\mathbf{\Delta}^{\left(k+1\right)}\mathbf{=X}^{\left(k+1\right)}-\mathbf{X}^{\left(k\right)}\]
+
+
+\[
+\mathbf{R}^{\left(k\right)}\mathbf{=}\frac{\overline{\overline{\mathbf{I}}}}{\Delta t}\cdot\mathbf{X}^{\left(k\right)}-\mathbf{B}^{\left(k\right)}-\left(\overline{\overline{\mathbf{M}}}+\frac{\overline{\overline{\mathbf{I}}}}{\Delta t}\right)\cdot\mathbf{X}^{\left(k\right)}=-\overline{\overline{\mathbf{T}}}\mathbf{\cdot X}^{\left(k\right)}-\mathbf{B}^{\left(k\right)}\]
+
+
+\[
+\overline{\overline{\mathbf{L}}}\cdot\overline{\overline{\mathbf{U}}}\cdot\mathbf{\Delta}^{\left(k+1\right)}=\]
+
+
+\[
+\sqrt{\frac{\iint\left(\frac{\partial f_{0}^{\left(0\right)}}{\partial t}\right)^{2}f_{0}^{\left(0\right)}p^{2}dp\xi_{0}d\xi_{0}}{\iint f_{0}^{\left(0\right)}p^{2}dp\xi_{0}d\xi_{0}}}<R\]
+

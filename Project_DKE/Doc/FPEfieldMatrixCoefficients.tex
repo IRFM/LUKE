@@ -1,0 +1,149 @@
+Dependence polo\"{\i}dale du champ electrique Ohmique
+
+Le fonctionnement de base du tokamak repose sur le principe du transformateur,
+l'anneau toro\"{\i}dal forme par le plasma constituant le circuit
+secondaire. Dans ce regime, le courant total $I_{p}$ circulant dans
+le plasma est induit par la variation temporelle du flux polo\"{\i}dal
+$\frac{\partial\psi}{\partial t}$ produite par le circuit primaire.
+La densite de courant $\overrightarrow{j}$ circulant dans le plasma
+resulte de la loi d'Ohm, $\overrightarrow{j}=\overline{\overline{\sigma}}_{\Omega}\overrightarrow{E},$
+ou $\overline{\overline{\sigma}}_{\Omega}$ est la conductivite electrique
+du plasma prenant en compte les interactions Coulombiennes entre ses
+constituants, les electrons etant fortement magnetises. La relation
+entre $\frac{\partial\psi}{\partial t}$ et $\overrightarrow{E}$
+est obtenue a partir de la loi Faraday, \[
+\frac{\partial\overrightarrow{B}}{\partial t}=-\overrightarrow{\nabla}\times\overrightarrow{E}\]
+ En projetant cette expression sur le gradient du flux polo\"{\i}dal,
+on obtient, \[
+\overrightarrow{\nabla}\psi\cdot\frac{\partial\overrightarrow{B}}{\partial t}=-\overrightarrow{\nabla}\psi\cdot\left(\overrightarrow{\nabla}\times\overrightarrow{E}\right)\]
+ et en utilisant le fait que le champ magnetique est contenu dans
+les surfaces de flux, \[
+\overrightarrow{B}\cdot\overrightarrow{\nabla}\psi=0\rightarrow\overrightarrow{\nabla}\psi\cdot\frac{\partial\overrightarrow{B}}{\partial t}=-\overrightarrow{B}\cdot\overrightarrow{\nabla}\frac{\partial\psi}{\partial t}\]
+ ce qui conduit a \[
+\overrightarrow{B}\cdot\overrightarrow{\nabla}\frac{\partial\psi}{\partial t}=\overrightarrow{\nabla}\psi\cdot\left(\overrightarrow{\nabla}\times\overrightarrow{E}\right)\]
+
+
+Sachant que \[
+\overrightarrow{\nabla}\times\overrightarrow{E}=\overrightarrow{\nabla}\times E_{\phi}\overrightarrow{e}_{\phi}\]
+ en raison de l'axisymetrie, on obtient\[
+\overrightarrow{\nabla}\psi\cdot\left(\overrightarrow{\nabla}\times\overrightarrow{E}\right)=\overrightarrow{\nabla}\psi\cdot\left(\overrightarrow{\nabla}\times E_{\phi}\overrightarrow{e}_{\phi}\right)=-\left(\overrightarrow{\nabla}\psi\times\overrightarrow{e}_{\phi}\right)\cdot\overrightarrow{\nabla}E_{\phi}\]
+en utilisant les relations vectorielles suivantes: $\overrightarrow{\nabla}\cdot\left(\overrightarrow{A}\times\overrightarrow{B}\right)=\overrightarrow{B}\cdot\left(\overrightarrow{\nabla}\times\overrightarrow{A}\right)-\overrightarrow{A}\cdot\left(\overrightarrow{\nabla}\times\overrightarrow{B}\right)$
+et $\nabla\times\left(f\overrightarrow{A}\right)=f\overrightarrow{\nabla}\times\overrightarrow{A}+\overrightarrow{\nabla}f\times\overrightarrow{A}$
+
+D'apres l'expression du champ poloidal en fonction de $\psi,$ on
+trouve donc \[
+\overrightarrow{\nabla}\psi\cdot\left(\overrightarrow{\nabla}\times\overrightarrow{E}\right)=-R\overrightarrow{B}_{p}\cdot\overrightarrow{\nabla}E_{\phi}\]
+ Comme de plus $\overrightarrow{B}_{\phi}\cdot\overrightarrow{\nabla}E_{\phi}=0,$
+il est toujours possible d'ajouter ce terme au second membre, afin
+de faire apparaitre le champ magnetique total $\overrightarrow{B}=$
+$\overrightarrow{B}_{\phi}+\overrightarrow{B}_{p}.$ On en deduit
+donc \[
+\overrightarrow{\nabla}\psi\cdot\left(\overrightarrow{\nabla}\times\overrightarrow{E}\right)=-R\overrightarrow{B}\cdot\overrightarrow{\nabla}E_{\phi}=-\overrightarrow{B}\cdot\overrightarrow{\nabla}RE_{\phi}\]
+
+
+Au final, \[
+\overrightarrow{B}\cdot\overrightarrow{\nabla}\frac{\partial\psi}{\partial t}=-\overrightarrow{B}\cdot\overrightarrow{\nabla}RE_{\phi}\]
+ soit \[
+\overrightarrow{B}\cdot\overrightarrow{\nabla}\left(\frac{\partial\psi}{\partial t}+RE_{\phi}\right)=0\]
+ quelle que soit la valeur de $\overrightarrow{B},$ ce qui indique
+que \[
+\frac{\partial\psi}{\partial t}=-RE_{\phi}\]
+
+
+En integrant cette relation, en supposant que $E_{\phi}$ est une
+fonction independante du temps, on trouve que $\psi\left(t\right)=-RE_{\phi}t+\psi\left(t=0\right).$
+Sachant que $\overrightarrow{B}_{p}$ depend de $\overrightarrow{\nabla}\psi,$
+on en deduit immediatement que $\frac{\partial\psi}{\partial R}$
+$=-t\frac{\partial RE_{\phi}}{\partial R}+\frac{\partial\psi\left(t=0\right)}{\partial R}$
+mais egalement $\frac{\partial\psi}{\partial Z}$ $=-t\frac{\partial RE_{\phi}}{\partial Z}+\frac{\partial\psi\left(t=0\right)}{\partial Z}.$
+Le champ polo\"{\i}dal etant constant, puisqu'il est une fonction
+de $\overrightarrow{j}=\overline{\overline{\sigma}}_{\Omega}\overrightarrow{E}$
+selon la loi d'Ohm, cela implique que $RE_{\phi}$ est une constante
+independante de $R$ et de $Z$, sinon $\overrightarrow{B}_{p}$ evoluerait
+aussi en fonction du temps. On a ainsi \[
+R\left(r,\theta\right)E_{\phi}\left(r,\theta\right)=R\left(r,\theta=0\right)E_{\phi}\left(r,\theta=0\right)\]
+ soit \[
+E_{\phi}\left(r,\theta\right)=\Psi\left(r,\theta\right)E_{\phi}^{(0)}\left(r\right)\]
+
+
+Expression conservative du flux lie au champ electrique constant
+
+En posant $\mathcal{E}(f_{0})=\overrightarrow{\nabla}\cdot\overrightarrow{S}^{E},$on
+trouve immediatement que dans des coordonnees cylindriques $\left(p_{\Vert},p_{\bot}\right),$
+le flux induit par le champ electrique longitudinal $E_{\Vert}$ dans
+l'espace des vitesses vaut \[
+\overrightarrow{S}^{E}=q_{e}E_{_{\Vert}}f_{0}\overrightarrow{b}\]
+ soit \[
+\overrightarrow{S}^{E}\left(cyl.\right)=\left(\begin{array}{l}
+S_{p_{_{\Vert}}}^{E}\\
+S_{p_{\bot}}^{E}\end{array}\right)=\left(\begin{array}{l}
+q_{e}E_{\Vert}f_{0}\\
+0\end{array}\right)\]
+ ou $q_{e}$ est la charge electrique de l'electron, et $\overrightarrow{b}=$
+$\overrightarrow{B}/\left|\left|\overrightarrow{B}\right|\right|$le
+vecteur unite le long de la ligne de champ.
+
+Pour calculer le flux dans en coordonnees spheriques $\left(p,\xi\right),$
+ou $\xi=p_{_{\Vert}}/p,$ et $p_{\bot}/p=\sqrt{1-\xi^{2}},$ on effectue
+la transformation $\overrightarrow{S}^{E}\left(sph.\right)=\mathcal{R}^{-1}$
+$\overrightarrow{S}^{E}\left(cyl.\right),$ ou $\mathcal{R}$ est
+la rotation permettant de passer du repere cylindrique au spherique
+soit \[
+\mathcal{R}=\left(\begin{array}{ll}
+\xi & -\sqrt{1-\xi^{2}}\\
+\sqrt{1-\xi^{2}} & \xi\end{array}\right)\]
+
+
+Utilisant la propriete usuelle des rotations, $\mathcal{R}^{-1}=$
+$^{t}\mathcal{R}$ on en deduit que \[
+\left\{ \begin{array}{l}
+S_{p}^{E}=\xi S_{p_{\Vert}}^{E}\\
+S_{\xi}^{E}=-\sqrt{1-\xi^{2}}S_{p_{\Vert}}^{E}\end{array}\right.\]
+ et naturellement \begin{eqnarray*}
+F_{p}^{\text{E}} & = & q_{e}\xi E_{\Vert}\\
+F_{\xi}^{\text{E}} & = & -q_{e}\sqrt{1-\xi^{2}}E_{\Vert}\end{eqnarray*}
+
+
+A partir de ces expressions il est facile de determiner la moyenne
+des coefficients sur la periode de rebond. On obtient ainsi
+
+\begin{eqnarray*}
+F_{p}^{\text{E}(0)} & = & q_{e}\left\{ \xi E_{\Vert}\right\} \\
+F_{\xi}^{\text{E}(0)} & = & q_{e}\sigma\left\{ -\sqrt{1-\xi^{2}}\frac{\sigma\xi}{\sqrt{\Psi}\xi_{0}}E_{\Vert}\right\} \end{eqnarray*}
+ Comme la dependence poloidale du champ electrique est la suivante
+sur une surface de flux $r$ donnee \[
+E_{\Vert}(\theta)=\Psi(\theta)E_{\Vert,0}\]
+ on en deduit que
+
+\begin{eqnarray*}
+F_{p}^{\text{E}(0)} & = & \xi_{0}\sigma q_{e}E_{\Vert,0}\left\{ \Psi\frac{\sigma\xi}{\xi_{0}}\right\} \\
+F_{\xi}^{\text{E}(0)} & = & -\sqrt{1-\xi_{0}^{2}}\sigma q_{e}E_{\Vert,0}\left\{ \Psi\frac{\sigma\xi}{\xi_{0}}\right\} \end{eqnarray*}
+
+
+Le coefficient $\left\{ \Psi\xi/\xi_{0}\right\} $ est defini selon
+la forme usuelle \[
+\left\{ \Psi\frac{\sigma\xi}{\xi_{0}}\right\} \equiv\frac{\sigma s^{\ast}}{\lambda\left(\xi_{0}\right)}\]
+ et on obtient finalement \begin{eqnarray*}
+F_{p}^{\text{E}(0)} & = & \xi_{0}\frac{s^{\ast}}{\lambda\left(\xi_{0}\right)}q_{e}E_{\Vert,0}\\
+F_{\xi}^{\text{E}(0)} & = & -\sqrt{1-\xi_{0}^{2}}\frac{s^{\ast}}{\lambda\left(\xi_{0}\right)}q_{e}E_{\Vert,0}\end{eqnarray*}
+ Sous forme discrete, les coefficients lies au champ electrique constant
+qui interviennent dans la matrice $\overline{\overline{M}}^{\left(0\right)}$
+sont \[
+\overline{\overline{D}}_{p}^{\text{E}(0)}\rightarrow\left\{ \begin{array}{l}
+D_{pp,i+1,j+1/2}^{\text{E}\left(0\right)}=0\\
+D_{pp,i,j+1/2}^{\text{E}\left(0\right)}=0\\
+D_{p\xi,i+1,j+1/2}^{\text{E}\left(0\right)}=0\\
+D_{\xi p,i+1/2,j+1}^{\text{E}\left(0\right)}=0\\
+D_{p\xi,i+1/2,j+1/2}^{\text{E}\left(0\right)}=0\\
+D_{\xi p,i+1/2,j+1/2}^{\text{E}\left(0\right)}=0\\
+D_{p\xi,i,j+1/2}^{\text{E}\left(0\right)}=0\\
+D_{\xi p,i+1/2,j}^{\text{E}\left(0\right)}=0\\
+D_{\xi\xi,i+1/2,j+1}^{\text{E}\left(0\right)}=0\\
+D_{\xi\xi,i+1/2,j}^{\text{E}\left(0\right)}=0\end{array}\right.\]
+ et \[
+\overline{F}_{p}^{\text{E}(0)}\rightarrow\left\{ \begin{array}{l}
+F_{p,i+1,j+1/2}^{\text{E}(0)}=\xi_{0j+1/2}\frac{s_{j+1/2}^{\ast}}{\lambda\left(\xi_{0j+1/2}\right)}(q_{e}E_{\Vert,0})\\
+F_{p,i,j+1/2}^{\text{E}(0)}=\xi_{0j+1/2}\frac{s_{j+1/2}^{\ast}}{\lambda\left(\xi_{0j+1/2}\right)}(q_{e}E_{\Vert,0})\\
+F_{\xi,i+1/2,j+1}^{\text{E}(0)}=-\sqrt{1-\xi_{0j+1}^{2}}\frac{s_{j+1}^{\ast}}{\lambda\left(\xi_{0j+1}\right)}(q_{e}E_{\Vert,0})\\
+F_{\xi,i+1/2,j}^{\text{E}(0)}=-\sqrt{1-\xi_{0j}^{2}}\frac{s_{j}^{\ast}}{\lambda\left(\xi_{0j}\right)}(q_{e}E_{\Vert,0})\end{array}\right.\]
+

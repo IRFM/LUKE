@@ -1,0 +1,73 @@
+En principe, le processus de transport doit conserver l'energie, donc
+l'impulsion $p$, et le moment magnetique $\mu$ de la particule,
+ces deux quantites etant des invariants du mouvement. La conservation
+du moment magnetique impose la relation suivante, \[
+\mu=\left.\frac{1-\xi^{2}}{B_{\min}}\right|_{l=l_{1}}=\left.\frac{1-\xi^{2}}{B_{\min}}\right|_{l=l_{2}}\]
+ ou $l_{1}$ et $l_{2}$ sont les indices correspondant aux deux positions
+radiales entre lesquelles l'electron se deplace. La valeur de $\xi$
+est donc une fonction de la position radiale $r$, a travers la dependance
+du champ magnetique $B$. Ainsi, \[
+\xi_{j_{l_{2}}}=\sigma_{j_{l_{1}}}\sqrt{1-\Psi_{l_{1},l_{2}}\left(1-\xi_{j_{l_{1}}}^{2}\right)}\]
+ ou \[
+\Psi_{l_{1},l_{2}}=\frac{B_{\min}\left(r_{l_{2}}\right)}{B_{\min,}\left(r_{l_{1}}\right)}\]
+ et \[
+\sigma_{j_{l_{1}}}=sgn\left(\xi_{j_{l_{1}}}\right)\]
+
+
+De proche en proche, un electron circulant au centre du plasma peut
+ainsi devenir un electron piege au bord de celui-ci. Cependant, les
+corrections liees a la conservation du moment magnetique concernent
+essentiellement les electrons ayant une grande energie perpendiculaire,
+soit $\xi\approx0.$ En effet, c'est dans cette region uniquement
+que la variation relative de $\xi$ d'un rayon a l'autre est la plus
+importante. Pour les electrons les plus rapides, donc $\left|\xi\right|\sim1,$
+cette correction est faible, voire negligeable, et le modele simple
+du paragraphe precedent est alors largement suffisant. Lorsque l'electron
+migre du centre vers le bord du plasma, $\xi$ tend a augmenter, donc
+son impulsion parallele $p_{\Vert}.$ Dans le cadre du modele simple
+du paragraphe precedent, on sous-estime l'elargissement du courant
+toro\"{\i}dal qui en resulte au bord du plasma.
+
+Sous forme generale, l'equation conservative du transport radial moyennee
+sur les trajectoires vaut alors \[
+\frac{\partial\left(rp^{2}f_{0}^{\left(0\right)}\right)}{\partial t}+p^{2}\frac{\partial\left(rS_{r}^{\left(0\right)}\right)}{\partial r}=0\]
+ ou \[
+S_{r}^{\left(0\right)}\left(p,\xi\left(r\right),r\right)=-D_{rr}^{\left(0\right)}\left(p,\xi\left(r\right),r\right)\frac{\partial f_{0}^{\left(0\right)}\left(p,\xi\left(r\right),r\right)}{\partial r}+F_{r}^{\left(0\right)}\left(p,\xi\left(r\right),r\right)f_{0}^{\left(0\right)}\left(p,\xi\left(r\right),r\right)\]
+
+
+On en deduit ainsi la forme discretisee sur la grille,
+
+\[
+r_{l+1/2}p_{i+1/2}^{2}\frac{f_{0,l+1/2,j_{l+1/2}+1/2}^{\left(0\right)(k+1)}-f_{0,l+1/2,j_{l+1/2}+1/2}^{\left(0\right)(k)}}{\Delta t}=-p_{i+1/2}^{2}\frac{r_{l+1}\left.S_{r}^{\left(0\right)}\right|_{l+1,j_{l+1}+1/2}^{(k+1)}-r_{l}\left.S_{r}^{\left(0\right)}\right|_{l,j_{l}+1/2}^{(k+1)}}{\Delta r_{l+1/2}}\]
+ avec \begin{eqnarray*}
+\left.S_{r}^{\left(0\right)}\right|_{l+1,j_{l+1}+1/2}^{(k+1)} & = & -D_{rr,l+1,j_{l+1}+1/2}^{\left(0\right)}\frac{f_{0,l+3/2,j_{l+3/2}+1/2}^{\left(0\right)(k+1)}-f_{0,l+1/2,j_{l+1/2}+1/2}^{\left(0\right)(k+1)}}{\Delta r_{l+1}}+F_{r,l,j_{l+1}+1/2}^{\left(0\right)}f_{0,l+1,j_{l+1}+1/2}^{\left(0\right)(k+1)}\\
+\left.S_{r}^{\left(0\right)}\right|_{l,j_{l}+1/2}^{(k+1)} & = & -D_{rr,l,j_{l}+1/2}^{\left(0\right)}\frac{f_{0,l+1/2,j_{l+1/2}+1/2}^{\left(0\right)(k+1)}-f_{0,l-1/2,j_{l-1/2}+1/2}^{\left(0\right)(k+1)}}{\Delta r_{l}}+F_{r,l,j_{l}+1/2}^{\left(0\right)}f_{0,l,,j_{l}+1/2}^{\left(0\right)(k+1)}\end{eqnarray*}
+ ou \[
+\left\{ \begin{array}{l}
+\xi_{j_{l+3/2}+1/2}=\sigma_{j_{l+1/2}+1/2}\sqrt{1-\Psi_{l+1/2,l+3/2}\left(1-\xi_{j_{l+1/2}+1/2}^{2}\right)}\\
+\xi_{j_{l+1}+1/2}=\sigma_{j_{l+1/2}+1/2}\sqrt{1-\Psi_{l+1/2,l+1}\left(1-\xi_{j_{l+1/2}+1/2}^{2}\right)}\\
+\xi_{j_{l}+1/2}=\sigma_{j_{l+1/2}+1/2}\sqrt{1-\Psi_{l+1/2,l}\left(1-\xi_{j_{l+1/2}+1/2}^{2}\right)}\\
+\xi_{j_{l}-1/2}=\sigma_{j_{l+1/2}+1/2}\sqrt{1-\Psi_{l+1/2,l-1/2}\left(1-\xi_{j_{l+1/2}+1/2}^{2}\right)}\end{array}\right.\]
+
+
+A la limite $\Psi=1,$ c'est-a-dire en negligeant la variation locale
+du champ magnetique, on retrouve bien le cas simple precedent.
+
+De maniere generale, il n'est pas possible d'effectuer un developpement
+de Taylor autour de la valeur en $j_{l+1/2}+1/2$ pour exprimer les
+termes en $j_{l-1/2}+1/2$, $j_{l}+1/2$, $j_{l+1}+1/2$ et $j_{l+3/2}+1/2,$
+car les grilles peuvent etre telles qu'une variation radiale $\Delta r_{l+1/2}$
+corresponde a une changement important de la distribution en $\xi$.
+L'interpolation entre les grilles vaut alors \[
+\left\{ \begin{array}{l}
+f_{0,l+1,j_{l+1}+1/2}^{\left(0\right)(\infty)}=\left(\frac{\Delta r_{l+1/2}}{\Delta r_{l+1/2}+\Delta r_{l+3/2}}\right)f_{0,l+3/2,j_{l+1}+1/2}^{\left(0\right)(\infty)}+\left(\frac{\Delta r_{l+3/2}}{\Delta r_{l+1/2}+\Delta r_{l+3/2}}\right)f_{0,l+1/2,j_{l+1}+1/2}^{\left(0\right)(\infty)}\\
+f_{0,l,,j_{l}+1/2}^{\left(0\right)(\infty)}=\left(\frac{\Delta r_{l-1/2}}{\Delta r_{l-1/2}+\Delta r_{l+1/2}}\right)f_{0,l+1/2,j_{l}+1/2}^{\left(0\right)(\infty)}+\left(\frac{\Delta r_{l+1/2}}{\Delta r_{l-1/2}+\Delta r_{l+1/2}}\right)f_{0,l-1/2,j_{l}+1/2}^{\left(0\right)(\infty)}\end{array}\right.\]
+
+
+d'ou
+
+\[
+r_{l+1/2}p_{i+1/2}^{2}\frac{f_{l+1/2,j_{l+1/2}+1/2}^{\left(0\right)(k+1)}-f_{l+1/2,j_{l+1/2}+1/2}^{\left(0\right)\left(k\right)}}{\Delta t}+p_{i+1/2}^{2}\sum_{l^{\prime}=l-1}^{l^{\prime}=l+1}\overline{\overline{M}}_{r,l^{\prime}+1/2}^{\left(0\right)}f_{0,l^{\prime}+1/2,j_{l^{\prime}+1/2}+1/2}^{\left(0\right)(k+1)}=0\]
+ les coefficients de matrice $\overline{\overline{M}}_{r}^{\left(0\right)}$
+valant dans ce cas,{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*} A ffaire
+{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}

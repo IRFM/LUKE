@@ -1,0 +1,174 @@
+On ne considere dans cette section que le probleme de l'evolution
+de la distribution des electrons dans l'espace des configurations.
+On omet donc ici la dynamique des flux en $p$ et $\xi.$ C'est l'approche
+classique prise en compte dans tous les codes Fokker-Planck 3D actuels.
+Les valeurs des fonctions et des flux sont evaluees a la meme position
+$p$ et $\xi$ dans l'espace des impulsions, soit a la demi-grille
+en impulsion $p_{i+1/2}$ et en diffusion angulaire $\xi_{j+1/2}$.
+Elle presente l'avantage de la simplicite numerique, le transport
+dans l'espace des configurations ne couplant que des electrons ayant
+les memes valeurs en $p_{\Vert}$ et $p_{\bot}.$ L'energie des electrons
+proportionnelle a $p^{2}$ est donc bien conservee, mais le moment
+magnetique, qui est en principe un invariant du mouvement, n'est en
+revanche pas conserve. Compte tenu des hypotheses, on omettra de specifier
+les indices $i+1/2$ et $j+1/2$. L'equation de transport de base
+est donnee par \[
+\frac{\partial\left(rp^{2}f_{0}\right)}{\partial t}+p^{2}\frac{\partial\left(rS_{r}\right)}{\partial r}+p^{2}\frac{\partial S_{\theta}}{\partial\theta}=0\]
+ avec \[
+S_{r}=-D_{rr}\frac{\partial f_{0}}{\partial r}-\frac{1}{r}D_{r\theta}\frac{\partial f_{0}}{\partial\theta}+F_{r}f_{0}\]
+ \[
+S_{\theta}=-D_{\theta r}\frac{\partial f_{0}}{\partial r}-\frac{1}{r}D_{\theta\theta}\frac{\partial f_{0}}{\partial\theta}+F_{\theta}f_{0}\]
+
+
+Sous forme discrete celle-ci devient \begin{eqnarray*}
+r_{l+1/2}p_{i+1/2}^{2}\frac{f_{0,l+1/2,m+1/2}^{(k+1)}-f_{0,l+1/2,m+1/2}^{(k)}}{\Delta t} & = & -p_{i+1/2}^{2}\frac{r_{l+1}\left.S_{r}\right|_{l+1,m+1/2}^{(k+1)}-r_{l}\left.S_{r}\right|_{l,m+1/2}^{(k+1)}}{\Delta r_{l+1/2}}\\
+ &  & -p_{i+1/2}^{2}\frac{\left.S_{\theta}\right|_{l+1/2,m+1}^{(k+1)}-\left.S_{\theta}\right|_{l+1/2,m}^{(k+1)}}{\Delta\theta_{m+1/2}}\end{eqnarray*}
+ avec \begin{eqnarray*}
+\left.S_{r}\right|_{l+1,m+1/2}^{(k+1)} & = & -D_{rr,l+1,m+1/2}\left.\frac{\partial f_{0}}{\partial r}\right|_{l+1,m+1/2}^{(k+1)}\\
+ &  & -D_{r\theta,l+1,m+1/2}\frac{1}{r_{l+1}}\left.\frac{\partial f_{0}}{\partial\theta}\right|_{l+1,m+1/2}^{(k+1)}+F_{r,l+1,m+1/2}f_{0,l+1,m+1/2}^{(k+1)}\\
+\left.S_{r}\right|_{l,m+1/2}^{(k+1)} & = & -D_{rr,l,m+1/2}\left.\frac{\partial f_{0}}{\partial r}\right|_{l,m+1/2}^{(k+1)}\\
+ &  & -D_{r\theta,l,m+1/2}\frac{1}{r_{l}}\left.\frac{\partial f_{0}}{\partial\theta}\right|_{l,m+1/2}^{(k+1)}+F_{r,l,m+1/2}f_{0,l,m+1/2}^{(k+1)}\\
+\left.S_{\theta}\right|_{l+1/2,m+1}^{(k+1)} & = & -D_{\theta r,l+1/2,m+1}\left.\frac{\partial f_{0}}{\partial r}\right|_{l+1/2,m+1}^{(k+1)}\\
+ &  & -D_{\theta\theta,l+1/2,m+1}\frac{1}{r_{l+1/2}}\left.\frac{\partial f_{0}}{\partial\theta}\right|_{l+1/2m+1}^{(k+1)}+F_{\theta,l+1/2,m+1}f_{0,l+1/2,m+1}^{(k+1)}\\
+\left.S_{\theta}\right|_{l+1/2,m}^{(k+1)} & = & -D_{\theta r,l+1/2,m}\left.\frac{\partial f_{0}}{\partial r}\right|_{l+1/2,m}^{(k+1)}\\
+ &  & -D_{\theta\theta,l+1/2,m}\frac{1}{r_{l+1/2}}\left.\frac{\partial f_{0}}{\partial\theta}\right|_{l+1/2m}^{(k+1)}+F_{\theta,l+1/2,m}f_{0,l+1/2,m}^{(k+1)}\end{eqnarray*}
+ Les expressions discretes des derivees partielles prennent la forme
+suivante, \[
+\left\{ \begin{array}{l}
+\left.\frac{\partial f_{0}}{\partial r}\right|_{l+1,m+1/2}^{(k+1)}=\frac{f_{0,l+3/2,m+1/2}^{(k+1)}-f_{0,l+1/2,m+1/2}^{(k+1)}}{\Delta r_{l+1}}\\
+\left.\frac{\partial f_{0}}{\partial r}\right|_{l,m+1/2}^{(k+1)}=\frac{f_{0,l+1/2,m+1/2}^{(k+1)}-f_{0,l-1/2,m+1/2}^{(k+1)}}{\Delta r_{l}}\\
+\left.\frac{\partial f_{0}}{\partial\theta}\right|_{l+1,m+1/2}^{(k+1)}=\frac{f_{0,l+1,m+1}^{(k+1)}-f_{0,l+1,m}^{(k+1)}}{\Delta\theta_{m+1/2}}\\
+\left.\frac{\partial f_{0}}{\partial\theta}\right|_{l,m+1/2}^{(k+1)}=\frac{f_{0,l,m+1}^{(k+1)}-f_{0,l,m}^{(k+1)}}{\Delta\theta_{m+1/2}}\end{array}\right.\]
+ et \[
+\left\{ \begin{array}{l}
+\left.\frac{\partial f_{0}}{\partial r}\right|_{l+1/2,m+1}^{(k+1)}=\frac{f_{0,l+1,m+1}^{(k+1)}-f_{0,l,m+1}^{(k+1)}}{\Delta r_{l+1/2}}\\
+\left.\frac{\partial f_{0}}{\partial r}\right|_{l+1/2,m}^{(k+1)}=\frac{f_{0,l+1,m}^{(k+1)}-f_{0,,m}^{(k+1)}}{\Delta r_{l+1/2}}\\
+\left.\frac{\partial f_{0}}{\partial\theta}\right|_{l+1/2,m+1}^{(k+1)}=\frac{f_{0,l+1/2,m+3/2}^{(k+1)}-f_{0,l+1/2,m+1/2}^{(k+1)}}{\Delta\theta_{m+1}}\\
+\left.\frac{\partial f_{0}}{\partial\theta}\right|_{i+1/2,m}^{(k+1)}=\frac{f_{0,l+1/2,m+1/2}^{(k+1)}-f_{0,l+1/2,m-1/2}^{(k+1)}}{\Delta\theta_{m}}\end{array}\right.\]
+ ou $\Delta r_{l},$ $\Delta r_{l+1/2},$ $\Delta r_{l+1},$ $\Delta\theta_{m},$
+$\Delta\theta_{m+1/2}$ et $\Delta\theta_{m+1}$ ont deja ete explicites
+au paragraphe consacre a la definition des grilles.
+
+En recombinant les differentes expressions on obtient
+
+\begin{eqnarray*}
+\left.S_{r}\right|_{l+1,m+1/2}^{(k+1)} & = & -D_{rr,l+1,m+1/2}\frac{f_{0,l+3/2,m+1/2}^{(k+1)}-f_{0,l+1/2,m+1/2}^{(k+1)}}{\Delta r_{l+1}}\\
+ &  & -D_{r\theta,l+1,m+1/2}\frac{1}{r_{l+1}}\frac{f_{0,l+1,m+1}^{(k+1)}-f_{0,l+1,m}^{(k+1)}}{\Delta\theta_{m+1/2}}+F_{r,l+1,m+1/2}f_{0,l+1,m+1/2}^{(k+1)}\\
+\left.S_{r}\right|_{l,m+1/2}^{(k+1)} & = & -D_{rr,l,m+1/2}\frac{f_{0,l+1/2,m+1/2}^{(k+1)}-f_{0,l-1/2,m+1/2}^{(k+1)}}{\Delta r_{l}}\\
+ &  & -D_{r\theta,l,m+1/2}\frac{1}{r_{l}}\frac{f_{0,l,m+1}^{(k+1)}-f_{0,l,m}^{(k+1)}}{\Delta\theta_{m+1/2}}+F_{r,l,m+1/2}f_{0,l,m+1/2}^{(k+1)}\\
+\left.S_{\theta}\right|_{l+1/2,m+1}^{(k+1)} & = & -D_{\theta r,l+1/2,m+1}\frac{f_{0,l+1,m+1}^{(k+1)}-f_{0,l,m+1}^{(k+1)}}{\Delta r_{l+1/2}}\\
+ &  & -D_{\theta\theta,l+1/2,m+1}\frac{1}{r_{l+1/2}}\frac{f_{0,l+1/2,m+3/2}^{(k+1)}-f_{0,l+1/2,m+1/2}^{(k+1)}}{\Delta\theta_{m+1}}+F_{\theta,l+1/2,m+1}f_{0,l+1/2,m+1}^{(k+1)}\\
+\left.S_{\theta}\right|_{l+1/2,m}^{(k+1)} & = & -D_{\theta r,l+1/2,m}\frac{f_{0,l+1,m}^{(k+1)}-f_{0,l,m}^{(k+1)}}{\Delta r_{l+1/2}}\\
+ &  & -D_{\theta\theta,l+1/2,m}\frac{1}{r_{l+1/2}}\frac{f_{0,l+1/2,m+1/2}^{(k+1)}-f_{0,l+1/2,m-1/2}^{(k+1)}}{\Delta\theta_{m}}+F_{\theta,l+1/2,m}f_{0,l+1/2,m}^{(k+1)}\end{eqnarray*}
+
+
+Comme la fonction est definie sur la demi-grille et les flux sur la
+grille entiere, il faut egalement effectuer une interpolation, puisque
+certaines valeurs de $f_{0}$ apparaissent sur la grille entiere dans
+les relations precedentes. De maniere generale, sans se preoccuper
+de l'expression precise du facteur de ponderation $\delta$ qui sera
+discutee plus loin, on peut ecrire \[
+\left\{ \begin{array}{l}
+f_{0,l+1,m+1}^{(k+1)}=\left(1-\delta_{r,l+1,m+1}\right)f_{0,l+3/2,m+1}^{(k+1)}+\delta_{r,l+1,m+1}f_{0,l+1/2,m+1}^{(k+1)}\\
+f_{0,l+1,m+1/2}^{(k+1)}=\left(1-\delta_{r,l+1,m+1/2}\right)f_{0,l+3/2,m+1/2}^{(k+1)}+\delta_{r,l+1,m+1/2}f_{0,l+1/2,m+1/2}^{(k+1)}\\
+f_{0,l+1,m}^{(k+1)}=\left(1-\delta_{r,l+1,m}\right)f_{0,l+3/2,m}^{(k+1)}+\delta_{r,l+1,m}f_{0,l+1/2,m}^{(k+1)}\\
+f_{0,l+1/2,m+1}^{(k+1)}=\left(1-\delta_{\theta,l+1/2,m+1}\right)f_{0,l+1/2,m+3/2}^{(k+1)}+\delta_{\theta,l+1/2,m+1}f_{0,l+1/2,m+1/2}^{(k+1)}\\
+f_{0,l+1/2,m}^{(k+1)}=\left(1-\delta_{\theta,l+1/2,m}\right)f_{0,l+1/2,m+1/2}^{(k+1)}+\delta_{\theta,l+1/2,m}f_{0,l+1/2,m-1/2}^{(k+1)}\\
+f_{0,l,m+1}^{(k+1)}=\left(1-\delta_{r,l,m+1}\right)f_{0,l+1/2,m+1}^{(k+1)}+\delta_{r,l,m+1}f_{0,l-1/2,m+1}^{(k+1)}\\
+f_{0,l,m+1/2}^{(k+1)}=\left(1-\delta_{r,l,m+1/2}\right)f_{0,l+1/2,m+1/2}^{(k+1)}+\delta_{r,l,m+1/2}f_{0,l-1/2,m+1/2}^{(k+1)}\\
+f_{0,l,m}^{(k+1)}=\left(1-\delta_{r,l,m}\right)f_{0,l+1/2,m}^{(k+1)}+\delta_{r,l,m}f_{0,l-1/2,m}^{(k+1)}\end{array}\right.\]
+
+
+Comme on s'interesse principalement au cas de l'equation de Fokker-Planck
+moyennee sur les trajectoires $\left(t\gg\tau_{t,b}\right)$, \[
+\left\{ \frac{\partial\left(rp^{2}f_{0}\right)}{\partial t}\right\} +\left\{ p^{2}\frac{\partial\left(rS_{r}\right)}{\partial r}\right\} +\left\{ p^{2}\frac{\partial S_{\theta}}{\partial\theta}\right\} =0\]
+ on elimine de fait la contribution polo\"{\i}dale en $\theta$ en
+raison des moyennes effectuees:$\left\{ D_{r\theta}\right\} $ $=\left\{ D_{\theta r}\right\} =\left\{ D_{\theta\theta}\right\} =0$
+et $\left\{ F_{\theta}\right\} $ $=0$ et on ne conserve que la dynamique
+radiale. On pose par definition les moyennes des diffusion et convection
+radiales sur les trajectoires des electrons $D_{rr}^{\left(0\right)}=\left\{ D_{rr}\right\} $
+et $F_{r}^{\left(0\right)}=\left\{ F_{r}\right\} $ , ces valeurs
+etant determinees en $B_{min}$. Dans cette limite, les equations
+en jeu sont considerablement simplifiees car \[
+\left\{ \frac{\partial\left(rp^{2}f_{0}\right)}{\partial t}\right\} +\left\{ p^{2}\frac{\partial\left(rS_{r}\right)}{\partial r}\right\} =0\]
+ soit \[
+\left\{ \frac{\partial\left(rp^{2}f_{0}\right)}{\partial t}\right\} +p^{2}\frac{\partial\left(r\left\{ S_{r}\right\} \right)}{\partial r}=\left\{ \frac{\partial\left(rp^{2}f_{0}\right)}{\partial t}\right\} +p^{2}\frac{\partial\left(rS_{r}^{\left(0\right)}\right)}{\partial r}=0\]
+ avec \[
+\mathbf{S}_{\mathbf{r}}^{(0)}=\left\{ \begin{array}{l}
+S_{r}^{\left(0\right)}=\left\{ S_{r}\right\} \\
+S_{\theta}^{\left(0\right)}=0\end{array}\right.\]
+ On conserve ainsi toujours la forme conservative pour la composante
+radiale \[
+S_{\mathbf{r}}^{(0)}=-\overline{\overline{D}}_{r}^{(0)}\cdot\nabla_{r,\theta}f_{0}^{(0)}+\overline{\overline{F}}_{r}^{(0)}f_{0}^{(0)}\]
+ avec les elements de la matrice de diffusion \[
+D_{rr}^{(0)}=\left\{ D_{rr}\right\} \]
+ \[
+F_{r}^{(0)}=\left\{ F_{r}\right\} \]
+ ou
+
+\[
+\left\{ S_{r}\right\} =S_{r}^{\left(0\right)}=\left\{ -D_{rr}\frac{\partial f}{\partial r}+F_{r}f\right\} =-\left\{ D_{rr}\right\} \frac{\partial f_{0}^{\left(0\right)}}{\partial r}+\left\{ F_{r}\right\} f_{0}^{\left(0\right)}=-D_{rr}^{\left(0\right)}\frac{\partial f_{0}^{\left(0\right)}}{\partial r}+F_{r}^{\left(0\right)}f_{0}^{\left(0\right)}\]
+ Sous forme discrete, on obtient \[
+r_{l+1/2}p_{i+1/2}^{2}\frac{f_{0,l+1/2}^{\left(0\right)(k+1)}-f_{0,l+1/2}^{\left(0\right)(k)}}{\Delta t}=-p_{i+1/2}^{2}\frac{r_{l+1}\left.S_{r}^{\left(0\right)}\right|_{l+1}^{(k+1)}-r_{l}\left.S_{r}^{\left(0\right)}\right|_{l}^{(k+1)}}{\Delta r_{l+1/2}}\]
+ avec \begin{eqnarray*}
+\left.S_{r}^{\left(0\right)}\right|_{l+1}^{(k+1)} & = & -D_{rr,l+1}^{\left(0\right)}\frac{f_{0,l+3/2}^{\left(0\right)(k+1)}-f_{0,l+1/2}^{\left(0\right)(k+1)}}{\Delta r_{l+1}}+F_{r,l+1}^{\left(0\right)}f_{0,l+1}^{\left(0\right)(k+1)}\\
+\left.S_{r}^{\left(0\right)}\right|_{l}^{(k+1)} & = & -D_{rr,l}^{\left(0\right)}\frac{f_{0,l+1/2}^{\left(0\right)(k+1)}-f_{0,l-1/2}^{\left(0\right)(k+1)}}{\Delta r_{l}}+F_{r,l}^{\left(0\right)}f_{0,l}^{\left(0\right)(k+1)}\end{eqnarray*}
+ et pour les interpolations entre les grilles \[
+\left\{ \begin{array}{l}
+f_{0,l+1}^{\left(0\right)(k+1)}=\left(1-\delta_{r,l+1}^{\left(0\right)}\right)f_{0,l+3/2}^{\left(0\right)(k+1)}+\delta_{r,l+1}^{\left(0\right)}f_{0,l+1/2}^{\left(0\right)(k+1)}\\
+f_{0,l}^{\left(0\right)(k+1)}=\left(1-\delta_{r,l}^{\left(0\right)}\right)f_{0,l+1/2}^{\left(0\right)(k+1)}+\delta_{r,l}^{\left(0\right)}f_{0,l-1/2}^{\left(0\right)(k+1)}\end{array}\right.\]
+
+
+Il est utile a ce stade d'exprimer sous forme matricielle le transport
+radial, qui peut etre mis sous la forme generale
+
+\[
+r_{l+1/2}p_{i+1/2}^{2}\frac{f_{l+1/2}^{\left(0\right)(k+1)}-f_{l+1/2}^{\left(0\right)\left(k\right)}}{\Delta t}+p_{i+1/2}^{2}\sum_{l^{\prime}=l-1}^{l^{\prime}=l+1}\overline{\overline{M}}_{r,l^{\prime}+1/2}^{\left(0\right)}f_{0,l^{\prime}+1/2}^{\left(0\right)(k+1)}=0\]
+ les coefficients de matrice $\overline{\overline{M}}_{r}^{\left(0\right)}$
+valant,
+
+\[
+\overline{\overline{M}}_{r,l+3/2}^{\left(0\right)}=-\frac{r_{l+1}}{\Delta r_{l+1}\Delta r_{l+1/2}}D_{rr,l+1}^{\left(0\right)}+\frac{r_{l+1}}{\Delta r_{l+1/2}}F_{r,l+1}^{\left(0\right)}\left(1-\delta_{r,l+1}^{\left(0\right)}\right)\]
+\begin{eqnarray*}
+\overline{\overline{M}}_{r,l+1/2}^{\left(0\right)} & = & +\frac{r_{l+1}}{\Delta r_{l+1}\Delta r_{l+1/2}}D_{rr,l+1}^{\left(0\right)}+\frac{r_{l+1}}{\Delta r_{l+1/2}}F_{r,l+1}^{\left(0\right)}\delta_{r,l+1}^{\left(0\right)}\\
+ &  & +\frac{r_{l}}{\Delta r_{l}\Delta r_{l+1/2}}D_{rr,l}^{\left(0\right)}-\frac{r_{l}}{\Delta r_{l+1/2}}F_{r,l}^{\left(0\right)}\left(1-\delta_{r,l}^{\left(0\right)}\right)\end{eqnarray*}
+ \[
+\overline{\overline{M}}_{r,l-1/2}^{\left(0\right)}=-\frac{r_{l}}{\Delta r_{l}\Delta r_{l+1/2}}D_{rr,l}^{\left(0\right)}-\frac{r_{l}}{\Delta r_{l+1/2}}F_{r,l}^{\left(0\right)}\delta_{r,l}^{\left(0\right)}\]
+
+
+Il s'agit donc d'une simple matrice tridiagonale. Pour le choix de
+$\delta_{r}^{\left(0\right)}$, la demarche est analogue a celle utilisee
+pour $\delta_{\xi}$ puisque qu'il n'y a pas de contrainte particuliere
+a prendre en compte sur la dependence radiale de la fonction de distribution
+$f_{0}^{\left(0\right)}$. La fa\c{c}on la plus naturelle consiste
+donc a effectuer une simple interpolation lineaire entre $f_{0,l+3/2}^{\left(0\right)(\infty)}$
+et $f_{0,l+1/2}^{\left(0\right)(\infty)}$ ainsi qu'entre $f_{0,l+1/2}^{\left(0\right)(\infty)}$
+et $f_{0,l-1/2}^{\left(0\right)(\infty)}$ selon les regles
+
+\[
+\left\{ \begin{array}{l}
+f_{0,l+1}^{\left(0\right)(\infty)}=\left(\frac{\Delta r_{l+1/2}}{\Delta r_{l+1/2}+\Delta r_{l+3/2}}\right)f_{0,l+3/2}^{\left(0\right)(\infty)}+\left(\frac{\Delta r_{l+3/2}}{\Delta r_{l+1/2}+\Delta r_{l+3/2}}\right)f_{0,l+1/2}^{\left(0\right)(\infty)}\\
+f_{0,l}^{\left(0\right)(\infty)}=\left(\frac{\Delta r_{l-1/2}}{\Delta r_{l-1/2}+\Delta r_{l+1/2}}\right)f_{0,l+1/2}^{\left(0\right)(\infty)}+\left(\frac{\Delta r_{l+1/2}}{\Delta r_{l-1/2}+\Delta r_{l+1/2}}\right)f_{0,l-1/2}^{\left(0\right)(\infty)}\end{array}\right.\]
+ en tenant compte des pas de grille, ce qui donne \[
+\left\{ \begin{array}{l}
+\delta_{r,l+1}^{\left(0\right)}=\frac{\Delta r_{l+3/2}}{\Delta r_{l+1/2}+\Delta r_{l+3/2}}\\
+\delta_{r,l}^{\left(0\right)}=\frac{\Delta r_{l+1/2}}{\Delta r_{l-1/2}+\Delta r_{l+1/2}}\end{array}\right.\]
+ On retrouve bien que pour une grille uniforme, $\delta_{r,l+1}^{\left(0\right)}=\delta_{r,l}^{\left(0\right)}=1/2.$
+
+Au centre du plasma en $r=0$, le flux $S_{r}^{\left(0\right)}$ doit
+etre nul, puisque toutes les particules entrantes doivent ressortir.
+Pour ce point singulier, on a donc \[
+\left.S_{r}^{\left(0\right)}\right|_{l=0}^{(k+1)}=-D_{rr,l=0}^{\left(0\right)}\frac{f_{0,l=1/2}^{\left(0\right)(k+1)}-f_{0,l=-1/2}^{\left(0\right)(k+1)}}{\Delta r_{l}}+F_{r,l=0}^{\left(0\right)}f_{0,l=0}^{\left(0\right)(k+1)}=0\]
+ et comme par symetrie $f_{0,l=1/2}^{\left(0\right)(k+1)}=f_{0,l=-1/2}^{\left(0\right)(k+1)},$
+cela impose que \[
+F_{r,l=0}^{\left(0\right)}=0\]
+ car cette condition doit etre verifiee pour toute valeur de $f_{0,l=0}^{\left(0\right)(k+1)}$
+qui n'est evidemment pas nulle au centre. Il n'y a evidemment aucune
+contrainte sur la valeur de $D_{rr,l=0}^{\left(0\right)}$, car $\left.S_{r}^{\left(0\right)}\right|_{l=0}^{(k+1)}=0$
+quelle que soit la valeur du coefficient de diffusion radiale.
+
+Au bord en $r=a$, la condition usuelle est d'imposer que les particules
+rapides quittent definitivement le plasma. La distribution est donc
+la Maxwelienne non perturbee d'ou \[
+f_{0,l=n_{r}}^{\left(0\right)(k+1)}=f_{M,l=n_{r}}^{\left(0\right)(k+1)}\]
+

@@ -1,0 +1,239 @@
+#LyX 1.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 221
+\textclass revtex4
+\language english
+\inputencoding auto
+\fontscheme pslatex
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 1
+\use_natbib 0
+\use_numerical_citations 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Standard
+
+En principe, le processus de transport doit conserver l'energie, donc l'impulsio
+n 
+\begin_inset Formula $p$
+\end_inset 
+
+, et le moment magnetique 
+\begin_inset Formula $\mu$
+\end_inset 
+
+ de la particule, ces deux quantites etant des invariants du mouvement.
+ La conservation du moment magnetique impose la relation suivante, 
+\begin_inset Formula \[
+\mu=\left.\frac{1-\xi^{2}}{B_{\min}}\right|_{l=l_{1}}=\left.\frac{1-\xi^{2}}{B_{\min}}\right|_{l=l_{2}}\]
+
+\end_inset 
+
+ ou 
+\begin_inset Formula $l_{1}$
+\end_inset 
+
+ et 
+\begin_inset Formula $l_{2}$
+\end_inset 
+
+ sont les indices correspondant aux deux positions radiales entre lesquelles
+ l'electron se deplace.
+ La valeur de 
+\begin_inset Formula $\xi$
+\end_inset 
+
+ est donc une fonction de la position radiale 
+\begin_inset Formula $r$
+\end_inset 
+
+, a travers la dependance du champ magnetique 
+\begin_inset Formula $B$
+\end_inset 
+
+.
+ Ainsi, 
+\begin_inset Formula \[
+\xi_{j_{l_{2}}}=\sigma_{j_{l_{1}}}\sqrt{1-\Psi_{l_{1},l_{2}}\left(1-\xi_{j_{l_{1}}}^{2}\right)}\]
+
+\end_inset 
+
+ ou 
+\begin_inset Formula \[
+\Psi_{l_{1},l_{2}}=\frac{B_{\min}\left(r_{l_{2}}\right)}{B_{\min,}\left(r_{l_{1}}\right)}\]
+
+\end_inset 
+
+ et 
+\begin_inset Formula \[
+\sigma_{j_{l_{1}}}=sgn\left(\xi_{j_{l_{1}}}\right)\]
+
+\end_inset 
+
+
+\layout Standard
+
+De proche en proche, un electron circulant au centre du plasma peut ainsi
+ devenir un electron piege au bord de celui-ci.
+ Cependant, les corrections liees a la conservation du moment magnetique
+ concernent essentiellement les electrons ayant une grande energie perpendiculai
+re, soit 
+\begin_inset Formula $\xi\approx0.$
+\end_inset 
+
+ En effet, c'est dans cette region uniquement que la variation relative
+ de 
+\begin_inset Formula $\xi$
+\end_inset 
+
+ d'un rayon a l'autre est la plus importante.
+ Pour les electrons les plus rapides, donc 
+\begin_inset Formula $\left|\xi\right|\sim1,$
+\end_inset 
+
+ cette correction est faible, voire negligeable, et le modele simple du
+ paragraphe precedent est alors largement suffisant.
+ Lorsque l'electron migre du centre vers le bord du plasma, 
+\begin_inset Formula $\xi$
+\end_inset 
+
+ tend a augmenter, donc son impulsion parallele 
+\begin_inset Formula $p_{\Vert}.$
+\end_inset 
+
+ Dans le cadre du modele simple du paragraphe precedent, on sous-estime
+ l'elargissement du courant toro\i \"{\i}
+dal qui en resulte au bord du plasma.
+\layout Standard
+
+Sous forme generale, l'equation conservative du transport radial moyennee
+ sur les trajectoires vaut alors 
+\begin_inset Formula \[
+\frac{\partial\left(rp^{2}f_{0}^{\left(0\right)}\right)}{\partial t}+p^{2}\frac{\partial\left(rS_{r}^{\left(0\right)}\right)}{\partial r}=0\]
+
+\end_inset 
+
+ ou 
+\begin_inset Formula \[
+S_{r}^{\left(0\right)}\left(p,\xi\left(r\right),r\right)=-D_{rr}^{\left(0\right)}\left(p,\xi\left(r\right),r\right)\frac{\partial f_{0}^{\left(0\right)}\left(p,\xi\left(r\right),r\right)}{\partial r}+F_{r}^{\left(0\right)}\left(p,\xi\left(r\right),r\right)f_{0}^{\left(0\right)}\left(p,\xi\left(r\right),r\right)\]
+
+\end_inset 
+
+
+\layout Standard
+
+On en deduit ainsi la forme discretisee sur la grille,
+\layout Standard
+
+
+\begin_inset Formula \[
+r_{l+1/2}p_{i+1/2}^{2}\frac{f_{0,l+1/2,j_{l+1/2}+1/2}^{\left(0\right)(k+1)}-f_{0,l+1/2,j_{l+1/2}+1/2}^{\left(0\right)(k)}}{\Delta t}=-p_{i+1/2}^{2}\frac{r_{l+1}\left.S_{r}^{\left(0\right)}\right|_{l+1,j_{l+1}+1/2}^{(k+1)}-r_{l}\left.S_{r}^{\left(0\right)}\right|_{l,j_{l}+1/2}^{(k+1)}}{\Delta r_{l+1/2}}\]
+
+\end_inset 
+
+ avec 
+\begin_inset Formula \begin{eqnarray*}
+\left.S_{r}^{\left(0\right)}\right|_{l+1,j_{l+1}+1/2}^{(k+1)} & = & -D_{rr,l+1,j_{l+1}+1/2}^{\left(0\right)}\frac{f_{0,l+3/2,j_{l+3/2}+1/2}^{\left(0\right)(k+1)}-f_{0,l+1/2,j_{l+1/2}+1/2}^{\left(0\right)(k+1)}}{\Delta r_{l+1}}+F_{r,l,j_{l+1}+1/2}^{\left(0\right)}f_{0,l+1,j_{l+1}+1/2}^{\left(0\right)(k+1)}\\
+\left.S_{r}^{\left(0\right)}\right|_{l,j_{l}+1/2}^{(k+1)} & = & -D_{rr,l,j_{l}+1/2}^{\left(0\right)}\frac{f_{0,l+1/2,j_{l+1/2}+1/2}^{\left(0\right)(k+1)}-f_{0,l-1/2,j_{l-1/2}+1/2}^{\left(0\right)(k+1)}}{\Delta r_{l}}+F_{r,l,j_{l}+1/2}^{\left(0\right)}f_{0,l,,j_{l}+1/2}^{\left(0\right)(k+1)}\end{eqnarray*}
+
+\end_inset 
+
+ ou 
+\begin_inset Formula \[
+\left\{ \begin{array}{l}
+\xi_{j_{l+3/2}+1/2}=\sigma_{j_{l+1/2}+1/2}\sqrt{1-\Psi_{l+1/2,l+3/2}\left(1-\xi_{j_{l+1/2}+1/2}^{2}\right)}\\
+\xi_{j_{l+1}+1/2}=\sigma_{j_{l+1/2}+1/2}\sqrt{1-\Psi_{l+1/2,l+1}\left(1-\xi_{j_{l+1/2}+1/2}^{2}\right)}\\
+\xi_{j_{l}+1/2}=\sigma_{j_{l+1/2}+1/2}\sqrt{1-\Psi_{l+1/2,l}\left(1-\xi_{j_{l+1/2}+1/2}^{2}\right)}\\
+\xi_{j_{l}-1/2}=\sigma_{j_{l+1/2}+1/2}\sqrt{1-\Psi_{l+1/2,l-1/2}\left(1-\xi_{j_{l+1/2}+1/2}^{2}\right)}\end{array}\right.\]
+
+\end_inset 
+
+
+\layout Standard
+
+A la limite 
+\begin_inset Formula $\Psi=1,$
+\end_inset 
+
+ c'est-a-dire en negligeant la variation locale du champ magnetique, on
+ retrouve bien le cas simple precedent.
+\layout Standard
+
+De maniere generale, il n'est pas possible d'effectuer un developpement
+ de Taylor autour de la valeur en 
+\begin_inset Formula $j_{l+1/2}+1/2$
+\end_inset 
+
+ pour exprimer les termes en 
+\begin_inset Formula $j_{l-1/2}+1/2$
+\end_inset 
+
+, 
+\begin_inset Formula $j_{l}+1/2$
+\end_inset 
+
+, 
+\begin_inset Formula $j_{l+1}+1/2$
+\end_inset 
+
+ et 
+\begin_inset Formula $j_{l+3/2}+1/2,$
+\end_inset 
+
+ car les grilles peuvent etre telles qu'une variation radiale 
+\begin_inset Formula $\Delta r_{l+1/2}$
+\end_inset 
+
+ corresponde a une changement important de la distribution en 
+\begin_inset Formula $\xi$
+\end_inset 
+
+.
+ L'interpolation entre les grilles vaut alors 
+\begin_inset Formula \[
+\left\{ \begin{array}{l}
+f_{0,l+1,j_{l+1}+1/2}^{\left(0\right)(\infty)}=\left(\frac{\Delta r_{l+1/2}}{\Delta r_{l+1/2}+\Delta r_{l+3/2}}\right)f_{0,l+3/2,j_{l+1}+1/2}^{\left(0\right)(\infty)}+\left(\frac{\Delta r_{l+3/2}}{\Delta r_{l+1/2}+\Delta r_{l+3/2}}\right)f_{0,l+1/2,j_{l+1}+1/2}^{\left(0\right)(\infty)}\\
+f_{0,l,,j_{l}+1/2}^{\left(0\right)(\infty)}=\left(\frac{\Delta r_{l-1/2}}{\Delta r_{l-1/2}+\Delta r_{l+1/2}}\right)f_{0,l+1/2,j_{l}+1/2}^{\left(0\right)(\infty)}+\left(\frac{\Delta r_{l+1/2}}{\Delta r_{l-1/2}+\Delta r_{l+1/2}}\right)f_{0,l-1/2,j_{l}+1/2}^{\left(0\right)(\infty)}\end{array}\right.\]
+
+\end_inset 
+
+
+\layout Standard
+
+d'ou
+\layout Standard
+
+
+\begin_inset Formula \[
+r_{l+1/2}p_{i+1/2}^{2}\frac{f_{l+1/2,j_{l+1/2}+1/2}^{\left(0\right)(k+1)}-f_{l+1/2,j_{l+1/2}+1/2}^{\left(0\right)\left(k\right)}}{\Delta t}+p_{i+1/2}^{2}\sum_{l^{\prime}=l-1}^{l^{\prime}=l+1}\overline{\overline{M}}_{r,l^{\prime}+1/2}^{\left(0\right)}f_{0,l^{\prime}+1/2,j_{l^{\prime}+1/2}+1/2}^{\left(0\right)(k+1)}=0\]
+
+\end_inset 
+
+ les coefficients de matrice 
+\begin_inset Formula $\overline{\overline{M}}_{r}^{\left(0\right)}$
+\end_inset 
+
+ valant dans ce cas,************** A ffaire *****************
+
+
+
+
+
+
+
+
+
+\the_end

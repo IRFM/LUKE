@@ -1,0 +1,399 @@
+#LyX 1.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 221
+\textclass revtex4
+\language english
+\inputencoding auto
+\fontscheme pslatex
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 1
+\use_natbib 0
+\use_numerical_citations 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Title
+
+A fast numerical solver for the 3-D relativistic electron Drift Kinetic
+ Equation
+\layout Author
+
+Joan Decker
+\layout Address
+
+Plasma Science and Fusion Center, Massachussets Institute of Technology,
+ Cambridge, MA 02139 U.S.A.
+\layout Author
+
+Yves Peysson
+\layout Address
+
+Association EURATOM-CEA, CEA-Cadarache, 13108 St Paul-lez-Durance, France
+\layout Date
+
+20th of november 2003
+\layout Standard
+
+
+\begin_inset LatexCommand \tableofcontents{}
+
+\end_inset 
+
+
+\layout Section
+
+Drift Kinetic equation
+\layout Section
+
+Calculations for a circular plasma equilibrium
+\layout Subsection
+
+Conservative formulation of the transport equations in momentum and configuratio
+n spaces
+\layout Standard
+
+
+\begin_inset Include \input{FPConservativeForm.lyx}
+preview false
+
+\end_inset 
+
+
+\layout Subsection
+
+Grids definition
+\layout Standard
+
+
+\begin_inset Include \input{GridDefinition.lyx}
+preview false
+
+\end_inset 
+
+
+\layout Subsection
+
+Dynamics in momentum space
+\layout Standard
+
+
+\begin_inset Include \input{FPMomentumDynamics.lyx}
+preview false
+
+\end_inset 
+
+
+\layout Subsection
+
+Grid interpolation technique
+\layout Standard
+
+
+\begin_inset Include \input{GridInterpolationTechnique.lyx}
+preview false
+
+\end_inset 
+
+
+\layout Subsection
+
+Bounce averaged Fokker-Planck equation in momentum space
+\layout Subsubsection
+
+Derivation of the numerical form
+\layout Standard
+
+
+\begin_inset Include \input{FPBounceAveragedEquation.lyx}
+preview false
+
+\end_inset 
+
+
+\layout Subsubsection
+
+Matrix coefficients for collisions
+\layout Standard
+
+
+\begin_inset Include \input{FPCollisionMatrixCoefficients.lyx}
+preview false
+
+\end_inset 
+
+
+\layout Subsubsection
+
+Matrix coefficients for a constant Ohmic electric field
+\layout Standard
+
+
+\begin_inset Include \input{FPEfieldMatrixCoefficients.lyx}
+preview false
+
+\end_inset 
+
+
+\layout Subsubsection
+
+Matrix coefficients for quasilinear interaction between RF waves and electrons
+\layout Standard
+
+
+\begin_inset Include \input{FPRFMatrixCoefficients.lyx}
+preview false
+
+\end_inset 
+
+
+\layout Paragraph
+
+Matrix coefficients for the case of the Lower Hybrid wave
+\layout Standard
+
+
+\begin_inset Include \input{FPLHwaveMatrixCoefficients.lyx}
+preview false
+
+\end_inset 
+
+
+\layout Paragraph
+
+Matrix coefficients for the case of the Electron cyclotron wave
+\layout Standard
+
+
+\begin_inset Include \input{FPECwaveMatrixCoefficients.lyx}
+preview false
+
+\end_inset 
+
+
+\layout Subsection
+
+Dynamics in configuration space
+\layout Subsubsection
+
+Radial transport at fixed 
+\begin_inset Formula $p_{\Vert}$
+\end_inset 
+
+ and 
+\begin_inset Formula $p_{\bot}$
+\end_inset 
+
+
+\layout Standard
+
+
+\begin_inset Include \input{RadialDynamicsFixedp.lyx}
+preview false
+
+\end_inset 
+
+
+\layout Subsubsection
+
+Radial transport at fixed energy and magnetic moment
+\layout Standard
+
+
+\begin_inset Include \input{RadialDynamicsFixedEm.lyx}
+preview false
+
+\end_inset 
+
+
+\layout Subsection
+
+Bounce averaged electron Drift Kinetic Equation
+\layout Subsubsection
+
+Flux conservative formulation
+\layout Standard
+
+
+\begin_inset Include \input{DKEFluxFormulation.lyx}
+preview false
+
+\end_inset 
+
+
+\layout Subsubsection
+
+Derivation of the numerical form
+\layout Standard
+
+
+\begin_inset Include \input{DKENumericalForm.lyx}
+preview false
+
+\end_inset 
+
+
+\layout Subsubsection
+
+Matrix coefficients for collisions
+\layout Standard
+
+
+\begin_inset Include \input{DKECollisionMatrixCoefficients.lyx}
+preview false
+
+\end_inset 
+
+
+\layout Subsubsection
+
+Matrix coefficients for a constant Ohmic electric field
+\layout Standard
+
+
+\begin_inset Include \input{DKEEfieldMatrixCoefficients.lyx}
+preview false
+
+\end_inset 
+
+
+\layout Subsubsection
+
+Matrix coefficients for quasilinear interaction between RF waves and electrons
+\layout Standard
+
+
+\begin_inset Include \input{DKERFMatrixCoefficients.lyx}
+preview false
+
+\end_inset 
+
+
+\layout Paragraph
+
+Matrix coefficients for the case of the Lower Hybrid wave
+\layout Standard
+
+
+\begin_inset Include \input{DKELHwaveMatrixCoefficients.lyx}
+preview false
+
+\end_inset 
+
+
+\layout Paragraph
+
+Matrix coefficients for the case of the Electron cyclotron wave
+\layout Standard
+
+
+\begin_inset Include \input{DKEECwaveMatrixcoefficients.lyx}
+preview false
+
+\end_inset 
+
+
+\layout Subsection
+
+Power density calculations
+\layout Subsubsection
+
+General formulation
+\layout Standard
+
+
+\begin_inset Include \input{PowerDensity.lyx}
+preview false
+
+\end_inset 
+
+
+\layout Subsubsection
+
+Power density calculations for the Fokker-Planck equation 
+\layout Standard
+
+
+\begin_inset Include \input{FPPowerDensity.lyx}
+preview false
+
+\end_inset 
+
+
+\layout Subsubsection
+
+Power density calculations for the Drift Kinetic equation 
+\layout Subsubsection
+
+Flux surface averaged power density calculations for the Fokker Planck equation
+ 
+\layout Standard
+
+
+\begin_inset Include \input{FPFluxSurfaceAveragedPowerDensity.lyx}
+preview false
+
+\end_inset 
+
+
+\layout Subsubsection
+
+Flux surface averaged power density calculations for the Drift Kinetic equation
+ 
+\layout Subsection
+
+Trapped particle fraction
+\layout Standard
+
+
+\begin_inset Include \input{TrappedFraction.lyx}
+preview false
+
+\end_inset 
+
+
+\layout Section
+
+Calculations for arbitrary plasma equilibrium
+\layout Section
+
+Code structure and matrix inversion technique
+\layout Subsection
+
+Code structure
+\layout Standard
+
+
+\begin_inset Include \input{CodeStructure.lyx}
+preview false
+
+\end_inset 
+
+
+\layout Section
+
+Appendix
+\layout Subsection
+
+Collision operator for the current drive problem
+\layout Standard
+
+
+\begin_inset Include \input{CollisionOperator.lyx}
+preview false
+
+\end_inset 
+
+
+\the_end
