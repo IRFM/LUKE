@@ -10,7 +10,9 @@ rf_list,nit_rf,prec_rf,...
 coll_mode,bounce_mode,dke_mode,equil_mode,...
 vparmin_r,Dr0,pDr,Dr_model,Vr0,pVr,Vr_model,...
 nhuloss,...
-norm_mode,boundary_mode,prec0_f,nit_f,dtn,prec0_g,nit_g,initguess,invproc,param_inv,...
+norm_mode_f,boundary_mode_f,prec0_f,nit_f,initguess_f,...
+boundary_mode_g,prec0_g,nit_g,...
+dtn,invproc,param_inv,...
 dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode,iloop)
 %
 %  Test function of the 3-D relativistic bounce-averaged electron drift kinetic equation solver 
@@ -20,7 +22,6 @@ dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode,iloop)
 %
 %by Y.PEYSSON CEA-DRFC 30/07/1997 <yves.peysson@cea.fr>
 %Drift kinetic calculations done by J. Decker and Y. Peysson
-%
 %
 format long e;
 global nfig;
@@ -45,6 +46,7 @@ if diary_mode == 1,auto_mode = 1;end
 if dke_mode > 1,dke_mode = 1;end
 %		
 bounce = [bounce_mode,dke_mode,equil_mode];
+boundary_mode = [boundary_mode_f,boundary_mode_g];
 %
 prec0 = [prec0_f,prec0_g];
 nit = [nit_f,nit_g];
@@ -189,13 +191,13 @@ if diary_mode == 1,
 	disp(' ');
 	disp('- Ripple parameter to be reimplemented ');
 	disp(' ');
-	disp(['- Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes norm_mode = ',num2str(norm_mode)]);
+	disp(['- Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes norm_mode_f = ',num2str(norm_mode_f)]);
 	disp(['- Convergence level of the residu prec0_f = ',num2str(prec0_f)]);
 	disp(['- Maximum number of iterations for f nit_f = ',num2str(nit_f)]);
 	disp(['- integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) dtn = ',num2str(dtn)]);
 	disp(['- Convergence level of the residu (if NaN, iterations stop with nit_g) nit_g = ',num2str(nit_g)]);
 	disp(['- Maximum /number of iterations for g nit_g = ',num2str(nit_g)]);
-	disp(['- Initial guess for the distribution function: (0) Maxwellian, (1) Fuchs model with Tperp for LH current drive only, (2) from a file initguess = ',num2str(initguess)]);
+	disp(['- Initial guess for the distribution function: (0) Maxwellian, (1) Fuchs model with Tperp for LH current drive only, (2) from a file initguess_f = ',num2str(initguess_f)]);
 	disp(['- Matrix inversion method: (1) Full LU factorization, (2) qmr iterative method, (3) bicgstab iterative method, (4) cgs iterative method invproc = ',num2str(invproc)]);
 	disp(['- Cylindrical momentum step (pth_ref) = ',num2str(dp_cyl)]);
 	disp(['- Display mode: (0): no, (1): partial, (2): full display_mode = ',num2str(display_mode)]);
@@ -316,15 +318,15 @@ for ir = 1:nr,
 	end
 	XXnhuloss_ref(:,:,ir) = Xnhuloss_ref;
 %
-   if initguess == 1  & (isnan(xvparmin_lh_ref(ir_display)) == 1 | isnan(xvparmax_lh_ref(ir_display)) == 1 | nb_lh ~= 1 ),initguess = 0 ;end
-	if initguess == 0,
+   if initguess_f == 1  & (isnan(xvparmin_lh_ref(ir_display)) == 1 | isnan(xvparmax_lh_ref(ir_display)) == 1 | nb_lh ~= 1 ),initguess_f = 0 ;end
+	if initguess_f == 0,
 		fM_ref = exp(-pn_ref.*pn_ref./(1 + gamma_ref)/xTe_norm(ir))/2/pi/xTe_norm(ir)/sqrt(2*pi*xTe_norm(ir));%Maxwellian distribution normalized to normalized density ne_norm (1st order gamma corrections)
 		XfM_ref = fM_ref'*ones(1,nmhu);
 		normfM_ref = 2*pi*integral_dke_jd(dpn_ref(:),pn_ref(:).*pn_ref(:).*integral_dke_jd(dmhu,XfM_ref,2),1);
 		XfM_ref = xne_norm(ir)*XfM_ref/normfM_ref;
 		Xf0_ref = XfM_ref;
 		title_initguess = 'Relativistic Maxwellian';        
-	elseif initguess == 1,
+	elseif initguess_f == 1,
 %
 %   Initial guess for the distribution function from ref. V.Fuchs et al.,Phys. Fluids 28 (1985) 3619. 
 %   (Only for the old method for calculating the quasilinear diffusion coefficient of the LH operator)
@@ -360,7 +362,7 @@ for ir = 1:nr,
       normf0_ref = 2*pi*integral_dke_jd(dpn_ref(:),pn2_ref(:).*integral_dke_jd(dmhu,Xf0_ref,2),1);
 		Xf0_ref = xne_norm(ir)*Xf0_ref/normf0_ref;
 		title_initguess = 'Fuchs et al. LH model';
-	elseif initguess == 2,
+	elseif initguess_f == 2,
 		eval(['load ',dossier,s,'XXfinit.mat'])
 		Xf0_ref = squeeze(XXfinit(:,:,ir));
 		title_initguess = 'Initial distribution from data file';
@@ -649,7 +651,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
         XXDr_ref,XXVr_ref,...
         XXnhuloss_ref,xdeltaripple,...
         xftp_norm_ref,bounce,coll_mode,...
-        norm_mode,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,XXfinit_ref);
+        norm_mode_f,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,XXfinit_ref);
 %
     if sum(rf_list) > 0
         xyPabs_rf_dke_fsav_out = ZP0_ref_fsav{3,1} + ZP0_ref_fsav{3,2} + ZP0_ref_fsav{3,3}; % flux-surface averaged density of absorbed power.
