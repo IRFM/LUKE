@@ -25,13 +25,13 @@ xywceb_ebw = qe*xyBb_ebw/me;
 xyomega_ebw(xytest_maskY_ebw) = xyn_ebw(xytest_maskY_ebw).*xywceb_ebw(xytest_maskY_ebw)./xyY_ebw(xytest_maskY_ebw);%EBW wave frequency (GHz)
 %
 for ib = 1:nb_ebw
-    if xyomega_ebw ~= repmat(xyomega_ebw(1,ib),[nr,1])
+    if xyomega_ebw(:,ib) ~= repmat(xyomega_ebw(1,ib),[nr,1])
         error('Simulations with varying frequency not yet implemented')
     else
         omega_EBW = xyomega_ebw(1,ib);
     end
 %   
-    if xynpar_ebw == repmat(xynpar_ebw(1,ib),[nr,1])
+    if xynpar_ebw(:,ib) == repmat(xynpar_ebw(1,ib),[nr,1])
         Npar_EBW = xynpar_ebw(1,ib);
         %
         somega = num2str(round(omega_EBW/(2*pi*1e9)*10));
@@ -93,10 +93,22 @@ for ib = 1:nb_ebw
         if isempty(mask),
             error('The DKE and dispersion data are incompatible')
         else
-            xNperp(ir,1) = interp1(xpsin_EBW_ht(mask),xNperp_EBW_ht(mask),xpsin(ir),'spline');
-            x3eps_pmz(ir,1:3) = interp1(xpsin_EBW_ht(mask),x3eps_pmz_EBW_ht(mask,:),xpsin(ir),'spline');
-            xPflow(ir,1) = interp1(xpsin_EBW_ht(mask),xPflow_EBW_ht(mask),xpsin(ir),'spline');
-            xPabs(ir,1) = interp1(xpsin_EBW_ht(mask),xPabs_EBW_at(mask),xpsin(ir),'spline');   
+            if xpsin(ir) >= min(xpsin_EBW_ht(mask)) & xpsin(ir) <= max(xpsin_EBW_ht(mask)),
+                xNperp(ir,1) = interp1(xpsin_EBW_ht(mask),xNperp_EBW_ht(mask),xpsin(ir),'spline');
+                x3eps_pmz(ir,1:3) = interp1(xpsin_EBW_ht(mask),x3eps_pmz_EBW_ht(mask,:),xpsin(ir),'spline');
+                xPflow(ir,1) = interp1(xpsin_EBW_ht(mask),xPflow_EBW_ht(mask),xpsin(ir),'spline');
+                xPabs(ir,1) = interp1(xpsin_EBW_ht(mask),xPabs_EBW_at(mask),xpsin(ir),'spline');   
+            elseif xpsin(ir) <= min(xpsin_EBW_ht(mask))
+                xNperp(ir,1) = xNperp_EBW_ht(mask(min(find(xpsin_EBW_ht(mask) == min(xpsin_EBW_ht(mask))))));
+                x3eps_pmz(ir,1:3) = x3eps_pmz_EBW_ht(mask(min(find(xpsin_EBW_ht(mask) == min(xpsin_EBW_ht(mask))))),:);
+                xPflow(ir,1) = xPflow_EBW_ht(mask(min(find(xpsin_EBW_ht(mask) == min(xpsin_EBW_ht(mask))))));
+                xPabs(ir,1) = xPabs_EBW_at(mask(min(find(xpsin_EBW_ht(mask) == min(xpsin_EBW_ht(mask))))));
+            else                
+                xNperp(ir,1) = xNperp_EBW_ht(mask(min(find(xpsin_EBW_ht(mask) == max(xpsin_EBW_ht(mask))))));
+                x3eps_pmz(ir,1:3) = x3eps_pmz_EBW_ht(mask(min(find(xpsin_EBW_ht(mask) == max(xpsin_EBW_ht(mask))))),:);
+                xPflow(ir,1) = xPflow_EBW_ht(mask(min(find(xpsin_EBW_ht(mask) == max(xpsin_EBW_ht(mask))))));
+                xPabs(ir,1) = xPabs_EBW_at(mask(min(find(xpsin_EBW_ht(mask) == max(xpsin_EBW_ht(mask))))));
+            end
         end
     end
 %
