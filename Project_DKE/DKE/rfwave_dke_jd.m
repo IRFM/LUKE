@@ -29,6 +29,7 @@ ptBP = sqrt(ptBR.^2 + ptBZ.^2); %poloidal magnetic field on the (psi,stheta) gri
 ptB = sqrt(ptBP.^2 + ptBphi.^2); %magnetic field on the (psi,stheta) grid
 %
 ibw = 0;
+vsrays = {};
 %
 for iw = 1:length(waves),% 
     %
@@ -298,7 +299,7 @@ if dke_mode == 1 % interpolation for the FP positions (only necessary if dke_mod
 %        
     end
 else
-    xyvray = xyvray_dke
+    xyvray = xyvray_dke;
     xyfinc_rf = xyfinc_dke_rf;
     xyP0_in_rf = xymask_prop_dke.*(ones(nr,1)*yP0(ib_rf_old));% initial incident power
 end
@@ -333,7 +334,9 @@ xyNparmax_rf(xymaskSquare_rf) = xyNpar_in(xymaskSquare_rf) + imag(xydNpar_in(xym
 wpe_ref = sqrt(ne_ref*qe^2/e0/me);
 %
 xyabsphi_pmz_rf = sqrt(abs(xyphip_rf).^2 + abs(xyphim_rf).^2 + abs(xyphiz_rf).^2);
-xyabsphi_pmz_rf(xyabsphi_pmz_rf == 0) = eps;
+%
+xyabsphi_pmz_rf(xyabsphi_pmz_rf == 0) = eps;%avoid singularities
+xydNpar_rf(xydNpar_rf == 0) = eps;%avoid singularities
 %
 [xyBb_rf,xyBPb_rf,xyrb_rf,xyRb_rf] = mg_interp_jd(theta,XR,XZ,XBR,XBZ,XBphi,Rp,Zp,xythetab_rf,method);
 %
