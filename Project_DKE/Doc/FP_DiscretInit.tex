@@ -1,0 +1,34 @@
+
+Basically, the determination of the steady-state electron distribution
+function is an initial value problem, where the initial guess corresponds
+usually to the unperturbed solution of the linearized problem. For the
+zero-order Fokker-Planck equation, the Maxwellian distribution function is
+therefore by definition an eigenfunction of the collision operator, without
+external perturbation. Here the weakly relativistic solution corresponding
+to the condition on the relativistic factor $\gamma -1\ll 1$ is considered
+at time $t=0$,
+\begin{equation}
+f_{M}\left( \psi ,p\right) \simeq \frac{n_{e}\left( \psi \right) }{\left[ 2%
+\pi T_{e}\left( \psi \right) \right] ^{3/2}}\exp \left[ -\frac{p^{2}}{\left(
+1+\gamma \right) T_{e}\left( \psi \right) }\right] 
+\end{equation}
+where $T_{e}\left( \psi \right) $ and $n_{e}\left( \psi \right) $ are the
+electron temperature and density respectively. Details on the notation are
+given in Sec. ***. 
+
+When the Lower Hybrid current drive problem is addressed, it is possible to
+start from a guess that already incorporate the existence of a plateau
+region, using the formulation given in Ref. *** in the non-relativistic
+limit. When relativistic corrections must be considered, the effective
+perpendicular temperature $T_{\bot }$ in the resonance domain must be
+multipled by $2$, according to the prescription given in Sec. ***. Though
+this elegant approach seems attractive in order to reduce the total number
+of iterations for reaching the steady-state solution, its effectiveness is
+usualy poor when large time step are considered. Indeed, the total number of
+time steps is merely determined by the relaxation time of the most energetic
+part of the fast electron tail prodiced by the wave. Since electrons are
+very weakly collisional, their relaxation time is very long as compared to
+the thermal one. Therefore, the gain for the rate of convergence is usually
+very small since the distribution model does not describe accurately the
+region above the plateau of the momentum space. Consequently, even if this
+method is implemented in the code, it is almost never used.
