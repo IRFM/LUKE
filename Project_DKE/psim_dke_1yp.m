@@ -24,7 +24,7 @@ dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode] = psim_dke_1yp;
 %
 snumber = 1;%Simulation number
 tokname = 'CMOD';%Tokamak equilibrium scenario (see ptok_dke_1yp.m) in EQUIL_tokname file)
-loadequil = 0;%0: Load already existing equilibrium file, 1: create equilibrium with HELENA (needs mex file), 2: create equilibrium file (with idealequil_f_jd.m function)
+loadequil = 2;%0: Load already existing equilibrium file, 1: create equilibrium with HELENA (needs mex file), 2: create equilibrium file (with idealequil_f_jd.m function)
 qopt = 1;%Option for q profile. (0): constant (default), (1): from qmin and eq (for HELENA, it is used only for the psi grid guess)
 %
 %Additional specific parameters for ideal cylindrical magnetic equilibrium with circular concentric flux surfaces (used if loadequil = 2 only)
@@ -79,17 +79,19 @@ epsi0 = 0.0;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/
 epsia = 0.0;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
 eepsi = 0;%Exponent for Ohmic electric field
 %
-% RF Waves
+% RF Waves: For each of the following calculations:
+% (0) do not include, (1): include without ray-tracing (RT) mode, 
+% (2+): include with RT mode (iterations for self-consistent damping between
+% RT and DKE) See below for details
 %
-rf_list(1) = 0;%(1): include LH test calculations (see psim_ideallhcd_jd); (0) do not include
-rf_list(2) = 0;%(1): include EC  calculations (see psim_idealeccd_jd); (0) do not include
-rf_list(3) = 1;%(1): include cold LHCD calculations (see psim_coldlhcd_jd); (0) do not include
-rf_list(4) = 0;%(1): include cold ECCD calculations (see psim_coldeccd_jd); (0) do not include
-rf_list(5) = 0;%*** to be implemented *** (1): include hot ECCD calculations (see psim_warmeccd_jd); (0) do not include
-rf_list(6) = 0;%*** to be implemented *** (1): include EBW calculations (see psim_ebw_jd); (0) do not include
+rf_list(1) = 0;%[0 or 1] LH test calculations (see psim_ideallhcd_jd) 
+rf_list(2) = 0;%[0 or 1] EC test calculations (see psim_idealeccd_jd) 
+rf_list(3) = 1;%[0 or 1] Cold plasma LHCD calculations (see psim_coldlhcd_jd); 
+rf_list(4) = 0;%[0,1 or 2] Cold plasma ECCD calculations (see psim_coldeccd_jd); (2): RT calculations in wpe << wce limit (see ??) 
+rf_list(5) = 0;%*** to be implemented *** Hot plasma ECCD calculations (see psim_warmeccd_jd)
+rf_list(6) = 0;%*** to be implemented *** (1): EBW calculations (see psim_ebw_jd)
 %
-rt_mode = 0;% ray-tracing mode (1): Yes (iterations for self-consistent damping between RT and DKE) (0): No (only one run)
-nit_rf = 20;% maximum number of iteration in ray-tracing (only if rt_mode=1)
+nit_rf = 20;% maximum number of iteration in ray-tracing (only in RT mode)
 prec_rf = 1e-4;%relative precision in RT-DKE iterations
 %
 % Fast electron radial transport
@@ -205,8 +207,8 @@ if isnan(psin_display),
     psin_display=rho2psi_jd(tokname,rho_display);
 end
 %
-if rt_mode == 0 | sum(rf_list) == 0,%only one run
-    nit_rf = 1;% maximum number of iteration in ray-tracing (only if rt_mode=1)
+if max(rf_list) < 2,%only one run
+    nit_rf = 1;% maximum number of iteration in ray-tracing 
 end
 %
 
