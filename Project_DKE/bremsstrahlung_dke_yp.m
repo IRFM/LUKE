@@ -8,14 +8,14 @@ function  [kphot,brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi,lchor
 %   OUTPUTS:
 %   
 %      - kphot : photon energies (keV) [1,nk]
-%      - brem_bd_out : photon density per unit energy and solid angle [ntilt,nr,nk]
-%      - brem_forward : photon density per unit energy and solid angle forward emission with respect to the electron direction [nr,nk]
-%      - brem_backward : photon density per unit energy and solid angle backward emission with respect to the electron direction [nr,nk]
-%      - brem_perp : photon density per unit energy and solid angle perpendicular emission with respect to the electron direction [nr,nk]
-%      - brem_4pibrem :  photon density per unit energy and solid angle mean 4*pi emission [nr,nk]
+%      - brem_bd_out : photon number per unit energy (keV) and time (s) for each chord [nchord,nk]
+%      - brem_forward : photon density (m-3) per unit energy (keV), time (s) and solid angle forward emission with respect to the electron direction [nr,nk]
+%      - brem_backward : photon density (m-3) per unit energy (keV), time (s) and solid angle backward emission with respect to the electron direction [nr,nk]
+%      - brem_perp : photon density (m-3) per unit energy (keV), time (s) and solid angle perpendicular emission with respect to the electron direction [nr,nk]
+%      - brem_4pibrem :  mean photon density (m-3) per unit energy, time (s) and solid angle [nr,nk]
 %      - lchord : chord length (m) [1,nchord]
-%      - rho_out: Normalized minor radius for the display of the elecron distribution function [1,1]
-%      - theta_out: Poloidal angle for the display of the elecron distribution function  [1,1]
+%      - rho_out: Normalized minor radius for the display of the electron distribution function [1,1]
+%      - theta_out: Poloidal angle for the display of the electron distribution function  [1,1]
 %
 % by Joan Decker <jodecker@mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 %
@@ -28,7 +28,7 @@ method = 'spline';
 n_gauleg = 35;
 n_pol = n_gauleg;%Necessary for accurate reconstruction at ksi = -1
 epsi_gauleg = 1e-14;
-kphot = [20:10:160];%Photon energy in keV
+kphot = [20:10:180];%Photon energy in keV
 %   
 ZZIB = zeros(size(psin_hxr,1),size(psin_hxr,2),n_pol+1,length(kphot));%Legendre coefficients for the bremsstrahlung at all radii at poloidal positions (NaN if not used)
 norm0_hxr = zeros(size(psin_hxr,1),size(psin_hxr,2)) + NaN;%Norm of the initial distribution function (NaN if not used)
@@ -47,9 +47,9 @@ theta_out = theta_hxr(1,j_test);
 %Bremsstrahlung cross-section calculations
 %
 for i = 1:length(zZi),
-	seBHE(:,:,:,i) = bhe_dke_yp(Ec,kphot,x_leg,zZi(i));%Electron-ion bremsstrahlung (Bethe-Heitler-Elwert)
+	seBHE(:,:,:,i) = bhe_dke_yp(Ec,kphot,x_leg,zZi(i));%Electron-ion bremsstrahlung (Bethe-Heitler-Elwert) (mec2 -> keV units)
 end
-seHC = haug_dke_yp(Ec,kphot,x_leg);%Electron-electron bremsstrahlung (Haug-Coulomb)
+seHC = haug_dke_yp(Ec,kphot,x_leg);%Electron-electron bremsstrahlung (Haug-Coulomb) (mec2 -> keV units)
 %
 %Gauss-Legendre projection for the bremsstrahlung cross-sections
 %
@@ -79,6 +79,8 @@ for i = 1:size(psin_hxr,1),%radial position
 	for j = 1:size(psin_hxr,2),%poloidal position
 %
 		if mask_hxr(i,j),%A chord is going through the elementary plasma volume. So the distribution function is calculated
+%		PSI_hxr(i,j) = max(PSI_hxr(i,:));%high field side only
+%		PSI_hxr(i,j) = 1;%low field side only
 			mhu_hxr = sign(mhu(:)).*sqrt(1-PSI_hxr(i,j)*(1 - mhu(:).^2));%mhu at a poloidal position that is different from Bmin
 			mhu_hxr = mhu_hxr(1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0);
 			Xf0_hxr = XXf0(:,1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0,i);%Distribution function at poloidal location
@@ -105,8 +107,6 @@ for i = 1:size(psin_hxr,1),%radial position
 			norm0_hxr(i,j) = 2*pi*integral_dke_jd(dpn',pn2'.*trapz_dke_yp([mhu_hxr,Xf0_hxr'])',1);
 			normi_hxr(i,j) = 2*pi*integral_dke_jd(dpn',pn2'.*trapz_dke_yp([x_leg,Xf0_i'])',1);
 %			
-			info_dke_yp(2,['Bremsstrahlung integral #',int2str((i-1)*size(psin_hxr,2) + j),'/',int2str(size(psin_hxr,1)*size(psin_hxr,2)),' done']);
-%
 			if i_test == i & j_test == j,
 %
 % Test of the reconstruction of the distribution function on the Legendre polynomial basis
@@ -173,7 +173,7 @@ for i = 1:size(psin_hxr,1),%radial position
 				brem_forward = permute(reshape(Pm_forward'*(squeeze(ZZIB(i,j,:,:))'.*(ones(size(IB_c1,2)*size(IB_c1,3),1)*cL'))',1,size(IB_c1,2),size(IB_c1,3)),[2,3,1]);%Forward emission
 				brem_backward = permute(reshape(Pm_backward'*(squeeze(ZZIB(i,j,:,:))'.*(ones(size(IB_c1,2)*size(IB_c1,3),1)*cL'))',1,size(IB_c1,2),size(IB_c1,3)),[2,3,1]);%Backward emission
 				brem_perp = permute(reshape(Pm_perp'*(squeeze(ZZIB(i,j,:,:))'.*(ones(size(IB_c1,2)*size(IB_c1,3),1)*cL'))',1,size(IB_c1,2),size(IB_c1,3)),[2,3,1]);%Perpendicular emission
-				brem_4pi = permute(reshape(squeeze(ZZIB(i,j,1,:))/2,1,size(IB_c1,2),size(IB_c1,3)),[2,3,1]);%Mean 4pi emission per steradian
+				brem_4pi = permute(reshape(squeeze(ZZIB(i,j,1,:))/2,1,size(IB_c1,2),size(IB_c1,3)),[2,3,1]);%Mean 4pi emission per steradian				
 %
 				if display_mode >= 1,
 					figure
@@ -189,6 +189,8 @@ for i = 1:size(psin_hxr,1),%radial position
 				end
 			end
 		end
+%
+		info_dke_yp(2,['Bremsstrahlung integral #',int2str((i-1)*size(psin_hxr,2) + j),'/',int2str(size(psin_hxr,1)*size(psin_hxr,2)),' done']);
 	end
 end
 %
@@ -238,7 +240,7 @@ for ic = 1:size(vschords,3),%loop on each chord
    s = s - s(1);%s=0 where the chord enter the plasma towards the detector
    s1 = repmat(s',[1,length(kphot)]);
 %
-	brem_bd_out(ic,:) = sum(s1.*brem_bd,1);%Integration along the chord
+	brem_bd_out(ic,:) = sum(s1.*brem_bd,1)*HXR{1,5}(ic);%Integration along the chord and multiplication by the geometrical factor
 	lchord(ic) = sum(s);%Chord length calculation
 %
 	info_dke_yp(2,['Line integration for chord #',int2str(ic),'/',int2str(size(vschords,3)),' done']);
