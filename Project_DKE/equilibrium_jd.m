@@ -1,4 +1,5 @@
-function [theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,Ncoils,BeLi,psia,xmhu0T2] = equilibrium_jd(tokamak,xpsin,method)
+function [theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,Ncoils,BeLi,psia,xmhu0T2] = ...
+    equilibrium_jd(tokamak,xpsin,display_mode,method)
 %
 %   This function interpolates the equilibrium data on the radial grid.
 %   It also calculates several quantities linked to the equilibrium, such
@@ -26,6 +27,7 @@ function [theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi
 %
 %       - tokamak: tokamak scenario selected
 %       - xpsin: positions for FP calculations on the normalized psi grid
+%       - display_mode: (0-1) text only (2) graphics
 %       - method: interpolation method (linear,cubic,spline,...) 
 %           (default: linear)
 %
@@ -123,4 +125,58 @@ xiB0 = (xiB0 - 1)*nr + (1:nr);%Indices in (psi,theta) grid corresponding of B=Bm
 xBT0 = XBT(xiB0);%Toroidal field at B=Bmin
 xBp0 = XBp(xiB0);%Poroidal field at B=Bmin
 xR0 = XR(xiB0);%Major radius at B=Bmin
+
+if display_mode >= 2
+%    
+    prho = (R(:,1)' - Rp)/ap;
+%
+% displays the equilibrium profiles
+%
+    figure(50),clf
+    set(gcf,'units','inches','position',[0.5,1,10,6])
+%    
+    subplot(2,3,1)
+        [ax] = graph1D_jd(prho,ppsin,'','','',NaN,[0,1],[0,1],'-','none','b',0.5);
+        [ax] = graph1D_jd(xrho,xpsin,'\rho','\psi_n','',NaN,[0,1],[0,1],'none','+','r',2);
+    subplot(2,3,2)
+        [ax] = graph1D_jd(prho,pTe,'','','',NaN,[0,1],[0,max(pTe)],'-','none','b',0.5);
+        [ax] = graph1D_jd(xrho,xTe,'\rho','T_e (keV)',tokamak,NaN,[0,1],[0,max(pTe)],'none','+','r',2);
+    subplot(2,3,3)
+        [ax] = graph1D_jd(prho,pne/1e19,'','','',NaN,[0,1],[0,max(pne/1e19)],'-','none','b',0.5);
+        [ax] = graph1D_jd(xrho,xne/1e19,'\rho','n_e (10^{19} m^{-3})','',NaN,[0,1],[0,max(pne/1e19)],'none','+','r',2);
+    subplot(2,3,4)
+        [ax] = graph1D_jd(prho,pzTi,'','','',NaN,[0,1],[0,max(max(pzTi))],'-','none','b',0.5);
+        [ax] = graph1D_jd(xrho,xzTi,'\rho','T_i (keV)','',NaN,[0,1],[0,max(max(pzTi))],'none','+','r',2);
+    subplot(2,3,5)
+        [ax] = graph1D_jd(prho,pzni/1e19,'','','',NaN,[0,1],[0,max(max(pzni/1e19))],'-','none','b',0.5);
+        [ax] = graph1D_jd(xrho,xzni/1e19,'\rho','n_i (10^{19} m^{-3})','',NaN,[0,1],[0,max(max(pzni/1e19))],'none','+','r',2);
+    subplot(2,3,6)
+        [ax] = graph1D_jd(prho,pZeff,'','','',NaN,[0,1],[0,max(pZeff)],'-','none','b',0.5);
+        [ax] = graph1D_jd(xrho,xZeff,'\rho','Z_{eff}','',NaN,[0,1],[0,max(pZeff)],'none','+','r',2);
+%       
+% displays the magnetic flux-surfaces geometry
+%       
+    srho = [0:0.1:1];
+    stheta = [0:0.25:2]*pi;
+    sR = interp1(prho,R,srho);  
+    sZ = interp1(prho,Z,srho); 
+    stR = interp1(theta,R',stheta)';  
+    stZ = interp1(theta,Z',stheta)';    
+%
+    Rmin = min(min(R));
+    Rmax = max(max(R));
+    Zmin = min(min(Z));
+    Zmax = max(max(Z));
+    %
+    figure(51),clf
+%    
+    [ax] = graph1D_jd(sR',sZ','','','',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','r',2);
+    [ax] = graph1D_jd(stR,stZ,'R','Z','Flux-surfaces labeled by \rho=0,0.1,0.2...1',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','b',0.5);
+    axis('equal');    
+end
+    
+
+
+
+
 
