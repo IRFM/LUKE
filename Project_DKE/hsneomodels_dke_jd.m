@@ -94,6 +94,8 @@ pBT0 = pBT(piB0);%Toroidal field at B=Bmin
 pBp0 = pBp(piB0);%Poroidal field at B=Bmin
 pR0 = pR(piB0);%Major radius at B=Bmin
 %
+pBp0(pBp0==0) = eps;%To avoid singularities
+%
 % note: model with one ion species only. to be completed
 %
 pTi = pzTi(1,:);
