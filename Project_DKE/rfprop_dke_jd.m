@@ -26,6 +26,7 @@ xyPinc_mod = xyPinc_in;%default values
 %
 xydV_dke = xdV_dke'*ones(1,ny);
 xyPrf_dke = xyPabs_dke.*xydV_dke;%power absorbed from each ray within each FS
+xyPrf_dke(xyPrf_dke < 0) = 0;
 %
 xymask_prop_dke = xyprop_dke ~= 0;%DKE points visited by the ray
 %
