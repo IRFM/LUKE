@@ -1,6 +1,6 @@
 function [xq,xqtilde,xqbar,xqhat,xymaskT,...
     xylambda_p0p0,xylambda_p2m1,xylambda_p2m2p2,xylambda_b_p1p1,xylambda_b_p1m1p2,xylambda_b_p1m1,xylambda_b_p1m2,xylambda_b_p2m2p2,xylambda_b_p3m2,xylambda_b_p2,xylambda_b_p1m3p4]...
-= bounce_dke_jd(equil_mode,ymhu0,XR,XZ,XBR,XBZ,XBphi,xmhubounce2,xB0,xR0,xBT0,xBp0,Rp,Zp,ap)
+= bounce_dke_jd(equil_mode,ymhu0,XR,XZ,XBR,XBZ,XBphi,xmhubounce2,xB0,xR0,xBT0,xBp0,Rp,Zp,ap,xymaskT_in,sign)
 %
 % calculates bounce averaging coefficients needed for solving the electron drift-kinetic-equation. 
 %
@@ -14,7 +14,14 @@ function [xq,xqtilde,xqbar,xqhat,xymaskT,...
 %
 % by Joan Decker <jodecker@alum.mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 %
-if nargin < 12,
+if nargin < 16,
+	sign = 0;
+	xymaskT_in = NaN;
+end
+if nargin == 16,
+	error('Inconsistent number of arguments');
+end
+if nargin < 15,
 	error('Not enough arguments');
 end
 %
@@ -28,6 +35,16 @@ if equil_mode == 1
     xyqtilde = repmat(xqtilde',[1,nmhu]);
 %
     [YMdt,YMmask,YMF,YMPSIB,YMmhu0,YMmhu,YMR,xymaskT,nm2] = banana_dke_jd(ymhu0,Rp,Zp,XR,XZ,XBR,XBZ,XBphi);
+%    
+    if ~isnan(xymaskT_in)
+		  xymaskT = xymaskT_in;
+		  for ir = 1:size(xymaskT_in,1),
+		  	    xjmhut_min(ir) = min(find(xymaskT_in(ir,:) == 1));
+		       xjmhut_max(ir) = max(find(xymaskT_in(ir,:) == 1));
+		  end
+        if sign == 1,xymaskT(:,xjmhut_min-1) = xymaskT_in(:,xjmhut_min);end
+		  if sign == -1,xymaskT(:,xjmhut_max+1) = xymaskT_in(:,xjmhut_max);end
+	 end
 %
     YMR0 = repmat(xR0,[nm2,1,nmhu]);
 %

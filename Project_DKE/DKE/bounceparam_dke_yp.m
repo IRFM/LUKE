@@ -28,12 +28,12 @@ if bounce_mode == 1,
 = bounce_dke_jd(equil_mode,mhu,XR,XZ,XBR,XBZ,XBphi,xmhubounce2,xB0,xR0,xBT0,xBp0,Rp,Zp,ap);
     [xq,xqtilde,xqbar,xqhat,xymaskT_p,...
     xylambda_p,xylambda_p2m1_p,xylambda_p2m2p2_p,xylambda_b_p1p1_p,xylambda_b_p1m1p2_p,xylambda_b_p1m1_p,xylambda_b_p1m2_p,xylambda_b_p2m2p2_p,xylambda_b_p3m2_p,xylambda_b_p2_p,xylambda_b_p1m3p4_p]...
-= bounce_dke_jd(equil_mode,mhup,XR,XZ,XBR,XBZ,XBphi,xmhubounce2,xB0,xR0,xBT0,xBp0,Rp,Zp,ap);
+= bounce_dke_jd(equil_mode,mhup,XR,XZ,XBR,XBZ,XBphi,xmhubounce2,xB0,xR0,xBT0,xBp0,Rp,Zp,ap,xymaskT,+1);
     [xq,xqtilde,xqbar,xqhat,xymaskT_m,...
     xylambda_m,xylambda_p2m1_m,xylambda_p2m2p2_m,xylambda_b_p1p1_m,xylambda_b_p1m1p2_m,xylambda_b_p1m1_m,xylambda_b_p1m2_m,xylambda_b_p2m2p2_m,xylambda_b_p3m2_m,xylambda_b_p2_m,xylambda_b_p1m3p4_m]...
-= bounce_dke_jd(equil_mode,mhum,XR,XZ,XBR,XBZ,XBphi,xmhubounce2,xB0,xR0,xBT0,xBp0,Rp,Zp,ap);
+= bounce_dke_jd(equil_mode,mhum,XR,XZ,XBR,XBZ,XBphi,xmhubounce2,xB0,xR0,xBT0,xBp0,Rp,Zp,ap,xymaskT,-1);
 %
-	XXheaviside = repmat(reshape(~xymaskT',[1,nmhu,nr]),[npn,1,1]);%For selecting the circulating population only
+	XXheaviside = repmat(reshape(~xymaskT',[1,nmhu,nr]),[npn,1,1]);%For selecting the circulating population only                      
 %
 	XXlambda = repmat(reshape(xylambda',[1,nmhu,nr]),[npn,1,1]);
 	XXlambda_p = repmat(reshape(xylambda_p',[1,nmhu,nr]),[npn,1,1]);
@@ -179,4 +179,5 @@ else
 %
 	XXlambda_b_p1m3p4 = ones(npn,nmhu,nr);	
 end
+
 
