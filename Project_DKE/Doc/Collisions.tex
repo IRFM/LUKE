@@ -4,7 +4,7 @@
 The collision operator used in the calculations may be expressed as 
 \begin{equation}
 \mathcal{C}\left( f\right) =\sum_{s}\sum_{s^{\prime }}C\left(
-f,f_{ss^{\prime }}\right) +C\left( f,f\right) 
+f,f_{ss^{\prime }}\right) +C\left( f,f\right)
 \end{equation}
 where $\sum_{s}\sum_{s^{\prime }}C\left( f,f_{ss^{\prime }}\right) $
 describe interactions between electrons and ions of species $s$ in the
@@ -22,7 +22,7 @@ f\simeq f_{M}+\delta f
 The self-collision operator $C\left( f,f\right) $ may be consequently
 approximated by its linearized form 
 \begin{equation}
-C\left( f,f\right) \simeq C\left( f,f_{M}\right) +C\left( f_{M},f\right) 
+C\left( f,f\right) \simeq C\left( f,f_{M}\right) +C\left( f_{M},f\right)
 \end{equation}
 where the the relation $C\left( f_{M},f_{M}\right) =0$ has been used, and
 terms of order $\delta f^{2}$ have been ignored. It can be shown that the
@@ -31,10 +31,10 @@ f,f_{ss^{\prime }}\right) $ and expressed in a conservative form
 \begin{equation}
 \sum_{s}\sum_{s^{\prime }}C\left( f,f_{ss^{\prime }}\right) +C\left(
 f,f_{M}\right) \rightarrow \nabla _{\mathbf{p}}\cdot \mathbf{S}_{\mathbf{p}%
-}\left( f\right) 
+}\left( f\right)
 \end{equation}
 where component $S_{p}$ and $S_{\xi }$ of the flux $\mathbf{S}_{\mathbf{p}}$
-are
+are 
 \begin{eqnarray}
 S_{p} &=&-D_{pp}\frac{\partial f_{0}}{\partial p}+\frac{\sqrt{1-\xi ^{2}}}{p}%
 D_{p\xi }\frac{\partial f_{0}}{\partial \xi }+F_{p}f_{0} \\
@@ -46,54 +46,54 @@ In the standard notations,
 \begin{equation}
 \left\{ 
 \begin{array}{l}
-D_{pp}=A\left( \psi ,p\right)  \\ 
+D_{pp}=A\left( \psi ,p\right) \\ 
 D_{p\xi }=0 \\ 
 D_{\xi p}=0 \\ 
-D_{\xi \xi }=B_{t}\left( \psi ,p\right) 
+D_{\xi \xi }=B_{t}\left( \psi ,p\right)
 \end{array}
-\right. 
+\right.
 \end{equation}
-and
+and 
 \begin{equation}
 \left\{ 
 \begin{array}{l}
-F_{p}=F\left( \psi ,p\right)  \\ 
+F_{p}=F\left( \psi ,p\right) \\ 
 F_{\xi }=0
 \end{array}
-\right. 
+\right.
 \end{equation}
 
 The term $C\left( f_{M},f\right) $ requires is specific treatment. By
 expanding $f$ as a sum of Legendre harmonics according to the relation 
 \begin{equation}
-f\left( t,\mathbf{X},p,\xi \right) =\sum_{l=0}^{\infty }\left( l+1/2\right)
-f^{\left( l\right) }\left( t,\mathbf{X},p\right) P_{l}\left( \xi \right) 
+f\left( t,\mathbf{X},p,\xi \right) =\sum_{m=0}^{\infty }\left( m+1/2\right)
+f^{\left( m\right) }\left( t,\mathbf{X},p\right) P_{m}\left( \xi \right)
 \end{equation}
 with 
 \begin{equation}
-f^{\left( l\right) }\left( t,\mathbf{X},p\right) =\int_{-1}^{+1}f\left( t,%
-\mathbf{X},p,\xi \right) P_{l}\left( \xi \right) d\xi 
+f^{\left( m\right) }\left( t,\mathbf{X},p\right) =\int_{-1}^{+1}f\left( t,%
+\mathbf{X},p,\xi \right) P_{m}\left( \xi \right) d\xi
 \end{equation}
 one obtains 
 \begin{equation}
-C\left( f_{M},f\right) =\sum_{l=0}^{\infty }\left( l+1/2\right) C\left(
-f_{M},f^{\left( l\right) }\left( t,\mathbf{X},p\right) P_{l}\left( \xi
-\right) \right) 
+C\left( f_{M},f\right) =\sum_{m=0}^{\infty }\left( m+1/2\right) C\left(
+f_{M},f^{\left( m\right) }\left( t,\mathbf{X},p\right) P_{m}\left( \xi
+\right) \right)
 \end{equation}
 
-By definition, $f^{\left( l=0\right) }\left( t,\mathbf{X},p\right) \simeq
-f_{M}$ and $C\left( f_{M},f^{\left( l=0\right) }\left( t,\mathbf{X},p\right)
+By definition, $f^{\left( m=0\right) }\left( t,\mathbf{X},p\right) \simeq
+f_{M}$ and $C\left( f_{M},f^{\left( m=0\right) }\left( t,\mathbf{X},p\right)
 P_{0}\left( \xi \right) \right) \simeq C\left( f_{M},f_{M}\right) =0,$ since 
 $P_{0}\left( \xi \right) =1.$ The first non-zero term in the series is then
 kept, so that 
 \begin{equation}
 C\left( f_{M},f\right) \simeq C\left( f_{M},\frac{3}{2}\xi f^{\left(
-l=1\right) }\left( t,\mathbf{X},p\right) \right) 
+m=1\right) }\left( t,\mathbf{X},p\right) \right)
 \end{equation}
 since $P_{1}\left( \xi \right) =\xi .$ By construction the linearized
 electron-electron collision operator conserves momentum, but not energy, so
 there is no need to introduce an energy loss term in the kinetic equation.
-Since $f^{\left( l=1\right) }$ is an integral of $f$, the term $C\left(
+Since $f^{\left( m=1\right) }$ is an integral of $f$, the term $C\left(
 f_{M},f\right) $ introduce a non-linear dependence in the Fokker-Planck or
 drift kinetic equation. However, even if it is crucial for the current drive
 problem, including the determination of the boostrap current level, this
@@ -101,10 +101,10 @@ non-linearity remains weak, so that the rate of convergence towards the
 solution of the kinetic equation is not significantly affected. For the
 calculations, the notation used in Ref. ** is considered, and 
 \begin{eqnarray}
-C\left( f_{M},\frac{3}{2}\xi f^{\left( l=1\right) }\left( t,\mathbf{X}%
-,p\right) \right)  &=&-\frac{3}{2}\xi \mathcal{I}\left( f_{M},f^{\left(
-l=1\right) }\left( t,\mathbf{X},p\right) \right)   \nonumber \\
-&=&-\frac{3}{2}\xi \mathcal{I}\left( t,\mathbf{X},p\right) 
+C\left( f_{M},\frac{3}{2}\xi f^{\left( m=1\right) }\left( t,\mathbf{X}%
+,p\right) \right) &=&-\frac{3}{2}\xi \mathcal{I}\left( f_{M},f^{\left(
+m=1\right) }\left( t,\mathbf{X},p\right) \right)  \nonumber \\
+&=&-\frac{3}{2}\xi \mathcal{I}\left( t,\mathbf{X},p\right)
 \end{eqnarray}
 
 \subsection{Belaiev-Budker collision operator}
@@ -118,31 +118,31 @@ calculations (Ref.***). Following the work done in Ref. ***, coefficients $%
 A\left( \psi ,p\right) $, $F\left( \psi ,p\right) $ and $B_{t}\left( \psi
 ,p\right) $ are 
 \begin{eqnarray}
-A\left( \psi ,p\right)  &=&\frac{F_{1}\left( \psi ,p\right) +F_{2}\left(
-\psi ,p\right) }{v}\overline{T}_{e}\left( \psi \right)   \nonumber \\
+A\left( \psi ,p\right) &=&\frac{F_{1}\left( \psi ,p\right) +F_{2}\left( \psi
+,p\right) }{v}\overline{T}_{e}\left( \psi \right)  \nonumber \\
 &&+\frac{1}{v^{3}}\sum_{s}\sum_{s^{\prime }}Z_{ss^{\prime }}^{2}\frac{%
 \overline{n}_{ss^{\prime }}\left( \psi \right) \overline{T}_{ss^{\prime
 }}\left( \psi \right) }{\overline{m}_{s}}
 \end{eqnarray}
-and
+and 
 \begin{eqnarray}
-F_{2}\left( \psi ,p\right)  &=&F_{1}\left( \psi ,p\right) +F_{2}\left( \psi
-,p\right)   \nonumber \\
+F_{2}\left( \psi ,p\right) &=&F_{1}\left( \psi ,p\right) +F_{2}\left( \psi
+,p\right)  \nonumber \\
 &&+\frac{1}{v^{2}}\sum_{s}\sum_{s^{\prime }}Z_{ss^{\prime }}^{2}\frac{%
 \overline{n}_{ss^{\prime }}\left( \psi \right) }{\overline{m}_{s}}
 \end{eqnarray}
 where the double sum $\sum_{s}\sum_{s^{\prime }}$ takes into account of all
 ions species $s$ in ionization state $s^{\prime }.$ Here, $\overline{n}%
-_{ss^{\prime }}\left( \psi \right) $ is the normalized ion density at $\psi ,
-$ as introduced in Sec. ***, and $\overline{m}_{s}$ is the ion rest mass
-normalized to the electron rest mass $m_{e}$. Here,
+_{ss^{\prime }}\left( \psi \right) $ is the normalized ion density at $\psi
+, $ as introduced in Sec. ***, and $\overline{m}_{s}$ is the ion rest mass
+normalized to the electron rest mass $m_{e}$. Here, 
 \begin{equation}
 F_{1}\left( \psi ,p\right) =\frac{4\pi }{v^{2}}F_{11}\left( \psi ,p\right) +%
-\frac{4\pi }{p^{2}}F_{12}\left( \psi ,p\right) 
+\frac{4\pi }{p^{2}}F_{12}\left( \psi ,p\right)
 \end{equation}
 \begin{equation}
 F_{2}\left( \psi ,p\right) =\frac{4\pi }{v}\left( 1-\frac{\gamma \zeta }{z}%
-\right) F_{21}\left( \psi ,p\right) 
+\right) F_{21}\left( \psi ,p\right)
 \end{equation}
 
 \begin{equation}
@@ -161,79 +161,79 @@ F_{21}\left( \psi ,p\right) =\int_{p}^{\infty }p^{\prime }f_{M}\left( \psi
 
 Much in the same way, the expression of coefficient $B_{t}$ is 
 \begin{eqnarray}
-B_{t}\left( \psi ,p\right)  &=&B_{t1}\left( \psi ,p\right) +B_{t2}\left(
-\psi ,p\right)   \nonumber \\
+B_{t}\left( \psi ,p\right) &=&B_{t1}\left( \psi ,p\right) +B_{t2}\left( \psi
+,p\right)  \nonumber \\
 &&+\frac{1}{2v}\sum_{s}\sum_{s^{\prime }}Z_{ss^{\prime }}^{2}\overline{n}%
 _{ss^{\prime }}\left( \psi \right) \left( 1-\frac{1}{v^{2}}\frac{\overline{T}%
-_{ss^{\prime }}\left( \psi \right) }{\overline{m}_{s}}\right) 
+_{ss^{\prime }}\left( \psi \right) }{\overline{m}_{s}}\right)
 \end{eqnarray}
 with 
 \begin{equation}
-B_{t1}\left( \psi ,p\right) =4\pi \sum_{n=1}^{5}B_{t1}^{\left( n\right)
-}\left( \psi ,p\right) 
+B_{t1}\left( \psi ,p\right) =4\pi \sum_{n=1}^{5}B_{t1}^{\left[ n\right]
+}\left( \psi ,p\right)
 \end{equation}
 and 
 \begin{equation}
-B_{t2}\left( \psi ,p\right) =4\pi \sum_{n=1}^{5}B_{t2}^{\left( n\right)
-}\left( \psi ,p\right) 
+B_{t2}\left( \psi ,p\right) =4\pi \sum_{n=1}^{5}B_{t2}^{\left[ n\right]
+}\left( \psi ,p\right)
 \end{equation}
 where 
 \begin{equation}
-B_{t1}^{1}\left( \psi ,p\right) =\frac{1}{2v}\int_{0}^{p}p^{\prime
-2}f_{M}\left( \psi ,p^{\prime }\right) dp^{\prime }
+B_{t1}^{\left[ 1\right] }\left( \psi ,p\right) =\frac{1}{2v}%
+\int_{0}^{p}p^{\prime 2}f_{M}\left( \psi ,p^{\prime }\right) dp^{\prime }
 \end{equation}
 \begin{equation}
-B_{t1}^{\left( 2\right) }\left( \psi ,p\right) =-\frac{1}{6vp^{2}}%
+B_{t1}^{\left[ 2\right] }\left( \psi ,p\right) =-\frac{1}{6vp^{2}}%
 \int_{0}^{p}p^{\prime 4}f_{M}\left( \psi ,p^{\prime }\right) dp^{\prime }
 \end{equation}
 \begin{equation}
-B_{t1}^{\left( 3\right) }\left( \psi ,p\right) =\frac{1}{8\gamma ^{2}z^{2}}%
+B_{t1}^{\left[ 3\right] }\left( \psi ,p\right) =\frac{1}{8\gamma ^{2}z^{2}}
 \int_{0}^{p}p^{\prime 2}\frac{J_{1}\left( p^{\prime }\right) }{\gamma
 ^{\prime }}f_{M}\left( \psi ,p^{\prime }\right) dp^{\prime }
 \end{equation}
 \begin{equation}
-B_{t1}^{\left( 4\right) }\left( \psi ,p\right) =-\frac{1}{4z_{i+1/2}^{2}}%
+B_{t1}^{\left[ 4\right] }\left( \psi ,p\right) =-\frac{1}{4z_{i+1/2}^{2}}%
 \int_{0}^{p}p^{\prime 2}\frac{J_{2}\left( p^{\prime }\right) }{\gamma
 ^{\prime }}f_{M}\left( \psi ,p^{\prime }\right) dp^{\prime }
 \end{equation}
 
 \begin{equation}
-B_{t1}^{\left( 5\right) }\left( \psi ,p\right) =-\frac{1}{4\gamma
+B_{t1}^{\left[ 5\right] }\left( \psi ,p\right) =-\frac{1}{4\gamma
 _{i+1/2}^{2}}\int_{0}^{p}\frac{p^{\prime 2}}{\gamma ^{\prime }}\left( \gamma
 ^{\prime }-\frac{\zeta ^{\prime }}{z^{\prime }}\right) f_{M}\left( \psi
 ,p^{\prime }\right) dp^{\prime }
 \end{equation}
 and 
 \begin{equation}
-B_{t2}^{\left( 1\right) }\left( \psi ,p\right) =\frac{1}{2}\int_{p}^{\infty }%
+B_{t2}^{\left[ 1\right] }\left( \psi ,p\right) =\frac{1}{2}\int_{p}^{\infty }%
 \frac{p^{\prime 2}}{v^{\prime }}f_{M}\left( \psi ,p^{\prime }\right)
 dp^{\prime }
 \end{equation}
 \begin{equation}
-B_{t2}^{\left( 2\right) }\left( \psi ,p\right) =-\frac{\gamma ^{2}}{6}%
+B_{t2}^{\left[ 2\right] }\left( \psi ,p\right) =-\frac{\gamma ^{2}}{6}%
 \int_{p}^{\infty }\frac{p^{\prime 2}}{\gamma ^{\prime 2}v^{\prime }}%
 f_{M}dp^{\prime }
 \end{equation}
 \begin{equation}
-B_{t2}^{\left( 3\right) }\left( \psi ,p\right) =\frac{J_{1}\left( p\right) }{%
+B_{t2}^{\left[ 3\right] }\left( \psi ,p\right) =\frac{J_{1}\left( p\right) }{%
 8\gamma z^{2}}\int_{p}^{\infty }\frac{p^{\prime 2}}{v^{\prime }}\frac{1}{%
 \gamma ^{\prime 2}}f_{M}\left( \psi ,p^{\prime }\right) dp^{\prime }
 \end{equation}
 \begin{equation}
-B_{t2}^{\left( 4\right) }\left( \psi ,p\right) =-\frac{\gamma J_{2}\left(
+B_{t2}^{\left[ 4\right] }\left( \psi ,p\right) =-\frac{\gamma J_{2}\left(
 p\right) }{4z^{2}}\int_{p}^{\infty }\frac{p^{\prime 2}}{v^{\prime }}\frac{1}{%
 \gamma ^{\prime 2}}f_{M}\left( \psi ,p^{\prime }\right) dp^{\prime }
 \end{equation}
 
 \begin{equation}
-B_{t2}^{\left( 5\right) }\left( \psi ,p\right) =-\frac{1}{4\gamma p^{2}}%
+B_{t2}^{\left[ 5\right] }\left( \psi ,p\right) =-\frac{1}{4\gamma p^{2}}%
 \left( \gamma -\frac{\zeta }{z}\right) \int_{p}^{\infty }p^{\prime
 2}v^{\prime }f_{M}\left( \psi ,p^{\prime }\right) dp^{\prime }
 \end{equation}
 
 Here, 
 \begin{equation}
-J_{1}\left( p\right) =-3\gamma +\zeta \left( \frac{3}{z}+2z\right) 
+J_{1}\left( p\right) =-3\gamma +\zeta \left( \frac{3}{z}+2z\right)
 \end{equation}
 \begin{equation}
 J_{2}\left( p\right) =\gamma +\frac{\zeta }{z}-\frac{2}{3}\gamma z^{2}
@@ -248,140 +248,141 @@ z=\beta _{th}^{\dag 2}p
 \begin{equation}
 \zeta =\sinh ^{-1}z
 \end{equation}
-and  $f_{M}\left( \psi ,p\right) $is the weakly relativistic Maxwellian
-distribution function given in Sec.***. 
+and $f_{M}\left( \psi ,p\right) $is the weakly relativistic Maxwellian
+distribution function given in Sec.***.
 
-The first order Legendre correction of the collision operator $\mathcal{I}%
+The first order Legendre correction of the collision operator $\mathcal{I}
 \left( t,\mathbf{X},p\right) $ is expressed as
 
 \begin{equation}
-\mathcal{I}\left( f_{M,},f^{\left( l=1\right) }\left( \psi ,p\right) \right)
-=\frac{4\pi }{\gamma }f^{\left( l=1\right) }\left( \psi ,p\right) +\frac{1}{%
-p^{2}}\mathcal{I}_{1}\left( f_{M,},f_{0}^{\left( l=1\right) }\left( \psi
-,p\right) \right) +p\mathcal{I}_{2}\left( f_{M,},f_{0}^{\left( l=1\right)
-}\left( \psi ,p\right) \right) 
+\mathcal{I}\left( f_{M,},f^{\left( m=1\right) }\left( \psi ,p\right) \right)
+=\frac{4\pi }{\gamma }f^{\left( m=1\right) }\left( \psi ,p\right) +\frac{1}{
+p^{2}}\mathcal{I}_{1}\left( f_{M,},f_{0}^{\left( m=1\right) }\left( \psi
+,p\right) \right) +p\mathcal{I}_{2}\left( f_{M,},f_{0}^{\left( m=1\right)
+}\left( \psi ,p\right) \right)
 \end{equation}
 where
 
 \begin{equation}
-\mathcal{I}_{1}\left( f_{M,},f_{0}^{\left( l=1\right) }\left( \psi ,p\right)
-\right) =\sum_{n=1}^{10}\mathcal{I}_{1}^{\left( n\right) }\left( \psi
-,p\right) 
+\mathcal{I}_{1}\left( f_{M,},f_{0}^{\left( m=1\right) }\left( \psi ,p\right)
+\right) =\sum_{n=1}^{10}\mathcal{I}_{1}^{\left[ n\right] }\left( \psi
+,p\right)
 \end{equation}
 and 
 \begin{equation}
-\mathcal{I}_{2}\left( f_{M,},f_{0}^{\left( 0\right) \left( l=1\right)
-}\left( \psi ,p\right) \right) =\sum_{n=1}^{7}\mathcal{I}_{2}^{\left(
-n\right) }\left( \psi ,p\right) 
+\mathcal{I}_{2}\left( f_{M,},f_{0}^{\left( 0\right) \left( m=1\right)
+}\left( \psi ,p\right) \right) =\sum_{n=1}^{7}\mathcal{I}_{2}^{\left[
+n\right] }\left( \psi ,p\right)
 \end{equation}
 
-The set of coefficients $\mathcal{I}_{1}^{n}$ is
+The set of coefficients $\mathcal{I}_{1}^{\left[ n\right] }\left( \psi
+,p\right) $ is
 
 \begin{equation}
-\mathcal{I}_{1}^{\left( 1\right) }\left( \psi ,p\right) =\frac{1}{3\overline{%
+\mathcal{I}_{1}^{\left[ 1\right] }\left( \psi ,p\right) =\frac{1}{3\overline{%
 T}_{e,l+1/2}}\int_{0}^{p}\frac{p^{\prime 3}}{\gamma ^{\prime }}f_{0}^{\left(
-l=1\right) }\left( \psi ,p\right) dp^{\prime }
+m=1\right) }\left( \psi ,p\right) dp^{\prime }
 \end{equation}
 \begin{equation}
-\mathcal{I}_{1}^{\left( 2\right) }\left( \psi ,p\right) =-\frac{2\gamma
+\mathcal{I}_{1}^{\left[ 2\right] }\left( \psi ,p\right) =-\frac{2\gamma
 _{i+1/2}}{3\overline{T}_{e,l+1/2}}\int_{0}^{p}p^{\prime 3}f_{0}^{\left(
-l=1\right) }\left( \psi ,p\right) dp^{\prime }
+m=1\right) }\left( \psi ,p\right) dp^{\prime }
 \end{equation}
 \begin{equation}
-\mathcal{I}_{1}^{\left( 3\right) }\left( \psi ,p\right) =\frac{\gamma
+\mathcal{I}_{1}^{\left[ 3\right] }\left( \psi ,p\right) =\frac{\gamma
 _{i+1/2}}{5\overline{T}_{e,l+1/2}^{2}}\int_{0}^{p}\frac{p^{\prime 5}}{\gamma
-^{\prime }}f_{0}^{\left( l=1\right) }\left( \psi ,p\right) dp^{\prime }
+^{\prime }}f_{0}^{\left( m=1\right) }\left( \psi ,p\right) dp^{\prime }
 \end{equation}
 \begin{equation}
-\mathcal{I}_{1}^{\left( 4\right) }\left( \psi ,p\right) =\int_{0}^{p}\frac{%
+\mathcal{I}_{1}^{\left[ 4\right] }\left( \psi ,p\right) =\int_{0}^{p}\frac{%
 p^{\prime }}{\gamma ^{\prime }}\left( \gamma ^{\prime }-\frac{\zeta ^{\prime
-}}{z^{\prime }}\right) f_{0}^{\left( l=1\right) }dp^{\prime }
+}}{z^{\prime }}\right) f_{0}^{\left( m=1\right) }dp^{\prime }
 \end{equation}
 \begin{equation}
-\mathcal{I}_{1}^{\left( 5\right) }\left( \psi ,p\right) =-\frac{\gamma
+\mathcal{I}_{1}^{\left[ 5\right] }\left( \psi ,p\right) =-\frac{\gamma
 _{i+1/2}}{\overline{T}_{e,l+1/2}}\int_{0}^{p}\frac{p^{\prime 3}}{\gamma
 ^{\prime }}\frac{J_{2}\left( p^{\prime }\right) }{z^{\prime 2}}f_{0}^{\left(
-l=1\right) }\left( \psi ,p\right) dp^{\prime }
+m=1\right) }\left( \psi ,p\right) dp^{\prime }
 \end{equation}
 \begin{equation}
-\mathcal{I}_{1}^{\left( 6\right) }\left( \psi ,p\right) =\frac{\gamma p^{2}-5%
+\mathcal{I}_{1}^{\left[ 6\right] }\left( \psi ,p\right) =\frac{\gamma p^{2}-5%
 \overline{T}_{e}\left( \psi \right) }{6\overline{T}_{e}^{2}\left( \psi
-\right) }\int_{0}^{p}\frac{p^{\prime 3}}{\gamma ^{\prime }}\left( 1+\frac{3}{%
+\right) }\int_{0}^{p}\frac{p^{\prime 3}}{\gamma ^{\prime }}\left( 1+\frac{3}{
 z^{\prime 2}}-\frac{3\gamma ^{\prime }\zeta ^{\prime }}{z^{\prime 3}}\right)
-f_{0}^{\left( l=1\right) }\left( \psi ,p\right) dp^{\prime }
+f_{0}^{\left( m=1\right) }\left( \psi ,p\right) dp^{\prime }
 \end{equation}
 \begin{equation}
-\mathcal{I}_{1}^{\left( 7\right) }\left( \psi ,p\right) =\frac{\gamma }{%
+\mathcal{I}_{1}^{\left[ 7\right] }\left( \psi ,p\right) =\frac{\gamma }{%
 2\beta _{th}^{\dag 2}\overline{T}_{e}^{2}\left( \psi \right) }\int_{0}^{p}%
 \frac{p^{\prime 3}}{\gamma ^{\prime }}\frac{J_{3}\left( p^{\prime }\right) }{%
-z^{\prime }}f_{0}^{\left( l=1\right) }\left( \psi ,p\right) dp^{\prime }
+z^{\prime }}f_{0}^{\left( m=1\right) }\left( \psi ,p\right) dp^{\prime }
 \end{equation}
 \begin{equation}
-\mathcal{I}_{1}^{\left( 8\right) }\left( \psi ,p\right) =\frac{\gamma }{2%
+\mathcal{I}_{1}^{\left[ 8\right] }\left( \psi ,p\right) =\frac{\gamma }{2%
 \overline{T}_{e}\left( \psi \right) }\int_{0}^{p}\frac{p^{\prime 3}}{\gamma
 ^{\prime }}\frac{J_{1}\left( p^{\prime }\right) }{z^{\prime 2}}f_{0}^{\left(
-l=1\right) }\left( \psi ,p\right) dp^{\prime }
+m=1\right) }\left( \psi ,p\right) dp^{\prime }
 \end{equation}
 \begin{equation}
-\mathcal{I}_{1}^{\left( 9\right) }\left( \psi ,p\right) =\frac{p^{2}}{%
+\mathcal{I}_{1}^{\left[ 9\right] }\left( \psi ,p\right) =\frac{p^{2}}{%
 \overline{T}_{e}\left( \psi \right) }\int_{0}^{p}\frac{p^{\prime }}{\gamma
 ^{\prime }}\left( \frac{\gamma ^{\prime }\zeta ^{\prime }}{z^{\prime }}%
--1\right) f_{0}^{\left( l=1\right) }\left( \psi ,p\right) dp^{\prime }
+-1\right) f_{0}^{\left( m=1\right) }\left( \psi ,p\right) dp^{\prime }
 \end{equation}
 \begin{equation}
-\mathcal{I}_{1}^{\left( 10\right) }\left( \psi ,p\right) =-\frac{\gamma ^{2}%
+\mathcal{I}_{1}^{\left[ 10\right] }\left( \psi ,p\right) =-\frac{\gamma ^{2}%
 }{12\beta _{th}^{\dag 2}\overline{T}_{e}^{2}\left( \psi \right) }\int_{0}^{p}%
-\frac{p^{\prime 3}}{\gamma ^{\prime }}\frac{J_{4}\left( \psi \right) }{%
-z^{\prime }}f_{0}^{\left( l=1\right) }\left( \psi ,p\right) dp^{\prime }
+\frac{p^{\prime 3}}{\gamma ^{\prime }}\frac{J_{4}\left( \psi \right) }{
+z^{\prime }}f_{0}^{\left( m=1\right) }\left( \psi ,p\right) dp^{\prime }
 \end{equation}
-and the coefficients $\mathcal{I}_{2}^{\left( n\right) }\left( \psi
+and the coefficients $\mathcal{I}_{2}^{\left[ n\right] }\left( \psi
 ,p\right) $ are
 
 \begin{equation}
-\mathcal{I}_{2}^{\left( 1\right) }\left( \psi ,p\right) =\frac{1}{3\overline{%
+\mathcal{I}_{2}^{\left[ 1\right] }\left( \psi ,p\right) =\frac{1}{3\overline{
 T}_{e}\left( \psi \right) }\int_{p}^{\infty }\frac{1}{\gamma ^{\prime }}%
-f_{0}^{\left( l=1\right) }\left( \psi ,p\right) dp^{\prime }
+f_{0}^{\left( m=1\right) }\left( \psi ,p\right) dp^{\prime }
 \end{equation}
 \begin{equation}
-\mathcal{I}_{2}^{\left( 2\right) }\left( \psi ,p\right) =\left( -\frac{%
+\mathcal{I}_{2}^{\left[ 2\right] }\left( \psi ,p\right) =\left( -\frac{
 2\gamma }{3\overline{T}_{e}\left( \psi \right) }+\frac{p^{2}}{5\overline{T}%
 _{e}^{2}\left( \psi \right) }\right) \int_{p}^{\infty }f_{0}^{\left(
-l=1\right) }\left( \psi ,p\right) dp^{\prime }
+m=1\right) }\left( \psi ,p\right) dp^{\prime }
 \end{equation}
 \begin{equation}
-\mathcal{I}_{2}^{\left( 3\right) }\left( \psi ,p\right) =\left( \gamma -%
+\mathcal{I}_{2}^{\left[ 3\right] }\left( \psi ,p\right) =\left( \gamma -%
 \frac{\zeta }{z}\right) \frac{1}{p^{2}}\int_{p}^{\infty }\frac{1}{\gamma
-^{\prime }}f_{0}^{\left( l=1\right) }\left( \psi ,p\right) dp^{\prime }
+^{\prime }}f_{0}^{\left( m=1\right) }\left( \psi ,p\right) dp^{\prime }
 \end{equation}
 \begin{equation}
-\mathcal{I}_{2}^{\left( 4\right) }\left( \psi ,p\right) =-\frac{J_{2}\left(
-p\right) }{z^{2}\overline{T}_{e}\left( \psi \right) }\int_{p}^{\infty %
-}f_{0}^{\left( l=1\right) }\left( \psi ,p\right) dp^{\prime }
+\mathcal{I}_{2}^{\left[ 4\right] }\left( \psi ,p\right) =-\frac{J_{2}\left(
+p\right) }{z^{2}\overline{T}_{e}\left( \psi \right) }\int_{p}^{\infty
+}f_{0}^{\left( m=1\right) }\left( \psi ,p\right) dp^{\prime }
 \end{equation}
 \begin{equation}
-\mathcal{I}_{2}^{\left( 5\right) }\left( \psi ,p\right) =\left( 1+\frac{3}{%
+\mathcal{I}_{2}^{\left[ 5\right] }\left( \psi ,p\right) =\left( 1+\frac{3}{
 z^{2}}-\frac{3\gamma \zeta }{z^{3}}\right) \frac{1}{6\overline{T}%
 _{e}^{2}\left( \psi \right) }\int_{p}^{\infty }\left( \frac{\gamma \prime
 p^{\prime 2}-5\overline{T}_{e}\left( \psi \right) }{\gamma ^{\prime }}%
-\right) f_{0}^{\left( l=1\right) }\left( \psi ,p\right) dp^{\prime }
+\right) f_{0}^{\left( m=1\right) }\left( \psi ,p\right) dp^{\prime }
 \end{equation}
 \begin{equation}
-\mathcal{I}_{2}^{\left( 6\right) }\left( \psi ,p\right) =\left( \frac{%
+\mathcal{I}_{2}^{\left[ 6\right] }\left( \psi ,p\right) =\left( \frac{%
 J_{3}\left( p\right) }{2z\beta _{th}^{\dag 2}\overline{T}_{e}^{2}\left( \psi
 \right) }+\frac{J_{1}\left( p\right) }{2z^{2}\overline{T}_{e}\left( \psi
 \right) }-\frac{J_{4}\left( p\right) }{12z\beta _{th}^{\dag 2}\overline{T}%
 _{e}^{2}\left( \psi \right) }\right) \int_{p}^{\infty }f_{0}^{\left(
-l=1\right) }\left( \psi ,p\right) dp^{\prime }
+m=1\right) }\left( \psi ,p\right) dp^{\prime }
 \end{equation}
 \begin{equation}
-\mathcal{I}_{2}^{\left( 7\right) }\left( \psi ,p\right) =\frac{1}{p^{2}%
+\mathcal{I}_{2}^{\left[ 7\right] }\left( \psi ,p\right) =\frac{1}{p^{2}%
 \overline{T}_{e}\left( \psi \right) }\left( \frac{\gamma \zeta }{z}-1\right)
 \int_{p}^{\infty }\frac{p^{\prime 2}}{\gamma ^{\prime }}f_{0}^{\left(
-l=1\right) }\left( \psi ,p\right) dp^{\prime }
+m=1\right) }\left( \psi ,p\right) dp^{\prime }
 \end{equation}
 where 
 \begin{equation}
-J_{3}\left( p\right) =-\frac{3\gamma \zeta }{z}+\frac{3}{z}+z-\frac{2}{5}%
+J_{3}\left( p\right) =-\frac{3\gamma \zeta }{z}+\frac{3}{z}+z-\frac{2}{5}
 z^{3}
 \end{equation}
 \begin{equation}
@@ -405,27 +406,27 @@ possibility has been implemented in the code. In that case, expressions of
 the coefficients are greatly simplified,
 
 \begin{eqnarray}
-A\left( \psi ,p\right)  &=&\frac{1}{v^{3}}\overline{n}_{e}\left( \psi
-\right) \overline{T}_{e}\left( \psi \right)   \nonumber \\
+A\left( \psi ,p\right) &=&\frac{1}{v^{3}}\overline{n}_{e}\left( \psi \right) 
+\overline{T}_{e}\left( \psi \right)  \nonumber \\
 &&+\frac{1}{v^{3}}\sum_{s}\sum_{s^{\prime }}Z_{ss^{\prime }}^{2}\frac{%
 \overline{n}_{ss^{\prime }}\left( \psi \right) \overline{T}_{ss^{\prime
 }}\left( \psi \right) }{\overline{m}_{s}}
 \end{eqnarray}
 and 
 \begin{eqnarray}
-F\left( \psi ,p\right)  &=&\frac{1}{v^{2}}\overline{n}_{e}\left( \psi
-\right)   \nonumber \\
+F\left( \psi ,p\right) &=&\frac{1}{v^{2}}\overline{n}_{e}\left( \psi \right)
+\nonumber \\
 &&+\frac{1}{v^{2}}\sum_{s}\sum_{s^{\prime }}Z_{ss^{\prime }}^{2}\frac{%
 \overline{n}_{ss^{\prime }}\left( \psi \right) }{\overline{m}_{s}}
 \end{eqnarray}
 while 
 \begin{eqnarray}
-B_{t}\left( \psi ,p\right)  &=&\frac{1}{2v}\overline{n}_{e}\left( \psi
+B_{t}\left( \psi ,p\right) &=&\frac{1}{2v}\overline{n}_{e}\left( \psi
 \right) -\frac{1}{2v^{3}}\overline{n}_{e}\left( \psi \right) \overline{T}%
-_{e}\left( \psi \right)   \nonumber \\
+_{e}\left( \psi \right)  \nonumber \\
 &&+\frac{1}{2v}\sum_{s}\sum_{s^{\prime }}Z_{ss^{\prime }}^{2}\overline{n}%
 _{ss^{\prime }}\left( \psi \right) \left( 1-\frac{1}{v^{2}}\frac{\overline{T}%
-_{ss^{\prime }}\left( \psi \right) }{\overline{m}_{s}}\right) 
+_{ss^{\prime }}\left( \psi \right) }{\overline{m}_{s}}\right)
 \end{eqnarray}
 
 In that limit, no first-order Legendre correction is considered in the code.
@@ -435,11 +436,11 @@ In that limit, no first-order Legendre correction is considered in the code.
 This case corresponds to the limit where only pitch-angle scattering of
 electrons on massive ions with $\overline{T}_{ss^{\prime }}\left( \psi
 \right) =0,$ with large $Z_{ss^{\prime }}.$ Consequently, large
-simplifications may be performed, and
+simplifications may be performed, and 
 \begin{equation}
 A\left( \psi ,p\right) =F\left( \psi ,p\right) =0
 \end{equation}
-and
+and 
 \begin{equation}
 B_{t}\left( \psi ,p\right) =1/2
 \end{equation}
