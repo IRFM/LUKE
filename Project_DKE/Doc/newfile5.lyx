@@ -1,0 +1,788 @@
+#LyX 1.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 221
+\textclass revtex4
+\language english
+\inputencoding auto
+\fontscheme pslatex
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 1
+\use_natbib 0
+\use_numerical_citations 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Subsubsection
+
+Coefficients d'interpolation
+\layout Standard
+
+Les coefficients d'interpolation 
+\begin_inset Formula $\delta$
+\end_inset 
+
+ a determiner sont au nombre de quatre, deux correspondant a une interpolation
+ sur la grille en 
+\begin_inset Formula $p$
+\end_inset 
+
+, 
+\begin_inset Formula $\delta_{p,i+1,j+1/2}$
+\end_inset 
+
+ et 
+\begin_inset Formula $\delta_{p,i,j+1/2}$
+\end_inset 
+
+ et les deux autres sur la grille en 
+\begin_inset Formula $\xi,$
+\end_inset 
+
+ 
+\begin_inset Formula $\delta_{\xi,i+1/2,j+1}$
+\end_inset 
+
+ et 
+\begin_inset Formula $\delta_{\xi,i+1/2,j}.$
+\end_inset 
+
+ La methode usuelle consiste a les evaluer en imposant que sous le simple
+ effet des collisions, donc en l'absence de tout autre mecanisme d'acceleration
+ (champ electrique, ondes RF,...), la solution stationnaire donnee par le code
+ 
+\begin_inset Formula $f^{\left(\infty\right)}$
+\end_inset 
+
+ soit bien une Maxwellienne 
+\begin_inset Formula $f_{M}$
+\end_inset 
+
+.
+ Dans ce cas, comme l'operateur de collision est de symetrie spherique,
+ 
+\begin_inset Formula $\overline{\overline{D}}$
+\end_inset 
+
+ est diagonal et 
+\begin_inset Formula \begin{eqnarray*}
+\left.S_{p}\right|_{i+1,j+1/2}^{(\infty)} & = & -D_{pp,i+1,j+1/2}\frac{f_{0,i+3/2,j+1/2}^{(\infty)}-f_{0,i+1/2,j+1/2}^{(\infty)}}{\Delta p_{i+1}}+F_{p,i+1,j+1/2}f_{0,i+1,j+1/2}^{(\infty)}\\
+\left.S_{p}\right|_{i,j+1/2}^{(\infty)} & = & -D_{pp,i,j+1/2}\frac{f_{0,i+1/2,j+1/2}^{(\infty)}-f_{0,i-1/2,j+1/2}^{(\infty)}}{\Delta p_{i}}+F_{p,i,j+1/2}f_{0,i,j+1/2}^{(\infty)}\\
+\left.S_{\xi}\right|_{i+1/2,j+1}^{(\infty)} & = & +D_{\xi\xi,i+1/2,j+1}\sqrt{1-\xi_{j+1}^{2}}\frac{f_{0,i+1/2,j+3/2}^{(\infty)}-f_{0,i+1/2,j+1/2}^{(\infty)}}{p_{i+1/2}\Delta\xi_{j+1}}+F_{\xi,i+1/2,j+1}f_{0,i+1/2,j+1}^{(\infty)}\\
+\left.S_{\xi}\right|_{i+1/2,j}^{(\infty)} & = & +D_{\xi\xi,i+1/2,j}\sqrt{1-\xi_{j}^{2}}\frac{f_{0,i+1/2,j+1/2}^{(\infty)}-f_{0,i+1/2,j-1/2}^{(\infty)}}{p_{i+1/2}\Delta\xi_{j}}+F_{\xi,i+1/2,j}f_{0,i+1/2,j}^{(\infty)}\end{eqnarray*}
+
+\end_inset 
+
+ soit 
+\begin_inset Formula \begin{eqnarray*}
+\Delta p_{i+1}\left.S_{p}\right|_{i+1,j+1/2}^{(\infty)} & = & -D_{pp,i+1,j+1/2}\left(f_{0,i+3/2,j+1/2}^{(\infty)}-f_{0,i+1/2,j+1/2}^{(\infty)}\right)\\
+ &  & +\Delta p_{i+1}F_{p,i+1,j+1/2}f_{0,i+1,j+1/2}^{(\infty)}\\
+\Delta p_{i}\left.S_{p}\right|_{i,j+1/2}^{(\infty)} & = & -D_{pp,i,j+1/2}\left(f_{0,i+1/2,j+1/2}^{(\infty)}-f_{0,i-1/2,j+1/2}^{(\infty)}\right)\\
+ &  & +\Delta p_{i}F_{p,i,j+1/2}f_{0,i,j+1/2}^{(\infty)}\\
+p_{i+1/2}\Delta\xi_{j+1}\left.S_{\xi}\right|_{i+1/2,j+1}^{(\infty)} & = & +D_{\xi\xi,i+1/2,j+1}\sqrt{1-\xi_{j+1}^{2}}\left(f_{0,i+1/2,j+3/2}^{(\infty)}-f_{0,i+1/2,j+1/2}^{(\infty)}\right)\\
+ &  & +p_{i+1/2}\Delta\xi_{j+1}F_{\xi,i+1/2,j+1}f_{0,i+1/2,j+1}^{(\infty)}\\
+p_{i+1/2}\Delta\xi_{j}\left.S_{\xi}\right|_{i+1/2,j}^{(\infty)} & = & +D_{\xi\xi,i+1/2,j}\sqrt{1-\xi_{j}^{2}}\left(f_{0,i+1/2,j+1/2}^{(\infty)}-f_{0,i+1/2,j-1/2}^{(\infty)}\right)\\
+ &  & +p_{i+1/2}\Delta\xi_{j}F_{\xi,i+1/2,j}f_{0,i+1/2,j}^{(\infty)}\end{eqnarray*}
+
+\end_inset 
+
+
+\layout Standard
+
+Cela signifie donc que 
+\begin_inset Formula \[
+\lim_{t\rightarrow+\infty}\frac{\partial f_{0}}{\partial t}=-\nabla S=0\]
+
+\end_inset 
+
+ On en deduit alors que 
+\begin_inset Formula \[
+\left\{ \begin{array}{l}
+\Delta p_{i+1}F_{p,i+1,j+1/2}f_{0,i+1,j+1/2}^{(\infty)}=D_{pp,i+1,j+1/2}\left(f_{0,i+3/2,j+1/2}^{(\infty)}-f_{0,i+1/2,j+1/2}^{(\infty)}\right)\\
+\Delta p_{i}F_{p,i,j+1/2}f_{0,i,j+1/2}^{(\infty)}=D_{pp,i,j+1/2}\left(f_{0,i+1/2,j+1/2}^{(\infty)}-f_{0,i-1/2,j+1/2}^{(\infty)}\right)\\
+p_{i+1/2}\Delta\xi_{j+1}F_{\xi,i+1/2,j+1}f_{0,i+1/2,j+1}^{(\infty)}=-D_{\xi\xi,i+1/2,j+1}\sqrt{1-\xi_{j+1}^{2}}\left(f_{0,i+1/2,j+3/2}^{(\infty)}-f_{0,i+1/2,j+1/2}^{(\infty)}\right)\\
+p_{i+1/2}\Delta\xi_{j}F_{\xi,i+1/2,j}f_{0,i+1/2,j}^{(\infty)}=-D_{\xi\xi,i+1/2,j}\sqrt{1-\xi_{j}^{2}}\left(f_{0,i+1/2,j+1/2}^{(\infty)}-f_{0,i+1/2,j-1/2}^{(\infty)}\right)\end{array}\right.\]
+
+\end_inset 
+
+ et en reportant les expressions des coefficients 
+\begin_inset Formula $\delta$
+\end_inset 
+
+ on obtient 
+\begin_inset Formula \[
+\left\{ \begin{array}{l}
+\Delta p_{i+1}F_{p,i+1,j+1/2}\left(\left(1-\delta_{p,i+1,j+1/2}\right)f_{0,i+3/2,j+1/2}^{(\infty)}+\delta_{p,i+1,j+1/2}f_{0,i+1/2,j+1/2}^{(\infty)}\right)\\
+=D_{pp,i+1,j+1/2}\left(f_{0,i+3/2,j+1/2}^{(\infty)}-f_{0,i+1/2,j+1/2}^{(\infty)}\right)\\
+\Delta p_{i}F_{p,i,j+1/2}\left(\left(1-\delta_{p,i,j+1/2}\right)f_{0,i+1/2,j+1/2}^{(\infty)}+\delta_{p,i,j+1/2}f_{0,i-1/2,j+1/2}^{(\infty)}\right)\\
+=D_{pp,i,j+1/2}\left(f_{0,i+1/2,j+1/2}^{(\infty)}-f_{0,i-1/2,j+1/2}^{(\infty)}\right)\\
+p_{i+1/2}\Delta\xi_{j+1}F_{\xi,i+1/2,j+1}\left(\left(1-\delta_{\xi,i+1/2,j+1}\right)f_{0,i+1/2,j+3/2}^{(\infty)}+\delta_{\xi,i+1/2,j+1}f_{0,i+1/2,j+1/2}^{(\infty)}\right)\\
+=-D_{\xi\xi,i+1/2,j+1}\sqrt{1-\xi_{j+1}^{2}}\left(f_{0,i+1/2,j+3/2}^{(\infty)}-f_{0,i+1/2,j+1/2}^{(\infty)}\right)\\
+p_{i+1/2}\Delta\xi_{j}F_{\xi,i+1/2,j}\left(\left(1-\delta_{\xi,i+1/2,j}\right)f_{0,i+1/2,j+1/2}^{(\infty)}+\delta_{\xi,i+1/2,j}f_{0,i+1/2,j-1/2}^{(\infty)}\right)\\
+=-D_{\xi\xi,i+1/2,j}\sqrt{1-\xi_{j}^{2}}\left(f_{0,i+1/2,j+1/2}^{(\infty)}-f_{0,i+1/2,j-1/2}^{(\infty)}\right)\end{array}\right.\]
+
+\end_inset 
+
+ soit en recombinant 
+\begin_inset Formula \[
+\frac{f_{0,i+3/2,j+1/2}^{(\infty)}}{f_{0,i+1/2,j+1/2}^{(\infty)}}=\frac{D_{pp,i+1,j+1/2}+\Delta p_{i+1}F_{p,i+1,j+1/2}\delta_{p,i+1,j+1/2}}{D_{pp,i+1,j+1/2}-\Delta p_{i+1}F_{p,i+1,j+1/2}\left(1-\delta_{p,i+1,j+1/2}\right)}\]
+
+\end_inset 
+
+ 
+\begin_inset Formula \[
+\frac{f_{0,i+1/2,j+1/2}^{(\infty)}}{f_{0,i-1/2,j+1/2}^{(\infty)}}=\frac{D_{pp,i,j+1/2}+\Delta p_{i}F_{p,i,j+1/2}\delta_{p,i,j+1/2}}{D_{pp,i,j+1/2}-\Delta p_{i}F_{p,i,j+1/2}\left(1-\delta_{p,i,j+1/2}\right)}\]
+
+\end_inset 
+
+
+\layout Standard
+
+
+\begin_inset Formula \[
+\frac{f_{0,i+1/2,j+3/2}^{(\infty)}}{f_{0,i+1/2,j+1/2}^{(\infty)}}=\frac{-D_{\xi\xi,i+1/2,j+1}\sqrt{1-\xi_{j+1}^{2}}+p_{i+1/2}\Delta\xi_{j+1}F_{\xi,i+1/2,j+1}\delta_{\xi,i+1/2,j+1}}{-D_{\xi\xi,i+1/2,j+1}\sqrt{1-\xi_{j+1}^{2}}-p_{i+1/2}\Delta\xi_{j+1}F_{\xi,i+1/2,j+1}\left(1-\delta_{\xi,i+1/2,j+1}\right)}\]
+
+\end_inset 
+
+
+\layout Standard
+
+
+\begin_inset Formula \[
+\frac{f_{0,i+1/2,j+1/2}^{(\infty)}}{f_{0,i+1/2,j-1/2}^{(\infty)}}=\frac{-D_{\xi\xi,i+1/2,j}\sqrt{1-\xi_{j}^{2}}+p_{i+1/2}\Delta\xi_{j}F_{\xi,i+1/2,j}\delta_{\xi,i+1/2,j}}{-D_{\xi\xi,i+1/2,j}\sqrt{1-\xi_{j}^{2}}-p_{i+1/2}\Delta\xi_{j}F_{\xi,i+1/2,j}\left(1-\delta_{\xi,i+1/2,j}\right)}\]
+
+\end_inset 
+
+ que l'on peut mettre sous la forme simple 
+\begin_inset Formula \[
+\frac{f_{0,i+3/2,j+1/2}^{(\infty)}}{f_{0,i+1/2,j+1/2}^{(\infty)}}=\frac{1-w_{pi+1,j+1/2}^{(u)}\delta_{p,i+1,j+1/2}}{1+w_{pi+1,j+1/2}^{(u)}\left(1-\delta_{p,i+1,j+1/2}\right)}\]
+
+\end_inset 
+
+ 
+\begin_inset Formula \[
+\frac{f_{0,i+1/2,j+1/2}^{(\infty)}}{f_{0,i-1/2,j+1/2}^{(\infty)}}=\frac{1-w_{pi,j+1/2}^{(u)}\delta_{p,i,j+1/2}}{1+w_{pi,j+1/2}^{(u)}\left(1-\delta_{p,i,j+1/2}\right)}\]
+
+\end_inset 
+
+
+\layout Standard
+
+
+\begin_inset Formula \[
+\frac{f_{0,i+1/2,j+3/2}^{(\infty)}}{f_{0,i+1/2,j+1/2}^{(\infty)}}=\frac{1-w_{\xi i+1/2,j+1}^{(u)}\delta_{\xi,i+1/2,j+1}}{1+w_{\xi i+1/2,j+1}^{(u)}\left(1-\delta_{\xi,i+1/2,j+1}\right)}\]
+
+\end_inset 
+
+
+\layout Standard
+
+
+\begin_inset Formula \[
+\frac{f_{0,i+1/2,j+1/2}^{(\infty)}}{f_{0,i+1/2,j-1/2}^{(\infty)}}=\frac{1-w_{\xi i+1/2,j}^{(u)}\delta_{\xi,i+1/2,j}}{1+w_{\xi i+1/2,j}^{(u)}\left(1-\delta_{\xi,i+1/2,j}\right)}\]
+
+\end_inset 
+
+ avec 
+\begin_inset Formula \[
+\left\{ \begin{array}{l}
+w_{pi+1,j+1/2}^{(u)}=-\Delta p_{i+1}\frac{F_{p,i+1,j+1/2}}{D_{pp,i+1,j+1/2}}\\
+w_{pi,j+1/2}^{(u)}=-\Delta p_{i}\frac{F_{p,i,j+1/2}}{D_{pp,i,j+1/2}}\\
+w_{\xi i+1/2,j+1}^{(u)}=+p_{i+1/2}\frac{\Delta\xi_{j+1}}{\sqrt{1-\xi_{j+1}^{2}}}\frac{F_{\xi,i+1/2,j+1}}{D_{\xi\xi,i+1/2,j+1}}\\
+w_{\xi i+1/2,j}^{(u)}=+p_{i+1/2}\frac{\Delta\xi_{j}}{\sqrt{1-\xi_{j}^{2}}}\frac{F_{\xi,i+1/2,j}}{D_{\xi\xi,i/2,j}}\end{array}\right.\]
+
+\end_inset 
+
+
+\layout Standard
+
+Par ailleurs, comme 
+\begin_inset Formula $\nabla S=0,$
+\end_inset 
+
+ on en deduit naturellement que 
+\begin_inset Formula \[
+\left\{ \begin{array}{l}
+-D_{pp}\frac{df_{0}^{(\infty)}}{dp}+F_{p}f_{0}^{(\infty)}=0\\
++\frac{\sqrt{1-\xi2}}{p}D_{\xi\xi}\frac{df_{0}^{(\infty)}}{d\xi}+F_{\xi}f_{0}^{(\infty)}=0\end{array}\right.\]
+
+\end_inset 
+
+ et comme 
+\begin_inset Formula $F_{\xi}=0$
+\end_inset 
+
+ pour les collisions car aucune direction angulaire n'est privilegiee 
+\begin_inset Formula \[
+\left\{ \begin{array}{l}
+\frac{\partial f_{0}^{(\infty)}}{f_{0}^{(\infty)}}=\left(\frac{F_{p}}{D_{pp}}\right)\partial p\\
+\frac{\partial f_{0}^{(\infty)}}{\partial\xi}=0\end{array}\right.\]
+
+\end_inset 
+
+ ce qui indique qu'en presence de collisions seules, 
+\begin_inset Formula $f^{(\infty)}$
+\end_inset 
+
+ ne depend pas de 
+\begin_inset Formula $\xi.$
+\end_inset 
+
+ Donc comme 
+\begin_inset Formula $\frac{\partial}{\partial p}\rightarrow\frac{d}{dp},$
+\end_inset 
+
+ par integration on obtient pour la premiere equation 
+\begin_inset Formula \[
+\ln f=\int\left(\frac{F_{p}}{D_{pp}}\right)dp+Cte\]
+
+\end_inset 
+
+
+\layout Standard
+
+Les valeurs de 
+\begin_inset Formula $f_{0}^{(\infty)}$
+\end_inset 
+
+ aux points de la demi-grille 
+\begin_inset Formula $\left(i+3/2,j+1/2\right)$
+\end_inset 
+
+ et 
+\begin_inset Formula $\left(i+1/2,j+1/2\right)$
+\end_inset 
+
+ valent ainsi 
+\begin_inset Formula \[
+\left\{ \begin{array}{l}
+\ln f_{0,i+3/2,j+1/2}^{(\infty)}=\int_{0}^{p_{i+3/2}}\left(\frac{F_{p}\left(p,\xi_{j+1/2}\right)}{D_{pp}\left(p,\xi_{j+1/2}\right)}\right)dp+Cte\\
+\ln f_{0,i+1/2,j+1/2}^{(\infty)}=\int_{0}^{p_{i+1/2}}\left(\frac{F_{p}\left(p,\xi_{j+1/2}\right)}{D_{pp}\left(p,\xi_{j+1/2}\right)}\right)dp+Cte\end{array}\right.\]
+
+\end_inset 
+
+
+\layout Standard
+
+On en deduit alors facilement les rapports 
+\begin_inset Formula \[
+\left\{ \begin{array}{l}
+\frac{f_{0,i+3/2,j+1/2}^{(\infty)}}{f_{0,i+1/2,j+1/2}^{(\infty)}}=\exp\left[\int_{p_{i+1/2}}^{p_{i+3/2}}\left(\frac{F_{p}\left(p,\xi_{j+1/2}\right)}{D_{pp}\left(p,\xi_{j+1/2}\right)}\right)dp\right]\\
+\frac{f_{0,i+1/2,j+1/2}^{(\infty)}}{f_{0,i-1/2,j+1/2}^{(\infty)}}=\exp\left[\int_{p_{i-1/2}}^{p_{i13/2}}\left(\frac{F_{p}\left(p,\xi_{j+1/2}\right)}{D_{pp}\left(p,\xi_{j+1/2}\right)}\right)dp\right]\end{array}\right.\]
+
+\end_inset 
+
+ et comme 
+\begin_inset Formula $f_{0}^{(\infty)}$
+\end_inset 
+
+ ne depend pas de 
+\begin_inset Formula $\xi,$
+\end_inset 
+
+ 
+\begin_inset Formula \[
+\frac{f_{0,i+1/2,j+3/2}^{(\infty)}}{f_{0,i+1/2,j+1/2}^{(\infty)}}=\frac{f_{0,i+1/2,j+1/2}^{(\infty)}}{f_{0,i+1/2,j-1/2}^{(\infty)}}=1\]
+
+\end_inset 
+
+
+\layout Standard
+
+Il est facile de determiner les coefficients 
+\begin_inset Formula $\delta_{p,i+1,j+1/2}$
+\end_inset 
+
+ et 
+\begin_inset Formula $\delta_{p,i,j+1/2}$
+\end_inset 
+
+ en calculant l'integrale par une simple methode des trapezes, 
+\begin_inset Formula \begin{eqnarray*}
+\int_{p_{i+1/2}}^{p_{i+3/2}}\frac{F_{p}\left(p,\xi_{j+1/2}\right)}{D_{pp}\left(p,\xi_{j+1/2}\right)}dp & \approx & \frac{1}{2}\left[\frac{F_{p}\left(p_{i+1/2},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+1/2},\xi_{j+1/2}\right)}+\frac{F_{p}\left(p_{i+1},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+1},\xi_{j+1/2}\right)}\right]\frac{\Delta p_{i+1/2}}{2}\\
+ &  & +\frac{1}{2}\left[\frac{F_{p}\left(p_{i+1},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+1},\xi_{j+1/2}\right)}+\frac{F_{p}\left(p_{i+3/2},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+3/2},\xi_{j+1/2}\right)}\right]\frac{\Delta p_{i+3/2}}{2}\end{eqnarray*}
+
+\end_inset 
+
+ et 
+\begin_inset Formula \begin{eqnarray*}
+\int_{p_{i-1/2}}^{p_{i+1/2}}\frac{F_{p}\left(p,\xi_{j+1/2}\right)}{D_{pp}\left(p,\xi_{j+1/2}\right)}dp & \approx & \frac{1}{2}\left[\frac{F_{p}\left(p_{i-1/2},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i-1/2},\xi_{j+1/2}\right)}+\frac{F_{p}\left(p_{i},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i},\xi_{j+1/2}\right)}\right]\frac{\Delta p_{i-1/2}}{2}\\
+ &  & +\frac{1}{2}\left[\frac{F_{p}\left(p_{i},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i},\xi_{j+1/2}\right)}+\frac{F_{p}\left(p_{i+1/2},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+1/2},\xi_{j+1/2}\right)}\right]\frac{\Delta p_{i+1/2}}{2}\end{eqnarray*}
+
+\end_inset 
+
+ puis en regroupant les termes en 
+\begin_inset Formula $p_{i+1}$
+\end_inset 
+
+ et 
+\begin_inset Formula $p_{i}$
+\end_inset 
+
+ on obtient 
+\begin_inset Formula \begin{eqnarray*}
+\int_{p_{i+1/2}}^{p_{i+3/2}}\frac{F_{p}\left(p,\xi_{j+1/2}\right)}{D_{pp}\left(p,\xi_{j+1/2}\right)}dp & \approx & \frac{1}{2}\frac{F_{p}\left(p_{i+1},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+1},\xi_{j+1/2}\right)}\left(\frac{\Delta p_{i+1/2}}{2}+\frac{\Delta p_{i+3/2}}{2}\right)\\
+ &  & +\frac{F_{p}\left(p_{i+1/2},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+1/2},\xi_{j+1/2}\right)}\frac{\Delta p_{i+1/2}}{4}+\frac{F_{p}\left(p_{i+3/2},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+3/2},\xi_{j+1/2}\right)}\frac{\Delta p_{i+3/2}}{4}\\
+ & = & \frac{F_{p}\left(p_{i+1},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+1},\xi_{j+1/2}\right)}\frac{\Delta p_{i+1}}{2}\\
+ &  & +\frac{F_{p}\left(p_{i+1/2},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+1/2},\xi_{j+1/2}\right)}\frac{\Delta p_{i+1/2}}{4}+\frac{F_{p}\left(p_{i+3/2},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+3/2},\xi_{j+1/2}\right)}\frac{\Delta p_{i+3/2}}{4}\end{eqnarray*}
+
+\end_inset 
+
+ soit 
+\begin_inset Formula \begin{eqnarray*}
+\int_{p_{i+1/2}}^{p_{i+3/2}}\frac{F_{p}\left(p,\xi_{j+1/2}\right)}{D_{pp}\left(p,\xi_{j+1/2}\right)}dp & = & \Delta p_{i+1}\frac{F_{p}\left(p_{i+1},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+1},\xi_{j+1/2}\right)}\\
+ &  & +\frac{F_{p}\left(p_{i+1/2},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+1/2},\xi_{j+1/2}\right)}\frac{\Delta p_{i+1/2}}{4}\\
+ &  & +\frac{F_{p}\left(p_{i+3/2},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+3/2},\xi_{j+1/2}\right)}\frac{\Delta p_{i+3/2}}{4}\\
+ &  & -\frac{\Delta p_{i+1}}{2}\frac{F_{p}\left(p_{i+1},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+1},\xi_{j+1/2}\right)}\end{eqnarray*}
+
+\end_inset 
+
+
+\layout Standard
+
+Comme 
+\begin_inset Formula \begin{eqnarray*}
+\frac{F_{p}\left(p_{i+1},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+1},\xi_{j+1/2}\right)} & = & \frac{\Delta p_{i+3/2}}{\Delta p_{i+1/2}+\Delta p_{i+3/2}}\frac{F_{p}\left(p_{i+1/2},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+1/2},\xi_{j+1/2}\right)}\\
+ &  & +\frac{\Delta p_{i+1/2}}{\Delta p_{i+1/2}+\Delta p_{i+3/2}}\frac{F_{p}\left(p_{i+3/2},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+3/2},\xi_{j+1/2}\right)}\end{eqnarray*}
+
+\end_inset 
+
+ soit 
+\begin_inset Formula \[
+\frac{F_{p}\left(p_{i+1},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+1},\xi_{j+1/2}\right)}=\frac{1}{2\Delta p_{i+1}}\left[\Delta p_{i+3/2}\frac{F_{p}\left(p_{i+1/2},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+1/2},\xi_{j+1/2}\right)}+\Delta p_{i+1/2}\frac{F_{p}\left(p_{i+3/2},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+3/2},\xi_{j+1/2}\right)}\right]\]
+
+\end_inset 
+
+ on trouve apres avoir regroupe les termes 
+\begin_inset Formula \begin{eqnarray*}
+\int_{p_{i+1/2}}^{p_{i+3/2}}\frac{F_{p}\left(p,\xi_{j+1/2}\right)}{D_{pp}\left(p,\xi_{j+1/2}\right)}dp & = & \Delta p_{i+1}\frac{F_{p}\left(p_{i+1},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+1},\xi_{j+1/2}\right)}\\
+ &  & +\frac{\Delta p_{i+3/2}-\Delta p_{i+1/2}}{4}\left[\frac{F_{p}\left(p_{i+3/2},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+3/2},\xi_{j+1/2}\right)}-\frac{F_{p}\left(p_{i+1/2},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+1/2},\xi_{j+1/2}\right)}\right]\end{eqnarray*}
+
+\end_inset 
+
+
+\layout Standard
+
+En jouant sur les indices on a de meme pour la seconde integrale
+\layout Standard
+
+
+\begin_inset Formula \begin{eqnarray*}
+\int_{p_{i-1/2}}^{p_{i+1/2}}\frac{F_{p}\left(p,\xi_{j+1/2}\right)}{D_{pp}\left(p,\xi_{j+1/2}\right)}dp & \approx & =\Delta p_{i}\frac{F_{p}\left(p_{i},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i},\xi_{j+1/2}\right)}\\
+ &  & +\frac{\Delta p_{i+1/2}-\Delta p_{i-1/2}}{4}\left[\frac{F_{p}\left(p_{i+1/2},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+1/2},\xi_{j+1/2}\right)}-\frac{F_{p}\left(p_{i-1/2},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i-1/2},\xi_{j+1/2}\right)}\right]\end{eqnarray*}
+
+\end_inset 
+
+
+\layout Standard
+
+En egalant les deux expressions des rapports 
+\begin_inset Formula $\frac{f_{0,i+3/2,j+1/2}^{(\infty)}}{f_{0,i+1/2,j+1/2}^{(\infty)}}$
+\end_inset 
+
+ on obtient facilement 
+\begin_inset Formula \[
+\delta_{p,i+1,j+1/2}=\frac{1}{w_{pi+1,j+1/2}^{(u)}}-\frac{1}{\exp\left[w_{pi+1,j+1/2}^{(u)}+w_{pi+1,j+1/2}^{(nu)}\right]-1}\]
+
+\end_inset 
+
+ avec 
+\begin_inset Formula \[
+w_{pi+1,j+1/2}^{(nu)}=-\frac{\Delta p_{i+3/2}-\Delta p_{i+1/2}}{4}\left[\frac{F_{p}\left(p_{i+3/2},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+3/2},\xi_{j+1/2}\right)}-\frac{F_{p}\left(p_{i+1/2},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+1/2},\xi_{j+1/2}\right)}\right]\]
+
+\end_inset 
+
+
+\layout Standard
+
+De meme 
+\begin_inset Formula \[
+\delta_{p,i,j+1/2}=\frac{1}{w_{pi,j+1/2}^{(u)}}-\frac{1}{\exp\left[w_{pi,j+1/2}^{(u)}+w_{pi,j+1/2}^{(nu)}\right]-1}\]
+
+\end_inset 
+
+ avec 
+\begin_inset Formula \[
+w_{pi,j+1/2}^{(nu)}=-\frac{\Delta p_{i+1/2}-\Delta p_{i-1/2}}{4}\left[\frac{F_{p}\left(p_{i+1/2},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+1/2},\xi_{j+1/2}\right)}-\frac{F_{p}\left(p_{i-1/2},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i-1/2},\xi_{j+1/2}\right)}\right]\]
+
+\end_inset 
+
+
+\layout Standard
+
+Dans le cas d'une grille uniforme, 
+\begin_inset Formula $w_{pi,j+1/2}^{(nu)}=0,$
+\end_inset 
+
+ et on retrouve bien la forme usuelle de la fonction de Chang et Cooper
+ 
+\begin_inset Formula \[
+g\left(x\right)=\frac{1}{x}-\frac{1}{e^{x}-1}\]
+
+\end_inset 
+
+ avec 
+\begin_inset Formula $x=w_{p}^{(u)}.$
+\end_inset 
+
+ Un developpement limite donne 
+\begin_inset Formula $g\left(x\right)=0.5-x/12+x^{3}/720+\mathrm{O}\left(x^{4}\right)$
+\end_inset 
+
+ lorsque 
+\begin_inset Formula $x\ll1$
+\end_inset 
+
+ avec la limite usuelle 
+\begin_inset Formula $\lim_{x\rightarrow0}g\left(x\right)=\frac{1}{2}.$
+\end_inset 
+
+ A noter qu'il faut introduire une fonction generalisee de Chang et Cooper
+ pour le cas de la grille non uniforme, sous la forme simple de deux variables
+ 
+\begin_inset Formula \[
+g\left(x,y\right)=\frac{1}{x}-\frac{1}{e^{x+y}-1}\]
+
+\end_inset 
+
+ le terme 
+\begin_inset Formula $y=w_{p}^{(nu)}$
+\end_inset 
+
+ etant nul lorsque la grille est uniforme.
+\layout Standard
+
+Avec cette definition, 
+\begin_inset Formula \[
+\frac{f_{0,i+3/2,j+1/2}^{(\infty)}}{f_{0,i+1/2,j+1/2}^{(\infty)}}=\frac{1-w_{pi+1,j+1/2}^{(u)}\left[\frac{1}{w_{pi+1,j+1/2}^{(u)}}-\frac{1}{\exp\left[w_{pi+1,j+1/2}^{(u)}+w_{pi+1,j+1/2}^{(nu)}\right]-1}\right]}{1+w_{pi+1,j+1/2}^{(u)}\left(1-\left[\frac{1}{w_{pi+1,j+1/2}^{(u)}}-\frac{1}{\exp\left[w_{pi+1,j+1/2}^{(u)}+w_{pi+1,j+1/2}^{(nu)}\right]-1}\right]\right)}\]
+
+\end_inset 
+
+ soit 
+\begin_inset Formula \[
+\frac{f_{0,i+3/2,j+1/2}^{(\infty)}}{f_{0,i+1/2,j+1/2}^{(\infty)}}=\frac{\frac{w_{pi+1,j+1/2}^{(u)}}{\exp\left[w_{pi+1,j+1/2}^{(u)}+w_{pi+1,j+1/2}^{(nu)}\right]-1}}{w_{pi+1,j+1/2}^{(u)}+\frac{w_{pi+1,j+1/2}^{(u)}}{\exp\left[w_{pi+1,j+1/2}^{(u)}+w_{pi+1,j+1/2}^{(nu)}\right]-1}}\]
+
+\end_inset 
+
+ qui se simplifie et devient 
+\begin_inset Formula \[
+\frac{f_{0,i+3/2,j+1/2}^{(\infty)}}{f_{0,i+1/2,j+1/2}^{(\infty)}}=\exp\left[-w_{pi+1,j+1/2}^{(u)}-w_{pi+1,j+1/2}^{(nu)}\right]\]
+
+\end_inset 
+
+
+\layout Standard
+
+Comme pour les collisions, on a la relation simple 
+\begin_inset Formula \[
+\frac{F_{p}\left(p,\xi\right)}{D_{pp}\left(p,\xi\right)}\cong-p\]
+
+\end_inset 
+
+ puisque la distribution 
+\begin_inset Formula $f^{(\infty)}$
+\end_inset 
+
+ est une Maxwellienne 
+\begin_inset Formula $f_{M},$
+\end_inset 
+
+ on trouve donc
+\layout Standard
+
+
+\begin_inset Formula \[
+\frac{f_{0,i+3/2,j+1/2}^{(\infty)}}{f_{0,i+1/2,j+1/2}^{(\infty)}}=\exp\left[-\Delta p_{i+1}p_{i+1}-\frac{\Delta p_{i+3/2}-\Delta p_{i+1/2}}{4}\left(p_{i+3/2}-p_{i+1/2}\right)\right]\]
+
+\end_inset 
+
+ En utilisant les egalites 
+\begin_inset Formula \[
+\left\{ \begin{array}{l}
+p_{i+3/2}=p_{i+1}+\frac{\Delta p_{i+3/2}}{2}\\
+p_{i+1/2}=p_{i+1}-\frac{\Delta p_{i+1/2}}{2}\end{array}\right.\]
+
+\end_inset 
+
+ il est facile de montrer que 
+\begin_inset Formula \[
+p_{i+1}=\frac{1}{2}\left(p_{i+3/2}+p_{i+1/2}\right)-\frac{1}{2}\left(\frac{\Delta p_{i+3/2}}{2}-\frac{\Delta p_{i+1/2}}{2}\right)\]
+
+\end_inset 
+
+ et 
+\begin_inset Formula \[
+\Delta p_{i+1}=\frac{1}{2}\left(\Delta p_{i+3/2}+\Delta p_{i+1/2}\right)=p_{i+3/2}-p_{i+1/2}\]
+
+\end_inset 
+
+ et en reportant ces relations dans l'expression precedente on trouve 
+\begin_inset Formula \begin{eqnarray*}
+ &  & -\Delta p_{i+1}p_{i+1}-\frac{\Delta p_{i+3/2}-\Delta p_{i+1/2}}{4}\left(p_{i+3/2}-p_{i+1/2}\right)\\
+ & = & -\left(p_{i+3/2}-p_{i+1/2}\right)\left[\frac{1}{2}\left(p_{i+3/2}+p_{i+1/2}\right)-\frac{1}{4}\left(\Delta p_{i+3/2}-\Delta p_{i+1/2}\right)\right]\\
+ &  & -\frac{\Delta p_{i+3/2}-\Delta p_{i+1/2}}{4}\left(p_{i+3/2}-p_{i+1/2}\right)\\
+ & = & -\frac{1}{2}\left(p_{i+3/2}+p_{i+1/2}\right)\left(p_{i+3/2}-p_{i+1/2}\right)\\
+ & = & -\frac{1}{2}\left(p_{i+3/2}^{2}-p_{i+1/2}^{2}\right)\end{eqnarray*}
+
+\end_inset 
+
+ soit 
+\begin_inset Formula \[
+\frac{f_{0,i+3/2,j+1/2}^{(\infty)}}{f_{0,i+1/2,j+1/2}^{(\infty)}}=\exp\left[-\frac{p_{i+3/2}^{2}-p_{i+1/2}^{2}}{2}\right]\]
+
+\end_inset 
+
+ ce qui correspond bien a une Maxwellienne numerique.
+ Les erreurs ne se propagent donc pas avec ce type de ponderation.
+\layout Standard
+
+Pour les termes angulaires, le calcul est tres simple et des relations precedent
+es on en deduit directement que 
+\begin_inset Formula $w_{\xi i+1/2,j+1}=w_{\xi i+1/2,j}=0$
+\end_inset 
+
+ car 
+\begin_inset Formula $F_{\xi}=0$
+\end_inset 
+
+.
+ Ainsi 
+\begin_inset Formula $\delta_{\xi,i+1/2,j+1}$
+\end_inset 
+
+ peut etre defini de maniere arbitraire.
+ La fa\i \c{c}
+ on la plus naturelle est d'effectuer une interpolation lineaire entre
+ 
+\begin_inset Formula $f_{0,i+1/2,j+3/2}^{(\infty)}$
+\end_inset 
+
+ et 
+\begin_inset Formula $f_{0,i+1/2,j+3/2}^{(\infty)}$
+\end_inset 
+
+ ainsi qu'entre 
+\begin_inset Formula $f_{0,i+1/2,j+1/2}^{(\infty)}$
+\end_inset 
+
+ et 
+\begin_inset Formula $f_{0,i+1/2,j-1/2}^{(\infty)}$
+\end_inset 
+
+ selon les relations 
+\begin_inset Formula \[
+\left\{ \begin{array}{l}
+f_{0,i+1/2,j+1}^{(\infty)}=\left(\frac{\Delta\xi_{j+1/2}}{\Delta\xi_{j+1/2}+\Delta\xi_{j+3/2}}\right)f_{0,i+1/2,j+3/2}^{(\infty)}+\left(\frac{\Delta\xi_{j+3/2}}{\Delta\xi_{j+1/2}+\Delta\xi_{j+3/2}}\right)f_{0,i+1/2,j+1/2}^{(\infty)}\\
+f_{0,i+1/2,j}^{(\infty)}=\left(\frac{\Delta\xi_{j-1/2}}{\Delta\xi_{j-1/2}+\Delta\xi_{j+1/2}}\right)f_{0,i+1/2,j+1/2}^{(\infty)}+\left(\frac{\Delta\xi_{j+1/2}}{\Delta\xi_{j-1/2}+\Delta\xi_{j+1/2}}\right)f_{0,i+1/2,j-1/2}^{(\infty)}\end{array}\right.\]
+
+\end_inset 
+
+ en tenant compte des pas de grille, ce qui donne 
+\begin_inset Formula \[
+\left\{ \begin{array}{l}
+\delta_{\xi,i+1/2,j+1}=\frac{\Delta\xi_{j+3/2}}{\Delta\xi_{j+1/2}+\Delta\xi_{j+3/2}}\\
+\delta_{\xi,i+1/2,j}=\frac{\Delta\xi_{j+1/2}}{\Delta\xi_{j-1/2}+\Delta\xi_{j+1/2}}\end{array}\right.\]
+
+\end_inset 
+
+ On retrouve bien que pour une grille uniforme, 
+\begin_inset Formula $\delta_{\xi,i+1/2,j+1}=\delta_{\xi,i+1/2,j}=1/2.$
+\end_inset 
+
+
+\layout Standard
+
+En resume, pour les coefficients d'interpolation 
+\begin_inset Formula $\delta,$
+\end_inset 
+
+ on obtient pour la grille en 
+\begin_inset Formula $p$
+\end_inset 
+
+
+\begin_inset Formula \[
+\delta_{p}\rightarrow\left\{ \begin{array}{l}
+\delta_{p,i+1,j+1/2}=\frac{1}{w_{pi+1,j+1/2}^{(u)}}-\frac{1}{\exp\left[w_{pi+1,j+1/2}^{(u)}+w_{pi+1,j+1/2}^{(nu)}\right]-1}\\
+\delta_{p,i,j+1/2}=\frac{1}{w_{pi,j+1/2}^{(u)}}-\frac{1}{\exp\left[w_{pi,j+1/2}^{(u)}+w_{pi,j+1/2}^{(nu)}\right]-1}\end{array}\right.\]
+
+\end_inset 
+
+ avec 
+\begin_inset Formula \[
+w_{p}^{(u)}\rightarrow\left\{ \begin{array}{l}
+w_{pi+1,j+1/2}^{(u)}=-\Delta p_{i+1}\frac{F_{p,i+1,j+1/2}}{D_{pp,i+1,j+1/2}}\\
+w_{pi,j+1/2}^{(u)}=-\Delta p_{i}\frac{F_{p,i,j+1/2}}{D_{pp,i,j+1/2}}\end{array}\right.\]
+
+\end_inset 
+
+ et 
+\begin_inset Formula \[
+w_{p}^{(nu)}\rightarrow\left\{ \begin{array}{l}
+w_{pi+1,j+1/2}^{(nu)}=-\frac{\Delta p_{i+3/2}-\Delta p_{i+1/2}}{4}\left[\frac{F_{p}\left(p_{i+3/2},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+3/2},\xi_{j+1/2}\right)}-\frac{F_{p}\left(p_{i+1/2},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+1/2},\xi_{j+1/2}\right)}\right]\\
+w_{pi,j+1/2}^{(nu)}=-\frac{\Delta p_{i+1/2}-\Delta p_{i-1/2}}{4}\left[\frac{F_{p}\left(p_{i+1/2},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i+1/2},\xi_{j+1/2}\right)}-\frac{F_{p}\left(p_{i-1/2},\xi_{j+1/2}\right)}{D_{pp}\left(p_{i-1/2},\xi_{j+1/2}\right)}\right]\end{array}\right.\]
+
+\end_inset 
+
+ ainsi que pour la grille en 
+\begin_inset Formula $\xi$
+\end_inset 
+
+
+\begin_inset Formula \[
+\delta_{\xi}\rightarrow\left\{ \begin{array}{l}
+\delta_{\xi,i+1/2,j+1}=\frac{\Delta\xi_{j+3/2}}{\Delta\xi_{j+1/2}+\Delta\xi_{j+3/2}}\\
+\delta_{\xi,i+1/2,j}=\frac{\Delta\xi_{j+1/2}}{\Delta\xi_{j-1/2}+\Delta\xi_{j+1/2}}\end{array}\right.\]
+
+\end_inset 
+
+
+\layout Standard
+
+A noter que comme on ne considere que le cas des collisions pour definir
+ les coefficients 
+\begin_inset Formula $\delta,$
+\end_inset 
+
+ les dynamiques en 
+\begin_inset Formula $p$
+\end_inset 
+
+ et en 
+\begin_inset Formula $\xi$
+\end_inset 
+
+ sont decouplees.
+ En consequence, les rapports 
+\begin_inset Formula $\frac{F_{p}}{D_{pp}}$
+\end_inset 
+
+ ne dependent que de 
+\begin_inset Formula $p$
+\end_inset 
+
+, et c'est pour cela qu'il est possible de prendre les memes valeurs en
+ differents points de grille en 
+\begin_inset Formula $\xi.$
+\end_inset 
+
+
+\layout Standard
+
+Les calculs effectues dans le cas ou seules les collisions interviennent
+ sont usuellement etendus aux regimes en presence de mecanismes d'acceleration
+ (champ electrique, ondes RF) en generalisant les expressions des coefficients
+ de ponderations 
+\begin_inset Formula $\delta$
+\end_inset 
+
+ selon la regle simple 
+\begin_inset Formula \[
+\left.\frac{F_{p}}{D_{pp}}\right|_{effectif}=\frac{\sum_{m}F_{p}^{(m)}}{\sum_{m}D_{pp}^{(m)}}\]
+
+\end_inset 
+
+ ou 
+\begin_inset Formula $\sum_{m}$
+\end_inset 
+
+ est la somme sur tous les mecanismes 
+\begin_inset Formula $m$
+\end_inset 
+
+ en jeu.
+ Ceci permet de garder la meme syntaxe et ainsi 
+\begin_inset Formula \[
+w_{pi+1,j+1/2}^{(nu)}=-\frac{\Delta p_{i+3/2}-\Delta p_{i+1/2}}{4}\left[\left.\frac{F_{p}}{D_{pp}}\right|_{effectif}^{i+3/2,j+1/2}-\left.\frac{F_{p}}{D_{pp}}\right|_{effectif}^{i+1/2,j+1/2}\right]\]
+
+\end_inset 
+
+ et 
+\begin_inset Formula \[
+w_{pi,j+1/2}^{(nu)}=-\frac{\Delta p_{i+1/2}-\Delta p_{i-1/2}}{4}\left[\left.\frac{F_{p}}{D_{pp}}\right|_{effectif}^{i+1/2,j+1/2}-\left.\frac{F_{p}}{D_{pp}}\right|_{effectif}^{i-1/2,j+1/2}\right]\]
+
+\end_inset 
+
+
+\layout Standard
+
+Dans ce cas evidemment, il apparait une dependence en fonction de 
+\begin_inset Formula $\xi,$
+\end_inset 
+
+ mais celle-ci est sans importance car dans la zone ou les flux sont modifies
+ la Maxwellienne n'est plus la solution locale.
+ La valeur de la fonction de Chang et Cooper tend ainsi vers la valeur 
+\begin_inset Formula $\delta_{p}\simeq\frac{1}{2}.$
+\end_inset 
+
+ On remplace tous les coefficients des tableaux ci-dessus par leurs valeurs
+ effectives, comme indique.
+\layout Standard
+
+A noter que les expressions de 
+\begin_inset Formula $w_{p}^{(nu)}$
+\end_inset 
+
+ et 
+\begin_inset Formula $\delta_{\xi,}$
+\end_inset 
+
+ font apparaitre des termes aux points de grille en 
+\begin_inset Formula $i-1/2,$
+\end_inset 
+
+ 
+\begin_inset Formula $i+3/2$
+\end_inset 
+
+ et en 
+\begin_inset Formula $j-1/2,$
+\end_inset 
+
+ 
+\begin_inset Formula $j+3/2.$
+\end_inset 
+
+ La fa\i \c{c}
+on usuelle de les prendre en compte dans les calculs consiste a effectuer
+ un decalage d'indice, sous la forme 
+\begin_inset Formula \[
+\left(i+1/2,j+1/2\right)\in\left\{ \left[1:n_{p}\right],\left[1:n_{\xi}\right]\right\} \]
+
+\end_inset 
+
+ et 
+\begin_inset Formula \[
+\left\{ \begin{array}{l}
+\left(i+3/2,j+1/2\right)\in\left\{ \left[2:n_{p},X\right],\left[1:n_{\xi}\right]\right\} \\
+\left(i-1/2,j+1/2\right)\in\left\{ \left[X,1:n_{p}-1\right],\left[1:n_{\xi}\right]\right\} \\
+\left(i+1/2,j+3/2\right)\in\left\{ \left[1:n_{p}\right],\left[2:n_{\xi},X\right]\right\} \\
+\left(i+1/2,j-1/2\right)\in\left\{ \left[1:n_{p}\right],\left[X,1:n_{\xi}-1\right]\right\} \end{array}\right.\]
+
+\end_inset 
+
+ Ainsi, toutes les quantites ont la meme dimension 
+\begin_inset Formula $\left(n_{p},n_{\xi}\right),$
+\end_inset 
+
+ ce qui est indispensable en utilisant MatLab pour une description matricielle.
+ Par ailleurs, les conditions aux limites aux extremites du domaine sont
+ naturellement satisfaites.
+ On peut donc attribuer a la variable une valeur 
+\begin_inset Formula $X$
+\end_inset 
+
+une valeur quelconque.
+\the_end

@@ -1,0 +1,629 @@
+#LyX 1.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 221
+\textclass revtex4
+\language english
+\inputencoding auto
+\fontscheme pslatex
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 1
+\use_natbib 0
+\use_numerical_citations 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+
+L'operateur de collisions
+\layout Standard
+
+Le probleme physique etudie celui de la generation de courant dans un plasma
+ resultant d
+\begin_inset Quotes erd
+\end_inset 
+
+une faible distortion de la distribution des electrons, il est d'usage de
+ lineariser l'operateur de collisions autour du noyau Maxwellien.
+ Un discussion detaillee de cette question est abordee dans l'article de
+ revue de C.
+ Karney sur les differentes formes possibles que l'on peut utiliser pour
+ l'operateur de collision dans les calculs numeriques.
+ On considerera ici trois formes, l'operateur Maxwellien 
+\begin_inset Formula \[
+C_{M}(f^{e})=C_{ee}(f^{e},f_{M}^{e})+C_{ei}(f^{e},f_{M}^{i})\]
+
+\end_inset 
+
+ decrivant les collisions entre les electrons rapides et les electrons ainsi
+ que les ions dominants dont la distribution en impulsion est de type Maxwellien
+, caracterises respectivement par les distribution 
+\begin_inset Formula $f_{M}^{e}$
+\end_inset 
+
+ et 
+\begin_inset Formula $f_{M}^{i},$
+\end_inset 
+
+ la distribution deformee par les differentes interactions etant ici denommee
+ par 
+\begin_inset Formula $f^{e}.$
+\end_inset 
+
+ Pour le probleme de la generation de courant il est important de considerer
+ le terme de correction d'ordre un de l'operateur de collision des electrons
+ thermiques sur la queue non-thermique.
+ Dans ce cas, on parle de l'operateur de collision linearise (ou tronque)
+ qui est la somme de trois termes
+\layout Standard
+
+
+\begin_inset Formula \[
+C_{M}(f^{e})=C_{ee}(f^{e},f_{M}^{e})+C_{ee}(f_{M}^{e},f^{e})+C_{ei}(f^{e},f_{M}^{i})\]
+
+\end_inset 
+
+
+\layout Standard
+
+C'est l
+\begin_inset Quotes erd
+\end_inset 
+
+operateur de collision generalement employe pour les simulations plasmas.
+ A noter qu'il introduit une legere non-linearite dans l'equation de diffusion,
+ ce qui necessite d'effectuer plusieurs iterations meme en presence d'un
+ schema numerique totalement implicite.
+\layout Standard
+
+Enfin, il est interessant de considerer pour des comparaisons analytiques
+ la limite haute vitesse de l'operateur de collision 
+\begin_inset Formula \[
+C_{M}^{HV}(f^{e})=C_{ee}^{HV}(f^{e},f_{M}^{e})+C_{ee}^{HV}(f_{M}^{e},f^{e})+C_{ei}^{HV}(f^{e},f_{M}^{i})\]
+
+\end_inset 
+
+
+\layout Subsection
+
+Terme differentiel 
+\begin_inset Formula $C_{ee}(f,f_{M})+C_{ei}(f,f_{i})$
+\end_inset 
+
+
+\layout Standard
+
+L'operateur de collision decrivant les interactions binaires entre electrons
+ et ions est exprime sous la forme conservative 
+\begin_inset Formula \[
+C_{M}(f^{e})=C_{ee}(f^{e},f_{M}^{e})+C_{ei}(f^{e},f_{M}^{i})=\frac{1}{p^{2}}\frac{\partial}{\partial p}\left[p^{2}\left(A(p)\frac{\partial f^{e}}{\partial p}+F(p)f^{e}\right)\right]+\frac{B_{t}(p)}{p^{2}}\frac{\partial}{\partial\xi}\left[(1-\xi^{2})\frac{\partial f^{e}}{\partial\xi}\right]\]
+
+\end_inset 
+
+
+\layout Standard
+
+ou le terme 
+\begin_inset Formula $F(p)$
+\end_inset 
+
+ represente le ralentissement collisionnel 
+\begin_inset Formula $F(p)=F^{(e)}(p)+F^{(i)}(p)$
+\end_inset 
+
+ qui est un terme de force (convection).
+ Normalise a la quantite 
+\begin_inset Formula $\nu_{e}p_{Te},$
+\end_inset 
+
+ le terme de collision avec les electrons vaut 
+\begin_inset Formula \[
+F^{(e)}(p)=F_{1}+F_{2}\]
+
+\end_inset 
+
+ ou
+\begin_inset Formula \begin{eqnarray*}
+F_{1} & = & 4\pi\int_{0}^{p}f_{M}(p^{\prime})\frac{p^{\prime}{}^{2}}{\gamma^{\prime}}\left[\frac{1}{v^{2}}+\frac{1}{p^{2}}\left(1-\frac{\gamma^{\prime}\sigma^{\prime}}{z^{\prime}}\right)\right]dp^{\prime}\\
+F_{2} & = & \frac{4\pi}{v}\left(1-\frac{\sigma}{\gamma z}\right)\int_{p}^{\infty}p^{\prime}f_{M}(p^{\prime})dp^{\prime}\end{eqnarray*}
+
+\end_inset 
+
+ la quantite de mouvement 
+\begin_inset Formula $p$
+\end_inset 
+
+ etant normalisee a l'impulsion thermique 
+\begin_inset Formula $p_{Te}$
+\end_inset 
+
+, avec les definitions suivantes 
+\begin_inset Formula \[
+z=p\frac{p_{Te}}{m_{e}c}\qquad\sigma=\sinh^{-1}z\qquad v=\frac{p}{\gamma}\qquad\gamma=\sqrt{1+z^{2}}\]
+
+\end_inset 
+
+
+\layout Itemize
+
+La contribution ionique est donnee simplement par 
+\begin_inset Formula \[
+F^{(i)}(p)=\frac{1}{v^{2}}Z_{i}\frac{m_{e}}{m_{i}}\]
+
+\end_inset 
+
+
+\layout Itemize
+
+
+\series bold 
+Diffusion in Momentum 
+\begin_inset Formula $p$
+\end_inset 
+
+
+\series default 
+, described by the diffusion coefficient 
+\begin_inset Formula $A(p)=A^{(e)}(p)+A^{(i)}(p)$
+\end_inset 
+
+, which also includes a contribution from collisions with electrons and
+ with ions.
+ 
+\begin_inset Formula $A(p)$
+\end_inset 
+
+ is normalized to the thermal diffusion coefficient 
+\begin_inset Formula $\nu_{e}p_{Te}^{2}$
+\end_inset 
+
+.
+\begin_deeper 
+\layout Itemize
+
+
+\emph on 
+Collisions with electrons
+\emph default 
+ 
+\begin_inset Formula \[
+A^{(e)}(p)=\frac{F_{1}+F_{2}}{v}\]
+
+\end_inset 
+
+
+\layout Itemize
+
+
+\emph on 
+Collisions with ions
+\emph default 
+ 
+\begin_inset Formula \[
+A^{(i)}(p)=\frac{1}{v^{3}}Z_{i}\frac{m_{e}}{m_{i}}\frac{T_{i}}{T_{e}}\]
+
+\end_inset 
+
+
+\end_deeper 
+\layout Itemize
+
+
+\series bold 
+Pitch-angle Scattering (Diffusion in 
+\begin_inset Formula $\xi$
+\end_inset 
+
+)
+\series default 
+, described by the diffusion coefficient 
+\begin_inset Formula $B_{t}(p)=B_{t}^{(e)}(p)+B_{t}^{(i)}(p)$
+\end_inset 
+
+, normalized to 
+\begin_inset Formula $\nu_{e}p_{Te}^{2}$
+\end_inset 
+
+ with
+\begin_deeper 
+\layout Itemize
+
+
+\emph on 
+Collisions with electrons
+\emph default 
+ 
+\begin_inset Formula \[
+B_{t}^{(e)}(p)=B_{1}+B_{2}\]
+
+\end_inset 
+
+ with 
+\begin_inset Formula \begin{eqnarray*}
+B_{1} & = & 4\pi\int_{0}^{p}f_{M}(p^{\prime})\frac{p^{\prime}{}^{2}}{v}\left\{ \frac{1}{2}-\frac{p^{\prime}{}^{2}}{6p^{2}}+\frac{1}{8\gamma^{\prime}\gamma^{2}z^{2}}\left[-3\gamma^{\prime}+\sigma^{\prime}\left(\frac{3}{z^{\prime}}+2z^{\prime}\right)\right]\cdots\right.\\
+ &  & \,\,\left.-\frac{1}{4z^{2}\gamma^{\prime}}\left(\gamma^{\prime}-\frac{\sigma^{\prime}}{z^{\prime}}-\frac{2}{3}\gamma^{\prime}z^{\prime}{}^{2}\right)-\frac{1}{4\gamma^{\prime}\gamma^{2}}\left(\gamma^{\prime}-\frac{\sigma^{\prime}}{z^{\prime}}\right)\right\} dp^{\prime}\\
+B_{2} & = & 4\pi\int_{p}^{\infty}p^{\prime}f_{M}(p^{\prime})\frac{p^{\prime}{}^{2}}{v^{\prime}}\left\{ \frac{1}{2}-\frac{\gamma^{2}}{6\gamma^{\prime}{}^{2}}+\frac{1}{8\gamma\gamma^{\prime}{}^{2}z^{2}}\left[-3\gamma+\sigma\left(\frac{3}{z}+2z\right)\right]\cdots\right.\\
+ &  & \,\,\left.-\frac{\gamma}{4z^{2}\gamma^{\prime}{}^{2}}\left(\gamma-\frac{\sigma}{z}-\frac{2}{3}\gamma z^{2}\right)-\frac{v^{\prime}{}^{2}}{4\gamma p^{2}}\left(\gamma-\frac{\sigma}{z}\right)\right\} dp^{\prime}\end{eqnarray*}
+
+\end_inset 
+
+
+\layout Itemize
+
+
+\emph on 
+Collisions with ions
+\emph default 
+ 
+\begin_inset Formula \[
+B_{t}^{(i)}(p)=\frac{1}{2v}Z_{i}\left(1-\frac{1}{v^{2}}\frac{m_{e}}{m_{i}}\frac{T_{i}}{T_{e}}\right)\]
+
+\end_inset 
+
+
+\end_deeper 
+\layout Standard
+
+It is interesting to note that collisions with ions bring only a very small
+ contribution (ratio 
+\begin_inset Formula $m_{e}/m_{i}$
+\end_inset 
+
+) to the slowing down and diffusion in 
+\begin_inset Formula $p$
+\end_inset 
+
+ processes.
+ However, the contribution of ions for pitch-angle scattering is of the
+ same order as the contribution from electrons.
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+subsubsubsection{Expression in the Limit of a Lorentz Gaz}
+\end_inset 
+
+
+\layout Standard
+
+In the limit of a Lorentz gas (
+\begin_inset Formula $Z_{i}\gg1$
+\end_inset 
+
+), pitch-angle scattering over ions becomes the dominant collision process
+ and the collision operator then reduces from () to: 
+\begin_inset Formula \[
+C^{(\text{Lor.})}(f)=\frac{\nu_{e}Z}{2v}\frac{1}{p^{2}}\frac{\partial}{\partial\xi}\left[(1-\xi^{2})\frac{\partial f}{\partial\xi}\right]=\frac{\nu_{ei}}{2\gamma^{2}}\frac{\partial}{\partial\xi}\left[(1-\xi^{2})\frac{\partial f}{\partial\xi}\right]\]
+
+\end_inset 
+
+ with 
+\begin_inset Formula \[
+\nu_{ei}=\frac{e^{4}Zi^{2}n_{i}\ln\Lambda}{4\pi\epsilon_{0}^{2}m_{e}^{2}v^{3}}\]
+
+\end_inset 
+
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+subsubsubsection{Expression as the Divergence of a Flux and Bounce-Averaged
+\newline 
+Operator}
+\end_inset 
+
+
+\layout Standard
+
+The differential part of the collision operator can also be expressed as
+ the divergence of a flux: 
+\begin_inset Formula \[
+C_{ee}(f,f_{M})+C_{ei}(f,f_{i})=-\nabla\cdot\vec{S}^{C}\]
+
+\end_inset 
+
+ where the expression of the divergence operator in spherical coordinates
+ is 
+\begin_inset Formula \[
+\nabla\cdot\vec{S}=\frac{1}{p^{2}}\frac{\partial}{\partial p}(p^{2}S_{p})-\frac{1}{p}\frac{\partial}{\partial\xi}(\sqrt{1-\xi^{2}}S_{\xi})\]
+
+\end_inset 
+
+
+\layout Standard
+
+Therefore, the expressions for the collisions-related fluxes are 
+\begin_inset Formula \begin{eqnarray*}
+S_{p}^{C} & = & -\left[A(p)\frac{\partial f}{\partial p}+F(p)f\right]\\
+S_{\xi}^{C} & = & \frac{B_{t}(p)}{p}\sqrt{1-\xi^{2}}\frac{\partial f}{\partial\xi}\end{eqnarray*}
+
+\end_inset 
+
+
+\layout Standard
+
+A bounce-averaging of the collision operator is required in order to remove
+ the dependence upon the poloidal angle 
+\begin_inset Formula $\theta$
+\end_inset 
+
+ and reduce the Fokker-Planck equation to a 2-D momentum space equation.
+ This operation is described in (), and has been derived for the collision
+ operator in , for the case of 
+\begin_inset Formula $f_{0}$
+\end_inset 
+
+, 
+\begin_inset Formula $g$
+\end_inset 
+
+ and 
+\begin_inset Formula $\tilde{f}$
+\end_inset 
+
+, which gives:
+\layout Itemize
+
+
+\emph on 
+For 
+\begin_inset Formula $f_{0}$
+\end_inset 
+
+ or 
+\begin_inset Formula $g$
+\end_inset 
+
+
+\emph default 
+ 
+\begin_inset Formula \[
+\{\nabla\cdot\vec{S}^{C}\}_{f_{0},g}=\frac{1}{p^{2}}\frac{\partial}{\partial p}(p^{2}S_{p}^{C,(0)})-\frac{1}{\lambda p}\frac{\partial}{\partial\xi_{0}}(\sqrt{1-\xi_{0}^{2}}\lambda S_{\xi_{0}}^{C,(0)})\]
+
+\end_inset 
+
+ where 
+\begin_inset Formula \begin{eqnarray*}
+S_{p}^{C,(0)} & = & -\left[A(p)\frac{\partial f^{(0)}(p,\xi_{0})}{\partial p}+F(p)f^{(0)}(p,\xi_{0})\right]\\
+S_{\xi_{0}}^{C,(0)} & = & \frac{B_{t}(p)}{p}\sqrt{1-\xi_{0}^{2}}\left(1-\frac{\Delta}{\xi_{0}^{2}}\right)\frac{\partial f^{(0)}(p,\xi_{0})}{\partial\xi_{0}}\end{eqnarray*}
+
+\end_inset 
+
+
+\layout Itemize
+
+
+\emph on 
+For 
+\begin_inset Formula $\tilde{f}$
+\end_inset 
+
+
+\emph default 
+ 
+\begin_inset Formula \[
+\{\nabla\cdot\vec{S}^{C}\}_{\tilde{f}}=\frac{1}{p^{2}}\frac{\partial}{\partial p}(p^{2}\tilde{S}_{p}^{C,(0)})-\frac{1}{\lambda p}\frac{\partial}{\partial\xi_{0}}(\sqrt{1-\xi_{0}^{2}}\lambda\tilde{S}_{\xi_{0}}^{C,(0)})\]
+
+\end_inset 
+
+ where 
+\begin_inset Formula \begin{eqnarray*}
+\tilde{S}_{p}^{C,(0)} & = & -\frac{1}{\lambda(1+\epsilon)}H(|\xi_{0}|>\xi_{0T})\left[A(p)\frac{\partial\tilde{f}^{(0)}(p,\xi_{0})}{\partial p}+F(p)\tilde{f}^{(0)}(p,\xi_{0})\right]\\
+\tilde{S}_{\xi_{0}}^{C,(0)} & = & \frac{1}{\lambda(1+\epsilon)}H(|\xi_{0}|>\xi_{0T})\frac{B_{t}(p)}{p}\sqrt{1-\xi_{0}^{2}}\\
+ &  & \qquad\left(\frac{\partial\tilde{f}^{(0)}(p,\xi_{0})}{\partial\xi_{0}}-\frac{(\epsilon-\epsilon^{2}/2)}{(1+\epsilon)\xi_{0}}\frac{\partial}{\partial\xi_{0}}\frac{\tilde{f}^{(0)}(p,\xi_{0})}{\xi_{0}}\right)\end{eqnarray*}
+
+\end_inset 
+
+
+\layout Standard
+
+The normalized bounce time 
+\begin_inset Formula $\lambda$
+\end_inset 
+
+ is defined in () and the bounce-average coefficient 
+\begin_inset Formula $\Delta$
+\end_inset 
+
+ is defined as: 
+\begin_inset Formula \[
+\Delta=\left\{ 1-\frac{1}{\Psi(\theta)}\right\} \]
+
+\end_inset 
+
+ Both coefficients are described in Appendix .
+\layout Subsection
+
+Integral term 
+\begin_inset Formula $C_{ee}(f_{M},f)$
+\end_inset 
+
+
+\layout Standard
+
+
+\begin_inset LatexCommand \label{intop}
+
+\end_inset 
+
+
+\layout Standard
+
+This term is included to ensure momentum conservation in the collision operator.
+ For this purpose, only collisions with the first, dominant term in the
+ Legendre polynomials expansion need to be considered.
+ 
+\begin_inset Formula \[
+C_{ee}(f_{M},f)=\xi I_{1}(f_{M},f_{1})\]
+
+\end_inset 
+
+ with 
+\begin_inset Formula \[
+I_{1}(f_{M},f_{1})=\nu_{e}f_{M}(p)\left[4\pi\frac{f_{1}(p)}{\gamma}+I_{1,1}(f_{1})+I_{1,2}(f_{1})\right]\]
+
+\end_inset 
+
+ 
+\begin_inset Formula \[
+f_{1}=\frac{3}{2}\int_{-1}^{1}\xi fd\xi\]
+
+\end_inset 
+
+ and 
+\begin_inset Formula \begin{eqnarray*}
+I_{1,1}(f_{1}) & = & 4\pi\int_{0}^{p}f_{1}(p^{\prime})\frac{p^{\prime}{}^{3}}{\gamma\gamma^{\prime}p^{2}}\left\{ \frac{1}{3}-\frac{2}{3}\gamma\gamma^{\prime}+\frac{1}{5}\gamma p^{\prime}{}^{2}+\frac{1}{p^{\prime}{}^{2}}\left(\gamma^{\prime}-\frac{\sigma^{\prime}}{z^{\prime}}\right)\right.\cdots\\
+ &  & -\frac{\gamma}{z^{\prime}{}^{2}}\left(\gamma^{\prime}-\frac{\sigma^{\prime}}{z^{\prime}}-\frac{2}{3}\gamma^{\prime}z^{\prime}{}^{2}\right)+\frac{(\gamma p^{2}-5)}{6z^{\prime}}\left(-\frac{3\gamma^{\prime}\sigma^{\prime}}{z^{\prime}{}^{2}}+\frac{3}{z^{\prime}}+z^{\prime}\right)\cdots\\
+ &  & +\frac{\gamma}{2z^{\prime}\beta_{th}^{2}}\left(-\frac{3\gamma^{\prime}\sigma^{\prime}}{z^{\prime}{}^{2}}+\frac{3}{z^{\prime}}+z^{\prime}-\frac{2}{5}z^{\prime}{}^{3}\right)+\frac{\gamma}{2z^{\prime}{}^{2}}\left[-3\gamma^{\prime}+\sigma^{\prime}\left(\frac{3}{z^{\prime}}+2z^{\prime}\right)\right]\cdots\\
+ &  & \left.+\frac{p^{2}}{p^{\prime}{}^{2}}\left(\frac{\gamma^{\prime}\sigma^{\prime}}{z^{\prime}}-1\right)-\frac{\gamma}{12z^{\prime}\beta_{th}^{2}}\left[\gamma^{\prime}\sigma^{\prime}\left(\frac{15}{z^{\prime}{}^{2}}+6\right)-\frac{15}{z^{\prime}}-11z^{\prime}\right]\right\} dp^{\prime}\end{eqnarray*}
+
+\end_inset 
+
+
+\begin_inset Formula \begin{eqnarray*}
+I_{1,2}(f_{1}) & = & 4\pi\int_{p}^{\infty}f_{1}(p^{\prime})\frac{p}{\gamma\gamma^{\prime}}\left\{ \frac{1}{3}-\frac{2}{3}\gamma\gamma^{\prime}+\frac{1}{5}\gamma^{\prime}p^{2}+\frac{1}{p^{2}}\left(\gamma-\frac{\sigma}{z}\right)\right.\cdots\\
+ &  & -\frac{\gamma^{\prime}}{z^{2}}\left(\gamma-\frac{\sigma}{z}-\frac{2}{3}\gamma z^{2}\right)+\frac{(\gamma^{\prime}p^{\prime}{}^{2}-5)}{6z}\left(-\frac{3\gamma\sigma}{z^{2}}+\frac{3}{z}+z\right)\cdots\\
+ &  & +\frac{\gamma^{\prime}}{2z\beta_{th}^{2}}\left(-\frac{3\gamma\sigma}{z^{2}}+\frac{3}{z}+z-\frac{2}{5}z^{3}\right)+\frac{\gamma^{\prime}}{2z^{2}}\left[-3\gamma+\sigma\left(\frac{3}{z}+2z\right)\right]\cdots\\
+ &  & \left.+\frac{p^{\prime}{}^{2}}{p^{2}}\left(\frac{\gamma\sigma}{z}-1\right)-\frac{\gamma^{\prime}}{12z\beta_{th}^{2}}\left[\gamma\sigma\left(\frac{15}{z^{2}}+6\right)-\frac{15}{z}-11z\right]\right\} dp^{\prime}\end{eqnarray*}
+
+\end_inset 
+
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+subsubsubsection{Bounce-Averaged Operator}
+\end_inset 
+
+
+\layout Standard
+
+The bounce-averaging of the integral term is derived in for 
+\begin_inset Formula $f_{0}$
+\end_inset 
+
+, 
+\begin_inset Formula $g$
+\end_inset 
+
+ and 
+\begin_inset Formula $\tilde{f}$
+\end_inset 
+
+, which gives:
+\layout Itemize
+
+
+\emph on 
+For 
+\begin_inset Formula $f_{0}$
+\end_inset 
+
+ or 
+\begin_inset Formula $g$
+\end_inset 
+
+
+\emph default 
+ 
+\begin_inset Formula \[
+\{ C_{ee}(f_{M},f)\}_{f_{0},g}=\{\xi I_{1}(f_{M},f_{1})\}_{f_{0},g}=\frac{s^{\ast}}{\lambda}\xi_{0}I_{1}(f_{M},f_{1}^{(0)})\]
+
+\end_inset 
+
+ where 
+\begin_inset Formula \[
+f_{1}^{(0)}=\frac{3}{2}\int_{-1}^{1}\xi_{0}f^{(0)}d\xi_{0}\]
+
+\end_inset 
+
+
+\begin_deeper 
+\layout Standard
+
+
+\begin_inset Formula $s^{\ast}$
+\end_inset 
+
+ is defined as 
+\begin_inset Formula \[
+s^{\ast}=H(|\xi_{0}|>\xi_{0T})\,\,\int_{-\pi}^{\pi}\frac{d\theta}{2\pi}\Psi\]
+
+\end_inset 
+
+ This bounce-averaging coefficient is described in Appendix .
+\end_deeper 
+\layout Itemize
+
+
+\emph on 
+For 
+\begin_inset Formula $\tilde{f}$
+\end_inset 
+
+
+\emph default 
+ 
+\begin_inset Formula \[
+\{ C_{ee}(f_{M},f)\}_{\tilde{f}}=\{\xi I_{1}(f_{M},f_{1})\}_{\tilde{f}}=\frac{1}{\lambda}H(|\xi_{0}|>\xi_{0T})\xi_{0}I_{1}(f_{M},\tilde{f}_{1}^{(0)})\]
+
+\end_inset 
+
+ where 
+\begin_inset Formula \[
+\tilde{f}_{1}^{(0)}=\frac{3}{2}\int_{-1}^{1}H(|\xi_{0}|>\xi_{0T})\,\,\xi_{0}\tilde{s}^{\ast}\tilde{f}^{(0)}d\xi_{0}\]
+
+\end_inset 
+
+
+\begin_deeper 
+\layout Standard
+
+
+\begin_inset Formula $\tilde{s}^{\ast}$
+\end_inset 
+
+ is defined as 
+\begin_inset Formula \[
+\tilde{s}^{\ast}=\int_{-\theta_{c}}^{\theta_{c}}\frac{d\theta}{2\pi}\frac{\xi}{\xi_{0}}\]
+
+\end_inset 
+
+ and is described in Appendix.
+\end_deeper 
+
+
+
+
+
+
+
+
+\the_end

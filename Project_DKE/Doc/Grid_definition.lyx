@@ -1,0 +1,513 @@
+#LyX 1.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 221
+\textclass revtex4
+\language english
+\inputencoding auto
+\fontscheme pslatex
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 1
+\use_natbib 0
+\use_numerical_citations 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Subsection
+
+Grid definition
+\layout Standard
+
+The Fokker-Planck equation may be numerically solved by different techniques.
+ Among them, the most natural is the finite difference method, which will
+ be here considered.
+ It is necessary to define a mesh of four dimensions, 
+\begin_inset Formula $\left(p,\xi,r,\theta\right)$
+\end_inset 
+
+in addition to the time parameter 
+\begin_inset Formula $t$
+\end_inset 
+
+.
+\layout Standard
+
+The usual technique is to perform La technique usuelle est d'effectuer une
+ discretisation des flux 
+\begin_inset Formula $S$
+\end_inset 
+
+ sur une grille d'indice entiers, la distribution 
+\begin_inset Formula $f_{0}$
+\end_inset 
+
+ etant intercalee sur une grille des demi-indices.
+ Cette forme respecte la nature conservative du probleme, a savoir que la
+ distribution 
+\begin_inset Formula $f_{0}$
+\end_inset 
+
+ resulte de la divergence d'un flux 
+\begin_inset Formula $S$
+\end_inset 
+
+.
+ Ainsi, en centrant correctement le processus de differentiation numerique
+ on ne fait pas apparaitre de termes correspondant a des flux numeriques
+ parasites qui conduisent a une solution erronee.
+ Dans ce cadre, la grille entiere est definie par les suites de points 
+\begin_inset Formula \[
+S\left(p_{i},\xi_{j},r_{l},\theta_{m}\right)\rightarrow\left\{ \begin{array}{l}
+p_{i}\in\left[0,p_{\max}\right],i\rightarrow\left\{ 0,n_{p}\right\} \\
+\xi_{j}\in\left[-1,1\right],j\rightarrow\left\{ 0,n_{\xi}\right\} \\
+r_{l}\in\left[0,a\right],l\rightarrow\left\{ 0,n_{r}\right\} \\
+\theta_{m}\in\left[0,2\pi\right],m\rightarrow\left\{ 0,n_{\theta}\right\} \end{array}\right.\]
+
+\end_inset 
+
+ et la demi-grille vaut par definition 
+\begin_inset Formula \[
+f_{0}\left(p_{i+1/2},\xi_{j+1/2},r_{l+1/2},\theta_{m+1/2}\right)\rightarrow\left\{ \begin{array}{l}
+p_{i+1/2}\in\left[\frac{\Delta p_{1/2}}{2},p_{\max}-\frac{\Delta p_{n_{p}-1/2}}{2}\right],i\rightarrow\left\{ 0,n_{p}-1\right\} \\
+\xi_{j+1/2}\in\left[-1+\frac{\Delta\xi_{1/2}}{2},1-\frac{\Delta\xi_{n_{\xi}-1/2}}{2}\right],j\rightarrow\left\{ 0,n_{\xi}-1\right\} \\
+r_{l+1/2}\in\left[0+\frac{\Delta r_{1/2}}{2},a-\frac{\Delta r_{n_{r}-1/2}}{2}\right],l\rightarrow\left\{ 0,n_{r}-1\right\} \\
+\theta_{m+1/2}\in\left[0+\frac{\Delta\theta_{1/2}}{2},2\pi-\frac{\Delta\theta_{n_{\theta}-1/2}}{2}\right],m\rightarrow\left\{ 0,n_{\theta}-1\right\} \end{array}\right.\]
+
+\end_inset 
+
+
+\layout Standard
+
+Les dynamiques en 
+\begin_inset Formula $p$
+\end_inset 
+
+ et 
+\begin_inset Formula $\xi$
+\end_inset 
+
+ etant independantes, la position de 
+\begin_inset Formula $p_{i+1/2}$
+\end_inset 
+
+ entre 
+\begin_inset Formula $p_{i}$
+\end_inset 
+
+ et 
+\begin_inset Formula $p_{i+1}$
+\end_inset 
+
+ et de 
+\begin_inset Formula $\xi_{j+1/2}$
+\end_inset 
+
+ entre 
+\begin_inset Formula $\xi_{j}$
+\end_inset 
+
+ et 
+\begin_inset Formula $\xi_{j+1}$
+\end_inset 
+
+ est arbitraire.
+ Le choix le plus simple est de placer le point de demi-grille exactement
+ a mi-chemin entre deux points consecutifs de la grille entiere soit 
+\begin_inset Formula \[
+\left\{ \begin{array}{l}
+p_{i+1/2}=\frac{p_{i}+p_{i+1}}{2}\\
+\xi_{j+1/2}=\frac{\xi_{j}+\xi_{j+1}}{2}\end{array}\right.\]
+
+\end_inset 
+
+
+\layout Standard
+
+On en deduit donc les expressions des intervalles sur les differentes grilles
+\layout Standard
+
+
+\begin_inset Formula \[
+\left\{ \begin{array}{l}
+\Delta p_{i+1}=p_{i+3/2}-p_{i+1/2}\\
+\Delta p_{i+1/2}=p_{i+1}-p_{i}\\
+\Delta p_{i}=p_{i+1/2}-p_{i-1/2}\\
+\Delta\xi_{j+1}=\xi_{j+3/2}-\xi_{j+1/2}\\
+\Delta\xi_{j+1/2}=\xi_{j+1}-\xi_{j}\\
+\Delta\xi_{j}=\xi_{j+1/2}-\xi_{j-1/2}\end{array}\right.\]
+
+\end_inset 
+
+
+\layout Standard
+
+ou
+\begin_inset Formula \begin{eqnarray*}
+\Delta p_{i+1} & = & p_{i+3/2}-p_{i+1/2}\\
+ & = & p_{i+3/2}-p_{i+1}+p_{i+1}-p_{i+1/2}\\
+ & = & \frac{\Delta p_{i+3/2}}{2}+\frac{\Delta p_{i+1/2}}{2}\end{eqnarray*}
+
+\end_inset 
+
+
+\begin_inset Formula \begin{eqnarray*}
+\Delta\xi_{j+1} & = & \xi_{j+3/2}-\xi_{j+1/2}\\
+ & = & \xi_{j+3/2}+\xi_{j+1}-\xi_{j+1}-\xi_{j+1/2}\\
+ & = & \frac{\Delta\xi_{j+3/2}}{2}+\frac{\Delta\xi_{j+1/2}}{2}\end{eqnarray*}
+
+\end_inset 
+
+
+\layout Standard
+
+A noter que les conditions aux limites des domaines jouent un grand role,
+ puisque le probleme a resoudre est de type Neuman, c.a.d.
+ que l'on specifie les gradients selon la normale a la frontiere du domaine
+ d'integration.
+ Il faut donc specifier 
+\begin_inset Formula $\left(\Delta p,\Delta\xi\right)$
+\end_inset 
+
+ aux extremites de chaque domaine.
+ Comme l'axe 
+\begin_inset Formula $p_{\bot}=0$
+\end_inset 
+
+ est un axe de symetrie (symetrie de revolution) dans l'espace des impulsions,
+ on a ainsi 
+\begin_inset Formula \[
+\Delta\xi_{0}=\frac{\Delta\xi_{1/2}+\Delta\xi_{-1/2}}{2}=\Delta\xi_{1/2}=\xi_{1}-\xi_{0}=2\xi_{1/2}+1\]
+
+\end_inset 
+
+ comme 
+\begin_inset Formula $\Delta\xi_{1/2}=\Delta\xi_{-1/2},$
+\end_inset 
+
+ 
+\begin_inset Formula $\xi_{1/2}=\frac{\xi_{1}+\xi_{0}}{2}$
+\end_inset 
+
+et 
+\begin_inset Formula $\xi_{0}=-1.$
+\end_inset 
+
+ De meme, 
+\begin_inset Formula \[
+\Delta\xi_{n_{\xi}}=\frac{\Delta\xi_{n_{\xi}+1/2}+\Delta\xi_{n_{\xi}-1/2}}{2}=\Delta\xi_{n_{\xi}-1/2}=\xi_{n_{\xi}}-\xi_{n_{\xi}-1}=1-\xi_{n_{\xi}-1}\]
+
+\end_inset 
+
+ en tenant compte du fait que 
+\begin_inset Formula $\Delta\xi_{n_{\xi}+1/2}=\Delta\xi_{n_{\xi}-1/2}.$
+\end_inset 
+
+ Par ailleurs, comme par definition 
+\begin_inset Formula \[
+\xi_{n_{\xi}-1/2}=\frac{\xi_{n_{\xi}}+\xi_{n_{\xi}-1}}{2}=\frac{1+\xi_{n_{\xi}-1}}{2}\]
+
+\end_inset 
+
+ on obtient finalement
+\layout Standard
+
+
+\begin_inset Formula \[
+\Delta\xi_{n_{\xi}}=2\left(1-\xi_{n_{\xi}-1/2}\right)\]
+
+\end_inset 
+
+
+\layout Standard
+
+On peut appliquer le meme raisonnement pour la grille en 
+\begin_inset Formula $p$
+\end_inset 
+
+.
+ Ainsi 
+\begin_inset Formula \[
+\Delta p_{0}=\frac{1}{2}\left(\Delta p_{1/2}+\Delta p_{-1/2}\right)=\Delta p_{1/2}\]
+
+\end_inset 
+
+ en prenant 
+\begin_inset Formula $\Delta p_{-1/2}=\Delta p_{1/2}.$
+\end_inset 
+
+ Comme 
+\begin_inset Formula $\Delta p_{1/2}=p_{1}-p_{0}$
+\end_inset 
+
+, et 
+\begin_inset Formula $p_{1/2}=\frac{p_{1}+p_{0}}{2}$
+\end_inset 
+
+ on obtient finalement 
+\begin_inset Formula \[
+\Delta p_{0}=2p_{1/2}\]
+
+\end_inset 
+
+ car 
+\begin_inset Formula $p_{0}=0.$
+\end_inset 
+
+ De la meme maniere, 
+\begin_inset Formula \[
+\Delta p_{n_{p}}=\Delta p_{\max}=\frac{1}{2}\left(\Delta p_{n_{p}+1/2}+\Delta p_{n_{p}-1/2}\right)=\Delta p_{n_{p}-1/2}=p_{n_{p}}-p_{n_{p}-1}\]
+
+\end_inset 
+
+ et comme par definition 
+\begin_inset Formula $p_{n_{p}+1/2}=\frac{p_{n_{p}}+p_{n_{p}-1}}{2}=\frac{p_{\max}+p_{n_{p}-1}}{2},$
+\end_inset 
+
+ on obtient en eliminant 
+\begin_inset Formula \[
+\Delta p_{n_{p}}=2\left(p_{n_{p}}-p_{n_{p}-1/2}\right)\]
+
+\end_inset 
+
+ ou de maniere equivalente 
+\begin_inset Formula \[
+\Delta p_{\max}=2\left(p_{\max}-p_{n_{p}-1/2}\right)\]
+
+\end_inset 
+
+ A noter que la valeur de 
+\begin_inset Formula $\Delta p_{\max}$
+\end_inset 
+
+ n'a pas d'importance particuliere, parce que le probleme se reduit a une
+ equation differentielle de type hyperbolique en ce point, et qu'il est
+ alors pas necessaire de preciser la condition aux limites.
+\layout Standard
+
+En l'absence de moyenne sur les trajectoires, les grilles radiales et polo\i \"{\i}
+dales
+ sont independantes des grilles en impulsion et en diffusion angulaire,
+ traduisant ainsi le fait que les deux dynamiques sont distinctes.
+ Dans ce cas, il est possible de faire le meme choix pour les definitions
+ des demi-grilles, a savoir que le point de demi-grille est place exactement
+ a mi-chemin entre deux points consecutifs de la grille entiere, d'ou
+\layout Standard
+
+
+\begin_inset Formula \[
+\left\{ \begin{array}{l}
+r_{l+1/2}=\frac{r_{l}+r_{l+1}}{2}\\
+\theta_{m+1/2}=\frac{\theta_{m}+\theta_{m+1}}{2}\end{array}\right.\]
+
+\end_inset 
+
+ et les expressions des intervalles sur les differentes grilles valent alors
+ 
+\begin_inset Formula \[
+\left\{ \begin{array}{l}
+\Delta r_{l+1}=r_{l+3/2}-r_{l+1/2}\\
+\Delta r_{l+1/2}=r_{l+1}-r_{l}\\
+\Delta r_{l}=r_{l+1/2}-r_{l-1/2}\\
+\Delta\theta_{m+1}=\theta_{m+3/2}-\theta_{m+1/2}\\
+\Delta\theta_{m+1/2}=\theta_{m+1}-\theta_{m}\\
+\Delta\theta_{m}=\theta_{m+1/2}-\theta_{m-1/2}\end{array}\right.\]
+
+\end_inset 
+
+ ou
+\begin_inset Formula \begin{eqnarray*}
+\Delta r_{l+1} & = & r_{l+3/2}-r_{l+1/2}\\
+ & = & r_{l+3/2}-r_{l+1}+r_{l+1}-r_{l+1/2}\\
+ & = & \frac{\Delta r_{l+3/2}}{2}+\frac{\Delta r_{l+1/2}}{2}\end{eqnarray*}
+
+\end_inset 
+
+
+\begin_inset Formula \begin{eqnarray*}
+\Delta\theta_{m+1} & = & \theta_{m+3/2}-\theta_{m+1/2}\\
+ & = & \theta_{m+3/2}+\theta_{m+1}-\theta_{m+1}-\theta_{m+1/2}\\
+ & = & \frac{\Delta\theta_{m+3/2}}{2}+\frac{\Delta\theta_{m+1/2}}{2}\end{eqnarray*}
+
+\end_inset 
+
+
+\layout Standard
+
+De la meme maniere, il faut donc specifier 
+\begin_inset Formula $\left(\Delta r,\Delta\theta\right)$
+\end_inset 
+
+ aux extremites de chaque domaine.
+ Sur la base d'un calcul analogue a celui mene pour la variable 
+\begin_inset Formula $p$
+\end_inset 
+
+, on trouve que 
+\begin_inset Formula \[
+\Delta r_{0}=2r_{1/2}\]
+
+\end_inset 
+
+ car 
+\begin_inset Formula $r_{0}=0$
+\end_inset 
+
+, et 
+\begin_inset Formula \[
+\Delta r_{n_{r}}=2\left(r_{n_{r}}-r_{n_{r}-1/2}\right)=2\left(a-r_{n_{r}-1/2}\right)\]
+
+\end_inset 
+
+ en remarquant que 
+\begin_inset Formula $r_{n_{r}}=a$
+\end_inset 
+
+.
+ Pour la variable polo\i \"{\i}
+dale 
+\begin_inset Formula $\theta$
+\end_inset 
+
+, on obtient egalement 
+\begin_inset Formula \[
+\Delta\theta_{0}=2\theta_{1/2}\]
+
+\end_inset 
+
+ car 
+\begin_inset Formula $\theta_{0}=0,$
+\end_inset 
+
+ et 
+\begin_inset Formula \[
+\Delta\theta_{n_{\theta}}=2\left(\theta_{n_{\theta}}-\theta_{n_{\theta}-1/2}\right)=2\left(2\pi-\theta_{n_{\theta}-1/2}\right)\]
+
+\end_inset 
+
+ sachant que 
+\begin_inset Formula $\theta_{n_{\theta}}=2\pi.$
+\end_inset 
+
+
+\layout Standard
+
+Lorsque l'on resoud l'equation de derive cinetique moyennee sur la periode
+ de rebond, la variable polo\i \"{\i}
+dale disparait par integration.
+ La valeur de la fonction de distribution est alors determinee en 
+\begin_inset Formula $\theta=0$
+\end_inset 
+
+ correspondant au lieu ou la valeur du champ magnetique est minimale, 
+\begin_inset Formula $B_{min}$
+\end_inset 
+
+.
+ C'est en effet le seul endroit par lequel passent toutes les particules,
+ quelles que soient leur type circulant ou piege.
+ Dans l'espace des impulsions, il faut dans ce cas distinguer deux regions,
+ celle des particules circulantes caracterisee par la condition 
+\begin_inset Formula \[
+\left|\xi_{0T}\right|>1\]
+
+\end_inset 
+
+ et celle des particules piegees definie par 
+\begin_inset Formula \[
+\left|\xi_{0T}\right|\leq1\]
+
+\end_inset 
+
+ ou 
+\begin_inset Formula \[
+\xi_{0T}^{2}=\frac{2\varepsilon}{1+\varepsilon}\]
+
+\end_inset 
+
+ 
+\begin_inset Formula $\varepsilon=r/R_{0}$
+\end_inset 
+
+ etant l'inverse du rapport d'aspect.
+ De cette relation il est clair que la grille angulaire en 
+\begin_inset Formula $\xi$
+\end_inset 
+
+ et la grille radiale en 
+\begin_inset Formula $r$
+\end_inset 
+
+ ne sont plus independantes si l'on impose qu'a chaque point de la grille
+ radiale en flux doit correspondre un point de la grille angulaire en flux
+ caracterisant pour ce lieu la frontiere entre les domaines circulant et
+ pieges.
+ La relation entre les points de grille vaut 
+\begin_inset Formula \[
+\left|\xi_{0T,j_{l}}\right|=\sqrt{\frac{2\varepsilon_{l}}{1+\varepsilon_{l}}}\]
+
+\end_inset 
+
+ ou 
+\begin_inset Formula $\varepsilon_{l}=r_{l}/R_{0}$
+\end_inset 
+
+.
+ De cette maniere, on assure une coherence entre les grilles en flux dans
+ les differents espaces consideres, une condition necessaire pour un calcul
+ numerique de grande precision.
+ Pour une grille radiale en flux donnee, il convient donc d'adapter la grille
+ angulaire en flux de telle sorte que cette condition de frontiere entre
+ les particules circulantes et piegees soit remplie a chaque position radiale.
+ Par principe donc, la grille radiale des flux est arbitraire et l'espacement
+ des points de grille ne depend que de la precision que l'on cherche localement
+ en 
+\begin_inset Formula $r$
+\end_inset 
+
+ en fonction des gradients du probleme etudie.
+ Si cette grille est caracterisee par 
+\begin_inset Formula $n_{r}+1$
+\end_inset 
+
+ points, la grille angulaire en flux aura donc au moins 
+\begin_inset Formula $n_{\xi}>6n_{r}+7$
+\end_inset 
+
+, chaque frontiere etant caracterisee par 3 points de grille, un place exactemen
+t sur cette frontiere, et les deux autres places symetriquement de part
+ et d'autre du point central.
+ Ce nombre est multiplie par deux pour tenir compte des domaines 
+\begin_inset Formula $\xi>0$
+\end_inset 
+
+ et 
+\begin_inset Formula $\xi\leq0,$
+\end_inset 
+
+ les points de grille supplementaires correspondant respectivement a 
+\begin_inset Formula $\left|\xi\right|=1$
+\end_inset 
+
+ (4 points de grille) et 
+\begin_inset Formula $\xi=0$
+\end_inset 
+
+ (3 points de grille) pour assurer une bonne precision des calculs aux extremite
+s du domaine angulaire.
+ Entre ces valeurs imposees par la moyenne sur la periode de rebond, il
+ est loisible de choisir n'importe quelle repartition des points de grille
+ angulaire en flux, selon la precision recherchee pour les calculs.
+ Par exemple, pour 21 points radiaux en flux, le nombre minimal de points
+ sur la grille angulaire en flux doit donc etre superieur a 133.
+\the_end

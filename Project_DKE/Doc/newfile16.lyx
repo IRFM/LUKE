@@ -1,0 +1,353 @@
+#LyX 1.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 221
+\textclass revtex4
+\language english
+\inputencoding auto
+\fontscheme pslatex
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 1
+\use_natbib 0
+\use_numerical_citations 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Subsubsection
+
+Traitement de l'operateur diffusion quasilineaire (ondes RF)
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+bigskip 
+\end_inset 
+
+L'operateur quasi-lineaire est caracterise par un tenseur de diffusion 
+\begin_inset Formula \[
+\left\{ \begin{array}{l}
+\widetilde{D}_{pp}^{\text{RF}}=(1-\xi^{2})D_{(n)}^{\text{RF}}(p,\xi)\\
+\widetilde{D}_{p\xi}^{\text{RF}}=-\frac{\sqrt{1-\xi^{2}}}{\xi}\left[1-\xi^{2}-\frac{n\Omega}{\omega}\right]D_{(n)}^{\text{RF}}(p,\xi)\\
+\widetilde{D}_{\xi p}^{\text{RF}}=-\frac{\sqrt{1-\xi^{2}}}{\xi}\left[1-\xi^{2}-\frac{n\Omega}{\omega}\right]D_{(n)}^{\text{RF}}(p,\xi)\\
+\widetilde{D}_{\xi\xi}^{\text{RF}}=\frac{1}{\xi^{2}}\left[1-\xi^{2}-\frac{n\Omega}{\omega}\right]^{2}D_{(n)}^{\text{RF}}(p,\xi)\end{array}\right.\]
+
+\end_inset 
+
+
+\layout Standard
+
+On effectue la moyenne sur la periode de rebond 
+\begin_inset Formula \begin{eqnarray*}
+\widetilde{D}_{pp}^{\text{RF}(0)} & = & (1-\xi_{0}^{2})\sigma\left\{ \frac{\sigma\xi}{\xi_{0}}D_{(n)}^{\text{RF}}(p,\xi)\right\} \\
+\widetilde{D}_{p\xi}^{\text{RF}(0)} & = & -\frac{\sqrt{1-\xi_{0}^{2}}}{\xi_{0}}\left[1-\xi_{0}^{2}-\frac{n\Omega_{0}}{\omega}\right]\sigma\left\{ \frac{\sigma\xi}{\xi_{0}}D_{(n)}^{\text{RF}}(p,\xi)\right\} \\
+\widetilde{F}_{p}^{\text{RF}(0)} & = & -\frac{\sqrt{1-\xi_{0}^{2}}}{p\xi_{0}^{3}}\frac{\sqrt{1-\xi_{0}^{2}}}{\xi_{0}}\left[1-\xi_{0}^{2}-\frac{n\Omega_{0}}{\omega}\right]\sigma\left\{ \left(\Psi(\theta)-1\right)\frac{\sigma\xi_{0}}{\xi}D_{(n)}^{\text{RF}}(p,\xi)\right\} \end{eqnarray*}
+
+\end_inset 
+
+
+\begin_inset Formula \begin{eqnarray*}
+\widetilde{D}_{\xi p}^{\text{RF}(0)} & = & -\frac{\sqrt{1-\xi_{0}^{2}}}{\xi_{0}}\left[1-\xi_{0}^{2}-\frac{n\Omega_{0}}{\omega}\right]\sigma\left\{ \frac{\sigma\xi}{\xi_{0}}D_{(n)}^{\text{RF}}(p,\xi)\right\} \\
+\widetilde{D}_{\xi\xi}^{\text{RF}(0)} & = & \frac{1}{\xi_{0}^{2}}\left[1-\xi_{0}^{2}-\frac{n\Omega_{0}}{\omega}\right]^{2}\sigma\left\{ \frac{\sigma\xi}{\xi_{0}}D_{(n)}^{\text{RF}}(p,\xi)\right\} \\
+\widetilde{F}_{\xi}^{\text{RF}(0)} & = & \frac{\sqrt{1-\xi_{0}^{2}}}{p\xi_{0}^{3}}\frac{1}{\xi_{0}^{2}}\left[1-\xi_{0}^{2}-\frac{n\Omega_{0}}{\omega}\right]^{2}\sigma\left\{ \left(\Psi(\theta)-1\right)\frac{\sigma\xi_{0}}{\xi}D_{(n)}^{\text{RF}}(p,\xi)\right\} \end{eqnarray*}
+
+\end_inset 
+
+
+\layout Standard
+
+Par definition 
+\begin_inset Formula \begin{eqnarray*}
+\widetilde{D}_{(n)}^{\text{RF}(0)}(p,\xi_{0}) & = & \sigma\left\{ \frac{\sigma\xi}{\xi_{0}}D_{(n)}^{\text{RF}}(p,\xi)\right\} \\
+\widetilde{D}_{F(n)}^{\text{RF}(0)}(p,\xi_{0}) & = & \sigma\left\{ \left(\Psi(\theta)-1\right)\frac{\sigma\xi_{0}}{\xi}D_{(n)}^{\text{RF}}(p,\xi)\right\} \end{eqnarray*}
+
+\end_inset 
+
+
+\layout Standard
+
+La discretisation des elements du tenseur quasi-lineaire est alors immediate,
+ et les coefficients qui interviennent dans la matrice 
+\begin_inset Formula $\widetilde{\overline{\overline{M}}}^{\left(0\right)}$
+\end_inset 
+
+sont 
+\begin_inset Formula \[
+\widetilde{\overline{\overline{D}}}^{\text{RF}(0)}\rightarrow\left\{ \begin{array}{l}
+\widetilde{D}_{pp,i+1,j+1/2}^{\text{RF}(0)}=(1-\xi_{0j+1/2}^{2})\widetilde{D}_{(n),i+1,j+1/2}^{\text{ RF}(0)}\\
+\widetilde{D}_{pp,i,j+1/2}^{\text{RF}(0)}=(1-\xi_{0j+1/2}^{2})\widetilde{D}_{(n),i,j+1/2}^{\text{RF}(0)}\\
+\widetilde{D}_{p\xi,i+3/2,j+1/2}^{\text{RF}\left(0\right)}=-\sqrt{1-\xi_{0j+1/2}^{2}}/\xi_{0j+1/2}\left[1-\xi_{0j+1/2}^{2}-n\Omega_{0}/\omega\right]\widetilde{D}_{(n),i+3/2,j+1/2}^{\text{RF}(0)}\\
+\widetilde{D}_{\xi p,i+1/2,j+3/2}^{\text{RF}\left(0\right)}=-\sqrt{1-\xi_{0j+1}^{2}}/\xi_{0j+1}\left[1-\xi_{0j+1}^{2}-n\Omega_{0}/\omega\right]\widetilde{D}_{(n),i+1/2,j+3/2}^{\text{RF}(0)}\\
+\widetilde{D}_{p\xi,i+1/2,j+1/2}^{\text{RF}\left(0\right)}=-\sqrt{1-\xi_{0j+1/2}^{2}}/\xi_{0j+1/2}\left[1-\xi_{0j+1/2}^{2}-n\Omega_{0}/\omega\right]\widetilde{D}_{(n),i+1/2,j+1/2}^{\text{RF}(0)}\\
+\widetilde{D}_{\xi p,i+1/2,j+1/2}^{\text{RF}\left(0\right)}=-\sqrt{1-\xi_{0j+1}^{2}}/\xi_{0j+1}\left[1-\xi_{0j+1}^{2}-n\Omega_{0}/\omega\right]\widetilde{D}_{(n),i+1/2,j+1/2}^{\text{RF}(0)}\\
+\widetilde{D}_{p\xi,i-1/2,j+1/2}^{\text{RF}\left(0\right)}=-\sqrt{1-\xi_{0j+1/2}^{2}}/\xi_{0j+1/2}\left[1-\xi_{0j+1/2}^{2}-n\Omega_{0}/\omega\right]\widetilde{D}_{(n),i-1/2,j+1/2}^{\text{RF}(0)}\\
+\widetilde{D}_{\xi p,i+1/2,j-1/2}^{\text{RF}\left(0\right)}=-\sqrt{1-\xi_{0j+1}^{2}}/\xi_{0j+1}\left[1-\xi_{0j+1}^{2}-n\Omega_{0}/\omega\right]\widetilde{D}_{(n),i+1/2,j-1/2}^{\text{RF}(0)}\\
+\widetilde{D}_{\xi\xi,i+1/2,j+1}^{\text{RF}(0)}=1/\xi_{0j+1}^{2}\left[1-\xi_{0j+1}^{2}-n\Omega_{0}/\omega\right]\widetilde{D}_{(n),i+1/2,j+1}^{\text{RF}(0)}\\
+\widetilde{D}_{\xi\xi,i+1/2,j}^{\text{RF}(0)}=1/\xi_{0j}^{2}\left[1-\xi_{0j}^{2}-n\Omega_{0}/\omega\right]\widetilde{D}_{(n),i+1/2,j}^{\text{RF}(0)}\end{array}\right.\]
+
+\end_inset 
+
+ et 
+\begin_inset Formula \[
+\widetilde{\overline{\overline{F}}}^{\text{RF}(0)}\rightarrow\left\{ \begin{array}{l}
+\widetilde{F}_{p,i+1,j+1/2}^{\text{RF}(0)}=-\left(1-\xi_{0j+1/2}^{2}\right)/\left(p_{i+1}\xi_{0j+1/2}^{4}\right)\left[1-\xi_{0j+1/2}^{2}-n\Omega_{0}/\omega\right]\widetilde{D}_{F(n),i+1,j+1/2}^{\text{ RF}(0)}\\
+\widetilde{F}_{p,i,j+1/2}^{\left(0\right)}=-\left(1-\xi_{0j+1/2}^{2}\right)/\left(p_{i}\xi_{0j+1/2}^{4}\right)\left[1-\xi_{0j+1/2}^{2}-n\Omega_{0}/\omega\right]\widetilde{D}_{F(n),i,j+1/2}^{\text{ RF}(0)}\\
+\widetilde{F}_{\xi,i+1/2,j+1}^{\left(0\right)}=\sqrt{1-\xi_{0j+1}^{2}}/\left(p_{i+1/2}\xi_{0j+1}^{5}\right)\left[1-\xi_{0j+1}^{2}-n\Omega_{0}/\omega\right]^{2}\widetilde{D}_{F(n),i+1/2,j+1}^{\text{RF}(0)}\\
+\widetilde{F}_{\xi,i+1/2,j}^{\left(0\right)}=\sqrt{1-\xi_{0j}^{2}}/\left(p_{i+1/2}\xi_{0j}^{5}\right)\left[1-\xi_{0j}^{2}-n\Omega_{0}/\omega\right]^{2}\widetilde{D}_{F(n),i+1/2,j}^{\text{RF}(0)}\end{array}\right.\]
+
+\end_inset 
+
+
+\layout Standard
+
+Sous cette forme, le calcul garde une tres grande generalite, quelque soit
+ le type d'onde.
+\layout Subsubsection
+
+Application au cas de l'onde a la frequence hybride basse (LH)
+\layout Standard
+
+On a 
+\begin_inset Formula \[
+D^{\text{LH}}(p,\xi)=\frac{p_{\Vert}^{2}}{p_{\bot}^{2}}\frac{v_{Te}}{\left|v_{\Vert}\right|}H(v_{\Vert}-v_{\min})H(v_{\max}-v_{\Vert})2\pi\delta(\theta-\theta_{b})D_{0}^{\text{LH}}\]
+
+\end_inset 
+
+ avec 
+\begin_inset Formula \[
+D_{0}^{\text{LH}}=\lim_{V\rightarrow\infty}\frac{\pi q_{e}^{2}\Delta\theta}{V}\int\frac{d^{2}k_{\bot}}{(2\pi)^{3}}\left|E_{\mathbf{k},\Vert,0}\right|^{2}(\mathbf{k}_{\bot})\frac{1}{v_{Te}}\]
+
+\end_inset 
+
+
+\layout Standard
+
+Les coefficients de diffusion quasilineaire pour l'onde hybride deviennent
+ alors 
+\begin_inset Formula \begin{eqnarray*}
+\widetilde{D}^{\text{LH}(0)}(p,\xi_{0}) & \equiv & \sigma\left\{ \frac{\sigma\xi}{\xi_{0}}D^{\text{LH}}(p,\xi)\right\} \\
+ & = & \sigma\left\{ \frac{\sigma\xi}{\xi_{0}}\frac{\xi^{2}}{1-\xi^{2}}\frac{v_{Te}}{v\left|\xi\right|}H(v\xi-v_{\min})H(v_{\max}-v\xi)2\pi\delta(\theta-\theta_{b})D_{0}^{\text{LH}}\right\} \\
+ & = & \frac{\xi_{0}^{2}}{1-\xi_{0}^{2}}\frac{v_{Te}}{v\xi_{0}}\left\{ \frac{\sigma}{\Psi}\frac{\xi^{2}}{\xi_{0}^{2}}H(v\xi-v_{\min})H(v_{\max}-v\xi)2\pi\delta(\theta-\theta_{b})D_{0}^{\text{LH}}\right\} \\
+ & = & \frac{\xi_{0}^{2}}{1-\xi_{0}^{2}}\frac{v_{Te}}{v\xi_{0}}\frac{1}{\lambda\left(\xi_{0}\right)}\left[\frac{1}{2}\sum_{\sigma=\pm1}\right]_{T}\int_{-\theta_{c}}^{\theta_{c}}\frac{d\theta}{2\pi}\frac{\sigma\xi}{\xi_{0}\Psi}H(v\xi-v_{\min})H(v_{\max}-v\xi)2\pi\delta(\theta-\theta_{b})D_{0}^{\text{LH}}\end{eqnarray*}
+
+\end_inset 
+
+ et finalement 
+\begin_inset Formula \begin{eqnarray*}
+\widetilde{D}^{\text{LH}(0)}(p,\xi_{0}) & \equiv & \sigma\left\{ \frac{\sigma\xi}{\xi_{0}}D^{\text{LH}}(p,\xi)\right\} \\
+ & = & \frac{\xi_{0}^{2}}{1-\xi_{0}^{2}}\frac{v_{Te}}{v\xi_{0}}\frac{1}{\lambda\left(\xi_{0}\right)}\left[\frac{1}{2}\sum_{\sigma=\pm1}\right]_{T}\frac{\sigma\xi_{b}}{\xi_{0}\Psi_{b}}H(|\theta_{b}|<\theta_{c}\left(\xi_{0}\right))H(v\xi_{b}\left(\xi_{0}\right)-v_{\min,b})H(v_{\max,b}-v\xi_{b}\left(\xi_{0}\right))D_{0,b}^{\text{LH}}\end{eqnarray*}
+
+\end_inset 
+
+ avec 
+\begin_inset Formula \[
+D_{0,b}^{\text{LH}}=\lim_{V\rightarrow\infty}\frac{\pi q_{e}^{2}\Delta\theta_{b}}{V}\int\frac{d^{2}k_{\bot}}{(2\pi)^{3}}\left|E_{\mathbf{k},\Vert,0,b}\right|^{2}(\mathbf{k}_{\bot})\frac{1}{v_{Te}}\]
+
+\end_inset 
+
+
+\layout Standard
+
+De meme
+\layout Standard
+
+
+\begin_inset Formula \begin{eqnarray*}
+\widetilde{D}_{F}^{\text{LH}(0)}(p,\xi_{0}) & \equiv & \sigma\left\{ \left(\Psi(\theta)-1\right)\frac{\sigma\xi_{0}}{\xi}D^{\text{LH}}(p,\xi)\right\} \\
+ & = & \sigma\left\{ \left(\Psi(\theta)-1\right)\frac{\sigma\xi_{0}}{\xi}\frac{\xi^{2}}{1-\xi^{2}}\frac{v_{Te}}{v\left|\xi\right|}H(v\xi-v_{\min})H(v_{\max}-v\xi)2\pi\delta(\theta-\theta_{b})D_{0}^{\text{LH}}\right\} \\
+ & = & \frac{\xi_{0}^{2}}{1-\xi_{0}^{2}}\frac{v_{Te}}{v\xi_{0}}\left\{ \left(\Psi-1\right)\frac{\sigma}{\Psi}H(v\xi-v_{\min})H(v_{\max}-v\xi)2\pi\delta(\theta-\theta_{b})D_{0}^{\text{LH}}\right\} \\
+ & = & \frac{\xi_{0}^{2}}{1-\xi_{0}^{2}}\frac{v_{Te}}{v\xi_{0}}\frac{1}{\lambda\left(\xi_{0}\right)}\left[\frac{1}{2}\sum_{\sigma=\pm1}\right]_{T}\int_{-\theta_{c}}^{\theta_{c}}\frac{d\theta}{2\pi}\left(\Psi-1\right)\frac{\sigma\xi_{0}}{\xi\Psi}H(v\xi-v_{\min})H(v_{\max}-v\xi)2\pi\delta(\theta-\theta_{b})D_{0}^{\text{LH}}\end{eqnarray*}
+
+\end_inset 
+
+ et finalement 
+\begin_inset Formula \begin{eqnarray*}
+\widetilde{D}_{F}^{\text{LH}(0)}(p,\xi_{0}) & \equiv & \sigma\left\{ \left(\Psi(\theta)-1\right)\frac{\sigma\xi_{0}}{\xi}D^{\text{LH}}(p,\xi)\right\} \\
+ & = & \frac{\xi_{0}^{2}}{1-\xi_{0}^{2}}\frac{v_{Te}}{v\xi_{0}}\frac{1}{\lambda\left(\xi_{0}\right)}\left[\frac{1}{2}\sum_{\sigma=\pm1}\right]_{T}\frac{\sigma\xi_{0}\left(\Psi_{b}-1\right)}{\xi_{b}\Psi_{b}}H(|\theta_{b}|<\theta_{c}\left(\xi_{0}\right))H(v\xi_{b}\left(\xi_{0}\right)-v_{\min,b})H(v_{\max,b}-v\xi_{b}\left(\xi_{0}\right))D_{0,b}^{\text{LH}}\end{eqnarray*}
+
+\end_inset 
+
+
+\layout Subsubsection
+
+Application au cas de l'onde cyclotronique electronique (EC)
+\layout Paragraph
+
+Cas du mode X
+\layout Standard
+
+
+\begin_inset Formula \[
+D^{\text{EC-X}(n)}(p,\xi)=\left(\frac{p_{\bot}}{p_{Te}}\right)^{2(n-1)}\frac{v_{Te}}{\left|v_{\Vert}\right|}\exp\left(-\frac{\left(k_{\Vert,\text{res}}-k_{\Vert,0}\right)^{2}}{\Delta k_{\Vert}^{2}}\right)2\pi\delta(\theta-\theta_{b})D_{0}^{\text{EC-X}(n)}\]
+
+\end_inset 
+
+ avec 
+\begin_inset Formula \[
+D_{0}^{\text{EC-X}(n)}=\lim_{V\rightarrow\infty}\frac{\pi q_{e}^{2}\Delta\theta}{V}\int\frac{d^{2}k_{\bot}}{(2\pi)^{3}}\frac{1}{(n-1)!^{2}}\left(N_{\bot}\frac{p_{Te}}{m_{e}c}\frac{\omega}{2\omega_{ce}}\right)^{2(n-1)}\left|E_{\mathbf{k},-,0}\right|^{2}(\overline{k}_{\bot})\frac{1}{v_{Te}}\]
+
+\end_inset 
+
+ et 
+\begin_inset Formula \[
+k_{\Vert,\text{res}}=\frac{\omega}{v_{\Vert}}\left(1-\frac{n\omega_{ce}}{\gamma\omega}\right)\]
+
+\end_inset 
+
+
+\layout Standard
+
+Les coefficients de diffusion quasilineaire pour l'onde EC en mode X deviennent
+ alors 
+\begin_inset Formula \begin{eqnarray*}
+\widetilde{D}_{(0)}^{\text{EC-X}(n)}(p,\xi_{0}) & \equiv & \sigma\left\{ \frac{\sigma\xi}{\xi_{0}}D^{\text{EC-X}(n)}(p,\xi)\right\} \\
+ & = & \sigma\left\{ \frac{\sigma\xi}{\xi_{0}}\left(\frac{p_{\bot}}{p_{Te}}\right)^{2(n-1)}\frac{v_{Te}}{\left|v_{\Vert}\right|}\exp\left(-\frac{\left(k_{\Vert,\text{res}}-k_{\Vert,0}\right)^{2}}{\Delta k_{\Vert}^{2}}\right)2\pi\delta(\theta-\theta_{b})D_{0}^{\text{EC-X}(n)}\right\} \\
+ & = & \left(\frac{p}{p_{Te}}\right)^{2(n-1)}\left(1-\xi_{0}^{2}\right)^{(n-1)}\frac{v_{Te}}{v\xi_{0}}\\
+ &  & \times\left\{ \sigma\Psi^{(n-1)}\exp\left(-\frac{\left(k_{\Vert,\text{res}}-k_{\Vert,0}\right)^{2}}{\Delta k_{\Vert}^{2}}\right)2\pi\delta(\theta-\theta_{b})D_{0}^{\text{EC-X}(n)}\right\} \\
+ & = & \left(\frac{p}{p_{Te}}\right)^{2(n-1)}\left(1-\xi_{0}^{2}\right)^{(n-1)}\frac{v_{Te}}{v\xi_{0}}\\
+ &  & \frac{1}{\lambda}\left[\frac{1}{2}\sum_{\sigma=\pm1}\right]_{T}\int_{-\theta_{c}}^{\theta_{c}}\frac{d\theta}{2\pi}\sigma\frac{\xi_{0}}{\xi}\Psi^{(n-1)}\exp\left(-\frac{\left(k_{\Vert,\text{res}}-k_{\Vert,0}\right)^{2}}{\Delta k_{\Vert}^{2}}\right)2\pi\delta(\theta-\theta_{b})D_{0}^{\text{EC-X}(n)}\end{eqnarray*}
+
+\end_inset 
+
+ et finalement 
+\begin_inset Formula \begin{eqnarray*}
+\widetilde{D}_{(0)}^{\text{EC-X}(n)}(p,\xi_{0}) & \equiv & \left\{ \frac{\sigma\xi}{\xi_{0}}D^{\text{EC-X}(n)}(p,\xi)\right\} \\
+ & = & \left(\frac{p}{p_{Te}}\right)^{2(n-1)}\left(1-\xi_{0}^{2}\right)^{(n-1)}\frac{v_{Te}}{v\xi_{0}}\\
+\times\frac{1}{\lambda}\left[\frac{1}{2}\sum_{\sigma=\pm1}\right]_{T}H(|\theta_{b}| & < & \theta_{c})\sigma\frac{\xi_{0}}{\xi_{b}}\Psi_{b}^{(n-1)}\exp\left(-\frac{\left(k_{\Vert,\text{res},b}-k_{\Vert,0}\right)^{2}}{\Delta k_{\Vert}^{2}}\right)D_{0,b}^{\text{EC-X}(n)}\end{eqnarray*}
+
+\end_inset 
+
+ avec 
+\begin_inset Formula \[
+D_{0,b}^{\text{EC-X}(n)}=\lim_{V\rightarrow\infty}\frac{\pi q_{e}^{2}\Delta\theta_{b}}{V}\int\frac{d^{2}k_{\bot}}{(2\pi)^{3}}\frac{1}{(n-1)!^{2}}\left(N_{\bot,b}\frac{p_{Te}}{m_{e}c}\frac{\omega_{b}}{2\omega_{ce}}\right)^{2(n-1)}\left|E_{\mathbf{k},-,0,b}\right|^{2}(\overline{k}_{\bot})\frac{1}{v_{Te}}\]
+
+\end_inset 
+
+
+\layout Standard
+
+De meme
+\layout Standard
+
+
+\begin_inset Formula \begin{eqnarray*}
+\widetilde{D}_{F(0)}^{\text{EC-X}(n)}(p,\xi_{0}) & \equiv & \sigma\left\{ \left(\Psi(\theta)-1\right)\frac{\sigma\xi_{0}}{\xi}D^{\text{EC-X}(n)}(p,\xi)\right\} \\
+ & = & \sigma\left\{ \frac{\left(\Psi(\theta)-1\right)\sigma\xi_{0}}{\xi}\left(\frac{p_{\bot}}{p_{Te}}\right)^{2(n-1)}\frac{v_{Te}}{\left|v_{\Vert}\right|}\exp\left(-\frac{\left(k_{\Vert,\text{res}}-k_{\Vert,0}\right)^{2}}{\Delta k_{\Vert}^{2}}\right)2\pi\delta(\theta-\theta_{b})D_{0}^{\text{EC-X}(n)}\right\} \\
+ & = & \left(\frac{p}{p_{Te}}\right)^{2(n-1)}\left(1-\xi_{0}^{2}\right)^{(n-1)}\frac{v_{Te}}{v\xi_{0}}\\
+ &  & \times\left\{ \sigma\frac{\xi_{0}^{2}}{\xi^{2}}\left(\Psi-1\right)\Psi^{(n-1)}\exp\left(-\frac{\left(k_{\Vert,\text{res}}-k_{\Vert,0}\right)^{2}}{\Delta k_{\Vert}^{2}}\right)2\pi\delta(\theta-\theta_{b})D_{0}^{\text{EC-X}(n)}\right\} \\
+ & = & \left(\frac{p}{p_{Te}}\right)^{2(n-1)}\left(1-\xi_{0}^{2}\right)^{(n-1)}\frac{v_{Te}}{v\xi_{0}}\\
+ &  & \frac{1}{\lambda}\left[\frac{1}{2}\sum_{\sigma=\pm1}\right]_{T}\int_{-\theta_{c}}^{\theta_{c}}\frac{d\theta}{2\pi}\sigma\frac{\xi_{0}^{3}}{\xi^{3}}\left(\Psi-1\right)\Psi^{(n-1)}\exp\left(-\frac{\left(k_{\Vert,\text{res}}-k_{\Vert,0}\right)^{2}}{\Delta k_{\Vert}^{2}}\right)2\pi\delta(\theta-\theta_{b})D_{0}^{\text{EC-X}(n)}\end{eqnarray*}
+
+\end_inset 
+
+ et finalement 
+\begin_inset Formula \begin{eqnarray*}
+\widetilde{D}_{F(0)}^{\text{EC-X}(n)}(p,\xi_{0}) & \equiv & \left\{ \left(\Psi(\theta)-1\right)\frac{\sigma\xi_{0}}{\xi}D^{\text{EC-X}(n)}(p,\xi)\right\} \\
+ & = & \left(\frac{p}{p_{Te}}\right)^{2(n-1)}\left(1-\xi_{0}^{2}\right)^{(n-1)}\frac{v_{Te}}{v\xi_{0}}\\
+\times\frac{1}{\lambda}\left[\frac{1}{2}\sum_{\sigma=\pm1}\right]_{T}H(|\theta_{b}| & < & \theta_{c})\sigma\frac{\xi_{0}^{3}}{\xi_{b}^{3}}\left(\Psi_{b}-1\right)\Psi_{b}^{(n-1)}\exp\left(-\frac{\left(k_{\Vert,\text{res},b}-k_{\Vert,0}\right)^{2}}{\Delta k_{\Vert}^{2}}\right)D_{0,b}^{\text{EC-X}(n)}\end{eqnarray*}
+
+\end_inset 
+
+
+\layout Paragraph
+
+Cas du mode O
+\layout Standard
+
+
+\begin_inset Formula \[
+D^{\text{EC-O}(n)}(p,\xi)=\left(\frac{p_{\bot}}{p_{Te}}\right)^{2n}\frac{p_{\Vert}^{2}}{p_{\bot}^{2}}\frac{v_{Te}}{\left|v_{\Vert}\right|}\exp\left(-\frac{\left(k_{\Vert,\text{res}}-k_{\Vert,0}\right)^{2}}{\Delta k_{\Vert}^{2}}\right)2\pi\delta(\theta-\theta_{b})D_{0}^{\text{EC-X}(n)}\]
+
+\end_inset 
+
+ avec 
+\begin_inset Formula \[
+D_{0}^{\text{EC-O}(n)}=\lim_{V\rightarrow\infty}\frac{\pi q_{e}^{2}\Delta\theta}{V}\int\frac{d^{2}k_{\bot}}{(2\pi)^{3}}\frac{1}{n!^{2}}\left(N_{\bot}\frac{p_{Te}}{m_{e}c}\frac{\omega}{2\omega_{ce}}\right)^{2n}\left|E_{\mathbf{k},\Vert,0}\right|^{2}(\overline{k}_{\bot})\frac{1}{v_{Te}}\]
+
+\end_inset 
+
+ et 
+\begin_inset Formula \[
+k_{\Vert,\text{res}}=\frac{\omega}{v_{\Vert}}\left(1-\frac{n\omega_{ce}}{\gamma\omega}\right)\]
+
+\end_inset 
+
+
+\layout Standard
+
+Les coefficients de diffusion quasilineaire pour l'onde EC en mode O deviennent
+ alors 
+\begin_inset Formula \begin{eqnarray*}
+\widetilde{D}_{(0)}^{\text{EC-O}(n)}(p,\xi_{0}) & \equiv & \sigma\left\{ \frac{\sigma\xi}{\xi_{0}}D^{\text{EC-O}(n)}(p,\xi)\right\} \\
+ & = & \sigma\left\{ \frac{\sigma\xi}{\xi_{0}}\left(\frac{p_{\bot}}{p_{Te}}\right)^{2n}\frac{p_{\Vert}^{2}}{p_{\bot}^{2}}\frac{v_{Te}}{\left|v_{\Vert}\right|}\exp\left(-\frac{\left(k_{\Vert,\text{res}}-k_{\Vert,0}\right)^{2}}{\Delta k_{\Vert}^{2}}\right)2\pi\delta(\theta-\theta_{b})D_{0}^{\text{EC-O}(n)}\right\} \\
+ & = & \left(\frac{p}{p_{Te}}\right)^{2n}\xi_{0}^{2}\left(1-\xi_{0}^{2}\right)^{(n-1)}\frac{v_{Te}}{v\xi_{0}}\\
+ &  & \times\left\{ \frac{\sigma\xi^{2}}{\xi_{0}^{2}}\Psi^{(n-1)}\exp\left(-\frac{\left(k_{\Vert,\text{res}}-k_{\Vert,0}\right)^{2}}{\Delta k_{\Vert}^{2}}\right)2\pi\delta(\theta-\theta_{b})D_{0}^{\text{EC-O}(n)}\right\} \\
+ & = & \left(\frac{p}{p_{Te}}\right)^{2n}\xi_{0}^{2}\left(1-\xi_{0}^{2}\right)^{(n-1)}\frac{v_{Te}}{v\xi_{0}}\\
+ &  & \frac{1}{\lambda}\left[\frac{1}{2}\sum_{\sigma=\pm1}\right]_{T}\int_{-\theta_{c}}^{\theta_{c}}\frac{d\theta}{2\pi}\frac{\sigma\xi}{\xi_{0}}\Psi^{(n-1)}\exp\left(-\frac{\left(k_{\Vert,\text{res}}-k_{\Vert,0}\right)^{2}}{\Delta k_{\Vert}^{2}}\right)2\pi\delta(\theta-\theta_{b})D_{0}^{\text{EC-O}(n)}\end{eqnarray*}
+
+\end_inset 
+
+ et finalement 
+\begin_inset Formula \begin{eqnarray*}
+\widetilde{D}_{(0)}^{\text{EC-O}(n)}(p,\xi_{0}) & \equiv & \sigma\left\{ \frac{\sigma\xi}{\xi_{0}}D^{\text{EC-O}(n)}(p,\xi)\right\} \\
+ & = & \left(\frac{p}{p_{Te}}\right)^{2n}\xi_{0}^{2}\left(1-\xi_{0}^{2}\right)^{(n-1)}\frac{v_{Te}}{v\xi_{0}}\\
+\times\frac{1}{\lambda}\left[\frac{1}{2}\sum_{\sigma=\pm1}\right]_{T}H(|\theta_{b}| & < & \theta_{c})\frac{\sigma\xi_{b}}{\xi_{0}}\Psi_{b}^{(n-1)}\exp\left(-\frac{\left(k_{\Vert,\text{res},b}-k_{\Vert,0}\right)^{2}}{\Delta k_{\Vert}^{2}}\right)D_{0,b}^{\text{EC-O}(n)}\end{eqnarray*}
+
+\end_inset 
+
+ avec 
+\begin_inset Formula \[
+D_{0,b}^{\text{EC-O}(n)}=\lim_{V\rightarrow\infty}\frac{\pi q_{e}^{2}\Delta\theta_{b}}{V}\int\frac{d^{2}k_{\bot}}{(2\pi)^{3}}\frac{1}{n!^{2}}\left(N_{\bot,b}\frac{p_{Te}}{m_{e}c}\frac{\omega_{b}}{2\omega_{ce}}\right)^{2n}\left|E_{\mathbf{k},\Vert,0,b}\right|^{2}(\overline{k}_{\bot})\frac{1}{v_{Te}}\]
+
+\end_inset 
+
+
+\layout Standard
+
+De meme
+\layout Standard
+
+
+\begin_inset Formula \begin{eqnarray*}
+\widetilde{D}_{F(0)}^{\text{EC-O}(n)}(p,\xi_{0}) & \equiv & \sigma\left\{ \left(\Psi(\theta)-1\right)\frac{\sigma\xi_{0}}{\xi}D^{\text{EC-O}(n)}(p,\xi)\right\} \\
+ & = & \sigma\left\{ \left(\Psi(\theta)-1\right)\frac{\sigma\xi_{0}}{\xi}\left(\frac{p_{\bot}}{p_{Te}}\right)^{2n}\frac{p_{\Vert}^{2}}{p_{\bot}^{2}}\frac{v_{Te}}{\left|v_{\Vert}\right|}\exp\left(-\frac{\left(k_{\Vert,\text{res}}-k_{\Vert,0}\right)^{2}}{\Delta k_{\Vert}^{2}}\right)2\pi\delta(\theta-\theta_{b})D_{0}^{\text{EC-O}(n)}\right\} \\
+ & = & \left(\frac{p}{p_{Te}}\right)^{2n}\xi_{0}^{2}\left(1-\xi_{0}^{2}\right)^{(n-1)}\frac{v_{Te}}{v\xi_{0}}\\
+ &  & \times\left\{ \sigma\left(\Psi-1\right)\Psi^{(n-1)}\exp\left(-\frac{\left(k_{\Vert,\text{res}}-k_{\Vert,0}\right)^{2}}{\Delta k_{\Vert}^{2}}\right)2\pi\delta(\theta-\theta_{b})D_{0}^{\text{EC-O}(n)}\right\} \\
+ & = & \left(\frac{p}{p_{Te}}\right)^{2n}\xi_{0}^{2}\left(1-\xi_{0}^{2}\right)^{(n-1)}\frac{v_{Te}}{v\xi_{0}}\\
+ &  & \frac{1}{\lambda}\left[\frac{1}{2}\sum_{\sigma=\pm1}\right]_{T}\int_{-\theta_{c}}^{\theta_{c}}\frac{d\theta}{2\pi}\frac{\sigma\xi_{0}}{\xi}\left(\Psi-1\right)\Psi^{(n-1)}\exp\left(-\frac{\left(k_{\Vert,\text{res}}-k_{\Vert,0}\right)^{2}}{\Delta k_{\Vert}^{2}}\right)2\pi\delta(\theta-\theta_{b})D_{0}^{\text{EC-O}(n)}\end{eqnarray*}
+
+\end_inset 
+
+ et finalement 
+\begin_inset Formula \begin{eqnarray*}
+\widetilde{D}_{F(0)}^{\text{EC-O}(n)}(p,\xi_{0}) & \equiv & \sigma\left\{ \frac{\sigma\xi}{\xi_{0}}D^{\text{EC-O}(n)}(p,\xi)\right\} \\
+ & = & \left(\frac{p}{p_{Te}}\right)^{2n}\xi_{0}^{2}\left(1-\xi_{0}^{2}\right)^{(n-1)}\frac{v_{Te}}{v\xi_{0}}\\
+\times\frac{1}{\lambda}\left[\frac{1}{2}\sum_{\sigma=\pm1}\right]_{T}H(|\theta_{b}| & < & \theta_{c})\frac{\sigma\xi_{0}}{\xi_{b}}\left(\Psi_{b}-1\right)\Psi_{b}^{(n-1)}\exp\left(-\frac{\left(k_{\Vert,\text{res},b}-k_{\Vert,0}\right)^{2}}{\Delta k_{\Vert}^{2}}\right)D_{0,b}^{\text{EC-O}(n)}\end{eqnarray*}
+
+\end_inset 
+
+
+
+
+
+
+
+
+
+
+\the_end
