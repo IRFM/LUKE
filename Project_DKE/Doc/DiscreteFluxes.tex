@@ -1,0 +1,89 @@
+The calculation of momentum-space moments of the distribution
+function, such as the density of power absorbed or the stream
+function, requires to calculate the bounce-averaged momentum space
+fluxes $\mathbf{S}_{\mathbf{p}}^{(0)}$ associated with a
+distribution function. Considering a given distribution
+function $f^{\left(  0\right)  }$ (which could be $f_{0}^{\left(  0\right)  }%
+$,  $\widetilde{f}^{\left(  0\right)  }$ or $g^{\left(  0\right)  }$) and
+given momentum-space diffusion $\mathbb{D}_{\mathbf{p}}^{\left(  0\right)
+\mathcal{O}}$ and convection $\mathbf{F}_{\mathbf{p}}^{\left(  0\right)
+\mathcal{O}}$coefficients, associated with a particular physical mechanism
+$\mathcal{O}$ (such as collisions, RF waves and DC electric field) and
+calculated in chapter \ref{physproc}, These fluxes are given by (\ref{sp0dev})
+or equivalently (\ref{sp0tdev}) and their components are%
+\begin{align}
+S_{p}^{(0)}  & =-D_{pp}^{(0)\mathcal{O}}\frac{\partial f^{(0)}}{\partial
+p}+\frac{\sqrt{1-\xi_{0}^{2}}}{p}D_{p\xi}^{(0)\mathcal{O}}\frac{\partial
+f^{(0)}}{\partial\xi_{0}}+F_{p}^{(0)\mathcal{O}}f^{(0)}\\
+S_{\xi_{0}}^{(0)}  & =-D_{\xi p}^{(0)\mathcal{O}}\frac{\partial f^{(0)}%
+}{\partial p}+\frac{\sqrt{1-\xi_{0}^{2}}}{p}D_{\xi\xi}^{(0)\mathcal{O}}%
+\frac{\partial f^{(0)}}{\partial\xi_{0}}+F_{\xi}^{(0)\mathcal{O}}f^{(0)}%
+\end{align}
+
+\begin{itemize}
+\item  For power density calculations (\ref{pabsdis}), we need to calculate
+the discretized flux $S_{p}^{(0)}$ at the flux grid point $\left(
+l+1/2,i,j+1/2\right)  $%
+\begin{align}
+S_{p,l+1/2,i,j+1/2}^{\left(  0\right)  \mathcal{O}}  & =-D_{pp,l+1/2,i,j+1/2}%
+^{(0)\mathcal{O}}\left.  \frac{\partial f^{(0)}}{\partial p}\right|
+_{l+1/2,i,j+1/2}\\
+& +\frac{\sqrt{1-\xi_{0,j+1/2}^{2}}}{p_{i}}D_{p\xi,l+1/2,i,j+1/2}%
+^{(0)\mathcal{O}}\left.  \frac{\partial f^{(0)}}{\partial\xi_{0}}\right|
+_{l+1/2,i,j+1/2}\nonumber\\
+& +F_{p,l+1/2,i,j+1/2}^{(0)\mathcal{O}}f_{l+1/2,i,j+1/2}^{(0)}\nonumber
+\end{align}
+The first derivative is straightforward (\ref{dfdp_imj})%
+\begin{equation}
+\left.  \frac{\partial f^{\left(  0\right)  }}{\partial p}\right|
+_{l+1/2,i,j+1/2}=\frac{f_{l+1/2,i+1/2,j+1/2}^{\left(  0\right)  }%
+-f_{l+1/2,i-1/2,j+1/2}^{\left(  0\right)  }}{\Delta p_{i}}%
+\end{equation}
+while the second derivative, similar to (\ref{dfdxi_ij})%
+\begin{equation}
+\left.  \frac{\partial f^{(0)}}{\partial\xi_{0}}\right|  _{l+1/2,i,j+1/2}%
+=\frac{f_{l+1/2,i,j+3/2}^{\left(  0\right)  }-f_{l+1/2,i,j-1/2}^{\left(
+0\right)  }}{\Delta\xi_{0,j+1}+\Delta\xi_{0,j}}%
+\end{equation}
+and the convective term both requires further interpolation (\ref{f_imj})%
+\begin{align}
+f_{l+1/2,i,j+3/2}^{\left(  0\right)  }  & =\left(  1-\delta_{p,l+1/2,i,j+3/2}%
+^{\left(  0\right)  }\right)  f_{l+1/2,i+1/2,j+3/2}^{\left(  0\right)
+}+\delta_{p,l+1/2,i,j+3/2}^{\left(  0\right)  }f_{l+1/2,i-1/2,j+3/2}^{\left(
+0\right)  }\\
+f_{l+1/2,i,j+3/2}^{\left(  0\right)  }  & =\left(  1-\delta_{p,l+1/2,i,j+1/2}%
+^{\left(  0\right)  }\right)  f_{l+1/2,i+1/2,j+1/2}^{\left(  0\right)
+}+\delta_{p,l+1/2,i,j+3/2}^{\left(  0\right)  }f_{l+1/2,i-1/2,j+1/2}^{\left(
+0\right)  }\\
+f_{l+1/2,i,j-1/2}^{\left(  0\right)  }  & =\left(  1-\delta_{p,l+1/2,i,j-1/2}%
+^{\left(  0\right)  }\right)  f_{l+1/2,i+1/2,j-1/2}^{\left(  0\right)
+}+\delta_{p,l+1/2,i,j-1/2}^{\left(  0\right)  }f_{l+1/2,i-1/2,j-1/2}^{\left(
+0\right)  }%
+\end{align}
+The expanded expression is then%
+\begin{align}
+S_{p,l+1/2,i,j+1/2}^{\left(  0\right)  \mathcal{O}}  & =\left[  -\frac
+{D_{pp,l+1/2,i,j+1/2}^{(0)\mathcal{O}}}{\Delta p_{i}}+F_{p,l+1/2,i,j+1/2}%
+^{(0)\mathcal{O}}\left(  1-\delta_{p,l+1/2,i,j+1/2}^{\left(  0\right)
+}\right)  \right]  f_{l+1/2,i+1/2,j+1/2}^{\left(  0\right)  }\\
+& +\left[  \frac{D_{pp,l+1/2,i,j+1/2}^{(0)\mathcal{O}}}{\Delta p_{i}%
+}+F_{p,l+1/2,i,j+1/2}^{(0)\mathcal{O}}\delta_{p,l+1/2,i,j+3/2}^{\left(
+0\right)  }\right]  f_{l+1/2,i-1/2,j+1/2}^{\left(  0\right)  }\nonumber\\
+& +\frac{\sqrt{1-\xi_{0,j+1/2}^{2}}}{p_{i}}\frac{D_{p\xi,l+1/2,i,j+1/2}%
+^{(0)\mathcal{O}}}{\Delta\xi_{0,j+1}+\Delta\xi_{0,j}}\left(  1-\delta
+_{p,l+1/2,i,j+3/2}^{\left(  0\right)  }\right)  f_{l+1/2,i+1/2,j+3/2}^{\left(
+0\right)  }\nonumber\\
+& +\frac{\sqrt{1-\xi_{0,j+1/2}^{2}}}{p_{i}}\frac{D_{p\xi,l+1/2,i,j+1/2}%
+^{(0)\mathcal{O}}}{\Delta\xi_{0,j+1}+\Delta\xi_{0,j}}\delta_{p,l+1/2,i,j+3/2}%
+^{\left(  0\right)  }f_{l+1/2,i-1/2,j+3/2}^{\left(  0\right)  }\nonumber\\
+& -\frac{\sqrt{1-\xi_{0,j+1/2}^{2}}}{p_{i}}\frac{D_{p\xi,l+1/2,i,j+1/2}%
+^{(0)\mathcal{O}}}{\Delta\xi_{0,j+1}+\Delta\xi_{0,j}}\left(  1-\delta
+_{p,l+1/2,i,j-1/2}^{\left(  0\right)  }\right)  f_{l+1/2,i+1/2,j-1/2}^{\left(
+0\right)  }\nonumber\\
+& -\frac{\sqrt{1-\xi_{0,j+1/2}^{2}}}{p_{i}}\frac{D_{p\xi,l+1/2,i,j+1/2}%
+^{(0)\mathcal{O}}}{\Delta\xi_{0,j+1}+\Delta\xi_{0,j}}\delta_{p,l+1/2,i,j-1/2}%
+^{\left(  0\right)  }f_{l+1/2,i-1/2,j-1/2}^{\left(  0\right)  }\nonumber
+\end{align}
+
+\item  For Stream function calculations, **** to be completed ****
+\end{itemize}

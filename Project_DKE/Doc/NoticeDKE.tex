@@ -35,7 +35,7 @@
 
 \maketitle
 \tableofcontents
-\listoffigures 
+\listoffigures
 \printglossary
 
 \chapter{Introduction}
@@ -104,7 +104,8 @@
 
         \input{Moments.tex}
 
-\chapter{Detailed description of physical processes}
+\chapter{Detailed description of physical
+processes}\label{physproc}
 
     \section{Collisions}
 
@@ -216,7 +217,13 @@
 
                     \input{DKE_Boundaries.tex}
 
-    \section{Numerical integrals for moment calculations}
+    \section{Moments of the Distribution Function}
+
+    \subsection{Flux discretization for moment calculations}
+
+        \input{DiscreteFluxes.tex}
+
+    \subsection{Numerical integrals for moment calculations}
 
         \input{DiscreteMoments.tex}
 
@@ -237,7 +244,7 @@
         \subsection{Incomplete matrix factorization}
 
             \input{IncompleteLU.tex}
-	    
+
         \subsection{Zero order term: the Fokker-Planck equation}
 
             \input{FP_Inversion.tex}
@@ -294,10 +301,10 @@
 \chapter{Calculation of Bounce Coefficients for Circular Concentric FS}
 
     \input{BounceCoef.tex}
-    
+
 \chapter{Effective trapped fraction for Circular Concentric FS}
 
-	\input{EffTrappedFrac.tex}
+    \input{EffTrappedFrac.tex}
 
 \chapter{Cold Plasma Model for RF Waves}\label{cold}
 
