@@ -29,4 +29,5 @@ end
 Xdeltap_ipj = g_dke_yp(-Xdpnp.*XFp_ipj./XDpp_ipj,-(Xdpnpp - Xdpn).*(XFp_ippj./XDpp_ippj - XFp_ij./XDpp_ij)/4); 		
 Xdeltap_imj = g_dke_yp(-Xdpnm.*XFp_imj./XDpp_imj,-(Xdpn - Xdpnmm).*(XFp_ij./XDpp_ij - XFp_immj./XDpp_immj)/4);	
 Xdeltam_ijp = Xdmhupp./(Xdmhu + Xdmhupp);
-Xdeltam_ijm = Xdmhumm./(Xdmhu + Xdmhumm);
+Xdeltam_ijm = Xdmhu./(Xdmhu + Xdmhumm);
+
