@@ -212,6 +212,11 @@ spparms('default');%Set parameters for sparse matrix ordering algorithms and dir
 spparms('supernd',4);
 spparms('rreduce',4);
 %
+npn = length(pn);%Size of the momentum grid for the distribution function (half grid)
+nmhu = length(mhu);%Size of the pitch-angle grid for the distribution function (half grid)
+nr = length(xpsin);%Size of the radial grid for the distribution function (half grid)
+nr_dke = length(rdke);%Size of the effective radial grid for the drift kinetic equation (nr_dke = nr for FPE equation only)
+%
 prec0_f = prec0(1);
 prec0_g = prec0(2);
 boundary_mode_f = boundary_mode(1);
@@ -224,17 +229,12 @@ nit_g = nit(2);
 bounce_mode = bounce(1);
 dke_mode = bounce(2);
 equil_mode = bounce(3);
-prec_inv = param_inv(1);
+prec_inv = min([param_inv(1),1/nr/dtn]);
 maxit_inv = param_inv(2);
 xbetath = betath_ref*sqrt(xTe_norm);
 %
 if bounce_mode == 0,dke_mode = 0;end
 if dke_mode == 1,bounce_mode = 1;end
-%
-npn = length(pn);%Size of the momentum grid for the distribution function (half grid)
-nmhu = length(mhu);%Size of the pitch-angle grid for the distribution function (half grid)
-nr = length(xpsin);%Size of the radial grid for the distribution function (half grid)
-nr_dke = length(rdke);%Size of the effective radial grid for the drift kinetic equation (nr_dke = nr for FPE equation only)
 %
 testDrVr = sum(sum(sum(abs(XXDr)))) + sum(sum(sum(abs(XXVr))));
 if length(rdke) >= 4 & testDrVr > 0,
@@ -253,10 +253,12 @@ if display_mode >=1,
 	if (store_mode == 0), disp('   - Matrices storage in RAM (fast mode)');
 	else                  disp('   - Matrices storage in disk file (slow mode)');end
 %Numerical matrix inversion procedure
-	if (invproc == 1),      disp('   - Full LU factorization method');
-	elseif (invproc == 2),  disp('   - QMR iterative method');
-	elseif (invproc == 3),  disp('   - BICGSTAB iterative method');
-	elseif (invproc == 4),  disp('   - CGS iterative method');end
+	if (invproc == 1),  disp('   - QMR iterative matrix inversion method');
+	elseif (invproc == 2),  disp('   - BICGSTAB iterative matrix inversion method');
+	elseif (invproc == 3),  end
+	disp(['   - Drop tolerance: ',num2str(prec_inv)]);
+	disp(['   - Maximum number of iterations for the matrix inversion method: ',num2str(maxit_inv)]);	
+%Boundary and normalization conditions
 	if (norm_mode == 1),    disp('   - Normalization of f0 at each iteration and radius');
 	elseif (norm_mode == 0),disp('   - No normalization of f0 at each iteration and radius: fully natural conservative mode');end
 	if (boundary_mode_f >= 1),    disp(['   - Maxwellian distribution for FPE enforced on ',int2str(boundary_mode_f),' momentum grid point around p = 0']);
@@ -266,6 +268,7 @@ if display_mode >=1,
 %Time scheme
 	if (time_scheme == 1),    disp(['   - Implicit time differencing scheme']);
 	elseif (time_scheme == 2),disp(['   - Crank-Nicholson time differencing scheme']);end
+	disp(['   - Normalized time step: ',int2str(dtn)]);
 %Momentum dynamics
 	if (coll_mode == 0),     disp(['   - Relativistic Maxwellian collision operator']);
 	elseif (coll_mode == 1), disp(['   - High velocity limit relativistic collision operator']);	
@@ -1252,7 +1255,7 @@ for ir = 1:nr,
 	XDmp_rf_ijm = XXDmp_rf_ijm(:,:,ir);
 %	
 	XDmm_rf_ijp = XXDmm_rf_ijp(:,:,ir);
-	XDmm_rf_ijm = XXDmm_rf_ijm(:,:,ir);
+	XDmm_rf_ijm = XXDmm_rf_ijm(:,:,ir);	
 %
 	XFp_rf_ippj = zeros(npn,nmhu);
 	XFp_rf_ipj = zeros(npn,nmhu);
@@ -1460,11 +1463,6 @@ for ir = 1:nr,
 			Xn_t(1:boundary_mode_f,:) = 0;
 			Xo_t(1:boundary_mode_f,:) = 0;      
 		end 
-	else
-		if prec_inv(1) > 1e-4,
-			info_dke_yp(2,['WARNING: Drop tolerance for LU factorization forced to ',num2str(1e-4),' !'])		
-			prec_inv(1) = 1e-4;%LU factorisation increased in that case. It is perhaps not enough to avoid ill-conditionned matrix...
-		end
 	end
 %
 %Matrix calculation

@@ -37,7 +37,7 @@ ntheta = 65;%Size of the theta grid for the magnetic equilibrium (ntheta ~= npsi
 grid_uniformity = 0;%Pitch-angle and momentum grids uniformity: (0) no, (1) yes (-1 for specific test DKE, transient)
 grid_method = 1;%Pitch-angle grid calculation technique: (0): old method, (1) new method
 nmhu_S = 101;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
-np_S = 101;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run)
+np_S = 110;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run)
 pnmax_S = 15;%Maximum value of the flux momentum grid (pth_ref)
 %
 %Pitch-angle grid
@@ -63,7 +63,7 @@ spfac = 20;%reduction factor for the supergrid used in collision integrals
 %Values of the radial flux grid [1,p] (If one radial value: local calculation only)
 %
 psin_S = [];%5.286742555900838e-002; %[0.1]%(rho = 0.25 in CMOD)
-rho_S = [0.2,0.6];%;0.03322100141578101;0.71365;
+rho_S = [0.05:0.07:0.9];%;0.03322100141578101;0.71365;
 %
 psin_display = NaN;%Approximate radial value at which results are displayed if display_mode >= 1 [1,1]
 rho_display = 0.1;
@@ -128,7 +128,7 @@ nit_g = 50;%Maximum number of iterations for g
 %
 dtn = 1000;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
 invproc = [2];%Iterative matrix inversion method: (1) qmr iterative method, (2) bicgstab iterative method, (3) cgs iterative method
-param_inv = [2e-5,30];%Parameters for the matrix inversion procedure. Precision of the partial LU decomposition, and maximum number of iteration for iterative methods (param_inv(1) depends of boundary_mode, if param_inv(1)=0, full LU factorization)
+param_inv = [1e-5,30];%Parameters for the matrix inversion procedure. Minimum value of the drop tolerance for the partial LU decomposition (drop tol = max(1/dtn/nr,param_inv(1))), and maximum number of iteration for iterative methods (param_inv(1) depends of boundary_mode, if param_inv(1)=0, full LU factorization)
 %
 dp_cyl = 0.1;%Cylindrical momentum step (pth_ref)
 display_mode = 1;%Display mode: (0): no, (1): partial, (2): full
