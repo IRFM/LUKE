@@ -282,10 +282,11 @@ if display_mode >=1,
 	elseif (time_scheme == 2),disp(['   - Crank-Nicholson time differencing scheme']);end
 	disp(['   - Normalized time step: ',int2str(dtn)]);
 %Momentum dynamics
-	if (coll_mode == 0),     disp(['   - Relativistic Maxwellian collision operator']);
-	elseif (coll_mode == 1), disp(['   - High velocity limit relativistic collision operator']);	
-	elseif (coll_mode == 2), disp(['   - Linearized relativistic Belaiev-Budker collision operator']);end
-	elseif (coll_mode == 3), disp(['   - Non-relativistic Lorentz collision operator']);end
+	if (coll_mode == 0),     disp(['   - Relativistic Maxwellian background']);
+	elseif (coll_mode == 1), disp(['   - High velocity limit']);	
+	elseif (coll_mode == 2), disp(['   - Linearized relativistic Belaiev-Budker']);
+	elseif (coll_mode == 3), disp(['   - Non-relativistic Lorentz model']);
+	elseif (coll_mode == 4), disp(['   - Non-relativistic Maxwellian background']);end
 	if (bounce_mode == 0),      disp(['   - No bounce averaging']);
 	elseif (bounce_mode == 1),  disp(['   - Bounce averaging + implicit symmetrization in the bounce domain (15 diagonals operator) for f0']);end
 	if (dke_mode == 0),       disp(['   - Resolution of the electron Fokker-Planck Equation']);
@@ -633,13 +634,20 @@ XXSp = zeros(npn,nmhu,nr);
 XXSmhu = zeros(npn,nmhu,nr);
 XXfM = zeros(npn,nmhu,nr);
 XXf0_g_th = zeros(npn,nmhu,nr);
-XXF = zeros(npn,nmhu,nr);
-XXFm = zeros(npn,nmhu,nr);
-XXFp = zeros(npn,nmhu,nr);
-XXA = zeros(npn,nmhu,nr);
-XXAm = zeros(npn,nmhu,nr);
-XXAp = zeros(npn,nmhu,nr);
-XXBt = zeros(npn,nmhu,nr);
+XXFee = zeros(npn,nmhu,nr);
+XXFeem = zeros(npn,nmhu,nr);
+XXFeep = zeros(npn,nmhu,nr);
+XXAee = zeros(npn,nmhu,nr);
+XXAeem = zeros(npn,nmhu,nr);
+XXAeep = zeros(npn,nmhu,nr);
+XXBtee = zeros(npn,nmhu,nr);
+XXFei = zeros(npn,nmhu,nr);
+XXFeim = zeros(npn,nmhu,nr);
+XXFeip = zeros(npn,nmhu,nr);
+XXAei = zeros(npn,nmhu,nr);
+XXAeim = zeros(npn,nmhu,nr);
+XXAeip = zeros(npn,nmhu,nr);
+XXBtei = zeros(npn,nmhu,nr);
 XXddeltaimdrho_tp_c = zeros(npn,nmhu,nr);
 XXMrm = zeros(nmhu,npn,nr);
 XXMr = zeros(nmhu,npn,nr);
@@ -1100,86 +1108,123 @@ for ir = 1:nr,
 		B2_3(1,ip) = trapz_dke_yp([spn,sfM.*smaskl.*spn2.*sv])';  
 	end
 %
-	if coll_mode == 1,%High-velocity limit
-		F = xne_norm(ir)'./v2 + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)')./v2;
+%Electron-ion collision term (non-relativistic limit)
 %
-		Fm = xne_norm(ir)'./v2m + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)')./v2m;
-		Fm(1) = 1;%Avoid singularity at p = 0, but the value is not used
-%   
-		Fp = xne_norm(ir)'./v2p + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)')./v2p;
-	elseif coll_mode == 0 | coll_mode == 2,%Linearizeded Belaiev-Budker
+   [Fei,Aei,Btei] = eicoll_dke_yp(v,zZi,zmi,xzni_norm,xzTi_norm,ir,coll_mode);
+	[Feim,Aeim] = eicoll_dke_yp(vm,zZi,zmi,xzni_norm,xzTi_norm,ir,coll_mode);
+	[Feip,Aeip] = eicoll_dke_yp(vp,zZi,zmi,xzni_norm,xzTi_norm,ir,coll_mode);
+%	
+	Feim(1) = 1;%Avoid singularity at p = 0, but the value is not used	
+	Feimm = [0,Fei(1:npn-1)];
+	Feipp = [Fei(2:npn),0];
+%		
+	XXFeimm(:,:,ir) = Feimm'*ones(1,nmhu);
+	XXFeim(:,:,ir) = Feim'*ones(1,nmhu);
+	XXFei(:,:,ir) = Fei'*ones(1,nmhu);
+	XXFeip(:,:,ir) = Feip'*ones(1,nmhu);
+	XXFeipp(:,:,ir) = Feipp'*ones(1,nmhu);
+%
+	Aeim(1) = 1;%Avoid singularity at p = 0, but the value is not used
+	Aeimm = [eps,Aei(1:npn-1)];
+	Aeipp = [Aei(2:npn),eps];
+%
+	XXAeimm(:,:,ir) = Aeimm'*ones(1,nmhu);
+	XXAeim(:,:,ir) = Aeim'*ones(1,nmhu); 
+	XXAei(:,:,ir) = Aei'*ones(1,nmhu);
+	XXAeip(:,:,ir) = Aeip'*ones(1,nmhu);
+	XXAeipp(:,:,ir) = Aeipp'*ones(1,nmhu);
+%
+	XXBtei(:,:,ir) = Btei'*ones(1,nmhu);	
+%
+%Fast electron-thermal electron collision term
+%
+	if coll_mode == 1,%High-velocity limit
+		Fee = xne_norm(ir)'./v2;
+		Feem = xne_norm(ir)'./v2m;		
+		Feep = xne_norm(ir)'./v2p;		
+	elseif coll_mode == 0 | coll_mode == 2,%Linearized Belaiev-Budker
 		F1 = F1_1./v2 + F1_2./pn2;
 		F2 = (1 - sigma./z./gamma).*F2_1./v;
-		F = 4*pi*(F1 + F2) + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)')./v2;
+		Fee = 4*pi*(F1 + F2);
 %
 		F1m = F1_1m ./v2m + F1_2m./pn2m;  
-		F2m = (1 - sigmam./zm./gammam).*F2_1m./vm;
-		
-		Fm = 4*pi*(F1m + F2m) + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)')./v2m;
-		Fm(1) = 1;%Avoid singularity at p = 0, but the value is not used
+		F2m = (1 - sigmam./zm./gammam).*F2_1m./vm;	
+		Feem = 4*pi*(F1m + F2m);		
 %   
 		F1p = F1_1p./v2p + F1_2p./pn2p;   
 		F2p = (1 - sigmap./zp./gammap).*F2_1p./vp;
-		Fp = 4*pi*(F1p + F2p) + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)')./v2p;
+		Feep = 4*pi*(F1p + F2p);
 	elseif coll_mode == 3,%Lorentz model
-		F = zeros(1,npn);
-		Fm = zeros(1,npn);
-		Fp = zeros(1,npn);	
+		Fee = zeros(1,npn);
+		Feem = zeros(1,npn);
+		Feep = zeros(1,npn);
+	elseif coll_mode == 4,%Maxwellian background
+		u = v/sqrt(2)/xTe_norm(ir)';Fee = xne_norm(ir)'.*(erf(u)-2*u.*exp(-u.^2)/sqrt(pi))./v2;
+		um = vm/sqrt(2)/xTe_norm(ir)';Feem = xne_norm(ir)'.*(erf(um)-2*um.*exp(-um.^2)/sqrt(pi))./v2m;	
+		up = vp/sqrt(2)/xTe_norm(ir)';Feep = xne_norm(ir)'.*(erf(up)-2*up.*exp(-up.^2)/sqrt(pi))./v2p;			
 	end
 %
-	Fmm = [0,F(1:npn-1)];
-	Fpp = [F(2:npn),0];
+	Feem(1) = 1;%Avoid singularity at p = 0, but the value is not used
+	Feemm = [0,Fee(1:npn-1)];
+	Feepp = [Fee(2:npn),0];
 %		
-	XXFmm(:,:,ir) = Fmm'*ones(1,nmhu);
-	XXFm(:,:,ir) = Fm'*ones(1,nmhu);
-	XXF(:,:,ir) = F'*ones(1,nmhu);
-	XXFp(:,:,ir) = Fp'*ones(1,nmhu);
-	XXFpp(:,:,ir) = Fpp'*ones(1,nmhu);
+	XXFeemm(:,:,ir) = Feemm'*ones(1,nmhu);
+	XXFeem(:,:,ir) = Feem'*ones(1,nmhu);
+	XXFee(:,:,ir) = Fee'*ones(1,nmhu);
+	XXFeep(:,:,ir) = Feep'*ones(1,nmhu);
+	XXFeepp(:,:,ir) = Feepp'*ones(1,nmhu);
 %
 	if coll_mode == 1,%High-velocity limit
-		A = xne_norm(ir)'.*xTe_norm(ir)'./v./v2 + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)'.*xzTi_norm(:,ir)')./v./v2;
-		Am = xne_norm(ir)'.*xTe_norm(ir)'./vm./v2m + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)'.*xzTi_norm(:,ir)')./vm./v2m;
-		Am(1) = 1;%Avoid singularity at p = 0, but the value is not used
-		Ap = xne_norm(ir)'.*xTe_norm(ir)'./vp./v2p + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)'.*xzTi_norm(:,ir)')./vp./v2p;
+		Aee = xne_norm(ir)'.*xTe_norm(ir)'./v./v2;
+		Aeem = xne_norm(ir)'.*xTe_norm(ir)'./vm./v2m;
+		Aeep = xne_norm(ir)'.*xTe_norm(ir)'./vp./v2p;
 	elseif coll_mode == 0 | coll_mode == 2,%Linearized Belaiev-Budker
-		A = 4*pi*xTe_norm(ir)*(F1 + F2)./v + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)'.*xzTi_norm(:,ir)')./v./v2;
-		Am = 4*pi*xTe_norm(ir)*(F1m + F2m)./vm + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)'.*xzTi_norm(:,ir)')./vm./v2m;
-		Am(1) = 1;%Avoid singularity at p = 0, but the value is not used
-		Ap = 4*pi*xTe_norm(ir)*(F1p + F2p)./vp + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)'.*xzTi_norm(:,ir)')./vp./v2p;
+		Aee = 4*pi*xTe_norm(ir)*(F1 + F2)./v;
+		Aeem = 4*pi*xTe_norm(ir)*(F1m + F2m)./vm;
+		Aeep = 4*pi*xTe_norm(ir)*(F1p + F2p)./vp;
 	elseif coll_mode == 3,%Lorentz model
-		A = zeros(1,npn);
-		Am = zeros(1,npn);
-		Ap = zeros(1,npn);
+		Aee = zeros(1,npn);
+		Aeem = zeros(1,npn);
+		Aeep = zeros(1,npn);
+	elseif coll_mode == 4,%Maxwellian background
+		u = v/sqrt(2)/xTe_norm(ir)';Aee = xne_norm(ir)'.*(erf(u)-2*u.*exp(-u.^2)/sqrt(pi))./v./u./u/2;
+		um = vm/sqrt(2)/xTe_norm(ir)';Aeem = xne_norm(ir)'.*(erf(um)-2*um.*exp(-um.^2)/sqrt(pi))./vm./um./um/2;	
+		Am(1) = 1;%Avoid singularity at p = 0, but the value is not used
+		up = vp/sqrt(2)/xTe_norm(ir)';Aeep = xne_norm(ir)'.*(erf(up)-2*up.*exp(-up.^2)/sqrt(pi))./vp./up./up/2;	
 	end
 %
-	Amm = [eps,A(1:npn-1)];
-	App = [A(2:npn),eps];
+	Aeem(1) = 1;%Avoid singularity at p = 0, but the value is not used
+	Aeemm = [eps,Aee(1:npn-1)];
+	Aeepp = [Aee(2:npn),eps];
 %
-	XXAmm(:,:,ir) = Amm'*ones(1,nmhu);
-	XXAm(:,:,ir) = Am'*ones(1,nmhu); 
-	XXA(:,:,ir) = A'*ones(1,nmhu);
-	XXAp(:,:,ir) = Ap'*ones(1,nmhu);
-	XXApp(:,:,ir) = App'*ones(1,nmhu);
+	XXAeemm(:,:,ir) = Aeemm'*ones(1,nmhu);
+	XXAeem(:,:,ir) = Aeem'*ones(1,nmhu); 
+	XXAee(:,:,ir) = Aee'*ones(1,nmhu);
+	XXAeep(:,:,ir) = Aeep'*ones(1,nmhu);
+	XXAeepp(:,:,ir) = Aeepp'*ones(1,nmhu);
 %
 	if coll_mode == 1,%High-velocity limit
-		Bt = xne_norm(ir)'./v/2 - xne_norm(ir)'.*xTe_norm(ir)'./v./v2/2 + sum(zZi.^2.*xzni_norm(:,ir)')./v/2 - sum(zZi.^2.*xzni_norm(:,ir)'.*(me./zmi).*xzTi_norm(:,ir)')./v./v2/2;
-	elseif coll_mode == 0 | coll_mode == 2,%Linearizeded Belaiev-Budker
+		Btee = xne_norm(ir)'./v/2 - xne_norm(ir)'.*xTe_norm(ir)'./v./v2/2;
+	elseif coll_mode == 0 | coll_mode == 2,%Linearized Belaiev-Budker
 		B1 = B1_1./v/2 - B1_2./v./pn2/6 + B1_3./v./gamma2./z2/8 - B1_4./v./z2/4 - B1_5./v./gamma2/4;
 		B2 = B2_1/2 + B2_2.*(-gamma2/6 + J1./z2./gamma/8 - gamma.*J2./z2/4) - B2_3.*(gamma - sigma./z)./pn2./gamma/4;   
-		Bt = 4*pi*(B1 + B2) + sum(zZi.^2.*xzni_norm(:,ir)')./v/2 - sum(zZi.^2.*xzni_norm(:,ir)'.*(me./zmi).*xzTi_norm(:,ir)')./v./v2/2;  	
+		Btee = 4*pi*(B1 + B2);  	
 	elseif coll_mode == 3,%Lorentz model
-		Bt = ones(1,npn)/2;
+		Btee = ones(1,npn)/2;
+	elseif coll_mode == 4,%Maxwellian background
+	   u = v/sqrt(2)/xTe_norm(ir)';                  
+	   Btee = xne_norm(ir)'.*((2*u.^2-1).*erf(u)+2*u.*exp(-u.^2)/sqrt(pi))./v./u./u/4;
 	end
 %
-	XXBt(:,:,ir) = Bt'*ones(1,nmhu);	
+	XXBtee(:,:,ir) = Btee'*ones(1,nmhu);	
 %	
 % Collisions
 %
-	XDpp_c_ippj = XXApp(:,:,ir);
-	XDpp_c_ipj = XXAp(:,:,ir);
-	XDpp_c_ij = XXA(:,:,ir);
-	XDpp_c_imj = XXAm(:,:,ir);
-	XDpp_c_immj = XXAmm(:,:,ir);
+	XDpp_c_ippj = XXAeepp(:,:,ir) + XXAeipp(:,:,ir);
+	XDpp_c_ipj = XXAeep(:,:,ir) + XXAeip(:,:,ir);
+	XDpp_c_ij = XXAee(:,:,ir) + XXAei(:,:,ir);
+	XDpp_c_imj = XXAeem(:,:,ir) + XXAeim(:,:,ir);
+	XDpp_c_immj = XXAeemm(:,:,ir) + XXAeimm(:,:,ir);
 %
 	XDpm_c_ipj = zeros(npn,nmhu);
 	XDpm_c_ij = zeros(npn,nmhu);
@@ -1189,14 +1234,14 @@ for ir = 1:nr,
 	XDmp_c_ij = zeros(npn,nmhu);
 	XDmp_c_ijm = zeros(npn,nmhu);
 %
-	XDmm_c_ijp = XXBt(:,:,ir).*XXRlambda_p2m1_p(:,:,ir);
-	XDmm_c_ijm = XXBt(:,:,ir).*XXRlambda_p2m1_m(:,:,ir);
+	XDmm_c_ijp = (XXBtee(:,:,ir) + XXBtei(:,:,ir)).*XXRlambda_p2m1_p(:,:,ir);
+	XDmm_c_ijm = (XXBtee(:,:,ir) + XXBtei(:,:,ir)).*XXRlambda_p2m1_m(:,:,ir);
 %
-	XFp_c_ippj = -XXFpp(:,:,ir);
-	XFp_c_ipj = -XXFp(:,:,ir);
-	XFp_c_ij = -XXF(:,:,ir);
-	XFp_c_imj = -XXFm(:,:,ir);
-	XFp_c_immj = -XXFmm(:,:,ir);	
+	XFp_c_ippj = -XXFeepp(:,:,ir) - XXFeipp(:,:,ir);
+	XFp_c_ipj = -XXFeep(:,:,ir) - XXFeip(:,:,ir);
+	XFp_c_ij = -XXFee(:,:,ir) - XXFei(:,:,ir);
+	XFp_c_imj = -XXFeem(:,:,ir) - XXFeim(:,:,ir);
+	XFp_c_immj = -XXFeemm(:,:,ir) - XXFeimm(:,:,ir);	
 %
 	XFm_c_ijp = zeros(npn,nmhu);
 	XFm_c_ijm = zeros(npn,nmhu);
@@ -1222,8 +1267,8 @@ for ir = 1:nr,
 	elseif bounce_mode == 1,
 	   xepsi(ir) = xepsi_fsav(ir)*(xqbar(ir)/xqtilde(ir))*(xB0(ir)/xBT0(ir))*(xR0(ir)/Rp)/XXlambda_b_p1m3p4(1,1,ir);%Value at Bmin for FP or DKE calculations
 	end
-	if xepsi(ir) > 0.1, 
-		error('Ohmic electric field too large');%To be consistent with the assumption of the linearized Fokker-Planck equation
+	if xepsi(ir) > 0.05, 
+		info_dke_yp(2,'WARNING: Ohmic electric field is likely too large. See the documentation');%To be consistent with the assumption of the linearized Fokker-Planck equation
 	end	
 %	
 	XDpp_e_ippj = zeros(npn,nmhu);
@@ -1326,9 +1371,9 @@ for ir = 1:nr,
 %
 %
 	[Xdeltap_imj,Xdeltap_ipj,...
-	    Xdeltam_ijm,Xdeltam_ijp] = ...
+		 Xdeltam_ijm,Xdeltam_ijp] = ...
 		 fppgridweights_dke_yp(Xdpnmm,Xdpnm,Xdpn,Xdpnp,Xdpnpp,...
-		 Xdmhumm,Xdmhum,Xdmhu,Xdmhup,Xdmhupp,...
+       Xdmhumm,Xdmhum,Xdmhu,Xdmhup,Xdmhupp,...
 		 XDpp_ippj,XDpp_ipj,XDpp_ij,XDpp_imj,XDpp_immj,...
 		 XFp_ippj,XFp_ipj,XFp_ij,XFp_imj,XFp_immj);
 %
@@ -1336,6 +1381,15 @@ for ir = 1:nr,
 	XXdeltap_ipj(:,:,ir) = Xdeltap_ipj;
 	XXdeltam_ijp(:,:,ir) = Xdeltam_ijp;
 	XXdeltam_ijm(:,:,ir) = Xdeltam_ijm;		
+%
+%	if display_mode == 2,
+	if 1,
+		figure(3100),plot(pn,Xdeltap_imj(:,1));hold on
+		zoom on;
+		axis('square');xlabel('pn');ylabel('Interpolation coefficient');
+		title('Momentum flux grid interpolation factor');
+		pause(time_pause);
+   end
 %
 %Momentum dynamics matrix coefficients calculations
 %	
@@ -1721,7 +1775,7 @@ if dke_mode == 1,
 		    XDmp_tp_ijp,XDmp_tp_ij,XDmp_tp_ijm,...
 		    XDmm_tp_ijp,XDmm_tp_ijm,...
 		    XFp_tp_ippj,XFp_tp_ipj,XFp_tp_ij,XFp_tp_imj,XFp_tp_immj,...
-		    XFm_tp_ijp,XFm_tp_ijm); 		
+		    XFm_tp_ijp,XFm_tp_ijm); 
 %
 %Correction matrix resulting from the radial gradient of Chang and Cooper interpolation coefficients
 %           		

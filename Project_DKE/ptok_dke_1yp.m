@@ -480,15 +480,15 @@ elseif strcmp(name,'CQL3D_LH') == 1,
 	qmin = 1.13;
 	eq = 2;
 %
-	Te0 = 5.11;
+	Te0 = 5.11/10000;
 	Tea = 0;
-	eTe = 0;
-	Ti0 = 5.11;
+	eTe = 1;
+	Ti0 = 5.11/10000;
 	Tia = 0;
 	eTi = 0;
 	ne0 = 1.0e+19;
 	nea = 0;
-	ene = 0;	
+	ene = 1;	
 elseif strcmp(name,'CQL3D_OHM') == 1,	
 	ap = 2.3899;
 	Rp = 2.39;%Separatrix major radius

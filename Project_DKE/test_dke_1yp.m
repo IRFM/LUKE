@@ -3,7 +3,7 @@ xPabs0_mksa_out,xPabs_tot_mksa_out,...
 xeta0_mksa_out,xepsi_mksa_out,xia_out,xft_out,...
 time_out,memoryLU_f_out,memoryLU_g_out] =...
 test_dke_1yp(tokname,snumber,...
-grid_uniformity,grid_power,nmhu_S,np_S,pnmax_S,sfac,spfac,snmhu,snp,psin_S,psin_display,dpsin_dke,...
+grid_uniformity,grid_power,nmhu_S,np_S,pnmax_S,sfac,spfac,snmhu,snp,np_S_ref,psin_S,psin_display,dpsin_dke,...
 ref_mode,norm_ref,...
 epsi0_fsav,epsia_fsav,eepsi_fsav,...
 rf_list,nit_rf,prec_rf,...
@@ -76,7 +76,7 @@ end
 %
 % Momentum Grid 
 %
-[pn,dpn,pnm,dpnm,pnp,dpnp,pn_S,mhu,dmhu,mhum,dmhum,mhup,dmhup,mhu_S] = momentumgrid_dke_jd(grid_uniformity,grid_power,dke_mode,r_dke,xmhu0T2,nmhu_S,np_S,pnmax_S,sfac,snmhu,snp);
+[pn,dpn,pnm,dpnm,pnp,dpnp,pn_S,mhu,dmhu,mhum,dmhum,mhup,dmhup,mhu_S] = momentumgrid_dke_jd(grid_uniformity,grid_power,dke_mode,r_dke,xmhu0T2,nmhu_S,np_S,pnmax_S,sfac,snmhu,snp,np_S_ref);
 %
 nmhu = length(mhu);
 np = length(pn);
@@ -106,8 +106,15 @@ if display_mode == 2,
 	title('Momentum mesh');
 	xlabel('Index');
 	ylabel('pn');
-%	
+%
 	h1002 = figure(1002);tilefigs_dke_yp(h1002);
+	semilogx(pn,dpn,'bo',pnm,dpnm,'g*',pnp,dpnp,'r+');grid on;zoom on; 
+	title('Momentum mesh (grid step)');
+	xlabel('pn');
+	ylabel('dpn');
+
+%	
+	h1003 = figure(1003);tilefigs_dke_yp(h1003);
 	plot(1:nr,xpsin,'bo',r_dke,xpsin(r_dke),'r+',r_dke,xrho(r_dke),'bx');grid on;zoom on; 
 	axis([0,nr+1,0,1])
 	title('Radial mesh');
@@ -172,7 +179,7 @@ if diary_mode == 1,
 	disp(' ');
 	disp(['- RF waves: too be implemented']);
 	disp(' ');
-	disp(['- Electron-electron collision operator: (0) Maxwellian, (1) High velicity limit, (2) Linearized Belaiev Budker coll_mode = ',num2str(coll_mode)]);
+	disp(['- Electron-electron collision operator: (0) Relativistic Maxwellian background, (1) High velicity limit, (2) Linearized Belaiev Budker (3) Lorentz model (4) Non-relativistic Maxwellian background coll_mode = ',num2str(coll_mode)]);
 	disp(['- Bounce averaging option: (0) no bounce averaging, (1) bounce averaging bounce_mode = ',num2str(bounce_mode)]);
 	disp(['- Fokker-Planck equation (0), Drift Kinetic equation (1) dke_mode = ',num2str(dke_mode)]);
 	disp(' ');

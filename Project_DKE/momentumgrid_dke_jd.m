@@ -1,6 +1,6 @@
 function [pn_f,dpn_f,pnm_S,dpnm_S,pnp_S,dpnp_S,pn_S,...
     mhu_f,dmhu_f,mhum_S,dmhum_S,mhup_S,dmhup_S,mhu_S]...
-= momentumgrid_dke_jd(uniform,grid_power,dke_mode,r_dke,xmhu0T2,nmhu_S_in,np_S_in,pnmax_S,sfac,snmhu,snp);
+= momentumgrid_dke_jd(uniform,grid_power,dke_mode,r_dke,xmhu0T2,nmhu_S_in,np_S_in,pnmax_S,sfac,snmhu,snp,np_S_ref);
 % 
 % Generates non uniform pitch angle and momentum grids 
 % In the case of a non-uniform grid, the code ensures that a minimum number of points are present 
@@ -19,7 +19,8 @@ function [pn_f,dpn_f,pnm_S,dpnm_S,pnp_S,dpnp_S,pn_S,...
 %	- pnmax_S: Maximum value of the flux momentum grid
 %	- sfac: reduction factors
 %	- snmhu: numbers of fine grid points in mhu
-%	- snp: numbers of fine grid points in p
+%	- snp: reduction factor for the fine grid points in p
+%	- np_S_ref: position in the mpomentum grid where dpn_S is twice the minimum value
 %
 %   OUTPUTS:
 %
@@ -254,7 +255,8 @@ dmhup_S(dmhup_S == 0) = eps;%Avoid singularities (NaN)
 %Momentum grid
 %
 if uniform == 1,
-	pgridfactor = eps;%Uniform grid: pgridfactor << 1
+	pgridfactor = 1;%Uniform grid: pgridfactor = 1
+	np_S_ref = 20;
 else
 	pgridfactor = snp;%Non-uniform grid pgridfactor > 1
 end
@@ -267,11 +269,11 @@ end
 %
 pn_S(1) = 0;
 dpn_S_ref = pnmax_S/np_S;
-dpn_S_0 = dpn_S_ref/20;%Momentum step close to p = 0
+dpn_S_0 = dpn_S_ref/pgridfactor;%Momentum step close to p = 0
 dpn_threshold = 0.1;
 ip = 1;
 while pn_S(ip) < pnmax_S,%Small steps close to p = 0
-	dpn_S(ip) = (dpn_S_ref - dpn_S_0)*(1 - exp(-ip/pgridfactor)) + dpn_S_0;
+   dpn_S(ip) = (dpn_S_ref-dpn_S_0)*tanh((ip-np_S_ref))/2 + (dpn_S_ref+dpn_S_0)/2;
 	pn_S(ip+1) = pn_S(ip) + dpn_S(ip);
 	ip = ip+1;
 end
@@ -293,11 +295,11 @@ dpnp_S = [dpn_S,2*(pn_S(npn_S) - pn_f(npn_f))];
 testdpn_f = find(dpn_f > dpn_threshold);
 if isempty(testdpn_f) == 0, info_dke_yp(2,'WARNING: momentum step too large, results may be inaccurate !');end
 %
-if uniform == -1,%for test only with uniform grid
+if uniform == -1,%for test only with uniform pitch-angle grid
     mhu_S_pos = linspace(0,1,floor((nmhu_S_in + 1)/2));
     mhu_S = [-fliplr(mhu_S_pos(2:length(mhu_S_pos))),mhu_S_pos];
     nmhu_S = length(mhu_S);
-	mhu_f = (mhu_S(1:nmhu_S-1) + mhu_S(2:nmhu_S))/2;
+	 mhu_f = (mhu_S(1:nmhu_S-1) + mhu_S(2:nmhu_S))/2;
     nmhu_f = length(mhu_f);
 	dmhu_f = diff(mhu_S);
 	dmhu_S = [2*(mhu_f(1)+1),diff(mhu_f),2*(1-mhu_f(nmhu_f))];

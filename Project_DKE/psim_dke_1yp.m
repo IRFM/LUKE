@@ -1,5 +1,5 @@
 function [tokname,snumber,...
-grid_uniformity,grid_power,nmhu_S,np_S,pnmax_S,sfac,spfac,snmhu,snp,...
+grid_uniformity,grid_power,nmhu_S,np_S,pnmax_S,sfac,spfac,snmhu,snp,np_S_ref,...
 psin_S,psin_display,dpsin_dke,...
 ref_mode,norm_ref,...
 epsi0,epsia,eepsi,...
@@ -34,11 +34,11 @@ ntheta = 65;%Size of the theta grid for the magnetic equilibrium (ntheta ~= npsi
 %
 %Mesh size calculation
 %
-grid_uniformity = 0;%Pitch-angle and momentum grids uniformity: (0) no, (1) yes (-1 for specific test DKE, transient)
+grid_uniformity = 0;%Pitch-angle and momentum grids uniformity: (0) no, (1) yes (-1 for specific test for DKE, transient and pitch-angle grid only)
 grid_method = 1;%Pitch-angle grid calculation technique: (0): old method, (1) new method
-nmhu_S = 103;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
-np_S = 116;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run)
-pnmax_S = 20;%Maximum value of the flux momentum grid (pth_ref)
+nmhu_S = 153;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
+np_S = 152;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run)
+pnmax_S = 15;%Maximum value of the flux momentum grid (pth_ref)
 %
 %Pitch-angle grid
 %
@@ -54,8 +54,9 @@ grid_power = 1.5; % power for mhu grid step varations (grid_power > 1) (Note: fo
 %
 %Momentum grid
 %
-snp = 10;%pgridfactor (Uniform grid: pgridfactor << 1, non-uniform grid: pgridfactor >= 1) 
-spfac = 20;%reduction factor for the supergrid used in collision integrals
+np_S_ref = 50;%position in the mpomentum grid where dpn_S is twice the minimum value(must be ajusted with snp parameter)
+snp = 2;%pgridfactor (Uniform grid: pgridfactor = 1, non-uniform grid: pgridfactor >= 1) 
+spfac = 20;%reduction factor for the momentum supergrid used in collision integrals
 %
 %Normalized radii at which the distribution is calculated (DKE or FP)
 %The syntax rho='all' may be also used if all mhu values are considered. 
@@ -63,20 +64,20 @@ spfac = 20;%reduction factor for the supergrid used in collision integrals
 %Values of the radial flux grid [1,p] (If one radial value: local calculation only)
 %
 psin_S = [];%5.286742555900838e-002; %[0.1]%(rho = 0.25 in CMOD)
-rho_S = [0.4];%[0.05:0.07:0.9];%;0.03322100141578101;0.71365;
+rho_S = [0.2,0.4];%[0.05:0.07:0.9];%;0.03322100141578101;0.71365;
 %
 psin_display = NaN;%Approximate radial value at which results are displayed if display_mode >= 1 [1,1]
 rho_display = 0.4;
 %
 dpsin_dke = 0.01;%maximum difference between two consecutive positions used for radial derivatives
 %
-ref_mode = 1;%Reference values: (0) from core Te and ne, (1) from Te and ne at the normalized radius (paramater only active for a single radial value, otherwise ref_mode = 0)
-norm_ref = 0;%Normalization procedure for the ohmic electric field, LH and EC quasilinear diffusion: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref 
+ref_mode = 0;%Reference values: (0) from core Te and ne, (1) from Te and ne at the normalized radius (paramater only active for a single radial value, otherwise ref_mode = 0)
+norm_ref = 1;%Normalization procedure for the ohmic electric field, LH and EC quasilinear diffusion: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref 
 %
 % Ohmic electric field
 %
-epsi0 = 0.00;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
-epsia = 0.00;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
+epsi0 = 0.03;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e) (WARNING: ref_mode = 0 by default when multiple radial positions are studied simultaneously, whatever the value in this file)
+epsia = 0.03;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
 eepsi = 0;%Exponent for Ohmic electric field
 %
 % RF Waves: For each of the following calculations:
@@ -84,7 +85,7 @@ eepsi = 0;%Exponent for Ohmic electric field
 % (2+): include with RT mode (iterations for self-consistent damping between
 % RT and DKE) See below for details
 %
-rf_list(1) = 1;%[0 or 1] LH test calculations (see psim_ideallhcd_jd) 
+rf_list(1) = 0;%[0 or 1] LH test calculations (see psim_ideallhcd_jd) 
 rf_list(2) = 0;%[0 or 1] EC test calculations (see psim_idealeccd_jd) 
 rf_list(3) = 0;%[0 or 1] Cold plasma LHCD calculations (see psim_coldlhcd_jd); 
 rf_list(4) = 0;%[0,1 or 2] Cold plasma ECCD calculations (see psim_coldeccd_jd); (2): RT calculations in wpe << wce limit (see psim_straightray_jd) 
@@ -110,7 +111,7 @@ nhuloss = NaN;%Magnetic ripple loss frequency, nhuloss > 1000 (or NaN if no ripp
 %
 % Collision operator
 %
-coll_mode = 2;%Relativistic collision operator: (0) Maxwellian, (1) High-velocity limit, (2) Linearized Belaiev-Budker - (3) No relativistic Lorentz model
+coll_mode = 2;%Relativistic collision operator: (0) Relativistic Maxwellian background, (1) High-velocity limit, (2) Linearized Belaiev-Budker (3) Non-relativistic Lorentz model, (4) Non-relativistic Maxwellian background
 %
 % Run mode
 %
@@ -118,10 +119,10 @@ bounce_mode = 0;%Bounce averaging option: (0) no bounce averaging, (1) bounce av
 dke_mode = 0;%Fokker-Planck equation (0), Drift Kinetic equation (1)
 equil_mode = 0;%Equilibrium option: (0) circular concentric flux-surfaces, (1) numerical equilibrium
 %
-norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
-boundary_mode_f = 1;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
+norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
+boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 prec0_f = 1e-10;%Convergence level of the residu
-nit_f = 100;%Maximum number of iterations for f
+nit_f = 50;%Maximum number of iterations for f (> 1)
 initguess_f = 0;%Initial guess for the distribution function: (0) Maxwellian, (1) Fuchs model with Tperp for LH current drive only, (2) from a file
 initfile_f = 'RESULTS_TS_S1.mat';%If initguess_f = 2. The file must be in the directory Project_DKE, and created by dke_4_1yp.m 
 %

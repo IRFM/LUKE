@@ -1,4 +1,7 @@
-\label{fpgridinterpolation}\paragraph{Momentum grid interpolation}
+
+\label{fpgridinterpolation}
+
+\paragraph{Momentum grid interpolation}
 
 The usual method for determining interpolation coefficients $\delta
 _{p,l+1/2,i+1,j+1/2}^{\left( 0\right) },$ $\delta _{p,l+1/2,i,j+1/2}^{\left(
@@ -315,18 +318,18 @@ D_{pp}^{\left( 0\right) }}\right) dp+Cte
 
 Values of $f_{0}^{\left( 0\right) (\infty )}$ on the respective half grid
 positions $\left( l+1/2,i+3/2,j+1/2\right) $ and $\left(
-l+1/2,i+1/2,j+1/2\right) $ are then
+l+1/2,i+1/2,j+1/2\right) $ are then 
 \begin{equation}
-\ln f_{0,l+1/2,i+3/2,j+1/2}^{\left( 0\right) (\infty )}=\int_{0}^{p_{i+3/2}}%
-\left( \frac{F_{p}^{\left( 0\right) }\left( \psi _{l+1/2,}p,\xi
-_{0,j+1/2}\right) }{D_{pp}^{\left( 0\right) }\left( \psi _{l+1/2,}p,\xi
-_{0,j+1/2}\right) }\right) dp+Cte
+\ln f_{0,l+1/2,i+3/2,j+1/2}^{\left( 0\right) (\infty
+)}=\int_{0}^{p_{i+3/2}}\left( \frac{F_{p}^{\left( 0\right) }\left( \psi
+_{l+1/2,}p,\xi _{0,j+1/2}\right) }{D_{pp}^{\left( 0\right) }\left( \psi
+_{l+1/2,}p,\xi _{0,j+1/2}\right) }\right) dp+Cte
 \end{equation}
 \begin{equation}
-\ln f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}=\int_{0}^{p_{i+1/2}}%
-\left( \frac{F_{p}^{\left( 0\right) }\left( \psi _{l+1/2,}p,\xi
-_{0,j+1/2}\right) }{D_{pp}^{\left( 0\right) }\left( \psi _{l+1/2,}p,\xi
-_{0,j+1/2}\right) }\right) dp+Cte
+\ln f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty
+)}=\int_{0}^{p_{i+1/2}}\left( \frac{F_{p}^{\left( 0\right) }\left( \psi
+_{l+1/2,}p,\xi _{0,j+1/2}\right) }{D_{pp}^{\left( 0\right) }\left( \psi
+_{l+1/2,}p,\xi _{0,j+1/2}\right) }\right) dp+Cte
 \end{equation}
 and ratios are finally easily determined 
 \begin{equation}
@@ -334,14 +337,14 @@ and ratios are finally easily determined
 f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}}=\exp \left[
 \int_{p_{i+1/2}}^{p_{i+3/2}}\left( \frac{F_{p}^{\left( 0\right) }\left( \psi
 _{l+1/2,}p,\xi _{0,j+1/2}\right) }{D_{pp}^{\left( 0\right) }\left( \psi
-_{l+1/2,}p,\xi _{0,j+1/2}\right) }\right) dp\right] 
+_{l+1/2,}p,\xi _{0,j+1/2}\right) }\right) dp\right]
 \end{equation}
 \begin{equation}
 \frac{f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}}{%
 f_{0,l+1/2,i-1/2,j+1/2}^{\left( 0\right) (\infty )}}=\exp \left[
 \int_{p_{i-1/2}}^{p_{i13/2}}\left( \frac{F_{p}^{\left( 0\right) }\left( \psi
 _{l+1/2,}p,\xi _{0,j+1/2}\right) }{D_{pp}^{\left( 0\right) }\left( \psi
-_{l+1/2,}p,\xi _{0,j+1/2}\right) }\right) dp\right] 
+_{l+1/2,}p,\xi _{0,j+1/2}\right) }\right) dp\right]
 \end{equation}
 while, since $f_{0}^{\left( 0\right) (\infty )}$ does not depend of $\xi
 _{0},$ 
@@ -358,7 +361,7 @@ _{p,l+1/2,i,j+1/2}^{\left( 0\right) }$ by the trapezoidal method,
 \begin{eqnarray}
 &&\int_{p_{i+1/2}}^{p_{i+3/2}}\frac{F_{p}^{\left( 0\right) }\left( \psi
 _{l+1/2,}p,\xi _{0,j+1/2}\right) }{D_{pp}^{\left( 0\right) }\left( \psi
-_{l+1/2,}p,\xi _{0,j+1/2}\right) }dp\simeq  \nonumber \\
+_{l+1/2,}p,\xi _{0,j+1/2}\right) }dp\simeq   \nonumber \\
 &&\frac{1}{2}\frac{F_{p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }}{%
 D_{pp,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }}\frac{\Delta p_{i+1/2}}{2} 
 \nonumber \\
@@ -375,12 +378,12 @@ and
 \begin{eqnarray}
 &&\int_{p_{i-1/2}}^{p_{i+1/2}}\frac{F_{p}^{\left( 0\right) }\left( \psi
 _{l+1/2,}p,\xi _{0,j+1/2}\right) }{D_{pp}^{\left( 0\right) }\left( \psi
-_{l+1/2,}p,\xi _{0,j+1/2}\right) }dp\simeq  \nonumber \\
+_{l+1/2,}p,\xi _{0,j+1/2}\right) }dp\simeq   \nonumber \\
 &&\frac{1}{2}\frac{F_{p,l+1/2,i-1/2,j+1/2}^{\left( 0\right) }}{%
 D_{pp,l+1/2,i-1/2,j+1/2}^{\left( 0\right) }}\frac{\Delta p_{i-1/2}}{2} 
 \nonumber \\
-&&+\frac{1}{2}\frac{F_{p,l+1/2,i+3/2,j+1/2}^{\left( 0\right) }}{%
-D_{pp,l+1/2,i+3/2,j+1/2}^{\left( 0\right) }}\frac{\Delta p_{i+3/2}}{2} 
+&&+\frac{1}{2}\frac{F_{p,l+1/2,i-1/2,j+1/2}^{\left( 0\right) }}{%
+D_{pp,l+1/2,i-1/2,j+1/2}^{\left( 0\right) }}\frac{\Delta p_{i-1/2}}{2} 
 \nonumber \\
 &&+\frac{1}{2}\frac{F_{p,l+1/2,i,j+1/2}^{\left( 0\right) }}{%
 D_{pp,l+1/2,i,j+1/2}^{\left( 0\right) }}\frac{\Delta p_{i+1/2}}{2}  \nonumber
@@ -392,10 +395,10 @@ then gathering terms $p_{i+3/2},$ $p_{i+1}$ and $p_{i+1/2}$, one obtains
 \begin{eqnarray}
 &&\int_{p_{i+1/2}}^{p_{i+3/2}}\frac{F_{p}^{\left( 0\right) }\left( \psi
 _{l+1/2,}p,\xi _{0,j+1/2}\right) }{D_{pp}^{\left( 0\right) }\left( \psi
-_{l+1/2,}p,\xi _{0,j+1/2}\right) }dp\simeq  \nonumber \\
+_{l+1/2,}p,\xi _{0,j+1/2}\right) }dp\simeq   \nonumber \\
 &&\frac{1}{2}\frac{F_{p,l+1/2,i+1,j+1/2}^{\left( 0\right) }}{%
 D_{pp,l+1/2,i+1,j+1/2}^{\left( 0\right) }}\left( \frac{\Delta p_{i+1/2}}{2}+%
-\frac{\Delta p_{i+3/2}}{2}\right)  \nonumber \\
+\frac{\Delta p_{i+3/2}}{2}\right)   \nonumber \\
 &&+\frac{F_{p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }}{%
 D_{pp,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }}\frac{\Delta p_{i+1/2}}{4} 
 \nonumber \\
@@ -534,7 +537,8 @@ g\left( x,y\right) =\frac{1}{x}-\frac{1}{e^{x+y}-1}
 where the term $y=w_{p}^{\left( 0\right) (nu)}$ is zero for the uniform
 case, as shown in Ref.\cite{biz97}.
 
-\fig{figures/ChangCooper.eps}{Chang and Cooper weightingfunction}{ChangCooper}{10cm}
+\fig{figures/ChangCooper.eps}{Chang and Cooper
+weightingfunction}{ChangCooper}{10cm}
 
 With this definition, 
 \begin{equation}
@@ -587,8 +591,15 @@ considered, the relation
 \frac{F_{p}^{\left( 0\right) }\left( \psi ,p,\xi _{0}\right) }{%
 D_{pp}^{\left( 0\right) }\left( \psi ,p,\xi _{0}\right) }\cong -p
 \end{equation}
-holds, since $f_{0}^{\left( 0\right) (\infty )}$ must be Maxwellian $f_{M},$
-and one finds
+holds\footnote{%
+It is important to note that this condition is not fulfilled in the vicinity
+of $p=0$, where electron-ion predominates over electron-electron
+interactions, if $T_{e}\neq T_{i}.$ The lack of equipartition makes the
+dependence of $F_{p}^{\left( 0\right) }/D_{pp}^{\left( 0\right) }$ more
+complex, either when using a high-velocity limit expression of the $e-i$
+collision operator, or a more physical description based on a Maxwellian
+background.}, since $f_{0}^{\left( 0\right) (\infty )}$ must be Maxwellian $%
+f_{M},$ and one finds
 
 \begin{equation}
 \frac{f_{0,l+1/2,i+3/2,j+1/2}^{\left( 0\right) (\infty )}}{
@@ -604,12 +615,12 @@ Using identities introduced in Sec. \ref{Griddef},
 p_{i+3/2}=p_{i+1}+\frac{\Delta p_{i+3/2}}{2} \\ 
 p_{i+1/2}=p_{i+1}-\frac{\Delta p_{i+1/2}}{2}
 \end{array}
-\right. 
+\right.
 \end{equation}
 it is easy to demonstrate that 
 \begin{equation}
 p_{i+1}=\frac{1}{2}\left( p_{i+3/2}+p_{i+1/2}\right) -\frac{1}{2}\left( 
-\frac{\Delta p_{i+3/2}}{2}-\frac{\Delta p_{i+1/2}}{2}\right) 
+\frac{\Delta p_{i+3/2}}{2}-\frac{\Delta p_{i+1/2}}{2}\right)
 \end{equation}
 and 
 \begin{equation}
@@ -710,47 +721,131 @@ D_{ppl+1/2,i+1/2,j+1/2}^{\left( 0\right) }}-\frac{F_{pl+1/2,i-1/2,j+1/2}^{%
 \end{equation}
 
 It is important to note that since only collisions are considered for
-evaluating interpolating coefficients $\delta ^{\left( 0\right) },$ momentum
-and pitch-angle dynamics are naturally decoupled. Consequently, the ratios $%
-\frac{F_{p}^{\left( 0\right) }}{D_{pp}^{\left( 0\right) }}$ are only
-functions of $p$, and it is the reason why they may take similar values at
+evaluating interpolating coefficients $\delta _{p}^{\left( 0\right) },$
+momentum and pitch-angle dynamics are naturally decoupled. Consequently, the
+ratios $F_{p}^{\left( 0\right) }/D_{pp}^{\left( 0\right) }$ are only
+functions of $p$, and it is the reason why they haves similar values at
 different pitch-angle grid points $\xi _{0}.$
 
-Calculations carried out for collisions only are usually extrapolated to
-other accelaration mechanismes (Ohmic electric field, RF waves,...), using
-the generalized weighting factor based on the simple rule, 
+By definition, $\delta _{p}^{\left( 0\right) }$ must be lower than unity, a
+condition that is naturaly satisfied for the uniform momentum grid, as shown
+in Fig.\ref{ChangCooper}. However, special care must be taken for the
+non-uniform case, since there is no exact cancellation between $1/x$ and $%
+1/\left( e^{x+y}-1\right) $. In the limit $y<x\ll 1,$ it can be easily shown
+that
+\begin{equation}
+g\left( x,y\right) \simeq \frac{y}{x\left( x+y\right) }
+\end{equation}
+and the condition $g\left( x,y\right) \leq 1$ is equivalent to the relation
+\begin{equation}
+\frac{y/x}{1+y/x}<x
+\end{equation}
+
+For a uniform grid, this condition is always fulfilled, since it corresponds
+to $y=0$. For the non-uniform case, it is clear that the range of validity
+of the extended Chang and Cooper function is much more restricted, since $y/x
+$ is finite. Consequently, if $x\simeq p\Delta p$ is small, $y$ which is
+proportional to the variation of the grid step as function of $p$ must be
+significantly smaller which means that the momentum grid is nearly uniform
+in this region of the phase space. For larger values of $x$, the condition
+is easier to satisfy, which indicates that the non-uniformity must be a
+growing function of the momentum value $p$, and nearly flat close to $p=0$.
+
+There are however additional limitations on the choice of the momentum for
+large $p$ values. Indeed, in this domain, other mechanismes are at play, and
+the usual technique is to extrapolate calculations carried out for
+collisions to other accelaration mechanismes (Ohmic electric field, RF
+waves,...), using the generalized weighting factor based on the simple rule, 
 \begin{equation}
 \left. \frac{F_{p}^{\left( 0\right) }}{D_{pp}^{\left( 0\right) }}\right|
 _{effective}=\frac{\sum_{m}F_{p}^{\left( 0\right) (m)}}{\sum_{m}D_{pp}^{%
 \left( 0\right) (m)}}
 \end{equation}
 where $\sum_{m}$ is the sum over all the physical processes $m$ that take
-place in the plasma. Hence, the same syntax may be kept, 
+place in the plasma. Since the same syntax may be kept, one obtains simply
+
 \begin{equation}
-w_{p,l+1/2,i+1,j+1/2}^{\left( 0\right) (nu)}=-\frac{\Delta p_{i+3/2}-\Delta
-p_{i+1/2}}{4}\left[ \left. \frac{F_{p}^{\left( 0\right) }}{D_{pp}^{\left(
-0\right) }}\right| _{effective}^{l+1/2,i+3/2,j+1/2}-\left. \frac{%
+w_{p,l+1/2,i+1,j+1/2}^{\left( 0\right) (u)}=-\Delta p_{i+1}\left. \frac{%
 F_{p}^{\left( 0\right) }}{D_{pp}^{\left( 0\right) }}\right|
-_{effective}^{l+1/2,i+1/2,j+1/2}\right]
+_{effective}^{l+1/2,i+1,j+1/2}
 \end{equation}
 and 
 \begin{equation}
-w_{p,l+1/2,i,j+1/2}^{\left( 0\right) (nu)}=-\frac{\Delta p_{i+1/2}-\Delta
+w_{p,l+1/2,i,j+1/2}^{\left( 0\right) (u)}=-\Delta p_{i}\left. \frac{%
+F_{p}^{\left( 0\right) }}{D_{pp}^{\left( 0\right) }}\right|
+_{effective}^{l+1/2,i,j+1/2}
+\end{equation}
+for the uniform contribution, while for the non-uniform one
+\begin{equation}
+w_{p,l+1/2,i+1,j+1/2}^{\left( 0\right) (nu)}=-\frac{\Delta p_{i+3/2}-\Delta %
+p_{i+1/2}}{4}\left[ \left. \frac{F_{p}^{\left( 0\right) }}{D_{pp}^{\left(
+0\right) }}\right| _{effective}^{l+1/2,i+3/2,j+1/2}-\left. \frac{%
+F_{p}^{\left( 0\right) }}{D_{pp}^{\left( 0\right) }}\right|
+_{effective}^{l+1/2,i+1/2,j+1/2}\right] 
+\end{equation}
+and 
+\begin{equation}
+w_{p,l+1/2,i,j+1/2}^{\left( 0\right) (nu)}=-\frac{\Delta p_{i+1/2}-\Delta %
 p_{i-1/2}}{4}\left[ \left. \frac{F_{p}^{\left( 0\right) }}{D_{pp}^{\left(
 0\right) }}\right| _{effective}^{l+1/2,i+1/2,j+1/2}-\left. \frac{%
 F_{p}^{\left( 0\right) }}{D_{pp}^{\left( 0\right) }}\right|
-_{effective}^{l+1/2,i-1/2,j+1/2}\right]
+_{effective}^{l+1/2,i-1/2,j+1/2}\right] 
 \end{equation}
 
 In that case, the interpolating weights exhibit a dependence with $\xi _{0}.$
-It has however no importance for the accuracy of the calculations, since in
-the domain where fluxes are strongly modified, the Maxwellian distribution
-function is no more the solution of the Fokker-Planck equation. Usually, the
-value of the Chang and Cooper function tends towards $\delta _{p}^{\left(
-0\right) }\simeq \frac{1}{2}$ for a uniform mesh, which corresponds to a
-standard linear interpolation.
+This has however a weak importance for the accuracy of the calculations,
+since in the domain where fluxes are strongly modified since usually $\left. 
+\frac{F_{p}^{\left( 0\right) }}{D_{pp}^{\left( 0\right) }}\right|
+_{effective}\rightarrow 0$ in presence of RF quasilinear diffusion. The
+Maxwellian distribution function is consequently no more the solution of the
+Fokker-Planck equation. 
 
-Furthermore, $w_{p}^{\left( 0\right) (nu)}$ require evaluations of the
+The reason why an effective expression of $F_{p}^{\left( 0\right)
+}/D_{pp}^{\left( 0\right) }$ is used  for evaluating  $\delta _{p}^{\left(
+0\right) }$ where collisions are not the single process is based on the fact
+that the Chang and Cooper function tends towards $\delta _{p}^{\left(
+0\right) }\simeq \frac{1}{2}$ for a uniform mesh when $\left. \frac{%
+F_{p}^{\left( 0\right) }}{D_{pp}^{\left( 0\right) }}\right| _{effective}$
+increases. In that case, it corresponds exactly to the standard linear
+interpolation, i.e. the well known arithmetic mean. The interpolation
+procedure is therefore consistent with the grid, an important characteristic
+for reducing the rate of convergence.
+
+Unfortunately, such a property is not valid for a non-uniform grid, and the
+interpolation may be wrong , leading to possible an anomalous behaviour of
+the code. Consequently, even at larger values of $p$, only a uniform mesh
+may provide a consistent solution with the numerical grid in presence of
+external sources of acceleration. From this analysis, it turns out that the
+only purpose for using a non-uniform momentum mesh is to establish a link
+between the fine mesh in the vicinity of $p=0$, and a coarse grid in the
+region where other physical mechanismes are at play. Consequently, the
+momentum mesh is build from the relation
+\begin{equation}
+\Delta p_{i}=\frac{\left( \Delta p_{n_{p}-1}-\Delta p_{0}\right) }{2}\tanh
+\left( i-i_{ref}\right) +\frac{\left( \Delta p_{n_{p}-1}+\Delta p_{0}\right) 
+}{2}
+\end{equation}
+with the recurrence relation
+\begin{equation}
+p_{i+1}=\Delta p_{i}+p_{i}
+\end{equation}
+where $p_{0}=0$, $\Delta p_{n_{p}-1}=p_{\max }/\left( n_{p}-1\right) $ and $%
+\Delta p_{0}$ is an arbitrary value. Here $i_{ref}$ is the index value
+corresponding to the transition between the fine and the coarse grids. When $%
+\Delta p_{0}=$ $\Delta p_{n_{p}-1},$ the case of an uniform mesh is well
+recovered, whatever $i_{ref}$. Here $\Delta p_{0}$ and $i_{ref}$ must be
+chosen so that the non-uniform part of the momentum grid is far enough from $%
+p=0$ in order the relation $\delta _{p}^{\left( 0\right) }>1$ is satisfied,
+but also far from the region where external forces play a role\footnote{%
+In the expression for calculating $\Delta p_{i},$  $i-i_{ref}$ may be
+replaced by  $\left( i-i_{ref}\right) /\Delta i,$ where $\Delta i$ is a free
+parameter for controlling the sharpness of the transition between the two
+domains in momentum space. However, $\Delta i=1$ provides the adequate
+number of point, of the order of $5$, in order to avoid both a large jump,
+or a too smooth transition that may lead to violation of the condition that $%
+\delta <1$ for small $i$ values.}.
+
+Finally, $w_{p}^{\left( 0\right) (nu)}$ require evaluations of the
 quantities at the respective grid points $\left( l+1/2,i-1/2,j+1/2\right) $
 and $\left( l+1/2,i+3/2,j+1/2\right) .$ The usual method to deal with this
 problem is shifting indexes, according to the relation 
@@ -844,11 +939,11 @@ interpolation, indexes are shifted,
 \left\{ 
 \begin{array}{l}
 \left( l+1/2,i+1/2,j-1/2\right) \in \left\{ \left[ 1:n_{\psi }\right]
-,\left[ 1:n_{p}\right] ,\left[ X,1:n_{\xi }-1\right] \right\}  \\ 
+,\left[ 1:n_{p}\right] ,\left[ X,1:n_{\xi }-1\right] \right\} \\ 
 \left( l+1/2,i+1/2,j+3/2\right) \in \left\{ \left[ 1:n_{\psi }\right]
-,\left[ 1:n_{p}\right] ,\left[ 2:n_{\xi },X\right] \right\} 
+,\left[ 1:n_{p}\right] ,\left[ 2:n_{\xi },X\right] \right\}
 \end{array}
-\right. 
+\right.
 \end{equation}
 
 \paragraph{Spatial grid interpolation}
@@ -856,10 +951,10 @@ interpolation, indexes are shifted,
 The determination of $\delta _{\psi }^{\left( 0\right) }$ is based on the
 same method used for $\delta _{\xi }^{\left( 0\right) }$, since no specific
 condition is required for interpolating $f_{0}^{\left( 0\right) }$ on the
-flux grid. A linear interpolation is considered between $
-f_{0,l+3/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}$ and $
-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}$ and also between $
-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}$ and $
+flux grid. A linear interpolation is considered between $%
+f_{0,l+3/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}$ and $%
+f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}$ and also between $%
+f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}$ and $%
 f_{0,l-1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}$, 
 \begin{eqnarray}
 f_{0,l+1,i+1/2,j+1/2}^{\left( 0\right) (\infty )} &=&\left( \frac{\Delta
@@ -896,9 +991,9 @@ interpolation, indexes are shifted according to the rule
 \left\{ 
 \begin{array}{l}
 \left( l-1/2,i+1/2,j+1/2\right) \in \left\{ \left[ X,1:n_{\psi }-1\right]
-,\left[ 1:n_{p}\right] ,\left[ 1:n_{\xi }\right] \right\}  \\ 
+,\left[ 1:n_{p}\right] ,\left[ 1:n_{\xi }\right] \right\} \\ 
 \left( l+3/2,i+1/2,j+1/2\right) \in \left\{ \left[ 2:n_{\psi },X\right]
-,\left[ 1:n_{p}\right] ,\left[ 1:n_{\xi }\right] \right\} 
+,\left[ 1:n_{p}\right] ,\left[ 1:n_{\xi }\right] \right\}
 \end{array}
-\right. 
+\right.
 \end{equation}
