@@ -23,8 +23,8 @@ dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode] = psim_dke_1yp;
 %by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
 %
 snumber = 1;%Simulation number
-tokname = 'TS';%Tokamak equilibrium scenario (see ptok_dke_1yp.m) in EQUIL_tokname file)
-loadequil = 2;%0: Load already existing equilibrium file, 1: create equilibrium with HELENA (needs mex file), 2: create equilibrium file (with idealequil_f_jd.m function)
+tokname = 'CMOD';%Tokamak equilibrium scenario (see ptok_dke_1yp.m) in EQUIL_tokname file)
+loadequil = 0;%0: Load already existing equilibrium file, 1: create equilibrium with HELENA (needs mex file), 2: create equilibrium file (with idealequil_f_jd.m function)
 qopt = 1;%Option for q profile. (0): constant (default), (1): from qmin and eq (for HELENA, it is used only for the psi grid guess)
 %
 %Additional specific parameters for ideal cylindrical magnetic equilibrium with circular concentric flux surfaces (used if loadequil = 2 only)
@@ -36,15 +36,15 @@ ntheta = 65;%Size of the theta grid for the magnetic equilibrium (ntheta ~= npsi
 %
 grid_uniformity = 0;%Pitch-angle and momentum grids uniformity: (0) no, (1) yes (-1 for specific test DKE, transient)
 grid_method = 1;%Pitch-angle grid calculation technique: (0): old method, (1) new method
-nmhu_S = 101;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
-np_S = 110;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run)
-pnmax_S = 15;%Maximum value of the flux momentum grid (pth_ref)
+nmhu_S = 83;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
+np_S = 90;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run)
+pnmax_S = 10;%Maximum value of the flux momentum grid (pth_ref)
 %
 %Pitch-angle grid
 %
 sfac0 = 1; % reduction factor for fine grid near mhu = 0
-sfac1 = 1; % reduction factor for fine grid near mhu = 1
-sfact = 1; % reduction factor for fine grid near mhu = mhut
+sfac1 = 3; % reduction factor for fine grid near mhu = 1
+sfact = 3; % reduction factor for fine grid near mhu = mhut
 %
 snmhu0 = 3; % number of fine grid points near mhu = 0
 snmhu1 = 3; % number of fine grid points near mhu = 1
@@ -63,7 +63,7 @@ spfac = 20;%reduction factor for the supergrid used in collision integrals
 %Values of the radial flux grid [1,p] (If one radial value: local calculation only)
 %
 psin_S = [];%5.286742555900838e-002; %[0.1]%(rho = 0.25 in CMOD)
-rho_S = [0.1];%[0.05:0.07:0.9];%;0.03322100141578101;0.71365;
+rho_S = [0.6];%[0.05:0.07:0.9];%;0.03322100141578101;0.71365;
 %
 psin_display = NaN;%Approximate radial value at which results are displayed if display_mode >= 1 [1,1]
 rho_display = 0.1;
@@ -81,12 +81,12 @@ eepsi = 0;%Exponent for Ohmic electric field
 %
 % RF Waves
 %
-rf_list(1) = 1;%(1): include LH test calculations (see psim_ideallhcd_jd); (0) do not include
-rf_list(2) = 0;%(1): include EC  calculations (see psim_idealeccd_jd); (0) do not include
-rf_list(3) = 0;%(1): include cold LHCD calculations (see psim_coldlhcd_jd); (0) do not include
-rf_list(4) = 0;%(1): include cold ECCD calculations (see psim_coldeccd_jd); (0) do not include
-rf_list(5) = 0;%(1): include hot ECCD calculations (see psim_warmeccd_jd); (0) do not include
-rf_list(6) = 0;%(1): include EBW calculations (see psim_ebw_jd); (0) do not include
+rf_list(1) = 0;%(1): include LH test calculations (see psim_ideallhcd_jd); (0) do not include
+rf_list(2) = 1;%(1): include EC  calculations (see psim_idealeccd_jd); (0) do not include
+rf_list(3) = 0;%*** to be implemented *** (1): include cold LHCD calculations (see psim_coldlhcd_jd); (0) do not include
+rf_list(4) = 0;%*** to be implemented *** (1): include cold ECCD calculations (see psim_coldeccd_jd); (0) do not include
+rf_list(5) = 0;%*** to be implemented *** (1): include hot ECCD calculations (see psim_warmeccd_jd); (0) do not include
+rf_list(6) = 0;%*** to be implemented *** (1): include EBW calculations (see psim_ebw_jd); (0) do not include
 %
 rt_mode = 0;% ray-tracing mode (1): Yes (iterations for self-consistent damping between RT and DKE) (0): No (only one run)
 nit_rf = 20;% maximum number of iteration in ray-tracing (only if rt_mode=1)
@@ -114,7 +114,7 @@ coll_mode = 2;%Relativistic collision operator: (0) Maxwellian, (1) High-velocit
 %
 bounce_mode = 1;%Bounce averaging option: (0) no bounce averaging, (1) bounce averaging full implicit method with 15 diagonals
 dke_mode = 0;%Fokker-Planck equation (0), Drift Kinetic equation (1)
-equil_mode = 0;%Equilibrium option: (0) circular concentric flux-surfaces, (1) numerical equilibrium
+equil_mode = 1;%Equilibrium option: (0) circular concentric flux-surfaces, (1) numerical equilibrium
 %
 norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
 boundary_mode_f = 1;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
@@ -184,7 +184,10 @@ if loadequil == 0,%Already existing magnetic equilibrium file
 	filename = ['EQUIL_',tokname,'.mat'];
 	if exist([dossier,s,filename]) == 2,
 		info_dke_yp(2,['Equilibrium file ',filename,' is well found.']);
-	else
+    elseif exist(filename) == 2,
+        copyfile(filename,[dossier,s,filename]);
+		info_dke_yp(2,['Equilibrium file ',filename,' is well found.']);
+    else
 		error('Equilibrium file is not found !')
 	end
 elseif loadequil == 1,%Create magnetic equilibrium file with HELENA
