@@ -2,7 +2,7 @@ function [ap,Rp,Zp,xpoint,Bt,...
 	 Ip,j0,ja,ej,qmin,eq,...
 	 Te0,Tea,eTe,ne0,nea,ene,Ti0,Tia,eTi,...
 	 Zi,mi,fi,Zeff0,Zeffa,eZeff,...
-	 HXR] = ptok_dke_1yp(name);
+	 HXR,file_helena] = ptok_dke_1yp(name);
 % 
 %Global plasma and tokamak parameters for script_dke_1yp (Drift Kinetic equation solver)
 % 
@@ -61,6 +61,9 @@ function [ap,Rp,Zp,xpoint,Bt,...
 %   	- HXR{1,4}: Major radius of the reference toroidal surface (m) [1,1]
 %   	- HXR{1,5}: Minor radius of the reference toroidal surface (m) [1,1]
 %     - HXR{1,6}: Geometrical factor for each chord (m^2/str) [1,nchord]
+%-----------------------------------------------------------------
+%For running with HELENA FORTRAN version only	 
+%     - file_helena : HELENA input file name	
 %
 %	Warning: none
 %
@@ -74,6 +77,7 @@ end
 %
 Zp = 0;
 HXR{1,1} = NaN;%No HXR tomographic system
+file_helena = '';%No HELENA input file
 xpoint = NaN;
 j0 = NaN;
 ja = NaN;
@@ -163,7 +167,8 @@ elseif strcmp(name,'TS') == 1,
 	HXR{1,3} = R_hxr;
 	HXR{1,4} = Z_hxr;
 	HXR{1,5} = EG_hxr;
-%
+% HELENA input file
+	file_helena = '';
 elseif strcmp(name,'RTP') == 1,
 	ap = 0.165;
 	Rp = 0.72;
@@ -225,6 +230,8 @@ elseif strcmp(name,'JT60_exp') == 1,%PoP 7 1927 (2000)
    eZeff = 0;
 % diagnostics
    HXR{1,1} = NaN;%No HXR tomographic system
+% HELENA input file
+	file_helena = '';
 elseif strcmp(name,'CMOD') == 1,
 	ap = 0.22;
 	Rp = 0.68;
@@ -255,6 +262,8 @@ elseif strcmp(name,'CMOD') == 1,
 	eZeff = 0;
 % diagnostics
 	HXR{1,1} = NaN;%No HXR tomographic system
+% HELENA input file
+	file_helena = '';
 elseif strcmp(name,'NSTX') == 1,
 	ap = 0.67;
 	Rp = 0.86;
@@ -290,6 +299,8 @@ elseif strcmp(name,'NSTX') == 1,
 	ene = 0.5;	
 % diagnostics
 	HXR{1,1} = NaN;%No HXR tomographic system
+% HELENA input file
+	file_helena = '';
 elseif strcmp(name,'D3D') == 1,
 	ap = 0.67;
 	Rp = 1.67;
@@ -320,6 +331,8 @@ elseif strcmp(name,'D3D') == 1,
 	eZeff = 0;
 % diagnostics
 	HXR{1,1} = NaN;%No HXR tomographic system
+% HELENA input file
+	file_helena = '';
 elseif strcmp(name,'D3D_test4') == 1,
 	ap = 0.67;
 	Rp = 1.67;
@@ -350,6 +363,8 @@ elseif strcmp(name,'D3D_test4') == 1,
 	eZeff = 0;
 % diagnostics
 	HXR{1,1} = NaN;%No HXR tomographic system
+% HELENA input file
+	file_helena = '';
 elseif strcmp(name,'D3D_test4_CST') == 1,
 	ap = 0.67;
 	Rp = 1.67;
@@ -410,6 +425,8 @@ elseif strcmp(name,'FTU') == 1,
 	eZeff = 0;
 % diagnostics
 	HXR{1,1} = NaN;%No HXR tomographic system
+% HELENA input file
+	file_helena = '';
 elseif strcmp(name,'TEST0') == 1,
 	ap = 0.22;
 	Rp = 0.68;
@@ -470,6 +487,8 @@ elseif strcmp(name,'TEST15') == 1,
 	eZeff = 0;
 % diagnostics
 	HXR{1,1} = NaN;%No HXR tomographic system
+% HELENA input file
+	file_helena = '';
 elseif strcmp(name,'TEST51') == 1,
 	ap = 0.22;
 	Rp = 0.68;
@@ -541,6 +560,8 @@ elseif strcmp(name,'CQL3D_LH') == 1,
 	ene = 0;	
 % diagnostics
 	HXR{1,1} = NaN;%No HXR tomographic system
+% HELENA input file
+	file_helena = '';
 elseif strcmp(name,'CQL3D_OHM') == 1,	
 	ap = 2.3899;
 	Rp = 2.39;%Separatrix major radius
@@ -582,6 +603,8 @@ elseif strcmp(name,'CQL3D_OHM') == 1,
 	ene = 1;	
 % diagnostics
 	HXR{1,1} = NaN;%No HXR tomographic system
+% HELENA input file
+	file_helena = '';
 elseif strcmp(name,'CQL3D_RUNAWAY') == 1,
 	ap = 2.3899;
 	Rp = 2.39;%Separatrix major radius
@@ -623,6 +646,8 @@ elseif strcmp(name,'CQL3D_RUNAWAY') == 1,
 	ene = 1;	
 % diagnostics
 	HXR{1,1} = NaN;%No HXR tomographic system
+% HELENA input file
+	file_helena = '';
 elseif strcmp(name,'CQL3D_ECCD') == 1,
 	ap = 2.3899;
 	Rp = 2.39; 
@@ -653,6 +678,8 @@ elseif strcmp(name,'CQL3D_ECCD') == 1,
 	eZeff = 0;
 % diagnostics
 	HXR{1,1} = NaN;%No HXR tomographic system
+% HELENA input file
+	file_helena = '';
 elseif strcmp(name,'JET') == 1,
 	ap = 0.9;
 	Rp = 3.00;
@@ -694,6 +721,51 @@ elseif strcmp(name,'JET') == 1,
 	ene = 0.5;
 % diagnostics
 	HXR{1,1} = NaN;%No HXR tomographic system
+% HELENA input file
+	file_helena = '';
+elseif strcmp(name,'JETH') == 1,%For use with HELENA FORTRAN version only
+	ap = NaN;
+	Rp = NaN;
+	Zp = NaN;
+	%
+	xpoint(1) = NaN;%Vertical position of the top X point
+	xpoint(2) = NaN;%Horizontal position of the top X point
+	xpoint(3) = NaN;%Angle between the separatrix and the horizontal plane for the top X point (degree)
+	xpoint(4) = NaN;%Angle between the separatrix and the horizontal plane for the top X point (degree)
+	xpoint(5) = NaN;%Vertical position of the bottom X point (always positive value)
+	xpoint(6) = NaN;%Horizontal position of the bottom X point
+	xpoint(7) = NaN;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
+	xpoint(8) = NaN;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
+	%
+	Bt = NaN;	
+	%
+	Zi = [NaN NaN NaN];
+	mi = [NaN NaN NaN];
+	fi = [NaN,NaN,NaN];
+	Zeff0 = NaN;
+	Zeffa = NaN;
+	eZeff = NaN;
+%	
+	Ip = NaN;
+	j0 = NaN;
+	ja = NaN;
+	ej = NaN;
+	qmin = NaN;
+	eq = NaN;
+%
+	Te0 = NaN;
+	Tea = NaN;
+	eTe = NaN;
+	Ti0 = NaN;
+	Tia = NaN;
+	eTi = NaN;	
+	ne0 = NaN;
+	nea = NaN;
+	ene = NaN;
+% diagnostics
+	HXR{1,1} = NaN;%No HXR tomographic system
+% HELENA input file
+	file_helena = 'helena1_in';
 elseif strcmp(name,'JETb') == 1,
 	ap = 0.9;
 	Rp = 3.00;
@@ -735,6 +807,8 @@ elseif strcmp(name,'JETb') == 1,
 	ene = 0.5;
 % diagnostics
 	HXR{1,1} = NaN;%No HXR tomographic system
+% HELENA input file
+	file_helena = '';
 elseif strcmp(name,'JET_C') == 1,%Counter current LH experiments (see Marc Goniche)
 	ap = 0.98;
 	Rp = 2.87;
@@ -776,6 +850,8 @@ elseif strcmp(name,'JET_C') == 1,%Counter current LH experiments (see Marc Gonic
    ene = 0.5;
 % diagnostics
    HXR{1,1} = NaN;%No HXR tomographic system
+% HELENA input file
+	file_helena = '';
 elseif strcmp(name,'TEST_LORENTZ') == 1,%Values based on NSTX case but circular plasma cross-section
    ap = 2.3899;
    Rp = 2.39; 
@@ -816,7 +892,9 @@ elseif strcmp(name,'TEST_LORENTZ') == 1,%Values based on NSTX case but circular 
 	nea = 0.001*ne0;
 	ene = 2;
 % diagnostics
-		HXR{1,1} = NaN;%No HXR tomographic system
+	HXR{1,1} = NaN;%No HXR tomographic system
+% HELENA input file
+	file_helena = '';
 elseif strcmp(name,'RELAX_ECCD') == 1,
 	ap = 1.125;
 	Rp = 2.25;
@@ -847,6 +925,8 @@ elseif strcmp(name,'RELAX_ECCD') == 1,
 	eZeff = 0;
 % diagnostics
 	HXR{1,1} = NaN;%No HXR tomographic system
+% HELENA input file
+	file_helena = '';
 else
 	error('Wrong input name in ptok_dke_1yp.m')
 end	
