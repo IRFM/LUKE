@@ -62,10 +62,10 @@ end
 [prho,pcurr_hir_mksa_fsav,pcurr_sau_mksa_fsav,pcurr_hin_mksa_fsav,pcurr_i_mksa_fsav] = ...
     hsneomodels_dke_jd(tokname);
 %
-xcurr_hir_mksa_fsav = interp1(prho,pcurr_hir_mksa_fsav,xrho);
-xcurr_sau_mksa_fsav = interp1(prho,pcurr_sau_mksa_fsav,xrho);
-xcurr_hin_mksa_fsav = interp1(prho,pcurr_hin_mksa_fsav,xrho);
-xcurr_i_mksa_fsav = interp1(prho,pcurr_i_mksa_fsav,xrho);
+xcurr_hir_mksa_fsav = interp1(prho,pcurr_hir_mksa_fsav,xrho_dke);
+xcurr_sau_mksa_fsav = interp1(prho,pcurr_sau_mksa_fsav,xrho_dke);
+xcurr_hin_mksa_fsav = interp1(prho,pcurr_hin_mksa_fsav,xrho_dke);
+xcurr_i_mksa_fsav = interp1(prho,pcurr_i_mksa_fsav,xrho_dke);
 %
 while 1,
 	ir_display_dke = find(r_dke == ir_display);
@@ -113,16 +113,16 @@ while 1,
 		info_dke_yp(2,['Major plasma radius on the LFS midplane (ap) : ',num2str(ap)])
 		disp('-------------------------------------------------------------------------------------------------------------------');
 		info_dke_yp(2,['Normalized radius on the LFS midplane where results are displayed (rho) : ',num2str(xrho_dke(ir_display_dke))])
-		info_dke_yp(2,['Normalized poloidal magnetic flux where results are displayed (psin) : ',num2str(xpsin(ir_display_dke))])
+		info_dke_yp(2,['Normalized poloidal magnetic flux where results are displayed (psin) : ',num2str(xpsin(ir_display))])
 		info_dke_yp(2,['Pseudo inverse aspect ratio (rho*ap/Rp) : ',num2str(xia(ir_display_dke))])
 		disp('-------------------------------------------------------------------------------------------------------------------');
-		info_dke_yp(2,['Flux-surface averaged electron temperature (keV): ',num2str(xTe(ir_display_dke))])
-		info_dke_yp(2,['Flux-surface averaged electron temperature increment (keV): ',num2str((xTe_norm_out(ir_display_dke) - xTe_norm(ir_display_dke))*Ten_ref*mc2)])
-		info_dke_yp(2,['Flux-surface averaged electron density (10+19 m-3): ',num2str(xne(ir_display_dke)/1e19)])
+		info_dke_yp(2,['Flux-surface averaged electron temperature (keV): ',num2str(xTe(ir_display))])
+		info_dke_yp(2,['Flux-surface averaged electron temperature increment (keV): ',num2str((xTe_norm_out(ir_display_dke) - xTe_norm(ir_display))*Ten_ref*mc2)])
+		info_dke_yp(2,['Flux-surface averaged electron density (10+19 m-3): ',num2str(xne(ir_display)/1e19)])
 %
 		disp('-------------------------------------------------------------------------------------------------------------------');
-		info_dke_yp(2,['Normalized Coulomb logarithm: ',num2str(xlnc(ir_display_dke)/lnc_ref)])
-		info_dke_yp(2,['Normalized electron collision frequency: ',num2str(xnhu(ir_display_dke)/nhu_ref)])
+		info_dke_yp(2,['Normalized Coulomb logarithm: ',num2str(xlnc(ir_display)/lnc_ref)])
+		info_dke_yp(2,['Normalized electron collision frequency: ',num2str(xnhu(ir_display)/nhu_ref)])
 		if bounce_mode > 0,
 			info_dke_yp(2,['Exact trapped fraction: ',num2str(xft_fsav(ir_display_dke))])
 		%	info_dke_yp(2,['Collisionality parameter: ',num2str(xcollisionnality(ir_display_dke))])
@@ -239,11 +239,11 @@ while 1,
 			xlabel('ppar/pth-ref');
 			ylabel('pperp/pth-ref');
 			if bounce_mode >= 1,%Draw bounce domain boundaries
-				line([0,pnmax_S*sqrt(xmhubounce2(ir_display_dke))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display_dke))]);
-				line([0,-pnmax_S*sqrt(xmhubounce2(ir_display_dke))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display_dke))]);
+				line([0,pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
+				line([0,-pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
 				if isnan(nhuloss) == 0,%Draw the loss cone
-					line([0,pnmax_S*sqrt(1-cos(xthetaloss(ir_display_dke)*pi/180)^2)],[0,pnmax_S*cos(xthetaloss(ir_display_dke)*pi/180)],'LineStyle','-','color','r');
-					line([0,-pnmax_S*sqrt(1-cos(xthetaloss(ir_display_dke)*pi/180)^2)],[0,pnmax_S*cos(xthetaloss(ir_display_dke)*pi/180)],'LineStyle','-','color','r');
+					line([0,pnmax_S*sqrt(1-cos(xthetaloss(ir_display)*pi/180)^2)],[0,pnmax_S*cos(xthetaloss(ir_display)*pi/180)],'LineStyle','-','color','r');
+					line([0,-pnmax_S*sqrt(1-cos(xthetaloss(ir_display)*pi/180)^2)],[0,pnmax_S*cos(xthetaloss(ir_display)*pi/180)],'LineStyle','-','color','r');
 				end
 			end
 %
@@ -258,11 +258,11 @@ while 1,
 			xlabel('ppar/pth-ref');
 			ylabel('pperp/pth-ref');
 			if bounce_mode >= 1,%Draw bounce domain boundaries
-				line([0,pnmax_S*sqrt(xmhubounce2(ir_display_dke))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display_dke))]);
-				line([0,-pnmax_S*sqrt(xmhubounce2(ir_display_dke))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display_dke))]);
+				line([0,pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
+				line([0,-pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
 				if isnan(nhuloss) == 0,%Draw the loss cone
-					line([0,pnmax_S*sqrt(1-cos(xthetaloss(ir_display_dke)*pi/180)^2)],[0,pnmax_S*cos(xthetaloss(ir_display_dke)*pi/180)],'LineStyle','-','color','r');
-					line([0,-pnmax_S*sqrt(1-cos(xthetaloss(ir_display_dke)*pi/180)^2)],[0,pnmax_S*cos(xthetaloss(ir_display_dke)*pi/180)],'LineStyle','-','color','r');
+					line([0,pnmax_S*sqrt(1-cos(xthetaloss(ir_display)*pi/180)^2)],[0,pnmax_S*cos(xthetaloss(ir_display)*pi/180)],'LineStyle','-','color','r');
+					line([0,-pnmax_S*sqrt(1-cos(xthetaloss(ir_display)*pi/180)^2)],[0,pnmax_S*cos(xthetaloss(ir_display)*pi/180)],'LineStyle','-','color','r');
 				end
 			end
 %
@@ -272,11 +272,11 @@ while 1,
 %	
 			if nb_lh > 0,
 				figure(4),
-				if initguess == 1 & isnan(xvparmin_lh_ref(ir_display_dke)) == 0 & isnan(xvparmax_lh_ref(ir_display_dke)) == 0,
+				if initguess == 1 & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0,
 					subplot(121)
-					if xvparmax_lh_ref(ir_display_dke) - xvparmin_lh_ref(ir_display_dke) ~= 0  & isnan(xvparmin_lh_ref(ir_display_dke)) == 0 & isnan(xvparmax_lh_ref(ir_display_dke)) == 0,,
-						pparresmin_lh_cyl_ref = xvparmin_lh_ref(ir_display_dke)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmin_lh_ref(ir_display_dke)^2*betath_ref^2);%LH resonance condition
-						pparresmax_lh_cyl_ref = xvparmax_lh_ref(ir_display_dke)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmax_lh_ref(ir_display_dke)^2*betath_ref^2);%LH resonance condition
+					if xvparmax_lh_ref(ir_display) - xvparmin_lh_ref(ir_display) ~= 0  & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0,,
+						pparresmin_lh_cyl_ref = xvparmin_lh_ref(ir_display)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmin_lh_ref(ir_display)^2*betath_ref^2);%LH resonance condition
+						pparresmax_lh_cyl_ref = xvparmax_lh_ref(ir_display)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmax_lh_ref(ir_display)^2*betath_ref^2);%LH resonance condition
 						hold on;
 						plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--');
 						plot(pparresmax_lh_cyl_ref,pperp_cyl_ref,'k--');
@@ -284,10 +284,10 @@ while 1,
 					end
 				end
 %
-				if xvparmax_lh_ref(ir_display_dke) - xvparmin_lh_ref(ir_display_dke) ~= 0  & isnan(xvparmin_lh_ref(ir_display_dke)) == 0 & isnan(xvparmax_lh_ref(ir_display_dke)) == 0,,
+				if xvparmax_lh_ref(ir_display) - xvparmin_lh_ref(ir_display) ~= 0  & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0,,
 					subplot(122)
-					pparresmin_lh_cyl_ref = xvparmin_lh_ref(ir_display_dke)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmin_lh_ref(ir_display_dke)^2*betath_ref^2);%LH resonance condition
-					pparresmax_lh_cyl_ref = xvparmax_lh_ref(ir_display_dke)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmax_lh_ref(ir_display_dke)^2*betath_ref^2);%LH resonance condition
+					pparresmin_lh_cyl_ref = xvparmin_lh_ref(ir_display)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmin_lh_ref(ir_display)^2*betath_ref^2);%LH resonance condition
+					pparresmax_lh_cyl_ref = xvparmax_lh_ref(ir_display)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmax_lh_ref(ir_display)^2*betath_ref^2);%LH resonance condition
 					hold on;
 					plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--');
 					plot(pparresmax_lh_cyl_ref,pperp_cyl_ref,'k--');
@@ -304,20 +304,20 @@ while 1,
 				title('Lower Hybrid diffusion coefficient (nhu-ref*pth-ref^2)');
 				xlabel('ppar/pth-ref');
 				ylabel('pperp/pth-ref');
-				if xvparmax_lh_ref(ir_display_dke) - xvparmin_lh_ref(ir_display_dke) ~= 0 & isnan(xvparmin_lh_ref(ir_display_dke)) == 0 & isnan(xvparmax_lh_ref(ir_display_dke)) == 0,,
+				if xvparmax_lh_ref(ir_display) - xvparmin_lh_ref(ir_display) ~= 0 & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0,,
 					hold on,
-					pparresmin_lh_cyl_ref = xvparmin_lh_ref(ir_display_dke)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmin_lh_ref(ir_display_dke)^2*betath_ref^2);%LH resonance condition
-					pparresmax_lh_cyl_ref = xvparmax_lh_ref(ir_display_dke)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmax_lh_ref(ir_display_dke)^2*betath_ref^2);%LH resonance condition
+					pparresmin_lh_cyl_ref = xvparmin_lh_ref(ir_display)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmin_lh_ref(ir_display)^2*betath_ref^2);%LH resonance condition
+					pparresmax_lh_cyl_ref = xvparmax_lh_ref(ir_display)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmax_lh_ref(ir_display)^2*betath_ref^2);%LH resonance condition
 					plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--');
 					plot(pparresmax_lh_cyl_ref,pperp_cyl_ref,'k--');
 					hold off,
 				end
 				if bounce_mode >= 1,%Draw bounce domain boundaries
-					line([0,pnmax_S*sqrt(xmhubounce2(ir_display_dke))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display_dke))]);
-					line([0,-pnmax_S*sqrt(xmhubounce2(ir_display_dke))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display_dke))]);
+					line([0,pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
+					line([0,-pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
 					if isnan(nhuloss) == 0,%Draw the toroidal ripple loss cone
-						line([0,pnmax_S*sqrt(1-cos(xthetaloss(ir_display_dke)*pi/180)^2)],[0,pnmax_S*cos(xthetaloss(ir_display_dke)*pi/180)],'LineStyle','-','color','r');
-						line([0,-pnmax_S*sqrt(1-cos(xthetaloss(ir_display_dke)*pi/180)^2)],[0,pnmax_S*cos(xthetaloss(ir_display_dke)*pi/180)],'LineStyle','-','color','r');
+						line([0,pnmax_S*sqrt(1-cos(xthetaloss(ir_display)*pi/180)^2)],[0,pnmax_S*cos(xthetaloss(ir_display)*pi/180)],'LineStyle','-','color','r');
+						line([0,-pnmax_S*sqrt(1-cos(xthetaloss(ir_display)*pi/180)^2)],[0,pnmax_S*cos(xthetaloss(ir_display)*pi/180)],'LineStyle','-','color','r');
 					end
 				end
 				faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
@@ -338,11 +338,11 @@ while 1,
 				xlabel('ppar/pth-ref');
 				ylabel('pperp/pth-ref');
 				if bounce_mode >= 1,%Draw bounce domain boundaries
-					line([0,pnmax_S*sqrt(xmhubounce2(ir_display_dke))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display_dke))]);
-					line([0,-pnmax_S*sqrt(xmhubounce2(ir_display_dke))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display_dke))]);
+					line([0,pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
+					line([0,-pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
 					if isnan(nhuloss) == 0,%Draw the toroidal ripple loss cone
-						line([0,pnmax_S*sqrt(1-cos(xthetaloss(ir_display_dke)*pi/180)^2)],[0,pnmax_S*cos(xthetaloss(ir_display_dke)*pi/180)],'LineStyle','-','color','r');
-						line([0,-pnmax_S*sqrt(1-cos(xthetaloss(ir_display_dke)*pi/180)^2)],[0,pnmax_S*cos(xthetaloss(ir_display_dke)*pi/180)],'LineStyle','-','color','r');
+						line([0,pnmax_S*sqrt(1-cos(xthetaloss(ir_display)*pi/180)^2)],[0,pnmax_S*cos(xthetaloss(ir_display)*pi/180)],'LineStyle','-','color','r');
+						line([0,-pnmax_S*sqrt(1-cos(xthetaloss(ir_display)*pi/180)^2)],[0,pnmax_S*cos(xthetaloss(ir_display)*pi/180)],'LineStyle','-','color','r');
 					end
 				end
 				faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
@@ -363,13 +363,13 @@ while 1,
     		xlabel('ppar/pth-ref');
     		ylabel('pperp/pth-ref');
     		if bounce_mode >= 1,%Draw bounce domain boundaries
-    			line([0,pnmax_S*sqrt(xmhubounce2(ir_display_dke))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display_dke))]);
-    			line([0,-pnmax_S*sqrt(xmhubounce2(ir_display_dke))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display_dke))]);
+    			line([0,pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
+    			line([0,-pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
     		end
 %
-    		if nb_lh > 0 & xvparmax_lh_ref(ir_display_dke) - xvparmin_lh_ref(ir_display_dke) ~= 0 & isnan(xvparmin_lh_ref(ir_display_dke)) == 0 & isnan(xvparmax_lh_ref(ir_display_dke)) == 0,
-    			pparresmin_lh_cyl_ref = xvparmin_lh_ref(ir_display_dke)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmin_lh_ref(ir_display_dke)^2*betath_ref^2);%LH resonance condition
-    			pparresmax_lh_cyl_ref = xvparmax_lh_ref(ir_display_dke)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmax_lh_ref(ir_display_dke)^2*betath_ref^2);%LH resonance condition
+    		if nb_lh > 0 & xvparmax_lh_ref(ir_display) - xvparmin_lh_ref(ir_display) ~= 0 & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0,
+    			pparresmin_lh_cyl_ref = xvparmin_lh_ref(ir_display)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmin_lh_ref(ir_display)^2*betath_ref^2);%LH resonance condition
+    			pparresmax_lh_cyl_ref = xvparmax_lh_ref(ir_display)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmax_lh_ref(ir_display)^2*betath_ref^2);%LH resonance condition
     			hold on;
     			plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--');
     
@@ -402,7 +402,8 @@ while 1,
 		xJrfB_fsav_mksa = xcurrB_ref_fsav*j_ref;
 		xJboot_e_fsav_mksa = xcurr_boot_ref_fsav*j_ref;
 		xJboot_i_fsav_mksa = xcurr_i_mksa_fsav;
-		xJtot_fsav_mksa = xcurr_tot_ref_fsav*j_ref;%+ xcurr_i_fsav_mksa;
+        xJboot_tot_fsav_mksa = xJboot_e_fsav_mksa + xJboot_i_fsav_mksa;
+		xJtot_fsav_mksa = xcurr_tot_ref_fsav*j_ref + xJboot_i_fsav_mksa;
 %
 % Power
 %
@@ -508,8 +509,8 @@ while 1,
 			disp('-------------------------------------------------------------------------------------------------------------------');
 			info_dke_yp(2,'Global flux surface averaged results (normalized to MKSA units):');
 			disp(['   - Density (10+19 m-3) [spherical]: ',num2str(xnormf_ref_fsav(ir_display_dke)*ne_ref/1e19)])
-			disp(['   - RF current density (MA/m2) [spherical]: ',num2str(xJrf0_mksa(ir_display_dke))])
-			disp(['   - RF power density lost on collisions (MW/m3) (coll) [spherical]: ',num2str(-xPcoll0_mksa(ir_display_dke))])
+			disp(['   - RF current density (MA/m2) [spherical]: ',num2str(xJrf0_fsav_mksa(ir_display_dke))])
+			disp(['   - RF power density lost on collisions (MW/m3) (coll) [spherical]: ',num2str(-xPcoll0_fsav_mksa(ir_display_dke))])
 			for ib = 1:nb_lh
 					disp(['   - LH beam #',num2str(ib),': v1 = ',num2str(1/waveparam_lh(ir_display_dke,ib,8)/betath_ref),', v2 = ',num2str(1/waveparam_lh(ir_display_dke,ib,7)/betath_ref),',D0lh = ',num2str(waveparam_lh(ir_display_dke,ib,6))])
 					disp(['        LH Power absorbed (MW/m3) [spherical]: ',num2str(xyPabs0_lh_mksa(ir_display_dke,ib))]) 
@@ -524,10 +525,10 @@ while 1,
 			if nb > 0,
 					disp(['   - RF current drive efficiency (A.m/W) [spherical]: ',num2str(xeta0_mksa(ir_display_dke))])
 			end
-			disp(['   - Ohmic eletric field (V/m): ',num2str(xepsi_mksa(ir_display_dke))])
+			disp(['   - Ohmic eletric field (V/m): ',num2str(xepsi_fsav_mksa(ir_display_dke))])
 			disp(['   - Runaway rate [spherical]: ',num2str(XxRR_ref_fsav(np-1,ir_display_dke)*nhu_ref*ne_ref*me)])
 			disp(['   - Kruskal-Berstein runaway rate (Z = 1) [spherical]: ',num2str(xRR_KB_fsav(ir_display_dke)*nhu_ref*ne_ref*me)])
-			disp(['   - Bulk current (MA/m2) [spherical]: ',num2str(xJrfB_mksa(ir_display_dke))])
+			disp(['   - Bulk current (MA/m2) [spherical]: ',num2str(xJrfB_fsav_mksa(ir_display_dke))])
 		else
 			[Xf0_g_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(Xf0_g_ref,pn_ref,mhu,dp_cyl);
 			[Xf0_tp_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(Xf0_tp_ref,pn_ref,mhu,dp_cyl);
@@ -557,8 +558,8 @@ while 1,
 				xlabel('ppar/pth-ref');
 				ylabel('pperp/pth-ref');
 				if bounce_mode >= 1,%Draw bounce domain boundaries
-					line([0,pnmax_S*sqrt(xmhubounce2(ir_display_dke))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display_dke))]);
-					line([0,-pnmax_S*sqrt(xmhubounce2(ir_display_dke))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display_dke))]);
+					line([0,pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
+					line([0,-pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
 					if isnan(nhuloss) == 0,%Draw the loss cone
 						line([0,pnmax_S*sqrt(1-cos(xthetaloss(ir_display_dke)*pi/180)^2)],[0,pnmax_S*cos(xthetaloss(ir_display_dke)*pi/180)],'LineStyle','-','color','r');
 						line([0,-pnmax_S*sqrt(1-cos(xthetaloss(ir_display_dke)*pi/180)^2)],[0,pnmax_S*cos(xthetaloss(ir_display_dke)*pi/180)],'LineStyle','-','color','r');
@@ -582,8 +583,8 @@ while 1,
 				xlabel('ppar/pth-ref');
 				ylabel('pperp/pth-ref');
 				if bounce_mode >= 1,%Draw bounce domain boundaries
-					line([0,pnmax_S*sqrt(xmhubounce2(ir_display_dke))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display_dke))]);
-					line([0,-pnmax_S*sqrt(xmhubounce2(ir_display_dke))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display_dke))]);
+					line([0,pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
+					line([0,-pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
 
 					if isnan(nhuloss) == 0,%Draw the loss cone
 						line([0,pnmax_S*sqrt(1-cos(xthetaloss(ir_display_dke)*pi/180)^2)],[0,pnmax_S*cos(xthetaloss(ir_display_dke)*pi/180)],'LineStyle','-','color','r');
@@ -698,7 +699,7 @@ while 1,
 			disp(['   - Electron bootstrap current density (MA/m2) [spherical]: ',num2str(xJboot_e_fsav_mksa(ir_display_dke))])
 			disp(['   - RF + electron bootstrap current density (MA/m2) [spherical]: ',num2str(xJrf_tot_fsav_mksa(ir_display_dke))])
 			disp(['   - Ion bootstrap current density (MA/m2): ',num2str(xJboot_i_fsav_mksa(ir_display_dke))])
-			disp(['   - Total bootstrap current density (MA/m2) [spherical]: ',num2str(xJboot_e_fsav_mksa(ir_display_dke) + xJboot_i_fsav_mksa(ir_display_dke))])        
+			disp(['   - Total bootstrap current density (MA/m2) [spherical]: ',num2str(xJboot_tot_fsav_mksa(ir_display_dke))])        
 			disp(['   - Hinton & Hazeltine model for bootstrap (MA/m2): ',num2str(xcurr_hin_mksa_fsav(ir_display_dke))])        
 			disp(['   - Hirshman model for bootstrap (MA/m2): ',num2str(xcurr_hir_mksa_fsav(ir_display_dke))])        
 			disp(['   - Sauter model for bootstrap (MA/m2): ',num2str(xcurr_sau_mksa_fsav(ir_display_dke))])  
@@ -727,124 +728,31 @@ while 1,
 	end
 %
 	if display_mode == 2,
-
-		if dke_mode == 0 & nr > 1,
-			figure(200),subplot(231),plot(xrho_dke,xpsin(r_dke),'+');
-			set(gca,'xlim',[0,1])
-			set(gca,'ylim',[0,1])
-			zoom on;grid on;
-			xlabel('rho');ylabel('psi/psia');
-			title('Normalized poloidal flux');
 %
-			figure(200),subplot(232),plot(xrho_dke,j_ref*xcurr_tot_ref_fsav(r_dke),'+');
-			set(gca,'xlim',[0,1])
-			zoom on;grid on;
-			xlabel('rho');ylabel('<J> (MA/m^2)');
-			title('Flux Surface Averaged Current density');
-%           
-			figure(200),subplot(233),plot(xrho_dke,P_ref*xPabs_tot_ref_fsav(r_dke),'+');
-			set(gca,'xlim',[0,1])
-			zoom on;grid on;
-			xlabel('rho');ylabel('P_{abs} (MW/m^3)');
-			title('Density of Absorbed Power'); 
-%   
-			figure(200),subplot(234),plot(xrho_dke,xTe(r_dke),'ro',xrho(r_dke),xzTi(r_dke),'bx');
-			set(gca,'xlim',[0,1])
-			zoom on;grid on;
-			xlabel('rho');ylabel('T (keV)');
-			title('Temperature')
-			legend('Electron','Ion'); 
+        figure(200),clf
+        [ax] = graph1D_jd(xrho_dke,xJrf0_fsav_mksa,'\rho','<J_{RF}> (MA/m^2)','RF + Ohmic Current Density',NaN,[0,1],NaN,'none','+','r',2,14,gca,0.8,0.7,0.6);
 %
-			figure(200),subplot(235),plot(xrho_dke,xne(r_dke)/1e20,'ro',xrho(r_dke),xzni(r_dke)/1e20,'bx');
-			set(gca,'xlim',[0,1])
-			zoom on;grid on;
-			xlabel('rho');ylabel('n (m-3)\times 10^20');
-			title('Densities')
-			legend('Electron','Ion');
+        figure(203),clf
+        [ax] = graph1D_jd(xrho_dke,-xPcoll_tot_fsav_mksa,'','','',NaN,[0,1],NaN,'none','+','r',2,14,gca,0.8,0.7,0.6);
+        hold on
+        [ax] = graph1D_jd(xrho_dke,xPelec_tot_fsav_mksa,'','','',NaN,[0,1],NaN,'none','+','b',2,14);
+        [ax] = graph1D_jd(xrho_dke,xPabs_tot_fsav_mksa,'\rho','<P_{abs}> (MW/m^3)','Density of Absorbed Power',['Collisions';'Ohmic     ';'RF Waves  '],[0,1],0,'none','+','m',2,14);
 %
-			figure(200),subplot(236),plot(xrho_dke,xft_fsav(r_dke),'ro');
-			set(gca,'xlim',[0,1],'ylim',[0,1])
-			zoom on;grid on;
-			xlabel('rho');ylabel('ft');
-			title('Exact trapped fraction')
-			legend('Code');
+		if dke_mode == 1,  
 %
-			if igor_mode == 1,
-				eval(['save ',filenameroot,'_data_fig200.mat xrho_dke xia r_dke j_ref xcurr_tot_ref_fsav P_ref xPabs_tot_ref_fsav xTe xTi xne xnhyd xft xft_llm'])
-			end
+            figure(201),clf
+            [ax] = graph1D_jd(xrho_dke,xJboot_tot_fsav_mksa,'','','',NaN,[0,1],NaN,'none','+','r',2,14,gca,0.8,0.7,0.6);
+            hold on
+            [ax] = graph1D_jd(prho,pcurr_hin_mksa_fsav,'','','',NaN,[0,1],NaN,'-','none','g',2,14);
+            [ax] = graph1D_jd(prho,pcurr_hir_mksa_fsav,'','','',NaN,[0,1],NaN,'-','none','b',2,14);
+            [ax] = graph1D_jd(prho,pcurr_sau_mksa_fsav,'\rho','<J_B> (MA/m^2)',['Bootstrap current in ',tokname],['DKE code';'Hinton  ';'Hirchman';'Sauter  '],[0,1],0,'-','none','m',2,14);
 %
-		elseif dke_mode == 1,  
-			srho = [0:0.001:1];
-			figure(200),subplot(421),plot(xrho_dke,j_ref*xcurr_tot_ref_fsav(r_dke) + xcurr_i_mksa_fsav(r_dke),'+');
-			set(gca,'xlim',[0,1])
-			zoom on;grid on;
-			xlabel('rho');ylabel('<J> (MA/m^2)');
-			title('Flux Surface Averaged Current density');
-%           
-			figure(200),subplot(422),plot(xrho_dke,P_ref*xPabs_tot_ref_fsav(r_dke),'+');
-			set(gca,'xlim',[0,1])
-			zoom on;grid on;
-			xlabel('rho');ylabel('P_{abs} (MW/m^3)');
-			title('Density of Absorbed Power'); 
-%   
-			sTe = (Te0 - Tea)*(1 - srho.^2).^eTe + Tea;
-			sTi = (Ti0 - Tia)*(1 - srho.^2).^eTi + Tia;
-			figure(200),subplot(423),plot(xrho_dke,xTe(r_dke),'ro',xrho(r_dke),xTi(r_dke),'bx',srho,sTe,'k-',srho,sTi,'k:');
-			set(gca,'xlim',[0,1])
-			zoom on;grid on;
-			xlabel('rho');ylabel('T (keV)');
-			title('Temperature')
-			legend('Electron','Ion'); 
+            figure(202),clf
+            [ax] = graph1D_jd(xrho_dke,xJtot_fsav_mksa,'\rho','<J_{tot}> (MA/m^2)','Total Current Density',NaN,[0,1],0,'none','+','r',2,14,gca,0.8,0.7,0.6);
 %
-			sne = (ne0 - nea)*(1 - srho.^2).^ene + nea;
-			figure(200),subplot(424),plot(xrho_dke,xne(r_dke)/1e20,'ro',xrho_dke,xnhyd(r_dke)/1e20,'bx',srho,sne/1e20,'k-');
-			set(gca,'xlim',[0,1])
-			zoom on;grid on;
-			xlabel('rho');ylabel('n (m-3)\times 10^20');
-			title('Densities')
-			legend('Electron','Ion');
-%
-			sZeff = (Zeff0 - Zeffa)*(1 - srho.^2).^eZeff + Zeffa;
-			figure(200),subplot(425),plot(xrho_dke,xZeff(r_dke),'ro',srho,sZeff,'k-');
-			set(gca,'xlim',[0,1])
-			zoom on;grid on;
-			xlabel('rho');ylabel('Zeff');
-			title('Effective charge');
-%
-			sq = (qmax - qmin)*srho.^eq + qmin;
-			figure(200),subplot(426),plot(xrho_dke,xq(r_dke),'ro',srho,sq,'k-');
-			set(gca,'xlim',[0,1])
-			zoom on;grid on;
-
-			xlabel('rho');ylabel('q');
-			title('Safety factor');
-%
-			sia = srho/Rp_norm;
-			scollisionnality = 0.012*(sne/1e20).*sZeff.*sq*Rp./sia.^1.5./sTe.^2;
-			figure(200),subplot(427),semilogy(xrho_dke,xcollisionnality(r_dke),'ro',srho,scollisionnality,'k-');
-			set(gca,'xlim',[0,1])
-			zoom on;grid on;
-			xlabel('rho');ylabel('nhue*');
-			title('Electron collisionnality');
-		  %
-%			[sft_llm] = ft_llm_dke_yp(sia,1000);%From Y.R. Lin-Liu and R.L. Miller, Phys. Plasma 2 (1995) 1666
-			figure(200),subplot(428),plot(xrho_dke,xft_fsav(r_dke)./sqrt(xia(r_dke)),'ro');
-			set(gca,'xlim',[0,1]);
-			set(gca,'ylim',[1,1.5]);
-			zoom on;grid on;
-			xlabel('rho');ylabel('xft_fsav/sqrt(iar)');
-			title('Exact trapped fraction')
-			legend('Code');
-%
-			figure(201),
-			plot(xrho_dke,j_ref*xcurr_tot_ref_fsav(r_dke) + xcurr_i_mksa_fsav(r_dke),'ro',xrho_dke,j_ref*xcurr0_ref_fsav(r_dke),'bx',...
-			xrho_dke,j_ref*(xcurr_tot_ref_fsav(r_dke) - xcurr0_ref_fsav(r_dke)) + xcurr_i_mksa_fsav(r_dke),'k+',...
-				prho,pcurr_sau_mksa_fsav,'k-',prho,pcurr_hir_mksa_fsav,'k:',prho,pcurr_hin_mksa_fsav,'k-.');
-			set(gca,'xlim',[0,1])
-			legend('J^{tot}','J^{RF}','J^{BS}','J^{BS} (Sauter)','J^{BS} (Hirshman)','J^{BS} (Hinton-Hazeltine)'); 
-			zoom on;grid on;
-				xlabel('rho');ylabel('<J> (MA/m^2)');
-			title('Flux Surface Averaged Current densities');
+		end
+		if igor_mode == 1,
+			eval(['save ',filenameroot,'_data_fig200.mat xrho_dke xia r_dke j_ref xcurr_tot_ref_fsav P_ref xPabs_tot_ref_fsav xTe xTi xne xnhyd xft xft_llm'])
 		end
 %        
 	end
