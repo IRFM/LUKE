@@ -715,6 +715,8 @@ P_ref = me*(clum*betath_ref)^2*nhu_ref*ne_ref; %power normalization constant
 %
 %xymask_prop_dke = (xyprop_dke ~= 0);
 %
+if isempty(waveparam),nit_rf = 1;end
+%
 for it_rf=1:nit_rf % convergence in the ray-tracing mode
 %    
 % The diffusion coefficient is proportional to the incident power
