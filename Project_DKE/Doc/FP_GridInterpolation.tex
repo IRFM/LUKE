@@ -1,4 +1,6 @@
 
+\label{fpgridinterpolation}
+
 \paragraph{Momentum grid interpolation}
 
 The usual method for determining interpolation coefficients $\delta
@@ -7,7 +9,7 @@ _{p,l+1/2,i+1,j+1/2}^{\left( 0\right) },$ $\delta _{p,l+1/2,i,j+1/2}^{\left(
 _{\xi ,l+1/2,i+1/2,j}^{\left( 0\right) }$ so that the distribution function $%
 f_{0}^{\left( 0\right) }$ may be estimated on the full grid (flux grid) from
 its value on the half grid (distribution grid) is to satisfy the constraint
-that numerically, the stationary solution $\lim_{t\rightarrow +\infty %
+that numerically, the stationary solution $\lim_{t\rightarrow +\infty
 }f_{0}^{\left( 0\right) }=f_{M}$ is an exact Maxwellian whithout any
 external accelerating mechanism (RF wave or Ohmic electric field). In this
 case, under the influence of collisional slowing-down and pitch-angle only,
@@ -16,7 +18,7 @@ and
 \begin{eqnarray}
 \left. S_{p}^{\left( 0\right) }\right| _{l+1/2,i+1,j+1/2}^{(\infty )}
 &=&-D_{pp,l+1/2,i+1,j+1/2}^{\left( 0\right) }\frac{f_{0,l+1/2,i+3/2,j+1/2}^{%
-\left( 0\right) (\infty )}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty %
+\left( 0\right) (\infty )}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty
 )}}{\Delta p_{i+1}}  \nonumber \\
 &&+F_{p,l+1/2,i+1,j+1/2}^{\left( 0\right) }f_{0,l+1/2,i+1,j+1/2}^{\left(
 0\right) (\infty )}
@@ -24,7 +26,7 @@ and
 \begin{eqnarray}
 \left. S_{p}^{\left( 0\right) }\right| _{l+1/2,i,j+1/2}^{(\infty )}
 &=&-D_{pp,l+1/2,i,j+1/2}^{\left( 0\right) }\frac{f_{0,l+1/2,i+1/2,j+1/2}^{%
-\left( 0\right) (\infty )}-f_{0,l+1/2,i-1/2,j+1/2}^{\left( 0\right) (\infty %
+\left( 0\right) (\infty )}-f_{0,l+1/2,i-1/2,j+1/2}^{\left( 0\right) (\infty
 )}}{\Delta p_{i}}  \nonumber \\
 &&+F_{p,l+1/2,i,j+1/2}^{\left( 0\right) }f_{0,l+1/2,i,j+1/2}^{\left(
 0\right) (\infty )}
@@ -32,51 +34,53 @@ and
 \begin{eqnarray}
 \left. S_{\xi }^{\left( 0\right) }\right| _{l+1/2,i+1/2,j+1}^{(\infty )}
 &=&+D_{\xi \xi ,l+1/2,i+1/2,j+1}^{\left( 0\right) }\sqrt{1-\xi _{0,j+1}^{2}}%
-\frac{f_{0,i+1/2,j+3/2}^{\left( 0\right) (\infty )}-f_{0,i+1/2,j+1/2}^{%
-\left( 0\right) (\infty )}}{p_{i+1/2}\Delta \xi _{0,j+1}}  \nonumber \\
+\frac{f_{0,i+1/2,j+3/2}^{\left( 0\right) (\infty
+)}-f_{0,i+1/2,j+1/2}^{\left( 0\right) (\infty )}}{p_{i+1/2}\Delta \xi
+_{0,j+1}}  \nonumber \\
 &&+F_{\xi ,l+1/2,i+1/2,j+1}^{\left( 0\right) }f_{0,l+1/2,i+1/2,j+1}^{\left(
 0\right) (\infty )}
 \end{eqnarray}
 \begin{eqnarray}
 \left. S_{\xi }^{\left( 0\right) }\right| _{l+1/2,i+1/2,j}^{(\infty )}
 &=&+D_{\xi \xi ,l+1/2,i+1/2,j}^{\left( 0\right) }\sqrt{1-\xi _{0,j}^{2}}%
-\frac{f_{0,i+1/2,j+1/2}^{\left( 0\right) (\infty )}-f_{0,i+1/2,j-1/2}^{%
-\left( 0\right) (\infty )}}{p_{i+1/2}\Delta \xi _{0,j}}  \nonumber \\
+\frac{f_{0,i+1/2,j+1/2}^{\left( 0\right) (\infty
+)}-f_{0,i+1/2,j-1/2}^{\left( 0\right) (\infty )}}{p_{i+1/2}\Delta \xi _{0,j}}
+\nonumber \\
 &&+F_{\xi ,l+1/2,i+1/2,j}^{\left( 0\right) }f_{0,l+1/2,i+1/2,j}^{\left(
 0\right) (\infty )}
 \end{eqnarray}
 or 
 \begin{eqnarray}
-\Delta p_{i+1}\left. S_{p}^{\left( 0\right) }\right| _{l+1/2,i+1,j+1/2}^{(%
-\infty )} &=&-D_{pp,l+1/2,i+1,j+1/2}^{\left( 0\right) }\left(
-f_{0,l+1/2,i+3/2,j+1/2}^{\left( 0\right) (\infty %
-)}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}\right)   \nonumber \\
+\Delta p_{i+1}\left. S_{p}^{\left( 0\right) }\right|
+_{l+1/2,i+1,j+1/2}^{(\infty )} &=&-D_{pp,l+1/2,i+1,j+1/2}^{\left( 0\right)
+}\left( f_{0,l+1/2,i+3/2,j+1/2}^{\left( 0\right) (\infty
+)}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}\right)  \nonumber \\
 &&+\Delta p_{i+1}F_{p,l+1/2,i+1,j+1/2}^{\left( 0\right)
 }f_{0,l+1/2,i+1,j+1/2}^{\left( 0\right) (\infty )}
 \end{eqnarray}
 \begin{eqnarray}
-\Delta p_{i}\left. S_{p}^{\left( 0\right) }\right| _{l+1/2,i,j+1/2}^{(\infty %
+\Delta p_{i}\left. S_{p}^{\left( 0\right) }\right| _{l+1/2,i,j+1/2}^{(\infty
 )} &=&-D_{pp,l+1/2,i,j+1/2}^{\left( 0\right) }\left(
-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty %
-)}-f_{0,l+1/2,i-1/2,j+1/2}^{\left( 0\right) (\infty )}\right)   \nonumber \\
+f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty
+)}-f_{0,l+1/2,i-1/2,j+1/2}^{\left( 0\right) (\infty )}\right)  \nonumber \\
 &&+\Delta p_{i}F_{p,l+1/2,i,j+1/2}^{\left( 0\right)
 }f_{0,l+1/2,i,j+1/2}^{\left( 0\right) (\infty )}
 \end{eqnarray}
 \begin{eqnarray}
 p_{i+1/2}\Delta \xi _{0,j+1}\left. S_{\xi }^{\left( 0\right) }\right|
 _{l+1/2,i+1/2,j+1}^{(\infty )} &=&+D_{\xi \xi ,l+1/2,i+1/2,j+1}^{\left(
-0\right) }\sqrt{1-\xi _{0,j+1}^{2}}\times   \nonumber \\
-&&\left( f_{0,l+1/2,i+1/2,j+3/2}^{\left( 0\right) (\infty %
-)}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}\right)   \nonumber \\
+0\right) }\sqrt{1-\xi _{0,j+1}^{2}}\times  \nonumber \\
+&&\left( f_{0,l+1/2,i+1/2,j+3/2}^{\left( 0\right) (\infty
+)}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}\right)  \nonumber \\
 &&+p_{i+1/2}\Delta \xi _{0,j+1}F_{\xi ,l+1/2,i+1/2,j+1}^{\left( 0\right)
 }f_{0,l+1/2,i+1/2,j+1}^{\left( 0\right) (\infty )}
 \end{eqnarray}
 \begin{eqnarray}
 p_{i+1/2}\Delta \xi _{0,j}\left. S_{\xi }^{\left( 0\right) }\right|
 _{l+1/2,i+1/2,j}^{(\infty )} &=&+D_{\xi \xi ,l+1/2,i+1/2,j}^{\left( 0\right)
-}\sqrt{1-\xi _{0,j}^{2}}\times   \nonumber \\
-&&\left( f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty %
-)}-f_{0,l+1/2,i+1/2,j-1/2}^{\left( 0\right) (\infty )}\right)   \nonumber \\
+}\sqrt{1-\xi _{0,j}^{2}}\times  \nonumber \\
+&&\left( f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty
+)}-f_{0,l+1/2,i+1/2,j-1/2}^{\left( 0\right) (\infty )}\right)  \nonumber \\
 &&+p_{i+1/2}\Delta \xi _{0,j}F_{\xi ,l+1/2,i+1/2,j}^{\left( 0\right)
 }f_{0,l+1/2,i+1/2,j}^{\left( 0\right) (\infty )}
 \end{eqnarray}
@@ -91,29 +95,29 @@ one can deduce,
 &&\Delta p_{i+1}F_{p,l+1/2,i+1,j+1/2}^{\left( 0\right)
 }f_{0,l+1/2,i+1,j+1/2}^{\left( 0\right) (\infty )}  \nonumber \\
 &=&D_{pp,l+1/2,i+1,j+1/2}^{\left( 0\right) }\left(
-f_{0,l+1/2,i+3/2,j+1/2}^{\left( 0\right) (\infty %
-)}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}\right) 
+f_{0,l+1/2,i+3/2,j+1/2}^{\left( 0\right) (\infty
+)}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}\right)
 \end{eqnarray}
 \begin{eqnarray}
 &&\Delta p_{i}F_{p,l+1/2,i,j+1/2}^{\left( 0\right)
 }f_{0,l+1/2,i,j+1/2}^{\left( 0\right) (\infty )}  \nonumber \\
 &=&D_{pp,l+1/2,i,j+1/2}^{\left( 0\right) }\left(
-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty %
-)}-f_{0,l+1/2,i-1/2,j+1/2}^{\left( 0\right) (\infty )}\right) 
+f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty
+)}-f_{0,l+1/2,i-1/2,j+1/2}^{\left( 0\right) (\infty )}\right)
 \end{eqnarray}
 \begin{eqnarray}
 &&p_{i+1/2}\Delta \xi _{0,j+1}F_{\xi ,l+1/2,i+1/2,j+1}^{\left( 0\right)
 }f_{0,l+1/2,i+1/2,j+1}^{\left( 0\right) (\infty )}  \nonumber \\
 &=&-D_{\xi \xi ,l+1/2,i+1/2,j+1}^{\left( 0\right) }\sqrt{1-\xi _{0,j+1}^{2}}%
-\left( f_{0,l+1/2,i+1/2,j+3/2}^{\left( 0\right) (\infty %
-)}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}\right) 
+\left( f_{0,l+1/2,i+1/2,j+3/2}^{\left( 0\right) (\infty
+)}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}\right)
 \end{eqnarray}
 \begin{eqnarray}
 &&p_{i+1/2}\Delta \xi _{0,j}F_{\xi ,l+1/2,i+1/2,j}^{\left( 0\right)
 }f_{0,l+1/2,i+1/2,j}^{\left( 0\right) (\infty )}  \nonumber \\
 &=&-D_{\xi \xi ,l+1/2,i+1/2,j}^{\left( 0\right) }\sqrt{1-\xi _{0,j}^{2}}%
-\left( f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty %
-)}-f_{0,l+1/2,i+1/2,j-1/2}^{\left( 0\right) (\infty )}\right) 
+\left( f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty
+)}-f_{0,l+1/2,i+1/2,j-1/2}^{\left( 0\right) (\infty )}\right)
 \end{eqnarray}
 and replacing the distribution functions on the full grid by their
 interpolated values, according to the relations 
@@ -150,47 +154,47 @@ one finds,
 \begin{eqnarray}
 &&\Delta p_{i+1}F_{p,l+1/2,i+1,j+1/2}^{\left( 0\right) }\left[ \left(
 1-\delta _{p,l+1/2,i+1,j+1/2}^{\left( 0\right) }\right)
-f_{0,l+1/2,i+3/2,j+1/2}^{\left( 0\right) (k+1)}\right.   \nonumber \\
+f_{0,l+1/2,i+3/2,j+1/2}^{\left( 0\right) (k+1)}\right.  \nonumber \\
 &&\left. +\delta _{p,l+1/2,i+1,j+1/2}^{\left( 0\right)
-}f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k+1)}\right]   \nonumber \\
+}f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k+1)}\right]  \nonumber \\
 &=&D_{pp,l+1/2,i+1,j+1/2}^{\left( 0\right) }\left(
-f_{0,l+1/2,i+3/2,j+1/2}^{\left( 0\right) (\infty %
-)}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}\right) 
+f_{0,l+1/2,i+3/2,j+1/2}^{\left( 0\right) (\infty
+)}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}\right)
 \end{eqnarray}
 \begin{eqnarray}
 &&\Delta p_{i}F_{p,l+1/2,i,j+1/2}^{\left( 0\right) }\left[ \left( 1-\delta
 _{p,l+1/2,i,j+1/2}^{\left( 0\right) }\right) f_{0,l+1/2,i+1/2,j+1/2}^{\left(
-0\right) (k+1)}\right.   \nonumber \\
+0\right) (k+1)}\right.  \nonumber \\
 &&\left. +\delta _{p,l+1/2,i,j+1/2}^{\left( 0\right)
-}f_{0,l+1/2,i-1/2,j+1/2}^{\left( 0\right) (k+1)}\right]   \nonumber \\
+}f_{0,l+1/2,i-1/2,j+1/2}^{\left( 0\right) (k+1)}\right]  \nonumber \\
 &=&D_{pp,l+1/2,i,j+1/2}^{\left( 0\right) }\left(
-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty %
-)}-f_{0,l+1/2,i-1/2,j+1/2}^{\left( 0\right) (\infty )}\right) 
+f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty
+)}-f_{0,l+1/2,i-1/2,j+1/2}^{\left( 0\right) (\infty )}\right)
 \end{eqnarray}
 \begin{eqnarray}
 &&p_{i+1/2}\Delta \xi _{0,j+1}F_{\xi ,l+1/2,i+1/2,j+1}^{\left( 0\right)
 }\left[ \left( 1-\delta _{\xi ,l+1/2,i+1/2,j+1}^{\left( 0\right) }\right)
-f_{0,l+1/2,i+1/2,j+3/2}^{\left( 0\right) (k+1)}\right.   \nonumber \\
+f_{0,l+1/2,i+1/2,j+3/2}^{\left( 0\right) (k+1)}\right.  \nonumber \\
 &&\left. +\delta _{\xi ,l+1/2,i+1/2,j+1}^{\left( 0\right)
-}f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k+1)}\right]   \nonumber \\
+}f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k+1)}\right]  \nonumber \\
 &=&-D_{\xi \xi ,l+1/2,i+1/2,j+1}^{\left( 0\right) }\sqrt{1-\xi _{0,j+1}^{2}}%
-\left( f_{0,l+1/2,i+1/2,j+3/2}^{\left( 0\right) (\infty %
-)}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}\right) 
+\left( f_{0,l+1/2,i+1/2,j+3/2}^{\left( 0\right) (\infty
+)}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}\right)
 \end{eqnarray}
 \begin{eqnarray}
 &&p_{i+1/2}\Delta \xi _{0,j}F_{\xi ,l+1/2,i+1/2,j}^{\left( 0\right) }\left[
 \left( 1-\delta _{\xi ,l+1/2,i+1/2,j}^{\left( 0\right) }\right)
-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k+1)}\right.   \nonumber \\
+f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k+1)}\right.  \nonumber \\
 &&\left. +\delta _{\xi ,l+1/2,i+1/2,j}^{\left( 0\right)
-}f_{0,l+1/2,i+1/2,j-1/2}^{\left( 0\right) (k+1)}\right]   \nonumber \\
+}f_{0,l+1/2,i+1/2,j-1/2}^{\left( 0\right) (k+1)}\right]  \nonumber \\
 &=&-D_{\xi \xi ,l+1/2,i+1/2,j}^{\left( 0\right) }\sqrt{1-\xi _{0,j}^{2}}%
-\left( f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty %
-)}-f_{0,l+1/2,i+1/2,j-1/2}^{\left( 0\right) (\infty )}\right) 
+\left( f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty
+)}-f_{0,l+1/2,i+1/2,j-1/2}^{\left( 0\right) (\infty )}\right)
 \end{eqnarray}
 
 Hence, the ratios are 
 \begin{eqnarray}
-&&\frac{f_{0,l+1/2,i+3/2,j+1/2}^{\left( 0\right) (\infty )}}{%
+&&\frac{f_{0,l+1/2,i+3/2,j+1/2}^{\left( 0\right) (\infty )}}{
 f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}}  \nonumber \\
 &=&\frac{D_{pp,l+1/2,i+1,j+1/2}^{\left( 0\right) }+\Delta
 p_{i+1}F_{p,l+1/2,i+1,j+1/2}^{\left( 0\right) }\delta
@@ -199,7 +203,7 @@ _{p,l+1/2,i+1,j+1/2}^{\left( 0\right) }}{D_{pp,l+1/2,i+1,j+1/2}^{\left(
 1-\delta _{p,l+1/2,i+1,j+1/2}^{\left( 0\right) }\right) }
 \end{eqnarray}
 \begin{eqnarray}
-&&\frac{f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}}{%
+&&\frac{f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}}{
 f_{0,l+1/2,i-1/2,j+1/2}^{\left( 0\right) (\infty )}}  \nonumber \\
 &=&\frac{D_{pp,l+1/2,i,j+1/2}^{\left( 0\right) }+\Delta
 p_{i}F_{p,l+1/2,i,j+1/2}^{\left( 0\right) }\delta _{p,l+1/2,i,j+1/2}^{\left(
@@ -209,7 +213,7 @@ _{p,l+1/2,i,j+1/2}^{\left( 0\right) }\right) }
 \end{eqnarray}
 
 \begin{eqnarray}
-&&\frac{f_{0,l+1/2,i+1/2,j+3/2}^{\left( 0\right) (\infty )}}{%
+&&\frac{f_{0,l+1/2,i+1/2,j+3/2}^{\left( 0\right) (\infty )}}{
 f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}}  \nonumber \\
 &=&\frac{-D_{\xi \xi ,l+1/2,i+1/2,j+1}^{\left( 0\right) }\sqrt{1-\xi
 _{0,j+1}^{2}}+p_{i+1/2}\Delta \xi _{0,j+1}F_{\xi ,l+1/2,i+1/2,j+1}^{\left(
@@ -220,7 +224,7 @@ _{0,j+1}^{2}}+p_{i+1/2}\Delta \xi _{0,j+1}F_{\xi ,l+1/2,i+1/2,j+1}^{\left(
 \end{eqnarray}
 
 \begin{eqnarray}
-&&\frac{f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}}{%
+&&\frac{f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}}{
 f_{0,l+1/2,i+1/2,j-1/2}^{\left( 0\right) (\infty )}}  \nonumber \\
 &=&\frac{-D_{\xi \xi ,l+1/2,i+1/2,j}^{\left( 0\right) }\sqrt{1-\xi _{0,j}^{2}%
 }+p_{i+1/2}\Delta \xi _{j}F_{\xi ,l+1/2,i+1/2,j}^{\left( 0\right) }\delta
@@ -231,14 +235,14 @@ _{\xi ,l+1/2,i+1/2,j}^{\left( 0\right) }}{-D_{\xi \xi
 \end{eqnarray}
 which may be recast in a compact form 
 \begin{equation}
-\frac{f_{0,l+1/2,i+3/2,j+1/2}^{\left( 0\right) (\infty )}}{%
+\frac{f_{0,l+1/2,i+3/2,j+1/2}^{\left( 0\right) (\infty )}}{
 f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}}=\frac{%
 1-w_{p,l+1/2,i+1,j+1/2}^{\left( 0\right) (u)}\delta
 _{p,l+1/2,i+1,j+1/2}^{\left( 0\right) }}{1+w_{p,l+1/2,i+1,j+1/2}^{\left(
 0\right) (u)}\left( 1-\delta _{p,l+1/2,i+1,j+1/2}^{\left( 0\right) }\right) }
 \end{equation}
 \begin{equation}
-\frac{f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}}{%
+\frac{f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}}{
 f_{0,l+1/2,i-1/2,j+1/2}^{\left( 0\right) (\infty )}}=\frac{%
 1-w_{p,i,j+1/2}^{\left( 0\right) (u)}\delta _{p,l+1/2,i,j+1/2}^{\left(
 0\right) }}{1+w_{p,l+1/2,i,j+1/2}^{\left( 0\right) (u)}\left( 1-\delta
@@ -246,7 +250,7 @@ _{p,l+1/2,i,j+1/2}^{\left( 0\right) }\right) }
 \end{equation}
 
 \begin{equation}
-\frac{f_{0,l+1/2,i+1/2,j+3/2}^{\left( 0\right) (\infty )}}{%
+\frac{f_{0,l+1/2,i+1/2,j+3/2}^{\left( 0\right) (\infty )}}{
 f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}}=\frac{1-w_{\xi
 ,l+1/2,i+1/2,j+1}^{\left( 0\right) (u)}\delta _{\xi
 ,l+1/2,i+1/2,j+1}^{\left( 0\right) }}{1+w_{\xi ,l+1/2,i+1/2,j+1}^{(u)}\left(
@@ -285,7 +289,7 @@ _{0,j}}{\sqrt{1-\xi _{0,j}^{2}}}\frac{F_{\xi ,l+1/2,i+1/2,j}^{\left(
 Furthermore, since $\nabla _{\mathbf{p}}\mathbf{S}_{\mathbf{p}}^{\left(
 0\right) }=0,$ one deduces naturally that 
 \begin{equation}
--D_{pp}^{\left( 0\right) }\frac{df_{0}^{\left( 0\right) (\infty )}}{dp}%
+-D_{pp}^{\left( 0\right) }\frac{df_{0}^{\left( 0\right) (\infty )}}{dp}
 +F_{p}^{\left( 0\right) }f_{0}^{\left( 0\right) (\infty )}=0
 \end{equation}
 \begin{equation}
@@ -305,29 +309,27 @@ isotropic nature of pitch-angle scattering
 \end{equation}
 which indicates that when collisions is the single physical process
 considered, $f_{0}^{\left( 0\right) (\infty )}$ is independent of $\xi _{0}.$
-Therefore, $\frac{\partial }{\partial p}\rightarrow \frac{d}{dp},$ and
-integrating the first equation of (\ref{gridInterpLim}) leads to the
-relation 
+Therefore, $\partial /\partial p\rightarrow d/dp,$ and integrating the first
+equation of (\ref{gridInterpLim}) leads to the relation 
 \begin{equation}
 \ln f_{0}^{\left( 0\right) }=\int \left( \frac{F_{p}^{\left( 0\right) }}{%
 D_{pp}^{\left( 0\right) }}\right) dp+Cte
 \end{equation}
 
-Values of $f_{0}^{\left( 0\right) (\infty )}$ on the half grid positions $%
-\left( l+1/2,i+3/2,j+1/2\right) $ and $\left( l+1/2,i+1/2,j+1/2\right) $ are
-then
-
+Values of $f_{0}^{\left( 0\right) (\infty )}$ on the respective half grid
+positions $\left( l+1/2,i+3/2,j+1/2\right) $ and $\left(
+l+1/2,i+1/2,j+1/2\right) $ are then
 \begin{equation}
-\ln f_{0,l+1/2,i+3/2,j+1/2}^{\left( 0\right) (\infty
-)}=\int_{0}^{p_{i+3/2}}\left( \frac{F_{p}^{\left( 0\right) }\left( \psi
-_{l+1/2,}p,\xi _{0,j+1/2}\right) }{D_{pp}^{\left( 0\right) }\left( \psi
-_{l+1/2,}p,\xi _{0,j+1/2}\right) }\right) dp+Cte
+\ln f_{0,l+1/2,i+3/2,j+1/2}^{\left( 0\right) (\infty )}=\int_{0}^{p_{i+3/2}}%
+\left( \frac{F_{p}^{\left( 0\right) }\left( \psi _{l+1/2,}p,\xi
+_{0,j+1/2}\right) }{D_{pp}^{\left( 0\right) }\left( \psi _{l+1/2,}p,\xi
+_{0,j+1/2}\right) }\right) dp+Cte
 \end{equation}
 \begin{equation}
-\ln f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty
-)}=\int_{0}^{p_{i+1/2}}\left( \frac{F_{p}^{\left( 0\right) }\left( \psi
-_{l+1/2,}p,\xi _{0,j+1/2}\right) }{D_{pp}^{\left( 0\right) }\left( \psi
-_{l+1/2,}p,\xi _{0,j+1/2}\right) }\right) dp+Cte
+\ln f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}=\int_{0}^{p_{i+1/2}}%
+\left( \frac{F_{p}^{\left( 0\right) }\left( \psi _{l+1/2,}p,\xi
+_{0,j+1/2}\right) }{D_{pp}^{\left( 0\right) }\left( \psi _{l+1/2,}p,\xi
+_{0,j+1/2}\right) }\right) dp+Cte
 \end{equation}
 and ratios are finally easily determined 
 \begin{equation}
@@ -335,14 +337,14 @@ and ratios are finally easily determined
 f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}}=\exp \left[
 \int_{p_{i+1/2}}^{p_{i+3/2}}\left( \frac{F_{p}^{\left( 0\right) }\left( \psi
 _{l+1/2,}p,\xi _{0,j+1/2}\right) }{D_{pp}^{\left( 0\right) }\left( \psi
-_{l+1/2,}p,\xi _{0,j+1/2}\right) }\right) dp\right]
+_{l+1/2,}p,\xi _{0,j+1/2}\right) }\right) dp\right] 
 \end{equation}
 \begin{equation}
 \frac{f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}}{%
 f_{0,l+1/2,i-1/2,j+1/2}^{\left( 0\right) (\infty )}}=\exp \left[
 \int_{p_{i-1/2}}^{p_{i13/2}}\left( \frac{F_{p}^{\left( 0\right) }\left( \psi
 _{l+1/2,}p,\xi _{0,j+1/2}\right) }{D_{pp}^{\left( 0\right) }\left( \psi
-_{l+1/2,}p,\xi _{0,j+1/2}\right) }\right) dp\right]
+_{l+1/2,}p,\xi _{0,j+1/2}\right) }\right) dp\right] 
 \end{equation}
 while, since $f_{0}^{\left( 0\right) (\infty )}$ does not depend of $\xi
 _{0},$ 
@@ -359,7 +361,7 @@ _{p,l+1/2,i,j+1/2}^{\left( 0\right) }$ by the trapezoidal method,
 \begin{eqnarray}
 &&\int_{p_{i+1/2}}^{p_{i+3/2}}\frac{F_{p}^{\left( 0\right) }\left( \psi
 _{l+1/2,}p,\xi _{0,j+1/2}\right) }{D_{pp}^{\left( 0\right) }\left( \psi
-_{l+1/2,}p,\xi _{0,j+1/2}\right) }dp\simeq   \nonumber \\
+_{l+1/2,}p,\xi _{0,j+1/2}\right) }dp\simeq  \nonumber \\
 &&\frac{1}{2}\frac{F_{p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }}{%
 D_{pp,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }}\frac{\Delta p_{i+1/2}}{2} 
 \nonumber \\
@@ -376,7 +378,7 @@ and
 \begin{eqnarray}
 &&\int_{p_{i-1/2}}^{p_{i+1/2}}\frac{F_{p}^{\left( 0\right) }\left( \psi
 _{l+1/2,}p,\xi _{0,j+1/2}\right) }{D_{pp}^{\left( 0\right) }\left( \psi
-_{l+1/2,}p,\xi _{0,j+1/2}\right) }dp\simeq   \nonumber \\
+_{l+1/2,}p,\xi _{0,j+1/2}\right) }dp\simeq  \nonumber \\
 &&\frac{1}{2}\frac{F_{p,l+1/2,i-1/2,j+1/2}^{\left( 0\right) }}{%
 D_{pp,l+1/2,i-1/2,j+1/2}^{\left( 0\right) }}\frac{\Delta p_{i-1/2}}{2} 
 \nonumber \\
@@ -393,10 +395,10 @@ then gathering terms $p_{i+3/2},$ $p_{i+1}$ and $p_{i+1/2}$, one obtains
 \begin{eqnarray}
 &&\int_{p_{i+1/2}}^{p_{i+3/2}}\frac{F_{p}^{\left( 0\right) }\left( \psi
 _{l+1/2,}p,\xi _{0,j+1/2}\right) }{D_{pp}^{\left( 0\right) }\left( \psi
-_{l+1/2,}p,\xi _{0,j+1/2}\right) }dp\simeq   \nonumber \\
+_{l+1/2,}p,\xi _{0,j+1/2}\right) }dp\simeq  \nonumber \\
 &&\frac{1}{2}\frac{F_{p,l+1/2,i+1,j+1/2}^{\left( 0\right) }}{%
 D_{pp,l+1/2,i+1,j+1/2}^{\left( 0\right) }}\left( \frac{\Delta p_{i+1/2}}{2}+%
-\frac{\Delta p_{i+3/2}}{2}\right)   \nonumber \\
+\frac{\Delta p_{i+3/2}}{2}\right)  \nonumber \\
 &&+\frac{F_{p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }}{%
 D_{pp,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }}\frac{\Delta p_{i+1/2}}{4} 
 \nonumber \\
@@ -470,7 +472,7 @@ in the previous relation, one obtains for the second integral,
 \begin{eqnarray}
 &&\int_{p_{i-1/2}}^{p_{i+1/2}}\frac{F_{p}^{\left( 0\right) }\left( \psi
 _{l+1/2,}p,\xi _{0,j+1/2}\right) }{D_{pp}^{\left( 0\right) }\left( \psi
-_{l+1/2,}p,\xi _{0,j+1/2}\right) }dp\simeq   \nonumber \\
+_{l+1/2,}p,\xi _{0,j+1/2}\right) }dp\simeq  \nonumber \\
 &&\Delta p_{i}\frac{F_{p,l+1/2,i,j+1/2}^{\left( 0\right) }}{%
 D_{pp,l+1/2,i,j+1/2}^{\left( 0\right) }}  \nonumber \\
 &&+\frac{\Delta p_{i+1/2}-\Delta p_{i-1/2}}{4}\frac{%
@@ -483,7 +485,7 @@ F_{p,l+1/2,i-1/2,j+1/2}^{\left( 0\right) }}{D_{pp,l+1/2,i-1/2,j+1/2}^{\left(
 
 From the two formulations of the ratios 
 \begin{equation}
-\frac{f_{0,l+1/2,i+3/2,j+1/2}^{\left( 0\right) (\infty )}}{%
+\frac{f_{0,l+1/2,i+3/2,j+1/2}^{\left( 0\right) (\infty )}}{
 f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}}
 \end{equation}
 one obtains easily 
@@ -495,9 +497,9 @@ w_{p,l+1/2,i+1,j+1/2}^{\left( 0\right) (u)}}  \nonumber \\
 \end{eqnarray}
 with 
 \begin{eqnarray}
-w_{p,l+1/2,i+1,j+1/2}^{\left( 0\right) (nu)} &=&-\frac{\Delta p_{i+3/2}-%
-\Delta p_{i+1/2}}{4}\frac{F_{p,l+1/2,i+3/2,j+1/2}^{\left( 0\right) }}{%
-D_{pp,l+1/2,i+3/2,j+1/2}^{\left( 0\right) }}  \nonumber \\
+w_{p,l+1/2,i+1,j+1/2}^{\left( 0\right) (nu)} &=&-\frac{\Delta
+p_{i+3/2}-\Delta p_{i+1/2}}{4}\frac{F_{p,l+1/2,i+3/2,j+1/2}^{\left( 0\right)
+}}{D_{pp,l+1/2,i+3/2,j+1/2}^{\left( 0\right) }}  \nonumber \\
 &&+\frac{\Delta p_{i+3/2}-\Delta p_{i+1/2}}{4}\frac{%
 F_{p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }}{D_{pp,l+1/2,i+1/2,j+1/2}^{\left(
 0\right) }}
@@ -511,7 +513,7 @@ Much in the same way,
 \end{equation}
 with \ss 
 \begin{eqnarray}
-w_{p,l+1/2,i,j+1/2}^{\left( 0\right) (nu)} &=&-\frac{\Delta p_{i+1/2}-\Delta %
+w_{p,l+1/2,i,j+1/2}^{\left( 0\right) (nu)} &=&-\frac{\Delta p_{i+1/2}-\Delta
 p_{i-1/2}}{4}\frac{F_{p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }}{%
 D_{pp,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }}  \nonumber \\
 &&+\frac{\Delta p_{i+1/2}-\Delta p_{i-1/2}}{4}\frac{%
@@ -527,12 +529,15 @@ g\left( x\right) =\frac{1}{x}-\frac{1}{e^{x}-1}
 with $x=w_{p}^{\left( 0\right) (u)}.$ In the limit where $x\ll 1,$ an
 expansion of the function gives $g\left( x\right) =0.5-x/12+x^{3}/720+%
 \mathrm{O}\left( x^{4}\right) $ with $\lim_{x\rightarrow 0}g\left( x\right) =%
-\frac{1}{2}.$ For a non-uniform grid, a generalized Chang and Cooper
-function must be introduced, with two arguments 
+\frac{1}{2},$ as shwon in Fig.\ref{ChangCooper}. For a non-uniform grid, a
+generalized Chang and Cooper function must be introduced, with two arguments 
 \begin{equation}
 g\left( x,y\right) =\frac{1}{x}-\frac{1}{e^{x+y}-1}
 \end{equation}
-where the term $y=w_{p}^{\left( 0\right) (nu)}$ is zero for the uniform case.
+where the term $y=w_{p}^{\left( 0\right) (nu)}$ is zero for the uniform
+case, as shown in Ref.\cite{biz97}.
+
+\fig{figures/ChangCooper.eps}{Chang and Cooper weightingfunction}{ChangCooper}{10cm}
 
 With this definition, 
 \begin{equation}
@@ -542,14 +547,14 @@ T_{4}^{cc}}{T_{5}^{cc}}
 \end{equation}
 where 
 \begin{eqnarray}
-T_{1}^{cc} &=&1-w_{p,l+1/2,i+1,j+1/2}^{\left( 0\right) (u)}\left[ \frac{1}{%
-w_{p,,l+1/2,i+1,j+1/2}^{\left( 0\right) (u)}}\right.   \nonumber \\
+T_{1}^{cc} &=&1-w_{p,l+1/2,i+1,j+1/2}^{\left( 0\right) (u)}\left[ \frac{1}{
+w_{p,,l+1/2,i+1,j+1/2}^{\left( 0\right) (u)}}\right.  \nonumber \\
 &&\left. -\frac{1}{\exp \left[ w_{p,l+1/2,i+1,j+1/2}^{\left( 0\right)
-(u)}+w_{p,l+1/2,i+1,j+1/2}^{\left( 0\right) (nu)}\right] -1}\right] 
+(u)}+w_{p,l+1/2,i+1,j+1/2}^{\left( 0\right) (nu)}\right] -1}\right]
 \end{eqnarray}
 \begin{equation}
 T_{2}^{cc}=1+w_{p,l+1/2,i+1,j+1/2}^{\left( 0\right) (u)}\left(
-1-T_{3}^{cc}\right) 
+1-T_{3}^{cc}\right)
 \end{equation}
 and 
 \begin{equation}
@@ -589,13 +594,13 @@ holds, since $f_{0}^{\left( 0\right) (\infty )}$ must be Maxwellian $f_{M},$
 and one finds
 
 \begin{equation}
-\frac{f_{0,l+1/2,i+3/2,j+1/2}^{\left( 0\right) (\infty )}}{%
+\frac{f_{0,l+1/2,i+3/2,j+1/2}^{\left( 0\right) (\infty )}}{
 f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}}=\exp \left[ -\Delta
 p_{i+1}p_{i+1}-\frac{\Delta p_{i+3/2}-\Delta p_{i+1/2}}{4}\left(
 p_{i+3/2}-p_{i+1/2}\right) \right]
 \end{equation}
 
-Using identities introduced in Sec. ***, 
+Using identities introduced in Sec. \ref{Griddef}, 
 \begin{equation}
 \left\{ 
 \begin{array}{l}
@@ -615,38 +620,38 @@ and
 =p_{i+3/2}-p_{i+1/2}
 \end{equation}
 
-Finally, since
+Finally, since 
 \begin{eqnarray}
 &&-\Delta p_{i+1}p_{i+1}-\frac{\Delta p_{i+3/2}-\Delta p_{i+1/2}}{4}\left(
-p_{i+3/2}-p_{i+1/2}\right)   \nonumber \\
+p_{i+3/2}-p_{i+1/2}\right)  \nonumber \\
 &=&-\left( p_{i+3/2}-p_{i+1/2}\right) \left[ \frac{1}{2}\left(
-p_{i+3/2}+p_{i+1/2}\right) -\frac{1}{4}\left( \Delta p_{i+3/2}-\Delta %
-p_{i+1/2}\right) \right]   \nonumber \\
+p_{i+3/2}+p_{i+1/2}\right) -\frac{1}{4}\left( \Delta p_{i+3/2}-\Delta
+p_{i+1/2}\right) \right]  \nonumber \\
 &&-\frac{\Delta p_{i+3/2}-\Delta p_{i+1/2}}{4}\left(
-p_{i+3/2}-p_{i+1/2}\right)   \nonumber \\
+p_{i+3/2}-p_{i+1/2}\right)  \nonumber \\
 &=&-\frac{1}{2}\left( p_{i+3/2}+p_{i+1/2}\right) \left(
-p_{i+3/2}-p_{i+1/2}\right)   \nonumber \\
-&=&-\frac{1}{2}\left( p_{i+3/2}^{2}-p_{i+1/2}^{2}\right) 
+p_{i+3/2}-p_{i+1/2}\right)  \nonumber \\
+&=&-\frac{1}{2}\left( p_{i+3/2}^{2}-p_{i+1/2}^{2}\right)
 \end{eqnarray}
 one obtains the following relation 
 \begin{equation}
-\frac{f_{0,l+1/2,i+3/2,j+1/2}^{\left( 0\right) (\infty )}}{%
+\frac{f_{0,l+1/2,i+3/2,j+1/2}^{\left( 0\right) (\infty )}}{
 f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}}=\exp \left[ -\frac{%
-p_{i+3/2}^{2}-p_{i+1/2}^{2}}{2}\right] 
+p_{i+3/2}^{2}-p_{i+1/2}^{2}}{2}\right]
 \end{equation}
 which is exactly corresponding to a numerical Maxwellian distribution
 function. Hence, numerical errors do not propagate with the weighting here
 considered.
 
 Finally, for the non-uniform $p$ grid, the final results for interpolation
-rules are
+rules are 
 \begin{equation}
 \delta _{p}^{\left( 0\right) }\rightarrow \left( 
 \begin{array}{l}
 \delta _{p,l+1/2,i+1,j+1/2}^{\left( 0\right) } \\ 
 \delta _{p,l+1/2,i,j+1/2}^{\left( 0\right) }
 \end{array}
-\right) 
+\right)
 \end{equation}
 with 
 \begin{equation}
@@ -668,7 +673,7 @@ w_{p}^{\left( 0\right) (u)}\rightarrow \left(
 w_{p,l+1/2,i+1,j+1/2}^{\left( 0\right) (u)} \\ 
 w_{p,l+1/2,i,j+1/2}^{\left( 0\right) (u)}
 \end{array}
-\right) 
+\right)
 \end{equation}
 with 
 \begin{equation}
@@ -690,21 +695,21 @@ w_{p}^{\left( 0\right) (nu)}\rightarrow \left(
 w_{p,l+1/2,i+1,j+1/2}^{\left( 0\right) (nu)} \\ 
 w_{p,i,j+1/2}^{\left( 0\right) (nu)}
 \end{array}
-\right) 
+\right)
 \end{equation}
 where 
 \begin{equation}
-w_{p,l+1/2,i+1,j+1/2}^{\left( 0\right) (nu)}=-\frac{\Delta p_{i+3/2}-\Delta %
+w_{p,l+1/2,i+1,j+1/2}^{\left( 0\right) (nu)}=-\frac{\Delta p_{i+3/2}-\Delta
 p_{i+1/2}}{4}\left[ \frac{F_{p,l+1/2,i+3/2,j+1/2}^{\left( 0\right) }}{%
 D_{ppl+1/2,i+3/2,j+1/2}^{\left( 0\right) }}-\frac{F_{pl+1/2,i+1/2,j+1/2}^{%
-\left( 0\right) }}{D_{ppl+1/2,i+1/2,j+1/2}^{\left( 0\right) }}\right] 
+\left( 0\right) }}{D_{ppl+1/2,i+1/2,j+1/2}^{\left( 0\right) }}\right]
 \end{equation}
 and 
 \begin{equation}
 w_{p,i,j+1/2}^{\left( 0\right) (nu)}=-\frac{\Delta p_{i+1/2}-\Delta p_{i-1/2}%
 }{4}\left[ \frac{F_{pl+1/2,i+1/2,j+1/2}^{\left( 0\right) }}{%
 D_{ppl+1/2,i+1/2,j+1/2}^{\left( 0\right) }}-\frac{F_{pl+1/2,i-1/2,j+1/2}^{%
-\left( 0\right) }}{D_{ppl+1/2,i-1/2,j+1/2}^{\left( 0\right) }}\right] 
+\left( 0\right) }}{D_{ppl+1/2,i-1/2,j+1/2}^{\left( 0\right) }}\right]
 \end{equation}
 
 It is important to note that since only collisions are considered for
@@ -725,19 +730,19 @@ _{effective}=\frac{\sum_{m}F_{p}^{\left( 0\right) (m)}}{\sum_{m}D_{pp}^{%
 where $\sum_{m}$ is the sum over all the physical processes $m$ that take
 place in the plasma. Hence, the same syntax may be kept, 
 \begin{equation}
-w_{p,l+1/2,i+1,j+1/2}^{\left( 0\right) (nu)}=-\frac{\Delta p_{i+3/2}-\Delta 
+w_{p,l+1/2,i+1,j+1/2}^{\left( 0\right) (nu)}=-\frac{\Delta p_{i+3/2}-\Delta
 p_{i+1/2}}{4}\left[ \left. \frac{F_{p}^{\left( 0\right) }}{D_{pp}^{\left(
 0\right) }}\right| _{effective}^{l+1/2,i+3/2,j+1/2}-\left. \frac{%
 F_{p}^{\left( 0\right) }}{D_{pp}^{\left( 0\right) }}\right|
-_{effective}^{l+1/2,i+1/2,j+1/2}\right] 
+_{effective}^{l+1/2,i+1/2,j+1/2}\right]
 \end{equation}
 and 
 \begin{equation}
-w_{p,l+1/2,i,j+1/2}^{\left( 0\right) (nu)}=-\frac{\Delta p_{i+1/2}-\Delta %
+w_{p,l+1/2,i,j+1/2}^{\left( 0\right) (nu)}=-\frac{\Delta p_{i+1/2}-\Delta
 p_{i-1/2}}{4}\left[ \left. \frac{F_{p}^{\left( 0\right) }}{D_{pp}^{\left(
 0\right) }}\right| _{effective}^{l+1/2,i+1/2,j+1/2}-\left. \frac{%
 F_{p}^{\left( 0\right) }}{D_{pp}^{\left( 0\right) }}\right|
-_{effective}^{l+1/2,i-1/2,j+1/2}\right] 
+_{effective}^{l+1/2,i-1/2,j+1/2}\right]
 \end{equation}
 
 In that case, the interpolating weights exhibit a dependence with $\xi _{0}.$
@@ -749,9 +754,9 @@ value of the Chang and Cooper function tends towards $\delta _{p}^{\left(
 standard linear interpolation.
 
 Furthermore, $w_{p}^{\left( 0\right) (nu)}$ require evaluations of the
-quantities at the grid points $\left( l+1/2,i-1/2,j+1/2\right) $ and $\left(
-l+1/2,i+3/2,j+1/2\right) .$ The usual method to deal with this problem is
-shifting indexes, according to the relation 
+quantities at the respective grid points $\left( l+1/2,i-1/2,j+1/2\right) $
+and $\left( l+1/2,i+3/2,j+1/2\right) .$ The usual method to deal with this
+problem is shifting indexes, according to the relation 
 \begin{equation}
 \left( l+1/2,i+1/2,j+1/2\right) \in \left\{ \left[ 1:n_{\psi }\right]
 ,\left[ 1:n_{p}\right] ,\left[ 1:n_{\xi }\right] \right\} 
@@ -780,11 +785,18 @@ For the pitch-angle terms, calculation is very simple, and from previous
 relations, one deduces directly that $w_{\xi ,l+1/2,i+1/2,j+1}^{\left(
 0\right) }=w_{\xi ,l+1/2,i+1/2,j}^{\left( 0\right) }=0$ since $F_{\xi
 }^{\left( 0\right) }=0$. Therefore, $\delta _{\xi ,l+1:2,i+1/2,j+1}^{\left(
-0\right) }$ may be defined in an arbitrary manner. The most natural way is
-to perform a linear interpolation, between $f_{0,l+1/2,i+1/2,j+3/2}^{\left(
-0\right) (\infty )}$ and $f_{0,l+1/2,i+1/2,j+3/2}^{\left( 0\right) (\infty
-)},$ and also between $f_{0,l+1:2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}$
-and $f_{0,l+1/2,i+1/2,j-1/2}^{\left( 0\right) (\infty )}$ according to the
+0\right) }$ may be defined in an arbitrary manner. It is important to note
+that this choice is different from the one described in Ref. \cite{biz97},
+where the pitch-angle weighting factors are defined in the same way as for
+the momentum $p$. However, it turns out that in presence of RF waves, this
+leads sometimes to spurious numerical evolutions, while the simple approach
+here described avoid them.
+
+The most natural way is therefore to perform a linear interpolation, between 
+$f_{0,l+1/2,i+1/2,j+3/2}^{\left( 0\right) (\infty )}$ and $%
+f_{0,l+1/2,i+1/2,j+3/2}^{\left( 0\right) (\infty )},$ and also between $%
+f_{0,l+1:2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}$ and $%
+f_{0,l+1/2,i+1/2,j-1/2}^{\left( 0\right) (\infty )}$ according to the
 relations 
 \begin{eqnarray}
 f_{0,l+1/2,i+1/2,j+1}^{\left( 0\right) (\infty )} &=&\left( \frac{\Delta \xi
@@ -815,7 +827,7 @@ and for a uniform grid, the relation $\delta _{\xi ,l+1/2,i+1/2,j+1}^{\left(
 recovered.
 
 Finally, for the non-uniform pitch-angle grid $\xi ,$ the interpolation
-rules are
+rules are 
 \begin{equation}
 \delta _{\xi }^{\left( 0\right) }\rightarrow \left\{ 
 \begin{array}{l}
@@ -824,13 +836,13 @@ rules are
 \delta _{\xi ,l+1/2,i+1/2,j}^{\left( 0\right) }=\frac{\Delta \xi _{0,j+1/2}}{%
 \Delta \xi _{0,j-1/2}+\Delta \xi _{0,j+1/2}}
 \end{array}
-\right. 
+\right.
 \end{equation}
 
 Furthermore, $\delta _{\xi }^{\left( 0\right) }$ require evaluations of the
-quantities at the grid points $\left( l+1/2,i+1/2,j-1/2\right) $ and $\left(
-l+1/2,j+1/2,j+3/2\right) $. As for the momentum grid interpolation, indexes
-are shifted, 
+quantities at the respective grid points $\left( l+1/2,i+1/2,j-1/2\right) $
+and $\left( l+1/2,j+1/2,j+3/2\right) $. As for the momentum grid
+interpolation, indexes are shifted, 
 \begin{equation}
 \left\{ 
 \begin{array}{l}
@@ -846,14 +858,14 @@ are shifted,
 
 The determination of $\delta _{\psi }^{\left( 0\right) }$ is based on the
 same method used for $\delta _{\xi }^{\left( 0\right) }$, since no specific
-condition is required for interpolating  $f_{0}^{\left( 0\right) }$ on the
-flux grid. A linear interpolation is considered between $%
-f_{0,l+3/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}$ and $%
-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}$ and also between $%
-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}$ and $%
+condition is required for interpolating $f_{0}^{\left( 0\right) }$ on the
+flux grid. A linear interpolation is considered between $
+f_{0,l+3/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}$ and $
+f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}$ and also between $
+f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}$ and $
 f_{0,l-1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}$, 
 \begin{eqnarray}
-f_{0,l+1,i+1/2,j+1/2}^{\left( 0\right) (\infty )} &=&\left( \frac{\Delta %
+f_{0,l+1,i+1/2,j+1/2}^{\left( 0\right) (\infty )} &=&\left( \frac{\Delta
 \psi _{l+1/2}}{\Delta \psi _{l+1/2}+\Delta \psi _{l+3/2}}\right)
 f_{0,l+3/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}  \nonumber \\
 &&+\left( \frac{\Delta \psi _{l+3/2}}{\Delta \psi _{l+1/2}+\Delta \psi
@@ -869,7 +881,7 @@ _{l+1/2}}\right) f_{0,l-1/2,i+1/2,j+1/2}^{\left( 0\right) (\infty )}
 \end{eqnarray}
 taking into account of the non-uniform nature of the grid 
 \begin{equation}
-\delta _{\psi ,l+1}^{\left( 0\right) }=\frac{\Delta \psi _{l+3/2}}{\Delta %
+\delta _{\psi ,l+1}^{\left( 0\right) }=\frac{\Delta \psi _{l+3/2}}{\Delta
 \psi _{l+1/2}+\Delta \psi _{l+3/2}}
 \end{equation}
 \begin{equation}
@@ -880,9 +892,9 @@ For a uniform grid the relation $\delta _{\psi ,l+1}^{\left( 0\right)
 }=\delta _{\psi ,l}^{\left( 0\right) }=1/2$ is well recovered.
 
 Furthermore, $\delta _{\psi }^{\left( 0\right) }$ require evaluations of the
-quantities at the grid points $\left( l-1/2,i+1/2,j+1/2\right) $ and $\left(
-l+3/2,j+1/2,j+1/2\right) $. As for the momentum grid interpolation, indexes
-are shifted according to the rule 
+quantities at the respective grid points $\left( l-1/2,i+1/2,j+1/2\right) $
+and $\left( l+3/2,j+1/2,j+1/2\right) $. As for the momentum grid
+interpolation, indexes are shifted according to the rule 
 \begin{equation}
 \left\{ 
 \begin{array}{l}

@@ -4,110 +4,110 @@
 The starting point of the numerical calculations for the Fokker-Planck
 equation is the following expression 
 \begin{eqnarray}
-&&\frac{\partial f_{0}^{\left( 0\right) }}{\partial t}+\frac{1}{p^{2}}\frac{
+&&\frac{\partial f_{0}^{\left( 0\right) }}{\partial t}+\frac{1}{p^{2}}\frac{%
 \partial }{\partial p}\left( p^{2}\mathbf{S}_{p}^{\left( 0\right) }\right) -%
 \frac{1}{\lambda }\frac{1}{p}\frac{\partial }{\partial \xi _{0}}\left( \sqrt{%
-1-\xi _{0}^{2}}\lambda \mathbf{S}_{\xi }^{\left( 0\right) }\right)  \nonumber
-\\
-&&+\frac{B_{\min }\left( \psi \right) }{\lambda \left( \psi ,\xi _{0}\right) 
+1-\xi _{0}^{2}}\lambda \mathbf{S}_{\xi }^{\left( 0\right) }\right)  
+\nonumber \\
+&&+\frac{B_{0}\left( \psi \right) }{\lambda \left( \psi ,\xi _{0}\right) 
 \widetilde{q}\left( \psi \right) }\frac{\partial }{\partial \psi }\left(
-R_{\min }\left( \psi \right) \widetilde{q}\left( \psi \right) \frac{B_{P\min
-}\left( \psi \right) }{B_{\min }\left( \psi \right) }\lambda \left( \psi
-,\xi _{0}\right) \mathbf{S}_{\psi }^{\left( 0\right) }\right)  \nonumber \\
+R_{0}\left( \psi \right) \widetilde{q}\left( \psi \right) \frac{B_{P0}\left(
+\psi \right) }{B_{0}\left( \psi \right) }\lambda \left( \psi ,\xi
+_{0}\right) \mathbf{S}_{\psi }^{\left( 0\right) }\right)   \nonumber \\
 &=&0
 \end{eqnarray}
 
 In order to avoid numerical singularities at $p=0$, it is convenient to
 multiply all the terms by the partial Jacobian 
 \begin{equation}
-J_{\psi }J_{p}=\frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi
+J_{\psi }J_{p}=\frac{\widetilde{q}\left( \psi \right) }{B_{0}\left( \psi
 \right) }p^{2}
 \end{equation}
 which leads to the equivalent form 
 \begin{eqnarray}
-&&\partial \left[ \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left(
-\psi \right) }p^{2}f_{0}^{\left( 0\right) }\right] /\partial t  \nonumber \\
-&&+\frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) }%
-\frac{\partial }{\partial p}\left( p^{2}\mathbf{S}_{p}^{\left( 0\right)
-}\right)  \nonumber \\
-&&-\frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) }%
-\frac{p}{\lambda \left( \psi ,\xi _{0}\right) }\frac{\partial }{\partial \xi
-_{0}}\left( \sqrt{1-\xi _{0}^{2}}\lambda \left( \psi ,\xi _{0}\right) 
-\mathbf{S}_{\xi }^{\left( 0\right) }\right)  \nonumber \\
+&&\partial \left[ \frac{\widetilde{q}\left( \psi \right) }{B_{0}\left( \psi
+\right) }p^{2}f_{0}^{\left( 0\right) }\right] /\partial t  \nonumber \\
+&&+\frac{\widetilde{q}\left( \psi \right) }{B_{0}\left( \psi \right) }\frac{%
+\partial }{\partial p}\left( p^{2}\mathbf{S}_{p}^{\left( 0\right) }\right)  
+\nonumber \\
+&&-\frac{\widetilde{q}\left( \psi \right) }{B_{0}\left( \psi \right) }\frac{p%
+}{\lambda \left( \psi ,\xi _{0}\right) }\frac{\partial }{\partial \xi _{0}}%
+\left( \sqrt{1-\xi _{0}^{2}}\lambda \left( \psi ,\xi _{0}\right) \mathbf{S}%
+_{\xi }^{\left( 0\right) }\right)   \nonumber \\
 &&+\frac{p^{2}}{\lambda \left( \psi ,\xi _{0}\right) }\frac{\partial }{%
-\partial \psi }\left( R_{\min }\left( \psi \right) \widetilde{q}\left( \psi
-\right) \frac{B_{P\min }\left( \psi \right) }{B_{\min }\left( \psi \right) }%
-\lambda \left( \psi ,\xi _{0}\right) \mathbf{S}_{\psi }^{\left( 0\right)
-}\right)  \nonumber \\
+\partial \psi }\left( R_{0}\left( \psi \right) \widetilde{q}\left( \psi
+\right) \frac{B_{P0}\left( \psi \right) }{B_{0}\left( \psi \right) }\lambda
+\left( \psi ,\xi _{0}\right) \mathbf{S}_{\psi }^{\left( 0\right) }\right)  
+\nonumber \\
 &=&0
 \end{eqnarray}
 
-Using the grid definition defined in Sec. **** and applying the backward
-time discretization, which corresponds to the fully implicit time
-differencing, the discrete form of the Fokker-planck equation may be
-expressed as
+Using the grid definition defined in Sec.\ref{Griddef} and applying the
+backward time discretization, which corresponds to the fully implicit time
+differencing as discussed in Sec. \ref{FPmatrix}, the discrete form of the
+Fokker-planck equation may be expressed as
 
 \begin{eqnarray}
-&&\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}p_{i+1/2}^{2}\frac{%
+&&\frac{\widetilde{q}_{l+1/2}}{B_{0,l+1/2}}p_{i+1/2}^{2}\frac{%
 f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right)
 (k+1)}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k)}}{\Delta t}  \nonumber \\
-&&+\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}\left. \frac{\partial \left(
+&&+\frac{\widetilde{q}_{l+1/2}}{B_{0,l+1/2}}\left. \frac{\partial \left(
 p^{2}\mathbf{S}_{p}^{\left( 0\right) }\right) }{\partial p}\right|
 _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
-&&-\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}\frac{p_{i+1/2}}{\lambda
-^{l+1/2,j+1/2}}\times  \nonumber \\
+&&-\frac{\widetilde{q}_{l+1/2}}{B_{0,l+1/2}}\frac{p_{i+1/2}}{\lambda
+^{l+1/2,j+1/2}}\times   \nonumber \\
 &&\left. \frac{\partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}%
 \lambda \mathbf{S}_{\xi }^{\left( 0\right) }\right) \right|
 _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
-&&+\frac{p_{i+1/2}^{2}}{\lambda ^{l+1/2,j+1/2}}\times  \nonumber \\
-&&\left. \frac{\partial }{\partial \psi }\left( R_{\min }\widetilde{q}\frac{%
-B_{P\min }}{B_{\min }}\lambda \mathbf{S}_{\psi }^{\left( 0\right) }\right)
-\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
+&&+\frac{p_{i+1/2}^{2}}{\lambda ^{l+1/2,j+1/2}}\times   \nonumber \\
+&&\left. \frac{\partial }{\partial \psi }\left( R_{0}\widetilde{q}\frac{%
+B_{P0}}{B_{0}}\lambda \mathbf{S}_{\psi }^{\left( 0\right) }\right) \right|
+_{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
 &=&0
 \end{eqnarray}
 where $\widetilde{q}_{l+1/2}=\widetilde{q}\left( \psi _{l+1/2}\right) ,$ $%
-B_{\min ,l+1/2}=B_{\min }\left( \psi _{l+1/2}\right) $ and $\lambda
+B_{0,l+1/2}=B_{0}\left( \psi _{l+1/2}\right) $ and $\lambda
 ^{l+1/2,j+1/2}=\lambda \left( \psi _{l+1/2},\xi _{0,j+1/2}\right) .$ In a
 compact form 
 \begin{eqnarray}
-&&\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}p_{i+1/2}^{2}\frac{%
+&&\frac{\widetilde{q}_{l+1/2}}{B_{0,l+1/2}}p_{i+1/2}^{2}\frac{%
 f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right)
 (k+1)}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k)}}{\Delta t}  \nonumber \\
-&&+\left. \frac{\widetilde{q}}{B_{\min }}p^{2}\nabla _{\mathbf{p}}\cdot 
-\mathbf{S}_{\mathbf{p}}^{\left( 0\right) }\right|
-_{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
-&&+\left. \frac{\widetilde{q}}{B_{\min }}p^{2}\nabla _{\psi }\cdot \mathbf{S}
+&&+\left. \frac{\widetilde{q}}{B_{0}}p^{2}\nabla _{\mathbf{p}}\cdot \mathbf{S%
+}_{\mathbf{p}}^{\left( 0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)} 
+\nonumber \\
+&&+\left. \frac{\widetilde{q}}{B_{0}}p^{2}\nabla _{\psi }\cdot \mathbf{S}%
 _{\psi }^{\left( 0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
 &=&0
 \end{eqnarray}
 where 
 \begin{eqnarray}
-\left. \frac{\widetilde{q}}{B_{\min }}p^{2}\nabla _{\mathbf{p}}\cdot \mathbf{%
-S}_{\mathbf{p}}^{\left( 0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)} &=&%
-\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}\left. \frac{\partial \left(
-p^{2}\mathbf{S}_{p}^{\left( 0\right) }\right) }{\partial p}\right|
+\left. \frac{\widetilde{q}}{B_{0}}p^{2}\nabla _{\mathbf{p}}\cdot \mathbf{S}_{%
+\mathbf{p}}^{\left( 0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)} &=&\frac{%
+\widetilde{q}_{l+1/2}}{B_{0,l+1/2}}\left. \frac{\partial \left( p^{2}\mathbf{%
+S}_{p}^{\left( 0\right) }\right) }{\partial p}\right|
 _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
-&&-\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}\frac{p_{i+1/2}}{\lambda
-^{l+1/2,j+1/2}}\times  \nonumber \\
+&&-\frac{\widetilde{q}_{l+1/2}}{B_{0,l+1/2}}\frac{p_{i+1/2}}{\lambda
+^{l+1/2,j+1/2}}\times   \nonumber \\
 &&\left. \frac{\partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}%
 \lambda \mathbf{S}_{\xi }^{\left( 0\right) }\right) \right|
 _{l+1/2,i+1/2,j+1/2}^{(k+1)}
 \end{eqnarray}
 and 
 \begin{eqnarray}
-\left. \frac{\widetilde{q}}{B_{\min }}p^{2}\nabla _{\psi }\cdot \mathbf{S}
-_{\psi }^{\left( 0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)} &=&\frac{%
-p_{i+1/2}^{2}}{\lambda ^{l+1/2,j+1/2}}\times  \nonumber \\
-&&\left. \frac{\partial }{\partial \psi }\left( R_{\min }\widetilde{q}\frac{%
-B_{P\min }}{B_{\min }}\lambda \mathbf{S}_{\psi }^{\left( 0\right) }\right)
-\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)}
+\left. \frac{\widetilde{q}}{B_{0}}p^{2}\nabla _{\psi }\cdot \mathbf{S}_{\psi
+}^{\left( 0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)} &=&\frac{%
+p_{i+1/2}^{2}}{\lambda ^{l+1/2,j+1/2}}\times   \nonumber \\
+&&\left. \frac{\partial }{\partial \psi }\left( R_{0}\widetilde{q}\frac{%
+B_{P0}}{B_{0}}\lambda \mathbf{S}_{\psi }^{\left( 0\right) }\right) \right|
+_{l+1/2,i+1/2,j+1/2}^{(k+1)}
 \end{eqnarray}
 
 \subsection{First order term: Drift kinetic equation}
 
 Since the first order drift kinetic equation may be also expressed in a
-conservative form as for the Fokker-Planck one, a similar formalism may be
-kept. In that case, 
+conservative form as for the Fokker-Planck one as shwon in Sec. \ref
+{dkefluxconsmomentum}, a similar formalism may be kept. In that case, 
 \begin{eqnarray}
 &&\frac{1}{p^{2}}\frac{\partial }{\partial p}\left( p^{2}\mathbf{S}%
 _{p}^{\left( 0\right) }\right) -\frac{1}{\lambda \left( \psi ,\xi
@@ -126,7 +126,7 @@ knowing $\widetilde{\mathbf{S}}_{p}^{\left( 0\right) }$ and $\widetilde{%
 \mathbf{S}}_{\xi }^{\left( 0\right) }$ from the spatial derivative of $%
 f_{0}^{\left( 0\right) }\left( \psi ,p,\xi _{0}\right) $ given by the zero
 order Fokker-Planck equation. Multiplying also both sides by the partial
-Jacobian $J_{\psi }J_{p}$, one obtains 
+Jacobian $J_{\psi }J_{p}$ defined in Sec. \ref{fluxcons}, one obtains 
 \begin{eqnarray}
 &&\frac{\partial }{\partial p}\left( p^{2}\mathbf{S}_{p}^{\left( 0\right)
 }\right) -\frac{p}{\lambda \left( \psi ,\xi _{0}\right) }\frac{\partial }{%

@@ -1,4 +1,7 @@
-\label{FPCollisions}\subsubsection{Flux conservative term}
+
+\label{FPCollisions}
+
+\subsubsection{Flux conservative term}
 
 In the Fokker-Planck equation, the diffusion and convection elements are
 bounce-averaged according to the expressions (\ref{diffbavpp})-(\ref
@@ -32,10 +35,14 @@ F_{\xi }^{\text{C}(0)} &=&0
 Here, coefficients $A^{\left( 0\right) }\left( p,\psi \right) ,$ $%
 B_{t}^{\left( 0\right) }\left( p,\psi \right) $ and $F^{\left( 0\right)
 }\left( p,\psi \right) $ are determined at the location where $B=B_{0}$ on
-the magnetic flux surface. The bounce coefficient $\lambda _{2,-1,0}$ is
-defined as (\ref{lkm}) 
+the magnetic flux surface. However, since $A,$ $B_{t}$ and $F$ are only
+functions of the density and temperature that are flux surface quantities as
+shown in Sec. \ref{Collisions}, their respective values are consequently
+independent of the poloidal position and therefore,  $A^{\left( 0\right) }=A,
+$ $B_{t}^{\left( 0\right) }=B_{t}$ and $F^{\left( 0\right) }=F.$ The bounce
+coefficient $\lambda _{2,-1,0}$ is defined as (\ref{lkm}) 
 \begin{equation}
-\lambda _{2,-1,0}=\lambda \left\{ \frac{\xi ^{2}}{\Psi \xi _{0}^{2}}\right\}
+\lambda _{2,-1,0}=\lambda \left\{ \frac{\xi ^{2}}{\Psi \xi _{0}^{2}}\right\} 
 \end{equation}
 
 For reference to the litterature (\cite{kil86}), note that we could also
@@ -133,10 +140,10 @@ circulating ones. Hence
 \begin{eqnarray}
 \overline{\lambda }_{1,1,0}^{P} &=&\frac{1}{\widetilde{q}}\int_{0}^{2\pi }%
 \frac{d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}%
-\right| }\frac{r}{R_{p}}\frac{B}{B_{P}}\Psi  \nonumber \\
+\right| }\frac{r}{R_{p}}\frac{B}{B_{P}}\Psi   \nonumber \\
 &=&\frac{1}{\widetilde{q}}\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{1}{%
-\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R_{p}}\frac{
-B^{2}\left( \psi ,\theta \right) }{B_{P}B\left( \psi ,\theta _{0}\right) }
+\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R_{p}}\frac{B^{2}}{%
+B_{P}B_{0}}
 \end{eqnarray}
 
 \paragraph{Case of circular concentric flux-surfaces}
@@ -152,7 +159,7 @@ since the ratio $B/B_{P}$ is a function of $r$ only
 &=&s^{*}
 \end{eqnarray}
 using the relation $\widetilde{q}B_{P}/B=\epsilon .$ The integral $s^{*},$
-according to the old notations found in the litterature (\cite{kil86}),
+according to the old notations found in the litterature (\cite{kil86}), 
 \begin{equation}
 s^{*}=\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{1+\epsilon }{1+\epsilon
 \cos \theta }
