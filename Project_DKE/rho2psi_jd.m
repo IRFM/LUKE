@@ -40,3 +40,4 @@ ppsin = ppsi/psia;%normalized poloidal flux
 % Interpolation of calculation grid
 %
 psin = interp1(prho,ppsin,rho,method);
+

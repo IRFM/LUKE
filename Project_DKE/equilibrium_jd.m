@@ -5,16 +5,20 @@ function [theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi
 %   as the trapped/passing boundary in momentum space, the plasma minor
 %   radius on LFS midplane, and the effective charge. 
 %
-%   NOTE: The equilibrium data in EQUIL_tokname must follow these conventions:
+%   NOTE: The equilibrium data in EQUIL_tokname must follow these
+%   conventions:
 %
 %       - R Z BR BZ BPHI must be given on a (psi,theta) grid [npsi,ntheta].
 %       - ppsi(1) = 0 is the magnetic axis.
-%       - ppsi(npsi) is the poloidal flux on the last closed flux-surface. It can
-%           be either positive or negative depending on the sign of the current
+%       - ppsi(npsi) is the poloidal flux on the last closed flux-surface.
+%       It can
+%           be either positive or negative depending on the sign of the
+%           current
 %           with respect to the toroidal angle phi.
 %       - theta(1) = 0 and theta(ntheta) = 2pi is required.
 %       - both grids can be non-uniform.
-%       - other equilibrium parameters (temperatures, densities) are assumed to 
+%       - other equilibrium parameters (temperatures, densities) are
+%       assumed to 
 %           be uniform within a flux-surface, because of the fast parallel
 %           motion. They are therefore given on the psi grid.
 %
@@ -51,9 +55,11 @@ function [theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi
 %       - Ncoils: Number of toroidal magnetic field coils [1,1]
 %       - BeLi: Beta + li/2 [1,1]
 %       - psia: poloidal flux at the edge [1,1]
-%       - xmhu0T2: pitch-angle (squared) at the trapped/passing boundary  [1,nr]
+%       - xmhu0T2: pitch-angle (squared) at the trapped/passing boundary
+%       [1,nr]
 %
-%   By J. Decker <jodecker@alum.mit.edu> and Y. Peysson <yves.peysson@cea.fr>
+%   By J. Decker <jodecker@alum.mit.edu> and Y. Peysson
+%   <yves.peysson@cea.fr>
 %   Created Feb. 17, 2004
 %
 if nargin < 3
@@ -117,3 +123,4 @@ xiB0 = (xiB0 - 1)*nr + (1:nr);%Indices in (psi,theta) grid corresponding of B=Bm
 xBT0 = XBT(xiB0);%Toroidal field at B=Bmin
 xBp0 = XBp(xiB0);%Poroidal field at B=Bmin
 xR0 = XR(xiB0);%Major radius at B=Bmin
+
