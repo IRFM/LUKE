@@ -145,14 +145,16 @@ for iw = 1:length(waves),%
             %
             % interpolation for psi at ray position (along cst theta lines)
             %
-            %    spsin = interp1(pstr,ppsin,sr,method);%psi(s)
+            %spsin = interp1(pstr,ppsin,sr,method);%psi(s)
+            method2 = 'linear';
             for is = 1:ns 
-                spsin(is) = interp1(pstr(:,is),ppsin,sr(is),method);%psi(s)
+                spsin(is) = interp1(pstr(:,is),ppsin,sr(is),method2);%psi(s)
             end
+            spsin(isnan(spsin)) = 1;%part of ray outside the last flux-surface
             %
             % positive values only for spsin
             %
-            if min(spsin) < -0.05
+            if min(spsin) < -0
                 error('The psin interpolation has produced negative values')
             end
             spsin(spsin <= 0) = eps;
@@ -167,21 +169,23 @@ for iw = 1:length(waves),%
             if isempty(sR)
                 sR = interp2(theta,ppsin,ptR,st,spsin,method);
             end
-            sBR = interp2(theta,ppsin,ptBR,st,spsin,method);
-            sBphi = interp2(theta,ppsin,ptBphi,st,spsin,method);
-            sBZ = interp2(theta,ppsin,ptBZ,st,spsin,method);
+            sBR = interp2(theta,ppsin,ptBR,stheta,spsin,method);
+            sBphi = interp2(theta,ppsin,ptBphi,stheta,spsin,method);
+            sBZ = interp2(theta,ppsin,ptBZ,stheta,spsin,method);
             %
             skpar = (skR.*sBR + sn.*sBphi./sR + skZ.*sBZ)./sqrt(sBR.^2 + sBphi.^2 + sBZ.^2);
-            skperp = sqrt(skR.^2 + (sn./sR).^2 + skZ.^2 - skpar.^2);
-            %
             sNpar = skpar*clum/omega_rf;
-            sNperp = skperp*clum/omega_rf;
+            %
+            if isempty(sNperp), 
+                skperp = sqrt(skR.^2 + (sn./sR).^2 + skZ.^2 - skpar.^2);
+                sNperp = skperp*clum/omega_rf;
+            end
         end
         %
         % Calculates sdNpar if needed.
         %
         if isempty(sdNpar),
-            sdNpar = 0.1*ones(1,ns);%assume a gaussian spectrum with this arbitrary width
+            sdNpar = 0.01*ones(1,ns);%assume a gaussian spectrum with this arbitrary width
         end
         %
         if opt_disp == 0, %sepol_pmz, sNperp and phi_pmz given by ray-tracing
