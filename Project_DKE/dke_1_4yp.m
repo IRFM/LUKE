@@ -418,32 +418,48 @@ xv2 = xv.*xv;
 %
 %Super momentum grid definitions for collision integrals
 %
-spn = [pn(1)/spfac:pn(1)/spfac:pn(1)];
-for ip=2:npn
+spnm = linspace(pn(1)/spfac,pnm(1),spfac);%In order to start from a point not to close to zero
+spn = linspace(pn(1)/spfac,pn(1),spfac);
+spnp = linspace(pn(1)/spfac,pnp(1),spfac);
+%
+for ip=2:npn,
+	spnm = [spnm(1:spfac-1),linspace(pnm(ip-1),pnm(ip),spfac)];	
 	spn = [spn(1:spfac-1),linspace(pn(ip-1),pn(ip),spfac)];	
+	spnp = [spnp(1:spfac-1),linspace(pnp(ip-1),pnp(ip),spfac)];	
 end
 %
+spnm = spnm(:);%for numerical integration by trapz_dke_yp subroutine
 spn = spn(:);%for numerical integration by trapz_dke_yp subroutine
+spnp = spnp(:);%for numerical integration by trapz_dke_yp subroutine
 %
+spn2m = spnm.*spnm;
 spn2 = spn.*spn;
+spn2p = spnp.*spnp;
 spn3 = spn2.*spn;
 %
+szm = betath_ref*spnm;
 sz = betath_ref*spn;
+szp = betath_ref*spnp;
+sz2m = szm.*szm;
 sz2 = sz.*sz;
-sz3 = sz2.*sz;
+sz2p = szp.*szp;
 %
+sgammam = sqrt(1 + sz2m);
 sgamma = sqrt(1 + sz2);
+sgammap = sqrt(1 + sz2p);
 sgamma2 = sgamma.*sgamma;
 %
+ssigmam = asinh(szm);
 ssigma = asinh(sz);
+ssigmap = asinh(szp);
 %
+svm = spnm./sgammam;
 sv = spn./sgamma;
+svp = spnp./sgammap;
 sv2 = sv.*sv;
 %
 sJ1 = -3*sgamma + ssigma.*(3.0./sz + 2*sz);
 sJ2 = sgamma - ssigma./sz - 2*sgamma.*sz2/3;
-sJ3 = -3*sgamma.*ssigma./sz2 + 3.0./sz + sz - 2*sz2.*sz/5;
-sJ4 = sgamma.*ssigma.*(15.0./sz2 + 6) - 15.0./sz - 11*sz;
 %
 %Radial grid
 %
@@ -892,28 +908,37 @@ for ir = 1:nr,
 %
 %Collision integrals
 %	
+	sfMm = exp(-spn2m./(1 + sgammam)/xTe_norm(ir))/2/pi/xTe_norm(ir)/sqrt(2*pi*xTe_norm(ir));
+	snormfMm = 4*pi*trapz_dke_yp([spnm,spn2m.*sfMm]);
+	sfMm = sfMm*xne_norm(ir)/snormfMm;
+%	
 	sfM = exp(-spn2./(1 + sgamma)/xTe_norm(ir))/2/pi/xTe_norm(ir)/sqrt(2*pi*xTe_norm(ir));
 	snormfM = 4*pi*trapz_dke_yp([spn,spn2.*sfM]);
 	sfM = sfM*xne_norm(ir)/snormfM;
+%
+	sfMp = exp(-spn2p./(1 + sgammap)/xTe_norm(ir))/2/pi/xTe_norm(ir)/sqrt(2*pi*xTe_norm(ir));
+	snormfMp = 4*pi*trapz_dke_yp([spnp,spn2p.*sfMp]);
+	sfMp = sfMp*xne_norm(ir)/snormfMp;
+%
 	for ip = 1:npn,%Loop for very accurate collision integral calculation close to p = 0 especially (crucial for numerical conservative scheme)
 		smasku = spn <= pn(ip);
 		smaskl = spn >= pn(ip);
-		smaskup = spn <= pnp(ip);
-		smasklp = spn >= pnp(ip);
-		smaskum = spn <= pnm(ip);
-		smasklm = spn >= pnm(ip);
+		smaskup = spnp <= pnp(ip);
+		smasklp = spnp >= pnp(ip);
+		smaskum = spnm <= pnm(ip);
+		smasklm = spnm >= pnm(ip);
 %
 		F1_1(1,ip) = trapz_dke_yp([spn,sfM.*spn.*sv.*smasku])';
 		F1_2(1,ip) = trapz_dke_yp([spn,sfM.*spn.*sv.*(1 - sgamma.*ssigma./sz).*smasku])';
 		F2_1(1,ip) = trapz_dke_yp([spn,sfM.*spn.*smaskl])';
 %		
-		F1_1m(1,ip) = trapz_dke_yp([spn,sfM.*spn.*sv.*smaskum])';
-		F1_2m(1,ip) = trapz_dke_yp([spn,sfM.*spn.*sv.*(1 - sgamma.*ssigma./sz).*smaskum])';
-		F2_1m(1,ip) = trapz_dke_yp([spn,sfM.*spn.*smasklm])';
+		F1_1m(1,ip) = trapz_dke_yp([spnm,sfMm.*spnm.*svm.*smaskum])';
+		F1_2m(1,ip) = trapz_dke_yp([spnm,sfMm.*spnm.*svm.*(1 - sgammam.*ssigmam./szm).*smaskum])';
+		F2_1m(1,ip) = trapz_dke_yp([spnm,sfMm.*spnm.*smasklm])';
 %		
-		F1_1p(1,ip) = trapz_dke_yp([spn,sfM.*spn.*sv.*smaskup])';
-		F1_2p(1,ip) = trapz_dke_yp([spn,sfM.*spn.*sv.*(1 - sgamma.*ssigma./sz).*smaskup])';
-		F2_1p(1,ip) = trapz_dke_yp([spn,sfM.*spn.*smasklp])';
+		F1_1p(1,ip) = trapz_dke_yp([spnp,sfMp.*spnp.*svp.*smaskup])';
+		F1_2p(1,ip) = trapz_dke_yp([spnp,sfMp.*spnp.*svp.*(1 - sgammap.*ssigmap./szp).*smaskup])';
+		F2_1p(1,ip) = trapz_dke_yp([spnp,sfMp.*spnp.*smasklp])';
 %
 		B1_1(1,ip) = trapz_dke_yp([spn,sfM.*smasku.*spn2])';
 		B1_2(1,ip) = trapz_dke_yp([spn,sfM.*smasku.*spn2.*spn2])';
