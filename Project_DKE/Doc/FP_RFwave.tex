@@ -1,0 +1,175 @@
+\smallskip (**************** incorporer le terme de moyenne en $\phi $
+***********
+
+In the Fokker-Planck equation, the diffusion and convection elements are
+bounce-averaged according to the expressions (\ref{diffbav})-(\ref{convbav}%
+), which gives, using (***-****) 
+\begin{eqnarray}
+D_{pp}^{\text{RF}(0)} &=&\left\{ \sum_{n=-\infty }^{+\infty }\sum_{b}(1-\xi
+^{2})D_{b,n}^{\text{RF}}(p,\xi )\right\}  \\
+D_{p\xi }^{\text{RF}(0)} &=&\sigma \left\{ \frac{\sigma \xi }{\sqrt{\Psi }%
+\xi _{0}}\sum_{n=-\infty }^{+\infty }\sum_{b}-\frac{\sqrt{1-\xi ^{2}}}{\xi }%
+\left[ 1-\xi ^{2}-\frac{n\Omega }{\omega _{b}}\right] D_{b,n}^{\text{RF}%
+}(p,\xi )\right\}  \\
+D_{\xi p}^{\text{RF}(0)} &=&\sigma \left\{ \frac{\sigma \xi }{\sqrt{\Psi }%
+\xi _{0}}\sum_{n=-\infty }^{+\infty }\sum_{b}-\frac{\sqrt{1-\xi ^{2}}}{\xi }%
+\left[ 1-\xi ^{2}-\frac{n\Omega }{\omega _{b}}\right] D_{b,n}^{\text{RF}%
+}(p,\xi )\right\}  \\
+D_{\xi \xi }^{\text{RF}(0)} &=&\left\{ \frac{\xi ^{2}}{\Psi \xi _{0}^{2}}%
+\sum_{n=-\infty }^{+\infty }\sum_{b}\frac{1}{\xi ^{2}}\left[ 1-\xi ^{2}-%
+\frac{n\Omega }{\omega _{b}}\right] ^{2}D_{b,n}^{\text{RF}}(p,\xi )\right\} 
+\end{eqnarray}
+where
+\begin{equation}
+\left\{ \mathcal{O}\right\} =\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2%
+}\sum\limits_{\sigma }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}%
+\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}%
+\right| }\frac{r}{R_{0}}\frac{B}{B_{P}}\frac{\xi _{0}}{\xi }\mathcal{O}
+\end{equation}
+
+Since $1-\xi ^{2}=\Psi \left( 1-\xi _{0}^{2}\right) ,$ 
+\begin{eqnarray}
+D_{pp}^{\text{RF}(0)} &=&\sum_{n=-\infty }^{+\infty }\sum_{b}(1-\xi
+_{0}^{2})D_{b,n}^{\text{RF}(0)}(p,\xi _{0}) \\
+D_{p\xi }^{\text{RF}(0)} &=&\sum_{n=-\infty }^{+\infty }\sum_{b}-\frac{\sqrt{%
+1-\xi _{0}^{2}}}{\xi _{0}}\left[ 1-\xi _{0}^{2}-\frac{n\Omega _{\min }}{%
+\omega _{b}}\right] D_{b,n}^{\text{RF}(0)}(p,\xi _{0}) \\
+D_{\xi p}^{\text{RF}(0)} &=&\sum_{n=-\infty }^{+\infty }\sum_{b}-\frac{\sqrt{%
+1-\xi _{0}^{2}}}{\xi _{0}}\left[ 1-\xi _{0}^{2}-\frac{n\Omega \min }{\omega
+_{b}}\right] D_{b,n}^{\text{RF}(0)}(p,\xi _{0}) \\
+D_{\xi \xi }^{\text{RF}(0)} &=&\sum_{n=-\infty }^{+\infty }\sum_{b}\frac{1}{%
+\xi _{0}^{2}}\left[ 1-\xi _{0}^{2}-\frac{n\Omega _{\min }}{\omega _{b}}%
+\right] ^{2}D_{b,n}^{\text{RF}(0)}(p,\xi _{0})
+\end{eqnarray}
+where 
+\begin{equation}
+D_{b,n}^{\text{RF}(0)}(p,\xi _{0})=\left\{ \Psi D_{b,n}^{\text{RF}}(p,\xi
+)\right\}   \label{bouncedrf_fp}
+\end{equation}
+and $\Omega _{\min }$ is the cyclotron frequency taken at the minimum $B$
+value, according to the relation 
+\begin{equation}
+\Omega _{\min }=\frac{eB_{\min }}{\gamma m_{e}}=-\frac{\omega _{ce,\min }}{%
+\gamma }=\frac{\Omega }{\Psi }  \label{omega0}
+\end{equation}
+with
+\begin{equation}
+\omega _{ce,\min }=\frac{\left| e\right| B_{\min }}{m_{e}}
+\end{equation}
+
+Therefore, only the bounce averaged diffusion coefficient $D_{b,n}^{\text{RF}%
+(0)}(p,\xi _{0})$ has to be calculated for the different types of RF waves,
+keeping the same formalism. It is determined by inserting expression (\ref
+{difcoeffnorm2}) into (\ref{bouncedrf_fp}),
+
+\begin{equation}
+\overline{D}_{b,n}^{\text{RF}(0)}(p,\xi _{0})=\left\{ \Psi \overline{D}%
+_{b,n,0}^{\text{RF}}\left| \Theta _{\mathbf{k}}^{b,n}\left( \mathbf{k}%
+_{b}\right) \right| ^{2}\frac{\gamma p_{Te}}{p\left| \xi \right| }\delta
+\left( N_{\Vert b}-N_{\Vert \text{res}}\right) \delta \left( \theta -\theta
+_{b}\right) \delta \left( \phi -\phi _{b}\right) \right\} 
+\end{equation}
+which gives
+\begin{equation}
+\overline{D}_{b,n}^{\text{RF}(0)}(p,\xi _{0})=\frac{\gamma p_{Te}}{p\left|
+\xi _{0}\right| }\left\{ \frac{\xi _{0}}{\xi }\Psi \overline{D}_{b,n,0}^{%
+\text{RF}}\left| \Theta _{\mathbf{k}}^{b,n}\left( \mathbf{k}_{b}\right)
+\right| ^{2}\delta \left( \theta -\theta _{b}\right) \delta \left( \phi
+-\phi _{b}\right) \delta \left( N_{\Vert b}-N_{\Vert \text{res}}\right)
+\right\} 
+\end{equation}
+with
+\begin{eqnarray}
+&&\left\{ \frac{\xi _{0}}{\xi }\Psi \overline{D}_{b,n,0}^{\text{RF}}\left|
+\Theta _{\mathbf{k}}^{b,n}\left( \mathbf{k}_{b}\right) \right| ^{2}\delta
+\left( \theta -\theta _{b}\right) \delta \left( \phi -\phi _{b}\right)
+\delta \left( N_{\Vert b}-N_{\Vert \text{res}}\right) \right\}   \nonumber \\
+&=&\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2}\sum\limits_{\sigma
+}\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }%
+\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}}%
+\frac{B}{B_{P}}\frac{\xi _{0}^{2}}{\xi ^{2}}\times   \nonumber \\
+&&\Psi \overline{D}_{b,n,0}^{\text{RF}}\left| \Theta _{\mathbf{k}%
+}^{b,n}\left( \mathbf{k}_{b}\right) \right| ^{2}\delta \left( \theta -\theta
+_{b}\right) \delta \left( \phi -\phi _{b}\right) \delta \left( N_{\Vert
+b}-N_{\Vert \text{res}}\right)  \\
+&=&\frac{1}{\lambda \widetilde{q}}\frac{r_{\theta _{b}}}{R_{0}}\frac{%
+B^{\theta _{b}}}{B_{P}^{\theta _{b}}}\frac{\xi _{0}^{2}}{\xi _{\theta
+_{b}}^{2}}\Psi _{\theta _{b}}\overline{D}_{b,n,0}^{\text{RF,}\theta
+_{b}}\left| \Theta _{\mathbf{k,}\theta _{b}}^{b,n}\left( \mathbf{k}%
+_{b}\right) \right| ^{2}\times  \\
+&&H\left( \theta _{c}-\left| \theta _{b}\right| \right) H\left( \phi
+_{c}-\left| \phi _{b}-\phi _{c}\right| \right) \left[ \frac{1}{2}%
+\sum\limits_{\sigma }\right] _{T}\delta \left( N_{\Vert b}-N_{\Vert \text{res%
+}}^{\theta _{b}}\right) 
+\end{eqnarray}
+where, $H\left( x\right) $ is the usual Heaviside step function. Therefore, 
+\begin{eqnarray}
+\overline{D}_{b,n}^{\text{RF}(0)}(p,\xi _{0}) &=&\frac{\gamma p_{Te}}{%
+p\left| \xi _{0}\right| }\frac{1}{\lambda \widetilde{q}}\frac{r_{\theta _{b}}%
+}{R_{0}}\frac{B^{\theta _{b}}}{B_{P}^{\theta _{b}}}\frac{\xi _{0}^{2}}{\xi
+_{\theta _{b}}^{2}}\Psi _{\theta _{b}}\overline{D}_{b,n,0}^{\text{RF,}\theta
+_{b}}\left| \Theta _{\mathbf{k,}\theta _{b}}^{b,n}\left( \mathbf{k}%
+_{b}\right) \right| ^{2}\times   \nonumber \\
+&&H\left( \theta _{c}-\left| \theta _{b}\right| \right) H\left( \phi
+_{c}-\left| \phi _{b}-\phi _{c}\right| \right) \left[ \frac{1}{2}%
+\sum\limits_{\sigma }\right] _{T}\delta \left( N_{\Vert b}-N_{\Vert \text{res%
+}}^{\theta _{b}}\right) 
+\end{eqnarray}
+where 
+\begin{equation}
+\xi _{\theta _{b}}^{2}=1-\Psi _{\theta _{b}}\left( 1-\xi _{0}^{2}\right) 
+\end{equation}
+\begin{equation}
+\Psi _{\theta _{b}}=\frac{B\left( \psi ,\theta _{b}\right) }{B_{\min }\left(
+\psi \right) }=\frac{B^{\theta _{b}}}{B_{\min }}
+\end{equation}
+\begin{equation}
+N_{\Vert \text{res}}^{\theta _{b}}=\frac{1}{\beta _{Te}}\frac{p_{Te}}{p\xi
+_{\theta _{b}}}\left( \gamma -\frac{n^{\prime }\Psi _{\theta _{b}}\omega
+_{ce,\min }}{\omega _{b}}\right) 
+\end{equation}
+\begin{equation}
+\overline{D}_{b,n,0}^{\text{RF,}\theta _{b}}=\frac{4\pi ^{2}}{r_{\theta
+_{b}}R_{\theta _{b}}}\frac{1}{m_{e}\ln \Lambda }\frac{1}{\omega _{b}\omega
+_{pe}^{2}}\frac{1}{\left| \mathbf{\Phi }_{b}\cdot \widehat{\psi }_{\theta
+_{b}}\right| }P_{b,\text{inc}}
+\end{equation}
+and 
+\begin{eqnarray}
+\widehat{\psi }_{\theta _{b}} &=&\widehat{\psi }(\theta _{b}) \\
+r_{\theta _{b}} &=&r\left( \psi ,\theta _{b}\right)  \\
+R_{\theta _{b}} &=&R_{0}+r\left( \psi ,\theta _{b}\right) \cos \theta _{b}
+\end{eqnarray}
+
+In addition, 
+\begin{equation}
+\Theta _{\mathbf{k,}\theta _{b}}^{b,n}\left( \mathbf{k}_{b}\right) =\frac{1}{%
+\sqrt{2}}e_{b\mathbf{k},+}e^{-i\alpha }J_{n-1}\left( z_{\theta _{b}}\right) +%
+\frac{1}{\sqrt{2}}e_{b\mathbf{k},-}e^{+i\alpha }J_{n+1}\left( z_{\theta
+_{b}}\right) +\frac{\xi _{\theta _{b}}}{\sqrt{1-\xi _{\theta _{b}}^{2}}}e_{b%
+\mathbf{k},\Vert }J_{n}\left( z_{\theta _{b}}\right) 
+\end{equation}
+with
+\begin{eqnarray}
+z_{\theta _{b}} &=&\frac{k_{\bot b}v_{\bot }^{\theta _{b}}}{\Omega _{\theta
+_{b}}}  \nonumber \\
+&=&-N_{\bot b}\frac{\omega _{b}}{\omega _{ce}^{\theta _{b}}}\frac{p}{m_{e}c}%
+\sqrt{1-\xi _{\theta _{b}}^{2}}  \nonumber \\
+&=&-N_{\bot b}\frac{\omega _{b}}{\omega _{ce,\min }}\frac{p}{m_{e}c}\frac{%
+\sqrt{1-\xi _{0}^{2}}}{\sqrt{\Psi _{\theta _{b}}}}
+\end{eqnarray}
+
+In the general case, the dispersion relation must be solved for each ray $b$
+in order to determine $k_{\bot b}$ in (\ref{zb2}) as a function of $k_{\Vert
+b}$ and $\omega _{b}$; then, the polarization components $\varepsilon _{b%
+\mathbf{k},+}$, $\varepsilon _{b\mathbf{k},-}$ and $\varepsilon _{b\mathbf{k}%
+,\Vert }$\ of the electric field must be evaluated from the elements of the
+dielectric tensor. Therefore, both $\Theta _{\mathbf{k,}\theta
+_{b}}^{b,n}\left( \mathbf{k}_{b}\right) $ (\ref{zb}) and $\mathbf{\Phi }_{b}$
+(\ref{phib2}) can be determined from the dielectric tensor, knowing $%
+k_{\Vert b}$, which can be determined along the ray path by ray-tracing
+techniques. A numerical code is required to solve the wave equation, and
+evaluate the diffusion coefficient\ (\ref{diffcoefnorm3}) in the general
+case. However, it is possible to obtain analytic expressions in some cases,
+assuming that the waves can be treated in the cold plasma limit.They are
+considered in Appendix *********
