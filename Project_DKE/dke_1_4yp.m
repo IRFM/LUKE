@@ -376,22 +376,14 @@ if radial_mode == 1,
 	xdpsinmm = [0,xdpsin(1:nr-1)];
 	xdpsinpp = [xdpsin(2:nr),0];
 %
-	XXpsin = repmat(xpsin,[npn*nmhu,1]);
-	XXpsin = reshape(XXpsin,[npn,nmhu,nr]);
-	XXdpsin = repmat(xdpsin,[npn*nmhu,1]);
-	XXdpsin = reshape(XXdpsin,[npn,nmhu,nr]);	
-	XXpsinm = repmat(xpsinm,[npn*nmhu,1]);
-	XXpsinm = reshape(XXpsinm,[npn,nmhu,nr]);	
-	XXdpsinm = repmat(xdpsinm,[npn*nmhu,1]);
-	XXdpsinm = reshape(XXdpsinm,[npn,nmhu,nr]);	
-	XXpsinp = repmat(xpsinp,[npn*nmhu,1]);
-	XXpsinp = reshape(XXpsinp,[npn,nmhu,nr]);	
-	XXdpsinp = repmat(xdpsinp,[npn*nmhu,1]);
-	XXdpsinp = reshape(XXdpsinp,[npn,nmhu,nr]);	
-	XXdpsinmm = repmat(xdpsinmm,[npn*nmhu,1]);
-	XXdpsinmm = reshape(XXdpsinmm,[npn,nmhu,nr]);	
-	XXdpsinpp = repmat(xdpsinpp,[npn*nmhu,1]);
-	XXdpsinpp = reshape(XXdpsinpp,[npn,nmhu,nr]);
+	XXpsin = reshape(repmat(xpsin,[npn*nmhu,1]),[npn,nmhu,nr]);
+	XXdpsin = reshape(repmat(xdpsin,[npn*nmhu,1]),[npn,nmhu,nr]);	
+	XXpsinm = reshape(repmat(xpsinm,[npn*nmhu,1]),[npn,nmhu,nr]);	
+	XXdpsinm = reshape(repmat(xdpsinm,[npn*nmhu,1]),[npn,nmhu,nr]);	
+	XXpsinp = reshape(repmat(xpsinp,[npn*nmhu,1]),[npn,nmhu,nr]);	
+	XXdpsinp = reshape(repmat(xdpsinp,[npn*nmhu,1]),[npn,nmhu,nr]);	
+	XXdpsinmm = reshape(repmat(xdpsinmm,[npn*nmhu,1]),[npn,nmhu,nr]);	
+	XXdpsinpp = reshape(repmat(xdpsinpp,[npn*nmhu,1]),[npn,nmhu,nr]);
 end
 %
 %Bounce average coefficients
@@ -507,24 +499,53 @@ if radial_mode == 1,
 	XXDrmm(:,:,2:nr) = XXDr(:,:,1:nr-1);
 	XXDrpp = zeros(npn,nmhu,nr);
 	XXDrpp(:,:,1:nr-1) = XXDr(:,:,2:nr);
+%
+	XXDrp = (1 - XXdeltalp).*XXDrpp + XXdeltalp.*XXDr;%Evaluation of the diffusion rate on the flux grid (linear interpolation)
+	XXDrm = (1 - XXdeltalm).*XXDr + XXdeltalm.*XXDrmm;%Evaluation of the diffusion rate on the flux grid (linear interpolation)
+%
 	XXVrmm = zeros(npn,nmhu,nr);
 	XXVrmm(:,:,2:nr) = XXVr(:,:,1:nr-1);
 	XXVrpp = zeros(npn,nmhu,nr);
 	XXVrpp(:,:,1:nr-1) = XXVr(:,:,2:nr);
 %
-	XXDrp = (1 - XXdeltalp).*XXDrpp + XXdeltalp.*XXDr;%Evaluation of the diffusion rate on the flux grid (linear interpolation)
-	XXDrm = (1 - XXdeltalm).*XXDr + XXdeltalm.*XXDrmm;%Evaluation of the diffusion rate on the flux grid (linear interpolation)
 	XXVrp = (1 - XXdeltalp).*XXVrpp + XXdeltalp.*XXVr;%Evaluation of the convection on the flux grid (linear interpolation)
 	XXVrm = (1 - XXdeltalm).*XXVr + XXdeltalm.*XXVrmm;%Evaluation of the convection on the flux grid (linear interpolation)
 %
-	XXalphar = repmat(reshape(xqtilde'.*xR0'.*xBp0'./xB0',[1,1,nr]),[npn,nmhu,1]);
-	XXalpharmm = zeros(npn,nmhu,nr);
-	XXalpharmm(:,:,2:nr) = XXalphar(:,:,1:nr-1);
-	XXalpharpp = zeros(npn,nmhu,nr);
-	XXalpharpp(:,:,1:nr-1) = XXalphar(:,:,2:nr);
+	XXR0 = repmat(reshape(xR0',[1,1,nr]),[npn,nmhu,1]);
+	XXR0mm = zeros(npn,nmhu,nr);
+	XXR0mm(:,:,2:nr) = XXR0(:,:,1:nr-1);
+	XXR0pp = zeros(npn,nmhu,nr);
+	XXR0pp(:,:,1:nr-1) = XXR0(:,:,2:nr);
 %
-	XXalpharp = (1 - XXdeltalp).*XXalpharpp + XXdeltalp.*XXalphar;%Evaluation on the flux grid (linear interpolation)
-	XXalpharm = (1 - XXdeltalm).*XXalphar + XXdeltalm.*XXalpharmm;%Evaluation on the flux grid (linear interpolation)
+	XXR0p = (1 - XXdeltalp).*XXR0pp + XXdeltalp.*XXR0;%Evaluation on the flux grid (linear interpolation)
+	XXR0m = (1 - XXdeltalm).*XXR0 + XXdeltalm.*XXR0mm;%Evaluation on the flux grid (linear interpolation)
+%
+	XXqtilde = repmat(reshape(xqtilde',[1,1,nr]),[npn,nmhu,1]);
+	XXqtildemm = zeros(npn,nmhu,nr);
+	XXqtildemm(:,:,2:nr) = XXqtilde(:,:,1:nr-1);
+	XXqtildepp = zeros(npn,nmhu,nr);
+	XXqtildepp(:,:,1:nr-1) = XXqtilde(:,:,2:nr);
+%
+	XXqtildep = (1 - XXdeltalp).*XXqtildepp + XXdeltalp.*XXqtilde;%Evaluation on the flux grid (linear interpolation)
+	XXqtildem = (1 - XXdeltalm).*XXqtilde + XXdeltalm.*XXqtildemm;%Evaluation on the flux grid (linear interpolation)
+%	
+	XXBp0 = repmat(reshape(xBp0',[1,1,nr]),[npn,nmhu,1]);
+	XXBp0mm = zeros(npn,nmhu,nr);
+	XXBp0mm(:,:,2:nr) = XXBp0(:,:,1:nr-1);
+	XXBp0pp = zeros(npn,nmhu,nr);
+	XXBp0pp(:,:,1:nr-1) = XXBp0(:,:,2:nr);
+%
+	XXBp0p = (1 - XXdeltalp).*XXBp0pp + XXdeltalp.*XXBp0;%Evaluation on the flux grid (linear interpolation)
+	XXBp0m = (1 - XXdeltalm).*XXBp0 + XXdeltalm.*XXBp0mm;%Evaluation on the flux grid (linear interpolation)
+%
+	XXB0 = repmat(reshape(xB0',[1,1,nr]),[npn,nmhu,1]);
+	XXB0mm = zeros(npn,nmhu,nr);
+	XXp0mm(:,:,2:nr) = XXB0(:,:,1:nr-1);
+	XXB0pp = zeros(npn,nmhu,nr);
+	XXB0pp(:,:,1:nr-1) = XXB0(:,:,2:nr);
+%
+	XXB0p = (1 - XXdeltalp).*XXB0pp + XXdeltalp.*XXB0;%Evaluation on the flux grid (linear interpolation)
+	XXB0m = (1 - XXdeltalm).*XXB0 + XXdeltalm.*XXB0mm;%Evaluation on the flux grid (linear interpolation)
 %
 	XXlambdamm = zeros(npn,nmhu,nr);
 	XXlambdamm(:,:,2:nr) = XXlambda(:,:,1:nr-1);
@@ -534,23 +555,10 @@ if radial_mode == 1,
 	XXlambdap = (1 - XXdeltalp).*XXlambdapp + XXdeltalp.*XXlambda;%Evaluation on the flux grid (linear interpolation)
 	XXlambdam = (1 - XXdeltalm).*XXlambda + XXdeltalm.*XXlambdamm;%Evaluation on the flux grid (linear interpolation)
 %	
-	XXR0 = repmat(reshape(xR0',[1,1,nr]),[npn,nmhu,1]);	
-	XXR0mm = zeros(npn,nmhu,nr);
-	XXR0mm(:,:,2:nr) = XXR0(:,:,1:nr-1);
-	XXR0pp = zeros(npn,nmhu,nr);
-	XXR0pp(:,:,1:nr-1) = XXR0(:,:,2:nr);
-%
-	XXR0p = (1 - XXdeltalp).*XXR0pp + XXdeltalp.*XXR0;%Evaluation on the flux grid (linear interpolation)
-	XXR0m = (1 - XXdeltalm).*XXR0 + XXdeltalm.*XXR0mm;%Evaluation on the flux grid (linear interpolation)	
-%
-	XXBp0 = repmat(reshape(xBp0',[1,1,nr]),[npn,nmhu,1]);	
-	XXBp0mm = zeros(npn,nmhu,nr);
-	XXBp0mm(:,:,2:nr) = XXBp0(:,:,1:nr-1);
-	XXBp0pp = zeros(npn,nmhu,nr);
-	XXBp0pp(:,:,1:nr-1) = XXBp0(:,:,2:nr);
-%
-	XXBp0p = (1 - XXdeltalp).*XXBp0pp + XXdeltalp.*XXBp0;%Evaluation on the flux grid (linear interpolation)
-	XXBp0m = (1 - XXdeltalm).*XXBp0 + XXdeltalm.*XXBp0mm;%Evaluation on the flux grid (linear interpolation)	
+	XXalpharp = XXR0p.*XXqtildep.*XXBp0p.*XXlambdap./XXB0p;%Evaluation on the flux grid (linear interpolation)
+	XXalpharm = XXR0m.*XXqtildem.*XXBp0m.*XXlambdam./XXB0m;%Evaluation on the flux grid (linear interpolation)
+	XXalpharm(:,:,1) = 0;%Force zero at the plasma center, which is the natural analytical limit (In cylindrical geometry, r=0)
+	XXalpharp(:,:,nr) = 0;%Avoid NaN
 end
 %
 %************************************************** Matrices calculation ******************************************************** 
@@ -561,10 +569,10 @@ time0 = clock;
 %
 if radial_mode == 1,
 %	
-	XXMrm = -(XXalpharm.*XXlambdam.*XXR0m.*XXBp0m./XXdpsinm./XXdpsin).*XXDrm - (XXalpharm.*XXlambdam./XXdpsin).*XXVrm.*XXdeltalm;
-	XXMr = (XXalpharp.*XXlambdap.*XXR0p.*XXBp0p./XXdpsinp./XXdpsin).*XXDrp + (XXalpharp.*XXlambdap./XXdpsin).*XXVrp.*XXdeltalp +...
-	       (XXalpharm.*XXlambdam.*XXR0m.*XXBp0m./XXdpsinm./XXdpsin).*XXDrm - (XXalpharm.*XXlambdam./XXdpsin).*XXVrm.*(1 - XXdeltalm);				       
-	XXMrp = -(XXalpharp.*XXlambdap.*XXR0p.*XXBp0p./XXdpsinp./XXdpsin).*XXDrp + (XXalpharp.*XXlambdap./XXdpsin).*XXVrp.*(1 - XXdeltalp);
+	XXMrm = -(XXalpharm.*XXR0m.*XXBp0m./XXdpsinm./XXdpsin).*XXDrm - (XXalpharm./XXdpsin).*XXVrm.*XXdeltalm;
+	XXMr = (XXalpharp.*XXR0p.*XXBp0p./XXdpsinp./XXdpsin).*XXDrp + (XXalpharp./XXdpsin).*XXVrp.*XXdeltalp +...
+	       (XXalpharm.*XXR0m.*XXBp0m./XXdpsinm./XXdpsin).*XXDrm - (XXalpharm./XXdpsin).*XXVrm.*(1 - XXdeltalm);				       
+	XXMrp = -(XXalpharp.*XXR0p.*XXBp0p./XXdpsinp./XXdpsin).*XXDrp + (XXalpharp./XXdpsin).*XXVrp.*(1 - XXdeltalp);
 %
 	XXMrm = XXMrm.*XXpn2./XXlambda;%Partial Jacobian multiplication
 	XXMr = XXMr.*XXpn2./XXlambda;%Partial Jacobian multiplication
@@ -573,6 +581,11 @@ if radial_mode == 1,
 	Xmask_r_edge = (XXDr(:,:,nr) > 0);
 	XXMrm(:,:,nr) = 0;%Edge boundary condition (Maxwellian solution)
 	XXMr(:,:,nr) = 0;%Edge boundary condition (Maxwellian solution)
+
+	
+	save toto.mat XXalpharp 
+	
+	
 %
 % Radial off-diagonal terms for fast electron transport
 %
@@ -713,11 +726,6 @@ if radial_mode == 1,
 		if display_mode >= 1,info_dke_yp(2,['Configuration space matrix calculations (',int2str(ir),'/',int2str(nr),') done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);end
 	end
 end
-if display_mode == 2,
-	figure(1004),spy(MMXP_f_r_t),zoom
-	title('Configuration space matrix');
-end
-%
 %
 % RF wave coefficients
 %
@@ -1708,6 +1716,25 @@ if display_mode >= 1,
 	end
 end
 %
+if display_mode == 2,
+	figure(3000),spy(MMXP_f_t);
+	zoom on;
+	axis('square');
+	title('Momentum space matrix');
+%
+	if radial_mode == 1,
+		figure(3001),spy(MMXP_f_r_t);
+		zoom on;
+		axis('square');
+		title('Configuration space matrix');	
+	end
+%
+	figure(3002),spy(MMXPC_f_t);
+	zoom on;
+	axis('square');
+	title('Total preconditionned matrix');
+end
+%
 %************************************************** Main Fokker-Planck loop ******************************************************** 
 %
 if display_mode >= 1,
@@ -1729,25 +1756,25 @@ for it = 2:nit_f,
 			XI = squeeze(XXI(:,:,ir));
 %
 			if store_mode == 1,
-            		eval(['load MXPmat.mat Xmask_',int2str(ir),'_f0']);
+            eval(['load MXPmat.mat Xmask_',int2str(ir),'_f0']);
         	end
 %
-		eval(['Xmask_f0 = Xmask_',int2str(ir),'_f0;']);%Load local value
-		Xf0_t = Xf0(:,Xmask_f0);
+        	eval(['Xmask_f0 = Xmask_',int2str(ir),'_f0;']);%Load local value
+        	Xf0_t = Xf0(:,Xmask_f0);
 %
-		if radial_mode == 1,
-			Xmask_r_edge_t = Xmask_r_edge(:,Xmask_f0);
-		end
+        	if radial_mode == 1,
+        		Xmask_r_edge_t = Xmask_r_edge(:,Xmask_f0);
+        	end
 %
-		XfM_t = XfM(:,Xmask_f0);
-		Xpn2_t = Xpn2(:,Xmask_f0);	
+        	XfM_t = XfM(:,Xmask_f0);
+        	Xpn2_t = Xpn2(:,Xmask_f0);	
 %
-		MMXf0_t = [MMXf0_t;reshape(Xf0_t',(nmhu - ns(ir))*npn,1)];
+        	MMXf0_t = [MMXf0_t;reshape(Xf0_t',(nmhu - ns(ir))*npn,1)];
 %
-		Xq = (XI + time_scheme*Xf0/dtn).*Xpn2;%Xpn2 is here as part of the partial Jacobian used to avoid singularities at p = 0
-		Xq_t = Xq(:,Xmask_f0);%Symmetric trapped domain removed
-		if bounce_mode == 1,Xq_t(2:npn,nmhu/2 + 1 - ns(ir)) = 0;end;%df/dmhu(mhu == pi/2) = 0   
-			MMXq_t = [MMXq_t;(xqtilde(ir)/xB0(ir))*reshape(Xq_t',(nmhu - ns(ir))*npn,1)];%Multiplication by the partial Jacobian to avoid singularities at p = 0
+        	Xq = (XI + time_scheme*Xf0/dtn).*Xpn2;%Xpn2 is here as part of the partial Jacobian used to avoid singularities at p = 0
+        	Xq_t = Xq(:,Xmask_f0);%Symmetric trapped domain removed
+        	if bounce_mode == 1,Xq_t(2:npn,nmhu/2 + 1 - ns(ir)) = 0;end;%df/dmhu(mhu == pi/2) = 0   
+        	MMXq_t = [MMXq_t;(xqtilde(ir)/xB0(ir))*reshape(Xq_t',(nmhu - ns(ir))*npn,1)];%Multiplication by the partial Jacobian to avoid singularities at p = 0
 		end
 %
 		if radial_mode == 1,%Edge radial boundary condition: f(r/a = 1) = fM(r/a) where transport operates
