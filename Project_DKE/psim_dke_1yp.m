@@ -55,7 +55,7 @@ grid_power = 1.5; % power for mhu grid step varations (grid_power > 1) (Note: fo
 %Momentum grid
 %
 np_S_ref = 20;%position in the mpomentum grid where dpn_S is twice the minimum value(must be ajusted with snp parameter)
-snp = 2;%pgridfactor (Uniform grid: pgridfactor = 1, non-uniform grid: pgridfactor >= 1) 
+snp = 2;%pgridfactor (Uniform grid: pgridfactor = 1, non-uniform grid: pgridfactor > 1) 
 spfac = 20;%reduction factor for the momentum supergrid used in collision integrals
 %
 %Normalized radii at which the distribution is calculated (DKE or FP)
@@ -91,6 +91,7 @@ rf_list(3) = 0;%[0 or 1] Cold plasma LHCD calculations (see psim_coldlhcd_jd);
 rf_list(4) = 0;%[0,1 or 2] Cold plasma ECCD calculations (see psim_coldeccd_jd); (2): RT calculations in wpe << wce limit (see psim_straightray_jd) 
 rf_list(5) = 0;%*** to be implemented *** Hot plasma ECCD calculations (see psim_warmeccd_jd)
 rf_list(6) = 0;%*** to be implemented *** (1): EBW calculations (see psim_ebw_jd)
+rf_list(7) = 0;%[0,1 or 2] Warm plasma LHCD calculations;
 %
 nit_rf = 20;% maximum number of iteration in ray-tracing (only in RT mode)
 prec_rf = 1e-4;%relative precision in RT-DKE iterations
