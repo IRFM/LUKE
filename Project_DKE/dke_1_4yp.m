@@ -1650,11 +1650,11 @@ if dke_mode == 1,
 %	
 % Collisions
 %
-		XDpp_c_tp_ippj = XXApp(:,:,jr2).*XXRlambda_b_p1m1(:,:,jr2);
-		XDpp_c_tp_ipj = XXAp(:,:,jr2).*XXRlambda_b_p1m1(:,:,jr2);
-		XDpp_c_tp_ij = XXA(:,:,jr2).*XXRlambda_b_p1m1(:,:,jr2);
-		XDpp_c_tp_imj = XXAm(:,:,jr2).*XXRlambda_b_p1m1(:,:,jr2);
-		XDpp_c_tp_immj = XXAmm(:,:,jr2).*XXRlambda_b_p1m1(:,:,jr2);
+		XDpp_c_tp_ippj = (XXAeepp(:,:,jr2) + XXAeipp(:,:,jr2)).*XXRlambda_b_p1m1(:,:,jr2);
+		XDpp_c_tp_ipj = (XXAeep(:,:,jr2) + XXAeip(:,:,jr2)).*XXRlambda_b_p1m1(:,:,jr2);
+		XDpp_c_tp_ij = (XXAee(:,:,jr2) + XXAei(:,:,jr2)).*XXRlambda_b_p1m1(:,:,jr2);
+		XDpp_c_tp_imj = (XXAeem(:,:,jr2) + XXAeim(:,:,jr2)).*XXRlambda_b_p1m1(:,:,jr2);
+		XDpp_c_tp_immj = (XXAeemm(:,:,jr2) + XXAeimm(:,:,jr2)).*XXRlambda_b_p1m1(:,:,jr2);
 %
 		XDpm_c_tp_ipj = zeros(npn,nmhu);
 		XDpm_c_tp_ij = zeros(npn,nmhu);
@@ -1664,17 +1664,17 @@ if dke_mode == 1,
 		XDmp_c_tp_ij = zeros(npn,nmhu);
 		XDmp_c_tp_ijm = zeros(npn,nmhu);
 %
-		XDmm_c_tp_ijp = XXBt(:,:,jr2).*XXRlambda_b_p3m2_p(:,:,jr2);
-		XDmm_c_tp_ijm = XXBt(:,:,jr2).*XXRlambda_b_p3m2_m(:,:,jr2);
+		XDmm_c_tp_ijp = (XXBtee(:,:,jr2) + XXBtei(:,:,jr2)).*XXRlambda_b_p3m2_p(:,:,jr2);
+		XDmm_c_tp_ijm = (XXBtee(:,:,jr2) + XXBtei(:,:,jr2)).*XXRlambda_b_p3m2_m(:,:,jr2);
 %
-		XFp_c_tp_ippj = -XXFpp(:,:,jr2).*XXRlambda_b_p1m1(:,:,jr2);
-		XFp_c_tp_ipj = -XXFp(:,:,jr2).*XXRlambda_b_p1m1(:,:,jr2);
-		XFp_c_tp_ij = -XXF(:,:,jr2).*XXRlambda_b_p1m1(:,:,jr2);
-		XFp_c_tp_imj = -XXFm(:,:,jr2).*XXRlambda_b_p1m1(:,:,jr2);
-		XFp_c_tp_immj = -XXFmm(:,:,jr2).*XXRlambda_b_p1m1(:,:,jr2);	
+		XFp_c_tp_ippj = -(XXFeepp(:,:,jr2) + XXFeipp(:,:,jr2)).*XXRlambda_b_p1m1(:,:,jr2);
+		XFp_c_tp_ipj = -(XXFeep(:,:,jr2) + XXFeip(:,:,jr2)).*XXRlambda_b_p1m1(:,:,jr2);
+		XFp_c_tp_ij = -(XXFee(:,:,jr2) + XXFei(:,:,jr2)).*XXRlambda_b_p1m1(:,:,jr2);
+		XFp_c_tp_imj = -(XXFeem(:,:,jr2) + XXFeim(:,:,jr2)).*XXRlambda_b_p1m1(:,:,jr2);
+		XFp_c_tp_immj = -(XXFeemm(:,:,jr2) + XXFeimm(:,:,jr2)).*XXRlambda_b_p1m1(:,:,jr2);	
 %
-		XFm_c_tp_ijp = XXBt(:,:,jr2).*(XXRlambda_b_p1m1_p(:,:,jr2) - XXRlambda_b_p1m2_p(:,:,jr2)).*sqrt(X1mmhu2p)./Xpn./Xmhu2p./Xmhup;
-		XFm_c_tp_ijm = XXBt(:,:,jr2).*(XXRlambda_b_p1m1_m(:,:,jr2) - XXRlambda_b_p1m2_m(:,:,jr2)).*sqrt(X1mmhu2m)./Xpn./Xmhu2m./Xmhum;
+		XFm_c_tp_ijp = (XXBtee(:,:,jr2) + XXBtei(:,:,jr2)).*(XXRlambda_b_p1m1_p(:,:,jr2) - XXRlambda_b_p1m2_p(:,:,jr2)).*sqrt(X1mmhu2p)./Xpn./Xmhu2p./Xmhup;
+		XFm_c_tp_ijm = (XXBtee(:,:,jr2) + XXBtei(:,:,jr2)).*(XXRlambda_b_p1m1_m(:,:,jr2) - XXRlambda_b_p1m2_m(:,:,jr2)).*sqrt(X1mmhu2m)./Xpn./Xmhu2m./Xmhum;
 %    
 		XXDpp_c_tp_imj(:,:,jr2) = XDpp_c_tp_imj;
 		XXDpm_c_tp_imj(:,:,jr2) = XDpm_c_tp_imj;
@@ -1804,29 +1804,29 @@ if dke_mode == 1,
 %
 %Boundary conditions because of cross-derivatives (symmetry of f: fj-1/2=fj+1/2)
 %
-		Xc_tp(:,1,ir) = Xc_tp(:,1,ir) + Xa_tp(:,1,ir);
-		Xd_tp(:,1,ir) = Xd_tp(:,1,ir) + Xi_tp(:,1,ir);
-		Xb_tp(:,1,ir) = Xb_tp(:,1,ir) + Xf_tp(:,1,ir);
+		Xc_tp(:,1) = Xc_tp(:,1) + Xa_tp(:,1);
+		Xd_tp(:,1) = Xd_tp(:,1) + Xi_tp(:,1);
+		Xb_tp(:,1) = Xb_tp(:,1) + Xf_tp(:,1);
 
-		Xa_tp(:,1,ir) = 0;
-		Xi_tp(:,1,ir) = 0;
-		Xf_tp(:,1,ir) = 0;
+		Xa_tp(:,1) = 0;
+		Xi_tp(:,1) = 0;
+		Xf_tp(:,1) = 0;
 
-		Xc_tp(:,nmhu,ir) = Xc_tp(:,nmhu,ir) + Xe_tp(:,nmhu,ir);
-		Xd_tp(:,nmhu,ir) = Xd_tp(:,nmhu,ir) + Xg_tp(:,nmhu,ir);
-		Xb_tp(:,nmhu,ir) = Xb_tp(:,nmhu,ir) + Xh_tp(:,nmhu,ir);
+		Xc_tp(:,nmhu) = Xc_tp(:,nmhu) + Xe_tp(:,nmhu);
+		Xd_tp(:,nmhu) = Xd_tp(:,nmhu) + Xg_tp(:,nmhu);
+		Xb_tp(:,nmhu) = Xb_tp(:,nmhu) + Xh_tp(:,nmhu);
 
-		Xe_tp(:,nmhu,ir) = 0;
-		Xg_tp(:,nmhu,ir) = 0;
-		Xh_tp(:,nmhu,ir) = 0;
+		Xe_tp(:,nmhu) = 0;
+		Xg_tp(:,nmhu) = 0;
+		Xh_tp(:,nmhu) = 0;
 
-		Xc_tp(1,:,ir) = Xc_tp(1,:,ir) + fliplr(Xb_tp(1,:,ir));
-		Xa_tp(1,:,ir) = Xa_tp(1,:,ir) + fliplr(Xf_tp(1,:,ir));
-		Xe_tp(1,:,ir) = Xe_tp(1,:,ir) + fliplr(Xh_tp(1,:,ir));
+		Xc_tp(1,:) = Xc_tp(1,:) + fliplr(Xb_tp(1,:));
+		Xa_tp(1,:) = Xa_tp(1,:) + fliplr(Xf_tp(1,:));
+		Xe_tp(1,:) = Xe_tp(1,:) + fliplr(Xh_tp(1,:));
 
-		Xb_tp(1,:,ir) = 0;
-		Xh_tp(1,:,ir) = 0;
-		Xf_tp(1,:,ir) = 0;
+		Xb_tp(1,:) = 0;
+		Xh_tp(1,:) = 0;
+		Xf_tp(1,:) = 0;
 %
 %Correction matrix resulting from the radial gradient of Chang and Cooper interpolation coefficients
 %           		
@@ -2299,7 +2299,7 @@ if dke_mode == 1,
 % Initial guess for the iterative loop (Lorentz model)
 %
 		XdfMdpsi = -dpsim*XfMp/dpsi/dpsip - (dpsip + dpsim)*XfM/dpsip/dpsim + dpsip*XfMm/dpsi/dpsim;%Calculation of the radial gradient of fM (parabolic interpolation) 
-		XXf0_g_th(:,:,jr2) = xftp_norm(jr2).*Xpn.*(Xmhu./abs(Xmhu)).*XXfM(:,:,jr2).*abs(XXILor(:,:,jr2));%**********signe ??????
+		XXf0_g_th(:,:,jr2) = -xftp_norm(jr2).*Xpn.*(Xmhu./abs(Xmhu)).*XXfM(:,:,jr2).*abs(XXILor(:,:,jr2));%
 %
 %First order Legendre correction for ftp
 %	  
