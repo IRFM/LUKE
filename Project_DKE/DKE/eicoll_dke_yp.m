@@ -20,8 +20,10 @@ elseif coll_mode == 3,%Lorentz model
 	Aei = zeros(size(v));
 	Btei = ones(size(v))/2;
 else,%Maxwellian background (non-relativistic limit)
-	u = (ones(size(xzTi_norm(:,ir)))*v)./(sqrt(xzTi_norm(:,ir).*(me./zmi'))*ones(1,length(v)))./sqrt(2);	
+        iu = find(xzTi_norm(:,ir)==0);%To remove singularities when Ti = 0 exactly
+	u = (ones(size(xzTi_norm(:,ir)))*v)./(sqrt(xzTi_norm(:,ir).*(me./zmi'))*ones(1,length(v)))./sqrt(2);
+	u(iu,:) = 1e+200;
 	Fei = sum(((zZi'.^2.*(me./zmi').*xzni_norm(:,ir))*ones(1,length(v))).*(erf(u)-2*u.*exp(-u.^2)/sqrt(pi)))./v2;
 	Aei = sum(((zZi'.^2.*xzni_norm(:,ir))*ones(1,length(v))).*(erf(u)-2*u.*exp(-u.^2)/sqrt(pi))./u./u)./v/2;	
-	Btei = sum(((zZi'.^2.*xzni_norm(:,ir))*ones(1,length(v))).*((2-1./u./u).*erf(u) + 2*exp(-u.^2)./u/sqrt(pi)))./v/4;				
+	Btei = sum(((zZi'.^2.*xzni_norm(:,ir))*ones(1,length(v))).*((2-1./u./u).*erf(u) + 2*exp(-u.^2)./u/sqrt(pi)))./v/4;
 end
