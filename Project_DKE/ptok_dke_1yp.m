@@ -212,6 +212,36 @@ elseif strcmp(name,'RTP') == 1,
 	eZeff = 0;
 % diagnostics
 	HXR{1,1} = NaN;%No HXR tomographic system
+% HELENA input file
+	file_helena = '';
+elseif strcmp(name,'TCV') == 1,%some parameters are incorrect for TCV
+	ap = 0.25;
+	Rp = 0.88;
+	Ip = 0.12;
+	Bt = 1.4;
+	Ncoils = NaN;
+	Zi = [1,1,1,6];
+	mi = [1,2,3,12];
+	fi = [0,1,0.0];
+%
+	BeLi = NaN;
+	qmin = 1.0;
+	eq = 0;%Parabolic dependence
+%
+	Te0 = 3.5;
+	Tea = 0.0;
+	eTe = 3;
+	eTe_ref = 3;
+	ne0 = 1e+19;
+	nea = 1;
+	ene = 0;
+	ene_ref = 0;
+	Ti0 = 1;
+	Tia = 0;
+	eTi = 3;
+	Zeff0 = 1;
+	Zeffa = 1;
+	eZeff = 0;
 elseif strcmp(name,'JT60_exp') == 1,%PoP 7 1927 (2000)
    ap = 0.8;
    Rp = 3.35;
