@@ -238,25 +238,6 @@ clear YXXopt
 %
 for n_rf = 0:nmax_rf;
     %
-    % Polarization term 
-    %
-    % Polarization vector is normed to 1.  
-    %
-    YXXpolb_ippj = YXXepolp_rf.*besselj_dke_jd(n_rf + 1,YXXZb_ippj,YXXlre)/sqrt(2) + YXXepolm_rf.*besselj_dke_jd(n_rf - 1,YXXZb_ippj,YXXlre)/sqrt(2)...
-               - YXXmhub.*YXXepolz_rf.*besselj_dke_jd(n_rf,YXXZb_ippj,YXXlre)./sqrt(YXXpsib.*YXX1mmhu2);
-    YXXpolb_ipj = YXXepolp_rf.*besselj_dke_jd(n_rf + 1,YXXZb_ipj,YXXlre)/sqrt(2) + YXXepolm_rf.*besselj_dke_jd(n_rf - 1,YXXZb_ipj,YXXlre)/sqrt(2)...
-               - YXXmhub.*YXXepolz_rf.*besselj_dke_jd(n_rf,YXXZb_ipj,YXXlre)./sqrt(YXXpsib.*YXX1mmhu2);
-    YXXpolb_ij = YXXepolp_rf.*besselj_dke_jd(n_rf + 1,YXXZb_ij,YXXlre)/sqrt(2) + YXXepolm_rf.*besselj_dke_jd(n_rf - 1,YXXZb_ij,YXXlre)/sqrt(2)...
-               - YXXmhub.*YXXepolz_rf.*besselj_dke_jd(n_rf,YXXZb_ij,YXXlre)./sqrt(YXXpsib.*YXX1mmhu2);
-    YXXpolb_imj = YXXepolp_rf.*besselj_dke_jd(n_rf + 1,YXXZb_imj,YXXlre)/sqrt(2) + YXXepolm_rf.*besselj_dke_jd(n_rf - 1,YXXZb_imj,YXXlre)/sqrt(2)...
-               - YXXmhub.*YXXepolz_rf.*besselj_dke_jd(n_rf,YXXZb_imj,YXXlre)./sqrt(YXXpsib.*YXX1mmhu2);
-    YXXpolb_immj = YXXepolp_rf.*besselj_dke_jd(n_rf + 1,YXXZb_immj,YXXlre)/sqrt(2) + YXXepolm_rf.*besselj_dke_jd(n_rf - 1,YXXZb_immj,YXXlre)/sqrt(2)...
-               - YXXmhub.*YXXepolz_rf.*besselj_dke_jd(n_rf,YXXZb_immj,YXXlre)./sqrt(YXXpsib.*YXX1mmhu2);
-    YXXpolb_ijp = YXXepolp_rf.*besselj_dke_jd(n_rf + 1,YXXZb_ijp,YXXlre)/sqrt(2) + YXXepolm_rf.*besselj_dke_jd(n_rf - 1,YXXZb_ijp,YXXlre)/sqrt(2)...
-               - YXXmhubp.*YXXepolz_rf.*besselj_dke_jd(n_rf,YXXZb_ijp,YXXlre)./sqrt(YXXpsib.*YXX1mmhu2p);
-    YXXpolb_ijm = YXXepolp_rf.*besselj_dke_jd(n_rf + 1,YXXZb_ijm,YXXlre)/sqrt(2) + YXXepolm_rf.*besselj_dke_jd(n_rf - 1,YXXZb_ijm,YXXlre)/sqrt(2)...
-               - YXXmhubm.*YXXepolz_rf.*besselj_dke_jd(n_rf,YXXZb_ijm,YXXlre)./sqrt(YXXpsib.*YXX1mmhu2m);    
-    %
     % Resonance Condition: resonant Npar
     %
     YXXnparres_ippj = (YXXgammapp - n_rf.*YXXomegac.*YXXpsib./YXXomega_rf)/betath_ref./YXXpnpp./YXXmhub;
@@ -300,6 +281,12 @@ for n_rf = 0:nmax_rf;
     %
     clear YXXnparres_ippj YXXnparres_ipj YXXnparres_ij YXXnparres_imj YXXnparres_immj YXXnparres_ijp YXXnparres_ijm
     %
+    % Select only relevant harmonics
+    %
+    if max(max(max(max(YXXdeltares_ij)))) < 1e-10 %this harmonic is not a significant contribution 
+        continue
+    end
+    %
     %Old technique for calculating the LH matrix coefficients, for comparaison with previous versions (Karney, Shoucri)
     %
     YXXdeltares_old_ij = YXXdeltares_ij;
@@ -339,6 +326,25 @@ for n_rf = 0:nmax_rf;
     YXXdeltares_ijm = YXXold.*YXXdeltares_old_ijm + ~YXXold.*YXXdeltares_ijm;
     %
     clear YXXdeltares_old_ippj YXXdeltares_old_ipj YXXdeltares_old_ij YXXdeltares_old_imj YXXdeltares_old_immj YXXdeltares_old_ijp YXXdeltares_old_ijm 
+    %
+    % Polarization term 
+    %
+    % Polarization vector is normed to 1.  
+    %
+    YXXpolb_ippj = YXXepolp_rf.*besselj_dke_jd(n_rf + 1,YXXZb_ippj,YXXlre)/sqrt(2) + YXXepolm_rf.*besselj_dke_jd(n_rf - 1,YXXZb_ippj,YXXlre)/sqrt(2)...
+               - YXXmhub.*YXXepolz_rf.*besselj_dke_jd(n_rf,YXXZb_ippj,YXXlre)./sqrt(YXXpsib.*YXX1mmhu2);
+    YXXpolb_ipj = YXXepolp_rf.*besselj_dke_jd(n_rf + 1,YXXZb_ipj,YXXlre)/sqrt(2) + YXXepolm_rf.*besselj_dke_jd(n_rf - 1,YXXZb_ipj,YXXlre)/sqrt(2)...
+               - YXXmhub.*YXXepolz_rf.*besselj_dke_jd(n_rf,YXXZb_ipj,YXXlre)./sqrt(YXXpsib.*YXX1mmhu2);
+    YXXpolb_ij = YXXepolp_rf.*besselj_dke_jd(n_rf + 1,YXXZb_ij,YXXlre)/sqrt(2) + YXXepolm_rf.*besselj_dke_jd(n_rf - 1,YXXZb_ij,YXXlre)/sqrt(2)...
+               - YXXmhub.*YXXepolz_rf.*besselj_dke_jd(n_rf,YXXZb_ij,YXXlre)./sqrt(YXXpsib.*YXX1mmhu2);
+    YXXpolb_imj = YXXepolp_rf.*besselj_dke_jd(n_rf + 1,YXXZb_imj,YXXlre)/sqrt(2) + YXXepolm_rf.*besselj_dke_jd(n_rf - 1,YXXZb_imj,YXXlre)/sqrt(2)...
+               - YXXmhub.*YXXepolz_rf.*besselj_dke_jd(n_rf,YXXZb_imj,YXXlre)./sqrt(YXXpsib.*YXX1mmhu2);
+    YXXpolb_immj = YXXepolp_rf.*besselj_dke_jd(n_rf + 1,YXXZb_immj,YXXlre)/sqrt(2) + YXXepolm_rf.*besselj_dke_jd(n_rf - 1,YXXZb_immj,YXXlre)/sqrt(2)...
+               - YXXmhub.*YXXepolz_rf.*besselj_dke_jd(n_rf,YXXZb_immj,YXXlre)./sqrt(YXXpsib.*YXX1mmhu2);
+    YXXpolb_ijp = YXXepolp_rf.*besselj_dke_jd(n_rf + 1,YXXZb_ijp,YXXlre)/sqrt(2) + YXXepolm_rf.*besselj_dke_jd(n_rf - 1,YXXZb_ijp,YXXlre)/sqrt(2)...
+               - YXXmhubp.*YXXepolz_rf.*besselj_dke_jd(n_rf,YXXZb_ijp,YXXlre)./sqrt(YXXpsib.*YXX1mmhu2p);
+    YXXpolb_ijm = YXXepolp_rf.*besselj_dke_jd(n_rf + 1,YXXZb_ijm,YXXlre)/sqrt(2) + YXXepolm_rf.*besselj_dke_jd(n_rf - 1,YXXZb_ijm,YXXlre)/sqrt(2)...
+               - YXXmhubm.*YXXepolz_rf.*besselj_dke_jd(n_rf,YXXZb_ijm,YXXlre)./sqrt(YXXpsib.*YXX1mmhu2m);    
     %
     %Sum over sigma for trapped particles
     %
