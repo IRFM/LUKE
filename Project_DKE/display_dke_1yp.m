@@ -72,7 +72,7 @@ end
 %
 %Calculation of the flux averaged Maxwellian bootstrap current from Hirshman, Sauter, Hinton & Hazeltine models (bulk contribution)
 %
-[prho,pcurr_hir_mksa_fsav,pcurr_sau_mksa_fsav,pcurr_hin_mksa_fsav,pcurr_i_mksa_fsav,L31] = hsneomodels_dke_jd(tokname);
+[prho,pcurr_hir_mksa_fsav,pcurr_sau_mksa_fsav,pcurr_hin_mksa_fsav,pcurr_i_mksa_fsav,L31] = hsneomodels_dke_jd(equil);
 %
 xcurr_hir_mksa_fsav = interp1(prho,pcurr_hir_mksa_fsav,xrho_dke);
 xcurr_sau_mksa_fsav = interp1(prho,pcurr_sau_mksa_fsav,xrho_dke);
@@ -552,7 +552,9 @@ while 1,
             graph1D_jd(x9,y9,0,0,xlab1,xlab2,'2D Distribution function f_0',NaN,xlim1,xlim2,style2,marker,color5,width1,siz);
             text(0.05,0.95,['\rho = ',rhostr],'units','normalized');
             axis('equal');axis([xlim1,xlim2])
-            bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,nhuloss,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap);
+            if ~isempty(ripple)
+            	bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,ripple.nhuloss,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap);
+			end
 %
 			pause(time_pause);
 %
@@ -584,7 +586,9 @@ while 1,
             graph1D_jd(x9,y9,0,0,xlab1,xlab2,'Stream function',NaN,xlim1,xlim2,style2,marker,color5,width1,siz);
             text(0.05,0.95,['\rho = ',rhostr],'units','normalized');
             axis('equal');axis([xlim1,xlim2])
-            bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,nhuloss,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap);
+            if ~isempty(ripple)
+            	bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,ripple.nhuloss,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap);
+			end
 %            
 			pause(time_pause);
 %
@@ -636,7 +640,9 @@ while 1,
                 graph1D_jd(x9,y9,0,0,xlab1,xlab2,'LH dif. coef. [\nu^{ref}(p_{Te}^{ref})^2]',NaN,xlim1,xlim2,style2,marker,color5,width1,siz);
                 text(0.05,0.95,['\rho = ',rhostr],'units','normalized');
                 axis('equal');axis([xlim1,xlim2])
-                bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,nhuloss,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap);
+                if ~isempty(ripple)
+                	bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,ripple.nhuloss,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap);
+				end
 				hold on;
 				plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--');
 				plot(pparresmax_lh_cyl_ref,pperp_cyl_ref,'k--');
@@ -671,7 +677,9 @@ while 1,
                 %graph_cyl_jd(pn,mhu_X,y3','EC dif. coef. [\nu^{ref}(p_{Te}^{ref})^2]',xlim1,xlim2,NaN,cont,style2,NaN,width1,red);
                 text(0.05,0.95,['\rho = ',rhostr],'units','normalized');
                 axis('equal');axis([xlim1,xlim2])
-                bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,nhuloss,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap);
+                if ~isempty(ripple)
+                	bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,ripple.nhuloss,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap);
+                end
                 %            
 			    pause(time_pause);
                 %
@@ -895,7 +903,9 @@ while 1,
                 graph1D_jd(x9,y9,0,0,xlab1,xlab2,'2D Distribution function f_{tp}',NaN,xlim1,xlim2,style2,marker,color5,width1,siz);
                 text(0.05,0.95,['\rho = ',rhostr],'units','normalized');
                 axis('equal');axis([xlim1,xlim2])
-                bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,nhuloss,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap);
+                if ~isempty(ripple)
+                	bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,ripple.nhuloss,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap);
+				end
 %                
 			    if nb_lh > 0 & xvparmax_lh_ref(ir_display) - xvparmin_lh_ref(ir_display) ~= 0  & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0,
     				hold on;
@@ -921,7 +931,9 @@ while 1,
                 graph1D_jd(x9,y9,0,0,xlab1,xlab2,'2D Distribution function g',NaN,xlim1,xlim2,style2,marker,color5,width1,siz);
                 text(0.05,0.95,['\rho = ',rhostr],'units','normalized');
                 axis('equal');axis([xlim1,xlim2])
-                bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,nhuloss,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap);
+                if ~isempty(ripple)
+                	bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,ripple.nhuloss,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap);
+				end
 %                
 			    if nb_lh > 0 & xvparmax_lh_ref(ir_display) - xvparmin_lh_ref(ir_display) ~= 0  & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0,
     				hold on;
@@ -952,7 +964,9 @@ while 1,
                 graph1D_jd(x9,y9,0,0,xlab1,xlab2,'2D Distribution function f_1',NaN,xlim1,xlim2,style2,marker,color5,width1,siz);
                 text(0.05,0.95,['\rho = ',rhostr],'units','normalized');
                 axis('equal');axis([xlim1,xlim2])
-                bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,nhuloss,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap);
+                if ~isempty(ripple)
+                	bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,ripple.nhuloss,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap);
+				end
 %                
 			    if nb_lh > 0 & xvparmax_lh_ref(ir_display) - xvparmin_lh_ref(ir_display) ~= 0  & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0,
     				hold on;
@@ -977,7 +991,9 @@ while 1,
                 graph1D_jd(x9,y9,0,0,xlab1,xlab2,'2D total distribution function f_0 + f_1',NaN,xlim1,xlim2,style2,marker,color5,width1,siz);
                 text(0.05,0.95,['\rho = ',rhostr],'units','normalized');
                 axis('equal');axis([xlim1,xlim2])
-                bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,nhuloss,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap);
+                if ~isempty(ripple)
+                	bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,ripple.nhuloss,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap);
+				end
 %                
 			    if nb_lh > 0 & xvparmax_lh_ref(ir_display) - xvparmin_lh_ref(ir_display) ~= 0  & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0,
     				hold on;

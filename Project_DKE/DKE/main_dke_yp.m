@@ -36,8 +36,6 @@ spfac = dkeparam.spfac;
 dpsin_dke = dkeparam.dpsin_dke;
 ref_mode = dkeparam.ref_mode;
 norm_ref = dkeparam.norm_ref;
-nit_rf = dkeparam.nit_rf;
-prec_rf = dkeparam.prec_rf;
 coll_mode = dkeparam.coll_mode;
 bounce_mode = dkeparam.bounce_mode;
 dke_mode = dkeparam.dke_mode;
@@ -57,6 +55,9 @@ invproc  = dkeparam.invproc;
 param1_inv = dkeparam.param1_inv;
 param2_inv = dkeparam.param2_inv;
 store_mode = dkeparam.store_mode;
+rt_mode = dkeparam.rt_mode;
+nit_rf = dkeparam.nit_rf;
+prec_rf = dkeparam.prec_rf;
 %-------------------------------------------
 psin_display = display.psin_display;
 rho_display = display.rho_display;
@@ -95,9 +96,14 @@ nit = [nit_f,nit_g];
 %
 % ---------- Spatial grid ---------
 %
-psin_S = sort([psin_S,rho2psi_jd(tokname,rho_S)]);
+psin_S = sort([psin_S,rho2psi_jd(equil,rho_S)]);
 if isnan(psin_display), 
-    psin_display=rho2psi_jd(tokname,rho_display);
+    psin_display=rho2psi_jd(equil,rho_display);
+end
+%
+if length(psin_S) == 1,%No iteration if one radial point
+	rt_mode = 0;
+	nit_rf = 1;
 end
 %
 [xpsin,xpsin_dke,xdpsin_dke,xpsinm_dke,xdpsinm_dke,xpsinp_dke,xdpsinp_dke,xpsin_S_dke,r_dke,ir_display] = radialgrid_dke_jd(dke_mode,psin_S,dpsin_dke,psin_display);
@@ -134,12 +140,13 @@ nr = length(xpsin);
 nr_dke = length(r_dke);%number of points for dke calculations
 display = [display_mode,ir_display,time_pause];%Display parameters
 %
-if (Dr0 ~= 0 | Vr0 ~= 0) & nr > 1,
-	dke_mode = 0;
-	radial_mode = 1;
-	norm_ref = 1;
-else
-	radial_mode = 0;
+radial_mode = 0;
+if ~isempty(transpfaste),%Radial transport without DKE calculations
+	if  (sum(transpfaste.Dr)~=0 | sum(transpfaste.Vr)~=0) & nr > 1,
+		dke_mode = 0;
+		radial_mode = 1;
+		norm_ref = 1;	
+	end
 end
 %
 if display_mode == 2, 
@@ -318,7 +325,7 @@ end
 %
 xepsi_ref_fsav_in = zeros(size(xrho));
 if ~isempty(ohm)
-	xepsi_ref_fsav_in = interp1(xrho,ohm.epsi,rho2psi_jd(tokname,ohm.rho),method).*xrbetath.*xrnhuth;
+	xepsi_ref_fsav_in = interp1(rho2psi_jd(equil,ohm.rho),ohm.epsi,xrho,'spline').*xrbetath.*xrnhuth;
 end
 %
 %****************************** Anomalous fast electron radial diffusion and pinch ***************************
@@ -331,8 +338,8 @@ if ~isempty(transpfaste),
 	alphaV = ap/psia;%For radial convection normalization
 %
 	xvparmin_r_ref = interp1(ppsin,transpfaste.vparmin_r,rho2psi_jd(tokname,transpfaste.rho),method).*xrbetath;
-	xDr = interp1(ppsin,transpfaste.Dr,rho2psi_jd(tokname,transpfaste.rho),method);
-	xVr = interp1(ppsin,transpfaste.Vr,rho2psi_jd(tokname,transpfaste.rho),method);
+	xDr = interp1(rho2psi_jd(equil,transpfaste.rho),transpfaste.Dr,ppsin,'spline');
+	xVr = interp1(rho2psi_jd(equil,transpfaste.rho),transpfaste.Vr,ppsin,'spline');
 %
 	for ir = 1:nr,	
 
@@ -361,9 +368,10 @@ end
 %********************* Loss term for the electrons trapped in the toroidal magnetic ripple ************************
 %
 XXnhuloss_ref = zeros(np,nmhu,nr);%Defined on the distribution function grid (half grid)
-xnhuloss_ref = nhuloss*xrnhuth;
+xdeltaripple = zeros(size(xrho));
 %
 if ~isempty(ripple),
+	xnhuloss_ref = ripple.nhuloss*xrnhuth;
 	for ir = 1:nr,	
 		if isnan(xnhuloss_ref(ir)) == 0 & bounce_mode == 1 & strcmp(tokname,'TS') == 1,%WARNING: only valid for the TORE SUPRA tokamak with large magnetic ripple
 			if ir == 1, 
@@ -403,10 +411,15 @@ end
 %
 %***************************** RF Wave parameters calculations *************************************
 %
-[waveparam,xyprop_dke,xyPinc_in,nb_list,yb] = ...
-    rfwave_dke_jd(equil,waves,xrho,xpsin,xpsin_dke,xdpsin_dke,xpsin_S_dke,r_dke,...
-    betath_ref,ne_ref,lnc_e_ref,xrbetath,xrnhuth,xTe_norm,xne_norm,xzni_norm,...
-    zZi,zmi,ap,Rp,Zp,theta,XR,XZ,XBR,XBZ,XBphi,xB0,bounce_mode,rf_list,dke_mode);%Look at the function for the RF wave input parameters
+%[waveparam,xyprop_dke,xyPinc_in,nb_list,yb] = ...
+%    rfwave_dke_jd(equil,waves,xrho,xpsin,xpsin_dke,xdpsin_dke,xpsin_S_dke,r_dke,...
+%    betath_ref,ne_ref,lnc_e_ref,xrbetath,xrnhuth,xTe_norm,xne_norm,xzni_norm,...
+%    zZi,zmi,ap,Rp,Zp,theta,XR,XZ,XBR,XBZ,XBphi,xB0,bounce_mode,dke_mode);%Look at the function for the RF wave input parameters
+waveparam = [];
+yprop_dke = [];
+xyPinc_in = [];
+nb_list = [];
+yb = [];
 %
 %***************************** Initial distribution function **************************
 %

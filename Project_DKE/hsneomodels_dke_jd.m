@@ -1,5 +1,5 @@
 function [prho,pcurr_hir_ref_fsav,pcurr_sau_ref_fsav,pcurr_hin_ref_fsav,pcurr_i_ref_fsav,L31] = ...
-    hsneomodels_dke_jd(tokname)
+    hsneomodels_dke_jd(equil)
 % 
 % Calculates the bootstrap current from neoclassical models by Hinton & Hazeltine, Hirshman and Sauter 
 % in the limit of large aspect ratio ia << 1.  
@@ -22,11 +22,22 @@ function [prho,pcurr_hir_ref_fsav,pcurr_sau_ref_fsav,pcurr_hin_ref_fsav,pcurr_i_
 %
 %by Joan Decker <jodecker@mit.edu> and Y. Peysson CEA-DRFC <yves.peysson@cea.fr>
 %
-qe = 1.6e-19;
+[qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;%Universal physics constants
 %
-filename = ['EQUIL_',tokname,'.mat'];
-[s,dossier,machine] = comput_dke_yp;
-eval(['load ',dossier,s,filename,' BPHI BR BZ R Z ppsi pTe pne pzTi zZi']);
+zZi = equil.zZi;
+zmi = equil.zmi;
+theta = equil.theta;
+pTe = equil.pTe;
+pne = equil.pne;
+pzTi = equil.pzTi;
+pzni = equil.pzni;
+R = equil.R;
+Z = equil.Z;
+ppsi = equil.ppsi;
+BR = equil.BR;
+BZ = equil.BZ;
+BPHI = equil.BPHI;
+%
 Bt = BPHI(1,1);
 %
 [npsi,ntheta] = size(R);
