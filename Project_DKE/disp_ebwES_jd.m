@@ -1,7 +1,7 @@
 function [xNperp] = disp_ebwES_jd(xB,xTe,xne,omega);
 %
 N = 100;
-xguess = ones(size(xB));
+xguess = 10*ones(size(xB));
 %
 [qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;
 %
