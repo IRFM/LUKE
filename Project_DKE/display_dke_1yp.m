@@ -114,11 +114,11 @@ while 1,
 		disp('-------------------------------------------- Calculation output ---------------------------------------------------')
 		disp('-------------------------------------------------------------------------------------------------------------------');
 		info_dke_yp(2,['Reference electron temperature (keV): ',num2str(Ten_ref*mc2)])
+		info_dke_yp(2,['Betath_ref: ',num2str(betath_ref)])
 		info_dke_yp(2,['Reference electron density (10+19 m-3): ',num2str(ne_ref/1e19)])
 		info_dke_yp(2,['Reference Coulomb logarithm: ',num2str(lnc_e_ref)])
 		info_dke_yp(2,['Reference electron collision frequency (kHz): ',num2str(nhu_ref/1000)])
 		info_dke_yp(2,['MKSA power unit (P_ref): ',num2str(P_ref),' (MW/m3)'])
-
 		info_dke_yp(2,['MKSA current unit (j_ref): ',num2str(j_ref),' (MA/m2)'])
 		info_dke_yp(2,['MKSA Dreicer field unit (Edreicer_ref): ',num2str(Edreicer_ref),' (V/m)'])
 %

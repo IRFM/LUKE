@@ -108,6 +108,8 @@ xj_Bmin        = -0.026642   -0.010405  -0.0031127     -0.00050313   -1.0237e-05
 ************************************************************************************************************************************************************
 ******************************************************************* Run-away rate **************************************************************************
 ************************************************************************************************************************************************************
+Scenario name = CQL3D_RUNAWAY
+
 with norm_mode_f = 1 and boundary_mode_f=1. (if norm_mode_f = 0, the density decreases, but normalized to the density, the result is the same)
 One radial location -> rho_S = [0.4], eTe = 0, eTe = 0;ref_mode = 0, norm_ref = 1, bounce_mode = 0
 ---------------------------------------------------------------------------------------
@@ -190,7 +192,38 @@ xRR_fsav       = 0.00011401  3.5038e-05  5.977e-06     2.7406e-07     1.022e-10
 ************************************************************************************************************************************************************
 ******************************************************************* Lower Hybrid Current drive *************************************************************
 ************************************************************************************************************************************************************
+Scenario name = CQL3D_LH
+with norm_mode_f = 0 and boundary_mode_f=1. (if boundary_mode_f = 0, the density decreases, but normalized to the density, the result is the same)
+One radial location -> rho_S = [0.4], eTe = 0, eTe = 0;ref_mode = 0, norm_ref = 1, bounce_mode = 0
+---------------------------------------------------------------------------------------
+(H), Dlh = 1 where 3.5<=vpar<=6, betath = 1.398909275981332e-02
+Z = 1, jlh_Bmin=0.024138, plh_Bmin=0.0011231, pcoll_Bmin=0.0010712, eff= 21.4922 (np=125, nmhu=120, pnmax_S = 15)
+Z = 2, jlh_Bmin=0.027092 ,plh_Bmin=0.0014479, pcoll_Bmin=0.0014122, eff=18.7116 (np=125, nmhu=120, pnmax_S = 15)
+Z = 5, jlh_Bmin=0.032009 ,plh_Bmin=0.0022931 ,pcoll_Bmin=0.0022743, eff=13.9589 (np=125, nmhu=120, pnmax_S = 15)
+Z = 10, jlh_Bmin=0.03531 ,plh_Bmin=0.0034981 ,pcoll_Bmin=0.0034747, eff=10.0939 (np=125, nmhu=120, pnmax_S = 15)
+---------------------------------------------------------------------------------------
+(H), Dlh = 1 where 3.5<=vpar<=6, betath = 0.1
+Z = 1, jlh_Bmin=0.018405 , plh_Bmin=0.00088813, pcoll_Bmin=0.00077638 , eff=20.7234 (np=125, nmhu=120, pnmax_S = 15)
+Z = 2, jlh_Bmin= ,plh_Bmin= , pcoll_Bmin= , eff=  (np=125, nmhu=120, pnmax_S = 15)
+Z = 5, jlh_Bmin= ,plh_Bmin= ,pcoll_Bmin= , eff=  (np=125, nmhu=120, pnmax_S = 15)
+Z = 10, jlh_Bmin= ,plh_Bmin= ,pcoll_Bmin= , eff= (np=125, nmhu=120, pnmax_S = 15)
 
+
+
+
+
+---------------------------------------------------------------------------------------
+(H), Dlh = 1 where 4<=vpar<=7, betath = 1.398909275981332e-02
+Z = 1, jlh_Bmin=0.0049165, plh_Bmin=0.0001791, pcoll_Bmin=0.0001644,eff= 27.4519 (np=125, nmhu=120, pnmax_S = 15)
+Z = 2, jlh_Bmin=0.0057593, plh_Bmin=0.00023779, pcoll_Bmin=0.0002249, eff=24.2206 (np=125, nmhu=120, pnmax_S = 15)
+Z = 5, jlh_Bmin=0.0071568, plh_Bmin=0.00039437, pcoll_Bmin=0.00037854, eff=18.1475 (np=125, nmhu=120, pnmax_S = 15)
+Z = 10, jlh_Bmin=0.0081319, plh_Bmin=0.00062695, pcoll_Bmin=0.00059226, eff=12.9705 (np=125, nmhu=120, pnmax_S = 15)
+---------------------------------------------------------------------------------------
+(H), Dlh = 1 where 4<=vpar<=7, betath = 0.1
+Z = 1, jlh_Bmin= , plh_Bmin= , pcoll_Bmin= , eff=   (np=125, nmhu=120, pnmax_S = 15)
+Z = 2, jlh_Bmin= ,plh_Bmin= , pcoll_Bmin= , eff=  (np=125, nmhu=120, pnmax_S = 15)
+Z = 5, jlh_Bmin= ,plh_Bmin= ,pcoll_Bmin= , eff=  (np=125, nmhu=120, pnmax_S = 15)
+Z = 10, jlh_Bmin= ,plh_Bmin= ,pcoll_Bmin= , eff= (np=125, nmhu=120, pnmax_S = 15)
 
 
 

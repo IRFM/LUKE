@@ -23,7 +23,7 @@ dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode] = psim_dke_1yp;
 %by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
 %
 snumber = 1;%Simulation number
-tokname = 'CQL3D_RUNAWAY';%Tokamak equilibrium scenario (see ptok_dke_1yp.m) in EQUIL_tokname file)
+tokname = 'CQL3D_LH';%Tokamak equilibrium scenario (see ptok_dke_1yp.m) in EQUIL_tokname file)
 loadequil = 2;%0: Load already existing equilibrium file, 1: create equilibrium with HELENA (needs mex file), 2: create equilibrium file (with idealequil_f_jd.m function)
 qopt = 0;%Option for q profile. (0): constant (default), (1): from qmin and eq (for HELENA, it is used only for the psi grid guess)
 %
@@ -38,7 +38,7 @@ grid_uniformity = 0;%Pitch-angle and momentum grids uniformity: (0) no, (1) yes 
 grid_method = 1;%Pitch-angle grid calculation technique: (0): old method, (1) new method
 nmhu_S = 103;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
 np_S = 116;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run)
-pnmax_S = 15;%Maximum value of the flux momentum grid (pth_ref)
+pnmax_S = 20;%Maximum value of the flux momentum grid (pth_ref)
 %
 %Pitch-angle grid
 %
@@ -63,7 +63,7 @@ spfac = 20;%reduction factor for the supergrid used in collision integrals
 %Values of the radial flux grid [1,p] (If one radial value: local calculation only)
 %
 psin_S = [];%5.286742555900838e-002; %[0.1]%(rho = 0.25 in CMOD)
-rho_S = [0.31623];%[0.05:0.07:0.9];%;0.03322100141578101;0.71365;
+rho_S = [0.4];%[0.05:0.07:0.9];%;0.03322100141578101;0.71365;
 %
 psin_display = NaN;%Approximate radial value at which results are displayed if display_mode >= 1 [1,1]
 rho_display = 0.4;
@@ -71,12 +71,12 @@ rho_display = 0.4;
 dpsin_dke = 0.01;%maximum difference between two consecutive positions used for radial derivatives
 %
 ref_mode = 1;%Reference values: (0) from core Te and ne, (1) from Te and ne at the normalized radius (paramater only active for a single radial value, otherwise ref_mode = 0)
-norm_ref = 0%Normalization procedure for the ohmic electric field, LH and EC quasilinear diffusion: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref 
+norm_ref = 0;%Normalization procedure for the ohmic electric field, LH and EC quasilinear diffusion: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref 
 %
 % Ohmic electric field
 %
-epsi0 = 0.08;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
-epsia = 0.08;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
+epsi0 = 0.00;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
+epsia = 0.00;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
 eepsi = 0;%Exponent for Ohmic electric field
 %
 % RF Waves: For each of the following calculations:
@@ -84,7 +84,7 @@ eepsi = 0;%Exponent for Ohmic electric field
 % (2+): include with RT mode (iterations for self-consistent damping between
 % RT and DKE) See below for details
 %
-rf_list(1) = 0;%[0 or 1] LH test calculations (see psim_ideallhcd_jd) 
+rf_list(1) = 1;%[0 or 1] LH test calculations (see psim_ideallhcd_jd) 
 rf_list(2) = 0;%[0 or 1] EC test calculations (see psim_idealeccd_jd) 
 rf_list(3) = 0;%[0 or 1] Cold plasma LHCD calculations (see psim_coldlhcd_jd); 
 rf_list(4) = 0;%[0,1 or 2] Cold plasma ECCD calculations (see psim_coldeccd_jd); (2): RT calculations in wpe << wce limit (see psim_straightray_jd) 
@@ -110,11 +110,11 @@ nhuloss = NaN;%Magnetic ripple loss frequency, nhuloss > 1000 (or NaN if no ripp
 %
 % Collision operator
 %
-coll_mode = 0;%Relativistic collision operator: (0) Maxwellian, (1) High-velocity limit, (2) Linearized Belaiev-Budker - (3) No relativistic Lorentz model
+coll_mode = 2;%Relativistic collision operator: (0) Maxwellian, (1) High-velocity limit, (2) Linearized Belaiev-Budker - (3) No relativistic Lorentz model
 %
 % Run mode
 %
-bounce_mode = 1;%Bounce averaging option: (0) no bounce averaging, (1) bounce averaging full implicit method with 15 diagonals
+bounce_mode = 0;%Bounce averaging option: (0) no bounce averaging, (1) bounce averaging full implicit method with 15 diagonals
 dke_mode = 0;%Fokker-Planck equation (0), Drift Kinetic equation (1)
 equil_mode = 0;%Equilibrium option: (0) circular concentric flux-surfaces, (1) numerical equilibrium
 %
@@ -131,7 +131,7 @@ nit_g = 100;%Maximum number of iterations for g
 %
 dtn = 1000;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
 invproc = 2;%Iterative matrix inversion method: (1) qmr iterative method, (2) bicgstab iterative method, (3) cgs iterative method
-param_inv = [1e-4,30];%Parameters for the matrix inversion procedure. Minimum value of the drop tolerance for the partial LU decomposition (drop tol = max(1/dtn/nr,param_inv(1))), and maximum number of iteration for iterative methods (param_inv(1) depends of boundary_mode, if param_inv(1)=0, full LU factorization)
+param_inv = [2e-3,30];%Parameters for the matrix inversion procedure. Minimum value of the drop tolerance for the partial LU decomposition (drop tol = max(1/dtn/nr,param_inv(1))), and maximum number of iteration for iterative methods (param_inv(1) depends of boundary_mode, if param_inv(1)=0, full LU factorization)
 %
 dp_cyl = 0.1;%Cylindrical momentum step (pth_ref)
 display_mode = 1;%Display mode: (0): no, (1): partial, (2): full
