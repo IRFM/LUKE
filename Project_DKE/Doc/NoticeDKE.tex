@@ -1,13 +1,19 @@
 %% LyX 1.3 created this file.  For more info, see http://www.lyx.org/.
 %% Do not edit unless you really know what you are doing.
-\documentclass[english]{revtex4}
+\documentclass[oneside,english]{book}
 \usepackage{pslatex}
 \usepackage[T1]{fontenc}
 \usepackage[latin1]{inputenc}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
 \usepackage{amsmath}
 \usepackage{amssymb}
 
 \makeatletter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usepackage{graphicx}
+\bibliographystyle{apsrev}
+
 \usepackage{babel}
 \makeatother
 \begin{document}
@@ -16,18 +22,11 @@
 Equation}
 
 
-\author{Joan Decker}
-
-
-\address{Plasma Science and Fusion Center, Massachussets Institute of Technology,
-Cambridge, MA 02139 U.S.A.}
-
-
-\author{Yves Peysson}
-
-
-\address{Association EURATOM-CEA, CEA-Cadarache, 13108 St Paul-lez-Durance,
-France}
+\author{Joan Decker%
+\footnote{Email: jodecker@mit.edu%
+} and Yves Peysson%
+\footnote{Email: yves.peysson@cea.fr%
+}}
 
 
 \date{20th of november 2003}
@@ -36,165 +35,109 @@ France}
 \tableofcontents{}
 
 
-\section{Drift Kinetic equation}
+\chapter{Tokamak geometry and particle dynamic}
 
 
-\section{Calculations for a circular plasma equilibrium}
+\section{Arbitrary configuration}
 
 
-\subsection{Conservative formulation of the transport equations in momentum and
-configuration spaces}
+\subsection{Coordinate system}
 
-\input{FPConservativeForm.tex}
 
+\subsection{Particle motion}
 
-\subsection{Grids definition}
 
-\input{GridDefinition.tex}
+\section{Circular configuration}
 
 
-\subsection{Dynamics in momentum space}
+\subsection{Coordinate system}
 
-\input{FPMomentumDynamics.tex}
 
+\subsection{Particle motion}
 
-\subsection{Grid interpolation technique}
 
-\input{GridInterpolationTechnique.tex}
+\chapter{Kinetic description of electrons}
 
 
-\subsection{Bounce averaged Fokker-Planck equation in momentum space}
+\section{Boltzman equation}
 
 
-\subsubsection{Derivation of the numerical form}
+\section{Gyro and radiofrequency averaging}
 
-\input{FPBounceAveragedEquation.tex}
 
+\section{Small drift approximation}
 
-\subsubsection{Matrix coefficients for collisions}
 
-\input{FPCollisionMatrixCoefficients.tex}
+\subsection{Zero order term: the Fokker-Planck equation}
 
 
-\subsubsection{Matrix coefficients for a constant Ohmic electric field}
+\subsection{First order term: the Drift Kinetic equation}
 
-\input{FPEfieldMatrixCoefficients.tex}
 
+\section{Low collisionality limit and bounce averaging}
 
-\subsubsection{Matrix coefficients for quasilinear interaction between RF waves
-and electrons}
 
-\input{FPRFMatrixCoefficients.tex}
+\subsection{Zero order term: the Fokker-Planck equation}
 
 
-\paragraph{Matrix coefficients for the case of the Lower Hybrid wave}
+\subsection{First order term: the Drift Kinetic equation}
 
-\input{FPLHwaveMatrixCoefficients.tex}
 
+\section{Flux conservative representation}
 
-\paragraph{Matrix coefficients for the case of the Electron cyclotron wave}
 
-\input{FPECwaveMatrixCoefficients.tex}
+\subsection{General formulation}
 
 
-\subsection{Dynamics in configuration space}
+\subsection{Zero order term: the Fokker-Planck equation}
 
 
-\subsubsection{Radial transport at fixed $p_{\Vert}$ and $p_{\bot}$}
+\subsection{First order term: the Drift Kinetic equation}
 
-\input{RadialDynamicsFixedp.tex}
 
+\section{Anomalous transport in configuration space}
 
-\subsubsection{Radial transport at fixed energy and magnetic moment}
 
-\input{RadialDynamicsFixedEm.tex}
+\chapter{Detailed description of physical processes}
 
 
-\subsection{Bounce averaged electron Drift Kinetic Equation}
+\section{Collisions}
 
 
-\subsubsection{Flux conservative formulation}
+\section{Ohmic electric field}
 
-\input{DKEFluxFormulation.tex}
 
+\section{Radio frequency waves}
 
-\subsubsection{Derivation of the numerical form}
 
-\input{DKENumericalForm.tex}
+\chapter{Numerical calculations}
 
 
-\subsubsection{Matrix coefficients for collisions}
+\section{Grid definitions}
 
-\input{DKECollisionMatrixCoefficients.tex}
 
+\section{Momentum dynamics}
 
-\subsubsection{Matrix coefficients for a constant Ohmic electric field}
 
-\input{DKEEfieldMatrixCoefficients.tex}
+\subsection{Discretization procedure}
 
 
-\subsubsection{Matrix coefficients for quasilinear interaction between RF waves
-and electrons}
+\subsection{Grid interpolation}
 
-\input{DKERFMatrixCoefficients.tex}
 
+\section{Spatial dynamics}
 
-\paragraph{Matrix coefficients for the case of the Lower Hybrid wave}
 
-\input{DKELHwaveMatrixCoefficients.tex}
+\subsection{Discretization procedure}
 
 
-\paragraph{Matrix coefficients for the case of the Electron cyclotron wave}
+\subsection{Grid interpolation}
 
-\input{DKEECwaveMatrixcoefficients.tex}
 
+\chapter{Algorithm}
 
-\subsection{Power density calculations}
 
+\chapter{Examples}
 
-\subsubsection{General formulation}
-
-\input{PowerDensity.tex}
-
-
-\subsubsection{Power density calculations for the Fokker-Planck equation }
-
-\input{FPPowerDensity.tex}
-
-
-\subsubsection{Power density calculations for the Drift Kinetic equation }
-
-
-\subsubsection{Flux surface averaged power density calculations for the Fokker Planck
-equation }
-
-\input{FPFluxSurfaceAveragedPowerDensity.tex}
-
-
-\subsubsection{Flux surface averaged power density calculations for the Drift Kinetic
-equation }
-
-
-\subsection{Trapped particle fraction}
-
-\input{TrappedFraction.tex}
-
-
-\section{Calculations for arbitrary plasma equilibrium}
-
-
-\section{Code structure and matrix inversion technique}
-
-
-\subsection{Code structure}
-
-\input{CodeStructure.tex}
-
-
-\section{Appendix}
-
-
-\subsection{Collision operator for the current drive problem}
-
-\input{CollisionOperator.tex}
+\appendix
 \end{document}

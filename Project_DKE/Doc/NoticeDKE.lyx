@@ -1,13 +1,32 @@
-# The reLyX bundled with LyX 1.3 created this file.
-# For more info see http://www.lyx.org/
-\lyxformat 2.15
-\textclass revtex4
+#LyX 1.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 221
+\textclass book
+\begin_preamble
+\usepackage{graphicx}
+\bibliographystyle{apsrev}
+\end_preamble
 \language english
 \inputencoding latin1
-\use_amsmath 1
 \fontscheme pslatex
+\graphics default
+\paperfontsize default
+\spacing onehalf 
+\papersize Default
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 1
 \use_natbib 0
 \use_numerical_citations 0
+\paperorientation portrait
+\secnumdepth 5
+\tocdepth 5
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
 
 \layout Title
 
@@ -16,344 +35,150 @@ A fast numerical solver for the 3-D relativistic electron Drift Kinetic
 \layout Author
 
 Joan Decker
-\layout Address
+\begin_inset Foot
+collapsed true
 
-Plasma Science and Fusion Center, Massachussets Institute of Technology,
- Cambridge, MA 02139 U.S.A.
-\layout Author
+\layout Standard
 
-Yves Peysson
-\layout Address
+Email: jodecker@mit.edu
+\end_inset 
 
-Association EURATOM-CEA, CEA-Cadarache, 13108 St Paul-lez-Durance, France
+ and Yves Peysson
+\begin_inset Foot
+collapsed true
+
+\layout Standard
+
+Email: yves.peysson@cea.fr
+\end_inset 
+
+
 \layout Date
 
 20th of november 2003
 \layout Standard
 
 
-\begin_inset LatexCommand \tableofcontents
+\begin_inset LatexCommand \tableofcontents{}
 
 \end_inset 
 
 
+\layout Chapter
+
+Tokamak geometry and particle dynamic
 \layout Section
 
-Drift Kinetic equation
+Arbitrary configuration
+\layout Subsection
+
+Coordinate system
+\layout Subsection
+
+Particle motion
 \layout Section
 
-Calculations for a circular plasma equilibrium
+Circular configuration
 \layout Subsection
 
-Conservative formulation of the transport equations in momentum and configuratio
-n
- spaces
-\layout Standard
-
-
-\begin_inset Include \input{FPConservativeForm.lyx}
-
-\end_inset 
-
-
+Coordinate system
 \layout Subsection
 
-Grids definition
-\layout Standard
+Particle motion
+\layout Chapter
 
+Kinetic description of electrons
+\layout Section
 
-\begin_inset Include \input{GridDefinition.lyx}
+Boltzman equation
+\layout Section
 
-\end_inset 
+Gyro and radiofrequency averaging
+\layout Section
 
-
+Small drift approximation
 \layout Subsection
 
-Dynamics in momentum space
-\layout Standard
-
-
-\begin_inset Include \input{FPMomentumDynamics.lyx}
-
-\end_inset 
-
-
+Zero order term: the Fokker-Planck equation
 \layout Subsection
 
-Grid interpolation technique
-\layout Standard
+First order term: the Drift Kinetic equation
+\layout Section
 
-
-\begin_inset Include \input{GridInterpolationTechnique.lyx}
-
-\end_inset 
-
-
+Low collisionality limit and bounce averaging
 \layout Subsection
 
-Bounce averaged Fokker-Planck equation in momentum space
-\layout Subsubsection
-
-Derivation of the numerical form
-\layout Standard
-
-
-\begin_inset Include \input{FPBounceAveragedEquation.lyx}
-
-\end_inset 
-
-
-\layout Subsubsection
-
-Matrix coefficients for collisions
-\layout Standard
-
-
-\begin_inset Include \input{FPCollisionMatrixCoefficients.lyx}
-
-\end_inset 
-
-
-\layout Subsubsection
-
-Matrix coefficients for a constant Ohmic electric field
-\layout Standard
-
-
-\begin_inset Include \input{FPEfieldMatrixCoefficients.lyx}
-
-\end_inset 
-
-
-\layout Subsubsection
-
-Matrix coefficients for quasilinear interaction between RF waves and electrons
-\layout Standard
-
-
-\begin_inset Include \input{FPRFMatrixCoefficients.lyx}
-
-\end_inset 
-
-
-\layout Paragraph
-
-Matrix coefficients for the case of the Lower Hybrid wave
-\layout Standard
-
-
-\begin_inset Include \input{FPLHwaveMatrixCoefficients.lyx}
-
-\end_inset 
-
-
-\layout Paragraph
-
-Matrix coefficients for the case of the Electron cyclotron wave
-\layout Standard
-
-
-\begin_inset Include \input{FPECwaveMatrixCoefficients.lyx}
-
-\end_inset 
-
-
+Zero order term: the Fokker-Planck equation
 \layout Subsection
 
-Dynamics in configuration space
-\layout Subsubsection
+First order term: the Drift Kinetic equation
+\layout Section
 
-Radial transport at fixed 
-\begin_inset Formula \( p_{\Vert}\)
-\end_inset 
-
- and 
-\begin_inset Formula \( p_{\bot}\)
-\end_inset 
-
-
-\layout Standard
-
-
-\begin_inset Include \input{RadialDynamicsFixedp.lyx}
-
-\end_inset 
-
-
-\layout Subsubsection
-
-Radial transport at fixed energy and magnetic moment
-\layout Standard
-
-
-\begin_inset Include \input{RadialDynamicsFixedEm.lyx}
-
-\end_inset 
-
-
+Flux conservative representation
 \layout Subsection
-
-Bounce averaged electron Drift Kinetic Equation
-\layout Subsubsection
-
-Flux conservative formulation
-\layout Standard
-
-
-\begin_inset Include \input{DKEFluxFormulation.lyx}
-
-\end_inset 
-
-
-\layout Subsubsection
-
-Derivation of the numerical form
-\layout Standard
-
-
-\begin_inset Include \input{DKENumericalForm.lyx}
-
-\end_inset 
-
-
-\layout Subsubsection
-
-Matrix coefficients for collisions
-\layout Standard
-
-
-\begin_inset Include \input{DKECollisionMatrixCoefficients.lyx}
-
-\end_inset 
-
-
-\layout Subsubsection
-
-Matrix coefficients for a constant Ohmic electric field
-\layout Standard
-
-
-\begin_inset Include \input{DKEEfieldMatrixCoefficients.lyx}
-
-\end_inset 
-
-
-\layout Subsubsection
-
-Matrix coefficients for quasilinear interaction between RF waves and electrons
-\layout Standard
-
-
-\begin_inset Include \input{DKERFMatrixCoefficients.lyx}
-
-\end_inset 
-
-
-\layout Paragraph
-
-Matrix coefficients for the case of the Lower Hybrid wave
-\layout Standard
-
-
-\begin_inset Include \input{DKELHwaveMatrixCoefficients.lyx}
-
-\end_inset 
-
-
-\layout Paragraph
-
-Matrix coefficients for the case of the Electron cyclotron wave
-\layout Standard
-
-
-\begin_inset Include \input{DKEECwaveMatrixcoefficients.lyx}
-
-\end_inset 
-
-
-\layout Subsection
-
-Power density calculations
-\layout Subsubsection
 
 General formulation
-\layout Standard
-
-
-\begin_inset Include \input{PowerDensity.lyx}
-
-\end_inset 
-
-
-\layout Subsubsection
-
-Power density calculations for the Fokker-Planck equation 
-\layout Standard
-
-
-\begin_inset Include \input{FPPowerDensity.lyx}
-
-\end_inset 
-
-
-\layout Subsubsection
-
-Power density calculations for the Drift Kinetic equation 
-\layout Subsubsection
-
-Flux surface averaged power density calculations for the Fokker Planck equation
- 
-\layout Standard
-
-
-\begin_inset Include \input{FPFluxSurfaceAveragedPowerDensity.lyx}
-
-\end_inset 
-
-
-\layout Subsubsection
-
-Flux surface averaged power density calculations for the Drift Kinetic equation
- 
 \layout Subsection
 
-Trapped particle fraction
-\layout Standard
-
-
-\begin_inset Include \input{TrappedFraction.lyx}
-
-\end_inset 
-
-
-\layout Section
-
-Calculations for arbitrary plasma equilibrium
-\layout Section
-
-Code structure and matrix inversion technique
+Zero order term: the Fokker-Planck equation
 \layout Subsection
 
-Code structure
-\layout Standard
-
-
-\begin_inset Include \input{CodeStructure.lyx}
-
-\end_inset 
-
-
+First order term: the Drift Kinetic equation
 \layout Section
 
-Appendix
+Anomalous transport in configuration space
+\layout Chapter
+
+Detailed description of physical processes
+\layout Section
+
+Collisions
+\layout Section
+
+Ohmic electric field
+\layout Section
+
+Radio frequency waves
+\layout Chapter
+
+Numerical calculations
+\layout Section
+
+Grid definitions
+\layout Section
+
+Momentum dynamics
 \layout Subsection
 
-Collision operator for the current drive problem
+Discretization procedure
+\layout Subsection
+
+Grid interpolation
+\layout Section
+
+Spatial dynamics
+\layout Subsection
+
+Discretization procedure
+\layout Subsection
+
+Grid interpolation
+\layout Chapter
+
+Algorithm
+\layout Chapter
+
+Examples
 \layout Standard
 
 
-\begin_inset Include \input{CollisionOperator.lyx}
+\begin_inset ERT
+status Collapsed
 
+\layout Standard
+
+\backslash 
+appendix
 \end_inset 
 
 
