@@ -78,7 +78,7 @@ opt_ec = 0; %(0): exact, (1): small LRE
 %
 %  ***************************** Cold plasma LH wave *****************************
 %
-blist_lhc = [1]; %Index of selected scenarios for the LH wave. Enter [] for none. [1,n_selected_scenario_lhc]
+blist_lhc = []; %Index of selected scenarios for the LH wave. Enter [] for none. [1,n_selected_scenario_lhc]
 nb_lhc = length(blist_lhc);
 %
 yn_lhc = [0];%RF resonance harmonic (zero for LH) [1,n_scenario_lhc]
