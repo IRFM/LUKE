@@ -1,6 +1,6 @@
 function [XXheaviside,...
     XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,...
-    YXXDrf_ij,...
+    XXDrf_ij,XXDrf_tp_ij,XXFrf_tp_ij,...
     Znorm,Znorm_fsav,...
     Zcurr,Zcurr_fsav,...
     ZP0_fsav,...
@@ -325,14 +325,17 @@ mhu2 = mhu.*mhu;
 Xmhu = ones(npn,1)*mhu;
 XXmhu = repmat(Xmhu,[1,1,nr]);
 Xmhu2 = ones(npn,1)*mhu2;
+XXmhu2 = repmat(Xmhu2,[1,1,nr]);
 X1mmhu2 = 1 - Xmhu2;
 XX1mmhu2 = repmat(X1mmhu2,[1,1,nr]);
 Xdmhu = ones(npn,1)*dmhu;
 XXdmhu = repmat(Xdmhu,[1,1,nr]);
 Xmhum = ones(npn,1)*mhum;
 Xmhum(find(Xmhum==0)) = eps;
+XXmhum = repmat(Xmhum,[1,1,nr]);
 Xmhumm = ones(npn,1)*[mhu(1),mhu(1:nmhu-1)];
 Xmhu2m = Xmhum.*Xmhum;
+XXmhu2m = repmat(Xmhu2m,[1,1,nr]);
 X1mmhu2m = 1 - Xmhu2m;
 X1mmhu2m(find(X1mmhu2m==0)) = eps;
 XX1mmhu2m = repmat(X1mmhu2m,[1,1,nr]);
@@ -341,8 +344,10 @@ XXdmhum = repmat(Xdmhum,[1,1,nr]);
 Xdmhumm = ones(npn,1)*[dmhu(1),dmhu(1:nmhu-1)];
 Xmhup = ones(npn,1)*mhup;
 Xmhup(find(Xmhup==0)) = eps;
+XXmhup = repmat(Xmhup,[1,1,nr]);
 Xmhupp= ones(npn,1)*[mhu(2:nmhu),mhu(nmhu)];
 Xmhu2p = Xmhup.*Xmhup;
+XXmhu2p = repmat(Xmhu2p,[1,1,nr]);
 X1mmhu2p = 1 - Xmhu2p;
 X1mmhu2p(find(X1mmhu2p==0)) = eps;
 XX1mmhu2p = repmat(X1mmhu2p,[1,1,nr]);
@@ -887,132 +892,23 @@ end
 % RF wave coefficients
 %
 if ~isempty(waveparam),
-%
-	[ZYXXD_rf,ZYXXD_rf_tp,ZYXXF_rf_tp] = rfdiff_dke_jd(waveparam,nmax_rf,...
-       theta,XR,XZ,XBR,XBZ,XBphi,xB0,Rp,Zp,xqtilde,...       
-       XXheaviside,XXheaviside_p,XXheaviside_m,...  
-	    Xmhup,Xmhu,Xmhum,Xmhu2p,Xmhu2,Xmhu2m,X1mmhu2p,X1mmhu2,X1mmhu2m,...
-		 Xdmhumm,Xdmhum,Xdmhu,Xdmhup,Xdmhupp,...
-	    pnpp,pnp,pn,pnm,pnmm,Xpnpp,Xpnp,Xpn,Xpnm,Xpnmm,...
-		 Xdpnmm,Xdpnm,Xdpn,Xdpnp,Xdpnpp,...
-		 Xgammapp,Xgammap,Xgamma,Xgammam,Xgammamm,...
-	    Xxlambda_p,Xxlambda,Xxlambda_m,...
-	    betath_ref,bounce_mode,dke_mode);
-%            
-% Dql is enforced to a maximum value in order to avoid numerical instabilities (bad matrix conditionning)
-%
-	YXXDpp_rf_ippj = ZYXXD_rf{1};
-	YXXDpp_rf_ipj = ZYXXD_rf{2};
-	YXXDpp_rf_ij = ZYXXD_rf{3};
-    YXXDpp_rf_imj = ZYXXD_rf{4};
-    YXXDpp_rf_immj = ZYXXD_rf{5};
-    YXXDpm_rf_ipj = ZYXXD_rf{6};
-    YXXDpm_rf_ij = ZYXXD_rf{7};
-    YXXDpm_rf_imj = ZYXXD_rf{8};
-    YXXDmp_rf_ijp = ZYXXD_rf{9};
-    YXXDmp_rf_ij = ZYXXD_rf{10};
-    YXXDmp_rf_ijm = ZYXXD_rf{11};
-    YXXDmm_rf_ijp = ZYXXD_rf{12};
-    YXXDmm_rf_ijm = ZYXXD_rf{13};
-%	   	
-	YXXDrf_ij = ZYXXD_rf{14};   
-%
-   if dke_mode == 1
-    	YXXDpp_rf_tp_ippj = ZYXXD_rf_tp{1};
-    	YXXDpp_rf_tp_ipj = ZYXXD_rf_tp{2};
-    	YXXDpp_rf_tp_ij = ZYXXD_rf_tp{3};
-    	YXXDpp_rf_tp_imj = ZYXXD_rf_tp{4};
-    	YXXDpp_rf_tp_immj = ZYXXD_rf_tp{5};
-    	YXXDpm_rf_tp_ipj = ZYXXD_rf_tp{6};
-    	YXXDpm_rf_tp_ij = ZYXXD_rf_tp{7};
-    	YXXDpm_rf_tp_imj = ZYXXD_rf_tp{8};
-    	YXXDmp_rf_tp_ijp = ZYXXD_rf_tp{9};
-    	YXXDmp_rf_tp_ij = ZYXXD_rf_tp{10};
-    	YXXDmp_rf_tp_ijm = ZYXXD_rf_tp{11};
-    	YXXDmm_rf_tp_ijp = ZYXXD_rf_tp{12};
-    	YXXDmm_rf_tp_ijm = ZYXXD_rf_tp{13};
-%    
-    	YXXDrf_D_tp_ij = ZYXXD_rf_tp{14};
-%    
-      YXXFp_rf_tp_ippj = ZYXXF_rf_tp{1};
-      YXXFp_rf_tp_ipj = ZYXXF_rf_tp{2};
-      YXXFp_rf_tp_ij = ZYXXF_rf_tp{3};
-      YXXFp_rf_tp_imj = ZYXXF_rf_tp{4};
-      YXXFp_rf_tp_immj = ZYXXF_rf_tp{5};
-      YXXFm_rf_tp_ijp = ZYXXF_rf_tp{6};
-      YXXFm_rf_tp_ijm = ZYXXF_rf_tp{7};
-%    
-      YXXDrf_F_tp_ij = ZYXXF_rf_tp{8};
-   end
-%    
-	clear ZYXXD_rf ZYXXD_rf_tp ZYXXF_rf_tp
-%    
-	nb = size(YXXDrf_ij,4);   
-%
-	XXDpp_rf_ippj = integral_dke_jd(ones(1,nb),YXXDpp_rf_ippj,4);
-	XXDpp_rf_ipj = integral_dke_jd(ones(1,nb),YXXDpp_rf_ipj,4);
-	XXDpp_rf_ij = integral_dke_jd(ones(1,nb),YXXDpp_rf_ij,4);
-	XXDpp_rf_imj = integral_dke_jd(ones(1,nb),YXXDpp_rf_imj,4);
-	XXDpp_rf_immj = integral_dke_jd(ones(1,nb),YXXDpp_rf_immj,4);
-%	
-	XXDpm_rf_ipj = integral_dke_jd(ones(1,nb),YXXDpm_rf_ipj,4);
-	XXDpm_rf_ij = integral_dke_jd(ones(1,nb),YXXDpm_rf_ij,4);	
-	XXDpm_rf_imj = integral_dke_jd(ones(1,nb),YXXDpm_rf_imj,4);
-%	
-	XXDmp_rf_ijp = integral_dke_jd(ones(1,nb),YXXDmp_rf_ijp,4);
-	XXDmp_rf_ij = integral_dke_jd(ones(1,nb),YXXDmp_rf_ij,4);	
-	XXDmp_rf_ijm = integral_dke_jd(ones(1,nb),YXXDmp_rf_ijm,4);
-%	
-	XXDmm_rf_ijp = integral_dke_jd(ones(1,nb),YXXDmm_rf_ijp,4);
-	XXDmm_rf_ijm = integral_dke_jd(ones(1,nb),YXXDmm_rf_ijm,4);
-%
-	if isnan(Dqlmax) == 0,
-	   testDqlmax1 = sum(sum(sum(XXDpp_rf_ippj > Dqlmax)));XXDpp_rf_ippj(XXDpp_rf_ippj > Dqlmax) = Dqlmax;
-	   testDqlmax2 = sum(sum(sum(XXDpp_rf_ipj > Dqlmax)));XXDpp_rf_ipj(XXDpp_rf_ipj > Dqlmax) = Dqlmax;
-	   testDqlmax3 = sum(sum(sum(XXDpp_rf_ij > Dqlmax)));XXDpp_rf_ij(XXDpp_rf_ij > Dqlmax) = Dqlmax;
-	   testDqlmax4 = sum(sum(sum(XXDpp_rf_imj > Dqlmax)));XXDpp_rf_imj(XXDpp_rf_imj > Dqlmax) = Dqlmax;
-	   testDqlmax5 = sum(sum(sum(XXDpp_rf_immj > Dqlmax)));XXDpp_rf_immj(XXDpp_rf_immj > Dqlmax) = Dqlmax;
-	   testDqlmax6 = sum(sum(sum(XXDpm_rf_ipj > Dqlmax)));XXDpm_rf_ipj(XXDpm_rf_ipj > Dqlmax) = Dqlmax;
-	   testDqlmax7 = sum(sum(sum(XXDpm_rf_ij > Dqlmax)));XXDpm_rf_ij(XXDpm_rf_ij > Dqlmax) = Dqlmax;
-	   testDqlmax8 = sum(sum(sum(XXDpm_rf_imj > Dqlmax)));XXDpm_rf_imj(XXDpm_rf_imj > Dqlmax) = Dqlmax;
-	   testDqlmax9 = sum(sum(sum(XXDmp_rf_ijp > Dqlmax)));XXDmp_rf_ijp(XXDmp_rf_ijp > Dqlmax) = Dqlmax;
-	   testDqlmax10 = sum(sum(sum(XXDmp_rf_ij > Dqlmax)));XXDmp_rf_ij(XXDmp_rf_ij > Dqlmax) = Dqlmax;
-	   testDqlmax11 = sum(sum(sum(XXDmp_rf_ijm > Dqlmax)));XXDmp_rf_ijm(XXDmp_rf_ijm > Dqlmax) = Dqlmax;
-	   testDqlmax12 = sum(sum(sum(XXDmm_rf_ijp > Dqlmax)));XXDmm_rf_ijp(XXDmm_rf_ijp > Dqlmax) = Dqlmax;
-	   testDqlmax13 = sum(sum(sum(XXDmm_rf_ijm > Dqlmax)));XXDmm_rf_ijm(XXDmm_rf_ijm > Dqlmax) = Dqlmax;
-%
-	   testDqlmax = testDqlmax1 + testDqlmax2 + testDqlmax3 + testDqlmax4 + testDqlmax5 + testDqlmax6 + testDqlmax7 + testDqlmax8;
-	   testDqlmax = testDqlmax + testDqlmax9 + testDqlmax10 + testDqlmax11 + testDqlmax12 + testDqlmax13;
-	   if testDqlmax>0 & display_mode >= 1,info_dke_yp(2,['WARNING: Dql exceeds the maximum allowed value ',num2str(Dqlmax),'. It is enforced to this level !']);end
-    end    
-%
-   if dke_mode == 1
-      XXDpp_rf_tp_ippj = integral_dke_jd(ones(1,nb),YXXDpp_rf_tp_ippj,4);
-    	XXDpp_rf_tp_ipj = integral_dke_jd(ones(1,nb),YXXDpp_rf_tp_ipj,4);
-    	XXDpp_rf_tp_ij = integral_dke_jd(ones(1,nb),YXXDpp_rf_tp_ij,4);
-    	XXDpp_rf_tp_imj = integral_dke_jd(ones(1,nb),YXXDpp_rf_tp_imj,4);
-    	XXDpp_rf_tp_immj = integral_dke_jd(ones(1,nb),YXXDpp_rf_tp_immj,4);
-%	
-    	XXDpm_rf_tp_ipj = integral_dke_jd(ones(1,nb),YXXDpm_rf_tp_ipj,4);
-    	XXDpm_rf_tp_ij = integral_dke_jd(ones(1,nb),YXXDpm_rf_tp_ij,4);	
-    	XXDpm_rf_tp_imj = integral_dke_jd(ones(1,nb),YXXDpm_rf_tp_imj,4);
-%	
-    	XXDmp_rf_tp_ijp = integral_dke_jd(ones(1,nb),YXXDmp_rf_tp_ijp,4);
-    	XXDmp_rf_tp_ij = integral_dke_jd(ones(1,nb),YXXDmp_rf_tp_ij,4);	
-    	XXDmp_rf_tp_ijm = integral_dke_jd(ones(1,nb),YXXDmp_rf_tp_ijm,4);
-%	
-    	XXDmm_rf_tp_ijp = integral_dke_jd(ones(1,nb),YXXDmm_rf_tp_ijp,4);
-    	XXDmm_rf_tp_ijm = integral_dke_jd(ones(1,nb),YXXDmm_rf_tp_ijm,4);
-%
-    	XXFp_rf_tp_ippj = integral_dke_jd(ones(1,nb),YXXFp_rf_tp_ippj,4);
-    	XXFp_rf_tp_ipj = integral_dke_jd(ones(1,nb),YXXFp_rf_tp_ipj,4);
-    	XXFp_rf_tp_ij = integral_dke_jd(ones(1,nb),YXXFp_rf_tp_ij,4);
-    	XXFp_rf_tp_imj = integral_dke_jd(ones(1,nb),YXXFp_rf_tp_imj,4);
-    	XXFp_rf_tp_immj = integral_dke_jd(ones(1,nb),YXXFp_rf_tp_immj,4);
-%
-    	XXFm_rf_tp_ijp = integral_dke_jd(ones(1,nb),YXXFm_rf_tp_ijp,4);
-    	XXFm_rf_tp_ijm = integral_dke_jd(ones(1,nb),YXXFm_rf_tp_ijm,4);
-   end
+    [nb,XXDrf_ij,XXDrf_tp_ij,XXFrf_tp_ij,...
+    XXDpp_rf_ippj,XXDpp_rf_ipj,XXDpp_rf_ij,XXDpp_rf_imj,XXDpp_rf_immj,...
+	 XXDpm_rf_ipj,XXDpm_rf_ij,XXDpm_rf_imj,XXDmp_rf_ijp,XXDmp_rf_ij,XXDmp_rf_ijm,...
+	 XXDmm_rf_ijp,XXDmm_rf_ijm,...
+	 XXDpp_rf_tp_ippj,XXDpp_rf_tp_ipj,XXDpp_rf_tp_ij,XXDpp_rf_tp_imj,XXDpp_rf_tp_immj,...
+	 XXDpm_rf_tp_ipj,XXDpm_rf_tp_ij,XXDpm_rf_tp_imj,XXDmp_rf_tp_ijp,XXDmp_rf_tp_ij,XXDmp_rf_tp_ijm,...
+	 XXDmm_rf_tp_ijp,XXDmm_rf_tp_ijm,...
+	 XXFp_rf_tp_ippj,XXFp_rf_tp_ipj,XXFp_rf_tp_ij,XXFp_rf_tp_imj,XXFp_rf_tp_immj,XXFm_rf_tp_ijp,XXFm_rf_tp_ijm] = rfdiff_dke_jd(waveparam,nmax_rf,...
+    theta,XR,XZ,XBR,XBZ,XBphi,xB0,Rp,Zp,xqtilde,...       
+    XXheaviside,XXheaviside_p,XXheaviside_m,...  
+	 Xmhup,Xmhu,Xmhum,Xmhu2p,Xmhu2,Xmhu2m,X1mmhu2p,X1mmhu2,X1mmhu2m,...
+    Xdmhumm,Xdmhum,Xdmhu,Xdmhup,Xdmhupp,...
+	 pnpp,pnp,pn,pnm,pnmm,Xpnpp,Xpnp,Xpn,Xpnm,Xpnmm,...
+	 Xdpnmm,Xdpnm,Xdpn,Xdpnp,Xdpnpp,...
+	 Xgammapp,Xgammap,Xgamma,Xgammam,Xgammamm,...
+	 Xxlambda_p,Xxlambda,Xxlambda_m,...
+	 betath_ref,bounce_mode,dke_mode,display_mode);    
 else
 	nb = 0;
 %    
@@ -1033,7 +929,7 @@ else
 	XXDmm_rf_ijp = zeros(npn,nmhu,nr);
 	XXDmm_rf_ijm = zeros(npn,nmhu,nr);
 %
-	YXXDrf_ij = zeros(npn,nmhu,nr);
+	XXDrf_ij = zeros(npn,nmhu,nr);
 %
    if dke_mode == 1
     	XXDpp_rf_tp_ippj = zeros(npn,nmhu,nr);
@@ -1053,7 +949,7 @@ else
     	XXDmm_rf_tp_ijp = zeros(npn,nmhu,nr);
     	XXDmm_rf_tp_ijm = zeros(npn,nmhu,nr);
 %
-    	YXXDrf_D_tp_ij = zeros(npn,nmhu,nr);
+    	XXDrf_tp_ij = zeros(npn,nmhu,nr);
 %    
      	XXFp_rf_tp_ippj = zeros(npn,nmhu,nr);
     	XXFp_rf_tp_ipj = zeros(npn,nmhu,nr);
@@ -1064,7 +960,7 @@ else
       XXFm_rf_tp_ijp = zeros(npn,nmhu,nr);
     	XXFm_rf_tp_ijm = zeros(npn,nmhu,nr);
 %
-    	YXXDrf_F_tp_ij = zeros(npn,nmhu,nr);
+    	XXFrf_tp_ij = zeros(npn,nmhu,nr);
    end  
 end
 if display_mode >= 1,info_dke_yp(2,['Wave matrix coefficients calculations done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
@@ -1970,7 +1866,56 @@ if dke_mode == 1,
 		MMXP_g_t = sparse(i0_g,j0_g,s0_g,m0_g+m1_g,m0_g+m1_g) + sparse(m0_g+i1_g,m0_g+j1_g,s1_g,m0_g+m1_g,m0_g+m1_g);
 %
 		if display_mode >= 1,info_dke_yp(2,['First order momentum space matrix calculations (',int2str(ir_dke),'/',int2str(nr_dke),') done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
-   end
+	end
+else
+%
+% for collisions
+%
+   XXDpp_tp_c_imj = zeros(npn,nmhu,nr);
+   XXDpm_tp_c_imj = zeros(npn,nmhu,nr);
+   XXFp_tp_c_imj = zeros(npn,nmhu,nr);
+   XXDpp_tp_c_ipj = zeros(npn,nmhu,nr);
+   XXDpm_tp_c_ipj = zeros(npn,nmhu,nr);
+   XXFp_tp_c_ipj = zeros(npn,nmhu,nr);
+%
+   XXDmm_tp_c_ijm = zeros(npn,nmhu,nr);
+   XXDmp_tp_c_ijm = zeros(npn,nmhu,nr);
+   XXFm_tp_c_ijm = zeros(npn,nmhu,nr);
+   XXDmm_tp_c_ijp = zeros(npn,nmhu,nr);
+   XXDmp_tp_c_ijp = zeros(npn,nmhu,nr);
+   XXFm_tp_c_ijp = zeros(npn,nmhu,nr);
+%
+% For Ohmic electric field
+%
+	XXDpp_tp_e_imj = zeros(npn,nmhu,nr);
+	XXDpm_tp_e_imj = zeros(npn,nmhu,nr);
+	XXFp_tp_e_imj = zeros(npn,nmhu,nr);
+	XXDpp_tp_e_ipj = zeros(npn,nmhu,nr);
+	XXDpm_tp_e_ipj = zeros(npn,nmhu,nr);
+	XXFp_tp_e_ipj = zeros(npn,nmhu,nr);
+%
+	XXDmm_tp_e_ijm = zeros(npn,nmhu,nr);
+	XXDmp_tp_e_ijm = zeros(npn,nmhu,nr);
+	XXFm_tp_e_ijm = zeros(npn,nmhu,nr);
+	XXDmm_tp_e_ijp = zeros(npn,nmhu,nr);
+	XXDmp_tp_e_ijp = zeros(npn,nmhu,nr);
+	XXFm_tp_e_ijp = zeros(npn,nmhu,nr);
+%
+% For RF waves
+%
+	XXDpp_tp_rf_imj = zeros(npn,nmhu,nr);
+	XXDpm_tp_rf_imj = zeros(npn,nmhu,nr);
+	XXFp_tp_rf_imj = zeros(npn,nmhu,nr);
+	XXDpp_tp_rf_ipj = zeros(npn,nmhu,nr);
+	XXDpm_tp_rf_ipj = zeros(npn,nmhu,nr);
+	XXFp_tp_rf_ipj = zeros(npn,nmhu,nr);
+%
+	XXDmm_tp_rf_ijm = zeros(npn,nmhu,nr);
+	XXDmp_tp_rf_ijm = zeros(npn,nmhu,nr);
+	XXFm_tp_rf_ijm = zeros(npn,nmhu,nr);
+	XXDmm_tp_rf_ijp = zeros(npn,nmhu,nr);
+	XXDmp_tp_rf_ijp = zeros(npn,nmhu,nr);
+	XXFm_tp_rf_ijp = zeros(npn,nmhu,nr);
 end
 %
 %Second order radial gradient correction for ftp (radial derivative of the Chang and Cooper momentum terms) 
@@ -2142,8 +2087,6 @@ for it_f = 2:nit_f,
 		MMXq_t = MMXIpn2_t + (MMXT_f_t - (time_scheme - 1)*(MMXP_f_t + MMXR_f_t)/time_scheme)*MMXf0_t;%Right handside term of the Fokker-Planck equation
 %
 		MMXR_t = MMXPDI_f_t*MMXq_t - MMXPC_f_t*MMXf0_t;%Residu calculation for matrix inversion
-%
-pack
 %
 		if invproc == 1,%cgs iterative method
 			[MMXS_t,flaginv_f] = cgs(MMXPC_f_t,MMXR_t,prec_inv,maxit_inv,MMXL_f_t,MMXU_f_t);
@@ -2632,20 +2575,6 @@ clear xcurr_0_fsav xcurr_tp_fsav xcurr_g_fsav
 %
 %   Collisional fluxes and power
 %
-XXDpp_tp_c_imj = zeros(npn,nmhu,nr);
-XXDpm_tp_c_imj = zeros(npn,nmhu,nr);
-XXFp_tp_c_imj = zeros(npn,nmhu,nr);
-XXDpp_tp_c_ipj = zeros(npn,nmhu,nr);
-XXDpm_tp_c_ipj = zeros(npn,nmhu,nr);
-XXFp_tp_c_ipj = zeros(npn,nmhu,nr);
-%
-XXDmm_tp_c_ijm = zeros(npn,nmhu,nr);
-XXDmp_tp_c_ijm = zeros(npn,nmhu,nr);
-XXFm_tp_c_ijm = zeros(npn,nmhu,nr);
-XXDmm_tp_c_ijp = zeros(npn,nmhu,nr);
-XXDmp_tp_c_ijp = zeros(npn,nmhu,nr);
-XXFm_tp_c_ijp = zeros(npn,nmhu,nr);
-%
 %f0 contribution
 %
 [XXSp0_c_imj,XXSp0_c_ipj,XXSm0_c_ijm,XXSm0_c_ijp] = ...
@@ -2713,20 +2642,6 @@ clear xP0_c_fsav xP0_tp_c_fsav xP0_g_c_fsav
 %
 %   Ohmic fluxes and power
 %
-XXDpp_tp_e_imj = zeros(npn,nmhu,nr);
-XXDpm_tp_e_imj = zeros(npn,nmhu,nr);
-XXFp_tp_e_imj = zeros(npn,nmhu,nr);
-XXDpp_tp_e_ipj = zeros(npn,nmhu,nr);
-XXDpm_tp_e_ipj = zeros(npn,nmhu,nr);
-XXFp_tp_e_ipj = zeros(npn,nmhu,nr);
-%
-XXDmm_tp_e_ijm = zeros(npn,nmhu,nr);
-XXDmp_tp_e_ijm = zeros(npn,nmhu,nr);
-XXFm_tp_e_ijm = zeros(npn,nmhu,nr);
-XXDmm_tp_e_ijp = zeros(npn,nmhu,nr);
-XXDmp_tp_e_ijp = zeros(npn,nmhu,nr);
-XXFm_tp_e_ijp = zeros(npn,nmhu,nr);
-%
 %f0 contribution
 %
 [XXSp0_e_imj,XXSp0_e_ipj,XXSm0_e_ijm,XXSm0_e_ijp] = ...
@@ -2793,130 +2708,122 @@ clear XXSp0_e_imj XXSp0_tp_e_imj XXSp0_g_e_imj
 clear xP0_e_fsav xP0_tp_e_fsav xP0_g_e_fsav
 %
 %   RF fluxes and power
-%  
-YXXDpp_tp_rf_imj = zeros(npn,nmhu,nr,nb);
-YXXDpm_tp_rf_imj = zeros(npn,nmhu,nr,nb);
-YXXFp_tp_rf_imj = zeros(npn,nmhu,nr,nb);
-YXXDpp_tp_rf_ipj = zeros(npn,nmhu,nr,nb);
-YXXDpm_tp_rf_ipj = zeros(npn,nmhu,nr,nb);
-YXXFp_tp_rf_ipj = zeros(npn,nmhu,nr,nb);
-%
-YXXDmm_tp_rf_ijm = zeros(npn,nmhu,nr,nb);
-YXXDmp_tp_rf_ijm = zeros(npn,nmhu,nr,nb);
-YXXFm_tp_rf_ijm = zeros(npn,nmhu,nr,nb);
-YXXDmm_tp_rf_ijp = zeros(npn,nmhu,nr,nb);
-YXXDmp_tp_rf_ijp = zeros(npn,nmhu,nr,nb);
-YXXFm_tp_rf_ijp = zeros(npn,nmhu,nr,nb);
-%
-YXXFp_rf_imj = zeros(npn,nmhu,nr,nb);
-YXXFp_rf_ipj = zeros(npn,nmhu,nr,nb);
-YXXFm_rf_ijm = zeros(npn,nmhu,nr,nb);
-YXXFm_rf_ijp = zeros(npn,nmhu,nr,nb);
 %      
 if nb > 0,
-	xyqtilde = repmat(xqtilde',[1,nb]);
-	xyqbar = repmat(xqbar',[1,nb]);
-	xyqhat = repmat(xqhat',[1,nb]);
+   ZSp0{3,1} = 0;
+   ZSp0{3,2} = 0;
+   ZSp0{3,3} = 0;
 %
-	YXXmhup = repmat(Xmhup,[1,1,nr,nb]);
-	YXXmhu = repmat(Xmhu,[1,1,nr,nb]);
-	YXXmhum = repmat(Xmhum,[1,1,nr,nb]);
-	YXXmhu2p = repmat(Xmhu2p,[1,1,nr,nb]);
-	YXXmhu2 = repmat(Xmhu2,[1,1,nr,nb]);
-	YXXmhu2m = repmat(Xmhu2m,[1,1,nr,nb]);
-	YXX1mmhu2p = repmat(X1mmhu2p,[1,1,nr,nb]);
-	YXX1mmhu2 = repmat(X1mmhu2,[1,1,nr,nb]);
-	YXX1mmhu2m = repmat(X1mmhu2m,[1,1,nr,nb]);
+   ZSp0{3,4} = 0;
+   ZSp0{3,5} = 0;
+   ZSp0{3,6} = 0;
 %
-	YXXpn = repmat(Xpn,[1,1,nr,nb]);
-	YXXpnm = repmat(Xpnm,[1,1,nr,nb]);
-	YXXpnp = repmat(Xpnp,[1,1,nr,nb]);
-	YXXdpnm = repmat(Xdpnm,[1,1,nr,nb]);
-	YXXdpnp = repmat(Xdpnp,[1,1,nr,nb]);
-	YXXdmhu = repmat(Xdmhu,[1,1,nr,nb]);
-	YXXdmhum = repmat(Xdmhum,[1,1,nr,nb]);
-	YXXdmhup = repmat(Xdmhup,[1,1,nr,nb]);
-	YXXlambda = repmat(XXlambda,[1,1,nr,nb]);
-	YXXgammam = repmat(Xgammam,[1,1,nr,nb]);
-	YXXgammap = repmat(Xgammap,[1,1,nr,nb]);
+   ZSp0{3,7} = 0;
+   ZSp0{3,8} = 0;
+   ZSp0{3,9} = 0;
 %
-	YXXf0 = repmat(XXf0,[1,1,1,nb]);
-	YXXf0_tp = repmat(XXf0_tp,[1,1,1,nb]);
-	YXXf0_g = repmat(XXf0_g,[1,1,1,nb]);
-%    
-	YXXdeltap_imj = repmat(XXdeltap_imj,[1,1,1,nb]);
-	YXXdeltap_ipj = repmat(XXdeltap_ipj,[1,1,1,nb]);
-	YXXdeltam_ijp = repmat(XXdeltam_ijp,[1,1,1,nb]);
-	YXXdeltam_ijm = repmat(XXdeltam_ijm,[1,1,1,nb]);
+   ZSp0{3,10} = 0;
+   ZSp0{3,11} = 0;
+   ZSp0{3,12} = 0;
 %
-%f0 contribution
+   for ib=1:nb,
+	   eval(['load temp_ray_#',int2str(ib),' ZYXXD_rf ZYXXD_rf_tp ZYXXF_rf_tp']);%Load large data file for each ray
+%	    
+		XXDpp_rf_imj = ZYXXD_rf{4};
+		XXDpp_rf_ipj = ZYXXD_rf{2};
+		XXDpm_rf_imj = ZYXXD_rf{8};
+		XXDpm_rf_ipj = ZYXXD_rf{6};
+		XXFp_rf_imj = zeros(npn,nmhu,nr);
+		XXFp_rf_ipj = zeros(npn,nmhu,nr);		
+		XXDmm_rf_ijm = ZYXXD_rf{13}; 
+		XXDmm_rf_ijp = ZYXXD_rf{12};
+		XXDmp_rf_ijm = ZYXXD_rf{11};
+		XXDmp_rf_ijp = ZYXXD_rf{9};
+		XXFm_rf_ijm = zeros(npn,nmhu,nr);
+		XXFm_rf_ijp = zeros(npn,nmhu,nr);
 %
-	[YXXSp0_rf_imj,YXXSp0_rf_ipj,YXXSm0_rf_ijm,YXXSm0_rf_ijp] = ...
-        fluxes_dke_jd(YXXDpp_rf_imj(:,:,rdke,:),YXXDpp_rf_ipj(:,:,rdke,:),YXXDpm_rf_imj(:,:,rdke,:),YXXDpm_rf_ipj(:,:,rdke,:),...
-        YXXFp_rf_imj(:,:,rdke,:),YXXFp_rf_ipj(:,:,rdke,:),...
-        YXXDmm_rf_ijm(:,:,rdke,:),YXXDmm_rf_ijp(:,:,rdke,:),YXXDmp_rf_ijm(:,:,rdke,:),YXXDmp_rf_ijp(:,:,rdke,:),...
-        YXXFm_rf_ijm(:,:,rdke,:),YXXFm_rf_ijp(:,:,rdke,:),...
-        YXXf0(:,:,rdke,:),YXXpn(:,:,rdke,:),YXXpnm(:,:,rdke,:),YXXpnp(:,:,rdke,:),YXX1mmhu2(:,:,rdke,:),YXX1mmhu2m(:,:,rdke,:),YXX1mmhu2p(:,:,rdke,:),...
-        YXXdpnm(:,:,rdke,:),YXXdpnp(:,:,rdke,:),YXXdmhum(:,:,rdke,:),YXXdmhup(:,:,rdke,:),...
-        YXXdeltap_imj(:,:,rdke,:),YXXdeltap_ipj(:,:,rdke,:),YXXdeltam_ijm(:,:,rdke,:),YXXdeltam_ijp(:,:,rdke,:));
+		XXDpp_rf_tp_imj = ZYXXD_rf_tp{4};
+		XXDpp_rf_tp_ipj = ZYXXD_rf_tp{2};
+		XXDpm_rf_tp_imj = ZYXXD_rf_tp{8};
+		XXDpm_rf_tp_ipj = ZYXXD_rf_tp{6};
+		XXFp_rf_tp_imj = ZYXXF_rf_tp{4};
+		XXFp_rf_tp_ipj = ZYXXF_rf_tp{2};
+		XXDmm_rf_tp_ijm = ZYXXD_rf_tp{13}; 
+		XXDmm_rf_tp_ijp = ZYXXD_rf_tp{12};
+		XXDmp_rf_tp_ijm = ZYXXD_rf_tp{11};
+		XXDmp_rf_tp_ijp = ZYXXD_rf_tp{9};
+		XXFm_rf_tp_ijm = ZYXXF_rf_tp{7};
+		XXFm_rf_tp_ijp = ZYXXF_rf_tp{6};		
 %
-        xyP0m_rf_fsav = 2*pi*(xyqtilde(rdke,:)./xyqhat(rdke,:)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,YXXpnm(:,:,rdke,:).^3./YXXgammam(:,:,rdke,:).*YXXlambda(:,:,rdke,:).*YXXSp0_rf_imj,1),1);       
-        xyP0p_rf_fsav = 2*pi*(xyqtilde(rdke,:)./xyqhat(rdke,:)).*integral_dke_jd(dmhu,integral_dke_jd(dpnp,YXXpnp(:,:,rdke,:).^3./YXXgammap(:,:,rdke,:).*YXXlambda(:,:,rdke,:).*YXXSp0_rf_ipj,1),1);       
-        xyP0_rf_fsav = (xyP0m_rf_fsav + xyP0p_rf_fsav)/2;
+%f0 contribution for each ray
 %
-%f0_tp contribution
+	   [XXSp0_rf_imj,XXSp0_rf_ipj,XXSm0_rf_ijm,XXSm0_rf_ijp] = ...
+         fluxes_dke_jd(XXDpp_rf_imj(:,:,rdke),XXDpp_rf_ipj(:,:,rdke),XXDpm_rf_imj(:,:,rdke),XXDpm_rf_ipj(:,:,rdke),...
+         XXFp_rf_imj(:,:,rdke),XXFp_rf_ipj(:,:,rdke),...
+         XXDmm_rf_ijm(:,:,rdke),XXDmm_rf_ijp(:,:,rdke),XXDmp_rf_ijm(:,:,rdke),XXDmp_rf_ijp(:,:,rdke),...
+         XXFm_rf_ijm(:,:,rdke),XXFm_rf_ijp(:,:,rdke),...
+         XXf0(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
+         XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
+         XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
 %
-        [YXXSp0_tp_rf_imj,YXXSp0_tp_rf_ipj,YXXSm0_tp_rf_ijm,YXXSm0_tp_rf_ijp] = ...
-        fluxes_dke_jd(YXXDpp_tp_rf_imj(:,:,rdke,:),YXXDpp_tp_rf_ipj(:,:,rdke,:),YXXDpm_tp_rf_imj(:,:,rdke,:),YXXDpm_tp_rf_ipj(:,:,rdke,:),...
-        YXXFp_tp_rf_imj(:,:,rdke,:),YXXFp_tp_rf_ipj(:,:,rdke,:),...
-        YXXDmm_tp_rf_ijm(:,:,rdke,:),YXXDmm_tp_rf_ijp(:,:,rdke,:),YXXDmp_tp_rf_ijm(:,:,rdke,:),YXXDmp_tp_rf_ijp(:,:,rdke,:),...
-        YXXFm_tp_rf_ijm(:,:,rdke,:),YXXFm_tp_rf_ijp(:,:,rdke,:),...
-        YXXf0_tp(:,:,rdke,:),YXXpn(:,:,rdke,:),YXXpnm(:,:,rdke,:),YXXpnp(:,:,rdke,:),YXX1mmhu2(:,:,rdke,:),YXX1mmhu2m(:,:,rdke,:),YXX1mmhu2p(:,:,rdke,:),...
-        YXXdpnm(:,:,rdke,:),YXXdpnp(:,:,rdke,:),YXXdmhum(:,:,rdke,:),YXXdmhup(:,:,rdke,:),...
-        YXXdeltap_imj(:,:,rdke,:),YXXdeltap_ipj(:,:,rdke,:),YXXdeltam_ijm(:,:,rdke,:),YXXdeltam_ijp(:,:,rdke,:));
+      xyP0m_rf_fsav(rdke,ib) = 2*pi*(xqtilde(rdke)'./xqhat(rdke)').*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).^3./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*XXSp0_rf_imj,1),1);       
+      xyP0p_rf_fsav(rdke,ib) = 2*pi*(xqtilde(rdke)'./xqhat(rdke)').*integral_dke_jd(dmhu,integral_dke_jd(dpnp,XXpnp(:,:,rdke).^3./XXgammap(:,:,rdke).*XXlambda(:,:,rdke).*XXSp0_rf_ipj,1),1);       
+      xyP0_rf_fsav(rdke,ib) = (xyP0m_rf_fsav(rdke,ib) + xyP0p_rf_fsav(rdke,ib))/2;
+%
+%f0_tp contribution for each ray
+%
+      [XXSp0_tp_rf_imj,XXSp0_tp_rf_ipj,XXSm0_tp_rf_ijm,XXSm0_tp_rf_ijp] = ...
+         fluxes_dke_jd(XXDpp_tp_rf_imj(:,:,rdke),XXDpp_tp_rf_ipj(:,:,rdke),XXDpm_tp_rf_imj(:,:,rdke),XXDpm_tp_rf_ipj(:,:,rdke),...
+         XXFp_tp_rf_imj(:,:,rdke),XXFp_tp_rf_ipj(:,:,rdke),...
+         XXDmm_tp_rf_ijm(:,:,rdke),XXDmm_tp_rf_ijp(:,:,rdke),XXDmp_tp_rf_ijm(:,:,rdke),XXDmp_tp_rf_ijp(:,:,rdke),...
+         XXFm_tp_rf_ijm(:,:,rdke),XXFm_tp_rf_ijp(:,:,rdke),...
+         XXf0_tp(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
+         XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
+         XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
 %            
-        xyP0_tp_rf_fsav = 2*pi*(xyqtilde(rdke,:)./xyqhat(rdke,:)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,YXXpnm(:,:,rdke,:).^3./YXXgammam(:,:,rdke,:).*YXXlambda(:,:,rdke,:).*YXXSp0_tp_rf_imj,1),1);       
+      xyP0_tp_rf_fsav(rdke,ib) = 2*pi*(xqtilde(rdke)'./xqhat(rdke)').*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).^3./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*XXSp0_tp_rf_imj,1),1);       
 %
-%f0_g contribution
+%f0_g contribution for each ray
 %
-        [YXXSp0_g_rf_imj,YXXSp0_g_rf_ipj,YXXSm0_g_rf_ijm,YXXSm0_g_rf_ijp] = ...
-        fluxes_dke_jd(YXXDpp_rf_imj(:,:,rdke,:),YXXDpp_rf_ipj(:,:,rdke,:),YXXDpm_rf_imj(:,:,rdke,:),YXXDpm_rf_ipj(:,:,rdke,:),...
-        YXXFp_rf_imj(:,:,rdke,:),YXXFp_rf_ipj(:,:,rdke,:),...
-        YXXDmm_rf_ijm(:,:,rdke,:),YXXDmm_rf_ijp(:,:,rdke,:),YXXDmp_rf_ijm(:,:,rdke,:),YXXDmp_rf_ijp(:,:,rdke,:),...
-        YXXFm_rf_ijm(:,:,rdke,:),YXXFm_rf_ijp(:,:,rdke,:),...
-        YXXf0_g(:,:,rdke,:),YXXpn(:,:,rdke,:),YXXpnm(:,:,rdke,:),YXXpnp(:,:,rdke,:),YXX1mmhu2(:,:,rdke,:),YXX1mmhu2m(:,:,rdke,:),YXX1mmhu2p(:,:,rdke,:),...
-        YXXdpnm(:,:,rdke,:),YXXdpnp(:,:,rdke,:),YXXdmhum(:,:,rdke,:),YXXdmhup(:,:,rdke,:),...
-        YXXdeltap_imj(:,:,rdke,:),YXXdeltap_ipj(:,:,rdke,:),YXXdeltam_ijm(:,:,rdke,:),YXXdeltam_ijp(:,:,rdke,:));
+      [XXSp0_g_rf_imj,XXSp0_g_rf_ipj,XXSm0_g_rf_ijm,XXSm0_g_rf_ijp] = ...
+         fluxes_dke_jd(XXDpp_rf_imj(:,:,rdke),XXDpp_rf_ipj(:,:,rdke),XXDpm_rf_imj(:,:,rdke),XXDpm_rf_ipj(:,:,rdke),...
+         XXFp_rf_imj(:,:,rdke),XXFp_rf_ipj(:,:,rdke),...
+         XXDmm_rf_ijm(:,:,rdke),XXDmm_rf_ijp(:,:,rdke),XXDmp_rf_ijm(:,:,rdke),XXDmp_rf_ijp(:,:,rdke),...
+         XXFm_rf_ijm(:,:,rdke),XXFm_rf_ijp(:,:,rdke),...
+         XXf0_g(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
+         XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
+         XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
 %    
-    xyP0_g_rf_fsav = 2*pi*(xyqtilde(rdke,:)./xyqhat(rdke,:)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,YXXpnm(:,:,rdke,:).^3./YXXgammam(:,:,rdke,:).*YXXlambda(:,:,rdke,:).*YXXSp0_g_rf_imj,1),1);       
+      xyP0_g_rf_fsav(rdke,ib) = 2*pi*(xqtilde(rdke)'./xqhat(rdke)').*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).^3./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*XXSp0_g_rf_imj,1),1);       
 %
-    ZSp0{3,1} = YXXSp0_rf_imj;
-    ZSp0{3,2} = YXXSp0_tp_rf_imj;
-    ZSp0{3,3} = YXXSp0_g_rf_imj;
+		XXSp0_imj = XXSp0_imj + XXSp0_rf_imj;
+		XXSm0_ijm = XXSm0_ijm + XXSm0_rf_ijm;
 %
-    ZSp0{3,4} = YXXSp0_rf_ipj;
-    ZSp0{3,5} = YXXSp0_tp_rf_ipj;
-    ZSp0{3,6} = YXXSp0_g_rf_ipj;
+		ZSp0{3,1} = ZSp0{3,1} + XXSp0_rf_imj;
+		ZSp0{3,2} = ZSp0{3,2} + XXSp0_tp_rf_imj;
+		ZSp0{3,3} = ZSp0{3,3} + XXSp0_g_rf_imj;
 %
-    ZSp0{3,7} = YXXSm0_rf_ijm;
-    ZSp0{3,8} = YXXSm0_tp_rf_ijm;
-    ZSp0{3,9} = YXXSm0_g_rf_ijm;
+		ZSp0{3,4} = ZSp0{3,4} + XXSp0_rf_ipj;
+		ZSp0{3,5} = ZSp0{3,5} + XXSp0_tp_rf_ipj;
+		ZSp0{3,6} = ZSp0{3,6} + XXSp0_g_rf_ipj;
 %
-    ZSp0{3,10} = YXXSm0_rf_ijp;
-    ZSp0{3,11} = YXXSm0_tp_rf_ijp;
-    ZSp0{3,12} = YXXSm0_g_rf_ijp;
-%   
-    ZP0_fsav{3,1} = xyP0_rf_fsav;
-    ZP0_fsav{3,2} = xyP0_tp_rf_fsav;
-    ZP0_fsav{3,3} = xyP0_g_rf_fsav;
+		ZSp0{3,7} = ZSp0{3,7} + XXSm0_rf_ijm;
+		ZSp0{3,8} = ZSp0{3,8} + XXSm0_tp_rf_ijm;
+		ZSp0{3,9} = ZSp0{3,9} + XXSm0_g_rf_ijm;
 %
-    XXSp0_imj = XXSp0_imj + integral_dke_jd(ones(1,nb),YXXSp0_rf_imj,4);
-    XXSm0_ijm = XXSm0_ijm + integral_dke_jd(ones(1,nb),YXXSm0_rf_ijm,4);
-%        
-    clear YXXf0 YXXf0_tp YXXf0_g YXXdeltap_imj YXXdeltap_ipj YXXdeltam_ijp YXXdeltam_ijm YXXmhup 
-    clear YXXmhu YXXmhum YXXmhu2p YXXmhu2 YXXmhu2m YXX1mmhu2p YXX1mmhu2 YXX1mmhu2m 
-    clear YXXpnm YXXpnp YXXdpnm YXXdpnp YXXdmhu YXXdmhum YXXdmhup YXXlambda YXXgammam YXXgammap 
-    clear YXXSp0_rf_imj YXXSp0_tp_rf_imj YXXSp0_g_rf_imj
+		ZSp0{3,10} = ZSp0{3,10} + XXSm0_rf_ijp;
+		ZSp0{3,11} = ZSp0{3,11} + XXSm0_tp_rf_ijp;
+		ZSp0{3,12} = ZSp0{3,12} + XXSm0_g_rf_ijp;
+%
+		disp(['Power absorption for effective ray #',int2str(ib),'/',int2str(nb),' done']);
+
+	end
+%
+	ZP0_fsav{3,1} = xyP0_rf_fsav;
+	ZP0_fsav{3,2} = xyP0_tp_rf_fsav;
+	ZP0_fsav{3,3} = xyP0_g_rf_fsav;
+end
+%
     clear xyP0_rf_fsav xyP0_tp_rf_fsav xyP0_g_rf_fsav
 end
 %

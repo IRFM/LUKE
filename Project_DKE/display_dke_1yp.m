@@ -268,8 +268,9 @@ while 1,
 			Xf0_L_g_ref = XXf0_L_g_ref(:,:,ir_display);%Display results at the required radial value
 		end
 		Xfinit_ref = XXfinit_ref(:,:,ir_display);%Display results at the required radial value
+%
 		if nb > 0
-			YXDrf_ref = squeeze(YXXDrf_ref(:,:,ir_display,:));%Display results at the required radial value
+			XDrf_ref = squeeze(XXDrf_ref(:,:,ir_display));%Display results at the required radial value
 		end
         if bounce_mode == 1,
 		    [XAstr_S_Pm_ref,XAstr_S_Pp_ref,XAstr_S_T_ref] = stream_dke_jd(ZSp0_ref,XxRR_ref_fsav,mhu,xmhubounce2,dmhu,pnp,ir_display_dke,nb);
@@ -374,22 +375,21 @@ while 1,
 		[logXf0_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(log(Xf0_ref),pn_ref,mhu,dp_cyl);%Spherical to cylindrical coordinate transformation
 		Xf0_cyl_ref = exp(logXf0_cyl_ref);%For accurate representation in figures 
 		if syn_mode == 1,
-            [logXf0_bc_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(log(Xf0_bc_ref),pn_ref,mhu,dp_cyl);%Spherical to cylindrical coordinate transformation
+         [logXf0_bc_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(log(Xf0_bc_ref),pn_ref,mhu,dp_cyl);%Spherical to cylindrical coordinate transformation
     		Xf0_bc_cyl_ref = exp(logXf0_bc_cyl_ref);%For accurate representation in figures 
-        end
+      end
 %
 %Points added at mhu = +/-1 for better plot (particularly effective for EBW)
 %
-        mhu_X = [-1,mhu,1];
-		for ib = 1:nb
-            n_rf = waveparam(ir_display,ib,1);
-            if n_rf >= 2,
-                XDrf_X_ref = [zeros(np,1),YXDrf_ref(:,:,ib),zeros(np,1)];
-			    [YXDrf_cyl_ref(:,:,ib),ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_S_dke_yp(XDrf_X_ref,pn_ref,mhu_X,dp_cyl);%Spherical to cylindrical coordinate transformation
-            else
-			    [YXDrf_cyl_ref(:,:,ib),ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(YXDrf_ref(:,:,ib),pn_ref,mhu,dp_cyl);%Spherical to cylindrical coordinate transformation
-            end
-		end
+      mhu_X = [-1,mhu,1];
+%************************************erreur dans la ligne d'en dessous ***********************
+      n_rf = max(waveparam(ir_display,:,1));
+      if n_rf >= 2,  	
+         XDrf_X_ref = [zeros(np,1),XDrf_ref,zeros(np,1)];
+	      [XDrf_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_S_dke_yp(XDrf_X_ref,pn_ref,mhu_X,dp_cyl);%Spherical to cylindrical coordinate transformation
+      else
+			[XDrf_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(XDrf_ref,pn_ref,mhu,dp_cyl);%Spherical to cylindrical coordinate transformation
+      end
 %
 		[XAstr_Pp_cyl_ref,ppar_cyl_S_ref,dppar_cyl_S_ref,pperp_cyl_S_ref,dpperp_S_cyl_ref] = s2c_S_dke_yp(XAstr_S_Pp_ref,pn_S,mhu_S,dp_cyl);%Spherical to cylindrical coordinate transformation
 		[XAstr_Pm_cyl_ref,ppar_cyl_S_ref,dppar_cyl_S_ref,pperp_cyl_S_ref,dpperp_S_cyl_ref] = s2c_S_dke_yp(XAstr_S_Pm_ref,pn_S,mhu_S,dp_cyl);%Spherical to cylindrical coordinate transformation
@@ -419,20 +419,15 @@ while 1,
 		Xfinit_cyl_ref = Xfinit_cyl_ref.*(Xp_cyl_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
 		Xfinit_cyl_ref(isnan(Xfinit_cyl_ref)) = 0;%Remove NaN values
 		if nb > 0
-			YXp_cyl_ref = repmat(Xp_cyl_ref,[1,1,nb]);
-			YXDrf_cyl_ref = YXDrf_cyl_ref.*(YXDrf_cyl_ref>0);
-			YXDrf_cyl_ref = YXDrf_cyl_ref.*(YXp_cyl_ref<max(ppar_cyl_ref));
-			YXDrf_cyl_ref = YXDrf_cyl_ref.*(YXDrf_cyl_ref<=max(max(max(YXDrf_ref))));
-
-			YXDrf_cyl_ref(isnan(YXDrf_cyl_ref))=0;
+			XDrf_cyl_ref = XDrf_cyl_ref.*(XDrf_cyl_ref>0);
+			XDrf_cyl_ref = XDrf_cyl_ref.*(Xp_cyl_ref<max(ppar_cyl_ref));
+			XDrf_cyl_ref = XDrf_cyl_ref.*(XDrf_cyl_ref<=max(max(max(XDrf_ref))));
+			XDrf_cyl_ref(isnan(XDrf_cyl_ref))=0;
 %
-			XDlh_cyl_ref = integral_dke_jd(ones(1,nb_lh),YXDrf_cyl_ref(:,:,blist_lh),3);
-			XDec_cyl_ref = integral_dke_jd(ones(1,nb_ec),YXDrf_cyl_ref(:,:,blist_ec),3);
 		end        
 		XAstr_cyl_Pp_ref = XAstr_Pp_cyl_ref.*(Xp_cyl_S_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
 		XAstr_cyl_Pm_ref = XAstr_Pm_cyl_ref.*(Xp_cyl_S_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
 		XAstr_cyl_T_ref = XAstr_T_cyl_ref.*(Xp_cyl_S_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
-		%XAstr_cyl_ref = XAstr_cyl_ref.*(XAstr_cyl_ref>0);%Remove negative values
 		XAstr_Pp_cyl_ref(isnan(XAstr_Pp_cyl_ref)) = 0;%Remove NaN values
 		XAstr_Pm_cyl_ref(isnan(XAstr_Pm_cyl_ref)) = 0;%Remove NaN values
 		XAstr_T_cyl_ref(isnan(XAstr_T_cyl_ref)) = 0;%Remove NaN values
@@ -658,7 +653,7 @@ while 1,
 %
                 figure(7),clf
                 %
-                y1 = log10(XDlh_cyl_ref/max(max(XDlh_cyl_ref)));
+                y1 = log10(XDrf_cyl_ref/max(max(XDrf_cyl_ref)));
                 cont = [-10.5:-0.5];
                 %
                 graph2D_jd(x1,x2,y1','','','',xlim1,xlim2,0,NaN,cont,0,style2,NaN,width1,siz,red);
@@ -674,14 +669,14 @@ while 1,
 			    pause(time_pause);
                 %
 				if igor_mode == 1,
-					eval(['save ',filenameroot,'_data_fig7_',int2str(ir_display_dke),'.mat xrho_dke xia r_dke ir_display_dke ppar_cyl_ref pperp_cyl_ref XDlh_cyl_ref xmhubounce2 pnmax_S'])
+					eval(['save ',filenameroot,'_data_fig7_',int2str(ir_display_dke),'.mat xrho_dke xia r_dke ir_display_dke ppar_cyl_ref pperp_cyl_ref XDrf_cyl_ref xmhubounce2 pnmax_S'])
 				end
 			end
 %
 % ----------- EC coefficient if applicable -----------
 %
 			if nb_ec > 0 
-                y3 = log10(XDec_cyl_ref/max(max(XDec_cyl_ref)));
+                y3 = log10(XDrf_cyl_ref/max(max(XDrf_cyl_ref)));
                 cont = [-2.2:0.4:-0.2];
                 %
                 figure(4),
@@ -933,7 +928,7 @@ while 1,
     				hold off;
                 end
 			    if nb_ec > 0 
-                    y3 = XDec_cyl_ref;
+                    y3 = XDrf_cyl_ref;
                     graph2D_jd(x1,x2,y3',xlab1,xlab2,'2D Distribution function f_{tp}',xlim1,xlim2,0,NaN,4,0,style1,color3,width2,siz);
                 end
 %
@@ -959,7 +954,7 @@ while 1,
     				hold off;
                 end
 			    if nb_ec > 0 
-                    y3 = XDec_cyl_ref;
+                    y3 = XDrf_cyl_ref;
                     graph2D_jd(x1,x2,y3',xlab1,xlab2,'2D Distribution function g',xlim1,xlim2,0,NaN,4,0,style1,color3,width2,siz);
                 end
 %
@@ -992,7 +987,7 @@ while 1,
     				hold off;
                 end
 			    if nb_ec > 0 
-                    y3 = XDec_cyl_ref;
+                    y3 = XDrf_cyl_ref;
                     graph2D_jd(x1,x2,y3',xlab1,xlab2,'2D Distribution function f_1',xlim1,xlim2,0,NaN,4,0,style1,color3,width2,siz);
                 end
 %
@@ -1017,7 +1012,7 @@ while 1,
     				hold off;
                 end
 			    if nb_ec > 0 
-                    y3 = XDec_cyl_ref;
+                    y3 = XDrf_cyl_ref;
                     graph2D_jd(x1,x2,y3',xlab1,xlab2,'2D total distribution function f_0 + f_1',xlim1,xlim2,0,NaN,4,0,style1,color3,width2,siz);
                 end
 %

@@ -42,7 +42,7 @@ if deltax < max(xramp + dx2/yn(nrdxramp + 1))
     if solution == 0,
         warning('empty output from powerdiff');
         x = [];
-        break
+        return
     end
 end
 %
@@ -161,7 +161,7 @@ while isempty(dx);
     d = deltax - xramp1 - xramp2;
 end
 if isempty(x)
-    break
+    return
 end
 if inv == 0;
     x = cumsum([x1,dx]);

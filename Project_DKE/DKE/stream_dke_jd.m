@@ -24,13 +24,9 @@ np_S = np + 1;
 nmhu_S = nmhu + 1;
 %
 if nb > 0,
-    YXXSp0_rf_ipj = ZSp0{3,4};%RF waves
-    YXXSp0_tp_rf_ipj = ZSp0{3,5};
-    YXXSp0_g_rf_ipj = ZSp0{3,6};
-%
-    XXSp0_rf_ipj = integral_dke_jd(ones(1,nb),YXXSp0_rf_ipj,4);
-    XXSp0_tp_rf_ipj = integral_dke_jd(ones(1,nb),YXXSp0_tp_rf_ipj,4);
-    XXSp0_g_rf_ipj = integral_dke_jd(ones(1,nb),YXXSp0_g_rf_ipj,4);
+    XXSp0_rf_ipj = ZSp0{3,4};%RF waves
+    XXSp0_tp_rf_ipj = ZSp0{3,5};
+    XXSp0_g_rf_ipj = ZSp0{3,6};
 else
     XXSp0_rf_ipj = zeros(np,nmhu,nr_dke);
     XXSp0_tp_rf_ipj = zeros(np,nmhu,nr_dke);
