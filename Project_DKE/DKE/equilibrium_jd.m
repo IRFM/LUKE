@@ -1,5 +1,5 @@
-function [mtheta,xpsin,psia,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,xmhu0T2,xdV_dke,xdA_dke,HXR] = ...
-    equilibrium_jd(tokamak,xpsin,xpsin_S_dke,display_mode,method,mfactor)
+function [mtheta,xpsin,psia,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,xmhu0T2,xdV_dke,xdA_dke] = ...
+    equilibrium_jd(equil,xpsin,xpsin_S_dke,display_mode,method,mfactor)
 %
 %   This function interpolates the equilibrium data on the radial grid.
 %
@@ -92,22 +92,17 @@ end
 %
 [qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;
 %
-filename = ['EQUIL_',tokamak,'.mat'];
-%
-[s,dossier,machine] = comput_dke_yp;
-eval(['load ',dossier,s,filename,' ppsi theta R Z BR BZ BPHI pTe pne pzTi pzni zZi zmi ftra HXR']);
-%
-[npsi,ntheta] = size(R);
+[npsi,ntheta] = size(equil.R);
 %
 % FFT interpolation on R,Z, BR, BZ, BPHI as a function of theta (very precise, works for uniform theta grids only)
 %
 mtheta = 0:2*pi/((ntheta-1)*mfactor):2*pi*((ntheta-1)*mfactor-1)/((ntheta-1)*mfactor); %super theta grid
 %
-mR = interpft(R(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
-mZ = interpft(Z(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
-mBR = interpft(BR(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
-mBZ = interpft(BZ(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
-mBPHI = interpft(BPHI(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
+mR = interpft(equil.R(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
+mZ = interpft(equil.Z(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
+mBR = interpft(equil.BR(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
+mBZ = interpft(equil.BZ(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
+mBPHI = interpft(equil.BPHI(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
 %
 mtheta = [mtheta,2*pi]; %2*pi point retrieved (for future interpolation)
 mR = [mR,mR(:,1)]; %2*pi point retrieved
@@ -124,10 +119,10 @@ Zp = mZ(1,1);%Elevation of magnetic Axis
 Rmax = mR(npsi,1);%Major radius where the last close flux-surface crosses the LFS midplane
 ap =  Rmax - Rp;%Plasma minor radius on the LFS midplane 
 %
-psia = ppsi(npsi);%Poloidal flux at the edge
-ppsin = ppsi/psia;%Normalized poloidal flux
+psia = equil.ppsi(npsi);%Poloidal flux at the edge
+ppsin = equil.ppsi/psia;%Normalized poloidal flux
 %
-pZeff = sum(pzni.*repmat((zZi.^2)',[1,npsi]))./pne;%Effective charge (a.u.)
+pZeff = sum(equil.pzni.*repmat((equil.zZi.^2)',[1,npsi]))./equil.pne;%Effective charge (a.u.)
 %
 if isnan(xpsin)
     xpsin = ppsin;
@@ -145,10 +140,10 @@ XBphi = interp1(ppsin,mBPHI,xpsin,method);
 %
 xrho = (XR(:,1)' - Rp)/ap;%Normalized radius on the horizontal LFS midplane                          
 %
-xTe = interp1(ppsin,pTe,xpsin,method);
-xne = interp1(ppsin,pne,xpsin,method);
-xzTi = interp1(ppsin,pzTi',xpsin,method)';
-xzni = interp1(ppsin,pzni',xpsin,method)';
+xTe = interp1(ppsin,equil.pTe,xpsin,method);
+xne = interp1(ppsin,equil.pne,xpsin,method);
+xzTi = interp1(ppsin,equil.pzTi',xpsin,method)';
+xzni = interp1(ppsin,equil.pzni',xpsin,method)';
 xZeff = interp1(ppsin,pZeff,xpsin,method);
 %
 XBT = abs(XBphi);%Toroidal B-field
@@ -211,7 +206,7 @@ end
 %
 if display_mode >= 2
 %    
-    prho = (R(:,1)' - Rp)/ap;
+    prho = (equil.R(:,1)' - Rp)/ap;
 %
 % displays the equilibrium profiles
 %
@@ -223,17 +218,17 @@ if display_mode >= 2
         [ax] = graph1D_jd(prho,ppsin,0,0,'','','',NaN,[0,1],[-eps,1],'-','none','b',0.5);
         [ax] = graph1D_jd(xrho,xpsin,0,0,'\rho','\psi_n','',NaN,[0,1],[-eps,1],'none','+','r',2);
     subplot('position',[1/3+1/12,0.5+1/16,5/24,5/16])
-        [ax] = graph1D_jd(prho,pTe,0,0,'','','',NaN,[0,1],[-eps,max(pTe)],'-','none','b',0.5);
-        [ax] = graph1D_jd(xrho,xTe,0,0,'\rho','T_e (keV)',tokamak,NaN,[0,1],[-eps,max(pTe)],'none','+','r',2);
+        [ax] = graph1D_jd(prho,equil.pTe,0,0,'','','',NaN,[0,1],[-eps,max(equil.pTe)],'-','none','b',0.5);
+        [ax] = graph1D_jd(xrho,xTe,0,0,'\rho','T_e (keV)',equil.id,NaN,[0,1],[-eps,max(equil.pTe)],'none','+','r',2);
     subplot('position',[2/3+1/12,0.5+1/16,5/24,5/16])
-        [ax] = graph1D_jd(prho,pne/1e19,0,0,'','','',NaN,[0,1],[-eps,max(pne/1e19)],'-','none','b',0.5);
-        [ax] = graph1D_jd(xrho,xne/1e19,0,0,'\rho','n_e (10^{19} m^{-3})','',NaN,[0,1],[-eps,max(pne/1e19)],'none','+','r',2);
+        [ax] = graph1D_jd(prho,equil.pne/1e19,0,0,'','','',NaN,[0,1],[-eps,max(equil.pne/1e19)],'-','none','b',0.5);
+        [ax] = graph1D_jd(xrho,xne/1e19,0,0,'\rho','n_e (10^{19} m^{-3})','',NaN,[0,1],[-eps,max(equil.pne/1e19)],'none','+','r',2);
     subplot('position',[1/12,1/8,5/24,5/16])
-        [ax] = graph1D_jd(prho,pzTi,0,0,'','','',NaN,[0,1],[-eps,max(max(pzTi))],'-','none','b',0.5);
-        [ax] = graph1D_jd(xrho,xzTi,0,0,'\rho','T_i (keV)','',NaN,[0,1],[-eps,max(max(pzTi))],'none','+','r',2);
+        [ax] = graph1D_jd(prho,equil.pzTi,0,0,'','','',NaN,[0,1],[-eps,max(max(equil.pzTi))],'-','none','b',0.5);
+        [ax] = graph1D_jd(xrho,xzTi,0,0,'\rho','T_i (keV)','',NaN,[0,1],[-eps,max(max(equil.pzTi))],'none','+','r',2);
     subplot('position',[1/3+1/12,1/8,5/24,5/16])
-        [ax] = graph1D_jd(prho,pzni/1e19,0,0,'','','',NaN,[0,1],[-eps,max(max(pzni/1e19))],'-','none','b',0.5);
-        [ax] = graph1D_jd(xrho,xzni/1e19,0,0,'\rho','n_i (10^{19} m^{-3})','',NaN,[0,1],[-eps,max(max(pzni/1e19))],'none','+','r',2);
+        [ax] = graph1D_jd(prho,equil.pzni/1e19,0,0,'','','',NaN,[0,1],[-eps,max(max(equil.pzni/1e19))],'-','none','b',0.5);
+        [ax] = graph1D_jd(xrho,xzni/1e19,0,0,'\rho','n_i (10^{19} m^{-3})','',NaN,[0,1],[-eps,max(max(equil.pzni/1e19))],'none','+','r',2);
     subplot('position',[2/3+1/12,1/8,5/24,5/16])
         [ax] = graph1D_jd(prho,pZeff,0,0,'','','',NaN,[0,1],[-eps,max(pZeff)],'-','none','b',0.5);
         [ax] = graph1D_jd(xrho,xZeff,0,0,'\rho','Z_{eff}','',NaN,[0,1],[-eps,max(pZeff)],'none','+','r',2);
@@ -247,10 +242,10 @@ if display_mode >= 2
     stR = interp1(mtheta,mR',stheta,method)';  
     stZ = interp1(mtheta,mZ',stheta,method)';    
 %
-    Rmin = min(min(R));
-    Rmax = max(max(R));
-    Zmin = min(min(Z));
-    Zmax = max(max(Z));
+    Rmin = min(min(equil.R));
+    Rmax = max(max(equil.R));
+    Zmin = min(min(equil.Z));
+    Zmax = max(max(equil.Z));
     %
     figure(51),clf
 %    
