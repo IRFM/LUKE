@@ -5,11 +5,11 @@ It is possible to recover the general bounce averaged transport equation in
 momentum space by another independent approach. Here, the momentum space
 dynamics of the kinetic equation is be expressed in conservative form as a
 flux divergence that may expressed according to the (\ref{div1}) introduced
-in Appendix \ref{curvilinear}
+in Appendix \ref{curvilinear} 
 \begin{equation}
 \nabla _{\mathbf{p}}\cdot \mathbf{S}_{\mathbf{p}}=\frac{1}{J_{\mathbf{p}}}%
 \frac{\partial }{\partial p^{i}}\left( J_{\mathbf{p}}S_{\mathbf{p}%
-}^{i}\right) \label{divfluxmom}
+}^{i}\right)  \label{divfluxmom}
 \end{equation}
 where $J_{\mathbf{p}}$ is the momentum space Jacobian associated with the
 momentum space coordinate system $\left( p,\xi ,\varphi \right) $, described
@@ -24,7 +24,7 @@ the divergence (\ref{pxidiv}) is obtained
 \begin{equation}
 \nabla _{\mathbf{p}}\cdot \mathbf{S}_{\mathbf{p}}=\frac{1}{p^{2}}\frac{%
 \partial }{\partial p}\left( p^{2}S_{p}\right) -\frac{1}{p}\frac{\partial }{%
-\partial \xi }\left( \sqrt{1-\xi ^{2}}S_{\xi }\right) 
+\partial \xi }\left( \sqrt{1-\xi ^{2}}S_{\xi }\right)
 \end{equation}
 where by definition 
 \begin{eqnarray}
@@ -45,13 +45,13 @@ with
 D_{pp} & D_{p\xi } \\ 
 D_{\xi p} & D_{\xi \xi }
 \end{array}
-\right)  \\
+\right) \\
 \mathbf{F}_{\mathbf{p}} &=&\left( 
 \begin{array}{l}
 F_{p} \\ 
 F_{\xi }
 \end{array}
-\right) 
+\right)
 \end{eqnarray}
 
 The gradient vector $\nabla _{\mathbf{p}}$ in the reduced coordinates system 
@@ -62,7 +62,7 @@ $\left( p,\xi \right) $ in given by (\ref{pxigrad})
 \nabla _{p} \\ 
 \nabla _{\xi }
 \end{array}
-\right) 
+\right)
 \end{equation}
 with 
 \begin{eqnarray}
@@ -74,7 +74,7 @@ so that
 S_{p}=-D_{pp}\frac{\partial f}{\partial p}+\frac{\sqrt{1-\xi ^{2}}}{p}
 D_{p\xi }\frac{\partial f}{\partial \xi }+F_{p}f  \label{momflux3}
 \end{equation}
-and
+and 
 \begin{equation}
 S_{\xi }=-D_{\xi p}\frac{\partial f}{\partial p}+\frac{\sqrt{1-\xi ^{2}}}{p}%
 D_{\xi \xi }\frac{\partial f}{\partial \xi }+F_{\xi }f  \label{momflux4}
@@ -94,7 +94,7 @@ where the bounce averaging operation is defined in (\ref{bav})
 \left\{ \mathcal{A}\right\} =\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2%
 }\sum_{\sigma }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{%
 d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }%
-\frac{r}{R_{0}}\frac{B}{B_{P}}\frac{\xi _{0}}{\xi }\mathcal{A}
+\frac{r}{R_{p}}\frac{B}{B_{P}}\frac{\xi _{0}}{\xi }\mathcal{A}
 \end{equation}
 and $\xi $ is given along the trajectory by 
 \begin{equation}
@@ -122,19 +122,19 @@ independent of $\sigma $, we can transform as follows,
 \begin{eqnarray}
 \left\{ \frac{1}{p}\frac{\partial }{\partial \xi }\left( \sqrt{1-\xi ^{2}}%
 S_{\xi }\right) \right\}  &=&\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2%
-}\sum_{\sigma }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{
+}\sum_{\sigma }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{%
 d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }%
-\frac{r}{R_{0}}\frac{B}{B_{P}}\frac{\xi _{0}}{\xi }\frac{1}{p}\frac{\partial 
+\frac{r}{R_{p}}\frac{B}{B_{P}}\frac{\xi _{0}}{\xi }\frac{1}{p}\frac{\partial 
 }{\partial \xi }\left( \sqrt{1-\xi ^{2}}S_{\xi }\right)   \nonumber \\
 &=&\frac{1}{\lambda p}\frac{\partial }{\partial \sigma \xi _{0}}\frac{1}{%
 \widetilde{q}}\left[ \frac{1}{2}\sum_{\sigma }\right] _{T}\int_{\theta
 _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{%
-\psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}}\frac{B}{B_{P}}\frac{\sigma }{%
+\psi }\cdot \widehat{r}\right| }\frac{r}{R_{p}}\frac{B}{B_{P}}\frac{\sigma }{%
 \Psi }\left( \sqrt{1-\xi ^{2}}S_{\xi }\right)   \nonumber \\
 &=&\frac{1}{\lambda p}\frac{\partial }{\partial \xi _{0}}\sqrt{1-\xi _{0}^{2}%
 }\sigma \frac{1}{\widetilde{q}}\left[ \frac{1}{2}\sum_{\sigma }\right]
 _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }\frac{1}{%
-\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}}\frac{B}{B_{P}%
+\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R_{p}}\frac{B}{B_{P}%
 }\frac{\sigma }{\sqrt{\Psi }}\left( S_{\xi }\right)   \nonumber \\
 &=&\frac{1}{\lambda p}\frac{\partial }{\partial \xi _{0}}\sqrt{1-\xi _{0}^{2}%
 }\lambda \sigma \left\{ \frac{\sigma \xi }{\sqrt{\Psi }\xi _{0}}S_{\xi
@@ -149,17 +149,17 @@ as
 \left\{ \nabla _{\mathbf{p}}\cdot \mathbf{S}_{\mathbf{p}}\right\} =\frac{1}{%
 p^{2}}\frac{\partial }{\partial p}\left( p^{2}S_{p}^{\left( 0\right)
 }\right) -\frac{1}{\lambda p}\frac{\partial }{\partial \xi _{0}}\left( \sqrt{%
-1-\xi _{0}^{2}}\lambda S_{\xi _{0}}^{\left( 0\right) }\right) 
+1-\xi _{0}^{2}}\lambda S_{\xi _{0}}^{\left( 0\right) }\right)
 \label{kinbav2}
 \end{equation}
 where the following components are defined 
 \begin{equation}
-S_{p}^{\left( 0\right) }=\left\{ S_{p}\right\} \label{sp0}
+S_{p}^{\left( 0\right) }=\left\{ S_{p}\right\}  \label{sp0}
 \end{equation}
 and 
 \begin{equation}
 S_{\xi _{0}}^{\left( 0\right) }=\sigma \left\{ \frac{\sigma \xi }{\sqrt{\Psi 
-}\xi _{0}}S_{\xi }\right\} \label{smu0}
+}\xi _{0}}S_{\xi }\right\}  \label{smu0}
 \end{equation}
 
 Here, expression (\ref{kinbav2}) is completely equivalent to the momentum

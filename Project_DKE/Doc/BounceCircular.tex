@@ -1,11 +1,11 @@
 
 \subsubsection{Parametrization of the Flux-Surfaces}
 
-In this case, we have $\psi=\psi\left( r\right) $ and therefore it is easier
-to work in the $\left( r,\theta,\phi\right) $ coordinate to account for the
-symmetry in the problem. The normalized radius is 
+In this case, we have $\psi =\psi \left( r\right) $ and therefore it is
+easier to work in the $\left( r,\theta ,\phi \right) $ coordinate to account
+for the symmetry in the problem. The normalized radius is 
 \begin{equation}
-\rho\left( \psi\right) =\frac{r}{a}
+\rho \left( \psi \right) =\frac{r}{a}
 \end{equation}
 
 We have now 
@@ -21,56 +21,58 @@ so that (\ref{gijrtheta})
 
 The toroidal field is 
 \begin{equation}
-B_{T}\left( \rho,\theta\right) =\frac{\left| I\left( \rho\right) \right| }{%
-R\left( \rho,\theta\right) }
+B_{T}\left( r,\theta \right) =\frac{\left| I\left( r\right) \right| }{%
+R\left( r,\theta \right) }
 \end{equation}
 and the poloidal field is 
 \begin{equation}
-B_{P}\left( \rho,\theta\right) =\frac{\left| \nabla\psi\left( \rho\right)
-\right| }{R\left( \rho,\theta\right) }  \label{Bpcirc}
+B_{P}\left( r,\theta \right) =\frac{\left| \nabla \psi \left( r\right)
+\right| }{R\left( r,\theta \right) }  \label{Bpcirc}
 \end{equation}
 where 
 \begin{equation}
-\left| \nabla\psi\left( \rho\right) \right| =\frac{1}{a}\left| \frac{
-d\psi\left( \rho\right) }{d\rho}\right|
+\left| \nabla \psi \left( r\right) \right| =\left| \frac{d\psi \left(
+r\right) }{dr}\right| =\frac{1}{a}\left| \frac{d\psi \left( \rho \right) }{%
+d\rho }\right| 
 \end{equation}
-is now only a function of $\rho$.
+is now only a function of $r$ or $\rho $.
 
 The total field is then 
 \begin{equation}
-B\left( \rho,\theta\right) =\frac{\sqrt{I^{2}\left( \rho\right) +\left|
-\nabla\psi\left( \rho\right) \right| ^{2}}}{R\left( \rho,\theta\right) }
+B\left( r,\theta \right) =\frac{\sqrt{I^{2}\left( r\right) +\left| \nabla
+\psi \left( r\right) \right| ^{2}}}{R\left( r,\theta \right) }
 \end{equation}
 and can be written as 
 \begin{equation}
-B\left( \rho,\theta\right) =B_{0}\left( \rho\right) \frac{R_{0}}{R\left(
-\rho,\theta\right) }  \label{Bcirc}
+B\left( r,\theta \right) =B_{0}\left( r\right) \frac{R_{0}}{R\left( r,\theta
+\right) }  \label{Bcirc}
 \end{equation}
 with 
 \begin{equation}
-B_{0}\left( \rho\right) =\frac{\sqrt{I^{2}\left( \rho\right) +\left|
-\nabla\psi\left( \rho\right) \right| ^{2}}}{R_{0}}
+B_{0}\left( r\right) =\frac{\sqrt{I^{2}\left( r\right) +\left| \nabla \psi
+\left( r\right) \right| ^{2}}}{R_{0}}
 \end{equation}
 
 Consequently, we ratio of magnetic fields $\Psi $ as defined in (\ref{Psidef}%
 ) becomes 
 \begin{equation}
-\Psi \left( \rho ,\theta \right) =\frac{R_{0}}{R\left( \rho ,\theta \right) }
+\Psi \left( r,\theta \right) =\frac{R_{0}}{R\left( r,\theta \right) }
 \label{Psidefcirc}
 \end{equation}
 and 
 \begin{equation}
-\frac{B}{B_{P}}=\frac{\sqrt{I^{2}\left( \rho \right) +\left| \nabla \psi
-\left( \rho \right) \right| ^{2}}}{\left| \nabla \psi \left( \rho \right)
-\right| }=\sqrt{1+\frac{I^{2}\left( \rho \right) }{\left| \nabla \psi \left(
-\rho \right) \right| ^{2}}}  \label{BsBpcirc}
+\frac{B}{B_{P}}=\frac{\sqrt{I^{2}\left( r\right) +\left| \nabla \psi \left(
+r\right) \right| ^{2}}}{\left| \nabla \psi \left( r\right) \right| }=\sqrt{1+%
+\frac{I^{2}\left( r\right) }{\left| \nabla \psi \left( r\right) \right| ^{2}}%
+}  \label{BsBpcirc}
 \end{equation}
+is a function of $r$ only.
 
 \subsubsection{Safety factor}
 
-The safety factor given by expression (\ref{qfactor}) becomes
+The safety factor given by expression (\ref{qfactor}) becomes 
 \begin{equation}
-q\left( \psi \right) =\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{r}{R}\frac{%
+q\left( r\right) =\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{r}{R}\frac{%
 B_{T}}{B_{P}}=\frac{r}{R_{p}}\frac{B_{T}}{B_{P}}\int_{0}^{2\pi }\frac{%
 d\theta }{2\pi }\frac{R_{p}}{R}
 \end{equation}
@@ -88,20 +90,20 @@ q\left( \psi\right) =\frac{1}{\sqrt{1-\left( r/R_{p}\right) ^{2}}}\frac
 
 Note that in the factor $\sqrt{1-\left( r/R_{p}\right) ^{2}}$ is usually
 neglected, which is valid only in the large aspect ratio approximation, i.e.
-when the inverse aspect ratio $\epsilon $ defined as
+when the inverse aspect ratio $\epsilon $ defined as 
 \begin{equation}
 \epsilon =\frac{r}{R_{p}}
 \end{equation}
-is much less than unity. 
+is much less than unity.
 
 \subsubsection{Particle Motion}
 
 Using relation (\ref{Rdef}), 
 \begin{equation}
-R\left( \rho ,\theta \right) =R_{p}+r\cos \theta 
+R\left( r,\theta \right) =R_{p}+r\cos \theta   \label{MajorradiusCirc}
 \end{equation}
-and recalling that the minimum $B$-field corresponds to the poloidal angle
-value
+and recalling that the minimum $B$-field $B_{0}$ corresponds to the poloidal
+angle value in that case
 \begin{equation}
 \theta _{0}=0
 \end{equation}
@@ -122,7 +124,7 @@ and using relation (\ref{Bcirc})
 B_{\max }\left( r\right) =B_{0}\left( r\right) \frac{1+\epsilon }{1-\epsilon 
 }
 \end{equation}
-expression (\ref{xi0t2}) is
+expression (\ref{xi0t2}) is 
 \begin{equation}
 \xi _{0T}^{2}\left( r\right) =\frac{2\epsilon }{1+\epsilon }
 \end{equation}
@@ -134,13 +136,13 @@ The pitch-angle cosine $\xi $ is then given by combining relations (\ref{xi}
 1+\epsilon \cos \theta }\left( 1-\xi _{0}^{2}\right) }  \label{xicirc}
 \end{equation}
 and the the turning angles are obtained from expression (\ref{Bbounce}), or
-in the present notation
+in the present notation 
 \begin{equation}
 B\left( r,\theta _{T}\right) =B_{b}\left( r,\xi _{0}\right) =\frac{%
 B_{0}\left( r\right) }{1-\xi _{0}^{2}}
 \end{equation}
 
-Using relation (\ref{Psidefcirc2}), one obtains
+Using relation (\ref{Psidefcirc2}), one obtains 
 \begin{equation}
 B_{0}\left( r\right) \frac{1+\epsilon }{1+\epsilon \cos \theta _{T}}=\frac{%
 B_{0}\left( r\right) }{1-\xi _{0}^{2}}
@@ -152,7 +154,7 @@ and then
 \end{equation}
 so that 
 \begin{equation}
-\theta _{T}=\arccos \left[ 1-\frac{2\xi _{0}^{2}}{\xi _{0T}^{2}}\right] 
+\theta _{T}=\arccos \left[ 1-\frac{2\xi _{0}^{2}}{\xi _{0T}^{2}}\right]
 \end{equation}
 and finally by symmetry 
 \begin{align}
@@ -164,29 +166,28 @@ and finally by symmetry
 
 Using (\ref{g22circ}), the normalized bounce time reduces to 
 \begin{equation}
-\lambda \left( \rho ,\xi _{0}\right) =\frac{1}{\widetilde{q}\left( \psi
-\right) }\frac{r}{R_{p}}\int_{\theta _{\min }}^{\theta _{\max }}\frac{%
-d\theta }{2\pi }\frac{\xi _{0}}{\xi }\frac{B}{B_{P}}
+\lambda \left( r,\xi _{0}\right) =\frac{\epsilon }{\widetilde{q}}%
+\int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }\frac{\xi _{0}%
+}{\xi }\frac{B}{B_{P}}
 \end{equation}
 with, using definition (\ref{qtilde}) 
 \begin{equation}
-\widetilde{q}\left( \psi \right) =\frac{r}{R_{p}}\int_{0}^{2\pi }\frac{%
-d\theta }{2\pi }\frac{B}{B_{P}}  \label{qtilde2}
+\widetilde{q}\left( r\right) =\epsilon \int_{0}^{2\pi }\frac{d\theta }{2\pi }%
+\frac{B}{B_{P}}  \label{qtilde2}
 \end{equation}
 
-Because $B/B_{P}$ only a function of $\rho$, as seen in (\ref{BsBpcirc}),
-and can be taken out of the integrals, we get finally
+Because $B/B_{P}$ only a function of $r$, as seen in (\ref{BsBpcirc}), and
+can be taken out of the integrals, we get finally
 
 \begin{equation}
-\lambda\left( \rho,\xi_{0}\right) =\int_{\theta_{\min}}^{\theta_{\max}}\frac{%
-d\theta}{2\pi}\frac{\xi_{0}}{\xi}  \label{lambdacirc}
+\lambda \left( r,\xi _{0}\right) =\int_{\theta _{\min }}^{\theta _{\max }}%
+\frac{d\theta }{2\pi }\frac{\xi _{0}}{\xi }  \label{lambdacirc}
 \end{equation}
 
 This integral can be performed analytically in a series expansion whose
 coefficients are calculated in (\ref{lambdacalcl}). Note that in the case
 where $B_{T}\gg B_{P}$ and in the large aspect ratio approximation $\epsilon
-\ll 1$, we have $\widetilde{q}\left( \psi \right) \rightarrow q\left( \psi
-\right) $, which explains the notations, and the introduction of pseudo
-safety factor like $\widetilde{q}.$ Other new definitions of pseudo safety
-factors will be introduced throughout the next sections, based on similar
-arguments. 
+\ll 1$, we have $\widetilde{q}\left( r\right) \rightarrow q\left( r\right) $%
+, which explains the notations, and the introduction of pseudo safety factor
+like $\widetilde{q}.$ Other new definitions of pseudo safety factors will be
+introduced throughout the next sections, based on similar arguments.
