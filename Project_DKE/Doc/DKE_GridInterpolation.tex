@@ -1,8 +1,8 @@
 
 \paragraph{Spatial grid interpolation for gradient calculation}
 
-The first order Drift Kinetic equation requires to calculate is  $\widetilde{%
-f}^{(0)}$ defined as 
+The first order Drift Kinetic equation requires to calculate  $\widetilde{f}%
+^{(0)}$ defined as 
 \begin{equation}
 \widetilde{f}^{(0)}(p,\xi _{0},\psi )=-\frac{p\xi _{0}I\left( \psi \right) }{%
 q_{e}B_{\min }\left( \psi \right) }\frac{\partial f_{0}^{(0)}(p,\xi
@@ -11,21 +11,21 @@ _{0},\psi )}{\partial \psi }
 where $\left| I\left( \psi \right) \right| =RB_{T}.$ Here all quantities are
 determined on the minimum $B$ axis.
 
-The radial grid being non-uniform, radial derivative requires a specific
-treatment, for an accurate determination. Let  $\psi _{-},\psi $ et $\psi
-_{+}$ the three neighbor radial positions where are calculated the
-distribution function  $f_{0}^{(0)}$ with  $\Delta \psi _{-}=\psi _{-}-\psi ,
-$ $\Delta \psi _{+}=\psi _{+}-\psi $ and $\Delta \psi =\psi _{+}-\psi _{-}.$
-A parabolic interpolation of the form $y=a\psi ^{2}+b\psi +c$ is used for
-calculating the radial derivative $dy/d\psi =2a\psi +b.$ The coefficients $%
-a,b$ and $c$ being determined by values $y_{-},y$ and $y_{+}$ at grid points 
-$\psi _{-},\psi $ and $\psi _{+},$ one can easily show that 
+The spatial grid being non-uniform, radial derivative requires a specific
+treatment, for an accurate determination. Let $\psi _{-},\psi $ et $\psi _{+}
+$ the three neighbor radial positions where are calculated the distribution
+function $f_{0}^{(0)}$ with $\Delta \psi _{-}=\psi _{-}-\psi ,$ $\Delta \psi
+_{+}=\psi _{+}-\psi $ and $\Delta \psi =\psi _{+}-\psi _{-}.$ A parabolic
+interpolation of the form $y=a\psi ^{2}+b\psi +c$ is used for calculating
+the radial derivative $dy/d\psi =2a\psi +b.$ The coefficients $a,b$ and $c$
+being determined by values $y_{-},y$ and $y_{+}$ at grid points $\psi
+_{-},\psi $ and $\psi _{+},$ one can easily show that 
 \begin{equation}
 \left. \frac{dy}{d\psi }\right| _{\psi }=\frac{1}{\det V}\left( -\Delta \psi
 _{+}^{2}y_{-}+\Delta \psi \left( \Delta \psi _{+}+\Delta \psi _{-}\right) y+%
 \Delta \psi _{-}^{2}y_{+}\right) 
 \end{equation}
-where $\overline{\overline{V}}$ is a Van der Monde matrix of order $3$,
+where $\overline{\overline{V}}$ is a Van der Monde matrix of order $3$, 
 \begin{equation}
 \overline{\overline{V}}=\left[ 
 \begin{array}{lll}
@@ -35,32 +35,32 @@ where $\overline{\overline{V}}$ is a Van der Monde matrix of order $3$,
 \end{array}
 \right] 
 \end{equation}
-whose determinant is simply
+whose determinant is simply 
 \begin{equation}
 \det V=-\Delta \psi _{-}\Delta \psi \Delta \psi _{+}
 \end{equation}
 
 Therefore 
 \begin{equation}
-\left. \frac{dy}{d\psi }\right| _{r}=\frac{\Delta \psi _{+}}{\Delta \psi 
+\left. \frac{dy}{d\psi }\right| _{r}=\frac{\Delta \psi _{+}}{\Delta \psi
 \Delta \psi _{-}}y_{-}-\frac{\left( \Delta \psi _{+}+\Delta \psi _{-}\right) 
-}{\Delta \psi _{+}\Delta \psi _{-}}y-\frac{\Delta \psi _{-}}{\Delta \psi 
+}{\Delta \psi _{+}\Delta \psi _{-}}y-\frac{\Delta \psi _{-}}{\Delta \psi
 \Delta \psi _{+}}y_{+}
 \end{equation}
-and applying this result for  $\widetilde{f}^{(0)},$%
+and applying this result for $\widetilde{f}^{(0)},$%
 \begin{eqnarray}
 &&\widetilde{f}_{l+1/2,i+1/2,j+1/2}^{(0)(k+1)}=-\frac{p_{i+1/2}\xi
 _{0,j+1/2}I\left( \psi _{l+1/2}\right) }{q_{e}B_{\min }\left( \psi
-_{l+1/2}\right) }\times   \nonumber \\
+_{l+1/2}\right) }\times  \nonumber \\
 &&\left[ \frac{\left( \psi _{l+3/2}-\psi _{l+1/2}\right) }{\left( \psi
 _{l+3/2}-\psi _{l-1/2}\right) \left( \psi _{l-1/2}-\psi _{l+1/2}\right) }%
-f_{0,l-1/2,i+1/2,j+1/2}^{(0)(k+1)}\right.   \nonumber \\
+f_{0,l-1/2,i+1/2,j+1/2}^{(0)(k+1)}\right.  \nonumber \\
 &&-\frac{\left( \psi _{l+3/2}-2\psi _{l+1/2}+\psi _{l-1/2}\right) }{\left(
 \psi _{l+3/2}-\psi _{l+1/2}\right) \left( \psi _{l-1/2}-\psi _{l+1/2}\right) 
 }f_{0,l+1/2,i+1/2,j+1/2}^{(0)(k+1)}  \nonumber \\
 &&-\left. \frac{\left( \psi _{l-1/2}-\psi _{l+1/2}\right) }{\left( \psi
 _{l+3/2}-\psi _{l-1/2}\right) \left( \psi _{l+3/2}-\psi _{l+1/2}\right) }%
-f_{0,l+3/2,i+1/2,j+1/2}^{(0)(k+1)}\right] 
+f_{0,l+3/2,i+1/2,j+1/2}^{(0)(k+1)}\right]
 \end{eqnarray}
 
 \paragraph{Momentum grid interpolation}
@@ -68,7 +68,7 @@ f_{0,l+3/2,i+1/2,j+1/2}^{(0)(k+1)}\right]
 As indicated in Sec.***, it is possible to keep the conservative form for
 the first-order Drift Kinetic equation. The main advantage is that the
 numerical differencing technique used for the zero-order Fokker-Planck
-equation may be used. The determination of the momentum  $\left. \frac{%
+equation may be used. The determination of the momentum $\left. \frac{
 \partial \left( p^{2}\widetilde{\mathbf{S}}_{p}^{\left( 0\right) }\right) }{%
 \partial p}\right| _{l+1/2,i+1/2,j+1/2}^{(k)}$ and pitch-angle $\left. \frac{%
 \partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}\lambda \left( \psi
@@ -77,7 +77,7 @@ equation may be used. The determination of the momentum  $\left. \frac{%
 f_{0}^{\left( 0\right) },$ interpolation techniques in order to evaluate $%
 \widetilde{f}^{(0)}$ on flux grid at the radial position $l+1/2.$ By
 analogy, one have to determine $\widetilde{f}^{(0)}$ on the following grid
-points
+points 
 \begin{equation}
 \widetilde{f}_{l+1/2,i+1,j+1/2}^{\left( 0\right) (k+1)}=-\frac{p_{i+1}\xi
 _{0,j+1/2}I\left( \psi _{l+1/2}\right) }{q_{e}B_{\min }\left( \psi
@@ -96,7 +96,7 @@ _{0,j+1}I\left( \psi _{l+1/2}\right) }{q_{e}B_{\min }\left( \psi
 _{l+1/2}\right) }\left. \frac{\partial f_{0}^{(0)}}{\partial \psi }\right|
 _{l+1/2,i+1/2,j+1}^{(k+1)}
 \end{equation}
-and
+and 
 \begin{equation}
 \widetilde{f}_{l+1/2,i+1/2,j}^{\left( 0\right) (k+1)}=-\frac{p_{i+1/2}\xi
 _{0,j}I\left( \psi _{l+1/2}\right) }{q_{e}B_{\min }\left( \psi
@@ -162,14 +162,14 @@ f_{0,l,i+1/2,j+1/2}^{(0)(k+1)}  \nonumber \\
 \end{eqnarray}
 or 
 \begin{eqnarray}
-\widetilde{f}_{l+1/2,i+1,j+1/2}^{\left( 0\right) (k+1)} &=&-\frac{p_{i+1}}{%
+\widetilde{f}_{l+1/2,i+1,j+1/2}^{\left( 0\right) (k+1)} &=&\frac{p_{i+1}}{%
 p_{i+3/2}}\left( 1-\delta _{p,l+1/2,i+1,j+1/2}^{(0)}\right) \widetilde{f}%
 _{l+1/2,i+3/2,j+1/2}^{(0)(k+1)}  \nonumber \\
 &&+\frac{p_{i+1}}{p_{i+1/2}}\delta _{p,l+1/2,i+1,j+1/2}^{(0)}\widetilde{f}%
 _{l+1/2,i+1/2,j+1/2}^{(0)(k+1)}  \nonumber \\
 &&+\widetilde{h}_{l+1/2,i+1,j+1/2}
 \end{eqnarray}
-where
+where 
 \begin{eqnarray}
 \widetilde{h}_{l+1/2,i+1,j+1/2} &=&-\frac{p_{i+1}\xi _{0,j+1/2}I\left( \psi
 _{l+1/2}\right) }{q_{e}B_{\min }\left( \psi _{l+1/2}\right) }\frac{\left(
@@ -181,17 +181,17 @@ _{p,l+1/2,i+1,j+1/2}^{(0)}-\delta _{p,l,i+1,j+1/2}^{(0)}\right) }{\Delta %
 \psi _{l+1/2}}f_{0,l,i+3/2,j+1/2}^{(0)(k+1)}  \nonumber \\
 &&-\frac{p_{i+1}\xi _{0,j+1/2}I\left( \psi _{l+1/2}\right) }{q_{e}B_{\min
 }\left( \psi _{l+1/2}\right) }\frac{\left( \delta
-_{p,l+1/2,i+1,j+1/2}^{(0)}-\delta _{p,l+1,i+1,j+1/2}^{(0)}\right) }{\Delta %
+_{p,l+1,i+1,j+1/2}^{(0)}-\delta _{p,l/2+1,i+1,j+1/2}^{(0)}\right) }{\Delta %
 \psi _{l+1/2}}f_{0,l+1,i+1/2,j+1/2}^{(0)(k+1)}  \nonumber \\
 &&+\frac{p_{i+1}\xi _{0,j+1/2}I\left( \psi _{l+1/2}\right) }{q_{e}B_{\min
 }\left( \psi _{l+1/2}\right) }\frac{\left( \delta
-_{p,l+1/2,i+1,j+1/2}^{(0)}-\delta _{p,l,i+1,j+1/2}^{(0)}\right) }{\Delta %
+_{p,l,i+1,j+1/2}^{(0)}-\delta _{p,l+1/2,i+1,j+1/2}^{(0)}\right) }{\Delta %
 \psi _{l+1/2}}f_{0,l,i+1/2,j+1/2}^{(0)(k+1)}
 \end{eqnarray}
 
-Using the spatial interpolation relations $\delta _{\psi }^{(0)}$ of $%
-f_{0}^{\left( 0\right) }$ for the interpolation of the Chang and Cooper
-coefficients,
+Using for the Chang and Cooper coefficients same spatial interpolation
+coefficients $\delta _{\psi }^{(0)}$ as determined for $f_{0}^{\left(
+0\right) }$ , 
 \begin{equation}
 \delta _{p,l+1,i+1,j+1/2}^{(0)}=\left( 1-\delta _{\psi ,l+1}^{(0)}\right)
 \delta _{p,l+3/2,i+1,j+1/2}^{(0)}+\delta _{\psi ,l+1}^{(0)}\delta
@@ -202,43 +202,47 @@ _{p,l+1/2,i+1,j+1/2}^{(0)}
 _{p,l+1/2,i+1,j+1/2}^{(0)}+\delta _{\psi ,l}^{(0)}\delta
 _{p,l-1/2,i+1,j+1/2}^{(0)}
 \end{equation}
-one obtains
+one obtains 
 \begin{eqnarray}
 \widetilde{h}_{l+1/2,i+1,j+1/2} &=&-\frac{p_{i+1}\xi _{0,j+1/2}I\left( \psi
 _{l+1/2}\right) }{q_{e}B_{\min }\left( \psi _{l+1/2}\right) }\left( 1-\delta
-_{\psi ,l+1}^{(0)}\right) \frac{\left( \delta
-_{p,l+1/2,i+1,j+1/2}^{(0)}-\delta _{p,l+3/2,i+1,j+1/2}^{(0)}\right) }{\Delta %
-\psi _{l+1/2}}f_{0,l+1,i+3/2,j+1/2}^{(0)(k+1)}  \nonumber \\
+_{\psi ,l+1}^{(0)}\right) \times   \nonumber \\
+&&\frac{\left( \delta _{p,l+1/2,i+1,j+1/2}^{(0)}-\delta
+_{p,l+3/2,i+1,j+1/2}^{(0)}\right) }{\Delta \psi _{l+1/2}}%
+f_{0,l+1,i+3/2,j+1/2}^{(0)(k+1)}  \nonumber \\
 &&+\frac{p_{i+1}\xi _{0,j+1/2}I\left( \psi _{l+1/2}\right) }{q_{e}B_{\min
-}\left( \psi _{l+1/2}\right) }\delta _{\psi ,l}^{(0)}\frac{\left( \delta
-_{p,l+1/2,i+1,j+1/2}^{(0)}-\delta _{p,l-1/2,i+1,j+1/2}^{(0)}\right) }{\Delta %
-\psi _{l+1/2}}f_{0,l,i+3/2,j+1/2}^{(0)(k+1)}  \nonumber \\
+}\left( \psi _{l+1/2}\right) }\delta _{\psi ,l}^{(0)}\times   \nonumber \\
+&&\frac{\left( \delta _{p,l+1/2,i+1,j+1/2}^{(0)}-\delta
+_{p,l-1/2,i+1,j+1/2}^{(0)}\right) }{\Delta \psi _{l+1/2}}%
+f_{0,l,i+3/2,j+1/2}^{(0)(k+1)}  \nonumber \\
 &&-\frac{p_{i+1}\xi _{0,j+1/2}I\left( \psi _{l+1/2}\right) }{q_{e}B_{\min
 }\left( \psi _{l+1/2}\right) }\left( 1-\delta _{\psi ,l+1}^{(0)}\right) 
-\frac{\left( \delta _{p,l+1/2,i+1,j+1/2}^{(0)}-\delta
+\times   \nonumber \\
+&&\frac{\left( -\delta _{p,l+1/2,i+1,j+1/2}^{(0)}+\delta
 _{p,l+3/2,i+1,j+1/2}^{(0)}\right) }{\Delta \psi _{l+1/2}}%
 f_{0,l+1,i+1/2,j+1/2}^{(0)(k+1)}  \nonumber \\
 &&+\frac{p_{i+1}\xi _{0,j+1/2}I\left( \psi _{l+1/2}\right) }{q_{e}B_{\min
-}\left( \psi _{l+1/2}\right) }\delta _{\psi ,l}^{(0)}\frac{\left( \delta
-_{p,l+1/2,i+1,j+1/2}^{(0)}-\delta _{p,l-1/2,i+1,j+1/2}^{(0)}\right) }{\Delta %
-\psi _{l+1/2}}f_{0,l,i+1/2,j+1/2}^{(0)(k+1)}
+}\left( \psi _{l+1/2}\right) }\delta _{\psi ,l}^{(0)}\times   \nonumber \\
+&&\frac{\left( -\delta _{p,l+1/2,i+1,j+1/2}^{(0)}+\delta
+_{p,l-1/2,i+1,j+1/2}^{(0)}\right) }{\Delta \psi _{l+1/2}}%
+f_{0,l,i+1/2,j+1/2}^{(0)(k+1)}
 \end{eqnarray}
-or
+or 
 \begin{eqnarray}
 \widetilde{h}_{l+1/2,i+1,j+1/2} &=&-\frac{p_{i+1}\xi _{0,j+1/2}I\left( \psi
 _{l+1/2}\right) }{q_{e}B_{\min }\left( \psi _{l+1/2}\right) }\left( 1-\delta
-_{\psi ,l+1}^{(0)}\right) \frac{\left( \delta
-_{p,l+1/2,i+1,j+1/2}^{(0)}-\delta _{p,l+3/2,i+1,j+1/2}^{(0)}\right) }{\Delta %
-\psi _{l+1/2}}\left(
-f_{0,l+1,i+3/2,j+1/2}^{(0)(k+1)}+f_{0,l+1,i+1/2,j+1/2}^{(0)(k+1)}\right)  
+_{\psi ,l+1}^{(0)}\right) \times   \nonumber \\
+&&\frac{\left( \delta _{p,l+1/2,i+1,j+1/2}^{(0)}-\delta
+_{p,l+3/2,i+1,j+1/2}^{(0)}\right) }{\Delta \psi _{l+1/2}}\left(
+f_{0,l+1,i+3/2,j+1/2}^{(0)(k+1)}-f_{0,l+1,i+1/2,j+1/2}^{(0)(k+1)}\right)  
 \nonumber \\
 &&+\frac{p_{i+1}\xi _{0,j+1/2}I\left( \psi _{l+1/2}\right) }{q_{e}B_{\min
-}\left( \psi _{l+1/2}\right) }\delta _{\psi ,l}^{(0)}\frac{\left( \delta
-_{p,l+1/2,i+1,j+1/2}^{(0)}-\delta _{p,l-1/2,i+1,j+1/2}^{(0)}\right) }{\Delta %
-\psi _{l+1/2}}\left(
-f_{0,l,i+3/2,j+1/2}^{(0)(k+1)}+f_{0,l,i+1/2,j+1/2}^{(0)(k+1)}\right) 
+}\left( \psi _{l+1/2}\right) }\delta _{\psi ,l}^{(0)}\times   \nonumber \\
+&&\frac{\left( \delta _{p,l+1/2,i+1,j+1/2}^{(0)}-\delta
+_{p,l-1/2,i+1,j+1/2}^{(0)}\right) }{\Delta \psi _{l+1/2}}\left(
+f_{0,l,i+3/2,j+1/2}^{(0)(k+1)}-f_{0,l,i+1/2,j+1/2}^{(0)(k+1)}\right) 
 \end{eqnarray}
-where
+where 
 \begin{equation}
 f_{0,l+1,i+3/2,j+1/2}^{(0)(k+1)}=\left( 1-\delta _{\psi ,l+1}^{(0)}\right)
 f_{0,l+3/2,i+3/2,j+1/2}^{(0)(k+1)}+\delta _{\psi
@@ -321,15 +325,14 @@ f_{0,l,i+1/2,j+1/2}^{(0)(k+1)}  \nonumber \\
 \end{eqnarray}
 or 
 \begin{eqnarray}
-\widetilde{f}_{l+1/2,i+/21,j+1}^{\left( 0\right) (k+1)} &=&-\frac{\xi
-_{0,j+1}}{\xi _{0,j+3/2}}\left( 1-\delta _{\xi
-,l+1/2,i+1/2,j+1}^{(0)}\right) \widetilde{f}_{l+1/2,i+1/2,j+3/2}^{(0)(k+1)} 
-\nonumber \\
+\widetilde{f}_{l+1/2,i+/21,j+1}^{\left( 0\right) (k+1)} &=&\frac{\xi _{0,j+1}%
+}{\xi _{0,j+3/2}}\left( 1-\delta _{\xi ,l+1/2,i+1/2,j+1}^{(0)}\right) 
+\widetilde{f}_{l+1/2,i+1/2,j+3/2}^{(0)(k+1)}  \nonumber \\
 &&+\frac{\xi _{0,j+1}}{\xi _{0,j+1/2}}\delta _{\xi ,l+1/2,i+1/2,j+1}^{(0)}%
 \widetilde{f}_{l+1/2,i+1/2,j+1/2}^{(0)(k+1)}  \nonumber \\
 &&+\widetilde{h}_{l+1/2,i+1/2,j+1}
 \end{eqnarray}
-where
+where 
 \begin{eqnarray}
 \widetilde{h}_{l+1/2,i+1/2,j+1} &=&-\frac{p_{i+1/2}\xi _{0,j+1}I\left( \psi
 _{l+1/2}\right) }{q_{e}B_{\min }\left( \psi _{l+1/2}\right) }\frac{\left(
@@ -342,17 +345,17 @@ f_{0,l+1,i+1/2,j+3/2}^{(0)(k+1)}  \nonumber \\
 \psi _{l+1/2}}f_{0,l,i+1/2,j+3/2}^{(0)(k+1)}  \nonumber \\
 &&-\frac{p_{i+1/2}\xi _{0,j+1}I\left( \psi _{l+1/2}\right) }{q_{e}B_{\min
 }\left( \psi _{l+1/2}\right) }\frac{\left( \delta _{\xi
-,l+1/2,i+1/2,j+1}^{(0)}-\delta _{\xi ,l+1,i+1/2,j+1}^{(0)}\right) }{\Delta %
+,l+1,i+1/2,j+1}^{(0)}-\delta _{\xi ,l+1/2,i+1/2,j+1}^{(0)}\right) }{\Delta %
 \psi _{l+1/2}}f_{0,l+1,i+1/2,j+1/2}^{(0)(k+1)}  \nonumber \\
 &&+\frac{p_{i+1/2}\xi _{0,j+1}I\left( \psi _{l+1/2}\right) }{q_{e}B_{\min
 }\left( \psi _{l+1/2}\right) }\frac{\left( \delta _{\xi
-,l+1/2,i+1/2,j+1}^{(0)}-\delta _{\xi ,l,i+1/2,j+1}^{(0)}\right) }{\Delta %
+,l,i+1/2,j+1}^{(0)}-\delta _{\xi ,l+1/2,i+1/2,j+1}^{(0)}\right) }{\Delta %
 \psi _{l+1/2}}f_{0,l,i+1/2,j+1/2}^{(0)(k+1)}
 \end{eqnarray}
 
 Using the spatial interpolation relations $\delta _{\psi }^{(0)}$ of $%
 f_{0}^{\left( 0\right) }$ for the interpolation of the Chang and Cooper
-coefficients,
+coefficients, 
 \begin{equation}
 \delta _{\xi ,l+1,i+1/2,j+1}^{(0)}=\left( 1-\delta _{\psi ,l+1}^{(0)}\right)
 \delta _{\xi ,l+3/2,i+1/2,j+1}^{(0)}+\delta _{\psi ,l+1}^{(0)}\delta _{\xi
@@ -363,43 +366,47 @@ coefficients,
 \delta _{\xi ,l+1/2,i+1/2,j+1}^{(0)}+\delta _{\psi ,l}^{(0)}\delta _{\xi
 ,l-1/2,i+1/2,j+1}^{(0)}
 \end{equation}
-one obtains
+one obtains 
 \begin{eqnarray}
 \widetilde{h}_{l+1/2,i+1/2,j+1} &=&-\frac{p_{i+1/2}\xi _{0,j+1}I\left( \psi
 _{l+1/2}\right) }{q_{e}B_{\min }\left( \psi _{l+1/2}\right) }\left( 1-\delta
-_{\psi ,l+1}^{(0)}\right) \frac{\left( \delta _{\xi
-,l+1/2,i+1/2,j+1}^{(0)}-\delta _{\xi ,l+3/2,i+1/2,j+1}^{(0)}\right) }{\Delta %
-\psi _{l+1/2}}f_{0,l+1,i+1/2,j+3/2}^{(0)(k+1)}  \nonumber \\
+_{\psi ,l+1}^{(0)}\right) \times   \nonumber \\
+&&\frac{\left( \delta _{\xi ,l+1/2,i+1/2,j+1}^{(0)}-\delta _{\xi
+,l+3/2,i+1/2,j+1}^{(0)}\right) }{\Delta \psi _{l+1/2}}%
+f_{0,l+1,i+1/2,j+3/2}^{(0)(k+1)}  \nonumber \\
 &&+\frac{p_{i+1/2}\xi _{0,j+1}I\left( \psi _{l+1/2}\right) }{q_{e}B_{\min
-}\left( \psi _{l+1/2}\right) }\delta _{\psi ,l}^{(0)}\frac{\left( \delta
-_{\xi ,l+1/2,i+1/2,j+1}^{(0)}-\delta _{\xi ,l-1/2,i+1/2,j+1}^{(0)}\right) }{%
-\Delta \psi _{l+1/2}}f_{0,l,i+1/2,j+3/2}^{(0)(k+1)}  \nonumber \\
+}\left( \psi _{l+1/2}\right) }\delta _{\psi ,l}^{(0)}\times   \nonumber \\
+&&\frac{\left( \delta _{\xi ,l+1/2,i+1/2,j+1}^{(0)}-\delta _{\xi
+,l-1/2,i+1/2,j+1}^{(0)}\right) }{\Delta \psi _{l+1/2}}%
+f_{0,l,i+1/2,j+3/2}^{(0)(k+1)}  \nonumber \\
 &&-\frac{p_{i+1/2}\xi _{0,j+1}I\left( \psi _{l+1/2}\right) }{q_{e}B_{\min
 }\left( \psi _{l+1/2}\right) }\left( 1-\delta _{\psi ,l+1}^{(0)}\right) 
-\frac{\left( \delta _{\xi ,l+1/2,i+1/2,j+1}^{(0)}-\delta _{\xi
+\times   \nonumber \\
+&&\frac{\left( -\delta _{\xi ,l+1/2,i+1/2,j+1}^{(0)}+\delta _{\xi
 ,l+3/2,i+1/2,j+1}^{(0)}\right) }{\Delta \psi _{l+1/2}}%
 f_{0,l+1,i+1/2,j+1/2}^{(0)(k+1)}  \nonumber \\
 &&+\frac{p_{i+1/2}\xi _{0,j+1}I\left( \psi _{l+1/2}\right) }{q_{e}B_{\min
-}\left( \psi _{l+1/2}\right) }\delta _{\psi ,l}^{(0)}\frac{\left( \delta
-_{\xi ,l+1/2,i+1/2,j+1}^{(0)}-\delta _{\xi ,l-1/2,i+1/2,j+1}^{(0)}\right) }{%
-\Delta \psi _{l+1/2}}f_{0,l,i+1/2,j+1/2}^{(0)(k+1)}
+}\left( \psi _{l+1/2}\right) }\delta _{\psi ,l}^{(0)}\times   \nonumber \\
+&&\frac{\left( -\delta _{\xi ,l+1/2,i+1/2,j+1}^{(0)}+\delta _{\xi
+,l-1/2,i+1/2,j+1}^{(0)}\right) }{\Delta \psi _{l+1/2}}%
+f_{0,l,i+1/2,j+1/2}^{(0)(k+1)}
 \end{eqnarray}
-or
+or 
 \begin{eqnarray}
 \widetilde{h}_{l+1/2,i+1/2,j+1} &=&-\frac{p_{i+1/2}\xi _{0,j+1}I\left( \psi
 _{l+1/2}\right) }{q_{e}B_{\min }\left( \psi _{l+1/2}\right) }\left( 1-\delta
-_{\psi ,l+1}^{(0)}\right) \frac{\left( \delta _{\xi
-,l+1/2,i+1/2,j+1}^{(0)}-\delta _{\xi ,l+3/2,i+1/2,j+1}^{(0)}\right) }{\Delta %
-\psi _{l+1/2}}\left(
-f_{0,l+1,i+1/2,j+3/2}^{(0)(k+1)}+f_{0,l+1,i+1/2,j+1/2}^{(0)(k+1)}\right)  
+_{\psi ,l+1}^{(0)}\right) \times   \nonumber \\
+&&\frac{\left( \delta _{\xi ,l+1/2,i+1/2,j+1}^{(0)}-\delta _{\xi
+,l+3/2,i+1/2,j+1}^{(0)}\right) }{\Delta \psi _{l+1/2}}\left(
+f_{0,l+1,i+1/2,j+3/2}^{(0)(k+1)}-f_{0,l+1,i+1/2,j+1/2}^{(0)(k+1)}\right)  
 \nonumber \\
 &&+\frac{p_{i+1/2}\xi _{0,j+1}I\left( \psi _{l+1/2}\right) }{q_{e}B_{\min
-}\left( \psi _{l+1/2}\right) }\delta _{\psi ,l}^{(0)}\frac{\left( \delta
-_{\xi ,l+1/2,i+1/2,j+1}^{(0)}-\delta _{\xi ,l-1/2,i+1/2,j+1}^{(0)}\right) }{%
-\Delta \psi _{l+1/2}}\left(
-f_{0,l,i+1/2,j+3/2}^{(0)(k+1)}+f_{0,l,i+1/2,j+1/2}^{(0)(k+1)}\right) 
+}\left( \psi _{l+1/2}\right) }\delta _{\psi ,l}^{(0)}\times   \nonumber \\
+&&\frac{\left( \delta _{\xi ,l+1/2,i+1/2,j+1}^{(0)}-\delta _{\xi
+,l-1/2,i+1/2,j+1}^{(0)}\right) }{\Delta \psi _{l+1/2}}\left(
+f_{0,l,i+1/2,j+3/2}^{(0)(k+1)}-f_{0,l,i+1/2,j+1/2}^{(0)(k+1)}\right) 
 \end{eqnarray}
-where
+where 
 \begin{equation}
 f_{0,l+1,i+1/2,j+3/2}^{(0)(k+1)}=\left( 1-\delta _{\psi ,l+1}^{(0)}\right)
 f_{0,l+3/2,i+1/2,j+3/2}^{(0)(k+1)}+\delta _{\psi
@@ -423,4 +430,4 @@ f_{0,l+1/2,i+3/2,j+1/2}^{(0)(k+1)}+\delta _{\psi
 
 Finally, a similar expression is obtained for the grid point $\left(
 l+1/2,i+1/2,j\right) ,$ by replacing $j+1\rightarrow j$ in all above
-relations. 
+relations.

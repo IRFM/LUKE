@@ -1,108 +1,569 @@
 
+The starting point of the discrete representation of the first order Drift
+Kinetic equation is the conservative relation 
+\begin{eqnarray}
+&&\left. \frac{\partial \left( p^{2}\mathbf{S}_{p}^{\left( 0\right) }\right) 
+}{\partial p}\right| _{l+1/2,i+1/2,j+1/2}^{(k)}-\frac{p_{i+1/2}}{\lambda
+\left( \psi _{l+1/2},\xi _{0,j+1/2}\right) }\times  \nonumber \\
+&&\left. \frac{\partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}
+\lambda \left( \psi ,\xi _{0}\right) \mathbf{S}_{\xi }^{\left( 0\right)
+}\right) \right| _{l+1/2,i+1/2,j+1/2}^{(k)}  \nonumber \\
+&=&\left. \frac{\partial \left( p^{2}\widetilde{\mathbf{S}}_{p}^{\left(
+0\right) }\right) }{\partial p}\right| _{l+1/2,i+1/2,j+1/2}^{(k)}-\frac{%
+p_{i+1/2}}{\lambda \left( \psi _{l+1/2},\xi _{0,j+1/2}\right) }\times 
+\nonumber \\
+&&\left. \frac{\partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}
+\lambda \left( \psi ,\xi _{0}\right) \widetilde{\mathbf{S}}_{\xi }^{\left(
+0\right) }\right) \right| _{l+1/2,i+1/2,j+1/2}^{(k)}
+\end{eqnarray}
+where $\mathbf{S}_{p}^{\left( 0\right) }$ and $\mathbf{S}_{\xi }^{\left(
+0\right) }$ are fluxes related to the function $g^{\left( 0\right) }$, while 
+$\widetilde{\mathbf{S}}_{p}^{\left( 0\right) }$ and $\widetilde{\mathbf{S}}%
+_{\xi }^{\left( 0\right) }$ are fluxes related to the function $\widetilde{f}
+^{\left( 0\right) }$. Since $g^{\left( 0\right) }$ and $f_{0}^{\left(
+0\right) }$ have same symmetries , matrix coefficients are exactly similar
+for both functions. However, calculations are slightly different for $%
+\widetilde{f}^{\left( 0\right) },$ though a conservative form may be kept.
+By analogy with zero order Fokker-Planck equation, 
+\begin{eqnarray}
+\frac{\partial \left( p^{2}\widetilde{S}_{p}^{\left( 0\right) }\right) }{
+\partial p} &=&\frac{\partial }{\partial p}\left( -p^{2}\widetilde{D}
+_{pp}^{\left( 0\right) }\frac{\partial \widetilde{f}^{\left( 0\right) }}{
+\partial p}+p^{2}\widetilde{F}_{p}^{\left( 0\right) }\widetilde{f}^{\left(
+0\right) }\right)  \nonumber \\
+&&+\sqrt{1-\xi _{0}^{2}}\frac{\partial }{\partial p}\left( p\widetilde{D}%
+_{p\xi }^{\left( 0\right) }\right) \frac{\partial \widetilde{f}^{\left(
+0\right) }}{\partial \xi _{0}}  \nonumber \\
+&&+\sqrt{1-\xi _{0}^{2}}p\widetilde{D}_{p\xi }^{\left( 0\right) }\frac{
+\partial ^{2}\widetilde{f}^{\left( 0\right) }}{\partial p\partial \xi _{0}}
+\end{eqnarray}
+\begin{eqnarray}
+\frac{\partial \left( \sqrt{1-\xi _{0}^{2}}\lambda \left( \psi ,\xi
+_{0}\right) \widetilde{S}_{\xi }^{\left( 0\right) }\right) }{\partial \xi
+_{0}} &=&\frac{\partial }{\partial \xi _{0}}\left( \widetilde{D}_{\xi \xi
+}^{\left( 0\right) }\frac{1-\xi _{0}^{2}}{p}\lambda \left( \psi ,\xi
+_{0}\right) \frac{\partial \widetilde{f}^{\left( 0\right) }}{\partial \xi
+_{0}}\right.  \nonumber \\
+&&\left. +\sqrt{1-\xi _{0}^{2}}\lambda \left( \psi ,\xi _{0}\right) 
+\widetilde{F}_{\xi }^{\left( 0\right) }\widetilde{f}^{\left( 0\right)
+}\right)  \nonumber \\
+&&-\frac{\partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}\lambda
+\left( \psi ,\xi _{0}\right) \widetilde{D}_{\xi p}^{\left( 0\right) }\right) 
+\frac{\partial \widetilde{f}^{\left( 0\right) }}{\partial p}  \nonumber \\
+&&-\sqrt{1-\xi _{0}^{2}}\lambda \left( \psi ,\xi _{0}\right) \widetilde{D}%
+_{\xi p}^{\left( 0\right) }\frac{\partial ^{2}\widetilde{f}^{\left( 0\right)
+}}{\partial \xi _{0}\partial p}
+\end{eqnarray}
+one obtains 
+\begin{eqnarray}
+&&\left. \frac{\partial \left( p^{2}\widetilde{\mathbf{S}}_{p}^{\left(
+0\right) }\right) }{\partial p}\right| _{l+1/2,i+1/2,j+1/2}^{(k)}-\frac{%
+p_{i+1/2}}{\lambda \left( \psi _{l+1/2},\xi _{0,j+1/2}\right) }\times 
+\nonumber \\
+&&\left. \frac{\partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}%
+\lambda \left( \psi ,\xi _{0}\right) \widetilde{\mathbf{S}}_{\xi }^{\left(
+0\right) }\right) \right| _{l+1/2,i+1/2,j+1/2}^{(k)}  \nonumber \\
+&=&\sum_{m=1}^{m=8}\widetilde{T}_{m}
+\end{eqnarray}
+with 
+\begin{equation}
+\widetilde{T}_{1}=\frac{-p_{i+1}^{2}\widetilde{D}_{pp,l+1/2,i+1,j+1/2}^{%
+\left( 0\right) }\left. \frac{\partial \widetilde{f}^{\left( 0\right) }}{%
+\partial p}\right| _{l+1/2,i+1,j+1/2}^{(k+1)}+p_{i+1}^{2}\widetilde{F}
+_{p,l+1/2,i+1,j+1/2}^{\left( 0\right) }f_{l+1/2,i+1,j+1/2}^{\left( 0\right)
+(k+1)}}{\Delta p_{i+1/2}}
+\end{equation}
+\begin{equation}
+\widetilde{T}_{2}=\frac{p_{i}^{2}\widetilde{D}_{pp,l+1/2,i,j+1/2}^{\left(
+0\right) }\left. \frac{\partial \widetilde{f}^{\left( 0\right) }}{\partial p}%
+\right| _{l+1/2,i,j+1/2}^{(k+1)}-p_{i}^{2}\widetilde{F}_{p,l+1/2,i,j+1/2}^{%
+\left( 0\right) }\widetilde{f}_{l+1/2,i,j+1/2}^{\left( 0\right) (k+1)}}{
+\Delta p_{i+1/2}}
+\end{equation}
+\begin{equation}
+\widetilde{T}_{3}=+\sqrt{1-\xi _{0,j+1/2}^{2}}\left. \frac{\partial \left( p%
+\widetilde{D}_{p\xi }^{\left( 0\right) }\right) }{\partial p}\right|
+_{l+1/2,i+1/2,j+1/2}\left. \frac{\partial \widetilde{f}^{\left( 0\right) }}{
+\partial \xi }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)}
+\end{equation}
+\begin{equation}
+\widetilde{T}_{4}=+\sqrt{1-\xi _{0,j+1/2}^{2}}p_{i+1/2}\widetilde{D}_{p\xi
+,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }\left. \frac{\partial ^{2}\widetilde{f}
+^{\left( 0\right) }}{\partial p\partial \xi }\right|
+_{l+1/2,i+1/2,j+1/2}^{(k+1)}
+\end{equation}
+\begin{eqnarray}
+\widetilde{T}_{5} &=&-\frac{p_{i+1/2}}{\lambda \left( \psi _{l+1/2},\xi
+_{0,j+1/2}\right) }\left[ \frac{\widetilde{D}_{\xi \xi
+,l+1/2,i+1/2,j+1}^{\left( 0\right) }\left( 1-\xi _{0,j+1}^{2}\right) \lambda
+\left( \psi _{l+1/2},\xi _{0,j+1}\right) \left. \frac{\partial \widetilde{f}
+^{\left( 0\right) }}{\partial \xi }\right| _{l+1/2,i+1/2,j+1}^{(k+1)}}{
+\Delta \xi _{j+1/2}}\right.  \nonumber \\
+&&-\left. \frac{p_{i+1/2}\sqrt{1-\xi _{0,j+1}^{2}}\lambda \left( \psi
+_{l+1/2},\xi _{0,j+1}\right) \widetilde{F}_{\xi ,l+1/2,i+1/2,j+1}^{\left(
+0\right) }\widetilde{f}_{l+1/2,i+1/2,j+1}^{\left( 0\right) (k+1)}}{\Delta
+\xi _{j+1/2}}\right]
+\end{eqnarray}
+\begin{eqnarray}
+\widetilde{T}_{6} &=&\frac{p_{i+1/2}}{\lambda \left( \psi _{l+1/2},\xi
+_{0,j+1/2}\right) }\left[ \frac{\widetilde{D}_{\xi \xi
+,l+1/2,i+1/2,j}^{\left( 0\right) }\left( 1-\xi _{0,j}^{2}\right) \lambda
+\left( \psi _{l+1/2},\xi _{0,j}\right) \left. \frac{\partial \widetilde{f}
+^{\left( 0\right) }}{\partial \xi }\right| _{l+1/2,i+1/2,j}^{(k+1)}}{\Delta
+\xi _{j+1/2}}\right.  \nonumber \\
+&&+\left. \frac{p_{i+1/2}\sqrt{1-\xi _{0,j}^{2}}\lambda \left( \psi
+_{l+1/2},\xi _{0,j}\right) \widetilde{F}_{\xi ,l+1/2,i+1/2,j}^{\left(
+0\right) }\widetilde{f}_{l+1/2,i+1/2,j}^{\left( 0\right) (k+1)}}{\Delta \xi
+_{j+1/2}}\right]
+\end{eqnarray}
 
-Pour calculer les coefficients des matrices correspondant au terme
-source $\left\{ r\nabla\cdot\mathbf{S}_{\mathbf{p}}^{\widetilde{f}}\right\} $
-pour l'equation de derive cinetique, il convient de reexprimer explicitement
-son expression \begin{eqnarray*}
-\left\{ r\nabla\cdot\mathbf{S}_{\mathbf{p}}^{\widetilde{f}}\right\} _{i+1/2,j+1/2,l+1/2} & = & +r_{l+1/2}\frac{-p_{i+1}^{2}\widetilde{D}_{pp,i+1,j+1/2}^{\left(0\right)}\left.\frac{\partial\widetilde{f}^{\left(0\right)}}{\partial p}\right|_{i+1,j+1/2}^{(k+1)}+p_{i+1}^{2}\widetilde{F}_{p,i+1,j+1/2}^{\left(0\right)}\widetilde{f}_{i+1,j+1/2}^{\left(0\right)(k+1)}}{\Delta p_{i+1/2}}\\
- &  & +r_{l+1/2}\frac{p_{i}^{2}\widetilde{D}_{pp,i,j+1/2}^{\left(0\right)}\left.\frac{\partial\widetilde{f}^{\left(0\right)}}{\partial p}\right|_{i,j+1/2}^{(k+1)}-p_{i}^{2}\widetilde{F}_{p,i,j+1/2}^{\left(0\right)}\widetilde{f}_{i,j+1/2}^{\left(0\right)(k+1)}}{\Delta p_{i+1/2}}\\
- &  & +r_{l+1/2}\frac{p_{i+1}\widetilde{D}_{p\xi,i+1,j+1/2}^{\left(0\right)}\sqrt{1-\xi_{0j+1/2}^{2}}\left.\frac{\partial\widetilde{f}^{\left(0\right)}}{\partial\left|\xi_{0}\right|}\right|_{i+1,j+1/2}^{(k+1)}-p_{i}\widetilde{D}_{p\xi,i,j+1/2}^{\left(0\right)}\sqrt{1-\xi_{0j+1/2}^{2}}\left.\frac{\partial\widetilde{f}^{\left(0\right)}}{\partial\left|\xi_{0}\right|}\right|_{i,j+1/2}^{(k+1)}}{\Delta p_{i+1/2}}\\
- &  & -r_{l+1/2}\frac{\widetilde{D}_{\xi\xi,i+1/2,j+1}^{\left(0\right)}\left(1-\xi_{0j+1}^{2}\right)\left.\frac{\partial\widetilde{f}^{\left(0\right)}}{\partial\left|\xi_{0}\right|}\right|_{i+1/2,j+1}^{(k+1)}+p_{i+1/2}\sqrt{1-\xi_{0j+1}^{2}}\widetilde{F}_{\xi,i+1/2,j+1}^{\left(0\right)}\widetilde{f}_{i+1/2,j+1}^{\left(0\right)(k+1)}}{\Delta\xi_{0j+1/2}}\frac{\lambda\left(\xi_{0j+1}\right)}{\lambda\left(\xi_{0j+1/2}\right)}\\
- &  & +r_{l+1/2}\frac{\widetilde{D}_{\xi\xi,i+1/2,j}^{\left(0\right)}\left(1-\xi_{0j}^{2}\right)\left.\frac{\partial\widetilde{f}^{\left(0\right)}}{\partial\left|\xi_{0}\right|}\right|_{i+1/2,j}^{(k+1)}+p_{i+1/2}\sqrt{1-\xi_{0j}^{2}}\widetilde{F}_{\xi,i+1/2,j}^{\left(0\right)}\widetilde{f}_{i+1/2,j}^{\left(0\right)(k+1)}}{\Delta\xi_{0j+1/2}}\frac{\lambda\left(\xi_{0j}\right)}{\lambda\left(\xi_{0j+1/2}\right)}\\
- &  & +r_{l+1/2}\frac{\lambda\left(\xi_{0j+1}\right)\sqrt{1-\xi_{0j+1}^{2}}p_{i+1/2}\widetilde{D}_{\xi p,i+1/2,j+1}^{\left(0\right)}\left.\frac{\partial\widetilde{f}^{\left(0\right)}}{\partial p}\right|_{i+1/2,j+1}^{(k+1)}-\lambda\left(\xi_{0j}\right)\sqrt{1-\xi_{0j}^{2}}p_{i+1/2}\widetilde{D}_{\xi p,i+1/2,j}^{\left(0\right)}\left.\frac{\partial\widetilde{f}^{\left(0\right)}}{\partial p}\right|_{i+1/2,j}^{(k+1)}}{\Delta\xi_{0j+1/2}\lambda\left(\xi_{0j+1/2}\right)}\end{eqnarray*}
+\begin{equation}
+\widetilde{T}_{7}=\frac{p_{i+1/2}}{\lambda \left( \psi _{l+1/2},\xi
+_{0,j+1/2}\right) }\left. \frac{\partial }{\partial \xi _{0}}\left( \sqrt{
+1-\xi _{0}^{2}}\lambda \left( \psi ,\xi _{0}\right) \widetilde{D}_{\xi
+p}^{\left( 0\right) }\right) \right| _{l+1/2,i+1/2,j+1/2}\left. \frac{%
+\partial \widetilde{f}^{\left( 0\right) }}{\partial p}\right|
+_{l+1/2,i+1/2,j+1/2}^{(k+1)}
+\end{equation}
+\begin{equation}
+\widetilde{T}_{8}=\frac{p_{i+1/2}}{\lambda \left( \psi _{l+1/2},\xi
+_{0,j+1/2}\right) }\sqrt{1-\xi _{0,j+1/2}^{2}}\lambda \left( \psi
+_{l+1/2},\xi _{0,j+1/2}\right) \widetilde{D}_{\xi
+p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }\left. \frac{\partial ^{2}\widetilde{f%
+}^{\left( 0\right) }}{\partial \xi _{0}\partial p}\right|
+_{l+1/2,i+1/2,j+1/2}^{(k+1)}
+\end{equation}
 
+Discrete expressions of the partial derivatives are, 
+\begin{equation}
+\left\{ 
+\begin{array}{l}
+\left. \frac{\partial \widetilde{f}^{\left( 0\right) }}{\partial p}\right|
+_{l+1/2,i+1,j+1/2}^{(k+1)}=\frac{\widetilde{f}_{l+1/2,i+3/2,j+1/2}^{\left(
+0\right) (k+1)}-\widetilde{f}_{l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k+1)}}{%
+\Delta p_{i+1}} \\ 
+\left. \frac{\partial \widetilde{f}^{\left( 0\right) }}{\partial p}\right|
+_{l+1/2,i+1/2,j+1/2}^{(k+1)}=\frac{\widetilde{f}_{l+1/2,i+3/2,j+1/2}^{\left(
+0\right) (k+1)}-\widetilde{f}_{l+1/2,i-1/2,j+1/2}^{\left( 0\right) (k+1)}}{
+\Delta p_{i+1}+\Delta p_{i}} \\ 
+\left. \frac{\partial \widetilde{f}^{\left( 0\right) }}{\partial p}\right|
+_{l+1/2,i,j+1/2}^{(k+1)}=\frac{\widetilde{f}_{l+1/2,i+1/2,j+1/2}^{\left(
+0\right) (k+1)}-\widetilde{f}_{l+1/2,i-1/2,j+1/2}^{\left( 0\right) (k+1)}}{%
+\Delta p_{i}} \\ 
+\left. \frac{\partial \widetilde{f}^{\left( 0\right) }}{\partial \xi _{0}}%
+\right| _{l+1/2,i+1/2,j+1}^{(k+1)}=\frac{\widetilde{f}_{l+1/2,i+1/2,j+3/2}^{%
+\left( 0\right) (k+1)}-\widetilde{f}_{l+1/2,i+1/2,j+1/2}^{\left( 0\right)
+(k+1)}}{\Delta \xi _{0,j+1}} \\ 
+\left. \frac{\partial \widetilde{f}^{\left( 0\right) }}{\partial \xi _{0}}
+\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)}=\frac{\widetilde{f}%
+_{l+1/2,i+1/2,j+3/2}^{\left( 0\right) (k+1)}-\widetilde{f}%
+_{l+1/2,i+1/2,j-1/2}^{\left( 0\right) (k+1)}}{\Delta \xi _{0,j+1}+\Delta \xi
+_{0,j}} \\ 
+\left. \frac{\partial \widetilde{f}^{\left( 0\right) }}{\partial \xi _{0}}
+\right| _{l+1/2,i+1/2,j}^{(k+1)}=\frac{\widetilde{f}_{l+1/2,i+1/2,j+1/2}^{%
+\left( 0\right) (k+1)}-\widetilde{f}_{l+1/2,i+1/2,j-1/2}^{\left( 0\right)
+(k+1)}}{\Delta \xi _{0,j}}
+\end{array}
+\right.
+\end{equation}
+and cross-derivatives 
+\begin{eqnarray}
+\left. \frac{\partial ^{2}\widetilde{f}^{\left( 0\right) }}{\partial
+p\partial \xi _{0}}\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)} &=&\left. \frac{%
+\partial ^{2}\widetilde{f}^{\left( 0\right) }}{\partial \xi _{0}\partial p}
+\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
+&=&\frac{\widetilde{f}_{l+1/2,i+3/2,j+3/2}^{\left( 0\right) (k+1)}+%
+\widetilde{f}_{l+1/2,i-1/2,j-1/2}^{\left( 0\right) (k+1)}}{\left( \Delta
+p_{i+1}+\Delta p_{i}\right) \left( \Delta \xi _{0,j+1}+\Delta \xi
+_{0,j}\right) }  \nonumber \\
+&&-\frac{\widetilde{f}_{l+1/2,i+3/2,j-1/2}^{\left( 0\right) (k+1)}+%
+\widetilde{f}_{l+1/2,i-1/2,j+3/2}^{\left( 0\right) (k+1)}}{\left( \Delta
+p_{i+1}+\Delta p_{i}\right) \left( \Delta \xi _{0,j+1}+\Delta \xi
+_{0,j}\right) }
+\end{eqnarray}
 
-On voit ainsi clairement que seuls les termes convectifs sont differents
-par rapport a l'expression $\left\{ r\nabla\cdot\mathbf{S}_{\mathbf{p}}\right\} _{i+1/2,j+1/2,l+1/2}$
-correspondant a l'equation de flux pour $f_{0}^{\left(0\right)}.$
-En reportant les expressions des termes d'interpolation entre les
-grilles entieres et demi-entieres, on obtient
+As for the zero-order Fokker-Planck equation, other derivatives in discrete
+form become 
+\begin{equation}
+\left. \frac{\partial \left( p\widetilde{D}_{p\xi }^{\left( 0\right)
+}\right) }{\partial p}\right| _{l+1/2,i+1/2,j+1/2}=\frac{p_{i+1}\widetilde{D}%
+_{p\xi ,l+1/2,i+1,j+1/2}^{\left( 0\right) }-p_{i}\widetilde{D}_{p\xi
+,l+1/2,i,j+1/2}^{\left( 0\right) }}{\Delta p_{i+1/2}}
+\end{equation}
+\begin{eqnarray}
+&&\left. \frac{\partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}%
+\lambda \left( \psi ,\xi _{0}\right) \widetilde{D}_{\xi p}^{\left( 0\right)
+}\right) \right| _{l+1/2,i+1/2,j+1/2}  \nonumber \\
+&=&\frac{\sqrt{1-\xi _{0,j+1}^{2}}\lambda \left( \psi _{l+1/2},\xi
+_{0,j+1}\right) \widetilde{D}_{\xi p,l+1/2,i+1/2,j+1}^{\left( 0\right) }}{%
+\Delta \xi _{0,j+1/2}}  \nonumber \\
+&&-\frac{\sqrt{1-\xi _{0,j}^{2}}\lambda \left( \psi _{l+1/2},\xi
+_{0,j}\right) \widetilde{D}_{\xi p,l+1/2,i+1/2,j}^{\left( 0\right) }}{\Delta
+\xi _{0,j+1/2}}
+\end{eqnarray}
 
-\begin{eqnarray*}
-\left\{ r\nabla\cdot\mathbf{S}_{\mathbf{p}}^{\widetilde{f}}\right\} _{i+1/2,j+1/2,l+1/2} & = & -r_{l+1/2}\frac{p_{i+1}^{2}\widetilde{D}_{pp,i+1,j+1/2}^{\left(0\right)}\left.\frac{\partial\widetilde{f}^{\left(0\right)}}{\partial p}\right|_{i+1,j+1/2}^{(k+1)}}{\Delta p_{i+1/2}}\\
- &  & +r_{l+1/2}\frac{p_{i+1}^{2}\widetilde{F}_{p,i+1,j+1/2}^{\left(0\right)}\left(\left(1-\delta_{p,i+1,j+1/2}^{(0)}\right)\frac{p_{i+1}}{p_{i+3/2}}\widetilde{f}_{i+3/2,j+1/2}^{\left(0\right)(k+1)}+\delta_{p,i+1,j+1/2}^{(0)}\frac{p_{i+1}}{p_{i+1/2}}\widetilde{f}_{i+1/2,j+1/2}^{\left(0\right)(k+1)}\right)}{\Delta p_{i+1/2}}\\
- &  & +_{l+1/2}\frac{p_{i+1}^{2}\widetilde{F}_{p,i+1,j+1/2}^{\left(0\right)}}{\Delta p_{i+1/2}}\left(+\frac{p_{i+1}\xi_{0,j+1/2}}{q_{e}B_{\theta,0,l+1/2}}\frac{\partial\delta_{p,i+1,j+1/2}^{(0)}}{\partial r}f_{0,i+3/2,j+1/2}^{\left(0\right)(k+1)}-\frac{p_{i+1}\xi_{0,j+1/2}}{q_{e}B_{\theta,0,l+1/2}}\frac{\partial\delta_{p,i+1,j+1/2}^{(0)}}{\partial r}f_{0,i+1/2,j+1/2}^{\left(0\right)(k+1)}\right)\\
- &  & +r_{l+1/2}\frac{p_{i}^{2}\widetilde{D}_{pp,i,j+1/2}^{\left(0\right)}\left.\frac{\partial\widetilde{f}^{\left(0\right)}}{\partial p}\right|_{i,j+1/2}^{(k+1)}}{\Delta p_{i+1/2}}\\
- &  & -r_{l+1/2}\frac{p_{i}^{2}\widetilde{F}_{p,i,j+1/2}^{\left(0\right)}\left(\left(1-\delta_{p,i,j+1/2}^{(0)}\right)\frac{p_{i}}{p_{i+1/2}}\widetilde{f}_{i+1/2,j+1/2}^{\left(0\right)(k+1)}+\delta_{p,i,j+1/2}^{(0)}\frac{p_{i}}{p_{i-1/2}}\widetilde{f}_{i-1/2,j+1/2}^{\left(0\right)(k+1)}\right)}{\Delta p_{i+1/2}}\\
- &  & -r_{l+1/2}\frac{p_{i}^{2}\widetilde{F}_{p,i,j+1/2}^{\left(0\right)}\left(+\frac{p_{i}\xi_{0,j+1/2}}{q_{e}B_{\theta,0,l+1/2}}\frac{\partial\delta_{p,i,j+1/2}^{(0)}}{\partial r}f_{0,i+1/2,j+1/2}^{\left(0\right)(k+1)}-\frac{p_{i}\xi_{0,j+1/2}}{q_{e}B_{\theta,0,l+1/2}}\frac{\partial\delta_{p,i,j+1/2}^{(0)}}{\partial r}f_{0,i-1/2,j+1/2}^{\left(0\right)(k+1)}\right)}{\Delta p_{i+1/2}}\\
- &  & +r_{l+1/2}\frac{p_{i+1}\widetilde{D}_{p\xi,i+1,j+1/2}^{\left(0\right)}\sqrt{1-\xi_{0j+1/2}^{2}}\left.\frac{\partial\widetilde{f}^{\left(0\right)}}{\partial\left|\xi_{0}\right|}\right|_{i+1,j+1/2}^{(k+1)}-p_{i}\widetilde{D}_{p\xi,i,j+1/2}^{\left(0\right)}\sqrt{1-\xi_{0j+1/2}^{2}}\left.\frac{\partial\widetilde{f}^{\left(0\right)}}{\partial\left|\xi_{0}\right|}\right|_{i,j+1/2}^{(k+1)}}{\Delta p_{i+1/2}}\\
- &  & -r_{l+1/2}\frac{\widetilde{D}_{\xi\xi,i+1/2,j+1}^{\left(0\right)}\left(1-\xi_{0j+1}^{2}\right)\left.\frac{\partial\widetilde{f}^{\left(0\right)}}{\partial\left|\xi_{0}\right|}\right|_{i+1/2,j+1}^{(k+1)}}{\Delta\xi_{0j+1/2}}\frac{\lambda\left(\xi_{0j+1}\right)}{\lambda\left(\xi_{0j+1/2}\right)}\\
- &  & -r_{l+1/2}\frac{p_{i+1/2}\sqrt{1-\xi_{0j+1}^{2}}\widetilde{F}_{\xi,i+1/2,j+1}^{\left(0\right)}}{\Delta\xi_{0j+1/2}}\frac{\lambda\left(\xi_{0j+1}\right)}{\lambda\left(\xi_{0j+1/2}\right)}\left(\left(1-\delta_{\xi,i+1/2,j+1}^{(0)}\right)\frac{\xi_{0,j+1}}{\xi_{0,j+3/2}}\widetilde{f}_{i+1/2,j+3/2}^{\left(0\right)(k+1)}+\delta_{\xi,i+1/2,j+1}^{(0)}\frac{\xi_{0,j+1}}{\xi_{0,j+1/2}}\widetilde{f}_{i+1/2,j+1/2}^{\left(0\right)(k+1)}\right)\\
- &  & -r_{l+1/2}\frac{p_{i+1/2}\sqrt{1-\xi_{0j+1}^{2}}\widetilde{F}_{\xi,i+1/2,j+1}^{\left(0\right)}}{\Delta\xi_{0j+1/2}}\frac{\lambda\left(\xi_{0j+1}\right)}{\lambda\left(\xi_{0j+1/2}\right)}\left(\frac{p_{i+1/2}\xi_{0,j+1}}{q_{e}B_{\theta,0,l+1/2}}\frac{\partial\delta_{\xi,i+1/2,j+1}^{(0)}}{\partial r}f_{0,i+1/2,j+3/2}^{\left(0\right)(k+1)}-\frac{p_{i+1/2}\xi_{0,j+1}}{q_{e}B_{\theta,0,l+1/2}}\frac{\partial\delta_{\xi,i+1/2,j+1}^{(0)}}{\partial r}f_{0,i+1/2,j+1/2}^{\left(0\right)(k+1)}\right)\\
- &  & +r_{l+1/2}\frac{\widetilde{D}_{\xi\xi,i+1/2,j}^{\left(0\right)}\left(1-\xi_{0j}^{2}\right)\left.\frac{\partial\widetilde{f}^{\left(0\right)}}{\partial\left|\xi_{0}\right|}\right|_{i+1/2,j}^{(k+1)}}{\Delta\xi_{0j+1/2}}\frac{\lambda\left(\xi_{0j}\right)}{\lambda\left(\xi_{0j+1/2}\right)}\\
- &  & +r_{l+1/2}\frac{p_{i+1/2}\sqrt{1-\xi_{0j}^{2}}\widetilde{F}_{\xi,i+1/2,j}^{\left(0\right)}}{\Delta\xi_{0j+1/2}}\frac{\lambda\left(\xi_{0j}\right)}{\lambda\left(\xi_{0j+1/2}\right)}\left(\left(1-\delta_{\xi,i+1/2,j}^{(0)}\right)\frac{\xi_{0,j}}{\xi_{0,j+3/2}}\widetilde{f}_{i+1/2,j+1/2}^{\left(0\right)(k+1)}+\delta_{\xi,i+1/2,j}^{(0)}\frac{\xi_{0,j}}{\xi_{0,j+1/2}}\widetilde{f}_{i+1/2,j-1/2}^{\left(0\right)(k+1)}\right)\\
- &  & +r_{l+1/2}\frac{p_{i+1/2}\sqrt{1-\xi_{0j}^{2}}\widetilde{F}_{\xi,i+1/2,j}^{\left(0\right)}}{\Delta\xi_{0j+1/2}}\frac{\lambda\left(\xi_{0j}\right)}{\lambda\left(\xi_{0j+1/2}\right)}\left(\frac{p_{i+1/2}\xi_{0,j}}{q_{e}B_{\theta,0,l+1/2}}\frac{\partial\delta_{\xi,i+1/2,j}^{(0)}}{\partial r}f_{0,i+1/2,j+1/2}^{\left(0\right)(k+1)}-\frac{p_{i+1/2}\xi_{0,j}}{q_{e}B_{\theta,0,l+1/2}}\frac{\partial\delta_{\xi,i+1/2,j}^{(0)}}{\partial r}f_{0,i+1/2,j-1/2}^{\left(0\right)(k+1)}\right)\\
- &  & +r_{l+1/2}\frac{\lambda\left(\xi_{0j+1}\right)\sqrt{1-\xi_{0j+1}^{2}}p_{i+1/2}\widetilde{D}_{\xi p,i+1/2,j+1}^{\left(0\right)}\left.\frac{\partial\widetilde{f}^{\left(0\right)}}{\partial p}\right|_{i+1/2,j+1}^{(k+1)}-\lambda\left(\xi_{0j}\right)\sqrt{1-\xi_{0j}^{2}}p_{i+1/2}\widetilde{D}_{\xi p,i+1/2,j}^{\left(0\right)}\left.\frac{\partial\widetilde{f}^{\left(0\right)}}{\partial p}\right|_{i+1/2,j}^{(k+1)}}{\Delta\xi_{0j+1/2}\lambda\left(\xi_{0j+1/2}\right)}\end{eqnarray*}
+Since the distribution function $\widetilde{f}^{\left( 0\right) }$is defined
+on the half grid, while fluxes on the full grid, it is necessary to
+interpolate, because in some derivatives, values of are taken on the full
+grid. As discussed in the previous section, interpolation procedure is more
+complex for $\widetilde{f}^{\left( 0\right) }$ than for $f_{0}^{\left(
+0\right) }.$ Therefore, for terms proportional to $D_{\xi \xi }^{\left(
+0\right) }$ and $F_{\xi }^{\left( 0\right) }$%
+\begin{eqnarray}
+\widetilde{f}_{l+1/2,i+1,j+1/2}^{\left( 0\right) (k+1)} &=&\frac{p_{i+1}}{
+p_{i+3/2}}\left( 1-\delta _{p,l+1/2,i+1,j+1/2}^{(0)}\right) \widetilde{f}
+_{l+1/2,i+3/2,j+1/2}^{(0)(k+1)}  \nonumber \\
+&&+\frac{p_{i+1}}{p_{i+1/2}}\delta _{p,l+1/2,i+1,j+1/2}^{(0)}\widetilde{f}
+_{l+1/2,i+1/2,j+1/2}^{(0)(k+1)}  \nonumber \\
+&&+\widetilde{h}_{l+1/2,i+1,j+1/2}
+\end{eqnarray}
+\begin{eqnarray}
+\widetilde{f}_{l+1/2,i,j+1/2}^{\left( 0\right) (k+1)} &=&\frac{p_{i}}{
+p_{i+1/2}}\left( 1-\delta _{p,l+1/2,i,j+1/2}^{(0)}\right) \widetilde{f}
+_{l+1/2,i+1/2,j+1/2}^{(0)(k+1)}  \nonumber \\
+&&+\frac{p_{i}}{p_{i-1/2}}\delta _{p,l+1/2,i,j+1/2}^{(0)}\widetilde{f}
+_{l+1/2,i-1/2,j+1/2}^{(0)(k+1)}  \nonumber \\
+&&+\widetilde{h}_{l+1/2,i,j+1/2}
+\end{eqnarray}
+\begin{eqnarray}
+f_{0,l+1/2,i,j+1/2}^{\left( 0\right) (k+1)} &=&\left( 1-\delta
+_{p,l+1/2,i,j+1/2}^{\left( 0\right) }\right) f_{0,l+1/2,i+1/2,j+1/2}^{\left(
+0\right) (k+1)}  \nonumber \\
+&&+\delta _{p,l+1/2,i,j+1/2}^{\left( 0\right)
+}f_{0,l+1/2,i-1/2,j+1/2}^{\left( 0\right) (k+1)}
+\end{eqnarray}
+and for terms proportional to $D_{\xi \xi }^{\left( 0\right) }$ and $F_{\xi
+}^{\left( 0\right) }$
 
+\begin{eqnarray}
+\widetilde{f}_{l+1/2,i+1/2,j+1}^{\left( 0\right) (k+1)} &=&\frac{\xi _{0,j+1}%
+}{\xi _{0,j+3/2}}\left( 1-\delta _{\xi ,l+1/2,i+1/2,j+1}^{(0)}\right) 
+\widetilde{f}_{l+1/2,i+1/2,j+3/2}^{(0)(k+1)}  \nonumber \\
+&&+\frac{\xi _{0,j+1}}{\xi _{0,j+1/2}}\delta _{\xi ,l+1/2,i+1/2,j+1}^{(0)}%
+\widetilde{f}_{l+1/2,i+1/2,j+1/2}^{(0)(k+1)}  \nonumber \\
+&&+\widetilde{h}_{l+1/2,i+1/2,j+1}
+\end{eqnarray}
+\begin{eqnarray}
+\widetilde{f}_{l+1/2,i+1/2,j}^{\left( 0\right) (k+1)} &=&\frac{\xi _{0,j}}{
+\xi _{0,j+1/2}}\left( 1-\delta _{\xi ,l+1/2,i+1/2,j}^{(0)}\right) \widetilde{
+f}_{l+1/2,i+1/2,j+1/2}^{(0)(k+1)}  \nonumber \\
+&&+\frac{\xi _{0,j}}{\xi _{0,j-1/2}}\delta _{\xi ,l+1/2,i+1/2,j}^{(0)}%
+\widetilde{f}_{l+1/2,i+1/2,j-1/2}^{(0)(k+1)}  \nonumber \\
+&&+\widetilde{h}_{l+1/2,i+1/2,j}
+\end{eqnarray}
 
-Sous forme matricielle, \begin{eqnarray*}
-\left\{ r\nabla\cdot\mathbf{S}_{\mathbf{p}}^{\widetilde{f}}\right\} _{i+1/2,j+1/2,l+1/2} & = & r_{l+1/2}\sum_{i^{\prime}=i-1}^{i^{\prime}=i+1}\sum_{j^{\prime}=j-1}^{j^{\prime}=j+1}\widetilde{\overline{\overline{M}}}_{p,i^{\prime}+1/2,j^{\prime}+1/2}^{\left(0\right)}\widetilde{f}_{i^{\prime}+1/2,j^{\prime}+1/2}^{\left(0\right)(k+1)}\\
- &  & +r_{l+1/2}\sum_{i^{\prime}=i-1}^{i^{\prime}=i+1}\sum_{j^{\prime}=j-1}^{j^{\prime}=j+1}\widetilde{\overline{\overline{MM}}}_{p,i^{\prime}+1/2,j^{\prime}+1/2}^{\left(0\right)}f_{0,i^{\prime}+1/2,j^{\prime}+1/2}^{\left(0\right)(k+1)}\end{eqnarray*}
- ou le second terme resulte de la dependence radiale des coefficients
-d'interpolation $\delta$, on obtient
+Gathering all terms in a matrix form 
+\begin{eqnarray}
+&&\left. \frac{\partial \left( p^{2}\widetilde{\mathbf{S}}_{p}^{\left(
+0\right) }\right) }{\partial p}\right| _{l+1/2,i+1/2,j+1/2}^{(k)}-\frac{%
+p_{i+1/2}}{\lambda \left( \psi _{l+1/2},\xi _{0,j+1/2}\right) }\times  
+\nonumber \\
+&&\left. \frac{\partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}
+\lambda \left( \psi ,\xi _{0}\right) \widetilde{\mathbf{S}}_{\xi }^{\left(
+0\right) }\right) \right| _{l+1/2,i+1/2,j+1/2}^{(k)}  \nonumber \\
+&=&\sum_{i^{\prime }=i-1}^{i^{\prime }=i+1}\sum_{j^{\prime }=j-1}^{j^{\prime
+}=j+1}\widetilde{\overline{\overline{M}}}_{p,l+1/2,i^{\prime }+1/2,j^{\prime
+}+1/2}^{\left( 0\right) }\widetilde{f}_{l+1/2,i^{\prime }+1/2,j^{\prime
+}+1/2}^{\left( 0\right) (k+1)}  \nonumber \\
+&&+\sum_{i^{\prime }=i-1}^{i^{\prime }=i+1}\sum_{j^{\prime }=j-1}^{j^{\prime
+}=j+1}\widetilde{\overline{\overline{MM}}}_{p,l+1/2,i^{\prime
+}+1/2,j^{\prime }+1/2}^{\left( 0\right) }f_{0,l+1/2,i^{\prime
+}+1/2,j^{\prime }+1/2}^{\left( 0\right) (k+1)}
+\end{eqnarray}
+where $\widetilde{\overline{\overline{M}}}^{\left( 0\right) }$ and $%
+\overline{\overline{M}}^{\left( 0\right) }$ have a very similar expressions,
+though slightly different because of the ratios $%
+p_{i+1}/p_{i+3/2},p_{i}/p_{i+1/2},\xi _{0,j+1}/\xi _{0,j+3/2}$ and $\xi
+a_{0,j}/\xi _{0,j+1/2}$ but a new matrix term $\widetilde{\overline{%
+\overline{MM}}}^{\left( 0\right) }$ appears now, that results from the
+spatial dependence of the Chang and Cooper coefficients. Starting from the
+expression of $\overline{\overline{M}}^{\left( 0\right) }$, one obtains 
+\begin{eqnarray}
+\widetilde{\overline{\overline{M}}}_{p,l+1/2,i+3/2,j+3/2}^{\left( 0\right) }
+&=&\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi
+_{0,j+1/2}^{2}}}{\Delta \xi _{0,j+1}+\Delta \xi _{0,j}}\widetilde{D}_{p\xi
+,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }  \nonumber \\
+&&+\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi
+_{0,j+1/2}^{2}}}{\Delta \xi _{0,j+1}+\Delta \xi _{0,j}}\widetilde{D}_{\xi
+p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }
+\end{eqnarray}
+\begin{eqnarray}
+\widetilde{\overline{\overline{M}}}_{p,l+1/2,i+1/2,j+3/2}^{\left( 0\right) }
+&=&\frac{p_{i+1}}{\Delta p_{i+1/2}}\frac{\sqrt{1-\xi _{0,j+1/2}^{2}}}{\Delta %
+\xi _{0,j+1}+\Delta \xi _{0,j}}\widetilde{D}_{p\xi ,l+1/2,i+1,j+1/2}^{\left(
+0\right) }  \nonumber \\
+&&-\frac{p_{i}}{\Delta p_{i+1/2}}\frac{\sqrt{1-\xi _{0,j+1/2}^{2}}}{\Delta %
+\xi _{0,j+1}+\Delta \xi _{0,j}}\widetilde{D}_{p\xi ,l+1/2,i,j+1/2}^{\left(
+0\right) }  \nonumber \\
+&&-\frac{1-\xi _{0,j+1}^{2}}{\Delta \xi _{0,j+1/2}\Delta \xi _{0,j+1}}\frac{%
+\lambda \left( \psi _{l+1/2},\xi _{0,j+1}\right) }{\lambda \left( \psi
+_{l+1/2},\xi _{0,j+1/2}\right) }\widetilde{D}_{\xi \xi
+,l+1/2,i+1/2,j+1}^{\left( 0\right) }  \nonumber \\
+&&-p_{i+1/2}\frac{\sqrt{1-\xi _{0,j+1}^{2}}}{\Delta \xi _{0,j+1/2}}\frac{\xi
+_{0,j+1}}{\xi _{0,j+3/2}}\left( 1-\delta _{\xi ,l+1/2,i+1/2,j+1}^{\left(
+0\right) }\right) \times   \nonumber \\
+&&\frac{\lambda \left( \psi _{l+1/2},\xi _{0,j+1}\right) }{\lambda \left(
+\psi _{l+1/2},\xi _{0,j+1/2}\right) }\widetilde{F}_{\xi
+,l+1/2,i+1/2,j+1}^{\left( 0\right) }
+\end{eqnarray}
+\begin{eqnarray}
+\widetilde{\overline{\overline{M}}}_{p,l+1/2,i-1/2,j+3/2}^{\left( 0\right) }
+&=&-\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi
+_{0,j+1/2}^{2}}}{\Delta \xi _{0,j+1}+\Delta \xi _{0,j}}\widetilde{D}_{p\xi
+,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }  \nonumber \\
+&&-\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi
+_{0,j+1/2}^{2}}}{\Delta \xi _{0,j+1}+\Delta \xi _{0,j}}\widetilde{D}_{\xi
+p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }
+\end{eqnarray}
+\begin{eqnarray}
+\widetilde{\overline{\overline{M}}}_{p,l+1/2,i+3/2,j+1/2}^{\left( 0\right) }
+&=&-\frac{p_{i+1}^{2}}{\Delta p_{i+1}\Delta p_{i+1/2}}\widetilde{D}%
+_{pp,l+1/2,i+1,j+1/2}^{\left( 0\right) }  \nonumber \\
+&&+\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi
+_{0,j+1}^{2}}}{\Delta \xi _{0,j+1/2}}\times   \nonumber \\
+&&\frac{\lambda \left( \psi _{l+1/2},\xi _{0,j+1}\right) }{\lambda \left(
+\psi _{l+1/2},\xi _{0,j+1/2}\right) }\widetilde{D}_{\xi
+p,l+1/2,i+1/2,j+1}^{\left( 0\right) }  \nonumber \\
+&&-\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi _{0,j}^{2}}%
+}{\Delta \xi _{0,j+1/2}}\times   \nonumber \\
+&&\frac{\lambda \left( \psi _{l+1/2},\xi _{0,j}\right) }{\lambda \left( \psi
+_{l+1/2},\xi _{0,j+1/2}\right) }\widetilde{D}_{\xi p,l+1/2,i+1/2,j}^{\left(
+0\right) }  \nonumber \\
+&&+\frac{p_{i+1}^{2}}{\Delta p_{i+1/2}}\frac{p_{i+1}}{p_{i+3/2}}\left(
+1-\delta _{p,l+1/2,i+1,j+1/2}^{\left( 0\right) }\right) \widetilde{F}%
+_{p,l+1/2,i+1,j+1/2}^{\left( 0\right) }
+\end{eqnarray}
+\begin{eqnarray}
+\widetilde{\overline{\overline{M}}}_{p,i+1/2,j+1/2}^{\left( 0\right) } &=&%
+\frac{p_{i+1}^{2}}{\Delta p_{i+1/2}\Delta p_{i+1}}\widetilde{D}%
+_{pp,l+1/2,i+1,j+1/2}^{\left( 0\right) }  \nonumber \\
+&&+\frac{p_{i+1}^{2}}{\Delta p_{i+1/2}}\widetilde{F}_{p,l+1/2,i+1,j+1/2}%
+\frac{p_{i+1}}{p_{i+3/2}}\delta _{p,l+1/2,i+1,j+1/2}^{\left( 0\right) } 
+\nonumber \\
+&&+\frac{p_{i}^{2}}{\Delta p_{i+1/2}\Delta p_{i}}\widetilde{D}%
+_{pp,l+1/2,i,j+1/2}^{\left( 0\right) }  \nonumber \\
+&&-\frac{p_{i}^{2}}{\Delta p_{i+1/2}}\frac{p_{i}}{p_{i+1/2}}\left( 1-\delta
+_{p,l+1/2,i,j+1/2}^{\left( 0\right) }\right) \widetilde{F}%
+_{p,l+1/2,i,j+1/2}^{\left( 0\right) }  \nonumber \\
+&&+\frac{1-\xi _{0,j+1}^{2}}{\Delta \xi _{0,j+1/2}\Delta \xi _{0,j+1}}\frac{%
+\lambda \left( \psi _{l+1/2},\xi _{0,j+1}\right) }{\lambda \left( \psi
+_{l+1/2},\xi _{0,j+1/2}\right) }\widetilde{D}_{\xi \xi
+,l+1/2,i+1/2,j+1}^{\left( 0\right) }  \nonumber \\
+&&-p_{i+1/2}\frac{\sqrt{1-\xi _{0,j+1}^{2}}}{\Delta \xi _{0,j+1/2}}\frac{\xi
+_{0,j+1}}{\xi _{0,j+3/2}}\delta _{\xi ,l+1/2,i+1/2,j+1}^{\left( 0\right) }%
+\times   \nonumber \\
+&&\frac{\lambda \left( \psi _{l+1/2},\xi _{0,j+1}\right) }{\lambda \left(
+\psi _{l+1/2},\xi _{0,j+1/2}\right) }\widetilde{F}_{\xi
+,l+1/2,i+1/2,j+1}^{\left( 0\right) }  \nonumber \\
+&&+\frac{1-\xi _{0,j}^{2}}{\Delta \xi _{0,j}\Delta \xi _{0,j+1/2}}\frac{%
+\lambda \left( \psi _{l+1/2},\xi _{0,j}\right) }{\lambda \left( \psi
+_{l+1/2},\xi _{0,j+1/2}\right) }\widetilde{D}_{\xi \xi
+,l+1/2,i+1/2,j}^{\left( 0\right) }  \nonumber \\
+&&+p_{i+1/2}\frac{\sqrt{1-\xi _{0,j}^{2}}}{\Delta \xi _{0,j+1/2}}\frac{\xi
+_{0,j}}{\xi _{0,j+1/2}}\left( 1-\delta _{\xi ,l+1/2,i+1/2,j}^{\left(
+0\right) }\right) \times   \nonumber \\
+&&\frac{\lambda \left( \psi _{l+1/2},\xi _{0,j}\right) }{\lambda \left( \psi
+_{l+1/2},\xi _{0,j+1/2}\right) }F_{\xi ,l+1/2,i+1/2,j}^{\left( 0\right) }
+\end{eqnarray}
+\begin{eqnarray}
+\widetilde{\overline{\overline{M}}}_{p,l+1/2,i-1/2,j+1/2}^{\left( 0\right) }
+&=&-\frac{p_{i}^{2}}{\Delta p_{i+1/2}\Delta p_{i}}\widetilde{D}%
+_{pp,l+1/2,i,j+1/2}^{\left( 0\right) }  \nonumber \\
+&&-\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi
+_{0,j+1}^{2}}}{\Delta \xi _{0,j+1/2}}\times   \nonumber \\
+&&\frac{\lambda \left( \psi _{l+1/2},\xi _{0,j+1}\right) }{\lambda \left(
+\psi _{l+1/2},\xi _{0,j+1/2}\right) }\widetilde{D}_{\xi
+p,l+1/2,i+1/2,j+1}^{\left( 0\right) }  \nonumber \\
+&&+\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi _{0,j}^{2}}%
+}{\Delta \xi _{0,j+1/2}}\times   \nonumber \\
+&&\frac{\lambda \left( \psi _{l+1/2},\xi _{0,j}\right) }{\lambda \left( \psi
+_{l+1/2},\xi _{0,j+1/2}\right) }\widetilde{D}_{\xi p,l+1/2,i+1/2,j}^{\left(
+0\right) }  \nonumber \\
+&&-\frac{p_{i}^{2}}{\Delta p_{i+1/2}}\frac{p_{i}}{p_{i+1/2}}\delta
+_{p,i,j+1/2}^{\left( 0\right) }\widetilde{F}_{p,l+1/2,i,j+1/2}^{\left(
+0\right) }
+\end{eqnarray}
+\begin{eqnarray}
+\widetilde{\overline{\overline{M}}}_{p,l+1/2,i+3/2,j-1/2}^{\left( 0\right) }
+&=&-\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi
+_{0,j+1/2}^{2}}}{\Delta \xi _{0,j+1}+\Delta \xi _{0,j}}\widetilde{D}_{p\xi
+,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }  \nonumber \\
+&&-\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi
+_{0,j+1/2}^{2}}}{\Delta \xi _{0,j+1}+\Delta \xi _{0,j}}\widetilde{D}_{\xi
+p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }
+\end{eqnarray}
+\begin{eqnarray}
+\widetilde{\overline{\overline{M}}}_{p,l+1/2,i+1/2,j-1/2}^{\left( 0\right) }
+&=&-\frac{p_{i+1}}{\Delta p_{i+1/2}}\frac{\sqrt{1-\xi _{0,j+1/2}^{2}}}{%
+\Delta \xi _{0,j+1}+\Delta \xi _{0,j}}\widetilde{D}_{p\xi
+,l+1/2,i+1,j+1/2}^{\left( 0\right) }  \nonumber \\
+&&+\frac{p_{i}}{\Delta p_{i+1/2}}\frac{\sqrt{1-\xi _{0,j+1/2}^{2}}}{\Delta %
+\xi _{0,j+1}+\Delta \xi _{0,j}}\widetilde{D}_{p\xi ,l+1/2,i,j+1/2}^{\left(
+0\right) }  \nonumber \\
+&&-\frac{1-\xi _{0,j}^{2}}{\Delta \xi _{0,j+1/2}\Delta \xi _{0,j}}\frac{%
+\lambda \left( \psi _{l+1/2},\xi _{0,j}\right) }{\lambda \left( \psi
+_{l+1/2},\xi _{0,j+1/2}\right) }\widetilde{D}_{\xi \xi
+,l+1/2,i+1/2,j}^{\left( 0\right) }  \nonumber \\
+&&+p_{i+1/2}\frac{\sqrt{1-\xi _{0,j}^{2}}}{\Delta \xi _{0,j+1/2}}\frac{\xi
+_{0,j}}{\xi _{0,j+1/2}}\delta _{\xi ,l+1/2,i+1/2,j}^{\left( 0\right) }\times 
+\nonumber \\
+&&\frac{\lambda \left( \psi _{l+1/2},\xi _{0,j}\right) }{\lambda \left( \psi
+_{l+1/2},\xi _{0,j+1/2}\right) }\widetilde{F}_{\xi ,l+1/2,i+1/2,j}^{\left(
+0\right) }
+\end{eqnarray}
+\begin{eqnarray}
+\widetilde{\overline{\overline{M}}}_{p,l+1/2,i-1/2,j-1/2}^{\left( 0\right) }
+&=&\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi
+_{0,j+1/2}^{2}}}{\Delta \xi _{0,j+1}+\Delta \xi _{0,j}}\widetilde{D}_{p\xi
+,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }  \nonumber \\
+&&+\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi
+_{0,j+1/2}^{2}}}{\Delta \xi _{0,j+1}+\Delta \xi _{0,j}}\widetilde{D}_{\xi
+p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }
+\end{eqnarray}
 
-\begin{eqnarray*}
-\widetilde{\overline{\overline{M}}}_{p,i+3/2,j+3/2}^{\left(0\right)} & = & \frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}\widetilde{D}_{p\xi,i+1/2,j+1/2}^{\left(0\right)}\\
- &  & +\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}\widetilde{D}_{\xi p,i+1/2,j+1/2}^{\left(0\right)}\end{eqnarray*}
-\begin{eqnarray*}
-\widetilde{\overline{\overline{M}}}_{p,i+1/2,j+3/2}^{\left(0\right)} & = & \frac{p_{i+1}}{\Delta p_{i+1/2}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}\widetilde{D}_{p\xi,i+1,j+1/2}^{\left(0\right)}\\
- &  & -\frac{p_{i}}{\Delta p_{i+1/2}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}\widetilde{D}_{p\xi,i,j+1/2}^{\left(0\right)}\\
- &  & -\frac{1-\xi_{0j+1}^{2}}{\Delta\xi_{0j+1/2}\Delta\xi_{0j+1}}\frac{\lambda\left(\xi_{0j+1}\right)}{\lambda\left(\xi_{0j+1/2}\right)}\widetilde{D}_{\xi\xi,i+1/2,j+1}^{\left(0\right)}\\
- &  & -p_{i+1/2}\frac{\sqrt{1-\xi_{0j+1}^{2}}}{\Delta\xi_{0j+1/2}}\left(1-\delta_{\xi,i+1/2,j+1}^{\left(0\right)}\right)\frac{\lambda\left(\xi_{0j+1}\right)}{\lambda\left(\xi_{0j+1/2}\right)}\frac{\xi_{0j+1}}{\xi_{0j+3/2}}\widetilde{F}_{\xi,i+1/2,j+1}^{\left(0\right)}\end{eqnarray*}
-\begin{eqnarray*}
-\widetilde{\overline{\overline{M}}}_{p,i-1/2,j+3/2}^{\left(0\right)} & = & -\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}D_{p\xi,i+1/2,j+1/2}^{\left(0\right)}\\
- &  & -\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}D_{\xi p,i+1/2,j+1/2}^{\left(0\right)}\end{eqnarray*}
-\begin{eqnarray*}
-\widetilde{\overline{\overline{M}}}_{p,i+3/2,j+1/2}^{\left(0\right)} & = & -\frac{p_{i+1}^{2}}{\Delta p_{i+1}\Delta p_{i+1/2}}\widetilde{D}_{pp,i+1,j+1/2}^{\left(0\right)}\\
- &  & +\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j+1}^{2}}}{\Delta\xi_{0j+1/2}}\frac{\lambda\left(\xi_{0j+1}\right)}{\lambda\left(\xi_{0j+1/2}\right)}\widetilde{D}_{\xi p,i+1/2,j+1}^{\left(0\right)}\\
- &  & -\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j-1/2}^{2}}}{\Delta\xi_{0j+1/2}}\frac{\lambda\left(\xi_{0j}\right)}{\lambda\left(\xi_{0j+1/2}\right)}\widetilde{D}_{\xi p,i+1/2,j}^{\left(0\right)}\\
- &  & +\frac{p_{i+1}^{2}}{\Delta p_{i+1/2}}\left(1-\delta_{p,i+1,j+1/2}^{\left(0\right)}\right)\frac{p_{i+1}}{p_{i+3/2}}\widetilde{F}_{p,i+1,j+1/2}^{\left(0\right)}\end{eqnarray*}
-\begin{eqnarray*}
-\widetilde{\overline{\overline{M}}}_{p,i+1/2,j+1/2}^{\left(0\right)} & = & \frac{p_{i+1}^{2}}{\Delta p_{i+1/2}\Delta p_{i+1}}\widetilde{D}_{pp,i+1,j+1/2}^{\left(0\right)}\\
- &  & +\frac{p_{i+1}^{2}}{\Delta p_{i+1/2}}\frac{p_{i+1}}{p_{i+1/2}}\widetilde{F}_{p,i+1,j+1/2}^{\left(0\right)}\delta_{p,i+1,j+1/2}\\
- &  & +\frac{p_{i}^{2}}{\Delta p_{i+1/2}\Delta p_{i}}\widetilde{D}_{pp,i,j+1/2}^{\left(0\right)}\\
- &  & -\frac{p_{i}^{2}}{\Delta p_{i+1/2}}\left(1-\delta_{p,i,j+1/2}^{\left(0\right)}\right)\frac{p_{i}}{p_{i+1/2}}\widetilde{F}_{p,i,j+1/2}^{\left(0\right)}\\
- &  & +\frac{1-\xi_{0j+1}^{2}}{\Delta\xi_{0j+1/2}\Delta\xi_{0j+1}}\frac{\lambda\left(\xi_{0j+1}\right)}{\lambda\left(\xi_{0j+1/2}\right)}\widetilde{D}_{\xi\xi,i+1/2,j+1}^{\left(0\right)}\\
- &  & -p_{i+1/2}\frac{\sqrt{1-\xi_{0j+1}^{2}}}{\Delta\xi_{0j+1/2}}\delta_{\xi,i+1/2,j+1}^{\left(0\right)}\frac{\lambda\left(\xi_{0j+1}\right)}{\lambda\left(\xi_{0j+1/2}\right)}\frac{\xi_{0j+1}}{\xi_{0j+1/2}}\widetilde{F}_{\xi,i+1/2,j+1}^{\left(0\right)}\\
- &  & +\frac{1-\xi_{0j}^{2}}{\Delta\xi_{0j}\Delta\xi_{0j+1/2}}\frac{\lambda\left(\xi_{0j}\right)}{\lambda\left(\xi_{0j+1/2}\right)}\widetilde{D}_{\xi\xi,i+1/2,j}^{\left(0\right)}\\
- &  & +p_{i+1/2}\frac{\sqrt{1-\xi_{0j}^{2}}}{\Delta\xi_{0j+1/2}}\left(1-\delta_{\xi,i+1/2,j}^{\left(0\right)}\right)\frac{\lambda\left(\xi_{0j}\right)}{\lambda\left(\xi_{0j+1/2}\right)}\frac{\xi_{0j}}{\xi_{0j+1/2}}\widetilde{F}_{\xi,i+1/2,j}^{\left(0\right)}\end{eqnarray*}
-\begin{eqnarray*}
-\widetilde{\overline{\overline{M}}}_{i-1/2,j+1/2}^{\left(0\right)} & = & -\frac{p_{i}^{2}}{\Delta p_{i+1/2}\Delta p_{i}}\widetilde{D}_{pp,i,j+1/2}^{\left(0\right)}\\
- &  & -\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j+1}^{2}}}{\Delta\xi_{0j+1/2}}\frac{\lambda\left(\xi_{0j+1}\right)}{\lambda\left(\xi_{0j+1/2}\right)}\widetilde{D}_{\xi p,i+1/2,j+1}^{\left(0\right)}\\
- &  & +\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j}^{2}}}{\Delta\xi_{0j+1/2}}\frac{\lambda\left(\xi_{0j}\right)}{\lambda\left(\xi_{0j+1/2}\right)}\widetilde{D}_{\xi p,i+1/2,j}^{\left(0\right)}\\
- &  & -\frac{p_{i}^{2}}{\Delta p_{i+1/2}}\delta_{p,i,j+1/2}^{\left(0\right)}\frac{p_{i}}{p_{i-1/2}}\widetilde{F}_{p,i,j+1/2}^{\left(0\right)}\end{eqnarray*}
-\begin{eqnarray*}
-\widetilde{\overline{\overline{M}}}_{p,i+3/2,j-1/2}^{\left(0\right)} & = & -\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}\widetilde{D}_{p\xi,i+1/2,j+1/2}^{\left(0\right)}\\
- &  & -\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}\widetilde{D}_{\xi p,i+1/2,j+1/2}^{\left(0\right)}\end{eqnarray*}
-\begin{eqnarray*}
-\widetilde{\overline{\overline{M}}}_{p,i+1/2,j-1/2}^{\left(0\right)} & = & -\frac{p_{i+1}}{\Delta p_{i+1/2}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}\widetilde{D}_{p\xi,i+1,j+1/2}^{\left(0\right)}\\
- &  & +\frac{p_{i}}{\Delta p_{i+1/2}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}\widetilde{D}_{p\xi,i,j+1/2}^{\left(0\right)}\\
- &  & -\frac{1-\xi_{0j}^{2}}{\Delta\xi_{0j+1/2}\Delta\xi_{0j}}\frac{\lambda\left(\xi_{0j}\right)}{\lambda\left(\xi_{0j+1/2}\right)}\widetilde{D}_{\xi\xi,i+1/2,j}^{\left(0\right)}\\
- &  & +p_{i+1/2}\frac{\sqrt{1-\xi_{0j}^{2}}}{\Delta\xi_{0j+1/2}}\delta_{\xi,i+1/2,j}^{\left(0\right)}\frac{\lambda\left(\xi_{0j}\right)}{\lambda\left(\xi_{0j+1/2}\right)}\frac{\xi_{0j}}{\xi_{0j-1/2}}\widetilde{F}_{\xi,i+1/2,j}^{\left(0\right)}\end{eqnarray*}
-\begin{eqnarray*}
-\widetilde{\overline{\overline{M}}}_{p,i-1/2,j-1/2}^{\left(0\right)} & = & \frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}\widetilde{D}_{p\xi,i+1/2,j+1/2}^{\left(0\right)}\\
- &  & +\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi_{0j+1/2}^{2}}}{\Delta\xi_{0j+1}+\Delta\xi_{0j}}\widetilde{D}_{\xi p,i+1/2,j+1/2}^{\left(0\right)}\end{eqnarray*}
- et \[
-\widetilde{\overline{\overline{MM}}}_{p,i+3/2,j+3/2}^{\left(0\right)}=0\]
- \[
-\widetilde{\overline{\overline{MM}}}_{p,i+1/2,j+3/2}^{\left(0\right)}=-\frac{p_{i+1/2}\sqrt{1-\xi_{0j+1}^{2}}}{\Delta\xi_{0j+1/2}}\frac{\lambda\left(\xi_{0j+1}\right)}{\lambda\left(\xi_{0j+1/2}\right)}\left(\frac{p_{i+1/2}\xi_{0,j+1}}{q_{e}B_{\theta,0,l+1/2}}\right)\frac{\partial\delta_{\xi,i+1/2,j+1}^{(0)}}{\partial r}\widetilde{F}_{\xi,i+1/2,j+1}^{\left(0\right)}\]
- \[
-\widetilde{\overline{\overline{MM}}}_{p,i-1/2,j+3/2}^{\left(0\right)}=0\]
- \[
-\widetilde{\overline{\overline{MM}}}_{p,i+3/2,j+1/2}^{\left(0\right)}=+\frac{p_{i+1}^{2}}{\Delta p_{i+1/2}}\left(\frac{p_{i+1}\xi_{0,j+1/2}}{q_{e}B_{\theta,0,l+1/2}}\right)\frac{\partial\delta_{p,i+1,j+1/2}^{(0)}}{\partial r}\widetilde{F}_{p,i+1,j+1/2}^{\left(0\right)}\]
-\begin{eqnarray*}
-\widetilde{\overline{\overline{MM}}}_{p,i+1/2,j+1/2}^{\left(0\right)} & = & -\frac{p_{i+1}^{2}}{\Delta p_{i+1/2}}\left(\frac{p_{i+1}\xi_{0,j+1/2}}{q_{e}B_{\theta,0,l+1/2}}\right)\frac{\partial\delta_{p,i+1,j+1/2}^{(0)}}{\partial r}\widetilde{F}_{p,i+1,j+1/2}^{\left(0\right)}\\
- &  & -\frac{p_{i}^{2}}{\Delta p_{i+1/2}}\left(\frac{p_{i}\xi_{0,j+1/2}}{q_{e}B_{\theta,0,l+1/2}}\right)\frac{\partial\delta_{p,i,j+1/2}^{(0)}}{\partial r}\widetilde{F}_{p,i,j+1/2}^{\left(0\right)}\\
- &  & +\frac{p_{i+1/2}\sqrt{1-\xi_{0j+1}^{2}}}{\Delta\xi_{0j+1/2}}\frac{\lambda\left(\xi_{0j+1}\right)}{\lambda\left(\xi_{0j+1/2}\right)}\left(\frac{p_{i+1/2}\xi_{0,j+1}}{q_{e}B_{\theta,0,l+1/2}}\right)\frac{\partial\delta_{\xi,i+1/2,j+1}^{(0)}}{\partial r}\widetilde{F}_{\xi,i+1/2,j+1}^{\left(0\right)}\\
- &  & +\frac{p_{i+1/2}\sqrt{1-\xi_{0j}^{2}}}{\Delta\xi_{0j+1/2}}\frac{\lambda\left(\xi_{0j}\right)}{\lambda\left(\xi_{0j+1/2}\right)}\left(\frac{p_{i+1/2}\xi_{0,j}}{q_{e}B_{\theta,0,l+1/2}}\right)\frac{\partial\delta_{\xi,i+1/2,j}^{(0)}}{\partial r}\widetilde{F}_{\xi,i+1/2,j}^{\left(0\right)}\end{eqnarray*}
- \[
-\widetilde{\overline{\overline{MM}}}_{i-1/2,j+1/2}=+\frac{p_{i}^{2}}{\Delta p_{i+1/2}}\left(\frac{p_{i}\xi_{0,j+1/2}}{q_{e}B_{\theta,0,l+1/2}}\right)\frac{\partial\delta_{p,i,j+1/2}^{(0)}}{\partial r}\widetilde{F}_{p,i,j+1/2}^{\left(0\right)}\]
- \[
-\widetilde{\overline{\overline{MM}}}_{p,i+3/2,j-1/2}^{\left(0\right)}=0\]
- \[
-\widetilde{\overline{\overline{MM}}}_{p,i+1/2,j-1/2}^{\left(0\right)}=-\frac{p_{i+1/2}\sqrt{1-\xi_{0j}^{2}}}{\Delta\xi_{0j+1/2}}\frac{\lambda\left(\xi_{0j}\right)}{\lambda\left(\xi_{0j+1/2}\right)}\left(\frac{p_{i+1/2}\xi_{0,j}}{q_{e}B_{\theta,0,l+1/2}}\right)\frac{\partial\delta_{\xi,i+1/2,j}^{(0)}}{\partial r}\widetilde{F}_{\xi,i+1/2,j}^{\left(0\right)}\]
- \[
-\widetilde{\overline{\overline{MM}}}_{p,i-1/2,j-1/2}^{\left(0\right)}=0\]
-
-
-
+The determination of the coefficients of matrix $\widetilde{\overline{%
+\overline{MM}}}^{\left( 0\right) }$ is more subtile. One obtains (Le terme
+est faux, j'ai juste fait du copier-coller par je n'ai plus le temps...! la
+suite au prochain num\'{e}ro !!)
+\begin{eqnarray}
+\widetilde{\overline{\overline{MM}}}_{p,l+1/2,i+3/2,j+3/2}^{\left( 0\right)
+} &=&\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi
+_{0,j+1/2}^{2}}}{\Delta \xi _{0,j+1}+\Delta \xi _{0,j}}\widetilde{D}_{p\xi
+,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }  \nonumber \\
+&&+\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi
+_{0,j+1/2}^{2}}}{\Delta \xi _{0,j+1}+\Delta \xi _{0,j}}\widetilde{D}_{\xi
+p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }
+\end{eqnarray}
+\begin{eqnarray}
+\widetilde{\overline{\overline{MM}}}_{p,l+1/2,i+1/2,j+3/2}^{\left( 0\right)
+} &=&\frac{p_{i+1}}{\Delta p_{i+1/2}}\frac{\sqrt{1-\xi _{0,j+1/2}^{2}}}{%
+\Delta \xi _{0,j+1}+\Delta \xi _{0,j}}\widetilde{D}_{p\xi
+,l+1/2,i+1,j+1/2}^{\left( 0\right) }  \nonumber \\
+&&-\frac{p_{i}}{\Delta p_{i+1/2}}\frac{\sqrt{1-\xi _{0,j+1/2}^{2}}}{\Delta %
+\xi _{0,j+1}+\Delta \xi _{0,j}}\widetilde{D}_{p\xi ,l+1/2,i,j+1/2}^{\left(
+0\right) }  \nonumber \\
+&&-\frac{1-\xi _{0,j+1}^{2}}{\Delta \xi _{0,j+1/2}\Delta \xi _{0,j+1}}\frac{%
+\lambda \left( \psi _{l+1/2},\xi _{0,j+1}\right) }{\lambda \left( \psi
+_{l+1/2},\xi _{0,j+1/2}\right) }\widetilde{D}_{\xi \xi
+,l+1/2,i+1/2,j+1}^{\left( 0\right) }  \nonumber \\
+&&-p_{i+1/2}\frac{\sqrt{1-\xi _{0,j+1}^{2}}}{\Delta \xi _{0,j+1/2}}\frac{\xi
+_{0,j+1}}{\xi _{0,j+3/2}}\left( 1-\delta _{\xi ,l+1/2,i+1/2,j+1}^{\left(
+0\right) }\right) \times   \nonumber \\
+&&\frac{\lambda \left( \psi _{l+1/2},\xi _{0,j+1}\right) }{\lambda \left(
+\psi _{l+1/2},\xi _{0,j+1/2}\right) }\widetilde{F}_{\xi
+,l+1/2,i+1/2,j+1}^{\left( 0\right) }
+\end{eqnarray}
+\begin{eqnarray}
+\widetilde{\overline{\overline{MM}}}_{p,l+1/2,i-1/2,j+3/2}^{\left( 0\right)
+} &=&-\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi
+_{0,j+1/2}^{2}}}{\Delta \xi _{0,j+1}+\Delta \xi _{0,j}}\widetilde{D}_{p\xi
+,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }  \nonumber \\
+&&-\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi
+_{0,j+1/2}^{2}}}{\Delta \xi _{0,j+1}+\Delta \xi _{0,j}}\widetilde{D}_{\xi
+p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }
+\end{eqnarray}
+\begin{eqnarray}
+\widetilde{\overline{\overline{MM}}}_{p,l+1/2,i+3/2,j+1/2}^{\left( 0\right)
+} &=&-\frac{p_{i+1}^{2}}{\Delta p_{i+1}\Delta p_{i+1/2}}\widetilde{D}%
+_{pp,l+1/2,i+1,j+1/2}^{\left( 0\right) }  \nonumber \\
+&&+\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi
+_{0,j+1}^{2}}}{\Delta \xi _{0,j+1/2}}\times   \nonumber \\
+&&\frac{\lambda \left( \psi _{l+1/2},\xi _{0,j+1}\right) }{\lambda \left(
+\psi _{l+1/2},\xi _{0,j+1/2}\right) }\widetilde{D}_{\xi
+p,l+1/2,i+1/2,j+1}^{\left( 0\right) }  \nonumber \\
+&&-\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi _{0,j}^{2}}%
+}{\Delta \xi _{0,j+1/2}}\times   \nonumber \\
+&&\frac{\lambda \left( \psi _{l+1/2},\xi _{0,j}\right) }{\lambda \left( \psi
+_{l+1/2},\xi _{0,j+1/2}\right) }\widetilde{D}_{\xi p,l+1/2,i+1/2,j}^{\left(
+0\right) }  \nonumber \\
+&&+\frac{p_{i+1}^{2}}{\Delta p_{i+1/2}}\frac{p_{i+1}}{p_{i+3/2}}\left(
+1-\delta _{p,l+1/2,i+1,j+1/2}^{\left( 0\right) }\right) \widetilde{F}%
+_{p,l+1/2,i+1,j+1/2}^{\left( 0\right) }
+\end{eqnarray}
+\begin{eqnarray}
+\widetilde{\overline{\overline{MM}}}_{p,i+1/2,j+1/2}^{\left( 0\right) } &=&%
+\frac{p_{i+1}^{2}}{\Delta p_{i+1/2}\Delta p_{i+1}}\widetilde{D}%
+_{pp,l+1/2,i+1,j+1/2}^{\left( 0\right) }  \nonumber \\
+&&+\frac{p_{i+1}^{2}}{\Delta p_{i+1/2}}\widetilde{F}_{p,l+1/2,i+1,j+1/2}%
+\frac{p_{i+1}}{p_{i+3/2}}\delta _{p,l+1/2,i+1,j+1/2}^{\left( 0\right) } 
+\nonumber \\
+&&+\frac{p_{i}^{2}}{\Delta p_{i+1/2}\Delta p_{i}}\widetilde{D}%
+_{pp,l+1/2,i,j+1/2}^{\left( 0\right) }  \nonumber \\
+&&-\frac{p_{i}^{2}}{\Delta p_{i+1/2}}\frac{p_{i}}{p_{i+1/2}}\left( 1-\delta
+_{p,l+1/2,i,j+1/2}^{\left( 0\right) }\right) \widetilde{F}%
+_{p,l+1/2,i,j+1/2}^{\left( 0\right) }  \nonumber \\
+&&+\frac{1-\xi _{0,j+1}^{2}}{\Delta \xi _{0,j+1/2}\Delta \xi _{0,j+1}}\frac{%
+\lambda \left( \psi _{l+1/2},\xi _{0,j+1}\right) }{\lambda \left( \psi
+_{l+1/2},\xi _{0,j+1/2}\right) }\widetilde{D}_{\xi \xi
+,l+1/2,i+1/2,j+1}^{\left( 0\right) }  \nonumber \\
+&&-p_{i+1/2}\frac{\sqrt{1-\xi _{0,j+1}^{2}}}{\Delta \xi _{0,j+1/2}}\frac{\xi
+_{0,j+1}}{\xi _{0,j+3/2}}\delta _{\xi ,l+1/2,i+1/2,j+1}^{\left( 0\right) }%
+\times   \nonumber \\
+&&\frac{\lambda \left( \psi _{l+1/2},\xi _{0,j+1}\right) }{\lambda \left(
+\psi _{l+1/2},\xi _{0,j+1/2}\right) }\widetilde{F}_{\xi
+,l+1/2,i+1/2,j+1}^{\left( 0\right) }  \nonumber \\
+&&+\frac{1-\xi _{0,j}^{2}}{\Delta \xi _{0,j}\Delta \xi _{0,j+1/2}}\frac{%
+\lambda \left( \psi _{l+1/2},\xi _{0,j}\right) }{\lambda \left( \psi
+_{l+1/2},\xi _{0,j+1/2}\right) }\widetilde{D}_{\xi \xi
+,l+1/2,i+1/2,j}^{\left( 0\right) }  \nonumber \\
+&&+p_{i+1/2}\frac{\sqrt{1-\xi _{0,j}^{2}}}{\Delta \xi _{0,j+1/2}}\frac{\xi
+_{0,j}}{\xi _{0,j+1/2}}\left( 1-\delta _{\xi ,l+1/2,i+1/2,j}^{\left(
+0\right) }\right) \times   \nonumber \\
+&&\frac{\lambda \left( \psi _{l+1/2},\xi _{0,j}\right) }{\lambda \left( \psi
+_{l+1/2},\xi _{0,j+1/2}\right) }F_{\xi ,l+1/2,i+1/2,j}^{\left( 0\right) }
+\end{eqnarray}
+\begin{eqnarray}
+\widetilde{\overline{\overline{M}}}_{p,l+1/2,i-1/2,j+1/2}^{\left( 0\right) }
+&=&-\frac{p_{i}^{2}}{\Delta p_{i+1/2}\Delta p_{i}}\widetilde{D}%
+_{pp,l+1/2,i,j+1/2}^{\left( 0\right) }  \nonumber \\
+&&-\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi
+_{0,j+1}^{2}}}{\Delta \xi _{0,j+1/2}}\times   \nonumber \\
+&&\frac{\lambda \left( \psi _{l+1/2},\xi _{0,j+1}\right) }{\lambda \left(
+\psi _{l+1/2},\xi _{0,j+1/2}\right) }\widetilde{D}_{\xi
+p,l+1/2,i+1/2,j+1}^{\left( 0\right) }  \nonumber \\
+&&+\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi _{0,j}^{2}}%
+}{\Delta \xi _{0,j+1/2}}\times   \nonumber \\
+&&\frac{\lambda \left( \psi _{l+1/2},\xi _{0,j}\right) }{\lambda \left( \psi
+_{l+1/2},\xi _{0,j+1/2}\right) }\widetilde{D}_{\xi p,l+1/2,i+1/2,j}^{\left(
+0\right) }  \nonumber \\
+&&-\frac{p_{i}^{2}}{\Delta p_{i+1/2}}\frac{p_{i}}{p_{i+1/2}}\delta
+_{p,i,j+1/2}^{\left( 0\right) }\widetilde{F}_{p,l+1/2,i,j+1/2}^{\left(
+0\right) }
+\end{eqnarray}
+\begin{eqnarray}
+\widetilde{\overline{\overline{MM}}}_{p,l+1/2,i+3/2,j-1/2}^{\left( 0\right)
+} &=&-\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi
+_{0,j+1/2}^{2}}}{\Delta \xi _{0,j+1}+\Delta \xi _{0,j}}\widetilde{D}_{p\xi
+,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }  \nonumber \\
+&&-\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi
+_{0,j+1/2}^{2}}}{\Delta \xi _{0,j+1}+\Delta \xi _{0,j}}\widetilde{D}_{\xi
+p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }
+\end{eqnarray}
+\begin{eqnarray}
+\widetilde{\overline{\overline{MM}}}_{p,l+1/2,i+1/2,j-1/2}^{\left( 0\right)
+} &=&-\frac{p_{i+1}}{\Delta p_{i+1/2}}\frac{\sqrt{1-\xi _{0,j+1/2}^{2}}}{%
+\Delta \xi _{0,j+1}+\Delta \xi _{0,j}}\widetilde{D}_{p\xi
+,l+1/2,i+1,j+1/2}^{\left( 0\right) }  \nonumber \\
+&&+\frac{p_{i}}{\Delta p_{i+1/2}}\frac{\sqrt{1-\xi _{0,j+1/2}^{2}}}{\Delta %
+\xi _{0,j+1}+\Delta \xi _{0,j}}\widetilde{D}_{p\xi ,l+1/2,i,j+1/2}^{\left(
+0\right) }  \nonumber \\
+&&-\frac{1-\xi _{0,j}^{2}}{\Delta \xi _{0,j+1/2}\Delta \xi _{0,j}}\frac{%
+\lambda \left( \psi _{l+1/2},\xi _{0,j}\right) }{\lambda \left( \psi
+_{l+1/2},\xi _{0,j+1/2}\right) }\widetilde{D}_{\xi \xi
+,l+1/2,i+1/2,j}^{\left( 0\right) }  \nonumber \\
+&&+p_{i+1/2}\frac{\sqrt{1-\xi _{0,j}^{2}}}{\Delta \xi _{0,j+1/2}}\frac{\xi
+_{0,j}}{\xi _{0,j+1/2}}\delta _{\xi ,l+1/2,i+1/2,j}^{\left( 0\right) }\times 
+\nonumber \\
+&&\frac{\lambda \left( \psi _{l+1/2},\xi _{0,j}\right) }{\lambda \left( \psi
+_{l+1/2},\xi _{0,j+1/2}\right) }\widetilde{F}_{\xi ,l+1/2,i+1/2,j}^{\left(
+0\right) }
+\end{eqnarray}
+\begin{eqnarray}
+\widetilde{\overline{\overline{MM}}}_{p,l+1/2,i-1/2,j-1/2}^{\left( 0\right)
+} &=&\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi
+_{0,j+1/2}^{2}}}{\Delta \xi _{0,j+1}+\Delta \xi _{0,j}}\widetilde{D}_{p\xi
+,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }  \nonumber \\
+&&+\frac{p_{i+1/2}}{\Delta p_{i+1}+\Delta p_{i}}\frac{\sqrt{1-\xi
+_{0,j+1/2}^{2}}}{\Delta \xi _{0,j+1}+\Delta \xi _{0,j}}\widetilde{D}_{\xi
+p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }
+\end{eqnarray}
