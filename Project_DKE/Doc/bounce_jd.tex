@@ -6,10 +6,14 @@
 \usepackage{graphicx}
 \usepackage{amsmath}
 
+%TCIDATA{Created=Wed Nov 12 18:33:07 2003}
+%TCIDATA{LastRevised=Tue Nov 18 10:51:03 2003}
+
+\input{tcilatex}
 \begin{document}
 
 
-\section{Flux-Surface and Bounce Geometry}
+\section{Coordinate Systems and Flux-Surface Geometry \label{coordi}}
 
 Three different coordinates system are considered here.
 
@@ -61,14 +65,15 @@ are set at the position of maximum magnetic field
 \begin{equation}
 B\left( \psi ,s\equiv s_{\min }\right) =B\left( \psi ,s\equiv s_{\max
 }\right) =\max \left\{ B\left( \psi ,s\right) \right\} =B_{\max }\left( \psi
-\right) 
+\right)   \label{bmax}
 \end{equation}
 The local orthogonal vectors are 
 \begin{eqnarray}
-\widehat{\psi } &=&\frac{\nabla \psi }{\left| \nabla \psi \right| } \\
+\widehat{\psi } &=&\frac{\nabla \psi }{\left| \nabla \psi \right| }
+\label{psih} \\
 \widehat{s} &=&\frac{\nabla \phi \times \nabla \psi }{\left| \nabla \psi
 \right| \left| \nabla \phi \right| }=\widehat{b}_{p} \\
-\widehat{\phi } &=&R\nabla \phi 
+\widehat{\phi } &=&R\nabla \phi   \label{phih}
 \end{eqnarray}
 
 \item  An alternative to the previous system may be easier to implement
@@ -76,77 +81,248 @@ numerically for the calculation of the bounce coefficients. This is the
 system $\left( \psi ,\theta ,\phi \right) $. The $\theta $ grid is defined
 in (\ref{theta}). We also define, for geometrical purposes, a flux-function $%
 \rho \left( \psi \right) $ which coincides with the normalized radius on the
-horizontal LFS midplane. Indeed, we have
+horizontal LFS midplane. Indeed, in an axisymmetric system, using the
+functions $R\left( \psi ,\theta \right) $ and $Z\left( \psi ,\theta \right) $%
+, we define $\rho \left( \psi \right) $ as
 \[
-\rho \left( R>R_{0},Z=Z_{0}\right) =\frac{R-R_{0}}{R_{\max }-R_{0}}
+\rho \left( \psi \right) =\frac{R\left( \psi ,0\right) -R_{0}}{R_{\max
+}-R_{0}}
 \]
-where $R_{\max }$ is the value of $R$ on the separatrix as it crosses the
-midplane. The local orthogonal vectors are 
-\begin{eqnarray}
-\widehat{\psi } &=&\frac{\nabla \psi }{\left| \nabla \psi \right| } \\
-\widehat{\theta } &=&\frac{\nabla \phi \times \nabla \psi }{\left| \nabla
-\psi \right| \left| \nabla \phi \right| }=\widehat{s}=\widehat{b}_{p} \\
-\widehat{\phi } &=&R\nabla \phi 
-\end{eqnarray}
+where $R_{\max }=R\left( \psi _{\max },0\right) $ is the value of $R$ on the
+separatrix as it crosses the midplane. The local orthogonal vectors are the
+same as (\ref{psih}-\ref{phih}). The 2-D outputs from the axisymmetric
+equilibrium code HELENA\ are given on the $\left( \psi ,\theta \right) $
+grid. The system $\left( \psi ,\theta ,\phi \right) $ will be used from now
+on.
 \end{itemize}
 
-The 2-D outputs from HELENA\ are given on the $\left( \psi ,\theta \right) $
-grid.
-
-\section{Bounce Time}
+\section{Transit or Bounce Time}
 
 \subsection{Normalized Expression}
 
-The transit, or bounce time is defined as 
+The transit, or bounce time, is defined as the time for a passing particle
+to complete a full orbit in the poloidal plane, and for a trapped particle
+to complete half a bounce period. Note that this is possible only in the
+approximation of zero banana width. Otherwise, the bounce motion would be no
+longer symmetric in the forth and back motions, and both would need to be
+acounted for. We define then
 \begin{eqnarray}
-\tau _{b}\left( \psi \right) &=&\int_{s_{\min }}^{s_{\max }}\frac{ds}{\left|
-v_{s}\right| } \\
+\tau _{b}\left( \psi \right)  &=&\int_{s_{\min }}^{s_{\max }}\frac{ds}{%
+\left| v_{s}\right| } \\
 &=&\int_{s_{\min }}^{s_{\max }}\frac{ds}{\left| v_{\Vert }\right| }\frac{B}{%
 \left| B_{P}\right| }
 \end{eqnarray}
+where $s_{\min }$ and $s_{\max }$ are defined in (\ref{bmax}) for passing
+electrons, and are the positions, along the field lines, of turning points
+for trapped electrons.
 
-Using 
+Using the metric dependence of $ds$ versus $ds$%
 \begin{equation}
-ds=Jd\theta 
+ds=\sqrt{g_{22}}x
 \end{equation}
-and 
+and introducing the pitch-angle cosine $\xi $%
 \begin{equation}
 v_{\Vert }=v\xi 
 \end{equation}
 we find 
 \begin{equation}
 \tau _{b}\left( \psi \right) =\frac{2\pi }{v\left| \xi _{0}\right| }%
-\int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }J\frac{\xi _{0}%
-}{\xi }\frac{B}{\left| B_{P}\right| }
+\int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }\sqrt{g_{22}}%
+\frac{\xi _{0}}{\xi }\frac{B}{\left| B_{P}\right| }
 \end{equation}
-where $\xi _{0}$ is the pitch angle at the position $\theta _{0}$ of minimum 
-$B$-field. 
+where $\xi _{0}$ is the pitch angle cosine at the position $\theta _{0}$ of
+minimum $B$-field
 \begin{equation}
 \theta _{0}\equiv \theta \left( B=B_{\min }\left( \psi \right) \right) 
 \end{equation}
-$\ $
+and the limits$\ \theta _{\min }$ and $\theta _{\max }$ will be calculated
+in the next subsection.
 
 The bounce time can be normalized as such: 
 \begin{equation}
 \tau _{b}\left( \psi ,\xi _{0}\right) =\frac{2\pi a\rho \left( \psi \right) 
-}{v\left| \xi _{0}\right| }\sqrt{1+\left( \frac{R_{0}q\left( \psi \right) }{%
-a\rho \left( \psi \right) }\right) ^{2}}\lambda \left( \psi ,\xi _{0}\right) 
+}{v\left| \xi _{0}\right| }\sqrt{1+\left( \frac{R_{0}q\left( \psi \right) }{
+a\rho \left( \psi \right) }\right) ^{2}}\lambda \left( \psi ,\xi _{0}\right)
 \end{equation}
 with 
 \begin{equation}
 \lambda \left( \psi ,\xi _{0}\right) =\left[ 1+\left( \frac{R_{0}q\left(
 \psi \right) }{a\rho \left( \psi \right) }\right) ^{2}\right]
-^{-1/2}\int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }\frac{J%
-}{a\rho \left( \psi \right) }\frac{\xi _{0}}{\xi }\frac{B}{\left|
-B_{P}\right| }
+^{-1/2}\int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }\frac{%
+\sqrt{g_{22}}}{a\rho \left( \psi \right) }\frac{\xi _{0}}{\xi }\frac{B}{%
+\left| B_{P}\right| }
 \end{equation}
 
 This complicated-looking expression is defined such as to take a very simple
-intuitive form for the case of circular concentric flux-surfaces. See
-Section ?? for details. It ensures that the normalized transit time of a
-particle with only parallel velocity is exactly one.
+intuitive form for the case of circular concentric flux-surfaces. Indeed, in
+the latter case, we will have $\lambda \left( \psi ,\pm 1\right) =1$, which
+means that the bounce time is normalized to the transit time of particles
+that exhibit only parallel velocity. This properties, and more generally the
+analytical calculation for circular concentric flux-surfaces, will be
+addressed in Section \ref{circonc}.
 
-\subsection{Idealized Magnetic Field Structure}
+The contra-variant metric element $g_{22}$ is given in the $\left( \psi
+,\theta ,\phi \right) $ system by 
+\[
+g_{22}=\left| J\nabla \psi \times \nabla \phi \right| ^{2}=J^{2}\left|
+\nabla \psi \right| ^{2}\left| \nabla \phi \right| ^{2}
+\]
+with the Jacobian being
+\[
+J=\left| \nabla \psi \times \nabla \theta \cdot \nabla \phi \right| ^{-1}
+\]
+so that 
+\begin{eqnarray*}
+\sqrt{g_{22}} &=&J\left| \nabla \psi \right| \left| \nabla \phi \right|  \\
+&=&\frac{\left| \nabla \psi \right| \left| \nabla \phi \right| }{\left|
+\nabla \psi \times \nabla \theta \cdot \nabla \phi \right| } \\
+&=&\frac{\left| \nabla \psi \right| \left| \nabla \phi \right| }{\left|
+\nabla \psi \cdot \nabla \theta \times \nabla \phi \right| } \\
+&=&\frac{r}{\left| \widehat{\psi }\cdot \widehat{r}\right| }
+\end{eqnarray*}
+where the unit vectors were defined in Section \ref{coordi} and where we used
+\begin{eqnarray*}
+\nabla \theta  &=&\frac{\widehat{\theta }}{r} \\
+\nabla \phi  &=&\left| \nabla \phi \right| \widehat{\phi } \\
+\nabla \psi  &=&\left| \nabla \psi \right| \widehat{\psi } \\
+\widehat{r} &=&\widehat{\theta }\times \widehat{\phi }
+\end{eqnarray*}
+
+Consequently, the normalized bounce time takes the form 
+\begin{equation}
+\lambda \left( \psi ,\xi _{0}\right) =\frac{1}{a\rho \left( \psi \right) }%
+\left[ 1+\left( \frac{R_{0}q\left( \psi \right) }{a\rho \left( \psi \right) }
+\right) ^{2}\right] ^{-1/2}\int_{\theta _{\min }}^{\theta _{\max }}\frac{%
+d\theta }{2\pi }\frac{r}{\left| \widehat{\psi }\cdot \widehat{r}\right| }%
+\frac{\xi _{0}}{\xi }\frac{B}{\left| B_{P}\right| }  \label{lambda}
+\end{equation}
+
+\subsection{Particle Motion in the Magnetic Field}
+
+The particle motion along the magnetic field lines exhibits one constant of
+the motions, the energy (or the total momentum), and an adiabatic invariant,
+the magnetic moment. They are given by the equations
+\begin{eqnarray}
+p^{2} &=&p_{\bot }^{2}+p_{\Vert }^{2} \\
+\mu  &=&\frac{p_{\bot }^{2}}{2mB}
+\end{eqnarray}
+such that, as a function of the moment component $\left( p_{\Vert 0},p_{\bot
+0}\right) $ at the location $\theta _{0}$ of minimum $B$-field, we have  
+\begin{eqnarray}
+p_{\bot }^{2}+p_{\Vert }^{2} &=&p_{\bot 0}^{2}+p_{\Vert 0}^{2}  \label{mom}
+\\
+\frac{p_{\bot }^{2}}{B\left( \psi ,\theta \right) } &=&\frac{p_{\bot 0}^{2}}{%
+B_{\min }\left( \psi \right) }  \label{mhu}
+\end{eqnarray}
+
+\subsubsection{Pitch-angle Cosine $\xi $}
+
+The pitch-angle cosine is defined as
+\[
+\xi =\frac{p_{\Vert }}{p}
+\]
+so that
+\begin{eqnarray*}
+p_{\Vert } &=&p\xi  \\
+p_{\bot } &=&p\sqrt{1-\xi ^{2}}
+\end{eqnarray*}
+and the system (\ref{mom}-\ref{mhu}) becomes
+\begin{eqnarray}
+p^{2} &=&p_{0}^{2} \\
+\frac{1-\xi ^{2}}{B\left( \psi ,\theta \right) } &=&\frac{1-\xi _{0}^{2}}{%
+B_{\min }\left( \psi \right) }
+\end{eqnarray}
+
+We get an expression for $\xi $ as a function of $\xi _{0}$:
+\begin{equation}
+\xi \left( \psi ,\theta ,\xi _{0}\right) =\text{sign}\left( \xi _{0}\right) 
+\sqrt{1-\frac{B\left( \psi ,\theta \right) }{B_{\min }\left( \psi \right) }%
+\left( 1-\xi _{0}^{2}\right) }  \label{xi}
+\end{equation}
+
+\subsubsection{Trapping Condition}
+
+The trapping condition is given by $\left| \xi _{0}\right| <\xi _{0T}\left(
+\psi \right) $ , where $\xi _{0T}\left( \psi \right) $ is the pitch angle,
+defined at the minimum $B_{\min }\left( \psi \right) $ on a given
+flux-surface, such that the parallel velocity of the particle vanishes at
+the maximum $B_{\max }\left( \psi \right) $. An expression for $\xi
+_{0T}\left( \psi \right) $ can then be obtained from (\ref{xi}): setting $
+\xi \left( \xi _{0T},B=B_{\max }\left( \psi \right) \right) =0$, we get 
+\begin{equation}
+\xi _{0T}^{2}\left( \psi \right) =1-\frac{B_{\min }\left( \psi \right) }{%
+B_{\max }\left( \psi \right) }
+\end{equation}
+
+\subsubsection{Turning Points $\theta _{\min }$ and $\theta _{\max }$}
+
+The turning points are 
+\begin{equation}
+\theta _{\min }\left( \psi ,\xi _{0}\right) =\left| 
+\begin{array}{cc}
+-\pi  & \text{for passing particles} \\ 
+\theta _{T\min } & \text{for trapped particles}
+\end{array}
+\right. 
+\end{equation}
+\begin{equation}
+\theta _{\max }\left( \psi ,\xi _{0}\right) =\left| 
+\begin{array}{cc}
+\pi  & \text{for passing particles} \\ 
+\theta _{T\max } & \text{for trapped particles}
+\end{array}
+\right. 
+\end{equation}
+
+We can determine the turning angles $\theta _{T\min }\left( \psi ,\xi
+_{0}\right) $ and $\theta _{T\max }\left( \psi ,\xi _{0}\right) $ as the
+position where $\xi \left( \psi ,\theta ,\xi _{0}\right) =0$. At this
+position, we have $B=B_{b}\left( \psi ,\xi _{0}\right) $, where $B_{b}\left(
+\psi ,\xi _{0}\right) $ is then given by (\ref{xi})
+\begin{equation}
+B_{b}\left( \psi ,\xi _{0}\right) =\frac{B_{\min }\left( \psi \right) }{%
+1-\xi _{0}^{2}}
+\end{equation}
+so that 
+\begin{eqnarray}
+\theta _{T\min }\left( \psi ,\xi _{0}\right)  &=&\theta \left( B=B_{b}\left|
+\theta <\theta _{0}\right. \right)  \\
+\theta _{T\max }\left( \psi ,\xi _{0}\right)  &=&\theta \left( B=B_{b}\left|
+\theta >\theta _{0}\right. \right) 
+\end{eqnarray}
+
+\subsection{Calculation of $\lambda \left( \psi ,\xi _{0}\right) $ From the
+Output Data of Equilibrium Codes}
+
+The numerical calculation of $\lambda \left( \psi ,\xi _{0}\right) $ can be
+carried from the output of equilibrium codes such as HELENA. These data are
+assumed to be the parametrization of the flux-surfaces $R\left( \psi ,\theta
+\right) $ and $Z\left( \psi ,\theta \right) $, and the three components of
+the magnetic field $B_{R}\left( \psi ,\theta \right) $, $B_{Z}\left( \psi
+,\theta \right) $ and $B_{\phi }\left( \psi ,\theta \right) $. From these
+components we derive directly the toroidal and poloidal components of the
+field, as well as the total field: 
+\begin{eqnarray*}
+B_{T}\left( \psi ,\theta \right)  &=&\left| B_{\phi }\left( \psi ,\theta
+\right) \right|  \\
+B_{P}\left( \psi ,\theta \right)  &=&\sqrt{B_{R}^{2}\left( \psi ,\theta
+\right) +B_{Z}^{2}\left( \psi ,\theta \right) } \\
+B\left( \psi ,\theta \right)  &=&\sqrt{B_{T}^{2}\left( \psi ,\theta \right)
++B_{P}^{2}\left( \psi ,\theta \right) }
+\end{eqnarray*}
+
+We also have an expression for $r$ 
+\[
+r\left( \psi ,\theta \right) =\sqrt{\left( R\left( \psi ,\theta \right)
+-R_{0}\right) ^{2}+\left( Z\left( \psi ,\theta \right) -Z_{0}\right) ^{2}}
+\]
+and for the scalar product 
+\[
+\widehat{\psi }\cdot \widehat{r}=\frac{\left( \nabla \psi \cdot \widehat{R}%
+\right) \left( R\left( \psi ,\theta \right) -R_{0}\right) +\left( \nabla
+\psi \cdot \widehat{Z}\right) \left( Z\left( \psi ,\theta \right)
+-Z_{0}\right) }{r\left| \nabla \psi \right| }
+\]
 
 In a toroidal axisymmetric geometry, the magnetic field can be expressed
 generally as 
@@ -155,146 +331,144 @@ generally as
 \end{equation}
 so that 
 \begin{eqnarray*}
-B_{T} &=&I\left( \psi \right) \left| \nabla \phi \right|  \\
-\left| B_{P}\right|  &=&\left| \nabla \psi \right| \left| \nabla \phi
-\right| 
+B_{T} &=&\left| I\left( \psi \right) \right| \left| \nabla \phi \right| =%
+\frac{\left| I\left( \psi \right) \right| }{R} \\
+B_{P} &=&\left| \nabla \psi \right| \left| \nabla \phi \right| =\frac{\left|
+\nabla \psi \right| }{R}
 \end{eqnarray*}
-and
-\begin{eqnarray*}
-B &=&\sqrt{B_{T}^{2}+B_{P}^{2}} \\
-&=&\left| \nabla \phi \right| \sqrt{I^{2}\left( \psi \right) +\left| \nabla
-\psi \right| ^{2}}
-\end{eqnarray*}
-
-We then have the ratio
-\[
-\frac{B}{\left| B_{P}\right| }=\sqrt{1+\frac{I^{2}\left( \psi \right) }{%
-\left| \nabla \psi \right| ^{2}}}
-\]
-and we obtain
-\[
-\lambda \left( \psi \right) =\sqrt{1+\frac{I^{2}\left( \psi \right) }{\left|
-\nabla \psi \right| ^{2}}}\left[ 1+\left( \frac{R_{0}q\left( \psi \right) }{%
-a\rho \left( \psi \right) }\right) ^{2}\right] ^{-1/2}\int_{\theta _{\min
-}}^{\theta _{\max }}\frac{d\theta }{2\pi }\frac{J}{a\rho \left( \psi \right) 
-}\frac{\xi _{0}}{\xi }
-\]
-
-\subsection{Passing - Trapped particles}
-
-The turning points are 
-\begin{equation}
-\theta _{\min }=\left| 
-\begin{array}{cc}
--\pi & \text{for passing particles} \\ 
-\theta _{T\min } & \text{for trapped particles}
-\end{array}
-\right.
-\end{equation}
-\begin{equation}
-\theta _{\max }=\left| 
-\begin{array}{cc}
-\pi & \text{for passing particles} \\ 
-\theta _{T\max } & \text{for trapped particles}
-\end{array}
-\right.
-\end{equation}
-where the trapping condition is given by $\left| \xi _{0}\right| <\xi _{0T}$
-, where $\xi _{0T}$ is the pitch angle, defined at the minimum $B_{\min
-}\left( \psi \right) $ on a given flux-surface, such that the parallel
-velocity of the particle vanishes at the maximum $B_{\max }\left( \psi
-\right) $. This can be expressed as a function of the two adiabatic
-invariants 
-\begin{eqnarray}
-\mu &=&\frac{p_{\bot }^{2}}{2mB} \\
-p^{2} &=&p_{\bot }^{2}+p_{\Vert }^{2}
-\end{eqnarray}
-such that 
-\begin{eqnarray}
-p_{\bot 1}^{2}+p_{\Vert 1}^{2} &=&p_{\bot 0}^{2}+p_{\Vert 0}^{2} \\
-\frac{p_{\bot 1}^{2}}{B_{\max }} &=&\frac{p_{\bot 0}^{2}}{B_{\min }}
-\end{eqnarray}
-
-Then, setting $p_{\Vert 1T}=0$, we get 
-\begin{equation}
-p_{\Vert 0T}^{2}=\left( \frac{B_{\max }}{B_{\min }}-1\right) p_{\bot 0T}^{2}
-\end{equation}
-\begin{equation}
-\xi _{0T}^{2}=1-\frac{B_{\min }}{B_{\max }}
-\end{equation}
-
-We can determine the turning angles $\theta _{T\min }$ and $\theta _{T\max }$
-from the same system, so that, for a given $\left| \xi _{0}\right| <\xi
-_{0T} $, 
-\begin{equation}
-\xi _{0}^{2}=1-\frac{B_{\min }}{B_{T\max }}
-\end{equation}
-so that 
-\begin{eqnarray}
-\theta _{T\min } &=&\theta \left( B=B_{T\max }\left| \theta <0\right. \right)
-\\
-\theta _{T\max } &=&\theta \left( B=B_{T\max }\left| \theta >0\right. \right)
-\end{eqnarray}
-
-\subsection{Case of Circular, Concentric Flux-Surfaces}
-
-In this case, we have 
-\begin{equation}
-R=R_{0}+r\cos \theta 
-\end{equation}
-so that 
-\[
-\rho =\frac{r}{a}
-\]
-and therefore the toroidal field is 
-\begin{equation}
-B_{T}=B_{T0}\left( r\right) \frac{R_{0}}{R}=\frac{B_{T0}\left( r\right) }{
-1+r/R_{0}\cos \theta }
-\end{equation}
-where 
-\[
-B_{T0}\left( r\right) =\frac{I\left( r\right) }{R_{0}}
-\]
-the poloidal field is 
-\begin{equation}
-B_{P}=B_{P0}\left( r\right) \frac{R_{0}}{R}=\frac{B_{P0}\left( r\right) }{%
-1+r/R_{0}\cos \theta }
-\end{equation}
-where
-\[
-B_{P0}\left( r\right) =\frac{\left| \nabla \psi \right| }{R_{0}}
-\]
-and the total field is 
-\begin{equation}
-B=\frac{\sqrt{B_{P0}^{2}\left( r\right) +B_{T0}^{2}}}{1+r/R_{0}\cos \theta }=%
-\frac{B_{0}}{1+r/R_{0}\cos \theta }
-\end{equation}
-with 
-\begin{equation}
-B_{0}=\sqrt{B_{P0}^{2}\left( r\right) +B_{T0}^{2}}
-\end{equation}
-
-Then, we have the ratio
-\[
-\frac{B}{B_{P}}=\frac{B_{0}}{B_{P0}\left( r\right) }=\sqrt{1+\frac{B_{T0}^{2}%
-}{B_{P0}^{2}\left( r\right) }}
-\]
 
 We also have 
-\begin{equation}
-J=\frac{ds}{d\theta }=r=a\rho 
-\end{equation}
-and 
-\begin{equation}
-q\left( r\right) =\frac{r}{R_{0}}\frac{B_{T}}{B_{P}}=\frac{r}{R_{0}}\frac{%
-B_{T0}}{B_{P0}}
-\end{equation}
+\[
+\mathbf{B}_{P}=\nabla \psi \times \nabla \phi 
+\]
+and therefore
+\begin{eqnarray*}
+\nabla \phi \times \mathbf{B}_{P} &=&\nabla \phi \times \left( \nabla \psi 
+\times \nabla \phi \right)  \\
+&=&\left| \nabla \phi \right| ^{2}\nabla \psi 
+\end{eqnarray*}
 so that 
 \[
-\frac{B}{B_{P}}=\sqrt{1+\left( \frac{qR_{0}}{r}\right) ^{2}}
+\nabla \psi =\frac{\nabla \phi \times \mathbf{B}_{P}}{\left| \nabla \phi
+\right| ^{2}}=R\widehat{\phi }\times \mathbf{B}_{P}
+\]
+and we have the projections 
+\begin{eqnarray*}
+\left( \nabla \psi \cdot \widehat{R}\right)  &=&R\widehat{R}\cdot \widehat{%
+\phi }\times \mathbf{B}_{P}=-RB_{Z} \\
+\left( \nabla \psi \cdot \widehat{Z}\right)  &=&R\widehat{Z}\cdot \widehat{%
+\phi }\times \mathbf{B}_{P}=RB_{R}
+\end{eqnarray*}
+
+Finally, the expression for the normalized bounce time becomes 
+\begin{equation}
+\lambda \left( \psi ,\xi _{0}\right) =\frac{1}{a\rho }\left[ 1+\left( \frac{%
+R_{0}q}{a\rho }\right) ^{2}\right] ^{-1/2}\int_{\theta _{\min }}^{\theta
+_{\max }}\frac{d\theta }{2\pi }\frac{B\left[ \left( R-R_{0}\right)
+^{2}+\left( Z-Z_{0}\right) ^{2}\right] }{\left| B_{R}\left( Z-Z_{0}\right)
+-B_{Z}\left( R-R_{0}\right) \right| }\frac{\xi _{0}}{\xi }
+\end{equation}
+where $R,Z,B_{R},B_{Z}$ and $B$ are functions of $\left( \psi ,\theta
+\right) $, $\rho $ and $q$ are functions of $\psi $, and $\xi $ is a
+function of $\left( \psi ,\theta ,\xi _{0}\right) $ given by (\ref{xi})
+\[
+\xi \left( \psi ,\theta ,\xi _{0}\right) =\text{sign}\left( \xi _{0}\right) 
+\sqrt{1-\frac{B\left( \psi ,\theta \right) }{B_{\min }\left( \psi \right) }%
+\left( 1-\xi _{0}^{2}\right) }
 \]
 
-The normalized bounce time then becomes simply
+We recall 
+\[
+\rho \left( \psi \right) =\frac{R\left( \psi ,0\right) -R_{0}}{a}
+\]
+so that we get filly the expression
+\begin{equation}
+\lambda \left( \psi ,\xi _{0}\right) =\frac{1}{R\left( \psi ,0\right) -R_{0}}%
+\left[ 1+\left( \frac{R_{0}q}{R\left( \psi ,0\right) -R_{0}}\right)
+^{2}\right] ^{-1/2}\int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2%
+\pi }\frac{B\left[ \left( R-R_{0}\right) ^{2}+\left( Z-Z_{0}\right)
+^{2}\right] }{\left| B_{R}\left( Z-Z_{0}\right) -B_{Z}\left( R-R_{0}\right)
+\right| }\frac{\xi _{0}}{\xi }
+\end{equation}
+which will be used to calculate $\lambda $ numerically.
+
+\section{Analytical Calculation for Idealized Plasmas}
+
+\subsection{Circular, Concentric Flux-Surfaces\label{circonc}}
+
+In this case, we have $\psi =\psi \left( r\right) $ and therefore it is
+easier to work in the $\left( r,\theta ,\phi \right) $ coordinate to account
+for the symmetry in the problem. The normalized radius is
+\[
+\rho \left( \psi \right) =\frac{r}{a}
+\]
+
+We have now
+\[
+\widehat{\psi }=\widehat{r}
+\]
+so that
+\[
+\sqrt{g_{22}}=r
+\]
+and the normalized bounce time reduces to
+\begin{equation}
+\lambda \left( \rho ,\xi _{0}\right) =\left[ 1+\left( \frac{R_{0}q\left(
+\rho \right) }{a\rho }\right) ^{2}\right] ^{-1/2}\int_{\theta _{\min
+}}^{\theta _{\max }}\frac{d\theta }{2\pi }\frac{\xi _{0}}{\xi }\frac{B}{%
+\left| B_{P}\right| }
+\end{equation}
+
+The toroidal field is 
+\begin{equation}
+B_{T}\left( \rho ,\theta \right) =\frac{\left| I\left( \rho \right) \right| 
+}{R\left( \rho ,\theta \right) }
+\end{equation}
+and the poloidal field is 
+\begin{equation}
+B_{P}\left( \rho ,\theta \right) =\frac{\left| \nabla \psi \left( \rho
+\right) \right| }{R\left( \rho ,\theta \right) }
+\end{equation}
+where 
+\begin{equation}
+\left| \nabla \psi \left( \rho \right) \right| =\frac{1}{a}\left| \frac{%
+d\psi \left( \rho \right) }{d\rho }\right| 
+\end{equation}
+is now only a function of $\rho $; the safety factor can be written as
+\begin{equation}
+q\left( \rho \right) =\frac{r}{R_{0}}\frac{B_{T}}{B_{P}}=\rho \frac{a}{R_{0}}%
+\frac{\left| I\left( \rho \right) \right| }{\left| \nabla \psi \left( \rho
+\right) \right| }
+\end{equation}
+
+The total field is then 
+\begin{equation}
+B\left( \rho ,\theta \right) =\frac{\sqrt{I^{2}\left( \rho \right) +\left|
+\nabla \psi \left( \rho \right) \right| ^{2}}}{R\left( \rho ,\theta \right) }
+\end{equation}
+and can be written as
+\begin{equation}
+B\left( \rho ,\theta \right) =B_{0}\left( \rho \right) \frac{R_{0}}{R\left(
+\rho ,\theta \right) }  \label{Bcirc}
+\end{equation}
+with
+\begin{equation}
+B_{0}\left( \rho \right) =\sqrt{I^{2}\left( \rho \right) +\left| \nabla \psi
+\left( \rho \right) \right| ^{2}}
+\end{equation}
+
+We have the ratio 
+\begin{eqnarray}
+\frac{B}{B_{P}} &=&\frac{\sqrt{I^{2}\left( \rho \right) +\left| \nabla \psi
+\left( \rho \right) \right| ^{2}}}{\left| \nabla \psi \left( \rho \right)
+\right| }  \nonumber \\
+&=&\sqrt{1+\frac{I^{2}\left( \rho \right) }{\left| \nabla \psi \left( \rho
+\right) \right| ^{2}}}  \nonumber \\
+&=&\sqrt{1+\left( \frac{R_{0}q\left( \rho \right) }{a\rho }\right) ^{2}}
+\end{eqnarray}
+which is only a function of $\rho $ and can be taken out of the integral, to
+give finally
+
 \begin{equation}
 \lambda \left( \psi \right) =\int_{\theta _{\min }}^{\theta _{\max }}\frac{%
 d\theta }{2\pi }\frac{\xi _{0}}{\xi }
@@ -306,22 +480,39 @@ In addition, defining
 \end{equation}
 we find 
 \begin{eqnarray}
-B_{\min } &=&\frac{B_{0}}{1+\epsilon } \\
-B_{\max } &=&\frac{B_{0}}{1-\epsilon }
+R_{\min }\left( r\right)  &=&R_{0}-r=R_{0}\left( 1-\epsilon \right)  \\
+R_{\min }\left( r\right)  &=&R_{0}+r=R_{0}\left( 1+\epsilon \right) 
 \end{eqnarray}
-so that 
+so that, using (\ref{Bcirc})
+\begin{eqnarray}
+B_{\min }\left( r\right)  &=&\frac{B_{0}\left( r\right) }{1+\epsilon } \\
+B_{\max }\left( r\right)  &=&\frac{B_{0}\left( r\right) }{1-\epsilon }
+\end{eqnarray}
+and 
 \begin{equation}
-\xi _{0T}^{2}=\frac{2\epsilon }{1+\epsilon }
+\xi _{0T}^{2}\left( r\right) =\frac{2\epsilon }{1+\epsilon }
 \end{equation}
 
 The turning angles are determined by 
 \begin{equation}
-\xi _{0}^{2}=\frac{\left( 1-\cos \theta _{T}\right) \epsilon }{1+\epsilon }
+B\left( r,\theta _{T}\right) =B_{b}\left( r,\xi _{0}\right) =\frac{B_{\min
+}\left( r\right) }{1-\xi _{0}^{2}}
 \end{equation}
+which gives
+\begin{equation}
+\frac{B_{0}\left( r\right) }{1+\epsilon \cos \theta _{T}}=\frac{1}{1-\xi
+_{0}^{2}}\frac{B_{0}\left( r\right) }{1+\epsilon }
+\end{equation}
+and then
+\begin{eqnarray}
+\xi _{0}^{2} &=&1-\frac{1+\epsilon \cos \theta _{T}}{1+\epsilon } \\
+&=&\frac{\epsilon \left( 1-\cos \theta _{T}\right) }{1+\epsilon }
+\end{eqnarray}
 so that 
 \begin{equation}
-\theta _{T}=\arccos \left[ 1-\frac{\xi _{0}^{2}}{2\xi _{0T}^{2}}\right]
+\theta _{T}=\arccos \left[ 1-\frac{2\xi _{0}^{2}}{\xi _{0T}^{2}}\right] 
 \end{equation}
+and by symmetry
 \begin{eqnarray}
 \theta _{T\min } &=&-\theta _{T} \\
 \theta _{T\max } &=&\theta _{T}
@@ -331,5 +522,211 @@ Of course, the position of minimum $B$-field is
 \begin{equation}
 \theta _{0}=0
 \end{equation}
+
+\section{Example with circular concentric flux-surfaces}
+
+\subsection{constant current profile}
+
+If we assume a parabolic current profile 
+\[
+j\left( \rho \right) =j_{0} 
+\]
+so that the current enclosed in the poloidal surface $S_{P}\left( \rho
+\right) $ is 
+\begin{eqnarray*}
+I\left( \rho \right) &=&\iint_{S_{P}\left( \rho \right) }j\;dS \\
+&=&2\pi a^{2}\int_{0}^{\rho }j\;\rho d\rho \\
+&=&\pi j_{0}a^{2}\rho ^{2}
+\end{eqnarray*}
+and the total toroidal current is 
+\[
+I_{0}=I\left( 1\right) =\pi j_{0}a^{2} 
+\]
+so that we can rewrite 
+\[
+I\left( \rho \right) =I_{0}\rho ^{2} 
+\]
+
+Assuming that the toroidal effect implies a $1/R$ dependence so that we can
+write the poloidal magnetic field 
+\[
+B_{P}\left( \rho ,\theta \right) =\frac{R_{0}}{R}\widetilde{B}_{P}\left(
+\rho \right) 
+\]
+and we find, using Ampere's law, 
+\begin{eqnarray*}
+\mu _{0}I\left( \rho \right) &=&\oint B_{P}dl \\
+&=&\int_{0}^{2\pi }\rho ad\theta \;\frac{R_{0}}{R}\widetilde{B}_{P}\left(
+\rho \right) \\
+&=&2\pi \rho a\widetilde{B}_{P}\left( \rho \right) \int_{0}^{2\pi }\;\frac{%
+d\theta }{1+\left( \rho a/R_{0}\right) \cos \theta } \\
+&=&,,, \\
+&=&2\pi \rho aB_{P}\left( \rho \right)
+\end{eqnarray*}
+so that 
+\begin{eqnarray*}
+B_{P}\left( \rho \right) &=&\frac{\mu _{0}I\left( \rho \right) }{2\pi \rho a}
+\\
+&=&\frac{\mu _{0}I_{0}}{2\pi a}\rho \\
+&=&B_{Pa}\rho
+\end{eqnarray*}
+where $B_{Pa}$ is the poloidal field at the edge, given by 
+\[
+B_{Pa}=\frac{\mu _{0}I_{0}}{2\pi a}=\frac{\mu _{0}aj_{0}}{2} 
+\]
+
+From the expression of the poloidal magnetic field, it is possible to
+determine the poloidal flux 
+\begin{eqnarray*}
+\psi \left( \rho ,\theta \right)  &=&\frac{1}{2\pi }\iint_{S_{T}\left( \rho
+,\theta \right) }B_{P}\left( \rho ,\theta \right) \;dS \\
+&=&a\int_{0}^{\rho }RB_{P}\left( \rho ,\theta \right) \;d\rho  \\
+&=&aR_{0}\int_{0}^{\rho }\widetilde{B}_{P}\left( \rho \right) \;d\rho  \\
+&=&aR_{0}B_{Pa}\int_{0}^{\rho }\rho \;d\rho  \\
+&=&aR_{0}B_{Pa}\frac{\rho ^{2}}{2} \\
+&=&\psi _{a}\rho ^{2}
+\end{eqnarray*}
+where we see that $\psi $ is independent of $\theta $ and with 
+\[
+\psi _{a}=\frac{aR_{0}B_{Pa}}{2}=\frac{\mu _{0}I_{0}R_{0}}{8\pi }
+\]
+
+Note we can also calculate it from the general expression of the magnetic
+field 
+\[
+\mathbf{B}=I\left( \psi \right) \nabla \phi +\nabla \psi \times \nabla \phi 
+\]
+so that the poloidal field is 
+\[
+B_{P}\left( \rho ,\theta \right) =\left| \nabla \psi \right| \left| \nabla
+\phi \right| =\frac{\left| \nabla \psi \right| }{R} 
+\]
+and therefore 
+\begin{eqnarray*}
+\widetilde{B}\left( \rho \right) &=&\frac{R}{R_{0}}B_{P}\left( \rho ,\theta
+\right) \\
+&=&\frac{\left| \nabla \psi \right| }{R_{0}} \\
+&=&\frac{1}{R_{0}a}\frac{d\psi }{d\rho }
+\end{eqnarray*}
+which is consistent with the calculation above.
+
+Since the flux-surfaces are circular concentric, il is straightforward to
+calculate $B_{R}$ and $B_{Z}$%
+\begin{eqnarray*}
+B_{R} &=&\mathbf{B}_{p}\cdot \widehat{R}=B_{p}\widehat{\theta }\cdot 
+\widehat{R}=-B_{p}\sin \theta \\
+B_{Z} &=&\mathbf{B}_{p}\cdot \widehat{Z}=B_{p}\widehat{\theta }\cdot 
+\widehat{Z}=B_{p}\cos \theta
+\end{eqnarray*}
+
+The quantities as a function of $\left( \psi ,\theta \right) $ desired for
+computation are finally 
+\begin{eqnarray*}
+\rho \left( \psi \right) &=&\sqrt{\frac{\psi }{\psi _{a}}} \\
+R\left( \psi ,\theta \right) &=&R_{0}+\rho \cos \theta =R_{0}+\sqrt{\frac{%
+\psi }{\psi _{a}}}\cos \theta \\
+Z\left( \psi ,\theta \right) &=&Z_{0}+\rho \sin \theta =Z_{0}+\sqrt{\frac{%
+\psi }{\psi _{a}}}\sin \theta \\
+B_{R}\left( \psi ,\theta \right) &=&-B_{p}\sin \theta =-B_{Pa}\rho \frac{%
+R_{0}}{R}\sin \theta =-\frac{2\sqrt{\psi _{a}\psi }}{a}\frac{\sin \theta }{%
+R_{0}+a\sqrt{\psi /\psi _{a}}\cos \theta } \\
+B_{Z}\left( \psi ,\theta \right) &=&B_{p}\cos \theta =B_{Pa}\rho \frac{R_{0}%
+}{R}\cos \theta =\frac{2\sqrt{\psi _{a}\psi }}{a}\frac{\cos \theta }{R_{0}+a%
+\sqrt{\psi /\psi _{a}}\cos \theta } \\
+B_{P}\left( \psi ,\theta \right) &=&B_{Pa}\rho \frac{R_{0}}{R}=\frac{2\sqrt{%
+\psi _{a}\psi }}{a}\frac{1}{R_{0}+a\sqrt{\psi /\psi _{a}}\cos \theta } \\
+B_{\phi }\left( \psi ,\theta \right) &=&\frac{I\left( \rho \right) }{R}=%
+\frac{1}{R_{0}+a\sqrt{\psi /\psi _{a}}\cos \theta }I\left( \sqrt{\frac{\psi 
+}{\psi _{a}}}\right) \\
+j &=&j_{0}=\frac{2}{\mu _{0}a}B_{Pa}=\frac{4}{\mu _{0}a^{2}R_{0}}\psi _{a} \\
+q\left( \psi \right) &=&\rho \left( \psi \right) \frac{a}{R_{0}}\frac{%
+B_{\phi }}{B_{P}}=\frac{a^{2}}{2R_{0}\psi _{a}}I\left( \sqrt{\frac{\psi }{%
+\psi _{a}}}\right)
+\end{eqnarray*}
+
+\subsection{parabolic current profile}
+
+If we assume a parabolic current profile 
+\[
+j\left( \rho \right) =j_{0}\left( 1-\rho ^{2}\right) 
+\]
+so that the current enclosed in the poloidal surface $S_{P}\left( \rho
+\right) $ is 
+\begin{eqnarray*}
+I\left( \rho \right) &=&\iint_{S_{P}\left( \rho \right) }j\;dS \\
+&=&2\pi a^{2}\int_{0}^{\rho }j\left( \rho \right) \;\rho d\rho \\
+&=&\frac{1}{2}\pi j_{0}a^{2}\rho ^{2}\left[ 2-\rho ^{2}\right]
+\end{eqnarray*}
+and the total toroidal current is 
+\[
+I_{0}=I\left( 1\right) =\frac{1}{2}\pi j_{0}a^{2} 
+\]
+so that we can rewrite 
+\[
+I\left( \rho \right) =I_{0}\rho ^{2}\left[ 2-\rho ^{2}\right] 
+\]
+
+Assuming that the toroidal effect implies a $1/R$ dependence so that we can
+write the poloidal magnetic field 
+\[
+B_{P}\left( \rho ,\theta \right) =\frac{R_{0}}{R}\widetilde{B}_{P}\left(
+\rho \right) 
+\]
+and we find, using Ampere's law, 
+\begin{eqnarray*}
+\mu _{0}I\left( \rho \right) &=&\oint B_{P}dl \\
+&=&\int_{0}^{2\pi }\rho ad\theta \;\frac{R_{0}}{R}\widetilde{B}_{P}\left(
+\rho \right) \\
+&=&2\pi \rho a\widetilde{B}_{P}\left( \rho \right) \int_{0}^{2\pi }\;\frac{%
+d\theta }{1+\left( \rho a/R_{0}\right) \cos \theta } \\
+&=&,,, \\
+&=&2\pi \rho aB_{P}\left( \rho \right)
+\end{eqnarray*}
+so that 
+\begin{eqnarray*}
+B_{P}\left( \rho \right) &=&\frac{\mu _{0}I\left( \rho \right) }{2\pi \rho a}
+\\
+&=&\frac{\mu _{0}I_{0}}{2\pi a}\rho \left[ 2-\rho ^{2}\right] \\
+&=&B_{Pa}\rho \left[ 2-\rho ^{2}\right]
+\end{eqnarray*}
+where $B_{Pa}$ is the poloidal field at the edge, given by 
+\[
+B_{Pa}=\frac{\mu _{0}I_{0}}{2\pi a}=\frac{\mu _{0}aj_{0}}{4} 
+\]
+
+From the expression of the poloidal magnetic field, it is possible to
+determine the poloidal flux 
+\begin{eqnarray*}
+\psi \left( \rho ,\theta \right) &=&\frac{1}{2\pi }\iint_{S_{T}\left( \rho
+,\theta \right) }B_{P}\left( \rho ,\theta \right) \;dS \\
+&=&a\int_{0}^{\rho }RB_{P}\left( \rho ,\theta \right) \;d\rho \\
+&=&aR_{0}\int_{0}^{\rho }\widetilde{B}_{P}\left( \rho \right) \;d\rho \\
+&=&aR_{0}B_{Pa}\int_{0}^{\rho }\rho \left[ 2-\rho ^{2}\right] \;d\rho \\
+&=&aR_{0}B_{Pa}\rho ^{2}\left[ 4-\rho ^{2}\right] \\
+&=&\psi _{a}\frac{\rho ^{2}}{3}\left[ 4-\rho ^{2}\right]
+\end{eqnarray*}
+where we see that $\psi $ is independent of $\theta $ and with 
+\[
+\psi _{a}=3aR_{0}B_{Pa} 
+\]
+
+Note we can also calculate it from the general expression of the magnetic
+field 
+\[
+\mathbf{B}=I\left( \psi \right) \nabla \phi +\nabla \psi \times \nabla \phi 
+\]
+so that the poloidal field is 
+\[
+B_{P}\left( \rho ,\theta \right) =\left| \nabla \psi \right| \left| \nabla
+\phi \right| =\frac{\left| \nabla \psi \right| }{R} 
+\]
+and therefore 
+\begin{eqnarray*}
+\widetilde{B}\left( \rho \right) &=&\frac{R}{R_{0}}B_{P}\left( \rho ,\theta
+\right) \\
+&=&\frac{\left| \nabla \psi \right| }{R_{0}} \\
+&=&\frac{1}{R_{0}a}\frac{d\psi }{d\rho }
+\end{eqnarray*}
+which is consistent with the calculation above.
 
 \end{document}
