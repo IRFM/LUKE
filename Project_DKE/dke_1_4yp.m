@@ -1313,12 +1313,12 @@ for ir = 1:nr,
 			Xn_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
 			Xo_t(:,nmhu/2 + 1 - ns(ir)) = 0;%df0(pn,mhu=pi/2) = 0
 %
-			Xj_t(:,3) = 0;Xj_t(:,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
-			Xk_t(:,3) = 0;Xk_t(:,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
-			Xl_t(:,3) = 0;Xl_t(:,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
-			Xm_t(:,3) = 0;Xm_t(:,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
-			Xn_t(:,3) = 0;Xn_t(:,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
-			Xo_t(:,3) = 0;Xo_t(:,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
+%			Xj_t(:,3) = 0;Xj_t(:,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
+%			Xk_t(:,3) = 0;Xk_t(:,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
+%			Xl_t(:,3) = 0;Xl_t(:,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
+%			Xm_t(:,3) = 0;Xm_t(:,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
+%			Xn_t(:,3) = 0;Xn_t(:,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
+%			Xo_t(:,3) = 0;Xo_t(:,nmhu - ns(ir) - 1) = 0;%df0/dmhu(abs(mhu) == 1) = 0
 %       
 			mhu_t = mhu(Xmask_f0);
 %           
