@@ -37,6 +37,9 @@ end
 %
 ec = repmat(ones(length(t_in),1)*ec_in(:)'/mc2,[1,1,length(k_in)]);%Relativistic units
 k = shiftdim(repmat(ones(length(ec_in),1)*k_in(:)'/mc2,[1,1,length(t_in)]),2);%Relativistic units
+if (length(ec_in) == 1) & (length(t_in) == 1),%For the case ec_in and t_in are scalars
+	k = reshape(k,1,1,length(k_in));
+end
 c = repmat(t_in(:)*ones(1,length(ec_in)),[1,1,length(k_in)]);
 %
 s = sqrt(1-c.^2);

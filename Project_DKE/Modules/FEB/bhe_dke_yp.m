@@ -19,7 +19,7 @@ function [seBHE,seBH,Elwert,ec,e,t] = bhe_dke_yp(ec_in,k_in,t_in,Z)
 %		- Elwert: Elwert correction factor [p,m,n]
 %		- ec: kinetic energy of the incoming electron (mc2) [p,m,n] 
 %		- e: photon energy (mc2)  [p,m,n] 
-%		- t: angle between the direction of displacement of the incoming electron and the photon emitted by bremsstrahlung (radian) p,m,n
+%		- t: cosine angle between the direction of displacement of the incoming electron and the photon emitted by bremsstrahlung (radian) p,m,n
 %
 %	Warning: Cross-section units : m^2 but energies are in relativistic units. To get 
 %			 cross-sections in standard m^2/keV units, seBH or seBHe must be divided 
@@ -37,6 +37,9 @@ end
 %
 ec = repmat(ones(length(t_in),1)*ec_in(:)'/mc2,[1,1,length(k_in)]);%Relativistic units
 k = shiftdim(repmat(ones(length(ec_in),1)*k_in(:)'/mc2,[1,1,length(t_in)]),2);%Relativistic units
+if (length(ec_in) == 1) & (length(t_in) == 1),%For the case ec_in and t_in are scalars
+	k = reshape(k,1,1,length(k_in));
+end
 c = repmat(t_in(:)*ones(1,length(ec_in)),[1,1,length(k_in)]);
 %
 s = sqrt(1-c.^2);
