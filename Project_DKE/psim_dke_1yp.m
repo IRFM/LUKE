@@ -37,7 +37,7 @@ ntheta = 65;%Size of the theta grid for the magnetic equilibrium (ntheta ~= npsi
 grid_uniformity = 0;%Pitch-angle and momentum grids uniformity: (0) no, (1) yes (-1 for specific test for DKE, transient and pitch-angle grid only)
 grid_method = 1;%Pitch-angle grid calculation technique: (0): old method, (1) new method
 nmhu_S = 153;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
-np_S = 152;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run)
+np_S = 202;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run)
 pnmax_S = 15;%Maximum value of the flux momentum grid (pth_ref)
 %
 %Pitch-angle grid
@@ -54,8 +54,8 @@ grid_power = 1.5; % power for mhu grid step varations (grid_power > 1) (Note: fo
 %
 %Momentum grid
 %
-np_S_ref = 50;%position in the mpomentum grid where dpn_S is twice the minimum value(must be ajusted with snp parameter)
-snp = 2;%pgridfactor (Uniform grid: pgridfactor = 1, non-uniform grid: pgridfactor >= 1) 
+np_S_ref = 20;%position in the mpomentum grid where dpn_S is twice the minimum value(must be ajusted with snp parameter)
+snp = 1;%pgridfactor (Uniform grid: pgridfactor = 1, non-uniform grid: pgridfactor >= 1) 
 spfac = 20;%reduction factor for the momentum supergrid used in collision integrals
 %
 %Normalized radii at which the distribution is calculated (DKE or FP)
@@ -64,7 +64,7 @@ spfac = 20;%reduction factor for the momentum supergrid used in collision integr
 %Values of the radial flux grid [1,p] (If one radial value: local calculation only)
 %
 psin_S = [];%5.286742555900838e-002; %[0.1]%(rho = 0.25 in CMOD)
-rho_S = [0.2,0.4];%[0.05:0.07:0.9];%;0.03322100141578101;0.71365;
+rho_S = [0.2,0.4,0.6,0.8];%[0.05:0.07:0.9];%;0.03322100141578101;0.71365;
 %
 psin_display = NaN;%Approximate radial value at which results are displayed if display_mode >= 1 [1,1]
 rho_display = 0.4;
@@ -76,8 +76,8 @@ norm_ref = 1;%Normalization procedure for the ohmic electric field, LH and EC qu
 %
 % Ohmic electric field
 %
-epsi0 = 0.03;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e) (WARNING: ref_mode = 0 by default when multiple radial positions are studied simultaneously, whatever the value in this file)
-epsia = 0.03;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
+epsi0 = 0.0;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e) (WARNING: ref_mode = 0 by default when multiple radial positions are studied simultaneously, whatever the value in this file)
+epsia = 0.0;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
 eepsi = 0;%Exponent for Ohmic electric field
 %
 % RF Waves: For each of the following calculations:
@@ -85,7 +85,7 @@ eepsi = 0;%Exponent for Ohmic electric field
 % (2+): include with RT mode (iterations for self-consistent damping between
 % RT and DKE) See below for details
 %
-rf_list(1) = 0;%[0 or 1] LH test calculations (see psim_ideallhcd_jd) 
+rf_list(1) = 1;%[0 or 1] LH test calculations (see psim_ideallhcd_jd) 
 rf_list(2) = 0;%[0 or 1] EC test calculations (see psim_idealeccd_jd) 
 rf_list(3) = 0;%[0 or 1] Cold plasma LHCD calculations (see psim_coldlhcd_jd); 
 rf_list(4) = 0;%[0,1 or 2] Cold plasma ECCD calculations (see psim_coldeccd_jd); (2): RT calculations in wpe << wce limit (see psim_straightray_jd) 
@@ -130,9 +130,9 @@ boundary_mode_g = 1;%Number of points where the first distribution function for 
 prec0_g = 1e-10;%Convergence level of the residu (if NaN, iterations stop with nit_g)
 nit_g = 100;%Maximum number of iterations for g
 %
-dtn = 1000;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
-invproc = 2;%Iterative matrix inversion method: (1) qmr iterative method, (2) bicgstab iterative method, (3) cgs iterative method
-param_inv = [2e-3,30];%Parameters for the matrix inversion procedure. Minimum value of the drop tolerance for the partial LU decomposition (drop tol = max(1/dtn/nr,param_inv(1))), and maximum number of iteration for iterative methods (param_inv(1) depends of boundary_mode, if param_inv(1)=0, full LU factorization)
+dtn = 10000;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
+invproc = 1;%Iterative matrix inversion method: (1) qmr iterative method, (2) gmres iterative method, (3) cgs iterative method
+param_inv = [1e-4,30];%Parameters for the matrix inversion procedure. Minimum value of the drop tolerance for the partial LU decomposition (drop tol = max(1/dtn/nr,param_inv(1))), and maximum number of iteration for iterative methods (param_inv(1) depends of boundary_mode, if param_inv(1)=0, full LU factorization)
 %
 dp_cyl = 0.1;%Cylindrical momentum step (pth_ref)
 display_mode = 1;%Display mode: (0): no, (1): partial, (2): full

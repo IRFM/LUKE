@@ -14,12 +14,12 @@ blist_lh = [3]; %Index of selected scenarios for the LH wave. [1,n_scenario_lh]
 % Choose (vparmin_lh,vparmax_lh) or (nparmin_lh,nparmax_lh) for square n// LH wave power spectrum,
 % or (npar_lh,dnpar_lh) for Gaussian shape
 %
-yvparmin_lh = [NaN,4,3.5];%LH wave square N// Spectrum: Lower limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
-yvparmax_lh = [NaN,7,6];%LH wave square N// Spectrum: Upper limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
+yvparmin_lh = [NaN,-6,3.5];%LH wave square N// Spectrum: Lower limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
+yvparmax_lh = [NaN,-3.5,6];%LH wave square N// Spectrum: Upper limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
 ynparmin_lh = [NaN,NaN,NaN];%LH wave square N// Spectrum: Lower limit [1,n_scenario_lh]
 ynparmax_lh = [NaN,NaN,NaN];%LH wave square N// Spectrum: Upper limit [1,n_scenario_lh]
-ynpar_lh = [3.0,NaN,NaN];%LH wave Gaussian N// Spectrum: peak [1,n_scenario_lh]
-ydnpar_lh = [0.1,NaN,NaN];%LH wave Gaussian N// Spectrum: width [1,n_scenario_lh]
+ynpar_lh = [2.50,NaN,NaN];%LH wave Gaussian N// Spectrum: peak [1,n_scenario_lh]
+ydnpar_lh = [0.15,NaN,NaN];%LH wave Gaussian N// Spectrum: width [1,n_scenario_lh]
 %
 %   Note: this diffusion coefficient is different from the general QL D0. It has a benchmarking purpose only 
 yD0_in_c_lh = [1.0,1.0,1.0];%Central LH QL diffusion coefficient (nhuth_ref*pth_ref^2 or nhuth*pth^2) [1,n_scenario_lh]

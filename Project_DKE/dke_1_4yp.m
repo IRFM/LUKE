@@ -241,8 +241,8 @@ nit_g = nit(2);
 bounce_mode = bounce(1);
 dke_mode = bounce(2);
 equil_mode = bounce(3);
-prec_inv = param_inv(1)
-%prec_inv = min([param_inv(1),1/nr/dtn]);
+prec_inv = param_inv(1);
+prec_inv_recommanded = min([param_inv(1),1/nr/dtn]);
 maxit_inv = param_inv(2);
 xbetath = betath_ref*sqrt(xTe_norm);
 %
@@ -269,7 +269,7 @@ if display_mode >=1,
 	if (invproc == 1),  disp('   - QMR iterative matrix inversion method');
 	elseif (invproc == 2),  disp('   - GMRES iterative matrix inversion method');
 	elseif (invproc == 3),  disp('   - CGS iterative matrix inversion method');end
-	disp(['   - Drop tolerance: ',num2str(prec_inv),' [input: ',num2str(param_inv(1)),']']);
+	disp(['   - Recommended drop tolerance: ',num2str(prec_inv_recommanded),' [input: ',num2str(param_inv(1)),']']);
 	disp(['   - Maximum number of iterations for the matrix inversion method: ',num2str(maxit_inv)]);	
 %Boundary and normalization conditions
 	if (norm_mode == 1),    disp('   - Normalization of f0 at each iteration and radius');
