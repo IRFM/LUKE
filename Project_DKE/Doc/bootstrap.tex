@@ -1,0 +1,32 @@
+
+\subsubsection{Lorentz model\label{bootstrapsection}}
+
+As shown in Sec.\ref{dkediscretinit}, the Lorentz model for thermal plasma
+represents a unique opportunity for benchmarking the $3-D$ drift kinetic
+code against simple analytical results. Calculations are performed for a
+circular magnetic equilibrium, using nevertheless numerical bounce integrals%
+\footnote{%
+It has been cross-checked that results are simular when using analytical
+forms of the bounce integrals given throughout the text.}. In the
+simulation, the spatial $\psi $ half-grid, on which the electron
+distribution function is calculated, is non-uniform, though grid steps $%
+\Delta \rho $ for the normalized radius defined in Sec. \ref
+{coordinatesystemsection} are constant for this example. The effective
+spatial mesh size for bootstrap calculations has $n_{\psi }-1=14$ points.
+Consequently, the distribution function $f_{0}^{\left( 0\right) }$ is
+evaluated on $42$ values of $\psi $, so that spatial gradients may be
+determined using the $3$ points interpolation technique as discussed in Sec.%
+\ref{dkegridinterp}. The corresponding pitch-angle grid is therefore
+strongly non uniform, like in Fig.\ref{pitchanglegridJET} for the Lower
+current drive problem, since trapped/passing boundaries corresponding to all
+radial positions are exactly placed on the flux grid in momentum space.
+Despite the larger number of $\psi $ values, the total number of pitch-angle
+points for $f_{0}^{\left( 0\right) }$ may be maintained to $n_{\xi
+_{0}}-1=206$, in order to avoid computer memory limitations. Since the
+electron distribution is Maxwellian for this study, the momentum grid is
+also taken no uniform, but with a reduced number of points as compared to
+the Lower Hybrid current drive problem with $n_{p}-1=110$ points. In the
+calculations, the pressure profile arises only from density gradient only
+since all temperatures profiles are taken flat.
+
+\subsubsection{Full simulation}
