@@ -7,34 +7,38 @@ v_{s}\frac{\partial f_{0}}{\partial s}=\mathcal{C}\left( f_{0}\right) +%
 \mathcal{Q}\left( f_{0}\right) +\mathcal{E}\left( f_{0}\right)
 \end{equation}
 
-In the low collisionality regime, we have 
+In the low collision regime, which is characterized by the condition
 \begin{equation}
 \nu ^{*}\equiv \frac{\tau _{b}}{\tau _{dt}}\ll 1
 \end{equation}
-where $\tau _{dt}=\epsilon \tau _{dt}$ is the collisional detrapping time.
-As a consequence, the dominant term in the Fokker-Planck equation is 
+where $\tau _{dt}=\epsilon \tau _{c}$ is the collision detrapping time, as
+defined in the previous section, it is assumed that electrons circulating or
+trapped are able to complete their orbit in a time too short for collisions
+to deflect them from their orbit. As a consequence, the dominant term in the
+Fokker-Planck equation is simply
 \begin{equation}
 v_{s}\frac{\partial f_{0}}{\partial s}=0
 \end{equation}
 so that $f_{0}$ is constant along the field lines.
 
-Then, performing a bounce-averaging, we have that 
+Then, performing a bounce-averaging, we have 
 \begin{eqnarray}
-\left\{ v_{s}\frac{\partial f_{0}}{\partial s}\right\} &=&\frac{1}{\tau _{b}}%
-\left[ \frac{1}{2}\sum_{\sigma }\right] _{T}\int_{s_{\min }}^{s_{\max }}%
+\left\{ v_{s}\frac{\partial f_{0}}{\partial s}\right\}  &=&\frac{1}{\tau _{b}%
+}\left[ \frac{1}{2}\sum_{\sigma }\right] _{T}\int_{s_{\min }}^{s_{\max }}%
 \frac{ds}{\left| v_{s}\right| }v_{s}\frac{\partial f_{0}}{\partial s} 
 \nonumber \\
 &=&\frac{1}{\tau _{b}}\left[ \frac{1}{2}\sum_{\sigma }\right] _{T}\sigma
 \left[ f_{0}\right] _{s_{\min }}^{s_{\max }}  \label{dsbav}
 \end{eqnarray}
 
-For passing particles, the posistions $s_{\min }$ and $s_{\max }$ coincide,
+For passing particles, the positions $s_{\min }$ and $s_{\max }$ coincide,
 so that $\left[ f_{0}\right] _{s_{\min }}^{s_{\max }}=0$ and the term
 vanishes. For trapped particles, the term also vanishes because of the sum
-over $\sigma =\pm 1$.
+over $\sigma =\pm 1$, since, by definition, $v_{\Vert }=0$ at the turning
+points  $s_{\min }$ and $s_{\max },$ and consequently  $f_{0}$ is
+independent of the sign of $\sigma .$ 
 
-Consequently, we find that the bounce-averaged Fokker-Planck equation
-becomes 
+Therefore, the bounce-averaged Fokker-Planck equation becomes 
 \begin{equation}
 \left\{ \mathcal{C}\left( f_{0}\right) \right\} +\left\{ \mathcal{Q}\left(
 f_{0}\right) \right\} +\left\{ \mathcal{E}\left( f_{0}\right) \right\} =0
@@ -43,18 +47,18 @@ with $f_{0}$ constant along the field lines.
 
 \subsection{Drift-Kinetic Equation}
 
-The Drift-Kinetic equation is 
+The drift kinetic equation is 
 \begin{equation}
-v_{s}\frac{\partial f_{1}}{\partial s}+\frac{v_{\Vert }}{\Omega }I\left(
+v_{s}\frac{\partial f_{1}}{\partial s}+\frac{v_{\Vert }}{\Omega _{e}}I\left(
 \psi \right) \frac{\left| \nabla \psi \right| }{R}\frac{\partial }{\partial s%
 }\left( \frac{v_{\Vert }}{B}\right) \frac{\partial f_{0}}{\partial \psi }=%
-\mathcal{C}\left( f_{1}\right) +\mathcal{Q}\left( f_{1}\right) +\mathcal{E}
-\left( f_{1}\right)
+\mathcal{C}\left( f_{1}\right) +\mathcal{Q}\left( f_{1}\right) +\mathcal{E}%
+\left( f_{1}\right) 
 \end{equation}
 
-In the low collisionality regime $\nu ^{*}\ll 1$, the dominant term is 
+In the low collisiona regime $\nu ^{*}\ll 1$, the dominant term is 
 \begin{equation}
-v_{s}\frac{\partial f_{1}}{\partial s}+\frac{v_{\Vert }}{\Omega }I\left(
+v_{s}\frac{\partial f_{1}}{\partial s}+\frac{v_{\Vert }}{\Omega _{e}}I\left(
 \psi \right) \frac{\left| \nabla \psi \right| }{R}\frac{\partial }{\partial s%
 }\left( \frac{v_{\Vert }}{B}\right) \frac{\partial f_{0}}{\partial \psi }=0
 \end{equation}
@@ -64,9 +68,9 @@ f_{1}=\widetilde{f}+g
 \end{equation}
 where 
 \begin{equation}
-\widetilde{f}=-\int ds\frac{v_{\Vert }}{v_{s}\Omega }I\left( \psi \right)
-B_{P}\frac{\partial }{\partial s}\left( \frac{v_{\Vert }}{B}\right) \frac{%
-\partial f_{0}}{\partial \psi }
+\widetilde{f}=-\int ds\frac{v_{\Vert }}{v_{s}\Omega _{e}}I\left( \psi
+\right) B_{P}\frac{\partial }{\partial s}\left( \frac{v_{\Vert }}{B}\right) 
+\frac{\partial f_{0}}{\partial \psi }
 \end{equation}
 and $g$ is a constant function along the field lines. Noting that 
 \begin{equation}
@@ -74,16 +78,16 @@ and $g$ is a constant function along the field lines. Noting that
 \end{equation}
 we get 
 \begin{eqnarray}
-\widetilde{f} &=&\int ds\frac{1}{\Omega }I\left( \psi \right) B\frac{%
+\widetilde{f} &=&\int ds\frac{1}{\Omega _{e}}I\left( \psi \right) B\frac{%
 \partial }{\partial s}\left( \frac{v_{\Vert }}{B}\right) \frac{\partial f_{0}%
-}{\partial \psi } \\
-&=&\frac{\gamma mI\left( \psi \right) }{q}\frac{\partial f_{0}}{\partial
-\psi }\int ds\frac{\partial }{\partial s}\left( \frac{v_{\Vert }}{B}\right)
-\\
-&=&\frac{v_{\Vert }}{\Omega }I\left( \psi \right) \frac{\partial f_{0}}{%
+}{\partial \psi }  \nonumber \\
+&=&\frac{\gamma m_{e}I\left( \psi \right) }{q_{e}}\frac{\partial f_{0}}{%
+\partial \psi }\int ds\frac{\partial }{\partial s}\left( \frac{v_{\Vert }}{B}%
+\right)   \nonumber \\
+&=&\frac{v_{\Vert }}{\Omega _{e}}I\left( \psi \right) \frac{\partial f_{0}}{%
 \partial \psi }
 \end{eqnarray}
-where we used the fast that $\partial f_{0}/\partial s=0$.
+where we used the fact that $\partial f_{0}/\partial s=0$.
 
 Then, performing a bounce-averaging, we find again, using the same argument
 as in (\ref{dsbav}), that 
@@ -93,29 +97,29 @@ as in (\ref{dsbav}), that
 
 In addition, we have 
 \begin{eqnarray}
-&&\left\{ \frac{v_{\Vert }}{\Omega }I\left( \psi \right) \frac{\left| \nabla
-\psi \right| }{R}\frac{\partial }{\partial s}\left( \frac{v_{\Vert }}{B}%
-\right) \frac{\partial f_{0}}{\partial \psi }\right\} \\
+&&\left\{ \frac{v_{\Vert }}{\Omega _{e}}I\left( \psi \right) \frac{\left|
+\nabla \psi \right| }{R}\frac{\partial }{\partial s}\left( \frac{v_{\Vert }}{%
+B}\right) \frac{\partial f_{0}}{\partial \psi }\right\}   \nonumber \\
 &=&\frac{1}{\tau _{b}}\left[ \frac{1}{2}\sum_{\sigma }\right]
 _{T}\int_{s_{\min }}^{s_{\max }}\frac{ds}{\left| v_{s}\right| }\frac{%
-v_{\Vert }}{\Omega }I\left( \psi \right) \frac{\left| \nabla \psi \right| }{R%
-}\frac{\partial }{\partial s}\left( \frac{v_{\Vert }}{B}\right) \frac{%
-\partial f_{0}}{\partial \psi } \\
-&=&\frac{1}{\tau _{b}}\frac{\gamma mI\left( \psi \right) }{q}\frac{\partial
-f_{0}}{\partial \psi }\left[ \frac{1}{2}\sum_{\sigma }\right] _{T}\sigma
-\int_{s_{\min }}^{s_{\max }}ds\frac{\partial }{\partial s}\left( \frac{
-v_{\Vert }}{B}\right) \\
-&=&\frac{1}{\tau _{b}}\frac{\gamma mI\left( \psi \right) }{q}\frac{\partial
-f_{0}}{\partial \psi }\left[ \frac{1}{2}\sum_{\sigma }\right] _{T}\sigma
-\left[ \frac{v_{\Vert }}{B}\right] _{s_{\min }}^{s_{\max }}
+v_{\Vert }}{\Omega _{e}}I\left( \psi \right) \frac{\left| \nabla \psi
+\right| }{R}\frac{\partial }{\partial s}\left( \frac{v_{\Vert }}{B}\right) 
+\frac{\partial f_{0}}{\partial \psi }  \nonumber \\
+&=&\frac{1}{\tau _{b}}\frac{\gamma m_{e}I\left( \psi \right) }{q_{e}}\frac{%
+\partial f_{0}}{\partial \psi }\left[ \frac{1}{2}\sum_{\sigma }\right]
+_{T}\sigma \int_{s_{\min }}^{s_{\max }}ds\frac{\partial }{\partial s}\left( 
+\frac{v_{\Vert }}{B}\right)   \nonumber \\
+&=&\frac{1}{\tau _{b}}\frac{\gamma m_{e}I\left( \psi \right) }{q_{e}}\frac{%
+\partial f_{0}}{\partial \psi }\left[ \frac{1}{2}\sum_{\sigma }\right]
+_{T}\sigma \left[ \frac{v_{\Vert }}{B}\right] _{s_{\min }}^{s_{\max }}
 \end{eqnarray}
 
-Again, for passing particles, the posistions $s_{\min }$ and $s_{\max }$
+Again, for passing particles, the positions $s_{\min }$ and $s_{\max }$
 coincide, so that $\left[ v_{\Vert }/B\right] _{s_{\min }}^{s_{\max }}=0$
 and the term vanishes. For trapped particles, the term also vanishes because 
-$v_{\Vert }\rightarrow 0$ at teh turning points.
+$v_{\Vert }\rightarrow 0$ at the turning points $s_{\min }$ and $s_{\max }.$
 
-Consequently, we find that the bounce-averaged Drift-Kinetic equation
+Consequently, we find that the bounce-averaged drift kinetic equation
 becomes 
 \begin{equation}
 \left\{ \mathcal{C}\left( f_{1}\right) \right\} +\left\{ \mathcal{Q}\left(
@@ -126,8 +130,8 @@ where .
 f_{1}=\widetilde{f}+g
 \end{equation}
 \begin{equation}
-\widetilde{f}=\frac{v_{\Vert }}{\Omega }I\left( \psi \right) \frac{\partial
-f_{0}}{\partial \psi }
+\widetilde{f}=\frac{v_{\Vert }}{\Omega _{e}}I\left( \psi \right) \frac{%
+\partial f_{0}}{\partial \psi }
 \end{equation}
 and $g$ is then given by 
 \begin{equation}
@@ -135,5 +139,6 @@ and $g$ is then given by
 g\right) \right\} +\left\{ \mathcal{E}\left( g\right) \right\} =-\left\{ 
 \mathcal{C}\left( \widetilde{f}\right) \right\} -\left\{ \mathcal{Q}\left( 
 \widetilde{f}\right) \right\} -\left\{ \mathcal{E}\left( \widetilde{f}%
-\right) \right\}
+\right) \right\} 
 \end{equation}
+using the fact that all operators are linear.
