@@ -1,7 +1,7 @@
 function [xJrf0_mksa_out,xJboot_e_mksa_out,xJboot_i_mksa_out,xJtot_mksa_out,...
 xPabs0_mksa_out,xPabs_tot_mksa_out,...
 xeta0_mksa_out,xepsi_mksa_out,xia_out,xft_out,...
-time_out,memoryLU_out] =...
+time_out,memoryLU_f_out,memoryLU_g_out] =...
 test_dke_1yp(tokname,snumber,...
 grid_uniformity,grid_power,nmhu_S,np_S,pnmax_S,sfac,snmhu,snp,psin_S,psin_display,dpsin_dke,...
 ref_mode,norm_ref,...
@@ -53,7 +53,7 @@ nit = [nit_f,nit_g];
 %
 % Plasma equilibrium
 %
-[theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,Ncoils,BeLi,psia,xmhu0T2] = equilibrium_jd(tokname,xpsin);
+[theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,Ncoils,BeLi,psia,xmhu0T2] = equilibrium_jd(tokname,xpsin);
 %
 if diary_mode == 1, 
 	diaryfile = ['diary_dke_',int2str(iloop)];
@@ -109,7 +109,7 @@ if display_mode == 2,
 	ylabel('pn');
 %	
 	h1002 = figure(1002);tilefigs_dke_yp(h1002);
-	plot(1:nr,xpsin,'bo',1:nr_dke,xpsin(r_dke),'r+',1:nr_dke,xrho(r_dke),'bx');grid on;zoom on; 
+	plot(1:nr,xpsin,'bo',r_dke,xpsin(r_dke),'r+',r_dke,xrho(r_dke),'bx');grid on;zoom on; 
 	axis([0,nr+1,0,1])
 	title('Radial mesh');
 	xlabel('Index');
@@ -148,11 +148,11 @@ if diary_mode == 1,
 	disp(['--------------------------------------------- Simulation parameters ----------------------------------------------']);
 	disp(['- Code version = ',num2str(version_dke)]);
 	disp(['- Simulation number = ',num2str(snumber)]);
-    disp(['- Pitch-angle and momentum grids uniformity: (0) no, (1) yes = ',num2str(grid_uniformity)]);
-    disp(['- Pitch-angle grid calculation method: (0): old method, (1) new method = ',num2str(grid_power ~= 0)]);
-    if grid_power ~= 0
+   disp(['- Pitch-angle and momentum grids uniformity: (0) no, (1) yes = ',num2str(grid_uniformity)]);
+   disp(['- Pitch-angle grid calculation method: (0): old method, (1) new method = ',num2str(grid_power ~= 0)]);
+   if grid_power ~= 0
         disp(['- Pitch-angle grid step variation power: ',num2str(grid_power)]);
-    end
+   end
 	disp(['- Effective number of pitch-angle values for the distribution function grid (half grid) nmhu = ',num2str(nmhu)]);
 	disp(['- Effective number of momentum values for the distribution function grid (half grid) np = ',num2str(np)]);
 	disp(['- Maximum value of the momentum grid (pth_ref) pnmax =  ',num2str(pn(np))]);
@@ -285,11 +285,11 @@ end
 %    
 for ir = 1:nr,	
 %
-%   Ohmic electric field: WARNING: Not yet implemented.
+%   Ohmic electric field
 %
    xepsi_ref_fsav(ir) = (xepsi0_ref_fsav(ir) - xepsia_ref_fsav(ir))*(1.0-xpsin(ir)).^eepsi_fsav + xepsia_ref_fsav(ir);
 %
-%	Fast electron radial diffusion and pinch coefficients: WARNING: Not yet implemented.
+%	Fast electron radial diffusion and pinch coefficients
 %
 	ivpar_r_ref_threshold = min(find(abs(Xvpar_ref) >= xvparmin_r_ref(ir)));
    xEc_r_ref_threshold(ir) = mc2*(sqrt(1+pn_ref(ivpar_r_ref_threshold).*pn_ref(ivpar_r_ref_threshold)*betath_ref^2) - 1);%in keV
@@ -389,40 +389,42 @@ for ir = 1:nr,
 		if dke_mode == 1,
 %
 			view = 0;
-			if ir == r_dke(ir_display)-1,
+%
+			if ir == ir_display-1,
 				figure(1),subplot(131);zoom on
 				view = 1;
-			elseif ir == r_dke(ir_display),
+			elseif ir == ir_display,
 				figure(1),subplot(132);zoom on
 				view = 1;
-			elseif ir == r_dke(ir_display)+1,
+			elseif ir == ir_display+1,
 				figure(1),subplot(133);zoom on
 				view = 1;
 			end	
 %		
 			if view == 1,		
-                normf0_ref = 2*pi*integral_dke_jd(dpn_ref(:),pn2_ref(:).*integral_dke_jd(dmhu,Xf0_ref,2),1);
-                [logXf0_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(log(Xf0_ref),pn_ref,mhu,dp_cyl);
-                Xf0_cyl_ref = exp(logXf0_cyl_ref);%For accurate representation in figures 
+				normf0_ref = 2*pi*integral_dke_jd(dpn_ref(:),pn2_ref(:).*integral_dke_jd(dmhu,Xf0_ref,2),1);
+				[logXf0_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(log(Xf0_ref),pn_ref,mhu,dp_cyl);
+				Xf0_cyl_ref = exp(logXf0_cyl_ref);%For accurate representation in figures 
 %
-                Xppar_cyl_ref = ones(length(pperp_cyl_ref),1)*ppar_cyl_ref(:)';
-                Xpperp_cyl_ref = pperp_cyl_ref(:)*ones(1,length(ppar_cyl_ref));
-                Xp_cyl_ref = sqrt(Xppar_cyl_ref.*Xppar_cyl_ref + Xpperp_cyl_ref.*Xpperp_cyl_ref);
-                Xmhu_cyl_ref = Xppar_cyl_ref./sqrt(Xppar_cyl_ref.^2+Xpperp_cyl_ref.^2);
-                Xgamma_cyl_ref = sqrt(1 + Xp_cyl_ref.*Xp_cyl_ref*betath_ref*betath_ref);
-                Xvpar_cyl_ref = Xppar_cyl_ref./Xgamma_cyl_ref;
-                if nb_lh > 0  & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0 & initguess == 1,,
-                	  pparresmin_lh_cyl_ref = xvparmin_lh_ref(ir)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmin_lh_ref(ir)^2*betath_ref^2);%LH resonance condition
-                	  pparresmax_lh_cyl_ref = xvparmax_lh_ref(ir)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmax_lh_ref(ir)^2*betath_ref^2);%LH resonance condition
-    	        	 end
+				Xppar_cyl_ref = ones(length(pperp_cyl_ref),1)*ppar_cyl_ref(:)';
+				Xpperp_cyl_ref = pperp_cyl_ref(:)*ones(1,length(ppar_cyl_ref));
+				Xp_cyl_ref = sqrt(Xppar_cyl_ref.*Xppar_cyl_ref + Xpperp_cyl_ref.*Xpperp_cyl_ref);
+				Xmhu_cyl_ref = Xppar_cyl_ref./sqrt(Xppar_cyl_ref.^2+Xpperp_cyl_ref.^2);
+				Xgamma_cyl_ref = sqrt(1 + Xp_cyl_ref.*Xp_cyl_ref*betath_ref*betath_ref);
+				Xvpar_cyl_ref = Xppar_cyl_ref./Xgamma_cyl_ref;
+%
+				if nb_lh > 0  & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0 & initguess == 1,
+					pparresmin_lh_cyl_ref = xvparmin_lh_ref(ir)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmin_lh_ref(ir)^2*betath_ref^2);%LH resonance condition
+					pparresmax_lh_cyl_ref = xvparmax_lh_ref(ir)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmax_lh_ref(ir)^2*betath_ref^2);%LH resonance condition
+				end
 %
         		Xf0_cyl_ref = Xf0_cyl_ref.*(Xf0_cyl_ref>0);%Remove negative values
         		Xf0_cyl_ref = Xf0_cyl_ref.*(Xp_cyl_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
             Xf0_cyl_ref(isnan(Xf0_cyl_ref)) = 0;%Remove NaN values
 %
         		curr0_ref = 2*pi*integral_dke_jd(dpn_ref(:),pn2_ref(:).*(pn_ref(:)./gamma_ref(:)).*integral_dke_jd(dmhu,Xmhu.*Xf0_ref,2),1);
-        		curr0_cyl_ref = 2*pi*integral_dke_jd(dpperp_cyl_ref(:),pperp_cyl_ref(:).*integral_dke_jd(dppar_cyl_ref,Xvpar_cyl_ref.*Xf0_cyl_ref,1),1);		
-                %
+        		curr0_cyl_ref = 2*pi*integral_dke_jd(dpperp_cyl_ref(:),pperp_cyl_ref(:).*integral_dke_jd(dppar_cyl_ref,Xvpar_cyl_ref.*Xf0_cyl_ref,2),1);
+%
 				C = contour(ppar_cyl_ref,pperp_cyl_ref,log(Xf0_cyl_ref),[-20:20/nlevel:0]);axis('equal');
 				faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
 				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['rho = ',num2str(xrho(ir))]);
@@ -431,22 +433,22 @@ for ir = 1:nr,
 				xlabel('ppar/pth-ref');ylabel('pperp/pth-ref');title(title_initguess);
 				pause(time_pause);
 %
-				if xD0_lh_ref(ir) ~= 0  & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0 & initguess == 1,,
+				if nb_lh > 0  & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0 & initguess == 1,,
 					hold on;
-                    plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--');
+					plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--');
                     plot(pparresmax_lh_cyl_ref,pperp_cyl_ref,'k--');
                     hold off;
 				end
 			end
 %
 			view = 0;
-			if ir == r_dke(ir_display)-1,
+			if ir == ir_display-1,
 				figure(2),subplot(231);zoom on
 				view = 1;
-			elseif ir == r_dke(ir_display),
+			elseif ir == ir_display,
 				figure(2),subplot(232);zoom on
 				view = 1;
-			elseif ir == r_dke(ir_display)+1,
+			elseif ir == ir_display+1,
 				figure(2),subplot(233);zoom on
 				view = 1;
 			end
@@ -454,18 +456,18 @@ for ir = 1:nr,
 			if view == 1,
 				semilogy(-v_ref,XfM_ref(:,1),'g--',v_ref,XfM_ref(:,nmhu),'g--',-v_ref,Xf0_ref(:,1),'c-',v_ref,Xf0_ref(:,nmhu),'c-');%Forward and backward directions only
 				axis([-max(v_ref),max(v_ref),1e-20,10]);grid on;zoom on
-				xlabel('vpar/vth-ref');ylabel('f(pperp = 0)');title(['Norm.(rho',num2str(xrho(ir)),') = ',num2str(normf0_ref)]);
+				xlabel('vpar/vth-ref');ylabel('f(pperp = 0)');title(['Norm.(rho=',num2str(xrho(ir)),') = ',num2str(normf0_ref)]);
 				pause(time_pause);
 			end
 %           
 			view = 0;
-			if ir == r_dke(ir_display)-1,
+			if ir == ir_display-1,
 				figure(2),subplot(234);zoom on
 				view = 1;
-			elseif ir == r_dke(ir_display),
+			elseif ir == ir_display,
 				figure(2),subplot(235);zoom on
 				view = 1;
-			elseif ir == r_dke(ir_display)+1,
+			elseif ir == ir_display+1,
 				figure(2),subplot(236);zoom on
 				view = 1;
 			end  
@@ -477,7 +479,7 @@ for ir = 1:nr,
 			end
 		else
 			view = 0;
-			if ir == r_dke(ir_display)
+			if ir == ir_display,
 				figure(1),subplot(132);zoom on
 				view = 1;
 			end
@@ -521,7 +523,7 @@ for ir = 1:nr,
 			end
 %
 			view = 0;
-			if ir == r_dke(ir_display),
+			if ir == ir_display,
 				figure(2),subplot(232);zoom on
 				view = 1;
 			end
@@ -534,7 +536,7 @@ for ir = 1:nr,
 			end
 %           
 			view = 0;
-			if ir == r_dke(ir_display),
+			if ir == ir_display,
 				figure(2),subplot(235);zoom on;pause(time_pause)
 				view = 1;
 			end    
@@ -547,19 +549,9 @@ for ir = 1:nr,
 %						
 		end
 %
-		if view == 1,
-			figure(2000),subplot(121),plot(xpsin,xrho,'r-.',xpsin,xrho,'b+');grid on;zoom on
-			xlabel('psi/psia');ylabel('rho');title('Metric relation');
-			axis('square');axis([0,1,0,1]);
-			figure(2000),subplot(122),plot(xrho,xpsin,'r-.',xrho,xpsin,'b+');grid on;zoom on
-			xlabel('rho');ylabel('psi/psia');title('Metric relation');
-			axis('square');axis([0,1,0,1]);
-			pause(time_pause);
-		end	
-%
 		if radial_mode == 1,
 			view = 0;
-			if ir == r_dke(ir_display)
+			if ir == ir_display,
 				figure(1007),subplot(121);zoom on
 				view = 1;
 			end
@@ -574,9 +566,10 @@ for ir = 1:nr,
 				XDrv_cyl_ref = XDrv_cyl_ref.*(XDrv_cyl_ref>0);%Remove negative values
 				XDrv_cyl_ref = XDrv_cyl_ref.*(Xp_cyl_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
  %
- 				C = contour(ppar_cyl_ref,pperp_cyl_ref,XDrv_cyl_ref,nlevel);axis('equal');
+ 				C = contourf(ppar_cyl_ref,pperp_cyl_ref,XDrv_cyl_ref,nlevel);colorbar;
+ 				axis('equal');
 				faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
-				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['psin = ',num2str(xpsin(ir))]);
+				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['rho = ',num2str(xrho(ir))]);
 				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*10,['v//-threshold(norm) = ',num2str(xvparmin_r_ref(ir))]);
 				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*15,['Ec-threshold = ',num2str(xEc_r_ref_threshold(ir)),' (keV)']);
 				xlabel('ppar/pth-ref');ylabel('pperp/pth-ref');title('Radial diffusion coefficient (nhu-ref*ap*ap)');
@@ -590,7 +583,7 @@ for ir = 1:nr,
 			end
 %
 			view = 0;
-			if ir == r_dke(ir_display)
+			if ir == ir_display,
 				figure(1008),subplot(121);zoom on
 				view = 1;
 			end
@@ -605,9 +598,10 @@ for ir = 1:nr,
 				XVrv_cyl_ref = XVrv_cyl_ref.*(XVrv_cyl_ref>0);%Remove negative values
 				XVrv_cyl_ref = XVrv_cyl_ref.*(Xp_cyl_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
 %
- 				C = contour(ppar_cyl_ref,pperp_cyl_ref,XVrv_cyl_ref,nlevel);axis('equal');
+ 				C = contourf(ppar_cyl_ref,pperp_cyl_ref,XVrv_cyl_ref,nlevel);colorbar;
+ 				axis('equal');
 				faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
-				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['psin = ',num2str(xpsin(ir))]);
+				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['rho = ',num2str(xrho(ir))]);
 				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*10,['v//-threshold(norm) = ',num2str(xvparmin_r_ref(ir))]);
 				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*15,['Ec-threshold = ',num2str(xEc_r_ref_threshold(ir)),' (keV)']);
 				xlabel('ppar/pth-ref');ylabel('pperp/pth-ref');title('Radial convection coefficient (nhu-ref*ap)');
@@ -623,29 +617,39 @@ for ir = 1:nr,
 	end
 end
 %
+if display_mode == 2,
+	figure(2000),subplot(121),plot(xpsin,xrho,'r-.',xpsin,xrho,'b+');grid on;zoom on
+	xlabel('psi/psia');ylabel('rho');title('Metric relation');
+	axis('square');axis([0,1,0,1]);
+	figure(2000),subplot(122),plot(xrho,xpsin,'r-.',xrho,xpsin,'b+');grid on;zoom on
+	xlabel('rho');ylabel('psi/psia');title('Metric relation');
+	axis('square');axis([0,1,0,1]);
+	pause(time_pause);
+end	
+%
 if radial_mode == 1 & display_mode == 2,
 	h1005 = figure(1005);tilefigs_dke_yp(h1005);
-	subplot(121),plot(xpsin,xvparmin_r_ref,'g-x');grid on;zoom on;
+	subplot(121),plot(xrho,xvparmin_r_ref,'g-x');grid on;zoom on;
 	axis([0,1,0,1.1*max(xvparmin_r_ref)]);
-	xlabel('r/a');
+	xlabel('rho');
 	ylabel('v// threshold (vth-ref)');
 	title('Radial transport');
-	subplot(122),plot(xpsin,xEc_r_ref_threshold,'c-x');grid on;zoom on;
+	subplot(122),plot(xrho,xEc_r_ref_threshold,'c-x');grid on;zoom on;
 	axis([0,1,0,1.1*max(xEc_r_ref_threshold)]);
-	xlabel('r/a');
+	xlabel('xrho');
 	ylabel('Kinetic energy threshold (keV)');
 	title('Radial transport');
 	pause(time_pause);
 %
 	h1006 = figure(1006);tilefigs_dke_yp(h1006);
-	subplot(121),plot(xpsin,xmaxDr_ref,'b-o');grid on;zoom on;
+	subplot(121),plot(xrho,xmaxDr_ref,'b-o');grid on;zoom on;
 	if sum(xmaxDr_ref) ~= 0,axis([0,1,0,1.1*max(xmaxDr_ref)]);end
-	xlabel('r/a');
+	xlabel('rho');
 	ylabel('Maximum value (nhu-ref*ap*ap)');
 	title('Radial diffusion');
-	subplot(122),plot(xpsin,xmaxVr_ref,'r-o');grid on;zoom on;
+	subplot(122),plot(xrho,xmaxVr_ref,'r-o');grid on;zoom on;
 	if sum(xmaxVr_ref) ~= 0,axis([0,1,0,1.1*max(xmaxVr_ref)]);end
-	xlabel('r/a');
+	xlabel('rho');
 	ylabel('Maximum value (nhu-ref*ap)');
 	title('Radial convection');
 	pause(time_pause);
@@ -663,10 +667,10 @@ time0 = clock;
     ZSp0_ref,ZP0_ref,...
     XxRR_ref_fsav,...
     xTe_norm_out,xft_fsav,xmhubounce2,xepsi_ref,...
-    memoryLU]...
+    memoryLU_f,memoryLU_g]...
 = dke_1_4yp(tokname,theta,...
     XR,XZ,XBR,XBZ,XBphi,...
-    xB0,xR0,xBT0,Rp,Zp,...
+    xB0,xR0,xBT0,xBp0,Rp,Zp,...
     mhu,dmhu,mhum,dmhum,mhup,dmhup,mhu_S,...
     xmhu0T2,xrho,xpsin,xdpsin_dke,xpsinm_dke,xdpsinm_dke,xpsinp_dke,xdpsinp_dke,r_dke,xpsin_S_dke,...
     pn,dpn,pnm,dpnm,pnp,dpnp,pn_S,...
@@ -678,7 +682,8 @@ time0 = clock;
     dtn,prec0,nit,invproc,param_inv,display,store_mode,XXfinit_ref);
 %
 time_out = etime(clock,time0);
-memoryLU_out = memoryLU;
+memoryLU_f_out = memoryLU_f;
+memoryLU_g_out = memoryLU_g;
 %
 if display_mode >= 1,
     if dke_mode == 0,

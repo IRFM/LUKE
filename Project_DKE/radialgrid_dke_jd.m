@@ -89,7 +89,7 @@ if dke_mode == 1%DKE calculations
        % central dke point
         xpsin_f = [xpsin_f,xpsin_f_dke(ir_f)];
         ir_dke = ir_dke + 1;
-        r_dke = [r_dke,ir_dke];
+        r_dke = [r_dke,ir_dke];       
        % right dke point
         if (ir_f < nr_f) & (xpsin_f_dke(ir_f + 1) > xpsin_f_dke(ir_f) + dpsin_dke + eps) 
             xpsin_f = [xpsin_f,xpsin_f_dke(ir_f) + dpsin_dke];

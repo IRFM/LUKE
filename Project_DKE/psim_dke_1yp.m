@@ -18,7 +18,7 @@ prec0_f,nit_f,dtn,prec0_g,nit_g,initguess,invproc,param_inv,dp_cyl,display_mode,
 %
 %by Y.Peysson CEA-DRFC 15/10/2002 <yves.peysson@cea.fr>
 %
-tokname = 'CQL3D_OHM';%Tokamak equilibrium scenario (in EQUIL_tokname file)
+tokname = 'CMOD';%Tokamak equilibrium scenario (in EQUIL_tokname file)
 snumber = 1;%Simulation number
 %
 %Mesh size calculation
@@ -51,7 +51,7 @@ snp = 10; % pgridfactor
 %Values of the radial flux grid [1,p] (If one radial value: local calculation only)
 %
 psin_S = [];
-rho_S = [0.4];
+rho_S = [0.2,0.4,0.6,0.8];
 %
 psin_display = NaN;%Approximate radial value at which results are displayed if display_mode >= 1 [1,1]
 rho_display = 0.45;
@@ -63,14 +63,14 @@ norm_ref = 1;%Normalization procedure for the ohmic electric field, LH and EC qu
 %
 % WARNING: Not yet implemented. (see test_dke_yp)
 %
-epsi0 = 0.01;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
-epsia = 0.01;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
+epsi0 = 0.02;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
+epsia = 0.02;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
 eepsi = 0;%Exponent for Ohmic electric field
 %
 % WARNING: Not yet implemented. (see test_dke_yp)
 %
 vparmin_r = 4.0;%Lower limit of the parallel velocity dependence of the radial diffusion and pinch (vth_ref or vth)
-Dr0 = 0;%Core  radial diffusion coefficient (m^2/s)
+Dr0 = 1;%Core  radial diffusion coefficient (m^2/s)
 pDr = 0;%Coefficient for the Dr radial profile
 Dr_model = 1;%Radial diffusion type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth), 
 Vr0 = 0;%Core radial pinch coefficient (m/s)
@@ -81,7 +81,7 @@ nhuloss = NaN;%Magnetic ripple loss frequency, nhuloss > 1000 (or NaN if no ripp
 %
 coll_mode = 2;%Relativistic electron-electron collision operator: (0) Maxwellian, (1) High-velocity limit, (2) Linearizeded Belaiev-Budker 
 %
-bounce_mode = 1;%Bounce averaging option: (0) no bounce averaging, (1) bounce averaging full implicit method with 15 diagonals
+bounce_mode = 0;%Bounce averaging option: (0) no bounce averaging, (1) bounce averaging full implicit method with 15 diagonals
 dke_mode = 0;%Fokker-Planck equation (0), Drift Kinetic equation (1)
 %
 prec0_f = 1e-10;%Convergence level of the residu

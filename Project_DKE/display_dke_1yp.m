@@ -179,6 +179,7 @@ while 1,
 		end        
 		XAstr_cyl_ref = XAstr_cyl_ref.*(Xp_cyl_S_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
 		XAstr_cyl_ref = XAstr_cyl_ref.*(XAstr_cyl_ref>0);%Remove negative values
+		XAstr_cyl_ref(isnan(XAstr_cyl_ref)) = 0;%Remove NaN values
 %
 %Calculations in cylindrical coordinates
 %
@@ -356,8 +357,8 @@ while 1,
 		xlabel('ppar/pth-ref');
 		ylabel('pperp/pth-ref');
 		if bounce_mode >= 1,%Draw bounce domain boundaries
-			line([0,pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
-			line([0,-pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))]);
+			line([0,pnmax_S*sqrt(xmhubounce2(r_dke(ir_display)))],[0,pnmax_S*sqrt(1 - xmhubounce2(r_dke(ir_display)))]);
+			line([0,-pnmax_S*sqrt(xmhubounce2(r_dke(ir_display)))],[0,pnmax_S*sqrt(1 - xmhubounce2(r_dke(ir_display)))]);
 		end
 %
 		if nb_lh > 0 & xvparmax_lh_ref(ir_display) - xvparmin_lh_ref(ir_display) ~= 0 & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0,

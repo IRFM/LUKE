@@ -1,4 +1,4 @@
-function [theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,Ncoils,BeLi,psia,xmhu0T2] = equilibrium_jd(tokamak,xpsin,method)
+function [theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,Ncoils,BeLi,psia,xmhu0T2] = equilibrium_jd(tokamak,xpsin,method)
 %
 %   This function interpolates the equilibrium data on the radial grid.
 %   It also calculates several quantities linked to the equilibrium, such
@@ -36,6 +36,7 @@ function [theta,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,
 %       - xB0: minimum magnetic field on a flux-surface [1,nr]
 %       - xR0: corresponding major radius [1,nr]
 %       - xBT0: corresponding toroidal field [1,nr]
+%       - xBp0: corresponding poloidal field [1,nr]
 %       - xrho: normalized radius on the horizontal LFS midplane [1,nr]
 %       - xTe: electron temperature [1,nr]
 %       - xne: electron density [1,nr]
@@ -102,7 +103,8 @@ xzni = interp1(ppsin,pzni',xpsin)';
 xZeff = interp1(ppsin,pZeff,xpsin);
 %
 XBT = abs(XBphi);%Toroidal B-field
-XB = sqrt(XBphi.^2 + XBR.^2 + XBZ.^2); % Total B-field
+XBp = sqrt(XBR.^2 + XBZ.^2);;%Poloidal B-field
+XB = sqrt(XBphi.^2 + XBR.^2 + XBZ.^2);%Total B-field
 %
 %index 0 refers to the minimum of the magnetic field
 %
@@ -113,4 +115,5 @@ xmhu0T2 = 1 - xB0./xBmax; %Pitch-angle (squared) at the trapped-passing boundary
 %
 xiB0 = (xiB0 - 1)*nr + (1:nr);%Indices in (psi,theta) grid corresponding of B=Bmin
 xBT0 = XBT(xiB0);%Toroidal field at B=Bmin
+xBp0 = XBp(xiB0);%Poroidal field at B=Bmin
 xR0 = XR(xiB0);%Major radius at B=Bmin

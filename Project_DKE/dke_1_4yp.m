@@ -6,10 +6,10 @@ function [XXheaviside,...
     ZSp0,ZP0,...
     XxRR_fsav,...
     xTe_out_norm,xft_fsav,xmhubounce2,xepsi,...
-    memoryLU] = ... 
+    memoryLU_f,memoryLU_g] = ... 
 dke_1_4yp(tokname,theta,...
     XR,XZ,XBR,XBZ,XBphi,...
-    xB0,xR0,xBT0,Rp,Zp,...
+    xB0,xR0,xBT0,xBp0,Rp,Zp,...
     mhu,dmhu,mhum,dmhum,mhup,dmhup,mhu_S,...
     xmhubounce2,xrho,xpsin,xdpsin,xpsinm,xdpsinm,xpsinp,xdpsinp,rdke,xpsin_S,...
     pn,dpn,pnm,dpnm,pnp,dpnp,pn_S,...
@@ -405,7 +405,7 @@ end
     XXlambda_b_p1m1p2,XXRlambda_b_p1m1p2,XXRlambda_b_p1m1p2_m,XXRlambda_b_p1m1p2_p,...
     XXlambda_b_p1m1,XXRlambda_b_p1m1,XXRlambda_b_p1m1_m,XXRlambda_b_p1m1_p,...
     XXRlambda_b_p1m2_m,XXRlambda_b_p1m2_p,...
-    XXlambda_b_p2m2p2,XXRlambda_b_p2m2p2_m,XXRlambda_b_p2m2p2_p,...
+    XXlambda_b_p2m2p2,XXRlambda_b_p2m2p2,XXRlambda_b_p2m2p2_m,XXRlambda_b_p2m2p2_p,...
     XXRlambda_b_p3m2_m,XXRlambda_b_p3m2_p,...
     XXlambda_b_p2,...
     XXlambda_b_p1m3p4]...
@@ -426,7 +426,7 @@ ns_g = zeros(1,nr);
 for ir = 1:nr,
 	if bounce_mode == 1,
 		Xmask_f0 = (Xmhu2 < xmhubounce2(ir)) & (Xmhu < 0);%Only the half-bounce region is removed
-		ns(ir) = nmhu - length(nonzeros(~(Xmask_f0(2,:)==1).*cumsum(ones(1,nmhu)))');%number of mhu values that are removed
+		ns(ir) = nmhu - length(nonzeros(~(Xmask_f0(2,:) == 1).*cumsum(ones(1,nmhu)))');%number of mhu values that are removed
 		if dke_mode == 1,
 			Xmask_tp = Xmhu2 < xmhubounce2(ir);
 			ns_tp(ir) = nmhu - length(nonzeros(~(Xmask_tp(2,:)==1).*cumsum(ones(1,nmhu)))');%number of mhu values that are removed
@@ -446,8 +446,9 @@ if nargin < narginmax,XXfinit = zeros(np,nmhu,nr);end;%For the initial guess
 %
 MMXP_f_t = [];	
 MMXP_f_r_t = sparse(nMMXP_f_t,nMMXP_f_t);
-MMXP_tp_t = [];	
-MMXP_g_t = [];	
+MMXP_tp_t = [];
+MMXP_g_t = [];
+%
 sm_f = zeros(1,nr+1);
 sm_tp = zeros(1,nr+1);
 sm_g = zeros(1,nr+1);
@@ -511,10 +512,45 @@ if radial_mode == 1,
 	XXVrpp = zeros(npn,nmhu,nr);
 	XXVrpp(:,:,1:nr-1) = XXVr(:,:,2:nr);
 %
-	XXDrp = (1 - XXdeltalp).*XXDrpp + XXdeltalp.*XXDr;
-	XXDrm = (1 - XXdeltalm).*XXDr + XXdeltalm.*XXDrmm;
-	XXVrp = (1 - XXdeltalp).*XXVrpp + XXdeltalp.*XXVr;
-	XXVrm = (1 - XXdeltalm).*XXVr + XXdeltalm.*XXVrmm;
+	XXDrp = (1 - XXdeltalp).*XXDrpp + XXdeltalp.*XXDr;%Evaluation of the diffusion rate on the flux grid (linear interpolation)
+	XXDrm = (1 - XXdeltalm).*XXDr + XXdeltalm.*XXDrmm;%Evaluation of the diffusion rate on the flux grid (linear interpolation)
+	XXVrp = (1 - XXdeltalp).*XXVrpp + XXdeltalp.*XXVr;%Evaluation of the convection on the flux grid (linear interpolation)
+	XXVrm = (1 - XXdeltalm).*XXVr + XXdeltalm.*XXVrmm;%Evaluation of the convection on the flux grid (linear interpolation)
+%
+	XXalphar = repmat(reshape(xqtilde'.*xR0'.*xBp0'./xB0',[1,1,nr]),[npn,nmhu,1]);
+	XXalpharmm = zeros(npn,nmhu,nr);
+	XXalpharmm(:,:,2:nr) = XXalphar(:,:,1:nr-1);
+	XXalpharpp = zeros(npn,nmhu,nr);
+	XXalpharpp(:,:,1:nr-1) = XXalphar(:,:,2:nr);
+%
+	XXalpharp = (1 - XXdeltalp).*XXalpharpp + XXdeltalp.*XXalphar;%Evaluation on the flux grid (linear interpolation)
+	XXalpharm = (1 - XXdeltalm).*XXalphar + XXdeltalm.*XXalpharmm;%Evaluation on the flux grid (linear interpolation)
+%
+	XXlambdamm = zeros(npn,nmhu,nr);
+	XXlambdamm(:,:,2:nr) = XXlambda(:,:,1:nr-1);
+	XXlambdapp = zeros(npn,nmhu,nr);
+	XXlambdapp(:,:,1:nr-1) = XXlambda(:,:,2:nr);
+%
+	XXlambdap = (1 - XXdeltalp).*XXlambdapp + XXdeltalp.*XXlambda;%Evaluation on the flux grid (linear interpolation)
+	XXlambdam = (1 - XXdeltalm).*XXlambda + XXdeltalm.*XXlambdamm;%Evaluation on the flux grid (linear interpolation)
+%	
+	XXR0 = repmat(reshape(xR0',[1,1,nr]),[npn,nmhu,1]);	
+	XXR0mm = zeros(npn,nmhu,nr);
+	XXR0mm(:,:,2:nr) = XXR0(:,:,1:nr-1);
+	XXR0pp = zeros(npn,nmhu,nr);
+	XXR0pp(:,:,1:nr-1) = XXR0(:,:,2:nr);
+%
+	XXR0p = (1 - XXdeltalp).*XXR0pp + XXdeltalp.*XXR0;%Evaluation on the flux grid (linear interpolation)
+	XXR0m = (1 - XXdeltalm).*XXR0 + XXdeltalm.*XXR0mm;%Evaluation on the flux grid (linear interpolation)	
+%
+	XXBp0 = repmat(reshape(xBp0',[1,1,nr]),[npn,nmhu,1]);	
+	XXBp0mm = zeros(npn,nmhu,nr);
+	XXBp0mm(:,:,2:nr) = XXBp0(:,:,1:nr-1);
+	XXBp0pp = zeros(npn,nmhu,nr);
+	XXBp0pp(:,:,1:nr-1) = XXBp0(:,:,2:nr);
+%
+	XXBp0p = (1 - XXdeltalp).*XXBp0pp + XXdeltalp.*XXBp0;%Evaluation on the flux grid (linear interpolation)
+	XXBp0m = (1 - XXdeltalm).*XXBp0 + XXdeltalm.*XXBp0mm;%Evaluation on the flux grid (linear interpolation)	
 end
 %
 %************************************************** Matrices calculation ******************************************************** 
@@ -525,13 +561,14 @@ time0 = clock;
 %
 if radial_mode == 1,
 %	
-	XXMrm = -(XXpsinm./XXdpsinm./XXdpsin).*XXDrm - (XXpsinm./XXdpsin).*XXVrm.*XXdeltalm;
-	XXMr = (XXpsinp./XXdpsinp./XXdpsin).*XXDrp + (XXpsinp./XXdpsin).*XXVrp.*XXdeltalp + (XXpsinm./XXdpsinm./XXdpsin).*XXDrm - (XXpsinm./XXdpsin).*XXVrm.*(1 - XXdeltalm);				
-	XXMrp = -(XXpsinp./XXdpsinp./XXdpsin).*XXDrp + (XXpsinp./XXdpsin).*XXVrp.*(1 - XXdeltalp);
+	XXMrm = -(XXalpharm.*XXlambdam.*XXR0m.*XXBp0m./XXdpsinm./XXdpsin).*XXDrm - (XXalpharm.*XXlambdam./XXdpsin).*XXVrm.*XXdeltalm;
+	XXMr = (XXalpharp.*XXlambdap.*XXR0p.*XXBp0p./XXdpsinp./XXdpsin).*XXDrp + (XXalpharp.*XXlambdap./XXdpsin).*XXVrp.*XXdeltalp +...
+	       (XXalpharm.*XXlambdam.*XXR0m.*XXBp0m./XXdpsinm./XXdpsin).*XXDrm - (XXalpharm.*XXlambdam./XXdpsin).*XXVrm.*(1 - XXdeltalm);				       
+	XXMrp = -(XXalpharp.*XXlambdap.*XXR0p.*XXBp0p./XXdpsinp./XXdpsin).*XXDrp + (XXalpharp.*XXlambdap./XXdpsin).*XXVrp.*(1 - XXdeltalp);
 %
-	XXMrm = XXMrm.*XXpn2;
-	XXMr = XXMr.*XXpn2;
-	XXMrp = XXMrp.*XXpn2;
+	XXMrm = XXMrm.*XXpn2./XXlambda;%Partial Jacobian multiplication
+	XXMr = XXMr.*XXpn2./XXlambda;%Partial Jacobian multiplication
+	XXMrp = XXMrp.*XXpn2./XXlambda;%Partial Jacobian multiplication
 %	
 	Xmask_r_edge = (XXDr(:,:,nr) > 0);
 	XXMrm(:,:,nr) = 0;%Edge boundary condition (Maxwellian solution)
@@ -1200,7 +1237,7 @@ for ir = 1:nr,
 		XDmp_c_tp_ijm = zeros(npn,nmhu);
 %
 		XDmm_c_tp_ijp = XBt.*XXRlambda_b_p3m2_p(:,:,ir);
-		XDmm_c_ijm = XBt.*XXRlambda_b_p3m2_m(:,:,ir);
+		XDmm_c_tp_ijm = XBt.*XXRlambda_b_p3m2_m(:,:,ir);
 %
 		XFp_c_tp_ippj = -XFpp.*XXRlambda_b_p1m1(:,:,ir);
 		XFp_c_tp_ipj = -XFp.*XXRlambda_b_p1m1(:,:,ir);
@@ -1299,7 +1336,7 @@ for ir = 1:nr,
 		XFm_tp_ijp = XFm_c_tp_ijp + XFm_e_tp_ijp;
 		XFm_tp_ijm = XFm_c_tp_ijm + XFm_e_tp_ijm;
 %
-		[Xa_tp,Xb_tp,Xc_tp,Xd_tp,Xe_tp,Xf_tp,Xg_tp,Xh_tp,Xi_tp,Xdeltap_imj,Xdeltap_ipj,Xdeltam_ijm,Xdeltam_ijp] = ...
+		[Xa_tp,Xb_tp,Xc_tp,Xd_tp,Xe_tp,Xf_tp,Xg_tp,Xh_tp,Xi_tp,Xdummy1,Xdummy2,Xdummy3,Xdummy4] = ...
 		fpengine_dke_yp(squeeze(XXRlambda_m(:,:,ir)),squeeze(XXRlambda_p(:,:,ir)),...
 		Xpn,Xpn2m,Xpn2p,Xpnm,Xpnp,Xdpnmm,Xdpnm,Xdpn,Xdpnp,Xdpnpp,...
 		Xmhu,X1mmhu2,X1mmhu2m,X1mmhu2p,Xdmhumm,Xdmhum,Xdmhu,Xdmhup,Xdmhupp,...
@@ -1308,16 +1345,7 @@ for ir = 1:nr,
 		XDmp_tp_ijp,XDmp_tp_ij,XDmp_tp_ijm,...
 		XDmm_tp_ijp,XDmm_tp_ijm,...
 		XFp_tp_ippj,XFp_tp_ipj,XFp_tp_ij,XFp_tp_imj,XFp_tp_immj,...
-		XFm_tp_ijp,XFm_tp_ijm);
-	% 		
-%        Xsssl_tp = Xsssl*sqrt((1 - xia(ir))/(1 + xia(ir)))/(1 + xia(ir));
-%        alpha_tp = (xia(ir) - xia(ir)*xia(ir)/2)/(1 + xia(ir));
-
-		
-		
-		
-		
-		
+		XFm_tp_ijp,XFm_tp_ijm); 		
 %
 %Loss matrix coefficients
 %
@@ -1454,7 +1482,7 @@ for ir = 1:nr,
 		MXP_f_t = MXP_f_t + sparse([1:(nmhu-ns(ir))*npn-(nmhu-ns(ir))-djmhut],[1+(nmhu-ns(ir))+djmhut:(nmhu-ns(ir))*npn],MXo(1:length(MXo)-(nmhu-ns(ir))-djmhut),(nmhu-ns(ir))*npn,(nmhu-ns(ir))*npn);      
 	end
 %
-	MXP_f_t = xpsin(ir)*MXP_f_t;
+	MXP_f_t = (xqtilde(ir)/xB0(ir))*MXP_f_t;%Partial Jacobian multiplication to avoid numerical singularties at p = 0	
 %    
 	sm_f(ir+1) = sm_f(ir) + blocksize_f_t(ir);
 	[i0_f,j0_f,s0_f] = find(MMXP_f_t);		
@@ -1494,13 +1522,13 @@ for ir = 1:nr,
 		MXP_tp_t = MXP_tp_t + sparse([1:(nmhu - ns_tp(ir))*npn-(nmhu - ns_tp(ir))+1],[1+(nmhu - ns_tp(ir))-1:(nmhu - ns_tp(ir))*npn],MXi_tp_t(1:length(MXi_tp_t)-(nmhu - ns_tp(ir))+1),(nmhu - ns_tp(ir))*npn,(nmhu - ns_tp(ir))*npn);      
 		MXg_tp_t = reshape(Xg_tp_t',(nmhu - ns_tp(ir))*npn,1);
 		MXP_tp_t = MXP_tp_t + sparse([1:(nmhu - ns_tp(ir))*npn-(nmhu - ns_tp(ir))-1],[1+(nmhu - ns_tp(ir))+1:(nmhu - ns_tp(ir))*npn],MXg_tp_t(1:length(MXg_tp_t)-(nmhu - ns_tp(ir))-1),(nmhu - ns_tp(ir))*npn,(nmhu - ns_tp(ir))*npn);          
-%
-		eval(['MXP_',int2str(ir),'_tp_t = MXP_tp_t;']);
-%
-		if store_mode == 1,
-			eval(['save MXPmat.mat MXP_',int2str(ir),'_tp_t -append']);
-			eval(['clear MXP_',int2str(ir),'_tp_t']);
-		end
+%    
+		sm_tp(ir+1) = sm_tp(ir) + blocksize_tp_t(ir);
+		[i0_tp,j0_tp,s0_tp] = find(MMXP_tp_t);		
+		[m0_tp,n0_tp] = size(MMXP_tp_t);
+		[i1_tp,j1_tp,s1_tp] = find(MXP_tp_t);
+		[m1_tp,n1_tp] = size(MXP_tp_t);
+		MMXP_tp_t = sparse(i0_tp,j0_tp,s0_tp,m0_tp+m1_tp,m0_tp+m1_tp) + sparse(m0_tp+i1_tp,m0_tp+j1_tp,s1_tp,m0_tp+m1_tp,m0_tp+m1_tp);
 %
 %Matrix calculation for g
 %
@@ -1523,48 +1551,29 @@ for ir = 1:nr,
 		MXg_g_t = reshape(Xg_g_t',(nmhu - ns_g(ir))*npn,1);
 		MXP_g_t = MXP_g_t + sparse([1:(nmhu - ns_g(ir))*npn-(nmhu - ns_g(ir))-1],[1+(nmhu - ns_g(ir))+1:(nmhu - ns_g(ir))*npn],MXg_g_t(1:length(MXg_g_t)-(nmhu - ns_g(ir))-1),(nmhu - ns_g(ir))*npn,(nmhu - ns_g(ir))*npn);     
 %
-		MXPDI_g_t = inv(diag(diag(MXP_g_t)));
-		MXPC_g_t = MXPDI_g_t*MXP_g_t;%Main diagonal matrix preconditionning
+		sm_g(ir+1) = sm_g(ir) + blocksize_g_t(ir);
+		[i0_g,j0_g,s0_g] = find(MMXP_g_t);		
+		[m0_g,n0_g] = size(MMXP_g_t);
+		[i1_g,j1_g,s1_g] = find(MXP_g_t);
+		[m1_g,n1_g] = size(MXP_g_t);
+		MMXP_g_t = sparse(i0_g,j0_g,s0_g,m0_g+m1_g,m0_g+m1_g) + sparse(m0_g+i1_g,m0_g+j1_g,s1_g,m0_g+m1_g,m0_g+m1_g);
 %
-%        if invproc == 1,%MatLab built-in full LU factorization
-%            [MXL_g_t,MXU_g_t] = lu(MXPC_g_t);
-%       elseif invproc == 2,%MatLab built-in iterative inversion method
-%            [MXL_g_t,MXU_g_t] = luinc(MXPC_g_t,prec_inv);
-%		  end
+		eval(['Xmask_',int2str(ir),'_g = Xmask_g;']);	
 %
-%	     if display_mode >= 1,info_dke_yp(2,['   - Size of the LU matrices for g: ',num2str((getfield(whos('MXL_g_t'),'bytes')+getfield(whos('MXU_g_t'),'bytes'))/1000000),' MBytes']);	 
+		if store_mode == 1,
+			eval(['save MXPmat.mat Xmask_',int2str(ir),'_g -append']);
+			eval(['clear Xmask_',int2str(ir),'_g']);
+		else
+			clear Xmask_g
+		end
+   end
 %
-   		eval(['MXPDI_',int2str(ir),'_g_t = MXPDI_g_t;']);
-			eval(['MXPC_',int2str(ir),'_g_t = MXPC_g_t;']);
-%   		eval(['MXL_',int2str(ir),'_g_t = MXL_g_t;']);
-%			eval(['MXU_',int2str(ir),'_g_t = MXU_g_t;']);
-   		eval(['Xmask_',int2str(ir),'_g = Xmask_g;']);	
-%
- %  		if store_mode == 1,
- %  			eval(['save MXPmat.mat MXPDI_',int2str(ir),'_g_t MXPC_',int2str(ir),'_g_t MXL_',int2str(ir),'_g_t MXU_',int2str(ir),'_g_t Xmask_',int2str(ir),'_g -append']);
- %     		eval(['clear MXPDI_',int2str(ir),'_g_t MXPC_',int2str(ir),'_g_t MXL_',int2str(ir),'_g_t MXU_',int2str(ir),'_g_t MXL_g_t MXU_g_t MXPC_g_t Xmask_',int2str(ir),'_g']);
-%			else
-%				clear MXL_g_t MXU_g_t MXPC_g_t MXPDI_g_t Xmask_g
- %  		end
-
-
-
-
-
-
-
-   		if store_mode == 1,
-   			eval(['save MXPmat.mat MXPDI_',int2str(ir),'_g_t MXPC_',int2str(ir),'_g_t Xmask_',int2str(ir),'_g -append']);
-   			eval(['clear MXPDI_',int2str(ir),'_g_t MXPC_',int2str(ir),'_g_t Xmask_',int2str(ir),'_g']);
-   		end
-   	end
-%
-   	if display_mode >= 1,info_dke_yp(2,['Momentum space matrix calculations (',int2str(ir),'/',int2str(nr),') done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);end
+   if display_mode >= 1,info_dke_yp(2,['Momentum space matrix calculations (',int2str(ir),'/',int2str(nr),') done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);end
 end
 %
 %Radial gradient correction for ftp (radial derivative of the Chang and Cooper momentum terms)
 %
-if dke_mode == 1,%******************A corriger
+if dke_mode == 10,%******************A corriger
     for ir = 1:nr_dke,
         jr1 = rdke(ir)-1;
         jr2 = rdke(ir);
@@ -1644,6 +1653,7 @@ clear Xsstar Xsstarm Xsstarp Xsstar_tp Xsstar_tpm Xsstar_tpp Xheaviside Xheavisi
 clear Xmhu_psib Xmhu_psibm Xmhu_psibp 
 clear XDeltalambda_rip XDeltalambda_ripm XDeltalambda_ripp theta0 theta0m theta0p thetaB thetaBm thetaBp
 clear sstar_rip Xlambda_rip Xlambda_ripm Xlambda_ripp  
+clear Xdummy1 Xdummy2 Xdummy3 Xdummy4
 %
 clear Xa Xb Xc Xd Xe Xf Xg Xh Xi Xj Xk Xl Xm Xn Xo 
 clear Xa_t Xb_t Xc_t Xd_t Xe_t Xf_t Xg_t Xh_t Xi_t Xj_t Xk_t Xl_t Xm_t Xn_t Xo_t 
@@ -1674,12 +1684,29 @@ if display_mode >= 1,info_dke_yp(2,['Full elapsed time for matrix calculation: '
 time0 = clock;
 MMXPDI_f_t = inv(diag(diag(MMXP_f_t + MMXP_f_r_t)));
 MMXPC_f_t = MMXPDI_f_t*(MMXP_f_t + MMXP_f_r_t);%Main diagonal matrix preconditionning
-%
 [MMXL_f_t,MMXU_f_t] = luinc(MMXPC_f_t,prec_inv); 
-if display_mode >= 1,info_dke_yp(2,['Full elapsed time for matrix LU factorization: ',num2str(etime(clock,time0)),' (s)']);end
+time_f = etime(clock,time0);
+memoryLU_f = (getfield(whos('MMXL_f_t'),'bytes') + getfield(whos('MMXU_f_t'),'bytes'))/1000000;
 %
-memoryLU = (getfield(whos('MMXL_f_t'),'bytes') + getfield(whos('MMXU_f_t'),'bytes'))/1000000;
-if display_mode >= 1,info_dke_yp(2,['Size of the LU matrices for f0: ',num2str(memoryLU),' MBytes']);end
+if dke_mode == 1,
+	time0 = clock;
+	MMXPDI_g_t = inv(diag(diag(MMXP_g_t)));
+	MMXPC_g_t = MMXPDI_g_t*MMXP_g_t;%Main diagonal matrix preconditionning
+	[MMXL_g_t,MMXU_g_t] = luinc(MMXPC_g_t,prec_inv); 
+	time_g = etime(clock,time0);
+	memoryLU_g = (getfield(whos('MMXL_g_t'),'bytes') + getfield(whos('MMXU_g_t'),'bytes'))/1000000;
+else
+	memoryLU_g = 0;
+end
+%
+if display_mode >= 1,	
+	info_dke_yp(2,['Full elapsed time of LU matrix factorization for f: ',num2str(time_f),' (s)']);end
+	info_dke_yp(2,['Size of the LU matrices for f: ',num2str(memoryLU_f),' MBytes']);end
+	if dke_mode == 1,
+		info_dke_yp(2,['Full elapsed time of LU matrix factorization for g: ',num2str(time_g),' (s)']);end
+		info_dke_yp(2,['Size of the LU matrices for g: ',num2str(memoryLU_g),' MBytes']);end
+	end
+end
 %
 %************************************************** Main Fokker-Planck loop ******************************************************** 
 %
@@ -1717,10 +1744,10 @@ for it = 2:nit_f,
 %
 		MMXf0_t = [MMXf0_t;reshape(Xf0_t',(nmhu - ns(ir))*npn,1)];
 %
-		Xq = (XI + time_scheme*Xf0/dtn).*Xpn2;
+		Xq = (XI + time_scheme*Xf0/dtn).*Xpn2;%Xpn2 is here as part of the partial Jacobian used to avoid singularities at p = 0
 		Xq_t = Xq(:,Xmask_f0);%Symmetric trapped domain removed
 		if bounce_mode == 1,Xq_t(2:npn,nmhu/2 + 1 - ns(ir)) = 0;end;%df/dmhu(mhu == pi/2) = 0   
-			MMXq_t = [MMXq_t;xpsin(ir)*reshape(Xq_t',(nmhu - ns(ir))*npn,1)];
+			MMXq_t = [MMXq_t;(xqtilde(ir)/xB0(ir))*reshape(Xq_t',(nmhu - ns(ir))*npn,1)];%Multiplication by the partial Jacobian to avoid singularities at p = 0
 		end
 %
 		if radial_mode == 1,%Edge radial boundary condition: f(r/a = 1) = fM(r/a) where transport operates
@@ -1779,7 +1806,7 @@ for it = 2:nit_f,
 %
 			if display_mode == 2,
 				if dke_mode == 1,
-					if ir == rdke(ir_display)-1,
+					if ir == ir_display-1,
 						figure(100),subplot(321),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
 						axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
 						title(['Iteration: ',int2str(it)]);xlabel('pn-ref');ylabel('f(pperp=0)')
@@ -1789,7 +1816,7 @@ for it = 2:nit_f,
 						title(['Convergence - f (rho=',num2str(xrho(ir)),')']);xlabel('Iteration');ylabel('Residu')
 						hold on;zoom on
 						pause(0.1);
-					elseif ir == rdke(ir_display),
+					elseif ir == ir_display,
 						figure(100),subplot(323),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
 						axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
 						title(['Iteration: ',int2str(it)]);xlabel('pn-ref');ylabel('f(pperp=0)')
@@ -1799,7 +1826,7 @@ for it = 2:nit_f,
 						title(['Convergence - f (rho=',num2str(xrho(ir)),')']);xlabel('Iteration');ylabel('Residu')
 						hold on;zoom on
 						pause(0.1);
-					elseif ir == rdke(ir_display)+1,
+					elseif ir == ir_display+1,
 						figure(100),subplot(325),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
 						axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
 						title(['Iteration: ',int2str(it)]);xlabel('pn-ref');ylabel('f(pperp=0)')
@@ -1811,7 +1838,7 @@ for it = 2:nit_f,
 						pause(0.1);
 					end
 				else
-  					if ir == rdke(ir_display),
+  					if ir == ir_display,
   						figure(100),subplot(121),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
   						axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
   						title(['Iteration: ',int2str(it)]);xlabel('pn-ref');ylabel('f(pperp=0)')
@@ -1888,28 +1915,21 @@ if dke_mode == 1,
 		Xf0_g_th = squeeze(XXf0_g_th(:,:,jr2)); 
 %
 		if store_mode == 1,
-			eval(['load MXPmat.mat MXPDI_',int2str(jr2),'_g_t MXPC_',int2str(jr2),'_g_t Xmask_',int2str(jr2),'_g']);
-			eval(['load MXPmat.mat MXP_',int2str(jr2),'_tp_t']);
-			eval(['load MXPmat.mat MXP_',int2str(jr2),'_tp_c_t']);
+			eval(['load MXPmat.mat Xmask_',int2str(jr2),'_g']);
+%			eval(['load MXPmat.mat MXP_',int2str(jr2),'_tp_t']);
+%			eval(['load MXPmat.mat MXP_',int2str(jr2),'_tp_c_t']);
 		end
 %
-		eval(['MXP_tp_t = MXP_',int2str(jr2),'_tp_t;']);
-		eval(['MXP_tp_c_t = MXP_',int2str(jr2),'_tp_c_t;']);
-		eval(['MXPDI_g_t = MXPDI_',int2str(jr2),'_g_t;']);
-		eval(['MXPC_g_t = MXPC_',int2str(jr2),'_g_t;']);
+%		eval(['MXP_tp_t = MXP_',int2str(jr2),'_tp_t;']);
+%		eval(['MXP_tp_c_t = MXP_',int2str(jr2),'_tp_c_t;']);
+%		eval(['MXPDI_g_t = MXPDI_',int2str(jr2),'_g_t;']);
+%		eval(['MXPC_g_t = MXPC_',int2str(jr2),'_g_t;']);
 		eval(['Xmask_g = Xmask_',int2str(jr2),'_g;']);
 		Xmask_tp = Xmask_g;
-%
-		eval(['clear MXPDI',int2str(jr2),'_g_t MXPC',int2str(jr2),'_g_t Xmask',int2str(jr2),'_g']);
-		eval(['clear MXP',int2str(jr2),'_tp_t']);
 %           
-		if invproc == 1,%MatLab built-in full LU factorization
-			[MXL_g_t,MXU_g_t] = lu(MXPC_g_t);
-		elseif invproc >= 2,%MatLab built-in iterative inversion method
-			[MXL_g_t,MXU_g_t] = luinc(MXPC_g_t,prec_inv);
-		end
-		if display_mode >= 1,info_dke_yp(2,['   - Size of the LU matrices for g: ',num2str((getfield(whos('MXL_g_t'),'bytes')+getfield(whos('MXU_g_t'),'bytes'))/1000000),' MBytes']);end
 
+		
+		
 %
 %		dr = (xia(jr3) - xia(jr1))*Rp_norm;%Radial step for gradient calculations (dke)
 %		drm = (xia(jr1) - xia(jr2))*Rp_norm;
