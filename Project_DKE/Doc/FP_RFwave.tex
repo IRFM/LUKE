@@ -23,8 +23,9 @@ where
 \begin{equation}
 \left\{ \mathcal{O}\right\} =\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2%
 }\sum\limits_{\sigma }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}%
-\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}%
-\right| }\frac{r}{R_{0}}\frac{B}{B_{P}}\frac{\xi _{0}}{\xi }\mathcal{O}
+\frac{d\theta }{2\pi }\int_{\phi _{\min }}^{\phi _{\max }}\frac{d\phi }{2\pi 
+}\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}}%
+\frac{B}{B_{P}}\frac{\xi _{0}}{\xi }\mathcal{O}
 \end{equation}
 
 Since $1-\xi ^{2}=\Psi \left( 1-\xi _{0}^{2}\right) ,$ 
@@ -35,8 +36,8 @@ D_{p\xi }^{\text{RF}(0)} &=&\sum_{n=-\infty }^{+\infty }\sum_{b}-\frac{\sqrt{%
 1-\xi _{0}^{2}}}{\xi _{0}}\left[ 1-\xi _{0}^{2}-\frac{n\Omega _{\min }}{%
 \omega _{b}}\right] D_{b,n}^{\text{RF}(0)}(p,\xi _{0}) \\
 D_{\xi p}^{\text{RF}(0)} &=&\sum_{n=-\infty }^{+\infty }\sum_{b}-\frac{\sqrt{%
-1-\xi _{0}^{2}}}{\xi _{0}}\left[ 1-\xi _{0}^{2}-\frac{n\Omega \min }{\omega
-_{b}}\right] D_{b,n}^{\text{RF}(0)}(p,\xi _{0}) \\
+1-\xi _{0}^{2}}}{\xi _{0}}\left[ 1-\xi _{0}^{2}-\frac{n\Omega _{\min }}{%
+\omega _{b}}\right] D_{b,n}^{\text{RF}(0)}(p,\xi _{0}) \\
 D_{\xi \xi }^{\text{RF}(0)} &=&\sum_{n=-\infty }^{+\infty }\sum_{b}\frac{1}{%
 \xi _{0}^{2}}\left[ 1-\xi _{0}^{2}-\frac{n\Omega _{\min }}{\omega _{b}}%
 \right] ^{2}D_{b,n}^{\text{RF}(0)}(p,\xi _{0})
@@ -85,9 +86,10 @@ with
 \left( \theta -\theta _{b}\right) \delta \left( \phi -\phi _{b}\right)
 \delta \left( N_{\Vert b}-N_{\Vert \text{res}}\right) \right\}   \nonumber \\
 &=&\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2}\sum\limits_{\sigma
-}\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }%
-\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}}%
-\frac{B}{B_{P}}\frac{\xi _{0}^{2}}{\xi ^{2}}\times   \nonumber \\
+}\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }
+\int_{\phi _{\min }}^{\phi _{\max }}\frac{d\phi }{2\pi }\frac{1}{\left| 
+\widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}}\frac{B}{B_{P}}\frac{%
+\xi _{0}^{2}}{\xi ^{2}}\times   \nonumber \\
 &&\Psi \overline{D}_{b,n,0}^{\text{RF}}\left| \Theta _{\mathbf{k}%
 }^{b,n}\left( \mathbf{k}_{b}\right) \right| ^{2}\delta \left( \theta -\theta
 _{b}\right) \delta \left( \phi -\phi _{b}\right) \delta \left( N_{\Vert
@@ -97,10 +99,10 @@ B^{\theta _{b}}}{B_{P}^{\theta _{b}}}\frac{\xi _{0}^{2}}{\xi _{\theta
 _{b}}^{2}}\Psi _{\theta _{b}}\overline{D}_{b,n,0}^{\text{RF,}\theta
 _{b}}\left| \Theta _{\mathbf{k,}\theta _{b}}^{b,n}\left( \mathbf{k}%
 _{b}\right) \right| ^{2}\times  \\
-&&H\left( \theta _{c}-\left| \theta _{b}\right| \right) H\left( \phi
-_{c}-\left| \phi _{b}-\phi _{c}\right| \right) \left[ \frac{1}{2}%
-\sum\limits_{\sigma }\right] _{T}\delta \left( N_{\Vert b}-N_{\Vert \text{res%
-}}^{\theta _{b}}\right) 
+&&H\left( \theta _{b}-\theta _{\min }\right) H\left( \theta _{\max }-\theta
+_{b}\right) H\left( \phi _{b}-\phi _{\min }\right) H\left( \phi _{\max
+}-\phi _{b}\right) \left[ \frac{1}{2}\sum\limits_{\sigma }\right] _{T}\delta
+\left( N_{\Vert b}-N_{\Vert \text{res}}^{\theta _{b}}\right) 
 \end{eqnarray}
 where, $H\left( x\right) $ is the usual Heaviside step function. Therefore, 
 \begin{eqnarray}
@@ -110,10 +112,10 @@ p\left| \xi _{0}\right| }\frac{1}{\lambda \widetilde{q}}\frac{r_{\theta _{b}}%
 _{\theta _{b}}^{2}}\Psi _{\theta _{b}}\overline{D}_{b,n,0}^{\text{RF,}\theta
 _{b}}\left| \Theta _{\mathbf{k,}\theta _{b}}^{b,n}\left( \mathbf{k}%
 _{b}\right) \right| ^{2}\times   \nonumber \\
-&&H\left( \theta _{c}-\left| \theta _{b}\right| \right) H\left( \phi
-_{c}-\left| \phi _{b}-\phi _{c}\right| \right) \left[ \frac{1}{2}%
-\sum\limits_{\sigma }\right] _{T}\delta \left( N_{\Vert b}-N_{\Vert \text{res%
-}}^{\theta _{b}}\right) 
+&&H\left( \theta _{b}-\theta _{\min }\right) H\left( \theta _{\max }-\theta
+_{b}\right) H\left( \phi _{b}-\phi _{\min }\right) H\left( \phi _{\max
+}-\phi _{b}\right) \left[ \frac{1}{2}\sum\limits_{\sigma }\right] _{T}\delta
+\left( N_{\Vert b}-N_{\Vert \text{res}}^{\theta _{b}}\right) 
 \end{eqnarray}
 where 
 \begin{equation}
