@@ -45,9 +45,11 @@
 %\include{myAbbrevs}
 \include{DocumentDimensions}
 
-\title{\hrule\bigbreak DKE: a fast numerical solver for the 3-D relativistic electron Drift Kinetic Equation \hrule\bigbreak}
+\title{\hrule\bigbreak DKE: a fast numerical solver for the 3-D relativistic 
+bounce-averaged electron Drift Kinetic Equation \hrule\bigbreak}
 \author{Joan Decker (RLE/MIT)\footnote{Email: jodecker@mit.edu} and Yves Peysson (DRFC/DSM/CEA)\footnote{Email: yves.peysson@cea.fr}}
 \date{\today}
+
 
 \begin{document}
 
@@ -57,16 +59,32 @@
 %%\else
 %%\DeclareGraphicsExtensions{.eps, .jpg}
 %%\fi
-
-
-
-
-
 \maketitle
+
+\begin{abstract}
+A new original code for solving the 3-D relativistic and
+bounce-avergaed electron drift kinetic equation is presented. It designed for
+the current drive problem in tokamak with an arbitrary magnetic equilibrium.
+This tool allows self-consistent calculations of the bootstrap current
+in presence of other external current sources. RF current drive for arbitrary
+type of waves may be used. Several moments of the electron
+distribution function are determined, like the exact and effective
+fractions of trapped electrons, the plasma current, absorbed RF
+power, runaway and magnetic ripple loss rates and non-thermal
+bremsstrahlung. Advanced numerical techniques have been used to make
+it the first fully implicit (reverse time) 3-D solver, particularly
+well designed for implementation in a chain of code for realistic
+current drive calculations in high beta-p plasmas. All the details of 
+the physics background and the numerical scheme are presented, as
+well a some examples to illustrate main code capabilities. Several
+important numerical points are addressed concerning code stability and
+potential limitations.    
+\end{abstract}
+
 \tableofcontents
 \listoffigures
 \listoftables
-\printglossary
+%\printglossary
 
 \chapter{Introduction}
 
