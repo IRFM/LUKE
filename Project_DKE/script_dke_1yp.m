@@ -1,1 +1,92 @@
-%Script for testing the DKE solver%by Y. PEYSSON, CEA/DRFC, 23/04/2003%clear all;pause(0.5);clear mex;pause(0.5);clear functions;pause(0.5);close all;warning off;global nfig;pause(1);%disp('-------------------------------------------------------------------------------------------------------------------');disp('-------------------------------------------------------------------------------------------------------------------');disp(['Kinetic calculations for the electron population during current drive in tokamaks']);disp(['Version 1 for nested circular poloidal magnetic flux surfaces']);disp(['Authors:  - Yves Peysson (CEA-DSM-DRFC, France, yves.peysson@cea.fr)']);disp(['          - Joan Decker (MIT-RLE, USA, jodecker@mit.edu)']);disp('-------------------------------------------------------------------------------------------------------------------');%%[s,dossier,machine] = comput_dke_yp;%%Simulation parameters%[tokname,snumber,...grid_uniformity,grid_method,nmhu_S_in,np_S_in,pnmax_S_in,rho_S,rho_display_in,...ref_mode,norm_ref,...epsi0_in,epsia_in,eepsi,...coll_mode,bounce_mode,dke_mode,...vparmin_r,Dr0,pDr,Dr_model,Vr0,pVr,Vr_model,...nhuloss,...prec0_f,nit_f,dtn,prec0_g,nit_g,initguess,invproc_in,param_inv_in,dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode]...= psim_dke_1yp;%%Global plasma parameters%[ap,Rp,Ip,Bt,Ncoils,Zi,mi,fi,BeLi,qmin,eq,Te0_in,Tea_in,eTe_in,eTe_ref,ne0,nea,ene_in,ene_ref,...Ti0,Tia,eTi,Zeff0,Zeffa,eZeff] = ptok_dke_1yp(tokname);%See ptok_dke_1yp.m file for changing global tokamak parameters%nloop = length(Te0_in)*length(eTe_in)*length(Tea_in)*length(ene_in)*length(nmhu_S_in)*length(np_S_in)*length(pnmax_S_in);nloop = nloop*length(rho_display_in)*length(epsi0_in)*length(epsia_in)*length(invproc_in)*size(param_inv_in,1);disp(['- Total number of loops: ',int2str(nloop)]);disp('-------------------------------------------------------------------------------------------------------------------');%iloop = 0;for Te0 = Te0_in,for eTe = eTe_in,for Tea = Tea_in,for ene = ene_in,for nmhu_S = nmhu_S_in,for np_S = np_S_in,for pnmax_S = pnmax_S_in,for rho_display = rho_display_in,for epsi0 = epsi0_in,for epsia = epsia_in,for invproc	= invproc_in,for sparam_inv = 1:size(param_inv_in,1),   	param_inv = param_inv_in(sparam_inv,:);  %	iloop = iloop + 1;    disp(['- Loop number: ',int2str(iloop),'/',int2str(nloop)]);%	[Jrf0(iloop,:),Jboot_e(iloop,:),Jboot_i(iloop,:),Jtot(iloop,:),Pabs0(iloop,:),Pabs_tot(iloop,:),efficiency(iloop,:),epsi_fsav(iloop,:),...	ia(iloop,:),ft(iloop,:),time(iloop),memoryLU(iloop)] =...	test_dke_1yp(snumber,ap,Rp,Ip,Bt,Ncoils,Zi,mi,fi,BeLi,qmin,eq,Te0,Tea,eTe,eTe_ref,ne0,nea,ene,ene_ref,Ti0,Tia,eTi,Zeff0,Zeffa,eZeff,...	grid_uniformity,grid_method,nmhu_S,np_S,pnmax_S,rho_S,rho_display,...	ref_mode,norm_ref,...	epsi0,epsia,eepsi,...	coll_mode,bounce_mode,dke_mode,...	vparmin_r,Dr0,pDr,Dr_model,Vr0,pVr,Vr_model,...	nhuloss,...	prec0_f,nit_f,dtn,prec0_g,nit_g,initguess,invproc,param_inv,dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode,iloop);    disp('-------------------------------------------------------------------------------------------------------------------');endendendendendendendendendendendend%eval(['save ',dossier,s,'script_dke_s',int2str(snumber),'_out.mat']);info_dke_yp(2,['The script file : ',dossier,s,'script_dke_s',int2str(snumber),'_out.mat has been successfully saved !']);disp('-------------------------------------------------------------------------------------------------------------------');
+%Script for testing the DKE solver
+%by Y. PEYSSON, CEA/DRFC, 23/04/2003
+%
+clear all;pause(0.5);
+clear mex;pause(0.5);
+clear functions;pause(0.5);
+close all;
+warning off;
+global nfig;
+pause(1);
+%
+disp('-------------------------------------------------------------------------------------------------------------------');
+disp('-------------------------------------------------------------------------------------------------------------------');
+disp(['Kinetic calculations for the electron population during current drive in tokamaks']);
+disp(['Version 1 for nested circular poloidal magnetic flux surfaces']);
+disp(['Authors:  - Yves Peysson (CEA-DSM-DRFC, France, yves.peysson@cea.fr)']);
+disp(['          - Joan Decker (MIT-RLE, USA, jodecker@mit.edu)']);
+disp('-------------------------------------------------------------------------------------------------------------------');
+%
+%
+[s,dossier,machine] = comput_dke_yp;
+%
+%Simulation parameters
+%
+[tokname,snumber,...
+grid_uniformity,grid_method,nmhu_S_in,np_S_in,pnmax_S_in,sfac,snmhu,snp,...
+rho_S,rho_display_in,...
+ref_mode,norm_ref,...
+epsi0_in,epsia_in,eepsi,...
+coll_mode,bounce_mode,dke_mode,...
+vparmin_r,Dr0,pDr,Dr_model,Vr0,pVr,Vr_model,...
+nhuloss,...
+prec0_f,nit_f,dtn,prec0_g,nit_g,initguess,invproc_in,param_inv_in,dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode]...
+= psim_dke_1yp;
+%
+%Global plasma parameters
+%
+[ap,Rp,Ip,Bt,Ncoils,Zi,mi,fi,BeLi,qmin,eq,Te0_in,Tea_in,eTe_in,eTe_ref,ne0,nea,ene_in,ene_ref,...
+Ti0,Tia,eTi,Zeff0,Zeffa,eZeff] = ptok_dke_1yp(tokname);%See ptok_dke_1yp.m file for changing global tokamak parameters
+%
+nloop = length(Te0_in)*length(eTe_in)*length(Tea_in)*length(ene_in)*length(nmhu_S_in)*length(np_S_in)*length(pnmax_S_in);
+nloop = nloop*length(rho_display_in)*length(epsi0_in)*length(epsia_in)*length(invproc_in)*size(param_inv_in,1);
+disp(['- Total number of loops: ',int2str(nloop)]);
+disp('-------------------------------------------------------------------------------------------------------------------');
+%
+iloop = 0;
+for Te0 = Te0_in,
+for eTe = eTe_in,
+for Tea = Tea_in,
+for ene = ene_in,
+for nmhu_S = nmhu_S_in,
+for np_S = np_S_in,
+for pnmax_S = pnmax_S_in,
+for rho_display = rho_display_in,
+for epsi0 = epsi0_in,
+for epsia = epsia_in,
+for invproc	= invproc_in,
+for sparam_inv = 1:size(param_inv_in,1),
+   	param_inv = param_inv_in(sparam_inv,:); 
+ %
+	iloop = iloop + 1;
+    disp(['- Loop number: ',int2str(iloop),'/',int2str(nloop)]);
+%
+	[Jrf0(iloop,:),Jboot_e(iloop,:),Jboot_i(iloop,:),Jtot(iloop,:),Pabs0(iloop,:),Pabs_tot(iloop,:),efficiency(iloop,:),epsi_fsav(iloop,:),...
+	ia(iloop,:),ft(iloop,:),time(iloop),memoryLU(iloop)] =...
+	test_dke_1yp(tokname,snumber,ap,Rp,Ip,Bt,Ncoils,Zi,mi,fi,BeLi,qmin,eq,Te0,Tea,eTe,eTe_ref,ne0,nea,ene,ene_ref,Ti0,Tia,eTi,Zeff0,Zeffa,eZeff,...
+	grid_uniformity,grid_method,nmhu_S,np_S,pnmax_S,sfac,snmhu,snp,rho_S,rho_display,...
+	ref_mode,norm_ref,...
+	epsi0,epsia,eepsi,...
+	coll_mode,bounce_mode,dke_mode,...
+	vparmin_r,Dr0,pDr,Dr_model,Vr0,pVr,Vr_model,...
+	nhuloss,...
+	prec0_f,nit_f,dtn,prec0_g,nit_g,initguess,invproc,param_inv,dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode,iloop);
+    disp('-------------------------------------------------------------------------------------------------------------------');
+end
+end
+end
+end
+end
+end
+end
+end
+end
+end
+end
+end
+%
+eval(['save script_dke_s',int2str(snumber),'_out.mat']);
+info_dke_yp(2,['The script file : script_dke_s',int2str(snumber),'_out.mat has been successfully saved !']);
+disp('-------------------------------------------------------------------------------------------------------------------');
+
+
