@@ -224,8 +224,8 @@ Ec_ref = mc2*(sqrt(1+pn_ref.*pn_ref*betath_ref^2) - 1);%Fast electron kinetic en
 Xpnpar_ref = Xpn_ref.*Xmhu;
 Xpnperp2_ref = Xpn2_ref - Xpnpar_ref.*Xpnpar_ref;
 %
-lnc_ref = 15.2 - 0.5*log(ne_ref/1e20) + log(Te_ref);%Reference Coulomb logarithm (in "Tokamaks" textbook by Wesson)
-nhu_ref = qe^4*ne_ref*lnc_ref/(4*pi*e0^2*me^2*(clum*betath_ref)^3);%Reference electron collision frequency (s-1)
+lnc_e_ref = 31.3 - 0.5*log(ne_ref) + log(Te_ref*1000);%Reference Coulomb logarithm (Sauter et al. Phys. Plasmas, 6 (1999) 2834)
+nhu_ref = qe^4*ne_ref*lnc_e_ref/(4*pi*e0^2*me^2*(clum*betath_ref)^3);%Reference electron collision frequency (s-1)
 xftp_norm_ref = me*clum*betath_ref*xR0.*xBT0./xB0/qe/psia;%Normalization factor for drift kinetic equation (ftilde)
 %
 z_ref = betath_ref*pn_ref;
@@ -244,8 +244,8 @@ xTen = xTe/mc2;
 xzTin = xzTi/mc2;
 %
 xbetath = sqrt(xTen);%Normalized pth/mc as prescribed by Karney
-xlnc = 15.2 - 0.5*log(xne/1e20) + log(xTe);%Coulomb logarithm (in Tokamaks by Wesson)
-xnhu = qe^4*xne.*xlnc./(4*pi*e0^2*me^2.*(clum*xbetath).^3);%Electron collision frequency (s-1)
+xlnc_e = 31.3 - 0.5*log(xne) + log(xTe);%Coulomb logarithm (Sauter et al. Phys. Plasmas, 6 (1999) 2834)
+xnhu = qe^4*xne.*xlnc_e./(4*pi*e0^2*me^2.*(clum*xbetath).^3);%Electron collision frequency (s-1)
 %
 XXfinit_ref = zeros(np,nmhu,nr);%Defined on the distribution function grid (half grid)
 XXnhuloss_ref = zeros(np,nmhu,nr);%Defined on the distribution function grid (half grid)
