@@ -821,14 +821,14 @@ end
 %
 if ~isempty(waveparam),
    
-	[ZYXXD_rf,ZYXXD_tp_rf] = rfdiff_dke_jd(waveparam,...
+	[ZYXXD_rf,ZYXXD_rf_tp,ZYXXF_rf_tp] = rfdiff_dke_jd(waveparam,...
         theta,XR,XZ,XBR,XBZ,XBphi,xB0,Rp,Zp,xqtilde,...       
         XXheaviside,XXheaviside_p,XXheaviside_m,...  
 	    Xmhup,Xmhu,Xmhum,Xmhu2p,Xmhu2,Xmhu2m,X1mmhu2p,X1mmhu2,X1mmhu2m,...
 	    pnpp,pnp,pn,pnm,pnmm,Xpnpp,Xpnp,Xpn,Xpnm,Xpnmm,Xgammapp,Xgammap,Xgamma,Xgammam,Xgammamm,...
 	    Xxlambda_p,Xxlambda,Xxlambda_m,...
 	    betath_ref,bounce_mode,dke_mode);
-            
+%            
 	YXXDpp_rf_ippj = ZYXXD_rf{1};
 	YXXDpp_rf_ipj = ZYXXD_rf{2};
 	YXXDpp_rf_ij = ZYXXD_rf{3};
@@ -843,9 +843,37 @@ if ~isempty(waveparam),
 	YXXDmm_rf_ijp = ZYXXD_rf{12};
 	YXXDmm_rf_ijm = ZYXXD_rf{13};
 %    
-	YXXDrf_ij = ZYXXD_rf{14};
+	YXXDrf_ij = ZYXXD_rf{14};   
+%
+    if dke_mode == 1
+    	YXXDpp_rf_tp_ippj = ZYXXD_rf_tp{1};
+    	YXXDpp_rf_tp_ipj = ZYXXD_rf_tp{2};
+    	YXXDpp_rf_tp_ij = ZYXXD_rf_tp{3};
+    	YXXDpp_rf_tp_imj = ZYXXD_rf_tp{4};
+    	YXXDpp_rf_tp_immj = ZYXXD_rf_tp{5};
+    	YXXDpm_rf_tp_ipj = ZYXXD_rf_tp{6};
+    	YXXDpm_rf_tp_ij = ZYXXD_rf_tp{7};
+    	YXXDpm_rf_tp_imj = ZYXXD_rf_tp{8};
+    	YXXDmp_rf_tp_ijp = ZYXXD_rf_tp{9};
+    	YXXDmp_rf_tp_ij = ZYXXD_rf_tp{10};
+    	YXXDmp_rf_tp_ijm = ZYXXD_rf_tp{11};
+    	YXXDmm_rf_tp_ijp = ZYXXD_rf_tp{12};
+    	YXXDmm_rf_tp_ijm = ZYXXD_rf_tp{13};
 %    
-	clear ZYXXD_rf
+    	YXXDrf_D_tp_ij = ZYXXD_rf_tp{14};
+%    
+        YXXFp_rf_tp_ippj = ZYXXF_rf_tp{1};
+        YXXFp_rf_tp_ipj = ZYXXF_rf_tp{2};
+        YXXFp_rf_tp_ij = ZYXXF_rf_tp{3};
+        YXXFp_rf_tp_imj = ZYXXF_rf_tp{4};
+        YXXFp_rf_tp_immj = ZYXXF_rf_tp{5};
+        YXXFm_rf_tp_ijp = ZYXXF_rf_tp{6};
+        YXXFm_rf_tp_ijm = ZYXXF_rf_tp{7};
+%    
+        YXXDrf_F_tp_ij = ZYXXF_rf_tp{8};
+    end
+%    
+	clear ZYXXD_rf ZYXXD_rf_tp ZYXXF_rf_tp
 %    
 	nb = size(YXXDrf_ij,4);   
 %
@@ -865,6 +893,34 @@ if ~isempty(waveparam),
 %	
 	XXDmm_rf_ijp = integral_dke_jd(ones(1,nb),YXXDmm_rf_ijp,4);
 	XXDmm_rf_ijm = integral_dke_jd(ones(1,nb),YXXDmm_rf_ijm,4);
+%
+    if dke_mode == 1
+        XXDpp_rf_tp_ippj = integral_dke_jd(ones(1,nb),YXXDpp_rf_tp_ippj,4);
+    	XXDpp_rf_tp_ipj = integral_dke_jd(ones(1,nb),YXXDpp_rf_tp_ipj,4);
+    	XXDpp_rf_tp_ij = integral_dke_jd(ones(1,nb),YXXDpp_rf_tp_ij,4);
+    	XXDpp_rf_tp_imj = integral_dke_jd(ones(1,nb),YXXDpp_rf_tp_imj,4);
+    	XXDpp_rf_tp_immj = integral_dke_jd(ones(1,nb),YXXDpp_rf_tp_immj,4);
+%	
+    	XXDpm_rf_tp_ipj = integral_dke_jd(ones(1,nb),YXXDpm_rf_tp_ipj,4);
+    	XXDpm_rf_tp_ij = integral_dke_jd(ones(1,nb),YXXDpm_rf_tp_ij,4);	
+    	XXDpm_rf_tp_imj = integral_dke_jd(ones(1,nb),YXXDpm_rf_tp_imj,4);
+%	
+    	XXDmp_rf_tp_ijp = integral_dke_jd(ones(1,nb),YXXDmp_rf_tp_ijp,4);
+    	XXDmp_rf_tp_ij = integral_dke_jd(ones(1,nb),YXXDmp_rf_tp_ij,4);	
+    	XXDmp_rf_tp_ijm = integral_dke_jd(ones(1,nb),YXXDmp_rf_tp_ijm,4);
+%	
+    	XXDmm_rf_tp_ijp = integral_dke_jd(ones(1,nb),YXXDmm_rf_tp_ijp,4);
+    	XXDmm_rf_tp_ijm = integral_dke_jd(ones(1,nb),YXXDmm_rf_tp_ijm,4);
+%
+    	XXFp_rf_tp_ippj = integral_dke_jd(ones(1,nb),YXXFp_rf_tp_ippj,4);
+    	XXFp_rf_tp_ipj = integral_dke_jd(ones(1,nb),YXXFp_rf_tp_ipj,4);
+    	XXFp_rf_tp_ij = integral_dke_jd(ones(1,nb),YXXFp_rf_tp_ij,4);
+    	XXFp_rf_tp_imj = integral_dke_jd(ones(1,nb),YXXFp_rf_tp_imj,4);
+    	XXFp_rf_tp_immj = integral_dke_jd(ones(1,nb),YXXFp_rf_tp_immj,4);
+%
+    	XXFm_rf_tp_ijp = integral_dke_jd(ones(1,nb),YXXFm_rf_tp_ijp,4);
+    	XXFm_rf_tp_ijm = integral_dke_jd(ones(1,nb),YXXFm_rf_tp_ijm,4);
+    end
 else
 	nb = 0;
 %    
@@ -886,6 +942,39 @@ else
 	XXDmm_rf_ijm = zeros(npn,nmhu,nr);
 %
 	YXXDrf_ij = zeros(npn,nmhu,nr);
+%
+    if dke_mode == 1
+    	XXDpp_rf_tp_ippj = zeros(npn,nmhu,nr);
+    	XXDpp_rf_tp_ipj = zeros(npn,nmhu,nr);
+    	XXDpp_rf_tp_ij = zeros(npn,nmhu,nr);
+    	XXDpp_rf_tp_imj = zeros(npn,nmhu,nr);
+    	XXDpp_rf_tp_immj = zeros(npn,nmhu,nr);
+%
+    	XXDpm_rf_tp_ipj = zeros(npn,nmhu,nr);
+    	XXDpm_rf_tp_ij = zeros(npn,nmhu,nr);
+    	XXDpm_rf_tp_imj = zeros(npn,nmhu,nr);
+%
+    	XXDmp_rf_tp_ijp = zeros(npn,nmhu,nr);
+    	XXDmp_rf_tp_ij = zeros(npn,nmhu,nr);
+    	XXDmp_rf_tp_ijm = zeros(npn,nmhu,nr);
+%
+    	XXDmm_rf_tp_ijp = zeros(npn,nmhu,nr);
+    	XXDmm_rf_tp_ijm = zeros(npn,nmhu,nr);
+%
+    	YXXDrf_D_tp_ij = zeros(npn,nmhu,nr);
+%    
+     	XXFp_rf_tp_ippj = zeros(npn,nmhu,nr);
+    	XXFp_rf_tp_ipj = zeros(npn,nmhu,nr);
+    	XXFp_rf_tp_ij = zeros(npn,nmhu,nr);
+    	XXFp_rf_tp_imj = zeros(npn,nmhu,nr);
+    	XXFp_rf_tp_immj = zeros(npn,nmhu,nr);
+%
+        XXFm_rf_tp_ijp = zeros(npn,nmhu,nr);
+    	XXFm_rf_tp_ijm = zeros(npn,nmhu,nr);
+%
+    	YXXDrf_F_tp_ij = zeros(npn,nmhu,nr);
+    end
+%   
 end
 %
 for ir = 1:nr,
@@ -1463,35 +1552,60 @@ for ir = 1:nr,
 %
 % RF waves
 %
-%************************************ a mettre **************************************
+%
+	XDpp_rf_tp_ippj = XXDpp_rf_tp_ippj(:,:,ir);
+	XDpp_rf_tp_ipj = XXDpp_rf_tp_ipj(:,:,ir);
+	XDpp_rf_tp_ij = XXDpp_rf_tp_ij(:,:,ir);
+	XDpp_rf_tp_imj = XXDpp_rf_tp_imj(:,:,ir);
+	XDpp_rf_tp_immj = XXDpp_rf_tp_immj(:,:,ir);
+%	
+	XDpm_rf_tp_ipj = XXDpm_rf_tp_ipj(:,:,ir);
+	XDpm_rf_tp_ij = XXDpm_rf_tp_ij(:,:,ir);	
+	XDpm_rf_tp_imj = XXDpm_rf_tp_imj(:,:,ir);
+
+	XDmp_rf_tp_ijp = XXDmp_rf_tp_ijp(:,:,ir);
+	XDmp_rf_tp_ij = XXDmp_rf_tp_ij(:,:,ir);
+	XDmp_rf_tp_ijm = XXDmp_rf_tp_ijm(:,:,ir);
+%	
+	XDmm_rf_tp_ijp = XXDmm_rf_tp_ijp(:,:,ir);
+	XDmm_rf_tp_ijm = XXDmm_rf_tp_ijm(:,:,ir);
+%
+	XFp_rf_tp_ippj = XXFp_rf_tp_ippj(:,:,ir);
+	XFp_rf_tp_ipj = XXFp_rf_tp_ipj(:,:,ir);
+	XFp_rf_tp_ij = XXFp_rf_tp_ij(:,:,ir);
+	XFp_rf_tp_imj = XXFp_rf_tp_imj(:,:,ir);
+	XFp_rf_tp_immj = XXFp_rf_tp_immj(:,:,ir);
+%
+	XFm_rf_tp_ijp = XXFm_rf_tp_ijp(:,:,ir);
+	XFm_rf_tp_ijm = XXFm_rf_tp_ijm(:,:,ir);
 %	
 % D and F tensors
 % 
-		XDpp_tp_ippj = XDpp_c_tp_ippj + XDpp_e_tp_ippj;
-		XDpp_tp_ipj = XDpp_c_tp_ipj + XDpp_e_tp_ipj;
-		XDpp_tp_ij = XDpp_c_tp_ij + XDpp_e_tp_ij;
-		XDpp_tp_imj = XDpp_c_tp_imj + XDpp_e_tp_imj;
-		XDpp_tp_immj = XDpp_c_tp_immj + XDpp_e_tp_immj;
+		XDpp_tp_ippj = XDpp_c_tp_ippj + XDpp_e_tp_ippj + XDpp_rf_tp_ippj;
+		XDpp_tp_ipj = XDpp_c_tp_ipj + XDpp_e_tp_ipj + XDpp_rf_tp_ipj;
+		XDpp_tp_ij = XDpp_c_tp_ij + XDpp_e_tp_ij + XDpp_rf_tp_ij;
+		XDpp_tp_imj = XDpp_c_tp_imj + XDpp_e_tp_imj + XDpp_rf_tp_imj;
+		XDpp_tp_immj = XDpp_c_tp_immj + XDpp_e_tp_immj + XDpp_rf_tp_immj;
 %
-		XDpm_tp_ipj = XDpm_c_tp_ipj + XDpm_e_tp_ipj;
-		XDpm_tp_ij = XDpm_c_tp_ij + XDpm_e_tp_ij;
-		XDpm_tp_imj = XDpm_c_tp_imj + XDpm_e_tp_imj;
+		XDpm_tp_ipj = XDpm_c_tp_ipj + XDpm_e_tp_ipj + XDpm_rf_tp_ipj;
+		XDpm_tp_ij = XDpm_c_tp_ij + XDpm_e_tp_ij + XDpm_rf_tp_ij;
+		XDpm_tp_imj = XDpm_c_tp_imj + XDpm_e_tp_imj + XDpm_rf_tp_imj;
 %
-		XDmp_tp_ijp = XDmp_c_tp_ijp + XDmp_e_tp_ijp;
-		XDmp_tp_ij = XDmp_c_tp_ij + XDmp_e_tp_ij;
-		XDmp_tp_ijm = XDmp_c_ijm + XDmp_e_tp_ijm;
+		XDmp_tp_ijp = XDmp_c_tp_ijp + XDmp_e_tp_ijp + XDmp_rf_tp_ijp;
+		XDmp_tp_ij = XDmp_c_tp_ij + XDmp_e_tp_ij + XDmp_rf_tp_ij;
+		XDmp_tp_ijm = XDmp_c_tp_ijm + XDmp_e_tp_ijm + XDmp_rf_tp_ijm;
 %
-		XDmm_tp_ijp = XDmm_c_tp_ijp + XDmm_e_tp_ijp;
-		XDmm_tp_ijm = XDmm_c_tp_ijm + XDmm_e_tp_ijm;
+		XDmm_tp_ijp = XDmm_c_tp_ijp + XDmm_e_tp_ijp + XDmm_rf_tp_ijp;
+		XDmm_tp_ijm = XDmm_c_tp_ijm + XDmm_e_tp_ijm + XDmm_rf_tp_ijm;
 %
-		XFp_tp_ippj = XFp_c_tp_ippj + XFp_e_tp_ippj;
-		XFp_tp_ipj = XFp_c_tp_ipj + XFp_e_tp_ipj;
-		XFp_tp_ij = XFp_c_tp_ij + XFp_e_tp_ij;
-		XFp_tp_imj = XFp_c_tp_imj + XFp_e_tp_imj;
-		XFp_tp_immj = XFp_c_tp_immj + XFp_e_tp_immj;
+		XFp_tp_ippj = XFp_c_tp_ippj + XFp_e_tp_ippj + XFp_rf_tp_ippj;
+		XFp_tp_ipj = XFp_c_tp_ipj + XFp_e_tp_ipj + XFp_rf_tp_ipj;
+		XFp_tp_ij = XFp_c_tp_ij + XFp_e_tp_ij + XFp_rf_tp_ij;
+		XFp_tp_imj = XFp_c_tp_imj + XFp_e_tp_imj + XFp_rf_tp_imj;
+		XFp_tp_immj = XFp_c_tp_immj + XFp_e_tp_immj + XFp_rf_tp_immj;
 %
-		XFm_tp_ijp = XFm_c_tp_ijp + XFm_e_tp_ijp;
-		XFm_tp_ijm = XFm_c_tp_ijm + XFm_e_tp_ijm;
+		XFm_tp_ijp = XFm_c_tp_ijp + XFm_e_tp_ijp + XFm_rf_tp_ijp;
+		XFm_tp_ijm = XFm_c_tp_ijm + XFm_e_tp_ijm + XFm_rf_tp_ijm;
 %
 		[Xa_tp,Xb_tp,Xc_tp,Xd_tp,Xe_tp,Xf_tp,Xg_tp,Xh_tp,Xi_tp] = ...
 		fpengine_dke_yp(1,...

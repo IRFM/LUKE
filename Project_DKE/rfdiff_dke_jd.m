@@ -1,4 +1,4 @@
-function [ZYXXD_rf,ZYXXD_tp_rf] = rfdiff_dke_jd(waveparam,...
+function [ZYXXD_rf,ZYXXD_rf_tp,ZYXXF_rf_tp] = rfdiff_dke_jd(waveparam,...
     theta,XR,XZ,XBR,XBZ,XBphi,xB0,Rp,Zp,xqtilde,...
     XXheaviside,XXheaviside_p,XXheaviside_m,... 
     Xmhup,Xmhu,Xmhum,Xmhu2p,Xmhu2,Xmhu2m,X1mmhu2p,X1mmhu2,X1mmhu2m,...
@@ -124,6 +124,12 @@ xyBPb_rf = sqrt(xyBRb_rf.^2 + xyBZb_rf.^2);% poloidal magnetic field at theta = 
 xyBb_rf = sqrt(xyBPb_rf.^2 + xyBphib_rf.^2);% magnetic field at theta = thetab_rf
 %
 YXXBb_rf = shiftdim(repmat(xyBb_rf,[1,1,npn,nmhu]),2);
+%
+%
+%
+YXXsigmap = sign(YXXmhup);
+YXXsigma = sign(YXXmhu);
+YXXsigmam = sign(YXXmhum);
 %    
 % Bounce averaging factors
 % 
@@ -132,9 +138,9 @@ if bounce_mode > 0,
 	YXXlambda = shiftdim(repmat(Xxlambda,[1,1,nb,npn]),3);
 	YXXlambdam = shiftdim(repmat(Xxlambdam,[1,1,nb,npn]),3);
 %  
-	%YXXHPp = repmat(XXheaviside_p,[1,1,1,nb]); %Mask for passing (1) or trapped (0) 
-	%YXXHP = repmat(XXheaviside,[1,1,1,nb]);
-    %YXXHPm = repmat(XXheaviside_m,[1,1,1,nb]);
+	YXXHPp = repmat(XXheaviside_p,[1,1,1,nb]); %Mask for passing (1) or trapped (0) 
+	YXXHP = repmat(XXheaviside,[1,1,1,nb]);
+    YXXHPm = repmat(XXheaviside_m,[1,1,1,nb]);
 % 
     xyqtildeb_rf = xyBb_rf.*xyrb_rf./xyBPb_rf/Rp;
 %
@@ -146,18 +152,18 @@ if bounce_mode > 0,
 %    
     YXXpsib = YXXBb_rf./YXXB0; %Ratio of magnetic fields at theta = thetab_rf
 %    
-    YXXmhubp = YXXmaskb.*sign(YXXmhup).*sqrt(1 - YXXpsib.*YXX1mmhu2p); %Pitch angle cosine at ray location
-    YXXmhub = YXXmaskb.*sign(YXXmhu).*sqrt(1 - YXXpsib.*YXX1mmhu2);
-    YXXmhubm = YXXmaskb.*sign(YXXmhum).*sqrt(1 - YXXpsib.*YXX1mmhu2m);
+    YXXmhubp = YXXmaskb.*YXXsigmap.*sqrt(1 - YXXpsib.*YXX1mmhu2p); %Pitch angle cosine at ray location
+    YXXmhub = YXXmaskb.*YXXsigma.*sqrt(1 - YXXpsib.*YXX1mmhu2);
+    YXXmhubm = YXXmaskb.*YXXsigmam.*sqrt(1 - YXXpsib.*YXX1mmhu2m);
 %
     YXXomegac = qe*YXXB0/me; % cyclotron frequency at B=Bmin 
 %
     clear YXXBbp YXXBb YXXBbm
     clear Xxlambdap Xxlambda Xxlambdam
 else
-    %YXXHPp = ones(npn,nmhu,nr,nb);
-    %YXXHP = ones(npn,nmhu,nr,nb);
-    %YXXHPm = ones(npn,nmhu,nr,nb);
+    YXXHPp = ones(npn,nmhu,nr,nb);
+    YXXHP = ones(npn,nmhu,nr,nb);
+    YXXHPm = ones(npn,nmhu,nr,nb);
 %    
     YXXlambdap = ones(npn,nmhu,nr,nb);
     YXXlambda = ones(npn,nmhu,nr,nb);
@@ -231,14 +237,6 @@ YXXpolb_ijp = YXXepolp_rf.*besselj_dke_jd(YXXn_rf + 1,YXXZb_ijp,YXXlre)/sqrt(2) 
 YXXpolb_ijm = YXXepolp_rf.*besselj_dke_jd(YXXn_rf + 1,YXXZb_ijm,YXXlre)/sqrt(2) + YXXepolm_rf.*besselj_dke_jd(YXXn_rf - 1,YXXZb_ijm,YXXlre)/sqrt(2)...
            - YXXmhubm.*YXXepolz_rf.*besselj_dke_jd(YXXn_rf,YXXZb_ijm,YXXlre)./sqrt(YXXpsib.*YXX1mmhu2m);    
 %       
-%YXXpolb_ippj = YXXHP.*YXXpolb_ippj + ~YXXHP.*(YXXpolb_ippj + flipdim(YXXpolb_ippj,2))/2;       
-%YXXpolb_ipj = YXXHP.*YXXpolb_ipj + ~YXXHP.*(YXXpolb_ipj + flipdim(YXXpolb_ipj,2))/2;       
-%YXXpolb_ij = YXXHP.*YXXpolb_ij + ~YXXHP.*(YXXpolb_ij + flipdim(YXXpolb_ij,2))/2;       
-%YXXpolb_imj = YXXHP.*YXXpolb_imj + ~YXXHP.*(YXXpolb_imj + flipdim(YXXpolb_imj,2))/2;       
-%YXXpolb_immj = YXXHP.*YXXpolb_immj + ~YXXHP.*(YXXpolb_immj + flipdim(YXXpolb_immj,2))/2;       
-%YXXpolb_ijp = YXXHPp.*YXXpolb_ijp + ~YXXHPp.*(YXXpolb_ijp + flipdim(YXXpolb_ijp,2))/2;% -mhup = fliplr(mhum)       
-%YXXpolb_ijm = YXXHPm.*YXXpolb_ijm + ~YXXHPm.*(YXXpolb_ijm + flipdim(YXXpolb_ijm,2))/2;% -mhum = fliplr(mhup) 
-%       
 clear YXXlre 
 clear YXXZb_ippj YXXZb_ipj YXXZb_ij YXXZb_imj YXXZb_immj YXXZb_ijp YXXZb_ijm
 clear YXXepolp_rf YXXepolm_rf YXXepolz_rf        
@@ -299,35 +297,6 @@ clear YXXmask_square YXXmask_gauss
 clear YXXnparres_ippj YXXnparres_ipj YXXnparres_ij YXXnparres_imj YXXnparres_immj YXXnparres_ijp YXXnparres_ijm
 clear YXXnparmin_rf YXXnparmax_rf YXXnpar_rf YXXdnpar_rf
 %
-%Sum over sigma for trapped particles
-%
-%YXXres_ippj = YXXHP.*YXXdeltares_ippj + ~YXXHP.*(YXXdeltares_ippj + flipdim(YXXdeltares_ippj,2))/2;       
-%YXXres_ipj = YXXHP.*YXXdeltares_ipj + ~YXXHP.*(YXXdeltares_ipj + flipdim(YXXdeltares_ipj,2))/2;       
-%YXXres_ij = YXXHP.*YXXdeltares_ij + ~YXXHP.*(YXXdeltares_ij + flipdim(YXXdeltares_ij,2))/2;       
-%YXXres_imj = YXXHP.*YXXdeltares_imj + ~YXXHP.*(YXXdeltares_imj + flipdim(YXXdeltares_imj,2))/2;       
-%YXXres_immj = YXXHP.*YXXdeltares_immj + ~YXXHP.*(YXXdeltares_immj + flipdim(YXXdeltares_immj,2))/2;       
-%YXXres_ijp = YXXHPp.*YXXdeltares_ijp + ~YXXHPp.*(YXXdeltares_ijp + flipdim(YXXdeltares_ijm,2))/2;% -mhup = fliplr(mhum)       
-%YXXres_ijm = YXXHPm.*YXXdeltares_ijm + ~YXXHPm.*(YXXdeltares_ijm + flipdim(YXXdeltares_ijp,2))/2;% -mhum = fliplr(mhup) 
-%
-YXXres_ippj = YXXdeltares_ippj;       
-YXXres_ipj = YXXdeltares_ipj;       
-YXXres_ij = YXXdeltares_ij;       
-YXXres_imj = YXXdeltares_imj;       
-YXXres_immj = YXXdeltares_immj;       
-YXXres_ijp = YXXdeltares_ijp;      
-YXXres_ijm = YXXdeltares_ijm;
-%
-%YXXres_ippj(npn-2:npn,:) = 0;%Baranov
-%YXXres_ipj(npn-2:npn,:) = 0;%Baranov
-%YXXres_ij(npn-2:npn,:) = 0;%Baranov
-%YXXres_imj(npn-2:npn,:) = 0;%Baranov
-%YXXres_immj(npn-2:npn,:) = 0;%Baranov
-%YXXres_ijp(npn-2:npn,:) = 0;%Baranov
-%YXXres_ijm(npn-2:npn,:) = 0;%Baranov
-%
-%clear YXXHPp YXXHP YXXHPm
-clear YXXdeltares_ippj YXXdeltares_ipj YXXdeltares_ij YXXdeltares_imj YXXdeltares_immj YXXdeltares_ijp YXXdeltares_ijm
-%
 %Old technique for calculating the LH matrix coefficients, for comparaison with previous versions (Karney, Shoucri)
 %
 YXXold = (YXXopt == 2);
@@ -335,70 +304,108 @@ if max(YXXold(:)) > 0
 	info_dke_yp(1,'WARNING: Old technique for calculating the LH matrix coefficients, for comparaison with previous versions (Karney, Shoucri)');
 end
 %
-YXXres_old_ij = YXXres_ij;
-YXXres_old_ij(npn-2:npn,:) = 0;%Baranov condition for avoiding particle leaks at the boundary when relativistic effects are karge at the high velocity limit
+YXXdeltares_old_ij = YXXdeltares_ij;
+YXXdeltares_old_ij(npn-2:npn,:) = 0;%Baranov condition for avoiding particle leaks at the boundary when relativistic effects are karge at the high velocity limit
 %
-YXXres_old_ippj = zeros(size(YXXres_old_ij)); 
-YXXres_old_ipj = zeros(size(YXXres_old_ij));
-YXXres_old_imj = zeros(size(YXXres_old_ij)); 
-YXXres_old_immj = zeros(size(YXXres_old_ij)); 
-YXXres_old_ijp = zeros(size(YXXres_old_ij)); 
-YXXres_old_ijm = zeros(size(YXXres_old_ij)); 
+YXXdeltares_old_ippj = zeros(size(YXXdeltares_old_ij)); 
+YXXdeltares_old_ipj = zeros(size(YXXdeltares_old_ij));
+YXXdeltares_old_imj = zeros(size(YXXdeltares_old_ij)); 
+YXXdeltares_old_immj = zeros(size(YXXdeltares_old_ij)); 
+YXXdeltares_old_ijp = zeros(size(YXXdeltares_old_ij)); 
+YXXdeltares_old_ijm = zeros(size(YXXdeltares_old_ij)); 
 %
-YXXres_old_ippj(1:npn-1,:,:,:) = YXXres_old_ij(2:npn,:,:,:); YXXres_old_ijipp(npn,:,:,:) = 0;
-YXXres_old_ipj(1:npn-1,:,:,:) = (YXXres_old_ij(1:npn-1,:,:,:) + YXXres_old_ij(2:npn,:,:,:))/2; YXXres_old_ipj(npn,:,:,:) = YXXres_old_ij(npn,:,:,:)/2;
-YXXres_old_imj(2:npn,:,:,:) = (YXXres_old_ij(1:npn-1,:,:,:) + YXXres_old_ij(2:npn,:,:,:))/2;YXXres_old_imj(1,:,:,:) = YXXres_old_ij(1,:,:,:)/2;
-YXXres_old_immj(2:npn,:,:,:) = YXXres_old_ij(1:npn-1,:,:,:);YXXres_old_immj(1,:,:,:) = 0;
-YXXres_old_ijp(:,1:nmhu-1,:,:) = (YXXres_old_ij(:,1:nmhu-1,:,:) + YXXres_old_ij(:,2:nmhu,:,:))/2;YXXres_old_ijp(:,nmhu,:,:) = YXXres_old_ij(:,nmhu,:,:)/2;   
-YXXres_old_ijm(:,2:nmhu,:,:) = (YXXres_old_ij(:,1:nmhu-1,:,:) + YXXres_old_ij(:,2:nmhu,:,:))/2;YXXres_old_ijm(:,1,:,:) = YXXres_old_ij(:,1,:,:)/2;
+YXXdeltares_old_ippj(1:npn-1,:,:,:) = YXXdeltares_old_ij(2:npn,:,:,:); YXXdeltares_old_ijipp(npn,:,:,:) = 0;
+YXXdeltares_old_ipj(1:npn-1,:,:,:) = (YXXdeltares_old_ij(1:npn-1,:,:,:) + YXXdeltares_old_ij(2:npn,:,:,:))/2; YXXdeltares_old_ipj(npn,:,:,:) = YXXdeltares_old_ij(npn,:,:,:)/2;
+YXXdeltares_old_imj(2:npn,:,:,:) = (YXXdeltares_old_ij(1:npn-1,:,:,:) + YXXdeltares_old_ij(2:npn,:,:,:))/2;YXXdeltares_old_imj(1,:,:,:) = YXXdeltares_old_ij(1,:,:,:)/2;
+YXXdeltares_old_immj(2:npn,:,:,:) = YXXdeltares_old_ij(1:npn-1,:,:,:);YXXdeltares_old_immj(1,:,:,:) = 0;
+YXXdeltares_old_ijp(:,1:nmhu-1,:,:) = (YXXdeltares_old_ij(:,1:nmhu-1,:,:) + YXXdeltares_old_ij(:,2:nmhu,:,:))/2;YXXdeltares_old_ijp(:,nmhu,:,:) = YXXdeltares_old_ij(:,nmhu,:,:)/2;   
+YXXdeltares_old_ijm(:,2:nmhu,:,:) = (YXXdeltares_old_ij(:,1:nmhu-1,:,:) + YXXdeltares_old_ij(:,2:nmhu,:,:))/2;YXXdeltares_old_ijm(:,1,:,:) = YXXdeltares_old_ij(:,1,:,:)/2;
 %
 %Old LH operator: 1/vpar dependence removed (Karney, Shoucri)
 %
-YXXres_old_ippj = YXXres_old_ippj.*YXXpnpp.*abs(YXXmhu)./YXXgammapp;
-YXXres_old_ipj = YXXres_old_ipj.*YXXpnp.*abs(YXXmhu)./YXXgammap;
-YXXres_old_ij = YXXres_old_ij.*YXXpn.*abs(YXXmhu)./YXXgamma;
-YXXres_old_imj = YXXres_old_imj.*YXXpnm.*abs(YXXmhu)./YXXgammam;
-YXXres_old_immj = YXXres_old_immj.*YXXpnmm.*abs(YXXmhu)./YXXgammamm;
-YXXres_old_ijp = YXXres_old_ijp.*YXXpn.*abs(YXXmhup)./YXXgamma;
-YXXres_old_ijm = YXXres_old_ijm.*YXXpn.*abs(YXXmhum)./YXXgamma;
+YXXdeltares_old_ippj = YXXdeltares_old_ippj.*YXXpnpp.*abs(YXXmhu)./YXXgammapp;
+YXXdeltares_old_ipj = YXXdeltares_old_ipj.*YXXpnp.*abs(YXXmhu)./YXXgammap;
+YXXdeltares_old_ij = YXXdeltares_old_ij.*YXXpn.*abs(YXXmhu)./YXXgamma;
+YXXdeltares_old_imj = YXXdeltares_old_imj.*YXXpnm.*abs(YXXmhu)./YXXgammam;
+YXXdeltares_old_immj = YXXdeltares_old_immj.*YXXpnmm.*abs(YXXmhu)./YXXgammamm;
+YXXdeltares_old_ijp = YXXdeltares_old_ijp.*YXXpn.*abs(YXXmhup)./YXXgamma;
+YXXdeltares_old_ijm = YXXdeltares_old_ijm.*YXXpn.*abs(YXXmhum)./YXXgamma;
 %
-YXXres_ippj = YXXold.*YXXres_old_ippj + ~YXXold.*YXXres_ippj;
-YXXres_ipj = YXXold.*YXXres_old_ipj + ~YXXold.*YXXres_ipj;
-YXXres_ij = YXXold.*YXXres_old_ij + ~YXXold.*YXXres_ij;
-YXXres_imj = YXXold.*YXXres_old_imj + ~YXXold.*YXXres_imj;
-YXXres_immj = YXXold.*YXXres_old_immj + ~YXXold.*YXXres_immj;
-YXXres_ijp = YXXold.*YXXres_old_ijp + ~YXXold.*YXXres_ijp;
-YXXres_ijm = YXXold.*YXXres_old_ijm + ~YXXold.*YXXres_ijm;
+YXXdeltares_ippj = YXXold.*YXXdeltares_old_ippj + ~YXXold.*YXXdeltares_ippj;
+YXXdeltares_ipj = YXXold.*YXXdeltares_old_ipj + ~YXXold.*YXXdeltares_ipj;
+YXXdeltares_ij = YXXold.*YXXdeltares_old_ij + ~YXXold.*YXXdeltares_ij;
+YXXdeltares_imj = YXXold.*YXXdeltares_old_imj + ~YXXold.*YXXdeltares_imj;
+YXXdeltares_immj = YXXold.*YXXdeltares_old_immj + ~YXXold.*YXXdeltares_immj;
+YXXdeltares_ijp = YXXold.*YXXdeltares_old_ijp + ~YXXold.*YXXdeltares_ijp;
+YXXdeltares_ijm = YXXold.*YXXdeltares_old_ijm + ~YXXold.*YXXdeltares_ijm;
 %
 clear YXXold YXXopt
-clear YXXres_old_ippj YXXres_old_ipj YXXres_old_ij YXXres_old_imj YXXres_old_immj YXXres_old_ijp YXXres_old_ijm 
+clear YXXdeltares_old_ippj YXXdeltares_old_ipj YXXdeltares_old_ij YXXdeltares_old_imj YXXdeltares_old_immj YXXdeltares_old_ijp YXXdeltares_old_ijm 
+%
+%Sum over sigma for trapped particles
+%
+% case FP
+YXXrespol_ippj = YXXHP.*(YXXdeltares_ippj.*abs(YXXpolb_ippj).^2) + ~YXXHP.*(YXXdeltares_ippj.*abs(YXXpolb_ippj).^2 + flipdim(YXXdeltares_ippj.*abs(YXXpolb_ippj).^2,2))/2;       
+YXXrespol_ipj = YXXHP.*(YXXdeltares_ipj.*abs(YXXpolb_ipj).^2) + ~YXXHP.*(YXXdeltares_ipj.*abs(YXXpolb_ipj).^2 + flipdim(YXXdeltares_ipj.*abs(YXXpolb_ipj).^2,2))/2;       
+YXXrespol_ij = YXXHP.*(YXXdeltares_ij.*abs(YXXpolb_ij).^2) + ~YXXHP.*(YXXdeltares_ij.*abs(YXXpolb_ij).^2 + flipdim(YXXdeltares_ij.*abs(YXXpolb_ij).^2,2))/2;       
+YXXrespol_imj = YXXHP.*(YXXdeltares_imj.*abs(YXXpolb_imj).^2) + ~YXXHP.*(YXXdeltares_imj.*abs(YXXpolb_imj).^2 + flipdim(YXXdeltares_imj.*abs(YXXpolb_imj).^2,2))/2;       
+YXXrespol_immj = YXXHP.*(YXXdeltares_immj.*abs(YXXpolb_immj).^2) + ~YXXHP.*(YXXdeltares_immj.*abs(YXXpolb_immj).^2 + flipdim(YXXdeltares_immj.*abs(YXXpolb_immj).^2,2))/2;      
+YXXrespol_ijp = YXXHPp.*(YXXdeltares_ijp.*abs(YXXpolb_ijp).^2) + ~YXXHPp.*(YXXdeltares_ijp.*abs(YXXpolb_ijp).^2 + flipdim(YXXdeltares_ijm.*abs(YXXpolb_ijm).^2,2))/2;% -mhup = fliplr(mhum)     
+YXXrespol_ijm = YXXHPm.*(YXXdeltares_ijm.*abs(YXXpolb_ijm).^2) + ~YXXHPm.*(YXXdeltares_ijm.*abs(YXXpolb_ijm).^2 + flipdim(YXXdeltares_ijp.*abs(YXXpolb_ijp).^2,2))/2;% -mhum = fliplr(mhup)        
+% case DKE
+YXXrespol_ippj = YXXHP.*(YXXdeltares_ippj.*abs(YXXpolb_ippj).^2) + ~YXXHP.*YXXsigma.*(YXXdeltares_ippj.*abs(YXXpolb_ippj).^2.*YXXsigma + flipdim(YXXdeltares_ippj.*abs(YXXpolb_ippj).^2.*YXXsigma,2))/2;       
+YXXrespol_ipj = YXXHP.*(YXXdeltares_ipj.*abs(YXXpolb_ipj).^2) + ~YXXHP.*YXXsigma.*(YXXdeltares_ipj.*abs(YXXpolb_ipj).^2.*YXXsigma + flipdim(YXXdeltares_ipj.*abs(YXXpolb_ipj).^2.*YXXsigma,2))/2;       
+YXXrespol_ij = YXXHP.*(YXXdeltares_ij.*abs(YXXpolb_ij).^2) + ~YXXHP.*YXXsigma.*(YXXdeltares_ij.*abs(YXXpolb_ij).^2.*YXXsigma + flipdim(YXXdeltares_ij.*abs(YXXpolb_ij).^2.*YXXsigma,2))/2;       
+YXXrespol_imj = YXXHP.*(YXXdeltares_imj.*abs(YXXpolb_imj).^2) + ~YXXHP.*YXXsigma.*(YXXdeltares_imj.*abs(YXXpolb_imj).^2.*YXXsigma + flipdim(YXXdeltares_imj.*abs(YXXpolb_imj).^2.*YXXsigma,2))/2;       
+YXXrespol_immj = YXXHP.*(YXXdeltares_immj.*abs(YXXpolb_immj).^2) + ~YXXHP.*YXXsigma.*(YXXdeltares_immj.*abs(YXXpolb_immj).^2.*YXXsigma + flipdim(YXXdeltares_immj.*abs(YXXpolb_immj).^2.*YXXsigma,2))/2;      
+YXXrespol_ijp = YXXHPp.*(YXXdeltares_ijp.*abs(YXXpolb_ijp).^2) + ~YXXHPp.*YXXsigmap.*(YXXdeltares_ijp.*abs(YXXpolb_ijp).^2.*YXXsigmap + flipdim(YXXdeltares_ijm.*abs(YXXpolb_ijm).^2.*YXXsigmam,2))/2;% -mhup = fliplr(mhum)     
+YXXrespol_ijm = YXXHPm.*(YXXdeltares_ijm.*abs(YXXpolb_ijm).^2) + ~YXXHPm.*YXXsigmam.*(YXXdeltares_ijm.*abs(YXXpolb_ijm).^2.*YXXsigmam + flipdim(YXXdeltares_ijp.*abs(YXXpolb_ijp).^2.*YXXsigmap,2))/2;% -mhum = fliplr(mhup)        
+%
+%YXXrespol_ippj(npn-2:npn,:) = 0;%Baranov
+%YXXrespol_ipj(npn-2:npn,:) = 0;%Baranov
+%YXXrespol_ij(npn-2:npn,:) = 0;%Baranov
+%YXXrespol_imj(npn-2:npn,:) = 0;%Baranov
+%YXXrespol_immj(npn-2:npn,:) = 0;%Baranov
+%YXXrespol_ijp(npn-2:npn,:) = 0;%Baranov
+%YXXrespol_ijm(npn-2:npn,:) = 0;%Baranov
+%
+clear YXXHPp YXXHP YXXHPm
+clear YXXsigmap YXXsigma YXXsigmam
+clear YXXdeltares_ippj YXXdeltares_ipj YXXdeltares_ij YXXdeltares_imj YXXdeltares_immj YXXdeltares_ijp YXXdeltares_ijm
 %
 %QL Diffusion Coefficient
 %    
-YXXDrf_ippj = YXXD0_rf.*abs(YXXpolb_ippj).^2.*YXXpsib.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXres_ippj.*YXXgammapp./YXXpnpp./abs(YXXmhu)./YXXmhub2./YXXlambda./YXXqtilde;
-YXXDrf_ipj = YXXD0_rf.*abs(YXXpolb_ipj).^2.*YXXpsib.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXres_ipj.*YXXgammap./YXXpnp./abs(YXXmhu)./YXXmhub2./YXXlambda./YXXqtilde;
-YXXDrf_ij = YXXD0_rf.*abs(YXXpolb_ij).^2.*YXXpsib.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXres_ij.*YXXgamma./YXXpn./abs(YXXmhu)./YXXmhub2./YXXlambda./YXXqtilde;
-YXXDrf_imj = YXXD0_rf.*abs(YXXpolb_imj).^2.*YXXpsib.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXres_imj.*YXXgammam./YXXpnm./abs(YXXmhu)./YXXmhub2./YXXlambda./YXXqtilde;
-YXXDrf_immj = YXXD0_rf.*abs(YXXpolb_immj).^2.*YXXpsib.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXres_immj.*YXXgammamm./YXXpnmm./abs(YXXmhu)./YXXmhub2./YXXlambda./YXXqtilde;
-YXXDrf_ijp = YXXD0_rf.*abs(YXXpolb_ijp).^2.*YXXpsib.*YXXmhu2p.*YXXqtildeb_rf.*YXXmaskb.*YXXres_ijp.*YXXgamma./YXXpn./abs(YXXmhup)./YXXmhub2p./YXXlambdap./YXXqtilde;
-YXXDrf_ijm = YXXD0_rf.*abs(YXXpolb_ijm).^2.*YXXpsib.*YXXmhu2m.*YXXqtildeb_rf.*YXXmaskb.*YXXres_ijm.*YXXgamma./YXXpn./abs(YXXmhum)./YXXmhub2m./YXXlambdam./YXXqtilde;   
+YXXDrf_ippj = YXXD0_rf.*YXXrespol_ippj.*YXXpsib.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXgammapp./YXXpnpp./abs(YXXmhu)./YXXmhub2./YXXlambda./YXXqtilde;
+YXXDrf_ipj = YXXD0_rf.*YXXrespol_ipj.*YXXpsib.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXgammap./YXXpnp./abs(YXXmhu)./YXXmhub2./YXXlambda./YXXqtilde;
+YXXDrf_ij = YXXD0_rf.*YXXrespol_ij.*YXXpsib.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXgamma./YXXpn./abs(YXXmhu)./YXXmhub2./YXXlambda./YXXqtilde;
+YXXDrf_imj = YXXD0_rf.*YXXrespol_imj.*YXXpsib.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXgammam./YXXpnm./abs(YXXmhu)./YXXmhub2./YXXlambda./YXXqtilde;
+YXXDrf_immj = YXXD0_rf.*YXXrespol_immj.*YXXpsib.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXgammamm./YXXpnmm./abs(YXXmhu)./YXXmhub2./YXXlambda./YXXqtilde;
+YXXDrf_ijp = YXXD0_rf.*YXXrespol_ijp.*YXXpsib.*YXXmhu2p.*YXXqtildeb_rf.*YXXmaskb.*YXXgamma./YXXpn./abs(YXXmhup)./YXXmhub2p./YXXlambdap./YXXqtilde;
+YXXDrf_ijm = YXXD0_rf.*YXXrespol_ijm.*YXXpsib.*YXXmhu2m.*YXXqtildeb_rf.*YXXmaskb.*YXXgamma./YXXpn./abs(YXXmhum)./YXXmhub2m./YXXlambdam./YXXqtilde;   
 %
 if dke_mode == 1
-    YXXDrf_tp_ippj = YXXD0_rf.*abs(YXXpolb_ippj).^2.*YXXmhu.*YXXqtildeb_rf.*YXXmaskb.*YXXres_ippj.*YXXgammapp./YXXpnpp./abs(YXXmhu)./YXXmhub./YXXlambda./YXXqtilde;
-    YXXDrf_tp_ipj = YXXD0_rf.*abs(YXXpolb_ipj).^2.*YXXmhu.*YXXqtildeb_rf.*YXXmaskb.*YXXres_ipj.*YXXgammap./YXXpnp./abs(YXXmhu)./YXXmhub./YXXlambda./YXXqtilde;
-    YXXDrf_tp_ij = YXXD0_rf.*abs(YXXpolb_ij).^2.*YXXmhu.*YXXqtildeb_rf.*YXXmaskb.*YXXres_ij.*YXXgamma./YXXpn./abs(YXXmhu)./YXXmhub./YXXlambda./YXXqtilde;
-    YXXDrf_tp_imj = YXXD0_rf.*abs(YXXpolb_imj).^2.*YXXmhu.*YXXqtildeb_rf.*YXXmaskb.*YXXres_imj.*YXXgammam./YXXpnm./abs(YXXmhu)./YXXmhub./YXXlambda./YXXqtilde;
-    YXXDrf_tp_immj = YXXD0_rf.*abs(YXXpolb_immj).^2.*YXXmhu.*YXXqtildeb_rf.*YXXmaskb.*YXXres_immj.*YXXgammamm./YXXpnmm./abs(YXXmhu)./YXXmhub./YXXlambda./YXXqtilde;
-    YXXDrf_tp_ijp = YXXD0_rf.*abs(YXXpolb_ijp).^2.*YXXmhup.*YXXqtildeb_rf.*YXXmaskb.*YXXres_ijp.*YXXgamma./YXXpn./abs(YXXmhup)./YXXmhubp./YXXlambdap./YXXqtilde;
-    YXXDrf_tp_ijm = YXXD0_rf.*abs(YXXpolb_ijm).^2.*YXXmhum.*YXXqtildeb_rf.*YXXmaskb.*YXXres_ijm.*YXXgamma./YXXpn./abs(YXXmhum)./YXXmhubm./YXXlambdam./YXXqtilde;   
+    YXXDrf_D_tp_ippj = YXXD0_rf.*YXXrespol_ippj.*YXXmhu.*YXXqtildeb_rf.*YXXmaskb.*YXXgammapp./YXXpnpp./abs(YXXmhu)./YXXmhub./YXXlambda./YXXqtilde;
+    YXXDrf_D_tp_ipj = YXXD0_rf.*YXXrespol_ipj.*YXXmhu.*YXXqtildeb_rf.*YXXmaskb.*YXXgammap./YXXpnp./abs(YXXmhu)./YXXmhub./YXXlambda./YXXqtilde;
+    YXXDrf_D_tp_ij = YXXD0_rf.*YXXrespol_ij.*YXXmhu.*YXXqtildeb_rf.*YXXmaskb.*YXXgamma./YXXpn./abs(YXXmhu)./YXXmhub./YXXlambda./YXXqtilde;
+    YXXDrf_D_tp_imj = YXXD0_rf.*YXXrespol_imj.*YXXmhu.*YXXqtildeb_rf.*YXXmaskb.*YXXgammam./YXXpnm./abs(YXXmhu)./YXXmhub./YXXlambda./YXXqtilde;
+    YXXDrf_D_tp_immj = YXXD0_rf.*YXXrespol_immj.*YXXmhu.*YXXqtildeb_rf.*YXXmaskb.*YXXgammamm./YXXpnmm./abs(YXXmhu)./YXXmhub./YXXlambda./YXXqtilde;
+    YXXDrf_D_tp_ijp = YXXD0_rf.*YXXrespol_ijp.*YXXmhup.*YXXqtildeb_rf.*YXXmaskb.*YXXgamma./YXXpn./abs(YXXmhup)./YXXmhubp./YXXlambdap./YXXqtilde;
+    YXXDrf_D_tp_ijm = YXXD0_rf.*YXXrespol_ijm.*YXXmhum.*YXXqtildeb_rf.*YXXmaskb.*YXXgamma./YXXpn./abs(YXXmhum)./YXXmhubm./YXXlambdam./YXXqtilde;   
+%    
+    YXXDrf_F_tp_ippj = YXXD0_rf.*YXXrespol_ippj.*(1 - YXXpsib).*YXXmhu.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXgammapp./YXXpnpp./abs(YXXmhu)./YXXmhub./YXXmhub2./YXXlambda./YXXqtilde;
+    YXXDrf_F_tp_ipj = YXXD0_rf.*YXXrespol_ipj.*(1 - YXXpsib).*YXXmhu.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXgammap./YXXpnp./abs(YXXmhu)./YXXmhub./YXXmhub2./YXXlambda./YXXqtilde;
+    YXXDrf_F_tp_ij = YXXD0_rf.*YXXrespol_ij.*(1 - YXXpsib).*YXXmhu.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXgamma./YXXpn./abs(YXXmhu)./YXXmhub./YXXmhub2./YXXlambda./YXXqtilde;
+    YXXDrf_F_tp_imj = YXXD0_rf.*YXXrespol_imj.*(1 - YXXpsib).*YXXmhu.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXgammam./YXXpnm./abs(YXXmhu)./YXXmhub./YXXmhub2./YXXlambda./YXXqtilde;
+    YXXDrf_F_tp_immj = YXXD0_rf.*YXXrespol_immj.*(1 - YXXpsib).*YXXmhu.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXgammamm./YXXpnmm./abs(YXXmhu)./YXXmhub./YXXmhub2./YXXlambda./YXXqtilde;
+    YXXDrf_F_tp_ijp = YXXD0_rf.*YXXrespol_ijp.*(1 - YXXpsib).*YXXmhup.*YXXmhu2p.*YXXqtildeb_rf.*YXXmaskb.*YXXgamma./YXXpn./abs(YXXmhup)./YXXmhubp./YXXmhub2p./YXXlambdap./YXXqtilde;
+    YXXDrf_F_tp_ijm = YXXD0_rf.*YXXrespol_ijm.*(1 - YXXpsib).*YXXmhum.*YXXmhu2m.*YXXqtildeb_rf.*YXXmaskb.*YXXgamma./YXXpn./abs(YXXmhum)./YXXmhubm./YXXmhub2m./YXXlambdam./YXXqtilde;       
 end
 % 
-clear YXXD0_rf YXXpsib YXXmhu2 YXXqtildeb_rf YXXmaskb YXXqtilde
-clear YXXmhubp YXXmhub YXXmhubm
+clear YXXD0_rf YXXpsib YXXqtildeb_rf YXXmaskb YXXqtilde
+clear YXXmhubp YXXmhub YXXmhubm YXXmhub2p YXXmhub2 YXXmhub2m
 clear YXXpolb_ippj YXXpolb_ipj YXXpolb_ij YXXpolb_imj YXXpolb_immj YXXpolb_ijp YXXpolb_ijm 
 clear YXXres_ippj YXXres_ipj YXXres_ij YXXres_imj YXXres_immj YXXres_ijp YXXres_ijm 
-clear YXXpnp YXXpn YXXpnm
-clear YXXgammap YXXgamma YXXgammam
+clear YXXgammapp YXXgammap YXXgamma YXXgammam YXXgammamm
 clear YXXlambdap YXXlambda YXXlambdam
 %
 %QL diffusion tensor elements
@@ -423,24 +430,36 @@ ZYXXD_rf{13} = (YXX1mmhu2m - YXXn_rf.*YXXomegac./YXXomega_rf).^2.*YXXDrf_ijm./YX
 ZYXXD_rf{14} =  YXXDrf_ij;
 %
 if dke_mode == 1
-    ZYXXD_tp_rf{1} = YXX1mmhu2.*YXXDrf_tp_ippj;%YXXDpp_rf_ippj
-    ZYXXD_tp_rf{2} = YXX1mmhu2.*YXXDrf_tp_ipj;%YXXDpp_rf_ipj
-    ZYXXD_tp_rf{3} = YXX1mmhu2.*YXXDrf_tp_ij;%YXXDpp_rf_ij
-    ZYXXD_tp_rf{4} = YXX1mmhu2.*YXXDrf_tp_imj;%YXXDpp_rf_imj
-    ZYXXD_tp_rf{5} = YXX1mmhu2.*YXXDrf_tp_immj;%YXXDpp_rf_immj
+    ZYXXD_rf_tp{1} = YXX1mmhu2.*YXXDrf_D_tp_ippj;%YXXDpp_rf_ippj
+    ZYXXD_rf_tp{2} = YXX1mmhu2.*YXXDrf_D_tp_ipj;%YXXDpp_rf_ipj
+    ZYXXD_rf_tp{3} = YXX1mmhu2.*YXXDrf_D_tp_ij;%YXXDpp_rf_ij
+    ZYXXD_rf_tp{4} = YXX1mmhu2.*YXXDrf_D_tp_imj;%YXXDpp_rf_imj
+    ZYXXD_rf_tp{5} = YXX1mmhu2.*YXXDrf_D_tp_immj;%YXXDpp_rf_immj
 %
-    ZYXXD_tp_rf{6} = -sqrt(YXX1mmhu2).*(YXX1mmhu2 - YXXn_rf.*YXXomegac./YXXomega_rf).*YXXDrf_tp_ipj./YXXmhu;%YXXDpm_rf_ipj
-    ZYXXD_tp_rf{7} = -sqrt(YXX1mmhu2).*(YXX1mmhu2 - YXXn_rf.*YXXomegac./YXXomega_rf).*YXXDrf_tp_ij./YXXmhu;%YXXDpm_rf_ij
-    ZYXXD_tp_rf{8} = -sqrt(YXX1mmhu2).*(YXX1mmhu2 - YXXn_rf.*YXXomegac./YXXomega_rf).*YXXDrf_tp_imj./YXXmhu;%YXXDpm_rf_imj
+    ZYXXD_rf_tp{6} = -sqrt(YXX1mmhu2).*(YXX1mmhu2 - YXXn_rf.*YXXomegac./YXXomega_rf).*YXXDrf_D_tp_ipj./YXXmhu;%YXXDpm_rf_ipj
+    ZYXXD_rf_tp{7} = -sqrt(YXX1mmhu2).*(YXX1mmhu2 - YXXn_rf.*YXXomegac./YXXomega_rf).*YXXDrf_D_tp_ij./YXXmhu;%YXXDpm_rf_ij
+    ZYXXD_rf_tp{8} = -sqrt(YXX1mmhu2).*(YXX1mmhu2 - YXXn_rf.*YXXomegac./YXXomega_rf).*YXXDrf_D_tp_imj./YXXmhu;%YXXDpm_rf_imj
 %
-    ZYXXD_tp_rf{9} = -sqrt(YXX1mmhu2p).*(YXX1mmhu2p - YXXn_rf.*YXXomegac./YXXomega_rf).*YXXDrf_tp_ijp./YXXmhup;%YXXDmp_rf_ijp
-    ZYXXD_tp_rf{10} = -sqrt(YXX1mmhu2).*(YXX1mmhu2 - YXXn_rf.*YXXomegac./YXXomega_rf).*YXXDrf_tp_ij./YXXmhu;%YXXDmp_rf_ij
-    ZYXXD_tp_rf{11} = -sqrt(YXX1mmhu2m).*(YXX1mmhu2m - YXXn_rf.*YXXomegac./YXXomega_rf).*YXXDrf_tp_ijm./YXXmhum;%YXXDmp_rf_ijm
+    ZYXXD_rf_tp{9} = -sqrt(YXX1mmhu2p).*(YXX1mmhu2p - YXXn_rf.*YXXomegac./YXXomega_rf).*YXXDrf_D_tp_ijp./YXXmhup;%YXXDmp_rf_ijp
+    ZYXXD_rf_tp{10} = -sqrt(YXX1mmhu2).*(YXX1mmhu2 - YXXn_rf.*YXXomegac./YXXomega_rf).*YXXDrf_D_tp_ij./YXXmhu;%YXXDmp_rf_ij
+    ZYXXD_rf_tp{11} = -sqrt(YXX1mmhu2m).*(YXX1mmhu2m - YXXn_rf.*YXXomegac./YXXomega_rf).*YXXDrf_D_tp_ijm./YXXmhum;%YXXDmp_rf_ijm
 %
-    ZYXXD_tp_rf{12} = (YXX1mmhu2p - YXXn_rf.*YXXomegac./YXXomega_rf).^2.*YXXDrf_tp_ijp./YXXmhu2p;%YXXDmm_rf_ijp
-    ZYXXD_tp_rf{13} = (YXX1mmhu2m - YXXn_rf.*YXXomegac./YXXomega_rf).^2.*YXXDrf_tp_ijm./YXXmhu2m;%YXXDmm_rf_ijm
+    ZYXXD_rf_tp{12} = (YXX1mmhu2p - YXXn_rf.*YXXomegac./YXXomega_rf).^2.*YXXDrf_D_tp_ijp./YXXmhu2p;%YXXDmm_rf_ijp
+    ZYXXD_rf_tp{13} = (YXX1mmhu2m - YXXn_rf.*YXXomegac./YXXomega_rf).^2.*YXXDrf_D_tp_ijm./YXXmhu2m;%YXXDmm_rf_ijm
 %
-    ZYXXD_tp_rf{14} =  YXXDrf_tp_ij;
+    ZYXXD_rf_tp{14} =  YXXDrf_D_tp_ij;
+%
+    ZYXXF_rf_tp{1} = -YXX1mmhu2.*(YXX1mmhu2 - YXXn_rf.*YXXomegac./YXXomega_rf).*YXXDrf_F_tp_ippj./YXXmhu2./YXXmhu2./YXXpnpp;%YXXFp_rf_tp_ippj 
+    ZYXXF_rf_tp{2} = -YXX1mmhu2.*(YXX1mmhu2 - YXXn_rf.*YXXomegac./YXXomega_rf).*YXXDrf_F_tp_ipj./YXXmhu2./YXXmhu2./YXXpnp;%YXXFp_rf_tp_ipj 
+    ZYXXF_rf_tp{3} = -YXX1mmhu2.*(YXX1mmhu2 - YXXn_rf.*YXXomegac./YXXomega_rf).*YXXDrf_F_tp_ij./YXXmhu2./YXXmhu2./YXXpn;%YXXFp_rf_tp_ij 
+    ZYXXF_rf_tp{4} = -YXX1mmhu2.*(YXX1mmhu2 - YXXn_rf.*YXXomegac./YXXomega_rf).*YXXDrf_F_tp_imj./YXXmhu2./YXXmhu2./YXXpnm;%YXXFp_rf_tp_imj 
+    ZYXXF_rf_tp{5} = -YXX1mmhu2.*(YXX1mmhu2 - YXXn_rf.*YXXomegac./YXXomega_rf).*YXXDrf_F_tp_immj./YXXmhu2./YXXmhu2./YXXpnmm;%YXXFp_rf_tp_immj 
+%
+    ZYXXF_rf_tp{6} = sqrt(YXX1mmhu2p).*(YXX1mmhu2p - YXXn_rf.*YXXomegac./YXXomega_rf).^2.*YXXDrf_F_tp_ijp./YXXmhu2p./YXXmhu2p./YXXmhup./YXXpn;%YXXFm_rf_ijp
+    ZYXXF_rf_tp{7} = sqrt(YXX1mmhu2m).*(YXX1mmhu2m - YXXn_rf.*YXXomegac./YXXomega_rf).^2.*YXXDrf_F_tp_ijm./YXXmhu2m./YXXmhu2m./YXXmhum./YXXpn;%YXXFm_rf_ijm
+%    
+    ZYXXF_rf_tp{8} = YXXDrf_F_tp_ij
 else
-    ZYXXD_tp_rf = NaN;
+    ZYXXD_rf_tp = NaN;
+    ZYXXF_rf_tp = NaN;
 end
