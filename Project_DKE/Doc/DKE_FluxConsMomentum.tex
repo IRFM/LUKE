@@ -1,39 +1,39 @@
 In the first-order Drift-Kinetic equation, the momentum space operator is 
 \begin{equation}
-J_{{\bf p}}\left. \frac{\partial f_{1}}{\partial t}\right| _{{\bf p}}=J_{%
-{\bf p}}\nabla _{{\bf p}}\cdot {\bf S}_{{\bf p}}\left( f_{1}\right)
-\label{momentumdke}
+\left. \frac{\partial f_{1}}{\partial t}\right| _{{\bf p}}=\nabla _{{\bf p}}%
+\cdot {\bf S}_{{\bf p}}\left( f_{1}\right)   \label{momentumdke}
 \end{equation}
 where the fluxes are expressed as (). 
-\[
+\begin{equation}
 {\bf S}_{{\bf p}}\left( f_{1}\right) =-{\Bbb D}_{p}\cdot \nabla _{p,\xi
-}f_{1}+{\bf F}_{p}f_{1} 
-\]
+}f_{1}+{\bf F}_{p}f_{1}
+\end{equation}
 with the components 
-\begin{eqnarray*}
+\begin{eqnarray}
 S_{p} &=&-D_{pp}\frac{\partial f_{1}}{\partial p}+D_{p\xi }\frac{\sqrt{1-\xi
 ^{2}}}{p}\frac{\partial f_{1}}{\partial \xi }+F_{p}f_{1} \\
 S_{\xi } &=&-D_{\xi p}\frac{\partial f_{1}}{\partial p}+D_{\xi \xi }\frac{%
-\sqrt{1-\xi ^{2}}}{p}\frac{\partial f_{1}}{\partial \xi }+F_{\xi }f_{1}
-\end{eqnarray*}
+\sqrt{1-\xi ^{2}}}{p}\frac{\partial f_{1}}{\partial \xi }+F_{\xi }f_{1} 
+\nonumber
+\end{eqnarray}
 
 The first-order distribution function $f_{1}$ is decomposed into 
-\[
-f_{1}=\widetilde{f}+g 
-\]
+\begin{equation}
+f_{1}=\widetilde{f}+g
+\end{equation}
 where $\widetilde{f}$ is a source term due to spacial gradients 
-\[
-\widetilde{f}=-\frac{v_{\Vert }}{\Omega }I\left( \psi \right) \frac{\partial
-f_{0}}{\partial \psi } 
-\]
+\begin{equation}
+\widetilde{f}=-\frac{v_{\Vert }}{\Omega }I\left( \psi \right) \frac{\partial %
+f_{0}}{\partial \psi }
+\end{equation}
 and $g$ is the response of the plasma.
 
 All the operators in the conservative form above are readily linear, so that
 we can decompose (\ref{momentumdke}) as 
 \begin{equation}
-J_{{\bf p}}\left. \frac{\partial f_{1}}{\partial t}\right| _{{\bf p}}=J_{%
-{\bf p}}\left. \frac{\partial \widetilde{f}}{\partial t}\right| _{{\bf p}%
-}+J_{{\bf p}}\left. \frac{\partial g}{\partial t}\right| _{{\bf p}}
+\left. \frac{\partial f_{1}}{\partial t}\right| _{{\bf p}}=\left. \frac{%
+\partial \widetilde{f}}{\partial t}\right| _{{\bf p}}+\left. \frac{\partial g%
+}{\partial t}\right| _{{\bf p}}
 \end{equation}
 
 According to (\ref{kinbav2}), we can express the bounce-averaged operator as 
@@ -72,16 +72,16 @@ with $\widetilde{f}$ are noted $\widetilde{S}$. .
 
 Indeed, $\widetilde{f}$ has an explicit dependence upon $\theta $, which can
 be isolated as follows: 
-\[
+\begin{equation}
 \widetilde{f}(p,\xi ,\psi ,\theta )=\frac{\xi (\psi ,\theta ,\xi _{0})}{\Psi
-(\psi ,\theta )\xi _{0}}\widetilde{f}^{(0)}(p,\xi _{0},\psi )
-\]
+(\psi ,\theta )\xi _{0}}\widetilde{f}^{(0)}(p,\xi _{0},\psi )  \label{ftilde}
+\end{equation}
 with 
-\[
+\begin{equation}
 \widetilde{f}^{(0)}(p,\xi _{0},\psi )=-\frac{p\xi _{0}I\left( \psi \right) }{%
 q_{e}B_{\min }\left( \psi \right) }\frac{\partial f_{0}^{(0)}(p,\xi
 _{0},\psi )}{\partial \psi }
-\]
+\end{equation}
 
 We can note that $\widetilde{f}^{(0)}$ is antisymmetric in the trapped
 region, since $f_{0}^{(0)}$ is symmetric and $\xi _{0}$ is, of course,
