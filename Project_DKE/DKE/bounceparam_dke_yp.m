@@ -26,8 +26,8 @@ if bounce_mode == 1,
 	[xylambdam,xylambda_p2m1_m,xylambda_p2p0_m,xysstarm,xymaskTm] = bounce_dke_jd(tokamak,xia,mhum);
 %
 	XXlambda = repmat(reshape(xylambda',[1,nmhu,nr]),[npn,1,1]);
-    XXlambdap = repmat(reshape(xylambdap',[1,nmhu,nr]),[npn,1,1]);
-    XXlambdam = repmat(reshape(xylambdam',[1,nmhu,nr]),[npn,1,1]);
+	XXlambdap = repmat(reshape(xylambdap',[1,nmhu,nr]),[npn,1,1]);
+	XXlambdam = repmat(reshape(xylambdam',[1,nmhu,nr]),[npn,1,1]);
 %
 	XXRlambdap = XXlambdap./XXlambda;
 	XXRlambdam = XXlambdam./XXlambda;
@@ -41,8 +41,8 @@ if bounce_mode == 1,
 	Xxlambdam = xylambdam'; 
 %
 	XXsstar = repmat(reshape(xysstar',[1,nmhu,nr]),[npn,1,1]);%s*
-    XXsstarp = repmat(reshape(xysstarp',[1,nmhu,nr]),[npn,1,1]);
-    XXsstarm = repmat(reshape(xysstarm',[1,nmhu,nr]),[npn,1,1]);
+	XXsstarp = repmat(reshape(xysstarp',[1,nmhu,nr]),[npn,1,1]);
+	XXsstarm = repmat(reshape(xysstarm',[1,nmhu,nr]),[npn,1,1]);
 %
 	XXsssl = XXsstar./XXlambda;
 	XXssslp = XXsstarp./XXlambdap;
