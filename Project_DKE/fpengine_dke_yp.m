@@ -87,10 +87,10 @@ else,%for ftp, first order Drift Kinetic equation
 	Xb = -Xpn2m.*XDpp_imj./Xdpn./Xdpnm;%ftp(i-1/2,j+1/2)	
 	Xb = Xb - Xpn.*sqrt(X1mmhu2p).*XDmp_ijp.*XRlambdap./Xdmhu./(Xdpnm + Xdpnp);
 	Xb = Xb + Xpn.*sqrt(X1mmhu2m).*XDmp_ijm.*XRlambdam./Xdmhu./(Xdpnm + Xdpnp);
-	Xb = Xb - Xpn2m.*XFp_imj.*Xdeltap_imj.*(Xpnm./Xpn)./Xdpn;	
+	Xb = Xb - Xpn2m.*XFp_imj.*Xdeltap_imj.*(Xpnm./Xpnmm)./Xdpn;	
 %
 	Xc = Xpn2p.*XDpp_ipj./Xdpn./Xdpnp;%ftp(i+1/2,j+1/2)
-	Xc = Xc + Xpn2p.*XFp_ipj.*Xdeltap_ipj.*(Xpnp./Xpnpp)./Xdpn;
+	Xc = Xc + Xpn2p.*XFp_ipj.*Xdeltap_ipj.*(Xpnp./Xpn)./Xdpn;
 	Xc = Xc + Xpn2m.*XDpp_imj./Xdpn./Xdpnm;
 	Xc = Xc - Xpn2m.*XFp_imj.*(1 - Xdeltap_imj).*(Xpnm./Xpn)./Xdpn;
 	Xc = Xc + Xpn.*XDmm_ijp.*X1mmhu2p.*XRlambdap./Xdmhu./Xdmhup;	
