@@ -50,7 +50,7 @@ makedisp_tokparam_jd(tokamak);
 makedisp_simparam_jd(tokamak,xrho,rho0,knr,nrt_nr,nrt_fr,kflag,GNperp,nn_nr);%
 makedisp_waveparam_jd(omega,xrho,xtheta,xNpar);
 %
-[s,w] = system('R2D2');
+[s,w] = execute_jd('R2D2');
 %
 load nr1.m -ascii
 %
