@@ -1,0 +1,50 @@
+Scenario name = CQL3D_OHM
+
+ap = 2.3899;Rp = 2.39; 
+Ip = 0.61;Bt = 3.65;Ncoils = 18;
+Zi = [1,1,1];mi = [1,2,3];fi = [1,0,0];
+%
+BeLi = 1.0;qmin = 1.13;eq = 2;
+%
+Te0 = 0.1;Tea = 0;eTe = 0;eTe_ref = 0;
+ne0 = 1.0e+19;nea = 0*ne0;ene = 0;ene_ref = 0;
+Ti0 = 0.0;Tia = 0;eTi = 0;
+Zeff0 = 1;Zeffa = 1;eZeff = 0;
+
+One radial location -> rho_S = [0.4];eTe = 0;eTe = 0;ref_mode = 1, norm_ref = 0, bounce_mode = 0
+---------------------------------------------------------------------------------------
+                                     code  [Karney]
+Z = 1, no imp, (H), sigma_spitzer = 7.5754 [7.429] (local norm., linearized, E/ED = 0.01, rho = 0.4, np=79, nmhu=104, pnmax_S = 15)
+Z = 1, no imp, (D), sigma_spitzer = 7.5818 (local norm., linearized, E/ED = 0.01, rho = 0.4, np=79, nmhu=104, pnmax_S = 15)
+Z = 1, no imp, (D), sigma_spitzer = 7.584 (local norm., linearized, E/ED = 0.01, rho = 0.4, np=79, nmhu=104, pnmax_S = 15)
+---------------------------------------------------------------------------------------
+Z = 1, no imp, (H), sigma_spitzer = 3.6517 [3.773] (local norm., Maxwellian, E/ED = 0.01, rho = 0.4, np=79, nmhu=104, pnmax_S = 15)
+Z = 1, no imp, (H), sigma_spitzer = 3.0161 [2.837] (local norm., High-velocity, E/ED = 0.01, rho = 0.4, np=79, nmhu=104, pnmax_S = 15)
+---------------------------------------------------------------------------------------
+Z = 1, no imp, (H), sigma_spitzer = 7.5239 (local norm., linearized, E/ED = 0.01, rho = 0.4, np=109, nmhu=116, pnmax_S = 15)
+Z = 1, no imp, (H), sigma_spitzer = 7.4881 (local norm., linearized, E/ED = 0.01, rho = 0.4, np=159, nmhu=166, pnmax_S = 15)
+---------------------------------------------------------------------------------------
+Z = 1, no imp, (H), sigma_spitzer = 7.5639 (local norm., linearized, E/ED = 0.01, rho = 0.4, np=109, nmhu=116, pnmax_S = 20)
+---------------------------------------------------------------------------------------
+Z = 1, Zimp = 2, Zeff = 2, sigma_spitzer = 4.439 [4.377] (local norm., linearized, E/ED = 0.01, rho = 0.4, np=109, nmhu=116, pnmax_S = 15)
+Z = 1, Zimp = 5, Zeff = 5, sigma_spitzer = 2.0936 [2.078] (local norm., linearized, E/ED = 0.01, rho = 0.4, np=109, nmhu=116, pnmax_S = 15)
+Z = 1, Zimp = 10, Zeff = 10, sigma_spitzer = 1.1354 [1.133] (local norm., linearized, E/ED = 0.01, rho = 0.4, np=109, nmhu=116, pnmax_S = 15)
+---------------------------------------------------------------------------------------
+Multiple radial locations -> rho_S = [0.2,0.4,0.6,0.8];eTe = 1,ene = 1, bounce_mode = 0
+---------------------------------------------------------------------------------------
+Z = 1, no imp, (H), sigma_spitzer = 7.5239 (central norm., linearized, E/ED = 0.01, rho = 0.4, np=109, nmhu=158, pnmax_S = 15)
+by definition, xsigsp = sigma_spitzer = Zcurr_ref{1,1}./((xbetath/betath_ref).*(xne/ne_ref))./xepsi_ref must be independent of the plasma radius
+---------------------------------------------------------------------------------------
+ref_mode = 0, norm_ref = 1
+xrho      = 1.413793103448276e-01     3.161904761904763e-01     5.099009900990099e-01     7.070921985815601e-01     9.055248618784534e-01
+xepsi_ref = 1.000000000000000e-02     1.000000000000000e-02     1.000000000000000e-02     1.000000000000000e-02     1.000000000000000e-02
+xsigsp    = 7.524160815042189e+00     7.529529496825710e+00     7.542839161908603e+00     7.574172374199438e+00     7.697017137448041e+00
+the local sigma_spitzer = 7.5239 is well recovered.
+---------------------------------------------------------------------------------------
+ref_mode = 0, norm_ref = 0
+xrho      = 1.413793103448276e-01     3.161904761904763e-01     5.099009900990099e-01     7.070921985815601e-01     9.055248618784534e-01
+xepsi_ref = 1.000000000000000e-02     9.969670134009510e-03     9.899953605269431e-03     9.760323614589523e-03     9.396451574778066e-03
+xsigsp    = 7.524171419173914e+00     7.529327827873931e+00     7.542147965343560e+00     7.572497577913010e+00     7.692697985297981e+00
+---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
+Z = 1, no imp, (H), sigma_neo = 5.8449 (local norm., linearized, E/ED = 0.01, rho = 0.05, np=109, nmhu=116, pnmax_S = 15)
