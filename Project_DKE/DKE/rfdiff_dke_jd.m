@@ -224,6 +224,14 @@ YXXpolb_ijp = YXXepolp_rf.*besselj_dke_jd(YXXn_rf + 1,YXXZb_ijp,YXXlre)/sqrt(2) 
 YXXpolb_ijm = YXXepolp_rf.*besselj_dke_jd(YXXn_rf + 1,YXXZb_ijm,YXXlre)/sqrt(2) + YXXepolm_rf.*besselj_dke_jd(YXXn_rf - 1,YXXZb_ijm,YXXlre)/sqrt(2)...
            - YXXmhubm.*YXXepolz_rf.*besselj_dke_jd(YXXn_rf,YXXZb_ijm,YXXlre)./sqrt(YXXpsib.*YXX1mmhu2m);    
 %       
+YXXpolb_ippj = YXXHP.*YXXpolb_ippj + ~YXXHP.*(YXXpolb_ippj + flipdim(YXXpolb_ippj,2))/2;       
+YXXpolb_ipj = YXXHP.*YXXpolb_ipj + ~YXXHP.*(YXXpolb_ipj + flipdim(YXXpolb_ipj,2))/2;       
+YXXpolb_ij = YXXHP.*YXXpolb_ij + ~YXXHP.*(YXXpolb_ij + flipdim(YXXpolb_ij,2))/2;       
+YXXpolb_imj = YXXHP.*YXXpolb_imj + ~YXXHP.*(YXXpolb_imj + flipdim(YXXpolb_imj,2))/2;       
+YXXpolb_immj = YXXHP.*YXXpolb_immj + ~YXXHP.*(YXXpolb_immj + flipdim(YXXpolb_immj,2))/2;       
+YXXpolb_ijp = YXXHPp.*YXXpolb_ijp + ~YXXHPp.*(YXXpolb_ijp + flipdim(YXXpolb_ijp,2))/2;% -mhup = fliplr(mhum)       
+YXXpolb_ijm = YXXHPm.*YXXpolb_ijm + ~YXXHPm.*(YXXpolb_ijm + flipdim(YXXpolb_ijm,2))/2;% -mhum = fliplr(mhup) 
+%       
 clear YXXlre 
 clear YXXepolp_rf YXXepolm_rf YXXepolz_rf        
 %
