@@ -74,14 +74,14 @@ for sparam_inv = 1:size(param_inv_in,1),
 	    dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode,iloop);
 %	    
 	    for j = 1:3
-	    	norm_ref_out(iloop,j) = Znorm_ref{j};
-	    	norm_ref_fsav_out(iloop,j) = Znorm_ref{j};
-	    	curr_ref_out(iloop,j) = Zcurr_ref{j};
-	    	curr_ref_fsav_out(iloop,j) = Zcurr_ref{j};
-	    	P0_ref_coll_fsav_out(iloop,j) = ZP0_ref_fsav{1,j};
-			P0_ref_e_fsav_out(iloop,j) = ZP0_ref_fsav{2,j};
+	    	norm_ref_out(j,:,iloop) = Znorm_ref{j};
+	    	norm_ref_fsav_out(j,:,iloop) = Znorm_ref{j};
+	    	curr_ref_out(j,:,iloop) = Zcurr_ref{j};
+	    	curr_ref_fsav_out(j,:,iloop) = Zcurr_ref{j};
+	    	P0_ref_coll_fsav_out(j,:,iloop) = ZP0_ref_fsav{1,j};
+			P0_ref_e_fsav_out(j,:,iloop) = ZP0_ref_fsav{2,j};
             if size(ZP0_ref_fsav,1) >= 3,
-                P0_ref_rf_fsav_out(iloop,j) = ZP0_ref_fsav{3,j};
+                P0_ref_rf_fsav_out(j,:,iloop) = ZP0_ref_fsav{3,j};
             end
 		 end
 		 time_out(iloop) = time;
