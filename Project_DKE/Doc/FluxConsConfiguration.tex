@@ -1,56 +1,55 @@
 
 \paragraph{Configuration space operator}
 
-The operator that describes the spatial transport is given by relation
+The operator that describes the spatial transport is given by relation 
 \begin{equation}
 \left. \frac{\partial f_{0}^{\left( 0\right) }}{\partial t}\right| _{\mathbf{%
 r}}=\frac{B_{\min }\left( \psi \right) }{\lambda \left( \psi ,\xi
 _{0}\right) \widetilde{q}\left( \psi \right) }\frac{\partial }{\partial \psi 
 }\left( \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi
 \right) }\lambda \left( \psi ,\xi _{0}\right) \left| \nabla \psi \right|
-_{\min }\mathbf{S}_{\psi }^{\left( 0\right) }\right) 
+_{\min }\mathbf{S}_{\psi }^{\left( 0\right) }\right)
 \end{equation}
 and since $B_{P}=\left| \nabla \psi \right| /R,$ it may be rewritten in the
-form
+form 
 \begin{equation}
 \left. \frac{\partial f_{0}^{\left( 0\right) }}{\partial t}\right| _{\mathbf{%
 r}}=\frac{B_{\min }\left( \psi \right) }{\lambda \left( \psi ,\xi
 _{0}\right) \widetilde{q}\left( \psi \right) }\frac{\partial }{\partial \psi 
-}\left( R_{\min }\left( \psi \right) \widetilde{q}\left( \psi \right) \frac{%
+}\left( R_{\min }\left( \psi \right) \widetilde{q}\left( \psi \right) \frac{
 B_{P\min }\left( \psi \right) }{B_{\min }\left( \psi \right) }\lambda \left(
-\psi ,\xi _{0}\right) \mathbf{S}_{\psi }^{\left( 0\right) }\right) 
+\psi ,\xi _{0}\right) \mathbf{S}_{\psi }^{\left( 0\right) }\right)
 \end{equation}
 where $R_{\min }$ and $B_{P\min }$ are taken at the poloidal location where $%
-B=B_{\min }$. 
+B=B_{\min }$.
 
-It is interesting at this stage to estimate the expression of $\left. \frac{%
+It is interesting at this stage to estimate the expression of $\left. \frac{
 \partial f_{0}^{\left( 0\right) }}{\partial t}\right| _{\mathbf{r}}$ for
 circular concentric magnetic flux surfaces. In that case, since $\widehat{%
 \psi }=\widehat{r},$ $\mathbf{S}_{\psi }^{\left( 0\right) }=\mathbf{S}%
 _{r}^{\left( 0\right) }$ and as $\widetilde{q}\left( r\right) =\frac{r}{R_{0}%
-}\frac{B_{\min }}{B_{P\min }},$ it comes
+}\frac{B_{\min }}{B_{P\min }},$ it comes 
 \begin{eqnarray}
 \left. \frac{\partial f_{0}^{\left( 0\right) }}{\partial t}\right| _{\mathbf{%
 r}}^{circ.} &=&\frac{R_{0}B_{P\min }\left( \psi \right) }{\lambda \left(
 r,\xi _{0}\right) r}\frac{\partial }{\partial \psi }\left( r\lambda \left(
-r,\xi _{0}\right) \mathbf{S}_{r}^{\left( 0\right) }\right)  \\
+r,\xi _{0}\right) \mathbf{S}_{r}^{\left( 0\right) }\right) \\
 &=&\frac{\left| \nabla \psi \right| _{\min }}{\lambda \left( r,\xi
 _{0}\right) r}\frac{\partial }{\partial \psi }\left( r\lambda \left( r,\xi
-_{0}\right) \mathbf{S}_{r}^{\left( 0\right) }\right)  \\
+_{0}\right) \mathbf{S}_{r}^{\left( 0\right) }\right) \\
 &=&\frac{1}{\lambda \left( r,\xi _{0}\right) r}\frac{\partial }{\partial r}%
 \left( r\lambda \left( r,\xi _{0}\right) \mathbf{S}_{r}^{\left( 0\right)
-}\right) 
+}\right)
 \end{eqnarray}
 since $R_{\min }\left( \psi \right) =R_{0}$ and $\left| \nabla \psi \right|
 _{\min }\frac{\partial }{\partial \psi }=\frac{\partial }{\partial r}.$
 Since in this simplified limit, dynamics in momentum and configuration
 spaces are not decoupled, through the normalized bounce time. On for
-strongly circulating electrons,
+strongly circulating electrons, 
 \begin{equation}
-\lim_{\left| \xi _{0}\right| \rightarrow 1}\left. \frac{\partial %
+\lim_{\left| \xi _{0}\right| \rightarrow 1}\left. \frac{\partial
 f_{0}^{\left( 0\right) }}{\partial t}\right| _{\mathbf{r}}^{circ.}=\frac{1}{r%
-}\frac{\partial }{\partial r}\left( r\mathbf{S}_{r}^{\left( 0\right)
-}\right) 
+}\frac{\partial }{\partial r}\left( r\mathbf{S}_{r}^{\left( 0\right) }\right)
 \end{equation}
 the usual cylindrical conservative expression of the radial transport is
 found, since $\lim_{\left| \xi _{0}\right| \rightarrow 1}\lambda \left(
@@ -58,4 +57,80 @@ r,\xi _{0}\right) =1.$
 
 Finally, it is more convenient to work with a parameter that has a length
 dimension, since diffusion and convection coefficient are expressed
-naturally in $m^{2}/s$ and $m/s$ respectively.
+naturally in $m^{2}/s$ and $m/s$ respectively. In the case of arbitrary
+magnetic equilibrium, as discussed in Section ****, it is useful to
+introduce a flux-function $\rho \left( \psi \right) $ that coincides with
+the normalized minor radius on the horizontal LFS midplane, according to the
+arbitrary definition
+\begin{equation}
+\rho \left( \psi \right) =\frac{R\left( \psi \right) -R_{p}}{R_{\max }-R_{p}}
+\end{equation}
+
+Since, in the spatial transport equation, $\psi $ can be used as a simple
+label, it is always possible to use the coordinate $\rho $ according to the
+univoque relation with the magnetic flux $\psi $. Inverting the relation, $%
+\psi \left( \rho \right) $ one obtains, 
+\begin{equation}
+\left. \frac{\partial f_{0}^{\left( 0\right) }}{\partial t}\right| _{\mathbf{
+r}}=\frac{B_{\min }\left( \rho \right) }{\lambda \left( \rho ,\xi
+_{0}\right) \widetilde{q}\left( \rho \right) }\rho _{\psi }^{\prime }\frac{%
+\partial }{\partial \rho }\left( R_{\min }\left( \rho \right) \widetilde{q}
+\left( \rho \right) \frac{B_{P\min }\left( \rho \right) }{B_{\min }\left(
+\rho \right) }\lambda \left( \rho ,\xi _{0}\right) \mathbf{S}_{\rho
+}^{\left( 0\right) }\right) 
+\end{equation}
+where
+\begin{equation}
+\rho _{\psi }^{\prime }\left( \psi \right) =\frac{\partial \rho }{\partial %
+\psi }
+\end{equation}
+
+In that case, the flux term $\mathbf{S}_{\rho }^{\left( 0\right) }$ must be
+also expressed as a function of the variable $\rho .$ According to the
+notations, 
+\begin{eqnarray}
+\nabla f_{0}^{\left( 0\right) } &=&\frac{\partial f_{0}^{\left( 0\right) }}{%
+\partial p}\widehat{p}-\frac{\sqrt{1-\xi _{0}^{2}}}{p}\frac{\partial 
+f_{0}^{\left( 0\right) }}{\partial \xi _{0}}\widehat{\xi }+\left| \nabla
+\psi \right| _{\min }\frac{\partial f_{0}^{\left( 0\right) }}{\partial \psi }%
+\widehat{\psi }  \nonumber \\
+&=&\frac{\partial f_{0}^{\left( 0\right) }}{\partial p}\widehat{p}-\frac{%
+\sqrt{1-\xi _{0}^{2}}}{p}\frac{\partial f_{0}^{\left( 0\right) }}{\partial %
+\xi _{0}}\widehat{\xi }+R_{\min }\left( \psi \right) B_{P\min }\left( \psi
+\right) \frac{\partial f_{0}^{\left( 0\right) }}{\partial \psi }\widehat{%
+\psi }  \nonumber \\
+&=&\frac{\partial f_{0}^{\left( 0\right) }}{\partial p}\widehat{p}-\frac{%
+\sqrt{1-\xi _{0}^{2}}}{p}\frac{\partial f_{0}^{\left( 0\right) }}{\partial %
+\xi _{0}}\widehat{\xi }+R_{\min }\left( \rho \right) B_{P\min }\left( \rho
+\right) \rho _{\psi }^{\prime }\frac{\partial f_{0}^{\left( 0\right) }}{%
+\partial \rho }\widehat{\psi }
+\end{eqnarray}
+with
+\begin{equation}
+\mathbf{S}^{\left( 0\right) }\left( f_{0}^{\left( 0\right) }\right) =-\Bbb{D}
+^{\left( 0\right) }\nabla f_{0}^{\left( 0\right) }+\mathbf{F}^{\left(
+0\right) }f_{0}^{\left( 0\right) }
+\end{equation}
+where the diffusion and convection tensors are simply
+\begin{equation}
+\Bbb{D}^{\left( 0\right) }=\left( 
+\begin{array}{lll}
+D_{pp}^{\left( 0\right) } & D_{p\xi }^{\left( 0\right) } & D_{p\rho
+}^{\left( 0\right) } \\ 
+D_{\xi p}^{\left( 0\right) } & D_{\xi \xi }^{\left( 0\right) } & D_{\xi \rho
+}^{\left( 0\right) } \\ 
+D_{\rho p}^{\left( 0\right) } & D_{\rho \xi }^{\left( 0\right) } & D_{\rho
+\rho }^{\left( 0\right) }
+\end{array}
+\right) 
+\end{equation}
+and 
+\begin{equation}
+\mathbf{F}^{\left( 0\right) }=\left( 
+\begin{array}{l}
+F_{p}^{\left( 0\right) } \\ 
+F_{\xi }^{\left( 0\right) } \\ 
+F_{\rho }^{\left( 0\right) }
+\end{array}
+\right) 
+\end{equation}
