@@ -9,17 +9,17 @@ function [pn_f,dpn_f,pnm_S,dpnm_S,pnp_S,dpnp_S,pn_S,...
 %
 %   INPUTS: 
 %
-% 		- uniform: (0) Non-uniform grid, (1) uniform grid
+% 	- uniform: (0) Non-uniform grid, (1) uniform grid
 %       - grid_power: Power for step variation. (grid_power > 1) NOTE: grid_power = 0 for old method with linear step variation 
-%		- dke_mode: Resolution of the (1) DKE equation ,(0) FP equation
-%		- r_dke: Indices of points for DKE calculation 
-%		- xmhu0T2: Trapped/passing boundaries in mhu space for all radial positions
-%		- nmhu_S_in: Number of angular values for the flux grid
-%		- np_S_in: Number of momentum values for the flux grid
-%		- pnmax_S: Maximum value of the flux momentum grid
-%		- sfac: reduction factors
-%		- snmhu: numbers of fine grid points in mhu
-%		- snp: numbers of fine grid points in p
+%	- dke_mode: Resolution of the (1) DKE equation ,(0) FP equation
+%	- r_dke: Indices of points for DKE calculation 
+%	- xmhu0T2: Trapped/passing boundaries in mhu space for all radial positions
+%	- nmhu_S_in: Number of angular values for the flux grid
+%	- np_S_in: Number of momentum values for the flux grid
+%	- pnmax_S: Maximum value of the flux momentum grid
+%	- sfac: reduction factors
+%	- snmhu: numbers of fine grid points in mhu
+%	- snp: numbers of fine grid points in p
 %
 %   OUTPUTS:
 %
@@ -30,18 +30,18 @@ function [pn_f,dpn_f,pnm_S,dpnm_S,pnp_S,dpnp_S,pn_S,...
 %       - pnp_S: 
 %       - dpnp_S: 
 %       - pn_S: momentum full grid (flux)
-%		- mhu_f: pitch-angle half-grid (distribution function)
+%	- mhu_f: pitch-angle half-grid (distribution function)
 %       - dmhu_f: 
 %       - mhum_S: 
 %       - dmhum_S: 
 %       - mhup_S: 
 %       - dmhup_S: 
-%		- mhu_S: pitch-angle full-grid (flux)
+%	- mhu_S: pitch-angle full-grid (flux)
 %
-%  by Joan Decker <jodecker@alum.mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
+%  by Joan Decker <jodecker@mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 %
 if nargin < 11,
-	error('Wrong number of input arguments in grid_dke_yp');
+	error('Wrong number of input arguments in momentumgrid_dke_jd');
 end
 %
 if uniform == 1,%if uniform grid called, the old method is used for the mhu-grid
@@ -289,17 +289,19 @@ testdpn_f = find(dpn_f > dpn_threshold);
 if isempty(testdpn_f) == 0, info_dke_yp(2,'WARNING: momentum step too large, results may be inaccurate !');end
 %
 if uniform == -1,%for test only with uniform grid
-	mhu_Smin = -1;
-	mhu_Smax = 1;
-	dmhu_S = ((mhu_Smax - mhu_Smin)/nmhu_S_in)*ones(1,nmhu_S_in);
-	mhu_f = [mhu_Smin + dmhu_S(1)/2:dmhu_S(1):mhu_Smax - dmhu_S(1)/2];
-	mhum_S = mhu_f - dmhu_S(1)/2;mhum_S(1) = -1;
-	mhup_S = mhu_f + dmhu_S(1)/2;mhup_S(nmhu_S_in) = 1;
-	dmhum_S = dmhu_S;dmhum_S(1)=dmhu_S(1);
-	dmhup_S = dmhu_S;dmhup_S(nmhu_S_in)=dmhu_S(1);
-	dmhu_f = dmhu_S;
-   mhu_S = [mhu_S,1];
+    mhu_S_pos = linspace(0,1,floor((nmhu_S_in + 1)/2));
+    mhu_S = [-fliplr(mhu_S_pos(2:length(mhu_S_pos))),mhu_S_pos];
+    nmhu_S = length(mhu_S);
+	mhu_f = (mhu_S(1:nmhu_S-1) + mhu_S(2:nmhu_S))/2;
+    nmhu_f = length(mhu_f);
+	dmhu_f = diff(mhu_S);
+	dmhu_S = [2*(mhu_f(1)+1),diff(mhu_f),2*(1-mhu_f(nmhu_f))];
+	mhum_S = mhu_S(1:nmhu_f);
+	mhup_S = mhu_S(2:nmhu_f+1);
+	dmhum_S = dmhu_S(1:nmhu_f);
+	dmhup_S = dmhu_S(2:nmhu_f+1);
 end
+
 
 
 

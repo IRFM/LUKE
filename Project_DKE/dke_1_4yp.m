@@ -2677,8 +2677,8 @@ if nb > 0,
 	YXXgammap = repmat(Xgammap,[1,1,nr,nb]);
 %
 	YXXf0 = repmat(XXf0,[1,1,1,nb]);
-	YXXf0_tp = repmat(XXf0,[1,1,1,nb]);
-	YXXf0_g = repmat(XXf0,[1,1,1,nb]);
+	YXXf0_tp = repmat(XXf0_tp,[1,1,1,nb]);
+	YXXf0_g = repmat(XXf0_g,[1,1,1,nb]);
 %    
 	YXXdeltap_imj = repmat(XXdeltap_imj,[1,1,1,nb]);
 	YXXdeltap_ipj = repmat(XXdeltap_ipj,[1,1,1,nb]);
@@ -2801,7 +2801,6 @@ if isnan(XXnhuloss) == 0 & strcmp(tokname,'TS')==1,
 	%		Gripflux_ref = Gripmhu_ref(max(find(abs(mhu)<xmhusupertrap(rdke(ir_display))))) - Gripmhu_ref(min(find(abs(mhu)<xmhusupertrap(rdke(ir_display))))) + Grippn_ref(max(find(pn_ref<xpndetrap_ref(rdke(ir_display))))+1);
  
      xMRR_tau_ref = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXnhuloss(:,:,rdke).*XXf0(:,:,rdke).*XXpn2(:,:,rdke).*XXlambda(:,:,rdke),1),1)';%Flux of electrons leaving the plasma through the loss cone
-    		
-	  xMRR_flux_ref = xMRR_tau_ref;
+     xMRR_flux_ref = xMRR_tau_ref;
 end
 
