@@ -1,36 +1,52 @@
-function [vschords,gR,gZ,gphi] = bremchord_dke_yp(tokamak,HXR,xpsin_S,display,ns);
+function [vschords,gR_hxr,gZ_hxr,gphi_hxr] = bremchord_dke_yp(tokamak,HXR,xpsin,xpsin_S,mfactor,method,display,ns);
 %
 % This function calculates chord positions fro bremsstrahlung tomography in a torus along unit vector g. 
 %
 % INPUTS
 %
-%       - HXR: HXR tomographic system geometrical characteristics
-%       - xpsin_S: flux surfaces used by DKE code
+%       - HXR: geometrical characteristics of the HXR tomographic system 
+%       - xpsin: poloidal flux surfaces for f used by DKE code [1,npsi]
+%       - xpsin_S: poloidal flux surfaces used for S by DKE code [1,npsi+1]
+%       - mfactor:
+%         (default = 10)
+%       - method: interpolation method
+%         (default = 'spline')
 %       - display: display chords [1,1]
+%         (default = 2)
 %       - ns: number of points on the chords [1,1]
+%         (default = 2000)
 %
 % OUTPUTS
 %       
-%       - vschords: chords parameter [4,n,nchords]
-%       - gR: component of g along R [1,n,nchords]
-%       - gZ: component of g along Z [1,n,nchords]
-%       - gphi: component of g along phi [1,n,nchords]
+%       - vschords: chords parameter [6,n,nchords]
+%       - gR_hxr: component of the chord direction g_hxr along R [1,n,nchords]
+%       - gZ_hxr: component of the chord direction g_hxr along Z [1,n,nchords]
+%       - gphi_hxr: component of the chord direction g_hxr along phi [1,n,nchords]
 %
 % by J. Decker (jodecker@alum.mit.edu) and Y. Peysson (yves.peysson@cea.fr)
 %
-if nargin < 3,
+if nargin < 4,
     error('Not enough arguments in bremchord_dke_yp')
-elseif nargin == 3,
-   display = 1;
-   ns = 2000;
 elseif nargin == 4,
-	ns = 2000;
+   	mfactor = 10;
+		method = 'spline'; 	
+      display = 2;
+      ns = 2000;
+elseif nargin == 5,
+		method = 'spline'; 	
+		display = 2;
+		ns = 2000;
+elseif nargin == 6,
+		display = 2;
+		ns = 2000;
+elseif nargin == 7,
+		ns = 2000;
 end
 %
 ns = abs(ns);%Force ns to be always positive
 nchords = length(HXR{1,1});%chord number
 %
-[theta,ppsin,psia,ptR,ptZ,ptBR,ptBZ] = equilibrium_jd(tokamak);	
+[theta,ppsin,psia,ptR,ptZ,ptBR,ptBZ,ptBphi] = equilibrium_jd(tokamak,NaN*xpsin,xpsin_S,display,method,mfactor);	
 %
 Rp = ptR(1,1);%Plasma major radius (m)
 Zp = ptZ(1,1);%Plasma vertical position (m)
@@ -41,8 +57,10 @@ smax = 2*(Rp + ap);%maximum chord length = R_hxr+a_hxr
 s = linspace(-smax,0,ns)'*ones(1,nchords);%for nchords (s negative by definition)
 % Poloidal plot
 for ir = 1:length(xpsin_S)
-   RR_pol(ir,:) = interp1(ppsin,ptR,xpsin_S(ir),'spline');
-   ZZ_pol(ir,:) = interp1(ppsin,ptZ,xpsin_S(ir),'spline');
+   RR_pol(ir,:) = interp1(ppsin,ptR,xpsin_S(ir),method);
+   ZZ_pol(ir,:) = interp1(ppsin,ptZ,xpsin_S(ir),method);
+	BR_pol(ir,:) = interp1(ppsin,ptBR,xpsin_S(ir),method);
+	BZ_pol(ir,:) = interp1(ppsin,ptBZ,xpsin_S(ir),method);
 end
 %
 HHR_pol = linspace(Rp-1.1*r_lcs(round(length(theta)/2)),Rp+1.1*r_lcs(1),1000);
@@ -81,14 +99,14 @@ sR = sqrt(R_hxr.^2 + sh.^2 + 2*R_hxr.*sh.*cos(alpha_hxr));
 sZ = Z_hxr + sZ;
 sphi = acos((sR.^2 + R_hxr.^2 - sh.^2)./(2*sR.*R_hxr)).*sign(alpha_hxr);
 %
-gR = sin(beta_hxr).*cos(alpha_hxr);
-gZ = cos(beta_hxr);
-gphi = sin(beta_hxr).*sin(alpha_hxr);
+gR_hxr = sin(beta_hxr).*cos(alpha_hxr);
+gZ_hxr = cos(beta_hxr);
+gphi_hxr = sin(beta_hxr).*sin(alpha_hxr);
 %
 sr = sqrt((sR - Rp).^2 + (sZ - Zp).^2);%Minor radius along the chords
 st = atan((sZ - Zp)./(sR - Rp)) + pi - pi*(sR > Rp).*sign(sZ - Zp);%poloidal angle [0,2*pi]
 %
-sr_lcs = interp1(theta,r_lcs,st,'spline');
+sr_lcs = interp1(theta,r_lcs,st,method);
 mask = sr < sr_lcs;
 for ic = 1:nchords,
    imask = find(mask(1:end-1,ic)-mask(2:end,ic) == 1);
@@ -98,9 +116,18 @@ for ic = 1:nchords,
 end	
 sR(~mask)=NaN;
 sZ(~mask)=NaN; 
+sr(~mask)=NaN;
+st(~mask)=NaN; 
+sBR=griddata(ptR,ptZ,ptBR,sR,sZ);
+sBZ=griddata(ptR,ptZ,ptBZ,sR,sZ);
+sBphi=griddata(ptR,ptZ,ptBphi,sR,sZ);
+sB = sqrt(sBR.^2 + sBZ.^2 + sBphi.^2);
+sksid = (sBR.*cos(sphi).*gR_hxr + sBZ.*cos(sphi).*gZ_hxr + sBphi.*sin(sphi).*gphi_hxr)./sB;
+
 %
 if display >= 1
-   figure(2878),plot(sR,sZ,'b');%Poloidal plot
+   figure(2878),
+	[ax] = graph1D_jd(sR,sZ,0,0,'','','',NaN,'','','-','none','b',2);pause(0.5);%Poloidal plot
    xlabel('X=R (m)');ylabel('Z (m)');title('Bremsstrahlung tomography (Poloidal view)')
    hold on
    for ir = 1:length(xpsin_S),
@@ -109,9 +136,24 @@ if display >= 1
    axis('equal');
    plot(HHR_pol,HHZ_pol,'r-.')
    plot(VVR_pol,VVZ_pol,'r-.')
+	plot(ptR,ptZ,'r-')
    hold off
 %
-	figure(2879)
+	figure(2879),
+	quiver(RR_pol,ZZ_pol,BR_pol,BZ_pol);
+	axis('equal');
+	xlabel('X=R (m)');ylabel('Z (m)');title('Poloidal field (T)')
+	hold on
+	plot(ptR,ptZ,'c-')
+	plot(HHR_pol,HHZ_pol,'r-.')
+	plot(VVR_pol,VVZ_pol,'r-.')
+	hold off
+	
+   
+   
+   
+%
+	figure(2880)
 	plot(sR.*cos(sphi),sZ.*sin(sphi),'b');%Toroidal plot
 	xlabel('X (m)');ylabel('Y (m)');title('Bremsstrahlung tomography (Toroidal view, Z = 0)')
 	hold on
@@ -122,8 +164,11 @@ if display >= 1
 	hold off
 end
 %
-vschords = zeros(4,ns,nchords);
+dbstop 163
+vschords = zeros(6,ns,nchords);
 vschords(1,:,:) = s;
 vschords(2,:,:) = sR;
 vschords(3,:,:) = sZ;
 vschords(4,:,:) = sphi;
+vschords(5,:,:) = sr;
+vschords(6,:,:) = st;

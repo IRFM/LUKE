@@ -3,13 +3,20 @@ In the kinetic description, electrons are described by a distribution
 function $f\left( \mathbf{r},\mathbf{p},t\right) $, which gives the density
 in phase space of particles with a momentum $\mathbf{p}$ at a position $%
 \mathbf{r}$ and at time $t$. The particle conservation equation in phase
-space is the Boltzmann equation 
+space is the Boltzmann equation \nomenclature{$f$}{Electron
+distribution function} \nomenclature{$t$}{Time parameter}
 \begin{equation}
 \frac{\partial f}{\partial t}+\mathbf{v}\cdot \nabla _{\mathbf{r}%
 }f+q_{e}\left[ \mathbf{E}\left( \mathbf{r},t\right) +\mathbf{v}\times 
 \mathbf{B}\left( \mathbf{r},t\right) \right] \cdot \nabla _{\mathbf{p}%
 }f=\left. \frac{\partial f}{\partial t}\right| _{\text{C}}  \label{kin1}
 \end{equation}
+\nomenclature{$\mathbf{E}$}{Total electric field vector}
+\nomenclature{$\mathbf{B}$}{Total magnetic field vector}
+\nomenclature{$\mathbf{r}$}{Radial position vector}
+\nomenclature{$\mathbf{p}$}{Momentum vector}
+\nomenclature{$\mathbf{v}$}{Velocity vector}
+\nomenclature{$\mathbf{k}$}{Plane-wave wave vector}
 where 
 \begin{equation}
 \left. \frac{\partial f}{\partial t}\right| _{\text{C}}\equiv C\left(
@@ -17,9 +24,18 @@ f\right)
 \end{equation}
 is the collision operator. The fields $\mathbf{E}\left( \mathbf{r},t\right) $
 and $\mathbf{B}\left( \mathbf{r},t\right) $ are assumed to consist of
-time-independent macroscopic fields $\mathbf{E}_{0}\left( \mathbf{r}\right) $
-and $\mathbf{B}_{0}\left( \mathbf{r}\right) $ and fields associated with
+time-independent macroscopic fields $\overline{\mathbf{E}}\left( \mathbf{r}\right) $
+and $\overline{\mathbf{B}}\left( \mathbf{r}\right) $ and fields associated with
 plane waves. 
+\nomenclature{$\overline{\mathbf{E}}$}{Time independent total electric field vector
+on the fast time scale characterized by the fluctuation time frequency $\omega/2\pi$}
+\nomenclature{$\overline{\mathbf{B}}$}{Time independent total magnetic field vector
+on the fast time scale characterized by the fluctuation time frequency
+\nomenclature{$\overline{\mathbf{B}}$}{Time independent electron
+distribution function
+on the fast time scale characterized by the fluctuation time frequency
+
+$\omega/2\pi$}
 \begin{eqnarray}
 \mathbf{E}\left( \mathbf{r},t\right) &=&\overline{\mathbf{E}}\left( \mathbf{%
 \ r}\right) +\int \widetilde{\mathbf{E}}_{\mathbf{k}}e^{i\left( \mathbf{k}%
@@ -28,6 +44,12 @@ plane waves.
 }\right) +\int \widetilde{\mathbf{B}}_{\mathbf{k}}e^{i\left( \mathbf{k}\cdot 
 \mathbf{r}-\omega t\right) }d\mathbf{k}
 \end{eqnarray}
+\nomenclature{$\widetilde{\mathbf{E}}$}{Fast time scale fluctuating component of the total electric field
+vector, associated to plane-waves}
+\nomenclature{$\widetilde{\mathbf{B}}$}{Fast time scale fluctuating component of the total magnetic field vector, associated to plane-waves}
+\nomenclature{$\omega/2\pi$}{Generic fluctuation time frequency (decribes fast scale
+for gyromotion and RF oscillations)}
+\nomenclature{$C\left(f\right)$}{Collision Fokker-Planck operator}
 
 Because we are interested in solving the kinetic equation on the bounce and
 collisional time scales, we need to average over the faster time scales,
