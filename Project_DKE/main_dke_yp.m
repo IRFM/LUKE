@@ -381,15 +381,15 @@ end
 %
 %***************************** RF Wave parameters calculations *************************************
 %
-%[waveparam,xyprop_dke,xyPinc_in,nb_list,yb] = ...
-%    rfwave_dke_jd(equil,waves,xrho,xpsin,xpsin_dke,xdpsin_dke,xpsin_S_dke,r_dke,...
-%    betath_ref,ne_ref,lnc_e_ref,xrbetath,xrnhuth,xTe_norm,xne_norm,xzni_norm,...
-%    zZi,zmi,ap,Rp,Zp,theta,XR,XZ,XBR,XBZ,XBphi,xB0,bounce_mode,dke_mode);%Look at the function for the RF wave input parameters
-waveparam = [];
-yprop_dke = [];
-xyPinc_in = [];
-nb_list = [];
-yb = [];
+[waveparam,xyprop_dke,xyPinc_in,yb] = ...
+    rfwave_dke_jd(equil,waves,xpsin,xpsin_dke,xdpsin_dke,xpsin_S_dke,r_dke,...
+    XR,XZ,XBR,XBZ,XBphi,ne_ref,lnc_e_ref,dke_mode);
+%
+%waveparam = [];
+%yprop_dke = [];
+%xyPinc_in = [];
+%nb_list = [];
+%yb = [];
 %
 %***************************** Initial distribution function **************************
 %

@@ -1,4 +1,4 @@
-function [xyvray,xyfinc,xyprop,yb] = propagation_jd(vsrays,xpsin,xdpsin,xpsin_S,ppsin,ptR,ptBP,psia,method);
+function [xyvray,xyfinc,xyprop,yb] = propagation_jd(vsrays,xpsin,xdpsin,xpsin_S,theta,ppsin,ptR,ptBP,psia,method);
 %
 % This function couples the DKE code with a ray-tracing code. Ray
 % caracteristics are evaluated at the DKE radial positions and the incidence
@@ -44,8 +44,8 @@ ibb = 0; %counting global number of ray
 for ib = 1:nb_rf
     %
     vsray = vsrays{ib};
-    ss = vsrays(1,:);
-    spsin = vsrays(2,:);
+    ss = vsray(1,:);
+    spsin = vsray(2,:);
     ns = length(ss);
     %    
     % positions where the ray enters and exits the plasma (at last closed FS)  
@@ -115,13 +115,13 @@ for ib = 1:nb_rf
 %
         is_f = min(find(abs(spsin(maskfs) - bpsin) == min(abs(spsin(maskfs) - bpsin)))) + is - 1;
 %
-        xyvray(ipsin,ibb,:) = reshape(vsray(:,is_f),[1,1,nv]); %parameters vrays at center of FS
+        xyvray(ipsin,ibb,:) = reshape(vsray(:,is_f),[1,1,12]); %parameters vrays at center of FS
 %
         bds = ss(islim) - ss(is);%path length of ray within the current FS
 %
 % local width of the FS: |dl| = |dpsi|/|grad psi| = |dpsin.psia|/|R.BP|
 %
-        thetab_f = vsrays(3,is_f);
+        thetab_f = vsray(3,is_f);
         Rb_f = interp2(theta,ppsin,ptR,thetab_f,bpsin,method);
         BPb_f = interp2(theta,ppsin,ptBP,thetab_f,bpsin,method);
 %

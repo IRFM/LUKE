@@ -1,7 +1,6 @@
 function [waveparam,xyprop_dke_rf,xyP0_in_rf,yb_rf] = ...
     rfwave_dke_jd(equil,waves,xpsin,xpsin_dke,xdpsin_dke,xpsin_S_dke,r_dke,...
-    betath_ref,ne_ref,lnc_e_ref,xTe_norm,xne_norm,xzni_norm,...
-    zZi,zmi,ap,Rp,Zp,theta,XR,XZ,XBR,XBZ,XBphi,xB0,dke_mode);
+    XR,XZ,XBR,XBZ,XBphi,ne_ref,lnc_e_ref,dke_mode);
 % 
 %	RF input parameters for the Drift Kinetic equation solver (dke_4_1yp.m). 
 %
@@ -83,29 +82,28 @@ for iw = 1:length(waves),%
         % - sR, sZ -> spsin, stheta
         % - skR, sn, skZ -> sNpar, sNperp
         % - sNpar -> sdNpar
-        % - disp_opt, sNpar, omega_rf, equil -> sepol_pmz, sNperp, sphi_pmz
+        % - opt_disp, sNpar, omega_rf, equil -> sepol_pmz, sNperp, sphi_pmz
         %
         P0 = ray.P0;% Power launched in the ray (W) [1,1]
         %
-        sR = ray.R;% Ray location (major radius) along the propagation [1,ns]
-        sphi = ray.phi;% Ray location (toroidal angle) along the propagation [1,ns]
-        sZ = ray.Z;% Ray location (vertical) along the propagation [1,ns]
+        sR = ray.sR;% Ray location (major radius) along the propagation [1,ns]
+        sphi = ray.sphi;% Ray location (toroidal angle) along the propagation [1,ns]
+        sZ = ray.sZ;% Ray location (vertical) along the propagation [1,ns]
+        ss = ray.ss;% Ray propagation distance parameter for each ray (put to NaN once the ray is absorbed) [1,ns]
+        spsin = ray.spsin;% Ray location (normalized magnetic flux) along the propagation [1,ns]
+        stheta = ray.stheta;% Ray location (poloidal angle) along the propagation [1,ns]
         %
-        ss = ray.s;% Ray propagation distance parameter for each ray (put to NaN once the ray is absorbed) [1,ns]
-        spsin = ray.psin;% Ray location (normalized magnetic flux) along the propagation [1,ns]
-        stheta = ray.theta;% Ray location (poloidal angle) along the propagation [1,ns]
+        skR = ray.skR;% Ray wave vector (major radius) along the propagation [1,ns]
+        sn = ray.sn;% Ray wave number (toroidal) along the propagation [1,ns]
+        skZ = ray.skZ;% Ray wave vector (vertical) along the propagation [1,ns]
         %
-        skR = ray.kR;% Ray wave vector (major radius) along the propagation [1,ns]
-        sn = ray.n;% Ray wave number (toroidal) along the propagation [1,ns]
-        skZ = ray.kZ;% Ray wave vector (vertical) along the propagation [1,ns]
-        %
-        sNpar = ray.Npar;% Ray parallel wave number [1,ns]
-        sNperp = ray.Nperp;% Ray perpendicular wave number [1,ns]
-        sdNpar = ray.dNpar;% Ray spectral width in Npar [1,ns] 
+        sNpar = ray.sNpar;% Ray parallel wave number [1,ns]
+        sNperp = ray.sNperp;% Ray perpendicular wave number [1,ns]
+        sdNpar = ray.sdNpar;% Ray spectral width in Npar [1,ns] 
         %       if sdNpar is real -> gaussian spectrum, if sdNpar is imag. -> square spectrum (centered on sNpar)
         %
-        sepol_pmz = ray.epol_pmz;% polarization vector [3,ns] complex
-        sphi_pmz = ray.phi_pmz;% normalized power flow [3,ns]
+        sepol_pmz = ray.sepol_pmz;% polarization vector [3,ns] complex
+        sphi_pmz = ray.sphi_pmz;% normalized power flow [3,ns]
         %
         % ======================================================================
         %                   calculates missing ray info if needed
@@ -119,8 +117,9 @@ for iw = 1:length(waves),%
             end
             ns = length(sR);
             ss(1) = 0;
-            ds = sqrt(diff(sR).^2 + diff(sR.*sphi).^2 + diff(sZ).^2);
-            s(2:ns) = cumsum(ds);
+            sRh = (sR(1:ns-1) + sR(2:ns))/2;
+            ds = sqrt(diff(sR).^2 + (sRh.*diff(sphi)).^2 + diff(sZ).^2);
+            ss(2:ns) = cumsum(ds);
         else 
             ns = length(ss);
         end
@@ -177,8 +176,8 @@ for iw = 1:length(waves),%
             sdNpar = 0.1*ones(1,ns);%assume a gaussian spectrum with this arbitrary width
         end
         %
-        if disp_opt == 0, %sepol_pmz, sNperp and phi_pmz given by ray-tracing
-            if isempty(sepol_pmz) | isempty(sNperp) | isempty(phi_pmz) 
+        if opt_disp == 0, %sepol_pmz, sNperp and phi_pmz given by ray-tracing
+            if isempty(sepol_pmz) | isempty(sNperp) | isempty(sphi_pmz) 
                 error('Ray-tracing data incomplete')
             end
         else
@@ -191,7 +190,7 @@ for iw = 1:length(waves),%
             sTe = interp1(ppsin,pTe,spsin,method);
             szTi = interp1(ppsin,pzTi',spsin,method)';
             %
-            if disp_opt == 1, % cold plasma dispersion tensor for sepol_pmz, sNperp and phi_pmz (colddisp_dke_jd)
+            if opt_disp == 1, % cold plasma dispersion tensor for sepol_pmz, sNperp and phi_pmz (colddisp_dke_jd)
                 for is = 1:ns
                     [sNperpp(is),sNperpm(is),sKxyz(1:3,1:3,is),...
                         sep_xyz(1:3,is),sem_xyz(1:3,is),sep_pmz(1:3,is),sem_pmz(1:3,is),sep_pyk(1:3,is),sem_pyk(1:3,is),...
@@ -210,13 +209,13 @@ for iw = 1:length(waves),%
                 else
                     error('No information was given to choose between the two cold modes')
                 end
-            elseif disp_opt == 2, % warm plasma dispersion tensor for sepol_pmz, sNperp and phi_pmz (warmdisp_dke_jd)
+            elseif opt_disp == 2, % warm plasma dispersion tensor for sepol_pmz, sNperp and phi_pmz (warmdisp_dke_jd)
                 %%%%%%%%%% to be implemented %%%%%%%%%%
                 error('model not yet implemented');
-            elseif disp_opt == 3, % non-relativistic hot plasma dispersion tensor for sepol_pmz, sNperp and phi_pmz (R2D2) 
+            elseif opt_disp == 3, % non-relativistic hot plasma dispersion tensor for sepol_pmz, sNperp and phi_pmz (R2D2) 
                 %%%%%%%%%% to be implemented %%%%%%%%%%
                 error('model not yet implemented');
-            elseif disp_opt == 4, % relativistic hot plasma dispersion tensor for sepol_pmz, sNperp and phi_pmz (R2D2)
+            elseif opt_disp == 4, % relativistic hot plasma dispersion tensor for sepol_pmz, sNperp and phi_pmz (R2D2)
                 %%%%%%%%%% to be implemented %%%%%%%%%%
                 error('model not yet implemented');
             else
@@ -243,7 +242,7 @@ end
 % ======================================================================
 %
 [xyvray_dke,xyfinc_dke_rf,xyprop_dke_rf,yb] = ...
-    propagation_jd(vsrays,xpsin_dke,xdpsin_dke,xpsin_S_dke,ppsin,ptR,ptBP,psia,method);
+    propagation_jd(vsrays,xpsin_dke,xdpsin_dke,xpsin_S_dke,theta,ppsin,ptR,ptBP,psia,method);
 %
 nb_rf = size(yb,2);%number of actual rays
 nbb_rf = size(xyvray_dke,2);%number of ray subdivisions
@@ -326,9 +325,13 @@ xyNparmax_rf(xymaskSquare_rf) = xyNpar_in(xymaskSquare_rf) + imag(xydNpar_in(xym
 %
 wpe_ref = sqrt(ne_ref*qe^2/e0/me);
 %
-xyD0_rf_ref = xyfinc_rf.*xyP0_in_rf./(xyrb_rf.*xyRb_rf*me*lnc_e_ref.*xyomega_rf*wpe_ref^2.*norm(xyabsphi_rf));
+xyabsphi_pmz_rf = sqrt(abs(xyphip_rf).^2 + abs(xyphim_rf).^2 + abs(xyphiz_rf).^2);
 %
-waveparam = zeros(nr,nb_ebw,13);
+[xyBb_rf,xyBPb_rf,xyrb_rf,xyRb_rf] = mg_interp_jd(theta,XR,XZ,XBR,XBZ,XBphi,Rp,Zp,xythetab_rf,method);
+%
+xyD0_rf_ref = xyfinc_rf.*xyP0_in_rf./(xyrb_rf.*xyRb_rf*me*lnc_e_ref.*xyomega_rf*wpe_ref^2.*xyabsphi_pmz_rf);
+%
+waveparam = zeros(nr,nbb_rf,12);
 %
 waveparam(:,:,1) = xyomega_rf;%RF wave frequency
 waveparam(:,:,2) = xyopt_rf;%Options for Larmor radius effects and/or EBW calc. 
