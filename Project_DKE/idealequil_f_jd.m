@@ -40,13 +40,13 @@ if nargin < 5
 	kappa = 1;
 end
 if nargin < 2
-	npsi = 101;
+	npsi = 201;
 end
 if nargin < 4
 	shift = zeros(1,npsi);
 end
 if nargin < 3
-	ntheta = 101;
+	ntheta = 201;
 end
 if nargin < 1
 	error('Tokamak not specified');

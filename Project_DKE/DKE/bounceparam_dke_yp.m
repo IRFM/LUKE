@@ -74,7 +74,7 @@ if bounce_mode == 1,
 %
 	XXlambda_p2m2p2 = repmat(reshape(xylambda_p2m2p2',[1,nmhu,nr]),[npn,1,1]);
 %
-    XXlambda_b_p1m1 = repmat(reshape(xylambda_b_p1m1',[1,nmhu,nr]),[npn,1,1]);
+   XXlambda_b_p1m1 = repmat(reshape(xylambda_b_p1m1',[1,nmhu,nr]),[npn,1,1]);
 	XXlambda_b_p1m1_p = repmat(reshape(xylambda_b_p1m1_p',[1,nmhu,nr]),[npn,1,1]);
 	XXlambda_b_p1m1_m = repmat(reshape(xylambda_b_p1m1_m',[1,nmhu,nr]),[npn,1,1]);
 	XXRlambda_b_p1m1 = XXlambda_b_p1m1./XXlambda;

@@ -23,7 +23,7 @@ snumber = 1;%Simulation number
 %
 %Mesh size calculation
 %
-grid_uniformity = -1;%Pitch-angle and momentum grids uniformity: (0) no, (1) yes (-1 for specific test DKE, transient)
+grid_uniformity = 0;%Pitch-angle and momentum grids uniformity: (0) no, (1) yes (-1 for specific test DKE, transient)
 grid_method = 1;%Pitch-angle grid calculation technique: (0): old method, (1) new method
 nmhu_S = 120;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
 np_S = 109;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run)

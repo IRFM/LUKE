@@ -410,6 +410,7 @@ end
 %
 %Bounce average coefficients
 %
+
 [xq,xqtilde,xqbar,xqhat,...
     XXheaviside,...
     Xxlambda,Xxlambda_p,Xxlambda_m,...
@@ -428,6 +429,11 @@ end
     mhu,mhum,mhup,Xmhu,Xmhum,Xmhup,...
     XR,XZ,XBR,XBZ,XBphi,...
     xB0,xR0,xBT0,Rp,Zp);
+    
+    dbstop 437
+    
+    
+    
 %
 %Super matrices size calculation
 %
@@ -1284,8 +1290,8 @@ for ir = 1:nr,
 		XFp_c_tp_imj = -XFm.*XXRlambda_b_p1m1(:,:,ir);
 		XFp_c_tp_immj = -XFmm.*XXRlambda_b_p1m1(:,:,ir);	
 %
-		XFm_c_tp_ijp = XBt.*(XXRlambda_b_p1m1_p(:,:,ir) - XXRlambda_b_p1m2_p(:,:,ir)).*sqrt(X1mmhu2p)./Xpn./Xmhu2p./abs(Xmhup);
-		XFm_c_tp_ijm = XBt.*(XXRlambda_b_p1m1_m(:,:,ir) - XXRlambda_b_p1m2_m(:,:,ir)).*sqrt(X1mmhu2m)./Xpn./Xmhu2m./abs(Xmhum);
+		XFm_c_tp_ijp = XBt.*(XXRlambda_b_p1m1_p(:,:,ir) - XXRlambda_b_p1m2_p(:,:,ir)).*sqrt(X1mmhu2p)./Xpn./Xmhu2p./Xmhup;
+		XFm_c_tp_ijm = XBt.*(XXRlambda_b_p1m1_m(:,:,ir) - XXRlambda_b_p1m2_m(:,:,ir)).*sqrt(X1mmhu2m)./Xpn./Xmhu2m./Xmhum;
 %    
 		XXDpp_c_tp_imj(:,:,ir) = XDpp_c_tp_imj;
 		XXDpm_c_tp_imj(:,:,ir) = XDpm_c_tp_imj;
@@ -1386,10 +1392,15 @@ for ir = 1:nr,
 		XDmp_tp_ijp,XDmp_tp_ij,XDmp_tp_ijm,...
 		XDmm_tp_ijp,XDmm_tp_ijm,...
 		XFp_tp_ippj,XFp_tp_ipj,XFp_tp_ij,XFp_tp_imj,XFp_tp_immj,...
-		XFm_tp_ijp,XFm_tp_ijm); 		
-%		save toto4.mat Xa Xb Xc Xd Xe Xa_tp Xb_tp Xc_tp Xd_tp Xe_tp Xf_tp Xg_tp Xh_tp Xi_tp Xpnmm Xpnm Xpn Xpnp Xpnpp Xpn2m Xpn2p Xdpnmm Xdpnm Xdpn Xdpnp Xdpnpp Xmhumm Xmhum Xmhu Xmhup Xmhupp X1mmhu2 X1mmhu2m X1mmhu2p Xdmhumm Xdmhum Xdmhu Xdmhup Xdmhupp
-%		save toto4.mat XDmm_c_tp_ijp XDmm_c_tp_ijm XXRlambda_b_p3m2_p XXRlambda_b_p3m2_m XXRlambda_b_p1m1 XFpp XFp XF XFm XFmm XXRlambda_b_p1m2_m XXRlambda_b_p1m2_p -append
-%	load toto1.mat Xa Xb Xc Xd Xe Xa_tp Xb_tp Xc_tp Xd_tp Xe_tp Xf_tp Xg_tp Xh_tp Xi_tp
+		XFm_tp_ijp,XFm_tp_ijm); 
+		
+save testdke_new.mat Xa_t Xb_t Xc_t Xd_t Xe_t Xf_t Xg_t Xh_t Xi_t
+save testdke_new.mat Xa_tp Xb_tp Xc_tp Xd_tp Xe_tp xTe_norm xne_norm xbetath betath_ref XBt XFp XAp xmhubounce2 fM xzTi_norm xzni_norm zZi ir -append
+save testdke_new.mat Xpnmm Xpnm Xpn Xpnp Xpnpp Xpn2m Xpn2 Xpn2p Xdpnmm Xdpnm Xdpn Xdpnp Xdpnpp -append
+save testdke_new.mat Xmhumm Xmhum Xmhu Xmhup Xmhupp X1mmhu2 X1mmhu2m X1mmhu2p Xdmhumm Xdmhum Xdmhu Xdmhup Xdmhupp -append
+save testdke_new.mat XDmm_c_tp_ijp XDmm_c_tp_ijm XXRlambda_b_p3m2_p XXRlambda_b_p3m2_m XXRlambda_b_p1m1 XFpp XFp XF XFm XFmm -append 
+save testdke_new.mat XXRlambda_b_p1m2_m XXRlambda_b_p1m2_p dtn -append
+		
 %
 %Loss matrix coefficients
 %
@@ -1521,7 +1532,14 @@ for ir = 1:nr,
 		MXP_f_t = MXP_f_t + sparse([1:(nmhu-ns(ir))*npn-(nmhu-ns(ir))-djmhut],[1+(nmhu-ns(ir))+djmhut:(nmhu-ns(ir))*npn],MXo(1:length(MXo)-(nmhu-ns(ir))-djmhut),(nmhu-ns(ir))*npn,(nmhu-ns(ir))*npn);      
 	end
 %
-	MXP_f_t = (xqtilde(ir)/xB0(ir))*MXP_f_t;%Partial Jacobian multiplication to avoid numerical singularties at p = 0	
+	if dke_mode == 1 & ~isempty(find(ir==rdke)),
+		disp('save 2')
+		save testdke_new.mat MXP_f_t   -append
+%		break
+	end
+	
+	
+	MXP_f_t = (xqtilde(ir)/xB0(ir))*MXP_f_t;%Partial Jacobian multiplication to avoid numerical singularities at p = 0	
 %    
 	sm_f(ir+1) = sm_f(ir) + blocksize_f_t(ir);
 	[i0_f,j0_f,s0_f] = find(MMXP_f_t);		
@@ -1963,7 +1981,7 @@ if dke_mode == 1,
 % Boundary conditions for g at p = 0
 %
 		XdfMdpsi = -dpsim*XfMp/dpsi/dpsip - (dpsip + dpsim)*XfM/dpsip/dpsim + dpsip*XfMm/dpsi/dpsim;%Calculation of the radial gradient of fM (parabolic interpolation) 
-		XfM_tp = - ftp_norm(jr2)*(Xpn.*Xmhu.*XdfMdpsi);	
+		XfM_tp = -ftp_norm(jr2)*(Xpn.*Xmhu.*XdfMdpsi);	
 		XI_g_th = (abs(Xmhu) - sqrt(xmhubounce2(jr2))).*(1 + 0.25*sqrt(xmhubounce2(jr2))./abs(Xmhu));%Large aspect ratio limit, Lorentz model
 		Xf0_g_th = - XI_g_th.*XfM_tp./abs(Xmhu);
 		Xf0_g_th(:,(nmhu - ns_g(jr2))/2+1:(nmhu + ns_g(jr2))/2) = 0;%Trapped domain set to zero
@@ -2003,18 +2021,18 @@ if dke_mode == 1,
 	MMXq_tp_t = -MMXP_tp_t*MMXf0_tp_t + MMXI_tp_t;%********************Verifier le signe de MMXI_tp_t***********
 %
 	for ir = 1:nr_dke,
-	jr2 = rdke(ir);
-	Xq_tp_t = reshape(MMXq_tp_t((ir-1)*(nmhu - ns_g(jr2))*npn + 1:ir*(nmhu - ns_g(jr2))*npn),(nmhu - ns_tp(jr2)),npn)';
-	Xq_tp_t(1,:) = 0;
-	Xq_tp_t(:,(nmhu - ns_g(jr2))/2) = 0;%g(pn,mhu = -mhut) = 0
-	Xq_tp_t(:,(nmhu - ns_g(jr2))/2 + 1) = 0;%g(pn,mhu = mhut) = 0
-	MMXq_tp_t((ir-1)*(nmhu - ns_g(jr2))*npn + 1:ir*(nmhu - ns_g(jr2))*npn) = reshape(Xq_tp_t',(nmhu - ns_g(jr2))*npn,1);
-end   
+		jr2 = rdke(ir);
+		Xq_tp_t = reshape(MMXq_tp_t((ir-1)*(nmhu - ns_g(jr2))*npn + 1:ir*(nmhu - ns_g(jr2))*npn),(nmhu - ns_tp(jr2)),npn)';
+		Xq_tp_t(1,:) = 0;
+		Xq_tp_t(:,(nmhu - ns_g(jr2))/2) = 0;%g(pn,mhu = -mhut) = 0
+		Xq_tp_t(:,(nmhu - ns_g(jr2))/2 + 1) = 0;%g(pn,mhu = mhut) = 0
+		MMXq_tp_t((ir-1)*(nmhu - ns_g(jr2))*npn + 1:ir*(nmhu - ns_g(jr2))*npn) = reshape(Xq_tp_t',(nmhu - ns_g(jr2))*npn,1);
+	end   
 %
 %Resolution of the first order Fokker-Planck equation
 %
-XXf0_g = XXf0_g_th;%Initial guess (thermal limit, large aspect ratio, Lorentz model)
-for it_g = 2:nit_g, 
+	XXf0_g = XXf0_g_th;%Initial guess (thermal limit, large aspect ratio, Lorentz model)
+	for it_g = 2:nit_g, 
 		if sum(residu_g(rdke,it_g-1) >= prec0_g) >= 1 & sum(prec_residu_g(rdke,it_g-1)) >= prec0_g,
 %
 			MMXf0_g_t = [];
@@ -2095,15 +2113,15 @@ for it_g = 2:nit_g,
 					        + integral_dke_jd(dpn,xf1_g.*masku.*xpn3.*xJ1./xz2./xgamma,1)'.*gamma/2/xTe_norm(jr2) ...
 					        + integral_dke_jd(dpn,xf1_g.*masku.*xpn.*(xgamma.*xsigma./xz - 1)./xgamma,1)'.*pn2/xTe_norm(jr2) ...
 					        - integral_dke_jd(dpn,xf1_g.*masku.*xpn3.*xJ4./xz./xgamma,1)'.*gamma/12/betath_ref/betath_ref/xTe_norm(jr2)/xTe_norm(jr2);
-					I2_g = integral_dke_jd(dpn,xf1_g.*maskl./xgamma,1)'/3/xTe_norm(jr2) ...       
+				         I2_g = integral_dke_jd(dpn,xf1_g.*maskl./xgamma,1)'/3/xTe_norm(jr2) ...       
 					        + integral_dke_jd(dpn,xf1_g.*maskl,1)'.*(-2*gamma/3/xTe_norm(jr2) + pn2/5/xTe_norm(jr2)/xTe_norm(jr2)) ...  
 					        + integral_dke_jd(dpn,xf1_g.*maskl./xgamma,1)'.*(gamma - sigma./z)./pn2 ...
 					        - integral_dke_jd(dpn,xf1_g.*maskl,1)'.*J2./z2/xTe_norm(jr2) ...                  
 					        + integral_dke_jd(dpn,xf1_g.*maskl.*(xgamma.*xpn2 - 5*xTe_norm(jr2))./xgamma,1)'.*(1 + 3.0./z2 - 3*gamma.*sigma./z2./z)/6/xTe_norm(jr2)/xTe_norm(jr2) ...
 					        + integral_dke_jd(dpn,xf1_g.*maskl,1)'.*(J3./z/2/betath_ref/betath_ref/xTe_norm(jr2)/xTe_norm(jr2) + J1./z2/2/xTe_norm(jr2) - J4./z/12/betath_ref/betath_ref/xTe_norm(jr2)/xTe_norm(jr2)) ...
 					        + integral_dke_jd(dpn,xf1_g.*maskl.*xpn2./xgamma,1)'.*(gamma.*sigma./z - 1)./pn2/xTe_norm(jr2);
-					XI_g = 4*pi*((XXfM(:,1,jr2)'.*(f1_g + I1_g./pn2 + I2_g.*pn)./gamma)'*mhu).*XXRlambda_b_p1p1(:,:,jr2);   
-					XXI_g(:,:,jr2) = XI_g;
+				         XI_g = 4*pi*((XXfM(:,1,jr2)'.*(f1_g + I1_g./pn2 + I2_g.*pn)./gamma)'*mhu).*XXRlambda_b_p1p1(:,:,jr2);   
+				         XXI_g(:,:,jr2) = XI_g;
 				end
 %
 				XXf0_g(:,:,jr2) = Xf1_g;
@@ -2209,7 +2227,7 @@ Znorm_fsav{1,3} = xnorm_g_fsav;
 %
 xc_g = -(xnorm_tp_fsav + xnorm_g_fsav)./xne_norm(rdke);%Flux surface averaged density conservation
 XXxc_g = shiftdim(repmat(repmat(xc_g(:),[1,npn,1]),[1,1,nmhu]),1);
-XXf0_g(:,:,rdke) = XXf0_g(:,:,rdke) + XXxc_g.*XXf0(:,:,rdke).*XXheaviside(:,:,rdke);%Normalisation in order to maintain the flux surface averaged density at the right level
+XXf0_g(:,:,rdke) = XXf0_g(:,:,rdke) + XXxc_g.*XXf0(:,:,rdke);%Normalisation in order to maintain the flux surface averaged density at the right level
 %
 clear xnorm_0_fsav xnorm_tp_fsav xnorm_g_fsav
 %

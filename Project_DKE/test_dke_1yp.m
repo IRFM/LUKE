@@ -29,7 +29,7 @@ time_pause = 1;%Pause delay for figure display (s)
 %
 %Physical constants
 %
-qe = 1.60217733e-19;%Electron charge (C)
+qe = 1.60217733e-19;%Absolute value of the electron charge (C)
 me = 9.1093897e-31;%Electron rest mass (Kg)
 e0 = 8.854187818e-12;%Free space permeability (F/m)
 re = 2.82e-15;%Classical electron radius (m)
