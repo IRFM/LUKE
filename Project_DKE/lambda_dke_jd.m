@@ -3,7 +3,7 @@ clear, warning off
 memax = 128*1e6; % Available memory
 filename = 'equihelena';
 method = 'linear';
-super = 10;
+super = 1;
 nmhu = 41;
 ymhu0 = linspace(0,1,nmhu); % Pitch-angle cosine at minimum of B-field
 
@@ -21,27 +21,22 @@ xq = q;
 
 clear R Z BR BZ BPHI psi q
 
-[np,nti] = size(XR);
-thetai = linspace(0,2*pi,nti); % Angulqr grid
+%[np,nti] = size(XR);
+[np,nt] = size(XR);
+%thetai = linspace(0,2*pi,nti); % Angular grid
 
-super = round(super);
-nt = nti*super;
-theta = linspace(0,2*pi,nt); % Angulqr grid
+%super = round(super);
+%nt = nti*super;
+theta = linspace(0,2*pi,nt); % Angular grid
 
-if super > 1
-	XR = interp1(thetai,XR',theta,method)';		
-	XZ = interp1(thetai,XZ',theta,method)';		
-	XBR = interp1(thetai,XBR',theta,method)';		
-	XBZ = interp1(thetai,XBZ',theta,method)';		
-	XBphi = interp1(thetai,XBphi',theta,method)';		
-end	
+%if super > 1
+%	XR = interp1(thetai,XR',theta,method)';		
+%	XZ = interp1(thetai,XZ',theta,method)';		
+%	XBR = interp1(thetai,XBR',theta,method)';		
+%	XBZ = interp1(thetai,XBZ',theta,method)';		
+%	XBphi = interp1(thetai,XBphi',theta,method)';		
+%end	
 	
-dt = theta(2) - theta(1);
-tdt = [dt/2, dt*ones(1,nt - 2), dt/2];
-
-psimin = min(xpsi);
-psimax = max(xpsi);
-
 R0 = XR(1,1); % R of Magnetic Axix
 Z0 = XZ(1,1); % Z of Magnetic Axix
 
@@ -55,73 +50,110 @@ XB = sqrt(XBT.^2 + XBP.^2); % Total B-field
 xBmin = min(XB'); % Minimum of B on FS
 xBmax = max(XB'); % Maximum of B on FS
 
+YB = repmat(XB',[1,1,nmhu]);
+YBmin = repmat(xBmin,[nt,1,nmhu]);
+Ymhu0 = shiftdim(repmat(ymhu0',[1,nt,np]),1);
+
+y1mmhu02 = 1 - ymhu0.^2;
+y1mmhu02(y1mmhu02 == 0) = eps;
+Y1mmhu02 = shiftdim(repmat(y1mmhu02',[1,nt,np]),1);
+
+YPSIB = YB./YBmin; % Ratio of B-field to its minimum on FS
+YBb = YBmin./Y1mmhu02; % B-field at turning point
+clear Y1mmhu02
+
 xmhu0T = sqrt(1 - xBmin./xBmax); % Pitch-angle at the trapped-passing boundary
 
-if np*nt*nmhu <= memax/8/14
+xymhu0 = repmat(ymhu0,[np,1]);
+xymhu0T = repmat(xmhu0T',[1,nmhu]);
+xyBb = xBmin'*(1./y1mmhu02); % B-field at turning point 
 
-	YB = repmat(XB,[1,1,nmhu]);
-	YBmin = repmat(xBmin',[1,nt,nmhu]);
-	Ymhu0 = shiftdim(repmat(ymhu0',[1,np,nt]),1);
+Y1Bb = YBb(1,:,:); % B-field at turning point
+Y1B0 = YB(1,:,:); % B-field at theta = 0
 
-	YPSIB = YB./YBmin; % Ratio of B-field to its minimum on FS
-	YBb = YBmin./(1 - Ymhu0.^2); % B-field at turning point
+Y1maskg = Y1Bb >= Y1B0; 
+Y1maskl = Y1Bb < Y1B0;
+xymaskT = abs(xymhu0) < xymhu0T; % Select trapped particles
 
-	clear YBmin
+YCS = cumsum(ones(nt,np,nmhu));
 
-	Ymhu = sign(Ymhu0).*sqrt(1 - YPSIB.*(1 - Ymhu0.^2)); % Pitch-angle cosine of (psi,theta,mhu)
+Yimin = (YB <= YBb).*YCS;
+Yimax = (YB > YBb).*YCS;
 
-	clear YPSIB
+Yimin(Yimin == 0) = NaN;
+Yimax(Yimax == 0) = NaN;
 
-	Ymask = YB <= YBb; % mask on the intergration over theta
+xyi1max = squeeze(min(Yimin).*Y1maskl + min(Yimax).*Y1maskg);
+xyi1min = squeeze(min(Yimin - 1).*Y1maskl + min(Yimax - 1).*Y1maskg);
+xyi2min = squeeze(max(Yimin).*Y1maskl + max(Yimax).*Y1maskg);
+xyi2max = squeeze(max(Yimin + 1).*Y1maskl + max(Yimax + 1).*Y1maskg);
 
-	clear YBb
+xyi1min(~xymaskT) = 1;
+xyi1max(~xymaskT) = 1;
+xyi2min(~xymaskT) = 1;
+xyi2max(~xymaskT) = 1;
 
-	Ymhu(~Ymask) = eps;
+xytheta1min =  theta(xyi1min);
+xytheta1max =  theta(xyi1max);
+xytheta2min =  theta(xyi2min);
+xytheta2max =  theta(xyi2max);
+
+Zi1min = reshape(xyi1min + nt*(cumsum(ones(np,nmhu)) - 1),[np*nmhu,1]);
+Zi1max = reshape(xyi1max + nt*(cumsum(ones(np,nmhu)) - 1),[np*nmhu,1]);
+Zi2min = reshape(xyi2min + nt*(cumsum(ones(np,nmhu)) - 1),[np*nmhu,1]);
+Zi2max = reshape(xyi2max + nt*(cumsum(ones(np,nmhu)) - 1),[np*nmhu,1]);
+
+XtB = XB';
+
+xyB1min =  reshape(XtB(Zi1min),[np,nmhu]);
+xyB1max =  reshape(XtB(Zi1max),[np,nmhu]);
+xyB2min =  reshape(XtB(Zi2min),[np,nmhu]);
+xyB2max =  reshape(XtB(Zi2max),[np,nmhu]);
 
 
-	YBR = repmat(XBR,[1,1,nmhu]);	
-	YBZ = repmat(XBZ,[1,1,nmhu]);
-	YR = repmat(XR,[1,1,nmhu]);
-	YZ = repmat(XZ,[1,1,nmhu]);
+xyB1max(~xymaskT) = xyB1min(~xymaskT) + eps;
+xyB2max(~xymaskT) = xyB2min(~xymaskT) + eps;
+
+xyTthetaT1 = xytheta1min + (xytheta1max - xytheta1min).*(xyBb - xyB1min)./(xyB1max - xyB1min);
+xyTthetaT2 = xytheta2min + (xytheta2max - xytheta2min).*(xyBb - xyB2min)./(xyB2max - xyB2min);
+
+Ytheta = repmat(theta',[1,np,nmhu]);
+
+YTtheta = [Ytheta;reshape(xyTthetaT1,[1,np,nmhu]);reshape(xyTthetaT2,[1,np,nmhu])];
+YTB = [YB;repmat(reshape(xyBb,[1,np,nmhu]),[2,1,1])];
+
+[YTtheta,YTiT] = sort(YTtheta);
+ZTB = reshape(YTB,[(nt + 2),np,nmhu]);
+ZTiT = reshape(YTiT,[(nt + 2),np,nmhu]);
+
+YTB = reshape(ZTB(ZTiT),[(nt + 2),np,nmhu]);
+
+YTBR = interp1(Ytheta,YBR,YTtheta);
 
 
-	xyInt = integral_dke_jd( tdt/(2*pi), Ymask.*YB.*((YR - R0).^2 + (YZ - Z0).^2).*Ymhu0./abs(YBR.*(YZ - Z0) - YBZ.*(YR - R0))./Ymhu, 2);
+Ymask = YB <= YBb; % mask on the intergration over theta
+
+
+
+clear YBmin YBb
+
+Ymhu = sign(Ymhu0).*sqrt(1 - YPSIB.*(1 - Ymhu0.^2)); % Pitch-angle cosine of (psi,theta,mhu)
+Ymhu(~Ymask) = eps;
+
+clear YPSIB
+
+YBR = repmat(XBR',[1,1,nmhu]);	
+YBZ = repmat(XBZ',[1,1,nmhu]);
+YR = repmat(XR',[1,1,nmhu]);
+YZ = repmat(XZ',[1,1,nmhu]);
+
+
+
+dt = theta(2) - theta(1);
+tdt = [dt/2, dt*ones(1,nt - 2), dt/2];
+
+xyInt = integral_dke_jd( tdt/(2*pi), Ymask.*YB.*((YR - R0).^2 + (YZ - Z0).^2).*Ymhu0./abs(YBR.*(YZ - Z0) - YBZ.*(YR - R0))./Ymhu, 1);
 	
-else
-	xyInt = zeros(np,nmhu);
-	for ip=1:np
-		
-		disp(['ip = ',num2str(ip),'/',num2str(np)]);
-
-		tyB = repmat(XB(ip,:)',[1,nmhu]);
-		tymhu0 = repmat(ymhu0,[nt,1]);
-		
-		tyPSIB = tyB/xBmin(ip); % Ratio of B-field to its minimum on FS
-		tyBb = xBmin(ip)./(1 - tymhu0.^2); % B-field at turning point
-
-		clear tyBmin
-	
-		tymhu = sign(tymhu0).*sqrt(1 - tyPSIB.*(1 - tymhu0.^2)); % Pitch-angle cosine of (psi,theta,mhu)
-	
-		clear tyPSIB
-	
-		tymask = tyB <= tyBb; % mask on the intergration over theta
-	
-		clear tyBb
-	
-		tymhu(~tymask) = eps;
-
-
-		tyBR = repmat(XBR(ip,:)',[1,nmhu]);	
-		tyBZ = repmat(XBZ(ip,:)',[1,nmhu]);
-		tyR = repmat(XR(ip,:)',[1,nmhu]);
-		tyZ = repmat(XZ(ip,:)',[1,nmhu]);
-
-
-		xyInt(ip,:) = integral_dke_jd( tdt/(2*pi), tymask.*tyB.*((tyR - R0).^2 + (tyZ - Z0).^2).*tymhu0./abs(tyBR.*(tyZ - Z0) - tyBZ.*(tyR - R0))./tymhu, 1)';
-	end
-end
-
 ymask = find(ymhu0 == 0);
 if ~isempty(ymask)
 	xyInt(:,ymask) = 0;
@@ -131,6 +163,10 @@ xyr = repmat(xr',[1,nmhu]);
 xyq = repmat(xq',[1,nmhu]);
 
 xylambda = xyInt./xyr./sqrt(1 + (R0*xyq./xyr).^2);
+
+psimin = min(xpsi);
+psimax = max(xpsi);
+
 
 figure(1),clf
 
