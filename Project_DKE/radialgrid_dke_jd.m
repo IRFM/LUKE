@@ -7,13 +7,16 @@ function [xpsin_f,xpsin_f_dke,xdpsin_f_dke,xpsinm_S_dke,xdpsinm_S_dke,xpsinp_S_d
 %
 %		- dke_mode : (1) resolution of the dke (0) of the FP equation
 %		- xpsin_S_dke : flux radial grid
-%		- dpsin_dke : maximum space between two consecutive points for DKE radial derivative calculations
-%		- psin_display_in: radial location at which data are displayed (graphic mode)
+%		- dpsin_dke : maximum space between two consecutive points for DKE
+%		radial derivative calculations
+%		- psin_display_in: radial location at which data are displayed
+%		(graphic mode)
 %
 %   OUTPUTS:
 %
 %       - xpsin_f: positions where FP equation is to be solved [1,nr]
-%       - xpsin_f_dke: positions where DKE equation is to be solved [1,nr_dke]
+%       - xpsin_f_dke: positions where DKE equation is to be solved
+%       [1,nr_dke]
 %       - xdpsin_f_dke: 
 %       - xpsinm_S_dke: 
 %       - xdpsinm_S_dke: 
@@ -21,10 +24,13 @@ function [xpsin_f,xpsin_f_dke,xdpsin_f_dke,xpsinm_S_dke,xdpsinm_S_dke,xpsinp_S_d
 %       - xdpsinp_S_dke: 
 %       - xpsin_S_dke: 
 %  		- r_dke: index of the radial positions for DKE calculations
-%		- rho_display_out: radial location at which data are displayed (graphic mode)
-%		- ir_display_out: index of the radial location at which data are displayed (graphic mode)
+%		- rho_display_out: radial location at which data are displayed
+%		(graphic mode)
+%		- ir_display_out: index of the radial location at which data are
+%		displayed (graphic mode)
 %
-% by Joan Decker <jodecker@alum.mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
+% by Joan Decker <jodecker@alum.mit.edu> (MIT/RLE) and Yves Peysson
+% <yves.peysson@cea.fr> (CEA/DRFC)
 %
 nr_S = length(xpsin_S_dke);
 %
