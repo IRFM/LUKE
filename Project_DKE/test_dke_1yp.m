@@ -6,6 +6,7 @@ test_dke_1yp(tokname,snumber,...
 grid_uniformity,grid_power,nmhu_S,np_S,pnmax_S,sfac,spfac,snmhu,snp,psin_S,psin_display,dpsin_dke,...
 ref_mode,norm_ref,...
 epsi0_fsav,epsia_fsav,eepsi_fsav,...
+rf_list,nit_rf,prec_rf,...
 coll_mode,bounce_mode,dke_mode,equil_mode,...
 vparmin_r,Dr0,pDr,Dr_model,Vr0,pVr,Vr_model,...
 nhuloss,...
@@ -260,30 +261,6 @@ xepsi0_ref_fsav = epsi0_fsav*xrbetath.*xrnhuth;
 xepsia_ref_fsav = epsia_fsav*xrbetath.*xrnhuth;
 xvparmin_r_ref = vparmin_r*xrbetath;
 xnhuloss_ref = nhuloss*xrnhuth;
-%
-%   RF wave quasilinear diffusion
-%
-waveparam = zeros(nr,0,14);
-% changes in waveparam not yet implemented
-%waveparam = rfwave_dke_jd(tokname,xrho',betath_ref,ne_ref,xrbetath',xrnhuth',xTe_norm,xne_norm',xzni_norm,Zi',mi',Bt,xq',Rp,ap,bounce_mode);%Look at the function for the RF wave input parameters
-nb = size(waveparam,2);
-blist_lh = find(waveparam(1,:,1)==0);
-nb_lh = length(blist_lh);
-waveparam_lh = waveparam(:,blist_lh,:);
-blist_ec = find(waveparam(1,:,1) > 0);
-nb_ec = length(blist_ec);
-waveparam_ec = waveparam(:,blist_ec,:);
-%
-%For displaying RF quasilinear domain only
-%
-if nb_ec > 0,
-    xDperp_cy_ref = waveparam_ec(:,1,6);
-end
-if nb_lh > 0,
-    xD0_lh_ref = waveparam_lh(:,1,6);
-    xvparmin_lh_ref = 1./waveparam_lh(:,1,8)/betath_ref;
-    xvparmax_lh_ref = 1./waveparam_lh(:,1,7)/betath_ref;
-end
 %    
 for ir = 1:nr,	
 %
@@ -415,14 +392,9 @@ for ir = 1:nr,
 				Xgamma_cyl_ref = sqrt(1 + Xp_cyl_ref.*Xp_cyl_ref*betath_ref*betath_ref);
 				Xvpar_cyl_ref = Xppar_cyl_ref./Xgamma_cyl_ref;
 %
-				if nb_lh > 0  & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0 & initguess == 1,
-					pparresmin_lh_cyl_ref = xvparmin_lh_ref(ir)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmin_lh_ref(ir)^2*betath_ref^2);%LH resonance condition
-					pparresmax_lh_cyl_ref = xvparmax_lh_ref(ir)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmax_lh_ref(ir)^2*betath_ref^2);%LH resonance condition
-				end
-%
         		Xf0_cyl_ref = Xf0_cyl_ref.*(Xf0_cyl_ref>0);%Remove negative values
         		Xf0_cyl_ref = Xf0_cyl_ref.*(Xp_cyl_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
-            Xf0_cyl_ref(isnan(Xf0_cyl_ref)) = 0;%Remove NaN values
+                Xf0_cyl_ref(isnan(Xf0_cyl_ref)) = 0;%Remove NaN values
 %
         		curr0_ref = 2*pi*integral_dke_jd(dpn_ref(:),pn2_ref(:).*(pn_ref(:)./gamma_ref(:)).*integral_dke_jd(dmhu,Xmhu.*Xf0_ref,2),1);
         		curr0_cyl_ref = 2*pi*integral_dke_jd(dpperp_cyl_ref(:),pperp_cyl_ref(:).*integral_dke_jd(dppar_cyl_ref,Xvpar_cyl_ref.*Xf0_cyl_ref,2),1);
@@ -435,12 +407,6 @@ for ir = 1:nr,
 				xlabel('ppar/pth-ref');ylabel('pperp/pth-ref');title(title_initguess);
 				pause(time_pause);
 %
-				if nb_lh > 0  & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0 & initguess == 1,,
-					hold on;
-					plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--');
-                    plot(pparresmax_lh_cyl_ref,pperp_cyl_ref,'k--');
-                    hold off;
-				end
 			end
 %
 			view = 0;
@@ -497,10 +463,6 @@ for ir = 1:nr,
         		Xmhu_cyl_ref = Xppar_cyl_ref./sqrt(Xppar_cyl_ref.^2 + Xpperp_cyl_ref.^2);
         		Xgamma_cyl_ref = sqrt(1 + Xp_cyl_ref.*Xp_cyl_ref*betath_ref*betath_ref);
         		Xvpar_cyl_ref = Xppar_cyl_ref./Xgamma_cyl_ref;
-        		if nb_lh > 0  & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0,
-        			pparresmin_lh_cyl_ref = xvparmin_lh_ref(ir)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmin_lh_ref(ir)^2*betath_ref^2);%LH resonance condition
-					pparresmax_lh_cyl_ref = xvparmax_lh_ref(ir)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmax_lh_ref(ir)^2*betath_ref^2);%LH resonance condition
-				end
 %
         		Xf0_cyl_ref = Xf0_cyl_ref.*(Xf0_cyl_ref>0);%Remove negative values
         		Xf0_cyl_ref = Xf0_cyl_ref.*(Xp_cyl_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
@@ -516,12 +478,6 @@ for ir = 1:nr,
 				xlabel('ppar/pth-ref');ylabel('pperp/pth-ref');title(title_initguess);
 				pause(time_pause);
 %
-				if nb_lh > 0 & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0 & initguess == 1,
-					hold on;
-                    plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--');
-                    plot(pparresmax_lh_cyl_ref,pperp_cyl_ref,'k--');
-                    hold off;
-				end
 			end
 %
 			view = 0;
@@ -661,28 +617,72 @@ end
 %
 time0 = clock;
 %
-[XXheaviside,...
-    XXf0_ref,XXf0_tp_ref,XXf0_g_ref,...
-    YXXDrf_ref,...
-    Znorm_ref,Znorm_ref_fsav,...
-    Zcurr_ref,Zcurr_ref_fsav,...
-    ZP0_ref_fsav,...
-    ZSp0_ref,...
-    XxRR_ref_fsav,...
-    xTe_norm_out,xft_fsav,xmhubounce2,xepsi_ref,...
-    memoryLU_f,memoryLU_g]...
-= dke_1_4yp(tokname,theta,...
-    XR,XZ,XBR,XBZ,XBphi,...
-    xB0,xR0,xBT0,xBp0,Rp,Zp,ap,...
-    mhu,dmhu,mhum,dmhum,mhup,dmhup,mhu_S,...
-    xmhu0T2,xrho,xpsin,xdpsin_dke,xpsinm_dke,xdpsinm_dke,xpsinp_dke,xdpsinp_dke,r_dke,xpsin_S_dke,...
-    pn,dpn,pnm,dpnm,pnp,dpnp,pn_S,spfac,...
-    xTe_norm,xne_norm,zZi,zmi,xzni_norm,xzTi_norm,...
-    betath_ref,xepsi_ref_fsav_in,waveparam,...
-    XXDr_ref,XXVr_ref,...
-    XXnhuloss_ref,xdeltaripple,xNq,...
-    xftp_norm_ref,bounce,coll_mode,...
-    norm_mode,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,XXfinit_ref);
+xyPabs_tot_rf_fsav_in = 0;
+%
+for it_rf=1:nit_rf % convergence in the ray-tracing mode
+
+    [waveparam,nb_list] = rfwave_dke_jd(tokname,xrho,xpsin,xpsin_dke,xdpsin_dke,xyPabs_tot_rf_fsav_in,betath_ref,ne_ref,xrbetath,xrnhuth,xTe_norm,xne_norm,xzni_norm,zZi,zmi,Rp,ap,bounce_mode,rf_list);%Look at the function for the RF wave input parameters
+    
+    [XXheaviside,...
+        XXf0_ref,XXf0_tp_ref,XXf0_g_ref,...
+        YXXDrf_ref,...
+        Znorm_ref,Znorm_ref_fsav,...
+        Zcurr_ref,Zcurr_ref_fsav,...
+        ZP0_ref_fsav,...
+        ZSp0_ref,...
+        XxRR_ref_fsav,...
+        xTe_norm_out,xft_fsav,xmhubounce2,xepsi_ref,...
+        memoryLU_f,memoryLU_g]...
+    = dke_1_4yp(tokname,theta,...
+        XR,XZ,XBR,XBZ,XBphi,...
+        xB0,xR0,xBT0,xBp0,Rp,Zp,ap,...
+        mhu,dmhu,mhum,dmhum,mhup,dmhup,mhu_S,...
+        xmhu0T2,xrho,xpsin,xdpsin_dke,xpsinm_dke,xdpsinm_dke,xpsinp_dke,xdpsinp_dke,r_dke,xpsin_S_dke,...
+        pn,dpn,pnm,dpnm,pnp,dpnp,pn_S,spfac,...
+        xTe_norm,xne_norm,zZi,zmi,xzni_norm,xzTi_norm,...
+        betath_ref,xepsi_ref_fsav_in,waveparam,...
+        XXDr_ref,XXVr_ref,...
+        XXnhuloss_ref,xdeltaripple,xNq,...
+        xftp_norm_ref,bounce,coll_mode,...
+        norm_mode,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,XXfinit_ref);
+%
+    if sum(rf_list) > 0
+        xyPabs_rf_dke_fsav_out = ZP0_ref_fsav{3,1} + ZP0_ref_fsav{3,2} + ZP0_ref_fsav{3,3}; % flux-surface averaged density of absorbed power.
+        residue_rf = max(max(abs(xyPabs_rf_dke_fsav_out - xyPabs_tot_rf_fsav_in)./(abs(xyPabs_rf_dke_fsav_out) + eps)));
+        xyPabs_tot_rf_fsav_in = xyPabs_rf_dke_fsav_out;
+        if residue_rf <= prec_rf
+            info_dke_yp(2,['Successfull convergence achieved for ray-tracing coupling after ',int2str(it_rf),' iterations !']);
+            break
+        end
+    end
+end
+%
+%
+%   RF wave quasilinear diffusion
+%
+nb = size(waveparam,2);
+if nb > 0
+    blist_lh = find(waveparam(1,:,1)==0);
+    nb_lh = length(blist_lh);
+    waveparam_lh = waveparam(:,blist_lh,:);
+    blist_ec = find(waveparam(1,:,1) > 0);
+    nb_ec = length(blist_ec);
+    waveparam_ec = waveparam(:,blist_ec,:);
+else 
+    nb_lh = 0;
+    nb_ec = 0;
+end
+%
+%For displaying RF quasilinear domain only
+%
+if nb_ec > 0,
+    xDperp_cy_ref = waveparam_ec(:,1,6);
+end
+if nb_lh > 0,
+    xD0_lh_ref = waveparam_lh(:,1,5);
+    xvparmin_lh_ref = 1./waveparam_lh(:,1,7)/betath_ref;
+    xvparmax_lh_ref = 1./waveparam_lh(:,1,6)/betath_ref;
+end
 %
 time_out = etime(clock,time0);
 memoryLU_f_out = memoryLU_f;
