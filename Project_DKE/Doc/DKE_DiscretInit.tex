@@ -3,8 +3,9 @@
 
 The initial distribution function for the first order drift kinetic equation
 is determined in the non-relativistic limit using the simplified Lorentz
-collision model corresponding to $Z_{i}\gg 1$ and $T_{i}=0$. In that case,
-the bounce-averaged collision operator reduces to 
+collision model corresponding to $Z_{i}\gg 1$ and $T_{i}=0,$ as introduced
+in Sec. \ref{FPCollisions}. In that case, the bounce-averaged collision
+operator reduces to 
 \begin{equation}
 \left\{ \nabla _{\mathbf{p}}\cdot \mathbf{S}_{\mathbf{p}}\left( f_{1}\right)
 \right\} _{\mathcal{L}}=-\frac{p}{\lambda }\frac{\partial }{\partial \xi _{0}%
@@ -14,8 +15,8 @@ _{0}}\left( \sqrt{1-\xi _{0}^{2}}\lambda S_{\xi _{0},\mathcal{L}}^{\left(
 0\right) }\right)
 \end{equation}
 and in the steady-state regime $\left\{ \nabla _{\mathbf{p}}\cdot \mathbf{S}%
-_{\mathbf{p}}\left( f_{1}\right) \right\} _{\mathcal{L}}=0$ so that the
-equation to be solved is 
+_{\mathbf{p}}\left( f_{1}\right) \right\} _{\mathcal{L}}=0$ , so that the
+equation to be solved is simply 
 \begin{equation}
 \frac{\partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}\lambda
 S_{\xi _{0},\mathcal{L}}^{\left( 0\right) }\right) =-\frac{\partial }{%
@@ -33,7 +34,7 @@ and
 S_{\xi _{0},\mathcal{L}}^{\left( 0\right) }=\sigma \left\{ \frac{\sigma \xi 
 }{\sqrt{\Psi }\xi _{0}}S_{\xi ,\mathcal{L}}\left( g\right) \right\}
 \end{equation}
-as defined in Sec.***.
+as defined in Sec.\ref{dkefluxconsmomentum}.
 
 Since only pitch-angle scattering takes place in this limit, $\widetilde{S}%
 _{\xi _{0},\mathcal{L}}^{(0)}$ may be expressed in a very simple form 
@@ -42,7 +43,7 @@ _{\xi _{0},\mathcal{L}}^{(0)}$ may be expressed in a very simple form
 \widetilde{D}_{\xi \xi ,\mathcal{L}}^{\text{C}(0)}\frac{\partial \widetilde{f%
 }^{(0)}}{\partial \xi _{0}}
 \end{equation}
-since $F_{\xi }=D_{\xi p}=0$ for collisions with 
+since $F_{\xi }^{C}=D_{\xi p}^{C}=0$ for collisions with 
 \begin{equation}
 \widetilde{D}_{\xi \xi ,\mathcal{L}}^{\text{C}(0)}=\sigma \left\{ \frac{%
 \sigma \xi ^{3}}{\Psi ^{2}\xi _{0}^{3}}D_{\xi \xi ,\mathcal{L}}^{\text{C}%
@@ -59,7 +60,7 @@ D_{\xi \xi ,\mathcal{L}}^{\text{C}(0)}=\left\{ \frac{\xi ^{2}}{\Psi \xi
 _{0}^{2}}D_{\xi \xi ,\mathcal{L}}^{\text{C}}\right\}
 \end{equation}
 where $D_{\xi \xi ,\mathcal{L}}^{\text{C}}=B_{t}^{\mathcal{L}}$ according
-usual notation given in Sec.***.
+usual notation given in Sec.\ref{FPCollisions}.
 
 The differential equation to be solved is then 
 \begin{equation}
@@ -93,7 +94,7 @@ and $g^{(0)}$ is given by the simple equation
 \right)
 \end{equation}
 
-If the solution of the zero-order Fokker-Planck equation is 
+If the solution of the zero-order Fokker-Planck equation is the Maxwellian 
 \begin{equation}
 f_{0}^{\left( 0\right) }=f_{M}\simeq \frac{n_{e}}{\left[ 2\pi T_{e}\right]
 ^{3/2}}\exp \left[ -\frac{p^{2}}{2T_{e}}\right]
@@ -104,41 +105,42 @@ its spatial derivative is
 n_{e}}{d\psi }+\left( \frac{p^{2}}{2T_{e}}-\frac{3}{2}\right) \frac{d\ln
 T_{e}}{d\psi }\right] f_{M}
 \end{equation}
-and from the definition of $\widetilde{f}^{(0)}$ given in Sec.***, 
+and from the definition of $\widetilde{f}^{(0)}$ given in Sec.\ref
+{lowcollision}, 
 \begin{eqnarray}
-\widetilde{f}^{(0)} &=&\frac{p\xi _{0}I\left( \psi \right) }{q_{e}B_{\min
-}\left( \psi \right) }\frac{\partial f_{0}^{(0)}(p,\xi _{0},\psi )}{\partial
-\psi }  \nonumber \\
-&=&\frac{p\xi _{0}I\left( \psi \right) }{q_{e}B_{\min }\left( \psi \right) }%
-\left[ \frac{d\ln n_{e}}{d\psi }+\left( \frac{p^{2}}{2T_{e}}-\frac{3}{2}%
-\right) \frac{d\ln T_{e}}{d\psi }\right] f_{M}
+\widetilde{f}^{(0)} &=&\frac{p\xi _{0}I\left( \psi \right) }{q_{e}B_{0}}%
+\frac{\partial f_{0}^{(0)}(\psi ,p,\xi _{0})}{\partial \psi }  \nonumber \\
+&=&\frac{p\xi _{0}I\left( \psi \right) }{q_{e}B_{0}}\left[ \frac{d\ln n_{e}}{%
+d\psi }+\left( \frac{p^{2}}{2T_{e}}-\frac{3}{2}\right) \frac{d\ln T_{e}}{%
+d\psi }\right] f_{M}
 \end{eqnarray}
 
 Projected on the numerical grids, the discrete form of $\widetilde{f}^{(0)}$
 is 
 \begin{eqnarray}
 \widetilde{f}_{l+1/2,i+1/2,j+1/2}^{(0)} &=&\frac{p_{i+1/2}\xi
-_{0,j+1/2}I_{l+1/2}}{q_{e}B_{\min ,l+1/2}}\left[ \left. \frac{d\ln n_{e}}{%
-d\psi }\right| _{l+1/2}\right.  \nonumber \\
+_{0,j+1/2}I_{l+1/2}}{q_{e}B_{0,l+1/2}}\left[ \left. \frac{d\ln n_{e}}{d\psi }%
+\right| _{l+1/2}\right.  \nonumber \\
 &&\left. +\left( \frac{p_{i+1/2}^{2}}{2T_{e,l+1/2}}-\frac{3}{2}\right)
 \left. \frac{d\ln T_{e}}{d\psi }\right| _{l+1/2}\right]
 f_{M,l+1/2,i+1/2,j+1/2}
 \end{eqnarray}
-where radial derivatives are performed as discussed in Sec.***.
+where radial derivatives are performed as discussed in Sec. \ref
+{dkegridinterp}.
 
 Since $f_{M}$ is by definition independent of $\xi _{0},$ 
 \begin{eqnarray}
 \frac{\partial \widetilde{f}^{(0)}}{\partial \xi _{0}} &=&\frac{pI\left(
-\psi \right) }{q_{e}B_{\min }\left( \psi \right) }\left[ \frac{d\ln n_{e}}{%
-d\psi }+\left( \frac{p^{2}}{2T_{e}}-\frac{3}{2}\right) \frac{d\ln T_{e}}{%
-d\psi }\right] f_{M}  \nonumber \\
+\psi \right) }{q_{e}B_{0}}\left[ \frac{d\ln n_{e}}{d\psi }+\left( \frac{p^{2}%
+}{2T_{e}}-\frac{3}{2}\right) \frac{d\ln T_{e}}{d\psi }\right] f_{M} 
+\nonumber \\
 &=&\Xi \left( \psi ,p\right) f_{M}
 \end{eqnarray}
 where 
 \begin{equation}
-\Xi \left( \psi ,p\right) =\frac{pI\left( \psi \right) }{q_{e}B_{\min
-}\left( \psi \right) }\left[ \frac{d\ln n_{e}}{d\psi }+\left( \frac{p^{2}}{%
-2T_{e}}-\frac{3}{2}\right) \frac{d\ln T_{e}}{d\psi }\right]
+\Xi \left( \psi ,p\right) =\frac{pI\left( \psi \right) }{q_{e}B_{0}}\left[ 
+\frac{d\ln n_{e}}{d\psi }+\left( \frac{p^{2}}{2T_{e}}-\frac{3}{2}\right) 
+\frac{d\ln T_{e}}{d\psi }\right]
 \end{equation}
 the equation becomes 
 \begin{equation}
@@ -155,11 +157,12 @@ f_{M}\frac{\overline{\lambda }_{3,-2,0}}{\lambda _{2,-1,0}}  \nonumber \\
 &=&-\Xi \left( \psi ,p\right) f_{M}\frac{\lambda _{3,-2,0}}{\lambda _{2,-1,0}%
 }H\left( \left| \xi _{0}\right| -\xi _{0T}\right)
 \end{eqnarray}
-using the definition of $\overline{\lambda }_{n,m,p}$ given in Sec. ***. By
-definition, $\overline{\lambda }_{3,-2,0}$ is an even function of $\xi _{0},$
-and therefore $g^{(0)}$ must be an odd function $\xi _{0}.$ Since
-furthermore $g^{(0)}$ is an even function of $\xi _{0}$, $g^{(0)}$ $=0$ in
-the trapped region. Integrating in the region $-$ $\xi _{0}\leq \xi _{0T},$ 
+using the definition of $\overline{\lambda }_{n,m,p}$ given in Sec. \ref
+{NormBounceSection}. By definition, $\overline{\lambda }_{3,-2,0}$ is an
+even function of $\xi _{0},$ and therefore $g^{(0)}$ must be an odd function 
+$\xi _{0}.$ Since furthermore $g^{(0)}$ is an even function of $\xi _{0}$, $%
+g^{(0)}$ $=0$ in the trapped region. Integrating in the region $-\xi
+_{0}\leq \xi _{0T},$ 
 \begin{eqnarray}
 g^{(0)}\left( \psi ,p,\xi _{0}\right) &=&-\Xi \left( \psi ,p\right)
 f_{M}\int_{-\xi _{0T}}^{\xi _{0}}\frac{\overline{\lambda }_{3,-2,0}}{\lambda
@@ -211,13 +214,13 @@ and $j>j_{T,l+1/2}^{+}.$
 
 \paragraph{Case of circular concentric flux surfaces}
 
-According to Sec.***, 
+According to Sec. \ref{dkecollisions}, 
 \begin{equation}
 \overline{\lambda }_{3,-2,0}=\frac{H(|\xi _{0}|-\xi _{0T})}{\left(
 1+\epsilon \right) \xi _{0}^{2}}\left( \xi _{0}^{2}-\frac{\epsilon \left(
 1-\epsilon /2\right) }{\left( 1+\epsilon \right) }\right)
 \end{equation}
-and 
+and Sec. \ref{FPCollisions} 
 \begin{equation}
 \lambda _{2,-1,0}=\lambda \left( 1-\frac{\Delta _{b}}{\xi _{0}^{2}}\right)
 \end{equation}
@@ -230,17 +233,18 @@ _{0T}}^{\left| \xi _{0}\right| }\frac{\left( \xi _{0}^{\prime 2}-\epsilon
 \left( 1-\Delta _{b}/\xi _{0}^{\prime 2}\right) \left( 1+\epsilon \right)
 \xi _{0}^{\prime 2}}d\xi _{0}^{\prime }
 \end{equation}
-and in the limit $\epsilon \ll 1,$%
+and in the low inverse aspect ratio limit $\epsilon \ll 1,$ one finds 
 \begin{equation}
 I_{\mathcal{L}}\left( \psi ,\left| \xi _{0}\right| \right) \simeq \frac{1}{%
 1+\epsilon }\int_{\xi _{0T}}^{\left| \xi _{0}\right| }\frac{d\xi
 _{0}^{\prime }}{\lambda \left( 1-\Delta _{b}/\xi _{0}^{\prime 2}\right) }
 \end{equation}
+the expression that was first given in Ref. \cite{sch99}.
 
 \paragraph{Flux surface averaged bootstrap current\label{BootLor}}
 
-The flux-averaged electron bootstrap current in the Lorentz model is given
-by the relation 
+According to Sec. \ref{moments}, the flux-averaged electron bootstrap
+current in the Lorentz model is given by the relation 
 \begin{equation}
 \left\langle J_{\Vert ,\mathcal{L}}\right\rangle \left( \psi \right)
 =\left\langle \widetilde{J}_{\Vert ,\mathcal{L}}\right\rangle _{\phi
@@ -250,27 +254,22 @@ _{\phi }^{1}\left( \psi \right)
 where 
 \begin{equation}
 \left\langle \widetilde{J}_{\Vert }\right\rangle _{\phi }^{1}\left( \psi
-\right) =2\pi q_{e}\frac{\widetilde{q}\left( \psi \right) }{\overline{q}%
-\left( \psi \right) }\frac{R_{0}}{R\left( \psi ,\theta _{0}\right) }\frac{%
-B_{T}\left( \psi ,\theta _{0}\right) }{B_{\min }\left( \psi \right) }%
-\int_{0}^{\infty }dp\;p^{3}\int_{-1}^{1}\;\lambda _{2,-2,2}\xi _{0}%
-\widetilde{f}^{(0)}d\xi _{0}
+\right) =2\pi q_{e}\frac{\widetilde{q}}{\overline{q}}\frac{R_{p}}{R_{0}}%
+\frac{B_{T0}}{B_{0}}\int_{0}^{\infty }dp\;p^{3}\int_{-1}^{1}\;\lambda
+_{2,-2,2}\xi _{0}\widetilde{f}^{(0)}d\xi _{0}
 \end{equation}
 and
 
 \begin{equation}
 \left\langle J_{\Vert }\right\rangle _{\phi }^{1}\left( \psi \right) =2\pi
-q_{e}\frac{q\left( \psi \right) }{\overline{q}\left( \psi \right) }%
-\int_{0}^{\infty }dp\;p^{3}\int_{-1}^{1}\;H\left( \left| \xi _{0}\right|
--\xi _{0T}\right) \;\xi _{0}g^{(0)}d\xi _{0}
+q_{e}\frac{q}{\overline{q}}\int_{0}^{\infty }dp\;p^{3}\int_{-1}^{1}\;H\left(
+\left| \xi _{0}\right| -\xi _{0T}\right) \;\xi _{0}g^{(0)}d\xi _{0}
 \end{equation}
 in the non-relativistic limit $\gamma \rightarrow 1.$ Therefore, 
 \begin{eqnarray}
 \left\langle \widetilde{J}_{\Vert }\right\rangle _{\phi }^{1}\left( \psi
-\right) &=&2\pi \frac{\widetilde{q}\left( \psi \right) }{\overline{q}\left(
-\psi \right) }\frac{R_{0}}{R\left( \psi ,\theta _{0}\right) }\frac{%
-B_{T}\left( \psi ,\theta _{0}\right) }{B_{\min }^{2}\left( \psi \right) }%
-I\left( \psi \right) \times  \nonumber \\
+\right) &=&2\pi \frac{\widetilde{q}}{\overline{q}}\frac{R_{p}}{R_{0}}\frac{%
+B_{T0}}{B_{0}^{2}}I\left( \psi \right) \times  \nonumber \\
 &&\int_{0}^{\infty }\left[ \frac{d\ln n_{e}}{d\psi }+\left( \frac{p^{2}}{%
 2T_{e}}-\frac{3}{2}\right) \frac{d\ln T_{e}}{d\psi }\right]
 \;p^{4}f_{M}dp\int_{-1}^{1}\xi _{0}^{2}\lambda _{2,-2,2}d\xi _{0}
@@ -278,22 +277,20 @@ I\left( \psi \right) \times  \nonumber \\
 and 
 \begin{eqnarray}
 \left\langle J_{\Vert }\right\rangle _{\phi }^{1}\left( \psi \right)
-&=&-2\pi \frac{q\left( \psi \right) }{\overline{q}\left( \psi \right) }\frac{%
-I\left( \psi \right) }{B_{\min }\left( \psi \right) }\times \int_{0}^{\infty
-}\left[ \frac{d\ln n_{e}}{d\psi }+\left( \frac{p^{2}}{2T_{e}}-\frac{3}{2}%
-\right) \frac{d\ln T_{e}}{d\psi }\right] \;p^{4}f_{M}dp  \nonumber \\
+&=&-2\pi \frac{q}{\overline{q}}\frac{I\left( \psi \right) }{B_{0}}\times
+\int_{0}^{\infty }\left[ \frac{d\ln n_{e}}{d\psi }+\left( \frac{p^{2}}{2T_{e}%
+}-\frac{3}{2}\right) \frac{d\ln T_{e}}{d\psi }\right] \;p^{4}f_{M}dp 
+\nonumber \\
 &&\;\int_{-1}^{1}\sigma H\left( \left| \xi _{0}\right| -\xi _{0T}\right)
 \;\xi _{0}I_{\mathcal{L}}\left( \psi ,\left| \xi _{0}\right| \right) d\xi
 _{0}
 \end{eqnarray}
 
-Using relation $R\left( \psi ,\theta _{0}\right) B_{T}\left( \psi ,\theta
-_{0}\right) =I\left( \psi \right) ,$ one obtains 
+Using relation $R_{0}B_{T0}=I\left( \psi \right) ,$ one obtains 
 \begin{eqnarray}
 \left\langle \widetilde{J}_{\Vert }\right\rangle _{\phi }^{1}\left( \psi
-\right) &=&2\pi R_{0}\frac{\widetilde{q}\left( \psi \right) }{\overline{q}%
-\left( \psi \right) }\frac{B_{T}^{2}\left( \psi ,\theta _{0}\right) }{%
-B_{\min }^{2}\left( \psi \right) }I\left( \psi \right) \times  \nonumber \\
+\right) &=&2\pi R_{p}\frac{\widetilde{q}}{\overline{q}}\frac{B_{T0}^{2}}{%
+B_{0}^{2}}I\left( \psi \right) \times  \nonumber \\
 &&\int_{0}^{\infty }\left[ \frac{d\ln n_{e}}{d\psi }+\left( \frac{p^{2}}{%
 2T_{e}}-\frac{3}{2}\right) \frac{d\ln T_{e}}{d\psi }\right]
 \;p^{4}f_{M}dp\int_{-1}^{1}\xi _{0}^{2}\lambda _{2,-2,2}d\xi _{0}
@@ -301,11 +298,10 @@ B_{\min }^{2}\left( \psi \right) }I\left( \psi \right) \times  \nonumber \\
 and 
 \begin{eqnarray}
 \left\langle J_{\Vert }\right\rangle _{\phi }^{1}\left( \psi \right)
-&=&-2\pi \frac{q\left( \psi \right) }{\overline{q}\left( \psi \right) }%
-R\left( \psi ,\theta _{0}\right) \frac{B_{T}\left( \psi ,\theta _{0}\right) 
-}{B_{\min }\left( \psi \right) }\times \int_{0}^{\infty }\left[ \frac{d\ln
-n_{e}}{d\psi }+\left( \frac{p^{2}}{2T_{e}}-\frac{3}{2}\right) \frac{d\ln
-T_{e}}{d\psi }\right] \;p^{4}f_{M}dp  \nonumber \\
+&=&-2\pi \frac{q}{\overline{q}}R_{0}\frac{B_{T0}}{B_{0}}\times
+\int_{0}^{\infty }\left[ \frac{d\ln n_{e}}{d\psi }+\left( \frac{p^{2}}{2T_{e}%
+}-\frac{3}{2}\right) \frac{d\ln T_{e}}{d\psi }\right] \;p^{4}f_{M}dp 
+\nonumber \\
 &&\;\int_{-1}^{1}\sigma H\left( \left| \xi _{0}\right| -\xi _{0T}\right)
 \;\xi _{0}I_{\mathcal{L}}\left( \psi ,\left| \xi _{0}\right| \right) d\xi
 _{0}
@@ -318,7 +314,7 @@ Since
 \frac{3}{2}n_{e}T_{e}\left( \frac{d\ln n_{e}}{d\psi }+\frac{d\ln T_{e}}{%
 d\psi }\right)
 \end{equation}
-using the definite integral relation (Ref.***) 
+using the definite integral relation in Ref. \cite{aba70}, 
 \begin{equation}
 \int_{0}^{\infty }x^{2n}\exp \left( -px^{2}\right) =\frac{\left( 2n-1\right)
 !!}{2\left( 2p\right) ^{n}}\sqrt{\frac{\pi }{p}}
@@ -326,19 +322,17 @@ using the definite integral relation (Ref.***)
 where $\left( 2n-1\right) !!=1.3.5...\times \left( 2n-1\right) ,$ 
 \begin{eqnarray}
 \left\langle \widetilde{J}_{\Vert }\right\rangle _{\phi }^{1}\left( \psi
-\right) &=&\frac{\widetilde{q}\left( \psi \right) }{\overline{q}\left( \psi
-\right) }R_{0}\frac{B_{T}^{2}\left( \psi ,\theta _{0}\right) }{B_{\min
-}^{2}\left( \psi \right) }\frac{3}{2}n_{e}T_{e}\left( \frac{d\ln n_{e}}{%
-d\psi }+\frac{d\ln T_{e}}{d\psi }\right) \times  \nonumber \\
+\right) &=&\frac{\widetilde{q}}{\overline{q}}R_{p}\frac{B_{T0}^{2}}{B_{0}^{2}%
+}\frac{3}{2}n_{e}T_{e}\left( \frac{d\ln n_{e}}{d\psi }+\frac{d\ln T_{e}}{%
+d\psi }\right) \times  \nonumber \\
 &&\int_{-1}^{1}\xi _{0}^{2}\lambda _{2,-2,2}d\xi _{0}
 \end{eqnarray}
 and 
 \begin{eqnarray}
 \left\langle J_{\Vert }\right\rangle _{\phi }^{1}\left( \psi \right) &=&-%
-\frac{q\left( \psi \right) }{\overline{q}\left( \psi \right) }R\left( \psi
-,\theta _{0}\right) \frac{B_{T}\left( \psi ,\theta _{0}\right) }{B_{\min
-}\left( \psi \right) }\frac{3}{2}n_{e}T_{e}\left( \frac{d\ln n_{e}}{d\psi }+%
-\frac{d\ln T_{e}}{d\psi }\right) \times  \nonumber \\
+\frac{q}{\overline{q}}R_{0}\frac{B_{T0}}{B_{0}}\frac{3}{2}n_{e}T_{e}\left( 
+\frac{d\ln n_{e}}{d\psi }+\frac{d\ln T_{e}}{d\psi }\right) \times  \nonumber
+\\
 &&\;\int_{-1}^{1}\sigma H\left( \left| \xi _{0}\right| -\xi _{0T}\right)
 \;\xi _{0}I_{\mathcal{L}}\left( \psi ,\left| \xi _{0}\right| \right) d\xi
 _{0}
@@ -347,55 +341,50 @@ _{0}
 Finally, 
 \begin{equation}
 \left\langle \widetilde{J}_{\Vert ,\mathcal{L}}\right\rangle \left( \psi
-\right) =\mathcal{F}_{t}^{eff.}\left( \psi \right) n_{e}T_{e}R_{0}\left( 
+\right) =\mathcal{F}_{t}^{eff.}\left( \psi \right) n_{e}T_{e}R_{p}\left( 
 \frac{d\ln n_{e}}{d\psi }+\frac{d\ln T_{e}}{d\psi }\right)
 \end{equation}
 where the flux surface function usualy named ``effective trapped fraction'' $%
 \mathcal{F}_{t}^{eff.}\left( \psi \right) $ is 
 \begin{eqnarray}
-\mathcal{F}_{t}^{eff.}\left( \psi \right) &=&\frac{3}{2}\frac{B_{T}\left(
-\psi ,\theta _{0}\right) }{B_{\min }\left( \psi \right) }\times  \nonumber \\
-&&\left[ \frac{\widetilde{q}\left( \psi \right) }{\overline{q}\left( \psi
-\right) }\frac{B_{T}\left( \psi ,\theta _{0}\right) }{B_{\min }\left( \psi
-\right) }\int_{-1}^{1}\xi _{0}^{2}\lambda _{2,-2,2}d\xi _{0}-\frac{q\left(
-\psi \right) }{\overline{q}\left( \psi \right) }\frac{R\left( \psi ,\theta
-_{0}\right) }{R_{0}}\int_{-1}^{1}\sigma H\left( \left| \xi _{0}\right| -\xi
+\mathcal{F}_{t}^{eff.}\left( \psi \right) &=&\frac{3}{2}\frac{B_{T0}}{B_{0}}%
+\times  \nonumber \\
+&&\left[ \frac{\widetilde{q}}{\overline{q}}\frac{B_{T0}}{B_{0}}%
+\int_{-1}^{1}\xi _{0}^{2}\lambda _{2,-2,2}d\xi _{0}-\frac{q}{\overline{q}}%
+\frac{R_{0}}{R_{p}}\int_{-1}^{1}\sigma H\left( \left| \xi _{0}\right| -\xi
 _{0T}\right) \;\xi _{0}I_{\mathcal{L}}\left( \psi ,\left| \xi _{0}\right|
 \right) d\xi _{0}\right]
 \end{eqnarray}
 
 In the case of circular concentric flux surfaces, 
 \begin{equation}
-\frac{R\left( r,\theta _{0}\right) }{R_{0}}=1+\epsilon
+\frac{R_{0}}{R_{p}}=1+\epsilon
 \end{equation}
 \begin{equation}
-\frac{\widetilde{q}\left( r\right) }{\overline{q}\left( r\right) }=1+\epsilon
+\frac{\widetilde{q}}{\overline{q}}=1+\epsilon
 \end{equation}
 and 
 \begin{equation}
-\frac{q\left( r\right) }{\overline{q}\left( r\right) }=\frac{B_{T}\left(
-r,\theta _{0}\right) }{B_{\min }\left( r\right) }\sqrt{\frac{1+\epsilon }{%
+\frac{q}{\overline{q}}=\frac{B_{T0}}{B_{0}}\sqrt{\frac{1+\epsilon }{%
 1-\epsilon }}
 \end{equation}
-as shown in Sec. ***. Hence, 
+as shown in Sec. \ref{moments}. Hence, 
 \begin{equation}
-\mathcal{F}_{t}^{eff.}\left( \psi \right) =\frac{3}{2}\left( 1+\epsilon
-\right) \left( \frac{B_{T}\left( \psi ,\theta _{0}\right) }{B_{\min }\left(
-\psi \right) }\right) ^{2}\left[ \int_{-1}^{1}\xi _{0}^{2}\lambda
-_{2,0,0}d\xi _{0}-\sqrt{\frac{1+\epsilon }{1-\epsilon }}\int_{-1}^{1}\sigma
-H\left( \left| \xi _{0}\right| -\xi _{0T}\right) \;\xi _{0}I_{\mathcal{L}%
-}\left( \psi ,\left| \xi _{0}\right| \right) d\xi _{0}\right]
-\end{equation}
-and since $R\left( \psi ,\theta _{0}\right) /R\left( \psi ,\theta \right)
-=\Psi ,$ $\lambda _{2,-2,2}=\lambda _{2,0,0}$, as shown in Sec. ***. In the
-limit $B_{p}\ll B_{T},$ further simplifications may be carried out and 
-\begin{equation}
-\lim_{\epsilon \rightarrow 0}\mathcal{F}_{t}^{eff.}\left( \psi \right)
-\simeq \frac{3}{2}\left( 1+\epsilon \right) \left[ \int_{-1}^{1}\xi
+\mathcal{F}_{t}^{eff.}\left( r\right) =\frac{3}{2}\left( 1+\epsilon \right)
+\left( \frac{B_{T0}}{B_{0}}\right) ^{2}\left[ \int_{-1}^{1}\xi
 _{0}^{2}\lambda _{2,0,0}d\xi _{0}-\sqrt{\frac{1+\epsilon }{1-\epsilon }}%
 \int_{-1}^{1}\sigma H\left( \left| \xi _{0}\right| -\xi _{0T}\right) \;\xi
-_{0}I_{\mathcal{L}}\left( \psi ,\left| \xi _{0}\right| \right) d\xi
-_{0}\right]
+_{0}I_{\mathcal{L}}\left( r,\left| \xi _{0}\right| \right) d\xi _{0}\right]
+\end{equation}
+and since $R_{0}/R=\Psi ,$ $\lambda _{2,-2,2}=\lambda _{2,0,0}$, as shown in
+Sec. \ref{moments}. In the limit $B_{p}\ll B_{T},$ further simplifications
+may be carried out and 
+\begin{equation}
+\lim_{\epsilon \rightarrow 0}\mathcal{F}_{t}^{eff.}\left( r\right) \simeq 
+\frac{3}{2}\left( 1+\epsilon \right) \left[ \int_{-1}^{1}\xi _{0}^{2}\lambda
+_{2,0,0}d\xi _{0}-\sqrt{\frac{1+\epsilon }{1-\epsilon }}\int_{-1}^{1}\sigma
+H\left( \left| \xi _{0}\right| -\xi _{0T}\right) \;\xi _{0}I_{\mathcal{L}%
+}\left( r,\left| \xi _{0}\right| \right) d\xi _{0}\right]
 \end{equation}
 
 The first term in the square bracket may be evaluated analyticaly. Indeed 
@@ -441,26 +430,27 @@ Consequently,
 \end{equation}
 and using the 
 \begin{eqnarray}
-\lim_{\epsilon \rightarrow 0}\mathcal{F}_{t}^{eff.}\left( \psi \right)
-&\simeq &1-\frac{3}{2}\sqrt{\frac{1}{1-\epsilon ^{2}}}\int_{-1}^{1}\sigma
-H\left( \left| \xi _{0}\right| -\xi _{0T}\right) \;\xi _{0}I_{\mathcal{L}%
-}\left( \psi ,\left| \xi _{0}\right| \right) d\xi _{0}  \nonumber \\
+\lim_{\epsilon \rightarrow 0}\mathcal{F}_{t}^{eff.}\left( r\right) &\simeq
+&1-\frac{3}{2}\sqrt{\frac{1}{1-\epsilon ^{2}}}\int_{-1}^{1}\sigma H\left(
+\left| \xi _{0}\right| -\xi _{0T}\right) \;\xi _{0}I_{\mathcal{L}}\left(
+r,\left| \xi _{0}\right| \right) d\xi _{0}  \nonumber \\
 &\simeq &1-\frac{3}{2}\int_{-1}^{1}\sigma H\left( \left| \xi _{0}\right|
--\xi _{0T}\right) \;\xi _{0}I_{\mathcal{L}}\left( \psi ,\left| \xi
-_{0}\right| \right) d\xi _{0}
+-\xi _{0T}\right) \;\xi _{0}I_{\mathcal{L}}\left( r,\left| \xi _{0}\right|
+\right) d\xi _{0}
 \end{eqnarray}
 
-It can be shown in Appendix *** after lengthly calculations, that 
+It can be shown in Appendix \ref{efftrappedfrac} after lengthly
+calculations, that 
 \begin{equation}
-\lim_{\epsilon \rightarrow 0}\mathcal{F}_{t}^{eff.}\left( \psi \right)
-\simeq K\sqrt{\epsilon }+\mathcal{O}\left( \epsilon \right)
+\lim_{\epsilon \rightarrow 0}\mathcal{F}_{t}^{eff.}\left( r\right) \simeq K%
+\sqrt{\epsilon }+\mathcal{O}\left( \epsilon \right) 
 \end{equation}
 where 
 \begin{equation}
-K=\frac{3\sqrt{2}}{2}\left[ 1-\sum_{m}^{\infty }\sum_{i_{1}}^{\infty
+K=\frac{3\sqrt{2}}{2}\left[ 1-\sum_{m}^{\infty }\sum_{i_{1}}^{\infty %
 }\sum_{i_{2}}^{\infty }...\sum_{i_{m}}^{\infty }\frac{%
 C_{i_{1}}C_{i_{2}}...C_{i_{m}}}{2^{i_{1}+i_{2}+...+i_{m}}\left[ 2\left(
-i_{1}+i_{2}+...+i_{m}\right) -1\right] }\right]
+i_{1}+i_{2}+...+i_{m}\right) -1\right] }\right] 
 \end{equation}
 with 
 \begin{equation}
@@ -469,4 +459,4 @@ C_{n}=\frac{\left[ \left( 2n\right) !\right] ^{2}}{\left( 2n-1\right)
 \end{equation}
 
 A rather fast convergence is obtained with $m$, and for $m=n=6,$ $K\simeq
-1.467,$ the usual value found in the litterature on neoclasical theory.
+1.467,$ the usual value found in the litterature on neoclassical theory.
