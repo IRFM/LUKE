@@ -1,4 +1,5 @@
-function [xylambda_p0p0,xylambda_p2m1,xylambda_p2p0,xysstar,xymaskT,xmhu0T2] = bounce_dke_jd(tokamak,xia,ymhu0)
+function [R0,xBmin,xRBmin,xBTBmin,xq,xqtilde,xqbar,xqhat,...
+xylambda_p0p0,xylambda_p2m1,xylambda_b_p1m1p2,xylambda_b_p1m1,xylambda_b_p1m2,xylambda_b_p2m2p2,xylambda_b_p3m2,xylambda_p2p0,xymaskT,xmhu0T2] = bounce_dke_jd(tokamak,xia,ymhu0)
 %
 % calculates bounce averaging coefficients needed for solving the electron drift-kinetic-equation. 
 %
@@ -10,11 +11,6 @@ function [xylambda_p0p0,xylambda_p2m1,xylambda_p2p0,xysstar,xymaskT,xmhu0T2] = b
 %
 %   OUTPUTS:
 %   
-%       - lambda: = 1/qtilde int_thetamin^2thetamax dtheta/2pi F(rho,theta,xi) xi0/xi, normalized bounce time 
-%       - delta: = {1-1/psi}
-%       - sstar = lambda.{psi.xi/xi0}
-%       - sstar_tp = lambda.{xi^2/xi0^2}
-%       - lambda_tp = lambda.{xi^2/xi0^2.psi} = lambda.(1-delta/xi0^2)
 %
 % by Joan Decker <jodecker@alum.mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 %
@@ -59,37 +55,50 @@ iBmin = find(XBmin == XB(:,1:nt-1));
 xBTmin = XBT(iBmin)';
 xRmin = XR(iBmin)';
 %
-[YMdt,YMmask,YMF,YMPSIB,YMmhu0,YMmhu,YMR,YMRBmin,xymaskT] = banana_dke_jd(ymhu0,R0,Z0,XR,XZ,XBR,XBZ,XBphi);
+[R0,xBmin,xRBmin,xBTBmin,YMdt,YMmask,YMF,YMPSIB,YMmhu0,YMmhu,YMR,YMRBmin,xymaskT] = banana_dke_jd(ymhu0,R0,Z0,XR,XZ,XBR,XBZ,XBphi);
 %
 Yweight_p0p0 = (YMmhu./YMmhu0).^(0).*YMPSIB.^(0);
-Yweight_p1m1p2 = (YMmhu./YMmhu0).^(1).*YMPSIB.^(-1).*(YMRBmin./YMR).^(2);
-%Yweight_p1p1 = (YMmhu./YMmhu0).^(1).*YMPSIB.^(1);
-Yweight_p2m1 = (YMmhu./YMmhu0).^(2).*YMPSIB.^(-1);
-Yweight_p2p0 = (YMmhu./YMmhu0).^(2).*YMPSIB.^(0);
-%Yweight_p2p1 = (YMmhu./YMmhu0).^(2).*YMPSIB.^(1);
-%
 xylambda_p0p0 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p0p0)/(2*pi),[np,nmhu])./xyqtilde;
-xylambda_p1m1p2 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p1m1p2)/(2*pi),[np,nmhu])./xyqtilde;
-%xylambda_p1p1 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p1p1)/(2*pi),[np,nmhu])./xyqtilde;
+%
+%Fokker-Planck weights
+%
+Yweight_p2m1 = (YMmhu./YMmhu0).^(2).*YMPSIB.^(-1);
 xylambda_p2m1 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p2m1)/(2*pi),[np,nmhu])./xyqtilde;
-xylambda_p2p0 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p2p0)/(2*pi),[np,nmhu])./xyqtilde;
-%xylambda_p2p1 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p2p1)/(2*pi),[np,nmhu])./xyqtilde;
 %
+Yweight_p1m1p2 = (YMmhu./YMmhu0).^(1).*YMPSIB.^(-1).*(YMRBmin./YMR).^(2);
+xylambda_p1m1p2 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p1m1p2)/(2*pi),[np,nmhu])./xyqtilde;
 xylambda_b_p1m1p2 = ~xymaskT.*xylambda_p1m1p2;%In old notation: xsstar = xq.*xRmin.*xBmin./xqtilde/R0./xBTmin
-xysstar = xylambda_b_p1m1p2;%***************notation to be changed according to the notice **********************
 %
-%xydelta = reshape(sum(YMmask.*YMdt.*YMF.*(1 - 1./YMPSIB))/(2*pi),[np,nmhu])./xylambdaqt;
-%xydelta = (1 - reshape(sum(YMmask.*YMdt.*YMF.*YMmhu.^2./YMmhu0.^2./YMPSIB)/(2*pi),[np,nmhu])./xylambdaqt).*xymhu0.^2;;
-%xysstar = reshape(sum(YMmask.*YMdt.*YMF.*YMPSIB.*YMmhu./YMmhu0)/(2*pi),[np,nmhu]).*~xymaskT./xyqtilde;
-%xysstar_tp = reshape(sum(YMmask.*YMdt.*YMF.*YMmhu.^2./YMmhu0.^2)/(2*pi),[np,nmhu])./xyqtilde;
-%xylambda_tp = reshape(sum(YMmask.*YMdt.*YMF.*YMPSIB.*YMmhu.^2./YMmhu0.^2)/(2*pi),[np,nmhu])./xyqtilde;
-	
+%Drift kinetic weights
+%
+Yweight_p1m1 = (YMmhu./YMmhu0).^(1).*YMPSIB.^(-1);
+xylambda_p1m1 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p1m1)/(2*pi),[np,nmhu])./xyqtilde;
+xylambda_b_p1m1 = ~xymaskT.*xylambda_p1m1;
+%
+Yweight_p1m2 = (YMmhu./YMmhu0).^(1).*YMPSIB.^(-2);
+xylambda_p1m2 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p1m2)/(2*pi),[np,nmhu])./xyqtilde;
+xylambda_b_p1m2 = ~xymaskT.*xylambda_p1m2;%In old notation: 1-delta/mhu0^2
+%
+Yweight_p2m2p2 = (YMmhu./YMmhu0).^(2).*YMPSIB.^(-2).*(YMRBmin./YMR).^(2);
+xylambda_p2m2p2 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p2m2p2)/(2*pi),[np,nmhu])./xyqtilde;
+xylambda_b_p2m2p2 = ~xymaskT.*xylambda_p2m2p2;
+%
+Yweight_p3m2 = (YMmhu./YMmhu0).^(3).*YMPSIB.^(-2);
+xylambda_p3m2 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p3m2)/(2*pi),[np,nmhu])./xyqtilde;
+xylambda_b_p3m2 = ~xymaskT.*xylambda_p3m2;
+%
+Yweight_p2p0 = (YMmhu./YMmhu0).^(2).*YMPSIB.^(0);
+xylambda_p2p0 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p2p0)/(2*pi),[np,nmhu])./xyqtilde;%In old notation: s*_tilde
+%
 ymask = find(ymhu0 == 0);
 if ~isempty(ymask),
 	xylambda_p0p0(:,ymask) = eps;
-	%xylambda_p1p1(:,ymask) = 0;
 	xylambda_p2m1(:,ymask) = eps;
 	xylambda_b_p1m1p2(:,ymask) = eps;
+%
+	xylambda_b_p1m1(:,ymask) = eps;
+	xylambda_b_p1m2(:,ymask) = eps;
+	xylambda_b_p2m2p2(:,ymask) = eps;
+	xylambda_b_p3m2(:,ymask) = eps;
 	xylambda_p2p0(:,ymask) = eps;
-%	xylambda_p2p1(:,ymask) = eps;
 end
