@@ -1,0 +1,187 @@
+
+Since the first order bounce-averaged drift kinetic equation may be
+expressed in the same conservative form as for zero order Fokker-Planck
+bounce-averaged equation, most of the boundary conditions apply in a natural
+way without additional specifications, in particular at $p=0$ and $\left|
+\xi _{0}\right| =1$, as a consequence of the two grids technique, one for
+the fluxes and the other for the distribution function.
+
+In matrix form, the general expression of the first order bounce averaged
+drift kinetic equation 
+\begin{equation}
+\left\{ \mathcal{C}\left( g\right) \right\} +\left\{ \mathcal{Q}\left(
+g\right) \right\} +\left\{ \mathcal{E}\left( g\right) \right\} =-\left\{ 
+\mathcal{C}\left( \widetilde{f}\right) \right\} -\left\{ \mathcal{Q}\left( 
+\widetilde{f}\right) \right\} -\left\{ \mathcal{E}\left( \widetilde{f}
+\right) \right\} 
+\end{equation}
+becomes
+\begin{eqnarray}
+\sum_{i^{\prime }=i-1}^{i^{\prime }=i+1}\sum_{j^{\prime }=j-1}^{j^{\prime
+}=j+1}\overline{\overline{M}}_{p,l+1/2,i^{\prime }+1/2,j^{\prime
+}+1/2}^{\left( 0\right) }g_{0,l+1/2,i^{\prime }+1/2,j^{\prime }+1/2}^{\left(
+0\right) (k)} &=&-\sum_{i^{\prime }=i-1}^{i^{\prime }=i+1}\sum_{j^{\prime
+}=j-1}^{j^{\prime }=j+1}\widetilde{\overline{\overline{M}}}%
+_{p,l+1/2,i^{\prime }+1/2,j^{\prime }+1/2}^{\left( 0\right) }\widetilde{f}%
+_{l+1/2,i^{\prime }+1/2,j^{\prime }+1/2}^{\left( 0\right) (k)}  \nonumber \\
+&&-\sum_{i^{\prime }=i-1}^{i^{\prime }=i+1}\sum_{l^{\prime }=l-1}^{l^{\prime
+}=l+1}\widetilde{\overline{\overline{H}}}_{\psi ,l^{\prime }+1/2,i^{\prime
+}+1/2,j+1/2}^{\left( 0\right) }f_{0,l^{\prime }+1/2,i^{\prime
+}+1/2,j+1/2}^{\left( 0\right) (k)}
+\end{eqnarray}
+where $\left( k\right) $ is the iteration index number. 
+
+\subsubsection{Internal boundaries for g}
+
+In the weak collision ``banana'' regime, it is shown in Sec.*** that $%
+g^{\left( 0\right) }\left( \psi ,p,\xi _{0}\right) =0$ for trapped
+electrons.  Therefore, the drift kinetic equation must be solved in a
+reduced domain of integration, as for $f_{0}^{\left( 0\right) }\left( \psi
+,p,\xi _{0}\right) ,$ but with different and more simple internal boundary
+conditions. Indeed, the only constraint is to enforce the condition $%
+g^{\left( 0\right) }\left( \psi ,p,\xi _{0}\right) =0$ for $\left| \xi
+_{0}\right| \leq \xi _{0T}.$ 
+
+%TCIMACRO{
+%\TeXButton{Fig_implicitdomaing}{\fig{figures/Implicitdomaing.eps}{Trapped domain for the first order distribution g}{Implicitdomaing}{10cm}}}
+%BeginExpansion
+\fig{figures/Implicitdomaing.eps}{Trapped domain for the first order distribution g}{Implicitdomaing}{10cm}%
+%EndExpansion
+
+Let define grid points
+\begin{equation}
+\left\{ 
+\begin{array}{l}
+1:\left( l+1/2,i+1/2,j_{T,l+1/2}^{+}-1/2\right)  \\ 
+2:\left( l+1/2,i+1/2,j_{T,l+1/2}^{+}+1/2\right)  \\ 
+3:\left( l+1/2,i+1/2,j_{T,l+1/2}^{-}+1/2\right)  \\ 
+4:\left( l+1/2,i+1/2,j_{T,l+1/2}^{-}-1/2\right) 
+\end{array}
+\right. 
+\end{equation}
+as indicated in Fig.***. Here $j_{T,l+1/2}^{-}$ is the index that
+corresponds to the trapped/passing boundary $\xi _{0}=-\xi _{0T},$ while $
+j_{T,l+1/2}^{+}$ corresponds to the symmetric boundary with respect to the
+axis $\xi _{0}=0,$ i.e. $\xi _{0}=\xi _{0T}.$
+
+Since $g^{\left( 0\right) }$ is prescribed in the trapped domain, all the
+region may be removed from the calculations, and the reduction of the domain
+of integration in the momentum phase space leads to introduce a new matrix $%
+\widehat{\overline{M}}_{p}^{\left( 1\right) }$ whose coefficients are
+defined as follows 
+\begin{equation}
+\widehat{\overline{M}}_{p,l+1/2,i+1/2,j^{\prime }+1/2}^{\left( 1\right) }=%
+\overline{\overline{M}}_{p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }
+\end{equation}
+with $j^{\prime }=j$, when $0\leq j<j_{T,l+1/2}^{-},$ and $j^{\prime
+}=j-m_{\xi _{0T,l+1/2}},$ when $j_{T,l+1/2}^{+}<j\leq n_{\xi _{0}}$. Here, $%
+m_{\xi _{0T,l+1/2}}=j_{T,l+1/2}^{+}-j_{T,l+1/2}^{-}$ corresponds to the
+number of grid points removed in the pitch-angle direction, and with this
+definition, it is easy to cross-check that $j_{T,l+1/2}^{\prime
++}-j_{T,l+1/2}^{\prime -}=j_{T,l+1/2}^{+}-j_{T,l+1/2}^{-}-m_{\xi
+_{0T,l+1/2}}=0.$ Since grid points $2$ and $4$ are not connected, the
+following condition applies
+
+\begin{equation}
+\left\{ 
+\begin{array}{l}
+\widehat{\overline{M}}_{p,l+1/2,i-1/2,\left[ j_{T,l+1/2}^{\prime
+}-1/2\right] +1}^{\left( 1\right) }=0 \\ 
+\widehat{\overline{M}}_{p,l+1/2,i+1/2,\left[ j_{T,l+1/2}^{\prime
+}-1/2\right] +1}^{\left( 1\right) }=0 \\ 
+\widehat{\overline{M}}_{p,l+1/2,i+3/2,\left[ j_{T,l+1/2}^{\prime
+}-1/2\right] +1}^{\left( 1\right) }=0
+\end{array}
+\right. 
+\end{equation}
+and conversely
+\begin{equation}
+\left\{ 
+\begin{array}{l}
+\widehat{\overline{M}}_{p,l+1/2,i-1/2,\left[ j_{T,l+1/2}^{\prime
+}+1/2\right] -1}^{\left( 1\right) }=0 \\ 
+\widehat{\overline{M}}_{p,l+1/2,i+1/2,\left[ j_{T,l+1/2}^{\prime
+}+1/2\right] -1}^{\left( 1\right) }=0 \\ 
+\widehat{\overline{M}}_{p,l+1/2,i+3/2,\left[ j_{T,l+1/2}^{\prime
+}+1/2\right] -1}^{\left( 1\right) }=0
+\end{array}
+\right. 
+\end{equation}
+where $j_{T,l+1/2}^{\prime -}=j_{T,l+1/2}^{\prime +}=j_{T,l+1/2}^{\prime }.$
+Since internal boundaries match already existing diagonals of the matrix $%
+\overline{\overline{M}}_{p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) },$ $\widehat{%
+\overline{M}}_{p,l+1/2,i+1/2,j^{\prime }+1/2}^{\left( 1\right) }$ remains a
+simple nine diagonal matrix, and is therefore less complex than $\widehat{%
+\overline{M}}_{p,l+1/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right) }$ for the
+Fokker-Planck equation.
+
+\subsubsection{Internal boundaries for $\widetilde{f}$}
+
+Taking into account of the matrix size reduction for $g$, the new discrete
+form of the first order drift kinetic equation becomes
+\begin{eqnarray}
+\sum_{i^{\prime }=i-1}^{i^{\prime }=i+1}\sum_{j^{\prime }=j-1}^{j^{\prime
+}=j+1}\widehat{\overline{M}}_{p,l+1/2,i+1/2,j^{\prime }+1/2}^{\left(
+1\right) }g_{0,l+1/2,i^{\prime }+1/2,j^{\prime }+1/2}^{\left( 0\right) (k)}
+&=&-\sum_{i^{\prime }=i-1}^{i^{\prime }=i+1}\sum_{j^{\prime
+}=j-1}^{j^{\prime }=j+1}\widetilde{\overline{\overline{M}}}%
+_{p,l+1/2,i^{\prime }+1/2,j^{\prime }+1/2}^{\left( 0\right) }\widetilde{f}%
+_{l+1/2,i^{\prime }+1/2,j^{\prime }+1/2}^{\left( 0\right) (k)}  \nonumber \\
+&&-\sum_{i^{\prime }=i-1}^{i^{\prime }=i+1}\sum_{l^{\prime }=l-1}^{l^{\prime
+}=l+1}\widetilde{\overline{\overline{H}}}_{\psi ,l^{\prime }+1/2,i^{\prime
+}+1/2,j+1/2}^{\left( 0\right) }f_{0,l^{\prime }+1/2,i^{\prime
+}+1/2,j+1/2}^{\left( 0\right) (k)}  \label{Modifieddiscretedke}
+\end{eqnarray}
+where the number of pitch-angle grid points is $n_{\xi _{0}}-m_{\xi
+_{0T,l+1/2}}.$ Consequently, the right hand-side of equation (\ref
+{Modifieddiscretedke}) must has the same number of pitch-angle grid points.
+However, there is no need to reduce the matrices $\widetilde{\overline{%
+\overline{M}}}_{p,l+1/2,i^{\prime }+1/2,j^{\prime }+1/2}^{\left( 0\right) }$
+and $\widetilde{\overline{\overline{H}}}_{\psi ,l^{\prime }+1/2,i^{\prime
+}+1/2,j+1/2}^{\left( 0\right) }$ themselves by removing the trapped region,
+since no inversion is required. As a consequence all internal boundaries
+including trapped/passing ones for $\widetilde{f}^{\left( 0\right) }$ are
+satisfied, and given the following definition
+\begin{equation}
+W_{l+1/2,i+1/2,j+1/2}=-\sum_{i^{\prime }=i-1}^{i^{\prime
+}=i+1}\sum_{j^{\prime }=j-1}^{j^{\prime }=j+1}\widetilde{\overline{\overline{
+M}}}_{p,l+1/2,i^{\prime }+1/2,j^{\prime }+1/2}^{\left( 0\right) }\widetilde{f%
+}_{l+1/2,i^{\prime }+1/2,j^{\prime }+1/2}^{\left( 0\right)
+(k)}-\sum_{i^{\prime }=i-1}^{i^{\prime }=i+1}\sum_{l^{\prime
+}=l-1}^{l^{\prime }=l+1}\widetilde{\overline{\overline{H}}}_{\psi ,l^{\prime
+}+1/2,i^{\prime }+1/2,j+1/2}^{\left( 0\right) }f_{0,l^{\prime
+}+1/2,i^{\prime }+1/2,j+1/2}^{\left( 0\right) (k)}
+\end{equation}
+the reduction along the pitch-angle direction must be performed only after $%
+W_{l+1/2,i+1/2,j+1/2}$ is calculated on the full $\xi _{0}$ grid. The
+prescription on the index number $j^{\prime }$ that holds for the matrix
+conversion 
+\begin{equation}
+\overline{\overline{M}}_{p,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }\rightarrow 
+\widehat{\overline{M}}_{p,l+1/2,i+1/2,j^{\prime }+1/2}^{\left( 1\right) }
+\end{equation}
+may be then applied in a similar way 
+\begin{equation}
+W_{l+1/2,i+1/2,j+1/2}\rightarrow \widehat{W}_{p,l+1/2,i+1/2,j^{\prime }+1/2}
+\end{equation}
+and finally the drift kinetic equation is given by the simple relation
+\begin{equation}
+\sum_{i^{\prime }=i-1}^{i^{\prime }=i+1}\sum_{j^{\prime }=j-1}^{j^{\prime
+}=j+1}\widehat{\overline{M}}_{p,l+1/2,i+1/2,j^{\prime }+1/2}^{\left(
+1\right) }g_{0,l+1/2,i^{\prime }+1/2,j^{\prime }+1/2}^{\left( 0\right) (k)}=%
+\widehat{W}_{p,l+1/2,i+1/2,j^{\prime }+1/2}
+\end{equation}
+where trapped electron dynamics is removed. 
+
+\subsubsection{External boundaries}
+
+The problem of external boundaries discussed in Sec. *** for the zero-order
+Fokker-Planck equation may be applied in a straightforward manner to the
+first-order drift kinetic ones, since it may be expressed in a similar
+conservative form. Consequently, if the zero-order Fokker-Planck equation
+conserves the total number of particles without specific conditions, the
+solution $g$ may be found without additional constraints at the boundaries
+of the integration domain. Conversely, if Dirichlet conditions are
+considered for the Fokker-Planck equation, like enforcing the Maxwellian
+solution at $p=0$, similar and consistent conditions must be also applied
+for the drift kinetic equation.

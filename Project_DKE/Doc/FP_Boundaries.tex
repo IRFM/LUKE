@@ -27,8 +27,8 @@ _{0}\right| =1$ for the flux grid only, since the distribution and flux
 grids are interlaced by definition. Therefore, starting from grids
 definition given in Sec. ***, 
 \begin{equation}
-\Delta \xi _{0,0}=\frac{\Delta \xi _{0,1/2}+\Delta \xi _{0,-1/2}}{2}=\Delta %
-\xi _{0,1/2}=\xi _{0,1}-\xi _{0,0}=2\left( \xi _{0,1/2}+1\right) 
+\Delta \xi _{0,0}=\frac{\Delta \xi _{0,1/2}+\Delta \xi _{0,-1/2}}{2}=\Delta
+\xi _{0,1/2}=\xi _{0,1}-\xi _{0,0}=2\left( \xi _{0,1/2}+1\right)
 \end{equation}
 as $\Delta \xi _{0,1/2}=\Delta \xi _{0,-1/2},$ $\xi _{0,1/2}=\frac{\xi
 _{0,1}+\xi _{0,0}}{2}$et $\xi _{0,0}=-1.$
@@ -75,7 +75,7 @@ automatically fullfiled for other terms. Indeed, at fixed $\psi _{l+1/2},$%
 }\right) }{\partial p}\right| _{l+1/2,1/2,j+1/2}^{(k+1)}  \nonumber \\
 &&-\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}\frac{p_{1/2}}{\lambda
 ^{l+1/2,j+1/2}}\times  \nonumber \\
-&&\left. \frac{\partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}%
+&&\left. \frac{\partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}
 \lambda \left( \psi ,\xi _{0}\right) \mathbf{S}_{\xi }^{\left( 0\right)
 }\right) \right| _{l+1/2,1/2,j+1/2}^{(k+1)}
 \end{eqnarray}
@@ -616,7 +616,7 @@ The Fokker-Planck equation is then solved in a reduced domain of
 integration, where the momentum phase space corresponding to $-\xi _{0T}\leq
 \xi _{0}\leq 0$ is removed. Once determined in this reduced domain, the
 distribution function is recovered on the whole space, by enforcing the
-condition $f_{0}^{\left( 0\right) }\left( \psi ,p,-\xi _{0}\right) =$ $
+condition $f_{0}^{\left( 0\right) }\left( \psi ,p,-\xi _{0}\right) =$ $%
 f_{0}^{\left( 0\right) }\left( \psi ,p,\xi _{0}\right) $ in the interval $%
 \left| \xi _{0}\right| \leq \xi _{0T}.$
 
@@ -666,10 +666,10 @@ inside the trapped region must be enforced according to the relation
 /2
 \end{equation}
 where $j_{T_{0}}=\left( j^{+}+j^{-}\right) /2,$ with $%
-j_{T,l+1/2}^{-}<j^{-}<j_{T_{0}}$ or an in equivalent manner $j_{T_{0}}<j^{+}<
-$ $j_{T,l+1/2}^{+}.$ This procedure allows to correctly account for some
-processes that are not symmetric in $p_{\Vert },$ like wave-particle
-interaction.
+j_{T,l+1/2}^{-}<j^{-}<j_{T_{0}}$ or an in equivalent manner $%
+j_{T_{0}}<j^{+}< $ $j_{T,l+1/2}^{+}.$ This procedure allows to correctly
+account for some processes that are not symmetric in $p_{\Vert },$ like
+wave-particle interaction.
 
 The reduction of the domain of integration in the momentum phase space leads
 to introduce a new matrix, $\widehat{\overline{M}}_{p}^{\left( 0\right) }$
@@ -702,53 +702,53 @@ procedure leads to add six new set of coefficients to the matrix $\widehat{%
 \begin{equation}
 \left\{ 
 \begin{array}{l}
-\widehat{\overline{M}}_{p,l+1/2,i-1/2,j_{T,l+1/2}^{\prime -}-1/2+n_{\xi
-_{0T,l+1/2}}}^{\left( 0\right) } \\ 
-\widehat{\overline{M}}_{p,l+1/2,i+1/2,j_{T,l+1/2}^{\prime -}-1/2+n_{\xi
-_{0T,l+1/2}}}^{\left( 0\right) } \\ 
-\widehat{\overline{M}}_{p,l+1/2,i+3/2,j_{T,l+1/2}^{\prime -}-1/2+n_{\xi
-_{0T,l+1/2}}}^{\left( 0\right) }
+\widehat{\overline{M}}_{p,l+1/2,i-1/2,\left[ j_{T,l+1/2}^{\prime
+-}-1/2\right] +n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } \\ 
+\widehat{\overline{M}}_{p,l+1/2,i+1/2,\left[ j_{T,l+1/2}^{\prime
+-}-1/2\right] +n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } \\ 
+\widehat{\overline{M}}_{p,l+1/2,i+3/2,\left[ j_{T,l+1/2}^{\prime
+-}-1/2\right] +n_{\xi _{0T,l+1/2}}}^{\left( 0\right) }
 \end{array}
-\right.
+\right. 
 \end{equation}
 and 
 \begin{equation}
 \left\{ 
 \begin{array}{l}
-\widehat{\overline{M}}_{p,l+1/2,i-1/2,j_{T,l+1/2}^{\prime +}-1/2-n_{\xi
-_{0T,l+1/2}}}^{\left( 0\right) } \\ 
-\widehat{\overline{M}}_{p,l+1/2,i+1/2,j_{T,l+1/2}^{\prime +}-1/2-n_{\xi
-_{0T,l+1/2}}}^{\left( 0\right) } \\ 
-\widehat{\overline{M}}_{p,l+1/2,i+3/2,j_{T,l+1/2}^{\prime +}-1/2-n_{\xi
-_{0T,l+1/2}}}^{\left( 0\right) }
+\widehat{\overline{M}}_{p,l+1/2,i-1/2,\left[ j_{T,l+1/2}^{\prime
++}-1/2\right] -n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } \\ 
+\widehat{\overline{M}}_{p,l+1/2,i+1/2,\left[ j_{T,l+1/2}^{\prime
++}-1/2\right] -n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } \\ 
+\widehat{\overline{M}}_{p,l+1/2,i+3/2,\left[ j_{T,l+1/2}^{\prime
++}-1/2\right] -n_{\xi _{0T,l+1/2}}}^{\left( 0\right) }
 \end{array}
-\right.
+\right. 
 \end{equation}
 while matrix coefficients 
 \begin{equation}
 \left\{ 
 \begin{array}{l}
-\widehat{\overline{M}}_{p,l+1/2,i-1/2,j_{T,l+1/2}^{\prime -}-1/2+1}^{\left(
-0\right) } \\ 
-\widehat{\overline{M}}_{p,l+1/2,i+1/2,j_{T,l+1/2}^{\prime -}-1/2+1}^{\left(
-0\right) } \\ 
-\widehat{\overline{M}}_{p,l+1/2,i+3/2,j_{T,l+1/2}^{\prime -}-1/2+1}^{\left(
-0\right) }
+\widehat{\overline{M}}_{p,l+1/2,i-1/2,\left[ j_{T,l+1/2}^{\prime
+-}-1/2\right] +1}^{\left( 0\right) } \\ 
+\widehat{\overline{M}}_{p,l+1/2,i+1/2,\left[ j_{T,l+1/2}^{\prime
+-}-1/2\right] +1}^{\left( 0\right) } \\ 
+\widehat{\overline{M}}_{p,l+1/2,i+3/2,\left[ j_{T,l+1/2}^{\prime
+-}-1/2\right] +1}^{\left( 0\right) }
 \end{array}
-\right.
+\right. 
 \end{equation}
 and 
 \begin{equation}
 \left\{ 
 \begin{array}{l}
-\widehat{\overline{M}}_{p,l+1/2,i-1/2,j_{T,l+1/2}^{\prime +}-1/2+1}^{\left(
-0\right) } \\ 
-\widehat{\overline{M}}_{p,l+1/2,i+1/2,j_{T,l+1/2}^{\prime +}-1/2+1}^{\left(
-0\right) } \\ 
-\widehat{\overline{M}}_{p,l+1/2,i+3/2,j_{T,l+1/2}^{\prime +}-1/2+1}^{\left(
-0\right) }
+\widehat{\overline{M}}_{p,l+1/2,i-1/2,\left[ j_{T,l+1/2}^{\prime
++}-1/2\right] +1}^{\left( 0\right) } \\ 
+\widehat{\overline{M}}_{p,l+1/2,i+1/2,\left[ j_{T,l+1/2}^{\prime
++}-1/2\right] +1}^{\left( 0\right) } \\ 
+\widehat{\overline{M}}_{p,l+1/2,i+3/2,\left[ j_{T,l+1/2}^{\prime
++}-1/2\right] +1}^{\left( 0\right) }
 \end{array}
-\right.
+\right. 
 \end{equation}
 where $j_{T,l+1/2}^{\prime -}=j_{T,l+1/2}^{-}$ and $j_{T,l+1/2}^{\prime
 +}=j_{T,l+1/2}^{+}-n_{\xi _{0T,l+1/2}}$ must be modified accordingly.
@@ -760,73 +760,79 @@ where $j_{T,l+1/2}^{\prime -}=j_{T,l+1/2}^{-}$ and $j_{T,l+1/2}^{\prime
 %EndExpansion
 
 As shown in a graphic form in Figs. *** and ***, 
-\begin{eqnarray}
-\widehat{\overline{M}}_{p,l+1/2,i-1/2,j_{T,l+1/2}^{\prime -}-1/2+1}^{\left(
-0\right) } &=&0  \nonumber \\
-\widehat{\overline{M}}_{p,l+1/2,i+1/2,j_{T,l+1/2}^{\prime -}-1/2+1}^{\left(
-0\right) } &=&0 \\
-\widehat{\overline{M}}_{p,l+1/2,i+3/2,j_{T,l+1/2}^{\prime -}-1/2+1}^{\left(
-0\right) } &=&0  \nonumber
-\end{eqnarray}
+
+\begin{equation}
+\left\{ 
+\begin{array}{l}
+\widehat{\overline{M}}_{p,l+1/2,i-1/2,\left[ j_{T,l+1/2}^{\prime
+-}-1/2\right] +1}^{\left( 0\right) }=0 \\ 
+\widehat{\overline{M}}_{p,l+1/2,i+1/2,\left[ j_{T,l+1/2}^{\prime
+-}-1/2\right] +1}^{\left( 0\right) }=0 \\ 
+\widehat{\overline{M}}_{p,l+1/2,i+3/2,\left[ j_{T,l+1/2}^{\prime
+-}-1/2\right] +1}^{\left( 0\right) }=0
+\end{array}
+\right. 
+\end{equation}
 since the distribution function at grid $4$ is no more connected with the
 one at grid point $3$ or $5$, but to the grid point $1$ only. Furthermore,
 since grid points $1$ and $3$ are equivalent, their clockwise flux links
 with grid point $2$ are only half in order to avoid counting them twice.
 Therefore, 
 \begin{eqnarray}
-\widehat{\overline{M}}_{p,l+1/2,i-1/2,j_{T,l+1/2}^{\prime +}-1/2+1}^{\left(
-0\right) } &=&\overline{\overline{M}}_{p,l+1/2,i-1/2,j_{T,l+1/2}^{\prime
-+}-1/2+1+n_{\xi _{0T,l+1/2}}}^{\left( 0\right) }/2  \nonumber \\
-\widehat{\overline{M}}_{p,l+1/2,i+1/2,j_{T,l+1/2}^{\prime +}-1/2+1}^{\left(
-0\right) } &=&\overline{\overline{M}}
-_{p,l+1/2,i+1/2,j_{T,l+1/2}^{+}-1/2+1+n_{\xi _{0T,l+1/2}}}^{\left( 0\right)
-}/2 \\
-\widehat{\overline{M}}_{p,l+1/2,i+3/2,j_{T,l+1/2}^{\prime +}-1/2+1}^{\left(
-0\right) } &=&\overline{\overline{M}}
-_{p,l+1/2,i+3/2,j_{T,l+1/2}^{+}-1/2+1+n_{\xi _{0T,l+1/2}}}^{\left( 0\right)
-}/2  \nonumber
+\widehat{\overline{M}}_{p,l+1/2,i-1/2,\left[ j_{T,l+1/2}^{\prime
++}-1/2\right] +1}^{\left( 0\right) } &=&\overline{\overline{M}}%
+_{p,l+1/2,i-1/2,\left[ j_{T,l+1/2}^{\prime +}-1/2\right] +1+n_{\xi
+_{0T,l+1/2}}}^{\left( 0\right) }/2  \nonumber \\
+\widehat{\overline{M}}_{p,l+1/2,i+1/2,\left[ j_{T,l+1/2}^{\prime
++}-1/2\right] +1}^{\left( 0\right) } &=&\overline{\overline{M}}%
+_{p,l+1/2,i+1/2,\left[ j_{T,l+1/2}^{+}-1/2\right] +1+n_{\xi
+_{0T,l+1/2}}}^{\left( 0\right) }/2 \\
+\widehat{\overline{M}}_{p,l+1/2,i+3/2,\left[ j_{T,l+1/2}^{\prime
++}-1/2\right] +1}^{\left( 0\right) } &=&\overline{\overline{M}}%
+_{p,l+1/2,i+3/2,\left[ j_{T,l+1/2}^{+}-1/2\right] +1+n_{\xi
+_{0T,l+1/2}}}^{\left( 0\right) }/2  \nonumber
 \end{eqnarray}
 
 Moreover, since counterclockwise flux that links grid points $3$ and $4$ is
 equivalent by symmetry with clockwise flux that links grid points $1$ and $2$
 , one obtains, 
 \begin{eqnarray}
-\widehat{\overline{M}}_{p,l+1/2,i-1/2,j_{T,l+1/2}^{\prime -}-1/2+n_{\xi
-_{0T,l+1/2}}}^{\left( 0\right) } &=&\overline{\overline{M}}%
-_{p,l+1/2,i-1/2,j_{T,l+1/2}^{\prime +}-1/2+1+n_{\xi _{0T,l+1/2}}}^{\left(
-0\right) }  \nonumber \\
-\widehat{\overline{M}}_{p,l+1/2,i+1/2,j_{T,l+1/2}^{\prime -}-1/2+n_{\xi
-_{0T,l+1/2}}}^{\left( 0\right) } &=&\overline{\overline{M}}
-_{p,l+1/2,i+1/2,j_{T,l+1/2}^{\prime +}-1/2+1+n_{\xi _{0T,l+1/2}}}^{\left(
-0\right) } \\
-\widehat{\overline{M}}_{p,l+1/2,i+3/2,j_{T,l+1/2}^{\prime -}-1/2+n_{\xi
-_{0T,l+1/2}}}^{\left( 0\right) } &=&\overline{\overline{M}}%
-_{p,l+1/2,i+3/2,j_{T,l+1/2}^{\prime +}-1/2+1+n_{\xi _{0T,l+1/2}}}^{\left(
-0\right) }  \nonumber
+\widehat{\overline{M}}_{p,l+1/2,i-1/2,\left[ j_{T,l+1/2}^{\prime
+-}-1/2\right] +n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } &=&\overline{%
+\overline{M}}_{p,l+1/2,i-1/2,\left[ j_{T,l+1/2}^{\prime +}-1/2\right]
++1+n_{\xi _{0T,l+1/2}}}^{\left( 0\right) }  \nonumber \\
+\widehat{\overline{M}}_{p,l+1/2,i+1/2,\left[ j_{T,l+1/2}^{\prime
+-}-1/2\right] +n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } &=&\overline{%
+\overline{M}}_{p,l+1/2,i+1/2,\left[ j_{T,l+1/2}^{\prime +}-1/2\right]
++1+n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } \\
+\widehat{\overline{M}}_{p,l+1/2,i+3/2,\left[ j_{T,l+1/2}^{\prime
+-}-1/2\right] +n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } &=&\overline{%
+\overline{M}}_{p,l+1/2,i+3/2,\left[ j_{T,l+1/2}^{\prime +}-1/2\right]
++1+n_{\xi _{0T,l+1/2}}}^{\left( 0\right) }  \nonumber
 \end{eqnarray}
 and 
 \begin{eqnarray}
-\widehat{\overline{M}}_{p,l+1/2,i-1/2,j_{T,l+1/2}^{\prime +}-1/2-n_{\xi
-_{0T,l+1/2}}}^{\left( 0\right) } &=&\overline{\overline{M}}
-_{p,l+1/2,i-1/2,j_{T,l+1/2}^{\prime +}-1/2+1+n_{\xi _{0T,l+1/2}}}^{\left(
-0\right) }/2  \nonumber \\
-\widehat{\overline{M}}_{p,l+1/2,i+1/2,j_{T,l+1/2}^{\prime +}-1/2-n_{\xi
-_{0T,l+1/2}}}^{\left( 0\right) } &=&\overline{\overline{M}}
-_{p,l+1/2,i+1/2,j_{T,l+1/2}^{\prime +}-1/2+1+n_{\xi _{0T,l+1/2}}}^{\left(
-0\right) }/2 \\
-\widehat{\overline{M}}_{p,l+1/2,i+3/2,j_{T,l+1/2}^{\prime +}-1/2-n_{\xi
-_{0T,l+1/2}}}^{\left( 0\right) } &=&\overline{\overline{M}}
-_{p,l+1/2,i+3/2,j_{T,l+1/2}^{\prime +}-1/2+1+n_{\xi _{0T,l+1/2}}}^{\left(
-0\right) }/2  \nonumber
+\widehat{\overline{M}}_{p,l+1/2,i-1/2,\left[ j_{T,l+1/2}^{\prime
++}-1/2\right] -n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } &=&\overline{%
+\overline{M}}_{p,l+1/2,i-1/2,\left[ j_{T,l+1/2}^{\prime +}-1/2\right]
++1+n_{\xi _{0T,l+1/2}}}^{\left( 0\right) }/2  \nonumber \\
+\widehat{\overline{M}}_{p,l+1/2,i+1/2,\left[ j_{T,l+1/2}^{\prime
++}-1/2\right] -n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } &=&\overline{%
+\overline{M}}_{p,l+1/2,i+1/2,\left[ j_{T,l+1/2}^{\prime +}-1/2\right]
++1+n_{\xi _{0T,l+1/2}}}^{\left( 0\right) }/2 \\
+\widehat{\overline{M}}_{p,l+1/2,i+3/2,\left[ j_{T,l+1/2}^{\prime
++}-1/2\right] -n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } &=&\overline{%
+\overline{M}}_{p,l+1/2,i+3/2,\left[ j_{T,l+1/2}^{\prime +}-1/2\right]
++1+n_{\xi _{0T,l+1/2}}}^{\left( 0\right) }/2  \nonumber
 \end{eqnarray}
 
 Finally, for the external boundary at $\xi _{0}=0,$ all matrix coefficients
 at grid point $j_{T_{0}}+1/2$ are forced to zero, except two, 
 \begin{eqnarray}
-\widehat{\overline{M}}_{p,l+1/2,i-1/2,j_{T_{,l+1/2}}^{\prime -}+1/2+n_{\xi
-_{0T,l+1/2}}}^{\left( 0\right) } &=&1  \nonumber \\
-\widehat{\overline{M}}_{p,l+1/2,i-1/2,j_{T_{,l+1/2}}^{\prime -}+3/2+n_{\xi
-_{0T,l+1/2}}}^{\left( 0\right) } &=&-1
+\widehat{\overline{M}}_{p,l+1/2,i-1/2,\left[ j_{T_{,l+1/2}}^{\prime
+-}+1/2\right] +n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } &=&1  \nonumber \\
+\widehat{\overline{M}}_{p,l+1/2,i-1/2,\left[ j_{T_{,l+1/2}}^{\prime
+-}+3/2\right] +n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } &=&-1
 \end{eqnarray}
 since $j_{T_{,l+1/2}}^{\prime -}=j_{T_{0}}-n_{\xi
 _{0T,l+1/2}}=j_{T_{0}}^{\prime }.$
@@ -1080,7 +1086,7 @@ and
 \begin{equation}
 j_{T_{0}}<j_{T,l-1/2}^{+}<j_{T,l+1/2}^{+}<j_{T,l+3/2}^{+}
 \end{equation}
-or using relations $j_{T,l+1/2}^{\prime -}=j_{T,l+1/2}^{-}$ and $
+or using relations $j_{T,l+1/2}^{\prime -}=j_{T,l+1/2}^{-}$ and $%
 j_{T,l+1/2}^{\prime +}=j_{T,l+1/2}^{+}-n_{\xi _{0T,l+1/2}}$ 
 \begin{equation}
 j_{T,l+3/2}^{\prime -}<j_{T,l+1/2}^{\prime -}<j_{T,l-1/2}^{\prime
@@ -1099,8 +1105,8 @@ fully preserved, and therefore
 provided $j^{\prime }<j_{T,l+1/2}^{\prime -},$ while 
 \begin{equation}
 \widehat{\overline{M}}_{\psi ,l+1/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right)
-}=\overline{\overline{M}}_{\psi ,l+1/2,i+1/2,j^{\prime }+1/2+n_{\xi
-_{0T,l+1/2}}}^{\left( 0\right) }
+}=\overline{\overline{M}}_{\psi ,l+1/2,i+1/2,\left[ j^{\prime }+1/2\right]
++n_{\xi _{0T,l+1/2}}}^{\left( 0\right) }
 \end{equation}
 when for $j^{\prime }>j_{T,l+1/2}^{\prime +}.$ Only off-diagonal matrix
 coefficients have to be modified, because of the presence of trapped and
@@ -1118,7 +1124,7 @@ If $j^{\prime }<j_{T,l+3/2}^{\prime -}$, matrix coefficients are given by
 }=\overline{\overline{M}}_{\psi ,l+3/2,i+1/2,j^{\prime }+1/2}^{\left(
 0\right) }
 \end{array}
-\right.
+\right. 
 \end{equation}
 and for $j_{T,l+3/2}^{\prime -}<j^{\prime }<j_{T,l+1/2}^{\prime -},$ the
 simple relation still holds for one matrix coefficient only 
@@ -1139,8 +1145,8 @@ j_{T_{0}}<j<j_{T,l+3/2}^{+},$ it turns out that
 \end{equation}
 and the flux link must be replaced by 
 \begin{equation}
-\widehat{\overline{M}}_{\psi ,l+3/2,i+1/2,j^{\prime }+1/2+2\left(
-j_{T_{0}}-\left( j^{\prime }+1/2\right) \right) -n_{\xi
+\widehat{\overline{M}}_{\psi ,l+3/2,i+1/2,\left[ j^{\prime }+1/2\right]
++2\left( j_{T_{0}}-\left( j^{\prime }+1/2\right) \right) -n_{\xi
 _{0T,l+3/2}}}^{\left( 0\right) }=\overline{\overline{M}}_{\psi
 ,l+3/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right) }
 \end{equation}
@@ -1158,23 +1164,23 @@ rule applies
 \widehat{\overline{M}}_{\psi ,l+3/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right)
 }=0
 \end{array}
-\right.
+\right. 
 \end{equation}
 all corresponding matrix coefficients being replaced by new ones according
 to the relations 
 \begin{equation}
 \left\{ 
 \begin{array}{l}
-\widehat{\overline{M}}_{\psi ,l-1/2,i+1/2,j^{\prime }+1/2+\left( n_{\xi
-_{0T,l+1/2}}-n_{\xi _{0T,l-1/2}}\right) }^{\left( 0\right) }=\overline{%
-\overline{M}}_{\psi ,l-1/2,i+1/2,j^{\prime }+1/2+n_{\xi
-_{0T,l+1/2}}}^{\left( 0\right) } \\ 
-\widehat{\overline{M}}_{\psi ,l+3/2,i+1/2,j^{\prime }+1/2+\left( n_{\xi
-_{0T,l+1/2}}-n_{\xi _{0T,l+3/2}}\right) }^{\left( 0\right) }=\overline{%
-\overline{M}}_{\psi ,l+3/2,i+1/2,j^{\prime }+1/2+n_{\xi
-_{0T,l+1/2}}}^{\left( 0\right) }
+\widehat{\overline{M}}_{\psi ,l-1/2,i+1/2,\left[ j^{\prime }+1/2\right]
++\left( n_{\xi _{0T,l+1/2}}-n_{\xi _{0T,l-1/2}}\right) }^{\left( 0\right) }=%
+\overline{\overline{M}}_{\psi ,l-1/2,i+1/2,\left[ j^{\prime }+1/2\right]
++n_{\xi _{0T,l+1/2}}}^{\left( 0\right) } \\ 
+\widehat{\overline{M}}_{\psi ,l+3/2,i+1/2,\left[ j^{\prime }+1/2\right]
++\left( n_{\xi _{0T,l+1/2}}-n_{\xi _{0T,l+3/2}}\right) }^{\left( 0\right) }=%
+\overline{\overline{M}}_{\psi ,l+3/2,i+1/2,\left[ j^{\prime }+1/2\right]
++n_{\xi _{0T,l+1/2}}}^{\left( 0\right) }
 \end{array}
-\right.
+\right. 
 \end{equation}
 wether electrons remains trapped or co-passing, or become trapped by the
 outward radial transport or detrapped by the inward cross-field diffusion.
@@ -1183,12 +1189,12 @@ _{0T,l+1/2}}-n_{\xi _{0T,l+3/2}}<0,$
 \begin{equation}
 \left\{ 
 \begin{array}{l}
-j^{\prime }+1/2+\left( n_{\xi _{0T,l+1/2}}-n_{\xi _{0T,l-1/2}}\right)
->j^{\prime }+1/2 \\ 
-j^{\prime }+1/2+\left( n_{\xi _{0T,l+1/2}}-n_{\xi _{0T,l+3/2}}\right)
-<j^{\prime }+1/2
+\left[ j^{\prime }+1/2\right] +\left( n_{\xi _{0T,l+1/2}}-n_{\xi
+_{0T,l-1/2}}\right) >j^{\prime }+1/2 \\ 
+\left[ j^{\prime }+1/2\right] +\left( n_{\xi _{0T,l+1/2}}-n_{\xi
+_{0T,l+3/2}}\right) <j^{\prime }+1/2
 \end{array}
-\right.
+\right. 
 \end{equation}
 which indicates that diagonals shrink when trapped/passing boundary is
 crossed, i.e. $j^{\prime }>j_{T,l+1/2}^{\prime -}.$ Therefore, matrix $%

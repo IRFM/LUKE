@@ -38,46 +38,6 @@ p}^{\left( 0\right) },D_{\xi \psi }^{\left( 0\right) }$ and $D_{\psi \xi
 }^{\left( 0\right) }$ between momentum and configuration spaces have been
 neglected.
 
-From Eqs (\ref{eq1}) and (\ref{eq2}), it turns out that the diffusion and
-convection rates scales like 
-\begin{equation}
-D_{\psi \psi }^{\left( 0\right) }\propto \frac{\Delta \psi ^{2}}{\left|
-\nabla \psi \right| _{\min }^{2}\Delta t}\propto \frac{\Delta r^{2}}{\Delta t%
-}
-\end{equation}
-and 
-\begin{equation}
-F_{\psi \psi }^{\left( 0\right) }\propto \frac{\Delta \psi }{\left| \nabla
-\psi \right| _{\min }\Delta t}\propto \frac{\Delta r}{\Delta t}
-\end{equation}
-using the approximate relation $\left| \nabla \psi \right| _{\min }\propto
-\Delta \psi /\Delta r,$ that holds for circular concentric flux-surfaces.
-Therefore, units of $D_{\psi \psi }^{\left( 0\right) }$ and $F_{\psi
-}^{\left( 0\right) }$ are naturaly $\left[ m^{2}.s^{-1}\right] $ and $\left[
-m.s^{-1}\right] $. Since for numerical calculations, it is more appropriate
-to work with normalized quantities, normalized diffusion rate and convection
-are simply given by the ratios, 
-\begin{equation}
-D_{\psi \psi }^{\left( 0\right) N}=\frac{D_{\psi \psi }^{\left( 0\right) }}{%
-a^{2}/\tau _{c}}
-\end{equation}
-and 
-\begin{equation}
-F_{\psi }^{\left( 0\right) N}=\frac{F_{\psi }^{\left( 0\right) }}{a/\tau _{c}%
-}
-\end{equation}
-where $a$ is arbitrarily deduced from the definition of the normalized minor
-radius on the horizontal LFS midplane $\rho $, according to the relation 
-\begin{equation}
-\rho \left( \psi \right) =\frac{R\left( \psi \right) -R_{0}}{R_{\max }-R_{0}}%
-=\frac{r_{0}}{a}
-\end{equation}
-where $r_{0}=R\left( \psi \right) -R_{0}$ and $a=R_{\max }-R_{0}$. By
-construction, $0\leq \rho \leq 1,$ and $a$ is a pseudo plasma minor radius
-that merges with the exact definition for circular concentric flux-surfaces.
-Here, the reference time $\tau _{c}$ used for the normalization is usually
-the electron collision time.
-
 \paragraph{Case of circular concentric flux-surfaces}
 
 In that case, $\widehat{\psi }=\widehat{r},$ and by definition $D_{\psi \psi
@@ -104,36 +64,35 @@ B_{\min }}{B_{P\min }},$%
 \left. \frac{\partial f_{0}^{\left( 0\right) }}{\partial t}\right| _{\mathbf{%
 r}}^{circ.} &=&\frac{R_{0}B_{P\min }}{\lambda \left( r,\xi _{0}\right) r}%
 \frac{\partial }{\partial \psi }\left( \frac{R_{\min }}{R_{0}}r\lambda
-\left( r,\xi _{0}\right) \mathbf{S}_{r}^{\left( 0\right) }\right)   \nonumber
+\left( r,\xi _{0}\right) \mathbf{S}_{r}^{\left( 0\right) }\right)  \nonumber
 \\
 &=&\frac{\left| \nabla \psi \right| _{\min }}{\lambda \left( r,\xi
 _{0}\right) R_{\min }r}\frac{\partial }{\partial \psi }\left( r\lambda
-\left( r,\xi _{0}\right) \mathbf{S}_{r}^{\left( 0\right) }\right)   \nonumber
+\left( r,\xi _{0}\right) \mathbf{S}_{r}^{\left( 0\right) }\right)  \nonumber
 \\
 &=&\frac{1}{\lambda \left( r,\xi _{0}\right) R_{\min }r}\frac{\partial }{%
 \partial r}\left( R_{\min }r\lambda \left( r,\xi _{0}\right) \mathbf{S}%
-_{r}^{\left( 0\right) }\right) 
+_{r}^{\left( 0\right) }\right)
 \end{eqnarray}
 
 Note that $R_{\min }$ may not be simplified, since it is a function of $r$,
-which corresponds to the toroidal configuration.  Dynamics in momentum and
+which corresponds to the toroidal configuration. Dynamics in momentum and
 configuration spaces are also not decoupled, the normalized bounce time $%
 \lambda \left( r,\xi _{0}\right) $ being on both sides of the radial
 derivative. Only for strongly circulating electrons, 
 \begin{equation}
-\lim_{\left| \xi _{0}\right| \rightarrow 1}\left. \frac{\partial %
+\lim_{\left| \xi _{0}\right| \rightarrow 1}\left. \frac{\partial
 f_{0}^{\left( 0\right) }}{\partial t}\right| _{\mathbf{r}}^{circ.}=\frac{1}{%
 rR_{\min }}\frac{\partial }{\partial r}\left( rR_{\min }\mathbf{S}%
-_{r}^{\left( 0\right) }\right) 
+_{r}^{\left( 0\right) }\right)
 \end{equation}
 since $\lim_{\left| \xi _{0}\right| \rightarrow 1}\lambda \left( r,\xi
 _{0}\right) =1,$ and the usual cylindrical conservative expression of the
 radial transport 
 \begin{equation}
-\lim_{\left| \xi _{0}\right| \rightarrow 1}\left. \frac{\partial %
+\lim_{\left| \xi _{0}\right| \rightarrow 1}\left. \frac{\partial
 f_{0}^{\left( 0\right) }}{\partial t}\right| _{\mathbf{r}}^{circ.}=\frac{1}{r%
-}\frac{\partial }{\partial r}\left( r\mathbf{S}_{r}^{\left( 0\right)
-}\right) 
+}\frac{\partial }{\partial r}\left( r\mathbf{S}_{r}^{\left( 0\right) }\right)
 \end{equation}
-is only found in the case $\epsilon \ll 1,$ i.e. when $R_{\min }\approx %
-R_{0}.$ 
+is only found in the case $\epsilon \ll 1,$ i.e. when $R_{\min }\approx
+R_{0}.$

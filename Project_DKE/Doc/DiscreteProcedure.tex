@@ -29,16 +29,16 @@ which leads to the equivalent form
 \psi \right) }p^{2}f_{0}^{\left( 0\right) }\right] /\partial t  \nonumber \\
 &&+\frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) }%
 \frac{\partial }{\partial p}\left( p^{2}\mathbf{S}_{p}^{\left( 0\right)
-}\right)   \nonumber \\
+}\right)  \nonumber \\
 &&-\frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) }%
 \frac{p}{\lambda \left( \psi ,\xi _{0}\right) }\frac{\partial }{\partial \xi
 _{0}}\left( \sqrt{1-\xi _{0}^{2}}\lambda \left( \psi ,\xi _{0}\right) 
-\mathbf{S}_{\xi }^{\left( 0\right) }\right)   \nonumber \\
+\mathbf{S}_{\xi }^{\left( 0\right) }\right)  \nonumber \\
 &&+\frac{p^{2}}{\lambda \left( \psi ,\xi _{0}\right) }\frac{\partial }{%
 \partial \psi }\left( R_{\min }\left( \psi \right) \widetilde{q}\left( \psi
 \right) \frac{B_{P\min }\left( \psi \right) }{B_{\min }\left( \psi \right) }%
 \lambda \left( \psi ,\xi _{0}\right) \mathbf{S}_{\psi }^{\left( 0\right)
-}\right)   \nonumber \\
+}\right)  \nonumber \\
 &=&0
 \end{eqnarray}
 
@@ -48,55 +48,56 @@ differencing, the discrete form of the Fokker-planck equation may be
 expressed as
 
 \begin{eqnarray}
-&&\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}p_{i+1/2}^{2}\frac{
+&&\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}p_{i+1/2}^{2}\frac{%
 f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right)
 (k+1)}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k)}}{\Delta t}  \nonumber \\
 &&+\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}\left. \frac{\partial \left(
 p^{2}\mathbf{S}_{p}^{\left( 0\right) }\right) }{\partial p}\right|
 _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
 &&-\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}\frac{p_{i+1/2}}{\lambda
-^{l+1/2,j+1/2}}\times   \nonumber \\
+^{l+1/2,j+1/2}}\times  \nonumber \\
 &&\left. \frac{\partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}%
 \lambda \mathbf{S}_{\xi }^{\left( 0\right) }\right) \right|
 _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
-&&+\frac{p_{i+1/2}^{2}}{\lambda ^{l+1/2,j+1/2}}\times   \nonumber \\
+&&+\frac{p_{i+1/2}^{2}}{\lambda ^{l+1/2,j+1/2}}\times  \nonumber \\
 &&\left. \frac{\partial }{\partial \psi }\left( R_{\min }\widetilde{q}\frac{%
 B_{P\min }}{B_{\min }}\lambda \mathbf{S}_{\psi }^{\left( 0\right) }\right)
 \right| _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
 &=&0
 \end{eqnarray}
 where $\widetilde{q}_{l+1/2}=\widetilde{q}\left( \psi _{l+1/2}\right) ,$ $%
-B_{\min ,l+1/2}=B_{\min }\left( \psi _{l+1/2}\right) $ and  $\lambda
+B_{\min ,l+1/2}=B_{\min }\left( \psi _{l+1/2}\right) $ and $\lambda
 ^{l+1/2,j+1/2}=\lambda \left( \psi _{l+1/2},\xi _{0,j+1/2}\right) .$ In a
 compact form 
 \begin{eqnarray}
 &&\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}p_{i+1/2}^{2}\frac{%
 f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right)
 (k+1)}-f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) (k)}}{\Delta t}  \nonumber \\
-&&+\left. \frac{\widetilde{q}}{B_{\min }}p^{2}\frac{\partial f^{\left(
-0\right) }}{\partial p}\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
-&&+\left. \frac{\widetilde{q}}{B_{\min }}p^{2}\frac{\partial f^{\left(
-0\right) }}{\partial \psi }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
+&&+\left. \frac{\widetilde{q}}{B_{\min }}p^{2}\nabla _{\mathbf{p}}\cdot 
+\mathbf{S}_{\mathbf{p}}^{\left( 0\right) }\right|
+_{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
+&&+\left. \frac{\widetilde{q}}{B_{\min }}p^{2}\nabla _{\psi }\cdot \mathbf{S}
+_{\psi }^{\left( 0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
 &=&0
 \end{eqnarray}
 where 
 \begin{eqnarray}
-\left. \frac{\widetilde{q}}{B_{\min }}p^{2}\frac{\partial f^{\left( 0\right)
-}}{\partial p}\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)} &=&\frac{\widetilde{q}%
-_{l+1/2}}{B_{\min ,l+1/2}}\left. \frac{\partial \left( p^{2}\mathbf{S}%
-_{p}^{\left( 0\right) }\right) }{\partial p}\right|
+\left. \frac{\widetilde{q}}{B_{\min }}p^{2}\nabla _{\mathbf{p}}\cdot \mathbf{%
+S}_{\mathbf{p}}^{\left( 0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)} &=&%
+\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}\left. \frac{\partial \left(
+p^{2}\mathbf{S}_{p}^{\left( 0\right) }\right) }{\partial p}\right|
 _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
 &&-\frac{\widetilde{q}_{l+1/2}}{B_{\min ,l+1/2}}\frac{p_{i+1/2}}{\lambda
-^{l+1/2,j+1/2}}\times   \nonumber \\
+^{l+1/2,j+1/2}}\times  \nonumber \\
 &&\left. \frac{\partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}%
 \lambda \mathbf{S}_{\xi }^{\left( 0\right) }\right) \right|
 _{l+1/2,i+1/2,j+1/2}^{(k+1)}
 \end{eqnarray}
 and 
 \begin{eqnarray}
-\left. \frac{\widetilde{q}}{B_{\min }}p^{2}\frac{\partial f^{\left( 0\right)
-}}{\partial \psi }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)} &=&\frac{p_{i+1/2}^{2}%
-}{\lambda ^{l+1/2,j+1/2}}\times   \nonumber \\
+\left. \frac{\widetilde{q}}{B_{\min }}p^{2}\nabla _{\psi }\cdot \mathbf{S}
+_{\psi }^{\left( 0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)} &=&\frac{%
+p_{i+1/2}^{2}}{\lambda ^{l+1/2,j+1/2}}\times  \nonumber \\
 &&\left. \frac{\partial }{\partial \psi }\left( R_{\min }\widetilde{q}\frac{%
 B_{P\min }}{B_{\min }}\lambda \mathbf{S}_{\psi }^{\left( 0\right) }\right)
 \right| _{l+1/2,i+1/2,j+1/2}^{(k+1)}
@@ -115,7 +116,7 @@ _{0}\right) }\frac{1}{p}\frac{\partial }{\partial \xi _{0}}\left( \sqrt{%
 }^{\left( 0\right) }\right)   \nonumber \\
 &=&\frac{1}{p^{2}}\frac{\partial }{\partial p}\left( p^{2}\widetilde{\mathbf{%
 S}}_{p}^{\left( 0\right) }\right) -\frac{1}{\lambda \left( \psi ,\xi
-_{0}\right) }\frac{1}{p}\frac{\partial }{\partial \xi _{0}}\left( \sqrt{
+_{0}\right) }\frac{1}{p}\frac{\partial }{\partial \xi _{0}}\left( \sqrt{%
 1-\xi _{0}^{2}}\lambda \left( \psi ,\xi _{0}\right) \widetilde{\mathbf{S}}%
 _{\xi }^{\left( 0\right) }\right) 
 \end{eqnarray}
@@ -143,13 +144,13 @@ simply
 \begin{eqnarray}
 &&\left. \frac{\partial \left( p^{2}\mathbf{S}_{p}^{\left( 0\right) }\right) 
 }{\partial p}\right| _{l+1/2,i+1/2,j+1/2}^{(k)}-\frac{p_{i+1/2}}{\lambda
-^{l+1/2,j+1/2}}\times   \nonumber \\
+^{l+1/2,j+1/2}}\times  \nonumber \\
 &&\left. \frac{\partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}%
 \lambda \mathbf{S}_{\xi }^{\left( 0\right) }\right) \right|
 _{l+1/2,i+1/2,j+1/2}^{(k)}  \nonumber \\
 &=&\left. \frac{\partial \left( p^{2}\widetilde{\mathbf{S}}_{p}^{\left(
 0\right) }\right) }{\partial p}\right| _{l+1/2,i+1/2,j+1/2}^{(k)}-\frac{%
-p_{i+1/2}}{\lambda ^{l+1/2,j+1/2}}\times   \nonumber \\
+p_{i+1/2}}{\lambda ^{l+1/2,j+1/2}}\times  \nonumber \\
 &&\left. \frac{\partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}%
 \widetilde{\mathbf{S}}_{\xi }^{\left( 0\right) }\right) \right|
 _{l+1/2,i+1/2,j+1/2}^{(k)}

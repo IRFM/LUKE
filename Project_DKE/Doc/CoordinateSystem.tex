@@ -1,7 +1,8 @@
+
 General and specific properties of curvilinear coordinate systems are
 detailed in Appendix \ref{curvilinear}. In this work, vectors are written in
 bold characters, like $\mathbf{v}$, except unit vectors, which are covered
-with a hat, like $\widehat{v}$. 
+with a hat, like $\widehat{v}$.
 
 \subsection{Momentum Space}
 
@@ -56,7 +57,8 @@ corresponding local orthogonal basis vectors $\left( \widehat{r},\widehat{%
 \theta },\widehat{\phi }\right) $ are defined in (\ref{rthetadef}) and shown
 on Fig. \ref{rthetaphi}.
 
-\fig{figures/rthetaphi.eps}{Coordinates System $( r,\theta ,\phi)$.}{rthetaphi}{10cm}
+\fig{figures/rthetaphi.eps}{Coordinates System $( r,\theta
+,\phi)$.}{rthetaphi}{10cm}
 
 \item  Third, the flux coordinate system $\left( \psi ,s,\phi \right) $ is
 the natural system when we describe particles which are confined to a given
@@ -79,10 +81,11 @@ maximum magnetic field
 \begin{equation}
 B\left( \psi ,s\equiv s_{\min }\right) =B\left( \psi ,s\equiv s_{\max
 }\right) =\max \left\{ B\left( \psi ,s\right) \right\} =B_{\max }\left( \psi
-\right)  \label{bmax}
+\right)   \label{bmax}
 \end{equation}
 
-\fig{figures/psisphi.eps}{Coordinates System $(\psi ,s,\phi)$.}{psisphi}{10cm}
+\fig{figures/psisphi.eps}{Coordinates System $(\psi
+,s,\phi)$.}{psisphi}{10cm}
 
 \item  The system $\left( \psi ,\theta ,\phi \right) $ is an alternative to
 the previous system, which is used to implement numerically the calculation
@@ -97,14 +100,16 @@ flux-function $\rho \left( \psi \right) $ which coincides with the
 normalized radius on the horizontal LFS midplane. Indeed, in an axisymmetric
 system, using the functions $R\left( \psi ,\theta \right) $ and $Z\left(
 \psi ,\theta \right) $, we define $\rho \left( \psi \right) $ as 
-\[
+\begin{equation}
 \rho \left( \psi \right) =\frac{R\left( \psi ,0\right) -R_{0}}{R_{\max
-}-R_{0}} 
-\]
-where $R_{\max }=R\left( \psi _{\max },0\right) $ is the value of $R$ on the
-separatrix as it crosses the midplane. The local orthogonal vectors are the
-same as (\ref{psih}-\ref{phih}). The 2-D outputs from the axisymmetric
-equilibrium code HELENA\ are given on the $\left( \psi ,\theta \right) $
-grid. The system $\left( \psi ,\theta ,\phi \right) $ will be used from now
-on.
+}-R_{0}}  \label{rhodef}
+\end{equation}
+with $0\leq \rho \leq 1$ by construction, and where $R_{\max }=R\left( \psi
+_{\max },0\right) $ is the value of $R$ on the separatrix as it crosses the
+midplane. Here $a_{p}=R_{\max }-R_{0}$ is defined arbitrarily as the plasma
+minor radius since this definition merges with the exact one for circular
+concentric flux-surfaces. The local orthogonal vectors are the same as (\ref
+{psih}-\ref{phih}). The 2-D outputs from the axisymmetric equilibrium code
+HELENA\ are given on the $\left( \psi ,\theta \right) $ grid. The system $%
+\left( \psi ,\theta ,\phi \right) $ will be used from now on.
 \end{itemize}
