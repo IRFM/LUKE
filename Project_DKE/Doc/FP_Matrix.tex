@@ -1,7 +1,7 @@
 
 Projected on the numerical distribution function grid, and taking into
 account of the internal and external boundaries, the electron Fokker-Planck
-equation may be expressed as
+equation may be expressed as 
 \begin{eqnarray}
 &&\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
 _{l+1/2}\right) }p_{i+1/2}^{2}\frac{f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right)
@@ -11,31 +11,77 @@ _{l+1/2}\right) }\sum_{i^{\prime }=i-1}^{i^{\prime }=i+1}\sum_{j^{\prime
 }=j-1}^{j^{\prime }=j+1}\widehat{\overline{\overline{M}}}_{p,l+1/2,i^{\prime
 }+1/2,j^{\prime }+1/2}^{\left( 0\right) }f_{0,l+1/2,i^{\prime
 }+1/2,j^{\prime }+1/2}^{\left( 0\right) (k+1)}  \nonumber \\
-&&+\frac{p_{i+1/2}^{2}}{\lambda \left( \psi _{l+1/2},\xi _{0,j+1/2}\right) }
+&&+\frac{p_{i+1/2}^{2}}{\lambda \left( \psi _{l+1/2},\xi _{0,j+1/2}\right) }%
 \sum_{l^{\prime }=l-1}^{l^{\prime }=l+1}\widehat{\overline{\overline{M}}}%
 _{\psi ,l^{\prime }+1/2,i+1/2,j+1/2}^{\left( 0\right) }f_{0,l^{\prime
 }+1/2,i+1/2,j+1/2}^{\left( 0\right) (k+1)}  \nonumber \\
 &=&\frac{\widetilde{q}\left( \psi _{l+1/2}\right) }{B_{\min }\left( \psi
-_{l+1/2}\right) }p_{i+1/2}^{2}C\left( f_{0,l+1/2,i+1/2,j+1/2}^{\left(
-0\right) (k+1)},f_{M,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }\right) 
+_{l+1/2}\right) }p_{i+1/2}^{2}\frac{\overline{\lambda }_{1,1,0}^{l+1/2,j+1/2}%
+}{\lambda ^{l+1/2,j+1/2}}\frac{3}{2}\xi _{0,j+1/2}\mathcal{I}\left(
+f_{M,l+1/2,i+1/2,j+1/2},f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right)
+(m=1)}\right) 
 \end{eqnarray}
 using upwind differencing that corresponds to the fully implicit scheme
 which is usually numerically stable for arbitrary values of $\Delta t.$ Here 
-$C$ is the first order Legendre correction that ensures momentum
-conservation, as discussed in Sec. ***
+$\mathcal{I}$ is the first order Legendre correction that ensures momentum
+conservation, as discussed in Sec. ***, and introduce a weak non-linear
+dependence. 
 
 In compact matrix form, the differential equation in the reduced momentum
 phase space has the following symbolic form 
 \begin{equation}
 \left( \frac{\widehat{\Bbb{A}}}{\Delta t}+\widehat{\Bbb{B}}\right)
 X^{(k+1)}=\left( \frac{\widehat{\Bbb{A}}}{\Delta t}\right) X^{(k)}+\widehat{C%
-}\left( X^{(k)},X_{M}\right) 
+}\left( X_{M},X^{(k)}\right)   \label{Matrixeq}
 \end{equation}
 where $\widehat{\Bbb{A}}$ is the matrix associated to the time differencing, 
 $\widehat{\Bbb{B}}$ corresponds to the flux divergence and $\widehat{C}$ is
 the first order Legendre correction. Here $X^{(k)}$ is a vector whose
 components are the discrete values of the distribution function at time step 
-$\left( k\right) ,$ organized along the following order
-\[
-\]
+$\left( k\right) ,$ organized as follows 
+\begin{equation}
+X^{(k)}\rightarrow \left\{ 
+\begin{array}{l}
+l=0\rightarrow \left\{ 
+\begin{array}{l}
+i=0\rightarrow \left\{ 
+\begin{array}{l}
+j^{\prime }=0 \\ 
+j^{\prime }=\ldots  \\ 
+j^{\prime }=n_{\xi _{0}}-n_{\xi _{0T,l+1/2}}-1
+\end{array}
+\right.  \\ 
+i=\ldots  \\ 
+i=n_{p}-1
+\end{array}
+\right.  \\ 
+l=\ldots  \\ 
+l=n_{\psi }-1
+\end{array}
+\right. 
+\end{equation}
 
+Consequently, $\widehat{\Bbb{A}}$ is a banded matrix, as shown in Fig. ***,
+whose main diagonal is dominant because collisions predominate over other
+physical processes. It is made of blocks 
+
+When trapped electron dynamics is not considered, the total number of
+diagonal is $11$, $9$ of them for describing the dynamics in momentum space,
+and the $2$ remaining for the spatial transport of fast electrons. In that
+simple case, $\widehat{\Bbb{A}}$ is a $n_{\psi }n_{p}n_{\xi _{0}}\times %
+n_{\psi }n_{p}n_{\xi _{0}}$ matrix, whose sparcity is extremely high. This
+property will be extensively used to the linear system of equation (\ref
+{Matrixeq}), otherwise, the computer memory requirement is fully
+prohibitive. Indeed, for a standard case, $n_{\psi }=20,$ $n_{p}=200$ and $%
+n_{\xi _{0}}=200,$ the total number of coefficients reaches $64\times %
+10^{+12},$ and the memory capacity that is needed is $512TBytes$ !
+Hopefully, this number may be drastically reduced down to $11\times n_{\psi
+}n_{p}n_{\xi _{0}},$ and for the example here considered, the required
+memory is of the order of $70.4MBytes$, a level that is standard for most
+computers, today. 
+
+When trapped particle are considered, new non-zero coefficients take place,
+and the number of diagonals is exceeds usually $17$, $15$ of them for the
+momentum dynamics itself, the remaining part for the spatial dynamics.
+Indeed, since the trapped passing boundary changes with the position in the
+plasma $\psi ,$ blocks that describe the momentum dynamics tends to shrink
