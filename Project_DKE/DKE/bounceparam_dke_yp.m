@@ -1,5 +1,5 @@
 function [xq,xqtilde,xqbar,xqhat,...
-    XXheaviside,...
+    XXheaviside,XXheaviside_p,XXheaviside_m,...
     Xxlambda,Xxlambda_p,Xxlambda_m,...
     XXlambda,XXRlambda_m,XXRlambda_p,...
     XXRlambda_p2m1_m,XXRlambda_p2m1_p,...
@@ -34,6 +34,8 @@ if bounce_mode == 1,
 = bounce_dke_jd(equil_mode,mhum,XR,XZ,XBR,XBZ,XBphi,xmhubounce2,xB0,xR0,xBT0,xBp0,Rp,Zp,ap,xymaskT,-1);
 %
 	XXheaviside = repmat(reshape(~xymaskT',[1,nmhu,nr]),[npn,1,1]);%For selecting the circulating population only                      
+	XXheaviside_p = repmat(reshape(~xymaskT_p',[1,nmhu,nr]),[npn,1,1]);%For selecting the circulating population only                      
+	XXheaviside_m = repmat(reshape(~xymaskT_m',[1,nmhu,nr]),[npn,1,1]);%For selecting the circulating population only                      
 %
 	XXlambda = repmat(reshape(xylambda',[1,nmhu,nr]),[npn,1,1]);
 	XXlambda_p = repmat(reshape(xylambda_p',[1,nmhu,nr]),[npn,1,1]);
@@ -122,6 +124,8 @@ else
     xqhat = ones(1,nr);
 %
 	XXheaviside = ones(npn,nmhu,nr);
+	XXheaviside_p = ones(npn,nmhu,nr);
+	XXheaviside_m = ones(npn,nmhu,nr);
 %
 	XXlambda = ones(npn,nmhu,nr);
 	Xxlambda = ones(nmhu,nr);
