@@ -1,4 +1,4 @@
-function waveparam = rfwave_dke_jd(tokname,xrho,betath_ref,ne_ref,xrbetath,xrnhuth,xTe_norm,xne_norm,zxni_norm,Zi,mi,Bt,Rp,ap,bounce_mode);
+function waveparam = rfwave_dke_jd(tokname,xrho,betath_ref,ne_ref,xrbetath,xrnhuth,xTe_norm,xne_norm,zxni_norm,Zi,mi,Bt,xq,Rp,ap,bounce_mode);
 % 
 %	RF input parameters for the Drift Kinetic equation solver (dke_4_1yp.m). Manual method, or with the cold plasma dispersion relation
 % 
@@ -11,17 +11,6 @@ function waveparam = rfwave_dke_jd(tokname,xrho,betath_ref,ne_ref,xrbetath,xrnhu
 %Last Update: 08/06/03
 %
 %by J.Decker MIT/RLE <jodecker@mit.edu> and Y.Peysson CEA/DRFC <yves.peysson@cea.fr> 04/29/2003
-%
-qe = 1.60217733e-19;%Electron charge (C)
-me = 9.1093897e-31;%Electron rest mass (Kg)
-mc2 = 510.99905;%Electron energy rest mass (keV)
-%
-nr = length(xrho);
-xia = xrho*ap/Rp;
-xB0 = Bt./(1+xia);
-xwce0 = qe*xB0/me;
-%
-Te_ref = mc2*betath_ref^2;
 %    
 % ***************************** Test mode LH wave *****************************
 % 
@@ -139,13 +128,13 @@ yomega_ecc = [NaN]*2*pi*1e9;%EC wave frequency [rad/s]
 yPinc_ecc = [2]*1e6;%central EC incident power (W)
 %
 yopt_ecc = [0]; %(0): exact, (1): small LRE
-yideal_ecc = [0]; %(0): cold dispersion model, (1): ideal case
+yideal_ecc = [0]; %(0): warm plasma dispersion model, (1): cold plasma dispersion model, (2): ideal case
 yfinc_ecc = [1];% incidence factor. In the limit of infinitely thin flux-surface, yfinc_ecc = 1/cos(alpha)
 %                                                       where alpha is the incidence angle of the ray on the surface 
 %
 %  ***************************** Local EBW Calculation *****************************
 %
-blist_ebw = [1];
+blist_ebw = [];
 nb_ebw = length(blist_ebw);
 %
 yn_ebw = [3];%EBW resonance harmonic
@@ -165,6 +154,23 @@ yfinc_ebw = [1];% incidence factor. In the limit of infinitely thin flux-surface
 %                                                       where alpha is the incidence angle of the ray on the surface 
 %
 %***************************** Wave matrix calculation *****************************
+%
+qe = 1.60217733e-19;%Electron charge (C)
+me = 9.1093897e-31;%Electron rest mass (Kg)
+mc2 = 510.99905;%Electron energy rest mass (keV)
+%
+% modified j.d. 11/20/03 -> Poloidal component added, derived from q factor.
+%
+iaa = ap/Rp;
+nr = length(xrho);
+xia = xrho*iaa;
+xBt0 = Bt./(1+xia);
+xq(xq == 0) = eps;
+xBp0 = xrho*iaa.*xBt0./xq;
+xB0 = sqrt(xBt0.^2 + xBp0.^2);
+xwce0 = qe*xB0/me;
+%
+Te_ref = mc2*betath_ref^2;
 %
 xyn_lh = ones(nr,1)*yn_lh;
 xythetab_lh = ones(nr,1)*ythetab_lh*pi/180;%(deg -> rad)
@@ -350,10 +356,11 @@ xyideal_lhc = ones(nr,1)*yideal_lhc; %(0): cold dispersion model, (1): ideal cas
 xyfinc_lhc = ones(nr,1)*yfinc_lhc;% incidence factor. In the limit of infinitely thin flux-surface, yfinc_ecc = 1/cos(alpha)
 %                                                       where alpha is the incidence angle of the ray on the surface 
 %    
+xyB0_lhc = repmat(xB0,[1,ns_lhc]); 
 % cold plasma dispersion tensor solver
-waveparam_0_lhc = coldlhcd_dke_jd(xyrho_lhc,xythetab_lhc,xyn_lhc,xyopt_lhc,xynparmin_lhc,xynparmax_lhc,xynpar_lhc,xydnpar_lhc,xyomega_lhc,xyPinc_lhc,xyfinc_lhc,Te_ref,ne_ref,xne_norm,zxni_norm,Zi,mi,Bt,Rp,ap,bounce_mode);
+waveparam_0_lhc = coldlhcd_dke_jd(xyrho_lhc,xythetab_lhc,xyn_lhc,xyopt_lhc,xynparmin_lhc,xynparmax_lhc,xynpar_lhc,xydnpar_lhc,xyomega_lhc,xyPinc_lhc,xyfinc_lhc,Te_ref,ne_ref,xne_norm,zxni_norm,Zi,mi,xyB0_lhc,Rp,ap,bounce_mode);
 % idealized polarization and spectrum
-waveparam_1_lhc = ideallhcd_dke_jd(xyrho_lhc,xythetab_lhc,xyn_lhc,xyopt_lhc,xynparmin_lhc,xynparmax_lhc,xynpar_lhc,xydnpar_lhc,xyomega_lhc,xyPinc_lhc,xyfinc_lhc,Te_ref,ne_ref,xne_norm,zxni_norm,Zi,mi,Bt,Rp,ap,bounce_mode);
+waveparam_1_lhc = ideallhcd_dke_jd(xyrho_lhc,xythetab_lhc,xyn_lhc,xyopt_lhc,xynparmin_lhc,xynparmax_lhc,xynpar_lhc,xydnpar_lhc,xyomega_lhc,xyPinc_lhc,xyfinc_lhc,Te_ref,ne_ref,xne_norm,zxni_norm,Zi,mi,xyB0_lhc,Rp,ap,bounce_mode);
 %
 xy14ideal_lhc = repmat(xyideal_lhc,[1,1,14]);
 waveparam_lhc = xy14ideal_lhc.*waveparam_1_lhc + ~xy14ideal_lhc.*waveparam_0_lhc;
@@ -374,7 +381,7 @@ xyomega_ecc = ones(nr,1)*yomega_ecc;%EC wave frequency [rad/s]
 xyPinc_ecc = ones(nr,1)*yPinc_ecc;%central EC incident power (W)
 %
 xyopt_ecc = ones(nr,1)*yopt_ecc; %(0): exact, (1): small LRE
-xyideal_ecc = ones(nr,1)*yideal_ecc; %(0): cold dispersion model, (1): ideal case
+xyideal_ecc = ones(nr,1)*yideal_ecc; %(0):  warm plasma dispersion model, (1): cold plasma dispersion model, (2): ideal case
 xyfinc_ecc = ones(nr,1)*yfinc_ecc;
 %
 xyia_ecc = repmat(xia,[1,ns_ecc]);
@@ -385,20 +392,64 @@ xyomega_ecc(mask_y_ecc) = xyn_ecc(mask_y_ecc).*xywce0_ecc(mask_y_ecc).*xypsib_ec
 %    
 xyrho_ecc = repmat(xrho,[1,ns_ecc]);
 %    
+xyB0_ecc = repmat(xB0,[1,ns_ecc]); 
+% warm plasma dispersion tensor solver
+if min(xyideal_ecc(:,blist_ecc)) == 0
+	waveparam_0_ecc = warmeccd_dke_jd(tokname,xyrho_ecc,xythetab_ecc,xyn_ecc,xyopt_ecc,xynpar_ecc,xydnpar_ecc,xybwidth_ecc,xypol_ecc,xyomega_ecc,xyPinc_ecc,xyfinc_ecc,Te_ref,ne_ref,xne_norm,zxni_norm,Zi,mi,xyB0_ecc,Rp,ap,bounce_mode);
+else
+	waveparam_0_ecc = zeros(nr,ns_ecc,14);
+end
 % cold plasma dispersion tensor solver
-waveparam_0_ecc = coldeccd_dke_jd(xyrho_ecc,xythetab_ecc,xyn_ecc,xyopt_ecc,xynpar_ecc,xydnpar_ecc,xybwidth_ecc,xypol_ecc,xyomega_ecc,xyPinc_ecc,xyfinc_ecc,Te_ref,ne_ref,xne_norm,zxni_norm,Zi,mi,Bt,Rp,ap,bounce_mode);
+waveparam_1_ecc = coldeccd_dke_jd(xyrho_ecc,xythetab_ecc,xyn_ecc,xyopt_ecc,xynpar_ecc,xydnpar_ecc,xybwidth_ecc,xypol_ecc,xyomega_ecc,xyPinc_ecc,xyfinc_ecc,Te_ref,ne_ref,xne_norm,zxni_norm,Zi,mi,xyB0_ecc,Rp,ap,bounce_mode);
 % idealized polarization and spectrum
-waveparam_1_ecc = idealeccd_dke_jd(xyrho_ecc,xythetab_ecc,xyn_ecc,xyopt_ecc,xynpar_ecc,xydnpar_ecc,xybwidth_ecc,xypol_ecc,xyomega_ecc,xyPinc_ecc,xyfinc_ecc,Te_ref,ne_ref,Bt,Rp,ap,bounce_mode);
+waveparam_2_ecc = idealeccd_dke_jd(xyrho_ecc,xythetab_ecc,xyn_ecc,xyopt_ecc,xynpar_ecc,xydnpar_ecc,xybwidth_ecc,xypol_ecc,xyomega_ecc,xyPinc_ecc,xyfinc_ecc,Te_ref,ne_ref,xyB0_ecc,Rp,ap,bounce_mode);
 %
 xy14ideal_ecc = repmat(xyideal_ecc,[1,1,14]);
-waveparam_ecc = xy14ideal_ecc.*waveparam_1_ecc + ~xy14ideal_ecc.*waveparam_0_ecc;
+%waveparam_ecc = (xy14ideal_ecc == 0).*waveparam_0_ecc + (xy14ideal_ecc == 1).*waveparam_1_ecc + (xy14ideal_ecc == 2).*waveparam_2_ecc;
+waveparam_ecc = (xy14ideal_ecc == 1).*waveparam_1_ecc + (xy14ideal_ecc == 2).*waveparam_2_ecc;
+%
+% Case of local EBW
+%
+xyn_ebw = ones(nr,1)*yn_ebw;%EBW resonance harmonic
+xythetab_ebw = ones(nr,1)*ythetab_ebw;%poloidal location of EBW beam [rad]
+ns_ebw = size(xyn_ebw,2);%number of EBW scenarios stored in this file
+xypol_ebw = ones(nr,ns_ebw)*[0];% not effective for EBW
+%    
+xynpar_ebw = ones(nr,1)*ynpar_ebw;%EBW wave Gaussian N// Spectrum: peak n//
+xydnpar_ebw = ones(nr,1)*ydnpar_ebw;%EBW wave Gaussian N// Spectrum: width in n//
+xybwidth_ebw = ones(nr,1)*ybwidth_ebw;%EBW wave Gaussian width. Used when xydnpar_ebw == NaN
+xyY_ebw = ones(nr,1)*yY_ebw;%EBW wave frequency shift n.omega_ce/omega_rf
+xyomega_ebw = ones(nr,1)*yomega_ebw;%EBW wave frequency [rad/s]
+%
+xyPinc_ebw = ones(nr,1)*yPinc_ebw;%central EBW incident power (W)
+%
+xyopt_ebw = ones(nr,1)*yopt_ebw; %(0): exact, (1): small LRE
+xyideal_ebw = ones(nr,ns_ebw)*[0]; % not effective for EBW
+xyfinc_ebw = ones(nr,1)*yfinc_ebw;
+%
+xyia_ebw = repmat(xia,[1,ns_ebw]);
+xypsib_ebw = (1+xyia_ebw)./(1+xyia_ebw.*cos(xythetab_ebw));
+xywce0_ebw = repmat(xwce0,[1,ns_ebw]);
+mask_y_ebw = ~isnan(xyY_ebw);
+xyomega_ebw(mask_y_ebw) = xyn_ebw(mask_y_ebw).*xywce0_ebw(mask_y_ebw).*xypsib_ebw(mask_y_ebw)./xyY_ebw(mask_y_ebw);
+%    
+xyrho_ebw = repmat(xrho,[1,ns_ebw]);
+%    
+xyB0_ebw = repmat(xB0,[1,ns_ebw]); 
+% dispersion tensor solver
+if nb_ebw > 0
+	waveparam_ebw = ebw_dke_jd(tokname,xyrho_ebw,xythetab_ebw,xyn_ebw,xyopt_ebw,xynpar_ebw,xydnpar_ebw,xybwidth_ebw,xypol_ebw,xyomega_ebw,xyPinc_ebw,xyfinc_ebw,Te_ref,ne_ref,xne_norm,zxni_norm,Zi,mi,xyB0_ebw,Rp,ap,bounce_mode);
+else
+	waveparam_ebw = zeros(nr,0,14);
+end
 %
 % Generates Waveparam
 % 
-nb = nb_ecc + nb_lhc + nb_test;
+nb = nb_ecc + nb_lhc + nb_ebw + nb_test;
 %
 waveparam = zeros(nr,nb,14);
 %
 waveparam(:,1:nb_ecc,:) = waveparam_ecc(:,blist_ecc,:);
 waveparam(:,(nb_ecc+1):(nb_ecc+nb_lhc),:) = waveparam_lhc(:,blist_lhc,:);
-waveparam(:,(nb_ecc+nb_lhc+1):nb,:) = waveparam_test;
+waveparam(:,(nb_ecc+nb_lhc+1):(nb_ecc+nb_lhc+nb_ebw),:) = waveparam_ebw(:,blist_ebw,:);
+waveparam(:,(nb_ecc+nb_lhc+nb_ebw+1):nb,:) = waveparam_test;
