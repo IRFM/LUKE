@@ -1,19 +1,23 @@
-function idealequil_f_jd(tokamak,qopt,npsi,ntheta,shift,kappa,delta,savename)
+function [filename] = idealequil_f_jd(tokamak,qopt,npsi,ntheta,shift,kappa,delta,savename)
 %
 %   This function generates the data file of an ideal equilibrium based on
 %   the information stored in ptok_dke_1yp.
 %
-%   INPUTS:
+%   INPUT:
 %
 %       - tokamak: tokamak scenario selected (in ptok_dke_1yp)
 %       - qopt: option for q profile. (0): constant (default), (1): from qmin and eq
-%       - npsi: size of the psi grid (default: 101)
-%       - ntheta: size of the theta grid (default: 101)
+%       - npsi: size of the psi grid (default: 201)
+%       - ntheta: size of the theta grid (default: 201)
 %       - shift: Shafranov shift [1,npsi] (default: zeros(1,npsi))
 %       - kappa: elongation (default: 1)
 %       - delta: triangularity (default: 0)
 %       - savename: file name for storing the equilibrium 
 %           (default: same as tokamak)
+%
+%   OUTPUT:
+%   
+%       - filename: filename where data are stored
 %
 %   NOTE: 
 %
@@ -103,8 +107,7 @@ end
 Bpa = (4*pi*1e-7)*Ip*1e6/(2*pi*ap); %Poloidal Field at the edge, Ampere's theorem (circular plasma cross-section)
 %
 %Note: The following calculations are valid only for a circular concentric equilibrium. 
-%   Moreover, in the following expressions, term of order (ap/Rp)^2 or
-%   higher are neglected.
+%Moreover, in the following expressions, term of order (ap/Rp)^2 or higher are neglected.
 %
 Xrho = repmat(prho',[1,ntheta]);
 Xtheta = repmat(theta,[npsi,1]);
@@ -138,5 +141,7 @@ BPHI = Bt*Rp./R;
 %
 filename = ['EQUIL_',savename,'.mat'];
 %
-eval(['save ',filename,' ppsi theta R Z BR BZ BPHI pTe pne pzTi pzni zZi zmi Ncoils BeLi'])
+[s,dossier,machine] = comput_dke_yp;
+%
+eval(['save ',dossier,s,filename,' ppsi theta R Z BR BZ BPHI pTe pne pzTi pzni zZi zmi Ncoils BeLi'])
 

@@ -20,16 +20,25 @@ dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode] = psim_dke_1yp;
 %
 %by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
 %
-tokname = 'CQL3D_LH';%Tokamak equilibrium scenario (in EQUIL_tokname file)
 snumber = 1;%Simulation number
+tokname = 'TS';%Tokamak equilibrium scenario (see ptok_dke_1yp.m) in EQUIL_tokname file)
+loadequil = 0;%1: Load already existing equilibrium file, 0: create equilibrium file with idealequil_f_jd.m function
+%
+%Ideal equilibrium parameters (if loadequil = 0 only)
+%
+qopt = 1;%option for q profile. (0): constant (default), (1): from qmin and eq
+npsi = 201;%size of the psi grid
+ntheta = 201;%size of the theta grid
+kappa = 1;%Plasma elongation
+delta = 0;%Plasma triangularity
 %
 %Mesh size calculation
 %
 grid_uniformity = 0;%Pitch-angle and momentum grids uniformity: (0) no, (1) yes (-1 for specific test DKE, transient)
 grid_method = 1;%Pitch-angle grid calculation technique: (0): old method, (1) new method
-nmhu_S = 100;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
-np_S = 100;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run)
-pnmax_S = 10;%Maximum value of the flux momentum grid (pth_ref)
+nmhu_S = 79;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
+np_S = 104;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run)
+pnmax_S = 15;%Maximum value of the flux momentum grid (pth_ref)
 %
 %Pitch-angle grid
 %
@@ -43,9 +52,9 @@ snmhut = 3; % number of fine grid points near mhu = mhut
 %
 grid_power = 1.5; % power for mhu grid step varations (grid_power > 1) (Note: for grid_method = 1 only)
 %
-%Momentum Grid
+%Momentum grid
 %
-snp = eps;%pgridfactor (Uniform grid: pgridfactor << 1, non-uniform grid: pgridfactor >= 1) 
+snp = 10;%pgridfactor (Uniform grid: pgridfactor << 1, non-uniform grid: pgridfactor >= 1) 
 spfac = 20;%reduction factor for the supergrid used in collision integrals
 %
 %Normalized radii at which the distribution is calculated (DKE or FP)
@@ -53,37 +62,37 @@ spfac = 20;%reduction factor for the supergrid used in collision integrals
 %
 %Values of the radial flux grid [1,p] (If one radial value: local calculation only)
 %
-psin_S = [0.1];5.286742555900838e-002; %[0.1]%(rho = 0.25 in CMOD)
-rho_S = [];%[0.1:0.05:0.9];%[0.2,0.6],%;0.03322100141578101;0.71365;
+psin_S = [];%5.286742555900838e-002; %[0.1]%(rho = 0.25 in CMOD)
+rho_S = [0.4];%[0.1:0.05:0.9];%[0.2,0.6],%;0.03322100141578101;0.71365;
 %
 psin_display = NaN;%Approximate radial value at which results are displayed if display_mode >= 1 [1,1]
 rho_display = 0.1;
 %
 dpsin_dke = 0.01;%maximum difference between two consecutive positions used for radial derivatives
 %
-ref_mode = 0;%Reference values: (0) from core Te and ne, (1) from Te and ne at the normalized radius (paramater only active for a single radial value, otherwise ref_mode = 0)
-norm_ref = 1;%Normalization procedure for the ohmic electric field, LH and EC quasilinear diffusion: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref 
+ref_mode = 1;%Reference values: (0) from core Te and ne, (1) from Te and ne at the normalized radius (paramater only active for a single radial value, otherwise ref_mode = 0)
+norm_ref = 0;%Normalization procedure for the ohmic electric field, LH and EC quasilinear diffusion: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref 
 %
-% WARNING: Not yet implemented. (see test_dke_yp)
+% Ohmic electric field
 %
-epsi0 = 0.00;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
-epsia = 0.00;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
+epsi0 = 0.01;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
+epsia = 0.01;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
 eepsi = 0;%Exponent for Ohmic electric field
 %
 % RF Waves
 %
-rf_list(1) = 1;%(1): include LH test calculations (see psim_ideallhcd_jd); (0) do not include
+rf_list(1) = 0;%(1): include LH test calculations (see psim_ideallhcd_jd); (0) do not include
 rf_list(2) = 0;%(1): include EC  calculations (see psim_idealeccd_jd); (0) do not include
 rf_list(3) = 0;%(1): include cold LHCD calculations (see psim_coldlhcd_jd); (0) do not include
 rf_list(4) = 0;%(1): include cold ECCD calculations (see psim_coldeccd_jd); (0) do not include
 rf_list(5) = 0;%(1): include hot ECCD calculations (see psim_warmeccd_jd); (0) do not include
 rf_list(6) = 0;%(1): include EBW calculations (see psim_ebw_jd); (0) do not include
-
+%
 rt_mode = 0;% ray-tracing mode (1): Yes (iterations for self-consistent damping between RT and DKE) (0): No (only one run)
 nit_rf = 20;% maximum number of iteration in ray-tracing (only if rt_mode=1)
 prec_rf = 1e-4;%relative precision in RT-DKE iterations
 %
-% WARNING: Not yet implemented. (see test_dke_yp)
+% Fast electron radial transport
 %
 vparmin_r = 3.5;%Lower limit of the parallel velocity dependence of the radial diffusion and pinch (vth_ref or vth)
 Dr0 = 0;%Core  radial diffusion coefficient (m^2/s)
@@ -93,16 +102,22 @@ Vr0 = 0;%Core radial pinch coefficient (m/s)
 pVr = 0;%Coefficient for the Vr radial profile
 Vr_model = 0;%Radial pinch type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth), 
 %
-nhuloss = NaN;%Magnetic ripple loss frequency, nhuloss > 1000 (or NaN if no ripple losses)  (nhu_th) (WARNING: only valid for TORE SUPRA)
+% Magnetic ripple losses
+%
+nhuloss = 1000;%Magnetic ripple loss frequency, nhuloss > 1000 (or NaN if no ripple losses) (nhu_th) (WARNING: only valid for TORE SUPRA)
+%
+% Collision operator
 %
 coll_mode = 2;%Relativistic electron-electron collision operator: (0) Maxwellian, (1) High-velocity limit, (2) Linearizeded Belaiev-Budker 
 %
-bounce_mode = 0;%Bounce averaging option: (0) no bounce averaging, (1) bounce averaging full implicit method with 15 diagonals
+% Run mode
+%
+bounce_mode = 1;%Bounce averaging option: (0) no bounce averaging, (1) bounce averaging full implicit method with 15 diagonals
 dke_mode = 0;%Fokker-Planck equation (0), Drift Kinetic equation (1)
-equil_mode = 0;%Equilibrium option: (0) circular concentric flux-surfaces, (1) numerical equilibrium
+equil_mode = 1;%Equilibrium option: (0) circular concentric flux-surfaces, (1) numerical equilibrium
 %
 norm_mode = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
-boundary_mode = 2;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
+boundary_mode = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 prec0_f = 1e-10;%Convergence level of the residu
 nit_f = 50;%Maximum number of iterations for f
 dtn = 1000;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
@@ -110,10 +125,10 @@ prec0_g = 1e-10;%Convergence level of the residu (if NaN, iterations stop with n
 nit_g = 50;%Maximum number of iterations for g
 initguess = 0;%Initial guess for the distribution function: (0) Maxwellian, (1) Fuchs model with Tperp for LH current drive only, (2) from a file
 invproc = [3];%Matrix inversion method: (1) Full LU factorization, (2) qmr iterative method, (3) bicgstab iterative method, (4) cgs iterative method
-param_inv = [2e-5,30];%Parameters for the matrix inversion procedure when invproc > 1. Precision of the partial LU decomposition, and maximum number of iteration for iterative methods (param_inv(1) depends of boundary_mode)
+param_inv = [2e-3,30];%Parameters for the matrix inversion procedure when invproc > 1. Precision of the partial LU decomposition, and maximum number of iteration for iterative methods (param_inv(1) depends of boundary_mode)
 %
 dp_cyl = 0.1;%Cylindrical momentum step (pth_ref)
-display_mode = 2;%Display mode: (0): no, (1): partial, (2): full
+display_mode = 1;%Display mode: (0): no, (1): partial, (2): full
 nlevel = 30;%Number of level for contour plots
 store_mode = 0;%Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight
 diary_mode = 0;%Write in a file named "diary_dke_xx" the output of the code in the MatLab command window: (0) no save, (1) save
@@ -126,6 +141,19 @@ if grid_method == 0
     grid_power = 0;
 end
 %
+[s,dossier,machine] = comput_dke_yp;
+if loadequil == 0,
+	filename = idealequil_f_jd(tokname,qopt,npsi,ntheta,zeros(1,npsi),kappa,delta);%Calculate the equibrium parameters if tokamak name exists
+	info_dke_yp(2,['Equilibrium file ',filename,' has been created.']);
+else
+	filename = ['EQUIL_',tokname,'.mat'];
+	if exist([dossier,s,filename]) == 2,
+		info_dke_yp(2,['Equilibrium file ',filename,' is well found.']);
+	else
+		error('Equilibrium file is not found !')
+	end
+end
+%
 psin_S = sort([psin_S,rho2psi_jd(tokname,rho_S)]);
 if isnan(psin_display), 
     psin_display=rho2psi_jd(tokname,rho_display);
@@ -134,6 +162,5 @@ end
 if rt_mode == 0 | sum(rf_list) == 0,%only one run
     nit_rf = 1;% maximum number of iteration in ray-tracing (only if rt_mode=1)
 end
-
 %
 

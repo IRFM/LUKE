@@ -77,7 +77,9 @@ clum = 299792458;%Speed of light (m/s)
 %
 filename = ['EQUIL_',tokamak,'.mat'];
 %
-eval(['load ',filename,' ppsi theta R Z BR BZ BPHI pTe pne pzTi pzni zZi zmi Ncoils BeLi']);
+[s,dossier,machine] = comput_dke_yp;
+%
+eval(['load ',dossier,s,filename,' ppsi theta R Z BR BZ BPHI pTe pne pzTi pzni zZi zmi Ncoils BeLi']);
 %
 [npsi,ntheta] = size(R);
 nr = length(xpsin);

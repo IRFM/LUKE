@@ -290,21 +290,22 @@ for ir = 1:nr,
 	XXVr_ref(:,:,ir) = XVrv_ref;%*(1 + pVr*xrho(ir)^2);%3-D radial pinch matrix (radial profile dependence)
 	xmaxVr_ref(ir) = max(max(XXVr_ref(:,:,ir)));%Maximum value of the radial convection coefficient
 %
-%Loss term for the electrons trapped in the toroidal magnetic ripple (WARNING: Only valid for the TORE SUPRA tokamak)
+%Loss term for the electrons trapped in the toroidal magnetic ripple 
 %
-%
-% WARNING: Not yet implemented. (see test_dke_yp)
-%
-	if bounce_mode == 1 & isnan(xnhuloss_ref(ir)) == 0,
-		Ncoils = 1;%Ncoils is here forced to 1, as prescribed in Ref. M. Ju et al., Phys. Plasmas, 9 (2002) 493. Upper bound of ripple losses is then calculated
-		xNq(ir) = Ncoils*xq(ir);%Exact N may be used but large values may lead to numerical instabilities due to round-off errors
-		[xthetabanana(ir),xthetaloss(ir),xpndetrap(ir),xEseuil(ir),xdeltaripple(ir)] = detrapmj3(xZeff(ir),ap,Bt,Rp,BeLi,Ip,xne(ir),xrho(ir));%WARNING: Only valid for the TORE SUPRA tokamak
+	if bounce_mode == 1 & isnan(xnhuloss_ref(ir)) == 0 & strcmp(tokname,'TS')==1,%WARNING: only valid for the TORE SUPRA tokamak with large magnetic ripple
+		info_dke_yp(2,'WARNING: Ripple losses calculations only valid for Tore Supra tokamak');
+%		Ncoils = 1;%Ncoils is here forced to 1, as prescribed in Ref. M. Ju et al., Phys. Plasmas, 9 (2002) 493. Upper bound of ripple losses is then calculated
+%		xNq(ir) = Ncoils*xq(ir);%Exact N may be used but large values may lead to numerical instabilities due to round-off errors
+Ip = 0.61
+BeLi
+		[xthetabanana(ir),xthetaloss(ir),xpndetrap(ir),xEseuil(ir),xdeltaripple(ir)] = detrapmj3(xZeff(ir),ap,xBT0(ir),Rp,BeLi,Ip,xne(ir),xrho(ir));%WARNING: Only valid for the TORE SUPRA tokamak
 		xpndetrap_ref(ir) = xpndetrap(ir)/betath_ref;
 %
 		xmhusupertrap(ir) = sin(pi*xthetaloss(ir)/180);
 		Xmaskrip_ref = (Xpn_ref > xpndetrap_ref(ir)).*(abs(Xmhu) < xmhusupertrap(ir));
 		Xnhuloss_ref = Xmaskrip_ref*xnhuloss_ref(ir);
 	else
+		if strcmp(tokname,'TS') == 0, info_dke_yp(2,'WARNING: Ripple losses calculations only valid for Tore Supra tokamak. Wrong tokamak name');end
 		xdeltaripple(ir) = 0;
 		xNq(ir) = Ncoils;%*xq(ir);
 		Xnhuloss_ref = zeros(length(pn_ref),length(mhu));
@@ -642,7 +643,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
         xTe_norm,xne_norm,zZi,zmi,xzni_norm,xzTi_norm,...
         betath_ref,xepsi_ref_fsav_in,waveparam,...
         XXDr_ref,XXVr_ref,...
-        XXnhuloss_ref,xdeltaripple,xNq,...
+        XXnhuloss_ref,xdeltaripple,...
         xftp_norm_ref,bounce,coll_mode,...
         norm_mode,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,XXfinit_ref);
 %
@@ -697,11 +698,12 @@ if display_mode >= 1,
     disp('-------------------------------------------------------------------------------------------------------------------');
 end
 %
-if exist(['dke_',int2str(ir_display),'_s',int2str(snumber),'_out.mat']) == 2,
-	delete(['dke_',int2str(ir_display),'_s',int2str(snumber),'_out.mat']);
+[s,dossier,machine] = comput_dke_yp;
+if exist([dossier,s,'dke_',int2str(ir_display),'_s',int2str(snumber),'_out.mat']) == 2,
+	delete([dossier,s,'dke_',int2str(ir_display),'_s',int2str(snumber),'_out.mat']);
 end
-eval(['save ','dke_',int2str(ir_display),'_s',int2str(snumber),'_out.mat']);
-if exist(['dke_',int2str(ir_display),'_s',int2str(snumber),'_out.mat']) == 2,
+eval(['save ',dossier,s,'dke_',int2str(ir_display),'_s',int2str(snumber),'_out.mat']);
+if exist([dossier,s,'dke_',int2str(ir_display),'_s',int2str(snumber),'_out.mat']) == 2,
 	disp('-------------------------------------------------------------------------------------------------------------------');
 	info_dke_yp(2,['The data file : dke_',int2str(ir_display),'_s',int2str(snumber),'_out.mat has been successfully saved !']);
 end

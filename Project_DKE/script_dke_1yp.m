@@ -35,6 +35,8 @@ norm_mode,boundary_mode,prec0_f,nit_f,dtn,prec0_g,nit_g,initguess,invproc_in,par
 dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode]...
 = psim_dke_1yp;
 %
+disp('-------------------------------------------------------------------------------------------------------------------');
+%	
 nloop = length(nmhu_S_in)*length(np_S_in)*length(pnmax_S_in);
 nloop = nloop*length(psin_display_in)*length(epsi0_in)*length(epsia_in)*length(invproc_in)*size(param_inv_in,1);
 disp(['- Total number of loops: ',int2str(nloop)]);

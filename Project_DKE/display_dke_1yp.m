@@ -8,7 +8,8 @@ xeta0_fsav_mksa,xepsi_fsav_mksa,xia,xft_fsav] = display_dke_1yp(filename,auto_mo
 %
 %
 if nargin == 0,
-	dir dke_*.mat
+	[s,dossier,machine] = comput_dke_yp;
+	eval(['dir ',dossier,s,'dke_*.mat']);
 	filename = [];
 	filename = input_dke_yp('Filename ',filename);
 	auto_mode_in = input_dke_yp('Automatic display mode (yes: 1, no: 0) ',0);
@@ -20,11 +21,14 @@ elseif nargin == 2,
 	igor_mode = 0;%Automatic mode when test_dke_1yp.m is running
 end
 %
-eval(['load ',filename]);%Load DKE data
+[s,dossier,machine] = comput_dke_yp;
+eval(['load ',dossier,s,filename]);%Load DKE data
 %
 if nargin >= 2,
 	auto_mode = auto_mode_in;
 end
+%
+display_mode = 2,
 %
 filenameroot = filename(1:findstr(filename,'_out.mat')-1);
 %  
@@ -49,18 +53,16 @@ j_ref = qe*clum*betath_ref*ne_ref/1e6;%MKSA current unit
 Edreicer_ref = me*clum*betath_ref*nhu_ref/qe;%MKSA Dreicer field unit
 
 if bounce_mode > 0,
-	%%%%%%xcollisionnality = 0.012*(xne/1e20).*xZeff.*xq*Rp./xia.^1.5./xTe.^2;%From O. Sauter et al., Phys. Plasma 6 (1999) 2834
+	xcollisionnality = 0.012*(xne/1e20).*xZeff.*xq*Rp./xia.^1.5./xTe.^2;%From O. Sauter et al., Phys. Plasma 6 (1999) 2834
 %	[xft_llm] = ft_llm_dke_yp(xia,1000);%From Y.R. Lin-Liu and R.L. Miller, Phys. Plasma 2 (1995) 1666
 else
-	%%%xcollisionnality = NaN*ones(size(xia));
+	xcollisionnality = NaN*ones(size(xia));
 %	xft_llm = zeros(size(xia));
 end
 %
 %Calculation of the flux averaged Maxwellian bootstrap current from Hirshman, Sauter, Hinton & Hazeltine models (bulk contribution)
-%*************Multiple ion species as done bu Houlberg et al not implemented here********************
 %
-[prho,pcurr_hir_mksa_fsav,pcurr_sau_mksa_fsav,pcurr_hin_mksa_fsav,pcurr_i_mksa_fsav] = ...
-    hsneomodels_dke_jd(tokname);
+[prho,pcurr_hir_mksa_fsav,pcurr_sau_mksa_fsav,pcurr_hin_mksa_fsav,pcurr_i_mksa_fsav] = hsneomodels_dke_jd(tokname);
 %
 xcurr_hir_mksa_fsav = interp1(prho,pcurr_hir_mksa_fsav,xrho_dke);
 xcurr_sau_mksa_fsav = interp1(prho,pcurr_sau_mksa_fsav,xrho_dke);
@@ -125,24 +127,23 @@ while 1,
 		info_dke_yp(2,['Normalized electron collision frequency: ',num2str(xnhu(ir_display)/nhu_ref)])
 		if bounce_mode > 0,
 			info_dke_yp(2,['Exact trapped fraction: ',num2str(xft_fsav(ir_display_dke))])
-		%	info_dke_yp(2,['Collisionality parameter: ',num2str(xcollisionnality(ir_display_dke))])
+			info_dke_yp(2,['Collisionality parameter: ',num2str(xcollisionnality(ir_display_dke))])
 		end
 		disp('-------------------------------------------------------------------------------------------------------------------');
 %
 %   Magnetic ripple losses
 %
-% fluxes in mhu must be calculated first
-%
+if 0,
 %    	if bounce_mode >= 1 & isnan(xnhuloss_ref(r_dke(ir_display))) == 0,     
-%			Gripmhu_ref = 2*pi*integral_dke_yp([dpn_ref',Xmaskrip_ref.*XSmhu0_ref.*Xpn_ref])*sqrt(1-min(mhu(find(abs(mhu)<xmhusupertrap(rdke(ir_display)))))^2);        
-%			Grippn_ref = 2*pi*pn(max(find(pn_ref<xpndetrap_ref(rdke(ir_display)))))^2*integral_dke_yp([dmhu',Xmaskrip_ref'.*XSp0_ref']);    
-%			Gripflux_ref = Gripmhu_ref(max(find(abs(mhu)<xmhusupertrap(rdke(ir_display))))) - Gripmhu_ref(min(find(abs(mhu)<xmhusupertrap(rdke(ir_display))))) + Grippn_ref(max(find(pn_ref<xpndetrap_ref(rdke(ir_display))))+1);
-%        	Griptau0_ref = integral_dke_yp([dpn_ref',Xnhuloss_ref.*Xf0_ref.*Xpn_ref.*Xpn_ref]);
-%        	Griptau_ref = 2*pi*integral_dke_yp([dmhu',Griptau0_ref']);%Flux of electrons leaving the plasma through the loss cone
-%        	info_dke_yp(2,['Ripple loss (s-1.m-3): ',num2str(Griptau_ref*nhu_ref*xne(rdke(ir_display)))]);
-%			info_dke_yp(2,['Ripple loss (flux calculations) (s-1.m-3): ',num2str(Gripflux_ref*nhu_ref*xne(rdke(ir_display)))]);
-%        	disp('-------------------------------------------------------------------------------------------------------------------');
-%    	end
+			Gripmhu_ref = 2*pi*integral_dke_yp([dpn_ref',Xmaskrip_ref.*XSmhu0_ref.*Xpn_ref])*sqrt(1-min(mhu(find(abs(mhu)<xmhusupertrap(rdke(ir_display)))))^2);        
+			Grippn_ref = 2*pi*pn(max(find(pn_ref<xpndetrap_ref(rdke(ir_display)))))^2*integral_dke_yp([dmhu',Xmaskrip_ref'.*XSp0_ref']);    
+			Gripflux_ref = Gripmhu_ref(max(find(abs(mhu)<xmhusupertrap(rdke(ir_display))))) - Gripmhu_ref(min(find(abs(mhu)<xmhusupertrap(rdke(ir_display))))) + Grippn_ref(max(find(pn_ref<xpndetrap_ref(rdke(ir_display))))+1);
+        	Griptau0_ref = integral_dke_yp([dpn_ref',Xnhuloss_ref.*Xf0_ref.*Xpn_ref.*Xpn_ref]);
+        	Griptau_ref = 2*pi*integral_dke_yp([dmhu',Griptau0_ref']);%Flux of electrons leaving the plasma through the loss cone
+        	info_dke_yp(2,['Ripple loss (s-1.m-3): ',num2str(Griptau_ref*nhu_ref*xne(rdke(ir_display)))]);
+			info_dke_yp(2,['Ripple loss (flux calculations) (s-1.m-3): ',num2str(Gripflux_ref*nhu_ref*xne(rdke(ir_display)))]);
+        	disp('-------------------------------------------------------------------------------------------------------------------');
+    	end
 %
 		[logXfinit_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(log(Xfinit_ref),pn_ref,mhu,dp_cyl);%Spherical to cylindrical coordinate transformation
 		Xfinit_cyl_ref = exp(logXfinit_cyl_ref);%For accurate representation in figures 

@@ -25,7 +25,8 @@ function [prho,pcurr_hir_ref_fsav,pcurr_sau_ref_fsav,pcurr_hin_ref_fsav,pcurr_i_
 qe = 1.6e-19;
 %
 filename = ['EQUIL_',tokname,'.mat'];
-eval(['load ',filename,' BPHI BR BZ R Z ppsi pTe pne pzTi zZi']);
+[s,dossier,machine] = comput_dke_yp;
+eval(['load ',dossier,s,filename,' BPHI BR BZ R Z ppsi pTe pne pzTi zZi']);
 np = length(ppsi);
 Bt = BPHI(1,1);
 Rp = R(1,1);

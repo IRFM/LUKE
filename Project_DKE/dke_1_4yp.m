@@ -17,7 +17,7 @@ dke_1_4yp(tokname,theta,...
     xTe_norm,xne_norm,zZi,zmi,xzni_norm,xzTi_norm,...
     betath_ref,xepsi_fsav,waveparam,...
     XXDr,XXVr,...
-    XXnhuloss,delta,Nq,...
+    XXnhuloss,delta,...
     ftp_norm,bounce,coll_mode,...
     norm_mode,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,XXfinit)
 %
@@ -246,9 +246,7 @@ end
 %************************************************** Simulation parameter display ******************************************************** 
 %
 if display_mode >=1,
-	disp('Calculation parameters:');
-%
-	disp('   - Code version 4: non-uniform momentum and pitch-angle grids + fully implicit 3D calculations');
+	disp('Calculation parameters: ');
 %Numerical transient operation
 	if (store_mode == 0), disp('   - Matrices storage in RAM (fast mode)');
 	else                  disp('   - Matrices storage in disk file (slow mode)');end
@@ -485,23 +483,23 @@ end
 %Bounce average coefficients
 %
 [xq,xqtilde,xqbar,xqhat,...
-    XXheaviside,XXheaviside_p,XXheaviside_m,...
-    Xxlambda,Xxlambda_p,Xxlambda_m,...
-    XXlambda,XXRlambda_m,XXRlambda_p,...
-    XXRlambda_p2m1_m,XXRlambda_p2m1_p,...
-    XXlambda_p2m2p2,...
-    XXRlambda_b_p1p1,...
-    XXlambda_b_p1m1p2,XXRlambda_b_p1m1p2,XXRlambda_b_p1m1p2_m,XXRlambda_b_p1m1p2_p,...
-    XXlambda_b_p1m1,XXRlambda_b_p1m1,XXRlambda_b_p1m1_m,XXRlambda_b_p1m1_p,...
-    XXRlambda_b_p1m2_m,XXRlambda_b_p1m2_p,...
-    XXlambda_b_p2m2p2,XXRlambda_b_p2m2p2,XXRlambda_b_p2m2p2_m,XXRlambda_b_p2m2p2_p,...
-    XXRlambda_b_p3m2_m,XXRlambda_b_p3m2_p,...
-    XXlambda_b_p2,...
-    XXlambda_b_p1m3p4]...
+	 XXheaviside,XXheaviside_p,XXheaviside_m,...
+	 Xxlambda,Xxlambda_p,Xxlambda_m,...
+	 XXlambda,XXRlambda_m,XXRlambda_p,...
+	 XXRlambda_p2m1_m,XXRlambda_p2m1_p,...
+	 XXlambda_p2m2p2,...
+	 XXRlambda_b_p1p1,...
+	 XXlambda_b_p1m1p2,XXRlambda_b_p1m1p2,XXRlambda_b_p1m1p2_m,XXRlambda_b_p1m1p2_p,...
+	 XXlambda_b_p1m1,XXRlambda_b_p1m1,XXRlambda_b_p1m1_m,XXRlambda_b_p1m1_p,...
+	 XXRlambda_b_p1m2_m,XXRlambda_b_p1m2_p,...
+	 XXlambda_b_p2m2p2,XXRlambda_b_p2m2p2,XXRlambda_b_p2m2p2_m,XXRlambda_b_p2m2p2_p,...
+	 XXRlambda_b_p3m2_m,XXRlambda_b_p3m2_p,...
+	 XXlambda_b_p2,...
+	 XXlambda_b_p1m3p4]...
 =  bounceparam_dke_yp(bounce_mode,equil_mode,...
-    mhu,mhum,mhup,Xmhu,Xmhum,Xmhup,...
-    XR,XZ,XBR,XBZ,XBphi,...
-    xmhubounce2,xB0,xR0,xBT0,xBp0,Rp,Zp,ap);    
+	 mhu,mhum,mhup,Xmhu,Xmhum,Xmhup,...
+	 XR,XZ,XBR,XBZ,XBphi,...
+	 xmhubounce2,xB0,xR0,xBT0,xBp0,Rp,Zp,ap);    
 %
 %Super matrices size calculation
 %
@@ -1291,8 +1289,7 @@ for ir = 1:nr,
 %
 %Loss matrix coefficients (fro ripple losses for example)
 %
-	Xnhuloss = squeeze(XXnhuloss(:,:,ir));
-	Xc = Xc + Xnhuloss.*Xpn2;
+	Xc = Xc + XXnhuloss(:,:,ir).*Xpn2;
 %
 %Time differencing scheme
 %
@@ -1309,7 +1306,7 @@ for ir = 1:nr,
 %Boundaries of the bounce domain for f0
 %
 	if bounce_mode == 0,%No bounce averaging
-		ymask_f0_t = ones(1,nmhu);
+		ymask_f0_t = logical(ones(1,nmhu));%All electrons are selected
 		ns(ir) = 0;%Number of mhu values that are removed for implicit bounce averaged calculations
 %
 		Xa_t = Xa;
@@ -1324,57 +1321,56 @@ for ir = 1:nr,
 		mhu_t = mhu;		
 	elseif bounce_mode == 1,%Full implicit bounce-averaging calculations, fifteen diagonals mode
 %
-        ymask_P = Xheaviside(1,:);% passing electrons
-        ymask_Tm = ~Xheaviside(1,:) & (mhu < 0);% trapped electrons with mhu>0
-        ymask_Tp = ~Xheaviside(1,:) & (mhu > 0);% trapped electrons with mhu<0
+		ymask_P = Xheaviside(1,:);%Passing electrons are selected
+		ymask_Tm = ~Xheaviside(1,:) & (mhu < 0);%Trapped electrons with mhu>0 are selected
+		ymask_Tp = ~Xheaviside(1,:) & (mhu > 0);%Trapped electrons with mhu<0 are selected
 %
-        ymask_f0_t = (ymask_P + ymask_Tp) > 0;% keep passing and half of trapped eelctrons
-        ymask_f0_t_P = ymask_P(ymask_f0_t);
-        ymask_f0_t_Tp = ymask_Tp(ymask_f0_t);
+		ymask_f0_t = (ymask_P + ymask_Tp) > 0;%Passing and half of trapped electrons are selected
+		ymask_f0_t_P = ymask_P(ymask_f0_t);
+		ymask_f0_t_Tp = ymask_Tp(ymask_f0_t);
 %        
 		jmhut_min = min(find(ymask_Tm));
 		jmhut_max = max(find(ymask_Tp));
 		djmhut = (jmhut_max - jmhut_min + 1)/2;
-        ns(ir) = djmhut;
+		ns(ir) = djmhut;
 		if djmhut > 3,%At least three points in the bounce domain
+			Xa_t = zeros(npn,nmhu - djmhut);
+			Xb_t = zeros(npn,nmhu - djmhut);
+			Xc_t = zeros(npn,nmhu - djmhut);
+			Xd_t = zeros(npn,nmhu - djmhut);
+			Xe_t = zeros(npn,nmhu - djmhut);
+			Xf_t = zeros(npn,nmhu - djmhut);
+			Xg_t = zeros(npn,nmhu - djmhut);
+			Xh_t = zeros(npn,nmhu - djmhut);
+			Xi_t = zeros(npn,nmhu - djmhut);
+			Xj_t = zeros(npn,nmhu - djmhut);
+			Xk_t = zeros(npn,nmhu - djmhut);
+			Xl_t = zeros(npn,nmhu - djmhut);
+			Xm_t = zeros(npn,nmhu - djmhut);
+			Xn_t = zeros(npn,nmhu - djmhut);
+			Xo_t = zeros(npn,nmhu - djmhut);
 %
-            Xa_t = zeros(npn,nmhu - djmhut);
-            Xb_t = zeros(npn,nmhu - djmhut);
-            Xc_t = zeros(npn,nmhu - djmhut);
-            Xd_t = zeros(npn,nmhu - djmhut);
-            Xe_t = zeros(npn,nmhu - djmhut);
-            Xf_t = zeros(npn,nmhu - djmhut);
-            Xg_t = zeros(npn,nmhu - djmhut);
-            Xh_t = zeros(npn,nmhu - djmhut);
-            Xi_t = zeros(npn,nmhu - djmhut);
-            Xj_t = zeros(npn,nmhu - djmhut);
-            Xk_t = zeros(npn,nmhu - djmhut);
-            Xl_t = zeros(npn,nmhu - djmhut);
-            Xm_t = zeros(npn,nmhu - djmhut);
-            Xn_t = zeros(npn,nmhu - djmhut);
-            Xo_t = zeros(npn,nmhu - djmhut);
+			Xa_t(:,ymask_f0_t_P) = Xa(:,ymask_P);
+			Xb_t(:,ymask_f0_t_P) = Xb(:,ymask_P);
+			Xc_t(:,ymask_f0_t_P) = Xc(:,ymask_P);
+			Xd_t(:,ymask_f0_t_P) = Xd(:,ymask_P);
+			Xe_t(:,ymask_f0_t_P) = Xe(:,ymask_P);
+			Xf_t(:,ymask_f0_t_P) = Xf(:,ymask_P);
+			Xg_t(:,ymask_f0_t_P) = Xg(:,ymask_P);
+			Xh_t(:,ymask_f0_t_P) = Xh(:,ymask_P);
+			Xi_t(:,ymask_f0_t_P) = Xi(:,ymask_P);
 %
-            Xa_t(:,ymask_f0_t_P) = Xa(:,ymask_P);
-            Xb_t(:,ymask_f0_t_P) = Xb(:,ymask_P);
-            Xc_t(:,ymask_f0_t_P) = Xc(:,ymask_P);
-            Xd_t(:,ymask_f0_t_P) = Xd(:,ymask_P);
-            Xe_t(:,ymask_f0_t_P) = Xe(:,ymask_P);
-            Xf_t(:,ymask_f0_t_P) = Xf(:,ymask_P);
-            Xg_t(:,ymask_f0_t_P) = Xg(:,ymask_P);
-            Xh_t(:,ymask_f0_t_P) = Xh(:,ymask_P);
-            Xi_t(:,ymask_f0_t_P) = Xi(:,ymask_P);
+%Symmetrization of the trapped region
 %
-%   symmetrization of the trapped region
-%
-            Xa_t(:,ymask_f0_t_Tp) = (Xa(:,ymask_Tp) + fliplr(Xe(:,ymask_Tm)))/2;
-            Xb_t(:,ymask_f0_t_Tp) = (Xb(:,ymask_Tp) + fliplr(Xb(:,ymask_Tm)))/2;
-            Xc_t(:,ymask_f0_t_Tp) = (Xc(:,ymask_Tp) + fliplr(Xc(:,ymask_Tm)))/2;
-            Xd_t(:,ymask_f0_t_Tp) = (Xd(:,ymask_Tp) + fliplr(Xd(:,ymask_Tm)))/2;
-            Xe_t(:,ymask_f0_t_Tp) = (Xe(:,ymask_Tp) + fliplr(Xa(:,ymask_Tm)))/2;
-            Xf_t(:,ymask_f0_t_Tp) = (Xf(:,ymask_Tp) + fliplr(Xh(:,ymask_Tm)))/2;
-            Xg_t(:,ymask_f0_t_Tp) = (Xg(:,ymask_Tp) + fliplr(Xi(:,ymask_Tm)))/2;
-            Xh_t(:,ymask_f0_t_Tp) = (Xh(:,ymask_Tp) + fliplr(Xf(:,ymask_Tm)))/2;
-            Xi_t(:,ymask_f0_t_Tp) = (Xi(:,ymask_Tp) + fliplr(Xg(:,ymask_Tm)))/2;
+			Xa_t(:,ymask_f0_t_Tp) = (Xa(:,ymask_Tp) + fliplr(Xe(:,ymask_Tm)))/2;
+			Xb_t(:,ymask_f0_t_Tp) = (Xb(:,ymask_Tp) + fliplr(Xb(:,ymask_Tm)))/2;
+			Xc_t(:,ymask_f0_t_Tp) = (Xc(:,ymask_Tp) + fliplr(Xc(:,ymask_Tm)))/2;
+			Xd_t(:,ymask_f0_t_Tp) = (Xd(:,ymask_Tp) + fliplr(Xd(:,ymask_Tm)))/2;
+			Xe_t(:,ymask_f0_t_Tp) = (Xe(:,ymask_Tp) + fliplr(Xa(:,ymask_Tm)))/2;
+			Xf_t(:,ymask_f0_t_Tp) = (Xf(:,ymask_Tp) + fliplr(Xh(:,ymask_Tm)))/2;
+			Xg_t(:,ymask_f0_t_Tp) = (Xg(:,ymask_Tp) + fliplr(Xi(:,ymask_Tm)))/2;
+			Xh_t(:,ymask_f0_t_Tp) = (Xh(:,ymask_Tp) + fliplr(Xf(:,ymask_Tm)))/2;
+			Xi_t(:,ymask_f0_t_Tp) = (Xi(:,ymask_Tp) + fliplr(Xg(:,ymask_Tm)))/2;
 %
 			Xh_t(:,jmhut_max - djmhut) = Xh_t(:,jmhut_max - djmhut)/2;
 			Xe_t(:,jmhut_max - djmhut) = Xe_t(:,jmhut_max - djmhut)/2;
@@ -1411,27 +1407,11 @@ for ir = 1:nr,
 			mhu_t = mhu(ymask_f0_t);
 %           
 		else
-			ymask_f0_t = ones(1,nmhu);
-			ns(ir) = 0;%Number of mhu values that are removed for implicit bounce averaged calculations
-			bounce_mode = 0;
-			if display_mode>=0,
-				info_dke_yp(2,['WARNING: Not enough grid point in the bounce region for accurate bounce-averaged calculations at psin = ',num2str(xpsin(ir)),' !'])
-			end
-			Xa_t = Xa;
-			Xb_t = Xb;
-			Xc_t = Xc;
-			Xd_t = Xd;
-			Xe_t = Xe;
-			Xf_t = Xf;
-			Xg_t = Xg;
-			Xh_t = Xh;
-			Xi_t = Xi;              
-%
-			mhu_t = mhu;
+			error(['WARNING: Not enough grid point in the bounce region for accurate bounce-averaged calculations at psin = ',num2str(xpsin(ir)),' !'])
 		end
 	end
 %
-%Local boundary conditions at p = p(1/2): not necessary but help for the density conservation
+%Local boundary conditions at p = p(1/2): not necessary but help for the density conservation (Dirichlet boundary condition)
 %
 	if boundary_mode > 0,
 		Xa_t(1:boundary_mode,:) = 0;
@@ -1454,7 +1434,7 @@ for ir = 1:nr,
 	else
 		if prec_inv(1) > 1e-4,
 			info_dke_yp(2,['WARNING: Drop tolerance for LU factorization forced to ',num2str(1e-4),' !'])		
-			prec_inv(1) = 1e-4;%LU factorisation increased in that case. It is perhaps not enough to avoid ill-conditionned matrix
+			prec_inv(1) = 1e-4;%LU factorisation increased in that case. It is perhaps not enough to avoid ill-conditionned matrix...
 		end
 	end
 	%
@@ -1996,11 +1976,13 @@ if display_mode >= 1,
     disp('-------------------------------------------------------------------------------------------------------------------');
 end
 %
-figure(6000),semilogy(xrho,abs(xEfield_validity),'r+')
-xlabel('r/a')
-ylabel('Fp_e/Fp_coll at pth_ref')
-zoom on, grid on
-title('Code validity with Ohmic electric field')
+if display_mode >= 2,
+	figure(6000),semilogy(xrho,abs(xEfield_validity),'r+')
+	xlabel('r/a')
+	ylabel('Fp_e/Fp_coll at pth_ref')
+	zoom on, grid on
+	title('Code validity with Ohmic electric field')
+end
 %
 time0 = clock;
 XXf0 = XXfinit;%Initial guess (normalized to xne_norm)
