@@ -676,10 +676,6 @@ if radial_mode == 1,
 	XXMrm = XXMrm.*XXpn2./XXlambda;%Partial Jacobian multiplication
 	XXMr = XXMr.*XXpn2./XXlambda;%Partial Jacobian multiplication
 	XXMrp = XXMrp.*XXpn2./XXlambda;%Partial Jacobian multiplication
-%	
-	Xmask_r_edge = (XXDr(:,:,nr) > 0);
-	XXMrm(:,:,nr) = 0;%Edge boundary condition (Maxwellian solution)
-	XXMr(:,:,nr) = 0;%Edge boundary condition (Maxwellian solution)
 %
 % Radial off-diagonal terms for fast electron transport
 %
@@ -1219,20 +1215,6 @@ for ir = 1:nr,
 	Xh = Xh/time_scheme;
 	Xi = Xi/time_scheme;
 %
-%Edge boundary conditions for radial transport (Maxwellian solution enforced where radial transport is non-zero)
-%
-	if radial_mode == 1 & ir == nr,
-    	Xa = ~Xmask_r_edge.*Xa/time_scheme;
-    	Xb = ~Xmask_r_edge.*Xb/time_scheme;
-    	Xc = ~Xmask_r_edge.*Xc/time_scheme + Xpn2/dtn;
-    	Xd = ~Xmask_r_edge.*Xd/time_scheme;
-    	Xe = ~Xmask_r_edge.*Xe/time_scheme;
-    	Xf = ~Xmask_r_edge.*Xf/time_scheme;
-    	Xg = ~Xmask_r_edge.*Xg/time_scheme;
-    	Xh = ~Xmask_r_edge.*Xh/time_scheme;
-    	Xi = ~Xmask_r_edge.*Xi/time_scheme;
-	end
-%
 %Boundaries of the bounce domain for f0
 %
 	if bounce_mode == 0,%No bounce averaging
@@ -1380,7 +1362,8 @@ for ir = 1:nr,
 		end 
 	else
 		if prec_inv(1) > 1e-4,
-			prec_inv(1) = 1e-4;%LU facorisation increased in that case. It is perhaps not enough to avoid ill-conditionned matrix
+			info_dke_yp(2,['WARNING: Drop tolerance for LU factorization forced to ',num2str(1e-4),' !'])		
+			prec_inv(1) = 1e-4;%LU factorisation increased in that case. It is perhaps not enough to avoid ill-conditionned matrix
 		end
 	end
 	%
@@ -1913,7 +1896,6 @@ for it_f = 2:nit_f,
 		MMXq_t = [];
 		for ir = 1:nr,
 			if store_mode == 1,load MXPmat.mat Zmask_f0_t;end	
-			if radial_mode == 1,Xmask_r_edge_t = Xmask_r_edge(:,Zmask_f0_t{ir});end
 %
 			if boundary_mode == 0,
 				Xq = (XXI(:,:,ir) + time_scheme*XXf0(:,:,ir)/dtn).*Xpn2;%Xpn2 is here as part of the partial Jacobian used to avoid singularities at p = 0
@@ -1927,10 +1909,6 @@ for it_f = 2:nit_f,
 			end
 			MMXq_t = [MMXq_t;(xqtilde(ir)/xB0(ir))*reshape(Xq_t',(nmhu - ns(ir))*npn,1)];%Multiplication by the partial Jacobian to avoid singularities at psi = 0
 			MMXf0_t = [MMXf0_t;reshape(XXf0(:,Zmask_f0_t{ir},ir)',(nmhu - ns(ir))*npn,1)];
-		end
-%
-		if radial_mode == 1,%Edge radial boundary condition: f(r/a = 1) = fM(r/a) where transport operates	
-			MMXq_t(nMMXP_f_t-npn*(nmhu - ns(nr))+1:nMMXP_f_t) = xpsin(nr)*time_scheme*reshape((XXf0(:,Zmask_f0_t{nr},nr)'.*~Xmask_r_edge_t' + XXfM(:,Zmask_f0_t{nr},nr)'.*Xmask_r_edge_t').*Xpn2(:,Zmask_f0_t{nr})',(nmhu - ns(nr))*npn,1)/dtn; 
 		end
 %
 %
@@ -2714,3 +2692,4 @@ elseif bounce_mode == 1,
 	xne_tot_fsav = integral_dke_jd(dmhu,integral_dke_jd(dpn,(XXf0(:,:,rdke) + XXf0_tp(:,:,rdke) + XXf0_g(:,:,rdke)).*XXpn2(:,:,rdke).*XXlambda(:,:,rdke),1),1)';%
 	xft_fsav = xne_trap_fsav./xne_tot_fsav;
 end
+
