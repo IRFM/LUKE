@@ -23,7 +23,7 @@ lines, of turning points for trapped electrons.
 
 The differential arc length $ds$ along the poloidal field line is generally
 expressed in curvilinear coordinates $\left( u^{1},u^{2},u^{3}\right) $ as (%
-\ref{dl})
+\ref{dl}) 
 \begin{equation}
 dl=\sqrt{g_{ij}du^{i}du^{j}}  \label{dl2}
 \end{equation}
@@ -32,14 +32,26 @@ the $\left( \psi ,\theta ,\phi \right) $ coordinates, the variations $d\psi $
 and $d\phi $ are essentially zero along the poloidal field line. As a
 consequence, (\ref{dl2}) becomes 
 \begin{equation}
-dl=\sqrt{g_{22}}d\theta 
+dl=\sqrt{g_{22}}d\theta
 \end{equation}
 
-Introducing the pitch-angle cosine $\xi $%
+The velocity and momentum are related through the relativistic factor $%
+\gamma \left( p\right) $. 
 \begin{equation}
-v_{\Vert }=v\xi   \label{xidef}
+v=\frac{p}{\gamma m}
 \end{equation}
-we find 
+with 
+\begin{equation}
+\gamma \left( p\right) =\sqrt{1+\frac{p^{2}}{m^{2}c^{2}}}
+\end{equation}
+
+Therefore, we have 
+\begin{equation}
+\frac{v_{\Vert }}{v}=\frac{p_{\Vert }}{p}=\xi
+\end{equation}
+where the pitch-angle cosine $\xi $ was defined in (\ref{pxidef})
+
+We get 
 \begin{equation}
 \tau _{b}\left( \psi \right) =\frac{2\pi }{v\left| \xi _{0}\right| }%
 \int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }\sqrt{g_{22}}%
@@ -48,7 +60,7 @@ we find
 where $\xi _{0}$ is the pitch angle cosine at the position $\theta _{0}$ of
 minimum $B$-field 
 \begin{equation}
-\theta _{0}\equiv \theta \left( B=B_{\min }\left( \psi \right) \right) 
+\theta _{0}\equiv \theta \left( B=B_{\min }\left( \psi \right) \right)
 \end{equation}
 and the limits$\ \theta _{\min }$ and $\theta _{\max }$ will be calculated
 in the next subsection.
@@ -75,10 +87,10 @@ momentum only, such that $\lambda \left( \psi ,\pm 1\right) =1$.
 
 The covariant metric element $g_{22}$ is given by (\ref{rel1})-(\ref{met}),
 which is in the $\left( \psi ,\theta ,\phi \right) $ system becomes (\ref
-{gijpsitheta})
+{gijpsitheta}) 
 \[
 g_{22}=\left| J\nabla \psi \times \nabla \phi \right| ^{2}=\frac{r}{\left| 
-\widehat{\psi }\cdot \widehat{r}\right| }
+\widehat{\psi }\cdot \widehat{r}\right| } 
 \]
 
 Consequently, the normalized bounce time takes the form 
@@ -102,7 +114,7 @@ the motion, the energy (or the total momentum), and an adiabatic invariant,
 the magnetic moment. They are given by the equations 
 \begin{eqnarray}
 p^{2} &=&p_{\bot }^{2}+p_{\Vert }^{2} \\
-\mu  &=&\frac{p_{\bot }^{2}}{2mB}  \nonumber
+\mu &=&\frac{p_{\bot }^{2}}{2mB}  \nonumber
 \end{eqnarray}
 such that, as a function of the moment component $\left( p_{\Vert 0},p_{\bot
 0}\right) $ at the location $\theta _{0}$ of minimum $B$-field, we have 
@@ -113,16 +125,9 @@ p_{\bot }^{2}+p_{\Vert }^{2} &=&p_{\bot 0}^{2}+p_{\Vert 0}^{2}  \label{mom}
 B_{\min }\left( \psi \right) }  \label{mhu}
 \end{eqnarray}
 
-The pitch-angle cosine is defined in (\ref{xidef}) and can be rewritten as
-\begin{equation}
-\xi =\frac{p_{\Vert }}{p}  \label{xidef2}
-\end{equation}
-so that 
-\begin{eqnarray}
-p_{\Vert } &=&p\xi   \label{pparperp} \\
-p_{\bot } &=&p\sqrt{1-\xi ^{2}}  \nonumber
-\end{eqnarray}
-and the system (\ref{mom}-\ref{mhu}) becomes 
+Using the transformation (\ref{pxi}-\ref{pparpperp}) from $\left( p_{\Vert
+},p_{\bot }\right) $ to $\left( p,\xi \right) $, the system (\ref{mom}-\ref
+{mhu}) becomes 
 \begin{eqnarray}
 p^{2} &=&p_{0}^{2} \\
 \frac{1-\xi ^{2}}{B\left( \psi ,\theta \right) } &=&\frac{1-\xi _{0}^{2}}{%
@@ -182,9 +187,9 @@ B_{b}\left( \psi ,\xi _{0}\right) =\frac{B_{\min }\left( \psi \right) }{%
 \end{equation}
 so that 
 \begin{eqnarray}
-\theta _{T\min }\left( \psi ,\xi _{0}\right)  &=&\theta \left( B=B_{b}\left|
+\theta _{T\min }\left( \psi ,\xi _{0}\right) &=&\theta \left( B=B_{b}\left|
 \theta <\theta _{0}\right. \right) \;[2\pi ]  \label{thetamin} \\
-\theta _{T\max }\left( \psi ,\xi _{0}\right)  &=&\theta \left( B=B_{b}\left|
+\theta _{T\max }\left( \psi ,\xi _{0}\right) &=&\theta \left( B=B_{b}\left|
 \theta >\theta _{0}\right. \right) \;[2\pi ]  \nonumber
 \end{eqnarray}
 
@@ -223,7 +228,7 @@ and, using
 \end{eqnarray}
 we get an expression for the scalar product 
 \begin{equation}
-\widehat{\psi }\cdot \widehat{r}=\frac{\left( \nabla \psi \cdot \widehat{R}%
+\widehat{\psi }\cdot \widehat{r}=\frac{\left( \nabla \psi \cdot \widehat{R}
 \right) \left( R\left( \psi ,\theta \right) -R_{0}\right) +\left( \nabla
 \psi \cdot \widehat{Z}\right) \left( Z\left( \psi ,\theta \right)
 -Z_{0}\right) }{r\left| \nabla \psi \right| }  \label{psidotr}
@@ -232,7 +237,7 @@ we get an expression for the scalar product
 In a toroidal axisymmetric geometry, the magnetic field can be expressed
 generally as 
 \begin{equation}
-\mathbf{B}=I\left( \psi \right) \nabla \phi +\nabla \psi \times \nabla \phi 
+\mathbf{B}=I\left( \psi \right) \nabla \phi +\nabla \psi \times \nabla \phi
 \label{B}
 \end{equation}
 so that 
@@ -252,9 +257,9 @@ We also have
 \end{eqnarray}
 and therefore 
 \begin{eqnarray}
-\nabla \phi \times \mathbf{B}_{P} &=&\nabla \phi \times \left( \nabla \psi 
-\times \nabla \phi \right)   \nonumber \\
-&=&\left| \nabla \phi \right| ^{2}\nabla \psi 
+\nabla \phi \times \mathbf{B}_{P} &=&\nabla \phi \times \left( \nabla \psi
+\times \nabla \phi \right)  \nonumber \\
+&=&\left| \nabla \phi \right| ^{2}\nabla \psi
 \end{eqnarray}
 so that 
 \begin{equation}
@@ -263,9 +268,9 @@ so that
 \end{equation}
 and we have the projections 
 \begin{eqnarray}
-\left( \nabla \psi \cdot \widehat{R}\right)  &=&R\widehat{R}\cdot \widehat{%
+\left( \nabla \psi \cdot \widehat{R}\right) &=&R\widehat{R}\cdot \widehat{
 \phi }\times \mathbf{B}_{P}=-RB_{Z} \\
-\left( \nabla \psi \cdot \widehat{Z}\right)  &=&R\widehat{Z}\cdot \widehat{%
+\left( \nabla \psi \cdot \widehat{Z}\right) &=&R\widehat{Z}\cdot \widehat{%
 \phi }\times \mathbf{B}_{P}=RB_{R}  \nonumber
 \end{eqnarray}
 
@@ -273,7 +278,7 @@ Finally, the expression for the normalized bounce time becomes
 \begin{equation}
 \lambda \left( \psi ,\xi _{0}\right) =\frac{1}{\widetilde{q}\left( \psi
 \right) }\int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }\frac{%
-B\left[ \left( R-R_{0}\right) ^{2}+\left( Z-Z_{0}\right) ^{2}\right] }{%
+B\left[ \left( R-R_{0}\right) ^{2}+\left( Z-Z_{0}\right) ^{2}\right] }{
 R_{0}\left| B_{R}\left( Z-Z_{0}\right) -B_{Z}\left( R-R_{0}\right) \right| }%
 \frac{\xi _{0}}{\xi }  \label{lambda1}
 \end{equation}
@@ -284,7 +289,7 @@ with
 R_{0}\left| B_{R}\left( Z-Z_{0}\right) -B_{Z}\left( R-R_{0}\right) \right| }
 \end{equation}
 where $R,Z,B_{R},B_{Z}$ and $B$ are functions of $\left( \psi ,\theta
-\right) $, $\rho $ is functions of $\psi $, and $\xi $ is a function of $
+\right) $, $\rho $ is functions of $\psi $, and $\xi $ is a function of $%
 \left( \psi ,\theta ,\xi _{0}\right) $ given by (\ref{xi}) 
 \begin{equation}
 \xi \left( \psi ,\theta ,\xi _{0}\right) =\text{sign}\left( \xi _{0}\right) 
@@ -306,8 +311,8 @@ where $V$ is the volume enclosed by a flux-surface and $\left\langle
 
 It can be expressed as 
 \begin{equation}
-q\left( \psi \right) =I\left( \psi \right) \int_{0}^{2\pi }\frac{d\theta }{2%
-\pi }\int_{0}^{2\pi }\frac{d\phi }{2\pi }\frac{J}{R^{2}}
+q\left( \psi \right) =I\left( \psi \right) \int_{0}^{2\pi }\frac{d\theta }{%
+2\pi }\int_{0}^{2\pi }\frac{d\phi }{2\pi }\frac{J}{R^{2}}
 \end{equation}
 where the Jacobian $J$ is given by (\ref{jacpsitheta}) 
 \begin{eqnarray}
@@ -353,7 +358,7 @@ function along the field lines. The natural average is
 \begin{equation}
 \left\{ \mathcal{A}\right\} =\frac{1}{\tau _{b}}\left[ \frac{1}{2}%
 \sum_{\sigma }\right] _{T}\int_{s_{\min }}^{s_{\max }}\frac{ds}{\left|
-v_{s}\right| }\mathcal{A}
+v_{s}\right| }\mathcal{A}  \label{bav0}
 \end{equation}
 where $\sigma =$sign$\left( v_{\Vert }\right) $ and the sum over $\sigma $
 applies to trapped particles only.
@@ -422,7 +427,7 @@ Note that $\lambda _{0,0,0}=\lambda $. In addition, we see that
 \lambda _{k,l,m} & \text{ for passing particles} \\ 
 0 & \text{ for trapped particles}
 \end{array}
-\right. 
+\right.
 \end{equation}
 
 \subsubsection{Numerical Integration over $\theta $}
@@ -468,10 +473,10 @@ _{2}\right) $ on the $\left( \psi ,\theta \right) $ grid. These values are
 determined from the three components issued by the equilibrium code simply
 by 
 \begin{eqnarray}
-B_{1}\left( \psi ,\theta _{1}\right)  &=&\sqrt{B_{R}^{2}\left( \psi ,\theta
+B_{1}\left( \psi ,\theta _{1}\right) &=&\sqrt{B_{R}^{2}\left( \psi ,\theta
 _{1}\right) +B_{Z}^{2}\left( \psi ,\theta _{1}\right) +B_{\phi }^{2}\left(
 \psi ,\theta _{1}\right) } \\
-B_{2}\left( \psi ,\theta _{1}\right)  &=&\sqrt{B_{R}^{2}\left( \psi ,\theta
+B_{2}\left( \psi ,\theta _{1}\right) &=&\sqrt{B_{R}^{2}\left( \psi ,\theta
 _{2}\right) +B_{Z}^{2}\left( \psi ,\theta _{2}\right) +B_{\phi }^{2}\left(
 \psi ,\theta _{2}\right) }  \nonumber
 \end{eqnarray}
@@ -481,7 +486,7 @@ location $\theta _{T}$ by linear interpolation:
 \begin{equation}
 B_{i}\left( \psi ,\theta _{T}\right) =B_{i1}+\frac{\left( \theta _{T}-\theta
 _{1}\right) }{\left( \theta _{2}-\theta _{1}\right) }\left(
-B_{i2}-B_{i1}\right) 
+B_{i2}-B_{i1}\right)
 \end{equation}
 where $i=R,Z,\phi $. Then, the location $\theta _{T}$ of the turning point
 can be calculated by requiring that the relation 
@@ -494,7 +499,7 @@ be satisfied. This implies
 \begin{equation}
 B_{R}^{2}\left( \psi ,\theta _{T}\right) +B_{Z}^{2}\left( \psi ,\theta
 _{T}\right) +B_{\phi }^{2}\left( \psi ,\theta _{T}\right) =B_{b}^{2}\left(
-\psi ,\xi _{0}\right) 
+\psi ,\xi _{0}\right)
 \end{equation}
 and then 
 \begin{equation}
@@ -534,7 +539,7 @@ We have
 \left( B_{R1}B_{R2}+B_{Z1}B_{Z2}+B_{\phi 1}B_{\phi 2}\right)
 ^{2}-B_{1}^{2}B_{2}^{2} \\ 
 +\left[ B_{2}^{2}+B_{1}^{2}-2\left( B_{R2}B_{R1}+B_{Z2}B_{Z1}+B_{\phi
-2}B_{\phi 1}\right) \right] B_{b}^{2}\left( \psi ,\xi _{0}\right) 
+2}B_{\phi 1}\right) \right] B_{b}^{2}\left( \psi ,\xi _{0}\right)
 \end{array}
 }  \nonumber \\
 &=&\sqrt{\left( Y-B_{b}^{2}\right) ^{2}-\left( B_{b}^{2}-B_{1}^{2}\right)
@@ -547,7 +552,7 @@ Y=B_{R1}B_{R2}+B_{Z1}B_{Z2}+B_{\phi 1}B_{\phi 2}
 so that 
 \begin{equation}
 \alpha =\frac{\pm \sqrt{\left( Y-B_{b}^{2}\right) ^{2}-\left(
-B_{b}^{2}-B_{1}^{2}\right) \left( B_{b}^{2}-B_{2}^{2}\right) }+B_{1}^{2}-Y}{%
+B_{b}^{2}-B_{1}^{2}\right) \left( B_{b}^{2}-B_{2}^{2}\right) }+B_{1}^{2}-Y}{
 B_{1}^{2}+B_{2}^{2}-2Y}
 \end{equation}
 and finally 
