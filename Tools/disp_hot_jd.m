@@ -57,7 +57,22 @@ if sum(isnan(sNperp)) == ns% look for electrostatic root
     %
     % ES approximation - guess for hot plasma calculations
     %
-    [GNperp] = disp_ebwES_jd(sB(iCmin_app),sTe(iCmin_app),sne(iCmin_app),omega,guess_ES);
+    gn = 1 - round(omega/swce(iCmin_app))*swce(iCmin_app)/omega;
+    if gn > 0,
+        guess_Nperp = 50;%LFR approach
+    else
+        guess_Nperp = -50*gn;%HFR approach
+    end
+    %
+    fac_root = 1.1;
+    fac_exp = -1.5;
+    fac_lim = 5;
+    GNperp = NaN;
+    %
+    while (isnan(GNperp) | real(GNperp) == 0) & fac_root < fac_lim
+        [GNperp] = disp_ebwES_jd(sB(iCmin_app),sTe(iCmin_app),sne(iCmin_app),omega,NaN,guess_Nperp*fac_root);
+        fac_root = fac_root^fac_exp;
+    end
     %
     % Determines ESW propagation range
     %
