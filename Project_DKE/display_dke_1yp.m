@@ -325,6 +325,19 @@ while 1,
             rhostr = num2str(xrho_dke(ir_display_dke));
             rhostr = rhostr(1:min([5,length(rhostr)]));
 %
+% ---------- parallel distribution difference-----------
+%
+            figure(306),clf
+            %
+            y1 = Fpar0_cyl_ref - Fparinit_cyl_ref;
+            ylab = 'F_{0//} - F_{M//}';
+            ylim = NaN;
+            %
+            graph1D_jd(x1,y1,0,0,xlab1,ylab,'',NaN,xlim1,ylim,style2,marker,color2,width2,siz,gca,red,lspace,bspace1);
+            text(0.05,0.95,['\rho = ',rhostr],'units','normalized');
+%
+			pause(time_pause);
+%
 % ---------- parallel distribution -----------
 %
             figure(301),clf
@@ -518,10 +531,10 @@ while 1,
 		xcurr0_ref = Zcurr_ref{1,1};    
 		xcurr_tp_ref = Zcurr_ref{1,2};    
 		xcurr_g_ref = Zcurr_ref{1,3};  
-		xcurr_bc_tp_ref = Zcurr_bc_ref{1,2};    
-		xcurr_bc_g_ref = Zcurr_bc_ref{1,3};  
 		xcurr_tot_ref = xcurr0_ref + xcurr_tp_ref + xcurr_g_ref;
         if syn_mode == 1,
+    		xcurr_bc_tp_ref = Zcurr_bc_ref{1,2};    
+		    xcurr_bc_g_ref = Zcurr_bc_ref{1,3};  
     		xcurr_bc_ref = xcurr_bc_tp_ref + xcurr_bc_g_ref;
             xcurr_syn_ref = xcurr_tot_ref - xcurr0_ref - xcurr_bc_ref;
         else
@@ -542,6 +555,8 @@ while 1,
 		xcurrB_ref_fsav = Zcurr_ref_fsav{2,1};%Bulk current in case of run-away electrons leaving the domain of integration
 		xcurr_tot_ref_fsav = xcurr0_ref_fsav + xcurr_tp_ref_fsav + xcurr_g_ref_fsav;
         if syn_mode == 1,
+    		xcurr_bc_tp_ref_fsav = Zcurr_bc_ref_fsav{1,2};    
+		    xcurr_bc_g_ref_fsav = Zcurr_bc_ref_fsav{1,3};  
     		xcurr_bc_ref_fsav = xcurr_bc_tp_ref_fsav + xcurr_bc_g_ref_fsav;
             xcurr_syn_ref_fsav = xcurr_tot_ref_fsav - xcurr0_ref_fsav - xcurr_bc_ref_fsav;
         else
@@ -681,7 +696,7 @@ while 1,
 			disp('-------------------------------------------------------------------------------------------------------------------');
 			info_dke_yp(2,'Global results (normalized to MKSA units) at Bmin [theta_pol = 0 (deg)]:');
 			disp(['   - Density (10+19 m-3) [spherical]: ',num2str(xnormf_ref(ir_display_dke)*ne_ref/1e19),', [cylindrical]: ',num2str(xnormf_cyl_ref(ir_display_dke)*ne_ref/1e19)])
-			disp(['   - RF current density (MA/m2) [spherical]: ',num2str(xJrf0_mksa(ir_display_dke)),', [cylindrical]: ',num2str(jxJrf0_cyl_mksa(ir_display_dke))])
+			disp(['   - RF current density (MA/m2) [spherical]: ',num2str(xJrf0_mksa(ir_display_dke)),', [cylindrical]: ',num2str(xJrf0_cyl_mksa(ir_display_dke))])
 			disp(['   - Ohmic eletric field (V/m): ',num2str(xepsi_ref(ir_display_dke)*Edreicer_ref)])
 %
 			disp('-------------------------------------------------------------------------------------------------------------------');
@@ -850,7 +865,7 @@ while 1,
                 elseif syn_mode == 1,
                     y3 = Xf0_bc_tp_ref(ipnplot_ref,:);
                     y4 = Xf0_bc_g_ref(ipnplot_ref,:);
-                    leg = ['f_{tp} (BC+RF+E)  ';'g (BC+RF+E)       ';'f_{tp} (BC Only)';'g (BC Only)     '];
+                    leg = ['f_{tp} (BC+RF+E)';'g (BC+RF+E)     ';'f_{tp} (BC Only)';'g (BC Only)     '];
                     graph1D_jd(mhu,y3,0,0,'','','',NaN,[-1,1],ylim,style1,marker,color1,width1,siz);
                     graph1D_jd(mhu,y4,0,0,xlab1,ylab,'',leg,[-1,1],ylim,style2,marker,color2,width1,siz);
                 else
@@ -945,7 +960,7 @@ while 1,
                 end
 			    if nb_ec > 0 
                     y3 = XDec_cyl_ref;
-                    graph2D_jd(x1,x2,y3',xlab1,xlab2,'2D Distribution function g',xlim1,xlim2,0,NaN,4,0,style1,color3,width2,siz);
+                    graph2D_jd(x1,x2,y3',xlab1,xlab2,'2D Distribution function f_1',xlim1,xlim2,0,NaN,4,0,style1,color3,width2,siz);
                 end
 %
                 pause(time_pause);
@@ -981,7 +996,7 @@ while 1,
 			info_dke_yp(2,'Global results (normalized to reference units) at Bmin [theta_pol = 0 (deg)]:');
 			disp(['   - Density [spherical]: ',num2str(xnormf_ref(ir_display_dke)),', [cylindrical]: ',num2str(xnormf_cyl_ref(ir_display_dke))])
 			disp(['   - RF only current density [spherical]: ',num2str(xcurr0_ref(ir_display_dke)),', [cylindrical]: ',num2str(xcurr0_cyl_ref(ir_display_dke))])
-			disp(['   - Electron bootstrap current density [spherical]: ',num2str(xcurr_bc_ref(ir_display_dke)),', [cylindrical]: ',num2str(xxcurr_bc_cyl_ref(ir_display_dke))])
+			disp(['   - Electron bootstrap current density [spherical]: ',num2str(xcurr_bc_ref(ir_display_dke)),', [cylindrical]: ',num2str(xcurr_bc_cyl_ref(ir_display_dke))])
 			disp(['   - Total electron current density [spherical]: ',num2str(xcurr_tot_ref(ir_display_dke)),', [cylindrical]: ',num2str(xcurr_tot_cyl_ref(ir_display_dke))])
             if syn_mode == 1,
                 disp(['   - Synergistic electron current density [spherical]: ',num2str(xcurr_syn_ref(ir_display_dke)),', [cylindrical]: ',num2str(xcurr_syn_cyl_ref(ir_display_dke))])
@@ -1064,7 +1079,7 @@ while 1,
 			disp(['   - Hinton & Hazeltine model for bootstrap (MA/m2): ',num2str(xcurr_hin_mksa_fsav(ir_display_dke))])        
 			disp(['   - Total current density (MA/m2) [spherical]: ',num2str(xJtot_fsav_mksa(ir_display_dke))])
             if syn_mode == 1,
-                disp(['   - Synergistic electron current density (MA/m2) [spherical]: ',num2str(xcurr_syn_fsav_mksa(ir_display_dke))])
+                disp(['   - Synergistic electron current density (MA/m2) [spherical]: ',num2str(xJsyn_fsav_mksa(ir_display_dke))])
             end
 			disp(['   - RF power density lost on collisions (MW/m3) (coll) [spherical]: ',num2str(-xPcoll0_fsav_mksa(ir_display_dke))])
 %
