@@ -11,100 +11,6 @@
 
 \layout Standard
 
-La densite de puissance liee a un operateur correspondant a l'action d'une
- processus 
-\begin_inset Formula \( \mathcal{O}\)
-\end_inset 
-
- dans le plasma au temps 
-\begin_inset Formula \( t\)
-\end_inset 
-
- etant donnee par 
-\begin_inset Formula \[ 
-P^{(t)\mathcal{O}}=2\pi\int_{-1}^{1}d\xi\int_{0}^{\infty}dp\;\frac{p^{3}}{\gamma m_{e}}S_{p}^{(t)\mathcal{O}}\]
-\end_inset 
-
- celle-ci vaut sur la grille des flux en 
-\begin_inset Formula \( p\)
-\end_inset 
-
-
-\layout Standard
-
-
-\begin_inset Formula \[ 
-P^{(k)\mathcal{O}}=2\pi\sum_{i=0}^{n_{p}-1}\;\sum_{j=0}^{n_{\xi}-1}\frac{p_{i}^{3}}{\gamma_{i}m_{e}}S_{p,i,j+1/2}^{(k)\mathcal{O}}\Delta p_{i}\Delta\xi_{j+1/2}\]
-\end_inset 
-
- ou le flux dans l'espace des impulsions est la somme de trois termes 
-\begin_inset Formula \[ 
-\left.S_{p}^{(k)}\right|_{i,j+1/2}^{\mathcal{O}}=-D_{pp,i,j+1/2}^{\mathcal{O}}\left.\frac{\partial f_{0}^{(k)}}{\partial p}\right|_{i,j+1/2}+D_{p\xi,i,j+1/2}^{\mathcal{O}}\frac{\sqrt{1-\xi_{j+1/2}^{2}}}{p_{i}}\left.\frac{\partial f_{0}^{(k)}}{\partial\xi}\right|_{i,j+1/2}+F_{p,i,j+1/2}^{\mathcal{O}}f_{0,i,j+1/2}^{(k)}\]
-\end_inset 
-
-
-\layout Standard
-
-La discretisation complete des flux intervient pour le calcul de la puissance.
- 
-\begin_inset Formula \begin{eqnarray*} 
-\left.S_{p}\right|_{i+1,j+1/2}^{(k)} & = & -D_{pp,i+1,j+1/2}\left.\frac{\partial f_{0}}{\partial p}\right|_{i+1,j+1/2}^{(k)}\\
- &  & +D_{p\xi,i+1,j+1/2}\frac{\sqrt{1-\xi_{j+1/2}^{2}}}{p_{i+1}}\left.\frac{\partial f_{0}}{\partial\xi}\right|_{i+1,j+1/2}^{(k)}+F_{p,i+1,j+1/2}f_{0,i+1,j+1/2}^{(k)}\\
-\left.S_{p}\right|_{i,j+1/2}^{(k)} & = & -D_{pp,i,j+1/2}\left.\frac{\partial f_{0}}{\partial p}\right|_{i,j+1/2}^{(k)}\\
- &  & +D_{p\xi,i,j+1/2}\frac{\sqrt{1-\xi_{j+1/2}^{2}}}{p_{i}}\left.\frac{\partial f_{0}}{\partial\xi}\right|_{i,j+1/2}^{(k)}+F_{p,i,j+1/2}f_{0,i,j+1/2}^{(k)}\\
-\left.S_{\xi}\right|_{i+1/2,j+1}^{(k)} & = & -D_{\xi p,i+1/2,j+1}\left.\frac{\partial f_{0}}{\partial p}\right|_{i+1/2,j+1}^{(k)}\\
- &  & +D_{\xi\xi,i+1/2,j+1}\frac{\sqrt{1-\xi_{j+1}^{2}}}{p_{i+1/2}}\left.\frac{\partial f_{0}}{\partial\xi}\right|_{i+1/2,j+1}^{(k)}+F_{\xi,i+1/2,j+1}f_{0,i+1/2,j+1}^{(k)}\\
-\left.S_{\xi}\right|_{i+1/2,j}^{(k)} & = & -D_{\xi p,i+1/2,j}\left.\frac{\partial f_{0}}{\partial p}\right|_{i+1/2,j}^{(k)}\\
- &  & +D_{\xi\xi,i+1/2,j}\frac{\sqrt{1-\xi_{j}^{2}}}{p_{i+1/2}}\left.\frac{\partial f_{0}}{\partial\xi}\right|_{i+1/2,j}^{(k)}+F_{\xi,i+1/2,j}f_{0,i+1/2,j}^{(k)}\end{eqnarray*}
-\end_inset 
-
-
-\layout Standard
-
-L'expression du flux peut etre mise sous la forme discrete suivante a partir
- des expressions numeriques des derivees 
-\begin_inset Formula \begin{eqnarray*} 
-\left.S_{p}^{\left(k\right)}\right|_{i,j+1/2}^{\mathcal{O}} & = & -\frac{D_{pp,i,j+1/2}^{\mathcal{O}}}{\Delta p_{i}}f_{0,i+1/2,j+1/2}^{(k)}\\
- &  & +\frac{D_{pp,i,j+1/2}^{\mathcal{O}}}{\Delta p_{i}}f_{0,i-1/2,j+1/2}^{(k)}\\
- &  & +D_{p\xi,i,j+1/2}^{\mathcal{O}}\frac{\sqrt{1-\xi_{j+1/2}^{2}}}{p_{i}\left(\Delta\xi_{j+1}+\Delta\xi_{j}\right)}f_{0,i,j+3/2}^{(k)}\\
- &  & +D_{p\xi,i,j+1/2}^{\mathcal{O}}\frac{\sqrt{1-\xi_{j+1/2}^{2}}}{p_{i}\left(\Delta\xi_{j+1}+\Delta\xi_{j}\right)}f_{0,i,j-1/2}^{(k)}\\
- &  & +F_{p,i,j+1/2}^{\mathcal{O}}f_{0,i,j+1/2}^{(k)}\end{eqnarray*}
-\end_inset 
-
- sachant que 
-\begin_inset Formula \( \left.\frac{\partial f_{0}}{\partial\xi}\right|_{i,j+1/2}^{(k)}=\frac{f_{0,i,j+3/2}^{(k)}-f_{0,i,j-1/2}^{(k)}}{\Delta\xi_{j+1}+\Delta\xi_{j}}\)
-\end_inset 
-
-.
- Sachant par ailleurs que 
-\begin_inset Formula \[ 
-\left\{ \begin{array}{l}
-f_{0,i,j+3/2}^{(k)}=\left(1-\delta_{p,i,j+3/2}\right)f_{0,i+1/2,j+3/2}^{(k)}+\delta_{p,i,j+3/2}f_{0,i-1/2,j+3/2}^{(k)}\\
-f_{0,i,j+1/2}^{(k)}=\left(1-\delta_{p,i,j+1/2}\right)f_{0,i+1/2,j+1/2}^{(k)}+\delta_{p,i,j-1/2}f_{0,i-1/2,j+1/2}^{(k)}\\
-f_{0,i,j-1/2}^{(k)}=\left(1-\delta_{p,i,j-1/2}\right)f_{0,i+1/2,j-1/2}^{(k)}+\delta_{p,i,j-1/2}f_{0,i-1/2,j-1/2}^{(k)}\end{array}\right.\]
-\end_inset 
-
- on obtient finalement
-\layout Standard
-
-
-\begin_inset Formula \begin{eqnarray*} 
-\left.S_{p}^{\left(k\right)}\right|_{i,j+1/2}^{\mathcal{O}} & = & -\frac{D_{pp,i,j+1/2}^{\mathcal{O}}}{\Delta p_{i}}f_{i+1/2,j+1/2}^{(k)}\\
- &  & +\frac{D_{pp,i,j+1/2}^{\mathcal{O}}}{\Delta p_{i}}f_{i-1/2,j+1/2}^{(k)}\\
- &  & +D_{p\xi,i,j+1/2}^{\mathcal{O}}\frac{\sqrt{1-\xi_{j+1/2}^{2}}}{p_{i}\left(\Delta\xi_{j+1}+\Delta\xi_{j}\right)}\left(1-\delta_{p,i,j+3/2}\right)f_{0,i+1/2,j+3/2}^{(k)}\\
- &  & +D_{p\xi,i,j+1/2}^{\mathcal{O}}\frac{\sqrt{1-\xi_{j+1/2}^{2}}}{p_{i}\left(\Delta\xi_{j+1}+\Delta\xi_{j}\right)}\delta_{p,i,j+3/2}f_{0,i-1/2,j+3/2}^{(k)}\\
- &  & +D_{p\xi,i,j+1/2}^{\mathcal{O}}\frac{\sqrt{1-\xi_{j+1/2}^{2}}}{p_{i}\left(\Delta\xi_{j+1}+\Delta\xi_{j}\right)}\left(1-\delta_{p,i,j-1/2}\right)f_{0,i+1/2,j-1/2}^{(k)}\\
- &  & +D_{p\xi,i,j+1/2}^{\mathcal{O}}\frac{\sqrt{1-\xi_{j+1/2}^{2}}}{p_{i}\left(\Delta\xi_{j+1}+\Delta\xi_{j}\right)}\delta_{p,i,j-1/2}f_{0,i-1/2,j-1/2}^{(k)}\\
- &  & +F_{p,i,j+1/2}^{\mathcal{O}}\left(1-\delta_{p,i,j+1/2}\right)f_{i+1/2,j+1/2}^{(k)}\\
- &  & +F_{p,i,j+1/2}^{\mathcal{O}}\delta_{p,i,j+1/2}f_{i-1/2,j+1/2}^{(k)}\end{eqnarray*}
-\end_inset 
-
-
-\layout Subsubsection
-
-Puissance moyennee sur la surface de flux
-\layout Standard
-
 Pour un calcul de densite de puissance, avec des surfaces de flux concentriques,
  la moyenne sur une surface de flux est donnee par 
 \begin_inset Formula \begin{eqnarray*} 
@@ -171,7 +77,7 @@ de sorte que
 
 Sous forme discrete 
 \begin_inset Formula \[ 
-\bigskip\left\langle P^{\mathcal{O}}\right\rangle ^{(k)}=2\pi\sum_{i=0}^{n_{p}-1}\;\sum_{j=0}^{n_{\xi}-1}\frac{p_{i}^{3}}{\gamma_{i}m_{e}}\lambda\left(\xi_{0j+1/2}\right)S_{p,i,j+1/2}^{\mathcal{O}(0)(k)}\Delta p_{i}\Delta\xi_{0j+1/2}\]
+\left\langle P^{\mathcal{O}}\right\rangle ^{(k)}=2\pi\sum_{i=0}^{n_{p}-1}\;\sum_{j=0}^{n_{\xi}-1}\frac{p_{i}^{3}}{\gamma_{i}m_{e}}\lambda\left(\xi_{0j+1/2}\right)S_{p,i,j+1/2}^{\mathcal{O}(0)(k)}\Delta p_{i}\Delta\xi_{0j+1/2}\]
 \end_inset 
 
  avec 
