@@ -1,11 +1,13 @@
 \label{curvilinear}In the following, we note ${\bf X}=\left( x,y,z\right) $
-the vector position. In general, vectors are written in bold characters,
-except unit vectors, noted with a hat. We consider the following curvilinear
-coordinate systems
+the vector position in the space under consideration. In general, vectors
+are written in bold characters, except unit vectors, noted with a hat. We
+consider the following curvilinear coordinate systems
 
-\subsection{General Case $(u^{1},u^{2},u^{3})$}
+\section{General Case $(u^{1},u^{2},u^{3})$}
 
 We consider the curvilinear coordinate system $(u^{1},u^{2},u^{3})$.
+
+\subsection{Vector Algebra}
 
 \subsubsection{Covariant (Tangent) Basis}
 
@@ -250,7 +252,7 @@ with
 \begin{eqnarray}
 {\bf A}_{k}^{j} &=&\frac{\partial A^{j}}{\partial u^{k}}+A^{i}\left\{ \frac{%
 \partial {\bf e}_{i}}{\partial u^{k}}\cdot {\bf e}^{j}\right\} \\
-{\bf A}_{j,k} &=&\frac{\partial A_{j}}{\partial u^{k}}+A_{i}\left\{ \frac{%
+{\bf A}_{j,k} &=&\frac{\partial A_{j}}{\partial u^{k}}+A_{i}\left\{ \frac{
 \partial {\bf e}^{i}}{\partial u^{k}}\cdot {\bf e}_{j}\right\}
 \end{eqnarray}
 
@@ -361,9 +363,13 @@ It becomes, a compact notations,
 \end{equation}
 or is extended as 
 \begin{equation}
-\left( \nabla \times {\bf A}\right) ^{k}=\frac{1}{J}\left( \frac{\partial
-A_{j}}{\partial u^{i}}-\frac{\partial A_{i}}{\partial u^{j}}\right)
+\left( \nabla \times {\bf A}\right) ^{k}=\frac{1}{J}\left( \frac{\partial %
+A_{j}}{\partial u^{i}}-\frac{\partial A_{i}}{\partial u^{j}}\right) 
 \end{equation}
+
+\subsection{Tensor Algebra}
+
+\section{Configuration space}
 
 \subsection{System $\left( R,Z,\phi \right) $}
 
@@ -380,13 +386,13 @@ and is related to $\left( x,y,z\right) $ by
 \begin{eqnarray}
 R &=&\sqrt{x^{2}+y^{2}}  \label{RZphidef} \\
 Z &=&-z  \nonumber \\
-\phi &=&\arctan \left( y/x\right) +\pi H\left( -x\right) \;\ \left[ 2\pi
-\right]  \nonumber
+\phi  &=&\arctan \left( y/x\right) +\pi H\left( -x\right) \;\ \left[ 2\pi 
+\right]   \nonumber
 \end{eqnarray}
 which is inverted to 
 \begin{eqnarray}
-x &=&R\cos \phi \\
-y &=&R\sin \phi  \nonumber \\
+x &=&R\cos \phi  \\
+y &=&R\sin \phi   \nonumber \\
 z &=&-Z  \nonumber
 \end{eqnarray}
 
@@ -502,29 +508,30 @@ They are defined in (\ref{chris}) and are all zero here except
 \[
 \left\{ 
 \begin{array}{l}
-Z \\ 
+\phi  \\ 
 \begin{array}{ll}
-Z & R
+\phi  & R
 \end{array}
 \end{array}
 \right\} =\left\{ 
 \begin{array}{l}
-Z \\ 
+\phi  \\ 
 \begin{array}{ll}
-R & Z
+R & \phi 
 \end{array}
 \end{array}
-\right\} =\frac{1}{2}g^{ZZ}\frac{\partial g_{ZZ}}{r}=\frac{1}{R} 
+\right\} =\frac{1}{2}g^{\phi \phi }\frac{\partial g_{\phi \phi }}{\partial R}%
+=\frac{1}{R}
 \]
 \begin{equation}
 \left\{ 
 \begin{array}{l}
 R \\ 
 \begin{array}{ll}
-Z & Z
+\phi  & \phi 
 \end{array}
 \end{array}
-\right\} =-\frac{1}{2}g^{RR}\frac{\partial g_{ZZ}}{r}=-R
+\right\} =-\frac{1}{2}g^{RR}\frac{\partial g_{\phi \phi }}{\partial R}=-R
 \end{equation}
 
 \subsubsection{Differential Operations}
@@ -555,7 +562,7 @@ Z}\widehat{Z}+\frac{1}{R}\frac{\partial f}{\partial \phi }\widehat{\phi }
 \partial }{\partial \phi }\left( {\bf A}\cdot \widehat{R}\right) -\frac{1}{R}%
 \frac{\partial }{\partial R}\left( R{\bf A}\cdot \widehat{\phi }\right) \\
 \left( \nabla \times {\bf A}\right) \cdot \widehat{\phi } &=&\frac{\partial 
-}{\partial R}\left( {\bf A}\cdot \widehat{Z}\right) -\frac{\partial }{%
+}{\partial R}\left( {\bf A}\cdot \widehat{Z}\right) -\frac{\partial }{
 \partial Z}\left( {\bf A}\cdot \widehat{R}\right)
 \end{eqnarray}
 
@@ -599,7 +606,7 @@ where we define a local orthonormal basis $\left( \widehat{r},\widehat{%
 since 
 \begin{eqnarray}
 \widehat{\phi }\times \widehat{r} &=&\left( \widehat{R}\times \widehat{Z}%
-\right) \times \left( \cos \theta \;\widehat{R}+\sin \theta \;\widehat{Z}%
+\right) \times \left( \cos \theta \;\widehat{R}+\sin \theta \;\widehat{Z}
 \right) \\
 &=&\left[ \left( \cos \theta \;\widehat{R}+\sin \theta \;\widehat{Z}\right)
 \cdot \widehat{R}\right] \widehat{Z}-\left[ \left( \cos \theta \;\widehat{R}%
@@ -663,14 +670,14 @@ g_{ij} &=&\left(
 0 & r^{2} & 0 \\ 
 0 & 0 & R^{2}
 \end{array}
-\right)   \label{gijrtheta} \\
+\right)  \label{gijrtheta} \\
 g^{ij} &=&\left( 
 \begin{array}{lll}
 1 & 0 & 0 \\ 
 0 & 1/r^{2} & 0 \\ 
 0 & 0 & 1/R^{2}
 \end{array}
-\right)   \nonumber
+\right)  \nonumber
 \end{eqnarray}
 
 As a result 
@@ -706,87 +713,88 @@ They are defined in (\ref{chris}) and are all zero here except
 \begin{equation}
 \left\{ 
 \begin{array}{l}
-\theta \\ 
+\theta  \\ 
 \begin{array}{ll}
-\theta & r
+\theta  & r
 \end{array}
 \end{array}
 \right\} =\left\{ 
 \begin{array}{l}
-\theta \\ 
+\theta  \\ 
 \begin{array}{ll}
-r & \theta
+r & \theta 
 \end{array}
 \end{array}
-\right\} =\frac{1}{2}g^{\theta \theta }\frac{\partial g_{\theta \theta }}{r}=%
-\frac{1}{r}
+\right\} =\frac{1}{2}g^{\theta \theta }\frac{\partial g_{\theta \theta }}{%
+\partial r}=\frac{1}{r}
 \end{equation}
 \begin{equation}
 \left\{ 
 \begin{array}{l}
 r \\ 
 \begin{array}{ll}
-\theta & \theta
+\theta  & \theta 
 \end{array}
 \end{array}
-\right\} =-\frac{1}{2}g^{rr}\frac{\partial g_{\theta \theta }}{r}=-r
+\right\} =-\frac{1}{2}g^{rr}\frac{\partial g_{\theta \theta }}{\partial r}=-r
 \end{equation}
 \begin{equation}
 \left\{ 
 \begin{array}{l}
-\phi \\ 
+\phi  \\ 
 \begin{array}{ll}
-\phi & r
+\phi  & r
 \end{array}
 \end{array}
 \right\} =\left\{ 
 \begin{array}{l}
-\phi \\ 
+\phi  \\ 
 \begin{array}{ll}
-r & \phi
+r & \phi 
 \end{array}
 \end{array}
-\right\} =\frac{1}{2}g^{\phi \phi }\frac{\partial g_{\phi \phi }}{r}=\frac{1%
-}{R}\cos \theta
+\right\} =\frac{1}{2}g^{\phi \phi }\frac{\partial g_{\phi \phi }}{\partial r}%
+=\frac{1}{R}\cos \theta 
 \end{equation}
 \begin{equation}
 \left\{ 
 \begin{array}{l}
 r \\ 
 \begin{array}{ll}
-\phi & \phi
+\phi  & \phi 
 \end{array}
 \end{array}
-\right\} =-\frac{1}{2}g^{rr}\frac{\partial g_{\phi \phi }}{r}=-R\cos \theta
+\right\} =-\frac{1}{2}g^{rr}\frac{\partial g_{\phi \phi }}{\partial r}%
+=-R\cos \theta 
 \end{equation}
 \begin{equation}
 \left\{ 
 \begin{array}{l}
-\phi \\ 
+\phi  \\ 
 \begin{array}{ll}
-\phi & \theta
+\phi  & \theta 
 \end{array}
 \end{array}
 \right\} =\left\{ 
 \begin{array}{l}
-\phi \\ 
+\phi  \\ 
 \begin{array}{ll}
-\theta & \phi
+\theta  & \phi 
 \end{array}
 \end{array}
-\right\} =\frac{1}{2}g^{\phi \phi }\frac{\partial g_{\phi \phi }}{\theta }=-%
-\frac{r}{R}\sin \theta
+\right\} =\frac{1}{2}g^{\phi \phi }\frac{\partial g_{\phi \phi }}{\partial 
+\theta }=-\frac{r}{R}\sin \theta 
 \end{equation}
 \begin{equation}
 \left\{ 
 \begin{array}{l}
-\theta \\ 
+\theta  \\ 
 \begin{array}{ll}
-\phi & \phi
+\phi  & \phi 
 \end{array}
 \end{array}
 \right\} =-\frac{1}{2}g^{\theta \theta }\frac{\partial g_{\phi \phi }}{%
-\theta }=\frac{R}{r}\sin \theta
+\partial \theta }=\frac{R}{r}\sin \theta 
 \end{equation}
 
 \subsubsection{Differential Operations}
@@ -811,13 +819,13 @@ r \\
 \paragraph{Curl}
 
 \begin{eqnarray}
-\left( \nabla \times {\bf A}\right) \cdot \widehat{r} &=&\frac{1}{rR}\frac{%
+\left( \nabla \times {\bf A}\right) \cdot \widehat{r} &=&\frac{1}{rR}\frac{
 \partial }{\partial \theta }\left( R{\bf A}\cdot \widehat{\phi }\right) -%
 \frac{1}{R}\frac{\partial }{\partial \phi }\left( {\bf A}\cdot \widehat{%
 \theta }\right) \\
 \left( \nabla \times {\bf A}\right) \cdot \widehat{\theta } &=&\frac{1}{R}%
 \frac{\partial }{\partial \phi }\left( {\bf A}\cdot \widehat{r}\right) -%
-\frac{1}{R}\frac{\partial }{\partial r}\left( R{\bf A}\cdot \widehat{\phi }%
+\frac{1}{R}\frac{\partial }{\partial r}\left( R{\bf A}\cdot \widehat{\phi }
 \right) \\
 \left( \nabla \times {\bf A}\right) \cdot \widehat{\phi } &=&\frac{1}{r}%
 \frac{\partial }{\partial r}\left( r{\bf A}\cdot \widehat{\theta }\right) -%
@@ -857,7 +865,7 @@ We define a local orthonormal basis $\left( \widehat{\psi },\widehat{s},%
 \widehat{\phi }\right) $ as 
 \begin{eqnarray}
 \widehat{\psi } &=&\frac{\nabla \psi }{\left| \nabla \psi \right| } \\
-\widehat{s} &=&\widehat{\phi }\times \widehat{\psi }
+\widehat{s} &=&\widehat{\phi }\times \widehat{\psi }  \nonumber
 \end{eqnarray}
 
 The transformation from $\left( \widehat{r},\widehat{\theta }\right) $ to $%
@@ -893,7 +901,7 @@ The position vector remains
 
 The covariant vector basis is defined in (\ref{cov}), which becomes here 
 \begin{eqnarray}
-{\bf e}_{\psi } &=&\frac{\partial {\bf X}}{\partial \psi }=\left. \frac{%
+{\bf e}_{\psi } &=&\frac{\partial {\bf X}}{\partial \psi }=\left. \frac{
 \partial r}{\partial \psi }\right| _{s}\widehat{r}+r\left. \frac{\partial 
 \widehat{r}}{\partial \psi }\right| _{s}=\left. \frac{\partial r}{\partial
 \psi }\right| _{s}\widehat{r}+r\left. \frac{\partial \theta }{\partial \psi }%
@@ -912,7 +920,7 @@ so that we have the covariant basis
 \begin{equation}
 \left( {\bf e}_{\psi },{\bf e}_{s},{\bf e}_{\phi }\right) =\left( \left. 
 \frac{\partial r}{\partial \psi }\right| _{s}\widehat{r}+r\left. \frac{%
-\partial \theta }{\partial \psi }\right| _{s}\widehat{\theta },\left. \frac{%
+\partial \theta }{\partial \psi }\right| _{s}\widehat{\theta },\left. \frac{
 \partial r}{\partial s}\right| _{\psi }\widehat{r}+r\left. \frac{\partial
 \theta }{\partial s}\right| _{\psi }\widehat{\theta },R\widehat{\phi }\right)
 \label{covpsis}
@@ -959,7 +967,7 @@ The relations (\ref{rel2}) then give
 so that we have the following tangent basis 
 \begin{equation}
 \left( {\bf e}_{\psi },{\bf e}_{s},{\bf e}_{\phi }\right) =\left( \frac{%
-\widehat{\psi }}{\left| \nabla \psi \right| },\widehat{s},R\widehat{\phi }%
+\widehat{\psi }}{\left| \nabla \psi \right| },\widehat{s},R\widehat{\phi }
 \right)
 \end{equation}
 the scaling factors 
@@ -975,7 +983,7 @@ the normalized tangent basis
 the reciprocal basis 
 \begin{equation}
 \left( {\bf e}^{\psi },{\bf e}^{s},{\bf e}^{\phi }\right) =\left( \left|
-\nabla \psi \right| \widehat{\psi },\widehat{s},\frac{\widehat{\phi }}{R}%
+\nabla \psi \right| \widehat{\psi },\widehat{s},\frac{\widehat{\phi }}{R}
 \right)
 \end{equation}
 and the normalized reciprocal basis 
@@ -992,7 +1000,7 @@ By comparing (\ref{covpsis}) with (\ref{covpsis2}), we also find that
 \left| \nabla \psi \right| } \\
 \left. \frac{\partial \theta }{\partial \psi }\right| _{s} &=&\frac{-\sin
 \alpha }{r\left| \nabla \psi \right| } \\
-\left. \frac{\partial r}{\partial s}\right| _{\psi } &=&\left( \widehat{s}%
+\left. \frac{\partial r}{\partial s}\right| _{\psi } &=&\left( \widehat{s}
 \cdot \widehat{r}\right) =\sin \alpha \\
 \left. \frac{\partial \theta }{\partial s}\right| _{\psi } &=&\frac{\left( 
 \widehat{s}\cdot \widehat{\theta }\right) }{r}=\frac{\cos \alpha }{r}
@@ -1024,7 +1032,7 @@ g=\frac{R^{2}}{\left| \nabla \psi \right| ^{2}}
 \end{equation}
 and the Jacobian is 
 \begin{equation}
-J=\frac{R}{\left| \nabla \psi \right| }
+J=\frac{R}{\left| \nabla \psi \right| }  \label{jacpsis}
 \end{equation}
 
 \subsubsection{Differential elements}
@@ -1068,7 +1076,8 @@ They are defined in (\ref{chris}) and are here
 \partial \psi }\left( R{\bf A}\cdot \widehat{\psi }\right) +\frac{\left|
 \nabla \psi \right| }{R}\frac{\partial }{\partial s}\left( \frac{R}{\left|
 \nabla \psi \right| }{\bf A}\cdot \widehat{s}\right) +\frac{1}{R}\frac{%
-\partial }{\partial \phi }\left( {\bf A}\cdot \widehat{\phi }\right)
+\partial }{\partial \phi }\left( {\bf A}\cdot \widehat{\phi }\right) 
+\label{psisdiv}
 \end{equation}
 
 \paragraph{Curl}
@@ -1126,7 +1135,7 @@ The covariant vector basis is defined in (\ref{cov}), which becomes here
 \begin{eqnarray}
 {\bf e}_{\psi } &=&\frac{\partial {\bf X}}{\partial \psi }=\left. \frac{%
 \partial r}{\partial \psi }\right| _{\theta }\widehat{r} \\
-{\bf e}_{\theta } &=&\frac{\partial {\bf X}}{\partial \theta }=\left. \frac{%
+{\bf e}_{\theta } &=&\frac{\partial {\bf X}}{\partial \theta }=\left. \frac{
 \partial r}{\partial \theta }\right| _{\psi }\widehat{r}+r\frac{\partial 
 \widehat{r}}{\partial \theta }=\left. \frac{\partial r}{\partial \theta }%
 \right| _{\psi }\widehat{r}+r\widehat{\theta } \\
@@ -1172,7 +1181,7 @@ The relations (\ref{rel2}) then give
 ^{\psi }\cdot {\bf e}^{\theta }\times {\bf e}^{\phi }}=\frac{\widehat{r}}{%
 \left| \nabla \psi \right| \cos \alpha } \\
 {\bf e}_{\theta } &=&\frac{{\bf e}^{\phi }\times {\bf e}^{\psi }}{{\bf e}%
-^{\theta }\cdot {\bf e}^{\phi }\times {\bf e}^{\psi }}=\frac{r\widehat{s}}{%
+^{\theta }\cdot {\bf e}^{\phi }\times {\bf e}^{\psi }}=\frac{r\widehat{s}}{
 \left( \widehat{\theta }\cdot \widehat{s}\right) }=\frac{r\widehat{s}}{\cos
 \alpha } \\
 {\bf e}_{\phi } &=&\frac{{\bf e}^{\psi }\times {\bf e}^{\theta }}{{\bf e}%
@@ -1223,26 +1232,26 @@ They are defined in (\ref{met}) and become here
 g_{ij}=\left( 
 \begin{array}{lll}
 1/\left[ \left| \nabla \psi \right| \cos \alpha \right] ^{2} & r\tan \alpha
-/\left[ \left| \nabla \psi \right| \cos \alpha \right]  & 0 \\ 
-r\tan \alpha /\left[ \left| \nabla \psi \right| \cos \alpha \right]  & 
-r^{2}/\cos ^{2}\alpha  & 0 \\ 
+/\left[ \left| \nabla \psi \right| \cos \alpha \right] & 0 \\ 
+r\tan \alpha /\left[ \left| \nabla \psi \right| \cos \alpha \right] & 
+r^{2}/\cos ^{2}\alpha & 0 \\ 
 0 & 0 & R^{2}
 \end{array}
-\right)   \label{gijpsitheta}
+\right)  \label{gijpsitheta}
 \end{equation}
 or equivalently 
 \begin{equation}
 g_{ij}=\left( 
 \begin{array}{lll}
-\left. \partial r/\partial \psi \right| _{\theta }^{2} & \left. \partial r/%
-\partial \psi \right| _{\theta }\left. \partial r/\partial \theta \right|
+\left. \partial r/\partial \psi \right| _{\theta }^{2} & \left. \partial
+r/\partial \psi \right| _{\theta }\left. \partial r/\partial \theta \right|
 _{\psi } & 0 \\ 
-\left. \partial r/\partial \psi \right| _{\theta }\left. \partial r/\partial %
+\left. \partial r/\partial \psi \right| _{\theta }\left. \partial r/\partial
 \theta \right| _{\psi } & \left. \partial r/\partial \theta \right| _{\psi
 }^{2}+r^{2} & 0 \\ 
 0 & 0 & R^{2}
 \end{array}
-\right)   \nonumber
+\right)  \nonumber
 \end{equation}
 and 
 \begin{equation}
@@ -1253,7 +1262,7 @@ g^{ij}=\left(
 -\left| \nabla \psi \right| \sin \alpha /r & 1/r^{2} & 0 \\ 
 0 & 0 & 1/R^{2}
 \end{array}
-\right) 
+\right)
 \end{equation}
 As a result 
 \begin{equation}
@@ -1309,23 +1318,441 @@ They are defined in (\ref{chris}) and are here
 \widehat{\psi }\right) +\frac{\left| \nabla \psi \right| \cos \alpha }{Rr}%
 \frac{\partial }{\partial \theta }\left( \frac{R}{\left| \nabla \psi \right|
 \cos \alpha }{\bf A}\cdot \widehat{\theta }\right) +\frac{1}{R}\frac{%
-\partial }{\partial \phi }\left( {\bf A}\cdot \widehat{\phi }\right)
+\partial }{\partial \phi }\left( {\bf A}\cdot \widehat{\phi }\right) 
+\label{psithetadiv}
 \end{equation}
 
 \paragraph{Curl}
 
 \begin{eqnarray}
 \left( \nabla \times {\bf A}\right) \cdot \widehat{\psi } &=&\frac{\cos
-\alpha }{Rr}\frac{\partial }{\partial \theta }\left( R{\bf A}\cdot \widehat{%
+\alpha }{Rr}\frac{\partial }{\partial \theta }\left( R{\bf A}\cdot \widehat{
 \phi }\right) -\frac{1}{R}\frac{\partial }{\partial \phi }\left( {\bf A}%
-\cdot \widehat{s}\right) \\
+\cdot \widehat{s}\right)  \\
 \left( \nabla \times {\bf A}\right) \cdot \widehat{\theta } &=&\frac{1}{R}%
 \frac{\partial }{\partial \phi }\left( {\bf A}\cdot \widehat{r}\right) -%
-\frac{\left| \nabla \psi \right| \cos \alpha }{R}\frac{\partial }{\partial
-\psi }\left( R{\bf A}\cdot \widehat{\phi }\right) \\
+\frac{\left| \nabla \psi \right| \cos \alpha }{R}\frac{\partial }{\partial %
+\psi }\left( R{\bf A}\cdot \widehat{\phi }\right)  \\
 \left( \nabla \times {\bf A}\right) \cdot \widehat{\phi } &=&\frac{\left|
 \nabla \psi \right| \cos \alpha }{r}\frac{\partial }{\partial \psi }\left( 
 \frac{r{\bf A}\cdot \widehat{s}}{\cos \alpha }\right) -\frac{\left| \nabla
 \psi \right| \cos \alpha }{r}\frac{\partial }{\partial \theta }\left( \frac{%
-{\bf A}\cdot \widehat{r}}{\left| \nabla \psi \right| \cos \alpha }\right)
+{\bf A}\cdot \widehat{r}}{\left| \nabla \psi \right| \cos \alpha }\right) 
+\end{eqnarray}
+
+\section{Momentum Space}
+
+We consider a cartesian momentum space in coordinates $\left(
+p_{x},p_{y},p_{z}\right) $ along axes $\left( \widehat{x},\widehat{y},%
+\widehat{z}\right) $. The vector position is momentum space is written
+\begin{equation}
+{\bf P}=p_{x}\widehat{x}+p_{y}\widehat{y}+p_{z}\widehat{z}
+\end{equation}
+
+We consider the two following curvilinear systems:
+
+\subsection{System $\left( p_{\Vert },p_{\bot },\varphi \right) $}
+
+\subsubsection{Definition}
+
+The coordinates $\left( p_{\Vert },p_{\bot },\varphi \right) $ are defined
+on the space 
+\begin{eqnarray}
+-\infty \leq p_{\Vert } &<&\infty  \\
+0\leq p_{\bot } &<&\infty  \\
+0\leq \varphi  &<&2\pi 
+\end{eqnarray}
+and is related to $\left( p_{x},p_{y},p_{z}\right) $ by
+
+\begin{eqnarray}
+p_{\Vert } &=&p_{z}  \label{pparpperpdef} \\
+p_{\bot } &=&\sqrt{p_{x}^{2}+p_{y}^{2}}  \nonumber \\
+\varphi  &=&\arctan \left( p_{y}/p_{x}\right) +\pi H\left( -p_{x}\right) \;\
+\left[ 2\pi \right]   \nonumber
+\end{eqnarray}
+which is inverted to 
+\begin{eqnarray}
+p_{x} &=&p_{\bot }\cos \varphi  \\
+p_{y} &=&p_{\bot }\sin \varphi   \nonumber \\
+p_{z} &=&p_{\Vert }  \nonumber
+\end{eqnarray}
+
+\subsubsection{Position Vector}
+
+The position vector in momentum space then becomes 
+\begin{equation}
+{\bf P}=p_{\bot }\widehat{\bot }+p_{\Vert }\widehat{\Vert }
+\end{equation}
+where we define a local orthonormal basis $\left( \widehat{\Vert },\widehat{%
+\bot },\widehat{\varphi }\right) $ as 
+\begin{eqnarray}
+\widehat{\Vert } &=&\widehat{z} \\
+\widehat{\bot } &=&\cos \varphi \;\widehat{x}+\sin \varphi \;\widehat{y} \\
+\widehat{\varphi } &=&\widehat{p}_{\Vert }\times \widehat{p}_{\bot }=-\sin
+\varphi \;\widehat{x}+\cos \varphi \;\widehat{y}
+\end{eqnarray}
+
+\subsubsection{Covariant Basis}
+
+The covariant vector basis is defined in (\ref{cov}), which becomes here 
+\begin{eqnarray}
+{\bf e}_{\Vert } &=&\frac{\partial {\bf P}}{\partial p_{\Vert }}=\widehat{
+\Vert } \\
+{\bf e}_{_{\bot }} &=&\frac{\partial {\bf P}}{\partial p_{\bot }}=\widehat{
+\bot } \\
+{\bf e}_{\varphi } &=&\frac{\partial {\bf P}}{\partial \varphi }=p_{\bot }%
+\frac{\partial \widehat{\bot }}{\partial \varphi }=p_{\bot }\widehat{\varphi 
+}
+\end{eqnarray}
+so that we have the covariant basis 
+\begin{equation}
+\left( {\bf e}_{\Vert },{\bf e}_{_{\bot }},{\bf e}_{\varphi }\right) =\left( 
+\widehat{\Vert },\widehat{\bot },p_{\bot }\widehat{\varphi }\right) 
+\end{equation}
+the scaling factors 
+\begin{equation}
+\left( h_{\Vert },h_{_{\bot }},h_{\varphi }\right) =\left( 1,1,p_{\bot
+}\right) 
+\end{equation}
+and the normalized tangent basis 
+\begin{equation}
+\left( \widehat{e}_{\Vert },\widehat{e}_{_{\bot }},\widehat{e}_{\varphi
+}\right) =\left( \widehat{\Vert },\widehat{\bot },\widehat{\varphi }\right) 
+\end{equation}
+
+\subsubsection{Contravariant Basis}
+
+The Contravariant vector basis is defined in (\ref{cont}), which becomes
+here 
+\begin{eqnarray}
+{\bf e}^{\Vert } &=&\nabla p_{\Vert }=\widehat{\Vert } \\
+{\bf e}^{\bot } &=&\nabla p_{\bot }=\widehat{\bot } \\
+{\bf e}^{\varphi } &=&\nabla \varphi =\frac{\widehat{\varphi }}{p_{\bot }}
+\end{eqnarray}
+
+The relations (\ref{rel1}-\ref{rel2}) are here readily verified. The
+normalized reciprocal basis is 
+\begin{equation}
+\left( \widehat{e}^{\Vert },\widehat{e}^{\bot },\widehat{e}^{\varphi
+}\right) =\left( \widehat{\Vert },\widehat{\bot },\widehat{\varphi }\right) 
+\end{equation}
+which here coincides with the normalized tangent basis, since both bases are
+orthogonal.
+
+\subsubsection{Metric Coefficients}
+
+They are defined in (\ref{met}) and become here 
+\begin{eqnarray}
+g_{ij} &=&\left( 
+\begin{array}{lll}
+1 & 0 & 0 \\ 
+0 & 1 & 0 \\ 
+0 & 0 & p_{\bot }^{2}
+\end{array}
+\right)  \\
+g^{ij} &=&\left( 
+\begin{array}{lll}
+1 & 0 & 0 \\ 
+0 & 1 & 0 \\ 
+0 & 0 & 1/p_{\bot }^{2}
+\end{array}
+\right)   \nonumber
+\end{eqnarray}
+
+As a result 
+\begin{equation}
+g=p_{\bot }^{2}
+\end{equation}
+and the Jacobian is 
+\begin{equation}
+J=p_{\bot }
+\end{equation}
+
+\subsubsection{Differential elements}
+
+\begin{eqnarray}
+dl\left( p_{\Vert }\right)  &=&dp_{\Vert } \\
+dl\left( p_{\bot }\right)  &=&dp_{\bot } \\
+dl\left( \varphi \right)  &=&p_{\bot }d\varphi 
+\end{eqnarray}
+
+\begin{eqnarray}
+d{\bf S}\left( p_{\Vert }\right)  &=&p_{\bot }dp_{\bot }d\varphi \widehat{%
+\Vert } \\
+d{\bf S}\left( p_{\bot }\right)  &=&p_{\bot }dp_{\Vert }d\varphi \widehat{%
+\bot } \\
+d{\bf S}\left( \varphi \right)  &=&dp_{\Vert }dp_{\bot }\widehat{\varphi }
+\end{eqnarray}
+
+\begin{equation}
+d^{3}{\bf X}=p_{\bot }dp_{\Vert }dp_{\bot }d\varphi 
+\end{equation}
+
+\subsubsection{Christoffel Symbols}
+
+They are defined in (\ref{chris}) and are all zero here except
+
+\[
+\left\{ 
+\begin{array}{l}
+\varphi  \\ 
+\begin{array}{ll}
+p_{\bot } & R
+\end{array}
+\end{array}
+\right\} =\left\{ 
+\begin{array}{l}
+\varphi  \\ 
+\begin{array}{ll}
+R & p_{\bot }
+\end{array}
+\end{array}
+\right\} =\frac{1}{2}g^{\varphi \varphi }\frac{\partial g_{\varphi \varphi }%
+}{\partial p_{\bot }}=\frac{1}{p_{\bot }}
+\]
+\begin{equation}
+\left\{ 
+\begin{array}{l}
+p_{\bot } \\ 
+\begin{array}{ll}
+\varphi  & \varphi 
+\end{array}
+\end{array}
+\right\} =-\frac{1}{2}g^{RR}\frac{\partial g_{\varphi \varphi }}{\partial 
+p_{\bot }}=-p_{\bot }
+\end{equation}
+
+\subsubsection{Differential Operations}
+
+\paragraph{Gradient}
+
+\begin{equation}
+\nabla _{{\bf p}}f=\frac{\partial f}{\partial p_{\Vert }}\widehat{\Vert }+%
+\frac{\partial f}{\partial p_{\bot }}\widehat{\bot }+\frac{1}{p_{\bot }}%
+\frac{\partial f}{\partial \varphi }\widehat{\varphi }
+\end{equation}
+
+\paragraph{Divergence}
+
+\begin{equation}
+\nabla _{{\bf p}}\cdot {\bf A}=\frac{\partial }{\partial p_{\Vert }}\left( 
+{\bf A}\cdot \widehat{\Vert }\right) +\frac{1}{p_{\bot }}\frac{\partial }{%
+\partial p_{\bot }}\left( p_{\bot }{\bf A}\cdot \widehat{\bot }\right) +%
+\frac{1}{p_{\bot }}\frac{\partial }{\partial \varphi }\left( {\bf A}\cdot 
+\widehat{\varphi }\right) 
+\end{equation}
+
+\paragraph{Curl}
+
+\begin{eqnarray}
+\left( \nabla _{{\bf p}}\times {\bf A}\right) \cdot \widehat{\Vert } &=&%
+\frac{1}{p_{\bot }}\frac{\partial }{\partial p_{\bot }}\left( p_{\bot }{\bf A%
+}\cdot \widehat{\varphi }\right) -\frac{1}{p_{\bot }}\frac{\partial }{%
+\partial \varphi }\left( {\bf A}\cdot \widehat{\bot }\right)  \\
+\left( \nabla _{{\bf p}}\times {\bf A}\right) \cdot \widehat{\bot } &=&\frac{%
+1}{p_{\bot }}\frac{\partial }{\partial \varphi }\left( {\bf A}\cdot \widehat{%
+\Vert }\right) -\frac{\partial }{\partial p_{\Vert }}\left( {\bf A}\cdot 
+\widehat{\varphi }\right)  \\
+\left( \nabla _{{\bf p}}\times {\bf A}\right) \cdot \widehat{\varphi } &=&%
+\frac{\partial }{\partial p_{\Vert }}\left( {\bf A}\cdot \widehat{\bot }%
+\right) -\frac{\partial }{\partial p_{\bot }}\left( {\bf A}\cdot \widehat{%
+\Vert }\right) 
+\end{eqnarray}
+
+\subsection{System $\left( p,\xi ,\varphi \right) $}
+
+\subsubsection{Definition}
+
+The coordinates $\left( p,\xi ,\varphi \right) $ are defined on the space 
+\begin{eqnarray}
+0\leq p &<&\infty  \\
+-1\leq \xi  &<&1 \\
+0\leq \varphi  &<&2\pi 
+\end{eqnarray}
+and is related to $\left( p_{x},p_{y},p_{z}\right) $ by
+
+\begin{eqnarray}
+p &=&\sqrt{p_{x}^{2}+p_{y}^{2}+p_{z}^{2}}  \label{pxidef} \\
+\xi  &=&\frac{p_{z}}{\sqrt{p_{x}^{2}+p_{y}^{2}+p_{z}^{2}}} \\
+\varphi  &=&\arctan \left( p_{y}/p_{x}\right) +\pi H\left( -p_{x}\right) \;\
+\left[ 2\pi \right]   \nonumber
+\end{eqnarray}
+which is inverted to 
+\begin{eqnarray}
+p_{x} &=&p\sqrt{1-\xi ^{2}}\cos \varphi  \\
+p_{y} &=&p\sqrt{1-\xi ^{2}}\sin \varphi   \nonumber \\
+p_{z} &=&p\xi   \nonumber
+\end{eqnarray}
+
+Note that we have the following transformation from $\left( p_{\Vert
+},p_{\bot }\right) $ to $\left( p,\xi \right) $%
+\begin{eqnarray}
+p &=&\sqrt{p_{\Vert }^{2}+p_{\bot }^{2}}  \label{pxi} \\
+\xi  &=&\frac{p_{\Vert }}{\sqrt{p_{\Vert }^{2}+p_{\bot }^{2}}}  \nonumber
+\end{eqnarray}
+which is inverted to
+\begin{eqnarray}
+p_{\Vert } &=&p\xi   \label{pparpperp} \\
+p_{\bot } &=&p\sqrt{1-\xi ^{2}}  \nonumber
+\end{eqnarray}
+
+\subsubsection{Position Vector}
+
+The position vector in momentum space then becomes 
+\begin{equation}
+{\bf P}=p\widehat{p}
+\end{equation}
+where we define a local orthonormal basis $\left( \widehat{p},\widehat{\xi },%
+\widehat{\varphi }\right) $ as 
+\begin{eqnarray}
+\widehat{p} &=&\sqrt{1-\xi ^{2}}\left( \cos \varphi \;\widehat{x}+\sin
+\varphi \;\widehat{y}\right) +\xi \;\widehat{z} \\
+\widehat{\xi } &=&\widehat{\varphi }\times \widehat{p}=\xi \left( \cos
+\varphi \;\widehat{x}+\sin \varphi \;\widehat{y}\right) -\sqrt{1-\xi ^{2}}\;%
+\widehat{z}\; \\
+\widehat{\varphi } &=&-\sin \varphi \;\widehat{x}+\cos \varphi \;\widehat{y}
+\end{eqnarray}
+
+\subsubsection{Covariant Basis}
+
+The covariant vector basis is defined in (\ref{cov}), which becomes here 
+\begin{eqnarray}
+{\bf e}_{p} &=&\frac{\partial {\bf P}}{\partial p}=\widehat{p} \\
+{\bf e}_{_{\xi }} &=&\frac{\partial {\bf P}}{\partial \xi }=p\frac{\partial 
+\widehat{p}}{\partial \xi }=-\frac{p}{\sqrt{1-\xi ^{2}}}\widehat{\xi } \\
+{\bf e}_{\varphi } &=&\frac{\partial {\bf P}}{\partial \varphi }=p\frac{%
+\partial \widehat{p}}{\partial \varphi }=p\sqrt{1-\xi ^{2}}\widehat{\varphi }
+\end{eqnarray}
+so that we have the covariant basis 
+\begin{equation}
+\left( {\bf e}_{p},{\bf e}_{_{\xi }},{\bf e}_{\varphi }\right) =\left( 
+\widehat{p},-\frac{p}{\sqrt{1-\xi ^{2}}}\widehat{\xi },p\sqrt{1-\xi ^{2}}%
+\widehat{\varphi }\right) 
+\end{equation}
+the scaling factors 
+\begin{equation}
+\left( h_{p},h_{_{\xi }},h_{\varphi }\right) =\left( 1,-\frac{p}{\sqrt{1-\xi
+^{2}}},p\sqrt{1-\xi ^{2}}\right) 
+\end{equation}
+and the normalized tangent basis 
+\begin{equation}
+\left( \widehat{e}_{p},\widehat{e}_{_{\xi }},\widehat{e}_{\varphi }\right)
+=\left( \widehat{p},\widehat{\xi },\widehat{\varphi }\right) 
+\end{equation}
+
+\subsubsection{Contravariant Basis}
+
+The Contravariant vector basis is defined in (\ref{cont}), which becomes
+here 
+\begin{eqnarray}
+{\bf e}^{p} &=&\nabla p=\frac{\partial p}{\partial {\bf P}}=\widehat{p} \\
+{\bf e}^{\xi } &=&\nabla \xi =\frac{\partial \xi }{\partial {\bf P}}=-\frac{%
+\sqrt{1-\xi ^{2}}}{p}\widehat{\xi } \\
+{\bf e}^{\varphi } &=&\nabla \varphi =\frac{\partial \varphi }{\partial {\bf %
+P}}=\frac{1}{p\sqrt{1-\xi ^{2}}}\widehat{\varphi }
+\end{eqnarray}
+
+The relations (\ref{rel1}-\ref{rel2}) are here readily verified. The
+reciprocal basis is 
+\begin{equation}
+\left( {\bf e}^{p},{\bf e}^{\xi },{\bf e}^{\varphi }\right) =\left( \widehat{%
+p},-\frac{\sqrt{1-\xi ^{2}}}{p}\widehat{\xi },\frac{1}{p\sqrt{1-\xi ^{2}}}%
+\widehat{\varphi }\right) 
+\end{equation}
+and the normalized reciprocal basis is 
+\begin{equation}
+\left( \widehat{e}^{p},\widehat{e}^{\xi },\widehat{e}^{\varphi }\right)
+=\left( \widehat{p},\widehat{\xi },\widehat{\varphi }\right) 
+\end{equation}
+which here coincides with the normalized tangent basis, since both bases are
+orthogonal.
+
+\subsubsection{Metric Coefficients}
+
+They are defined in (\ref{met}) and become here 
+\begin{eqnarray}
+g_{ij} &=&\left( 
+\begin{array}{lll}
+1 & 0 & 0 \\ 
+0 & p^{2}/\left( 1-\xi ^{2}\right)  & 0 \\ 
+0 & 0 & p^{2}\left( 1-\xi ^{2}\right) 
+\end{array}
+\right)  \\
+g^{ij} &=&\left( 
+\begin{array}{lll}
+1 & 0 & 0 \\ 
+0 & \left( 1-\xi ^{2}\right) /p^{2} & 0 \\ 
+0 & 0 & 1/\left[ p^{2}\left( 1-\xi ^{2}\right) \right] 
+\end{array}
+\right)   \nonumber
+\end{eqnarray}
+
+As a result 
+\begin{equation}
+g=p^{4}
+\end{equation}
+and the Jacobian is 
+\begin{equation}
+J=p^{2}  \label{jacpxi}
+\end{equation}
+
+\subsubsection{Differential elements}
+
+\begin{eqnarray}
+dl\left( p\right)  &=&dp \\
+dl\left( \xi \right)  &=&\frac{p}{\sqrt{1-\xi ^{2}}}d\xi  \\
+dl\left( \varphi \right)  &=&p\sqrt{1-\xi ^{2}}d\varphi 
+\end{eqnarray}
+
+\begin{eqnarray}
+d{\bf S}\left( p\right)  &=&p^{2}d\xi d\varphi \widehat{p} \\
+d{\bf S}\left( \xi \right)  &=&-p\sqrt{1-\xi ^{2}}dpd\varphi \widehat{\xi }
+\\
+d{\bf S}\left( \varphi \right)  &=&\frac{p}{\sqrt{1-\xi ^{2}}}dpd\xi 
+\widehat{\varphi }
+\end{eqnarray}
+
+\begin{equation}
+d^{3}{\bf X}=p^{2}dpd\xi d\varphi 
+\end{equation}
+
+\subsubsection{Christoffel Symbols}
+
+They are defined in (\ref{chris}) and are all zero here except
+
+\subsubsection{Differential Operations}
+
+\paragraph{Gradient}
+
+\begin{equation}
+\nabla _{{\bf p}}f=\frac{\partial f}{\partial p}\widehat{p}-\frac{\sqrt{%
+1-\xi ^{2}}}{p}\frac{\partial f}{\partial \xi }\widehat{\xi }+\frac{1}{p%
+\sqrt{1-\xi ^{2}}}\frac{\partial f}{\partial \varphi }\widehat{\varphi }
+\end{equation}
+
+\paragraph{Divergence}
+
+\begin{equation}
+\nabla _{{\bf p}}\cdot {\bf A}=\frac{1}{p^{2}}\frac{\partial }{\partial p}%
+\left( p^{2}{\bf A}\cdot \widehat{p}\right) -\frac{1}{p}\frac{\partial }{%
+\partial \xi }\left( \sqrt{1-\xi ^{2}}{\bf A}\cdot \widehat{\xi }\right) +%
+\frac{1}{p\sqrt{1-\xi ^{2}}}\frac{\partial }{\partial \varphi }\left( {\bf A}%
+\cdot \widehat{\varphi }\right)   \label{pxidiv}
+\end{equation}
+
+\paragraph{Curl}
+
+\begin{eqnarray}
+\left( \nabla \times {\bf A}\right) \cdot \widehat{p} &=&\frac{1}{p}\frac{%
+\partial }{\partial \xi }\left( \sqrt{1-\xi ^{2}}{\bf A}\cdot \widehat{%
+\varphi }\right) +\frac{1}{p\sqrt{1-\xi ^{2}}}\frac{\partial }{\partial 
+\varphi }\left( {\bf A}\cdot \widehat{\xi }\right)  \\
+\left( \nabla \times {\bf A}\right) \cdot \widehat{\xi } &=&\frac{1}{p}\frac{%
+\partial }{\partial p}\left( p{\bf A}\cdot \widehat{\varphi }\right) -\frac{1%
+}{p\sqrt{1-\xi ^{2}}}\frac{\partial }{\partial \varphi }\left( {\bf A}\cdot 
+\widehat{p}\right)  \\
+\left( \nabla \times {\bf A}\right) \cdot \widehat{\varphi } &=&-\frac{1}{p}%
+\frac{\partial }{\partial p}\left( p{\bf A}\cdot \widehat{\xi }\right) -%
+\frac{\sqrt{1-\xi ^{2}}}{p}\frac{\partial \left( {\bf A}\cdot \widehat{p}%
+\right) }{\partial \xi }
 \end{eqnarray}
