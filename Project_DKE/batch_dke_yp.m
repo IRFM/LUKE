@@ -21,7 +21,7 @@
 %
 %--------------------------------------------------------------
 %
-function cr = dke_batch_yp(job,name,machine,queue)
+function cr = dke_batch_yp(jobname,nomuser,machine,queue)
 
 clc
 
@@ -30,12 +30,12 @@ cr    = 0;
 
 
 
-if nargin <2
-	job =1;
+if nargin <1
+	jobname =1;
 end
 
 if nargin <2
-	name ='peysson';
+	nomuser ='peysson';
 end
 
 if nargin <3
@@ -77,7 +77,7 @@ modele = ['#!/bin/csh',crs, ...
 	     'pwd',crs, ...
 	     'matlab <<@@ > /dev/null ',crs, ...
 	     'cd /usr/drfc/peysson/Project_DKE',crs, ...
-	     'script_dke_1yp(',job,')',crs, ...
+	     'script_dke_1yp',crs, ...
 	     'exit',crs, ...
 	     '@@',crs, ...
 	     'exit',crs];
@@ -125,7 +125,7 @@ end
    fprintf(fid,'#PBS -q %s\n',queue);
 %   fprintf(fid,'#PBS -l host=%s\n',ordi);
    fprintf(fid,'#PBS -m be\n');
-   fprintf(fid,'#PBS -M %s\n',name);
+   fprintf(fid,'#PBS -M %s\n',nomuser);
    fprintf(fid,'#PBS -r n\n');
    fprintf(fid,'#PBS -V\n');
    fprintf(fid,'PBS_O_WORKDIR="%s"\n',root);
