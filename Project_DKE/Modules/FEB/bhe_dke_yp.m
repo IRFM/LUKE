@@ -33,7 +33,7 @@ if nargin < 4,
 	return;
 end
 %
-[qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;%Physics constant
+[qe,me,mp,mn,epsi0,mu0,re,mc2,clum,alpha] = pc_dke_yp;%Physics constant
 %
 ec = repmat(ones(length(t_in),1)*ec_in(:)'/mc2,[1,1,length(k_in)]);%Relativistic units
 k = shiftdim(repmat(ones(length(ec_in),1)*k_in(:)'/mc2,[1,1,length(t_in)]),2);%Relativistic units
