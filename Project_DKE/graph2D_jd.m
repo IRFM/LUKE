@@ -58,8 +58,8 @@ if nargin == 0
     error('no argument')
 end
 %
-x = x(:);
-y = y(:);
+%x = x(:);
+%y = y(:);
 %
 if ~isnan(max)
     if isnan(Z_0)
