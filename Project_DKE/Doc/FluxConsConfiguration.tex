@@ -1,0 +1,411 @@
+Bounce-averaged spatial flux divergence
+
+In this section, calculations are restricted to the bounce averaged
+anomalous radial transport equation that is added to the Fokker-Planck
+equation in an heuristic manner. Here, momentum dynamics is omitted for sake
+of clarity. It is considered that the anomalous transport equation may be
+cast in a conservative form as for the Fokker-Planck equation. Therefore,
+the problem is reduced to the calculation of the bounce averaged divergence
+of the spatial flux $\mathbf{S}_{\mathbf{r}}$ 
+\begin{equation}
+\left\{ \nabla _{\mathbf{r}}\cdot \mathbf{S}_{\mathbf{r}}\right\} =\left\{ 
+\frac{1}{J_{\mathbf{r}}}\frac{\partial }{\partial u^{i}}\left( J_{\mathbf{r}
+}S_{\mathbf{r}}^{i}\right) \right\}
+\end{equation}
+
+For this purpose, the contravariant vector basis $\left( \widehat{r},%
+\widehat{\theta },\widehat{\phi }\right) $ must be used, since it is
+associated to length coordinates in configuration. Indeed, $du^{i}$ are
+elementary lengths along the coordinate curves. Using general identities 
+\begin{equation}
+\left\{ 
+\begin{array}{l}
+\partial u^{r}=\left| \nabla r\right| ^{-1}\partial r \\ 
+\partial u^{\theta }=\left| \nabla \theta \right| ^{-1}\partial \theta \\ 
+\partial u^{\phi }=\left| \nabla \phi \right| ^{-1}\partial \phi
+\end{array}
+\right.
+\end{equation}
+with 
+\begin{equation}
+\left\{ 
+\begin{array}{l}
+\left| \nabla r\right| ^{-1}=1 \\ 
+\left| \nabla \theta \right| ^{-1}=r \\ 
+\left| \nabla \phi \right| ^{-1}=R
+\end{array}
+\right.
+\end{equation}
+and the Jacobian $J_{\mathbf{r}}=\left| \nabla r\times \nabla \theta \cdot
+\nabla \phi \right| ^{-1}=rR,$ it comes 
+\begin{equation}
+\frac{\partial }{\partial u^{r}}\left( J_{\mathbf{r}}S_{\mathbf{r}
+}^{r}\right) =\frac{\partial }{\partial r}\left( rRS_{\mathbf{r}}^{r}\right)
+\end{equation}
+\begin{equation}
+\frac{\partial }{\partial u^{\theta }}\left( J_{\mathbf{r}}S_{\mathbf{r}%
+}^{\theta }\right) =\frac{1}{r}\frac{\partial }{\partial \theta }\left( rRS_{%
+\mathbf{r}}^{\theta }\right)
+\end{equation}
+\begin{equation}
+\frac{\partial }{\partial u^{\phi }}\left( J_{\mathbf{r}}S_{\mathbf{r}%
+}^{\phi }\right) =\frac{1}{R}\frac{\partial }{\partial \phi }\left( rRS_{%
+\mathbf{r}}^{\phi }\right) =0
+\end{equation}
+taking benefits of the axisymmetry. Finally, 
+\begin{eqnarray}
+\nabla _{\mathbf{r}}\cdot \mathbf{S}_{\mathbf{r}} &=&\frac{1}{rR}\left[ 
+\frac{\partial }{\partial r}\left( rRS_{\mathbf{r}}^{r}\right) +\frac{1}{r}%
+\frac{\partial }{\partial \theta }\left( rRS_{\mathbf{r}}^{\theta }\right)
+\right]  \nonumber \\
+&=&\frac{1}{rR}\frac{\partial }{\partial r}\left( rRS_{\mathbf{r}
+}^{r}\right) +\frac{1}{r^{2}R}\frac{\partial }{\partial \theta }\left( rRS_{%
+\mathbf{r}}^{\theta }\right)
+\end{eqnarray}
+
+In order to perform bounce-averaging calculations, it is more appropriate to
+express the components of $\mathbf{S}_{\mathbf{r}}$ in the covariant vector
+basis $\left( \widehat{\psi },\widehat{s},\widehat{\phi }\right) $ since in
+the thin banana limit, particle trajectories remain confined in a magnetic
+surface labelled by the poloidal magnetic flux $\psi $ . Therefore, 
+\begin{equation}
+\mathbf{S}_{\mathbf{r}}=S_{\mathbf{r}}^{r}\widehat{r}+S_{\mathbf{r}}^{\theta
+}\widehat{\theta }=S_{\mathbf{r}}^{\psi }\widehat{\psi }+S_{\mathbf{r}}^{s}%
+\widehat{s}
+\end{equation}
+where the covariant vector basis may be deduced from the contravariant one
+by the rotation transform characterized by the matrix $R$
+
+\begin{equation}
+\left( 
+\begin{array}{l}
+\widehat{\psi } \\ 
+\widehat{s}
+\end{array}
+\right) =R\left( 
+\begin{array}{l}
+\widehat{r} \\ 
+\widehat{\theta }
+\end{array}
+\right)
+\end{equation}
+according to the relation
+
+\begin{equation}
+R\left( 
+\begin{array}{ll}
+\widehat{\psi }\widehat{\cdot r} & \widehat{\psi }\cdot \widehat{\theta } \\ 
+\widehat{s}\widehat{\cdot r} & \widehat{s}\cdot \widehat{\theta }
+\end{array}
+\right) =\left( 
+\begin{array}{ll}
+\cos \alpha & -\sin \alpha \\ 
+\sin \alpha & \cos \alpha
+\end{array}
+\right)
+\end{equation}
+
+Flux vector coordinates relations are then 
+\begin{equation}
+\left( 
+\begin{array}{l}
+S_{\mathbf{r}}^{r} \\ 
+S_{\mathbf{r}}^{\theta }
+\end{array}
+\right) =R^{-1}\left( 
+\begin{array}{l}
+S_{\mathbf{r}}^{\psi } \\ 
+S_{\mathbf{r}}^{s}
+\end{array}
+\right)
+\end{equation}
+and,
+
+\begin{equation}
+\nabla _{\mathbf{r}}\cdot \mathbf{S}_{\mathbf{r}}=\frac{1}{rR}\frac{\partial 
+}{\partial r}\left( rR\left[ S_{\mathbf{r}}^{\psi }\cos \alpha +S_{\mathbf{r}%
+}^{s}\sin \alpha \right] \right) +\frac{1}{r^{2}R}\frac{\partial }{\partial
+\theta }\left( rR\left[ -S_{\mathbf{r}}^{\psi }\sin \alpha +S_{\mathbf{r}
+}^{s}\cos \alpha \right] \right)
+\end{equation}
+
+From the relations between the coordinate systems $\left( r,\theta \right) $
+and $\left( \psi ,s\right) ,$ 
+\begin{equation}
+\left( 
+\begin{array}{l}
+\partial /\partial r \\ 
+\partial /\partial \theta
+\end{array}
+\right) =\left( 
+\begin{array}{ll}
+\partial \psi /\partial r & \partial s/\partial r \\ 
+\partial \psi /\partial \theta & \partial s/\partial \theta
+\end{array}
+\right) \cdot \left( 
+\begin{array}{l}
+\partial /\partial \psi \\ 
+\partial /\partial s
+\end{array}
+\right)
+\end{equation}
+with 
+\begin{eqnarray}
+\left. \frac{\partial \psi }{\partial r}\right| _{s} &=&\frac{\nabla \psi
+\cdot \widehat{\psi }}{\nabla r\cdot \widehat{r}}\left( \widehat{\psi }\cdot 
+\widehat{r}\right) =\left( \nabla \psi \cdot \widehat{\psi }\right) \cos
+\alpha  \nonumber \\
+\left. \frac{\partial \psi }{\partial \theta }\right| _{s} &=&\frac{\nabla
+\psi \cdot \widehat{\psi }}{\nabla \theta \cdot \widehat{\theta }}\left( 
+\widehat{\psi }\cdot \widehat{\theta }\right) =-\left( \nabla \psi \cdot 
+\widehat{\psi }\right) r\sin \alpha  \nonumber \\
+\left. \frac{\partial s}{\partial r}\right| _{\psi } &=&\frac{\nabla s\cdot 
+\widehat{s}}{\nabla r\cdot \widehat{r}}\left( \widehat{s}\cdot \widehat{r}%
+\right) =\sin \alpha  \nonumber \\
+\left. \frac{\partial s}{\partial \theta }\right| _{\psi } &=&\frac{\nabla
+s\cdot \widehat{s}}{\nabla \theta \cdot \widehat{\theta }}\left( \widehat{s}%
+\cdot \widehat{\theta }\right) =r\cos \alpha
+\end{eqnarray}
+the transport equation may be recast in a more natural form for the
+bounce-averaging procedure 
+\begin{eqnarray}
+\nabla _{\mathbf{r}}\cdot \mathbf{S}_{\mathbf{r}} &=&\frac{1}{rR}\left[
+\left( \nabla \psi \cdot \widehat{\psi }\right) \cos \alpha \frac{\partial }{
+\partial \psi }\left[ rRS_{\mathbf{r}}^{r}\right] +\sin \alpha \frac{%
+\partial }{\partial s}\left[ rRS_{\mathbf{r}}^{r}\right] \right]  \nonumber
+\\
+&&+\frac{1}{r^{2}R}\left[ -\left( \nabla \psi \cdot \widehat{\psi }\right)
+r\sin \alpha \frac{\partial }{\partial \psi }\left[ rRS_{\mathbf{r}}^{\theta
+}\right] +r\cos \alpha \frac{\partial }{\partial s}\left[ rRS_{\mathbf{r}%
+}^{\theta }\right] \right]
+\end{eqnarray}
+
+The value of the flux $\psi $ in the center can be arbitrarily set to $0$,
+and the evolution of $\psi $ must be monotonic (nested flux-surfaces), so
+that the factor $\nabla \psi \cdot \widehat{\psi }$ can be expressed as 
+\begin{equation}
+\nabla \psi \cdot \widehat{\psi }=\sigma _{\psi }\left| \nabla \psi \right|
+\end{equation}
+where $\sigma _{\psi }=\pm 1$ is constant across the plasma.
+
+Finally, 
+\begin{eqnarray}
+\nabla _{\mathbf{r}}\cdot \mathbf{S}_{\mathbf{r}} &=&\frac{1}{rR}\sigma
+_{\psi }\left| \nabla \psi \right| \cos \alpha \frac{\partial }{\partial %
+\psi }\left[ rR\left( \cos \alpha S_{\mathbf{r}}^{\psi }+\sin \alpha S_{%
+\mathbf{r}}^{s}\right) \right]   \nonumber \\
+&&+\frac{1}{rR}\sin \alpha \frac{\partial }{\partial s}\left[ rR\left( \cos
+\alpha S_{\mathbf{r}}^{\psi }+\sin \alpha S_{\mathbf{r}}^{s}\right) \right] 
+\nonumber \\
+&&-\frac{1}{rR}\sigma _{\psi }\left| \nabla \psi \right| \sin \alpha \frac{%
+\partial }{\partial \psi }\left[ rR\left( -\sin \alpha S_{\mathbf{r}}^{\psi
+}+\cos \alpha S_{\mathbf{r}}^{s}\right) \right]   \nonumber \\
+&&+\frac{1}{rR}\cos \alpha \frac{\partial }{\partial s}\left[ rR\left( -\sin
+\alpha S_{\mathbf{r}}^{\psi }+\cos \alpha S_{\mathbf{r}}^{s}\right) \right] 
+\end{eqnarray}
+and regrouping, 
+\begin{eqnarray}
+rR\nabla _{\mathbf{r}}\cdot \mathbf{S}_{\mathbf{r}} &=&\sigma _{\psi }\left|
+\nabla \psi \right| \cos \alpha \left( \frac{\partial }{\partial \psi }%
+\left[ \cos \alpha rRS_{\mathbf{r}}^{\psi }\right] +\frac{\partial }{%
+\partial \psi }\left[ \sin \alpha rRS_{\mathbf{r}}^{s}\right] \right)  
+\nonumber \\
+&&+\sin \alpha \left( \frac{\partial }{\partial s}\left[ \cos \alpha rRS_{%
+\mathbf{r}}^{\psi }\right] +\frac{\partial }{\partial s}\left[ \sin \alpha
+rRS_{\mathbf{r}}^{s}\right] \right)   \nonumber \\
+&&-\sigma _{\psi }\left| \nabla \psi \right| \sin \alpha \left( -\frac{%
+\partial }{\partial \psi }\left[ \sin \alpha rRS_{\mathbf{r}}^{\psi }\right]
++\frac{\partial }{\partial \psi }\left[ \cos \alpha rRS_{\mathbf{r}%
+}^{s}\right] \right)   \nonumber \\
+&&+\cos \alpha \left( -\frac{\partial }{\partial s}\left[ \sin \alpha rRS_{%
+\mathbf{r}}^{\psi }\right] +\frac{\partial }{\partial s}\left[ \cos \alpha
+rRS_{\mathbf{r}}^{s}\right] \right) 
+\end{eqnarray}
+\begin{eqnarray}
+rR\nabla _{\mathbf{r}}\cdot \mathbf{S}_{\mathbf{r}} &=&\sigma _{\psi }\left|
+\nabla \psi \right| \cos \alpha \left( \cos \alpha \frac{\partial }{\partial %
+\psi }\left[ rRS_{\mathbf{r}}^{\psi }\right] +rRS_{\mathbf{r}}^{\psi }\frac{%
+\partial }{\partial \psi }\left[ \cos \alpha \right] \right)   \nonumber \\
+&&+\sigma _{\psi }\left| \nabla \psi \right| \cos \alpha \left( \sin \alpha 
+\frac{\partial }{\partial \psi }\left[ rRS_{\mathbf{r}}^{s}\right] +rRS_{%
+\mathbf{r}}^{s}\frac{\partial }{\partial \psi }\left[ \sin \alpha \right]
+\right)   \nonumber \\
+&&+\sigma _{\psi }\left| \nabla \psi \right| \sin \alpha \left( \sin \alpha 
+\frac{\partial }{\partial \psi }\left[ rRS_{\mathbf{r}}^{\psi }\right] +rRS_{%
+\mathbf{r}}^{\psi }\frac{\partial }{\partial \psi }\left[ \sin \alpha
+\right] \right)   \nonumber \\
+&&-\sigma _{\psi }\left| \nabla \psi \right| \sin \alpha \left( \cos \alpha 
+\frac{\partial }{\partial \psi }\left[ rRS_{\mathbf{r}}^{s}\right] +rRS_{%
+\mathbf{r}}^{s}\frac{\partial }{\partial \psi }\left[ \cos \alpha \right]
+\right)   \nonumber \\
+&&+\sin \alpha \left( \cos \alpha \frac{\partial }{\partial s}\left[ rRS_{%
+\mathbf{r}}^{\psi }\right] +rRS_{\mathbf{r}}^{\psi }\frac{\partial }{%
+\partial s}\left[ \cos \alpha \right] \right)   \nonumber \\
+&&+\sin \alpha \left( \sin \alpha \frac{\partial }{\partial s}\left[ rRS_{%
+\mathbf{r}}^{s}\right] +rRS_{\mathbf{r}}^{s}\frac{\partial }{\partial s}%
+\left[ \sin \alpha \right] \right)   \nonumber \\
+&&-\cos \alpha \left( \sin \alpha \frac{\partial }{\partial s}\left[ rRS_{%
+\mathbf{r}}^{\psi }\right] +rRS_{\mathbf{r}}^{\psi }\frac{\partial }{%
+\partial s}\left[ \sin \alpha \right] \right)   \nonumber \\
+&&+\cos \alpha \left( \cos \alpha \frac{\partial }{\partial s}\left[ rRS_{%
+\mathbf{r}}^{s}\right] +rRS_{\mathbf{r}}^{s}\frac{\partial }{\partial s}%
+\left[ \cos \alpha \right] \right) 
+\end{eqnarray}
+\begin{eqnarray}
+rR\nabla _{\mathbf{r}}\cdot \mathbf{S}_{\mathbf{r}} &=&\sigma _{\psi }\left|
+\nabla \psi \right| \frac{\partial }{\partial \psi }\left[ rRS_{\mathbf{r}%
+}^{\psi }\right]   \nonumber \\
+&&+\frac{\partial }{\partial s}\left[ rRS_{\mathbf{r}}^{s}\right]   \nonumber
+\\
+&&+\sigma _{\psi }\left| \nabla \psi \right| rRS_{\mathbf{r}}^{\psi }\left[
+\cos \alpha \frac{\partial \cos \alpha }{\partial \psi }+\sin \alpha \frac{%
+\partial \sin \alpha }{\partial \psi }\right]   \nonumber \\
+&&+\sigma _{\psi }\left| \nabla \psi \right| rRS_{\mathbf{r}}^{s}\left[ \cos
+\alpha \frac{\partial \sin \alpha }{\partial \psi }-\sin \alpha \frac{%
+\partial \cos \alpha }{\partial \psi }\right]   \nonumber \\
+&&+rRS_{\mathbf{r}}^{\psi }\left[ \sin \alpha \frac{\partial \cos \alpha }{%
+\partial s}-\cos \alpha \frac{\partial \sin \alpha }{\partial s}\right]  
+\nonumber \\
+&&+rRS_{\mathbf{r}}^{s}\left[ \sin \alpha \frac{\partial \sin \alpha }{%
+\partial s}+\cos \alpha \frac{\partial \cos \alpha }{\partial s}\right] 
+\end{eqnarray}
+\begin{eqnarray}
+rR\nabla _{\mathbf{r}}\cdot \mathbf{S}_{\mathbf{r}} &=&\sigma _{\psi }\left|
+\nabla \psi \right| \frac{\partial }{\partial \psi }\left[ rRS_{\mathbf{r}%
+}^{\psi }\right] +\frac{\partial }{\partial s}\left[ rRS_{\mathbf{r}%
+}^{s}\right]   \nonumber \\
+&&+\sigma _{\psi }\left| \nabla \psi \right| rRS_{\mathbf{r}}^{s}\frac{%
+\partial \alpha }{\partial \psi }-rRS_{\mathbf{r}}^{\psi }\frac{\partial %
+\alpha }{\partial s}
+\end{eqnarray}
+\begin{eqnarray}
+\nabla _{\mathbf{r}}\cdot \mathbf{S}_{\mathbf{r}} &=&\sigma _{\psi }\frac{%
+\left| \nabla \psi \right| }{rR}\frac{\partial }{\partial \psi }\left[ rRS_{%
+\mathbf{r}}^{\psi }\right] +\frac{1}{rR}\frac{\partial }{\partial s}\left[
+rRS_{\mathbf{r}}^{s}\right]   \nonumber \\
+&&+\sigma _{\psi }\left| \nabla \psi \right| S_{\mathbf{r}}^{s}\frac{%
+\partial \alpha }{\partial \psi }-S_{\mathbf{r}}^{\psi }\frac{\partial %
+\alpha }{\partial s}
+\end{eqnarray}
+
+The bounce average operation is 
+\begin{eqnarray}
+\left\{ \mathcal{A}\right\}  &=&\frac{1}{\tau _{b}}\left[ \frac{1}{2}%
+\sum_{\sigma }\right] _{T}\int_{s_{\min }}^{s_{\max }}\frac{ds}{\left|
+v_{s}\right| }\mathcal{A}  \nonumber \\
+&=&\frac{1}{\tau _{b}}\left[ \frac{1}{2}\sum_{\sigma }\right]
+_{T}\int_{s_{\min }}^{s_{\max }}\frac{ds}{\left| v_{\Vert }\right| }\frac{B}{%
+B_{P}}\mathcal{A}
+\end{eqnarray}
+
+Because the parallel dynamics is described in our model, we know the fluxes
+along the magnetic field lines, which is simply
+\begin{equation}
+S_{\mathbf{r}}^{s}=v_{s}f\left( v_{s}\right) 
+\end{equation}
+
+Since $f$ is constant along a field line, $\partial f/\partial s=0$ and we
+have simply
+\begin{eqnarray}
+\left\{ \frac{1}{rR}\frac{\partial }{\partial s}\left[ rRS_{\mathbf{r}%
+}^{s}\right] \right\}  &=&\frac{1}{\tau _{b}}\left[ \frac{1}{2}\sum_{\sigma
+}\right] _{T}\int_{s_{\min }}^{s_{\max }}\frac{ds}{\left| v_{s}\right| }%
+\frac{1}{rR}\frac{\partial }{\partial s}\left[ rRS_{\mathbf{r}}^{s}\right]  
+\nonumber \\
+&=&f\frac{1}{\tau _{b}}\left[ \frac{1}{2}\sum_{\sigma }\right] _{T}\sigma
+\int_{s_{\min }}^{s_{\max }}\frac{ds}{v_{s}}\frac{1}{rR}\frac{\partial }{%
+\partial s}\left[ rRv_{s}\right]  \\
+&=&f\frac{1}{\tau _{b}}\left[ \frac{1}{2}\sum_{\sigma }\right] _{T}\sigma
+\int_{s_{\min }}^{s_{\max }}ds\frac{\partial }{\partial s}\ln \left[ \frac{%
+rRv_{s}}{r\left( \psi ,0\right) R\left( \psi ,0\right) v_{s}\left( \psi
+,0,v_{s0}\right) }\right]  \\
+&=&f\frac{1}{\tau _{b}}\left[ \frac{1}{2}\sum_{\sigma }\right] _{T}\sigma
+\left( \ln \left[ \frac{r\left( \psi ,s_{\max }\right) }{r\left( \psi
+,s_{\min }\right) }\right] \ln \left[ \frac{R\left( \psi ,s_{\max }\right) }{%
+R\left( \psi ,s_{\min }\right) }\right] +\ln \left[ \frac{v_{s}\left( \psi
+,s_{\max },v_{s0}\right) }{v_{s}\left( \psi ,s_{\min },v_{s0}\right) }%
+\right] \right) 
+\end{eqnarray}
+
+For passing particles, the positions $\left( \psi ,s_{\min }\right) $ and $%
+\left( \psi ,s_{\max }\right) $ coincide and therefore the term vanishes.
+Because the factor is an odd function of $\sigma $, the sum over $\sigma $
+for trapped particle leads to $0$. Consequently,
+\begin{equation}
+\left\{ \frac{1}{rR}\frac{\partial }{\partial s}\left[ rRS_{\mathbf{r}%
+}^{s}\right] \right\} =0
+\end{equation}
+
+Using 
+\begin{equation}
+\left| \nabla \psi \right| =RB_{P}
+\end{equation}
+we find 
+\begin{equation}
+\left\{ \sigma _{\psi }\frac{\left| \nabla \psi \right| }{rR}\frac{\partial 
+}{\partial \psi }\left[ rRS_{\mathbf{r}}^{\psi }\right] \right\} =\sigma
+_{\psi }\frac{1}{\tau _{b}}\left[ \frac{1}{2}\sum_{\sigma }\right]
+_{T}\int_{s_{\min }}^{s_{\max }}\frac{ds}{\left| v_{\Vert }\right| }\frac{B}{%
+r}\frac{\partial }{\partial \psi }\left[ rRS_{\mathbf{r}}^{\psi }\right] 
+\end{equation}
+\begin{equation}
+\left\{ \sigma _{\psi }\left| \nabla \psi \right| S_{\mathbf{r}}^{s}\frac{%
+\partial \alpha }{\partial \psi }\right\} =\sigma _{\psi }\frac{1}{\tau _{b}}%
+\left[ \frac{1}{2}\sum_{\sigma }\right] _{T}\int_{s_{\min }}^{s_{\max }}%
+\frac{ds}{\left| v_{\Vert }\right| }RBS_{\mathbf{r}}^{s}\frac{\partial %
+\alpha }{\partial \psi }
+\end{equation}
+\begin{equation}
+\left\{ -S_{\mathbf{r}}^{\psi }\frac{\partial \alpha }{\partial s}\right\} =-%
+\frac{1}{\tau _{b}}\left[ \frac{1}{2}\sum_{\sigma }\right] _{T}\int_{s_{\min
+}}^{s_{\max }}\frac{ds}{\left| v_{s}\right| }S_{\mathbf{r}}^{\psi }\frac{%
+\partial \alpha }{\partial s}
+\end{equation}
+
+Cylindrincal limit with circular magnetic flux surfaces
+
+In the cylindrical limit with circular concentric magnetic flux surfaces $%
+R=R_{0},$ and $\alpha =0.$ Furthermore, since 
+\begin{equation}
+\left. \frac{\partial }{\partial r}\right| _{s}=\frac{\nabla \psi \cdot 
+\widehat{\psi }}{\nabla r\cdot \widehat{r}}\left( \widehat{\psi }\cdot 
+\widehat{r}\right) \frac{\partial }{\partial \psi }=\left( \nabla \psi \cdot 
+\widehat{\psi }\right) \frac{\partial }{\partial \psi }=\sigma _{\psi
+}\left| \nabla \psi \right| \frac{\partial }{\partial \psi }
+\end{equation}
+one obtains 
+\begin{equation}
+\left\{ \sigma _{\psi }\frac{\left| \nabla \psi \right| }{rR}\frac{\partial 
+}{\partial \psi }\left[ rRS_{\psi }\right] \right\} =\frac{1}{r}\frac{%
+\partial }{\partial r}\left[ r\left\{ S_{\mathbf{r}}^{\psi }\right\} \right]
+=\frac{1}{r}\frac{\partial }{\partial r}\left[ r\left\{ S_{\mathbf{r}%
+}^{r}\right\} \right]
+\end{equation}
+\[
+\left\{ \frac{1}{rR}\frac{\partial }{\partial s}\left[ rRS_{\mathbf{r}%
+}^{s}\right] \right\} =0 
+\]
+\begin{equation}
+\left\{ \sigma _{\psi }\left| \nabla \psi \right| S_{\mathbf{r}}^{s}\frac{
+\partial \alpha }{\partial \psi }\right\} =0
+\end{equation}
+\begin{equation}
+\left\{ -S_{\mathbf{r}}^{\psi }\frac{\partial \alpha }{\partial s}\right\} =0
+\end{equation}
+The poloidal magnetic field $B_{p}$ is then simply, 
+\begin{equation}
+B_{p}=\frac{1}{R_{0}}\frac{d\psi \left( r\right) }{dr}=\frac{\psi ^{\prime }%
+}{R_{0}}
+\end{equation}
+and the expression \ref{qtilde} is the well known local value of the
+cylindrical safety factor
+
+\begin{equation}
+\widetilde{q}\left( \psi \right) =\frac{r}{R_{0}}\frac{B_{0}}{B_{p}}=r\frac{
+B_{0}}{\psi ^{\prime }}
+\end{equation}
+
+Furthermore, in this simplified configuration, the fraction of trapped
+electrons vanishes, and consequently $\theta _{\min }=0,$ $\theta _{\max
+}=2\pi ,$ $\frac{\xi _{0}}{\xi }=1$ and $\lambda =1.$ Hence, using the fact
+that $S_{\psi }^{\psi }=S_{\psi }^{r}.$
