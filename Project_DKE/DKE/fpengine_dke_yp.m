@@ -40,8 +40,8 @@ if ftp_mode == 0,% for f0 (zero order Fokker-Planck term)
 %	
 	Xa = - Xpnp.*XDpm_ipj.*sqrt(X1mmhu2)./(Xdmhum + Xdmhup)./Xdpn;%f0(i+1/2,j-1/2)
 	Xa = Xa + Xpnm.*XDpm_imj.*sqrt(X1mmhu2)./(Xdmhum + Xdmhup)./Xdpn;
-	Xa = Xa - XDmm_ijm.*X1mmhu2m.*XRlambdam./Xdmhu./Xdmhum;
-	Xa = Xa + Xpn.*sqrt(X1mmhu2m).*XFm_ijm.*Xdeltam_ijm.*XRlambdam./Xdmhu;
+	Xa = Xa - Xpn.*XDmm_ijm.*X1mmhu2m.*XRlambdam./Xdmhu./Xdmhum;
+	Xa = Xa - Xpn.*sqrt(X1mmhu2m).*XFm_ijm.*Xdeltam_ijm.*XRlambdam./Xdmhu;
 %	
 	Xb = -Xpn2m.*XDpp_imj./Xdpn./Xdpnm;%f0(i-1/2,j+1/2)	
 	Xb = Xb - Xpn.*sqrt(X1mmhu2p).*XDmp_ijp.*XRlambdap./Xdmhu./(Xdpnm + Xdpnp);
@@ -52,9 +52,9 @@ if ftp_mode == 0,% for f0 (zero order Fokker-Planck term)
 	Xc = Xc + Xpn2p.*XFp_ipj.*Xdeltap_ipj./Xdpn;
 	Xc = Xc + Xpn2m.*XDpp_imj./Xdpn./Xdpnm;
 	Xc = Xc - Xpn2m.*XFp_imj.*(1 - Xdeltap_imj)./Xdpn;
-	Xc = Xc + XDmm_ijp.*X1mmhu2p.*XRlambdap./Xdmhu./Xdmhup;	
-	Xc = Xc - Xpn.*sqrt(X1mmhu2p).*XFm_ijp.*XRlambdap.*Xdeltam_ijp./Xdmhu;
-	Xc = Xc + XDmm_ijm.*X1mmhu2m.*XRlambdam./Xdmhu./Xdmhum;
+	Xc = Xc + Xpn.*XDmm_ijp.*X1mmhu2p.*XRlambdap./Xdmhu./Xdmhup;	
+	Xc = Xc + Xpn.*sqrt(X1mmhu2p).*XFm_ijp.*XRlambdap.*Xdeltam_ijp./Xdmhu;	
+	Xc = Xc + Xpn.*XDmm_ijm.*X1mmhu2m.*XRlambdam./Xdmhu./Xdmhum;
 	Xc = Xc + Xpn.*sqrt(X1mmhu2m).*XFm_ijm.*(1 - Xdeltam_ijm).*XRlambdam./Xdmhu;
 %
 	Xd = - Xpn2p.*XDpp_ipj./Xdpn./Xdpnp;%f0(i+3/2,j+1/2)
@@ -64,7 +64,7 @@ if ftp_mode == 0,% for f0 (zero order Fokker-Planck term)
 %
 	Xe = Xpnp.*XDpm_ipj.*sqrt(X1mmhu2)./(Xdmhum + Xdmhup)./Xdpn;%f0(i+1/2,j+3/2)
 	Xe = Xe - Xpnm.*XDpm_imj.*sqrt(X1mmhu2)./(Xdmhum + Xdmhup)./Xdpn;
-	Xe = Xe - XDmm_ijp.*X1mmhu2p.*XRlambdap./Xdmhu./Xdmhup;
+	Xe = Xe - Xpn.*XDmm_ijp.*X1mmhu2p.*XRlambdap./Xdmhu./Xdmhup;
 	Xe = Xe - Xpn.*sqrt(X1mmhu2p).*XFm_ijp.*(1 - Xdeltam_ijp).*XRlambdap./Xdmhu;	
 %
 	Xf = XDpm_ij.*Xpn.*sqrt(X1mmhu2)./(Xdmhum + Xdmhup)./(Xdpnm + Xdpnp);%f0(i-1/2,j-1/2)
@@ -81,8 +81,8 @@ if ftp_mode == 0,% for f0 (zero order Fokker-Planck term)
 else,%for ftp, first order Drift Kinetic equation
 	Xa = - Xpnp.*XDpm_ipj.*sqrt(X1mmhu2)./(Xdmhum + Xdmhup)./Xdpn;%ftp(i+1/2,j-1/2)
 	Xa = Xa + Xpnm.*XDpm_imj.*sqrt(X1mmhu2)./(Xdmhum + Xdmhup)./Xdpn;
-	Xa = Xa - XDmm_ijm.*X1mmhu2m.*XRlambdam./Xdmhu./Xdmhum;
-	Xa = Xa + Xpn.*sqrt(X1mmhu2m).*XFm_ijm.*Xdeltam_ijm.*(Xmhum./Xmhumm).*XRlambdam./Xdmhu;
+	Xa = Xa - Xpn.*XDmm_ijm.*X1mmhu2m.*XRlambdam./Xdmhu./Xdmhum;
+	Xa = Xa - Xpn.*sqrt(X1mmhu2m).*XFm_ijm.*Xdeltam_ijm.*(Xmhum./Xmhumm).*XRlambdam./Xdmhu;
 %	
 	Xb = -Xpn2m.*XDpp_imj./Xdpn./Xdpnm;%ftp(i-1/2,j+1/2)	
 	Xb = Xb - Xpn.*sqrt(X1mmhu2p).*XDmp_ijp.*XRlambdap./Xdmhu./(Xdpnm + Xdpnp);
@@ -93,9 +93,9 @@ else,%for ftp, first order Drift Kinetic equation
 	Xc = Xc + Xpn2p.*XFp_ipj.*Xdeltap_ipj.*(Xpnp./Xpnpp)./Xdpn;
 	Xc = Xc + Xpn2m.*XDpp_imj./Xdpn./Xdpnm;
 	Xc = Xc - Xpn2m.*XFp_imj.*(1 - Xdeltap_imj).*(Xpnm./Xpn)./Xdpn;
-	Xc = Xc + XDmm_ijp.*X1mmhu2p.*XRlambdap./Xdmhu./Xdmhup;	
-	Xc = Xc - Xpn.*sqrt(X1mmhu2p).*XFm_ijp.*XRlambdap.*Xdeltam_ijp.*(Xmhup./Xmhu)./Xdmhu;
-	Xc = Xc + XDmm_ijm.*X1mmhu2m.*XRlambdam./Xdmhu./Xdmhum;
+	Xc = Xc + Xpn.*XDmm_ijp.*X1mmhu2p.*XRlambdap./Xdmhu./Xdmhup;	
+	Xc = Xc + Xpn.*sqrt(X1mmhu2p).*XFm_ijp.*XRlambdap.*Xdeltam_ijp.*(Xmhup./Xmhu)./Xdmhu;
+	Xc = Xc + Xpn.*XDmm_ijm.*X1mmhu2m.*XRlambdam./Xdmhu./Xdmhum;
 	Xc = Xc + Xpn.*sqrt(X1mmhu2m).*XFm_ijm.*(1 - Xdeltam_ijm).*(Xmhum./Xmhu).*XRlambdam./Xdmhu;
 %
 	Xd = - Xpn2p.*XDpp_ipj./Xdpn./Xdpnp;%ftp(i+3/2,j+1/2)
@@ -105,7 +105,7 @@ else,%for ftp, first order Drift Kinetic equation
 %
 	Xe = Xpnp.*XDpm_ipj.*sqrt(X1mmhu2)./(Xdmhum + Xdmhup)./Xdpn;%ftp(i+1/2,j+3/2)
 	Xe = Xe - Xpnm.*XDpm_imj.*sqrt(X1mmhu2)./(Xdmhum + Xdmhup)./Xdpn;
-	Xe = Xe - XDmm_ijp.*X1mmhu2p.*XRlambdap./Xdmhu./Xdmhup;
+	Xe = Xe - Xpn.*XDmm_ijp.*X1mmhu2p.*XRlambdap./Xdmhu./Xdmhup;
 	Xe = Xe - Xpn.*sqrt(X1mmhu2p).*XFm_ijp.*(1 - Xdeltam_ijp).*(Xmhup./Xmhupp).*XRlambdap./Xdmhu;	
 %
 	Xf = XDpm_ij.*Xpn.*sqrt(X1mmhu2)./(Xdmhum + Xdmhup)./(Xdpnm + Xdpnp);%ftp(i-1/2,j-1/2)
