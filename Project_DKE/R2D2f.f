@@ -65,11 +65,10 @@ C
 	character*20 tokamak,tokparam
 	integer l_tokamak
 C
-      common /para1/ w0,rp,r0
-      common /para2/ rin,drp,drm,nplus,nminus
-      common /para3/ pc,rm
+      common /para1/ w0
+      common /para2/ npos
       common /para4/ den0,bt0,te0
-      common /para5/ wpe0,wce0,vte0,bp0
+      common /para5/ wpe0,wce0,vte0
 C
       common /nrels/ nr_nterms
 C
@@ -91,7 +90,7 @@ C
 C
       common /rterr/ errt_abs,errt_rel,it_max
 C
-      common /wave0/ cnpa,theta
+      common /wave0/ cnpa
 C
       common /guinp/ guesr,guesi,kgues
 C
@@ -101,27 +100,9 @@ C	Simulation parameters
 C
 	open(20,file='simparam.m')
 C
-C	Generates Code parameters file name
-
-C
-
-	read(20,*) tokamak
-
-	call length_jd(tokamak,l_tokamak)
-	tokparam = 'PARAM_'//tokamak(1:l_tokamak)//'.m'
-C
-C
-C	Tokamak parameters
-C
-	open(21,file=tokparam)
-C
 C	Code parameters
 C
       open(22,file='codeparam.m')
-C
-C	Wave parameters
-C
-      open(23,file='waveparam.m')
 C
 C....  output non-relativistic and relativistic roots .....
 C....... (data output is the local position and all the roots) .......
@@ -232,14 +213,10 @@ C... cnpe_r and cnpe_i are the real and imaginary parts of n_perp ....
 C
       namelist /pwrit/ kpr,kcheck,cnpe_r,cnpe_i
 C
-C............... getting the dispersion relation roots ...............
-C............. (non-relativistic and fully relativistic) .............
-C........ initial starting point (all distances in actual cm) ........
-C...... step-size and number of steps in the positive direction ......
-C...... step-size and number of steps in the negative direction ......
+C...... number of normalized radial positions ......
 C.............. (NOTE: these are used when kparam = 0) ...............
 C
-      read (20,*) rin,drp,nplus,drm,nminus
+      read (20,*) npos
 C
 C... knr = 1 solves the non-relativistic disperison relation only ....
 C.. knr = 0 solves the fully relativistic dispersion relation also ... 
@@ -266,20 +243,14 @@ C
       read (20,*) guesr(1:nrt_nr)
       read (20,*) guesi(1:nrt_nr)
 C
-C............... frequency ...........................................
-C
-	read (23,*) w0	
-C	
-C.......................... major radius, minor radius ...............
-C..... (all distances are in cm. even those in the list "rloc") ......
-C.............. toroidal magnetic field, plasma current ..............
+C.............. reference magnetic field,  ..............
 C.............. peak electron temperature, peak density ..............
+C............... frequency ...........................................
 C........ (NOTE: this te0 is used for all kparam given above) ........
 C.... (NOTE: the other parameters are used only when kparam = 0) .....
 C
 C
-	read (21,*) rm,rp,bt0,pc
-	read (21,*) te0,den0
+	read (20,*) bt0,te0,den0,w0
 C
       read (22,param0)
       read (22,param1)
@@ -337,7 +308,7 @@ C
       double complex dcmplx,cnpe,ep(6),ci
 C
       common /para9/ alpha,omega,vt,besk2
-      common /wave0/ cnpa,theta
+      common /wave0/ cnpa
       common /wave1/ cnpe
       common /nrels/ nr_nterms
       common /trub0/ ktrub
@@ -400,8 +371,8 @@ C
       double complex frtgues(n_rts),frt(n_rts)
       double complex rguess_in(n_rts),frtgues_in(n_rts)
 C
-      common /para1/ w0,rp,r0
-      common /para2/ rin,drp,drm,nplus,nminus
+      common /para1/ w0
+      common /para2/ npos
       common /para8/ wp,wc,vte
       common /para9/ alpha,omega,vt,besk2
       common /nrts1/ knr,nrt_nr,nrt_fr
@@ -411,8 +382,7 @@ C
       ci=dcmplx(0.d0,1.d0)
 C
       call prof_in
-      r=rin
-	call wavepar_jd(r)
+C
       call pp(r,1)
 C
 C..... solving for the cold plasma and approximate plasma roots ......
@@ -441,15 +411,15 @@ C......... solving the non-relativistic dispersion relation ..........
 C
       call nr_disp(rguess,roots,nrt_nr)
       call zero_roots(roots,nrt_nr)
-      write (5,107) r*rp,roots(1:nrt_nr)
+      write (5,107) r,roots(1:nrt_nr)
       do 21 j=1,nrt_nr
         rguess(j)=roots(j)
         rguess_in(j)=rguess(j)
-        write (6,501) r*rp,roots(j)
-  501   format(1x,"r*rp, nr-root = ",3g18.10)
-        call wave_polar(r*rp,roots(j),0)
+        write (6,501) r,roots(j)
+  501   format(1x,"r, nr-root = ",3g18.10)
+        call wave_polar(r,roots(j),0)
    21 continue
-      call nr_disp_herm(r*rp,roots,nrt_nr)
+      call nr_disp_herm(r,roots,nrt_nr)
 C
 C........ solving the fully-relativistic dispersion relation .........
 C
@@ -459,117 +429,52 @@ C
    31   continue
         call fr_disp(frtgues,frt,nrt_fr)
         call zero_roots(frt,nrt_fr)
-        write (8,108) r*rp,frt(1:nrt_fr)
+        write (8,108) r,frt(1:nrt_fr)
         do 41 j=1,nrt_fr
           frtgues(j)=frt(j)
           frtgues_in(j)=frtgues(j)
-          write (6,601) r*rp,frt(j)
-  601     format(1x,"r*rp, rel-root = ",3g18.10)
-          call wave_polar(r*rp,frt(j),1)
+          write (6,601) r,frt(j)
+  601     format(1x,"r, rel-root = ",3g18.10)
+          call wave_polar(r,frt(j),1)
    41   continue
       end if
 C
-      rinit=r
-C
-      if (nplus.eq.0) go to 4
-C
 C...... do-loop for calculating the roots at various positions .......
 C
-      r=r-drp
+      do 3 n=1,npos
 C
-      do 3 n=1,nplus
+C.......... reading next position r and the corresponding plasma parameters ..........
 C
-        r=r+drp
-C
-C.......... setting the plasma parameters at the position r ..........
-C
-	  call wavepar_jd(r) 
         call pp(r,1)
 C
 C......... solving the non-relativistic dispersion relation ..........
 C
         call nr_disp(rguess,roots,nrt_nr)
         call zero_roots(roots,nrt_nr)
-        write (5,107) r*rp,roots(1:nrt_nr)
+        write (5,107) r,roots(1:nrt_nr)
         do 22 j=1,nrt_nr
           rguess(j)=roots(j)
-          if (n.eq.1.or.kpr.eq.1) write (6,501) r*rp,roots(j)
-          call wave_polar(r*rp,roots(j),0)
+          if (n.eq.1.or.kpr.eq.1) write (6,501) r,roots(j)
+          call wave_polar(r,roots(j),0)
    22   continue
-        call nr_disp_herm(r*rp,roots,nrt_nr)
+        call nr_disp_herm(r,roots,nrt_nr)
 C
 C........ solving the fully-relativistic dispersion relation .........
 C
         if (knr.eq.0) then
           call fr_disp(frtgues,frt,nrt_fr)
           call zero_roots(frt,nrt_fr)
-          write (8,108) r*rp,frt(1:nrt_fr)
+          write (8,108) r,frt(1:nrt_fr)
           do 42 j=1,nrt_fr
             frtgues(j)=frt(j)
-            if (n.eq.1.or.kpr.eq.1) write (6,601) r*rp,frt(j)
-            call wave_polar(r*rp,frt(j),1)
+            if (n.eq.1.or.kpr.eq.1) write (6,601) r,frt(j)
+            call wave_polar(r,frt(j),1)
    42     continue
         end if
 C
     3 continue
 C
     4 continue
-C
-      r=rinit
-C
-      if (nminus.eq.0) go to 99
-C
-      do 23 j=1,nrt_nr
-        rguess(j)=rguess_in(j)
-   23 continue
-      if (knr.eq.0) then
-        do 33 j=1,nrt_fr
-          frtgues(j)=frtgues_in(j)
-   33   continue
-      end if
-C
-C...... do-loop for calculating the roots at various positions .......
-C
-      r=r+drm
-C
-      do 5 n=1,nminus
-C
-        r=r-drm
-C
-C.......... setting the plasma parameters at the position r ..........
-C
-	  call wavepar_jd(r) 
-        call pp(r,1)
-C
-C......... solving the non-relativistic dispersion relation ..........
-C
-        call nr_disp(rguess,roots,nrt_nr)
-        call zero_roots(roots,nrt_nr)
-        write (5,107) r*rp,roots(1:nrt_nr)
-        do 24 j=1,nrt_nr
-          rguess(j)=roots(j)
-          if (n.eq.1.or.kpr.eq.1) write (6,501) r*rp,roots(j)
-          call wave_polar(r*rp,roots(j),0)
-   24   continue
-        call nr_disp_herm(r*rp,roots,nrt_nr)
-C
-C........ solving the fully-relativistic dispersion relation .........
-C
-        if (knr.eq.0) then
-          call fr_disp(frtgues,frt,nrt_fr)
-          call zero_roots(frt,nrt_fr)
-          write (8,108) r*rp,frt(1:nrt_fr)
-          do 44 j=1,nrt_fr
-            frtgues(j)=frt(j)
-            if (n.eq.1.or.kpr.eq.1) write (6,601) r*rp,frt(j)
-            call wave_polar(r*rp,frt(j),1)
-   44     continue
-        end if
-C
-    5 continue
-C
-   99 continue
-C
 C
   107 format(<2*nrt_nr+1>g18.10)
   108 format(<2*nrt_fr+1>g18.10)
@@ -600,7 +505,7 @@ C
       common /chck2/ cnpa_in,cnpa_fi,n_cnpa
       common /chck3/ omega_in,omega_fi,n_omega
       common /chck4/ alpha_in,alpha_fi,n_alpha
-      common /wave0/ cnpa,theta
+      common /wave0/ cnpa
       common /guinp/ guesr,guesi,kgues
       common /prnt/  kpr
 C
@@ -900,26 +805,12 @@ C
 C
       implicit double precision (a-h, o-z)
 C
-      common /para1/ w0,rp,r0
-      common /para2/ rin,drp,drm,nplus,nminus
-      common /para3/ pc,rm
+      common /para1/ w0
+      common /para2/ npos
       common /para4/ den0,bt0,te0
-      common /para5/ wpe0,wce0,vte0,bp0
+      common /para5/ wpe0,wce0,vte0
 C
       pi=3.141592653589793238462643d0
-C
-C................ poloidal magnetic field multiplier .................
-C.............. (for parabolic current density profile) ..............
-C
-      bp0=0.2*pc/rp
-C
-C.......... major radius (normalised to the plasma radius) ...........
-C.. initial position and step-sizes normalized to the plasma radius ..
-C
-      r0=rm/rp
-      rin=rin/rp
-      drp=drp/rp
-      drm=drm/rp
 C
 C...... electron plasma and cycloton frequencies at the center .......
 C........................ (normalised to w0) .........................
@@ -943,58 +834,38 @@ C
 C
       implicit double precision (a-h, o-z)
 C
-      common /para1/ w0,rp,r0
+      common /para1/ w0
       common /para4/ den0,bt0,te0
-      common /para5/ wpe0,wce0,vte0,bp0
+      common /para5/ wpe0,wce0,vte0
       common /para8/ wpe,wce,vte
       common /para9/ alpha,omega,vt,besk2
-      common /wave0/ cnpa,theta
+      common /wave0/ cnpa
 
 C
       external dbsk0e,dbsk1e,besk_a,umach,erset
 C
-C... distances normalised to plasma radius (r0 ==> major radius) .....
+C... distances normalised to plasma radius .....
 C.............. profiles for density and magnetic field ..............
 C.............. (normalised to their central values) .................
 C................ extending into the scrape-off layer ................
 C... (in this region the density/temperatures are the edge values) ...
 C
-	rewind 21
-	read(21,*)
-	read(21,*)
-	read(21,*)
+	read(20,*) r, te, den, bt, cnpa
+C	read(21,*) rcm, tem, denm, qm
+C	read(21,*) rcp, tep, denp, qp
 
-1001	continue 
-		read(21,*) rc
-		if (rc.gt.r) then
-			goto 1002
-			else
-			if (rc.eq.-1) then
-				backspace 21
-				goto 1002
-			end if
-	end if
-	goto 1001
-
-1002	continue
-
-	backspace 21
-	backspace 21
-	read(21,*) rcm, tem, denm, qm
-	read(21,*) rcp, tep, denp, qp
-
-	te = ((rcp - r)*tem + (r - rcm)*tep)/(rcp - rcm)
-	den = ((rcp - r)*denm + (r - rcm)*denp)/(rcp - rcm)
-	q = ((rcp - r)*qm + (r - rcm)*qp)/(rcp - rcm)
+C	te = ((rcp - r)*tem + (r - rcm)*tep)/(rcp - rcm)
+C	den = ((rcp - r)*denm + (r - rcm)*denp)/(rcp - rcm)
+C	q = ((rcp - r)*qm + (r - rcm)*qp)/(rcp - rcm)
 
 
 
 C
-      bpol=r/r0/q/(1.+r/r0*cos(theta))
+C      bpol=r/r0/q/(1.+r/r0*cos(theta))
 C.......Modified j.d. 9/16/03. Poloidal dependence added for B field 
-      btor=1./(1.+r/r0*cos(theta))
+C      btor=1./(1.+r/r0*cos(theta))
 
-      bt=dsqrt(bpol**2+btor**2)
+C      bt=dsqrt(bpol**2+btor**2)
 
 C
 C....... various frequencies normalised to the wave frequency ........
@@ -1027,7 +898,7 @@ C
       end if
 C
       if (kout.eq.1) then
-        write (7,101) r*rp,wpe,wce,dsqrt(wpe**2+wce**2),
+        write (7,101) r,wpe,wce,dsqrt(wpe**2+wce**2),
      %                1./wce,vte,bt*bt0,den*den0,te*te0
       end if
 C
@@ -1149,7 +1020,7 @@ C
       double complex ep(6)
 C
       common /trub0/ ktrub
-      common /wave0/ cnpa,theta
+      common /wave0/ cnpa
       common /wave1/ cnpe
       common /coutd/ d11,d12,d13,d22,d23,d33
 C
@@ -1278,7 +1149,7 @@ C
       common /para9/ alpha,omega,vt,besk2
       common /coutd/ d11,d12,d13,d22,d23,d33
       common /coutx/ x11,x12,x13,x22,x23,x33
-      common /wave0/ cnpa,theta
+      common /wave0/ cnpa
       common /prnt/  kpr
 C
       ci=dcmplx(0.d0,1.d0)
@@ -1447,7 +1318,7 @@ C
       double complex cr(2),croots(4)
 C
       common /para9/ alpha,omega,vt,besk2
-      common /wave0/ cnpa,theta
+      common /wave0/ cnpa
       common /wave1/ cnpe
 C
 C..................... the stix tensor elements ......................
@@ -1512,7 +1383,7 @@ C
       double complex rts(n_order),roots(8)
 C
       common /para9/ alpha,omega,vt,besk2
-      common /wave0/ cnpa,theta
+      common /wave0/ cnpa
       common /wave1/ cnpe
 C
       external dzpocc,umach,erset
@@ -1773,7 +1644,7 @@ C
 C
       double complex det(3),pdum(3)
 C
-      common /wave0/ cnpa,theta
+      common /wave0/ cnpa
       common /coutd/ d11,d12,d13,d22,d23,d33
 C
       external nr_func,fr_func
@@ -2051,7 +1922,7 @@ C
       double complex ckbs(2)
 C
       common /para9/ alpha,omega,vt,besk2
-      common /wave0/ cnpa,theta
+      common /wave0/ cnpa
       common /wave1/ cnpe
 C
       external dcbks,umach,erset
@@ -2123,7 +1994,7 @@ C
       double complex ckbs(2)
 C
       common /para9/ alpha,omega,vt,besk2
-      common /wave0/ cnpa,theta
+      common /wave0/ cnpa
       common /wave1/ cnpe
 C
       external dcbks,umach,erset
@@ -2195,7 +2066,7 @@ C
       double complex ckbs(2)
 C
       common /para9/ alpha,omega,vt,besk2
-      common /wave0/ cnpa,theta
+      common /wave0/ cnpa
       common /wave1/ cnpe
 C
       external dcbks,umach,erset
@@ -2265,7 +2136,7 @@ C
       double complex ckbs(2)
 C
       common /para9/ alpha,omega,vt,besk2
-      common /wave0/ cnpa,theta
+      common /wave0/ cnpa
       common /wave1/ cnpe
 C
       external dcbks,umach,erset
@@ -2337,7 +2208,7 @@ C
       double complex ckbs(2)
 C
       common /para9/ alpha,omega,vt,besk2
-      common /wave0/ cnpa,theta
+      common /wave0/ cnpa
       common /wave1/ cnpe
 C
       external dcbks,umach,erset
@@ -2407,7 +2278,7 @@ C
       double complex ckbs(2)
 C
       common /para9/ alpha,omega,vt,besk2
-      common /wave0/ cnpa,theta
+      common /wave0/ cnpa
       common /wave1/ cnpe
 C
       external dcbks,umach,erset
@@ -2485,7 +2356,7 @@ C
       common /ppara/ p_para_min,p_para_max
       common /pperp/ p_perp_min,p_perp_max
       common /weerr/ errabs0,errrel0,irule0
-      common /wave0/ cnpa,theta
+      common /wave0/ cnpa
       common /wave1/ cnpe
       common /wkpa/  ckpa
       common /wkpe/  ckpe
@@ -3321,7 +3192,7 @@ C
       double complex t2(3,3)
 C
       common /para9/ alpha,omega,vt,besk2
-      common /wave0/ cnpa,theta
+      common /wave0/ cnpa
       common /wave1/ cnpe
       common /nele/  n1,n2
 C
@@ -3420,7 +3291,7 @@ C
       double complex t2(3,3)
 C
       common /para9/ alpha,omega,vt,besk2
-      common /wave0/ cnpa,theta
+      common /wave0/ cnpa
       common /wave1/ cnpe
       common /nele/  n1,n2
 C
@@ -3641,7 +3512,7 @@ C
       double complex dzm(0:1000),dzp(0:1000)
       double complex csum(6,4)
 C
-      common /para1/ w0,rp,r0
+      common /para1/ w0
       common /para9/ alpha,omega,vt,besk2
       common /wave0/ cnpa
       common /prnt/  kpr
@@ -4091,47 +3962,3 @@ C
 
 	return
 	end
-C
-C---------------------------------------------------------------------
-C
-	subroutine wavepar_jd(r)
-
-      implicit double precision (a-h, o-z)
-
-      common /wave0/ cnpa,theta
-
-	rewind 23
-	read(23,*)
-	read(23,*)
-
-1005	continue 
-		read(23,*) rc
-		if (rc.gt.r) then
-			goto 1006
-		else
-			if (rc.eq.-1) then
-				backspace 23
-				goto 1006
-			end if
-		end if
-	goto 1005
-
-1006	continue
-
-	backspace 23
-	backspace 23
-	read(23,*) rcm, thetam, cnpam
-	if (rcm.eq.r) then
-		theta = thetam
-		cnpa = cnpam
-	else
-		read(23,*) rcp, thetap, cnpap
-		theta = ((rcp - r)*thetam + (r - rcm)*thetap)/(rcp - rcm)
-		cnpa = ((rcp - r)*cnpam + (r - rcm)*cnpap)/(rcp - rcm)
-	endif
-
-	return
-	end
-C
-C---------------------------------------------------------------------
-C
