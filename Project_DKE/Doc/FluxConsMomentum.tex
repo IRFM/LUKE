@@ -3,8 +3,9 @@
 
 It is possible to recover the general bounce averaged transport equation in
 momentum space by another independent approach. Here, the momentum space
-dynamics of the kinetic equation is be expressed in conservative form as (%
-\ref{consform}) 
+dynamics of the kinetic equation is be expressed in conservative form as a
+flux divergence that may expressed according to the (\ref{div1}) introduced
+in Appendix \ref{curvilinear}
 \begin{equation}
 \nabla _{\mathbf{p}}\cdot \mathbf{S}_{\mathbf{p}}=\frac{1}{J_{\mathbf{p}}}%
 \frac{\partial }{\partial p^{i}}\left( J_{\mathbf{p}}S_{\mathbf{p}%
@@ -19,20 +20,20 @@ J_{\mathbf{p}}=p^{2}
 \end{equation}
 so that, taking into account that the kinetic equation is gyroaveraged and
 therefore the coordinate $\varphi $ disappears, the following expression for
-the divergence (\ref{pxidiv}) is obtained
+the divergence (\ref{pxidiv}) is obtained 
 \begin{equation}
 \nabla _{\mathbf{p}}\cdot \mathbf{S}_{\mathbf{p}}=\frac{1}{p^{2}}\frac{%
 \partial }{\partial p}\left( p^{2}S_{p}\right) -\frac{1}{p}\frac{\partial }{%
 \partial \xi }\left( \sqrt{1-\xi ^{2}}S_{\xi }\right) 
 \end{equation}
-where by definition
+where by definition 
 \begin{eqnarray}
 S_{p} &=&\mathbf{S}_{\mathbf{p}}\cdot \widehat{p} \\
-S_{\xi } &=&\mathbf{S}_{\mathbf{p}}\cdot \widehat{\xi }  \nonumber
+S_{\xi } &=&\mathbf{S}_{\mathbf{p}}\cdot \widehat{\xi }
 \end{eqnarray}
 
-In the mean-field approximation, the momentum space fluxes may be expressed
-as the sum of diffusive and convective parts (\ref{momflux}) 
+In the mean-field theory, the momentum space fluxes may be expressed as the
+sum of diffusive and convective parts, 
 \begin{equation}
 \mathbf{S}_{\mathbf{p}}=-\Bbb{D}_{\mathbf{p}}\nabla _{\mathbf{p}}f+\mathbf{F}%
 _{\mathbf{p}}f  \label{momflux2}
@@ -53,8 +54,8 @@ F_{\xi }
 \right) 
 \end{eqnarray}
 
-The gradient vector in the reduced coordinates system $\left( p,\xi \right) $
-in given by (\ref{pxigrad}) 
+The gradient vector $\nabla _{\mathbf{p}}$ in the reduced coordinates system 
+$\left( p,\xi \right) $ in given by (\ref{pxigrad}) 
 \begin{equation}
 \nabla _{\mathbf{p}}=\left( 
 \begin{array}{l}
@@ -68,13 +69,16 @@ with
 \nabla _{p} &=&\frac{\partial }{\partial p} \\
 \nabla _{\xi } &=&-\frac{\sqrt{1-\xi ^{2}}}{p}\frac{\partial }{\partial \xi }
 \end{eqnarray}
-so that
-\begin{eqnarray}
-S_{p} &=&-D_{pp}\frac{\partial f}{\partial p}+\frac{\sqrt{1-\xi ^{2}}}{p}%
-D_{p\xi }\frac{\partial f}{\partial \xi }+F_{p}f  \label{momflux3} \\
-S_{\xi } &=&-D_{\xi p}\frac{\partial f}{\partial p}+\frac{\sqrt{1-\xi ^{2}}}{%
-p}D_{\xi \xi }\frac{\partial f}{\partial \xi }+F_{\xi }f  \nonumber
-\end{eqnarray}
+so that 
+\begin{equation}
+S_{p}=-D_{pp}\frac{\partial f}{\partial p}+\frac{\sqrt{1-\xi ^{2}}}{p}
+D_{p\xi }\frac{\partial f}{\partial \xi }+F_{p}f  \label{momflux3}
+\end{equation}
+and
+\begin{equation}
+S_{\xi }=-D_{\xi p}\frac{\partial f}{\partial p}+\frac{\sqrt{1-\xi ^{2}}}{p}%
+D_{\xi \xi }\frac{\partial f}{\partial \xi }+F_{\xi }f  \label{momflux4}
+\end{equation}
 
 \paragraph{Bounce-averaged operator}
 
@@ -100,8 +104,9 @@ and $\xi $ is given along the trajectory by
 with 
 \begin{equation}
 \Psi \left( \psi ,\theta \right) =\frac{B\left( \psi ,\theta \right) }{%
-B_{\min }\left( \psi \right) }
+B_{0}\left( \psi \right) }
 \end{equation}
+as shown in Sec.\ref{NormBounceSection}.
 
 We find from (\ref{xi2}) that in momentum space 
 \begin{equation}
@@ -116,27 +121,30 @@ Then, keeping in mind that $\left| \xi _{0}\right| =\sigma \xi _{0}$ is
 independent of $\sigma $, we can transform as follows, 
 \begin{eqnarray}
 \left\{ \frac{1}{p}\frac{\partial }{\partial \xi }\left( \sqrt{1-\xi ^{2}}%
-S_{\xi }\right) \right\} &=&\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2}%
-\sum_{\sigma }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{%
+S_{\xi }\right) \right\}  &=&\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2%
+}\sum_{\sigma }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{
 d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }%
 \frac{r}{R_{0}}\frac{B}{B_{P}}\frac{\xi _{0}}{\xi }\frac{1}{p}\frac{\partial 
-}{\partial \xi }\left( \sqrt{1-\xi ^{2}}S_{\xi }\right)  \nonumber \\
+}{\partial \xi }\left( \sqrt{1-\xi ^{2}}S_{\xi }\right)   \nonumber \\
 &=&\frac{1}{\lambda p}\frac{\partial }{\partial \sigma \xi _{0}}\frac{1}{%
 \widetilde{q}}\left[ \frac{1}{2}\sum_{\sigma }\right] _{T}\int_{\theta
 _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{%
 \psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}}\frac{B}{B_{P}}\frac{\sigma }{%
-\Psi }\left( \sqrt{1-\xi ^{2}}S_{\xi }\right)  \nonumber \\
+\Psi }\left( \sqrt{1-\xi ^{2}}S_{\xi }\right)   \nonumber \\
 &=&\frac{1}{\lambda p}\frac{\partial }{\partial \xi _{0}}\sqrt{1-\xi _{0}^{2}%
 }\sigma \frac{1}{\widetilde{q}}\left[ \frac{1}{2}\sum_{\sigma }\right]
 _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }\frac{1}{%
 \left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}}\frac{B}{B_{P}%
-}\frac{\sigma }{\sqrt{\Psi }}\left( S_{\xi }\right)  \nonumber \\
+}\frac{\sigma }{\sqrt{\Psi }}\left( S_{\xi }\right)   \nonumber \\
 &=&\frac{1}{\lambda p}\frac{\partial }{\partial \xi _{0}}\sqrt{1-\xi _{0}^{2}%
 }\lambda \sigma \left\{ \frac{\sigma \xi }{\sqrt{\Psi }\xi _{0}}S_{\xi
-}\right\}
+}\right\} 
 \end{eqnarray}
+using relation $\xi d\xi =\Psi \xi _{0}d\xi _{0}$ that is deduced from
+expression (\ref{xi2}).
 
-Finally, we can rewrite (\ref{kinbav}) under a conservative form as 
+Finally, we can rewrite the equation (\ref{kinbav}) in a conservative form
+as 
 \begin{equation}
 \left\{ \nabla _{\mathbf{p}}\cdot \mathbf{S}_{\mathbf{p}}\right\} =\frac{1}{%
 p^{2}}\frac{\partial }{\partial p}\left( p^{2}S_{p}^{\left( 0\right)
@@ -145,11 +153,14 @@ p^{2}}\frac{\partial }{\partial p}\left( p^{2}S_{p}^{\left( 0\right)
 \label{kinbav2}
 \end{equation}
 where the following components are defined 
-\begin{eqnarray}
-S_{p}^{\left( 0\right) } &=&\left\{ S_{p}\right\}   \label{sp0} \\
-S_{\xi _{0}}^{\left( 0\right) } &=&\sigma \left\{ \frac{\sigma \xi }{\sqrt{%
-\Psi }\xi _{0}}S_{\xi }\right\}   \nonumber
-\end{eqnarray}
+\begin{equation}
+S_{p}^{\left( 0\right) }=\left\{ S_{p}\right\}   \label{sp00}
+\end{equation}
+and 
+\begin{equation}
+S_{\xi _{0}}^{\left( 0\right) }=\sigma \left\{ \frac{\sigma \xi }{\sqrt{\Psi 
+}\xi _{0}}S_{\xi }\right\}   \label{smu0}
+\end{equation}
 
 Here, expression (\ref{kinbav2}) is completely equivalent to the momentum
 transport equation deduced from particle conservation. However, this

@@ -4,33 +4,33 @@
 The operator that describes the spatial transport is given by relation 
 \begin{equation}
 \left. \frac{\partial f_{0}^{\left( 0\right) }}{\partial t}\right| _{\mathbf{%
-r}}=\frac{B_{\min }\left( \psi \right) }{\lambda \left( \psi ,\xi
-_{0}\right) \widetilde{q}\left( \psi \right) }\frac{\partial }{\partial \psi 
-}\left( \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi
-\right) }\lambda \left( \psi ,\xi _{0}\right) \left| \nabla \psi \right|
-_{\min }\mathbf{S}_{\psi }^{\left( 0\right) }\right)  \label{eq1}
+r}}=\frac{B_{0}\left( \psi \right) }{\lambda \left( \psi ,\xi _{0}\right) 
+\widetilde{q}\left( \psi \right) }\frac{\partial }{\partial \psi }\left( 
+\frac{\widetilde{q}\left( \psi \right) }{B_{0}\left( \psi \right) }\lambda
+\left( \psi ,\xi _{0}\right) \left| \nabla \psi \right| _{0}\mathbf{S}_{\psi
+}^{\left( 0\right) }\right)  \label{eq1}
 \end{equation}
 and since $B_{P}=\left| \nabla \psi \right| /R,$ it may be rewritten in the
 form 
 \begin{equation}
 \left. \frac{\partial f_{0}^{\left( 0\right) }}{\partial t}\right| _{\mathbf{%
-r}}=\frac{B_{\min }\left( \psi \right) }{\lambda \left( \psi ,\xi
-_{0}\right) \widetilde{q}\left( \psi \right) }\frac{\partial }{\partial \psi 
-}\left( R_{\min }\left( \psi \right) \widetilde{q}\left( \psi \right) \frac{%
-B_{P\min }\left( \psi \right) }{B_{\min }\left( \psi \right) }\lambda \left(
-\psi ,\xi _{0}\right) \mathbf{S}_{\psi }^{\left( 0\right) }\right)
+r}}=\frac{B_{0}\left( \psi \right) }{\lambda \left( \psi ,\xi _{0}\right) 
+\widetilde{q}\left( \psi \right) }\frac{\partial }{\partial \psi }\left(
+R_{0}\left( \psi \right) \widetilde{q}\left( \psi \right) \frac{B_{P0}\left(
+\psi \right) }{B_{0}\left( \psi \right) }\lambda \left( \psi ,\xi
+_{0}\right) \mathbf{S}_{\psi }^{\left( 0\right) }\right)
 \end{equation}
-where $R_{\min }$ and $B_{P\min }$ are taken at the poloidal location where $%
-B=B_{\min }$. Much in the same way, 
+where $R_{0}$ and $B_{P0}$ are taken at the poloidal location where the
+magnetic field is minimum $B=B_{0}$. Much in the same way, 
 \begin{eqnarray}
 \mathbf{S}_{\psi }^{\left( 0\right) } &=&-D_{\psi \psi }^{\left( 0\right)
 }\nabla _{\psi }f_{0}^{\left( 0\right) }+F_{\psi }^{\left( 0\right)
 }f_{0}^{\left( 0\right) }  \nonumber \\
-&=&-D_{\psi \psi }^{\left( 0\right) }\left| \nabla \psi \right| _{\min }%
-\frac{\partial f_{0}^{\left( 0\right) }}{\partial \psi }+F_{\psi }^{\left(
+&=&-D_{\psi \psi }^{\left( 0\right) }\left| \nabla \psi \right| _{0}\frac{%
+\partial f_{0}^{\left( 0\right) }}{\partial \psi }+F_{\psi }^{\left(
 0\right) }f_{0}^{\left( 0\right) }  \nonumber \\
-&=&-D_{\psi \psi }^{\left( 0\right) }R_{\min }\left( \psi \right) B_{P\min
-}\left( \psi \right) \frac{\partial f_{0}^{\left( 0\right) }}{\partial \psi }%
+&=&-D_{\psi \psi }^{\left( 0\right) }R_{0}\left( \psi \right) B_{P0}\left(
+\psi \right) \frac{\partial f_{0}^{\left( 0\right) }}{\partial \psi }
 +F_{\psi }^{\left( 0\right) }f_{0}^{\left( 0\right) }  \label{eq2}
 \end{eqnarray}
 where the diffusion cross-terms $D_{p\psi }^{\left( 0\right) },$ $D_{\psi
@@ -43,39 +43,40 @@ neglected.
 In that case, $\widehat{\psi }=\widehat{r},$ and by definition $D_{\psi \psi
 }^{\left( 0\right) }=D_{rr}^{\left( 0\right) }$, $F_{\psi }^{\left( 0\right)
 }=F_{r}^{\left( 0\right) },$ since $\psi $ is here just a label. Therefore,
-using relation$\left| \nabla \psi \right| _{\min }\frac{\partial }{\partial
-\psi }=\frac{\partial }{\partial r},$
+using relation $\left| \nabla \psi \right| _{0}\partial /\partial \psi =%
+\partial /\partial r,$
 
 \begin{eqnarray}
 \mathbf{S}_{\psi }^{\left( 0\right) } &=&-D_{\psi \psi }^{\left( 0\right)
 }\nabla _{\psi }f_{0}^{\left( 0\right) }+F_{\psi }^{\left( 0\right)
 }f_{0}^{\left( 0\right) }  \nonumber \\
-&=&-D_{\psi \psi }^{\left( 0\right) }\left| \nabla \psi \right| _{\min }%
-\frac{\partial f_{0}^{\left( 0\right) }}{\partial \psi }+F_{\psi }^{\left(
+&=&-D_{\psi \psi }^{\left( 0\right) }\left| \nabla \psi \right| _{0}\frac{%
+\partial f_{0}^{\left( 0\right) }}{\partial \psi }+F_{\psi }^{\left(
 0\right) }f_{0}^{\left( 0\right) }  \nonumber \\
 &=&-D_{rr}^{\left( 0\right) }\frac{\partial f_{0}^{\left( 0\right) }}{%
 \partial r}+F_{r}^{\left( 0\right) }f_{0}^{\left( 0\right) }  \nonumber \\
 &=&\mathbf{S}_{r}^{\left( 0\right) }
 \end{eqnarray}
 
-Furthermore, since $\widetilde{q}\left( r\right) =\frac{r}{R_{0}}\frac{%
-B_{\min }}{B_{P\min }},$%
+Furthermore, since 
+\begin{equation}
+\widetilde{q}\left( r\right) =\frac{r}{R_{p}}\frac{B_{0}}{B_{P0}}
+\end{equation}
+one obtains, 
 \begin{eqnarray}
 \left. \frac{\partial f_{0}^{\left( 0\right) }}{\partial t}\right| _{\mathbf{%
-r}}^{circ.} &=&\frac{R_{0}B_{P\min }}{\lambda \left( r,\xi _{0}\right) r}%
-\frac{\partial }{\partial \psi }\left( \frac{R_{\min }}{R_{0}}r\lambda
-\left( r,\xi _{0}\right) \mathbf{S}_{r}^{\left( 0\right) }\right)  \nonumber
-\\
-&=&\frac{\left| \nabla \psi \right| _{\min }}{\lambda \left( r,\xi
-_{0}\right) R_{\min }r}\frac{\partial }{\partial \psi }\left( r\lambda
-\left( r,\xi _{0}\right) \mathbf{S}_{r}^{\left( 0\right) }\right)  \nonumber
-\\
-&=&\frac{1}{\lambda \left( r,\xi _{0}\right) R_{\min }r}\frac{\partial }{%
-\partial r}\left( R_{\min }r\lambda \left( r,\xi _{0}\right) \mathbf{S}%
+r}}^{circ.} &=&\frac{R_{p}B_{P0}}{\lambda \left( r,\xi _{0}\right) r}\frac{%
+\partial }{\partial \psi }\left( \frac{R_{0}}{R_{p}}r\lambda \left( r,\xi
+_{0}\right) \mathbf{S}_{r}^{\left( 0\right) }\right)  \nonumber \\
+&=&\frac{\left| \nabla \psi \right| _{0}}{\lambda \left( r,\xi _{0}\right)
+R_{0}r}\frac{\partial }{\partial \psi }\left( R_{0}r\lambda \left( r,\xi
+_{0}\right) \mathbf{S}_{r}^{\left( 0\right) }\right)  \nonumber \\
+&=&\frac{1}{\lambda \left( r,\xi _{0}\right) R_{0}r}\frac{\partial }{%
+\partial r}\left( R_{0}r\lambda \left( r,\xi _{0}\right) \mathbf{S}%
 _{r}^{\left( 0\right) }\right)
 \end{eqnarray}
 
-Note that $R_{\min }$ may not be simplified, since it is a function of $r$,
+Note that $R_{0}$ may not be here simplified, since it is a function of $r$,
 which corresponds to the toroidal configuration. Dynamics in momentum and
 configuration spaces are also not decoupled, the normalized bounce time $%
 \lambda \left( r,\xi _{0}\right) $ being on both sides of the radial
@@ -83,8 +84,8 @@ derivative. Only for strongly circulating electrons,
 \begin{equation}
 \lim_{\left| \xi _{0}\right| \rightarrow 1}\left. \frac{\partial
 f_{0}^{\left( 0\right) }}{\partial t}\right| _{\mathbf{r}}^{circ.}=\frac{1}{%
-rR_{\min }}\frac{\partial }{\partial r}\left( rR_{\min }\mathbf{S}%
-_{r}^{\left( 0\right) }\right)
+rR_{0}}\frac{\partial }{\partial r}\left( rR_{0}\mathbf{S}_{r}^{\left(
+0\right) }\right)
 \end{equation}
 since $\lim_{\left| \xi _{0}\right| \rightarrow 1}\lambda \left( r,\xi
 _{0}\right) =1,$ and the usual cylindrical conservative expression of the
@@ -94,5 +95,4 @@ radial transport
 f_{0}^{\left( 0\right) }}{\partial t}\right| _{\mathbf{r}}^{circ.}=\frac{1}{r%
 }\frac{\partial }{\partial r}\left( r\mathbf{S}_{r}^{\left( 0\right) }\right)
 \end{equation}
-is only found in the case $\epsilon \ll 1,$ i.e. when $R_{\min }\approx
-R_{0}.$
+is only found in the case $\epsilon \ll 1,$ i.e. when $R_{0}\approx R_{p}.$

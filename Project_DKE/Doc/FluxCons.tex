@@ -11,46 +11,46 @@ in the calculations, $\mathbf{X=}\left( \psi ,\theta ,\phi \right) $ and $%
 \begin{equation}
 \left\{ 
 \begin{array}{l}
-d^{3}\mathbf{X=}\frac{Rr}{\left| \nabla \psi \right| \left| \widehat{\psi }
-\cdot \widehat{r}\right| }d\psi d\theta d\phi \\ 
-d^{3}\mathbf{P=}p^{2}dpd\xi d\varphi
+d^{3}\mathbf{X=}\frac{Rr}{\left| \nabla \psi \right| \left| \widehat{\psi }%
+\cdot \widehat{r}\right| }d\psi d\theta d\phi  \\ 
+d^{3}\mathbf{P=}p^{2}dpd\xi d\varphi 
 \end{array}
-\right.
+\right. 
 \end{equation}
-as shown in Appendix ****, on obtains 
+as shown in Appendix \ref{curvilinear}, one obtains 
 \begin{equation}
 N=\idotsint f\left( \psi ,\theta ,\phi ,p,\xi ,\varphi \right) \frac{Rr}{%
 \left| \nabla \psi \right| \left| \widehat{\psi }\cdot \widehat{r}\right| }%
-p^{2}d\psi d\theta d\phi dpd\xi d\varphi
+p^{2}d\psi d\theta d\phi dpd\xi d\varphi 
 \end{equation}
 
 Using the transformation 
 \begin{equation}
-\frac{1-\xi ^{2}}{B\left( \psi ,\theta \right) }=\frac{1-\xi _{0}^{2}}{
-B_{\min }\left( \psi \right) }
+\frac{1-\xi ^{2}}{B\left( \psi ,\theta \right) }=\frac{1-\xi _{0}^{2}}{%
+B_{0}\left( \psi \right) }
 \end{equation}
-that results from conservation of the magnetic moment and the energy, 
+that results from conservation of the magnetic moment and energy, 
 \begin{equation}
 N=\idotsint f\left( \psi ,\theta ,\phi ,p,\xi ,\varphi \right) \frac{Rr}{%
-\left| \nabla \psi \right| \left| \widehat{\psi }\cdot \widehat{r}\right| }
-p^{2}\frac{\xi _{0}}{\xi }\frac{B\left( \psi ,\theta \right) }{B_{\min
-}\left( \psi \right) }d\psi d\theta d\phi dpd\xi _{0}d\varphi 
+\left| \nabla \psi \right| \left| \widehat{\psi }\cdot \widehat{r}\right| }%
+p^{2}\frac{\xi _{0}}{\xi }\frac{B\left( \psi ,\theta \right) }{B_{0}\left(
+\psi \right) }d\psi d\theta d\phi dpd\xi _{0}d\varphi 
 \end{equation}
-because $\xi d\xi /B\left( \psi ,\theta \right) =\xi _{0}d\xi _{0}/B_{\min
-}\left( \psi \right) .$ Since at the order, $f_{0}$ is constant along a
-magnetic field line, it is independent of the poloidal angle $\theta ,$ and $
-f_{0}=f_{0}^{\left( 0\right) }$ where $f_{0}^{\left( 0\right) }$ is the
-bounce averaged distribution function. Hence 
+because $\xi d\xi /B\left( \psi ,\theta \right) =\xi _{0}d\xi
+_{0}/B_{0}\left( \psi \right) .$ Since at the zero order, $f_{0}$ is
+constant along a magnetic field line, $f_{0}=f_{0}^{\left( 0\right) }$ is
+independent of the poloidal angle $\theta ,$ where $f_{0}^{\left( 0\right) }$
+is the bounce averaged distribution function. Hence 
 \begin{eqnarray}
 N &=&\iiint f_{0}^{\left( 0\right) }\left( \psi ,p,\xi _{0}\right)
 p^{2}d\psi dpd\xi _{0}\times   \nonumber \\
 &&\int_{\theta _{\min }}^{\theta _{\max }}\frac{Rr}{\left| \nabla \psi
 \right| \left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{\xi _{0}}{\xi }%
-\frac{B\left( \psi ,\theta \right) }{B_{\min }\left( \psi \right) }d\theta
+\frac{B\left( \psi ,\theta \right) }{B_{0}\left( \psi \right) }d\theta
 \int_{0}^{2\pi }d\phi \int_{0}^{2\pi }d\varphi   \nonumber \\
 &=&4\pi ^{2}\iiint f_{0}^{\left( 0\right) }\left( \psi ,p,\xi _{0}\right) 
-\frac{1}{B_{\min }\left( \psi \right) }p^{2}d\psi dpd\xi _{0}\times  
-\nonumber \\
+\frac{1}{B_{0}\left( \psi \right) }p^{2}d\psi dpd\xi _{0}\times   \nonumber
+\\
 &&\int_{\theta _{\min }}^{\theta _{\max }}\frac{Rr}{\left| \nabla \psi
 \right| \left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{\xi _{0}}{\xi }%
 B\left( \psi ,\theta \right) d\theta 
@@ -75,27 +75,27 @@ B}{B_{P}}d\theta =2\pi \lambda \left( \psi ,\xi _{0}\right) \widetilde{q}
 \end{equation}
 
 Here, appears, as expected the normalized bounce time $\lambda \left( \psi
-,\xi _{0}\right) $ and the factor $\widetilde{q}\left( \psi \right) $ which
-in conjunction with $B_{\min }\left( \psi \right) $ characterizes the local
-shape of magnetic flux surface. Hence, 
+,\xi _{0}\right) $ and the factor $\widetilde{q}\left( \psi \right) $
+introduced in Sec. $\ref{NormBounceSection},$ which in conjunction with $%
+B_{0}\left( \psi \right) $ characterizes the local shape of magnetic flux
+surface. Hence, 
 \begin{equation}
 N=8\pi ^{3}\iiint f_{0}^{\left( 0\right) }\left( \psi ,p,\xi _{0}\right) 
-\frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) }%
-\lambda \left( \psi ,\xi _{0}\right) p^{2}d\psi dpd\xi _{0}
+\frac{\widetilde{q}\left( \psi \right) }{B_{0}\left( \psi \right) }\lambda
+\left( \psi ,\xi _{0}\right) p^{2}d\psi dpd\xi _{0}
 \end{equation}
 
 From this expression, the Jacobian $J$ of the coordinate system $\left( \psi
 ,p,\xi _{0}\right) $ may be simply defined as, 
 \begin{equation}
 J=J_{\psi }J_{p}J_{\xi _{0}}=\frac{\widetilde{q}\left( \psi \right) }{%
-B_{\min }\left( \psi \right) }\lambda \left( \psi ,\xi _{0}\right) p^{2}
+B_{0}\left( \psi \right) }\lambda \left( \psi ,\xi _{0}\right) p^{2}
 \end{equation}
 where 
 \begin{equation}
 \left\{ 
 \begin{array}{l}
-J_{\psi }=\frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi
-\right) } \\ 
+J_{\psi }=\widetilde{q}\left( \psi \right) /B_{0}\left( \psi \right)  \\ 
 J_{p}=p^{2} \\ 
 J_{_{\xi _{0}}}=\lambda \left( \psi ,\xi _{0}\right) 
 \end{array}
@@ -114,9 +114,9 @@ is decomposed into a diffusive and a convective part
 f_{0}^{\left( 0\right) }+\mathbf{F}^{\left( 0\right) }f_{0}^{\left( 0\right)
 }
 \end{equation}
-$\Bbb{D}^{\left( 0\right) }$ and $\mathbf{F}^{\left( 0\right) }$ being
-respectively the diffusion tensor and convection vector in phase space. They
-can be expressed generally as 
+in the mean field theory. Here, $\Bbb{D}^{\left( 0\right) }$ and $\mathbf{F}%
+^{\left( 0\right) }$ are respectively the diffusion tensor and convection
+vector in phase space. They can be expressed generally as 
 \begin{equation}
 \Bbb{D}^{\left( 0\right) }=\left( 
 \begin{array}{lll}
@@ -145,15 +145,14 @@ is
 \begin{equation}
 \nabla =\left( 
 \begin{array}{l}
-\nabla _{\psi }=\left| \nabla \psi \right| \frac{\partial }{\partial \psi }
-\\ 
-\nabla _{p}=\frac{\partial }{\partial p} \\ 
-\nabla _{\xi _{0}}=-\frac{\sqrt{1-\xi _{0}^{2}}}{p}\frac{\partial }{\partial %
-\xi _{0}}
+\nabla _{\psi }=\left| \nabla \psi \right| \partial /\partial \psi  \\ 
+\nabla _{p}=\partial /\partial p \\ 
+\nabla _{\xi _{0}}=-\frac{\sqrt{1-\xi _{0}^{2}}}{p}\partial /\partial \xi
+_{0}
 \end{array}
 \right) 
 \end{equation}
-so, following calculations given in Appendix ***, 
+so, following calculations given in Appendix \ref{curvilinear}, 
 \begin{eqnarray}
 \nabla _{\left( \psi ,p,\xi _{0}\right) }\cdot \mathbf{S}^{\left( 0\right)
 }\left( f_{0}^{\left( 0\right) }\right)  &=&\frac{1}{J}\frac{\partial }{%
@@ -167,42 +166,46 @@ so, following calculations given in Appendix ***,
 \partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}J\mathbf{S}^{\left( 0\right) }%
 \cdot \widehat{\xi }\right)   \nonumber \\
 &&+\frac{1}{J}\frac{\partial }{\partial \psi }\left( J\left| \nabla \psi
-\right| _{\min }\mathbf{S}^{\left( 0\right) }\cdot \widehat{\psi }\right)  
+\right| _{0}\mathbf{S}^{\left( 0\right) }\cdot \widehat{\psi }\right)  
 \nonumber \\
 &=&\frac{1}{p^{2}}\frac{\partial }{\partial p}\left( p^{2}\mathbf{S}%
 _{p}^{\left( 0\right) }\right) -\frac{1}{\lambda \left( \psi ,\xi
 _{0}\right) }\frac{1}{p}\frac{\partial }{\partial \xi _{0}}\left( \sqrt{%
 1-\xi _{0}^{2}}\lambda \left( \psi ,\xi _{0}\right) \mathbf{S}_{\xi
 }^{\left( 0\right) }\right)   \nonumber \\
-&&+\frac{B_{\min }\left( \psi \right) }{\lambda \left( \psi ,\xi _{0}\right) 
+&&+\frac{B_{0}\left( \psi \right) }{\lambda \left( \psi ,\xi _{0}\right) 
 \widetilde{q}\left( \psi \right) }\frac{\partial }{\partial \psi }\left( 
-\frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) }%
-\lambda \left( \psi ,\xi _{0}\right) \left| \nabla \psi \right| _{\min }%
-\mathbf{S}_{\psi }^{\left( 0\right) }\right) 
+\frac{\widetilde{q}\left( \psi \right) }{B_{0}\left( \psi \right) }\lambda
+\left( \psi ,\xi _{0}\right) \left| \nabla \psi \right| _{0}\mathbf{S}_{\psi
+}^{\left( 0\right) }\right) 
 \end{eqnarray}
-where $\left| \nabla \psi \right| _{\min }$ is taken at $B=B_{\min }.$ The
-first two terms correspond to the usual dynamics in momentum space at a
-given spatial position $\psi $, while the third one is associated to spatial
-transport at fixed $p$ and $\xi _{0}$. It is interesting to note that
-spatial transport is not independent of the momentum dynamics through the
-parameter $\lambda \left( \psi ,\xi _{0}\right) .$ It corrects the spatial
-transport from the particle dynamics along the magnetic field line, since
-most particles tend to spend more time far from $B=B_{\min }$. In the limit
-of strongly passing particles, $\lambda \left( \psi ,\xi _{0}\right) $ $%
-\simeq 1$, and the spatial term becomes independent of $\xi _{0}.$
+where $\left| \nabla \psi \right| _{0}$ is taken on the magnetic flux
+surface where $B$ is minimum, i.e., $B=B_{0}.$ The first two terms
+correspond to the usual dynamics in momentum space at a given spatial
+position $\psi $, while the third one is associated to spatial transport at
+fixed $p$ and $\xi _{0}$. It is interesting to note that spatial transport
+is not independent of the momentum dynamics through the parameter $\lambda
+\left( \psi ,\xi _{0}\right) .$ It corrects the spatial transport from the
+particle dynamics along the magnetic field line, since most particles tend
+to spend more time far from $B=B_{0}$. In the limit of strongly passing
+particles, $\lambda \left( \psi ,\xi _{0}\right) $ $\simeq 1$, and the
+spatial term becomes independent of $\xi _{0}.$
 
 It is interesting to cross-check the conservative nature of the transport
 equation is well ensured by performing the integral 
-\begin{eqnarray}
+\begin{equation}
 \iiint \left[ \frac{\partial f_{0}^{\left( 0\right) }}{\partial t}+\nabla
 _{\left( \psi ,p,\xi _{0}\right) }\cdot \mathbf{S}^{\left( 0\right) }\right]
-Jdpd\xi _{0}d\psi &=&0  \nonumber \\
+Jdpd\xi _{0}d\psi =0
+\end{equation}
+or
+\begin{equation}
 \frac{\partial N}{\partial t}+\iiint \nabla _{\left( \psi ,p,\xi _{0}\right)
-}\cdot \mathbf{S}^{\left( 0\right) }Jdpd\xi _{0}d\psi &=&0
-\end{eqnarray}
+}\cdot \mathbf{S}^{\left( 0\right) }Jdpd\xi _{0}d\psi =0
+\end{equation}
 
-Indeed, in that case, the variation of the total number of particles $\frac{%
-\partial N}{\partial t}$ as a function of time depends only from boundary
+Indeed, in that case, the variation of the total number of particles $%
+\partial N/\partial t$ as a function of time depends only from boundary
 conditions. 
 \begin{equation}
 \iiint \nabla _{\left( \psi ,p,\xi _{0}\right) }\cdot \mathbf{S}^{\left(
@@ -212,33 +215,32 @@ I}_{\psi }
 where 
 \begin{equation}
 \mathcal{I}_{p}=\iiint \frac{1}{p^{2}}\frac{\partial }{\partial p}\left(
-p^{2}\mathbf{S}_{p}^{\left( 0\right) }\right) Jdpd\xi _{0}d\psi
+p^{2}\mathbf{S}_{p}^{\left( 0\right) }\right) Jdpd\xi _{0}d\psi 
 \end{equation}
 \begin{equation}
 \mathcal{I}_{\xi _{0}}=\iiint \frac{1}{\lambda \left( \psi ,\xi _{0}\right) }%
 \frac{1}{p}\frac{\partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}%
 \lambda \left( \psi ,\xi _{0}\right) \mathbf{S}_{\xi }^{\left( 0\right)
-}\right) Jdpd\xi _{0}d\psi
+}\right) Jdpd\xi _{0}d\psi 
 \end{equation}
 \begin{equation}
-\mathcal{I}_{\psi }=\iiint \frac{B_{\min }\left( \psi \right) }{\lambda
-\left( \psi ,\xi _{0}\right) \widetilde{q}\left( \psi \right) }\frac{%
-\partial }{\partial \psi }\left( \frac{\widetilde{q}\left( \psi \right) }{%
-B_{\min }\left( \psi \right) }\lambda \left( \psi ,\xi _{0}\right) \left|
-\nabla \psi \right| \mathbf{S}_{\psi }^{\left( 0\right) }\right) Jdpd\xi
-_{0}d\psi
+\mathcal{I}_{\psi }=\iiint \frac{B_{0}\left( \psi \right) }{\lambda \left(
+\psi ,\xi _{0}\right) \widetilde{q}\left( \psi \right) }\frac{\partial }{%
+\partial \psi }\left( \frac{\widetilde{q}\left( \psi \right) }{B_{0}\left(
+\psi \right) }\lambda \left( \psi ,\xi _{0}\right) \left| \nabla \psi
+\right| \mathbf{S}_{\psi }^{\left( 0\right) }\right) Jdpd\xi _{0}d\psi 
 \end{equation}
 
 For $\mathcal{I}_{p},$ 
 \begin{eqnarray}
-&&\iiint \frac{1}{p^{2}}\frac{\partial }{\partial p}\left( p^{2}\mathbf{S}
-_{p}^{\left( 0\right) }\right) Jdpd\xi _{0}d\psi  \nonumber \\
+&&\iiint \frac{1}{p^{2}}\frac{\partial }{\partial p}\left( p^{2}\mathbf{S}%
+_{p}^{\left( 0\right) }\right) Jdpd\xi _{0}d\psi   \nonumber \\
 &=&\iint \left[ p^{2}\mathbf{S}_{p}^{\left( 0\right) }\right] _{0}^{p_{\max
-}}\frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) }
-\lambda \left( \psi ,\xi _{0}\right) d\xi _{0}d\psi  \nonumber \\
+}}\frac{\widetilde{q}\left( \psi \right) }{B_{0}\left( \psi \right) }\lambda
+\left( \psi ,\xi _{0}\right) d\xi _{0}d\psi   \nonumber \\
 &=&p_{\max }^{2}\iint \mathbf{S}_{p}^{\left( 0\right) }\left( p_{\max
-}\right) \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi
-\right) }\lambda \left( \psi ,\xi _{0}\right) d\xi _{0}d\psi
+}\right) \frac{\widetilde{q}\left( \psi \right) }{B_{0}\left( \psi \right) }
+\lambda \left( \psi ,\xi _{0}\right) d\xi _{0}d\psi 
 \end{eqnarray}
 and assuming that $\lim_{p\rightarrow \infty }p^{2}\mathbf{S}_{p}^{\left(
 0\right) }=0,$ one finds $\mathcal{I}_{p}=0.$ This condition is generally
@@ -249,7 +251,7 @@ integration addressed in numerical calculations for the current drive
 problem. However, in this case, $\mathcal{I}_{p}$ is given by $\mathbf{S}%
 _{p}^{\left( 0\right) }$ at $p_{\max }$, where $p_{\max }$ corresponds to
 the boundary of the momentum domain of integration. Its conservative nature
-is well ensured, since $\frac{\partial N}{\partial t}$ only depends of this
+is well ensured, since $\partial N/\partial t$ only depends of this
 parameter for $p$.
 
 The integration of $\xi _{0}$ leads to 
@@ -257,10 +259,10 @@ The integration of $\xi _{0}$ leads to
 \mathcal{I}_{\xi _{0}} &=&\iiint \frac{1}{\lambda \left( \psi ,\xi
 _{0}\right) }\frac{1}{p}\frac{\partial }{\partial \xi _{0}}\left( \sqrt{%
 1-\xi _{0}^{2}}\lambda \left( \psi ,\xi _{0}\right) \mathbf{S}_{\xi
-}^{\left( 0\right) }\right) Jdpd\xi _{0}d\psi  \nonumber \\
+}^{\left( 0\right) }\right) Jdpd\xi _{0}d\psi   \nonumber \\
 &=&\iint \left[ \sqrt{1-\xi _{0}^{2}}\lambda \left( \psi ,\xi _{0}\right) 
-\mathbf{S}_{\xi }^{\left( 0\right) }\right] _{-1}^{+1}\frac{\widetilde{q}%
-\left( \psi \right) }{B_{\min }\left( \psi \right) }pdpd\psi  \nonumber \\
+\mathbf{S}_{\xi }^{\left( 0\right) }\right] _{-1}^{+1}\frac{\widetilde{q}
+\left( \psi \right) }{B_{0}\left( \psi \right) }pdpd\psi   \nonumber \\
 &=&0
 \end{eqnarray}
 which indicates that pitch-angle scattering never contributes to variations
@@ -269,26 +271,27 @@ equation is also well demonstrated.
 
 Finally, 
 \begin{eqnarray}
-\mathcal{I}_{\psi } &=&\iiint \frac{B_{\min }\left( \psi \right) }{\lambda
+\mathcal{I}_{\psi } &=&\iiint \frac{B_{0}\left( \psi \right) }{\lambda
 \left( \psi ,\xi _{0}\right) \widetilde{q}\left( \psi \right) }\frac{%
 \partial }{\partial \psi }\left( \frac{\widetilde{q}\left( \psi \right) }{%
-B_{\min }\left( \psi \right) }\lambda \left( \psi ,\xi _{0}\right) \left|
-\nabla \psi \right| \mathbf{S}_{\psi }^{\left( 0\right) }\right) Jdpd\xi
-_{0}d\psi  \nonumber \\
+B_{0}\left( \psi \right) }\lambda \left( \psi ,\xi _{0}\right) \left| \nabla
+\psi \right| \mathbf{S}_{\psi }^{\left( 0\right) }\right) Jdpd\xi _{0}d\psi 
+\nonumber \\
 &=&\iint \left[ \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left(
 \psi \right) }\lambda \left( \psi ,\xi _{0}\right) \left| \nabla \psi
 \right| \mathbf{S}_{\psi }^{\left( 0\right) }\right] _{0}^{\psi
 _{a}}p^{2}dpd\xi _{0}  \nonumber \\
-&=&\frac{\widetilde{q}\left( \psi _{a}\right) }{B_{\min }\left( \psi
-_{a}\right) }\left| \nabla \psi \right| _{\psi _{a}}\iint \lambda \left(
-\psi _{a},\xi _{0}\right) \mathbf{S}_{\psi }^{\left( 0\right) }\left( \psi
-_{a}\right) p^{2}dpd\xi _{0}
+&=&\frac{\widetilde{q}\left( \psi _{a}\right) }{B_{0}\left( \psi _{a}\right) 
+}\left| \nabla \psi \right| _{\psi _{a}}\iint \lambda \left( \psi _{a},\xi
+_{0}\right) \mathbf{S}_{\psi }^{\left( 0\right) }\left( \psi _{a}\right)
+p^{2}dpd\xi _{0}
 \end{eqnarray}
 which only depends of edge values at $\psi _{a}$ since $\left| \nabla \psi
-\right| _{\min }=R_{\min }B_{P\min }=0$ at $\psi =0$ when no particle is
-injected at the plasma center. If $\mathbf{S}_{\psi }^{\left( 0\right)
-}\left( \psi _{a}\right) =0,$ $\mathcal{I}_{\psi }=0,$ and the total number
-of particles is conserved in the discharge.
+\right| _{0}=R_{0}B_{P0}=0$ at $\psi =0$ when no particle is injected at the
+plasma center. Here, $B_{P0}$ is the poloidal magnetic field where $B$ is
+minimum. If $\mathbf{S}_{\psi }^{\left( 0\right) }\left( \psi _{a}\right) =0,
+$ $\mathcal{I}_{\psi }=0,$ and the total number of particles is conserved in
+the discharge.
 
 It is important to notice that the magnetic moment is intrinsically
 conserved in the equations, in particular for the radial transport part,
