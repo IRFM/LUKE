@@ -23,7 +23,7 @@ dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode] = psim_dke_1yp
 %by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
 %
 snumber = 300;%Simulation number
-tokname = 'TS';%Tokamak equilibrium scenario (see ptok_dke_1yp.m) in EQUIL_tokname file)
+tokname = 'JETb';%Tokamak equilibrium scenario (see ptok_dke_1yp.m) in EQUIL_tokname file)
 loadequil = 1;%0: Load already existing equilibrium file, 1: create equilibrium with HELENA (needs mex file), 2: create equilibrium file (with idealequil_f_jd.m function)
 qopt = 1;%Option for q profile. (0): constant (default), (1): from qmin and eq (for HELENA, it is used only for the psi grid guess)
 %
@@ -36,9 +36,9 @@ ntheta = 65;%Size of the theta grid for the magnetic equilibrium (ntheta ~= npsi
 %
 grid_uniformity = 0;%Pitch-angle and momentum grids uniformity: (0) no, (1) yes (-1 for specific test for DKE, transient and pitch-angle grid only)
 grid_method = 1;%Pitch-angle grid calculation technique: (0): old method, (1) new method
-nmhu_S = 151;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
-np_S = 201;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run) WARNING: must be adjusted so that effective momentum point number is larger than thepitch-angle one.
-pnmax_S = 30;%Maximum value of the flux momentum grid (pth_ref)
+nmhu_S = 101;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
+np_S = 151;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run) WARNING: must be adjusted so that effective momentum point number is larger than thepitch-angle one.
+pnmax_S = 15;%Maximum value of the flux momentum grid (pth_ref)
 %
 %Pitch-angle grid
 %
@@ -64,7 +64,7 @@ spfac = 20;%reduction factor for the momentum supergrid used in collision integr
 %Values of the radial flux grid [1,p] (If one radial value: local calculation only)
 %
 psin_S = [];%5.286742555900838e-002; %[0.1]%(rho = 0.25 in CMOD)
-rho_S = [0.1,0.5,0.7];%[0.05:0.07:0.9];%;0.03322100141578101;0.71365;
+rho_S = [0.7];%;0.03322100141578101;0.71365;
 %
 psin_display = NaN;%Approximate radial value at which results are displayed if display_mode >= 1 [1,1]
 rho_display = 0.4;
@@ -78,14 +78,14 @@ norm_ref = 1;%Normalization procedure for the ohmic electric field, LH and EC qu
 %
 epsi0 = 0;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e) (WARNING: ref_mode = 0 by default when multiple radial positions are studied simultaneously, whatever the value in this file)
 epsia = 0;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
-eepsi = 0;%Exponent for Ohmic electric field
+eepsi = 0;%Exponent for Ohmic electric field (WARNING: psi coordinate and not rho)
 %
 % RF Waves: For each of the following calculations:
 % (0) do not include, (1): include without ray-tracing (RT) mode, 
 % (2+): include with RT mode (iterations for self-consistent damping between
 % RT and DKE) See below for details
 %
-rf_list(1) = 0;%[0 or 1] LH test calculations (see psim_ideallhcd_jd) 
+rf_list(1) = 1;%[0 or 1] LH test calculations (see psim_ideallhcd_jd) 
 rf_list(2) = 0;%[0 or 1] EC test calculations (see psim_idealeccd_jd) 
 rf_list(3) = 0;%[0 or 1] Cold plasma LHCD calculations (see psim_coldlhcd_jd); 
 rf_list(4) = 0;%[0,1 or 2] Cold plasma ECCD calculations (see psim_coldeccd_jd); (2): RT calculations in wpe << wce limit (see psim_straightray_jd) 
@@ -111,7 +111,7 @@ nhuloss = NaN;%Magnetic ripple loss frequency, nhuloss > 1000 (or NaN if no ripp
 %
 % Collision operator
 %
-coll_mode = 3;%Relativistic collision operator: (0) Relativistic Maxwellian background, (1) High-velocity limit, (2) Linearized Belaiev-Budker (3) Non-relativistic Lorentz model, (4) Non-relativistic Maxwellian background
+coll_mode = 2;%Relativistic collision operator: (0) Relativistic Maxwellian background, (1) High-velocity limit, (2) Linearized Belaiev-Budker (3) Non-relativistic Lorentz model, (4) Non-relativistic Maxwellian background
 %
 % Run mode
 %
@@ -120,7 +120,7 @@ dke_mode = 1;%Fokker-Planck equation (0), Drift Kinetic equation (1)
 equil_mode = 1;%Equilibrium option: (0) circular concentric flux-surfaces, (1) numerical equilibrium
 %
 norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
-boundary_mode_f = 5;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
+boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 prec0_f = 1e-11;%Convergence level of the residu
 nit_f = 50;%Maximum number of iterations for f (> 1)
 initguess_f = 0;%Initial guess for the distribution function: (0) Maxwellian, (1) Fuchs model with Tperp for LH current drive only, (2) from a file

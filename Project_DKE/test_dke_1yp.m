@@ -261,19 +261,20 @@ else
     xrbetath = ones(1,nr);
     xrnhuth = ones(1,nr);
 end
-xepsi0_ref_fsav = epsi0_fsav*xrbetath.*xrnhuth;
-xepsia_ref_fsav = epsia_fsav*xrbetath.*xrnhuth;
+%xepsi0_ref_fsav = epsi0_fsav*xrbetath.*xrnhuth;
+%xepsia_ref_fsav = epsia_fsav*xrbetath.*xrnhuth;
 xvparmin_r_ref = vparmin_r*xrbetath;
 xnhuloss_ref = nhuloss*xrnhuth;
 % 
 alphaD = ap*ap/psia/psia;%For radial diffusion normalization
 alphaV = ap/psia;%For radial convection normalization
 %
-for ir = 1:nr,	
 %
 %   Ohmic electric field
 %
-   xepsi_ref_fsav_in(ir) = (xepsi0_ref_fsav(ir) - xepsia_ref_fsav(ir))*(1.0-xpsin(ir)).^eepsi_fsav + xepsia_ref_fsav(ir);
+xepsi_ref_fsav_in = ((epsi0_fsav - epsia_fsav)*(1.0-xpsin.^2).^eepsi_fsav + epsia_fsav).*xrbetath.*xrnhuth;
+%
+for ir = 1:nr,	
 %
 %	Anomalous fast electron radial diffusion and pinch
 %

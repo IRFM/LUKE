@@ -1,5 +1,3 @@
-1) Stream funnction: not fully symmetric in trapped domain
-2) ILor seems to be not correct for effective trapped fraction calculation 
-or bootstrap current level in Lorentz model
-3) Why the numerical method may be so important for the conservative nature
+1) Why the numerical method may be so important for the conservative nature
 of the code (LH mainly) ? Matrix conditioning ?
+2) large Dql

@@ -390,6 +390,19 @@ while 1,
 %            
 			pause(time_pause);
 %
+% ----------- Ohmic electric field
+%
+         figure(304)
+         y1 = xepsi_ref_fsav_in;
+			ylab = '<E_{//}> (E_{Dreicer-ref})';
+         graph1D_jd(xrho_dke,y1,0,0,'\rho',ylab,'Normalized Ohmic electric field',NaN,[0,1],[min(y1)-eps,max(y1)+eps],style1,marker,color1,width1,siz,gca,red,lspace,bspace1);
+			text(0.05,0.95,['E_{Dreicer-ref} = ',num2str(Edreicer_ref),' (V/m)'],'units','normalized');
+         %
+         figure(305)
+			y1 = xepsi_ref_fsav_in.*Edreicer_ref;
+			ylab = '<E_{//}> (V/m)';
+			graph1D_jd(xrho_dke,y1,0,0,'\rho',ylab,'Ohmic electric field',NaN,[0,1],[min(y1)-eps,max(y1)+eps],style1,marker,color1,width1,siz,gca,red,lspace,bspace1);
+%
 % ----------- LH domain if applicable
 %
 			if nb_lh > 0 & xvparmax_lh_ref(ir_display) - xvparmin_lh_ref(ir_display) ~= 0  & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0,
@@ -400,13 +413,13 @@ while 1,
 					eval(['save ',filenameroot,'_data_fig_',int2str(ir_display_dke),'lh.mat xrho_dke xia r_dke ir_display_dke pparresmin_lh_cyl_ref pparresmax_lh_cyl_ref pperp_cyl_ref'])
 				end
                 %
-                figure(4),
+            figure(4),
 				hold on;
 				plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--');
 				plot(pparresmax_lh_cyl_ref,pperp_cyl_ref,'k--');
 				hold off;
                 %
-                figure(5),
+            figure(5),
 				hold on;
 				plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--');
 				plot(pparresmax_lh_cyl_ref,pperp_cyl_ref,'k--');

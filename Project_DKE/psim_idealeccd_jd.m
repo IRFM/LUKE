@@ -16,7 +16,7 @@ blist_ec = [1]; %Index of selected scenarios for the EC wave. [1,n_scenario_ec]
 yY_ec = [0.98,0.98,0.98];%Normalized EC wave frequency: wce/w [1,n_scenario_ec]
 yomega_ec = [NaN,NaN,NaN];%EC wave frequency (GHz) [1,n_scenario_ec]
 %
-ynpar_ec = [0.3,0.3,0.3];%EC wave Gaussian N// Spectrum: peak [1,n_scenario_ec]
+ynpar_ec = [-0.3,0.3,0.3];%EC wave Gaussian N// Spectrum: peak [1,n_scenario_ec]
 ydnpar_ec = [0.02,0.02,0.02];%EC wave Gaussian N// Spectrum: width [1,n_scenario_ec]
 %
 %   Note: this diffusion coefficient is different from the general QL D0. It has a benchmarking purpose only 
