@@ -1,4 +1,4 @@
-function [vschords,gR_hxr,gZ_hxr,gphi_hxr] = bremchord_dke_yp(tokamak,HXR,xpsin,xpsin_S,mfactor,method,display,ns);
+function [vschords] = bremchord_dke_yp(tokamak,HXR,xpsin,xpsin_S,mfactor,method,display,ns);
 %
 % This function calculates chord positions fro bremsstrahlung tomography in a torus along unit vector g. 
 %
@@ -18,13 +18,12 @@ function [vschords,gR_hxr,gZ_hxr,gphi_hxr] = bremchord_dke_yp(tokamak,HXR,xpsin,
 %
 % OUTPUTS
 %       
-%       - vschords: chords parameter [6,n,nchords]
-%       - gR_hxr: component of the chord direction g_hxr along R [1,n,nchords]
-%       - gZ_hxr: component of the chord direction g_hxr along Z [1,n,nchords]
-%       - gphi_hxr: component of the chord direction g_hxr along phi [1,n,nchords]
+%       - vschords: chords parameter [12,n,nchords]
 %
 % by J. Decker (jodecker@alum.mit.edu) and Y. Peysson (yves.peysson@cea.fr)
 %
+
+%[vschords] = bremchord_dke_yp('TS',HXR,xpsin_dke,xpsin_S_dke,1,'spline',2);
 if nargin < 4,
     error('Not enough arguments in bremchord_dke_yp')
 elseif nargin == 4,
@@ -47,12 +46,14 @@ ns = abs(ns);%Force ns to be always positive
 nchords = length(HXR{1,1});%chord number
 %
 [theta,ppsin,psia,ptR,ptZ,ptBR,ptBZ,ptBphi] = equilibrium_jd(tokamak,NaN*xpsin,xpsin_S,display,method,mfactor);	
+
 %
 Rp = ptR(1,1);%Plasma major radius (m)
 Zp = ptZ(1,1);%Plasma vertical position (m)
-%
+xq = qfactors_dke_yp(Rp,Zp,ptR,ptZ,ptBR,ptBZ,ptBphi);%Safety factor
 r_lcs = sqrt((ptR(length(ppsin),:) - Rp).^2 + (ptZ(length(ppsin),:) - Zp).^2);%Minor radius of the last closed magnetic surface
 ap = max([r_lcs(1),max(r_lcs)]);%Max of low field side  minor radius and maximum minor radius
+%
 smax = 2*(Rp + ap);%maximum chord length = R_hxr+a_hxr
 s = linspace(-smax,0,ns)'*ones(1,nchords);%for nchords (s negative by definition)
 % Poloidal plot
@@ -79,7 +80,26 @@ VVY = linspace(1.1*min(YY_tor_max),1.1*max(YY_tor_max),1000);
 HHX = linspace(1.1*min(XX_tor_max),1.1*max(XX_tor_max),1000);
 HHY = zeros(1,1000);
 %
-alpha_hxr = ones(ns,1)*HXR{1,1};
+phi_mfl = linspace(0,2*pi*xq(end),1000);
+phi_mfl0 = 0;
+theta_mfl_lcs = (phi_mfl - phi_mfl0)/xq(end);%Heliticity relation given by the safety factor
+r_mfl_lcs = interp1(theta,r_lcs,theta_mfl_lcs,method);
+%
+BR_mfl_lcs = interp1(theta,ptBR(end,:),theta_mfl_lcs,method);
+BZ_mfl_lcs = interp1(theta,ptBZ(end,:),theta_mfl_lcs,method);
+Bphi_mfl_lcs = interp1(theta,ptBphi(end,:),theta_mfl_lcs,method);
+%
+ptBtheta = -ptBR.*sin(ones(size(ppsin))*theta) + ptBZ.*cos(ones(size(ppsin))*theta);
+Ipdir = 2*isempty(find(ptBtheta < 0)) - 1;%If +1: Ip same direction to Bphi, if -1 Ip opposite direction to Bphi
+%
+BX_mfl_lcs = BR_mfl_lcs.*cos(phi_mfl) - Bphi_mfl_lcs.*sin(phi_mfl);
+BY_mfl_lcs = BR_mfl_lcs.*sin(phi_mfl) + Bphi_mfl_lcs.*cos(phi_mfl);
+%
+X_mfl_lcs = (Rp + r_mfl_lcs.*cos(theta_mfl_lcs)).*cos(phi_mfl); 
+Y_mfl_lcs = (Rp + r_mfl_lcs.*cos(theta_mfl_lcs)).*sin(phi_mfl); 
+Z_mfl_lcs = Zp + r_mfl_lcs.*sin(theta_mfl_lcs);
+%
+alpha_hxr = ones(ns,1)*HXR{1,1};%Defined in the indirect frame only (see the documentation)
 beta_hxr = ones(ns,1)*HXR{1,2};
 R_hxr = ones(ns,1)*HXR{1,3};
 Z_hxr = ones(ns,1)*HXR{1,4};
@@ -96,12 +116,14 @@ sZ = s.*cos(beta_hxr);
 sh = s.*sin(beta_hxr);
 %
 sR = sqrt(R_hxr.^2 + sh.^2 + 2*R_hxr.*sh.*cos(alpha_hxr));
+sR = sR + eps*(sR == Rp);%to avoid singularities
 sZ = Z_hxr + sZ;
-sphi = acos((sR.^2 + R_hxr.^2 - sh.^2)./(2*sR.*R_hxr)).*sign(alpha_hxr);
+sZ = sZ + eps*(sZ == Zp);%to avoid singularities
+sphi = rem(2*pi - acos((sR.^2 + R_hxr.^2 - sh.^2)./(2*sR.*R_hxr)).*sign(alpha_hxr),2*pi);
 %
-gR_hxr = sin(beta_hxr).*cos(alpha_hxr);
-gZ_hxr = cos(beta_hxr);
-gphi_hxr = sin(beta_hxr).*sin(alpha_hxr);
+gX_hxr = sin(beta_hxr).*cos(alpha_hxr);%Chord vector
+gY_hxr = sin(beta_hxr).*sin(alpha_hxr);%Chord vector
+gZ_hxr = cos(beta_hxr);%Chord vector
 %
 sr = sqrt((sR - Rp).^2 + (sZ - Zp).^2);%Minor radius along the chords
 st = atan((sZ - Zp)./(sR - Rp)) + pi - pi*(sR > Rp).*sign(sZ - Zp);%poloidal angle [0,2*pi]
@@ -116,14 +138,14 @@ for ic = 1:nchords,
 end	
 sR(~mask)=NaN;
 sZ(~mask)=NaN; 
+sphi(~mask)=NaN; 
 sr(~mask)=NaN;
 st(~mask)=NaN; 
 sBR=griddata(ptR,ptZ,ptBR,sR,sZ);
 sBZ=griddata(ptR,ptZ,ptBZ,sR,sZ);
 sBphi=griddata(ptR,ptZ,ptBphi,sR,sZ);
 sB = sqrt(sBR.^2 + sBZ.^2 + sBphi.^2);
-sksid = (sBR.*cos(sphi).*gR_hxr + sBZ.*cos(sphi).*gZ_hxr + sBphi.*sin(sphi).*gphi_hxr)./sB;
-
+sksid = -Ipdir*((sBR.*cos(sphi) - sBphi.*sin(sphi)).*gX_hxr + (-sBR.*sin(sphi) + sBphi.*cos(sphi)).*gY_hxr + sBZ.*gZ_hxr)./sB;%cosine between magnetic field line and chord direction
 %
 if display >= 1
    figure(2878),
@@ -147,28 +169,38 @@ if display >= 1
 	plot(ptR,ptZ,'c-')
 	plot(HHR_pol,HHZ_pol,'r-.')
 	plot(VVR_pol,VVZ_pol,'r-.')
-	hold off
-	
-   
-   
-   
+	hold off  
 %
 	figure(2880)
-	plot(sR.*cos(sphi),sZ.*sin(sphi),'b');%Toroidal plot
-	xlabel('X (m)');ylabel('Y (m)');title('Bremsstrahlung tomography (Toroidal view, Z = 0)')
+	plot(sR.*cos(sphi),sR.*sin(sphi),'b','LineWidth',2);%Toroidal plot
+	xlabel('X (m)');ylabel('Y (m)');title('Bremsstrahlung tomography (Top toroidal view, Z = 0), Ip:green, B-field:black')
 	hold on
-	plot(XX_tor_min,YY_tor_min,'r',XX_tor,YY_tor,'r-.',XX_tor_max,YY_tor_max,'r')
+	plot(XX_tor_min,YY_tor_min,'r',XX_tor,YY_tor,'r-.',XX_tor_max,YY_tor_max,'r','LineWidth',2)
 	axis('equal');
 	plot(VVX,VVY,'r-.')
 	plot(HHX,HHY,'r-.')
+	plot(X_mfl_lcs(1:3:end),Y_mfl_lcs(1:3:end),'k:');%Z < 0                                        
+	plot(X_mfl_lcs(find(Z_mfl_lcs>=0)),Y_mfl_lcs(find(Z_mfl_lcs>=0)),'k-');%Z >= 0
+	h = quiver(X_mfl_lcs(1:40:end),Y_mfl_lcs(1:40:end),BX_mfl_lcs(1:40:end),BY_mfl_lcs(1:40:end),0.5);%Magnetic field line direction
+	set(h,'Color','k');
+	h = quiver(X_mfl_lcs(20:40:end),Y_mfl_lcs(20:40:end),Ipdir*BX_mfl_lcs(20:40:end),Ipdir*BY_mfl_lcs(20:40:end),0.5);%Current direction on magnetic field line direction
+	set(h,'Color','g');
 	hold off
+	set(gca,'YDir','rev');%Because the reference is indirect by definition
 end
 %
-dbstop 163
-vschords = zeros(6,ns,nchords);
+vschords = zeros(12,ns,nchords);
 vschords(1,:,:) = s;
 vschords(2,:,:) = sR;
 vschords(3,:,:) = sZ;
 vschords(4,:,:) = sphi;
 vschords(5,:,:) = sr;
 vschords(6,:,:) = st;
+vschords(7,:,:) = sksid;
+vschords(8,:,:) = sBR;
+vschords(9,:,:) = sBZ;
+vschords(10,:,:) = sBphi;
+vschords(11,:,:) = gX_hxr;
+vschords(12,:,:) = gY_hxr;
+vschords(13,:,:) = gZ_hxr;
+
