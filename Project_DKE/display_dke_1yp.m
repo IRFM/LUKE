@@ -271,7 +271,11 @@ while 1,
 		if nb > 0
 			YXDrf_ref = squeeze(YXXDrf_ref(:,:,ir_display,:));%Display results at the required radial value
 		end
-		[XAstr_S_Pm_ref,XAstr_S_Pp_ref,XAstr_S_T_ref] = stream_dke_jd(ZSp0_ref,XxRR_ref_fsav,mhu,xmhubounce2,dmhu,pnp,ir_display_dke,nb);
+        if bounce_mode == 1,
+		    [XAstr_S_Pm_ref,XAstr_S_Pp_ref,XAstr_S_T_ref] = stream_dke_jd(ZSp0_ref,XxRR_ref_fsav,mhu,xmhubounce2,dmhu,pnp,ir_display_dke,nb);
+        else
+		    [XAstr_S_Pm_ref,XAstr_S_Pp_ref,XAstr_S_T_ref] = stream_dke_jd(ZSp0_ref,XxRR_ref_fsav,mhu,NaN,dmhu,pnp,ir_display_dke,nb);
+        end
 %
 		disp('-------------------------------------------------------------------------------------------------------------------');
 		disp('-------------------------------------------------------------------------------------------------------------------');
@@ -378,9 +382,9 @@ while 1,
             end
 		end
 %
-		[XAstr_Pp_cyl_ref,ppar_cyl_S_ref,dppar_cyl_S_ref,pperp_cyl_S_ref,dpperp_S_cyl_ref] = s2c_dke_yp(XAstr_S_Pp_ref,pn_S,mhu_S,dp_cyl);%Spherical to cylindrical coordinate transformation
-		[XAstr_Pm_cyl_ref,ppar_cyl_S_ref,dppar_cyl_S_ref,pperp_cyl_S_ref,dpperp_S_cyl_ref] = s2c_dke_yp(XAstr_S_Pm_ref,pn_S,mhu_S,dp_cyl);%Spherical to cylindrical coordinate transformation
-		[XAstr_T_cyl_ref,ppar_cyl_S_ref,dppar_cyl_S_ref,pperp_cyl_S_ref,dpperp_S_cyl_ref] = s2c_dke_yp(XAstr_S_T_ref,pn_S,mhu_S,dp_cyl);%Spherical to cylindrical coordinate transformation
+		[XAstr_Pp_cyl_ref,ppar_cyl_S_ref,dppar_cyl_S_ref,pperp_cyl_S_ref,dpperp_S_cyl_ref] = s2c_S_dke_yp(XAstr_S_Pp_ref,pn_S,mhu_S,dp_cyl);%Spherical to cylindrical coordinate transformation
+		[XAstr_Pm_cyl_ref,ppar_cyl_S_ref,dppar_cyl_S_ref,pperp_cyl_S_ref,dpperp_S_cyl_ref] = s2c_S_dke_yp(XAstr_S_Pm_ref,pn_S,mhu_S,dp_cyl);%Spherical to cylindrical coordinate transformation
+		[XAstr_T_cyl_ref,ppar_cyl_S_ref,dppar_cyl_S_ref,pperp_cyl_S_ref,dpperp_S_cyl_ref] = s2c_S_dke_yp(XAstr_S_T_ref,pn_S,mhu_S,dp_cyl);%Spherical to cylindrical coordinate transformation
 %
 		Xppar_cyl_ref = ones(length(pperp_cyl_ref),1)*ppar_cyl_ref(:)';%Grid for the distribution functions only
 		Xpperp_cyl_ref = pperp_cyl_ref(:)*ones(1,length(ppar_cyl_ref));
@@ -458,9 +462,11 @@ while 1,
 %   General graph properties
 %
             x1 = ppar_cyl_ref;
-            xlab1 = 'p_{//}/p_{Te}^{ref}';
+            x1_S = ppar_cyl_S_ref;
+            xlab1 = 'p_{||}/p_{Te}^{ref}';
             xlim1 = [-pnmax_S,pnmax_S];
             x2 = pperp_cyl_ref;
+            x2_S = pperp_cyl_S_ref;
             xlab2 = 'p_{\perp}/p_{Te}^{ref}';
             xlim2 = [0,pnmax_S];
             leg = ['f_{init}';'f_0     '];
@@ -494,7 +500,7 @@ while 1,
             figure(306),clf
             %
             y1 = Fpar0_cyl_ref - Fparinit_cyl_ref;
-            ylab = 'F_{0//} - F_{M//}';
+            ylab = 'F_{0||} - F_{M||}';
             ylim = NaN;
             %
             graph1D_jd(x1,y1,0,0,xlab1,ylab,'',NaN,xlim1,ylim,style2,marker,color2,width2,siz,gca,red,lspace,bspace1);
@@ -508,7 +514,7 @@ while 1,
             %
             y1 = Fparinit_cyl_ref;
             y2 = Fpar0_cyl_ref;
-            ylab = 'F_{0//}';
+            ylab = 'F_{0||}';
             ylim = [1e-20,1];
             %
             graph1D_jd(x1,y1,0,1,'','','',NaN,xlim1,ylim,style1,marker,color1,width1,siz,gca,red,lspace,bspace1);
@@ -538,7 +544,7 @@ while 1,
             %
             y1 = Tparinitn_cyl_ref;
             y2 = Tparn_cyl_ref;
-            ylab = 'T_{//}/T_e^{ref}';
+            ylab = 'T_{||}/T_e^{ref}';
             ylim = NaN;
             %
             graph1D_jd(x2,y1,0,0,'','','',NaN,xlim2,ylim,style1,marker,color1,width1,siz,gca,red,lspace,bspace1);
@@ -575,7 +581,6 @@ while 1,
             y1 = XAstr_S_Pm_ref';
             y2 = XAstr_S_T_ref';
             y3 = XAstr_S_Pp_ref';
-            mhu0T = sqrt(xmhubounce2(ir_display));
             %
             ymin = min(min([y1,y2,y3]));
             ymax = max(max([y1,y2,y3]));
@@ -586,9 +591,16 @@ while 1,
                 cont = ymin:dy:ymax;
             end
             %
-            graph_cyl_jd(pn_S,mhu_S,y1,'',xlim1,xlim2,NaN,cont,style2,NaN,width1,red,NaN,[0,pnmax_S,-1,-mhu0T+eps]);
-            graph_cyl_jd(pn_S,mhu_S,y2,'',xlim1,xlim2,NaN,cont,style2,NaN,width1,1,NaN,[0,pnmax_S,-mhu0T-eps,mhu0T+eps]);
-            graph_cyl_jd(pn_S,mhu_S,y3,'',xlim1,xlim2,NaN,cont,style2,NaN,width1,1,NaN,[0,pnmax_S,mhu0T-eps,1]);
+            if bounce_mode >= 1,
+                mhu0T = sqrt(xmhubounce2(ir_display));
+                graph_cyl_jd(pn_S,mhu_S,y1,'',xlim1,xlim2,NaN,cont,style2,NaN,width1,red,NaN,[0,pnmax_S,-1,-mhu0T+eps]);
+                graph_cyl_jd(pn_S,mhu_S,y2,'',xlim1,xlim2,NaN,cont,style2,NaN,width1,1,NaN,[0,pnmax_S,-mhu0T-eps,mhu0T+eps]);
+                graph_cyl_jd(pn_S,mhu_S,y3,'',xlim1,xlim2,NaN,cont,style2,NaN,width1,1,NaN,[0,pnmax_S,mhu0T-eps,1]);
+            else
+                y = (XAstr_Pm_cyl_ref + XAstr_Pp_cyl_ref)/2;
+            %
+                graph2D_jd(x1_S,x2_S,y','','','',xlim1,xlim2,0,NaN,cont,0,style2,NaN,width1,siz,red);
+            end
             graph1D_jd(x9,y9,0,0,xlab1,xlab2,'Stream function',NaN,xlim1,xlim2,style2,marker,color5,width1,siz);
             text(0.05,0.95,['\rho = ',rhostr],'units','normalized');
             axis('equal');axis([xlim1,xlim2])
@@ -601,13 +613,13 @@ while 1,
 			if max(abs(xepsi_ref_fsav_in)) > 0,
          		figure(304)
  	        	y1 = xepsi_ref_fsav_in;
-				ylab = '<E_{//}> (E_{Dreicer-ref})';
+				ylab = '<E_{||}> (E_{Dreicer-ref})';
 	         	graph1D_jd(xrho_dke,y1,0,0,'\rho',ylab,'Normalized Ohmic electric field',NaN,[0,1],[min(y1)-eps,max(y1)+eps],style1,marker,color1,width1,siz,gca,red,lspace,bspace1);
 				text(0.05,0.95,['E_{Dreicer-ref} = ',num2str(Edreicer_ref),' (V/m)'],'units','normalized');
          %
 	         	figure(305)
 				y1 = xepsi_ref_fsav_in.*Edreicer_ref;
-				ylab = '<E_{//}> (V/m)';
+				ylab = '<E_{||}> (V/m)';
 				graph1D_jd(xrho_dke,y1,0,0,'\rho',ylab,'Ohmic electric field',NaN,[0,1],[min(y1)-eps,max(y1)+eps],style1,marker,color1,width1,siz,gca,red,lspace,bspace1);
 			end
 %
@@ -720,7 +732,7 @@ while 1,
 			end
 %
 			for ib=1:nb_ec
-					disp(['   - EC beam #',num2str(ib),': n// = ',num2str(waveparam_ec(ir_display_dke,ib,8)),...
+					disp(['   - EC beam #',num2str(ib),': n|| = ',num2str(waveparam_ec(ir_display_dke,ib,8)),...
 				', Y = ',num2str(waveparam_ec(ir_display_dke,ib,1)*waveparam_ec(ir_display_dke,ib,3)/waveparam_ec(ir_display_dke,ib,2)),',D0ec = ',num2str(waveparam_ec(ir_display_dke,ib,5))])
 					disp(['        EC Power absorbed [spherical]: ',num2str(xyPabs0_ec_ref_fsav(ir_display_dke,ib))]) 
 			end
@@ -744,7 +756,7 @@ while 1,
 			end
 %
 			for ib = 1:nb_ec
-					disp(['   - EC beam #',num2str(ib),': n// = ',num2str(waveparam_ec(ir_display_dke,ib,8)),...
+					disp(['   - EC beam #',num2str(ib),': n|| = ',num2str(waveparam_ec(ir_display_dke,ib,8)),...
 					', Y = ',num2str(waveparam_ec(ir_display_dke,ib,1)*waveparam_ec(ir_display_dke,ib,3)/waveparam_ec(ir_display_dke,ib,2)),',D0ec = ',num2str(waveparam_ec(ir_display_dke,ib,5))])
 					disp(['        EC Power absorbed (MW/m3) [spherical]: ',num2str(xyPabs0_ec_fsav_mksa(ir_display_dke,ib))]) 
 			end
@@ -819,10 +831,10 @@ while 1,
 				figure(9);clf
                 %
                 y1 = Fpar1_cyl_ref;
-                ylab = 'F_{1//}';
+                ylab = 'F_{1||}';
                 ylim = NaN;
                 %
-                graph1D_jd(x1,y1,0,0,xlab1,ylab,'',NaN,xlim1,ylim,style3,marker1,color2,width2,siz,gca,red,lspace,bspace1);
+                graph1D_jd(x1,y1,0,0,xlab1,ylab,'',NaN,xlim1,ylim,style2,marker,color2,width2,siz,gca,red,lspace,bspace1);
                 %
 				if coll_mode == 3,%Lorentz model
                     y2 = Fpar1_L_cyl_ref;
@@ -844,7 +856,7 @@ while 1,
     				figure(15);clf
                 %
                     y1 = Fpar1_syn_cyl_ref;
-                    ylab = 'F_{1//}';
+                    ylab = 'F_{1||}';
                     ylim = NaN;
                 %
                     graph1D_jd(x1,y1,0,0,xlab1,ylab,'Synergistic Parallel Distribution',NaN,xlim1,ylim,style3,marker1,color2,width2,siz,gca,red,lspace,bspace1);
@@ -948,10 +960,12 @@ while 1,
 %
                 figure(13),clf
                 %
-                y1 = log10(abs(Xf0_tpg_cyl_ref/max(max(abs(Xf0_tpg_cyl_ref)))));
-                cont = [-10.5:-0.5];
+                y1 = Xf0_tpg_cyl_ref/max(max(abs(Xf0_tpg_cyl_ref)));
+                y1(abs(y1) <= eps) = eps;
+                y1 = sign(Xf0_tpg_cyl_ref).*(log10(abs(y1))-log10(eps));
+                cont = [-16.5:16.5];
                 %
-                graph2D_jd(x1,x2,y1','','','',xlim1,xlim2,0,NaN,cont,0,style2,color2,width2,siz,red);
+                graph2D_jd(x1,x2,y1','','','',xlim1,xlim2,0,NaN,cont,0,style2,NaN,width2,siz,red);
                 if syn_mode == 1,
                     y2 = log10(abs(Xf0_bc_tpg_cyl_ref/max(max(abs(Xf0_tpg_cyl_ref)))));
                     graph2D_jd(x1,x2,y2','','','',xlim1,xlim2,0,NaN,cont,0,style2,color1,width1,siz,red);
@@ -1055,7 +1069,7 @@ while 1,
 			end
 %	
 			for ib=1:nb_ec,
-				disp(['   - EC beam #',num2str(ib),': n// = ',num2str(waveparam_ec(ir_display_dke,ib,8)),...
+				disp(['   - EC beam #',num2str(ib),': n|| = ',num2str(waveparam_ec(ir_display_dke,ib,8)),...
 				', Y = ',num2str(waveparam_ec(ir_display_dke,ib,1)*waveparam_ec(ir_display_dke,ib,3)/waveparam_ec(ir_display_dke,ib,2)),',D0ec = ',num2str(waveparam_ec(ir_display_dke,ib,5))])
 					disp(['        EC Power absorbed [spherical]: ',num2str(xyPabs0_ec_ref_fsav(ir_display_dke,ib))]) 
                 if syn_mode == 1,
@@ -1102,7 +1116,7 @@ while 1,
 			end
 %
 			for ib=1:nb_ec,
-				disp(['   - EC beam #',num2str(ib),': n// = ',num2str(waveparam_ec(ir_display_dke,ib,8)),...
+				disp(['   - EC beam #',num2str(ib),': n|| = ',num2str(waveparam_ec(ir_display_dke,ib,8)),...
 					', Y = ',num2str(waveparam_ec(ir_display_dke,ib,1)*waveparam_ec(ir_display_dke,ib,3)/waveparam_ec(ir_display_dke,ib,2)),',D0ec = ',num2str(waveparam_ec(ir_display_dke,ib,5))])
 				disp(['        EC Power absorbed (MW/m3) [spherical]: ',num2str(xyPabs0_ec_fsav_mksa(ir_display_dke,ib))]) 
                 if syn_mode == 1,
@@ -1203,7 +1217,7 @@ if auto_mode_in == 0 & nr > 1,
 	disp('  ');
 	ie_display = 1;
 	Ec_r_ref_in = xEc_r_ref_threshold(1);
-	info_dke_yp(1,'Radial profile plot of F//');
+	info_dke_yp(1,'Radial profile plot of F||');
 	h_figure = 499;
 	while 1,
 		h_figure = h_figure + 1;
@@ -1227,7 +1241,7 @@ if auto_mode_in == 0 & nr > 1,
 		figure(h_figure),clf
         
 		tit = ['Electron kinetic energy: ',num2str(Ec_r_ref_out),' (keV), threshold: ',num2str(xEc_r_ref_threshold(1)),' (keV)'];
-        graph1D_jd(xrho_dke,prof_r_Fpar_ref,0,0,xlab,'F_{//}',tit,NaN,xlim,NaN,style2,marker1,color1,width1,siz,gca,red,lspace,bspace2);
+        graph1D_jd(xrho_dke,prof_r_Fpar_ref,0,0,xlab,'F_{||}',tit,NaN,xlim,NaN,style2,marker1,color1,width1,siz,gca,red,lspace,bspace2);
 %
 		if igor_mode == 1,
 			if exist([filenameroot,'_Fparprof_',int2str(ie_display),'_out.mat']) == 2,
