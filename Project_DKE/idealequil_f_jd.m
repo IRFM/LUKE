@@ -1,4 +1,4 @@
-function idealequil_f_jd(tokamak,npsi,ntheta,shift,kappa,delta,savename)
+function idealequil_f_jd(tokamak,npsi,ntheta,qopt,shift,kappa,delta,savename)
 %
 %   This function generates the data file of an ideal equilibrium based on
 %   the information stored in ptok_dke_1yp.
@@ -13,6 +13,7 @@ function idealequil_f_jd(tokamak,npsi,ntheta,shift,kappa,delta,savename)
 %       - delta: triangularity (default: 0)
 %       - savename: file name for storing the equilibrium 
 %           (default: same as tokamak)
+%       - qopt: option for q profile. (0): constant (default), (1): from qmin and eq
 %
 %   NOTE: 
 %
@@ -30,23 +31,26 @@ function idealequil_f_jd(tokamak,npsi,ntheta,shift,kappa,delta,savename)
 %   By J. Decker <jodecker@alum.mit.edu> and Y. Peysson <yves.peysson@cea.fr>
 %   Created Feb. 17, 2004
 %
-if nargin < 7
+if nargin < 8
 	savename = tokamak;
 end
-if nargin < 6
+if nargin < 7
 	delta = 0;
 end
-if nargin < 5
+if nargin < 6
 	kappa = 1;
 end
-if nargin < 2
-	npsi = 201;
+if nargin < 5
+	shift = zeros(1,npsi);
 end
 if nargin < 4
-	shift = zeros(1,npsi);
+	qopt = 0;
 end
 if nargin < 3
 	ntheta = 201;
+end
+if nargin < 2
+	npsi = 201;
 end
 if nargin < 1
 	error('Tokamak not specified');
@@ -98,13 +102,9 @@ end
 %
 Bpa = (4*pi*1e-7)*Ip*1e6/(2*pi*ap); %Poloidal Field at the edge, Ampere's theorem (circular plasma cross-section)
 %
-%Note: The following calculations are based on the assumption of a constant
-%   current profile and are valid only for a circular concentric equilibrium. 
+%Note: The following calculations are valid only for a circular concentric equilibrium. 
 %   Moreover, in the following expressions, term of order (ap/Rp)^2 or
 %   higher are neglected.
-%
-psia = ap*Rp*Bpa/2; %poloidal flux at the edge
-ppsi = prho.^2*psia; %poloidal flux profile
 %
 Xrho = repmat(prho',[1,ntheta]);
 Xtheta = repmat(theta,[npsi,1]);
@@ -114,8 +114,26 @@ Zp = 0;
 R = Rp + ap*Xrho.*cos(Xtheta);
 Z = Zp + ap*Xrho.*sin(Xtheta);
 %
-BR = -Bpa*Xrho.*sin(Xtheta)*Rp./R;
-BZ = Bpa*Xrho.*cos(Xtheta)*Rp./R;
+qmax = ap/Rp*Bt/Bpa;
+%
+if qopt == 1 %case with current profile defined by qmin and eq
+    pq = (qmax - qmin)*prho.^eq + qmin;
+else %case with constant q (uniform current density)
+    pq = qmax*ones(1,npsi);
+end
+pBpp = prho*ap/Rp*Bt./pq;
+%
+%sprho = repmat(prho',[1,npsi]);
+spBpp = triu(repmat((pBpp(1:npsi-1) + pBpp(2:npsi))'/2,[1,npsi-1]));
+pdprho = diff(prho);
+ppsi = [0,ap*Rp*integral_dke_jd(pdprho,spBpp,1)'];
+%
+%psia = ap*Rp*Bpa/2; %poloidal flux at the edge
+%ppsi = prho.^2*psia; %poloidal flux profile
+%
+XBpp = repmat(pBpp',[1,ntheta]);
+BR = -XBpp.*sin(Xtheta)*Rp./R;
+BZ = XBpp.*cos(Xtheta)*Rp./R;
 BPHI = Bt*Rp./R;
 %
 filename = ['EQUIL_',savename,'.mat'];
