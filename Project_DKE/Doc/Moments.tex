@@ -855,3 +855,316 @@ or
 A^{\left( 0\right) }=\frac{2\pi \sqrt{1-\xi _{0}^{2}}}{n\left( \psi \right) }%
 \int_{0}^{p}p^{\prime }dp^{\prime }\;S_{\xi }^{\left( 0\right) }
 \end{equation}
+
+\subsection{Fraction of trapped electrons}
+
+The effective fraction of trapped electrons $f_{t}$ is one of the most
+important quantities of the neoclassical transport theory, since the
+parallel viscosity responsible for reduction of the Ohmic conductivity and
+the bootstrap current are directly proportional to $f_{t}\left(
+1-f_{t}\right) $ in the Hirschan-Sigmar formulation of the transport theory.
+It is a purely kinetic quantity, that can only be estimated localy at the
+common plasma location for all electrons trajectories i.e. at $B_{min}$. In
+the thin banana width approximation, it is therefore a function of the flux
+surface $\psi $%
+\begin{equation}
+f_{t}^{kin}\left( \psi \right) =\frac{2\pi \int_{0}^{\infty %
+}p^{2}dp\int_{-\xi _{0T}}^{+\xi _{0T}}f^{(0)}\left( \psi ,p,\xi _{0}\right)
+d\xi _{0}}{n_{e}\left( \psi \right) }  \label{kintrapfracgen}
+\end{equation}
+where $\xi _{0T}\left( \psi \right) $ is given by the relation (\ref{xi0t2})
+and $n_{e}\left( \psi \right) $ is the flux-surface electron averaged
+density. Recalling the expansion up to the first order
+\begin{equation}
+f^{(0)}\simeq f_{0}^{(0)}+f_{1}^{(0)}
+\end{equation}
+where $f_{1}^{(0)}=\widetilde{f}^{\left( 0\right) }+g^{\left( 0\right) },$
+it turns out that
+\begin{equation}
+f_{t}^{kin}\left( \psi \right) \simeq f_{0,t}^{kin}\left( \psi \right) +%
+\widetilde{f}_{t}^{kin}\left( \psi \right) +g_{t}^{kin}\left( \psi \right) 
+\end{equation}
+where
+\begin{eqnarray}
+f_{0,t}^{kin}\left( \psi \right)  &=&\frac{2\pi }{n_{e}\left( \psi \right) }%
+\int_{0}^{\infty }p^{2}dp\int_{-\xi _{0T}}^{+\xi _{0T}}f_{0}^{(0)}\left(
+\psi ,p,\xi _{0}\right) d\xi _{0}  \nonumber \\
+\widetilde{f}_{t}^{kin}\left( \psi \right)  &=&\frac{2\pi }{n_{e}\left( \psi
+\right) }\int_{0}^{\infty }p^{2}dp\int_{-\xi _{0T}}^{+\xi _{0T}}\widetilde{f}%
+^{\left( 0\right) }\left( \psi ,p,\xi _{0}\right) d\xi _{0}  \nonumber \\
+g_{t}^{kin}\left( \psi \right)  &=&\frac{2\pi }{n_{e}\left( \psi \right) }%
+\int_{0}^{\infty }p^{2}dp\int_{-\xi _{0T}}^{+\xi _{0T}}g^{\left( 0\right)
+}\left( \psi ,p,\xi _{0}\right) d\xi _{0}
+\end{eqnarray}
+gradient terms taking into account of the neoclassical corrections. Since $%
+\widetilde{f}^{\left( 0\right) }$ is always antisymmetric in the trapped
+region, $\widetilde{f}_{t}^{kin}\left( \psi \right) =0$ and
+\begin{equation}
+f_{t}^{kin}\left( \psi \right) \simeq f_{0,t}^{kin}\left( \psi \right)
++g_{t}^{kin}\left( \psi \right)   \label{trapfrackin}
+\end{equation}
+
+For a Maxwellian distribution function, since in addition $g_{M}^{\left(
+0\right) }=0$ in the trapped region,
+\begin{equation}
+g_{t,M}^{kin}\left( \psi \right) =0
+\end{equation}
+and since $f_{0,M}^{(0)}$ is only a function of $p$ and $\psi ,$
+
+\begin{equation}
+f_{0,t,M}^{kin}\left( \psi \right) =\frac{\int_{-\xi _{0T}}^{+\xi _{0T}}d\xi
+_{0}}{\int_{-1}^{+1}d\xi _{0}}=\xi _{0T}=\sqrt{1-\frac{B_{\min }\left( \psi
+\right) }{B_{\max }\left( \psi \right) }}
+\end{equation}
+This expression is different from the one deduced from neoclassical theory,
+whose general formulation is 
+\begin{equation}
+f_{t,M}^{neo}\left( \psi \right) =1-\frac{3}{4}\left\langle
+h^{2}\right\rangle \int_{0}^{1}\frac{xdx}{\left\langle \sqrt{1-xh}%
+\right\rangle }  \label{neotrapfracgenthermal}
+\end{equation}
+where $h=B/B_{max}$ and $B_{max}$ is the maximum value of the magnetic field 
+$B$ along the particle trajectory. This difference likely arises from second
+order terms that has been incorporated in the neoclassical transport theory
+for thermal regimes, that are here neglected. However, when RF waves
+strongly distort the electron distribution function, the first term $%
+g_{t}^{kin}\left( \psi \right) $ may become more important and only the
+expression (\ref{kintrapfracgen}) must be considered.
+
+Regarding the numerical application, expression (\ref{kintrapfracgen}) is
+more general for arbitrary shapes of the electron distribution function, and
+involves quantities that are naturally determined by the Fokker-Planck
+equation solver. However, it is interesting to compare with the general
+formula (\ref{neotrapfracgenthermal}) in the thermal regime, in order to
+validate both approaches.
+
+Since $f_{t,M}^{neo}$ involves a cumbersome double integral that is
+numerically demanding in the vicinity of the core region of the plasma,
+several attempts have been done to obtain a simplified, though accurate,
+expression that may be used in all types of equilibria, especially in high $%
+\beta _{p}$ regime. So far, the best approach in the one performed by Y.R.
+Lin-Liu and R. L. Miller (Phys. Plasma, 2 (1995) 1666) that consider upper
+and lower limit boundaries of (\ref{neotrapfracgenthermal}) using Schwartz
+inequality. Hence, 
+
+\begin{equation}
+f_{tl,M}^{neo}\left( \psi \right) \leq f_{t,M}^{neo}\left( \psi \right) \leq %
+f_{tu,M}^{neo}\left( \psi \right) 
+\end{equation}
+with 
+\begin{equation}
+f_{tu,M}^{neo}\left( \psi \right) =1-\frac{\left\langle h^{2}\right\rangle }{%
+\left\langle h\right\rangle ^{2}}\left[ 1-\sqrt{1-\left\langle
+h\right\rangle }\left( 1+\frac{\left\langle h\right\rangle }{2}\right)
+\right] 
+\end{equation}
+and
+\begin{equation}
+f_{tl,M}^{neo}\left( \psi \right) =1-\left\langle h^{2}\right\rangle
+\left\langle \frac{1-\sqrt{1-h}\left( 1+\frac{h}{2}\right) }{h^{2}}%
+\right\rangle 
+\end{equation}
+
+By expanding $f_{tu,M}^{neo}$ and $f_{tl,M}^{neo}$ in terms of moments of $h$%
+, one obtains inifinite series of weak convergence for a simple practical
+purpose, but the set of coefficients suggest that a linear combination of $%
+f_{tu,M}^{neo}$ and $f_{tl,M}^{neo},$ may provide an accurate enough
+estimate of $f_{t,M}^{neo}$ for nearly all plasma regimes. Therefore, 
+\begin{equation}
+\overline{f}_{t,M}^{neo}\approx \varpi f_{tu,M}^{neo}+(1-\varpi
+)f_{tl,M}^{neo}  \label{intertrapfrac}
+\end{equation}
+where the usual value for $\varpi $ deduced from numerical simulations is $%
+0.75$. 
+
+According to the definition of the volume flux surface averaged, 
+\begin{equation}
+\left\langle h\right\rangle =\frac{1}{\widehat{q}\left( \psi \right) }\frac{%
+B_{\min }\left( \psi \right) }{B_{\max }\left( \psi \right) }\int_{0}^{2\pi }%
+\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}%
+\right| }\frac{r}{R_{0}}\frac{B}{B_{P}}
+\end{equation}
+where
+\begin{equation}
+\widehat{q}\left( \psi \right) =\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{1%
+}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}}\frac{%
+B_{\min }\left( \psi \right) }{B_{P}}
+\end{equation}
+
+\subsubsection{Case of circular concentric flux surfaces}
+
+In that case, $\epsilon =r/R_{0},$ $\widehat{\psi }\cdot \widehat{r}=1,$ and
+the ratio $B/B_{P}$ is a function of $r$ only. Therefore, since 
+\begin{equation}
+\frac{B_{\min }\left( r\right) }{B_{\max }\left( r\right) }=\frac{1-\epsilon 
+}{1+\epsilon }
+\end{equation}
+It is then straightforward to evaluate $f_{t,M}^{kin}\left( r\right) $ which
+is
+\begin{equation}
+f_{t,M}^{kin}\left( r\right) =\sqrt{\frac{2\epsilon }{1+\epsilon }}
+\end{equation}
+and in the limit of large aspect ratio, 
+\begin{equation}
+\lim_{\epsilon \rightarrow 0}f_{t,M}^{kin}\left( r\right) =\sqrt{2\epsilon }
+\end{equation}
+which is very close to the exact value $f_{t,M}^{neo}$ of the neoclassical
+theory $\gamma \sqrt{\epsilon }$ with $\gamma \simeq 1.46\footnote{%
+The exact analytical result according to FL. Hinton and R.D. Hazeltine (Rev.
+Mod. Phys. \textbf{48}, 239 (1976)), gives for $\gamma ,$%
+\[
+\gamma \equiv \frac{3\sqrt{2}}{2}\left[ 1+\int 01\frac{dx}{x^{2}}\left( 1-%
+\frac{\pi }{2E\left( x\right) }\right) \right] \cong 1.46
+\]
+}.$
+
+For the determination of $f_{tl}^{neo}$ and $f_{tu}^{neo},$ 
+\begin{equation}
+\left\langle h\right\rangle =\frac{1}{\widehat{q}\left( r\right) }\frac{%
+1-\epsilon }{1+\epsilon }\epsilon \frac{B}{B_{P}}
+\end{equation}
+and 
+\begin{equation}
+\widehat{q}\left( r\right) =\frac{\epsilon }{1+\epsilon }\frac{B}{B_{P}}
+\end{equation}
+\begin{equation}
+\left\langle h\right\rangle =1-\epsilon 
+\end{equation}
+
+In the same way, 
+\begin{eqnarray}
+\left\langle h^{2}\right\rangle  &=&\frac{1}{\widehat{q}\left( r\right) }%
+\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{r}{R_{0}}\frac{B_{\min }\left(
+r\right) }{B_{P}}\left( \frac{B}{B_{\max }\left( r\right) }\right) ^{2} 
+\nonumber \\
+&=&\frac{1}{\widehat{q}\left( r\right) }\frac{B_{\min }\left( r\right) }{%
+B_{\max }^{2}\left( r\right) }\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{r}{%
+R_{0}}\frac{B^{2}}{B_{P}}
+\end{eqnarray}
+and 
+\begin{eqnarray}
+\left\langle h^{2}\right\rangle  &=&\left( 1-\epsilon \right) ^{2}\frac{B_{P}%
+}{BB_{0}}\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{B^{2}}{B_{P}}  \nonumber
+\\
+&=&\left( 1-\epsilon \right) ^{2}\frac{1}{B_{0}}\int_{0}^{2\pi }\frac{%
+d\theta }{2\pi }B  \nonumber \\
+&=&\frac{\left( 1-\epsilon \right) ^{2}}{1+\epsilon }\int_{0}^{2\pi }\frac{%
+d\theta }{2\pi }\Psi \left( r,\theta \right)   \nonumber \\
+&=&\frac{\left( 1-\epsilon \right) ^{2}}{1+\epsilon }s^{*}  \nonumber \\
+&=&\frac{\left( 1-\epsilon \right) ^{3/2}}{\left( 1+\epsilon \right) ^{1/2}}
+\end{eqnarray}
+with $s^{*}=\sqrt{\frac{1+\epsilon }{1-\epsilon }}$ as calculated in the
+Appendix ****. Hence, in this simplified configuration, 
+\begin{equation}
+\left\langle \frac{1-\sqrt{1-h}\left( 1+\frac{h}{2}\right) }{h^{2}}%
+\right\rangle =\left( 1+\epsilon \right) \int_{0}^{2\pi }\frac{1}{\Psi
+\left( r,\theta \right) }\frac{1-\sqrt{1-\frac{\Psi \left( r,\theta \right) 
+}{s^{*2}}}\left( 1+\frac{1}{2}\frac{\Psi \left( r,\theta \right) }{s^{*2}\,}%
+\right) }{\left[ \frac{\Psi \left( r,\theta \right) }{s^{*2}\,}\right] ^{2}}%
+\frac{d\theta }{2\pi }
+\end{equation}
+which becomes
+\begin{equation}
+\left\langle \frac{1-\sqrt{1-h}\left( 1+\frac{h}{2}\right) }{h^{2}}%
+\right\rangle =\frac{\left( 1+\epsilon \right) ^{3}}{\left\langle 1-\epsilon
+\right\rangle ^{2}}\int_{0}^{2\pi }\frac{1-\sqrt{1-\frac{\Psi \left(
+r,\theta \right) }{s^{*2}}}\left( 1+\frac{1}{2}\frac{\Psi \left( r,\theta
+\right) }{s^{*2}}\right) }{\Psi ^{3}\left( r,\theta \right) }\frac{d\theta }{%
+2\pi }
+\end{equation}
+
+Since 
+\begin{equation}
+\left\{ 
+\begin{array}{l}
+\lim_{\epsilon \rightarrow 0}1-\left\langle h\right\rangle =\epsilon  \\ 
+\lim_{\epsilon \rightarrow 0}1-\left\langle h^{2}\right\rangle =2\epsilon 
+\end{array}
+\right. 
+\end{equation}
+one obtains in a straightforward manner
+\begin{equation}
+\lim_{\epsilon \rightarrow 0}f_{tu,M}^{neo}\left( r\right) =\frac{3}{2}\sqrt{%
+\epsilon }
+\end{equation}
+and 
+\begin{equation}
+\lim_{\epsilon \rightarrow 0}f_{tl,M}^{neo}\left( r\right) =\frac{3\sqrt{2}}{%
+\pi }\sqrt{\epsilon }
+\end{equation}
+
+Using the interpolation formula (\ref{intertrapfrac}),
+
+\begin{equation}
+\lim_{\epsilon \rightarrow 0}\overline{f}_{t,M}^{neo}\left( r\right) =\left(
+0.75\frac{3}{2}+0.25\frac{3\sqrt{2}}{\pi }\right) \sqrt{\epsilon }=1.46\sqrt{%
+\epsilon }
+\end{equation}
+
+In this simplified configuration, it is interesting to evaluate directly the
+thermal neoclassical expression, starting from (\ref{neotrapfracgenthermal}%
+). One obtains
+\begin{eqnarray}
+\left\langle \sqrt{1-xh}\right\rangle  &=&\frac{1}{\widehat{q}\left(
+r\right) }\int_{0}^{2\pi }\frac{d\theta }{2\pi }\epsilon \frac{B_{\min
+}\left( r\right) }{B_{P}}\sqrt{1-x\frac{B}{B_{\max }}}  \nonumber \\
+&=&\frac{\epsilon B}{\widehat{q}\left( r\right) B_{P}}\int_{0}^{2\pi }\frac{%
+d\theta }{2\pi }\frac{B_{\min }\left( r\right) }{B}\sqrt{1-x\frac{B}{B_{\max
+}}}  \nonumber \\
+&=&\left( 1+\epsilon \right) \int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{%
+B_{\min }\left( r\right) }{B}\sqrt{1-x\frac{B}{B_{\max }}}
+\end{eqnarray}
+
+Hence, 
+
+\begin{equation}
+\left\langle \sqrt{1-xh}\right\rangle =\int_{0}^{2\pi }\frac{d\theta }{2\pi }%
+\left( 1+\epsilon \cos \theta \right) \sqrt{1-x\left( \frac{1-\epsilon }{%
+1+\epsilon \cos \theta }\right) }
+\end{equation}
+or
+
+\begin{equation}
+\left\langle \sqrt{1-xh}\right\rangle =\int_{0}^{2\pi }\frac{d\theta }{2\pi }%
+\sqrt{\left( 1+\epsilon \cos \theta \right) ^{2}-x\left( 1-\epsilon \right)
+\left( 1+\epsilon \cos \theta \right) }
+\end{equation}
+and at the limit of large aspect ratio,
+\begin{eqnarray}
+\lim_{\epsilon \rightarrow 0}\left\langle \sqrt{1-xh}\right\rangle  &\simeq
+&\int_{0}^{2\pi }\frac{d\theta }{2\pi }\sqrt{1+x\epsilon -x+(2-x)\epsilon
+\cos \theta }  \nonumber \\
+&=&\sqrt{1+x\epsilon -x}\int_{0}^{2\pi }\frac{d\theta }{2\pi }\sqrt{1+\frac{%
+(2-x)\epsilon }{1+x\epsilon -x}\cos \theta }
+\end{eqnarray}
+
+If $\kappa =\frac{(2-x)\epsilon }{1+x\epsilon -x},$ with $0<\kappa <1$, one
+must calculate the integral
+\begin{eqnarray}
+I &=&\int_{0}^{2\pi }\frac{d\theta }{2\pi }\sqrt{1+\kappa \cos \theta } 
+\nonumber \\
+&=&\int_{0}^{\pi }\frac{d\theta }{\pi }\sqrt{1+\kappa \cos 2\theta } 
+\nonumber \\
+&=&\int_{0}^{\pi }\frac{d\theta }{\pi }\sqrt{1+\kappa \left( 2\cos
+^{2}\theta -1\right) }  \nonumber \\
+&=&\int_{0}^{\pi }\frac{d\theta }{\pi }\sqrt{1+\kappa \left( 2\left( 1-\sin
+^{2}\theta \right) -1\right) }  \nonumber \\
+&=&\int_{0}^{\pi }\frac{d\theta }{\pi }\sqrt{1+\kappa -2\kappa \sin
+^{2}\theta }  \nonumber \\
+&=&\sqrt{1+\kappa }\int_{0}^{\pi }\frac{d\theta }{\pi }\sqrt{1-\frac{2\kappa 
+}{1+\kappa }\sin ^{2}\theta }  \nonumber \\
+&&\sqrt{1+\kappa }E\left( \pi \backslash \arcsin \left( \sqrt{\frac{2\kappa 
+}{1+\kappa }}\right) \right) 
+\end{eqnarray}
+where $E\left( x\right) $ is the elliptic integral of second kind.
+
+The trapped fraction $f_{t,M}^{neo}$ then becomes
+\begin{equation}
+\lim_{\epsilon \rightarrow 0}f_{t,M}^{neo}\left( r\right) \simeq 1-\frac{3}{4%
+}\int_{0}^{1}\frac{x}{\sqrt{\frac{1+2\epsilon -x}{1+x\left( \epsilon
+-1\right) }}E\left( \pi \backslash \arcsin \left( \sqrt{\frac{2\epsilon
+\left( 2-x\right) }{1+2\epsilon -x}}\right) \right) }dx
+\end{equation}
+
+\subsection{Bremsstrahlung emission}
+
