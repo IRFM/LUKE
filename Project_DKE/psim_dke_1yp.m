@@ -3,7 +3,7 @@ grid_uniformity,grid_power,nmhu_S,np_S,pnmax_S,sfac,snmhu,snp,...
 psin_S,psin_display,dpsin_dke,...
 ref_mode,norm_ref,...
 epsi0,epsia,eepsi,...
-coll_mode,bounce_mode,dke_mode,...
+coll_mode,bounce_mode,dke_mode,equil_mode,...
 vparmin_r,Dr0,pDr,Dr_model,Vr0,pVr,Vr_model,...
 nhuloss,...
 prec0_f,nit_f,dtn,prec0_g,nit_g,initguess,invproc,param_inv,dp_cyl,display_mode,nlevel,store_mode,diary_mode,auto_mode] = psim_dke_1yp;
@@ -23,7 +23,7 @@ snumber = 1;%Simulation number
 %
 %Mesh size calculation
 %
-grid_uniformity = 0;%Pitch-angle and momentum grids uniformity: (0) no, (1) yes (-1 for specific test DKE, transient)
+grid_uniformity = -1;%Pitch-angle and momentum grids uniformity: (0) no, (1) yes (-1 for specific test DKE, transient)
 grid_method = 1;%Pitch-angle grid calculation technique: (0): old method, (1) new method
 nmhu_S = 120;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
 np_S = 109;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run)
@@ -51,12 +51,12 @@ snp = 10;%pgridfactor (Uniform grid: pgridfactor << 1, non-uniform grid: pgridfa
 %Values of the radial flux grid [1,p] (If one radial value: local calculation only)
 %
 psin_S = [];
-rho_S = [0.71365];
+rho_S = [0.033221];0.033221;0.71365;
 %
 psin_display = NaN;%Approximate radial value at which results are displayed if display_mode >= 1 [1,1]
 rho_display = 0.7;
 %
-dpsin_dke = 0.02;%maximum difference between two consecutive positions used for radial derivatives
+dpsin_dke = 0.01;%maximum difference between two consecutive positions used for radial derivatives
 %
 ref_mode = 0;%Reference values: (0) from core Te and ne, (1) from Te and ne at the normalized radius (paramater only active for a single radial value, otherwise ref_mode = 0)
 norm_ref = 1;%Normalization procedure for the ohmic electric field, LH and EC quasilinear diffusion: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref 
@@ -83,6 +83,7 @@ coll_mode = 2;%Relativistic electron-electron collision operator: (0) Maxwellian
 %
 bounce_mode = 1;%Bounce averaging option: (0) no bounce averaging, (1) bounce averaging full implicit method with 15 diagonals
 dke_mode = 1;%Fokker-Planck equation (0), Drift Kinetic equation (1)
+equil_mode = 0;%Equilibrium option: (0) circular concentric flux-surfaces, (1) numerical equilibrium
 %
 prec0_f = 1e-10;%Convergence level of the residu
 nit_f = 50;%Maximum number of iterations for f
@@ -94,7 +95,7 @@ initguess = 0;%Initial guess for the distribution function: (0) Maxwellian, (1) 
 invproc = [3];%Matrix inversion method: (1) Full LU factorization, (2) qmr iterative method, (3) bicgstab iterative method, (4) cgs iterative method
 param_inv = [2e-3,30];%Parameters for the matrix inversion procedure when invproc > 1. Precision of the partial LU decomposition, and maximum number of iteration for iterative methods
 dp_cyl = 0.1;%Cylindrical momentum step (pth_ref)
-display_mode = 2;%Display mode: (0): no, (1): partial, (2): full
+display_mode = 1;%Display mode: (0): no, (1): partial, (2): full
 nlevel = 30;%Number of level for contour plots
 store_mode = 0;%Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight
 diary_mode = 1;%Write in a file named "diary_dke_xx" the output of the code in the MatLab command window: (0) no save, (1) save
