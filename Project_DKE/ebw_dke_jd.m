@@ -1,42 +1,49 @@
-function waveparam = ebw_dke_jd(tokamak,xyrho,xythetab,xyn,xyopt,xyNpar,xydNpar,xybwidth,xypol,xyomega_rf,xyPinc,xyfinc,Te_ref,ne_ref,xne_norm,zxni_norm,zZi,zmi,xyB0,Rp,ap,bounce_mode);
+function waveparam = ebw_dke_jd(tokamak,xpsin,ne_ref,lnc_e_ref,theta,XR,XZ,XBR,XBZ,XBphi,Rp,Zp,...
+                xyY_ebw,xyomega_ebw,xynpar_ebw,xydnpar_ebw,xynparmin_ebw,xynparmax_ebw,xyP0_in_ebw,xyfinc_ebw,xythetab_ebw,xyopt_ebw,xyn_ebw);
 %
-% Calculates the normalized diffusion coefficient, polarization elements, and Nperp for EBW 
+% Creates wave parameters for hot plasma EBWCD calculations based on 
+% dispersion code R2D2 results. Note that for now only ideal circular
+% concentric FS cases are considered.
 %
-% by J. Decker 09/23/03
+% by Joan Decker (jodecker@mit.edu) and Yves Peysson (yves.peysson@cea.fr)
 %
-% Updated 09/23/03
+[qe,me,mp,mn,e0,mu0,re,mc2,clum] = pc_dke_yp;
 %
-qe = 1.6022e-19;%Electron charge (C)
-me = 9.1094e-31;%Electron rest mass (Kg)
-mp = 1.6726e-27;%Proton rest mass (Kg)
-e0 = 8.8542e-12;%Free space permeability (F/m)
-clum = 299792458;%Speed of light (m/s)
+[nr,nb_ebw] = size(xyn_ebw);
 %
-xne = ne_ref*xne_norm;
-zxni = ne_ref*zxni_norm;
-xne = ne_ref*xne_norm;
+xytest_maskY_ebw =  ~isnan(xyY_ebw);
+xytest_maskomega_ebw =  ~isnan(xyomega_ebw);
+xytest_input_ebw = xytest_maskY_ebw + xytest_maskomega_ebw;
 %
-[nr,nb] = size(xyrho);
+if xytest_input_ebw ~= ones(nr,nb_ebw)
+    error('EBW frequency input not compatible')
+end
 %
-xyia = xyrho*ap/Rp;
-xyB = xyB0./(1 + xyia.*cos(xythetab));
-xywce = qe*xyB/me;
+% when only the ratio n.wce/w is given, the EBW frequency is calculated as follows
 %
-for ib = 1:nb
-    somega = num2str(round(xyomega_rf(1,ib)/(2*pi*1e9)*10));
+[xyBb_ebw,xyBPb_ebw,xyrb_ebw,xyRb_ebw] = mg_interp_jd(theta,XR,XZ,XBR,XBZ,XBphi,Rp,Zp,xythetab_ebw);
+xywceb_ebw = qe*xyBb_ebw/me;
+xyomega_ebw(xytest_maskY_ebw) = xyn_ebw(xytest_maskY_ebw).*xywceb_ebw(xytest_maskY_ebw)./xyY_ebw(xytest_maskY_ebw);%EBW wave frequency (GHz)
+%
+%********** only ideal circular concentric FS
+%
+xrho = psi2rho_jd(tokamak,xpsin);
+%
+for ib = 1:nb_ebw
+    somega = num2str(round(xyomega_ebw(1,ib)/(2*pi*1e9)*10));
     if length(somega) == 2
         somega = ['0',somega];
     end
-    sNpar = num2str(round(xyNpar(1,ib)*100));
-    if length(sNpar) == 1
-        sNpar = ['00',sNpar];
-    elseif length(sNpar) == 2
-        sNpar = ['0',sNpar];
+    snpar = num2str(round(xynpar_ebw(1,ib)*100));
+    if length(snpar) == 1
+        snpar = ['00',snpar];
+    elseif length(snpar) == 2
+        snpar = ['0',snpar];
     end
-    loadstr = ['DISP_',tokamak,'_',somega,'_',sNpar,'.mat'];
+    loadstr = ['DISP_',tokamak,'_',somega,'_',snpar,'.mat'];
     %
-    if min(xyrho(:,ib) == repmat(xyrho(1,ib),[nr,1]))
-        rho_0 = xyrho(1,ib);
+    if min(xrho == repmat(xrho(1),[nr,1]))
+        rho_0 = xrho(1);
     else
         rho_0 = NaN;
     end
@@ -46,111 +53,86 @@ for ib = 1:nb
     elseif length(srho_0) == 2
         srho_0 = ['0',srho_0];
     end
-    loadseekstr = ['SEEK_',tokamak,'_',sNpar,'_',srho_0,'.mat'];
-    loadintstr = ['INT_',tokamak,'_',sNpar,'.mat'];
+    loadseekstr = ['SEEK_',tokamak,'_',snpar,'_',srho_0,'.mat'];
+    loadintstr = ['INT_',tokamak,'_',snpar,'.mat'];
     %
     if exist(loadintstr) == 2
         eval(['load ',loadintstr,' xrho_EBW xNperp_EBW x3eps_pmz_EBW xPflow_EBW xPabs_EBW']);
-        xMNperp = interp1(xrho_EBW,xNperp_EBW,xyrho(:,ib));
-        xM3eps_pmz = interp1(xrho_EBW,x3eps_pmz_EBW',xyrho(:,ib));
-        xMPflow = interp1(xrho_EBW,xPflow_EBW,xyrho(:,ib));
-        xMPabs = interp1(xrho_EBW,xPabs_EBW,xyrho(:,ib));       
+        xMNperp = interp1(xrho_EBW,xNperp_EBW,xrho,'spline');
+        xM3eps_pmz = interp1(xrho_EBW,x3eps_pmz_EBW',xrho,'spline');
+        xMPflow = interp1(xrho_EBW,xPflow_EBW,xrho,'spline');
+        xMPabs = interp1(xrho_EBW,xPabs_EBW,xrho,'spline');       
     elseif exist(loadstr) == 2
         eval(['load ',loadstr,' xrho_EBW xNperp_EBW x3eps_pmz_EBW xPflow_EBW xPabs_EBW']);
-        xMNperp = interp1(xrho_EBW,xNperp_EBW,xyrho(:,ib));
-        xM3eps_pmz = interp1(xrho_EBW,x3eps_pmz_EBW',xyrho(:,ib));
-        xMPflow = interp1(xrho_EBW,xPflow_EBW,xyrho(:,ib));
-        xMPabs = interp1(xrho_EBW,xPabs_EBW,xyrho(:,ib));       
+        xMNperp = interp1(xrho_EBW,xNperp_EBW,xrho,'spline');
+        xM3eps_pmz = interp1(xrho_EBW,x3eps_pmz_EBW',xrho,'spline');
+        xMPflow = interp1(xrho_EBW,xPflow_EBW,xrho,'spline');
+        xMPabs = interp1(xrho_EBW,xPabs_EBW,xrho,'spline');       
     elseif exist(loadseekstr) == 2
         eval(['load ',loadseekstr,' xrho_EBW xNperp_EBW x3eps_pmz_EBW xPflow_EBW xPabs_EBW omega']);
-        xMNperp = interp1(xrho_EBW,xNperp_EBW,xyrho(:,ib));
-        xM3eps_pmz = interp1(xrho_EBW,x3eps_pmz_EBW',xyrho(:,ib));
-        xMPflow = interp1(xrho_EBW,xPflow_EBW,xyrho(:,ib));
-        xMPabs = interp1(xrho_EBW,xPabs_EBW,xyrho(:,ib));       
+        xMNperp = interp1(xrho_EBW,xNperp_EBW,xrho,'spline');
+        xM3eps_pmz = interp1(xrho_EBW,x3eps_pmz_EBW',xrho,'spline');
+        xMPflow = interp1(xrho_EBW,xPflow_EBW,xrho,'spline');
+        xMPabs = interp1(xrho_EBW,xPabs_EBW,xrho,'spline');       
     else
         prec = 5e-4;
-        xrho = 0:prec:1;
-        nr = length(xrho);
-        if length(xyrho(:,ib)) > 1
-            xtheta = interp1(xyrho(:,ib),xythetab(:,ib),xrho);
-            xNpar = interp1(xyrho(:,ib),xyNpar(:,ib),xrho);
+        xrho_EBW = 0:prec:1;
+        nr_EBW = length(xrho_EBW);
+        if length(xrho) > 1
+            xtheta_EBW = interp1(xrho,xythetab(:,ib),xrho_EBW);
+            xnpar_EBW = interp1(xrho,xynpar_ebw(:,ib),xrho_EBW);
+            xomega_EBW = interp1(xrho,xyomega_ebw(:,ib),xrho_EBW);
         else
-            xtheta = repmat(xythetab(:,ib),[1,nr]);
-            xNpar = repmat(xyNpar(:,ib),[1,nr]);
+            xtheta_EBW = repmat(xythetab(:,ib),[1,nr_EBW]);
+            xnpar_EBW = repmat(xynpar_ebw(:,ib),[1,nr_EBW]);
+            xomega_EBW = repmat(xyomega_ebw(:,ib),[1,nr_EBW]);
         end    
 %
         [xrho_out_SX,xMNperp_SX,xM3eps_pmz_SX,...
                 xrho_out_EBB,xMNperp_EBB,xM3eps_pmz_EBB,...
                 xrho_out_EBW_ft,xMNperp_EBW_ft,xM3eps_pmz_EBW_ft,...
                 xrho_out_EBW_ht,xMNperp_EBW_ht,xM3eps_pmz_EBW_ht,xMPflow_EBW_ht,xMPabs_EBW_at] = ...
-            disp_ebw_jd(tokamak,xrho,xtheta,xNpar,xyomega_rf(1,ib));
-        [xMNperp,xM3eps_pmz] = disp_ebw_jd(tokamak,xyrho(:,ib),xythetab(:,ib),xyNpar(:,ib),xyomega_rf(1,ib),prec);
-        xMNperp = interp1(xrho_out_EBW_ht,xMNperp_EBW_ht,xyrho(:,ib));
-        xM3eps_pmz = interp1(xrho_out_EBW_ht,xM3eps_pmz_EBW_ht,xyrho(:,ib));
-        xMPflow =  interp1(xrho_out_EBW_ht,xMPflow_EBW_ht,xyrho(:,ib));
-        xMPabs =  interp1(xrho_out_EBW_ht,xMPabs_EBW_at,xyrho(:,ib));
+            disp9_ebw_jd(tokamak,xrho_EBW,xtheta_EBW,xnpar_EBW,xomega_EBW);
+%        [xMNperp,xM3eps_pmz] = disp_ebw_jd(tokamak,xrho,xythetab(:,ib),xynpar_ebw(:,ib),xyomega_ebw(:,ib),prec);
+        xMNperp = interp1(xrho_out_EBW_ht,xMNperp_EBW_ht,xrho);
+        xM3eps_pmz = interp1(xrho_out_EBW_ht,xM3eps_pmz_EBW_ht,xrho);
+        xMPflow =  interp1(xrho_out_EBW_ht,xMPflow_EBW_ht,xrho);
+        xMPabs =  interp1(xrho_out_EBW_ht,xMPabs_EBW_at,xrho);
     end
-    xyNperp(:,ib) = xMNperp;
-    if length(xyrho(:,ib)) == 1
-        xyepolp(:,ib) = xM3eps_pmz(:,1);  
-        xyepolm(:,ib) = xM3eps_pmz(:,2);  
-        xyepolz(:,ib) = xM3eps_pmz(:,3);  
+    xynperp_ebw(:,ib) = xMNperp;
+    if length(xrho) == 1
+        xyepolp_ebw(:,ib) = xM3eps_pmz(:,1);  
+        xyepolm_ebw(:,ib) = xM3eps_pmz(:,2);  
+        xyepolz_ebw(:,ib) = xM3eps_pmz(:,3);  
     else        
-        xyepolp(:,ib) = xM3eps_pmz(:,1,1);  
-        xyepolm(:,ib) = xM3eps_pmz(:,1,2);  
-        xyepolz(:,ib) = xM3eps_pmz(:,1,3); 
+        xyepolp_ebw(:,ib) = xM3eps_pmz(:,1,1);  
+        xyepolm_ebw(:,ib) = xM3eps_pmz(:,1,2);  
+        xyepolz_ebw(:,ib) = xM3eps_pmz(:,1,3); 
     end
     xyPflow(:,ib) = xMPflow;
     xyPabs(:,ib) = xMPabs;
 end
 %
-%xyepolk = (real(xyNperp).*(xyepolp + xyepolm)/sqrt(2) + xyNpar.*xyepolz)./sqrt(real(xyNperp).^2 + xyNpar.^2);
-%
-% electron frequencies
+xyabsphi_ebw = abs(2*xyPflow/e0/clum);
 %
 wpe_ref = sqrt(ne_ref*qe^2/e0/me);
-xywce0 = qe*xyB0./(1 + xyia)/me;
 %
-lnc_ref = 15.2 - 0.5*log(ne_ref/1e20) + log(Te_ref);
+xyD0_ebw_ref = xyfinc_ebw.*xyP0_in_ebw./(xyrb_ebw.*xyRb_ebw*me*lnc_e_ref.*xyomega_ebw*wpe_ref^2.*xyabsphi_ebw);
 %
-xypsib = (1 + xyia)./(1 + xyia.*cos(xythetab));
-xypsic = (1 + xyia);
+waveparam = zeros(nr,nb_ebw,13);
 %
-if bounce_mode == 0 % 
-    xywce_out = xywce0.*xypsib;
-    xyrpsi = ones(nr,nb);
-else
-    xywce_out = xywce0;
-    xyrpsi = xypsib./xypsic;
-end
-%
-%xyphibdn = -xyKperp.*xyNperpLH./(xyNpar_disp.^2 + xyNperpLH.^2)./xyfinc;
-%xyphibdn = (1 - abs(xyepolk).^2).*xyNperp./xyfinc;
-xyphibdn = 2*xyPflow/e0/clum./xyfinc;
-%
-xyD0 = xyPinc.*xyrpsi./(me*wpe_ref^2*lnc_ref*xyomega_rf.*abs(xyphibdn).*xyrho*ap*Rp);
-%
-xydNpar_bis = real(xyNperp)./sqrt(xyNpar.^2 + real(xyNperp).^2)*clum./(xyomega_rf.*xybwidth);
-mask = isnan(xydNpar);
-xydNpar(mask) = xydNpar_bis(mask);
-%    
-% --------------------------- building waveparam-----------------------
-%    
-waveparam = zeros(nr,nb,14);
-%
-waveparam(:,:,1) = xyn;%RF resonance harmonic     
-waveparam(:,:,2) = xyomega_rf;%RF wave frequency
-waveparam(:,:,3) = xywce_out;%midplane cyclotron frequency (r,theta=0) at the radial position considered 
-waveparam(:,:,4) = xyopt;%options for Larmor radius effects and/or LH calc. 
-waveparam(:,:,5) = xythetab;%poloidal location of RF beam (relevant for bounce_mode>0 only)    
-waveparam(:,:,6) = xyD0;%RF quasi-linear diffusion coefficient (nhuth_ref*pth_ref^2)
-waveparam(:,:,7) = NaN*ones(nr,nb);%Square N// spectrum: Lower limit
-waveparam(:,:,8) = NaN*ones(nr,nb);%Square N// spectrum: Upper limit
-waveparam(:,:,9) = xyNpar;%Gaussian N// spectrum: peak n//
-waveparam(:,:,10) = xydNpar;%Gaussian N// spectrum: width in n//
-waveparam(:,:,11) = xyNperp;%RF wave : n_perp
-waveparam(:,:,12) = xyepolp;%RF wave : polarization plus
-waveparam(:,:,13) = xyepolm;%RF wave : polarization minus
-waveparam(:,:,14) = xyepolz;%RF wave : polarization parallel
+waveparam(:,:,1) = xyn_ebw;%RF resonance harmonic     
+waveparam(:,:,2) = xyomega_ebw;%RF wave frequency
+waveparam(:,:,3) = xyopt_ebw;%Options for Larmor radius effects and/or EBW calc. 
+waveparam(:,:,4) = xythetab_ebw;%Poloidal location of RF beam (relevant for bounce_mode > 0 only)    
+waveparam(:,:,5) = xyD0_ebw_ref;%RF quasi-linear diffusion coefficient (nhuth_ref*pth_ref^2)
+waveparam(:,:,6) = xynparmin_ebw;%Square N// spectrum: Lower limit
+waveparam(:,:,7) = xynparmax_ebw;%Square N// spectrum: Upper limit
+waveparam(:,:,8) = xynpar_ebw;%Gaussian N// spectrum: peak n//
+waveparam(:,:,9) = xydnpar_ebw;%Gaussian N// spectrum: width in n//
+waveparam(:,:,10) = xynperp_ebw;%RF wave : n_perp
+waveparam(:,:,11) = xyepolp_ebw;%RF wave : polarization plus
+waveparam(:,:,12) = xyepolm_ebw;%RF wave : polarization minus
+waveparam(:,:,13) = xyepolz_ebw;%RF wave : polarization parallel
 
 
