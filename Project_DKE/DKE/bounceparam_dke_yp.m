@@ -9,7 +9,7 @@ XXRlambda_b_p1m1,XXRlambda_b_p1m1_m,XXRlambda_b_p1m1_p,...
 XXRlambda_b_p1m2_m,XXRlambda_b_p1m2_p,...
 XXlambda_b_p2m2p2,XXRlambda_b_p2m2p2_m,XXRlambda_b_p2m2p2_p,...
 XXRlambda_b_p3m2_m,XXRlambda_b_p3m2_p,...
-XXlambda_p2p0,XXlambda_p2p0_p,XXlambda_p2p0_m] = bounceparam_dke_yp(tokamak,bounce_mode,xia,delta,Nq,mhu,mhum,mhup,Xmhu,Xmhum,Xmhup)
+XXlambda_b_p2] = bounceparam_dke_yp(tokamak,bounce_mode,xia,delta,Nq,mhu,mhum,mhup,Xmhu,Xmhum,Xmhup)
 %
 %by Y.Peysson <yves.peysson@cea.fr> (CEA-DRFC) and J. Decker <jodecker@mit.edu> (MIT/RLE)
 %
@@ -17,9 +17,9 @@ nr = length(xia);
 [npn,nmhu] = size(Xmhu);
 %
 if bounce_mode == 1,	
-	[R0,xBmin,xRBmin,xBTBmin,xq,xqtilde,xqbar,xqhat,xylambda,xylambda_p2m1,xylambda_b_p1p1,xylambda_b_p1m1p2,xylambda_b_p1m1,xylambda_b_p1m2,xylambda_b_p2m2p2,xylambda_b_p3m2,xylambda_p2p0,xymaskT,xmhu0T2] = bounce_dke_jd(tokamak,xia,mhu);
-	[R0,xBmin,xRBmin,xBTBmin,xq,xqtilde,xqbar,xqhat,xylambda_p,xylambda_p2m1_p,xylambda_b_p1p1_p,xylambda_b_p1m1p2_p,xylambda_b_p1m1_p,xylambda_b_p1m2_p,xylambda_b_p2m2p2_p,xylambda_b_p3m2_p,xylambda_p2p0_p,xymaskTp,xmhu0T2p] = bounce_dke_jd(tokamak,xia,mhup);
-	[R0,xBmin,xRBmin,xBTBmin,xq,xqtilde,xqbar,xqhat,xylambda_m,xylambda_p2m1_m,xylambda_b_p1p1_m,xylambda_b_p1m1p2_m,xylambda_b_p1m1_m,xylambda_b_p1m2_m,xylambda_b_p2m2p2_m,xylambda_b_p3m2_m,xylambda_p2p0_m,xymaskTm,xmhu0T2m] = bounce_dke_jd(tokamak,xia,mhum);
+	[R0,xBmin,xRBmin,xBTBmin,xq,xqtilde,xqbar,xqhat,xylambda,xylambda_p2m1,xylambda_b_p1p1,xylambda_b_p1m1p2,xylambda_b_p1m1,xylambda_b_p1m2,xylambda_b_p2m2p2,xylambda_b_p3m2,xylambda_b_p2,xymaskT,xmhu0T2] = bounce_dke_jd(tokamak,xia,mhu);
+	[R0,xBmin,xRBmin,xBTBmin,xq,xqtilde,xqbar,xqhat,xylambda_p,xylambda_p2m1_p,xylambda_b_p1p1_p,xylambda_b_p1m1p2_p,xylambda_b_p1m1_p,xylambda_b_p1m2_p,xylambda_b_p2m2p2_p,xylambda_b_p3m2_p,xylambda_b_p2_p,xymaskTp,xmhu0T2p] = bounce_dke_jd(tokamak,xia,mhup);
+	[R0,xBmin,xRBmin,xBTBmin,xq,xqtilde,xqbar,xqhat,xylambda_m,xylambda_p2m1_m,xylambda_b_p1p1_m,xylambda_b_p1m1p2_m,xylambda_b_p1m1_m,xylambda_b_p1m2_m,xylambda_b_p2m2p2_m,xylambda_b_p3m2_m,xylambda_b_p2_m,xymaskTm,xmhu0T2m] = bounce_dke_jd(tokamak,xia,mhum);
 %
 	XXheaviside = repmat(reshape(~xymaskT',[1,nmhu,nr]),[npn,1,1]);%For selecting the circulating population only
 %
@@ -77,9 +77,9 @@ if bounce_mode == 1,
 	XXRlambda_b_p3m2_p = XXlambda_b_p3m2_p./XXlambda_p;%*********Idem*********
 	XXRlambda_b_p3m2_m = XXlambda_b_p3m2_m./XXlambda_m;%*********Idem*********
 %
-	XXlambda_p2p0 = repmat(reshape(xylambda_p2p0',[1,nmhu,nr]),[npn,1,1]);
-   XXlambda_p2p0_p = repmat(reshape(xylambda_p2p0_p',[1,nmhu,nr]),[npn,1,1]);
-   XXlambda_p2p0_m = repmat(reshape(xylambda_p2p0_m',[1,nmhu,nr]),[npn,1,1]);
+	XXlambda_b_p2 = repmat(reshape(xylambda_b_p2',[1,nmhu,nr]),[npn,1,1]);
+   XXlambda_b_p2_p = repmat(reshape(xylambda_b_p2_p',[1,nmhu,nr]),[npn,1,1]);
+   XXlambda_b_p2_m = repmat(reshape(xylambda_b_p2_m',[1,nmhu,nr]),[npn,1,1]);
 %
 %Non-axisymmetric corrections as done by M. Ju et al. in Phys. Plasmas, 9 (2002) 493 (to be used only with FP calculations, and tested for TORE SUPRA only)
 %may be inserted here. Work to be done...
@@ -144,8 +144,8 @@ else
 	XXRlambda_b_p3m2_p = ones(npn,nmhu,nr);
 	XXRlambda_b_p3m2_m = ones(npn,nmhu,nr);
 %
-	XXlambda_p2p0 = ones(npn,nmhu,nr);
-	XXlambda_p2p0_p = ones(npn,nmhu,nr);
-	XXlambda_p2p0_m = ones(npn,nmhu,nr);
+	XXlambda_b_p2 = ones(npn,nmhu,nr);
+	XXlambda_b_p2_p = ones(npn,nmhu,nr);
+	XXlambda_b_p2_m = ones(npn,nmhu,nr);
 end
 
