@@ -1,4 +1,4 @@
-function [seBHE,seBH,Elwert,ec,e,t] = bhe_dke_yp(ec_in,k_in,t_in,Z)
+function [seBHE,seBH,Elwert,ec,k,c] = bhe_dke_yp(ec_in,k_in,t_in,Z)
 %
 %	Differential electron-ion bremstrahlung cross-section (dsigma/dk.domega)
 %	Bethe-Heitler model including Elwert factor.
@@ -18,8 +18,8 @@ function [seBHE,seBH,Elwert,ec,e,t] = bhe_dke_yp(ec_in,k_in,t_in,Z)
 %		- seBH: Bethe-Heitler bremstrahlung cross-section (m^2) [p,m,n]
 %		- Elwert: Elwert correction factor [p,m,n]
 %		- ec: kinetic energy of the incoming electron (mc2) [p,m,n] 
-%		- e: photon energy (mc2)  [p,m,n] 
-%		- t: cosine angle between the direction of displacement of the incoming electron and the photon emitted by bremsstrahlung (radian) p,m,n
+%		- k: photon energy (mc2)  [p,m,n] 
+%		- c: cosine angle between the direction of displacement of the incoming electron and the photon emitted by bremsstrahlung (radian) [p,m,n]
 %
 %	Warning: Cross-section units : m^2 but energies are in relativistic units. To get 
 %			 cross-sections in standard m^2/keV units, seBH or seBHe must be divided 
@@ -83,3 +83,4 @@ seBHE = seBH.*Elwert;
 %
 seBHE(isnan(seBHE)) = 0;
 seBHE(~isreal(seBHE)) = 0;
+

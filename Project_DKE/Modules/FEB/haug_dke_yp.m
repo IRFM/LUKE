@@ -1,4 +1,4 @@
-function [seHC,seH,fee,ec,e,t] = haug_dke_yp(ec_in,k_in,t_in)
+function [seHC,seH,fee,ec,k,c] = haug_dke_yp(ec_in,k_in,t_in)
 %
 %	Differential electron-electron bremstrahlung cross-section (dsigma/dk.domega)
 %	Haug model including Coulomb correction factor.
@@ -18,8 +18,8 @@ function [seHC,seH,fee,ec,e,t] = haug_dke_yp(ec_in,k_in,t_in)
 %		- seH: Haug bremstrahlung cross-section (m^2) [p,m,n]
 %		- fee: Elwert correction factor [p,m,n]
 %		- ec: kinetic energy of the incoming electron (mec2) [p,m,n] 
-%		- e: photon energy (mec2) [p,m,n] 
-%		- t: angle between the direction of displacement of the incoming electron and the photon emitted by bremsstrahlung (radian) [p,m,n] 
+%		- k: photon energy (mec2) [p,m,n] 
+%		- c: angle between the direction of displacement of the incoming electron and the photon emitted by bremsstrahlung (radian) [p,m,n] 
 %
 %	Warning: Cross-section units : m^2 but energies are in relativistic units. To get 
 %			 cross-sections in standard m^2/keV units, seH or seHC must be divided 
