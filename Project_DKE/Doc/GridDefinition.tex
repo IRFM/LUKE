@@ -2,19 +2,20 @@
 The drift kinetic equation may be solved by different numerical techniques.
 Here one of the most natural approach is described, namely the finite
 difference method, which is based on the transformation of a differential
-equation into an algebraic one. The hyper-volume $\mathcal{V}$ on which the
-drift kinetic equation is solved is characterized by three dimensions $
-\left( p,\xi ,\psi \right) ,$ and, the time evolution is introduced with the
+equation into an algebraic one. The volume $\mathcal{V}$ on which the drift
+kinetic equation is solved is characterized by three dimensions $\left(
+p,\xi _{0},\psi \right) ,$ and, the time evolution is introduced with the
 parameter $t$.
 
 Since the drift kinetic equation is expressed in conservative form, it is
 natural to define the grids for the flux $S$ grid as the starting point of
-the numerical calculations.
+the numerical calculations. 
 \begin{equation}
-S\left( p_{i},\xi _{j},\psi _{l}\right) \rightarrow \left\{ 
+S\left( p_{i},\xi _{0,j},\psi _{l}\right) \rightarrow \left\{ 
 \begin{array}{l}
 p_{i}\in \left[ 0,p_{\max }\right] ,i\rightarrow \left\{ 0,n_{p}\right\}  \\ 
-\xi _{j}\in \left[ -1,1\right] ,j\rightarrow \left\{ 0,n_{\xi }\right\}  \\ 
+\xi _{0,j}\in \left[ -1,1\right] ,j\rightarrow \left\{ 0,n_{\xi
+_{0}}\right\}  \\ 
 \psi _{l}\in \left[ 0,\psi _{a}\right] ,l\rightarrow \left\{ 0,n_{\psi
 }\right\} 
 \end{array}
@@ -26,15 +27,16 @@ index numbers which, by definition, are integers. The distribution function $%
 f$ is represented by its values inside these cells, as shown in Fig. *****.
 With this form, the conservative nature of the problem is preserved
 numerically, avoiding the occurence of spurious numerical fluxes which lead
-to wrong estimate of the solution. 
+to wrong estimate of the solution.
 
 \begin{equation}
-f\left( p_{i+1/2},\xi _{j+1/2},\psi _{l+1/2}\right) \rightarrow \left\{ 
+f\left( p_{i+1/2},\xi _{0j+1/2},\psi _{l+1/2}\right) \rightarrow \left\{ 
 \begin{array}{l}
 p_{i+1/2}\in \left[ \frac{\Delta p_{1/2}}{2},p_{\max }-\frac{\Delta %
 p_{n_{p}-1/2}}{2}\right] ,i\rightarrow \left\{ 0,n_{p}-1\right\}  \\ 
-\xi _{j+1/2}\in \left[ -1+\frac{\Delta \xi _{1/2}}{2},1-\frac{\Delta \xi
-_{n_{\xi }-1/2}}{2}\right] ,j\rightarrow \left\{ 0,n_{\xi }-1\right\}  \\ 
+\xi _{0j+1/2}\in \left[ -1+\frac{\Delta \xi _{0,1/2}}{2},1-\frac{\Delta \xi
+_{0,n_{\xi _{0}}-1/2}}{2}\right] ,j\rightarrow \left\{ 0,n_{\xi
+_{0}}-1\right\}  \\ 
 \psi _{l+1/2}\in \left[ 0+\frac{\Delta \psi _{1/2}}{2},a-\frac{\Delta \psi
 _{n_{r}-1/2}}{2}\right] ,l\rightarrow \left\{ 0,n_{\psi }-1\right\} 
 \end{array}
@@ -43,16 +45,16 @@ _{n_{r}-1/2}}{2}\right] ,l\rightarrow \left\{ 0,n_{\psi }-1\right\}
 
 \subsubsection{Grid definitions in momentum space}
 
-Momentum dynamic in $p$ and pitch-angle $\xi $ being independent, the
+Momentum dynamic in $p$ and pitch-angle $\xi _{0}$ being independent, the
 position of $p_{i+1/2}$ in between $p_{i}$ and $p_{i+1},$ and of $\xi
-_{j+1/2}$ in between $\xi _{j}$ and $\xi _{j+1}$ is an arbitrary choice. The
-most simple and natural one is to place the point where the distribution
-function $f$ is determined exactly in the middle of the cell, 
+_{0,j+1/2}$ in between $\xi _{0,j}$ and $\xi _{0,j+1}$ is an arbitrary
+choice. The most simple and natural one is to place the point where the
+distribution function $f$ is determined exactly in the middle of the cell, 
 \begin{equation}
 \left\{ 
 \begin{array}{l}
 p_{i+1/2}=\frac{p_{i}+p_{i+1}}{2} \\ 
-\xi _{j+1/2}=\frac{\xi _{j}+\xi _{j+1}}{2}
+\xi _{j+1/2}=\frac{\xi _{0,j}+\xi _{0,j+1}}{2}
 \end{array}
 \right. 
 \end{equation}
@@ -65,78 +67,79 @@ Then, intervals on the different grids are
 \Delta p_{i+1}=p_{i+3/2}-p_{i+1/2} \\ 
 \Delta p_{i+1/2}=p_{i+1}-p_{i} \\ 
 \Delta p_{i}=p_{i+1/2}-p_{i-1/2} \\ 
-\Delta \xi _{j+1}=\xi _{j+3/2}-\xi _{j+1/2} \\ 
-\Delta \xi _{j+1/2}=\xi _{j+1}-\xi _{j} \\ 
-\Delta \xi _{j}=\xi _{j+1/2}-\xi _{j-1/2}
+\Delta \xi _{0,j+1}=\xi _{0,j+3/2}-\xi _{0,j+1/2} \\ 
+\Delta \xi _{0,j+1/2}=\xi _{0,j+1}-\xi _{0,j} \\ 
+\Delta \xi _{0,j}=\xi _{0,j+1/2}-\xi _{0,j-1/2}
 \end{array}
 \right. 
 \end{equation}
 
-where
+where 
 \begin{eqnarray}
 \Delta p_{i+1} &=&p_{i+3/2}-p_{i+1/2} \\
 &=&p_{i+3/2}-p_{i+1}+p_{i+1}-p_{i+1/2}  \nonumber \\
 &=&\frac{\Delta p_{i+3/2}}{2}+\frac{\Delta p_{i+1/2}}{2}  \nonumber
 \end{eqnarray}
 \begin{eqnarray}
-\Delta \xi _{j+1} &=&\xi _{j+3/2}-\xi _{j+1/2} \\
-&=&\xi _{j+3/2}+\xi _{j+1}-\xi _{j+1}-\xi _{j+1/2}  \nonumber \\
-&=&\frac{\Delta \xi _{j+3/2}}{2}+\frac{\Delta \xi _{j+1/2}}{2}  \nonumber
+\Delta \xi _{0,j+1} &=&\xi _{0,j+3/2}-\xi _{0,j+1/2} \\
+&=&\xi _{0,j+3/2}+\xi _{0,j+1}-\xi _{0,j+1}-\xi _{0,j+1/2}  \nonumber \\
+&=&\frac{\Delta \xi _{0,j+3/2}}{2}+\frac{\Delta \xi _{0,j+1/2}}{2}  \nonumber
 \end{eqnarray}
 
 It is important to note that boundary conditions play a crucial role in the
 type of equation to be solved, since it corresponds to a Neuman type
 problem, where gradients are specified along the perpendicular direction of
-the volume of integration. Therefore, $\left( \Delta p,\Delta \xi \right) $
-must be specified accurately at each volume boundary. Since $p_{\bot }=0$
-corresponds to the cylindrical axis of symmetry of the problem in the
-momentum space, 
+the volume of integration. Therefore, $\left( \Delta p,\Delta \xi
+_{0,0}\right) $ must be specified accurately at each volume boundary. Since $%
+p_{\bot }=0$ corresponds to the cylindrical axis of symmetry of the problem
+in the momentum space, 
 \begin{equation}
-\Delta \xi _{0}=\frac{\Delta \xi _{1/2}+\Delta \xi _{-1/2}}{2}=\Delta \xi
-_{1/2}=\xi _{1}-\xi _{0}=2\xi _{1/2}+1
+\Delta \xi _{0,0}=\frac{\Delta \xi _{0,1/2}+\Delta \xi _{0,-1/2}}{2}=\Delta %
+\xi _{0,1/2}=\xi _{0,1}-\xi _{0,0}=2\xi _{0,1/2}+1
 \end{equation}
-as $\Delta \xi _{1/2}=\Delta \xi _{-1/2},$ $\xi _{1/2}=\frac{\xi _{1}+\xi
-_{0}}{2}$et $\xi _{0}=-1.$ Much in the same way, 
+as $\Delta \xi _{0,1/2}=\Delta \xi _{0,-1/2},$ $\xi _{0,1/2}=\frac{\xi
+_{0,1}+\xi _{0,0}}{2}$et $\xi _{0,0}=-1.$ Much in the same way, 
 \begin{equation}
-\Delta \xi _{n_{\xi }}=\frac{\Delta \xi _{n_{\xi }+1/2}+\Delta \xi _{n_{\xi
-}-1/2}}{2}=\Delta \xi _{n_{\xi }-1/2}=\xi _{n_{\xi }}-\xi _{n_{\xi
-}-1}=1-\xi _{n_{\xi }-1}
+\Delta \xi _{0,n_{\xi }}=\frac{\Delta \xi _{0,n_{\xi }+1/2}+\Delta \xi
+_{0,n_{\xi }-1/2}}{2}=\Delta \xi _{0,n_{\xi }-1/2}=\xi _{0,n_{\xi }}-\xi
+_{0,n_{\xi }-1}=1-\xi _{0,n_{\xi }-1}
 \end{equation}
-since $\Delta \xi _{n_{\xi }+1/2}=\Delta \xi _{n_{\xi }-1/2}.$ Furthermore,
-since by definition, 
+since $\Delta \xi _{0,n_{\xi }+1/2}=\Delta \xi _{0,n_{\xi }-1/2}.$
+Furthermore, since by definition, 
 \begin{equation}
-\xi _{n_{\xi }-1/2}=\frac{\xi _{n_{\xi }}+\xi _{n_{\xi }-1}}{2}=\frac{1+\xi
-_{n_{\xi }-1}}{2}
+\xi _{0,n_{\xi }-1/2}=\frac{\xi _{0,n_{\xi }}+\xi _{0,n_{\xi }-1}}{2}=\frac{%
+1+\xi _{0,n_{\xi }-1}}{2}
 \end{equation}
 one obtains finally
 
 \begin{equation}
-\Delta \xi _{n_{\xi }}=2\left( 1-\xi _{n_{\xi }-1/2}\right) 
+\Delta \xi _{0,n_{\xi }}=2\left( 1-\xi _{0,n_{\xi }-1/2}\right) 
 \end{equation}
 
 A similar technique may be used for the momentum grid $p$. Hence 
 \begin{equation}
-\Delta p_{0}=\frac{1}{2}\left( \Delta p_{1/2}+\Delta p_{-1/2}\right) =\Delta %
+\Delta p_{0}=\frac{1}{2}\left( \Delta p_{1/2}+\Delta p_{-1/2}\right) =\Delta
 p_{1/2}
 \end{equation}
 using $\Delta p_{-1/2}=\Delta p_{1/2}.$ Since $\Delta p_{1/2}=p_{1}-p_{0}$,
-and $p_{1/2}=\frac{p_{1}+p_{0}}{2}$ one obtains finally,
+and $p_{1/2}=\frac{p_{1}+p_{0}}{2}$ one obtains finally, 
 \begin{equation}
 \Delta p_{0}=2p_{1/2}
 \end{equation}
-because $p_{0}=0.$ Much in the same way,
+because $p_{0}=0.$ Much in the same way, 
 \begin{equation}
-\Delta p_{n_{p}}=\Delta p_{\max }=\frac{1}{2}\left( \Delta p_{n_{p}+1/2}+%
-\Delta p_{n_{p}-1/2}\right) =\Delta p_{n_{p}-1/2}=p_{n_{p}}-p_{n_{p}-1}
+\Delta p_{n_{p}}=\Delta p_{\max }=\frac{1}{2}\left( \Delta
+p_{n_{p}+1/2}+\Delta p_{n_{p}-1/2}\right) =\Delta
+p_{n_{p}-1/2}=p_{n_{p}}-p_{n_{p}-1}
 \end{equation}
 and since by definition $p_{n_{p}+1/2}=\frac{p_{n_{p}}+p_{n_{p}-1}}{2}=\frac{%
 p_{\max }+p_{n_{p}-1}}{2},$ it results 
 \begin{equation}
-\Delta p_{n_{p}}=2\left( p_{n_{p}}-p_{n_{p}-1/2}\right) 
+\Delta p_{n_{p}}=2\left( p_{n_{p}}-p_{n_{p}-1/2}\right)
 \end{equation}
 or in equivalent manner, 
 \begin{equation}
-\Delta p_{\max }=2\left( p_{\max }-p_{n_{p}-1/2}\right) 
+\Delta p_{\max }=2\left( p_{\max }-p_{n_{p}-1/2}\right)
 \end{equation}
 
 Note that the exact value of $\Delta p_{\max }$ has no importance, since the
@@ -148,12 +151,12 @@ point, and therefore, it is not necessary to specify boundary conditions.
 By an appropriate bounce averaging, the number of dimension is reduced to
 one, i.e. the radial one. As for the dynamics in momentum space, the point
 where the distribution function $f$ is determined is chosen exactly in the
-middle of the cell, 
+middle of the cell,
 
 \begin{equation}
 \psi _{l+1/2}=\frac{\psi _{l}+\psi _{l+1}}{2}
 \end{equation}
-and the intervals on the different grids are,
+and the intervals on the different grids are, 
 \begin{equation}
 \left\{ 
 \begin{array}{l}
@@ -161,27 +164,27 @@ and the intervals on the different grids are,
 \Delta \psi _{l+1/2}=\psi _{l+1}-\psi _{l} \\ 
 \Delta \psi _{l}=\psi _{l+1/2}-\psi _{l-1/2}
 \end{array}
-\right. 
+\right.
 \end{equation}
-where
+where 
 \begin{eqnarray}
 \Delta \psi _{l+1} &=&\psi _{l+3/2}-\psi _{l+1/2} \\
 &=&\psi _{l+3/2}-\psi _{l+1}+\psi _{l+1}-\psi _{l+1/2}  \nonumber \\
 &=&\frac{\Delta \psi _{l+3/2}}{2}+\frac{\Delta \psi _{l+1/2}}{2}  \nonumber
 \end{eqnarray}
 
-Much in the same way,  $\Delta \psi $ must be specified at the boundaries of
-the domain of integration. Using a similar approach as for the momentum  $p$%
-, one finds that 
+Much in the same way, $\Delta \psi $ must be specified at the boundaries of
+the domain of integration. Using a similar approach as for the momentum $p$,
+one finds that 
 \begin{equation}
 \Delta \psi _{0}=2\psi _{1/2}
 \end{equation}
 since $\psi _{0}=0$, and 
 \begin{equation}
 \Delta \psi _{n_{\psi }}=2\left( \psi _{n_{\psi }}-\psi _{n_{\psi
-}-1/2}\right) =2\left( \psi _{a}-\psi _{n_{\psi }-1/2}\right) 
+}-1/2}\right) =2\left( \psi _{a}-\psi _{n_{\psi }-1/2}\right)
 \end{equation}
-en remarquant que $\psi _{n_{\psi }}=\psi _{a}$. 
+en remarquant que $\psi _{n_{\psi }}=\psi _{a}$.
 
 \subsubsection{Link between momentum and configuration grids}
 
@@ -189,10 +192,10 @@ When the bounce averaged drift kinetic equation is solved, the distribution
 function $f^{\left( 0\right) }\equiv f\left( B=B_{\min }\right) $ is
 determined by definition at the poloidal angle value where the magnetic
 field is minimal on a given magnetic flux surface. It is indeed the only
-common poloidal point on the magnetic flux surface to all particle
-trajectories, whatever they are trapped or or not. In momentum space, the
-dynamics of trapped and passing particles is characterized by an interval
-boundary which is defined by the relation
+common poloidal point on the magnetic flux surface that is crossed by
+trajectories of both trapped and circulating electrons. In momentum space,
+the dynamics of trapped and passing particles is characterized by an
+interval boundary which is defined by the relation 
 \begin{equation}
 \xi _{0T}^{2}\left( \psi \right) =1-\frac{B_{\min }\left( \psi \right) }{%
 B_{\max }\left( \psi \right) }  \label{Trapcond}
@@ -201,49 +204,21 @@ B_{\max }\left( \psi \right) }  \label{Trapcond}
 From relation (\ref{Trapcond}), it is clear that momentum and radial grids
 are no more fully independent, if one enforces for ensuring numerical
 accuracy, that at each radial position $\psi _{l}$ corresponds an index
-number $j_{l}$ of the picth-angle grid, so that 
+number $j_{l}$ of the pitch-angle grid, so that 
 \begin{equation}
 \xi _{0T,j_{l}}^{2}\left( \psi _{l}\right) =1-\frac{B_{\min }\left( \psi
 _{l}\right) }{B_{\max }\left( \psi _{l}\right) }
 \end{equation}
-
-Hence, if the number of radial point $n_{\psi }$ is arbitrary, the number of
-points for the pitch-angle grid has a lower limit 
-\[
-\xi _{0T}^{2}=\frac{2\varepsilon }{1+\varepsilon }
-\]
-$\varepsilon =r/R_{0}$ etant l'inverse du rapport d'aspect. De cette
-relation il est clair que la grille angulaire en $\xi $ et la grille radiale
-en $r$ ne sont plus independantes si l'on impose qu'a chaque point de la
-grille radial
-
-e en flux doit correspondre un point de la grille angulaire en flux
-caracterisant pour ce lieu la frontiere entre les domaines circulant et
-pieges. La relation entre les points de grille vaut 
-\[
-\left| \xi _{0T,j_{l}}\right| =\sqrt{\frac{2\varepsilon _{l}}{1+\varepsilon
-_{l}}}
-\]
-ou $\varepsilon _{l}=r_{l}/R_{0}$. De cette maniere, on assure une coherence
-entre les grilles en flux dans les differents espaces consideres, une
-condition necessaire pour un calcul numerique de grande precision. Pour une
-grille radiale en flux donnee, il convient donc d'adapter la grille
-angulaire en flux de telle sorte que cette condition de frontiere entre les
-particules circulantes et piegees soit remplie a chaque position radiale.
-Par principe donc, la grille radiale des flux est arbitraire et l'espacement
-des points de grille ne depend que de la precision que l'on cherche
-localement en $r$ en fonction des gradients du probleme etudie. Si cette
-grille est caracterisee par $n_{r}+1$ points, la grille angulaire en flux
-aura donc au moins $n_{\xi }>6n_{r}+7$, chaque frontiere etant caracterisee
-par 3 points de grille, un place exactement sur cette frontiere, et les deux
-autres places symetriquement de part et d'autre du point central. Ce nombre
-est multiplie par deux pour tenir compte des domaines $\xi >0$ et $\xi \leq 
-0,$ les points de grille supplementaires correspondant respectivement a $%
-\left| \xi \right| =1$ (4 points de grille) et $\xi =0$ (3 points de grille)
-pour assurer une bonne precision des calculs aux extremites du domaine
-angulaire. Entre ces valeurs imposees par la moyenne sur la periode de
-rebond, il est loisible de choisir n'importe quelle repartition des points
-de grille angulaire en flux, selon la precision recherchee pour les calculs.
-Par exemple, pour 21 points radiaux en flux, le nombre minimal de points sur
-la grille angulaire en flux doit donc etre superieur a 133.
- 
+the trapped passing boundary is set exactly on the pitch-angle grid\footnote{%
+This choice is possible, since bounce integrals are determined numerically
+from magnetic equilibrium codes, and therefore, no singularity is
+encountered. }. Hence, if the number of radial points for the flux grid is
+arbitrary by definition, the number of points for the pitch-angle grid has a
+lower limit. It is straightforward to give a rough estimate, in order to
+evaluate the numerical size of the objects in the code. Let $n_{\psi }$
+being the number of flux grid points,  $n_{\xi _{0}}\geq 6n_{\psi }+7,$
+since at least each trapped passing boundary on the pitch-angle flux grid
+must be framed by two consecutive neighbors points, on each side, for  $\xi
+_{0}>0$ et $\xi _{0}\leq 0$ domains. In addition, accurate calculations must
+be performed at $\xi _{0}$ (3 points) et at $\left| \xi _{0}\right| =1$ (4
+points). Hence, for $n_{\psi }=30,$ $n_{\xi _{0}}\geq 187.$ 
