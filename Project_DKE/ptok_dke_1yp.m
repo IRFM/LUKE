@@ -69,6 +69,15 @@ if nargin < 1,
 	error('Wrong number of input arguments in ptok_dke_1yp')
 end
 %
+% Default values or non applicable
+%
+Zp = 0;
+HXR = NaN;
+xpoint = NaN;
+j0 = NaN;
+ja = NaN;
+ej = NaN;
+%
 disp('-------------------------------------------------------------------------------------------------------------------');
 disp(['- Tokamak name = ',name]);
 disp('-------------------------------------------------------------------------------------------------------------------');
@@ -246,9 +255,9 @@ elseif strcmp(name,'CMOD') == 1,
 	Ip = 0.678;%****** calculated from f3din for C-mod(qmin = 3.2, qmax = 2.1, eq=1)
 	Bt = 4.0;
 	Ncoils = NaN;
-	Zi = [12 1 1];
-	mi = [12 2 3];
-	fi = [1,0,0];
+	Zi = [1 1 1];
+	mi = [1 2 3];
+	fi = [1 0 0];
 %
 	BeLi = NaN;
 	qmin = 3.2;
@@ -256,17 +265,17 @@ elseif strcmp(name,'CMOD') == 1,
 %
 	Te0 = 7.5;
 	Tea = 0.0;
-	eTe = 2*0;
-	eTe_ref = 2*0;
+	eTe = 2;
+	eTe_ref = 2;
 	ne0 = 2.5e+20;
 	nea = 0.2*ne0;
 	ene = 0.5;
 	ene_ref = 0.5;
-	Ti0 = 4*0.01;
+	Ti0 = 4;
 	Tia = 0;
-	eTi = 2*0;
-	Zeff0 = 12;
-	Zeffa = 12;
+	eTi = 2;
+	Zeff0 = 1;
+	Zeffa = 1;
 	eZeff = 0;
 elseif strcmp(name,'NSTX') == 1,
 	ap = 0.67;
@@ -421,7 +430,7 @@ elseif strcmp(name,'TEST51') == 1,
 	Ncoils = NaN;
 	Zi = [1,1,1];
 	mi = [1,2,3];
-	fi = [0,1,0.0];
+	fi = [1,0,0];
 %
 	BeLi = NaN;
 	qmin = 3.2;
@@ -432,12 +441,12 @@ elseif strcmp(name,'TEST51') == 1,
 	eTe = 0;
 	eTe_ref = 0;
 	ne0 = 2.5e+19;
-	nea = 0.2*ne0;
-	ene = 0.5;
-	ene_ref = 0.5;
-	Ti0 = 2.555*0;
+	nea = 1*ne0;
+	ene = 0;
+	ene_ref = 0;
+	Ti0 = 0;
 	Tia = 0;
-	eTi = 2;
+	eTi = 0;
 	Zeff0 = 1;
 	Zeffa = 1;
 	eZeff = 0;
