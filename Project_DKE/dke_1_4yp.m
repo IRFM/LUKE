@@ -13,7 +13,7 @@ dke_1_4yp(tokname,theta,...
     xB0,xR0,xBT0,xBp0,Rp,Zp,ap,...
     mhu,dmhu,mhum,dmhum,mhup,dmhup,mhu_S,...
     xmhubounce2,xrho,xpsin,xdpsin,xpsinm,xdpsinm,xpsinp,xdpsinp,rdke,xpsin_S,...
-    pn,dpn,pnm,dpnm,pnp,dpnp,pn_S,...
+    pn,dpn,pnm,dpnm,pnp,dpnp,pn_S,spfac,...
     xTe_norm,xne_norm,zZi,zmi,xzni_norm,xzTi_norm,...
     betath_ref,xepsi_fsav,waveparam,...
     XXDr,XXVr,...
@@ -392,6 +392,35 @@ vp = pnp./gammap;
 v2p = vp.*vp;
 xv = v'*ones(1,length(v));
 xv2 = xv.*xv;
+%
+%Super momentum grid definitions for collision integrals
+%
+spn_f = [pn(1)/spfac:pn(1)/spfac:pn(1)];
+for ip=2:npn
+    spn_f = [spn_f,linspace(pn(ip-1),pn(ip),spfac)];
+end
+nspn = length(spn_f);
+spn = [spn_f(1)/2,(spn_f(1:nspn-1) + spn_f(2:nspn))/2];
+sdpn = diff([0, spn_f]);
+spn2 = spn.*spn;
+spn3 = spn2.*spn;
+%
+sz = betath_ref*spn;
+sz2 = sz.*sz;
+sz3 = sz2.*sz;
+%
+sgamma = sqrt(1 + sz2);
+sgamma2 = sgamma.*sgamma;
+%
+ssigma = asinh(sz);
+%
+sv = spn./sgamma;
+sv2 = sv.*sv;
+%
+sJ1 = -3*sgamma + ssigma.*(3.0./sz + 2*sz);
+sJ2 = sgamma - ssigma./sz - 2*sgamma.*sz2/3;
+sJ3 = -3*sgamma.*ssigma./sz2 + 3.0./sz + sz - 2*sz2.*sz/5;
+sJ4 = sgamma.*ssigma.*(15.0./sz2 + 6) - 15.0./sz - 11*sz;
 %
 %Radial grid
 %
@@ -840,18 +869,25 @@ for ir = 1:nr,
 %
 %Collision integrals
 %	
- 	F1_1 = integral_dke_jd(dpn,xfM.*xpn.*xv.*masku,1)';
-  	F1_2 = integral_dke_jd(dpn,xfM.*xpn.*xv.*(1 - xgamma.*xsigma./xz).*masku,1)';
-  	F2_1 = integral_dke_jd(dpn,xfM.*xpn.*maskl,1)';
+    sfM = exp(-spn2./(1 + sgamma)/xTe_norm(ir))/2/pi/xTe_norm(ir)/sqrt(2*pi*xTe_norm(ir));
+    snormfM = 4*pi*integral_dke_jd(sdpn,spn.*spn.*sfM,2);
+    sfM = sfM*xne_norm(ir)/snormfM;
+    for ip = 1:npn,%Loop for very accurate collision integral calculation close to p = 0 especially
+        smasku = spn < pn(ip);
+        smaskl = spn > pn(ip);
+ 	    F1_1(1,ip) = integral_dke_jd(sdpn,sfM.*spn.*sv.*smasku,2)';
+      	F1_2(1,ip) = integral_dke_jd(sdpn,sfM.*spn.*sv.*(1 - sgamma.*ssigma./sz).*smasku,2)';
+      	F2_1(1,ip) = integral_dke_jd(sdpn,sfM.*spn.*smaskl,2)';
 %
-	B1_1 = integral_dke_jd(dpn,xfM.*masku.*xpn2,1)';
-	B1_2 = integral_dke_jd(dpn,xfM.*masku.*xpn2.*xpn2,1)';
-	B1_3 = integral_dke_jd(dpn,xfM.*masku.*xpn2.*xJ1./xgamma,1)';
-	B1_4 = integral_dke_jd(dpn,xfM.*masku.*xpn2.*xJ2./xgamma,1)';
-	B1_5 = integral_dke_jd(dpn,xfM.*masku.*xpn2.*((xgamma - xsigma./xz)./xgamma),1)';
-	B2_1 = integral_dke_jd(dpn,xfM.*maskl.*xpn2./xv,1)';
-	B2_2 = integral_dke_jd(dpn,xfM.*maskl.*xpn2./xv./xgamma2,1)';
-	B2_3 = integral_dke_jd(dpn,xfM.*maskl.*xpn2.*xv,1)';  
+    	B1_1(1,ip) = integral_dke_jd(sdpn,sfM.*smasku.*spn2,2)';
+    	B1_2(1,ip) = integral_dke_jd(sdpn,sfM.*smasku.*spn2.*spn2,2)';
+    	B1_3(1,ip) = integral_dke_jd(sdpn,sfM.*smasku.*spn2.*sJ1./sgamma,2)';
+    	B1_4(1,ip) = integral_dke_jd(sdpn,sfM.*smasku.*spn2.*sJ2./sgamma,2)';
+    	B1_5(1,ip) = integral_dke_jd(sdpn,sfM.*smasku.*spn2.*((sgamma - ssigma./sz)./sgamma),2)';
+    	B2_1(1,ip) = integral_dke_jd(sdpn,sfM.*smaskl.*spn2./sv,2)';
+    	B2_2(1,ip) = integral_dke_jd(sdpn,sfM.*smaskl.*spn2./sv./sgamma2,2)';
+    	B2_3(1,ip) = integral_dke_jd(sdpn,sfM.*smaskl.*spn2.*sv,2)';  
+    end
 %
 	if coll_mode == 1,
 		F = xne_norm(ir)'./v2 + sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)')./v2;
