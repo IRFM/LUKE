@@ -346,13 +346,13 @@ YXXrespol_immj = YXXHP.*(YXXdeltares_immj.*abs(YXXpolb_immj).^2) + ~YXXHP.*(YXXd
 YXXrespol_ijp = YXXHPp.*(YXXdeltares_ijp.*abs(YXXpolb_ijp).^2) + ~YXXHPp.*(YXXdeltares_ijp.*abs(YXXpolb_ijp).^2 + flipdim(YXXdeltares_ijm.*abs(YXXpolb_ijm).^2,2))/2;% -mhup = fliplr(mhum)     
 YXXrespol_ijm = YXXHPm.*(YXXdeltares_ijm.*abs(YXXpolb_ijm).^2) + ~YXXHPm.*(YXXdeltares_ijm.*abs(YXXpolb_ijm).^2 + flipdim(YXXdeltares_ijp.*abs(YXXpolb_ijp).^2,2))/2;% -mhum = fliplr(mhup)        
 % case DKE
-YXXrespol_ippj = YXXHP.*(YXXdeltares_ippj.*abs(YXXpolb_ippj).^2) + ~YXXHP.*YXXsigma.*(YXXdeltares_ippj.*abs(YXXpolb_ippj).^2.*YXXsigma + flipdim(YXXdeltares_ippj.*abs(YXXpolb_ippj).^2.*YXXsigma,2))/2;       
-YXXrespol_ipj = YXXHP.*(YXXdeltares_ipj.*abs(YXXpolb_ipj).^2) + ~YXXHP.*YXXsigma.*(YXXdeltares_ipj.*abs(YXXpolb_ipj).^2.*YXXsigma + flipdim(YXXdeltares_ipj.*abs(YXXpolb_ipj).^2.*YXXsigma,2))/2;       
-YXXrespol_ij = YXXHP.*(YXXdeltares_ij.*abs(YXXpolb_ij).^2) + ~YXXHP.*YXXsigma.*(YXXdeltares_ij.*abs(YXXpolb_ij).^2.*YXXsigma + flipdim(YXXdeltares_ij.*abs(YXXpolb_ij).^2.*YXXsigma,2))/2;       
-YXXrespol_imj = YXXHP.*(YXXdeltares_imj.*abs(YXXpolb_imj).^2) + ~YXXHP.*YXXsigma.*(YXXdeltares_imj.*abs(YXXpolb_imj).^2.*YXXsigma + flipdim(YXXdeltares_imj.*abs(YXXpolb_imj).^2.*YXXsigma,2))/2;       
-YXXrespol_immj = YXXHP.*(YXXdeltares_immj.*abs(YXXpolb_immj).^2) + ~YXXHP.*YXXsigma.*(YXXdeltares_immj.*abs(YXXpolb_immj).^2.*YXXsigma + flipdim(YXXdeltares_immj.*abs(YXXpolb_immj).^2.*YXXsigma,2))/2;      
-YXXrespol_ijp = YXXHPp.*(YXXdeltares_ijp.*abs(YXXpolb_ijp).^2) + ~YXXHPp.*YXXsigmap.*(YXXdeltares_ijp.*abs(YXXpolb_ijp).^2.*YXXsigmap + flipdim(YXXdeltares_ijm.*abs(YXXpolb_ijm).^2.*YXXsigmam,2))/2;% -mhup = fliplr(mhum)     
-YXXrespol_ijm = YXXHPm.*(YXXdeltares_ijm.*abs(YXXpolb_ijm).^2) + ~YXXHPm.*YXXsigmam.*(YXXdeltares_ijm.*abs(YXXpolb_ijm).^2.*YXXsigmam + flipdim(YXXdeltares_ijp.*abs(YXXpolb_ijp).^2.*YXXsigmap,2))/2;% -mhum = fliplr(mhup)        
+YXXrespol_tp_ippj = YXXHP.*(YXXdeltares_ippj.*abs(YXXpolb_ippj).^2) + ~YXXHP.*YXXsigma.*(YXXdeltares_ippj.*abs(YXXpolb_ippj).^2.*YXXsigma + flipdim(YXXdeltares_ippj.*abs(YXXpolb_ippj).^2.*YXXsigma,2))/2;       
+YXXrespol_tp_ipj = YXXHP.*(YXXdeltares_ipj.*abs(YXXpolb_ipj).^2) + ~YXXHP.*YXXsigma.*(YXXdeltares_ipj.*abs(YXXpolb_ipj).^2.*YXXsigma + flipdim(YXXdeltares_ipj.*abs(YXXpolb_ipj).^2.*YXXsigma,2))/2;       
+YXXrespol_tp_ij = YXXHP.*(YXXdeltares_ij.*abs(YXXpolb_ij).^2) + ~YXXHP.*YXXsigma.*(YXXdeltares_ij.*abs(YXXpolb_ij).^2.*YXXsigma + flipdim(YXXdeltares_ij.*abs(YXXpolb_ij).^2.*YXXsigma,2))/2;       
+YXXrespol_tp_imj = YXXHP.*(YXXdeltares_imj.*abs(YXXpolb_imj).^2) + ~YXXHP.*YXXsigma.*(YXXdeltares_imj.*abs(YXXpolb_imj).^2.*YXXsigma + flipdim(YXXdeltares_imj.*abs(YXXpolb_imj).^2.*YXXsigma,2))/2;       
+YXXrespol_tp_immj = YXXHP.*(YXXdeltares_immj.*abs(YXXpolb_immj).^2) + ~YXXHP.*YXXsigma.*(YXXdeltares_immj.*abs(YXXpolb_immj).^2.*YXXsigma + flipdim(YXXdeltares_immj.*abs(YXXpolb_immj).^2.*YXXsigma,2))/2;      
+YXXrespol_tp_ijp = YXXHPp.*(YXXdeltares_ijp.*abs(YXXpolb_ijp).^2) + ~YXXHPp.*YXXsigmap.*(YXXdeltares_ijp.*abs(YXXpolb_ijp).^2.*YXXsigmap + flipdim(YXXdeltares_ijm.*abs(YXXpolb_ijm).^2.*YXXsigmam,2))/2;% -mhup = fliplr(mhum)     
+YXXrespol_tp_ijm = YXXHPm.*(YXXdeltares_ijm.*abs(YXXpolb_ijm).^2) + ~YXXHPm.*YXXsigmam.*(YXXdeltares_ijm.*abs(YXXpolb_ijm).^2.*YXXsigmam + flipdim(YXXdeltares_ijp.*abs(YXXpolb_ijp).^2.*YXXsigmap,2))/2;% -mhum = fliplr(mhup)        
 %
 clear YXXHPp YXXHP YXXHPm
 clear YXXsigmap YXXsigma YXXsigmam
@@ -369,21 +369,21 @@ YXXDrf_ijp = YXXD0_rf.*YXXrespol_ijp.*YXXpsib.*YXXmhu2p.*YXXqtildeb_rf.*YXXmaskb
 YXXDrf_ijm = YXXD0_rf.*YXXrespol_ijm.*YXXpsib.*YXXmhu2m.*YXXqtildeb_rf.*YXXmaskb.*YXXgamma./YXXpn./abs(YXXmhum)./YXXmhub2m./YXXlambdam./YXXqtilde;   
 %
 if dke_mode == 1
-    YXXDrf_D_tp_ippj = YXXD0_rf.*YXXrespol_ippj.*YXXmhu.*YXXqtildeb_rf.*YXXmaskb.*YXXgammapp./YXXpnpp./abs(YXXmhu)./YXXmhub./YXXlambda./YXXqtilde;
-    YXXDrf_D_tp_ipj = YXXD0_rf.*YXXrespol_ipj.*YXXmhu.*YXXqtildeb_rf.*YXXmaskb.*YXXgammap./YXXpnp./abs(YXXmhu)./YXXmhub./YXXlambda./YXXqtilde;
-    YXXDrf_D_tp_ij = YXXD0_rf.*YXXrespol_ij.*YXXmhu.*YXXqtildeb_rf.*YXXmaskb.*YXXgamma./YXXpn./abs(YXXmhu)./YXXmhub./YXXlambda./YXXqtilde;
-    YXXDrf_D_tp_imj = YXXD0_rf.*YXXrespol_imj.*YXXmhu.*YXXqtildeb_rf.*YXXmaskb.*YXXgammam./YXXpnm./abs(YXXmhu)./YXXmhub./YXXlambda./YXXqtilde;
-    YXXDrf_D_tp_immj = YXXD0_rf.*YXXrespol_immj.*YXXmhu.*YXXqtildeb_rf.*YXXmaskb.*YXXgammamm./YXXpnmm./abs(YXXmhu)./YXXmhub./YXXlambda./YXXqtilde;
-    YXXDrf_D_tp_ijp = YXXD0_rf.*YXXrespol_ijp.*YXXmhup.*YXXqtildeb_rf.*YXXmaskb.*YXXgamma./YXXpn./abs(YXXmhup)./YXXmhubp./YXXlambdap./YXXqtilde;
-    YXXDrf_D_tp_ijm = YXXD0_rf.*YXXrespol_ijm.*YXXmhum.*YXXqtildeb_rf.*YXXmaskb.*YXXgamma./YXXpn./abs(YXXmhum)./YXXmhubm./YXXlambdam./YXXqtilde;   
+    YXXDrf_D_tp_ippj = YXXD0_rf.*YXXrespol_tp_ippj.*YXXmhu.*YXXqtildeb_rf.*YXXmaskb.*YXXgammapp./YXXpnpp./abs(YXXmhu)./YXXmhub./YXXlambda./YXXqtilde;
+    YXXDrf_D_tp_ipj = YXXD0_rf.*YXXrespol_tp_ipj.*YXXmhu.*YXXqtildeb_rf.*YXXmaskb.*YXXgammap./YXXpnp./abs(YXXmhu)./YXXmhub./YXXlambda./YXXqtilde;
+    YXXDrf_D_tp_ij = YXXD0_rf.*YXXrespol_tp_ij.*YXXmhu.*YXXqtildeb_rf.*YXXmaskb.*YXXgamma./YXXpn./abs(YXXmhu)./YXXmhub./YXXlambda./YXXqtilde;
+    YXXDrf_D_tp_imj = YXXD0_rf.*YXXrespol_tp_imj.*YXXmhu.*YXXqtildeb_rf.*YXXmaskb.*YXXgammam./YXXpnm./abs(YXXmhu)./YXXmhub./YXXlambda./YXXqtilde;
+    YXXDrf_D_tp_immj = YXXD0_rf.*YXXrespol_tp_immj.*YXXmhu.*YXXqtildeb_rf.*YXXmaskb.*YXXgammamm./YXXpnmm./abs(YXXmhu)./YXXmhub./YXXlambda./YXXqtilde;
+    YXXDrf_D_tp_ijp = YXXD0_rf.*YXXrespol_tp_ijp.*YXXmhup.*YXXqtildeb_rf.*YXXmaskb.*YXXgamma./YXXpn./abs(YXXmhup)./YXXmhubp./YXXlambdap./YXXqtilde;
+    YXXDrf_D_tp_ijm = YXXD0_rf.*YXXrespol_tp_ijm.*YXXmhum.*YXXqtildeb_rf.*YXXmaskb.*YXXgamma./YXXpn./abs(YXXmhum)./YXXmhubm./YXXlambdam./YXXqtilde;   
 %    
-    YXXDrf_F_tp_ippj = YXXD0_rf.*YXXrespol_ippj.*(1 - YXXpsib).*YXXmhu.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXgammapp./YXXpnpp./abs(YXXmhu)./YXXmhub./YXXmhub2./YXXlambda./YXXqtilde;
-    YXXDrf_F_tp_ipj = YXXD0_rf.*YXXrespol_ipj.*(1 - YXXpsib).*YXXmhu.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXgammap./YXXpnp./abs(YXXmhu)./YXXmhub./YXXmhub2./YXXlambda./YXXqtilde;
-    YXXDrf_F_tp_ij = YXXD0_rf.*YXXrespol_ij.*(1 - YXXpsib).*YXXmhu.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXgamma./YXXpn./abs(YXXmhu)./YXXmhub./YXXmhub2./YXXlambda./YXXqtilde;
-    YXXDrf_F_tp_imj = YXXD0_rf.*YXXrespol_imj.*(1 - YXXpsib).*YXXmhu.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXgammam./YXXpnm./abs(YXXmhu)./YXXmhub./YXXmhub2./YXXlambda./YXXqtilde;
-    YXXDrf_F_tp_immj = YXXD0_rf.*YXXrespol_immj.*(1 - YXXpsib).*YXXmhu.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXgammamm./YXXpnmm./abs(YXXmhu)./YXXmhub./YXXmhub2./YXXlambda./YXXqtilde;
-    YXXDrf_F_tp_ijp = YXXD0_rf.*YXXrespol_ijp.*(1 - YXXpsib).*YXXmhup.*YXXmhu2p.*YXXqtildeb_rf.*YXXmaskb.*YXXgamma./YXXpn./abs(YXXmhup)./YXXmhubp./YXXmhub2p./YXXlambdap./YXXqtilde;
-    YXXDrf_F_tp_ijm = YXXD0_rf.*YXXrespol_ijm.*(1 - YXXpsib).*YXXmhum.*YXXmhu2m.*YXXqtildeb_rf.*YXXmaskb.*YXXgamma./YXXpn./abs(YXXmhum)./YXXmhubm./YXXmhub2m./YXXlambdam./YXXqtilde;       
+    YXXDrf_F_tp_ippj = YXXD0_rf.*YXXrespol_tp_ippj.*(1 - YXXpsib).*YXXmhu.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXgammapp./YXXpnpp./abs(YXXmhu)./YXXmhub./YXXmhub2./YXXlambda./YXXqtilde;
+    YXXDrf_F_tp_ipj = YXXD0_rf.*YXXrespol_tp_ipj.*(1 - YXXpsib).*YXXmhu.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXgammap./YXXpnp./abs(YXXmhu)./YXXmhub./YXXmhub2./YXXlambda./YXXqtilde;
+    YXXDrf_F_tp_ij = YXXD0_rf.*YXXrespol_tp_ij.*(1 - YXXpsib).*YXXmhu.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXgamma./YXXpn./abs(YXXmhu)./YXXmhub./YXXmhub2./YXXlambda./YXXqtilde;
+    YXXDrf_F_tp_imj = YXXD0_rf.*YXXrespol_tp_imj.*(1 - YXXpsib).*YXXmhu.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXgammam./YXXpnm./abs(YXXmhu)./YXXmhub./YXXmhub2./YXXlambda./YXXqtilde;
+    YXXDrf_F_tp_immj = YXXD0_rf.*YXXrespol_tp_immj.*(1 - YXXpsib).*YXXmhu.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXgammamm./YXXpnmm./abs(YXXmhu)./YXXmhub./YXXmhub2./YXXlambda./YXXqtilde;
+    YXXDrf_F_tp_ijp = YXXD0_rf.*YXXrespol_tp_ijp.*(1 - YXXpsib).*YXXmhup.*YXXmhu2p.*YXXqtildeb_rf.*YXXmaskb.*YXXgamma./YXXpn./abs(YXXmhup)./YXXmhubp./YXXmhub2p./YXXlambdap./YXXqtilde;
+    YXXDrf_F_tp_ijm = YXXD0_rf.*YXXrespol_tp_ijm.*(1 - YXXpsib).*YXXmhum.*YXXmhu2m.*YXXqtildeb_rf.*YXXmaskb.*YXXgamma./YXXpn./abs(YXXmhum)./YXXmhubm./YXXmhub2m./YXXlambdam./YXXqtilde;       
 end
 % 
 clear YXXD0_rf YXXpsib YXXqtildeb_rf YXXmaskb YXXqtilde
