@@ -167,15 +167,15 @@ elseif strcmp(name,'TS') == 1,
 	HXR{1,3} = R_hxr;
 	HXR{1,4} = Z_hxr;
 	HXR{1,5} = EG_hxr;
-	HXR{1,5} = ef_hxr;
-	HXR{1,5} = tf_hxr;
-	HXR{1,5} = ea_hxr;
-	HXR{1,5} = ta_hxr;
-	HXR{1,5} = ec_hxr;
-	HXR{1,5} = tc_hxr;
-	HXR{1,5} = ed_hxr;
-	HXR{1,5} = td_hxr;
-	HXR{1,5} = kdiag_hxr	;
+	HXR{1,6} = ef_hxr;
+	HXR{1,7} = tf_hxr;
+	HXR{1,8} = ea_hxr;
+	HXR{1,9} = ta_hxr;
+	HXR{1,10} = ec_hxr;
+	HXR{1,11} = tc_hxr;
+	HXR{1,12} = ed_hxr;
+	HXR{1,13} = td_hxr;
+	HXR{1,14} = kdiag_hxr;
 % HELENA input file
 	file_helena = '';
 elseif strcmp(name,'RTP') == 1,
