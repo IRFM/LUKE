@@ -2,11 +2,11 @@ clear, warning off
 
 memax = 128*1e6; % Available memory
 tokamak = 'test';
-filename = ['EQUIL_',tokamak];
-%filename = 'equihelena';
+%filename = ['EQUIL_',tokamak];
+filename = 'equihelena';
 method = 'linear';
 %super = 1;
-nmhu = 11;
+nmhu = 41;
 ymhu0 = linspace(0,1,nmhu); % Pitch-angle cosine at minimum of B-field
 
 
@@ -165,50 +165,34 @@ xyalpha1b = ((xyB1min.^2 - xyY1) - xydelta1)./(xyB1min.^2 + xyB1max.^2 - 2*xyY1)
 xyalpha2a = ((xyB2min.^2 - xyY2) + xydelta2)./(xyB2min.^2 + xyB2max.^2 - 2*xyY2);
 xyalpha2b = ((xyB2min.^2 - xyY2) - xydelta2)./(xyB2min.^2 + xyB2max.^2 - 2*xyY2);
 
-xyTthetaT1a = xytheta1min + (xytheta1max - xytheta1min).*xyalpha1a;
-xyTthetaT1b = xytheta1min + (xytheta1max - xytheta1min).*xyalpha1b;
-xyTthetaT2a = xytheta2min + (xytheta2max - xytheta2min).*xyalpha2a;
-xyTthetaT2b = xytheta2min + (xytheta2max - xytheta2min).*xyalpha2b;
+xymask1a = xyalpha1a >= 0 & xyalpha1a <= 1;
+xymask1b = xyalpha1b >= 0 & xyalpha1b <= 1;
+xymask2a = xyalpha2a >= 0 & xyalpha2a <= 1;
+xymask2b = xyalpha2b >= 0 & xyalpha2b <= 1;
 
-xyTthetaT1a(~xymaskT) = 0;
-xyTthetaT1b(~xymaskT) = 0;
-xyTthetaT2a(~xymaskT) = 0;
-xyTthetaT2b(~xymaskT) = 0;
+xyones = ones(np,nmhu);
 
-xyBRT1a = xyBR1min + (xyBR1max - xyBR1min).*(xyTthetaT1a - xytheta1min)./(xytheta1max - xytheta1min);
-xyBRT1b = xyBR1min + (xyBR1max - xyBR1min).*(xyTthetaT1b - xytheta1min)./(xytheta1max - xytheta1min);
-xyBRT2a = xyBR2min + (xyBR2max - xyBR2min).*(xyTthetaT2a - xytheta2min)./(xytheta2max - xytheta2min);
-xyBRT2b = xyBR2min + (xyBR2max - xyBR2min).*(xyTthetaT2b - xytheta2min)./(xytheta2max - xytheta2min);
+if min(xymask1a.*xymaskT + xymask1b.*xymaskT == xyones.*xymaskT) == 0
+	error('root 1 not determined');
+end
+if min(xymask2a.*xymaskT + xymask2b.*xymaskT == xyones.*xymaskT) == 0
+	error('root 2 not determined');
+end
 
-xyBZT1a = xyBZ1min + (xyBZ1max - xyBZ1min).*(xyTthetaT1a - xytheta1min)./(xytheta1max - xytheta1min);
-xyBZT1b = xyBZ1min + (xyBZ1max - xyBZ1min).*(xyTthetaT1b - xytheta1min)./(xytheta1max - xytheta1min);
-xyBZT2a = xyBZ2min + (xyBZ2max - xyBZ2min).*(xyTthetaT2a - xytheta2min)./(xytheta2max - xytheta2min);
-xyBZT2b = xyBZ2min + (xyBZ2max - xyBZ2min).*(xyTthetaT2b - xytheta2min)./(xytheta2max - xytheta2min);
+xyalpha1 = xymask1a.*xyalpha1a + ~xymask1a.*xyalpha1b;
+xyalpha2 = xymask2a.*xyalpha2a + ~xymask2a.*xyalpha2b;
 
-xyBphiT1a = xyBphi1min + (xyBphi1max - xyBphi1min).*(xyTthetaT1a - xytheta1min)./(xytheta1max - xytheta1min);
-xyBphiT1b = xyBphi1min + (xyBphi1max - xyBphi1min).*(xyTthetaT1b - xytheta1min)./(xytheta1max - xytheta1min);
-xyBphiT2a = xyBphi2min + (xyBphi2max - xyBphi2min).*(xyTthetaT2a - xytheta2min)./(xytheta2max - xytheta2min);
-xyBphiT2b = xyBphi2min + (xyBphi2max - xyBphi2min).*(xyTthetaT2b - xytheta2min)./(xytheta2max - xytheta2min);
+xyTthetaT1 = xytheta1min + (xytheta1max - xytheta1min).*xyalpha1;
+xyTthetaT2 = xytheta2min + (xytheta2max - xytheta2min).*xyalpha2;
 
-xyBT1a = sqrt(xyBRT1a.^2 + xyBZT1a.^2 + xyBphiT1a.^2);
-xyBT1b = sqrt(xyBRT1b.^2 + xyBZT1b.^2 + xyBphiT1b.^2);
-xyBT2a = sqrt(xyBRT2a.^2 + xyBZT2a.^2 + xyBphiT2a.^2);
-xyBT2b = sqrt(xyBRT2b.^2 + xyBZT2b.^2 + xyBphiT2b.^2);
+xyTthetaT1(~xymaskT) = 0;
+xyTthetaT2(~xymaskT) = 0;
 
-xymask1 = abs(xyBT1a - xyBb) <= abs(xyBT1b - xyBb);
-xymask2 = abs(xyBT2a - xyBb) <= abs(xyBT2b - xyBb);
+xyBRT1 = xyBR1min + (xyBR1max - xyBR1min).*(xyTthetaT1 - xytheta1min)./(xytheta1max - xytheta1min);
+xyBRT2 = xyBR2min + (xyBR2max - xyBR2min).*(xyTthetaT2 - xytheta2min)./(xytheta2max - xytheta2min);
 
-xyBRT1 = xyBRT1a.*xymask1 + xyBRT1b.*~xymask1;
-xyBRT2 = xyBRT2a.*xymask2 + xyBRT2b.*~xymask2;
-
-xyBZT1 = xyBZT1a.*xymask1 + xyBZT1b.*~xymask1;
-xyBZT2 = xyBZT2a.*xymask2 + xyBZT2b.*~xymask2;
-
-%xyBphiT1 = xyBphiT1a.*xymask1 + xyBphiT1b.*~xymask1;
-%xyBphiT2 = xyBphiT2a.*xymask2 + xyBphiT2b.*~xymask2;
-
-%xyBT1 = xyBT1a.*xymask1 + xyBT1b.*~xymask1;
-%xyBT2 = xyBT2a.*xymask2 + xyBT2b.*~xymask2;
+xyBZT1 = xyBZ1min + (xyBZ1max - xyBZ1min).*(xyTthetaT1 - xytheta1min)./(xytheta1max - xytheta1min);
+xyBZT2 = xyBZ2min + (xyBZ2max - xyBZ2min).*(xyTthetaT2 - xytheta2min)./(xytheta2max - xytheta2min);
 
 xyRT1 = xyR1min + (xyR1max - xyR1min).*(xyTthetaT1 - xytheta1min)./(xytheta1max - xytheta1min);
 xyRT2 = xyR2min + (xyR2max - xyR2min).*(xyTthetaT2 - xytheta2min)./(xytheta2max - xytheta2min);
@@ -287,9 +271,10 @@ YTmhu(~YTmask) = eps;
 clear YTPSIB
 
 YTF = YTmask.*YTB.*((YTR - R0).^2 + (YTZ - Z0).^2).*YTmhu0./abs(YTBR.*(YTZ - Z0) - YTBZ.*(YTR - R0))./YTmhu;
-%clear YTmask YTB YTR YTZ YTBR YTBZ YTmhu0 YTmhu
-
 YMF = (YTF(1:nt2-1,:,:) + YTF(2:nt2,:,:))/2;
+
+clear YTmask YTB YTR YTZ YTBR YTBZ YTmhu0 YTmhu
+
 YMdt = diff(YTtheta);
 
 xyInt = squeeze(sum(YMF.*YMdt)/(2*pi));
