@@ -83,16 +83,17 @@ _{abs}^{\mathcal{O}}\right\rangle _{V,l+1/2}^{1}%
 where the respective contributions are given by the equations (\ref{pabs0})
 and (\ref{pabs1t}-\ref{pabs1g}) and discretized as%
 \begin{align}
-\left\langle P_{abs}^{\mathcal{O}}\right\rangle _{V,l+1/2}^{0}  & =\frac{2\pi
-}{m_{e}}\frac{\widetilde{q}_{l+1/2}}{\widehat{q}_{l+1/2}}\sum_{i=1}^{n_{p}%
-}\sum_{j=0}^{n_{\xi_{0}}-1}\frac{p_{i}^{3}}{\gamma_{i}}\lambda^{l+1/2,j+1/2}%
-S_{p,l+1/2,i,j+1/2}^{\left(  0\right)  \mathcal{O}}\left(  f_{0}^{\left(
-0\right)  }\right)  \Delta p_{i}\Delta\xi_{0,j+1/2}\label{pabsdis}\\
-\left\langle P_{abs}^{\mathcal{O}}\right\rangle _{V,l+1/2}^{1}  & =\frac{2\pi
-}{m_{e}}\frac{\widetilde{q}_{l+1/2}}{\widehat{q}_{l+1/2}}\sum_{i=1}^{n_{p}%
-}\sum_{j=0}^{n_{\xi_{0}}-1}\frac{p_{i}^{3}}{\gamma_{i}}\lambda^{l+1/2,j+1/2}%
-S_{p,l+1/2,i,j+1/2}^{\left(  0\right)  \mathcal{O}}\left(  g^{\left(
-0\right)  }\right)  \Delta p_{i}\Delta\xi_{0,j+1/2}\\
+\left\langle P_{abs}^{\mathcal{O}}\right\rangle _{V,l+1/2}^{0}  &  =\frac
+{2\pi}{m_{e}}\frac{\widetilde{q}_{l+1/2}}{\widehat{q}_{l+1/2}}\sum
+_{i=1}^{n_{p}}\sum_{j=0}^{n_{\xi_{0}}-1}\frac{p_{i}^{3}}{\gamma_{i}}%
+\lambda^{l+1/2,j+1/2}S_{p,l+1/2,i,j+1/2}^{\left(  0\right)  \mathcal{O}%
+}\left(  f_{0}^{\left(  0\right)  }\right)  \Delta p_{i}\Delta\xi
+_{0,j+1/2}\label{pabsdis}\\
+\left\langle P_{abs}^{\mathcal{O}}\right\rangle _{V,l+1/2}^{1}  &  =\frac
+{2\pi}{m_{e}}\frac{\widetilde{q}_{l+1/2}}{\widehat{q}_{l+1/2}}\sum
+_{i=1}^{n_{p}}\sum_{j=0}^{n_{\xi_{0}}-1}\frac{p_{i}^{3}}{\gamma_{i}}%
+\lambda^{l+1/2,j+1/2}S_{p,l+1/2,i,j+1/2}^{\left(  0\right)  \mathcal{O}%
+}\left(  g^{\left(  0\right)  }\right)  \Delta p_{i}\Delta\xi_{0,j+1/2}\\
 \left\langle \widetilde{P}_{abs}^{\mathcal{O}}\right\rangle _{V,l+1/2}^{1}  &
 =\frac{2\pi}{m_{e}}\frac{\widetilde{q}_{l+1/2}}{\widehat{q}_{l+1/2}}\sum
 _{i=1}^{n_{p}}\sum_{j=0}^{n_{\xi_{0}}-1}\frac{p_{i}^{3}}{\gamma_{i}}%
@@ -103,25 +104,39 @@ p_{i}\Delta\xi_{0,j+1/2}%
 
 The discretization of the momentum-space flux components $S_{p,l+1/2,i,j+1/2}%
 ^{\left(  0\right)  \mathcal{O}}$ and $\widetilde{S}_{p,l+1/2,i,j+1/2}%
-^{\left(  0\right)  \mathcal{O}}$ is done in ().
+^{\left(  0\right)  \mathcal{O}}$ is done in (\ref{sp0dis}).
 
 \subsubsection{Stream Function for Momentum Space fluxes}
 
-According to calculations in Sec. ***, the stream function $A$ may be
-expressed in two ways, the first one being
+\bigskip The stream function gives the local direction of the momentum-space
+fluxes, and its gradient is an indication of the flux intensity. Because it is
+a flux function, it is naturally defined on the momentum-space flux grid.
+According to the three equivalent expressions for the stream function
+(\ref{stream1}-\ref{stream2}), we have the following discretizations, for
+$1\leq i\leq n_{p}$ and $1\leq j\leq n_{\xi}-1$
 \begin{align}
-A_{l+1/2,i+1/2,j+1/2}^{\left(  0\right)  }  & =\frac{2\pi p_{i+1/2}^{2}%
-}{n_{e,l+1/2}}\sum_{j^{\prime}=0}^{j}\Delta\xi_{0,j^{\prime}}%
-S_{p,l+1/2,i+1/2,j^{\prime}}^{\left(  0\right)  }\nonumber\\
-& =-\frac{2\pi p_{i+1/2}^{2}}{n_{e,l+1/2}}\sum_{j^{\prime}=j}^{n_{\xi_{0}}%
-}\Delta\xi_{0,j^{\prime}+1}S_{p,l+1/2,i+1/2,j^{\prime}+1}^{\left(  0\right)  }%
+A_{l+1/2,i,j}^{\left(  0\right)  }  &  =\frac{2\pi p_{i}^{2}}{n_{e,l+1/2}}%
+\sum_{m=0}^{j-1}\Delta\xi_{0,m+1/2}\;S_{p,l+1/2,i,m+1/2}^{\left(  0\right)
+}\label{streamdis}\\
+A_{l+1/2,i,j}^{\left(  0\right)  }  &  =\frac{2\pi p_{i}^{2}}{n_{e,l+1/2}}%
+\sum_{m=j}^{n_{\xi}-1}\Delta\xi_{0,m+1/2}\;S_{p,l+1/2,i,m+1/2}^{\left(
+0\right)  }%
 \end{align}
-and the second
+and
 \begin{equation}
-A_{l+1/2,i+1/2,j+1/2}^{\left(  0\right)  }=\frac{2\pi\sqrt{1-\xi_{0,j+1/2}%
-^{2}}}{n_{e,l+1/2}}\sum_{i^{\prime}=0}^{i}S_{\xi,l+1/2,i^{\prime}%
-,j+1/2}^{\left(  0\right)  }p_{i^{\prime}}\Delta p_{i^{\prime}}%
+A_{l+1/2,i,j}^{\left(  0\right)  }=\frac{2\pi\sqrt{1-\xi_{0,j}^{2}}%
+}{n_{e,l+1/2}}\sum_{m=0}^{i-1}p_{m+1/2}\Delta p_{m+1/2}\;S_{\xi,l+1/2,m+1/2,j}%
+^{\left(  0\right)  } \label{streamdis2}%
 \end{equation}
+where the boundary conditions are%
+\begin{equation}
+A_{l+1/2,0,j}^{\left(  0\right)  }=A_{l+1/2,i,0}^{\left(  0\right)
+}=A_{l+1/2,i,n_{\xi}}^{\left(  0\right)  }=0
+\end{equation}
+
+The discretization of the momentum-space flux components $S_{p,l+1/2,i,j+1/2}%
+^{\left(  0\right)  \mathcal{O}}$ and $S_{\xi,l+1/2,i+1/2,j}^{\left(
+0\right)  \mathcal{O}}$ is done in (\ref{sp0dis}) and (\ref{sxi0dis}).
 
 \subsubsection{Ohmic electric field}
 
@@ -155,15 +170,16 @@ The effective fraction of trapped electrons, as deduced from the Lorentz model
 in Sec. \ref{dkediscretinit} is%
 
 \begin{align}
-\mathcal{F}_{t,l+1/2}^{eff.}  & =\frac{3}{2}\frac{B_{T0,l+1/2}}{B_{0,l+1/2}%
+\mathcal{F}_{t,l+1/2}^{eff.}  &  =\frac{3}{2}\frac{B_{T0,l+1/2}}{B_{0,l+1/2}%
 }\times\nonumber\\
-& \left[  \frac{\widetilde{q}_{l+1/2}}{\overline{q}_{l+1/2}}\frac
+&  \left[  \frac{\widetilde{q}_{l+1/2}}{\overline{q}_{l+1/2}}\frac
 {B_{T0,l+1/2}}{B_{0,l+1/2}}\sum_{j=0}^{n_{\xi_{0}}-1}\xi_{0,j+1/2}^{2}%
 \lambda_{2,-2,2}^{l+1/2,j+1/2}\Delta\xi_{0,j+1/2}\right. \nonumber\\
-& \left.  -\frac{q_{l+1/2}}{\overline{q}_{l+1/2}}\frac{R_{0,l+1/2}}{R_{p}}%
-\sum_{j=0}^{n_{\xi_{0}}-1}\sigma_{j+1/2}H\left(  \left|  \xi_{0,j+1/2}\right|
--\xi_{0T,l+1/2}\right)  \;\xi_{0,j+1/2}I_{\mathcal{L}}\left(  \psi
-_{l+1/2},\left|  \xi_{0,j+1/2}\right|  \right)  \Delta\xi_{0,j+1/2}\right]
+&  \left.  -\frac{q_{l+1/2}}{\overline{q}_{l+1/2}}\frac{R_{0,l+1/2}}{R_{p}%
+}\sum_{j=0}^{n_{\xi_{0}}-1}\sigma_{j+1/2}H\left(  \left|  \xi_{0,j+1/2}%
+\right|  -\xi_{0T,l+1/2}\right)  \;\xi_{0,j+1/2}I_{\mathcal{L}}\left(
+\psi_{l+1/2},\left|  \xi_{0,j+1/2}\right|  \right)  \Delta\xi_{0,j+1/2}%
+\right]
 \end{align}
 
 \subsubsection{Runaway loss rate}
@@ -183,21 +199,21 @@ _{R}\right\rangle _{V}\left(  \psi\right)  $ is given%
 In a similar way, the magnetic ripple loss rate $\Gamma_{ST}^{\left(
 0\right)  }\left(  \psi\right)  $ is given by
 \begin{align}
-\Gamma_{ST,l+1/2}^{\left(  0\right)  }  & =2\pi p_{i_{c}}^{2}\sum
+\Gamma_{ST,l+1/2}^{\left(  0\right)  }  &  =2\pi p_{i_{c}}^{2}\sum
 _{j=0}^{n_{\xi_{0}}-1}\lambda^{l+1/2,j+1/2}\left(  1-H\left(  \left|
 \xi_{0,j+1/2}\right|  -\xi_{0ST,l+1/2}\right)  \right)  S_{p,l+1/2,i_{c}%
 ,j+1/2}^{\left(  0\right)  }\Delta\xi_{0,j+1/2}\nonumber\\
-& +4\pi\lambda^{l+1/2,j_{ST}}\sqrt{1-\xi_{0ST,j}^{2}}\sum_{i=0}^{n_{p}%
+&  +4\pi\lambda^{l+1/2,j_{ST}}\sqrt{1-\xi_{0ST,j}^{2}}\sum_{i=0}^{n_{p}%
 -1}p_{i+1/2}H\left(  p_{i+1/2}-p_{i_{c}+1/2}\right)  S_{\xi_{0}%
 ,l+1/2,i+1/2,j_{ST}}^{\left(  0\right)  }\Delta p_{i+1/2}%
 \end{align}
 and the second formulation given in Sec.\ref{moments} is
 \begin{align}
-\Gamma_{ST,l+1/2}^{\left(  0\right)  }  & =2\pi\sum_{i=0}^{n_{p}-1}\sum
+\Gamma_{ST,l+1/2}^{\left(  0\right)  }  &  =2\pi\sum_{i=0}^{n_{p}-1}\sum
 _{j=0}^{n_{\xi_{0}}-1}\left(  1-H\left(  \left|  \xi_{0,j+1/2}\right|
 -\xi_{0ST,l+1/2}\right)  \right)  H\left(  p_{i+1/2}-p_{i_{c}+1/2}\right)
 \nonumber\\
-& \times\nu_{d_{ST,l+1/2,i+1/2,j+1/2}}f_{0,l+1/2,i+1/2,j+1/2}^{(0)}\Delta
+&  \times\nu_{d_{ST,l+1/2,i+1/2,j+1/2}}f_{0,l+1/2,i+1/2,j+1/2}^{(0)}\Delta
 \xi_{0,j+1/2}\Delta p_{i+1/2}%
 \end{align}
 where $i_{c}$ is the index number that corresponds to the detrapping threshold
@@ -212,7 +228,7 @@ strongly oscillate between $-1$ and $+1$, as their order $m$ increases, it is
 not possible to evaluate accurately integrals of the type
 \begin{equation}
 h^{\left(  m\right)  }=\int_{-1}^{+1}h\left(  x\right)  P_{m}\left(  x\right)
-dx\label{projLegendre}%
+dx \label{projLegendre}%
 \end{equation}
 by standard integration techniques, like trapezoidal or Simpson rules. The
 only possibility is to replace integral (\ref{projLegendre}) by a discrete
