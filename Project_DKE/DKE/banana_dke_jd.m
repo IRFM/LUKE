@@ -148,10 +148,12 @@ xyalpha1b = ((xyB1min.^2 - xyY1) - xydelta1)./(xyB1min.^2 + xyB1max.^2 - 2*xyY1)
 xyalpha2a = ((xyB2min.^2 - xyY2) + xydelta2)./(xyB2min.^2 + xyB2max.^2 - 2*xyY2);
 xyalpha2b = ((xyB2min.^2 - xyY2) - xydelta2)./(xyB2min.^2 + xyB2max.^2 - 2*xyY2);
 %
-xymask1a = xyalpha1a >= 0 & xyalpha1a <= 1;
-xymask1b = xyalpha1b >= 0 & xyalpha1b <= 1;
-xymask2a = xyalpha2a >= 0 & xyalpha2a <= 1;
-xymask2b = xyalpha2b >= 0 & xyalpha2b <= 1;
+tol = 1e-5;
+%
+xymask1a = xyalpha1a >= -tol & xyalpha1a <= 1+tol;
+xymask1b = xyalpha1b >= -tol & xyalpha1b <= 1+tol;
+xymask2a = xyalpha2a >= -tol & xyalpha2a <= 1+tol;
+xymask2b = xyalpha2b >= -tol & xyalpha2b <= 1+tol;
 %
 xymaskid1a = (xyBb == xyB1min);
 xymaskid1b = (xyBb == xyB1max);
