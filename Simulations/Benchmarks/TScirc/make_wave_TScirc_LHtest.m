@@ -121,8 +121,8 @@ end
 syvparmin_lh_loc = syvparmin_lh./syrbetath_lh;%Local Normalization (when norm_ref = 1)
 syvparmax_lh_loc = syvparmax_lh./syrbetath_lh;%Local Normalization (when norm_ref = 1)
 %
-syNparmin_lh(:,ytest_maskvpar_lh) = 1./syvparmax_lh_loc(:,ytest_maskvpar_lh)./sybetath_loc;%Conversion from vpar representation to Npar one (if yvparmax_lh not a NaN)
-syNparmax_lh(:,ytest_maskvpar_lh) = 1./syvparmin_lh_loc(:,ytest_maskvpar_lh)./sybetath_loc;%Conversion from vpar representation to Npar one (if yvparmin_lh not a NaN)
+syNparmin_lh(:,ytest_maskvpar_lh) = 1./syvparmax_lh_loc(:,ytest_maskvpar_lh)./sybetath_loc(:,ytest_maskvpar_lh);%Conversion from vpar representation to Npar one (if yvparmax_lh not a NaN)
+syNparmax_lh(:,ytest_maskvpar_lh) = 1./syvparmin_lh_loc(:,ytest_maskvpar_lh)./sybetath_loc(:,ytest_maskvpar_lh);%Conversion from vpar representation to Npar one (if yvparmin_lh not a NaN)
 ytest_maskNpars_lh = logical(ytest_maskNpars_lh + ytest_maskvpar_lh);
 %
 syNpar_lh(:,ytest_maskNpars_lh) = (syNparmax_lh(:,ytest_maskvpar_lh) + syNparmin_lh(:,ytest_maskvpar_lh))/2;
