@@ -1,498 +1,495 @@
+
 \subsubsection{Transit or Bounce Time}
 
 \paragraph{Normalized Expression}
 
-The transit, or bounce time, is defined as the time for a passing particle to
-complete a full orbit in the poloidal plane, and for a trapped particle to
-complete half a bounce period. Note that this is possible only in the
+The transit, or bounce time, is defined as the time for a passing particle
+to complete a full orbit in the poloidal plane, and for a trapped particle
+to complete half a bounce period. Note that this is possible only in the
 approximation of zero banana width. Otherwise, the bounce motion would be no
 longer symmetric in the forth and back motions, and both would need to be
-acounted for. We define then
-\begin{align}
-\tau_{b}\left(  \psi\right)   & =\int_{s_{\min}}^{s_{\max}}\frac{ds}{\left|
-v_{s}\right|  }\\
-& =\int_{s_{\min}}^{s_{\max}}\frac{ds}{\left|  v_{\Vert}\right|  }\frac{B}{
-B_{P}}%
-\end{align}
+accounted for. We define then 
+\begin{equation}
+\tau _{b}\left( \psi \right) =\int_{s_{\min }}^{s_{\max }}\frac{ds}{\left|
+v_{s}\right| }=\int_{s_{\min }}^{s_{\max }}\frac{ds}{\left| v_{\Vert
+}\right| }\frac{B}{B_{P}}
+\end{equation}
 where $v_{s}$ is the guiding center velocity along the poloidal field lines,
-and $v_{\Vert}$ is its velocity parallel to the magnetic field. $B$ is the
+and $v_{\Vert }$ is its velocity parallel to the magnetic field. $B$ is the
 magnitude of the magnetic field, while $B_{P}$ is the magnitude of its
-poloidal component. The limits $s_{\min}$ and $s_{\max}$ are defined in
-(\ref{bmax}) for passing electrons, and are the positions, along the field
-lines, of turning points for trapped electrons.
+poloidal component as shown in Fig. \ref{figvpar}. The limits $s_{\min }$
+and $s_{\max }$ are defined in (\ref{bmax}) for passing electrons, and are
+the positions, along the field lines, of turning points for trapped
+electrons.
+
+\fig{figures/vpar.eps}{Guiding center velocity definition}{figvpar}{7cm}
 
 The differential arc length $ds$ along the poloidal field line is generally
-expressed in curvilinear coordinates $\left(  u^{1},u^{2},u^{3}\right)  $ as
-(\ref{dl})
+expressed in curvilinear coordinates $\left( u^{1},u^{2},u^{3}\right) $ as (%
+\ref{dl}) 
 \begin{equation}
-dl=\sqrt{g_{ij}du^{i}du^{j}}\label{dl2}%
+ds=\sqrt{g_{ij}du^{i}du^{j}}  \label{dl2}
 \end{equation}
-where the $g_{ij}$ are the metric coefficients, defined in (\ref{met}). In the
-$\left(  \psi,\theta,\phi\right)  $ coordinates, the variations $d\psi$ and
-$d\phi$ are essentially zero along the poloidal field line. As a consequence,
-(\ref{dl2}) becomes
+where the $g_{ij}$ are the metric coefficients, defined in (\ref{met}). In
+the $\left( \psi ,\theta ,\phi \right) $ coordinates, the variations $d\psi $
+and $d\phi $ are essentially zero along the poloidal field line. As a
+consequence, (\ref{dl2}) becomes 
 \begin{equation}
-dl=\sqrt{g_{22}}d\theta
-\end{equation}
-
-The velocity and momentum are related through the relativistic factor
-$\gamma\left(  p\right)  $.
-\begin{equation}
-v=\frac{p}{\gamma m}%
-\end{equation}
-with
-\begin{equation}
-\gamma\left(  p\right)  =\sqrt{1+\frac{p^{2}}{m^{2}c^{2}}}%
+ds=\sqrt{g_{22}}d\theta
 \end{equation}
 
-Therefore, we have
+The velocity and momentum are related through the relativistic factor $%
+\gamma \left( p\right) $ introduced in Sec. \ref{NormMomentum}, and
+therefore, we have 
 \begin{equation}
-\frac{v_{\Vert}}{v}=\frac{p_{\Vert}}{p}=\xi
+\frac{v_{\Vert }}{v}\simeq \frac{p_{\Vert }}{p}=\xi 
 \end{equation}
-where the pitch-angle cosine $\xi$ was defined in (\ref{pxidef})
+in the weak relativistic regime of tokamak plasmas, where the pitch-angle
+cosine $\xi $ is defined in (\ref{pxidef})
 
-We get
+We get 
 \begin{equation}
-\tau_{b}\left(  \psi\right)  =\frac{2\pi}{v\left|  \xi_{0}\right|  }%
-\int_{\theta_{\min}}^{\theta_{\max}}\frac{d\theta}{2\pi}\sqrt{g_{22}}\frac
-{\xi_{0}}{\xi}\frac{B}{B_{P}}%
+\tau _{b}\left( \psi \right) =\frac{2\pi }{v\left| \xi _{0}\right| }%
+\int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }\sqrt{g_{22}}%
+\frac{\xi _{0}}{\xi }\frac{B}{B_{P}}
 \end{equation}
-where $\xi_{0}$ is the pitch angle cosine at the position $\theta_{0}$ of
-minimum $B$-field
+where $\xi _{0}$ is the pitch angle cosine at the position $\theta _{0}$ of
+minimum $B$-field 
 \begin{equation}
-\theta_{0}\equiv\theta\left(  B=B_{0}\left(  \psi\right)  \right)
+\theta _{0}\equiv \theta \left( B=B_{0}\left( \psi \right) \right)
+\label{theta0ref}
 \end{equation}
-and the limits$\ \theta_{\min}$ and $\theta_{\max}$ will be calculated in the
-next subsection.
+and the limits$\ \theta _{\min }$ and $\theta _{\max }$ will be calculated
+in the next subsection.
 
-The bounce time can be normalized as such:
+The bounce time can be normalized as such: 
 \begin{equation}
-\tau_{b}\left(  \psi,\xi_{0}\right)  =\frac{2\pi R_{p}\widetilde{q}\left(
-\psi\right)  }{v\left|  \xi_{0}\right|  }\lambda\left(  \psi,\xi_{0}\right)
+\tau_{b}\left( \psi,\xi_{0}\right) =\frac{2\pi R_{p}\widetilde{q}\left(
+\psi\right) }{v\left| \xi_{0}\right| }\lambda\left( \psi,\xi_{0}\right)
 \end{equation}
-with
+with 
 \begin{equation}
-\lambda\left(  \psi,\xi_{0}\right)  =\frac{1}{\widetilde{q}\left(
-\psi\right)  }\int_{\theta_{\min}}^{\theta_{\max}}\frac{d\theta}{2\pi}%
-\frac{\sqrt{g_{22}}}{R_{p}}\frac{\xi_{0}}{\xi}\frac{B}{B_{P}}\label{lambda0}%
+\lambda\left( \psi,\xi_{0}\right) =\frac{1}{\widetilde{q}\left( \psi\right) }%
+\int_{\theta_{\min}}^{\theta_{\max}}\frac{d\theta}{2\pi}\frac{\sqrt{g_{22}}}{%
+R_{p}}\frac{\xi_{0}}{\xi}\frac{B}{B_{P}}  \label{lambda0}
 \end{equation}
-and
+and 
 \begin{equation}
-\widetilde{q}\left(  \psi\right)  \equiv\int_{0}^{2\pi}\frac{d\theta}{2\pi
-}\frac{\sqrt{g_{22}}}{R_{p}}\frac{B}{B_{P}}%
+\widetilde{q}\left( \psi\right) \equiv\int_{0}^{2\pi}\frac{d\theta}{2\pi }%
+\frac{\sqrt{g_{22}}}{R_{p}}\frac{B}{B_{P}}
 \end{equation}
 
 The bounce time is normalized to the transit time of particles with parallel
-momentum only, such that $\lambda\left(  \psi,\pm1\right)  =1$.
+momentum only, such that $\lambda\left( \psi,\pm1\right) =1$.
 
 The covariant metric element $g_{22}$ is given by (\ref{rel1})-(\ref{met}),
-which is in the $\left(  \psi,\theta,\phi\right)  $ system becomes
-(\ref{gijpsitheta})
-\[
-g_{22}=\left|  J\nabla\psi\times\nabla\phi\right|  ^{2}=\frac{r}{\left|
-\widehat{\psi}\cdot\widehat{r}\right|  }
-\]
-
-Consequently, the normalized bounce time takes the form
+which is in the $\left( \psi ,\theta ,\phi \right) $ system becomes (\ref
+{gijpsitheta}) 
 \begin{equation}
-\lambda\left(  \psi,\xi_{0}\right)  =\frac{1}{\widetilde{q}\left(
-\psi\right)  }\int_{\theta_{\min}}^{\theta_{\max}}\frac{d\theta}{2\pi}\frac
-{1}{\left|  \widehat{\psi}\cdot\widehat{r}\right|  }\frac{r}{R_{p}}\frac
-{B}{B_{P}}\frac{\xi_{0}}{\xi}\label{lambda}%
+g_{22}=\left| J\nabla \psi \times \nabla \phi \right| ^{2}=\frac{r}{\left| 
+\widehat{\psi }\cdot \widehat{r}\right| }  \label{g22}
 \end{equation}
-with
+
+Consequently, the normalized bounce time takes the form 
 \begin{equation}
-\widetilde{q}\left(  \psi\right)  =\int_{0}^{2\pi}\frac{d\theta}{2\pi}\frac
-{1}{\left|  \widehat{\psi}\cdot\widehat{r}\right|  }\frac{r}{R_{p}}\frac
-{B}{B_{P}}\label{qtilde}%
+\lambda\left( \psi,\xi_{0}\right) =\frac{1}{\widetilde{q}\left( \psi\right) }%
+\int_{\theta_{\min}}^{\theta_{\max}}\frac{d\theta}{2\pi}\frac {1}{\left| 
+\widehat{\psi}\cdot\widehat{r}\right| }\frac{r}{R_{p}}\frac {B}{B_{P}}\frac{%
+\xi_{0}}{\xi}  \label{lambda}
+\end{equation}
+with 
+\begin{equation}
+\widetilde{q}\left( \psi\right) =\int_{0}^{2\pi}\frac{d\theta}{2\pi}\frac
+{1}{\left| \widehat{\psi}\cdot\widehat{r}\right| }\frac{r}{R_{p}}\frac
+{B}{B_{P}}  \label{qtilde}
 \end{equation}
 
 \paragraph{Particle Motion in the Magnetic Field}
 
 The particle motion along the magnetic field lines exhibits one constant of
-the motion, the energy (or the total momentum), and an adiabatic invariant,
-the magnetic moment. They are given by the equations
+the motion, the energy (or the total momentum $p$), and an adiabatic
+invariant, the magnetic moment $\mu $. They are given by the equations 
+\begin{equation}
+p^{2}=p_{\bot }^{2}+p_{\Vert }^{2}
+\end{equation}
+\begin{equation}
+\mu =\frac{p_{\bot }^{2}}{2mB}
+\end{equation}
+such that, as a function of the moment component $\left( p_{\Vert 0},p_{\bot
+0}\right) $ at the location $\theta _{0}$ of minimum $B$-field, we have 
 \begin{align}
-p^{2}  & =p_{\bot}^{2}+p_{\Vert}^{2}\\
-\mu & =\frac{p_{\bot}^{2}}{2mB}\nonumber
-\end{align}
-such that, as a function of the moment component $\left(  p_{\Vert0},p_{\bot
-0}\right)  $ at the location $\theta_{0}$ of minimum $B$-field, we have
-\begin{align}
-p_{\bot}^{2}+p_{\Vert}^{2}  & =p_{\bot0}^{2}+p_{\Vert0}^{2}\label{mom}\\
-\frac{p_{\bot}^{2}}{B\left(  \psi,\theta\right)  }  & =\frac{p_{\bot0}^{2}%
-}{B_{0}\left(  \psi\right)  }\label{mhu}%
-\end{align}
-
-Using the transformation (\ref{pxi}-\ref{pparpperp}) from $\left(  p_{\Vert
-},p_{\bot}\right)  $ to $\left(  p,\xi\right)  $, the system (\ref{mom}%
--\ref{mhu}) becomes
-\begin{align}
-p^{2}  & =p_{0}^{2}\\
-\frac{1-\xi^{2}}{B\left(  \psi,\theta\right)  }  & =\frac{1-\xi_{0}^{2}}%
-{B_{0}\left(  \psi\right)  }\nonumber
+p_{\bot }^{2}+p_{\Vert }^{2}& =p_{\bot 0}^{2}+p_{\Vert 0}^{2}  \label{mom} \\
+\frac{p_{\bot }^{2}}{B\left( \psi ,\theta \right) }& =\frac{p_{\bot 0}^{2}}{%
+B_{0}\left( \psi \right) }  \label{mhu}
 \end{align}
 
-We get an expression for $\xi$ as a function of $\xi_{0}$:
+Using the transformation (\ref{pxi}-\ref{pparpperp}) from $\left( p_{\Vert
+},p_{\bot }\right) $ to $\left( p,\xi \right) $, the system (\ref{mom}-\ref
+{mhu}) becomes 
+\begin{align}
+p^{2}& =p_{0}^{2} \\
+\frac{1-\xi ^{2}}{B\left( \psi ,\theta \right) }& =\frac{1-\xi _{0}^{2}}{%
+B_{0}\left( \psi \right) }
+\end{align}
+
+We get an expression for $\xi $ as a function of $\xi _{0}$: 
 \begin{equation}
-\xi\left(  \psi,\theta,\xi_{0}\right)  =\text{sign}\left(  \xi_{0}\right)
-\sqrt{1-\Psi\left(  \psi,\theta\right)  \left(  1-\xi_{0}^{2}\right)
-}\label{xi}%
+\xi \left( \psi ,\theta ,\xi _{0}\right) =\sigma \sqrt{1-\Psi \left( \psi
+,\theta \right) \left( 1-\xi _{0}^{2}\right) }  \label{xi}
 \end{equation}
-where we define the ratio
+where $\sigma =$ $sign\left( \xi _{0}\right) =$ $sign\left( v_{\Vert
+}\right) ,$ and $\Psi \left( \psi ,\theta \right) $ is the ratio of the
+total magnetic field $B$ to its minimum value $B_{0}$%
 \begin{equation}
-\Psi\left(  \psi,\theta\right)  \equiv\frac{B\left(  \psi,\theta\right)
-}{B_{0}\left(  \psi\right)  }\label{Psidef}%
+\Psi \left( \psi ,\theta \right) \equiv \frac{B\left( \psi ,\theta \right) }{%
+B_{0}\left( \psi \right) }  \label{Psidef}
 \end{equation}
 
-The trapping condition is given by $\left|  \xi_{0}\right|  <\xi_{0T}\left(
-\psi\right)  $ , where $\xi_{0T}\left(  \psi\right)  $ is the pitch angle,
-defined at the minimum $B_{0}\left(  \psi\right)  $ on a given flux-surface,
-such that the parallel velocity of the particle vanishes at the maximum
-$B_{\max}\left(  \psi\right)  $. An expression for $\xi_{0T}\left(
-\psi\right)  $ can then be obtained from (\ref{xi}): setting $\xi\left(
-\xi_{0T},B=B_{\max}\left(  \psi\right)  \right)  =0$, we get
+The trapping condition is given by $\left| \xi_{0}\right| <\xi_{0T}\left(
+\psi\right) $ , where $\xi_{0T}\left( \psi\right) $ is the pitch angle,
+defined at the minimum $B_{0}\left( \psi\right) $ on a given flux-surface,
+such that the parallel velocity of the particle vanishes at the maximum $%
+B_{\max}\left( \psi\right) $. An expression for $\xi_{0T}\left( \psi\right) $
+can then be obtained from (\ref{xi}): setting $\xi\left(
+\xi_{0T},B=B_{\max}\left( \psi\right) \right) =0$, we get 
 \begin{equation}
-\xi_{0T}^{2}\left(  \psi\right)  =1-\frac{B_{0}\left(  \psi\right)  }{B_{\max
-}\left(  \psi\right)  }\label{xi0t2}%
+\xi_{0T}^{2}\left( \psi\right) =1-\frac{B_{0}\left( \psi\right) }{B_{\max
+}\left( \psi\right) }  \label{xi0t2}
 \end{equation}
 
-The turning points are
+The turning points are 
 \begin{equation}
-\theta_{\min}\left(  \psi,\xi_{0}\right)  =\left|
-\begin{array}
-[c]{cc}%
--\pi & \text{for passing particles}\\
-\theta_{T\min} & \text{for trapped particles}%
-\end{array}
-\right.
-\end{equation}%
-\begin{equation}
-\theta_{\max}\left(  \psi,\xi_{0}\right)  =\left|
-\begin{array}
-[c]{cc}%
-\pi & \text{for passing particles}\\
-\theta_{T\max} & \text{for trapped particles}%
+\theta_{\min}\left( \psi,\xi_{0}\right) =\left| 
+\begin{array}{cc}
+-\pi & \text{for passing particles} \\ 
+\theta_{T\min} & \text{for trapped particles}
 \end{array}
 \right.
 \end{equation}
-
-We can determine the turning angles $\theta_{T\min}\left(  \psi,\xi
-_{0}\right)  $ and $\theta_{T\max}\left(  \psi,\xi_{0}\right)  $ as the
-position where $\xi\left(  \psi,\theta,\xi_{0}\right)  =0$. At this position,
-we have $B=B_{b}\left(  \psi,\xi_{0}\right)  $, where $B_{b}\left(  \psi
-,\xi_{0}\right)  $ is then given by (\ref{xi})
 \begin{equation}
-B_{b}\left(  \psi,\xi_{0}\right)  =\frac{B_{0}\left(  \psi\right)  }{1-\xi
-_{0}^{2}}%
+\theta_{\max}\left( \psi,\xi_{0}\right) =\left| 
+\begin{array}{cc}
+\pi & \text{for passing particles} \\ 
+\theta_{T\max} & \text{for trapped particles}
+\end{array}
+\right.
 \end{equation}
-so that
-\begin{align}
-\theta_{T\min}\left(  \psi,\xi_{0}\right)    & =\theta\left(  B=B_{b}\left|
-\theta<\theta_{0}\right.  \right)  \;[2\pi]\label{thetamin}\\
-\theta_{T\max}\left(  \psi,\xi_{0}\right)    & =\theta\left(  B=B_{b}\left|
-\theta>\theta_{0}\right.  \right)  \;[2\pi]\nonumber
-\end{align}
 
-\paragraph{Calculation of $\lambda\left(  \psi,\xi_{0}\right)  $ From the
+We can determine the turning angles $\theta _{T\min }\left( \psi ,\xi
+_{0}\right) $ and $\theta _{T\max }\left( \psi ,\xi _{0}\right) $ as the
+position where $\xi \left( \psi ,\theta ,\xi _{0}\right) =0$. At this
+position, we have $B=B_{b}\left( \psi ,\xi _{0}\right) $, where $B_{b}\left(
+\psi ,\xi _{0}\right) $ is then given by (\ref{xi}) 
+\begin{equation}
+B_{b}\left( \psi ,\xi _{0}\right) =\frac{B_{0}\left( \psi \right) }{1-\xi
+_{0}^{2}}
+\end{equation}
+so that 
+\begin{align}
+\theta _{T\min }\left( \psi ,\xi _{0}\right) & =\theta \left( B=B_{b}\left|
+\theta <\theta _{0}\right. \right) \;[2\pi ]  \label{thetamin} \\
+\theta _{T\max }\left( \psi ,\xi _{0}\right) & =\theta \left( B=B_{b}\left|
+\theta >\theta _{0}\right. \right) \;[2\pi ]  \label{thetamax}
+\end{align}
+where $\theta _{0}$ is given by (\ref{theta0ref}).
+
+\paragraph{Calculation of $\lambda\left( \psi,\xi_{0}\right) $ From the
 Output Data of Equilibrium Codes}
 
-The numerical calculation of $\lambda\left(  \psi,\xi_{0}\right)  $ can be
-carried from the output of equilibrium codes such as HELENA. These data are
-assumed to be the parametrization of the flux-surfaces $R\left(  \psi
-,\theta\right)  $ and $Z\left(  \psi,\theta\right)  $, and the three
-components of the magnetic field $B_{R}\left(  \psi,\theta\right)  $,
-$B_{Z}\left(  \psi,\theta\right)  $ and $B_{\phi}\left(  \psi,\theta\right)
+The numerical calculation of $\lambda \left( \psi ,\xi _{0}\right) $ can be
+carried from the output of any magnetic equilibrium code. In the kinetic
+code here considered, we use HELENA for magnetic flux surface calculations 
+\cite{huy91}, since it is used in the the CRONOS tokamak simulation package 
+\cite{bas03}.
+
+Data are assumed to be the parametrization of the flux-surfaces $R\left(
+\psi ,\theta \right) $ and $Z\left( \psi ,\theta \right) $, and the three
+components of the magnetic field $B_{R}\left( \psi ,\theta \right) $, $%
+B_{Z}\left( \psi ,\theta \right) $ and $B_{\phi }\left( \psi ,\theta \right) 
 $. From these components we derive directly the toroidal and poloidal
-components of the field, as well as the total field:
+components of the field, as well as the total field: 
 \begin{align}
-B_{T}\left(  \psi,\theta\right)    & =\left|  B_{\phi}\left(  \psi
-,\theta\right)  \right|  \nonumber\\
-B_{P}\left(  \psi,\theta\right)    & =\sqrt{B_{R}^{2}\left(  \psi
-,\theta\right)  +B_{Z}^{2}\left(  \psi,\theta\right)  }\nonumber\\
-B\left(  \psi,\theta\right)    & =\sqrt{B_{T}^{2}\left(  \psi,\theta\right)
-+B_{P}^{2}\left(  \psi,\theta\right)  }\label{Btot}%
+B_{T}\left( \psi ,\theta \right) & =\left| B_{\phi }\left( \psi ,\theta
+\right) \right|  \nonumber \\
+B_{P}\left( \psi ,\theta \right) & =\sqrt{B_{R}^{2}\left( \psi ,\theta
+\right) +B_{Z}^{2}\left( \psi ,\theta \right) }  \nonumber \\
+B\left( \psi ,\theta \right) & =\sqrt{B_{T}^{2}\left( \psi ,\theta \right)
++B_{P}^{2}\left( \psi ,\theta \right) }  \label{Btot}
 \end{align}
-and also%
+and also 
 \begin{align}
-R_{p}  & =R\left(  0,\theta\right)  \\
-Z_{p}  & =Z\left(  0,\theta\right)
+R_{p}& =R\left( 0,\theta \right) \\
+Z_{p}& =Z\left( 0,\theta \right)
 \end{align}
 
-We also have an expression for $r$
+We also have an expression for $r$ 
 \begin{equation}
-r\left(  \psi,\theta\right)  =\sqrt{\left(  R\left(  \psi,\theta\right)
--R_{p}\right)  ^{2}+\left(  Z\left(  \psi,\theta\right)  -Z_{p}\right)  ^{2}%
-}\label{r}%
+r\left( \psi ,\theta \right) =\sqrt{\left( R\left( \psi ,\theta \right)
+-R_{p}\right) ^{2}+\left( Z\left( \psi ,\theta \right) -Z_{p}\right) ^{2}}
+\label{r}
 \end{equation}
-and, using
+and, using relation 
 \begin{align}
-\widehat{r}  & =\left(  \widehat{r}\cdot\widehat{R}\right)  \widehat
-{R}+\left(  \widehat{r}\cdot\widehat{Z}\right)  \widehat{Z}\nonumber\\
-& =\left(  \frac{R\left(  \psi,\theta\right)  -R_{p}}{r}\right)  \widehat
-{R}+\left(  \frac{Z\left(  \psi,\theta\right)  -Z_{p}}{r}\right)  \widehat{Z}%
+\widehat{r}& =\left( \widehat{r}\cdot \widehat{R}\right) \widehat{R}+\left( 
+\widehat{r}\cdot \widehat{Z}\right) \widehat{Z}  \nonumber \\
+& =\left( \frac{R\left( \psi ,\theta \right) -R_{p}}{r}\right) \widehat{R}%
++\left( \frac{Z\left( \psi ,\theta \right) -Z_{p}}{r}\right) \widehat{Z}
 \end{align}
-we get an expression for the scalar product
+that can be easily deduced from vector relation in Fig. \ref{figRZphi}, we
+get an expression for the scalar product 
 \begin{equation}
-\widehat{\psi}\cdot\widehat{r}=\frac{\left(  \nabla\psi\cdot\widehat
-{R}\right)  \left(  R\left(  \psi,\theta\right)  -R_{p}\right)  +\left(
-\nabla\psi\cdot\widehat{Z}\right)  \left(  Z\left(  \psi,\theta\right)
--Z_{p}\right)  }{r\left|  \nabla\psi\right|  }\label{psidotr}%
+\widehat{\psi }\cdot \widehat{r}=\frac{\left( \nabla \psi \cdot \widehat{R}%
+\right) \left( R\left( \psi ,\theta \right) -R_{p}\right) +\left( \nabla
+\psi \cdot \widehat{Z}\right) \left( Z\left( \psi ,\theta \right)
+-Z_{p}\right) }{r\left| \nabla \psi \right| }  \label{psidotr}
 \end{equation}
 
 In a toroidal axisymmetric geometry, the magnetic field can be expressed
-generally as
+generally as 
 \begin{equation}
-\mathbf{B}=I\left(  \psi\right)  \nabla\phi+\nabla\psi\times\nabla
-\phi\label{B}%
+\mathbf{B}=I\left( \psi \right) \nabla \phi +\nabla \psi \times \nabla \phi
+\label{B}
 \end{equation}
-so that
+so that 
 \begin{align}
-B_{T}  & =\left|  I\left(  \psi\right)  \right|  \left|  \nabla\phi\right|
-=\frac{\left|  I\left(  \psi\right)  \right|  }{R}\\
-B_{P}  & =\left|  \nabla\psi\right|  \left|  \nabla\phi\right|  =\frac{\left|
-\nabla\psi\right|  }{R}\nonumber
+B_{T}& =\left| I\left( \psi \right) \right| \left| \nabla \phi \right| =%
+\frac{\left| I\left( \psi \right) \right| }{R} \\
+B_{P}& =\left| \nabla \psi \right| \left| \nabla \phi \right| =\frac{\left|
+\nabla \psi \right| }{R}
 \end{align}
 
-We also have
+We also have 
 \begin{align}
-\mathbf{B}_{T}  & =I\left(  \psi\right)  \nabla\phi=B_{\phi}\widehat{\phi
-}\label{Bp}\\
-\mathbf{B}_{P}  & =\nabla\psi\times\nabla\phi=-B_{P}\widehat{s}\nonumber
+\mathbf{B}_{T}& =I\left( \psi \right) \nabla \phi =B_{\phi }\widehat{\phi }
+\label{Bt} \\
+\mathbf{B}_{P}& =\nabla \psi \times \nabla \phi =-B_{P}\widehat{s}
+\label{Bp}
 \end{align}
-and therefore
+and therefore 
+\begin{equation}
+\nabla \phi \times \mathbf{B}_{P}=\nabla \phi \times \left( \nabla \psi
+\times \nabla \phi \right) =\left| \nabla \phi \right| ^{2}\nabla \psi
+\end{equation}
+so that 
+\begin{equation}
+\nabla \psi =\frac{\nabla \phi \times \mathbf{B}_{P}}{\left| \nabla \phi
+\right| ^{2}}=R\widehat{\phi }\times \mathbf{B}_{P}
+\end{equation}
+and we have the projections 
 \begin{align}
-\nabla\phi\times\mathbf{B}_{P}  & =\nabla\phi\times\left(  \nabla\psi
-\times\nabla\phi\right) \nonumber\\
-& =\left|  \nabla\phi\right|  ^{2}\nabla\psi
-\end{align}
-so that
-\begin{equation}
-\nabla\psi=\frac{\nabla\phi\times\mathbf{B}_{P}}{\left|  \nabla\phi\right|
-^{2}}=R\widehat{\phi}\times\mathbf{B}_{P}%
-\end{equation}
-and we have the projections
-\begin{align}
-\left(  \nabla\psi\cdot\widehat{R}\right)   & =R\widehat{R}\cdot\widehat{
-\phi}\times\mathbf{B}_{P}=-RB_{Z}\\
-\left(  \nabla\psi\cdot\widehat{Z}\right)   & =R\widehat{Z}\cdot\widehat{
-\phi}\times\mathbf{B}_{P}=RB_{R}\nonumber
+\left( \nabla \psi \cdot \widehat{R}\right) & =R\widehat{R}\cdot \widehat{
+\phi }\times \mathbf{B}_{P}=-RB_{Z} \\
+\left( \nabla \psi \cdot \widehat{Z}\right) & =R\widehat{Z}\cdot \widehat{%
+\phi }\times \mathbf{B}_{P}=RB_{R}
 \end{align}
 
-Finally, the expression for the normalized bounce time becomes
+Finally, the expressions for the normalized bounce time $\lambda $ and $%
+\widetilde{q}$ that are used in numerical calculations are 
 \begin{equation}
-\lambda\left(  \psi,\xi_{0}\right)  =\frac{1}{\widetilde{q}\left(
-\psi\right)  }\int_{\theta_{\min}}^{\theta_{\max}}\frac{d\theta}{2\pi}%
-\frac{B\left[  \left(  R-R_{p}\right)  ^{2}+\left(  Z-Z_{p}\right)
-^{2}\right]  }{R_{p}\left|  B_{R}\left(  Z-Z_{p}\right)  -B_{Z}\left(
-R-R_{p}\right)  \right|  }\frac{\xi_{0}}{\xi}\label{lambda1}%
+\lambda \left( \psi ,\xi _{0}\right) =\frac{1}{\widetilde{q}\left( \psi
+\right) }\int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }\frac{%
+B\left[ \left( R-R_{p}\right) ^{2}+\left( Z-Z_{p}\right) ^{2}\right] }{%
+R_{p}\left| B_{R}\left( Z-Z_{p}\right) -B_{Z}\left( R-R_{p}\right) \right| }%
+\frac{\xi _{0}}{\xi }  \label{lambda1}
 \end{equation}
-with
+with 
 \begin{equation}
-\widetilde{q}\left(  \psi\right)  =\int_{0}^{2\pi}\frac{d\theta}{2\pi}%
-\frac{B\left[  \left(  R-R_{p}\right)  ^{2}+\left(  Z-Z_{p}\right)
-^{2}\right]  }{R_{p}\left|  B_{R}\left(  Z-Z_{p}\right)  -B_{Z}\left(
-R-R_{p}\right)  \right|  }%
+\widetilde{q}\left( \psi \right) =\int_{0}^{2\pi }\frac{d\theta }{2\pi }%
+\frac{B\left[ \left( R-R_{p}\right) ^{2}+\left( Z-Z_{p}\right) ^{2}\right] }{
+R_{p}\left| B_{R}\left( Z-Z_{p}\right) -B_{Z}\left( R-R_{p}\right) \right| }
 \end{equation}
-where $R,Z,B_{R},B_{Z}$ and $B$ are functions of $\left(  \psi,\theta\right)
-$, and $\xi$ is a function of $\left(  \psi,\theta,\xi_{0}\right)  $ given by
-(\ref{xi})
+where $R,Z,B_{R},B_{Z}$ and $B$ are functions of $\left( \psi ,\theta
+\right) $, and $\xi $ is a function of $\left( \psi ,\theta ,\xi _{0}\right) 
+$ given by (\ref{xi}).
+
+\paragraph{Safety Factor $q\left( \psi\right) $}
+
+The (averaged) safety factor $q$ is defined in Ref. \cite{cal**} in a
+general way as 
 \begin{equation}
-\xi\left(  \psi,\theta,\xi_{0}\right)  =\text{sign}\left(  \xi_{0}\right)
-\sqrt{1-\frac{B\left(  \psi,\theta\right)  }{B_{0}\left(  \psi\right)
-}\left(  1-\xi_{0}^{2}\right)  }%
-\end{equation}
-
-This will be used to calculate $\lambda$ numerically.
-
-\paragraph{Safety Factor $q\left(  \psi\right)  $}
-
-The (averaged) safety factor is generally defined by [callen 11.5.6]
-\begin{equation}
-q\left(  \psi\right)  =\frac{I\left(  \psi\right)  }{4\pi^{2}}\frac{\delta
-V}{\delta\psi}\left\langle R^{-2}\right\rangle
+q\left( \psi \right) =\frac{I\left( \psi \right) }{4\pi ^{2}}\frac{\delta V}{%
+\delta \psi }\left\langle R^{-2}\right\rangle
 \end{equation}
 where $V$ is the volume enclosed by a flux-surface and $\left\langle
 \;\right\rangle $ denotes the flux-surface average.
 
-It can be expressed as
+It can be expressed as 
 \begin{equation}
-q\left(  \psi\right)  =I\left(  \psi\right)  \int_{0}^{2\pi}\frac{d\theta}{
-2\pi}\int_{0}^{2\pi}\frac{d\phi}{2\pi}\frac{J}{R^{2}}%
+q\left( \psi \right) =I\left( \psi \right) \int_{0}^{2\pi }\frac{d\theta }{%
+2\pi }\int_{0}^{2\pi }\frac{d\phi }{2\pi }\frac{J}{R^{2}}
 \end{equation}
-where the Jacobian $J$ is given by (\ref{jacpsitheta})
+where the Jacobian $J$ is given by (\ref{jacpsitheta}) 
 \begin{align}
-J  & =\left|  \nabla\psi\times\nabla\theta\cdot\nabla\phi\right|
-^{-1}\nonumber\\
-& =\frac{Rr}{\left|  \nabla\psi\right|  \left|  \widehat{\psi}\cdot\widehat{
-r}\right|  }\nonumber\\
-& =\frac{r}{B_{P}}\frac{1}{\left|  \widehat{\psi}\cdot\widehat{r}\right|  }%
+J& =\left| \nabla \psi \times \nabla \theta \cdot \nabla \phi \right| ^{-1} 
+\nonumber \\
+& =\frac{Rr}{\left| \nabla \psi \right| \left| \widehat{\psi }\cdot \widehat{%
+r}\right| }  \nonumber \\
+& =\frac{r}{B_{P}}\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }
 \end{align}
-where we used (\ref{Bp}).
+where (\ref{Bp}) is used
 
-We obtain
+We obtain 
 \begin{equation}
-q\left(  \psi\right)  =I\left(  \psi\right)  \int_{0}^{2\pi}\frac{d\theta}{
-2\pi}\frac{1}{\left|  \widehat{\psi}\cdot\widehat{r}\right|  }\frac{r}{
-B_{P}R^{2}}%
+q\left( \psi\right) =I\left( \psi\right) \int_{0}^{2\pi}\frac{d\theta}{ 2\pi}%
+\frac{1}{\left| \widehat{\psi}\cdot\widehat{r}\right| }\frac{r}{ B_{P}R^{2}}
 \end{equation}
-and, using (\ref{B}), we finally have
+and, using (\ref{B}), we finally have 
 \begin{equation}
-q\left(  \psi\right)  =\int_{0}^{2\pi}\frac{d\theta}{2\pi}\frac{1}{\left|
-\widehat{\psi}\cdot\widehat{r}\right|  }\frac{r}{R}\frac{B_{T}}{B_{P}%
-}\label{qfactor}%
+q\left( \psi\right) =\int_{0}^{2\pi}\frac{d\theta}{2\pi}\frac{1}{\left| 
+\widehat{\psi}\cdot\widehat{r}\right| }\frac{r}{R}\frac{B_{T}}{B_{P}}
+\label{qfactor}
 \end{equation}
 
-The expression of $q\left(  \psi\right)  $ and its relation to $\widetilde
-{q}\left(  \psi\right)  $ in the simplified case of circular concentric
-flux-surfaces will be addressed in Subsection \ref{circonc}.
+The expression of $q\left( \psi \right) $ and its relation to $\widetilde{q}%
+\left( \psi \right) $ in the simplified case of circular concentric
+flux-surfaces will be addressed in sub-section \ref{circonc}.
 
-Using (\ref{r}) and (\ref{psidotr}), we find the expression
+Using (\ref{r}) and (\ref{psidotr}), we find the expression 
 \begin{equation}
-q\left(  \psi\right)  =\int_{0}^{2\pi}\frac{d\theta}{2\pi}\frac{\left[
-\left(  R-R_{p}\right)  ^{2}+\left(  Z-Z_{p}\right)  ^{2}\right]  B_{T}%
-}{R\left|  B_{R}\left(  Z-Z_{p}\right)  -B_{Z}\left(  R-R_{p}\right)  \right|
-}\label{qfactor2}%
+q\left( \psi \right) =\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{\left[
+\left( R-R_{p}\right) ^{2}+\left( Z-Z_{p}\right) ^{2}\right] B_{T}}{R\left|
+B_{R}\left( Z-Z_{p}\right) -B_{Z}\left( R-R_{p}\right) \right| }
+\label{qfactor2}
 \end{equation}
+that is convenient for the numerical evaluation.
 
 \subsubsection{Toroidal Extent of Banana Orbits}
 
 We are interested in calculating the toroidal extent of banana orbits, that
 is, the toroidal angle corresponding to the path done by a trapped particle
-between two turning points. It is given by
+between two turning points. It is given by 
 \begin{equation}
 \Delta\phi=\phi_{\max}-\phi_{\min}=\int_{\phi_{\min}}^{\phi_{\max}}d\phi
 \end{equation}
-and can be expressed as a function of the length element along the path, using
-(\ref{dlphi})
+and can be expressed as a function of the length element along the path,
+using (\ref{dlphi}) 
 \begin{equation}
-\Delta\phi=\int_{l\left(  \phi_{\min}\right)  }^{l\left(  \phi_{\max}\right)
-}dl\left(  \phi\right)  \frac{d\phi}{dl\left(  \phi\right)  }=\int_{l\left(
-\phi_{\min}\right)  }^{l\left(  \phi_{\max}\right)  }\frac{dl\left(
-\phi\right)  }{R}%
+\Delta\phi=\int_{l\left( \phi_{\min}\right) }^{l\left( \phi_{\max}\right)
+}dl\left( \phi\right) \frac{d\phi}{dl\left( \phi\right) }=\int_{l\left(
+\phi_{\min}\right) }^{l\left( \phi_{\max}\right) }\frac{dl\left( \phi\right) 
+}{R}
 \end{equation}
 
-The poloidal and toroidal elements are related through the local angle of the
-magnetic field,
+The poloidal and toroidal elements are related through the local angle of
+the magnetic field, 
 \begin{equation}
-\frac{dl\left(  \phi\right)  }{dl\left(  \theta\right)  }=\frac{B_{T}}{B_{P}}%
+\frac{dl\left( \phi\right) }{dl\left( \theta\right) }=\frac{B_{T}}{B_{P}}
 \end{equation}
-so that
+so that 
 \begin{equation}
-\Delta\phi=\int_{l\left(  \phi_{\min}\right)  }^{l\left(  \phi_{\max}\right)
-}dl\left(  \phi\right)  \frac{d\phi}{dl\left(  \phi\right)  }=\int_{l\left(
-\theta_{\min}\right)  }^{l\left(  \theta_{\max}\right)  }\frac{1}{R}%
-\frac{B_{T}}{B_{P}}dl\left(  \theta\right)
-\end{equation}
-
-Using (\ref{dltheta}), we get
-\begin{equation}
-\Delta\phi=\int_{\theta_{\min}}^{\theta_{\max}}d\theta\;\frac{1}{\left|
-\widehat{\psi}\cdot\widehat{r}\right|  }\frac{r}{R}\frac{B_{T}}{B_{P}}%
+\Delta\phi=\int_{l\left( \phi_{\min}\right) }^{l\left( \phi_{\max}\right)
+}dl\left( \phi\right) \frac{d\phi}{dl\left( \phi\right) }=\int_{l\left(
+\theta_{\min}\right) }^{l\left( \theta_{\max}\right) }\frac{1}{R}\frac{B_{T}%
+}{B_{P}}dl\left( \theta\right)
 \end{equation}
 
-Defining the integral
+Using (\ref{dltheta}), we get 
 \begin{equation}
-q_{T}\left(  \psi,\xi_{0}\right)  =\int_{\theta_{\min}}^{\theta_{\max}}%
-\frac{d\theta}{2\pi}\;\frac{1}{\left|  \widehat{\psi}\cdot\widehat{r} \right|
-}\frac{r}{R}\frac{B_{T}}{B_{P}}\label{qtdef}%
-\end{equation}
-we find that the toroidal extent of banana orbits is
-\begin{equation}
-\frac{\Delta\phi}{2\pi}=q_{T}\left(  \psi,\xi_{0}\right)
+\Delta\phi=\int_{\theta_{\min}}^{\theta_{\max}}d\theta\;\frac{1}{\left| 
+\widehat{\psi}\cdot\widehat{r}\right| }\frac{r}{R}\frac{B_{T}}{B_{P}}
 \end{equation}
 
-Note that at the trapped/passing limit, we have
+Defining the integral 
 \begin{equation}
-\lim_{\xi_{0}\rightarrow\xi_{0T}}\frac{\Delta\phi}{2\pi}=q_{T}\left(  \psi
-,\xi_{0T}\right)  =q\left(  \psi\right)
+q_{T}\left( \psi,\xi_{0}\right) =\int_{\theta_{\min}}^{\theta_{\max}}\frac{%
+d\theta}{2\pi}\;\frac{1}{\left| \widehat{\psi}\cdot\widehat{r} \right| }%
+\frac{r}{R}\frac{B_{T}}{B_{P}}  \label{qtdef}
 \end{equation}
-Therefore, we retrieve the interpretation of the safety factors, which is the
-number of toroidal rotations $\Delta\phi/2\pi$ for one poloidal rotation.
+we find that the toroidal extent of banana orbits is 
+\begin{equation}
+\frac{\Delta\phi}{2\pi}=q_{T}\left( \psi,\xi_{0}\right)
+\end{equation}
+
+Note that at the trapped/passing limit, we have 
+\begin{equation}
+\lim_{\xi_{0}\rightarrow\xi_{0T}}\frac{\Delta\phi}{2\pi}=q_{T}\left( \psi
+,\xi_{0T}\right) =q\left( \psi\right)
+\end{equation}
+Therefore, we retrieve the interpretation of the safety factors, which is
+the number of toroidal rotations $\Delta\phi/2\pi$ for one poloidal rotation.
 
 \subsubsection{Bounce Average}
 
 In order to reduce the dimension of kinetic equations, it is important to
 define an average over the poloidal motion, which anihilates the term that
-accounts for the time evolution of the variations of the distribution function
-along the field lines. The natural average is
+accounts for the time evolution of the variations of the distribution
+function along the field lines. The natural average is 
 \begin{equation}
-\left\{  \mathcal{A}\right\}  =\frac{1}{\tau_{b}}\left[  \frac{1}{2}%
-\sum_{\sigma}\right]  _{T}\int_{s_{\min}}^{s_{\max}}\frac{ds}{\left|
-v_{s}\right|  }\mathcal{A}\label{bav0}%
+\left\{ \mathcal{A}\right\} =\frac{1}{\tau _{b}}\left[ \frac{1}{2}%
+\sum_{\sigma }\right] _{T}\int_{s_{\min }}^{s_{\max }}\frac{ds}{\left|
+v_{s}\right| }\mathcal{A}  \label{bav0}
 \end{equation}
-where $\sigma=$sign$\left(  v_{\Vert}\right)  $ and the sum over $\sigma$
-applies to trapped particles only.
+where the sum over $\sigma $ applies to trapped particles only.
 
-It can be rewritten in terms of the normalized bounce time $\lambda$
-(\ref{lambda0})
+It can be rewritten in terms of the normalized bounce time $\lambda $ using
+expression (\ref{lambda0}) 
 \begin{equation}
-\left\{  \mathcal{A}\right\}  =\frac{1}{\lambda\widetilde{q}}\left[  \frac
-{1}{2}\sum_{\sigma}\right]  _{T}\int_{\theta_{\min}}^{\theta_{\max}}%
-\frac{d\theta}{2\pi}\frac{\sqrt{g_{22}}}{R_{p}}\frac{B}{B_{P}}\frac{\xi_{0}%
-}{\xi}\mathcal{A}\label{bav}%
+\left\{ \mathcal{A}\right\} =\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2%
+}\sum_{\sigma }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{%
+d\theta }{2\pi }\frac{\sqrt{g_{22}}}{R_{p}}\frac{B}{B_{P}}\frac{\xi _{0}}{%
+\xi }\mathcal{A}  \label{bav}
 \end{equation}
-or, expressing the metric coefficient,
+or 
 \begin{equation}
-\left\{  \mathcal{A}\right\}  =\frac{1}{\lambda\widetilde{q}}\left[  \frac
-{1}{2}\sum_{\sigma}\right]  _{T}\int_{\theta_{\min}}^{\theta_{\max}}%
-\frac{d\theta}{2\pi}\frac{1}{\left|  \widehat{\psi}\cdot\widehat{r}\right|
-}\frac{r}{R_{p}}\frac{B}{B_{P}}\frac{\xi_{0}}{\xi}\mathcal{A}\label{bav2}%
+\left\{ \mathcal{A}\right\} =\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2%
+}\sum_{\sigma }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{%
+d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }%
+\frac{r}{R_{p}}\frac{B}{B_{P}}\frac{\xi _{0}}{\xi }\mathcal{A}  \label{bav2}
 \end{equation}
+using relation (\ref{g22}).
 
-Another expression uses the output data from equilibrium codes. Following the
-work in the previous section, we find
+Another expression uses the output data from equilibrium codes. Following
+the work in the previous section, we find 
 \begin{equation}
-\left\{  \mathcal{A}\right\}  =\frac{1}{\lambda\widetilde{q}}\left[  \frac
-{1}{2}\sum_{\sigma}\right]  _{T}\int_{\theta_{\min}}^{\theta_{\max}}%
-\frac{d\theta}{2\pi}\frac{B\left[  \left(  R-R_{p}\right)  ^{2}+\left(
-Z-Z_{p}\right)  ^{2}\right]  }{R_{p}\left|  B_{R}\left(  Z-Z_{p}\right)
--B_{Z}\left(  R-R_{p}\right)  \right|  }\frac{\xi_{0}}{\xi}\mathcal{A}%
+\left\{ \mathcal{A}\right\} =\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2%
+}\sum_{\sigma }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{%
+d\theta }{2\pi }\frac{B\left[ \left( R-R_{p}\right) ^{2}+\left(
+Z-Z_{p}\right) ^{2}\right] }{R_{p}\left| B_{R}\left( Z-Z_{p}\right)
+-B_{Z}\left( R-R_{p}\right) \right| }\frac{\xi _{0}}{\xi }\mathcal{A}
 \end{equation}
-or explicitely
+or explicitely 
 \begin{align}
-\left\{  \mathcal{A}\right\}    & =\left[  \int_{\theta_{\min}}^{\theta_{\max
-}}\frac{d\theta}{2\pi}\frac{B\left[  \left(  R-R_{p}\right)  ^{2}+\left(
-Z-Z_{p}\right)  ^{2}\right]  }{R_{p}\left|  B_{R}\left(  Z-Z_{p}\right)
--B_{Z}\left(  R-R_{p}\right)  \right|  }\frac{\xi_{0}}{\xi}\right]
-^{-1}\times\\
-& \;\left[  \frac{1}{2}\sum_{\sigma}\right]  _{T}\int_{\theta_{\min}}%
-^{\theta_{\max}}\frac{d\theta}{2\pi}\frac{B\left[  \left(  R-R_{p}\right)
-^{2}+\left(  Z-Z_{p}\right)  ^{2}\right]  }{R_{p}\left|  B_{R}\left(
-Z-Z_{p}\right)  -B_{Z}\left(  R-R_{p}\right)  \right|  }\frac{\xi_{0}}{\xi
-}\mathcal{A}%
+\left\{ \mathcal{A}\right\} & =\left[ \int_{\theta _{\min }}^{\theta _{\max
+}}\frac{d\theta }{2\pi }\frac{B\left[ \left( R-R_{p}\right) ^{2}+\left(
+Z-Z_{p}\right) ^{2}\right] }{R_{p}\left| B_{R}\left( Z-Z_{p}\right)
+-B_{Z}\left( R-R_{p}\right) \right| }\frac{\xi _{0}}{\xi }\right] ^{-1}\times
+\nonumber \\
+& \;\left[ \frac{1}{2}\sum_{\sigma }\right] _{T}\int_{\theta _{\min
+}}^{\theta _{\max }}\frac{d\theta }{2\pi }\frac{B\left[ \left(
+R-R_{p}\right) ^{2}+\left( Z-Z_{p}\right) ^{2}\right] }{R_{p}\left|
+B_{R}\left( Z-Z_{p}\right) -B_{Z}\left( R-R_{p}\right) \right| }\frac{\xi
+_{0}}{\xi }\mathcal{A}
 \end{align}
 
 The bounce averaging of momentum-space operators in the kinetic equations
-leads to coefficients with similar structure, denoted $\lambda_{k,l,m}$ and
-$\overline{\lambda}_{k,l,m}$, which we define as
+leads to a set of coefficients that all have a similar structure, denoted $%
+\lambda _{k,l,m}$ and $\overline{\lambda }_{k,l,m}$, which are define as 
 \begin{equation}
-\left\{  \left(  \frac{\xi\left(  \psi,\theta,\xi_{0}\right)  }{\xi_{0}%
-}\right)  ^{k}\Psi^{l}\left(  \psi,\theta\right)  \left(  \frac{R_{0}\left(
-\psi\right)  }{R\left(  \psi,\theta\right)  }\right)  ^{m}\right\}
-=\frac{\lambda_{k,l,m}\left(  \psi,\xi_{0}\right)  }{\lambda\left(  \psi
-,\xi_{0}\right)  }\label{lkm}%
+\left\{ \left( \frac{\xi \left( \psi ,\theta ,\xi _{0}\right) }{\xi _{0}}%
+\right) ^{k}\Psi ^{l}\left( \psi ,\theta \right) \left( \frac{R_{0}\left(
+\psi \right) }{R\left( \psi ,\theta \right) }\right) ^{m}\right\} =\frac{
+\lambda _{k,l,m}\left( \psi ,\xi _{0}\right) }{\lambda \left( \psi ,\xi
+_{0}\right) }  \label{lkm}
 \end{equation}
-and
+and 
 \begin{equation}
-\sigma\left\{  \sigma\left(  \frac{\xi\left(  \psi,\theta,\xi_{0}\right)
-}{\xi_{0}}\right)  ^{k}\Psi^{l}\left(  \psi,\theta\right)  \left(  \frac
-{R_{0}\left(  \psi\right)  }{R\left(  \psi,\theta\right)  }\right)
-^{m}\right\}  =\frac{\overline{\lambda}_{k,l,m}\left(  \psi,\xi_{0}\right)
-}{\lambda\left(  \psi,\xi_{0}\right)  }\label{lkmb}%
+\sigma \left\{ \sigma \left( \frac{\xi \left( \psi ,\theta ,\xi _{0}\right) 
+}{\xi _{0}}\right) ^{k}\Psi ^{l}\left( \psi ,\theta \right) \left( \frac{%
+R_{0}\left( \psi \right) }{R\left( \psi ,\theta \right) }\right)
+^{m}\right\} =\frac{\overline{\lambda }_{k,l,m}\left( \psi ,\xi _{0}\right) 
+}{\lambda \left( \psi ,\xi _{0}\right) }  \label{lkmb}
 \end{equation}
-where%
+where 
 \begin{equation}
-R_{0}\left(  \psi\right)  \equiv R\left(  \psi,\theta_{0}\right)
+R_{0}\left( \psi \right) \equiv R\left( \psi ,\theta _{0}\right)
 \end{equation}
 
-Note that $\lambda_{0,0,0}=\lambda$. In addition, we see that
+Note that by definition, $\lambda _{0,0,0}=\lambda $. In addition,  
 \begin{equation}
-\overline{\lambda}_{k,l,m}=\left|
-\begin{array}
-[c]{ll}%
-\lambda_{k,l,m} & \text{ for passing particles}\\
-0 & \text{ for trapped particles}%
+\overline{\lambda }_{k,l,m}=\left| 
+\begin{array}{ll}
+\lambda _{k,l,m} & \text{ for passing particles} \\ 
+0 & \text{ for trapped particles}
 \end{array}
 \right.
 \end{equation}

@@ -148,9 +148,9 @@ energy.
 
 \subsection{Momentum, velocity, and kinetic energy}
 
-In the calculations, the momentum $p$ in relativistic units $\left(
-m_{e}c\right) $ is normalized to the thermal reference value $p_{th}^{\dag
-}=m_{e}v_{th}^{\dag },$%
+\label{NormMomentum}In the calculations, the momentum $p$ in relativistic
+units $\left( m_{e}c\right) $ is normalized to the thermal reference value $%
+p_{th}^{\dag }=m_{e}v_{th}^{\dag },$%
 \begin{equation}
 \overline{p}=p/p_{th}^{\dag }
 \end{equation}
@@ -204,11 +204,11 @@ Maxwellian electron momentum distribution function $f_{M}\left( \psi
 ,p\right) $ up to first order $\gamma $ correction used in the code is given
 by 
 \begin{equation}
-f_{M}\left( \psi ,p\right) \simeq \frac{n_{e}\left( \psi \right) }{\left[ 2%
-\pi T_{e}\left( \psi \right) \right] ^{3/2}}\exp \left[ -\frac{p^{2}}{\left(
-1+\gamma \right) T_{e}\left( \psi \right) }\right] 
+f_{M}\left( \psi ,p\right) \simeq \frac{n_{e}\left( \psi \right) }{\left[
+2\pi T_{e}\left( \psi \right) \right] ^{3/2}}\exp \left[ -\frac{p^{2}}{%
+\left( 1+\gamma \right) T_{e}\left( \psi \right) }\right]
 \end{equation}
-where $T_{e}\left( \psi \right) $ is expressed in electron rest mass energy $%
+where $T_{e}\left( \psi \right) $ is expressed in electron rest mass energy $
 m_{e}c^{2}$ unit, and providing that $\gamma -1\ll 1.$ Therefore, the
 condition 
 \begin{equation}
@@ -231,25 +231,25 @@ plasmas, where $T_{e}^{\dag }$ never exceeds $20keV.$ In normalized units,
 \begin{equation}
 f_{M}\left( \psi ,p\right) =\alpha \frac{\overline{n}_{e}\left( \psi \right)
 n_{e}^{\dag }}{\left[ 2\pi \overline{T}_{e}\left( \psi \right) T_{e}^{\dag
-}\right] ^{3/2}}\exp \left[ -\frac{\overline{p}^{2}\beta _{th}^{\dag 2}}{
-\left( 1+\gamma \right) T_{e}\left( \psi \right) }\right] 
+}\right] ^{3/2}}\exp \left[ -\frac{\overline{p}^{2}\beta _{th}^{\dag 2}}{%
+\left( 1+\gamma \right) T_{e}\left( \psi \right) }\right]
 \end{equation}
 and since $\beta _{th}^{\dag }=\sqrt{T_{e}^{\dag }/m_{e}c^{2}},$ it turns
 out that 
 \begin{equation}
 f_{M}\left( \psi ,p\right) =\frac{n_{e}^{\dag }}{\beta _{th}^{\dag 3}}%
 \overline{f}_{M}\left( \psi ,p\right) =\frac{n_{e}^{\dag }}{p_{th}^{\dag 3}}%
-\overline{f}_{M}\left( \psi ,p\right) 
+\overline{f}_{M}\left( \psi ,p\right)
 \end{equation}
-where
+where 
 \begin{equation}
 \overline{f}_{M}\left( \psi ,p\right) \approx \alpha \frac{\overline{n}%
 _{e}\left( \psi \right) }{\left[ 2\pi \overline{T}_{e}\left( \psi \right)
 \right] ^{3/2}}\exp \left[ -\frac{\overline{p}^{2}}{\left( 1+\gamma \right) 
-\overline{T}_{e}\left( \psi \right) }\right] 
+\overline{T}_{e}\left( \psi \right) }\right]
 \end{equation}
 
-With this definition one can cross-check that
+With this definition one can cross-check that 
 \begin{equation}
 2\pi \int_{-1}^{+1}d\xi _{0}\int_{0}^{+\infty }p^{2}f_{M}\left( \psi
 ,p\right) dp=2\pi p_{th}^{\dag 3}\frac{n_{e}^{\dag }}{\beta _{th}^{\dag 3}}%
@@ -281,7 +281,7 @@ For the poloidal flux coordinate, the normalized value is
 where $\psi _{a}$ is the value at the plasma edge, corresponding usually to
 the last closed magnetic flux surface, as given by the equilibrium code.
 Usually, it is taken so that $0\leq \overline{\psi }\leq 1$ from the center
-to the plasma edge. For 
+to the plasma edge. For
 
 \subsection{Drift kinetic coefficient}
 
@@ -442,7 +442,7 @@ coefficients. Let
 \mathbf{F}_{\psi }^{\dag *} &=&\nu _{e}^{\dag }a_{p}
 \end{eqnarray}
 the reference diffusion and convection, where $a_{p}$ is the plasma minor
-radius as defined i\ss n Sec.***. The relation is 
+radius as defined i\ss n Sec.***. The relation is
 
 \begin{eqnarray}
 \overline{\Bbb{D}}_{\psi } &=&\alpha _{\Bbb{D}}\Bbb{D}_{\psi }/\Bbb{D}_{\psi
@@ -462,7 +462,7 @@ where
 
 In momentum space, 
 \begin{eqnarray}
-S_{\mathbf{p}} &\propto &-\Bbb{D}_{\mathbf{p}}\frac{\partial f_{0}}{\partial %
+S_{\mathbf{p}} &\propto &-\Bbb{D}_{\mathbf{p}}\frac{\partial f_{0}}{\partial
 p}+\mathbf{F}_{\mathbf{p}}f_{0}  \nonumber \\
 &=&-\overline{\Bbb{D}}_{\mathbf{p}}\Bbb{D}_{\mathbf{p}}^{\dag }\frac{%
 n_{e}^{\dag }}{p_{th}^{\dag 3}}\frac{\partial \overline{f}_{0}}{p_{th}^{\dag
@@ -476,7 +476,7 @@ n_{e}^{\dag }}{p_{th}^{\dag 3}}\frac{\partial \overline{f}_{0}}{p_{th}^{\dag
 &=&\left( \frac{\nu _{e}^{\dag }n_{e}^{\dag }}{p_{th}^{\dag 2}}\right)
 \left( -\overline{\Bbb{D}}_{\mathbf{p}}\frac{\partial \overline{f}_{0}}{%
 \partial \overline{p}}+\overline{\mathbf{F}}_{\mathbf{p}}\overline{f}%
-_{0}\right) 
+_{0}\right)
 \end{eqnarray}
 and 
 \begin{equation}
@@ -490,7 +490,7 @@ and with these definitions,
 \[
 \overline{S}_{\mathbf{p}}\propto -\overline{\Bbb{D}}_{\mathbf{p}}\frac{%
 \partial \overline{f}_{0}}{\partial \overline{p}}+\overline{\mathbf{F}}_{%
-\mathbf{p}}\overline{f}_{0}
+\mathbf{p}}\overline{f}_{0} 
 \]
 
 A similar procedure is applied for dynamics in configuration space, 
@@ -510,9 +510,9 @@ _{a}\right) \overline{f}_{0}  \nonumber \\
 &=&\left( \frac{n_{e}^{\dag }}{p_{th}^{\dag 3}}\nu _{e}^{\dag }\psi
 _{a}\right) \left( -\overline{\Bbb{D}}_{\psi \psi }\left| \nabla \psi
 \right| \frac{\partial \overline{f}_{0}}{\partial \overline{\psi }}+\mathbf{F%
-}_{\psi }\overline{f}_{0}\right) 
+}_{\psi }\overline{f}_{0}\right)
 \end{eqnarray}
-and
+and 
 \begin{equation}
 S_{\psi }=\overline{S}_{\psi }S_{\psi }^{\dag }
 \end{equation}
@@ -532,12 +532,12 @@ and with these definitions,
 
 The current density is given by the relation 
 \begin{eqnarray}
-J &\propto &2\pi q_{e}\int p^{2}dp\int_{-1}^{+1}\xi vf_{0}d\xi   \nonumber \\
-&=&2\pi q_{e}\int \frac{p^{3}}{\gamma m_{e}}dp\int_{-1}^{+1}\xi f_{0}d\xi  
+J &\propto &2\pi q_{e}\int p^{2}dp\int_{-1}^{+1}\xi vf_{0}d\xi  \nonumber \\
+&=&2\pi q_{e}\int \frac{p^{3}}{\gamma m_{e}}dp\int_{-1}^{+1}\xi f_{0}d\xi 
 \nonumber \\
 &=&2\pi \frac{q_{e}}{m_{e}}p_{th}^{\dag 4}\frac{n_{e}^{\dag }}{\beta
 _{th}^{\dag 3}}\int \frac{\overline{p}^{3}}{\gamma }d\overline{p}%
-\int_{-1}^{+1}\xi \overline{f}_{0}d\xi 
+\int_{-1}^{+1}\xi \overline{f}_{0}d\xi
 \end{eqnarray}
 Therefore, 
 \begin{equation}
@@ -583,10 +583,10 @@ With this definition
 
 The electron runaway rate $\Gamma _{R}$ is given by the relation 
 \begin{eqnarray}
-\Gamma _{R} &\propto &2\pi p^{2}\int_{-1}^{+1}S_{\mathbf{p}}d\xi   \nonumber
+\Gamma _{R} &\propto &2\pi p^{2}\int_{-1}^{+1}S_{\mathbf{p}}d\xi  \nonumber
 \\
 &=&2\pi \overline{p}^{2}p_{th}^{\dag 2}\frac{\nu _{e}^{\dag }n_{e}^{\dag }}{%
-p_{th}^{\dag 2}}\int_{-1}^{+1}\overline{S}_{\mathbf{p}}d\xi 
+p_{th}^{\dag 2}}\int_{-1}^{+1}\overline{S}_{\mathbf{p}}d\xi
 \end{eqnarray}
 
 Therefore, normalized expression is 
@@ -600,7 +600,7 @@ with
 so that 
 \begin{equation}
 \overline{\Gamma }_{R}\propto 2\pi \overline{p}^{2}\int_{-1}^{+1}\overline{S}%
-_{\mathbf{p}}d\xi 
+_{\mathbf{p}}d\xi
 \end{equation}
 
 The consistency of the normalized units may be benchmarked by the
@@ -628,7 +628,7 @@ so that
 2m_{e}}\frac{p_{th}^{\dag 2}\Gamma _{R}^{\dag }}{E^{\dag }J^{\dag }}\left( 
 \frac{\overline{\Gamma }_{R}}{\overline{E}}\right) \overline{p}_{\max }^{2}
 \end{equation}
-According to their respective expression,
+According to their respective expression, 
 \begin{equation}
 \frac{p_{th}^{\dag 2}\Gamma _{R}^{\dag }}{m_{e}E^{\dag }J_{th}^{\dag }}=%
 \frac{p_{th}^{\dag 2}\nu _{e}^{\dag }n_{e}^{\dag }}{m_{e}\frac{q_{e}}{m_{e}}%
@@ -642,7 +642,7 @@ different quantities calculated by the code.
 By definition, the electron magnetic ripple loss rate $\Gamma _{ST}$ is
 given by a relation relation similar to $\Gamma _{R},$ except that integrals
 of fluxes are calculated for different boundaries. Therefore, the normalized
-expression is simply given by the relation
+expression is simply given by the relation 
 \begin{equation}
 \overline{\Gamma }_{ST}=\Gamma _{ST}/\Gamma _{ST}^{\dag }
 \end{equation}
