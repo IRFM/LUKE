@@ -13,14 +13,14 @@ the numerical calculations.
 \begin{equation}
 S\left( p_{i},\xi _{0,j},\psi _{l},t_{k}\right) \rightarrow \left\{ 
 \begin{array}{l}
-p_{i}\in \left[ 0,p_{\max }\right] ,i\rightarrow \left\{ 0,n_{p}\right\}  \\ 
-\xi _{0,j}\in \left[ -1,1\right] ,j\rightarrow \left\{ 0,n_{\xi
-_{0}}\right\}  \\ 
+p_{i}\in \left[ 0,p_{\max }\right] ,i\rightarrow \left\{ 0,n_{p}\right\} \\ 
+\xi _{0,j}\in \left[ -1,1\right] ,j\rightarrow \left\{ 0,n_{\xi _{0}}\right\}
+\\ 
 \psi _{l}\in \left[ 0,\psi _{a}\right] ,l\rightarrow \left\{ 0,n_{\psi
-}\right\}  \\ 
-t_{k}\in \left[ 0,+\infty \right] ,k\rightarrow \left\{ 0,n_{t}\right\} 
+}\right\} \\ 
+t_{k}\in \left[ 0,+\infty \right] ,k\rightarrow \left\{ 0,n_{t}\right\}
 \end{array}
-\right. 
+\right.
 \end{equation}
 
 This grid system defines a set of cells of non-uniform sizescharacterized by
@@ -34,15 +34,15 @@ to wrong estimate of the solution.
 f\left( p_{i+1/2},\xi _{0j+1/2},\psi _{l+1/2},t_{k}\right) \rightarrow
 \left\{ 
 \begin{array}{l}
-p_{i+1/2}\in \left[ \frac{\Delta p_{1/2}}{2},p_{\max }-\frac{\Delta %
-p_{n_{p}-1/2}}{2}\right] ,i\rightarrow \left\{ 0,n_{p}-1\right\}  \\ 
+p_{i+1/2}\in \left[ \frac{\Delta p_{1/2}}{2},p_{\max }-\frac{\Delta
+p_{n_{p}-1/2}}{2}\right] ,i\rightarrow \left\{ 0,n_{p}-1\right\} \\ 
 \xi _{0j+1/2}\in \left[ -1+\frac{\Delta \xi _{0,1/2}}{2},1-\frac{\Delta \xi
 _{0,n_{\xi _{0}}-1/2}}{2}\right] ,j\rightarrow \left\{ 0,n_{\xi
-_{0}}-1\right\}  \\ 
+_{0}}-1\right\} \\ 
 \psi _{l+1/2}\in \left[ 0+\frac{\Delta \psi _{1/2}}{2},a-\frac{\Delta \psi
-_{n_{r}-1/2}}{2}\right] ,l\rightarrow \left\{ 0,n_{\psi }-1\right\} 
+_{n_{r}-1/2}}{2}\right] ,l\rightarrow \left\{ 0,n_{\psi }-1\right\}
 \end{array}
-\right. 
+\right.
 \end{equation}
 
 \subsubsection{Grid definitions in momentum space}
@@ -225,21 +225,24 @@ et $\xi _{0}\leq 0$ domains. In addition, accurate calculations must be
 performed at $\xi _{0}$ (3 points) et at $\left| \xi _{0}\right| =1$ (4
 points). Hence, for $n_{\psi }=30,$ $n_{\xi _{0}}\geq 187.$
 
-\subsubsection{Temporal grid definition}
+\subsubsection{Time grid definition}
 
-Time evolution is also projected on a numerical grid which is taken uniform
-for two reasons. First, in the numerical approach here considered, the
-algorithm, as discussed in Section****, is mainly dedicated to the fast
-determination of the asymptotic stationary solution $\lim_{t\rightarrow +%
-\infty }f\left( p,\xi _{0},\psi ,t\right) =\overline{f}\left( p,\xi
-_{0},\psi \right) ,$ and therefore time step values fulfill the condition $%
-\Delta t\gg 1.$ In this limit, the time $t$ used in the iterative procedure
-that results from weak non-linearities of the collision operator, acts
-mainly as a regularization parameter, when matrix to be inverted is close to
-be ill-conditionned.  Furthermore, with a non-uniform time grid, matrix must
-be calculated at each time step, which prevents the use of the very
-efficient $LU$ matrix factorization technique, a procedure that allows to
-reduce considerably computer time consumption. Since the code is expected to
-be incorporate in a chain of codes, in order to obtain self-consistent
-magnetic equilibrium, wave propagation and kinetic calculations, this is
-therefore the only choice that can be considered.
+Time evolution is also projected on a numerical grid,
+\begin{equation}
+t_{k}=k\Delta t
+\end{equation}
+which is taken uniform for two reasons. First, in the numerical approach
+here considered, the algorithm, as discussed in Section****, is mainly
+dedicated to the fast determination of the asymptotic stationary solution $%
+\lim_{t\rightarrow +\infty }f\left( p,\xi _{0},\psi ,t\right) =\overline{f}%
+\left( p,\xi _{0},\psi \right) ,$ and therefore time step values must
+fulfill the condition $\Delta t\gg 1.$ In this limit, the time $t$ used in
+the iterative procedure because of the weak non-linearities of the collision
+operator, acts mainly as a regularization parameter, when matrix to be
+inverted is close to be ill-conditionned. Furthermore, with a non-uniform
+time grid, matrix must be calculated at each time step, which prevents the
+use of the very efficient $LU$ matrix factorization technique, a procedure
+that allows to reduce considerably computer time consumption. Since the code
+is expected to be incorporate in a chain of codes, in order to obtain
+self-consistent magnetic equilibrium, wave propagation and kinetic
+calculations, this is therefore the only choice that can be considered.

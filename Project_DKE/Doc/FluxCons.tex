@@ -26,15 +26,15 @@ p^{2}d\psi d\theta d\phi dpd\xi d\varphi
 
 Using the transformation 
 \begin{equation}
-\frac{1-\xi ^{2}}{B\left( \psi ,\theta \right) }=\frac{1-\xi _{0}^{2}}{
+\frac{1-\xi ^{2}}{B\left( \psi ,\theta \right) }=\frac{1-\xi _{0}^{2}}{%
 B_{\min }\left( \psi \right) }
 \end{equation}
 that results from conservation of the magnetic moment and the energy, 
 \begin{equation}
 N=\idotsint f\left( \psi ,\theta ,\phi ,p,\xi ,\varphi \right) \frac{Rr}{%
-\left| \nabla \psi \right| \left| \widehat{\psi }\cdot \widehat{r}\right| }
+\left| \nabla \psi \right| \left| \widehat{\psi }\cdot \widehat{r}\right| }%
 p^{2}\frac{\xi _{0}}{\xi }\frac{B\left( \psi ,\theta \right) }{B_{\min
-}\left( \psi \right) }d\psi d\theta d\phi dpd\xi _{0}d\varphi
+}\left( \psi \right) }d\psi d\theta d\phi dpd\xi _{0}d\varphi 
 \end{equation}
 since $\frac{\xi d\xi }{B\left( \psi ,\theta \right) }=\frac{\xi _{0}d\xi
 _{0}}{B_{\min }\left( \psi \right) }.$ Since at the order, $f_{0}$ is
@@ -43,16 +43,17 @@ angle $\theta ,$ and $f_{0}=f_{0}^{\left( 0\right) }$ where $f_{0}^{\left(
 0\right) }$ is the bounce averaged distribution function. Hence 
 \begin{eqnarray}
 N &=&\iiint f_{0}^{\left( 0\right) }\left( \psi ,p,\xi _{0}\right)
-p^{2}d\psi dpd\xi _{0}\int_{\theta _{\min }}^{\theta _{\max }}\frac{Rr}{%
-\left| \nabla \psi \right| \left| \widehat{\psi }\cdot \widehat{r}\right| }%
-\frac{\xi _{0}}{\xi }\frac{B\left( \psi ,\theta \right) }{B_{\min }\left(
-\psi \right) }d\theta \int_{0}^{2\pi }d\phi \int_{0}^{2\pi }d\varphi 
-\nonumber \\
+p^{2}d\psi dpd\xi _{0}\times   \nonumber \\
+&&\int_{\theta _{\min }}^{\theta _{\max }}\frac{Rr}{\left| \nabla \psi
+\right| \left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{\xi _{0}}{\xi }%
+\frac{B\left( \psi ,\theta \right) }{B_{\min }\left( \psi \right) }d\theta
+\int_{0}^{2\pi }d\phi \int_{0}^{2\pi }d\varphi   \nonumber \\
 &=&4\pi ^{2}\iiint f_{0}^{\left( 0\right) }\left( \psi ,p,\xi _{0}\right) 
-\frac{1}{B_{\min }\left( \psi \right) }p^{2}d\psi dpd\xi _{0}\int_{\theta
-_{\min }}^{\theta _{\max }}\frac{Rr}{\left| \nabla \psi \right| \left| 
-\widehat{\psi }\cdot \widehat{r}\right| }\frac{\xi _{0}}{\xi }B\left( \psi
-,\theta \right) d\theta
+\frac{1}{B_{\min }\left( \psi \right) }p^{2}d\psi dpd\xi _{0}\times  
+\nonumber \\
+&&\int_{\theta _{\min }}^{\theta _{\max }}\frac{Rr}{\left| \nabla \psi
+\right| \left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{\xi _{0}}{\xi }%
+B\left( \psi ,\theta \right) d\theta 
 \end{eqnarray}
 taking into account, in addition, of the toroidal aximmetry, and cylindrical
 symmetry of the distribution along the magnetic field line direction. Here, $%
@@ -89,16 +90,16 @@ From this expression, the Jacobian $J$ of the coordinate system $\left( \psi
 J=J_{\psi }J_{p}J_{\xi _{0}}=\frac{\widetilde{q}\left( \psi \right) }{%
 B_{\min }\left( \psi \right) }\lambda \left( \psi ,\xi _{0}\right) p^{2}
 \end{equation}
-where
+where 
 \begin{equation}
 \left\{ 
 \begin{array}{l}
 J_{\psi }=\frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi
 \right) } \\ 
 J_{p}=p^{2} \\ 
-J_{_{\xi _{0}}}=\lambda \left( \psi ,\xi _{0}\right) 
+J_{_{\xi _{0}}}=\lambda \left( \psi ,\xi _{0}\right)
 \end{array}
-\right. 
+\right.
 \end{equation}
 and the generic conservative form of the kinetic equation may be immediatly
 deduced 
@@ -120,14 +121,14 @@ can be expressed generally as
 \begin{equation}
 \Bbb{D}^{\left( 0\right) }=\left( 
 \begin{array}{lll}
-D_{pp}^{\left( 0\right) } & D_{p\xi }^{\left( 0\right) } & D_{p\psi
+D_{\psi \psi }^{\left( 0\right) } & D_{\psi p}^{\left( 0\right) } & D_{\psi
+\xi }^{\left( 0\right) } \\ 
+D_{p\xi }^{\left( 0\right) } & D_{pp}^{\left( 0\right) } & D_{p\psi
 }^{\left( 0\right) } \\ 
-D_{\xi p}^{\left( 0\right) } & D_{\xi \xi }^{\left( 0\right) } & D_{\xi \psi
-}^{\left( 0\right) } \\ 
-D_{\psi p}^{\left( 0\right) } & D_{\psi \xi }^{\left( 0\right) } & D_{\psi
-\psi }^{\left( 0\right) }
+D_{\xi \psi }^{\left( 0\right) } & D_{\xi p}^{\left( 0\right) } & D_{\xi \xi
+}^{\left( 0\right) }
 \end{array}
-\right) 
+\right)
 \end{equation}
 and 
 \begin{equation}
@@ -137,20 +138,20 @@ F_{p}^{\left( 0\right) } \\
 F_{\xi }^{\left( 0\right) } \\ 
 F_{\psi }^{\left( 0\right) }
 \end{array}
-\right) 
+\right)
 \end{equation}
 where each element is function of $\left( \psi ,p,\xi _{0}\right) $. Here
-the gradient in the $\left( \psi ,p,\xi _{0}\right) $ space is
+the gradient in the $\left( \psi ,p,\xi _{0}\right) $ space is 
 \begin{equation}
 \nabla =\left( 
 \begin{array}{l}
 \nabla _{\psi }=\left| \nabla \psi \right| \frac{\partial }{\partial \psi }
 \\ 
 \nabla _{p}=\frac{\partial }{\partial p} \\ 
-\nabla _{\xi _{0}}=-\frac{\sqrt{1-\xi _{0}^{2}}}{p}\frac{\partial }{\partial %
+\nabla _{\xi _{0}}=-\frac{\sqrt{1-\xi _{0}^{2}}}{p}\frac{\partial }{\partial
 \xi _{0}}
 \end{array}
-\right) 
+\right)
 \end{equation}
 
 So, following calculations given in Appendix ***, 
@@ -165,17 +166,19 @@ So, following calculations given in Appendix ***,
 &=&\frac{1}{J}\frac{\partial }{\partial p}\left( J\mathbf{S}^{\left(
 0\right) }\cdot \widehat{p}\right) -\frac{1}{J}\frac{1}{p}\frac{\partial }{%
 \partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}J\mathbf{S}^{\left( 0\right) }%
-\cdot \widehat{\xi }\right) +\frac{1}{J}\frac{\partial }{\partial \psi }%
-\left( J\left| \nabla \psi \right| _{\min }\mathbf{S}^{\left( 0\right) }%
-\cdot \widehat{\psi }\right)   \nonumber \\
+\cdot \widehat{\xi }\right)   \nonumber \\
+&&+\frac{1}{J}\frac{\partial }{\partial \psi }\left( J\left| \nabla \psi
+\right| _{\min }\mathbf{S}^{\left( 0\right) }\cdot \widehat{\psi }\right)  
+\nonumber \\
 &=&\frac{1}{p^{2}}\frac{\partial }{\partial p}\left( p^{2}\mathbf{S}%
 _{p}^{\left( 0\right) }\right) -\frac{1}{\lambda }\frac{1}{p}\frac{\partial 
 }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}\lambda \mathbf{S}_{\xi
-}^{\left( 0\right) }\right) +\frac{B_{\min }\left( \psi \right) }{\lambda 
-\widetilde{q}\left( \psi \right) }\frac{\partial }{\partial \psi }\left( 
-\frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) }%
-\lambda \left( \psi ,\xi _{0}\right) \left| \nabla \psi \right| _{\min }%
-\mathbf{S}_{\psi }^{\left( 0\right) }\right) 
+}^{\left( 0\right) }\right)   \nonumber \\
+&&+\frac{B_{\min }\left( \psi \right) }{\lambda \widetilde{q}\left( \psi
+\right) }\frac{\partial }{\partial \psi }\left( \frac{\widetilde{q}\left(
+\psi \right) }{B_{\min }\left( \psi \right) }\lambda \left( \psi ,\xi
+_{0}\right) \left| \nabla \psi \right| _{\min }\mathbf{S}_{\psi }^{\left(
+0\right) }\right) 
 \end{eqnarray}
 where $\left| \nabla \psi \right| _{\min }$ is taken at $B=B_{\min }.$ The
 first two terms correspond to the usual dynamics in momentum space at a
@@ -209,32 +212,32 @@ I}_{p}-\mathcal{I}_{\xi _{0}}+\mathcal{I}_{\psi }
 \end{equation}
 where 
 \begin{equation}
-\left\{ 
-\begin{array}{l}
 \mathcal{I}_{p}=\iiint \frac{1}{p^{2}}\frac{\partial }{\partial p}\left(
-p^{2}\mathbf{S}_{p}^{\left( 0\right) }\right) Jdpd\xi _{0}d\psi \\ 
+p^{2}\mathbf{S}_{p}^{\left( 0\right) }\right) Jdpd\xi _{0}d\psi 
+\end{equation}
+\begin{equation}
 \mathcal{I}_{\xi _{0}}=\iiint \frac{1}{\lambda }\frac{1}{p}\frac{\partial }{%
 \partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}\lambda \mathbf{S}_{\xi
-}^{\left( 0\right) }\right) Jdpd\xi _{0}d\psi \\ 
+}^{\left( 0\right) }\right) Jdpd\xi _{0}d\psi 
+\end{equation}
+\begin{equation}
 \mathcal{I}_{\psi }=\iiint \frac{B_{\min }\left( \psi \right) }{\lambda 
 \widetilde{q}\left( \psi \right) }\frac{\partial }{\partial \psi }\left( 
 \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) }%
 \lambda \left( \psi ,\xi _{0}\right) \left| \nabla \psi \right| \mathbf{S}%
-_{\psi }^{\left( 0\right) }\right) Jdpd\xi _{0}d\psi
-\end{array}
-\right.
+_{\psi }^{\left( 0\right) }\right) Jdpd\xi _{0}d\psi 
 \end{equation}
 
 For $\mathcal{I}_{p},$ 
 \begin{eqnarray}
-\iiint \frac{1}{p^{2}}\frac{\partial }{\partial p}\left( p^{2}\mathbf{S}%
-_{p}^{\left( 0\right) }\right) Jdpd\xi _{0}d\psi &=&\iint \left[ p^{2}%
-\mathbf{S}_{p}^{\left( 0\right) }\right] _{0}^{p_{\max }}\frac{\widetilde{q}%
-\left( \psi \right) }{B_{\min }\left( \psi \right) }\lambda \left( \psi ,\xi
-_{0}\right) d\xi _{0}d\psi  \nonumber \\
+&&\iiint \frac{1}{p^{2}}\frac{\partial }{\partial p}\left( p^{2}\mathbf{S}%
+_{p}^{\left( 0\right) }\right) Jdpd\xi _{0}d\psi   \nonumber \\
+&=&\iint \left[ p^{2}\mathbf{S}_{p}^{\left( 0\right) }\right] _{0}^{p_{\max
+}}\frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) }%
+\lambda \left( \psi ,\xi _{0}\right) d\xi _{0}d\psi   \nonumber \\
 &=&p_{\max }^{2}\iint \mathbf{S}_{p}^{\left( 0\right) }\left( p_{\max
 }\right) \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi
-\right) }\lambda \left( \psi ,\xi _{0}\right) d\xi _{0}d\psi
+\right) }\lambda \left( \psi ,\xi _{0}\right) d\xi _{0}d\psi 
 \end{eqnarray}
 and assuming that $\lim_{p\rightarrow \infty }p^{2}\mathbf{S}_{p}^{\left(
 0\right) }=0,$ one finds $\mathcal{I}_{p}=0.$ This condition is generally
@@ -252,10 +255,10 @@ The integration of $\xi _{0}$ leads to
 \begin{eqnarray}
 \mathcal{I}_{\xi _{0}} &=&\iiint \frac{1}{\lambda }\frac{1}{p}\frac{\partial 
 }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}\lambda \mathbf{S}_{\xi
-}^{\left( 0\right) }\right) Jdpd\xi _{0}d\psi =\iint \left[ \sqrt{1-\xi
-_{0}^{2}}\lambda \mathbf{S}_{\xi }^{\left( 0\right) }\right] _{-1}^{+1}\frac{%
-\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) }pdpd\psi 
-\nonumber \\
+}^{\left( 0\right) }\right) Jdpd\xi _{0}d\psi   \nonumber \\
+&=&\iint \left[ \sqrt{1-\xi _{0}^{2}}\lambda \mathbf{S}_{\xi }^{\left(
+0\right) }\right] _{-1}^{+1}\frac{\widetilde{q}\left( \psi \right) }{B_{\min
+}\left( \psi \right) }pdpd\psi   \nonumber \\
 &=&0
 \end{eqnarray}
 which indicates that pitch-angle scattering never contributes to variations
@@ -268,10 +271,11 @@ Finally,
 \widetilde{q}\left( \psi \right) }\frac{\partial }{\partial \psi }\left( 
 \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) }%
 \lambda \left( \psi ,\xi _{0}\right) \left| \nabla \psi \right| \mathbf{S}%
-_{\psi }^{\left( 0\right) }\right) Jdpd\xi _{0}d\psi =\iint \left[ \frac{%
-\widetilde{q}\left( \psi \right) }{B_{\min }\left( \psi \right) }\lambda
-\left( \psi ,\xi _{0}\right) \left| \nabla \psi \right| \mathbf{S}_{\psi
-}^{\left( 0\right) }\right] _{0}^{\psi _{a}}p^{2}dpd\xi _{0}  \nonumber \\
+_{\psi }^{\left( 0\right) }\right) Jdpd\xi _{0}d\psi   \nonumber \\
+&=&\iint \left[ \frac{\widetilde{q}\left( \psi \right) }{B_{\min }\left(
+\psi \right) }\lambda \left( \psi ,\xi _{0}\right) \left| \nabla \psi
+\right| \mathbf{S}_{\psi }^{\left( 0\right) }\right] _{0}^{\psi
+_{a}}p^{2}dpd\xi _{0}  \nonumber \\
 &=&\frac{\widetilde{q}\left( \psi _{a}\right) }{B_{\min }\left( \psi
 _{a}\right) }\left| \nabla \psi \right| _{\psi _{a}}\iint \lambda \left(
 \psi _{a},\xi _{0}\right) \mathbf{S}_{\psi }^{\left( 0\right) }\left( \psi
