@@ -1,116 +1,186 @@
-In the Drift Kinetic equation, the diffusion and convection elements are
-bounce-averaged according to the expressions (\ref{diffbav}) and (\ref
-{convbav}), which gives, using (\ref{dtensor1}-\ref{dtensor4}) 
-\begin{eqnarray}
-\widetilde{D}_{pp}^{\text{RF}(0)} &=&\sigma \left\{ \frac{\sigma \xi }{\Psi
-\xi _{0}}\sum_{n=-\infty }^{+\infty }\sum_{b}(1-\xi ^{2})D_{b,n}^{\text{RF}%
-}(p,\xi )\right\}  \\
-\widetilde{D}_{p\xi }^{\text{RF}(0)} &=&\left\{ \frac{\xi ^{2}}{\Psi
-^{3/2}\xi _{0}^{2}}\sum_{n=-\infty }^{+\infty }\sum_{b}-\frac{\sqrt{1-\xi
-^{2}}}{\xi }\left[ 1-\xi ^{2}-\frac{n\Omega }{\omega _{b}}\right] D_{b,n}^{%
-\text{RF}}(p,\xi )\right\}  \\
-\widetilde{D}_{\xi p}^{\text{RF}(0)} &=&\left\{ \frac{\xi ^{2}}{\Psi
-^{3/2}\xi _{0}^{2}}\sum_{n=-\infty }^{+\infty }\sum_{b}-\frac{\sqrt{1-\xi
-^{2}}}{\xi }\left[ 1-\xi ^{2}-\frac{n\Omega }{\omega _{b}}\right] D_{b,n}^{%
-\text{RF}}(p,\xi )\right\}  \\
-\widetilde{D}_{\xi \xi }^{\text{RF}(0)} &=&\sigma \left\{ \frac{\sigma \xi
-^{3}}{\Psi ^{2}\xi _{0}^{3}}\sum_{n=-\infty }^{+\infty }\sum_{b}\frac{1}{\xi
-^{2}}\left[ 1-\xi ^{2}-\frac{n\Omega }{\omega _{b}}\right] ^{2}D_{b,n}^{%
-\text{RF}}(p,\xi )\right\} 
-\end{eqnarray}
-where 
+In the Drift Kinetic equation, the diffusion and convection
+elements are bounce-averaged according to the expressions
+(\ref{diffbavdke}) and (\ref{convbavdke}), which gives, using
+(\ref{dtensor1}-\ref{dtensor4})
+\begin{align}
+\widetilde{D}_{pp}^{\text{RF}(0)}  &  =\sigma\left\{  \frac{\sigma\xi}{\Psi
+\xi_{0}}\sum_{n=-\infty}^{+\infty}\sum_{b}(1-\xi^{2})D_{b,n}^{\text{RF}}%
+(p,\xi)\right\} \label{diffbavdkerf}\\
+\widetilde{D}_{p\xi}^{\text{RF}(0)}  &  =\left\{  \frac{\xi^{2}}{\Psi^{3/2}%
+\xi_{0}^{2}}\sum_{n=-\infty}^{+\infty}\sum_{b}-\frac{\sqrt{1-\xi^{2}}}{\xi
+}\left[  1-\xi^{2}-\frac{n\Omega}{\omega_{b}}\right]  D_{b,n}^{\text{RF}%
+}(p,\xi)\right\} \nonumber\\
+\widetilde{D}_{\xi p}^{\text{RF}(0)}  &  =\left\{  \frac{\xi^{2}}{\Psi
+^{3/2}\xi_{0}^{2}}\sum_{n=-\infty}^{+\infty}\sum_{b}-\frac{\sqrt{1-\xi^{2}}%
+}{\xi}\left[  1-\xi^{2}-\frac{n\Omega}{\omega_{b}}\right]  D_{b,n}^{\text{RF}%
+}(p,\xi)\right\} \nonumber\\
+\widetilde{D}_{\xi\xi}^{\text{RF}(0)}  &  =\sigma\left\{  \frac{\sigma\xi^{3}%
+}{\Psi^{2}\xi_{0}^{3}}\sum_{n=-\infty}^{+\infty}\sum_{b}\frac{1}{\xi^{2}%
+}\left[  1-\xi^{2}-\frac{n\Omega}{\omega_{b}}\right]  ^{2}D_{b,n}^{\text{RF}%
+}(p,\xi)\right\} \nonumber
+\end{align}
+and%
+\begin{align}
+\widetilde{F}_{p}^{\text{RF}(0)}  &  =\frac{\sqrt{1-\xi_{0}^{2}}}{p\xi_{0}%
+^{3}}\left\{  \frac{\left(  \Psi-1\right)  }{\Psi^{3/2}}\sum_{n=-\infty
+}^{+\infty}\sum_{b}-\frac{\sqrt{1-\xi^{2}}}{\xi}\left[  1-\xi^{2}%
+-\frac{n\Omega}{\omega_{b}}\right]  D_{b,n}^{\text{RF}}(p,\xi)\right\}
+\label{convbavdkerf}\\
+\widetilde{F}_{\xi}^{\text{RF}(0)}  &  =\frac{\sqrt{1-\xi_{0}^{2}}}{p\xi
+_{0}^{3}}\sigma\left\{  \frac{\sigma\xi\left(  \Psi-1\right)  }{\xi_{0}%
+\Psi^{2}}\sum_{n=-\infty}^{+\infty}\sum_{b}\frac{1}{\xi^{2}}\left[  1-\xi
+^{2}-\frac{n\Omega}{\omega_{b}}\right]  ^{2}D_{b,n}^{\text{RF}}(p,\xi)\right\}
+\nonumber
+\end{align}
+where
 \begin{equation}
-\left\{ \mathcal{O}\right\} =\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2%
-}\sum\limits_{\sigma }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}%
-\frac{d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}%
-\right| }\frac{r}{R_{0}}\frac{B}{B_{P}}\frac{\xi _{0}}{\xi }\mathcal{O}
+\left\{  \mathcal{O}\right\}  =\frac{1}{\lambda\widetilde{q}}\left[  \frac
+{1}{2}\sum\limits_{\sigma}\right]  _{T}\int_{\theta_{\min}}^{\theta_{\max}%
+}\frac{d\theta}{2\pi}\frac{1}{\left|  \widehat{\psi}\cdot\widehat{r}\right|
+}\frac{r}{R_{p}}\frac{B}{B_{P}}\frac{\xi_{0}}{\xi}\mathcal{O}%
 \end{equation}
 
-Since $1-\xi ^{2}=\Psi \left( 1-\xi _{0}^{2}\right) ,$ 
-\begin{eqnarray}
-\widetilde{D}_{pp}^{\text{RF}(0)} &=&\sum_{n=-\infty }^{+\infty
-}\sum_{b}(1-\xi _{0}^{2})\widetilde{D}_{b,n}^{\text{RF}(0)}(p,\xi _{0}) \\
-\widetilde{D}_{p\xi }^{\text{RF}(0)} &=&\sum_{n=-\infty }^{+\infty }\sum_{b}-%
-\frac{\sqrt{1-\xi _{0}^{2}}}{\xi _{0}}\left[ 1-\xi _{0}^{2}-\frac{n\Omega
-_{\min }}{\omega _{b}}\right] \widetilde{D}_{b,n}^{\text{RF}(0)}(p,\xi _{0})
-\\
-\widetilde{D}_{\xi p}^{\text{RF}(0)} &=&\sum_{n=-\infty }^{+\infty }\sum_{b}-%
-\frac{\sqrt{1-\xi _{0}^{2}}}{\xi _{0}}\left[ 1-\xi _{0}^{2}-\frac{n\Omega
-_{\min }}{\omega _{b}}\right] \widetilde{D}_{b,n}^{\text{RF}(0)}(p,\xi _{0})
-\\
-\widetilde{D}_{\xi \xi }^{\text{RF}(0)} &=&\sum_{n=-\infty }^{+\infty
-}\sum_{b}\frac{1}{\xi _{0}^{2}}\left[ 1-\xi _{0}^{2}-\frac{n\Omega _{\min }}{%
-\omega _{b}}\right] ^{2}\widetilde{D}_{b,n}^{\text{RF}(0)}(p,\xi _{0})
-\end{eqnarray}
-where 
-\begin{equation}
-\widetilde{D}_{b,n}^{\text{RF}(0)}(p,\xi _{0})=\sigma \left\{ \sigma \frac{%
-\xi }{\xi _{0}}\widetilde{D}_{b,n}^{\text{RF}}(p,\xi )\right\}
-\end{equation}
-and $\Omega _{\min }$ is the cyclotron frequency taken at the minumum $B$
-value, as defined for the Fokker-Planck equation. Therefore, only the bounce
-averaged diffusion coefficient $\widetilde{D}_{b,n}^{\text{RF}(0)}(p,\xi
-_{0})$ has to be calculated for the different types of RF waves, keeping
-also the same formalism. It is important to recall that only $\left| \xi
-_{0}\right| =\sigma \xi _{0}$ can be put outside the $\left\{ {}\right\} $
-corresponding of the bounce-averaging integral.
+Since $1-\xi^{2}=\Psi\left(  1-\xi_{0}^{2}\right)  $ and $\Omega=\Psi
+\Omega_{0}$,
+\begin{align}
+\widetilde{D}_{pp}^{\text{RF}(0)}  &  =\sum_{n=-\infty}^{+\infty}\sum
+_{b}(1-\xi_{0}^{2})\widetilde{D}_{b,n}^{\text{RF}(0)\text{D}}(p,\xi_{0})\\
+\widetilde{D}_{p\xi}^{\text{RF}(0)}  &  =\sum_{n=-\infty}^{+\infty}\sum
+_{b}-\frac{\sqrt{1-\xi_{0}^{2}}}{\xi_{0}}\left[  1-\xi_{0}^{2}-\frac
+{n\Omega_{0}}{\omega_{b}}\right]  \widetilde{D}_{b,n}^{\text{RF}(0)\text{D}%
+}(p,\xi_{0})\\
+\widetilde{D}_{\xi p}^{\text{RF}(0)}  &  =\sum_{n=-\infty}^{+\infty}\sum
+_{b}-\frac{\sqrt{1-\xi_{0}^{2}}}{\xi_{0}}\left[  1-\xi_{0}^{2}-\frac
+{n\Omega_{0}}{\omega_{b}}\right]  \widetilde{D}_{b,n}^{\text{RF}(0)\text{D}%
+}(p,\xi_{0})\\
+\widetilde{D}_{\xi\xi}^{\text{RF}(0)}  &  =\sum_{n=-\infty}^{+\infty}\sum
+_{b}\frac{1}{\xi_{0}^{2}}\left[  1-\xi_{0}^{2}-\frac{n\Omega_{0}}{\omega_{b}%
+}\right]  ^{2}\widetilde{D}_{b,n}^{\text{RF}(0)\text{D}}(p,\xi_{0})
+\end{align}%
+\begin{align}
+\widetilde{F}_{p}^{\text{RF}(0)}  &  =\frac{\sqrt{1-\xi_{0}^{2}}}{p\xi_{0}%
+^{3}}\sum_{n=-\infty}^{+\infty}\sum_{b}-\frac{\sqrt{1-\xi_{0}^{2}}}{\xi_{0}%
+}\left[  1-\xi_{0}^{2}-\frac{n\Omega_{0}}{\omega_{b}}\right]  \widetilde
+{D}_{b,n}^{\text{RF}(0)\text{F}}(p,\xi_{0})\\
+\widetilde{F}_{\xi}^{\text{RF}(0)}  &  =\frac{\sqrt{1-\xi_{0}^{2}}}{p\xi
+_{0}^{3}}\sum_{n=-\infty}^{+\infty}\sum_{b}\frac{1}{\xi_{0}^{2}}\left[
+1-\xi_{0}^{2}-\frac{n\Omega_{0}}{\omega_{b}}\right]  ^{2}\widetilde{D}%
+_{b,n}^{\text{RF}(0)\text{F}}(p,\xi_{0})\nonumber
+\end{align}
+where
+\begin{align}
+\widetilde{D}_{b,n}^{\text{RF}(0)\text{D}}(p,\xi_{0})  &  =\sigma\left\{
+\sigma\frac{\xi}{\xi_{0}}D_{b,n}^{\text{RF}}(p,\xi)\right\}
+\label{bouncedrf_dke}\\
+\widetilde{D}_{b,n}^{\text{RF}(0)\text{F}}(p,\xi_{0})  &  =\sigma\left\{
+\sigma\left(  \Psi-1\right)  \frac{\xi_{0}}{\xi}D_{b,n}^{\text{RF}}%
+(p,\xi)\right\} \nonumber
+\end{align}
+and $\Omega_{0}$ is the cyclotron frequency taken at the minumum $B$ value, as
+defined for the Fokker-Planck equation. Therefore, only the two bounce
+averaged diffusion coefficient $\widetilde{D}_{b,n}^{\text{RF}(0))\text{D}%
+}(p,\xi_{0})$ and $\widetilde{D}_{b,n}^{\text{RF}(0)\text{F}}(p,\xi_{0})$ have
+to be calculated for the different types of RF waves, keeping also the same
+formalism. It is important to recall that only $\left|  \xi_{0}\right|
+=\sigma\xi_{0}$ can be put outside the $\left\{  {}\right\}  $ corresponding
+of the bounce-averaging integral.
 
-It is determined by inserting expression (\ref{difcoeffnorm2}) into (\ref
-{bouncedrf_fp}),
+These coefficient are determined by inserting expression (\ref{difcoeffnorm2})
+into (\ref{bouncedrf_fp}),%
+\begin{align}
+\widetilde{D}_{b,n}^{\text{RF}(0)\text{D}}(p,\xi_{0}) &  =\sigma\left\{
+\sigma\frac{\xi}{\xi_{0}}\overline{D}_{b,n,0}^{\text{RF}}\left|
+\Theta_{\mathbf{k}}^{b,\left(  n\right)  }\right|  ^{2}\frac{\gamma p_{Te}%
+}{p\left|  \xi\right|  }\delta\left(  N_{b\Vert}-N_{\Vert\text{res}}\right)
+2\pi\delta\left(  \theta-\theta_{b}\right)  \right\}  \\
+\widetilde{D}_{b,n}^{\text{RF}(0)\text{F}}(p,\xi_{0}) &  =\sigma\left\{
+\sigma\left(  \Psi-1\right)  \frac{\xi_{0}}{\xi}\overline{D}_{b,n,0}%
+^{\text{RF}}\left|  \Theta_{\mathbf{k}}^{b,\left(  n\right)  }\right|
+^{2}\frac{\gamma p_{Te}}{p\left|  \xi\right|  }\delta\left(  N_{b\Vert
+}-N_{\Vert\text{res}}\right)  2\pi\delta\left(  \theta-\theta_{b}\right)
+\right\}  \nonumber
+\end{align}
+which gives%
+\begin{align}
+\widetilde{D}_{b,n}^{\text{RF}(0)\text{D}}(p,\xi_{0}) &  =\frac{\gamma p_{Te}%
+}{p\left|  \xi_{0}\right|  }\sigma\left\{  \sigma\overline{D}_{b,n,0}%
+^{\text{RF}}\left|  \Theta_{\mathbf{k}}^{b,\left(  n\right)  }\right|
+^{2}2\pi\delta\left(  \theta-\theta_{b}\right)  \delta\left(  N_{b\Vert
+}-N_{\Vert\text{res}}\right)  \right\}  \\
+\widetilde{D}_{b,n}^{\text{RF}(0)\text{F}}(p,\xi_{0}) &  =\frac{\gamma p_{Te}%
+}{p\left|  \xi_{0}\right|  }\sigma\left\{  \sigma\left(  \Psi-1\right)
+\frac{\xi_{0}^{2}}{\xi^{2}}\overline{D}_{b,n,0}^{\text{RF}}\left|
+\Theta_{\mathbf{k}}^{b,\left(  n\right)  }\right|  ^{2}2\pi\delta\left(
+\theta-\theta_{b}\right)  \delta\left(  N_{b\Vert}-N_{\Vert\text{res}}\right)
+\right\}  \nonumber
+\end{align}
 
-\begin{equation}
-\widetilde{\overline{D}}_{b,n}^{\text{RF}(0)}(p,\xi _{0})=\sigma \left\{
-\sigma \frac{\xi }{\xi _{0}}\overline{D}_{b,n,0}^{\text{RF}}\left| \Theta _{%
-\mathbf{k}}^{b,n}\left( \mathbf{k}_{b}\right) \right| ^{2}\frac{\gamma p_{Te}%
-}{p\left| \xi \right| }\delta \left( N_{\Vert b}-N_{\Vert \text{res}}\right)
-\delta \left( \theta -\theta _{b}\right) \right\} 
-\end{equation}
-which gives 
-\begin{equation}
-\widetilde{\overline{D}}_{b,n}^{\text{RF}(0)}(p,\xi _{0})=\frac{\gamma p_{Te}%
-}{p\xi _{0}}\left\{ \sigma \overline{D}_{b,n,0}^{\text{RF}}\left| \Theta _{%
-\mathbf{k}}^{b,n}\left( \mathbf{k}_{b}\right) \right| ^{2}\delta \left(
-\theta -\theta _{b}\right) \delta \left( N_{\Vert b}-N_{\Vert \text{res}%
-}\right) \right\} 
-\end{equation}
-with 
-\begin{eqnarray}
-&&\left\{ \sigma \overline{D}_{b,n,0}^{\text{RF}}\left| \Theta _{\mathbf{k}%
-}^{b,n}\left( \mathbf{k}_{b}\right) \right| ^{2}\delta \left( \theta -\theta
-_{b}\right) \delta \left( N_{\Vert b}-N_{\Vert \text{res}}\right) \right\}  
-\nonumber \\
-&=&\frac{1}{\lambda \widetilde{q}}\left[ \frac{1}{2}\sum\limits_{\sigma
-}\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }%
-\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }\frac{r}{R_{0}}%
-\frac{B}{B_{P}}\frac{\xi _{0}}{\xi }\times   \nonumber \\
-&&\sigma \overline{D}_{b,n,0}^{\text{RF}}\left| \Theta _{\mathbf{k}%
-}^{b,n}\left( \mathbf{k}_{b}\right) \right| ^{2}\delta \left( \theta -\theta
-_{b}\right) \delta \left( N_{\Vert b}-N_{\Vert \text{res}}\right)  \\
-&=&\frac{1}{\lambda \widetilde{q}}\frac{r_{\theta _{b}}}{R_{0}}\frac{%
-B^{\theta _{b}}}{B_{P}^{\theta _{b}}}\frac{\xi _{0}}{\xi _{\theta _{b}}}%
-\overline{D}_{b,n,0}^{\text{RF,}\theta _{b}}\left| \Theta _{\mathbf{k,}%
-\theta _{b}}^{b,n}\left( \mathbf{k}_{b}\right) \right| ^{2}\times  \\
-&&H\left( \theta _{b}-\theta _{\min }\right) H\left( \theta _{\max }-\theta
-_{b}\right) \left[ \frac{1}{2}\sum\limits_{\sigma }\right] _{T}\sigma \delta
-\left( N_{\Vert b}-N_{\Vert \text{res}}^{\theta _{b}}\right) 
-\end{eqnarray}
-where, $H\left( x\right) $ is the usual Heaviside step function. Therefore, 
-\begin{eqnarray}
-\widetilde{\overline{D}}_{b,n}^{\text{RF}(0)}(p,\xi _{0}) &=&\frac{\gamma
-p_{Te}}{p\xi _{0}}\frac{1}{\lambda \widetilde{q}}\frac{r_{\theta _{b}}}{R_{0}%
-}\frac{B^{\theta _{b}}}{B_{P}^{\theta _{b}}}\frac{\xi _{0}}{\xi _{\theta
-_{b}}}\overline{D}_{b,n,0}^{\text{RF,}\theta _{b}}\left| \Theta _{\mathbf{k,}
-\theta _{b}}^{b,n}\left( \mathbf{k}_{b}\right) \right| ^{2}\times   \nonumber
-\\
-&&H\left( \theta _{b}-\theta _{\min }\right) H\left( \theta _{\max }-\theta
-_{b}\right) H\left( \phi _{b}-\phi _{\min }\right) H\left( \phi _{\max
-}-\phi _{b}\right) \left[ \frac{1}{2}\sum\limits_{\sigma }\right] _{T}\sigma
-\delta \left( N_{\Vert b}-N_{\Vert \text{res}}^{\theta _{b}}\right) 
-\end{eqnarray}
-where 
-\begin{equation}
-\xi _{\theta _{b}}=\sigma \sqrt{1-\Psi _{\theta _{b}}\left( 1-\xi
-_{0}^{2}\right) }
-\end{equation}
-and $\overline{D}_{b,n,0}^{\text{RF,}\theta _{b}}$ is the same expression
-obtained for the Fokker-Planck equation.
+We perform the poloidal integration
+\begin{align}
+&  \sigma\left\{  \sigma\overline{D}_{b,n,0}^{\text{RF}}\left|  \Theta
+_{\mathbf{k}}^{b,\left(  n\right)  }\right|  ^{2}2\pi\delta\left(
+\theta-\theta_{b}\right)  \delta\left(  N_{b\Vert}-N_{\Vert\text{res}}\right)
+\right\}  \nonumber\\
+&  =\frac{1}{\lambda\widetilde{q}}\sigma\left[  \frac{1}{2}\sum\limits_{\sigma
+}\right]  _{T}\int_{\theta_{\min}}^{\theta_{\max}}d\theta\frac{1}{\left|
+\widehat{\psi}\cdot\widehat{r}\right|  }\frac{r}{R_{p}}\frac{B}{B_{P}}%
+\frac{\xi_{0}}{\xi}\sigma\overline{D}_{b,n,0}^{\text{RF}}\left|
+\Theta_{\mathbf{k}}^{b,\left(  n\right)  }\right|  ^{2}\delta\left(
+\theta-\theta_{b}\right)  \delta\left(  N_{b\Vert}-N_{\Vert\text{res}}\right)
+\nonumber\\
+&  =\frac{1}{\lambda\widetilde{q}}\frac{r_{\theta_{b}}}{R_{p}}\frac
+{B^{\theta_{b}}}{B_{P}^{\theta_{b}}}\frac{\xi_{0}}{\xi_{\theta_{b}}}%
+\overline{D}_{b,n,0}^{\text{RF,}\theta_{b}}H\left(  \theta_{b}-\theta_{\min
+}\right)  H\left(  \theta_{\max}-\theta_{b}\right)  \sigma\left[  \frac{1}%
+{2}\sum\limits_{\sigma}\right]  _{T}\sigma\delta\left(  N_{b\Vert}%
+-N_{\Vert\text{res}}^{\theta_{b}}\right)  \left|  \Theta_{\mathbf{k,}%
+\theta_{b}}^{b,\left(  n\right)  }\right|  ^{2}%
+\end{align}%
+\begin{align}
+&  \sigma\left\{  \sigma\left(  \Psi-1\right)  \frac{\xi_{0}^{2}}{\xi^{2}%
+}\overline{D}_{b,n,0}^{\text{RF}}\left|  \Theta_{\mathbf{k}}^{b,\left(
+n\right)  }\right|  ^{2}2\pi\delta\left(  \theta-\theta_{b}\right)
+\delta\left(  N_{b\Vert}-N_{\Vert\text{res}}\right)  \right\}  \nonumber\\
+&  =\frac{1}{\lambda\widetilde{q}}\sigma\left[  \frac{1}{2}\sum\limits_{\sigma
+}\right]  _{T}\int_{\theta_{\min}}^{\theta_{\max}}d\theta\frac{1}{\left|
+\widehat{\psi}\cdot\widehat{r}\right|  }\frac{r}{R_{p}}\frac{B}{B_{P}}\left(
+\Psi-1\right)  \frac{\xi_{0}^{3}}{\xi^{3}}\sigma\overline{D}_{b,n,0}%
+^{\text{RF}}\left|  \Theta_{\mathbf{k}}^{b,\left(  n\right)  }\right|
+^{2}\delta\left(  \theta-\theta_{b}\right)  \delta\left(  N_{b\Vert}%
+-N_{\Vert\text{res}}\right)  \nonumber\\
+&  =\frac{1}{\lambda\widetilde{q}}\frac{r_{\theta_{b}}}{R_{p}}\frac
+{B^{\theta_{b}}}{B_{P}^{\theta_{b}}}\left(  \Psi^{\theta_{b}}-1\right)
+\frac{\xi_{0}^{3}}{\xi_{\theta_{b}}^{3}}\overline{D}_{b,n,0}^{\text{RF,}%
+\theta_{b}}H\left(  \theta_{b}-\theta_{\min}\right)  H\left(  \theta_{\max
+}-\theta_{b}\right)  \sigma\left[  \frac{1}{2}\sum\limits_{\sigma}\right]
+_{T}\sigma\delta\left(  N_{b\Vert}-N_{\Vert\text{res}}^{\theta_{b}}\right)
+\left|  \Theta_{\mathbf{k,}\theta_{b}}^{b,\left(  n\right)  }\right|  ^{2}%
+\end{align}
+where $H\left(  x\right)  $ is the usual Heaviside step function and
+$\overline{D}_{b,n,0}^{\text{RF,}\theta_{b}}$ is given by (\ref{dbnb}).
+
+Therefore, we find
+\begin{align}
+\widetilde{\overline{D}}_{b,n}^{\text{RF}(0)\text{D}}(p,\xi_{0}) &
+=\frac{\gamma p_{Te}}{p\left|  \xi_{0}\right|  }\frac{1}{\lambda\widetilde{q}%
+}\frac{r_{\theta_{b}}}{R_{p}}\frac{B^{\theta_{b}}}{B_{P}^{\theta_{b}}}%
+\frac{\xi_{0}}{\xi_{\theta_{b}}}\overline{D}_{b,n,0}^{\text{RF,}\theta_{b}%
+}\times\label{drf0D_dke}\\
+&  H\left(  \theta_{b}-\theta_{\min}\right)  H\left(  \theta_{\max}-\theta
+_{b}\right)  \sigma\left[  \frac{1}{2}\sum\limits_{\sigma}\right]  _{T}%
+\sigma\delta\left(  N_{b\Vert}-N_{\Vert\text{res}}^{\theta_{b}}\right)
+\left|  \Theta_{\mathbf{k,}\theta_{b}}^{b,\left(  n\right)  }\right|
+^{2}\nonumber
+\end{align}%
+\begin{align}
+\widetilde{\overline{D}}_{b,n}^{\text{RF}(0)\text{F}}(p,\xi_{0}) &
+=\frac{\gamma p_{Te}}{p\left|  \xi_{0}\right|  }\frac{1}{\lambda\widetilde{q}%
+}\frac{r_{\theta_{b}}}{R_{p}}\frac{B^{\theta_{b}}}{B_{P}^{\theta_{b}}}\left(
+\Psi^{\theta_{b}}-1\right)  \frac{\xi_{0}^{3}}{\xi_{\theta_{b}}^{3}}%
+\overline{D}_{b,n,0}^{\text{RF,}\theta_{b}}\times\label{drf0F_dke}\\
+&  H\left(  \theta_{b}-\theta_{\min}\right)  H\left(  \theta_{\max}-\theta
+_{b}\right)  \sigma\left[  \frac{1}{2}\sum\limits_{\sigma}\right]  _{T}%
+\sigma\delta\left(  N_{b\Vert}-N_{\Vert\text{res}}^{\theta_{b}}\right)
+\left|  \Theta_{\mathbf{k,}\theta_{b}}^{b,\left(  n\right)  }\right|
+^{2}\nonumber
+\end{align}

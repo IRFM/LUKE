@@ -1,0 +1,1078 @@
+\section{\bigskip Cold Plasma Model}
+
+In this section, we use the cold plasma model to calculate the wave
+properties. This approximation is valid only if the following conditions are satisfied:
+
+\begin{itemize}
+\item  The wave must exist in the cold plasma model, which is not the case of
+electrons Bernstein waves (EBW). The description of EBW requires a hot plasma model.
+
+\item  The wave remains far from resonances, where $k_{\bot}\rightarrow\infty
+$. Near resonances, mode conversion to electrostatic waves (IBW, EBW) occur,
+which are not described by cold plasma wave theory. LHCD and ECCD usually take
+place far enough from the LH and UH resonances, respectively, so that the cold
+plasma description is valid.
+
+\item  Hot plasma effects, such as the energy flow carried by the coherent
+motion of particles $\mathbf{\Phi}_{bT}$, must be negligible.
+
+\item  FLR effects must be small, that is, we must have%
+\begin{equation}
+\left|  z\right|  =\left|  \frac{k_{\perp}v_{\perp}}{\Omega}\right|  \ll1
+\end{equation}
+This condition generally holds for LHW and ECW as long as the temperature is
+not too high ($T\leq10$ keV) and the resonance harmonic is low ($n=0,1,2$).
+\end{itemize}
+
+In the first subsection, we discuss the modeling of RF $k_{\Vert}$ spectrum.
+In the second subsection, we use the cold plasma model to calculate wave
+properties. In the third and fourth subsections, we use further approximations
+to give analytical formulas for the properties of LHW and ECW. This leads to a
+simplified description of LHCD and ECCD and allows us to compare our models
+and results with other codes.
+
+\subsection{Wave Equation and Dispersion Tensor}
+
+We consider the two-fluids description of a non relativistic plasma in a
+constant magnetic field $\mathbf{B}_{0}=B_{0}\widehat{z}$. In a continuous
+homogeneous linear medium, a Fourier component $\mathbf{E}_{b}\left(
+\mathbf{k}_{b},\omega_{b}\right)  $ verifies the wave equation \cite{sti92b1}%
+
+\begin{equation}
+\mathbf{N}_{b}\times(\mathbf{N}_{b}\times\mathbf{E}_{b})+\mathbb{K}%
+\cdot\mathbf{E}_{b}=0
+\end{equation}
+or equivalently
+\begin{equation}
+(\mathbf{N}_{b}\cdot\mathbf{E}_{b})\mathbf{N}_{b}-N_{b}^{2}\mathbf{E}%
+_{b}+\mathbb{K}\cdot\mathbf{E}_{b}=0
+\end{equation}
+where $\mathbf{N}_{b}=c\mathbf{k}_{b}/\omega_{b}$ is the wave refractive index
+and $\mathbb{K}$ is the dielectric tensor. This equation can be expressed in
+tensorial form as
+\begin{equation}
+\mathbb{D}\cdot\mathbf{E}_{b}=0 \label{waveeq3}%
+\end{equation}
+where the dispersion tensor is
+\begin{equation}
+\mathbb{D=}\mathbf{N}_{b}\mathbf{N}_{b}\mathbf{-}N_{b}^{2}\mathbb{I}%
++\mathbb{K}%
+\end{equation}
+
+By evaluating the susceptibilities in the cold plasma limit, the following
+dielectric tensor is obtained \cite{bon84} in the frame $\left(  x,y,z\right)
+$:
+\begin{equation}
+\mathbb{K}=%
+\begin{pmatrix}
+K_{\perp} & -iK_{xy} & 0\\
+iK_{xy} & K_{\perp} & 0\\
+0 & 0 & K_{\Vert}%
+\end{pmatrix}
+\label{ktensor}%
+\end{equation}
+whose elements in a plasma made of species $s$ are given by
+\begin{align}
+K_{\perp}  &  =1-\sum_{s}\frac{\omega_{ps}^{2}}{\omega^{2}-\omega_{cs}^{2}%
+}\nonumber\\
+K_{\parallel}  &  =1-\sum_{s}\frac{\omega_{ps}^{2}}{\omega^{2}}\nonumber\\
+K_{xy}  &  =-\sum_{s}\frac{\omega_{ps}^{2}\omega_{cs}}{\omega(\omega
+^{2}-\omega_{cs}^{2})}%
+\end{align}
+where
+\begin{equation}
+\omega_{ps}=\sqrt{\frac{n_{s}q_{s}^{2}}{\varepsilon_{0}m_{s}}}%
+\end{equation}
+is the plasma frequency and
+\begin{equation}
+\omega_{cs}=\frac{\left|  q_{s}\right|  B_{0}}{m_{s}}%
+\end{equation}
+the cyclotron frequency for the species $s$.
+
+\subsection{Dispersion Relation}
+
+In order to have a non-trivial solution to the wave equation, the dispersion
+relation must therefore be satisfied:
+\begin{equation}
+D\left(  \mathbf{k}_{b},\omega_{b}\right)  =\left|  \mathbb{D}\right|  =0
+\label{disprel}%
+\end{equation}
+
+The axis $\widehat{x}$ is chosen such that
+\begin{equation}
+\mathbf{N}_{b}\mathbf{=}N_{b\perp}\widehat{x}+N_{b\parallel}\widehat{z}%
+\end{equation}
+
+Taking the parallel component $N_{b\parallel}$ as given, (\ref{disprel}) lead
+to the following equation for $N_{b\perp}$%
+\begin{equation}
+AN_{b\perp}^{4}+BN_{b\perp}^{2}+C=0
+\end{equation}
+with
+\begin{align}
+A  &  =K_{\perp}\\
+B  &  =\left(  N_{b\parallel}^{2}-K_{\perp}\right)  \left(  K_{\perp
+}+K_{\parallel}\right)  +K_{xy}^{2}\\
+C  &  =K_{\parallel}\left[  \left(  N_{b\parallel}^{2}-K_{\perp}\right)
+^{2}-K_{xy}^{2}\right]
+\end{align}
+or equivalently
+\begin{align}
+A  &  =K_{\perp}\\
+B  &  =\left(  K_{\perp}+K_{\parallel}\right)  N_{b\parallel}^{2}-\left(
+K_{R}K_{L}+K_{\perp}K_{\parallel}\right) \\
+C  &  =K_{b\parallel}\left(  N_{b\parallel}^{2}-K_{R}\right)  \left(
+N_{b\parallel}^{2}-K_{L}\right)
+\end{align}
+with
+\begin{align}
+K_{R}  &  =K_{\perp}+K_{xy}\\
+K_{L}  &  =K_{\perp}-K_{xy}%
+\end{align}
+
+We find the expression for $N_{b\perp}$ as a function of $N_{b\parallel}$ and
+$\omega$:
+\begin{equation}
+N_{b\perp}^{2}=\frac{-B\pm\sqrt{B^{2}-4AC}}{2A} \label{nperpform}%
+\end{equation}
+
+We see immediately that the resonances occur for $A=0$, that is,
+\begin{equation}
+K_{\perp}=0
+\end{equation}
+and that cut-offs occur for $C=0$, that is,
+\begin{equation}
+K_{R}=N_{b\parallel}^{2}%
+\end{equation}%
+\begin{equation}
+K_{L}=N_{b\parallel}^{2}%
+\end{equation}
+or
+\begin{equation}
+K_{\parallel}=0
+\end{equation}
+
+\subsection{Polarization components}
+
+Once $N_{b\perp}$ has been evaluated, the components of the polarization of
+the electric field are simply given as the eigenvector of the wave equation
+(\ref{waveeq3})
+\begin{equation}
+\mathbb{D}\cdot\mathbf{E}_{b}=0 \label{polform}%
+\end{equation}
+
+\subsection{Power flow}
+
+The relation between power flux and electric field was described using the
+vector $\mathbf{\Phi}_{b}$ defined in (\ref{phib2})
+\begin{equation}
+\mathbf{\Phi}_{b}=\mathbf{\Phi}_{bP}+\mathbf{\Phi}_{bT}%
+\end{equation}
+with (\ref{phibp2})
+\begin{equation}
+\mathbf{\Phi}_{bP}=\text{Re}\left[  \mathbf{N}_{b}-\left(  \mathbf{N}_{b}%
+\cdot\mathbf{e}_{b}\right)  \mathbf{e}_{b}^{\ast}\right]  \label{phibp}%
+\end{equation}
+and (\ref{phit})
+\begin{equation}
+\mathbf{\Phi}_{bT}=\mathbf{-}\frac{1}{2}\mathbf{e}_{b}^{\ast}\cdot
+\frac{\partial\mathbb{K}^{H}}{\partial\mathbf{N}_{b}}\cdot\mathbf{e}_{b}%
+\end{equation}
+
+In the cold plasma model, the dielectric tensor $\mathbb{K}$ is independent of
+$\mathbf{N}_{b}$ and the contribution $\mathbf{\Phi}_{bT}$, from the coherent
+motion of particles, vanishes.%
+\begin{equation}
+\mathbf{\Phi}_{bT}=0
+\end{equation}
+It is usually a very good approximation to neglect this kinetic power flux,
+even for quasi-electrostatic waves like Lower-Hybrid waves (See \ref{kinetic}).
+
+\subsection{Conclusion}
+
+The cold plasma model gives expressions (\ref{nperpform}), (\ref{polform}) and
+(\ref{phibp}) for the calculation of $N_{\bot}$, $e_{b}$ and $\mathbf{\Phi
+}_{b}$ respectively. These formulas can be generally used for the calculation
+of the diffusion coefficient in LHCD and ECCD.
+
+\section{Lower Hybrid Current Drive\label{LHCD}}
+
+Analytic expression for the properties of LH waves can be obtained in the cold
+plasma description if further approximations are made. Then, an analytical
+expression can be obtained for the LH diffusion coefficient.
+
+\subsection{Electrostatic Dispersion Relation}
+
+We consider the wave equation (\ref{waveeq3})
+\begin{equation}
+(\mathbf{N}_{b}\cdot\mathbf{E}_{b})\mathbf{N}_{b}-N_{b}^{2}\mathbf{E}%
+_{b}+\mathbb{K}\cdot\mathbf{E}_{b}=0 \label{waveeq}%
+\end{equation}
+
+The electric field can be separated into its longitudinal and transverse
+components with respect to the normalized wave vector $\mathbf{N}_{b}$:
+\begin{equation}
+\mathbf{E}_{b}=\mathbf{E}_{bL}+\mathbf{E}_{bT} \label{edecomp}%
+\end{equation}
+so that the wave equation (\ref{waveeq}) becomes
+\begin{equation}
+(N_{b}^{2}-\mathbb{K})\mathbf{E}_{bT}-\mathbb{K}\cdot\mathbf{E}_{bL}=0
+\label{waveeq2}%
+\end{equation}
+
+Electrostatic waves, and also electromagnetic waves approaching resonances,
+such as LHW, can satisfy the condition
+\begin{equation}
+N_{b}^{2}\gg|K_{ij}| \label{esapprox}%
+\end{equation}
+and therefore (\ref{waveeq2}) reduces to
+\begin{equation}
+N_{b}^{2}\mathbf{E}_{bT}-\mathbb{K}\cdot\mathbf{E}_{bL}\simeq0
+\label{waveeqes}%
+\end{equation}
+
+Dot-multiplying (\ref{waveeqes}) by $\widehat{N}_{b}=\mathbf{N}_{b}/N_{b}$
+leads to the electrostatic dispersion relation
+\begin{equation}
+D_{L}\equiv\widehat{N}_{b}\cdot\mathbb{K}\cdot\widehat{N}_{b}=0
+\label{dispreles}%
+\end{equation}
+and the transverse electric field is given by
+\begin{equation}
+\mathbf{E}_{bT}=\frac{1}{N_{b}^{2}}\mathbb{K}\cdot\mathbf{E}_{bL} \label{et}%
+\end{equation}
+
+We note from (\ref{et}) and (\ref{esapprox}) that $|\mathbf{E}_{bT}%
+|\ll|\mathbf{E}_{bL}|$. The electric field is quasi longitudinal, which
+justify the term electrostatic approximation given to the condition
+(\ref{esapprox}).
+
+\subsection{Cold Plasma Limit}
+
+Using (\ref{ktensor}), the electrostatic dispersion relation (\ref{dispreles})
+in the cold plasma limit is then given by
+\begin{equation}
+D_{L}=N_{b\perp}^{2}K_{\perp}+N_{b\parallel}^{2}K_{\parallel}=0
+\label{disprelescpl}%
+\end{equation}
+which gives an expression for $N_{b\perp}$ as a function of $N_{b\parallel}$
+and $\omega_{b}$:
+\begin{equation}
+N_{b\perp}^{2}=\frac{-K_{\parallel}}{K_{\perp}}N_{b\parallel}^{2}
+\label{nperplh0}%
+\end{equation}
+
+\subsection{Lower Hybrid Waves}
+
+We consider the lower-hybrid range of frequency in a electron-ion plasma,
+where the following ordering applies
+\begin{equation}
+\omega_{ci}\ll\omega_{b}\ll\omega_{ce}%
+\end{equation}
+
+Assuming in addition that
+\begin{equation}
+\omega_{b}\ll\omega_{pe}%
+\end{equation}
+leads to approximate expressions of the dielectric tensor components given
+by:
+\begin{align}
+K_{\perp}  &  \simeq1+\frac{\omega_{pe}^{2}}{\omega_{ce}^{2}}-\frac
+{\omega_{pi}^{2}}{\omega_{b}^{2}}\nonumber\\
+K_{\parallel}  &  \simeq-\frac{\omega_{pe}^{2}}{\omega_{b}^{2}}\label{kpar}\\
+K_{xy}  &  \simeq\frac{\omega_{pe}^{2}}{\omega_{b}\omega_{ce}}
+\label{disptenlh}%
+\end{align}
+where $K_{\perp}$ can be rewritten as%
+\begin{align}
+K_{\perp}  &  =\left(  1+\frac{\omega_{pe}^{2}}{\omega_{ce}^{2}}\right)
+\left(  1-\frac{\omega_{pi}^{2}/\omega_{b}^{2}}{1+\omega_{pe}^{2}/\omega
+_{ce}^{2}}\right) \label{kperp}\\
+&  =\left(  1+\frac{\omega_{pe}^{2}}{\omega_{ce}^{2}}\right)  \left(
+1-\frac{\omega_{\text{LH}}^{2}}{\omega_{b}^{2}}\right) \\
+&  =\frac{\omega_{pi}^{2}}{\omega_{b}^{2}}\left(  \frac{\omega_{b}^{2}}%
+{\omega_{\text{LH}}^{2}}-1\right)
+\end{align}
+where
+\begin{equation}
+\omega_{\text{LH}}^{2}=\frac{\omega_{pi}^{2}}{1+\omega_{pe}^{2}/\omega
+_{ce}^{2}}%
+\end{equation}
+is the lower hybrid frequency.
+
+The perpendicular index of refraction becomes
+\begin{equation}
+N_{b\perp}^{2}=\frac{\omega_{pe}^{2}/\omega_{pi}^{2}}{\left(  \omega_{b}%
+^{2}/\omega_{\text{LH}}^{2}-1\right)  }N_{b\parallel}^{2} \label{nperplh2}%
+\end{equation}
+We recognize that $N_{b\perp}\rightarrow\infty$ as the the lower-hybrid
+frequency approaches the wave frequency. However, in most LHCD scenarios, wave
+frequency are sensibly higher than the lower-hybrid frequency in order to
+avoid conversion to IBW. Typically, in Alcator C-Mod, we have
+\begin{equation}
+\frac{\omega_{b}}{\omega_{\text{LH}}}\sim2\text{ or }3
+\end{equation}
+
+In that case, and as shown in \ref{kinetic}, the contribution of
+$\mathbf{\Phi}_{bT}$ to the power flow can be neglected. The cold plasma
+description therefore remains valid.
+
+\subsection{Polarization}
+
+The LH Waves of concern for LHCD are quasi-electrostatic, and therefore the
+electric field is quasi-longitudinal ($\mathbf{E}_{b}\parallel\mathbf{N}_{b}$)
+and we have
+\begin{equation}
+e_{b,i}=\frac{E_{b,i}}{\left|  \mathbf{E}_{b}\right|  }\simeq\frac{k_{b,i}%
+}{\left|  \mathbf{k}_{b}\right|  }%
+\end{equation}
+for any component $i$, so that the polarization elements become
+\begin{align}
+e_{b,+}  &  \equiv\frac{E_{b,x}+iE_{b,y}}{\sqrt{2}\left|  \mathbf{E}%
+_{b}\right|  }=\frac{k_{b\bot}}{\sqrt{2}k_{b}}\left(  \cos\alpha+i\sin
+\alpha\right)  =\frac{k_{b\bot}}{\sqrt{2}k_{b}}e^{+i\alpha}\label{pollh}\\
+e_{b,-}  &  \equiv\frac{E_{b,x}-iE_{b,y}}{\sqrt{2}\left|  \mathbf{E}%
+_{b}\right|  }=\frac{k_{b\bot}}{\sqrt{2}k_{b}}\left(  \cos\alpha-i\sin
+\alpha\right)  =\frac{k_{b\bot}}{\sqrt{2}k_{b}}e^{-i\alpha}\nonumber\\
+e_{b,\Vert}  &  \equiv\frac{E_{b,z}}{\left|  \mathbf{E}_{b}\right|  }%
+=\frac{k_{b\parallel}}{k_{b}}\nonumber
+\end{align}
+
+\subsection{Determination of $\Theta_{\mathbf{k}}^{b,\text{LH}}$}
+
+Lower Hybrid Current Drive (LHCD) results from momentum exchange from the LH
+wave to the plasma through Landau damping (harmonic $n=0$). In this case, the
+coefficient (\ref{thetakn2}) becomes
+\begin{align}
+\Theta_{\mathbf{k}}^{b,0}  &  =\frac{1}{\sqrt{2}}e_{b,+}e^{-i\alpha}%
+J_{-1}\left(  \frac{k_{b\bot}v_{\bot}}{\Omega}\right)  +\frac{1}{\sqrt{2}%
+}e_{b,-}e^{+i\alpha}J_{1}\left(  \frac{k_{b\bot}v_{\bot}}{\Omega}\right)
++\frac{p_{\Vert}}{p_{\bot}}e_{b,\Vert}J_{0}\left(  \frac{k_{b\bot}v_{\bot}%
+}{\Omega}\right) \\
+&  =\frac{1}{\sqrt{2}}\left(  e_{b,-}e^{+i\alpha}-e_{b,+}e^{-i\alpha}\right)
+J_{1}\left(  \frac{k_{b\bot}v_{\bot}}{\Omega}\right)  +\frac{p_{\Vert}%
+}{p_{\bot}}e_{b,\Vert}J_{0}\left(  \frac{k_{b\bot}v_{\bot}}{\Omega}\right)
+\end{align}
+
+Using (\ref{pollh}), we see that the perpendicular components cancel and we
+are left with
+\begin{equation}
+\Theta_{\mathbf{k}}^{b,\text{LH}}=\frac{p_{\Vert}}{p_{\bot}}\frac
+{k_{b\parallel}}{k_{b}}J_{0}\left(  \frac{k_{b\bot}v_{\bot}}{\Omega}\right)
+\label{thetaklh}%
+\end{equation}
+
+The argument of the Bessel function in (\ref{thetaklh}) is
+\begin{equation}
+\frac{k_{b\bot}v_{\bot}}{\Omega}=N_{b\bot}\frac{v_{\bot}}{c}\frac{\omega_{b}%
+}{\Omega}%
+\end{equation}
+where an expression for $N_{\bot}$ is given by (\ref{nperplh2}). The argument
+of the Bessel function becomes
+\begin{equation}
+\frac{k_{b\bot}v_{\bot}}{\Omega}=\frac{1}{\sqrt{\omega_{b}^{2}/\omega
+_{\text{LH}}^{2}-1}}\frac{\omega_{pe}}{\omega_{pi}}\frac{\omega_{b}}%
+{\omega_{ce}}N_{b\parallel}\frac{p_{\bot}}{p_{Te}}\beta_{Te}%
+\end{equation}
+and we see that for $\omega_{pe}\sim\omega_{ce}$ and $\omega_{b}\sim
+2\omega_{\text{LH}}$, we get
+\begin{equation}
+\left|  \frac{k_{b\bot}v_{\bot}}{\Omega}\right|  \sim\beta_{Te}N_{b\parallel
+}\frac{p_{\bot}}{p_{Te}}%
+\end{equation}
+
+Given that most electrons concerned with LHCD have $p_{\bot}\sim p_{Te}$, and
+that for LHCD we have typically $N_{b\parallel}\sim2$, we see that it is
+reasonable to take the limit
+\begin{equation}
+\left|  \frac{k_{b\bot}v_{\bot}}{\Omega}\right|  \ll1
+\end{equation}
+as long as the plasma is not too relativistic ($\beta_{Te}\ll1$). This limit
+is consistent with the validity condition of the cold plasma description. In
+this limit, valid for most LHCD scenarios, we have
+\begin{equation}
+\Theta_{\mathbf{k}}^{b,\text{LH}}\simeq\frac{p_{\Vert}}{p_{\bot}}%
+\frac{k_{b\parallel}}{k_{b}} \label{thetaklh2}%
+\end{equation}
+
+\subsection{Determination of $\mathbf{\Phi}_{bP}^{\text{LH}}$}
+
+The vector $\mathbf{\Phi}_{b}^{\text{LH}}$ describes the relation between the
+energy flux and the electric field. Although LHW are almost electrostatic, the
+dominant contribution to the power flux is the wave Poynting flux
+$\mathbf{\Phi}_{bP}^{\text{LH}}$, assuming that the wave frequency remains
+sensibly higher than the LH frequency. The contribution of the Kinetic power
+flux is calculated in \ref{kinetic}. In most LHCD scenarios, this contribution
+is not more than a few percents of the total flux and can therefore be
+neglected. We have (\ref{phibp}).%
+\begin{equation}
+\mathbf{\Phi}_{bP}=\text{Re}\left[  \left|  e_{bT}\right|  ^{2}\mathbf{N}%
+_{b}-N_{b}e_{bL}\mathbf{e}_{bT}^{\ast}\right]  \label{phiblh}%
+\end{equation}
+
+LH waves are quasi-electrostatic, so that the longitudinal and transverse
+components are given by (\ref{et})
+\begin{align}
+e_{bL}  &  \simeq1\\
+\mathbf{e}_{bT}  &  =\frac{1}{N_{b}^{2}}\mathbb{K}\cdot\mathbf{e}_{bL}%
+\end{align}
+so that the first term in (\ref{phiblh}) can be neglected, and
+\begin{align}
+\mathbf{\Phi}_{bP}^{\text{LH}}  &  \simeq\text{Re}\left(  -e_{bL}\frac
+{1}{N_{b}}\mathbb{K}^{\ast}\cdot\mathbf{e}_{bL}^{\ast}\right) \nonumber\\
+&  =\text{Re}\left(  -\frac{1}{N_{b}}\mathbb{K}^{\ast}\cdot\widehat{N}\right)
+\label{poyntinges}%
+\end{align}
+
+Note from (\ref{poyntinges}) and (\ref{dispreles}) that the Poynting flux is
+in the direction perpendicular to the wave vector:
+\begin{equation}
+\mathbf{\Phi}_{bP}^{\text{LH}}\cdot\widehat{N}=0
+\end{equation}
+
+We finally find, using (\ref{ktensor}),
+\begin{equation}
+\mathbf{\Phi}_{bP}^{\text{LH}}=-\frac{1}{N_{b}^{2}}\left(  K_{\perp}%
+\mathbf{N}_{b\perp}+K_{\Vert}N_{b\Vert}\widehat{z}\right)  \label{phiblh2}%
+\end{equation}
+
+\subsection{Determination of $\mathbf{\Phi}_{bT}^{\text{LH}}$ \label{kinetic}}
+
+\bigskip In the analysis above the kinetic part of the power flux, due to the
+coherent motion of charge carriers, has been neglected. This approximation
+must be justified by comparing the Poynting and the kinetic fluxes.
+
+The normalized expression for the kinetic power flux associated with an
+electromagnetic wave in a kinetic plasma is given by (\ref{phit})
+\begin{equation}
+\mathbf{\Phi}_{bT}=\mathbf{-}\frac{\omega_{b}}{2c}\mathbf{e}_{b}^{\ast}%
+\cdot\frac{\partial\mathbb{K}^{H}}{\partial\mathbf{k}}\cdot\mathbf{e}_{b}
+\label{kinflux}%
+\end{equation}
+
+\subsubsection{Electrostatic Waves}
+
+In the electrostatic approximation, the electric field is quasi-longitudinal
+(\ref{et})
+\begin{equation}
+\left|  \mathbf{e}_{bT}\right|  \ll e_{bL}\simeq1
+\end{equation}
+and (\ref{kinflux}) becomes
+\begin{equation}
+\mathbf{\Phi}_{bT}=\mathbf{-}\frac{\omega_{b}}{2c}\widehat{k}_{b}\cdot
+\frac{\partial\mathbb{K}^{H}}{\partial\mathbf{k}}\cdot\widehat{k}_{b}
+\label{kinfluxes1}%
+\end{equation}
+
+In the frame of the wave vector $\widehat{k}_{b}$, (\ref{kinfluxes1}) can then
+be expressed as
+\begin{equation}
+\mathbf{\Phi}_{bT}=\mathbf{-}\frac{\omega_{b}}{2c}\frac{\partial K_{L}^{H}%
+}{\partial k}\widehat{k}_{b} \label{kinfluxes2}%
+\end{equation}
+where
+\begin{equation}
+K_{L}=\widehat{k}_{b}\cdot\mathbb{K}\cdot\widehat{k}_{b}%
+\end{equation}
+is the longitudinal (electrostatic) component of the dielectric tensor.
+
+\subsubsection{Lower Hybrid Waves}
+
+An expression of the electrostatic dispersion relation for LH waves that
+includes the first-order thermal corrections is given by \cite{por02}:
+\begin{equation}
+K_{L}^{\text{LH}}(\omega,k_{b})\simeq1+\frac{k_{b\perp}^{2}}{k_{b}^{2}}%
+\frac{\omega_{pe}^{2}}{\omega_{ce}^{2}}\left(  1-\frac{3b_{e}}{4}\right)
+-\frac{k_{b\perp}^{2}}{k_{b}^{2}}\frac{\omega_{pi}^{2}}{\omega_{b}^{2}}\left(
+1+\frac{3b_{i}\omega_{ci}^{2}}{\omega_{b}^{2}}\right)  -\frac{k_{b\parallel
+}^{2}}{k_{b}^{2}}\frac{\omega_{pe}^{2}}{\omega_{b}^{2}} \label{dispreleslhkin}%
+\end{equation}
+where the finite Larmor radius (FRL) effects are scaled by the parameters
+\begin{equation}
+b_{e}=\frac{k_{b\perp}^{2}v_{Te}^{2}}{\omega_{ce}^{2}},\qquad b_{i}%
+=\frac{k_{b\perp}^{2}v_{Ti}^{2}}{\omega_{ci}^{2}} \label{flr}%
+\end{equation}
+with $v_{T}^{2}=T/m$.
+
+The $k$-dependence of the dispersion relation is found in the thermal
+correction terms so that
+\begin{equation}
+\frac{\partial K_{L}^{\text{LH}}}{\partial k}=-\frac{3}{4}\frac{k_{b\perp}%
+^{4}}{k_{b}^{4}}\frac{\omega_{pe}^{2}}{\omega_{ce}^{2}}\frac{2k_{b}v_{Te}^{2}%
+}{\omega_{ce}^{2}}-\frac{k_{b\perp}^{4}}{k_{b}^{4}}\frac{\omega_{pi}^{2}%
+}{\omega_{b}^{2}}\frac{3\omega_{ci}^{2}}{\omega_{b}^{2}}\frac{2k_{b}v_{Ti}%
+^{2}}{\omega_{ci}^{2}} \label{kdepdispreleslhkin}%
+\end{equation}
+
+Inside the plasma, we have $k_{b\parallel}^{2}\ll k_{b\perp}^{2}$ and
+therefore $k_{b\perp}^{2}/k_{b}^{2}\simeq1$. We finally get the following
+expression for the kinetic flux associated with quasi-electrostatic LH waves:
+\begin{equation}
+\mathbf{\Phi}_{bT}^{\text{LH}}=\frac{1}{N_{b}}\left(  \frac{1}{4}\frac
+{\omega_{pe}^{2}k_{b}^{2}v_{Te}^{2}}{\omega_{ce}^{4}}+\frac{\omega_{pi}%
+^{2}k_{b}^{2}v_{Ti}^{2}}{\omega_{b}^{4}}\right)  \widehat{k}_{b}
+\label{kinfluxeslh}%
+\end{equation}
+
+The kinetic flux is oriented in the direction of the wave vector, and the
+incident flux on the flux surface
+\begin{equation}
+\left|  \mathbf{\Phi}_{bT}^{\text{LH}}\cdot\widehat{\psi}\right|  =\frac
+{1}{N_{b}}\left(  \frac{1}{4}\frac{\omega_{pe}^{2}k_{b}^{2}v_{Te}^{2}}%
+{\omega_{ce}^{4}}+\frac{\omega_{pi}^{2}k_{b}^{2}v_{Ti}^{2}}{\omega_{b}^{4}%
+}\right)  \left|  \widehat{k}_{b}\cdot\widehat{\psi}\right|
+\label{kinfluxeslhperp}%
+\end{equation}
+This incident kinetic flux must be compared to the incident Poynting flux
+taken in the cold plasma limit from (\ref{phiblh2})
+\begin{equation}
+\left|  \mathbf{\Phi}_{bP}^{\text{LH}}\cdot\widehat{\psi}\right|
+=\frac{K_{\perp}}{N_{b}^{2}}\left|  \mathbf{N}_{b\perp}\cdot\widehat{\psi
+}\right|  \simeq\frac{K_{\perp}}{N_{b}}\left|  \widehat{k}_{b}\cdot
+\widehat{\psi}\right|  \label{poyntfluxeslhperp}%
+\end{equation}
+
+The ratio of the incident kinetic power flux to the Poynting flux is given by
+\begin{equation}
+\frac{\left|  \mathbf{\Phi}_{bT}^{\text{LH}}\cdot\widehat{\psi}\right|
+}{\left|  \mathbf{\Phi}_{bP}^{\text{LH}}\cdot\widehat{\psi}\right|  }=\frac
+{1}{K_{\perp}}\left(  \frac{3}{4}\frac{\omega_{pe}^{2}v_{Te}^{2}k_{b}^{2}%
+}{\omega_{ce}^{4}}+3\frac{\omega_{pi}^{2}v_{Ti}^{2}k_{b}^{2}}{\omega_{b}^{4}%
+}\right)  \label{fluxratio}%
+\end{equation}
+
+Using ({\ref{nperplh0}) we have
+\begin{equation}
+k_{b}^{2}\simeq\frac{\omega_{b}^{2}}{c^{2}}N_{b\perp}^{2}\simeq\frac
+{\omega_{b}^{2}}{c^{2}}\frac{\left(  -K_{\parallel}\right)  }{K_{\perp}%
+}N_{b\parallel}^{2}\simeq\frac{1}{K_{\perp}}\frac{\omega_{pe}^{2}}{c^{2}%
+}N_{b\parallel}^{2}%
+\end{equation}
+so that
+\begin{equation}
+\frac{\mathbf{\Phi}_{bT\perp}^{\text{LH}}}{\mathbf{\Phi}_{bP\perp}^{\text{LH}%
+}}=\frac{3\beta_{Te}^{2}N_{b\parallel}^{2}}{(1+\omega_{pe}^{2}/\omega_{ce}%
+^{2})(1-\omega_{\text{LH}}^{2}/\omega_{b}^{2})}\left(  \frac{1}{4}\frac
+{\omega_{pe}^{4}}{\omega_{ce}^{4}}+\frac{\omega_{pi}^{4}}{\omega_{b}^{4}}%
+\frac{T_{i}}{T_{e}}\right)  \label{fluxratio2}%
+\end{equation}
+where $\beta_{Te}^{2}=T_{e}/mc^{2}$. }
+
+It can be seen from (\ref{fluxratio2}) that the kinetic part of the power flux
+becomes significant only as the wave approaches the lower-hybrid resonance
+very closely. In a typical LHCD context (for instance Alcator C-Mod,
+\cite{bon00}), we have
+\begin{equation}
+\omega_{b}\sim2\omega_{\text{LH}},\ \omega_{pe}\sim\Omega_{e},\ \omega
+_{pi}\sim\omega,\ T_{e}\sim T_{i}\text{ and }\beta_{Te}\sim0.1 \label{cmod}%
+\end{equation}
+so that the kinetic part of the power flux is not more than a few percents.
+
+\subsection{LH Diffusion Coefficient}
+
+\subsubsection{General expression in small FLR\ limit and ES approximation}
+
+The normalized bounce-averaged diffusion coefficient for the Fokker-Planck
+equation is given by (\ref{dbnb})%
+\begin{align}
+\overline{D}_{b}^{\text{LH}(0)}(p,\xi_{0})  &  =\frac{\gamma p_{Te}}{p\left|
+\xi_{0}\right|  }\frac{1}{\lambda\widetilde{q}}\frac{r_{\theta_{b}}}{R_{p}%
+}\frac{B^{\theta_{b}}}{B_{P}^{\theta_{b}}}\frac{\xi_{0}^{2}}{\xi_{\theta_{b}%
+}^{2}}\Psi_{\theta_{b}}\overline{D}_{b,0}^{\text{LH,}\theta_{b}}%
+\times\nonumber\\
+&  H\left(  \theta_{b}-\theta_{\min}\right)  H\left(  \theta_{\max}-\theta
+_{b}\right)  \left[  \frac{1}{2}\sum\limits_{\sigma}\right]  _{T}\delta\left(
+N_{b\Vert}-N_{\Vert\text{res}}^{\theta_{b}\text{LH}}\right)  \left|
+\Theta_{\mathbf{k,}\theta_{b}}^{b,\text{LH}}\right|  ^{2} \label{dlh2}%
+\end{align}
+with%
+\begin{align}
+\overline{D}_{b,0}^{\text{LH,}\theta_{b}}  &  =\frac{1}{r_{\theta_{b}%
+}R_{\theta_{b}}}\frac{1}{m_{e}\ln\Lambda}\frac{1}{\omega_{b}\omega_{pe}^{2}%
+}\frac{f_{\text{inc},b}^{l+1/2}}{\left|  \mathbf{\Phi}_{b}^{\text{LH}}\right|
+}P_{b,\text{inc}}\\
+N_{\Vert\text{res}}^{\theta_{b}\text{LH}}  &  =\frac{1}{\beta_{Te}}%
+\frac{\gamma p_{Te}}{p\xi_{\theta_{b}}}%
+\end{align}
+
+Within the electrostatic approximation and in the small FLR limit, we have
+obtained the following expressions for the LHW properties (\ref{thetaklh2}),
+(\ref{nperplh0}), (\ref{phiblh2})
+\begin{align}
+\Theta_{\mathbf{k},\theta_{b}}^{b,\text{LH}}  &  =\frac{\xi_{\theta_{b}}%
+}{\sqrt{\Psi_{\theta_{b}}\left(  1-\xi_{0}^{2}\right)  }}\frac{N_{b\parallel}%
+}{N_{b}}\\
+N_{b\perp}  &  =\sqrt{\frac{-K_{\parallel}}{K_{\perp}}}N_{b\parallel}\\
+\mathbf{\Phi}_{b}^{\text{LH}}  &  =-\frac{1}{N_{b}^{2}}\left(  K_{\perp
+}\mathbf{N}_{b\perp}+K_{\Vert}N_{b\Vert}\widehat{z}\right)
+\end{align}
+so that%
+\begin{align}
+\left|  \mathbf{\Phi}_{b}^{\text{LH}}\right|   &  =\frac{1}{N_{b}^{2}}%
+\sqrt{K_{\perp}^{2}N_{b\perp}^{2}+K_{\Vert}^{2}N_{b\Vert}^{2}}\\
+&  \simeq\frac{N_{b\Vert}}{N_{b}^{2}}\left|  K_{\Vert}\right| \\
+&  =\frac{K_{\perp}}{N_{b\Vert}}%
+\end{align}
+and where $K_{\perp}$ and $K_{\Vert}$ are given by (\ref{kperp}) and
+(\ref{kpar}) respectively
+
+\subsubsection{Simplified expression for LHCD}
+
+We consider the limit of a large aspect ratio tokamak with circular
+flux-surfaces (limit of a cylindrical plasma). In that case, $r_{\theta_{b}%
+}/R_{p}\rightarrow0$ and the effects of magnetic trapping disppear. We can use
+the following asymptotic expressions
+\begin{align}
+\Psi_{\theta_{b}}  &  \rightarrow1\\
+\lambda\left(  \psi,\xi_{0}\right)   &  \rightarrow1\\
+\frac{1}{\widetilde{q}}\frac{r_{\theta_{b}}}{R_{p}}\frac{B^{\theta_{b}}}%
+{B_{P}^{\theta_{b}}}  &  \rightarrow1\\
+\frac{\xi_{\theta_{b}}}{\xi_{0}}  &  \rightarrow1
+\end{align}
+
+Because of cylindrical symmetry, the dependence $\theta_{b}$ on disappears.
+
+The QL diffusion coefficient for LHCD\ (\ref{dlh2}) can therefore be written
+as%
+\begin{equation}
+\overline{D}_{b}^{\text{LH}(0)}(p,\xi_{0})=\frac{\gamma p_{Te}}{p\left|
+\xi_{0}\right|  }\frac{\xi_{0}^{2}}{\left(  1-\xi_{0}^{2}\right)  }%
+\frac{K_{\perp}}{\left(  -K_{\parallel}\right)  }\overline{D}_{b,0}%
+^{\text{LH}}\frac{1}{\Delta N_{b\Vert}}H\left(  N_{\Vert\text{res}}%
+^{\text{LH}}-N_{b\Vert\min}\right)  H\left(  N_{b\Vert\max}-N_{\Vert
+\text{res}}^{\text{LH}}\right)
+\end{equation}
+with
+\begin{align}
+\overline{D}_{b,0}^{\text{LH}}  &  =\frac{1}{rR_{p}}\frac{1}{m_{e}\ln\Lambda
+}\frac{1}{\omega_{b}\omega_{pe}^{2}}\frac{N_{b\parallel,0}}{K_{\perp}%
+}f_{\text{inc},b}^{l+1/2}P_{b,\text{inc}}\\
+N_{\Vert\text{res}}^{\text{LH}}  &  =\frac{1}{\beta_{Te}}\frac{\gamma p_{Te}%
+}{p\xi_{0}}%
+\end{align}
+and where we used $N_{b}\simeq N_{b\perp}$ and assume a square power spectrum
+as in (\ref{square}).
+
+In order to compare with LHCD\ operators found in the litterature, we redefine
+the LH constant factor such that%
+\begin{equation}
+\overline{D}_{b}^{\text{LH}(0)}(p,\xi_{0})=\frac{\gamma p_{Te}}{p\left|
+\xi_{0}\right|  }\frac{\xi_{0}^{2}}{\left(  1-\xi_{0}^{2}\right)  }%
+\overline{D}_{b,0\text{,new}}^{\text{LH}}H\left(  N_{\Vert\text{res}%
+}^{\text{LH}}-N_{b\Vert\min}\right)  H\left(  N_{b\Vert\max}-N_{\Vert
+\text{res}}^{\text{LH}}\right)
+\end{equation}
+with
+\begin{align}
+\overline{D}_{b,0\text{,new}}^{\text{LH}}  &  =\frac{N_{b\parallel,0}^{2}%
+}{N_{b\bot,0}^{2}}\frac{1}{\Delta N_{b\Vert}}\overline{D}_{b,0}^{\text{LH}}\\
+&  =\frac{1}{rR_{p}}\frac{1}{m_{e}\ln\Lambda}\frac{\omega_{b}}{\omega_{pe}%
+^{4}}\frac{N_{b\parallel,0}}{\Delta N_{b\Vert}}f_{\text{inc},b}^{l+1/2}%
+P_{b,\text{inc}} \label{dlh1}%
+\end{align}
+
+A familiar expression for the LH QL operator is obtained in cylindrical
+geometry. From (\ref{divcyl}) and (\ref{dcyl1}-\ref{dcyl4}) we see that for
+LHCD, the QL\ operator can be rewritten as
+\begin{align}
+Q^{\text{LH}}(f)  &  =\frac{\partial}{\partial p_{\Vert}}D_{\Vert\Vert
+}^{\text{RF}}\frac{\partial f}{\partial p_{\Vert}}\nonumber\\
+&  =\sum_{b}\frac{\partial}{\partial p_{\Vert}}\overline{D}_{b,0\text{,new}%
+}^{\text{LH}}\frac{v_{Te}}{\left|  v_{\Vert}\right|  }H\left(  \frac
+{c}{v_{\Vert}}-N_{b\Vert\min}\right)  H\left(  N_{b\Vert\max}-\frac
+{c}{v_{\Vert}}\right)  \frac{\partial f}{\partial p_{\Vert}} \label{dlh}%
+\end{align}
+
+Although it is better to keep the exact formula (\ref{dlh}), the factor
+$v_{Te}/\left|  v_{\Vert}\right|  $ has often been neglected in the
+litterature, which is an acceptable approximation when $\overline
+{D}_{b,0\text{,new}}^{\text{LH}}\gg\nu_{e}p_{Te}^{2}$ and $\Delta N_{b\Vert
+}\ll N_{b\Vert\min}$. In this case, considering only one ray $b$, the LH
+Operator reduces to
+\begin{equation}
+Q^{\text{LH}}(f)\simeq\left\{
+\begin{array}
+[c]{cc}%
+\dfrac{\partial}{\partial p_{\Vert}}\overline{D}_{0\text{,new}}^{\text{LH}%
+}\dfrac{\partial f}{\partial p_{\Vert}} & \text{for }v_{1}<\dfrac{v_{\Vert}%
+}{v_{Te}}<v_{2}\\
+0 & \text{otherwise}%
+\end{array}
+\right.
+\end{equation}
+with
+\begin{align}
+v_{1}  &  =\frac{1}{\beta_{Te}N_{\Vert\max}}\\
+v_{2}  &  =\frac{1}{\beta_{Te}N_{\Vert\min}}\\
+\overline{D}_{0\text{,new}}^{\text{LH}}  &  =\overline{\left[  \frac{v_{Te}%
+}{\left|  v_{\Vert}\right|  }\right]  }\overline{D}_{b,0\text{,new}%
+}^{\text{LH}}\\
+&  =\frac{1}{rR_{p}}\frac{1}{\left|  \left(  v_{1}+v_{2}\right)  /2\right|
+}\frac{1}{m_{e}\ln\Lambda}\frac{\omega}{\omega_{pe}^{4}}\frac{N_{\parallel,0}%
+}{\Delta N_{\Vert}}f_{\text{inc}}^{l+1/2}P_{\text{inc}}%
+\end{align}
+where $\overline{\left[  \dfrac{v_{Te}}{\left|  v_{\Vert}\right|  }\right]  }$
+is an averaged value of $\dfrac{v_{Te}}{\left|  v_{\Vert}\right|  }$ which can
+be taken to be $\dfrac{1}{\beta_{Te}N_{\Vert,0}}$ and then%
+\begin{equation}
+\overline{D}_{0\text{,new}}^{\text{LH}}=\frac{1}{rR_{p}}\frac{1}{\beta_{Te}%
+}\frac{1}{m_{e}\ln\Lambda}\frac{\omega}{\omega_{pe}^{4}}\frac{1}{\Delta
+N_{\Vert}}f_{\text{inc}}^{l+1/2}P_{\text{inc}}%
+\end{equation}
+
+\section{Electron Cyclotron Current Drive\label{ECCD}}
+
+The cold plasma description is usually a good approximation to determine the
+ECW properties, as long as we stay away from the upper-hybrid resonance, where
+mode-conversion to EBW occurs. However, even in the cold plasma model, the
+polarizations are usually mixed for oblique propagation, and no simple
+analytical formulation is possible. Still, it is possible to find limit cases
+(small FLR effects, small $N_{\Vert}$) for which a simple analytical
+derivation is possible.
+
+\subsection{Polarization}
+
+In the case of mostly perpendicular propagation, where $\left|  N_{\Vert
+}\right|  \ll1$, the two modes are the quasi-X and quasi-O modes.
+
+The polarization is mostly right-hand circular for X and parallel linear for
+O. The only exception is for the X mode near the first harmonic $n=1$ where
+$e_{b,-}^{\text{X}}$ $\simeq0$. For this reason, the first-harmonic is almost
+transparent to the X-mode and this resonance is usually not considered.
+Moreover, this harmonic can only be reached from the high field side, because
+of the right-hand cut-off. From now, we consider only the X mode with $n\geq2$.
+
+\subsection{Determination of $\Theta_{\mathbf{k}}^{b,\text{EC}}$}
+
+\subsubsection{Small FLR\ limit}
+
+Electron Cyclotron Current Drive (ECCD) results from momentum exchange from
+the EC wave to the plasma through electron cyclotron damping at some harmonic
+$n$. For a ray $b$, considering a given harmonic $n$, the coefficient
+(\ref{thetakn2}) is
+\begin{equation}
+\Theta_{\mathbf{k}}^{b,n}=\frac{1}{\sqrt{2}}e_{b,+}e^{-i\alpha}J_{n-1}\left(
+z_{b}\right)  +\frac{1}{\sqrt{2}}e_{b,-}e^{+i\alpha}J_{n+1}\left(
+z_{b}\right)  +\frac{p_{\Vert}}{p_{\bot}}e_{b,\Vert}J_{n}\left(  z_{b}\right)
+\end{equation}
+where $z_{b}=k_{b\bot}v_{\bot}/\Omega$.
+
+Since the resonance condition is $\omega_{b}-k_{b\Vert}v_{\Vert}-n\Omega=0$
+and
+\begin{equation}
+\Omega=\frac{q_{e}B}{\gamma m_{e}}=-\frac{\omega_{ce}}{\gamma}<0
+\end{equation}
+the only harmonics to be considered for electrons are for
+\begin{equation}
+n\leq-1
+\end{equation}
+
+Applying the substitution
+\begin{equation}
+n^{\prime}=-n\geq1
+\end{equation}
+and renaming $n^{\prime}\rightarrow n\geq0$, we get
+\begin{align}
+\Theta_{\mathbf{k}}^{b,\text{EC}n} &  =\frac{1}{\sqrt{2}}e_{b,+}e^{-i\alpha
+}J_{-n-1}\left(  z_{b}\right)  +\frac{1}{\sqrt{2}}e_{b,-}e^{+i\alpha}%
+J_{-n+1}\left(  z_{b}\right)  +\frac{p_{\Vert}}{p_{\bot}}e_{b,\Vert}%
+J_{-n}\left(  z_{b}\right)  \label{thetaEC}\\
+&  =\frac{1}{\sqrt{2}}e_{b,+}e^{-i\alpha}\left(  -1\right)  ^{n+1}%
+J_{n+1}\left(  z_{b}\right)  +\frac{1}{\sqrt{2}}e_{b,-}e^{+i\alpha}\left(
+-1\right)  ^{n-1}J_{n-1}\left(  z_{b}\right)  +\frac{p_{\Vert}}{p_{\bot}%
+}e_{b,\Vert}\left(  -1\right)  ^{n}J_{n}\left(  z_{b}\right)
+\end{align}
+
+We have
+\begin{equation}
+z_{b}=\frac{k_{b\bot}v_{\bot}}{\Omega}=-N_{b\bot}\frac{p_{\bot}}{m_{e}c}%
+\frac{\omega_{b}}{\omega_{ce}}%
+\end{equation}
+Using $\omega_{b}\sim n\omega_{ce}$, we get an estimation for $\left|
+z_{b}\right|  $%
+\begin{equation}
+\left|  z_{b}\right|  \sim nN_{b\bot}\frac{p_{\bot}}{p_{Te}}\beta_{Te}%
+\end{equation}
+Typically, for ECCD in tokamaks, we have
+\begin{equation}
+N_{b\bot}\lesssim1,\;\beta_{Te}\lesssim0.1
+\end{equation}
+and most electrons of concern have
+\begin{equation}
+\frac{p_{\bot}}{p_{Te}}\leq3
+\end{equation}
+so that for low harmonics, the condition $\left|  z_{b}\right|  \ll1$ is
+satisfied. In other words, the Larmor radius remains small compared to the
+perpendicular wavelength. This condition is consistent with the conditions of
+the cold plasma description of the EC waves. From now on, we assume $\left|
+z_{b}\right|  \ll1$, which is the : limit of small FLR effects.
+
+In this case, for $n\geq0$, the following approximate expression can be used
+\begin{equation}
+J_{n}\left(  z\right)  \simeq\frac{1}{n!}\left(  \frac{z}{2}\right)  ^{n}%
+\end{equation}
+and we have
+\begin{equation}
+\Theta_{\mathbf{k}}^{b,\text{EC}n}\simeq\frac{e_{b,+}}{\sqrt{2}}e^{-i\alpha
+}\left(  -1\right)  ^{n+1}\frac{1}{\left(  n+1\right)  !}\left(  \frac{z_{b}%
+}{2}\right)  ^{n+1}+\frac{e_{b,-}}{\sqrt{2}}e^{+i\alpha}\left(  -1\right)
+^{n-1}\frac{1}{\left(  n-1\right)  !}\left(  \frac{z_{b}}{2}\right)
+^{n-1}+\frac{p_{\Vert}}{p_{\bot}}e_{b,\Vert}\frac{1}{n!}\left(  \frac{z_{b}%
+}{2}\right)  ^{n} \label{thetaklowz}%
+\end{equation}
+
+\subsubsection{X-mode, $n\geq2$}
+
+Because $e_{b,-}$ is the dominant polarization component and $\left|
+z_{b}\right|  \ll1$, the second term in the sum in (\ref{thetaklowz}) is
+largely dominant. We obtain%
+\begin{equation}
+\Theta_{\mathbf{k}}^{b,\text{EC-Xn}}\simeq e^{+i\alpha}\frac{e_{b,-}}{\sqrt
+{2}}\frac{1}{\left(  n-1\right)  !}\left(  \frac{1}{2}N_{b\bot}\frac{p_{\bot}%
+}{m_{e}c}\frac{\omega_{b}}{\omega_{ce}}\right)  ^{n-1} \label{thetakX}%
+\end{equation}
+
+\subsubsection{O-mode, $n\geq1$}
+
+\bigskip For the O-mode, things are more complicated. However, if $\left|
+N_{\Vert}\right|  \ll1$, $e_{b,\Vert}$ is much larger than $e_{b,-}$. The last
+term in (\ref{thetaklowz}) is dominant if%
+\begin{equation}
+\left|  \frac{e_{b,-}}{e_{b,\Vert}}\right|  \ll\frac{1}{\sqrt{2}}\frac{\left|
+p_{\Vert}\right|  }{m_{e}c}%
+\end{equation}
+which is satisfied for resonant electrons as long as the temperature is not
+too low. In that case, we have%
+\begin{equation}
+\Theta_{\mathbf{k}}^{b,\text{EC-On}}\simeq\frac{p_{\Vert}}{p_{\bot}}%
+e_{b,\Vert}\frac{1}{n!}\left(  \frac{1}{2}N_{b\bot}\frac{p_{\bot}}{m_{e}%
+c}\frac{\omega_{b}}{\omega_{ce}}\right)  ^{n} \label{thetakO}%
+\end{equation}
+
+\subsection{Determination of $\mathbf{\Phi}_{b}^{\text{EC}}$ in the low
+density limit.}
+
+The vector $\mathbf{\Phi}_{b}$ describes the relation between the energy flux
+and the electric field. In the cold plasma description, it is given by
+(\ref{phibp2}).
+\begin{equation}
+\mathbf{\Phi}_{bP}=\text{Re}\left[  \mathbf{N}_{b}-\left(  \mathbf{N}_{b}%
+\cdot\mathbf{e}_{b}\right)  \mathbf{e}_{b}^{\ast}\right]
+\end{equation}
+
+In general, both terms must be kept. However, where the density is low
+\begin{equation}
+\omega_{pe}\ll\omega_{b}%
+\end{equation}
+the ECW is mostly electromagnetic and mostly keeps its free-space
+characteristics. In that case,%
+\begin{align}
+N_{b}  &  \simeq1\label{nb}\\
+\frac{\mathbf{N}_{b}\cdot\mathbf{e}_{b}}{N_{b}}  &  \ll1
+\end{align}
+so that
+\begin{equation}
+\mathbf{\Phi}_{b}^{\text{EC}}\simeq\widehat{N}_{b} \label{phibec}%
+\end{equation}
+
+\subsection{EC Diffusion Coefficient}
+
+\subsubsection{General expression with small FLR, $\left|  N_{\Vert}\right|
+\ll1$ and $\omega_{pe}\ll\omega_{b}$ - or EM - approximations}
+
+The normalized bounce-averaged diffusion coefficient for the Fokker-Planck
+equation is given by (\ref{dbnb})%
+\begin{align}
+\overline{D}_{b,n}^{\text{EC}(0)}(p,\xi_{0}) &  =\frac{\gamma p_{Te}}{p\left|
+\xi_{0}\right|  }\frac{1}{\lambda\widetilde{q}}\frac{r_{\theta_{b}}}{R_{p}%
+}\frac{B^{\theta_{b}}}{B_{P}^{\theta_{b}}}\frac{\xi_{0}^{2}}{\xi_{\theta_{b}%
+}^{2}}\Psi_{\theta_{b}}\overline{D}_{b,n,0}^{\text{EC,}\theta_{b}}%
+\times\nonumber\\
+&  H\left(  \theta_{b}-\theta_{\min}\right)  H\left(  \theta_{\max}-\theta
+_{b}\right)  \left[  \frac{1}{2}\sum\limits_{\sigma}\right]  _{T}\delta\left(
+N_{b\Vert}-N_{\Vert\text{res}}^{\theta_{b}}\right)  \left|  \Theta
+_{\mathbf{k,}\theta_{b}}^{b,\left(  n\right)  }\right|  ^{2}\label{dec}%
+\end{align}
+with
+\begin{align}
+\overline{D}_{b,n,0}^{\text{EC,}\theta_{b}} &  =\frac{1}{r_{\theta_{b}%
+}R_{\theta_{b}}}\frac{1}{m_{e}\ln\Lambda}\frac{1}{\omega_{b}\omega_{pe}^{2}%
+}\frac{f_{\text{inc},b}^{l+1/2}}{\left|  \mathbf{\Phi}_{b}\right|
+}P_{b,\text{inc}}\\
+N_{\Vert\text{res}}^{\theta_{b}} &  =\frac{1}{\beta_{Te}}\frac{p_{Te}}%
+{p\xi_{\theta_{b}}}\left(  \gamma-\frac{n\Psi_{\theta_{b}}\omega_{ce,0}%
+}{\omega_{b}}\right)
+\end{align}
+where we used the substitution $n^{\prime}\rightarrow n$ as in (\ref{thetaEC}%
+).
+
+Within the small FLR, $\left|  N_{\Vert}\right|  \ll1$ and $\omega_{pe}%
+\ll\omega_{b}$ - or electromagnetic - approximations, we have obtained the
+following expressions for the ECW properties (\ref{thetakX}), ( \ref{thetakO}%
+), (\ref{phibec})
+\begin{align}
+\Theta_{\mathbf{k}}^{b,\text{EC-Xn}} &  \simeq e^{+i\alpha}\frac{e_{b,-}%
+}{\sqrt{2}}\frac{1}{\left(  n-1\right)  !}\left(  \frac{1}{2}N_{b\bot}%
+\frac{p\sqrt{\Psi_{\theta_{b}}\left(  1-\xi_{0}^{2}\right)  }}{m_{e}c}%
+\frac{\omega_{b}}{\Psi_{\theta_{b}}\omega_{ce,0}}\right)  ^{n-1}\\
+\Theta_{\mathbf{k}}^{b,\text{EC-On}} &  \simeq\frac{\xi_{\theta_{b}}}%
+{\sqrt{\Psi_{\theta_{b}}\left(  1-\xi_{0}^{2}\right)  }}e_{b,\Vert}\frac
+{1}{n!}\left(  \frac{1}{2}N_{b\bot}\frac{p\sqrt{\Psi_{\theta_{b}}\left(
+1-\xi_{0}^{2}\right)  }}{m_{e}c}\frac{\omega_{b}}{\Psi_{\theta_{b}}%
+\omega_{ce,0}}\right)  ^{n}\\
+\mathbf{\Phi}_{b}^{\text{EC}} &  \simeq\widehat{N}_{b}%
+\end{align}
+so that%
+\[
+\left|  \mathbf{\Phi}_{b}^{\text{EC}}\right|  \simeq1
+\]
+
+In addition, within these approximations, the polarizations take the following
+limit expressions:%
+\begin{gather}
+\left|  e_{b,-}\right|  \simeq\frac{\sqrt{2}}{2}\text{ for the X mode }\left(
+n\geq2\right)  \\
+\left|  e_{b,\Vert}\right|  \simeq1\text{ for the O mode}%
+\end{gather}
+
+\subsubsection{Simplified expression for ECCD in the case of circular
+concentric flux-surfaces}
+
+We consider the limit of a tokamak with circular flux-surfaces. In that case,
+we have the following identities
+\begin{gather}
+\left|  \widehat{\psi}\cdot\widehat{r}\right|  =1\\
+\widetilde{q}=\frac{r}{R_{p}}\frac{B}{B_{P}}=\frac{r_{\theta_{b}}}{R_{p}}%
+\frac{B^{\theta_{b}}}{B_{P}^{\theta_{b}}}%
+\end{gather}
+and the QL diffusion coefficients for ECCD\ (\ref{dec}) can therefore be
+written as%
+\begin{align}
+\overline{D}_{b}^{\text{EC-Xn}(0)}(p,\xi_{0}) &  =\frac{\gamma p_{Te}%
+}{p\left|  \xi_{0}\right|  }\frac{1}{\lambda}\frac{\xi_{0}^{2}}{\xi
+_{\theta_{b}}^{2}}\Psi_{\theta_{b}}\overline{D}_{b,n,0}^{\text{EC,}\theta_{b}%
+}\frac{1}{4\left[  \left(  n-1\right)  !\right]  ^{2}}\left(  \frac{p}{p_{Te}%
+}\right)  ^{2\left(  n-1\right)  }\left(  \frac{1-\xi_{0}^{2}}{\Psi
+_{\theta_{b}}}\right)  ^{\left(  n-1\right)  }\left(  \frac{1}{2}N_{b\bot
+}\beta_{Te}\frac{\omega_{b}}{\omega_{ce,0}}\right)  ^{2\left(  n-1\right)
+}\nonumber\\
+&  H\left(  \theta_{b}-\theta_{\min}\right)  H\left(  \theta_{\max}-\theta
+_{b}\right)  \frac{1}{\sqrt{\pi}\Delta N_{\Vert}}\left[  \frac{1}{2}%
+\sum\limits_{\sigma}\right]  _{T}\exp\left[  \frac{-\left(  N_{\Vert
+\text{res}}-N_{b\Vert,0}\right)  ^{2}}{\Delta N_{\Vert}^{2}}\right]
+\end{align}%
+\begin{align}
+\overline{D}_{b}^{\text{EC-On}(0)}(p,\xi_{0}) &  =\frac{\gamma p_{Te}%
+}{p\left|  \xi_{0}\right|  }\frac{1}{\lambda}\frac{\xi_{0}^{2}}{\left(
+1-\xi_{0}^{2}\right)  }\overline{D}_{b,n,0}^{\text{EC,}\theta_{b}}\frac
+{1}{\left[  n!\right]  ^{2}}\left(  \frac{p}{p_{Te}}\right)  ^{2n}\left(
+\frac{1-\xi_{0}^{2}}{\Psi_{\theta_{b}}}\right)  ^{n}\left(  \frac{1}%
+{2}N_{b\bot}\beta_{Te}\frac{\omega_{b}}{\omega_{ce,0}}\right)  ^{2n}%
+\nonumber\\
+&  H\left(  \theta_{b}-\theta_{\min}\right)  H\left(  \theta_{\max}-\theta
+_{b}\right)  \frac{1}{\sqrt{\pi}\Delta N_{\Vert}}\left[  \frac{1}{2}%
+\sum\limits_{\sigma}\right]  _{T}\exp\left[  \frac{-\left(  N_{\Vert
+\text{res}}-N_{b\Vert,0}\right)  ^{2}}{\Delta N_{\Vert}^{2}}\right]
+\end{align}
+with
+\begin{align}
+\overline{D}_{b,n,0}^{\text{EC,}\theta_{b}} &  =\frac{1}{rR_{\theta_{b}}}%
+\frac{1}{m_{e}\ln\Lambda}\frac{1}{\omega_{b}\omega_{pe}^{2}}f_{\text{inc}%
+,b}^{l+1/2}P_{b,\text{inc}}\\
+N_{\Vert\text{res}}^{\theta_{b}} &  =\frac{1}{\beta_{Te}}\frac{p_{Te}}%
+{p\xi_{\theta_{b}}}\left(  \gamma-\frac{n\Psi_{\theta_{b}}\omega_{ce,0}%
+}{\omega_{b}}\right)
+\end{align}
+and where we assume a gaussian power spectrum as in (\ref{gaussian}).
+
+In order to compare with ECCD\ operators found in the litterature, we redefine
+the EC constant factors such that%
+\begin{align}
+\overline{D}_{b}^{\text{EC-Xn}(0)}(p,\xi_{0}) &  =\frac{\gamma p_{Te}%
+}{p\left|  \xi_{0}\right|  }\left(  \frac{p}{p_{Te}}\right)  ^{2\left(
+n-1\right)  }\frac{\xi_{0}^{2}}{\xi_{\theta_{b}}^{2}}\overline{D}%
+_{b,0\text{,new}}^{\text{EC-Xn,}\theta_{b}}\frac{\left(  1-\xi_{0}^{2}\right)
+^{\left(  n-1\right)  }}{\Psi_{\theta_{b}}^{\left(  n-2\right)  }}\frac
+{1}{\lambda}\nonumber\\
+&  H\left(  \theta_{b}-\theta_{\min}\right)  H\left(  \theta_{\max}-\theta
+_{b}\right)  \left[  \frac{1}{2}\sum\limits_{\sigma}\right]  _{T}\exp\left[
+\frac{-\left(  N_{\Vert\text{res}}-N_{b\Vert,0}\right)  ^{2}}{\Delta N_{\Vert
+}^{2}}\right]
+\end{align}
+with
+\begin{align}
+\overline{D}_{b,0\text{,new}}^{\text{EC-Xn,}\theta_{b}} &  =\frac{1}{\sqrt
+{\pi}\Delta N_{\Vert}}\frac{1}{4\left[  \left(  n-1\right)  !\right]  ^{2}%
+}\left(  \frac{1}{2}N_{b\bot}\beta_{Te}\frac{\omega_{b}}{\omega_{ce,0}%
+}\right)  ^{2\left(  n-1\right)  }\overline{D}_{b,n,0}^{\text{EC,}\theta_{b}%
+}\\
+&  =\frac{1}{rR_{\theta_{b}}}\frac{1}{m_{e}\ln\Lambda}\frac{1}{\omega
+_{b}\omega_{pe}^{2}}\frac{1}{\sqrt{\pi}\Delta N_{\Vert}}\frac{1}{4\left[
+\left(  n-1\right)  !\right]  ^{2}}\left(  \frac{1}{2}N_{b\bot}\beta_{Te}%
+\frac{\omega_{b}}{\omega_{ce,0}}\right)  ^{2\left(  n-1\right)  }%
+f_{\text{inc},b}^{l+1/2}P_{b,\text{inc}}%
+\end{align}
+and%
+\begin{align}
+\overline{D}_{b}^{\text{EC-On}(0)}(p,\xi_{0}) &  =\frac{\gamma p_{Te}%
+}{p\left|  \xi_{0}\right|  }\left(  \frac{p}{p_{Te}}\right)  ^{2n}\frac
+{\xi_{0}^{2}\left(  1-\xi_{0}^{2}\right)  ^{n-1}}{\Psi_{\theta_{b}}^{n}%
+}\overline{D}_{b,0\text{,new}}^{\text{EC-On,}\theta_{b}}\frac{1}{\lambda
+}\nonumber\\
+&  H\left(  \theta_{b}-\theta_{\min}\right)  H\left(  \theta_{\max}-\theta
+_{b}\right)  \left[  \frac{1}{2}\sum\limits_{\sigma}\right]  _{T}\exp\left[
+\frac{-\left(  N_{\Vert\text{res}}-N_{b\Vert,0}\right)  ^{2}}{\Delta N_{\Vert
+}^{2}}\right]
+\end{align}
+with
+\begin{align}
+\overline{D}_{b,0\text{,new}}^{\text{EC-On,}\theta_{b}} &  =\frac{1}{\sqrt
+{\pi}\Delta N_{\Vert}}\frac{1}{\left[  n!\right]  ^{2}}\left(  \frac{1}%
+{2}N_{b\bot}\beta_{Te}\frac{\omega_{b}}{\omega_{ce,0}}\right)  ^{2n}%
+\overline{D}_{b,n,0}^{\text{EC,}\theta_{b}}\\
+&  =\frac{1}{rR_{\theta_{b}}}\frac{1}{m_{e}\ln\Lambda}\frac{1}{\omega
+_{b}\omega_{pe}^{2}}\frac{1}{\sqrt{\pi}\Delta N_{\Vert}}\frac{1}{\left[
+n!\right]  ^{2}}\left(  \frac{1}{2}N_{b\bot}\beta_{Te}\frac{\omega_{b}}%
+{\omega_{ce,0}}\right)  ^{2n}f_{\text{inc},b}^{l+1/2}P_{b,\text{inc}}%
+\end{align}
+
+The two most common ECCD scenarios in experiments are the ones with the
+largest diffusion coefficient: X2 and O1. For these case, we find%
+
+\begin{align}
+\overline{D}_{b}^{\text{EC-X2}(0)}(p,\xi_{0}) &  =\frac{\gamma p_{Te}%
+}{p\left|  \xi_{0}\right|  }\left(  \frac{p}{p_{Te}}\right)  ^{2}\frac{\xi
+_{0}^{2}\left(  1-\xi_{0}^{2}\right)  }{\xi_{\theta_{b}}^{2}}\overline
+{D}_{b,0\text{,new}}^{\text{EC-X2,}\theta_{b}}\frac{1}{\lambda}\nonumber\\
+&  H\left(  \theta_{b}-\theta_{\min}\right)  H\left(  \theta_{\max}-\theta
+_{b}\right)  \left[  \frac{1}{2}\sum\limits_{\sigma}\right]  _{T}\exp\left[
+\frac{-\left(  N_{\Vert\text{res}}-N_{b\Vert,0}\right)  ^{2}}{\Delta N_{\Vert
+}^{2}}\right]
+\end{align}
+with
+\begin{equation}
+\overline{D}_{b,0\text{,new}}^{\text{EC-X2,}\theta_{b}}=\frac{1}%
+{rR_{\theta_{b}}}\frac{1}{m_{e}\ln\Lambda}\frac{1}{\omega_{b}\omega_{pe}^{2}%
+}\frac{1}{\sqrt{\pi}\Delta N_{\Vert}}\frac{1}{4}\left(  \frac{1}{2}N_{b\bot
+}\beta_{Te}\frac{\omega_{b}}{\omega_{ce,0}}\right)  ^{2}f_{\text{inc}%
+,b}^{l+1/2}P_{b,\text{inc}}%
+\end{equation}
+and%
+\begin{align}
+\overline{D}_{b}^{\text{EC-O1}(0)}(p,\xi_{0}) &  =\frac{\gamma p_{Te}%
+}{p\left|  \xi_{0}\right|  }\left(  \frac{p}{p_{Te}}\right)  ^{2}\frac{\xi
+_{0}^{2}}{\Psi_{\theta_{b}}}\overline{D}_{b,0\text{,new}}^{\text{EC-O1,}%
+\theta_{b}}\frac{1}{\lambda}\nonumber\\
+&  H\left(  \theta_{b}-\theta_{\min}\right)  H\left(  \theta_{\max}-\theta
+_{b}\right)  \left[  \frac{1}{2}\sum\limits_{\sigma}\right]  _{T}\exp\left[
+\frac{-\left(  N_{\Vert\text{res}}-N_{b\Vert,0}\right)  ^{2}}{\Delta N_{\Vert
+}^{2}}\right]
+\end{align}
+with
+\begin{equation}
+\overline{D}_{b,0\text{,new}}^{\text{EC-O1,}\theta_{b}}=\frac{1}%
+{rR_{\theta_{b}}}\frac{1}{m_{e}\ln\Lambda}\frac{1}{\omega_{b}\omega_{pe}^{2}%
+}\frac{1}{\sqrt{\pi}\Delta N_{\Vert}}\left(  \frac{1}{2}N_{b\bot}\beta
+_{Te}\frac{\omega_{b}}{\omega_{ce,0}}\right)  ^{2}f_{\text{inc},b}%
+^{l+1/2}P_{b,\text{inc}}%
+\end{equation}

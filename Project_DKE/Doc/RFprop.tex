@@ -1,0 +1,130 @@
+The quasilinear diffusion coefficients (\ref{dbnb}),
+(\ref{drf0D_dke}) and (\ref{drf0F_dke}) describe the interaction
+between electrons and a discrete set ($b$) of RF plane waves
+(\ref{Ecomp}) with frequencies $\omega_{b}$. In addition, we can
+linearly superpose a discrete set of plane waves with the same
+frequency but different parallel wave number $k_{\Vert}$ because
+of the linearity of the QL operator (\ref{qloporig}) in
+$\mathbf{k}$. This set of plane waves is typically represented by
+rays. Each ray is characterized by: the wave frequency
+$\omega_{b}$, the poloidal location $\theta_{b}$, the index of
+refraction $\mathbf{N}_{b}$, the polarization vector
+$\mathbf{e}_{b}$ and the power flow $\mathbf{\Phi}_{b}$. In
+general, the ray propagation path $\left(  r_{b},\theta_{b}\right)
+$ and the evolution of the index of refraction $\mathbf{N}_{b}$
+are determined by ray-tracing (RT) calculations. When the wave
+properties are determined by RT calculations, the launched power
+spectrum in $k_{\Vert}$ is typically decomposed in an array of
+rays with different poloidal launching angle and/or $k_{\Vert}$
+power spectrum. This distribution depends on the antenna and other
+launching parameters. The evolution of each ray is determined
+separately, by the RT code, and the contributions of each ray to
+wave-particle interaction are separately accounted for in the sum
+over $b$ in (\ref{dtensor1}-\ref{dtensor4}). The separation of
+these contributions is justified if their $k_{\Vert}$ power
+spectrums do not overlap.
+
+We do not address the RT problem in this work. Therefore, we assume that the
+path $\theta_{b}\left(  \psi\right)  $ and the parallel index of refraction
+$N_{b\Vert}$ are determined either by coupling of DKE to a RT code, or by any
+other propagation model. RT calculations require to calculate the dispersion
+tensor and solve the dispersion relation, and therefore they can provide input
+for the remaining wave properties $\left(  N_{b\bot},\mathbf{e}_{b}%
+,\mathbf{\Phi}_{b}\right)  $. However, these properties can also be determined
+by solving locally the wave equation, once $\psi,\theta_{b}\ $and $N_{\Vert}$
+are known. Keeping the calculation of $\left(  N_{b\bot},\mathbf{e}%
+_{b},\mathbf{\Phi}_{b}\right)  $ within DKE allows us to use a more advanced
+model - such as the fully relativistic dispersion solver R2D2 - for the
+evaluation of these important wave properties. A numerical code is required to
+solve the wave equation, and evaluate the diffusion coefficient\ (\ref{dbnb})
+in the general case. However, it is possible to obtain analytic expressions in
+some cases, assuming that the waves can be treated in the cold plasma limit.
+The calculation of $\overline{D}_{b,n}^{\text{RF}(0)}(p,\xi_{0})$ in the cold
+plasma model is performed in Appendix \ref{cold}. In addition, simplified
+expression and the comparison with operators used in the litterature are given
+for lower-hybrid (LH) and electron-cyclotron (EC) waves in appendices
+\ref{LHCD} and \ref{ECCD} respectively.
+
+Note that the cold plasma model, if used in the RT calculations, does not
+account for the wave-particle interaction and the power absorption from the
+rays. The power absorbed from each ray and deposited on electrons can be
+evaluated if a hot plasma model is used, but even then, the calculation is not
+consistent with DKE because quasilinear effects are not accounted for. In
+order to have a consistency between RT and DKE calculations, the power
+absorption calculated by DKE must be inserted back in the RT calculations. In
+the case where rays turn back toward the edge (as it can happen in LHCD),
+iterations between RT and DKE calculations are necessary to ensure self-consistency.
+
+\subsubsection{Modeling of RF $k_{\Vert}$ spectrum}
+
+We consider two different models for the $k_{\Vert}$ spectrum of a given ray.
+
+\paragraph{Square power spectrum in $k_{\Vert}$}
+
+\bigskip Here, the power spectrum of a given ray is taken as being constant in
+$N_{\Vert}$ between two limits $N_{b\Vert\min}$ and $N_{b\Vert\max}$.
+Therefore, we operate the following transformation
+\begin{equation}
+\delta\left(  N_{\Vert}-N_{\Vert\text{res},b}\right)  \rightarrow\frac
+{1}{\Delta N_{b\Vert}}H\left(  N_{\Vert\text{res},b}-N_{b\Vert\min}\right)
+H\left(  N_{b\Vert\max}-N_{b\Vert\text{res},b}\right)  \label{square}%
+\end{equation}
+where%
+\begin{equation}
+\Delta N_{b\Vert}=N_{b\Vert\max}-N_{b\Vert\min}%
+\end{equation}
+
+In this case, the RT calculations and wave equation are solved for the central
+value.%
+\begin{equation}
+N_{b\Vert,0}=\frac{N_{b\Vert\max}+N_{b\Vert\min}}{2}%
+\end{equation}
+which is a good approximation only when
+\begin{equation}
+\frac{\Delta_{b}N_{\Vert}}{N_{b\Vert,0}}\ll1
+\end{equation}
+
+For simplification and benchmarking purposes, in LHCD, one can consider only
+one ray with a square spectrum. Then, the limits $N_{b\Vert\min}$ and
+$N_{b\Vert\max}$ are respectively given by the accessibility condition and the
+condition for strong linear Laudau damping.
+
+\paragraph{Gaussian power spectrum in $k_{\Vert}$}
+
+\bigskip The power spectrum of a given ray can be assumed to have a Gaussian
+dependence on $N_{\Vert}$, centered around a value $N_{b\Vert,0}$ and with a
+Gaussian width $\Delta N_{b\Vert}$. Then, we operate the transformation%
+\begin{equation}
+\delta\left(  N_{b\Vert}-N_{\Vert\text{res}}\right)  \rightarrow\frac{1}%
+{\sqrt{\pi}\Delta N_{b\Vert}}\exp\left[  \frac{-\left(  N_{\Vert\text{res}%
+}-N_{b\Vert,0}\right)  ^{2}}{\Delta N_{b\Vert}^{2}}\right]  \label{gaussian}%
+\end{equation}
+
+In this case too, the RT calculations and wave equation are solved for the
+central value $N_{b\Vert,0}$, which is a good approximation only when
+\begin{equation}
+\frac{\Delta_{b}N_{\Vert}}{N_{b\Vert,0}}\ll1 \label{narrow}%
+\end{equation}
+
+For simplification and benchmarking purposes, in ECCD, one can consider only
+one ray with a Gaussian spectrum. Then, the wave properties $N_{b\Vert,0}$ and
+$\Delta N_{b\Vert}$ are determined by the beam characteristics, as described
+in \ref{beam}.
+
+\subsubsection{Beam size and power spectrum\label{beam}}
+
+\bigskip If we consider a Gaussian beam of waist $d$, of negligible
+diffraction angle, and of negligible dispersion, such that the wave vector is
+in the direction of the beam, and $N\simeq1$, we get that by the properties of
+Fourier transform, the width $\Delta N_{\Vert}$ is related to the beam waist
+$d$ as
+\begin{equation}
+\Delta N_{\Vert}=\frac{N_{\bot}}{N}\frac{c}{\omega d}%
+\end{equation}
+This conditions are approximately satisfied for EC\ beamsif the density is low
+($\omega_{pe}\ll\omega$).
+
+Then, and we can verify that for a beam waist of a few centimeters ($d=5$ cm,
+$f=110$ GHz, $N_{\Vert}\simeq0.2\rightarrow\Delta N_{\Vert}\simeq0.01$), the
+condition (\ref{narrow}) is satisfied, and there is no nead to decompose the
+beam spectrum into many rays.

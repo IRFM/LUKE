@@ -1,336 +1,527 @@
 \subsection{Integration in $k$-space}
 
-The quasilinear diffusion coefficient (\ref{drf}), describing the
-interaction of the electrons with a given beam $b$ at an harmonic $n$, is
-rewritten as 
+The quasilinear diffusion coefficient (\ref{dnrf}), describing the interaction
+of the electrons with a given beam $b$ at an harmonic $n$, is rewritten as
 \begin{equation}
-D_{b,n}^{\text{RF}}(p,\xi )=\lim_{V\rightarrow \infty }\frac{e^{2}\pi }{V}%
-\iiint \frac{d^{3}k}{(2\pi )^{3}}\left| \mathbf{E}_{b\mathbf{k}}\right|
-^{2}\left| \Theta _{\mathbf{k}}^{b,n}\right| ^{2}\delta \left( \omega
-_{b}-k_{\Vert }v_{\Vert }-n\Omega \right)  \label{dn}
+D_{b,n}^{\text{RF}}(p,\xi)=\lim_{V\rightarrow\infty}\frac{e^{2}\pi}{V}%
+\iiint\frac{d^{3}k}{(2\pi)^{3}}\left|  \mathbf{E}_{b\mathbf{k}}\right|
+^{2}\left|  \Theta_{\mathbf{k}}^{b,\left(  n\right)  }\right|  ^{2}%
+\delta\left(  \omega_{b}-k_{\Vert}v_{\Vert}-n\Omega\right)  \label{dn}%
 \end{equation}
-where, 
+where,
 \begin{equation}
-\Theta _{\mathbf{k}}^{b,n}=\frac{1}{\sqrt{2}}e_{b\mathbf{k},+}e^{-i\alpha
-}J_{n-1}\left( \frac{k_{\bot }v_{\bot }}{\Omega }\right) +\frac{1}{\sqrt{2}}
-e_{b\mathbf{k},-}e^{+i\alpha }J_{n+1}\left( \frac{k_{\bot }v_{\bot }}{\Omega 
-}\right) +\frac{p_{\Vert }}{p_{\bot }}e_{b\mathbf{k},\Vert }J_{n}\left( 
-\frac{k_{\bot }v_{\bot }}{\Omega }\right)  \label{thetak}
+\Theta_{\mathbf{k}}^{b,\left(  n\right)  }=\frac{1}{\sqrt{2}}e_{b\mathbf{k}%
+,+}e^{-i\alpha}J_{n-1}\left(  \frac{k_{\bot}v_{\bot}}{\Omega}\right)
++\frac{1}{\sqrt{2}}e_{b\mathbf{k},-}e^{+i\alpha}J_{n+1}\left(  \frac{k_{\bot
+}v_{\bot}}{\Omega}\right)  +\frac{p_{\Vert}}{p_{\bot}}e_{b\mathbf{k},\Vert
+}J_{n}\left(  \frac{k_{\bot}v_{\bot}}{\Omega}\right)  \label{thetak}%
 \end{equation}
 
-Here, the polarization vector in Fourier space 
+Here, the polarization vector in Fourier space
 \begin{equation}
-\mathbf{e}_{b\mathbf{k}}=\frac{\mathbf{E}_{b\mathbf{k}}}{\left| \mathbf{E}_{b%
-\mathbf{k}}\right| }  \label{polvec}
+\mathbf{e}_{b\mathbf{k}}=\frac{\mathbf{E}_{b\mathbf{k}}}{\left|
+\mathbf{E}_{b\mathbf{k}}\right|  } \label{polvec}%
 \end{equation}
-is introduced, whose components in the rotating field frame are 
-\begin{eqnarray}
-e_{b\mathbf{k},+} &=&\frac{E_{b\mathbf{k},+}}{\left| \mathbf{E}_{b\mathbf{k}%
-}\right| }=\frac{E_{b\mathbf{k},x}+iE_{b\mathbf{k},y}}{\sqrt{2}\left| 
-\mathbf{E}_{b\mathbf{k}}\right| } \\
-e_{b\mathbf{k},-} &=&\frac{E_{b\mathbf{k},-}}{\left| \mathbf{E}_{b\mathbf{k}%
-}\right| }=\frac{E_{b\mathbf{k},x}-iE_{b\mathbf{k},y}}{\sqrt{2}\left| 
-\mathbf{E}_{b\mathbf{k}}\right| } \\
-e_{b\mathbf{k},\Vert } &=&\frac{E_{b\mathbf{k},\Vert }}{\left| \mathbf{E}_{b%
-\mathbf{k}}\right| }=\frac{E_{b\mathbf{k},z}}{\left| \mathbf{E}_{b\mathbf{k}%
-}\right| }
-\end{eqnarray}
+is introduced, whose components in the rotating field frame are
+\begin{align}
+e_{b\mathbf{k},+}  &  =\frac{E_{b\mathbf{k},+}}{\left|  \mathbf{E}%
+_{b\mathbf{k}}\right|  }=\frac{E_{b\mathbf{k},x}+iE_{b\mathbf{k},y}}{\sqrt
+{2}\left|  \mathbf{E}_{b\mathbf{k}}\right|  }\label{pol}\\
+e_{b\mathbf{k},-}  &  =\frac{E_{b\mathbf{k},-}}{\left|  \mathbf{E}%
+_{b\mathbf{k}}\right|  }=\frac{E_{b\mathbf{k},x}-iE_{b\mathbf{k},y}}{\sqrt
+{2}\left|  \mathbf{E}_{b\mathbf{k}}\right|  }\nonumber\\
+e_{b\mathbf{k},\Vert}  &  =\frac{E_{b\mathbf{k},\Vert}}{\left|  \mathbf{E}%
+_{b\mathbf{k}}\right|  }=\frac{E_{b\mathbf{k},z}}{\left|  \mathbf{E}%
+_{b\mathbf{k}}\right|  }\nonumber
+\end{align}
 
 The electric field associated with a given ray is described by a plane wave,
-with given frequency $\omega _{b}$ and wave number $\mathbf{k}_{b}$:
+with given frequency $\omega_{b}$ and wave number $\mathbf{k}_{b}$:%
 
-\begin{eqnarray}
-\mathbf{E}_{b}\left( \mathbf{x},t\right)  &=&\text{Re}\left[ \mathbf{E}%
-_{b0}e^{i\left( \mathbf{k}_{b}\cdot \mathbf{x}-\omega _{b}t\right) }\right] =%
-\text{Re}\left[ \widetilde{\mathbf{E}}_{b}\right]   \nonumber \\
-&=&\frac{1}{2}\left[ \mathbf{E}_{b0}e^{i\left( \mathbf{k}_{b}\cdot \mathbf{x}%
--\omega _{b}t\right) }+\mathbf{E}_{b0}^{*}e^{-i\left( \mathbf{k}_{b}\cdot 
-\mathbf{x}-\omega _{b}t\right) }\right] 
-\end{eqnarray}
-so that 
-\begin{eqnarray}
-\mathbf{E}_{b\mathbf{k}}\left( \mathbf{k},t\right)  &\equiv &\iiint
-d^{3}x\;e^{-i\mathbf{k}\cdot \mathbf{x}}\mathbf{E}_{b}\left( \mathbf{x}%
-,t\right)   \nonumber \\
-&=&\frac{1}{2}\left[ \mathbf{E}_{b0}e^{-i\omega _{b}t}\iiint
-d^{3}x\;e^{i\left( \mathbf{k}_{b}-\mathbf{k}\right) \cdot \mathbf{x}}+%
-\mathbf{E}_{b0}^{*}e^{i\omega _{b}t}\iiint d^{3}x\;e^{i\left( \mathbf{k}_{b}+%
-\mathbf{k}\right) \cdot \mathbf{x}}\right]   \nonumber \\
-&=&\frac{1}{2}\left[ \mathbf{E}_{b0}e^{-i\omega _{b}t}\delta \left( \mathbf{k%
-}_{b}-\mathbf{k}\right) +\mathbf{E}_{b0}^{*}e^{i\omega _{b}t}\delta \left( 
-\mathbf{k}_{b}+\mathbf{k}\right) \right] 
-\end{eqnarray}
+\begin{align}
+\mathbf{E}_{b}\left(  \mathbf{x},t\right)   &  =\text{Re}\left[
+\mathbf{E}_{b0}e^{i\left(  \mathbf{k}_{b}\cdot\mathbf{x}-\omega_{b}t\right)
+}\right]  =\text{Re}\left[  \widetilde{\mathbf{E}}_{b}\right] \label{Ecomp}\\
+&  =\frac{1}{2}\left[  \mathbf{E}_{b0}e^{i\left(  \mathbf{k}_{b}%
+\cdot\mathbf{x}-\omega_{b}t\right)  }+\mathbf{E}_{b0}^{\ast}e^{-i\left(
+\mathbf{k}_{b}\cdot\mathbf{x}-\omega_{b}t\right)  }\right]
+\end{align}
+so that
+\begin{align}
+\mathbf{E}_{b\mathbf{k}}\left(  \mathbf{k},t\right)   &  \equiv\iiint
+d^{3}x\;e^{-i\mathbf{k}\cdot\mathbf{x}}\mathbf{E}_{b}\left(  \mathbf{x}%
+,t\right) \nonumber\\
+&  =\frac{1}{2}\left[  \mathbf{E}_{b0}e^{-i\omega_{b}t}\iiint d^{3}%
+x\;e^{i\left(  \mathbf{k}_{b}-\mathbf{k}\right)  \cdot\mathbf{x}}%
++\mathbf{E}_{b0}^{\ast}e^{i\omega_{b}t}\iiint d^{3}x\;e^{i\left(
+\mathbf{k}_{b}+\mathbf{k}\right)  \cdot\mathbf{x}}\right] \nonumber\\
+&  =\frac{1}{2}\left[  \mathbf{E}_{b0}e^{-i\omega_{b}t}\delta\left(
+\mathbf{k}_{b}-\mathbf{k}\right)  +\mathbf{E}_{b0}^{\ast}e^{i\omega_{b}%
+t}\delta\left(  \mathbf{k}_{b}+\mathbf{k}\right)  \right]
+\end{align}
 
-The term $\left| \mathbf{E}_{b\mathbf{k}}\right| ^{2}$ in expression (\ref
-{dn}) is then
+The electric field is the sum of two contributions with different frequencies%
+\begin{align}
+\mathbf{E}_{b\mathbf{k}}^{+}\left(  \mathbf{k}\right)   &  =\frac{1}%
+{2}\mathbf{E}_{b0}\delta\left(  \mathbf{k}_{b}-\mathbf{k}\right)  \text{ with
+}\omega=\omega_{b}\\
+\mathbf{E}_{b\mathbf{k}}^{-}\left(  \mathbf{k}\right)   &  =\frac{1}%
+{2}\mathbf{E}_{b0}^{\ast}\delta\left(  \mathbf{k}_{b}+\mathbf{k}\right)
+\text{ with }\omega=-\omega_{b}%
+\end{align}
 
-\begin{eqnarray}
-\left| \mathbf{E}_{b\mathbf{k}}\right| ^{2} &=&\frac{1}{4}\left| \mathbf{E}
-_{b0}e^{-i\omega _{b}t}\delta \left( \mathbf{k}_{b}-\mathbf{k}\right) +%
-\mathbf{E}_{b0}^{*}e^{i\omega _{b}t}\delta \left( \mathbf{k}_{b}+\mathbf{k}
-\right) \right| ^{2}  \nonumber \\
-&=&\frac{1}{4}\left( \mathbf{E}_{b0}e^{-i\omega _{b}t}\delta \left( \mathbf{k%
-}_{b}-\mathbf{k}\right) +\mathbf{E}_{b0}^{*}e^{i\omega _{b}t}\delta \left( 
-\mathbf{k}_{b}+\mathbf{k}\right) \right) \left( \mathbf{E}
-_{b0}^{*}e^{i\omega _{b}t}\delta \left( \mathbf{k}_{b}-\mathbf{k}\right) +%
-\mathbf{E}_{b0}e^{-i\omega _{b}t}\delta \left( \mathbf{k}_{b}+\mathbf{k}%
-\right) \right)  \nonumber \\
-&=&\frac{1}{4}\left( \left| \mathbf{E}_{b0}\right| ^{2}\delta ^{2}\left( 
-\mathbf{k}_{b}-\mathbf{k}\right) +\left| \mathbf{E}_{b0}\right| ^{2}\delta
-^{2}\left( \mathbf{k}_{b}+\mathbf{k}\right) +2\text{Re}\left[ \mathbf{E}
-_{b0}^{2}e^{-i\omega _{b}t}\right] \delta \left( \mathbf{k}_{b}-\mathbf{k}%
-\right) \delta \left( \mathbf{k}_{b}+\mathbf{k}\right) \right)
-\end{eqnarray}
+Therefore the QL diffusion tensor (\ref{dtensor}) is the sum of these two
+contributions:%
+\begin{equation}
+\mathbb{{D}}^{\text{RF}}=\mathbb{{D}}^{\text{RF}+}+\mathbb{{D}}^{\text{RF}-}%
+\end{equation}
+associated with the diffusion coefficients%
+\begin{align}
+D_{b,n}^{\text{RF}+}(p,\xi)  &  =\lim_{V\rightarrow\infty}\frac{e^{2}\pi}%
+{V}\iiint\frac{d^{3}k}{(2\pi)^{3}}\left|  \frac{1}{2}\mathbf{E}_{b0}%
+\delta\left(  \mathbf{k}_{b}-\mathbf{k}\right)  \right|  ^{2}\left|
+\Theta_{\mathbf{k}}^{b^{+},n}\right|  ^{2}\delta\left(  \omega_{b}-k_{\Vert
+}v_{\Vert}-n\Omega\right) \label{dbnp}\\
+D_{b,n}^{\text{RF}-}(p,\xi)  &  =\lim_{V\rightarrow\infty}\frac{e^{2}\pi}%
+{V}\iiint\frac{d^{3}k}{(2\pi)^{3}}\left|  \frac{1}{2}\mathbf{E}_{b0}^{\ast
+}\delta\left(  \mathbf{k}_{b}+\mathbf{k}\right)  \right|  ^{2}\left|
+\Theta_{\mathbf{k}}^{b^{-},n}\right|  ^{2}\delta\left(  -\omega_{b}-k_{\Vert
+}v_{\Vert}-n\Omega\right) \nonumber
+\end{align}
+with, using (\ref{thetak})%
+\begin{align}
+\Theta_{\mathbf{k}}^{b+,\left(  n\right)  }  &  =\frac{1}{\sqrt{2}}%
+e_{b^{+}\mathbf{k},+}e^{-i\alpha}J_{n-1}\left(  \frac{k_{\bot}v_{\bot}}%
+{\Omega}\right)  +\frac{1}{\sqrt{2}}e_{b^{+}\mathbf{k},-}e^{+i\alpha}%
+J_{n+1}\left(  \frac{k_{\bot}v_{\bot}}{\Omega}\right)  +\frac{p_{\Vert}%
+}{p_{\bot}}e_{b^{+}\mathbf{k},\Vert}J_{n}\left(  \frac{k_{\bot}v_{\bot}%
+}{\Omega}\right) \label{thetakp}\\
+\Theta_{\mathbf{k}}^{b-,\left(  n\right)  }  &  =\frac{1}{\sqrt{2}}%
+e_{b^{-}\mathbf{k},+}e^{-i\alpha}J_{n-1}\left(  \frac{k_{\bot}v_{\bot}}%
+{\Omega}\right)  +\frac{1}{\sqrt{2}}e_{b^{-}\mathbf{k},-}e^{+i\alpha}%
+J_{n+1}\left(  \frac{k_{\bot}v_{\bot}}{\Omega}\right)  +\frac{p_{\Vert}%
+}{p_{\bot}}e_{b^{-}\mathbf{k},\Vert}J_{n}\left(  \frac{k_{\bot}v_{\bot}%
+}{\Omega}\right) \nonumber
+\end{align}
 
-Expressing the condition $\mathbf{k}=\pm \mathbf{k}_{b}$ from the first
-delta function (**** A verifier, utiliser la somme ?? ****), 
-\begin{eqnarray}
-D_{b,n}^{\text{RF}}(p,\xi ) &=&\frac{1}{4}e^{2}\pi \left| \Theta _{\mathbf{k}%
-}^{b,n}\left( \mathbf{k}_{b}\right) \right| ^{2}\delta \left( \omega
-_{b}-k_{\Vert b}v_{\Vert }-n\Omega \right) \lim_{V\rightarrow \infty }\frac{1%
-}{V}\iiint \frac{d^{3}k}{(2\pi )^{3}}  \nonumber \\
-&&\left[ \left| \mathbf{E}_{b0}\right| ^{2}\delta ^{2}\left( \mathbf{k}_{b}-%
-\mathbf{k}\right) +\left| \mathbf{E}_{b0}\right| ^{2}\delta ^{2}\left( 
-\mathbf{k}_{b}+\mathbf{k}\right) +2\text{Re}\left[ \mathbf{E}
-_{b0}^{2}e^{-i\omega _{b}t}\right] \delta \left( \mathbf{k}_{b}-\mathbf{k}
-\right) \delta \left( \mathbf{k}_{b}+\mathbf{k}\right) \right]
-\end{eqnarray}
+The polarization components (\ref{pol}) are%
+\begin{align}
+e_{b^{+}\mathbf{k},+}  &  =\frac{E_{b0,x}+iE_{b0,y}}{\sqrt{2}\left|
+\mathbf{E}_{b0}\right|  }=e_{b0,+}\\
+e_{b^{+}\mathbf{k},-}  &  =\frac{E_{b0,x}-iE_{b0,y}}{\sqrt{2}\left|
+\mathbf{E}_{b0}\right|  }=e_{b0,-}\nonumber\\
+e_{b^{+}\mathbf{k},\Vert}  &  =\frac{E_{b0,z}}{\left|  \mathbf{E}_{b0}\right|
+}=e_{b0,\Vert}\nonumber
+\end{align}
+and
+\begin{align}
+e_{b^{-}\mathbf{k},+}  &  =\frac{E_{b0,x}^{\ast}+iE_{b0,y}^{\ast}}{\sqrt
+{2}\left|  \mathbf{E}_{b0}\right|  }=e_{b0,-}^{\ast}\\
+e_{b^{-}\mathbf{k},-}  &  =\frac{E_{b0,x}^{\ast}-iE_{b0,y}^{\ast}}{\sqrt
+{2}\left|  \mathbf{E}_{b0}\right|  }=e_{b0,+}^{\ast}\nonumber\\
+e_{b^{-}\mathbf{k},\Vert}  &  =\frac{E_{b0,z}^{\ast}}{\left|  \mathbf{E}%
+_{b0}\right|  }=e_{b0,\Vert}^{\ast}\nonumber
+\end{align}
 
-The term $\delta \left( \mathbf{k}_{b}-\mathbf{k}\right) \delta \left( 
-\mathbf{k}_{b}+\mathbf{k}\right) $ has no contribution when the limit $%
-V\rightarrow \infty $ is taken. Using Parseval's theorem, 
-\begin{eqnarray}
-\lim_{V\rightarrow \infty }\frac{1}{V}\iiint \frac{d^{3}k}{(2\pi )^{3}}
-\left( \delta ^{2}\left( \mathbf{k}_{b}-\mathbf{k}\right) +\delta ^{2}\left( 
-\mathbf{k}_{b}+\mathbf{k}\right) \right) &=&2\lim_{V\rightarrow \infty }%
-\frac{1}{V}\iiint d^{3}x  \nonumber \\
-&=&2
-\end{eqnarray}
-one obtains 
-\begin{equation}
-D_{b,n}^{\text{RF}}(p,\xi )=e^{2}\pi \frac{\left| \mathbf{E}_{b0}\right| ^{2}%
-}{2}\left| \Theta _{\mathbf{k}}^{b,n}\left( \mathbf{k}_{b}\right) \right|
-^{2}\delta \left( \omega _{b}-k_{\Vert b}v_{\Vert }-n\Omega \right)
-\end{equation}
-which can be rewritten as\qquad \qquad \qquad \qquad 
-\begin{eqnarray}
-D_{b,n}^{\text{RF}}(p,\xi ) &=&e^{2}\pi \frac{\left| \mathbf{E}_{b0}\right|
-^{2}}{2}\left| \Theta _{\mathbf{k}}^{b,n}\left( \mathbf{k}_{b}\right)
-\right| ^{2}\frac{1}{\left| v_{\Vert }\right| }\delta \left( k_{\Vert b}-%
-\frac{\omega _{b}}{v_{\Vert }}+\frac{n\Omega }{v_{\Vert }}\right)  \nonumber
-\\
-&=&e^{2}\pi \frac{\left| \mathbf{E}_{b0}\right| ^{2}}{2}\left| \Theta _{%
-\mathbf{k}}^{b,n}\left( \mathbf{k}_{b}\right) \right| ^{2}\frac{1}{\left|
-v_{\Vert }\right| }\frac{c}{\omega _{b}}\delta \left( N_{\Vert b}-N_{\Vert 
-\text{res}}\right)  \label{diffcoef}
-\end{eqnarray}
-with 
-\begin{eqnarray}
-N_{\Vert b} &=&\frac{k_{\Vert b}c}{\omega _{b}} \\
-N_{\Vert \text{res}} &=&\frac{c}{v_{\Vert }}\left( 1-\frac{n\Omega }{\omega
-_{b}}\right)  \nonumber \\
-&=&\frac{1}{\beta _{Te}}\frac{p_{Te}}{p_{\Vert }}\left( \gamma -\frac{
-n^{\prime }\omega _{ce}}{\omega _{b}}\right)
-\end{eqnarray}
-where 
-\begin{eqnarray}
-\Omega &=&\frac{q_{e}B}{\gamma m_{e}}=\frac{-\omega _{ce}}{\gamma }\text{
-with }\omega _{ce}=\frac{eB}{m_{e}} \\
-n^{\prime } &=&-n \\
-\beta _{Te} &=&\frac{p_{Te}}{m_{e}c}=\frac{v_{Te}}{c}=\sqrt{\frac{kT_{e}}{%
-m_{e}c^{2}}}
-\end{eqnarray}
+Expressing the condition $\mathbf{k}=\pm\mathbf{k}_{b}$ from the first delta
+function in (\ref{dbnp}), we find%
+\begin{align}
+D_{b,n}^{\text{RF}+}(p,\xi)  &  =\lim_{V\rightarrow\infty}\frac{e^{2}\pi}%
+{4V}\frac{1}{\left|  v_{\Vert}\right|  }\iiint\frac{d^{3}k}{(2\pi)^{3}}\left|
+\mathbf{E}_{b0}\right|  ^{2}\delta^{2}\left(  \mathbf{k}_{b}-\mathbf{k}%
+\right)  \left|  \Theta_{\mathbf{k}}^{b^{+},n}\right|  ^{2}\delta\left(
+k_{b\Vert}-\frac{\omega_{b}-n\Omega}{v_{\Vert}}\right) \label{dbnp2}\\
+D_{b,n}^{\text{RF}-}(p,\xi)  &  =\lim_{V\rightarrow\infty}\frac{e^{2}\pi}%
+{4V}\frac{1}{\left|  v_{\Vert}\right|  }\iiint\frac{d^{3}k}{(2\pi)^{3}}\left|
+\mathbf{E}_{b0}^{\ast}\right|  ^{2}\delta^{2}\left(  \mathbf{k}_{b}%
++\mathbf{k}\right)  \left|  \Theta_{\mathbf{k}}^{b^{-},n}\right|  ^{2}%
+\delta\left(  k_{b\Vert}-\frac{\omega_{b}+n\Omega}{v_{\Vert}}\right) \nonumber
+\end{align}
+with now (\ref{thetakp}) being%
+\begin{align}
+\Theta_{\mathbf{k}}^{b+,\left(  n\right)  }  &  =\frac{1}{\sqrt{2}}%
+e_{b0,+}e^{-i\alpha_{b}}J_{n-1}\left(  \frac{k_{b\bot}v_{\bot}}{\Omega
+}\right)  +\frac{1}{\sqrt{2}}e_{b0,-}e^{+i\alpha_{b}}J_{n+1}\left(
+\frac{k_{b\bot}v_{\bot}}{\Omega}\right)  +\frac{p_{\Vert}}{p_{\bot}%
+}e_{b0,\Vert}J_{n}\left(  \frac{k_{b\bot}v_{\bot}}{\Omega}\right)
+\label{thetaknp}\\
+\Theta_{\mathbf{k}}^{b-,\left(  n\right)  }  &  =\frac{1}{\sqrt{2}}%
+e_{b0,-}^{\ast}e^{-i\left(  \alpha_{b}+\pi\right)  }J_{n-1}\left(
+\frac{k_{b\bot}v_{\bot}}{\Omega}\right)  +\frac{1}{\sqrt{2}}e_{b0,+}^{\ast
+}e^{+i\left(  \alpha_{b}+\pi\right)  }J_{n+1}\left(  \frac{k_{b\bot}v_{\bot}%
+}{\Omega}\right)  +\frac{p_{\Vert}}{p_{\bot}}e_{b0,\Vert}^{\ast}J_{n}\left(
+\frac{k_{b\bot}v_{\bot}}{\Omega}\right) \nonumber\\
+&  =-\frac{1}{\sqrt{2}}e_{b0,-}^{\ast}e^{-i\alpha_{b}}J_{n-1}\left(
+\frac{k_{b\bot}v_{\bot}}{\Omega}\right)  -\frac{1}{\sqrt{2}}e_{b0,+}^{\ast
+}e^{+i\alpha_{b}}J_{n+1}\left(  \frac{k_{b\bot}v_{\bot}}{\Omega}\right)
++\frac{p_{\Vert}}{p_{\bot}}e_{b0,\Vert}^{\ast}J_{n}\left(  \frac{k_{b\bot
+}v_{\bot}}{\Omega}\right)  \label{thetaknm}%
+\end{align}
+where we used the fact that $\mathbf{k}_{b}$ is transformed into
+$-\mathbf{k}_{b}$ by changing $k_{b\Vert}$ to $-k_{b\Vert}$ and $\alpha_{b}$
+to $\alpha_{b}+\pi$.
 
-\subsection{Incident Energy Flow Density and Relation to the Electric Field}
+Using the properties of the Bessel functions, and defining $n^{\prime}=-n$,%
+\begin{align}
+J_{n+1}  &  =\left(  -1\right)  ^{n+1}J_{n^{\prime}-1}\\
+J_{n-1}  &  =\left(  -1\right)  ^{n-1}J_{n^{\prime}+1}\nonumber\\
+J_{n}  &  =\left(  -1\right)  ^{n}J_{n^{\prime}}\nonumber
+\end{align}
+so that (\ref{thetaknm}) becomes%
+\begin{align}
+\Theta_{\mathbf{k}}^{b-,\left(  n\right)  }  &  =\left(  -1\right)
+^{n}\left[  \frac{1}{\sqrt{2}}e_{b0,-}^{\ast}e^{-i\alpha_{b}}J_{n^{\prime}%
++1}\left(  \frac{k_{b\bot}v_{\bot}}{\Omega}\right)  +\frac{1}{\sqrt{2}%
+}e_{b0,+}^{\ast}e^{+i\alpha_{b}}J_{n^{\prime}-1}\left(  \frac{k_{b\bot}%
+v_{\bot}}{\Omega}\right)  +\frac{p_{\Vert}}{p_{\bot}}e_{b0,\Vert}^{\ast
+}J_{n^{\prime}}\left(  \frac{k_{b\bot}v_{\bot}}{\Omega}\right)  \right] \\
+&  =\left(  -1\right)  ^{n}\left(  \Theta_{\mathbf{k}}^{b+,\left(  n\right)
+^{\prime}}\right)  ^{\ast}%
+\end{align}
+and the diffusion coefficients become%
+\begin{align}
+D_{b,n}^{\text{RF}+}(p,\xi)  &  =\lim_{V\rightarrow\infty}\frac{e^{2}\pi}%
+{4V}\frac{1}{\left|  v_{\Vert}\right|  }\left|  \Theta_{\mathbf{k}}^{b,\left(
+n\right)  }\right|  ^{2}\left|  \mathbf{E}_{b0}\right|  ^{2}\delta\left(
+k_{b\Vert}-\frac{\omega_{b}-n\Omega}{v_{\Vert}}\right)  \iiint\frac{d^{3}%
+k}{(2\pi)^{3}}\delta^{2}\left(  \mathbf{k}_{b}-\mathbf{k}\right) \\
+D_{b,n}^{\text{RF}-}(p,\xi)  &  =\lim_{V\rightarrow\infty}\frac{e^{2}\pi}%
+{4V}\frac{1}{\left|  v_{\Vert}\right|  }\left|  \Theta_{\mathbf{k}}^{b,\left(
+n\right)  ^{\prime}}\right|  ^{2}\left|  \mathbf{E}_{b0}\right|  ^{2}%
+\delta\left(  k_{b\Vert}-\frac{\omega_{b}-n^{\prime}\Omega}{v_{\Vert}}\right)
+\iiint\frac{d^{3}k}{(2\pi)^{3}}\delta^{2}\left(  \mathbf{k}_{b}+\mathbf{k}%
+\right) \nonumber
+\end{align}
 
-The time-averaged energy flow density in the beam is in general given by 
-\begin{equation}
-\overline{s}_{b}=\mathbf{P}_{b}+\mathbf{T}_{b}  \label{sb}
-\end{equation}
-where 
-\begin{equation}
-\mathbf{P}_{b}=\frac{1}{2}\text{Re}\left[ \widetilde{\mathbf{E}}_{b}\times 
-\widetilde{\mathbf{H}}_{b}^{*}\right] 
-\end{equation}
-is the flow of the electromagnetic energy or Poynting vector, and 
-\begin{equation}
-\mathbf{T}_{b}=-\frac{\epsilon _{0}\omega _{b}}{4}\widetilde{\mathbf{E}}%
-_{b}^{*}\cdot \frac{\partial \Bbb{K}^{H}}{\partial \mathbf{k}}\cdot 
-\widetilde{\mathbf{E}}_{b}
-\end{equation}
-is the kinetic energy flow density where $\Bbb{K}^{H}$ is the Hermitian part
-of the dielectric tensor.
+Using Parseval's theorem,
+\begin{align}
+\lim_{V\rightarrow\infty}\frac{1}{V}\iiint\frac{d^{3}k}{(2\pi)^{3}}\delta
+^{2}\left(  \mathbf{k}_{b}-\mathbf{k}\right)   &  =\lim_{V\rightarrow\infty
+}\frac{1}{V}\iiint d^{3}x=1\nonumber\\
+\lim_{V\rightarrow\infty}\frac{1}{V}\iiint\frac{d^{3}k}{(2\pi)^{3}}\delta
+^{2}\left(  \mathbf{k}_{b}+\mathbf{k}\right)   &  =\lim_{V\rightarrow\infty
+}\frac{1}{V}\iiint d^{3}x=1
+\end{align}
+one obtains
+\begin{align}
+D_{b,n}^{\text{RF}+}(p,\xi)  &  =e^{2}\pi\frac{1}{\left|  v_{\Vert}\right|
+}\frac{\left|  \mathbf{E}_{b0}\right|  ^{2}}{4}\left|  \Theta_{\mathbf{k}%
+}^{b,\left(  n\right)  }\right|  ^{2}\delta\left(  k_{b\Vert}-\frac{\omega
+_{b}-n\Omega}{v_{\Vert}}\right) \\
+D_{b,n}^{\text{RF}-}(p,\xi)  &  =e^{2}\pi\frac{1}{\left|  v_{\Vert}\right|
+}\frac{\left|  \mathbf{E}_{b0}\right|  ^{2}}{4}\left|  \Theta_{\mathbf{k}%
+}^{b,\left(  n\right)  ^{\prime}}\right|  ^{2}\delta\left(  k_{b\Vert}%
+-\frac{\omega_{b}-n^{\prime}\Omega}{v_{\Vert}}\right)
+\end{align}
 
-$\widetilde{\mathbf{E}}_{b}$ is the complex form of the electric field 
+In the expression (\ref{dtensor2}-\ref{dtensor4}) for $\mathbb{{D}}%
+^{\text{RF}-}$ tensor elements, we subsitute%
 \begin{equation}
-\widetilde{\mathbf{E}}_{b}=\mathbf{E}_{b0}e^{i\mathbf{k}_{b}\mathbf{\cdot x}%
--i\omega _{b}t}
-\end{equation}
-and the magnetic field $\widetilde{\mathbf{H}}_{b}^{*}$ is given by
-\begin{equation}
-\widetilde{\mathbf{H}}_{b}^{*}=\frac{\mathbf{k}_{b}\times \widetilde{\mathbf{%
-E}}_{b}}{\mu _{0}\omega _{b}}=\frac{\mathbf{N}_{b}\times \widetilde{\mathbf{E%
-}}_{b}}{\mu _{0}c}
-\end{equation}
-using the relation $\mathbf{N}_{b}=\mathbf{k}_{b}\omega _{b}/c.$
-
-The energy flow density (\ref{sb}) can be formally rewritten as 
-\begin{equation}
-\overline{s}_{b}=\frac{\epsilon _{0}c}{2}\left| \mathbf{E}_{b0}\right| ^{2}%
-\mathbf{\Phi }_{b}
-\end{equation}
-where $\mathbf{\Phi }_{b}$ is a non dimensional vector defined as 
-\begin{equation}
-\mathbf{\Phi }_{b}=\mathbf{\Phi }_{bP}+\mathbf{\Phi }_{bT}  \label{phib2}
-\end{equation}
-with 
-\begin{equation}
-\mathbf{\Phi }_{bP}=\frac{\mu _{0}c}{\left| \mathbf{E}_{b0}\right| ^{2}}%
-\text{Re}\left[ \widetilde{\mathbf{E}}_{b}\times \widetilde{\mathbf{H}}%
-_{b}^{*}\right]  \label{phib}
-\end{equation}
-and 
-\begin{equation}
-\mathbf{\Phi }_{bT}=\mathbf{-}\frac{1}{2}\mathbf{e}_{b}^{*}\cdot \frac{%
-\partial \Bbb{K}^{H}}{\partial \mathbf{N}}\cdot \mathbf{e}_{b}  \label{phit}
+\left[  1-\xi^{2}-\frac{n\Omega}{-\omega_{b}}\right]  =\left[  1-\xi^{2}%
+-\frac{n^{\prime}\Omega}{\omega_{b}}\right]
 \end{equation}
 
-In vacuum, $\mathbf{\Phi }_{b}=\widehat{k}$ , unit vector in the direction
-of propagation, and $\mathbf{\Phi }_{bT}=0$. Here $\mathbf{e}_{b}=\frac{%
-\mathbf{E}_{b0}}{\left| \mathbf{E}_{b0}\right| }$ is the polarization
-vector. The incident power flux on a flux-surface is therefore given by 
+Then, by redefining $n^{\prime}\rightarrow n$ in the sum over all harmonics
+for $\mathbb{{D}}^{\text{RF}-}$, we can combine the two contributions of
+$\mathbb{{D}}^{\text{RF}+}$ and $\mathbb{{D}}^{\text{RF}-}$, and finally we
+obtain an expression with one diffusion coefficient:\qquad\qquad\qquad\qquad%
+\begin{align}
+D_{b,n}^{\text{RF}}(p,\xi) &  =e^{2}\pi\frac{1}{\left|  v_{\Vert}\right|
+}\frac{\left|  \mathbf{E}_{b0}\right|  ^{2}}{2}\left|  \Theta_{\mathbf{k}%
+}^{b,\left(  n\right)  }\right|  ^{2}\delta\left(  k_{b\Vert}-\frac{\omega
+_{b}-n\Omega}{v_{\Vert}}\right)  \nonumber\\
+&  =e^{2}\pi\frac{1}{\left|  v_{\Vert}\right|  }\frac{\left|  \mathbf{E}%
+_{b0}\right|  ^{2}}{2}\left|  \Theta_{\mathbf{k}}^{b,\left(  n\right)
+}\right|  ^{2}\frac{c}{\omega_{b}}\delta\left(  N_{b\Vert}-N_{\Vert\text{res}%
+}\right)  \label{diffcoef}%
+\end{align}
+with (\ref{thetaknp})%
 \begin{equation}
-\overline{\mathbf{s}}_{b\text{inc}}=\frac{\epsilon _{0}c}{2}\left| \mathbf{E}
-_{b0}\right| ^{2}\left| \mathbf{\Phi }_{b}\cdot \widehat{\psi }\right|
-\label{sbinc}
+\Theta_{\mathbf{k}}^{b,\left(  n\right)  }=\frac{1}{\sqrt{2}}e_{b0,+}%
+e^{-i\alpha_{b}}J_{n-1}\left(  \frac{k_{b\bot}v_{\bot}}{\Omega}\right)
++\frac{1}{\sqrt{2}}e_{b0,-}e^{+i\alpha_{b}}J_{n+1}\left(  \frac{k_{b\bot
+}v_{\bot}}{\Omega}\right)  +\frac{p_{\Vert}}{p_{\bot}}e_{b0,\Vert}J_{n}\left(
+\frac{k_{b\bot}v_{\bot}}{\Omega}\right)  \label{thetakn}%
+\end{equation}%
+\begin{align}
+N_{b\Vert} &  =\frac{k_{b\Vert}c}{\omega_{b}}\\
+N_{\Vert\text{res}} &  =\frac{c}{v_{\Vert}}\left(  1-\frac{n\Omega}{\omega
+_{b}}\right)  \nonumber\\
+&  =\frac{1}{\beta_{Te}}\frac{p_{Te}}{p_{\Vert}}\left(  \gamma-\frac
+{n^{\prime}\omega_{ce}}{\omega_{b}}\right)  \label{nparres}%
+\end{align}
+where
+\begin{align}
+\Omega &  =\frac{q_{e}B}{\gamma m_{e}}=\frac{-\omega_{ce}}{\gamma}\text{ with
+}\omega_{ce}=\frac{eB}{m_{e}}\\
+n^{\prime} &  =-n\\
+\beta_{Te} &  =\frac{p_{Te}}{m_{e}c}=\frac{v_{Te}}{c}=\sqrt{\frac{kT_{e}%
+}{m_{e}c^{2}}}%
+\end{align}
+
+\subsection{Incident Energy Flow Density}
+
+\subsubsection{Relation to the Electric Field}
+
+The time-averaged energy flow density in the beam is in general given by
+\begin{equation}
+\overline{s}_{b}=\mathbf{P}_{b}+\mathbf{T}_{b} \label{sb}%
 \end{equation}
-where $\widehat{\psi }$ is the\ local vector normal to the flux-surface.
+where
+\begin{equation}
+\mathbf{P}_{b}=\frac{1}{2}\text{Re}\left[  \widetilde{\mathbf{E}}_{b}%
+\times\widetilde{\mathbf{H}}_{b}^{*}\right]
+\end{equation}
+is the flow of the electromagnetic energy or Poynting vector, and
+\begin{equation}
+\mathbf{T}_{b}=-\frac{\epsilon_{0}\omega_{b}}{4}\widetilde{\mathbf{E}}_{b}%
+^{*}\cdot\frac{\partial\mathbb{{K}^{H}}}{\partial\mathbf{k}}\cdot
+\widetilde{\mathbf{E}}_{b}%
+\end{equation}
+is the kinetic energy flow density where $\mathbb{{K}^{H}}$ is the Hermitian
+part of the dielectric tensor.
+
+$\widetilde{\mathbf{E}}_{b}$ is the complex form of the electric field
+(\ref{Ecomp})
+\begin{equation}
+\widetilde{\mathbf{E}}_{b}=\mathbf{E}_{b0}e^{i\mathbf{k}_{b}\mathbf{\cdot
+x}-i\omega_{b}t}%
+\end{equation}
+and the magnetic field $\widetilde{\mathbf{H}}_{b}$ is given by
+\begin{equation}
+\widetilde{\mathbf{H}}_{b}=\frac{\mathbf{k}_{b}\times\widetilde{\mathbf{E}%
+}_{b}}{\mu_{0}\omega_{b}}=\frac{\mathbf{N}_{b}\times\widetilde{\mathbf{E}}%
+_{b}}{\mu_{0}c} \label{Hfield}%
+\end{equation}
+using the relation $\mathbf{N}_{b}=\mathbf{k}_{b}\omega_{b}/c.$
+
+The energy flow density (\ref{sb}) can be formally rewritten as
+\begin{equation}
+\overline{s}_{b}=\frac{\epsilon_{0}c}{2}\left|  \mathbf{E}_{b0}\right|
+^{2}\mathbf{\Phi}_{b}%
+\end{equation}
+where $\mathbf{\Phi}_{b}$ is a non dimensional vector defined as
+\begin{equation}
+\mathbf{\Phi}_{b}=\mathbf{\Phi}_{bP}+\mathbf{\Phi}_{bT} \label{phib2}%
+\end{equation}
+with
+\begin{equation}
+\mathbf{\Phi}_{bP}=\frac{\mu_{0}c}{\left|  \mathbf{E}_{b0}\right|  ^{2}%
+}\text{Re}\left[  \widetilde{\mathbf{E}}_{b}\times\widetilde{\mathbf{H}}%
+_{b}^{\ast}\right]  \label{phib}%
+\end{equation}
+and
+\begin{equation}
+\mathbf{\Phi}_{bT}=\mathbf{-}\frac{1}{2}\mathbf{e}_{b}^{\ast}\cdot
+\frac{\partial\mathbb{{K}^{H}}}{\partial\mathbf{N}}\cdot\mathbf{e}_{b}
+\label{phit}%
+\end{equation}
+
+Using (\ref{Hfield}), we obtain
+\begin{align}
+\mathbf{\Phi}_{bP}  &  =\text{Re}\left[  \mathbf{e}_{b}\times\left(
+\mathbf{N}_{b}\times\mathbf{e}_{b}^{\ast}\right)  \right] \nonumber\\
+&  =\text{Re}\left[  \mathbf{N}_{b}-\left(  \mathbf{N}_{b}\cdot\mathbf{e}%
+_{b}\right)  \mathbf{e}_{b}^{\ast}\right]  \label{phibp2}%
+\end{align}
+
+In vacuum, $\mathbf{\Phi}_{b}=\widehat{k}$ , unit vector in the direction of
+propagation, and $\mathbf{\Phi}_{bT}=0$. Here,
+\begin{equation}
+\mathbf{e}_{b}=\frac{\mathbf{E}_{b0}}{\left|  \mathbf{E}_{b0}\right|  }%
+\end{equation}
+is the polarization vector. The incident power flux on a flux-surface is
+therefore given by
+\begin{equation}
+\overline{\mathbf{s}}_{b\text{inc}}=\frac{\epsilon_{0}c}{2}\left|
+\mathbf{E}_{b0}\right|  ^{2}\left|  \mathbf{\Phi}_{b}\cdot\widehat{\psi
+}\right|
+\end{equation}
+where $\widehat{\psi}$ is the\ local vector normal to the flux-surface.
+
+\subsubsection{Relation to the ray trajectories}
+
+\bigskip The energy flows in the direction of the group velocity, noted
+$\widehat{g}$%
+\begin{equation}
+\widehat{g}_{b}=\frac{\mathbf{\Phi}_{b}}{\left|  \mathbf{\Phi}_{b}\right|  }%
+\end{equation}
+In ray-tracing calculations, this is the direction of the ray trajectories,
+which are parametrized by $\left(  \psi_{b}\left(  s\right)  ,\theta
+_{b}\left(  s\right)  ,\phi_{b}\left(  s\right)  \right)  $ where $s$ is the
+distance along the ray. Therefore $\widehat{g}_{b}$ can be determined from
+ray-tracing calculations or any other wave propagation model, and we have
+\begin{equation}
+\overline{\mathbf{s}}_{b\text{inc}}=\frac{\epsilon_{0}c}{2}\left|
+\mathbf{E}_{b0}\right|  ^{2}\left|  \mathbf{\Phi}_{b}\right|  \left|
+\widehat{g}_{b}\cdot\widehat{\psi}\right|
+\end{equation}
+
+In DKE calculations, flux-surfaces are discretized on a grid $\psi_{l+1/2}$
+and have a finite volume (). In consequence, the factor $\left|  \widehat
+{g}_{b}\cdot\widehat{\psi}\right|  $ must be ''integrated'' along the ray
+trajectory within this volume. We therefore define an incidence factor
+\begin{equation}
+f_{\text{inc},b}^{l+1/2}=\frac{1}{\Delta r_{l+1/2}^{\theta_{b}}}\int
+_{\psi_{l+1/2}\mp\Delta\psi_{l+1/2}/2}^{\psi_{l+1/2}\pm\Delta\psi_{l+1/2}/2}ds
+\end{equation}
+where the $\pm$ sign accounts for the fact that the ray may be locally
+directed either inward or outward, and where $\Delta r_{l+1/2}^{\theta_{b}}$
+is the local thickness of the flux-surface.
+\begin{equation}
+\Delta r_{l+1/2}^{\theta_{b}}=r(\psi_{l+1,}\theta_{b})-r(\psi_{l,}\theta_{b})
+\end{equation}
+
+The factor $f_{\text{inc},b}^{l+1/2}$ can be numerically calculated from the
+equilibrium and ray-tracing data. In the limit of an infinitely thin
+flux-surface, we have
+\begin{equation}
+f_{\text{inc},b}^{l+1/2}\rightarrow\left|  \widehat{g}_{b}\cdot\widehat{\psi
+}\right|  ^{-1}%
+\end{equation}
+
+We therefore substitute%
+\begin{equation}
+\overline{\mathbf{s}}_{b\text{inc}}=\frac{\epsilon_{0}c}{2}\left|
+\mathbf{E}_{b0}\right|  ^{2}\frac{\left|  \mathbf{\Phi}_{b}\right|
+}{f_{\text{inc},b}^{l+1/2}} \label{sbinc}%
+\end{equation}
 
 \subsection{Narrow Beam Approximation}
 
 Let consider a ray which crosses the flux surface at the respective poloidal
-locations $\theta _{b}$. Here, it is assumed that all electrons interact
-with the beam, whatever its toroidal location, because of the axisymmetry.
+locations $\theta_{b}$. Here, it is assumed that all electrons interact with
+the beam, whatever its toroidal location, because of the axisymmetry.
 Therefore, calculations are only valid for circulating electrons, except for
-those localized on low order rational $q$-surfaces, since their trajectories
-are exactly periodic in configuration space. Consequently, either they may
-never crosses the beam or if they cross it, the quasilinear assumption might
-likely fail, since some correlations could remain between two momentum
-kicks.  However, the total weight of these electrons is marginal, and their
-contribution to RF power absorption and current generation is simply
-neglected. It is important to recal that trapped particle interaction with
-RF wave is not addressed in this code for similar arguments. For all
-particles whose trajectory is periodic, a specific treatment of the
-quasilinear interaction is necessary, which is at this stage beyond the
-scope of this development.
+those localized on low $n$ order rational $q$-surfaces, since their
+trajectories are exactly periodic in configuration space. Consequently, either
+they may never crosses the beam or if they cross it, the quasilinear
+assumption might likely fail, since some correlations could remain between two
+momentum kicks. However, the total weight of these electrons is marginal, and
+their contribution to RF power absorption and current generation is simply
+neglected. It is important to recal that trapped particle interaction with RF
+wave is not addressed in this code for similar arguments. For all particles
+whose trajectory is periodic, a specific treatment of the quasilinear
+interaction is necessary, which is at this stage beyond the scope of this development.
 
-If the assumption that the extension of the beam power on the flux-surface
-is very small in the poloidal directions is done, we can approximate 
+If we assume that the extension of the beam power on the flux-surface is very
+small in the poloidal directions, we can approximate
 \begin{equation}
-\overline{\mathbf{s}}_{b\text{inc}}\simeq \frac{P_{b,\text{inc}}}{\mathcal{A}%
-_{b}}\delta \left( \theta -\theta _{b}\right) 
-\end{equation}
-
-This assumption is in contradication with the plane-wave decomposition of
-the RF beam, since plane waves are essentially present in the entire
-configuration space. However, it is assumed that plane waves interfere
-destructively everywhere except in the beam region, which can be limited to
-a narrow poloidal and toroidal extention.Only a full-wave approach may help
-to justify this assumption. By definition, $\mathcal{A}_{b}$ is just the
-elementary surface of the beam at the poloidal locations $\theta _{b},$ and
-is determined so that $P_{\text{inc}}$ is the total incident power on the
-flux-surface 
-\begin{equation}
-\iint dS\;\overline{\mathbf{s}}_{b\text{inc}}=P_{b,\text{inc}}
-\end{equation}
-which gives in the system $\left( \psi ,\theta ,\phi \right) $%
-\begin{equation}
-1=\int_{0}^{2\pi }d\phi \;\int_{0}^{2\pi }\frac{rR}{\mathcal{A}_{b}\left|
-\cos \alpha \right| }\delta \left( \theta -\theta _{b}\right) d\theta 
-\end{equation}
-or 
-\begin{equation}
-1=\int_{0}^{2\pi }d\phi \;\int_{0}^{2\pi }\frac{rR}{\mathcal{A}_{b}\left| 
-\widehat{\psi }\cdot \widehat{r}\right| }\delta \left( \theta -\theta
-_{b}\right) d\theta 
+\overline{\mathbf{s}}_{b\text{inc}}\simeq\frac{P_{b,\text{inc}}}%
+{\mathcal{A}_{b}}\delta\left(  \theta-\theta_{b}\right)
 \end{equation}
 
-Hence, 
+This assumption is in contradication with the plane-wave decomposition of the
+RF beam, since plane waves are essentially present in the entire configuration
+space. However, it is assumed that plane waves interfere destructively
+everywhere except in the beam region, which can be limited to a narrow
+poloidal and toroidal extention. By definition, $\mathcal{A}_{b}$ is
+determined so that $P_{b,\text{inc}}$ is the total incident power on the
+flux-surface
 \begin{equation}
-\mathcal{A}_{b}=\frac{2\pi rR}{\left| \widehat{\psi }\cdot \widehat{r}%
-\right| }
+\iint dS\;\overline{\mathbf{s}}_{b\text{inc}}=P_{b,\text{inc}}%
 \end{equation}
-and the incident power flux is simply
-
+which gives in the system $\left(  \psi,\theta,\phi\right)  $ , using
+(\ref{dsdthetadphi})
 \begin{equation}
-\overline{\mathbf{s}}_{b\text{inc}}=\frac{P_{b,\text{inc}}}{2\pi rR}\left| 
-\widehat{\psi }\cdot \widehat{r}\right| \delta \left( \theta -\theta
-_{b}\right)   \label{sbinc2}
-\end{equation}
-
-Using (\ref{sbinc}) and (\ref{sbinc2}), 
-\begin{equation}
-\frac{\left| \mathbf{E}_{b0}\right| ^{2}}{2}=\frac{1}{\epsilon _{0}c}\frac{1%
-}{2\pi rR}\frac{\left| \widehat{\psi }\cdot \widehat{r}\right| }{\left| 
-\mathbf{\Phi }_{b}\cdot \widehat{\psi }\right| }\delta \left( \theta -\theta
-_{b}\right) P_{b,\text{inc}}  \label{e0}
+1=\int_{0}^{2\pi}d\phi\;\int_{0}^{2\pi}\frac{rR}{\mathcal{A}_{b}\left|
+\widehat{\psi}\cdot\widehat{r}\right|  }\delta\left(  \theta-\theta
+_{b}\right)  d\theta
 \end{equation}
 
-Since for concentric circular flux surfaces, $\widehat{\psi }=\widehat{r}$ ,
-then $\left| \widehat{\psi }\cdot \widehat{r}\right| =1$ and $\mathcal{A}=rR.
-$ In the limit of small inverse aspect ratio $\epsilon =\frac{r}{R}\simeq 
-\frac{r}{R_{0}}\ll 1,$ 
+Hence,
 \begin{equation}
-\frac{\left| \mathbf{E}_{b0}\right| ^{2}}{2}=\frac{1}{\epsilon _{0}c}\frac{1%
-}{2\pi rR_{0}}\frac{\Psi \left( r,\theta \right) }{\Psi \left( r,\pi %
-/2\right) }\frac{1}{\left| \mathbf{\Phi }_{b}\cdot \widehat{r}\right| }
-\delta \left( \theta -\theta _{b}\right) P_{b,\text{ inc}}
+\mathcal{A}_{b}=\frac{2\pi rR}{\left|  \widehat{\psi}\cdot\widehat{r}\right|
+}%
 \end{equation}
-where $\Psi \left( r,\theta \right) =\frac{1+\epsilon }{1+\epsilon \cos
-\theta }.$
+and the incident power flux is simply%
+
+\begin{equation}
+\overline{\mathbf{s}}_{b\text{inc}}=\frac{P_{b,\text{inc}}}{2\pi rR}\left|
+\widehat{\psi}\cdot\widehat{r}\right|  \delta\left(  \theta-\theta_{b}\right)
+\label{sbinc2}%
+\end{equation}
+
+Using (\ref{sbinc}) and (\ref{sbinc2}),
+\begin{equation}
+\frac{\left|  \mathbf{E}_{b0}\right|  ^{2}}{2}=\frac{1}{\epsilon_{0}c}\frac
+{1}{2\pi rR}\left|  \widehat{\psi}\cdot\widehat{r}\right|  \frac
+{f_{\text{inc},b}^{l+1/2}}{\left|  \mathbf{\Phi}_{b}\right|  }\delta\left(
+\theta-\theta_{b}\right)  P_{b,\text{inc}} \label{e0}%
+\end{equation}
+
+For concentric circular flux surfaces, $\widehat{\psi}=\widehat{r}$ , then
+$\left|  \widehat{\psi}\cdot\widehat{r}\right|  =1$. We obtain
+\begin{equation}
+\frac{\left|  \mathbf{E}_{b0}\right|  ^{2}}{2}=\frac{1}{\epsilon_{0}c}\frac
+{1}{2\pi rR_{p}}\frac{\Psi}{\Psi_{p}}\frac{f_{\text{inc},b}^{l+1/2}}{\left|
+\mathbf{\Phi}_{b}\right|  }\delta\left(  \theta-\theta_{b}\right)  P_{b,\text{
+inc}}%
+\end{equation}
+where $\Psi_{p}\left(  r\right)  =\Psi_{p}\left(  r,\pi/2\right)  =1+\epsilon$.
 
 \subsection{Normalized Diffusion Coefficient}
 
 The diffusion coefficient is usually normalized to the collisional diffusion
-coefficient $\nu _{e}p_{Te}^{2}$, thus defining 
+coefficient $\nu_{e}p_{Te}^{2}$, thus defining
 \begin{equation}
-\overline{D}_{b,n}^{\text{RF}}(p,\xi )\equiv \frac{D_{b,n}^{\text{RF}}(p,\xi
-)}{\nu _{e}p_{Te}^{2}}  \label{difcoeffnorm}
+\overline{D}_{b,n}^{\text{RF}}(p,\xi)\equiv\frac{D_{b,n}^{\text{RF}}(p,\xi
+)}{\nu_{e}p_{Te}^{2}} \label{difcoeffnorm}%
 \end{equation}
-with 
+with
 \begin{equation}
-\nu _{e}=\frac{e^{4}n_{e}\ln \Lambda }{4\pi \epsilon
-_{0}^{2}m_{e}^{2}v_{Te}^{3}}
-\end{equation}
-
-Using (\ref{diffcoef}) and (\ref{e0}), the diffusion coefficient (\ref
-{difcoeffnorm}) becomes 
-\begin{equation}
-\overline{D}_{b,n}^{\text{RF}}(p,\xi )=\overline{D}_{b,n,0}^{\text{RF}%
-}\left| \Theta _{\mathbf{k}}^{b,n}\left( \mathbf{k}_{b}\right) \right| ^{2}%
-\frac{\gamma p_{Te}}{p\left| \xi \right| }\delta \left( N_{\Vert b}-N_{\Vert 
-\text{res}}\right) \delta \left( \theta -\theta _{b}\right) 
-\label{difcoeffnorm2}
-\end{equation}
-with 
-\begin{eqnarray}
-\overline{D}_{b,n,0}^{\text{RF}} &=&\frac{1}{\nu _{e}p_{Te}^{2}}\frac{1}{%
-v_{Te}}\frac{\pi }{\omega _{b}}\frac{e^{2}}{\epsilon _{0}}\frac{1}{2\pi rR}%
-\frac{\left| \widehat{\psi }\cdot \widehat{r}\right| }{\left| \mathbf{\Phi }%
-_{b}\cdot \widehat{\psi }\right| }P_{b,\text{inc}}  \nonumber \\
-&=&\frac{2\pi }{rR}\frac{1}{m_{e}\ln \Lambda }\frac{1}{\omega _{b}\omega
-_{pe}^{2}}\frac{\left| \widehat{\psi }\cdot \widehat{r}\right| }{\left| 
-\mathbf{\Phi }_{b}\cdot \widehat{\psi }\right| }P_{b,\text{inc}}
-\end{eqnarray}
-where $\omega _{pe}$ is the electron plasma frequency 
-\begin{equation}
-\omega _{pe}=\sqrt{\frac{e^{2}n_{e}}{\epsilon _{0}m_{e}}}
+\nu_{e}=\frac{e^{4}n_{e}\ln\Lambda}{4\pi\epsilon_{0}^{2}m_{e}^{2}v_{Te}^{3}}%
 \end{equation}
 
-For concentric circular flux surfaces, 
+Using (\ref{diffcoef}) and (\ref{e0}), the diffusion coefficient
+(\ref{difcoeffnorm}) becomes
 \begin{equation}
-\overline{D}_{b,n,0}^{\text{RF}}=\frac{2\pi }{rR_{0}}\frac{\Psi \left(
-r,\theta \right) }{\Psi \left( r,\pi /2\right) }\frac{1}{m_{e}\ln \Lambda }%
-\frac{1}{\omega _{b}\omega _{pe}^{2}}\frac{1}{\left| \mathbf{\Phi }_{b}\cdot 
-\widehat{r}\right| }P_{b,\text{inc}}  \label{drf0}
+\overline{D}_{b,n}^{\text{RF}}(p,\xi)=\overline{D}_{b,n,0}^{\text{RF}}\left|
+\Theta_{\mathbf{k}}^{b,\left(  n\right)  }\right|  ^{2}\frac{\gamma p_{Te}%
+}{p\left|  \xi\right|  }\delta\left(  N_{b\Vert}-N_{\Vert\text{res}}\right)
+2\pi\delta\left(  \theta-\theta_{b}\right)  \label{difcoeffnorm2}%
+\end{equation}
+with
+\begin{align}
+\overline{D}_{b,n,0}^{\text{RF}} &  =\frac{1}{\nu_{e}p_{Te}^{2}}\frac
+{1}{v_{Te}}\frac{\pi}{\omega_{b}}\frac{e^{2}}{\epsilon_{0}}\frac{1}{4\pi
+^{2}rR}\left|  \widehat{\psi}\cdot\widehat{r}\right|  \frac{f_{\text{inc}%
+,b}^{l+1/2}}{\left|  \mathbf{\Phi}_{b}\right|  }P_{b,\text{inc}}\nonumber\\
+&  =\frac{1}{rR}\frac{1}{m_{e}\ln\Lambda}\frac{1}{\omega_{b}\omega_{pe}^{2}%
+}\left|  \widehat{\psi}\cdot\widehat{r}\right|  \frac{f_{\text{inc},b}%
+^{l+1/2}}{\left|  \mathbf{\Phi}_{b}\right|  }P_{b,\text{inc}}\label{drf0}%
+\end{align}
+where $\omega_{pe}$ is the electron plasma frequency
+\begin{equation}
+\omega_{pe}=\sqrt{\frac{e^{2}n_{e}}{\epsilon_{0}m_{e}}}%
+\end{equation}
+
+We also recall the expressions (\ref{thetakn}), (\ref{nparres}) and
+(\ref{phib2}-\ref{phibp2})%
+\begin{equation}
+\Theta_{\mathbf{k}}^{b,\left(  n\right)  }=\frac{1}{\sqrt{2}}e_{b0,+}%
+e^{-i\alpha_{b}}J_{n-1}\left(  \frac{k_{b\bot}v_{\bot}}{\Omega}\right)
++\frac{1}{\sqrt{2}}e_{b0,-}e^{+i\alpha_{b}}J_{n+1}\left(  \frac{k_{b\bot
+}v_{\bot}}{\Omega}\right)  +\frac{p_{\Vert}}{p_{\bot}}e_{b0,\Vert}J_{n}\left(
+\frac{k_{b\bot}v_{\bot}}{\Omega}\right)  \label{thetakn2}%
+\end{equation}%
+\begin{equation}
+N_{\Vert\text{res}}=\frac{c}{v_{\Vert}}\left(  1-\frac{n\Omega}{\omega_{b}%
+}\right)  =\frac{1}{\beta_{Te}}\frac{p_{Te}}{p_{\Vert}}\left(  \gamma
+-\frac{n^{\prime}\omega_{ce}}{\omega_{b}}\right)  \label{nparres2}%
+\end{equation}%
+\begin{align}
+\mathbf{\Phi}_{b}  &  =\mathbf{\Phi}_{bP}+\mathbf{\Phi}_{bT}\label{phib3}\\
+\mathbf{\Phi}_{bP}  &  =\text{Re}\left[  \mathbf{N}_{b}-\left(  \mathbf{N}%
+_{b}\cdot\mathbf{e}_{b}\right)  \mathbf{e}_{b}^{\ast}\right] \label{phibp3}\\
+\mathbf{\Phi}_{bT}  &  =\mathbf{-}\frac{1}{2}\mathbf{e}_{b}^{\ast}\cdot
+\frac{\partial\mathbb{{K}^{H}}}{\partial\mathbf{N}}\cdot\mathbf{e}_{b}
+\label{phibt3}%
+\end{align}
+
+For concentric circular flux surfaces,
+\begin{equation}
+\overline{D}_{b,n,0}^{\text{RF}}=\frac{1}{rR_{p}}\frac{\Psi}{\Psi_{p}}\frac
+{1}{m_{e}\ln\Lambda}\frac{1}{\omega_{b}\omega_{pe}^{2}}\frac{f_{\text{inc}%
+,b}^{l+1/2}}{\left|  \mathbf{\Phi}_{b}\right|  }P_{b,\text{inc}}%
 \end{equation}
