@@ -98,7 +98,7 @@ for ib = 1:nb_lh
 end
 %
 mask_yfinc = isnan(yfinc_lh(blist_lh));
-xyfinc_lh(:,mask_yfinc) = xynperp_lh(:,mask_yfinc)./xynpar_lh_disp(:,mask_yfinc); %normal poloidal incidence and ES approximation
+xyfinc_lh(:,mask_yfinc) = abs(xynperp_lh(:,mask_yfinc)./xynpar_lh_disp(:,mask_yfinc)); %normal poloidal incidence and ES approximation
 %
 wpe_ref = sqrt(ne_ref*qe^2/e0/me);
 %
