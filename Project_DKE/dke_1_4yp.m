@@ -2041,11 +2041,11 @@ else
 end
 %
 if display_mode >= 1,	
-	info_dke_yp(2,['Full elapsed time of LU matrix factorization for f: ',num2str(time_f),' (s)']);end
-	info_dke_yp(2,['Size of the LU matrices for f: ',num2str(memoryLU_f),' MBytes']);end
+	info_dke_yp(2,['Full elapsed time of LU matrix factorization for f: ',num2str(time_f),' (s)']);
+	info_dke_yp(2,['Size of the LU matrices for f: ',num2str(memoryLU_f),' MBytes']);
 	if dke_mode == 1,
-		info_dke_yp(2,['Full elapsed time of LU matrix factorization for g: ',num2str(time_g),' (s)']);end
-		info_dke_yp(2,['Size of the LU matrices for g: ',num2str(memoryLU_g),' MBytes']);end
+		info_dke_yp(2,['Full elapsed time of LU matrix factorization for g: ',num2str(time_g),' (s)']);
+		info_dke_yp(2,['Size of the LU matrices for g: ',num2str(memoryLU_g),' MBytes']);
 	end
 end
 %
@@ -2117,6 +2117,8 @@ for it_f = 2:nit_f,
 		MMXq_t = MMXIpn2_t + (MMXT_f_t - (time_scheme - 1)*(MMXP_f_t + MMXR_f_t)/time_scheme)*MMXf0_t;%Right handside term of the Fokker-Planck equation
 %
 		MMXR_t = MMXPDI_f_t*MMXq_t - MMXPC_f_t*MMXf0_t;%Residu calculation for matrix inversion
+%
+pack
 %
 		if invproc == 1,%cgs iterative method
 			[MMXS_t,flaginv_f] = cgs(MMXPC_f_t,MMXR_t,prec_inv,maxit_inv,MMXL_f_t,MMXU_f_t);
