@@ -28,5 +28,5 @@ elseif strcmp(machine,'MAC') == 1,
    	dossier = '/Volumes/Ailefroide/CVS/Project_DKE';
 elseif strcmp(machine,'MAC2') == 1,
 	s = ':';
-	dossier = ':Sirac:CVS:Project_DKE';
+	dossier = 'Ailefroide:CVS:Project_DKE';
 end

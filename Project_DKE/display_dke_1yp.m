@@ -51,7 +51,9 @@ xRR_KB_fsav = 0.35*abs(xepsi_ref_fsav).^(-3/8).*exp(-(sqrt(2./abs(xepsi_ref_fsav
 P_ref = me*(clum*betath_ref)^2*nhu_ref*ne_ref/1e6;%MKSA power unit
 j_ref = qe*clum*betath_ref*ne_ref/1e6;%MKSA current unit
 Edreicer_ref = me*clum*betath_ref*nhu_ref/qe;%MKSA Dreicer field unit
-
+%
+XxRR_mksa_fsav = XxRR_ref_fsav*nhu_ref*ne_ref;%Runaway loss rate in mksa units
+%
 if bounce_mode > 0,
 	xcollisionnality = 0.012*(xne/1e20).*xZeff.*xq*Rp./xia.^1.5./xTe.^2;%From O. Sauter et al., Phys. Plasma 6 (1999) 2834
 %	[xft_llm] = ft_llm_dke_yp(xia,1000);%From Y.R. Lin-Liu and R.L. Miller, Phys. Plasma 2 (1995) 1666
@@ -137,17 +139,27 @@ while 1,
     		pparsupertrap_ref = xpndetrap_ref(ir_display)*mhu(abs(mhu)<=xmhusupertrap(ir_display));%For contour plot of the supertrapped domain
     		pperpsupertrap_ref = xpndetrap_ref(ir_display)*sqrt(1-mhu(abs(mhu)<=xmhusupertrap(ir_display)).^2);%For contour plot of the supertrapped domain
 %
+			xMRR_tau_mksa = xMRR_tau_ref*nhu_ref*ne_ref;
+			xMRR_flux_mksa = xMRR_flux_ref*nhu_ref*ne_ref;
+%
     		disp('-------------------------------------------------------------------------------------------------------------------');
 			info_dke_yp(2,'Global results (normalized to reference units) at Bmin [theta_pol = 0 (deg)]:');
-			info_dke_yp(2,['Ripple loss : ',num2str(xMRR_tau_ref(ir_display))]);
-			info_dke_yp(2,['Ripple loss (flux calculations) : ',num2str(xMRR_flux_ref(ir_display))]);
+			info_dke_yp(2,['Magnetic ripple loss rate: ',num2str(xMRR_tau_ref(ir_display))]);
+			info_dke_yp(2,['Magnetic ripple loss rate (flux calculations) : ',num2str(xMRR_flux_ref(ir_display))]);
 %
 			disp('-------------------------------------------------------------------------------------------------------------------');
 			info_dke_yp(2,'Global results (normalized to MKSA units) at Bmin [theta_pol = 0 (deg)]:');
-    		info_dke_yp(2,['Ripple loss (s-1.m-3): ',num2str(xMRR_tau_ref(ir_display)*nhu_ref*ne_ref)]);
-			info_dke_yp(2,['Ripple loss (flux calculations) (s-1.m-3): ',num2str(xMRR_flux_ref(ir_display)*nhu_ref*ne_ref)]);
+    		info_dke_yp(2,['Magnetic ripple loss rate (s-1.m-3): ',num2str(xMRR_tau_mksa(ir_display))]);
+			info_dke_yp(2,['Magnetic ripple loss rate (flux calculations) (s-1.m-3): ',num2str(xMRR_flux_mksa(ir_display))]);
 			disp('-------------------------------------------------------------------------------------------------------------------');
-		else
+%
+            figure(205),clf
+            [ax] = graph1D_jd(xrho_dke,xMRR_tau_mksa,'','','',NaN,[0,1],NaN,'none','+','r',2,14,gca,0.8,0.7,0.6);
+			hold on
+            [ax] = graph1D_jd(xrho_dke,xMRR_flux_mksa,'\rho','\Gamma_{ST} (m^-3.s^-1)','Magnetic ripple loss rate at Bmin',NaN,[0,1],NaN,'none','x','b',2,14,gca,0.8,0.7,0.6);
+			hold off
+			axis([0,1,0,1.1*max([xMRR_tau_mksa,xMRR_flux_mksa])]);
+	   else
 			info_dke_yp(2,'No magnetic ripple loss calculations');
 			disp('-------------------------------------------------------------------------------------------------------------------');
 	   end
@@ -518,7 +530,7 @@ while 1,
 					disp(['   - RF current drive efficiency [spherical]: ',num2str(xeta0_ref_fsav(ir_display_dke))])
 			end
 			disp(['   - Ohmic eletric field: ',num2str(xepsi_ref_fsav(ir_display_dke))])
-			disp(['   - Runaway rate [spherical]: ',num2str(XxRR_ref_fsav(np-1,ir_display_dke))])
+			disp(['   - Runaway loss rate [spherical]: ',num2str(XxRR_ref_fsav(np-1,ir_display_dke))])
 			disp(['   - Kruskal-Berstein runaway rate (Z = 1) [spherical]: ',num2str(xRR_KB_fsav(ir_display_dke))])
 			disp(['   - Bulk current [spherical]: ',num2str(xcurrB_ref_fsav(ir_display_dke))])
 %
@@ -542,8 +554,8 @@ while 1,
 					disp(['   - RF current drive efficiency (A.m/W) [spherical]: ',num2str(xeta0_fsav_mksa(ir_display_dke))])
 			end
 			disp(['   - Ohmic eletric field (V/m): ',num2str(xepsi_fsav_mksa(ir_display_dke))])
-			disp(['   - Runaway rate [spherical]: ',num2str(XxRR_ref_fsav(np-1,ir_display_dke)*nhu_ref*ne_ref)])
-			disp(['   - Kruskal-Berstein runaway rate (Z = 1) [spherical]: ',num2str(xRR_KB_fsav(ir_display_dke)*nhu_ref*ne_ref)])
+			disp(['   - Runaway loss rate [spherical] (m-3.s-1): ',num2str(XxRR_mksa_fsav(np-1,ir_display_dke))])
+			disp(['   - Kruskal-Berstein runaway rate (Z = 1) [spherical] (m-3.s-1): ',num2str(xRR_KB_fsav(ir_display_dke)*nhu_ref*ne_ref)])
 			disp(['   - Bulk current (MA/m2) [spherical]: ',num2str(xJrfB_fsav_mksa(ir_display_dke))])
 		else
 			[Xf0_g_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(Xf0_g_ref,pn_ref,mhu,dp_cyl);
@@ -707,7 +719,7 @@ while 1,
 					disp(['   - RF only current drive efficiency [spherical]: ',num2str(xeta0_ref_fsav(ir_display_dke))])
 			end
 			disp(['   - Ohmic eletric field: ',num2str(xepsi_ref_fsav(ir_display_dke))])
-			disp(['   - Runaway rate [spherical]: ',num2str(XxRR_ref_fsav(np-1,ir_display_dke))])
+			disp(['   - Runaway loss rate [spherical]: ',num2str(XxRR_ref_fsav(np-1,ir_display_dke))])
 			disp(['   - Bulk current [spherical]: ',num2str(xcurrB_ref_fsav(ir_display_dke))])
 %
 			disp('-------------------------------------------------------------------------------------------------------------------');
@@ -739,7 +751,7 @@ while 1,
 					disp(['   - RF current drive efficiency (A.m/W) [spherical]: ',num2str(xeta0_mksa(ir_display_dke))])
 			end
 			disp(['   - Ohmic eletric field (V/m): ',num2str(xepsi_fsav_mksa(ir_display_dke))])
-			disp(['   - Runaway rate (Kg.m-3.s-1) [spherical]: ',num2str(XxRR_ref_fsav(np-1,ir_display_dke)*nhu_ref*ne_ref)])
+			disp(['   - Runaway loss rate [spherical] (m-3.s-1): ',num2str(XxRR_mksa_fsav(np-1,ir_display_dke))])
 			disp(['   - Bulk current (MA/m2) [spherical]: ',num2str(xJrfB_fsav_mksa(ir_display_dke))])
 %
 		end
@@ -755,6 +767,10 @@ while 1,
         hold on
         [ax] = graph1D_jd(xrho_dke,xPelec_tot_fsav_mksa,'','','',NaN,[0,1],NaN,'none','+','b',2,14);
         [ax] = graph1D_jd(xrho_dke,xPabs_tot_fsav_mksa,'\rho','<P_{abs}> (MW/m^3)','Density of Absorbed Power',['Collisions';'Ohmic     ';'RF Waves  '],[0,1],0,'none','+','m',2,14);
+%
+        figure(204),clf
+        [ax] = graph1D_jd(xrho_dke,XxRR_mksa_fsav(np-1,ir_display_dke),'\rho','<\Gamma_{R}> (m^-3.s^-1)','Runaway loss rate',NaN,[0,1],NaN,'none','+','r',2,14,gca,0.8,0.7,0.6);
+		axis([0,1,0,1.1*max(XxRR_mksa_fsav(np-1,ir_display_dke))])
 %
 		if dke_mode == 1,  
 %

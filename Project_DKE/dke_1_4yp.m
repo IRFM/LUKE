@@ -2802,8 +2802,8 @@ if isnan(XXnhuloss) == 0 & strcmp(tokname,'TS')==1,
 	XXmaskMRR_im = [zeros(1,nmhu,nr);abs(diff(XXnhuloss~=0))];%Mask in p
 	XXmaskMRR_jm = [zeros(npn,1,nr),abs(permute(diff(permute(XXnhuloss~=0,[2,1,3])),[2,1,3]))];%Mask in mhu (mhu < 0 only because of symmetry)
 	XXmaskMRR_jm(:,mhu>0,:)=0;%mhu < 0 only because of symmetry)
-	XxMRR_flux_p_ref = 2*pi*integral_dke_jd(dmhu,XXmaskMRR_im(:,:,rdke).*XXSp0_imj(:,:,rdke).*XXpn2m(:,:,rdke).*XXlambda(:,:,rdke),2);
-	XxMRR_flux_mhu_ref = 2*2*pi*integral_dke_jd(dpn,XXmaskMRR_jm(:,:,rdke).*XXSm0_ijm(:,:,rdke).*XXpn(:,:,rdke).*XXlambda(:,:,rdke).*XXRlambda_m(:,:,rdke),1);
+	XxMRR_flux_p_ref = 2*pi*integral_dke_jd(dmhum,XXmaskMRR_im(:,:,rdke).*XXSp0_imj(:,:,rdke).*XXpn2m(:,:,rdke).*XXlambda(:,:,rdke).*XXRlambda_m(:,:,rdke),2);
+	XxMRR_flux_mhu_ref = 2*2*pi*integral_dke_jd(dpnm,XXmaskMRR_jm(:,:,rdke).*XXSm0_ijm(:,:,rdke).*XXpnm(:,:,rdke).*XXlambda(:,:,rdke).*XXRlambda_m(:,:,rdke),1);
 	xMRR_flux_p_ref = XxMRR_flux_p_ref(XxMRR_flux_p_ref~=0)';
 	xMRR_flux_mhu_ref = XxMRR_flux_mhu_ref(XxMRR_flux_mhu_ref~=0)';
 	xMRR_flux_ref = xMRR_flux_p_ref - xMRR_flux_mhu_ref;
