@@ -1236,23 +1236,4 @@ if auto_mode_in == 0 & nr > 1,
 	end
 end
 %
-%--------------------------------------------------------------------------
-%
-function bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,nhuloss,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap)
-%
-% Draws the bounce and ripple loss domains
-%
-if bounce_mode >= 1,%Draw bounce domain boundaries
-    line([0,pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))],'color','k');
-    line([0,-pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))],'color','k');
-    if isnan(nhuloss) == 0,%Draw the magnetic ripple loss cone
-    	hold on,plot(pparsupertrap_ref,pperpsupertrap_ref,'r'),hold off
-    	line([xpndetrap_ref(ir_display)*xmhusupertrap(ir_display),pnmax_S*xmhusupertrap(ir_display)],[xpndetrap_ref(ir_display)*sqrt(1-xmhusupertrap(ir_display)^2),pnmax_S*sqrt(1-xmhusupertrap(ir_display)^2)],'LineStyle','-','color','r');
-    	line([-xpndetrap_ref(ir_display)*xmhusupertrap(ir_display),-pnmax_S*xmhusupertrap(ir_display)],[xpndetrap_ref(ir_display)*sqrt(1-xmhusupertrap(ir_display)^2),pnmax_S*sqrt(1-xmhusupertrap(ir_display)^2)],'LineStyle','-','color','r');					
-    end
-end
-%
-%--------------------------------------------------------------------------
-%
-
 
