@@ -1,0 +1,79 @@
+%% This document created by Scientific Word (R) Version 2.5
+
+
+\documentclass[12pt]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{sw20jart}
+
+%TCIDATA{TCIstyle=Article/ART4.LAT,jart,sw20jart}
+
+%TCIDATA{Created=Tue Nov 18 18:18:44 2003}
+%TCIDATA{LastRevised=Wed Nov 19 09:39:06 2003}
+
+\input{tcilatex}
+
+\begin{document}
+
+
+\section{Misc. Calculations}
+
+\subsection{Length of a field line}
+
+If we define $s$ as the longitudinal distance along the magnetic field line
+\begin{equation}
+\mathbf{dl}=ds\widehat{b}
+\end{equation}
+
+The elementary distance in the toroidal direction is then
+\begin{eqnarray}
+Rd\phi  &=&\mathbf{dl}\cdot \widehat{\phi } \\
+&=&ds\widehat{b}\cdot \widehat{\phi }
+\end{eqnarray}
+so that
+\begin{equation}
+d\phi =\frac{ds\widehat{b}\cdot \widehat{\phi }}{R}
+\end{equation}
+
+We have
+\begin{equation}
+\mathbf{B}=I\nabla \phi +\nabla \psi \times \nabla \phi 
+\end{equation}
+so that
+\begin{eqnarray}
+\widehat{b} &\equiv &\frac{\mathbf{B}}{B} \\
+&=&\frac{I\left( \psi \right) \nabla \phi +\nabla \psi \times \nabla \phi }{B%
+} \\
+&=&\frac{I\left( \psi \right) \widehat{\phi }+\left| \nabla \psi \right| 
+\widehat{b}_{p}}{BR}
+\end{eqnarray}
+and
+\begin{equation}
+d\phi =\frac{dsI\left( \psi \right) }{BR^{2}}
+\end{equation}
+
+The length of the field line corresponding to an entire toroidal period
+therefore is (for an axysymmetric plasma)
+\begin{equation}
+s_{\text{tot}}\left( \psi \right) =\frac{2\pi BR^{2}}{I\left( \psi \right) }
+\end{equation}
+
+\subsection{Computation of $R\left( \psi ,s\right) $ from field data}
+
+Assuming that the functions $I\left( \psi \right) $ and $\left| \nabla \psi
+\right| \left( \psi ,s\right) $ are known, we have
+\begin{eqnarray}
+dR &=&\mathbf{dl}\cdot \widehat{R} \\
+&=&ds\widehat{b}\cdot \widehat{R} \\
+&=&ds\frac{\nabla \psi \times \widehat{\phi }\cdot \widehat{R}}{BR}
+\end{eqnarray}
+and therefore
+\begin{equation}
+dR=ds\frac{\nabla \psi \cdot \widehat{Z}}{BR}
+\end{equation}
+so that 
+\begin{equation}
+R\left( \psi ,s\right) =R\left( \psi ,0\right) +\int_{0}^{s}\frac{\nabla
+\psi \cdot \widehat{Z}}{BR}ds
+\end{equation}
+
+\end{document}
