@@ -130,7 +130,5 @@ else%FP calculations only
     r_dke = cumsum(ones(1,nr_f)); 
 end
 %
-xpsin_f = rho2psi_jd('CMOD',[2.600130985358448e-002 3.322100141578101e-002 4.135568334760799e-002])
-%
 ir_display_out = r_dke(ir_dke_display_out);
 %
