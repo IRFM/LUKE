@@ -20,8 +20,8 @@ elseif nargin == 2,
 	igor_mode = 0;%Automatic mode when test_dke_1yp.m is running
 end
 %
-eval(['load ',dossier,s,filename]);%Load time dependent DKE output data
-eval(['load ',dossier,s,'RESULTS',filename(5:end)]);%Load DKE output data
+eval(['load ',s,filename]);%Load time dependent DKE output data
+eval(['load ',s,'RESULTS',filename(5:end)]);%Load DKE output data
 %
 display_mode = input_dke_yp('Display graphics (yes: 1, no: 0)',1) + 1;
 %

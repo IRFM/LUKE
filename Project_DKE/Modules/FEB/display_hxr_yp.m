@@ -1,6 +1,6 @@
-function [xJrf0_fsav_mksa,xJbc_e_fsav_mksa,xJbc_i_fsav_mksa,xJtot_fsav_mksa,...
-xPabs0_fsav_mksa,xPabs_tot_fsav_mksa,...
-xeta0_fsav_mksa,xepsi_fsav_mksa,xia,xft_fsav] = display_dke_1yp(filename,id_hxr,path_hxr,auto_mode_in,igor_mode)
+function [vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr,...
+kphot,brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi,lchord,rho_out,theta_out,...
+brem_bd_plasma,brem_bd_diag,tphot_plasma,afit_plasma,tphot_plasma_exp,afit_plasma_exp,meanabsx] = display_dke_1yp(filename,id_hxr,path_hxr,auto_mode_in,igor_mode)
 %
 % Display results of the Electron Drift Kinetic solver (test_dke_1yp.m)
 %
@@ -66,7 +66,42 @@ while 1,
 	[kphot,brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi,lchord,rho_out,theta_out] = bremsstrahlung_dke_yp(equil,hxr,vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr,XXheaviside,zZi,xzni_norm,xne_norm,ne_ref,xrho,dmhu,mhu,dpn_ref,pn_ref,pn2_ref,gamma_ref,Ec_ref,dp_cyl,pnmax_S,XXf0_ref,XXf0_tp_ref,XXf0_g_ref,nlevel,bounce_mode,display_mode,xrho(ir_display_dke),theta_display);
 % 
 disp('*****verifiez amplitude absolue + mettre figure profils integres, et fonction convolution')
-dbstop 69
+dbstop 70
 	[kphot,brem_bd_plasma,brem_bd_diag,tphot_plasma,afit_plasma,tphot_plasma_exp,afit_plasma_exp,meanabsx] = bremdiag_dke_yp(equil,hxr,kphot,brem_bd_out,display_mode,chord_display);
 %
+%*********************************** Saving results ***************************************
+%
+	filename = ['HXR_',tokname,'_S',int2str(snumber),'.mat'];
+	if diary_mode == 1,%Automatic data saving when diary mode is called
+		filename = ['HXR_',tokname,'_S',int2str(snumber),'.mat'];		
+		snumber=snumber+1;
+		del = 1;
+	else,%Manual data saving
+		while 1,
+			if exist(filename) == 2 & auto_mode == 0,%Only in manual mode
+				del = input_dke_yp(['File ',filename,' already exists ! Do you want to overwrite it (yes:1, no:0)'],0);
+				if del == 1,
+					break;
+				else
+					snumber = input_dke_yp('New simulation number',snumber+1);
+					filename = ['HXR_',tokname,'_S',int2str(snumber),'.mat'];	
+				end
+			else
+				del = 1;
+				break;
+			end
+		end
+	end
+	%
+	if del == 1	,
+		delete(filename);
+		eval(['save ',filename]);
+		if exist(filename) == 2,
+			disp('-------------------------------------------------------------------------------------------------------------------');
+			info_dke_yp(2,['The HXR data file : ',filename,' has been successfully saved !']);
+		else
+			info_dke_yp(2,['The HXR data file : ',filename,' has not been saved, an unknown error occurs on the disk !']);	
+		end
+	end
+
 end
