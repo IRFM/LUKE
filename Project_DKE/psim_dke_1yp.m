@@ -26,7 +26,7 @@ snumber = 1;%Simulation number
 %
 grid_uniformity = 0;%Pitch-angle and momentum grids uniformity: (0) no, (1) yes (-1 for specific test DKE, transient)
 grid_method = 1;%Pitch-angle grid calculation technique: (0): old method, (1) new method
-nmhu_S = 120;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
+nmhu_S = 80;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
 np_S = 120;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run)
 pnmax_S = 15;%Maximum value of the flux momentum grid (pth_ref)
 %
@@ -45,15 +45,15 @@ grid_power = 1.5; % power for mhu grid step varations (grid_power > 1) (Note: fo
 %Momentum Grid
 %
 snp = 10;%pgridfactor (Uniform grid: pgridfactor << 1, non-uniform grid: pgridfactor >= 1) 
-spfac = 100;%reduction factor for the supergrid used in collision integrals
+spfac = 20;%reduction factor for the supergrid used in collision integrals
 %
 %Normalized radii at which the distribution is calculated (DKE or FP)
 %The syntax rho='all' may be also used if all mhu values are considered. 
 %
 %Values of the radial flux grid [1,p] (If one radial value: local calculation only)
 %
-psin_S = [];5.286742555900838e-002; %[0.1]%(rho = 0.25 in CMOD)
-rho_S = [0.2,0.6];%[0.1:0.05:0.9];%[0.2,0.6],%;0.03322100141578101;0.71365;
+psin_S = [0,0.1,0.9,1];5.286742555900838e-002; %[0.1]%(rho = 0.25 in CMOD)
+rho_S = [];%[0.1:0.05:0.9];%[0.2,0.6],%;0.03322100141578101;0.71365;
 %
 psin_display = NaN;%Approximate radial value at which results are displayed if display_mode >= 1 [1,1]
 rho_display = 0.1;
@@ -65,8 +65,8 @@ norm_ref = 1;%Normalization procedure for the ohmic electric field, LH and EC qu
 %
 % WARNING: Not yet implemented. (see test_dke_yp)
 %
-epsi0 = 0.02;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
-epsia = 0.02;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
+epsi0 = 0.0;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
+epsia = 0.0;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
 eepsi = 0;%Exponent for Ohmic electric field
 %
 % WARNING: Not yet implemented. (see test_dke_yp)
@@ -83,8 +83,8 @@ nhuloss = NaN;%Magnetic ripple loss frequency, nhuloss > 1000 (or NaN if no ripp
 %
 coll_mode = 2;%Relativistic electron-electron collision operator: (0) Maxwellian, (1) High-velocity limit, (2) Linearizeded Belaiev-Budker 
 %
-bounce_mode = 0;%Bounce averaging option: (0) no bounce averaging, (1) bounce averaging full implicit method with 15 diagonals
-dke_mode = 0;%Fokker-Planck equation (0), Drift Kinetic equation (1)
+bounce_mode = 1;%Bounce averaging option: (0) no bounce averaging, (1) bounce averaging full implicit method with 15 diagonals
+dke_mode = 1;%Fokker-Planck equation (0), Drift Kinetic equation (1)
 equil_mode = 1;%Equilibrium option: (0) circular concentric flux-surfaces, (1) numerical equilibrium
 %
 norm_mode = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
@@ -96,10 +96,10 @@ prec0_g = 1e-10;%Convergence level of the residu (if NaN, iterations stop with n
 nit_g = 50;%Maximum number of iterations for g
 initguess = 0;%Initial guess for the distribution function: (0) Maxwellian, (1) Fuchs model with Tperp for LH current drive only, (2) from a file
 invproc = [3];%Matrix inversion method: (1) Full LU factorization, (2) qmr iterative method, (3) bicgstab iterative method, (4) cgs iterative method
-param_inv = [1e-3,30];%Parameters for the matrix inversion procedure when invproc > 1. Precision of the partial LU decomposition, and maximum number of iteration for iterative methods (param_inv(1) depends of boundary_mode)
+param_inv = [2e-4,30];%Parameters for the matrix inversion procedure when invproc > 1. Precision of the partial LU decomposition, and maximum number of iteration for iterative methods (param_inv(1) depends of boundary_mode)
 %
 dp_cyl = 0.1;%Cylindrical momentum step (pth_ref)
-display_mode = 2;%Display mode: (0): no, (1): partial, (2): full
+display_mode = 1;%Display mode: (0): no, (1): partial, (2): full
 nlevel = 30;%Number of level for contour plots
 store_mode = 0;%Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight
 diary_mode = 1;%Write in a file named "diary_dke_xx" the output of the code in the MatLab command window: (0) no save, (1) save
