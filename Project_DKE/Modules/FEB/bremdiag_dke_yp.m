@@ -16,29 +16,25 @@ function  [kphot,brem_bd_plasma,brem_bd_diag,tphot_plasma,afit_plasma,tphot_plas
 %      
 % by Joan Decker <jodecker@mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 %
-%non-thermal    
-%%%%%% [kphot,brem_bd_plasma,brem_bd_diag,tphot_plasma,afit_plasma,tphot_plasma_exp,afit_plasma_exp,meanabsx] = bremdiag_dke_yp('TS',HXR,kphot,brem_bd_out,2,1);
-%thermal
-%%%%%% [kphot,brem_bd_plasma_th,brem_bd_diag_th,tphot_plasma_th,afit_plasma_th,tphot_plasma_th_exp,afit_plasma_th_exp,meanabsx] = bremdiag_dke_yp('TS',HXR,kphot,brem_th_out,2,1);
 %
 method = 'cubic';
 %
-kphotmin = HXR{17}(1,1);
-kphotmax = HXR{17}(2,end-1);
+kphotmin = hxr.kdiag_hxr(1,1);
+kphotmax = hxr.kdiag_hxr(2,end-1);
 %
-kfit = (HXR{17}(1,1:end-1) + HXR{17}(2,1:end-1))/2;%Measured photon energy spectrum (keV) [1,k]
-ikfitmin = find(kfit == HXR{17}(1,end));
-ikfitmax = find(kfit == HXR{17}(2,end));
+kfit = (hxr.kdiag_hxr(1,1:end-1) + hxr.kdiag_hxr(2,1:end-1))/2;%Measured photon energy spectrum (keV) [1,k]
+ikfitmin = find(kfit == hxr.kdiag_hxr(1,end));
+ikfitmax = find(kfit == hxr.kdiag_hxr(2,end));
 kfitmin = kfit(ikfitmin);
 kfitmax = kfit(ikfitmax);
-dkfit = HXR{17}(2,1:end-1) - HXR{17}(1,1:end-1);%Channel width of the measured photon energy spectrum (keV) [1,k]
+dkfit = hxr.kdiag_hxr(2,1:end-1) - hxr.kdiag_hxr(1,1:end-1);%Channel width of the measured photon energy spectrum (keV) [1,k]
 %
 kinterp = linspace(kphotmin,kphotmax,1000);%Uniform grid only 
 dkinterp = kinterp(2) - kinterp(1);
 brem_bd_interp = interp1(kphot,brem_bd_in',kinterp,method)';
 %
-for ik = 1:size(HXR{17},2)-1,
-	brem_bd_plasma(:,ik) = sum(brem_bd_interp(:,min(find(kinterp >= HXR{17}(1,ik))):max(find(kinterp < HXR{17}(2,ik))))')'*dkinterp;
+for ik = 1:size(hxr.kdiag_hxr,2)-1,
+	brem_bd_plasma(:,ik) = sum(brem_bd_interp(:,min(find(kinterp >= hxr.kdiag_hxr(1,ik))):max(find(kinterp < hxr.kdiag_hxr(2,ik))))')'*dkinterp;
 end
 %
 wbrem_bd_plasma = brem_bd_plasma.*repmat(kfit,[size(brem_bd_plasma,1),1])./repmat(dkfit,[size(brem_bd_plasma,1),1]);% per keV but taking into account of the channel energy width
@@ -50,17 +46,17 @@ end
 %
 % Convolution with detector response
 %
-kd = HXR{1,6};%reference energies for the photofraction [m,p]
-phf = HXR{1,7};%photofraction determined using the "MCDET.f" Monte-carlo hard x-ray absorption code at energies kd [m,p]
-res = HXR{1,8};%fit parameters of the energy resolution of the detectors [m,2]
-ef = HXR{1,9};%thickness of the vacuum window (mm) [1,m]
-tf = HXR{1,10};%type of material for the vacuum window (Al ou Be) [1,m]
-ea = HXR{1,11};%thickness of the absorber (mm) [1,m]
-ta = HXR{1,12};%type of material for the absorber (Al,Fe,Ge,Be ou Pb) [1,m]
-ec = HXR{1,13};%thickness of the detector shield (mm) [1,m]
-tc = HXR{1,14};%type of material for the detector shield (Al ou Be) [1,m]
-ed = HXR{1,15};%thickness of the detector (mm) [1,m]
-td = HXR{1,16};%type of material for the detector (BGO,CsI,NaI,Ge or CdTe) [1,m]
+kd = hxr.kd_hxr;%reference energies for the photofraction [m,p]
+phf = hxr.phf_hxr;%photofraction determined using the "MCDET.f" Monte-carlo hard x-ray absorption code at energies kd [m,p]
+res = hxr.res_hxr;%fit parameters of the energy resolution of the detectors [m,2]
+ef = hxr.res_hxr;%thickness of the vacuum window (mm) [1,m]
+tf = hxr.tf_hxr;%type of material for the vacuum window (Al ou Be) [1,m]
+ea = hxr.ea_hxr;%thickness of the absorber (mm) [1,m]
+ta = hxr.ta_hxr;%type of material for the absorber (Al,Fe,Ge,Be ou Pb) [1,m]
+ec = hxr.ec_hxr;%thickness of the detector shield (mm) [1,m]
+tc = hxr.tc_hxr;%type of material for the detector shield (Al ou Be) [1,m]
+ed = hxr.ed_hxr;%thickness of the detector (mm) [1,m]
+td = hxr.td_hxr;%type of material for the detector (BGO,CsI,NaI,Ge or CdTe) [1,m]
 %
 meanabsx = zeros(size(wbrem_bd_plasma));%Mean attenuation per channel
 brem_bd_diag_interp = zeros(size(brem_bd_interp));
@@ -85,12 +81,12 @@ for ic = 1:size(brem_bd_interp,1),
 	brem_bd_diag_interp(ic,:) = (fix(((gkEinterp'.*Tabsxinterp)*dkinterp*(brem_bd_interp(ic,:))')))'; 
 %	brem_bd_diag_interp(ic,:) = (fix(((eye(size(gkEinterp')).*Tabsxinterp)*(brem_bd_interp(ic,:))')))';%detector response neglected
 %	
-	for ik = 1:size(HXR{17},2)-1,
-		meanabsx(ic,ik) = sum(absxinterp(min(find(kinterp >= HXR{17}(1,ik))):max(find(kinterp < HXR{17}(2,ik))))')'/length(absxinterp(min(find(kinterp >= HXR{17}(1,ik))):max(find(kinterp < HXR{17}(2,ik))))');
+	for ik = 1:size(hxr.kdiag_hxr,2)-1,
+		meanabsx(ic,ik) = sum(absxinterp(min(find(kinterp >= hxr.kdiag_hxr(1,ik))):max(find(kinterp < hxr.kdiag_hxr(2,ik))))')'/length(absxinterp(min(find(kinterp >= hxr.kdiag_hxr(1,ik))):max(find(kinterp < hxr.kdiag_hxr(2,ik))))');
 	end
 %
-	for ik = 1:size(HXR{17},2)-1,
-		brem_bd_diag(ic,ik) = sum(brem_bd_diag_interp(ic,min(find(kinterp >= HXR{17}(1,ik))):max(find(kinterp < HXR{17}(2,ik))))')'*dkinterp;
+	for ik = 1:size(hxr.kdiag_hxr,2)-1,
+		brem_bd_diag(ic,ik) = sum(brem_bd_diag_interp(ic,min(find(kinterp >= hxr.kdiag_hxr(1,ik))):max(find(kinterp < hxr.kdiag_hxr(2,ik))))')'*dkinterp;
 	end
 %	
 	wbrem_bd_plasma_exp(ic,:) = brem_bd_diag(ic,:).*kfit./dkfit./meanabsx(ic,:);% per keV but taking into account of the channel energy width and mean attenuation per channel	

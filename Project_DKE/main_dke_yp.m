@@ -1,4 +1,4 @@
-function [Znorm_ref,Znorm_ref_fsav,Zcurr_ref,Zcurr_ref_fsav,ZP0_ref_fsav,time_out,memoryLU_f_out,memoryLU_g_out] = main_dke_yp(snumber,psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple,hxr);
+function [Znorm_ref,Znorm_ref_fsav,Zcurr_ref,Zcurr_ref_fsav,ZP0_ref_fsav,time_out,memoryLU_f_out,memoryLU_g_out] = main_dke_yp(snumber,psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple);
 %
 %  Main function of the 3-D relativistic bounce-averaged electron drift kinetic equation solver 
 %  for the RF wave absorption problem in presence of an Ohmic electric field (electron bootstrap current consistent with non-Maxwellian distribution)

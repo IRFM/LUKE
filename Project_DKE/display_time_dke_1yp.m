@@ -8,7 +8,7 @@ function [] = display_time_dke_1yp(filename,auto_mode_in,igor_mode)
 warning off;
 [s,dossier,machine] = comput_dke_yp;
 if nargin == 0,	
-	eval(['dir ',dossier,s,'TIME_*.mat']);
+	eval(['dir TIME_*.mat']);
 	filename = [];
 	filename = input_dke_yp('Filename ',filename);
 	auto_mode_in = input_dke_yp('Automatic display mode (yes: 1, no: 0) ',0);

@@ -5,7 +5,7 @@
 %by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
 %
 clear all
-hxr_id = 'TScirc';%Set here the name (identifier) of the Hard X-ray configuration
+hxr_id = 'TS99';%Set here the name (identifier) of the Hard X-ray configuration
 %
 %
 %Fast electron bremsstrahlung tomography (if exists)
@@ -29,5 +29,8 @@ hxr.tc_hxr = tc_hxr;
 hxr.ed_hxr = ed_hxr;
 hxr.td_hxr = td_hxr;
 hxr.kdiag_hxr = kdiag_hxr;
+hxr.kphot = [20:10:180];%Photon energy in keV
+hxr.n_gauleg = 35;%Number of Legendre polynomials for prjections of cross-section and distribution
+hxr.epsi_gauleg = 1e-14;%Accuracy of the Legendre projection
 %
 eval(['save HXR_',hxr_id,'.mat hxr']);

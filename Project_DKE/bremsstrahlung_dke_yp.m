@@ -1,4 +1,4 @@
-function  [kphot,brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi,lchord,rho_out,theta_out] = bremsstrahlung_dke_yp(tokamak,HXR,vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr,XXheaviside,zZi,xzni_norm,xne_norm,ne_ref,xrho,dmhu,mhu,dpn,pn,pn2,gamma,Ec,dp_cyl,pnmax_S,XXf0,XXf0_tp,XXf0_g,nlevel,bounce_mode,display_mode,r_display,t_display)
+function  [kphot,brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi,lchord,rho_out,theta_out] = bremsstrahlung_dke_yp(equil,hxr,vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr,XXheaviside,zZi,xzni_norm,xne_norm,ne_ref,xrho,dmhu,mhu,dpn,pn,pn2,gamma,Ec,dp_cyl,pnmax_S,XXf0,XXf0_tp,XXf0_g,nlevel,bounce_mode,display_mode,r_display,t_display)
 %
 % Calculates the bremsstrahlung emission. Call first the function bremchord_dke_yp.m for calculating "vschords" used in line integration
 %
@@ -19,16 +19,14 @@ function  [kphot,brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi,lchor
 %
 % by Joan Decker <jodecker@mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 %
-    
-%%%%%%[kphot,brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi,lchord,rho_out,theta_out] = bremsstrahlung_dke_yp('TS',HXR,vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr,XXheaviside,zZi,xzni_norm,xne_norm,ne_ref,xrho,dmhu,mhu,dpn_ref,pn_ref,pn2_ref,gamma_ref,Ec_ref,dp_cyl,pnmax_S,XXf0_ref,XXf0_tp_ref,XXf0_g_ref,nlevel,bounce_mode,2,0.7,180);
 % 
 [qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;%Physics constant
 %
 method = 'spline';
-n_gauleg = 35;
+n_gauleg = hxr.n_gauleg;
 n_pol = n_gauleg;%Necessary for accurate reconstruction at ksi = -1
-epsi_gauleg = 1e-14;
-kphot = [20:10:180];%Photon energy in keV
+epsi_gauleg = hxr.epsi_gauleg;
+kphot = hxr.kphot;
 %   
 ZZIB = zeros(size(psin_hxr,1),size(psin_hxr,2),n_pol+1,length(kphot));%Legendre coefficients for the bremsstrahlung at all radii at poloidal positions (NaN if not used)
 norm0_hxr = zeros(size(psin_hxr,1),size(psin_hxr,2)) + NaN;%Norm of the initial distribution function (NaN if not used)
@@ -242,7 +240,7 @@ for ic = 1:size(vschords,3),%loop on each chord
        ds = [diff(s),0];%Elementary chord length for integration
        ds1 = repmat(ds',[1,length(kphot)]);
 %
-	    brem_bd_out(ic,:) = sum(ds1.*brem_bd,1)*HXR{1,5}(ic);%Integration along the chord and multiplication by the geometrical factor
+	    brem_bd_out(ic,:) = sum(ds1.*brem_bd,1)*hxr.EG_hxr(ic);%Integration along the chord and multiplication by the geometrical factor
 	    lchord(ic) = sum(ds);%Chord length calculation
 	else
 		brem_bd_out(ic,:) = 0;%Integration along the chord and multiplication by the geometrical factor

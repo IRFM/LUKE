@@ -1,10 +1,11 @@
-function [vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr] = bremchord_dke_yp(tokamak,HXR,xpsin,xpsin_S,mfactor,method,display,ns);
+function [vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr] = bremchord_dke_yp(equil,hxr,xpsin,xpsin_S,mfactor,method,display,ns);
 %
 % This function calculates chord positions fro bremsstrahlung tomography in a torus along unit vector g. 
 %
 % INPUTS
 %
-%       - HXR: geometrical characteristics of the HXR tomographic system 
+%       - equil: Magnetic equilibrium structure
+%       - hxr: Bremsstrahlung structure 
 %       - xpsin: poloidal flux surfaces for f used by DKE code [1,npsi]
 %       - xpsin_S: poloidal flux surfaces used for S by DKE code [1,npsi+1]
 %       - mfactor:
@@ -26,8 +27,7 @@ function [vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr] = bremchord_dke_yp(tokam
 %
 % by J. Decker (jodecker@alum.mit.edu) and Y. Peysson (yves.peysson@cea.fr)
 %
-
-%[vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr] = bremchord_dke_yp('TS',HXR,xpsin_dke,xpsin_S_dke,1,'spline',2);
+%
 if nargin < 4,
     error('Not enough arguments in bremchord_dke_yp')
 elseif nargin == 4,
@@ -47,10 +47,10 @@ elseif nargin == 7,
 end
 %
 ns = abs(ns);%Force ns to be always positive
-nchords = length(HXR{1,1});%chord number
+nchords = length(hxr.alpha_hxr);%chord number
 %
 coefr = 1;%For reducing the number of poloidal positions
-[theta,ppsin,psia,ptR,ptZ,ptBR,ptBZ,ptBphi,ptB0,ptR0,ptBT0,ptBp0,ptrho] = equilibrium_jd(tokamak,NaN*xpsin,xpsin_S,display,method,mfactor);%NaN
+[theta,ppsin,psia,ptR,ptZ,ptBR,ptBZ,ptBphi,ptB0,ptR0,ptBT0,ptBp0,ptrho] = equilibrium_jd(equil,NaN*xpsin,xpsin_S,display,method,mfactor);%NaN
 ppsin = ppsin(:);
 nreduc = min([coefr,length(theta)]);%For reducing the number of poloidal positions
 theta = theta(1:nreduc:end);
@@ -111,10 +111,10 @@ X_mfl_lcs = (Rp + r_mfl_lcs.*cos(theta_mfl_lcs)).*cos(phi_mfl);
 Y_mfl_lcs = (Rp + r_mfl_lcs.*cos(theta_mfl_lcs)).*sin(phi_mfl); 
 Z_mfl_lcs = Zp + r_mfl_lcs.*sin(theta_mfl_lcs);
 %
-alpha_hxr = ones(ns,1)*HXR{1,1};%Defined in the indirect frame only (see the documentation)
-beta_hxr = ones(ns,1)*HXR{1,2};
-R_hxr = ones(ns,1)*HXR{1,3};
-Z_hxr = ones(ns,1)*HXR{1,4};
+alpha_hxr = ones(ns,1)*hxr.alpha_hxr;%Defined in the indirect frame only (see the documentation)
+beta_hxr = ones(ns,1)*hxr.beta_hxr;
+R_hxr = ones(ns,1)*hxr.R_hxr;
+Z_hxr = ones(ns,1)*hxr.Z_hxr;
 %
 if alpha_hxr <= -pi | alpha_hxr > pi
 	 error('need -pi < alpha_hxr <= pi')

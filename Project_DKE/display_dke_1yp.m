@@ -22,7 +22,7 @@ elseif nargin == 2,
 	igor_mode = 0;%Automatic mode when test_dke_1yp.m is running
 end
 %
-eval(['load ',dossier,s,filename]);%Load DKE output data
+eval(['load ',filename]);%Load DKE output data
 %
 display_mode = input_dke_yp('Display graphics (yes: 1, no: 0)',1) + 1;
 %
@@ -37,6 +37,10 @@ disp('Display results of Drift Kinetic Equation solver (see test_dke_1yp.m)');
 disp('-------------------------------------------------------------------------------------------------------------------');
 %
 [xq,xqtilde,xqbar,xqhat] = qfactors_dke_yp(Rp,Zp,XR(r_dke,:),XZ(r_dke,:),XBR(r_dke,:),XBZ(r_dke,:),XBphi(r_dke,:));%q factors calculations at radial positions at which bootstrap current is calculated are used
+%
+% Display the equilibrium
+%
+equilibrium_jd(equil,xpsin,xpsin_S_dke,display_mode,'spline',10);
 %
 xnormf_ref = Znorm_ref{1,1};
 xnormf_ref_fsav = Znorm_ref_fsav{1,1};
