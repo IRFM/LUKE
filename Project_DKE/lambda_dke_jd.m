@@ -2,26 +2,25 @@ clear, warning off
 
 memax = 128*1e6; % Available memory
 tokamak = 'test';
-%filename = ['EQUIL_',tokamak];
-filename = 'equihelena';
+filename = ['EQUIL_',tokamak];
+%filename = 'equihelena';
 method = 'linear';
 %super = 1;
 nmhu = 81;
 ymhu0 = linspace(-1,1,nmhu); % Pitch-angle cosine at minimum of B-field
 
-
-eval(['load ',filename,'.mat'])
+eval(['load ',filename,'.mat R Z BR BZ BPHI psi'])
 
 XR = R;
 XZ = Z;
 XBR = BR;
 XBZ = BZ;
 XBphi = BPHI;
-
 xpsi = psi;
-xq = q;
 
-clear R Z BR BZ BPHI psi q
+xqtilde = qtilde_dke_jd(filename);
+
+clear R Z BR BZ BPHI psi 
 
 %[np,nti] = size(XR);
 [np,nt] = size(XR);
@@ -301,7 +300,7 @@ YMmhu(~YMmask) = eps;
 
 clear YTPSIB
 
-YMF = YMmask.*YMB.*((YMR - R0).^2 + (YMZ - Z0).^2).*YMmhu0./abs(YMBR.*(YMZ - Z0) - YMBZ.*(YMR - R0))./YMmhu;
+YMF = YMmask.*YMB.*((YMR - R0).^2 + (YMZ - Z0).^2).*YMmhu0./abs(YMBR.*(YMZ - Z0) - YMBZ.*(YMR - R0))./YMmhu/R0;
 
 clear YTmask YMB YMR YMZ YMBR YMBZ YMmhu0 YMmhu
 
@@ -314,16 +313,15 @@ if ~isempty(ymask)
 	xyInt(:,ymask) = 0;
 end
 
-xyr = repmat(xr',[1,nmhu]);
-xyq = repmat(xq',[1,nmhu]);
+xyqtilde = repmat(xqtilde',[1,nmhu]);
 
-xylambda = xyInt./xyr./sqrt(1 + (R0*xyq./xyr).^2);
+xylambda = xyInt./xyqtilde;
 
 psimin = min(xpsi);
 psimax = max(xpsi);
 
 
-figure(1),clf
+%figure(1),clf
 
 %[ax] = graph2Djd(xr,ymhu0,xylambda,'','','',[0,a],[min(ymhu0),max(ymhu0)],0,NaN,[0:0.2:2],1,'-','r',2,0.9,NaN);
 %hold on
@@ -336,5 +334,21 @@ xmask = [2,round(np/4),round(np/2),round(np*3/4),np]
 
 [ax] = graph1Djd(ymhu0,xylambda(xmask,:),'\xi','\lambda','',[min(ymhu0),max(ymhu0)],[0,3],'-','none','r',2,gca,0.9,0.7,0.7);
 
+if 1,
+	xia = xr/R0;
+	xmhutrap2 = 2*xia./(1+xia);
+	m = 30;
+	for ir = xmask
+		[ylambda,ydelta,ysstar,ysstar_tp,ylambda_tp] = bounce_dke_jd(xmhutrap2(ir),ymhu0,m);
+		xylambda_c(ir,:) = ylambda;	
+		xydelta_c(ir,:) = ydelta;
+		xysstar_c(ir,:) = ysstar;
+		xysstar_tp_c(ir,:) = ysstar_tp;
+		xylambda_tp_c(ir,:) = ylambda_tp;
+	end
 
-
+	figure(2)
+	hold on
+	[ax] = graph1Djd(ymhu0,xylambda_c,'\xi','\lambda','',[min(ymhu0),max(ymhu0)],[0,3],'-','none','b',0.5,gca,0.9,0.7,0.7);
+	hold off
+end	
