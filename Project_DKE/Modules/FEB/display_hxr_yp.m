@@ -12,11 +12,11 @@ warning off;
 if nargin == 0,	
 	eval(['dir RESULTS_*.mat']);
 	filename = [];
-	filename = input_dke_yp('Filename ',filename);
+	filename = input_dke_yp('Kinetic calculations filename ',filename);
 %
 	eval(['dir HXR_*.mat']);
 	filenamehxr = [];
-	filenamehxr = input_dke_yp('Filename ',filenamehxr);
+	filenamehxr = input_dke_yp('HXR tomographic system filename ',filenamehxr);
 %
 	auto_mode_in = input_dke_yp('Automatic display mode (yes: 1, no: 0) ',0);
 	igor_mode = input_dke_yp('Igor software output (yes: 1, no: 0) ',0);%For figure by figure data output (Easy data transfer to Igor software for final output)

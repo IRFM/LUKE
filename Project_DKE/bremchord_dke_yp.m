@@ -92,7 +92,7 @@ BR_mfl_lcs = interp1(theta,ptBR(end,:),theta_mfl_lcs,method);
 BZ_mfl_lcs = interp1(theta,ptBZ(end,:),theta_mfl_lcs,method);
 Bphi_mfl_lcs = interp1(theta,ptBphi(end,:),theta_mfl_lcs,method);
 %
-ptBtheta = -ptBR.*sin(ones(size(ppsin))*theta) + ptBZ.*cos(ones(size(ppsin))*theta);
+ptBtheta = -ptBR.*sin(ones(size(ppsin(:)))*theta) + ptBZ.*cos(ones(size(ppsin(:)))*theta);
 Ipdir = 2*isempty(find(ptBtheta < 0)) - 1;%If +1: Ip same direction to Bphi, if -1 Ip opposite direction to Bphi
 %
 BX_mfl_lcs = BR_mfl_lcs.*cos(phi_mfl) - Bphi_mfl_lcs.*sin(phi_mfl);
@@ -123,7 +123,7 @@ sR = sR + eps*(sR == Rp);%to avoid singularities
 sZ = Z_hxr + sZ;
 sZ = sZ + eps*(sZ == Zp);%to avoid singularities
 sphi = rem(2*pi - acos((sR.^2 + R_hxr.^2 - sh.^2)./(2*sR.*R_hxr)).*sign(alpha_hxr),2*pi);%Toroidal angle
-spsi = griddata(ptR,ptZ,ppsin*ones(1,length(theta)),sR,sZ);%Flux surface value
+spsi = griddata(ptR,ptZ,ppsin(:)*ones(1,length(theta)),sR,sZ);%Flux surface value
 %
 gX_hxr = sin(beta_hxr).*cos(alpha_hxr);%Chord vector
 gY_hxr = sin(beta_hxr).*sin(alpha_hxr);%Chord vector
@@ -154,7 +154,7 @@ end
 theta_hxr = ones(length(xpsin),1)*(theta(1:end-1) + diff(theta)/2);
 psin_hxr = xpsin'*ones(1,length(theta)-1);
 B0_hxr = interp1(ppsin,ptB0,xpsin,method);%Bmin
-PSI_hxr = griddata(ppsin*ones(1,length(theta)),ones(length(ppsin),1)*theta,sqrt(ptBR.^2 + ptBZ.^2 + ptBphi.^2),psin_hxr,theta_hxr)./(B0_hxr'*ones(1,length(theta)-1));%B/Bmin
+PSI_hxr = griddata(ppsin(:)*ones(1,length(theta)),ones(length(ppsin),1)*theta,sqrt(ptBR.^2 + ptBZ.^2 + ptBphi.^2),psin_hxr,theta_hxr)./(B0_hxr'*ones(1,length(theta)-1));%B/Bmin
 %
 sr_lcs = interp1(theta,r_lcs,st,method);
 mask = ~isnan(spsi);

@@ -26,6 +26,7 @@ mhutrap2 = mhutrap^2;
 if mhutrap < 0 or mhutrap > 1,
     error('mhutrap must be between 0 and 1')
 end
+%   
 if prod(mhu-mhutrap) == 0,
     imhu = find(mhu2 == mhutrap2);
     dmhu = diff(mhu);

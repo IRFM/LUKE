@@ -77,8 +77,8 @@ for i = 1:size(psin_hxr,1),%radial position
 	for j = 1:size(psin_hxr,2),%poloidal position
 %
 		if mask_hxr(i,j),%A chord is going through the elementary plasma volume. So the distribution function is calculated
-%		PSI_hxr(i,j) = max(PSI_hxr(i,:));%high field side only
-%		PSI_hxr(i,j) = 1;%low field side only
+%%%%%%		PSI_hxr(i,j) = max(PSI_hxr(i,:));%high field side only
+%%%%%%		PSI_hxr(i,j) = 1;%low field side only
 			mhu_hxr = sign(mhu(:)).*sqrt(1-PSI_hxr(i,j)*(1 - mhu(:).^2));%mhu at a poloidal position that is different from Bmin
 			mhu_hxr = mhu_hxr(1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0);
 			Xf0_hxr = XXf0(:,1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0,i);%Distribution function at poloidal location
@@ -215,8 +215,16 @@ for ic = 1:size(vschords,3),%loop on each chord
 %
 	IB1 = zeros(size(ZZIB,3),s_length,size(ZZIB,4));
 %
-	nstep = 200;%In order to avoid use of too large multidimensional tables (limitation of MatLab)
+	nstep = 199;%In order to avoid use of too large multidimensional tables (limitation of MatLab)
 	jmax = floor(s_length/nstep)+1;
+%
+	index_test = [(jmax-1)*nstep+1:jmax*nstep];
+	index_test = index_test(index_test<=s_length);
+	if length(index_test) == 1,%In order to avoid this case which generates an error for the line  "IB1(:,index,:) = permute(squeeze(IB(:,1,:,:)),[2,1,3]);"
+	    nstep = nstep - 1;
+		 jmax = floor(s_length/nstep)+1;
+	end
+%	
 	for j = 1:jmax,
 		index = [(j-1)*nstep+1:j*nstep];
 		index = index(index<=s_length);
@@ -226,7 +234,7 @@ for ic = 1:size(vschords,3),%loop on each chord
 		end
    end
 %
-	sksid = vschords(10,s_mask,ic);%Zero for exact perpendicular observation or +1 forward, -1 backward, nothing when taking the exct magnetic topology
+	sksid = vschords(10,s_mask,ic);%Zero for exact perpendicular observation or +1 forward, -1 backward, nothing when taking the exact magnetic topology
 	[Pm_bd] = leg_dke_yp(sksid,n_pol);%Legendre polynomial for the cosine of the angle between magnetic field line and line of sight
 	Pm_bd1 = repmat(Pm_bd,[1,1,length(kphot)]);
 %	
