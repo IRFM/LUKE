@@ -20,6 +20,9 @@ if strcmp(machine,'ALPHA') == 1,
 elseif strcmp(machine,'PC') == 1,
 	s = '\';
    	dossier = 'c:\';
+elseif strcmp(machine,'PCWIN') == 1,
+	s = '\';
+   	dossier = 'c:\work\temp';
 elseif strcmp(machine,'MAC') == 1,
 	s = '/';
    	dossier = '/Volumes/Ailefroide/CVS/Project_DKE';
