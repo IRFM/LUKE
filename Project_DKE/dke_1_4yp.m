@@ -1593,9 +1593,12 @@ for ir = 1:nr,
 		MMXP_g_t = sparse(i0_g,j0_g,s0_g,m0_g+m1_g,m0_g+m1_g) + sparse(m0_g+i1_g,m0_g+j1_g,s1_g,m0_g+m1_g,m0_g+m1_g);
 %
 		Zmask_g{ir} = Xmask_g;
-   end
+    else
+        sm_tp(ir+1) = sm_tp(ir);
+        sm_g(ir+1) = sm_g(ir);
+    end
 %
-   if display_mode >= 1,info_dke_yp(2,['Momentum space matrix calculations (',int2str(ir),'/',int2str(nr),') done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);end
+    if display_mode >= 1,info_dke_yp(2,['Momentum space matrix calculations (',int2str(ir),'/',int2str(nr),') done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);end
 end
 %
 %Radial gradient correction for ftp (radial derivative of the Chang and Cooper momentum terms)
@@ -2002,11 +2005,11 @@ if dke_mode == 1,
 %
 	for ir = 1:nr_dke,
 		jr2 = rdke(ir);
-		Xq_tp_t = reshape(MMXq_tp_t((ir-1)*(nmhu - ns_g(jr2))*npn + 1:ir*(nmhu - ns_g(jr2))*npn),(nmhu - ns_tp(jr2)),npn)';
+		Xq_tp_t = reshape(MMXq_tp_t(sm_tp(jr2)+1:sm_tp(jr2+1)),(nmhu - ns_tp(jr2)),npn)';
 		Xq_tp_t(1,:) = 0;
 		Xq_tp_t(:,(nmhu - ns_g(jr2))/2) = 0;%g(pn,mhu = -mhut) = 0
 		Xq_tp_t(:,(nmhu - ns_g(jr2))/2 + 1) = 0;%g(pn,mhu = mhut) = 0
-		MMXq_tp_t((ir-1)*(nmhu - ns_g(jr2))*npn + 1:ir*(nmhu - ns_g(jr2))*npn) = reshape(Xq_tp_t',(nmhu - ns_g(jr2))*npn,1);
+		MMXq_tp_t(sm_tp(jr2)+1:sm_tp(jr2+1)) = reshape(Xq_tp_t',(nmhu - ns_g(jr2))*npn,1);
 	end   
 %
 %Resolution of the first order Fokker-Planck equation
