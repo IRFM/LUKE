@@ -296,7 +296,7 @@ while 1,
             bspace2 = 0.5;
 %            
             rhostr = num2str(xrho_dke(ir_display_dke));
-            rhostr = rhostr(1:5);
+            rhostr = rhostr(1:min([5,length(rhostr)]));
 %
 % ---------- parallel distribution -----------
 %
@@ -352,7 +352,7 @@ while 1,
             y2 = Xf0_cyl_ref;
             %
             graph2D_jd(x1,x2,y1','','','',xlim1,xlim2,0,betath_ref,[0:0.5:pnmax_S],0,style2,color1,width1,siz,red,max(max(y1)));
-            graph2D_jd(x1,x2,y2',xlab1,xlab2,'2D Distribution function f_0',xlim1,xlim2,0,betath_ref,[0:pnmax_S],0,style2,color2,width2,siz,1,max(max(y1)));
+            graph2D_jd(x1,x2,y2',xlab1,xlab2,'2D Distribution function f_0',xlim1,xlim2,0,betath_ref,[0:0.5:pnmax_S],0,style2,color2,width2,siz,1,max(max(y1)));
             text(0.05,0.95,['\rho = ',rhostr],'units','normalized');
             axis('equal');axis([xlim1,xlim2])
             bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,nhuloss,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap);
@@ -703,7 +703,7 @@ while 1,
 				line([-mhu0T,-mhu0T],ylim,'color','k');
                 text(0.05,0.95,['\rho = ',rhostr],'units','normalized');
                 ipnstr = num2str(pn_ref(ipnplot_ref));
-                ipnstr = ipnstr(1:5);
+                ipnstr = ipnstr(1:min([5,length(ipnstr)]));
                 text(0.05,0.85,['p^{ref}/p_{te} = ',ipnstr],'units','normalized');
                 %
 				pause(time_pause);
