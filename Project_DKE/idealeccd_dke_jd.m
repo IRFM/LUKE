@@ -1,4 +1,4 @@
-function waveparam = idealeccd_dke_jd(xrho,betath_ref,xrbetath,xrnhuth,theta,XR,XZ,XBR,XBZ,XBphi,Rp,Zp,xB0);
+function waveparam = idealeccd_dke_jd(xrho,betath_ref,xrbetath,xrnhuth,theta,XR,XZ,XBR,XBZ,XBphi,Rp,Zp,xB0,sim_mode,sim_par);
 %
 % Creates wave parameters for test mode ECCD calculations
 % This function has a benchmarking purpose only
@@ -8,11 +8,31 @@ function waveparam = idealeccd_dke_jd(xrho,betath_ref,xrbetath,xrnhuth,theta,XR,
 %
 % by Joan Decker (jodecker@mit.edu) and Yves Peysson (yves.peysson@cea.fr)
 %
+if nargin < 14
+    sim_mode = 0;
+end
 qe = 1.6022e-19;%Electron charge (C)
 me = 9.1094e-31;%Electron rest mass (Kg)
 %
-[blist_ec,yY_ec,yomega_ec,ynpar_ec,ydnpar_ec,...
-    yD0_in_c_ec,yD0_in_ec_prof,ypeak_ec,ywidth_ec,ythetab_ec,yopt_ec,yepolc_ec,yn_ec] = psim_idealeccd_jd;
+if sim_mode == 0,
+    [blist_ec,yY_ec,yomega_ec,ynpar_ec,ydnpar_ec,...
+        yD0_in_c_ec,yD0_in_ec_prof,ypeak_ec,ywidth_ec,ythetab_ec,yopt_ec,yepolc_ec,yn_ec] = psim_idealeccd_jd;
+elseif sim_mode == 2,
+    yY_ec = sim_par(1);
+    yomega_ec = sim_par(2);
+    ynpar_ec = sim_par(3);
+    ydnpar_ec = sim_par(4);
+    yD0_in_c_ec = sim_par(5);
+    yD0_in_ec_prof = sim_par(6);
+    ypeak_ec = sim_par(7);
+    ywidth_ec = sim_par(8);
+    ythetab_ec = sim_par(9);
+    yopt_ec = sim_par(10);
+    yepolc_ec = sim_par(11);
+    yn_ec = sim_par(12);
+    %
+    blist_ec = 1;
+end
 %
 nr = length(xrho);
 nb_ec = length(blist_ec);
