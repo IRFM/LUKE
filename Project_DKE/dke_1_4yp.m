@@ -241,7 +241,8 @@ nit_g = nit(2);
 bounce_mode = bounce(1);
 dke_mode = bounce(2);
 equil_mode = bounce(3);
-prec_inv = min([param_inv(1),1/nr/dtn]);
+prec_inv = param_inv(1)
+%prec_inv = min([param_inv(1),1/nr/dtn]);
 maxit_inv = param_inv(2);
 xbetath = betath_ref*sqrt(xTe_norm);
 %
@@ -266,9 +267,9 @@ if display_mode >=1,
 	else                  disp('   - Matrices storage in disk file (slow mode)');end
 %Numerical matrix inversion procedure
 	if (invproc == 1),  disp('   - QMR iterative matrix inversion method');
-	elseif (invproc == 2),  disp('   - BICGSTAB iterative matrix inversion method');
-	elseif (invproc == 3),  end
-	disp(['   - Drop tolerance: ',num2str(prec_inv)]);
+	elseif (invproc == 2),  disp('   - GMRES iterative matrix inversion method');
+	elseif (invproc == 3),  disp('   - CGS iterative matrix inversion method');end
+	disp(['   - Drop tolerance: ',num2str(prec_inv),' [input: ',num2str(param_inv(1)),']']);
 	disp(['   - Maximum number of iterations for the matrix inversion method: ',num2str(maxit_inv)]);	
 %Boundary and normalization conditions
 	if (norm_mode == 1),    disp('   - Normalization of f0 at each iteration and radius');
@@ -1384,7 +1385,7 @@ for ir = 1:nr,
 %
 %	if display_mode == 2,
 	if 1,
-		figure(3100),plot(pn,Xdeltap_imj(:,1));hold on
+		figure(3100),plot(pn,Xdeltap_imj(:,:));hold on
 		zoom on;
 		axis('square');xlabel('pn');ylabel('Interpolation coefficient');
 		title('Momentum flux grid interpolation factor');
@@ -1826,15 +1827,6 @@ if dke_mode == 1,
 		Xb_tp(1,:,ir) = 0;
 		Xh_tp(1,:,ir) = 0;
 		Xf_tp(1,:,ir) = 0;
-		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    
 %
 %Correction matrix resulting from the radial gradient of Chang and Cooper interpolation coefficients
 %           		
@@ -2128,8 +2120,8 @@ for it_f = 2:nit_f,
 %
 		if invproc == 1,%qmr iterative method
 			[MMXS_t,flaginv_f] = qmr(MMXPC_f_t,MMXR_t,prec_inv,maxit_inv,MMXL_f_t,MMXU_f_t);
-		elseif invproc == 2,%bicgstab iterative method
-			[MMXS_t,flaginv_f] = bicgstab(MMXPC_f_t,MMXR_t,prec_inv,maxit_inv,MMXL_f_t,MMXU_f_t); 
+		elseif invproc == 2,%gmres iterative method		
+			[MMXS_t,flaginv_f] = gmres(MMXPC_f_t,MMXR_t,prec_inv,maxit_inv,MMXL_f_t,MMXU_f_t); 
 		elseif invproc == 3,%cgs iterative method
 			[MMXS_t,flaginv_f] = cgs(MMXPC_f_t,MMXR_t,prec_inv,maxit_inv,MMXL_f_t,MMXU_f_t);
 		end

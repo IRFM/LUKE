@@ -11,13 +11,13 @@ Sec. \ref{conducsection}. The corresponding tokamak parameter file is named
 for code comparison with the well know CQL3D program (\cite{har93c1_IAEA}).
 By definition, the code is no more conservative since runaway electrons are
 leaving the domain of integration. Consequently, the particle losses must be
-compensated in order to keep constant the total number of particle. In
-addition, in $3-D$ mode, there are numerical losses, as shown in the
-previous section, that overcome physical ones. Consequently, the same
-procedure is used and the Maxwellian solution is enforced at $i=1/2$ while
-the density is normalized at each iteration. It has been cros-checked that
+compensated in order to keep constant the total number of particle. Consequently, the same
+the Maxwellian solution is enforced at $i=1/2$ while
+the density is normalized at each iteration. It has been cross-checked that
 the compensation of losses has no influence on the final solution and
-therefore the runaway rate.
+therefore the runaway rate. Indeed, results normalized to the final
+numerical electron density found by the code, or normalized at each
+time step are similar.
 
 In a first step, a local analysis is performed, without considering bounce
 averaging. Here, only the Maxwellian electron-electron collision operator is

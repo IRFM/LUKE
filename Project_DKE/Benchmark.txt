@@ -33,7 +33,7 @@ Multiple radial locations -> rho_S = [0.2,0.4,0.6,0.8], eTe = 1,ene = 1, bounce_
 ---------------------------------------------------------------------------------------
 Z = 1, no imp, (H), sigma_spitzer = 7.4353 (central norm., linearized, E/ED = 0.01, np=125, nmhu=168, pnmax_S = 15)
 by definition, xsigsp = sigma_spitzer = Zcurr_ref{1,1}./((xbetath/betath_ref).*(xne/ne_ref))./xepsi_ref must be independent of the plasma radius
-with norm_mode_f = 1 and boundary_mode_f=1. (if norm_mode_f = 0, the density decreases, but normalized to the density, the result is the same)
+with norm_mode_f = 0 and boundary_mode_f=0. 
 ---------------------------------------------------------------------------------------
 ref_mode = 0, norm_ref = 1
 xrho      = 0.14142     0.31623     0.5099     0.70711     0.90554
@@ -49,7 +49,6 @@ the local sigma_spitzer = 7.4353 is well recovered.
 ---------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------
 One radial location -> eTe = 0, eTe = 0, ref_mode = 1, norm_ref = 1, bounce_mode = 1
-with norm_mode_f = 1 and boundary_mode_f=1. (if norm_mode_f = 0, the density decreases, but normalized to the density, the result is the same)
 ---------------------------------------------------------------------------------------
 Z = 1, no imp, (H), sigma_neo = 5.114 (local norm., linearized, E/ED_fsav = 0.01,j_fsav= 0.05114, <E/ED_Bmin = 0.0096864, j_Bmin = 0.049536> rho = 0.031848, np=125, nmhu=120, pnmax_S = 15)
 sigma_neo_Bmin/sigma_spitzer = 5.114/7.4356 = 0.688 [Coppi-Sigmar=0.682]
@@ -111,6 +110,7 @@ xj_Bmin        = -0.026642   -0.010405  -0.0031127     -0.00050313   -1.0237e-05
 Scenario name = CQL3D_RUNAWAY
 
 with norm_mode_f = 1 and boundary_mode_f=1. (if norm_mode_f = 0, the density decreases, but normalized to the density, the result is the same)
+Necessary since leak at the boundary of the integration domain in this regime
 One radial location -> rho_S = [0.4], eTe = 0, eTe = 0;ref_mode = 0, norm_ref = 1, bounce_mode = 0
 ---------------------------------------------------------------------------------------
 Z = 1, no imp, (H), RR_ref_fsav = 0.00028618 [Kruskal-Bernstein=0.00026716,Kulsrud et al=3.177e-4] (central norm., Maxwellian, E/ED = 0.08, rho = 0.4, np=88, nmhu=120, pnmax_S = 15)
@@ -193,7 +193,6 @@ xRR_fsav       = 0.00011401  3.5038e-05  5.977e-06     2.7406e-07     1.022e-10
 ******************************************************************* Lower Hybrid Current drive *************************************************************
 ************************************************************************************************************************************************************
 Scenario name = CQL3D_LH
-with norm_mode_f = 0 and boundary_mode_f=1. (if boundary_mode_f = 0, the density decreases, but normalized to the density, the result is the same)
 One radial location -> rho_S = [0.4], eTe = 0, eTe = 0;ref_mode = 0, norm_ref = 1, bounce_mode = 0
 ---------------------------------------------------------------------------------------
 (H), Dlh = 1 where 3.5<=vpar<=6, betath = 1.398909275981332e-02
