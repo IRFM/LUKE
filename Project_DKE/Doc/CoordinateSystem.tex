@@ -1,75 +1,72 @@
-Three different coordinates system are considered here. Unit vectors are
-covered with a hat like $\widehat{v}$. 
+The particular toroidal geometry of tokamaks requires to use specific
+coordinates, in order to make use of symmetry properties such as
+axisymmetry, and take into account the flux-surface geometry. General and
+specific properties of curvilinear coordinate systems are detailed in
+Appendix \ref{curvilinear}. In this work, vectors are written in bold
+characters, like $\mathbf{v}$, except unit vectors, which are covered with a
+hat, like $\widehat{v}$. Three different coordinates system are considered
+here.
+
+\fig{RZphi.eps}{Coordinates System $( R,Z,\phi)$.}{RZphi}{10cm}
 
 \begin{itemize}
-\item  First, the toroidal coordinate system $\left( R,Z,\phi \right) $ with
-local orthogonal vectors 
-\begin{eqnarray}
-\widehat{R} &=&\nabla R \\
-\widehat{Z} &=&\nabla Z \\
-\widehat{\phi } &=&R\nabla \phi 
-\end{eqnarray}
-This coordinate system conserves the largest generality in the magnetic
-geometry
+\item  First, the toroidal coordinate system $\left( R,Z,\phi \right) $,
+where $R$ is the distance from the axis of the torus, and $Z$ the distance
+along this axis. This coordinates system and the corresponding local
+orthogonal basis vectors $\left( \widehat{R},\widehat{Z},\widehat{\phi }%
+\right) $ are defined in (\ref{RZphidef}) and shown on Fig. \ref{RZphi}. This coordinate
+system conserves the largest generality in the magnetic geometry.
+
+\fig{rthetaphi.eps}{Coordinates System $( r,\theta ,\phi)$.}{rthetaphi}{10cm}
 
 \item  Second, the poloidal (polar) coordinate system $\left( r,\theta ,\phi
-\right) $, centered around the magnetic axis $\left( R_{0},Z_{0}\right) $
-defined as the position of an extremum of $\psi $ (can be arbitrarily chosen
-as $\psi =0$), and with local orthogonal vectors 
-\begin{eqnarray}
-\widehat{r} &=&\nabla r \\
-\widehat{\theta } &=&r\nabla \theta  \\
-\widehat{\phi } &=&R\nabla \phi 
-\end{eqnarray}
-and the relations 
-\begin{eqnarray}
-R &=&R_{0}+r\cos \theta  \\
-Z &=&Z_{0}+r\sin \theta 
-\end{eqnarray}
-which can be inverted as 
-\begin{eqnarray}
-r &=&\sqrt{\left( R-R_{0}\right) ^{2}+\left( Z-Z_{0}\right) ^{2}} \\
-\theta  &=&\arctan \left( \frac{Z-Z_{0}}{R-R_{0}}\right) +\pi \text{sign}%
-\left( R-R_{0}\right)   \label{theta}
-\end{eqnarray}
+\right) $ assumes the existence of a toroidal axis at constant position $%
+\left( R_{0},Z_{0}\right) $, which is typically the magnetic axis,
+corresponding to the position of an extremum of $\psi $ (which can be
+arbitrarily chosen as $\psi =0$). This coordinates system and the
+corresponding local orthogonal basis vectors $\left( \widehat{r},\widehat{%
+\theta },\widehat{\phi }\right) $ are defined in (\ref{rthetadef}) and shown on Fig. \ref
+{rthetaphi}.
+
+\fig{psisphi.eps}{Coordinates System $(\psi ,s,\phi)$.}{psisphi}{10cm}
 
 \item  Third, the flux coordinate system $\left( \psi ,s,\phi \right) $ is
-the natural system for Fokker-Planck simulations, since the particles are
-essentially confined to a given flux surface $\psi $. The distance $s$ is
-the length along the poloidal magnetic field lines. We can choose its origin
-as being at the position of minimum $B$-field amplitude within a
+the natural system when we describe particles which are confined to a given
+flux surface $\psi $. This coordinates system and the corresponding local
+orthogonal basis vectors $\left( \widehat{\psi },\widehat{s},\widehat{\phi }%
+\right) $ are defined in (\ref{psisdef}) and shown on Fig. \ref{psisphi}. The vector $%
+\widehat{\psi }$ is perpendicular to the flux surface, while $\widehat{s}$
+is parallel to the surface, and included in the poloidal plane. The distance 
+$s$ is the length along the poloidal magnetic field lines. We can choose its
+origin as being at the position of minimum $B$-field amplitude within a
 flux-surface. 
 \begin{equation}
 B\left( \psi ,s\equiv 0\right) =\min \left\{ B\left( \psi ,s\right) \right\}
 =B_{\min }\left( \psi \right) 
 \end{equation}
-The direction is counter-clockwise and the limits $s_{\min }$ and $s_{\max }$
-are set at the position of maximum magnetic field
+The direction is counter-clockwise and the limits $s_{\min }\left( \psi
+\right) $ and $s_{\max }\left( \psi \right) $ are set at the position of
+maximum magnetic field
 
 \begin{equation}
 B\left( \psi ,s\equiv s_{\min }\right) =B\left( \psi ,s\equiv s_{\max
 }\right) =\max \left\{ B\left( \psi ,s\right) \right\} =B_{\max }\left( \psi
 \right)   \label{bmax}
 \end{equation}
-The local orthogonal vectors are 
-\begin{eqnarray}
-\widehat{\psi } &=&\frac{\nabla \psi }{\left| \nabla \psi \right| }
-\label{psih} \\
-\widehat{s} &=&\frac{\nabla \phi \times \nabla \psi }{\left| \nabla \psi
-\right| \left| \nabla \phi \right| }=-\widehat{b}_{p} \\
-\widehat{\phi } &=&R\nabla \phi   \label{phih}
-\end{eqnarray}
-where $\widehat{b}_{p}$ is the unit vector in the direction of the poloidal
-magnetic field.
 
-\item  An alternative to the previous system may be easier to implement
-numerically for the calculation of the bounce coefficients. This is the
-system $\left( \psi ,\theta ,\phi \right) $. The $\theta $ grid is defined
-in (\ref{theta}). We also define, for geometrical purposes, a flux-function $%
-\rho \left( \psi \right) $ which coincides with the normalized radius on the
-horizontal LFS midplane. Indeed, in an axisymmetric system, using the
-functions $R\left( \psi ,\theta \right) $ and $Z\left( \psi ,\theta \right) $%
-, we define $\rho \left( \psi \right) $ as 
+\item  The system $\left( \psi ,\theta ,\phi \right) $ is an alternative to
+the previous system, which is used to implement numerically the calculation
+of the bounce coefficients. One advantage is that the $\theta $ grid is now
+independent of $\psi $, which simplifies the numerical calculations. On the
+other hand, the contravariant vectors $\nabla \psi $ and $\nabla \theta $
+are not orthogonal, and therefore are not respectively colinear with the
+covariant vectors $\partial \mathbf{X}/\partial \psi $ and $\partial \mathbf{%
+X}/\partial \theta $. The properties of this curvilinear system are detailed
+in Appendix \ref{curvilinear}. We also define, for geometrical purposes, a
+flux-function $\rho \left( \psi \right) $ which coincides with the
+normalized radius on the horizontal LFS midplane. Indeed, in an axisymmetric
+system, using the functions $R\left( \psi ,\theta \right) $ and $Z\left(
+\psi ,\theta \right) $, we define $\rho \left( \psi \right) $ as 
 \[
 \rho \left( \psi \right) =\frac{R\left( \psi ,0\right) -R_{0}}{R_{\max
 }-R_{0}}

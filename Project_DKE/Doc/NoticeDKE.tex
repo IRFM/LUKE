@@ -2,14 +2,19 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{graphicx}
-%\usepackage{babel}
-
-%\bibliographystyle{apsrev}
 
 \addtolength{\voffset}{-3.0cm} \addtolength{\textheight}{6.0cm}
 \addtolength{\hoffset}{-1.5cm} \addtolength{\textwidth}{3.0cm}
 
-%\makeatother
+\newcommand{\fig}[4]{
+\begin{figure}
+\begin{center}
+\includegraphics[width = #4 cm]{#1}
+\caption{#2}\label{#3}
+\end{center}
+\end{figure}
+}
+
 \begin{document}
 
 \title{A fast numerical solver for the 3-D relativistic electron Drift Kinetic
@@ -192,4 +197,8 @@ Equation}
 \chapter{Examples}
 
 \appendix
+
+\section{Curvilinear Coordinate Systems}
+
+\input{curvilinear.tex}
 \end{document}
