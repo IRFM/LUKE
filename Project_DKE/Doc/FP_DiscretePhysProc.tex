@@ -1,4 +1,7 @@
-\label{fpdiscretephysproc}\subsubsection{Collisions}
+
+\label{fpdiscretephysproc}
+
+\subsection{Collisions}
 
 According to the bounce averaged expression, 
 \begin{equation}
@@ -17,7 +20,7 @@ _{2,-1,0}^{l+1/2,j+1}/\lambda ^{l+1/2,j+1}\right) B_{t,l+1/2,i+1/2} \\
 D_{\xi \xi ,l+1/2,i+1/2,j}^{C\left( 0\right) }=\left( \lambda
 _{2,-1,0}^{l+1/2,j}/\lambda ^{l+1/2,j}\right) B_{t,l+1/2,i+1/2}
 \end{array}
-\right.
+\right. 
 \end{equation}
 and 
 \begin{equation}
@@ -28,41 +31,36 @@ F_{p,l+1/2,i,j+1/2}^{C\left( 0\right) }=-F_{l+1/2,i} \\
 F_{\xi ,l+1/2,i+1/2,j+1}^{C\left( 0\right) }=0 \\ 
 F_{\xi ,l+1/2,i+1/2,j}^{C\left( 0\right) }=0
 \end{array}
-\right.
+\right. 
 \end{equation}
+where each coefficient is the sum of the electron-electron and electron-ion
+interactions.
 
-\paragraph{Belaiev-Budker model}
+\subsubsection{Electron-electron collision operator}
+
+\paragraph{Belaiev-Budker relativistic collision model}
 
 Here, coefficients corresponding to the Belaiev-Budker collision operator
 that ranges from non-relativistic to fully relativistic regimes may be
 expressed as, according to the notation used in Ref.\cite{shk97}, 
-\begin{eqnarray}
-A_{l+1/2,i+1/2} &=&\frac{\left( F_{1,l+1/2,i+1/2}+F_{2,l+1/2,i+1/2}\right) }{%
-v_{i+1/2}}\overline{T}_{e,l+1/2}  \nonumber \\
-&&+\frac{1}{v_{i+1/2}^{3}}\sum_{s}\sum_{s^{\prime }}Z_{ss^{\prime }}^{2}%
-\frac{\overline{n}_{ss^{\prime },l+1/2}\overline{T}_{ss^{\prime },l+1/2}}{%
-\overline{m}_{s}}
-\end{eqnarray}
-\begin{eqnarray}
-F_{l+1/2,i+1/2} &=&F_{1,l+1/2,i+1/2}+F_{2,l+1/2,i+1/2}  \nonumber \\
-&&+\frac{1}{v_{i+1/2}^{2}}\sum_{s}\sum_{s^{\prime }}Z_{ss^{\prime }}^{2}%
-\frac{\overline{n}_{ss^{\prime },l+1/2}}{\overline{m}_{s}}
-\end{eqnarray}
+\begin{equation}
+A_{l+1/2,i+1/2}^{ee}=\frac{\left( F_{1,l+1/2,i+1/2}+F_{2,l+1/2,i+1/2}\right) 
+}{v_{i+1/2}}\overline{T}_{e,l+1/2}
+\end{equation}
+\begin{equation}
+F_{l+1/2,i+1/2}^{ee}=F_{1,l+1/2,i+1/2}+F_{2,l+1/2,i+1/2}
+\end{equation}
 with 
 \begin{equation}
-F_{1,l+1/2,i+1/2}=\frac{4\pi }{v_{i+1/2}^{2}}F_{11,l+1/2,i+1/2}+\frac{4\pi }{
+F_{1,l+1/2,i+1/2}=\frac{4\pi }{v_{i+1/2}^{2}}F_{11,l+1/2,i+1/2}+\frac{4\pi }{%
 p_{i+1/2}^{2}}F_{12,l+1/2,i+1/2}
 \end{equation}
 \begin{equation}
 F_{2,l+1/2,i+1/2}=\frac{4\pi }{v_{i+1/2}}\left( 1-\frac{\gamma _{i+1/2}\zeta
 _{,i+1/2}}{z_{i+1/2}}\right) F_{21,l+1/2,i+1/2}
 \end{equation}
-The double sum $\sum_{s}\sum_{s^{\prime }}$ takes into account of all ions
-species $s$ in ionization state $s^{\prime }.$ Here, $\overline{n}%
-_{ss^{\prime },l+1/2}$ is the normalized ion density at $\psi _{l+1/2},$ as
-introduced in Sec. \ref{normtene}, and $\overline{m}_{s}$ is the ion rest
-mass normalized to the electron rest mass $m_{e}$. Expressions of
-coefficients $F_{11,l+1/2,i+1/2},$ $F_{12,l+1/2,i+1/2}$ and $
+
+Expressions of coefficients $F_{11,l+1/2,i+1/2},$ $F_{12,l+1/2,i+1/2}$ and $%
 F_{21,l+1/2,i+1/2}$ are
 
 \begin{equation}
@@ -79,25 +77,20 @@ F_{21,l+1/2,i+1/2}=\int_{i+1/2}^{\infty }p^{\prime }f_{M}\left( \psi
 _{l+1/2},p^{\prime }\right) dp^{\prime }
 \end{equation}
 
-Coefficients $A$ and $F$ must be also calculated on the flux grids and
-therefore, according to the previous definition,
+Coefficients $A^{ee}$ and $F^{ee}$ must be also calculated on the flux grids
+and therefore, according to the previous definition,
 
-\begin{eqnarray}
-A_{l+1/2,i} &=&\frac{\left( F_{1,l+1/2,i}+F_{2,l+1/2,i}\right) }{v_{i}}%
-\overline{T}_{e,l+1/2}  \nonumber \\
-&&+\frac{1}{v_{i}^{3}}\sum_{s}\sum_{s^{\prime }}Z_{ss^{\prime }}^{2}\frac{%
-\overline{n}_{ss^{\prime },l+1/2}\overline{T}_{ss^{\prime },l+1/2}}{%
-\overline{m}_{s}}
-\end{eqnarray}
+\begin{equation}
+A_{l+1/2,i}^{ee}=\frac{\left( F_{1,l+1/2,i}+F_{2,l+1/2,i}\right) }{v_{i}}%
+\overline{T}_{e,l+1/2}
+\end{equation}
 and 
-\begin{eqnarray}
-F_{l+1/2,i} &=&F_{1,l+1/2,i}+F_{2,l+1/2,i}  \nonumber \\
-&&+\frac{1}{v_{i}^{2}}\sum_{s}\sum_{s^{\prime }}Z_{ss^{\prime }}^{2}\frac{%
-\overline{n}_{ss^{\prime },l+1/2}}{\overline{m}_{s}}
-\end{eqnarray}
+\begin{equation}
+F_{l+1/2,i}^{ee}=F_{1,l+1/2,i}+F_{2,l+1/2,i}
+\end{equation}
 where 
 \begin{equation}
-F_{1,l+1/2,i}=\frac{4\pi }{v_{i}^{2}}F_{11,l+1/2,i}+\frac{4\pi }{p_{i}^{2}}
+F_{1,l+1/2,i}=\frac{4\pi }{v_{i}^{2}}F_{11,l+1/2,i}+\frac{4\pi }{p_{i}^{2}}%
 F_{12,l+1/2,i}
 \end{equation}
 \begin{equation}
@@ -121,13 +114,10 @@ _{l+1/2},p^{\prime }\right) dp^{\prime }
 for the grid points $i,$ while for the grid points $i+1,$ one has just to
 replace $i$ by $i+1$ in the set of above expressions.
 
-Furthermore, the expression of coefficient $B_{t}$ is 
-\begin{eqnarray}
-B_{t,l+1/2,i+1/2} &=&B_{t1,l+1/2,i+1/2}+B_{t2,l+1/2,i+1/2}  \nonumber \\
-&&+\frac{1}{2v_{i+1/2}}\sum_{s}\sum_{s^{\prime }}Z_{ss^{\prime }}^{2}%
-\overline{n}_{ss^{\prime },l+1/2}\left( 1-\frac{1}{v_{i+1/2}^{2}}\frac{%
-\overline{T}_{ss^{\prime },l+1/2}}{\overline{m}_{s}}\right) 
-\end{eqnarray}
+Furthermore, the expression of coefficient $B_{t}^{ee}$ is 
+\begin{equation}
+B_{t,l+1/2,i+1/2}^{ee}=B_{t1,l+1/2,i+1/2}+B_{t2,l+1/2,i+1/2}
+\end{equation}
 with 
 \begin{equation}
 B_{t1,l+1/2,i+1/2}=4\pi \sum_{n=1}^{5}B_{t1,l+1/2,i+1/2}^{\left[ n\right] }
@@ -149,7 +139,7 @@ dp^{\prime }
 \end{equation}
 \begin{equation}
 B_{t1,l+1/2,i+1/2}^{\left[ 3\right] }=\frac{1}{8\gamma
-_{i+1/2}^{2}z_{i+1/2}^{2}}\int_{0}^{i+1/2}p^{\prime 2}\frac{J_{1}^{\prime }}{
+_{i+1/2}^{2}z_{i+1/2}^{2}}\int_{0}^{i+1/2}p^{\prime 2}\frac{J_{1}^{\prime }}{%
 \gamma ^{\prime }}f_{M}\left( \psi _{l+1/2},p^{\prime }\right) dp^{\prime }
 \end{equation}
 \begin{equation}
@@ -317,7 +307,7 @@ conservation, one must calculate
 \begin{equation}
 \left\{ C\left( f_{M},f\right) \right\} \simeq -\frac{3}{2}\frac{\overline{%
 \lambda }_{1,1,0}}{\lambda }\xi _{0}\mathcal{I}\left( f_{M},f_{0}^{\left(
-0\right) \left( m=1\right) }\right) 
+0\right) \left( m=1\right) }\right)
 \end{equation}
 on the distribution function grid, where 
 \begin{equation}
@@ -520,17 +510,55 @@ For this case, integrals are simply calculated according to the rule
 \end{equation}
 so that $f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right) \left( l=1\right) \left(
 k\right) }$ must not be interpolated between $0$ and $p_{i+1/2}$ for refined
-calculations as done for coefficients $A,$ $B_{t}$ and $F.$ Even if by this
-techniqe, the numerical accuracy is poor in the vicinity of $p=0$,
-consequences are fairly negligible for the momentum conservation and the
-current level, since first-order Legendre corrections are weighted by $p$.
+calculations as done for coefficients $A^{ee},$ $B_{t}^{ee}$ and $F^{ee}.$
+Even if by this techniqe, the numerical accuracy is poor in the vicinity of $%
+p=0$, consequences are fairly negligible for the momentum conservation and
+the current level, since first-order Legendre corrections are weighted by $p$%
+.
 
-\paragraph{Maxwellian limit}
+\paragraph{Relativistic Maxwellian background}
 
-The Maxwellian limit corresponds to that case where no first order Legendre
-correction for momentum conservation is applied. This is an academic case
-that allows only fruitful comparison with some theorerical works for code
-benchmarking.
+The relativistic Maxwellian background corresponds to that case where the
+first order Legendre correction for momentum conservation is neglected.
+Matrix coeffients $A^{ee},$ $B_{t}^{ee}$ and $F^{ee}$ determined in the
+previous section are used.
+
+\paragraph{Non-relativistic Maxwellian background}
+
+For this case, matrix coefficients are
+
+\begin{equation}
+A_{l+1/2,i+1/2}^{ee}=\frac{\overline{n}_{e,l+1/2}}{%
+2v_{i+1/2}u_{l+1/2,i+1/2}^{2}}\left[ erf
+\left( u_{l+1/2,i+1/2}\right)
+-u_{l+1/2,i+1/2}erf
+^{\prime }\left( u_{l+1/2,i+1/2}\right) \right] 
+\end{equation}
+
+\begin{equation}
+F_{l+1/2,i+1/2}^{ee}=\frac{\overline{n}_{e,l+1/2}}{v_{i+1/2}^{2}}\left[ 
+erf
+\left( u_{l+1/2,i+1/2}\right) -u_{l+1/2,i+1/2}erf
+^{\prime
+}\left( u_{l+1/2,i+1/2}\right) \right] 
+\end{equation}
+and
+
+\begin{equation}
+B_{t,l+1/2,i+1/2}^{ee}=\frac{\overline{n}_{e,l+1/2}}{%
+4v_{i+1/2}u_{l+1/2,i+1/2}^{2}}\left[ \left( 2u_{l+1/2,i+1/2}^{2}-1\right) 
+erf
+\left( u_{l+1/2,i+1/2}\right) +u_{l+1/2,i+1/2}erf
+^{\prime
+}\left( u_{l+1/2,i+1/2}\right) \right] 
+\end{equation}
+where 
+\begin{equation}
+u_{l+1/2,i+1/2}=\frac{v_{i+1/2}}{2\overline{n}_{e,l+1/2}}
+\end{equation}
+
+For values of the matrix coefficients $A^{ee},$ $B_{t}^{ee}$ and $F^{ee}$ on
+the momentum flux grids, one just has to replace $i+1/2$ by $i$ or $i+1$.
 
 \paragraph{High velocity limit}
 
@@ -540,48 +568,161 @@ useful comparisons with some theoretical calculations. Therefore, this
 possibility has been implemented in the code. In that case, expressions of
 the coefficients are greatly simplified,
 
-\begin{eqnarray}
-A_{l+1/2,i+1/2} &=&\frac{1}{v_{i+1/2}^{3}}\overline{n}_{e,l+1/2}\overline{T}%
-_{e,l+1/2}  \nonumber \\
-&&+\frac{1}{v_{i+1/2}^{3}}\sum_{s}\sum_{s^{\prime }}Z_{ss^{\prime }}^{2}%
-\frac{\overline{n}_{ss^{\prime },l+1/2}\overline{T}_{ss^{\prime },l+1/2}}{%
-\overline{m}_{s}}
-\end{eqnarray}
+\begin{equation}
+A_{l+1/2,i+1/2}^{ee}=\frac{1}{v_{i+1/2}^{3}}\overline{n}_{e,l+1/2}\overline{T%
+}_{e,l+1/2}
+\end{equation}
 and 
-\begin{eqnarray}
-F_{l+1/2,i+1/2} &=&\frac{1}{v_{i+1/2}^{2}}\overline{n}_{e,l+1/2}  \nonumber
-\\
-&&+\frac{1}{v_{i+1/2}^{2}}\sum_{s}\sum_{s^{\prime }}Z_{ss^{\prime }}^{2}%
-\frac{\overline{n}_{ss^{\prime },l+1/2}}{\overline{m}_{s}}
-\end{eqnarray}
+\begin{equation}
+F_{l+1/2,i+1/2}^{ee}=\frac{1}{v_{i+1/2}^{2}}\overline{n}_{e,l+1/2}
+\end{equation}
 while 
-\begin{eqnarray}
-B_{t,l+1/2,i+1/2} &=&\frac{1}{2v_{i+1/2}}\overline{n}_{e,l+1/2}-\frac{1}{
-2v_{i+1/2}^{3}}\overline{n}_{e,l+1/2}\overline{T}_{e,l+1/2}  \nonumber \\
-&&+\frac{1}{2v_{i+1/2}}\sum_{s}\sum_{s^{\prime }}Z_{ss^{\prime }}^{2}%
-\overline{n}_{ss^{\prime },l+1/2}\left( 1-\frac{1}{v_{i+1/2}^{2}}\frac{%
-\overline{T}_{ss^{\prime },l+1/2}}{\overline{m}_{s}}\right) 
-\end{eqnarray}
+\begin{equation}
+B_{t,l+1/2,i+1/2}^{ee}=\frac{1}{2v_{i+1/2}}\overline{n}_{e,l+1/2}-\frac{1}{%
+2v_{i+1/2}^{3}}\overline{n}_{e,l+1/2}\overline{T}_{e,l+1/2}
+\end{equation}
 
 Since no integrals appear in the coefficients, the expressions at momentum
-grid points $i$ and $i+1$ can be obtained in a straightforward manner, by
-just replacing $i+1/2$ by the corresponding index values. In that limit, no
-first-order Legendre correction is considered.
+flux grid points $i$ and $i+1$ can be obtained in a straightforward manner,
+by just replacing $i+1/2$ by the corresponding index values. In that limit,
+the first-order Legendre correction is neglected. In the calculations, both
+electron-electron and electron-ion collision model in the high velocity
+limit are used for a consistent description of the collisions.
 
-\paragraph{Non-relativistic Lorentz collision operator}
+\paragraph{Non-relativistic Lorentz model}
 
-This case corresponds to 
+This very simple case corresponds to 
 \begin{equation}
-A_{l+1/2,i+1/2}=F_{l+1/2,i+1/2}=0
+A_{l+1/2,i+1/2}^{ee}=F_{l+1/2,i+1/2}^{ee}=B_{t,l+1/2,i+1/2}^{ee}=0
+\end{equation}
+and also on the momentum flux grid points $i$ and $i+1.$ Obviously, the
+first-order Legendre correction is also neglected in that case.
+
+\subsubsection{Electron-ion collision operator}
+
+\paragraph{Non-relativistic Maxwellian background}
+
+In that case matrix coefficients are
+
+\begin{eqnarray}
+A_{l+1/2,i+1/2}^{ei} &=&\frac{1}{2v_{i+1/2}}\sum_{s}\sum_{s^{\prime }}\frac{1%
+}{u_{l+1/2,i+1/2}^{ss^{\prime }2}}\left[ erf
+\left(
+u_{l+1/2,i+1/2}^{ss^{\prime }}\right) \right.   \nonumber \\
+&&\left. -u_{l+1/2,i+1/2}erf
+^{\prime }\left(
+u_{l+1/2,i+1/2}^{ss^{\prime }}\right) \right] Z_{ss^{\prime }}^{2}\overline{n%
+}_{ss^{\prime },l+1/2}
+\end{eqnarray}
+
+\begin{equation}
+F_{l+1/2,i+1/2}^{ei}=\frac{1}{v_{i+1/2}^{2}}\sum_{s}\sum_{s^{\prime }}\left[ 
+erf
+\left( u_{l+1/2,i+1/2}^{ss^{\prime }}\right)
+-u_{l+1/2,i+1/2}^{ss^{\prime }}erf
+^{\prime }\left(
+u_{l+1/2,i+1/2}^{ss^{\prime }}\right) \right] Z_{ss^{\prime }}^{2}\frac{%
+\overline{n}_{ss^{\prime },l+1/2}}{\overline{m}_{s}}
+\end{equation}
+and
+
+\begin{eqnarray}
+B_{t,l+1/2,i+1/2}^{ei} &=&\frac{1}{4v_{i+1/2}}\sum_{s}\sum_{s^{\prime }}%
+\frac{1}{u_{l+1/2,i+1/2}^{ss^{\prime }2}}\left[ \left(
+2u_{l+1/2,i+1/2}^{ss^{\prime }2}-1\right) erf
+\left(
+u_{l+1/2,i+1/2}^{ss^{\prime }}\right) \right.   \nonumber \\
+&&\left. +u_{l+1/2,i+1/2}^{ss^{\prime }}erf
+^{\prime }\left(
+u_{l+1/2,i+1/2}^{ss^{\prime }}\right) \right] Z_{ss^{\prime }}^{2}\overline{n%
+}_{ss^{\prime },l+1/2}
+\end{eqnarray}
+where 
+\[
+u_{l+1/2,i+1/2}^{ss^{\prime }}=\frac{v_{i+1/2}}{2v_{th,ss^{\prime
+},l+1/2}^{\dagger }}=\frac{v_{i+1/2}}{2\sqrt{\overline{T}_{ss^{\prime
+},l+1/2}/\overline{m}_{s}}}
+\]
+
+In the case $\overline{T}_{ss^{\prime },l+1/2}=0,$ to avoid a singularity, 
+\begin{equation}
+A_{l+1/2,i+1/2}^{ei}=B_{t,l+1/2,i+1/2}^{ei}=0
+\end{equation}
+while
+\begin{equation}
+F_{l+1/2,i+1/2}^{ei}=\frac{1}{v_{i+1/2}^{2}}\sum_{s}\sum_{s^{\prime
+}}Z_{ss^{\prime }}^{2}\frac{\overline{n}_{ss^{\prime },l+1/2}}{\overline{m}%
+_{s}}
+\end{equation}
+since $erf
+\left( +\infty \right) =1$ and $erf
+^{\prime }\left( +%
+\infty \right) =0.$
+
+Finally, for values of the matrix coefficients $A^{ei},F^{ei}$ and $%
+B_{t}^{ei}$ on the momentum flux grids, one just has to replace $i+1/2$ by $i
+$ or $i+1$.
+
+\paragraph{High-velocity limit}
+
+In this limit, matrix coefficients are
+
+\begin{equation}
+A_{l+1/2,i+1/2}^{ei}=\frac{1}{v_{i+1/2}^{3}}\sum_{s}\sum_{s^{\prime
+}}Z_{ss^{\prime }}^{2}\frac{\overline{n}_{ss^{\prime },l+1/2}\overline{T}%
+_{ss^{\prime },l+1/2}}{\overline{m}_{s}}
+\end{equation}
+\begin{equation}
+F_{l+1/2,i+1/2}^{ei}=\frac{1}{v_{i+1/2}^{2}}\sum_{s}\sum_{s^{\prime
+}}Z_{ss^{\prime }}^{2}\frac{\overline{n}_{ss^{\prime },l+1/2}}{\overline{m}%
+_{s}}
+\end{equation}
+The double sum $\sum_{s}\sum_{s^{\prime }}$ takes into account of all ions
+species $s$ in ionization state $s^{\prime }.$ Here, $\overline{n}%
+_{ss^{\prime },l+1/2}$ is the normalized ion density at $\psi _{l+1/2},$ as
+introduced in Sec. \ref{normtene}, and $\overline{m}_{s}$ is the ion rest
+mass normalized to the electron rest mass $m_{e}$. 
+
+Coefficients $A^{ei}$ and $F^{ei}$ must be also calculated on the flux grids
+and therefore, according to the previous definition,
+
+\begin{equation}
+A_{l+1/2,i}^{ei}=\frac{1}{v_{i}^{3}}\sum_{s}\sum_{s^{\prime }}Z_{ss^{\prime
+}}^{2}\frac{\overline{n}_{ss^{\prime },l+1/2}\overline{T}_{ss^{\prime
+},l+1/2}}{\overline{m}_{s}}
 \end{equation}
 and 
 \begin{equation}
-B_{t,l+1/2,i+1/2}=1/2
+F_{l+1/2,i}^{ei}=\frac{1}{v_{i}^{2}}\sum_{s}\sum_{s^{\prime }}Z_{ss^{\prime
+}}^{2}\frac{\overline{n}_{ss^{\prime },l+1/2}}{\overline{m}_{s}}
+\end{equation}
+for the grid points $i,$ while for the grid points $i+1,$ one has just to
+replace $i$ by $i+1$ in the set of above expressions.
+
+Furthermore, the expression of coefficient $B_{t}^{ei}$ is 
+\begin{equation}
+B_{t,l+1/2,i+1/2}^{ei}=\frac{1}{2v_{i+1/2}}\sum_{s}\sum_{s^{\prime
+}}Z_{ss^{\prime }}^{2}\overline{n}_{ss^{\prime },l+1/2}\left( 1-\frac{1}{%
+v_{i+1/2}^{2}}\frac{\overline{T}_{ss^{\prime },l+1/2}}{\overline{m}_{s}}%
+\right) 
 \end{equation}
 
-In that limit, no first-order Legendre correction is considered.
+\paragraph{Non-relativistic Lorentz model}
 
-\subsubsection{Ohmic electric field}
+In that limit
+\begin{equation}
+A_{l+1/2,i+1/2}^{ei}=F_{l+1/2,i+1/2}^{ei}=0
+\end{equation}
+while
+
+\begin{equation}
+B_{t,l+1/2,i+1/2}^{ei}=1/2
+\end{equation}
+
+A straightforward extrapolation may be done for the momentum flux grid $i$
+by $i+1.$
+
+\subsection{Ohmic electric field}
 
 According to the bounce averaged expression, 
 \begin{equation}
@@ -598,7 +739,7 @@ D_{\xi p,l+1/2,i+1/2,j}^{E\left( 0\right) }=0 \\
 D_{\xi \xi ,l+1/2,i+1/2,j+1}^{E\left( 0\right) }=0 \\ 
 D_{\xi \xi ,l+1/2,i+1/2,j}^{E\left( 0\right) }=0
 \end{array}
-\right. 
+\right.
 \end{equation}
 and 
 \begin{equation}
@@ -617,7 +758,7 @@ F_{\xi ,l+1/2,i+1/2,j}^{E\left( 0\right) }=-\left( \overline{\lambda }%
 _{1,-1,2}^{l+1/2,j}/\lambda ^{l+1/2,j}\right) \sqrt{1-\xi _{0,j}^{2}}%
 \overline{E}_{\Vert 0,l+1/2}
 \end{array}
-\right. 
+\right.
 \end{equation}
 where $\overline{E}_{\Vert 0,l+1/2}$ is the parallel component of the Ohmic
 electric field along the magnetic field line direction normalized to the
@@ -631,11 +772,11 @@ As a consequence, there is a fundamental contradiction for the internal
 boundary at $p=0$ where $p^{2}S_{p}=0$. Indeed, for large values of $%
 \overline{E}_{\Vert 0},$ the maximum of the distribution function $%
 f_{0}^{\left( 0\right) }$ is no more at $p=0$, but may be significantly
-shifted along the axis $p_{\bot }=0$. Since in that extrem case $p^{2}S_{p}%
-\neq 0$ at $p=0$ while it is naturally enforced to be null by construction
-with the grid definition, the distribution function has a wrong shape close
-to $p=0$ and the conservative scheme is no more preserved. It is also
-important to note that the external boundary $\partial f_{0}^{\left(
+shifted along the axis $p_{\bot }=0$. Since in that extrem case $%
+p^{2}S_{p}\neq 0$ at $p=0$ while it is naturally enforced to be null by
+construction with the grid definition, the distribution function has a wrong
+shape close to $p=0$ and the conservative scheme is no more preserved. It is
+also important to note that the external boundary $\partial f_{0}^{\left(
 0\right) }/\partial \xi _{0}=0$ at $\xi _{0}=0$ is also no more consistent
 with initial bounce averaged assumptions, which represents also an important
 failure of the use of the code.
@@ -654,8 +795,9 @@ operator, this corresponds roughly to
 \end{equation}
 since $\overline{n}_{e}\simeq 1$ in normalized units, as defined in Sec.\ref
 {normtene}$.$ Consequently, flux surface averaged value of the Ohmic
-electric field $\left\langle \overline{E}\right\rangle $ is restricted to $
-0.05$, in Dreicer units.
+electric field $\left\langle \overline{E}\right\rangle $ should be
+restricted to $0.05$, in Dreicer units. A warning is indicated when this
+value is exceeded.
 
 \subsubsection{Radio-frequency waves}
 
