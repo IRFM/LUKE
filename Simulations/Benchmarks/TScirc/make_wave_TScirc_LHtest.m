@@ -68,9 +68,7 @@ method = 'spline';
 %
 [theta,ppsin,psia,ptR,ptZ,ptBR,ptBZ,ptBphi,pB0,pR0,pBT0,pBp0,prho,pTe,pne,pzTi,pzni,zZi,zmi,pZeff,Rp,Zp,ap] = equilibrium_jd(equil);
 %
-srho2 = 1/ns:2/ns:1;
-srho1 = fliplr(srho2);
-srho = [srho1,srho2];%radial position along the rays
+srho = 1:-1/ns:1/ns;%radial position along the rays
 %
 Te0 = pTe(1);
 ne0 = pne(1);
@@ -95,12 +93,7 @@ end
 %
 nb_lh = length(yD0_in_c_lh);% number of stored scenarios
 %
-ythetab_lh_pi = (ythetab_lh < pi).*(ythetab_lh + pi) + (ythetab_lh >= pi).*(ythetab_lh - pi);
-%
-sythetab_lh1 = ones(ns/2,1)*ythetab_lh;
-sythetab_lh2 = ones(ns/2,1)*ythetab_lh_pi;
-%    
-sythetab_lh = [sythetab_lh1;sythetab_lh2];
+sythetab_lh = ones(ns,1)*ythetab_lh;
 %
 syvparmin_lh = ones(ns,1)*yvparmin_lh;
 syvparmax_lh = ones(ns,1)*yvparmax_lh;
@@ -199,7 +192,7 @@ for i_lh = blist_lh,
         %
     ray.sNpar = syNpar_lh(:,i_lh)';% Ray parallel wave number [1,ns]
     ray.sNperp = syNperp_lh(:,i_lh)';% Ray perpendicular wave number [1,ns]
-    ray.sdNpar = sydNpar_lh(:,i_lh)';% Ray spectral width in Npar [1,ns] 
+    ray.sdNpar = reshape(sydNpar_lh(:,i_lh),[1,ns]);% Ray spectral width in Npar [1,ns] 
         %       if sdNpar is real -> gaussian spectrum, if sdNpar is imag. -> square spectrum (centered on sNpar)
         %
     syepol_pmz_lh = [syepol_p_lh(:,i_lh)';syepol_m_lh(:,i_lh)';syepol_z_lh(:,i_lh)'];
