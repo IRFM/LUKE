@@ -1,4 +1,4 @@
-function [xyvray,xythetab,xyfinc,xyprop,yb] = propagation_jd(tokamak,vsrays,xpsin,xdpsin,xpsin_S,method);
+function [xyvray,xyfinc,xyprop,yb] = propagation_jd(vsrays,xpsin,xdpsin,xpsin_S,ppsin,ptR,ptBP,psia,method);
 %
 % This function couples the DKE code with a ray-tracing code. Ray
 % caracteristics are evaluated at the DKE radial positions and the incidence
@@ -9,8 +9,8 @@ function [xyvray,xythetab,xyfinc,xyprop,yb] = propagation_jd(tokamak,vsrays,xpsi
 %
 %       - vsrays: list of RF rays. {1,nb_rf}. vsrays{ib} = ray [nv,ns] is an
 %           array of nv variables evaluated at ns propagation steps. It is
-%           requires that nv=1 is "s", distance along the ray, nv=2 is "R" 
-%           toroidal radius and nv=3 is "Z" vertical position.  
+%           requires that nv=1 is "ss", distance along the ray, nv=2 is "spsin" 
+%           normalized poloidal flux and nv=3 is "stheta" poloidal angle.  
 %       - xpsin: distribution radial grid [1,nx]
 %       - xdpsin: radial grid steps [1,nx]
 %       - xpsin_S: flux radial grid [1,nx_S]
@@ -19,7 +19,6 @@ function [xyvray,xythetab,xyfinc,xyprop,yb] = propagation_jd(tokamak,vsrays,xpsi
 %   OUTPUTS
 %
 %       - xyvray: RF rays characteristics evaluated at radial grid positions
-%       - xythetab: RF rays poloidal angle evaluated at radial grid positions
 %       - xyfinc: RF rays incidence factor
 %       - xyprop: RF rays propagation factor (1 if increasing psin, -1 if
 %       decreasing psin, 0 if flux-surface (FS) is not visited by the ray)
@@ -27,22 +26,12 @@ function [xyvray,xythetab,xyfinc,xyprop,yb] = propagation_jd(tokamak,vsrays,xpsi
 %
 % by J. Decker (jodecker@alum.mit.edu) and Y. Peysson (yves.peysson@cea.fr)
 %
-if nargin < 5
+if nargin < 9
     method = 'spline';%interpolation technique in psi
 end
 %
-[theta,ppsin,psia,ptR,ptZ,ptBR,ptBZ] = equilibrium_jd(tokamak);
-%
-nt = length(theta);
 nb_rf = length(vsrays);
 %
-Rp = ptR(1,1);
-Zp = ptZ(1,1);
-%
-ptr = sqrt((ptR - Rp).^2 + (ptZ - Zp).^2); %minor radius on the (psi,stheta) grid
-ptBP = sqrt(ptBR.^2 + ptBZ.^2); %poloidal magntic field on the (psi,stheta) grid
-%
-xyvray = []; %ray parameters
 xythetab = []; %ray poloidal location
 xyfinc = []; %incidence factor
 xyprop = []; %propagation factor (NaN is ray start, +1 is increasing psi, -1 is decreasing psi, 0 is non-applicable)
@@ -53,33 +42,14 @@ ibb = 0; %counting global number of ray
 % Each ray has to be treated separately, because their lengths differ.
 %
 for ib = 1:nb_rf
-    vsray = vsrays{ib};%ray characteristics
-    [nv,ns] = size(vsray);
-%
-    ss = vsray(1,:);
-    sR = vsray(2,:);
-    sZ = vsray(3,:);
-%
-% ray position in (r,theta) coordinates
-%
-    sR = sR + eps*(sR == Rp); %to avoid singularities
-    sZ = sZ + eps*(sZ == Zp); %to avoid singularities
-    sr = sqrt((sR - Rp).^2 + (sZ - Zp).^2); %minor radius
-    st = atan((sZ - Zp)./(sR - Rp)) + pi - pi*(sR > Rp).*sign(sZ - Zp); %poloidal angle [0,2*pi]
-%
-% interpolation for r at ray poloidal locations            
-%
-    pstr = interp1(theta,ptr',st,method)';%r(psi,st)
-%
-% interpolation for psi at ray position (along cst theta lines)
-%
-%    spsin = interp1(pstr,ppsin,sr,method);%psi(s)
-    for is = 1:ns 
-        spsin(is) = interp1(pstr(:,is),ppsin,sr(is),method);%psi(s)
-    end
-%    
-% positions where the ray enters and exits the plasma (at last closed FS)  
-%
+    %
+    vsray = vsrays{ib};
+    ss = vsrays(1,:);
+    spsin = vsrays(2,:);
+    ns = length(ss);
+    %    
+    % positions where the ray enters and exits the plasma (at last closed FS)  
+    %
     is0 = min(find(spsin <= 1)); %position where the ray enters the plasma 
     if isempty(is0)
         disp('Warning: one ray did not enter the plasma and was rejected')
@@ -88,15 +58,11 @@ for ib = 1:nb_rf
         ibb = ibb + 1;%starting a new ray in xy matrices
     end
     ismax = min([find(spsin > 1 & ss > ss(is0)) - 1,ns]); %position where the ray leaves the plasma (if applicable)
-%
-% throw away path outside the last closed FS   
-%
+    %
+    % throw away path outside the last closed FS   
+    %
     vsray = vsray(:,is0:ismax);
     ss = ss(is0:ismax);
-    sR = sR(is0:ismax);
-    sZ = sZ(is0:ismax);
-    sr = sr(is0:ismax);
-    st = st(is0:ismax);
     spsin = spsin(is0:ismax);
 %    
     ns = length(ss);   
@@ -150,15 +116,16 @@ for ib = 1:nb_rf
         is_f = min(find(abs(spsin(maskfs) - bpsin) == min(abs(spsin(maskfs) - bpsin)))) + is - 1;
 %
         xyvray(ipsin,ibb,:) = reshape(vsray(:,is_f),[1,1,nv]); %parameters vrays at center of FS
-        xythetab(ipsin,ibb) = st(is_f); %poloidal angle of ray at center of FS
 %
         bds = ss(islim) - ss(is);%path length of ray within the current FS
 %
 % local width of the FS: |dl| = |dpsi|/|grad psi| = |dpsin.psia|/|R.BP|
 %
-        pbBP = interp1(theta,ptBP',st(is_f),method);%BP(psi,thetab)
-        bBP = interp1(ppsin,pbBP,bpsin,method); %poloidal field along the ray at center of FS
-        bdl = abs(xdpsin(ipsin)*psia./sR(is_f)./bBP); %width of the FS at theta = thetab
+        thetab_f = vsrays(3,is_f);
+        Rb_f = interp2(theta,ppsin,ptR,thetab_f,bpsin,method);
+        BPb_f = interp2(theta,ppsin,ptBP,thetab_f,bpsin,method);
+%
+        bdl = abs(xdpsin(ipsin)*psia./Rb_f./BPb_f); %width of the FS at theta = thetab
         xyfinc(ipsin,ibb) = bds/bdl; %incidence factor
 %
 % next FS
