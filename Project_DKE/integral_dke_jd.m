@@ -29,7 +29,7 @@ end
 %
 if ndx == 0
     SX = [];
-    break
+    return
 end
 if ndx == 1
     %SX = squeeze(X);
@@ -37,7 +37,7 @@ if ndx == 1
     if size(SX,1) == 1
         SX = SX';
     end
-    break;
+    return;
 end
 Xs = shiftdim(X,d-1);
 clear X
