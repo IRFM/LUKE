@@ -225,7 +225,7 @@ else
     %sdmhutmin = diff(mhu(length(mhu) - 1:length(mhu)));
     mhu = [mhu,makegrid_dke_jd(xmhut(N),snmhut,sdmhut,1,snmhu1,sdmhu1,sdmhu1,dmhu,grid_power)];
 %
-    mhu = mhu(find(diff([-1,mhu]) > eps));
+    mhu = mhu(find(diff([-1,mhu]) > 10*eps));
     mhu_S = [-fliplr(mhu(2:length(mhu))),mhu];
 %
 end
