@@ -23,7 +23,7 @@ prec0_f,nit_f,dtn,prec0_g,nit_g,initguess,invproc,param_inv,dp_cyl,display_mode,
 format long e;
 global nfig;
 version_dke = 2.0;
-time_pause = 1;
+time_pause = 1;%Pause delay for figure display (s)
 %
 [s,dossier,machine] = comput_dke_yp;
 %
@@ -83,7 +83,7 @@ nmhu = length(mhu);
 np = length(pn);
 nr = length(xpsin);
 nr_dke = length(r_dke);%number of points for dke calculations
-display = [display_mode,ir_display];%Display parameters
+display = [display_mode,ir_display,time_pause];%Display parameters
 %
 if (Dr0 ~= 0 | Vr0 ~= 0) & nr > 1,
 	dke_mode = 0;

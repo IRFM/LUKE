@@ -51,10 +51,10 @@ snp = 10; % pgridfactor
 %Values of the radial flux grid [1,p] (If one radial value: local calculation only)
 %
 psin_S = [];
-rho_S = [0.2,0.4,0.6,0.8];
+rho_S = [0.4];
 %
 psin_display = NaN;%Approximate radial value at which results are displayed if display_mode >= 1 [1,1]
-rho_display = 0.45;
+rho_display = 0.4;
 %
 dpsin_dke = 0.02;%maximum difference between two consecutive positions used for radial derivatives
 %
@@ -63,16 +63,16 @@ norm_ref = 1;%Normalization procedure for the ohmic electric field, LH and EC qu
 %
 % WARNING: Not yet implemented. (see test_dke_yp)
 %
-epsi0 = 0.02;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
-epsia = 0.02;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
+epsi0 = 0.00;%Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
+epsia = 0.00;%Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e)
 eepsi = 0;%Exponent for Ohmic electric field
 %
 % WARNING: Not yet implemented. (see test_dke_yp)
 %
-vparmin_r = 4.0;%Lower limit of the parallel velocity dependence of the radial diffusion and pinch (vth_ref or vth)
-Dr0 = 1;%Core  radial diffusion coefficient (m^2/s)
+vparmin_r = 4;%Lower limit of the parallel velocity dependence of the radial diffusion and pinch (vth_ref or vth)
+Dr0 = 0;%Core  radial diffusion coefficient (m^2/s)
 pDr = 0;%Coefficient for the Dr radial profile
-Dr_model = 1;%Radial diffusion type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth), 
+Dr_model = 0;%Radial diffusion type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth), 
 Vr0 = 0;%Core radial pinch coefficient (m/s)
 pVr = 0;%Coefficient for the Vr radial profile
 Vr_model = 0;%Radial pinch type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth), 
@@ -81,11 +81,11 @@ nhuloss = NaN;%Magnetic ripple loss frequency, nhuloss > 1000 (or NaN if no ripp
 %
 coll_mode = 2;%Relativistic electron-electron collision operator: (0) Maxwellian, (1) High-velocity limit, (2) Linearizeded Belaiev-Budker 
 %
-bounce_mode = 0;%Bounce averaging option: (0) no bounce averaging, (1) bounce averaging full implicit method with 15 diagonals
-dke_mode = 0;%Fokker-Planck equation (0), Drift Kinetic equation (1)
+bounce_mode = 1;%Bounce averaging option: (0) no bounce averaging, (1) bounce averaging full implicit method with 15 diagonals
+dke_mode = 1;%Fokker-Planck equation (0), Drift Kinetic equation (1)
 %
 prec0_f = 1e-10;%Convergence level of the residu
-nit_f = 20;%Maximum number of iterations for f
+nit_f = 50;%Maximum number of iterations for f
 dtn = 1000;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
 prec0_g = 1e-10;%Convergence level of the residu (if NaN, iterations stop with nit_g)
 nit_g = 50;%Maximum number of iterations for g
