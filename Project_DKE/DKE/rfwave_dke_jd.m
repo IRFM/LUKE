@@ -104,7 +104,7 @@ ynparmax_lhc = [NaN];%LH wave square N// Spectrum: Upper limit [1,n_scenario_lhc
 ynpar_lhc = [NaN];%LH wave Gaussian N// Spectrum: peak [1,n_scenario_lhc]
 ydnpar_lhc = [NaN];%LH wave Gaussian N// Spectrum: width [1,n_scenario_lhc]
 %
-yomega_lhc = [4.6]*2*pi*1e9;%LH wave frequency (Not relevant when opt_lhc > 0) [1,n_scenario_lhc]
+yomega_lhc = [4.6]*2*pi*1e9;%LH wave frequency (Rad/s)(Not relevant when opt_lhc > 0) [1,n_scenario_lhc]
 %
 yPinc_lhc = [2.0]*1e6;%Central LH Incident Power (W)
 yP0_lhc_prof = [0];%Power radial profile: (0) uniform , (1) gaussian radial profile [1,n_scenario_lhc]
