@@ -418,13 +418,13 @@ xv2 = xv.*xv;
 %
 %Super momentum grid definitions for collision integrals
 %
-spn_f = [pn(1)/spfac:pn(1)/spfac:pn(1)];
+spn = [pn(1)/spfac:pn(1)/spfac:pn(1)];
 for ip=2:npn
-    spn_f = [spn_f,linspace(pn(ip-1),pn(ip),spfac)];
+	spn = [spn(1:spfac-1),linspace(pn(ip-1),pn(ip),spfac)];	
 end
-nspn = length(spn_f);
-spn = [spn_f(1)/2,(spn_f(1:nspn-1) + spn_f(2:nspn))/2];
-sdpn = diff([0, spn_f]);
+%
+spn = spn(:);%for numerical integration by trapz_dke_yp subroutine
+%
 spn2 = spn.*spn;
 spn3 = spn2.*spn;
 %
@@ -893,36 +893,36 @@ for ir = 1:nr,
 %Collision integrals
 %	
 	sfM = exp(-spn2./(1 + sgamma)/xTe_norm(ir))/2/pi/xTe_norm(ir)/sqrt(2*pi*xTe_norm(ir));
-	snormfM = 4*pi*integral_dke_jd(sdpn,spn.*spn.*sfM,2);
+	snormfM = 4*pi*trapz_dke_yp([spn,spn2.*sfM]);
 	sfM = sfM*xne_norm(ir)/snormfM;
 	for ip = 1:npn,%Loop for very accurate collision integral calculation close to p = 0 especially (crucial for numerical conservative scheme)
-		smasku = spn < pn(ip);
-		smaskl = spn > pn(ip);
-		smaskup = spn < pnp(ip);
-		smasklp = spn > pnp(ip);
-		smaskum = spn < pnm(ip);
-		smasklm = spn > pnm(ip);
+		smasku = spn <= pn(ip);
+		smaskl = spn >= pn(ip);
+		smaskup = spn <= pnp(ip);
+		smasklp = spn >= pnp(ip);
+		smaskum = spn <= pnm(ip);
+		smasklm = spn >= pnm(ip);
 %
-		F1_1(1,ip) = integral_dke_jd(sdpn,sfM.*spn.*sv.*smasku,2)';
-		F1_2(1,ip) = integral_dke_jd(sdpn,sfM.*spn.*sv.*(1 - sgamma.*ssigma./sz).*smasku,2)';
-		F2_1(1,ip) = integral_dke_jd(sdpn,sfM.*spn.*smaskl,2)';
+		F1_1(1,ip) = trapz_dke_yp([spn,sfM.*spn.*sv.*smasku])';
+		F1_2(1,ip) = trapz_dke_yp([spn,sfM.*spn.*sv.*(1 - sgamma.*ssigma./sz).*smasku])';
+		F2_1(1,ip) = trapz_dke_yp([spn,sfM.*spn.*smaskl])';
 %		
-		F1_1m(1,ip) = integral_dke_jd(sdpn,sfM.*spn.*sv.*smaskum,2)';
-		F1_2m(1,ip) = integral_dke_jd(sdpn,sfM.*spn.*sv.*(1 - sgamma.*ssigma./sz).*smaskum,2)';
-		F2_1m(1,ip) = integral_dke_jd(sdpn,sfM.*spn.*smasklm,2)';
+		F1_1m(1,ip) = trapz_dke_yp([spn,sfM.*spn.*sv.*smaskum])';
+		F1_2m(1,ip) = trapz_dke_yp([spn,sfM.*spn.*sv.*(1 - sgamma.*ssigma./sz).*smaskum])';
+		F2_1m(1,ip) = trapz_dke_yp([spn,sfM.*spn.*smasklm])';
 %		
-		F1_1p(1,ip) = integral_dke_jd(sdpn,sfM.*spn.*sv.*smaskup,2)';
-		F1_2p(1,ip) = integral_dke_jd(sdpn,sfM.*spn.*sv.*(1 - sgamma.*ssigma./sz).*smaskup,2)';
-		F2_1p(1,ip) = integral_dke_jd(sdpn,sfM.*spn.*smasklp,2)';
+		F1_1p(1,ip) = trapz_dke_yp([spn,sfM.*spn.*sv.*smaskup])';
+		F1_2p(1,ip) = trapz_dke_yp([spn,sfM.*spn.*sv.*(1 - sgamma.*ssigma./sz).*smaskup])';
+		F2_1p(1,ip) = trapz_dke_yp([spn,sfM.*spn.*smasklp])';
 %
-		B1_1(1,ip) = integral_dke_jd(sdpn,sfM.*smasku.*spn2,2)';
-		B1_2(1,ip) = integral_dke_jd(sdpn,sfM.*smasku.*spn2.*spn2,2)';
-		B1_3(1,ip) = integral_dke_jd(sdpn,sfM.*smasku.*spn2.*sJ1./sgamma,2)';
-		B1_4(1,ip) = integral_dke_jd(sdpn,sfM.*smasku.*spn2.*sJ2./sgamma,2)';
-		B1_5(1,ip) = integral_dke_jd(sdpn,sfM.*smasku.*spn2.*((sgamma - ssigma./sz)./sgamma),2)';
-		B2_1(1,ip) = integral_dke_jd(sdpn,sfM.*smaskl.*spn2./sv,2)';
-		B2_2(1,ip) = integral_dke_jd(sdpn,sfM.*smaskl.*spn2./sv./sgamma2,2)';
-		B2_3(1,ip) = integral_dke_jd(sdpn,sfM.*smaskl.*spn2.*sv,2)';  
+		B1_1(1,ip) = trapz_dke_yp([spn,sfM.*smasku.*spn2])';
+		B1_2(1,ip) = trapz_dke_yp([spn,sfM.*smasku.*spn2.*spn2])';
+		B1_3(1,ip) = trapz_dke_yp([spn,sfM.*smasku.*spn2.*sJ1./sgamma])';
+		B1_4(1,ip) = trapz_dke_yp([spn,sfM.*smasku.*spn2.*sJ2./sgamma])';
+		B1_5(1,ip) = trapz_dke_yp([spn,sfM.*smasku.*spn2.*((sgamma - ssigma./sz)./sgamma)])';
+		B2_1(1,ip) = trapz_dke_yp([spn,sfM.*smaskl.*spn2./sv])';
+		B2_2(1,ip) = trapz_dke_yp([spn,sfM.*smaskl.*spn2./sv./sgamma2])';
+		B2_3(1,ip) = trapz_dke_yp([spn,sfM.*smaskl.*spn2.*sv])';  
 	end
 %
 	if coll_mode == 1,
