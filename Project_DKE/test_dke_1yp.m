@@ -2,9 +2,9 @@ function [xJrf0_mksa_out,xJboot_e_mksa_out,xJboot_i_mksa_out,xJtot_mksa_out,...
 xPabs0_mksa_out,xPabs_tot_mksa_out,...
 xeta0_mksa_out,xepsi_mksa_out,xia_out,xft_out,...
 time_out,memoryLU_out] =...
-test_dke_1yp(snumber,...
+test_dke_1yp(tokname,snumber,...
 ap,Rp,Ip,Bt,Ncoils,Zi,mi,fi,BeLi,qmin,eq,Te0,Tea,eTe,eTe_ref,ne0,nea,ene,ene_ref,Ti0,Tia,eTi,Zeff0,Zeffa,eZeff,...
-grid_uniformity,grid_method,nmhu_S,np_S,pnmax_S,rho_S,rho_display,...
+grid_uniformity,grid_method,nmhu_S,np_S,pnmax_S,sfac,snmhu,snp,rho_S,rho_display,...
 ref_mode,norm_ref,...
 epsi0_fsav,epsia_fsav,eepsi_fsav,...
 coll_mode,bounce_mode,dke_mode,...
@@ -91,7 +91,7 @@ Rp_norm = Rp/ap;%Normalized major radius
 %
 %Grids calculation
 %
-[pn,dpn,pnm,dpnm,pnp,dpnp,pn_S,mhu,dmhu,mhum,dmhum,mhup,dmhup,mhu_S,xia,xrho,xdrho,xrhom,xdrhom,xrhop,xdrhop,xrho_S,rdke,rho_display,ir_display] = grid_dke_yp(grid_method,grid_uniformity,dke_mode,Rp_norm,rho_S,nmhu_S,np_S,pnmax_S,rho_display);%Grid calculations
+[pn,dpn,pnm,dpnm,pnp,dpnp,pn_S,mhu,dmhu,mhum,dmhum,mhup,dmhup,mhu_S,xia,xrho,xdrho,xrhom,xdrhom,xrhop,xdrhop,xrho_S,rdke,rho_display,ir_display] = grid_dke_yp(grid_method,grid_uniformity,dke_mode,Rp_norm,rho_S,nmhu_S,np_S,pnmax_S,sfac,snmhu,snp,rho_display);%Grid calculations
 %
 nmhu = length(mhu);
 np = length(pn);
@@ -334,7 +334,7 @@ xnhuloss_ref = nhuloss*xrnhuth;
 %
 %   RF wave quasilinear diffusion
 %
-waveparam = rfwave_dke_jd(xrho',betath_ref,ne_ref,xrbetath',xrnhuth',xTe_norm,xne_norm,xzni_norm,Zi',mi',Bt,Rp,ap,bounce_mode);%Look at the function for the RF wave input parameters
+waveparam = rfwave_dke_jd(tokname,xrho',betath_ref,ne_ref,xrbetath',xrnhuth',xTe_norm,xne_norm,xzni_norm,Zi',mi',Bt,Rp,ap,bounce_mode);%Look at the function for the RF wave input parameters
 nb = size(waveparam,2);
 blist_lh = find(waveparam(1,:,1)==0);
 nb_lh = length(blist_lh);
@@ -748,18 +748,18 @@ if display_mode >= 1,
     disp('-------------------------------------------------------------------------------------------------------------------');
 end
 %
-if exist([dossier,s,'dke_',int2str(ir_display),'_s',int2str(snumber),'_out.mat']) == 2,
-	delete([dossier,s,'dke_',int2str(ir_display),'_s',int2str(snumber),'_out.mat']);
+if exist(['dke_',int2str(ir_display),'_s',int2str(snumber),'_out.mat']) == 2,
+	delete(['dke_',int2str(ir_display),'_s',int2str(snumber),'_out.mat']);
 end
-eval(['save ',dossier,s,'dke_',int2str(ir_display),'_s',int2str(snumber),'_out.mat']);
-if exist([dossier,s,'dke_',int2str(ir_display),'_s',int2str(snumber),'_out.mat']) == 2,
+eval(['save ','dke_',int2str(ir_display),'_s',int2str(snumber),'_out.mat']);
+if exist(['dke_',int2str(ir_display),'_s',int2str(snumber),'_out.mat']) == 2,
 	disp('-------------------------------------------------------------------------------------------------------------------');
-	info_dke_yp(2,['The data file : ',dossier,s,'dke_',int2str(ir_display),'_s',int2str(snumber),'_out.mat has been successfully saved !']);
+	info_dke_yp(2,['The data file : dke_',int2str(ir_display),'_s',int2str(snumber),'_out.mat has been successfully saved !']);
 end
 %
 [xJrf0_mksa_out,xJboot_e_mksa_out,xJboot_i_mksa_out,xJtot_mksa_out,...
 xPabs0_mksa_out,xPabs_tot_mksa_out,...
-xeta0_mksa_out,xepsi_mksa_out,xia_out,xft_out] = display_dke_1yp([dossier,s,'dke_',int2str(ir_display),'_s',int2str(snumber),'_out.mat']);
+xeta0_mksa_out,xepsi_mksa_out,xia_out,xft_out] = display_dke_1yp(['dke_',int2str(ir_display),'_s',int2str(snumber),'_out.mat']);
 
 
 
