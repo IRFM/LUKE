@@ -51,7 +51,7 @@ xyD0_in_lh(:,~yD0_in_lh_prof) = xyD0_in_c_lh(:,~yD0_in_lh_prof);%Uniform radial 
 xyvparmin_lh_ref = xyvparmin_lh.*xyrbetath_lh;%Normalization when norm_ref = 0
 xyvparmax_lh_ref = xyvparmax_lh.*xyrbetath_lh;%Normalization when norm_ref = 0
 %
-xyD0_lh_ref_in = xyD0_in_lh.*xyrnhuth_lh.*xyrbetath_lh.*xyrbetath_lh,%Normalization when norm_ref = 0
+xyD0_lh_ref_in = xyD0_in_lh.*xyrnhuth_lh.*xyrbetath_lh.*xyrbetath_lh;%Normalization when norm_ref = 0
 %
 xynparmin_lh(:,ytest_maskvpar_lh) = 1./xyvparmax_lh_ref(:,ytest_maskvpar_lh)/betath_ref;%Conversion from vpar representation to npar one (if yvparmax_lh not a NaN)
 xynparmax_lh(:,ytest_maskvpar_lh) = 1./xyvparmin_lh_ref(:,ytest_maskvpar_lh)/betath_ref;%Conversion from vpar representation to npar one (if yvparmin_lh not a NaN)
