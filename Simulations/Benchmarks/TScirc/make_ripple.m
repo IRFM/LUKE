@@ -1,13 +1,63 @@
+%**************************************************************************************************************
 %************************************** MAGNETIC RIPPLE PARAMETERS ********************************************
-%******************************************************************************************************************
-% Create the local file RIPPLE_ripple_id.mat
+%**************************************************************************************************************
+% Create the local file RIPPLE_id_equil.mat
 % 
 %by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
 %
 clear all
-ripple_id = 'TScirc';%Set here the name (identifier) of the magnetic ripple parameters
 %
-ripple.nhuloss = NaN;%Magnetic ripple loss frequency, nhuloss > 1000 (or NaN if no ripple losses) (nhu_th) (WARNING: only valid for TORE SUPRA magentic equilibrium)
-ripple.Ncoils = 18;%Number of coils for the toroidal magnetic field
+id_equil = 'TScirc';%For loading the plasma equilibrium
+path_equil = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-eval(['save RIPPLE_',ripple_id,'.mat ripple']);
+nhuloss = NaN;%Magnetic ripple loss frequency, nhuloss > 1000 (or NaN if no ripple losses) (nhu_th) (WARNING: only valid for TORE SUPRA magentic equilibrium)
+Ncoils = 18;%Number of coils for the toroidal magnetic field
+%
+norm_ref = 1;%Normalization procedure for the magnetic ripple loss frequency: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref 
+%
+%*****************************************************************************************************************
+%
+if exist([path_equil,'EQUIL_',id_equil,'.mat']) == 0,%Magnetic equilibrium
+	info_dke_yp(2,[path_equil,'EQUIL_',id_equil,'.mat does not exist']);
+	break
+else
+	eval(['load ',path_equil,'EQUIL_',id_equil,'.mat']);
+	info_dke_yp(2,'Structure ''equil'' succesfully loaded');
+end
+%
+[theta,ppsin,psia,XR,XZ,XBR,XBZ,XBphi,pB0,pR0,pBT0,pBp0,prho,pTe,pne,pzTi,pzni,zZi,zmi,pZeff,Rp,Zp,ap,pmhu0T2,pdV_dke,pdA_dke] = equilibrium_jd(equil,NaN*xpsin,xpsin_S_dke,0,'spline',10);
+[qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;%Universal physics constants
+%
+Te_ref = pTe(1);
+ne_ref = pne(1);
+%
+Ten_ref = Te_ref/mc2;
+betath_ref = sqrt(Ten_ref);%Normalized pth_ref/mc as prescribed by Karney
+lnc_e_ref = 31.3 - 0.5*log(ne_ref) + log(Te_ref*1000);%Reference Coulomb logarithm (Sauter et al. Phys. Plasmas, 6 (1999) 2834)
+nhu_ref = qe^4*ne_ref*lnc_e_ref/(4*pi*e0^2*me^2*(clum*betath_ref)^3);%Reference electron collision frequency (s-1)
+%
+pTe_norm = pTe/Te_ref;
+pzTi_norm = pzTi/Te_ref;
+pne_norm = pne/ne_ref;
+pzni_norm = pzni/ne_ref;
+%
+pTen = pTe/mc2;
+pzTin = pzTi/mc2;
+%
+pbetath = sqrt(pTen);%Normalized pth/mc as prescribed by Karney
+plnc_e = 31.3 - 0.5*log(pne) + log(pTe*1000);%Coulomb logarithm (Sauter et al. Phys. Plasmas, 6 (1999) 2834)
+pnhu = qe^4*pne.*plnc_e./(4*pi*e0^2*me^2.*(clum*pbetath).^3);%Electron collision frequency (s-1)
+%
+if norm_ref == 0,
+    prbetath = pbetath/betath_ref;
+    prnhuth = pnhu/nhu_ref;
+else
+    prbetath = ones(size(ppsin));
+    prnhuth = ones(size(ppsin));
+end
+%
+ripple.rho = psi2rho_jd(equil,ppsin);%Arbitrary normalized minor radius
+ripple.nhuloss = nhuloss*prnhuth*nhu_ref;%Magnetic ripple loss frequency, nhuloss > 1000 (or NaN if no ripple losses) (nhu_th) (WARNING: only valid for TORE SUPRA magentic equilibrium)
+ripple.Ncoils = Ncoils;%Number of coils for the toroidal magnetic field
+%
+eval(['save RIPPLE_',id_equil,'.mat ripple']);

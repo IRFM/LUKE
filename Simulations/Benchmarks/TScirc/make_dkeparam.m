@@ -39,7 +39,6 @@ dkeparam.spfac = 20;%reduction factor for the momentum supergrid used in collisi
 dkeparam.dpsin_dke = 0.01;%maximum difference between two consecutive positions used for radial derivatives
 %
 dkeparam.ref_mode = 0;%Reference values: (0) from core Te and ne, (1) from Te and ne at the normalized radius (paramater only active for a single radial value, otherwise ref_mode = 0)
-dkeparam.norm_ref = 1;%Normalization procedure for the ohmic electric field, LH and EC quasilinear diffusion: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref 
 %
 % Collision operator
 %

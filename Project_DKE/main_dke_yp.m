@@ -35,7 +35,6 @@ snp = dkeparam.snp;
 spfac = dkeparam.spfac;
 dpsin_dke = dkeparam.dpsin_dke;
 ref_mode = dkeparam.ref_mode;
-norm_ref = dkeparam.norm_ref;
 coll_mode = dkeparam.coll_mode;
 bounce_mode = dkeparam.bounce_mode;
 dke_mode = dkeparam.dke_mode;
@@ -209,19 +208,18 @@ else
 end
 %
 if syn_mode == 1
-    info_dke_yp(2,'Synergy Mode = 1: Synergistic effects calculated');
+    info_dke_yp(2,'Synergy Mode = 1: Synergistic effects with bootstrap current calculated');
     disp('-------------------------------------------------------------------------------------------------------------------');
 end
 %
 if diary_mode == 1,
 	disp(['--------------------------------------------- Simulation parameters ----------------------------------------------']);
-	disp(['- Code version = ',num2str(version_dke)]);
 	disp(['- Simulation number = ',num2str(snumber)]);
-   disp(['- Pitch-angle and momentum grids uniformity: (0) no, (1) yes = ',num2str(grid_uniformity)]);
-   disp(['- Pitch-angle grid calculation method: (0): old method, (1) new method = ',num2str(grid_power ~= 0)]);
-   if grid_power ~= 0
+    disp(['- Pitch-angle and momentum grids uniformity: (0) no, (1) yes = ',num2str(grid_uniformity)]);
+    disp(['- Pitch-angle grid calculation method: (0): old method, (1) new method = ',num2str(grid_power ~= 0)]);
+    if grid_power ~= 0
         disp(['- Pitch-angle grid step variation power: ',num2str(grid_power)]);
-   end
+    end
 	disp(['- Effective number of pitch-angle values for the distribution function grid (half grid) nmhu = ',num2str(nmhu)]);
 	disp(['- Effective number of momentum values for the distribution function grid (half grid) np = ',num2str(np)]);
 	disp(['- Maximum value of the momentum grid (pth_ref) pnmax =  ',num2str(pn(np))]);
@@ -234,41 +232,21 @@ if diary_mode == 1,
 	disp(['- Normalized radius on the LFS midplane at which the distribution is displayed rho_display = ',num2str(xrho(ir_display))]);
 	disp(' ');	
 	disp(['- Reference values: (0) from core Te and ne, (1) from Te and ne at the normalized poloidal flux (parameter only active for a single radial value, otherwise ref_mode = 0)',num2str(ref_mode)]);
-	disp(['- Normalization procedure for the ohmic electric field, RF quasilinear diffusion: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref norm_ref = ',num2str(norm_ref)]);
 	disp(' ');
-	disp(['- Flux surface averaged core Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e) epsi0_fsav = ',num2str(epsi0_fsav)]);
-	disp(['- Flux surface averaged edge Ohmic electric field (pth_ref*nhuth_ref/e or pth*nhuth/e) epsia_fsav = ',num2str(epsia_fsav)]);
-	disp(['- Flux surface averaged Ohmic electric field profile peaking factor eepsi_fsav = ',num2str(eepsi_fsav)]);
-	disp(' ');
-	disp(['- RF waves: too be implemented']);
 	disp(' ');
 	disp(['- Electron-electron collision operator: (0) Relativistic Maxwellian background, (1) High velicity limit, (2) Linearized Belaiev Budker (3) Lorentz model (4) Non-relativistic Maxwellian background coll_mode = ',num2str(coll_mode)]);
 	disp(['- Bounce averaging option: (0) no bounce averaging, (1) bounce averaging bounce_mode = ',num2str(bounce_mode)]);
 	disp(['- Fokker-Planck equation (0), Drift Kinetic equation (1) dke_mode = ',num2str(dke_mode)]);
 	disp(' ');
-	disp(['- Lower velocity limit of the fast electron radial transport vparmin (vth_ref or vth) = ',num2str(vparmin_r)]);
-	disp(['- Fast electron radial diffusion model: (0) No dependence, (1) Parallel velocity dependence Dr_model = ',num2str(Dr_model)]);
-	disp(['- Fast electron radial pinch model: (0) No dependence, (1) Parallel velocity dependence Vr_model = ',num2str(Vr_model)]);
-	disp(['- Reference fast electron radial diffusion coefficient (m2/s) Dr0 = ',num2str(Dr0)]);
-	disp(['- Fast electron radial diffusion profile peaking factor pDr = ',num2str(pDr)]);
-	disp(['- Reference fast electron radial pinch coefficient (m2/s) Vr0 (m/s) = ',num2str(Vr0)]);
-	disp(['- Fast electron radial pinch profile peaking factor pVr = ',num2str(pVr)]);
-	disp(' ');
-	disp('- Ripple parameter to be reimplemented ');
-	disp(' ');
 	disp(['- Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes norm_mode_f = ',num2str(norm_mode_f)]);
 	disp(['- Convergence level of the residu prec0_f = ',num2str(prec0_f)]);
 	disp(['- Maximum number of iterations for f nit_f = ',num2str(nit_f)]);
-	disp(['- integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) dtn = ',num2str(dtn)]);
+	disp(['- Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) dtn = ',num2str(dtn)]);
 	disp(['- Convergence level of the residu (if NaN, iterations stop with nit_g) nit_g = ',num2str(nit_g)]);
 	disp(['- Maximum /number of iterations for g nit_g = ',num2str(nit_g)]);
 	disp(['- Initial guess for the distribution function: (0) Maxwellian, (1) Fuchs model with Tperp for LH current drive only, (2) from a file initguess_f = ',num2str(initguess_f)]);
 	disp(['- Matrix inversion method: (1) cgs iterative method, (2) bicg iterative method, (3) qmr iterative method invproc = ',num2str(invproc)]);
-	disp(['- Cylindrical momentum step (pth_ref) = ',num2str(dp_cyl)]);
-	disp(['- Display mode: (0): no, (1): partial, (2): full display_mode = ',num2str(display_mode)]);
-	disp(['- Number of level for contour plots nlevel = ',num2str(nlevel)]);
 	disp(['- Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) store_mode = ',num2str(store_mode)]);
-	disp(['- Write in a file named "diary_dke_xx" the output of the code in the MatLab command window: (0) no save, (1) save diary_mode = ',num2str(diary_mode)]);
 end
 disp('-------------------------------------------------------------------------------------------------------------------');
 %
@@ -305,28 +283,12 @@ xzTi_norm = xzTi/Te_ref;
 xne_norm = xne/ne_ref;
 xzni_norm = xzni/ne_ref;
 %
-xTen = xTe/mc2;
-xzTin = xzTi/mc2;
-%
-xbetath = sqrt(xTen);%Normalized pth/mc as prescribed by Karney
-xlnc_e = 31.3 - 0.5*log(xne) + log(xTe*1000);%Coulomb logarithm (Sauter et al. Phys. Plasmas, 6 (1999) 2834)
-xnhu = qe^4*xne.*xlnc_e./(4*pi*e0^2*me^2.*(clum*xbetath).^3);%Electron collision frequency (s-1)
-%
-XXfinit_ref = zeros(np,nmhu,nr);%Defined on the distribution function grid (half grid)
-%
-if norm_ref == 0,
-    xrbetath = xbetath/betath_ref;
-    xrnhuth = xnhu/nhu_ref;
-else
-    xrbetath = ones(1,nr);
-    xrnhuth = ones(1,nr);
-end
-%
 %***************************************** Ohmic electric field **********************************************
 %
 xepsi_ref_fsav_in = zeros(size(xrho));
+Edreicer_ref = me*clum*betath_ref*nhu_ref/qe;%MKSA Dreicer field unit (V/m)
 if ~isempty(ohm)
-	xepsi_ref_fsav_in = interp1(rho2psi_jd(equil,ohm.rho),ohm.epsi,xrho,'spline').*xrbetath.*xrnhuth;
+	xepsi_ref_fsav_in = interp1(rho2psi_jd(equil,ohm.rho),ohm.epsi,xrho,'spline')/Edreicer_ref;%Normalized to the Dreicer value
 end
 %
 %****************************** Anomalous fast electron radial diffusion and pinch ***************************
@@ -338,12 +300,11 @@ if ~isempty(transpfaste),
 	alphaD = ap*ap/psia/psia;%For radial diffusion normalization
 	alphaV = ap/psia;%For radial convection normalization
 %
-	xvparmin_r_ref = interp1(ppsin,transpfaste.vparmin_r,rho2psi_jd(tokname,transpfaste.rho),method).*xrbetath;
+	xvparmin_r_ref = interp1(ppsin,transpfaste.vparmin_r,rho2psi_jd(tokname,transpfaste.rho),method)/clum/betath_ref;%Normalized to vth_ref
 	xDr = interp1(rho2psi_jd(equil,transpfaste.rho),transpfaste.Dr,ppsin,'spline');
 	xVr = interp1(rho2psi_jd(equil,transpfaste.rho),transpfaste.Vr,ppsin,'spline');
 %
 	for ir = 1:nr,	
-
 		ivpar_r_ref_threshold = min(find(abs(Xvpar_ref) >= xvparmin_r_ref(ir)));
    		xEc_r_ref_threshold(ir) = mc2*(sqrt(1+pn_ref(ivpar_r_ref_threshold).*pn_ref(ivpar_r_ref_threshold)*betath_ref^2) - 1);%in keV
 %
@@ -372,9 +333,9 @@ XXnhuloss_ref = zeros(np,nmhu,nr);%Defined on the distribution function grid (ha
 xdeltaripple = zeros(size(xrho));
 %
 if ~isempty(ripple),
-	xnhuloss_ref = ripple.nhuloss*xrnhuth;
+	xnhuloss_ref = interp1(rho2psi_jd(equil,ripple.rho),ripple.nhuloss,xrho,'spline')/nhu_ref;%Normalized to the reference frequency
 	for ir = 1:nr,	
-		if isnan(xnhuloss_ref(ir)) == 0 & bounce_mode == 1 & strcmp(tokname,'TS') == 1,%WARNING: only valid for the TORE SUPRA tokamak with large magnetic ripple
+		if isnan(xnhuloss_ref(ir)) == 0 & bounce_mode == 1 & isempty(findstr(tokname,'TS')) == 0,%WARNING: only valid for the TORE SUPRA tokamak with large magnetic ripple
 			if ir == 1, 
 				info_dke_yp(2,'WARNING: Ripple losses calculations only valid for Tore Supra tokamak, see test_dke_1yp.m for BeLi, Ip and Ncoils values');
 				disp('-------------------------------------------------------------------------------------------------------------------');
@@ -390,12 +351,12 @@ if ~isempty(ripple),
 			Xmaskrip_ref = (Xpn_ref > xpndetrap_ref(ir)).*(abs(Xmhu) < xmhusupertrap(ir));
 			Xnhuloss_ref = Xmaskrip_ref*xnhuloss_ref(ir);
 		else
-			if isnan(xnhuloss_ref(ir)) == 0 & bounce_mode == 1 & strcmp(tokname,'TS') == 0
+			if isnan(xnhuloss_ref(ir)) == 0 & bounce_mode == 1 & isempty(findstr(tokname,'TS')) == 1
 				if ir == 1, 
 					info_dke_yp(2,'WARNING: Ripple losses calculations only valid for Tore Supra tokamak. Wrong tokamak name');
 					disp('-------------------------------------------------------------------------------------------------------------------');
 				end
-			elseif isnan(xnhuloss_ref(ir)) == 0 & bounce_mode == 0 & strcmp(tokname,'TS') == 1
+			elseif isnan(xnhuloss_ref(ir)) == 0 & bounce_mode == 0 & isempty(findstr(tokname,'TS')) == 0
 				if ir == 1, 
 					info_dke_yp(2,'WARNING: Ripple losses calculations only valid for bounce averaged calculations');
 					disp('-------------------------------------------------------------------------------------------------------------------');
@@ -424,6 +385,7 @@ yb = [];
 %
 %***************************** Initial distribution function **************************
 %
+XXfinit_ref = zeros(np,nmhu,nr);%Defined on the distribution function grid (half grid)
 for ir = 1:nr,	
 	if initguess_f == 1  & (isnan(xvparmin_lh_ref(ir_display)) == 1 | isnan(xvparmax_lh_ref(ir_display)) == 1 | nb_lh ~= 1 ),initguess_f = 0 ;end
 %

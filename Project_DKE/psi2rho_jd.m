@@ -1,11 +1,11 @@
-function [rho] = psi2rho_jd(tokamak,psin,method)
+function [rho] = psi2rho_jd(equil,psin,method)
 %
 % gives the normalized rho grid corresponding to the input normalized psi
 % grid.
 %
 %   INPUTS:
 %
-%       - tokamak: identification name of the scenario
+%       - equil: Magnetic equilibrium structure
 %       - psin: poloidal flux [1:nr]
 %       - method: interpolation method (default: linear)
 %
