@@ -160,22 +160,25 @@ elseif strcmp(name,'TS') == 1,
 %
 %Fast electron bremsstrahlung tomography (if exists)
 %
-	[alpha_hxr,beta_hxr,R_hxr,Z_hxr,EG_hxr,ef_hxr,tf_hxr,ea_hxr,ta_hxr,ec_hxr,tc_hxr,ed_hxr,td_hxr,kdiag_hxr] = bremTSconvert_dke_yp(1,10,1999);%Specific function for Tore Supra
+	[alpha_hxr,beta_hxr,R_hxr,Z_hxr,EG_hxr,kd_hxr,phf_hxr,res_hxr,ef_hxr,tf_hxr,ea_hxr,ta_hxr,ec_hxr,tc_hxr,ed_hxr,td_hxr,kdiag_hxr] = bremTSconvert_dke_yp(1,10,1999);%Specific function for Tore Supra
 %
 	HXR{1,1} = alpha_hxr;
 	HXR{1,2} = beta_hxr;
 	HXR{1,3} = R_hxr;
 	HXR{1,4} = Z_hxr;
 	HXR{1,5} = EG_hxr;
-	HXR{1,6} = ef_hxr;
-	HXR{1,7} = tf_hxr;
-	HXR{1,8} = ea_hxr;
-	HXR{1,9} = ta_hxr;
-	HXR{1,10} = ec_hxr;
-	HXR{1,11} = tc_hxr;
-	HXR{1,12} = ed_hxr;
-	HXR{1,13} = td_hxr;
-	HXR{1,14} = kdiag_hxr;
+	HXR{1,6} = kd_hxr;
+	HXR{1,7} = phf_hxr;
+	HXR{1,8} = res_hxr;
+	HXR{1,9} = ef_hxr;
+	HXR{1,10} = tf_hxr;
+	HXR{1,11} = ea_hxr;
+	HXR{1,12} = ta_hxr;
+	HXR{1,13} = ec_hxr;
+	HXR{1,14} = tc_hxr;
+	HXR{1,15} = ed_hxr;
+	HXR{1,16} = td_hxr;
+	HXR{1,17} = kdiag_hxr;
 % HELENA input file
 	file_helena = '';
 elseif strcmp(name,'RTP') == 1,

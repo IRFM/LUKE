@@ -1,4 +1,4 @@
-function [alpha_hxr,beta_hxr,R_hxr,Z_hxr,EG_hxr,ef_hxr,tf_hxr,ea_hxr,ta_hxr,ec_hxr,tc_hxr,ed_hxr,td_hxr,kdiag_hxr] = bremTSconvert_dke_yp(day,month,year);
+function [alpha_hxr,beta_hxr,R_hxr,Z_hxr,EG_hxr,kd_hxr,phf_hxr,res_hxr,ef_hxr,tf_hxr,ea_hxr,ta_hxr,ec_hxr,tc_hxr,ed_hxr,td_hxr,kdiag_hxr] = bremTSconvert_dke_yp(day,month,year);
 %
 % Convert old coodinate system used for DPSX (in partokyp.m for displaytt.m) in the new one used by DKE. Only useful for Tore Supra HXR diagnostic
 % For other tokamak, use directly the correct system of coordinate
@@ -33,9 +33,15 @@ beta_hxr = pi/2 - mv*pi/180;%vertical angle (with respect to Z) [0...pi]
 %
 EG_hxr = EG*1e-6;%geometrical extend (m^2) [1,nchord]
 %
+kd_hxr = kd;% reference energies for the photofraction [m,p]
+%
+phf_hxr = phf;% photofraction determined using the "MCDET.f" Monte-carlo hard x-ray absorption code at energies kd [m,p]
+%
+res_hxr = res;%fit parameters of the energy resolution of the detectors [m,2]
+%
 ef_hxr = ef;% thickness of the vacuum window (mm) [1,m]
 %
-tf_hxr = tf;%type of material for the vacuum window (Al ou Be) [1,m]
+tf_hxr = tf;% type of material for the vacuum window (Al ou Be) [1,m]
 %
 ea_hxr = ea;%thickness of the absorber (mm) [1,m]
 %
