@@ -7,7 +7,7 @@ Projected on the numerical distribution function grid, and taking into
 account of the internal and external boundaries, the $3-D$ electron
 Fokker-Planck equation may be expressed as 
 \begin{eqnarray}
-&&\frac{\widetilde{q}_{l+1/2}}{B_{0,l+1/2}}p_{i+1/2}^{2}\frac{%
+&&\frac{\widetilde{q}_{l+1/2}}{B_{0,l+1/2}}p_{i+1/2}^{2}\frac{
 f_{0,l+1/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right)
 (k+1)}-f_{0,l+1/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right) (k)}}{\Delta t} 
 \nonumber \\
@@ -23,15 +23,21 @@ f_{0,l+1/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right)
 &&+\frac{\widetilde{q}_{l+1/2}}{B_{0,l+1/2}}p_{i+1/2}^{2}C^{\left( 0\right)
 }\left( f_{M,l+1/2,i+1/2,j^{\prime }+1/2},\frac{3}{2}\xi
 _{0,j+1/2}f_{0,l+1/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right) (m=1)\left(
-k\right) }\right)  \nonumber \\
-&=&0  \label{FPeq}
+k\right) }\right)   \nonumber \\
+&=&+\frac{\widetilde{q}_{l+1/2}}{B_{0,l+1/2}}p_{i+1/2}^{2}\left( \mathcal{S}%
+_{R,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }-\mathcal{S}%
+_{th,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }\right)   \label{FPeq}
 \end{eqnarray}
 where $C^{\left( 0\right) }$ is the first order Legendre electron-electron
-self-collision term that ensures momentum conservation, as discussed in Sec. 
-\ref{Collisions}, a contribution that introduces a weak non-linear
-dependence. Here, the Fokker-Planck equation (\ref{FPeq}) is evaluated on
-the reduced pitch-angle grid which is described by the index number $%
-j^{\prime }$.
+self-collision term that ensures momentum conservation, as discussed in Sec.%
+\ref{Collisions} , a contribution that introduces a weak non-linear
+dependence, $\mathcal{S}_{R,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }$ is the
+runaway avalanche source term as introduced in Sec.\ref{moments} and $%
+\mathcal{S}_{th,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }$ is the source of
+thermal that must be removed from the bulk since they have been knock-on to
+much higher energies. Here, the Fokker-Planck equation (\ref{FPeq}) is
+evaluated on the reduced pitch-angle grid which is described by the index
+number $j^{\prime }$.
 
 Upwind differencing corresponding to the fully implicit time scheme is used,
 since it is usually numerically stable for arbitrary values of $\Delta t.$
@@ -55,13 +61,14 @@ phase space has the following symbolic form
 \begin{equation}
 \left( \frac{\widehat{\Bbb{A}}}{\Delta t}+\widehat{\Bbb{B}}\right)
 X^{(k+1)}=\left( \frac{\widehat{\Bbb{A}}}{\Delta t}\right) X^{(k)}+\widehat{C%
-}\left( X_{M},X^{(k)}\right)  \label{Matrixeq}
+}\left( X_{M},X^{(k)}\right) +\widehat{S}_{R}^{(k)}  \label{Matrixeq}
 \end{equation}
 where $\widehat{\Bbb{A}}$ is a single diagonal matrix associated to time
 differencing, $\widehat{\Bbb{B}}$ corresponds to the flux divergence and $%
-\widehat{C}$ is the first order Legendre correction. Here $X^{(k)}$ is a
-vector whose components are the discrete values of the distribution function 
-$f_{0}^{\left( 0\right) }$ at time step $\left( k\right) ,$ organized as
+\widehat{C}$ is the first order Legendre correction, and $\widehat{S}_{R}$
+is the runaway avalanche source term. Here $X^{(k)}$ is a vector whose
+components are the discrete values of the distribution function $%
+f_{0}^{\left( 0\right) }$ at time step $\left( k\right) ,$ organized as
 follows 
 \begin{equation}
 X^{(k)}\rightarrow \left\{ 
@@ -99,7 +106,7 @@ predominate over other physical processes at each plasma radius.
 %TCIMACRO{
 %\TeXButton{Fig_fpmatrix}{\fig{figures/fpmatrix.eps}{Qualitative shape of matrix $\widehat{{Bbb}{B}}$ for the Fokker-Planck equation}{fpmatrix}{10cm}}}
 %BeginExpansion
-\fig{figures/fpmatrix.eps}{Qualitative shape of matrix $\widehat{\Bbb{B}}$ for the Fokker-Planck equation}{fpmatrix}{5cm}%
+\fig{figures/fpmatrix.eps}{Qualitative shape of matrix $\widehat{{Bbb}{B}}$ for the Fokker-Planck equation}{fpmatrix}{10cm}%
 %EndExpansion
 
 The introduction of the radial dynamics adds several extra off-diagonals,
@@ -145,7 +152,8 @@ matrix form of the Fokker-Planck equation
 \begin{equation}
 \left( \frac{\widehat{\Bbb{A}}}{\Delta t}+\frac{\widehat{\Bbb{B}}}{2}\right)
 X^{(k+1)}=\left( \frac{\widehat{\Bbb{A}}}{\Delta t}-\frac{\widehat{\Bbb{B}}}{%
-2}\right) X^{(k)}+\widehat{C}\left( X_{M},X^{(k)}\right)
+2}\right) X^{(k)}+\widehat{C}\left( X_{M},X^{(k)}\right) +\widehat{S}%
+_{R}^{(k)}
 \end{equation}
 by just replacing
 

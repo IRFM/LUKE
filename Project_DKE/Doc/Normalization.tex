@@ -49,6 +49,7 @@ n_{e}^{\dag }=\max \left( n_{e}\left( \psi \right) ,n_{ss^{\prime }}\left(
 \end{equation}
 for $0\leq \psi \leq \psi _{\max }.$
 
+\label{Zeffdef}
 In principle, ion densities $n_{ss^{\prime }}\left( \psi \right) $ are
 obtained from a particle transport code transport code. However, when the
 plasma is made of two types of ions which are fully ionized (low $Z$ limit),
@@ -108,7 +109,7 @@ n_{ss^{\prime }}\left( \psi \right) =\sum_{m}n_{ss^{\prime }}^{m}\left( \psi
 \end{equation}
 or 
 \begin{equation}
-\overline{n}_{ss^{\prime }}\left( \psi \right) =\sum_{m}\overline{n}%
+\overline{n}_{ss^{\prime }}\left( \psi \right) =\sum_{m}\overline{n}
 _{ss^{\prime }}^{m}\left( \psi \right)
 \end{equation}
 where the masses of isotope $m$ of ion species $ss^{\prime }$ are $%
@@ -130,8 +131,9 @@ _{e}^{\dag }$ according to the relation
 \end{equation}
 where 
 \begin{equation}
-\nu _{e}^{\dag }=\frac{q_{e}^{4}n_{e}^{\dag }\ln \Lambda ^{\dag }}{4\pi
-\varepsilon _{0}m_{e}^{2}c^{3}\beta _{th}^{\dag 3}}
+\nu _{e}^{\dag }=\frac{q_{e}^{4}n_{e}^{\dag }\ln \Lambda ^{\dag }}{4\pi %
+\varepsilon _{0}^{2}m_{e}^{2}c^{3}\beta _{th}^{\dag 3}}=\frac{cr_{e}^{2}}{%
+\beta _{th}^{\dag 3}}n_{e}^{\dag }\ln \Lambda ^{\dag }  \label{normcollfreq}
 \end{equation}
 
 Here $\varepsilon _{0}=8.854187818\times 10^{-12}$ $\left( F/m\right) $ is
@@ -148,9 +150,15 @@ is the usual reference Coulomb logarithm, with
 ^{\dag }}
 \end{equation}
 where $m_{e}c^{2}=510.99905$ $\left( keV\right) $is the electron rest mass
-energy.
+energy. In expression \ref{normcollfreq}, the classical electron radius $
+r_{e}$ has been introduced, which is given by
+\begin{equation}
+r_{e}=\frac{q_{e}^{4}}{4\pi \varepsilon _{0}m_{e}c^{2}}
+\end{equation}
 
-\subsection{Momentum, velocity, and kinetic energy}\label{momentnormdef}
+\subsection{Momentum, velocity, and kinetic energy}
+
+\label{momentnormdef}
 
 \label{NormMomentum}In the calculations, the momentum $p$ in relativistic
 units $\left( m_{e}c\right) $ is normalized to the thermal reference value $%
@@ -298,12 +306,12 @@ The first order drift kinetic equation requires to calculate $\widetilde{f}%
 \Omega _{e0}}\frac{\partial f_{0}^{\left( 0\right) }}{\partial \psi }
 \end{equation}
 where by definition $B_{T0}\left( \psi \right) =\left| I_{0}\left( \psi
-\right) \right| /R_{0}$ and $\Omega _{e0}=-\frac{\left| e\right| B_{0}}{%
+\right) \right| /R_{0}$ and $\Omega _{e0}=-\frac{\left| e\right| B_{0}}{
 \gamma m_{e}}$ is the electron Larmor frequency, all quantities being
 determined at the poloidal location where the magnetic field B is minimum,
 as discussed in Sec. \ref{dkefluxconsmomentum}. Since 
 \begin{equation}
-\overline{v}v_{th}^{\dag }/c=\overline{p}\beta _{th}^{\dag }/\gamma 
+\overline{v}v_{th}^{\dag }/c=\overline{p}\beta _{th}^{\dag }/\gamma
 \end{equation}
 one obtains in normalized units 
 \begin{eqnarray}
@@ -352,7 +360,7 @@ where the safety factor $q$ is approximated by its cylindrical expression $q=%
 From the conservative form of the Fokker-Planck equation in momentum space 
 \begin{equation}
 \frac{\partial f_{0}^{\left( 0\right) }}{\partial t}\propto \frac{\partial }{%
-\partial p}\left( S_{\mathbf{p}}^{\left( 0\right) }\right) 
+\partial p}\left( S_{\mathbf{p}}^{\left( 0\right) }\right)
 \end{equation}
 where 
 \begin{equation}
@@ -368,23 +376,23 @@ Introducing normalized coordinates, it turns out that
 \overline{p}}\left( -\frac{\Bbb{D}_{\mathbf{p}}^{\left( 0\right) }}{%
 p_{th}^{\dag }}\frac{\partial \overline{f}_{0}^{\left( 0\right) }}{\partial 
 \overline{p}}+\mathbf{F}_{\mathbf{p}}^{\left( 0\right) }\overline{f}%
-_{0}^{\left( 0\right) }\right)   \nonumber \\
+_{0}^{\left( 0\right) }\right)  \nonumber \\
 &=&\frac{\partial }{\partial \overline{p}}\left( -\frac{\Bbb{D}_{\mathbf{p}%
 }^{\left( 0\right) }}{\nu _{e}^{\dag }p_{th}^{\dag 2}}\frac{\partial 
 \overline{f}_{0}^{\left( 0\right) }}{\partial \overline{p}}+\frac{\mathbf{F}%
 _{\mathbf{p}}^{\left( 0\right) }}{\nu _{e}^{\dag }p_{th}^{\dag }}\overline{f}%
-_{0}^{\left( 0\right) }\right)   \nonumber \\
+_{0}^{\left( 0\right) }\right)  \nonumber \\
 &=&\frac{\partial }{\partial \overline{p}}\left( -\overline{\Bbb{D}}_{%
 \mathbf{p}}^{\left( 0\right) }\frac{\partial \overline{f}_{0}^{\left(
 0\right) }}{\partial \overline{p}}+\overline{\mathbf{F}}_{\mathbf{p}
-}^{\left( 0\right) }\overline{f}_{0}^{\left( 0\right) }\right) 
+}^{\left( 0\right) }\overline{f}_{0}^{\left( 0\right) }\right)
 \end{eqnarray}
 where normalized diffusive and convective coefficients are 
 \begin{eqnarray}
 \overline{\Bbb{D}}_{\mathbf{p}}^{\left( 0\right) } &=&\Bbb{D}_{\mathbf{p}%
 }^{\left( 0\right) }/\Bbb{D}_{\mathbf{p}}^{\dag } \\
-\overline{\mathbf{F}}_{\mathbf{p}}^{\left( 0\right) } &=&\mathbf{F}_{\mathbf{
-p}}^{\left( 0\right) }/\mathbf{F}_{\mathbf{p}}^{\dag }
+\overline{\mathbf{F}}_{\mathbf{p}}^{\left( 0\right) } &=&\mathbf{F}_{\mathbf{%
+\ p}}^{\left( 0\right) }/\mathbf{F}_{\mathbf{p}}^{\dag }
 \end{eqnarray}
 with 
 \begin{eqnarray}
@@ -409,7 +417,7 @@ space
 \begin{equation}
 \frac{\partial f_{0}^{\left( 0\right) }}{\partial t}\propto \frac{\partial }{%
 \partial \psi }\left( \left| \nabla \psi \right| _{0}S_{\psi }^{\left(
-0\right) }\right) 
+0\right) }\right)
 \end{equation}
 where
 
@@ -424,19 +432,19 @@ Introducing normalized coordinates, it turns out that
 \frac{\partial \overline{f}_{0}^{\left( 0\right) }}{\partial \overline{t}}
 &\propto &\frac{1}{\nu _{e}^{\dag }\psi _{a}}\frac{\partial }{\partial 
 \overline{\psi }}\left( \left| \nabla \psi \right| _{0}S_{\psi }^{\left(
-0\right) }\right)   \nonumber \\
+0\right) }\right)  \nonumber \\
 &=&\frac{1}{\nu _{e}^{\dag }\psi _{a}}\frac{\partial }{\partial \overline{
 \psi }}\left( \frac{\Bbb{D}_{\psi }^{\left( 0\right) }}{\psi _{a}}\left|
 \nabla \psi \right| _{0}^{2}\frac{\partial \overline{f}_{0}^{\left( 0\right)
 }}{\partial \overline{\psi }}+\left| \nabla \psi \right| _{0}\mathbf{F}%
-_{\psi }^{\left( 0\right) }\overline{f}_{0}^{\left( 0\right) }\right)  
+_{\psi }^{\left( 0\right) }\overline{f}_{0}^{\left( 0\right) }\right) 
 \nonumber \\
 &=&\frac{\partial }{\partial \overline{\psi }}\left( \frac{\Bbb{D}_{\psi
 }^{\left( 0\right) }}{\nu _{e}^{\dag }\psi _{a}^{2}}\left| \nabla \psi
 \right| _{0}^{2}\frac{\partial \overline{f}_{0}^{\left( 0\right) }}{\partial 
 \overline{\psi }}+\left| \nabla \psi \right| _{0}\frac{\mathbf{F}_{\psi
 }^{\left( 0\right) }}{\nu _{e}^{\dag }\psi _{a}}\overline{f}_{0}^{\left(
-0\right) }\right) 
+0\right) }\right)
 \end{eqnarray}
 with 
 \begin{eqnarray}
@@ -463,7 +471,7 @@ the reference diffusion and convection, where $a_{p}$ is the plasma minor
 radius as defined in Sec.\ref{coordinatesystemsection}. The relation is
 
 \begin{eqnarray}
-\overline{\Bbb{D}}_{\psi }^{\left( 0\right) } &=&\alpha _{\Bbb{D}}\Bbb{D}%
+\overline{\Bbb{D}}_{\psi }^{\left( 0\right) } &=&\alpha _{\Bbb{D}}\Bbb{D}
 _{\psi }^{\left( 0\right) }/\Bbb{D}_{\psi }^{\dag *} \\
 \overline{\mathbf{F}}_{\psi }^{\left( 0\right) } &=&\alpha _{\mathbf{F}}%
 \mathbf{F}_{\psi }^{\left( 0\right) }/\mathbf{F}_{\psi }^{\dag *}
@@ -492,13 +500,13 @@ _{0}^{\left( 0\right) }}{p_{th}^{\dag }\partial \overline{p}}+\overline{%
 &=&-\overline{\Bbb{D}}_{\mathbf{p}}^{\left( 0\right) }\left( \frac{\nu
 _{e}^{\dag }n_{e}^{\dag }}{p_{th}^{\dag 2}}\right) \frac{\partial \overline{f%
 }_{0}^{\left( 0\right) }}{\partial \overline{p}}+\overline{\mathbf{F}}_{%
-\mathbf{p}}^{\left( 0\right) }\left( \frac{\nu _{e}^{\dag }n_{e}^{\dag }}{%
+\mathbf{p}}^{\left( 0\right) }\left( \frac{\nu _{e}^{\dag }n_{e}^{\dag }}{
 p_{th}^{\dag 2}}\right) \overline{f}_{0}^{\left( 0\right) }  \nonumber \\
 &=&\left( \frac{\nu _{e}^{\dag }n_{e}^{\dag }}{p_{th}^{\dag 2}}\right)
 \left( -\overline{\Bbb{D}}_{\mathbf{p}}^{\left( 0\right) }\frac{\partial 
 \overline{f}_{0}^{\left( 0\right) }}{\partial \overline{p}}+\overline{%
 \mathbf{F}}_{\mathbf{p}}^{\left( 0\right) }\overline{f}_{0}^{\left( 0\right)
-}\right) 
+}\right)
 \end{eqnarray}
 and 
 \begin{equation}
@@ -514,7 +522,7 @@ and with these definitions,
 \overline{S}_{\mathbf{p}}^{\left( 0\right) }\propto -\overline{\Bbb{D}}_{%
 \mathbf{p}}^{\left( 0\right) }\frac{\partial \overline{f}_{0}^{\left(
 0\right) }}{\partial \overline{p}}+\overline{\mathbf{F}}_{\mathbf{p}%
-}^{\left( 0\right) }\overline{f}_{0}^{\left( 0\right) }
+}^{\left( 0\right) }\overline{f}_{0}^{\left( 0\right) } 
 \]
 
 A similar procedure is applied for dynamics in configuration space, 
@@ -539,7 +547,7 @@ _{0}^{\left( 0\right) }  \nonumber \\
 _{a}\right) \left( -\overline{\Bbb{D}}_{\psi \psi }^{\left( 0\right) }\left|
 \nabla \psi \right| _{0}\frac{\partial \overline{f}_{0}^{\left( 0\right) }}{%
 \partial \overline{\psi }}+\mathbf{F}_{\psi }^{\left( 0\right) }\overline{f}
-_{0}^{\left( 0\right) }\right) 
+_{0}^{\left( 0\right) }\right)
 \end{eqnarray}
 and 
 \begin{equation}
@@ -609,9 +617,9 @@ P^{\dag }=\frac{\nu _{e}^{\dag }p_{th}^{\dag 3}n_{e}^{\dag }}{m_{e}}
 
 With this definition 
 \begin{equation}
-\overline{P}^{\left( 0\right) }\propto 2\pi \int_{-1}^{+1}d\xi _{0}\int_{0}^{%
-\infty }\frac{\overline{p}^{3}}{\gamma }\overline{S}_{\mathbf{p}}^{\left(
-0\right) }d\overline{p}
+\overline{P}^{\left( 0\right) }\propto 2\pi \int_{-1}^{+1}d\xi
+_{0}\int_{0}^{\infty }\frac{\overline{p}^{3}}{\gamma }\overline{S}_{\mathbf{p%
+}}^{\left( 0\right) }d\overline{p}
 \end{equation}
 
 \subsection{Electron runaway rate}

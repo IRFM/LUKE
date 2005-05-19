@@ -14,11 +14,12 @@ equation is the following expression
 R_{0}\left( \psi \right) \widetilde{q}\left( \psi \right) \frac{B_{P0}\left(
 \psi \right) }{B_{0}\left( \psi \right) }\lambda \left( \psi ,\xi
 _{0}\right) \mathbf{S}_{\psi }^{\left( 0\right) }\right)   \nonumber \\
-&=&0
+&=&\mathcal{S}_{R}^{\left( 0\right) }
 \end{eqnarray}
-
-In order to avoid numerical singularities at $p=0$, it is convenient to
-multiply all the terms by the partial Jacobian 
+where $S_{R}^{\left( 0\right) }$ is the bounce-averaged avalanche source
+term that comes into play in runaway regime. In order to avoid numerical
+singularities at $p=0$, it is convenient to multiply all the terms by the
+partial Jacobian 
 \begin{equation}
 J_{\psi }J_{p}=\frac{\widetilde{q}\left( \psi \right) }{B_{0}\left( \psi
 \right) }p^{2}
@@ -39,13 +40,14 @@ _{\xi }^{\left( 0\right) }\right)   \nonumber \\
 \right) \frac{B_{P0}\left( \psi \right) }{B_{0}\left( \psi \right) }\lambda
 \left( \psi ,\xi _{0}\right) \mathbf{S}_{\psi }^{\left( 0\right) }\right)  
 \nonumber \\
-&=&0
+&=&\frac{\widetilde{q}\left( \psi \right) }{B_{0}\left( \psi \right) }%
+p_{R}^{2}\mathcal{S}_{R}^{\left( 0\right) }
 \end{eqnarray}
 
 Using the grid definition defined in Sec.\ref{Griddef} and applying the
 backward time discretization, which corresponds to the fully implicit time
-differencing as discussed in Sec. \ref{fpmatrixsection}, the discrete form of the
-Fokker-planck equation may be expressed as
+differencing as discussed in Sec. \ref{fpmatrixsection}, the discrete form
+of the Fokker-planck equation may be expressed as
 
 \begin{eqnarray}
 &&\frac{\widetilde{q}_{l+1/2}}{B_{0,l+1/2}}p_{i+1/2}^{2}\frac{%
@@ -63,7 +65,8 @@ _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
 &&\left. \frac{\partial }{\partial \psi }\left( R_{0}\widetilde{q}\frac{%
 B_{P0}}{B_{0}}\lambda \mathbf{S}_{\psi }^{\left( 0\right) }\right) \right|
 _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
-&=&0
+&=&\frac{\widetilde{q}_{l+1/2}}{B_{0,l+1/2}}p_{i+1/2}^{2}\mathcal{S}%
+_{R,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }
 \end{eqnarray}
 where $\widetilde{q}_{l+1/2}=\widetilde{q}\left( \psi _{l+1/2}\right) ,$ $%
 B_{0,l+1/2}=B_{0}\left( \psi _{l+1/2}\right) $ and $\lambda
@@ -78,13 +81,14 @@ f_{0,l+1/2,i+1/2,j+1/2}^{\left( 0\right)
 \nonumber \\
 &&+\left. \frac{\widetilde{q}}{B_{0}}p^{2}\nabla _{\psi }\cdot \mathbf{S}%
 _{\psi }^{\left( 0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
-&=&0
+&=&\frac{\widetilde{q}_{l+1/2}}{B_{0,l+1/2}}p_{i+1/2}^{2}\mathcal{S}%
+_{R,l+1/2,i+1/2,j+1/2}^{\left( 0\right) }
 \end{eqnarray}
 where 
 \begin{eqnarray}
 \left. \frac{\widetilde{q}}{B_{0}}p^{2}\nabla _{\mathbf{p}}\cdot \mathbf{S}_{%
 \mathbf{p}}^{\left( 0\right) }\right| _{l+1/2,i+1/2,j+1/2}^{(k+1)} &=&\frac{%
-\widetilde{q}_{l+1/2}}{B_{0,l+1/2}}\left. \frac{\partial \left( p^{2}\mathbf{%
+\widetilde{q}_{l+1/2}}{B_{0,l+1/2}}\left. \frac{\partial \left( p^{2}\mathbf{
 S}_{p}^{\left( 0\right) }\right) }{\partial p}\right|
 _{l+1/2,i+1/2,j+1/2}^{(k+1)}  \nonumber \\
 &&-\frac{\widetilde{q}_{l+1/2}}{B_{0,l+1/2}}\frac{p_{i+1/2}}{\lambda
@@ -113,12 +117,12 @@ conservative form as for the Fokker-Planck one as shwon in Sec. \ref
 _{p}^{\left( 0\right) }\right) -\frac{1}{\lambda \left( \psi ,\xi
 _{0}\right) }\frac{1}{p}\frac{\partial }{\partial \xi _{0}}\left( \sqrt{%
 1-\xi _{0}^{2}}\lambda \left( \psi ,\xi _{0}\right) \mathbf{S}_{\xi
-}^{\left( 0\right) }\right)   \nonumber \\
+}^{\left( 0\right) }\right)  \nonumber \\
 &=&\frac{1}{p^{2}}\frac{\partial }{\partial p}\left( p^{2}\widetilde{\mathbf{%
 S}}_{p}^{\left( 0\right) }\right) -\frac{1}{\lambda \left( \psi ,\xi
 _{0}\right) }\frac{1}{p}\frac{\partial }{\partial \xi _{0}}\left( \sqrt{%
 1-\xi _{0}^{2}}\lambda \left( \psi ,\xi _{0}\right) \widetilde{\mathbf{S}}%
-_{\xi }^{\left( 0\right) }\right) 
+_{\xi }^{\left( 0\right) }\right)
 \end{eqnarray}
 where in the left-hand side, the fluxes concern the function $g^{\left(
 0\right) }\left( \psi ,p,\xi _{0}\right) $ which is to be determined,
@@ -131,12 +135,12 @@ Jacobian $J_{\psi }J_{p}$ defined in Sec. \ref{fluxcons}, one obtains
 &&\frac{\partial }{\partial p}\left( p^{2}\mathbf{S}_{p}^{\left( 0\right)
 }\right) -\frac{p}{\lambda \left( \psi ,\xi _{0}\right) }\frac{\partial }{%
 \partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}\lambda \left( \psi ,\xi
-_{0}\right) \mathbf{S}_{\xi }^{\left( 0\right) }\right)   \nonumber \\
+_{0}\right) \mathbf{S}_{\xi }^{\left( 0\right) }\right)  \nonumber \\
 &=&\frac{\partial }{\partial p}\left( p^{2}\widetilde{\mathbf{S}}%
 _{p}^{\left( 0\right) }\right) -\frac{p}{\lambda \left( \psi ,\xi
 _{0}\right) }\frac{\partial }{\partial \xi _{0}}\left( \sqrt{1-\xi _{0}^{2}}%
 \lambda \left( \psi ,\xi _{0}\right) \widetilde{\mathbf{S}}_{\xi }^{\left(
-0\right) }\right) 
+0\right) }\right)
 \end{eqnarray}
 and the discrete form of the first order drift kinetic equation is then
 simply

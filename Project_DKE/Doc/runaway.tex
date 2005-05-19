@@ -1,23 +1,25 @@
 
-The runaway loss rate $\overline{\Gamma }_{R}$ is also an important physical
-quantity that can be determined by the code. It becomes significant when the
-Ohmic electric field is large. For the benchmarking procedure, the Ohmic
-electric field is then set to $\overline{E}=0.08,$ which corresponds to a
-standard value for such studies. Usually, runaway losses become significant
-above $\overline{E}=0.03.$ All other parameters are kept constant as
-compared to the benchmarking procedure done for the Ohmic conductivity in
-Sec. \ref{conducsection}. In the tokamak parameter M-file
-``ptok\_dke\_1yp.m'', the corresponding section for these simulations is named
-``CQL3D\_RUNAWAY'', since it corresponds to conditions that have been used
-for code comparison with the well know CQL3D program (\cite{har93c1_IAEA}).
-By definition, the code is no more conservative since runaway electrons are
-leaving the domain of integration. Consequently, the particle losses must be
-compensated in order to keep constant the total number of particle. Consequently, the same
-the Maxwellian solution is enforced at $i=1/2$ while
-the density is normalized at each iteration. It has been cross-checked that
-the compensation of losses has no influence on the final solution and
-therefore the runaway rate. Indeed, results normalized to the final
-numerical electron density found by the code, or normalized at each
+\paragraph{Primary generation}
+
+The loss rate $\overline{\Gamma }_{R}$ by primary runaway generation is also
+an important physical quantity that can be determined by the code. It
+becomes significant when the Ohmic electric field is large. For the
+benchmarking procedure, the Ohmic electric field is then set to $\overline{E}%
+=0.08,$ which corresponds to a standard value for such studies. Usually,
+runaway losses become significant above $\overline{E}=0.03.$ All other
+parameters are kept constant as compared to the benchmarking procedure done
+for the Ohmic conductivity in Sec. \ref{conducsection}. In the tokamak
+parameter M-file ``ptok\_dke\_1yp.m'', the corresponding section for these
+simulations is named ``CQL3D\_RUNAWAY'', since it corresponds to conditions
+that have been used for code comparison with the well know CQL3D program (%
+\cite{har93c1_IAEA}). By definition, the code is no more conservative since
+runaway electrons are leaving the domain of integration. Consequently, the
+particle losses must be compensated in order to keep constant the total
+number of particle. Consequently, the same Maxwellian solution is enforced
+at $i=1/2$ while the density is normalized at each iteration. It has been
+cross-checked that the compensation of losses has no influence on the final
+solution and therefore the runaway rate. Indeed, results normalized to the
+final numerical electron density found by the code, or normalized at each
 time step are similar.
 
 In a first step, a local analysis is performed, without considering bounce
@@ -46,10 +48,38 @@ The agreement between numerical results obtained with the drift kinetic code
 and the code written by Kulsrud and coauthors is reasonably good \cite{kul73}%
 , a modest systematic difference of $-15\%$ being observed for all $Z_{eff}$
 values. For $Z_{eff}=1$, the agreement is slightly better with the model of
-Kruskal-Bernstein \cite{kul73}, and the relative difference is now positive
+Kruskal-Bernstein \cite{kru62}, and the relative difference is now positive
 and less than $7\%$. The role played by the numerical grid is marginal, less
 than $1\%$. when $n_{p}$ is varying from $88\ $to $125\ $or $165$ while $%
 n_{\xi _{0}}$ is kept constant at $120.$
+
+The collision operator plays an important role in the value of $\overline{%
+\Gamma }_{R}.$ As shown in \ref{table_run1b}, using the Belaiev-Budker
+operator with first order Legendre correction leads to twice more runaways
+than expected by the model of Kruskal-Bernstein. The difference is even much
+larger with the model of Connor and Hastie \cite{con75}. It must be
+emphasized that the expression of M\o ller for the collision operator
+underestimate $\overline{\Gamma }_{R}$ by $10\%$ as compared to the
+high-velocity limit. 
+\begin{table}[tbp]
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+Collision model & $\overline{\Gamma }_{R}[Z_{eff}=1,E/E_{D}=0.08]$ \\ \hline
+Maxwellian (DKE) & $2.27\times 10^{-4}$ \\ \hline
+High-velocity limit (DKE) & $2.10\times 10^{-4}$ \\ \hline
+Belaiev-Budker (DKE) & $3.94\times 10^{-4}$ \\ \hline
+M\o ller ultrarelativistic (DKE) & $1.99\times 10^{-4}$ \\ \hline
+Kruskal-Bernstein & $2.67\times 10^{-4}$ \\ \hline
+Connor-Hastie & $1.00\times 10^{-4}$ \\ \hline
+\end{tabular}
+\end{center}
+\caption{Runaway rate as function of the collision model. Calculations are
+performed with bounce-averaging, which reduce $\overline{\Gamma }_{R}$ by $%
+21\%$ as compared to data given in Table \ref{table_run1}, for similar
+plasma parameters.}
+\label{table_run1b}
+\end{table}
 
 A full $3-D$ calculation has been performed with flat profiles at normalized
 radial positions on the spatial flux grid $\left[ 0.2,0.4,0.6,0.8\right] ,$
@@ -66,7 +96,7 @@ lines given in Fig.\ref{streamcontrun} along with electrons are moving in
 the momentum space show the clear boundary between close loops for regular
 electrons that remain in the integration domain because of collisions, and
 the open loops, for runaways that continuously accelerated by the Ohmic
-electric field up to the integration domain. 
+electric field up to the integration domain.
 
 %TCIMACRO{
 %\TeXButton{Fig_fpcontrun}{\fig{figures/fpcontrun.eps}{Contour plot of the electron distribution function at $\epsilon=0.31623$}{fpcontrun}{7cm} }}
@@ -83,15 +113,15 @@ electric field up to the integration domain.
 In Fig. \ref{fpprojrun}, the parallel component of the electron distribution
 function 
 \begin{equation}
-F_{\Vert }{}_{0}^{\left( 0\right) }\left( \psi ,p_{\Vert }\right) =2\pi \int_{0}^{%
-\infty }f_{0}^{\left( 0\right) }\left( \psi ,p_{\Vert },p_{\bot }\right) p_{\bot
-}dp_{\bot }  \label{Fpar}
+F_{\Vert }{}_{0}^{\left( 0\right) }\left( \psi ,p_{\Vert }\right) =2\pi
+\int_{0}^{\infty }f_{0}^{\left( 0\right) }\left( \psi ,p_{\Vert },p_{\bot
+}\right) p_{\bot }dp_{\bot }  \label{Fpar}
 \end{equation}
 the normalized perpendicular temperature $\overline{T}_{\bot }\left( \psi
 ,p_{\Vert }\right) =T_{\bot }\left( \psi ,p_{\Vert }\right) /T_{e}^{\dag }$
-where
+where 
 \begin{equation}
-T_{\bot }\left( \psi ,p_{\Vert }\right) =\frac{1}{2}\frac{\int_{0}^{\infty %
+T_{\bot }\left( \psi ,p_{\Vert }\right) =\frac{1}{2}\frac{\int_{0}^{\infty
 }f_{0}^{\left( 0\right) }\left( p_{\Vert },p_{\bot }\right) p_{\bot
 }^{3}dp_{\bot }}{\int_{0}^{\infty }f_{0}^{\left( 0\right) }\left( p_{\Vert
 },p_{\bot }\right) p_{\bot }dp_{\bot }}  \label{Tperpnorm}
@@ -99,7 +129,7 @@ T_{\bot }\left( \psi ,p_{\Vert }\right) =\frac{1}{2}\frac{\int_{0}^{\infty %
 and the parallel one $\overline{T}_{\Vert }\left( \psi ,p_{\bot }\right)
 =T_{\Vert }\left( \psi ,p_{\bot }\right) /T_{e}^{\dag }$ defined as 
 \begin{equation}
-T_{\Vert }\left( \psi ,p_{\bot }\right) =\frac{\int_{-\infty }^{\infty %
+T_{\Vert }\left( \psi ,p_{\bot }\right) =\frac{\int_{-\infty }^{\infty
 }f_{0}^{\left( 0\right) }\left( p_{\Vert },p_{\bot }\right) p_{\Vert
 }^{2}dp_{\Vert }}{\int_{-\infty }^{\infty }f_{0}^{\left( 0\right) }\left(
 p_{\Vert },p_{\bot }\right) dp_{\Vert }}  \label{Tparnorm}
@@ -110,9 +140,7 @@ function with respect to the Maxwellian shape.
 %TCIMACRO{
 %\TeXButton{Fig_fpprojrun}{\fig{figures/fpprojrun.eps}{Parallel projection, parallel and perpendicular temperatures of the electron distribution function at $\epsilon=0.31623$}{fpprojrun}{7cm} }}
 %BeginExpansion
-\fig{figures/fpprojrun.eps}{Electron distribution function averaged over the perpendicular momentum direction
-at $\epsilon=0.31623$. Parallel and perpendicular temperatures of the electron distribution function
-are also shown}{fpprojrun}{7cm} %
+\fig{figures/fpprojrun.eps}{Parallel projection, parallel and perpendicular temperatures of the electron distribution function at $\epsilon=0.31623$}{fpprojrun}{7cm} %
 %EndExpansion
 
 Bounce averaged calculations have be performed first locally. As shown in
@@ -144,7 +172,7 @@ results confirms this coarse analysis, since
 \begin{equation}
 \Delta \overline{\Gamma }_{R}\simeq -1.2\sqrt{\frac{2\epsilon }{1+\epsilon }}
 \end{equation}
-for $\epsilon \lesssim 0.53$ and  lim$_{\epsilon \rightarrow 0}\Delta 
+for $\epsilon \lesssim 0.53$ and lim$_{\epsilon \rightarrow 0}\Delta 
 \overline{\Gamma }_{R}\left( \epsilon \right) \simeq 1.7\sqrt{\epsilon }%
 \simeq -1.16\mathcal{F}_{t}^{eff.}\footnote{%
 The reduction factor of the runaway losses as predicted by the drift kinetic
@@ -180,3 +208,7 @@ convergence, leading to a modest increase of the matrix sizes. However the
 rate of convergence is not affected, and the final result is obtained
 usually after $11-13$ iterations, even when several radial positions are
 considered.
+
+\paragraph{Secondary generation}
+
+The problem of secondary runaway generation is*****
