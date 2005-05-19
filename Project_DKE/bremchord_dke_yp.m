@@ -1,10 +1,11 @@
-function [vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr] = bremchord_dke_yp(equil,hxr,xpsin,xpsin_S,mfactor,method,display,ns,mtheta);
+function [vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr] = bremchord_dke_yp(equil,IPBT,hxr,xpsin,xpsin_S,mfactor,method,display,ns,mtheta);
 %
 % This function calculates chord positions fro bremsstrahlung tomography in a torus along unit vector g. 
 %
 % INPUTS
 %
 %       - equil: Magnetic equilibrium structure
+%       - IPBT: Cosine between the plasma current and the toroidal B-field directions (+1: Ip same direction as BT, -1 opposite direction as BT) (see below definitions)
 %       - hxr: Bremsstrahlung structure 
 %       - xpsin: poloidal flux surfaces for f used by DKE code [1,npsi]
 %       - xpsin_S: poloidal flux surfaces used for S by DKE code [1,npsi+1]
@@ -15,7 +16,7 @@ function [vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr] = bremchord_dke_yp(equil
 %       - display: display chords [1,1]
 %         (default = 2)
 %       - ns: number of points on the chords [1,1]
-%         (default = 2000)
+%         (default = 3000)
 %
 % OUTPUTS
 %       
@@ -27,23 +28,31 @@ function [vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr] = bremchord_dke_yp(equil
 %
 % by J. Decker (jodecker@alum.mit.edu) and Y. Peysson (yves.peysson@cea.fr)
 %
+%WARNING: the definitions used in the DKE code, and here crucial for HXR calculations are the following
+%         1) the frame (psi,s,phi) is direct
+%         2) BT.phi > 0 
+%         3) Bp.s > 0
+% The consequence is that when BT.Ip > 0, (Ip is the plsma current vector) psi increases from the plasma center to the edge (the vector psi goes out of the plasma)
+% In most machines, BT is clockwise when the machine is viewed from the top (Z axis is positive towards the top) 
+% With the definitions above, if Ip is positive, psi is turned outward, Bp is counterclockwise poloidally, and s too. The Ampère theorem is OK !
+% The HXR diagnostic arrangement is taking this frame of reference. Check the figures. Take care if BT is counterclockwise...
 %
-if nargin < 4,
+if nargin < 5,
     error('Not enough arguments in bremchord_dke_yp')
-elseif nargin == 4,
+elseif nargin == 5,
    	  mfactor = 1;
 	  method = 'spline'; 	
       display = 2;
-      ns = 2000;
-elseif nargin == 5,
+      ns = 3000;
+elseif nargin == 6,
 		method = 'spline'; 	
 		display = 2;
-		ns = 2000;
-elseif nargin == 6,
-		display = 2;
-		ns = 2000;
+		ns = 3000;
 elseif nargin == 7,
-		ns = 2000;
+		display = 2;
+		ns = 3000;
+elseif nargin == 8,
+		ns = 3000;
 end
 %
 ns = abs(ns);%Force ns to be always positive
@@ -51,13 +60,16 @@ nchords = length(hxr.alpha_hxr);%chord number
 %
 [theta,ppsin,psia,ptR,ptZ,ptBR,ptBZ,ptBphi,ptB0,ptR0,ptBT0,ptBp0,ptrho] = equilibrium_jd(equil,NaN,NaN,0,method,mfactor);
 %
+ptBR = -sign(IPBT)*ptBR;%Ip is positive, psi is turned outward, Bp is counterclockwise -> negative sign
+ptBZ = -sign(IPBT)*ptBZ;%Ip is positive, psi is turned outward, Bp is counterclockwise -> negative sign
+%
 Rp = ptR(1,1);%Plasma major radius (m)
 Zp = ptZ(1,1);%Plasma vertical position (m)
 xq = qfactors_dke_yp(Rp,Zp,ptR,ptZ,ptBR,ptBZ,ptBphi);%Safety factor
 r_lcs = sqrt((ptR(length(ppsin),:) - Rp).^2 + (ptZ(length(ppsin),:) - Zp).^2);%Minor radius of the last closed magnetic surface
 ap = max([r_lcs(1),max(r_lcs)]);%Max of low field side  minor radius and maximum minor radius
 %
-smax = 2*(Rp + ap);%maximum chord length = R_hxr+a_hxr
+smax = 3*(Rp + ap);%maximum chord length = R_hxr+a_hxr
 s = linspace(-smax,0,ns)'*ones(1,nchords);%for nchords (s negative by definition)
 % Poloidal plot
 for ir = 1:length(xpsin_S)
@@ -93,7 +105,8 @@ BZ_mfl_lcs = interp1(theta,ptBZ(end,:),theta_mfl_lcs,method);
 Bphi_mfl_lcs = interp1(theta,ptBphi(end,:),theta_mfl_lcs,method);
 %
 ptBtheta = -ptBR.*sin(ones(size(ppsin(:)))*theta) + ptBZ.*cos(ones(size(ppsin(:)))*theta);
-Ipdir = 2*isempty(find(ptBtheta < 0)) - 1;%If +1: Ip same direction to Bphi, if -1 Ip opposite direction to Bphi
+Ipdir = sign(ptBtheta);%Btheta > 0 (clockwise) then Ip is counterclickwise from the top view (Bphi > 0, clockwise from top view). May change as function of plasma minor radius (negative shear case)
+Ipdir_mfl_lcs = sign(interp1(theta,Ipdir(end,:),theta_mfl_lcs,method));%Sign of Ip on the last closed magnetic surface
 %
 BX_mfl_lcs = BR_mfl_lcs.*cos(phi_mfl) - Bphi_mfl_lcs.*sin(phi_mfl);
 BY_mfl_lcs = BR_mfl_lcs.*sin(phi_mfl) + Bphi_mfl_lcs.*cos(phi_mfl);
@@ -182,8 +195,9 @@ gZ_hxr(~mask) = NaN;
 sBR=griddata(ptR,ptZ,ptBR,sR,sZ);
 sBZ=griddata(ptR,ptZ,ptBZ,sR,sZ);
 sBphi=griddata(ptR,ptZ,ptBphi,sR,sZ);
+sIpdir=sign(griddata(ptR,ptZ,Ipdir,sR,sZ));%sign function to enforce +/- 1. Only the sign is important here
 sB = sqrt(sBR.^2 + sBZ.^2 + sBphi.^2);
-sksid = -Ipdir*((sBR.*cos(sphi) - sBphi.*sin(sphi)).*gX_hxr + (-sBR.*sin(sphi) + sBphi.*cos(sphi)).*gY_hxr + sBZ.*gZ_hxr)./sB;%cosine between magnetic field line and chord direction
+sksid = -sIpdir.*((sBR.*cos(sphi) - sBphi.*sin(sphi)).*gX_hxr + (-sBR.*sin(sphi) + sBphi.*cos(sphi)).*gY_hxr + sBZ.*gZ_hxr)./sB;%cosine between magnetic field line and chord direction (towards the detector)
 %
 if display >= 1
     figure(10000),
@@ -214,7 +228,7 @@ if display >= 1
 	h = quiver(X_mfl_lcs(1:40:end),Y_mfl_lcs(1:40:end),BX_mfl_lcs(1:40:end),BY_mfl_lcs(1:40:end),0.5);%Magnetic field line direction
 	set(h,'Color','k');
 	hold on
-	h = quiver(X_mfl_lcs(20:40:end),Y_mfl_lcs(20:40:end),Ipdir*BX_mfl_lcs(20:40:end),Ipdir*BY_mfl_lcs(20:40:end),0.5);%Current direction on magnetic field line direction
+	h = quiver(X_mfl_lcs(20:40:end),Y_mfl_lcs(20:40:end),Ipdir_mfl_lcs(20:40:end).*BX_mfl_lcs(20:40:end),Ipdir_mfl_lcs(20:40:end).*BY_mfl_lcs(20:40:end),0.5);%Current direction on magnetic field line direction
 	set(h,'Color','g');
 	axis('equal');	
 	graph1D_jd(sR.*cos(sphi),sR.*sin(sphi),0,0,'','','',NaN,'','','-','non','b',2);

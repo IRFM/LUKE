@@ -64,13 +64,10 @@ brem_bd_diag = zeros(size(brem_bd_plasma));
 %
 for ic = 1:size(brem_bd_interp,1),
 	if ic == 1,
-		gkEinterp1 = dresp_dke_yp(res(ic,:),phf(ic,:),kd(ic,:),ic,kinterp);		
+		gkEinterp1 = dresp_dke_yp(res(ic,:),phf(ic,:),kd(ic,:),kinterp);		
 		normgkEinterp1 = trapz(kinterp,gkEinterp1');%To enforce that the norm is unity
 		gkEinterp = (gkEinterp1'./(normgkEinterp1(:)*ones(1,length(kinterp)))')';
 %		trapz(kinterp,gkEinterp'),%test of the norm	
-		if ic == chord_display,
-		      gkEinterp_out = gkEinterp;%For display of the response function
-		end
 %
 		absxinterp = absx_dke_yp(kinterp,0,0,ef(ic),tf(ic,:),ea(ic),ta(ic,:),ec(ic),tc(ic,:),ed(ic),td(ic,:));%Air contribution is neglected (k > 10 keV only)
 		Tabsxinterp = repmat(absxinterp(:),[1,size(brem_bd_interp,2)]);
@@ -83,9 +80,13 @@ for ic = 1:size(brem_bd_interp,1),
 			absxinterp = absx_dke_yp(kinterp,0,0,ef(ic),tf(ic,:),ea(ic),ta(ic,:),ec(ic),tc(ic,:),ed(ic),td(ic,:));%Air contribution is neglected (k > 10 keV only)
 			Tabsxinterp = repmat(absxinterp(:),[1,size(brem_bd_interp,2)]);
 		end		
-	end
+    end
 %
-	brem_bd_diag_interp(ic,:) = (fix(((gkEinterp'.*Tabsxinterp)*dkinterp*(brem_bd_interp(ic,:))')))'; 
+    if ic == chord_display,
+		gkEinterp_out = gkEinterp;%For display of the response function
+    end
+%
+	brem_bd_diag_interp(ic,:) = (((gkEinterp'.*Tabsxinterp)*dkinterp*(brem_bd_interp(ic,:))'))'; 
 %	brem_bd_diag_interp(ic,:) = (fix(((eye(size(gkEinterp')).*Tabsxinterp)*(brem_bd_interp(ic,:))')))';%detector response neglected
 %	
 	for ik = 1:size(hxr.kdiag_hxr,2)-1,
