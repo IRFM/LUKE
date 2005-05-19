@@ -310,9 +310,9 @@ if ~isempty(transpfaste),
 	alphaD = ap*ap/psia/psia;%For radial diffusion normalization
 	alphaV = ap/psia;%For radial convection normalization
 %
-	xvparmin_r_ref = interp1(ppsin,transpfaste.vparmin_r,rho2psi_jd(tokname,transpfaste.rho),method)/clum/betath_ref;%Normalized to vth_ref
-	xDr = interp1(rho2psi_jd(equil,transpfaste.rho),transpfaste.Dr,ppsin,'spline');
-	xVr = interp1(rho2psi_jd(equil,transpfaste.rho),transpfaste.Vr,ppsin,'spline');
+	xvparmin_r_ref = interp1(rho2psi_jd(equil,transpfaste.rho),transpfaste.vparmin_r,xrho,'spline')/clum/betath_ref;%Normalized to vth_ref
+	xDr = interp1(rho2psi_jd(equil,transpfaste.rho),transpfaste.Dr,xrho,'spline');
+	xVr = interp1(rho2psi_jd(equil,transpfaste.rho),transpfaste.Vr,xrho,'spline');
 %
 	for ir = 1:nr,	
 		ivpar_r_ref_threshold = min(find(abs(Xvpar_ref) >= xvparmin_r_ref(ir)));

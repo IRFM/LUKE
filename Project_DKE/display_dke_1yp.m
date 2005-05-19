@@ -63,7 +63,7 @@ if bounce_mode > 0,
 %
 	filename = ['EQUIL_',tokname,'.mat'];
 	eval(['load ',filename]);%Load effective trapped fraction given by HELENA
-	if exist('equil.ftra') == 1 && (length(equil.ppsi)==length(equil.ftra)),
+	if exist('equil.ftra') == 1 & (length(equil.ppsi)==length(equil.ftra)),
 		xftra = interp1(ppsi,equil.ftra,xpsin(r_dke));
 	else 
 		xftra=NaN*xpsin(r_dke);

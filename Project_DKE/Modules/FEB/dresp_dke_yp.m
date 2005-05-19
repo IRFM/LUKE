@@ -1,4 +1,4 @@
-function gkE = dresp_dke_yp(res,phf,kd,nomvoie,k)
+function gkE = dresp_dke_yp(res,phf,kd,k)
 %
 %       Calculation of the energy response function of detector (scintillator
 %       coupled with a photo-multiplier or diode). Compton scattering, photoelectric
@@ -11,7 +11,6 @@ function gkE = dresp_dke_yp(res,phf,kd,nomvoie,k)
 %               - phf: photofraction determined using the "MCDET.for" Monte-carlo hard x-ray absorption
 %                          code at energies kd [m,p]
 %               - kd: reference energies for the photofraction [m,p]
-%               - nomvoie: number of the line-of-sight [1,1]
 %               - k: photon energy (keV) [1,n]
 %
 %       Output:
@@ -22,7 +21,7 @@ function gkE = dresp_dke_yp(res,phf,kd,nomvoie,k)
 %by Y.PEYSSON CEA-DRFC 27/06/1991 <peysson@fedv09.cad.cea.fr>
 %revised for MatLab 4.1 (25/08/1994) 
 %
-if nargin < 5,
+if nargin < 4,
         infoyp(2,'Wrong number of input arguments for dresp_dke_yp');
         return;
 end
@@ -39,17 +38,15 @@ nk = length(k);
 deltak = k(2)-k(1);
 E = k;
 %
-iv = nomvoie;
-%
 gkE = zeros(nk,nk);
 gkEph = zeros(nk,nk);
 gkEph0 = zeros(nk,nk);
 gkEco = zeros(nk,nk);
 %
-Rk = (interp1(kd(iv,:),phf(iv,:),k,'spline'))';
-dEk = (res(iv,1)*k.^res(iv,2)).*k;
+Rk = (interp1(kd,phf,k,'spline'))';
+dEk = (res(1)*k.^res(2)).*k;
 Ec = (2*k.^2)./(2*k+mc2);
-dEc = (res(iv,1)*Ec.^res(iv,2)).*Ec;
+dEc = (res(1)*Ec.^res(2)).*Ec;
 ic = fix(Ec/(k(2)-k(1)));
 %
 for i=1:nk,

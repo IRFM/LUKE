@@ -994,7 +994,7 @@ for ir = 1:nr,
 	XXAeip(:,:,ir) = Aeip'*ones(1,nmhu);
 	XXAeipp(:,:,ir) = Aeipp'*ones(1,nmhu);
 %
-	XXBtei(:,:,ir) = Btei'*ones(1,nmhu);	
+	XXBtei(:,:,ir) = Btei'*ones(1,nmhu);	 
 %
 %Fast electron-thermal electron collision term
 %
@@ -1021,7 +1021,11 @@ for ir = 1:nr,
 	elseif coll_mode == 4,%Maxwellian background
 		u = v/sqrt(2)/xTe_norm(ir)';Fee = xne_norm(ir)'.*(erf(u)-2*u.*exp(-u.^2)/sqrt(pi))./v2;
 		um = vm/sqrt(2)/xTe_norm(ir)';Feem = xne_norm(ir)'.*(erf(um)-2*um.*exp(-um.^2)/sqrt(pi))./v2m;	
-		up = vp/sqrt(2)/xTe_norm(ir)';Feep = xne_norm(ir)'.*(erf(up)-2*up.*exp(-up.^2)/sqrt(pi))./v2p;			
+		up = vp/sqrt(2)/xTe_norm(ir)';Feep = xne_norm(ir)'.*(erf(up)-2*up.*exp(-up.^2)/sqrt(pi))./v2p;	
+	elseif coll_mode == 5,%Ultrarelativistic Moller model
+	    Fee = xne_norm(ir)'./v2;
+	    Feem = xne_norm(ir)'./v2m;
+	    Feep = xne_norm(ir)'./v2p;	
 	end
 %
 	Feem(1) = 1;%Avoid singularity at p = 0, but the value is not used
@@ -1051,6 +1055,10 @@ for ir = 1:nr,
 		um = vm/sqrt(2)/xTe_norm(ir)';Aeem = xne_norm(ir)'.*(erf(um)-2*um.*exp(-um.^2)/sqrt(pi))./vm./um./um/2;	
 		Am(1) = 1;%Avoid singularity at p = 0, but the value is not used
 		up = vp/sqrt(2)/xTe_norm(ir)';Aeep = xne_norm(ir)'.*(erf(up)-2*up.*exp(-up.^2)/sqrt(pi))./vp./up./up/2;	
+   elseif coll_mode == 5,%Ultrarelativistic Moller model
+		Aee = xne_norm(ir)'.*xTe_norm(ir)'./v./v2;
+		Aeem = xne_norm(ir)'.*xTe_norm(ir)'./vm./v2m;
+		Aeep = xne_norm(ir)'.*xTe_norm(ir)'./vp./v2p;
 	end
 %
 	Aeem(1) = 1;%Avoid singularity at p = 0, but the value is not used
@@ -1074,6 +1082,8 @@ for ir = 1:nr,
 	elseif coll_mode == 4,%Maxwellian background
 		u = v/sqrt(2)/xTe_norm(ir)';                  
 		Btee = xne_norm(ir)'.*((2*u.^2-1).*erf(u)+2*u.*exp(-u.^2)/sqrt(pi))./v./u./u/4;
+	elseif coll_mode == 5,%Ultrarelativistic Moller model
+	   Btee = xne_norm(ir)'./v/2;
 	end
 %
 	XXBtee(:,:,ir) = Btee'*ones(1,nmhu);	
@@ -1328,7 +1338,7 @@ for ir = 1:nr,
 	[Xdeltap_imj,Xdeltap_ipj,...
 		 Xdeltam_ijm,Xdeltam_ijp] = ...
 		 fppgridweights_dke_yp(Xdpnmm,Xdpnm,Xdpn,Xdpnp,Xdpnpp,...
-       Xdmhumm,Xdmhum,Xdmhu,Xdmhup,Xdmhupp,...
+         Xdmhumm,Xdmhum,Xdmhu,Xdmhup,Xdmhupp,...
 		 XDpp_ippj,XDpp_ipj,XDpp_ij,XDpp_imj,XDpp_immj,...
 		 XFp_ippj,XFp_ipj,XFp_ij,XFp_imj,XFp_immj);
 %
@@ -2873,7 +2883,6 @@ if nb > 0,
 end
 %
     clear xyP0_rf_fsav xyP0_rf_tp_fsav xyP0_rf_g_fsav
-end
 %
 % run-away rate
 %
