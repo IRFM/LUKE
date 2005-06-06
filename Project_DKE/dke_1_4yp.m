@@ -5,7 +5,7 @@ function [XXheaviside,...
     Zcurr,Zcurr_fsav,...
     ZP0_fsav,...
     ZSp0,...
-    XxRR_fsav,xMRR_flux_ref,xMRR_tau_ref,...
+    XxRR_fsav,xMRR_flux_ref,xMRR_tau_ref,ZWiTransp_fsav,xVr,...
     xTe_out_norm,xft_fsav,xfteff_fsav,xmhubounce2,xepsi_rdke,...
     memoryLU_f,memoryLU_g] = ... 
 dke_1_4yp(it_rf,tokname,theta,...
@@ -14,7 +14,7 @@ dke_1_4yp(it_rf,tokname,theta,...
     mhu,dmhu,mhum,dmhum,mhup,dmhup,mhu_S,...
     xmhubounce2,xrho,xpsin,xdpsin,xpsinm,xdpsinm,xpsinp,xdpsinp,rdke,xpsin_S,...
     pn,dpn,pnm,dpnm,pnp,dpnp,pn_S,spfac,...
-    xTe_norm,xne_norm,zZi,zmi,xzni_norm,xzTi_norm,...
+    xTe_norm,xne_norm,zZi,zmi,xzni_norm,xzTi_norm,xZeff,xrnhuth,...
     betath_ref,xepsi_fsav,waveparam,nmax_rf,...
     XXDr,XXVr,...
     XXnhuloss,delta,...
@@ -1107,7 +1107,8 @@ if ~isempty(waveparam),
 	 XXDpp_rf_tp_ippj,XXDpp_rf_tp_ipj,XXDpp_rf_tp_ij,XXDpp_rf_tp_imj,XXDpp_rf_tp_immj,...
 	 XXDpm_rf_tp_ipj,XXDpm_rf_tp_ij,XXDpm_rf_tp_imj,XXDmp_rf_tp_ijp,XXDmp_rf_tp_ij,XXDmp_rf_tp_ijm,...
 	 XXDmm_rf_tp_ijp,XXDmm_rf_tp_ijm,...
-	 XXFp_rf_tp_ippj,XXFp_rf_tp_ipj,XXFp_rf_tp_ij,XXFp_rf_tp_imj,XXFp_rf_tp_immj,XXFm_rf_tp_ijp,XXFm_rf_tp_ijm] = rfdiff_dke_jd(it_rf,Dqlmax,waveparam,nmax_rf,...
+	 XXFp_rf_tp_ippj,XXFp_rf_tp_ipj,XXFp_rf_tp_ij,XXFp_rf_tp_imj,XXFp_rf_tp_immj,XXFm_rf_tp_ijp,XXFm_rf_tp_ijm,...
+     XXDmp1_rf_tp_ijp,XXDmp1_rf_tp_ij,XXDmp1_rf_tp_ijm,XXDmm1_rf_tp_ijp,XXDmm1_rf_tp_ijm] = rfdiff_dke_jd(it_rf,Dqlmax,waveparam,nmax_rf,...
     theta,XR,XZ,XBR,XBZ,XBphi,xB0,Rp,Zp,xqtilde,...       
     XXheaviside,XXheaviside_p,XXheaviside_m,...  
 	 Xmhup,Xmhu,Xmhum,Xmhu2p,Xmhu2,Xmhu2m,X1mmhu2p,X1mmhu2,X1mmhu2m,...
@@ -1167,10 +1168,16 @@ else
     	XXFp_rf_tp_imj = zeros(npn,nmhu,nr);
     	XXFp_rf_tp_immj = zeros(npn,nmhu,nr);
 %
-      XXFm_rf_tp_ijp = zeros(npn,nmhu,nr);
+        XXFm_rf_tp_ijp = zeros(npn,nmhu,nr);
     	XXFm_rf_tp_ijm = zeros(npn,nmhu,nr);
 %
     	XXFrf_tp_ij = zeros(npn,nmhu,nr);
+%
+    	XXDmp1_rf_tp_ijp = zeros(npn,nmhu,nr);
+    	XXDmp1_rf_tp_ij = zeros(npn,nmhu,nr);
+    	XXDmp1_rf_tp_ijm = zeros(npn,nmhu,nr);
+    	XXDmm1_rf_tp_ijp = zeros(npn,nmhu,nr);
+    	XXDmm1_rf_tp_ijm = zeros(npn,nmhu,nr);
    end  
 end
 if display_mode >= 1,info_dke_yp(2,['D and F tensor calculations for RF waves done in ',num2str(etime(clock,time0)),' (s)']);end
@@ -2777,12 +2784,12 @@ if nb > 0,
    ZSp0{3,11} = 0;
    ZSp0{3,12} = 0;
 %
-	xP0_rf_fsav = 0;
-	xP0_rf_tp_fsav = 0;
-	xP0_rf_g_fsav = 0;
+   xP0_rf_fsav = 0;
+   xP0_rf_tp_fsav = 0;
+   xP0_rf_g_fsav = 0;
 %
    for ib=1:nb,
-	   eval(['load temp_ray_#',int2str(ib),' ZYXXD_rf ZYXXD_rf_tp ZYXXF_rf_tp']);%Load large data file for each ray
+	   eval(['load ',temppath,'temp_ray_#',int2str(ib),' ZYXXD_rf ZYXXD_rf_tp ZYXXF_rf_tp']);%Load large data file for each ray
 %	   
 		xyD0_rf = waveparam(:,ib,4);% RF quasi-linear diffusion coefficient (nhuth_ref*pth_ref^2)
 		YXXD0_rf = shiftdim(repmat(xyD0_rf,[1,1,npn,nmhu]),2);
@@ -2813,7 +2820,15 @@ if nb > 0,
 		XXDmp_rf_tp_ijm = ZYXXD_rf_tp{11}.*YXXD0_rf;
 		XXDmp_rf_tp_ijp = ZYXXD_rf_tp{9}.*YXXD0_rf;
 		XXFm_rf_tp_ijm = ZYXXF_rf_tp{7}.*YXXD0_rf;
-		XXFm_rf_tp_ijp = ZYXXF_rf_tp{6}.*YXXD0_rf;		
+		XXFm_rf_tp_ijp = ZYXXF_rf_tp{6}.*YXXD0_rf;
+%
+%  Wave-induced radial transport by adjoint technique (P. Helander model)
+%
+   		XXDmp1_rf_tp_ijp = ZYXXD_rf_tp{15}.*YXXD0_rf;
+   		XXDmp1_rf_tp_ij = ZYXXD_rf_tp{16}.*YXXD0_rf;
+   		XXDmp1_rf_tp_ijm = ZYXXD_rf_tp{17}.*YXXD0_rf;
+   		XXDmm1_rf_tp_ijp = ZYXXD_rf_tp{18}.*YXXD0_rf;
+   		XXDmm1_rf_tp_ijm = ZYXXD_rf_tp{19}.*YXXD0_rf;
 %
 %f0 contribution for each ray
 %
@@ -2856,25 +2871,24 @@ if nb > 0,
 %    
       xP0_rf_g_fsav = xP0_rf_g_fsav + 2*pi*(xqtilde(rdke)'./xqhat(rdke)').*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).^3./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*XXSp0_rf_g_imj,1),1);       
 %
-		XXSp0_imj = XXSp0_imj + XXSp0_rf_imj;
-		XXSm0_ijm = XXSm0_ijm + XXSm0_rf_ijm;
+	  XXSp0_imj = XXSp0_imj + XXSp0_rf_imj;
+      XXSm0_ijm = XXSm0_ijm + XXSm0_rf_ijm;
 %
-		ZSp0{3,1} = ZSp0{3,1} + XXSp0_rf_imj;
-		ZSp0{3,2} = ZSp0{3,2} + XXSp0_rf_tp_imj;
-		ZSp0{3,3} = ZSp0{3,3} + XXSp0_rf_g_imj;
+	  ZSp0{3,1} = ZSp0{3,1} + XXSp0_rf_imj;
+	  ZSp0{3,2} = ZSp0{3,2} + XXSp0_rf_tp_imj;
+	  ZSp0{3,3} = ZSp0{3,3} + XXSp0_rf_g_imj;
 %
-		ZSp0{3,4} = ZSp0{3,4} + XXSp0_rf_ipj;
-		ZSp0{3,5} = ZSp0{3,5} + XXSp0_rf_tp_ipj;
-		ZSp0{3,6} = ZSp0{3,6} + XXSp0_rf_g_ipj;
+	  ZSp0{3,4} = ZSp0{3,4} + XXSp0_rf_ipj;
+	  ZSp0{3,5} = ZSp0{3,5} + XXSp0_rf_tp_ipj;
+	  ZSp0{3,6} = ZSp0{3,6} + XXSp0_rf_g_ipj;
 %
-		ZSp0{3,7} = ZSp0{3,7} + XXSm0_rf_ijm;
-		ZSp0{3,8} = ZSp0{3,8} + XXSm0_rf_tp_ijm;
-		ZSp0{3,9} = ZSp0{3,9} + XXSm0_rf_g_ijm;
+	  ZSp0{3,7} = ZSp0{3,7} + XXSm0_rf_ijm;
+	  ZSp0{3,8} = ZSp0{3,8} + XXSm0_rf_tp_ijm;
+	  ZSp0{3,9} = ZSp0{3,9} + XXSm0_rf_g_ijm;
 %
-		ZSp0{3,10} = ZSp0{3,10} + XXSm0_rf_ijp;
-		ZSp0{3,11} = ZSp0{3,11} + XXSm0_rf_tp_ijp;
-		ZSp0{3,12} = ZSp0{3,12} + XXSm0_rf_g_ijp;
-%
+	  ZSp0{3,10} = ZSp0{3,10} + XXSm0_rf_ijp;
+	  ZSp0{3,11} = ZSp0{3,11} + XXSm0_rf_tp_ijp;
+	  ZSp0{3,12} = ZSp0{3,12} + XXSm0_rf_g_ijp;
 	end
 %
 	ZP0_fsav{3,1} = xP0_rf_fsav;%For all rays
@@ -2883,6 +2897,77 @@ if nb > 0,
 end
 %
     clear xyP0_rf_fsav xyP0_rf_tp_fsav xyP0_rf_g_fsav
+%
+%   Wave-induced radial transport by adjoint technique (P. Helander model)
+%
+xX = ones(nr,1)*pn/sqrt(2);
+xXG = (erf(xX) - 2*xX.*exp(-xX.^2)/sqrt(pi))./2./xX./xX;
+XXnhuDei = permute(repmat(((xrnhuth.*xZeff)'*ones(1,npn)).*((erf(xX) - xXG)./xX./xX./xX),[1,1,nmhu]),[2,3,1]);
+%   
+xggradpsi22 = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*(xR0(rdke).*xBT0(rdke)./xB0(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0(:,:,rdke).*XXnhuDei(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke).*XXlambda_b_p1m1(:,:,rdke),1),1)';
+%
+xggradpsi1 = 0;
+xggradpsi21 = 0;
+for ib=1:nb,
+	eval(['load ',temppath,'temp_ray_#',int2str(ib),' ZYXXD_rf ZYXXD_rf_tp ZYXXF_rf_tp']);%Load large data file for each ray
+%	   
+	xyD0_rf = waveparam(:,ib,4);% RF quasi-linear diffusion coefficient (nhuth_ref*pth_ref^2)
+	YXXD0_rf = shiftdim(repmat(xyD0_rf,[1,1,npn,nmhu]),2);
+%
+% Sum over all rays
+%
+	XXDpp_rf_tp_imj = ZYXXD_rf_tp{4}.*YXXD0_rf;
+	XXDpp_rf_tp_ipj = ZYXXD_rf_tp{2}.*YXXD0_rf;
+	XXDpm_rf_tp_imj = ZYXXD_rf_tp{8}.*YXXD0_rf;
+	XXDpm_rf_tp_ipj = ZYXXD_rf_tp{6}.*YXXD0_rf;
+%		
+	XXFp_rf_tp_imj = ZYXXF_rf_tp{4}.*YXXD0_rf;
+	XXFp_rf_tp_ipj = ZYXXF_rf_tp{2}.*YXXD0_rf;
+%	
+	XXDmm_rf_tp_ijm = ZYXXD_rf_tp{13}.*YXXD0_rf; 
+	XXDmm_rf_tp_ijp = ZYXXD_rf_tp{12}.*YXXD0_rf;
+	XXDmp_rf_tp_ijm = ZYXXD_rf_tp{11}.*YXXD0_rf;
+	XXDmp_rf_tp_ijp = ZYXXD_rf_tp{9}.*YXXD0_rf;
+	XXFm_rf_tp_ijm = ZYXXF_rf_tp{7}.*YXXD0_rf;
+	XXFm_rf_tp_ijp = ZYXXF_rf_tp{6}.*YXXD0_rf;
+%
+%  Wave-induced radial transport by adjoint technique (P. Helander model)
+%
+   	XXDmp1_rf_tp_ijp = ZYXXD_rf_tp{15}.*YXXD0_rf;
+   	XXDmp1_rf_tp_ij = ZYXXD_rf_tp{16}.*YXXD0_rf;
+   	XXDmp1_rf_tp_ijm = ZYXXD_rf_tp{17}.*YXXD0_rf;
+   	XXDmm1_rf_tp_ijp = ZYXXD_rf_tp{18}.*YXXD0_rf;
+   	XXDmm1_rf_tp_ijm = ZYXXD_rf_tp{19}.*YXXD0_rf;
+%
+    [XXp_rf_imj,XXp_rf_ipj,XXm_rf_ijm,XXm_rf_ijp] = ...
+          fluxes_dke_jd(XXDpp_rf_tp_imj(:,:,rdke),XXDpp_rf_tp_ipj(:,:,rdke),XXDpm_rf_tp_imj(:,:,rdke),XXDpm_rf_tp_ipj(:,:,rdke),...
+          0*XXFp_rf_tp_imj(:,:,rdke),0*XXFp_rf_tp_ipj(:,:,rdke),...
+          XXDmm1_rf_tp_ijm(:,:,rdke),XXDmm1_rf_tp_ijp(:,:,rdke),XXDmp1_rf_tp_ijm(:,:,rdke),XXDmp1_rf_tp_ijp(:,:,rdke),...
+          0*XXFm_rf_tp_ijm(:,:,rdke),0*XXFm_rf_tp_ijp(:,:,rdke),...
+          XXf0(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke,:),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
+          XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
+          XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
+%
+    xggradpsi21 = xggradpsi21 + 2*pi*(xqtilde(rdke)./xqhat(rdke)).*(xR0(rdke).*xBT0(rdke)./xB0(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXp_rf_imj.*XXpn2m(:,:,rdke).*XXmhu(:,:,rdke).*XXlambda(:,:,rdke),1),1)';
+%
+    xggradpsi1 = xggradpsi1 + 2*pi*(xqtilde(rdke)./xqhat(rdke)).*(xR0(rdke).*xBT0(rdke)./xB0(rdke)).*integral_dke_jd(dmhum,integral_dke_jd(dpn,XXm_rf_ijm.*XXpn2(:,:,rdke).*XX1mmhu2m(:,:,rdke).*XXlambda(:,:,rdke).*XXRlambda_m(:,:,rdke),1),1)';
+end
+%
+if nb > 0,
+	 xggradpsi = xggradpsi1 - xggradpsi21 - xggradpsi22;
+     xVr = xggradpsi.*xR0(rdke).*xBp0(rdke)./xne_norm(rdke);
+     ZWiTransp_fsav{1} = xggradpsi;%For all rays
+	 ZWiTransp_fsav{2} = xggradpsi1;%For all rays
+	 ZWiTransp_fsav{3} = xggradpsi21;%For all rays
+	 ZWiTransp_fsav{4} = xggradpsi22;%For all rays
+else
+	 xggradpsi = zeros(length(rdke),1);
+     xVr = zeros(length(rdke),1);
+     ZWiTransp_fsav{1} = zeros(length(rdke),1);%For all rays
+	 ZWiTransp_fsav{2} = zeros(length(rdke),1);%For all rays
+	 ZWiTransp_fsav{3} = zeros(length(rdke),1);%For all rays
+	 ZWiTransp_fsav{4} = zeros(length(rdke),1);%For all rays
+end		
 %
 % run-away rate
 %
@@ -2949,5 +3034,3 @@ else
 end
 %
 if display_mode >= 1,info_dke_yp(2,['Moments of the distribution function calculated in ',num2str(etime(clock,time0)),' (s)']);end
-
-

@@ -141,6 +141,7 @@ end
 %
 xJrf0_fsav_mksa = xcurr0_ref_fsav*j_ref;
 xJrf_tot_fsav_mksa = xcurr_tot_ref_fsav*j_ref;
+Jrf_tot = xJrf_tot_fsav_mksa*xdA_dke',%in MA
 xJrfB_fsav_mksa = xcurrB_ref_fsav*j_ref;
 xJbc_e_fsav_mksa = xcurr_bc_ref_fsav*j_ref;
 xJbc_i_fsav_mksa = xcurr_i_mksa_fsav;
@@ -207,12 +208,15 @@ end
 %
 xPcoll0_fsav_mksa = xPcoll0_ref_fsav*P_ref;
 xPcoll_tot_fsav_mksa = xPcoll_tot_ref_fsav*P_ref;
+Pcoll_tot = xPcoll_tot_fsav_mksa*xdV_dke',%in MW
 %
 xPelec0_fsav_mksa = xPelec0_ref_fsav*P_ref;
 xPelec_tot_fsav_mksa = xPelec_tot_ref_fsav*P_ref;
+Pelec_tot = xPelec_tot_fsav_mksa*xdV_dke',%in MW
 %
 xyPabs0_lh_fsav_mksa = xyPabs0_lh_ref_fsav*P_ref;
 xyPabs_tot_lh_fsav_mksa = xyPabs_tot_lh_ref_fsav*P_ref;
+sum(xyPabs_tot_lh_fsav_mksa.*xdV_dke'),%in MW
 xyPabs0_ec_fsav_mksa = xyPabs0_ec_ref_fsav*P_ref;
 xyPabs_tot_ec_fsav_mksa = xyPabs_tot_ec_ref_fsav*P_ref;
 %
@@ -238,6 +242,8 @@ end
 %
 xepsi_fsav_mksa = xepsi_ref_fsav*Edreicer_ref;	
 %
+dbstop 246
+figure(20000),plot(xrho(r_dke),xVr*me*clum*betath_ref*nhu_ref/qe),title('Vr')
 while 1,
 	ir_display_dke = find(r_dke == ir_display);
 	if auto_mode_in == 0,

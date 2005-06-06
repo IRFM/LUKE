@@ -69,7 +69,7 @@ while 1,
 %
 	[vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr] = bremchord_dke_yp(equil,IPBT,hxr,xpsin_dke,xpsin_S_dke,1,'spline',display_mode);%Calculation of the chord length and angle between magnetic field line and line-of-sight
 %
-	[kphot,brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi,lchord,rho_out,theta_out] = bremsstrahlung_dke_yp(equil,hxr,vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr,XXheaviside,zZi,xzni_norm,xne_norm,ne_ref,betath_ref,xrho,dmhu,mhu,dpn_ref,pn_ref,pn2_ref,gamma_ref,Ec_ref,dp_cyl,pnmax_S,XXfinit_ref,XXf0_ref,XXf0_tp_ref,XXf0_g_ref,nlevel,bounce_mode,display_mode,xrho(ir_display_dke),theta_display);%Local and line-integrated bremsstrahlung calculation
+	[kphot,brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi,lchord,rho_out,theta_out] = bremsstrahlung_dke_yp(equil,hxr,vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr,XXheaviside,zZi,xzni_norm(:,r_dke),xne_norm(r_dke),ne_ref,betath_ref,xrho(r_dke),dmhu,mhu,dpn_ref,pn_ref,pn2_ref,gamma_ref,Ec_ref,dp_cyl,pnmax_S,XXfinit_ref(:,:,r_dke),XXf0_ref(:,:,r_dke),XXf0_tp_ref(:,:,r_dke),XXf0_g_ref(:,:,r_dke),nlevel,bounce_mode,display_mode,xrho(ir_display_dke),theta_display);%Local and line-integrated bremsstrahlung calculation
 %
 	[kinterp,gkEinterp,kfit,dkfit,brem_bd_plasma,brem_bd_diag,tphot_plasma,afit_plasma,tphot_plasma_exp,afit_plasma_exp,meanabsx] = bremdiag_dke_yp(equil,hxr,kphot,brem_bd_out,display_mode,chord_display);%Convolution with the diagnostic system response function for each chord
 %

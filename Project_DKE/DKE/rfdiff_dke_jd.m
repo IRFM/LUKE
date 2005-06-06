@@ -5,7 +5,8 @@ function [nb,XXD_rf_ij,XXD_rf_tp_ij,XXF_rf_tp_ij,...
 	 XXDpp_rf_tp_ippj,XXDpp_rf_tp_ipj,XXDpp_rf_tp_ij,XXDpp_rf_tp_imj,XXDpp_rf_tp_immj,...
 	 XXDpm_rf_tp_ipj,XXDpm_rf_tp_ij,XXDpm_rf_tp_imj,XXDmp_rf_tp_ijp,XXDmp_rf_tp_ij,XXDmp_rf_tp_ijm,...
 	 XXDmm_rf_tp_ijp,XXDmm_rf_tp_ijm,...
-	 XXFp_rf_tp_ippj,XXFp_rf_tp_ipj,XXFp_rf_tp_ij,XXFp_rf_tp_imj,XXFp_rf_tp_immj,XXFm_rf_tp_ijp,XXFm_rf_tp_ijm] = rfdiff_dke_jd(it_rf,Dqlmax,waveparam,nmax_rf,...
+	 XXFp_rf_tp_ippj,XXFp_rf_tp_ipj,XXFp_rf_tp_ij,XXFp_rf_tp_imj,XXFp_rf_tp_immj,XXFm_rf_tp_ijp,XXFm_rf_tp_ijm,...
+	 XXDmp1_rf_tp_ijp,XXDmp1_rf_tp_ij,XXDmp1_rf_tp_ijm,XXDmm1_rf_tp_ijp,XXDmm1_rf_tp_ijm] = rfdiff_dke_jd(it_rf,Dqlmax,waveparam,nmax_rf,...
     theta,XR,XZ,XBR,XBZ,XBphi,xB0,Rp,Zp,xqtilde,...
     XXheaviside,XXheaviside_p,XXheaviside_m,... 
     Xmhup,Xmhu,Xmhum,Xmhu2p,Xmhu2,Xmhu2m,X1mmhu2p,X1mmhu2,X1mmhu2m,...
@@ -95,6 +96,14 @@ if dke_mode == 1
 	XXFm_rf_tp_ijp = zeros(npn,nmhu,nr);
 	XXFm_rf_tp_ijm = zeros(npn,nmhu,nr);
 	XXF_rf_tp_ij = zeros(npn,nmhu,nr);
+%
+% Wave-induced radial transport adjoint technique (P. Helander model)
+%
+   XXDmp1_rf_tp_ijp = zeros(npn,nmhu,nr);
+   XXDmp1_rf_tp_ij = zeros(npn,nmhu,nr);
+   XXDmp1_rf_tp_ijm = zeros(npn,nmhu,nr);
+   XXDmm1_rf_tp_ijp = zeros(npn,nmhu,nr);
+   XXDmm1_rf_tp_ijm = zeros(npn,nmhu,nr);
 else
 	XXDpp_rf_tp_ippj = NaN;
 	XXDpp_rf_tp_ipj = NaN;
@@ -119,6 +128,14 @@ else
 	XXFm_rf_tp_ijp = NaN;
 	XXFm_rf_tp_ijm = NaN;
 	XXF_rf_tp_ij = NaN;
+%
+% Wave-induced radial transport adjoint technique (P. Helander model)
+%
+   XXDmp1_rf_tp_ijp = NaN;
+   XXDmp1_rf_tp_ij = NaN;
+   XXDmp1_rf_tp_ijm = NaN;
+   XXDmm1_rf_tp_ijp = NaN;
+   XXDmm1_rf_tp_ijm = NaN;
 end
 %
 % Output files
@@ -197,7 +214,7 @@ if it_rf == 1,
    time0 = clock;
 %
    for iray = 1:nb;
-   	for iD=1:14,
+   	for iD=1:19,
    		ZYXXD_rf{iD} = zeros(npn,nmhu,nr,1);
    		ZYXXD_rf_tp{iD} = zeros(npn,nmhu,nr,1);
    	end
@@ -462,6 +479,12 @@ if it_rf == 1,
          	YXXDrf_F_tp_immj = YXXrespol_tp_immj.*(1 - YXXpsib).*YXXmhu.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXgammamm./YXXpnmm./abs(YXXmhu)./YXXmhub./YXXmhub2./YXXlambda./YXXqtilde;
          	YXXDrf_F_tp_ijp = YXXrespol_tp_ijp.*(1 - YXXpsib).*YXXmhup.*YXXmhu2p.*YXXqtildeb_rf.*YXXmaskb.*YXXgamma./YXXpn./abs(YXXmhup)./YXXmhubp./YXXmhub2p./YXXlambdap./YXXqtilde;
          	YXXDrf_F_tp_ijm = YXXrespol_tp_ijm.*(1 - YXXpsib).*YXXmhum.*YXXmhu2m.*YXXqtildeb_rf.*YXXmaskb.*YXXgamma./YXXpn./abs(YXXmhum)./YXXmhubm./YXXmhub2m./YXXlambdam./YXXqtilde;       
+%
+% ---------------- Terms for wave-induced radial transport by adjoint technique (P. Helander model) ----------------
+%         	
+         	YXXDrf_F1_tp_ijp = YXXrespol_tp_ijp.*YXXmhup.*YXXmhu2p.*YXXqtildeb_rf.*YXXmaskb.*YXXgamma./YXXpn./abs(YXXmhup)./YXXmhubp./YXXmhub2p./YXXlambdap./YXXqtilde;
+            YXXDrf_F1_tp_ij = YXXrespol_tp_ij.*YXXmhu.*YXXmhu2.*YXXqtildeb_rf.*YXXmaskb.*YXXgamma./YXXpn./abs(YXXmhu)./YXXmhub./YXXmhub2./YXXlambda./YXXqtilde;
+            YXXDrf_F1_tp_ijm = YXXrespol_tp_ijm.*YXXmhum.*YXXmhu2m.*YXXqtildeb_rf.*YXXmaskb.*YXXgamma./YXXpn./abs(YXXmhum)./YXXmhubm./YXXmhub2m./YXXlambdam./YXXqtilde;       
          end
 %
 %QL diffusion tensor elements normalized to YXXD0_rf
@@ -505,6 +528,17 @@ if it_rf == 1,
 %
          	ZYXXD_rf_tp{14} = ZYXXD_rf_tp{14} + YXXDrf_D_tp_ij;
 %
+% ---------------- Terms for wave-induced radial transport by adjoint technique (P. Helander model) ----------------
+%
+            ZYXXD_rf_tp{15} = ZYXXD_rf_tp{15} - sqrt(YXX1mmhu2p).*(YXX1mmhu2p - n_rf.*YXXomegac./YXXomega_rf).*(YXXDrf_D_tp_ijp + YXXDrf_F1_tp_ijp)./YXXmhup;%YXXDmp_rf_ijp
+            ZYXXD_rf_tp{16} = ZYXXD_rf_tp{16} - sqrt(YXX1mmhu2).*(YXX1mmhu2 - n_rf.*YXXomegac./YXXomega_rf).*(YXXDrf_D_tp_ij + YXXDrf_F1_tp_ij)./YXXmhu;%YXXDmp_rf_ij
+            ZYXXD_rf_tp{17} = ZYXXD_rf_tp{17} - sqrt(YXX1mmhu2m).*(YXX1mmhu2m - n_rf.*YXXomegac./YXXomega_rf).*(YXXDrf_D_tp_ijm + YXXDrf_F1_tp_ijm)./YXXmhum;%YXXDmp_rf_ijm
+%
+            ZYXXD_rf_tp{18} = ZYXXD_rf_tp{18} + (YXX1mmhu2p - n_rf.*YXXomegac./YXXomega_rf).^2.*(YXXDrf_D_tp_ijp + YXXDrf_F1_tp_ijp)./YXXmhu2p;%YXXDmm_rf_ijp
+            ZYXXD_rf_tp{19} = ZYXXD_rf_tp{19} + (YXX1mmhu2m - n_rf.*YXXomegac./YXXomega_rf).^2.*(YXXDrf_D_tp_ijm + YXXDrf_F1_tp_ijm)./YXXmhu2m;%YXXDmm_rf_ijm
+%
+% ------------------------------------------------------------------------------------------------------------------
+%
          	ZYXXF_rf_tp{1} = ZYXXF_rf_tp{1} - YXX1mmhu2.*(YXX1mmhu2 - n_rf.*YXXomegac./YXXomega_rf).*YXXDrf_F_tp_ippj./YXXmhu2./YXXmhu2./YXXpnpp;%YXXFp_rf_tp_ippj 
          	ZYXXF_rf_tp{2} = ZYXXF_rf_tp{2} - YXX1mmhu2.*(YXX1mmhu2 - n_rf.*YXXomegac./YXXomega_rf).*YXXDrf_F_tp_ipj./YXXmhu2./YXXmhu2./YXXpnp;%YXXFp_rf_tp_ipj 
          	ZYXXF_rf_tp{3} = ZYXXF_rf_tp{3} - YXX1mmhu2.*(YXX1mmhu2 - n_rf.*YXXomegac./YXXomega_rf).*YXXDrf_F_tp_ij./YXXmhu2./YXXmhu2./YXXpn;%YXXFp_rf_tp_ij 
@@ -535,6 +569,13 @@ if it_rf == 1,
 %
          	ZYXXD_rf_tp{14} = zeros(npn,nmhu,nr,1);
 %
+         	ZYXXD_rf_tp{14} = zeros(npn,nmhu,nr,1);
+         	ZYXXD_rf_tp{15} = zeros(npn,nmhu,nr,1);
+         	ZYXXD_rf_tp{16} = zeros(npn,nmhu,nr,1);
+         	ZYXXD_rf_tp{17} = zeros(npn,nmhu,nr,1);
+         	ZYXXD_rf_tp{18} = zeros(npn,nmhu,nr,1);
+         	ZYXXD_rf_tp{19} = zeros(npn,nmhu,nr,1);
+%         	
          	ZYXXF_rf_tp{1} = zeros(npn,nmhu,nr,1);
          	ZYXXF_rf_tp{2} = zeros(npn,nmhu,nr,1);
          	ZYXXF_rf_tp{3} = zeros(npn,nmhu,nr,1);
@@ -585,14 +626,22 @@ if it_rf == 1,
          XXDmm_rf_tp_ijm = XXDmm_rf_tp_ijm + YXXD0_rf.*ZYXXD_rf_tp{13}; 
          XXD_rf_tp_ij = XXD_rf_tp_ij + YXXD0_rf.*ZYXXD_rf_tp{14};				
 %
-         XXFp_rf_tp_ippj = XXFp_rf_tp_ippj + ZYXXF_rf_tp{1};
-         XXFp_rf_tp_ipj = XXFp_rf_tp_ipj + ZYXXF_rf_tp{2};
-         XXFp_rf_tp_ij = XXFp_rf_tp_ij + ZYXXF_rf_tp{3};
-         XXFp_rf_tp_imj = XXFp_rf_tp_imj + ZYXXF_rf_tp{4};
-         XXFp_rf_tp_immj = XXFp_rf_tp_immj + ZYXXF_rf_tp{5};
-         XXFm_rf_tp_ijp = XXFm_rf_tp_ijp + ZYXXF_rf_tp{6};
-         XXFm_rf_tp_ijm = XXFm_rf_tp_ijm + ZYXXF_rf_tp{7};
-         XXF_rf_tp_ij = XXF_rf_tp_ij + ZYXXF_rf_tp{8};				
+         XXFp_rf_tp_ippj = XXFp_rf_tp_ippj + YXXD0_rf.*ZYXXF_rf_tp{1};
+         XXFp_rf_tp_ipj = XXFp_rf_tp_ipj + YXXD0_rf.*ZYXXF_rf_tp{2};
+         XXFp_rf_tp_ij = XXFp_rf_tp_ij + YXXD0_rf.*ZYXXF_rf_tp{3};
+         XXFp_rf_tp_imj = XXFp_rf_tp_imj + YXXD0_rf.*ZYXXF_rf_tp{4};
+         XXFp_rf_tp_immj = XXFp_rf_tp_immj + YXXD0_rf.*ZYXXF_rf_tp{5};
+         XXFm_rf_tp_ijp = XXFm_rf_tp_ijp + YXXD0_rf.*ZYXXF_rf_tp{6};
+         XXFm_rf_tp_ijm = XXFm_rf_tp_ijm + YXXD0_rf.*ZYXXF_rf_tp{7};
+         XXF_rf_tp_ij = XXF_rf_tp_ij + YXXD0_rf.*ZYXXF_rf_tp{8};
+%
+% Wave-induced radial transport adjoint technique (P. Helander model)
+%
+   		XXDmp1_rf_tp_ijp = XXDmp1_rf_tp_ijp + YXXD0_rf.*ZYXXD_rf_tp{15};
+   		XXDmp1_rf_tp_ij = XXDmp1_rf_tp_ij + YXXD0_rf.*ZYXXD_rf_tp{16};
+   		XXDmp1_rf_tp_ijm = XXDmp1_rf_tp_ijm + YXXD0_rf.*ZYXXD_rf_tp{17};
+   		XXDmm1_rf_tp_ijp = XXDmm1_rf_tp_ijp + YXXD0_rf.*ZYXXD_rf_tp{18};
+   		XXDmm1_rf_tp_ijm = XXDmm1_rf_tp_ijm + YXXD0_rf.*ZYXXD_rf_tp{19};
       end
 	   if display_mode >= 1,info_dke_yp(2,['Calculations of RF matrix coefficients for effective ray #',int2str(iray),'/',int2str(nb),' done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end	
 	end
@@ -640,15 +689,23 @@ else
    		XXDmm_rf_tp_ijm = XXDmm_rf_tp_ijm + YXXD0_rf.*ZYXXD_rf_tp{13}; 
    		XXD_rf_tp_ij = XXD_rf_tp_ij + YXXD0_rf.*ZYXXD_rf_tp{14};				
 %
-   		XXFp_rf_tp_ippj = XXFp_rf_tp_ippj + ZYXXF_rf_tp{1};
-   		XXFp_rf_tp_ipj = XXFp_rf_tp_ipj + ZYXXF_rf_tp{2};
-   		XXFp_rf_tp_ij = XXFp_rf_tp_ij + ZYXXF_rf_tp{3};
-   		XXFp_rf_tp_imj = XXFp_rf_tp_imj + ZYXXF_rf_tp{4};
-   		XXFp_rf_tp_immj = XXFp_rf_tp_immj + ZYXXF_rf_tp{5};
-   		XXFm_rf_tp_ijp = XXFm_rf_tp_ijp + ZYXXF_rf_tp{6};
-   		XXFm_rf_tp_ijm = XXFm_rf_tp_ijm + ZYXXF_rf_tp{7};
-   		XXF_rf_tp_ij = XXF_rf_tp_ij + ZYXXF_rf_tp{8};				
-   	end
+   		XXFp_rf_tp_ippj = XXFp_rf_tp_ippj + YXXD0_rf.*ZYXXF_rf_tp{1};
+   		XXFp_rf_tp_ipj = XXFp_rf_tp_ipj + YXXD0_rf.*ZYXXF_rf_tp{2};
+   		XXFp_rf_tp_ij = XXFp_rf_tp_ij + YXXD0_rf.*ZYXXF_rf_tp{3};
+   		XXFp_rf_tp_imj = XXFp_rf_tp_imj + YXXD0_rf.*ZYXXF_rf_tp{4};
+   		XXFp_rf_tp_immj = XXFp_rf_tp_immj + YXXD0_rf.*ZYXXF_rf_tp{5};
+   		XXFm_rf_tp_ijp = XXFm_rf_tp_ijp + YXXD0_rf.*ZYXXF_rf_tp{6};
+   		XXFm_rf_tp_ijm = XXFm_rf_tp_ijm + YXXD0_rf.*ZYXXF_rf_tp{7};
+   		XXF_rf_tp_ij = XXF_rf_tp_ij + YXXD0_rf.*ZYXXF_rf_tp{8};
+%
+% Wave-induced radial transport adjoint technique (P. Helander model)
+%
+   		XXDmp1_rf_tp_ijp = XXDmp1_rf_tp_ijp + YXXD0_rf.*ZYXXD_rf_tp{15};
+   		XXDmp1_rf_tp_ij = XXDmp1_rf_tp_ij + YXXD0_rf.*ZYXXD_rf_tp{16};
+   		XXDmp1_rf_tp_ijm = XXDmp1_rf_tp_ijm + YXXD0_rf.*ZYXXD_rf_tp{17};
+   		XXDmm1_rf_tp_ijp = XXDmm1_rf_tp_ijp + YXXD0_rf.*ZYXXD_rf_tp{18};
+   		XXDmm1_rf_tp_ijm = XXDmm1_rf_tp_ijm + YXXD0_rf.*ZYXXD_rf_tp{19};
+     	end
    	if display_mode >= 1,info_dke_yp(2,['Calculations of RF matrix coefficients for effective ray #',int2str(iray),'/',int2str(nb),' done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end	
 	end
 end 
