@@ -49,7 +49,6 @@ n_{e}^{\dag }=\max \left( n_{e}\left( \psi \right) ,n_{ss^{\prime }}\left(
 \end{equation}
 for $0\leq \psi \leq \psi _{\max }.$
 
-\label{Zeffdef}
 In principle, ion densities $n_{ss^{\prime }}\left( \psi \right) $ are
 obtained from a particle transport code transport code. However, when the
 plasma is made of two types of ions which are fully ionized (low $Z$ limit),
@@ -131,7 +130,7 @@ _{e}^{\dag }$ according to the relation
 \end{equation}
 where 
 \begin{equation}
-\nu _{e}^{\dag }=\frac{q_{e}^{4}n_{e}^{\dag }\ln \Lambda ^{\dag }}{4\pi %
+\nu _{e}^{\dag }=\frac{q_{e}^{4}n_{e}^{\dag }\ln \Lambda ^{\dag }}{4\pi
 \varepsilon _{0}^{2}m_{e}^{2}c^{3}\beta _{th}^{\dag 3}}=\frac{cr_{e}^{2}}{%
 \beta _{th}^{\dag 3}}n_{e}^{\dag }\ln \Lambda ^{\dag }  \label{normcollfreq}
 \end{equation}
@@ -150,8 +149,8 @@ is the usual reference Coulomb logarithm, with
 ^{\dag }}
 \end{equation}
 where $m_{e}c^{2}=510.99905$ $\left( keV\right) $is the electron rest mass
-energy. In expression \ref{normcollfreq}, the classical electron radius $
-r_{e}$ has been introduced, which is given by
+energy. In expression \ref{normcollfreq}, the classical electron radius $%
+r_{e}$ has been introduced, which is given by 
 \begin{equation}
 r_{e}=\frac{q_{e}^{4}}{4\pi \varepsilon _{0}m_{e}c^{2}}
 \end{equation}
@@ -211,20 +210,69 @@ v_{th}^{\dag }/c=\beta _{th}^{\dag }
 
 \subsection{Maxwellian electron momentum distribution}
 
-\label{normmaxwellian}
-
-With the definition of $\overline{p}$, the approximate relativistic
-Maxwellian electron momentum distribution function $f_{M}\left( \psi
-,p\right) $ up to first order $\gamma $ correction used in the code is given
-by 
+\label{normmaxwellian}The relativistic Maxwellian $f_{M}$ used in the
+calculations has the following dependence in $p$%
 \begin{equation}
-f_{M}\left( \psi ,p\right) \simeq \frac{n_{e}\left( \psi \right) }{\left[
-2\pi T_{e}\left( \psi \right) \right] ^{3/2}}\exp \left[ -\frac{p^{2}}{%
-\left( 1+\gamma \right) T_{e}\left( \psi \right) }\right]
+f_{M}\left( \psi ,p\right) \propto \alpha \exp \left[ -\frac{p^{2}}{\left(
+1+\gamma \right) \Theta }\right] =\alpha \exp \left[ -\frac{\gamma -1}{%
+\Theta }\right] 
 \end{equation}
-where $T_{e}\left( \psi \right) $ is expressed in electron rest mass energy $%
-m_{e}c^{2}$ unit, and providing that $\gamma -1\ll 1.$ Therefore, the
-condition 
+where $\Theta =T_{e}\left( \psi \right) /m_{e}c^{2}$ and $\gamma
+^{2}=p^{2}+1.$ By definition, $f_{M}$ is normalized to the local density $%
+n_{e}\left( \psi \right) $, and the parameter $\alpha $ is then given by the
+integral
+\begin{equation}
+4\pi \alpha \int_{0}^{\infty }p^{2}\exp \left[ -\frac{\gamma -1}{\Theta }%
+\right] dp=n_{e}\left( \psi \right) 
+\end{equation}
+
+Recalling that $\gamma d\gamma =pdp,$ 
+\begin{equation}
+\alpha =\frac{n_{e}\left( \psi \right) }{4\pi \exp \left( \Theta
+^{-1}\right) \Xi _{p}\left( \Theta ^{-1}\right) }
+\end{equation}
+where
+\begin{equation}
+\Xi _{p}\left( \Theta ^{-1}\right) =\int_{1}^{\infty }\gamma \sqrt{\gamma
+^{2}-1}\exp \left[ -\gamma \Theta ^{-1}\right] d\gamma 
+\end{equation}
+
+By integrating by parts, 
+\begin{eqnarray}
+\Xi _{p}\left( \Theta ^{-1}\right)  &=&\frac{\Theta ^{-1}}{3}\int_{1}^{%
+\infty }\left( \gamma ^{2}-1\right) ^{3/2}\exp \left[ -\gamma \Theta
+^{-1}\right] d\gamma   \nonumber \\
+&=&\frac{4}{3}\frac{\left( 3/2\right) !}{\sqrt{\pi }}\frac{K_{2}\left(
+\Theta ^{-1}\right) }{\Theta ^{-1}}
+\end{eqnarray}
+and using relations $\left( n-1/2\right) !=\sqrt{\pi }\left( 2n-1\right)
+!!/2^{n}$ and $n!!=1.3.....n$ for positive odd $n$ values, one obtains
+readily
+\begin{equation}
+\Xi _{p}\left( \Theta ^{-1}\right) =\frac{K_{2}\left( \Theta ^{-1}\right) }{%
+\Theta ^{-1}}
+\end{equation}
+and finally
+\begin{eqnarray}
+f_{M}\left( \psi ,p\right)  &=&\frac{n_{e}\left( \psi \right) }{4\pi \Theta
+\exp \left( \Theta ^{-1}\right) K_{2}\left( \Theta ^{-1}\right) }\exp \left[
+-\frac{\gamma -1}{\Theta }\right]   \nonumber \\
+&=&\frac{n_{e}\left( \psi \right) }{4\pi \Theta K_{2}\left( \Theta
+^{-1}\right) }\exp \left[ -\frac{\gamma }{\Theta }\right] 
+\end{eqnarray}
+
+For $\Theta \ll 1,$ using the large argument expression of $K_{2}\left(
+\Theta ^{-1}\right) \approx \sqrt{\pi /2}\sqrt{\Theta }\exp (-\Theta
+^{-1})+O\left( \Theta ^{3/2}\right) ,$ the usual expression
+\begin{eqnarray}
+f_{M}\left( \psi ,p\right)  &\simeq &\frac{n_{e}\left( \psi \right) }{\left[
+2\pi \Theta \right] ^{3/2}}\exp \left[ -\frac{\gamma -1}{\Theta }\right]  
+\nonumber \\
+&=&\frac{n_{e}\left( \psi \right) }{\left[ 2\pi \Theta \right] ^{3/2}}\exp
+\left[ -\frac{p^{2}}{\left( 1+\gamma \right) \Theta }\right] 
+\end{eqnarray}
+is well recovered. This expression is only valid providing that $\gamma
+-1\ll 1.$ Therefore, the condition 
 \begin{equation}
 \overline{p}^{2}\beta _{th}^{\dag 2}\ll 1  \label{weakrelativist}
 \end{equation}
@@ -242,49 +290,49 @@ T_{e}^{\dag }\ll 511\sqrt{1/30}\approx 100keV
 Usually, this condition is well satisfied even in the core of tokamak
 plasmas, where $T_{e}^{\dag }$ never exceeds $20keV.$ In normalized units,
 
-\begin{equation}
-f_{M}\left( \psi ,p\right) =\alpha \frac{\overline{n}_{e}\left( \psi \right)
-n_{e}^{\dag }}{\left[ 2\pi \overline{T}_{e}\left( \psi \right) T_{e}^{\dag
-}\right] ^{3/2}}\exp \left[ -\frac{\overline{p}^{2}\beta _{th}^{\dag 2}}{%
-\left( 1+\gamma \right) T_{e}\left( \psi \right) }\right]
-\end{equation}
-and since $\beta _{th}^{\dag }=\sqrt{T_{e}^{\dag }/m_{e}c^{2}},$ it turns
+\begin{eqnarray}
+f_{M}\left( \psi ,p\right)  &=&\frac{\overline{n}_{e}\left( \psi \right)
+n_{e}^{\dag }}{\left[ 2\pi \Theta \left( \psi \right) \right] ^{3/2}}\exp
+\left[ -\frac{\overline{p}^{2}\beta _{th}^{\dag 2}}{\left( 1+\gamma \right) 
+\overline{T}_{e}\left( \psi \right) \beta _{th}^{\dag 2}}\right]   \nonumber
+\\
+&=&\frac{\overline{n}_{e}\left( \psi \right) n_{e}^{\dag }}{\left[ 2\pi 
+\overline{T}_{e}\left( \psi \right) \beta _{th}^{\dag 2}\right] ^{3/2}}\exp
+\left[ -\frac{\overline{p}^{2}}{\left( 1+\gamma \right) \overline{T}%
+_{e}\left( \psi \right) }\right] 
+\end{eqnarray}
+since $\beta _{th}^{\dag }=\sqrt{T_{e}^{\dag }/m_{e}c^{2}}.$ Then, it turns
 out that 
 \begin{equation}
 f_{M}\left( \psi ,p\right) =\frac{n_{e}^{\dag }}{\beta _{th}^{\dag 3}}%
-\overline{f}_{M}\left( \psi ,p\right) =\frac{n_{e}^{\dag }}{p_{th}^{\dag 3}}%
-\overline{f}_{M}\left( \psi ,p\right)
+\overline{f}_{M}\left( \psi ,\overline{p}\right) =\frac{n_{e}^{\dag }}{%
+p_{th}^{\dag 3}}\overline{f}_{M}\left( \psi ,\overline{p}\right) 
 \end{equation}
-where 
+since $p_{th}^{\dag }=\beta _{th}^{\dag }$, with 
 \begin{equation}
-\overline{f}_{M}\left( \psi ,p\right) \approx \alpha \frac{\overline{n}%
-_{e}\left( \psi \right) }{\left[ 2\pi \overline{T}_{e}\left( \psi \right)
-\right] ^{3/2}}\exp \left[ -\frac{\overline{p}^{2}}{\left( 1+\gamma \right) 
-\overline{T}_{e}\left( \psi \right) }\right]
+\overline{f}_{M}\left( \psi ,p\right) \approx \frac{\overline{n}_{e}\left(
+\psi \right) }{\left[ 2\pi \overline{T}_{e}\left( \psi \right) \right] ^{3/2}%
+}\exp \left[ -\frac{\overline{p}^{2}}{\left( 1+\gamma \right) \overline{T}%
+_{e}\left( \psi \right) }\right] 
+\end{equation}
+which may be expressed in an alternative form useful for calculating
+interpolation between full and half-grids
+\begin{equation}
+\overline{f}_{M}\left( \psi ,p\right) \approx \frac{\overline{n}_{e}\left(
+\psi \right) }{\left[ 2\pi \overline{T}_{e}\left( \psi \right) \right] ^{3/2}%
+}\exp \left[ -\frac{\gamma -1}{\overline{T}_{e}\left( \psi \right) \beta
+_{th}^{\dag 2}}\right] 
 \end{equation}
 
-With this definition one can cross-check that 
+One can then cross-check that 
 \begin{equation}
 2\pi \int_{-1}^{+1}d\xi _{0}\int_{0}^{+\infty }p^{2}f_{M}\left( \psi
 ,p\right) dp=2\pi p_{th}^{\dag 3}\frac{n_{e}^{\dag }}{\beta _{th}^{\dag 3}}%
 \int_{-1}^{+1}d\xi _{0}\int_{0}^{+\infty }\overline{p}^{2}\overline{f}%
-_{M}\left( \psi ,p\right) d\overline{p}=n_{e}^{\dag }\overline{n}_{e}=n_{e}
+_{M}\left( \psi ,\overline{p}\right) d\overline{p}=n_{e}^{\dag }\overline{n}%
+_{e}=n_{e}
 \end{equation}
-since $p_{th}^{\dag }=\beta _{th}^{\dag }$ and the normalisation coefficient 
-$\alpha $ is defined by the relation
-
-\begin{equation}
-\alpha =\frac{\overline{n}_{e}\left( \psi \right) }{4\pi \frac{\overline{n}%
-_{e}\left( \psi \right) }{\left[ 2\pi \overline{T}_{e}\left( \psi \right)
-\right] ^{3/2}}\int_{0}^{+\infty }\overline{p}^{2}\exp \left[ -\frac{%
-\overline{p}^{2}}{\left( 1+\gamma \right) \overline{T}_{e}\left( \psi
-\right) }\right] d\overline{p}}
-\end{equation}
-with $\alpha =1$ for $\beta _{th}^{\dag }\ll 1.$ Usually, no simple
-analytical expression of $\alpha $ may be obtained, and its value is only
-determined numerically. A good criterion upon the validity of the condition (%
-\ref{weakrelativist}) is that the value of $\alpha $ must always remain
-close to unity.
+the local density is well recovered$.$
 
 \subsection{Poloidal flux coordinate}
 
@@ -436,7 +484,7 @@ Introducing normalized coordinates, it turns out that
 &=&\frac{1}{\nu _{e}^{\dag }\psi _{a}}\frac{\partial }{\partial \overline{
 \psi }}\left( \frac{\Bbb{D}_{\psi }^{\left( 0\right) }}{\psi _{a}}\left|
 \nabla \psi \right| _{0}^{2}\frac{\partial \overline{f}_{0}^{\left( 0\right)
-}}{\partial \overline{\psi }}+\left| \nabla \psi \right| _{0}\mathbf{F}%
+}}{\partial \overline{\psi }}+\left| \nabla \psi \right| _{0}\mathbf{F}
 _{\psi }^{\left( 0\right) }\overline{f}_{0}^{\left( 0\right) }\right) 
 \nonumber \\
 &=&\frac{\partial }{\partial \overline{\psi }}\left( \frac{\Bbb{D}_{\psi
