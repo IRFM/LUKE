@@ -6,6 +6,25 @@ xeta0_fsav_mksa,xepsi_fsav_mksa,xia,xft_fsav] = display_dke_1yp(filename,auto_mo
 %
 %by Y.Peysson CEA-DRFC 02/08/2003 <yves.peysson@cea.fr>
 %
+% Display options
+style1 = '--';
+style2 = '-';
+style3 = 'none';
+marker = 'none';
+marker1 = 'x';
+marker2 = '+';
+color1 = 'b';
+color2 = 'r';
+color3 = 'g';
+color4 = 'm';
+color5 = 'k';
+width1 = 0.5;
+width2 = 2;
+siz = 20;
+red = 0.95;
+lspace = 0.7;
+bspace1 = 0.7;
+bspace2 = 0.5;
 %
 warning off;
 [s,dossier,machine] = comput_dke_yp;
@@ -242,8 +261,10 @@ end
 %
 xepsi_fsav_mksa = xepsi_ref_fsav*Edreicer_ref;	
 %
-dbstop 246
-figure(20000),plot(xrho(r_dke),xVr*me*clum*betath_ref*nhu_ref/qe),title('Vr')
+if dke_mode == 1, %Wave-induced Pinch
+figure(20000),graph1D_jd(xrho(r_dke),xVr*me*clum*betath_ref*nhu_ref/qe,0,0,'\rho','V_{\rho} (m/s)','Wave-induced pinch','',[0,1],[-0.008,0],style2,marker,color2,width2)
+end
+%
 while 1,
 	ir_display_dke = find(r_dke == ir_display);
 	if auto_mode_in == 0,
@@ -482,24 +503,6 @@ while 1,
             xlab2 = 'p_{\perp}/p_{Te}^{ref}';
             xlim2 = [0,pnmax_S];
             leg = ['f_{init}';'f_0     '];
-            style1 = '--';
-            style2 = '-';
-            style3 = 'none';
-            marker = 'none';
-            marker1 = 'x';
-            marker2 = '+';
-            color1 = 'b';
-            color2 = 'r';
-            color3 = 'g';
-            color4 = 'm';
-            color5 = 'k';
-            width1 = 0.5;
-            width2 = 2;
-            siz = 20;
-            red = 0.95;
-            lspace = 0.7;
-            bspace1 = 0.7;
-            bspace2 = 0.5;
 %
             x9 = x1;
             y9 = sqrt(pnmax_S^2 - x9.^2);
