@@ -26,22 +26,15 @@ function 	 [Xdeltap_imj,Xdeltap_ipj,...
 if nargin < 20,
 	error('Wrong number of input arguments in fppgridweights_dke_yp')
 end
-%Momentum grid interpolation			  
+%
+%Momentum grid interpolation
+%
 %Xdeltap_ipj = g_dke_yp(-Xdpnp.*XFp_ipj./XDpp_ipj,-(Xdpnpp - Xdpn).*(XFp_ippj./XDpp_ippj - XFp_ij./XDpp_ij)/4); 		
 %Xdeltap_imj = g_dke_yp(-Xdpnm.*XFp_imj./XDpp_imj,-(Xdpn - Xdpnmm).*(XFp_ij./XDpp_ij - XFp_immj./XDpp_immj)/4);	
 Xdeltap_ipj = g_dke_yp(-Xdpnp.*XFp_ipj./XDpp_ipj); 		
 Xdeltap_imj = g_dke_yp(-Xdpnm.*XFp_imj./XDpp_imj);	
-
-
-
-%Test if the interpolation is valid
-testp = isempty(find(abs(Xdeltap_ipj)>1));
-testm = isempty(find(abs(Xdeltap_imj)>1));
-if (testp+testm ~= 2),
-   figure(20000),plot(Xdpnp,Xdeltap_ipj),xlabel('pnp-ref'),ylabel('delta-ip')
-   figure(20001),plot(Xdpnm,Xdeltap_imj),xlabel('pnm-ref'),ylabel('delta-im')
-	error('Interpolation coefficient on momentum flux grid larger than 1 ! Adjust snp and np_S_ref parameters');	
-end
+%
 %Pitch-angle grid interpolation
+%
 Xdeltam_ijp = Xdmhupp./(Xdmhu + Xdmhupp);
 Xdeltam_ijm = Xdmhu./(Xdmhu + Xdmhumm);
