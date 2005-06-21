@@ -2788,14 +2788,17 @@ if nb > 0,
    xP0_rf_tp_fsav = 0;
    xP0_rf_g_fsav = 0;
 %
+   xyP0_rf_fsav = zeros(nr,nb);
+   xyP0_rf_tp_fsav = zeros(nr,nb);
+   xyP0_rf_g_fsav = zeros(nr,nb);
+
+%
    for ib=1:nb,
 	   eval(['load ',temppath,'temp_ray_#',int2str(ib),' ZYXXD_rf ZYXXD_rf_tp ZYXXF_rf_tp']);%Load large data file for each ray
 %	   
 		xyD0_rf = waveparam(:,ib,4);% RF quasi-linear diffusion coefficient (nhuth_ref*pth_ref^2)
 		YXXD0_rf = shiftdim(repmat(xyD0_rf,[1,1,npn,nmhu]),2);
 %
-% Sum over all rays
-%	    
 		XXDpp_rf_imj = ZYXXD_rf{4}.*YXXD0_rf;
 		XXDpp_rf_ipj = ZYXXD_rf{2}.*YXXD0_rf;
 		XXDpm_rf_imj = ZYXXD_rf{8}.*YXXD0_rf;
@@ -2889,14 +2892,18 @@ if nb > 0,
 	  ZSp0{3,10} = ZSp0{3,10} + XXSm0_rf_ijp;
 	  ZSp0{3,11} = ZSp0{3,11} + XXSm0_rf_tp_ijp;
 	  ZSp0{3,12} = ZSp0{3,12} + XXSm0_rf_g_ijp;
+%	  
+      xyP0_rf_fsav(:,ib) = xP0_rf_fsav;
+      xyP0_rf_tp_fsav(:,ib) = xP0_rf_tp_fsav;
+      xyP0_rf_g_fsav(:,ib) = xP0_rf_g_fsav;  
 	end
 %
-	ZP0_fsav{3,1} = xP0_rf_fsav;%For all rays
-	ZP0_fsav{3,2} = xP0_rf_tp_fsav;%For all rays
-	ZP0_fsav{3,3} = xP0_rf_g_fsav;%For all rays
+    ZP0_fsav{3,1} = xyP0_rf_fsav;%For all rays
+    ZP0_fsav{3,2} = xyP0_rf_tp_fsav;%For all rays
+    ZP0_fsav{3,3} = xyP0_rf_g_fsav;%For all rays
 end
 %
-    clear xyP0_rf_fsav xyP0_rf_tp_fsav xyP0_rf_g_fsav
+clear xyP0_rf_fsav xyP0_rf_tp_fsav xyP0_rf_g_fsav
 %
 %   Wave-induced radial transport by adjoint technique (P. Helander model)
 %
