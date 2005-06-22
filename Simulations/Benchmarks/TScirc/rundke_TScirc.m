@@ -106,7 +106,7 @@ end
 %
 %************************************************************************************************************************************
 %
-[Znorm_ref,Znorm_ref_fsav,Zcurr_ref,Zcurr_ref_fsav,ZP0_ref_fsav,time,memoryLU_f,memoryLU_g] = main_dke_yp(snumber,psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple);
+[Znorm_ref,Znorm_ref_fsav,Zcurr_ref,Zcurr_ref_fsav,ZP0_ref_fsav,time,memoryLU_f,memoryLU_g,radial,momentum,mksa] = main_dke_yp(snumber,psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple);
 %	    
 %************************************************************************************************************************************
 

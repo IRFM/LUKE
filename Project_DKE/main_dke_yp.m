@@ -1,4 +1,4 @@
-function [Znorm_ref,Znorm_ref_fsav,Zcurr_ref,Zcurr_ref_fsav,ZP0_ref_fsav,time_out,memoryLU_f_out,memoryLU_g_out] = main_dke_yp(snumber,psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple);
+function [Znorm_ref,Znorm_ref_fsav,Zcurr_ref,Zcurr_ref_fsav,ZP0_ref_fsav,time_out,memoryLU_f_out,memoryLU_g_out,radial,momentum,mksa] = main_dke_yp(snumber,psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple);
 %
 %  Main function of the 3-D relativistic bounce-averaged electron drift kinetic equation solver 
 %  for the RF wave absorption problem in presence of an Ohmic electric field (electron bootstrap current consistent with non-Maxwellian distribution)
@@ -111,6 +111,19 @@ end
 %
 [xpsin,xpsin_dke,xdpsin_dke,xpsinm_dke,xdpsinm_dke,xpsinp_dke,xdpsinp_dke,xpsin_S_dke,r_dke,ir_display] = radialgrid_dke_jd(dke_mode,psin_S,dpsin_dke,psin_display);
 %
+%Build the structure for output
+%
+radial.xpsin = xpsin;
+radial.xpsin_dke = xpsin_dke;
+radial.xdpsin_dke = xdpsin_dke
+radial.xpsinm_dke = xpsinm_dke;
+radial.xdpsinm_dke = xdpsinm_dke;
+radial.xpsinp_dke = xpsinp_dke;
+radial.xdpsinp_dke = xdpsinp_dke;
+radial.xpsin_S_dke = xpsin_S_dke;
+radial.r_dke = r_dke;
+radial.ir_display = ir_display;
+%
 % ----------- Plasma equilibrium of the radial grid ---------------
 %
 [theta,xpsin,psia,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,xmhu0T2,xdV_dke,xdA_dke] = equilibrium_jd(equil,xpsin,xpsin_S_dke,display_mode,'spline',10);
@@ -136,6 +149,23 @@ end
 % ------------ Momentum Grid ----------- 
 %
 [pn,dpn,pnm,dpnm,pnp,dpnp,pn_S,mhu,dmhu,mhum,dmhum,mhup,dmhup,mhu_S] = momentumgrid_dke_jd(grid_uniformity,grid_power,dke_mode,r_dke,xmhu0T2,nmhu_S,np_S,pnmax_S,sfac,snmhu,snp,np_S_ref);
+%
+%Build the structure for output
+%
+momentum.pn = pn;
+momentum.dpn = dpn;
+momentum.pnm = pnm;
+momentum.dpnm = dpnm;
+momentum.pnp = pnp;
+momentum.dpnp = dpnp; 
+momentum.pn_S = pn_S;
+momentum.mhu = mhu;
+momentum.dmhu = dmhu;
+momentum.mhum = mhum;
+momentum.dmhum = dmhum;
+momentum.mhup = mhup;
+momentum.dmhup = dmhup;
+momentum.mhu_S = mhu_S;
 %
 nmhu = length(mhu);
 np = length(pn);
@@ -271,6 +301,7 @@ Xpnpar_ref = Xpn_ref.*Xmhu;
 Xpnperp2_ref = Xpn2_ref - Xpnpar_ref.*Xpnpar_ref;
 %
 lnc_e_ref = 31.3 - 0.5*log(ne_ref) + log(Te_ref*1000);%Reference Coulomb logarithm (Sauter et al. Phys. Plasmas, 6 (1999) 2834)
+lnc_i_ref = 31.3 - 0.5*log(ne_ref) + log(Te_ref*1000);%Reference Coulomb logarithm (Sauter et al. Phys. Plasmas, 6 (1999) 2834)
 nhu_ref = qe^4*ne_ref*lnc_e_ref/(4*pi*e0^2*me^2*(clum*betath_ref)^3);%Reference electron collision frequency (s-1)
 xftp_norm_ref = me*clum*betath_ref*xR0.*xBT0./xB0/qe/psia;%Normalization factor for drift kinetic equation (ftilde)
 %
@@ -381,6 +412,15 @@ if ~isempty(ripple),
 		XXnhuloss_ref(:,:,ir) = Xnhuloss_ref;
 	end
 end
+%
+%Build the structure for output
+%
+mksa.betath_ref = betath_ref;
+mksa.ne_ref = ne_ref;
+mksa.nhu_ref = nhu_ref;
+mksa.P_ref = me*(clum*betath_ref)^2*nhu_ref*ne_ref/1e6;%MKSA power unit
+mksa.j_ref = qe*clum*betath_ref*ne_ref/1e6;%MKSA current unit
+mksa.Edreicer_ref = me*clum*betath_ref*nhu_ref/qe;%MKSA Dreicer field unit
 %
 %***************************** RF Wave parameters calculations *************************************
 %
