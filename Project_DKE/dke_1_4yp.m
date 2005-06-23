@@ -2788,9 +2788,9 @@ if nb > 0,
    xP0_rf_tp_fsav = 0;
    xP0_rf_g_fsav = 0;
 %
-   xyP0_rf_fsav = zeros(nr,nb);
-   xyP0_rf_tp_fsav = zeros(nr,nb);
-   xyP0_rf_g_fsav = zeros(nr,nb);
+   xyP0_rf_fsav = zeros(nr_dke,nb);
+   xyP0_rf_tp_fsav = zeros(nr_dke,nb);
+   xyP0_rf_g_fsav = zeros(nr_dke,nb);
 
 %
    for ib=1:nb,
