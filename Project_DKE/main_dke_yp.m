@@ -111,22 +111,26 @@ end
 %
 [xpsin,xpsin_dke,xdpsin_dke,xpsinm_dke,xdpsinm_dke,xpsinp_dke,xdpsinp_dke,xpsin_S_dke,r_dke,ir_display] = radialgrid_dke_jd(dke_mode,psin_S,dpsin_dke,psin_display);
 %
-%Build the structure for output
-%
-radial.xpsin = xpsin;
-radial.xpsin_dke = xpsin_dke;
-radial.xdpsin_dke = xdpsin_dke
-radial.xpsinm_dke = xpsinm_dke;
-radial.xdpsinm_dke = xdpsinm_dke;
-radial.xpsinp_dke = xpsinp_dke;
-radial.xdpsinp_dke = xdpsinp_dke;
-radial.xpsin_S_dke = xpsin_S_dke;
-radial.r_dke = r_dke;
-radial.ir_display = ir_display;
-%
 % ----------- Plasma equilibrium of the radial grid ---------------
 %
 [theta,xpsin,psia,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,xmhu0T2,xdV_dke,xdA_dke] = equilibrium_jd(equil,xpsin,xpsin_S_dke,display_mode,'spline',10);
+%
+%Build the structure for output
+%
+radial.xhro = xrho;
+radial.ap = ap;
+radial.Rp = Rp;
+radial.Zp = Zp;
+radial.xdV_dke = xdV_dke;
+radial.xdA_dke = xdA_dke;
+radial.xpsin = xpsin;
+radial.xpsin_dke = xpsin_dke;
+radial.psia = psia;
+radial.xdpsin_dke = xdpsin_dke
+radial.xpsin_S_dke = xpsin_S_dke;
+radial.xmhu0T2 = xmhu0T2;
+radial.r_dke = r_dke;
+radial.ir_display = ir_display;
 %
 if diary_mode == 1, 
 	diaryfile = ['diary_dke_',int2str(iloop)];
