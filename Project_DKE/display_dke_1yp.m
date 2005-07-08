@@ -235,7 +235,7 @@ Pelec_tot = xPelec_tot_fsav_mksa*xdV_dke',%in MW
 %
 xyPabs0_lh_fsav_mksa = xyPabs0_lh_ref_fsav*P_ref;
 xyPabs_tot_lh_fsav_mksa = xyPabs_tot_lh_ref_fsav*P_ref;
-sum(xyPabs_tot_lh_fsav_mksa.*xdV_dke'),%in MW
+sum((xyPabs_tot_lh_fsav_mksa.*(xdV_dke(:)*ones(1,size(xyPabs_tot_lh_fsav_mksa,2))))'),%in MW
 xyPabs0_ec_fsav_mksa = xyPabs0_ec_ref_fsav*P_ref;
 xyPabs_tot_ec_fsav_mksa = xyPabs_tot_ec_ref_fsav*P_ref;
 %
