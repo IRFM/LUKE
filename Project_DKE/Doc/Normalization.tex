@@ -56,16 +56,16 @@ a simple model may be used in order to determine densities $n_{s}\left( \psi
 \right) $ with $s=\left\{ 1,2\right\} $, knowing electron density $%
 n_{e}\left( \psi \right) $ and effective charge $Z_{eff}\left( \psi \right) $
 profiles. Indeed, since by definition\footnote{%
-An alternative definition of $Z_{eff}$ is given by the following expression,
+An alternative definition of $Z_{eff}$ is given by the following expression, 
 \[
 Z_{eff}\left( \psi \right) =\sum_{s}\sum_{s^{\prime }}\frac{n_{ss^{\prime
 }}\left( \psi \right) }{n_{e}\left( \psi \right) }Z_{ss^{\prime }}^{2}\frac{
-\ln \Lambda _{ess^{\prime }}^{\dagger }}{\ln \Lambda _{ee}^{\dagger }}
+\ln \Lambda _{ess^{\prime }}^{\dagger }}{\ln \Lambda _{ee}^{\dagger }} 
 \]
 Both definitions merge if the condition $\ln \Lambda _{ess^{\prime
 }}^{\dagger }=\ln \Lambda _{ee}^{\dagger }$ is assumed to be valid.}, 
 \begin{eqnarray}
-Z_{eff}\left( \psi \right)  &=&\sum_{s}\sum_{s^{\prime }}\frac{n_{ss^{\prime
+Z_{eff}\left( \psi \right) &=&\sum_{s}\sum_{s^{\prime }}\frac{n_{ss^{\prime
 }}\left( \psi \right) Z_{ss^{\prime }}^{2}}{n_{ss^{\prime }}\left( \psi
 \right) Z_{ss^{\prime }}} \\
 &=&\frac{1}{n_{e}\left( \psi \right) }\sum_{s}\sum_{s^{\prime
@@ -79,11 +79,11 @@ with two unknowns,
 \left\{ 
 \begin{array}{l}
 n_{1}\left( \psi \right) Z_{1}^{2}+n_{2}\left( \psi \right)
-Z_{2}^{2}=n_{e}\left( \psi \right) Z_{eff}\left( \psi \right)  \\ 
+Z_{2}^{2}=n_{e}\left( \psi \right) Z_{eff}\left( \psi \right) \\ 
 n_{1}\left( \psi \right) Z_{1}+n_{2}\left( \psi \right) Z_{2}=n_{e}\left(
-\psi \right) 
+\psi \right)
 \end{array}
-\right. 
+\right.
 \end{equation}
 
 Therefore, 
@@ -112,12 +112,12 @@ In the calculations, one may also consider several isotopes, since ion
 inertia play a significant role for the collision operator. Hence, 
 \begin{equation}
 n_{ss^{\prime }}\left( \psi \right) =\sum_{m}n_{ss^{\prime }}^{m}\left( \psi
-\right) 
+\right)
 \end{equation}
 or 
 \begin{equation}
 \overline{n}_{ss^{\prime }}\left( \psi \right) =\sum_{m}\overline{n}%
-_{ss^{\prime }}^{m}\left( \psi \right) 
+_{ss^{\prime }}^{m}\left( \psi \right)
 \end{equation}
 where the masses of isotope $m$ of ion species $ss^{\prime }$ are $%
 m_{ss^{\prime }}^{m}.$ In the calculations 
@@ -129,9 +129,9 @@ where $m_{e}$ is the electron rest mass.
 \subsection{Coulomb Logarithm}
 
 The electron-electron Coulomb logarithm $\ln \Lambda _{ee}$ is defined as
-the logarithm of the ratio******************
+the logarithm of the ratio****************** 
 \begin{equation}
-\ln \Lambda _{ee}=\ln 
+\ln \Lambda _{ee}=\ln
 \end{equation}
 
 \begin{equation}
@@ -151,7 +151,7 @@ _{e}^{\dag }$ according to the relation
 \end{equation}
 where 
 \begin{equation}
-\nu _{e}^{\dag }=\frac{q_{e}^{4}n_{e}^{\dag }\ln \Lambda ^{\dag }}{4\pi %
+\nu _{e}^{\dag }=\frac{q_{e}^{4}n_{e}^{\dag }\ln \Lambda ^{\dag }}{4\pi
 \varepsilon _{0}^{2}m_{e}^{2}c^{3}\beta _{th}^{\dag 3}}=\frac{cr_{e}^{2}}{%
 \beta _{th}^{\dag 3}}n_{e}^{\dag }\ln \Lambda _{ee}^{\dag }
 \label{normcollfreq}
@@ -281,7 +281,7 @@ f_{M}\left( \psi ,p\right) &=&\frac{n_{e}\left( \psi \right) }{4\pi \Theta
 ^{-1}\right) }\exp \left[ -\frac{\gamma }{\Theta }\right]
 \end{eqnarray}
 
-For $\Theta \ll 1,$ using the large argument asymptotic development of $
+For $\Theta \ll 1,$ using the large argument asymptotic development of $%
 K_{2}\left( \Theta ^{-1}\right) \approx \sqrt{\pi /2}\sqrt{\Theta }\exp
 (-\Theta ^{-1})+O\left( \Theta ^{-3/2}\right) ,$ the usual expression 
 \begin{eqnarray}
@@ -727,7 +727,7 @@ p_{\bot }\right) .$ By integrating the current integral $v_{\Vert
 }f_{0}^{\left( 0\right) }$ out to $p_{\max },$ one obtains 
 \begin{equation}
 J^{\left( 0\right) }\left( v_{\max }\right) \approx J_{bulk}^{\left(
-0\right) }+\frac{1}{2m_{e}}\left( \frac{\Gamma _{R}^{\left( 0\right) }}{
+0\right) }+\frac{1}{2m_{e}}\left( \frac{\Gamma _{R}^{\left( 0\right) }}{%
 E_{\Vert 0}}\right) p_{\max }^{2}
 \end{equation}
 and in normalized units, 
@@ -752,6 +752,22 @@ p_{th}^{\dag }n_{e}^{\dag }\nu _{e}^{\dag }p_{th}^{\dag }/q_{e}}=1
 \end{equation}
 which demonstrates the overall consistency of the normalization of the
 different quantities calculated by the code.
+
+The bounce-averaged avalanche source term $\mathcal{S}_{R}^{\left( 0\right) }
+$ given by relation \ref{bavavalanchesourceterm}, is simply proportional to $%
+\left\langle n_{R}\right\rangle _{V}\nu _{e}/\ln \Lambda _{ee}.$ Therefore
+\begin{equation}
+\mathcal{S}_{R}^{\left( 0\right) }\propto \frac{\left\langle \overline{n}%
+_{R}\right\rangle _{V}\overline{\nu }_{e}}{\overline{\ln \Lambda _{ee}}}%
+\frac{n_{e}^{\dag }\nu _{e}^{\dag }}{\ln \Lambda _{ee}^{\dag }}
+\end{equation}
+where $\overline{\ln \Lambda _{ee}}=\ln \Lambda _{ee}/\ln \Lambda
+_{ee}^{\dag },$ and the ratio is
+
+\begin{equation}
+\frac{n_{e}^{\dag }\nu _{e}^{\dag }}{\ln \Lambda _{ee}^{\dag }}=\frac{%
+n_{e}^{\dag 2}cr_{e}^{2}}{\beta _{th}^{\dag 3}}
+\end{equation}
 
 \subsection{Electron magnetic ripple loss rate}
 

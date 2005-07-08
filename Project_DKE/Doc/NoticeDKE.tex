@@ -9,6 +9,7 @@
 %\usepackage{latexsym}
 \usepackage{amssymb}
 \usepackage{amsmath}
+\usepackage{amsmath}
 %\usepackage{epstopdf}
 %\usepackage[mathscr]{eucal}
 %\usepackage[body={5.5in,9in}]{geometry}
@@ -40,6 +41,7 @@
 \pagestyle{fancyplain}
 
 % -- Format -- %
+\newcommand{\erf}{Erf}
 \renewcommand{\chaptermark}[1]{\markboth{\thechapter. #1}{}}
 \renewcommand{\sectionmark}[1]{\markright{\thesection. #1}{}}
 %\include{myAbbrevs}
@@ -368,6 +370,10 @@ potential numerical and physical limitations.
 \chapter{Cold Plasma Model for RF Waves}
 
     \input{RFappendix.tex}
+    
+\chapter{Large pitch-angle collisions}
+
+    \input{pitchangle.tex}
 
 \chapter{Alternative discrete cross-derivatives coefficients}
 
