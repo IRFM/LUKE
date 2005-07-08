@@ -78,7 +78,7 @@ c DRMERC : resistive Mercier criterion
 c BALCRIT : ballooning stability criterion (stable if >1, marginally stable if =1, unstable if <1, except if s<0 : balcrit=0 (always stable with negative magnetic shear)) 
 c ifail  : code d'erreur (0 si pas d'erreur) [1,1]
 C
-C Compilation : fmex helmex77.f -ldxml
+C Compilation : mex -f mexopts_f77.sh -lnag helmex77.f (dans matlab 7 ou dans le shell)
 C--------------------------------------------------------------
 
       IMPLICIT REAL*8 (A-H,O-Z)
