@@ -1,0 +1,382 @@
+
+\label{largepitchangle}
+
+\subsection{Relativistic electron-electron collisions}
+
+The starting point of the calculations for the avalanche source term in the
+runaway process is close Coulomb collisions between a thermal or sub-thermal
+electron and and ultrarelativistic electron. Since the realmtivistic
+electron has a very high momentum, loosing a small amount of it may not
+affect its dynamics significantly (it remains in the runaway phase space
+after the momentum transfer), but for the other electron the gain in energy
+may be so large that the drag force is suddenly strongly decreasing. For an
+electron whose kinetic energy is closely below the runaway energy threshold,
+such a process may make it runaway, leading by multiple interaction to the
+avalanche effect.
+
+The electron is characterized by the 4-momentum vector $\mathbf{P}$ defined
+as 
+\begin{equation}
+\mathbf{P\equiv }\gamma \left( 1,\frac{\mathbf{v}}{c}\right) 
+\end{equation}
+where $\gamma =\sqrt{1+p^{2}}=1/\sqrt{1-\left( v/c\right) ^{2}}$ is the
+normalized total energy $E_{T}=\gamma m_{e}c^{2},$ and $\mathbf{v}/c$ is the
+normalized momentum $p=\gamma m_{e}c^{2}$. The scalar product for the
+4-momentum vector $\mathbf{P}$ is defined by the relation 
+\begin{equation}
+\mathbf{A\cdot B=}A_{1}B_{1}-A_{2}B_{2}-A_{3}B_{3}-A_{4}B_{4}
+\end{equation}
+according the relativistic theory, and therefore 
+\begin{equation}
+\mathbf{P\cdot P=}\gamma ^{2}\left( 1-\frac{\mathbf{v\cdot v}}{c^{2}}\right)
+=\gamma ^{2}\left( 1-\frac{v^{2}}{c^{2}}\right) =1
+\end{equation}
+
+Let consider two electrons, one moving at high velocity close to the speed
+of light $c$, the other being at rest in the frame of mass, since its
+velocity is considering to be negligible as compared to $c$. In an elastic
+collision, both energy and momentum are conserved. If initial and final
+4-momentum values are $(\mathbf{P}_{0}\mathbf{,}$ $\mathbf{P}_{1}\mathbf{)}$
+and $(\mathbf{P}_{2}\mathbf{,}$ $\mathbf{P}_{3}\mathbf{)}$ for the fast and
+slow electrons, one has the relation 
+\begin{equation}
+\mathbf{P}_{0}+\mathbf{P}_{1}=\mathbf{P}_{2}+\mathbf{P}_{3}
+\end{equation}
+or 
+\begin{equation}
+\mathbf{P}_{0}+\mathbf{P}_{1}-\mathbf{P}_{2}=\mathbf{P}_{3}
+\end{equation}
+
+Squaring both sides and using the definition of the scalar product for
+4-momentum vectors, it comes 
+\begin{equation}
+1+\mathbf{P}_{0}\mathbf{\cdot P}_{1}-\mathbf{P}_{0}\mathbf{\cdot P}_{2}-%
+\mathbf{P}_{1}\mathbf{\cdot P}_{2}=0
+\end{equation}
+and using the formulation 
+\begin{equation}
+\mathbf{P}_{i}\mathbf{\cdot P}_{j}=\gamma _{i}\gamma _{j}\left( 1-\frac{%
+\mathbf{v}_{i}\mathbf{\cdot v}_{j}}{c^{2}}\right) 
+\end{equation}
+with the assumptions that $\mathbf{v}_{0}\sim 0$ and $\gamma _{0}\sim 1$
+since the target electron is nearly at rest before the collision, one
+obtains 
+\begin{equation}
+1+\gamma _{1}-\gamma _{2}-\gamma _{1}\gamma _{2}\left( 1-\frac{\mathbf{v}_{1}%
+\mathbf{\cdot v}_{2}}{c^{2}}\right) =0
+\end{equation}
+or 
+\begin{equation}
+1+\gamma _{1}-\gamma _{2}-\gamma _{1}\gamma _{2}+p_{1}p_{2}\xi ^{*}=0
+\label{eecoll}
+\end{equation}
+where $\xi ^{*}$ is the cosine of the pitch-angle between the incoming
+primary electron and the scattered secondary electron as defined in Fig.
+***. Here, 
+\begin{eqnarray}
+\xi ^{*} &=&-\frac{\left( 1+\gamma _{1}\right) \left( 1-\gamma _{2}\right) }{%
+p_{1}p_{2}}  \nonumber \\
+&=&-\frac{\left( 1+\sqrt{1+p_{1}^{2}}\right) \left( 1-\sqrt{1+p_{2}^{2}}%
+\right) }{p_{1}p_{2}}  \nonumber \\
+&=&\sqrt{\left( \frac{\gamma _{1}+1}{\gamma _{1}-1}\right) \left( \frac{%
+\gamma _{2}-1}{\gamma _{2}+1}\right) }  \label{pitchanglerunaway}
+\end{eqnarray}
+and since $\left| \xi ^{*}\right| \leq 1,$ the validity of the relation
+imposes $p_{2}\leq p_{1}.$ For very energetic runaway electrons, the
+following condition  $\gamma _{1}\gg 1$ is fullfiled, and
+\begin{equation}
+\xi ^{*}\approx \sqrt{\frac{\gamma _{2}-1}{\gamma _{2}+1}}
+\end{equation}
+
+This relation relates the cosine of the scattering angle $\xi _{2}$ of the
+slow electron to its momentum $p_{2}$ after the collisions with the fast
+electron. When $p_{2}\sim 0,$ i.e. when the gain in energy is small, $\xi
+^{*}$ is close to zero, which means that the scattering is perpendicular to
+the direction of the runaway electron. In that case, the slow electron gains
+only perpendicular energy with respect to the magnetic field line direction.
+Conversely, when $p_{2}\gg 1,$ the slow electron becomes very energetic in
+the collision process, and in this case $\xi ^{*}\sim 1,$ which means that
+the electron has a high probability to fall into the runaway region in the
+momentum phase space. It is important to notice that $\xi ^{*}>0,$ i.e. that
+the rest electrons can only be scattered in the direction of the primary
+runaway electron, and the locus of the end point of the scattered momentum
+is along an ellipse as indicated in Ref. \cite{chi98}. Let define $p_{2\Vert
+}=p_{2}\xi ^{*},$ the projection of the scattered electron momentum on the
+momentum direction of the primary electron. By construction $\gamma
+_{2}^{2}=1+$ $p_{2\Vert }^{2}+$ $p_{2\bot }^{2}.$ From relation \ref{eecoll}%
+, one obtains
+\begin{equation}
+\left( 1+\gamma _{1}\right) \left( 1-\gamma _{2}\right) +p_{1}p_{2\Vert }=0
+\end{equation}
+which becomes
+\begin{equation}
+\gamma _{2}^{2}=\left( 1+\frac{p_{1}}{1+\gamma _{1}}p_{2\Vert }\right) ^{2}
+\end{equation}
+
+After squaring and developing both sides,
+\begin{equation}
+p_{2\Vert }^{2}+p_{2\bot }^{2}=\left( \frac{p_{1}}{1+\gamma _{1}}\right)
+^{2}p_{2\Vert }^{2}+\frac{2p_{1}}{1+\gamma _{1}}p_{2\Vert }
+\end{equation}
+one obtains
+\begin{equation}
+p_{2\Vert }^{2}\left[ 1-\left( \frac{p_{1}}{1+\gamma _{1}}\right)
+^{2}\right] -\frac{2p_{1}}{1+\gamma _{1}}p_{2\Vert }+p_{2\bot }^{2}=0
+\end{equation}
+and using the relation 
+\begin{equation}
+1-\left( \frac{p_{1}}{1+\gamma _{1}}\right) ^{2}=\frac{2}{\gamma _{1}+1}
+\end{equation}
+it turns out that
+\begin{equation}
+\frac{2p_{2\Vert }^{2}}{\gamma _{1}+1}-\frac{2p_{1}}{\gamma _{1}+1}p_{2\Vert
+}+p_{2\bot }^{2}=0
+\end{equation}
+or 
+\begin{equation}
+\frac{p_{2\Vert }^{2}}{\gamma _{1}^{2}-1}-\frac{p_{1}}{\gamma _{1}^{2}-1}%
+p_{2\Vert }+\frac{p_{2\bot }^{2}}{2\left( \gamma _{1}-1\right) }=0
+\end{equation}
+which is equivalent to ellipse equation
+\begin{equation}
+\left( \frac{p_{2\Vert }}{\sqrt{\gamma _{1}^{2}-1}}-\frac{1}{2}\right) ^{2}+%
+\frac{p_{2\bot }^{2}}{2\left( \gamma _{1}-1\right) }=\frac{1}{4}
+\end{equation}
+since
+\begin{equation}
+\frac{p_{1}}{\gamma _{1}^{2}-1}=\frac{1}{p_{1}}=\frac{1}{\sqrt{\gamma
+_{1}^{2}-1}}
+\end{equation}
+
+\subsection{Secondary electron source term}
+
+The secondary electron source term, or the scattering rate is given by the M%
+\o ller differential relativistic electron-electron cross-section \cite
+{hei57}, which has the following form
+\begin{equation}
+d\sigma _{M}=2\pi r_{e}^{2}\sum \left( \gamma _{1},\gamma _{2}\right)
+d\gamma _{2}
+\end{equation}
+where $r_{e}$ is the classical radius of the electron, and
+\begin{eqnarray}
+\sum \left( \gamma _{1},\gamma _{2}\right)  &=&\frac{\gamma _{1}^{2}}{\left(
+\gamma _{1}^{2}-1\right) \left( \gamma _{2}-1\right) ^{2}\left( \gamma
+_{1}-\gamma _{2}\right) ^{2}}\times   \nonumber \\
+&&\left\{ \left( \gamma _{1}-1\right) ^{2}-\frac{\left( \gamma _{2}-1\right)
+\left( \gamma _{1}-\gamma _{2}\right) }{\gamma _{1}^{2}}\times \left[
+2\gamma _{1}^{2}-2\gamma _{1}-1-\left( \gamma _{2}-1\right) \left( \gamma
+_{1}-\gamma _{2}\right) \right] \right\} 
+\end{eqnarray}
+which becomes for very energetic runaways, 
+\begin{equation}
+\lim_{\gamma _{1}\rightarrow \infty }\sum \left( \gamma _{1},\gamma
+_{2}\right) =\frac{1}{\left( \gamma _{2}-1\right) ^{2}}=\frac{1}{E_{c2}^{2}}
+\end{equation}
+if one introduces the kinetic energy $E_{c2}=\gamma _{2}-1$ of the scattered
+electron. It may be expressed also in a simplified form
+\begin{equation}
+\sum \left( \gamma _{1},\gamma _{2}\right) =\frac{1}{\left( \gamma
+_{1}^{2}-1\right) }\left( \frac{\gamma _{1}^{2}\left( \gamma _{1}-1\right)
+^{2}}{E_{c2}^{2}\left( \gamma _{1}-1-E_{c2}\right) ^{2}}-\frac{2\gamma
+_{1}^{2}+2\gamma _{1}+1}{E_{c2}\left( \gamma _{1}-1-E_{c2}\right) }+1\right) 
+\end{equation}
+where $E_{c1}=\gamma _{1}-1$ is simply the kinetic energy of the primary
+electron after the collision. 
+
+It is now important to separe two regions in the phase space for the primary
+electrons, those who belong to the region $\Pi _{i}$ inside the integration
+domain of the kinetic equation, and those who have gained a very large
+kinetic energy, who belong to the region $\Pi _{o}$ beyond the upper limit
+of the integration domain. 
+
+Recalling that $\gamma _{2}=\sqrt{1+p_{2}^{2}},$ $d\gamma _{2}=\left(
+p_{2}/\gamma _{2}\right) dp_{2}=v_{2}dp_{2}$ and
+\begin{equation}
+d\sigma _{M}=2\pi r_{e}^{2}\sum \left( \gamma _{1},\gamma _{2}\right) \left( 
+\frac{p_{2}}{\gamma _{2}}\right) dp_{2}=2\pi r_{e}^{2}\sum \left( \gamma
+_{1},\gamma _{2}\right) v_{2}dp_{2}
+\end{equation}
+
+\subsubsection{ Source term from very energetic runaways}
+
+For very energetic runaway electrons belonging to the region $\Pi _{o},$ the
+energy transfer is very small, i.e. 
+\begin{equation}
+E_{c2}\ll E_{c1}
+\end{equation}
+and simplifications may be done
+\begin{equation}
+\sum \left( \gamma _{1},\gamma _{2}\right) \approx \frac{1}{\left( \gamma
+_{1}^{2}-1\right) }\left( \frac{\gamma _{1}^{2}}{E_{c2}^{2}}-\frac{2\gamma
+_{1}^{2}+2\gamma _{1}+1}{E_{c2}\left( \gamma _{1}-1\right) }+1\right) 
+\approx \frac{\gamma _{1}^{2}}{\left( \gamma _{1}^{2}-1\right) }\frac{1}{%
+E_{c2}^{2}}
+\end{equation}
+which becomes in the limit $\gamma _{1}\gg 1,$ 
+\begin{equation}
+\sum \left( \gamma _{1},\gamma _{2}\right) \approx \frac{1}{E_{c2}^{2}}
+\end{equation}
+
+Since $d\gamma _{2}=dE_{c2},$ 
+\begin{eqnarray}
+d\sigma _{M} &\approx &2\pi r_{e}^{2}\frac{dE_{c2}}{E_{c2}^{2}}  \nonumber \\
+&=&-2\pi r_{e}^{2}d\left( \frac{1}{E_{c2}}\right)   \nonumber \\
+&=&-2\pi r_{e}^{2}\frac{d\left( 1/E_{c2}\right) }{dp_{2}}dp_{2}  \nonumber \\
+&=&2\pi r_{e}^{2}\frac{d}{dp_{2}}\left( \frac{1}{1-\gamma _{2}}\right) dp_{2}
+\nonumber \\
+&=&2\pi r_{e}^{2}\frac{d}{dp_{2}}\left( \frac{1}{1-\sqrt{1+p_{2}^{2}}}
+\right) dp_{2}
+\end{eqnarray}
+
+As each $p_{2}$ is uniquely associated with $\xi ^{*},$ and since all
+primary electrons are consider to have approximately zero pitch-angle, we
+can write
+\begin{equation}
+d\sigma _{M}\simeq 2\pi r_{e}^{2}\frac{d}{dp_{2}}\left( \frac{1}{1-\sqrt{%
+1+p_{2}^{2}}}\right) \delta \left( \xi _{2}-\xi ^{*}\right) d\xi _{2}dp_{2}
+\end{equation}
+and from this expression, it is possible to derive the the secondary runaway
+electron source term $\mathcal{S}_{R}\left( t,\theta ,\psi ,p_{2},\xi
+_{2}\right) $ at the poloidal position $\theta ,$ on the magnetic flux
+surface $\psi $ and time $t$ for a beam of monoenergetic primary electrons
+of velocity $v_{1}$ from the standard definition
+\begin{equation}
+n_{e}\left( t,\psi \right) n_{R}\left( t,\psi \right) v_{1}d\sigma _{M}=2\pi %
+p_{2}^{2}dp_{2}d\xi _{2}\mathcal{S}_{R}\left( t,\theta ,\psi ,p_{2},\xi
+_{2}\right) 
+\end{equation}
+so that
+\begin{equation}
+\mathcal{S}_{R}\left( t,\theta ,\psi ,p_{2},\xi _{2}\right) =\frac{%
+r_{e}^{2}n_{e}\left( t,\psi \right) n_{R}\left( t,\psi \right) v_{1}}{%
+p_{2}^{2}}\frac{d}{dp_{2}}\left( \frac{1}{1-\sqrt{1+p_{2}^{2}}}\right)
+\delta \left( \xi _{2}-\xi ^{*}\right) 
+\end{equation}
+where $n_{R}\left( t,\psi \right) $ is the density of primary runaway
+electrons and $n_{e}\left( t,\psi \right) $ is the density of target
+electrons which are scattered at momentum $p_{2}$ with a pitch-angle cosine $%
+\xi ^{*}$. \strut Here $n_{R}$ is only a function of the radial position,
+since fast electrons are only passing particles with no magnetic moments
+(zero pitch-angle).
+
+Since in the high velocity limit, $v_{1}\approx c,$ one obtains finally 
+
+\begin{equation}
+\mathcal{S}_{R}\left( t,\theta ,\psi ,p_{2},\xi _{2}\right) =\frac{%
+cr_{e}^{2}n_{e}n_{R}}{p_{2}^{2}}\frac{d}{dp_{2}}\left( \frac{1}{1-\sqrt{%
+1+p_{2}^{2}}}\right) \delta \left( \xi _{2}-\xi ^{*}\right) 
+\end{equation}
+
+Therefore, dropping the index of the secondary electron which has here no
+more interest, the secondary electron source term arising from very
+energetic runaway electrons lying in the region $\Pi _{o}$ beyond the upper
+integration limit $p_{\max },$ 
+\begin{equation}
+\mathcal{S}_{R}^{\Pi _{o}}\left( t,\theta ,\psi ,p,\xi \right) =\frac{%
+cr_{e}^{2}n_{e}n_{R}^{\Pi _{o}}}{p^{2}}\frac{d}{dp}\left( \frac{1}{1-\sqrt{%
+1+p^{2}}}\right) \delta \left( \xi -\xi ^{*}\right) 
+\end{equation}
+where $\xi ^{*}$ is given by relation \ref{pitchanglerunaway}. This is
+exactly the expression given in Ref. \cite{ros97}, where the Coulomb
+logarithm comes in through the normalization to the reference collision
+frequency $\nu _{e}^{\dag }$ introduced in Sec. \ref{normalization}.
+Recalling that
+\begin{equation}
+\mathcal{S}_{R}^{\Pi _{o}}\left( t,\theta ,\psi ,p,\xi \right) =\frac{%
+cr_{e}^{2}n_{e}^{\dag 2}}{\beta _{th}^{\dag 3}}\frac{\overline{n}_{e}%
+\overline{n}_{R}^{\Pi _{o}}}{\overline{p}^{2}}\frac{d}{d\overline{p}}\left( 
+\frac{1}{1-\sqrt{1+\beta _{th}^{\dag 2}\overline{p}^{2}}}\right) \delta
+\left( \xi -\xi ^{*}\right) 
+\end{equation}
+according to the normalization procedure given in Sec. \ref{normalization},
+and using the expression of $\nu _{e}^{\dag },$ one obtains readily
+\begin{equation}
+\mathcal{S}_{R}^{\Pi _{o}}\left( t,\theta ,\psi ,p,\xi \right) =\frac{
+n_{e}^{\dag }\nu _{e}^{\dag }}{\ln \Lambda _{ee}^{\dag }}\frac{\overline{n}%
+_{e}\overline{n}_{R}^{\Pi _{o}}}{\overline{p}^{2}}\frac{d}{d\overline{p}}
+\left( \frac{1}{1-\sqrt{1+\beta _{th}^{\dag 2}\overline{p}^{2}}}\right)
+\delta \left( \xi -\xi ^{*}\right) 
+\end{equation}
+so that $\overline{\mathcal{S}}_{R}^{\Pi _{o}}\left( t,\theta ,\psi ,p,\xi
+\right) =\mathcal{S}_{R}^{\Pi _{o}}\left( t,\theta ,\psi ,p,\xi \right)
+/n_{e}^{\dag }\nu _{e}^{\dag },$ the final expression in normalized units
+used by the code is
+\begin{equation}
+\overline{\mathcal{S}}_{R}^{\Pi _{o}}\left( t,\theta ,\psi ,p,\xi \right) =%
+\frac{1}{\ln \Lambda _{ee}^{\dag }}\frac{\overline{n}_{e}\overline{n}_{R}^{%
+\Pi _{o}}}{\overline{p}^{2}}\frac{d}{d\overline{p}}\left( \frac{1}{1-\sqrt{%
+1+\beta _{th}^{\dag 2}\overline{p}^{2}}}\right) \delta \left( \xi -\xi
+^{*}\right) 
+\end{equation}
+which must be bounce-averaged in order to incorporate particle trajectory
+effect as done in Sec. \ref{moments}, and remove the poloidal dependence $%
+\theta .$
+
+If assumptions of small energy exchange and high-velocity limit for primary
+electrons are removed, still assuming a beam of primary electron of velocity 
+$v_{1}$ along the magnetic field line direction with no pitch-angle, the
+general expression for $\mathcal{S}_{R}\left( t,\theta ,\psi ,p_{2},\xi
+_{2}\right) $ becomes
+\begin{equation}
+\mathcal{S}_{R}\left( t,\theta ,\psi ,p_{2},\xi _{2}\right)
+=cr_{e}^{2}n_{e}n_{R}\frac{p_{1}}{\gamma _{1}}\frac{\sum \left( \gamma
+_{1},\gamma _{2}\right) }{\gamma _{2}p_{2}}\delta \left( \xi _{2}-\xi
+^{*}\right) 
+\end{equation}
+using the differential relation $d\gamma _{2}=\left( p_{2}/\gamma
+_{2}\right) dp_{2}$ and $v_{1}=cp_{1}/\gamma _{1}$ in relativistic units.
+After dropping the index for secondary electrons,
+\begin{equation}
+\mathcal{S}_{R}^{\Pi _{o}}\left( t,\theta ,\psi ,p,\xi \right)
+=cr_{e}^{2}n_{e}n_{R}^{\Pi _{o}}\frac{p_{1}}{\gamma _{1}}\frac{\sum \left(
+\gamma _{1},\gamma \right) }{\gamma p}\delta \left( \xi -\xi ^{*}\right) 
+\end{equation}
+and in normalized units for kinetic calculations (******* verifier
+normalization********)
+\begin{equation}
+\overline{\mathcal{S}}_{R}^{\Pi _{o}}\left( t,\theta ,\psi ,p,\xi \right) =%
+\overline{n}_{e}\overline{n}_{R}^{\Pi _{o}}\frac{\beta _{th}^{\dag 3}}{\ln
+\Lambda _{ee}^{\dag }}\frac{\overline{p}_{1}}{\overline{p}}\frac{\sum \left(
+\gamma _{1},\gamma \right) }{\gamma \gamma _{1}}\delta \left( \xi -\xi
+^{*}\right)   \label{beamsourcegeneral}
+\end{equation}
+
+For a beam of fast primary runaway electrons with no pitch-angle with
+various velocities, the distribution function may be expressed in the simple
+form $f_{0R}(t,\psi ,\overline{p}_{1},\xi _{1})=f_{R}\left( t,\psi ,%
+\overline{p}_{1}\right) \delta \left( \xi _{1}-1\right) $. It is important
+to note that $f_{0R}$ has no poloidal dependence, since runaway electrons
+are supposed to have a negligible magentic moment. The extrapolation from
+formula \ref{beamsourcegeneral} is then straightforward, using the
+prescription
+\begin{equation}
+\overline{n}_{R}^{\Pi _{o}}\left( t,\psi \right) \frac{\overline{p}_{1}}{%
+\gamma _{1}}\mathcal{A}\left( \overline{p}_{1}\right) \rightarrow 2\pi \iint 
+\mathcal{A}\left( \overline{p}_{1}\right) f_{R}\left( t,\psi ,\overline{p}%
+_{1}\right) \delta \left( \xi _{1}-1\right) \frac{\overline{p}_{1}}{\gamma
+_{1}}\overline{p}_{1}^{2}d\overline{p}_{1}d\xi _{1}=2\pi \int_{p_{\max }}^{%
+\infty }\mathcal{A}\left( \overline{p}_{1}\right) f_{R}\left( \overline{p}%
+_{1}\right) \frac{\overline{p}_{1}^{3}}{\gamma _{1}}d\overline{p}_{1}
+\end{equation}
+where $\mathcal{A}\left( \overline{p}_{1}\right) $ is a function of $%
+\overline{p}_{1}$ arising from the energy dependence of the e-e collision
+cross-section. Here, the lower integral boundary is taken to be the upper
+limit of the Fokker-Planck integration domain, since in this Section, we
+consider only the knock-on process resulting from very energetic primary
+electrons whose momentum is well beyond $p_{\max }$.
+
+\subsubsection{Source term from moderate energetic runaways}
+
+In that case, it is no more possible to neglect the momentum distribution
+function $f_{0}$ of primary electrons which have kinetic energies $E_{c1}$
+larger than $E_{*}$ the critical runaway energy threshold. Inside the region 
+$\Pi _{i,}$the full expression of the M\o ller cross-section $d\sigma _{M}$
+must be used. The generalized source function is then given by
+\[
+\mathcal{S}_{R}\left( p_{2},\xi _{2}\right) =cr_{e}^{2}n_{e}\frac{p_{1}}{%
+\gamma _{1}}\frac{1}{\gamma _{2}p_{2}}\sum \left( \gamma _{1},\gamma
+_{2}\right) f_{0}\left( \psi ,\theta ,p_{1},\xi _{1}\right) \delta \left(
+\xi _{2}-\xi ^{*}\right) 
+\]
+
+\subsection{Critical electric field}
