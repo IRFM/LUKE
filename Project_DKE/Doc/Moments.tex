@@ -1463,7 +1463,7 @@ runaway loss rate $\Gamma _{R}$ is given by the relation
 \ p}}\left( \psi ,p\xi \right) \cdot d\mathbf{S}
 \end{equation}
 where the element of surface $d\mathbf{S}\left( p\right) =p^{2}d\xi d\varphi 
-\widehat{p}$ according to the Appendix \ref{curvilinear}. Therefore, since $
+\widehat{p}$ according to the Appendix \ref{curvilinear}. Therefore, since $%
 \int d\varphi =2\pi $ by symmetry, one obtains 
 \begin{equation}
 \Gamma _{R}\left( \psi ,\theta \right) =2\pi
@@ -2607,15 +2607,15 @@ as shown in Fig. \ref{anglebrem}.
 
 It is possible to take advantage of the azimuthal symmetry of the
 distribution function around the field line direction as well as the
-relations between angles $\chi,$ $\theta_{e}$ and $\theta_{d}$ using
+relations between angles $\chi ,$ $\theta _{e}$ and $\theta _{d}$ using
 projection on Legendre polynomials, in order to reduce the required number
 of integrations. The numerical accuracy for the determination of $%
-dn_{k}/dtdkd\Omega$ may be then greatly enhanced, while the computational
+dn_{k}/dtdkd\Omega $ may be then greatly enhanced, while the computational
 time strongly reduced. Let define the series for a function $h\left(
 x\right) $%
 \begin{equation}
-h\left( x\right) =\sum_{l=0}^{\infty}\left( m+1/2\right) h^{\left( m\right)
-}P_{l}\left( x\right)
+h\left( x\right) =\sum_{m=0}^{\infty }\left( m+1/2\right) h^{\left( m\right)
+}P_{m}\left( x\right) 
 \end{equation}
 where coefficients $h^{\left( m\right) }$%
 \begin{equation}
@@ -2623,43 +2623,43 @@ h^{\left( m\right) }=\int_{-1}^{+1}h\left( x\right) P_{m}\left( x\right) dx
 \end{equation}
 and $P_{m}$ is the Legendre polynomial of degree $m$.
 
-Applying the Legendre polynomial series to differential cross-sections $
+Applying the Legendre polynomial series to differential cross-sections $%
 d\sigma ^{ei}$/$dtdkd\Omega $ and $d\sigma ^{ee}/dtdkd\Omega $ and to $%
 f\left( t,\mathbf{X},p,\xi \right) ,$ 
 \begin{align}
 \frac{dn_{k}^{ei}\left( t,k,\mathbf{X},\widehat{b}\cdot \widehat{d}
-,Z_{s}\right) }{dtdkd\Omega }& =n_{s}\left( t,\psi \right) \int_{0}^{\infty %
-}vp^{2}dp\int_{0}^{2\pi }d\varphi \int_{-1}^{+1}d\xi \times   \nonumber \\
+,Z_{s}\right) }{dtdkd\Omega }& =n_{s}\left( t,\psi \right) \int_{0}^{\infty
+}vp^{2}dp\int_{0}^{2\pi }d\varphi \int_{-1}^{+1}d\xi \times  \nonumber \\
 & \sum_{m=0}^{\infty }\sum_{m^{\prime }=0}^{\infty }\left( m+1/2\right)
 \left( m^{\prime }+1/2\right) \frac{d\sigma _{ei}^{\left( m\right) }\left(
-k,p,Z_{s}\right) }{dtdkd\Omega }\times   \nonumber \\
+k,p,Z_{s}\right) }{dtdkd\Omega }\times  \nonumber \\
 & f^{\left( m^{\prime }\right) }\left( t,\mathbf{X},p\right) P_{m^{\prime
-}}\left( \cos \chi \right) P_{m^{\prime }}\left( \xi \right) 
+}}\left( \cos \chi \right) P_{m^{\prime }}\left( \xi \right)
 \end{align}
 where 
 \begin{equation}
 \frac{d\sigma _{ei}^{\left( m\right) }\left( k,p,Z_{s}\right) }{dtdkd\Omega }%
 =\int_{-1}^{+1}\frac{d\sigma _{ei}^{\left( m\right) }\left( k,p,\widehat{k}%
 \cdot \widehat{p},Z_{s}\right) }{dtdkd\Omega }P_{m}\left( \widehat{k}\cdot 
-\widehat{p}\right) d\left( \cos \chi \right) 
+\widehat{p}\right) d\left( \cos \chi \right)
 \end{equation}
 and 
 \begin{equation}
 f^{\left( m^{\prime }\right) }\left( t,\mathbf{X},p\right)
 =\int_{-1}^{+1}f\left( t,\mathbf{X},p,\xi \right) P_{m^{\prime }}\left( \xi
-\right) d\xi 
+\right) d\xi
 \end{equation}
 one obtains 
 \begin{align}
 \frac{dn_{k}^{ei}\left( t,k,\mathbf{X},\widehat{b}\cdot \widehat{d}
-,Z_{s}\right) }{dtdkd\Omega }& =n_{s}\left( t,\psi \right) \int_{0}^{\infty %
+,Z_{s}\right) }{dtdkd\Omega }& =n_{s}\left( t,\psi \right) \int_{0}^{\infty
 }vp^{2}dp\sum_{m=0}^{\infty }\sum_{m^{\prime }=0}^{\infty }\left(
-m+1/2\right) \left( m^{\prime }+1/2\right) \times   \nonumber \\
-& \frac{d\sigma _{ei}^{\left( m\right) }\left( k,p,Z_{s}\right) }{dtdkd%
-\Omega }f^{\left( m^{\prime }\right) }\left( t,\mathbf{X},p\right) \times  
-\nonumber \\
+m+1/2\right) \left( m^{\prime }+1/2\right) \times  \nonumber \\
+& \frac{d\sigma _{ei}^{\left( m\right) }\left( k,p,Z_{s}\right) }{%
+dtdkd\Omega }f^{\left( m^{\prime }\right) }\left( t,\mathbf{X},p\right)
+\times  \nonumber \\
 & \int_{0}^{2\pi }d\varphi \int_{-1}^{+1}d\xi P_{m}\left( \cos \chi \right)
-P_{m^{\prime }}\left( \xi \right)   \label{LegendreProj1}
+P_{m^{\prime }}\left( \xi \right)  \label{LegendreProj1}
 \end{align}
 
 Using the well known sum relation for the Legendre polynomials that holds
@@ -2668,20 +2668,20 @@ for angle relation between $\chi ,$ $\theta _{e}$ and $\theta _{d}$,
 P_{m}\left( \cos \chi \right) =P_{m}\left( \cos \theta _{d}\right)
 P_{l}\left( \xi \right) +2\sum_{n=m}^{n=m}\frac{\left( m-n\right) !}{\left(
 m+n\right) !}P_{m}^{n}\left( \cos \theta _{d}\right) P_{m}^{n}\left( \xi
-\right) \cos \left( n\varphi \right) 
+\right) \cos \left( n\varphi \right)
 \end{equation}
 where $P_{m}^{n}\left( x\right) $ is the associated Legendre function of
 degree $m$ and order $n$, expression (\ref{LegendreProj1}) becomes 
 \begin{align}
 \frac{dn_{k}^{ei}\left( t,k,\mathbf{X},\widehat{b}\cdot \widehat{d}%
-,Z_{s}\right) }{dtdkd\Omega }& =n_{s}\left( t,\psi \right) \int_{0}^{\infty %
+,Z_{s}\right) }{dtdkd\Omega }& =n_{s}\left( t,\psi \right) \int_{0}^{\infty
 }vp^{2}dp\sum_{m=0}^{\infty }\sum_{m^{\prime }=0}^{\infty }\left(
-m+1/2\right) \left( m^{\prime }+1/2\right) \times   \nonumber \\
-& \frac{d\sigma _{ei}^{\left( m\right) }\left( k,p,Z_{s}\right) }{dtdkd%
-\Omega }f^{\left( m^{\prime }\right) }\left( t,\mathbf{X},p\right)
-\int_{0}^{2\pi }d\varphi \times   \nonumber \\
+m+1/2\right) \left( m^{\prime }+1/2\right) \times  \nonumber \\
+& \frac{d\sigma _{ei}^{\left( m\right) }\left( k,p,Z_{s}\right) }{%
+dtdkd\Omega }f^{\left( m^{\prime }\right) }\left( t,\mathbf{X},p\right)
+\int_{0}^{2\pi }d\varphi \times  \nonumber \\
 & \int_{-1}^{+1}P_{m}\left( \cos \theta _{d}\right) P_{m}\left( \xi \right)
-P_{m^{\prime }}\left( \xi \right) d\xi 
+P_{m^{\prime }}\left( \xi \right) d\xi
 \end{align}
 since 
 \begin{equation}
@@ -2699,20 +2699,22 @@ where $\delta _{mm^{\prime }}$ is the Kronecker symbol, one obtains the
 simple relation 
 \begin{align}
 \frac{dn_{k}^{ei}\left( t,k,\mathbf{X},\widehat{b}\cdot \widehat{d}%
-,Z_{s}\right) }{dtdkd\Omega }& =2\pi n_{s}\left( t,\psi \right) \int_{0}^{%
-\infty }vp^{2}dp\sum_{m=0}^{\infty }\left( m+1/2\right) \times   \nonumber \\
-& \frac{d\sigma _{ei}^{\left( m\right) }\left( k,p,Z_{s}\right) }{dtdkd%
-\Omega }f^{\left( m\right) }\left( t,\mathbf{X},p\right) P_{m}\left( 
-\widehat{b}\cdot \widehat{d}\right) 
+,Z_{s}\right) }{dtdkd\Omega }& =2\pi n_{s}\left( t,\psi \right)
+\int_{0}^{\infty }vp^{2}dp\sum_{m=0}^{\infty }\left( m+1/2\right) \times 
+\nonumber \\
+& \frac{d\sigma _{ei}^{\left( m\right) }\left( k,p,Z_{s}\right) }{%
+dtdkd\Omega }f^{\left( m\right) }\left( t,\mathbf{X},p\right) P_{m}\left( 
+\widehat{b}\cdot \widehat{d}\right)
 \end{align}
 or 
 \begin{align}
 & \frac{dn_{k}^{ei}\left( t,k,\mathbf{X},\widehat{b}\cdot \widehat{d}%
-,Z_{s}\right) }{dtdkd\Omega }=2\pi n_{s}\left( t,\psi \right) \sum_{m=0}^{%
-\infty }\left( m+1/2\right) \times   \nonumber \\
-& \quad \quad P_{m}\left( \widehat{b}\cdot \widehat{d}\right) \int_{0}^{%
-\infty }vp^{2}\frac{d\sigma _{ei}^{\left( m\right) }\left( k,p,Z_{s}\right) 
-}{dtdkd\Omega }f^{\left( m\right) }\left( t,\mathbf{X},p\right) dp
+,Z_{s}\right) }{dtdkd\Omega }=2\pi n_{s}\left( t,\psi \right)
+\sum_{m=0}^{\infty }\left( m+1/2\right) \times  \nonumber \\
+& \quad \quad P_{m}\left( \widehat{b}\cdot \widehat{d}\right)
+\int_{0}^{\infty }vp^{2}\frac{d\sigma _{ei}^{\left( m\right) }\left(
+k,p,Z_{s}\right) }{dtdkd\Omega }f^{\left( m\right) }\left( t,\mathbf{X}%
+,p\right) dp
 \end{align}
 
 A similar expression may be obtained for the e-e bremsstrahlung, and the
@@ -2760,7 +2762,7 @@ distribution function and the plasma equilibrium, i.e. $\widehat{b}\cdot%
 
 From expression (\ref{bremLegendre}), it is also possible to extract
 interesting local quantities about the bremsstrahlung, like the mean
-radiation level in all directions of the configuration space $
+radiation level in all directions of the configuration space $%
 dn_{k}^{4\pi}\left( t,k,\mathbf{X}\right) /dtdkd\Omega$ 
 \begin{align}
 \frac{dn_{k}^{4\pi}\left( t,k,\mathbf{X}\right) }{dtdkd\Omega} & =\frac
