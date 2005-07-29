@@ -2614,8 +2614,8 @@ dn_{k}/dtdkd\Omega $ may be then greatly enhanced, while the computational
 time strongly reduced. Let define the series for a function $h\left(
 x\right) $%
 \begin{equation}
-h\left( x\right) =\sum_{m=0}^{\infty }\left( m+1/2\right) h^{\left( m\right)
-}P_{m}\left( x\right) 
+h\left( x\right) =\sum_{m=0}^{\infty }\left( m+\frac{1}{2}\right) h^{\left(
+m\right) }P_{m}\left( x\right) 
 \end{equation}
 where coefficients $h^{\left( m\right) }$%
 \begin{equation}
@@ -2624,68 +2624,68 @@ h^{\left( m\right) }=\int_{-1}^{+1}h\left( x\right) P_{m}\left( x\right) dx
 and $P_{m}$ is the Legendre polynomial of degree $m$.
 
 Applying the Legendre polynomial series to differential cross-sections $%
-d\sigma ^{ei}$/$dtdkd\Omega $ and $d\sigma ^{ee}/dtdkd\Omega $ and to $%
-f\left( t,\mathbf{X},p,\xi \right) ,$ 
+d\sigma ^{ei}/dtdkd\Omega $ and $d\sigma ^{ee}/dtdkd\Omega $ and to $f\left(
+t,\mathbf{X},p,\xi \right) ,$ 
 \begin{align}
-\frac{dn_{k}^{ei}\left( t,k,\mathbf{X},\widehat{b}\cdot \widehat{d}
-,Z_{s}\right) }{dtdkd\Omega }& =n_{s}\left( t,\psi \right) \int_{0}^{\infty
-}vp^{2}dp\int_{0}^{2\pi }d\varphi \int_{-1}^{+1}d\xi \times  \nonumber \\
-& \sum_{m=0}^{\infty }\sum_{m^{\prime }=0}^{\infty }\left( m+1/2\right)
-\left( m^{\prime }+1/2\right) \frac{d\sigma _{ei}^{\left( m\right) }\left(
-k,p,Z_{s}\right) }{dtdkd\Omega }\times  \nonumber \\
-& f^{\left( m^{\prime }\right) }\left( t,\mathbf{X},p\right) P_{m^{\prime
-}}\left( \cos \chi \right) P_{m^{\prime }}\left( \xi \right)
+\frac{dn_{k}^{ei}\left( t,k,\mathbf{X},\widehat{b}\cdot \widehat{d}%
+,Z_{s}\right) }{dtdkd\Omega }& =n_{s}\left( t,\psi \right) \int_{0}^{\infty %
+}vp^{2}dp\int_{0}^{2\pi }d\varphi \int_{-1}^{+1}d\xi \times   \nonumber \\
+& \sum_{m=0}^{\infty }\sum_{m^{\prime }=0}^{\infty }\left( m+\frac{1}{2}%
+\right) \left( m^{\prime }+\frac{1}{2}\right) \frac{d\sigma _{ei}^{\left(
+m\right) }\left( k,p,Z_{s}\right) }{dtdkd\Omega }\times   \nonumber \\
+& f^{\left( m^{\prime }\right) }\left( t,\mathbf{X},p\right) P_{m}\left(
+\cos \chi \right) P_{m^{\prime }}\left( \xi \right) 
 \end{align}
 where 
 \begin{equation}
 \frac{d\sigma _{ei}^{\left( m\right) }\left( k,p,Z_{s}\right) }{dtdkd\Omega }%
 =\int_{-1}^{+1}\frac{d\sigma _{ei}^{\left( m\right) }\left( k,p,\widehat{k}%
 \cdot \widehat{p},Z_{s}\right) }{dtdkd\Omega }P_{m}\left( \widehat{k}\cdot 
-\widehat{p}\right) d\left( \cos \chi \right)
+\widehat{p}\right) d\left( \cos \chi \right) 
 \end{equation}
 and 
 \begin{equation}
 f^{\left( m^{\prime }\right) }\left( t,\mathbf{X},p\right)
 =\int_{-1}^{+1}f\left( t,\mathbf{X},p,\xi \right) P_{m^{\prime }}\left( \xi
-\right) d\xi
+\right) d\xi 
 \end{equation}
 one obtains 
 \begin{align}
-\frac{dn_{k}^{ei}\left( t,k,\mathbf{X},\widehat{b}\cdot \widehat{d}
-,Z_{s}\right) }{dtdkd\Omega }& =n_{s}\left( t,\psi \right) \int_{0}^{\infty
-}vp^{2}dp\sum_{m=0}^{\infty }\sum_{m^{\prime }=0}^{\infty }\left(
-m+1/2\right) \left( m^{\prime }+1/2\right) \times  \nonumber \\
-& \frac{d\sigma _{ei}^{\left( m\right) }\left( k,p,Z_{s}\right) }{%
-dtdkd\Omega }f^{\left( m^{\prime }\right) }\left( t,\mathbf{X},p\right)
-\times  \nonumber \\
+\frac{dn_{k}^{ei}\left( t,k,\mathbf{X},\widehat{b}\cdot \widehat{d}%
+,Z_{s}\right) }{dtdkd\Omega }& =n_{s}\left( t,\psi \right) \int_{0}^{\infty %
+}vp^{2}dp\sum_{m=0}^{\infty }\sum_{m^{\prime }=0}^{\infty }\left( m+\frac{1}{%
+2}\right) \left( m^{\prime }+\frac{1}{2}\right) \times   \nonumber \\
+& \frac{d\sigma _{ei}^{\left( m\right) }\left( k,p,Z_{s}\right) }{dtdkd%
+\Omega }f^{\left( m^{\prime }\right) }\left( t,\mathbf{X},p\right) \times  
+\nonumber \\
 & \int_{0}^{2\pi }d\varphi \int_{-1}^{+1}d\xi P_{m}\left( \cos \chi \right)
-P_{m^{\prime }}\left( \xi \right)  \label{LegendreProj1}
+P_{m^{\prime }}\left( \xi \right)   \label{LegendreProj1}
 \end{align}
 
 Using the well known sum relation for the Legendre polynomials that holds
 for angle relation between $\chi ,$ $\theta _{e}$ and $\theta _{d}$, 
 \begin{equation}
 P_{m}\left( \cos \chi \right) =P_{m}\left( \cos \theta _{d}\right)
-P_{l}\left( \xi \right) +2\sum_{n=m}^{n=m}\frac{\left( m-n\right) !}{\left(
+P_{m}\left( \xi \right) +2\sum_{n=1}^{n=m}\frac{\left( m-n\right) !}{\left(
 m+n\right) !}P_{m}^{n}\left( \cos \theta _{d}\right) P_{m}^{n}\left( \xi
-\right) \cos \left( n\varphi \right)
+\right) \cos \left( n\varphi \right) 
 \end{equation}
 where $P_{m}^{n}\left( x\right) $ is the associated Legendre function of
 degree $m$ and order $n$, expression (\ref{LegendreProj1}) becomes 
 \begin{align}
 \frac{dn_{k}^{ei}\left( t,k,\mathbf{X},\widehat{b}\cdot \widehat{d}%
-,Z_{s}\right) }{dtdkd\Omega }& =n_{s}\left( t,\psi \right) \int_{0}^{\infty
-}vp^{2}dp\sum_{m=0}^{\infty }\sum_{m^{\prime }=0}^{\infty }\left(
-m+1/2\right) \left( m^{\prime }+1/2\right) \times  \nonumber \\
-& \frac{d\sigma _{ei}^{\left( m\right) }\left( k,p,Z_{s}\right) }{%
-dtdkd\Omega }f^{\left( m^{\prime }\right) }\left( t,\mathbf{X},p\right)
-\int_{0}^{2\pi }d\varphi \times  \nonumber \\
+,Z_{s}\right) }{dtdkd\Omega }& =n_{s}\left( t,\psi \right) \int_{0}^{\infty %
+}vp^{2}dp\sum_{m=0}^{\infty }\sum_{m^{\prime }=0}^{\infty }\left( m+\frac{1}{%
+2}\right) \left( m^{\prime }+\frac{1}{2}\right) \times   \nonumber \\
+& \frac{d\sigma _{ei}^{\left( m\right) }\left( k,p,Z_{s}\right) }{dtdkd%
+\Omega }f^{\left( m^{\prime }\right) }\left( t,\mathbf{X},p\right)
+\int_{0}^{2\pi }d\varphi \times   \nonumber \\
 & \int_{-1}^{+1}P_{m}\left( \cos \theta _{d}\right) P_{m}\left( \xi \right)
-P_{m^{\prime }}\left( \xi \right) d\xi
+P_{m^{\prime }}\left( \xi \right) d\xi 
 \end{align}
 since 
 \begin{equation}
-2\int_{0}^{2\pi }d\varphi \int_{-1}^{+1}\sum_{n=m}^{n=m}\frac{\left(
+2\int_{0}^{2\pi }d\varphi \int_{-1}^{+1}\sum_{n=1}^{n=m}\frac{\left(
 m-n\right) !}{\left( m+n\right) !}P_{m}^{n}\left( \cos \theta _{d}\right)
 P_{m}^{n}\left( \xi \right) \cos \left( n\varphi \right) d\xi =0
 \end{equation}
@@ -2699,31 +2699,30 @@ where $\delta _{mm^{\prime }}$ is the Kronecker symbol, one obtains the
 simple relation 
 \begin{align}
 \frac{dn_{k}^{ei}\left( t,k,\mathbf{X},\widehat{b}\cdot \widehat{d}%
-,Z_{s}\right) }{dtdkd\Omega }& =2\pi n_{s}\left( t,\psi \right)
-\int_{0}^{\infty }vp^{2}dp\sum_{m=0}^{\infty }\left( m+1/2\right) \times 
+,Z_{s}\right) }{dtdkd\Omega }& =2\pi n_{s}\left( t,\psi \right) \int_{0}^{%
+\infty }vp^{2}dp\sum_{m=0}^{\infty }\left( m+\frac{1}{2}\right) \times  
 \nonumber \\
-& \frac{d\sigma _{ei}^{\left( m\right) }\left( k,p,Z_{s}\right) }{%
-dtdkd\Omega }f^{\left( m\right) }\left( t,\mathbf{X},p\right) P_{m}\left( 
-\widehat{b}\cdot \widehat{d}\right)
+& \frac{d\sigma _{ei}^{\left( m\right) }\left( k,p,Z_{s}\right) }{dtdkd%
+\Omega }f^{\left( m\right) }\left( t,\mathbf{X},p\right) P_{m}\left( 
+\widehat{b}\cdot \widehat{d}\right) 
 \end{align}
 or 
 \begin{align}
 & \frac{dn_{k}^{ei}\left( t,k,\mathbf{X},\widehat{b}\cdot \widehat{d}%
-,Z_{s}\right) }{dtdkd\Omega }=2\pi n_{s}\left( t,\psi \right)
-\sum_{m=0}^{\infty }\left( m+1/2\right) \times  \nonumber \\
-& \quad \quad P_{m}\left( \widehat{b}\cdot \widehat{d}\right)
-\int_{0}^{\infty }vp^{2}\frac{d\sigma _{ei}^{\left( m\right) }\left(
-k,p,Z_{s}\right) }{dtdkd\Omega }f^{\left( m\right) }\left( t,\mathbf{X}%
-,p\right) dp
+,Z_{s}\right) }{dtdkd\Omega }=2\pi n_{s}\left( t,\psi \right) \sum_{m=0}^{%
+\infty }\left( m+\frac{1}{2}\right) \times   \nonumber \\
+& \quad \quad P_{m}\left( \widehat{b}\cdot \widehat{d}\right) \int_{0}^{%
+\infty }vp^{2}\frac{d\sigma _{ei}^{\left( m\right) }\left( k,p,Z_{s}\right) 
+}{dtdkd\Omega }f^{\left( m\right) }\left( t,\mathbf{X},p\right) dp
 \end{align}
 
 A similar expression may be obtained for the e-e bremsstrahlung, and the
 total bremsstrahlung is then 
 \begin{equation}
-\frac{dn_{k}\left( t,k,\mathbf{X},\widehat{b}\cdot\widehat{d}\right) }{
-dtdkd\Omega}=\sum_{m=0}^{\infty}\left( m+1/2\right) I_{B}^{\left( m\right)
-}\left( t,\mathbf{X},p,k\right) P_{m}\left( \widehat{b}\cdot\widehat{d}
-\right)  \label{bremLegendre}
+\frac{dn_{k}\left( t,k,\mathbf{X},\widehat{b}\cdot \widehat{d}\right) }{dtdkd%
+\Omega }=\sum_{m=0}^{\infty }\left( m+\frac{1}{2}\right) I_{B}^{\left(
+m\right) }\left( t,\mathbf{X},p,k\right) P_{m}\left( \widehat{b}\cdot 
+\widehat{d}\right)   \label{bremLegendre}
 \end{equation}
 where the bremsstrahlung function $I_{B}^{\left( m\right) }\left( t,\mathbf{X%
 },p,k\right) $ is
@@ -2762,20 +2761,20 @@ distribution function and the plasma equilibrium, i.e. $\widehat{b}\cdot%
 
 From expression (\ref{bremLegendre}), it is also possible to extract
 interesting local quantities about the bremsstrahlung, like the mean
-radiation level in all directions of the configuration space $%
-dn_{k}^{4\pi}\left( t,k,\mathbf{X}\right) /dtdkd\Omega$ 
+radiation level in all directions of the configuration space $dn_{k}^{4\pi %
+}\left( t,k,\mathbf{X}\right) /dtdkd\Omega $ 
 \begin{align}
-\frac{dn_{k}^{4\pi}\left( t,k,\mathbf{X}\right) }{dtdkd\Omega} & =\frac
-{1}{4\pi}\int\frac{dn_{k}\left( t,k,\mathbf{X},\cos\theta_{d}\right) }{
-dtdkd\Omega}d\Omega  \nonumber \\
-& =\frac{1}{4\pi}\int_{0}^{\pi}d\theta_{d}\int_{-\pi}^{\pi}\sin\theta
-_{d}d\varphi_{d}\frac{dn_{k}\left( t,k,\mathbf{X},\cos\theta_{d}\right) }{
-dtdkd\Omega} \\
-& =\frac{1}{2}\int_{-1}^{1}d\xi_{d}\frac{dn_{k}\left( t,k,\mathbf{X},\xi
-_{d}\right) }{dtdkd\Omega} \\
-& =\frac{1}{2}\sum_{m=0}^{\infty}\left( m+1/2\right) I_{B}^{\left( m\right)
-}\left( t,\mathbf{X},p,k\right) \int_{-1}^{1}d\xi_{d}P_{m}\left(
-\xi_{d}\right)
+\frac{dn_{k}^{4\pi }\left( t,k,\mathbf{X}\right) }{dtdkd\Omega }& =\frac{1}{4%
+\pi }\int \frac{dn_{k}\left( t,k,\mathbf{X},\cos \theta _{d}\right) }{dtdkd%
+\Omega }d\Omega   \nonumber \\
+& =\frac{1}{4\pi }\int_{0}^{\pi }d\theta _{d}\int_{-\pi }^{\pi }\sin \theta
+_{d}d\varphi _{d}\frac{dn_{k}\left( t,k,\mathbf{X},\cos \theta _{d}\right) }{%
+dtdkd\Omega } \\
+& =\frac{1}{2}\int_{-1}^{1}d\xi _{d}\frac{dn_{k}\left( t,k,\mathbf{X},\xi
+_{d}\right) }{dtdkd\Omega } \\
+& =\frac{1}{2}\sum_{m=0}^{\infty }\left( m+\frac{1}{2}\right) I_{B}^{\left(
+m\right) }\left( t,\mathbf{X},p,k\right) \int_{-1}^{1}d\xi _{d}P_{m}\left(
+\xi _{d}\right) 
 \end{align}
 
 and since $P_{0}\left( x\right) =1,$ using the orthogonality relation (\ref
@@ -2827,53 +2826,53 @@ f_{0}^{\left( 0\right) }$
 
 \begin{align}
 f_{0}^{\left( m\right) }\left( t,\mathbf{X},p\right) &
-=\int_{-1}^{+1}f_{0}\left( t,\psi,\theta,p,\xi\right) P_{m}\left( \xi\right)
-d\xi  \nonumber \\
-& =\Psi\left( \psi,\theta\right) \int_{-1}^{+1}f_{0}^{\left( 0\right)
-}\left( t,\psi,p,\xi_{0}\right) \frac{\xi_{0}}{\xi}\times  \nonumber \\
-& H\left( \left| \xi_{0}\right| -\sqrt{1-\frac{1}{\Psi\left( \psi
-,\theta\right) }}\right) P_{m}\left( \xi\right) d\xi_{0}  \label{LegCoeff0}
+=\int_{-1}^{+1}f_{0}\left( t,\psi ,\theta ,p,\xi \right) P_{m}\left( \xi
+\right) d\xi   \nonumber \\
+& =\Psi \left( \psi ,\theta \right) \int_{-1}^{+1}f_{0}^{\left( 0\right)
+}\left( t,\psi ,p,\xi _{0}\right) \frac{\xi _{0}}{\xi }\times   \nonumber \\
+& H\left( \left| \xi _{0}\right| -\sqrt{1-\frac{1}{\Psi \left( \psi ,\theta
+\right) }}\right) P_{m}\left( \xi \right) d\xi _{0}  \label{LegCoeff0}
 \end{align}
 since $f_{0}$ is constant along a magnetic field line, i.e. $f_{0}\left(
-t,\psi,\theta,p,\xi\right) =f_{0}^{\left( 0\right) }\left( t,\psi
-,p,\xi_{0}\right) .$ Here the Heaviside function $H$ indicates that only
-electrons who reach the poloidal position $\theta$ must be considered. By
-expanding part of the integrand in (\ref{LegCoeff0}) as a series of Legendre
+t,\psi ,\theta ,p,\xi \right) =f_{0}^{\left( 0\right) }\left( t,\psi ,p,\xi
+_{0}\right) .$ Here the Heaviside function $H$ indicates that only electrons
+who reach the poloidal position $\theta $ must be considered. By expanding
+part of the integrand in (\ref{LegCoeff0}) as a series of Legendre
 polynomials, according to the relation 
 \begin{equation}
-\frac{\xi_{0}}{\xi}H\left( \left| \xi_{0}\right| -\sqrt{1-\frac{1}{
-\Psi\left( \psi,\theta\right) }}\right) P_{l}\left( \xi\right)
-=\sum_{m^{\prime}=0}^{\infty}\left( m^{\prime}+1/2\right) c_{m}^{\left(
-m^{\prime}\right) }\left( \psi,\theta\right) P_{m^{\prime}}\left( \xi
-_{0}\right)
+\frac{\xi _{0}}{\xi }H\left( \left| \xi _{0}\right| -\sqrt{1-\frac{1}{\Psi
+\left( \psi ,\theta \right) }}\right) P_{l}\left( \xi \right)
+=\sum_{m^{\prime }=0}^{\infty }\left( m^{\prime }+\frac{1}{2}\right)
+c_{m}^{\left( m^{\prime }\right) }\left( \psi ,\theta \right) P_{m^{\prime
+}}\left( \xi _{0}\right) 
 \end{equation}
 with 
 \begin{equation}
-c_{m}^{\left( m^{\prime}\right) }\left( \psi,\theta\right) =\int_{-1}^{+1}%
-\frac{\xi_{0}}{\xi}H\left( \left| \xi_{0}\right| -\sqrt{1-\frac
-{1}{\Psi\left( \psi,\theta\right) }}\right) P_{m}\left( \xi\right)
-P_{m^{\prime}}\left( \xi_{0}\right) d\xi_{0}
+c_{m}^{\left( m^{\prime }\right) }\left( \psi ,\theta \right) =\int_{-1}^{+1}%
+\frac{\xi _{0}}{\xi }H\left( \left| \xi _{0}\right| -\sqrt{1-\frac{1}{\Psi
+\left( \psi ,\theta \right) }}\right) P_{m}\left( \xi \right) P_{m^{\prime
+}}\left( \xi _{0}\right) d\xi _{0}
 \end{equation}
 one obtains finaly 
 \begin{equation}
-f_{0}^{\left( m\right) }\left( t,\mathbf{X},p\right) =\Psi\left(
-\psi,\theta\right) \sum_{m^{\prime}=0}^{\infty}\left( m^{\prime}+1/2\right)
-c_{m}^{\left( m^{\prime}\right) }\left( \psi,\theta\right)
-\int_{-1}^{+1}f_{0}^{\left( 0\right) }\left( t,\psi,p,\xi_{0}\right)
-P_{m^{\prime}}\left( \xi_{0}\right) d\xi_{0}
+f_{0}^{\left( m\right) }\left( t,\mathbf{X},p\right) =\Psi \left( \psi
+,\theta \right) \sum_{m^{\prime }=0}^{\infty }\left( m^{\prime }+\frac{1}{2}%
+\right) c_{m}^{\left( m^{\prime }\right) }\left( \psi ,\theta \right)
+\int_{-1}^{+1}f_{0}^{\left( 0\right) }\left( t,\psi ,p,\xi _{0}\right)
+P_{m^{\prime }}\left( \xi _{0}\right) d\xi _{0}
 \end{equation}
 or 
 \begin{equation}
-f_{0}^{\left( m\right) }\left( t,\mathbf{X},p\right) =\Psi\left(
-\psi,\theta\right) \sum_{m^{\prime}=0}^{\infty}\left( m^{\prime}+1/2\right)
-c_{m}^{\left( m^{\prime}\right) }\left( \psi,\theta\right) f_{0}^{\left(
-0\right) \left( m^{\prime}\right) }\left( t,\psi,p\right)
+f_{0}^{\left( m\right) }\left( t,\mathbf{X},p\right) =\Psi \left( \psi
+,\theta \right) \sum_{m^{\prime }=0}^{\infty }\left( m^{\prime }+\frac{1}{2}%
+\right) c_{m}^{\left( m^{\prime }\right) }\left( \psi ,\theta \right)
+f_{0}^{\left( 0\right) \left( m^{\prime }\right) }\left( t,\psi ,p\right) 
 \end{equation}
 where 
 \begin{equation}
-f_{0}^{\left( 0\right) \left( m^{\prime}\right) }\left( t,\psi,p\right)
-=\int_{-1}^{+1}f_{0}^{\left( 0\right) }\left( t,\psi,p,\xi_{0}\right)
-P_{m^{\prime}}\left( \xi_{0}\right) d\xi_{0}
+f_{0}^{\left( 0\right) \left( m^{\prime }\right) }\left( t,\psi ,p\right)
+=\int_{-1}^{+1}f_{0}^{\left( 0\right) }\left( t,\psi ,p,\xi _{0}\right)
+P_{m^{\prime }}\left( \xi _{0}\right) d\xi _{0}
 \end{equation}
 
 For the first order distribution function, $f_{1}=\widetilde{f}+g,$ since $g$
@@ -2892,40 +2891,40 @@ _{0}\right) H\left( \left| \xi_{0}\right| -\sqrt{1-\frac{1}{\Psi\left(
 
 If 
 \begin{equation}
-H\left( \left| \xi_{0}\right| -\sqrt{1-\frac{1}{\Psi\left( \psi
-,\theta\right) }}\right) P_{m}\left( \xi\right)
-=\sum_{m^{\prime}=0}^{\infty}\left( m^{\prime}+1/2\right) \widetilde{c}
-_{m}^{\left( m^{\prime}\right) }\left( \psi,\theta\right)
-P_{m^{\prime}}\left( \xi _{0}\right)
+H\left( \left| \xi _{0}\right| -\sqrt{1-\frac{1}{\Psi \left( \psi ,\theta
+\right) }}\right) P_{m}\left( \xi \right) =\sum_{m^{\prime }=0}^{\infty %
+}\left( m^{\prime }+1/2\right) \widetilde{c}_{m}^{\left( m^{\prime }\right)
+}\left( \psi ,\theta \right) P_{m^{\prime }}\left( \xi _{0}\right) 
 \end{equation}
 with 
 \begin{equation}
-\widetilde{c}_{m}^{\left( m^{\prime}\right) }\left( \psi,\theta\right)
-=\int_{-1}^{+1}H\left( \left| \xi_{0}\right| -\sqrt{1-\frac{1}{\Psi\left(
-\psi,\theta\right) }}\right) P_{m}\left( \xi\right) P_{m^{\prime}}\left(
-\xi_{0}\right) d\xi_{0}
+\widetilde{c}_{m}^{\left( m^{\prime }\right) }\left( \psi ,\theta \right)
+=\int_{-1}^{+1}H\left( \left| \xi _{0}\right| -\sqrt{1-\frac{1}{\Psi \left(
+\psi ,\theta \right) }}\right) P_{m}\left( \xi \right) P_{m^{\prime }}\left(
+\xi _{0}\right) d\xi _{0}
 \end{equation}
 then expression (\ref{LegCoeffftilde}) becomes 
 \begin{equation}
 \widetilde{f}^{\left( m\right) }\left( t,\mathbf{X},p\right)
-=\sum_{m^{\prime}=0}^{\infty}\left( m^{\prime}+1/2\right) \widetilde{c}
-_{m}^{\left( m^{\prime}\right) }\left( \psi,\theta\right) \int_{-1}^{+1}%
-\widetilde{f}^{\left( 0\right) }\left( t,\psi,p,\xi_{0}\right)
-P_{m^{\prime}}\left( \xi_{0}\right) d\xi_{0}
+=\sum_{m^{\prime }=0}^{\infty }\left( m^{\prime }+\frac{1}{2}\right) 
+\widetilde{c}_{m}^{\left( m^{\prime }\right) }\left( \psi ,\theta \right)
+\int_{-1}^{+1}\widetilde{f}^{\left( 0\right) }\left( t,\psi ,p,\xi
+_{0}\right) P_{m^{\prime }}\left( \xi _{0}\right) d\xi _{0}
 \end{equation}
 
 Since 
 \begin{equation}
-\widetilde{f}^{\left( 0\right) \left( m^{\prime}\right) }\left(
-t,\psi,p\right) =\int_{-1}^{+1}\widetilde{f}^{\left( 0\right) }\left(
-t,\psi,p,\xi_{0}\right) P_{m^{\prime}}\left( \xi_{0}\right) d\xi_{0}
+\widetilde{f}^{\left( 0\right) \left( m^{\prime }\right) }\left( t,\psi
+,p\right) =\int_{-1}^{+1}\widetilde{f}^{\left( 0\right) }\left( t,\psi
+,p,\xi _{0}\right) P_{m^{\prime }}\left( \xi _{0}\right) d\xi _{0}
 \end{equation}
 one obtains finaly 
 \begin{equation}
 \widetilde{f}^{\left( m\right) }\left( t,\mathbf{X},p\right)
-=\sum_{m^{\prime}=0}^{\infty}\left( m^{\prime}+1/2\right) \widetilde{c}
-_{m}^{\left( m^{\prime}\right) }\left( \psi,\theta\right) \widetilde{f}
-^{\left( 0\right) \left( m^{\prime}\right) }\left( t,\psi,p\right)
+=\sum_{m^{\prime }=0}^{\infty }\left( m^{\prime }+\frac{1}{2}\right) 
+\widetilde{c}_{m}^{\left( m^{\prime }\right) }\left( \psi ,\theta \right) 
+\widetilde{f}^{\left( 0\right) \left( m^{\prime }\right) }\left( t,\psi
+,p\right) 
 \end{equation}
 
 It is interesting to notice that the determination of the $f^{\left(

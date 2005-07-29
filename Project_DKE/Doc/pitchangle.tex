@@ -5,31 +5,32 @@
 
 The starting point of the calculations for the avalanche source term in the
 runaway process is close Coulomb collisions between thermal or sub-thermal
-electrons and ultrarelativistic electrons. Since relativistic electron have
+electrons and ultrarelativistic electrons. Since relativistic electrons have
 a very high momentum, loosing a small amount of them may not affect their
 dynamics significantly (they remain in the runaway phase space after the
-momentum transfer), but for the other electron, the gain in energy may be so
-large that the drag force is suddenly strongly decreasing. For an electron
-whose kinetic energy is closely below the runaway energy threshold, such a
-process may make it runaway, leading by multiple interactions to the
+momentum transfer), but for the low velocity electrons, the gain in energy
+may be so large that the drag force is suddenly strongly decreasing. For an
+electron whose kinetic energy is closely below the runaway energy threshold,
+such a process may make it runaway, leading by multiple interactions to the
 avalanche effect.
 
 The electron is characterized by the 4-momentum vector $\mathbf{P}$ defined
 as 
 \begin{equation}
-\mathbf{P\equiv }\gamma \left( 1,\frac{\mathbf{v}}{c}\right)
+\mathbf{P\equiv }\gamma \left( 1,\mathbf{v}\right) 
 \end{equation}
-where $\gamma =\sqrt{1+p^{2}}=1/\sqrt{1-\left( v/c\right) ^{2}}$ is the
-normalized total energy $E_{T}=\gamma m_{e}c^{2},$ and $\mathbf{v}/c$ is the
-normalized momentum $p=\gamma m_{e}c^{2}$. The scalar product for the
-4-momentum vector $\mathbf{P}$ is defined by the relation 
+where $\gamma =\sqrt{1+p^{2}}=1/\sqrt{1-v^{2}}$ is the normalized total
+energy $E_{T}=\gamma m_{e}c^{2},$ and $\mathbf{v}$ is thevelocity normalized
+to the speed of light $c$, and the normalized momentum is $p=\gamma m_{e}c$.
+The scalar product for the 4-momentum vector $\mathbf{P}$ is defined by the
+relation 
 \begin{equation}
 \mathbf{A\cdot B=}A_{1}B_{1}-A_{2}B_{2}-A_{3}B_{3}-A_{4}B_{4}
 \end{equation}
 according the relativistic theory, and therefore 
 \begin{equation}
-\mathbf{P\cdot P=}\gamma ^{2}\left( 1-\frac{\mathbf{v\cdot v}}{c^{2}}\right)
-=\gamma ^{2}\left( 1-\frac{v^{2}}{c^{2}}\right) =1
+\mathbf{P\cdot P=}\gamma ^{2}\left( 1-\mathbf{v\cdot v}\right) =\gamma
+^{2}\left( 1-v^{2}\right) =1
 \end{equation}
 
 Let consider two electrons, one moving at high velocity close to the speed
@@ -55,15 +56,15 @@ Squaring both sides and using the definition of the scalar product for
 \end{equation}
 and using the formulation 
 \begin{equation}
-\mathbf{P}_{i}\mathbf{\cdot P}_{j}=\gamma _{i}\gamma _{j}\left( 1-\frac{%
-\mathbf{v}_{i}\mathbf{\cdot v}_{j}}{c^{2}}\right)
+\mathbf{P}_{i}\mathbf{\cdot P}_{j}=\gamma _{i}\gamma _{j}\left( 1-\mathbf{v}%
+_{i}\mathbf{\cdot v}_{j}\right) 
 \end{equation}
 with the assumptions that $\mathbf{v}_{0}\sim 0$ and $\gamma _{0}\sim 1$
 since the target electron is nearly at rest before the collision, one
 obtains 
 \begin{equation}
-1+\gamma _{1}-\gamma _{2}-\gamma _{1}\gamma _{2}\left( 1-\frac{\mathbf{v}_{1}%
-\mathbf{\cdot v}_{2}}{c^{2}}\right) =0
+1+\gamma _{1}-\gamma _{2}-\gamma _{1}\gamma _{2}\left( 1-\mathbf{v}_{1}%
+\mathbf{\cdot v}_{2}\right) =0
 \end{equation}
 or 
 \begin{equation}
@@ -80,7 +81,7 @@ as defined in Fig. \ref{angleee}.
 %EndExpansion
 . Here, 
 \begin{eqnarray}
-\xi ^{*}\left( p_{1},p_{2}\right) &=&-\frac{\left( 1+\gamma _{1}\right)
+\xi ^{*}\left( p_{1},p_{2}\right)  &=&-\frac{\left( 1+\gamma _{1}\right)
 \left( 1-\gamma _{2}\right) }{p_{1}p_{2}}  \nonumber \\
 &=&-\frac{\left( 1+\sqrt{1+p_{1}^{2}}\right) \left( 1-\sqrt{1+p_{2}^{2}}%
 \right) }{p_{1}p_{2}}  \nonumber \\
@@ -172,8 +173,8 @@ _{1}^{2}-1}}
 
 \subsection{Secondary electron source term}
 
-The secondary electron source term, or the scattering rate is given by the
-M\o ller differential relativistic electron-electron cross-section \cite
+The secondary electron source term or the scattering rate is given by the M%
+\o ller differential relativistic electron-electron cross-section \cite
 {hei57}, which has the following form 
 \begin{equation}
 d\sigma _{M}=2\pi r_{e}^{2}\sum \left( \gamma _{1},\gamma _{2}\right)
@@ -181,14 +182,14 @@ d\gamma _{2}
 \end{equation}
 where $r_{e}$ is the classical radius of the electron, and 
 \begin{eqnarray}
-\sum \left( \gamma _{1},\gamma _{2}\right) &=&\frac{\gamma _{1}^{2}}{\left(
+\sum \left( \gamma _{1},\gamma _{2}\right)  &=&\frac{\gamma _{1}^{2}}{\left(
 \gamma _{1}^{2}-1\right) \left( \gamma _{2}-1\right) ^{2}\left( \gamma
-_{1}-\gamma _{2}\right) ^{2}}\times  \nonumber \\
+_{1}-\gamma _{2}\right) ^{2}}\times   \nonumber \\
 &&\left\{ \left( \gamma _{1}-1\right) ^{2}-\frac{\left( \gamma _{2}-1\right)
-\left( \gamma _{1}-\gamma _{2}\right) }{\gamma _{1}^{2}}\times \right. 
+\left( \gamma _{1}-\gamma _{2}\right) }{\gamma _{1}^{2}}\times \right.  
 \nonumber \\
 &&\left. \left[ 2\gamma _{1}^{2}-2\gamma _{1}-1-\left( \gamma _{2}-1\right)
-\left( \gamma _{1}-\gamma _{2}\right) \right] \right\}
+\left( \gamma _{1}-\gamma _{2}\right) \right] \right\} 
 \end{eqnarray}
 which becomes for very energetic runaways, 
 \begin{equation}
@@ -196,12 +197,13 @@ which becomes for very energetic runaways,
 _{2}\right) =\frac{1}{\left( \gamma _{2}-1\right) ^{2}}=\frac{1}{E_{c2}^{2}}
 \end{equation}
 if one introduces the kinetic energy $E_{c2}=\gamma _{2}-1$ of the scattered
-electron. It may be also expressed in a simplified form 
+electron. It may be also expressed in a slightly different form found in the
+litterature,
 \begin{equation}
 \sum \left( \gamma _{1},\gamma _{2}\right) =\frac{1}{\left( \gamma
-_{1}^{2}-1\right) }\left( \frac{\gamma _{1}^{2}\left( \gamma _{1}-1\right)
-^{2}}{E_{c2}^{2}\left( \gamma _{1}-1-E_{c2}\right) ^{2}}-\frac{2\gamma
-_{1}^{2}+2\gamma _{1}+1}{E_{c2}\left( \gamma _{1}-1-E_{c2}\right) }+1\right)
+_{1}^{2}-1\right) }\left( \frac{\gamma _{1}^{2}E_{c1}^{2}}{E_{c2}^{2}\left(
+E_{c1}-E_{c2}\right) ^{2}}-\frac{2\gamma _{1}^{2}+2\gamma _{1}+1}{%
+E_{c2}\left( E_{c1}-E_{c2}\right) }+1\right) 
 \end{equation}
 where $E_{c1}=\gamma _{1}-1$ is simply the kinetic energy of the primary
 electron after the collision.
@@ -218,62 +220,54 @@ d\sigma _{M}=2\pi r_{e}^{2}\sum \left( \gamma _{1},\gamma _{2}\right) \left(
 \frac{p_{2}}{\gamma _{2}}\right) dp_{2}
 \end{equation}
 
-It is important to define the differential cross-section in the direction $%
-\xi _{2}$ at momentum $p_{2}$%
+The differential cross-section at the point $\left( p_{2},\xi _{2}\right) $
+viewed under the elementary solid angle $d\Omega _{2}=2\pi %
+p_{2}^{2}dp_{2}d\xi _{2}$ from $\left( 0,0\right) $ is simply
 \begin{equation}
 \frac{d\sigma _{M}}{d\Omega _{2}}=r_{e}^{2}\frac{\sum \left( \gamma
 _{1},\gamma _{2}\right) }{p_{2}\gamma _{2}}\delta \left( \xi _{2}-\xi
-^{*}\left( p_{1},p_{2}\right) \right)
+^{*}\left( p_{1},p_{2}\right) \right) 
 \end{equation}
-where $d\Omega _{2}=2\pi p_{2}^{2}dp_{2}d\xi _{2}$ is the elementary solid
-angle. Here, we assume the probability of scattering has an azimuthal
-symmetru around the primary electron momentum direction.
+Here, the probability of scattering is assumed to have an azimuthal symmetry
+around the primary electron momentum direction. The delta function
+corresponds to the angular relation imposed bu energy and momentum
+conservation.
 
-\subsubsection{ Source term from very energetic runaways}
+\subsubsection{ Source term from collisions with a beam of very energetic
+runaway electrons}
 
 For very energetic runaway electrons belonging to the region $\Pi _{o},$ the
 energy transfer is very small, i.e. 
 \begin{equation}
 E_{c2}\ll E_{c1}
 \end{equation}
-and simplifications may be done 
+and in the limit $\gamma _{1}\gg 1,$ 
 \begin{equation}
-\sum \left( \gamma _{1},\gamma _{2}\right) \approx \frac{1}{\left( \gamma
-_{1}^{2}-1\right) }\left( \frac{\gamma _{1}^{2}}{E_{c2}^{2}}-\frac{2\gamma
-_{1}^{2}+2\gamma _{1}+1}{E_{c2}\left( \gamma _{1}-1\right) }+1\right)
-\approx \frac{\gamma _{1}^{2}}{\left( \gamma _{1}^{2}-1\right) }\frac{1}{%
-E_{c2}^{2}}
-\end{equation}
-which becomes in the limit $\gamma _{1}\gg 1,$ 
-\begin{equation}
-\sum \left( \gamma _{1},\gamma _{2}\right) \approx \frac{1}{E_{c2}^{2}}
+\sum \left( \gamma _{1},\gamma _{2}\right) \approx \frac{1}{E_{c2}^{2}}=%
+\frac{1}{\left( \gamma _{2}-1\right) ^{2}}
 \end{equation}
 
-Since $d\gamma _{2}=dE_{c2},$ 
+As $d\gamma _{2}=dE_{c2},$ one obtains readily
 \begin{eqnarray}
 d\sigma _{M} &\approx &2\pi r_{e}^{2}\frac{dE_{c2}}{E_{c2}^{2}}  \nonumber \\
-&=&-2\pi r_{e}^{2}d\left( \frac{1}{E_{c2}}\right)  \nonumber \\
+&=&-2\pi r_{e}^{2}d\left( \frac{1}{E_{c2}}\right)   \nonumber \\
 &=&-2\pi r_{e}^{2}\frac{d\left( 1/E_{c2}\right) }{dp_{2}}dp_{2}  \nonumber \\
 &=&2\pi r_{e}^{2}\frac{d}{dp_{2}}\left( \frac{1}{1-\gamma _{2}}\right) dp_{2}
 \nonumber \\
-&=&2\pi r_{e}^{2}\frac{d}{dp_{2}}\left( \frac{1}{1-\sqrt{1+p_{2}^{2}}}
+&=&2\pi r_{e}^{2}\frac{d}{dp_{2}}\left( \frac{1}{1-\sqrt{1+p_{2}^{2}}}%
 \right) dp_{2}
 \end{eqnarray}
 
 As each $p_{2}$ is uniquely associated with $\xi ^{*}\left( p_{2}\right) ,$
-and since all primary electrons are considered having approximately zero
-pitch-angle, we can write 
+when  $\gamma _{1}\gg 1$ and since all primary electrons are considered
+having approximately zero pitch-angle with respect to the magnetic field
+direction $\widehat{\mathbf{b}}$, the differential electron-electron
+scattering cross-section is
 \begin{equation}
-d\sigma _{M}\simeq 2\pi r_{e}^{2}\frac{d}{dp_{2}}\left( \frac{1}{1-\sqrt{%
-1+p_{2}^{2}}}\right) \delta \left( \xi _{2}-\xi ^{*}\left( p_{2}\right)
-\right) d\xi _{2}dp_{2}
-\end{equation}
-which is equivalent to 
-\[
 \frac{d\sigma _{M}}{d\Omega _{2}}\simeq \frac{r_{e}^{2}}{p_{2}^{2}}\frac{d}{%
 dp_{2}}\left( \frac{1}{1-\sqrt{1+p_{2}^{2}}}\right) \delta \left( \xi
-_{2}-\xi ^{*}\left( p_{2}\right) \right) d\xi _{2}dp_{2} 
-\]
+_{2}-\xi ^{*}\left( p_{2}\right) \right) 
+\end{equation}
 
 From this expression, it is possible to derive the local value of secondary
 runaway electron source term $\mathcal{S}_{R}\left( t,\theta ,\psi
@@ -282,21 +276,21 @@ flux surface $\psi $ and at time $t$ for a beam of monoenergetic primary
 electrons of velocity $v_{1}$ from the standard definition 
 \begin{equation}
 n_{e}\left( t,\psi \right) n_{R}\left( t,\psi \right) v_{1}\frac{d\sigma _{M}%
-}{d\Omega _{2}}=\mathcal{S}_{R}\left( t,\theta ,\psi ,p_{2},\xi _{2}\right)
+}{d\Omega _{2}}=\mathcal{S}_{R}\left( t,\theta ,\psi ,p_{2},\xi _{2}\right) 
 \end{equation}
 so that 
 \begin{equation}
 \mathcal{S}_{R}\left( t,\theta ,\psi ,p_{2},\xi _{2}\right) =\frac{%
 v_{1}r_{e}^{2}}{p_{2}^{2}}n_{e}\left( t,\psi \right) n_{R}\left( t,\psi
 \right) \frac{d}{dp_{2}}\left( \frac{1}{1-\sqrt{1+p_{2}^{2}}}\right) \delta
-\left( \xi _{2}-\xi ^{*}\left( p_{2}\right) \right)
+\left( \xi _{2}-\xi ^{*}\left( p_{2}\right) \right) 
 \end{equation}
 where $n_{R}\left( t,\psi \right) $ is the density of primary runaway
 electrons and $n_{e}\left( t,\psi \right) $ is the density of target
 electrons which are scattered at momentum $p_{2}$ with a pitch-angle cosine $%
 \xi ^{*}\left( p_{2}\right) $. \strut Here $n_{R}$ is only a function of the
-radial position, since fast electrons are only passing particles with no
-magnetic moments (zero pitch-angle).
+radial position $\psi $, since fast electrons are only passing particles
+with no magnetic moments (zero pitch-angle approximation).
 
 Since in the high velocity limit, $v_{1}\approx c,$ one obtains finally
 
@@ -313,35 +307,35 @@ upper integration limit $p_{\max }$ of the Fokker-Planck equation,
 \begin{equation}
 \mathcal{S}_{R}^{\Pi _{o}}\left( t,\theta ,\psi ,p,\xi \right) =\frac{%
 cr_{e}^{2}}{p^{2}}n_{e}n_{R}^{\Pi _{o}}\frac{d}{dp}\left( \frac{1}{1-\sqrt{%
-1+p^{2}}}\right) \delta \left( \xi -\xi ^{*}\left( p\right) \right)
+1+p^{2}}}\right) \delta \left( \xi -\xi ^{*}\left( p\right) \right) 
 \end{equation}
 where $\xi ^{*}\left( p\right) $ is given by relation \ref{pitchanglerunaway}%
 . In order to express $\mathcal{S}_{R}^{\Pi _{o}}\left( t,\theta ,\psi
-,p,\xi \right) $ in normalized units, it is useful to develop the first
-derivative in $p$. Hence, 
+,p,\xi \right) $ in normalized units used by the Fokker-Planck code, it is
+useful to develop the first derivative in $p$. Hence, 
 \begin{equation}
 \mathcal{S}_{R}^{\Pi _{o}}\left( t,\theta ,\psi ,p,\xi \right)
 =cr_{e}^{2}n_{e}n_{R}^{\Pi _{o}}\frac{1}{p\gamma \left( \gamma -1\right) ^{2}%
-}\delta \left( \xi -\xi ^{*}\left( p\right) \right)
+}\delta \left( \xi -\xi ^{*}\left( p\right) \right)   \label{sourcebeamfast}
 \end{equation}
-using the relation $d\gamma /dp=p/\gamma .$ Using the relations $n_{e}=%
-\overline{n}_{e}n_{e}^{\dag },$ $n_{R}^{\Pi _{o}}=\overline{n}_{R}^{\Pi
-_{o}}n_{e}^{\dag }$ and $p=\overline{p}\beta _{th}^{\dag }$ as defined in
-Sec. \ref{normalization}, one obtains 
+since $d\gamma /dp=p/\gamma .$ Using the definitions $n_{e}=\overline{n}%
+_{e}n_{e}^{\dag },$ $n_{R}^{\Pi _{o}}=\overline{n}_{R}^{\Pi _{o}}n_{e}^{\dag
+}$ and $p=\overline{p}\beta _{th}^{\dag }$ introduced in Sec. \ref
+{normalization}, one obtains 
 \begin{equation}
 \mathcal{S}_{R}^{\Pi _{o}}\left( t,\theta ,\psi ,\overline{p},\xi \right) =%
 \frac{cr_{e}^{2}n_{e}^{\dag 2}}{\beta _{th}^{\dag }}\overline{n}_{e}%
 \overline{n}_{R}^{\Pi _{o}}\frac{1}{\overline{p}\gamma \left( \gamma
--1\right) ^{2}}\delta \left( \xi -\xi ^{*}\left( \overline{p}\right) \right)
+-1\right) ^{2}}\delta \left( \xi -\xi ^{*}\left( \overline{p}\right) \right) 
 \end{equation}
-and using the relation \ref{normcollfreq} for the reference frequency $\nu
+and from the relation \ref{normcollfreq} for the reference frequency $\nu
 _{e}^{\dag },$ 
 \begin{equation}
 \mathcal{S}_{R}^{\Pi _{o}}\left( t,\theta ,\psi ,\overline{p},\xi \right) =%
 \frac{\nu _{e}^{\dag }}{\ln \Lambda _{ee}^{\dag }}n_{e}^{\dag }\beta
 _{th}^{\dag 2}\overline{n}_{e}\overline{n}_{R}^{\Pi _{o}}\frac{1}{\overline{p%
 }\gamma \left( \gamma -1\right) ^{2}}\delta \left( \xi -\xi ^{*}\left( 
-\overline{p}\right) \right)
+\overline{p}\right) \right) 
 \end{equation}
 
 It is convenient to defined the normalized source of secondary electrons as $%
@@ -369,24 +363,37 @@ particle trajectories are fully incorporated (see Sec. \ref{moments})$,$ and
 the contribution of secondary electrons in the Fokker-Planck equation can be
 taken into account.
 
-\subsubsection{Source term from runaways of moderate energy}
+\subsubsection{Source term from collisions with a beam of moderate energy
+runaway electrons}
 
-In the general case, using the prescription 
+In the general case, when there is a velocity distribution in the runaway
+tail, one can use the following the prescription 
 \begin{equation}
 n_{R}\left( t,\psi \right) v_{1}\frac{d\sigma _{M}}{d\Omega _{2}}\rightarrow
-2\pi c\iint \frac{d\sigma _{M}}{d\Omega _{2}}f_{R}\left( t,\psi ,p_{1},\xi
-_{1}\right) \frac{p_{1}}{\gamma _{1}}p_{1}^{2}dp_{1}d\xi _{1}
+2\pi c\iint \frac{d\sigma _{M}}{d\Omega _{2}}f_{R}\left( t,\psi
+,p_{1}\right) \frac{p_{1}}{\gamma _{1}}p_{1}^{2}dp_{1}d\xi _{1}
 \end{equation}
-the source $\mathcal{S}_{R}^{\Pi _{i}}\left( t,\theta ,\psi ,p_{2},\xi
+where $v_{1}=cp_{1}/\gamma _{1}$ and $f_{R}\left( t,\psi ,p_{1}\right) $ is
+the velocity distribution in the tail\footnote{%
+The runaway velocity distribution $f_{R}$ has here no poloidal dependence,
+since perpendicular velocity of fast electrons is neglected (no pitch-angle
+approximation, $\xi _{1}=1$)}, and by construction
+\begin{equation}
+n_{R}\left( t,\psi \right) =2\pi \int_{-1}^{+1}d\xi _{1}\int_{0}^{p_{\max
+}}f_{R}\left( t,\psi ,p_{1}\right) p_{1}^{2}dp_{1}=4\pi \int_{0}^{p_{\max
+}}f_{R}\left( t,\psi ,p_{1}\right) p_{1}^{2}dp_{1}
+\end{equation}
+
+The source $\mathcal{S}_{R}^{\Pi _{i}}\left( t,\theta ,\psi ,p_{2},\xi
 _{2}\right) $ of secondary runaways in the region $\Pi _{i}$ of the momentum
-phase space is given by 
+phase space is the given by 
 \begin{eqnarray}
-\mathcal{S}_{R}^{\Pi _{i}}\left( t,\theta ,\psi ,p_{2},\xi _{2}\right)
-&=&2\pi n_{e}\left( t,\psi \right) cr_{e}^{2}\frac{1}{p_{2}\gamma _{2}}\times
+\mathcal{S}_{R}^{\Pi _{i}}\left( t,\theta ,\psi ,p_{2},\xi _{2}\right)  &=&2%
+\pi n_{e}\left( t,\psi \right) cr_{e}^{2}\frac{1}{p_{2}\gamma _{2}}\times  
 \nonumber \\
-&&\int_{0}^{1}d\xi _{1}\int_{0}^{p_{\max }}\sum \left( \gamma _{1},\gamma
+&&\int_{-1}^{1}d\xi _{1}\int_{0}^{p_{\max }}\sum \left( \gamma _{1},\gamma
 _{2}\right) \delta \left( \xi _{2}-\xi ^{*}\left( p_{1},p_{2}\right) \right)
-f_{0}\left( t,\psi ,p_{1},\xi _{1}\right) \frac{p_{1}^{3}}{\gamma _{1}}dp_{1}
+f_{R}\left( t,\psi ,p_{1}\right) \frac{p_{1}^{3}}{\gamma _{1}}dp_{1}
 \end{eqnarray}
 
 Using the general relation $\delta \left( g\left( x\right) \right)
@@ -395,12 +402,12 @@ Using the general relation $\delta \left( g\left( x\right) \right)
 are the zeros of function $g\left( x\right) $ and $g^{\prime }\left(
 x\right) =dg/dx,$ one obtains 
 \begin{eqnarray}
-\mathcal{S}_{R}^{\Pi _{i}}\left( t,\theta ,\psi ,p_{2},\xi _{2}\right)
-&=&2\pi n_{e}\left( t,\psi \right) cr_{e}^{2}\times  \nonumber \\
+\mathcal{S}_{R}^{\Pi _{i}}\left( t,\theta ,\psi ,p_{2},\xi _{2}\right)  &=&2%
+\pi n_{e}\left( t,\psi \right) cr_{e}^{2}\times   \nonumber \\
 &&\left[ \frac{\sum \left( \gamma _{1},\gamma _{2}\right) }{p_{2}\gamma _{2}}%
-\frac{p_{1}^{3}}{\gamma _{1}}\frac{1}{\left| \partial \xi ^{*}/\partial
-p_{1}\right| }\int_{0}^{1}d\xi _{1}f_{0}\left( t,\psi ,p_{1},\xi _{1}\right)
-\right] _{\xi _{2}=\xi ^{*}\left( p_{1},p_{2}\right) }
+\frac{p_{1}^{3}}{\gamma _{1}}\frac{1}{\left| \partial \xi ^{*}/\partial %
+p_{1}\right| }\int_{-1}^{1}d\xi _{1}f_{R}\left( t,\psi ,p_{1}\right) \right]
+_{\xi _{2}=\xi ^{*}\left( p_{1},p_{2}\right) }
 \end{eqnarray}
 where $p_{1}$ inside $\left[ ...\right] _{\xi _{2}=\xi ^{*}\left(
 p_{1},p_{2}\right) }$ satisfies the pitch-angle relation $\xi _{2}=\xi
@@ -413,81 +420,72 @@ p_{1}\gamma _{1}}
 \end{equation}
 it turns out that 
 \begin{equation}
-\mathcal{S}_{R}^{\Pi _{i}}\left( t,\theta ,\psi ,p_{2},\xi _{2}\right)
-=n_{e}\left( t,\psi \right) cr_{e}^{2}\left[ \frac{\sum \left( \gamma
+\mathcal{S}_{R}^{\Pi _{i}}\left( t,\theta ,\psi ,p_{2},\xi _{2}\right) =4\pi %
+n_{e}\left( t,\psi \right) cr_{e}^{2}\left[ \frac{\sum \left( \gamma
 _{1},\gamma _{2}\right) }{p_{2}\gamma _{2}}\frac{p_{1}^{4}}{\xi ^{*}}%
-\int_{0}^{1}2\pi d\xi _{1}f_{0}\left( t,\psi ,p_{1},\xi _{1}\right) \right]
-_{\xi _{2}=\xi ^{*}\left( p_{1},p_{2}\right) }
+f_{R}\left( t,\psi ,p_{1}\right) \right] _{\xi _{2}=\xi ^{*}\left(
+p_{1},p_{2}\right) }
 \end{equation}
-
-Assuming $\xi _{1}=1$ for primary electrons, $f_{0}\left( t,\psi ,p_{1},\xi
-_{1}=1\right) =f_{0}\left( t,\psi ,p_{1}\right) \delta \left( \xi
-_{1}-1\right) $ and defining 
-\begin{equation}
-\overline{f_{0}\left( t,\psi ,p_{1}\right) }=\int_{0}^{1}2\pi d\xi
-_{1}f_{0}\left( t,\psi ,p_{1},\xi _{1}=1\right)
-\end{equation}
-one obtains the expression 
-\begin{equation}
-\mathcal{S}_{R}^{\Pi _{i}}\left( t,\theta ,\psi ,p_{2},\xi _{2}\right)
-=n_{e}\left( t,\psi \right) cr_{e}^{2}\left[ \frac{\sum \left( \gamma
-_{1},\gamma _{2}\right) }{p_{2}\gamma _{2}}\frac{p_{1}^{4}}{\xi ^{*}}%
-\overline{f_{0}\left( t,\psi ,p_{1}\right) }\right] _{\xi _{2}=\xi
-^{*}\left( p_{1},p_{2}\right) }
-\end{equation}
-which is equivalent to the relation given in Ref. \cite{chi98}. In
-normalized units, 
+which is equivalent to the relation (9) given in Ref. \cite{chi98}\footnote{%
+One can define $f_{R}\left( t,\psi ,\overline{p}_{1}\right) $ as $%
+f_{0}\left( t,\psi ,\overline{p}_{1},\xi _{1}=1\right) $ above a critical
+energy that may correspond for example to the region where the velocity
+exceeds the Dreicer value.}. In normalized units, 
 \begin{equation}
 \overline{\mathcal{S}}_{R}^{\Pi _{i}}\left( t,\theta ,\psi ,p_{2},\xi
 _{2}\right) =\frac{\beta _{th}^{\dag 2}}{\ln \Lambda _{ee}^{\dag }}\overline{%
 n}_{e}\left( t,\psi \right) \left[ \frac{\sum \left( \gamma _{1},\gamma
 _{2}\right) }{\overline{p}_{2}\gamma _{2}}\frac{\left( \gamma
-_{1}^{2}-1\right) ^{2}}{\xi ^{*}}\overline{f_{0}\left( t,\psi ,\overline{p}%
-_{1}\right) }\right] _{\xi _{2}=\xi ^{*}\left( \overline{p}_{1},\overline{p}%
-_{2}\right) }
+_{1}^{2}-1\right) ^{2}}{\xi ^{*}}f_{R}\left( t,\psi ,\overline{p}_{1}\right)
+\right] _{\xi _{2}=\xi ^{*}\left( \overline{p}_{1},\overline{p}_{2}\right) }
 \end{equation}
 where $\overline{p}_{1}$ satifies the equation for a given value $\left( 
 \overline{p}_{2},\xi _{2}\right) ,$%
 \begin{equation}
 \beta _{th}^{\dag 2}\overline{p}_{1}\overline{p}_{2}\xi _{2}=\left( \gamma
-_{2}-1\right) \left( \gamma _{1}+1\right)
+_{2}-1\right) \left( \gamma _{1}+1\right) 
 \end{equation}
 with $\gamma _{1}=\sqrt{1+\beta _{th}^{\dag 2}\overline{p}_{1}^{2}}$ and $%
-\gamma _{2}=\sqrt{1+\beta _{th}^{\dag 2}\overline{p}_{2}^{2}}.$ An
-equivalent form is 
+\gamma _{2}=\sqrt{1+\beta _{th}^{\dag 2}\overline{p}_{2}^{2}}.$ The
+expression of $\overline{\mathcal{S}}_{R}^{\Pi _{i}}\left( t,\theta ,\psi
+,p_{2},\xi _{2}\right) $ may be also expressed in a more general form
+introducing the Delta function
 \begin{equation}
 \overline{\mathcal{S}}_{R}^{\Pi _{i}}\left( t,\theta ,\psi ,p_{2},\xi
 _{2}\right) =\frac{\beta _{th}^{\dag 2}}{\ln \Lambda _{ee}^{\dag }}\overline{%
 n}_{e}\left( t,\psi \right) \frac{\sum \left( \gamma _{1},\gamma _{2}\right) 
 }{\overline{p}_{2}\gamma _{2}}\frac{\left( \gamma _{1}^{2}-1\right) ^{2}}{%
-\xi ^{*}}\overline{f_{0}\left( t,\psi ,\overline{p}_{1}\right) }\delta
-\left( \xi _{2}-\xi ^{*}\left( \overline{p}_{1},\overline{p}_{2}\right)
-\right)
+\xi ^{*}}f_{R}\left( t,\psi ,\overline{p}_{1}\right) \delta \left( \xi
+_{2}-\xi ^{*}\left( \overline{p}_{1},\overline{p}_{2}\right) \right) 
 \end{equation}
 
 In the limit $\overline{p}_{1}\rightarrow \infty ,$ $\xi ^{*}$ becomes
 independent of $\overline{p}_{1},$ and assuming a monokinetic beam of
-electrons, $\overline{f_{0}\left( t,\psi ,p_{1}\right) }=\overline{n}%
-_{R}^{\Pi _{i}}$ so that 
+electrons ********* A FINIR *****************, $\overline{f_{0}\left( t,\psi
+,p_{1}\right) }=\overline{n}_{R}^{\Pi _{i}}$ so that 
 \begin{equation}
-\lim_{\overline{p}_{1}\rightarrow \infty }\overline{\mathcal{S}}_{R}^{\Pi
+\lim_{\overline{p}_{1}\rightarrow \infty }\overline{\mathcal{S}}_{R}^{\Pi %
 _{i}}\left( t,\theta ,\psi ,p_{2},\xi _{2}\right) =\frac{\beta _{th}^{\dag 2}%
 }{\ln \Lambda _{ee}^{\dag }}\overline{n}_{e}\left( t,\psi \right) \overline{n%
 }_{R}^{\Pi _{i}}\frac{1}{\overline{p}_{2}\gamma _{2}\left( \gamma
 _{2}-1\right) ^{2}}\frac{\left( \gamma _{1}^{2}-1\right) ^{2}}{\xi ^{*}}%
-\delta \left( \xi _{2}-\xi ^{*}\left( \overline{p}_{2}\right) \right)
+\delta \left( \xi _{2}-\xi ^{*}\left( \overline{p}_{2}\right) \right) 
 \end{equation}
 using the expression of $\lim_{\overline{p}_{1}\rightarrow \infty }\sum
 \left( \gamma _{1},\gamma _{2}\right) =1/\left( \gamma _{2}-1\right) ^{2}.$
 
-When all pitch-angles $\xi _{1}$ must be considered, the starting point of
-the general expression is 
+\subsubsection{Source term from collisions with a distribution of moderate
+energy runaway electrons}
+
+In that case, we consider self-collisions between electrons of domain $\Pi %
+_{i}.$ When all pitch-angles $\xi _{1}$ must be considered, the starting
+point of the general expression is 
 \begin{equation}
 \mathcal{S}_{R}^{\Pi _{i}}\left( t,\theta ,\psi ,p_{2},\xi _{2}\right)
 =cn_{e}\left( t,\psi \right) \int_{0}^{p_{\max }}\frac{p_{1}}{\gamma _{1}}%
 p_{1}^{2}dp_{1}\int_{0}^{2\pi }d\varphi _{1}\int_{0}^{1}d\xi _{1}\frac{%
 d\sigma _{M}}{d\Omega _{2}}\left( p_{1},p_{2},\xi ^{*}\right) f_{0}\left(
-t,\psi ,p_{1},\xi _{1}\right)   \label{generalsecondarysource}
+t,\theta ,\psi ,p_{1},\xi _{1}\right)   \label{generalsecondarysource}
 \end{equation}
 where the azimuthal angle $\varphi _{1}$ is related to $\xi _{1}=$ $\widehat{%
 p}_{1}\cdot \widehat{b}$ and $\xi _{2}=\widehat{p}_{2}\cdot \widehat{b}$ by
@@ -521,9 +519,9 @@ _{2}}P_{m}\left( \xi ^{*}\left( p_{1},p_{2}\right) \right)
 \end{eqnarray}
 where $\xi =\widehat{p}_{1}\cdot \widehat{p}_{2}$ and 
 \begin{equation}
-f_{0}^{\left( m^{\prime }\right) }\left( t,\psi ,p_{1}\right)
-=\int_{-1}^{+1}f_{0}\left( t,\psi ,p_{1},\xi _{1}\right) P_{m^{\prime
-}}\left( \xi _{1}\right) d\xi _{1}
+f_{0}^{\left( m^{\prime }\right) }\left( t,\theta ,\psi ,p_{1}\right)
+=\int_{-1}^{+1}f_{0}\left( t,\theta ,\psi ,p_{1},\xi _{1}\right)
+P_{m^{\prime }}\left( \xi _{1}\right) d\xi _{1}
 \end{equation}
 the relation \ref{generalsecondarysource} becomes 
 \begin{eqnarray}
@@ -534,7 +532,7 @@ p_{1}^{2}dp_{1}\int_{0}^{2\pi }d\varphi _{1}\int_{0}^{1}d\xi _{1}\times
 &&\sum_{m=0}^{\infty }\sum_{m=0}^{\infty }\left( m+\frac{1}{2}\right) \left(
 m^{\prime }+\frac{1}{2}\right) \frac{d\sigma _{M}^{\left( m\right) }}{d%
 \Omega _{2}}P_{m}\left( \xi \right) f_{0}^{\left( m^{\prime }\right) }\left(
-t,\psi ,p_{1}\right) P_{m^{\prime }}\left( \xi _{1}\right) 
+t,\theta ,\psi ,p_{1}\right) P_{m^{\prime }}\left( \xi _{1}\right) 
 \end{eqnarray}
 or 
 \begin{eqnarray}
@@ -543,7 +541,7 @@ or
 p_{1}^{2}dp_{1}\sum_{m=0}^{\infty }\sum_{m=0}^{\infty }\left( m+\frac{1}{2}%
 \right) \left( m^{\prime }+\frac{1}{2}\right) \frac{d\sigma _{M}^{\left(
 m\right) }}{d\Omega _{2}}\left( p_{1},p_{2}\right) f_{0}^{\left( m^{\prime
-}\right) }\left( t,\psi ,p_{1}\right) \times   \nonumber \\
+}\right) }\left( t,\theta ,\psi ,p_{1}\right) \times   \nonumber \\
 &&\int_{0}^{2\pi }d\varphi _{1}\int_{0}^{1}d\xi _{1}P_{m}\left( \xi \right)
 P_{m^{\prime }}\left( \xi _{1}\right) 
 \end{eqnarray}
@@ -554,7 +552,7 @@ relation between $\xi ,$ $\xi _{1}$ and $\xi _{2}$,
 P_{m}\left( \xi \right) =P_{m}\left( \xi _{2}\right) P_{m}\left( \xi
 _{1}\right) +2\sum_{n=1}^{n=m}\frac{\left( m-n\right) !}{\left( m+n\right) !}%
 P_{m}^{n}\left( \xi _{2}\right) P_{m}^{n}\left( \xi _{1}\right) \cos \left(
-n\varphi _{1}\right) 
+n\varphi _{1}\right)
 \end{equation}
 where $P_{m}^{n}\left( x\right) $ is the associated Legendre function of
 degree $m$ and order $n$,
@@ -565,7 +563,7 @@ degree $m$ and order $n$,
 p_{1}^{2}dp_{1}\sum_{m=0}^{\infty }\sum_{m=0}^{\infty }\left( m+\frac{1}{2}%
 \right) \left( m^{\prime }+\frac{1}{2}\right) \frac{d\sigma _{M}^{\left(
 m\right) }}{d\Omega _{2}}\left( p_{1},p_{2}\right) f_{0}^{\left( m^{\prime
-}\right) }\left( t,\psi ,p_{1}\right) \times   \nonumber \\
+}\right) }\left( t,\theta ,\psi ,p_{1}\right) \times   \nonumber \\
 &&\int_{0}^{2\pi }d\varphi _{1}\int_{0}^{1}d\xi _{1}P_{m}\left( \xi
 _{2}\right) P_{m}\left( \xi _{1}\right) P_{m^{\prime }}\left( \xi
 _{1}\right) 
@@ -584,7 +582,7 @@ the orthogonality relation (\ref{orthoLegendre}),
 cn_{e}\left( t,\psi \right) \int_{0}^{p_{\max }}\frac{p_{1}^{3}}{\gamma _{1}}%
 dp_{1}\sum_{m=0}^{\infty }\left( m+\frac{1}{2}\right) \frac{d\sigma
 _{M}^{\left( m\right) }}{d\Omega _{2}}\left( p_{1},p_{2}\right)
-f_{0}^{\left( m\right) }\left( t,\psi ,p_{1}\right) P_{m}\left( \xi
+f_{0}^{\left( m\right) }\left( t,\theta ,\psi ,p_{1}\right) P_{m}\left( \xi
 _{2}\right) 
 \end{equation}
 and using the exact expression of $d\sigma _{M}^{\left( m\right) }/d\Omega %
@@ -595,43 +593,56 @@ cr_{e}^{2}n_{e}\left( t,\psi \right) \sum_{m=0}^{\infty }\left( m+\frac{1}{2}%
 \right) P_{m}\left( \xi _{2}\right) \left[ \int_{0}^{p_{\max }}\frac{%
 p_{1}^{3}}{\gamma _{1}}\frac{\sum \left( \gamma _{1},\gamma _{2}\right) }{%
 p_{2}\gamma _{2}}P_{m}\left( \xi ^{*}\left( p_{1},p_{2}\right) \right)
-f_{0}^{\left( m\right) }\left( t,\psi ,p_{1}\right) dp_{1}\right] 
+f_{0}^{\left( m\right) }\left( t,\theta ,\psi ,p_{1}\right) dp_{1}\right] 
 \end{equation}
 whith $\xi ^{*}$ defined by relation (\ref{pitchanglerunaway}).
 
 In the limit $\gamma _{1}\gg 1,$ the distribution of primary electrons is a
-beam along the magnetic field direction $\widehat{\mathbf{b}}$, and 
+beam along the magnetic field direction $\widehat{\mathbf{b}}$, i.e. $%
+f_{0}\left( t,\theta ,\psi ,p_{1},\xi _{1}\right) =$ $f_{0}\left( t,\psi
+,p_{1}\right) \delta \left( \xi _{1}-1\right) ,$ and 
 \begin{equation}
-f_{0}^{\left( m\right) }\left( t,\psi ,p_{1}\right) \simeq 1
+f_{0}^{\left( m\right) }\left( t,\theta ,\psi ,p_{1}\right) \simeq
+f_{0}\left( t,\psi ,p_{1}\right) 
 \end{equation}
-for all $m$ values. In that case, since $\xi ^{*}$ is only function of $%
-p_{2},$ $P_{m}\left( \xi ^{*}\right) $ may be taken out from the integral in 
-$p_{1}$, and
+for all $m$ values, and the poloidal dependence vanishes. In that case,
+since $\xi ^{*}$ is only function of $p_{2},$ $P_{m}\left( \xi ^{*}\right) $
+may be taken out from the integral in $p_{1}$, and 
 \begin{equation}
 \mathcal{S}_{R}^{\Pi _{i}}\left( t,\theta ,\psi ,p_{2},\xi _{2}\right)
 \simeq 2\pi cr_{e}^{2}n_{e}\left( t,\psi \right) \sum_{m=0}^{\infty }\left(
 m+\frac{1}{2}\right) P_{m}\left( \xi _{2}\right) P_{m}\left( \xi ^{*}\left(
 p_{2}\right) \right) \left[ \int_{0}^{p_{\max }}\frac{p_{1}^{3}}{\gamma _{1}}%
 \frac{\sum \left( \gamma _{1},\gamma _{2}\right) }{p_{2}\gamma _{2}}%
-dp_{1}\right] 
+f_{0}\left( t,\psi ,p_{1}\right) dp_{1}\right] 
 \end{equation}
 
-Using the orthogonality relation (\ref{orthoLegendre}),
+Using the orthogonality relation (\ref{orthoLegendre}), 
 \begin{equation}
 \sum_{m=0}^{\infty }\left( m+\frac{1}{2}\right) P_{m}\left( \xi _{2}\right)
 P_{m}\left( \xi ^{*}\left( p_{2}\right) \right) =\delta \left( \xi _{2}-\xi
 ^{*}\left( p_{2}\right) \right) 
 \end{equation}
-it turns out
+it turns out 
 \begin{equation}
 \mathcal{S}_{R}^{\Pi _{i}}\left( t,\theta ,\psi ,p_{2},\xi _{2}\right)
 \simeq 2\pi cr_{e}^{2}n_{e}\left( t,\psi \right) \frac{1}{p_{2}\gamma
 _{2}\left( \gamma _{2}-1\right) ^{2}}\left[ \int_{0}^{p_{\max }}\frac{%
-p_{1}^{3}}{\gamma _{1}}dp_{1}\right] \delta \left( \xi _{2}-\xi ^{*}\left(
-p_{2}\right) \right) 
+p_{1}^{3}}{\gamma _{1}}f_{0}\left( t,\psi ,p_{1}\right) dp_{1}\right] \delta
+\left( \xi _{2}-\xi ^{*}\left( p_{2}\right) \right) 
 \end{equation}
 since $\sum \left( \gamma _{1},\gamma _{2}\right) \sim \left( \gamma
-_{2}-1\right) ^{-2}.$ One recovers the expression found independently, which
-ends the calculation. 
-
-\subsection{Critical electric field}
+_{2}-1\right) ^{-2}.$ Defining
+\begin{equation}
+n_{R}^{\Pi _{i}}\left( t,\psi \right) v_{1mean}=\int_{0}^{p_{\max }}\frac{%
+p_{1}^{3}}{\gamma _{1}}f_{0}\left( t,\psi ,p_{1}\right) dp_{1}
+\end{equation}
+where $v_{1mean}$ is the mean velocity in the beam of fast electrons
+normalized to the speed of light $c$, one obtains finally
+\begin{equation}
+\mathcal{S}_{R}^{\Pi _{i}}\left( t,\theta ,\psi ,p_{2},\xi _{2}\right)
+\simeq 2\pi cr_{e}^{2}n_{e}\left( t,\psi \right) n_{R}^{\Pi _{i}}\left(
+t,\psi \right) \frac{v_{1mean}}{p_{2}\gamma _{2}\left( \gamma _{2}-1\right)
+^{2}}\delta \left( \xi _{2}-\xi ^{*}\left( p_{2}\right) \right) 
+\end{equation}
+which is exactly the expression (\ref{sourcebeamfast}).
