@@ -426,7 +426,7 @@ p_{1}\gamma _{1}}
 \end{equation}
 it turns out that 
 \begin{equation}
-\mathcal{S}_{R}^{\Pi _{i}}\left( t,\theta ,\psi ,p_{2},\xi _{2}\right) =2\pi %
+\mathcal{S}_{R}^{\Pi _{i}}\left( t,\theta ,\psi ,p_{2},\xi _{2}\right) =2\pi 
 n_{e}\left( t,\psi \right) cr_{e}^{2}\left[ \frac{\sum \left( \gamma
 _{1},\gamma _{2}\right) }{p_{2}\gamma _{2}}\frac{p_{1}^{4}}{\xi ^{*}}%
 f_{R}\left( t,\psi ,p_{1}\right) \right] _{\xi _{2}=\xi ^{*}\left(
@@ -466,13 +466,15 @@ It is possible from expression (\ref{modereatevsecondarysource}) to recover
 the case of a monokinetic beam discussed in the previous section which
 corresponds to the limit 
 \begin{equation}
-f_{R}\left( t,\psi ,p_{1}\right) \simeq \delta \left( p_{1}-p_{1mean}\right) 
+f_{R}\left( t,\psi ,p_{1}\right) \simeq n_{R}^{\Pi _{i}}\left( t,\psi
+\right) \delta \left( p_{1}-p_{1mean}\right) 
 \end{equation}
 In this case, the mean normalized velocity of the beam is $v_{1mean}$%
 \begin{equation}
 n_{R}^{\Pi _{i}}\left( t,\psi \right) v_{1mean}=2\pi \int_{0}^{p_{\max }}%
-\frac{p_{1}}{\gamma _{1}}\delta \left( p_{1}-p_{1mean}\right)
-p_{1}^{2}dp_{1}=2\pi \frac{p_{1mean}^{3}}{\gamma _{1mean}}
+\frac{p_{1}}{\gamma _{1}}n_{R}^{\Pi _{i}}\left( t,\psi \right) \delta \left(
+p_{1}-p_{1mean}\right) p_{1}^{2}dp_{1}=2\pi n_{R}^{\Pi _{i}}\left( t,\psi
+\right) \frac{p_{1mean}^{3}}{\gamma _{1mean}}
 \end{equation}
 where $\gamma _{1mean}=\sqrt{1+p_{1mean}^{2}}.$ 
 
@@ -576,7 +578,7 @@ P_{m^{\prime }}\left( \xi _{1}\right) d\xi _{1}
 the relation \ref{generalsecondarysource} becomes 
 \begin{eqnarray}
 \mathcal{S}_{R}^{\Pi _{i}}\left( t,\theta ,\psi ,p_{2},\xi _{2}\right)
-&=&cn_{e}\left( t,\psi \right) \int_{0}^{p_{\max }}\frac{p_{1}}{\gamma _{1}}
+&=&cn_{e}\left( t,\psi \right) \int_{0}^{p_{\max }}\frac{p_{1}}{\gamma _{1}}%
 p_{1}^{2}dp_{1}\int_{0}^{2\pi }d\varphi _{1}\int_{0}^{1}d\xi _{1}\times 
 \nonumber \\
 &&\sum_{m=0}^{\infty }\sum_{m=0}^{\infty }\left( m+\frac{1}{2}\right) \left(
@@ -647,7 +649,7 @@ f_{0}^{\left( m\right) }\left( t,\theta ,\psi ,p_{1}\right) dp_{1}\right]
 whith $\xi ^{*}$ defined by relation (\ref{pitchanglerunaway}).
 
 In the limit of a beam of primary electrons along the magnetic field
-direction $\widehat{\mathbf{b}}$ with a distribution of velocities, i.e. $%
+direction $\widehat{\mathbf{b}}$ with a distribution of velocities, i.e. $
 f_{0}\left( t,\theta ,\psi ,p_{1},\xi _{1}\right) =$ $f_{0}\left( t,\psi
 ,p_{1}\right) \delta \left( \xi _{1}-1\right) ,$ 
 \begin{equation}
@@ -660,7 +662,7 @@ permuting the integral on $p_{1}$ on the sum over the Legendre polynomials,
 \mathcal{S}_{R}^{\Pi _{i}}\left( t,\theta ,\psi ,p_{2},\xi _{2}\right)
 \simeq 2\pi cr_{e}^{2}n_{e}\left( t,\psi \right) \int_{0}^{p_{\max }}\frac{%
 p_{1}^{3}}{\gamma _{1}}\frac{\sum \left( \gamma _{1},\gamma _{2}\right) }{%
-p_{2}\gamma _{2}}f_{0}\left( t,\psi ,p_{1}\right) dp_{1}\sum_{m=0}^{\infty 
+p_{2}\gamma _{2}}f_{0}\left( t,\psi ,p_{1}\right) dp_{1}\sum_{m=0}^{\infty %
 }\left( m+\frac{1}{2}\right) P_{m}\left( \xi _{2}\right) P_{m}\left( \xi
 ^{*}\right) 
 \end{equation}
@@ -690,4 +692,85 @@ t,\psi ,p_{1}\right) \delta \left( \xi _{1}-1\right) \rightarrow \delta
 \end{equation}
 from the most general problem to the simplest limit.
 
-\subsection{Threshold energy}
+\subsection{The critical electric field}
+
+The critical electric field $E_{c}$ corresponds to the threshold above which
+the drag force due to collisions is exactly counterbalanced by the electric
+field force. It is usually evaluated for a single test particle of momentum $%
+p_{test}$. The distribution function is then simply
+\begin{equation}
+f_{test}=\frac{1}{2\pi p_{test}^{2}}\delta \left( p-p_{test}\right) \delta
+\left( \xi -\xi _{test}\right) 
+\end{equation}
+The retardation due to collision at momentum $p$ is localy 
+\begin{equation}
+\left. \frac{dp}{dt}\right| _{coll.}=\iiint p\mathcal{C}\left(
+f_{test}\right) d^{3}p=2\pi \int_{-1}^{+1}d\xi \int_{0}^{p_{\max }}p^{3}%
+\mathcal{C}\left( f_{test}\right) dp  \label{retardation}
+\end{equation}
+where $\mathcal{C}\left( f\right) $ is the collision operator in the
+Fokker-Planck equation, which may be expressed as the divergence of a
+electron flux of the following form
+\begin{equation}
+\mathcal{C}\left( f_{0}\right) =\mathbf{\nabla }_{\mathbf{p}}\cdot \mathbf{S}%
+_{\mathbf{p}}^{C}=\frac{1}{p^{2}}\frac{\partial }{\partial p}p^{2}S_{p}^{C}-%
+\frac{1}{p}\frac{\partial }{\partial \xi }\sqrt{1-\xi ^{2}}S_{\xi }^{C}
+\end{equation}
+with
+\begin{eqnarray}
+S_{p}^{C} &=&-D_{pp}^{C}\frac{\partial f_{test}}{\partial p}%
++F_{p}^{C}f_{test} \\
+S_{\xi }^{C} &=&\frac{\sqrt{1-\xi ^{2}}}{p}D_{\xi \xi }^{C}\frac{\partial %
+f_{test}}{\partial \xi }
+\end{eqnarray}
+
+Here, according to the notations introduced in Sec. \ref{collisions}, $%
+D_{pp}^{C}=A\left( \psi ,p\right) ,$ $F_{p}^{C}=$ $-F\left( \psi ,p\right) $
+and $D_{\xi \xi }^{C}=B_{t}\left( \psi ,p\right) .$ Since the pitch-angle
+term is exactly zero in the relation (\ref{retardation}), 
+\begin{eqnarray}
+\left. \frac{dp}{dt}\right| _{coll.} &=&2\pi \int_{-1}^{+1}d\xi
+\int_{0}^{p_{\max }}p\frac{\partial }{\partial p}\left( p^{2}S_{p}\right) dp
+\nonumber \\
+&=&-2\pi \int_{-1}^{+1}d\xi \int_{0}^{p_{\max }}p^{2}S_{p}^{C}dp
+\end{eqnarray}
+assuming that $\lim_{p\rightarrow \infty }p^{3}S_{p}^{C}=0,$ a condition
+already considered for power calculations in Sec. \ref{moments} which is
+usually fullfiled . From the expression of $S_{p}^{C},$ 
+\begin{equation}
+\left. \frac{dp}{dt}\right| _{coll.}=2\pi \int_{-1}^{+1}d\xi
+\int_{0}^{p_{\max }}p^{2}D_{pp}^{C}\frac{\partial f_{test}}{\partial p}dp-2%
+\pi \int_{-1}^{+1}d\xi \int_{0}^{p_{\max }}p^{2}F_{p}^{C}f_{test}dp
+\end{equation}
+
+Since $\int_{-\infty }^{+\infty }g\left( x\right) \delta ^{\prime }\left(
+x-a\right) dx=-g^{\prime }\left( a\right) ,$ one obtains
+\begin{equation}
+\left. \frac{dp}{dt}\right| _{coll.}=-\left. \frac{\partial D_{pp}^{C}}{%
+\partial p}\right| _{p=p_{test}}-\left. F_{p}^{C}\right| _{p=p_{test}}
+\end{equation}
+
+*********** A voir ************Concerning the acceleration due to the
+electric field, 
+
+\begin{equation}
+\left. \frac{dp}{dt}\right| _{E}=\iiint p\mathcal{E}\left( f\right) d^{3}p=2%
+\pi \int_{-1}^{+1}d\xi \int_{0}^{p_{\max }}p^{3}\mathcal{E}\left( f\right) dp
+\end{equation}
+where
+\begin{equation}
+\mathcal{E}\left( f\right) =\mathbf{\nabla }_{\mathbf{p}}\cdot \mathbf{S}_{%
+\mathbf{p}}^{E}=\frac{1}{p^{2}}\frac{\partial }{\partial p}p^{2}S_{p}^{E}-%
+\frac{1}{p}\frac{\partial }{\partial \xi }\sqrt{1-\xi ^{2}}S_{\xi }^{E}
+\end{equation}
+with
+\begin{eqnarray}
+S_{p}^{E} &=&F_{p}^{E}f_{0} \\
+S_{\xi }^{E} &=&F_{\xi }^{E}f_{0}
+\end{eqnarray}
+
+In this case, as shown in Sec. ***, $F_{p}^{E}=q_{e}\xi E_{\Vert }$ and $%
+F_{\xi }^{E}=-q_{e}\sqrt{1-\xi ^{2}}E_{\Vert }.$ Therefore, 
+\[
+\left. \frac{dp}{dt}\right| _{E}=-4\pi \int_{0}^{p_{\max }}p^{2}S_{p}^{E}dp
+\]
