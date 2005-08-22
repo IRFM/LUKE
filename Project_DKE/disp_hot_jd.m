@@ -1,4 +1,4 @@
-function [smask_ht,sNperp_ht,sepol_pmz_ht,sPflow_ht,sPabs_at,...
+function [smask_ht,sNperp_ht,sepol_pmz_ht,sPflow_xyz_ht,sPabs_at,...
         smask_ft,sNperp_ft,sepol_pmz_ft] = ...
     disp_hot_jd(ss,sB,sne,sTe,sNpar,omega,sNperp,rel_opt,tol_ht,nd_ht,guess_ES,nn_nr);
 %
@@ -66,10 +66,10 @@ if sum(isnan(sNperp)) == ns% look for electrostatic root
     %
     fac_root = 1.1;
     fac_exp = -1.5;
-    fac_lim = 5;
+    fac_lim = 20;
     GNperp = NaN;
     %
-    while (isnan(GNperp) | real(GNperp) == 0) & fac_root < fac_lim
+    while (isnan(GNperp) | real(GNperp) < 1) & fac_root < fac_lim
         [GNperp] = disp_ebwES_jd(sB(iCmin_app),sTe(iCmin_app),sne(iCmin_app),omega,NaN,guess_Nperp*fac_root);
         fac_root = fac_root^fac_exp;
     end
@@ -97,7 +97,7 @@ nrt_nr = 1-rel_opt;
 nrt_fr = rel_opt;
 kflag = 1;
 %
-[ss_out_ft,sMNperp_ft,sM3eps_pmz_ft,ss_out_ht,sMNperp_ht,sM3eps_pmz_ht,sMPflow_ht,sMPabs_at] = ...
+[ss_out_ft,sMNperp_ft,sM3eps_pmz_ft,ss_out_ht,sMNperp_ht,sM3eps_pmz_ht,sM3Pflow_xyz_ht,sMPabs_at] = ...
     disp_jd(ss_in,sB_in,sTe_in,sne_in,sNpar_in,omega,knr,nrt_nr,nrt_fr,kflag,GNperp,nn_nr,tol_ht,nd_ht);
 ns_out_ft = length(ss_out_ft);
 ns_out_ht = length(ss_out_ht);
@@ -114,7 +114,7 @@ for is = 1:ns_out_ft,
 end
 sNperp_ht = sMNperp_ht';%since nrt=1
 sepol_pmz_ht = reshape(sM3eps_pmz_ht,[ns_out_ht,3])';
-sPflow_ht = sMPflow_ht';
+sPflow_xyz_ht = reshape(sM3Pflow_xyz_ht,[ns_out_ht,3])';
 sPabs_at = sMPabs_at';
 sNperp_ft = sMNperp_ft';
 sepol_pmz_ft = reshape(sM3eps_pmz_ft,[ns_out_ft,3])';
