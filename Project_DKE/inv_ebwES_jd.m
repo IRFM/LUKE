@@ -11,7 +11,13 @@ for ix = 1:length(xq);
     abr_ebw_ES = xabr(ix);
     guess_ES = xguess(ix);
 %
-    [xlambda(ix),xYval(ix),xYflag(ix)] = fzero(@F_jd,guess_ES);
+    try
+        [xlambda(ix),xYval(ix),xYflag(ix)] = fzero(@F_jd,guess_ES);
+    catch
+        xlambda(ix) = NaN;
+        xYval(ix) = NaN;
+        xYflag(ix) = 0;
+    end
 %
     waitbar(ix/length(xq),h);
 end
