@@ -224,9 +224,10 @@ else
         %
         sNperp = sNperp_ht;
         sepol_pmz = sepol_pmz_ht;
-        sphi_pmz(1,:) = abs(2*sPflow_ht/e0/clum);
+        sphi_pmz(1,:) = abs(2*sPflow_ht(1,:)/e0/clum);
         sphi_pmz(2,:) = zeros(1,ns);
-        sphi_pmz(3,:) = zeros(1,ns);            
+        sphi_pmz(3,:) = zeros(1,ns);       
+        salphaphi_lin = 2*sPabs_at/e0/clum;
         %
         ss = ss(smask_ht);
         spsin = spsin(smask_ht);
@@ -296,5 +297,8 @@ ray.sne = sne;
 ray.szni = szni;
 ray.sTe = sTe;
 ray.szTi = szTi;
-
+%
+if opt_disp == 3,
+    ray.salphaphi_lin = salphaphi_lin;
+end
 
