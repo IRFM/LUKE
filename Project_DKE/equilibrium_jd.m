@@ -92,7 +92,53 @@ end
 %
 [qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;
 %
+% CASE OF LOCAL CALCULATION INDEPENDENT OF ANY ACTUAL TOKAMAK GENOMETRY
+%
 [npsi,ntheta] = size(equil.R);
+%
+if strcmp(equil.id,'LOCAL')
+    mtheta = equil.theta;
+    ppsin = equil.ppsi;
+    if isnan(xpsin)
+        xpsin = ppsin;
+    end
+    nr = length(xpsin);
+    psia = NaN;
+    %
+    XR = interp1(ppsin,equil.R,xpsin,'linear');
+    XZ = interp1(ppsin,equil.Z,xpsin,'linear');
+    XBR = interp1(ppsin,equil.BR,xpsin,'linear');
+    XBZ = interp1(ppsin,equil.BZ,xpsin,'linear');
+    XBphi = interp1(ppsin,equil.BPHI,xpsin,'linear');
+    xB0 = equil.BR(2,1);
+    xBT0 = xB0;
+    xBp0 = xB0;
+    xrho = interp1(ppsin,equil.prho,xpsin,'linear');
+    xTe = interp1(ppsin,equil.pTe,xpsin,'linear');
+    xne = interp1(ppsin,equil.pne,xpsin,'linear');
+    xzTi = interp1(ppsin,equil.pzTi',xpsin,'linear')';
+    xzni = interp1(ppsin,equil.pzni',xpsin,'linear')';
+    zZi = equil.zZi;
+    zmi = equil.zmi;
+    Rp = equil.R(1,1);
+    Zp = equil.Z(1,1);
+    xR0 = equil.R(2,1);
+    ap = xR0-Rp;
+    %
+    xmhu0T2 = interp1(ppsin,equil.pmhu0T2,xpsin,'linear');
+    xmhu0T2_new = 2*(xR0-Rp)/xR0;
+    if abs(xmhu0T2_new - xmhu0T2)>1e-4
+        error('something is wrong in the geometry')
+    else
+        xmhu0T2 = xmhu0T2_new;
+    end
+    xdV_dke = equil.xdV_dke;
+    xdA_dke = equil.xdA_dke;
+%    
+    xZeff = sum(xzni.*repmat((zZi.^2)',[1,nr]))./xne;%Effective charge (a.u.)
+%
+    return
+end
 %
 % FFT interpolation on R,Z, BR, BZ, BPHI as a function of theta (very precise, works for uniform theta grids only)
 %
