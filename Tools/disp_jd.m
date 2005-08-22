@@ -1,4 +1,4 @@
-function [xpsin_out_ft,xMNperp_ft,xM3eps_pmz_ft,xpsin_out_ht,xMNperp_ht,xM3eps_pmz_ht,xMPflow_ht,xMPabs_at] = ...
+function [xpsin_out_ft,xMNperp_ft,xM3eps_pmz_ft,xpsin_out_ht,xMNperp_ht,xM3eps_pmz_ht,xM3Pflow_xyz_ht,xMPabs_at] = ...
     disp_jd(xpsin,xB,xTe,xne,xNpar,omega,knr,nrt_nr,nrt_fr,kflag,GNperp,nn_nr,tol_ht,nd_ht);
 %
 % This function calls R2D2 and solves the wave equation for relativistic
@@ -57,11 +57,21 @@ pathname = getpath_jd(exename);%
 wd = cd;
 eval(['cd ',pathname]);
 %
-makedisp_simparam_jd(xpsin,xB,xTe,xne,xNpar,omega,knr,nrt_nr,nrt_fr,kflag,GNperp,nn_nr,tol_ht,nd_ht);%
+while (isempty(nr1) | isempty (pf)) & tol_ht < 1
 %
-[s,w] = execute_jd(exename);
+    makedisp_simparam_jd(xpsin,xB,xTe,xne,xNpar,omega,knr,nrt_nr,nrt_fr,kflag,GNperp,nn_nr,tol_ht,nd_ht);%
 %
-load nr1.m -ascii
+    [s,w] = execute_jd(exename);
+%
+    load nr1.m -ascii
+    load pf.m -ascii
+    tol_ht = tol_ht*1.2;
+end
+if isempty(nr1)
+    error('The ft root was not found')
+elseif isempty(pf)
+    error('The ht root was not found')
+end
 %
 [nr_ft,nn] = size(nr1);
 %
@@ -114,29 +124,35 @@ xM3eps_pmz_ft(:,:,3) = xMepsz_norm_ft;
 %
 load pf.m -ascii
 %
-nd_ht = size(pf,1);
+np_ht = size(pf,1);
 %
-xpsin_out_ht = pf(1:nn:nd_ht,1)';
+xpsin_out_ht = pf(1:nn:np_ht,1)';
 nr_ht = length(xpsin_out_ht);
 %
 for in = 1:nn
-    xMNperp_re_ht(:,in) = pf(in:nn:nd_ht,2);
-    xMNperp_im_ht(:,in) = pf(in:nn:nd_ht,3);
-    xMPflow_re_ht_x(:,in) = pf(in:nn:nd_ht,4);
-    xMPflow_im_ht_x(:,in) = pf(in:nn:nd_ht,5);
-    xMPabs_re_at_x(:,in) = pf(in:nn:nd_ht,6);
-    xMPabs_im_at_x(:,in) = pf(in:nn:nd_ht,7);
-    xMepsx_re_ht(:,in) = pf(in:nn:nd_ht,8); 
-    xMepsx_im_ht(:,in) = pf(in:nn:nd_ht,9); 
-    xMepsy_re_ht(:,in) = pf(in:nn:nd_ht,10); 
-    xMepsy_im_ht(:,in) = pf(in:nn:nd_ht,11); 
-    xMepsz_re_ht(:,in) = pf(in:nn:nd_ht,12); 
-    xMepsz_im_ht(:,in) = pf(in:nn:nd_ht,13); 
+    xMNperp_re_ht(:,in) = pf(in:nn:np_ht,2);
+    xMNperp_im_ht(:,in) = pf(in:nn:np_ht,3);
+    xMPflow_re_ht_x(:,in) = pf(in:nn:np_ht,4);
+    xMPflow_im_ht_x(:,in) = pf(in:nn:np_ht,5);
+    xMPflow_re_ht_y(:,in) = pf(in:nn:np_ht,6);
+    xMPflow_im_ht_y(:,in) = pf(in:nn:np_ht,7);
+    xMPflow_re_ht_z(:,in) = pf(in:nn:np_ht,8);
+    xMPflow_im_ht_z(:,in) = pf(in:nn:np_ht,9);
+    xMPabs_re_at_x(:,in) = pf(in:nn:np_ht,10);
+    xMPabs_im_at_x(:,in) = pf(in:nn:np_ht,11);
+    xMepsx_re_ht(:,in) = pf(in:nn:np_ht,12); 
+    xMepsx_im_ht(:,in) = pf(in:nn:np_ht,13); 
+    xMepsy_re_ht(:,in) = pf(in:nn:np_ht,14); 
+    xMepsy_im_ht(:,in) = pf(in:nn:np_ht,15); 
+    xMepsz_re_ht(:,in) = pf(in:nn:np_ht,16); 
+    xMepsz_im_ht(:,in) = pf(in:nn:np_ht,17); 
 end
 %
 xMNperp_ht = xMNperp_re_ht + i*xMNperp_im_ht;
 %
 xMPflow_ht_x = xMPflow_re_ht_x + i*xMPflow_im_ht_x;
+xMPflow_ht_y = xMPflow_re_ht_y + i*xMPflow_im_ht_y;
+xMPflow_ht_z = xMPflow_re_ht_z + i*xMPflow_im_ht_z;
 xMPabs_at_x = xMPabs_re_at_x + i*xMPabs_im_at_x;
 %
 xMepsx_abs_ht = abs(xMepsx_re_ht + i*xMepsx_im_ht);
@@ -158,7 +174,9 @@ xM3eps_pmz_ht(:,:,1) = xMepsp_norm_ht;
 xM3eps_pmz_ht(:,:,2) = xMepsm_norm_ht;
 xM3eps_pmz_ht(:,:,3) = xMepsz_norm_ht;
 %
-xMPflow_ht = xMPflow_ht_x.*abs(xMepsx_norm_ht).^2;
+xM3Pflow_xyz_ht(:,:,1) = xMPflow_ht_x.*abs(xMepsx_norm_ht).^2;
+xM3Pflow_xyz_ht(:,:,2) = xMPflow_ht_y.*abs(xMepsx_norm_ht).^2;
+xM3Pflow_xyz_ht(:,:,3) = xMPflow_ht_z.*abs(xMepsx_norm_ht).^2;
 xMPabs_at = xMPabs_at_x.*abs(xMepsx_norm_ht).^2;
 %
 eval(['cd ',wd]);
