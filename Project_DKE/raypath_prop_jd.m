@@ -61,6 +61,7 @@ sybeta = ones(ns,1)*ybeta_L;
 syR = sqrt(syR_L.^2 + sysh.^2 + 2*syR_L.*sysh.*cos(syalpha_L));
 syZ = syZ_L + sysZ;
 syphi = syphi_L + acos((syR.^2 + syR_L.^2 - sysh.^2)./(2*syR.*syR_L)).*sign(syalpha_L);
+syphi = real(syphi);
 %
 syalpha = syalpha_L - syphi;
 %
