@@ -3499,7 +3499,7 @@ C
       double complex up,um,dup,dum,uzp,uzm,duzp,duzm
       double complex uz2p,duz2p,duz2m,duz3p
       double complex ex,ey,ez
-      double complex sx,pdis
+      double complex sx,sy,sz,pdis
 C
       double complex x11(4),x12(4),x13(4)
       double complex x22(4),x23(4),x33(4)
@@ -3741,18 +3741,48 @@ C
      %                   2.*(ci*dimag(dconjg(ex)*ey)*x12h(2)+
      %                          dreal(dconjg(ex)*ez)*x13h(2)+
      %                       ci*dimag(dconjg(ey)*ez)*x23h(2)))
+C
+C........... power flow in the y-direction (in cgs units) ............
+C
+      sy=-0.5*c*dreal(cnpa*dconjg(ey)*ez+cnpe*ex*dconjg(ey))
+C
+C........... power flow in the y-direction (in cgs units) ............
+C
+      sz=0.5*c*dreal(cnpa*(cdabs(ex)**2+cdabs(ey)**2)-
+     %               cnpe*ex*dconjg(ez))-
+     %   0.25*c/cnpa*(cdabs(ex)**2*x11h(4)+cdabs(ey)**2*x22h(4)+
+     %                cdabs(ez)**2*x33h(4)+
+     %                2.*(ci*dimag(dconjg(ex)*ey)*x12h(4)+
+     %                       dreal(dconjg(ex)*ez)*x13h(4)+
+     %                    ci*dimag(dconjg(ey)*ez)*x23h(4)))
+C
 C.............. converting the power flow to mks units ...............
 C..... this gives the power flow density (in watts/meter**2) per .....
 C.... unit electric field amplitude squared (in {volts/meter}**2) ....
 C...... the conversion factor is = 1.e-11/(4*pi*2.99792458**2) .......
 C
       fact=8.854187817620391d-14
+C
       sxr=dreal(sx)
       sxi=dimag(sx)
       if (dabs(sxr).lt.1.d-20) sxr=0.d0
       if (dabs(sxi).lt.1.d-20) sxi=0.d0
+      syr=dreal(sy)
+      syi=dimag(sy)
+      if (dabs(syr).lt.1.d-20) syr=0.d0
+      if (dabs(syi).lt.1.d-20) syi=0.d0
+      szr=dreal(sz)
+      szi=dimag(sz)
+      if (dabs(szr).lt.1.d-20) szr=0.d0
+      if (dabs(szi).lt.1.d-20) szi=0.d0
+C
       sx=dcmplx(sxr,sxi)
+      sy=dcmplx(syr,syi)
+      sz=dcmplx(szr,szi)
       sx=sx*fact
+      sy=sy*fact
+      sz=sz*fact
+C
 C
 C......................... power disspiated ..........................
 C
@@ -3774,8 +3804,8 @@ C
       pdis=dcmplx(pdisr,pdisi)
       pdis=fact*pdis
 C
-      write (11,101) data,cnpe,sx,pdis,ex,ey,ez
-  101 format(13g18.10)
+      write (11,101) data,cnpe,sx,sy,sz,pdis,ex,ey,ez
+  101 format(17g18.10)
 C
 C
       return
