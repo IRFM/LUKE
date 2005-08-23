@@ -32,7 +32,6 @@ ibw = 0;
 vsrays = {};
 %
 for iw = 1:length(waves),% 
-	
     %
     % ======================================================================
     %                       treats each wave individually
@@ -131,7 +130,8 @@ end
 %           Discretization of the rays on the flux-surfaces
 % ======================================================================
 %
-[xyvray_dke,xyfinc_dke_rf,xyprop_dke_rf,yb] = propagation_jd(vsrays,xpsin_dke,xdpsin_dke,xpsin_S_dke,theta,ppsin,ptR,ptBP,psia,method,display_mode);
+[xyvray_dke,xyfinc_dke_rf,xyprop_dke_rf,yb] = ...
+    propagation_jd(vsrays,xpsin_dke,xdpsin_dke,xpsin_S_dke,theta,ppsin,ptR,ptBP,psia,method);
 disp('-------------------------------------------------------------------------------------------------------------------');
 %
 nb_rf = size(yb,2);%number of actual rays
@@ -171,17 +171,17 @@ if dke_mode == 1 % interpolation for the FP positions (only necessary if dke_mod
     xyvray = zeros(nr,nbb_rf,12);
     xyfinc_rf = zeros(nr,nbb_rf);
     xyP0_in_rf = zeros(nr,nbb_rf);
-%
+%     
     for ibb = 1:nbb_rf
         xmask_prop_fp = [(min(r_dke(xymask_prop_dke(:,ibb))) - 1):(max(r_dke(xymask_prop_dke(:,ibb))) + 1)];%corresponding FP points
 %       
-        if length(xymask_prop_dke(:,ibb)) == 1,
-		      xyvray(xmask_prop_fp,ibb,:) = repmat(xyvray_dke(xymask_prop_dke(:,ibb),ibb,:),[length(xmask_prop_fp),1,1]);
-		      xyfinc_rf(xmask_prop_fp,ibb) = repmat(xyfinc_dke_rf(xymask_prop_dke(:,ibb),ibb),[length(xmask_prop_fp),1]);
-		      xyP0_in_rf(xmask_prop_fp,ibb) = repmat(yP0(ib_rf_old(ibb)),[length(xmask_prop_fp),1]);% initial incident power
-		     else
-            xyvray(xmask_prop_fp,ibb,:) = interp1(xpsin_dke(xymask_prop_dke(:,ibb)),xyvray_dke(xymask_prop_dke(:,ibb),ibb,:),xpsin(xmask_prop_fp),'linear','extrap');
-            xyfinc_rf(xmask_prop_fp,ibb) = interp1(xpsin_dke(xymask_prop_dke(:,ibb)),xyfinc_dke_rf(xymask_prop_dke(:,ibb),ibb),xpsin(xmask_prop_fp),'linear','extrap')';
+        if nr_dke == 1,
+            xyvray(xmask_prop_fp,ibb,:) = repmat(xyvray_dke(xymask_prop_dke(:,ibb),ibb,:),[3,1,1]);
+            xyfinc_rf(xmask_prop_fp,ibb) = repmat(xyfinc_dke_rf(xymask_prop_dke(:,ibb),ibb),[3,1,1]);
+            xyP0_in_rf(xmask_prop_fp,ibb) = yP0(ib_rf_old(ibb));% initial incident power
+        else
+            xyvray(xmask_prop_fp,ibb,:) = interp1(xpsin_dke(xymask_prop_dke(:,ibb)),xyvray_dke(xymask_prop_dke(:,ibb)),xpsin(xmask_prop_fp),method);
+            xyfinc_rf(xmask_prop_fp,ibb) = interp1(xpsin_dke(xymask_prop_dke(:,ibb)),xyfinc_dke_rf(xymask_prop_dke(:,ibb)),xpsin(xmask_prop_fp),method);
             xyP0_in_rf(xmask_prop_fp,ibb) = yP0(ib_rf_old(ibb));% initial incident power
         end
 %        
