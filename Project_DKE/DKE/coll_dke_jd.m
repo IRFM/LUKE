@@ -306,7 +306,7 @@ else
 %
     XBtee = Btee'*ones(1,nmhu);    
 %   
-% D and F tensors for collisions
+% Collisions flux coefficients calculations for f0 and g
 %
     ZXXD_c.pp_ippj(:,:,ir) = XAeepp + XAeipp;
     ZXXD_c.pp_ipj(:,:,ir) = XAeep + XAeip;
@@ -323,7 +323,7 @@ else
     ZXXF_c.p_imj(:,:,ir) = -XFeem - XFeim;
     ZXXF_c.p_immj(:,:,ir) = -XFeemm - XFeimm;    
 %
-% Collisions coefficients calculations for ftp
+% Collisions flux coefficients calculations for ftp
 %   
     if dke_mode == 1
 %
