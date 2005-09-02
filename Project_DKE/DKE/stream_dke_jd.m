@@ -1,4 +1,4 @@
-function [XAstr_S_Pm,XAstr_S_Pp,XAstr_S_T] = stream_dke_jd(ZSp0,XxRR_ref_fsav,mhu,xmhubounce2,dmhu,pnp,ir_display_dke,nb);
+function [XAstr_S_Pm,XAstr_S_Pp,XAstr_S_T] = stream_dke_jd(ZXXS_ref,XxRR_ref_fsav,mhu,xmhubounce2,dmhu,pnp,ir_display_dke,nb);
 %
 %Stream function calculation for graphical flux analysis
 %
@@ -10,30 +10,13 @@ if nargin < 6,
 	return;
 end
 %
-XXSp0_c_ipj = ZSp0{1,4};%Collisions
-XXSp0_tp_c_ipj = ZSp0{1,5};
-XXSp0_g_c_ipj = ZSp0{1,6};
 %
-XXSp0_e_ipj = ZSp0{2,4};%Ohmic electric field
-XXSp0_tp_e_ipj = ZSp0{2,5};
-XXSp0_g_e_ipj = ZSp0{2,6};
-%
-[np,nmhu,nr_dke] = size(XXSp0_c_ipj);
+[np,nmhu,nr_dke] = size(ZXXS_ref.p0_c_ipj);
 %
 np_S = np + 1;
 nmhu_S = nmhu + 1;
 %
-if nb > 0,
-    XXSp0_rf_ipj = ZSp0{3,4};%RF waves
-    XXSp0_tp_rf_ipj = ZSp0{3,5};
-    XXSp0_g_rf_ipj = ZSp0{3,6};
-else
-    XXSp0_rf_ipj = zeros(np,nmhu,nr_dke);
-    XXSp0_tp_rf_ipj = zeros(np,nmhu,nr_dke);
-    XXSp0_g_rf_ipj = zeros(np,nmhu,nr_dke);
-end
-%
-XXSp0_tot_ipj = XXSp0_c_ipj + XXSp0_e_ipj + XXSp0_rf_ipj;
+XXSp0_tot_ipj = ZXXS_ref.p0_c_ipj + ZXXS_ref.p0_e_ipj + ZXXS_ref.p0_rf_ipj;
 XSp0_tot_ipj = XXSp0_tot_ipj(:,:,ir_display_dke);
 %
 XAstr_S_Pp = zeros(np_S,nmhu_S);
