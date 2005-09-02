@@ -1,4 +1,4 @@
-function [ZYXXD_rf,ZYXXD_rf_tp,ZYXXF_rf_tp,ylist_rf] = rfdiff_dke_jd(waveparam,nmax_rf,...
+function [ZYXXD_rf,ZYXXF_rf,ZYXXD_rf_tp,ZYXXF_rf_tp,ylist_rf] = rfdiff_dke_jd(waveparam,nmax_rf,save_id,...
     theta,XR,XZ,XBR,XBZ,XBphi,xB0,Rp,Zp,xqtilde,...
     XXheaviside,XXheaviside_p,XXheaviside_m,... 
     Xmhup,Xmhu,Xmhum,Xmhu2p,Xmhu2,Xmhu2m,X1mmhu2p,X1mmhu2,X1mmhu2m,Xdmhumm,Xdmhum,Xdmhu,Xdmhup,Xdmhupp,...
@@ -21,6 +21,7 @@ function [ZYXXD_rf,ZYXXD_rf_tp,ZYXXF_rf_tp,ylist_rf] = rfdiff_dke_jd(waveparam,n
 %       - waveparam:        RF wave parameters (See detailed description below in code)
 %                           waveparam is build by the function rfwave_dke_jd.m
 %       - nmax_rf:          maximum harmonic number to be included
+%       - save_id:          identification string, based on running date and time
 %       - theta...xqtilde:  equilibrium properties
 %       - Xmhup...Xdmhupp:  pitch angle grid 
 %       - Xpnpp...Xdpnpp:   momentum grid 
@@ -72,6 +73,14 @@ ZYXXD_rf.mp_ij = zeros(npn,nmhu,nr);
 ZYXXD_rf.mp_ijm = zeros(npn,nmhu,nr);
 ZYXXD_rf.mm_ijp = zeros(npn,nmhu,nr);
 ZYXXD_rf.mm_ijm = zeros(npn,nmhu,nr);
+%
+ZYXXF_rf.p_ippj = zeros(npn,nmhu,nr);
+ZYXXF_rf.p_ipj = zeros(npn,nmhu,nr);
+ZYXXF_rf.p_ij = zeros(npn,nmhu,nr);
+ZYXXF_rf.p_imj = zeros(npn,nmhu,nr);
+ZYXXF_rf.p_immj = zeros(npn,nmhu,nr);
+ZYXXF_rf.m_ijp = zeros(npn,nmhu,nr);
+ZYXXF_rf.m_ijm = zeros(npn,nmhu,nr);
 %
 if dke_mode == 1
 %
@@ -223,7 +232,7 @@ for iy = ylist_rf,
     XXD0_rf = shiftdim(repmat(xyD0_rf(:,iy),[1,npn,nmhu]),1);% RF quasi-linear diffusion coefficient (nhuth_ref*pth_ref^2)
     %
     ynum = num2str(iy);
-    eval(['load temp_DQL.mat ZXXD_rf_',ynum,' ZXXD_rf_tp_',ynum,' ZXXF_rf_tp_',ynum]);
+    eval(['load temp_DQL_',save_id,'.mat ZXXD_rf_',ynum,' ZXXD_rf_tp_',ynum,' ZXXF_rf_tp_',ynum]);
     %
     if exist(['ZXXD_rf_',ynum]) == 1, %The coefficients associated with this ray were calculated before.
         if display_mode >= 1,info_dke_yp(2,['RF matrix coefficients for effective ray #',ynum,' retrieved.']);end	
@@ -591,7 +600,7 @@ for iy = ylist_rf,
         eval(['ZXXD_rf_tp_',ynum,' = ZXXD_rf_tp',';']);
         eval(['ZXXF_rf_tp_',ynum,' = ZXXF_rf_tp',';']);
         %
-        eval(['save temp_DQL.mat ZXXD_rf_',ynum,' ZXXD_rf_tp_',ynum,' ZXXF_rf_tp_',ynum,' -append']);
+        eval(['save temp_DQL_',save_id,'.mat ZXXD_rf_',ynum,' ZXXD_rf_tp_',ynum,' ZXXF_rf_tp_',ynum,' -append']);
         %
         if display_mode >= 1,info_dke_yp(2,['RF matrix coefficients for effective ray #',ynum,' calculated.']);end	
         %

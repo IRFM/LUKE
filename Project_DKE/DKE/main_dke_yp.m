@@ -762,8 +762,8 @@ P_ref = me*(clum*betath_ref)^2*nhu_ref*ne_ref; %power normalization constant
 %
 if isempty(waveparam),nit_rf = 1;end
 %
-today = date;
-save temp_DQL.mat today
+save_id = timeid_jd(clock);
+eval(['save temp_DQL_',save_id,'.mat save_id'])
 %
 for it_rf=1:nit_rf % convergence in the ray-tracing mode
 %    
@@ -780,7 +780,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
         XxRR_ref_fsav,xMRR_flux_ref,xMRR_tau_ref,...
         xTe_norm_out,xft_fsav,xfteff_fsav,xmhubounce2,xepsi_ref,...
         memoryLU_f,memoryLU_g]...
-    = dke_1_4yp(tokname,theta,...
+    = dke_1_4yp(tokname,save_id,theta,...
         XR,XZ,XBR,XBZ,XBphi,...
         xB0,xR0,xBT0,xBp0,Rp,Zp,ap,...
         mhu,dmhu,mhum,dmhum,mhup,dmhup,mhu_S,...
@@ -891,7 +891,7 @@ if syn_mode == 1
 %
 end
 %
-delete temp_DQL.mat;%Delete large temporary data file on disk
+eval(['delete temp_DQL_',save_id,'.mat']);%Delete large temporary data file on disk
 %
 %*********************************** Saving results ***************************************
 %
