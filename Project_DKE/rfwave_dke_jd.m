@@ -61,6 +61,12 @@ for iw = 1:length(waves),%
         % ======================================================================
         %
         ray = rays{iray};
+        % ======================================================================
+        %                   cut invalid ray path !!!!! CRONOS error
+        % ======================================================================
+        %
+        ismax = min([find(isnan(ray.sepol_pmz(3,:)))-1,Inf]);
+        %
         %
         % ======================================================================
         %                   calculates missing ray info if needed
@@ -93,24 +99,24 @@ for iw = 1:length(waves),%
         %
         P0 = ray.P0;% Power launched in the ray (W) [1,1]
         %
-        sR = ray.sR;% Ray location (major radius) along the propagation [1,ns]
-        sphi = ray.sphi;% Ray location (toroidal angle) along the propagation [1,ns]
-        sZ = ray.sZ;% Ray location (vertical) along the propagation [1,ns]
-        ss = ray.ss;% Ray propagation distance parameter for each ray (put to NaN once the ray is absorbed) [1,ns]
-        spsin = ray.spsin;% Ray location (normalized magnetic flux) along the propagation [1,ns]
-        stheta = ray.stheta;% Ray location (poloidal angle) along the propagation [1,ns]
+        sR = ray.sR(1:min(ismax,length(ray.sR)));% Ray location (major radius) along the propagation [1,ns]
+        sphi = ray.sphi(1:min(ismax,length(ray.sphi)));% Ray location (toroidal angle) along the propagation [1,ns]
+        sZ = ray.sZ(1:min(ismax,length(ray.sZ)));% Ray location (vertical) along the propagation [1,ns]
+        ss = ray.ss(1:min(ismax,length(ray.ss)));% Ray propagation distance parameter for each ray (put to NaN once the ray is absorbed) [1,ns]
+        spsin = ray.spsin(1:min(ismax,length(ray.spsin)));% Ray location (normalized magnetic flux) along the propagation [1,ns]
+        stheta = ray.stheta(1:min(ismax,length(ray.stheta)));% Ray location (poloidal angle) along the propagation [1,ns]
         %
-        skR = ray.skR;% Ray wave vector (major radius) along the propagation [1,ns]
-        sn = ray.sn;% Ray wave number (toroidal) along the propagation [1,ns]
-        skZ = ray.skZ;% Ray wave vector (vertical) along the propagation [1,ns]
+        skR = ray.skR(1:min(ismax,length(ray.skR)));% Ray wave vector (major radius) along the propagation [1,ns]
+        sn = ray.sn(1:min(ismax,length(ray.sn)));% Ray wave number (toroidal) along the propagation [1,ns]
+        skZ = ray.skZ(1:min(ismax,length(ray.skZ)));% Ray wave vector (vertical) along the propagation [1,ns]
         %
-        sNpar = ray.sNpar;% Ray parallel wave number [1,ns]
-        sNperp = ray.sNperp;% Ray perpendicular wave number [1,ns]
-        sdNpar = ray.sdNpar;% Ray spectral width in Npar [1,ns] 
+        sNpar = ray.sNpar(1:min(ismax,length(ray.sNpar)));% Ray parallel wave number [1,ns]
+        sNperp = ray.sNperp(1:min(ismax,length(ray.sNperp)));% Ray perpendicular wave number [1,ns]
+        sdNpar = ray.sdNpar(1:min(ismax,length(ray.sdNpar)));% Ray spectral width in Npar [1,ns] 
         %       if sdNpar is real -> gaussian spectrum, if sdNpar is imag. -> square spectrum (centered on sNpar)
         %
-        sepol_pmz = ray.sepol_pmz;% polarization vector [3,ns] complex
-        sphi_pmz = ray.sphi_pmz;% normalized power flow [3,ns]
+        sepol_pmz = ray.sepol_pmz(:,1:min(ismax,size(ray.sepol_pmz,2)));% polarization vector [3,ns] complex
+        sphi_pmz = ray.sphi_pmz(:,1:min(ismax,size(ray.sphi_pmz,2)));% normalized power flow [3,ns]
         %
         % Store useful information for DKE in a vsray matrix
         %
