@@ -130,8 +130,7 @@ end
 %           Discretization of the rays on the flux-surfaces
 % ======================================================================
 %
-[xyvray_dke,xyfinc_dke_rf,xyprop_dke_rf,yb] = ...
-    propagation_jd(vsrays,xpsin_dke,xdpsin_dke,xpsin_S_dke,theta,ppsin,ptR,ptBP,psia,method);
+[xyvray_dke,xyfinc_dke_rf,xyprop_dke_rf,yb] = propagation_jd(vsrays,xpsin_dke,xdpsin_dke,xpsin_S_dke,theta,ppsin,ptR,ptBP,psia,method,display_mode);
 disp('-------------------------------------------------------------------------------------------------------------------');
 %
 nb_rf = size(yb,2);%number of actual rays
