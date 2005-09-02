@@ -177,92 +177,90 @@ end
 %
 % Power
 %
-xPcoll0_ref_fsav = ZP0_ref_fsav{1,1};
-xPcoll_tp_ref_fsav = ZP0_ref_fsav{1,2};
-xPcoll_g_ref_fsav = ZP0_ref_fsav{1,3};
-xPcoll_tot_ref_fsav = xPcoll0_ref_fsav + xPcoll_tp_ref_fsav + xPcoll_g_ref_fsav;
-% 
-xPelec0_ref_fsav = ZP0_ref_fsav{2,1};
-xPelec_tp_ref_fsav = ZP0_ref_fsav{2,2};
-xPelec_g_ref_fsav = ZP0_ref_fsav{2,3};
-xPelec_tot_ref_fsav = xPelec0_ref_fsav + xPelec_tp_ref_fsav + xPelec_g_ref_fsav;
+if dke_mode > 1,
+    ZP0_ref.x_c_tot_fsav = ZP0_ref.x_c_fsav + ZP0_ref.x_c_tp_fsav + ZP0_ref.x_c_g_fsav;
+    ZP0_ref.x_e_tot_fsav = ZP0_ref.x_e_fsav + ZP0_ref.x_e_tp_fsav + ZP0_ref.x_e_g_fsav;
+    ZP0_ref.x_rf_tot_fsav = ZP0_ref.x_rf_fsav + ZP0_ref.x_rf_tp_fsav + ZP0_ref.x_rf_g_fsav;
+    ZP0_ref.xy_rf_tot_fsav = ZP0_ref.xy_rf_fsav + ZP0_ref.xy_rf_tp_fsav + ZP0_ref.xy_rf_g_fsav;
+else
+    ZP0_ref.x_c_tot_fsav = ZP0_ref.x_c_fsav;
+    ZP0_ref.x_e_tot_fsav = ZP0_ref.x_e_fsav;
+    ZP0_ref.x_rf_tot_fsav = ZP0_ref.x_rf_fsav;
+    ZP0_ref.xy_rf_tot_fsav = ZP0_ref.xy_rf_fsav;
+end
 %
 if syn_mode == 1,
-    xPelec_syn_ref_fsav = xPelec_tp_ref_fsav + xPelec_g_ref_fsav;
+    ZP0_ref.x_e_syn_fsav = ZP0_ref.x_e_tp_fsav + ZP0_ref.x_e_g_fsav;
 end
-if nb > 0,
-	xyPabs0_ref_fsav = ZP0_ref_fsav{3,1};
-	xyPabs_tp_ref_fsav = ZP0_ref_fsav{3,2};
-	xyPabs_g_ref_fsav = ZP0_ref_fsav{3,3};    
-	xyPabs_tot_ref_fsav = xyPabs0_ref_fsav + xyPabs_tp_ref_fsav + xyPabs_g_ref_fsav;
-% 
-	xyPabs0_lh_ref_fsav = xyPabs0_ref_fsav(:,blist_lh);
-	xyPabs0_ec_ref_fsav = xyPabs0_ref_fsav(:,blist_ec);
-	xyPabs_tot_lh_ref_fsav = xyPabs_tot_ref_fsav(:,blist_lh);
-	xyPabs_tot_ec_ref_fsav = xyPabs_tot_ref_fsav(:,blist_ec);
 %
-	xPabs0_ref_fsav = integral_dke_jd(ones(1,nb),xyPabs0_ref_fsav,2)';
-    xPabs_tot_ref_fsav = integral_dke_jd(ones(1,nb),xyPabs_tot_ref_fsav,2)';
+if nb > 0,
+	ZP0_ref.xy_lh_fsav = ZP0_ref.xy_rf_fsav(:,blist_lh);
+	ZP0_ref.xy_ec_fsav = ZP0_ref.xy_rf_fsav(:,blist_ec);
+	ZP0_ref.xy_lh_tot_fsav = ZP0_ref.xy_rf_tot_fsav(:,blist_lh);
+	ZP0_ref.xy_ec_tot_fsav = ZP0_ref.xy_rf_tot_fsav(:,blist_ec);
+%
     if syn_mode == 1,
-        xyPabs_syn_ref_fsav = xyPabs_tp_ref_fsav + xyPabs_g_ref_fsav;
-        xyPabs_syn_lh_ref_fsav = xyPabs_syn_ref_fsav(:,blist_lh);
-        xyPabs_syn_ec_ref_fsav = xyPabs_syn_ref_fsav(:,blist_ec);
-        xPabs_syn_ref_fsav = integral_dke_jd(ones(1,nb),xyPabs_syn_ref_fsav,2)';
+        ZP0_ref.x_rf_syn_fsav = ZP0_ref.x_rf_tp_fsav + ZP0_ref.x_rf_g_fsav;
+        ZP0_ref.xy_rf_syn_fsav = ZP0_ref.xy_rf_tp_fsav + ZP0_ref.xy_rf_g_fsav;
+        ZP0_ref.xy_lh_syn_fsav = ZP0_ref.xy_rf_syn_fsav(:,blist_lh);
+        ZP0_ref.xy_ec_syn_fsav = ZP0_ref.xy_rf_syn_fsav(:,blist_ec);
     end
 else
-	xyPabs0_lh_ref_fsav = zeros(1,nr_dke);
-	xyPabs0_ec_ref_fsav = zeros(1,nr_dke);
-	xyPabs_tot_lh_ref_fsav = zeros(1,nr_dke);
-	xyPabs_tot_ec_ref_fsav = zeros(1,nr_dke);
+	ZP0_ref.xy_lh_fsav = zeros(1,nr_dke);
+	ZP0_ref.xy_ec_fsav = zeros(1,nr_dke);
+	ZP0_ref.xy_lh_tot_fsav = zeros(1,nr_dke);
+	ZP0_ref.xy_ec_tot_fsav = zeros(1,nr_dke);
 %
-	xPabs0_ref_fsav = zeros(1,nr_dke);
-	xPabs_tot_ref_fsav = zeros(1,nr_dke);
     if syn_mode == 1,
-        xyPabs_syn_ref_fsav = zeros(1,nr_dke);
-        xyPabs_syn_lh_ref_fsav = zeros(1,nr_dke);
-        xyPabs_syn_ec_ref_fsav = zeros(1,nr_dke);
-        xPabs_syn_ref_fsav = zeros(1,nr_dke);
+        ZP0_ref.x_rf_syn_fsav = zeros(1,nr_dke);
+        ZP0_ref.xy_rf_syn_fsav = zeros(1,nr_dke);
+        ZP0_ref.xy_lh_syn_fsav = zeros(1,nr_dke);
+        ZP0_ref.xy_ec_syn_fsav = zeros(1,nr_dke);
     end
 end      
 %
-xPcoll0_fsav_mksa = xPcoll0_ref_fsav*P_ref;
-xPcoll_tot_fsav_mksa = xPcoll_tot_ref_fsav*P_ref;
-Pcoll_tot = xPcoll_tot_fsav_mksa*xdV_dke',%in MW
+xPcoll0_fsav_mksa = ZP0_ref.x_c_fsav*P_ref;
+xPcoll_tot_fsav_mksa = ZP0_ref.x_c_tot_fsav*P_ref;
+%Pcoll_tot = xPcoll_tot_fsav_mksa*xdV_dke',%in MW
 %
-xPelec0_fsav_mksa = xPelec0_ref_fsav*P_ref;
-xPelec_tot_fsav_mksa = xPelec_tot_ref_fsav*P_ref;
-Pelec_tot = xPelec_tot_fsav_mksa*xdV_dke',%in MW
+xPelec0_fsav_mksa = ZP0_ref.x_e_fsav*P_ref;
+xPelec_tot_fsav_mksa = ZP0_ref.x_e_tot_fsav*P_ref;
+%Pelec_tot = xPelec_tot_fsav_mksa*xdV_dke',%in MW
 %
-xyPabs0_lh_fsav_mksa = xyPabs0_lh_ref_fsav*P_ref;
-xyPabs_tot_lh_fsav_mksa = xyPabs_tot_lh_ref_fsav*P_ref;
-sum((xyPabs_tot_lh_fsav_mksa.*(xdV_dke(:)*ones(1,size(xyPabs_tot_lh_fsav_mksa,2))))'),%in MW
-xyPabs0_ec_fsav_mksa = xyPabs0_ec_ref_fsav*P_ref;
-xyPabs_tot_ec_fsav_mksa = xyPabs_tot_ec_ref_fsav*P_ref;
+xyPabs0_lh_fsav_mksa = ZP0_ref.xy_lh_fsav*P_ref;
+xyPabs_tot_lh_fsav_mksa = ZP0_ref.xy_lh_tot_fsav*P_ref;
+%sum((xyPabs_tot_lh_fsav_mksa.*(xdV_dke(:)*ones(1,size(xyPabs_tot_lh_fsav_mksa,2))))'),%in MW
+xyPabs0_ec_fsav_mksa = ZP0_ref.xy_ec_fsav*P_ref;
+xyPabs_tot_ec_fsav_mksa = ZP0_ref.xy_ec_tot_fsav*P_ref;
 %
-xPabs0_fsav_mksa = xPabs0_ref_fsav*P_ref;
-xPabs_tot_fsav_mksa = xPabs_tot_ref_fsav*P_ref;
+xPabs0_fsav_mksa = ZP0_ref.x_rf_fsav*P_ref;
+xPabs_tot_fsav_mksa = ZP0_ref.x_rf_tot_fsav*P_ref;
 if syn_mode == 1,
-    xPelec_syn_fsav_mksa = xPelec_syn_ref_fsav*P_ref;
-    xyPabs_syn_fsav_mksa = xyPabs_syn_ref_fsav*P_ref;
-    xyPabs_syn_lh_fsav_mksa = xyPabs_syn_lh_ref_fsav*P_ref;
-    xyPabs_syn_ec_fsav_mksa = xyPabs_syn_ec_ref_fsav*P_ref;
-    xPabs_syn_fsav_mksa = xPabs_syn_ref_fsav*P_ref;
+    xPelec_syn_fsav_mksa = ZP0_ref.x_e_syn_fsav*P_ref;
+    xyPabs_syn_fsav_mksa = ZP0_ref.xy_rf_syn_fsav*P_ref;
+    xyPabs_syn_lh_fsav_mksa = ZP0_ref.xy_lh_syn_fsav*P_ref;
+    xyPabs_syn_ec_fsav_mksa = ZP0_ref.xy_ec_syn_fsav*P_ref;
+    xPabs_syn_fsav_mksa = ZP0_ref.x_rf_syn_fsav*P_ref;
 end
+%
+% Fluxes
+%
+ZXXS_ref.rf = sqrt(((ZXXS_ref.p0_rf_imj + ZXXS_ref.p0_rf_ipj)/2).^2 + ((ZXXS_ref.m0_rf_ijm + ZXXS_ref.m0_rf_ijp)/2).^2);% magnitude of total RF fluxe
 %
 % Efficiency (j/p)
 %
-xeta0_ref_fsav = xcurr0_ref_fsav./(xPabs0_ref_fsav + eps);
+xeta0_ref_fsav = xcurr0_ref_fsav./(ZP0_ref.x_rf_fsav + eps);
 %
 xeta0_fsav_mksa = xeta0_ref_fsav*j_ref/P_ref;	
 if syn_mode == 1,
-    xeta_tot_ref_fsav = (xcurr0_ref_fsav + xcurr_syn_ref_fsav)./(xPabs0_ref_fsav + xPabs_syn_ref_fsav + eps);
+    xeta_tot_ref_fsav = (xcurr0_ref_fsav + xcurr_syn_ref_fsav)./(ZP0_ref.x_rf_fsav + ZP0_ref.x_rf_syn_fsav + eps);
     xeta_tot_fsav_mksa = xeta_tot_ref_fsav*j_ref/P_ref;	
 end
 %
 xepsi_fsav_mksa = xepsi_ref_fsav*Edreicer_ref;	
 %
 if dke_mode == 1, %Wave-induced Pinch
-figure(20000),graph1D_jd(xrho(r_dke),xVr*me*clum*betath_ref*nhu_ref/qe,0,0,'\rho','V_{\rho} (m/s)','Wave-induced pinch','',[0,1],[-0.008,0],style2,marker,color2,width2)
+%figure(20000),graph1D_jd(xrho(r_dke),xVr*me*clum*betath_ref*nhu_ref/qe,0,0,'\rho','V_{\rho} (m/s)','Wave-induced pinch','',[0,1],[-0.008,0],style2,marker,color2,width2)
 end
 %
 while 1,
@@ -297,12 +295,12 @@ while 1,
 		Xfinit_ref = XXfinit_ref(:,:,ir_display);%Display results at the required radial value
 %
 		if nb > 0
-			XDrf_ref = squeeze(XXDrf_ref(:,:,ir_display));%Display results at the required radial value
+			XDrf_ref = squeeze(ZXXS_ref.rf(:,:,ir_display_dke));%Display results at the required radial value
 		end
         if bounce_mode == 1,
-		    [XAstr_S_Pm_ref,XAstr_S_Pp_ref,XAstr_S_T_ref] = stream_dke_jd(ZSp0_ref,XxRR_ref_fsav,mhu,xmhubounce2,dmhu,pnp,ir_display_dke,nb);
+		    [XAstr_S_Pm_ref,XAstr_S_Pp_ref,XAstr_S_T_ref] = stream_dke_jd(ZXXS_ref,XxRR_ref_fsav,mhu,xmhubounce2,dmhu,pnp,ir_display_dke,nb);
         else
-		    [XAstr_S_Pm_ref,XAstr_S_Pp_ref,XAstr_S_T_ref] = stream_dke_jd(ZSp0_ref,XxRR_ref_fsav,mhu,NaN,dmhu,pnp,ir_display_dke,nb);
+		    [XAstr_S_Pm_ref,XAstr_S_Pp_ref,XAstr_S_T_ref] = stream_dke_jd(ZXXS_ref,XxRR_ref_fsav,mhu,NaN,dmhu,pnp,ir_display_dke,nb);
         end
 %
 		disp('-------------------------------------------------------------------------------------------------------------------');
@@ -740,16 +738,16 @@ while 1,
 			info_dke_yp(2,'Global flux surface averaged results (normalized to reference units):');
 			disp(['   - Density: [spherical]: ',num2str(xnormf_ref_fsav(ir_display_dke))])
 			disp(['   - RF current density: [spherical]: ',num2str(xcurr0_ref_fsav(ir_display_dke))])
-			disp(['   - RF power density lost on collisions (coll) [spherical]: ',num2str(-xPcoll0_ref_fsav(ir_display_dke))])
+			disp(['   - RF power density lost on collisions (coll) [spherical]: ',num2str(-ZP0_ref.x_c_fsav(ir_display_dke))])
 			for ib=1:nb_lh
 					disp(['   - LH beam #',num2str(ib),': v1 = ',num2str(1/waveparam_lh(ir_display_dke,ib,6)/betath_ref),', v2 = ',num2str(1/waveparam_lh(ir_display_dke,ib,5)/betath_ref),',D0lh = ',num2str(waveparam_lh(ir_display_dke,ib,4))])
-					disp(['        LH Power absorbed [spherical]: ',num2str(xyPabs0_lh_ref_fsav(ir_display_dke,ib))]) 
+					disp(['        LH Power absorbed [spherical]: ',num2str(ZP0_ref.xy_lh_fsav(ir_display_dke,ib))]) 
 			end
 %
 			for ib=1:nb_ec
 					disp(['   - EC beam #',num2str(ib),': n|| = ',num2str(waveparam_ec(ir_display_dke,ib,7)),...
 				', Y = ',num2str(waveparam_ec(ir_display_dke,ib,1)*waveparam_ec(ir_display_dke,ib,2)/waveparam_ec(ir_display_dke,ib,1)),',D0ec = ',num2str(waveparam_ec(ir_display_dke,ib,4))])
-					disp(['        EC Power absorbed [spherical]: ',num2str(xyPabs0_ec_ref_fsav(ir_display_dke,ib))]) 
+					disp(['        EC Power absorbed [spherical]: ',num2str(ZP0_ref.xy_ec_fsav(ir_display_dke,ib))]) 
 			end
 %
 			if nb > 0,
@@ -1073,22 +1071,22 @@ while 1,
             if syn_mode == 1,
                 disp(['   - Synergistic electron current density [spherical]: ',num2str(xcurr_syn_ref_fsav(ir_display_dke))])
             end
-			disp(['   - RF power density lost on collisions (coll) [spherical]: ',num2str(-xPcoll0_ref_fsav(ir_display_dke))])
+			disp(['   - RF power density lost on collisions (coll) [spherical]: ',num2str(-ZP0_ref.x_c_fsav(ir_display_dke))])
 %
 			for ib=1:nb_lh,
 				disp(['   - LH beam #',num2str(ib),': v1 = ',num2str(1/waveparam_lh(ir_display_dke,ib,7)/betath_ref),', v2 = ',num2str(1/waveparam_lh(ir_display_dke,ib,6)/betath_ref),',D0lh = ',num2str(waveparam_lh(ir_display_dke,ib,5))])
-				disp(['        LH Power absorbed [spherical]: ',num2str(xyPabs0_lh_ref_fsav(ir_display_dke,ib))]) 
+				disp(['        LH Power absorbed [spherical]: ',num2str(ZP0_ref.xy_lh_fsav(ir_display_dke,ib))]) 
                 if syn_mode == 1,
-    				disp(['        Synergistic LH Power absorbed [spherical]: ',num2str(xyPabs_syn_lh_ref_fsav(ir_display_dke,ib))]) 
+    				disp(['        Synergistic LH Power absorbed [spherical]: ',num2str(ZP0_ref.xy_lh_syn_fsav(ir_display_dke,ib))]) 
                 end    
 			end
 %	
 			for ib=1:nb_ec,
 				disp(['   - EC beam #',num2str(ib),': n|| = ',num2str(waveparam_ec(ir_display_dke,ib,8)),...
 				', Y = ',num2str(waveparam_ec(ir_display_dke,ib,1)*waveparam_ec(ir_display_dke,ib,3)/waveparam_ec(ir_display_dke,ib,2)),',D0ec = ',num2str(waveparam_ec(ir_display_dke,ib,5))])
-					disp(['        EC Power absorbed [spherical]: ',num2str(xyPabs0_ec_ref_fsav(ir_display_dke,ib))]) 
+					disp(['        EC Power absorbed [spherical]: ',num2str(ZP0_ref.xy_ec_fsav(ir_display_dke,ib))]) 
                 if syn_mode == 1,
-    				disp(['        Synergistic EC Power absorbed [spherical]: ',num2str(xyPabs_syn_ec_ref_fsav(ir_display_dke,ib))]) 
+    				disp(['        Synergistic EC Power absorbed [spherical]: ',num2str(ZP0_ref.xy_ec_syn_fsav(ir_display_dke,ib))]) 
                 end    
 			end
 %
@@ -1214,7 +1212,7 @@ while 1,
         end
 %      
 		if igor_mode == 1,
-			eval(['save ',filenameroot,'_data_fig200.mat xrho_dke xia r_dke j_ref xcurr_tot_ref_fsav P_ref xPabs_tot_ref_fsav xTe xTi xne xnhyd xft xft_llm'])
+			eval(['save ',filenameroot,'_data_fig200.mat xrho_dke xia r_dke j_ref xcurr_tot_ref_fsav P_ref ZP0_ref.x_rf_tot_fsav xTe xTi xne xnhyd xft xft_llm'])
 		end
 %        
 	end
