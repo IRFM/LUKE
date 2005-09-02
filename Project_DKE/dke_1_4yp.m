@@ -7,7 +7,7 @@ function [XXheaviside,...
     XxRR_fsav,xMRR_flux_ref,xMRR_tau_ref,...
     xTe_out_norm,xft_fsav,xfteff_fsav,xmhubounce2,xepsi_rdke,...
     memoryLU_f,memoryLU_g] = ... 
-dke_1_4yp(tokname,theta,...
+dke_1_4yp(tokname,save_id,theta,...
     XR,XZ,XBR,XBZ,XBphi,...
     xB0,xR0,xBT0,xBp0,Rp,Zp,ap,...
     mhu,dmhu,mhum,dmhum,mhup,dmhup,mhu_S,...
@@ -441,53 +441,6 @@ v2p = vp.*vp;
 xv = v'*ones(1,length(v));
 xv2 = xv.*xv;
 %
-%Super momentum grid definitions for collision integrals
-%
-spnm = linspace(pn(1)/spfac,pnm(2),spfac);%In order to start from a point not to close to zero
-for ip=3:npn,
-    spnm = [spnm(1:length(spnm)-1),linspace(pnm(ip-1),pnm(ip),spfac)];  
-end
-%
-spn = linspace(pn(1)/spfac,pn(1),spfac);
-spnp = linspace(pn(1)/spfac,pnp(1),spfac);
-for ip=2:npn,
-    spn = [spn(1:length(spn)-1),linspace(pn(ip-1),pn(ip),spfac)];   
-    spnp = [spnp(1:length(spnp)-1),linspace(pnp(ip-1),pnp(ip),spfac)];  
-end
-%
-spnm = spnm(:);%for numerical integration by trapz_dke_yp subroutine
-spn = spn(:);%for numerical integration by trapz_dke_yp subroutine
-spnp = spnp(:);%for numerical integration by trapz_dke_yp subroutine
-%
-spn2m = spnm.*spnm;
-spn2 = spn.*spn;
-spn2p = spnp.*spnp;
-spn3 = spn2.*spn;
-%
-szm = betath_ref*spnm;
-sz = betath_ref*spn;
-szp = betath_ref*spnp;
-sz2m = szm.*szm;
-sz2 = sz.*sz;
-sz2p = szp.*szp;
-%
-sgammam = sqrt(1 + sz2m);
-sgamma = sqrt(1 + sz2);
-sgammap = sqrt(1 + sz2p);
-sgamma2 = sgamma.*sgamma;
-%
-ssigmam = asinh(szm);
-ssigma = asinh(sz);
-ssigmap = asinh(szp);
-%
-svm = spnm./sgammam;
-sv = spn./sgamma;
-svp = spnp./sgammap;
-sv2 = sv.*sv;
-%
-sJ1 = -3*sgamma + ssigma.*(3.0./sz + 2*sz);
-sJ2 = sgamma - ssigma./sz - 2*sgamma.*sz2/3;
-%
 %Radial grid
 %
 if radial_mode == 1,
@@ -522,7 +475,7 @@ time0 = clock;
      XXlambda_b_p3m2,XXRlambda_b_p3m2_m,XXRlambda_b_p3m2_p,...
      XXlambda_b_p2,...
      XXlambda_b_p1m3p4]...
-=  bounceparam_dke_yp(bounce_mode,equil_mode,...
+=  bounceparam_dke_yp(bounce_mode,equil_mode,display_mode,save_id,...
      mhu,mhum,mhup,Xmhu,Xmhum,Xmhup,...
      XR,XZ,XBR,XBZ,XBphi,...
      xmhubounce2,xB0,xR0,xBT0,xBp0,Rp,Zp,ap);
@@ -637,20 +590,6 @@ XXSp = zeros(npn,nmhu,nr);
 XXSmhu = zeros(npn,nmhu,nr);
 XXfM = zeros(npn,nmhu,nr);
 XXf0_g_th = zeros(npn,nmhu,nr);
-XXFee = zeros(npn,nmhu,nr);
-XXFeem = zeros(npn,nmhu,nr);
-XXFeep = zeros(npn,nmhu,nr);
-XXAee = zeros(npn,nmhu,nr);
-XXAeem = zeros(npn,nmhu,nr);
-XXAeep = zeros(npn,nmhu,nr);
-XXBtee = zeros(npn,nmhu,nr);
-XXFei = zeros(npn,nmhu,nr);
-XXFeim = zeros(npn,nmhu,nr);
-XXFeip = zeros(npn,nmhu,nr);
-XXAei = zeros(npn,nmhu,nr);
-XXAeim = zeros(npn,nmhu,nr);
-XXAeip = zeros(npn,nmhu,nr);
-XXBtei = zeros(npn,nmhu,nr);
 XXddeltaimdrho_tp_c = zeros(npn,nmhu,nr);
 XXMrm = zeros(nmhu,npn,nr);
 XXMr = zeros(nmhu,npn,nr);
@@ -889,199 +828,28 @@ if radial_mode == 1,
     if display_mode >= 1,info_dke_yp(2,['Zero order configuration space matrix calculations done in ',num2str(etime_radial),' (s)']);end
 end
 %
+time0 = clock;%Timer
+%
 % Collisions
 %
-time0 = clock;%Timer
-for ir = 1:nr,
+[ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM] = ...
+    coll_dke_jd(Xmhup,Xmhu2p,X1mmhu2p,Xmhum,Xmhu2m,X1mmhu2m,...
+        pn,pn2,dpn,pnm,pn2m,dpnm,pnp,pn2p,dpnp,Xpn,...
+        gamma,gammam,gammap,gamma2,v,vm,vp,v2,v2m,v2p,...
+        sigma,sigmam,sigmap,z,zm,zp,z2,J1,J2,...
+        xTe_norm,xzTi_norm,xne_norm,xzni_norm,betath_ref,zZi,zmi,...
+        XXRlambda_p2m1_p,XXRlambda_p2m1_m,XXRlambda_b_p1m1,XXRlambda_b_p1m1_p,XXRlambda_b_p1m1_m,...
+        XXRlambda_b_p3m2_p,XXRlambda_b_p3m2_m,XXRlambda_b_p1m2_p,XXRlambda_b_p1m2_m,...
+        spfac,coll_mode,dke_mode,display_mode,rdke,save_id);
 %
-%Relativistic Maxwellian distribution function for collision integrals
-%
-    fM = exp(-pn2./(1 + gamma)/xTe_norm(ir))/2/pi/xTe_norm(ir)/sqrt(2*pi*xTe_norm(ir));
-    normfM = 4*pi*integral_dke_jd(dpn,pn.*pn.*fM,2);
-    fM = fM*xne_norm(ir)/normfM;
-    xfM = fM'*ones(1,length(fM));
-    XXfM(:,:,ir) = fM'*ones(1,nmhu);
-    if nargin < narginmax,
-        XXfinit(:,:,ir) = fM'*ones(1,nmhu);%Initial guess (normalized to xne_norm)
-    end
-%
-    fMm = exp(-pn2m./(1 + gammam)/xTe_norm(ir))/2/pi/xTe_norm(ir)/sqrt(2*pi*xTe_norm(ir));
-    normfMm = 4*pi*integral_dke_jd(dpnm,pnm.*pnm.*fMm,2);
-    fMm = fMm*xne_norm(ir)/normfMm;
-%
-    fMp = exp(-pn2p./(1 + gammap)/xTe_norm(ir))/2/pi/xTe_norm(ir)/sqrt(2*pi*xTe_norm(ir));
-    normfMp = 4*pi*integral_dke_jd(dpnp,pnp.*pnp.*fMp,2);
-    fMp = fMp*xne_norm(ir)/normfMp;
-%
-%Collision integrals
-%   
-    sfMm = exp(-spn2m./(1 + sgammam)/xTe_norm(ir))/2/pi/xTe_norm(ir)/sqrt(2*pi*xTe_norm(ir));
-    snormfMm = 4*pi*trapz_dke_yp([spnm,spn2m.*sfMm]);
-    sfMm = sfMm*xne_norm(ir)/snormfMm;
-%   
-    sfM = exp(-spn2./(1 + sgamma)/xTe_norm(ir))/2/pi/xTe_norm(ir)/sqrt(2*pi*xTe_norm(ir));
-    snormfM = 4*pi*trapz_dke_yp([spn,spn2.*sfM]);
-    sfM = sfM*xne_norm(ir)/snormfM;
-%
-    sfMp = exp(-spn2p./(1 + sgammap)/xTe_norm(ir))/2/pi/xTe_norm(ir)/sqrt(2*pi*xTe_norm(ir));
-    snormfMp = 4*pi*trapz_dke_yp([spnp,spn2p.*sfMp]);
-    sfMp = sfMp*xne_norm(ir)/snormfMp;
-%
-    for ip = 1:npn,%Loop for very accurate collision integral calculation close to p = 0 especially (crucial for numerical conservative scheme)
-        smasku = spn <= pn(ip);
-        smaskl = spn >= pn(ip);
-        smaskup = spnp <= pnp(ip);
-        smasklp = spnp >= pnp(ip);
-        smaskum = spnm <= pnm(ip);
-        smasklm = spnm >= pnm(ip);
-%
-        F1_1(1,ip) = trapz_dke_yp([spn,sfM.*spn.*sv.*smasku])';
-        F1_2(1,ip) = trapz_dke_yp([spn,sfM.*spn.*sv.*(1 - sgamma.*ssigma./sz).*smasku])';
-        F2_1(1,ip) = trapz_dke_yp([spn,sfM.*spn.*smaskl])';
-%       
-        F1_1m(1,ip) = trapz_dke_yp([spnm,sfMm.*spnm.*svm.*smaskum])';
-        F1_2m(1,ip) = trapz_dke_yp([spnm,sfMm.*spnm.*svm.*(1 - sgammam.*ssigmam./szm).*smaskum])';
-        F2_1m(1,ip) = trapz_dke_yp([spnm,sfMm.*spnm.*smasklm])';
-%       
-        F1_1p(1,ip) = trapz_dke_yp([spnp,sfMp.*spnp.*svp.*smaskup])';
-        F1_2p(1,ip) = trapz_dke_yp([spnp,sfMp.*spnp.*svp.*(1 - sgammap.*ssigmap./szp).*smaskup])';
-        F2_1p(1,ip) = trapz_dke_yp([spnp,sfMp.*spnp.*smasklp])';
-%
-        B1_1(1,ip) = trapz_dke_yp([spn,sfM.*smasku.*spn2])';
-        B1_2(1,ip) = trapz_dke_yp([spn,sfM.*smasku.*spn2.*spn2])';
-        B1_3(1,ip) = trapz_dke_yp([spn,sfM.*smasku.*spn2.*sJ1./sgamma])';
-        B1_4(1,ip) = trapz_dke_yp([spn,sfM.*smasku.*spn2.*sJ2./sgamma])';
-        B1_5(1,ip) = trapz_dke_yp([spn,sfM.*smasku.*spn2.*((sgamma - ssigma./sz)./sgamma)])';
-        B2_1(1,ip) = trapz_dke_yp([spn,sfM.*smaskl.*spn2./sv])';
-        B2_2(1,ip) = trapz_dke_yp([spn,sfM.*smaskl.*spn2./sv./sgamma2])';
-        B2_3(1,ip) = trapz_dke_yp([spn,sfM.*smaskl.*spn2.*sv])';  
-    end
-%
-%Electron-ion collision term (non-relativistic limit)
-%
-    [Fei,Aei,Btei] = eicoll_dke_yp(v,zZi,zmi,xzni_norm,xzTi_norm,ir,coll_mode);
-    [Feim,Aeim] = eicoll_dke_yp(vm,zZi,zmi,xzni_norm,xzTi_norm,ir,coll_mode);
-    [Feip,Aeip] = eicoll_dke_yp(vp,zZi,zmi,xzni_norm,xzTi_norm,ir,coll_mode);
-%   
-    Feim(1) = 1;%Avoid singularity at p = 0, but the value is not used  
-    Feimm = [0,Fei(1:npn-1)];
-    Feipp = [Fei(2:npn),0];
-%       
-    XXFeimm(:,:,ir) = Feimm'*ones(1,nmhu);
-    XXFeim(:,:,ir) = Feim'*ones(1,nmhu);
-    XXFei(:,:,ir) = Fei'*ones(1,nmhu);
-    XXFeip(:,:,ir) = Feip'*ones(1,nmhu);
-    XXFeipp(:,:,ir) = Feipp'*ones(1,nmhu);
-%
-    Aeim(1) = 1;%Avoid singularity at p = 0, but the value is not used
-    Aeimm = [eps,Aei(1:npn-1)];
-    Aeipp = [Aei(2:npn),eps];
-%
-    XXAeimm(:,:,ir) = Aeimm'*ones(1,nmhu);
-    XXAeim(:,:,ir) = Aeim'*ones(1,nmhu); 
-    XXAei(:,:,ir) = Aei'*ones(1,nmhu);
-    XXAeip(:,:,ir) = Aeip'*ones(1,nmhu);
-    XXAeipp(:,:,ir) = Aeipp'*ones(1,nmhu);
-%
-    XXBtei(:,:,ir) = Btei'*ones(1,nmhu);     
-%
-%Fast electron-thermal electron collision term
-%
-    if coll_mode == 1,%High-velocity limit
-        Fee = xne_norm(ir)'./v2;
-        Feem = xne_norm(ir)'./v2m;      
-        Feep = xne_norm(ir)'./v2p;      
-    elseif coll_mode == 0 | coll_mode == 2,%Linearized Belaiev-Budker
-        F1 = F1_1./v2 + F1_2./pn2;
-        F2 = (1 - sigma./z./gamma).*F2_1./v;
-        Fee = 4*pi*(F1 + F2);
-%
-        F1m = F1_1m ./v2m + F1_2m./pn2m;  
-        F2m = (1 - sigmam./zm./gammam).*F2_1m./vm;  
-        Feem = 4*pi*(F1m + F2m);        
-%   
-        F1p = F1_1p./v2p + F1_2p./pn2p;   
-        F2p = (1 - sigmap./zp./gammap).*F2_1p./vp;
-        Feep = 4*pi*(F1p + F2p);
-    elseif coll_mode == 3,%Lorentz model
-        Fee = zeros(1,npn);
-        Feem = zeros(1,npn);
-        Feep = zeros(1,npn);
-    elseif coll_mode == 4,%Maxwellian background
-        u = v/sqrt(2)/xTe_norm(ir)';Fee = xne_norm(ir)'.*(erf(u)-2*u.*exp(-u.^2)/sqrt(pi))./v2;
-        um = vm/sqrt(2)/xTe_norm(ir)';Feem = xne_norm(ir)'.*(erf(um)-2*um.*exp(-um.^2)/sqrt(pi))./v2m;  
-        up = vp/sqrt(2)/xTe_norm(ir)';Feep = xne_norm(ir)'.*(erf(up)-2*up.*exp(-up.^2)/sqrt(pi))./v2p;  
-    elseif coll_mode == 5,%Ultrarelativistic Moller model
-        Fee = xne_norm(ir)'./v2;
-        Feem = xne_norm(ir)'./v2m;
-        Feep = xne_norm(ir)'./v2p;  
-    end
-%
-    Feem(1) = 1;%Avoid singularity at p = 0, but the value is not used
-    Feemm = [0,Fee(1:npn-1)];
-    Feepp = [Fee(2:npn),0];
-%       
-    XXFeemm(:,:,ir) = Feemm'*ones(1,nmhu);
-    XXFeem(:,:,ir) = Feem'*ones(1,nmhu);
-    XXFee(:,:,ir) = Fee'*ones(1,nmhu);
-    XXFeep(:,:,ir) = Feep'*ones(1,nmhu);
-    XXFeepp(:,:,ir) = Feepp'*ones(1,nmhu);
-%
-    if coll_mode == 1,%High-velocity limit
-        Aee = xne_norm(ir)'.*xTe_norm(ir)'./v./v2;
-        Aeem = xne_norm(ir)'.*xTe_norm(ir)'./vm./v2m;
-        Aeep = xne_norm(ir)'.*xTe_norm(ir)'./vp./v2p;
-    elseif coll_mode == 0 | coll_mode == 2,%Linearized Belaiev-Budker
-        Aee = 4*pi*xTe_norm(ir)*(F1 + F2)./v;
-        Aeem = 4*pi*xTe_norm(ir)*(F1m + F2m)./vm;
-        Aeep = 4*pi*xTe_norm(ir)*(F1p + F2p)./vp;
-    elseif coll_mode == 3,%Lorentz model
-        Aee = zeros(1,npn);
-        Aeem = zeros(1,npn);
-        Aeep = zeros(1,npn);
-    elseif coll_mode == 4,%Maxwellian background
-        u = v/sqrt(2)/xTe_norm(ir)';Aee = xne_norm(ir)'.*(erf(u)-2*u.*exp(-u.^2)/sqrt(pi))./v./u./u/2;
-        um = vm/sqrt(2)/xTe_norm(ir)';Aeem = xne_norm(ir)'.*(erf(um)-2*um.*exp(-um.^2)/sqrt(pi))./vm./um./um/2; 
-        Am(1) = 1;%Avoid singularity at p = 0, but the value is not used
-        up = vp/sqrt(2)/xTe_norm(ir)';Aeep = xne_norm(ir)'.*(erf(up)-2*up.*exp(-up.^2)/sqrt(pi))./vp./up./up/2; 
-    elseif coll_mode == 5,%Ultrarelativistic Moller model
-        Aee = xne_norm(ir)'.*xTe_norm(ir)'./v./v2;
-        Aeem = xne_norm(ir)'.*xTe_norm(ir)'./vm./v2m;
-        Aeep = xne_norm(ir)'.*xTe_norm(ir)'./vp./v2p;
-    end
-%
-    Aeem(1) = 1;%Avoid singularity at p = 0, but the value is not used
-    Aeemm = [eps,Aee(1:npn-1)];
-    Aeepp = [Aee(2:npn),eps];
-%
-    XXAeemm(:,:,ir) = Aeemm'*ones(1,nmhu);
-    XXAeem(:,:,ir) = Aeem'*ones(1,nmhu); 
-    XXAee(:,:,ir) = Aee'*ones(1,nmhu);
-    XXAeep(:,:,ir) = Aeep'*ones(1,nmhu);
-    XXAeepp(:,:,ir) = Aeepp'*ones(1,nmhu);
-%
-    if coll_mode == 1,%High-velocity limit
-        Btee = xne_norm(ir)'./v/2 - xne_norm(ir)'.*xTe_norm(ir)'./v./v2/2;
-    elseif coll_mode == 0 | coll_mode == 2,%Linearized Belaiev-Budker
-        B1 = B1_1./v/2 - B1_2./v./pn2/6 + B1_3./v./gamma2./z2/8 - B1_4./v./z2/4 - B1_5./v./gamma2/4;
-        B2 = B2_1/2 + B2_2.*(-gamma2/6 + J1./z2./gamma/8 - gamma.*J2./z2/4) - B2_3.*(gamma - sigma./z)./pn2./gamma/4;   
-        Btee = 4*pi*(B1 + B2);      
-    elseif coll_mode == 3,%Lorentz model
-        Btee = zeros(1,npn);
-    elseif coll_mode == 4,%Maxwellian background
-        u = v/sqrt(2)/xTe_norm(ir)';                  
-        Btee = xne_norm(ir)'.*((2*u.^2-1).*erf(u)+2*u.*exp(-u.^2)/sqrt(pi))./v./u./u/4;
-    elseif coll_mode == 5,%Ultrarelativistic Moller model
-       Btee = xne_norm(ir)'./v/2;
-    end
-%
-    XXBtee(:,:,ir) = Btee'*ones(1,nmhu);    
+if exist('XXfinit') ~= 1
+    XXfinit = XXfM;%Initial guess (normalized to xne_norm)
 end
 %
 % RF wave coefficients
 %
-[ZYXXD_rf,ZYXXD_rf_tp,ZYXXF_rf_tp,ylist_rf] = ...
-    rfdiff_dke_jd(waveparam,nmax_rf,...
+[ZYXXD_rf,ZYXXF_rf,ZYXXD_rf_tp,ZYXXF_rf_tp,ylist_rf] = ...
+    rfdiff_dke_jd(waveparam,nmax_rf,save_id,...
         theta,XR,XZ,XBR,XBZ,XBphi,xB0,Rp,Zp,xqtilde,...
         XXheaviside,XXheaviside_p,XXheaviside_m,... 
         Xmhup,Xmhu,Xmhum,Xmhu2p,Xmhu2,Xmhu2m,X1mmhu2p,X1mmhu2,X1mmhu2m,Xdmhumm,Xdmhum,Xdmhu,Xdmhup,Xdmhupp,...
@@ -1099,48 +867,6 @@ if display_mode >= 1,info_dke_yp(2,['D and F tensor calculations for RF waves do
 etime_fp = 0;
 time0 = clock;
 for ir = 1:nr,
-%   
-% D and F tensors for collisions
-%
-    XDpp_c_ippj = XXAeepp(:,:,ir) + XXAeipp(:,:,ir);
-    XDpp_c_ipj = XXAeep(:,:,ir) + XXAeip(:,:,ir);
-    XDpp_c_ij = XXAee(:,:,ir) + XXAei(:,:,ir);
-    XDpp_c_imj = XXAeem(:,:,ir) + XXAeim(:,:,ir);
-    XDpp_c_immj = XXAeemm(:,:,ir) + XXAeimm(:,:,ir);
-%
-    XDpm_c_ipj = zeros(npn,nmhu);
-    XDpm_c_ij = zeros(npn,nmhu);
-    XDpm_c_imj = zeros(npn,nmhu);
-%
-    XDmp_c_ijp = zeros(npn,nmhu);
-    XDmp_c_ij = zeros(npn,nmhu);
-    XDmp_c_ijm = zeros(npn,nmhu);
-%
-    XDmm_c_ijp = (XXBtee(:,:,ir) + XXBtei(:,:,ir)).*XXRlambda_p2m1_p(:,:,ir);
-    XDmm_c_ijm = (XXBtee(:,:,ir) + XXBtei(:,:,ir)).*XXRlambda_p2m1_m(:,:,ir);
-%
-    XFp_c_ippj = -XXFeepp(:,:,ir) - XXFeipp(:,:,ir);
-    XFp_c_ipj = -XXFeep(:,:,ir) - XXFeip(:,:,ir);
-    XFp_c_ij = -XXFee(:,:,ir) - XXFei(:,:,ir);
-    XFp_c_imj = -XXFeem(:,:,ir) - XXFeim(:,:,ir);
-    XFp_c_immj = -XXFeemm(:,:,ir) - XXFeimm(:,:,ir);    
-%
-    XFm_c_ijp = zeros(npn,nmhu);
-    XFm_c_ijm = zeros(npn,nmhu);
-%    
-    XXDpp_c_imj(:,:,ir) = XDpp_c_imj;
-    XXDpm_c_imj(:,:,ir) = XDpm_c_imj;
-    XXFp_c_imj(:,:,ir) = XFp_c_imj;
-    XXDpp_c_ipj(:,:,ir) = XDpp_c_ipj;
-    XXDpm_c_ipj(:,:,ir) = XDpm_c_ipj;
-    XXFp_c_ipj(:,:,ir) = XFp_c_ipj;
-%
-    XXDmm_c_ijm(:,:,ir) = XDmm_c_ijm;
-    XXDmp_c_ijm(:,:,ir) = XDmp_c_ijm;
-    XXFm_c_ijm(:,:,ir) = XFm_c_ijm;
-    XXDmm_c_ijp(:,:,ir) = XDmm_c_ijp;
-    XXDmp_c_ijp(:,:,ir) = XDmp_c_ijp;
-    XXFm_c_ijp(:,:,ir) = XFm_c_ijp; 
 %   
 % D and F tensors for electric field
 %
@@ -1176,7 +902,7 @@ for ir = 1:nr,
     XFp_e_imj = +Xmhu.*XXRlambda_b_p1m1p2(:,:,ir)*xepsi(ir);
     XFp_e_immj = +Xmhu.*XXRlambda_b_p1m1p2(:,:,ir)*xepsi(ir);   
 %
-    xEfield_validity(ir) = max(XFp_e_ij(ip_th_ref,[1,nmhu])./XFp_c_ij(ip_th_ref,[1,nmhu]));%Comparison between electric field and collisions pinches at pth_ref (if above 1, the code validity breaks close to p = 0 leading to numerical particle leak)                 
+    xEfield_validity(ir) = max(XFp_e_ij(ip_th_ref,[1,nmhu])./ZXXF_c.p_ij(ip_th_ref,[1,nmhu],ir));%Comparison between electric field and collisions pinches at pth_ref (if above 1, the code validity breaks close to p = 0 leading to numerical particle leak)                 
 %
     XFm_e_ijp = -sqrt(X1mmhu2p).*XXRlambda_b_p1m1p2_p(:,:,ir)*xepsi(ir);
     XFm_e_ijm = -sqrt(X1mmhu2m).*XXRlambda_b_p1m1p2_m(:,:,ir)*xepsi(ir);
@@ -1194,65 +920,36 @@ for ir = 1:nr,
     XXDmm_e_ijp(:,:,ir) = XDmm_e_ijp;
     XXDmp_e_ijp(:,:,ir) = XDmp_e_ijp;
     XXFm_e_ijp(:,:,ir) = XFm_e_ijp;
-%
-% D and F tensors for RF waves
-%
-    XDpp_rf_ippj = ZYXXD_rf.pp_ippj(:,:,ir);
-    XDpp_rf_ipj = ZYXXD_rf.pp_ipj(:,:,ir);
-    XDpp_rf_ij = ZYXXD_rf.pp_ij(:,:,ir);
-    XDpp_rf_imj = ZYXXD_rf.pp_imj(:,:,ir);
-    XDpp_rf_immj = ZYXXD_rf.pp_immj(:,:,ir);
-%   
-    XDpm_rf_ipj = ZYXXD_rf.pm_ipj(:,:,ir);
-    XDpm_rf_ij = ZYXXD_rf.pm_ij(:,:,ir);    
-    XDpm_rf_imj = ZYXXD_rf.pm_imj(:,:,ir);
-
-    XDmp_rf_ijp = ZYXXD_rf.mp_ijp(:,:,ir);
-    XDmp_rf_ij = ZYXXD_rf.mp_ij(:,:,ir);
-    XDmp_rf_ijm = ZYXXD_rf.mp_ijm(:,:,ir);
-%   
-    XDmm_rf_ijp = ZYXXD_rf.mm_ijp(:,:,ir);
-    XDmm_rf_ijm = ZYXXD_rf.mm_ijm(:,:,ir);  
-%   
-    XFp_rf_ippj = zeros(npn,nmhu);
-    XFp_rf_ipj = zeros(npn,nmhu);
-    XFp_rf_ij = zeros(npn,nmhu);
-    XFp_rf_imj = zeros(npn,nmhu);
-    XFp_rf_immj = zeros(npn,nmhu);
-%
-    XFm_rf_ijp = zeros(npn,nmhu);
-    XFm_rf_ijm = zeros(npn,nmhu);
 %   
 % D and F tensors
 % 
-    XDpp_ippj = XDpp_c_ippj + XDpp_e_ippj + XDpp_rf_ippj;
-    XDpp_ipj = XDpp_c_ipj + XDpp_e_ipj + XDpp_rf_ipj;
-    XDpp_ij = XDpp_c_ij + XDpp_e_ij + XDpp_rf_ij;
-    XDpp_imj = XDpp_c_imj + XDpp_e_imj + XDpp_rf_imj;
-    XDpp_immj = XDpp_c_immj + XDpp_e_immj + XDpp_rf_immj;
+    XDpp_ippj = ZXXD_c.pp_ippj(:,:,ir) + XDpp_e_ippj + ZYXXD_rf.pp_ippj(:,:,ir);
+    XDpp_ipj = ZXXD_c.pp_ipj(:,:,ir) + XDpp_e_ipj + ZYXXD_rf.pp_ipj(:,:,ir);
+    XDpp_ij = ZXXD_c.pp_ij(:,:,ir) + XDpp_e_ij + ZYXXD_rf.pp_ij(:,:,ir);
+    XDpp_imj = ZXXD_c.pp_imj(:,:,ir) + XDpp_e_imj + ZYXXD_rf.pp_imj(:,:,ir);
+    XDpp_immj = ZXXD_c.pp_immj(:,:,ir) + XDpp_e_immj + ZYXXD_rf.pp_immj(:,:,ir);
 %
-    XDpm_ipj = XDpm_c_ipj + XDpm_e_ipj + XDpm_rf_ipj;
-    XDpm_ij = XDpm_c_ij + XDpm_e_ij + XDpm_rf_ij;
-    XDpm_imj = XDpm_c_imj + XDpm_e_imj + XDpm_rf_imj;
+    XDpm_ipj = ZXXD_c.pm_ipj(:,:,ir) + XDpm_e_ipj + ZYXXD_rf.pm_ipj(:,:,ir);
+    XDpm_ij = ZXXD_c.pm_ij(:,:,ir) + XDpm_e_ij + ZYXXD_rf.pm_ij(:,:,ir);
+    XDpm_imj = ZXXD_c.pm_imj(:,:,ir) + XDpm_e_imj + ZYXXD_rf.pm_imj(:,:,ir);
 %
-    XDmp_ijp = XDmp_c_ijp + XDmp_e_ijp + XDmp_rf_ijp;
-    XDmp_ij = XDmp_c_ij + XDmp_e_ij + XDmp_rf_ij;
-    XDmp_ijm = XDmp_c_ijm + XDmp_e_ijm + XDmp_rf_ijm;
+    XDmp_ijp = ZXXD_c.mp_ijp(:,:,ir) + XDmp_e_ijp + ZYXXD_rf.mp_ijp(:,:,ir);
+    XDmp_ij = ZXXD_c.mp_ij(:,:,ir) + XDmp_e_ij + ZYXXD_rf.mp_ij(:,:,ir);
+    XDmp_ijm = ZXXD_c.mp_ijm(:,:,ir) + XDmp_e_ijm + ZYXXD_rf.mp_ijm(:,:,ir);
 %
-    XDmm_ijp = XDmm_c_ijp + XDmm_e_ijp + XDmm_rf_ijp;
-    XDmm_ijm = XDmm_c_ijm + XDmm_e_ijm + XDmm_rf_ijm;
+    XDmm_ijp = ZXXD_c.mm_ijp(:,:,ir) + XDmm_e_ijp + ZYXXD_rf.mm_ijp(:,:,ir);
+    XDmm_ijm = ZXXD_c.mm_ijm(:,:,ir) + XDmm_e_ijm + ZYXXD_rf.mm_ijm(:,:,ir);
 %
-    XFp_ippj = XFp_c_ippj + XFp_e_ippj + XFp_rf_ippj;
-    XFp_ipj = XFp_c_ipj + XFp_e_ipj + XFp_rf_ipj;
-    XFp_ij = XFp_c_ij + XFp_e_ij + XFp_rf_ij;
-    XFp_imj = XFp_c_imj + XFp_e_imj + XFp_rf_imj;
-    XFp_immj = XFp_c_immj + XFp_e_immj + XFp_rf_immj;
+    XFp_ippj = ZXXF_c.p_ippj(:,:,ir) + XFp_e_ippj + ZYXXF_rf.p_ippj(:,:,ir);
+    XFp_ipj = ZXXF_c.p_ipj(:,:,ir) + XFp_e_ipj + ZYXXF_rf.p_ipj(:,:,ir);
+    XFp_ij = ZXXF_c.p_ij(:,:,ir) + XFp_e_ij + ZYXXF_rf.p_ij(:,:,ir);
+    XFp_imj = ZXXF_c.p_imj(:,:,ir) + XFp_e_imj + ZYXXF_rf.p_imj(:,:,ir);
+    XFp_immj = ZXXF_c.p_immj(:,:,ir) + XFp_e_immj + ZYXXF_rf.p_immj(:,:,ir);
 %
-    XFm_ijp = XFm_c_ijp + XFm_e_ijp + XFm_rf_ijp;
-    XFm_ijm = XFm_c_ijm + XFm_e_ijm + XFm_rf_ijm;
+    XFm_ijp = ZXXF_c.m_ijp(:,:,ir) + XFm_e_ijp + ZYXXF_rf.m_ijp(:,:,ir);
+    XFm_ijm = ZXXF_c.m_ijm(:,:,ir) + XFm_e_ijm + ZYXXF_rf.m_ijm(:,:,ir);
 %
 %Momentum weights calculations (for f0 and ftp also)
-%
 %
     [Xdeltap_imj,Xdeltap_ipj,...
          Xdeltam_ijm,Xdeltam_ijp] = ...
@@ -1535,49 +1232,6 @@ if dke_mode == 1,
         jr3 = rdke(ir_dke)+1;
 %
 %Matrix coefficients calculations for ftp
-%   
-% Collisions
-%
-        XDpp_c_tp_ippj = (XXAeepp(:,:,jr2) + XXAeipp(:,:,jr2)).*XXRlambda_b_p1m1(:,:,jr2);
-        XDpp_c_tp_ipj = (XXAeep(:,:,jr2) + XXAeip(:,:,jr2)).*XXRlambda_b_p1m1(:,:,jr2);
-        XDpp_c_tp_ij = (XXAee(:,:,jr2) + XXAei(:,:,jr2)).*XXRlambda_b_p1m1(:,:,jr2);
-        XDpp_c_tp_imj = (XXAeem(:,:,jr2) + XXAeim(:,:,jr2)).*XXRlambda_b_p1m1(:,:,jr2);
-        XDpp_c_tp_immj = (XXAeemm(:,:,jr2) + XXAeimm(:,:,jr2)).*XXRlambda_b_p1m1(:,:,jr2);
-%
-        XDpm_c_tp_ipj = zeros(npn,nmhu);
-        XDpm_c_tp_ij = zeros(npn,nmhu);
-        XDpm_c_tp_imj = zeros(npn,nmhu);
-%
-        XDmp_c_tp_ijp = zeros(npn,nmhu);
-        XDmp_c_tp_ij = zeros(npn,nmhu);
-        XDmp_c_tp_ijm = zeros(npn,nmhu);
-%
-        XDmm_c_tp_ijp = (XXBtee(:,:,jr2) + XXBtei(:,:,jr2)).*XXRlambda_b_p3m2_p(:,:,jr2);
-        XDmm_c_tp_ijm = (XXBtee(:,:,jr2) + XXBtei(:,:,jr2)).*XXRlambda_b_p3m2_m(:,:,jr2);
-%
-        XFp_c_tp_ippj = -(XXFeepp(:,:,jr2) + XXFeipp(:,:,jr2)).*XXRlambda_b_p1m1(:,:,jr2);
-        XFp_c_tp_ipj = -(XXFeep(:,:,jr2) + XXFeip(:,:,jr2)).*XXRlambda_b_p1m1(:,:,jr2);
-        XFp_c_tp_ij = -(XXFee(:,:,jr2) + XXFei(:,:,jr2)).*XXRlambda_b_p1m1(:,:,jr2);
-        XFp_c_tp_imj = -(XXFeem(:,:,jr2) + XXFeim(:,:,jr2)).*XXRlambda_b_p1m1(:,:,jr2);
-        XFp_c_tp_immj = -(XXFeemm(:,:,jr2) + XXFeimm(:,:,jr2)).*XXRlambda_b_p1m1(:,:,jr2);  
-%
-        XFm_c_tp_ijp = (XXBtee(:,:,jr2) + XXBtei(:,:,jr2)).*(XXRlambda_b_p1m1_p(:,:,jr2) - XXRlambda_b_p1m2_p(:,:,jr2)).*sqrt(X1mmhu2p)./Xpn./Xmhu2p./Xmhup;
-        XFm_c_tp_ijm = (XXBtee(:,:,jr2) + XXBtei(:,:,jr2)).*(XXRlambda_b_p1m1_m(:,:,jr2) - XXRlambda_b_p1m2_m(:,:,jr2)).*sqrt(X1mmhu2m)./Xpn./Xmhu2m./Xmhum;
-%    
-        XXDpp_c_tp_imj(:,:,jr2) = XDpp_c_tp_imj;
-        XXDpm_c_tp_imj(:,:,jr2) = XDpm_c_tp_imj;
-        XXFp_c_tp_imj(:,:,jr2) = XFp_c_tp_imj;
-        
-        XXDpp_c_tp_ipj(:,:,jr2) = XDpp_c_tp_ipj;
-        XXDpm_c_tp_ipj(:,:,jr2) = XDpm_c_tp_ipj;
-        XXFp_c_tp_ipj(:,:,jr2) = XFp_c_tp_ipj;
-%
-        XXDmm_c_tp_ijm(:,:,jr2) = XDmm_c_tp_ijm;
-        XXDmp_c_tp_ijm(:,:,jr2) = XDmp_c_tp_ijm;
-        XXFm_c_tp_ijm(:,:,jr2) = XFm_c_tp_ijm;
-        XXDmm_c_tp_ijp(:,:,jr2) = XDmm_c_tp_ijp;
-        XXDmp_c_tp_ijp(:,:,jr2) = XDmp_c_tp_ijp;
-        XXFm_c_tp_ijp(:,:,jr2) = XFm_c_tp_ijp;
 %   
 % Electric field
 %
@@ -2540,41 +2194,45 @@ clear xcurr_0_fsav xcurr_tp_fsav xcurr_g_fsav
 %f0 contribution
 %
 [ZXXS.p0_c_imj,ZXXS.p0_c_ipj,ZXXS.m0_c_ijm,ZXXS.m0_c_ijp] = ...
-    fluxes_dke_jd(XXDpp_c_imj(:,:,rdke),XXDpp_c_ipj(:,:,rdke),XXDpm_c_imj(:,:,rdke),XXDpm_c_ipj(:,:,rdke),...
-    XXFp_c_imj(:,:,rdke),XXFp_c_ipj(:,:,rdke),...
-    XXDmm_c_ijm(:,:,rdke),XXDmm_c_ijp(:,:,rdke),XXDmp_c_ijm(:,:,rdke),XXDmp_c_ijp(:,:,rdke),...
-    XXFm_c_ijm(:,:,rdke),XXFm_c_ijp(:,:,rdke),...
+    fluxes_dke_jd(ZXXD_c.pp_imj(:,:,rdke),ZXXD_c.pp_ipj(:,:,rdke),ZXXD_c.pm_imj(:,:,rdke),ZXXD_c.pm_ipj(:,:,rdke),...
+    ZXXF_c.p_imj(:,:,rdke),ZXXF_c.p_ipj(:,:,rdke),...
+    ZXXD_c.mm_ijm(:,:,rdke),ZXXD_c.mm_ijp(:,:,rdke),ZXXD_c.mp_ijm(:,:,rdke),ZXXD_c.mp_ijp(:,:,rdke),...
+    ZXXF_c.m_ijm(:,:,rdke),ZXXF_c.m_ijp(:,:,rdke),...
     XXf0(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
     XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
     XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
 %    
 ZP0.x_c_fsav = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).*XXpn2m(:,:,rdke)./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*ZXXS.p0_c_imj,1),1)';       
 %
+if dke_mode > 1
+%
 %f0_tp contribution
 %
-[ZXXS.p0_c_tp_imj,ZXXS.p0_c_tp_ipj,ZXXS.m0_c_tp_ijm,ZXXS.m0_c_tp_ijp] = ...
-    fluxes_dke_jd(XXDpp_c_tp_imj(:,:,rdke),XXDpp_c_tp_ipj(:,:,rdke),XXDpm_c_tp_imj(:,:,rdke),XXDpm_c_tp_ipj(:,:,rdke),...
-    XXFp_c_tp_imj(:,:,rdke),XXFp_c_tp_ipj(:,:,rdke),...
-    XXDmm_c_tp_ijm(:,:,rdke),XXDmm_c_tp_ijp(:,:,rdke),XXDmp_c_tp_ijm(:,:,rdke),XXDmp_c_tp_ijp(:,:,rdke),...
-    XXFm_c_tp_ijm(:,:,rdke),XXFm_c_tp_ijp(:,:,rdke),...
-    XXf0_tp(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
-    XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
-    XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
+
+    [ZXXS.p0_c_tp_imj,ZXXS.p0_c_tp_ipj,ZXXS.m0_c_tp_ijm,ZXXS.m0_c_tp_ijp] = ...
+        fluxes_dke_jd(ZXXD_c_tp.pp_imj,ZXXD_c_tp.pp_ipj,ZXXD_c_tp.pm_imj,ZXXD_c_tp.pm_ipj,...
+        ZXXF_c_tp.p_imj,ZXXF_c_tp.p_ipj,...
+        ZXXD_c_tp.mm_ijm,ZXXD_c_tp.mm_ijp,ZXXD_c_tp.mp_ijm,ZXXD_c_tp.mp_ijp,...
+        ZXXF_c_tp.m_ijm,ZXXF_c_tp.m_ijp,...
+        XXf0_tp(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
+        XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
+        XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
 %    
-ZP0.x_c_tp_fsav = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).*XXpn2m(:,:,rdke)./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*ZXXS.p0_c_tp_imj,1),1)';       
+    ZP0.x_c_tp_fsav = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).*XXpn2m(:,:,rdke)./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*ZXXS.p0_c_tp_imj,1),1)';       
 %
 %f0_g contribution
 %
-[ZXXS.p0_c_g_imj,ZXXS.p0_c_g_ipj,ZXXS.m0_c_g_ijm,ZXXS.m0_c_g_ijp] = ...
-    fluxes_dke_jd(XXDpp_c_imj(:,:,rdke),XXDpp_c_ipj(:,:,rdke),XXDpm_c_imj(:,:,rdke),XXDpm_c_ipj(:,:,rdke),...
-    XXFp_c_imj(:,:,rdke),XXFp_c_ipj(:,:,rdke),...
-    XXDmm_c_ijm(:,:,rdke),XXDmm_c_ijp(:,:,rdke),XXDmp_c_ijm(:,:,rdke),XXDmp_c_ijp(:,:,rdke),...
-    XXFm_c_ijm(:,:,rdke),XXFm_c_ijp(:,:,rdke),...
-    XXf0_g(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
-    XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
-    XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
+    [ZXXS.p0_c_g_imj,ZXXS.p0_c_g_ipj,ZXXS.m0_c_g_ijm,ZXXS.m0_c_g_ijp] = ...
+        fluxes_dke_jd(ZXXD_c.pp_imj(:,:,rdke),ZXXD_c.pp_ipj(:,:,rdke),ZXXD_c.pm_imj(:,:,rdke),ZXXD_c.pm_ipj(:,:,rdke),...
+        ZXXF_c.p_imj(:,:,rdke),ZXXF_c.p_ipj(:,:,rdke),...
+        ZXXD_c.mm_ijm(:,:,rdke),ZXXD_c.mm_ijp(:,:,rdke),ZXXD_c.mp_ijm(:,:,rdke),ZXXD_c.mp_ijp(:,:,rdke),...
+        ZXXF_c.m_ijm(:,:,rdke),ZXXF_c.m_ijp(:,:,rdke),...
+        XXf0_g(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
+        XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
+        XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
 %    
-ZP0.x_c_g_fsav = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).*XXpn2m(:,:,rdke)./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*ZXXS.p0_c_g_imj,1),1)';       
+    ZP0.x_c_g_fsav = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).*XXpn2m(:,:,rdke)./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*ZXXS.p0_c_g_imj,1),1)';       
+end
 %
 %   Ohmic fluxes and power
 %
@@ -2655,7 +2313,7 @@ for iy = ylist_rf,
     XXD0_rf = shiftdim(repmat(xyD0_rf(:,iy),[1,npn,nmhu]),1);% RF quasi-linear diffusion coefficient (nhuth_ref*pth_ref^2)
     %
     ynum = num2str(iy);
-    eval(['load temp_DQL.mat ZXXD_rf_',ynum,' ZXXD_rf_tp_',ynum,' ZXXF_rf_tp_',ynum]);
+    eval(['load temp_DQL_',save_id,'.mat ZXXD_rf_',ynum,' ZXXD_rf_tp_',ynum,' ZXXF_rf_tp_',ynum]);
     %
     eval(['ZXXD_rf = ZXXD_rf_',ynum,';']);
     eval(['ZXXD_rf_tp = ZXXD_rf_tp_',ynum,';']);
