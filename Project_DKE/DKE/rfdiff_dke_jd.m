@@ -1,4 +1,4 @@
-function [ZYXXD_rf,ZYXXF_rf,ZYXXD_rf_tp,ZYXXF_rf_tp,ylist_rf] = rfdiff_dke_jd(waveparam,nmax_rf,save_id,...
+function [ZYXXD_rf,ZYXXF_rf,ZYXXD_rf_tp,ZYXXF_rf_tp,ylist_rf] = rfdiff_dke_jd(waveparam,nmax_rf,save_id,temppath,...
     theta,XR,XZ,XBR,XBZ,XBphi,xB0,Rp,Zp,xqtilde,...
     XXheaviside,XXheaviside_p,XXheaviside_m,... 
     Xmhup,Xmhu,Xmhum,Xmhu2p,Xmhu2,Xmhu2m,X1mmhu2p,X1mmhu2,X1mmhu2m,Xdmhumm,Xdmhum,Xdmhu,Xdmhup,Xdmhupp,...
@@ -22,6 +22,7 @@ function [ZYXXD_rf,ZYXXF_rf,ZYXXD_rf_tp,ZYXXF_rf_tp,ylist_rf] = rfdiff_dke_jd(wa
 %                           waveparam is build by the function rfwave_dke_jd.m
 %       - nmax_rf:          maximum harmonic number to be included
 %       - save_id:          identification string, based on running date and time
+%       - temppath:         path to temporary folder
 %       - theta...xqtilde:  equilibrium properties
 %       - Xmhup...Xdmhupp:  pitch angle grid 
 %       - Xpnpp...Xdpnpp:   momentum grid 
@@ -69,6 +70,7 @@ ZYXXD_rf.pp_imj = zeros(npn,nmhu,nr);
 ZYXXD_rf.pp_immj = zeros(npn,nmhu,nr);
 ZYXXD_rf.pm_ipj = zeros(npn,nmhu,nr);
 ZYXXD_rf.pm_ij = zeros(npn,nmhu,nr);
+ZYXXD_rf.parpar_ij = zeros(npn,nmhu,nr);
 ZYXXD_rf.pm_imj = zeros(npn,nmhu,nr);
 ZYXXD_rf.mp_ijp = zeros(npn,nmhu,nr);
 ZYXXD_rf.mp_ij = zeros(npn,nmhu,nr);
@@ -234,7 +236,7 @@ for iy = ylist_rf,
     XXD0_rf = shiftdim(repmat(xyD0_rf(:,iy),[1,npn,nmhu]),1);% RF quasi-linear diffusion coefficient (nhuth_ref*pth_ref^2)
     %
     ynum = num2str(iy);
-    eval(['load temp_DQL_',save_id,'.mat ZXXD_rf_',ynum,' ZXXD_rf_tp_',ynum,' ZXXF_rf_tp_',ynum]);
+    eval(['load ',fullfile(temppath,'temp_DQL_'),save_id,'.mat ZXXD_rf_',ynum,' ZXXD_rf_tp_',ynum,' ZXXF_rf_tp_',ynum]);
     %
     if exist(['ZXXD_rf_',ynum]) == 1, %The coefficients associated with this ray were calculated before.
         if display_mode >= 1,info_dke_yp(2,['RF matrix coefficients for effective ray #',ynum,' retrieved.']);end	
@@ -254,6 +256,7 @@ for iy = ylist_rf,
         ZXXD_rf.pp_immj = zeros(npn,nmhu,nr);
         ZXXD_rf.pm_ipj = zeros(npn,nmhu,nr);
         ZXXD_rf.pm_ij = zeros(npn,nmhu,nr);
+        ZXXD_rf.parpar_ij = zeros(npn,nmhu,nr);
         ZXXD_rf.pm_imj = zeros(npn,nmhu,nr);
         ZXXD_rf.mp_ijp = zeros(npn,nmhu,nr);
         ZXXD_rf.mp_ij = zeros(npn,nmhu,nr);
@@ -506,6 +509,7 @@ for iy = ylist_rf,
             ZXXD_rf.pp_ippj = ZXXD_rf.pp_ippj + XX1mmhu2.*XXDrf_ippj;
             ZXXD_rf.pp_ipj = ZXXD_rf.pp_ipj + XX1mmhu2.*XXDrf_ipj;
             ZXXD_rf.pp_ij = ZXXD_rf.pp_ij + XX1mmhu2.*XXDrf_ij;
+            ZXXD_rf.parpar_ij = ZXXD_rf.pp_ij + XX1mmhu2.*(1 - n_rf.*XXomegac./XXomega_rf).^2.*XXDrf_ij./XXmhu2;
             ZXXD_rf.pp_imj = ZXXD_rf.pp_imj + XX1mmhu2.*XXDrf_imj;
             ZXXD_rf.pp_immj = ZXXD_rf.pp_immj + XX1mmhu2.*XXDrf_immj;
             %
@@ -606,7 +610,7 @@ for iy = ylist_rf,
         eval(['ZXXD_rf_tp_',ynum,' = ZXXD_rf_tp',';']);
         eval(['ZXXF_rf_tp_',ynum,' = ZXXF_rf_tp',';']);
         %
-        eval(['save temp_DQL_',save_id,'.mat ZXXD_rf_',ynum,' ZXXD_rf_tp_',ynum,' ZXXF_rf_tp_',ynum,' -append']);
+        eval(['save ',fullfile(temppath,'temp_DQL_'),save_id,'.mat ZXXD_rf_',ynum,' ZXXD_rf_tp_',ynum,' ZXXF_rf_tp_',ynum,' -append']);
         %
         if display_mode >= 1,info_dke_yp(2,['RF matrix coefficients for effective ray #',ynum,' calculated.']);end	
         %
@@ -621,6 +625,7 @@ for iy = ylist_rf,
     ZYXXD_rf.pp_immj = ZYXXD_rf.pp_immj + ZXXD_rf.pp_immj.*XXD0_rf;
     ZYXXD_rf.pm_ipj = ZYXXD_rf.pm_ipj + ZXXD_rf.pm_ipj .*XXD0_rf;
     ZYXXD_rf.pm_ij = ZYXXD_rf.pm_ij + ZXXD_rf.pm_ij.*XXD0_rf;
+    ZYXXD_rf.parpar_ij = ZYXXD_rf.parpar_ij + ZXXD_rf.parpar_ij.*XXD0_rf;
     ZYXXD_rf.pm_imj = ZYXXD_rf.pm_imj + ZXXD_rf.pm_imj.*XXD0_rf;
     ZYXXD_rf.mp_ijp = ZYXXD_rf.mp_ijp + ZXXD_rf.mp_ijp.*XXD0_rf;
     ZYXXD_rf.mp_ij = ZYXXD_rf.mp_ij + ZXXD_rf.mp_ij.*XXD0_rf;
