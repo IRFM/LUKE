@@ -59,6 +59,7 @@ rt_mode = dkeparam.rt_mode;
 nit_rf = dkeparam.nit_rf;
 prec_rf = dkeparam.prec_rf;
 nmax_rf = dkeparam.nmax_rf;
+temppath = dkeparam.temppath;
 %-------------------------------------------
 psin_display = display.psin_display;
 rho_display = display.rho_display;
@@ -791,7 +792,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
         XXDr_ref,XXVr_ref,...
         XXnhuloss_ref,xdeltaripple,...
         xftp_norm_ref,bounce,Dqlmax,coll_mode,...
-        norm_mode_f,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,snumber,XXfinit_ref);
+        norm_mode_f,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,temppath,snumber,XXfinit_ref);
 %
     if ~isempty(waveparam) & nit_rf > 1,
         xyPabs_rf_dke_fsav_out = ZP0_ref.xy_rf_fsav + ZP0_ref.xy_rf_tp_fsav + ZP0_ref.xy_rf_g_fsav; % flux-surface averaged density of absorbed power.
@@ -800,7 +801,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
         [xyPinc_out,xyPinc_mod] = rfprop_dke_jd(yb,xyprop_dke,xyPinc_mod,xyPabs_rf_dke_fsav_mksa,xdV_dke,xpsin,xpsin_dke,r_dke,dke_mode);
 %
         residue_rf = max(max(abs(xyPinc_out - xyPinc_mod)./(xyPinc_mod + eps)));
-        if residue_rf <= prec_rf
+        if residue_rf <= prec_rf & it_rf > 1
             info_dke_yp(2,['Successfull convergence achieved for ray-tracing coupling after ',int2str(it_rf),' iterations !']);
             break
         end
