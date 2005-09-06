@@ -65,7 +65,11 @@ for iw = 1:length(waves),%
         %                   cut invalid ray path !!!!! CRONOS error
         % ======================================================================
         %
-        ismax = min([find(isnan(ray.sepol_pmz(3,:)))-1,Inf]);
+        if ~isempty(ray.sepol_pmz),
+            ismax = min([find(isnan(ray.sepol_pmz(3,:)))-1,Inf]);
+        else
+            ismax = Inf;
+        end
         %
         %
         % ======================================================================
