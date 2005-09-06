@@ -4,14 +4,14 @@ function [ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,xepsi] = ...
         xqbar,xqtilde,xB0,xBT0,xR0,Rp,...
         XXlambda_b_p1m3p4,XXRlambda_b_p1m1p2,XXRlambda_b_p1m1p2_p,XXRlambda_b_p1m1p2_m,...
         XXRlambda_b_p2m2p2,XXRlambda_b_p2m2p2_p,XXRlambda_b_p2m2p2_m,...
-        bounce_mode,dke_mode,display_mode,rdke,save_id);
+        bounce_mode,dke_mode,display_mode,rdke,save_id,temppath);
 %
 %
-eval(['load temp_DQL_',save_id,'.mat xepsi']);
+eval(['load ',fullfile(temppath,'temp_DQL_'),save_id,'.mat xepsi']);
 %
 if exist('xepsi') == 1, %The bounce averaging coefficients were calculated before.
   %
-  eval(['load temp_DQL_',save_id,'.mat ZXXD_e ZXXF_e ZXXD_e_tp ZXXF_e_tp'])
+  eval(['load ',fullfile(temppath,'temp_DQL_'),save_id,'.mat ZXXD_e ZXXF_e ZXXD_e_tp ZXXF_e_tp'])
   %
   if display_mode >= 1,info_dke_yp(2,['Electric field flux coefficients retrieved.']);end	
   %
@@ -117,7 +117,7 @@ else
     end
 %
   end
-  eval(['save temp_DQL_',save_id,'.mat ZXXD_e ZXXF_e ZXXD_e_tp ZXXF_e_tp xepsi -append']);
+  eval(['save ',fullfile(temppath,'temp_DQL_'),save_id,'.mat ZXXD_e ZXXF_e ZXXD_e_tp ZXXF_e_tp xepsi -append']);
   %
   if display_mode >= 1,info_dke_yp(2,['Electric field flux coefficients saved.']);end	
   %
