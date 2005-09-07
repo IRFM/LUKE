@@ -763,8 +763,8 @@ P_ref = me*(clum*betath_ref)^2*nhu_ref*ne_ref; %power normalization constant
 %
 if isempty(waveparam),nit_rf = 1;end
 %
-save_id = '050907102921';timeid_jd(clock);
-%eval(['save ',fullfile(temppath,'temp_DKE_'),save_id,'.mat save_id'])
+save_id = timeid_jd(clock);
+eval(['save ',fullfile(temppath,'temp_DKE_'),save_id,'.mat save_id'])
 %
 for it_rf=1:nit_rf % convergence in the ray-tracing mode
 %    
@@ -796,10 +796,10 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
 %
     if ~isempty(waveparam) & nit_rf > 1,
     	if dke_mode >= 1,
-	    xyPabs_rf_dke_fsav_out = ZP0_ref.xy_rf_fsav + ZP0_ref.xy_rf_tp_fsav + ZP0_ref.xy_rf_g_fsav; % flux-surface averaged density of absorbed power.
-	else
-	    xyPabs_rf_dke_fsav_out = ZP0_ref.xy_rf_fsav; % flux-surface averaged density of absorbed power.
-	end	    
+	        xyPabs_rf_dke_fsav_out = ZP0_ref.xy_rf_fsav + ZP0_ref.xy_rf_tp_fsav + ZP0_ref.xy_rf_g_fsav; % flux-surface averaged density of absorbed power.
+	    else
+	        xyPabs_rf_dke_fsav_out = ZP0_ref.xy_rf_fsav; % flux-surface averaged density of absorbed power.
+	    end	    
         xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav_out*P_ref;
 %
         [xyPinc_out,xyPinc_mod] = rfprop_dke_jd(yb,xyprop_dke,xyPinc_mod,xyPabs_rf_dke_fsav_mksa,xdV_dke,xpsin,xpsin_dke,r_dke,dke_mode);
