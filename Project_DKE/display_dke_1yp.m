@@ -177,7 +177,7 @@ end
 %
 % Power
 %
-if dke_mode > 1,
+if dke_mode >= 1,
     ZP0_ref.x_c_tot_fsav = ZP0_ref.x_c_fsav + ZP0_ref.x_c_tp_fsav + ZP0_ref.x_c_g_fsav;
     ZP0_ref.x_e_tot_fsav = ZP0_ref.x_e_fsav + ZP0_ref.x_e_tp_fsav + ZP0_ref.x_e_g_fsav;
     ZP0_ref.x_rf_tot_fsav = ZP0_ref.x_rf_fsav + ZP0_ref.x_rf_tp_fsav + ZP0_ref.x_rf_g_fsav;
@@ -249,7 +249,7 @@ ZXXS_ref.rf = sqrt(((ZXXS_ref.p0_rf_imj + ZXXS_ref.p0_rf_ipj)/2).^2 + ((ZXXS_ref
 %
 % Efficiency (j/p)
 %
-xeta0_ref_fsav = xcurr0_ref_fsav./(ZP0_ref.x_rf_fsav + eps);
+xeta0_ref_fsav = xcurr0_ref_fsav./(ZP0_ref.x_rf_fsav' + eps);
 %
 xeta0_fsav_mksa = xeta0_ref_fsav*j_ref/P_ref;	
 if syn_mode == 1,
@@ -684,7 +684,7 @@ while 1,
 %
 % ----------- EC coefficient if applicable -----------
 %
-			if nb_ec > 0 
+			if nb_ec > 0 | (nb_lh > 0 & isnan(xvparmin_lh_ref(ir_display)) == 1 & isnan(xvparmax_lh_ref(ir_display)) == 1),
                 y3 = log10(XDrf_cyl_ref/max(max(XDrf_cyl_ref)));
                 cont = [-2.2:0.4:-0.2];
                 %
@@ -1226,7 +1226,7 @@ while 1,
 	if auto_mode_in == 1, break, end	
 end
 %
-if auto_mode_in == 0 & nr > 1,
+if exist('hxr') & auto_mode_in == 0 & nr > 1,
 	disp('  ');
 	ie_display = 1;
 	Ec_r_ref_in = xEc_r_ref_threshold(1);
