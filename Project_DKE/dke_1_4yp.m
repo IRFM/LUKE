@@ -2089,7 +2089,7 @@ clear xcurr_0_fsav xcurr_tp_fsav xcurr_g_fsav
 %    
 ZP0.x_c_fsav = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).*XXpn2m(:,:,rdke)./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*ZXXS.p0_c_imj,1),1)';       
 %
-if dke_mode > 1
+if dke_mode >= 1
 %
 %f0_tp contribution
 %
@@ -2134,7 +2134,7 @@ end
 % 
 ZP0.x_e_fsav = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).*XXpn2m(:,:,rdke)./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*ZXXS.p0_e_imj,1),1)';       
 %
-if dke_mode > 1
+if dke_mode >= 1
 %
 %f0_tp contribution
 %
@@ -2171,10 +2171,8 @@ ZXXS.m0_rf_ijm = zeros(npn,nmhu,nr_dke);
 ZXXS.m0_rf_ijp = zeros(npn,nmhu,nr_dke);
 %
 ZP0.xy_rf_fsav = zeros(nr_dke,nb);
-ZP0.xy_rf_tp_fsav = zeros(nr_dke,nb);
-ZP0.xy_rf_g_fsav = zeros(nr_dke,nb);
 %
-if dke_mode > 1
+if dke_mode >= 1
     ZXXS.p0_rf_tp_imj = zeros(npn,nmhu,nr_dke);
     ZXXS.p0_rf_tp_ipj = zeros(npn,nmhu,nr_dke);
     ZXXS.m0_rf_tp_ijm = zeros(npn,nmhu,nr_dke);
@@ -2185,6 +2183,8 @@ if dke_mode > 1
     ZXXS.m0_rf_g_ijm = zeros(npn,nmhu,nr_dke);
     ZXXS.m0_rf_g_ijp = zeros(npn,nmhu,nr_dke);
 %    
+    ZP0.xy_rf_tp_fsav = zeros(nr_dke,nb);
+    ZP0.xy_rf_g_fsav = zeros(nr_dke,nb);
 end
 %
 %  Wave-induced radial transport by adjoint technique (P. Helander model)
@@ -2204,13 +2204,7 @@ for iy = ylist_rf,
     XXD0_rf = shiftdim(repmat(xyD0_rf(:,iy),[1,npn,nmhu]),1);% RF quasi-linear diffusion coefficient (nhuth_ref*pth_ref^2)
     %
     ynum = num2str(iy);
-    eval(['load ',fullfile(temppath,'temp_DQL_'),save_id,'.mat ZXXD_rf_',ynum,' ZXXD_rf_tp_',ynum,' ZXXF_rf_tp_',ynum]);
-    %
-    eval(['ZXXD_rf = ZXXD_rf_',ynum,';']);
-    eval(['ZXXD_rf_tp = ZXXD_rf_tp_',ynum,';']);
-    eval(['ZXXF_rf_tp = ZXXF_rf_tp_',ynum,';']);
-    %
-    eval(['clear ZXXD_rf_',ynum,' ZXXD_rf_tp_',ynum,' ZXXF_rf_tp_',ynum]);
+    eval(['load ',fullfile(temppath,'temp_DQL_'),save_id,'_',ynum,'.mat ZXXD_rf ZXXD_rf_tp ZXXF_rf_tp']);
     %
 	XXDpp_rf_imj = ZXXD_rf.pp_imj.*XXD0_rf;
     XXDpp_rf_ipj = ZXXD_rf.pp_ipj.*XXD0_rf;
@@ -2246,35 +2240,35 @@ for iy = ylist_rf,
     ZXXS.m0_rf_ijm = ZXXS.m0_rf_ijm + XXSm0_rf_ijm;
     ZXXS.m0_rf_ijp = ZXXS.m0_rf_ijp + XXSm0_rf_ijp;
 %        
-    if dke_mode > 1
-        XXDpp_rf_tp_imj = ZXXD_rf_tp.pp_imj.*XXD0_rf;
-        XXDpp_rf_tp_ipj = ZXXD_rf_tp.pp_ipj.*XXD0_rf;
-        XXDpm_rf_tp_imj = ZXXD_rf_tp.pm_imj.*XXD0_rf;
-        XXDpm_rf_tp_ipj = ZXXD_rf_tp.pm_ipj.*XXD0_rf;
-        XXFp_rf_tp_imj = ZXXF_rf_tp.p_imj.*XXD0_rf;
-        XXFp_rf_tp_ipj = ZXXF_rf_tp.p_ipj.*XXD0_rf;
-        XXDmm_rf_tp_ijm = ZXXD_rf_tp.mm_ijm.*XXD0_rf; 
-        XXDmm_rf_tp_ijp = ZXXD_rf_tp.mm_ijp.*XXD0_rf;
-        XXDmp_rf_tp_ijm = ZXXD_rf_tp.mp_ijm.*XXD0_rf;
-        XXDmp_rf_tp_ijp = ZXXD_rf_tp.mp_ijp.*XXD0_rf;
-        XXFm_rf_tp_ijm = ZXXF_rf_tp.m_ijm.*XXD0_rf;
-        XXFm_rf_tp_ijp = ZXXF_rf_tp.m_ijp.*XXD0_rf;
+    if dke_mode >= 1
+        XXDpp_rf_tp_imj = ZXXD_rf_tp.pp_imj.*XXD0_rf(rdke);
+        XXDpp_rf_tp_ipj = ZXXD_rf_tp.pp_ipj.*XXD0_rf(rdke);
+        XXDpm_rf_tp_imj = ZXXD_rf_tp.pm_imj.*XXD0_rf(rdke);
+        XXDpm_rf_tp_ipj = ZXXD_rf_tp.pm_ipj.*XXD0_rf(rdke);
+        XXFp_rf_tp_imj = ZXXF_rf_tp.p_imj.*XXD0_rf(rdke);
+        XXFp_rf_tp_ipj = ZXXF_rf_tp.p_ipj.*XXD0_rf(rdke);
+        XXDmm_rf_tp_ijm = ZXXD_rf_tp.mm_ijm.*XXD0_rf(rdke); 
+        XXDmm_rf_tp_ijp = ZXXD_rf_tp.mm_ijp.*XXD0_rf(rdke);
+        XXDmp_rf_tp_ijm = ZXXD_rf_tp.mp_ijm.*XXD0_rf(rdke);
+        XXDmp_rf_tp_ijp = ZXXD_rf_tp.mp_ijp.*XXD0_rf(rdke);
+        XXFm_rf_tp_ijm = ZXXF_rf_tp.m_ijm.*XXD0_rf(rdke);
+        XXFm_rf_tp_ijp = ZXXF_rf_tp.m_ijp.*XXD0_rf(rdke);
 %
 %  Wave-induced radial transport by adjoint technique (P. Helander model)
 %
-        XXDmp1_rf_tp_ijp = ZXXD_rf_tp.mp1_ijp.*XXD0_rf;
-        XXDmp1_rf_tp_ij = ZXXD_rf_tp.mp1_ij.*XXD0_rf;
-        XXDmp1_rf_tp_ijm = ZXXD_rf_tp.mp1_ijm.*XXD0_rf;
-        XXDmm1_rf_tp_ijp = ZXXD_rf_tp.mm1_ijp.*XXD0_rf;
-        XXDmm1_rf_tp_ijm = ZXXD_rf_tp.mm1_ijm.*XXD0_rf;    
+        XXDmp1_rf_tp_ijp = ZXXD_rf_tp.mp1_ijp.*XXD0_rf(rdke);
+        XXDmp1_rf_tp_ij = ZXXD_rf_tp.mp1_ij.*XXD0_rf(rdke);
+        XXDmp1_rf_tp_ijm = ZXXD_rf_tp.mp1_ijm.*XXD0_rf(rdke);
+        XXDmm1_rf_tp_ijp = ZXXD_rf_tp.mm1_ijp.*XXD0_rf(rdke);
+        XXDmm1_rf_tp_ijm = ZXXD_rf_tp.mm1_ijm.*XXD0_rf(rdke);    
 %
 %f0_tp contribution
 %
         [XXSp0_rf_tp_imj,XXSp0_rf_tp_ipj,XXSm0_rf_tp_ijm,XXSm0_rf_tp_ijp] = ...
-            fluxes_dke_jd(XXDpp_rf_tp_imj(:,:,rdke),XXDpp_rf_tp_ipj(:,:,rdke),XXDpm_rf_tp_imj(:,:,rdke),XXDpm_rf_tp_ipj(:,:,rdke),...
-            XXFp_rf_tp_imj(:,:,rdke),XXFp_rf_tp_ipj(:,:,rdke),...
-            XXDmm_rf_tp_ijm(:,:,rdke),XXDmm_rf_tp_ijp(:,:,rdke),XXDmp_rf_tp_ijm(:,:,rdke),XXDmp_rf_tp_ijp(:,:,rdke),...
-            XXFm_rf_tp_ijm(:,:,rdke),XXFm_rf_tp_ijp(:,:,rdke),...
+            fluxes_dke_jd(XXDpp_rf_tp_imj,XXDpp_rf_tp_ipj,XXDpm_rf_tp_imj,XXDpm_rf_tp_ipj,...
+            XXFp_rf_tp_imj,XXFp_rf_tp_ipj,...
+            XXDmm_rf_tp_ijm,XXDmm_rf_tp_ijp,XXDmp_rf_tp_ijm,XXDmp_rf_tp_ijp,...
+            XXFm_rf_tp_ijm,XXFm_rf_tp_ijp,...
             XXf0_tp(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
             XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
             XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
@@ -2288,7 +2282,7 @@ for iy = ylist_rf,
 %
 %f0_g contribution
 %
-        [XXSp0_g_rf_imj,XXSp0_g_rf_ipj,XXSm0_g_rf_ijm,XXSm0_g_rf_ijp] = ...
+        [XXSp0_rf_g_imj,XXSp0_rf_g_ipj,XXSm0_rf_g_ijm,XXSm0_rf_g_ijp] = ...
             fluxes_dke_jd(XXDpp_rf_imj(:,:,rdke),XXDpp_rf_ipj(:,:,rdke),XXDpm_rf_imj(:,:,rdke),XXDpm_rf_ipj(:,:,rdke),...
             XXFp_rf_imj(:,:,rdke),XXFp_rf_ipj(:,:,rdke),...
             XXDmm_rf_ijm(:,:,rdke),XXDmm_rf_ijp(:,:,rdke),XXDmp_rf_ijm(:,:,rdke),XXDmp_rf_ijp(:,:,rdke),...
@@ -2297,7 +2291,7 @@ for iy = ylist_rf,
             XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
             XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
 %    
-        ZP0.xy_rf_tp_fsav(:,iy) = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).^3./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*XXSp0_g_rf_imj,1),1);       
+        ZP0.xy_rf_g_fsav(:,iy) = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).^3./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*XXSp0_rf_g_imj,1),1);       
 %
         ZXXS.p0_rf_g_imj = ZXXS.p0_rf_g_imj + XXSp0_rf_g_imj;
         ZXXS.p0_rf_g_ipj = ZXXS.p0_rf_g_ipj + XXSp0_rf_g_ipj;
@@ -2307,10 +2301,10 @@ for iy = ylist_rf,
 %   Wave-induced radial transport by adjoint technique (P. Helander model)
 %
         [XXp_rf_imj,XXp_rf_ipj,XXm_rf_ijm,XXm_rf_ijp] = ...
-            fluxes_dke_jd(XXDpp_rf_tp_imj(:,:,rdke),XXDpp_rf_tp_ipj(:,:,rdke),XXDpm_rf_tp_imj(:,:,rdke),XXDpm_rf_tp_ipj(:,:,rdke),...
-            0*XXFp_rf_tp_imj(:,:,rdke),0*XXFp_rf_tp_ipj(:,:,rdke),...
-            XXDmm1_rf_tp_ijm(:,:,rdke),XXDmm1_rf_tp_ijp(:,:,rdke),XXDmp1_rf_tp_ijm(:,:,rdke),XXDmp1_rf_tp_ijp(:,:,rdke),...
-            0*XXFm_rf_tp_ijm(:,:,rdke),0*XXFm_rf_tp_ijp(:,:,rdke),...
+            fluxes_dke_jd(XXDpp_rf_tp_imj,XXDpp_rf_tp_ipj,XXDpm_rf_tp_imj,XXDpm_rf_tp_ipj,...
+            0*XXFp_rf_tp_imj,0*XXFp_rf_tp_ipj,...
+            XXDmm1_rf_tp_ijm,XXDmm1_rf_tp_ijp,XXDmp1_rf_tp_ijm,XXDmp1_rf_tp_ijp,...
+            0*XXFm_rf_tp_ijm,0*XXFm_rf_tp_ijp,...
             XXf0(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke,:),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
             XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
             XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
@@ -2322,7 +2316,7 @@ for iy = ylist_rf,
 end
 %
 ZP0.x_rf_fsav = sum(ZP0.xy_rf_fsav,2);
-if dke_mode > 1
+if dke_mode >= 1
     ZP0.x_rf_tp_fsav = sum(ZP0.xy_rf_tp_fsav,2);
     ZP0.x_rf_g_fsav = sum(ZP0.xy_rf_g_fsav,2);
 end
