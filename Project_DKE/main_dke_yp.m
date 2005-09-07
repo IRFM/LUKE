@@ -764,7 +764,7 @@ P_ref = me*(clum*betath_ref)^2*nhu_ref*ne_ref; %power normalization constant
 if isempty(waveparam),nit_rf = 1;end
 %
 save_id = timeid_jd(clock);
-eval(['save ',fullfile(temppath,'temp_DQL_'),save_id,'.mat save_id'])
+eval(['save ',fullfile(temppath,'temp_DKE_'),save_id,'.mat save_id'])
 %
 for it_rf=1:nit_rf % convergence in the ray-tracing mode
 %    
@@ -864,7 +864,7 @@ if syn_mode == 1
         XxRR_bc_ref_fsav,xMRR_flux_bc_ref,xMRR_tau_bc_ref,...
         xTe_norm_bc_out,xft_bc_fsav,xfteff_bc_fsav,xmhubounce2_bc,xepsi_bc_ref,...
         memoryLU_bc_f,memoryLU_bc_g]...
-    = dke_1_4yp(tokname,theta,...
+    = dke_1_4yp(tokname,save_id,theta,...
         XR,XZ,XBR,XBZ,XBphi,...
         xB0,xR0,xBT0,xBp0,Rp,Zp,ap,...
         mhu,dmhu,mhum,dmhum,mhup,dmhup,mhu_S,...
@@ -875,7 +875,7 @@ if syn_mode == 1
         XXDr_ref,XXVr_ref,...
         XXnhuloss_ref,xdeltaripple,...
         xftp_norm_ref,bounce,Dqlmax,coll_mode,...
-        norm_mode_f,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,snumber,XXfinit_ref);
+        norm_mode_f,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,temppath,snumber,XXfinit_ref);
 %
     time_bc_out = etime(clock,time0_bc);
     memoryLU_bc_f_out = memoryLU_bc_f;
@@ -892,7 +892,11 @@ if syn_mode == 1
 %
 end
 %
-eval(['delete temp_DQL_',save_id,'.mat']);%Delete large temporary data file on disk
+eval(['delete ',fullfile(temppath,'temp_DKE_'),save_id,'.mat']);%Delete large temporary data file on disk
+for iy = 1:nb,
+    ynum = num2str(iy);
+    eval(['delete ',fullfile(temppath,'temp_DQL_'),save_id,'_',ynum,'.mat']);
+end    
 %
 %*********************************** Saving results ***************************************
 %

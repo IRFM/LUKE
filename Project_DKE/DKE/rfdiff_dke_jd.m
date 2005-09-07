@@ -236,14 +236,14 @@ for iy = ylist_rf,
     XXD0_rf = shiftdim(repmat(xyD0_rf(:,iy),[1,npn,nmhu]),1);% RF quasi-linear diffusion coefficient (nhuth_ref*pth_ref^2)
     %
     ynum = num2str(iy);
-    eval(['load ',fullfile(temppath,'temp_DQL_'),save_id,'.mat ZXXD_rf_',ynum,' ZXXD_rf_tp_',ynum,' ZXXF_rf_tp_',ynum]);
+    if exist([fullfile(temppath,'temp_DQL_'),save_id,'_',ynum,'.mat']) == 2,
+        if dke_mode == 0,
+            eval(['load ',fullfile(temppath,'temp_DQL_'),save_id,'_',ynum,'.mat ZXXD_rf']);
+        else
+            eval(['load ',fullfile(temppath,'temp_DQL_'),save_id,'_',ynum,'.mat ZXXD_rf ZXXD_rf_tp ZXXF_rf_tp']);
+        end            
     %
-    if exist(['ZXXD_rf_',ynum]) == 1, %The coefficients associated with this ray were calculated before.
         if display_mode >= 1,info_dke_yp(2,['RF matrix coefficients for effective ray #',ynum,' retrieved.']);end	
-    %
-        eval(['ZXXD_rf = ZXXD_rf_',ynum,';']);
-        eval(['ZXXD_rf_tp = ZXXD_rf_tp_',ynum,';']);
-        eval(['ZXXF_rf_tp = ZXXF_rf_tp_',ynum,';']);
     %
     else %The coefficients associated with this ray must be calculated.
     %
@@ -606,17 +606,15 @@ for iy = ylist_rf,
             %
         end
         %
-        eval(['ZXXD_rf_',ynum,' = ZXXD_rf',';']);
-        eval(['ZXXD_rf_tp_',ynum,' = ZXXD_rf_tp',';']);
-        eval(['ZXXF_rf_tp_',ynum,' = ZXXF_rf_tp',';']);
+        if dke_mode == 0,
+            eval(['save ',fullfile(temppath,'temp_DQL_'),save_id,'_',ynum,'.mat ZXXD_rf']);
+        else
+            eval(['save ',fullfile(temppath,'temp_DQL_'),save_id,'_',ynum,'.mat ZXXD_rf ZXXD_rf_tp ZXXF_rf_tp']);
+        end            
         %
-        eval(['save ',fullfile(temppath,'temp_DQL_'),save_id,'.mat ZXXD_rf_',ynum,' ZXXD_rf_tp_',ynum,' ZXXF_rf_tp_',ynum,' -append']);
-        %
-        if display_mode >= 1,info_dke_yp(2,['RF matrix coefficients for effective ray #',ynum,' calculated.']);end	
+        if display_mode >= 1,info_dke_yp(2,['RF matrix coefficients for effective ray #',ynum,' calculated and saved.']);end	
         %
     end
-    %
-    eval(['clear ZXXD_rf_',ynum,' ZXXD_rf_tp_',ynum,' ZXXF_rf_tp_',ynum]);
     %
     ZYXXD_rf.pp_ippj = ZYXXD_rf.pp_ippj + ZXXD_rf.pp_ippj.*XXD0_rf;
     ZYXXD_rf.pp_ipj = ZYXXD_rf.pp_ipj + ZXXD_rf.pp_ipj.*XXD0_rf;

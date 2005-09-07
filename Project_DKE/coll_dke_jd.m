@@ -8,11 +8,11 @@ function [ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM] = ...
         XXRlambda_b_p3m2_p,XXRlambda_b_p3m2_m,XXRlambda_b_p1m2_p,XXRlambda_b_p1m2_m,...
         spfac,coll_mode,dke_mode,display_mode,rdke,save_id,temppath);
 %
-eval(['load ',fullfile(temppath,'temp_DQL_'),save_id,'.mat XXfM']);
+eval(['load ',fullfile(temppath,'temp_DKE_'),save_id,'.mat XXfM']);
     %
 if exist('XXfM') == 1, %The bounce averaging coefficients were calculated before.
   %
-  eval(['load ',fullfile(temppath,'temp_DQL_'),save_id,'.mat ZXXD_c ZXXF_c ZXXD_c_tp ZXXF_c_tp'])
+  eval(['load ',fullfile(temppath,'temp_DKE_'),save_id,'.mat ZXXD_c ZXXF_c ZXXD_c_tp ZXXF_c_tp'])
   %
   if display_mode >= 1,info_dke_yp(2,['Collision flux coefficients retrieved.']);end	
   %
@@ -352,7 +352,7 @@ else
     end
 %    
   end
-  eval(['save ',fullfile(temppath,'temp_DQL_'),save_id,'.mat ZXXD_c ZXXF_c ZXXD_c_tp ZXXF_c_tp XXfM -append']);
+  eval(['save ',fullfile(temppath,'temp_DKE_'),save_id,'.mat ZXXD_c ZXXF_c ZXXD_c_tp ZXXF_c_tp XXfM -append']);
   %
   if display_mode >= 1,info_dke_yp(2,['Collision flux coefficients saved.']);end	
   %
