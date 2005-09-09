@@ -509,7 +509,7 @@ for iy = ylist_rf,
             ZXXD_rf.pp_ippj = ZXXD_rf.pp_ippj + XX1mmhu2.*XXDrf_ippj;
             ZXXD_rf.pp_ipj = ZXXD_rf.pp_ipj + XX1mmhu2.*XXDrf_ipj;
             ZXXD_rf.pp_ij = ZXXD_rf.pp_ij + XX1mmhu2.*XXDrf_ij;
-            ZXXD_rf.parpar_ij = ZXXD_rf.pp_ij + XX1mmhu2.*(1 - n_rf.*XXomegac./XXomega_rf).^2.*XXDrf_ij./XXmhu2;
+            ZXXD_rf.parpar_ij = ZXXD_rf.parpar_ij + XX1mmhu2.*(1 - n_rf.*XXomegac./XXomega_rf).^2.*XXDrf_ij./XXmhu2;
             ZXXD_rf.pp_imj = ZXXD_rf.pp_imj + XX1mmhu2.*XXDrf_imj;
             ZXXD_rf.pp_immj = ZXXD_rf.pp_immj + XX1mmhu2.*XXDrf_immj;
             %
