@@ -294,8 +294,11 @@ while 1,
 		end
 		Xfinit_ref = XXfinit_ref(:,:,ir_display);%Display results at the required radial value
 %
-		if nb > 0
-			XDrf_ref = squeeze(ZXXS_ref.rf(:,:,ir_display_dke));%Display results at the required radial value
+		if nb_ec > 0
+			XSec_ref = squeeze(ZXXS_ref.rf(:,:,ir_display_dke));%Display results at the required radial value
+		end
+		if nb_lh > 0
+			XDparpar_ref = squeeze(ZYXXD_rf.parpar_ij(:,:,ir_display_dke));%Display results at the required radial value
 		end
         if bounce_mode == 1,
 		    [XAstr_S_Pm_ref,XAstr_S_Pp_ref,XAstr_S_T_ref] = stream_dke_jd(ZXXS_ref,XxRR_ref_fsav,mhu,xmhubounce2,dmhu,pnp,ir_display_dke,nb);
@@ -400,23 +403,22 @@ while 1,
 		[logXf0_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(log(Xf0_ref),pn_ref,mhu,dp_cyl);%Spherical to cylindrical coordinate transformation
 		Xf0_cyl_ref = exp(logXf0_cyl_ref);%For accurate representation in figures 
 		if syn_mode == 1,
-         [logXf0_bc_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(log(Xf0_bc_ref),pn_ref,mhu,dp_cyl);%Spherical to cylindrical coordinate transformation
+            [logXf0_bc_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(log(Xf0_bc_ref),pn_ref,mhu,dp_cyl);%Spherical to cylindrical coordinate transformation
     		Xf0_bc_cyl_ref = exp(logXf0_bc_cyl_ref);%For accurate representation in figures 
-      end
+        end
 %
 %Points added at mhu = +/-1 for better plot (particularly effective for EBW)
 %
-      mhu_X = [-1,mhu,1];
-%************************************erreur dans la ligne d'en dessous ***********************
-      if ~isempty(waveparam) == 1,
-         n_rf = max(waveparam(ir_display,:,1));
-         if n_rf >= 2,  	
-            XDrf_X_ref = [zeros(np,1),XDrf_ref,zeros(np,1)];
-	         [XDrf_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_S_dke_yp(XDrf_X_ref,pn_ref,mhu_X,dp_cyl);%Spherical to cylindrical coordinate transformation
-         else
-			   [XDrf_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(XDrf_ref,pn_ref,mhu,dp_cyl);%Spherical to cylindrical coordinate transformation
-		   end
-	   end
+        mhu_X = [-1,mhu,1];
+        if nb_lh > 0,
+            XDparpar_X_ref = [zeros(np,1),XDparpar_ref,zeros(np,1)];
+	        [XDparpar_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_S_dke_yp(XDparpar_X_ref,pn_ref,mhu_X,dp_cyl);%Spherical to cylindrical coordinate transformation
+		end
+        if nb_ec > 0,
+            XSec_X_ref = [zeros(np,1),XSec_ref,zeros(np,1)];
+	        [XSec_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_S_dke_yp(XSec_X_ref,pn_ref,mhu_X,dp_cyl);%Spherical to cylindrical coordinate transformation
+		end
+	end
 %
 		[XAstr_Pp_cyl_ref,ppar_cyl_S_ref,dppar_cyl_S_ref,pperp_cyl_S_ref,dpperp_S_cyl_ref] = s2c_S_dke_yp(XAstr_S_Pp_ref,pn_S,mhu_S,dp_cyl);%Spherical to cylindrical coordinate transformation
 		[XAstr_Pm_cyl_ref,ppar_cyl_S_ref,dppar_cyl_S_ref,pperp_cyl_S_ref,dpperp_S_cyl_ref] = s2c_S_dke_yp(XAstr_S_Pm_ref,pn_S,mhu_S,dp_cyl);%Spherical to cylindrical coordinate transformation
@@ -445,11 +447,18 @@ while 1,
 		Xfinit_cyl_ref = Xfinit_cyl_ref.*(Xfinit_cyl_ref>0);%Remove negative values
 		Xfinit_cyl_ref = Xfinit_cyl_ref.*(Xp_cyl_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
 		Xfinit_cyl_ref(isnan(Xfinit_cyl_ref)) = 0;%Remove NaN values
-		if nb > 0
-			XDrf_cyl_ref = XDrf_cyl_ref.*(XDrf_cyl_ref>0);
-			XDrf_cyl_ref = XDrf_cyl_ref.*(Xp_cyl_ref<max(ppar_cyl_ref));
-			XDrf_cyl_ref = XDrf_cyl_ref.*(XDrf_cyl_ref<=max(max(max(XDrf_ref))));
-			XDrf_cyl_ref(isnan(XDrf_cyl_ref))=0;
+		if nb_ec > 0
+			XSec_cyl_ref = XSec_cyl_ref.*(XSec_cyl_ref>0);
+			XSec_cyl_ref = XSec_cyl_ref.*(Xp_cyl_ref<max(ppar_cyl_ref));
+			XSec_cyl_ref = XSec_cyl_ref.*(XSec_cyl_ref<=max(max(max(XSec_ref))));
+			XSec_cyl_ref(isnan(XSec_cyl_ref))=0;
+%
+		end        
+		if nb_lh > 0
+			XDparpar_cyl_ref = XDparpar_cyl_ref.*(XDparpar_cyl_ref>0);
+			XDparpar_cyl_ref = XDparpar_cyl_ref.*(Xp_cyl_ref<max(ppar_cyl_ref));
+			XDparpar_cyl_ref = XDparpar_cyl_ref.*(XDparpar_cyl_ref<=max(max(max(XDparpar_ref))));
+			XDparpar_cyl_ref(isnan(XDparpar_cyl_ref))=0;
 %
 		end        
 		XAstr_cyl_Pp_ref = XAstr_Pp_cyl_ref.*(Xp_cyl_S_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
@@ -638,54 +647,67 @@ while 1,
 %
 % ----------- LH domain if applicable
 %
-			if nb_lh > 0 & xvparmax_lh_ref(ir_display) - xvparmin_lh_ref(ir_display) ~= 0  & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0,
-				pparresmin_lh_cyl_ref = xvparmin_lh_ref(ir_display)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmin_lh_ref(ir_display)^2*betath_ref^2);%LH resonance condition
-				pparresmax_lh_cyl_ref = xvparmax_lh_ref(ir_display)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmax_lh_ref(ir_display)^2*betath_ref^2);%LH resonance condition
-                %
-				if igor_mode == 1,
-					eval(['save ',filenameroot,'_data_fig_',int2str(ir_display_dke),'lh.mat xrho_dke xia r_dke ir_display_dke pparresmin_lh_cyl_ref pparresmax_lh_cyl_ref pperp_cyl_ref'])
-				end
-                %
-            	figure(4),
-				hold on;
-				plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--');
-				plot(pparresmax_lh_cyl_ref,pperp_cyl_ref,'k--');
-				hold off;
-                %
-            	figure(5),
-				hold on;
-				plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--');
-				plot(pparresmax_lh_cyl_ref,pperp_cyl_ref,'k--');
-				hold off;
+			if nb_lh > 0 
 %
 % ---------- LH coefficient if applicable -----------
 %
                 figure(7),clf
                 %
-                y1 = log10(XDrf_cyl_ref/max(max(XDrf_cyl_ref)));
-                cont = [-10.5:-0.5];
+                y1 = XDparpar_cyl_ref;
+                cont = [0:ceil(max(max(XDparpar_cyl_ref)))];
                 %
                 graph2D_jd(x1,x2,y1','','','',xlim1,xlim2,0,NaN,cont,0,style2,NaN,width1,siz,red);
                 graph1D_jd(x9,y9,0,0,xlab1,xlab2,'LH dif. coef. [\nu^{ref}(p_{Te}^{ref})^2]',NaN,xlim1,xlim2,style2,marker,color5,width1,siz);
                 text(0.05,0.95,['\rho = ',rhostr],'units','normalized');
                 axis('equal');axis([xlim1,xlim2])
                 bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,ripple,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap);
-				hold on;
-				plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--');
-				plot(pparresmax_lh_cyl_ref,pperp_cyl_ref,'k--');
-				hold off;
                 %            
 			    pause(time_pause);
                 %
 				if igor_mode == 1,
-					eval(['save ',filenameroot,'_data_fig7_',int2str(ir_display_dke),'.mat xrho_dke xia r_dke ir_display_dke ppar_cyl_ref pperp_cyl_ref XDrf_cyl_ref xmhubounce2 pnmax_S'])
-				end
+					eval(['save ',filenameroot,'_data_fig7_',int2str(ir_display_dke),'.mat xrho_dke xia r_dke ir_display_dke ppar_cyl_ref pperp_cyl_ref XDparpar_cyl_ref xmhubounce2 pnmax_S'])
+                end
+                %
+                %
+                figure(4),
+                graph2D_jd(x1,x2,y1',xlab1,xlab2,'2D Distribution function f_0',xlim1,xlim2,0,NaN,cont,0,style1,color3,width2,siz);
+                
+                %
+                figure(5),
+                graph2D_jd(x1,x2,y1',xlab1,xlab2,'Stream function',xlim1,xlim2,0,NaN,cont,0,style1,color3,width2,siz);
+                %
+                if xvparmax_lh_ref(ir_display) - xvparmin_lh_ref(ir_display) ~= 0  & isnan(xvparmin_lh_ref(ir_display)) == 0 & isnan(xvparmax_lh_ref(ir_display)) == 0,
+				    pparresmin_lh_cyl_ref = xvparmin_lh_ref(ir_display)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmin_lh_ref(ir_display)^2*betath_ref^2);%LH resonance condition
+				    pparresmax_lh_cyl_ref = xvparmax_lh_ref(ir_display)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmax_lh_ref(ir_display)^2*betath_ref^2);%LH resonance condition
+                    %
+				    if igor_mode == 1,
+					    eval(['save ',filenameroot,'_data_fig_',int2str(ir_display_dke),'lh.mat xrho_dke xia r_dke ir_display_dke pparresmin_lh_cyl_ref pparresmax_lh_cyl_ref pperp_cyl_ref'])
+				    end
+                    %
+                	figure(4),
+    				hold on;
+    				plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--');
+    				plot(pparresmax_lh_cyl_ref,pperp_cyl_ref,'k--');
+    				hold off;
+                    %
+                	figure(5),
+    				hold on;
+    				plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--');
+    				plot(pparresmax_lh_cyl_ref,pperp_cyl_ref,'k--');
+    				hold off;
+                    %
+                	figure(7),
+    				hold on;
+    				plot(pparresmin_lh_cyl_ref,pperp_cyl_ref,'k--');
+    				plot(pparresmax_lh_cyl_ref,pperp_cyl_ref,'k--');
+    				hold off;
+                end
 			end
 %
 % ----------- EC coefficient if applicable -----------
 %
-			if nb_ec > 0 | (nb_lh > 0 & isnan(xvparmin_lh_ref(ir_display)) == 1 & isnan(xvparmax_lh_ref(ir_display)) == 1),
-                y3 = log10(XDrf_cyl_ref/max(max(XDrf_cyl_ref)));
+			if nb_ec > 0 
+                y3 = log10(XSec_cyl_ref/max(max(XSec_cyl_ref)));
                 cont = [-2.2:0.4:-0.2];
                 %
                 figure(4),
@@ -700,7 +722,7 @@ while 1,
                 cont = [-2.2:0.2:-0.2];
                 graph2D_jd(x1,x2,y3','','','',xlim1,xlim2,0,NaN,cont,0,style2,NaN,width1,siz,red);
                 graph1D_jd(x9,y9,0,0,xlab1,xlab2,'EC dif. coef. [\nu^{ref}(p_{Te}^{ref})^2]',NaN,xlim1,xlim2,style2,marker,color5,width1,siz);
-                %y3 = log10(XDrf_X_ref/max(max(XDrf_X_ref)));
+                %y3 = log10(XSec_X_ref/max(max(XSec_X_ref)));
                 %graph_cyl_jd(pn,mhu_X,y3','EC dif. coef. [\nu^{ref}(p_{Te}^{ref})^2]',xlim1,xlim2,NaN,cont,style2,NaN,width1,red);
                 text(0.05,0.95,['\rho = ',rhostr],'units','normalized');
                 axis('equal');axis([xlim1,xlim2])
@@ -937,7 +959,7 @@ while 1,
     				hold off;
                 end
 			    if nb_ec > 0 
-                    y3 = XDrf_cyl_ref;
+                    y3 = XSec_cyl_ref;
                     graph2D_jd(x1,x2,y3',xlab1,xlab2,'2D Distribution function f_{tp}',xlim1,xlim2,0,NaN,4,0,style1,color3,width2,siz);
                 end
 %
@@ -963,7 +985,7 @@ while 1,
     				hold off;
                 end
 			    if nb_ec > 0 
-                    y3 = XDrf_cyl_ref;
+                    y3 = XSec_cyl_ref;
                     graph2D_jd(x1,x2,y3',xlab1,xlab2,'2D Distribution function g',xlim1,xlim2,0,NaN,4,0,style1,color3,width2,siz);
                 end
 %
@@ -996,7 +1018,7 @@ while 1,
     				hold off;
                 end
 			    if nb_ec > 0 
-                    y3 = XDrf_cyl_ref;
+                    y3 = XSec_cyl_ref;
                     graph2D_jd(x1,x2,y3',xlab1,xlab2,'2D Distribution function f_1',xlim1,xlim2,0,NaN,4,0,style1,color3,width2,siz);
                 end
 %
@@ -1021,7 +1043,7 @@ while 1,
     				hold off;
                 end
 			    if nb_ec > 0 
-                    y3 = XDrf_cyl_ref;
+                    y3 = XSec_cyl_ref;
                     graph2D_jd(x1,x2,y3',xlab1,xlab2,'2D total distribution function f_0 + f_1',xlim1,xlim2,0,NaN,4,0,style1,color3,width2,siz);
                 end
 %
@@ -1170,7 +1192,7 @@ while 1,
         [ax] = graph1D_jd(xrho_dke,xPabs_tot_fsav_mksa,0,0,xlab,'<P_{abs}> (MW/m^3)','Density of Absorbed Power',['Collisions';'Ohmic     ';'RF Waves  '],xlim,0,style3,marker1,color1,width2,siz);
 %
         figure(204),clf
-        [ax] = graph1D_jd(xrho_dke,XxRR_mksa_fsav(np-1,ir_display_dke),0,0,xlab,'<\Gamma_{R}> (m^-3.s^-1)','Runaway loss rate',NaN,xlim,0,style3,marker2,color2,width2,siz,gca,red,lspace,bspace2);
+        [ax] = graph1D_jd(xrho_dke,XxRR_mksa_fsav(np-1,:),0,0,xlab,'<\Gamma_{R}> (m^-3.s^-1)','Runaway loss rate',NaN,xlim,0,style3,marker2,color2,width2,siz,gca,red,lspace,bspace2);
 %
 		if dke_mode == 1,  
 %
