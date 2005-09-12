@@ -779,12 +779,10 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
 %
     if nb > 0,         
         if nit_rf > 1 & it_rf <= redfac,
-            if it_rf == 1,
-                waveparam(:,:,4) = 0;
-                waveparam(:,yb,4) = xyD0_rf_in(:,yb,4).*xyPinc_mod(:,yb,4)/redfac./xyPinc_in(:,yb,4);
-            else
-                waveparam = xyD0_rf_in.*xyPinc_mod*it_rf/redfac./xyPinc_in;
-            end
+            ymask = sort([ymask,(yb + it_rf - 1)]);
+            ymask = ymask([1,1 + find(diff(ymask) ~= 0)]);
+            waveparam(:,:,4) = 0;
+            waveparam(:,ymask,4) = xyD0_rf_in(:,ymask).*xyPinc_mod(:,ymask)*it_rf/redfac./xyPinc_in(:,ymask);
         else
             waveparam(:,:,4) = xyD0_rf_in.*xyPinc_mod./xyPinc_in;
         end
