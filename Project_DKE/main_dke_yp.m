@@ -756,12 +756,19 @@ xyPinc_mod = xyPinc_in;
 xymask = (xyPinc_in == 0);
 xyPinc_in(xymask) = eps; %to avoid singularities
 %
-if length(waveparam) > 0, xyD0_rf_in = waveparam(:,:,4);end  %initial value of the constant diffusion coefficient
+nb = size(waveparam,2);
+%
+if nb > 0, %initial value of the constant diffusion coefficient
+    xyD0_rf_in = waveparam(:,:,4);
+    if nit_rf > 1,
+        redfac = round(nb/length(yb));%reduction factor for a progressive RT convergence
+        ymask = [];
+    end
+else
+    nit_rf = 1;
+end  
+%
 P_ref = me*(clum*betath_ref)^2*nhu_ref*ne_ref; %power normalization constant
-%
-%xymask_prop_dke = (xyprop_dke ~= 0);
-%
-if isempty(waveparam),nit_rf = 1;end
 %
 save_id = timeid_jd(clock);
 eval(['save ',fullfile(temppath,'temp_DKE_'),save_id,'.mat save_id'])
@@ -770,7 +777,18 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
 %    
 % The diffusion coefficient is proportional to the incident power
 %
-    if length(waveparam) > 0, waveparam(:,:,4) = xyD0_rf_in.*xyPinc_mod./xyPinc_in;end 
+    if nb > 0,         
+        if nit_rf > 1 & it_rf <= redfac,
+            if it_rf == 1,
+                waveparam(:,:,4) = 0;
+                waveparam(:,yb,4) = xyD0_rf_in(:,yb,4).*xyPinc_mod(:,yb,4)/redfac./xyPinc_in(:,yb,4);
+            else
+                waveparam = xyD0_rf_in.*xyPinc_mod*it_rf/redfac./xyPinc_in;
+            end
+        else
+            waveparam(:,:,4) = xyD0_rf_in.*xyPinc_mod./xyPinc_in;
+        end
+    end     
 %   
     [XXheaviside,...
         XXf0_ref,XXf0_tp_ref,XXf0_g_ref,XXf0_L_tp_ref,XXf0_L_g_ref,...
@@ -801,11 +819,14 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
 	        xyPabs_rf_dke_fsav_out = ZP0_ref.xy_rf_fsav; % flux-surface averaged density of absorbed power.
 	    end	    
         xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav_out*P_ref;
+        if nit_rf > 1 & it_rf <= redfac,
+            xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav_mksa*redfac/it_rf;
+        end
 %
         [xyPinc_out,xyPinc_mod] = rfprop_dke_jd(yb,xyprop_dke,xyPinc_mod,xyPabs_rf_dke_fsav_mksa,xdV_dke,xpsin,xpsin_dke,r_dke,dke_mode);
 %
         residue_rf = max(max(abs(xyPinc_out - xyPinc_mod)./(xyPinc_mod + eps)));
-        if residue_rf <= prec_rf & it_rf > 1
+        if residue_rf <= prec_rf & it_rf > redfac
             info_dke_yp(2,['Successfull convergence achieved for ray-tracing coupling after ',int2str(it_rf),' iterations !']);
             break
         else
@@ -816,7 +837,6 @@ end
 %
 %   RF wave quasilinear diffusion
 %
-nb = size(waveparam,2);
 if nb > 0
     blist_lh = find(round(waveparam(1,:,1)./(qe*min(xB0)/me)) == 0);
     nb_lh = length(blist_lh);
