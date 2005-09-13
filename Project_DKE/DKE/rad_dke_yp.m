@@ -18,10 +18,15 @@ XXMr = zeros(nmhu,npn,nr);
 XXMrp = zeros(nmhu,npn,nr);
 %
 nMMXP_f_t = max(cumsum(blocksize_f_t));
-MMXR_f_t = sparse(nMMXP_f_t,nMMXP_f_t);%Create supermatrix
 %
 if radial_mode == 1,
 %   
+ eval(['load ',fullfile(temppath,'temp_DKE_'),save_id,'.mat MMXR_f_t']);
+    %
+ if exist('MMXR_f_t') == 0, %The radial matrix was calculated before.
+   %
+   MMXR_f_t = sparse(nMMXP_f_t,nMMXP_f_t);%Create supermatrix
+% 
    xdpsinmm = [0,xdpsin(1:nr-1)];
    xdpsinpp = [xdpsin(2:nr),0];
 %
@@ -241,8 +246,14 @@ if radial_mode == 1,
        if display_mode >= 1,info_dke_yp(2,['D and F tensor calculations for fast electron radial transport at radius number (',int2str(ir),'/',int2str(nr),') done in ',num2str(etime(clock,time0)),' (s)']);etime_radial = etime_radial + etime(clock,time0);time0 = clock;end
        time0 = clock;
 %
+        eval(['save ',fullfile(temppath,'temp_DKE_'),save_id,'.mat MMXR_f_t']);
+      if display_mode >= 1,info_dke_yp(2,['Radial Matrix saved.']);end	
+%
     end
     if display_mode >= 1,info_dke_yp(2,['Zero order configuration space matrix calculations done in ',num2str(etime_radial),' (s)']);end
+  end
+else
+    MMXR_f_t = sparse(nMMXP_f_t,nMMXP_f_t);%Create empty supermatrix
 end
 
     
