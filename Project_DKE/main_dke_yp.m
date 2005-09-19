@@ -761,7 +761,7 @@ nb = size(waveparam,2);
 if nb > 0, %initial value of the constant diffusion coefficient
     xyD0_rf_in = waveparam(:,:,4);
     if nit_rf > 1,
-        redfac = round(nb/length(yb));%reduction factor for a progressive RT convergence
+        redfac = round(nb/length(yb))*3;%reduction factor for a progressive RT convergence
         ymask = [];
     end
 else
@@ -779,9 +779,11 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
 %
     if nb > 0,         
         if nit_rf > 1 & it_rf <= redfac,
-            ymask = sort([ymask,(yb + it_rf - 1)]);
-            ymask = ymask([1,1 + find(diff(ymask) ~= 0)]);
-            waveparam(:,:,4) = 0;
+            %ymask = sort([ymask,(yb + it_rf - 1)]);
+            %ymask = ymask(ymask <= nb);
+            %ymask = ymask([1,1 + find(diff(ymask) ~= 0)]);
+            %waveparam(:,:,4) = 0;
+            ymask = 1:nb;
             waveparam(:,ymask,4) = xyD0_rf_in(:,ymask).*xyPinc_mod(:,ymask)*it_rf/redfac./xyPinc_in(:,ymask);
         else
             waveparam(:,:,4) = xyD0_rf_in.*xyPinc_mod./xyPinc_in;
