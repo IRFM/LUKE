@@ -121,10 +121,11 @@ for iw = 1:length(waves),%
         %
         sepol_pmz = ray.sepol_pmz(:,1:min(ismax,size(ray.sepol_pmz,2)));% polarization vector [3,ns] complex
         sphi_pmz = ray.sphi_pmz(:,1:min(ismax,size(ray.sphi_pmz,2)));% normalized power flow [3,ns]
+        salphaphi_lin = ray.salphaphi_lin(:,1:min(ismax,length(ray.salphaphi_lin)));% Linear absorption coefficient (m-1) along the propagation [1,ns]
         %
         % Store useful information for DKE in a vsray matrix
         %
-        vsray = [ss;spsin;stheta;sNpar;sNperp;sdNpar;sepol_pmz;sphi_pmz];
+        vsray = [ss;spsin;stheta;sNpar;sNperp;sdNpar;sepol_pmz;sphi_pmz;salphaphi_lin];
         %
         % Regroup vsray matrices in a list
         %
@@ -211,6 +212,7 @@ xyepolz_rf = xyvray(:,:,9);
 xyphip_rf = xyvray(:,:,10);
 xyphim_rf = xyvray(:,:,11);
 xyphiz_rf = xyvray(:,:,12);
+xyalphaphi_lin_rf = xyvray(:,:,13);
 %
 % Spectral properties
 %
@@ -253,4 +255,5 @@ waveparam(:,:,9) = xyNperp_rf;%RF wave : n_perp
 waveparam(:,:,10) = xyepolp_rf;%RF wave : polarization plus
 waveparam(:,:,11) = xyepolm_rf;%RF wave : polarization minus
 waveparam(:,:,12) = xyepolz_rf;%RF wave : polarization parallel
+waveparam(:,:,13) = xyalphaphi_lin_rf;%RF wave : Linear absorption coefficient
 %

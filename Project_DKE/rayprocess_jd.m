@@ -113,6 +113,12 @@ else
     mask = is0:ismax;
 end    
 %
+try
+    salphaphi_lin = ray.salphaphi_lin;
+catch
+    salphaphi_lin = NaN*ones(1,ns);
+end
+%
 % remove unwanted ray parts
 %
 ns = length(mask);
@@ -148,6 +154,9 @@ if ~isempty(sepol_pmz)
 end
 if ~isempty(sphi_pmz)
     sphi_pmz = sphi_pmz(:,mask);
+end
+if ~isempty(salphaphi_lin)
+    salphaphi_lin = salphaphi_lin(:,mask);
 end
 %
 % Calculates Equilibrium properties along the ray
@@ -298,7 +307,5 @@ ray.szni = szni;
 ray.sTe = sTe;
 ray.szTi = szTi;
 %
-if opt_disp == 3,
-    ray.salphaphi_lin = salphaphi_lin;
-end
-
+ray.salphaphi_lin = salphaphi_lin;
+%

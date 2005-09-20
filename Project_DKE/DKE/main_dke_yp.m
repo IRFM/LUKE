@@ -750,7 +750,13 @@ end
 %
 time0 = clock;
 %
-xyPabs_tot_rf_fsav_in = 0;%initial absorbed power density estimate (Note, future work: could use linear theory)
+wpe_ref = sqrt(ne_ref*qe^2/me/e0);
+%
+if sum(sum(isnan(waveparam(:,:,13)))),
+    xyPabs_rf_dke_fsav_mksa = 0;%initial absorbed power density estimate (Note, future work: could use linear theory)
+else
+    xyPabs_rf_dke_fsav_mksa = waveparam(:,:,13).*waveparam(:,:,4).*waveparam(:,:,1)*me*lnc_e_ref*wpe_ref^2/(4*pi^2);
+end
 %
 xyPinc_mod = xyPinc_in;
 xymask = (xyPinc_in == 0);
@@ -761,7 +767,7 @@ nb = size(waveparam,2);
 if nb > 0, %initial value of the constant diffusion coefficient
     xyD0_rf_in = waveparam(:,:,4);
     if nit_rf > 1,
-        redfac = round(nb/length(yb))*3;%reduction factor for a progressive RT convergence
+        redfac = round(nb/length(yb));%reduction factor for a progressive RT convergence
         ymask = [];
     end
 else
@@ -777,14 +783,11 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
 %    
 % The diffusion coefficient is proportional to the incident power
 %
+    [xyPinc_out,xyPinc_mod] = rfprop_dke_jd(yb,xyprop_dke,xyPinc_mod,xyPabs_rf_dke_fsav_mksa,xdV_dke,xpsin,xpsin_dke,r_dke,dke_mode);
+%
     if nb > 0,         
         if nit_rf > 1 & it_rf <= redfac,
-            %ymask = sort([ymask,(yb + it_rf - 1)]);
-            %ymask = ymask(ymask <= nb);
-            %ymask = ymask([1,1 + find(diff(ymask) ~= 0)]);
-            %waveparam(:,:,4) = 0;
-            ymask = 1:nb;
-            waveparam(:,ymask,4) = xyD0_rf_in(:,ymask).*xyPinc_mod(:,ymask)*it_rf/redfac./xyPinc_in(:,ymask);
+            waveparam(:,:,4) = xyD0_rf_in.*xyPinc_mod*it_rf/redfac./xyPinc_in;
         else
             waveparam(:,:,4) = xyD0_rf_in.*xyPinc_mod./xyPinc_in;
         end
@@ -822,8 +825,6 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
         if nit_rf > 1 & it_rf <= redfac,
             xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav_mksa*redfac/it_rf;
         end
-%
-        [xyPinc_out,xyPinc_mod] = rfprop_dke_jd(yb,xyprop_dke,xyPinc_mod,xyPabs_rf_dke_fsav_mksa,xdV_dke,xpsin,xpsin_dke,r_dke,dke_mode);
 %
         residue_rf = max(max(abs(xyPinc_out - xyPinc_mod)./(xyPinc_mod + eps)));
         if residue_rf <= prec_rf & it_rf > redfac

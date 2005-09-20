@@ -129,7 +129,7 @@ for ib = 1:nb_rf
 %
           is_f = min(find(abs(spsin(maskfs) - bpsin) == min(abs(spsin(maskfs) - bpsin)))) + is - 1;
 %
-          xyvray(ipsin,ibb,:) = reshape(vsray(:,is_f),[1,1,12]); %parameters vrays at center of FS
+          xyvray(ipsin,ibb,:) = reshape(vsray(:,is_f),[1,1,13]); %parameters vrays at center of FS
 %
           bds = ss(islim) - ss(is);%path length of ray within the current FS
 %
