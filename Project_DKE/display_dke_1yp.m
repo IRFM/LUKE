@@ -409,11 +409,10 @@ while 1,
 %
 %Points added at mhu = +/-1 for better plot (particularly effective for EBW)
 %
-        mhu_X = [-1,mhu,1];
         if nb_lh > 0,
-            XDparpar_X_ref = [zeros(np,1),XDparpar_ref,zeros(np,1)];
-	        [XDparpar_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_S_dke_yp(XDparpar_X_ref,pn_ref,mhu_X,dp_cyl);%Spherical to cylindrical coordinate transformation
+	        [XDparpar_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(XDparpar_ref,pn_ref,mhu,dp_cyl);%Spherical to cylindrical coordinate transformation
 		end
+        mhu_X = [-1,mhu,1];
         if nb_ec > 0,
             XSec_X_ref = [zeros(np,1),XSec_ref,zeros(np,1)];
 	        [XSec_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_S_dke_yp(XSec_X_ref,pn_ref,mhu_X,dp_cyl);%Spherical to cylindrical coordinate transformation
@@ -456,7 +455,6 @@ while 1,
 		if nb_lh > 0
 			XDparpar_cyl_ref = XDparpar_cyl_ref.*(XDparpar_cyl_ref>0);
 			XDparpar_cyl_ref = XDparpar_cyl_ref.*(Xp_cyl_ref<max(ppar_cyl_ref));
-			XDparpar_cyl_ref = XDparpar_cyl_ref.*(XDparpar_cyl_ref<=max(max(max(XDparpar_ref))));
 			XDparpar_cyl_ref(isnan(XDparpar_cyl_ref))=0;
 %
 		end        
@@ -653,7 +651,7 @@ while 1,
                 figure(7),clf
                 %
                 y1 = XDparpar_cyl_ref;
-                cont = [0:ceil(max(max(XDparpar_cyl_ref)))];
+                cont = 10;[0:ceil(max(max(XDparpar_cyl_ref)))];
                 %
                 graph2D_jd(x1,x2,y1','','','',xlim1,xlim2,0,NaN,cont,0,style2,NaN,width1,siz,red);
                 graph1D_jd(x9,y9,0,0,xlab1,xlab2,'LH dif. coef. [\nu^{ref}(p_{Te}^{ref})^2]',NaN,xlim1,xlim2,style2,marker,color5,width1,siz);
