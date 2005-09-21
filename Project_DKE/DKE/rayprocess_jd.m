@@ -286,7 +286,7 @@ ray.sn = sn;% Ray wave number (toroidal) along the propagation [1,ns]
 ray.skZ = skZ;% Ray wave vector (vertical) along the propagation [1,ns]
 %
 ray.sNpar = sNpar;% Ray parallel wave number [1,ns]
-ray.sNperp = sNperp;% Ray perpendicular wave number [1,ns]
+ray.sNperp = real(sNperp);% Ray perpendicular wave number [1,ns]
 ray.sdNpar = sdNpar;% Ray spectral width in Npar [1,ns] 
 %       if sdNpar is real -> gaussian spectrum, if sdNpar is imag. -> square spectrum (centered on sNpar)
 %
