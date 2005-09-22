@@ -59,7 +59,7 @@ for iy = 1:ny
 % estimated next step remaining power in the ray 
 % based on approximate linear power absorbed vs incident power dependence.
 %
-        if xyPinc_mod(ir,iy)/xyPinc_in(ir,iy) < 1
+        if xyPinc_in(ir,iy) > 0
             bPrf_mod = max([bPrf_mod - xyPrf_dke(ir_dke,iy)*xyPinc_mod(ir,iy)/xyPinc_in(ir,iy),0]);
         else
             bPrf_mod = max([bPrf_mod - xyPrf_dke(ir_dke,iy),0]);
