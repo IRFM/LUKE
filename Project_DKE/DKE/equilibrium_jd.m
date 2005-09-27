@@ -1,5 +1,5 @@
 function [mtheta,xpsin,psia,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,xmhu0T2,xdV_dke,xdA_dke] = ...
-    equilibrium_jd(equil,xpsin,xpsin_S_dke,display_mode,method,mfactor)
+    equilibrium_jd(equil,xpsin,xpsin_S_dke,display_mode,method,mfactor,fig_id)
 %
 %   This function interpolates the equilibrium data on the radial grid.
 %
@@ -35,6 +35,7 @@ function [mtheta,xpsin,psia,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,x
 %       - method: interpolation method (linear,cubic,spline,...) 
 %           (default: linear)
 %       - mfactor: factor for super theta grid (default: 50)
+%       - fig_id: figure ID of figure for the magnetic equilibrium (default = 51)
 %
 %   OUTPUTS:
 %
@@ -71,6 +72,12 @@ function [mtheta,xpsin,psia,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,x
 %
 %   By J. Decker RLE-MIT <jodecker@alum.mit.edu> and Y. Peysson DRFC-CEA <yves.peysson@cea.fr>
 %
+if nargin < 7
+    fig_id = 51;%Factor for super theta grid
+    flag_id = 1;
+else
+    flag_id = 0;%
+end
 if nargin < 6
     mfactor = 10;%Factor for super theta grid
 end
@@ -250,34 +257,36 @@ end
 %
 % Display of equilibrium properties
 %
-if display_mode >= 2
+if display_mode >= 2,
 %    
     prho = (equil.R(:,1)' - Rp)/ap;
 %
 % displays the equilibrium profiles
 %
-    figure(50),clf
-    set(gcf,'units','inches','position',[0.5,1,10,6]);
-    set(gca,'position',[0,0,1,1]);
+    if flag_id, 
+       figure(50),clf
+       set(gcf,'units','inches','position',[0.5,1,10,6]);
+       set(gca,'position',[0,0,1,1]);
 %
-    subplot('position',[1/12,0.5+1/16,5/24,5/16])
-        [ax] = graph1D_jd(prho,ppsin,0,0,'','','',NaN,[0,1],[-eps,1],'-','none','b',0.5);
-        [ax] = graph1D_jd(xrho,xpsin,0,0,'\rho','\psi_n','',NaN,[0,1],[-eps,1],'none','+','r',2);
-    subplot('position',[1/3+1/12,0.5+1/16,5/24,5/16])
-        [ax] = graph1D_jd(prho,equil.pTe,0,0,'','','',NaN,[0,1],[-eps,max(equil.pTe)],'-','none','b',0.5);
-        [ax] = graph1D_jd(xrho,xTe,0,0,'\rho','T_e (keV)',equil.id,NaN,[0,1],[-eps,max(equil.pTe)],'none','+','r',2);
-    subplot('position',[2/3+1/12,0.5+1/16,5/24,5/16])
-        [ax] = graph1D_jd(prho,equil.pne/1e19,0,0,'','','',NaN,[0,1],[-eps,max(equil.pne/1e19)],'-','none','b',0.5);
-        [ax] = graph1D_jd(xrho,xne/1e19,0,0,'\rho','n_e (10^{19} m^{-3})','',NaN,[0,1],[-eps,max(equil.pne/1e19)],'none','+','r',2);
-    subplot('position',[1/12,1/8,5/24,5/16])
-        [ax] = graph1D_jd(prho,equil.pzTi,0,0,'','','',NaN,[0,1],[-eps,max(max(equil.pzTi))],'-','none','b',0.5);
-        [ax] = graph1D_jd(xrho,xzTi,0,0,'\rho','T_i (keV)','',NaN,[0,1],[-eps,max(max(equil.pzTi))],'none','+','r',2);
-    subplot('position',[1/3+1/12,1/8,5/24,5/16])
-        [ax] = graph1D_jd(prho,equil.pzni/1e19,0,0,'','','',NaN,[0,1],[-eps,max(max(equil.pzni/1e19))],'-','none','b',0.5);
-        [ax] = graph1D_jd(xrho,xzni/1e19,0,0,'\rho','n_i (10^{19} m^{-3})','',NaN,[0,1],[-eps,max(max(equil.pzni/1e19))],'none','+','r',2);
-    subplot('position',[2/3+1/12,1/8,5/24,5/16])
-        [ax] = graph1D_jd(prho,pZeff,0,0,'','','',NaN,[0,1],[-eps,max(pZeff)],'-','none','b',0.5);
-        [ax] = graph1D_jd(xrho,xZeff,0,0,'\rho','Z_{eff}','',NaN,[0,1],[-eps,max(pZeff)],'none','+','r',2);
+       subplot('position',[1/12,0.5+1/16,5/24,5/16])
+          [ax] = graph1D_jd(prho,ppsin,0,0,'','','',NaN,[0,1],[-eps,1],'-','none','b',0.5);
+          [ax] = graph1D_jd(xrho,xpsin,0,0,'\rho','\psi_n','',NaN,[0,1],[-eps,1],'none','+','r',2);
+       subplot('position',[1/3+1/12,0.5+1/16,5/24,5/16])
+          [ax] = graph1D_jd(prho,equil.pTe,0,0,'','','',NaN,[0,1],[-eps,max(equil.pTe)],'-','none','b',0.5);
+          [ax] = graph1D_jd(xrho,xTe,0,0,'\rho','T_e (keV)',equil.id,NaN,[0,1],[-eps,max(equil.pTe)],'none','+','r',2);
+       subplot('position',[2/3+1/12,0.5+1/16,5/24,5/16])
+          [ax] = graph1D_jd(prho,equil.pne/1e19,0,0,'','','',NaN,[0,1],[-eps,max(equil.pne/1e19)],'-','none','b',0.5);
+          [ax] = graph1D_jd(xrho,xne/1e19,0,0,'\rho','n_e (10^{19} m^{-3})','',NaN,[0,1],[-eps,max(equil.pne/1e19)],'none','+','r',2);
+       subplot('position',[1/12,1/8,5/24,5/16])
+          [ax] = graph1D_jd(prho,equil.pzTi,0,0,'','','',NaN,[0,1],[-eps,max(max(equil.pzTi))],'-','none','b',0.5);
+          [ax] = graph1D_jd(xrho,xzTi,0,0,'\rho','T_i (keV)','',NaN,[0,1],[-eps,max(max(equil.pzTi))],'none','+','r',2);
+       subplot('position',[1/3+1/12,1/8,5/24,5/16])
+          [ax] = graph1D_jd(prho,equil.pzni/1e19,0,0,'','','',NaN,[0,1],[-eps,max(max(equil.pzni/1e19))],'-','none','b',0.5);
+          [ax] = graph1D_jd(xrho,xzni/1e19,0,0,'\rho','n_i (10^{19} m^{-3})','',NaN,[0,1],[-eps,max(max(equil.pzni/1e19))],'none','+','r',2);
+       subplot('position',[2/3+1/12,1/8,5/24,5/16])
+          [ax] = graph1D_jd(prho,pZeff,0,0,'','','',NaN,[0,1],[-eps,max(pZeff)],'-','none','b',0.5);
+          [ax] = graph1D_jd(xrho,xZeff,0,0,'\rho','Z_{eff}','',NaN,[0,1],[-eps,max(pZeff)],'none','+','r',2);
+    end
 %       
 % displays the magnetic flux-surfaces geometry
 %       
@@ -292,12 +301,13 @@ if display_mode >= 2
     Rmax = max(max(equil.R));
     Zmin = min(min(equil.Z));
     Zmax = max(max(equil.Z));
+   
     %
-    figure(51),clf
+    figure(fig_id),clf
 %    
     [ax] = graph1D_jd(sR',sZ',0,0,'','','',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','r',2);pause(0.5)
-    [ax] = graph1D_jd(stR,stZ,0,0,'R','Z','Flux-surfaces labeled by \rho=0,0.1,0.2...1',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','b',0.5);pause(0.5)
-    axis('equal');    
+    [ax] = graph1D_jd(stR,stZ,0,0,'R(m)','Z(m)','Flux-surfaces labeled by \rho=0,0.1,0.2...1',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','b',0.5);pause(0.5)
+    axis('equal');  
 end
 %
 zZi = equil.zZi;
