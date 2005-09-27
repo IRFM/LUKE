@@ -70,13 +70,29 @@ if exist('waves'),
    Zmax = max(max(equil.Z));
 %
    for iw = 1:length(waves),
-      equilibrium_jd(equil,xpsin,xpsin_S_dke,display_mode,'spline',10,52);
+%
+% Ray contour plot
+%
+      equilibrium_jd(equil,xpsin,xpsin_S_dke,display_mode,'spline',10,51+iw);
       titre = ['Wave #',int2str(iw),', \nu = ',num2str(waves{iw}.omega_rf/2/pi/1e9,2),' GHz, Nrays = ',int2str(length(waves{iw}.rays))];
       hold on
       for iray = 1:length(waves{iw}.rays),
          graph1D_jd(waves{iw}.rays{iray}.sR,waves{iw}.rays{iray}.sZ,0,0,'R(m)','Z(m)',titre,NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','k',2);pause(0.5)
       end
       hold off
+%
+% Initial power spectrum
+%
+      figure(70+iw);
+      Pinit = zeros(1,length(waves{iw}.rays));
+      Nparinit = zeros(1,length(waves{iw}.rays));
+      for iray = 1:length(waves{iw}.rays),
+         Nparinit(iray) = waves{iw}.rays{iray}.sNpar(1);
+         Pinit(iray) = waves{iw}.rays{iray}.P0/1000;%KW
+      end
+      Ptot = sum(Pinit);
+      titre = ['Launched power spectrum, Wave #',int2str(iw),', \nu = ',num2str(waves{iw}.omega_rf/2/pi/1e9,2),' GHz, P_t_o_t = ',num2str(Ptot),' KW'];
+      graph1D_jd(Nparinit,Pinit,0,0,'N_/_/','P_init (KW)',titre,NaN,[floor(min(Nparinit)),ceil(max(Nparinit))],[0,ceil(max(Pinit)*1.1)],'-','none','r',2);pause(0.5)
    end
 end
 %
