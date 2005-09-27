@@ -61,6 +61,25 @@ disp('--------------------------------------------------------------------------
 %
 equilibrium_jd(equil,xpsin,xpsin_S_dke,display_mode,'spline',10);
 %
+% Display the rays
+%
+if exist('waves'), 
+   Rmin = min(min(equil.R));
+   Rmax = max(max(equil.R));
+   Zmin = min(min(equil.Z));
+   Zmax = max(max(equil.Z));
+%
+   for iw = 1:length(waves),
+      equilibrium_jd(equil,xpsin,xpsin_S_dke,display_mode,'spline',10,52);
+      titre = ['Wave #',int2str(iw),', \nu = ',num2str(waves{iw}.omega_rf/2/pi/1e9,2),' GHz'];
+      hold on
+      for iray = 1:length(waves{iw}.rays),
+         graph1D_jd(waves{iw}.rays{iray}.sR,waves{iw}.rays{iray}.sZ,0,0,'R(m)','Z(m)',titre,NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','k',2);pause(0.5)
+      end
+      hold off
+   end
+end
+%
 xnormf_ref = Znorm_ref{1,1};
 xnormf_ref_fsav = Znorm_ref_fsav{1,1};
 %
