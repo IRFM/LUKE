@@ -77,8 +77,9 @@ if exist('waves'),
       titre = ['Wave #',int2str(iw),', \nu = ',num2str(waves{iw}.omega_rf/2/pi/1e9,2),' GHz, Nrays = ',int2str(length(waves{iw}.rays))];
       hold on
       for iray = 1:length(waves{iw}.rays),
-         graph1D_jd(waves{iw}.rays{iray}.sR,waves{iw}.rays{iray}.sZ,0,0,'R(m)','Z(m)',titre,NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','k',2);pause(0.5)
+         graph1D_jd(waves{iw}.rays{iray}.sR,waves{iw}.rays{iray}.sZ,0,0,'R(m)','Z(m)',titre,NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','b',2);pause(0.5)
       end
+%
       hold off
 %
 % Initial power spectrum
@@ -93,6 +94,46 @@ if exist('waves'),
       Ptot = sum(Pinit);
       titre = ['Launched power spectrum, Wave #',int2str(iw),', \nu = ',num2str(waves{iw}.omega_rf/2/pi/1e9,2),' GHz, P_t_o_t = ',num2str(Ptot),' KW'];
       graph1D_jd(Nparinit,Pinit,0,0,'N_/_/','P_init (KW)',titre,NaN,[floor(min(Nparinit)),ceil(max(Nparinit))],[0,ceil(max(Pinit)*1.1)],'-','none','r',2);pause(0.5)
+%
+% Launched and absorbed wave power spectrum in each layer
+%
+      figure(80+iw);
+      title('toto')
+      npar = linspace(-10,10,1000);
+      nfigh_max = 5;%Number of horizontal figures
+      nfigv_max = ceil(nr/nfigh_max);%Number of vertical figures
+      Ploc_in = zeros(nr,1000);
+      Ploc_mod = zeros(nr,1000);
+%
+      for i=1:nr,
+         for j=1:length(waves{iw}.rays),
+               Ploc_in(i,:) = Ploc_in(i,:)  + xyPinc_in(i,j).*exp(-(npar - waveparam(i,j,7)).^2./waveparam(i,j,8).^2)./waveparam(i,j,8)/sqrt(pi);
+               Ploc_mod(i,:)  = Ploc_mod(i,:)  + xyPinc_mod(i,j).*exp(-(npar - waveparam(i,j,7)).^2./waveparam(i,j,8).^2)./waveparam(i,j,8)/sqrt(pi);
+         end
+      end
+%
+      Pmax = max([max(max(Ploc_in)),max(max(Ploc_mod))]);
+%      
+      for iv = 1:nfigv_max,
+         for ih = 1:nfigh_max,
+            ifig = ih + (iv-1)*nfigh_max;
+            if ifig < nr,            
+               subplot(nfigv_max,nfigh_max,ifig), plot(npar,Ploc_in(ifig,:)/1e6,'b',npar,Ploc_mod(ifig,:)/1e6,'r'),title(['#',int2str(ifig),', \rho = ',num2str(xrho(ifig))]),xlabel('N_/_/'),ylabel('dP/dN_/_/ (MW)')
+               axis([-10,10,0,Pmax/1e6]);
+            end
+         end
+      end
+%
+
+      
+      
+      
+%
+%
+%
+
+
+
    end
 end
 %
