@@ -788,7 +788,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
     xyPinc_mod_old = xyPinc_mod;
     [xyPinc_out,xyPinc_mod_new] = rfprop_dke_jd(yb,xyprop_dke,xyPinc_mod,xyPabs_rf_dke_fsav_mksa,xdV_dke,xpsin,xpsin_dke,r_dke,dke_mode);
 %
-    if it_rf > 1 & residue_rf(it_rf-1) > prec_rf*10,
+    if it_rf==2 | (it_rf > 2 & residue_rf(it_rf-1) > prec_rf*10),
         xyPinc_mod = delta_rt*xyPinc_mod + (1 - delta_rt)*xyPinc_mod_new;
     else
         xyPinc_mod = xyPinc_mod_new;
