@@ -2079,10 +2079,10 @@ for iy = ylist_rf,
     end
 end
 %
-ZP0.x_rf_fsav = sum(ZP0.xy_rf_fsav,2);
+ZP0.x_rf_fsav = sum(ZP0.xy_rf_fsav,2)';
 if dke_mode >= 1
-    ZP0.x_rf_tp_fsav = sum(ZP0.xy_rf_tp_fsav,2);
-    ZP0.x_rf_g_fsav = sum(ZP0.xy_rf_g_fsav,2);
+    ZP0.x_rf_tp_fsav = sum(ZP0.xy_rf_tp_fsav,2)';
+    ZP0.x_rf_g_fsav = sum(ZP0.xy_rf_g_fsav,2)';
 end
 %
 XXSp0_imj = ZXXS.p0_c_imj + ZXXS.p0_e_imj + ZXXS.p0_rf_imj;
