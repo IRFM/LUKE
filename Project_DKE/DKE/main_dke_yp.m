@@ -749,7 +749,7 @@ end
 %*********************************** Drift Kinetic calculations *********************************
 %
 time0 = clock;
-delta_rt = 0.55;
+delta_rt = 0.75;
 %
 wpe_ref = sqrt(ne_ref*qe^2/me/e0);
 %
@@ -769,7 +769,7 @@ xyPinc_in(xymask) = eps; %to avoid singularities
 if nb > 0, %initial value of the constant diffusion coefficient
     xyD0_rf_in = waveparam(:,:,4);
     if nit_rf > 1,
-        redfac = 1;%round(nb/length(yb));%reduction factor for a progressive RT convergence
+        redfac = round(nb/length(yb));%reduction factor for a progressive RT convergence
         ymask = [];
     end
 else
@@ -778,17 +778,17 @@ end
 %
 P_ref = me*(clum*betath_ref)^2*nhu_ref*ne_ref; %power normalization constant
 %
-save_id = '050921133620';%timeid_jd(clock);
-%eval(['save ',fullfile(temppath,'temp_DKE_'),save_id,'.mat save_id'])
+save_id = timeid_jd(clock);
+eval(['save ',fullfile(temppath,'temp_DKE_'),save_id,'.mat save_id'])
 %
 for it_rf=1:nit_rf % convergence in the ray-tracing mode
 %    
 % The diffusion coefficient is proportional to the incident power
 %
-%    [xyPinc_out,xyPinc_mod] = rfprop_dke_jd(yb,xyprop_dke,xyPinc_mod,xyPabs_rf_dke_fsav_mksa,xdV_dke,xpsin,xpsin_dke,r_dke,dke_mode);
+    xyPinc_mod_old = xyPinc_mod;
     [xyPinc_out,xyPinc_mod_new] = rfprop_dke_jd(yb,xyprop_dke,xyPinc_mod,xyPabs_rf_dke_fsav_mksa,xdV_dke,xpsin,xpsin_dke,r_dke,dke_mode);
 %
-    if it_rf > 1,
+    if it_rf > 1 & residue_rf(it_rf-1) > prec_rf*10,
         xyPinc_mod = delta_rt*xyPinc_mod + (1 - delta_rt)*xyPinc_mod_new;
     else
         xyPinc_mod = xyPinc_mod_new;
@@ -837,18 +837,17 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
             xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav_mksa*redfac/it_rf;
         end
 %
-        residue_rf = max(max(abs(xyPinc_mod_new - xyPinc_mod)./xyPinc_in));
-        figure(1)
-        axis([0,nit_rf,1e-5,1])        
-        hold on
-        semilogy(it_rf,residue_rf,'r+')
-        hold off
+        residue_rf(it_rf) = max(max(abs(xyPinc_mod - xyPinc_mod_old)./xyPinc_in));
+        figure(1)        
+        plot(1:it_rf,residue_rf,'r+')
+        set(gca,'yscale','log')
+        axis([0,nit_rf,1e-5,1])
         pause(0.5)
-        if residue_rf <= prec_rf & it_rf > redfac
+        if residue_rf(it_rf) <= prec_rf & it_rf > redfac
             info_dke_yp(2,['Successfull convergence achieved for ray-tracing coupling after ',int2str(it_rf),' iterations !']);
             break
         else
-            info_dke_yp(2,['Iteration ',int2str(it_rf),', residue = ',num2str(residue_rf)]);            
+            info_dke_yp(2,['Iteration ',int2str(it_rf),', residue = ',num2str(residue_rf(it_rf))]);            
         end
     end
 end
