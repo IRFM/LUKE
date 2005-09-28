@@ -195,7 +195,7 @@ end
 %
 xJrf0_fsav_mksa = xcurr0_ref_fsav*j_ref;
 xJrf_tot_fsav_mksa = xcurr_tot_ref_fsav*j_ref;
-Jrf_tot = xJrf_tot_fsav_mksa*xdA_dke',%in MA
+Jrf_tot_fsav_mksa = xJrf_tot_fsav_mksa*xdA_dke';%in MA
 xJrfB_fsav_mksa = xcurrB_ref_fsav*j_ref;
 xJbc_e_fsav_mksa = xcurr_bc_ref_fsav*j_ref;
 xJbc_i_fsav_mksa = xcurr_i_mksa_fsav;
@@ -270,6 +270,8 @@ xyPabs_tot_ec_fsav_mksa = ZP0_ref.xy_ec_tot_fsav*P_ref;
 %
 xPabs0_fsav_mksa = ZP0_ref.x_rf_fsav*P_ref;
 xPabs_tot_fsav_mksa = ZP0_ref.x_rf_tot_fsav*P_ref;
+Pabs_tot_fsav_mksa = xPabs_tot_fsav_mksa*xdV_dke';%total absorbed power in MW
+%
 if syn_mode == 1,
     xPelec_syn_fsav_mksa = ZP0_ref.x_e_syn_fsav*P_ref;
     xyPabs_syn_fsav_mksa = ZP0_ref.xy_rf_syn_fsav*P_ref;
@@ -284,7 +286,7 @@ ZXXS_ref.rf = sqrt(((ZXXS_ref.p0_rf_imj + ZXXS_ref.p0_rf_ipj)/2).^2 + ((ZXXS_ref
 %
 % Efficiency (j/p)
 %
-xeta0_ref_fsav = xcurr0_ref_fsav./(ZP0_ref.x_rf_fsav' + eps);
+xeta0_ref_fsav = xcurr0_ref_fsav./(ZP0_ref.x_rf_fsav + eps);
 %
 xeta0_fsav_mksa = xeta0_ref_fsav*j_ref/P_ref;	
 if syn_mode == 1,
@@ -693,7 +695,8 @@ while 1,
                 text(0.05,0.95,['\rho = ',rhostr],'units','normalized');
                 axis('equal');axis([xlim1,xlim2])
                 bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,ripple,pparsupertrap_ref,pperpsupertrap_ref,xpndetrap_ref,xmhusupertrap);
-                %            
+                colorbar
+				%            
 			    pause(time_pause);
                 %
 				if igor_mode == 1,
@@ -1201,7 +1204,13 @@ while 1,
 			disp(['   - Runaway loss rate [spherical] (m-3.s-1): ',num2str(XxRR_mksa_fsav(np-1,ir_display_dke))])
 			disp(['   - Bulk current (MA/m2) [spherical]: ',num2str(xJrfB_fsav_mksa(ir_display_dke))])
 %
-		end
+        end
+%
+			disp('-------------------------------------------------------------------------------------------------------------------');
+			disp(['   - Total driven current (MA) ',num2str(Jrf_tot_fsav_mksa)])
+			disp(['   - Total RF absorbed power (MW) ',num2str(Pabs_tot_fsav_mksa)])
+			disp(['   - Global CD efficiency (A/W) ',num2str(Jrf_tot_fsav_mksa./Pabs_tot_fsav_mksa)])
+%       
 	end
 %
 	if display_mode == 2,
@@ -1216,12 +1225,12 @@ while 1,
 		[ax] = graph1D_jd(xrho_dke,xne(r_dke)./(xnormf_ref_fsav*ne_ref),0,0,xlab,'<ne>_{in}/<ne>_{out}','Electron density conservation',NaN,xlim,[0.5,1.5],style3,marker1,color2,width2,siz,gca,red,lspace,bspace2);		 
 % 
         figure(200),clf
-        [ax] = graph1D_jd(xrho_dke,xJrf0_fsav_mksa,0,0,xlab,'<J_{RF}> (MA/m^2)','RF + Ohmic Current Density',NaN,xlim,NaN,style3,marker2,color2,width2,siz,gca,red,lspace,bspace2);
+        [ax] = graph1D_jd(xrho_dke,xJrf0_fsav_mksa,0,0,xlab,'<J_{RF}> (MA/m^2)','RF + Ohmic Current Density',NaN,xlim,NaN,style2,marker2,color2,width2,siz,gca,red,lspace,bspace2);
 %
         figure(203),clf
-        [ax] = graph1D_jd(xrho_dke,-xPcoll_tot_fsav_mksa,0,0,'','','',NaN,xlim,NaN,style3,marker3,color2,width2,siz,gca,red,lspace,bspace2);
-        [ax] = graph1D_jd(xrho_dke,xPelec_tot_fsav_mksa,0,0,'','','',NaN,xlim,NaN,style3,marker2,color3,width2,siz);
-        [ax] = graph1D_jd(xrho_dke,xPabs_tot_fsav_mksa,0,0,xlab,'<P_{abs}> (MW/m^3)','Density of Absorbed Power',['Collisions';'Ohmic     ';'RF Waves  '],xlim,0,style3,marker1,color1,width2,siz);
+        [ax] = graph1D_jd(xrho_dke,-xPcoll_tot_fsav_mksa,0,0,'','','',NaN,xlim,NaN,style1,marker3,color2,width2,siz,gca,red,lspace,bspace2);
+        [ax] = graph1D_jd(xrho_dke,xPelec_tot_fsav_mksa,0,0,'','','',NaN,xlim,NaN,style4,marker2,color3,width2,siz);
+        [ax] = graph1D_jd(xrho_dke,xPabs_tot_fsav_mksa,0,0,xlab,'<P_{abs}> (MW/m^3)','Density of Absorbed Power',['Collisions';'Ohmic     ';'RF Waves  '],xlim,0,style2,marker1,color1,width2,siz);
 %
         figure(204),clf
         [ax] = graph1D_jd(xrho_dke,XxRR_mksa_fsav(np-1,:),0,0,xlab,'<\Gamma_{R}> (m^-3.s^-1)','Runaway loss rate',NaN,xlim,0,style3,marker2,color2,width2,siz,gca,red,lspace,bspace2);
