@@ -752,7 +752,7 @@ nb = size(waveparam,2);
 %
 time0 = clock;
 delta_rt = 0.25;
-limit_dql = 2;
+limit_dql = 1;
 %
 wpe_ref = sqrt(ne_ref*qe^2/me/e0);
 %
@@ -829,7 +829,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
 	        xyPabs_rf_dke_fsav_out = ZP0_ref.xy_rf_fsav; % flux-surface averaged density of absorbed power.
 	    end	    
         xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav_out*P_ref;
-        if 0,%nit_rf > 1,
+        if nit_rf > 1,
             xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav_mksa.*xyredfac;
         end
 %
