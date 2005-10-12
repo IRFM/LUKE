@@ -1,5 +1,5 @@
 function [Nperp,e_xyz,e_pmz,e_pyk,D,X,X_s,X_sn,alphaphi_lin,phiT_xyz,phiP_xyz,phiT_pmz,phiP_pmz,phiT_pyk,phiP_pyk]...
-    = hotdisp_dke_jd(Npar,omega_rf,Te,ne,zTi,zni,zZi,zmi,Bfield,Nperp,herm_mode,display_mode,nmax,tol);
+    = hotdisp_dke_jd(Npar,omega_rf,Te,ne,zTi,zni,zZi,zmi,Bfield,Nperp,herm_mode,display_mode,nmax,NZ,tol);
 % This function solves the dispersion relation and the wave equation
 % in the linear kinetic plasma model. It calculates the perpendicular index of
 % refraction and the polarization as a function of the wave
@@ -29,7 +29,8 @@ function [Nperp,e_xyz,e_pmz,e_pyk,D,X,X_s,X_sn,alphaphi_lin,phiT_xyz,phiP_xyz,ph
 %               are also calculated
 %       - display_mode: (0,1) none (2) convergence figures (default:0)  
 %       - nmax: maximum harmonic number (default:10) 
-%       - tol: tolerance on the value of the dispersion relation (default:1e-10) 
+%       - NZ: number of grid points in Z function integration calculation (default:100) 
+%       - tol: tolerance on the value of the dispersion relation (default:1e-6) 
 %
 %   OUTPUTS:
 %
@@ -44,6 +45,25 @@ function [Nperp,e_xyz,e_pmz,e_pyk,D,X,X_s,X_sn,alphaphi_lin,phiT_xyz,phiP_xyz,ph
 % created 05/02/2003
 % by Joan Decker <jodecker@alum.mit.edu> (MIT/RLE) and  Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 % 
+if nargin < 15,
+   tol = 1e-6;
+end
+if nargin < 14,
+   NZ = 100;
+end
+if nargin < 13,
+   nmax = 10;
+end
+if nargin < 12,
+   display_mode = 0;
+end
+if nargin < 11,
+   herm_mode = 0;
+end
+if nargin < 10,
+   Nperp = 1.0;
+end
+%
 [qe,me,mp,mn,e0,mu0,re,mc2,clum] = pc_dke_yp;
 %
 n = (-nmax:nmax);
@@ -51,7 +71,7 @@ Nn = 2*nmax+1;
 n0 = nmax+1;
 %
 nit_disp = 50;
-NZ = 10000;
+NZ = 100;
 proxcoef = 1e-4;
 %
 Ns = 1 + length(zZi);
@@ -72,13 +92,13 @@ bTs = sqrt([Te*1e3*qe/me/clum^2;zTi(:)*1e3*qe./(mp*zmi(:))/clum^2]);
 %
 zeta_sn = (1 - abs(ys)*n)/abs(Npar)/sqrt(2)./(bTs*ones(1,Nn));
 %
-wb = waitbar(0);
-for in = 1:Nn,
-    [Z_sn(:,in),Zp_sn(:,in),Zpp_sn(:,in)] = Zplasma2(zeta_sn(:,in),NZ);
-    waitbar(in/Nn,wb);
-end
-close(wb)
-%[Z_sn,Zp_sn,Zpp_sn] = Zplasma2(zeta_sn,NZ);
+%wb = waitbar(0);
+%for in = 1:Nn,
+    %[Z_sn(:,in),Zp_sn(:,in),Zpp_sn(:,in)] = Zplasma2(zeta_sn(:,in),NZ);
+    %waitbar(in/Nn,wb);
+%end
+%close(wb)
+[Z_sn,Zp_sn,Zpp_sn] = Zplasma2(zeta_sn,NZ);
 %
 spar = sign(Npar);
 ss = sign(qs);
