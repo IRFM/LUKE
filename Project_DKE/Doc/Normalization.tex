@@ -1,3 +1,6 @@
+%TCIDATA{Version=5.50.0.2890}
+%TCIDATA{LaTeXparent=0,0,NoticeDKE.tex}
+
 
 \label{normalization}
 
@@ -10,11 +13,11 @@ them are normalized to reference values. Here temperature and densities
 correspond to flux surface-averaged values, though the usual bracket
 notation is not introduce, for sake on simplicity.
 
-Normalized temperatures, are defined by the relations 
+Normalized temperatures, are defined by the relations
 \begin{equation}
 \begin{array}{l}
 \overline{T}_{e}\left( \psi \right) =T_{e}\left( \psi \right) /T_{e}^{\dag }
-\\ 
+\\
 \overline{T}_{ss^{\prime }}\left( \psi \right) =T_{ss^{\prime }}\left( \psi
 \right) /T_{e}^{\dag }
 \end{array}
@@ -24,24 +27,24 @@ species $s$ in the ionization state $s^{\prime }$, whose charge is $%
 Z_{ss^{\prime }}$. Here, both $T_{e}\left( \psi \right) $ and $T_{e}^{\dag }$
 have defined units, while $T_{e}^{\dag }$ is the reference value for the
 normalization. According to this rule, the normalized densities are defined
-in the same way 
+in the same way
 \begin{equation}
-\left\{ 
+\left\{
 \begin{array}{l}
 \overline{n}_{e}\left( \psi \right) =n_{e}\left( \psi \right) /n_{e}^{\dag }
-\\ 
+\\
 \overline{n}_{ss^{\prime }}\left( \psi \right) =n_{ss^{\prime }}\left( \psi
 \right) /n_{e}^{\dag }
 \end{array}
 \right.
 \end{equation}
 and in order to ensure that all quantities are less than unity from the
-plasma center to the edge, references values are given by the condition 
+plasma center to the edge, references values are given by the condition
 \begin{equation}
-\left\{ 
+\left\{
 \begin{array}{l}
 T_{e}^{\dag }=\max \left( T_{e}\left( \psi \right) ,T_{ss^{\prime }}\left(
-\psi \right) \right) \\ 
+\psi \right) \right) \\
 n_{e}^{\dag }=\max \left( n_{e}\left( \psi \right) ,n_{ss^{\prime }}\left(
 \psi \right) \right)
 \end{array}
@@ -56,14 +59,14 @@ a simple model may be used in order to determine densities $n_{s}\left( \psi
 \right) $ with $s=\left\{ 1,2\right\} $, knowing electron density $%
 n_{e}\left( \psi \right) $ and effective charge $Z_{eff}\left( \psi \right) $
 profiles. Indeed, since by definition\footnote{%
-An alternative definition of $Z_{eff}$ is given by the following expression, 
+An alternative definition of $Z_{eff}$ is given by the following expression,
 \[
 Z_{eff}\left( \psi \right) =\sum_{s}\sum_{s^{\prime }}\frac{n_{ss^{\prime
 }}\left( \psi \right) }{n_{e}\left( \psi \right) }Z_{ss^{\prime }}^{2}\frac{
-\ln \Lambda _{ess^{\prime }}^{\dagger }}{\ln \Lambda _{ee}^{\dagger }} 
+\ln \Lambda _{ess^{\prime }}^{\dagger }}{\ln \Lambda _{ee}^{\dagger }}
 \]
 Both definitions merge if the condition $\ln \Lambda _{ess^{\prime
-}}^{\dagger }=\ln \Lambda _{ee}^{\dagger }$ is assumed to be valid.}, 
+}}^{\dagger }=\ln \Lambda _{ee}^{\dagger }$ is assumed to be valid.},
 \begin{eqnarray}
 Z_{eff}\left( \psi \right) &=&\sum_{s}\sum_{s^{\prime }}\frac{n_{ss^{\prime
 }}\left( \psi \right) Z_{ss^{\prime }}^{2}}{n_{ss^{\prime }}\left( \psi
@@ -74,19 +77,19 @@ Z_{eff}\left( \psi \right) &=&\sum_{s}\sum_{s^{\prime }}\frac{n_{ss^{\prime
 taking into account of the local electro-neutrality, $n_{e}\left( \psi
 \right) =\sum_{s}\sum_{s^{\prime }}n_{ss^{\prime }}\left( \psi \right)
 Z_{ss^{\prime }},$ one obtains in this simple case a system of two equations
-with two unknowns, 
+with two unknowns,
 \begin{equation}
-\left\{ 
+\left\{
 \begin{array}{l}
 n_{1}\left( \psi \right) Z_{1}^{2}+n_{2}\left( \psi \right)
-Z_{2}^{2}=n_{e}\left( \psi \right) Z_{eff}\left( \psi \right) \\ 
+Z_{2}^{2}=n_{e}\left( \psi \right) Z_{eff}\left( \psi \right) \\
 n_{1}\left( \psi \right) Z_{1}+n_{2}\left( \psi \right) Z_{2}=n_{e}\left(
 \psi \right)
 \end{array}
 \right.
 \end{equation}
 
-Therefore, 
+Therefore,
 \begin{equation}
 n_{1}\left( \psi \right) =n_{e}\left( \psi \right) \frac{\left(
 Z_{eff}\left( \psi \right) -Z_{2}\right) }{Z_{1}\left( Z_{1}-Z_{2}\right) }
@@ -95,32 +98,32 @@ Z_{eff}\left( \psi \right) -Z_{2}\right) }{Z_{1}\left( Z_{1}-Z_{2}\right) }
 n_{2}\left( \psi \right) =n_{e}\left( \psi \right) \frac{\left(
 Z_{1}-Z_{eff}\left( \psi \right) \right) }{Z_{2}\left( Z_{1}-Z_{2}\right) }
 \end{equation}
-and using the normalization rule, 
+and using the normalization rule,
 \begin{equation}
-\overline{n}_{1}\left( \psi \right) =\overline{n}_{e}\left( \psi \right) 
+\overline{n}_{1}\left( \psi \right) =\overline{n}_{e}\left( \psi \right)
 \frac{\left( Z_{eff}\left( \psi \right) -Z_{2}\right) }{Z_{1}\left(
 Z_{1}-Z_{2}\right) }
 \end{equation}
 \begin{equation}
-\overline{n}_{2}\left( \psi \right) =\overline{n}_{e}\left( \psi \right) 
+\overline{n}_{2}\left( \psi \right) =\overline{n}_{e}\left( \psi \right)
 \frac{\left( Z_{1}-Z_{eff}\left( \psi \right) \right) }{Z_{2}\left(
 Z_{1}-Z_{2}\right) }
 \end{equation}
 since by definition $Z_{eff}\left( \psi \right) $ has no units.
 
 In the calculations, one may also consider several isotopes, since ion
-inertia play a significant role for the collision operator. Hence, 
+inertia play a significant role for the collision operator. Hence,
 \begin{equation}
 n_{ss^{\prime }}\left( \psi \right) =\sum_{m}n_{ss^{\prime }}^{m}\left( \psi
 \right)
 \end{equation}
-or 
+or
 \begin{equation}
 \overline{n}_{ss^{\prime }}\left( \psi \right) =\sum_{m}\overline{n}%
 _{ss^{\prime }}^{m}\left( \psi \right)
 \end{equation}
 where the masses of isotope $m$ of ion species $ss^{\prime }$ are $%
-m_{ss^{\prime }}^{m}.$ In the calculations 
+m_{ss^{\prime }}^{m}.$ In the calculations
 \begin{equation}
 \overline{m}_{ss^{\prime }}^{m}=m_{ss^{\prime }}^{m}/m_{e}
 \end{equation}
@@ -129,7 +132,7 @@ where $m_{e}$ is the electron rest mass.
 \subsection{Coulomb Logarithm}
 
 The electron-electron Coulomb logarithm $\ln \Lambda _{ee}$ is defined as
-the logarithm of the ratio****************** 
+the logarithm of the ratio******************
 \begin{equation}
 \ln \Lambda _{ee}=\ln
 \end{equation}
@@ -145,11 +148,11 @@ Regarding time ordering which is considered in the derivation of the drift
 kinetic equation and the dominant role played by collisions for the electron
 momentum distribution function build-up, it is natural to scale time
 evolution to the reference electron thermal collision frequency $\nu
-_{e}^{\dag }$ according to the relation 
+_{e}^{\dag }$ according to the relation
 \begin{equation}
 \overline{t}=t/\tau _{c}^{\dag }=t\nu _{e}^{\dag }
 \end{equation}
-where 
+where
 \begin{equation}
 \nu _{e}^{\dag }=\frac{q_{e}^{4}n_{e}^{\dag }\ln \Lambda ^{\dag }}{4\pi
 \varepsilon _{0}^{2}m_{e}^{2}c^{3}\beta _{th}^{\dag 3}}=\frac{cr_{e}^{2}}{%
@@ -163,14 +166,14 @@ of light, $q_{e}=-1.60217733\times 10^{-19}$ $\left( C\right) $ the electric
 charge of the electron, $m_{e}=9.1093897\times 10^{-31}$ $\left( Kg\right) $
 the electron rest mass, and $\ln \Lambda _{ee}^{\dag }$ is the usual
 reference electron-electron thermal Coulomb logarithm \cite{sau99} taken at $%
-T_{e}^{\dag }$ and $n_{e}^{\dag }$ with 
+T_{e}^{\dag }$ and $n_{e}^{\dag }$ with
 \begin{equation}
 \beta _{th}^{\dag }=\sqrt{\frac{T_{e}^{\dag }}{m_{e}c^{2}}}=\sqrt{\Theta
 ^{\dag }}
 \end{equation}
 where $m_{e}c^{2}=510.99905$ $\left( keV\right) $is the electron rest mass
 energy. In expression \ref{normcollfreq}, the classical electron radius $%
-r_{e}$ has been introduced, which is given by 
+r_{e}$ has been introduced, which is given by
 \begin{equation}
 r_{e}=\frac{q_{e}^{4}}{4\pi \varepsilon _{0}m_{e}c^{2}}
 \end{equation}
@@ -185,13 +188,13 @@ p_{th}^{\dag }=m_{e}v_{th}^{\dag },$%
 \begin{equation}
 \overline{p}=p/p_{th}^{\dag }
 \end{equation}
-and consequently 
+and consequently
 \begin{equation}
 p_{th}^{\dag }/m_{e}c\approx v_{th}^{\dag }/c=\beta _{th}^{\dag }
 \end{equation}
 since thermal electrons are only weakly relativistic. The well known
 relativistic Lorentz correction factor $\gamma $ is then simply given by the
-relation 
+relation
 \begin{equation}
 \gamma =\sqrt{p^{2}+1}=\sqrt{\overline{p}^{2}\beta _{th}^{\dag 2}+1}
 \end{equation}
@@ -199,7 +202,7 @@ and in the non-relativistic limit, i.e. when $\overline{p}^{2}\beta
 _{th}^{\dag 2}\ll 1,$ $\gamma \approx 1.$
 
 Since in relativistic units, the total energy is linked to the relativistic
-momentum according to the expression, 
+momentum according to the expression,
 \begin{equation}
 \left( E_{c}+1\right) ^{2}=\gamma
 \end{equation}
@@ -209,21 +212,21 @@ of $\overline{p}$ in units of electron rest mass energy $m_{e}c^{2}$%
 E_{c}=m_{e}c^{2}\left( \sqrt{\overline{p}^{2}\beta _{th}^{\dag 2}+1}-1\right)
 \end{equation}
 
-Finally, concerning the normalization of the electron velocity $v$, one has 
+Finally, concerning the normalization of the electron velocity $v$, one has
 \begin{eqnarray}
 v/c &=&p/\left( \gamma m_{e}c\right)  \nonumber \\
 &=&\overline{p}p_{th}^{\dag }/\left( \gamma m_{e}c\right)  \nonumber \\
 &=&\overline{p}\beta _{th}^{\dag }/\gamma
 \end{eqnarray}
-and using $\overline{v}=v/v_{th}^{\dag },$ it comes 
+and using $\overline{v}=v/v_{th}^{\dag },$ it comes
 \begin{equation}
 \overline{v}v_{th}^{\dag }/c=\overline{p}\beta _{th}^{\dag }/\gamma
 \end{equation}
-or 
+or
 \begin{equation}
 \overline{v}=\overline{p}/\gamma
 \end{equation}
-with 
+with
 \begin{equation}
 v_{th}^{\dag }/c=\beta _{th}^{\dag }
 \end{equation}
@@ -240,24 +243,24 @@ f_{M}\left( \psi ,p\right) \propto \alpha \exp \left[ -\frac{p^{2}}{\left(
 where $\Theta =T_{e}\left( \psi \right) /m_{e}c^{2}$ and $\gamma
 ^{2}=p^{2}+1.$ By definition, $f_{M}$ is normalized to the local density $%
 n_{e}\left( \psi \right) $, and the parameter $\alpha $ is then given by the
-integral 
+integral
 \begin{equation}
 4\pi \alpha \int_{0}^{\infty }p^{2}\exp \left[ -\frac{\gamma -1}{\Theta }%
 \right] dp=n_{e}\left( \psi \right)
 \end{equation}
 
-Recalling that $\gamma d\gamma =pdp,$ 
+Recalling that $\gamma d\gamma =pdp,$
 \begin{equation}
 \alpha =\frac{n_{e}\left( \psi \right) }{4\pi \exp \left( \Theta
 ^{-1}\right) \Xi _{p}\left( \Theta ^{-1}\right) }
 \end{equation}
-where 
+where
 \begin{equation}
 \Xi _{p}\left( \Theta ^{-1}\right) =\int_{1}^{\infty }\gamma \sqrt{\gamma
 ^{2}-1}\exp \left[ -\gamma \Theta ^{-1}\right] d\gamma
 \end{equation}
 
-By integrating by parts, 
+By integrating by parts,
 \begin{eqnarray}
 \Xi _{p}\left( \Theta ^{-1}\right) &=&\frac{\Theta ^{-1}}{3}\int_{1}^{\infty
 }\left( \gamma ^{2}-1\right) ^{3/2}\exp \left[ -\gamma \Theta ^{-1}\right]
@@ -267,12 +270,12 @@ d\gamma  \nonumber \\
 \end{eqnarray}
 and using relations $\left( n-1/2\right) !=\sqrt{\pi }\left( 2n-1\right)
 !!/2^{n}$ and $n!!=1.3.....n$ for positive odd $n$ values, one obtains
-readily 
+readily
 \begin{equation}
 \Xi _{p}\left( \Theta ^{-1}\right) =\frac{K_{2}\left( \Theta ^{-1}\right) }{%
 \Theta ^{-1}}
 \end{equation}
-and finally 
+and finally
 \begin{eqnarray}
 f_{M}\left( \psi ,p\right) &=&\frac{n_{e}\left( \psi \right) }{4\pi \Theta
 \exp \left( \Theta ^{-1}\right) K_{2}\left( \Theta ^{-1}\right) }\exp \left[
@@ -283,26 +286,26 @@ f_{M}\left( \psi ,p\right) &=&\frac{n_{e}\left( \psi \right) }{4\pi \Theta
 
 For $\Theta \ll 1,$ using the large argument asymptotic development of $%
 K_{2}\left( \Theta ^{-1}\right) \approx \sqrt{\pi /2}\sqrt{\Theta }\exp
-(-\Theta ^{-1})+O\left( \Theta ^{-3/2}\right) ,$ the usual expression 
+(-\Theta ^{-1})+O\left( \Theta ^{-3/2}\right) ,$ the usual expression
 \begin{eqnarray}
 f_{M}\left( \psi ,p\right) &\simeq &\frac{n_{e}\left( \psi \right) }{\left[
-2\pi \Theta \right] ^{3/2}}\exp \left[ -\frac{\gamma -1}{\Theta }\right] 
+2\pi \Theta \right] ^{3/2}}\exp \left[ -\frac{\gamma -1}{\Theta }\right]
 \nonumber \\
 &=&\frac{n_{e}\left( \psi \right) }{\left[ 2\pi \Theta \right] ^{3/2}}\exp
 \left[ -\frac{p^{2}}{\left( 1+\gamma \right) \Theta }\right]
 \end{eqnarray}
 is well recovered. This expression is only valid providing that $\gamma
--1\ll 1.$ Therefore, the condition 
+-1\ll 1.$ Therefore, the condition
 \begin{equation}
 \overline{p}^{2}\beta _{th}^{\dag 2}\ll 1  \label{weakrelativist}
 \end{equation}
 must be fulfiled. Since $\overline{p}$ may be as large as $30$ in
 calculations, in order to correctly describe momentum dynamics of the
-fastest electrons, it results that 
+fastest electrons, it results that
 \begin{equation}
 \beta _{th}^{\dag }=\Theta ^{\dag 2}\ll 1/30
 \end{equation}
-or 
+or
 \begin{equation}
 T_{e}^{\dag }\ll 511\sqrt{1/30}\approx 100keV
 \end{equation}
@@ -313,22 +316,22 @@ plasmas, where $T_{e}^{\dag }$ never exceeds $20keV.$ In normalized units,
 \begin{eqnarray}
 f_{M}\left( \psi ,p\right) &=&\frac{\overline{n}_{e}\left( \psi \right)
 n_{e}^{\dag }}{\left[ 2\pi \Theta \left( \psi \right) \right] ^{3/2}}\exp
-\left[ -\frac{\overline{p}^{2}\beta _{th}^{\dag 2}}{\left( 1+\gamma \right) 
+\left[ -\frac{\overline{p}^{2}\beta _{th}^{\dag 2}}{\left( 1+\gamma \right)
 \overline{T}_{e}\left( \psi \right) \beta _{th}^{\dag 2}}\right]  \nonumber
 \\
-&=&\frac{\overline{n}_{e}\left( \psi \right) n_{e}^{\dag }}{\left[ 2\pi 
+&=&\frac{\overline{n}_{e}\left( \psi \right) n_{e}^{\dag }}{\left[ 2\pi
 \overline{T}_{e}\left( \psi \right) \beta _{th}^{\dag 2}\right] ^{3/2}}\exp
 \left[ -\frac{\overline{p}^{2}}{\left( 1+\gamma \right) \overline{T}%
 _{e}\left( \psi \right) }\right]
 \end{eqnarray}
 since $\beta _{th}^{\dag }=\sqrt{T_{e}^{\dag }/m_{e}c^{2}}.$ Then, it turns
-out that 
+out that
 \begin{equation}
 f_{M}\left( \psi ,p\right) =\frac{n_{e}^{\dag }}{\beta _{th}^{\dag 3}}%
 \overline{f}_{M}\left( \psi ,\overline{p}\right) =\frac{n_{e}^{\dag }}{%
 p_{th}^{\dag 3}}\overline{f}_{M}\left( \psi ,\overline{p}\right)
 \end{equation}
-since $p_{th}^{\dag }=\beta _{th}^{\dag }$, with 
+since $p_{th}^{\dag }=\beta _{th}^{\dag }$, with
 \begin{equation}
 \overline{f}_{M}\left( \psi ,p\right) \approx \frac{\overline{n}_{e}\left(
 \psi \right) }{\left[ 2\pi \overline{T}_{e}\left( \psi \right) \right] ^{3/2}%
@@ -336,7 +339,7 @@ since $p_{th}^{\dag }=\beta _{th}^{\dag }$, with
 _{e}\left( \psi \right) }\right]
 \end{equation}
 which may be expressed in an alternative form, useful for calculating
-interpolation between full and half-grids, 
+interpolation between full and half-grids,
 \begin{equation}
 \overline{f}_{M}\left( \psi ,p\right) \approx \frac{\overline{n}_{e}\left(
 \psi \right) }{\left[ 2\pi \overline{T}_{e}\left( \psi \right) \right] ^{3/2}%
@@ -344,7 +347,7 @@ interpolation between full and half-grids,
 _{th}^{\dag 2}}\right]
 \end{equation}
 
-One can then cross-check that 
+One can then cross-check that
 \begin{equation}
 2\pi \int_{-1}^{+1}d\xi _{0}\int_{0}^{+\infty }p^{2}f_{M}\left( \psi
 ,p\right) dp=2\pi p_{th}^{\dag 3}\frac{n_{e}^{\dag }}{\beta _{th}^{\dag 3}}%
@@ -356,7 +359,7 @@ the local density is well recovered$.$
 
 \subsection{Poloidal flux coordinate}
 
-For the poloidal flux coordinate, the normalized value is 
+For the poloidal flux coordinate, the normalized value is
 \begin{equation}
 \overline{\psi }=\psi /\psi _{a}
 \end{equation}
@@ -368,7 +371,7 @@ to the plasma edge. For
 \subsection{Drift kinetic coefficient}
 
 The first order drift kinetic equation requires to calculate $\widetilde{f}%
-^{\left( 0\right) }$ defined as 
+^{\left( 0\right) }$ defined as
 \begin{equation}
 \widetilde{f}^{\left( 0\right) }=\frac{v_{\Vert 0}I_{0}\left( \psi \right) }{%
 \Omega _{e0}}\frac{\partial f_{0}^{\left( 0\right) }}{\partial \psi }
@@ -377,11 +380,11 @@ where by definition $B_{T0}\left( \psi \right) =\left| I_{0}\left( \psi
 \right) \right| /R_{0}$ and $\Omega _{e0}=-\frac{\left| e\right| B_{0}}{
 \gamma m_{e}}$ is the electron Larmor frequency, all quantities being
 determined at the poloidal location where the magnetic field B is minimum,
-as discussed in Sec. \ref{dkefluxconsmomentum}. Since 
+as discussed in Sec. \ref{dkefluxconsmomentum}. Since
 \begin{equation}
 \overline{v}v_{th}^{\dag }/c=\overline{p}\beta _{th}^{\dag }/\gamma
 \end{equation}
-one obtains in normalized units 
+one obtains in normalized units
 \begin{eqnarray}
 \overline{\widetilde{f}}^{\left( 0\right) } &=&v\xi _{0}\frac{\gamma m_{e}}{%
 q_{e}}R_{0}\frac{B_{T0}}{B_{0}}\frac{\partial \overline{f}_{0}^{\left(
@@ -394,13 +397,13 @@ B_{0}}\frac{R_{0}}{\psi _{a}}\frac{\partial \overline{f}_{0}^{\left(
 0\right) }}{\partial \overline{\psi }}
 \end{eqnarray}
 
-Therefore, 
+Therefore,
 \begin{equation}
 \overline{\widetilde{f}}^{\left( 0\right) }=\overline{p}\xi _{0}\widetilde{C}%
 _{0}\frac{\partial \overline{f}_{0}^{\left( 0\right) }}{\partial \overline{%
 \psi }}
 \end{equation}
-where 
+where
 \begin{equation}
 \widetilde{C}_{0}=\frac{cm_{e}}{q_{e}}\beta _{th}^{\dag }\frac{B_{T0}}{B_{0}}%
 \frac{R_{0}}{\psi _{a}}
@@ -408,7 +411,7 @@ where
 
 For circular concentric flux surfaces, since $\partial /\partial \psi
 =\left( 1/\nabla \psi \right) \partial /\partial r$ and $\,\nabla \psi
-=RB_{P},$ it turns out that 
+=RB_{P},$ it turns out that
 \begin{equation}
 \widetilde{f}^{\left( 0\right) }=v\xi \frac{\gamma m_{e}}{q_{e}}\frac{B_{T0}%
 }{B_{P0}}\frac{1}{B_{0}}\frac{\partial f_{0}^{\left( 0\right) }}{\partial r}
@@ -425,28 +428,28 @@ where the safety factor $q$ is approximated by its cylindrical expression $q=%
 
 \subsection{Momentum convection and diffusion}
 
-From the conservative form of the Fokker-Planck equation in momentum space 
+From the conservative form of the Fokker-Planck equation in momentum space
 \begin{equation}
 \frac{\partial f_{0}^{\left( 0\right) }}{\partial t}\propto \frac{\partial }{%
 \partial p}\left( S_{\mathbf{p}}^{\left( 0\right) }\right)
 \end{equation}
-where 
+where
 \begin{equation}
 S_{\mathbf{p}}^{\left( 0\right) }\propto -\Bbb{D}_{\mathbf{p}}^{\left(
 0\right) }\frac{\partial f_{0}^{\left( 0\right) }}{\partial p}+\mathbf{F}_{%
 \mathbf{p}}^{\left( 0\right) }f_{0}^{\left( 0\right) }
 \end{equation}
 
-Introducing normalized coordinates, it turns out that 
+Introducing normalized coordinates, it turns out that
 \begin{eqnarray}
 \frac{\partial \overline{f}_{0}^{\left( 0\right) }}{\partial \overline{t}}
-&\propto &\frac{1}{\nu _{e}^{\dag }p_{th}^{\dag }}\frac{\partial }{\partial 
+&\propto &\frac{1}{\nu _{e}^{\dag }p_{th}^{\dag }}\frac{\partial }{\partial
 \overline{p}}\left( -\frac{\Bbb{D}_{\mathbf{p}}^{\left( 0\right) }}{%
-p_{th}^{\dag }}\frac{\partial \overline{f}_{0}^{\left( 0\right) }}{\partial 
+p_{th}^{\dag }}\frac{\partial \overline{f}_{0}^{\left( 0\right) }}{\partial
 \overline{p}}+\mathbf{F}_{\mathbf{p}}^{\left( 0\right) }\overline{f}%
 _{0}^{\left( 0\right) }\right)  \nonumber \\
 &=&\frac{\partial }{\partial \overline{p}}\left( -\frac{\Bbb{D}_{\mathbf{p}%
-}^{\left( 0\right) }}{\nu _{e}^{\dag }p_{th}^{\dag 2}}\frac{\partial 
+}^{\left( 0\right) }}{\nu _{e}^{\dag }p_{th}^{\dag 2}}\frac{\partial
 \overline{f}_{0}^{\left( 0\right) }}{\partial \overline{p}}+\frac{\mathbf{F}%
 _{\mathbf{p}}^{\left( 0\right) }}{\nu _{e}^{\dag }p_{th}^{\dag }}\overline{f}%
 _{0}^{\left( 0\right) }\right)  \nonumber \\
@@ -455,25 +458,25 @@ _{0}^{\left( 0\right) }\right)  \nonumber \\
 0\right) }}{\partial \overline{p}}+\overline{\mathbf{F}}_{\mathbf{p}
 }^{\left( 0\right) }\overline{f}_{0}^{\left( 0\right) }\right)
 \end{eqnarray}
-where normalized diffusive and convective coefficients are 
+where normalized diffusive and convective coefficients are
 \begin{eqnarray}
 \overline{\Bbb{D}}_{\mathbf{p}}^{\left( 0\right) } &=&\Bbb{D}_{\mathbf{p}%
 }^{\left( 0\right) }/\Bbb{D}_{\mathbf{p}}^{\dag } \\
 \overline{\mathbf{F}}_{\mathbf{p}}^{\left( 0\right) } &=&\mathbf{F}_{\mathbf{%
 \ p}}^{\left( 0\right) }/\mathbf{F}_{\mathbf{p}}^{\dag }
 \end{eqnarray}
-with 
+with
 \begin{eqnarray}
 \Bbb{D}_{\mathbf{p}}^{\dag } &=&\nu _{e}^{\dag }p_{th}^{\dag 2} \\
 \mathbf{F}_{\mathbf{p}}^{\dag } &=&\nu _{e}^{\dag }p_{th}^{\dag }
 \end{eqnarray}
 
 For the case of the Ohmic electric field, this normalization leads to
-introduce naturaly the Dreicer field 
+introduce naturaly the Dreicer field
 \begin{equation}
 E^{\dag }=\nu _{e}^{\dag }p_{th}^{\dag }/q_{e}
 \end{equation}
-the electric field being normalized according to the relation 
+the electric field being normalized according to the relation
 \begin{equation}
 \overline{E}_{\Vert 0}=E_{\Vert 0}/E^{\dag }
 \end{equation}
@@ -481,7 +484,7 @@ the electric field being normalized according to the relation
 \subsection{Radial convection and diffusion}
 
 From the conservative form of the Fokker-Planck equation in configuration
-space 
+space
 \begin{equation}
 \frac{\partial f_{0}^{\left( 0\right) }}{\partial t}\propto \frac{\partial }{%
 \partial \psi }\left( \left| \nabla \psi \right| _{0}S_{\psi }^{\left(
@@ -495,33 +498,33 @@ S_{\psi }^{\left( 0\right) }\propto -\Bbb{D}_{\psi }^{\left( 0\right)
 \partial \psi }+\mathbf{F}_{\psi }^{\left( 0\right) }f_{0}^{\left( 0\right) }
 \end{equation}
 
-Introducing normalized coordinates, it turns out that 
+Introducing normalized coordinates, it turns out that
 \begin{eqnarray}
 \frac{\partial \overline{f}_{0}^{\left( 0\right) }}{\partial \overline{t}}
-&\propto &\frac{1}{\nu _{e}^{\dag }\psi _{a}}\frac{\partial }{\partial 
+&\propto &\frac{1}{\nu _{e}^{\dag }\psi _{a}}\frac{\partial }{\partial
 \overline{\psi }}\left( \left| \nabla \psi \right| _{0}S_{\psi }^{\left(
 0\right) }\right)  \nonumber \\
 &=&\frac{1}{\nu _{e}^{\dag }\psi _{a}}\frac{\partial }{\partial \overline{
 \psi }}\left( \frac{\Bbb{D}_{\psi }^{\left( 0\right) }}{\psi _{a}}\left|
 \nabla \psi \right| _{0}^{2}\frac{\partial \overline{f}_{0}^{\left( 0\right)
 }}{\partial \overline{\psi }}+\left| \nabla \psi \right| _{0}\mathbf{F}
-_{\psi }^{\left( 0\right) }\overline{f}_{0}^{\left( 0\right) }\right) 
+_{\psi }^{\left( 0\right) }\overline{f}_{0}^{\left( 0\right) }\right)
 \nonumber \\
 &=&\frac{\partial }{\partial \overline{\psi }}\left( \frac{\Bbb{D}_{\psi
 }^{\left( 0\right) }}{\nu _{e}^{\dag }\psi _{a}^{2}}\left| \nabla \psi
-\right| _{0}^{2}\frac{\partial \overline{f}_{0}^{\left( 0\right) }}{\partial 
+\right| _{0}^{2}\frac{\partial \overline{f}_{0}^{\left( 0\right) }}{\partial
 \overline{\psi }}+\left| \nabla \psi \right| _{0}\frac{\mathbf{F}_{\psi
 }^{\left( 0\right) }}{\nu _{e}^{\dag }\psi _{a}}\overline{f}_{0}^{\left(
 0\right) }\right)
 \end{eqnarray}
-with 
+with
 \begin{eqnarray}
 \overline{\Bbb{D}}_{\psi }^{\left( 0\right) } &=&\Bbb{D}_{\psi }^{\left(
 0\right) }/\Bbb{D}_{\psi }^{\dag } \\
 \overline{\mathbf{F}}_{\psi }^{\left( 0\right) } &=&\mathbf{F}_{\psi
 }^{\left( 0\right) }/\mathbf{F}_{\psi }^{\dag }
 \end{eqnarray}
-with 
+with
 \begin{eqnarray}
 \Bbb{D}_{\psi }^{\dag } &=&\nu _{e}^{\dag }\psi _{a}^{2} \\
 \mathbf{F}_{\psi }^{\dag } &=&\nu _{e}^{\dag }\psi _{a}
@@ -530,7 +533,7 @@ with
 However, since it is more convenient to handle diffusion and convection
 coefficients that scale in $m^{2}/s$ and $m/s$ respectively, one must
 introduce new reference values for the diffusion and convection
-coefficients. Let 
+coefficients. Let
 \begin{eqnarray}
 \Bbb{D}_{\psi }^{\dag *} &=&\nu _{e}^{\dag }a_{p}^{2} \\
 \mathbf{F}_{\psi }^{\dag *} &=&\nu _{e}^{\dag }a_{p}
@@ -544,7 +547,7 @@ _{\psi }^{\left( 0\right) }/\Bbb{D}_{\psi }^{\dag *} \\
 \overline{\mathbf{F}}_{\psi }^{\left( 0\right) } &=&\alpha _{\mathbf{F}}%
 \mathbf{F}_{\psi }^{\left( 0\right) }/\mathbf{F}_{\psi }^{\dag *}
 \end{eqnarray}
-where 
+where
 \begin{eqnarray}
 \alpha _{\Bbb{D}} &=&\Bbb{D}_{\psi }^{\dag *}/\Bbb{D}_{\psi }^{\dag
 }=a_{p}^{2}/\psi _{a}^{2} \\
@@ -554,7 +557,7 @@ where
 
 \subsection{Fluxes}
 
-In momentum space, 
+In momentum space,
 \begin{eqnarray}
 S_{\mathbf{p}}^{\left( 0\right) } &\propto &-\Bbb{D}_{\mathbf{p}}^{\left(
 0\right) }\frac{\partial f_{0}^{\left( 0\right) }}{\partial p}+\mathbf{F}_{%
@@ -563,7 +566,7 @@ S_{\mathbf{p}}^{\left( 0\right) } &\propto &-\Bbb{D}_{\mathbf{p}}^{\left(
 }^{\dag }\frac{n_{e}^{\dag }}{p_{th}^{\dag 3}}\frac{\partial \overline{f}%
 _{0}^{\left( 0\right) }}{p_{th}^{\dag }\partial \overline{p}}+\overline{%
 \mathbf{F}}_{\mathbf{p}}^{\left( 0\right) }\mathbf{F}_{\mathbf{p}}^{\dag }%
-\frac{n_{e}^{\dag }}{p_{th}^{\dag 3}}\overline{f}_{0}^{\left( 0\right) } 
+\frac{n_{e}^{\dag }}{p_{th}^{\dag 3}}\overline{f}_{0}^{\left( 0\right) }
 \nonumber \\
 &=&-\overline{\Bbb{D}}_{\mathbf{p}}^{\left( 0\right) }\left( \frac{\nu
 _{e}^{\dag }n_{e}^{\dag }}{p_{th}^{\dag 2}}\right) \frac{\partial \overline{f%
@@ -571,29 +574,29 @@ _{e}^{\dag }n_{e}^{\dag }}{p_{th}^{\dag 2}}\right) \frac{\partial \overline{f%
 \mathbf{p}}^{\left( 0\right) }\left( \frac{\nu _{e}^{\dag }n_{e}^{\dag }}{
 p_{th}^{\dag 2}}\right) \overline{f}_{0}^{\left( 0\right) }  \nonumber \\
 &=&\left( \frac{\nu _{e}^{\dag }n_{e}^{\dag }}{p_{th}^{\dag 2}}\right)
-\left( -\overline{\Bbb{D}}_{\mathbf{p}}^{\left( 0\right) }\frac{\partial 
+\left( -\overline{\Bbb{D}}_{\mathbf{p}}^{\left( 0\right) }\frac{\partial
 \overline{f}_{0}^{\left( 0\right) }}{\partial \overline{p}}+\overline{%
 \mathbf{F}}_{\mathbf{p}}^{\left( 0\right) }\overline{f}_{0}^{\left( 0\right)
 }\right)
 \end{eqnarray}
-and 
+and
 \begin{equation}
 S_{\mathbf{p}}^{\left( 0\right) }=\overline{S}_{\mathbf{p}}^{\left( 0\right)
 }S_{\mathbf{p}}^{\dag }
 \end{equation}
-where 
+where
 \begin{equation}
 S_{\mathbf{p}}^{\dag }=\frac{\nu _{e}^{\dag }n_{e}^{\dag }}{p_{th}^{\dag 2}}
 \end{equation}
-and with these definitions, 
+and with these definitions,
 \[
 \overline{S}_{\mathbf{p}}^{\left( 0\right) }\propto -\overline{\Bbb{D}}_{%
 \mathbf{p}}^{\left( 0\right) }\frac{\partial \overline{f}_{0}^{\left(
 0\right) }}{\partial \overline{p}}+\overline{\mathbf{F}}_{\mathbf{p}%
-}^{\left( 0\right) }\overline{f}_{0}^{\left( 0\right) } 
+}^{\left( 0\right) }\overline{f}_{0}^{\left( 0\right) }
 \]
 
-A similar procedure is applied for dynamics in configuration space, 
+A similar procedure is applied for dynamics in configuration space,
 \begin{eqnarray}
 S_{\psi }^{\left( 0\right) } &\propto &-\Bbb{D}_{\psi \psi }^{\left(
 0\right) }\left| \nabla \psi \right| _{0}\frac{\partial f_{0}^{\left(
@@ -601,7 +604,7 @@ S_{\psi }^{\left( 0\right) } &\propto &-\Bbb{D}_{\psi \psi }^{\left(
 }f_{0}^{\left( 0\right) }  \nonumber \\
 &=&-\overline{\Bbb{D}}_{\psi \psi }^{\left( 0\right) }\Bbb{D}_{\psi \psi
 }^{\dag }\frac{n_{e}^{\dag }}{p_{th}^{\dag 3}}\left| \nabla \psi \right| _{0}%
-\frac{\partial \overline{f}_{0}^{\left( 0\right) }}{\psi _{a}\partial 
+\frac{\partial \overline{f}_{0}^{\left( 0\right) }}{\psi _{a}\partial
 \overline{\psi }}+\mathbf{F}_{\psi }^{\left( 0\right) }\mathbf{F}_{\psi
 }^{\dag }\frac{n_{e}^{\dag }}{p_{th}^{\dag 3}}\overline{f}_{0}^{\left(
 0\right) }  \nonumber \\
@@ -617,20 +620,20 @@ _{a}\right) \left( -\overline{\Bbb{D}}_{\psi \psi }^{\left( 0\right) }\left|
 \partial \overline{\psi }}+\mathbf{F}_{\psi }^{\left( 0\right) }\overline{f}
 _{0}^{\left( 0\right) }\right)
 \end{eqnarray}
-and 
+and
 \begin{equation}
 S_{\psi }^{\left( 0\right) }=\overline{S}_{\psi }^{\left( 0\right) }S_{\psi
 }^{\dag }
 \end{equation}
-with 
+with
 \begin{equation}
 S_{\psi }^{\dag }=\frac{n_{e}^{\dag }}{p_{th}^{\dag 3}}\nu _{e}^{\dag }\psi
 _{a}
 \end{equation}
-and with these definitions, 
+and with these definitions,
 \begin{equation}
 \overline{S}_{\psi }^{\left( 0\right) }\propto -\overline{\Bbb{D}}_{\psi
-\psi }^{\left( 0\right) }\left| \nabla \psi \right| _{0}\frac{\partial 
+\psi }^{\left( 0\right) }\left| \nabla \psi \right| _{0}\frac{\partial
 \overline{f}_{0}^{\left( 0\right) }}{\partial \overline{\psi }}+\overline{%
 \mathbf{F}}_{\psi }^{\left( 0\right) }\overline{f}_{0}^{\left( 0\right) }
 \end{equation}
@@ -638,7 +641,7 @@ and with these definitions,
 \subsection{Current density}
 
 The local current density at the minimum $\mathbf{B}$ value on the flux
-surface is given by the relation 
+surface is given by the relation
 \begin{eqnarray}
 J^{\left( 0\right) } &\propto &2\pi q_{e}\int p^{2}dp\int_{-1}^{+1}\xi
 _{0}vf_{0}^{\left( 0\right) }d\xi _{0}  \nonumber \\
@@ -648,16 +651,16 @@ _{0}f_{0}^{\left( 0\right) }d\xi _{0}  \nonumber \\
 _{th}^{\dag 3}}\int \frac{\overline{p}^{3}}{\gamma }d\overline{p}%
 \int_{-1}^{+1}\xi _{0}\overline{f}_{0}^{\left( 0\right) }d\xi _{0}
 \end{eqnarray}
-Therefore, 
+Therefore,
 \begin{equation}
 \overline{J}^{\left( 0\right) }=J^{\left( 0\right) }/J^{\dag }
 \end{equation}
-where 
+where
 \begin{equation}
 J^{\dag }=\frac{q_{e}}{m_{e}}p_{th}^{\dag }n_{e}^{\dag }
 \end{equation}
 
-With this definition 
+With this definition
 \begin{equation}
 \overline{J}^{\left( 0\right) }\propto 2\pi \int \frac{\overline{p}^{3}}{
 \gamma }d\overline{p}\int_{-1}^{+1}\xi _{0}\overline{f}_{0}^{\left( 0\right)
@@ -666,7 +669,7 @@ With this definition
 
 \subsection{Power density}
 
-The power density is deduced from the integral 
+The power density is deduced from the integral
 \begin{eqnarray}
 P^{\left( 0\right) } &\propto &2\pi \int_{-1}^{+1}d\xi _{0}\int_{0}^{\infty }%
 \frac{p^{3}}{\gamma m_{e}}S_{\mathbf{p}}^{\left( 0\right) }dp  \nonumber \\
@@ -674,16 +677,16 @@ P^{\left( 0\right) } &\propto &2\pi \int_{-1}^{+1}d\xi _{0}\int_{0}^{\infty }%
 p_{th}^{\dag 2}}\int_{-1}^{+1}d\xi _{0}\int_{0}^{\infty }\frac{\overline{p}
 ^{3}}{\gamma }\overline{S}_{\mathbf{p}}^{\left( 0\right) }d\overline{p}
 \end{eqnarray}
-and defining 
+and defining
 \begin{equation}
 \overline{P}^{\left( 0\right) }=P^{\left( 0\right) }/P^{\dag }
 \end{equation}
-one has 
+one has
 \begin{equation}
 P^{\dag }=\frac{\nu _{e}^{\dag }p_{th}^{\dag 3}n_{e}^{\dag }}{m_{e}}
 \end{equation}
 
-With this definition 
+With this definition
 \begin{equation}
 \overline{P}^{\left( 0\right) }\propto 2\pi \int_{-1}^{+1}d\xi
 _{0}\int_{0}^{\infty }\frac{\overline{p}^{3}}{\gamma }\overline{S}_{\mathbf{p%
@@ -693,7 +696,7 @@ _{0}\int_{0}^{\infty }\frac{\overline{p}^{3}}{\gamma }\overline{S}_{\mathbf{p%
 \subsection{Electron runaway rate}
 
 The electron runaway rate $\Gamma _{R}^{\left( 0\right) }$ is given by the
-relation 
+relation
 \begin{eqnarray}
 \Gamma _{R}^{\left( 0\right) } &\propto &2\pi p^{2}\int_{-1}^{+1}S_{\mathbf{p%
 }}^{\left( 0\right) }d\xi _{0}  \nonumber \\
@@ -702,16 +705,16 @@ p_{th}^{\dag 2}}\int_{-1}^{+1}\overline{S}_{\mathbf{p}}^{\left( 0\right)
 }d\xi _{0}
 \end{eqnarray}
 
-Therefore, normalized expression is 
+Therefore, normalized expression is
 \begin{equation}
 \overline{\Gamma }_{R}^{\left( 0\right) }=\Gamma _{R}^{\left( 0\right)
 }/\Gamma _{R}^{\dag }
 \end{equation}
-with 
+with
 \begin{equation}
 \Gamma _{R}^{\dag }=\nu _{e}^{\dag }n_{e}^{\dag }
 \end{equation}
-so that 
+so that
 \begin{equation}
 \overline{\Gamma }_{R}^{\left( 0\right) }\propto 2\pi \overline{p}%
 ^{2}\int_{-1}^{+1}\overline{S}_{\mathbf{p}}^{\left( 0\right) }d\xi _{0}
@@ -724,27 +727,27 @@ the runaway distribution is independent of $v_{\Vert },$ so that it may be
 approximated by the simple expression $f_{0}^{\left( 0\right) }\left(
 v_{\Vert }\gg v_{th}\right) \approx \left( \gamma /E\right) \delta \left(
 p_{\bot }\right) .$ By integrating the current integral $v_{\Vert
-}f_{0}^{\left( 0\right) }$ out to $p_{\max },$ one obtains 
+}f_{0}^{\left( 0\right) }$ out to $p_{\max },$ one obtains
 \begin{equation}
 J^{\left( 0\right) }\left( v_{\max }\right) \approx J_{bulk}^{\left(
 0\right) }+\frac{1}{2m_{e}}\left( \frac{\Gamma _{R}^{\left( 0\right) }}{%
 E_{\Vert 0}}\right) p_{\max }^{2}
 \end{equation}
-and in normalized units, 
+and in normalized units,
 \begin{equation}
-\overline{J}^{\left( 0\right) }\left( v_{\max }\right) J^{\dag }\approx 
+\overline{J}^{\left( 0\right) }\left( v_{\max }\right) J^{\dag }\approx
 \overline{J}_{bulk}^{\left( 0\right) }J^{\dag }+\frac{1}{2m_{e}}\left( \frac{%
 \overline{\Gamma }_{R}^{\left( 0\right) }\Gamma _{R}^{\dag }}{\overline{E}%
 _{\Vert 0}E^{\dag }}\right) p_{th}^{\dag 2}\overline{p}_{\max }^{2}
 \end{equation}
-so that 
+so that
 \begin{equation}
 \overline{J}^{\left( 0\right) }\left( v_{\max }\right) \approx \overline{J}%
 _{bulk}^{\left( 0\right) }+\frac{1}{2m_{e}}\frac{p_{th}^{\dag 2}\Gamma
 _{R}^{\dag }}{E^{\dag }J^{\dag }}\left( \frac{\overline{\Gamma }_{R}^{\left(
 0\right) }}{\overline{E}_{\Vert 0}}\right) \overline{p}_{\max }^{2}
 \end{equation}
-According to their respective expression, 
+According to their respective expression,
 \begin{equation}
 \frac{p_{th}^{\dag 2}\Gamma _{R}^{\dag }}{m_{e}E^{\dag }J_{th}^{\dag }}=%
 \frac{p_{th}^{\dag 2}\nu _{e}^{\dag }n_{e}^{\dag }}{m_{e}\frac{q_{e}}{m_{e}}%
@@ -775,12 +778,12 @@ By definition, the electron magnetic ripple loss rate $\Gamma _{ST}^{\left(
 0\right) }$ is given by a relation relation similar to $\Gamma _{R}^{\left(
 0\right) },$ except that integrals of fluxes are calculated for different
 boundaries. Therefore, the normalized expression is simply given by the
-relation 
+relation
 \begin{equation}
 \overline{\Gamma }_{ST}^{\left( 0\right) }=\Gamma _{ST}^{\left( 0\right)
 }/\Gamma _{ST}^{\dag }
 \end{equation}
-where 
+where
 \begin{equation}
 \Gamma _{ST}^{\dag }=\Gamma _{R}^{\dag }=\nu _{e}^{\dag }n_{e}^{\dag }
 \end{equation}
@@ -791,10 +794,10 @@ In the code, the following units are used
 
 \[
 \begin{tabular}{ll}
-Quantity & Units \\ 
-Temperature & $keV$ \\ 
-Density & $m^{-3}$ \\ 
-Time & $s$ \\ 
+Quantity & Units \\
+Temperature & $keV$ \\
+Density & $m^{-3}$ \\
+Time & $s$ \\
 Frequency & $s^{-1}$%
 \end{tabular}
 \]

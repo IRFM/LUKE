@@ -1,41 +1,44 @@
+%TCIDATA{Version=5.50.0.2890}
+%TCIDATA{LaTeXparent=0,0,NoticeDKE.tex}
+
 
 \label{FPEfield}In the Fokker-Planck equation, the diffusion and convection
 elements are bounce-averaged according to the expressions (\ref{diffbavpp})-(%
-\ref{convbavm}), which gives, using (\ref{elec}), 
+\ref{convbavm}), which gives, using (\ref{elec}),
 \begin{equation}
 \Bbb{D}_{\mathbf{p}}^{\text{E}(0)}=0
 \end{equation}
-and the convection components 
+and the convection components
 \begin{eqnarray}
 F_{p}^{\text{E}(0)} &=&\left\{ q_{e}\xi E_{\Vert }\right\}  \\
 F_{\xi }^{\text{E}(0)} &=&-\sigma \left\{ \frac{\sigma \xi }{\sqrt{\Psi }\xi
-_{0}}q_{e}\sqrt{1-\xi ^{2}}E_{\Vert }\right\} 
+_{0}}q_{e}\sqrt{1-\xi ^{2}}E_{\Vert }\right\}
 \end{eqnarray}
 
 Since the poloidal dependence of the electric field on a flux-surface is
-given by () 
+given by ()
 \begin{equation}
 E_{\Vert }\left( \psi ,\theta \right) =\frac{1}{\Psi \left( \psi ,\theta
-\right) }\frac{R_{0}^{2}}{R^{2}}E_{\Vert 0}\left( \psi \right) 
+\right) }\frac{R_{0}^{2}}{R^{2}}E_{\Vert 0}\left( \psi \right)
 \end{equation}
-we find 
+we find
 \begin{eqnarray}
 F_{p}^{\text{E}(0)} &=&\frac{\overline{\lambda }_{1,-1,2}}{\lambda }q_{e}\xi
 _{0}E_{\Vert 0}\left( \psi \right)  \\
 F_{\xi }^{\text{E}(0)} &=&-\frac{\overline{\lambda }_{1,-1,2}}{\lambda }q_{e}%
-\sqrt{1-\xi _{0}^{2}}E_{\Vert 0}\left( \psi \right) 
+\sqrt{1-\xi _{0}^{2}}E_{\Vert 0}\left( \psi \right)
 \end{eqnarray}
-where we defined the bounce averaged coefficient (\ref{lkm}) 
+where we defined the bounce averaged coefficient (\ref{lkm})
 \begin{equation}
 \overline{\lambda }_{1,-1,2}=\lambda \sigma \left\{ \sigma \frac{\xi }{\xi
 _{0}}\frac{1}{\Psi \left( \psi ,\theta \right) }\frac{R_{0}^{2}}{R^{2}}%
-\right\} 
+\right\}
 \end{equation}
 
 \subsubsection{Expression of $\overline{\lambda }_{1,-1,2}$}
 
 The coefficient $\overline{\lambda }_{1,-1,2}$, which is known as $s^{*}$ in
-the old notation found in the litterature (\cite{kil86}), is expressed as 
+the old notation found in the litterature (\cite{kil86}), is expressed as
 \begin{equation}
 \overline{\lambda }_{1,-1,2}=\frac{\sigma }{\widetilde{q}}\left[ \frac{1}{2}
 \sum_{\sigma }\right] _{T}\int_{\theta _{\min }}^{\theta _{\max }}\frac{%
@@ -45,14 +48,14 @@ d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }%
 \end{equation}
 
 Since the integral is odd in $\sigma $, the sum over trapped particles
-vanishes, and we have 
+vanishes, and we have
 \begin{equation}
-\overline{\lambda }_{1,-1,2}=\left| 
+\overline{\lambda }_{1,-1,2}=\left|
 \begin{array}{ll}
-0 & \text{for trapped particles} \\ 
+0 & \text{for trapped particles} \\
 \lambda _{1,-1,2}^{P} & \text{for passing particles}
 \end{array}
-\right. 
+\right.
 \end{equation}
 \begin{eqnarray}
 \lambda _{1,-1,2}^{P} &=&\frac{1}{\widetilde{q}}\int_{0}^{2\pi }\frac{%
@@ -73,13 +76,13 @@ d\theta }{2\pi }\frac{1}{\left| \widehat{\psi }\cdot \widehat{r}\right| }%
 
 \subsubsection{Case of circular concentric flux-surfaces}
 
-Since in the case of circular concentric flux-surfaces, we have 
+Since in the case of circular concentric flux-surfaces, we have
 \begin{eqnarray}
 \widetilde{q} &=&\frac{r}{R_{p}}\frac{B}{B_{P}} \\
 q &=&\frac{r}{R_{p}}\frac{B_{T}}{B_{P}}\int_{0}^{2\pi }\frac{d\theta }{2\pi }%
 \frac{R_{p}}{R}
 \end{eqnarray}
-so that 
+so that
 \begin{equation}
 \lambda _{1,-1,2}^{P}=\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{R_{0}}{R}%
 =\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{1+\epsilon }{1+\epsilon \cos
@@ -87,7 +90,7 @@ so that
 \end{equation}
 
 This integral can then be performed analytically, as shown in Sec. \ref
-{lambdacalcl}, at formula (\ref{sstar}), which gives 
+{lambdacalcl}, at formula (\ref{sstar}), which gives
 \begin{equation}
 \lambda _{1,-1,2}^{P}=\sqrt{\frac{1+\epsilon }{1-\epsilon }}
 \end{equation}

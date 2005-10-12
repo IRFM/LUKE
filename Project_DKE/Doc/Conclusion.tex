@@ -1,3 +1,6 @@
+%TCIDATA{Version=5.50.0.2890}
+%TCIDATA{LaTeXparent=0,0,NoticeDKE.tex}
+
 
 The determination of the current density profile is a crucial issue for next
 step tokamaks like ITER, since it may directly modify plasma performances.
@@ -6,7 +9,7 @@ configuration, or using crude physical assumptions that consequently reduce
 considerably the confidence in the results. Accurate and realistic kinetic
 calculations for the electron population in magnetized plasmas where
 therefore an important step towards a consistent modeling of the current
-drive process. 
+drive process.
 
 For this purpose, a completely new numerical solver has been designed which
 contains most of the salient features of the physics in hot plasmas, where
@@ -18,7 +21,7 @@ in particular for the interplay between inductive, non-inductive and
 bootstrap currents. The conservative nature of the equations has been the
 guideline in this work, especially to have a clear derivation of radial
 transport equation for the fast electron population in arbitrary magnetic
-configuration when bounce averaging is concerned. 
+configuration when bounce averaging is concerned.
 
 The numerical part has been derived with the same spirit, keeping a
 systematic approach for all types of operators in the discretization
@@ -59,7 +62,7 @@ must be evaluating as a function of time and space (\cite{bas03}). In is
 important to notice that special attention has been paid to the delicate
 problem of coupling the kinetic solver with ray-tracing. This amazing feat
 has been made easily possible with the use of the compact MatLab numerical
-environment for solving the huge linear system of equations (\cite{mat02}). 
+environment for solving the huge linear system of equations (\cite{mat02}).
 
 Furthermore, numerous moments of the electron distribution function are
 evaluated like the RF power, magnetic ripple and runaway losses, fast
@@ -96,7 +99,7 @@ absorption, but also for thermal particle pinch in steady-state conditions (%
 \cite{hoa03}). Furthermore, once the bounce-averaging is replaced by
 trajectory-averaging, it is natural to extend the code for multiple ion
 dynamics. In that case, parallel processing may be foreseen for each
-species, in order to optimize calculations. 
+species, in order to optimize calculations.
 
 Finally, an ultimate though important evolution for the code may concern
 non-linear problems. So far, the collision operator is linearized for a

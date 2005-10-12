@@ -1,3 +1,6 @@
+%TCIDATA{Version=5.50.0.2890}
+%TCIDATA{LaTeXparent=0,0,NoticeDKE.tex}
+
 
 \subsubsection{Implicit time scheme}
 
@@ -5,11 +8,11 @@
 
 Projected on the numerical distribution function grid, and taking into
 account of the internal and external boundaries, the $3-D$ electron
-Fokker-Planck equation may be expressed as 
+Fokker-Planck equation may be expressed as
 \begin{eqnarray}
 &&\frac{\widetilde{q}_{l+1/2}}{B_{0,l+1/2}}p_{i+1/2}^{2}\frac{
 f_{0,l+1/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right)
-(k+1)}-f_{0,l+1/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right) (k)}}{\Delta t} 
+(k+1)}-f_{0,l+1/2,i+1/2,j^{\prime }+1/2}^{\left( 0\right) (k)}}{\Delta t}
 \nonumber \\
 &&+\frac{\widetilde{q}_{l+1/2}}{B_{0,l+1/2}}\sum_{i^{\prime
 }=i-1}^{i^{\prime }=i+1}\sum_{j^{\prime \prime }=j^{\prime }-1}^{j^{\prime
@@ -57,7 +60,7 @@ are considered explicitely, a procedure which puts strong limitations on the
 time step $\Delta t/\tau _{c}^{\dagger }\approx 1.$
 
 In compact matrix form, the differential equation in the reduced momentum
-phase space has the following symbolic form 
+phase space has the following symbolic form
 \begin{equation}
 \left( \frac{\widehat{\Bbb{A}}}{\Delta t}+\widehat{\Bbb{B}}\right)
 X^{(k+1)}=\left( \frac{\widehat{\Bbb{A}}}{\Delta t}\right) X^{(k)}+\widehat{C%
@@ -69,24 +72,24 @@ differencing, $\widehat{\Bbb{B}}$ corresponds to the flux divergence and $%
 is the runaway avalanche source term. Here $X^{(k)}$ is a vector whose
 components are the discrete values of the distribution function $%
 f_{0}^{\left( 0\right) }$ at time step $\left( k\right) ,$ organized as
-follows 
+follows
 \begin{equation}
-X^{(k)}\rightarrow \left\{ 
+X^{(k)}\rightarrow \left\{
 \begin{array}{l}
-l=0\rightarrow \left\{ 
+l=0\rightarrow \left\{
 \begin{array}{l}
-i=0\rightarrow \left\{ 
+i=0\rightarrow \left\{
 \begin{array}{l}
-j^{\prime }=0 \\ 
-j^{\prime }=\ldots \\ 
+j^{\prime }=0 \\
+j^{\prime }=\ldots \\
 j^{\prime }=n_{\xi _{0}}-n_{\xi _{0T,l+1/2}}-1
 \end{array}
-\right. \\ 
-i=\ldots \\ 
+\right. \\
+i=\ldots \\
 i=n_{p}-1
 \end{array}
-\right. \\ 
-l=\ldots \\ 
+\right. \\
+l=\ldots \\
 l=n_{\psi }-1
 \end{array}
 \right.
@@ -117,7 +120,7 @@ become passing as a result of the radial transport process, and conversely.
 However, matrix $\widehat{\Bbb{B}}$ keeps a global banded structure and is
 still highly sparce, a property that is extensively used for reducing memory
 storage requirement. Indeed, size of $\widehat{\Bbb{B}}$ is roughly given by
-relation 
+relation
 \begin{equation}
 size\left( \widehat{\Bbb{B}}\right) =n_{p}^{2}\left[ \sum_{l=0}^{l=n_{\psi
 }-1}\left( n_{\xi _{0}}-n_{\xi _{0T,l+1/2}}\right) \right] ^{2}\leq n_{\psi
@@ -148,7 +151,7 @@ accurate in time, but this scheme requires usualy $\Delta t/\tau
 _{c}^{\dagger }\approx 1$, in order to avoid spurious numerical oscillations
 towards the steady-state solution $f_{0}^{\left( 0\right) \left( \infty
 \right) }.$ From Eq.\ref{Matrixeq}, it is straightforward to derive the new
-matrix form of the Fokker-Planck equation 
+matrix form of the Fokker-Planck equation
 \begin{equation}
 \left( \frac{\widehat{\Bbb{A}}}{\Delta t}+\frac{\widehat{\Bbb{B}}}{2}\right)
 X^{(k+1)}=\left( \frac{\widehat{\Bbb{A}}}{\Delta t}-\frac{\widehat{\Bbb{B}}}{%

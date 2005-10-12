@@ -1,21 +1,10 @@
 % -- The Drift Kinetic code -- %
 % -- J. Decker and Y. Peysson -- %
-
-\documentclass[11pt,a4paper]{report}
-
-\bibliographystyle{unsrt}
 %\usepackage{cite}
-\usepackage{graphicx}
 %\usepackage{latexsym}
-\usepackage{amssymb}
-\usepackage{amsmath}
-\usepackage{amsmath}
 %\usepackage{epstopdf}
 %\usepackage[mathscr]{eucal}
 %\usepackage[body={5.5in,9in}]{geometry}
-\usepackage{fancyheadings}
-\usepackage{nomencl}
-
 %%\newif\ifpdf
 %%  \ifx\pdfoutput\undefined
 %%  \pdffalse % we are not running PDFLaTeX
@@ -23,368 +12,583 @@
 %%  \pdfoutput=1 % we are running PDFLaTeX
 %%  \pdftrue
 %%\fi
-%
 %%\ifpdf
 %%  \usepackage[pdftex]{graphicx}
 %%\else
 %%  \usepackage{graphicx}
 %%\fi
-
-
 %\makeglossary
-
 % -- Style de page -- %
 %\addtolength{\voffset}{-3.0cm} \addtolength{\textheight}{6.0cm}
 %\addtolength{\hoffset}{-1.5cm} \addtolength{\textwidth}{3.0cm}
+% -- Format -- %
+%\include{myAbbrevs}
+%\author{Joan Decker\footnote{Email: jodecker@alum.mit.edu} and Yves Peysson\footnote{Email: yves.peysson@cea.fr}}
+
+
+\documentclass[11pt,a4paper]{report}
+\usepackage{makeidx}
+\usepackage{eurosym}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsmath}
+\usepackage{fancyheadings}
+\usepackage{nomencl}
+
+\setcounter{MaxMatrixCols}{10}
+%TCIDATA{OutputFilter=Latex.dll}
+%TCIDATA{Version=5.50.0.2890}
+%TCIDATA{<META NAME="SaveForMode" CONTENT="1">}
+%TCIDATA{BibliographyScheme=BibTeX}
+%TCIDATA{LastRevised=Wednesday, October 12, 2005 10:59:57}
+%TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
+
+\bibliographystyle{unsrt}
 \addtolength{\headwidth}{\marginparsep}
 \addtolength{\headwidth}{\marginparwidth}
 \pagestyle{fancyplain}
-
-% -- Format -- %
 \newcommand{\erf}{Erf}
 \renewcommand{\chaptermark}[1]{\markboth{\thechapter. #1}{}}
 \renewcommand{\sectionmark}[1]{\markright{\thesection. #1}{}}
-%\include{myAbbrevs}
 \include{DocumentDimensions}
 
-\title{\hrule\bigbreak DKE: a fast numerical solver for the 3-D relativistic
-bounce-averaged electron Drift Kinetic Equation \hrule\bigbreak}
-%\author{Joan Decker\footnote{Email: jodecker@alum.mit.edu} and Yves Peysson\footnote{Email: yves.peysson@cea.fr}}
-
-\author{Joan Decker\footnote{Email: jodecker@alum.mit.edu} and Y Peysson\footnote{Email:
-yves.peysson@cea.fr}\vspace{1cm}\\ Association EURATOM-CEA sur la Fusion\\
-CEA-Cadarache, F-13108 Saint Paul-lez-Durance,
-France\vspace{1cm}\\Plasma Science and Fusion Center\\
-Massachussetts Institute of Technology, Cambridge, MA 02139, USA}
-
-\date{\today}
-
+\input{tcilatex}
 
 \begin{document}
 
+\title{\hrule\bigbreak DKE: a fast numerical solver for the 3-D relativistic
+bounce-averaged electron Drift Kinetic Equation \hrule\bigbreak}
+\author{Joan Decker\thanks{%
+Email: jodecker@alum.mit.edu} and Y Peysson\thanks{%
+Email: yves.peysson@cea.fr}\vspace{1cm} \\
+%EndAName
+Association EURATOM-CEA sur la Fusion\\
+CEA-Cadarache, F-13108 Saint Paul-lez-Durance, France\vspace{1cm}\\
+Plasma Science and Fusion Center\\
+Massachussetts Institute of Technology, Cambridge, MA 02139, USA}
+\date{\today}
+\maketitle
+
+\begin{abstract}
+A new original code for solving the 3-D relativistic and bounce-averaged
+electron drift kinetic equation is presented. It designed for the current
+drive problem in tokamak with an arbitrary magnetic equilibrium. This tool
+allows self-consistent calculations of the bootstrap current in presence of
+other external current sources. RF current drive for arbitrary type of waves
+may be used. Several moments of the electron distribution function are
+determined, like the exact and effective fractions of trapped electrons, the
+plasma current, absorbed RF power, runaway and magnetic ripple loss rates
+and non-thermal bremsstrahlung. Advanced numerical techniques have been used
+to make it the first fully implicit (reverse time) 3-D solver, particularly
+well designed for implementation in a chain of code for realistic current
+drive calculations in high $\beta _{p}$ plasmas. All the details of the
+physics background and the numerical scheme are presented, as well a some
+examples to illustrate main code capabilities. Several important numerical
+points are addressed concerning code stability and potential numerical and
+physical limitations.
+\end{abstract}
+
+\tableofcontents
+\listoffigures
+\listoftables
 
 %%\ifpdf
 %%\DeclareGraphicsExtensions{.pdf, .jpg, .tif}
 %%\else
 %%\DeclareGraphicsExtensions{.eps, .jpg}
 %%\fi
-\maketitle
 
-\begin{abstract}
-A new original code for solving the 3-D relativistic and
-bounce-averaged electron drift kinetic equation is presented. It designed for
-the current drive problem in tokamak with an arbitrary magnetic equilibrium.
-This tool allows self-consistent calculations of the bootstrap current
-in presence of other external current sources. RF current drive for arbitrary
-type of waves may be used. Several moments of the electron
-distribution function are determined, like the exact and effective
-fractions of trapped electrons, the plasma current, absorbed RF
-power, runaway and magnetic ripple loss rates and non-thermal
-bremsstrahlung. Advanced numerical techniques have been used to make
-it the first fully implicit (reverse time) 3-D solver, particularly
-well designed for implementation in a chain of code for realistic
-current drive calculations in high $\beta _{p}$ plasmas. All the details of
-the physics background and the numerical scheme are presented, as
-well a some examples to illustrate main code capabilities. Several
-important numerical points are addressed concerning code stability and
-potential numerical and physical limitations.
-\end{abstract}
-
-\tableofcontents
-\listoffigures
-\listoftables
 %\printglossary
 
 \chapter{Introduction}
 
-      \input{Introduction.tex}
+%TCIMACRO{\QSubDoc{Include Introduction}{\input{Introduction.tex}}}%
+%BeginExpansion
+\input{Introduction.tex}%
+%EndExpansion
 
 \chapter{Tokamak geometry and particle dynamic}
 
-    \section{Coordinate system}
+\section{Coordinate system}
 
-        \input{CoordinateSystem.tex}
+%TCIMACRO{\QSubDoc{Include CoordinateSystem}{\input{CoordinateSystem.tex}}}%
+%BeginExpansion
+\input{CoordinateSystem.tex}%
+%EndExpansion
 
-    \section{Particle motion}
+\section{Particle motion}
 
-        \subsection{Arbitrary configuration}
+\subsection{Arbitrary configuration}
 
-            \input{BounceGeneral.tex}
+%TCIMACRO{\QSubDoc{Include BounceGeneral}{\input{BounceGeneral.tex}}}%
+%BeginExpansion
+\input{BounceGeneral.tex}%
+%EndExpansion
 
-        \subsection{Circular configuration}\label{circonc}
+\subsection{Circular configuration}
 
-            \input{BounceCircular.tex}
+\label{circonc}
+
+%TCIMACRO{\QSubDoc{Include BounceCircular}{\input{BounceCircular.tex}}}%
+%BeginExpansion
+\input{BounceCircular.tex}%
+%EndExpansion
 
 \chapter{Kinetic description of electrons}
 
-    \section{Boltzman equation; Gyro- and Wave-averaging}
+\section{Boltzman equation; Gyro- and Wave-averaging}
 
-        \input{Boltzmann.tex}
+%TCIMACRO{\QSubDoc{Include Boltzmann}{\input{Boltzmann.tex}}}%
+%BeginExpansion
+\input{Boltzmann.tex}%
+%EndExpansion
 
-    \section{Guiding-Center Drifts and Drift-Kinetic Equation}
+\section{Guiding-Center Drifts and Drift-Kinetic Equation}
 
-        \input{Drift.tex}
+%TCIMACRO{\QSubDoc{Include Drift}{\input{Drift.tex}}}%
+%BeginExpansion
+\input{Drift.tex}%
+%EndExpansion
 
-    \section{Small drift approximation}
+\section{Small drift approximation}
 
-        \input{DriftOrdering.tex}
+%TCIMACRO{\QSubDoc{Include DriftOrdering}{\input{DriftOrdering.tex}}}%
+%BeginExpansion
+\input{DriftOrdering.tex}%
+%EndExpansion
 
-    \section{Low collision limit and bounce averaging}
+\section{Low collision limit and bounce averaging}
 
-        \input{LowCollisionality.tex}
+%TCIMACRO{\QSubDoc{Include LowCollisionality}{\input{LowCollisionality.tex}}}%
+%BeginExpansion
+\input{LowCollisionality.tex}%
+%EndExpansion
 
-    \section{Flux conservative representation}
+\section{Flux conservative representation}
 
-        \subsection{General formulation}
+\subsection{General formulation}
 
-            \input{FluxCons.tex}
+%TCIMACRO{\QSubDoc{Include FluxCons}{\input{FluxCons.tex}}}%
+%BeginExpansion
+\input{FluxCons.tex}%
+%EndExpansion
 
-        \subsection{Dynamics in Momentum Space}
+\subsection{Dynamics in Momentum Space}
 
-            \input{FluxConsMomentum.tex}
+%TCIMACRO{\QSubDoc{Include FluxConsMomentum}{\input{FluxConsMomentum.tex}}}%
+%BeginExpansion
+\input{FluxConsMomentum.tex}%
+%EndExpansion
 
-        \subsection{Dynamics in Configuration Space}
+\subsection{Dynamics in Configuration Space}
 
-            \input{FluxConsConfiguration.tex}
+%TCIMACRO{\QSubDoc{Include FluxConsConfiguration}{\input{FluxConsConfiguration.tex}}}%
+%BeginExpansion
+\input{FluxConsConfiguration.tex}%
+%EndExpansion
 
-        \subsection{Bounce-averaged flux calculation}
+\subsection{Bounce-averaged flux calculation}
 
-            \subsubsection{Zero order term: the Fokker-Planck equation}
+\subsubsection{Zero order term: the Fokker-Planck equation}
 
-                \input{FP_FluxConsMomentum.tex}
+%TCIMACRO{\QSubDoc{Include FP_FluxConsMomentum}{\input{FP_FluxConsMomentum.tex}}}%
+%BeginExpansion
+\input{FP_FluxConsMomentum.tex}%
+%EndExpansion
 
-            \subsection{Up to first order term: the Drift Kinetic equation}
+\subsection{Up to first order term: the Drift Kinetic equation}
 
-                \input{DKE_FluxConsMomentum.tex}
+%TCIMACRO{\QSubDoc{Include DKE_FluxConsMomentum}{\input{DKE_FluxConsMomentum.tex}}}%
+%BeginExpansion
+\input{DKE_FluxConsMomentum.tex}%
+%EndExpansion
 
-    \section{Moments of the distribution function}
+\section{Moments of the distribution function}
 
-        \input{Moments.tex}
+%TCIMACRO{\QSubDoc{Include Moments}{\input{Moments.tex}}}%
+%BeginExpansion
+\input{Moments.tex}%
+%EndExpansion
 
-\chapter{Detailed description of physical processes}\label{physproc}
+\chapter{Detailed description of physical processes}
 
-    \section{Collisions}
+\label{physproc}
 
-           \input{Collisions.tex}
+\section{Collisions}
 
-        \subsection{Bounce Averaged Fokker-Planck Equation}
+%TCIMACRO{\QSubDoc{Include Collisions}{\input{Collisions.tex}}}%
+%BeginExpansion
+\input{Collisions.tex}%
+%EndExpansion
 
-            \input{FP_Collisions.tex}
+\subsection{Bounce Averaged Fokker-Planck Equation}
 
-        \subsection{Bounce Averaged Drift Kinetic Equation}
+%TCIMACRO{\QSubDoc{Include FP_Collisions}{\input{FP_Collisions.tex}}}%
+%BeginExpansion
+\input{FP_Collisions.tex}%
+%EndExpansion
 
-            \input{DKE_Collisions.tex}
+\subsection{Bounce Averaged Drift Kinetic Equation}
 
-    \section{Ohmic electric field}
+%TCIMACRO{\QSubDoc{Include DKE_Collisions}{\input{DKE_Collisions.tex}}}%
+%BeginExpansion
+\input{DKE_Collisions.tex}%
+%EndExpansion
 
-        \input{Efield.tex}
+\section{Ohmic electric field}
 
-        \subsection{Bounce Averaged Fokker-Planck Equation}
+%TCIMACRO{\QSubDoc{Include Efield}{\input{Efield.tex}}}%
+%BeginExpansion
+\input{Efield.tex}%
+%EndExpansion
 
-            \input{FP_Efield.tex}
+\subsection{Bounce Averaged Fokker-Planck Equation}
 
-        \subsection{Bounce Averaged Drift Kinetic Equation}
+%TCIMACRO{\QSubDoc{Include FP_Efield}{\input{FP_Efield.tex}}}%
+%BeginExpansion
+\input{FP_Efield.tex}%
+%EndExpansion
 
-            \input{DKE_Efield.tex}
+\subsection{Bounce Averaged Drift Kinetic Equation}
 
-    \section{Radio frequency waves}
+%TCIMACRO{\QSubDoc{Include DKE_Efield}{\input{DKE_Efield.tex}}}%
+%BeginExpansion
+\input{DKE_Efield.tex}%
+%EndExpansion
 
-        \input{RFwave.tex}
+\section{Radio frequency waves}
 
-        \subsection{RF Diffusion coefficient for a Plane Wave}
+%TCIMACRO{\QSubDoc{Include RFwave}{\input{RFwave.tex}}}%
+%BeginExpansion
+\input{RFwave.tex}%
+%EndExpansion
 
-            \input{RFdiff.tex}
+\subsection{RF Diffusion coefficient for a Plane Wave}
 
-        \subsection{Bounce Averaged Fokker-Planck Equation}
+%TCIMACRO{\QSubDoc{Include RFdiff}{\input{RFdiff.tex}}}%
+%BeginExpansion
+\input{RFdiff.tex}%
+%EndExpansion
 
-            \input{FP_RFwave.tex}
+\subsection{Bounce Averaged Fokker-Planck Equation}
 
-        \subsection{Bounce Averaged Drift-Kinetic Equation}
+%TCIMACRO{\QSubDoc{Include FP_RFwave}{\input{FP_RFwave.tex}}}%
+%BeginExpansion
+\input{FP_RFwave.tex}%
+%EndExpansion
 
-            \input{DKE_RFwave.tex}
+\subsection{Bounce Averaged Drift-Kinetic Equation}
 
-        \subsection{Modeling of RF Waves}
+%TCIMACRO{\QSubDoc{Include DKE_RFwave}{\input{DKE_RFwave.tex}}}%
+%BeginExpansion
+\input{DKE_RFwave.tex}%
+%EndExpansion
 
-            \input{RFprop.tex}
+\subsection{Modeling of RF Waves}
+
+%TCIMACRO{\QSubDoc{Include RFprop}{\input{RFprop.tex}}}%
+%BeginExpansion
+\input{RFprop.tex}%
+%EndExpansion
 
 \chapter{Numerical calculations}
 
-        \section{Bounce integrals}
+\section{Bounce integrals}
 
-            \input{DiscreteBounce.tex}
+%TCIMACRO{\QSubDoc{Include DiscreteBounce}{\input{DiscreteBounce.tex}}}%
+%BeginExpansion
+\input{DiscreteBounce.tex}%
+%EndExpansion
 
-    \section{Grid definitions}
+\section{Grid definitions}
 
-        \input{GridDefinition.tex}
+%TCIMACRO{\QSubDoc{Include GridDefinition}{\input{GridDefinition.tex}}}%
+%BeginExpansion
+\input{GridDefinition.tex}%
+%EndExpansion
 
-    \section{Discretization procedure}
+\section{Discretization procedure}
 
-        \input{DiscreteProcedure.tex}
+%TCIMACRO{\QSubDoc{Include DiscreteProcedure}{\input{DiscreteProcedure.tex}}}%
+%BeginExpansion
+\input{DiscreteProcedure.tex}%
+%EndExpansion
 
-    \section{Zero order term: the Fokker-Planck equation}
+\section{Zero order term: the Fokker-Planck equation}
 
-        \subsection{Momentum dynamics}
+\subsection{Momentum dynamics}
 
-            \input{FP_DiscretMomentum.tex}
+%TCIMACRO{\QSubDoc{Include FP_DiscretMomentum}{\input{FP_DiscretMomentum.tex}}}%
+%BeginExpansion
+\input{FP_DiscretMomentum.tex}%
+%EndExpansion
 
-        \subsection{Spatial dynamics}
+\subsection{Spatial dynamics}
 
-            \input{FP_DiscretSpatial.tex}
+%TCIMACRO{\QSubDoc{Include FP_DiscretSpatial}{\input{FP_DiscretSpatial.tex}}}%
+%BeginExpansion
+\input{FP_DiscretSpatial.tex}%
+%EndExpansion
 
-        \subsection{Grid interpolation}
+\subsection{Grid interpolation}
 
-            \input{FP_GridInterpolation.tex}
+%TCIMACRO{\QSubDoc{Include FP_GridInterpolation}{\input{FP_GridInterpolation.tex}}}%
+%BeginExpansion
+\input{FP_GridInterpolation.tex}%
+%EndExpansion
 
-        \subsection{Discrete description of physical processes}
+\subsection{Discrete description of physical processes}
 
-            \input{FP_DiscretePhysProc.tex}
+%TCIMACRO{\QSubDoc{Include FP_DiscretePhysProc}{\input{FP_DiscretePhysProc.tex}}}%
+%BeginExpansion
+\input{FP_DiscretePhysProc.tex}%
+%EndExpansion
 
-    \section{Up to first order term: the Drift Kinetic equation}
+\section{Up to first order term: the Drift Kinetic equation}
 
-        \subsection{Grid interpolation}
+\subsection{Grid interpolation}
 
-            \input{DKE_GridInterpolation.tex}
+%TCIMACRO{\QSubDoc{Include DKE_GridInterpolation}{\input{DKE_GridInterpolation.tex}}}%
+%BeginExpansion
+\input{DKE_GridInterpolation.tex}%
+%EndExpansion
 
-        \subsection{Momentum dynamics}
+\subsection{Momentum dynamics}
 
-            \input{DKE_DiscretMomentum.tex}
+%TCIMACRO{\QSubDoc{Include DKE_DiscretMomentum}{\input{DKE_DiscretMomentum.tex}}}%
+%BeginExpansion
+\input{DKE_DiscretMomentum.tex}%
+%EndExpansion
 
-        \subsection{Discrete description of physical processes}
+\subsection{Discrete description of physical processes}
 
-            \input{DKE_DiscretePhysProc.tex}
+%TCIMACRO{\QSubDoc{Include DKE_DiscretePhysProc}{\input{DKE_DiscretePhysProc.tex}}}%
+%BeginExpansion
+\input{DKE_DiscretePhysProc.tex}%
+%EndExpansion
 
-    \section{Initial solution}
+\section{Initial solution}
 
-            \subsection{Zero order term: the Fokker-Planck equation}
+\subsection{Zero order term: the Fokker-Planck equation}
 
-                \input{FP_DiscretInit.tex}
+%TCIMACRO{\QSubDoc{Include FP_DiscretInit}{\input{FP_DiscretInit.tex}}}%
+%BeginExpansion
+\input{FP_DiscretInit.tex}%
+%EndExpansion
 
-        \subsection{Up to first order term: the Drift Kinetic equation}
+\subsection{Up to first order term: the Drift Kinetic equation}
 
-                \input{DKE_DiscretInit.tex}
+%TCIMACRO{\QSubDoc{Include DKE_DiscretInit}{\input{DKE_DiscretInit.tex}}}%
+%BeginExpansion
+\input{DKE_DiscretInit.tex}%
+%EndExpansion
 
-    \section{Boundary conditions}
+\section{Boundary conditions}
 
-            \subsection{Zero order term: the Fokker-Planck equation}
+\subsection{Zero order term: the Fokker-Planck equation}
 
-                \input{FP_Boundaries.tex}
+%TCIMACRO{\QSubDoc{Include FP_Boundaries}{\input{FP_Boundaries.tex}}}%
+%BeginExpansion
+\input{FP_Boundaries.tex}%
+%EndExpansion
 
-            \subsection{Up to first order term: the Drift Kinetic equation}
+\subsection{Up to first order term: the Drift Kinetic equation}
 
-                    \input{DKE_Boundaries.tex}
+%TCIMACRO{\QSubDoc{Include DKE_Boundaries}{\input{DKE_Boundaries.tex}}}%
+%BeginExpansion
+\input{DKE_Boundaries.tex}%
+%EndExpansion
 
-    \section{Moments of the Distribution Function}
+\section{Moments of the Distribution Function}
 
-             \subsection{Flux discretization for moment calculations}
+\subsection{Flux discretization for moment calculations}
 
-                     \input{DiscreteFluxes.tex}
+%TCIMACRO{\QSubDoc{Include DiscreteFluxes}{\input{DiscreteFluxes.tex}}}%
+%BeginExpansion
+\input{DiscreteFluxes.tex}%
+%EndExpansion
 
-              \subsection{Numerical integrals for moment calculations}
+\subsection{Numerical integrals for moment calculations}
 
-                     \input{DiscreteMoments.tex}
+%TCIMACRO{\QSubDoc{Include DiscreteMoments}{\input{DiscreteMoments.tex}}}%
+%BeginExpansion
+\input{DiscreteMoments.tex}%
+%EndExpansion
 
 \chapter{Algorithm}
 
-    \section{Matrix representation}
+\section{Matrix representation}
 
-        \subsection{Zero order term: the Fokker-Planck equation}
+\subsection{Zero order term: the Fokker-Planck equation}
 
-            \input{FP_Matrix.tex}
+%TCIMACRO{\QSubDoc{Include FP_Matrix}{\input{FP_Matrix.tex}}}%
+%BeginExpansion
+\input{FP_Matrix.tex}%
+%EndExpansion
 
-        \subsection{Up to first order term: the Drift Kinetic equation}
+\subsection{Up to first order term: the Drift Kinetic equation}
 
-            \input{DKE_Matrix.tex}
+%TCIMACRO{\QSubDoc{Include DKE_Matrix}{\input{DKE_Matrix.tex}}}%
+%BeginExpansion
+\input{DKE_Matrix.tex}%
+%EndExpansion
 
-    \section{Inversion procedure}
+\section{Inversion procedure}
 
-        \subsection{Incomplete matrix factorization}
+\subsection{Incomplete matrix factorization}
 
-            \input{IncompleteLU.tex}
+%TCIMACRO{\QSubDoc{Include IncompleteLU}{\input{IncompleteLU.tex}}}%
+%BeginExpansion
+\input{IncompleteLU.tex}%
+%EndExpansion
 
-        \subsection{Zero order term: the Fokker-Planck equation}
+\subsection{Zero order term: the Fokker-Planck equation}
 
-            \input{FP_Inversion.tex}
+%TCIMACRO{\QSubDoc{Include FP_Inversion}{\input{FP_Inversion.tex}}}%
+%BeginExpansion
+\input{FP_Inversion.tex}%
+%EndExpansion
 
-        \subsection{Up to first order term: the Drift Kinetic equation}
+\subsection{Up to first order term: the Drift Kinetic equation}
 
-            \input{DKE_Inversion.tex}
+%TCIMACRO{\QSubDoc{Include DKE_Inversion}{\input{DKE_Inversion.tex}}}%
+%BeginExpansion
+\input{DKE_Inversion.tex}%
+%EndExpansion
 
-    \section{Normalization and definitions}
+\section{Normalization and definitions}
 
-            \input{Normalization.tex}
+%TCIMACRO{\QSubDoc{Include Normalization}{\input{Normalization.tex}}}%
+%BeginExpansion
+\input{Normalization.tex}%
+%EndExpansion
 
 \chapter{Examples}
 
-    \input{examples.tex}
+%TCIMACRO{\QSubDoc{Include examples}{\input{examples.tex}}}%
+%BeginExpansion
+\input{examples.tex}%
+%EndExpansion
 
-    \section{Ohmic conductivity}
+\section{Ohmic conductivity}
 
-            \input{conductivity.tex}
+%TCIMACRO{\QSubDoc{Include conductivity}{\input{conductivity.tex}}}%
+%BeginExpansion
+\input{conductivity.tex}%
+%EndExpansion
 
-    \section{Runaway losses}
+\section{Runaway losses}
 
-            \input{runaway.tex}
+%TCIMACRO{\QSubDoc{Include runaway}{\input{runaway.tex}}}%
+%BeginExpansion
+\input{runaway.tex}%
+%EndExpansion
 
-    \section{Lower Hybrid Current drive}
+\section{Lower Hybrid Current drive}
 
-           \input{lhcd.tex}
+%TCIMACRO{\QSubDoc{Include lhcd}{\input{lhcd.tex}}}%
+%BeginExpansion
+\input{lhcd.tex}%
+%EndExpansion
 
-    \section{Electron Cyclotron Current drive}
+\section{Electron Cyclotron Current drive}
 
-            \input{eccd.tex}
+%TCIMACRO{\QSubDoc{Include eccd}{\input{eccd.tex}}}%
+%BeginExpansion
+\input{eccd.tex}%
+%EndExpansion
 
-    \section{Fast electron radial transport}
+\section{Fast electron radial transport}
 
-            \input{fasttransport.tex}
+%TCIMACRO{\QSubDoc{Include fasttransport}{\input{fasttransport.tex}}}%
+%BeginExpansion
+\input{fasttransport.tex}%
+%EndExpansion
 
-    \section{Fast electron magnetic ripple losses}
+\section{Fast electron magnetic ripple losses}
 
-            \input{ripple.tex}
+%TCIMACRO{\QSubDoc{Include ripple}{\input{ripple.tex}}}%
+%BeginExpansion
+\input{ripple.tex}%
+%EndExpansion
 
-    \section{Maxwellian bootstrap current}
+\section{Maxwellian bootstrap current}
 
-            \input{bootstrap.tex}
+%TCIMACRO{\QSubDoc{Include bootstrap}{\input{bootstrap.tex}}}%
+%BeginExpansion
+\input{bootstrap.tex}%
+%EndExpansion
 
 \chapter{Conclusion}
 
-            \input{Conclusion.tex}
+%TCIMACRO{\QSubDoc{Include Conclusion}{\input{Conclusion.tex}}}%
+%BeginExpansion
+\input{Conclusion.tex}%
+%EndExpansion
 
 \chapter{Acknowledgements}
 
-     \input{Acknowledgements.tex}
+%TCIMACRO{\QSubDoc{Include Acknowledgements}{\input{Acknowledgements.tex}}}%
+%BeginExpansion
+\input{Acknowledgements.tex}%
+%EndExpansion
 
 \appendix
 
 \chapter{Curvilinear Coordinate Systems}
 
-    \input{curvilinear.tex}
+%TCIMACRO{\QSubDoc{Include curvilinear}{\input{curvilinear.tex}}}%
+%BeginExpansion
+\input{curvilinear.tex}%
+%EndExpansion
 
 \chapter{Calculation of Bounce Coefficients for Circular Concentric FS}
 
-    \input{BounceCoef.tex}
+%TCIMACRO{\QSubDoc{Include BounceCoef}{\input{BounceCoef.tex}}}%
+%BeginExpansion
+\input{BounceCoef.tex}%
+%EndExpansion
 
 \chapter{Effective trapped fraction for Circular Concentric FS}
 
-    \input{EffTrappedFrac.tex}
+%TCIMACRO{\QSubDoc{Include EffTrappedFrac}{\input{EffTrappedFrac.tex}}}%
+%BeginExpansion
+\input{EffTrappedFrac.tex}%
+%EndExpansion
 
 \chapter{Cold Plasma Model for RF Waves}
 
-    \input{RFappendix.tex}
-    
+%TCIMACRO{\QSubDoc{Include RFappendix}{\input{RFappendix.tex}}}%
+%BeginExpansion
+\input{RFappendix.tex}%
+%EndExpansion
+
 \chapter{Large pitch-angle collisions}
 
-    \input{pitchangle.tex}
+%TCIMACRO{\QSubDoc{Include pitchangle}{\input{pitchangle.tex}}}%
+%BeginExpansion
+\input{pitchangle.tex}%
+%EndExpansion
 
 \chapter{Alternative discrete cross-derivatives coefficients}
 
-    \input{discretmomentcrossterms.tex}
+%TCIMACRO{\QSubDoc{Include discretmomentcrossterms}{\input{discretmomentcrossterms.tex}}}%
+%BeginExpansion
+\input{discretmomentcrossterms.tex}%
+%EndExpansion
 
 \chapter{MatLab File List}
 
-     \input{listfiles.tex}
+%TCIMACRO{\QSubDoc{Include listfiles}{\input{listfiles.tex}}}%
+%BeginExpansion
+\input{listfiles.tex}%
+%EndExpansion
 
 \newpage
 
+\bibliographystyle{plain}
 \bibliography{biblio}
 
 \end{document}

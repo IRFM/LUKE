@@ -1,25 +1,29 @@
-\label{Griddef}The drift kinetic equation may be solved by different numerical techniques.
-Here one of the most natural approach is described, namely the finite
-difference method, which is based on the transformation of a differential
-equation into an algebraic one. The volume $\mathcal{V}$ on which the drift
-kinetic equation is solved is characterized by three dimensions $\left( \psi
-,p,\xi _{0}\right) ,$ and, the time evolution is introduced with the
+%TCIDATA{Version=5.50.0.2890}
+%TCIDATA{LaTeXparent=0,0,NoticeDKE.tex}
+
+\label{Griddef}The drift kinetic equation may be solved by different
+numerical techniques. Here one of the most natural approach is
+described, namely the finite difference method, which is based on
+the transformation of a differential equation into an algebraic one.
+The volume $\mathcal{V}$ on which the drift kinetic equation is
+solved is characterized by three dimensions $\left( \psi ,p,\xi
+_{0}\right) ,$ and, the time evolution is introduced with the
 parameter $t$.
 
 Since the drift kinetic equation is expressed in conservative form, it is
 natural to define the grids for the flux $S$ grid as the starting point of
-the numerical calculations. 
+the numerical calculations.
 \begin{equation}
-S\left( t_{k},\psi _{l},p_{i},\xi _{0,j}\right) \rightarrow \left\{ 
+S\left( t_{k},\psi _{l},p_{i},\xi _{0,j}\right) \rightarrow \left\{
 \begin{array}{l}
-t_{k}\in \left[ 0,+\infty \right] ,k\rightarrow \left\{ 0,n_{t}\right\}  \\ 
+t_{k}\in \left[ 0,+\infty \right] ,k\rightarrow \left\{ 0,n_{t}\right\}  \\
 \psi _{l}\in \left[ 0,\psi _{a}\right] ,l\rightarrow \left\{ 0,n_{\psi
-}\right\}  \\ 
-p_{i}\in \left[ 0,p_{\max }\right] ,i\rightarrow \left\{ 0,n_{p}\right\}  \\ 
+}\right\}  \\
+p_{i}\in \left[ 0,p_{\max }\right] ,i\rightarrow \left\{ 0,n_{p}\right\}  \\
 \xi _{0,j}\in \left[ -1,1\right] ,j\rightarrow \left\{ 0,n_{\xi
-_{0}}\right\} 
+_{0}}\right\}
 \end{array}
-\right. 
+\right.
 \end{equation}
 
 This grid system defines a set of cells of non-uniform sizes characterized
@@ -32,18 +36,18 @@ solution.
 
 \begin{equation}
 f\left( t_{k},\psi _{l+1/2},p_{i+1/2},\xi _{0j+1/2}\right) \rightarrow
-\left\{ 
+\left\{
 \begin{array}{l}
-t_{k}\in \left[ 0,+\infty \right] ,k\rightarrow \left\{ 0,n_{t}\right\}  \\ 
+t_{k}\in \left[ 0,+\infty \right] ,k\rightarrow \left\{ 0,n_{t}\right\}  \\
 \psi _{l+1/2}\in \left[ 0+\frac{\Delta \psi _{1/2}}{2},a-\frac{\Delta \psi
-_{n_{r}-1/2}}{2}\right] ,l\rightarrow \left\{ 0,n_{\psi }-1\right\}  \\ 
+_{n_{r}-1/2}}{2}\right] ,l\rightarrow \left\{ 0,n_{\psi }-1\right\}  \\
 p_{i+1/2}\in \left[ \frac{\Delta p_{1/2}}{2},p_{\max }-\frac{\Delta %
-p_{n_{p}-1/2}}{2}\right] ,i\rightarrow \left\{ 0,n_{p}-1\right\}  \\ 
+p_{n_{p}-1/2}}{2}\right] ,i\rightarrow \left\{ 0,n_{p}-1\right\}  \\
 \xi _{0j+1/2}\in \left[ -1+\frac{\Delta \xi _{0,1/2}}{2},1-\frac{\Delta \xi
 _{0,n_{\xi _{0}}-1/2}}{2}\right] ,j\rightarrow \left\{ 0,n_{\xi
-_{0}}-1\right\} 
+_{0}}-1\right\}
 \end{array}
-\right. 
+\right.
 \end{equation}
 
 \fig{figures/griddefmom.eps}{Grid definition for the momentum
@@ -55,11 +59,11 @@ Momentum dynamic in $p$ and pitch-angle $\xi _{0}$ being independent, the
 position of $p_{i+1/2}$ in between $p_{i}$ and $p_{i+1},$ and of $\xi
 _{0,j+1/2}$ in between $\xi _{0,j}$ and $\xi _{0,j+1}$ is an arbitrary
 choice. The most simple and natural one is to place the point where the
-distribution function $f$ is determined exactly in the middle of the cell, 
+distribution function $f$ is determined exactly in the middle of the cell,
 \begin{equation}
-\left\{ 
+\left\{
 \begin{array}{l}
-p_{i+1/2}=\frac{p_{i}+p_{i+1}}{2} \\ 
+p_{i+1/2}=\frac{p_{i}+p_{i+1}}{2} \\
 \xi _{j+1/2}=\frac{\xi _{0,j}+\xi _{0,j+1}}{2}
 \end{array}
 \right.
@@ -68,19 +72,19 @@ p_{i+1/2}=\frac{p_{i}+p_{i+1}}{2} \\
 Then, intervals on the different grids are
 
 \begin{equation}
-\left\{ 
+\left\{
 \begin{array}{l}
-\Delta p_{i+1}=p_{i+3/2}-p_{i+1/2} \\ 
-\Delta p_{i+1/2}=p_{i+1}-p_{i} \\ 
-\Delta p_{i}=p_{i+1/2}-p_{i-1/2} \\ 
-\Delta \xi _{0,j+1}=\xi _{0,j+3/2}-\xi _{0,j+1/2} \\ 
-\Delta \xi _{0,j+1/2}=\xi _{0,j+1}-\xi _{0,j} \\ 
+\Delta p_{i+1}=p_{i+3/2}-p_{i+1/2} \\
+\Delta p_{i+1/2}=p_{i+1}-p_{i} \\
+\Delta p_{i}=p_{i+1/2}-p_{i-1/2} \\
+\Delta \xi _{0,j+1}=\xi _{0,j+3/2}-\xi _{0,j+1/2} \\
+\Delta \xi _{0,j+1/2}=\xi _{0,j+1}-\xi _{0,j} \\
 \Delta \xi _{0,j}=\xi _{0,j+1/2}-\xi _{0,j-1/2}
 \end{array}
 \right.
 \end{equation}
 
-where 
+where
 \begin{eqnarray}
 \Delta p_{i+1} &=&p_{i+3/2}-p_{i+1/2}  \nonumber \\
 &=&p_{i+3/2}-p_{i+1}+p_{i+1}-p_{i+1/2}  \nonumber \\
@@ -111,17 +115,17 @@ middle of the cell,
 \begin{equation}
 \psi _{l+1/2}=\frac{\psi _{l}+\psi _{l+1}}{2}
 \end{equation}
-and the intervals on the different grids are, 
+and the intervals on the different grids are,
 \begin{equation}
-\left\{ 
+\left\{
 \begin{array}{l}
-\Delta \psi _{l+1}=\psi _{l+3/2}-\psi _{l+1/2} \\ 
-\Delta \psi _{l+1/2}=\psi _{l+1}-\psi _{l} \\ 
+\Delta \psi _{l+1}=\psi _{l+3/2}-\psi _{l+1/2} \\
+\Delta \psi _{l+1/2}=\psi _{l+1}-\psi _{l} \\
 \Delta \psi _{l}=\psi _{l+1/2}-\psi _{l-1/2}
 \end{array}
 \right.
 \end{equation}
-where 
+where
 \begin{eqnarray}
 \Delta \psi _{l+1} &=&\psi _{l+3/2}-\psi _{l+1/2} \\
 &=&\psi _{l+3/2}-\psi _{l+1}+\psi _{l+1}-\psi _{l+1/2}  \nonumber \\
@@ -138,7 +142,7 @@ minimal on a given magnetic flux surface as shown in Sec.\ref
 magnetic flux surface that is crossed by trajectories of both trapped and
 circulating electrons. In momentum space, the dynamics of trapped and
 passing particles is characterized by an interval boundary which is defined
-by the relation 
+by the relation
 \begin{equation}
 \xi _{0T}^{2}\left( \psi \right) =1-\frac{B_{0}\left( \psi \right) }{B_{\max
 }\left( \psi \right) }  \label{Trapcond}
@@ -151,7 +155,7 @@ there exists an index number $j_{l}$ where the following condition is
 exactly fullfiled\footnote{%
 This choice is possible, since bounce integrals are determined numerically
 from magnetic equilibrium codes, and therefore, no singularity is
-encountered.}, 
+encountered.},
 \begin{equation}
 \xi _{0T,j_{l}}^{2}\left( \psi _{l}\right) =1-\frac{B_{0}\left( \psi
 _{l}\right) }{B_{\max }\left( \psi _{l}\right) }
@@ -172,7 +176,7 @@ points). Hence, for $n_{\psi }=30,$ $n_{\xi _{0}}\geq 187.$
 
 \subsection{Time grid definition}
 
-Time evolution is also projected on a numerical grid, 
+Time evolution is also projected on a numerical grid,
 \begin{equation}
 t_{k}=k\Delta t
 \end{equation}

@@ -1,3 +1,6 @@
+%TCIDATA{Version=5.50.0.2890}
+%TCIDATA{LaTeXparent=0,0,NoticeDKE.tex}
+
 \label{runawaysection}
 \paragraph{Primary generation}
 
@@ -24,7 +27,7 @@ time step are similar.
 
 In a first step, a local analysis is performed, without considering bounce
 averaging. Here, only the Maxwellian electron-electron collision operator is
-considered, for allowing comparisons with analytical solutions, as shown in 
+considered, for allowing comparisons with analytical solutions, as shown in
 \ref{table_run1}
 
 \begin{table}[tbp]
@@ -60,7 +63,7 @@ than expected by the model of Kruskal-Bernstein. The difference is even much
 larger with the model of Connor and Hastie \cite{con75}. It must be
 emphasized that the expression of M\o ller for the collision operator
 underestimate $\overline{\Gamma }_{R}$ by $10\%$ as compared to the
-high-velocity limit. 
+high-velocity limit.
 \begin{table}[tbp]
 \begin{center}
 \begin{tabular}{|l|l|}
@@ -87,7 +90,7 @@ giving the following radial positions $\rho =\left[
 0.14142,0.31623,0.5099,0.70711,0.90554\right] $. In that case, the code
 calculates itself the pitch-angle grid and the number of step is now $n_{\xi
 _{0}}=168,$ while $n_{p}=125.$The runaway rate is found to be independent of
-the method of calculations, and the Kruskal-Bernstein is well recovered when 
+the method of calculations, and the Kruskal-Bernstein is well recovered when
 $Z_{eff}=1$ at all plasma radii. In Fig.\ref{fpcontrun} , and example of a
 runaway distribution at Bmin is given, for $\rho =0.31623.$ The trapped
 domain is large, and the region where the electric field may accelerate fast
@@ -111,7 +114,7 @@ electric field up to the integration domain.
 %EndExpansion
 
 In Fig. \ref{fpprojrun}, the parallel component of the electron distribution
-function 
+function
 \begin{equation}
 F_{\Vert }{}_{0}^{\left( 0\right) }\left( \psi ,p_{\Vert }\right) =2\pi
 \int_{0}^{\infty }f_{0}^{\left( 0\right) }\left( \psi ,p_{\Vert },p_{\bot
@@ -119,7 +122,7 @@ F_{\Vert }{}_{0}^{\left( 0\right) }\left( \psi ,p_{\Vert }\right) =2\pi
 \end{equation}
 the normalized perpendicular temperature $\overline{T}_{\bot }\left( \psi
 ,p_{\Vert }\right) =T_{\bot }\left( \psi ,p_{\Vert }\right) /T_{e}^{\dag }$
-where 
+where
 \begin{equation}
 T_{\bot }\left( \psi ,p_{\Vert }\right) =\frac{1}{2}\frac{\int_{0}^{\infty
 }f_{0}^{\left( 0\right) }\left( p_{\Vert },p_{\bot }\right) p_{\bot
@@ -127,7 +130,7 @@ T_{\bot }\left( \psi ,p_{\Vert }\right) =\frac{1}{2}\frac{\int_{0}^{\infty
 },p_{\bot }\right) p_{\bot }dp_{\bot }}  \label{Tperpnorm}
 \end{equation}
 and the parallel one $\overline{T}_{\Vert }\left( \psi ,p_{\bot }\right)
-=T_{\Vert }\left( \psi ,p_{\bot }\right) /T_{e}^{\dag }$ defined as 
+=T_{\Vert }\left( \psi ,p_{\bot }\right) /T_{e}^{\dag }$ defined as
 \begin{equation}
 T_{\Vert }\left( \psi ,p_{\bot }\right) =\frac{\int_{-\infty }^{\infty
 }f_{0}^{\left( 0\right) }\left( p_{\Vert },p_{\bot }\right) p_{\Vert
@@ -159,7 +162,7 @@ are more efficiently accelerated along bthe magnetic field line. But since
 they are close to trapped/passing boundary, their probability to be trapped
 before reaching the Dreicer limit is fairly high, and therefore, the density
 close to the Dreicer boundary is likely significantly lowered. Consequently,
-the relative reduction of the runaway rate 
+the relative reduction of the runaway rate
 \begin{equation}
 \Delta \overline{\Gamma }_{R}=\frac{\overline{\Gamma }_{R}\left( \epsilon
 \right) -\overline{\Gamma }_{R}\left( \epsilon =0\right) }{\overline{\Gamma }%
@@ -168,11 +171,11 @@ _{R}\left( \epsilon =0\right) }
 must be roughly given by a factor proportional to the effective fraction of
 trapped electron $\mathcal{F}_{t}^{eff.},$ since not only trapped but also
 barely trapped electron dynamics are concerned. A fit of the numerical
-results confirms this coarse analysis, since 
+results confirms this coarse analysis, since
 \begin{equation}
 \Delta \overline{\Gamma }_{R}\simeq -1.2\sqrt{\frac{2\epsilon }{1+\epsilon }}
 \end{equation}
-for $\epsilon \lesssim 0.53$ and lim$_{\epsilon \rightarrow 0}\Delta 
+for $\epsilon \lesssim 0.53$ and lim$_{\epsilon \rightarrow 0}\Delta
 \overline{\Gamma }_{R}\left( \epsilon \right) \simeq 1.7\sqrt{\epsilon }%
 \simeq -1.16\mathcal{F}_{t}^{eff.}\footnote{%
 The reduction factor of the runaway losses as predicted by the drift kinetic

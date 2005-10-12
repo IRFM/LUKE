@@ -1,18 +1,22 @@
-\label{lhcdsection}
-The Lower Hybrid current drive problem is one the more important addressed
-by Fokker-Planck calculations in the field of fusion by magnetic
-confinement. It is also certainly one of the most demanding case regarding
-the numerical constraints that must be satisfied simultaneously such as
-possible discontinuities and large values of the quasilinear diffusion
-coefficient, presence of cross-derivatives $D_{p\xi }=D_{\xi p}\neq 0.$ In
-that conditions, the matrix conditionning may be significantly reduced,
-leading to possible onset of numerical instabilities, lack of convergence or
-possible convergence towards a solution that has no physical sense. In these
-conditions, the demonstration that the code remains fully conservative and
-gives a physical solution for a domain of parameters that is relevant for
-magnetic fusion simulations is a stringent test for the validity of the
-projection technique of the kinetic equations on the numerical grids as well
-as the correct description of both the internal and external boundary
+%TCIDATA{Version=5.50.0.2890}
+%TCIDATA{LaTeXparent=0,0,NoticeDKE.tex}
+
+\label{lhcdsection} The Lower Hybrid current drive problem is one
+the more important addressed by Fokker-Planck calculations in the
+field of fusion by magnetic confinement. It is also certainly one of
+the most demanding case regarding the numerical constraints that
+must be satisfied simultaneously such as possible discontinuities
+and large values of the quasilinear diffusion coefficient, presence
+of cross-derivatives $D_{p\xi }=D_{\xi p}\neq 0.$ In that
+conditions, the matrix conditionning may be significantly reduced,
+leading to possible onset of numerical instabilities, lack of
+convergence or possible convergence towards a solution that has no
+physical sense. In these conditions, the demonstration that the code
+remains fully conservative and gives a physical solution for a
+domain of parameters that is relevant for magnetic fusion
+simulations is a stringent test for the validity of the projection
+technique of the kinetic equations on the numerical grids as well as
+the correct description of both the internal and external boundary
 conditions.
 
 For the test procedure, a simplified expression of the quasilinear diffusion
@@ -80,12 +84,12 @@ code are larger by more than $10\%$. The difference arises likely from the
 collision operator that may exhibit some differences.
 
 %TCIMACRO{
-%\TeXButton{Fig_efflhgrille}{\fig{figures/efflhgrille.eps}{Variations of the Lower Hybrid current and power densities, ratio between the RF and collision absorbed power density, 
-%and the current drive efficiency with the grid size. Here uniform pitch-angle and momentum grids are considered. Detailed aspect of the simulation 
+%\TeXButton{Fig_efflhgrille}{\fig{figures/efflhgrille.eps}{Variations of the Lower Hybrid current and power densities, ratio between the RF and collision absorbed power density,
+%and the current drive efficiency with the grid size. Here uniform pitch-angle and momentum grids are considered. Detailed aspect of the simulation
 %are given in the text}{efflhgrille}{7cm} }}
 %BeginExpansion
-\fig{figures/efflhgrille.eps}{Variations of the Lower Hybrid current and power densities, ratio between the RF and collision absorbed power density, 
-and the current drive efficiency with the grid size. Here uniform pitch-angle and momentum grids are considered. Detailed aspect of the simulation 
+\fig{figures/efflhgrille.eps}{Variations of the Lower Hybrid current and power densities, ratio between the RF and collision absorbed power density,
+and the current drive efficiency with the grid size. Here uniform pitch-angle and momentum grids are considered. Detailed aspect of the simulation
 are given in the text}{efflhgrille}{7cm} %
 %EndExpansion
 
@@ -105,17 +109,17 @@ code, which is fast, accurate and robust, therefore fully designed for
 self-consistent realistic calculations that involve a chain of codes.
 
 %TCIMACRO{
-%\TeXButton{Fig_memlhgrille}{\fig{figures/memlhgrille.eps}{Variations of the memory storage requirement and the time elapsed for kinetic calculations with the grid size. 
+%\TeXButton{Fig_memlhgrille}{\fig{figures/memlhgrille.eps}{Variations of the memory storage requirement and the time elapsed for kinetic calculations with the grid size.
 %Here uniform pitch-angle and momentum grids are considered. Detailed aspect of the simulation are given in the text}{memlhgrille}{7cm} }}
 %BeginExpansion
-\fig{figures/memlhgrille.eps}{Variations of the memory storage requirement and the time elapsed for kinetic calculations with the grid size. 
+\fig{figures/memlhgrille.eps}{Variations of the memory storage requirement and the time elapsed for kinetic calculations with the grid size.
 Here uniform pitch-angle and momentum grids are considered. Detailed aspect of the simulation are given in the text}{memlhgrille}{7cm} %
 %EndExpansion
 
 For a fixed number of grid points, the upper limit of the integration domain
 may have a crucial role, especially when entering relativistic regimes at $
 \beta _{th}^{\dag }=0.1$ and when the resonance domain involves large values
-of $v_{\Vert }$. As shown in Fig. \ref{efflhpmax} for a pure hydrogen plasma 
+of $v_{\Vert }$. As shown in Fig. \ref{efflhpmax} for a pure hydrogen plasma
 $\left( Z_{s}=1\right) ,$ $p_{\max }$ must be larger than $25$ for $\left(
 v_{1}=4,v_{2}=7\right) $ so that $\eta _{LH}$ becomes independent of $
 p_{\max },$ while $p_{\max }\simeq 15$ is acceptable for $\left(
@@ -127,7 +131,7 @@ the upper limit of the integration domain in momentum space is too low.
 Consequently, for robust estimate of the current drive efficiency in
 realistic tokamak simulations, $p_{\max }=30$ must be considered as a
 reference value for relativistic calculations, providing the lower bound of
-the resonance domain is larger than $n_{\Vert }\simeq 1.4.$ As shown in Sec. 
+the resonance domain is larger than $n_{\Vert }\simeq 1.4.$ As shown in Sec.
 \ref{boundarylhsec}, values of $n_{\Vert }$ lower than $1.4$ becomes rapidly
 highly questionable when $T_{e}^{\dagger }$ exceeds $1keV$, because of the
 relativistic curvature of the resonance domain that makes the code
@@ -150,7 +154,7 @@ The physical benchmark of the code is performed by investigating the role
 played by increasingly large values of $Z_{s}$. Though this corresponds to
 unrealistic situations, it allows interesting comparisons with theoretical
 results. As shown in Fig. \ref{efflhZi}, the current drive efficiency
-defined as the ratio 
+defined as the ratio
 \begin{equation}
 \eta _{LH}=\frac{\left\langle j_{LH}\right\rangle }{\left\langle
 P_{LH}\right\rangle }
@@ -165,14 +169,14 @@ is significantly underestimated, as discussed above, when large values of $
 v_{\Vert }$ are considered, and when relativistic effects become
 significant, i.e. when $\beta _{th}^{\dag }=0.1$ in the case here
 considered. The current drive efficiency scales roughly with the $1-D$
-non-relativistic model given in Ref. \cite{kar86} 
+non-relativistic model given in Ref. \cite{kar86}
 \begin{equation}
 \eta _{LH}^{1-D}\simeq 0.7\frac{4}{5+Z_{s}}\frac{v_{2}^{2}-v_{1}^{2}}{\ln
 \left( v_{2}/v_{1}\right) }
 \end{equation}
 where the dependence $4/\left( 5+Z_{s}\right) $ with $Z_{s}$ is deduced from
 Langevin analysis. It is found that the coefficient $0.7$ is independent of $
-\left( v_{1},v_{2}\right) $. This factor could arise from that fact that the 
+\left( v_{1},v_{2}\right) $. This factor could arise from that fact that the
 $1-D$ expression is obtained in the saturated limit corresponding to $%
 \overline{D}_{0,new}^{LH}=+\infty ,$ while numerical calculations are
 obtained with $\overline{D}_{0,new}^{LH}=1.$ This result confirms on one
@@ -220,7 +224,7 @@ from various $2-D$ relativistic Fokker-Planck codes}
 \end{table}
 considering the current efficiency in normalized units, but also an
 excellent agreement is found in absolute units, as shown in Table \ref
-{table_lh2} 
+{table_lh2}
 \begin{table}[tbp]
 \begin{center}
 \begin{tabular}{|l|l|l|l|}
@@ -246,10 +250,10 @@ numerous analytical results corresponds to the asymptotic solution $%
 \overline{D}_{0,new}^{LH}=+\infty .$ However, limitations do exist in
 numerical simulations, and it is important to qualify the robustness of the
 code regarding this problem. A systematic study has been performed for $
-\left( v_{1}=3.5,v_{2}=6\right) $ and $\left( v_{1}=4,v_{2}=7\right) ,$ with 
+\left( v_{1}=3.5,v_{2}=6\right) $ and $\left( v_{1}=4,v_{2}=7\right) ,$ with
 $\beta _{th}^{\dag }=0.001$ and $\beta _{th}^{\dag }=0.1$. In these
 simulations, $p_{\max }=30,$ and uniform momentum and pitch-angle grids are
-taken, with a size $n_{p}=n_{\xi _{0}}\simeq 200$ except when specified. 
+taken, with a size $n_{p}=n_{\xi _{0}}\simeq 200$ except when specified.
 
 As shown in Fig.\ref{efflhdql}, for all simulations with $\overline{D}%
 _{0,new}^{LH}$ ranging from $1$ to $10$, the conservative scheme is
@@ -262,7 +266,7 @@ _{0,new}^{LH}\leq 2$ only. It is interesting to observe that the current
 drive efficiency does not vary significantly from $\overline{D}%
 _{0,new}^{LH}=1$ to $\overline{D}_{0,new}^{LH}=2$, which indicates that the
 saturated regime with a flat plateau is almost reached when $\overline{D}%
-_{0,new}^{LH}=1.$ 
+_{0,new}^{LH}=1.$
 
 %TCIMACRO{
 %\TeXButton{Fig_efflhdql}{\fig{figures/efflhdql.eps}{Variation of the current drive efficiency with the amplitude of the quasilinear diffusion coefficient
@@ -323,7 +327,7 @@ and the current drive efficient drops down to an acceptable level, while $%
 \left\langle P_{coll}\right\rangle /\left\langle P_{LH}\right\rangle $ is
 very close to unity for $\overline{D}_{0,new}^{LH}=10$ as shown, in Fig. \ref
 {efflhdql}. Still visible, this effect is weaker for $\overline{D}%
-_{0,new}^{LH}=5.$ 
+_{0,new}^{LH}=5.$
 
 From this analysis, it is clear that a too coarse grid leads to strong
 limitations on the upper value of $\overline{D}_{0,new}^{LH}$ that may be
@@ -346,7 +350,7 @@ fails, and the result has no meaning. A possible way to overcome this
 problem is to perform calculations with the upper acceptable $\overline{D}%
 _{0,new}^{LH}=2$ value, while using an adhoc correcting factor, in order to
 recover the solution corresponding asymptotic limit at $\overline{D}%
-_{0,new}^{LH}=+\infty .$ 
+_{0,new}^{LH}=+\infty .$
 
 From the physical point of view, it is not surprizing that the use of very
 large $\overline{D}_{0,new}^{LH}$ values leads to numerical instabilities.
@@ -368,7 +372,7 @@ off-diagonal coefficients in the matrix, but in that case, the conditionning
 of the matrix is preserved even for $\overline{D}_{0,new}^{LH}=+\infty .$
 With the new general method of partial matrix factorization discussed in Sec.%
 \ref{LUsection}, such an approach may be in principle easily tractable,
-without prohibitive computational efforts. 
+without prohibitive computational efforts.
 
 The role played by a non-uniform pitch-angle grid is critical, since in
 realistic simulations, bounce-averaging must be considered with
@@ -384,7 +388,7 @@ no effect for $\overline{D}_{0,new}^{LH}\leq 2,$ $n_{p}=n_{\xi _{0}}\simeq
 1\%$, which is an important result for $3-D$ operation, even when $Z_{s}$
 increases, and $2-D$ broadening by pitch-angle scattering plays
 progressively a dominant role over the parallel direction along the magnetic
-field line direction. 
+field line direction.
 
 Ultimate benchmarks have been performed to validate the implementation of
 the Lower Hybrid current drive in the code in $3-D$ configuration and

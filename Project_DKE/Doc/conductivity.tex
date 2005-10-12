@@ -1,4 +1,8 @@
-\label{conducsection}The determination of the Ohmic electrical conductivity 
+%TCIDATA{Version=5.50.0.2890}
+%TCIDATA{LaTeXparent=0,0,NoticeDKE.tex}
+
+\label{conducsection}The determination of the Ohmic electrical
+conductivity
 \begin{equation}
 \sigma =\frac{\overline{J}}{\overline{E}}
 \end{equation}
@@ -17,7 +21,7 @@ Except if it is mentionned, bounce integrals are performed analytically,
 according to the expressions given throughout the text. The minor radius is
 set to $a_{p}=2.3899m$ and the major one is $R_{p}=2.39m$ so that the
 normalized radius $\rho $ is very close to $\epsilon $ value from $0$ to $1$%
-. In the tokamak parameter M-file ``ptok\_dke\_1yp.m'', the corresponding 
+. In the tokamak parameter M-file ``ptok\_dke\_1yp.m'', the corresponding
 section for these simulations is named ``CQL3D\_OHM'', since it
 corresponds to conditions that have been used for code comparison with the
 well know CQL3D program \cite{har93c1_IAEA}. For all cases, except when
@@ -60,8 +64,8 @@ increasing the integration domain up to $\overline{p}_{\max }=20$, $\sigma
 domain of integration. which confirms that $7.4387.$
 
 As far as $Z_{eff}$ is increased, the Lorentz limit is progressively
-reached, since the pitch-angle predominates. This is clearly shown in Table 
-\ref{Table_cond2} 
+reached, since the pitch-angle predominates. This is clearly shown in Table
+\ref{Table_cond2}
 
 \begin{table}[tbp]
 \begin{center}
@@ -81,7 +85,7 @@ linearized e-e collision model}
 
 and in the limit $Z_{eff}\gg 1,$ the result is well independent of the
 electron-electron collision model \cite{kar86}. Its value is roughly given
-by expression 
+by expression
 \begin{equation}
 \sigma \simeq 16\sqrt{\frac{2}{\pi }}\frac{1}{Z_{eff}}\simeq \frac{12.766}{%
 Z_{eff}}
@@ -97,13 +101,13 @@ _{0}}=168,$ while $n_{p}=125.$The conductivity is found to be independent of
 the method of calculations, and the value $\sigma =7.4353$ is well
 recovered. It is found that the code remains fully conservative
 without forcing the Maxwellian solution at $i=1/2$ and without normalizing
-the density at each iteration. 
+the density at each iteration.
 
 Bounce averaged calculations have be performed first locally. As shown in
 Fig. \ref{ohmconduct}, an excellent agreement is found with CQL code from
 Ref. \cite{kil86} over a broad range for the inverse aspect ratio, and also
 its more recent version CQL3D \cite{har93c1_IAEA}. At the limit $\epsilon
-\ll 1,$ the approximate Sigmar-Coppi expression 
+\ll 1,$ the approximate Sigmar-Coppi expression
 \begin{equation}
 \sigma /\sigma _{Spitzer}=1-1.95\sqrt{\epsilon }+0.95\epsilon
 \end{equation}

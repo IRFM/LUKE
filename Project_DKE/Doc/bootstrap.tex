@@ -1,3 +1,6 @@
+%TCIDATA{Version=5.50.0.2890}
+%TCIDATA{LaTeXparent=0,0,NoticeDKE.tex}
+
 
 The $3-D$ relativistic and bounce-averaged electron drift kinetic solver
 allows kinetic calculations of the bootstrap current for arbitrary tokamak
@@ -33,7 +36,7 @@ that the normalized radius $\rho $ is very close to $\epsilon $ value from $%
 order to simplify calculations, and identify clearly the pitch-angle
 dynamics that plays a major role in the bootstrap current calculation, all
 temperatures profiles are taken flat, and consequently the pressure profile
-arises only from density gradient. Its radial dependence is 
+arises only from density gradient. Its radial dependence is
 \begin{equation}
 n_{e}\left( \rho \right) =\left( n_{e0}-n_{ea}\right) \left( 1-\rho
 ^{2}\right) ^{2}+n_{ea}  \label{densityprofLor}
@@ -98,14 +101,14 @@ analytical expressions that may be found in Refs. \cite{hin76}\cite{hir81}%
 plasmas circular magnetic flux surfaces, in the low aspect ratio limit $%
 \epsilon \rightarrow 0$ and low collisionality limit $\nu ^{*}\rightarrow 0,$
 flux surface-averaged parallel current may be expressed in the general
-simple form 
+simple form
 \begin{equation}
 \left\langle J_{\Vert }\right\rangle _{\phi }\left( \rho \right) \propto
 -p_{e}\left( \rho \right) \frac{B_{T}\left( \rho \right) }{B_{P}\left( \rho
 \right) }\left( L_{31}A_{1}+L_{32}A_{2}+L_{34}A_{4}\right)
 \label{bootstrapthermalanalytic}
 \end{equation}
-where 
+where
 \begin{equation}
 A_{1}=\frac{d\ln p_{e}}{d\rho }+\frac{T_{i}\left( \rho \right) }{%
 Z_{i}T_{e}\left( \rho \right) }\frac{d\ln p_{e}}{d\rho }  \label{A1coeff}
@@ -123,44 +126,44 @@ the model. For the non-relativistic Lorentz model, with flat temperature
 gradients, $A_{2}=A_{3}=0$, and consequently only the coefficient $L_{31}$
 plays a role. Therefore both models \cite{hir88} and \cite{sau99} are
 expected to give equivalent results. Moreover since $Z_{i}\gg 1$ and $%
-T_{i}/T_{e}\ll 1,$ 
+T_{i}/T_{e}\ll 1,$
 \begin{equation}
 A_{1}\simeq \frac{d\ln p_{e}}{d\rho }=\frac{d\ln n_{e}}{d\rho }
 \end{equation}
 
 In the low collisionality limit but for arbitrary inverse aspect ratio
 between $0$ and $1$, the expression of $L_{31}$ given by Hirshman \cite
-{hir88} may be used 
+{hir88} may be used
 \begin{eqnarray}
 L_{31} &=&x\left[ 0.754+2.21Z_{i}+Z_{i}^{2}\right.  \nonumber \\
 &&+\left. x\left( 0.348+1.243Z_{i}+Z_{i}^{2}\right) \right] /D\left( x\right)
 \end{eqnarray}
-where 
+where
 \begin{eqnarray}
 D\left( x\right) &=&1.414Z_{i}+Z_{i}^{2}+x\left(
 0.754+2.657Z_{i}+2Z_{i}^{2}\right)  \nonumber \\
 &&+x^{2}\left( 0.348+1.243Z_{i}+Z_{i}^{2}\right)
 \end{eqnarray}
-and 
+and
 \begin{equation}
 x\simeq \frac{1.46\sqrt{\epsilon }+2.4\epsilon }{\left( 1-\epsilon \right)
 ^{3/2}}
 \end{equation}
 
-In the limit $Z_{i}\gg 1,$ 
+In the limit $Z_{i}\gg 1,$
 \begin{equation}
 \lim_{Z_{i}\rightarrow +\infty }L_{31}=\frac{x}{1+x}
 \end{equation}
 $L_{31}$ is independent of $Z_{i}.$ Therefore, the flux-surface averaged
-bootstrap current scales as 
+bootstrap current scales as
 \begin{equation}
 \lim_{Z_{i}\rightarrow +\infty }\left\langle J_{\Vert ,\mathcal{L}%
-}\right\rangle _{\phi }\left( \rho \right) \propto -\frac{1.46\sqrt{\epsilon 
+}\right\rangle _{\phi }\left( \rho \right) \propto -\frac{1.46\sqrt{\epsilon
 }+2.4\epsilon }{1.46\sqrt{\epsilon }+2.4\epsilon +\left( 1-\epsilon \right)
 ^{3/2}}n_{e}\left( \rho \right) T_{e}\frac{B_{T}\left( \rho \right) }{%
 B_{P}\left( \rho \right) }\frac{d\ln n_{e}}{d\rho }  \label{bootcurrlargeZi}
 \end{equation}
-with 
+with
 \begin{equation}
 \rho =\epsilon \frac{R_{p}}{a_{p}}
 \end{equation}
@@ -173,7 +176,7 @@ expression (\ref{bootcurrlargeZi}), the well known limit $\epsilon \ll 1$%
 n_{e}\left( \rho \right) T_{e}\frac{B_{T}\left( \rho \right) }{B_{P}\left(
 \rho \right) }\frac{d\ln n_{e}}{d\rho }
 \end{equation}
-is recovered, while 
+is recovered, while
 \begin{equation}
 \lim_{Z_{i}\rightarrow +\infty }\left\langle J_{\Vert ,\mathcal{L}%
 }\right\rangle _{\phi }\left( \rho \right) \propto -n_{e}\left( \rho \right)
@@ -231,7 +234,7 @@ scale as $L_{31}$ in the simulation here studied. At the lowest $\epsilon
 _{t}^{eff.}\left( \rho \right) /\mathcal{F}_{t}\approx 2$ is larger than the
 expected value $1.46/0.9\approx 1.62,$ which indicates that the well known
 limit value $\mathcal{F}_{t}^{eff.}\left( \rho \right) \simeq 1.46\sqrt{%
-\epsilon }$ is only only valid for very small inverse aspect ratio $\epsilon 
+\epsilon }$ is only only valid for very small inverse aspect ratio $\epsilon
 $. Indeed, $\mathcal{F}_{t}$ is very well reproduced by the asymptotic
 expression $\mathcal{F}_{t}\left( \rho \right) \simeq 0.9\sqrt{\epsilon }$
 quite far from the limit $\epsilon \ll 1,$ as presented in Fig.\ref

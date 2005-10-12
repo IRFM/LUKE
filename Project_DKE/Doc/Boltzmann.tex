@@ -1,3 +1,6 @@
+%TCIDATA{Version=5.50.0.2890}
+%TCIDATA{LaTeXparent=0,0,NoticeDKE.tex}
+
 
 In the kinetic description, electrons are described by a distribution
 function $f\left( \mathbf{r},\mathbf{p},t\right) $, which gives the density
@@ -7,7 +10,7 @@ space is the Boltzmann equation \nomenclature{$f$}{Electron
 distribution function} \nomenclature{$t$}{Time parameter}
 \begin{equation}
 \frac{\partial f}{\partial t}+\mathbf{v}\cdot \nabla _{\mathbf{r}%
-}f+q_{e}\left[ \mathbf{E}\left( \mathbf{r},t\right) +\mathbf{v}\times 
+}f+q_{e}\left[ \mathbf{E}\left( \mathbf{r},t\right) +\mathbf{v}\times
 \mathbf{B}\left( \mathbf{r},t\right) \right] \cdot \nabla _{\mathbf{p}%
 }f=\left. \frac{\partial f}{\partial t}\right| _{\text{C}}  \label{kin1}
 \end{equation}
@@ -17,7 +20,7 @@ distribution function} \nomenclature{$t$}{Time parameter}
 \nomenclature{$\mathbf{p}$}{Momentum vector}
 \nomenclature{$\mathbf{v}$}{Velocity vector}
 \nomenclature{$\mathbf{k}$}{Plane-wave wave vector}
-where 
+where
 \begin{equation}
 \left. \frac{\partial f}{\partial t}\right| _{\text{C}}\equiv C\left(
 f\right)
@@ -26,7 +29,7 @@ is the collision operator. The fields $\mathbf{E}\left( \mathbf{r},t\right) $
 and $\mathbf{B}\left( \mathbf{r},t\right) $ are assumed to consist of
 time-independent macroscopic fields $\overline{\mathbf{E}}\left( \mathbf{r}\right) $
 and $\overline{\mathbf{B}}\left( \mathbf{r}\right) $ and fields associated with
-plane waves. 
+plane waves.
 \nomenclature{$\overline{\mathbf{E}}$}{Time independent total electric field vector
 on the fast time scale characterized by the fluctuation time frequency $\omega/2\pi$}
 \nomenclature{$\overline{\mathbf{B}}$}{Time independent total magnetic field vector
@@ -37,7 +40,7 @@ on the fast time scale characterized by the fluctuation time frequency}
 \ r}\right) +\int \widetilde{\mathbf{E}}_{\mathbf{k}}e^{i\left( \mathbf{k}%
 \cdot \mathbf{r}-\omega t\right) }d\mathbf{k} \\
 \mathbf{B}\left( \mathbf{r},t\right) &=&\overline{\mathbf{B}}\left( \mathbf{r%
-}\right) +\int \widetilde{\mathbf{B}}_{\mathbf{k}}e^{i\left( \mathbf{k}\cdot 
+}\right) +\int \widetilde{\mathbf{B}}_{\mathbf{k}}e^{i\left( \mathbf{k}\cdot
 \mathbf{r}-\omega t\right) }d\mathbf{k}
 \end{eqnarray}
 \nomenclature{$\widetilde{\mathbf{E}}$}{Fast time scale fluctuating component of the total electric field
@@ -52,7 +55,7 @@ collisional time scales, we need to average over the faster time scales,
 which are the gyromotion and the wave oscillation.
 
 Performing a time-averaging $\int_{0}^{2\pi /\omega }dt$ of the equation (%
-\ref{kin1}) removes the fast wave time scale from the equation, to give 
+\ref{kin1}) removes the fast wave time scale from the equation, to give
 \begin{eqnarray}
 &&\frac{\partial \overline{f}}{\partial t}+\mathbf{v}\cdot \nabla _{\mathbf{r%
 }}\overline{f}+q_{e}\left[ \overline{\mathbf{E}}\left( \mathbf{r}\right) +%
@@ -63,7 +66,7 @@ Performing a time-averaging $\int_{0}^{2\pi /\omega }dt$ of the equation (%
 }}_{k}+\mathbf{v}\times \widetilde{\mathbf{B}}_{k}\right] \cdot \nabla _{%
 \mathbf{p}}f\right)  \label{kin2}
 \end{eqnarray}
-where 
+where
 \begin{equation}
 \overline{f}=\int_{0}^{2\pi /\omega }dt\;f
 \end{equation}
@@ -71,37 +74,37 @@ is the wave-period averaged distribution function. The time derivative in
 the first term of (\ref{kin2}) implicitely refers to times longer than the
 wave period $\omega $.
 
-Under the assumption of a strong magnetic field, such that the gyrofrequency 
+Under the assumption of a strong magnetic field, such that the gyrofrequency
 $\Omega _{e}$%
 \begin{equation}
 \Omega _{e}=\frac{q_{e}\overline{B}}{\gamma m_{e}}
 \end{equation}
 is much larger than both the collisional frequency and the bounce frequency,
-we can expand the distribution function 
+we can expand the distribution function
 \begin{equation}
 \overline{f}=\overline{f}_{0}+\overline{f}_{1}+\overline{f}_{2}+\cdots
 \end{equation}
-with a small parameter 
+with a small parameter
 \begin{equation}
 \delta \sim \frac{\omega _{b}}{\Omega _{e}}\sim \frac{\nu _{c}}{\Omega _{e}}
 \end{equation}
 
-The zero order equation becomes 
+The zero order equation becomes
 \begin{equation}
 q_{e}\mathbf{v}\times \overline{\mathbf{B}}\left( \mathbf{r}\right) \cdot
 \nabla _{\mathbf{p}}\overline{f}_{0}=0  \label{kinexp0}
 \end{equation}
 
 We have, in the $\left( p_{\Vert },p_{\bot },\varphi \right) $ space defined
-in Appendix \ref{curvilinear}, 
+in Appendix \ref{curvilinear},
 \begin{equation}
 \mathbf{v}=\frac{\mathbf{p}}{\gamma \left( p_{\Vert },p_{\bot }\right) m_{e}}
 \end{equation}
-with the momentum being given by relation (\ref{pparperp}) 
+with the momentum being given by relation (\ref{pparperp})
 \begin{equation}
 \mathbf{p}=p_{\Vert }\widehat{\Vert }+p_{\bot }\widehat{\bot }
 \end{equation}
-and the gradient by expression (\ref{gradparperp}) 
+and the gradient by expression (\ref{gradparperp})
 \begin{equation}
 \nabla _{\mathbf{p}}\overline{f}=\frac{\partial \overline{f}}{\partial
 p_{\Vert }}\widehat{\Vert }+\frac{\partial \overline{f}}{\partial p_{\bot }}%
@@ -109,12 +112,12 @@ p_{\Vert }}\widehat{\Vert }+\frac{\partial \overline{f}}{\partial p_{\bot }}%
 \varphi }\widehat{\varphi }  \label{gradparperp2}
 \end{equation}
 
-In this system, by definition, 
+In this system, by definition,
 \begin{equation}
 \overline{\mathbf{B}}\left( \mathbf{r}\right) =\overline{B}\left( \mathbf{r}%
 \right) \widehat{\Vert }
 \end{equation}
-so that the gyromotion operator becomes 
+so that the gyromotion operator becomes
 \begin{eqnarray}
 q_{e}\mathbf{v}\times \overline{\mathbf{B}}\left( \mathbf{r}\right) \cdot
 \nabla _{\mathbf{p}} &=&\Omega _{e}\left( \mathbf{p}\times \widehat{\Vert }
@@ -122,12 +125,12 @@ q_{e}\mathbf{v}\times \overline{\mathbf{B}}\left( \mathbf{r}\right) \cdot
 &=&-\Omega _{e}\frac{\partial }{\partial \varphi }  \label{gyromotion}
 \end{eqnarray}
 
-The equation (\ref{kinexp0}) becomes consequently 
+The equation (\ref{kinexp0}) becomes consequently
 \begin{equation}
 \frac{\partial \overline{f}_{0}}{\partial \varphi }=0  \label{ftilde0phi}
 \end{equation}
 and therefore $\overline{f}_{0}$ is independent of $\varphi $. The first
-order equation is 
+order equation is
 \begin{eqnarray}
 &&\frac{\partial \overline{f}_{0}}{\partial t}+\mathbf{v}\cdot \nabla _{%
 \mathbf{r}\overline{f}0}+q_{e}\overline{\mathbf{E}}\left( \mathbf{r}\right)
@@ -142,24 +145,24 @@ _{1}  \nonumber \\
 
 The last term in the equation (\ref{kinexp}) has been calculated by Lerche
 for a uniform plasma, in the form of a quasilinear operator $\mathcal{Q}
-\left( \overline{f}\right) $. We can rewrite 
+\left( \overline{f}\right) $. We can rewrite
 \begin{equation}
 \mathcal{C}\left( \overline{f}_{0}\right) =\;\left. \frac{\partial \overline{%
 f}_{0}}{\partial t}\right| _{\text{C}}
 \end{equation}
 \begin{equation}
 \mathcal{Q}\left( \overline{f}_{0}\right) =-\;\int_{0}^{2\pi /\omega
-}dt\;\sum_{k}\left( q_{e}\left[ \widetilde{\mathbf{E}}_{k}+\mathbf{v}\times 
+}dt\;\sum_{k}\left( q_{e}\left[ \widetilde{\mathbf{E}}_{k}+\mathbf{v}\times
 \widetilde{\mathbf{B}}_{k}\right] \cdot \nabla _{\mathbf{p}}f\right)
 \end{equation}
 
 Performing the gyro-averaging $\int_{0}^{2\pi }d\varphi $ on the kinetic
-equation (\ref{kinexp}), we find, using (\ref{ftilde0phi}), that 
+equation (\ref{kinexp}), we find, using (\ref{ftilde0phi}), that
 \begin{equation}
 \int_{0}^{2\pi }d\varphi \;\frac{\partial \widetilde{f}_{0}}{\partial t}=%
 \frac{\partial \widetilde{f}_{0}}{\partial t}
 \end{equation}
-and 
+and
 \begin{equation}
 \int_{0}^{2\pi }d\varphi \;\mathbf{v}\cdot \nabla _{\mathbf{r}}\overline{f}
 _{0}=\int_{0}^{2\pi }\left( d\varphi \;\mathbf{v}\right) \cdot \nabla _{%
@@ -170,7 +173,7 @@ where $\mathbf{v}_{\text{gc}}$ is the electron velocity along the guiding
 center.
 
 Concerning the electric field, we decompose the gradient in momentum space
-using (\ref{gradparperp2}) 
+using (\ref{gradparperp2})
 \begin{eqnarray}
 \int_{0}^{2\pi }d\varphi \;q_{e}\overline{\mathbf{E}}\left( \mathbf{r}
 \right) \cdot \nabla _{\mathbf{p}}\overline{f}_{0} &=&q_{e}\overline{\mathbf{%
@@ -188,7 +191,7 @@ p_{\bot }}\frac{\partial \overline{f}_{0}}{\partial \varphi }\widehat{%
 \cdot \int_{0}^{2\pi }d\varphi \frac{\partial \overline{f}_{0}}{\partial
 \varphi }\widehat{\varphi }
 \end{eqnarray}
-and, using 
+and, using
 \begin{eqnarray}
 \int_{0}^{2\pi }d\varphi \widehat{\bot } &=&0 \\
 \int_{0}^{2\pi }d\varphi \frac{\partial \overline{f}_{0}}{\partial \varphi }%
@@ -196,7 +199,7 @@ and, using
 \partial \widehat{\varphi }}{\partial \varphi }=\overline{f}%
 _{0}\int_{0}^{2\pi }d\varphi \widehat{\bot }=0
 \end{eqnarray}
-we obtain 
+we obtain
 \begin{equation}
 \int_{0}^{2\pi }d\varphi \;q_{e}\overline{\mathbf{E}}\left( \mathbf{r}%
 \right) \cdot \nabla _{\mathbf{p}}\overline{f}_{0}=q_{e}\overline{E}_{\Vert
@@ -204,33 +207,33 @@ we obtain
 }}
 \end{equation}
 
-The gyromotion term is averaged to zero 
+The gyromotion term is averaged to zero
 \begin{equation}
-\int_{0}^{2\pi }d\varphi \;q_{e}\mathbf{v}\times \overline{\mathbf{B}}\left( 
+\int_{0}^{2\pi }d\varphi \;q_{e}\mathbf{v}\times \overline{\mathbf{B}}\left(
 \mathbf{r}\right) \cdot \nabla _{\mathbf{p}}\overline{f}_{1}=-\Omega %
 _{e}\int_{0}^{2\pi }d\varphi \;\frac{\partial \overline{f}_{1}}{\partial %
 \varphi }=0
 \end{equation}
-so that we get finally 
+so that we get finally
 \begin{equation}
 \frac{\partial \widetilde{f}_{0}}{\partial t}+\mathbf{v}_{\text{gc}}\cdot %
 \nabla _{\mathbf{r}}\widetilde{f}_{0}+q_{e}\overline{E}_{\Vert }\frac{%
 \partial }{\partial p_{\Vert }}\left( \mathbf{r}\right) \widetilde{f}_{0}=%
 \mathcal{C}\left( \widetilde{f}_{0}\right) +\mathcal{Q}\left( \widetilde{f}%
-_{0}\right) 
+_{0}\right)
 \end{equation}
 
 This equation is called electron drift-kinetic equation. Renaming the
 guiding-center distribution function $\overline{f}_{0}=f\left( \mathbf{r}%
 ,p_{\Vert },p_{\bot },t\right) ,$ $\mathbf{E}\left( \mathbf{r}\right) $ $=%
-\overline{\mathbf{E}}\left( \mathbf{r}\right) $ and $\mathbf{B}\left( 
+\overline{\mathbf{E}}\left( \mathbf{r}\right) $ and $\mathbf{B}\left(
 \mathbf{r}\right) $ $=\overline{\mathbf{B}}\left( \mathbf{r}\right) ,$ we
-get 
+get
 \begin{equation}
 \frac{\partial f}{\partial t}+\mathbf{v}_{\text{gc}}\cdot \nabla f=\mathcal{C%
-}\left( f\right) +\mathcal{Q}\left( f\right) +\mathcal{E}\left( f\right) 
+}\left( f\right) +\mathcal{Q}\left( f\right) +\mathcal{E}\left( f\right)
 \end{equation}
-where we define an electric field operator 
+where we define an electric field operator
 \begin{equation}
 \mathcal{E}\left( f\right) =-q_{e}E_{\Vert }\left( \mathbf{r}\right) \frac{%
 \partial }{\partial p_{\Vert }}f \label{EfieldFPterm}
@@ -238,4 +241,3 @@ where we define an electric field operator
 
 Implicitely, the time scale here considered is so that $t\gg \left( 2\pi
 /\omega ,2\pi /\Omega _{e}\right) .$
- 

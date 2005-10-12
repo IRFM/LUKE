@@ -1,3 +1,6 @@
+%TCIDATA{Version=5.50.0.2890}
+%TCIDATA{LaTeXparent=0,0,NoticeDKE.tex}
+
 
 Basically, the determination of the steady-state electron distribution
 function is an initial value problem, where the initial guess corresponds
@@ -6,20 +9,20 @@ zero-order Fokker-Planck equation, the Maxwellian distribution function is
 therefore by definition an eigenfunction of the collision operator, without
 external perturbation. Here the weakly relativistic solution corresponding
 to the condition on the relativistic factor $\gamma -1\ll 1$ is considered
-at time $t=0$, 
+at time $t=0$,
 \begin{equation}
 f_{M}\left( \psi ,p\right) \simeq \frac{n_{e}\left( \psi \right) }{\left[ 2%
 \pi T_{e}\left( \psi \right) \right] ^{3/2}}\exp \left[ -\frac{p^{2}}{\left(
-1+\gamma \right) T_{e}\left( \psi \right) }\right] 
+1+\gamma \right) T_{e}\left( \psi \right) }\right]
 \end{equation}
 where $T_{e}\left( \psi \right) $ and $n_{e}\left( \psi \right) $ are the
 electron temperature and density respectively. Details on the notation are
 given in Sec. \ref{normtene}. Projected on the numerical grids, as defined
-in Sec.\ref{Griddef}, the discrete form is 
+in Sec.\ref{Griddef}, the discrete form is
 \begin{equation}
 f_{M,l+1/2,i+1/2,j+1/2}\simeq \frac{n_{e,l+1/2}}{\left[ 2\pi %
 T_{e,l+1/2}\right] ^{3/2}}\exp \left[ -\frac{p_{i+1/2}^{2}}{\left( 1+\gamma
-_{i+1/2}\right) T_{e,l+1/2}}\right] 
+_{i+1/2}\right) T_{e,l+1/2}}\right]
 \end{equation}
 
 When the Lower Hybrid current drive problem is addressed, it is possible to

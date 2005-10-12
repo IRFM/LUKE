@@ -1,11 +1,14 @@
+%TCIDATA{Version=5.50.0.2890}
+%TCIDATA{LaTeXparent=0,0,NoticeDKE.tex}
 
-We recall the electron drift kinetic equation may be expressed as 
+
+We recall the electron drift kinetic equation may be expressed as
 \begin{equation}
 v_{s}\frac{\partial f}{\partial s}+\frac{v_{\Vert }}{\Omega }I\left( \psi
 \right) \frac{\left| \nabla \psi \right| }{R}\frac{\partial }{\partial s}%
 \left( \frac{v_{\Vert }}{B}\right) \frac{\partial f}{\partial \psi }=%
 \mathcal{C}\left( f\right) +\mathcal{Q}\left( f\right) +\mathcal{E}\left(
-f\right) 
+f\right)
 \end{equation}
 
 Each of these terms corresponds to a time evolution, and is therefore
@@ -48,7 +51,7 @@ using expression \ref{drift3} for the radial component $\mathbf{v}_{D}\cdot %
 \nabla \psi $ of the drift velocity$\mathbf{\ v}_{D}$ as defined in \ref
 {vdrift}. Using relation  $I\left( \psi \right) $ as defined in (\ref{Bt1}),
 and the fact that $d\psi /\left| \nabla \psi \right| =dr$ for circular
-concentric plasma cross-sections, 
+concentric plasma cross-sections,
 \begin{equation}
 \tau _{d}\simeq \frac{\Omega _{e}}{v_{Te}^{2}}\int_{0}^{a_{p}}\frac{dr}{B_{T}%
 }\left[ \frac{\partial }{\partial s}\left( \frac{1}{B}\right) \right] ^{-1}
@@ -59,7 +62,7 @@ and since in that magnetic configuration $\partial /\partial s\sim 2\pi %
 \tau _{d}\simeq 2\pi \frac{\Omega _{e}}{v_{Te}^{2}}R_{p}\int_{0}^{a_{p}}%
 \frac{B}{B_{T}}dr
 \end{equation}
-or 
+or
 \begin{equation}
 \tau _{d}\simeq 2\pi \frac{\Omega _{e}}{v_{Te}^{2}}R_{p}a_{p}
 \end{equation}
@@ -69,7 +72,7 @@ Consequently, the small drift parameter $\delta _{d}$ is defined as the ratio
 \sim \frac{\rho _{L}}{a_{p}}  \label{smalldriftordering}
 \end{equation}
 where the thermal Larmor radius $\rho _{L}=$ $v_{Te}/\Omega _{e}$ has been
-introduced. 
+introduced.
 
 \item  \textit{Collisions}. The Fokker-Planck theory considers the
 cumulative effect of many small-angle collisions in calculating the rate of
@@ -83,33 +86,33 @@ q_{e}^{4}n_{e}\ln \Lambda }
 \end{equation}
 where $\ln \Lambda $ is the well known Coulomb logarithm, a slowly varying
 function of the plasma temperature and density. The collision time scale $%
-\tau _{c}$ holds for circulating electrons. 
+\tau _{c}$ holds for circulating electrons.
 
 For trapped ones, it is more physical to consider an alternate collision
 time scale determined not by the time for deflection of the path by $\pi /2,$
 but by the time needed for the electron to be deflected so that it is no
 longer on a trapped orbit. In the limit $\epsilon \ll 1,$ we can approximate
 the change of the pitch angle necessary to make trapped particles become
-untrapped 
+untrapped
 \begin{equation}
 \Delta \xi _{0}\sim \xi _{0T}\simeq \sqrt{\frac{2\epsilon }{1+\epsilon }}%
 \sim \sqrt{\epsilon }
 \end{equation}
 Because the small-angle collisions produce a random-walk change in the
-pitch-angle $\xi _{0},$ the \textit{effective} collision time for detrapping 
+pitch-angle $\xi _{0},$ the \textit{effective} collision time for detrapping
 $\tau _{c}^{eff.}$ or $\tau _{dt}$ is approximately deduced from relation
 \begin{equation}
 \nu _{c}^{eff.}\sim \frac{\nu _{c}}{\Delta \xi _{0}^{2}}\sim \frac{\nu _{c}}{%
 \epsilon }
 \end{equation}
-and 
+and
 \begin{equation}
 \tau _{dt}=\tau _{c}^{eff.}\sim \epsilon \tau _{c}
 \end{equation}
 
 \item  \textit{Constant electric field acceleration}. From the relation (\ref
 {EfieldFPterm}), it is straightforward to estimate that the time scale
-associated to constant electric field acceleration is  
+associated to constant electric field acceleration is
 \begin{equation}
 \tau _{e}\sim \frac{m_{e}v_{Te}}{\left| q_{e}\right| E_{\Vert }}\sim \tau
 _{c}\frac{\left| E_{D}\right| }{E_{\Vert }}
@@ -120,7 +123,7 @@ E_{D}=\nu _{c}\frac{m_{e}v_{Te}}{q_{e}}
 \end{equation}
 is introduced. Here only circulating particle are concerned.
 
-\item  \textit{Quasilinear diffusion}. In a similar approach, 
+\item  \textit{Quasilinear diffusion}. In a similar approach,
 \begin{equation}
 \tau _{ql}\sim \frac{\left( m_{e}v_{Te}\right) ^{2}}{D_{ql}}\sim \tau _{c}%
 \frac{D_{ql}^{\dagger }}{D_{ql}}
@@ -134,21 +137,21 @@ where $D_{ql}^{\dagger }=\nu _{c}\left( m_{e}v_{Te}\right) ^{2}.$
 In the small drift expansion $\delta _{d}\ll 1,$ where the small parameter
 is defined by relation (\ref{smalldriftordering})
 \begin{equation}
-f=f_{0}+f_{1}+\cdots 
+f=f_{0}+f_{1}+\cdots
 \end{equation}
-the first order equation is 
+the first order equation is
 \begin{equation}
 v_{s}\frac{\partial f_{0}}{\partial s}=\mathcal{C}\left( f_{0}\right) +%
-\mathcal{Q}\left( f_{0}\right) +\mathcal{E}\left( f_{0}\right) 
+\mathcal{Q}\left( f_{0}\right) +\mathcal{E}\left( f_{0}\right)
 \end{equation}
 which is usually referred to as the Fokker-Planck equation.
 
-The second order equation is 
+The second order equation is
 \begin{equation}
 v_{s}\frac{\partial f_{1}}{\partial s}+\frac{v_{\Vert }}{\Omega _{e}}I\left(
 \psi \right) \frac{\left| \nabla \psi \right| }{R}\frac{\partial }{\partial s%
 }\left( \frac{v_{\Vert }}{B}\right) \frac{\partial f_{0}}{\partial \psi }=%
 \mathcal{C}\left( f_{1}\right) +\mathcal{Q}\left( f_{1}\right) +\mathcal{E}%
-\left( f_{1}\right) 
+\left( f_{1}\right)
 \end{equation}
 which is referred to as the electron Drift Kinetic equation.

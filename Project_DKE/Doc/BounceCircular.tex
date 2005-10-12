@@ -1,65 +1,68 @@
+%TCIDATA{Version=5.50.0.2890}
+%TCIDATA{LaTeXparent=0,0,NoticeDKE.tex}
+
 
 \subsubsection{Parametrization of the Flux-Surfaces}
 
 In this case, we have $\psi =\psi \left( r\right) $ and therefore it is
 easier to work in the $\left( r,\theta ,\phi \right) $ coordinate to account
-for the symmetry in the problem. The normalized radius is 
+for the symmetry in the problem. The normalized radius is
 \begin{equation}
 \rho \left( \psi \right) =\frac{r}{a_{p}}
 \end{equation}
 
-We have now 
+We have now
 \begin{equation}
 \widehat{\psi}=\widehat{r}
 \end{equation}
-so that (\ref{gijrtheta}) 
+so that (\ref{gijrtheta})
 \begin{equation}
 \sqrt{g_{22}}=r  \label{g22circ}
 \end{equation}
 
 \subsubsection{Magnetic Field}
 
-The toroidal field is 
+The toroidal field is
 \begin{equation}
 B_{T}\left( r,\theta \right) =\frac{\left| I\left( r\right) \right| }{%
 R\left( r,\theta \right) }
 \end{equation}
-and the poloidal field is 
+and the poloidal field is
 \begin{equation}
 B_{P}\left( r,\theta \right) =\frac{\left| \nabla \psi \left( r\right)
 \right| }{R\left( r,\theta \right) }  \label{Bpcirc}
 \end{equation}
-where 
+where
 \begin{equation}
 \left| \nabla \psi \left( r\right) \right| =\left| \frac{d\psi \left(
 r\right) }{dr}\right| =\frac{1}{a_{p}}\left| \frac{d\psi \left( \rho \right) }{%
-d\rho }\right| 
+d\rho }\right|
 \end{equation}
 is now only a function of $r$ or $\rho $.
 
-The total field is then 
+The total field is then
 \begin{equation}
 B\left( r,\theta \right) =\frac{\sqrt{I^{2}\left( r\right) +\left| \nabla
 \psi \left( r\right) \right| ^{2}}}{R\left( r,\theta \right) }
 \end{equation}
-and can be written as 
+and can be written as
 \begin{equation}
 B\left( r,\theta \right) =B_{0}\left( r\right) \frac{R_{0}}{R\left( r,\theta
 \right) }  \label{Bcirc}
 \end{equation}
-with 
+with
 \begin{equation}
 B_{0}\left( r\right) =\frac{\sqrt{I^{2}\left( r\right) +\left| \nabla \psi
 \left( r\right) \right| ^{2}}}{R_{0}}
 \end{equation}
 
 Consequently, we ratio of magnetic fields $\Psi $ as defined in (\ref{Psidef}%
-) becomes 
+) becomes
 \begin{equation}
 \Psi \left( r,\theta \right) =\frac{R_{0}}{R\left( r,\theta \right) }
 \label{Psidefcirc}
 \end{equation}
-and 
+and
 \begin{equation}
 \frac{B}{B_{P}}=\frac{\sqrt{I^{2}\left( r\right) +\left| \nabla \psi \left(
 r\right) \right| ^{2}}}{\left| \nabla \psi \left( r\right) \right| }=\sqrt{1+%
@@ -70,19 +73,19 @@ is a function of $r$ only.
 
 \subsubsection{Safety factor}
 
-The safety factor given by expression (\ref{qfactor}) becomes 
+The safety factor given by expression (\ref{qfactor}) becomes
 \begin{equation}
 q\left( r\right) =\int_{0}^{2\pi }\frac{d\theta }{2\pi }\frac{r}{R}\frac{%
 B_{T}}{B_{P}}=\frac{r}{R_{p}}\frac{B_{T}}{B_{P}}\int_{0}^{2\pi }\frac{%
 d\theta }{2\pi }\frac{R_{p}}{R}
 \end{equation}
 
-The averaged value of $R_{p}/R$ is evaluated in (\ref{sstar}). It gives 
+The averaged value of $R_{p}/R$ is evaluated in (\ref{sstar}). It gives
 \begin{equation}
 \int_{0}^{2\pi}\frac{d\theta}{2\pi}\frac{R_{p}}{R}=\frac{1}{\sqrt{1-\left(
 r/R_{p}\right) ^{2}}}
 \end{equation}
-so that 
+so that
 \begin{equation}
 q\left( \psi\right) =\frac{1}{\sqrt{1-\left( r/R_{p}\right) ^{2}}}\frac
 {r}{R_{p}}\frac{B_{T}}{B_{P}}  \label{qcirc}
@@ -90,7 +93,7 @@ q\left( \psi\right) =\frac{1}{\sqrt{1-\left( r/R_{p}\right) ^{2}}}\frac
 
 Note that in the factor $\sqrt{1-\left( r/R_{p}\right) ^{2}}$ is usually
 neglected, which is valid only in the large aspect ratio approximation, i.e.
-when the inverse aspect ratio $\epsilon $ defined as 
+when the inverse aspect ratio $\epsilon $ defined as
 \begin{equation}
 \epsilon =\frac{r}{R_{p}}
 \end{equation}
@@ -100,7 +103,7 @@ circular plasma cross-section}
 
 \subsubsection{Particle Motion}
 
-Using relation (\ref{Rdef}), 
+Using relation (\ref{Rdef}),
 \begin{equation}
 R\left( r,\theta \right) =R_{p}+r\cos \theta   \label{MajorradiusCirc}
 \end{equation}
@@ -109,56 +112,56 @@ angle value in that case
 \begin{equation}
 \theta _{0}=0
 \end{equation}
-we find 
+we find
 \begin{align}
 R_{\min }\left( r\right) & =R_{p}-r=R_{p}\left( 1-\epsilon \right)  \\
 R_{\max }\left( r\right) & =R_{p}+r=R_{p}\left( 1+\epsilon \right)
-=R_{0}\left( r\right) 
+=R_{0}\left( r\right)
 \end{align}
 
-Therefore, the expression (\ref{Psidefcirc}) becomes 
+Therefore, the expression (\ref{Psidefcirc}) becomes
 \begin{equation}
 \Psi \left( \rho ,\theta \right) =\frac{1+\epsilon }{1+\epsilon \cos \theta }
 \label{Psidefcirc2}
 \end{equation}
-and using relation (\ref{Bcirc}) 
+and using relation (\ref{Bcirc})
 \begin{equation}
-B_{\max }\left( r\right) =B_{0}\left( r\right) \frac{1+\epsilon }{1-\epsilon 
+B_{\max }\left( r\right) =B_{0}\left( r\right) \frac{1+\epsilon }{1-\epsilon
 }
 \end{equation}
-expression (\ref{xi0t2}) is 
+expression (\ref{xi0t2}) is
 \begin{equation}
 \xi _{0T}^{2}\left( r\right) =\frac{2\epsilon }{1+\epsilon }
 \end{equation}
 
 The pitch-angle cosine $\xi $ is then given by combining relations (\ref{xi}
-) and (\ref{Psidefcirc2}) 
+) and (\ref{Psidefcirc2})
 \begin{equation}
 \xi \left( r,\theta ,\xi _{0}\right) =\sigma \sqrt{1-\frac{1+\epsilon }{%
 1+\epsilon \cos \theta }\left( 1-\xi _{0}^{2}\right) }  \label{xicirc}
 \end{equation}
 and the the turning angles are obtained from expression (\ref{Bbounce}), or
-in the present notation 
+in the present notation
 \begin{equation}
 B\left( r,\theta _{T}\right) =B_{b}\left( r,\xi _{0}\right) =\frac{%
 B_{0}\left( r\right) }{1-\xi _{0}^{2}}
 \end{equation}
 
-Using relation (\ref{Psidefcirc2}), one obtains 
+Using relation (\ref{Psidefcirc2}), one obtains
 \begin{equation}
 B_{0}\left( r\right) \frac{1+\epsilon }{1+\epsilon \cos \theta _{T}}=\frac{%
 B_{0}\left( r\right) }{1-\xi _{0}^{2}}
 \end{equation}
-and then 
+and then
 \begin{equation}
 \xi _{0}^{2}=1-\frac{1+\epsilon \cos \theta _{T}}{1+\epsilon }=\frac{%
 \epsilon \left( 1-\cos \theta _{T}\right) }{1+\epsilon }
 \end{equation}
-so that 
+so that
 \begin{equation}
 \theta _{T}=\arccos \left[ 1-\frac{2\xi _{0}^{2}}{\xi _{0T}^{2}}\right]
 \end{equation}
-and finally by symmetry 
+and finally by symmetry
 \begin{align}
 \theta _{T\min }& =-\theta _{T} \\
 \theta _{T\max }& =\theta _{T}  \nonumber
@@ -166,13 +169,13 @@ and finally by symmetry
 
 \subsubsection{Bounce Time}
 
-Using (\ref{g22circ}), the normalized bounce time reduces to 
+Using (\ref{g22circ}), the normalized bounce time reduces to
 \begin{equation}
 \lambda \left( r,\xi _{0}\right) =\frac{\epsilon }{\widetilde{q}}%
 \int_{\theta _{\min }}^{\theta _{\max }}\frac{d\theta }{2\pi }\frac{\xi _{0}%
 }{\xi }\frac{B}{B_{P}}
 \end{equation}
-with, using definition (\ref{qtilde}) 
+with, using definition (\ref{qtilde})
 \begin{equation}
 \widetilde{q}\left( r\right) =\epsilon \int_{0}^{2\pi }\frac{d\theta }{2\pi }%
 \frac{B}{B_{P}}  \label{qtilde2}

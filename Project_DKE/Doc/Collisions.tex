@@ -1,3 +1,6 @@
+%TCIDATA{Version=5.50.0.2890}
+%TCIDATA{LaTeXparent=0,0,NoticeDKE.tex}
+
 
 \label{Collisions}
 
@@ -19,7 +22,7 @@ occur much more frequently. Since this effect is beyond the Fokker-Planck
 approximation and only concerns a small fraction of the total number of
 electrons in the plasma, it is described by a source term $S_{R}$ which
 becomes significative for electrons which runaway when the Ohmic electric
-field is large, like in the ramp-up phase or during a disruption.} 
+field is large, like in the ramp-up phase or during a disruption.}
 \begin{equation}
 \mathcal{C}\left( f\right) =\sum_{s}\sum_{s^{\prime }}C\left(
 f,f_{ss^{\prime }}\right) +C\left( f,f\right)
@@ -32,28 +35,28 @@ electron-ion collisions, it is considered that $f_{ss^{\prime }}$ is a
 Maxwellian distribution function, the corresponding temperature being $%
 T_{ss^{\prime }}$. In the application of the code here foreseen, including
 RF heating and current drive, collisions dominate thermal particles, and
-therefore the distribution function $f$ may be expanded about the Maxwellian 
-$f_{M}$ according to the relation 
+therefore the distribution function $f$ may be expanded about the Maxwellian
+$f_{M}$ according to the relation
 \begin{equation}
 f\simeq f_{M}+\delta f
 \end{equation}
 
 The self-collision operator $C\left( f,f\right) $ may be consequently
-approximated by its linearized form 
+approximated by its linearized form
 \begin{equation}
 C\left( f,f\right) \simeq C\left( f,f_{M}\right) +C\left( f_{M},f\right)
 \end{equation}
 where the the relation $C\left( f_{M},f_{M}\right) =0$ has been used, and
 terms of order $\delta f^{2}$ have been ignored. It can be shown that the
 operator $C\left( f,f_{M}\right) $ may be computed as $C\left(
-f,f_{ss^{\prime }}\right) $ and expressed in a conservative form 
+f,f_{ss^{\prime }}\right) $ and expressed in a conservative form
 \begin{equation}
 \sum_{s}\sum_{s^{\prime }}C\left( f,f_{ss^{\prime }}\right) +C\left(
 f,f_{M}\right) \rightarrow \nabla _{\mathbf{p}}\cdot \mathbf{S}_{\mathbf{p}
 }\left( f\right)
 \end{equation}
 where component $S_{p}$ and $S_{\xi }$ of the flux $\mathbf{S}_{\mathbf{p}}$
-are 
+are
 \begin{eqnarray}
 S_{p} &=&-D_{pp}\frac{\partial f_{0}}{\partial p}+\frac{\sqrt{1-\xi ^{2}}}{p}
 D_{p\xi }\frac{\partial f_{0}}{\partial \xi }+F_{p}f_{0} \\
@@ -63,37 +66,37 @@ S_{\xi } &=&-D_{\xi p}\frac{\partial f_{0}}{\partial p}+\frac{\sqrt{1-\xi
 
 In the standard notations used in Ref. \cite{shk97}
 \begin{equation}
-\left\{ 
+\left\{
 \begin{array}{l}
-D_{pp}=A\left( \psi ,p\right)  \\ 
-D_{p\xi }=0 \\ 
-D_{\xi p}=0 \\ 
-D_{\xi \xi }=B_{t}\left( \psi ,p\right) 
+D_{pp}=A\left( \psi ,p\right)  \\
+D_{p\xi }=0 \\
+D_{\xi p}=0 \\
+D_{\xi \xi }=B_{t}\left( \psi ,p\right)
 \end{array}
 \right.   \label{Dcoll}
 \end{equation}
-and 
+and
 \begin{equation}
-\left\{ 
+\left\{
 \begin{array}{l}
-F_{p}=-F\left( \psi ,p\right)  \\ 
+F_{p}=-F\left( \psi ,p\right)  \\
 F_{\xi }=0
 \end{array}
 \right.   \label{Fcoll}
 \end{equation}
 
 The term $C\left( f_{M},f\right) $ requires is specific treatment. By
-expanding $f$ as a sum of Legendre harmonics according to the relation 
+expanding $f$ as a sum of Legendre harmonics according to the relation
 \begin{equation}
 f\left( t,\mathbf{X},p,\xi \right) =\sum_{m=0}^{\infty }\left( m+1/2\right)
 f^{\left( m\right) }\left( t,\mathbf{X},p\right) P_{m}\left( \xi \right)
 \end{equation}
-with 
+with
 \begin{equation}
 f^{\left( m\right) }\left( t,\mathbf{X},p\right) =\int_{-1}^{+1}f\left( t,%
 \mathbf{X},p,\xi \right) P_{m}\left( \xi \right) d\xi
 \end{equation}
-one obtains 
+one obtains
 \begin{equation}
 C\left( f_{M},f\right) =\sum_{m=0}^{\infty }\left( m+1/2\right) C\left(
 f_{M},f^{\left( m\right) }\left( t,\mathbf{X},p\right) P_{m}\left( \xi
@@ -101,12 +104,12 @@ f_{M},f^{\left( m\right) }\left( t,\mathbf{X},p\right) P_{m}\left( \xi
 \end{equation}
 
 By definition, $f^{\left( m=0\right) }\left( t,\mathbf{X},p\right) \simeq
-f_{M}$ and, since $P_{0}\left( \xi \right) =1$, 
+f_{M}$ and, since $P_{0}\left( \xi \right) =1$,
 \[
 C\left( f_{M},f^{\left( m=0\right) }\left( t,\mathbf{X},p\right) P_{0}\left(
-\xi \right) \right) \simeq C\left( f_{M},f_{M}\right) =0, 
+\xi \right) \right) \simeq C\left( f_{M},f_{M}\right) =0,
 \]
-The first non-zero term in the series is then kept, so that 
+The first non-zero term in the series is then kept, so that
 \begin{equation}
 C\left( f_{M},f\right) \simeq C\left( f_{M},\frac{3}{2}\xi f^{\left(
 m=1\right) }\left( t,\mathbf{X},p\right) \right)
@@ -121,7 +124,7 @@ problem, including the determination of the boostrap current level, this
 non-linearity remains weak, so that the rate of convergence towards the
 solution of the kinetic equation is not significantly affected, even if this
 term is treated explicitely, regarding the time scheme. For the
-calculations, the notation used in Ref. \cite{shk97} is considered, and 
+calculations, the notation used in Ref. \cite{shk97} is considered, and
 \begin{eqnarray}
 C\left( f_{M},\frac{3}{2}\xi f^{\left( m=1\right) }\left( t,\mathbf{X}
 ,p\right) \right) &=&-\frac{3}{2}\xi \mathcal{I}\left( f_{M},f^{\left(
@@ -143,21 +146,21 @@ fully relativistic limits and is therefore very well suited for studying the
 heating and current drive problems. Its recent formulation in terms of
 Rosenbluth-like potential has open the possibility to use it in numerical
 calculations (Ref.\cite{bra89}). Following the work done in Ref. \cite{shk97}
-, normalized coefficients $\overline{A}^{ee}\left( \psi ,\overline{p}\right) 
+, normalized coefficients $\overline{A}^{ee}\left( \psi ,\overline{p}\right)
 $, $\overline{F}^{ee}\left( \psi ,\overline{p}\right) $ and $\overline{B}%
-_{t}^{ee}\left( \psi ,\overline{p}\right) $ are 
+_{t}^{ee}\left( \psi ,\overline{p}\right) $ are
 \begin{equation}
 \overline{A}^{ee}\left( \psi ,\overline{p}\right) =\frac{\overline{F}%
 _{1}\left( \psi ,\overline{p}\right) +\overline{F}_{2}\left( \psi ,\overline{%
 p}\right) }{\overline{v}}\overline{T}_{e}\left( \psi \right)
 \end{equation}
-and 
+and
 \begin{equation}
 \overline{F}^{ee}\left( \psi ,\overline{p}\right) =\overline{F}_{1}\left(
 \psi ,\overline{p}\right) +\overline{F}_{2}\left( \psi ,\overline{p}\right)
 \end{equation}
 
-Here, 
+Here,
 \begin{equation}
 \overline{F}_{1}\left( \psi ,\overline{p}\right) =\frac{4\pi }{\overline{v}%
 ^{2}}\overline{F}_{11}\left( \psi ,\overline{p}\right) +\frac{4\pi }{%
@@ -187,16 +190,16 @@ Here,
 \end{equation}
 When relativistic corrections are neglected, $1-\gamma \zeta /z\approx 0,$
 expressions derived from usual Rosenbluth potentials are recovered \cite
-{kar86}, and 
+{kar86}, and
 \begin{equation}
 \overline{A}^{ee,nr}\left( \psi ,\overline{v}\right) =\frac{4\pi }{\overline{%
 v}^{3}}\overline{F}_{11,nr}\left( \psi ,\overline{v}\right) \overline{T}%
-_{e}\left( \psi \right) 
+_{e}\left( \psi \right)
 \end{equation}
 and
 \begin{equation}
 \overline{F}^{ee,nr}\left( \psi ,\overline{v}\right) =\frac{4\pi }{\overline{%
-v}^{2}}\overline{F}_{11,nr}\left( \psi ,\overline{v}\right) 
+v}^{2}}\overline{F}_{11,nr}\left( \psi ,\overline{v}\right)
 \end{equation}
 with
 \begin{equation}
@@ -230,7 +233,7 @@ one obtains
 \begin{equation}
 \overline{F}_{11,nr}\left( \psi ,\overline{v}\right) =\frac{\overline{n}%
 _{e}\left( \psi \right) }{4\pi }\left[ Erf\left( u_{\psi }\right)
--u_{\psi }Erf^{\prime }\left( u_{\psi }\right) \right] 
+-u_{\psi }Erf^{\prime }\left( u_{\psi }\right) \right]
 \end{equation}
 where
 \begin{equation}
@@ -242,14 +245,14 @@ Consequently
 \begin{equation}
 \overline{F}^{ee,nr}\left( \psi ,\overline{v}\right) =\frac{\overline{n}%
 _{e}\left( \psi \right) }{\overline{v}^{2}}\left[ Erf\left( u_{\psi
-}\right) -u_{\psi }Erf^{\prime }\left( u_{\psi }\right) \right] 
+}\right) -u_{\psi }Erf^{\prime }\left( u_{\psi }\right) \right]
 \end{equation}
 and for $\overline{A}^{ee,nr}\left( \psi ,\overline{v}\right) $ it comes
 \begin{equation}
 \overline{A}^{ee,nr}\left( \psi ,\overline{v}\right) =\frac{\overline{n}%
 _{e}\left( \psi \right) \overline{T}_{e}\left( \psi \right) }{\overline{v}%
 ^{3}}\left[ Erf\left( u_{\psi }\right) -u_{\psi }Erf^{\prime
-}\left( u_{\psi }\right) \right] 
+}\left( u_{\psi }\right) \right]
 \end{equation}
 expressions which correspond to the Maxwellian limit discussed later in this
 section. The high velocity limit corresponds to the condition  $u_{\psi }\gg
@@ -269,23 +272,23 @@ _{e}\left( \psi \right) }{\overline{v}^{3}}
 which both are well known relations.
 
 Much in the same way, the expression of coefficient $\overline{B}_{t}^{ee}$
-for pitch-angle scattering is 
+for pitch-angle scattering is
 \begin{equation}
 \overline{B}_{t}^{ee}\left( \psi ,\overline{p}\right) =\overline{B}%
 _{t1}\left( \psi ,\overline{p}\right) +\overline{B}_{t2}\left( \psi ,%
-\overline{p}\right) 
+\overline{p}\right)
 \end{equation}
-with 
+with
 \begin{equation}
 \overline{B}_{t1}\left( \psi ,\overline{p}\right) =4\pi \sum_{n=1}^{5}%
-\overline{B}_{t1}^{\left[ n\right] }\left( \psi ,\overline{p}\right) 
+\overline{B}_{t1}^{\left[ n\right] }\left( \psi ,\overline{p}\right)
 \end{equation}
-and 
+and
 \begin{equation}
 \overline{B}_{t2}\left( \psi ,\overline{p}\right) =4\pi \sum_{n=1t2}^{5}%
-\overline{B}_{t2}^{\left[ n\right] }\left( \psi ,\overline{p}\right) 
+\overline{B}_{t2}^{\left[ n\right] }\left( \psi ,\overline{p}\right)
 \end{equation}
-where 
+where
 \begin{equation}
 \overline{B}_{t1}^{\left[ 1\right] }\left( \psi ,\overline{p}\right) =\frac{1%
 }{2v}\int_{0}^{\overline{p}}\overline{p}^{\prime 2}\overline{f}_{M}\left(
@@ -316,7 +319,7 @@ _{M}\left( \psi ,\overline{p}^{\prime }\right) d\overline{p}^{\prime }
 z^{\prime }}\right) \overline{f}_{M}\left( \psi ,\overline{p}^{\prime
 }\right) d\overline{p}^{\prime }
 \end{equation}
-and 
+and
 \begin{equation}
 \overline{B}_{t2}^{\left[ 1\right] }\left( \psi ,\overline{p}\right) =\frac{1%
 }{2}\int_{\overline{p}}^{\infty }\frac{\overline{p}^{\prime 2}}{v^{\prime }}%
@@ -350,7 +353,7 @@ J_{1}\left( \overline{p}\right) }{8\gamma z^{2}}\int_{\overline{p}}^{\infty }%
 _{M}\left( \psi ,\overline{p}^{\prime }\right) d\overline{p}^{\prime }
 \end{equation}
 
-Here, 
+Here,
 \begin{equation}
 J_{1}\left( \overline{p}\right) =-3\gamma +\zeta \left( \frac{3}{z}+2z\right)
 \end{equation}
@@ -358,7 +361,7 @@ J_{1}\left( \overline{p}\right) =-3\gamma +\zeta \left( \frac{3}{z}+2z\right)
 J_{2}\left( \overline{p}\right) =\gamma +\frac{\zeta }{z}-\frac{2}{3}\gamma
 z^{2}
 \end{equation}
-with 
+with
 \begin{equation}
 z=\beta _{th}^{\dag }\overline{p}
 \end{equation}
@@ -392,7 +395,7 @@ where
 m=1\right) }\left( \psi ,\overline{p}\right) \right) =\sum_{n=1}^{10}%
 \overline{\mathcal{I}}_{1}^{\left[ n\right] }\left( \psi ,\overline{p}\right)
 \end{equation}
-and 
+and
 \begin{equation}
 \overline{\mathcal{I}}_{2}\left( \overline{f}_{M,},\overline{f}_{0}^{\left(
 0\right) \left( m=1\right) }\left( \psi ,\overline{p}\right) \right)
@@ -437,7 +440,7 @@ m=1\right) }\left( \psi ,\overline{p}\right) d\overline{p}^{\prime }
 \end{equation}
 \begin{equation}
 \overline{\mathcal{I}}_{1}^{\left[ 6\right] }\left( \psi ,\overline{p}%
-\right) =\frac{\gamma \overline{p}^{2}-5\overline{T}_{e}\left( \psi \right) 
+\right) =\frac{\gamma \overline{p}^{2}-5\overline{T}_{e}\left( \psi \right)
 }{6\overline{T}_{e}^{2}\left( \psi \right) }\int_{0}^{\overline{p}}\frac{%
 \overline{p}^{\prime 3}}{\gamma ^{\prime }}\left( 1+\frac{3}{z^{\prime 2}}-%
 \frac{3\gamma ^{\prime }\zeta ^{\prime }}{z^{\prime 3}}\right) \overline{f}%
@@ -463,7 +466,7 @@ m=1\right) }\left( \psi ,\overline{p}\right) d\overline{p}^{\prime }
 \overline{\mathcal{I}}_{1}^{\left[ 9\right] }\left( \psi ,\overline{p}%
 \right) =\frac{\overline{p}^{2}}{\overline{T}_{e}\left( \psi \right) }%
 \int_{0}^{\overline{p}}\frac{\overline{p}^{\prime }}{\gamma ^{\prime }}%
-\left( \frac{\gamma ^{\prime }\zeta ^{\prime }}{z^{\prime }}-1\right) 
+\left( \frac{\gamma ^{\prime }\zeta ^{\prime }}{z^{\prime }}-1\right)
 \overline{f}_{0}^{\left( m=1\right) }\left( \psi ,\overline{p}\right) d%
 \overline{p}^{\prime }
 \end{equation}
@@ -517,7 +520,7 @@ _{0}^{\left( m=1\right) }\left( \psi ,\overline{p}\right) d\overline{p}%
 \overline{\mathcal{I}}_{2}^{\left[ 6\right] }\left( \psi ,\overline{p}%
 \right) =\left( \frac{J_{3}\left( \overline{p}\right) }{2z\beta _{th}^{\dag
 2}\overline{T}_{e}^{2}\left( \psi \right) }+\frac{J_{1}\left( \overline{p}%
-\right) }{2z^{2}\overline{T}_{e}\left( \psi \right) }-\frac{J_{4}\left( 
+\right) }{2z^{2}\overline{T}_{e}\left( \psi \right) }-\frac{J_{4}\left(
 \overline{p}\right) }{12z\beta _{th}^{\dag 2}\overline{T}_{e}^{2}\left( \psi
 \right) }\right) \int_{\overline{p}}^{\infty }\overline{f}_{0}^{\left(
 m=1\right) }\left( \psi ,p\right) d\overline{p}^{\prime }
@@ -529,7 +532,7 @@ m=1\right) }\left( \psi ,p\right) d\overline{p}^{\prime }
 \overline{p}^{\prime 2}}{\gamma ^{\prime }}\overline{f}_{0}^{\left(
 m=1\right) }\left( \psi ,\overline{p}\right) d\overline{p}^{\prime }
 \end{equation}
-where 
+where
 \begin{equation}
 J_{3}\left( \overline{p}\right) =-\frac{3\gamma \zeta }{z}+\frac{3}{z}+z-%
 \frac{2}{5}z^{3}
@@ -562,13 +565,13 @@ unit system here employed. Using the standard notations
 \overline{A}^{ee}\left( \psi ,\overline{p}\right) =\frac{\overline{n}%
 _{e}\left( \psi \right) }{2\overline{v}}\frac{1}{u_{\psi }^{2}}\left[
 Erf\left( u_{\psi }\right) -u_{\psi }Erf^{\prime }\left( u_{\psi }\right)
-\right] 
+\right]
 \end{equation}
 
 \begin{equation}
 \overline{F}^{ee}\left( \psi ,\overline{p}\right) =\frac{\overline{n}%
 _{e}\left( \psi \right) }{\overline{v}^{2}}\left[ Erf\left( u_{\psi }\right)
--u_{\psi }Erf^{\prime }\left( u_{\psi }\right) \right] 
+-u_{\psi }Erf^{\prime }\left( u_{\psi }\right) \right]
 \end{equation}
 and
 
@@ -576,9 +579,9 @@ and
 \overline{B}_{t}^{ee}\left( \psi ,\overline{p}\right) =\frac{\overline{n}%
 _{e}\left( \psi \right) }{4\overline{v}}\frac{1}{u_{\psi }^{2}}\left[ \left(
 2u_{\psi }^{2}-1\right) Erf\left( u_{\psi }\right) +u_{\psi }Erf^{\prime
-}\left( u_{\psi }\right) \right] 
+}\left( u_{\psi }\right) \right]
 \end{equation}
-where 
+where
 \begin{equation}
 u_{\psi }=\frac{\overline{v}}{\sqrt{2\overline{T}_{e}}\left( \psi \right) }
 \end{equation}
@@ -586,12 +589,12 @@ u_{\psi }=\frac{\overline{v}}{\sqrt{2\overline{T}_{e}}\left( \psi \right) }
 Erf(x)=\frac{2}{\sqrt{\pi }}\int_{0}^{x}\exp \left( -y^{2}\right) dy
 \end{equation}
 is the well know error function defined in Refs \cite{gra65} and \cite{aba70}
-, and its derivative 
+, and its derivative
 \begin{equation}
-Erf^{\prime }(x)=\frac{2}{\sqrt{\pi }}\exp \left( -x^{2}\right) 
+Erf^{\prime }(x)=\frac{2}{\sqrt{\pi }}\exp \left( -x^{2}\right)
 \end{equation}
 
-The relation 
+The relation
 \begin{equation}
 \frac{\overline{F}^{ee}\left( \psi ,p\right) }{\overline{A}^{ee}\left( \psi
 ,p\right) }=\frac{2\overline{v}u_{\psi }^{2}}{\overline{v}^{2}}=\frac{%
@@ -605,7 +608,7 @@ the only physical process. In that limit, self-collisions are neglected.
 Though the high velocity limit $u_{\psi }\gg 1$ corresponds to a restricted
 range of applications regarding the full electron-electron collision
 operator, it can contribute usefuly to comparisons with some theoretical
-calculations. Starting from expressions given in Ref. \cite{kar86}, 
+calculations. Starting from expressions given in Ref. \cite{kar86},
 \begin{equation}
 \overline{A}^{ee}\left( \psi ,\overline{p}\right) =\frac{\overline{n}%
 _{e}\left( \psi \right) }{\overline{v}^{3}}\overline{T}_{e}\left( \psi
@@ -615,14 +618,14 @@ _{e}\left( \psi \right) }{\overline{v}^{3}}\overline{T}_{e}\left( \psi
 \overline{F}^{ee}\left( \psi ,\overline{p}\right) =\frac{\overline{n}%
 _{e}\left( \psi \right) }{\overline{v}^{2}}
 \end{equation}
-and 
+and
 \begin{equation}
 \overline{B}_{t}^{ee}\left( \psi ,\overline{p}\right) =\frac{\overline{n}%
 _{e}\left( \psi \right) }{2\overline{v}}\left[ 1-\frac{\overline{T}%
-_{e}\left( \psi \right) }{\overline{v}^{2}}\right] 
+_{e}\left( \psi \right) }{\overline{v}^{2}}\right]
 \end{equation}
 
-With these definitions, the ratio 
+With these definitions, the ratio
 \begin{equation}
 \frac{\overline{F}^{ee}\left( \psi ,\overline{p}\right) }{\overline{A}
 ^{ee}\left( \psi ,\overline{p}\right) }=\frac{\overline{v}}{\overline{T}%
@@ -635,7 +638,7 @@ is well recovered. In that limit, self-collisions are neglected.
 This case corresponds to the limit where only pitch-angle scattering of
 electrons on massive ions with $\overline{T}_{ss^{\prime }}\left( \psi
 \right) =0,$ with large $Z_{ss^{\prime }}.$ Consequently, large
-simplifications may be performed, and 
+simplifications may be performed, and
 \begin{equation}
 \overline{A}^{ee}\left( \psi ,\overline{p}\right) =\overline{F}^{ee}\left(
 \psi ,\overline{p}\right) =\overline{B}_{t}^{ee}\left( \psi ,\overline{p}%
@@ -656,17 +659,17 @@ friction term $\overline{F}^{ee}\left( \psi ,\overline{p}\right) $to the
 diffusion one $\overline{A}^{ee}\left( \psi ,\overline{p}\right) $ scales
 like $\overline{v}$ as indicated in \ref{ratioAF} , the contribution of the
 diffusion $\overline{A}^{ee}\left( \psi ,\overline{p}\right) $ is simply
-neglected in the limit $v\rightarrow c.$ Hence, 
+neglected in the limit $v\rightarrow c.$ Hence,
 \begin{equation}
 \overline{F}^{ee}\left( \psi ,p\right) =\frac{\overline{n}_{e}\left( \psi
 \right) }{\overline{v}^{2}}
 \end{equation}
-and 
+and
 \begin{equation}
 \overline{A}^{ee}\left( \psi ,\overline{p}\right) =0
 \end{equation}
 
-For the pitch-angle term, the term is simply 
+For the pitch-angle term, the term is simply
 \begin{equation}
 \overline{B}_{t}^{ee}\left( \psi ,\overline{p}\right) =\frac{\overline{n}%
 _{e}\left( \psi \right) }{2\overline{v}}
@@ -707,7 +710,7 @@ the unit system here employed. Using the standard notations
 Erf\left( u_{\psi }^{ss^{\prime }}\right) -u_{\psi }Erf^{\prime }\left(
 u_{\psi }^{ss^{\prime }}\right) \right] \frac{\ln \Lambda _{e/ss^{\prime
 }}^{\dagger }}{\ln \Lambda _{e/e}^{\dagger }}Z_{ss^{\prime }}^{2}\overline{n}%
-_{ss^{\prime }}\left( \psi \right) 
+_{ss^{\prime }}\left( \psi \right)
 \end{equation}
 
 \begin{equation}
@@ -727,9 +730,9 @@ and
 }}\right) +u_{\psi }^{ss^{\prime }}Erf^{\prime }\left( u_{\psi }^{ss^{\prime
 }}\right) \right] \frac{\ln \Lambda _{e/ss^{\prime }}^{\dagger }}{\ln
 \Lambda _{e/e}^{\dagger }}Z_{ss^{\prime }}^{2}\overline{n}_{ss^{\prime
-}}\left( \psi \right) 
+}}\left( \psi \right)
 \end{equation}
-where 
+where
 \begin{equation}
 u_{\psi }^{ss^{\prime }}=\frac{v}{\sqrt{2}v_{th,ss^{\prime }}^{\dagger }}=%
 \frac{\overline{v}}{\sqrt{2}\sqrt{\overline{T}_{ss^{\prime }}\left( \psi
@@ -739,7 +742,7 @@ u_{\psi }^{ss^{\prime }}=\frac{v}{\sqrt{2}v_{th,ss^{\prime }}^{\dagger }}=%
 Here, $v_{th,ss^{\prime }}^{\dagger }$ is the thermal velocity of species $s$
 in ionization state $s^{\prime }$, while $Erf(x)$ and $Erf^{\prime }(x)$
 have the same expressions as for the electron-electron collision term. For a
-single ion species $s$ fully ionized, the ratio 
+single ion species $s$ fully ionized, the ratio
 \begin{equation}
 \frac{\overline{F}^{ei}\left( \psi ,\overline{p}\right) }{\overline{A}%
 ^{ei}\left( \psi ,\overline{p}\right) }=\frac{\overline{v}}{\overline{T}%
@@ -757,7 +760,7 @@ resonance condition is far from the thermal bulk, it is reasonable to
 consider the high velocity limit of the electron-ion collision operator.
 Corresponding coefficients $\overline{A}^{ei}\left( \psi ,\overline{p}%
 \right) $, $\overline{F}^{ei}\left( \psi ,\overline{p}\right) $ and $%
-\overline{B}_{t}^{ei}\left( \psi ,\overline{p}\right) $ are 
+\overline{B}_{t}^{ei}\left( \psi ,\overline{p}\right) $ are
 \begin{equation}
 \overline{A}^{ei}\left( \psi ,\overline{p}\right) =\frac{1}{\overline{v}^{3}}%
 \sum_{s}\sum_{s^{\prime }}Z_{ss^{\prime }}^{2}\overline{n}_{ss^{\prime
@@ -771,7 +774,7 @@ Corresponding coefficients $\overline{A}^{ei}\left( \psi ,\overline{p}%
 }}\left( \psi \right) \frac{\ln \Lambda _{e/ss^{\prime }}^{\dagger }}{\ln
 \Lambda _{e/e}^{\dagger }}\frac{1}{\overline{m}_{s}}
 \end{equation}
-and 
+and
 \begin{equation}
 \overline{B}_{t}^{ei}\left( \psi ,\overline{p}\right) =\frac{1}{2\overline{v}%
 }\sum_{s}\sum_{s^{\prime }}Z_{ss^{\prime }}^{2}\overline{n}_{ss^{\prime
@@ -785,7 +788,7 @@ _{ss^{\prime }}\left( \psi \right) $ is the normalized ion density at $\psi ,
 $ as introduced in Sec. \ref{normtene}, and $\overline{m}_{s}$ is the ion
 rest mass normalized to the electron rest mass $m_{e}$. Coefficients for the
 electron-ion collisions given in Ref.\cite{shk97} are well recovered. Like
-for the Maxwellian limit, 
+for the Maxwellian limit,
 \begin{equation}
 \frac{\overline{F}^{ei}\left( \psi ,\overline{p}\right) }{\overline{A}%
 ^{ei}\left( \psi ,\overline{p}\right) }=\frac{\overline{v}}{\overline{T}%
@@ -799,12 +802,12 @@ species $s$ is considered.
 
 Since only pitch-angle electron scattering on massive ions with $\overline{T}%
 _{ss^{\prime }}\left( \psi \right) =0,$ with large $Z_{ss^{\prime }}$ is
-considered in this model, by definition 
+considered in this model, by definition
 \begin{equation}
 \overline{A}^{ei}\left( \psi ,\overline{p}\right) =\overline{F}^{ei}\left(
 \psi ,\overline{p}\right) =0
 \end{equation}
-while 
+while
 \begin{equation}
 \overline{B}_{t}^{ei}\left( \psi ,\overline{p}\right) =1/2
 \end{equation}
@@ -816,12 +819,12 @@ analytical calculations.
 
 \subsubsection{Ultra-relativistic M\o ller model}
 
-A simplified term is used where 
+A simplified term is used where
 \begin{equation}
 \overline{A}^{ei}\left( \psi ,\overline{p}\right) =\overline{F}^{ei}\left(
 \psi ,\overline{p}\right) =0
 \end{equation}
-since ion contribution is almost negligible as compared to electrons and 
+since ion contribution is almost negligible as compared to electrons and
 \begin{equation}
 \overline{B}_{t}^{ei}\left( \psi ,\overline{p}\right) =\frac{1}{2\overline{v}%
 }\sum_{s}\sum_{s^{\prime }}Z_{ss^{\prime }}^{2}\overline{n}_{ss^{\prime
