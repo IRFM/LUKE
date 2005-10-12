@@ -1,6 +1,5 @@
-function [Nperp,e_xyz,e_pmz,e_pyk,X,X_s,X_sn]...
-    = hotdisp_dke_jd(Npar,omega_rf,Te,ne,zTi,zni,zZi,zmi,Bfield,Nperp,nmax,tol);
-%
+function [Nperp,e_xyz,e_pmz,e_pyk,D,X,X_s,X_sn,alphaphi_lin,phiT_xyz,phiP_xyz,phiT_pmz,phiP_pmz,phiT_pyk,phiP_pyk]...
+    = hotdisp_dke_jd(Npar,omega_rf,Te,ne,zTi,zni,zZi,zmi,Bfield,Nperp,herm_mode,display_mode,nmax,tol);
 % This function solves the dispersion relation and the wave equation
 % in the linear kinetic plasma model. It calculates the perpendicular index of
 % refraction and the polarization as a function of the wave
@@ -25,6 +24,10 @@ function [Nperp,e_xyz,e_pmz,e_pyk,X,X_s,X_sn]...
 %       - zmi: ion masses (mp) [1,i]  
 %       - Bfield: magnetic field amplitude [1,1]
 %       - Nperp: perpendicular index of refraction (initial guess) [1,1] (default:1)    
+%       - herm_mode: mode for the calculation (0) full dielectric tensor, (1) hermitian part (default:0) 
+%           >>> In the case herm_mode = 1, the power flow and linear absorption
+%               are also calculated
+%       - display_mode: (0,1) none (2) convergence figures (default:0)  
 %       - nmax: maximum harmonic number (default:10) 
 %       - tol: tolerance on the value of the dispersion relation (default:1e-10) 
 %
@@ -49,6 +52,8 @@ n0 = nmax+1;
 %
 nit_disp = 50;
 NZ = 10000;
+proxcoef = 1e-4;
+%
 Ns = 1 + length(zZi);
 %
 ns = [ne;zni(:)];
@@ -67,13 +72,16 @@ bTs = sqrt([Te*1e3*qe/me/clum^2;zTi(:)*1e3*qe./(mp*zmi(:))/clum^2]);
 %
 zeta_sn = (1 - abs(ys)*n)/abs(Npar)/sqrt(2)./(bTs*ones(1,Nn));
 %
-Z_sn = Zplasma2(zeta_sn,NZ);
-Zp_sn = -2*(1 + Z_sn.*zeta_sn);
+wb = waitbar(0);
+for in = 1:Nn,
+    [Z_sn(:,in),Zp_sn(:,in),Zpp_sn(:,in)] = Zplasma2(zeta_sn(:,in),NZ);
+    waitbar(in/Nn,wb);
+end
+close(wb)
+%[Z_sn,Zp_sn,Zpp_sn] = Zplasma2(zeta_sn,NZ);
 %
 spar = sign(Npar);
 ss = sign(qs);
-sperp = 1;
-Drel = 0;
 %
 %   Dielectric tensor elements
 %
@@ -97,14 +105,13 @@ D = zeros(3,3);
 %
 I = eye(3);
 %
-for it_disp = 1:nit_disp,
+for it_disp = 1:2*nit_disp+1,
     %
-    Drel_old = Drel;
-    N = [Nperp,0,Npar]';
+    N = [Nperp(it_disp),0,Npar].';
     %
-    lambdas = (Nperp*bTs./ys).^2;
-    Gamma_sn = besseli(n,lambdas,1);
-    Gammap_sn = ((1./lambdas)*n - 1).*Gamma_sn + besseli(n+1,lambdas,1);
+    lambdas = (Nperp(it_disp)*bTs./ys).^2;
+    Gamma_sn = besseli(n,lambdas,1).*(exp(-i*imag(lambdas))*ones(1,Nn));
+    Gammap_sn = ((besseli(n+1,lambdas,1) + besseli(n-1,lambdas,1))/2 - besseli(n,lambdas,1)).*(exp(-i*imag(lambdas))*ones(1,Nn));
     %
     MGamma_sn = reshape(Gamma_sn,[1,1,Ns,Nn]);
     MGammap_sn = reshape(Gammap_sn,[1,1,Ns,Nn]);
@@ -129,22 +136,46 @@ for it_disp = 1:nit_disp,
     %
     K = I + X;
     %
-    D = N*N' - (N'*N)*I + K;
+    D = N*N.' - (N.'*N)*I + K;
     %
-    Drel = det(D); 
+    if herm_mode == 1,
+        D = (D + D')/2;
+    end
     %
-    if abs(Drel) <= tol,
+    Drel(it_disp) = det(D); 
+    %
+    if rem(it_disp,2) == 1 & abs(Drel(it_disp)) <= tol,
         break
-    elseif abs(Drel) <= abs(Drel_old)%Richardson method
-        Nperp = Nperp + sperp*Drel;
+    elseif rem(it_disp,2) == 1,
+        if it_disp == 1,
+            Nperp(it_disp + 1) = (1 - proxcoef)*Nperp(it_disp);
+        else
+            Nperp(it_disp + 1) = (1 - proxcoef)*Nperp(it_disp) + proxcoef*Nperp(it_disp - 2);
+        end
     else
-        Nperp = Nperp - 2*sperp*Drel_old;
-        sperp = -sperp;
+        dDreldNperp = (Drel(it_disp) - Drel(it_disp - 1))/(Nperp(it_disp) - Nperp(it_disp - 1));
+        Nperp(it_disp + 1) = Nperp(it_disp - 1) - Drel(it_disp - 1)/dDreldNperp; 
     end
 end
-if it_disp == nit_disp,
+%
+if display_mode >= 2,
+%
+    figure(1),
+    plot(1:(it_disp + 1)/2,real(Nperp(1:2:it_disp)),'b+',1:(it_disp + 1)/2,imag(Nperp(1:2:it_disp)),'r+')
+%
+    figure(2),
+    plot(1:(it_disp + 1)/2,real(Drel(1:2:it_disp)),'b+',1:(it_disp + 1)/2,imag(Drel(1:2:it_disp)),'r+')
+%
+    figure(3),
+    plot(1:(it_disp + 1)/2,abs(Drel(1:2:it_disp)),'b+')
+    set(gca,'yscale','log')
+end
+%
+if it_disp == 2*nit_disp+1,    
     error('The root was not found');
 end
+%
+Nperp = Nperp(it_disp);
 %
 %   Eigenvector
 %
@@ -171,3 +202,86 @@ M_xzpk = [c,0,-s;0,1,0;s,0,c];
 %
 e_pyk = M_xzpk*e_xyz; %pyk
 %
+if herm_mode == 1,
+    %
+    % linear absorption coefficient
+    %
+    XA = (X - X')/2;
+    alphaphi_lin = -i*omega_rf/clum*e_xyz'*XA*e_xyz;
+    %
+    % energy flow density
+    %
+    dYdNperp_sn = zeros(3,3,Ns,Nn);
+    %
+    Mlambdap_s = 2*Mlambdas/Nperp;
+    Gammapp_sn = ((besseli(n+2,lambdas,1) + besseli(n-2,lambdas,1))/4 + 3*besseli(n,lambdas,1)/2 - besseli(n+1,lambdas,1) - besseli(n-1,lambdas,1)).*(exp(-i*imag(lambdas))*ones(1,Nn));
+    MGammapp_sn = reshape(Gammapp_sn,[1,1,Ns,Nn]);
+    %
+    dYdNperp_sn(1,1,:,:) = Mn.^2.*Mlambdap_s.*(MGammap_sn - MGamma_sn./Mlambdas).*MZ_sn./Mlambdas;
+    dYdNperp_sn(1,2,:,:) = i*Mss.*Mn.*Mlambdap_s.*MGammapp_sn.*MZ_sn;
+    dYdNperp_sn(1,3,:,:) = -spar.*Mn.*Mlambdap_s.*(MGammap_sn - MGamma_sn/2./Mlambdas).*MZp_sn./sqrt(2*Mlambdas);
+    dYdNperp_sn(2,1,:,:) = -dYdNperp_sn(1,2,:,:);
+    dYdNperp_sn(2,2,:,:) = Mlambdap_s.*((Mn.^2./Mlambdas - 2).*MGammap_sn - Mn.^2.*MGamma_sn./Mlambdas.^2 - 2*Mlambdas.*MGammapp_sn).*MZ_sn;
+    dYdNperp_sn(2,3,:,:) = i*Mss*spar.*Mlambdap_s.*sqrt(Mlambdas/2).*(MGammap_sn/2./Mlambdas + MGammapp_sn).*MZp_sn;
+    dYdNperp_sn(3,1,:,:) = dYdNperp_sn(1,3,:,:);
+    dYdNperp_sn(3,2,:,:) = -dYdNperp_sn(2,3,:,:);
+    dYdNperp_sn(3,3,:,:) = -Mlambdap_s.*MGammap_sn.*Mzeta_sn.*MZp_sn;
+    %
+    dXdNperp_sn = Mps.^2.*Mzeta_sn0.*dYdNperp_sn;
+    %  
+    dXdNperp_s = sum(dXdNperp_sn,4);
+    %
+    dXdNperp = sum(dXdNperp_s,3);
+    %
+    dXdNperp = (dXdNperp + dXdNperp')/2;%hermitian part only
+    %  
+    dYdNpar_sn = zeros(3,3,Ns,Nn);
+    %
+    Mzetap_sn = -Mzeta_sn/Npar;
+    Mzetap_sn0 = -Mzeta_sn0/Npar;
+    MZpp_sn = reshape(Zpp_sn,[1,1,Ns,Nn]);
+    %
+    dYdNpar_sn(1,1,:,:) = Mn.^2.*MGamma_sn.*Mzetap_sn.*MZp_sn./Mlambdas;
+    dYdNpar_sn(1,2,:,:) = i*Mss.*Mn.*MGammap_sn.*Mzetap_sn.*MZp_sn;
+    dYdNpar_sn(1,3,:,:) = -spar.*Mn.*MGamma_sn.*Mzetap_sn.*MZpp_sn./sqrt(2*Mlambdas);
+    dYdNpar_sn(2,1,:,:) = -dYdNpar_sn(1,2,:,:);
+    dYdNpar_sn(2,2,:,:) = (Mn.^2.*MGamma_sn./Mlambdas - 2*Mlambdas.*MGammap_sn).*Mzetap_sn.*MZp_sn;
+    dYdNpar_sn(2,3,:,:) = i*Mss*spar.*sqrt(Mlambdas/2).*MGammap_sn.*Mzetap_sn.*MZpp_sn;
+    dYdNpar_sn(3,1,:,:) = dYdNpar_sn(1,3,:,:);
+    dYdNpar_sn(3,2,:,:) = -dYdNpar_sn(2,3,:,:);
+    dYdNpar_sn(3,3,:,:) = -MGamma_sn.*Mzetap_sn.*(MZp_sn + Mzeta_sn.*MZpp_sn);
+    %
+    dXdNpar_sn = Mps.^2.*Mzetap_sn0.*Y_sn + Mps.^2.*Mzeta_sn0.*dYdNpar_sn;
+    %  
+    dXdNpar_s = sum(dXdNpar_sn,4);
+    %
+    dXdNpar = sum(dXdNpar_s,3);
+    %
+    dXdNpar  = (dXdNpar + dXdNpar')/2;
+    %
+    phiT_xyz = -(e_xyz(1)'*dXdNperp*e_xyz + e_xyz(3)'*dXdNpar*e_xyz)/2;
+    phiP_xyz = N - real((e_xyz'*N)*e_xyz);
+    %
+    phiT_pmz = M_xypm*phiT_xyz; %pmz
+    phiP_pmz = M_xypm*phiP_xyz; %pmz
+    %
+    phiT_pyk = M_xzpk*phiT_xyz; %pyk
+    phiP_pyk = M_xzpk*phiP_xyz; %pyk
+else
+    alphaphi_lin = NaN;
+    phiT_xyz = NaN;
+    phiP_xyz = NaN;
+    phiT_pmz = NaN;
+    phiP_pmz = NaN;
+    phiT_pyk = NaN;
+    phiP_pyk = NaN;
+end
+
+
+
+
+
+
+
+
+
