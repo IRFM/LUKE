@@ -94,11 +94,11 @@ zeta_sn = (1 - abs(ys)*n)/abs(Npar)/sqrt(2)./(bTs*ones(1,Nn));
 %
 %wb = waitbar(0);
 %for in = 1:Nn,
-    %[Z_sn(:,in),Zp_sn(:,in),Zpp_sn(:,in)] = Zplasma2(zeta_sn(:,in),NZ);
+    %[Z_sn(:,in),Zp_sn(:,in),Zpp_sn(:,in)] = Zplasma(zeta_sn(:,in),NZ);
     %waitbar(in/Nn,wb);
 %end
 %close(wb)
-[Z_sn,Zp_sn,Zpp_sn] = Zplasma2(zeta_sn,NZ);
+[Z_sn,Zp_sn,Zpp_sn] = Zplasma(zeta_sn,NZ);
 %
 spar = sign(Npar);
 ss = sign(qs);
