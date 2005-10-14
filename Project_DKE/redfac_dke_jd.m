@@ -5,6 +5,8 @@ Nparmin = -10;
 Nparmax = 10;
 nz = 1000;
 %
+nit_max = 5000;
+%
 tol = 1e-10;
 %
 [nr,nb] = size(xyD0_rf_mod);
@@ -30,7 +32,11 @@ for ir = 1:nr,
 %
     yredfac = ones(1,nb);
 %
-    while 1,
+    it_rfac = 0;
+%
+    while it_rfac < nit_max,
+    %
+        it_rfac = it_rfac + 1;
     %
         zyredfac = repmat(yredfac,[nz,1]);
         zyDparparb_mod = zyDparparb./zyredfac;
@@ -55,6 +61,11 @@ for ir = 1:nr,
         end
         yredfac(iymax) = yredfac(iymax).*zyDparparb_mod(izmax,iymax)/Dmaxnew;
     end
+    %
+    if it_rfac == nit_max,
+        error('the calculation of xyredfac failed')
+    end
+    %
     xyredfac(ir,:) = yredfac;
 end
     
