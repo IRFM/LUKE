@@ -222,9 +222,13 @@ else
         else
             error('No information was given to choose between the two cold modes')
         end
-    elseif opt_disp == 2, % warm plasma dispersion tensor for sepol_pmz, sNperp and phi_pmz (warmdisp_dke_jd)
-        %%%%%%%%%% to be implemented %%%%%%%%%%
-        error('model not yet implemented');
+    elseif opt_disp == 2, % non-relativistic hot plasma dispersion tensor for sepol_pmz, sNperp and phi_pmz (hotdisp_dke_jd)
+        for is=1:ns,
+            [sNperp(is),e_xyz,sepol_pmz(:,is),e_pyk,D,X,X_s,X_sn,salphaphi_lin(is),phiT_xyz,phiP_xyz,sphiT_pmz(:,is),sphiP_pmz(:,is),phiT_pyk,phiP_pyk]...
+                = hotdisp_dke_jd(sNpar(is),omega_rf,sTe(is),sne(is),szTi(:,is),szni(:,is),zZi,zmi,sB(is),sNperp(is),1);
+        end
+        sphi_pmz = real(sphiP_pmz + sphiT_pmz);
+        salphaphi_lin = real(salphaphi_lin);
     elseif opt_disp == 3, % non-relativistic hot plasma dispersion tensor for sepol_pmz, sNperp and phi_pmz (R2D2) 
         [smask_ht,sNperp_ht,sepol_pmz_ht,sPflow_ht,sPabs_at] = ...
             disp_hot_jd(ss,sB,sne,sTe,sNpar,omega_rf,sNperp,0); 
