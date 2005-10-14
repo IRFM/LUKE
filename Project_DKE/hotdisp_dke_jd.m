@@ -1,5 +1,5 @@
 function [Nperp,e_xyz,e_pmz,e_pyk,D,X,X_s,X_sn,alphaphi_lin,phiT_xyz,phiP_xyz,phiT_pmz,phiP_pmz,phiT_pyk,phiP_pyk]...
-    = hotdisp_dke_jd(Npar,omega_rf,Te,ne,zTi,zni,zZi,zmi,Bfield,Nperp,herm_mode,display_mode,nmax,NZ,tol);
+    = hotdisp_dke_jd(Npar,omega_rf,Te,ne,zTi,zni,zZi,zmi,Bfield,Nperp_in,herm_mode,display_mode,nmax,NZ,tol);
 % This function solves the dispersion relation and the wave equation
 % in the linear kinetic plasma model. It calculates the perpendicular index of
 % refraction and the polarization as a function of the wave
@@ -23,7 +23,7 @@ function [Nperp,e_xyz,e_pmz,e_pyk,D,X,X_s,X_sn,alphaphi_lin,phiT_xyz,phiP_xyz,ph
 %       - zZi: ion charges [1,i] 
 %       - zmi: ion masses (mp) [1,i]  
 %       - Bfield: magnetic field amplitude [1,1]
-%       - Nperp: perpendicular index of refraction (initial guess) [1,1] (default:1)    
+%       - Nperp_in: perpendicular index of refraction (initial guess) [1,1] (default:1)    
 %       - herm_mode: mode for the calculation (0) full dielectric tensor, (1) hermitian part (default:0) 
 %           >>> In the case herm_mode = 1, the power flow and linear absorption
 %               are also calculated
@@ -46,7 +46,7 @@ function [Nperp,e_xyz,e_pmz,e_pyk,D,X,X_s,X_sn,alphaphi_lin,phiT_xyz,phiP_xyz,ph
 % by Joan Decker <jodecker@alum.mit.edu> (MIT/RLE) and  Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 % 
 if nargin < 15,
-   tol = 1e-6;
+   tol = 1e-5;
 end
 if nargin < 14,
    NZ = 100;
@@ -61,7 +61,7 @@ if nargin < 11,
    herm_mode = 0;
 end
 if nargin < 10,
-   Nperp = 1.0;
+   Nperp_in = 1.0;
 end
 %
 [qe,me,mp,mn,e0,mu0,re,mc2,clum] = pc_dke_yp;
@@ -73,6 +73,7 @@ n0 = nmax+1;
 nit_disp = 50;
 NZ = 100;
 proxcoef = 1e-4;
+Nperp(1) = Nperp_in;
 %
 Ns = 1 + length(zZi);
 %
@@ -192,7 +193,25 @@ if display_mode >= 2,
 end
 %
 if it_disp == 2*nit_disp+1,    
-    error('The root was not found');
+    warning('The root was not found');
+%    
+    Nperp = NaN;
+    e_xyz = NaN*ones(3,1);
+    e_pmz = NaN*ones(3,1);
+    e_pyk = NaN*ones(3,1);
+    D = NaN*ones(3,3);
+    X = NaN*ones(3,3);
+    X_s = NaN*ones(3,3,Ns);
+    X_sn = NaN*ones(3,3,Ns,Nn);
+    alphaphi_lin = NaN;
+    phiT_xyz = NaN*ones(3,1);
+    phiP_xyz = NaN*ones(3,1);
+    phiT_pmz = NaN*ones(3,1);
+    phiP_pmz = NaN*ones(3,1);
+    phiT_pyk = NaN*ones(3,1);
+    phiP_pyk = NaN*ones(3,1);
+%    
+    return
 end
 %
 Nperp = Nperp(it_disp);
