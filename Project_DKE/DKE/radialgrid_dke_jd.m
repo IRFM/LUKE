@@ -47,6 +47,7 @@ if nr_S == 1,%Case of local studies, no fast electron transport
     end
 %
 	xpsin_f_dke = xpsin_S_dke;
+    xpsin_S_dke = [0,1];
 	xdpsin_f_dke = NaN;
 	xpsinm_S_dke = NaN;
 	xdpsinm_S_dke = NaN;
