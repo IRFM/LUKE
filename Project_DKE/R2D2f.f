@@ -9,7 +9,7 @@ C#####################################################################
 C
 C---------------------------------------------------------------------
 C
-C VERSION 5:  September 23, 2003
+C VERSION 5/3J:September 23, 2003
 C             May 2003
 C              (modified the integration routine to check for
 C               convergence -- seems to be doing fine)
@@ -52,18 +52,32 @@ C                     tensor one can change the number of intervals
 C                     in which to search for roots, and the range 
 C                     over which to solve for the roots)
 C                     (finished and tested October 14, 2003)
+C             December 2, 2004
+C              (fixed the modified Bessel function identity in
+C               besk2 in three places -- courtesy of Eric)
+C             April 5, 2005
+C              (added parallel and y-direction power flows in the 
+C               non-relativistic power flow package -- pwr_nr)
+C             April to October 2005
+C              (added relativistic power flow package)
 C
 C---------------------------------------------------------------------
 C
+C
+      subroutine R2D2(rout,pini,pinr,gues,pos)
 C
       implicit double precision (a-h, o-z)
 C
       parameter (n_rts=10)
 C
       double precision guesr(n_rts),guesi(n_rts)
+      double complex croots(4),roots(n_rts),frt(n_rts)
 C
-	character*20 tokamak,tokparam
-	integer l_tokamak
+	  character*20 tokamak,tokparam
+	  integer l_tokamak
+C
+	  real*8 rout(2*(4+2*n_rts))
+	  real*8 pini(21),pinr(26),gues(2*n_rts),pos(32768*5)
 C
       common /para1/ w0
       common /para2/ npos
@@ -81,7 +95,7 @@ C
       common /pperp/ p_perp_min,p_perp_max
       common /weerr/ errabs1,errrel1,irule1
 C
-      common /nrts1/ knr,nrt_nr,nrt_fr,tol_ht,nd_ht
+      common /nrts1/ tol_ht,knr,nrt_nr,nrt_fr,nd_ht
 C
       common /chck1/ kparam
       common /chck2/ cnpa_in,cnpa_fi,n_cnpa
@@ -98,18 +112,18 @@ C
 C
 C	Simulation parameters
 C
-	open(20,file='simparam.m')
+C	open(20,file='simparam.m')
 C
 C	Code parameters
 C
-      open(22,file='codeparam.m')
+C      open(22,file='codeparam.m')
 C
 C....  output non-relativistic and relativistic roots .....
 C....... (data output is the local position and all the roots) .......
 C.... (kparam = 1: local cnpa, omega, or alpha and all the roots) ....
 C
-      open(5,file='nr1.m',status='replace')
-      open(8,file='r1.m',status='replace')
+C      open(5,file='nr1.m',status='replace')
+C      open(8,file='r1.m',status='replace')
 C
 C........ the non-relativistic and relativistic polarizations ........
 C..... polarizations are w.r.t. E_x and output as E_+, E_-, E_z ......
@@ -166,20 +180,21 @@ C...... output file containing power flow and power dissipated .......
 C...... (output: input parameter e.g. position, cnpe, sx, pdis) ......
 C
       open(11,file='pf.m',status='replace')
+      open(13,file='pfr.m',status='replace')
 C
-      namelist /param0/ kparam
-      namelist /param1/ knp,cnpa_in,cnpa_fi,n_cnpa
-      namelist /param2/ omega_in,omega_fi,n_omega
-      namelist /param3/ alpha_in,alpha_fi,n_alpha
+C      namelist /param0/ kparam
+C      namelist /param1/ knp,cnpa_in,cnpa_fi,n_cnpa
+C      namelist /param2/ omega_in,omega_fi,n_omega
+C      namelist /param3/ alpha_in,alpha_fi,n_alpha
 C
 C............ if kw0 = 0 ==> w0 is the frequency in Hertz ............
 C............ if kw0 = 1 ==> w0 is the angular frequency  ............
 C
-      namelist /para/ kw0
+C      namelist /para/ kw0
 C
 C... error limits for root finder and maximum number of iterations ...
 C
-      namelist /rtfnd/ errt_abs,errt_rel,it_max
+C      namelist /rtfnd/ errt_abs,errt_rel,it_max
 C
 C............... for the trubnikov integration package ...............
 C........... ktrub = 1 uses the trubnikov form of the d.r. ...........
@@ -194,9 +209,9 @@ C.... absolute and relative errors and the rule for integration ......
 C.. navg = number of intervals for averaging the integration result ..
 C.... diff_err = error tolerance between three of these averages .....
 C
-      namelist /trint1/ ktrub,xi_lo,xi_hi,nxi
-      namelist /trint2/ errabs0,errrel0,irule0
-      namelist /trint3/ navg,diff_err
+C      namelist /trint1/ ktrub,xi_lo,xi_hi,nxi
+C      namelist /trint2/ errabs0,errrel0,irule0
+C      namelist /trint3/ navg,diff_err
 C
 C... these are parameters when doing the integration over momenta ....
 C.......... minimum and maximum values of parallel momentum ..........
@@ -204,31 +219,38 @@ C....... minimum and maximum values of perpendicular momentum ........
 C.... (NOTE: p_perp_min has to be equal to or greater than zero) .....
 C.... absolute and relative errors and the rule for integration ......
 C
-      namelist /pint1/ p_para_min,p_para_max,p_perp_min,p_perp_max
-      namelist /pint2/ errabs1,errrel1,irule1
+C      namelist /pint1/ p_para_min,p_para_max,p_perp_min,p_perp_max
+C      namelist /pint2/ errabs1,errrel1,irule1
 C
 C......... kpr  = 0 suppresses printing out of various data ..........
 C... kcheck = 1 checks the dispersion elements for a given n_perp ....
 C... cnpe_r and cnpe_i are the real and imaginary parts of n_perp ....
 C
-      namelist /pwrit/ kpr,kcheck,cnpe_r,cnpe_i
+C      namelist /pwrit/ kpr,kcheck,cnpe_r,cnpe_i
 C
 C...... number of normalized radial positions ......
 C.............. (NOTE: these are used when kparam = 0) ...............
 C
-      read (20,*) npos
+C      read (20,*) npos
+       npos=int(pini(1))
 C
 C... knr = 1 solves the non-relativistic disperison relation only ....
 C.. knr = 0 solves the fully relativistic dispersion relation also ... 
 C..... number of roots to be found in the non-relativistic case ......
 C....... number of roots to be found in the relativistic case ........
 C
-      read (20,*) knr,nrt_nr,nrt_fr,tol_ht,nd_ht 
+C       read (20,*) tol_ht 
+       knr=int(pini(2)) 
+       nrt_nr=int(pini(3)) 
+       nrt_fr=int(pini(4))
+       nd_ht=int(pini(5))
+       tol_ht=pinr(1) 
 C
 C.......... number of terms to be used in the sums for the ...........
 C............ non-relativistic dielectric tensor elements ............
 C
-	read (20,*) nr_nterms
+C	read (20,*) nr_nterms
+       nr_nterms=int(pini(6))
 C
 C............ kflag = 1 : these initial guesses are used .............
 C....... when solving the non-relativistic dispersion relation .......
@@ -236,12 +258,17 @@ C......... (real part in guesr and imaginary part in guesi) ..........
 C....... kflag = 0 : these guesses are ignored and the guesses .......
 C.... obtained from the approximate dispersion relation are used .....
 C
-	read (20,*) kgues
+C	read (20,*) kgues
+      kgues = int(pini(7))
 C
 C............... input guesses of roots if so desired ................
 C
-      read (20,*) guesr(1:nrt_nr)
-      read (20,*) guesi(1:nrt_nr)
+C      read (20,*) guesr(1:nrt_nr)
+C      read (20,*) guesi(1:nrt_nr)
+        do i=1,nrt_nr
+          guesr(i) = gues(2*i-1)
+          guesi(i) = gues(2*i)
+        end do
 C
 C.............. reference magnetic field,  ..............
 C.............. peak electron temperature, peak density ..............
@@ -250,20 +277,61 @@ C........ (NOTE: this te0 is used for all kparam given above) ........
 C.... (NOTE: the other parameters are used only when kparam = 0) .....
 C
 C
-	read (20,*) bt0,te0,den0,w0
+C	read (20,*) bt0,te0,den0,w0
+      bt0 = pinr(2)
+      te0 = pinr(3)
+      den0 = pinr(4)
+      w0 = pinr(5)
 C
-      read (22,param0)
-      read (22,param1)
-      read (22,param2)
-      read (22,param3)
-      read (22,para)
-      read (22,rtfnd)
-      read (22,trint1)
-      read (22,trint2)
-      read (22,trint3)
-      read (22,pint1)
-      read (22,pint2)
-      read (22,pwrit)
+C      read (22,param0)
+C      read (22,param1)
+C      read (22,param2)
+C      read (22,param3)
+C      read (22,para)
+C      read (22,rtfnd)
+C      read (22,trint1)
+C      read (22,trint2)
+C      read (22,trint3)
+C      read (22,pint1)
+C      read (22,pint2)
+C      read (22,pwrit)
+C      
+      kparam = int(pini(8))
+      knp = int(pini(9))
+      n_cnpa = int(pini(10))
+      n_omega = int(pini(11))
+      n_alpha = int(pini(12))
+      kw0 = int(pini(13))
+      it_max = int(pini(14))
+      ktrub = int(pini(15))
+      nxi = int(pini(16))
+      irule0 = int(pini(17))
+      navg = int(pini(18))
+      irule1 = int(pini(19))
+      kpr = int(pini(20))
+      kcheck = int(pini(21))
+C
+      cnpa_in = pinr(6)
+      cnpa_fi = pinr(7)
+      omega_in = pinr(8)
+      omega_fi = pinr(9)
+      alpha_in = pinr(10)
+      alpha_fi = pinr(11)
+      errt_abs = pinr(12)
+      errt_rel = pinr(13)
+      xi_lo = pinr(14)
+      xi_hi = pinr(15)
+      errabs0 = pinr(16)
+      errrel0 = pinr(17)
+      diff_err = pinr(18)
+      p_para_min = pinr(19)
+      p_para_max = pinr(20)
+      p_perp_min = pinr(21)
+      p_perp_max = pinr(22)
+      errabs1 = pinr(23)
+      errrel1 = pinr(24)
+      cnpe_r = pinr(25)
+      cnpe_i = pinr(26)
 C
       twopi=6.283185307179586476925287
       clight=2.99792458d10
@@ -287,15 +355,26 @@ C
 C... solving the dispersion relation for two different conditions ....
 C
       if (kparam.eq.0) then
-        call rel_disp
+        call rel_disp(croots,roots,frt,pos)
       else
-        call rel_eff(te0)
+        call rel_eff(croots,roots,frt,te0)
       end if
 C
    99 continue
 C
+      do i=1,4
+        rout(2*i-1) = dreal(croots(i))
+        rout(2*i) = dimag(croots(i))
+      end do
+C      
+      do i=1,n_rts
+        rout(8+2*i-1) = dreal(roots(i))
+        rout(8+2*i) = dimag(roots(i))
+        rout(28+2*i-1) = dreal(frt(i))
+        rout(28+2*i) = dimag(frt(i))
+      end do
 C
-      stop
+      return
       end
 C
 C
@@ -326,7 +405,7 @@ C
       arg=1./vt**2
       if (arg.lt.50.d0) then
         call umach(-3,9)
-        besk2=dbsk0e(arg)-2.*dbsk1e(arg)/arg
+        besk2=dbsk0e(arg)+2.*dbsk1e(arg)/arg
         call erset(0,1,1)
       else
         besk2=besk_a(2,arg)
@@ -356,7 +435,7 @@ C
 C
 C=====================================================================
 C
-      subroutine rel_disp
+      subroutine rel_disp(croots,roots,frt,pos)
 C
       implicit double precision (a-h, o-z)
 C
@@ -364,18 +443,23 @@ C
 C
       double precision guesr(n_rts),guesi(n_rts)
 C
+	  real*8 pos(32768*5)
+C	  
       double complex dcmplx,ci
 C
       double complex croots(4)
       double complex rguess(n_rts),roots(n_rts)
+      double complex xrguess(n_rts,1+npos),xroots(n_rts,1+npos)
       double complex frtgues(n_rts),frt(n_rts)
+      double complex frt_herm_guess(n_rts),frt_herm(n_rts)
+      double complex frt_herm_guess_in(n_rts)
       double complex rguess_in(n_rts),frtgues_in(n_rts)
 C
       common /para1/ w0
       common /para2/ npos
       common /para8/ wp,wc,vte
       common /para9/ alpha,omega,vt,besk2
-      common /nrts1/ knr,nrt_nr,nrt_fr,tol_ht,nd_ht
+      common /nrts1/ tol_ht,knr,nrt_nr,nrt_fr,nd_ht
       common /guinp/ guesr,guesi,kgues
       common /prnt/  kpr
 C
@@ -383,7 +467,7 @@ C
 C
       call prof_in
 C
-      call pp(r,1)
+      call pp(r,1,pos,0)
 C
 C..... solving for the cold plasma and approximate plasma roots ......
 C
@@ -391,8 +475,8 @@ C
       call zero_roots(croots,4)
       call app_nr(rguess)
       call zero_roots(rguess,6)
-      write (6,401) croots(1:2)
-      write (6,401) croots(3:4)
+C      write (6,401) croots(1:2)
+C      write (6,401) croots(3:4)
       write (6,402) rguess(1:2)
       write (6,402) rguess(3:4)
       write (6,402) rguess(5:6)
@@ -411,7 +495,8 @@ C......... solving the non-relativistic dispersion relation ..........
 C
       call nr_disp(rguess,roots,nrt_nr)
       call zero_roots(roots,nrt_nr)
-      write (5,107) r,roots(1:nrt_nr)
+      xroots(1:nrt_nr,1) = roots(1:nrt_nr)
+C      write (5,107) r,roots(1:nrt_nr)
       do 21 j=1,nrt_nr
         rguess(j)=roots(j)
         rguess_in(j)=rguess(j)
@@ -424,37 +509,44 @@ C
 C........ solving the fully-relativistic dispersion relation .........
 C
       if (knr.eq.0) then
-        do 31 j=1,nrt_fr
+       do 31 j=1,nrt_fr
           frtgues(j)=rguess(j)
    31   continue
         call fr_disp(frtgues,frt,nrt_fr)
         call zero_roots(frt,nrt_fr)
-        write (8,108) r,frt(1:nrt_fr)
+C        write (8,108) r,frt(1:nrt_fr)
         do 41 j=1,nrt_fr
           frtgues(j)=frt(j)
           frtgues_in(j)=frtgues(j)
           write (6,601) r,frt(j)
   601     format(1x,"r, rel-root = ",3g18.10)
           call wave_polar(r,frt(j),1)
+          frt_herm_guess(j)=dcmplx(dreal(frt(j)),0.d0)
    41   continue
+        call fr_herm_disp(r,frt_herm_guess,frt_herm,nrt_fr)
+        do 51 j=1,nrt_fr
+          write (6,701) r,frt_herm(j)
+  701     format(1x,"r, hermitian rel-root = ",3g18.10)
+          frt_herm_guess_in(j)=frt_herm(j)
+   51   continue
       end if
 C
 C...... do-loop for calculating the roots at various positions .......
 C
-      do 3 n=1,npos
+      do 3 ipos=1,npos
 C
 C.......... reading next position r and the corresponding plasma parameters ..........
 C
-        call pp(r,1)
+        call pp(r,1,pos,ipos)
 C
 C......... solving the non-relativistic dispersion relation ..........
 C
         call nr_disp(rguess,roots,nrt_nr)
         call zero_roots(roots,nrt_nr)
-        write (5,107) r,roots(1:nrt_nr)
+C        write (5,107) r,roots(1:nrt_nr)
         do 22 j=1,nrt_nr
           rguess(j)=roots(j)
-          if (n.eq.1.or.kpr.eq.1) write (6,501) r,roots(j)
+          if (ipos.eq.1.or.kpr.eq.1) write (6,501) r,roots(j)
           call wave_polar(r,roots(j),0)
    22   continue
         call nr_disp_herm(r,roots,nrt_nr)
@@ -464,12 +556,14 @@ C
         if (knr.eq.0) then
           call fr_disp(frtgues,frt,nrt_fr)
           call zero_roots(frt,nrt_fr)
-          write (8,108) r,frt(1:nrt_fr)
+C          write (8,108) r,frt(1:nrt_fr)
           do 42 j=1,nrt_fr
             frtgues(j)=frt(j)
-            if (n.eq.1.or.kpr.eq.1) write (6,601) r,frt(j)
+            if (ipos.eq.1.or.kpr.eq.1) write (6,601) r,frt(j)
             call wave_polar(r,frt(j),1)
+            frt_herm_guess(j)=frt_herm(j)
    42     continue
+          call fr_herm_disp(r,frt_herm_guess,frt_herm,nrt_fr)
         end if
 C
     3 continue
@@ -485,7 +579,7 @@ C
 C
 C=====================================================================
 C
-      subroutine rel_eff(te0)
+      subroutine rel_eff(croots,roots,frt,te0)
 C
       implicit double precision (a-h, o-z)
 C
@@ -498,9 +592,10 @@ C
       double complex croots(4)
       double complex rguess(n_rts),roots(n_rts)
       double complex frtgues(n_rts),frt(n_rts)
+      double complex frt_herm_guess(n_rts),frt_herm(n_rts)
 C
       common /para9/ alpha,omega,vt,besk2
-      common /nrts1/ knr,nrt_nr,nrt_fr,tol_ht,nd_ht
+      common /nrts1/ tol_ht,knr,nrt_nr,nrt_fr,nd_ht
       common /chck1/ kparam
       common /chck2/ cnpa_in,cnpa_fi,n_cnpa
       common /chck3/ omega_in,omega_fi,n_omega
@@ -524,7 +619,7 @@ C
       arg=1./vt**2
       if (arg.lt.50.d0) then
         call umach(-3,9)
-        besk2=dbsk0e(arg)-2.*dbsk1e(arg)/arg
+        besk2=dbsk0e(arg)+2.*dbsk1e(arg)/arg
         call erset(0,1,1)
       else
         besk2=besk_a(2,arg)
@@ -582,7 +677,7 @@ C......... solving the non-relativistic dispersion relation ..........
 C
           call nr_disp(rguess,roots,nrt_nr)
           call zero_roots(roots,nrt_nr)
-          write (5,107) cnpa,roots(1:nrt_nr)
+C          write (5,107) cnpa,roots(1:nrt_nr)
           do 21 j=1,nrt_nr
             rguess(j)=roots(j)
             if (i.eq.1.or.kpr.eq.1) write (6,501) cnpa,roots(j)
@@ -603,13 +698,19 @@ C
 CC          frtgues(1)=dcmplx(93.76,-0.56e-2)
           call fr_disp(frtgues,frt,nrt_fr)
           call zero_roots(frt,nrt_fr)
-          write (8,108) cnpa,frt(1:nrt_fr)
+C          write (8,108) cnpa,frt(1:nrt_fr)
           do 41 j=1,nrt_fr
             frtgues(j)=frt(j)
             if (i.eq.1.or.kpr.eq.1) write (6,601) cnpa,frt(j)
   601       format(1x,"cnpa, rel-root = ",3g18.10)
             call wave_polar(cnpa,frt(j),1)
+          if (i.eq.1) then
+            frt_herm_guess(j)=dcmplx(dreal(frt(j)),0.d0)
+          else
+            frt_herm_guess(j)=frt_herm(j)
+          end if
    41     continue
+          call fr_herm_disp(cnpa,frt_herm_guess,frt_herm,nrt_fr)
 C
     1   continue
 C
@@ -662,7 +763,7 @@ C......... solving the non-relativistic dispersion relation ..........
 C
           call nr_disp(rguess,roots,nrt_nr)
           call zero_roots(roots,nrt_nr)
-          write (5,107) omega,roots(1:nrt_nr)
+C          write (5,107) omega,roots(1:nrt_nr)
           do 22 j=1,nrt_nr
             rguess(j)=roots(j)
             if (i.eq.1.or.kpr.eq.1) write (6,502) omega,roots(j)
@@ -683,13 +784,19 @@ C
 CC          frtgues(1)=dcmplx(93.76,-0.56e-2)
           call fr_disp(frtgues,frt,nrt_fr)
           call zero_roots(frt,nrt_fr)
-          write (8,108) omega,frt(1:nrt_fr)
+C          write (8,108) omega,frt(1:nrt_fr)
           do 42 j=1,nrt_fr
             frtgues(j)=frt(j)
             if (i.eq.1.or.kpr.eq.1) write (6,602) omega,frt(j)
   602       format(1x,"cnpa, rel-root = ",3g18.10)
             call wave_polar(omega,frt(j),1)
+          if (i.eq.1) then
+            frt_herm_guess(j)=dcmplx(dreal(frt(j)),0.d0)
+          else
+            frt_herm_guess(j)=frt_herm(j)
+          end if
    42     continue
+          call fr_herm_disp(omega,frt_herm_guess,frt_herm,nrt_fr)
 C
     2   continue
 C
@@ -742,7 +849,7 @@ C......... solving the non-relativistic dispersion relation ..........
 C
           call nr_disp(rguess,roots,nrt_nr)
           call zero_roots(roots,nrt_nr)
-          write (5,107) alpha,roots(1:nrt_nr)
+C          write (5,107) alpha,roots(1:nrt_nr)
           do 23 j=1,nrt_nr
             rguess(j)=roots(j)
             if (i.eq.1.or.kpr.eq.1) write (6,503) alpha,roots(j)
@@ -763,13 +870,19 @@ C
 CC          frtgues(1)=dcmplx(93.76,-0.56e-2)
           call fr_disp(frtgues,frt,nrt_fr)
           call zero_roots(frt,nrt_fr)
-          write (8,108) alpha,frt(1:nrt_fr)
+C          write (8,108) alpha,frt(1:nrt_fr)
           do 43 j=1,nrt_fr
             frtgues(j)=frt(j)
             if (i.eq.1.or.kpr.eq.1) write (6,603) alpha,frt(j)
   603       format(1x,"alpha, rel-root = ",3g18.10)
             call wave_polar(alpha,frt(j),1)
+          if (i.eq.1) then
+            frt_herm_guess(j)=dcmplx(dreal(frt(j)),0.d0)
+          else
+            frt_herm_guess(j)=frt_herm(j)
+          end if
    43     continue
+          call fr_herm_disp(alpha,frt_herm_guess,frt_herm,nrt_fr)
 C
     3   continue
 C
@@ -806,7 +919,6 @@ C
       implicit double precision (a-h, o-z)
 C
       common /para1/ w0
-      common /para2/ npos
       common /para4/ den0,bt0,te0
       common /para5/ wpe0,wce0,vte0
 C
@@ -830,9 +942,11 @@ C---------------------------------------------------------------------
 C
 C...... calculating the various plasma parameters at position r ......
 C
-      subroutine pp(r,kout)
+      subroutine pp(r,kout,pos,ipos)
 C
       implicit double precision (a-h, o-z)
+C
+	  real*8 pos(32768*5)
 C
       common /para1/ w0
       common /para4/ den0,bt0,te0
@@ -850,7 +964,12 @@ C.............. (normalised to their central values) .................
 C................ extending into the scrape-off layer ................
 C... (in this region the density/temperatures are the edge values) ...
 C
-	read(20,*) r, te, den, bt, cnpa
+C	read(20,*) r, te, den, bt, cnpa
+	r = pos(ipos*5 + 1)
+	te = pos(ipos*5 + 2)
+	den = pos(ipos*5 + 3)
+	bt = pos(ipos*5 + 4)
+	cnpa = pos(ipos*5 + 5)
 C	read(21,*) rcm, tem, denm, qm
 C	read(21,*) rcp, tep, denp, qp
 
@@ -891,7 +1010,7 @@ C
       arg=1./vte**2
       if (arg.lt.50.d0) then
         call umach(-3,9)
-        besk2=dbsk0e(arg)-2.*dbsk1e(arg)/arg
+        besk2=dbsk0e(arg)+2.*dbsk1e(arg)/arg
         call erset(0,1,1)
       else
         besk2=besk_a(2,arg)
@@ -1161,6 +1280,11 @@ C
       scmu=cnpe*vt*omega
       cmu=scmu**2
       cy0=1./(dsqrt(2.d0)*dabs(cnpa)*vt)
+C
+C...... the number of terms to be calculated in the summations .......
+C....... this is based on when exp(-mu)*I_n(mu) becomes small ........
+C
+      nn=idint(cdabs(cmu)/dsqrt(2.d0))*5+20
 C
 C.......... arguments of the z-functions in the summations ...........
 C
@@ -3021,7 +3145,7 @@ C
         dumi=ainteg(xi)
         if (dabs(dumr).lt.1.d-40) dumr=0.d0
         if (dabs(dumi).lt.1.d-40) dumi=0.d0
-        write (5,101) xi,dumr,dumi
+C        write (5,101) xi,dumr,dumi
     1 continue
 C
   101 format(3g15.10)
@@ -3388,7 +3512,6 @@ C
 C
       common /rterr/ errt_abs,errt_rel,it_max
       common /nrels/ nr_nterms
-      common /nrts1/ knr,nrt_nr,nrt_fr,tol_ht,nd_ht
       common /prnt/  kpr
 C
       external nr_func_herm,dzbren,umach,erset
@@ -3408,13 +3531,13 @@ C
         rtmax=dmax1(rtmax,re_rt(i))
     2 continue
 C
-      rtmin=(1.d0-tol_ht*dabs(rtmin)/rtmin)*rtmin
-      rtmax=(1.d0+tol_ht*dabs(rtmax)/rtmax)*rtmax
+      rtmin=(1.d0-0.25*rtmin/dabs(rtmin))*rtmin
+      rtmax=(1.d0+0.25*rtmax/dabs(rtmax))*rtmax
 C
 C....... finding the real n_perp roots for the hermitian tensor ......
 C
       newrt=0
-      nu_int=nd_ht
+      nu_int=11
       drt=(rtmax-rtmin)/dfloat(nu_int)
       rti=rtmin-drt
       do 3 i=1,nu_int
@@ -3513,7 +3636,7 @@ C
       double complex dzm(0:1000),dzp(0:1000)
       double complex csum(6,4)
 C
-      common /para1/ w0
+      common /para1/ w0,rp,r0
       common /para9/ alpha,omega,vt,besk2
       common /wave0/ cnpa
       common /prnt/  kpr
@@ -3529,6 +3652,11 @@ C
       cmu=scmu**2
       cy0=1./(dsqrt(2.d0)*dabs(cnpa)*vt)
 C
+C...... the number of terms to be calculated in the summations .......
+C....... this is based on when exp(-mu)*I_n(mu) becomes small ........
+C
+      nn=idint(cdabs(cmu)/dsqrt(2.d0))*5+20
+C
 C.......... arguments of the z-functions in the summations ...........
 C
       do 1 n=0,nn
@@ -3540,7 +3668,7 @@ C
 C
       call pdisp2(nn,zargm,zargp,zm,zp,dzm,dzp)
 C
-C..... the first element denotes the component of the 2x2 tensor .....
+C..... the first element denotes the component of the 3x3 tensor .....
 C.. (1 is for xx, 2 for xy, 3 for xz, 4 for yy, 5 for yz, 6 for zz) ..
 C............. the second element is defined as follows ..............
 C.............. 1 gives the dielectric tensor elements ...............
@@ -3974,6 +4102,1371 @@ C---------------------------------------------------------------------
 C
 C
 C---------------------------------------------------------------------
+C=====================================================================
+C=====================================================================
+C
+C...... solving the hermitian relativistic dispersion relation .......
+C
+      subroutine fr_herm_disp(data,rguess,roots,nrts)
+C
+      implicit double precision (a-h,o-z)
+C
+      parameter (n_rts=10)
+C
+      integer info(n_rts)
+C
+      double complex fr_herm_func
+      double complex rguess(n_rts),roots(n_rts)
+C
+      common /rterr/ errt_abs,errt_rel,it_max
+      common /prnt/  kpr
+C
+      external fr_herm_func,dzanly,umach,erset
+C
+      errabs=errt_abs
+      errrel=errt_rel
+      itmax=it_max
+      nknown=0
+      nnew=nrts
+      nguess=nrts
+C
+      call umach(-3,9)
+      call dzanly(fr_herm_func,errabs,errrel,nknown,nnew,nguess,
+     %            rguess,itmax,roots,info)
+      call erset(0,1,1)
+C
+      call order_roots(roots,nrts)
+C
+CCCCCCCCCCCCCCCCCCC
+CC      do 421 j=1,nrts
+CC        write (10,422) roots(j)
+CC  422   format("hermitian root = ",2g18.10)
+CC  421 continue
+CCCCCCCCCCCCCCCCCCC
+      do 1 i=1,nrts
+        call pwr_rel(roots(i),data)
+    1 continue
+C
+C
+      return
+      end
+C
+C---------------------------------------------------------------------
+C
+C............ the fully-relativistic dispersion function .............
+C
+      double complex function fr_herm_func(roots)
+C
+      implicit double precision (a-h, o-z)
+C
+      double complex roots,cnpe
+      double complex dh11,dh12,dh13,dh22,dh23,dh33
+      double complex xh11,xh12,xh13,xh22,xh23,xh33
+C
+      double complex ep(6)
+C
+      common /wave0/ cnpa
+      common /wave1/ cnpe
+C
+      cnpe=roots
+C
+      kherm=1
+      call trub_herm(kherm,ep)
+C
+      xh11=ep(1)
+      xh12=ep(2)
+      xh13=ep(3)
+      xh22=ep(4)
+      xh23=ep(5)
+      xh33=ep(6)
+C
+C........ the dielectric tensor elements (satisfying D.E = 0) ........
+C
+      dh11=1.-cnpa**2+xh11
+      dh12=xh12
+      dh13=cnpe*cnpa+xh13
+      dh22=1.-cnpe**2-cnpa**2+xh22
+      dh23=xh23
+      dh33=1.-cnpe**2+xh33
+C
+      fr_herm_func=dh11*(dh22*dh33+dh23*dh23)+
+     %             dh12*(dh23*dh13+dh12*dh33)+
+     %             dh13*(dh12*dh23-dh22*dh13)
+C
+C
+      return
+      end
+C
+C
+C---------------------------------------------------------------------
+C
+C..... evaluating the trubnikov form of the relativistic tensor ......
+C
+      subroutine trub_herm(kherm,epsilon)
+C
+      implicit double precision (a-h, o-z)
+C
+      double precision stot(3),sumr(0:1000)
+C
+      double complex dcmplx
+C
+      double complex epsilon(6),co(0:1)
+C
+      common /trub1/ xi_lo,dxi,nxi
+      common /trub2/ diff_err,navg
+      common /trerr/ errabs0,errrel0,irule0
+      common /trubh/ kel,kreal
+      common /prnt/  kpr
+C
+      external dqdag,ftrub_herm,umach,erset
+C
+      co(0)=dcmplx(0.d0,1.d0)
+      co(1)=dcmplx(1.d0,0.d0)
+C
+      do 1 j=1,6
+        kel=j
+C
+        if (kherm.eq.1) then
+          if (j.eq.1.or.j.eq.3.or.j.eq.4.or.j.eq.6) kreal=1
+          if (j.eq.2.or.j.eq.5) kreal=0
+        else
+          if (j.eq.1.or.j.eq.3.or.j.eq.4.or.j.eq.6) kreal=0
+          if (j.eq.2.or.j.eq.5) kreal=1
+        end if
+C
+        k=kreal
+C
+C.. ntr keeps track of the number of averages (3) that are compared ..
+C
+        ntr=0
+C
+        xi_0=xi_lo
+        xi_1=xi_0+dxi
+C
+        sum=0.d0
+CCCCCCCCCCCCCCCCCCCCCCC
+CC        ncount=0
+CCCCCCCCCCCCCCCCCCCCCCC
+C
+        do 2 i=1,nxi
+C
+CCCCCCCCCCCCCCCCCCCCCCC
+CC          ncount=ncount+1
+CCCCCCCCCCCCCCCCCCCCCCC
+          errabs=errabs0
+          errrel=errrel0
+          irule=irule0
+C
+          call umach(-3,9)
+          call dqdag(ftrub_herm,xi_0,xi_1,errabs,errrel,irule,
+     %               t_real,errest)
+          call erset(0,1,1)
+C
+          sum=sum+t_real
+C
+          jj=mod(i-1,navg)
+          sumr(jj)=sum
+          if (jj.eq.navg-1) then
+            ntr=ntr+1
+            stot(ntr)=0.d0
+            do 3 ij=0,navg-1
+              stot(ntr)=stot(ntr)+sumr(ij)
+    3       continue
+            stot(ntr)=stot(ntr)/dfloat(navg)
+            if (ntr.eq.3) then
+              diff1=dabs(dabs(stot(1))-dabs(stot(2)))
+              diff2=dabs(dabs(stot(2))-dabs(stot(3)))
+              if (diff1.lt.diff_err.and.diff2.lt.diff_err) then
+                sum_real=stot(3)
+                go to 4
+              else
+                stot(1)=stot(2)
+                stot(2)=stot(3)
+                ntr=2
+              end if
+            end if
+          end if
+C
+          xi_0=xi_1
+          xi_1=xi_0+dxi
+C
+    2   continue
+C
+    4   continue
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CC        write (10,389) kel,ncount
+CC  389   format("inside trub_herm: element, int_count = ",2i8)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C
+        epsilon(kel)=co(k)*sum
+C
+    1 continue
+C
+C
+      return
+      end
+C
+C---------------------------------------------------------------------
+C
+      double precision function ftrub_herm(xi)
+C
+      implicit double precision (a-h, o-z)
+C
+      double complex dcmplx,ci,factor
+      double complex tx_11,tx_12,tx_13
+      double complex tx_22,tx_23,tx_33
+C
+      common /para9/ alpha,omega,vt,besk2
+      common /trubh/ kel,kreal
+C
+      external tx_11,tx_12,tx_13
+      external tx_22,tx_23,tx_33
+C
+      ci=dcmplx(0.d0,1.d0)
+C
+C...... factor is the multiplier in the dielectric tensor form .......
+C.............. factor = i * {(wpe/wce)**2} * (wce/w0) ...............
+C
+      factor=ci*alpha/omega
+C
+      if (kreal.eq.0) then
+        if (kel.eq.1) ftrub_herm=dimag(factor*tx_11(xi))
+        if (kel.eq.2) ftrub_herm=dimag(factor*tx_12(xi))
+        if (kel.eq.3) ftrub_herm=dimag(factor*tx_13(xi))
+        if (kel.eq.4) ftrub_herm=dimag(factor*tx_22(xi))
+        if (kel.eq.5) ftrub_herm=dimag(factor*tx_23(xi))
+        if (kel.eq.6) ftrub_herm=dimag(factor*tx_33(xi))
+      else
+        if (kel.eq.1) ftrub_herm=dreal(factor*tx_11(xi))
+        if (kel.eq.2) ftrub_herm=dreal(factor*tx_12(xi))
+        if (kel.eq.3) ftrub_herm=dreal(factor*tx_13(xi))
+        if (kel.eq.4) ftrub_herm=dreal(factor*tx_22(xi))
+        if (kel.eq.5) ftrub_herm=dreal(factor*tx_23(xi))
+        if (kel.eq.6) ftrub_herm=dreal(factor*tx_33(xi))
+      end if
+C
+C
+      return
+      end
+C
+C
+C=====================================================================
+C
+C...... subroutines for calculating various derivatives of the .......
+C... hermitian (and anti-hermitian) relativistic dielectric tensor ...
+C
+C..... the derivatives are x(i)*[d/dx(i)] where i is as follows ......
+C..... i = 1 is w (frequency), i = 2 is k_perp, i = 3 is k_para ......
+C...... i = 4 is wc (cyclotron), i = 5 is vt (thermal velocity) ......
+C.................. i = 6 is wp (plasma frequency) ...................
+C
+C
+C.... working with the trubnikov form of the relativistic tensor .....
+C
+C..... here kdiff plays the same role as i in x(i) listed above ......
+C
+      subroutine d_drel(kherm,kdiff,eps,deps)
+C
+      implicit double precision (a-h, o-z)
+C
+      double complex dcmplx,cz
+C
+      double complex eps(6),deps(6),d_eps(6),dg(6)
+C
+      common /para9/ alpha,omega,vt,besk2
+C
+      external dbsk0e,dbsk1e,besk_a,umach,erset
+C
+C..... dg is the derivative of the term multiplying the integral .....
+C
+      cz=dcmplx(0.d0,0.d0)
+      do 1 i=1,6
+        dg(i)=cz
+    1 continue
+C
+      if (kdiff.eq.6) then
+        do 2 i=1,6
+          d_eps(i)=cz
+    2  continue
+      else
+        call d_trub(kherm,kdiff,d_eps)
+      end if
+C
+C.......... g has derivatives w.r.t. w, wc, vt, and wp only ..........
+C
+      if (kdiff.eq.1.or.kdiff.eq.4) then
+        do 3 i=1,6
+          dg(i)=-eps(i)
+    3   continue
+      end if
+C
+      if (kdiff.eq.5) then
+        arg=1./vt**2
+        if (arg.lt.50.d0) then
+          call umach(-3,9)
+          bk2=dbsk0e(arg)+2.*dbsk1e(arg)/arg
+          bk1=dbsk1e(arg)
+          call erset(0,1,1)
+        else
+          bk1=besk_a(1,arg)
+          bk2=besk_a(2,arg)
+        end if
+        fac=-2.*(4.+arg*bk1/bk2)
+        do 4 i=1,6
+          dg(i)=fac*eps(i)
+    4   continue
+      end if
+C
+      if (kdiff.eq.6) then
+        do 5 i=1,6
+          dg(i)=2.*eps(i)
+    5   continue
+      end if
+C
+C.................. the derivatives of all the xi's ..................
+C
+      do 6 i=1,6
+        deps(i)=dg(i)+d_eps(i)
+    6 continue
+C
+C
+      return
+      end
+C
+C---------------------------------------------------------------------
+C
+      subroutine d_trub(kherm,kdiff,d_eps)
+C
+      implicit double precision (a-h, o-z)
+C
+      double precision stot(3),sumr(0:1000)
+C
+      double complex dcmplx
+C
+      double complex d_eps(6),co(0:1)
+C
+      common /trub1/ xi_lo,dxi,nxi
+      common /trub2/ diff_err,navg
+      common /trerr/ errabs0,errrel0,irule0
+      common /trubp/ kel,kreal
+      common /trubd/ nder
+      common /prnt/  kpr
+C
+      external dqdag,d_ftrub,umach,erset
+C
+C............. kdiff is the particular derivative needed .............
+C.... kdiff = i calculates x(i)*[d/dx(i)] of the tensor elements .....
+C
+      nder=kdiff
+C
+      co(0)=dcmplx(0.d0,1.d0)
+      co(1)=dcmplx(1.d0,0.d0)
+C
+      do 1 j=1,6
+        kel=j
+C
+        if (kherm.eq.1) then
+          if (j.eq.1.or.j.eq.3.or.j.eq.4.or.j.eq.6) kreal=1
+          if (j.eq.2.or.j.eq.5) kreal=0
+        else
+          if (j.eq.1.or.j.eq.3.or.j.eq.4.or.j.eq.6) kreal=0
+          if (j.eq.2.or.j.eq.5) kreal=1
+        end if
+C
+        k=kreal
+C
+C.. ntr keeps track of the number of averages (3) that are compared ..
+C
+        ntr=0
+C
+        xi_0=xi_lo
+        xi_1=xi_0+dxi
+C
+        sum=0.d0
+C
+CCCCCCCCCCCCCCCCCCCCC
+CC        write (10,433)
+CC  433   format(1x,"inside d_trub")
+CC        write (10,444) xi_0,xi_1,nder
+CC  444   format("xi_0, xi_1, nder = ",2g18.10,5x,i4)
+CC        ncount=0
+CCCCCCCCCCCCCCCCCCCCC
+        do 2 i=1,nxi
+C
+CCCCCCCCCCCCCCCCCCCCC
+CC          ncount=ncount+1
+CCCCCCCCCCCCCCCCCCCCC
+          errabs=errabs0
+          errrel=errrel0
+          irule=irule0
+C
+          call umach(-3,9)
+          call dqdag(d_ftrub,xi_0,xi_1,errabs,errrel,irule,
+     %               t_real,errest)
+          call erset(0,1,1)
+C
+          sum=sum+t_real
+C
+          jj=mod(i-1,navg)
+          sumr(jj)=sum
+          if (jj.eq.navg-1) then
+            ntr=ntr+1
+            stot(ntr)=0.d0
+            do 3 ij=0,navg-1
+              stot(ntr)=stot(ntr)+sumr(ij)
+    3       continue
+            stot(ntr)=stot(ntr)/dfloat(navg)
+            if (ntr.eq.3) then
+              diff1=dabs(dabs(stot(1))-dabs(stot(2)))
+              diff2=dabs(dabs(stot(2))-dabs(stot(3)))
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CC              write (10,520) kel
+CC  520         format("d_trub element = ",i2)
+CC              write (10,519) stot(1),stot(2),stot(3)
+CC  519         format("s1,s2,s3 = ",3g18.10)
+CC              write (10,521) (stot(1)+stot(2))/2.,
+CC     %         (stot(2)+stot(3))/2.
+CC  521         format("s12,s23 = ",2g18.10)
+CC              s12=(stot(1)+stot(2))/2.
+CC              s23=(stot(2)+stot(3))/2.
+CC              write (10,522) diff1,diff2,dabs(s12-s23)
+CC  522         format("diff1,diff2,diff12=",3g18.10)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+              if (diff1.lt.diff_err.and.diff2.lt.diff_err) then
+                sum_real=stot(3)
+                go to 4
+              else
+                stot(1)=stot(2)
+                stot(2)=stot(3)
+                ntr=2
+              end if
+            end if
+          end if
+C
+          xi_0=xi_1
+          xi_1=xi_0+dxi
+CCCCCCCCCCCCCCCCCCC
+CC          if (kel.eq.6) then
+CC            write (10,589) i,xi_0-dxi,xi_0,co(k)*sum
+CC  589       format("d_trub: i,xi0,xi1,sum ",i8,4g18.10)
+CC          end if
+CCCCCCCCCCCCCCCCCCC
+C
+    2   continue
+C
+    4   continue
+C
+        d_eps(kel)=co(k)*sum
+CCCCCCCCCCCCCCCCCCC
+CC        write (10,389) kel,ncount
+CC  389   format("inside d_trub: element, int_count = ",2i8)
+CC        write (10,434) j,kel,d_eps(kel)
+CC  434   format("j, kel, d_eps = ",2i4,2g18.10)
+CCCCCCCCCCCCCCCCCCC
+C
+    1 continue
+C
+C
+      return
+      end
+C
+C---------------------------------------------------------------------
+C
+      double precision function d_ftrub(xi)
+C
+      implicit double precision (a-h, o-z)
+C
+      double complex dcmplx,ci,factor
+      double complex dtx_11,dtx_12,dtx_13
+      double complex dtx_22,dtx_23,dtx_33
+C
+      common /para9/ alpha,omega,vt,besk2
+      common /trubp/ kel,kreal
+C
+      external dtx_11,dtx_12,dtx_13
+      external dtx_22,dtx_23,dtx_33
+C
+      ci=dcmplx(0.d0,1.d0)
+C
+C...... factor is the multiplier in the dielectric tensor form .......
+C.............. factor = i * {(wpe/wce)**2} * (wce/w0) ...............
+C
+      factor=ci*alpha/omega
+C
+      if (kreal.eq.0) then
+        if (kel.eq.1) d_ftrub=dimag(factor*dtx_11(xi))
+        if (kel.eq.2) d_ftrub=dimag(factor*dtx_12(xi))
+        if (kel.eq.3) d_ftrub=dimag(factor*dtx_13(xi))
+        if (kel.eq.4) d_ftrub=dimag(factor*dtx_22(xi))
+        if (kel.eq.5) d_ftrub=dimag(factor*dtx_23(xi))
+        if (kel.eq.6) d_ftrub=dimag(factor*dtx_33(xi))
+      else
+        if (kel.eq.1) d_ftrub=dreal(factor*dtx_11(xi))
+        if (kel.eq.2) d_ftrub=dreal(factor*dtx_12(xi))
+        if (kel.eq.3) d_ftrub=dreal(factor*dtx_13(xi))
+        if (kel.eq.4) d_ftrub=dreal(factor*dtx_22(xi))
+        if (kel.eq.5) d_ftrub=dreal(factor*dtx_23(xi))
+        if (kel.eq.6) d_ftrub=dreal(factor*dtx_33(xi))
+      end if
+C
+C
+      return
+      end
+C
+C---------------------------------------------------------------------
+C
+      double complex function dtx_11(xi)
+C
+      implicit double precision (a-h, o-z)
+C
+      double complex dcmplx,cdexp,cdsqrt
+      double complex cnpe
+      double complex ci,cz,r,sr,t2
+      double complex ck3,ck4,dr,dt2
+      double complex cm1,cm2
+      double complex ce,cfac,cbesk_a
+C
+      double complex ckbs(2)
+C
+      common /para9/ alpha,omega,vt,besk2
+      common /wave0/ cnpa
+      common /wave1/ cnpe
+      common /trubd/ nder
+C
+      external dcbks,umach,erset
+C
+      ci=dcmplx(0.d0,1.d0)
+      cz=dcmplx(0.d0,0.d0)
+C
+      twopi=6.283185307179586476925287
+C
+C..... xim is xi modulo two*pi (needed in the sines and cosines) .....
+C
+      xim=dmod(xi,twopi)
+C
+C... r is the actual r multiplied by (vte/c)**4 and K_2({c/vt}**2) ...
+C.... this takes care of the normalization factors in the tensor .....
+C... sr is the square-root of r (argument of the Bessel functions) ...
+C............ dom = omega*(vte/c)**2 = (w/wce)*(vte/c)**2 ............
+C
+      dom=omega*vt**2
+      r=(1.-ci*xi*dom)**2+2.*(cnpe*dom)**2*(1.-dcos(xim))+
+     %  (cnpa*dom*xi)**2
+      sr=cdsqrt(r)/vt**2
+      r=r*besk2
+C
+      if (dreal(sr).lt.50.d0) then
+C
+        numb=2
+        xnu=3.
+        call umach(-3,9)
+        call dcbks(xnu,sr,numb,ckbs)
+        call erset(0,1,1)
+C
+        ck3=ckbs(1)*dexp(1./vt**2)
+        ck4=ckbs(2)*dexp(1./vt**2)
+C
+      else
+C
+        ce=1./vt**2-sr
+        cfac=cdexp(ce)
+        ck3=cbesk_a(3,sr)*cfac
+        ck4=cbesk_a(4,sr)*cfac
+C
+      end if
+C
+      cm1=-ck3/(2.*sr*r)
+      cm2= ck4/(2.*sr**2*r)
+C
+      t1=dcos(xim)
+      t2=(cnpe*omega*dsin(xim))**2
+C
+C.... derivatives of r (un-normalized) w.r.t. various parameters .....
+C.. derivatives of t2 and tensor element w.r.t. various parameters ...
+C
+      if (nder.eq.1) then
+        dr=-2.*ci*xi*omega*(1./vt**2-ci*xi*omega)
+        dtx_11=(cm1*t1+cm2*t2)*dr
+      end if
+      if (nder.eq.2) then
+        dr=4.*(cnpe*omega)**2*(1.-dcos(xim))
+        dt2=2.*t2
+        dtx_11=cm1*(t1*dr+2.*dt2)+cm2*t2*dr
+      end if
+      if (nder.eq.3) then
+        dr=2.*(cnpa*omega*xi)**2
+        dtx_11=(cm1*t1+cm2*t2)*dr
+      end if
+      if (nder.eq.4) then
+        dr=2.*ci*xi*omega*(1./vt**2-ci*xi*omega)-
+     %     4.*(cnpe*omega)**2*(1.-dcos(xim))-
+     %     2.*(cnpa*omega*xi)**2
+        dt2=-2.*t2
+        dtx_11=cm1*(t1*dr+2.*dt2)+cm2*t2*dr
+      end if
+      if (nder.eq.5) then
+        dr=-(2./vt)**2*(1./vt**2-ci*xi*omega)
+        dtx_11=(cm1*t1+cm2*t2)*dr
+      end if
+C
+C
+      return
+      end
+C
+C---------------------------------------------------------------------
+C
+      double complex function dtx_12(xi)
+C
+      implicit double precision (a-h, o-z)
+C
+      double complex dcmplx,cdexp,cdsqrt
+      double complex cnpe
+      double complex ci,cz,r,sr,t2
+      double complex ck3,ck4,dr,dt2
+      double complex cm1,cm2
+      double complex ce,cfac,cbesk_a
+C
+      double complex ckbs(2)
+C
+      common /para9/ alpha,omega,vt,besk2
+      common /wave0/ cnpa
+      common /wave1/ cnpe
+      common /trubd/ nder
+C
+      external dcbks,umach,erset
+C
+      ci=dcmplx(0.d0,1.d0)
+      cz=dcmplx(0.d0,0.d0)
+C
+      twopi=6.283185307179586476925287
+C
+C..... xim is xi modulo two*pi (needed in the sines and cosines) .....
+C
+      xim=dmod(xi,twopi)
+C
+C... r is the actual r multiplied by (vte/c)**4 and K_2({c/vt}**2) ...
+C.... this takes care of the normalization factors in the tensor .....
+C... sr is the square-root of r (argument of the Bessel functions) ...
+C............ dom = omega*(vte/c)**2 = (w/wce)*(vte/c)**2 ............
+C
+      dom=omega*vt**2
+      r=(1.-ci*xi*dom)**2+2.*(cnpe*dom)**2*(1.-dcos(xim))+
+     %  (cnpa*dom*xi)**2
+      sr=cdsqrt(r)/vt**2
+      r=r*besk2
+C
+      if (dreal(sr).lt.50.d0) then
+C
+        numb=2
+        xnu=3.
+        call umach(-3,9)
+        call dcbks(xnu,sr,numb,ckbs)
+        call erset(0,1,1)
+C
+        ck3=ckbs(1)*dexp(1./vt**2)
+        ck4=ckbs(2)*dexp(1./vt**2)
+C
+      else
+C
+        ce=1./vt**2-sr
+        cfac=cdexp(ce)
+        ck3=cbesk_a(3,sr)*cfac
+        ck4=cbesk_a(4,sr)*cfac
+C
+      end if
+C
+      cm1=-ck3/(2.*sr*r)
+      cm2= ck4/(2.*sr**2*r)
+C
+      t1=-dsin(xim)
+      t2=-(cnpe*omega)**2*dsin(xim)*(1.d0-dcos(xim))
+C
+C.... derivatives of r (un-normalized) w.r.t. various parameters .....
+C.. derivatives of t2 and tensor element w.r.t. various parameters ...
+C
+      if (nder.eq.1) then
+        dr=-2.*ci*xi*omega*(1./vt**2-ci*xi*omega)
+        dtx_12=(cm1*t1+cm2*t2)*dr
+      end if
+      if (nder.eq.2) then
+        dr=4.*(cnpe*omega)**2*(1.-dcos(xim))
+        dt2=2.*t2
+        dtx_12=cm1*(t1*dr+2.*dt2)+cm2*t2*dr
+      end if
+      if (nder.eq.3) then
+        dr=2.*(cnpa*omega*xi)**2
+        dtx_12=(cm1*t1+cm2*t2)*dr
+      end if
+      if (nder.eq.4) then
+        dr=2.*ci*xi*omega*(1./vt**2-ci*xi*omega)-
+     %     4.*(cnpe*omega)**2*(1.-dcos(xim))-
+     %     2.*(cnpa*omega*xi)**2
+        dt2=-2.*t2
+        dtx_12=cm1*(t1*dr+2.*dt2)+cm2*t2*dr
+      end if
+      if (nder.eq.5) then
+        dr=-(2./vt)**2*(1./vt**2-ci*xi*omega)
+        dtx_12=(cm1*t1+cm2*t2)*dr
+      end if
+C
+C
+      return
+      end
+C
+C---------------------------------------------------------------------
+C
+      double complex function dtx_13(xi)
+C
+      implicit double precision (a-h, o-z)
+C
+      double complex dcmplx,cdexp,cdsqrt
+      double complex cnpe
+      double complex ci,cz,r,sr,t2
+      double complex ck3,ck4,dr,dt2
+      double complex cm1,cm2
+      double complex ce,cfac,cbesk_a
+C
+      double complex ckbs(2)
+C
+      common /para9/ alpha,omega,vt,besk2
+      common /wave0/ cnpa
+      common /wave1/ cnpe
+      common /trubd/ nder
+C
+      external dcbks,umach,erset
+C
+      ci=dcmplx(0.d0,1.d0)
+      cz=dcmplx(0.d0,0.d0)
+C
+      twopi=6.283185307179586476925287
+C
+C..... xim is xi modulo two*pi (needed in the sines and cosines) .....
+C
+      xim=dmod(xi,twopi)
+C
+C... r is the actual r multiplied by (vte/c)**4 and K_2({c/vt}**2) ...
+C.... this takes care of the normalization factors in the tensor .....
+C... sr is the square-root of r (argument of the Bessel functions) ...
+C............ dom = omega*(vte/c)**2 = (w/wce)*(vte/c)**2 ............
+C
+      dom=omega*vt**2
+      r=(1.-ci*xi*dom)**2+2.*(cnpe*dom)**2*(1.-dcos(xim))+
+     %  (cnpa*dom*xi)**2
+      sr=cdsqrt(r)/vt**2
+      r=r*besk2
+C
+      if (dreal(sr).lt.50.d0) then
+C
+        numb=2
+        xnu=3.
+        call umach(-3,9)
+        call dcbks(xnu,sr,numb,ckbs)
+        call erset(0,1,1)
+C
+        ck3=ckbs(1)*dexp(1./vt**2)
+        ck4=ckbs(2)*dexp(1./vt**2)
+C
+      else
+C
+        ce=1./vt**2-sr
+        cfac=cdexp(ce)
+        ck3=cbesk_a(3,sr)*cfac
+        ck4=cbesk_a(4,sr)*cfac
+C
+      end if
+C
+      cm1=-ck3/(2.*sr*r)
+      cm2= ck4/(2.*sr**2*r)
+C
+      t2=cnpe*cnpa*omega**2*xi*dsin(xim)
+C
+C.... derivatives of r (un-normalized) w.r.t. various parameters .....
+C.. derivatives of t2 and tensor element w.r.t. various parameters ...
+C
+      if (nder.eq.1) then
+        dr=-2.*ci*xi*omega*(1./vt**2-ci*xi*omega)
+        dtx_13=cm2*t2*dr
+      end if
+      if (nder.eq.2) then
+        dr=4.*(cnpe*omega)**2*(1.-dcos(xim))
+        dt2=t2
+        dtx_13=2.*cm1*dt2+cm2*t2*dr
+      end if
+      if (nder.eq.3) then
+        dr=2.*(cnpa*omega*xi)**2
+        dt2=t2
+        dtx_13=2.*cm1*dt2+cm2*t2*dr
+      end if
+      if (nder.eq.4) then
+        dr=2.*ci*xi*omega*(1./vt**2-ci*xi*omega)-
+     %     4.*(cnpe*omega)**2*(1.-dcos(xim))-
+     %     2.*(cnpa*omega*xi)**2
+        dt2=-2.*t2
+        dtx_13=2.*cm1*dt2+cm2*t2*dr
+      end if
+      if (nder.eq.5) then
+        dr=-(2./vt)**2*(1./vt**2-ci*xi*omega)
+        dtx_13=cm2*t2*dr
+      end if
+C
+C
+      return
+      end
+C
+C---------------------------------------------------------------------
+C
+      double complex function dtx_22(xi)
+C
+      implicit double precision (a-h, o-z)
+C
+      double complex dcmplx,cdexp,cdsqrt
+      double complex cnpe
+      double complex ci,cz,r,sr,t2
+      double complex ck3,ck4,dr,dt2
+      double complex cm1,cm2
+      double complex ce,cfac,cbesk_a
+C
+      double complex ckbs(2)
+C
+      common /para9/ alpha,omega,vt,besk2
+      common /wave0/ cnpa
+      common /wave1/ cnpe
+      common /trubd/ nder
+C
+      external dcbks,umach,erset
+C
+      ci=dcmplx(0.d0,1.d0)
+      cz=dcmplx(0.d0,0.d0)
+C
+      twopi=6.283185307179586476925287
+C
+C..... xim is xi modulo two*pi (needed in the sines and cosines) .....
+C
+      xim=dmod(xi,twopi)
+C
+C... r is the actual r multiplied by (vte/c)**4 and K_2({c/vt}**2) ...
+C.... this takes care of the normalization factors in the tensor .....
+C... sr is the square-root of r (argument of the Bessel functions) ...
+C............ dom = omega*(vte/c)**2 = (w/wce)*(vte/c)**2 ............
+C
+      dom=omega*vt**2
+      r=(1.-ci*xi*dom)**2+2.*(cnpe*dom)**2*(1.-dcos(xim))+
+     %  (cnpa*dom*xi)**2
+      sr=cdsqrt(r)/vt**2
+      r=r*besk2
+C
+      if (dreal(sr).lt.50.d0) then
+C
+        numb=2
+        xnu=3.
+        call umach(-3,9)
+        call dcbks(xnu,sr,numb,ckbs)
+        call erset(0,1,1)
+C
+        ck3=ckbs(1)*dexp(1./vt**2)
+        ck4=ckbs(2)*dexp(1./vt**2)
+C
+      else
+C
+        ce=1./vt**2-sr
+        cfac=cdexp(ce)
+        ck3=cbesk_a(3,sr)*cfac
+        ck4=cbesk_a(4,sr)*cfac
+C
+      end if
+C
+      cm1=-ck3/(2.*sr*r)
+      cm2= ck4/(2.*sr**2*r)
+C
+      t1=dcos(xim)
+      t2=-(cnpe*omega*(1.d0-dcos(xim)))**2
+C
+C.... derivatives of r (un-normalized) w.r.t. various parameters .....
+C.. derivatives of t2 and tensor element w.r.t. various parameters ...
+C
+      if (nder.eq.1) then
+        dr=-2.*ci*xi*omega*(1./vt**2-ci*xi*omega)
+        dtx_22=(cm1*t1+cm2*t2)*dr
+      end if
+      if (nder.eq.2) then
+        dr=4.*(cnpe*omega)**2*(1.-dcos(xim))
+        dt2=2.*t2
+        dtx_22=cm1*(t1*dr+2.*dt2)+cm2*t2*dr
+      end if
+      if (nder.eq.3) then
+        dr=2.*(cnpa*omega*xi)**2
+        dtx_22=(cm1*t1+cm2*t2)*dr
+      end if
+      if (nder.eq.4) then
+        dr=2.*ci*xi*omega*(1./vt**2-ci*xi*omega)-
+     %     4.*(cnpe*omega)**2*(1.-dcos(xim))-
+     %     2.*(cnpa*omega*xi)**2
+        dt2=-2.*t2
+        dtx_22=cm1*(t1*dr+2.*dt2)+cm2*t2*dr
+      end if
+      if (nder.eq.5) then
+        dr=-(2./vt)**2*(1./vt**2-ci*xi*omega)
+        dtx_22=(cm1*t1+cm2*t2)*dr
+      end if
+C
+C
+      return
+      end
+C
+C---------------------------------------------------------------------
+C
+      double complex function dtx_23(xi)
+C
+      implicit double precision (a-h, o-z)
+C
+      double complex dcmplx,cdexp,cdsqrt
+      double complex cnpe
+      double complex ci,cz,r,sr,t2
+      double complex ck3,ck4,dr,dt2
+      double complex cm1,cm2
+      double complex ce,cfac,cbesk_a
+C
+      double complex ckbs(2)
+C
+      common /para9/ alpha,omega,vt,besk2
+      common /wave0/ cnpa
+      common /wave1/ cnpe
+      common /trubd/ nder
+C
+      external dcbks,umach,erset
+C
+      ci=dcmplx(0.d0,1.d0)
+      cz=dcmplx(0.d0,0.d0)
+C
+      twopi=6.283185307179586476925287
+C
+C..... xim is xi modulo two*pi (needed in the sines and cosines) .....
+C
+      xim=dmod(xi,twopi)
+C
+C... r is the actual r multiplied by (vte/c)**4 and K_2({c/vt}**2) ...
+C.... this takes care of the normalization factors in the tensor .....
+C... sr is the square-root of r (argument of the Bessel functions) ...
+C............ dom = omega*(vte/c)**2 = (w/wce)*(vte/c)**2 ............
+C
+      dom=omega*vt**2
+      r=(1.-ci*xi*dom)**2+2.*(cnpe*dom)**2*(1.-dcos(xim))+
+     %  (cnpa*dom*xi)**2
+      sr=cdsqrt(r)/vt**2
+      r=r*besk2
+C
+      if (dreal(sr).lt.50.d0) then
+C
+        numb=2
+        xnu=3.
+        call umach(-3,9)
+        call dcbks(xnu,sr,numb,ckbs)
+        call erset(0,1,1)
+C
+        ck3=ckbs(1)*dexp(1./vt**2)
+        ck4=ckbs(2)*dexp(1./vt**2)
+C
+      else
+C
+        ce=1./vt**2-sr
+        cfac=cdexp(ce)
+        ck3=cbesk_a(3,sr)*cfac
+        ck4=cbesk_a(4,sr)*cfac
+C
+      end if
+C
+      cm1=-ck3/(2.*sr*r)
+      cm2= ck4/(2.*sr**2*r)
+C
+      t2=cnpe*cnpa*omega**2*xi*(1.d0-dcos(xim))
+C
+C.... derivatives of r (un-normalized) w.r.t. various parameters .....
+C.. derivatives of t2 and tensor element w.r.t. various parameters ...
+C
+      if (nder.eq.1) then
+        dr=-2.*ci*xi*omega*(1./vt**2-ci*xi*omega)
+        dtx_23=cm2*t2*dr
+      end if
+      if (nder.eq.2) then
+        dr=4.*(cnpe*omega)**2*(1.-dcos(xim))
+        dt2=t2
+        dtx_23=2.*cm1*dt2+cm2*t2*dr
+      end if
+      if (nder.eq.3) then
+        dr=2.*(cnpa*omega*xi)**2
+        dt2=t2
+        dtx_23=2.*cm1*dt2+cm2*t2*dr
+      end if
+      if (nder.eq.4) then
+        dr=2.*ci*xi*omega*(1./vt**2-ci*xi*omega)-
+     %     4.*(cnpe*omega)**2*(1.-dcos(xim))-
+     %     2.*(cnpa*omega*xi)**2
+        dt2=-2.*t2
+        dtx_23=2.*cm1*dt2+cm2*t2*dr
+      end if
+      if (nder.eq.5) then
+        dr=-(2./vt)**2*(1./vt**2-ci*xi*omega)
+        dtx_23=cm2*t2*dr
+      end if
+C
+C
+      return
+      end
+C
+C---------------------------------------------------------------------
+C
+      double complex function dtx_33(xi)
+C
+      implicit double precision (a-h, o-z)
+C
+      double complex dcmplx,cdexp,cdsqrt
+      double complex cnpe
+      double complex ci,cz,r,sr,t2
+      double complex ck3,ck4,dr,dt2
+      double complex cm1,cm2
+      double complex ce,cfac,cbesk_a
+C
+      double complex ckbs(2)
+C
+      common /para9/ alpha,omega,vt,besk2
+      common /wave0/ cnpa
+      common /wave1/ cnpe
+      common /trubd/ nder
+C
+      external dcbks,umach,erset
+C
+      ci=dcmplx(0.d0,1.d0)
+      cz=dcmplx(0.d0,0.d0)
+C
+      twopi=6.283185307179586476925287
+C
+C..... xim is xi modulo two*pi (needed in the sines and cosines) .....
+C
+      xim=dmod(xi,twopi)
+C
+C... r is the actual r multiplied by (vte/c)**4 and K_2({c/vt}**2) ...
+C.... this takes care of the normalization factors in the tensor .....
+C... sr is the square-root of r (argument of the Bessel functions) ...
+C............ dom = omega*(vte/c)**2 = (w/wce)*(vte/c)**2 ............
+C
+      dom=omega*vt**2
+      r=(1.-ci*xi*dom)**2+2.*(cnpe*dom)**2*(1.-dcos(xim))+
+     %  (cnpa*dom*xi)**2
+      sr=cdsqrt(r)/vt**2
+      r=r*besk2
+C
+      if (dreal(sr).lt.50.d0) then
+C
+        numb=2
+        xnu=3.
+        call umach(-3,9)
+        call dcbks(xnu,sr,numb,ckbs)
+        call erset(0,1,1)
+C
+        ck3=ckbs(1)*dexp(1./vt**2)
+        ck4=ckbs(2)*dexp(1./vt**2)
+C
+      else
+C
+        ce=1./vt**2-sr
+        cfac=cdexp(ce)
+        ck3=cbesk_a(3,sr)*cfac
+        ck4=cbesk_a(4,sr)*cfac
+C
+      end if
+C
+      cm1=-ck3/(2.*sr*r)
+      cm2= ck4/(2.*sr**2*r)
+C
+      t1=1.d0
+      t2=(cnpa*omega*xi)**2
+C
+C.... derivatives of r (un-normalized) w.r.t. various parameters .....
+C.. derivatives of t2 and tensor element w.r.t. various parameters ...
+C
+      if (nder.eq.1) then
+        dr=-2.*ci*xi*omega*(1./vt**2-ci*xi*omega)
+        dtx_33=(cm1+cm2*t2)*dr
+      end if
+      if (nder.eq.2) then
+        dr=4.*(cnpe*omega)**2*(1.-dcos(xim))
+        dtx_33=(cm1+cm2*t2)*dr
+      end if
+      if (nder.eq.3) then
+        dr=2.*(cnpa*omega*xi)**2
+        dt2=2.*t2
+        dtx_33=cm1*(dr+2.*dt2)+cm2*t2*dr
+      end if
+      if (nder.eq.4) then
+        dr=2.*ci*xi*omega*(1./vt**2-ci*xi*omega)-
+     %     4.*(cnpe*omega)**2*(1.-dcos(xim))-
+     %     2.*(cnpa*omega*xi)**2
+        dt2=-2.*t2
+        dtx_33=cm1*(dr+2.*dt2)+cm2*t2*dr
+      end if
+      if (nder.eq.5) then
+        dr=-(2./vt)**2*(1./vt**2-ci*xi*omega)
+        dtx_33=(t1+cm2*t2)*dr
+      end if
+C
+C
+      return
+      end
+C
+C=====================================================================
+C
+C.......... solving the power flow and the power dissipated ..........
+C
+      subroutine pwr_rel(roots,data)
+C
+      implicit double precision (a-h, o-z)
+C
+      double complex dconjg,dcmplx,ci
+      double complex roots,cnpe
+      double complex x11h,x12h,x13h,x22h,x23h,x33h
+      double complex x11a,x12a,x13a,x22a,x23a,x33a
+      double complex d11h,d12h,d13h,d22h,d23h,d33h
+      double complex dx11h,dx12h,dx13h,dx22h,dx23h,dx33h
+      double complex ex,ey,ez
+      double complex sx,sy,sz,pdis
+C
+      double complex ep(6),dep(6)
+C
+      common /para1/ w0,rp,r0
+      common /wave0/ cnpa
+      common /wave1/ cnpe
+      common /pwrdr/ d11h,d12h,d13h,d22h,d23h,d33h
+C
+      ci=dcmplx(0.d0,1.d0)
+C
+      cnpe=roots
+C
+C........... getting the tensor elements (this is 4*pi*xi) ...........
+C............. ( 4*pi*xi = epsilon_{i,j} - delta_{i,j} ) .............
+C.... (kherm = 1 is for getting the hermitian part of the tensor) ....
+C
+      kherm=1
+      call trub_herm(kherm,ep)
+C
+      x11h=ep(1)
+      x12h=ep(2)
+      x13h=ep(3)
+      x22h=ep(4)
+      x23h=ep(5)
+      x33h=ep(6)
+C
+      d11h=1.-cnpa**2+x11h
+      d12h=x12h
+      d13h=cnpe*cnpa+x13h
+      d22h=1.-cnpe**2-cnpa**2+x22h
+      d23h=x23h
+      d33h=1.-cnpe**2+x33h
+CCCCCCCCCCCCCCCCCCC
+CC      write (10,423)
+CC  423 format("inside pwr-rel")
+CC      write (10,424) d11h,d12h,d13h
+CC  424 format("d11h,d12h,d13h = ",6g18.10)
+CC      write (10,425) d22h,d23h,d33h
+CC  425 format("d22h,d23h,d33h = ",6g18.10)
+CCCCCCCCCCCCCCCCCCC
+C
+C............. evaluating the electric field components ..............
+C
+      call wave_polar_pwr_rel(roots,ex,ey,ez)
+C
+      kherm=1
+      kdiff=2
+      call d_drel(kherm,kdiff,ep,dep)
+C
+      dx11h=dep(1)
+      dx12h=dep(2)
+      dx13h=dep(3)
+      dx22h=dep(4)
+      dx23h=dep(5)
+      dx33h=dep(6)
+C
+C.......................... speed of light ...........................
+      c=2.99792458d10
+C
+C........... power flow in the x-direction (in cgs units) ............
+C
+      sx=0.5*c*dreal(cnpe*(cdabs(ey)**2+cdabs(ez)**2)-
+     %               cnpa*dconjg(ex)*ez)-
+     %   0.25*c/cnpe*(cdabs(ex)**2*dx11h+cdabs(ey)**2*dx22h+
+     %                cdabs(ez)**2*dx33h+
+     %                2.*(ci*dimag(dconjg(ex)*ey)*dx12h+
+     %                       dreal(dconjg(ex)*ez)*dx13h+
+     %                    ci*dimag(dconjg(ey)*ez)*dx23h))
+C
+C........... power flow in the y-direction (in cgs units) ............
+C
+      sy=-0.5*c*dreal(cnpa*dconjg(ey)*ez+cnpe*ex*dconjg(ey))
+C
+C........... power flow in the y-direction (in cgs units) ............
+C
+      ep(1)=x11h
+      ep(2)=x12h
+      ep(3)=x13h
+      ep(4)=x22h
+      ep(5)=x23h
+      ep(6)=x33h
+C
+      kherm=1
+      kdiff=3
+      call d_drel(kherm,kdiff,ep,dep)
+C
+      dx11h=dep(1)
+      dx12h=dep(2)
+      dx13h=dep(3)
+      dx22h=dep(4)
+      dx23h=dep(5)
+      dx33h=dep(6)
+C
+      sz=0.5*c*dreal(cnpa*(cdabs(ex)**2+cdabs(ey)**2)-
+     %               cnpe*ex*dconjg(ez))-
+     %   0.25*c/cnpa*(cdabs(ex)**2*dx11h+cdabs(ey)**2*dx22h+
+     %                cdabs(ez)**2*dx33h+
+     %                2.*(ci*dimag(dconjg(ex)*ey)*dx12h+
+     %                       dreal(dconjg(ex)*ez)*dx13h+
+     %                    ci*dimag(dconjg(ey)*ez)*dx23h))
+C
+C.............. converting the power flow to mks units ...............
+C..... this gives the power flow density (in watts/meter**2) per .....
+C.... unit electric field amplitude squared (in {volts/meter}**2) ....
+C...... the conversion factor is = 1.e-11/(4*pi*2.99792458**2) .......
+C
+      fact=8.854187817620391d-14
+C
+      sxr=dreal(sx)
+      sxi=dimag(sx)
+      if (dabs(sxr).lt.1.d-20) sxr=0.d0
+      if (dabs(sxi).lt.1.d-20) sxi=0.d0
+      syr=dreal(sy)
+      syi=dimag(sy)
+      if (dabs(syr).lt.1.d-20) syr=0.d0
+      if (dabs(syi).lt.1.d-20) syi=0.d0
+      szr=dreal(sz)
+      szi=dimag(sz)
+      if (dabs(szr).lt.1.d-20) szr=0.d0
+      if (dabs(szi).lt.1.d-20) szi=0.d0
+C
+      sx=dcmplx(sxr,sxi)
+      sy=dcmplx(syr,syi)
+      sz=dcmplx(szr,szi)
+      sx=sx*fact
+      sy=sy*fact
+      sz=sz*fact
+C
+C......................... power disspiated ..........................
+C
+      kherm=0
+      call trub_herm(kherm,ep)
+C
+      x11a=ep(1)
+      x12a=ep(2)
+      x13a=ep(3)
+      x22a=ep(4)
+      x23a=ep(5)
+      x33a=ep(6)
+C
+      pdis=-0.5*ci*w0*(x11a*cdabs(ex)**2+x22a*cdabs(ey)**2+
+     %                 x33a*cdabs(ez)**2+
+     %                 2.*ci*x12a*dimag(dconjg(ex)*ey)+
+     %                 2.*x13a*dreal(dconjg(ex)*ez)+
+     %                 2.*ci*x23a*dimag(dconjg(ey)*ez))
+C
+C...................... converting to mks units ......................
+C.... this gives the power dissipated density (in watts/meter**3) ....
+C.... per electric field amplitude squared (in {volts/meter}**2) .....
+C........ the conversion factor = 1.e-9/(4.*pi*2.99792458**2) ........
+C
+      fact=8.854187817620391d-12
+      pdisr=dreal(pdis)
+      pdisi=dimag(pdis)
+      if (dabs(pdisr).lt.1.d-20) pdisr=0.d0
+      if (dabs(pdisi).lt.1.d-20) pdisi=0.d0
+      pdis=dcmplx(pdisr,pdisi)
+      pdis=fact*pdis
+C
+      write (13,101) data,cnpe,sx,sy,sz,pdis,ex,ey,ez
+  101 format(17g18.10)
+C
+C
+      return
+      end
+C
+C---------------------------------------------------------------------
+C
+C........... calculating polarizations with respect to E_x ...........
+C
+      subroutine wave_polar_pwr_rel(cnpe,ex,ey,ez)
+C
+      implicit double precision (a-h, o-z)
+C
+      double complex dcmplx,ci,cnpe,cdummy
+      double complex d11,d12,d13,d22,d23,d33
+      double complex ex,ey,ez
+      double complex pol_p,pol_m,pol_z
+C
+      double complex det(3),pdum(3)
+C
+      common /pwrdr/ d11,d12,d13,d22,d23,d33
+C
+      ci=dcmplx(0.d0,1.d0)
+C
+      det(1)=-d12*d23-d13*d22
+      det(2)= d22*d33-d23*d23
+      det(3)= d12*d33+d13*d23
+C
+      if (cdabs(det(1)).gt.cdabs(det(2))) then
+        if (cdabs(det(1)).gt.cdabs(det(3))) then
+          nn=1
+        else
+          nn=3
+        end if
+      else
+        if (cdabs(det(2)).gt.cdabs(det(3))) then
+          nn=2
+        else
+          nn=3
+        end if
+      end if
+C
+      if (nn.eq.1) then
+        ey=(d11*d23-d13*d12)/det(1)
+        ez=(d12*d12+d11*d22)/det(1)
+      end if
+      if (nn.eq.2) then
+        ey=(d12*d33-d13*d23)/det(2) 
+        ez=(d12*d23-d13*d22)/det(2)
+      end if
+      if (nn.eq.3) then
+        ey= (d13*d13-d11*d33)/det(3)
+        ez=-(d12*d13+d11*d23)/det(3)
+      end if
+C
+C....... zeroing out the small components of the polarizations .......
+C
+      pdum(1)=(1.d0+ci*ey)/dsqrt(2.d0)
+      pdum(2)=(1.d0-ci*ey)/dsqrt(2.d0)
+      pdum(3)=ez
+C
+      do 1 i=1,3
+        if (dabs(dreal(pdum(i))).lt.1.0d-15) 
+     %      pdum(i)=dcmplx(0.d0,dimag(pdum(i)))
+        if (dabs(dimag(pdum(i))).lt.1.0d-15) 
+     %      pdum(i)=dcmplx(dreal(pdum(i)),0.d0)
+    1 continue
+C
+      ex=dcmplx(1.0d0,0.d0)
+      ey=ci*(dsqrt(2.d0)*pdum(2)-1.d0)
+      ez=pdum(3)
+C
+C
+      return
+      end
+C
+C---------------------------------------------------------------------
 C
 	subroutine length_jd(string,l_string)
 
@@ -3993,3 +5486,4 @@ C
 
 	return
 	end
+	

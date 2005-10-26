@@ -1,4 +1,4 @@
-function [smask_ht,sNperp_ht,sepol_pmz_ht,sPflow_xyz_ht,sPabs_at,...
+function [smask_ht,sNperp_ht,sepol_pmz_ht,sPflow_pmz_ht,sPabs_at,...
         smask_ft,sNperp_ft,sepol_pmz_ft] = ...
     disp_hot_jd(ss,sB,sne,sTe,sNpar,omega,sNperp,rel_opt,tol_ht,nd_ht,guess_ES,nn_nr);
 %
@@ -92,12 +92,12 @@ sB_in = sB(mask_in);
 sTe_in = sTe(mask_in);
 sne_in = sne(mask_in);
 %    
-knr = 1;
-nrt_nr = 1-rel_opt;
-nrt_fr = rel_opt;
+knr = 1-rel_opt;
+nrt_nr = 1;
+nrt_fr = 1;
 kflag = 1;
 %
-[ss_out_ft,sMNperp_ft,sM3eps_pmz_ft,ss_out_ht,sMNperp_ht,sM3eps_pmz_ht,sM3Pflow_xyz_ht,sMPabs_at] = ...
+[ss_out_ft,sMNperp_ft,sM3eps_pmz_ft,ss_out_ht,sMNperp_ht,sM3eps_pmz_ht,sM3Pflow_xyz_ht,sMPabs_at,sM3Pflow_pmz_ht] = ...
     disp_jd(ss_in,sB_in,sTe_in,sne_in,sNpar_in,omega,knr,nrt_nr,nrt_fr,kflag,GNperp,nn_nr,tol_ht,nd_ht);
 ns_out_ft = length(ss_out_ft);
 ns_out_ht = length(ss_out_ht);
@@ -114,7 +114,8 @@ for is = 1:ns_out_ft,
 end
 sNperp_ht = sMNperp_ht';%since nrt=1
 sepol_pmz_ht = reshape(sM3eps_pmz_ht,[ns_out_ht,3])';
-sPflow_xyz_ht = reshape(sM3Pflow_xyz_ht,[ns_out_ht,3])';
+%sPflow_xyz_ht = reshape(sM3Pflow_xyz_ht,[ns_out_ht,3])';
+sPflow_pmz_ht = reshape(sM3Pflow_pmz_ht,[ns_out_ht,3])';
 sPabs_at = sMPabs_at';
 sNperp_ft = sMNperp_ft';
 sepol_pmz_ft = reshape(sM3eps_pmz_ft,[ns_out_ft,3])';
