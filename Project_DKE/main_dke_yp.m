@@ -76,7 +76,7 @@ if display_mode >=1,
 	disp(['Drift Kinetic calculations for the electron population during current drive in tokamaks']);
 	disp(['for arbitrary plasma equilibrium and type of RF waves']);
 	disp(['Authors:  - Yves Peysson (CEA-DSM-DRFC, France, yves.peysson@cea.fr)']);
-	disp(['          - Joan Decker (MIT-RLE, USA, jodecker@mit.edu)']);
+	disp(['          - Joan Decker (CEA-DSM-DRFC, France,joan.decker@cea.fr)']);
 	disp('-------------------------------------------------------------------------------------------------------------------');
 end
 %
