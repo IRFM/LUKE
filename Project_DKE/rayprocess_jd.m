@@ -1,4 +1,4 @@
-function ray = rayprocess_jd(ray,equil,opt_disp,omega_rf,method);
+function ray = rayprocess_jd(ray,equil,opt_disp,omega_rf,nmax,method);
 %
 % This function calculates missing ray info if needed. 
 % Also calculates the correct Nperp, polarization and power flow if required 
@@ -195,7 +195,7 @@ if isempty(sdNpar),
     sdNpar = 0.01*ones(1,ns);%assume a gaussian spectrum with this arbitrary width
 end
 %
-if opt_disp == 0, %sepol_pmz, sNperp and phi_pmz given by ray-tracing
+if real(opt_disp) == 0, %sepol_pmz, sNperp and phi_pmz given by ray-tracing
     if isempty(sepol_pmz) | isempty(sNperp) | isempty(sphi_pmz) 
         error('Ray-tracing data incomplete')
     end
@@ -203,7 +203,7 @@ else
 %
 % Solves the dispersion relation for sepol_pmz, sNperp and phi_pmz 
 %
-    if opt_disp == 1, % cold plasma dispersion tensor for sepol_pmz, sNperp and phi_pmz (colddisp_dke_jd)
+    if real(opt_disp) == 1, % cold plasma dispersion tensor for sepol_pmz, sNperp and phi_pmz (colddisp_dke_jd)
         for is = 1:ns
             [sNperpp(is),sNperpm(is),sKxyz(1:3,1:3,is),...
                 sep_xyz(1:3,is),sem_xyz(1:3,is),sep_pmz(1:3,is),sem_pmz(1:3,is),sep_pyk(1:3,is),sem_pyk(1:3,is),...
@@ -222,14 +222,14 @@ else
         else
             error('No information was given to choose between the two cold modes')
         end
-    elseif opt_disp == 2, % non-relativistic hot plasma dispersion tensor for sepol_pmz, sNperp and phi_pmz (hotdisp_dke_jd)
+    elseif real(opt_disp) == 2, % non-relativistic hot plasma dispersion tensor for sepol_pmz, sNperp and phi_pmz (hotdisp_dke_jd)
         for is=1:ns,
             [sNperp(is),e_xyz,sepol_pmz(:,is),e_pyk,D,X,X_s,X_sn,salphaphi_lin(is),phiT_xyz,phiP_xyz,sphiT_pmz(:,is),sphiP_pmz(:,is),phiT_pyk,phiP_pyk]...
                 = hotdisp_dke_jd(sNpar(is),omega_rf,sTe(is),sne(is),szTi(:,is),szni(:,is),zZi,zmi,sB(is),sNperp(is),1);
         end
         sphi_pmz = real(sphiP_pmz + sphiT_pmz);
         salphaphi_lin = real(salphaphi_lin);
-    elseif opt_disp == 3, % non-relativistic hot plasma dispersion tensor for sepol_pmz, sNperp and phi_pmz (R2D2) 
+    elseif real(opt_disp) == 3, % non-relativistic hot plasma dispersion tensor for sepol_pmz, sNperp and phi_pmz (R2D2) 
         [smask_ht,sNperp_ht,sepol_pmz_ht,sPflow_ht,sPabs_at] = ...
             disp_hot_jd(ss,sB,sne,sTe,sNpar,omega_rf,sNperp,0); 
 %
@@ -270,11 +270,21 @@ else
         sTe = sTe(smask_ht);
         szTi = szTi(:,smask_ht);
         %
-    elseif opt_disp == 4, % relativistic hot plasma dispersion tensor for sepol_pmz, sNperp and phi_pmz (R2D2)
+    elseif real(opt_disp) == 4, % relativistic hot plasma dispersion tensor for sepol_pmz, sNperp and phi_pmz (R2D2)
         %%%%%%%%%% to be implemented %%%%%%%%%%
         error('model not yet implemented');
     else
         error('invalid disp option');
+    end
+end
+%
+if imag(opt_disp) == 1,%relativistic calculation of the absorption coefficient
+    sa = sne*qe^2/e0/me/omega_rf^2;
+    sb = sB*qe/me/omega_rf;
+	sbeta = sqrt(sTe/mc2);
+    salphaphi_lin = zeros(1,ns);
+    for n = 0:nmax,
+        salphaphi_lin = salphaphi_lin + alphaphi_fr_jd(sa,sb,sbeta,sNpar,real(sNperp),sepol_pmz,n);
     end
 end
 %
