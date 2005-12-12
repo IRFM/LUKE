@@ -429,7 +429,7 @@ mksa.Edreicer_ref = me*clum*betath_ref*nhu_ref/qe;%MKSA Dreicer field unit
 %
 [waveparam,xyprop_dke,xyPinc_in,yb] = ...
     rfwave_dke_jd(equil,waves,xpsin,xpsin_dke,xdpsin_dke,xpsin_S_dke,r_dke,...
-    XR,XZ,XBR,XBZ,XBphi,ne_ref,lnc_e_ref,dke_mode,display_mode);
+    XR,XZ,XBR,XBZ,XBphi,ne_ref,lnc_e_ref,nmax_rf,dke_mode,display_mode);
 %
 %waveparam = [];
 %yprop_dke = [];
@@ -756,7 +756,7 @@ limit_dql = 1;
 %
 wpe_ref = sqrt(ne_ref*qe^2/me/e0);
 %
-if sum(sum(isnan(waveparam(:,:,13)))),
+if 1,%sum(sum(isnan(waveparam(:,:,13)))),
     xyPabs_rf_dke_fsav_mksa = 0;%initial absorbed power density estimate (Note, future work: could use linear theory)
 else
     xyPabs_rf_dke_fsav_mksa = waveparam(:,:,13).*waveparam(:,:,4).*waveparam(:,:,1)*me*lnc_e_ref*wpe_ref^2/(4*pi^2);
@@ -829,7 +829,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
 	        xyPabs_rf_dke_fsav_out = ZP0_ref.xy_rf_fsav; % flux-surface averaged density of absorbed power.
 	    end	    
         xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav_out*P_ref;
-        if nit_rf > 1,
+        if 0,nit_rf > 1,
             xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav_mksa.*xyredfac;
         end
 %

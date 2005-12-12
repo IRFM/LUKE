@@ -1,6 +1,6 @@
 function [waveparam,xyprop_dke_rf,xyP0_in_rf,yb_rf] = ...
     rfwave_dke_jd(equil,waves,xpsin,xpsin_dke,xdpsin_dke,xpsin_S_dke,r_dke,...
-    XR,XZ,XBR,XBZ,XBphi,ne_ref,lnc_e_ref,dke_mode,display_mode);
+    XR,XZ,XBR,XBZ,XBphi,ne_ref,lnc_e_ref,nmax,dke_mode,display_mode);
 % 
 %	RF input parameters for the Drift Kinetic equation solver (dke_4_1yp.m). 
 %
@@ -99,7 +99,7 @@ for iw = 1:length(waves),%
         % - sNpar -> sdNpar
         % - opt_disp, sNpar, omega_rf, equil -> sepol_pmz, sNperp, sphi_pmz
         %
-        ray = rayprocess_jd(ray,equil,opt_disp,omega_rf,method);
+        ray = rayprocess_jd(ray,equil,opt_disp,omega_rf,nmax,method);
         %
         P0 = ray.P0;% Power launched in the ray (W) [1,1]
         %

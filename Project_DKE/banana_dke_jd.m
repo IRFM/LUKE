@@ -45,7 +45,7 @@ YBmin = repmat(xBmin,[nt,1,nmhu]);
 Y1mmhu02 = repmat(reshape(y1mmhu02,[1,1,nmhu]),[nt,np,1]);
 YBb = YBmin./Y1mmhu02;%B-field at turning point
 %
-clear Y1mmhu02 YBmin
+%clear Y1mmhu02 YBmin
 %
 Y1Bb = reshape(xyBb,[1,np,nmhu]);%B-field at turning point
 Y1B0 = YB(1,:,:);%B-field at theta = 0
@@ -58,14 +58,14 @@ xmhu0T = sqrt(1 - xBmin./xBmax);%Pitch-angle at the trapped-passing boundary
 xymhu0 = repmat(ymhu0,[np,1]);
 xymhu0T = repmat(xmhu0T',[1,nmhu]);
 %
-xymaskT = abs(xymhu0) <= xymhu0T - eps;%Select trapped particles (the eps is for access to very core plasma calculations)
+xymaskT = abs(xymhu0) <= xymhu0T - 10*eps;%Select trapped particles (the eps is for access to very core plasma calculations)
 %
 YCS = cumsum(ones(nt,np,nmhu));
 %
 Yimin = (YB <= YBb).*YCS;
 Yimax = (YB > YBb).*YCS;
 %
-clear YBb
+%clear YBb
 %
 Yimin(Yimin == 0) = NaN;
 Yimax(Yimax == 0) = NaN;
@@ -75,7 +75,7 @@ xyi1min = reshape(min(Yimin - 1).*Y1maskl + min(Yimax - 1).*Y1maskg,[np,nmhu]);
 xyi2min = reshape(max(Yimin).*Y1maskl + max(Yimax).*Y1maskg,[np,nmhu]);
 xyi2max = reshape(max(Yimin + 1).*Y1maskl + max(Yimax + 1).*Y1maskg,[np,nmhu]);
 %
-%clear Yimin Yimax
+%%clear Yimin Yimax
 %
 xyi1min(~xymaskT) = 1;
 xyi1max(~xymaskT) = 1;
@@ -160,15 +160,15 @@ xymaskid1b = (xyBb == xyB1max);
 xymaskid2a = (xyBb == xyB2min);
 xymaskid2b = (xyBb == xyB2max);
 %
-xymaskid1 = xymaskid1a + xymaskid1b;
-xymaskid2 = xymaskid2a + xymaskid2b;
+xymaskid1 = xymaskid1a | xymaskid1b;
+xymaskid2 = xymaskid2a | xymaskid2b;
 %
 xyones = ones(np,nmhu);
 %
-if min(xymask1a.*xymaskT.*~xymaskid1 + xymask1b.*xymaskT.*~xymaskid1 == xyones.*xymaskT.*~xymaskid1) == 0,
+if min(min(xymask1a.*xymaskT.*~xymaskid1 + xymask1b.*xymaskT.*~xymaskid1 == xyones.*xymaskT.*~xymaskid1)) == 0,
 	error('root 1 not determined');
 end
-if min(xymask2a.*xymaskT.*~xymaskid2 + xymask2b.*xymaskT.*~xymaskid2 == xyones.*xymaskT.*~xymaskid2) == 0,
+if min(min(xymask2a.*xymaskT.*~xymaskid2 + xymask2b.*xymaskT.*~xymaskid2 == xyones.*xymaskT.*~xymaskid2)) == 0,
 	error('root 2 not determined');
 end
 %
@@ -234,7 +234,7 @@ YTZ = [YZ;reshape(xyZT1,[1,np,nmhu]);reshape(xyZT2,[1,np,nmhu])];
 %
 nt2 = nt + 2;%Two poloidal angle values are added corresponding to banana tips
 %
-clear YB YBR YBZ YBphi YR YZ Ytheta
+%clear YB YBR YBZ YBphi YR YZ Ytheta
 %
 [YTtheta,YTiT] = sort(YTtheta);
 ZTB = reshape(YTB,[nt2*np*nmhu,1]);
@@ -257,18 +257,18 @@ YTBphi = reshape(ZTBphi(ZTiT),[nt2,np,nmhu]);
 YTR = reshape(ZTR(ZTiT),[nt2,np,nmhu]);
 YTZ = reshape(ZTZ(ZTiT),[nt2,np,nmhu]);
 %
-clear ZTB ZTBR ZTBZ ZTBphi ZTR ZTZ ZTiT
+%clear ZTB ZTBR ZTBZ ZTBphi ZTR ZTZ ZTiT
 %
 % Half grid in theta for integration
 %
 YMBR = (YTBR(1:nt2-1,:,:) + YTBR(2:nt2,:,:))/2;
-clear YTBR
+%clear YTBR
 %
 YMBZ = (YTBZ(1:nt2-1,:,:) + YTBZ(2:nt2,:,:))/2;
-clear YTBZ
+%clear YTBZ
 %
 YMBphi = (YTBphi(1:nt2-1,:,:) + YTBphi(2:nt2,:,:))/2;
-clear YTBphi
+%clear YTBphi
 %
 YMB = sqrt(YMBR.^2 + YMBZ.^2 + YMBphi.^2); 
 %
@@ -280,15 +280,15 @@ YM1mmhu02 = repmat(reshape(y1mmhu02,[1,1,nmhu]),[nm2,np,1]);
 %
 YMPSIB = YMB./YMBmin;%Ratio of B-field to its minimum on flux surface
 YMBb = YMBmin./YM1mmhu02;%B-field at turning point
-clear YM1mmhu02 YMBmin
+%clear YM1mmhu02 YMBmin
 %
 YMR = (YTR(1:nt2-1,:,:) + YTR(2:nt2,:,:))/2;
 YMZ = (YTZ(1:nt2-1,:,:) + YTZ(2:nt2,:,:))/2;
-clear YTZ
+%clear YTZ
 %
 YMmask = YMB <= YMBb;%Mask on the integration over B
 %
-clear YMBb
+%clear YMBb
 %
 YMmhu = sign(YMmhu0).*sqrt(1 - YMPSIB.*(1 - YMmhu0.^2));%Pitch-angle cosine of (psi,theta,mhu)
 YMmhu(~YMmask) = eps;%Avoid numerical singularities
