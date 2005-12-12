@@ -107,3 +107,5 @@ if inv == 0;
 else
     x = cumsum([xmin,fliplr(dx)]);
 end
+%
+x(length(x)) = xmax;%to compensate numerical errors from cumsum.
