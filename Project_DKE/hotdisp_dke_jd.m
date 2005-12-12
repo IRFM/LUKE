@@ -1,5 +1,5 @@
 function [Nperp,e_xyz,e_pmz,e_pyk,D,X,X_s,X_sn,alphaphi_lin,phiT_xyz,phiP_xyz,phiT_pmz,phiP_pmz,phiT_pyk,phiP_pyk]...
-    = hotdisp_dke_jd(Npar,omega_rf,Te,ne,zTi,zni,zZi,zmi,Bfield,Nperp_in,herm_mode,display_mode,nmax,NZ,tol);
+    = hotdisp_dke_jd(Npar,omega_rf,Te,ne,zTi,zni,zZi,zmi,Bfield,Nperp_in,herm_mode,display_mode,nmax,NZ,tol,method_type);
 % This function solves the dispersion relation and the wave equation
 % in the linear kinetic plasma model. It calculates the perpendicular index of
 % refraction and the polarization as a function of the wave
@@ -31,6 +31,7 @@ function [Nperp,e_xyz,e_pmz,e_pyk,D,X,X_s,X_sn,alphaphi_lin,phiT_xyz,phiP_xyz,ph
 %       - nmax: maximum harmonic number (default:10) 
 %       - NZ: number of grid points in Z function integration calculation (default:100) 
 %       - tol: tolerance on the value of the dispersion relation (default:1e-6) 
+%       - method_type: 'newton', 'segments' (default:'newton') 
 %
 %   OUTPUTS:
 %
@@ -45,6 +46,11 @@ function [Nperp,e_xyz,e_pmz,e_pyk,D,X,X_s,X_sn,alphaphi_lin,phiT_xyz,phiP_xyz,ph
 % created 05/02/2003
 % by Joan Decker <jodecker@alum.mit.edu> (MIT/RLE) and  Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 % 
+if nargin < 16,
+   method.type = 'newton';
+else
+   method.type = method_type;
+end
 if nargin < 15,
    tol = 1e-5;
 end
@@ -73,6 +79,8 @@ n0 = nmax+1;
 nit_disp = 50;
 NZ = 100;
 proxcoef = 1e-4;
+varfac = 100;
+%
 Nperp(1) = Nperp_in;
 %
 Ns = 1 + length(zZi);
@@ -126,6 +134,8 @@ D = zeros(3,3);
 %
 I = eye(3);
 %
+method.mode = 0;
+%
 for it_disp = 1:2*nit_disp+1,
     %
     N = [Nperp(it_disp),0,Npar].';
@@ -165,17 +175,46 @@ for it_disp = 1:2*nit_disp+1,
     %
     Drel(it_disp) = det(D); 
     %
-    if rem(it_disp,2) == 1 & abs(Drel(it_disp)) <= tol,
-        break
-    elseif rem(it_disp,2) == 1,
-        if it_disp == 1,
-            Nperp(it_disp + 1) = (1 - proxcoef)*Nperp(it_disp);
+    if strcmp(method.type,'newton'),
+        if rem(it_disp,2) == 1 & abs(Drel(it_disp)) <= tol,
+            break
+        elseif rem(it_disp,2) == 1,
+            if it_disp == 1,
+                Nperp(it_disp + 1) = (1 - proxcoef)*Nperp(it_disp);
+            else
+                Nperp(it_disp + 1) = (1 - proxcoef)*Nperp(it_disp) + proxcoef*Nperp(it_disp - 2);
+            end
         else
-            Nperp(it_disp + 1) = (1 - proxcoef)*Nperp(it_disp) + proxcoef*Nperp(it_disp - 2);
+            dDreldNperp = (Drel(it_disp) - Drel(it_disp - 1))/(Nperp(it_disp) - Nperp(it_disp - 1));
+            if dDreldNperp == 0 | isnan(dDreldNperp)
+                warning('The calculation did not converge')
+                Nperp(it_disp + 1) = Nperp(it_disp - 1);
+                tol = Inf;
+            else
+                Nperp(it_disp + 1) = Nperp(it_disp - 1) - Drel(it_disp - 1)/dDreldNperp; 
+            end
+        end
+    elseif strcmp(method.type,'segments'),
+        if abs(Drel(it_disp)) <= tol,
+            break
+        end
+        if method.mode == 0,
+            if it_disp > 1 & Drel(it_disp)*Drel(it_disp - 1) < 0,
+                method.mode = 1;
+            elseif rem(it_disp,2) == 1,
+                Nperp(it_disp + 1) = Nperp(1)*exp((it_disp + 1)/2/varfac);
+            else
+                Nperp(it_disp + 1) = Nperp(1)*exp(-it_disp/2/varfac);
+            end
+        end
+        if method.mode == 1,
+            if Drel(it_disp)*Drel(it_disp - 1) < 0,
+                it_ref = it_disp - 1;
+            end
+            Nperp(it_disp + 1) = (Nperp(it_ref) + Nperp(it_disp))/2;
         end
     else
-        dDreldNperp = (Drel(it_disp) - Drel(it_disp - 1))/(Nperp(it_disp) - Nperp(it_disp - 1));
-        Nperp(it_disp + 1) = Nperp(it_disp - 1) - Drel(it_disp - 1)/dDreldNperp; 
+        error('root finding method not recognized')
     end
 end
 %
