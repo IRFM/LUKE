@@ -15,18 +15,22 @@ if nargin < 3
     error('Not enough arguments in besselj_dke_jd')
 end
 %
-if max(size(size(N)) ~= size(size(Z))) | max(size(N) ~= size(Z))
+SZ = size(Z);
+SN = size(N);
+SM = size(Mode);
+%
+if max(size(SN) ~= size(SZ)) | max(SN ~= SZ)
     if length(N) ~= 1
         error('N must be scalar or of the same size as Z')
     end
-    N = repmat(N,size(Z));
+    N = repmat(N,SZ);
 end
 %        
-if max(size(size(Mode)) ~= size(size(Z))) | max(size(Mode) ~= size(Z))
+if max(size(SM) ~= size(SZ)) | max(SM ~= SZ)
     if length(Mode) ~= 1
         error('Mode must be scalar or of the same size as Z')
     end
-    Mode = repmat(Mode,size(Z));
+    Mode = repmat(Mode,SZ);
 end
 %
 if max(N(:) - floor(N(:))) > 0
@@ -42,4 +46,7 @@ end
 Z = Z.*(N >= 0) + (-1).^N.*(N <0).*Z; % J_{-n}(Z) = J_(n)((-1)^n*Z)
 N = abs(N);
 %
-J = ~Mask_approx.*besselj(N,Z) + Mask_approx.*(Z/2).^N./fact_dke_jd(N);
+J = zeros(SZ);
+J(~Mask_approx) = besselj(N(~Mask_approx),Z(~Mask_approx));
+J(Mask_approx) = (Z(Mask_approx)/2).^N(Mask_approx)./fact_dke_jd(N(Mask_approx));
+%
