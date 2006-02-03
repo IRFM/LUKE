@@ -238,9 +238,9 @@ for iy = ylist_rf,
     ynum = num2str(iy);
     if exist([fullfile(temppath,'temp_DQL_'),save_id,'_',ynum,'.mat']) == 2,
         if dke_mode == 0,
-            eval(['load ',fullfile(temppath,'temp_DQL_'),save_id,'_',ynum,'.mat ZXXD_rf']);
+            load([fullfile(temppath,'temp_DQL_'),save_id,'_',ynum,'.mat'],'ZXXD_rf');
         else
-            eval(['load ',fullfile(temppath,'temp_DQL_'),save_id,'_',ynum,'.mat ZXXD_rf ZXXD_rf_tp ZXXF_rf_tp']);
+            load([fullfile(temppath,'temp_DQL_'),save_id,'_',ynum,'.mat'],'ZXXD_rf','ZXXD_rf_tp','ZXXF_rf_tp');
         end            
     %
         if display_mode >= 1,info_dke_yp(2,['RF matrix coefficients for effective ray #',ynum,' retrieved.']);end	
@@ -607,9 +607,9 @@ for iy = ylist_rf,
         end
         %
         if dke_mode == 0,
-            eval(['save ',fullfile(temppath,'temp_DQL_'),save_id,'_',ynum,'.mat ZXXD_rf']);
+            save([fullfile(temppath,'temp_DQL_'),save_id,'_',ynum,'.mat'],'ZXXD_rf');
         else
-            eval(['save ',fullfile(temppath,'temp_DQL_'),save_id,'_',ynum,'.mat ZXXD_rf ZXXD_rf_tp ZXXF_rf_tp']);
+            save([fullfile(temppath,'temp_DQL_'),save_id,'_',ynum,'.mat'],'ZXXD_rf','ZXXD_rf_tp','ZXXF_rf_tp');
         end            
         %
         if display_mode >= 1,info_dke_yp(2,['RF matrix coefficients for effective ray #',ynum,' calculated and saved.']);end	
