@@ -775,7 +775,7 @@ end
 P_ref = me*(clum*betath_ref)^2*nhu_ref*ne_ref; %power normalization constant
 %
 save_id = timeid_jd(clock);
-eval(['save ',fullfile(temppath,'temp_DKE_'),save_id,'.mat save_id'])
+save([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'save_id')
 %
 for it_rf=1:nit_rf % convergence in the ray-tracing mode
 %    

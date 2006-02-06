@@ -4,8 +4,7 @@ function [XXheaviside,...
     ZXXS,ZYXXD_rf,...
     XxRR_fsav,xMRR_flux_ref,xMRR_tau_ref,...
     xTe_out_norm,xft_fsav,xfteff_fsav,xmhubounce2,xepsi_rdke,...
-    memoryLU_f,memoryLU_g] = ... 
-dke_1_4yp(tokname,save_id,theta,...
+    memoryLU_f,memoryLU_g] = dke_1_4yp(tokname,save_id,theta,...
     XR,XZ,XBR,XBZ,XBphi,...
     xB0,xR0,xBT0,xBp0,Rp,Zp,ap,...
     mhu,dmhu,mhum,dmhum,mhup,dmhup,mhu_S,...
@@ -33,7 +32,6 @@ dke_1_4yp(tokname,save_id,theta,...
 %       - B. Braams, C. Karney, Phys.fluids B1 (1989) 1355
 %       - M. Shoucri and I. Shkarofsky, Comp. Phys. Comm. 82 (1994) 287
 %       - I. Shkarofsky and M. Shoucri, Nuclear Fusion, 37 (1997) 539
-%       - J.P.S. Bizarro and P. Rodrigues, Nuclear Fusion, 37 (1997) 1509
 %       - Y. Peysson and M. Shoucri, Comp. Phys. Comm. 109 (1998) 55
 %       - S.D. Schultz, A. Bers and A.B. Rahm, AIP Proc. of the 12th Conf. Radio Frequency Power in Plasmas, Savannah (USA), 403 1997,327
 %       - M. Ju et al., Phys. Plasmas, 9 (2002) 493
@@ -313,8 +311,8 @@ maskl = tril(ones(npn,npn)) - 0.5*diag(ones(1,npn));
 if store_mode == 1,
     filename = ['MXP_',tokname,'.mat'];
     [s,dossier,machine] = comput_dke_yp;
-    eval(['delete ',dossier,s,filename])
-    eval(['save ',dossier,s,filename,' nr'])
+    delete([dossier,s,filename])
+    save([dossier,s,filename],'nr')
 end
 %
 %Angular grid
@@ -1252,7 +1250,7 @@ if display_mode >= 1,info_dke_yp(2,['Full elapsed time for matrix calculation: '
 if store_mode == 1,
     filename = ['MXP_',tokname,'.mat'];
     [s,dossier,machine] = comput_dke_yp;
-    eval(['save ',dossier,s,filename,'Zmask_f0_t Zmask_g -append'])
+    save([dossier,s,filename],'Zmask_f0_t','Zmask_g','-append')
 end
 %
 time0 = clock;
@@ -1341,7 +1339,7 @@ for it_f = 2:nit_f,
             if store_mode == 1,
                 filename = ['MXP_',tokname,'.mat'];
                 [s,dossier,machine] = comput_dke_yp;
-                eval(['load ',dossier,s,filename,' Zmask_f0_t'])
+                load([dossier,s,filename],'Zmask_f0_t')
             end 
 %
             XI_t = XXI(:,Zmask_f0_t{ir},ir);
@@ -1522,7 +1520,7 @@ if dke_mode == 1,
         if store_mode == 1,
             filename = ['MXP_',tokname,'.mat'];
             [s,dossier,machine] = comput_dke_yp;
-            eval(['load ',dossier,s,filename,' Zmask_g'])
+            load([dossier,s,filename],'Zmask_g')
         end
 %                   
         dpsim = (xpsin(jr1) - xpsin(jr2));%Radial step for parabolic gradient calculations (dke)
@@ -1940,9 +1938,9 @@ for iy = ylist_rf,
     XXD0_rf = shiftdim(repmat(xyD0_rf(:,iy),[1,npn,nmhu]),1);% RF quasi-linear diffusion coefficient (nhuth_ref*pth_ref^2)
     %
     ynum = num2str(iy);
-    eval(['load ',fullfile(temppath,'temp_DQL_'),save_id,'_',ynum,'.mat ZXXD_rf ZXXD_rf_tp ZXXF_rf_tp']);
-    %
-	XXDpp_rf_imj = ZXXD_rf.pp_imj.*XXD0_rf;
+    load([fullfile(temppath,'temp_DQL_'),save_id,'_',ynum,'.mat'],'ZXXD_rf','ZXXD_rf_tp','ZXXF_rf_tp');
+%
+	 XXDpp_rf_imj = ZXXD_rf.pp_imj.*XXD0_rf;
     XXDpp_rf_ipj = ZXXD_rf.pp_ipj.*XXD0_rf;
     XXDpm_rf_imj = ZXXD_rf.pm_imj.*XXD0_rf;
     XXDpm_rf_ipj = ZXXD_rf.pm_ipj.*XXD0_rf;
