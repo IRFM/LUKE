@@ -1,8 +1,6 @@
 function [XXheaviside,...
     XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,...
-    Znorm,Znorm_fsav,...
-    Zcurr,Zcurr_fsav,...
-    ZP0,...
+    Znorm,Zcurr,ZP0,...
     ZXXS,ZYXXD_rf,...
     XxRR_fsav,xMRR_flux_ref,xMRR_tau_ref,...
     xTe_out_norm,xft_fsav,xfteff_fsav,xmhubounce2,xepsi_rdke,...
@@ -1752,38 +1750,22 @@ time0 = clock;
 %
 %   Density
 %
-xnorm_0 = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0(:,:,rdke).*XXpn2(:,:,rdke),1),1)';
-xnorm_tp = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_tp(:,:,rdke).*XXpn2(:,:,rdke),1),1)';
-xnorm_g = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_g(:,:,rdke).*XXpn2(:,:,rdke),1),1)';
-%
-Znorm{1,1} = xnorm_0;
-Znorm{1,2} = xnorm_tp;
-Znorm{1,3} = xnorm_g;
+Znorm.x_0 = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0(:,:,rdke).*XXpn2(:,:,rdke),1),1)';
+Znorm.x_tp = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_tp(:,:,rdke).*XXpn2(:,:,rdke),1),1)';
+Znorm.x_g = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_g(:,:,rdke).*XXpn2(:,:,rdke),1),1)';
 %
 if coll_mode == 3,%Lorentz model (test mode only, see documentation)
-    xnorm_L_tp = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_L_tp(:,:,rdke).*XXpn2(:,:,rdke),1),1)';
-    xnorm_L_g = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_L_g(:,:,rdke).*XXpn2(:,:,rdke),1),1)';
-    Znorm{1,4} = xnorm_L_tp;
-    Znorm{1,5} = xnorm_L_g;
-    clear xnorm_L_tp xnorm_L_g
+    Znorm.x_L_tp = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_L_tp(:,:,rdke).*XXpn2(:,:,rdke),1),1)';
+    Znorm.x_L_g = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_L_g(:,:,rdke).*XXpn2(:,:,rdke),1),1)';
 end 
 %
-clear xnorm_0 xnorm_tp xnorm_g xnorm_L_tp xnorm_L_g
-%
-xnorm_0_fsav = 2*pi.*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda(:,:,rdke).*XXf0(:,:,rdke).*XXpn2(:,:,rdke),1),1)';
-xnorm_tp_fsav = 2*pi.*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda_b_p1m1(:,:,rdke).*XXf0_tp(:,:,rdke).*XXpn2(:,:,rdke),1),1)';
-xnorm_g_fsav = 2*pi.*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda(:,:,rdke).*XXf0_g(:,:,rdke).*XXpn2(:,:,rdke),1),1)';
-%
-Znorm_fsav{1,1} = xnorm_0_fsav;
-Znorm_fsav{1,2} = xnorm_tp_fsav;
-Znorm_fsav{1,3} = xnorm_g_fsav;
+Znorm.x_0_fsav = 2*pi.*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda(:,:,rdke).*XXf0(:,:,rdke).*XXpn2(:,:,rdke),1),1)';
+Znorm.x_tp_fsav = 2*pi.*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda_b_p1m1(:,:,rdke).*XXf0_tp(:,:,rdke).*XXpn2(:,:,rdke),1),1)';
+Znorm.x_g_fsav = 2*pi.*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda(:,:,rdke).*XXf0_g(:,:,rdke).*XXpn2(:,:,rdke),1),1)';
 %
 if coll_mode == 3,%Lorentz model (test mode only, see documentation)
-    xnorm_L_tp_fsav = 2*pi.*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda_b_p1m1(:,:,rdke).*XXf0_L_tp(:,:,rdke).*XXpn2(:,:,rdke),1),1)';
-    xnorm_L_g_fsav = 2*pi.*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda(:,:,rdke).*XXf0_L_g(:,:,rdke).*XXpn2(:,:,rdke),1),1)';
-    Znorm_fsav{1,4} = xnorm_L_tp_fsav;
-    Znorm_fsav{1,5} = xnorm_L_g_fsav;
-    clear xnorm_L_tp_fsav xnorm_L_g_fsav
+    Znorm.x_L_tp_fsav = 2*pi.*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda_b_p1m1(:,:,rdke).*XXf0_L_tp(:,:,rdke).*XXpn2(:,:,rdke),1),1)';
+    Znorm.x_L_g_fsav = 2*pi.*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda(:,:,rdke).*XXf0_L_g(:,:,rdke).*XXpn2(:,:,rdke),1),1)';
 end 
 %
 % When radial transport is turned off, the distribution function is renormalized before calculating all other
@@ -1792,61 +1774,39 @@ end
 %
 if radial_mode ~= 1,
     %XXf0 = XXf0.*shiftdim(repmat(xne_norm'./xnorm_0_fsav',[1,npn,nmhu]),1);
-     XXf0 = XXf0.*shiftdim(repmat(xne_norm'./Znorm{1,1}',[1,npn,nmhu]),1);
+     XXf0 = XXf0.*shiftdim(repmat(xne_norm'./Znorm{1,1}',[1,npn,nmhu]),1);%******* A VERIFIER YVES ************
 end
 %
 %
-xc_g = -(xnorm_tp_fsav + xnorm_g_fsav)./xne_norm(rdke);%Flux surface averaged density conservation
+xc_g = -(Znorm.x_tp_fsav + Znorm.x_g_fsav)./xne_norm(rdke);%Flux surface averaged density conservation
 XXxc_g = shiftdim(repmat(repmat(xc_g(:),[1,npn,1]),[1,1,nmhu]),1);
 XXf0_g(:,:,rdke) = XXf0_g(:,:,rdke) + XXxc_g.*XXf0(:,:,rdke);%Normalisation in order to maintain the flux surface averaged density at the right level
 %
-clear xnorm_0_fsav xnorm_tp_fsav xnorm_g_fsav 
-%
 %   Current
 %
-xcurr_0 = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
-xcurr_tp = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_tp(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
-xcurr_g = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_g(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
-%
-xcurr_tot = xcurr_0 + xcurr_tp + xcurr_g;%Total current density
-%
-Zcurr{1,1} = xcurr_0;
-Zcurr{1,2} = xcurr_tp;
-Zcurr{1,3} = xcurr_g;
+Zcurr.x_0 = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
+Zcurr.x_tp = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_tp(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
+Zcurr.x_g = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_g(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
+Zcurr.x_tot = Zcurr.x_0 + Zcurr.x_tp + Zcurr.x_g;%Total current density
 %
 if coll_mode == 3,%Lorentz model (test mode only, see documentation)
-    xcurr_L_tp = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_L_tp(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
-    xcurr_L_g = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_L_g(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
-    Zcurr{1,4} = xcurr_L_tp;
-    Zcurr{1,5} = xcurr_L_g;
-    xcurr_L_tot = xcurr_0 + xcurr_L_tp + xcurr_L_g;%Total current density
-    clear xcurr_L_tp xcurr_L_g
+    Zcurr.x_L_tp = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_L_tp(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
+    Zcurr.x_L_g = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_L_g(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
+    Zcurr.x_L_tot = Zcurr.x_0 + Zcurr.x_L_tp + Zcurr.x_L_g;%Total current density
 end 
-%
-clear xcurr_0 xcurr_tp xcurr_g
 %
 %   Flux surface averaged current
 %
-xcurr_0_fsav = 2*pi*(xq(rdke)./xqbar(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0(:,:,rdke).*XXheaviside(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
-xcurr_tp_fsav = 2*pi*(xqtilde(rdke)./xqbar(rdke)).*(Rp./xR0(rdke)).*(xBT0(rdke)./xB0(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_tp(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke).*XXlambda_p2m2p2(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
-xcurr_g_fsav = 2*pi*(xq(rdke)./xqbar(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_g(:,:,rdke).*XXheaviside(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
-%
-xcurr_tot_fsav = xcurr_0_fsav + xcurr_tp_fsav + xcurr_g_fsav;%Flux surface averaged total current density  
-%
-Zcurr_fsav{1,1} = xcurr_0_fsav;
-Zcurr_fsav{1,2} = xcurr_tp_fsav;
-Zcurr_fsav{1,3} = xcurr_g_fsav;
+Zcurr.x_0_fsav = 2*pi*(xq(rdke)./xqbar(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0(:,:,rdke).*XXheaviside(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
+Zcurr.x_tp_fsav = 2*pi*(xqtilde(rdke)./xqbar(rdke)).*(Rp./xR0(rdke)).*(xBT0(rdke)./xB0(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_tp(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke).*XXlambda_p2m2p2(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
+Zcurr.x_g_fsav = 2*pi*(xq(rdke)./xqbar(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_g(:,:,rdke).*XXheaviside(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
+Zcurr.x_tot_fsav = Zcurr.x_0_fsav + Zcurr.x_tp_fsav + Zcurr.x_g_fsav;%Total current density
 %
 if coll_mode == 3,%Lorentz model (test mode only, see documentation)
-    xcurr_L_tp_fsav = 2*pi*(xqtilde(rdke)./xqbar(rdke)).*(Rp./xR0(rdke)).*(xBT0(rdke)./xB0(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_L_tp(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke).*XXlambda_p2m2p2(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
-    xcurr_L_g_fsav = 2*pi*(xq(rdke)./xqbar(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_L_g(:,:,rdke).*XXheaviside(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
-    Zcurr_fsav{1,4} = xcurr_L_tp_fsav;
-    Zcurr_fsav{1,5} = xcurr_L_g_fsav;
-    xcurr_L_tot_fsav = xcurr_0_fsav + xcurr_L_tp_fsav + xcurr_L_g_fsav;%Total current density
-    clear xcurr_L_tp_fsav xcurr_L_g_fsav
+    Zcurr.x_L_tp_fsav = 2*pi*(xqtilde(rdke)./xqbar(rdke)).*(Rp./xR0(rdke)).*(xBT0(rdke)./xB0(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_L_tp(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke).*XXlambda_p2m2p2(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
+    Zcurr.x_L_g_fsav = 2*pi*(xq(rdke)./xqbar(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_L_g(:,:,rdke).*XXheaviside(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
+    Zcurr.x_L_tot = Zcurr.x_0_fsav + Zcurr.x_L_tp_fsav + Zcurr.x_L_g_fsav;%Total current density
 end 
-%
-clear xcurr_0_fsav xcurr_tp_fsav xcurr_g_fsav
 %   
 %   Fluxes
 %
