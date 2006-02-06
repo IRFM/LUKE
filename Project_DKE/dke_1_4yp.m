@@ -1393,7 +1393,7 @@ for it_f = 2:nit_f,
             if display_mode >= 1,
                 info_dke_yp(2,['Iteration : ',int2str(it_f),' / ',int2str(nit_f),', Residu = ',num2str(residu_f(ir,it_f))]);
                 info_dke_yp(2,['   Normalized poloidal magnetic flux: ',num2str(xpsin(ir))]);
-                info_dke_yp(2,['      Normalized radius on LFS midplane: ',num2str(xrho(ir))]);
+                info_dke_yp(2,['      Normalized radius on LFS midplane: ',num2str(xrho(ir)),' / Radius index number: ',int2str(ir)]);
                 disp(['                - Density [t-1]: ',num2str(normf0(ir,it_f-1)),' - [t]: ',num2str(normf1(ir,it_f)),' / Relative variation [t-t0]: ',num2str(prec_normf(ir,it_f))]);               
                 disp(['                - Current [t-1]: ',num2str(curr0(ir,it_f-1)),' - [t]: ',num2str(curr1(ir,it_f)),' / Current relative accuracy [dt]: ',num2str(prec_curr(ir,it_f))]);
             end
@@ -1625,7 +1625,7 @@ if dke_mode == 1,
                 if display_mode >= 1,   
                     info_dke_yp(2,['Iteration : ',int2str(it_g),' / ',int2str(nit_g),', Residu = ',num2str(residu_g(ir_dke,it_g))]);
                     info_dke_yp(2,['   Normalized poloidal magnetic flux: ',num2str(xpsin(jr2))]);
-                    info_dke_yp(2,['      Normalized radius on LFS midplane: ',num2str(xrho(jr2))]);
+                    info_dke_yp(2,['      Normalized radius on LFS midplane: ',num2str(xrho(jr2)),' / Radius index number: ',int2str(jr2)]);
                 end
 %
                 if jr2 == ir_display & display_mode == 2,
@@ -1772,7 +1772,7 @@ end
 %
 if radial_mode ~= 1,
     %XXf0 = XXf0.*shiftdim(repmat(xne_norm'./xnorm_0_fsav',[1,npn,nmhu]),1);
-     XXf0 = XXf0.*shiftdim(repmat(xne_norm'./Znorm{1,1}',[1,npn,nmhu]),1);%******* A VERIFIER YVES ************
+    XXf0 = XXf0.*shiftdim(repmat(xne_norm'./Znorm.x_0',[1,npn,nmhu]),1);
 end
 %
 %
@@ -2085,12 +2085,10 @@ XxRR_fsav = 2*pi*(Xxqtilde(:,rdke)./Xxqhat(:,rdke)).*integral_dke_jd(dmhu,XXSp0_
 %
 mask_xepsi = find(xepsi_rdke~=0);
 if ~isempty(mask_xepsi)
-    currB_fsav = xcurr_tot_fsav - 0.5*XxRR_fsav(npn-1,mask_xepsi)*max(v2)./xepsi_rdke(mask_xepsi);%Bulk current as defined by Karney (useful for non-zero large dc electric field only)
+    Zcurr.x_B_fsav = Zcurr.x_tot_fsav - 0.5*XxRR_fsav(npn-1,mask_xepsi)*max(v2)./xepsi_rdke(mask_xepsi);%Bulk current as defined by Karney (useful for non-zero large dc electric field only)
 else
-    currB_fsav = xcurr_tot_fsav;
-end
-Zcurr_fsav{2,1} = currB_fsav;
-clear currB_fsav
+    Zcurr.x_B_fsav = Zcurr.x_tot_fsav;
+end 
 %
 %
 Xxf0 = 0.5*integral_dke_jd(dmhu,XXf0(:,:,rdke),2);

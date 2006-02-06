@@ -11,11 +11,11 @@ close all
 warning off;
 [s,dossier,machine] = comput_dke_yp;
 if nargin == 0,	
-	eval(['dir RESULTS_*.mat']);
+	dir('RESULTS_*.mat');
 	filename = [];
 	filename = input_dke_yp('Kinetic calculations filename ',filename);
 %
-	eval(['dir HXR_*.mat']);
+	dir('HXR_*.mat');
 	filenamehxr = [];
 	filenamehxr = input_dke_yp('HXR tomographic system filename ',filenamehxr);
 %
@@ -28,8 +28,8 @@ elseif nargin == 2,
 	igor_mode = 0;%Automatic mode when test_dke_1yp.m is running
 end
 %
-eval(['load ',filename]);%Load DKE output data
-eval(['load ',filenamehxr]);%Load HXR structure
+load(filename);%Load DKE output data
+load(filenamehxr);%Load HXR structure
 %
 display_mode = input_dke_yp('Display graphics (yes: 1, no: 0)',1) + 1;
 %
@@ -140,7 +140,7 @@ while 1,
 	%
 	if del == 1	,
 		delete(filename);
-		eval(['save ',filename]);
+		save(filename);
 		if exist(filename) == 2,
 			disp('-------------------------------------------------------------------------------------------------------------------');
 			info_dke_yp(2,['The HXR data file : ',filename,' has been successfully saved !']);

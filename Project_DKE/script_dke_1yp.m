@@ -97,7 +97,7 @@ end
 end
 end
 %
-eval(['save SCRIPT_',tokname,'_S',int2str(snumber),'.mat']);
+save([SCRIPT_',tokname,'_S',int2str(snumber),'.mat']);
 info_dke_yp(2,['The script file :  SCRIPT_',tokname,'_S',int2str(snumber),'_out.mat has been successfully saved !']);
 disp('-------------------------------------------------------------------------------------------------------------------');
 

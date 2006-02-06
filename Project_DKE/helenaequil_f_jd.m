@@ -35,12 +35,9 @@ end
 [s,dossier,machine,mexext] = comput_dke_yp;
 if exist(['runhel',mexext]) == 3,
 	eval ['runhel ',file_helena]);
-
+	filename = ['EQUIL_',savename,'.mat'];
 %
-%		
-		filename = ['EQUIL_',savename,'.mat'];
-%
-	eval(['save ',dossier,s,filename,' ppsi theta R Z BR BZ BPHI pTe pne pzTi pzni zZi zmi ftra HXR'])   
+	save([dossier,s,filename],'ppsi','theta','R','Z','BR','BZ','BPHI','pTe','pne','pzTi','pzni','zZi','zmi','ftra','HXR')   
 else
 	error(['The script file ''runhel'' for running HELENA does not exists !']);
 end

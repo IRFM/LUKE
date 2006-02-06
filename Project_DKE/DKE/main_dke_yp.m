@@ -134,7 +134,7 @@ radial.ir_display = ir_display;
 %
 if diary_mode == 1, 
 	diaryfile = ['diary_dke_',int2str(iloop)];
-	eval(['delete ',diaryfile]);
+	delete(diaryfile);
 	diary(diaryfile);
 	diary on;
 %
@@ -487,7 +487,7 @@ for ir = 1:nr,
 		Xf0_ref = xne_norm(ir)*Xf0_ref/normf0_ref;
 		title_initguess = 'Fuchs et al. LH model';
 	elseif initguess_f == 2,
-		eval(['load ',dossier,s,initfile_f,' XXf0_ref ']);
+		load([dossier,s,initfile_f],'XXf0_ref');
 		Xf0_ref = XXf0_ref(:,:,ir);
 		title_initguess = 'Initial distribution from a file';
 	end
@@ -930,7 +930,7 @@ if syn_mode == 1
 %
 end
 %
-eval(['delete ',fullfile(temppath,'temp_DKE_'),save_id,'.mat']);%Delete large temporary data file on disk
+delete([fullfile(temppath,'temp_DKE_'),save_id,'.mat']);%Delete large temporary data file on disk
 for iy = 1:nb,
     ynum = num2str(iy);
     eval(['delete ',fullfile(temppath,'temp_DQL_'),save_id,'_',ynum,'.mat']);

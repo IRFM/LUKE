@@ -8,7 +8,7 @@ function [] = display_time_dke_1yp(filename,auto_mode_in,igor_mode)
 warning off;
 [s,dossier,machine] = comput_dke_yp;
 if nargin == 0,	
-	eval(['dir TIME_*.mat']);
+	dir('TIME_*.mat');
 	filename = [];
 	filename = input_dke_yp('Filename ',filename);
 	auto_mode_in = input_dke_yp('Automatic display mode (yes: 1, no: 0) ',0);
@@ -20,8 +20,8 @@ elseif nargin == 2,
 	igor_mode = 0;%Automatic mode when test_dke_1yp.m is running
 end
 %
-eval(['load ',s,filename]);%Load time dependent DKE output data
-eval(['load ',s,'RESULTS',filename(5:end)]);%Load DKE output data
+load([s,filename]);%Load time dependent DKE output data
+load([s,'RESULTS',filename(5:end)]);%Load DKE output data
 %
 display_mode = input_dke_yp('Display graphics (yes: 1, no: 0)',1) + 1;
 %
@@ -295,7 +295,7 @@ while 1,
 			colorbar('vert')
 %
 			if igor_mode == 1,
-				eval(['save ',filenameroot,'_data_fig4_',int2str(ir_display_dke),'.mat xrho_dke xia r_dke ir_display_dke ppar_cyl_ref pperp_cyl_ref Xfinit_cyl_ref Xf0_cyl_ref xmhubounce2 pnmax_S'])
+				save([filenameroot,'_data_fig4_',int2str(ir_display_dke),'.mat'],'xrho_dke','xia','r_dke','ir_display_dke','ppar_cyl_ref','pperp_cyl_ref','Xfinit_cyl_ref','Xf0_cyl_ref','xmhubounce2','pnmax_S')
 			end
 %
 			if makemovie == 1,

@@ -17,7 +17,7 @@ xrho = sqrt(x.^2 + y.^2);
 Nr = length(xrho);
 %
 loadstr = ['PARAM_',tokamak];
-eval(['load ',loadstr,' ap Rp Ip Bt pne Zi mi fi pzTi pzni prho pq']);
+load([loadstr,'ap','Rp','Ip','Bt','pne','Zi','mi','fi','pzTi','pzni','prho','pq');
 %
 xne = interp1(prho,pne,xrho);
 zxni = interp1(prho,pzni',xrho)';

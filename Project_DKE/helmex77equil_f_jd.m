@@ -154,7 +154,7 @@ if exist(['helmex77',mexext]) == 3,
 %		
 		filename = ['EQUIL_',savename,'.mat'];
 %
-	eval(['save ',dossier,s,filename,' ppsi theta R Z BR BZ BPHI pTe pne pzTi pzni zZi zmi ftra HXR'])   
+	save([dossier,s,filename],'ppsi','theta','R','Z','BR','BZ','BPHI','pTe','pne','pzTi','pzni','zZi','zmi','ftra','HXR')   
 else
 	error(['The mexfile helmex77',mexext,' does not exists ! Compile it for the computer you are using...']);
 end

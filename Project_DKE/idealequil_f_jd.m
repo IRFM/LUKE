@@ -101,5 +101,5 @@ ftra = [];%Approximate trapped fraction
 filename = ['EQUIL_',savename,'.mat'];
 %
 [s,dossier,machine] = comput_dke_yp;
-eval(['save ',dossier,s,filename,' ppsi theta R Z BR BZ BPHI pTe pne pzTi pzni zZi zmi ftra HXR'])
+save([dossier,s,filename],'ppsi','theta','R','Z','BR','BZ','BPHI','pTe','pne','pzTi','pzni','zZi','zmi','ftra','HXR')
 

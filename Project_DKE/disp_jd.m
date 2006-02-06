@@ -55,7 +55,7 @@ root1 = [];
 vect = [];
 %
 wd = cd;
-eval(['cd ',pathname]);
+cd(pathname);
 %
 while (isempty(root1) | isempty (vect)) & tol_ht < 1
 %
@@ -202,4 +202,4 @@ xM3Pflow_pmz_ht(:,:,3) = xM3Pflow_xyz_ht(:,:,3);
 %
 xMPabs_at = xMPabs_at_x.*abs(xMepsx_norm_ht).^2;
 %
-eval(['cd ',wd]);
+cd(wd);

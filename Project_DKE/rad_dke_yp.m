@@ -21,7 +21,7 @@ nMMXP_f_t = max(cumsum(blocksize_f_t));
 %
 if radial_mode == 1,
 %   
- eval(['load ',fullfile(temppath,'temp_DKE_'),save_id,'.mat MMXR_f_t']);
+ load([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'MMXR_f_t');
     %
  if exist('MMXR_f_t') == 0, %The radial matrix was calculated before.
    %
@@ -246,7 +246,7 @@ if radial_mode == 1,
        if display_mode >= 1,info_dke_yp(2,['D and F tensor calculations for fast electron radial transport at radius number (',int2str(ir),'/',int2str(nr),') done in ',num2str(etime(clock,time0)),' (s)']);etime_radial = etime_radial + etime(clock,time0);time0 = clock;end
        time0 = clock;
 %
-        eval(['save ',fullfile(temppath,'temp_DKE_'),save_id,'.mat MMXR_f_t']);
+        save([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'MMXR_f_t');
       if display_mode >= 1,info_dke_yp(2,['Radial Matrix saved.']);end	
 %
     end

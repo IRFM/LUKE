@@ -29,7 +29,7 @@ bspace2 = 0.5;
 warning off;
 [s,dossier,machine] = comput_dke_yp;
 if nargin == 0,	
-	eval(['dir RESULTS_*.mat']);
+	dir('RESULTS_*.mat');
 	filename = [];
 	filename = input_dke_yp('Filename ',filename);
 	auto_mode_in = input_dke_yp('Automatic display mode (yes: 1, no: 0) ',0);
@@ -41,7 +41,7 @@ elseif nargin == 2,
 	igor_mode = 0;%Automatic mode when test_dke_1yp.m is running
 end
 %
-eval(['load ',filename]);%Load DKE output data
+load(filename);%Load DKE output data
 %
 display_mode = input_dke_yp('Display graphics (yes: 1, no: 0)',1) + 1;
 %
@@ -157,7 +157,7 @@ if bounce_mode > 0,
 	[xfteff_llm] = ft_llm_dke_yp(xia,1000);%From Y.R. Lin-Liu and R.L. Miller, Phys. Plasma 2 (1995) 1666
 %
 	filename = ['EQUIL_',tokname,'.mat'];
-	eval(['load ',filename]);%Load effective trapped fraction given by HELENA
+	load(filename);%Load effective trapped fraction given by HELENA
 	if exist('equil.ftra') == 1 & (length(equil.ppsi)==length(equil.ftra)),
 		xftra = interp1(ppsi,equil.ftra,xpsin(r_dke));
 	else 
@@ -668,7 +668,7 @@ while 1,
 			pause(time_pause);
 %
 			if igor_mode == 1,
-				eval(['save ',filenameroot,'_data_fig4_',int2str(ir_display_dke),'.mat xrho_dke xia r_dke ir_display_dke ppar_cyl_ref pperp_cyl_ref Xfinit_cyl_ref Xf0_cyl_ref xmhubounce2 pnmax_S'])
+				save([filenameroot,'_data_fig4_',int2str(ir_display_dke),'.mat'],'xrho_dke','xia','r_dke','ir_display_dke','ppar_cyl_ref','pperp_cyl_ref','Xfinit_cyl_ref','Xf0_cyl_ref','xmhubounce2','pnmax_S')
 			end
 %
 % ---------- Stream function -----------
@@ -741,7 +741,7 @@ while 1,
 			    pause(time_pause);
                 %
 				if igor_mode == 1,
-					eval(['save ',filenameroot,'_data_fig7_',int2str(ir_display_dke),'.mat xrho_dke xia r_dke ir_display_dke ppar_cyl_ref pperp_cyl_ref XDparpar_cyl_ref xmhubounce2 pnmax_S'])
+					 save([filenameroot,'_data_fig7_',int2str(ir_display_dke),'.mat'],'xrho_dke','xia','r_dke','ir_display_dke','ppar_cyl_ref','pperp_cyl_ref','XDparpar_cyl_ref','xmhubounce2','pnmax_S')
                 end
                 %
                 %
@@ -757,7 +757,7 @@ while 1,
 				    pparresmax_lh_cyl_ref = xvparmax_lh_ref(ir_display)*sqrt(1 + betath_ref^2.*pperp_cyl_ref.^2)/sqrt(1 - xvparmax_lh_ref(ir_display)^2*betath_ref^2);%LH resonance condition
                     %
 				    if igor_mode == 1,
-					    eval(['save ',filenameroot,'_data_fig_',int2str(ir_display_dke),'lh.mat xrho_dke xia r_dke ir_display_dke pparresmin_lh_cyl_ref pparresmax_lh_cyl_ref pperp_cyl_ref'])
+					    save([filenameroot,'_data_fig_',int2str(ir_display_dke),'lh.mat'],'xrho_dke','xia','r_dke','ir_display_dke','pparresmin_lh_cyl_ref','pparresmax_lh_cyl_ref','pperp_cyl_ref')
 				    end
                     %
                 	figure(4),
@@ -807,7 +807,7 @@ while 1,
 			    pause(time_pause);
                 %
 			    if igor_mode == 1,
-				    eval(['save ',filenameroot,'_data_fig8_',int2str(ir_display_dke),'.mat xrho_dke xia r_dke ir_display_dke ppar_cyl_ref pperp_cyl_ref xmhubounce2 pnmax_S'])
+				    save([filenameroot,'_data_fig8_',int2str(ir_display_dke),'.mat'],'xrho_dke','xia','r_dke','ir_display_dke','ppar_cyl_ref','pperp_cyl_ref','xmhubounce2','pnmax_S')
 			    end
 			end
 %
@@ -1316,7 +1316,7 @@ while 1,
         end
 %      
 		if igor_mode == 1,
-			eval(['save ',filenameroot,'_data_fig200.mat xrho_dke xia r_dke j_ref xcurr_tot_ref_fsav P_ref ZP0_ref.x_rf_tot_fsav xTe xTi xne xnhyd xft xft_llm'])
+			save([filenameroot,'_data_fig200.mat'],'xrho_dke','xia','r_dke','j_ref','xcurr_tot_ref_fsav','P_ref','ZP0_ref.x_rf_tot_fsav','xTe','xTi','xne','xnhyd','xft','xft_llm')
 		end
 %        
 	end
@@ -1364,7 +1364,7 @@ if exist('hxr') & auto_mode_in == 0 & nr > 1,
 			if exist([filenameroot,'_Fparprof_',int2str(ie_display),'_out.mat']) == 2,
 				delete([filenameroot,'_Fparprof_',int2str(ie_display),'_out.mat']);
 			end
-			eval(['save ',filenameroot,'_Fparprof_',int2str(ie_display),'_out.mat  Ec_r_ref_out xEc_r_ref_threshold xrho_dke r_dke prof_r_Fpar_ref']);
+			save([filenameroot,'_Fparprof_',int2str(ie_display),'_out.mat'],'Ec_r_ref_out','xEc_r_ref_threshold','xrho_dke','r_dke','prof_r_Fpar_ref');
 			if exist([filenameroot,'_Fparprof_',int2str(ie_display),'_out.mat']) == 2,
 				disp('-------------------------------------------------------------------------------------------------------------------');
 				info_dke_yp(2,['The profile file : ',filenameroot,'_Fparprof_',int2str(ie_display),'_out.mat has been successfully saved !']);

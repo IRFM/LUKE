@@ -66,7 +66,7 @@ for ib = 1:nb_ebw
 %    loadintstr = ['INT_',tokamak,'_',snpar,'.mat'];
     %
     if ~isnan(loadstr) & exist(loadstr) == 2
-        eval(['load ',loadstr,' xpsin_EBW_ht xtheta_EBW_ht xNperp_EBW_ht x3eps_pmz_EBW_ht xPflow_EBW_ht xPabs_EBW_at']);
+        load(loadstr,'xpsin_EBW_ht','xtheta_EBW_ht','xNperp_EBW_ht','x3eps_pmz_EBW_ht','xPflow_EBW_ht','xPabs_EBW_at');
 %    elseif exist(loadintstr) == 2
 %        eval(['load ',loadintstr,' xpsin_EBW_ht xtheta_EBW_ht xNperp_EBW_ht x3eps_pmz_EBW_ht xPflow_EBW_ht xPabs_EBW_at']);
 %    elseif exist(loadseekstr) == 2
