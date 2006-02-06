@@ -27,9 +27,9 @@
 
 
 \documentclass[11pt,a4paper]{report}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{makeidx}
 \usepackage{eurosym}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{graphicx}
 \usepackage{amssymb}
 \usepackage{amsmath}
@@ -42,7 +42,7 @@
 %TCIDATA{Version=5.50.0.2890}
 %TCIDATA{<META NAME="SaveForMode" CONTENT="1">}
 %TCIDATA{BibliographyScheme=BibTeX}
-%TCIDATA{LastRevised=Wednesday, October 12, 2005 10:59:57}
+%TCIDATA{LastRevised=Monday, January 16, 2006 17:15:53}
 %TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
 
 \bibliographystyle{unsrt}
@@ -53,9 +53,7 @@
 \renewcommand{\chaptermark}[1]{\markboth{\thechapter. #1}{}}
 \renewcommand{\sectionmark}[1]{\markright{\thesection. #1}{}}
 \include{DocumentDimensions}
-
 \input{tcilatex}
-
 \begin{document}
 
 \title{\hrule\bigbreak DKE: a fast numerical solver for the 3-D relativistic
@@ -161,7 +159,8 @@ physical limitations.
 
 \section{Low collision limit and bounce averaging}
 
-%TCIMACRO{\QSubDoc{Include LowCollisionality}{\input{LowCollisionality.tex}}}%
+%TCIMACRO{%
+%\QSubDoc{Include LowCollisionality}{\input{LowCollisionality.tex}}}%
 %BeginExpansion
 \input{LowCollisionality.tex}%
 %EndExpansion
@@ -184,7 +183,8 @@ physical limitations.
 
 \subsection{Dynamics in Configuration Space}
 
-%TCIMACRO{\QSubDoc{Include FluxConsConfiguration}{\input{FluxConsConfiguration.tex}}}%
+%TCIMACRO{%
+%\QSubDoc{Include FluxConsConfiguration}{\input{FluxConsConfiguration.tex}}}%
 %BeginExpansion
 \input{FluxConsConfiguration.tex}%
 %EndExpansion
@@ -193,14 +193,16 @@ physical limitations.
 
 \subsubsection{Zero order term: the Fokker-Planck equation}
 
-%TCIMACRO{\QSubDoc{Include FP_FluxConsMomentum}{\input{FP_FluxConsMomentum.tex}}}%
+%TCIMACRO{%
+%\QSubDoc{Include FP_FluxConsMomentum}{\input{FP_FluxConsMomentum.tex}}}%
 %BeginExpansion
 \input{FP_FluxConsMomentum.tex}%
 %EndExpansion
 
 \subsection{Up to first order term: the Drift Kinetic equation}
 
-%TCIMACRO{\QSubDoc{Include DKE_FluxConsMomentum}{\input{DKE_FluxConsMomentum.tex}}}%
+%TCIMACRO{%
+%\QSubDoc{Include DKE_FluxConsMomentum}{\input{DKE_FluxConsMomentum.tex}}}%
 %BeginExpansion
 \input{DKE_FluxConsMomentum.tex}%
 %EndExpansion
@@ -216,11 +218,20 @@ physical limitations.
 
 \label{physproc}
 
-\section{Collisions}
+\section{Coulomb collisions}
+
+\subsection{Small angle scattering}
 
 %TCIMACRO{\QSubDoc{Include Collisions}{\input{Collisions.tex}}}%
 %BeginExpansion
 \input{Collisions.tex}%
+%EndExpansion
+
+\subsection{Large angle scattering}
+
+%TCIMACRO{\QSubDoc{Include pitchangle}{\input{pitchangle.tex}}}%
+%BeginExpansion
+\input{pitchangle.tex}%
 %EndExpansion
 
 \subsection{Bounce Averaged Fokker-Planck Equation}
@@ -311,7 +322,8 @@ physical limitations.
 
 \section{Discretization procedure}
 
-%TCIMACRO{\QSubDoc{Include DiscreteProcedure}{\input{DiscreteProcedure.tex}}}%
+%TCIMACRO{%
+%\QSubDoc{Include DiscreteProcedure}{\input{DiscreteProcedure.tex}}}%
 %BeginExpansion
 \input{DiscreteProcedure.tex}%
 %EndExpansion
@@ -320,28 +332,32 @@ physical limitations.
 
 \subsection{Momentum dynamics}
 
-%TCIMACRO{\QSubDoc{Include FP_DiscretMomentum}{\input{FP_DiscretMomentum.tex}}}%
+%TCIMACRO{%
+%\QSubDoc{Include FP_DiscretMomentum}{\input{FP_DiscretMomentum.tex}}}%
 %BeginExpansion
 \input{FP_DiscretMomentum.tex}%
 %EndExpansion
 
 \subsection{Spatial dynamics}
 
-%TCIMACRO{\QSubDoc{Include FP_DiscretSpatial}{\input{FP_DiscretSpatial.tex}}}%
+%TCIMACRO{%
+%\QSubDoc{Include FP_DiscretSpatial}{\input{FP_DiscretSpatial.tex}}}%
 %BeginExpansion
 \input{FP_DiscretSpatial.tex}%
 %EndExpansion
 
 \subsection{Grid interpolation}
 
-%TCIMACRO{\QSubDoc{Include FP_GridInterpolation}{\input{FP_GridInterpolation.tex}}}%
+%TCIMACRO{%
+%\QSubDoc{Include FP_GridInterpolation}{\input{FP_GridInterpolation.tex}}}%
 %BeginExpansion
 \input{FP_GridInterpolation.tex}%
 %EndExpansion
 
 \subsection{Discrete description of physical processes}
 
-%TCIMACRO{\QSubDoc{Include FP_DiscretePhysProc}{\input{FP_DiscretePhysProc.tex}}}%
+%TCIMACRO{%
+%\QSubDoc{Include FP_DiscretePhysProc}{\input{FP_DiscretePhysProc.tex}}}%
 %BeginExpansion
 \input{FP_DiscretePhysProc.tex}%
 %EndExpansion
@@ -350,21 +366,24 @@ physical limitations.
 
 \subsection{Grid interpolation}
 
-%TCIMACRO{\QSubDoc{Include DKE_GridInterpolation}{\input{DKE_GridInterpolation.tex}}}%
+%TCIMACRO{%
+%\QSubDoc{Include DKE_GridInterpolation}{\input{DKE_GridInterpolation.tex}}}%
 %BeginExpansion
 \input{DKE_GridInterpolation.tex}%
 %EndExpansion
 
 \subsection{Momentum dynamics}
 
-%TCIMACRO{\QSubDoc{Include DKE_DiscretMomentum}{\input{DKE_DiscretMomentum.tex}}}%
+%TCIMACRO{%
+%\QSubDoc{Include DKE_DiscretMomentum}{\input{DKE_DiscretMomentum.tex}}}%
 %BeginExpansion
 \input{DKE_DiscretMomentum.tex}%
 %EndExpansion
 
 \subsection{Discrete description of physical processes}
 
-%TCIMACRO{\QSubDoc{Include DKE_DiscretePhysProc}{\input{DKE_DiscretePhysProc.tex}}}%
+%TCIMACRO{%
+%\QSubDoc{Include DKE_DiscretePhysProc}{\input{DKE_DiscretePhysProc.tex}}}%
 %BeginExpansion
 \input{DKE_DiscretePhysProc.tex}%
 %EndExpansion
@@ -574,7 +593,8 @@ physical limitations.
 
 \chapter{Alternative discrete cross-derivatives coefficients}
 
-%TCIMACRO{\QSubDoc{Include discretmomentcrossterms}{\input{discretmomentcrossterms.tex}}}%
+%TCIMACRO{%
+%\QSubDoc{Include discretmomentcrossterms}{\input{discretmomentcrossterms.tex}}}%
 %BeginExpansion
 \input{discretmomentcrossterms.tex}%
 %EndExpansion
