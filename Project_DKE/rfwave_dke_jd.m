@@ -148,7 +148,7 @@ nb_rf = size(yb,2);%number of actual rays
 nbb_rf = size(xyvray_dke,2);%number of ray subdivisions
 %
 if nb_rf == 0%no rays
-    waveparam = [];
+    waveparam = zeros(nr,0,13);
     xyprop_dke_rf = [];
     xyP0_in_rf = [];
     yb_rf = [];
@@ -241,7 +241,7 @@ xydNpar_rf(xydNpar_rf == 0) = eps;%avoid singularities
 %
 xyD0_rf_ref = xyfinc_rf.*xyP0_in_rf./(xyrb_rf.*xyRb_rf*me*lnc_e_ref.*xyomega_rf*wpe_ref^2.*xyabsphi_pmz_rf);
 %
-waveparam = zeros(nr,nbb_rf,12);
+waveparam = zeros(nr,nbb_rf,13);
 %
 waveparam(:,:,1) = xyomega_rf;%RF wave frequency
 waveparam(:,:,2) = xyopt_rf;%Options for Larmor radius effects and/or EBW calc. 
