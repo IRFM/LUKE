@@ -65,13 +65,13 @@ for ix=1:nx,
     herm_mode = 0;
     [xNperp_ft(ix),xepol_xyz_ft(:,ix),xepol_pmz_ft(:,ix),xepol_pyk_ft(:,ix),...
             xD_ft(:,:,ix),xX_ft(:,:,ix),xX_s_ft(:,:,:,ix),X_sn_ft]...%xX_sn_ft(:,:,:,:,ix)
-        = hotdisp_dke_jd(xNpar(ix),omega_rf,xTe(ix),xne(ix),xzTi(:,ix),xzni(:,ix),zZi,zmi,xB(ix),xNperp_in_ft(ix),herm_mode,display_mode,nmax,tol);%,NZ
+        = hotdisp_dke_jd(xNpar(ix),omega_rf,xTe(ix),xne(ix),xzTi(:,ix),xzni(:,ix),zZi,zmi,xB(ix),xNperp_in_ft(ix),herm_mode,display_mode,nmax);%,NZ
     %
     herm_mode = 1;
     [xNperp_ht(ix),xepol_xyz_ht(:,ix),xepol_pmz_ht(:,ix),xepol_pyk_ht(:,ix),...
             xD_ht(:,:,ix),xX_ht(:,:,ix),xX_s_ht(:,:,:,ix),X_sn_ht,...%xX_sn_ht(:,:,:,:,ix)
             xalphaphi_lin(ix),xphiT_xyz(:,ix),xphiP_xyz(:,ix),xphiT_pmz(:,ix),xphiP_pmz(:,ix),xphiT_pyk(:,ix),xphiP_pyk(:,ix)]...
-        = hotdisp_dke_jd(xNpar(ix),omega_rf,xTe(ix),xne(ix),xzTi(:,ix),xzni(:,ix),zZi,zmi,xB(ix),xNperp_in_ht(ix),herm_mode,display_mode,nmax,tol);%,NZ
+        = hotdisp_dke_jd(xNpar(ix),omega_rf,xTe(ix),xne(ix),xzTi(:,ix),xzni(:,ix),zZi,zmi,xB(ix),xNperp_in_ht(ix),herm_mode,display_mode,nmax);%,NZ
     %
     if guess_mode == 0,% continuous calculation case, guess is Nperp at previous location
         if ~isnan(xNperp_ft(ix))
