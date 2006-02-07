@@ -52,6 +52,8 @@ else
     ns = length(ss);
 end
 %
+mask = [1,find(diff(ss) > 0) + 1];
+%
 % Calculates spsin and stheta (normalized flux and poloidal angle, location along the ray) and sR sZ sphi if missing.
 %
 if isempty(spsin) | isempty(stheta),
@@ -75,14 +77,14 @@ if isempty(spsin) | isempty(stheta),
     %spsin = interp1(pstr,ppsin,sr,method);%psi(s)
     method2 = 'linear';
     for is = 1:ns 
-        spsin(is) = interp1(pstr(:,is),ppsin,sr(is),method2);%psi(s)
+        spsin(is) = interp1(pstr(:,is),ppsin,sr(is),method2,1);%psi(s)
     end
     %
     % remove ray parts outlise the FS.
     %
-    imask_1 = min(find(~isnan(spsin)));
-    imask_2 = min([find(isnan(spsin(imask_1:ns))),ns - imask_1 + 2]);
-    mask = [imask_1:imask_1 + imask_2 - 2];
+    %imask_1 = min(find(~isnan(spsin)));
+    %imask_2 = min([find(isnan(spsin(imask_1:ns))),ns - imask_1 + 2]);
+    %mask = [imask_1:imask_1 + imask_2 - 2];
     %
     % positive values only for spsin
     %
@@ -108,9 +110,9 @@ else
     end
     sr = sqrt((sR - Rp).^2 + (sZ - Zp).^2); %minor radius
     %
-    is0 = min(find(spsin < 1)); %position where the ray enters the plasma 
-    ismax = min([find(spsin >= 1 & ss > ss(is0)) - 1,ns]); %position where the ray leaves the plasma (if applicable) 
-    mask = is0:ismax;
+%    is0 = min(find(spsin < 1)); %position where the ray enters the plasma 
+%    ismax = min([find(spsin >= 1 & ss > ss(is0)) - 1,ns]); %position where the ray leaves the plasma (if applicable) 
+%    mask = is0:ismax;
 end    
 %
 try
@@ -284,7 +286,7 @@ if imag(opt_disp) == 1,%relativistic calculation of the absorption coefficient
 	sbeta = sqrt(sTe/mc2);
     salphaphi_lin = zeros(1,ns);
     for n = 0:nmax,
-        salphaphi_lin = salphaphi_lin + alphaphi_fr_jd(sa,sb,sbeta,sNpar,real(sNperp),sepol_pmz,n);
+        salphaphi_lin = salphaphi_lin + omega_rf/clum*alphaphi_fr_jd(sa,sb,sbeta,sNpar,real(sNperp),sepol_pmz,n);
     end
 end
 %
