@@ -756,7 +756,7 @@ limit_dql = 1;
 %
 wpe_ref = sqrt(ne_ref*qe^2/me/e0);
 %
-if 1,%sum(sum(isnan(waveparam(:,:,13)))),
+if sum(sum(isnan(waveparam(:,:,13)))),
     xyPabs_rf_dke_fsav_mksa = 0;%initial absorbed power density estimate (Note, future work: could use linear theory)
 else
     xyPabs_rf_dke_fsav_mksa = waveparam(:,:,13).*waveparam(:,:,4).*waveparam(:,:,1)*me*lnc_e_ref*wpe_ref^2/(4*pi^2);
@@ -792,7 +792,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
 %
     if nb > 0,         
         xyD0_rf_mod = xyD0_rf_in.*xyPinc_mod./xyPinc_in;
-        if nit_rf > 1,
+        if 0,nit_rf > 1,
             xyredfac = redfac_dke_jd(waveparam,xyD0_rf_mod,betath_ref,limit_dql);
         else
             xyredfac = ones(nr,nb);
@@ -827,7 +827,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
 	        xyPabs_rf_dke_fsav_out = ZP0_ref.xy_rf_fsav; % flux-surface averaged density of absorbed power.
 	    end	    
         xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav_out*P_ref;
-        if 0,nit_rf > 1,
+        if nit_rf > 1,
             xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav_mksa.*xyredfac;
         end
 %
