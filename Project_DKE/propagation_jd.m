@@ -35,10 +35,11 @@ if length(xpsin) == 1,
 end
 %
 nb_rf = length(vsrays);
+nr = length(xpsin);
 %
-xyvray = []; %ray properties
-xyfinc = []; %incidence factor
-xyprop = []; %propagation factor (NaN is ray start, +1 is increasing psi, -1 is decreasing psi, 0 is non-applicable)
+xyvray = zeros(nr,0,13); %ray properties
+xyfinc = zeros(nr,0); %incidence factor
+xyprop = zeros(nr,0); %propagation factor (NaN is ray start, +1 is increasing psi, -1 is decreasing psi, 0 is non-applicable)
 yb = []; %list of ray starts
 %
 ibb = 0; %counting global number of ray
@@ -56,18 +57,23 @@ for ib = 1:nb_rf
     %    
     % positions where the ray enters and exits the plasma (at last closed FS)  
     %
-    is0 = min(find(spsin < 1)); %position where the ray enters the plasma 
-    if isempty(is0)
+    is0 = min(find(spsin < 1)); %position where the ray enters the plasma
+    is1 = max(find(spsin < 1)); %position where the ray definitely leaves the plasma
+    %
+    if isempty(is0), 
         disp('Warning: one ray did not enter the plasma and was rejected')
     else
         ibb = ibb + 1;%starting a new ray in xy matrices
-        ismax = min([find(spsin >= 1 & ss > ss(is0)) - 1,ns]); %position where the ray leaves the plasma (if applicable)
+        %ismax = min([find(spsin > 1 & ss > ss(is0)) - 1,ns]); %position where the ray leaves the plasma (if applicable)
     %
     % throw away path outside the last closed FS   
     %
-        vsray = vsray(:,is0:ismax);
-        ss = ss(is0:ismax);
-        spsin = spsin(is0:ismax);
+        %vsray = vsray(:,is0:ismax);
+        %ss = ss(is0:ismax);
+        %spsin = spsin(is0:ismax);
+        vsray = vsray(:,is0:is1);
+        ss = ss(is0:is1);
+        spsin = spsin(is0:is1);
 %    
         ns = length(ss);   
 %    
