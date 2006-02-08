@@ -237,12 +237,12 @@ else
 %
         ns = length(smask_ht);
         %
-        sNperp = sNperp_ht;
-        sepol_pmz = sepol_pmz_ht;
-        sphi_pmz(1,:) = abs(2*sPflow_ht(1,:)/e0/clum);
+        sNperp = sNperp_ht(smask_ht);
+        sepol_pmz = sepol_pmz_ht(:,smask_ht);
+        sphi_pmz(1,:) = abs(2*sPflow_ht(1,smask_ht)/e0/clum);
         sphi_pmz(2,:) = zeros(1,ns);
         sphi_pmz(3,:) = zeros(1,ns);       
-        salphaphi_lin = 2*sPabs_at/e0/clum;
+        salphaphi_lin = 2*sPabs_at(smask_ht)/e0/clum;
         %
         ss = ss(smask_ht);
         spsin = spsin(smask_ht);
