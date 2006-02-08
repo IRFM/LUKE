@@ -49,118 +49,151 @@ ibb = 0; %counting global number of ray
 time0 = clock;
 %
 for ib = 1:nb_rf
-    %
+%
     vsray = vsrays{ib};
     ss = vsray(1,:);
     spsin = vsray(2,:);
     ns = length(ss);
-    %    
-    % positions where the ray enters and exits the plasma (at last closed FS)  
-    %
-    is0 = min(find(spsin < 1)); %position where the ray enters the plasma
-    is1 = max(find(spsin < 1)); %position where the ray definitely leaves the plasma
-    %
-    if isempty(is0), 
+%    
+    if isempty(find(spsin < 1)), 
         disp('Warning: one ray did not enter the plasma and was rejected')
-    else
-        ibb = ibb + 1;%starting a new ray in xy matrices
-        %ismax = min([find(spsin > 1 & ss > ss(is0)) - 1,ns]); %position where the ray leaves the plasma (if applicable)
-    %
-    % throw away path outside the last closed FS   
-    %
-        %vsray = vsray(:,is0:ismax);
-        %ss = ss(is0:ismax);
-        %spsin = spsin(is0:ismax);
-        vsray = vsray(:,is0:is1);
-        ss = ss(is0:is1);
-        spsin = spsin(is0:is1);
-%    
-        ns = length(ss);   
-%    
-        is = 1;
+        continue
+    end
 %
-        ipsin = max(find(xpsin_S < spsin(is)));%initial FS on ray trajectory (generally last FS, but not necessarily (ex: EBW))
-        yb = [yb,[ibb;ib]];
-        bdir = 0;
+    if min(spsin) < 0 | max(isnan(spsin)), 
+        disp('Warning: one ray is ill defined (spsin < 0 or NaN) and was rejected')
+        continue
+    end
+%
+    if max(spsin) > 1, 
+        disp('Warning: ray positions outside the last FS are projected on that last FS')
+        spsin(find(spsin > 1)) = 1;
+    end
+%
+    ibb = ibb + 1;%starting a new ray in xy matrices
+%    
+    is = max([1,min(find(spsin < 1)) - 1]);
+%
+    ipsin = max(find(xpsin_S < spsin(is)));%initial FS on ray trajectory (generally last FS, but not necessarily (ex: EBW))
+    yb = [yb,[ibb;ib]];
+    bdir = -1;
+    bdir_new = bdir; 
+    going = 1;
 %
 % distribution of the ray on flux-surfaces
 %
-       if ns == 1%test case with local calculation on one flux-surface - no ray-tracing
-           xyprop(ipsin,ibb) = NaN;
-           xyfinc(ipsin,ibb) = 1;
-           xyvray(ipsin,ibb,:) = reshape(vsray(:,is),[1,1,12]);
-       end
-       while is < ns 
-          bpsinm = xpsin_S(ipsin); % lower bound of the current FS
-          bpsin = xpsin(ipsin); % center of the current FS
-          bpsinp = xpsin_S(ipsin + 1); % upper bound of the current FS
+    if ns == 1%test case with local calculation on one flux-surface - no ray-tracing
+        xyprop(ipsin,ibb) = NaN;
+        xyfinc(ipsin,ibb) = 1;
+        xyvray(ipsin,ibb,:) = reshape(vsray(:,is),[1,1,12]);
+        going = 0;
+    end
+    while going == 1 
+        bpsinm = xpsin_S(ipsin); % lower bound of the current FS
+        bpsin = xpsin(ipsin); % center of the current FS
+        bpsinp = xpsin_S(ipsin + 1); % upper bound of the current FS
 %        
 % position where ray exits the current FS (or last point on the ray path if last visited FS is reached)
 %
-          islim = min([find((ss > ss(is)) & (spsin < bpsinm | spsin > bpsinp)),ns]); 
+        islim = min([find((ss > ss(is)) & (spsin < bpsinm | spsin > bpsinp)),ns]); 
 %        
-          maskfs = is:islim; %ray trajectory within current FS
+        maskfs = is:islim; %ray trajectory within current FS
 %
-% dealing with extremums of spsin: if ray goes "around" the fs center within one fs, it is split at the extremum. 
+% dealing with extremums of spsin: if ray turns around, it is split at the extremum. 
 %    
-          dspfs = sign(diff(spsin(maskfs)));% "direction" of the ray in psi
-          ndspfs = length(dspfs);
-          for is_maskfs = 1:ndspfs,
-             if dspfs(is_maskfs) == 0,
-                dspfs(is_maskfs) = dspfs(is_maskfs - 1);
-             end
-          end
-          ipextrfs = find(dspfs(1:ndspfs-1).*dspfs(2:ndspfs) < 0); %extremum positions in spsin(s)
-          isextr = 0;
-          while ~isempty(ipextrfs)
-             if dspfs(ipextrfs(1))*(bpsin - spsin(ipextrfs(1) + is)) < 0 %ray goes "around" xpsin
-                islim = is + ipextrfs(1); %split into two contributions
-                maskfs = is:islim;
-                isextr = 1;
-                break
-             else % ray "turns before" xpsin
-                ipextrfs(1) = [];
-             end
-          end
+        is_f_0 = is - 1 + min(find((spsin(maskfs) - bpsin)*bdir_new > 0));
+%        
+        if isempty(is_f_0),%ray turns before the fs center
+            isint = find(abs(spsin(maskfs) - bpsin) == min(abs(spsin(maskfs) - bpsin)));
+            is_f = is - 1 + max(isint);
+            islim = is_f;
+            is_f_1 = [];
+%            
+        elseif is_f_0 == is,%ray has started or turned before the fs center
+            isint = find(abs(spsin(maskfs) - bpsin) == min(abs(spsin(maskfs) - bpsin)));
+            is_f = is - 1 + max(isint);
+            is_f_1 = [];
+%            
+        else,%ray goes past the fs center
+            is_f_1 = is_f_0 - 1 + min(find((spsin(is_f_0:islim) - bpsin)*bdir_new < 0));           
+        end
+%        
+        if ~isempty(is_f_1),%ray goes "around" the fs center
+            isext = find((spsin(is_f_0:is_f_1) - bpsin)*bdir_new == max((spsin(is_f_0:is_f_1) - bpsin)*bdir_new));
+            islim = is_f_0 - 1 + max(isext);
+        end        
 %        
 % propagation factor        
 %        
-          bdir_new = sign(spsin(islim) - spsin(is));
-          if bdir_new*bdir == -1 %change of direction in psi leads to splitting of ray
-             ibb = ibb + 1;
-          end
-          xyprop(ipsin,ibb) = bdir_new;
+        bdir_new = sign(spsin(islim) - spsin(is));
+        if bdir_new*bdir == -1 %change of direction in psi leads to splitting of ray
+            ibb = ibb + 1;
+        end
+        xyprop(ipsin,ibb) = bdir_new;
+%
+        bdir = bdir_new;
 %        
-% position where the ray reaches the center of the FS   
+        if is_f_0 > is & ~isempty(is_f_0),%ray goes past the fs center
+%        
+% interpolation for the center of the FS   
 %
-          is_f = min(find(abs(spsin(maskfs) - bpsin) == min(abs(spsin(maskfs) - bpsin)))) + is - 1;
+            vsray_f = interp1(spsin(is_f_0-1:is_f_0),vsray(:,is_f_0-1:is_f_0).',bpsin);
+            xyvray(ipsin,ibb,:) = reshape(vsray_f,[1,1,13]); %parameters vrays at center of FS
 %
-          xyvray(ipsin,ibb,:) = reshape(vsray(:,is_f),[1,1,13]); %parameters vrays at center of FS
+        else% ray turns around before center
+            xyvray(ipsin,ibb,:) = reshape(vsray(:,is_f),[1,1,13]); %parameters vrays at center of FS   
+        end
 %
-          bds = ss(islim) - ss(is);%path length of ray within the current FS
+% remove ray path outside FS
+%
+        if spsin(is) > bpsinp,
+            bds_0 = (ss(is+1) - ss(is))*(spsin(is) - bpsinp)/(spsin(is) - spsin(is+1));
+        elseif spsin(is) < bpsinm,
+            bds_0 = (ss(is+1) - ss(is))*(bpsinm - spsin(is))/(spsin(is+1) - spsin(is));
+        else
+            bds_0 = 0;
+        end
+%            
+        if spsin(islim) < bpsinm,
+            bds_1 = (ss(islim) - ss(islim-1))*(bpsinm - spsin(islim))/(spsin(islim-1) - spsin(islim));
+        elseif spsin(islim) > bpsinp,
+            bds_1 = (ss(islim) - ss(islim-1))*(spsin(islim) - bpsinp)/(spsin(islim) - spsin(islim-1));
+        else
+            bds_1 = 0;
+        end        
+%
+        bds = ss(islim) - ss(is) - bds_0 - bds_1;%path length of ray within the current FS
 %
 % local width of the FS: |dl| = |dpsi|/|grad psi| = |dpsin.psia|/|R.BP|
 %
-          thetab_f = vsray(3,is_f);
-          Rb_f = interp2(theta,ppsin,ptR,thetab_f,bpsin,method);
-          BPb_f = interp2(theta,ppsin,ptBP,thetab_f,bpsin,method);
+        thetab_f = vsray(3,is_f);
+        Rb_f = interp2(theta,ppsin,ptR,thetab_f,bpsin,method);
+        BPb_f = interp2(theta,ppsin,ptBP,thetab_f,bpsin,method);
 %
-          bdl = abs(xdpsin(ipsin)*psia./Rb_f./BPb_f); %width of the FS at theta = thetab
-          xyfinc(ipsin,ibb) = bds/bdl; %incidence factor
+        bdl = abs(xdpsin(ipsin)*psia./Rb_f./BPb_f); %width of the FS at theta = thetab
+        xyfinc(ipsin,ibb) = bds/bdl; %incidence factor
+%
+% test for stopping
+%
+        if islim == ns & spsin(ns) >= bpsinm & spsin(ns) <= bpsinp,
+            going = 0;
+        end
 %
 % next FS
 %
-          if isextr == 0 % ray is not split at an extremum in psi: it either reaches another FS or stops
-             if spsin(islim) < bpsin %reaches a more inward FS
+        if ~isempty(is_f_0) & isempty(is_f_1) % ray is not split at an extremum in psi: it either reaches another FS or stops
+            if bdir_new < 0 %reaches a more inward FS
                 ipsin = ipsin - 1;
-             else %reaches a more outward FS
+            else %reaches a more outward FS
                 ipsin = ipsin + 1;
-             end
-          end
-          is = islim;
-          bdir = bdir_new;
-       end
-   end  
+            end
+            is = islim - 1; 
+        else
+            is = islim;
+            bdir_new = - bdir;
+        end
+    end
+%
 	if display_mode >= 1,info_dke_yp(2,['Preprocessing of launched ray #',int2str(ib),'/',int2str(nb_rf),' done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
 
 end
