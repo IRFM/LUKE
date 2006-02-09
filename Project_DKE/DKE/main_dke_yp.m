@@ -191,28 +191,28 @@ if ~isempty(transpfaste),%Radial transport without DKE calculations
 end
 %
 if display_mode == 2, 
-	h1000 = figure('tag','Pitch-angle grid');tilefigs_dke_yp(h1000);
+	h1000 = figure('Name','Pitch-angle grid');tilefigs_dke_yp(h1000);
 	plot(1:nmhu,mhu,'bo',1:nmhu,mhum,'g*',1:nmhu,mhup,'r+');grid on;zoom on;
 	axis([1,nmhu+1,-1,1])
 	title('Pitch-angle grid');
 	xlabel('Index');
 	ylabel('mhu');
 %
-	h1001 = figure('tag','Momentum grid');tilefigs_dke_yp(h1001);
+	h1001 = figure('Name','Momentum grid');tilefigs_dke_yp(h1001);
 	plot(1:np,pn,'bo',1:np,pnm,'g*',1:np,pnp,'r+');grid on;zoom on; 
 	axis([1,np+1,0,max(pnp)])
 	title('Momentum grid');
 	xlabel('Index');
 	ylabel('pn');
 %
-	h1002 = figure('tag','Momentum step grid');tilefigs_dke_yp(h1002);
+	h1002 = figure('Name','Momentum step grid');tilefigs_dke_yp(h1002);
 	semilogx(pn,dpn,'bo',pnm,dpnm,'g*',pnp,dpnp,'r+');grid on;zoom on; 
 	title('Momentum mesh (grid step)');
 	xlabel('pn');
 	ylabel('dpn');
 
 %	
-	h1003 = figure('tag','Radial grid');tilefigs_dke_yp(h1003);
+	h1003 = figure('Name','Radial grid');tilefigs_dke_yp(h1003);
 	plot(1:nr,xpsin,'bo',r_dke,xpsin(r_dke),'r+',r_dke,xrho(r_dke),'bx');grid on;zoom on; 
 	axis([0,nr+1,0,1])
 	title('Radial mesh');
@@ -507,13 +507,13 @@ for ir = 1:nr,
 			view = 0;
 %
 			if ir == ir_display-1,
-				figure('tag','Inital distribution'),subplot(131);zoom on
+				figure('Name','Inital distribution'),subplot(131);zoom on
 				view = 1;
 			elseif ir == ir_display,
-				figure('tag','Inital distribution'),subplot(132);zoom on
+				figure('Name','Inital distribution'),subplot(132);zoom on
 				view = 1;
 			elseif ir == ir_display+1,
-				figure('tag','Inital distribution'),subplot(133);zoom on
+				figure('Name','Inital distribution'),subplot(133);zoom on
 				view = 1;
 			end	
 %		
@@ -548,13 +548,13 @@ for ir = 1:nr,
 %
 			view = 0;
 			if ir == ir_display-1,
-				figure('tag','Inital distribution at pperp=0'),subplot(231);zoom on
+				figure('Name','Inital distribution at pperp=0'),subplot(231);zoom on
 				view = 1;
 			elseif ir == ir_display,
-				figure('tag','Inital distribution at pperp=0'),subplot(232);zoom on
+				figure('Name','Inital distribution at pperp=0'),subplot(232);zoom on
 				view = 1;
 			elseif ir == ir_display+1,
-				figure('tag','Inital distribution at pperp=0'),subplot(233);zoom on
+				figure('Name','Inital distribution at pperp=0'),subplot(233);zoom on
 				view = 1;
 			end
 %
@@ -567,13 +567,13 @@ for ir = 1:nr,
 %           
 			view = 0;
 			if ir == ir_display-1,
-				figure('tag','Electron velocity'),subplot(234);zoom on
+				figure('Name','Electron velocity'),subplot(234);zoom on
 				view = 1;
 			elseif ir == ir_display,
-				figure('tag','Electron velocity'),subplot(235);zoom on
+				figure('Name','Electron velocity'),subplot(235);zoom on
 				view = 1;
 			elseif ir == ir_display+1,
-				figure('tag','Electron velocity'),subplot(236);zoom on
+				figure('Name','Electron velocity'),subplot(236);zoom on
 				view = 1;
 			end  
 %
@@ -585,7 +585,7 @@ for ir = 1:nr,
 		else
 			view = 0;
 			if ir == ir_display,
-				figure('tag','Inital distribution'),subplot(132);zoom on
+				figure('Name','Inital distribution'),subplot(132);zoom on
 				view = 1;
 			end
 %
@@ -619,7 +619,7 @@ for ir = 1:nr,
 %
 			view = 0;
 			if ir == ir_display,
-				figure('tag','Inital distribution at pperp=0'),subplot(232);zoom on
+				figure('Name','Inital distribution at pperp=0'),subplot(232);zoom on
 				view = 1;
 			end
 %
@@ -632,7 +632,7 @@ for ir = 1:nr,
 %           
 			view = 0;
 			if ir == ir_display,
-				figure('tag','Electron velocity'),subplot(235);zoom on;pause(time_pause)
+				figure('Name','Electron velocity'),subplot(235);zoom on;pause(time_pause)
 				view = 1;
 			end    
 %
@@ -647,7 +647,7 @@ for ir = 1:nr,
 		if radial_mode == 1,
 			view = 0;
 			if ir == ir_display,
-				figure('tag','Fast electron radial diffusion'),subplot(121);zoom on
+				figure('Name','Fast electron radial diffusion'),subplot(121);zoom on
 				view = 1;
 			end
 %
@@ -679,7 +679,7 @@ for ir = 1:nr,
 %
 			view = 0;
 			if ir == ir_display,
-				figure('tag','Fast electron radial pinch'),subplot(121);zoom on
+				figure('Name','Fast electron radial pinch'),subplot(121);zoom on
 				view = 1;
 			end
 %
@@ -713,17 +713,17 @@ for ir = 1:nr,
 end
 %
 if display_mode == 2,
-	figure('tag','Metric relation'),subplot(121),plot(xpsin,xrho,'r-.',xpsin,xrho,'b+');grid on;zoom on
+	figure('Name','Metric relation'),subplot(121),plot(xpsin,xrho,'r-.',xpsin,xrho,'b+');grid on;zoom on
 	xlabel('psi/psia');ylabel('rho');title('Metric relation');
 	axis('square');axis([0,1,0,1]);
-	figure('tag','Metric relation'),subplot(122),plot(xrho,xpsin,'r-.',xrho,xpsin,'b+');grid on;zoom on
+	figure('Name','Metric relation'),subplot(122),plot(xrho,xpsin,'r-.',xrho,xpsin,'b+');grid on;zoom on
 	xlabel('rho');ylabel('psi/psia');title('Metric relation');
 	axis('square');axis([0,1,0,1]);
 	pause(time_pause);
 end	
 %
 if radial_mode == 1 & display_mode == 2,
-	h1005 = figure('tag','Fast electron radial transport velocity threshold');tilefigs_dke_yp(h1005);
+	h1005 = figure('Name','Fast electron radial transport velocity threshold');tilefigs_dke_yp(h1005);
 	subplot(121),plot(xrho,xvparmin_r_ref,'g-x');grid on;zoom on;
 	axis([0,1,0,1.1*max(xvparmin_r_ref)]);
 	xlabel('rho');
@@ -736,7 +736,7 @@ if radial_mode == 1 & display_mode == 2,
 	title('Radial transport');
 	pause(time_pause);
 %
-	h1006 = figure('tag','Fast electron radial transport');tilefigs_dke_yp(h1006);
+	h1006 = figure('Name','Fast electron radial transport');tilefigs_dke_yp(h1006);
 	subplot(121),plot(xrho,xmaxDr_ref,'b-o');grid on;zoom on;
 	if sum(xmaxDr_ref) ~= 0,axis([0,1,0,1.1*max(xmaxDr_ref)]);end
 	xlabel('rho');
@@ -836,7 +836,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
         end
 %
         residue_rf(it_rf) = max(max(abs(xyPinc_mod - xyPinc_mod_old)./xyPinc_in));
-        figure('tag','Quasilinear iteration')        
+        figure('Name','Quasilinear iteration')        
         plot(1:it_rf,residue_rf,'r+')
         set(gca,'yscale','log')
         axis([0,nit_rf,1e-5,1])

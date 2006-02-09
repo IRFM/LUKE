@@ -34,7 +34,7 @@ function [vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr] = bremchord_dke_yp(equil
 %         3) Bp.s > 0
 % The consequence is that when BT.Ip > 0, (Ip is the plsma current vector) psi increases from the plasma center to the edge (the vector psi goes out of the plasma)
 % In most machines, BT is clockwise when the machine is viewed from the top (Z axis is positive towards the top) 
-% With the definitions above, if Ip is positive, psi is turned outward, Bp is counterclockwise poloidally, and s too. The Ampère theorem is OK !
+% With the definitions above, if Ip is positive, psi is turned outward, Bp is counterclockwise poloidally, and s too. The AmpÃ¨re theorem is OK !
 % The HXR diagnostic arrangement is taking this frame of reference. Check the figures. Take care if BT is counterclockwise...
 %
 if nargin < 5,
@@ -200,10 +200,10 @@ sB = sqrt(sBR.^2 + sBZ.^2 + sBphi.^2);
 sksid = -sIpdir.*((sBR.*cos(sphi) - sBphi.*sin(sphi)).*gX_hxr + (-sBR.*sin(sphi) + sBphi.*cos(sphi)).*gY_hxr + sBZ.*gZ_hxr)./sB;%cosine between magnetic field line and chord direction (towards the detector)
 %
 if display >= 1
-    figure('tag','Safety factor'),
+    figure('Name','Safety factor'),
     [ax] = graph1D_jd(ptrho,xq,0,0,'Normalized radius {\rho}','q','Safety factor',NaN,'','','-','none','b',2);pause(0.5);%Safety factor profile
 %
-   figure('tag','Bremsstrahlung tomography (Poloidal view)'),
+   figure('Name','Bremsstrahlung tomography (Poloidal view)'),
 	[ax] = graph1D_jd(sR,sZ,0,0,'','','',NaN,'','','-','none','b',2);pause(0.5);%Poloidal plot
    hold on
    for ir = 1:length(xpsin_S),
@@ -215,7 +215,7 @@ if display >= 1
 	graph1D_jd(ptR,ptZ,0,0,'X=R (m)','Z (m)','Bremsstrahlung tomography (Poloidal view)',NaN,'','','-','non','r',1);
    hold off
 %
-	figure('tag','Poloidal field'),
+	figure('Name','Poloidal field'),
 	quiver(RR_pol,ZZ_pol,BR_pol,BZ_pol);
 	axis('equal');
 	hold on
@@ -224,7 +224,7 @@ if display >= 1
 	graph1D_jd(VVR_pol,VVZ_pol,0,0,'X=R (m)','Z (m)','Poloidal field (T)',NaN,'','','-.','non','r',1);
 	hold off  	
 %
-	figure('tag','Bremsstrahlung tomography (Toroidal top view, Z = 0)')
+	figure('Name','Bremsstrahlung tomography (Toroidal top view, Z = 0)')
 	h = quiver(X_mfl_lcs(1:40:end),Y_mfl_lcs(1:40:end),BX_mfl_lcs(1:40:end),BY_mfl_lcs(1:40:end),0.5);%Magnetic field line direction
 	set(h,'Color','k');
 	hold on

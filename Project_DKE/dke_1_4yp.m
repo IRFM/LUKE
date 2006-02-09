@@ -1278,19 +1278,19 @@ if display_mode >= 1,
 end
 %
 if display_mode == 2 & strcmp(computer,'MAC') == 0,%Spy function seems to crash MatLab 6.5.1 on MAC OSX slow processor....
-    figure('tag','Momentum space matrix'),spy(MMXP_f_t);
+    figure('Name','Momentum space matrix'),spy(MMXP_f_t);
     zoom on;
     axis('square');
     title('Momentum space matrix');
 %
     if radial_mode == 1,
-        figure('tag','Configuration space matrix'),spy(MMXR_f_t);
+        figure('Name','Configuration space matrix'),spy(MMXR_f_t);
         zoom on;
         axis('square');
         title('Configuration space matrix');    
     end
 %
-    figure('tag','Total preconditionned matrix'),spy(MMXPC_f_t);
+    figure('Name','Total preconditionned matrix'),spy(MMXPC_f_t);
     zoom on;
     axis('square');
     title('Total preconditionned matrix');
@@ -1303,7 +1303,7 @@ if display_mode >= 1,
 end
 %
 if display_mode >= 2,
-    figure('tag','Code validity with Ohmic electric field'),semilogy(xrho,abs(xEfield_validity),'r+')
+    figure('Name','Code validity with Ohmic electric field'),semilogy(xrho,abs(xEfield_validity),'r+')
     xlabel('r/a')
     ylabel('Fp_e/Fp_coll at pth_ref')
     zoom on, grid on
@@ -1392,31 +1392,31 @@ for it_f = 2:nit_f,
             if display_mode == 2,
                 if dke_mode == 1,
                     if ir == ir_display-1,
-                        figure('tag','Fokker-Planc equation convergence status'),subplot(321),semilogy(-pn,XXfM(:,2,ir),'g--',pn,XXfM(:,nmhu-1,ir),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
+                        figure('Name','Fokker-Planc equation convergence status'),subplot(321),semilogy(-pn,XXfM(:,2,ir),'g--',pn,XXfM(:,nmhu-1,ir),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
                         axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
                         title(['Iteration: ',int2str(it_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
                         hold on;zoom on
-                        figure('tag','Fokker-Planc equation convergence status'),subplot(322),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],max(residu_f(:,1:it_f)),'gx',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
+                        figure('Name','Fokker-Planc equation convergence status'),subplot(322),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],max(residu_f(:,1:it_f)),'gx',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
                         axis('square');axis([0,it_f,prec0_f/10,1e-4]);
                         title(['Convergence - f (rho=',num2str(xrho(ir)),')']);xlabel('Iteration');ylabel('Residu')
                         hold on;zoom on
                         pause(time_pause);
                     elseif ir == ir_display,
-                        figure('tag','Fokker-Planc equation convergence status'),subplot(323),semilogy(-pn,XXfM(:,2,ir),'g--',pn,XXfM(:,nmhu-1,ir),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
+                        figure('Name','Fokker-Planc equation convergence status'),subplot(323),semilogy(-pn,XXfM(:,2,ir),'g--',pn,XXfM(:,nmhu-1,ir),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
                         axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
                         title(['Iteration: ',int2str(it_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
                         hold on;zoom on
-                        figure('tag','Fokker-Planc equation convergence status'),subplot(324),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],max(residu_f(:,1:it_f)),'gx',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
+                        figure('Name','Fokker-Planc equation convergence status'),subplot(324),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],max(residu_f(:,1:it_f)),'gx',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
                         axis('square');axis([0,it_f,prec0_f/10,1e-4]);
                         title(['Convergence - f (rho=',num2str(xrho(ir)),')']);xlabel('Iteration');ylabel('Residu')
                         hold on;zoom on
                         pause(time_pause);
                     elseif ir == ir_display+1,
-                        figure('tag','Fokker-Planc equation convergence status'),subplot(325),semilogy(-pn,XXfM(:,2,ir),'g--',pn,XXfM(:,nmhu-1,ir),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
+                        figure('Name','Fokker-Planc equation convergence status'),subplot(325),semilogy(-pn,XXfM(:,2,ir),'g--',pn,XXfM(:,nmhu-1,ir),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
                         axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
                         title(['Iteration: ',int2str(it_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
                         hold on;zoom on
-                        figure('tag','Fokker-Planc equation convergence status'),subplot(326),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],max(residu_f(:,1:it_f)),'gx',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
+                        figure('Name','Fokker-Planc equation convergence status'),subplot(326),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],max(residu_f(:,1:it_f)),'gx',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
                         axis('square');axis([0,it_f,prec0_f/10,1e-4]);
                         title(['Convergence - f (rho=',num2str(xrho(ir)),')']);xlabel('Iteration');ylabel('Residu')
                         hold on;zoom on
@@ -1424,11 +1424,11 @@ for it_f = 2:nit_f,
                     end
                 else
                     if ir == ir_display,
-                        figure('tag','Fokker-Planc equation convergence status'),subplot(121),semilogy(-pn,XXfM(:,2,ir),'g--',pn,XXfM(:,nmhu-1,ir),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
+                        figure('Name','Fokker-Planc equation convergence status'),subplot(121),semilogy(-pn,XXfM(:,2,ir),'g--',pn,XXfM(:,nmhu-1,ir),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
                         axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
                         title(['Iteration: ',int2str(it_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
                         hold on;
-                        figure('tag','Fokker-Planc equation convergence status'),subplot(122),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],max(residu_f(:,1:it_f)),'gx',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
+                        figure('Name','Fokker-Planc equation convergence status'),subplot(122),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],max(residu_f(:,1:it_f)),'gx',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
                         axis('square');axis([0,it_f,prec0_f/10,1e-4]);
                         title(['Convergence - f (rho=',num2str(xrho(ir)),')']);xlabel('Iteration');ylabel('Residu')
                         hold on;
@@ -1481,8 +1481,8 @@ clear Xf0 Xf0_t Xq Xq_t Xf1 Xf1_t Xf1_tp Xf1_tm Xf1_ts XR_t XS_t XY_t
 clear f1 xf1 I1 I2 XI 
 %
 if display_mode == 2,
-    figure('tag','Fokker-Planc equation convergence status'),subplot(121),hold off;
-    figure('tag','Fokker-Planc equation convergence status'),subplot(122),hold off;
+    figure('Name','Fokker-Planc equation convergence status'),subplot(121),hold off;
+    figure('Name','Fokker-Planc equation convergence status'),subplot(122),hold off;
 end
 % 
 time0 = clock;
@@ -1620,11 +1620,11 @@ if dke_mode == 1,
                 end
 %
                 if jr2 == ir_display & display_mode == 2,
-                    figure('tag','Drift kinetic equation convergence status'),subplot(121),plot(-pn,Xf1_g(:,1),'r-',pn,Xf1_g(:,nmhu),'r-');%g(perp = 0)
+                    figure('Name','Drift kinetic equation convergence status'),subplot(121),plot(-pn,Xf1_g(:,1),'r-',pn,Xf1_g(:,nmhu),'r-');%g(perp = 0)
                     axis('square');set(gca,'xlim',[-10,10]);
                     title(['Iteration: ',int2str(it_g)]);xlabel('pn-ref');ylabel('g(pperp=0)')
                     hold on;zoom on
-                    figure('tag',''Drift kinetic equation convergence status'),subplot(122),semilogy([1:it_g],residu_g(ir_dke,1:it_g),'r+',[1:it_g],max(residu_g(:,1:it_g)),'gx',[1:it_g],prec0_g*ones(size([1:it_g])),'b--');
+                    figure('Name',''Drift kinetic equation convergence status'),subplot(122),semilogy([1:it_g],residu_g(ir_dke,1:it_g),'r+',[1:it_g],max(residu_g(:,1:it_g)),'gx',[1:it_g],prec0_g*ones(size([1:it_g])),'b--');
                     axis('square');axis([0,it_g,prec0_g/10,1e-4]);
                     title(['Convergence - g (rho=',num2str(xrho(jr2)),')']);xlabel('Iteration');ylabel('Residu')
                     hold on;zoom on
@@ -1683,11 +1683,11 @@ if display == 2,
 %           
         XfM = XXfM(:,:,ir_display-1);
         Xf0 = XXf0(:,:,ir_display-1);
-        figure('tag','Final convergence status'),subplot(321),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf0(:,2),'r-',pn,Xf0(:,nmhu-1),'r-');%f(perp = 0)
+        figure('Name','Final convergence status'),subplot(321),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf0(:,2),'r-',pn,Xf0(:,nmhu-1),'r-');%f(perp = 0)
         axis('square');axis([-max(pn),max(pn),1e-20,10]);zoom on
         title(['Iteration: ',int2str(nit_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
         hold on;zoom on
-        figure('tag','Final convergence status'),subplot(322),plot([1:nit_f],curr1(ir_display-1,:),'r-');
+        figure('Name','Final convergence status'),subplot(322),plot([1:nit_f],curr1(ir_display-1,:),'r-');
         axis('square');if max(max(curr1(ir_display-1,:))) ~= 0,axis([0,nit_f,0,1.1*max(max(curr1(ir_display-1,:)))]);end
         title('Convergence');xlabel('Iteration');ylabel('Current')
         hold on;zoom on
@@ -1695,11 +1695,11 @@ if display == 2,
 %
         XfM = XXfM(:,:,ir_display);
         Xf0 = XXf0(:,:,ir_display);
-        figure('tag','Final convergence status'),subplot(323),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf0(:,2),'r-',pn,Xf0(:,nmhu-1),'r-');%f(perp = 0)
+        figure('Name','Final convergence status'),subplot(323),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf0(:,2),'r-',pn,Xf0(:,nmhu-1),'r-');%f(perp = 0)
         axis('square');axis([-max(pn),max(pn),1e-20,10]);zoom on
         title(['Iteration: ',int2str(nit_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
         hold on;zoom on
-        figure('tag','Final convergence status'),subplot(324),plot([1:nit_f],curr1(ir_display,:),'r-');
+        figure('Name','Final convergence status'),subplot(324),plot([1:nit_f],curr1(ir_display,:),'r-');
         axis('square');if max(max(curr1(ir_display,:))) ~= 0,axis([0,nit_f,0,1.1*max(max(curr1(ir_display,:)))]);end
         title('Convergence');xlabel('Iteration');ylabel('Current')
         hold on;zoom on
@@ -1707,11 +1707,11 @@ if display == 2,
 %
         XfM = XXfM(:,:,ir_display+1);
         Xf0 = XXf0(:,:,ir_display+1);
-        figure('tag','Final convergence status'),subplot(325),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf0(:,2),'r-',pn,Xf0(:,nmhu-1),'r-');%f(perp = 0)
+        figure('Name','Final convergence status'),subplot(325),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf0(:,2),'r-',pn,Xf0(:,nmhu-1),'r-');%f(perp = 0)
         axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
         title(['Iteration: ',int2str(nit_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
         hold on;zoom on
-        figure('tag','Final convergence status'),subplot(326),plot([1:nit_f],curr1(ir_display+1,:),'r-');
+        figure('Name','Final convergence status'),subplot(326),plot([1:nit_f],curr1(ir_display+1,:),'r-');
         axis('square');if max(max(curr1(ir_display+1,:))) ~= 0,axis([0,nit_f,0,1.1*max(max(curr1(ir_display+1,:)))]);end
         title('Convergence');xlabel('Iteration');ylabel('Current')
         hold on;zoom on
@@ -1720,11 +1720,11 @@ if display == 2,
         XfM = XXfM(:,:,ir_display);
         Xf0 = XXf0(:,:,ir_display);
 %
-        figure('tag','Final convergence status'),subplot(121),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf0(:,2),'r-',pn,Xf0(:,nmhu-1),'r-');%f(perp = 0)
+        figure('Name','Final convergence status'),subplot(121),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf0(:,2),'r-',pn,Xf0(:,nmhu-1),'r-');%f(perp = 0)
         axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
         title(['Iteration: ',int2str(nit_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
         hold on;
-        figure('tag','Final convergence status'),subplot(122),plot([1:nit_f],curr1(ir_display,:),'r-');
+        figure('Name','Final convergence status'),subplot(122),plot([1:nit_f],curr1(ir_display,:),'r-');
         axis('square');if max(max(curr1(ir_display,:))) ~= 0,axis([0,nit_f,0,1.1*max(max(curr1(ir_display,:)))]);end
         title('Current convergence');xlabel('Iteration');ylabel('Current')
         hold on;
