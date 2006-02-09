@@ -264,7 +264,7 @@ if display_mode >= 2,
 % displays the equilibrium profiles
 %
     if flag_id, 
-       figure(50),clf
+       figure('tag','Magnetic equilibrium profile parameters'),clf
        set(gcf,'units','inches','position',[0.5,1,10,6]);
        set(gca,'position',[0,0,1,1]);
 %
@@ -303,7 +303,7 @@ if display_mode >= 2,
     Zmax = max(max(equil.Z));
    
     %
-    figure(fig_id),clf
+    figure('tag','Magnetic equilibrium flux surface contour'),clf
 %    
     [ax] = graph1D_jd(sR',sZ',0,0,'','','',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','r',2);pause(0.5)
     [ax] = graph1D_jd(stR,stZ,0,0,'R(m)','Z(m)','Flux-surfaces labeled by \rho=0,0.1,0.2...1',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','b',0.5);pause(0.5)

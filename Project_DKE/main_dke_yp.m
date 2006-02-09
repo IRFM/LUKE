@@ -9,6 +9,10 @@ function [Znorm_ref,Zcurr_ref,ZP0_ref,time_out,memoryLU_f_out,memoryLU_g_out,rad
 %
 %by Y.Peysson (CEA-DRFC) <yves.peysson@cea.fr> and J. Decker (MIT/RLE) <jodecker@mit.edu>
 %
+if nargin < 10,
+    error('Wrong number of input arguments in main_dke_yp')
+end
+%   
 format long e;
 global nfig;
 [s,dossier,machine] = comput_dke_yp;
@@ -132,7 +136,7 @@ radial.xmhu0T2 = xmhu0T2;
 radial.r_dke = r_dke;
 radial.ir_display = ir_display;
 %
-if diary_mode == 1, 
+if diary_mode == 1 & display_mode >=1,
 	diaryfile = ['diary_dke_',int2str(iloop)];
 	delete(diaryfile);
 	diary(diaryfile);
@@ -187,28 +191,28 @@ if ~isempty(transpfaste),%Radial transport without DKE calculations
 end
 %
 if display_mode == 2, 
-	h1000 = figure(1000);tilefigs_dke_yp(h1000);
+	h1000 = figure('tag','Pitch-angle grid');tilefigs_dke_yp(h1000);
 	plot(1:nmhu,mhu,'bo',1:nmhu,mhum,'g*',1:nmhu,mhup,'r+');grid on;zoom on;
 	axis([1,nmhu+1,-1,1])
-	title('Pitch-angle mesh');
+	title('Pitch-angle grid');
 	xlabel('Index');
 	ylabel('mhu');
 %
-	h1001 = figure(1001);tilefigs_dke_yp(h1001);
+	h1001 = figure('tag','Momentum grid');tilefigs_dke_yp(h1001);
 	plot(1:np,pn,'bo',1:np,pnm,'g*',1:np,pnp,'r+');grid on;zoom on; 
 	axis([1,np+1,0,max(pnp)])
-	title('Momentum mesh');
+	title('Momentum grid');
 	xlabel('Index');
 	ylabel('pn');
 %
-	h1002 = figure(1002);tilefigs_dke_yp(h1002);
+	h1002 = figure('tag','Momentum step grid');tilefigs_dke_yp(h1002);
 	semilogx(pn,dpn,'bo',pnm,dpnm,'g*',pnp,dpnp,'r+');grid on;zoom on; 
 	title('Momentum mesh (grid step)');
 	xlabel('pn');
 	ylabel('dpn');
 
 %	
-	h1003 = figure(1003);tilefigs_dke_yp(h1003);
+	h1003 = figure('tag','Radial grid');tilefigs_dke_yp(h1003);
 	plot(1:nr,xpsin,'bo',r_dke,xpsin(r_dke),'r+',r_dke,xrho(r_dke),'bx');grid on;zoom on; 
 	axis([0,nr+1,0,1])
 	title('Radial mesh');
@@ -249,14 +253,14 @@ if syn_mode == 1
     disp('-------------------------------------------------------------------------------------------------------------------');
 end
 %
-if diary_mode == 1,
+if diary_mode == 1 & display_mode >=1,,
 	disp(['--------------------------------------------- Simulation parameters ----------------------------------------------']);
 	disp(['- Simulation number = ',num2str(snumber)]);
-    disp(['- Pitch-angle and momentum grids uniformity: (0) no, (1) yes = ',num2str(grid_uniformity)]);
-    disp(['- Pitch-angle grid calculation method: (0): old method, (1) new method = ',num2str(grid_power ~= 0)]);
-    if grid_power ~= 0
+   disp(['- Pitch-angle and momentum grids uniformity: (0) no, (1) yes = ',num2str(grid_uniformity)]);
+   disp(['- Pitch-angle grid calculation method: (0): old method, (1) new method = ',num2str(grid_power ~= 0)]);
+   if grid_power ~= 0
         disp(['- Pitch-angle grid step variation power: ',num2str(grid_power)]);
-    end
+   end
 	disp(['- Effective number of pitch-angle values for the distribution function grid (half grid) nmhu = ',num2str(nmhu)]);
 	disp(['- Effective number of momentum values for the distribution function grid (half grid) np = ',num2str(np)]);
 	disp(['- Maximum value of the momentum grid (pth_ref) pnmax =  ',num2str(pn(np))]);
@@ -503,13 +507,13 @@ for ir = 1:nr,
 			view = 0;
 %
 			if ir == ir_display-1,
-				figure(1),subplot(131);zoom on
+				figure('tag','Inital distribution'),subplot(131);zoom on
 				view = 1;
 			elseif ir == ir_display,
-				figure(1),subplot(132);zoom on
+				figure('tag','Inital distribution'),subplot(132);zoom on
 				view = 1;
 			elseif ir == ir_display+1,
-				figure(1),subplot(133);zoom on
+				figure('tag','Inital distribution'),subplot(133);zoom on
 				view = 1;
 			end	
 %		
@@ -544,13 +548,13 @@ for ir = 1:nr,
 %
 			view = 0;
 			if ir == ir_display-1,
-				figure(2),subplot(231);zoom on
+				figure('tag','Inital distribution at pperp=0'),subplot(231);zoom on
 				view = 1;
 			elseif ir == ir_display,
-				figure(2),subplot(232);zoom on
+				figure('tag','Inital distribution at pperp=0'),subplot(232);zoom on
 				view = 1;
 			elseif ir == ir_display+1,
-				figure(2),subplot(233);zoom on
+				figure('tag','Inital distribution at pperp=0'),subplot(233);zoom on
 				view = 1;
 			end
 %
@@ -563,13 +567,13 @@ for ir = 1:nr,
 %           
 			view = 0;
 			if ir == ir_display-1,
-				figure(2),subplot(234);zoom on
+				figure('tag','Electron velocity'),subplot(234);zoom on
 				view = 1;
 			elseif ir == ir_display,
-				figure(2),subplot(235);zoom on
+				figure('tag','Electron velocity'),subplot(235);zoom on
 				view = 1;
 			elseif ir == ir_display+1,
-				figure(2),subplot(236);zoom on
+				figure('tag','Electron velocity'),subplot(236);zoom on
 				view = 1;
 			end  
 %
@@ -581,7 +585,7 @@ for ir = 1:nr,
 		else
 			view = 0;
 			if ir == ir_display,
-				figure(1),subplot(132);zoom on
+				figure('tag','Inital distribution'),subplot(132);zoom on
 				view = 1;
 			end
 %
@@ -615,7 +619,7 @@ for ir = 1:nr,
 %
 			view = 0;
 			if ir == ir_display,
-				figure(2),subplot(232);zoom on
+				figure('tag','Inital distribution at pperp=0'),subplot(232);zoom on
 				view = 1;
 			end
 %
@@ -628,7 +632,7 @@ for ir = 1:nr,
 %           
 			view = 0;
 			if ir == ir_display,
-				figure(2),subplot(235);zoom on;pause(time_pause)
+				figure('tag','Electron velocity'),subplot(235);zoom on;pause(time_pause)
 				view = 1;
 			end    
 %
@@ -643,7 +647,7 @@ for ir = 1:nr,
 		if radial_mode == 1,
 			view = 0;
 			if ir == ir_display,
-				figure(1007),subplot(121);zoom on
+				figure('tag','Fast electron radial diffusion'),subplot(121);zoom on
 				view = 1;
 			end
 %
@@ -675,7 +679,7 @@ for ir = 1:nr,
 %
 			view = 0;
 			if ir == ir_display,
-				figure(1008),subplot(121);zoom on
+				figure('tag','Fast electron radial pinch'),subplot(121);zoom on
 				view = 1;
 			end
 %
@@ -709,17 +713,17 @@ for ir = 1:nr,
 end
 %
 if display_mode == 2,
-	figure(2000),subplot(121),plot(xpsin,xrho,'r-.',xpsin,xrho,'b+');grid on;zoom on
+	figure('tag','Metric relation'),subplot(121),plot(xpsin,xrho,'r-.',xpsin,xrho,'b+');grid on;zoom on
 	xlabel('psi/psia');ylabel('rho');title('Metric relation');
 	axis('square');axis([0,1,0,1]);
-	figure(2000),subplot(122),plot(xrho,xpsin,'r-.',xrho,xpsin,'b+');grid on;zoom on
+	figure('tag','Metric relation'),subplot(122),plot(xrho,xpsin,'r-.',xrho,xpsin,'b+');grid on;zoom on
 	xlabel('rho');ylabel('psi/psia');title('Metric relation');
 	axis('square');axis([0,1,0,1]);
 	pause(time_pause);
 end	
 %
 if radial_mode == 1 & display_mode == 2,
-	h1005 = figure(1005);tilefigs_dke_yp(h1005);
+	h1005 = figure('tag','Fast electron radial transport velocity threshold');tilefigs_dke_yp(h1005);
 	subplot(121),plot(xrho,xvparmin_r_ref,'g-x');grid on;zoom on;
 	axis([0,1,0,1.1*max(xvparmin_r_ref)]);
 	xlabel('rho');
@@ -732,7 +736,7 @@ if radial_mode == 1 & display_mode == 2,
 	title('Radial transport');
 	pause(time_pause);
 %
-	h1006 = figure(1006);tilefigs_dke_yp(h1006);
+	h1006 = figure('tag','Fast electron radial transport');tilefigs_dke_yp(h1006);
 	subplot(121),plot(xrho,xmaxDr_ref,'b-o');grid on;zoom on;
 	if sum(xmaxDr_ref) ~= 0,axis([0,1,0,1.1*max(xmaxDr_ref)]);end
 	xlabel('rho');
@@ -817,7 +821,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
         betath_ref,xepsi_ref_fsav_in,waveparam,nmax_rf,...
         XXDr_ref,XXVr_ref,...
         XXnhuloss_ref,xdeltaripple,...
-        xftp_norm_ref,bounce,Dqlmax,coll_mode,...
+        xftp_norm_ref,bounce,it_rf,coll_mode,...
         norm_mode_f,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,temppath,snumber,XXfinit_ref);
 %
     if ~isempty(waveparam) & nit_rf > 1,
@@ -832,7 +836,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
         end
 %
         residue_rf(it_rf) = max(max(abs(xyPinc_mod - xyPinc_mod_old)./xyPinc_in));
-        figure(1)        
+        figure('tag','Quasilinear iteration')        
         plot(1:it_rf,residue_rf,'r+')
         set(gca,'yscale','log')
         axis([0,nit_rf,1e-5,1])
@@ -912,7 +916,7 @@ if syn_mode == 1
         betath_ref,xepsi_bc_ref_fsav_in,waveparam_bc,nmax_rf,...
         XXDr_ref,XXVr_ref,...
         XXnhuloss_ref,xdeltaripple,...
-        xftp_norm_ref,bounce,Dqlmax,coll_mode,...
+        xftp_norm_ref,bounce,1,coll_mode,...
         norm_mode_f,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,temppath,snumber,XXfinit_ref);
 %
     time_bc_out = etime(clock,time0_bc);

@@ -200,10 +200,10 @@ sB = sqrt(sBR.^2 + sBZ.^2 + sBphi.^2);
 sksid = -sIpdir.*((sBR.*cos(sphi) - sBphi.*sin(sphi)).*gX_hxr + (-sBR.*sin(sphi) + sBphi.*cos(sphi)).*gY_hxr + sBZ.*gZ_hxr)./sB;%cosine between magnetic field line and chord direction (towards the detector)
 %
 if display >= 1
-    figure(10000),
+    figure('tag','Safety factor'),
     [ax] = graph1D_jd(ptrho,xq,0,0,'Normalized radius {\rho}','q','Safety factor',NaN,'','','-','none','b',2);pause(0.5);%Safety factor profile
 %
-   figure(10001),
+   figure('tag','Bremsstrahlung tomography (Poloidal view)'),
 	[ax] = graph1D_jd(sR,sZ,0,0,'','','',NaN,'','','-','none','b',2);pause(0.5);%Poloidal plot
    hold on
    for ir = 1:length(xpsin_S),
@@ -215,7 +215,7 @@ if display >= 1
 	graph1D_jd(ptR,ptZ,0,0,'X=R (m)','Z (m)','Bremsstrahlung tomography (Poloidal view)',NaN,'','','-','non','r',1);
    hold off
 %
-	figure(10002),
+	figure('tag','Poloidal field'),
 	quiver(RR_pol,ZZ_pol,BR_pol,BZ_pol);
 	axis('equal');
 	hold on
@@ -224,7 +224,7 @@ if display >= 1
 	graph1D_jd(VVR_pol,VVZ_pol,0,0,'X=R (m)','Z (m)','Poloidal field (T)',NaN,'','','-.','non','r',1);
 	hold off  	
 %
-	figure(10003)
+	figure('tag','Bremsstrahlung tomography (Toroidal top view, Z = 0)')
 	h = quiver(X_mfl_lcs(1:40:end),Y_mfl_lcs(1:40:end),BX_mfl_lcs(1:40:end),BY_mfl_lcs(1:40:end),0.5);%Magnetic field line direction
 	set(h,'Color','k');
 	hold on
@@ -238,7 +238,7 @@ if display >= 1
 	graph1D_jd(VVX,VVY,0,0,'','','',NaN,'','','-.','non','r',1);
 	graph1D_jd(HHX,HHY,0,0,'','','',NaN,'','','-.','non','r',1);
 	graph1D_jd(X_mfl_lcs(1:3:end),Y_mfl_lcs(1:3:end),0,0,'','','',NaN,'','',':','non','k',1);%Z < 0 
-	graph1D_jd(X_mfl_lcs(find(Z_mfl_lcs>=0)),Y_mfl_lcs(find(Z_mfl_lcs>=0)),0,0,'X (m)','Y (m)','Bremsstrahlung tomography (Top view, Z = 0)','B-field, (Ip: green)','','','-','non','k',1);%Z >= 0 
+	graph1D_jd(X_mfl_lcs(find(Z_mfl_lcs>=0)),Y_mfl_lcs(find(Z_mfl_lcs>=0)),0,0,'X (m)','Y (m)','Bremsstrahlung tomography (Toroidal top view, Z = 0)','B-field, (Ip: green)','','','-','non','k',1);%Z >= 0 
 	hold off
 	set(gca,'YDir','rev');%Because the reference is indirect by definition
 end

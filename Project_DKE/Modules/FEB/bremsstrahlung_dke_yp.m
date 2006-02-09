@@ -122,7 +122,7 @@ for i = 1:size(psin_hxr,1),%radial position
 %
 % Test of the reconstruction of the distribution function on the Legendre polynomial basis
 %
-				figure(10004),
+				figure('tag','Distribution function'),
 				ylab = ['f(norm initial: ',num2str(norm0_hxr(i_test,j_test)),', norm recontructed: ',num2str(normi_hxr(i_test,j_test)),')'];
 				tit = ['Distribution function at {\rho} = ',num2str(rho_out),' and {\theta}_{pol} = ',num2str(theta_out*180/pi),' (Deg)'];
 %				
@@ -163,7 +163,7 @@ for i = 1:size(psin_hxr,1),%radial position
 				xlim1 = [-pnmax_S,pnmax_S];xlim2 = [0,pnmax_S];
 				siz = 20;red = 0.95;
 %
-				figure(10005)				
+				figure('tag','Distribution function contour 1')				
 				graph2D_jd(ppar_cyl,pperp_cyl,Xfinit_cyl','','','',xlim1,xlim2,0,betath_ref,[0:0.5:pnmax_S],0,'-','b',0.5,siz,red,max(max(Xf0_cyl)));
 				graph2D_jd(ppar_cyl,pperp_cyl,Xf0_cyl','p_{||}/p_{Te}^{ref}','p_{\perp}/p_{Te}^{ref}','Distribution function',xlim1,xlim2,0,betath_ref,[0:0.5:pnmax_S],0,'-','r',2,siz,red,max(max(Xfinit_cyl)));
 				axis('equal');
@@ -176,7 +176,7 @@ for i = 1:size(psin_hxr,1),%radial position
 					 line([0,-pnmax_S*sqrt(mhubounce2_0)],[0,pnmax_S*sqrt(1 - mhubounce2_0)],'color','k');
 			   end				
 %
-				figure(10006),
+				figure('tag','Distribution function contour 2'),
 				graph2D_jd(ppar_cyl,pperp_cyl,Xfinit_cyl','','','',xlim1,xlim2,0,betath_ref,[0:0.5:pnmax_S],0,'-','b',0.5,siz,red,max(max(Xf_hxr_cyl)));
 				graph2D_jd(ppar_cyl,pperp_cyl,Xf_hxr_cyl','p_{||}/p_{Te}^{ref}','p_{\perp}/p_{Te}^{ref}','Distribution function',xlim1,xlim2,0,betath_ref,[0:0.5:pnmax_S],0,'-','r',2,siz,red,max(max(Xfinit_cyl)));
 				axis('equal');
@@ -204,7 +204,7 @@ for i = 1:size(psin_hxr,1),%radial position
 				brem_4pi = permute(reshape(squeeze(ZZIB(i,j,1,:))/2,1,size(IB_c1,2),size(IB_c1,3)),[2,3,1]);%Mean 4pi emission per steradian				
 %
 				if display_mode >= 1,
-				   figure(10007),
+				   figure('tag','Bremshrahlung forward - perp - backward'),
 					graph1D_jd(kphot,brem_forward,0,1,'','','',NaN,'','','-','non','r',2);
 					graph1D_jd(kphot,brem_backward,0,1,'','','',NaN,'','','-','non','b',2);
 					graph1D_jd(kphot,brem_4pi,0,1,'','','',NaN,'','','-.','non','g',2);
@@ -227,7 +227,7 @@ end
 %
 disp('-------------------------------------------------------------------------------------------------------------------');
 if display_mode >= 1,%Display the quality of the reconstruction of the electron distribution function
-	figure(10008),
+	figure('tag','Distribution normalization'),
 	graph1D_jd(xrho,xne_norm,0,0,'','','',NaN,'','','-','non','b',2);
 	graph1D_jd(xrho,norm0_hxr,0,0,'','','',NaN,'','','--','non','r',2);
 	graph1D_jd(xrho,normi_hxr,0,0,'Normalized radius {\rho}','Normalization (local density)','Normalization of the electron distribution function',NaN,'','','-.','non','g',2);
