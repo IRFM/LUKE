@@ -337,7 +337,9 @@ if herm_mode == 1,
     %
     dXdNpar  = (dXdNpar + dXdNpar')/2;
     %
-    phiT_xyz = -(e_xyz(1)'*dXdNperp*e_xyz + e_xyz(3)'*dXdNpar*e_xyz)/2;
+    phiT_xyz(1,1) = -e_xyz'*dXdNperp*e_xyz/2;
+    phiT_xyz(2,1) = 0;
+    phiT_xyz(3,1) = -e_xyz'*dXdNpar*e_xyz/2;
     phiP_xyz = N - real((e_xyz'*N)*e_xyz);
     %
     phiT_pmz = M_xypm*phiT_xyz; %pmz
