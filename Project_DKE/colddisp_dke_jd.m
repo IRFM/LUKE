@@ -1,5 +1,5 @@
 function [Nperpp,Nperpm,Kxyz,ep_xyz,em_xyz,ep_pmz,em_pmz,ep_pyk,em_pyk,phip_xyz,phim_xyz,phip_pmz,phim_pmz,phip_pyk,phim_pyk]...
-    = colddisp_dke_jd(Npar,omega_rf,ne,zni,zZi,zmi,Bfield);
+    = colddisp_dke_jd(Npar,omega_rf,ne,zni,zZi,zmi,Bfield,Nperp);
 %
 % This function solves the dispersion relation and the wave equation
 % in the linear cold plasma model. It calculates the perpendicular index of
@@ -13,7 +13,7 @@ function [Nperpp,Nperpm,Kxyz,ep_xyz,em_xyz,ep_pmz,em_pmz,ep_pyk,em_pyk,phip_xyz,
 % - (p,y,k): p and y are the transverse components of the polarization, with 
 %           respect to the wave vector. k is the longitudinal component.
 %
-% The power flow is: phi = Re[e x (N x e*)] = Re[N - (N . e)e*]  
+% The power flow is: phi = Re[e x (N x e*)] = Re[N - (N . e)e*] (electromagnetic approximation only) 
 %
 %   INPUTS: 
 %
@@ -24,6 +24,7 @@ function [Nperpp,Nperpm,Kxyz,ep_xyz,em_xyz,ep_pmz,em_pmz,ep_pyk,em_pyk,phip_xyz,
 %       - zZi: ion charges [1,i] 
 %       - zmi: ion masses (mp) [1,i]  
 %       - Bfield: magnetic field amplitude [1,1]
+%       - Nperp: Perpendicular refractive index (optional) [1,1]
 %
 %   OUTPUTS:
 %
@@ -36,7 +37,7 @@ function [Nperpp,Nperpm,Kxyz,ep_xyz,em_xyz,ep_pmz,em_pmz,ep_pyk,em_pyk,phip_xyz,
 %       - em_pmz: polarization vector in the (p,m,z) coordinates (root -) [3,1]  
 %       - ep_pyk: polarization vector in the (p,y,k) coordinates (root +) [3,1]  
 %       - em_pyk: polarization vector in the (p,y,k) coordinates (root -) [3,1] 
-%       - phip_xyz: power flow in the (x,y,z) coordinates (root +) [3,1]
+%       - phip_xyz: power flow vector in the (x,y,z) coordinates (root +) [3,1]
 %       - phim_xyz: power flow vector in the (x,y,z) coordinates (root -) [3,1] 
 %       - phip_pmz: power flow vector in the (p,m,z) coordinates (root +) [3,1] 
 %       - phim_pmz: power flow vector in the (p,m,z) coordinates (root -) [3,1]  
@@ -46,10 +47,7 @@ function [Nperpp,Nperpm,Kxyz,ep_xyz,em_xyz,ep_pmz,em_pmz,ep_pyk,em_pyk,phip_xyz,
 % created 05/02/2003
 % by Joan Decker <jodecker@alum.mit.edu> (MIT/RLE) and  Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 % 
-qe = 1.6022e-19;%Electron charge (C)
-me = 9.1094e-31;%Electron rest mass (Kg)
-mp = 1.6726e-27;%Proton rest mass (Kg)
-e0 = 8.8542e-12;%Free space permeability (F/m)
+[qe,me,mp,mn,e0] = pc_dke_yp;
 %
 ns = [ne;zni(:)];
 qs = qe*[-1;zZi(:)];
@@ -73,15 +71,26 @@ Kxyz = [Kperp,-i*Kxy,0;i*Kxy,Kperp,0;0,0,Kpar];
 %
 %   Dispersion relation
 %
-A = Kperp;
-B = (Npar^2 - Kperp)*(Kperp + Kpar) + Kxy^2;
-C = Kpar*((Npar^2 - Kperp)^2 - Kxy^2);
+if nargin == 8,%Nperp is an input variable
+   Nxyzp = [Nperp;0;Npar];
+   Nxyzm = [Nperp;0;Npar];
+   Nperpp = Nperp;
+   Nperpm = Nperp;
+elseif nargin == 7,%Nperp is calculated from the cold dispersion relation
+   A = Kperp;
+   B = (Npar^2 - Kperp)*(Kperp + Kpar) + Kxy^2;
+   C = Kpar*((Npar^2 - Kperp)^2 - Kxy^2);
 %
-Nperpp = sqrt((-B + sqrt(B^2-4*A*C))/(2*A));
-Nperpm = sqrt((-B - sqrt(B^2-4*A*C))/(2*A));
+   Nperpp = sqrt((-B + sqrt(B^2-4*A*C))/(2*A));
+   Nperpm = sqrt((-B - sqrt(B^2-4*A*C))/(2*A));
 %
-Nxyzp = [Nperpp;0;Npar];         
-Nxyzm = [Nperpm;0;Npar];         
+% Note: root + corresponds to the slow LH wave when Kperp > 0
+%
+   Nxyzp = [Nperpp;0;Npar];         
+   Nxyzm = [Nperpm;0;Npar]; 
+else
+   error('Wrong number of input arguments in colddisp_dke_jd');
+end
 %
 %   Dispersion tensor for + root
 %
