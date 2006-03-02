@@ -166,7 +166,7 @@ for ib = 1:nb_rf
 %
 % local width of the FS: |dl| = |dpsi|/|grad psi| = |dpsin.psia|/|R.BP|
 %
-        thetab_f = vsray(3,is_f);
+        thetab_f = xyvray(ipsin,ibb,3);
         Rb_f = interp2(theta,ppsin,ptR,thetab_f,bpsin,method);
         BPb_f = interp2(theta,ppsin,ptBP,thetab_f,bpsin,method);
 %
