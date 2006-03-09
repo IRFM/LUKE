@@ -803,7 +803,6 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
 		  info_dke_yp(2,'---------------------------------------------------------');
         info_dke_yp(2,['Quasilinear iteration : ',int2str(it_rf),', Residu = ',num2str(residue_rf(it_rf))]);
 		  info_dke_yp(2,'---------------------------------------------------------');
-
  %
         if it_rf > 2 & residue_rf(it_rf-1) < prec_rf*10,
             delta_rt = 0;
@@ -906,7 +905,7 @@ end
 %
 %Build the radial structure for output
 %
-radial.xhro = xrho;
+radial.xrho = xrho;
 radial.ap = ap;
 radial.Rp = Rp;
 radial.Zp = Zp;
