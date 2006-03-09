@@ -2,9 +2,10 @@ function [XXheaviside,...
     XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,...
     Znorm,Zcurr,ZP0,...
     ZXXS,ZYXXD_rf,...
-    XxRR_fsav,xMRR_flux_ref,xMRR_tau_ref,...
+    XxRR_fsav,xMRR_flux_ref,xMRR_tau_ref,xnsource_ref,...
     xTe_out_norm,xft_fsav,xfteff_fsav,xmhubounce2,xepsi_rdke,...
-    memoryLU_f,memoryLU_g] = dke_1_4yp(tokname,save_id,theta,...
+    memoryLU_f,memoryLU_g,...
+	 normf0,curr0,ZXXf0] = dke_1_4yp(tokname,save_id,theta,...
     XR,XZ,XBR,XBZ,XBphi,...
     xB0,xR0,xBT0,xBp0,Rp,Zp,ap,...
     mhu,dmhu,mhum,dmhum,mhup,dmhup,mhu_S,...
@@ -13,9 +14,9 @@ function [XXheaviside,...
     xTe_norm,xne_norm,zZi,zmi,xzni_norm,xzTi_norm,xZeff,xrnhuth,...
     betath_ref,xepsi_fsav,waveparam,nmax_rf,...
     XXDr,XXVr,...
-    XXnhuloss,delta,...
-    xftp_norm,bounce,it_rf,coll_mode,...
-    norm_mode,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,temppath,snumber,XXfinit)
+    XXsource,XXlossripple,...
+    xftp_norm,bounce,it_rf,xnloss,coll_mode,...
+    norm_mode,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,temppath,XXfinit)
 %
 %
 %   Self-consistent 3-D relativistic solver of the drift kinetic equation in momentum space with Beliaev-Budker collision integrals 
@@ -52,7 +53,7 @@ function [XXheaviside,...
 %       - XXDlh: LH normalized quasi-linear diffusion coefficient (nhuth_ref*pth_ref^2) [np,nmhu,nr]
 %       - XXDcy: EC normalized quasi-linear diffusion coefficient (nhuth_ref*pth_ref^2) [np,nmhu,nr]
 %       - param_cy: *******************normalized EC frequency [1,nr]
-%       - XXnhuloss: normalized loss frequency (nhuth_ref) [np,nmhu,nr]
+%       - XXsource: normalized source/loss frequency (nhuth_ref) [np,nmhu,nr]
 %       - xepsi_fsav: flux surface averaged normalized ohmic electric field (pth_ref*nhuth_ref/e) [1,nr]
 %       - rdke: list of radial positions indexes at which FP or DKE are solved [1,nr_dke].  
 %       - bounce: First argument: bounce averaged option, (0) no trapping, (1) trapping full implicit calculations, second argument: Fokker-Planck (0) or Drift Kinetic Equation (1 or 2) [1,2]
@@ -118,87 +119,9 @@ function [XXheaviside,...
 %Fokker-Planck part originally done by Y. Peysson 
 %Drift kinetic calculations for arbitrary magnetic equilibrium done by J. Decker (MIT-RLE) <jodecker@mit.edu> and Y. Peysson (CEA-DRFC) <yves.peysson@cea.fr>
 %
-if nargin < 59,
+if nargin < 69,
     error('Wrong number of input arguments in dke_1_4yp')
-elseif nargin == 59,
-    coll_mode = 2;
-    norm_mode = 0;
-    boundary_mode = [1,1];
-    dtn = 1000;
-    prec0 = [1e-10,1e-10];
-    nit = [50,200];
-    invproc = 1;
-    param_inv = [1e-3,20];
-    display = [0,1,1];
-    store_mode = 0;
-    snumber = 1;
-elseif nargin == 60,
-    norm_mode = 0;
-    boundary_mode = [1,1];
-    dtn = 1000;
-    prec0 = [1e-10,1e-10];
-    nit = [50,200];
-    invproc = 1;
-    param_inv = [1e-3,20];
-    display = [0,1,1];
-    store_mode = 0;
-    snumber = 1;
-elseif nargin == 61,
-    boundary_mode = [1,1];
-    prec0 = [1e-10,1e-10];
-    nit = [50,200];
-    invproc = 1;
-    param_inv = [1e-3,20];
-    display = [0,1,1];
-    store_mode = 0;
-    snumber = 1;
-elseif nargin == 62,
-    dtn = 1000;
-    prec0 = [1e-10,1e-10];
-    nit = [50,200];
-    invproc = 1;
-    param_inv = [1e-3,20];
-    display = [0,1,1];
-    store_mode = 0;
-    snumber = 1;
-elseif nargin == 63,
-    prec0 = [1e-10,1e-10];
-    nit = [50,200];
-    invproc = 1;
-    param_inv = [1e-3,20];
-    display = [0,1,1];
-    store_mode = 0;
-    snumber = 1;
-elseif nargin == 64,
-    nit = [50,200];
-    invproc = 1;
-    param_inv = [1e-3,20];
-    display = [0,1,1];
-    store_mode = 0;
-    snumber = 1;
-elseif nargin == 65,
-    invproc = 1;
-    param_inv = [1e-3,20];
-    display = [0,1,1];
-    store_mode = 0;
-    snumber = 1;
-elseif nargin == 66,
-    param_inv = [1e-3,20];  
-    display = [0,1,1];
-    store_mode = 0;
-    snumber = 1;
-elseif nargin == 67,
-    display = [0,1,1];  
-    store_mode = 0;
-    snumber = 1;
-elseif nargin == 68,    
-    store_mode = 0;
-    snumber = 1;
-elseif nargin == 69,    
-    snumber = 1;
 end
-%
-narginmax = 69;
 %
 timeCPU0 = cputime;
 %
@@ -536,8 +459,6 @@ for ir_dke = 1:nr_dke,
     end 
 end 
 %
-if nargin < narginmax,XXfinit = zeros(np,nmhu,nr);end;%For the initial guess of f0
-%
 Pabs = zeros(1,nr);
 Pcoll = zeros(1,nr);
 trapped_fraction = NaN*ones(1,nr);
@@ -709,7 +630,7 @@ for ir = 1:nr,
 % 
 %Loss matrix coefficients (for magnetic ripple losses but may be used for other effects if necessary)
 %
-    XXc(:,:,ir) = XXc(:,:,ir) + XXnhuloss(:,:,ir).*Xpn2;
+    XXc(:,:,ir) = XXc(:,:,ir) + XXlossripple(:,:,ir).*Xpn2;
 %
 %Boundaries of the bounce domain for f0
 %   
@@ -1233,7 +1154,7 @@ clear F1_1 F2_1 F1_2 B1_1 B1_2 B1_3 B1_4 B1_5 B2_1 B2_2 B2_3
 clear F1 F2 F XF F1m F2m Fm F1p F2p Fp XFm XFp A XA Am Ap XAm XAp B1 B2 Bt XBt 
 clear MXP_f_t MXPC_f_t MXPDI_f_t MXP_tp_t MXP_c_tp_t MXP_g_t MXPC_g_t MXPDI_g_t
 clear Xmask Xmask_g Xmask_tp
-clear Xnhuloss XI_th Xf0_g_th
+clear Xsource XI_th Xf0_g_th
 clear jmhut_min jmhut_max
 %
 if display_mode >= 1,info_dke_yp(2,['Full elapsed time for matrix calculation: ',num2str(etime(clock,time00)),' (s)']);end
@@ -1317,14 +1238,13 @@ for ir = 1:nr,
     curr0(ir,1) = 2*pi*integral_dke_jd(dpn',pn2'.*(pn'./gamma').*integral_dke_jd(dmhu,Xmhu.*XXfinit(:,:,ir),2),1)*xne_norm(ir)/normf0(ir,1);
 end
 %
-ZXXf0{1} = XXfinit;%Time evolution of the distribution function is stored (only valid if no self-consistent calculations are done for Dql)
-%
-for it_f = 2:nit_f,     
-    if sum(residu_f(:,it_f-1) >= prec0_f) >= 1 & sum(prec_residu_f(:,it_f-1)) >= prec0_f | it_f < 7,
+for it_f = 2:(nit_f+1),     
+    if sum(residu_f(:,it_f-1) >= prec0_f) >= 1 & sum(prec_residu_f(:,it_f-1)) >= prec0_f ,%| it_f < 7
 %   
         MMXf0_t = [];
         MMXq_t = [];
         MMXIpn2_t = [];
+        MMXsource_t = [];
 %
         for ir = 1:nr,
             if store_mode == 1,
@@ -1339,10 +1259,11 @@ for it_f = 2:nit_f,
             end
 %
             MMXf0_t = [MMXf0_t;reshape(XXf0(:,Zmask_f0_t{ir},ir)',(nmhu - ns_f(ir))*npn,1)];
+            MMXsource_t = [MMXsource_t;reshape(XXsource(:,Zmask_f0_t{ir},ir)',(nmhu - ns_f(ir))*npn,1)];
             MMXIpn2_t = [MMXIpn2_t;(xqtilde(ir)/xB0(ir))*reshape((XI_t.*Zpn2_t{ir})',(nmhu - ns_f(ir))*npn,1)];%Zpn2_t is here as part of the partial Jacobian used to avoid singularities at p = 0 and psi = 0, and for pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2
         end 
 %
-        MMXq_t = MMXIpn2_t + (MMXT_f_t - (time_scheme - 1)*(MMXP_f_t + MMXR_f_t)/time_scheme)*MMXf0_t;%Right handside term of the Fokker-Planck equation
+        MMXq_t = MMXsource_t + MMXIpn2_t + (MMXT_f_t - (time_scheme - 1)*(MMXP_f_t + MMXR_f_t)/time_scheme)*MMXf0_t;%Right handside term of the Fokker-Planck equation
 %
         MMXR_t = MMXPDI_f_t*MMXq_t - MMXPC_f_t*MMXf0_t;%Residu calculation for matrix inversion
 %
@@ -1354,7 +1275,7 @@ for it_f = 2:nit_f,
             [MMXS_t,flaginv_f] = qmr(MMXPC_f_t,MMXR_t,prec_inv,maxit_inv,MMXL_f_t,MMXU_f_t);
         end
 %
-      if flaginv_f == 2,
+        if flaginv_f == 2,
             error('WARNING: Matrix ill-conditionned. No inversion possible for the zero order Fokker-Planck equation. Try to reduce drop tolerance parameter for LU factorization...!');
         end
 %
@@ -1372,8 +1293,8 @@ for it_f = 2:nit_f,
                 Xf1(:,nmhu/2 + 1 - ns_f(ir):nmhu/2) = fliplr(Xf1_t(:,nmhu/2 + 1 - ns_f(ir):nmhu/2));
             end
 %
-         normf0(ir,it_f) = 2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,XXf0(:,:,ir),2),1);
-            normf1(ir,it_f) = 2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,Xf1,2),1);
+            normf0(ir,it_f) = 2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,XXf0(:,:,ir),2),1);            
+            normf1(ir,it_f) = 2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,Xf1,2),1);           
             curr0(ir,it_f) = 2*pi*integral_dke_jd(dpn',pn2'.*(pn'./gamma').*integral_dke_jd(dmhu,Xmhu.*XXf0(:,:,ir),2),1)*xne_norm(ir)/normf0(ir,it_f);
             curr1(ir,it_f) = 2*pi*integral_dke_jd(dpn',pn2'.*(pn'./gamma').*integral_dke_jd(dmhu,Xmhu.*Xf1,2),1)*xne_norm(ir)/normf1(ir,it_f);
             prec_curr(ir,it_f) = (curr1(ir,it_f) - curr0(ir,it_f))/curr0(ir,it_f);
@@ -1382,41 +1303,42 @@ for it_f = 2:nit_f,
             prec_residu_f(ir,it_f) = abs((residu_f(ir,it_f) - residu_f(ir,it_f-1))/residu_f(ir,it_f));%For radial transport calculations    
 %
             if display_mode >= 1,
-                info_dke_yp(2,['Quasilinear iteration : ',int2str(it_rf),'Fokker-Planck iteration : ',int2str(it_f),' / ',int2str(nit_f),', Residu = ',num2str(residu_f(ir,it_f))]);
+            	 disp(' ');           	 
+                info_dke_yp(2,['Quasilinear iteration : ',int2str(it_rf),', Fokker-Planck iteration : ',int2str(it_f-1),' / ',int2str(nit_f),', Residu = ',num2str(residu_f(ir,it_f)),' / ',num2str(prec0_f)]);
                 info_dke_yp(2,['   Normalized poloidal magnetic flux: ',num2str(xpsin(ir))]);
                 info_dke_yp(2,['      Normalized radius on LFS midplane: ',num2str(xrho(ir)),' / Radius index number: ',int2str(ir)]);
-                disp(['                - Density [t-1]: ',num2str(normf0(ir,it_f-1)),' - [t]: ',num2str(normf1(ir,it_f)),' / Relative variation [t-t0]: ',num2str(prec_normf(ir,it_f))]);               
+                disp(['                - Density [t-1]: ',num2str(normf0(ir,it_f-1)),' - [t]: ',num2str(normf1(ir,it_f)),' / Relative variation [t-t0]: ',num2str(prec_normf(ir,it_f)),' / Absolute variation [dt]: ',num2str(normf1(ir,it_f) - normf0(ir,it_f))]);               
                 disp(['                - Current [t-1]: ',num2str(curr0(ir,it_f-1)),' - [t]: ',num2str(curr1(ir,it_f)),' / Current relative accuracy [dt]: ',num2str(prec_curr(ir,it_f))]);
             end
 %
             if display_mode == 2,
                 if dke_mode == 1,
                     if ir == ir_display-1,
-                        figure('Name','Fokker-Planc equation convergence status'),subplot(321),semilogy(-pn,XXfM(:,2,ir),'g--',pn,XXfM(:,nmhu-1,ir),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
+                        figure('Name','Fokker-Planck equation convergence status'),subplot(321),semilogy(-pn,XXfM(:,2,ir),'g--',pn,XXfM(:,nmhu-1,ir),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
                         axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
                         title(['Iteration: ',int2str(it_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
                         hold on;zoom on
-                        figure('Name','Fokker-Planc equation convergence status'),subplot(322),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],max(residu_f(:,1:it_f)),'gx',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
+                        figure('Name','Fokker-Planck equation convergence status'),subplot(322),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],max(residu_f(:,1:it_f)),'gx',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
                         axis('square');axis([0,it_f,prec0_f/10,1e-4]);
                         title(['Convergence - f (rho=',num2str(xrho(ir)),')']);xlabel('Iteration');ylabel('Residu')
                         hold on;zoom on
                         pause(time_pause);
                     elseif ir == ir_display,
-                        figure('Name','Fokker-Planc equation convergence status'),subplot(323),semilogy(-pn,XXfM(:,2,ir),'g--',pn,XXfM(:,nmhu-1,ir),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
+                        figure('Name','Fokker-Planck equation convergence status'),subplot(323),semilogy(-pn,XXfM(:,2,ir),'g--',pn,XXfM(:,nmhu-1,ir),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
                         axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
                         title(['Iteration: ',int2str(it_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
                         hold on;zoom on
-                        figure('Name','Fokker-Planc equation convergence status'),subplot(324),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],max(residu_f(:,1:it_f)),'gx',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
+                        figure('Name','Fokker-Planck equation convergence status'),subplot(324),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],max(residu_f(:,1:it_f)),'gx',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
                         axis('square');axis([0,it_f,prec0_f/10,1e-4]);
                         title(['Convergence - f (rho=',num2str(xrho(ir)),')']);xlabel('Iteration');ylabel('Residu')
                         hold on;zoom on
                         pause(time_pause);
                     elseif ir == ir_display+1,
-                        figure('Name','Fokker-Planc equation convergence status'),subplot(325),semilogy(-pn,XXfM(:,2,ir),'g--',pn,XXfM(:,nmhu-1,ir),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
+                        figure('Name','Fokker-Planck equation convergence status'),subplot(325),semilogy(-pn,XXfM(:,2,ir),'g--',pn,XXfM(:,nmhu-1,ir),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
                         axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
                         title(['Iteration: ',int2str(it_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
                         hold on;zoom on
-                        figure('Name','Fokker-Planc equation convergence status'),subplot(326),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],max(residu_f(:,1:it_f)),'gx',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
+                        figure('Name','Fokker-Planck equation convergence status'),subplot(326),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],max(residu_f(:,1:it_f)),'gx',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
                         axis('square');axis([0,it_f,prec0_f/10,1e-4]);
                         title(['Convergence - f (rho=',num2str(xrho(ir)),')']);xlabel('Iteration');ylabel('Residu')
                         hold on;zoom on
@@ -1424,11 +1346,11 @@ for it_f = 2:nit_f,
                     end
                 else
                     if ir == ir_display,
-                        figure('Name','Fokker-Planc equation convergence status'),subplot(121),semilogy(-pn,XXfM(:,2,ir),'g--',pn,XXfM(:,nmhu-1,ir),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
+                        figure('Name','Fokker-Planck equation convergence status'),subplot(121),semilogy(-pn,XXfM(:,2,ir),'g--',pn,XXfM(:,nmhu-1,ir),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
                         axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
                         title(['Iteration: ',int2str(it_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
                         hold on;
-                        figure('Name','Fokker-Planc equation convergence status'),subplot(122),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],max(residu_f(:,1:it_f)),'gx',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
+                        figure('Name','Fokker-Planck equation convergence status'),subplot(122),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],max(residu_f(:,1:it_f)),'gx',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
                         axis('square');axis([0,it_f,prec0_f/10,1e-4]);
                         title(['Convergence - f (rho=',num2str(xrho(ir)),')']);xlabel('Iteration');ylabel('Residu')
                         hold on;
@@ -1460,7 +1382,6 @@ for it_f = 2:nit_f,
             normf0(ir,it_f) = normf1(ir,it_f);
             curr0(ir,it_f) = curr1(ir,it_f);
 %           
-            ZXXf0{it_f} = XXf0(:,:,ir);%For time evolution studies
         end
     else            
         if sum(prec_residu_f(:,it_f-1)) < prec0_f,info_dke_yp(2,['WARNING: stationnary residu but convergence not achieved for f0 after ',int2str(it_f),' iterations. Time step likely too large !']);end
@@ -1473,16 +1394,13 @@ for it_f = 2:nit_f,
 end
 if display_mode >= 1,info_dke_yp(2,['Convergence achieved for zero order Fokker-Planck calculations in ',num2str(etime(clock,time0)),' (s)']);end
 %
-filename = ['TIME_',tokname,'_S',int2str(snumber),'.mat'];%Time evolution is stored in a separated file
-save(filename,'dtn','normf0','curr0','ZXXf0');
-%
 clear ir fM XfM MMXPC_f_t MMXPDI_f_t Xmask_f0 MMXL_f_t MMXU_f_t
 clear Xf0 Xf0_t Xq Xq_t Xf1 Xf1_t Xf1_tp Xf1_tm Xf1_ts XR_t XS_t XY_t
 clear f1 xf1 I1 I2 XI 
 %
 if display_mode == 2,
-    figure('Name','Fokker-Planc equation convergence status'),subplot(121),hold off;
-    figure('Name','Fokker-Planc equation convergence status'),subplot(122),hold off;
+    figure('Name','Fokker-Planck equation convergence status'),subplot(121),hold off;
+    figure('Name','Fokker-Planck equation convergence status'),subplot(122),hold off;
 end
 % 
 time0 = clock;
@@ -1624,7 +1542,7 @@ if dke_mode == 1,
                     axis('square');set(gca,'xlim',[-10,10]);
                     title(['Iteration: ',int2str(it_g)]);xlabel('pn-ref');ylabel('g(pperp=0)')
                     hold on;zoom on
-                    figure('Name',''Drift kinetic equation convergence status'),subplot(122),semilogy([1:it_g],residu_g(ir_dke,1:it_g),'r+',[1:it_g],max(residu_g(:,1:it_g)),'gx',[1:it_g],prec0_g*ones(size([1:it_g])),'b--');
+                    figure('Name','Drift kinetic equation convergence status'),subplot(122),semilogy([1:it_g],residu_g(ir_dke,1:it_g),'r+',[1:it_g],max(residu_g(:,1:it_g)),'gx',[1:it_g],prec0_g*ones(size([1:it_g])),'b--');
                     axis('square');axis([0,it_g,prec0_g/10,1e-4]);
                     title(['Convergence - g (rho=',num2str(xrho(jr2)),')']);xlabel('Iteration');ylabel('Residu')
                     hold on;zoom on
@@ -1804,13 +1722,13 @@ end
 %f0 contribution
 %
 [ZXXS.p0_c_imj,ZXXS.p0_c_ipj,ZXXS.m0_c_ijm,ZXXS.m0_c_ijp] = ...
-    fluxes_dke_jd(ZXXD_c.pp_imj(:,:,rdke),ZXXD_c.pp_ipj(:,:,rdke),ZXXD_c.pm_imj(:,:,rdke),ZXXD_c.pm_ipj(:,:,rdke),...
-    ZXXF_c.p_imj(:,:,rdke),ZXXF_c.p_ipj(:,:,rdke),...
-    ZXXD_c.mm_ijm(:,:,rdke),ZXXD_c.mm_ijp(:,:,rdke),ZXXD_c.mp_ijm(:,:,rdke),ZXXD_c.mp_ijp(:,:,rdke),...
-    ZXXF_c.m_ijm(:,:,rdke),ZXXF_c.m_ijp(:,:,rdke),...
-    XXf0(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
-    XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
-    XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
+   fluxes_dke_jd(ZXXD_c.pp_imj(:,:,rdke),ZXXD_c.pp_ipj(:,:,rdke),ZXXD_c.pm_imj(:,:,rdke),ZXXD_c.pm_ipj(:,:,rdke),...
+   ZXXF_c.p_imj(:,:,rdke),ZXXF_c.p_ipj(:,:,rdke),...
+   ZXXD_c.mm_ijm(:,:,rdke),ZXXD_c.mm_ijp(:,:,rdke),ZXXD_c.mp_ijm(:,:,rdke),ZXXD_c.mp_ijp(:,:,rdke),...
+   ZXXF_c.m_ijm(:,:,rdke),ZXXF_c.m_ijp(:,:,rdke),...
+   XXf0(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
+   XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
+   XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
 %    
 ZP0.x_c_fsav = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).*XXpn2m(:,:,rdke)./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*ZXXS.p0_c_imj,1),1)';       
 %
@@ -1818,7 +1736,6 @@ if dke_mode >= 1
 %
 %f0_tp contribution
 %
-
     [ZXXS.p0_c_tp_imj,ZXXS.p0_c_tp_ipj,ZXXS.m0_c_tp_ijm,ZXXS.m0_c_tp_ijp] = ...
         fluxes_dke_jd(ZXXD_c_tp.pp_imj,ZXXD_c_tp.pp_ipj,ZXXD_c_tp.pm_imj,ZXXD_c_tp.pm_ipj,...
         ZXXF_c_tp.p_imj,ZXXF_c_tp.p_ipj,...
@@ -1849,13 +1766,13 @@ end
 %f0 contribution
 %
 [ZXXS.p0_e_imj,ZXXS.p0_e_ipj,ZXXS.m0_e_ijm,ZXXS.m0_e_ijp] = ...
-    fluxes_dke_jd(ZXXD_e.pp_imj(:,:,rdke),ZXXD_e.pp_ipj(:,:,rdke),ZXXD_e.pm_imj(:,:,rdke),ZXXD_e.pm_ipj(:,:,rdke),...
-    ZXXF_e.p_imj(:,:,rdke),ZXXF_e.p_ipj(:,:,rdke),...
-    ZXXD_e.mm_ijm(:,:,rdke),ZXXD_e.mm_ijp(:,:,rdke),ZXXD_e.mp_ijm(:,:,rdke),ZXXD_e.mp_ijp(:,:,rdke),...
-    ZXXF_e.m_ijm(:,:,rdke),ZXXF_e.m_ijp(:,:,rdke),...
-    XXf0(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
-    XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
-    XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
+   fluxes_dke_jd(ZXXD_e.pp_imj(:,:,rdke),ZXXD_e.pp_ipj(:,:,rdke),ZXXD_e.pm_imj(:,:,rdke),ZXXD_e.pm_ipj(:,:,rdke),...
+   ZXXF_e.p_imj(:,:,rdke),ZXXF_e.p_ipj(:,:,rdke),...
+   ZXXD_e.mm_ijm(:,:,rdke),ZXXD_e.mm_ijp(:,:,rdke),ZXXD_e.mp_ijm(:,:,rdke),ZXXD_e.mp_ijp(:,:,rdke),...
+   ZXXF_e.m_ijm(:,:,rdke),ZXXF_e.m_ijp(:,:,rdke),...
+   XXf0(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
+   XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
+   XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
 % 
 ZP0.x_e_fsav = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).*XXpn2m(:,:,rdke)./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*ZXXS.p0_e_imj,1),1)';       
 %
@@ -1917,7 +1834,7 @@ end
 xX = ones(nr,1)*pn/sqrt(2);
 xXG = (erf(xX) - 2*xX.*exp(-xX.^2)/sqrt(pi))./2./xX./xX;
 XXnhuDei = permute(repmat(((xrnhuth.*xZeff)'*ones(1,npn)).*((erf(xX) - xXG)./xX./xX./xX),[1,1,nmhu]),[2,3,1]);
-%   
+%  
 xggradpsi22 = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*(xR0(rdke).*xBT0(rdke)./xB0(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0(:,:,rdke).*XXnhuDei(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke).*XXlambda_b_p1m1(:,:,rdke),1),1)';
 %
 xggradpsi1 = 0;
@@ -1948,22 +1865,22 @@ for iy = ylist_rf,
 %f0 contribution
 %
     [XXSp0_rf_imj,XXSp0_rf_ipj,XXSm0_rf_ijm,XXSm0_rf_ijp] = ...
-        fluxes_dke_jd(XXDpp_rf_imj(:,:,rdke),XXDpp_rf_ipj(:,:,rdke),XXDpm_rf_imj(:,:,rdke),XXDpm_rf_ipj(:,:,rdke),...
-        XXFp_rf_imj(:,:,rdke),XXFp_rf_ipj(:,:,rdke),...
-        XXDmm_rf_ijm(:,:,rdke),XXDmm_rf_ijp(:,:,rdke),XXDmp_rf_ijm(:,:,rdke),XXDmp_rf_ijp(:,:,rdke),...
-        XXFm_rf_ijm(:,:,rdke),XXFm_rf_ijp(:,:,rdke),...
-        XXf0(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
-        XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
-        XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
+       fluxes_dke_jd(XXDpp_rf_imj(:,:,rdke),XXDpp_rf_ipj(:,:,rdke),XXDpm_rf_imj(:,:,rdke),XXDpm_rf_ipj(:,:,rdke),...
+       XXFp_rf_imj(:,:,rdke),XXFp_rf_ipj(:,:,rdke),...
+       XXDmm_rf_ijm(:,:,rdke),XXDmm_rf_ijp(:,:,rdke),XXDmp_rf_ijm(:,:,rdke),XXDmp_rf_ijp(:,:,rdke),...
+       XXFm_rf_ijm(:,:,rdke),XXFm_rf_ijp(:,:,rdke),...
+       XXf0(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
+       XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
+       XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
 %
     xP0m_rf_fsav = 2*pi*(xqtilde(rdke)./xqhat(rdke))'.*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).^3./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*XXSp0_rf_imj,1),1);       
     xP0p_rf_fsav = 2*pi*(xqtilde(rdke)./xqhat(rdke))'.*integral_dke_jd(dmhu,integral_dke_jd(dpnp,XXpnp(:,:,rdke).^3./XXgammap(:,:,rdke).*XXlambda(:,:,rdke).*XXSp0_rf_ipj,1),1);       
     ZP0.xy_rf_fsav(:,iy) = (xP0m_rf_fsav + xP0p_rf_fsav)/2;
 %
-    ZXXS.p0_rf_imj = ZXXS.p0_rf_imj + XXSp0_rf_imj;
-    ZXXS.p0_rf_ipj = ZXXS.p0_rf_ipj + XXSp0_rf_ipj;
-    ZXXS.m0_rf_ijm = ZXXS.m0_rf_ijm + XXSm0_rf_ijm;
-    ZXXS.m0_rf_ijp = ZXXS.m0_rf_ijp + XXSm0_rf_ijp;
+   ZXXS.p0_rf_imj = ZXXS.p0_rf_imj + XXSp0_rf_imj;
+   ZXXS.p0_rf_ipj = ZXXS.p0_rf_ipj + XXSp0_rf_ipj;
+   ZXXS.m0_rf_ijm = ZXXS.m0_rf_ijm + XXSm0_rf_ijm;
+   ZXXS.m0_rf_ijp = ZXXS.m0_rf_ijp + XXSm0_rf_ijp;
 %        
     if dke_mode >= 1
         XXDpp_rf_tp_imj = ZXXD_rf_tp.pp_imj.*XXD0_rf(rdke);
@@ -2026,17 +1943,16 @@ for iy = ylist_rf,
 %   Wave-induced radial transport by adjoint technique (P. Helander model)
 %
         [XXp_rf_imj,XXp_rf_ipj,XXm_rf_ijm,XXm_rf_ijp] = ...
-            fluxes_dke_jd(XXDpp_rf_tp_imj,XXDpp_rf_tp_ipj,XXDpm_rf_tp_imj,XXDpm_rf_tp_ipj,...
-            0*XXFp_rf_tp_imj,0*XXFp_rf_tp_ipj,...
-            XXDmm1_rf_tp_ijm,XXDmm1_rf_tp_ijp,XXDmp1_rf_tp_ijm,XXDmp1_rf_tp_ijp,...
-            0*XXFm_rf_tp_ijm,0*XXFm_rf_tp_ijp,...
-            XXf0(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke,:),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
-            XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
-            XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
+           fluxes_dke_jd(XXDpp_rf_tp_imj,XXDpp_rf_tp_ipj,XXDpm_rf_tp_imj,XXDpm_rf_tp_ipj,...
+           0*XXFp_rf_tp_imj,0*XXFp_rf_tp_ipj,...
+           XXDmm1_rf_tp_ijm,XXDmm1_rf_tp_ijp,XXDmp1_rf_tp_ijm,XXDmp1_rf_tp_ijp,...
+           0*XXFm_rf_tp_ijm,0*XXFm_rf_tp_ijp,...
+           XXf0(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke,:),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
+           XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
+           XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
 %
-        xggradpsi21 = xggradpsi21 + 2*pi*(xqtilde(rdke)./xqhat(rdke)).*(xR0(rdke).*xBT0(rdke)./xB0(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXp_rf_imj.*XXpn2m(:,:,rdke).*XXmhu(:,:,rdke).*XXlambda(:,:,rdke),1),1)';
-%
-        xggradpsi1 = xggradpsi1 + 2*pi*(xqtilde(rdke)./xqhat(rdke)).*(xR0(rdke).*xBT0(rdke)./xB0(rdke)).*integral_dke_jd(dmhum,integral_dke_jd(dpn,XXm_rf_ijm.*XXpn2(:,:,rdke).*XX1mmhu2m(:,:,rdke).*XXlambda(:,:,rdke).*XXRlambda_m(:,:,rdke),1),1)';
+        xggradpsi21 = xggradpsi21(it,:) + 2*pi*(xqtilde(rdke)./xqhat(rdke)).*(xR0(rdke).*xBT0(rdke)./xB0(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXp_rf_imj(:,:,rdke).*XXpn2m(:,:,rdke).*XXmhu(:,:,rdke).*XXlambda(:,:,rdke),1),1)';
+        xggradpsi1 = xggradpsi1(it,:) + 2*pi*(xqtilde(rdke)./xqhat(rdke)).*(xR0(rdke).*xBT0(rdke)./xB0(rdke)).*integral_dke_jd(dmhum,integral_dke_jd(dpn,XXm_rf_ijm(:,:,rdke).*XXpn2(:,:,rdke).*XX1mmhu2m(:,:,rdke).*XXlambda(:,:,rdke).*XXRlambda_m(:,:,rdke),1),1)';
     end
 end
 %
@@ -2048,37 +1964,39 @@ end
 %
 XXSp0_imj = ZXXS.p0_c_imj + ZXXS.p0_e_imj + ZXXS.p0_rf_imj;
 XXSm0_ijm = ZXXS.m0_c_ijm + ZXXS.m0_e_ijm + ZXXS.m0_rf_ijm;
+XXSp0_ipj = ZXXS.p0_c_ipj + ZXXS.p0_e_ipj + ZXXS.p0_rf_ipj;
+XXSm0_ijp = ZXXS.m0_c_ijp + ZXXS.m0_e_ijp + ZXXS.m0_rf_ijp;
 %
 %   Wave-induced radial transport by adjoint technique (P. Helander model)
 %
 if nb > 0,
 	 xggradpsi = xggradpsi1 - xggradpsi21 - xggradpsi22;
-     xVr = xggradpsi.*xR0(rdke).*xBp0(rdke)./xne_norm(rdke);
-     ZWiTransp_fsav{1} = xggradpsi;%For all rays
+    xVr = xggradpsi.*xR0(rdke).*xBp0(rdke)./xne_norm(rdke);
+    ZWiTransp_fsav{1} = xggradpsi;%For all rays
 	 ZWiTransp_fsav{2} = xggradpsi1;%For all rays
 	 ZWiTransp_fsav{3} = xggradpsi21;%For all rays
 	 ZWiTransp_fsav{4} = xggradpsi22;%For all rays
 else
 	 xggradpsi = zeros(length(rdke),1);
-     xVr = zeros(length(rdke),1);
-     ZWiTransp_fsav{1} = zeros(length(rdke),1);%For all rays
+    xVr = zeros(length(rdke),1);
+    ZWiTransp_fsav{1} = zeros(length(rdke),1);%For all rays
 	 ZWiTransp_fsav{2} = zeros(length(rdke),1);%For all rays
 	 ZWiTransp_fsav{3} = zeros(length(rdke),1);%For all rays
 	 ZWiTransp_fsav{4} = zeros(length(rdke),1);%For all rays
 end		
 %
-% run-away rate
+% Run-away loss rate
 %
 xepsi_rdke = xepsi(rdke);
 Xxqtilde = repmat(xqtilde,npn,1);
 Xxqhat = repmat(xqtilde,npn,1);
-XxRR_fsav = 2*pi*(Xxqtilde(:,rdke)./Xxqhat(:,rdke)).*integral_dke_jd(dmhu,XXSp0_imj.*XXpn2m(:,:,rdke).*XXlambda(:,:,rdke),2);%Run-away rate
+XxRR_fsav = 2*pi*(Xxqtilde(:,rdke)./Xxqhat(:,rdke)).*integral_dke_jd(dmhu,XXSp0_imj(:,:,rdke).*XXpn2m(:,:,rdke).*XXlambda(:,:,rdke),2);%Run-away rate
 %
 mask_xepsi = find(xepsi_rdke~=0);
 if ~isempty(mask_xepsi)
-    Zcurr.x_B_fsav = Zcurr.x_tot_fsav - 0.5*XxRR_fsav(npn-1,mask_xepsi)*max(v2)./xepsi_rdke(mask_xepsi);%Bulk current as defined by Karney (useful for non-zero large dc electric field only)
+   Zcurr.x_B_fsav = Zcurr.x_tot_fsav - 0.5*XxRR_fsav(npn-1,mask_xepsi)*max(v2)./xepsi_rdke(mask_xepsi);%Bulk current as defined by Karney (useful for non-zero large dc electric field only)
 else
-    Zcurr.x_B_fsav = Zcurr.x_tot_fsav;
+   Zcurr.x_B_fsav = Zcurr.x_tot_fsav;
 end 
 %
 %
@@ -2111,12 +2029,14 @@ elseif bounce_mode == 1,
 end
 %
 %   Magnetic ripple loss rate calculation (for Tore Supra tokamak only)
+%   Volume or surface loss calculations must match if no additional source term 
+%   is added (XXlossripple = XXsource). Otherwise, only the surface loss must be considered
 %
-if sum(sum(sum(XXnhuloss))) ~= 0 & isempty(findstr(tokname,'TS')) == 0,
-    xMRR_tau_ref = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXnhuloss(:,:,rdke).*XXf0(:,:,rdke).*XXpn2(:,:,rdke).*XXlambda(:,:,rdke),1),1)';%Flux of electrons leaving the plasma through the loss cone
+if sum(sum(sum(XXlossripple))) ~= 0 & isempty(findstr(tokname,'TS')) == 0,
+    xMRR_tau_ref = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlossripple(:,:,rdke).*XXf0(:,:,rdke).*XXpn2(:,:,rdke).*XXlambda(:,:,rdke),1),1)';%Flux of electrons leaving the plasma through the loss cone
 %
-    XXmaskMRR_im = [zeros(1,nmhu,nr);abs(diff(XXnhuloss~=0))];%Mask in p (only nhuloss ~=0 is considered)
-    XXmaskMRR_jm = [zeros(npn,1,nr),abs(permute(diff(permute(XXnhuloss~=0,[2,1,3])),[2,1,3]))];%Mask in mhu (mhu < 0 only because of symmetry) (only nhuloss ~=0 is considered)
+    XXmaskMRR_im = [zeros(1,nmhu,nr);abs(diff(XXlossripple~=0))];%Mask in p (only nhuloss ~=0 is considered)
+    XXmaskMRR_jm = [zeros(npn,1,nr),abs(permute(diff(permute(XXlossripple~=0,[2,1,3])),[2,1,3]))];%Mask in mhu (mhu < 0 only because of symmetry) (only nhuloss ~=0 is considered)
     XXmaskMRR_jm(:,mhu>0,:)=0;%mhu < 0 only because of symmetry)
     XxMRR_flux_p_ref = 2*pi*integral_dke_jd(dmhum,XXmaskMRR_im(:,:,rdke).*XXSp0_imj.*XXpn2m(:,:,rdke).*XXlambda(:,:,rdke).*XXRlambda_m(:,:,rdke),2);
     XxMRR_flux_mhu_ref = 2*2*pi*integral_dke_jd(dpnm,XXmaskMRR_jm(:,:,rdke).*XXSm0_ijm.*XXpnm(:,:,rdke).*sqrt(XX1mmhu2m(:,:,rdke)).*XXlambda(:,:,rdke).*XXRlambda_m(:,:,rdke),1);
@@ -2128,5 +2048,9 @@ else
     xMRR_tau_ref = NaN*ones(1,nr_dke);
     xMRR_flux_ref = NaN*ones(1,nr_dke);
 end
+%
+%Integral of the source term
+%
+xnsource_ref = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXsource(:,:,rdke).*XXpn2(:,:,rdke).*XXlambda(:,:,rdke),1),1)';%Flux of electrons leaving the plasma through the loss cone
 %
 if display_mode >= 1,info_dke_yp(2,['Moments of the distribution function calculated in ',num2str(etime(clock,time0)),' (s)']);end

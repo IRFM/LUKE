@@ -1,30 +1,22 @@
-function [vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr] = bremchord_dke_yp(equil,IPBT,hxr,xpsin,xpsin_S,mfactor,method,display,ns,mtheta);
+function [Zbremchord] = bremchord_dke_yp(equil,hxr,hxrparam,radial);
 %
-% This function calculates chord positions fro bremsstrahlung tomography in a torus along unit vector g. 
+% This function calculates chord positions for bremsstrahlung tomography in a torus along unit vector g from DKE grid structure
 %
 % INPUTS
 %
 %       - equil: Magnetic equilibrium structure
-%       - IPBT: Cosine between the plasma current and the toroidal B-field directions (+1: Ip same direction as BT, -1 opposite direction as BT) (see below definitions)
-%       - hxr: Bremsstrahlung structure 
-%       - xpsin: poloidal flux surfaces for f used by DKE code [1,npsi]
-%       - xpsin_S: poloidal flux surfaces used for S by DKE code [1,npsi+1]
-%       - mfactor: amplification number of poloidal angles compared to the value of the equilbrium code (>1) [1,1]
-%         (default = 1)
-%       - method: interpolation method
-%         (default = 'spline')
-%       - display: display chords [1,1]
-%         (default = 2)
-%       - ns: number of points on the chords [1,1]
-%         (default = 3000)
+%       - hxr: Bremsstrahlung structure
+%       - hxrparam : Bremsstrahlung calculation and display parameter structure
+%       - radial: Radial grid structure   
 %
 % OUTPUTS
 %       
-%       - vschords: chords parameter [16,n,nchords]
-%       - psi_hxr: magnetic flux surface coordinate where the distribution function is calculated for the bremsstrahlung emission [npsi,ntheta]
-%       - theta_hxr: poloidal angle values where the distribution function is calculated for the bremsstrahlung emission [npsi,ntheta]
-%       - PSI_hxr: B/Bmin where the distribution function is calculated for the bremsstrahlung emission [npsi,ntheta]
-%       - mask_hxr: locations where the distribution function is calculated for the bremsstrahlung emission [npsi,ntheta]
+%       - Zbremchord: data structure for the bremsstrahlung diagnostic (for display principaly)
+%          * Zbremchord.vschords: chords parameter [16,n,nchords]
+%          * Zbremchord.psi_hxr: magnetic flux surface coordinate where the distribution function is calculated for the bremsstrahlung emission [npsi,ntheta]
+%          * Zbremchord.theta_hxr: poloidal angle values where the distribution function is calculated for the bremsstrahlung emission [npsi,ntheta]
+%          * Zbremchord.PSI_hxr: B/Bmin where the distribution function is calculated for the bremsstrahlung emission [npsi,ntheta]
+%          * Zbremchord.mask_hxr: locations where the distribution function is calculated for the bremsstrahlung emission [npsi,ntheta]
 %
 % by J. Decker (jodecker@alum.mit.edu) and Y. Peysson (yves.peysson@cea.fr)
 %
@@ -37,23 +29,17 @@ function [vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr] = bremchord_dke_yp(equil
 % With the definitions above, if Ip is positive, psi is turned outward, Bp is counterclockwise poloidally, and s too. The Ampère theorem is OK !
 % The HXR diagnostic arrangement is taking this frame of reference. Check the figures. Take care if BT is counterclockwise...
 %
-if nargin < 5,
-    error('Not enough arguments in bremchord_dke_yp')
-elseif nargin == 5,
-   	  mfactor = 1;
-	  method = 'spline'; 	
-      display = 2;
-      ns = 3000;
-elseif nargin == 6,
-		method = 'spline'; 	
-		display = 2;
-		ns = 3000;
-elseif nargin == 7,
-		display = 2;
-		ns = 3000;
-elseif nargin == 8,
-		ns = 3000;
+if nargin < 4,
+   error('Not enough arguments in bremchord_dke_yp')
 end
+%	
+mfactor = hxrparam.mfactor;
+method = hxrparam.method;
+ns = hxrparam.ns;
+mtheta = hxrparam.mtheta;
+IPBT = equil.IPBT;
+xpsin = radial.xpsin_dke;
+xpsin_S = radial.xpsin_dke_S;
 %
 ns = abs(ns);%Force ns to be always positive
 nchords = length(hxr.alpha_hxr);%chord number
@@ -199,50 +185,6 @@ sIpdir=sign(griddata(ptR,ptZ,Ipdir,sR,sZ));%sign function to enforce +/- 1. Only
 sB = sqrt(sBR.^2 + sBZ.^2 + sBphi.^2);
 sksid = -sIpdir.*((sBR.*cos(sphi) - sBphi.*sin(sphi)).*gX_hxr + (-sBR.*sin(sphi) + sBphi.*cos(sphi)).*gY_hxr + sBZ.*gZ_hxr)./sB;%cosine between magnetic field line and chord direction (towards the detector)
 %
-if display >= 1
-    figure('Name','Safety factor'),
-    [ax] = graph1D_jd(ptrho,xq,0,0,'Normalized radius {\rho}','q','Safety factor',NaN,'','','-','none','b',2);pause(0.5);%Safety factor profile
-%
-   figure('Name','Bremsstrahlung tomography (Poloidal view)'),
-	[ax] = graph1D_jd(sR,sZ,0,0,'','','',NaN,'','','-','none','b',2);pause(0.5);%Poloidal plot
-   hold on
-   for ir = 1:length(xpsin_S),
-			graph1D_jd(RR_pol(ir,:),ZZ_pol(ir,:),0,0,'','','',NaN,'','','-','non','r',1);
-	     end
-   axis('equal');
-	graph1D_jd(HHR_pol,HHZ_pol,0,0,'','','',NaN,'','','-.','non','r',1);
-	graph1D_jd(VVR_pol,VVZ_pol,0,0,'','','',NaN,'','','-.','non','r',1);
-	graph1D_jd(ptR,ptZ,0,0,'X=R (m)','Z (m)','Bremsstrahlung tomography (Poloidal view)',NaN,'','','-','non','r',1);
-   hold off
-%
-	figure('Name','Poloidal field'),
-	quiver(RR_pol,ZZ_pol,BR_pol,BZ_pol);
-	axis('equal');
-	hold on
-	graph1D_jd(ptR,ptZ,0,0,'','','',NaN,'','','-','non','c',1);
-	graph1D_jd(HHR_pol,HHZ_pol,0,0,'','','',NaN,'','','-.','non','r',1);
-	graph1D_jd(VVR_pol,VVZ_pol,0,0,'X=R (m)','Z (m)','Poloidal field (T)',NaN,'','','-.','non','r',1);
-	hold off  	
-%
-	figure('Name','Bremsstrahlung tomography (Toroidal top view, Z = 0)')
-	h = quiver(X_mfl_lcs(1:40:end),Y_mfl_lcs(1:40:end),BX_mfl_lcs(1:40:end),BY_mfl_lcs(1:40:end),0.5);%Magnetic field line direction
-	set(h,'Color','k');
-	hold on
-	h = quiver(X_mfl_lcs(20:40:end),Y_mfl_lcs(20:40:end),Ipdir_mfl_lcs(20:40:end).*BX_mfl_lcs(20:40:end),Ipdir_mfl_lcs(20:40:end).*BY_mfl_lcs(20:40:end),0.5);%Current direction on magnetic field line direction
-	set(h,'Color','g');
-	axis('equal');	
-	graph1D_jd(sR.*cos(sphi),sR.*sin(sphi),0,0,'','','',NaN,'','','-','non','b',2);
-	graph1D_jd(XX_tor_min,YY_tor_min,0,0,'','','',NaN,'','','-','non','r',2);
-	graph1D_jd(XX_tor,YY_tor,0,0,'','','',NaN,'','','-.','non','r',2);
-	graph1D_jd(XX_tor_max,YY_tor_max,0,0,'','','',NaN,'','','-','non','r',2);
-	graph1D_jd(VVX,VVY,0,0,'','','',NaN,'','','-.','non','r',1);
-	graph1D_jd(HHX,HHY,0,0,'','','',NaN,'','','-.','non','r',1);
-	graph1D_jd(X_mfl_lcs(1:3:end),Y_mfl_lcs(1:3:end),0,0,'','','',NaN,'','',':','non','k',1);%Z < 0 
-	graph1D_jd(X_mfl_lcs(find(Z_mfl_lcs>=0)),Y_mfl_lcs(find(Z_mfl_lcs>=0)),0,0,'X (m)','Y (m)','Bremsstrahlung tomography (Toroidal top view, Z = 0)','B-field, (Ip: green)','','','-','non','k',1);%Z >= 0 
-	hold off
-	set(gca,'YDir','rev');%Because the reference is indirect by definition
-end
-%
 vschords = zeros(16,ns,nchords);
 vschords(1,:,:) = s;
 vschords(2,:,:) = sR;
@@ -260,4 +202,44 @@ vschords(13,:,:) = sBphi;
 vschords(14,:,:) = gX_hxr;
 vschords(15,:,:) = gY_hxr;
 vschords(16,:,:) = gZ_hxr;
+%
+% Structure for display
+%	 
+Zbremchord.ptrho = ptrho;
+Zbremchord.xq = xq;
+Zbremchord.sR = sR;
+Zbremchord.sZ = sZ;
+Zbremchord.RR_pol = RR_pol;
+Zbremchord.ZZ_pol = ZZ_pol;
+Zbremchord.HHR_pol = HHR_pol;
+Zbremchord.HHZ_pol = HHZ_pol;
+Zbremchord.VVR_pol = VVR_pol;
+Zbremchord.ptR = ptR;
+Zbremchord.ptZ = ptZ;
+Zbremchord.BR_pol = BR_pol;
+Zbremchord.BZ_pol = BZ_pol;
+Zbremchord.X_mfl_lcs = X_mfl_lcs;
+Zbremchord.Y_mfl_lcs = Y_mfl_lcs;
+Zbremchord.Z_mfl_lcs = Z_mfl_lcs;
+Zbremchord.sR = sR;
+Zbremchord.sphi = sphi;
+Zbremchord.XX_tor_min = XX_tor_min;
+Zbremchord.YY_tor_min = YY_tor_min;
+Zbremchord.XX_tor = XX_tor;
+Zbremchord.YY_tor = YY_tor;
+Zbremchord.XX_tor_max = XX_tor_max;
+Zbremchord.YY_tor_max = YY_tor_max;
+Zbremchord.VVX = VVX;
+Zbremchord.VVY = VVY;
+Zbremchord.HHX = HHX;
+Zbremchord.HHY = HHY;
+Zbremchord.xpsin_S = xpsin_S;
+Zbremchord.vschords = vschords;
+Zbremchord.psin_hxr = psin_hxr;
+Zbremchord.theta_hxr = theta_hxr;
+Zbremchord.PSI_hxr = PSI_hxr;
+Zbremchord.mask_hxr = mask_hxr;
+
+
+
 

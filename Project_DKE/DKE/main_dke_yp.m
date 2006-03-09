@@ -1,4 +1,4 @@
-function [Znorm_ref,Zcurr_ref,ZP0_ref,time_out,memoryLU_f_out,memoryLU_g_out,radial,momentum,mksa] = main_dke_yp(snumber,psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple);
+function [Znorm_ref,Zcurr_ref,ZP0_ref,dke_out,radial,momentum,mksa] = main_dke_yp(psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple,XXf0_in,xnloss,XXsource);
 %
 %  Main function of the 3-D relativistic bounce-averaged electron drift kinetic equation solver 
 %  for the RF wave absorption problem in presence of an Ohmic electric field (electron bootstrap current consistent with non-Maxwellian distribution)
@@ -7,9 +7,9 @@ function [Znorm_ref,Zcurr_ref,ZP0_ref,time_out,memoryLU_f_out,memoryLU_g_out,rad
 %  Plasma current, RF power absorption, runaway rate, magnetic ripple loss and fast electron bremsstrahlung calculations
 %  See dke_1_4yp.m
 %
-%by Y.Peysson (CEA-DRFC) <yves.peysson@cea.fr> and J. Decker (MIT/RLE) <jodecker@mit.edu>
+%by Y.Peysson (CEA-DRFC) <yves.peysson@cea.fr> and J. Decker (MIT/RLE) <joan.decker@cea.fr>
 %
-if nargin < 10,
+if nargin < 12,
     error('Wrong number of input arguments in main_dke_yp')
 end
 %   
@@ -78,7 +78,7 @@ if display_mode >=1,
 	disp('-------------------------------------------------------------------------------------------------------------------');
 	disp('-------------------------------------------------------------------------------------------------------------------');
 	disp(['Drift Kinetic calculations for the electron population during current drive in tokamaks']);
-	disp(['for arbitrary plasma equilibrium and type of RF waves']);
+	disp(['for arbitrary plasma equilibrium and type of RF waves. Thin banana width approximation.']);
 	disp(['Authors:  - Yves Peysson (CEA-DSM-DRFC, France, yves.peysson@cea.fr)']);
 	disp(['          - Joan Decker (CEA-DSM-DRFC, France,joan.decker@cea.fr)']);
 	disp('-------------------------------------------------------------------------------------------------------------------');
@@ -119,22 +119,7 @@ end
 %
 [theta,xpsin,psia,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,xmhu0T2,xdV_dke,xdA_dke] = equilibrium_jd(equil,xpsin,xpsin_S_dke,display_mode,'spline',10);
 %
-%Build the structure for output
-%
-radial.xhro = xrho;
-radial.ap = ap;
-radial.Rp = Rp;
-radial.Zp = Zp;
-radial.xdV_dke = xdV_dke;
-radial.xdA_dke = xdA_dke;
-radial.xpsin = xpsin;
-radial.xpsin_dke = xpsin_dke;
-radial.psia = psia;
-radial.xdpsin_dke = xdpsin_dke;
-radial.xpsin_S_dke = xpsin_S_dke;
-radial.xmhu0T2 = xmhu0T2;
-radial.r_dke = r_dke;
-radial.ir_display = ir_display;
+xne = xne - xnloss;%The lossed electrons (runaway or magnetic ripple) do not participate to collisions and thus must be removed
 %
 if diary_mode == 1 & display_mode >=1,
 	diaryfile = ['diary_dke_',int2str(iloop)];
@@ -157,23 +142,6 @@ end
 % ------------ Momentum Grid ----------- 
 %
 [pn,dpn,pnm,dpnm,pnp,dpnp,pn_S,mhu,dmhu,mhum,dmhum,mhup,dmhup,mhu_S] = momentumgrid_dke_jd(grid_uniformity,grid_power,dke_mode,r_dke,xmhu0T2,nmhu_S,np_S,pnmax_S,sfac,snmhu,snp,np_S_ref);
-%
-%Build the structure for output
-%
-momentum.pn = pn;
-momentum.dpn = dpn;
-momentum.pnm = pnm;
-momentum.dpnm = dpnm;
-momentum.pnp = pnp;
-momentum.dpnp = dpnp; 
-momentum.pn_S = pn_S;
-momentum.mhu = mhu;
-momentum.dmhu = dmhu;
-momentum.mhum = mhum;
-momentum.dmhum = dmhum;
-momentum.mhup = mhup;
-momentum.dmhup = dmhup;
-momentum.mhu_S = mhu_S;
 %
 nmhu = length(mhu);
 np = length(pn);
@@ -255,7 +223,6 @@ end
 %
 if diary_mode == 1 & display_mode >=1,,
 	disp(['--------------------------------------------- Simulation parameters ----------------------------------------------']);
-	disp(['- Simulation number = ',num2str(snumber)]);
    disp(['- Pitch-angle and momentum grids uniformity: (0) no, (1) yes = ',num2str(grid_uniformity)]);
    disp(['- Pitch-angle grid calculation method: (0): old method, (1) new method = ',num2str(grid_power ~= 0)]);
    if grid_power ~= 0
@@ -378,7 +345,7 @@ end
 %
 %********************* Loss term for the electrons trapped in the toroidal magnetic ripple ************************
 %
-XXnhuloss_ref = zeros(np,nmhu,nr);%Defined on the distribution function grid (half grid)
+XXlossripple_ref = zeros(np,nmhu,nr);%Defined on the distribution function grid (half grid)
 xdeltaripple = zeros(size(xrho));
 %
 if ~isempty(ripple),
@@ -416,18 +383,12 @@ if ~isempty(ripple),
 			xNq(ir) = 0;
 			Xnhuloss_ref = zeros(length(pn_ref),length(mhu));
 		end
-		XXnhuloss_ref(:,:,ir) = Xnhuloss_ref;
+		XXlossripple_ref(:,:,ir) = Xnhuloss_ref;%Magnetic ripple loss term is expressed in a Krook term
 	end
 end
 %
-%Build the structure for output
-%
-mksa.betath_ref = betath_ref;
-mksa.ne_ref = ne_ref;
-mksa.nhu_ref = nhu_ref;
-mksa.P_ref = me*(clum*betath_ref)^2*nhu_ref*ne_ref/1e6;%MKSA power unit
-mksa.j_ref = qe*clum*betath_ref*ne_ref/1e6;%MKSA current unit
-mksa.Edreicer_ref = me*clum*betath_ref*nhu_ref/qe;%MKSA Dreicer field unit
+if isempty(XXsource),XXsource = zeros(np,nmhu,nr);end
+XXsource_ref = XXsource/ne_ref/nhu_ref;%Source or sink terms
 %
 %***************************** RF Wave parameters calculations *************************************
 %
@@ -447,14 +408,14 @@ XXfinit_ref = zeros(np,nmhu,nr);%Defined on the distribution function grid (half
 for ir = 1:nr,	
 	if initguess_f == 1  & (isnan(xvparmin_lh_ref(ir_display)) == 1 | isnan(xvparmax_lh_ref(ir_display)) == 1 | nb_lh ~= 1 ),initguess_f = 0 ;end
 %
-	if initguess_f == 0,
+	if initguess_f == 0 & isempty(XXf0_in) == 1,
 		fM_ref = exp(-pn_ref.*pn_ref./(1 + gamma_ref)/xTe_norm(ir))/2/pi/xTe_norm(ir)/sqrt(2*pi*xTe_norm(ir));%Maxwellian distribution normalized to normalized density ne_norm (1st order gamma corrections)
 		XfM_ref = fM_ref'*ones(1,nmhu);
 		normfM_ref = 2*pi*integral_dke_jd(dpn_ref(:),pn_ref(:).*pn_ref(:).*integral_dke_jd(dmhu,XfM_ref,2),1);
 		XfM_ref = xne_norm(ir)*XfM_ref/normfM_ref;
 		Xf0_ref = XfM_ref;
 		title_initguess = 'Relativistic Maxwellian';        
-	elseif initguess_f == 1,
+	elseif nargin == 10 & isempty(XXf0_in) == 1,
 %
 %   Initial guess for the distribution function from ref. V.Fuchs et al.,Phys. Fluids 28 (1985) 3619. 
 %   (Only for the old method for calculating the quasilinear diffusion coefficient of the LH operator)
@@ -490,10 +451,9 @@ for ir = 1:nr,
       normf0_ref = 2*pi*integral_dke_jd(dpn_ref(:),pn2_ref(:).*integral_dke_jd(dmhu,Xf0_ref,2),1);
 		Xf0_ref = xne_norm(ir)*Xf0_ref/normf0_ref;
 		title_initguess = 'Fuchs et al. LH model';
-	elseif initguess_f == 2,
-		load([dossier,s,initfile_f],'XXf0_ref');
-		Xf0_ref = XXf0_ref(:,:,ir);
-		title_initguess = 'Initial distribution from a file';
+	else
+		Xf0_ref = XXf0_in(:,:,ir);
+		title_initguess = 'Initial distribution from input arguments';
 	end
 	XXfinit_ref(:,:,ir) = Xf0_ref;
 end
@@ -531,7 +491,7 @@ for ir = 1:nr,
 %
         		Xf0_cyl_ref = Xf0_cyl_ref.*(Xf0_cyl_ref>0);%Remove negative values
         		Xf0_cyl_ref = Xf0_cyl_ref.*(Xp_cyl_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
-                Xf0_cyl_ref(isnan(Xf0_cyl_ref)) = 0;%Remove NaN values
+            Xf0_cyl_ref(isnan(Xf0_cyl_ref)) = 0;%Remove NaN values
 %
         		curr0_ref = 2*pi*integral_dke_jd(dpn_ref(:),pn2_ref(:).*(pn_ref(:)./gamma_ref(:)).*integral_dke_jd(dmhu,Xmhu.*Xf0_ref,2),1);
         		curr0_cyl_ref = 2*pi*integral_dke_jd(dpperp_cyl_ref(:),pperp_cyl_ref(:).*integral_dke_jd(dppar_cyl_ref,Xvpar_cyl_ref.*Xf0_cyl_ref,2),1);
@@ -808,7 +768,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
         XXf0_ref,XXf0_tp_ref,XXf0_g_ref,XXf0_L_tp_ref,XXf0_L_g_ref,...
         Znorm_ref,Zcurr_ref,ZP0_ref,...
         ZXXS_ref,ZYXXD_rf,...
-        XxRR_ref_fsav,xMRR_flux_ref,xMRR_tau_ref,...
+        XxRR_ref_fsav,xMRR_flux_ref,xMRR_tau_ref,xnsource_ref,...
         xTe_norm_out,xft_fsav,xfteff_fsav,xmhubounce2,xepsi_ref,...
         memoryLU_f,memoryLU_g]...
     = dke_1_4yp(tokname,save_id,theta,...
@@ -820,9 +780,9 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
         xTe_norm,xne_norm,zZi,zmi,xzni_norm,xzTi_norm,xZeff,xrnhuth,...
         betath_ref,xepsi_ref_fsav_in,waveparam,nmax_rf,...
         XXDr_ref,XXVr_ref,...
-        XXnhuloss_ref,xdeltaripple,...
-        xftp_norm_ref,bounce,it_rf,coll_mode,...
-        norm_mode_f,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,temppath,snumber,XXfinit_ref);
+		  XXsource_ref,XXlossripple_ref,...
+        xftp_norm_ref,bounce,it_rf,xnloss,coll_mode,...
+        norm_mode_f,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,temppath,XXfinit_ref);
 %
     if ~isempty(waveparam) & nit_rf > 1,
     	if dke_mode >= 1,
@@ -836,11 +796,20 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
         end
 %
         residue_rf(it_rf) = max(max(abs(xyPinc_mod - xyPinc_mod_old)./xyPinc_in));
-        figure('Name','Quasilinear iteration')        
-        plot(1:it_rf,residue_rf,'r+')
-        set(gca,'yscale','log')
-        axis([0,nit_rf,1e-5,1])
-        pause(0.5)
+		  if display_mode >= 1,
+           if figure('Name','Quasilinear iteration')        
+              plot(1:it_rf,residue_rf,'r+')
+              set(gca,'yscale','log')
+              axis([0,nit_rf,1e-5,1])
+              pause(0.5)
+           end 
+        end
+ %
+		  info_dke_yp(2,'---------------------------------------------------------');
+        info_dke_yp(2,['Quasilinear iteration : ',int2str(it_rf),', Residu = ',num2str(residue_rf(it_rf))]);
+		  info_dke_yp(2,'---------------------------------------------------------');
+
+ %
         if it_rf > 2 & residue_rf(it_rf-1) < prec_rf*10,
             delta_rt = 0;
         end
@@ -893,7 +862,7 @@ end
 %
 %   Bootstrap Current Calculations (for synergy calculations)
 %
-if syn_mode == 1
+if syn_mode == 1,
     time0_bc = clock;
     %
     waveparam_bc = [];
@@ -903,7 +872,7 @@ if syn_mode == 1
         XXf0_bc_ref,XXf0_bc_tp_ref,XXf0_bc_g_ref,XXf0_bc_L_tp_ref,XXf0_bc_L_g_ref,...
         Znorm_bc_ref,Zcurr_bc_ref,ZP0_bc_ref,...
         ZXXS_bc_ref,ZYXXD_bc_rf,...
-        XxRR_bc_ref_fsav,xMRR_flux_bc_ref,xMRR_tau_bc_ref,...
+        XxRR_bc_ref_fsav,xMRR_flux_bc_ref,xMRR_tau_bc_ref,xnsource_bc_ref,...
         xTe_norm_bc_out,xft_bc_fsav,xfteff_bc_fsav,xmhubounce2_bc,xepsi_bc_ref,...
         memoryLU_bc_f,memoryLU_bc_g]...
     = dke_1_4yp(tokname,save_id,theta,...
@@ -915,9 +884,9 @@ if syn_mode == 1
         xTe_norm,xne_norm,zZi,zmi,xzni_norm,xzTi_norm,xZeff,xrnhuth,...
         betath_ref,xepsi_bc_ref_fsav_in,waveparam_bc,nmax_rf,...
         XXDr_ref,XXVr_ref,...
-        XXnhuloss_ref,xdeltaripple,...
-        xftp_norm_ref,bounce,1,coll_mode,...
-        norm_mode_f,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,temppath,snumber,XXfinit_ref);
+		  XXsource_ref,XXlossripple_ref,...
+        xftp_norm_ref,bounce,1,xnloss,coll_mode,...
+        norm_mode_f,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,temppath,XXfinit_ref);
 %
     time_bc_out = etime(clock,time0_bc);
     memoryLU_bc_f_out = memoryLU_bc_f;
@@ -938,54 +907,143 @@ delete([fullfile(temppath,'temp_DKE_'),save_id,'.mat']);%Delete large temporary 
 for iy = 1:nb,
     ynum = num2str(iy);
     eval(['delete ',fullfile(temppath,'temp_DQL_'),save_id,'_',ynum,'.mat']);
-end    
-%
-%*********************************** Saving results ***************************************
-%
-filename = ['RESULTS_',tokname,'_S',int2str(snumber),'.mat'];
-if diary_mode == 1,%Automatic data saving when diary mode is called
-	filename = ['RESULTS_',tokname,'_S',int2str(snumber),'.mat'];		
-	snumber=snumber+1;
-	del = 1;
-else,%Manual data saving
-	while 1,
-		if exist(filename) == 2 & auto_mode == 0,%Only in manual mode
-			del = input_dke_yp(['File ',filename,' already exists ! Do you want to overwrite it (yes:1, no:0)'],0);
-			if del == 1,
-				break;
-			else
-				snumber = input_dke_yp('New simulation number',snumber+1);
-				filename = ['RESULTS_',tokname,'_S',int2str(snumber),'.mat'];	
-			end
-		else
-			del = 1;
-			break;
-		end
-	end
 end
 %
-if del == 1	,
-	delete(filename);
-	save(filename);
-	if exist(filename) == 2,
-		disp('-------------------------------------------------------------------------------------------------------------------');
-		info_dke_yp(2,['The data file : ',filename,' has been successfully saved !']);
+%Build the radial structure for output
 %
-		if diary_mode == 0,
-			if auto_mode == 0,%Only in manual mode
-				dispres = input_dke_yp(['0: No display, 1: Display all results, 2: Display time evolution'],1); 
-				if dispres == 1,
-					[xJrf0_mksa_out,xJboot_e_mksa_out,xJboot_i_mksa_out,xJtot_mksa_out,xPabs0_mksa_out,xPabs_tot_mksa_out,xeta0_mksa_out,xepsi_mksa_out,xia_out,xft_out] = display_dke_1yp(filename);
-				elseif dispres == 2,
-					display_time_dke_1yp(filename)
-				end
-			end
-		end
-	else
-		info_dke_yp(2,['The data file : ',filename,' has not been saved, an unknown error occurs on the disk !']);	
-	end
+radial.xhro = xrho;
+radial.ap = ap;
+radial.Rp = Rp;
+radial.Zp = Zp;
+radial.xdV_dke = xdV_dke;
+radial.xdA_dke = xdA_dke;
+radial.xpsin = xpsin;
+radial.xpsin_dke = xpsin_dke;
+radial.psia = psia;
+radial.xdpsin_dke = xdpsin_dke;
+radial.xpsin_S_dke = xpsin_S_dke;
+radial.xmhu0T2 = xmhu0T2;
+radial.r_dke = r_dke;
+radial.ir_display = ir_display;
+%
+%Build the momentum structure for output
+%
+momentum.pn = pn;
+momentum.dpn = dpn;
+momentum.pnm = pnm;
+momentum.dpnm = dpnm;
+momentum.pnp = pnp;
+momentum.dpnp = dpnp; 
+momentum.pn_S = pn_S;
+momentum.mhu = mhu;
+momentum.dmhu = dmhu;
+momentum.mhum = mhum;
+momentum.dmhum = dmhum;
+momentum.mhup = mhup;
+momentum.dmhup = dmhup;
+momentum.mhu_S = mhu_S;
+%
+%Build the mksa and reference structure for output
+%
+mksa.betath_ref = betath_ref;
+mksa.Te_ref = Te_ref;%Temperature (keV)
+mksa.ne_ref = ne_ref;%Density (m-3)
+mksa.nhu_ref = nhu_ref;%Reference electron collision frequency (s-1)
+mksa.lnc_e_ref = lnc_e_ref;%Reference Coulomb logarithm
+mksa.xftp_norm_ref = xftp_norm_ref;%Normalization factor for drift kinetic equation (ftilde)
+mksa.P_ref = me*(clum*betath_ref)^2*nhu_ref*ne_ref/1e6;%MKSA power unit
+mksa.j_ref = qe*clum*betath_ref*ne_ref/1e6;%MKSA current unit
+mksa.Edreicer_ref = me*clum*betath_ref*nhu_ref/qe;%MKSA Dreicer field unit
+mksa.Ec_ref = Ec_ref;%Fast electron kinetic energy in keV
+%
+% DKE data output structure
+%
+dke_out.XXheaviside = XXheaviside;
+dke_out.XXfinit_ref = XXfinit_ref;
+dke_out.XXf0_ref = XXf0_ref;
+dke_out.XXf0_tp_ref = XXf0_tp_ref;
+dke_out.XXf0_g_ref = XXf0_g_ref;
+dke_out.XXf0_L_tp_ref = XXf0_L_tp_ref;
+dke_out.XXf0_L_g_ref = XXf0_L_g_ref;
+dke_out.Znorm_ref = Znorm_ref;
+dke_out.Zcurr_ref = Zcurr_ref;
+dke_out.ZP0_ref = ZP0_ref;
+dke_out.ZXXS_ref = ZXXS_ref;
+dke_out.ZYXXD_rf = ZYXXD_rf;
+dke_out.XxRR_ref_fsav = XxRR_ref_fsav;
+dke_out.xMRR_flux_ref = xMRR_flux_ref;
+dke_out.xMRR_tau_ref = xMRR_tau_ref;
+dke_out.xTe_norm_out = xTe_norm_out;
+dke_out.xft_fsav = xft_fsav;
+dke_out.xfteff_fsav = xfteff_fsav;
+dke_out.xmhubounce2 = xmhubounce2;
+dke_out.xepsi_ref = xepsi_ref;
+dke_out.memoryLU_f_out = memoryLU_f_out;
+dke_out.memoryLU_g_out = memoryLU_g_out;
+dke_out.time_out = time_out;
+dke_out.XXDr_ref = XXDr_ref;
+dke_out.XXVr_ref = XXVr_ref;  
+dke_out.xTe_norm = xTe_norm;
+dke_out.xzTi_norm = xzTi_norm;
+dke_out.xne_norm = xne_norm;
+dke_out.xzni_norm = xzni_norm;
+if ~isempty(ripple),
+   dke_out.xthetabanana = xthetabanana;
+   dke_out.xthetaloss = xthetaloss;
+   dke_out.xpndetrap_ref = xpndetrap_ref;
+   dke_out.xEseuil = xEseuil;
+   dke_out.XXlossripple_ref = XXlossripple_ref;
+   dke_out.xdeltaripple = xdeltaripple;
 end
+dke_out.XXsource_ref = XXsource_ref;
+dke_out.xnsource_ref = xnsource_ref;
 %
-
-
+if syn_mode == 1,
+   dke_out.XXheaviside_bc = XXheaviside_bc;
+   dke_out.XXf0_bc_ref = XXf0_bc_ref;
+   dke_out.XXf0_bc_tp_ref = XXf0_bc_tp_ref;
+   dke_out.XXf0_bc_g_ref = XXf0_bc_g_ref;
+   dke_out.XXf0_bc_L_tp_ref = XXf0_bc_L_tp_ref;
+   dke_out.XXf0_bc_L_g_ref = XXf0_bc_L_g_ref;
+   dke_out.Znorm_bc_ref = Znorm_bc_ref;
+   dke_out.Zcurr_bc_ref = Zcurr_bc_ref;
+   dke_out.ZP0_bc_ref = ZP0_bc_ref;
+   dke_out.ZXXS_bc_ref = ZXXS_bc_ref;
+   dke_out.ZYXXD_bc_rf = ZYXXD_bc_rf;
+   dke_out.XxRR_bc_ref_fsav = XxRR_bc_ref_fsav;
+   dke_out.xMRR_flux_bc_ref = xMRR_flux_bc_ref;
+   dke_out.xMRR_tau_bc_ref = xMRR_tau_bc_ref;
+   dke_out.xTe_norm_bc_out = xTe_norm_bc_out;
+   dke_out.xft_bc_fsav = xft_bc_fsav;
+   dke_out.xfteff_bc_fsav = xfteff_bc_fsav;
+   dke_out.xmhubounce2_bc = xmhubounce2_bc;
+   dke_out.xepsi_bc_ref = xepsi_bc_ref;
+   dke_out.memoryLU_bc_g_out = memoryLU_bc_g_out;
+   dke_out.memoryLU_bc_f_out = memoryLU_bc_f_out;
+   dke_out.time_bc_out = time_bc_out;
+	dke_out.xnsource_bc_ref = xnsource_bc_ref;
+else
+   dke_out.XXheaviside_bc = [];
+   dke_out.XXf0_bc_ref = [];
+   dke_out.XXf0_bc_tp_ref = [];
+   dke_out.XXf0_bc_g_ref = [];
+   dke_out.XXf0_bc_L_tp_ref = [];
+   dke_out.XXf0_bc_L_g_ref = [];
+   dke_out.Znorm_bc_ref = [];
+   dke_out.Zcurr_bc_ref = [];
+   dke_out.ZP0_bc_ref = [];
+   dke_out.ZXXS_bc_ref = [];
+   dke_out.ZYXXD_bc_rf = [];
+   dke_out.XxRR_bc_ref_fsav = [];
+   dke_out.xMRR_flux_bc_ref = [];
+   dke_out.xMRR_tau_bc_ref = [];
+   dke_out.xTe_norm_bc_out = [];
+   dke_out.xft_bc_fsav = [];
+   dke_out.xfteff_bc_fsav = [];
+   dke_out.xmhubounce2_bc = [];
+   dke_out.xepsi_bc_ref = [];
+   dke_out.memoryLU_bc_g_out = [];
+   dke_out.memoryLU_bc_f_out = [];
+   dke_out.time_bc_out = [];
+end
 

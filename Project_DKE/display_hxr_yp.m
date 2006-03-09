@@ -1,11 +1,9 @@
-function [vschords,psin_hxr,theta_hxr,PSI_hxr,mask_hxr,...
-kphot,brem_bd_out,brem_forward,brem_backward,brem_perp,brem_4pi,lchord,rho_out,theta_out,...
-brem_bd_plasma,brem_bd_diag,tphot_plasma,afit_plasma,tphot_plasma_exp,afit_plasma_exp,meanabsx] = display_dke_1yp(filename,id_hxr,path_hxr,auto_mode_in,igor_mode)
+function display_dke_1yp
 %
-% Display results of the Electron Drift Kinetic solver (test_dke_1yp.m)
+% Calculate and display the HXR bremsstrahlung from results of the 
+% Electron Drift Kinetic solver (main_dke_yp.m)
 %
-%by Y.Peysson CEA-DRFC 02/08/2003 <yves.peysson@cea.fr>
-%
+% by Joan Decker <jodecker@mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 %
 close all
 warning off;

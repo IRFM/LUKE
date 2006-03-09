@@ -293,7 +293,7 @@ dpnm_S = [2*pn_f(1),dpn_S];
 dpnp_S = [dpn_S,2*(pn_S(npn_S) - pn_f(npn_f))];
 %
 testdpn_f = find(dpn_f > dpn_threshold);
-if isempty(testdpn_f) == 0, info_dke_yp(2,'WARNING: momentum step too large, results may be inaccurate !');end
+%if isempty(testdpn_f) == 0, info_dke_yp(2,'WARNING: momentum step too large, results may be inaccurate !');end
 %
 if abs(uniform) == 1,%for test only with uniform grid
     mhu_S_pos = linspace(0,1,floor((nmhu_S_in + 1)/2));

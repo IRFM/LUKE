@@ -83,7 +83,7 @@ else
         xepsi(ir) = xepsi_fsav(ir)*(xqbar(ir)/xqtilde(ir))*(xB0(ir)/xBT0(ir))*(xR0(ir)/Rp)/XXlambda_b_p1m3p4(1,1,ir);%Value at Bmin for FP or DKE calculations
     end
     if xepsi(ir) > 0.05, 
-        info_dke_yp(2,'WARNING: Ohmic electric field is likely too large. See the documentation');%To be consistent with the assumption of the linearized Fokker-Planck equation
+%        info_dke_yp(2,'WARNING: Ohmic electric field is likely too large. See the documentation');%To be consistent with the assumption of the linearized Fokker-Planck equation
     end 
 %   
 % Electric field flux coefficients calculations for f0 and g
@@ -95,7 +95,7 @@ else
     ZXXF_e.p_immj(:,:,ir) = +Xmhu.*XXRlambda_b_p1m1p2(:,:,ir)*xepsi(ir);   
 %
     ZXXF_e.m_ijp(:,:,ir) = -sqrt(X1mmhu2p).*XXRlambda_b_p1m1p2_p(:,:,ir)*xepsi(ir);
-    ZXXF_e.m_ijm(:,:,ir) = -sqrt(X1mmhu2m).*XXRlambda_b_p1m1p2_m(:,:,ir)*xepsi(ir);
+    ZXXF_e.m_ijm(:,:,ir) = -sqrt(X1mmhu2m).*XXRlambda_b_p1m1p2_m(:,:,ir)*xepsi(ir);    
 %
 % Electric field flux coefficients calculations for ftp
 %   
