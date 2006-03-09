@@ -71,7 +71,6 @@ dp_cyl = display.dp_cyl;
 nlevel = display.nlevel;
 display_mode = display.display_mode;
 time_pause = display.time_pause;
-diary_mode = display.diary_mode;
 auto_mode = display.auto_mode;
 %
 if display_mode >=1,
@@ -87,7 +86,6 @@ end
 if bounce_mode == 0,dke_mode = 0;end
 if dke_mode == 1,bounce_mode = 1;end
 if bounce_mode > 1,bounce_mode = 1;end
-if diary_mode == 1,auto_mode = 1;end
 if dke_mode > 1,dke_mode = 1;end
 if dke_mode == 0, syn_mode =0;end
 if rt_mode == 0,nit_rf = 1;end
@@ -119,18 +117,15 @@ end
 %
 [theta,xpsin,psia,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,xmhu0T2,xdV_dke,xdA_dke] = equilibrium_jd(equil,xpsin,xpsin_S_dke,display_mode,'spline',10);
 %
+if isempty(xnloss),
+	xnloss = zeros(size(xne));
+end
 xne = xne - xnloss;%The lossed electrons (runaway or magnetic ripple) do not participate to collisions and thus must be removed
 %
-if diary_mode == 1 & display_mode >=1,
-	diaryfile = ['diary_dke_',int2str(iloop)];
-	delete(diaryfile);
-	diary(diaryfile);
-	diary on;
-%
-    disp('-------------------------------------------------------------------------------------------------------------------');
-    disp(['- Scenario name = ',tokname]);
-    disp('-------------------------------------------------------------------------------------------------------------------');
-%
+if display_mode >=1,
+   disp('-------------------------------------------------------------------------------------------------------------------');
+   disp(['- Scenario name = ',tokname]);
+   disp('-------------------------------------------------------------------------------------------------------------------');
 	disp(['----------------------------------------------- Plasma parameters ------------------------------------------------']);
 	disp(['- Plasma minor radius on LFS midplane (m) ap = ',num2str(ap)]);
 	disp(['- Plasma major radius on axis (m) Rp = ',num2str(Rp)]);
@@ -221,7 +216,7 @@ if syn_mode == 1
     disp('-------------------------------------------------------------------------------------------------------------------');
 end
 %
-if diary_mode == 1 & display_mode >=1,,
+if display_mode >=1,,
 	disp(['--------------------------------------------- Simulation parameters ----------------------------------------------']);
    disp(['- Pitch-angle and momentum grids uniformity: (0) no, (1) yes = ',num2str(grid_uniformity)]);
    disp(['- Pitch-angle grid calculation method: (0): old method, (1) new method = ',num2str(grid_power ~= 0)]);
