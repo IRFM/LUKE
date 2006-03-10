@@ -750,6 +750,8 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
     end
 %
     if nb > 0,         
+        xyD0_rf_mod = xyD0_rf_in.*xyPinc_mod./xyPinc_in;
+        %
         if nit_rf > 1,
             if it_rf == 1,
                 redfac = max(sum(xyPinc_mod.'))/sum(max(xyPinc_in(:,yb)));
@@ -760,7 +762,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
             redfac = max([redfac,1]);
             %
         else
-            redfac = ones(nr,nb);
+            redfac = 1;
         end
         waveparam(:,:,4) = xyD0_rf_mod./redfac;
     end     
@@ -813,7 +815,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
         if it_rf > 2 & residue_rf(it_rf-1) < prec_rf*10,
             delta_rt = 0;
         end
-        if residue_rf(it_rf) <= prec_rf & it_rf > 10,
+        if residue_rf(it_rf) <= prec_rf & it_rf > 10 & redfac == 1,
             info_dke_yp(2,['Successfull convergence achieved for ray-tracing coupling after ',int2str(it_rf),' iterations !']);
             break
         else
