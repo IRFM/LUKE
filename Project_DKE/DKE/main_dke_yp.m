@@ -750,13 +750,19 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
     end
 %
     if nb > 0,         
-        xyD0_rf_mod = xyD0_rf_in.*xyPinc_mod./xyPinc_in;
-        if 0,nit_rf > 1,
-            xyredfac = redfac_dke_jd(waveparam,xyD0_rf_mod,betath_ref,limit_dql);
+        if nit_rf > 1,
+            if it_rf == 1,
+                redfac = max(sum(xyPinc_mod.'))/sum(max(xyPinc_in(:,yb)));
+            else
+                redfac = redfac - 1;
+            end
+            %
+            redfac = max([redfac,1]);
+            %
         else
-            xyredfac = ones(nr,nb);
+            redfac = ones(nr,nb);
         end
-        waveparam(:,:,4) = xyD0_rf_mod./xyredfac;
+        waveparam(:,:,4) = xyD0_rf_mod./redfac;
     end     
 %   
 [XXheaviside,...
@@ -787,7 +793,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
 	    end	    
         xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav_out*P_ref;
         if nit_rf > 1,
-            xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav_mksa.*xyredfac;
+            xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav_mksa*redfac;
         end
 %
         residue_rf(it_rf) = max(max(abs(xyPinc_mod - xyPinc_mod_old)./xyPinc_in));
@@ -982,62 +988,66 @@ dke_out.xzTi_norm = xzTi_norm;
 dke_out.xne_norm = xne_norm;
 dke_out.xzni_norm = xzni_norm;
 if ~isempty(ripple),
-   dke_out.xthetabanana = xthetabanana;
-   dke_out.xthetaloss = xthetaloss;
-   dke_out.xpndetrap_ref = xpndetrap_ref;
-   dke_out.xEseuil = xEseuil;
-   dke_out.XXlossripple_ref = XXlossripple_ref;
-   dke_out.xdeltaripple = xdeltaripple;
+    dke_out.xthetabanana = xthetabanana;
+    dke_out.xthetaloss = xthetaloss;
+    dke_out.xpndetrap_ref = xpndetrap_ref;
+    dke_out.xEseuil = xEseuil;
+    dke_out.XXlossripple_ref = XXlossripple_ref;
+    dke_out.xdeltaripple = xdeltaripple;
 end
+dke_out.waveparam = waveparam;
+dke_out.xyprop_dke = xyprop_dke;
+dke_out.xyPinc_in = xyPinc_in;
+dke_out.yb = yb;
 dke_out.XXsource_ref = XXsource_ref;
 dke_out.xnsource_ref = xnsource_ref;
 %
 if syn_mode == 1,
-   dke_out.XXheaviside_bc = XXheaviside_bc;
-   dke_out.XXf0_bc_ref = XXf0_bc_ref;
-   dke_out.XXf0_bc_tp_ref = XXf0_bc_tp_ref;
-   dke_out.XXf0_bc_g_ref = XXf0_bc_g_ref;
-   dke_out.XXf0_bc_L_tp_ref = XXf0_bc_L_tp_ref;
-   dke_out.XXf0_bc_L_g_ref = XXf0_bc_L_g_ref;
-   dke_out.Znorm_bc_ref = Znorm_bc_ref;
-   dke_out.Zcurr_bc_ref = Zcurr_bc_ref;
-   dke_out.ZP0_bc_ref = ZP0_bc_ref;
-   dke_out.ZXXS_bc_ref = ZXXS_bc_ref;
-   dke_out.ZYXXD_bc_rf = ZYXXD_bc_rf;
-   dke_out.XxRR_bc_ref_fsav = XxRR_bc_ref_fsav;
-   dke_out.xMRR_flux_bc_ref = xMRR_flux_bc_ref;
-   dke_out.xMRR_tau_bc_ref = xMRR_tau_bc_ref;
-   dke_out.xTe_norm_bc_out = xTe_norm_bc_out;
-   dke_out.xft_bc_fsav = xft_bc_fsav;
-   dke_out.xfteff_bc_fsav = xfteff_bc_fsav;
-   dke_out.xmhubounce2_bc = xmhubounce2_bc;
-   dke_out.xepsi_bc_ref = xepsi_bc_ref;
-   dke_out.memoryLU_bc_g_out = memoryLU_bc_g_out;
-   dke_out.memoryLU_bc_f_out = memoryLU_bc_f_out;
-   dke_out.time_bc_out = time_bc_out;
-	dke_out.xnsource_bc_ref = xnsource_bc_ref;
+    dke_out.XXheaviside_bc = XXheaviside_bc;
+    dke_out.XXf0_bc_ref = XXf0_bc_ref;
+    dke_out.XXf0_bc_tp_ref = XXf0_bc_tp_ref;
+    dke_out.XXf0_bc_g_ref = XXf0_bc_g_ref;
+    dke_out.XXf0_bc_L_tp_ref = XXf0_bc_L_tp_ref;
+    dke_out.XXf0_bc_L_g_ref = XXf0_bc_L_g_ref;
+    dke_out.Znorm_bc_ref = Znorm_bc_ref;
+    dke_out.Zcurr_bc_ref = Zcurr_bc_ref;
+    dke_out.ZP0_bc_ref = ZP0_bc_ref;
+    dke_out.ZXXS_bc_ref = ZXXS_bc_ref;
+    dke_out.ZYXXD_bc_rf = ZYXXD_bc_rf;
+    dke_out.XxRR_bc_ref_fsav = XxRR_bc_ref_fsav;
+    dke_out.xMRR_flux_bc_ref = xMRR_flux_bc_ref;
+    dke_out.xMRR_tau_bc_ref = xMRR_tau_bc_ref;
+    dke_out.xTe_norm_bc_out = xTe_norm_bc_out;
+    dke_out.xft_bc_fsav = xft_bc_fsav;
+    dke_out.xfteff_bc_fsav = xfteff_bc_fsav;
+    dke_out.xmhubounce2_bc = xmhubounce2_bc;
+    dke_out.xepsi_bc_ref = xepsi_bc_ref;
+    dke_out.memoryLU_bc_g_out = memoryLU_bc_g_out;
+    dke_out.memoryLU_bc_f_out = memoryLU_bc_f_out;
+    dke_out.time_bc_out = time_bc_out;
+    dke_out.xnsource_bc_ref = xnsource_bc_ref;
 else
-   dke_out.XXheaviside_bc = [];
-   dke_out.XXf0_bc_ref = [];
-   dke_out.XXf0_bc_tp_ref = [];
-   dke_out.XXf0_bc_g_ref = [];
-   dke_out.XXf0_bc_L_tp_ref = [];
-   dke_out.XXf0_bc_L_g_ref = [];
-   dke_out.Znorm_bc_ref = [];
-   dke_out.Zcurr_bc_ref = [];
-   dke_out.ZP0_bc_ref = [];
-   dke_out.ZXXS_bc_ref = [];
-   dke_out.ZYXXD_bc_rf = [];
-   dke_out.XxRR_bc_ref_fsav = [];
-   dke_out.xMRR_flux_bc_ref = [];
-   dke_out.xMRR_tau_bc_ref = [];
-   dke_out.xTe_norm_bc_out = [];
-   dke_out.xft_bc_fsav = [];
-   dke_out.xfteff_bc_fsav = [];
-   dke_out.xmhubounce2_bc = [];
-   dke_out.xepsi_bc_ref = [];
-   dke_out.memoryLU_bc_g_out = [];
-   dke_out.memoryLU_bc_f_out = [];
-   dke_out.time_bc_out = [];
+    dke_out.XXheaviside_bc = [];
+    dke_out.XXf0_bc_ref = [];
+    dke_out.XXf0_bc_tp_ref = [];
+    dke_out.XXf0_bc_g_ref = [];
+    dke_out.XXf0_bc_L_tp_ref = [];
+    dke_out.XXf0_bc_L_g_ref = [];
+    dke_out.Znorm_bc_ref = [];
+    dke_out.Zcurr_bc_ref = [];
+    dke_out.ZP0_bc_ref = [];
+    dke_out.ZXXS_bc_ref = [];
+    dke_out.ZYXXD_bc_rf = [];
+    dke_out.XxRR_bc_ref_fsav = [];
+    dke_out.xMRR_flux_bc_ref = [];
+    dke_out.xMRR_tau_bc_ref = [];
+    dke_out.xTe_norm_bc_out = [];
+    dke_out.xft_bc_fsav = [];
+    dke_out.xfteff_bc_fsav = [];
+    dke_out.xmhubounce2_bc = [];
+    dke_out.xepsi_bc_ref = [];
+    dke_out.memoryLU_bc_g_out = [];
+    dke_out.memoryLU_bc_f_out = [];
+    dke_out.time_bc_out = [];
 end
 
