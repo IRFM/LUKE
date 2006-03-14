@@ -25,7 +25,7 @@ function varargout = display_dke(varargin)
 
 % Edit the above text to modify the response to help display_dke
 
-% Last Modified by GUIDE v2.5 09-Mar-2006 14:46:30
+% Last Modified by GUIDE v2.5 14-Mar-2006 13:19:31
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -62,9 +62,18 @@ handles.output = hObject;
 %
 handles.scenarios = {};
 handles.graphs = {};
-handles.listofgraphtypes = GetGraphData_jd;
 handles.selectedgraphs1 = [];
 handles.selectedgraphs2 = [];
+%
+[handles.listofgraphtypes,...
+ handles.listoflinestyles,...
+ handles.listoflinewidths,...
+ handles.listoflinecolors,...
+ handles.listofmarkerstyles,...
+ handles.listofmarkersizes,...
+ handles.listofmarkercolors]...
+    = GetGraphProperties_jd;
+%
 UpdateVisible_jd(handles.visible1, [], handles, handles.axes1, handles.selectedgraphs1);
 UpdateVisible_jd(handles.visible2, [], handles, handles.axes2, handles.selectedgraphs2);
 %
@@ -217,7 +226,7 @@ selectedgraphs1 = UpdateSelectedGraphs_jd(hObject, [], handles, handles.axes1, h
 %
 handles.selectedgraphs1 = selectedgraphs1;
 %
-UpdateLineStyle_jd(handles.linestyle1, [], handles, handles.axes1, handles.selectedgraphs1);
+UpdateGraphs_jd(handles.modifypanel1, [], handles, handles.axes1, handles.selectedgraphs1);
 %
 guidata(hObject,handles);
 %
@@ -246,7 +255,7 @@ selectedgraphs2 = UpdateSelectedGraphs_jd(hObject, [], handles, handles.axes2, h
 %
 handles.selectedgraphs2 = selectedgraphs2;
 %
-UpdateLineStyle_jd(handles.linestyle2, [], handles, handles.axes2, handles.selectedgraphs2);
+UpdateGraphs_jd(handles.modifypanel2, [], handles, handles.axes2, handles.selectedgraphs2);
 %
 guidata(hObject,handles);
 %
@@ -275,7 +284,7 @@ function new1_Callback(hObject, eventdata, handles)
 %
 handles.selectedgraphs1 = selectedgraphs1;
 %
-UpdateLineStyle_jd(handles.linestyle1, [], handles, handles.axes1, handles.selectedgraphs1);
+UpdateGraphs_jd(handles.modifypanel1, [], handles, handles.axes1, handles.selectedgraphs1);
 %
 guidata(hObject,handles);
 %
@@ -289,7 +298,7 @@ function new2_Callback(hObject, eventdata, handles)
 %
 handles.selectedgraphs2 = selectedgraphs2;
 %
-UpdateLineStyle_jd(handles.linestyle2, [], handles, handles.axes2, handles.selectedgraphs2);
+UpdateGraphs_jd(handles.modifypanel2, [], handles, handles.axes2, handles.selectedgraphs2);
 %
 guidata(hObject,handles);
 %
@@ -303,7 +312,7 @@ function remove1_Callback(hObject, eventdata, handles)
 %
 handles.selectedgraphs1 = selectedgraphs1;
 %
-UpdateLineStyle_jd(handles.linestyle1, [], handles, handles.axes1, handles.selectedgraphs1);
+UpdateGraphs_jd(handles.modifypanel1, [], handles, handles.axes1, handles.selectedgraphs1);
 %
 guidata(hObject,handles);
 %
@@ -317,7 +326,7 @@ function remove2_Callback(hObject, eventdata, handles)
 %
 handles.selectedgraphs2 = selectedgraphs2;
 %
-UpdateLineStyle_jd(handles.linestyle2, [], handles, handles.axes2, handles.selectedgraphs2);
+UpdateGraphs_jd(handles.modifypanel2, [], handles, handles.axes2, handles.selectedgraphs2);
 %
 guidata(hObject,handles);
 %
@@ -369,11 +378,9 @@ end
 % --- Executes on selection change in linestyle1.
 function linestyle1_Callback(hObject, eventdata, handles)
 %
-% This function changes the line properties of the selected graphs in axes.
+% This function changes the line properties of the selected graphs in axes1.
 %
-handles = ChangeLineStyle_jd(hObject, [], handles, handles.axes1, handles.selectedgraphs1);
-%
-guidata(hObject,handles);
+ChangeGraphProperty_jd(hObject, [], handles, handles.axes1, handles.selectedgraphs1, 'linestyle', handles.listoflinestyles);
 %
 
 % --- Executes during object creation, after setting all properties.
@@ -390,130 +397,13 @@ else
     set(hObject,'BackgroundColor',get(0,'defaultUicontrolBackgroundColor'));
 end
 
-
-% --- Executes on selection change in linewidth1.
-function linewidth1_Callback(hObject, eventdata, handles)
-% hObject    handle to linewidth1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = get(hObject,'String') returns linewidth1 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from linewidth1
-
-
-% --- Executes during object creation, after setting all properties.
-function linewidth1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to linewidth1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc
-    set(hObject,'BackgroundColor','white');
-else
-    set(hObject,'BackgroundColor',get(0,'defaultUicontrolBackgroundColor'));
-end
-
-
-% --- Executes on button press in markerstyle1.
-function markerstyle1_Callback(hObject, eventdata, handles)
-% hObject    handle to markerstyle1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --- Executes during object creation, after setting all properties.
-function markerstyle1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to markerstyle1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-
-% --- Executes on selection change in markersize1.
-function markersize1_Callback(hObject, eventdata, handles)
-% hObject    handle to markersize1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = get(hObject,'String') returns markersize1 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from markersize1
-
-
-% --- Executes during object creation, after setting all properties.
-function markersize1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to markersize1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc
-    set(hObject,'BackgroundColor','white');
-else
-    set(hObject,'BackgroundColor',get(0,'defaultUicontrolBackgroundColor'));
-end
-
-
-% --- Executes on selection change in linecolor1.
-function linecolor1_Callback(hObject, eventdata, handles)
-% hObject    handle to linecolor1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = get(hObject,'String') returns linecolor1 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from linecolor1
-
-
-% --- Executes during object creation, after setting all properties.
-function linecolor1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to linecolor1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc
-    set(hObject,'BackgroundColor','white');
-else
-    set(hObject,'BackgroundColor',get(0,'defaultUicontrolBackgroundColor'));
-end
-
-
-% --- Executes on selection change in markercolor1.
-function markercolor1_Callback(hObject, eventdata, handles)
-% hObject    handle to markercolor1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = get(hObject,'String') returns markercolor1 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from markercolor1
-
-
-% --- Executes during object creation, after setting all properties.
-function markercolor1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to markercolor1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc
-    set(hObject,'BackgroundColor','white');
-else
-    set(hObject,'BackgroundColor',get(0,'defaultUicontrolBackgroundColor'));
-end
-
-
 % --- Executes on selection change in linestyle2.
 function linestyle2_Callback(hObject, eventdata, handles)
-% hObject    handle to linestyle2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = get(hObject,'String') returns linestyle2 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from linestyle2
-
+%
+% This function changes the line properties of the selected graphs in axes2.
+%
+ChangeGraphProperty_jd(hObject, [], handles, handles.axes2, handles.selectedgraphs2, 'linestyle', handles.listoflinestyles);
+%
 
 % --- Executes during object creation, after setting all properties.
 function linestyle2_CreateFcn(hObject, eventdata, handles)
@@ -529,16 +419,35 @@ else
     set(hObject,'BackgroundColor',get(0,'defaultUicontrolBackgroundColor'));
 end
 
+% --- Executes on selection change in linewidth1.
+function linewidth1_Callback(hObject, eventdata, handles)
+%
+% This function changes the line width of the selected graphs in axes1.
+%
+ChangeGraphProperty_jd(hObject, [], handles, handles.axes1, handles.selectedgraphs1, 'linewidth', handles.listoflinewidths);
+%
+
+% --- Executes during object creation, after setting all properties.
+function linewidth1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to linewidth1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc
+    set(hObject,'BackgroundColor','white');
+else
+    set(hObject,'BackgroundColor',get(0,'defaultUicontrolBackgroundColor'));
+end
 
 % --- Executes on selection change in linewidth2.
 function linewidth2_Callback(hObject, eventdata, handles)
-% hObject    handle to linewidth2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = get(hObject,'String') returns linewidth2 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from linewidth2
-
+%
+% This function changes the line width of the selected graphs in axes2.
+%
+ChangeGraphProperty_jd(hObject, [], handles, handles.axes2, handles.selectedgraphs2, 'linewidth', handles.listoflinewidths);
+%
 
 % --- Executes during object creation, after setting all properties.
 function linewidth2_CreateFcn(hObject, eventdata, handles)
@@ -554,20 +463,17 @@ else
     set(hObject,'BackgroundColor',get(0,'defaultUicontrolBackgroundColor'));
 end
 
-
-% --- Executes on selection change in markerstyle2.
-function markerstyle2_Callback(hObject, eventdata, handles)
-% hObject    handle to markerstyle2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = get(hObject,'String') returns markerstyle2 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from markerstyle2
-
+% --- Executes on selection change in linecolor1.
+function linecolor1_Callback(hObject, eventdata, handles)
+%
+% This function changes the line color of the selected graphs in axes1.
+%
+ChangeGraphProperty_jd(hObject, [], handles, handles.axes1, handles.selectedgraphs1, 'color', handles.listoflinecolors);
+%
 
 % --- Executes during object creation, after setting all properties.
-function markerstyle2_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to markerstyle2 (see GCBO)
+function linecolor1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to linecolor1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -578,42 +484,14 @@ if ispc
 else
     set(hObject,'BackgroundColor',get(0,'defaultUicontrolBackgroundColor'));
 end
-
-
-% --- Executes on selection change in markersize2.
-function markersize2_Callback(hObject, eventdata, handles)
-% hObject    handle to markersize2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = get(hObject,'String') returns markersize2 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from markersize2
-
-
-% --- Executes during object creation, after setting all properties.
-function markersize2_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to markersize2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc
-    set(hObject,'BackgroundColor','white');
-else
-    set(hObject,'BackgroundColor',get(0,'defaultUicontrolBackgroundColor'));
-end
-
 
 % --- Executes on selection change in linecolor2.
 function linecolor2_Callback(hObject, eventdata, handles)
-% hObject    handle to linecolor2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = get(hObject,'String') returns linecolor2 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from linecolor2
-
+%
+% This function changes the line color of the selected graphs in axes2.
+%
+ChangeGraphProperty_jd(hObject, [], handles, handles.axes2, handles.selectedgraphs2, 'color', handles.listoflinecolors);
+%
 
 % --- Executes during object creation, after setting all properties.
 function linecolor2_CreateFcn(hObject, eventdata, handles)
@@ -630,15 +508,126 @@ else
 end
 
 
+% --- Executes on button press in markerstyle1.
+function markerstyle1_Callback(hObject, eventdata, handles)
+%
+% This function changes the marker style of the selected graphs in axes1.
+%
+ChangeGraphProperty_jd(hObject, [], handles, handles.axes1, handles.selectedgraphs1, 'marker', handles.listofmarkerstyles);
+%
+
+% --- Executes during object creation, after setting all properties.
+function markerstyle1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to markerstyle1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc
+    set(hObject,'BackgroundColor','white');
+else
+    set(hObject,'BackgroundColor',get(0,'defaultUicontrolBackgroundColor'));
+end
+
+% --- Executes on selection change in markerstyle2.
+function markerstyle2_Callback(hObject, eventdata, handles)
+%
+% This function changes the marker style of the selected graphs in axes2.
+%
+ChangeGraphProperty_jd(hObject, [], handles, handles.axes2, handles.selectedgraphs2, 'marker', handles.listofmarkerstyles);
+%
+
+% --- Executes during object creation, after setting all properties.
+function markerstyle2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to markerstyle2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc
+    set(hObject,'BackgroundColor','white');
+else
+    set(hObject,'BackgroundColor',get(0,'defaultUicontrolBackgroundColor'));
+end
+
+
+% --- Executes on selection change in markersize1.
+function markersize1_Callback(hObject, eventdata, handles)
+%
+% This function changes the marker size of the selected graphs in axes1.
+%
+ChangeGraphProperty_jd(hObject, [], handles, handles.axes1, handles.selectedgraphs1, 'markersize', handles.listofmarkersizes);
+%
+
+% --- Executes during object creation, after setting all properties.
+function markersize1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to markersize1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc
+    set(hObject,'BackgroundColor','white');
+else
+    set(hObject,'BackgroundColor',get(0,'defaultUicontrolBackgroundColor'));
+end
+
+% --- Executes on selection change in markersize2.
+function markersize2_Callback(hObject, eventdata, handles)
+%
+% This function changes the marker size of the selected graphs in axes1.
+%
+ChangeGraphProperty_jd(hObject, [], handles, handles.axes2, handles.selectedgraphs2, 'markersize', handles.listofmarkersizes);
+%
+
+% --- Executes during object creation, after setting all properties.
+function markersize2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to markersize2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc
+    set(hObject,'BackgroundColor','white');
+else
+    set(hObject,'BackgroundColor',get(0,'defaultUicontrolBackgroundColor'));
+end
+
+% --- Executes on selection change in markercolor1.
+function markercolor1_Callback(hObject, eventdata, handles)
+%
+% This function changes the marker color of the selected graphs in axes1.
+%
+ChangeGraphProperty_jd(hObject, [], handles, handles.axes1, handles.selectedgraphs1, 'markeredgecolor', handles.listofmarkercolors);
+ChangeGraphProperty_jd(hObject, [], handles, handles.axes1, handles.selectedgraphs1, 'markerfacecolor', handles.listofmarkercolors);
+%
+
+% --- Executes during object creation, after setting all properties.
+function markercolor1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to markercolor1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc
+    set(hObject,'BackgroundColor','white');
+else
+    set(hObject,'BackgroundColor',get(0,'defaultUicontrolBackgroundColor'));
+end
+
 % --- Executes on selection change in markercolor2.
 function markercolor2_Callback(hObject, eventdata, handles)
-% hObject    handle to markercolor2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = get(hObject,'String') returns markercolor2 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from markercolor2
-
+%
+% This function changes the marker color of the selected graphs in axes1.
+%
+ChangeGraphProperty_jd(hObject, [], handles, handles.axes2, handles.selectedgraphs2, 'markeredgecolor', handles.listofmarkercolors);
+ChangeGraphProperty_jd(hObject, [], handles, handles.axes2, handles.selectedgraphs2, 'markerfacecolor', handles.listofmarkercolors);
+%
 
 % --- Executes during object creation, after setting all properties.
 function markercolor2_CreateFcn(hObject, eventdata, handles)
