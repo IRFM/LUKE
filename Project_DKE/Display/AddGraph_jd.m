@@ -57,7 +57,7 @@ graph.axes = hObject;
 %
 % Get graph data
 %
-[x,y,z,xlab,ylab,zlab,warnstr] = GetGraphData_jd(graph);
+[x,y,z,xlab,ylab,zlab,warnstr] = GetGraphData_jd(handles, graph);
 %
 if ~isempty(warnstr),
     h = warndlg(warnstr,'Operation aborted');

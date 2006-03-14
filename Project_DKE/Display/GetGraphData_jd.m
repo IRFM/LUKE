@@ -1,21 +1,7 @@
-function [x,y,z,xlab,ylab,zlab,warnstr] = GetGraphData_jd(graph);
+function [x,y,z,xlab,ylab,zlab,warnstr] = GetGraphData_jd(handles, graph);
 %
 % This function retrieves the data from a given scenario and graph type and
-% sends the data as a (x,y) or (x,y,z) group.
-%
-
-%
-% List of graph types
-%
-listofgraphtypes{1} = 'xte';
-listofgraphtypes{2} = 'xne';
-%
-if nargin == 0,
-    x = listofgraphtypes;
-    return
-end
-%
-% Get graph data
+% sends the data as a (x,y) or (x,y,z) group. 
 %
 x = [];
 y = [];
@@ -46,7 +32,7 @@ else
     NumberOfGraphs = 0;
 end
 %
-if isequal(graph.type,listofgraphtypes{1}),% xte
+if isequal(graph.type,handles.listofgraphtypes{1}),% xte
     %
     load(graph.scenario,'equil');
     x = psi2rho_jd(equil,equil.ppsi/equil.ppsi(length(equil.ppsi)));
@@ -58,7 +44,7 @@ if isequal(graph.type,listofgraphtypes{1}),% xte
     %
 end
 %
-if isequal(graph.type,listofgraphtypes{2}),% xne
+if isequal(graph.type,handles.listofgraphtypes{2}),% xne
     %
     load(graph.scenario,'equil');
     x = psi2rho_jd(equil,equil.ppsi/equil.ppsi(length(equil.ppsi)));
