@@ -36,7 +36,6 @@ end
 mfactor = hxrparam.mfactor;
 method = hxrparam.method;
 ns = hxrparam.ns;
-mtheta = hxrparam.mtheta;
 IPBT = equil.IPBT;
 xpsin = radial.xpsin_dke;
 xpsin_S = radial.xpsin_dke_S;

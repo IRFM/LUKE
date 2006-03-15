@@ -62,9 +62,9 @@ gamma = sqrt(1 + pn2*betath_ref^2);
 [qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;%Physics constant
 %
 method = 'spline';
-n_gauleg = hxr.n_gauleg;
+n_gauleg = hxrparam.n_gauleg;
 n_pol = n_gauleg;%Necessary for accurate reconstruction at ksi = -1
-epsi_gauleg = hxr.epsi_gauleg;
+epsi_gauleg = hxrparam.epsi_gauleg;
 kphot = hxr.kphot;
 %   
 ZZIB = zeros(size(psin_hxr,1),size(psin_hxr,2),n_pol+1,length(kphot));%Legendre coefficients for the bremsstrahlung at all radii at poloidal positions (NaN if not used)
