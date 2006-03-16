@@ -1,4 +1,4 @@
-function [xyvray,xyfinc,xyprop,yb] = propagation_jd(vsrays,xpsin,xdpsin,xpsin_S,theta,ppsin,ptR,ptBP,psia,method,display_mode);
+function [xyvray,xyfinc,xyprop,yb] = propagation_jd(vsrays,xpsin,xdpsin,xpsin_S,theta,ppsin,ptr,method,display_mode);
 %
 % This function couples the DKE code with a ray-tracing code. Ray
 % caracteristics are evaluated at the DKE radial positions and the incidence
@@ -167,10 +167,10 @@ for ib = 1:nb_rf
 % local width of the FS: |dl| = |dpsi|/|grad psi| = |dpsin.psia|/|R.BP|
 %
         thetab_f = xyvray(ipsin,ibb,3);
-        Rb_f = interp2(theta,ppsin,ptR,thetab_f,bpsin,method);
-        BPb_f = interp2(theta,ppsin,ptBP,thetab_f,bpsin,method);
+        rp = interp2(theta,ppsin,ptr,thetab_f,bpsinp,method);
+        rm = interp2(theta,ppsin,ptr,thetab_f,bpsinm,method);
 %
-        bdl = abs(xdpsin(ipsin)*psia./Rb_f./BPb_f); %width of the FS at theta = thetab
+        bdl = rp-rm; %width of the FS at theta = thetab
         xyfinc(ipsin,ibb) = bds/bdl; %incidence factor
 %
 % test for stopping
