@@ -21,16 +21,16 @@ rho_S = [0.5];%Normalized radial flux grid where calculations are performed (0 <
 id_equil = 'TScirc';%For plasma equilibrium
 path_equil = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_dkeparam = 'TScirc';%For DKE code parameters
+id_dkeparam = 'UNIFORM10010020';%For DKE code parameters
 path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_display = 'TScirc';%For output code display
+id_display = 'VISUAL';%For output code display
 path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_ohm = '';%For Ohmic electric contribution
 path_ohm = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-ids_wave = {'LH_test'};%For RF waves contribution (put all the type of waves needed)
+ids_wave = {''};%For RF waves contribution (put all the type of waves needed)
 paths_wave = {''};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_transpfaste = '';%For fast electron radial transport
@@ -106,7 +106,7 @@ end
 %
 %************************************************************************************************************************************
 %
-[Znorm_ref,Znorm_ref_fsav,Zcurr_ref,Zcurr_ref_fsav,ZP0_ref_fsav,time,memoryLU_f,memoryLU_g,radial,momentum,mksa] = main_dke_yp(snumber,psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple);
+[Znorm_ref,Zcurr_ref,ZP0_ref,dke_out,radial,momentum,mksa] = main_dke_yp(psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[],[]);
 %	    
 %************************************************************************************************************************************
 
