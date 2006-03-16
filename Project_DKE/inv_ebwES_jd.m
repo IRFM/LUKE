@@ -2,7 +2,7 @@ function [xlambda,xYval,xYflag] = inv_ebwES_jd(xq,N,xabr,xguess);
 %
 global q_ebw_ES N_ebw_ES abr_ebw_ES
 %
-h = waitbar(0,'Calculates Roots');
+h = waitbar(0,'Calculates ES Roots');
 %
 for ix = 1:length(xq);
 %
