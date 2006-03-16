@@ -9,45 +9,44 @@ clear all
 %
 equil.id = 'TScirc';% scenario identification
 %
+[qe,me,mp,mn,e0,mu0,re,mc2,clum] = pc_dke_yp;
+%
 npsi = 101;% number of points in psi grid
 ntheta = 65;% number of points in theta grid
-qopt = 1;%Option for q profile. (0): constant (default, uniform current, psi=rho^2), (1): from qmin and eq 
+qopt = 0;%Option for q profile. (0): constant (default, uniform current, psi=rho^2), (1): from qmin and eq 
 %
 % Equilibrium parameters
 %
-ap = 0.72;%  Plasma minor radius on LFS midplane (m)
-Rp = 2.39;%  Plasma major radius on axis (m)
+ap = 0.7;%  Plasma minor radius on LFS midplane (m)
+Rp = 2.4;%  Plasma major radius on axis (m)
 Zp = 0;%  Global plasma vertical shift (m)
 Ip = 1.0;%  Plasma current (MA)  
-Bt = 3.65;%  Toroidal magnetic field on the magnetic axis (T) 
+Bt = 3.6;%  Toroidal magnetic field on the magnetic axis (T) 
 %
 Zi = [1,1,1,6];%  Ion types: (1) H/D/T, (2) He, ..., (6) C [1,p] (WARNING: Zi must be [1,1,1,imp1,imp2] for hydrogen plasmas)
 mi = [1,2,3,12];%  Ion mass (uma) [1,p] (WARNING: Zi must be [1,2,3,mimp1,mimp2] for hydrogen plasmas)
 fi = [0,1,0];%  Hydrogen isotopic fraction (H/D/T) [1,3] (WARNING: only used when hydrogen plasmas are considered)
 %
-qmin = 1.13;%  Safety factor q0 at plasma center
-eq = 2;%  Exponent for q radial profile (q = (qmax - qmin)*(r/a).^eq + qmin, qmax calaculated by the Ampere's theorem at the plasma edge with a circular plasma cross-section)
+qmin = NaN;%  Safety factor q0 at plasma center
+eq = NaN;%  Exponent for q radial profile (q = (qmax - qmin)*(r/a).^eq + qmin, qmax calaculated by the Ampere's theorem at the plasma edge with a circular plasma cross-section)
 %
-Te0 = 4.6;%  Core electron temperature (keV)
-Tea = 0.1*Te0;%  Edge electron temperature (keV)
-eTe = 1.1;%  Exponent for Te profile (Te(r) = (Te0-Tea)*(1-(r/a)^2)^eTe + Tea)
+beta0 = 0.1;% 
 %
-ne0 =2.0e19;%  Core electron density (m-3)
-nea = 0.1*ne0;%  Edge electron density (m-3)
-ene = 0.5;%  Exponent for ne profile (ne(r) = (ne0-nea)*(1-(r/a)^2)^ene + nea)
+Te0 = beta0^2*mc2;%  Core electron temperature (keV)
+Tea = 0*Te0;%  Edge electron temperature (keV)
+eTe = 1;%  Exponent for Te profile (Te(r) = (Te0-Tea)*(1-(r/a)^2)^eTe + Tea)
 %
-Ti0 = 2.3;%  Core ion temperature (keV)
-Tia = 0.1*Ti0;%  Edge ion temperature (keV)
-eTi = 1.1;%  Exponent for Ti profile (Ti(r) = (Ti0-Tia)*(1-(r/a)^2)^eTi + Tia)
+ne0 = 2.0e19;%  Core electron density (m-3)
+nea = 0*ne0;%  Edge electron density (m-3)
+ene = 1;%  Exponent for ne profile (ne(r) = (ne0-nea)*(1-(r/a)^2)^ene + nea)
 %
-Zeff0 = 1.5;%  Core effective charge (a.u.)
-Zeffa = 1.5;%  Edge effective charge (a.u.)
+Ti0 = Te0;%  Core ion temperature (keV)
+Tia = 0*Ti0;%  Edge ion temperature (keV)
+eTi = 1;%  Exponent for Ti profile (Ti(r) = (Ti0-Tia)*(1-(r/a)^2)^eTi + Tia)
+%
+Zeff0 = 1;%  Core effective charge (a.u.)
+Zeffa = 1;%  Edge effective charge (a.u.)
 eZeff = 0;%  Exponent for the effective charge (Zeff(r) = (Zeff0-Zeffa)*(1-(r/a)^2)^eZeff + Zeffa)
-%
-% ***** to be implemented
-%
-%xpoint,j0,ja,ej (ptok)
-%shift,kappa,delta (local)
 %
 equil.zZi = Zi;%[1,ni]
 equil.zmi = mi;%[1,ni]
