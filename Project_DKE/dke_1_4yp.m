@@ -1237,6 +1237,10 @@ for ir = 1:nr,
     curr0(ir,1) = 2*pi*integral_dke_jd(dpn',pn2'.*(pn'./gamma').*integral_dke_jd(dmhu,Xmhu.*XXfinit(:,:,ir),2),1)*xne_norm(ir)/normf0(ir,1);
 end
 %
+if display_mode == 2,
+	Fig_FPEconvstatus = figure('Name','Fokker-Planck equation convergence status');
+end
+%
 for it_f = 2:(nit_f+1),     
     if sum(residu_f(:,it_f-1) >= prec0_f) >= 1 & sum(prec_residu_f(:,it_f-1)) >= prec0_f ,%| it_f < 7
 %   
@@ -1313,31 +1317,31 @@ for it_f = 2:(nit_f+1),
             if display_mode == 2,
                 if dke_mode == 1,
                     if ir == ir_display-1,
-                        figure('Name','Fokker-Planck equation convergence status'),subplot(321),semilogy(-pn,XXfM(:,2,ir),'g--',pn,XXfM(:,nmhu-1,ir),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
+                        figure(Fig_FPEconvstatus),subplot(321),semilogy(-pn,XXfM(:,2,ir),'g--',pn,XXfM(:,nmhu-1,ir),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
                         axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
                         title(['Iteration: ',int2str(it_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
                         hold on;zoom on
-                        figure('Name','Fokker-Planck equation convergence status'),subplot(322),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],max(residu_f(:,1:it_f)),'gx',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
+                        figure(Fig_FPEconvstatus),subplot(322),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],max(residu_f(:,1:it_f)),'gx',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
                         axis('square');axis([0,it_f,prec0_f/10,1e-4]);
                         title(['Convergence - f (rho=',num2str(xrho(ir)),')']);xlabel('Iteration');ylabel('Residu')
                         hold on;zoom on
                         pause(time_pause);
                     elseif ir == ir_display,
-                        figure('Name','Fokker-Planck equation convergence status'),subplot(323),semilogy(-pn,XXfM(:,2,ir),'g--',pn,XXfM(:,nmhu-1,ir),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
+                        figure(Fig_FPEconvstatus),subplot(323),semilogy(-pn,XXfM(:,2,ir),'g--',pn,XXfM(:,nmhu-1,ir),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
                         axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
                         title(['Iteration: ',int2str(it_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
                         hold on;zoom on
-                        figure('Name','Fokker-Planck equation convergence status'),subplot(324),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],max(residu_f(:,1:it_f)),'gx',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
+                        figure(Fig_FPEconvstatus),subplot(324),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],max(residu_f(:,1:it_f)),'gx',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
                         axis('square');axis([0,it_f,prec0_f/10,1e-4]);
                         title(['Convergence - f (rho=',num2str(xrho(ir)),')']);xlabel('Iteration');ylabel('Residu')
                         hold on;zoom on
                         pause(time_pause);
                     elseif ir == ir_display+1,
-                        figure('Name','Fokker-Planck equation convergence status'),subplot(325),semilogy(-pn,XXfM(:,2,ir),'g--',pn,XXfM(:,nmhu-1,ir),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
+                        figure(Fig_FPEconvstatus),subplot(325),semilogy(-pn,XXfM(:,2,ir),'g--',pn,XXfM(:,nmhu-1,ir),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
                         axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
                         title(['Iteration: ',int2str(it_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
                         hold on;zoom on
-                        figure('Name','Fokker-Planck equation convergence status'),subplot(326),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],max(residu_f(:,1:it_f)),'gx',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
+                        figure(Fig_FPEconvstatus),subplot(326),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],max(residu_f(:,1:it_f)),'gx',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
                         axis('square');axis([0,it_f,prec0_f/10,1e-4]);
                         title(['Convergence - f (rho=',num2str(xrho(ir)),')']);xlabel('Iteration');ylabel('Residu')
                         hold on;zoom on
@@ -1345,11 +1349,11 @@ for it_f = 2:(nit_f+1),
                     end
                 else
                     if ir == ir_display,
-                        figure('Name','Fokker-Planck equation convergence status'),subplot(121),semilogy(-pn,XXfM(:,2,ir),'g--',pn,XXfM(:,nmhu-1,ir),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
+                        figure(Fig_FPEconvstatus),subplot(121),semilogy(-pn,XXfM(:,2,ir),'g--',pn,XXfM(:,nmhu-1,ir),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
                         axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
                         title(['Iteration: ',int2str(it_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
                         hold on;
-                        figure('Name','Fokker-Planck equation convergence status'),subplot(122),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],max(residu_f(:,1:it_f)),'gx',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
+                        figure(Fig_FPEconvstatus),subplot(122),semilogy([1:it_f],residu_f(ir,1:it_f),'r+',[1:it_f],max(residu_f(:,1:it_f)),'gx',[1:it_f],prec0_f*ones(size([1:it_f])),'b--');
                         axis('square');axis([0,it_f,prec0_f/10,1e-4]);
                         title(['Convergence - f (rho=',num2str(xrho(ir)),')']);xlabel('Iteration');ylabel('Residu')
                         hold on;
@@ -1385,7 +1389,7 @@ for it_f = 2:(nit_f+1),
     else            
         if sum(prec_residu_f(:,it_f-1)) < prec0_f,info_dke_yp(2,['WARNING: stationnary residu but convergence not achieved for f0 after ',int2str(it_f),' iterations. Time step likely too large !']);end
         if sum(residu_f(:,it_f-1) >= prec0_f) == 0 & display_mode > 0,
-            info_dke_yp(2,['Successfull convergence achieved for f0 after ',int2str(it_f),' iterations !']);
+            info_dke_yp(2,['Successfull convergence achieved for f0 after ',int2str(it_f-2),' iterations !']);
         end
         break;
     end
@@ -1398,13 +1402,17 @@ clear Xf0 Xf0_t Xq Xq_t Xf1 Xf1_t Xf1_tp Xf1_tm Xf1_ts XR_t XS_t XY_t
 clear f1 xf1 I1 I2 XI 
 %
 if display_mode == 2,
-    figure('Name','Fokker-Planck equation convergence status'),subplot(121),hold off;
-    figure('Name','Fokker-Planck equation convergence status'),subplot(122),hold off;
+    figure(Fig_FPEconvstatus),subplot(121),hold off;
+    figure(Fig_FPEconvstatus),subplot(122),hold off;
 end
 % 
 time0 = clock;
 %
 if dke_mode == 1,
+	if display_mode == 2,
+		Fig_DKEconvstatus = figure('Name','Drift kinetic equation convergence status');
+	end	
+%
     MMXf0_tp = [];
     MMXf0 = [];
     MMXI_tp = [];
@@ -1537,11 +1545,11 @@ if dke_mode == 1,
                 end
 %
                 if jr2 == ir_display & display_mode == 2,
-                    figure('Name','Drift kinetic equation convergence status'),subplot(121),plot(-pn,Xf1_g(:,1),'r-',pn,Xf1_g(:,nmhu),'r-');%g(perp = 0)
+                    figure(Fig_DKEconvstatus),subplot(121),plot(-pn,Xf1_g(:,1),'r-',pn,Xf1_g(:,nmhu),'r-');%g(perp = 0)
                     axis('square');set(gca,'xlim',[-10,10]);
                     title(['Iteration: ',int2str(it_g)]);xlabel('pn-ref');ylabel('g(pperp=0)')
                     hold on;zoom on
-                    figure('Name','Drift kinetic equation convergence status'),subplot(122),semilogy([1:it_g],residu_g(ir_dke,1:it_g),'r+',[1:it_g],max(residu_g(:,1:it_g)),'gx',[1:it_g],prec0_g*ones(size([1:it_g])),'b--');
+                    figure(Fig_DKEconvstatus),subplot(122),semilogy([1:it_g],residu_g(ir_dke,1:it_g),'r+',[1:it_g],max(residu_g(:,1:it_g)),'gx',[1:it_g],prec0_g*ones(size([1:it_g])),'b--');
                     axis('square');axis([0,it_g,prec0_g/10,1e-4]);
                     title(['Convergence - g (rho=',num2str(xrho(jr2)),')']);xlabel('Iteration');ylabel('Residu')
                     hold on;zoom on
@@ -1600,11 +1608,11 @@ if display == 2,
 %           
         XfM = XXfM(:,:,ir_display-1);
         Xf0 = XXf0(:,:,ir_display-1);
-        figure('Name','Final convergence status'),subplot(321),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf0(:,2),'r-',pn,Xf0(:,nmhu-1),'r-');%f(perp = 0)
+        Fig_Finalconvstatus = figure('Name','Final convergence status'),subplot(321),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf0(:,2),'r-',pn,Xf0(:,nmhu-1),'r-');%f(perp = 0)
         axis('square');axis([-max(pn),max(pn),1e-20,10]);zoom on
         title(['Iteration: ',int2str(nit_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
         hold on;zoom on
-        figure('Name','Final convergence status'),subplot(322),plot([1:nit_f],curr1(ir_display-1,:),'r-');
+        figure(Fig_Finalconvstatus),subplot(322),plot([1:nit_f],curr1(ir_display-1,:),'r-');
         axis('square');if max(max(curr1(ir_display-1,:))) ~= 0,axis([0,nit_f,0,1.1*max(max(curr1(ir_display-1,:)))]);end
         title('Convergence');xlabel('Iteration');ylabel('Current')
         hold on;zoom on
@@ -1612,11 +1620,11 @@ if display == 2,
 %
         XfM = XXfM(:,:,ir_display);
         Xf0 = XXf0(:,:,ir_display);
-        figure('Name','Final convergence status'),subplot(323),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf0(:,2),'r-',pn,Xf0(:,nmhu-1),'r-');%f(perp = 0)
+        figure(Fig_Finalconvstatus),subplot(323),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf0(:,2),'r-',pn,Xf0(:,nmhu-1),'r-');%f(perp = 0)
         axis('square');axis([-max(pn),max(pn),1e-20,10]);zoom on
         title(['Iteration: ',int2str(nit_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
         hold on;zoom on
-        figure('Name','Final convergence status'),subplot(324),plot([1:nit_f],curr1(ir_display,:),'r-');
+        figure(Fig_Finalconvstatus),subplot(324),plot([1:nit_f],curr1(ir_display,:),'r-');
         axis('square');if max(max(curr1(ir_display,:))) ~= 0,axis([0,nit_f,0,1.1*max(max(curr1(ir_display,:)))]);end
         title('Convergence');xlabel('Iteration');ylabel('Current')
         hold on;zoom on
@@ -1624,11 +1632,11 @@ if display == 2,
 %
         XfM = XXfM(:,:,ir_display+1);
         Xf0 = XXf0(:,:,ir_display+1);
-        figure('Name','Final convergence status'),subplot(325),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf0(:,2),'r-',pn,Xf0(:,nmhu-1),'r-');%f(perp = 0)
+        figure(Fig_Finalconvstatus),subplot(325),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf0(:,2),'r-',pn,Xf0(:,nmhu-1),'r-');%f(perp = 0)
         axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
         title(['Iteration: ',int2str(nit_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
         hold on;zoom on
-        figure('Name','Final convergence status'),subplot(326),plot([1:nit_f],curr1(ir_display+1,:),'r-');
+        figure(Fig_Finalconvstatus),subplot(326),plot([1:nit_f],curr1(ir_display+1,:),'r-');
         axis('square');if max(max(curr1(ir_display+1,:))) ~= 0,axis([0,nit_f,0,1.1*max(max(curr1(ir_display+1,:)))]);end
         title('Convergence');xlabel('Iteration');ylabel('Current')
         hold on;zoom on
@@ -1637,11 +1645,11 @@ if display == 2,
         XfM = XXfM(:,:,ir_display);
         Xf0 = XXf0(:,:,ir_display);
 %
-        figure('Name','Final convergence status'),subplot(121),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf0(:,2),'r-',pn,Xf0(:,nmhu-1),'r-');%f(perp = 0)
+        figure(Fig_Finalconvstatus),subplot(121),semilogy(-pn,XfM(:,2),'g--',pn,XfM(:,nmhu-1),'g--',-pn,Xf0(:,2),'r-',pn,Xf0(:,nmhu-1),'r-');%f(perp = 0)
         axis('square');axis([-max(pn),max(pn),1e-20,10]),zoom on
         title(['Iteration: ',int2str(nit_f)]);xlabel('pn-ref');ylabel('f(pperp=0)')
         hold on;
-        figure('Name','Final convergence status'),subplot(122),plot([1:nit_f],curr1(ir_display,:),'r-');
+        figure(Fig_Finalconvstatus),subplot(122),plot([1:nit_f],curr1(ir_display,:),'r-');
         axis('square');if max(max(curr1(ir_display,:))) ~= 0,axis([0,nit_f,0,1.1*max(max(curr1(ir_display,:)))]);end
         title('Current convergence');xlabel('Iteration');ylabel('Current')
         hold on;
@@ -1721,13 +1729,13 @@ end
 %f0 contribution
 %
 [ZXXS.p0_c_imj,ZXXS.p0_c_ipj,ZXXS.m0_c_ijm,ZXXS.m0_c_ijp] = ...
-   fluxes_dke_jd(ZXXD_c.pp_imj(:,:,rdke),ZXXD_c.pp_ipj(:,:,rdke),ZXXD_c.pm_imj(:,:,rdke),ZXXD_c.pm_ipj(:,:,rdke),...
-   ZXXF_c.p_imj(:,:,rdke),ZXXF_c.p_ipj(:,:,rdke),...
-   ZXXD_c.mm_ijm(:,:,rdke),ZXXD_c.mm_ijp(:,:,rdke),ZXXD_c.mp_ijm(:,:,rdke),ZXXD_c.mp_ijp(:,:,rdke),...
-   ZXXF_c.m_ijm(:,:,rdke),ZXXF_c.m_ijp(:,:,rdke),...
-   XXf0(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
-   XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
-   XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
+    fluxes_dke_jd(ZXXD_c.pp_imj(:,:,rdke),ZXXD_c.pp_ipj(:,:,rdke),ZXXD_c.pm_imj(:,:,rdke),ZXXD_c.pm_ipj(:,:,rdke),...
+    ZXXF_c.p_imj(:,:,rdke),ZXXF_c.p_ipj(:,:,rdke),...
+    ZXXD_c.mm_ijm(:,:,rdke),ZXXD_c.mm_ijp(:,:,rdke),ZXXD_c.mp_ijm(:,:,rdke),ZXXD_c.mp_ijp(:,:,rdke),...
+    ZXXF_c.m_ijm(:,:,rdke),ZXXF_c.m_ijp(:,:,rdke),...
+    XXf0(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
+    XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
+    XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
 %    
 ZP0.x_c_fsav = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).*XXpn2m(:,:,rdke)./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*ZXXS.p0_c_imj,1),1)';       
 %
@@ -1765,13 +1773,13 @@ end
 %f0 contribution
 %
 [ZXXS.p0_e_imj,ZXXS.p0_e_ipj,ZXXS.m0_e_ijm,ZXXS.m0_e_ijp] = ...
-   fluxes_dke_jd(ZXXD_e.pp_imj(:,:,rdke),ZXXD_e.pp_ipj(:,:,rdke),ZXXD_e.pm_imj(:,:,rdke),ZXXD_e.pm_ipj(:,:,rdke),...
-   ZXXF_e.p_imj(:,:,rdke),ZXXF_e.p_ipj(:,:,rdke),...
-   ZXXD_e.mm_ijm(:,:,rdke),ZXXD_e.mm_ijp(:,:,rdke),ZXXD_e.mp_ijm(:,:,rdke),ZXXD_e.mp_ijp(:,:,rdke),...
-   ZXXF_e.m_ijm(:,:,rdke),ZXXF_e.m_ijp(:,:,rdke),...
-   XXf0(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
-   XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
-   XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
+    fluxes_dke_jd(ZXXD_e.pp_imj(:,:,rdke),ZXXD_e.pp_ipj(:,:,rdke),ZXXD_e.pm_imj(:,:,rdke),ZXXD_e.pm_ipj(:,:,rdke),...
+    ZXXF_e.p_imj(:,:,rdke),ZXXF_e.p_ipj(:,:,rdke),...
+    ZXXD_e.mm_ijm(:,:,rdke),ZXXD_e.mm_ijp(:,:,rdke),ZXXD_e.mp_ijm(:,:,rdke),ZXXD_e.mp_ijp(:,:,rdke),...
+    ZXXF_e.m_ijm(:,:,rdke),ZXXF_e.m_ijp(:,:,rdke),...
+    XXf0(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
+    XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
+    XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
 % 
 ZP0.x_e_fsav = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).*XXpn2m(:,:,rdke)./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*ZXXS.p0_e_imj,1),1)';       
 %
@@ -1864,22 +1872,22 @@ for iy = ylist_rf,
 %f0 contribution
 %
     [XXSp0_rf_imj,XXSp0_rf_ipj,XXSm0_rf_ijm,XXSm0_rf_ijp] = ...
-       fluxes_dke_jd(XXDpp_rf_imj(:,:,rdke),XXDpp_rf_ipj(:,:,rdke),XXDpm_rf_imj(:,:,rdke),XXDpm_rf_ipj(:,:,rdke),...
-       XXFp_rf_imj(:,:,rdke),XXFp_rf_ipj(:,:,rdke),...
-       XXDmm_rf_ijm(:,:,rdke),XXDmm_rf_ijp(:,:,rdke),XXDmp_rf_ijm(:,:,rdke),XXDmp_rf_ijp(:,:,rdke),...
-       XXFm_rf_ijm(:,:,rdke),XXFm_rf_ijp(:,:,rdke),...
-       XXf0(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
-       XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
-       XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
+        fluxes_dke_jd(XXDpp_rf_imj(:,:,rdke),XXDpp_rf_ipj(:,:,rdke),XXDpm_rf_imj(:,:,rdke),XXDpm_rf_ipj(:,:,rdke),...
+        XXFp_rf_imj(:,:,rdke),XXFp_rf_ipj(:,:,rdke),...
+        XXDmm_rf_ijm(:,:,rdke),XXDmm_rf_ijp(:,:,rdke),XXDmp_rf_ijm(:,:,rdke),XXDmp_rf_ijp(:,:,rdke),...
+        XXFm_rf_ijm(:,:,rdke),XXFm_rf_ijp(:,:,rdke),...
+        XXf0(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
+        XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
+        XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
 %
     xP0m_rf_fsav = 2*pi*(xqtilde(rdke)./xqhat(rdke))'.*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXpnm(:,:,rdke).^3./XXgammam(:,:,rdke).*XXlambda(:,:,rdke).*XXSp0_rf_imj,1),1);       
     xP0p_rf_fsav = 2*pi*(xqtilde(rdke)./xqhat(rdke))'.*integral_dke_jd(dmhu,integral_dke_jd(dpnp,XXpnp(:,:,rdke).^3./XXgammap(:,:,rdke).*XXlambda(:,:,rdke).*XXSp0_rf_ipj,1),1);       
     ZP0.xy_rf_fsav(:,iy) = (xP0m_rf_fsav + xP0p_rf_fsav)/2;
 %
-   ZXXS.p0_rf_imj = ZXXS.p0_rf_imj + XXSp0_rf_imj;
-   ZXXS.p0_rf_ipj = ZXXS.p0_rf_ipj + XXSp0_rf_ipj;
-   ZXXS.m0_rf_ijm = ZXXS.m0_rf_ijm + XXSm0_rf_ijm;
-   ZXXS.m0_rf_ijp = ZXXS.m0_rf_ijp + XXSm0_rf_ijp;
+    ZXXS.p0_rf_imj = ZXXS.p0_rf_imj + XXSp0_rf_imj;
+    ZXXS.p0_rf_ipj = ZXXS.p0_rf_ipj + XXSp0_rf_ipj;
+    ZXXS.m0_rf_ijm = ZXXS.m0_rf_ijm + XXSm0_rf_ijm;
+    ZXXS.m0_rf_ijp = ZXXS.m0_rf_ijp + XXSm0_rf_ijp;
 %        
     if dke_mode >= 1
         XXDpp_rf_tp_imj = ZXXD_rf_tp.pp_imj.*XXD0_rf(rdke);
@@ -1942,13 +1950,13 @@ for iy = ylist_rf,
 %   Wave-induced radial transport by adjoint technique (P. Helander model)
 %
         [XXp_rf_imj,XXp_rf_ipj,XXm_rf_ijm,XXm_rf_ijp] = ...
-           fluxes_dke_jd(XXDpp_rf_tp_imj,XXDpp_rf_tp_ipj,XXDpm_rf_tp_imj,XXDpm_rf_tp_ipj,...
-           0*XXFp_rf_tp_imj,0*XXFp_rf_tp_ipj,...
-           XXDmm1_rf_tp_ijm,XXDmm1_rf_tp_ijp,XXDmp1_rf_tp_ijm,XXDmp1_rf_tp_ijp,...
-           0*XXFm_rf_tp_ijm,0*XXFm_rf_tp_ijp,...
-           XXf0(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke,:),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
-           XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
-           XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
+            fluxes_dke_jd(XXDpp_rf_tp_imj,XXDpp_rf_tp_ipj,XXDpm_rf_tp_imj,XXDpm_rf_tp_ipj,...
+            0*XXFp_rf_tp_imj,0*XXFp_rf_tp_ipj,...
+            XXDmm1_rf_tp_ijm,XXDmm1_rf_tp_ijp,XXDmp1_rf_tp_ijm,XXDmp1_rf_tp_ijp,...
+            0*XXFm_rf_tp_ijm,0*XXFm_rf_tp_ijp,...
+            XXf0(:,:,rdke),XXpn(:,:,rdke),XXpnm(:,:,rdke),XXpnp(:,:,rdke),XX1mmhu2(:,:,rdke,:),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),...
+            XXdpnm(:,:,rdke),XXdpnp(:,:,rdke),XXdmhum(:,:,rdke),XXdmhup(:,:,rdke),...
+            XXdeltap_imj(:,:,rdke),XXdeltap_ipj(:,:,rdke),XXdeltam_ijm(:,:,rdke),XXdeltam_ijp(:,:,rdke));
 %
         xggradpsi21 = xggradpsi21(it,:) + 2*pi*(xqtilde(rdke)./xqhat(rdke)).*(xR0(rdke).*xBT0(rdke)./xB0(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXp_rf_imj(:,:,rdke).*XXpn2m(:,:,rdke).*XXmhu(:,:,rdke).*XXlambda(:,:,rdke),1),1)';
         xggradpsi1 = xggradpsi1(it,:) + 2*pi*(xqtilde(rdke)./xqhat(rdke)).*(xR0(rdke).*xBT0(rdke)./xB0(rdke)).*integral_dke_jd(dmhum,integral_dke_jd(dpn,XXm_rf_ijm(:,:,rdke).*XXpn2(:,:,rdke).*XX1mmhu2m(:,:,rdke).*XXlambda(:,:,rdke).*XXRlambda_m(:,:,rdke),1),1)';
@@ -1970,15 +1978,15 @@ XXSm0_ijp = ZXXS.m0_c_ijp + ZXXS.m0_e_ijp + ZXXS.m0_rf_ijp;
 %
 if nb > 0,
 	 xggradpsi = xggradpsi1 - xggradpsi21 - xggradpsi22;
-    xVr = xggradpsi.*xR0(rdke).*xBp0(rdke)./xne_norm(rdke);
-    ZWiTransp_fsav{1} = xggradpsi;%For all rays
+     xVr = xggradpsi.*xR0(rdke).*xBp0(rdke)./xne_norm(rdke);
+     ZWiTransp_fsav{1} = xggradpsi;%For all rays
 	 ZWiTransp_fsav{2} = xggradpsi1;%For all rays
 	 ZWiTransp_fsav{3} = xggradpsi21;%For all rays
 	 ZWiTransp_fsav{4} = xggradpsi22;%For all rays
 else
 	 xggradpsi = zeros(length(rdke),1);
-    xVr = zeros(length(rdke),1);
-    ZWiTransp_fsav{1} = zeros(length(rdke),1);%For all rays
+     xVr = zeros(length(rdke),1);
+     ZWiTransp_fsav{1} = zeros(length(rdke),1);%For all rays
 	 ZWiTransp_fsav{2} = zeros(length(rdke),1);%For all rays
 	 ZWiTransp_fsav{3} = zeros(length(rdke),1);%For all rays
 	 ZWiTransp_fsav{4} = zeros(length(rdke),1);%For all rays
@@ -1994,9 +2002,9 @@ xRR_primary_fsav = XxRR_fsav(end,:);%Radial profile of primary runaway electron 
 %
 mask_xepsi = find(xepsi_rdke~=0);
 if ~isempty(mask_xepsi)
-   Zcurr.x_B_fsav = Zcurr.x_tot_fsav - 0.5*XxRR_fsav(npn-1,mask_xepsi)*max(v2)./xepsi_rdke(mask_xepsi);%Bulk current as defined by Karney (useful for non-zero large dc electric field only)
+    Zcurr.x_B_fsav = Zcurr.x_tot_fsav - 0.5*XxRR_fsav(npn-1,mask_xepsi)*max(v2)./xepsi_rdke(mask_xepsi);%Bulk current as defined by Karney (useful for non-zero large dc electric field only)
 else
-   Zcurr.x_B_fsav = Zcurr.x_tot_fsav;
+    Zcurr.x_B_fsav = Zcurr.x_tot_fsav;
 end 
 %
 % Knock-on runaway generation
