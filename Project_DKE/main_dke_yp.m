@@ -39,7 +39,6 @@ snp = dkeparam.snp;
 spfac = dkeparam.spfac;
 dpsin_dke = dkeparam.dpsin_dke;
 ref_mode = dkeparam.ref_mode;
-Dqlmax = dkeparam.Dqlmax;
 coll_mode = dkeparam.coll_mode;
 bounce_mode = dkeparam.bounce_mode;
 dke_mode = dkeparam.dke_mode;
@@ -218,11 +217,11 @@ end
 %
 if display_mode >=1,,
 	disp(['--------------------------------------------- Simulation parameters ----------------------------------------------']);
-   disp(['- Pitch-angle and momentum grids uniformity: (0) no, (1) yes = ',num2str(grid_uniformity)]);
-   disp(['- Pitch-angle grid calculation method: (0): old method, (1) new method = ',num2str(grid_power ~= 0)]);
-   if grid_power ~= 0
+    disp(['- Pitch-angle and momentum grids uniformity: (0) no, (1) yes = ',num2str(grid_uniformity)]);
+    disp(['- Pitch-angle grid calculation method: (0): old method, (1) new method = ',num2str(grid_power ~= 0)]);
+    if grid_power ~= 0
         disp(['- Pitch-angle grid step variation power: ',num2str(grid_power)]);
-   end
+    end
 	disp(['- Effective number of pitch-angle values for the distribution function grid (half grid) nmhu = ',num2str(nmhu)]);
 	disp(['- Effective number of momentum values for the distribution function grid (half grid) np = ',num2str(np)]);
 	disp(['- Maximum value of the momentum grid (pth_ref) pnmax =  ',num2str(pn(np))]);
@@ -411,7 +410,7 @@ for ir = 1:nr,
 		XfM_ref = xne_norm(ir)*XfM_ref/normfM_ref;
 		Xf0_ref = XfM_ref;
 		title_initguess = 'Relativistic Maxwellian';        
-	elseif nargin == 10 & isempty(XXf0_in) == 1,
+	elseif initguess_f == 1 & isempty(XXf0_in) == 1,
 %
 %   Initial guess for the distribution function from ref. V.Fuchs et al.,Phys. Fluids 28 (1985) 3619. 
 %   (Only for the old method for calculating the quasilinear diffusion coefficient of the LH operator)
@@ -456,6 +455,13 @@ end
 %
 % *************************** Display initial distribution function ***************************
 %
+if display_mode == 2,
+	Fig_InitDistr = figure('Name','Inital distribution');	
+	Fig_InitDistrp0 = figure('Name','Inital distribution at pperp=0');
+	Fig_ElecVeloc = figure('Name','Electron velocity');
+	Fig_MetRel = figure('Name','Metric relation');
+end
+%
 for ir = 1:nr,	
 	if display_mode == 2,
 		if dke_mode == 1,
@@ -463,13 +469,13 @@ for ir = 1:nr,
 			view = 0;
 %
 			if ir == ir_display-1,
-				figure('Name','Inital distribution'),subplot(131);zoom on
+				figure(Fig_InitDistr),subplot(131);zoom on
 				view = 1;
 			elseif ir == ir_display,
-				figure('Name','Inital distribution'),subplot(132);zoom on
+				figure(Fig_InitDistr),subplot(132);zoom on
 				view = 1;
 			elseif ir == ir_display+1,
-				figure('Name','Inital distribution'),subplot(133);zoom on
+				figure(Fig_InitDistr),subplot(133);zoom on
 				view = 1;
 			end	
 %		
@@ -487,7 +493,7 @@ for ir = 1:nr,
 %
         		Xf0_cyl_ref = Xf0_cyl_ref.*(Xf0_cyl_ref>0);%Remove negative values
         		Xf0_cyl_ref = Xf0_cyl_ref.*(Xp_cyl_ref<max(ppar_cyl_ref));%Remove values above max(ppar)
-            Xf0_cyl_ref(isnan(Xf0_cyl_ref)) = 0;%Remove NaN values
+                Xf0_cyl_ref(isnan(Xf0_cyl_ref)) = 0;%Remove NaN values
 %
         		curr0_ref = 2*pi*integral_dke_jd(dpn_ref(:),pn2_ref(:).*(pn_ref(:)./gamma_ref(:)).*integral_dke_jd(dmhu,Xmhu.*Xf0_ref,2),1);
         		curr0_cyl_ref = 2*pi*integral_dke_jd(dpperp_cyl_ref(:),pperp_cyl_ref(:).*integral_dke_jd(dppar_cyl_ref,Xvpar_cyl_ref.*Xf0_cyl_ref,2),1);
@@ -504,13 +510,13 @@ for ir = 1:nr,
 %
 			view = 0;
 			if ir == ir_display-1,
-				figure('Name','Inital distribution at pperp=0'),subplot(231);zoom on
+				figure(Fig_InitDistrp0),subplot(231);zoom on
 				view = 1;
 			elseif ir == ir_display,
-				figure('Name','Inital distribution at pperp=0'),subplot(232);zoom on
+				figure(Fig_InitDistrp0),subplot(232);zoom on
 				view = 1;
 			elseif ir == ir_display+1,
-				figure('Name','Inital distribution at pperp=0'),subplot(233);zoom on
+				figure(Fig_InitDistrp0),subplot(233);zoom on
 				view = 1;
 			end
 %
@@ -523,13 +529,13 @@ for ir = 1:nr,
 %           
 			view = 0;
 			if ir == ir_display-1,
-				figure('Name','Electron velocity'),subplot(234);zoom on
+				figure(Fig_ElecVeloc),subplot(234);zoom on
 				view = 1;
 			elseif ir == ir_display,
-				figure('Name','Electron velocity'),subplot(235);zoom on
+				figure(Fig_ElecVeloc),subplot(235);zoom on
 				view = 1;
 			elseif ir == ir_display+1,
-				figure('Name','Electron velocity'),subplot(236);zoom on
+				figure(Fig_ElecVeloc),subplot(236);zoom on
 				view = 1;
 			end  
 %
@@ -541,7 +547,7 @@ for ir = 1:nr,
 		else
 			view = 0;
 			if ir == ir_display,
-				figure('Name','Inital distribution'),subplot(132);zoom on
+				figure(Fig_InitDistr),subplot(132);zoom on
 				view = 1;
 			end
 %
@@ -575,7 +581,7 @@ for ir = 1:nr,
 %
 			view = 0;
 			if ir == ir_display,
-				figure('Name','Inital distribution at pperp=0'),subplot(232);zoom on
+				figure(Fig_InitDistrp0),subplot(232);zoom on
 				view = 1;
 			end
 %
@@ -588,7 +594,7 @@ for ir = 1:nr,
 %           
 			view = 0;
 			if ir == ir_display,
-				figure('Name','Electron velocity'),subplot(235);zoom on;pause(time_pause)
+				figure(Fig_ElecVeloc),subplot(235);zoom on;pause(time_pause)
 				view = 1;
 			end    
 %
@@ -669,10 +675,10 @@ for ir = 1:nr,
 end
 %
 if display_mode == 2,
-	figure('Name','Metric relation'),subplot(121),plot(xpsin,xrho,'r-.',xpsin,xrho,'b+');grid on;zoom on
+	figure(Fig_MetRel),subplot(121),plot(xpsin,xrho,'r-.',xpsin,xrho,'b+');grid on;zoom on
 	xlabel('psi/psia');ylabel('rho');title('Metric relation');
 	axis('square');axis([0,1,0,1]);
-	figure('Name','Metric relation'),subplot(122),plot(xrho,xpsin,'r-.',xrho,xpsin,'b+');grid on;zoom on
+	figure(Fig_MetRel),subplot(122),plot(xrho,xpsin,'r-.',xrho,xpsin,'b+');grid on;zoom on
 	xlabel('rho');ylabel('psi/psia');title('Metric relation');
 	axis('square');axis([0,1,0,1]);
 	pause(time_pause);
@@ -736,6 +742,10 @@ P_ref = me*(clum*betath_ref)^2*nhu_ref*ne_ref; %power normalization constant
 save_id = timeid_jd(clock);
 save([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'save_id')
 %
+if ~isempty(waveparam) & nit_rf > 1 & display_mode >= 1,
+	Fig_QLIter = figure('Name','Quasilinear iteration');
+end
+%
 for it_rf=1:nit_rf % convergence in the ray-tracing mode
 %    
 % The diffusion coefficient is proportional to the incident power
@@ -783,7 +793,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
         xTe_norm,xne_norm,zZi,zmi,xzni_norm,xzTi_norm,xZeff,xlnc_e,xrnhuth,...
         betath_ref,xepsi_ref_fsav_in,waveparam,nmax_rf,...
         XXDr_ref,XXVr_ref,...
-		  XXsource_ref,XXlossripple_ref,...
+		XXsource_ref,XXlossripple_ref,...
         xftp_norm_ref,bounce,it_rf,xnloss_norm,coll_mode,...
         norm_mode_f,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,temppath,XXfinit_ref);
 %
@@ -799,20 +809,19 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
         end
 %
         residue_rf(it_rf) = max(max(abs(xyPinc_mod - xyPinc_mod_old)./xyPinc_in));
-		  if display_mode >= 1,
-           if figure('Name','Quasilinear iteration')        
-              plot(1:it_rf,residue_rf,'r+')
-              set(gca,'yscale','log')
-              axis([0,nit_rf,1e-5,1])
-              pause(0.5)
-           end 
+		if display_mode >= 1,
+            figure(Fig_QLIter)        
+            plot(1:it_rf,residue_rf,'r+')
+            set(gca,'yscale','log')
+            axis([0,nit_rf,1e-5,1])
+            pause(0.5)
         end
  %
-		  info_dke_yp(2,'---------------------------------------------------------');
+		info_dke_yp(2,'---------------------------------------------------------');
         info_dke_yp(2,['Quasilinear iteration : ',int2str(it_rf),', Residu = ',num2str(residue_rf(it_rf))]);
-		  info_dke_yp(2,'---------------------------------------------------------');
+		info_dke_yp(2,'---------------------------------------------------------');
  %
-        if it_rf > 2 & residue_rf(it_rf-1) < prec_rf*10,
+        if 0,it_rf > 2 & residue_rf(it_rf-1) < prec_rf*10,
             delta_rt = 0;
         end
         if residue_rf(it_rf) <= prec_rf & it_rf > 10 & redfac == 1,
@@ -886,7 +895,7 @@ if syn_mode == 1,
         xTe_norm,xne_norm,zZi,zmi,xzni_norm,xzTi_norm,xZeff,xlnc_e,xrnhuth,...
         betath_ref,xepsi_bc_ref_fsav_in,waveparam_bc,nmax_rf,...
         XXDr_ref,XXVr_ref,...
-		  XXsource_ref,XXlossripple_ref,...
+		XXsource_ref,XXlossripple_ref,...
         xftp_norm_ref,bounce,1,xnloss_norm,coll_mode,...
         norm_mode_f,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,temppath,XXfinit_ref);
 %
