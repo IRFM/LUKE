@@ -21,8 +21,7 @@ Fig_brempulse = figure('Name','Pulse bremsstrahlung spectrum');
 figure(Fig_brempulse);
 graph1D_jd(Zbremdiag.kfit,Zbremdiag.brem_bd_diag(chord_display,:),0,1,'Pulse energy channel E (keV)','dN_{pulse}/dE.dt [keV^{-1}.s^{-1}]',['HXR diagnostic count rate, chord #',num2str(chord_display)],NaN,'','','-','non','b',2);
 %	
-kphot_display
-ikphot_display = max(find(Zbremdiag.kfit <= kphot_display))
+ikphot_display = max(find(Zbremdiag.kfit <= kphot_display));
 %
 Fig_bremplasmaprof = figure('Name','Plasma bremsstrahlung profile');
 figure(Fig_bremplasmaprof);
