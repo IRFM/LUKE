@@ -1,4 +1,4 @@
-function [] = bremchorddisplay_dke_yp(Zbremchord);
+function [] = bremchorddisplay_dke_yp(Zbremchord)
 %
 % This function draws chord positions for bremsstrahlung tomography
 %
@@ -44,10 +44,12 @@ HHX = Zbremchord.HHX;
 HHY = Zbremchord.HHY;
 xpsin_S = Zbremchord.xpsin_S;
 %
-figure('Name','Safety factor'),
+Fig_safetyfactor = figure('Name','Safety factor');
+figure(Fig_safetyfactor);
 [ax] = graph1D_jd(ptrho,xq,0,0,'Normalized radius {\rho}','q','Safety factor',NaN,'','','-','none','b',2);pause(0.5);%Safety factor profile
 %
-figure('Name','Bremsstrahlung tomography (Poloidal view)'),
+Fig_Brempol = figure('Name','Bremsstrahlung tomography (Poloidal view)');
+figure(Fig_Brempol);
 [ax] = graph1D_jd(sR,sZ,0,0,'','','',NaN,'','','-','none','b',2);pause(0.5);%Poloidal plot
 hold on
 for ir = 1:length(xpsin_S),
@@ -59,7 +61,8 @@ graph1D_jd(VVR_pol,VVZ_pol,0,0,'','','',NaN,'','','-.','non','r',1);
 graph1D_jd(ptR,ptZ,0,0,'X=R (m)','Z (m)','Bremsstrahlung tomography (Poloidal view)',NaN,'','','-','non','r',1);
 hold off
 %
-figure('Name','Poloidal field'),
+Fig_Bpol = figure('Name','Poloidal field');
+figure(Fig_Bpol);
 quiver(RR_pol,ZZ_pol,BR_pol,BZ_pol);
 axis('equal');
 hold on
@@ -68,7 +71,8 @@ graph1D_jd(HHR_pol,HHZ_pol,0,0,'','','',NaN,'','','-.','non','r',1);
 graph1D_jd(VVR_pol,VVZ_pol,0,0,'X=R (m)','Z (m)','Poloidal field (T)',NaN,'','','-.','non','r',1);
 hold off  	
 %
-figure('Name','Bremsstrahlung tomography (Toroidal top view, Z = 0)')
+Fig_Bremtor = figure('Name','Bremsstrahlung tomography (Toroidal top view, Z = 0)');
+figure(Fig_Bremtor);
 h = quiver(X_mfl_lcs(1:40:end),Y_mfl_lcs(1:40:end),BX_mfl_lcs(1:40:end),BY_mfl_lcs(1:40:end),0.5);%Magnetic field line direction
 set(h,'Color','k');
 hold on
