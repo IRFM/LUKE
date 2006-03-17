@@ -2,21 +2,7 @@ function [] = bremlocaldisplay_dke_yp(equil,dkeparam,momentum,radial,display,dke
 %
 % This function draws local properties of the plasma bremsstrahlung
 %
-% INPUTS
-%
-%       - Zbremplasma: Plasma bremsstrahlung data strcuture
-%       
-% OUTPUTS: none
-%
-% by J. Decker (jodecker@alum.mit.edu) and Y. Peysson (yves.peysson@cea.fr)
-%
-
-
-
-
-
-
-
+% by J. Decker (joan.decker@cea.fr) and Y. Peysson (yves.peysson@cea.fr)
 %
 dp_cyl = display.dp_cyl;
 nlevel = display.nlevel;
@@ -54,7 +40,7 @@ xne_norm = xne(r_dke)/ne_ref;
 xrho = xrho1(r_dke);
 %
 i_test = max(find(xrho <= r_display));%Normalized radius index for output and display
-j_test = max(find(theta_hxr(1,:) <= t_display*pi/180));%Poloidal angle index for output and display
+j_test = max(find(theta_hxr(1,:) <= t_display*pi/180 + 2*pi));%Poloidal angle index for output and display
 %
 if ~mask_hxr(i_test,j_test),
    info_dke_yp(2,'WARNING: no chord is going through the plasma volume at the chosen radial and poloidal positions !');
