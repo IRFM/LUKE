@@ -1,4 +1,4 @@
-function  [Zbremplasma] = bremsstrahlung_dke_yp(Zbremchord,equil,hxr,hxrparam,radial,mksa,momentum,dke_out)
+function  [Zbremplasma] = bremsstrahlung_dke_yp(Zbremchord,equil,hxr,hxrparam,dkeparam,display,radial,mksa,momentum,dke_out)
 %
 % Calculates the plasma bremsstrahlung emission. Call first the function bremchord_dke_yp.m
 %
@@ -8,6 +8,8 @@ function  [Zbremplasma] = bremsstrahlung_dke_yp(Zbremchord,equil,hxr,hxrparam,ra
 %       - equil: Magnetic equilibrium structure
 %       - hxr: Bremsstrahlung structure
 %       - hxrparam : Bremsstrahlung calculation and display parameter structure
+%       - dkeparam: DKE data structure
+%       - display: display structure
 %       - radial: Radial grid structure   
 %       - mksa: MKSA structure   
 %       - momentum: momentum structure
@@ -23,7 +25,7 @@ function  [Zbremplasma] = bremsstrahlung_dke_yp(Zbremchord,equil,hxr,hxrparam,ra
 %
 % by Joan Decker <jodecker@mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 %
-if nargin < 13,
+if nargin < 10,
    error('Not enough arguments in bremshtrahlung_dke_yp')
 end
 %	
@@ -46,7 +48,7 @@ xpsin_S_dke = radial.xpsin_S_dke;
 pnmax_S = dkeparam.pnmax_S;
 bounce_mode = dkeparam.bounce_mode;
 %
-[theta,xpsin,psia,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho1,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,xmhu0T2,xdV_dke,xdA_dke] = equilibrium_jd(equil,xpsin,xpsin_S_dke,display_mode,'spline',10);
+[theta,xpsin,psia,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho1,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,xmhu0T2,xdV_dke,xdA_dke] = equilibrium_jd(equil,xpsin,xpsin_S_dke,display.display_mode,'spline',10);
 xzni_norm = xzni(:,r_dke)/ne_ref;
 xne_norm = xne(r_dke)/ne_ref;
 xrho = xrho1(r_dke);
@@ -108,8 +110,8 @@ seHC_c=(reshape(seHC,n_gauleg,size(seBHE,2)*size(seBHE,3))'.*(w_leg*ones(1,size(
 %For test only
 Zbremplasma.seBHE1 = reshape((Pm'*(seBHE_c.*(ones(size(seBHE,2)*size(seBHE,3)*size(seBHE,4),1)*cL'))'),size(seBHE,1),size(seBHE,2),size(seBHE,3),size(seBHE,4));
 Zbremplasma.seHC1 = reshape((Pm'*(seHC_c.*(ones(size(seHC,2)*size(seHC,3),1)*cL'))'),size(seHC,1),size(seHC,2),size(seHC,3));
-Zbremplasma.epsiBHE = (seBHE-seBHE1)./seBHE;epsiBHE(isnan(epsiBHE)==1)=0;
-Zbremplasma.epsiHC = (seHC-seHC1)./seHC;epsiHC(isnan(epsiHC)==1)=0;
+Zbremplasma.epsiBHE = (seBHE-Zbremplasma.seBHE1)./seBHE;Zbremplasma.epsiBHE(isnan(Zbremplasma.epsiBHE)==1)=0;
+Zbremplasma.epsiHC = (seHC-Zbremplasma.seHC1)./seHC;Zbremplasma.epsiHC(isnan(Zbremplasma.epsiHC)==1)=0;
 %
 seBHE_c1 = repmat(reshape(seBHE_c',n_gauleg+1,size(seBHE,2),size(seBHE,3),size(seBHE,4)),[1,1,1,1,size(XXf0,3)]);
 ni_c1 = shiftdim(repmat(xzni_norm,[1,1,n_gauleg+1,size(seBHE,2),size(seBHE,3)]),2);

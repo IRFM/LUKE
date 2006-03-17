@@ -1,18 +1,18 @@
 function [hxr] = bremTSconvert_dke_yp(day,month,year);
 %
 % Convert old coodinate system used for DPSX (in partokyp.m for displaytt.m) in the new one used by DKE. Only useful for Tore Supra HXR diagnostic
-% For other tokamak, use directly the correct system of coordinate
+% For other tokamak, use directly the correct system of coordinate. For
+% Tore Supra use only
 %
 % INPUTS
-%
-%       - day: calibration day (1-31) [1,1]
+%%       - day: calibration day (1-31) [1,1]
 %       - month: calibration month (1-12) [1,1]
 %       - year: calibration year (19** or 20**) [1,1]
 %
 % OUTPUTS
 %
-%       - hxr: hard x-ray diagnostic data structure
-%
+%       - hxr: HXR diagnostic parameter structure
+%      
 % by J. Decker (jodecker@alum.mit.edu) and Y. Peysson (yves.peysson@cea.fr)
 %
 if nargin < 3,
@@ -54,4 +54,3 @@ hxr.td_hxr = td;%type of material for the detector (BGO,CsI,NaI,Ge or CdTe) [1,m
 hxr.kdiag_hxr = kdiag;%Measured photon energy spectrum (keV) [1,k]
 %
 hxr.kphot = [20:10:180];%Photon energy in keV
-%

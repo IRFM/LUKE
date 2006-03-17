@@ -38,7 +38,7 @@ method = hxrparam.method;
 ns = hxrparam.ns;
 IPBT = equil.IPBT;
 xpsin = radial.xpsin_dke;
-xpsin_S = radial.xpsin_dke_S;
+xpsin_S = radial.xpsin_S_dke;
 %
 ns = abs(ns);%Force ns to be always positive
 nchords = length(hxr.alpha_hxr);%chord number

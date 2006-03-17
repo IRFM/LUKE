@@ -29,14 +29,14 @@ function  [Zbremdiag] = bremdiag_dke_yp(Zbremplasma,hxr,hxrparam)
 %      
 % by Joan Decker <jodecker@mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 %
-if nargin < 5,
+if nargin < 3,
 	error('Not enough arguments in bremshtrahlung_dke_yp')
 end
 %
 method = 'cubic';
 %
-kphot = Zbrem.kphot;
-brem_bd_in = Zbrem.brem_bd_out;
+kphot = Zbremplasma.kphot;
+brem_bd_in = Zbremplasma.brem_bd_out;
 %
 kphotmin = hxr.kdiag_hxr(1,1);
 kphotmax = hxr.kdiag_hxr(2,end-1);
@@ -136,4 +136,4 @@ Zbremdiag.tphot_plasma = tphot_plasma;
 Zbremdiag.afit_plasma = afit_plasma;
 Zbremdiag.tphot_plasma_exp = tphot_plasma_exp;
 Zbremdiag.afit_plasma_exp = afit_plasma_exp;
-Zbremdiag.meanabsx = meanabs;
+Zbremdiag.meanabsx = meanabsx;
