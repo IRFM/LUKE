@@ -1,4 +1,4 @@
-function [time0,MMXR_f_t] = rad_dke_yp(npn,nmhu,nr,ns_f,XXDr,XXVr,xpsin,xdpsin,xpsinm,xdpsinm,xpsinp,xdpsinp,XXlambda,XXpn2,Xmhu,Xmhu2,xmhubounce2,xR0,xqtilde,xBp0,xB0,blocksize_f_t,bounce_mode,radial_mode,display_mode)
+function [time0,MMXR_f_t] = rad_dke_yp(npn,nmhu,nr,ns_f,XXDr,XXVr,xpsin,xdpsin,xpsinm,xdpsinm,xpsinp,xdpsinp,XXlambda,XXpn2,Xmhu,Xmhu2,xmhubounce2,xR0,xqtilde,xBp0,xB0,blocksize_f_t,bounce_mode,radial_mode,display_mode,save_id,temppath)
 %
 % Calculation of the anomalous radial fast electron transport matrix coefficients for arbitrary magnetic plasma equilibrium 
 %
@@ -163,7 +163,7 @@ if radial_mode == 1,
           [ibp+(nmhu-ns_f(ir+1))*(ip-1)+((nmhu-ns_f(ir+1))-imhup):-1:ibp+(nmhu-ns_f(ir+1))*(ip-1)+((nmhu-ns_f(ir+1))-imhu0)+1],XMrp2_t(ip,[imhup+1:imhu0]),nMMXP_f_t,nMMXP_f_t);
        end 
 %
-       if display_mode >= 1,info_dke_yp(2,['D and F tensor calculations for fast electron radial transport at radius number (',int2str(ir),'/',int2str(nr),') done in ',num2str(etime(clock,time0)),' (s)']);etime_radial = etime_radial + etime(clock,time0);time0 = clock;end
+       if display_mode >= 1,info_dke_yp(2,['Configuration space matrix calculations (',int2str(ir),'/',int2str(nr),') done in ',num2str(etime(clock,time0)),' (s)']);etime_radial = etime_radial + etime(clock,time0);time0 = clock;end
 %
        for ir = 2:nr-1,
           if ir == 2,
@@ -243,7 +243,7 @@ if radial_mode == 1,
           MMXR_f_t = MMXR_f_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*ip],[ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhum+1:ibm+(nmhu-ns_f(ir-1))*ip],XMrm2_t(ip,[imhu0+1:nmhu-ns_f(ir)]),nMMXP_f_t,nMMXP_f_t);              
        end
 %
-       if display_mode >= 1,info_dke_yp(2,['D and F tensor calculations for fast electron radial transport at radius number (',int2str(ir),'/',int2str(nr),') done in ',num2str(etime(clock,time0)),' (s)']);etime_radial = etime_radial + etime(clock,time0);time0 = clock;end
+       if display_mode >= 1,info_dke_yp(2,['Configuration space matrix calculations (',int2str(ir),'/',int2str(nr),') done in ',num2str(etime(clock,time0)),' (s)']);etime_radial = etime_radial + etime(clock,time0);time0 = clock;end
        time0 = clock;
 %
         save([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'MMXR_f_t');

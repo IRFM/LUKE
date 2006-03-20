@@ -62,7 +62,6 @@ rt_mode = dkeparam.rt_mode;
 nit_rf = dkeparam.nit_rf;
 prec_rf = dkeparam.prec_rf;
 nmax_rf = dkeparam.nmax_rf;
-temppath = dkeparam.temppath;
 %-------------------------------------------
 psin_display = display.psin_display;
 rho_display = display.rho_display;
@@ -456,10 +455,16 @@ end
 % *************************** Display initial distribution function ***************************
 %
 if display_mode == 2,
-	Fig_InitDistr = figure('Name','Inital distribution');	
-	Fig_InitDistrp0 = figure('Name','Inital distribution at pperp=0');
+	Fig_InitDistr = figure('Name','Initial distribution');	
+	Fig_InitDistrp0 = figure('Name','Initial distribution at pperp=0');
 	Fig_ElecVeloc = figure('Name','Electron velocity');
 	Fig_MetRel = figure('Name','Metric relation');
+    if radial_mode == 1,
+       Fig_radialdiff = figure('Name','Fast electron radial diffusion'),
+       Fig_radialpinch = figure('Name','Fast electron radial pinch')
+       Fig_radialtranspvthreshold = figure('Name','Fast electron radial transport velocity threshold');
+       Fig_fastetransp = figure('Name','Fast electron radial transport');
+    end
 end
 %
 for ir = 1:nr,	
@@ -581,7 +586,7 @@ for ir = 1:nr,
 %
 			view = 0;
 			if ir == ir_display,
-				figure(Fig_InitDistrp0),subplot(232);zoom on
+				figure(Fig_InitDistrp0),zoom on;;pause(time_pause)
 				view = 1;
 			end
 %
@@ -594,7 +599,7 @@ for ir = 1:nr,
 %           
 			view = 0;
 			if ir == ir_display,
-				figure(Fig_ElecVeloc),subplot(235);zoom on;pause(time_pause)
+				figure(Fig_ElecVeloc);zoom on;pause(time_pause)
 				view = 1;
 			end    
 %
@@ -609,7 +614,7 @@ for ir = 1:nr,
 		if radial_mode == 1,
 			view = 0;
 			if ir == ir_display,
-				figure('Name','Fast electron radial diffusion'),subplot(121);zoom on
+				figure(Fig_radialdiff),subplot(121);zoom on;pause(time_pause)
 				view = 1;
 			end
 %
@@ -641,7 +646,7 @@ for ir = 1:nr,
 %
 			view = 0;
 			if ir == ir_display,
-				figure('Name','Fast electron radial pinch'),subplot(121);zoom on
+				figure(Fig_radialpinch),subplot(121);zoom on,pause(time_pause)
 				view = 1;
 			end
 %
@@ -685,7 +690,7 @@ if display_mode == 2,
 end	
 %
 if radial_mode == 1 & display_mode == 2,
-	h1005 = figure('Name','Fast electron radial transport velocity threshold');tilefigs_dke_yp(h1005);
+    figure(Fig_radialtranspvthreshold);%tilefigs_dke_yp(h1005);
 	subplot(121),plot(xrho,xvparmin_r_ref,'g-x');grid on;zoom on;
 	axis([0,1,0,1.1*max(xvparmin_r_ref)]);
 	xlabel('rho');
@@ -698,7 +703,7 @@ if radial_mode == 1 & display_mode == 2,
 	title('Radial transport');
 	pause(time_pause);
 %
-	h1006 = figure('Name','Fast electron radial transport');tilefigs_dke_yp(h1006);
+    figure(Fig_fastetransp);%tilefigs_dke_yp(h1006);
 	subplot(121),plot(xrho,xmaxDr_ref,'b-o');grid on;zoom on;
 	if sum(xmaxDr_ref) ~= 0,axis([0,1,0,1.1*max(xmaxDr_ref)]);end
 	xlabel('rho');
@@ -740,6 +745,8 @@ end
 P_ref = me*(clum*betath_ref)^2*nhu_ref*ne_ref; %power normalization constant
 %
 save_id = timeid_jd(clock);
+mkdir(dkeparam.temppath,['DKE_',save_id])
+temppath = [dkeparam.temppath,filesep,'DKE_',save_id,filesep];
 save([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'save_id')
 %
 if ~isempty(waveparam) & nit_rf > 1 & display_mode >= 1,
@@ -1065,4 +1072,5 @@ else
     dke_out.xnsource_bc_ref = [];
     dke_out.xRR_b_fsav = [];
 end
-
+%
+rmdir([dkeparam.temppath,filesep,'DKE_',save_id],'s');
