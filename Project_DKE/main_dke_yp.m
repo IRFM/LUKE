@@ -145,7 +145,7 @@ display = [display_mode,ir_display,time_pause];%Display parameters
 %
 radial_mode = 0;
 if ~isempty(transpfaste),%Radial transport without DKE calculations
-	if  (sum(transpfaste.Dr)~=0 | sum(transpfaste.Vr)~=0) & nr > 1,
+	if  (transpfaste.Dr0~=0 | transpfaste.Vr0~=0) & nr > 1,
 		dke_mode = 0;
 		radial_mode = 1;
 		norm_ref = 1;	
@@ -311,10 +311,10 @@ if ~isempty(transpfaste),
 	alphaD = ap*ap/psia/psia;%For radial diffusion normalization
 	alphaV = ap/psia;%For radial convection normalization
 %
-	xvparmin_r_ref = interp1(rho2psi_jd(equil,transpfaste.rho),transpfaste.vparmin_r,xrho,'spline')/clum/betath_ref;%Normalized to vth_ref
-	xDr = interp1(rho2psi_jd(equil,transpfaste.rho),transpfaste.Dr,xrho,'spline');
-	xVr = interp1(rho2psi_jd(equil,transpfaste.rho),transpfaste.Vr,xrho,'spline');
-%
+    xvparmin_r_ref = transpfaste.vparmin*ones(size(xrho)).*xbetath/betath_ref;%Normalized to vth_ref
+	xDr = transpfaste.Dr0*(1 + transpfaste.pDr*xrho.^2);
+    xVr = transpfaste.Vr0*(1 + transpfaste.pVr*xrho.^2);
+    %
 	for ir = 1:nr,	
 		ivpar_r_ref_threshold = min(find(abs(Xvpar_ref) >= xvparmin_r_ref(ir)));
    		xEc_r_ref_threshold(ir) = mc2*(sqrt(1+pn_ref(ivpar_r_ref_threshold).*pn_ref(ivpar_r_ref_threshold)*betath_ref^2) - 1);%in keV
