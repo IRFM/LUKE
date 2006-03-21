@@ -343,7 +343,7 @@ XXlossripple_ref = zeros(np,nmhu,nr);%Defined on the distribution function grid 
 xdeltaripple = zeros(size(xrho));
 %
 if ~isempty(ripple),
-	xnhuloss_ref = interp1(rho2psi_jd(equil,ripple.rho),ripple.nhuloss,xrho,'spline')/nhu_ref;%Normalized to the reference frequency
+	xnhuloss_ref = ones(size(xrho))*1000/nhu_ref;%Normalized to the reference frequency(forced to very large loss frequency)
 	for ir = 1:nr,	
 		if isnan(xnhuloss_ref(ir)) == 0 & bounce_mode == 1 & isempty(findstr(tokname,'TS')) == 0,%WARNING: only valid for the TORE SUPRA tokamak with large magnetic ripple
 			if ir == 1, 
