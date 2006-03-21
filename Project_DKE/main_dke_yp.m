@@ -1015,7 +1015,8 @@ if ~isempty(ripple),
 end
 dke_out.waveparam = waveparam;
 dke_out.xyprop_dke = xyprop_dke;
-dke_out.xyPinc_in = xyPinc_in;
+dke_out.xyPinc_mod = xyPinc_mod;
+dke_out.residue_rf = residue_rf;
 dke_out.yb = yb;
 dke_out.XXsource_ref = XXsource_ref;
 dke_out.xRR_fsav = xRR_fsav;
