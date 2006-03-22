@@ -87,7 +87,7 @@ for iw = 1:length(waves),%
         % - sdNpar: Ray spectral width in Npar [1,ns] 
         %       if sdNpar is real -> gaussian spectrum, if sdNpar is imag. -> square spectrum (centered on sNpar)
         % - sepol_pmz: polarization vector [3,ns] complex
-        % - sphi_pmz: normalized power flow [3,ns] 
+        % - sphi_xyz: normalized power flow [3,ns] 
         %
         % if these quantities are not calculated by the ray-tracing code,
         % they will be determined from the other RT output according to the
@@ -97,7 +97,7 @@ for iw = 1:length(waves),%
         % - sR, sZ -> spsin, stheta
         % - skR, sn, skZ -> sNpar, sNperp
         % - sNpar -> sdNpar
-        % - opt_disp, sNpar, omega_rf, equil -> sepol_pmz, sNperp, sphi_pmz
+        % - opt_disp, sNpar, omega_rf, equil -> sepol_pmz, sNperp, sphi_xyz
         %
         ray = rayprocess_jd(ray,equil,opt_disp,omega_rf,nmax,method);
         %
@@ -120,12 +120,12 @@ for iw = 1:length(waves),%
         %       if sdNpar is real -> gaussian spectrum, if sdNpar is imag. -> square spectrum (centered on sNpar)
         %
         sepol_pmz = ray.sepol_pmz(:,1:min(ismax,size(ray.sepol_pmz,2)));% polarization vector [3,ns] complex
-        sphi_pmz = ray.sphi_pmz(:,1:min(ismax,size(ray.sphi_pmz,2)));% normalized power flow [3,ns]
+        sphi_xyz = ray.sphi_xyz(:,1:min(ismax,size(ray.sphi_xyz,2)));% normalized power flow [3,ns]
         salphaphi_lin = ray.salphaphi_lin(:,1:min(ismax,length(ray.salphaphi_lin)));% Linear absorption coefficient (m-1) along the propagation [1,ns]
         %
         % Store useful information for DKE in a vsray matrix
         %
-        vsray = [ss;spsin;stheta;sNpar;sNperp;sdNpar;sepol_pmz;sphi_pmz;salphaphi_lin];
+        vsray = [ss;spsin;stheta;sNpar;sNperp;sdNpar;sepol_pmz;sphi_xyz;salphaphi_lin];
         %
         % Regroup vsray matrices in a list
         %
@@ -209,8 +209,8 @@ xydNpar_in = xyvray(:,:,6);
 xyepolp_rf = xyvray(:,:,7);
 xyepolm_rf = xyvray(:,:,8);
 xyepolz_rf = xyvray(:,:,9);
-xyphip_rf = xyvray(:,:,10);
-xyphim_rf = xyvray(:,:,11);
+xyphix_rf = xyvray(:,:,10);
+xyphiy_rf = xyvray(:,:,11);
 xyphiz_rf = xyvray(:,:,12);
 xyalphaphi_lin_rf = xyvray(:,:,13);
 %
@@ -232,14 +232,14 @@ xyNparmax_rf(xymaskSquare_rf) = xyNpar_in(xymaskSquare_rf) + imag(xydNpar_in(xym
 %
 wpe_ref = sqrt(ne_ref*qe^2/e0/me);
 %
-xyabsphi_pmz_rf = sqrt(abs(xyphip_rf).^2 + abs(xyphim_rf).^2 + abs(xyphiz_rf).^2);
+xyabsphi_xyz_rf = sqrt(abs(xyphix_rf).^2 + abs(xyphiy_rf).^2 + abs(xyphiz_rf).^2);
 %
-xyabsphi_pmz_rf(xyabsphi_pmz_rf == 0) = eps;%avoid singularities
+xyabsphi_xyz_rf(xyabsphi_xyz_rf == 0) = eps;%avoid singularities
 xydNpar_rf(xydNpar_rf == 0) = eps;%avoid singularities
 %
 [xyBb_rf,xyBPb_rf,xyrb_rf,xyRb_rf] = mg_interp_jd(theta,XR,XZ,XBR,XBZ,XBphi,Rp,Zp,xythetab_rf,method);
 %
-xyD0_rf_ref = xyfinc_rf.*xyP0_in_rf./(xyrb_rf.*xyRb_rf*me*lnc_e_ref.*xyomega_rf*wpe_ref^2.*xyabsphi_pmz_rf);
+xyD0_rf_ref = xyfinc_rf.*xyP0_in_rf./(xyrb_rf.*xyRb_rf*me*lnc_e_ref.*xyomega_rf*wpe_ref^2.*xyabsphi_xyz_rf);
 %
 waveparam = zeros(nr,nbb_rf,13);
 %
