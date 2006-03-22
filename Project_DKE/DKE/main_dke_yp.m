@@ -753,7 +753,16 @@ if ~isempty(waveparam) & nit_rf > 1 & display_mode >= 1,
 	Fig_QLIter = figure('Name','Quasilinear iteration');
 end
 %
+if nit_rf > 1,%No radial transport for initial quasilinear iterations
+    XXDr_ref_in = zeros(size(XXDr_ref));
+    XXVr_ref_in = zeros(size(XXVr_ref));
+else
+    XXDr_ref_in = XXDr_ref;
+    XXVr_ref_in = XXVr_ref;    
+end
+%
 for it_rf=1:nit_rf % convergence in the ray-tracing mode
+
 %    
 % The diffusion coefficient is proportional to the incident power
 %
@@ -799,11 +808,12 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
         pn,dpn,pnm,dpnm,pnp,dpnp,pn_S,spfac,...
         xTe_norm,xne_norm,zZi,zmi,xzni_norm,xzTi_norm,xZeff,xlnc_e,xrnhuth,...
         betath_ref,xepsi_ref_fsav_in,waveparam,nmax_rf,...
-        XXDr_ref,XXVr_ref,...
+        XXDr_ref_in,XXVr_ref_in,...
 		XXsource_ref,XXlossripple_ref,...
         xftp_norm_ref,bounce,it_rf,xnloss_norm,coll_mode,...
         norm_mode_f,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,temppath,XXfinit_ref);
 %
+    XXfinit_ref = XXf0_ref;
     if ~isempty(waveparam) & nit_rf > 1,
     	if dke_mode >= 1,
 	        xyPabs_rf_dke_fsav_out = ZP0_ref.xy_rf_fsav + ZP0_ref.xy_rf_tp_fsav + ZP0_ref.xy_rf_g_fsav; % flux-surface averaged density of absorbed power.
@@ -825,12 +835,22 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
         end
  %
 		info_dke_yp(2,'---------------------------------------------------------');
-        info_dke_yp(2,['Quasilinear iteration : ',int2str(it_rf),', Residu = ',num2str(residue_rf(it_rf))]);
+        info_dke_yp(2,['Quasilinear iteration : ',int2str(it_rf),', Residu = ',num2str(residue_rf(it_rf)),', delta_rt = ',num2str(delta_rt)]);
 		info_dke_yp(2,'---------------------------------------------------------');
  %
         if 0,it_rf > 2 & residue_rf(it_rf-1) < prec_rf*10,
-            delta_rt = 0;
+            delta_rt = 0;s
         end
+ %      
+         if residue_rf(it_rf) < 0.001 
+            delta_rt = delta_rt/1.1;%For increasing the quasilinear rate of convergence
+            if ~isempty(XXDr_ref) == 1 | ~isempty(XXVr_ref) == 1,%If radial transport is no zero, it is turned on when quasilinear convergence is robust enough
+                param_inv(1) = 1e-4;
+                XXDr_ref_in = XXDr_ref;
+                XXVr_ref_in = XXVr_ref;
+            end
+         end     
+  %      
         if residue_rf(it_rf) <= prec_rf & it_rf > 10 & redfac == 1,
             info_dke_yp(2,['Successfull convergence achieved for ray-tracing coupling after ',int2str(it_rf),' iterations !']);
             break
