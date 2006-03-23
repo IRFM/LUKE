@@ -94,11 +94,11 @@ end
 %
 %   Dispersion tensor for + root
 %
-Dxyzp = Nxyzp*Nxyzp' - sum(Nxyzp.^2)*diag([1,1,1]) + Kxyz;
+Dxyzp = Nxyzp*Nxyzp.' - sum(Nxyzp.^2)*diag([1,1,1]) + Kxyz;
 %
 %   Dispersion tensor for - root
 %
-Dxyzm = Nxyzm*Nxyzm' - sum(Nxyzm.^2)*diag([1,1,1]) + Kxyz;
+Dxyzm = Nxyzm*Nxyzm.' - sum(Nxyzm.^2)*diag([1,1,1]) + Kxyz;
 %
 %   Eigenvectors
 %
@@ -142,9 +142,9 @@ Npmzm = M_xypm*Nxyzm;
 Npykp = Mp_xzpk*Nxyzp;
 Npykm = Mm_xzpk*Nxyzm;
 %
-phip_xyz = real(Nxyzp - (Nxyzp'*ep_xyz)*conj(ep_xyz));
-phim_xyz = real(Nxyzm - (Nxyzm'*em_xyz)*conj(em_xyz)); 
-phip_pmz = real(Npmzp - (Npmzp'*ep_pmz)*conj(ep_pmz));
-phim_pmz = real(Npmzm - (Npmzm'*em_pmz)*conj(em_pmz)); 
-phip_pyk = real(Npykp - (Npykp'*ep_pyk)*conj(ep_pyk)); 
-phim_pyk = real(Npykm - (Npykm'*em_pyk)*conj(em_pyk));
+phip_xyz = real(Nxyzp - (Nxyzp.'*ep_xyz)*conj(ep_xyz));
+phim_xyz = real(Nxyzm - (Nxyzm.'*em_xyz)*conj(em_xyz)); 
+phip_pmz = real(Npmzp - (Npmzp.'*ep_pmz)*conj(ep_pmz));
+phim_pmz = real(Npmzm - (Npmzm.'*em_pmz)*conj(em_pmz)); 
+phip_pyk = real(Npykp - (Npykp.'*ep_pyk)*conj(ep_pyk)); 
+phim_pyk = real(Npykm - (Npykm.'*em_pyk)*conj(em_pyk));
