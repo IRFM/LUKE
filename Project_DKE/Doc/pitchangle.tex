@@ -13,20 +13,20 @@ a very high momentum, loosing a small amount of them may not affect their
 dynamics significantly (they remain in the runaway phase space after the
 momentum transfer), but for the low velocity electrons, the gain in energy
 may be so large that the drag force is suddenly strongly decreasing. For an
-electron whose kinetic energy is closely below the runaway energy threshold,
-such a process may make it runaway, leading by multiple interactions to the
-avalanche effect.
+electron whose kinetic energy is closely below the runaway energy threshold $%
+E_{c}$, such a process may make it runaway, leading by multiple interactions
+to the avalanche effect.
 
 The electron is characterized by the 4-momentum vector $\mathbf{P}$ defined
 as 
 \begin{equation}
-\mathbf{P\equiv }\gamma \left( 1,\mathbf{v}\right)
+\mathbf{P\equiv }\gamma \left( 1,\mathbf{v}\right) 
 \end{equation}%
-where $\gamma =\sqrt{1+p^{2}}=1/\sqrt{1-v^{2}}$ is the normalized total
-energy $E_{T}=\gamma m_{e}c^{2},$ and $\mathbf{v}$ is the velocity
-normalized to the speed of light $c$, and the normalized momentum is $%
-p=\gamma m_{e}c$. The scalar product for the 4-momentum vector $\mathbf{P}$
-is defined by the relation 
+where $\gamma =\sqrt{1+p^{2}}=1/\sqrt{1-v^{2}}$ is the total energy $%
+E_{T}=\gamma m_{e}c^{2}$ normalized to the electron rest mass energy, $%
+\mathbf{v}$ is the velocity normalized to the speed of light $c$, the
+normalized momentum being $p=\gamma m_{e}c$. The scalar product for the
+4-momentum vector $\mathbf{P}$ is defined by the relation 
 \begin{equation}
 \mathbf{A\cdot B=}A_{1}B_{1}-A_{2}B_{2}-A_{3}B_{3}-A_{4}B_{4}
 \end{equation}%
@@ -60,7 +60,7 @@ Squaring both sides and using the definition of the scalar product for
 and using the formulation 
 \begin{equation}
 \mathbf{P}_{i}\mathbf{\cdot P}_{j}=\gamma _{i}\gamma _{j}\left( 1-\mathbf{v}%
-_{i}\mathbf{\cdot v}_{j}\right) 
+_{i}\mathbf{\cdot v}_{j}\right)
 \end{equation}%
 with the assumptions that $\mathbf{v}_{0}\sim 0$ and $\gamma _{0}\sim 1$
 since the target electron is nearly at rest before the collision, one
@@ -82,10 +82,10 @@ secondary electron as defined in Fig. \ref{angleee}.
 %BeginExpansion
 \fig{figures/angleee.eps} {Directions of primary and secondary electrons with respect to the local magnetic field direction} {angleee}{10cm}%
 %EndExpansion
-. 
+.
 
-From relation (\ref{eecoll}), the expression of  knock-on pitch-angle cosine 
-$\xi ^{\ast }$ is%
+From relation (\ref{eecoll}), the expression of knock-on pitch-angle cosine $%
+\xi ^{\ast }$ is%
 \begin{eqnarray}
 \xi ^{\ast }\left( p_{1},p_{2}\right)  &=&-\frac{\left( 1+\gamma _{1}\right)
 \left( 1-\gamma _{2}\right) }{p_{1}p_{2}}  \notag \\
@@ -94,9 +94,10 @@ $\xi ^{\ast }$ is%
 &=&\sqrt{\left( \frac{\gamma _{1}+1}{\gamma _{1}-1}\right) \left( \frac{%
 \gamma _{2}-1}{\gamma _{2}+1}\right) }  \label{pitchanglerunaway}
 \end{eqnarray}%
-and since $\left\vert \xi ^{\ast }\right\vert \leq 1,$ the validity of this
-relation implies $p_{2}\leq p_{1}.$ For very energetic runaway electrons, $%
-\gamma _{1}\gg 1$, $\xi ^{\ast }$ becomes independent of $\gamma _{1},$     
+and since $p_{2}\leq p_{1},$ the validity of this relation implies $%
+\left\vert \xi ^{\ast }\right\vert \leq 1.$ For very energetic runaway
+electrons, $\gamma _{1}\gg 1$, $\xi ^{\ast }$ becomes independent of $\gamma
+_{1},$ 
 \begin{equation}
 \lim_{\gamma _{1}\rightarrow +\infty }\xi ^{\ast }=\xi ^{\ast \infty }=\sqrt{%
 \frac{\gamma _{2}-1}{\gamma _{2}+1}}
@@ -105,26 +106,26 @@ and $\xi ^{\ast \infty }$ is only function of the momentum $p_{2}$ of the
 scattered electron after its collision with the fast one, as clearly shown
 in Fig.\ref{avalanchecosine} 
 %TCIMACRO{%
-%\TeXButton{Fig_avalanchecosine}{\fig{figures/avalanchecosine.eps}{Cosine of the knowk-on pitch-angle scattering.} {avalanchecosine}{10cm}}}%
+%\TeXButton{Fig_avalanchecosine}{\fig{figures/avalanchecosine.eps}{Cosine of the knock-on pitch-angle scattering.} {avalanchecosine}{10cm}}}%
 %BeginExpansion
-\fig{figures/avalanchecosine.eps}{Cosine of the knowk-on pitch-angle scattering.} {avalanchecosine}{10cm}%
+\fig{figures/avalanchecosine.eps}{Cosine of the knock-on pitch-angle scattering.} {avalanchecosine}{10cm}%
 %EndExpansion
 .
 
 When $p_{2}\sim 0,$ i.e. when the gain in energy is small, $\xi ^{\ast }$ is
-close to zero, which means that the scattering is perpendicular to the
-direction of the primary runaway electron. In that case, the slow electron
-gains only perpendicular energy with respect to the magnetic field line
-direction. Conversely, when $p_{2}\gg 1,$ the slow electron becomes very
-energetic in the collision process, and in this case $\xi ^{\ast }\sim 1,$
-which means that the electron has a high probability to fall into the
-runaway region in the momentum phase space. It is important to notice that $%
-\xi ^{\ast }>0,$ i.e. that the rest electrons can only be scattered in the
-direction of the primary runaway electron, and the locus of the end point of
-the scattered momentum is along an ellipse as mentioned in Ref. \cite{chi98}%
-. Let define $p_{2\Vert }=p_{2}\xi ^{\ast },$ the projection of the
-scattered electron momentum on the momentum direction of the primary
-electron as shown in Fig. \ref{runawayscattering} 
+close to zero, which means that the scattering is almost perpendicular to
+the direction of the primary runaway electron. In that case, the slow
+electron gains only perpendicular energy with respect to the magnetic field
+line direction. Conversely, when $p_{2}\gg 1,$ the slow electron becomes
+very energetic in the collision process, and in this case $\xi ^{\ast }\sim
+1,$ which means that the knock-on electron has a high probability to fall
+into the runaway region in the momentum phase space. It is important to
+notice that $\xi ^{\ast }>0,$ i.e. that the rest electrons can only be
+scattered in the direction of the primary runaway electron, and the locus of
+the end point of the scattered momentum is along an ellipse as mentioned in
+Ref. \cite{chi98}. Let define $p_{2\Vert }=p_{2}\xi ^{\ast },$ the
+projection of the scattered electron momentum on the momentum direction of
+the primary electron as shown in Fig. \ref{runawayscattering} 
 %TCIMACRO{%
 %\TeXButton{Fig_runawayscattering}{\fig{figures/runawayscattering.eps}{Directions of primary and secondary electrons with respect to the local magnetic field direction.
 %The upper limit of the integration domain of the Fokker-Planck equation is represented by the dot-dashed line circle, corresponding to
@@ -186,8 +187,8 @@ _{1}^{2}-1}}
 \subsection{Secondary electron source term}
 
 The secondary electron source term or the scattering rate is given by the M%
-\o ller differential relativistic electron-electron cross-section \cite%
-{hei57}, which has the following form 
+\o ller differential relativistic electron-electron cross-section in $4\pi $
+\cite{hei57}, which has the following form 
 \begin{equation}
 d\sigma _{M}=2\pi r_{e}^{2}\sum \left( \gamma _{1},\gamma _{2}\right)
 d\gamma _{2}
@@ -203,15 +204,15 @@ _{1}-\gamma _{2}\right) ^{2}}\times   \notag \\
 &&\left. \left[ 2\gamma _{1}^{2}+2\gamma _{1}-1-\left( \gamma _{2}-1\right)
 \left( \gamma _{1}-\gamma _{2}\right) \right] \right\} 
 \end{eqnarray}%
-which becomes for very energetic runaways, 
+which becomes for very energetic runaways $\gamma _{1}\gg 1$, 
 \begin{equation}
 \lim_{\gamma _{1}\rightarrow \infty }\sum \left( \gamma _{1},\gamma
 _{2}\right) =\frac{1}{\left( \gamma _{2}-1\right) ^{2}}=\frac{1}{E_{c2}^{2}}
 \end{equation}%
 if one introduces the kinetic energy $E_{c2}=\gamma _{2}-1$ of the scattered
-electron. The high velocity limit is an excellent assumption over a wide
-range of runaway electron energies, as shown in Fig. \ref%
-{avalanchecrosssection} 
+electron, normalized to the electron energy rest mass. The high velocity
+limit is an excellent assumption over a wide range of runaway electron
+energies, as shown in Fig. \ref{avalanchecrosssection} 
 %TCIMACRO{%
 %\TeXButton{Fig_avalanchecrosssection}{\fig{figures/avalanchecrosssection.eps}{Differential cross-section of knock-on pitch-angle scattering as given by formula \ref{diffcross}.} {avalanchecrosssection}{10cm}}}%
 %BeginExpansion
@@ -225,52 +226,52 @@ _{1}^{2}-1\right) }\left( \frac{\gamma _{1}^{2}E_{c1}^{2}}{E_{c2}^{2}\left(
 E_{c1}-E_{c2}\right) ^{2}}-\frac{2\gamma _{1}^{2}+2\gamma _{1}-1}{%
 E_{c2}\left( E_{c1}-E_{c2}\right) }+1\right) 
 \end{equation}%
-where $E_{c1}=\gamma _{1}-1$ is simply the kinetic energy of the primary
-electron after the collision.
+where $E_{c1}=\gamma _{1}-1$ is simply the normalized kinetic energy of the
+primary electron after the collision.
 
 Recalling that $\gamma _{2}=\sqrt{1+p_{2}^{2}},$ $d\gamma _{2}=\left(
 p_{2}/\gamma _{2}\right) dp_{2}$, the general expression of the knock-on
-cross-section becomes simply 
+cross-section in $4\pi $ becomes simply 
 \begin{equation}
 d\sigma _{M}=2\pi r_{e}^{2}\sum \left( \gamma _{1},\gamma _{2}\right) \left( 
 \frac{p_{2}}{\gamma _{2}}\right) dp_{2}
 \end{equation}%
-and its differential form $d\sigma _{M}/d\Omega _{2}$ in the momentum space
-at the coordinates $\left( p_{2},\xi _{2}\right) $ viewed under the
-elementary solid angle $d\Omega _{2}=2\pi p_{2}^{2}dp_{2}d\xi _{2}$ from the
-point $p=0,$ since the initial velocity of the scattered electron is zero,
-is simply 
+and since for a given primary electron $p_{1},$ the scattering angle $\xi
+_{2}$ is uniquely defined knowing $p_{2}$ because of energy and momentum
+conservation, it turns out that 
 \begin{equation}
-\frac{d\sigma _{M}}{d\Omega _{2}}=r_{e}^{2}\frac{\sum \left( \gamma
-_{1},\gamma _{2}\right) }{p_{2}\gamma _{2}}\delta \left( \xi _{2}-\xi ^{\ast
-}\left( p_{1},p_{2}\right) \right)   \label{diffcross}
+\frac{d\sigma _{M}}{d^{3}p_{2}}=r_{e}^{2}\frac{\sum \left( \gamma
+_{1},\gamma _{2}\right) }{\gamma _{2}p_{2}}\delta \left( \xi _{2}-\xi ^{\ast
+}\left( p_{1},p_{2}\right) \right) 
 \end{equation}%
-Here, the probability of scattering is assumed to have an azimuthal symmetry
-around the primary electron momentum direction. The delta function
-corresponds to the angular relation imposed by energy and momentum
+where $d^{3}p_{2}=2\pi p_{2}^{2}dp_{2}d\xi _{2}$ is the elementary volume in
+momentum space viewed under the elementary solid angle $d\Omega _{2}=2\pi
+d\xi _{2}$ from the point $p=0,$ since the initial velocity of the scattered
+electron is zero. Here, the differential cross-section is assumed to have an
+azimuthal symmetry around the primary electron momentum direction. The delta
+function corresponds to the angular relation imposed by energy and momentum
 conservations. In the limit $p_{1}\gg 1$%
 \begin{equation}
-\frac{d\sigma _{M}}{d\Omega _{2}}=\frac{r_{e}^{2}}{p_{2}\gamma _{2}\left(
+\frac{d\sigma _{M}}{d^{3}p_{2}}=\frac{r_{e}^{2}}{p_{2}\gamma _{2}\left(
 \gamma _{2}-1\right) ^{2}}\delta \left( \xi _{2}-\xi ^{\ast \infty }\left(
 p_{2}\right) \right) 
 \end{equation}%
 which is again a function of $p_{2}$ only.
 
-In order to calculate all secondary electrons in the mometum phase space
-shown in  Fig. \ref{runawayscattering}. several processes must be
-considered: first, the case of secondary electrons produced inside the
-integration domain $\Pi _{i}$ of the Fokker-Planck equation by a beam of
-very energetic runaways lying in the region $\Pi _{o}$ outside $p_{\max }%
-\footnote{%
-In this case, it is supposed that runaway electrons have reached their
-asymptotic velocity close to the speed of light, forming a beam of particles
-inside the plasma volume on the magnetic axis.}$, then secondary electrons
-which jump directly from the thermal bulk to the runaway region $\Pi _{o}$
-by knock-on collisions, and finally secondary electrons that are produced
-inside the integration domain $\Pi _{i}$ by knock-on collisions with a
-distribution of primary electrons whose momentum is less than $p_{\max }.$
-In this latter case, the full distribution in velocity and pitch-angle of
-the primary electrons must be taken into account. 
+In order to calculate all secondary electrons in the momemtum phase space
+shown in Fig. \ref{runawayscattering}. several processes must be considered:
+first, the case of secondary electrons produced inside the integration
+domain $\Pi _{i}$ of the Fokker-Planck equation by a beam of very energetic
+runaways lying in the region $\Pi _{o}$ outside $p_{\max }\footnote{%
+It is supposed that runaway electrons have reached their asymptotic velocity
+close to the speed of light, forming a beam of particles inside the plasma
+volume on the magnetic axis.}$, then secondary electrons which jump directly
+from the thermal bulk to the runaway region $\Pi _{o}$ by knock-on
+collisions, and finally secondary electrons that are produced inside the
+integration domain $\Pi _{i}$ by knock-on collisions with a distribution of
+primary electrons whose momentum is less than $p_{\max }.$ In this latter
+case, the full distribution in velocity and pitch-angle of the primary
+electrons must be taken into account.
 
 \subsubsection{Source term from collisions with a beam of very energetic
 runaway electrons}
@@ -289,7 +290,7 @@ and in the limit $\gamma _{1}\gg 1,$
 Using the relation $d\gamma _{2}=dE_{c2},$ one obtains readily 
 \begin{eqnarray}
 d\sigma _{M} &\approx &2\pi r_{e}^{2}\frac{dE_{c2}}{E_{c2}^{2}}  \notag \\
-&=&-2\pi r_{e}^{2}d\left( \frac{1}{E_{c2}}\right)   \notag \\
+&=&-2\pi r_{e}^{2}d\left( \frac{1}{E_{c2}}\right)  \notag \\
 &=&-2\pi r_{e}^{2}\frac{d\left( 1/E_{c2}\right) }{dp_{2}}dp_{2}  \notag \\
 &=&2\pi r_{e}^{2}\frac{d}{dp_{2}}\left( \frac{1}{1-\gamma _{2}}\right) dp_{2}
 \notag \\
@@ -303,7 +304,7 @@ all primary electrons are considered having approximately zero pitch-angle
 with respect to the magnetic field direction $\widehat{\mathbf{b}}$, the
 differential electron-electron knock-on collision cross-section is 
 \begin{equation}
-\frac{d\sigma _{M}}{d\Omega _{2}}\simeq \frac{r_{e}^{2}}{p_{2}^{2}}\frac{d}{%
+\frac{d\sigma _{M}}{d^{3}p_{2}}\simeq \frac{r_{e}^{2}}{p_{2}^{2}}\frac{d}{%
 dp_{2}}\left( \frac{1}{1-\sqrt{1+p_{2}^{2}}}\right) \delta \left( \xi
 _{2}-\xi ^{\ast \infty }\left( p_{2}\right) \right) 
 \end{equation}
@@ -312,40 +313,41 @@ From this expression, it is possible to derive the local value of secondary
 runaway electron source term $\mathcal{S}_{R}^{\Pi _{o}\rightarrow \Pi
 _{i}}\left( t,\theta ,\psi ,p_{2},\xi _{2}\right) $ inside the domain $\Pi
 _{i}$ at the poloidal position $\theta ,$ on the magnetic flux surface $\psi 
-$ and at time $t$ arising from a beam of monoenergetic primary electrons of
+$ and at time $t$ arising from a beam of monoenergetic runaway electrons of
 normalized velocity $v_{1}$ (here to the speed of light $c$), lying in the
 domain $\Pi _{o}.$ From the standard definition 
 \begin{equation}
 n_{e}\left( t,\psi \right) n_{R}\left( t,\psi \right) cv_{1}\frac{d\sigma
-_{M}}{d\Omega _{2}}=\mathcal{S}_{R}^{\Pi _{o}\rightarrow \Pi _{i}}\left(
+_{M}}{d^{3}p_{2}}=\mathcal{S}_{R}^{\Pi _{o}\rightarrow \Pi _{i}}\left(
 t,\theta ,\psi ,p_{2},\xi _{2}\right) 
 \end{equation}%
 so that 
 \begin{equation}
 \mathcal{S}_{R}^{\Pi _{o}\rightarrow \Pi _{i}}\left( t,\theta ,\psi
 ,p_{2},\xi _{2}\right) =\frac{cv_{1}r_{e}^{2}}{p_{2}^{2}}n_{e}\left( t,\psi
-\right) n_{R}\left( t,\psi \right) \frac{d}{dp_{2}}\left( \frac{1}{1-\sqrt{%
-1+p_{2}^{2}}}\right) \delta \left( \xi _{2}-\xi ^{\ast \infty }\left(
-p_{2}\right) \right) 
+\right) n_{R}^{\Pi _{o}}\left( t,\psi \right) \frac{d}{dp_{2}}\left( \frac{1%
+}{1-\sqrt{1+p_{2}^{2}}}\right) \delta \left( \xi _{2}-\xi ^{\ast \infty
+}\left( p_{2}\right) \right) 
 \end{equation}%
-where $n_{R}\left( t,\psi \right) $ is the density of primary runaway
-electrons and $n_{e}\left( t,\psi \right) $ is the density of target
-electrons which are scattered at momentum $p_{2}$ with a pitch-angle cosine $%
-\xi ^{\ast \infty }\left( p_{2}\right) $. \strut Here $n_{R}$ is only a
-function of the radial position $\psi $, since fast electrons are only
-passing particles with no magnetic moments (zero pitch-angle approximation).
+where $n_{R}^{\Pi _{o}}\left( t,\psi \right) $ is the density of all runaway
+electrons in the domain $\Pi _{o}$ and $n_{e}\left( t,\psi \right) $ is the
+density of target electrons which are scattered at momentum $p_{2}$ with a
+pitch-angle cosine $\xi ^{\ast \infty }\left( p_{2}\right) $. \strut Here $%
+n_{R}$ is only a function of the radial position $\psi $, since fast
+electrons are only passing particles with no magnetic moments (zero
+pitch-angle approximation).
 
 In the high velocity limit, $v_{1}\approx 1,$ one obtains finally
 
 \begin{equation}
 \mathcal{S}_{R}^{\Pi _{o}\rightarrow \Pi _{i}}\left( t,\theta ,\psi
-,p_{2},\xi _{2}\right) =\frac{cr_{e}^{2}}{p_{2}^{2}}n_{e}n_{R}\frac{d}{dp_{2}%
-}\left( \frac{1}{1-\sqrt{1+p_{2}^{2}}}\right) \delta \left( \xi _{2}-\xi
-^{\ast \infty }\left( p_{2}\right) \right) 
+,p_{2},\xi _{2}\right) =\frac{cr_{e}^{2}}{p_{2}^{2}}n_{e}n_{R}^{\Pi _{o}}%
+\frac{d}{dp_{2}}\left( \frac{1}{1-\sqrt{1+p_{2}^{2}}}\right) \delta \left(
+\xi _{2}-\xi ^{\ast \infty }\left( p_{2}\right) \right) 
 \end{equation}
 
-Therefore, dropping the index $2$, the secondary electron source term
-arising from very energetic runaway electrons lying in the region $\Pi _{o}$
+Therefore, dropping index $2$, the secondary electron source term arising
+from a beam very energetic runaway electrons lying in the region $\Pi _{o}$
 beyond the upper integration limit $p_{\max }$ of the Fokker-Planck equation
 is 
 \begin{equation}
@@ -376,14 +378,14 @@ _{e}n_{e}^{\dag },$ $n_{R}^{\Pi _{o}}=\overline{n}_{R}^{\Pi _{o}}n_{e}^{\dag
 \left( \gamma -1\right) ^{2}}\delta \left( \xi -\xi ^{\ast }\left( \overline{%
 p}\right) \right) 
 \end{equation}%
-and from the relation \ref{normcollfreq} for the reference frequency $\nu
-_{e}^{\dag },$ 
+and from the relation \ref{normcollfreq} for the reference electron-eelctron
+collision frequency $\nu _{e}^{\dag }$ used in the code, 
 \begin{equation}
 \mathcal{S}_{R}^{\Pi _{o}\rightarrow \Pi _{i}}\left( t,\theta ,\psi ,%
-\overline{p},\xi \right) =\frac{\nu _{e}^{\dag }}{\ln \Lambda _{ee}^{\dag }}%
-n_{e}^{\dag }\beta _{th}^{\dag 2}\overline{n}_{e}\overline{n}_{R}^{\Pi _{o}}%
-\frac{1}{\overline{p}\gamma \left( \gamma -1\right) ^{2}}\delta \left( \xi
--\xi ^{\ast }\left( \overline{p}\right) \right) 
+\overline{p},\xi \right) =\frac{1}{4\pi }\frac{\nu _{e}^{\dag }n_{e}^{\dag
+}\beta _{th}^{\dag 2}}{\ln \Lambda _{ee}^{\dag }}\overline{n}_{e}\overline{n}%
+_{R}^{\Pi _{o}}\frac{1}{\overline{p}\gamma \left( \gamma -1\right) ^{2}}%
+\delta \left( \xi -\xi ^{\ast }\left( \overline{p}\right) \right) 
 \end{equation}
 
 It is convenient to defined the normalized source of secondary electrons as $%
@@ -392,18 +394,19 @@ It is convenient to defined the normalized source of secondary electrons as $%
 t,\theta ,\psi ,p,\xi \right) /n_{e}^{\dag }\nu _{e}^{\dag },$ and 
 \begin{equation}
 \overline{\mathcal{S}}_{R}^{\Pi _{o}\rightarrow \Pi _{i}}\left( t,\theta
-,\psi ,p,\xi \right) =\frac{\beta _{th}^{\dag 2}}{\ln \Lambda _{ee}^{\dag }}%
-\overline{n}_{e}\overline{n}_{R}^{\Pi _{o}}\frac{1}{\overline{p}\gamma
-\left( \gamma -1\right) ^{2}}\delta \left( \xi -\xi ^{\ast }\left( \overline{%
-p}\right) \right) 
+,\psi ,p,\xi \right) =\frac{1}{4\pi }\frac{\beta _{th}^{\dag 2}}{\ln \Lambda
+_{ee}^{\dag }}\overline{n}_{e}\overline{n}_{R}^{\Pi _{o}}\frac{1}{\overline{p%
+}\gamma \left( \gamma -1\right) ^{2}}\delta \left( \xi -\xi ^{\ast }\left( 
+\overline{p}\right) \right) 
 \end{equation}%
 or 
 \begin{equation}
 \overline{\mathcal{S}}_{R}^{\Pi _{o}\rightarrow \Pi _{i}}\left( t,\theta
-,\psi ,p,\xi \right) =\frac{1}{\ln \Lambda _{ee}^{\dag }}\overline{n}_{e}%
-\overline{n}_{R}^{\Pi _{o}}\frac{1}{\overline{p}^{2}}\frac{d}{d\overline{p}}%
-\left( \frac{1}{1-\sqrt{1+\beta _{th}^{\dag 2}\overline{p}^{2}}}\right)
-\delta \left( \xi -\xi ^{\ast }\left( \overline{p}\right) \right) 
+,\psi ,p,\xi \right) =\frac{1}{4\pi }\frac{1}{\ln \Lambda _{ee}^{\dag }}%
+\overline{n}_{e}\overline{n}_{R}^{\Pi _{o}}\frac{1}{\overline{p}^{2}}\frac{d%
+}{d\overline{p}}\left( \frac{1}{1-\sqrt{1+\beta _{th}^{\dag 2}\overline{p}%
+^{2}}}\right) \delta \left( \xi -\xi ^{\ast }\left( \overline{p}\right)
+\right) 
 \end{equation}%
 which is exactly the expression given in Ref. \cite{ros97}. In order to
 remove the poloidal dependence, $\overline{\mathcal{S}}_{R}^{\Pi
@@ -417,27 +420,27 @@ secondary runaway electrons $\overline{\mathcal{n}}_{R}^{\Pi _{o}\rightarrow
 \Pi _{o}}$which directly jump outside the integration domain by the knock-on
 process. It is given by the relation%
 \begin{equation}
-\overline{\mathcal{n}}_{R}^{\Pi _{o}\rightarrow \Pi _{o}}=2\pi \int_{p_{\max
-}}^{+\infty }\frac{1}{\ln \Lambda _{ee}^{\dag }}\overline{n}_{e}\overline{n}%
-_{R}^{\Pi _{o}}\frac{d}{d\overline{p}}\left( \frac{1}{1-\sqrt{1+\beta
-_{th}^{\dag 2}\overline{p}^{2}}}\right) d\overline{p}\int_{-1}^{+1}\delta
-\left( \xi -\xi ^{\ast }\left( \overline{p}\right) \right) d\xi 
+\overline{\mathcal{n}}_{R}^{\Pi _{o}\rightarrow \Pi _{o}}=2\pi \int_{%
+\overline{p}_{\max }}^{+\infty }\frac{1}{4\pi }\frac{1}{\ln \Lambda
+_{ee}^{\dag }}\overline{n}_{e}\overline{n}_{R}^{\Pi _{o}}\frac{d}{d\overline{%
+p}}\left( \frac{1}{1-\sqrt{1+\beta _{th}^{\dag 2}\overline{p}^{2}}}\right) d%
+\overline{p}\int_{-1}^{+1}\delta \left( \xi -\xi ^{\ast }\left( \overline{p}%
+\right) \right) d\xi 
 \end{equation}%
 and since in this case, $\xi ^{\ast }\left( \overline{p}\right) =1$ is
 assumed, 
 \begin{equation}
-\overline{\mathcal{n}}_{R}^{\Pi _{o}\rightarrow \Pi _{o}}=\frac{2\pi }{\ln
+\overline{\mathcal{n}}_{R}^{\Pi _{o}\rightarrow \Pi _{o}}=\frac{1}{2\ln
 \Lambda _{ee}^{\dag }}\overline{n}_{e}\overline{n}_{R}^{\Pi _{o}}\left[ 
-\frac{1}{1-\sqrt{1+\beta _{th}^{\dag 2}\overline{p}^{2}}}\right] _{p_{\max
-}}^{+\infty }
+\frac{1}{1-\sqrt{1+\beta _{th}^{\dag 2}\overline{p}^{2}}}\right] _{\overline{%
+p}_{\max }}^{+\infty }
 \end{equation}%
 or%
 \begin{equation}
-\overline{\mathcal{n}}_{R}^{\Pi _{o}\rightarrow \Pi _{o}}=\frac{2\pi }{\ln
+\overline{\mathcal{n}}_{R}^{\Pi _{o}\rightarrow \Pi _{o}}=\frac{1}{2\ln
 \Lambda _{ee}^{\dag }}\overline{n}_{e}\overline{n}_{R}^{\Pi _{o}}\frac{1}{%
 \sqrt{1+\beta _{th}^{\dag 2}\overline{p}_{\max }^{2}}-1}
-\end{equation}%
-neglecting the momentum dependence of the Coulomb logarithm at high energy.
+\end{equation}
 
 \subsubsection{Source term from collisions with a beam of moderate energy
 runaway electrons}
@@ -446,10 +449,10 @@ In the general case, when there the runaway beam along the magnetic field
 line has a velocity distribution, one can use the following prescription 
 \begin{equation}
 n_{R}\left( t,\psi \right) cv_{1}\frac{d\sigma _{M}}{d\Omega _{2}}%
-\rightarrow 2\pi c\iint \frac{d\sigma _{M}}{d\Omega _{2}}f_{R}\left( t,\psi
+\rightarrow 2\pi c\iint \frac{d\sigma _{M}}{d^{3}p_{2}}f_{R}\left( t,\psi
 ,p_{1}\right) \delta \left( \xi _{1}-1\right) \frac{p_{1}}{\gamma _{1}}%
 p_{1}^{2}dp_{1}d\xi _{1}
-\end{equation}
+\end{equation}%
 where $v_{1}=p_{1}/\gamma _{1}$ and $f_{R}\left( t,\psi ,p_{1}\right) $ is
 the velocity distribution of the tail\footnote{%
 The runaway velocity distribution $f_{R}$ has here no poloidal dependence,
@@ -467,8 +470,8 @@ The source $\mathcal{S}_{R}^{\Pi _{o}\rightarrow \Pi _{i}}\left( t,\theta
 of the momentum phase space is then given by 
 \begin{eqnarray}
 \mathcal{S}_{R}^{\Pi _{o}\rightarrow \Pi _{i}}\left( t,\theta ,\psi
-,p_{2},\xi _{2}\right)  &=&2\pi n_{e}\left( t,\psi \right) cr_{e}^{2}\frac{1%
-}{p_{2}\gamma _{2}}\times   \notag \\
+,p_{2},\xi _{2}\right) &=&2\pi n_{e}\left( t,\psi \right) cr_{e}^{2}\frac{1}{%
+p_{2}\gamma _{2}}\times  \notag \\
 &&\int_{-1}^{1}\delta \left( \xi _{1}-1\right) d\xi _{1}\int_{0}^{p_{\max
 }}\sum \left( \gamma _{1},\gamma _{2}\right) \delta \left( \xi _{2}-\xi
 ^{\ast }\left( p_{1},p_{2}\right) \right) f_{R}\left( t,\psi ,p_{1}\right) 
@@ -482,7 +485,7 @@ where $x_{k}$ are the zeros of function $g\left( x\right) $ and $g^{\prime
 }\left( x\right) =dg/dx,$ one obtains 
 \begin{eqnarray}
 \mathcal{S}_{R}^{\Pi _{o}\rightarrow \Pi _{i}}\left( t,\theta ,\psi
-,p_{2},\xi _{2}\right)  &=&2\pi n_{e}\left( t,\psi \right) cr_{e}^{2}\times 
+,p_{2},\xi _{2}\right) &=&2\pi n_{e}\left( t,\psi \right) cr_{e}^{2}\times 
 \notag \\
 &&\left[ \frac{\sum \left( \gamma _{1},\gamma _{2}\right) }{p_{2}\gamma _{2}}%
 \frac{p_{1}^{3}}{\gamma _{1}}\frac{1}{\left\vert \partial \xi ^{\ast
@@ -511,26 +514,25 @@ _{2}=\xi ^{\ast }\left( p_{1},p_{2}\right) }
 which is equivalent to the relation (9) given in Ref. \cite{chi98}\footnote{%
 One can define $f_{R}\left( t,\psi ,\overline{p}_{1}\right) $ as $%
 f_{0}\left( t,\psi ,\overline{p}_{1},\xi _{1}=1\right) $ above a critical
-energy that may correspond for example to the region where the velocity
-exceeds the Dreicer value.}. It is important to note that $p_{1}$ is an
-implicit function of $p_{2}$ and $\xi _{2},$ i.e. $p_{1}=h\left( p_{2},\xi
-_{2}\right) \footnote{%
+energy that may correspond for example to the region where electrons runaway.%
+}. It is important to note that $p_{1}$ is an implicit function of $p_{2}$
+and $\xi _{2},$ i.e. $p_{1}=h\left( p_{2},\xi _{2}\right) \footnote{%
 After a straighforward calculation it can be shown that 
 \begin{equation*}
 p_{1}=h\left( p_{2},\xi _{2}\right) =\frac{2p_{2}\xi _{2}}{\xi
 _{2}^{2}\left( \gamma _{2}+1\right) -\left( \gamma _{2}-1\right) }
 \end{equation*}%
-}$ and isn't an independent variable. 
+}$ and isn't here an independent variable.
 
-In normalized units, 
+In normalized units,  
 \begin{equation}
 \overline{\mathcal{S}}_{R}^{\Pi _{o}\rightarrow \Pi _{i}}\left( t,\theta
-,\psi ,p_{2},\xi _{2}\right) =\frac{\beta _{th}^{\dag 2}}{\ln \Lambda
-_{ee}^{\dag }}\overline{n}_{e}\left( t,\psi \right) \left[ \frac{\sum \left(
-\gamma _{1},\gamma _{2}\right) }{\overline{p}_{2}\gamma _{2}}\frac{\left(
-\gamma _{1}^{2}-1\right) ^{2}}{\xi ^{\ast }}f_{R}\left( t,\psi ,\overline{p}%
-_{1}\right) \right] _{\xi _{2}=\xi ^{\ast }\left( \overline{p}_{1},\overline{%
-p}_{2}\right) }
+,\psi ,p_{2},\xi _{2}\right) =\frac{3}{16\sqrt{\pi }}\frac{\beta _{th}^{\dag
+2}}{Z_{eff}^{\dag }\ln \Lambda _{ee}^{\dag }}\overline{n}_{e}\left( t,\psi
+\right) \left[ \frac{\sum \left( \gamma _{1},\gamma _{2}\right) }{\overline{p%
+}_{2}\gamma _{2}}\frac{\left( \gamma _{1}^{2}-1\right) ^{2}}{\xi ^{\ast }}%
+f_{R}\left( t,\psi ,\overline{p}_{1}\right) \right] _{\xi _{2}=\xi ^{\ast
+}\left( \overline{p}_{1},\overline{p}_{2}\right) }
 \end{equation}%
 where $\overline{p}_{1}$ satifies the equation for a given value $\left( 
 \overline{p}_{2},\xi _{2}\right) ,$%
@@ -546,7 +548,7 @@ the case of a monokinetic beam discussed in the previous section which
 corresponds to the limit 
 \begin{equation}
 f_{R}\left( t,\psi ,p_{1}\right) \simeq n_{R}^{\Pi _{i}}\left( t,\psi
-\right) \delta \left( p_{1}-p_{1mean}\right) 
+\right) \delta \left( p_{1}-p_{1mean}\right)
 \end{equation}%
 In this case, the mean normalized velocity of the beam is $v_{1mean}$%
 \begin{equation}
@@ -563,7 +565,7 @@ from relation (\ref{modereatevsecondarysource})
 \mathcal{S}_{R}^{\Pi _{o}\rightarrow \Pi _{i}}\left( t,\theta ,\psi
 ,p_{2},\xi _{2}\right) =2\pi n_{e}\left( t,\psi \right) cr_{e}^{2}\frac{\sum
 \left( \gamma _{1},\gamma _{2}\right) }{p_{2}\gamma _{2}}\frac{p_{1}^{4}}{%
-\xi ^{\ast }}\delta \left( p_{1}-p_{1mean}\right) 
+\xi ^{\ast }}\delta \left( p_{1}-p_{1mean}\right)
 \end{equation}%
 which is equivalent to 
 \begin{equation}
@@ -599,10 +601,11 @@ and in the high velocity limit $v_{1mean}\simeq 1$ and $\lim_{\gamma
 _{1mean}\rightarrow \infty }\sum \left( \gamma _{1},\gamma _{2}\right)
 =1/\left( \gamma _{2}-1\right) ^{2},$ one obtains finally 
 \begin{equation}
-\mathcal{S}_{R}^{\Pi _{o}\rightarrow \Pi _{i}}\left( t,\theta ,\psi
-,p_{2},\xi _{2}\right) =n_{R}^{\Pi _{i}}\left( t,\psi \right) n_{e}\left(
-t,\psi \right) cr_{e}^{2}\frac{1}{p_{2}\gamma _{2}\left( \gamma
-_{2}-1\right) ^{2}}\delta \left( \xi _{2}-\xi ^{\ast }\right) 
+\lim_{\gamma _{1mean}\rightarrow \infty }\mathcal{S}_{R}^{\Pi
+_{o}\rightarrow \Pi _{i}}\left( t,\theta ,\psi ,p_{2},\xi _{2}\right)
+=n_{R}^{\Pi _{i}}\left( t,\psi \right) n_{e}\left( t,\psi \right) cr_{e}^{2}%
+\frac{\delta \left( \xi _{2}-\xi ^{\ast }\right) }{p_{2}\gamma _{2}\left(
+\gamma _{2}-1\right) ^{2}}
 \end{equation}%
 which is exactly the relation (\ref{sourcebeamfast}).
 
@@ -610,13 +613,18 @@ which is exactly the relation (\ref{sourcebeamfast}).
 energy runaway electrons}
 
 In that case, we consider self-collisions between electrons of domain $\Pi
-_{i}.$ When all pitch-angles $\xi _{1}$ must be considered, the starting
-point of the general expression is 
+_{i}.$ However, this calculation holds only in the limit where $p_{2}\ll
+p_{1},$ so that the initial electron distribution function is very weakly
+modified by the knock-on process\footnote{%
+Otherwise, a two-particle distribution function must be considered, with
+appropriate averaging, which is a far most difficult problem.}.  When all
+pitch-angles $\xi _{1}$ must be considered, the starting point of the
+general expression is 
 \begin{equation}
 \mathcal{S}_{R}^{\Pi _{i}\rightarrow \Pi _{i}}\left( t,\theta ,\psi
 ,p_{2},\xi _{2}\right) =cn_{e}\left( t,\psi \right) \int_{0}^{p_{\max }}%
 \frac{p_{1}}{\gamma _{1}}p_{1}^{2}dp_{1}\int_{0}^{2\pi }d\varphi
-_{1}\int_{0}^{1}d\xi _{1}\frac{d\sigma _{M}}{d\Omega _{2}}\left(
+_{1}\int_{0}^{1}d\xi _{1}\frac{d\sigma _{M}}{d^{3}p_{2}}\left(
 p_{1},p_{2},\xi ^{\ast }\right) f_{0}\left( t,\theta ,\psi ,p_{1},\xi
 _{1}\right)   \label{generalsecondarysource}
 \end{equation}%
@@ -641,9 +649,9 @@ discussed in Sec. \ref{moments}.
 
 Let define 
 \begin{eqnarray}
-\frac{d\sigma _{M}^{\left( m\right) }}{d\Omega _{2}}\left(
-p_{1},p_{2}\right)  &=&\int_{-1}^{+1}\frac{d\sigma _{M}}{d\Omega _{2}}\left(
-p_{1},p_{2},\xi \right) P_{m}\left( \xi \right) d\xi   \notag \\
+\frac{d\sigma _{M}^{\left( m\right) }}{d^{3}p_{2}}\left( p_{1},p_{2}\right) 
+&=&\int_{-1}^{+1}\frac{d\sigma _{M}}{d\Omega _{2}}\left( p_{1},p_{2},\xi
+\right) P_{m}\left( \xi \right) d\xi   \notag \\
 &=&r_{e}^{2}\frac{\sum \left( \gamma _{1},\gamma _{2}\right) }{p_{2}\gamma
 _{2}}\int_{-1}^{+1}\delta \left( \xi -\xi ^{\ast }\left( p_{1},p_{2}\right)
 \right) P_{m}\left( \xi \right) d\xi   \notag \\
@@ -664,8 +672,8 @@ the relation \ref{generalsecondarysource} becomes
 _{1}\int_{0}^{1}d\xi _{1}\times   \notag \\
 &&\sum_{m=0}^{\infty }\sum_{m=0}^{\infty }\left( m+\frac{1}{2}\right) \left(
 m^{\prime }+\frac{1}{2}\right) \frac{d\sigma _{M}^{\left( m\right) }}{%
-d\Omega _{2}}P_{m}\left( \xi \right) f_{0}^{\left( m^{\prime }\right)
-}\left( t,\theta ,\psi ,p_{1}\right) P_{m^{\prime }}\left( \xi _{1}\right) 
+d^{3}p_{2}}P_{m}\left( \xi \right) f_{0}^{\left( m^{\prime }\right) }\left(
+t,\theta ,\psi ,p_{1}\right) P_{m^{\prime }}\left( \xi _{1}\right) 
 \end{eqnarray}%
 or 
 \begin{eqnarray}
@@ -693,15 +701,14 @@ degree $m$ and order $n$,
 
 \begin{eqnarray}
 \mathcal{S}_{R}^{\Pi _{i}\rightarrow \Pi _{i}}\left( t,\theta ,\psi
-,p_{2},\xi _{2}\right)  &=&cn_{e}\left( t,\psi \right) \int_{0}^{p_{\max }}%
+,p_{2},\xi _{2}\right) &=&cn_{e}\left( t,\psi \right) \int_{0}^{p_{\max }}%
 \frac{p_{1}}{\gamma _{1}}p_{1}^{2}dp_{1}\sum_{m=0}^{\infty
 }\sum_{m=0}^{\infty }\left( m+\frac{1}{2}\right) \left( m^{\prime }+\frac{1}{%
 2}\right) \frac{d\sigma _{M}^{\left( m\right) }}{d\Omega _{2}}\left(
 p_{1},p_{2}\right) f_{0}^{\left( m^{\prime }\right) }\left( t,\theta ,\psi
-,p_{1}\right) \times   \notag \\
+,p_{1}\right) \times  \notag \\
 &&\int_{0}^{2\pi }d\varphi _{1}\int_{0}^{1}d\xi _{1}P_{m}\left( \xi
-_{2}\right) P_{m}\left( \xi _{1}\right) P_{m^{\prime }}\left( \xi
-_{1}\right) 
+_{2}\right) P_{m}\left( \xi _{1}\right) P_{m^{\prime }}\left( \xi _{1}\right)
 \end{eqnarray}%
 since 
 \begin{equation}
@@ -716,12 +723,12 @@ the orthogonality relation (\ref{orthoLegendre}),
 \mathcal{S}_{R}^{\Pi _{i}\rightarrow \Pi _{i}}\left( t,\theta ,\psi
 ,p_{2},\xi _{2}\right) =2\pi cn_{e}\left( t,\psi \right) \int_{0}^{p_{\max }}%
 \frac{p_{1}^{3}}{\gamma _{1}}dp_{1}\sum_{m=0}^{\infty }\left( m+\frac{1}{2}%
-\right) \frac{d\sigma _{M}^{\left( m\right) }}{d\Omega _{2}}\left(
+\right) \frac{d\sigma _{M}^{\left( m\right) }}{d^{3}p_{2}}\left(
 p_{1},p_{2}\right) f_{0}^{\left( m\right) }\left( t,\theta ,\psi
 ,p_{1}\right) P_{m}\left( \xi _{2}\right) 
 \end{equation}%
-and using the exact expression of $d\sigma _{M}^{\left( m\right) }/d\Omega
-_{2},$ one obtains finally 
+and using the exact expression of $d\sigma _{M}^{\left( m\right)
+}/d^{3}p_{2},$ one obtains finally 
 \begin{equation}
 \mathcal{S}_{R}^{\Pi _{i}\rightarrow \Pi _{i}}\left( t,\theta ,\psi
 ,p_{2},\xi _{2}\right) =2\pi cr_{e}^{2}n_{e}\left( t,\psi \right)
@@ -739,7 +746,7 @@ f_{0}\left( t,\theta ,\psi ,p_{1},\xi _{1}\right) =$ $f_{0}\left( t,\psi
 ,p_{1}\right) \delta \left( \xi _{1}-1\right) ,$ 
 \begin{equation}
 f_{0}^{\left( m\right) }\left( t,\theta ,\psi ,p_{1}\right) \simeq
-f_{0}\left( t,\psi ,p_{1}\right) 
+f_{0}\left( t,\psi ,p_{1}\right)
 \end{equation}%
 for all $m$ values, and the poloidal dependence vanishes. In that case,
 permuting the integral on $p_{1}$ on the sum over the Legendre polynomials, 
@@ -749,13 +756,13 @@ permuting the integral on $p_{1}$ on the sum over the Legendre polynomials,
 \int_{0}^{p_{\max }}\frac{p_{1}^{3}}{\gamma _{1}}\frac{\sum \left( \gamma
 _{1},\gamma _{2}\right) }{p_{2}\gamma _{2}}f_{0}\left( t,\psi ,p_{1}\right)
 dp_{1}\sum_{m=0}^{\infty }\left( m+\frac{1}{2}\right) P_{m}\left( \xi
-_{2}\right) P_{m}\left( \xi ^{\ast }\right) 
+_{2}\right) P_{m}\left( \xi ^{\ast }\right)
 \end{equation}
 
 Using the orthogonality relation (\ref{orthoLegendre}), 
 \begin{equation}
 \sum_{m=0}^{\infty }\left( m+\frac{1}{2}\right) P_{m}\left( \xi _{2}\right)
-P_{m}\left( \xi ^{\ast }\right) =\delta \left( \xi _{2}-\xi ^{\ast }\right) 
+P_{m}\left( \xi ^{\ast }\right) =\delta \left( \xi _{2}-\xi ^{\ast }\right)
 \end{equation}%
 it turns out that 
 \begin{equation}
@@ -773,12 +780,12 @@ consistency between all cases
 \begin{equation}
 f_{0}\left( t,\theta ,\psi ,p_{1},\xi _{1}\right) \rightarrow f_{0}\left(
 t,\psi ,p_{1}\right) \delta \left( \xi _{1}-1\right) \rightarrow \delta
-\left( p_{1}-p_{1mean}\right) \delta \left( \xi _{1}-1\right) 
+\left( p_{1}-p_{1mean}\right) \delta \left( \xi _{1}-1\right)
 \end{equation}%
 from the most general problem to the simplest limit.
 
-For knock-on collisions between elctrons lying inside the domain $\Pi _{i}$,
-it is not necessary to consider the intermediate case corresponding to a
+For knock-on collisions between electrons lying inside the domain $\Pi _{i}$%
+, it is not necessary to consider the intermediate case corresponding to a
 beam of particles with different energies, and only the most general
 situation here described will be considered in the calculations.
 
@@ -790,78 +797,102 @@ field force. It is usually evaluated for a single test particle of momentum $%
 p_{test}$. The distribution function is then simply 
 \begin{equation}
 f_{test}=\frac{1}{2\pi p_{test}^{2}}\delta \left( p-p_{test}\right) \delta
-\left( \xi -\xi _{test}\right)
-\end{equation}
+\left( \xi -\xi _{test}\right) 
+\end{equation}%
+where by construction%
+\begin{equation}
+\diiint f_{test}d^{3}p=1
+\end{equation}%
 The retardation due to collision at momentum $p$ is localy 
 \begin{equation}
-\left. \frac{dp}{dt}\right| _{coll.}=\iiint p\mathcal{C}\left(
+\left. \frac{dp}{dt}\right\vert _{coll.}=\iiint p\mathcal{C}\left(
 f_{test}\right) d^{3}p=2\pi \int_{-1}^{+1}d\xi \int_{0}^{p_{\max }}p^{3}%
 \mathcal{C}\left( f_{test}\right) dp  \label{retardation}
-\end{equation}
-where $\mathcal{C}\left( f\right) $ is the collision operator in the
-Fokker-Planck equation, which may be expressed as the divergence of a
-electron flux of the following form 
+\end{equation}%
+where $\mathcal{C}$ is the collision operator in the Fokker-Planck equation,
+which may be expressed as the divergence of an electron flux of the
+following form 
 \begin{equation}
-\mathcal{C}\left( f_{0}\right) =\mathbf{\nabla }_{\mathbf{p}}\cdot \mathbf{S}%
-_{\mathbf{p}}^{C}=\frac{1}{p^{2}}\frac{\partial }{\partial p}p^{2}S_{p}^{C}-%
-\frac{1}{p}\frac{\partial }{\partial \xi }\sqrt{1-\xi ^{2}}S_{\xi }^{C}
-\end{equation}
+\mathcal{C}\left( f_{test}\right) =\mathbf{\nabla }_{\mathbf{p}}\cdot 
+\mathbf{S}_{\mathbf{p}}^{C}=\frac{1}{p^{2}}\frac{\partial }{\partial p}%
+\left( p^{2}S_{p}^{C}\right) -\frac{1}{p}\frac{\partial }{\partial \xi }%
+\left( \sqrt{1-\xi ^{2}}S_{\xi }^{C}\right) 
+\end{equation}%
 with 
 \begin{eqnarray}
 S_{p}^{C} &=&-D_{pp}^{C}\frac{\partial f_{test}}{\partial p}%
 +F_{p}^{C}f_{test} \\
 S_{\xi }^{C} &=&\frac{\sqrt{1-\xi ^{2}}}{p}D_{\xi \xi }^{C}\frac{\partial
 f_{test}}{\partial \xi }
-\end{eqnarray}
+\end{eqnarray}%
+as introduced in Sec.\ref{fluxcons}.
 
 Here, according to the notations introduced in Sec. \ref{collisions}, $%
 D_{pp}^{C}=A\left( \psi ,p\right) ,$ $F_{p}^{C}=$ $-F\left( \psi ,p\right) $
 and $D_{\xi \xi }^{C}=B_{t}\left( \psi ,p\right) .$ Since the pitch-angle
 term is exactly zero in the relation (\ref{retardation}), 
 \begin{eqnarray}
-\left. \frac{dp}{dt}\right| _{coll.} &=&2\pi \int_{-1}^{+1}d\xi
+\left. \frac{dp}{dt}\right\vert _{coll.} &=&2\pi \int_{-1}^{+1}d\xi
 \int_{0}^{p_{\max }}p\frac{\partial }{\partial p}\left( p^{2}S_{p}\right) dp
 \notag \\
 &=&-2\pi \int_{-1}^{+1}d\xi \int_{0}^{p_{\max }}p^{2}S_{p}^{C}dp
-\end{eqnarray}
-assuming that $\lim_{p\rightarrow \infty }p^{3}S_{p}^{C}=0,$ a condition
-already considered for power calculations in Sec. \ref{moments} which is
-usually fullfiled . From the expression of $S_{p}^{C},$ 
+\end{eqnarray}%
+assuming that $\lim_{p\rightarrow \infty }p^{3}S_{p}^{C}=0,$ an usual
+condition already considered for power calculations in Sec. \ref{moments}.
+From the expression of $S_{p}^{C},$ 
 \begin{equation}
-\left. \frac{dp}{dt}\right| _{coll.}=2\pi \int_{-1}^{+1}d\xi
+\left. \frac{dp}{dt}\right\vert _{coll.}=2\pi \int_{-1}^{+1}d\xi
 \int_{0}^{p_{\max }}p^{2}D_{pp}^{C}\frac{\partial f_{test}}{\partial p}%
 dp-2\pi \int_{-1}^{+1}d\xi \int_{0}^{p_{\max }}p^{2}F_{p}^{C}f_{test}dp
 \end{equation}
 
 Since $\int_{-\infty }^{+\infty }g\left( x\right) \delta ^{\prime }\left(
-x-a\right) dx=-g^{\prime }\left( a\right) ,$ one obtains 
+x-a\right) dx=-g^{\prime }\left( a\right) ,$ and $\int_{-\infty }^{+\infty
+}g\left( x\right) \delta \left( x-a\right) dx=g\left( a\right) ,$ one
+obtains 
 \begin{equation}
-\left. \frac{dp}{dt}\right| _{coll.}=-\left. \frac{\partial D_{pp}^{C}}{%
-\partial p}\right| _{p=p_{test}}-\left. F_{p}^{C}\right| _{p=p_{test}}
+\left. \frac{dp}{dt}\right\vert _{coll.}=-\frac{1}{p_{test}^{2}}\left. \frac{%
+\partial \left( p^{2}D_{pp}^{C}\right) }{\partial p}\right\vert
+_{p=p_{test},\xi =\xi _{test}}-\left. F_{p}^{C}\right\vert _{p=p_{test},\xi
+=\xi _{test}}
 \end{equation}
 
-*********** A voir ************Concerning the acceleration due to the
-electric field,
+Concerning the acceleration due to the electric field,
 
 \begin{equation}
-\left. \frac{dp}{dt}\right| _{E}=\iiint p\mathcal{E}\left( f\right)
+\left. \frac{dp}{dt}\right\vert _{E}=\iiint p\mathcal{E}\left( f\right)
 d^{3}p=2\pi \int_{-1}^{+1}d\xi \int_{0}^{p_{\max }}p^{3}\mathcal{E}\left(
 f\right) dp
-\end{equation}
+\end{equation}%
 where 
 \begin{equation}
 \mathcal{E}\left( f\right) =\mathbf{\nabla }_{\mathbf{p}}\cdot \mathbf{S}_{%
-\mathbf{p}}^{E}=\frac{1}{p^{2}}\frac{\partial }{\partial p}p^{2}S_{p}^{E}-%
-\frac{1}{p}\frac{\partial }{\partial \xi }\sqrt{1-\xi ^{2}}S_{\xi }^{E}
-\end{equation}
+\mathbf{p}}^{E}=\frac{1}{p^{2}}\frac{\partial }{\partial p}\left(
+p^{2}S_{p}^{E}\right) -\frac{1}{p}\frac{\partial }{\partial \xi }\left( 
+\sqrt{1-\xi ^{2}}S_{\xi }^{E}\right) 
+\end{equation}%
 with 
 \begin{eqnarray}
 S_{p}^{E} &=&F_{p}^{E}f_{0} \\
 S_{\xi }^{E} &=&F_{\xi }^{E}f_{0}
 \end{eqnarray}
 
-In this case, as shown in Sec. ***, $F_{p}^{E}=q_{e}\xi E_{\Vert }$ and $%
-F_{\xi }^{E}=-q_{e}\sqrt{1-\xi ^{2}}E_{\Vert }.$ Therefore, 
+In this case, as shown in Sec. \ref{Efield}, $F_{p}^{E}=q_{e}\xi E_{\Vert }$
+and $F_{\xi }^{E}=-q_{e}\sqrt{1-\xi ^{2}}E_{\Vert },$ it is straightforward
+to obtain 
+\begin{equation}
+\left. \frac{dp}{dt}\right\vert _{E}=-q_{e}\xi _{test}E_{\Vert }
+\end{equation}%
+and the critical field $E_{\Vert c}$ is given by the relation%
+\begin{equation}
+q_{e}\xi _{test}E_{\Vert c}=\frac{1}{p_{test}^{2}}\left. \frac{\partial
+\left( p^{2}D_{pp}^{C}\right) }{\partial p}\right\vert _{p=p_{test},\xi =\xi
+_{test}}+\left. F_{p}^{C}\right\vert _{p=p_{test},\xi =\xi _{test}}
+\end{equation}
+
+In the high energy limit, the drag force predominates, and 
 \begin{equation*}
-\left. \frac{dp}{dt}\right| _{E}=-4\pi \int_{0}^{p_{\max }}p^{2}S_{p}^{E}dp
+q_{e}\xi _{test}E_{\Vert c}=\frac{1}{p_{test}^{2}}\left. \frac{\partial
+\left( p^{2}D_{pp}^{C}\right) }{\partial p}\right\vert _{p=p_{test},\xi =\xi
+_{test}}+\left. F_{p}^{C}\right\vert _{p=p_{test},\xi =\xi _{test}}
 \end{equation*}
