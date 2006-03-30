@@ -69,17 +69,17 @@ dkeparam.boundary_mode_g = 0;%Number of points where the first distribution func
 dkeparam.prec0_g = 1e-11;%Convergence level of the residu (if NaN, iterations stop with nit_g)
 dkeparam.nit_g = 100;%Maximum number of iterations for g
 %
-%WARNING: param_inv must evolve like [1e-5,<2-3],[1e-4,<4-5],[1e-3,<9-10],[1e-2,<19-20] when RF waves are applied. Otherwise, density is not conserved !
-%Values may have to be adjusted regarding the matrix size 
-%Quite all inversion methods here proposed are equivalent in term of rate of convergence. 
-%If matrix preconditionning is ill-conditionned, try to reduce param_inv(1) and param_inv(2) accordingly
-%
 dkeparam.dtn = 10000;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
-dkeparam.invproc = 1;%Iterative matrix inversion method: (1) cgs iterative method, (2) bicg iterative method, (3) qmr iterative method
-dkeparam.param1_inv = 1e-5;%Parameters for the matrix inversion procedure. Minimum value of the drop tolerance for the partial LU decomposition (drop tol = max(1/dtn/nr,param_inv(1)))
-dkeparam.param2_inv = 4;%Parameters for the matrix inversion procedure. Maximum number of iteration for iterative method< 20 (param_inv(1) depends of boundary_mode, if param_inv(1)=0, full LU factorization)
-dkeparam.store_mode = 0;%Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight
 %
-dkeparam.temppath = 'D:\Temp';
+dkeparam.luproc = 1;%LU matrix inversion method: (0) MatLab build-in, (1) MUMPS parallel fortran 95
+dkeparam.ludroptol = 1e-5;%Drop tolerance for the partial LU decomposition (recipes: droptol = max(1/dtn/nr,param_inv(1)))
+dkeparam.invproc = 1;%Iterative matrix inversion method: (1) cgs iterative method, (2) bicg iterative method, (3) qmr iterative method, -1: MUMPS parallel fortran 95
+dkeparam.mlprecinv = 1e-5;%Accuracy for the MatLab build-in matrix inversion.
+dkeparam.mlmaxitinv = 4;%Maximum number of iterations for iterative method (between 1 and 20 usualy, if empty, mlmaxitinv = min(matrixdim,20). See matlab documentation.
+dkeparam.MUMPSparam.path = '';%Absolute directory path adress where compiled MUMPS program is located (empty: local directory, otherwise, it must end with the file separator)
+dkeparam.MUMPSparam.nproc = 4;%number of processor used by MUMPS (depends of the computer framework). Default is 1
+%
+dkeparam.store_mode = 0;%Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight
+dkeparam.temppath = '';%%Absolute directory path adress where temporary matrices are stored (empty: local directory, otherwise, it must end with the file separator)
 %
 eval(['save DKEPARAM_',dkeparam_id,'.mat dkeparam']);
