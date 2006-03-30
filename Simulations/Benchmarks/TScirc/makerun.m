@@ -5,6 +5,6 @@ make_ohm_TScirc_karney
 make_wave_TScirc_LH_karney
 make_ripple
 make_transpfaste
-make_hxr
+make_hxr_param
 %
 rundke_TScirc
