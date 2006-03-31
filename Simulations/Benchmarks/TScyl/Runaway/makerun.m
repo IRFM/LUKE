@@ -1,0 +1,7 @@
+make_equil_TScirc
+make_dkeparam
+make_display
+make_ohm
+make_hxr_param
+%
+rundke
