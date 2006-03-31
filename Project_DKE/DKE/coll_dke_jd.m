@@ -29,7 +29,7 @@ else
   ZXXD_c.pp_ij = zeros(npn,nmhu,nr);
   ZXXD_c.pp_imj = zeros(npn,nmhu,nr);
   ZXXD_c.pp_immj = zeros(npn,nmhu,nr);
-  ZXXD_c.pm_ipj = zeros(npn,nmhu,nr);
+  ZXXD_c.pm_ipj = zeros(npn,nmhu,nr); 
   ZXXD_c.pm_ij = zeros(npn,nmhu,nr);
   ZXXD_c.pm_imj = zeros(npn,nmhu,nr);
   ZXXD_c.mp_ijp = zeros(npn,nmhu,nr);
@@ -176,14 +176,14 @@ else
         ZXXD_c_tp.mm_ijp(:,:,ir_dke) = (XBtee + XBtei).*XXRlambda_b_p3m2_p(:,:,ir);
         ZXXD_c_tp.mm_ijm(:,:,ir_dke) = (XBtee + XBtei).*XXRlambda_b_p3m2_m(:,:,ir);
 %
-        ZXXF_c_tp.p_ippj = -(XFeepp + XFeipp).*XXRlambda_b_p1m1(:,:,ir);
-        ZXXF_c_tp.p_ipj = -(XFeep + XFeip).*XXRlambda_b_p1m1(:,:,ir);
-        ZXXF_c_tp.p_ij = -(XFee + XFei).*XXRlambda_b_p1m1(:,:,ir);
-        ZXXF_c_tp.p_imj = -(XFeem + XFeim).*XXRlambda_b_p1m1(:,:,ir);
-        ZXXF_c_tp.p_immj = -(XFeemm + XFeimm).*XXRlambda_b_p1m1(:,:,ir);  
+        ZXXF_c_tp.p_ippj(:,:,ir_dke) = -(XFeepp + XFeipp).*XXRlambda_b_p1m1(:,:,ir);
+        ZXXF_c_tp.p_ipj(:,:,ir_dke) = -(XFeep + XFeip).*XXRlambda_b_p1m1(:,:,ir);
+        ZXXF_c_tp.p_ij(:,:,ir_dke) = -(XFee + XFei).*XXRlambda_b_p1m1(:,:,ir);
+        ZXXF_c_tp.p_imj(:,:,ir_dke) = -(XFeem + XFeim).*XXRlambda_b_p1m1(:,:,ir);
+        ZXXF_c_tp.p_immj(:,:,ir_dke) = -(XFeemm + XFeimm).*XXRlambda_b_p1m1(:,:,ir);  
 %
-        ZXXF_c_tp.m_ijp = (XBtee + XBtei).*(XXRlambda_b_p1m1_p(:,:,ir) - XXRlambda_b_p1m2_p(:,:,ir)).*sqrt(X1mmhu2p)./Xpn./Xmhu2p./Xmhup;
-        ZXXF_c_tp.m_ijm = (XBtee + XBtei).*(XXRlambda_b_p1m1_m(:,:,ir) - XXRlambda_b_p1m2_m(:,:,ir)).*sqrt(X1mmhu2m)./Xpn./Xmhu2m./Xmhum;
+        ZXXF_c_tp.m_ijp(:,:,ir_dke) = (XBtee + XBtei).*(XXRlambda_b_p1m1_p(:,:,ir) - XXRlambda_b_p1m2_p(:,:,ir)).*sqrt(X1mmhu2p)./Xpn./Xmhu2p./Xmhup;
+        ZXXF_c_tp.m_ijm(:,:,ir_dke) = (XBtee + XBtei).*(XXRlambda_b_p1m1_m(:,:,ir) - XXRlambda_b_p1m2_m(:,:,ir)).*sqrt(X1mmhu2m)./Xpn./Xmhu2m./Xmhum;
     end
 %    
   end
