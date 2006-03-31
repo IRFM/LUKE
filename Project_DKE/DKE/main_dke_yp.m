@@ -54,9 +54,12 @@ boundary_mode_g = dkeparam.boundary_mode_g;
 prec0_g = dkeparam.prec0_g;
 nit_g = dkeparam.nit_g;
 dtn = dkeparam.dtn;
-invproc  = dkeparam.invproc;
-param1_inv = dkeparam.param1_inv;
-param2_inv = dkeparam.param2_inv;
+invparam.luproc = dkeparam.luproc;
+invparam.ludroptol = dkeparam.ludroptol;
+invparam.invproc = dkeparam.invproc;
+invparam.mlprecinv = dkeparam.mlprecinv;
+invparam.mlmaxitinv = dkeparam.mlmaxitinv;
+invparam.MUMPSparam = dkeparam.MUMPSparam;
 store_mode = dkeparam.store_mode;
 rt_mode = dkeparam.rt_mode;
 nit_rf = dkeparam.nit_rf;
@@ -90,7 +93,6 @@ if rt_mode == 0,nit_rf = 1;end
 %	
 sfac = [sfac0,sfac1,sfact];
 snmhu = [snmhu0,snmhu1,snmhut];
-param_inv = [param1_inv,param2_inv];
 bounce = [bounce_mode,dke_mode,equil_mode];
 boundary_mode = [boundary_mode_f,boundary_mode_g];
 %
@@ -214,7 +216,7 @@ if syn_mode == 1
     disp('-------------------------------------------------------------------------------------------------------------------');
 end
 %
-if display_mode >=1,,
+if display_mode >=1,
 	disp(['--------------------------------------------- Simulation parameters ----------------------------------------------']);
     disp(['- Pitch-angle and momentum grids uniformity: (0) no, (1) yes = ',num2str(grid_uniformity)]);
     disp(['- Pitch-angle grid calculation method: (0): old method, (1) new method = ',num2str(grid_power ~= 0)]);
@@ -246,7 +248,6 @@ if display_mode >=1,,
 	disp(['- Convergence level of the residu (if NaN, iterations stop with nit_g) nit_g = ',num2str(nit_g)]);
 	disp(['- Maximum /number of iterations for g nit_g = ',num2str(nit_g)]);
 	disp(['- Initial guess for the distribution function: (0) Maxwellian, (1) Fuchs model with Tperp for LH current drive only, (2) from a file initguess_f = ',num2str(initguess_f)]);
-	disp(['- Matrix inversion method: (1) cgs iterative method, (2) bicg iterative method, (3) qmr iterative method invproc = ',num2str(invproc)]);
 	disp(['- Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) store_mode = ',num2str(store_mode)]);
 end
 disp('-------------------------------------------------------------------------------------------------------------------');
@@ -344,8 +345,8 @@ xdeltaripple = zeros(size(xrho));
 %
 if ~isempty(ripple),
 	xnhuloss_ref = ones(size(xrho))*1000/nhu_ref;%Normalized to the reference frequency(forced to very large loss frequency)
-	for ir = 1:nr,	
-		if isnan(xnhuloss_ref(ir)) == 0 & bounce_mode == 1 & isempty(findstr(tokname,'TS')) == 0,%WARNING: only valid for the TORE SUPRA tokamak with large magnetic ripple
+	for ir = 1:nr,
+		if isnan(xnhuloss_ref(ir)) == 0 & bounce_mode == 1 & ~isempty(findstr(tokname,'TS')) == 1,%WARNING: only valid for the TORE SUPRA tokamak with large magnetic ripple
 			if ir == 1, 
 				info_dke_yp(2,'WARNING: Ripple losses calculations only valid for Tore Supra tokamak, see main_dke_1yp.m for BeLi, Ip and Ncoils values');
 				disp('-------------------------------------------------------------------------------------------------------------------');
@@ -376,6 +377,10 @@ if ~isempty(ripple),
 			xdeltaripple(ir) = 0;
 			xNq(ir) = 0;
 			Xnhuloss_ref = zeros(length(pn_ref),length(mhu));
+            xthetabanana(ir) = 0;
+            xthetaloss(ir) = 0;
+            xpndetrap_ref(ir) = 0;
+            xEseuil(ir) = 0;
 		end
 		XXlossripple_ref(:,:,ir) = Xnhuloss_ref;%Magnetic ripple loss term is expressed in a Krook term
 	end
@@ -722,36 +727,42 @@ end
 nb = size(waveparam,2);
 %
 time0 = clock;
-delta_rt = 0.25;
+P_ref = me*(clum*betath_ref)^2*nhu_ref*ne_ref; %power normalization constant (W)
 %
-wpe_ref = sqrt(ne_ref*qe^2/me/e0);
-%
-if sum(sum(isnan(waveparam(:,:,13)))),
-    xyPabs_rf_dke_fsav_mksa = 0;%initial absorbed power density estimate (Note, future work: could use linear theory)
-else
-    xyPabs_rf_dke_fsav_mksa = waveparam(:,:,13).*waveparam(:,:,4).*waveparam(:,:,1)*me*lnc_e_ref*wpe_ref^2/(4*pi^2);
-end
-%
-xyPinc_mod = xyPinc_in;
-xymask = (xyPinc_in == 0);
-xyPinc_in(xymask) = eps; %to avoid singularities
-%
-if nb > 0, %initial value of the constant diffusion coefficient
+if ~isempty(waveparam), %initial value of the constant diffusion coefficient 
     xyD0_rf_in = waveparam(:,:,4);
+    delta_rt = 0.5;
+    wpe_ref = sqrt(ne_ref*qe^2/me/e0);
+%
+    if sum(sum(isnan(waveparam(:,:,13)))),
+       xyPabs_rf_dke_fsav_mksa = 0;%initial absorbed power density estimate (Note, future work: could use linear theory)
+    else
+       xyPabs_rf_dke_fsav_mksa = waveparam(:,:,13).*waveparam(:,:,4).*waveparam(:,:,1)*me*lnc_e_ref*wpe_ref^2/(4*pi^2);
+    end
+%
+    xyPinc_mod = xyPinc_in;
+    xymask = (xyPinc_in == 0);
+    xyPinc_in(xymask) = eps; %to avoid singularities
+    if nit_rf > 1 & display_mode >= 1,
+	   Fig_QLIter = figure('Name','Quasilinear iteration');
+    end
 else
     nit_rf = 1;
+    xyPinc_mod = '';
 end  
+residue_rf = '';
 %
-P_ref = me*(clum*betath_ref)^2*nhu_ref*ne_ref; %power normalization constant
+%Local directory for temp saving
 %
 save_id = timeid_jd(clock);
-mkdir(dkeparam.temppath,['DKE_',save_id])
-temppath = [dkeparam.temppath,filesep,'DKE_',save_id,filesep];
-save([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'save_id')
-%
-if ~isempty(waveparam) & nit_rf > 1 & display_mode >= 1,
-	Fig_QLIter = figure('Name','Quasilinear iteration');
+if isempty(dkeparam.temppath),%Local saving
+   mkdir(['tempdir_DKE_',save_id])
+   temppath = ['tempdir_DKE_',save_id,filesep];
+else
+   mkdir([dkeparam.temppath,filesep,'tempdir_DKE_',save_id])
+   temppath = [dkeparam.temppath,filesep,'tempdir_DKE_',save_id,filesep];
 end
+save([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'save_id')
 %
 if nit_rf > 1,%No radial transport for initial quasilinear iterations
     XXDr_ref_in = zeros(size(XXDr_ref));
@@ -763,19 +774,18 @@ end
 %
 for it_rf=1:nit_rf % convergence in the ray-tracing mode
 
+    if ~isempty(waveparam),%in the case of RF waves only
+       xyPinc_mod_old = xyPinc_mod;
+       [xyPinc_out,xyPinc_mod_new] = rfprop_dke_jd(yb,xyprop_dke,xyPinc_mod,xyPabs_rf_dke_fsav_mksa,xdV_dke,xpsin,xpsin_dke,r_dke,dke_mode);
+%
+       if 1,%it_rf > 1
+          xyPinc_mod = delta_rt*xyPinc_mod + (1 - delta_rt)*xyPinc_mod_new;
+       else
+          xyPinc_mod = xyPinc_mod_new;
+       end
 %    
 % The diffusion coefficient is proportional to the incident power
 %
-    xyPinc_mod_old = xyPinc_mod;
-    [xyPinc_out,xyPinc_mod_new] = rfprop_dke_jd(yb,xyprop_dke,xyPinc_mod,xyPabs_rf_dke_fsav_mksa,xdV_dke,xpsin,xpsin_dke,r_dke,dke_mode);
-%
-    if 1,%it_rf > 1
-        xyPinc_mod = delta_rt*xyPinc_mod + (1 - delta_rt)*xyPinc_mod_new;
-    else
-        xyPinc_mod = xyPinc_mod_new;
-    end
-%
-    if nb > 0,         
         xyD0_rf_mod = xyD0_rf_in.*xyPinc_mod./xyPinc_in;
         %
         if 0,%nit_rf > 1,
@@ -811,78 +821,79 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
         XXDr_ref_in,XXVr_ref_in,...
 		XXsource_ref,XXlossripple_ref,...
         xftp_norm_ref,bounce,it_rf,xnloss_norm,coll_mode,...
-        norm_mode_f,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,temppath,XXfinit_ref);
+        norm_mode_f,boundary_mode,dtn,prec0,nit,invparam,display,store_mode,temppath,XXfinit_ref);
 %
-    XXfinit_ref = XXf0_ref;
-    if ~isempty(waveparam) & nit_rf > 1,
-    	if dke_mode >= 1,
-	        xyPabs_rf_dke_fsav_out = ZP0_ref.xy_rf_fsav + ZP0_ref.xy_rf_tp_fsav + ZP0_ref.xy_rf_g_fsav; % flux-surface averaged density of absorbed power.
-	    else
-	        xyPabs_rf_dke_fsav_out = ZP0_ref.xy_rf_fsav; % flux-surface averaged density of absorbed power.
-	    end	    
-        xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav_out*P_ref;
-        if nit_rf > 1,
-            xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav_mksa*redfac;
-        end
+    if ~isempty(waveparam),%In the case of RF waves and quasilinear iteration
+       if nit_rf > 1,
+    	  if dke_mode >= 1,
+	         xyPabs_rf_dke_fsav_out = ZP0_ref.xy_rf_fsav + ZP0_ref.xy_rf_tp_fsav + ZP0_ref.xy_rf_g_fsav; % flux-surface averaged density of absorbed power.
+	      else
+	         xyPabs_rf_dke_fsav_out = ZP0_ref.xy_rf_fsav; % flux-surface averaged density of absorbed power.
+	      end	    
+          xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav_out*P_ref;
+          if nit_rf > 1,
+             xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav_mksa*redfac;
+          end
 %
-        residue_rf(it_rf) = max(max(abs(xyPinc_mod - xyPinc_mod_old)./xyPinc_in));
-		if display_mode >= 1,
-            figure(Fig_QLIter)        
-            plot(1:it_rf,residue_rf,'r+')
-            set(gca,'yscale','log')
-            axis([0,nit_rf,1e-5,1])
-            pause(0.5)
-        end
+          residue_rf(it_rf) = max(max(abs(xyPinc_mod - xyPinc_mod_old)./xyPinc_in));
+		  if display_mode >= 1,
+             figure(Fig_QLIter)        
+             plot(1:it_rf,residue_rf,'r+')
+             set(gca,'yscale','log')
+             axis([0,nit_rf,1e-5,1])
+             pause(0.5)
+         end
  %
-		info_dke_yp(2,'---------------------------------------------------------');
-        info_dke_yp(2,['Quasilinear iteration : ',int2str(it_rf),', Residu = ',num2str(residue_rf(it_rf)),', delta_rt = ',num2str(delta_rt)]);
-		info_dke_yp(2,'---------------------------------------------------------');
+		 info_dke_yp(2,'---------------------------------------------------------');
+         info_dke_yp(2,['Quasilinear iteration : ',int2str(it_rf),', Residu = ',num2str(residue_rf(it_rf)),', delta_rt = ',num2str(delta_rt)]);
+		 info_dke_yp(2,'---------------------------------------------------------');
  %
-        if 0,it_rf > 2 & residue_rf(it_rf-1) < prec_rf*10,
+         if 0,it_rf > 2 & residue_rf(it_rf-1) < prec_rf*10,
             delta_rt = 0;s
-        end
+         end
  %      
-         if residue_rf(it_rf) < 0.001 
-            delta_rt = delta_rt/1.1;%For increasing the quasilinear rate of convergence
+         if residue_rf(it_rf) < 0.01,          
+%           delta_rt = delta_rt/1.1;%For increasing the quasilinear rate of convergence
             if ~isempty(XXDr_ref) == 1 | ~isempty(XXVr_ref) == 1,%If radial transport is no zero, it is turned on when quasilinear convergence is robust enough
-                param_inv(1) = 1e-4;
-                XXDr_ref_in = XXDr_ref;
-                XXVr_ref_in = XXVr_ref;
+               param_inv(1) = 1e-4;
+               XXDr_ref_in = XXDr_ref;
+               XXVr_ref_in = XXVr_ref;
             end
          end     
   %      
-        if residue_rf(it_rf) <= prec_rf & it_rf > 10 & redfac == 1,
+         if residue_rf(it_rf) <= prec_rf & it_rf > 10 & redfac == 1,
             info_dke_yp(2,['Successfull convergence achieved for ray-tracing coupling after ',int2str(it_rf),' iterations !']);
             break
-        else
-            info_dke_yp(2,['Iteration ',int2str(it_rf),', residue = ',num2str(residue_rf(it_rf))]);            
-        end
-    end
+         else
+           info_dke_yp(2,['Iteration ',int2str(it_rf),', residue = ',num2str(residue_rf(it_rf))]);            
+         end
+      end
+   end
 end
 %
 %   RF wave quasilinear diffusion
 %
-if nb > 0
+if ~isempty(waveparam),%In the case of RF waves and quasilinear iteration
     blist_lh = find(round(waveparam(1,:,1)./(qe*min(xB0)/me)) == 0);
     nb_lh = length(blist_lh);
     waveparam_lh = waveparam(:,blist_lh,:);
     blist_ec = find(round(waveparam(1,:,1)./(qe*min(xB0)/me)) > 0);
     nb_ec = length(blist_ec);
     waveparam_ec = waveparam(:,blist_ec,:);
-else 
-    nb_lh = 0;
-    nb_ec = 0;
-end
 %
 %For displaying RF quasilinear domain only
 %
-if nb_ec > 0,
-    xDperp_cy_ref = waveparam_ec(:,1,4);
-end
-if nb_lh > 0,
-    xD0_lh_ref = waveparam_lh(:,1,4);
-    xvparmin_lh_ref = 1./waveparam_lh(:,1,6)/betath_ref;
-    xvparmax_lh_ref = 1./waveparam_lh(:,1,5)/betath_ref;
+   if nb_ec > 0,
+      xDperp_cy_ref = waveparam_ec(:,1,4);
+   end
+   if nb_lh > 0,
+      xD0_lh_ref = waveparam_lh(:,1,4);
+      xvparmin_lh_ref = 1./waveparam_lh(:,1,6)/betath_ref;
+      xvparmax_lh_ref = 1./waveparam_lh(:,1,5)/betath_ref;
+   end
+else 
+    nb_lh = 0;
+    nb_ec = 0;
 end
 %
 time_out = etime(clock,time0);
@@ -924,7 +935,7 @@ if syn_mode == 1,
         XXDr_ref,XXVr_ref,...
 		XXsource_ref,XXlossripple_ref,...
         xftp_norm_ref,bounce,1,xnloss_norm,coll_mode,...
-        norm_mode_f,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,temppath,XXfinit_ref);
+        norm_mode_f,boundary_mode,dtn,prec0,nit,invparam,display,store_mode,temppath,XXfinit_ref);
 %
     time_bc_out = etime(clock,time0_bc);
     memoryLU_bc_f_out = memoryLU_bc_f;
@@ -989,8 +1000,8 @@ mksa.ne_ref = ne_ref;%Density (m-3)
 mksa.nhu_ref = nhu_ref;%Reference electron collision frequency (s-1)
 mksa.lnc_e_ref = lnc_e_ref;%Reference Coulomb logarithm
 mksa.xftp_norm_ref = xftp_norm_ref;%Normalization factor for drift kinetic equation (ftilde)
-mksa.P_ref = me*(clum*betath_ref)^2*nhu_ref*ne_ref/1e6;%MKSA power unit
-mksa.j_ref = qe*clum*betath_ref*ne_ref/1e6;%MKSA current unit
+mksa.P_ref = P_ref/1e6;%MKSA power unit (MW)
+mksa.j_ref = qe*clum*betath_ref*ne_ref/1e6;%MKSA current unit (MA)
 mksa.Edreicer_ref = me*clum*betath_ref*nhu_ref/qe;%MKSA Dreicer field unit
 mksa.Ec_ref = Ec_ref;%Fast electron kinetic energy in keV
 %
@@ -1094,4 +1105,9 @@ else
     dke_out.xRR_b_fsav = [];
 end
 %
-rmdir([dkeparam.temppath,filesep,'DKE_',save_id],'s');
+if isempty(dkeparam.temppath),%Remove temporary file on the disk
+   rmdir(['tempdir_DKE_',save_id],'s')
+else
+   rmdir([dkeparam.temppath,filesep,'tempdir_DKE_',save_id],'s')
+end
+

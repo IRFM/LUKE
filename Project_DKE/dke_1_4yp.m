@@ -15,7 +15,7 @@ function [XXheaviside,...
     XXDr,XXVr,...
     XXsource,XXlossripple,...
     xftp_norm,bounce,it_rf,xnloss,coll_mode,...
-    norm_mode,boundary_mode,dtn,prec0,nit,invproc,param_inv,display,store_mode,temppath,XXfinit)
+    norm_mode,boundary_mode,dtn,prec0,nit,invparam,display,store_mode,temppath,XXfinit)
 %
 %
 %   Self-consistent 3-D relativistic solver of the drift kinetic equation in momentum space with Beliaev-Budker collision integrals 
@@ -70,10 +70,7 @@ function [XXheaviside,...
 %           (default = [1e-10,1e-10])
 %       - nit: maximum number of iterations  for f and g [1,2]
 %           (default = [20,20])
-%       - invproc: matrix inversion procedure (1: LU decomposition, 2-4: Iterative method) [1,1]
-%           (default = 1)
-%       - param_inv: parameter for the matrix inversion procedure [1,2]
-%           (default = [1e-3,20])
+%       - invparam: structure for parameters of the matrix inversion
 %       - display: display mode parameter (full: 2, partial: 1, no: = 0) index of the radial position where results are displayed
 %           (default = [0,1])
 %       - store_mode: Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1)
@@ -138,9 +135,9 @@ elseif dtn < 0,
     time_scheme = 2;%Crank-Nicholson differencing scheme
 end 
 %
-spparms('default');%Set parameters for sparse matrix ordering algorithms and direct linear equation solver
-spparms('supernd',4);
-spparms('rreduce',4);
+spparms('default');%Set parameters for sparse matrix ordering algorithms and direct linear equation solver MatLab build-in functions only
+spparms('supernd',4);%Set parameters for sparse matrix ordering algorithms and direct linear equation solver MatLab build-in functions only
+spparms('rreduce',4);%Set parameters for sparse matrix ordering algorithms and direct linear equation solver MatLab build-in functions only
 %
 npn = length(pn);%Size of the momentum grid for the distribution function (half grid)
 nmhu = length(mhu);%Size of the pitch-angle grid for the distribution function (half grid)
@@ -159,9 +156,6 @@ nit_g = nit(2);
 bounce_mode = bounce(1);
 dke_mode = bounce(2);
 equil_mode = bounce(3);
-prec_inv = param_inv(1);
-prec_inv_recommanded = min([param_inv(1),1/nr/dtn]);
-maxit_inv = param_inv(2);
 xbetath = betath_ref*sqrt(xTe_norm);
 %
 if bounce_mode == 0,dke_mode = 0;end
@@ -183,12 +177,14 @@ if display_mode >=1,
 %Numerical transient operation
     if (store_mode == 0), disp('   - Matrices storage in RAM (fast mode)');
     else                  disp('   - Matrices storage in disk file (slow mode)');end
+%Matrix facorization tecnhique
+    if (invparam.luproc == 0),  disp('   - MatLab incomplete LU matrix facorization');
+    elseif (invparam.luproc == 1),  disp('   - MUMPS incomplete LU matrix facorization - FORTRAN 95 parallel processing');end
 %Numerical matrix inversion procedure
-    if (invproc == 1),  disp('   - CGS iterative matrix inversion method');
-    elseif (invproc == 2),  disp('   - BICG iterative matrix inversion method');
-    elseif (invproc == 3),  disp('   - QMR iterative matrix inversion method');end
-    disp(['   - Recommended drop tolerance: ',num2str(prec_inv_recommanded),' [input: ',num2str(param_inv(1)),']']);
-    disp(['   - Maximum number of iterations for the matrix inversion method: ',num2str(maxit_inv)]);   
+    if (invparam.invproc == 1),  disp('   - MatLab CGS iterative matrix inversion method');
+    elseif (invparam.invproc == 2),  disp('   - MatLab BICG iterative matrix inversion method');
+    elseif (invparam.invproc == 3),  disp('   - MatLab QMR iterative matrix inversion method');
+    elseif (invparam.invproc == -1),  disp('   - MUMPS matrix inversion - FORTRAN 95 parallel processing');end
 %Boundary and normalization conditions
     if (norm_mode == 1),    disp('   - Normalization of f0 at each iteration and radius');
     elseif (norm_mode == 0),disp('   - No normalization of f0 at each iteration and radius: fully natural conservative mode');end
@@ -230,10 +226,7 @@ maskl = tril(ones(npn,npn)) - 0.5*diag(ones(1,npn));
 %Temporary data saving on disk
 %
 if store_mode == 1,
-    filename = ['MXP_',tokname,'.mat'];
-    [s,dossier,machine] = comput_dke_yp;
-    delete([dossier,s,filename])
-    save([dossier,s,filename],'nr')
+    save([fullfile(temppath,'MXP_'),save_id,'.mat'],'nr');
 end
 %
 %Angular grid
@@ -507,8 +500,8 @@ XXi = zeros(npn,nmhu,nr);
 %
 [time0,MMXR_f_t] = rad_dke_yp(npn,nmhu,nr,ns_f,XXDr,XXVr,xpsin,xdpsin,xpsinm,xdpsinm,xpsinp,xdpsinp,XXlambda,XXpn2,Xmhu,Xmhu2,xmhubounce2,xR0,xqtilde,xBp0,xB0,blocksize_f_t,bounce_mode,radial_mode,display_mode,save_id,temppath);
 %
-% Collisions flux coefficients
-%
+% Collisions flux coefficients 
+%ZXXF_c_tp.p_ippj
 [ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM] = ...
     coll_dke_jd(Xmhup,Xmhu2p,X1mmhu2p,Xmhum,Xmhu2m,X1mmhu2m,...
         pn,pn2,dpn,pnm,pn2m,dpnm,pnp,pn2p,dpnp,Xpn,...
@@ -903,6 +896,8 @@ if dke_mode == 1,
         [Xa_tp,Xb_tp,Xc_tp,Xd_tp,Xe_tp,Xf_tp,Xg_tp,Xh_tp,Xi_tp] = ...
             fpengine_dke_yp(1,...
             XXdeltap_imj(:,:,jr2),XXdeltap_ipj(:,:,jr2),XXdeltam_ijm(:,:,jr2),XXdeltam_ijp(:,:,jr2),...
+            XXdeltap_imjmm(:,:,jr2),XXdeltap_imjpp(:,:,jr2),XXdeltap_ipjmm(:,:,jr2),XXdeltap_ipjpp(:,:,jr2),...
+            XXdeltam_immjm(:,:,jr2),XXdeltam_ippjm(:,:,jr2),XXdeltam_immjp(:,:,jr2),XXdeltam_ippjp(:,:,jr2),...
             XXRlambda_m(:,:,jr2),XXRlambda_p(:,:,jr2),...
             Xpnmm,Xpnm,Xpn,Xpnp,Xpnpp,Xpn2m,Xpn2p,Xdpnmm,Xdpnm,Xdpn,Xdpnp,Xdpnpp,...
             Xmhumm,Xmhum,Xmhu,Xmhup,Xmhupp,X1mmhu2,X1mmhu2m,X1mmhu2p,Xdmhumm,Xdmhum,Xdmhu,Xdmhup,Xdmhupp,...
@@ -1159,18 +1154,22 @@ clear jmhut_min jmhut_max
 if display_mode >= 1,info_dke_yp(2,['Full elapsed time for matrix calculation: ',num2str(etime(clock,time00)),' (s)']);end
 %
 if store_mode == 1,
-    filename = ['MXP_',tokname,'.mat'];
-    [s,dossier,machine] = comput_dke_yp;
-    save([dossier,s,filename],'Zmask_f0_t','Zmask_g','-append')
+    save([fullfile(temppath,'MXP_'),save_id,'.mat'],'Zmask_f0_t','Zmask_g','-append');
 end
 %
 time0 = clock;
 %
 MMXdiag = diag(MMXP_f_t/time_scheme + MMXR_f_t/time_scheme + MMXT_f_t);
-if isempty(find(MMXdiag==0)) == 1,
+if isempty(find(MMXdiag==0)) == 1, 
     MMXPDI_f_t = inv(diag(MMXdiag));
     MMXPC_f_t = MMXPDI_f_t*(MMXP_f_t/time_scheme + MMXR_f_t/time_scheme + MMXT_f_t);%Main diagonal matrix preconditionning
-    [MMXL_f_t,MMXU_f_t] = luinc(MMXPC_f_t,prec_inv); 
+%
+    if invparam.luproc == 0,%MatLab build-in matrix incomplete factorization
+       [MMXL_f_t,MMXU_f_t] = luinc(MMXPC_f_t,invparam.ludroptol); 
+    elseif invparam.luproc == 1;%MUMPS matrix incomplete factorization
+       [MMXL_f_t,MMXU_f_t] = MUMPS_dke_yp(invparam.MUMPSparam,MMXPC_f_t,invparam.ludroptol,temppath,[]);
+    end
+%
     time_f = etime(clock,time0);
     memoryLU_f = (getfield(whos('MMXL_f_t'),'bytes') + getfield(whos('MMXU_f_t'),'bytes'))/1000000;
 else
@@ -1181,7 +1180,13 @@ if dke_mode == 1,
     time0 = clock;  
     MMXPDI_g_t = inv(diag(diag(MMXP_g_t)));
     MMXPC_g_t = MMXPDI_g_t*MMXP_g_t;%Main diagonal matrix preconditionning
-    [MMXL_g_t,MMXU_g_t] = luinc(MMXPC_g_t,prec_inv);
+%
+    if invparam.luproc == 0,%MatLab build-in matrix incomplete factorization
+       [MMXL_g_t,MMXU_g_t] = luinc(MMXPC_g_t,invparam.ludroptol); 
+    elseif invparam.luproc == 1;%MUMPS matrix incomplete factorization
+       [MMXL_g_t,MMXU_g_t] = MUMPS_dke_yp(invparam.MUMPSparam,MMXPC_g_t,invparam.ludroptol,temppath,[]);
+    end
+%
     time_g = etime(clock,time0);
     memoryLU_g = (getfield(whos('MMXL_g_t'),'bytes') + getfield(whos('MMXU_g_t'),'bytes'))/1000000;
 else
@@ -1251,9 +1256,7 @@ for it_f = 2:(nit_f+1),
 %
         for ir = 1:nr,
             if store_mode == 1,
-                filename = ['MXP_',tokname,'.mat'];
-                [s,dossier,machine] = comput_dke_yp;
-                load([dossier,s,filename],'Zmask_f0_t')
+                load([fullfile(temppath,'MXP_'),save_id,'.mat'],'Zmask_f0_t');
             end 
 %
             XI_t = XXI(:,Zmask_f0_t{ir},ir);
@@ -1270,16 +1273,21 @@ for it_f = 2:(nit_f+1),
 %
         MMXR_t = MMXPDI_f_t*MMXq_t - MMXPC_f_t*MMXf0_t;%Residu calculation for matrix inversion
 %
-        if invproc == 1,%cgs iterative method
-            [MMXS_t,flaginv_f] = cgs(MMXPC_f_t,MMXR_t,prec_inv,maxit_inv,MMXL_f_t,MMXU_f_t);
-        elseif invproc == 2,%bicg iterative method      
-            [MMXS_t,flaginv_f] = bicg(MMXPC_f_t,MMXR_t,prec_inv,maxit_inv,MMXL_f_t,MMXU_f_t); 
-        elseif invproc == 3,%qmr iterative method
-            [MMXS_t,flaginv_f] = qmr(MMXPC_f_t,MMXR_t,prec_inv,maxit_inv,MMXL_f_t,MMXU_f_t);
+        if invparam.invproc == 1,%cgs iterative method
+            [MMXS_t,flaginv_f] = cgs(MMXPC_f_t,MMXR_t,invparam.mlprecinv,invparam.mlmaxitinv,MMXL_f_t,MMXU_f_t);
+        elseif invparam.invproc == 2,%bicg iterative method      
+            [MMXS_t,flaginv_f] = bicg(MMXPC_f_t,MMXR_t,invparam.mlprecinv,invparam.mlmaxitinv,MMXL_f_t,MMXU_f_t); 
+        elseif invparam.invproc == 3,%qmr iterative method
+            [MMXS_t,flaginv_f] = qmr(MMXPC_f_t,MMXR_t,invparam.mlprecinv,invparam.mlmaxitinv,MMXL_f_t,MMXU_f_t);
+        elseif invparam.invproc == -1,%MUMPS FORTAN 95 parallel processing package
+            [dummy1,dummy2,MMXS_t,flaginv_f] = MUMPS_dke_yp(invparam.MUMPSparam,MMXPC_f_t,temppath,MMXR_t);
+            clear dummy1 dummy2
         end
 %
-        if flaginv_f == 2,
+        if flaginv_f == 2 & invparam.invproc > 1,
             error('WARNING: Matrix ill-conditionned. No inversion possible for the zero order Fokker-Planck equation. Try to reduce drop tolerance parameter for LU factorization...!');
+        elseif flaginv_f ~= 0 & invparam.invproc == -1,
+            error(['WARNING: Error ',int2str(flaginv_f),' in MUMPS matrix inversion for the zero order Fokker-Planck equation. See MUMPS documentation !']);
         end
 %
         MMXf1_t = MMXf0_t + MMXS_t;
@@ -1434,9 +1442,7 @@ if dke_mode == 1,
         XfMp = XXfM(:,:,jr3);%Upper radial value for gradient calculation
 %
         if store_mode == 1,
-            filename = ['MXP_',tokname,'.mat'];
-            [s,dossier,machine] = comput_dke_yp;
-            load([dossier,s,filename],'Zmask_g')
+            load([fullfile(temppath,'MXP_'),save_id,'.mat'],'Zmask_g');
         end
 %                   
         dpsim = (xpsin(jr1) - xpsin(jr2));%Radial step for parabolic gradient calculations (dke)
@@ -1510,18 +1516,21 @@ if dke_mode == 1,
 %
             MMXR_t = MMXPDI_g_t*(MMXq_g_t + MMXq_tp_t) - MMXPC_g_t*MMXf0_g_t;
 %
-            if invproc == 1,%cgs iterative method
-                [MMXS_t,flaginv_g] = cgs(MMXPC_g_t,MMXR_t,prec_inv,maxit_inv,MMXL_g_t,MMXU_g_t);
-            elseif invproc == 2,%bicg iterative method
-                [MMXS_t,flaginv_g] = bicg(MMXPC_g_t,MMXR_t,prec_inv,maxit_inv,MMXL_g_t,MMXU_g_t);
-            elseif invproc == 3,%qmr iterative method
-                [MMXS_t,flaginv_g] = qmr(MMXPC_g_t,MMXR_t,prec_inv,maxit_inv,MMXL_g_t,MMXU_g_t);
+            if invparam.invproc == 1,%cgs iterative method
+               [MMXS_t,flaginv_g] = cgs(MMXPC_g_t,MMXR_t,invparam.mlprecinv,invparam.mlmaxitinv,MMXL_g_t,MMXU_g_t);
+            elseif invparam.invproc == 2,%bicg iterative method      
+               [MMXS_t,flaginv_g] = bicg(MMXPC_g_t,MMXR_t,invparam.mlprecinv,invparam.mlmaxitinv,MMXL_g_t,MMXU_g_t); 
+            elseif invparam.invproc == 3,%qmr iterative method
+               [MMXS_t,flaginv_g] = qmr(MMXPC_g_t,MMXR_t,invparam.mlprecinv,invparam.mlmaxitinv,MMXL_g_t,MMXU_g_t);
+            elseif invparam.invproc == -1,%MUMPS FORTAN 95 parallel processing package
+               [dummy1,dummy2,MMXS_t,flaginv_g] = MUMPS_dke_yp(invparam.MUMPSparam,MMXPC_g_t,temppath,MMXR_t);
+               clear dummy1 dummy2
             end
 %
-            if flaginv_g == 1,
-                info_dke_yp(2,'WARNING: No convergence in the matrix inversion subroutine for the first order Fokker-Planck equation');
-            elseif flaginv_g == 2,
-                error('WARNING: Matrix ill-conditionned. No inversion possible for the first order Fokker-Planck equation');
+            if flaginv_g == 2 & invparam.invproc > 1,
+               error('WARNING: Matrix ill-conditionned. No inversion possible for the first order Fokker-Planck equation. Try to reduce drop tolerance parameter for LU factorization...!');
+            elseif flaginv_g ~= 0 & invparam.invproc == -1,
+               error(['WARNING: Error ',int2str(flaginv_g),' in MUMPS matrix inversion for the first order Fokker-Planck equation. See MUMPS documentation !']);
             end
 %
             MMXf1_g_t = MMXf0_g_t + MMXS_t;
@@ -1687,8 +1696,8 @@ end
 % or gained (! still need to include run-away contribution - Yves?)
 %
 if radial_mode ~= 1,
-    %XXf0 = XXf0.*shiftdim(repmat(xne_norm'./xnorm_0_fsav',[1,npn,nmhu]),1);
-    XXf0 = XXf0.*shiftdim(repmat(xne_norm'./Znorm.x_0',[1,npn,nmhu]),1);
+    xnorm_0_fsav = 2*pi.*(xqtilde./xqhat).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda.*XXf0.*XXpn2,1),1)';%Same as Znorm.x_0_fsav but at all radius (just for vector calculations in dke_mode=1)
+    XXf0 = XXf0.*shiftdim(repmat(xne_norm'./xnorm_0_fsav',[1,npn,nmhu]),1);
 end
 %
 %
@@ -1997,7 +2006,7 @@ end
 xepsi_rdke = xepsi(rdke);
 Xxqtilde = repmat(xqtilde,npn,1);
 Xxqhat = repmat(xqtilde,npn,1);
-XxRR_fsav = 2*pi*(Xxqtilde(:,rdke)./Xxqhat(:,rdke)).*integral_dke_jd(dmhu,XXSp0_imj(:,:,rdke).*XXpn2m(:,:,rdke).*XXlambda(:,:,rdke),2);%Primary generation run-away rate (Dreicer field effect)
+XxRR_fsav = 2*pi*(Xxqtilde(:,rdke)./Xxqhat(:,rdke)).*integral_dke_jd(dmhu,XXSp0_imj.*XXpn2m(:,:,rdke).*XXlambda(:,:,rdke),2);%Primary generation run-away rate (Dreicer field effect)
 xRR_primary_fsav = XxRR_fsav(end,:);%Radial profile of primary runaway electron generation rate
 %
 mask_xepsi = find(xepsi_rdke~=0);
@@ -2013,7 +2022,7 @@ pnminRR = 2;%
 zminRR = betath_ref*pnminRR;
 zminRR2 = zminRR.*zminRR;
 gammaminRR = sqrt(1 + zminRR2);
-xRR_secondary_fsav = 1/(gammaminRR-1)*pi*xnloss.*xrnhuth./xlnc_e;
+xRR_secondary_fsav = 1/(gammaminRR-1)*pi*xnloss(rdke).*xrnhuth(rdke)./xlnc_e(rdke);
 %
 xRR_fsav = xRR_primary_fsav + xRR_secondary_fsav;%Runaway rate profile (primary + secondary contribution)
 %
