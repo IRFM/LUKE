@@ -71,13 +71,13 @@ dkeparam.nit_g = 100;%Maximum number of iterations for g
 %
 dkeparam.dtn = 10000;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
 %
-dkeparam.luproc = 0;%LU matrix inversion method: (0) MatLab build-in, (1) MUMPS parallel fortran 95
+dkeparam.luproc = 0;%LU matrix inversion method: (-1) No LU, direct inversion, (0) MatLab build-in
 dkeparam.ludroptol = 1e-5;%Drop tolerance for the partial LU decomposition (recipes: droptol = max(1/dtn/nr,param_inv(1)))
-dkeparam.invproc = 1;%Iterative matrix inversion method: (1) cgs iterative method, (2) bicg iterative method, (3) qmr iterative method, -1: MUMPS parallel fortran 95
+dkeparam.invproc = 1;%Iterative matrix inversion method: (1) cgs iterative method, (2) bicg iterative method, (3) qmr iterative method, -1: MUMPS parallel fortran 95 (direct inversion, dkeparam.luproc not used)
 dkeparam.mlprecinv = 1e-5;%Accuracy for the MatLab build-in matrix inversion.
 dkeparam.mlmaxitinv = 20;%Maximum number of iterations for iterative method (between 1 and 20 usualy, if empty, mlmaxitinv = min(matrixdim,20). See matlab documentation.
-dkeparam.MUMPSparam.path = '';%Absolute directory path adress where compiled MUMPS program is located (empty: local directory)
-dkeparam.MUMPSparam.nproc = 1;%number of processor used by MUMPS (depends of the computer framework). Default is 1
+dkeparam.MUMPSparam.path = '../../../../MUMPS_4.6.1/dke/';%Directory path adress where compiled MUMPS program is located (empty: local directory)
+dkeparam.MUMPSparam.nproc = 2;%number of processor used by MUMPS (depends of the computer framework). Default is 1
 %
 dkeparam.store_mode = 0;%Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight
 dkeparam.temppath = '';%Absolute directory path adress where temporary matrices are stored (empty: local directory)
