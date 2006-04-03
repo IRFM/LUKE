@@ -120,6 +120,8 @@ if nargin < 70,
 end
 %
 timeCPU0 = cputime;
+memoryLU_f = 0;
+memoryLU_g = 0;
 %
 %************************************************** Set grid and various parameters ******************************************************** 
 %
@@ -169,6 +171,8 @@ elseif length(rdke) < 4 & testDrVr > 0,
 elseif testDrVr == 0,
     radial_mode = 0;
 end 
+%
+if (invparam.invproc == -1), invparam.luproc = -1;end,%MUMPS performs direct inversion only
 %
 %************************************************** Simulation parameter display ******************************************************** 
 %
@@ -1166,12 +1170,14 @@ if isempty(find(MMXdiag==0)) == 1,
 %
     if invparam.luproc == 0,%MatLab build-in matrix incomplete factorization
        [MMXL_f_t,MMXU_f_t] = luinc(MMXPC_f_t,invparam.ludroptol); 
-    elseif invparam.luproc == 1;%MUMPS matrix incomplete factorization
-       [MMXL_f_t,MMXU_f_t] = MUMPS_dke_yp(invparam.MUMPSparam,MMXPC_f_t,invparam.ludroptol,temppath,[]);
+    elseif invparam.luproc == 1;%HYPRE matrix incomplete factorization
+       [dummy1,dummy2,MMXL_f_t,MMXU_f_t] = HYPRE_dke_yp(invparam.HYPREparam,MMXPC_f_t,[],invparam.ludroptol,temppath);
     end
 %
     time_f = etime(clock,time0);
-    memoryLU_f = (getfield(whos('MMXL_f_t'),'bytes') + getfield(whos('MMXU_f_t'),'bytes'))/1000000;
+    if invparam.luproc >= 0,
+       memoryLU_f = (getfield(whos('MMXL_f_t'),'bytes') + getfield(whos('MMXU_f_t'),'bytes'))/1000000;
+    end
 else
     error('Fokker-Planck matrix has a null element on the main diagonal');%Matrix must be main diagonal dominant
 end
@@ -1183,22 +1189,31 @@ if dke_mode == 1,
 %
     if invparam.luproc == 0,%MatLab build-in matrix incomplete factorization
        [MMXL_g_t,MMXU_g_t] = luinc(MMXPC_g_t,invparam.ludroptol); 
-    elseif invparam.luproc == 1;%MUMPS matrix incomplete factorization
-       [MMXL_g_t,MMXU_g_t] = MUMPS_dke_yp(invparam.MUMPSparam,MMXPC_g_t,invparam.ludroptol,temppath,[]);
+    elseif invparam.luproc == 1;%HYPRE matrix incomplete factorization
+       [dummy1,dummy2,MMXL_f_t,MMXU_f_t] = HYPRE_dke_yp(invparam.HYPREparam,MMXPC_f_t,[],invparam.ludroptol,temppath);
     end
 %
     time_g = etime(clock,time0);
-    memoryLU_g = (getfield(whos('MMXL_g_t'),'bytes') + getfield(whos('MMXU_g_t'),'bytes'))/1000000;
-else
-    memoryLU_g = 0;
+    if invparam.luproc >= 0,
+       memoryLU_g = (getfield(whos('MMXL_g_t'),'bytes') + getfield(whos('MMXU_g_t'),'bytes'))/1000000;
+    end
 end
 %
 if display_mode >= 1,   
-    info_dke_yp(2,['Full elapsed time of LU matrix factorization for f: ',num2str(time_f),' (s)']);
-    info_dke_yp(2,['Size of the LU matrices for f: ',num2str(memoryLU_f),' MBytes']);
+    
+    if invparam.luproc >= 0,
+        info_dke_yp(2,['Size of the LU matrices for f: ',num2str(memoryLU_f),' MBytes']);
+        info_dke_yp(2,['Full elapsed time of LU matrix factorization for f: ',num2str(time_f),' (s)']);
+    else
+        info_dke_yp(2,'Direct matrix inversion, no LU matrix factorization');
+    end
     if dke_mode == 1,
-        info_dke_yp(2,['Full elapsed time of LU matrix factorization for g: ',num2str(time_g),' (s)']);
-        info_dke_yp(2,['Size of the LU matrices for g: ',num2str(memoryLU_g),' MBytes']);
+        if invparam.luproc >= 0,
+            info_dke_yp(2,['Size of the LU matrices for g: ',num2str(memoryLU_g),' MBytes']);
+            info_dke_yp(2,['Full elapsed time of LU matrix factorization for g: ',num2str(time_g),' (s)']);
+        else
+            info_dke_yp(2,'Direct matrix inversion, no LU matrix factorization');
+        end
     end
 end
 %
@@ -1279,15 +1294,18 @@ for it_f = 2:(nit_f+1),
             [MMXS_t,flaginv_f] = bicg(MMXPC_f_t,MMXR_t,invparam.mlprecinv,invparam.mlmaxitinv,MMXL_f_t,MMXU_f_t); 
         elseif invparam.invproc == 3,%qmr iterative method
             [MMXS_t,flaginv_f] = qmr(MMXPC_f_t,MMXR_t,invparam.mlprecinv,invparam.mlmaxitinv,MMXL_f_t,MMXU_f_t);
-        elseif invparam.invproc == -1,%MUMPS FORTAN 95 parallel processing package
-            [dummy1,dummy2,MMXS_t,flaginv_f] = MUMPS_dke_yp(invparam.MUMPSparam,MMXPC_f_t,temppath,MMXR_t);
-            clear dummy1 dummy2
+        elseif invparam.invproc == -1,%MUMPS FORTAN 95 parallel processing package (direct inversion)
+            [MMXS_t,flaginv_f] = MUMPS_dke_yp(invparam.MUMPSparam,MMXPC_f_t,MMXR_t,temppath);
+        elseif invparam.invproc == -2,%HYPRE FORTAN 95 parallel processing package (direct inversion)
+            [MMXS_t,flaginv_f] = HYPRE_dke_yp(invparam.HYPREparam,MMXPC_f_t,MMXR_t,invparam.ludroptol,temppath);
         end
 %
         if flaginv_f == 2 & invparam.invproc > 1,
             error('WARNING: Matrix ill-conditionned. No inversion possible for the zero order Fokker-Planck equation. Try to reduce drop tolerance parameter for LU factorization...!');
         elseif flaginv_f ~= 0 & invparam.invproc == -1,
             error(['WARNING: Error ',int2str(flaginv_f),' in MUMPS matrix inversion for the zero order Fokker-Planck equation. See MUMPS documentation !']);
+        elseif flaginv_f ~= 0 & invparam.invproc == -2,
+            error(['WARNING: Error ',int2str(flaginv_f),' in HYPRE matrix inversion for the zero order Fokker-Planck equation. See HYPRE documentation !']);
         end
 %
         MMXf1_t = MMXf0_t + MMXS_t;
@@ -1404,6 +1422,7 @@ for it_f = 2:(nit_f+1),
     if it_f == nit_f,info_dke_yp(2,['WARNING: convergence not achieved for f0 after ',int2str(nit_f),' iterations. Time step too small !']);end
 end
 if display_mode >= 1,info_dke_yp(2,['Convergence achieved for zero order Fokker-Planck calculations in ',num2str(etime(clock,time0)),' (s)']);end
+if invparam.invproc == -1 & display_mode >= 1,info_dke_yp(2,['Number of processors used for MUMPS matrix inversion : ',int2str(invparam.MUMPSparam.nproc)]);end%MUMPS FORTAN 95 parallel processing package
 %
 clear ir fM XfM MMXPC_f_t MMXPDI_f_t Xmask_f0 MMXL_f_t MMXU_f_t
 clear Xf0 Xf0_t Xq Xq_t Xf1 Xf1_t Xf1_tp Xf1_tm Xf1_ts XR_t XS_t XY_t
@@ -1522,15 +1541,18 @@ if dke_mode == 1,
                [MMXS_t,flaginv_g] = bicg(MMXPC_g_t,MMXR_t,invparam.mlprecinv,invparam.mlmaxitinv,MMXL_g_t,MMXU_g_t); 
             elseif invparam.invproc == 3,%qmr iterative method
                [MMXS_t,flaginv_g] = qmr(MMXPC_g_t,MMXR_t,invparam.mlprecinv,invparam.mlmaxitinv,MMXL_g_t,MMXU_g_t);
-            elseif invparam.invproc == -1,%MUMPS FORTAN 95 parallel processing package
-               [dummy1,dummy2,MMXS_t,flaginv_g] = MUMPS_dke_yp(invparam.MUMPSparam,MMXPC_g_t,temppath,MMXR_t);
-               clear dummy1 dummy2
+            elseif invparam.invproc == -1,%MUMPS FORTAN 95 parallel processing package (direct inversion)
+               [MMXS_t,flaginv_g] = MUMPS_dke_yp(invparam.MUMPSparam,MMXPC_g_t,MMXR_t,temppath);
+            elseif invparam.invproc == -2,%HYPRE FORTAN 95 parallel processing package (direct inversion)
+               [MMXS_t,flaginv_g] = HYPRE_dke_yp(invparam.HYPREparam,MMXPC_g_t,MMXR_t,invparam.ludroptol,temppath);
             end
 %
             if flaginv_g == 2 & invparam.invproc > 1,
                error('WARNING: Matrix ill-conditionned. No inversion possible for the first order Fokker-Planck equation. Try to reduce drop tolerance parameter for LU factorization...!');
             elseif flaginv_g ~= 0 & invparam.invproc == -1,
                error(['WARNING: Error ',int2str(flaginv_g),' in MUMPS matrix inversion for the first order Fokker-Planck equation. See MUMPS documentation !']);
+            elseif flaginv_g ~= 0 & invparam.invproc == -2,
+               error(['WARNING: Error ',int2str(flaginv_g),' in HYPRE matrix inversion for the first order Fokker-Planck equation. See HYPRE documentation !']);
             end
 %
             MMXf1_g_t = MMXf0_g_t + MMXS_t;
@@ -1593,6 +1615,7 @@ if dke_mode == 1,
     end
 %
     if display_mode >= 1,info_dke_yp(2,['Convergence achieved for first order Fokker-Planck calculations in ',num2str(etime(clock,time0)),' (s)']);end
+    if invparam.invproc == -1 & display_mode >= 1,info_dke_yp(2,['Number of processors used for MUMPS matrix inversion : ',int2str(invparam.MUMPSparam.nproc)]);end%MUMPS FORTAN 95 parallel processing package
 else
     XXf0_tp = zeros(size(XXf0));
     XXf0_g = zeros(size(XXf0));
