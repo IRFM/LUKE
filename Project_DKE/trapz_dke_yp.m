@@ -5,11 +5,11 @@ function [sf] = trapzyp(f)
 %
 %	Input:
 %
-%		- f: [x,f1,f2,...,fm], x is the abciss vector, fi are m functions [n,m+1]
+%		- f: [x,f1,f2,...,fn], x is the abciss vector, fi are n functions [m,n+1]
 %
 %	Output:
 %
-%		- sf: [sf1,sf2,...,sfm], sum of fi's [n,m] 
+%		- sf: [sf1,sf2,...,sfn], sum of fi's [m,n] 
 %
 %
 %by Y.PEYSSON CEA-DRFC 11/10/1991 <peysson@drfc.cad.cea.fr>
@@ -17,23 +17,21 @@ function [sf] = trapzyp(f)
 %revised for MatLab 5.2 (31/08/2000) 
 %
 if nargin < 1,
-	infoyp(2,'Wrong number of input arguments for trapezeyp');
+	infoyp(2,'Wrong number of input arguments for trapz_dke_yp');
 	return;
 end
 %
-[n,m] = size(f);
+[m,n] = size(f);
 %
-%sf=(f(2,1)-f(1,1))*sum(f(:,2:m));
-%
-if n > 2,
-	delta = f(2:1:n,1)-f(1:1:n-1,1);
-	ff = (f(2:1:n,2:1:m) + f(1:1:n-1,2:1:m))/2;
-	sf = sum((delta*ones(1,m-1)).*ff);
-elseif n == 2,
-	sf = (f(1,2:1:m) + f(2,2:1:m))/2;
-elseif n == 1,
-	sf = f(1,2:1:m);
-elseif n == 0,
-	error('Empty matrix in trapzyp');
+if m > 2,
+	delta = f(2:1:m,1)-f(1:1:m-1,1);
+	ff = (f(2:1:m,2:1:n) + f(1:1:m-1,2:1:n))/2;
+	sf = sum((delta*ones(1,n-1)).*ff);
+elseif m == 2,
+	sf = (f(1,2:1:n) + f(2,2:1:n))/2;
+elseif m == 1,
+	sf = f(1,2:1:n);
+elseif m == 0,
+	error('Empty matrix in trapz_dke_yp');
 end
 
