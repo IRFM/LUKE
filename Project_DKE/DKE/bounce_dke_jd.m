@@ -55,49 +55,66 @@ if equil_mode == 1
 %
     YMR0 = repmat(xR0,[nm2,1,nmhu]);
 %
-    Yweight_p0p0 = (YMmhu./YMmhu0).^(0).*YMPSIB.^(0);
-    xylambda_p0p0 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p0p0)/(2*pi),[nr,nmhu])./xyqtilde;
+    YMYM01 = YMmhu./YMmhu0;
+	YMYM02 = YMYM01.*YMYM01;
+	YMYM03 = YMYM01.*YMYM02;
+%
+    YMPSIBM1 = 1.0./YMPSIB;
+	YMPSIBM2 = YMPSIBM1.*YMPSIBM1;
+	YMPSIBM3 = YMPSIBM1.*YMPSIBM2;
+%
+    YMR0YMR1 = YMR0./YMR;
+    YMR0YMR2 = YMR0YMR1.*YMR0YMR1;
+	YMR0YMR4 = YMR0YMR2.*YMR0YMR2;
+%
+    YMmaskYMdtYMF = YMmask.*YMdt.*YMF;
+	not_xymaskT = ~xymaskT;
+%
+    Yweight_p0p0 = ones(size(YMYM01));%(YMmhu./YMmhu0).^(0).*YMPSIB.^(0);
+    xylambda_p0p0 = reshape(sum(YMmaskYMdtYMF.*Yweight_p0p0)/(2*pi),[nr,nmhu])./xyqtilde;
 %
 %For flux surface averaged Ohmic electric field
 %
-    Yweight_p1m3p4 = (YMmhu./YMmhu0).^(1).*YMPSIB.^(-3).*(YMR0./YMR).^(4);
-    xylambda_p1m3p4 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p1m3p4)/(2*pi),[nr,nmhu])./xyqtilde;
-    xylambda_b_p1m3p4 = ~xymaskT.*xylambda_p1m3p4;
+
+%
+    Yweight_p1m3p4 = YMYM01.*YMPSIBM3.*YMR0YMR4;
+    xylambda_p1m3p4 = reshape(sum(YMmaskYMdtYMF.*Yweight_p1m3p4)/(2*pi),[nr,nmhu])./xyqtilde;
+    xylambda_b_p1m3p4 = not_xymaskT.*xylambda_p1m3p4;
 %
 %Fokker-Planck weights
 %
-    Yweight_p2m1 = (YMmhu./YMmhu0).^(2).*YMPSIB.^(-1);
-    xylambda_p2m1 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p2m1)/(2*pi),[nr,nmhu])./xyqtilde;
+    Yweight_p2m1 = YMYM02.*YMPSIBM1;
+    xylambda_p2m1 = reshape(sum(YMmaskYMdtYMF.*Yweight_p2m1)/(2*pi),[nr,nmhu])./xyqtilde;
 %
-    Yweight_p1p1 = (YMmhu./YMmhu0).^(1).*YMPSIB.^(1);
-    xylambda_p1p1 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p1p1)/(2*pi),[nr,nmhu])./xyqtilde;
-    xylambda_b_p1p1 = ~xymaskT.*xylambda_p1p1;
+    Yweight_p1p1 = YMYM01.*YMPSIBM1;
+    xylambda_p1p1 = reshape(sum(YMmaskYMdtYMF.*Yweight_p1p1)/(2*pi),[nr,nmhu])./xyqtilde;
+    xylambda_b_p1p1 = not_xymaskT.*xylambda_p1p1;
 %
-    Yweight_p1m1p2 = (YMmhu./YMmhu0).^(1).*YMPSIB.^(-1).*(YMR0./YMR).^(2);
-    xylambda_p1m1p2 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p1m1p2)/(2*pi),[nr,nmhu])./xyqtilde;
-    xylambda_b_p1m1p2 = ~xymaskT.*xylambda_p1m1p2;%Equivalent form: xq.*xRmin.*xB0./xqtilde/R0./xBTmin                                              
+    Yweight_p1m1p2 = YMYM01.*YMPSIBM1.*YMR0YMR2;
+    xylambda_p1m1p2 = reshape(sum(YMmaskYMdtYMF.*Yweight_p1m1p2)/(2*pi),[nr,nmhu])./xyqtilde;
+    xylambda_b_p1m1p2 = not_xymaskT.*xylambda_p1m1p2;%Equivalent form: xq.*xRmin.*xB0./xqtilde/R0./xBTmin                                              
 %
 %Drift kinetic weights
 %
-    Yweight_p1m1 = (YMmhu./YMmhu0).^(1).*YMPSIB.^(-1);
-    xylambda_p1m1 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p1m1)/(2*pi),[nr,nmhu])./xyqtilde;
-    xylambda_b_p1m1 = ~xymaskT.*xylambda_p1m1;
+    Yweight_p1m1 = YMYM01.*YMPSIBM1;
+    xylambda_p1m1 = reshape(sum(YMmaskYMdtYMF.*Yweight_p1m1)/(2*pi),[nr,nmhu])./xyqtilde;
+    xylambda_b_p1m1 = not_xymaskT.*xylambda_p1m1;
 %
-    Yweight_p1m2 = (YMmhu./YMmhu0).^(1).*YMPSIB.^(-2);
-    xylambda_p1m2 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p1m2)/(2*pi),[nr,nmhu])./xyqtilde;
-    xylambda_b_p1m2 = ~xymaskT.*xylambda_p1m2;%In old notation: 1-delta/mhu0^2
+    Yweight_p1m2 = YMYM01.*YMPSIBM2;
+    xylambda_p1m2 = reshape(sum(YMmaskYMdtYMF.*Yweight_p1m2)/(2*pi),[nr,nmhu])./xyqtilde;
+    xylambda_b_p1m2 = not_xymaskT.*xylambda_p1m2;%In old notation: 1-delta/mhu0^2
 %
-    Yweight_p2m2p2 = (YMmhu./YMmhu0).^(2).*YMPSIB.^(-2).*(YMR0./YMR).^(2);    
-    xylambda_p2m2p2 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p2m2p2)/(2*pi),[nr,nmhu])./xyqtilde;%************probl?me sur le courant en mode numérique (grille uniforme ou non)
-    xylambda_b_p2m2p2 = ~xymaskT.*xylambda_p2m2p2;
+    Yweight_p2m2p2 = YMYM02.*YMPSIBM2.*YMR0YMR2;    
+    xylambda_p2m2p2 = reshape(sum(YMmaskYMdtYMF.*Yweight_p2m2p2)/(2*pi),[nr,nmhu])./xyqtilde;%************probl?me sur le courant en mode numérique (grille uniforme ou non)
+    xylambda_b_p2m2p2 = not_xymaskT.*xylambda_p2m2p2;
 %
-    Yweight_p3m2 = (YMmhu./YMmhu0).^(3).*YMPSIB.^(-2);
-    xylambda_p3m2 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p3m2)/(2*pi),[nr,nmhu])./xyqtilde;
-    xylambda_b_p3m2 = ~xymaskT.*xylambda_p3m2;
+    Yweight_p3m2 = YMYM03.*YMPSIBM2;
+    xylambda_p3m2 = reshape(sum(YMmaskYMdtYMF.*Yweight_p3m2)/(2*pi),[nr,nmhu])./xyqtilde;
+    xylambda_b_p3m2 = not_xymaskT.*xylambda_p3m2;
 %
-    Yweight_p2 = (YMmhu./YMmhu0).^(2);
-    xylambda_p2 = reshape(sum(YMmask.*YMdt.*YMF.*Yweight_p2)/(2*pi),[nr,nmhu])./xyqtilde;%In old notation: s*_tilde
-    xylambda_b_p2 = ~xymaskT.*xylambda_p2;
+    Yweight_p2 = YMYM02;
+    xylambda_p2 = reshape(sum(YMmaskYMdtYMF.*Yweight_p2)/(2*pi),[nr,nmhu])./xyqtilde;%In old notation: s*_tilde
+    xylambda_b_p2 = not_xymaskT.*xylambda_p2;
 %
     ymask = find(ymhu0 == 0);
     if ~isempty(ymask),

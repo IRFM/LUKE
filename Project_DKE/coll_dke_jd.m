@@ -8,11 +8,14 @@ function [ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM] = ...
         XXRlambda_b_p3m2_p,XXRlambda_b_p3m2_m,XXRlambda_b_p1m2_p,XXRlambda_b_p1m2_m,...
         spfac,coll_mode,dke_mode,display_mode,rdke,save_id,temppath);
 %
-load([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'XXfM');
+etime_coll = 0;
+time0 = clock;
+%
+%load([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'XXfM');
 %
 if exist('XXfM') == 1, %The bounce averaging coefficients were calculated before.
   %
-  load([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'ZXXD_c','ZXXF_c','ZXXD_c_tp','ZXXF_c_tp')
+%  load([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'ZXXD_c','ZXXF_c','ZXXD_c_tp','ZXXF_c_tp')
   %
   if display_mode >= 1,info_dke_yp(2,['Collision flux coefficients retrieved.']);end	
   %
@@ -29,7 +32,7 @@ else
   ZXXD_c.pp_ij = zeros(npn,nmhu,nr);
   ZXXD_c.pp_imj = zeros(npn,nmhu,nr);
   ZXXD_c.pp_immj = zeros(npn,nmhu,nr);
-  ZXXD_c.pm_ipj = zeros(npn,nmhu,nr); 
+  ZXXD_c.pm_ipj = zeros(npn,nmhu,nr);
   ZXXD_c.pm_ij = zeros(npn,nmhu,nr);
   ZXXD_c.pm_imj = zeros(npn,nmhu,nr);
   ZXXD_c.mp_ijp = zeros(npn,nmhu,nr);
@@ -187,9 +190,10 @@ else
     end
 %    
   end
-  save([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'ZXXD_c','ZXXF_c','ZXXD_c_tp','ZXXF_c_tp','XXfM','-append');
+%  save([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'ZXXD_c','ZXXF_c','ZXXD_c_tp','ZXXF_c_tp','XXfM','-append');
   %
-  if display_mode >= 1,info_dke_yp(2,['Collision flux coefficients saved.']);end	
+  etime_coll = etime_coll + etime(clock,time0);
+  if display_mode >= 1,info_dke_yp(2,['Collision flux coefficients calculations done in ',num2str(etime_coll),' (s)']);end	
   %
 %
 end

@@ -6,12 +6,14 @@ function [ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,xepsi] = ...
         XXRlambda_b_p2m2p2,XXRlambda_b_p2m2p2_p,XXRlambda_b_p2m2p2_m,...
         bounce_mode,dke_mode,display_mode,rdke,save_id,temppath);
 %
+etime_efield = 0;
+time0 = clock;
 %
-load([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'xepsi');
+%load([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'xepsi');
 %
 if exist('xepsi') == 1, %The bounce averaging coefficients were calculated before.
   %
-  load([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'ZXXD_e','ZXXF_e','ZXXD_e_tp','ZXXF_e_tp')
+%  load([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'ZXXD_e','ZXXF_e','ZXXD_e_tp','ZXXF_e_tp')
   %
   if display_mode >= 1,info_dke_yp(2,['Electric field flux coefficients retrieved.']);end	
   %
@@ -117,9 +119,10 @@ else
     end
 %
   end
-  save([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'ZXXD_e','ZXXF_e','ZXXD_e_tp','ZXXF_e_tp','xepsi','-append');
+%  save([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'ZXXD_e','ZXXF_e','ZXXD_e_tp','ZXXF_e_tp','xepsi','-append');
   %
-  if display_mode >= 1,info_dke_yp(2,['Electric field flux coefficients saved.']);end	
+  etime_efield = etime_efield + etime(clock,time0);
+  if display_mode >= 1,info_dke_yp(2,['Electric field flux coefficients calculations done in ',num2str(etime_efield),' (s)']);end	
   %
 %
 end

@@ -1,4 +1,4 @@
-function [time0,MMXR_f_t] = rad_dke_yp(npn,nmhu,nr,ns_f,XXDr,XXVr,xpsin,xdpsin,xpsinm,xdpsinm,...
+function [MMXR_f_t] = rad_dke_yp(npn,nmhu,nr,ns_f,XXDr,XXVr,xpsin,xdpsin,xpsinm,xdpsinm,...
 xpsinp,xdpsinp,XXlambda,XXpn2,Xmhu,Xmhu2,xmhubounce2,xR0,xqtilde,xBp0,xB0,blocksize_f_t,...
 bounce_mode,radial_mode,display_mode,save_id,temppath)
 %
@@ -11,7 +11,6 @@ if nargin < 27,
    error('Wrong number of input arguments for rad_dke_yp');
 end
 %
-etime_radial = 0;
 time0 = clock;
 %
 XXMrm = zeros(nmhu,npn,nr);
@@ -22,11 +21,10 @@ nMMXP_f_t = max(cumsum(blocksize_f_t));
 %
 if radial_mode == 1,
 %   
-   load([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'MMXR_f_t');
+%   load([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'MMXR_f_t');
 %
    if exist('MMXR_f_t') == 1, %The radial matrix was calculated before.
-      etime_radial = etime_radial + etime(clock,time0);time0 = clock;
-      if display_mode >= 1,info_dke_yp(2,['Configuration space matrix coefficients retrieved in ',num2str(etime_radial),' (s)']);end
+   
    else
    %
       MMXR_f_t = sparse(nMMXP_f_t,nMMXP_f_t);%Create supermatrix
@@ -135,7 +133,7 @@ if radial_mode == 1,
          MMXR_f_t = MMXR_f_t + sparse([1+nmhu*npn:nMMXP_f_t],[1:nMMXP_f_t-nmhu*npn],MMrm_t(1+npn*nmhu:nMMXP_f_t),nMMXP_f_t,nMMXP_f_t);
          MMXR_f_t = MMXR_f_t + sparse([1:nMMXP_f_t],[1:nMMXP_f_t],MMr_t,nMMXP_f_t,nMMXP_f_t);    
          MMXR_f_t = MMXR_f_t + sparse([1:nMMXP_f_t-nmhu*npn],[1+npn*nmhu:nMMXP_f_t],MMrp_t(1:nMMXP_f_t-nmhu*npn),nMMXP_f_t,nMMXP_f_t);
-         if display_mode >= 1,info_dke_yp(2,['Configuration space matrix calculations done in ',num2str(etime(clock,time0)),' (s)']);etime_radial = etime_radial + etime(clock,time0);time0 = clock;end
+         if display_mode >= 1,info_dke_yp(2,['Zero order configuration space matrix calculations done in ',num2str(etime(clock,time0)),' (s)']);end
       elseif bounce_mode == 1,    
          ir = 1;
          ib0 = 0;
@@ -152,22 +150,44 @@ if radial_mode == 1,
          XMr = XXMr(:,:,ir);
          XMr_t = XMr(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
          MMr_t = reshape(XMr_t',npn*(nmhu-ns_f(ir)),1,1);
-         MMXR_f_t = MMXR_f_t + sparse([1+ib0:ibp],[1+ib0:ibp],MMr_t,nMMXP_f_t,nMMXP_f_t);
+ %        
+         MMXR_f_t_i = zeros(nMMXP_f_t*11*nr,1);%Create oversized sparse matrix to avoid reallocation
+         MMXR_f_t_j = zeros(nMMXP_f_t*11*nr,1);
+         MMXR_f_t_v = zeros(nMMXP_f_t*11*nr,1);
+%
+         i = [1+ib0:ibp];
+         j = [1+ib0:ibp];
+         ia = 1;ib = ia+length(i);                 
+         MMXR_f_t_i(ia:ib-1) = i;
+         MMXR_f_t_j(ia:ib-1) = j;
+         MMXR_f_t_v(ia:ib-1) = MMr_t;
 %           
          XMrp = XXMrp(:,:,ir);
          XMrp_t = XMrp(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
          XMrp1_t = XMrp_t.*(Xmhu(:,Xmask_f0) < 0).*(Xmhu2(:,Xmask_f0) > xmhubounce2(ir+1));
          XMrp2_t = XMrp_t.*(Xmhu(:,Xmask_f0) < 0).*(Xmhu2(:,Xmask_f0) < xmhubounce2(ir+1)).*(Xmhu2(:,Xmask_f0) > xmhubounce2(ir));
          XMrp3_t = XMrp_t.*(Xmhu(:,Xmask_f0) > 0);
-%           
+%   
          for ip = 1:npn, 
-            MMXR_f_t = MMXR_f_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhup],[ibp+(nmhu-ns_f(ir+1))*(ip-1)+1:ibp+(nmhu-ns_f(ir+1))*(ip-1)+imhup],XMrp1_t(ip,[1:imhup]),nMMXP_f_t,nMMXP_f_t);
-            MMXR_f_t = MMXR_f_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*ip],[ibp+(nmhu-ns_f(ir+1))*(ip-1)+imhup+1:ibp+(nmhu-ns_f(ir+1))*ip],XMrp3_t(ip,[imhu0+1:nmhu-ns_f(ir)]),nMMXP_f_t,nMMXP_f_t);
-            MMXR_f_t = MMXR_f_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+imhup+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0],...
-            [ibp+(nmhu-ns_f(ir+1))*(ip-1)+((nmhu-ns_f(ir+1))-imhup):-1:ibp+(nmhu-ns_f(ir+1))*(ip-1)+((nmhu-ns_f(ir+1))-imhu0)+1],XMrp2_t(ip,[imhup+1:imhu0]),nMMXP_f_t,nMMXP_f_t);
+            i = [ib0+(nmhu-ns_f(ir))*(ip-1)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhup];
+            j = [ibp+(nmhu-ns_f(ir+1))*(ip-1)+1:ibp+(nmhu-ns_f(ir+1))*(ip-1)+imhup];
+            ia = ib;ib = ia+length(i);
+            MMXR_f_t_i(ia:ib-1) = i;
+            MMXR_f_t_j(ia:ib-1) = j;
+            MMXR_f_t_v(ia:ib-1) = XMrp1_t(ip,[1:imhup])';
+            i = [ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*ip];
+            j = [ibp+(nmhu-ns_f(ir+1))*(ip-1)+imhup+1:ibp+(nmhu-ns_f(ir+1))*ip];
+            ia = ib;ib = ia+length(i);
+            MMXR_f_t_i(ia:ib-1) = i;
+            MMXR_f_t_j(ia:ib-1) = j;
+            MMXR_f_t_v(ia:ib-1) = XMrp3_t(ip,[imhu0+1:nmhu-ns_f(ir)])';            
+            i = [ib0+(nmhu-ns_f(ir))*(ip-1)+imhup+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0];
+            j = [ibp+(nmhu-ns_f(ir+1))*(ip-1)+((nmhu-ns_f(ir+1))-imhup):-1:ibp+(nmhu-ns_f(ir+1))*(ip-1)+((nmhu-ns_f(ir+1))-imhu0)+1];
+            ia = ib;ib = ia+length(i);
+            MMXR_f_t_i(ia:ib-1) = i;
+            MMXR_f_t_j(ia:ib-1) = j;
+            MMXR_f_t_v(ia:ib-1) = XMrp2_t(ip,[imhup+1:imhu0])';
          end 
-%
-         if display_mode >= 1,info_dke_yp(2,['Configuration space matrix calculations (',int2str(ir),'/',int2str(nr),') done in ',num2str(etime(clock,time0)),' (s)']);etime_radial = etime_radial + etime(clock,time0);time0 = clock;end
 %
          for ir = 2:nr-1,
             if ir == 2,
@@ -193,7 +213,13 @@ if radial_mode == 1,
             XMr = XXMr(:,:,ir);
             XMr_t = XMr(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
             MMr_t = reshape(XMr_t',npn*(nmhu-ns_f(ir)),1,1);
-            MMXR_f_t = MMXR_f_t + sparse([1+ib0:ibp],[1+ib0:ibp],MMr_t,nMMXP_f_t,nMMXP_f_t);
+%           
+            i = [1+ib0:ibp];
+            j = [1+ib0:ibp];
+            ia = ib;ib = ia+length(i); 
+            MMXR_f_t_i(ia:ib-1) = i;
+            MMXR_f_t_j(ia:ib-1) = j;
+            MMXR_f_t_v(ia:ib-1) = MMr_t;
 %           
             XMrp = XXMrp(:,:,ir);
             XMrp_t = XMrp(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
@@ -205,18 +231,40 @@ if radial_mode == 1,
             XMrm_t = XMrm(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
             XMrm1_t = XMrm_t.*(Xmhu(:,Xmask_f0) < 0).*(Xmhu2(:,Xmask_f0) > xmhubounce2(ir));
             XMrm2_t = XMrm_t.*(Xmhu(:,Xmask_f0) > 0);
-%   
+%            
             for ip = 1:npn, 
-               MMXR_f_t = MMXR_f_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhup],[ibp+(nmhu-ns_f(ir+1))*(ip-1)+1:ibp+(nmhu-ns_f(ir+1))*(ip-1)+imhup],XMrp1_t(ip,[1:imhup]),nMMXP_f_t,nMMXP_f_t);
-               MMXR_f_t = MMXR_f_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*ip],[ibp+(nmhu-ns_f(ir+1))*(ip-1)+imhup+1:ibp+(nmhu-ns_f(ir+1))*ip],XMrp3_t(ip,[imhu0+1:nmhu-ns_f(ir)]),nMMXP_f_t,nMMXP_f_t);
-               MMXR_f_t = MMXR_f_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+imhup+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0],...
-               [ibp+(nmhu-ns_f(ir+1))*(ip-1)+((nmhu-ns_f(ir+1))-imhup):-1:ibp+(nmhu-ns_f(ir+1))*(ip-1)+((nmhu-ns_f(ir+1))-imhu0)+1],XMrp2_t(ip,[imhup+1:imhu0]),nMMXP_f_t,nMMXP_f_t);
-%
-               MMXR_f_t = MMXR_f_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0],[ibm+(nmhu-ns_f(ir-1))*(ip-1)+1:ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhu0],XMrm1_t(ip,[1:imhu0]),nMMXP_f_t,nMMXP_f_t);                
-               MMXR_f_t = MMXR_f_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*ip],[ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhum+1:ibm+(nmhu-ns_f(ir-1))*ip],XMrm2_t(ip,[imhu0+1:nmhu-ns_f(ir)]),nMMXP_f_t,nMMXP_f_t);              
+               i = [ib0+(nmhu-ns_f(ir))*(ip-1)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhup];
+               j = [ibp+(nmhu-ns_f(ir+1))*(ip-1)+1:ibp+(nmhu-ns_f(ir+1))*(ip-1)+imhup];
+               ia = ib;ib = ia+length(i);     
+               MMXR_f_t_i(ia:ib-1) = i;
+               MMXR_f_t_j(ia:ib-1) = j;
+               MMXR_f_t_v(ia:ib-1) = XMrp1_t(ip,[1:imhup])';
+               i = [ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*ip];
+               j = [ibp+(nmhu-ns_f(ir+1))*(ip-1)+imhup+1:ibp+(nmhu-ns_f(ir+1))*ip];
+               ia = ib;ib = ia+length(i);
+               MMXR_f_t_i(ia:ib-1) = i;
+               MMXR_f_t_j(ia:ib-1) = j;
+               MMXR_f_t_v(ia:ib-1) = XMrp3_t(ip,[imhu0+1:nmhu-ns_f(ir)])'; 
+               i = [ib0+(nmhu-ns_f(ir))*(ip-1)+imhup+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0];
+               j = [ibp+(nmhu-ns_f(ir+1))*(ip-1)+((nmhu-ns_f(ir+1))-imhup):-1:ibp+(nmhu-ns_f(ir+1))*(ip-1)+((nmhu-ns_f(ir+1))-imhu0)+1];
+               ia = ib;ib = ia+length(i);
+               MMXR_f_t_i(ia:ib-1) = i;
+               MMXR_f_t_j(ia:ib-1) = j;
+               MMXR_f_t_v(ia:ib-1) = XMrp2_t(ip,[imhup+1:imhu0])';  
+               i = [ib0+(nmhu-ns_f(ir))*(ip-1)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0];
+               j = [ibm+(nmhu-ns_f(ir-1))*(ip-1)+1:ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhu0];
+               ia = ib;ib = ia+length(i);
+               MMXR_f_t_i(ia:ib-1) = i;
+               MMXR_f_t_j(ia:ib-1) = j;
+               MMXR_f_t_v(ia:ib-1) = XMrm1_t(ip,[1:imhu0])';               
+               i = [ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*ip];
+               j = [ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhum+1:ibm+(nmhu-ns_f(ir-1))*ip];
+               ia = ib;ib = ia+length(i);
+               MMXR_f_t_i(ia:ib-1) = i;
+               MMXR_f_t_j(ia:ib-1) = j;
+               MMXR_f_t_v(ia:ib-1) = XMrm2_t(ip,[imhu0+1:nmhu-ns_f(ir)])';
             end 
 %
-            if display_mode >= 1,info_dke_yp(2,['Configuration space matrix calculations (',int2str(ir),'/',int2str(nr),') done in ',num2str(etime(clock,time0)),' (s)']);etime_radial = etime_radial + etime(clock,time0);time0 = clock;end
          end
 %
          ir = nr;
@@ -235,25 +283,40 @@ if radial_mode == 1,
          XMr = XXMr(:,:,ir);
          XMr_t = XMr(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
          MMr_t = reshape(XMr_t',npn*(nmhu-ns_f(ir)),1,1);
-         MMXR_f_t = MMXR_f_t + sparse([1+ib0:ibp],[1+ib0:ibp],MMr_t,nMMXP_f_t,nMMXP_f_t);
+%        
+         i = [1+ib0:ibp];
+         j = [1+ib0:ibp];
+         ia = ib;ib = ia+length(i);
+         MMXR_f_t_i(ia:ib-1) = i;
+         MMXR_f_t_j(ia:ib-1) = j;
+         MMXR_f_t_v(ia:ib-1) = MMr_t;
 %           
          XMrm = XXMrm(:,:,ir);
          XMrm_t = XMrm(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
          XMrm1_t = XMrm_t.*(Xmhu(:,Xmask_f0) < 0).*(Xmhu2(:,Xmask_f0) > xmhubounce2(ir));
          XMrm2_t = XMrm_t.*(Xmhu(:,Xmask_f0) > 0);
 %   
-         for ip = 1:npn, 
-            MMXR_f_t = MMXR_f_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0],[ibm+(nmhu-ns_f(ir-1))*(ip-1)+1:ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhu0],XMrm1_t(ip,[1:imhu0]),nMMXP_f_t,nMMXP_f_t);                
-            MMXR_f_t = MMXR_f_t + sparse([ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*ip],[ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhum+1:ibm+(nmhu-ns_f(ir-1))*ip],XMrm2_t(ip,[imhu0+1:nmhu-ns_f(ir)]),nMMXP_f_t,nMMXP_f_t);              
-         end
+        for ip = 1:npn,       
+           i = [ib0+(nmhu-ns_f(ir))*(ip-1)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0];
+           j = [ibm+(nmhu-ns_f(ir-1))*(ip-1)+1:ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhu0];
+           ia = ib;ib = ia+length(i);
+           MMXR_f_t_i(ia:ib-1) = i;
+           MMXR_f_t_j(ia:ib-1) = j;
+           MMXR_f_t_v(ia:ib-1) = XMrm1_t(ip,[1:imhu0])';      
+           i = [ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*ip];
+           j = [ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhum+1:ibm+(nmhu-ns_f(ir-1))*ip];
+           ia = ib;ib = ia+length(i);
+           MMXR_f_t_i(ia:ib-1) = i;
+           MMXR_f_t_j(ia:ib-1) = j;
+           MMXR_f_t_v(ia:ib-1) = XMrm2_t(ip,[imhu0+1:nmhu-ns_f(ir)])';
+        end
 %
-         if display_mode >= 1,info_dke_yp(2,['Configuration space matrix calculations (',int2str(ir),'/',int2str(nr),') done in ',num2str(etime(clock,time0)),' (s)']);etime_radial = etime_radial + etime(clock,time0);time0 = clock;end
-         time0 = clock;
+        MMXR_f_t = sparse(MMXR_f_t_i(1:ib-1),MMXR_f_t_j(1:ib-1),MMXR_f_t_v(1:ib-1),nMMXP_f_t,nMMXP_f_t);%Create sparse radial transport matrix
 %
-         save([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'MMXR_f_t');
-         if display_mode >= 1,info_dke_yp(2,['Radial Matrix saved.']);end	
+%       save([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'MMXR_f_t');
+%       if display_mode >= 1,info_dke_yp(2,['Radial Matrix saved.']);end	
 %
-         if display_mode >= 1,info_dke_yp(2,['Zero order configuration space matrix calculations done in ',num2str(etime_radial),' (s)']);end
+         if display_mode >= 1,info_dke_yp(2,['Zero order configuration space matrix calculations done in ',num2str(etime(clock,time0)),' (s)']);end
       end 
    end
 else

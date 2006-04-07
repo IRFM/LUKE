@@ -46,6 +46,22 @@ elseif coll_mode == 0 | coll_mode == 2,%Linearized Belaiev-Budker
  %
     sfM = maxwellian_dke_yp(sgamma,spn2,sdpn,xne_norm,xTe_norm,ir);
 %
+
+        F1_1 = zeros(1,npn);
+        F1_2 = zeros(1,npn);
+        F2_1 = zeros(1,npn);
+%
+        B1_1 = zeros(1,npn);
+        B1_2 = zeros(1,npn);
+        B1_3 = zeros(1,npn);
+        B1_4 = zeros(1,npn);
+        B1_5 = zeros(1,npn);
+        B2_1 = zeros(1,npn);
+        B2_2 = zeros(1,npn);
+        B2_3 = zeros(1,npn); 
+
+
+
     for ip = 1:npn,%Loop for very accurate collision integral calculation close to p = 0 especially (crucial for numerical conservative scheme)
         smasku = spn <= pn(ip);
         smaskl = spn >= pn(ip);

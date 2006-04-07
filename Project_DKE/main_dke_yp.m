@@ -12,7 +12,7 @@ function [Znorm_ref,Zcurr_ref,ZP0_ref,dke_out,radial,momentum,mksa] = main_dke_y
 if nargin < 12,
     error('Wrong number of input arguments in main_dke_yp')
 end
-%   
+%
 format long e;
 global nfig;
 [s,dossier,machine] = comput_dke_yp;
@@ -60,6 +60,7 @@ invparam.invproc = dkeparam.invproc;
 invparam.mlprecinv = dkeparam.mlprecinv;
 invparam.mlmaxitinv = dkeparam.mlmaxitinv;
 invparam.MUMPSparam = dkeparam.MUMPSparam;
+invparam.HYPREparam = dkeparam.HYPREparam;
 store_mode = dkeparam.store_mode;
 rt_mode = dkeparam.rt_mode;
 nit_rf = dkeparam.nit_rf;

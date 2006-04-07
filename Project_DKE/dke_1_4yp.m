@@ -128,7 +128,6 @@ memoryLU_g = 0;
 me = 1/1860;%Electron mass (u.m.a.)
 %
 time00 = clock;%For overall matrix calculation
-time0 = clock;
 %
 if dtn > 0,
     time_scheme = 1;%Implicit differencing scheme
@@ -357,8 +356,6 @@ xv2 = xv.*xv;
 %
 %Bounce average coefficients
 %
-time0 = clock;
-%
 [xq,xqtilde,xqbar,xqhat,...
      XXheaviside,XXheaviside_p,XXheaviside_m,...
      Xxlambda,Xxlambda_p,Xxlambda_m,...
@@ -377,8 +374,6 @@ time0 = clock;
      mhu,mhum,mhup,Xmhu,Xmhum,Xmhup,...
      XR,XZ,XBR,XBZ,XBphi,...
      xmhubounce2,xB0,xR0,xBT0,xBp0,Rp,Zp,ap);
-%
-if display_mode >= 1,info_dke_yp(2,['Bounce integrals calculations done in ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
 %
 %Super matrices size definition and masks calculations for trapped electrons in the bounce mode
 %
@@ -502,7 +497,7 @@ XXi = zeros(npn,nmhu,nr);
 %
 %Radial supermatrix coefficients
 %
-[time0,MMXR_f_t] = rad_dke_yp(npn,nmhu,nr,ns_f,XXDr,XXVr,xpsin,xdpsin,xpsinm,xdpsinm,xpsinp,xdpsinp,XXlambda,XXpn2,Xmhu,Xmhu2,xmhubounce2,xR0,xqtilde,xBp0,xB0,blocksize_f_t,bounce_mode,radial_mode,display_mode,save_id,temppath);
+[MMXR_f_t] = rad_dke_yp(npn,nmhu,nr,ns_f,XXDr,XXVr,xpsin,xdpsin,xpsinm,xdpsinm,xpsinp,xdpsinp,XXlambda,XXpn2,Xmhu,Xmhu2,xmhubounce2,xR0,xqtilde,xBp0,xB0,blocksize_f_t,bounce_mode,radial_mode,display_mode,save_id,temppath);
 %
 % Collisions flux coefficients 
 %ZXXF_c_tp.p_ippj
@@ -520,7 +515,6 @@ if exist('XXfinit') ~= 1
     XXfinit = XXfM;%Initial guess (normalized to xne_norm)
 end
 %
-time0 = clock;%Timer
 %
 % RF wave flux coefficients
 %
@@ -535,8 +529,8 @@ time0 = clock;%Timer
         betath_ref,bounce_mode,dke_mode,rdke,display_mode);
 %
 nb = size(waveparam,2);
-%
-if display_mode >= 1,info_dke_yp(2,['D and F tensor calculations for RF waves done in ',num2str(etime(clock,time0)),' (s)']);end
+%******PUT the next line  in the rfdiff routine *********
+%if display_mode >= 1,info_dke_yp(2,['D and F tensor calculations for RF waves done in ',num2str(etime(clock,time0)),' (s)']);end
 %
 % Electric field flux coefficients
 %
@@ -550,8 +544,8 @@ if display_mode >= 1,info_dke_yp(2,['D and F tensor calculations for RF waves do
 %
 xEfield_validity = max(squeeze(ZXXF_e.p_ij(ip_th_ref,[1,nmhu],:)./ZXXF_c.p_ij(ip_th_ref,[1,nmhu],:)));%Comparison between electric field and collisions pinches at pth_ref (if above 1, the code validity breaks close to p = 0 leading to numerical particle leak)                 
 %
-etime_fp = 0;
 time0 = clock;
+etime_fp = 0;
 %   
 % Fokker-Planck (zero order) matrix calculation
 % 
@@ -1286,18 +1280,20 @@ for it_f = 2:(nit_f+1),
 %
         MMXq_t = MMXsource_t + MMXIpn2_t + (MMXT_f_t - (time_scheme - 1)*(MMXP_f_t + MMXR_f_t)/time_scheme)*MMXf0_t;%Right handside term of the Fokker-Planck equation
 %
-        MMXR_t = MMXPDI_f_t*MMXq_t - MMXPC_f_t*MMXf0_t;%Residu calculation for matrix inversion
+        MMXR_t = sparse(MMXPDI_f_t*MMXq_t - MMXPC_f_t*MMXf0_t);%Residu calculation for matrix inversion, force sparse type for the RHS, optimized for Matlab 
 %
-        if invparam.invproc == 1,%cgs iterative method
+        if invparam.invproc == 0,%Matlab direct inversion
+            MMXS_t = MMXR_t\MMXPC_f_t;
+        elseif invparam.invproc == 1,%Matlab cgs iterative inversion method
             [MMXS_t,flaginv_f] = cgs(MMXPC_f_t,MMXR_t,invparam.mlprecinv,invparam.mlmaxitinv,MMXL_f_t,MMXU_f_t);
-        elseif invparam.invproc == 2,%bicg iterative method      
+        elseif invparam.invproc == 2,%Matlab bicg iterative inversion method      
             [MMXS_t,flaginv_f] = bicg(MMXPC_f_t,MMXR_t,invparam.mlprecinv,invparam.mlmaxitinv,MMXL_f_t,MMXU_f_t); 
-        elseif invparam.invproc == 3,%qmr iterative method
+        elseif invparam.invproc == 3,%Matlab qmr iterative inversion method
             [MMXS_t,flaginv_f] = qmr(MMXPC_f_t,MMXR_t,invparam.mlprecinv,invparam.mlmaxitinv,MMXL_f_t,MMXU_f_t);
         elseif invparam.invproc == -1,%MUMPS FORTAN 95 parallel processing package (direct inversion)
-            [MMXS_t,flaginv_f] = MUMPS_dke_yp(invparam.MUMPSparam,MMXPC_f_t,MMXR_t,temppath);
+            [MMXS_t,flaginv_f] = MUMPS_dke_yp(invparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),display_mode,temppath);
         elseif invparam.invproc == -2,%HYPRE FORTAN 95 parallel processing package (direct inversion)
-            [MMXS_t,flaginv_f] = HYPRE_dke_yp(invparam.HYPREparam,MMXPC_f_t,MMXR_t,invparam.ludroptol,temppath);
+%            [MMXS_t,dummy1,dummu2,flaginv_f] = HYPRE_dke_yp(invparam.HYPREparam,MMXPC_f_t,MMXR_t,invparam.ludroptol,temppath)
         end
 %
         if flaginv_f == 2 & invparam.invproc > 1,
@@ -1533,18 +1529,20 @@ if dke_mode == 1,
                 MMXq_g_t = [MMXq_g_t;reshape(Xq_g_t',(nmhu - ns_g(ir_dke))*npn,1)];
             end
 %
-            MMXR_t = MMXPDI_g_t*(MMXq_g_t + MMXq_tp_t) - MMXPC_g_t*MMXf0_g_t;
-%
-            if invparam.invproc == 1,%cgs iterative method
+            MMXR_t = sparse(MMXPDI_g_t*(MMXq_g_t + MMXq_tp_t) - MMXPC_g_t*MMXf0_g_t);%Force sparse tyep for the RHS, optmized for Matlab
+%        
+            if invparam.invproc == 0,%Matlab direct inversion
+               MMXS_t = MMXR_t\MMXPC_g_t;
+            elseif invparam.invproc == 1,%cgs iterative method
                [MMXS_t,flaginv_g] = cgs(MMXPC_g_t,MMXR_t,invparam.mlprecinv,invparam.mlmaxitinv,MMXL_g_t,MMXU_g_t);
             elseif invparam.invproc == 2,%bicg iterative method      
                [MMXS_t,flaginv_g] = bicg(MMXPC_g_t,MMXR_t,invparam.mlprecinv,invparam.mlmaxitinv,MMXL_g_t,MMXU_g_t); 
             elseif invparam.invproc == 3,%qmr iterative method
                [MMXS_t,flaginv_g] = qmr(MMXPC_g_t,MMXR_t,invparam.mlprecinv,invparam.mlmaxitinv,MMXL_g_t,MMXU_g_t);
             elseif invparam.invproc == -1,%MUMPS FORTAN 95 parallel processing package (direct inversion)
-               [MMXS_t,flaginv_g] = MUMPS_dke_yp(invparam.MUMPSparam,MMXPC_g_t,MMXR_t,temppath);
+               [MMXS_t,flaginv_g] = MUMPS_dke_yp(invparam.MUMPSparam,MMXPC_g_t,full(MMXR_t),display_mode,temppath);
             elseif invparam.invproc == -2,%HYPRE FORTAN 95 parallel processing package (direct inversion)
-               [MMXS_t,flaginv_g] = HYPRE_dke_yp(invparam.HYPREparam,MMXPC_g_t,MMXR_t,invparam.ludroptol,temppath);
+%               [MMXS_t,flaginv_g] = HYPRE_dke_yp(invparam.HYPREparam,MMXPC_g_t,MMXR_t,invparam.ludroptol,temppath);
             end
 %
             if flaginv_g == 2 & invparam.invproc > 1,

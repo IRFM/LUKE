@@ -245,7 +245,10 @@ ZTR = reshape(YTR,[nt2*np*nmhu,1]);
 ZTZ = reshape(YTZ,[nt2*np*nmhu,1]);
 %
 if np > 1,
-	ZTiT = reshape(YTiT + shiftdim(nt2*(cumsum(ones(np,nmhu,nt2)) - 1),2) + shiftdim(nt2*np*(cumsum(ones(nmhu,nt2,np)) - 1),1),[nt2*np*nmhu,1]);
+	csum1 = repmat(repmat([1:np]',1,nmhu),[1,1],nt2);% cumsum(ones(np,nmhu,nt2))
+	csum2 = repmat(repmat([1:nmhu]',1,nt2),[1,1],np);;% cumsum(ones(nmhu,nt2,np))
+	ZTiT = reshape(YTiT + shiftdim(nt2*(csum1 - 1),2) + shiftdim(nt2*np*(csum2 - 1),1),[nt2*np*nmhu,1]);
+    % ZTiT = reshape(YTiT + shiftdim(nt2*(cumsum(ones(np,nmhu,nt2)) - 1),2) + shiftdim(nt2*np*(cumsum(ones(nmhu,nt2,np)) - 1),1),[nt2*np*nmhu,1]);
 else
 	ZTiT = reshape(YTiT + reshape(nt2*(cumsum(ones(nmhu,nt2)) - 1)',[nt2,1,nmhu]),[nt2*np*nmhu,1]);
 end
