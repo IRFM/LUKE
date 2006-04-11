@@ -20,10 +20,9 @@ SN = size(N);
 SM = size(Mode);
 %
 if max(size(SN) ~= size(SZ)) | max(SN ~= SZ)
-    if length(N) ~= 1
+    if length(N) ~= 1,
         error('N must be scalar or of the same size as Z')
     end
-    N = repmat(N,SZ);
 end
 %        
 if max(size(SM) ~= size(SZ)) | max(SM ~= SZ)
@@ -39,14 +38,33 @@ end
 %
 Mask_approx = (Mode == 0);
 %
-if min(isreal(Mask_approx(:).*Z(:))) == 0
-    error('Z must be real for approximate formula')
+%if any(imag(Mask_approx(:).*Z(:)))
+%    error('Z must be real for approximate formula')
+%end
+%
+J = ones(SZ);
+%
+if length(N) == 1,
+    if N < 0,
+        N = -N;
+        Z = (-1).^N.*Z; % J_{-n}(Z) = J_(n)((-1)^n*Z)
+    end
+    %
+    J(~Mask_approx) = besselj(N,Z(~Mask_approx));
+    %
+    %J(Mask_approx) = (Z(Mask_approx)/2).^N/fact_dke_jd(N);
+    for n=1:N
+        J(Mask_approx) = J(Mask_approx).*Z(Mask_approx)/n/2;
+    end
+    %
+else
+    %
+    Z(N < 0) = (-1).^(-N(N < 0)).*Z(N < 0); % J_{-n}(Z) = J_(n)((-1)^n*Z)
+    N = abs(N);
+    %
+    J(~Mask_approx) = besselj(N(~Mask_approx),Z(~Mask_approx));
+    %
+    J(Mask_approx) = (Z(Mask_approx)/2).^N(Mask_approx)./fact_dke_jd(N(Mask_approx));
+    %    
 end
-%
-Z = Z.*(N >= 0) + (-1).^N.*(N <0).*Z; % J_{-n}(Z) = J_(n)((-1)^n*Z)
-N = abs(N);
-%
-J = zeros(SZ);
-J(~Mask_approx) = besselj(N(~Mask_approx),Z(~Mask_approx));
-J(Mask_approx) = (Z(Mask_approx)/2).^N(Mask_approx)./fact_dke_jd(N(Mask_approx));
 %
