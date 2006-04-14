@@ -66,18 +66,18 @@ method = 'spline';
 %
 [qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;
 %
-[theta,ppsin,psia,ptR,ptZ,ptBR,ptBZ,ptBphi,pB0,pR0,pBT0,pBp0,prho,pTe,pne,pzTi,pzni,zZi,zmi,pZeff,Rp,Zp,ap] = equilibrium_jd(equil);
+[equilDKE] = equilibrium_jd(equil);
 %
 srho = 1:-1/ns:1/ns;%radial position along the rays
 %
-Te0 = pTe(1);
-ne0 = pne(1);
+Te0 = equilDKE.xTe(1);
+ne0 = equilDKE.xne(1);
 lnc_e_ref = 31.3 - 0.5*log(ne0) + log(Te0*1000);%Coulomb logarithm (Sauter et al. Phys. Plasmas, 6 (1999) 2834)
 betath_ref = sqrt(Te0/mc2);
 nhuth_ref = qe^4*ne0.*lnc_e_ref./(4*pi*e0^2*me^2.*(clum*betath_ref).^3);%Electron collision frequency (s-1)
 %
-sTe = interp1(prho,pTe,srho,method);
-sne = interp1(prho,pne,srho,method);
+sTe = interp1(equilDKE.xrho,equilDKE.xTe,srho,method);
+sne = interp1(equilDKE.xrho,equilDKE.xne,srho,method);
 slnc_e = 31.3 - 0.5*log(sne) + log(sTe*1000);%Coulomb logarithm (Sauter et al. Phys. Plasmas, 6 (1999) 2834)
 sbetath = sqrt(sTe/mc2);
 snhuth = qe^4*sne.*slnc_e./(4*pi*e0^2*me^2.*(clum*sbetath).^3);%Electron collision frequency (s-1)
@@ -153,7 +153,7 @@ syphi_y_lh = [0]*ones(ns,nb_lh);%Not relevant
 %
 %Normalization of the diffusion coefficient for comparison with old calc. (Karney, Shoucri), see rfdiff_dke_jd
 %
-synorm_lh = (srho*ap*Rp*me.*slnc_e.*swpe.^2*omega_lh)'*ones(1,nb_lh).*abs(syphi_z_lh)./syepol_z_lh.^2;
+synorm_lh = (srho*equilDKE.ap*equilDKE.Rp*me.*slnc_e.*swpe.^2*omega_lh)'*ones(1,nb_lh).*abs(syphi_z_lh)./syepol_z_lh.^2;
 %
 syP0_lh = zeros(ns,nb_lh);
 syP0_lh(:,ytest_maskNpars_lh) = synorm_lh(:,ytest_maskNpars_lh).*syD0_lh(:,ytest_maskNpars_lh).*(syNparmax_lh(:,ytest_maskNpars_lh) - syNparmin_lh(:,ytest_maskNpars_lh));%Square power spectrum
@@ -171,8 +171,8 @@ syphi_z_lh = syphi_z_lh.*(ones(ns,1)*yP0_lh)./(syP0_lh+eps);
 %
 syNperp_lh = syNpar_lh./syepol_z_lh;%Electrostatic limit. Indicative, not relevant in small FLR limit
 %
-syR = Rp + ap*syrho.*cos(sythetab_lh);
-syZ = Zp + ap*syrho.*sin(sythetab_lh);
+syR = equilDKE.Rp + equilDKE.ap*syrho.*cos(sythetab_lh);
+syZ = equilDKE.Zp + equilDKE.ap*syrho.*sin(sythetab_lh);
 syphi = [0]*ones(ns,nb_lh);% so that the calculated finc is 1.
 %
 for i_lh = blist_lh,

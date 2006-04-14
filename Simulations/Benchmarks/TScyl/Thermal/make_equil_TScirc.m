@@ -101,7 +101,8 @@ XBpp = repmat(pBpp',[1,ntheta]);
 equil.BR = -XBpp.*sin(Xtheta)*Rp./equil.R;
 equil.BZ = XBpp.*cos(Xtheta)*Rp./equil.R;
 equil.BPHI = Bt*Rp./equil.R;
-equil.IPBT = +1;%IP and BT are in the same direction
+equil.sgnIP = +1;%Sign of the toroidal current direction when the tokamak is seen from the top (trigonometric direction, sgn > 0)
+equil.sgnBT = -1;%Sign of the toroidal magnetic field direction when the tokamak is seen from the top (trigonometric direction, sgn > 0)
 %
 filename = ['EQUIL_',equil.id,'.mat'];
 %
