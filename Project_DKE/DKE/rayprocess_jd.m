@@ -1,4 +1,4 @@
-function ray = rayprocess_jd(ray,equil,opt_disp,omega_rf,nmax,method);
+function ray = rayprocess_jd(ray,equil,opt_disp,omega_rf,n_rf_list,method);
 %
 % This function calculates missing ray info if needed. 
 % Also calculates the correct Nperp, polarization and power flow if required 
@@ -309,7 +309,7 @@ if imag(opt_disp) == 1,%relativistic calculation of the absorption coefficient
     sb = sB*qe/me/omega_rf;
 	sbeta = sqrt(sTe/mc2);
     salphaphi_lin = zeros(1,ns);
-    for n = 0:nmax,
+    for n = n_rf_list,
         salphaphi_lin = salphaphi_lin + omega_rf/clum*alphaphi_fr_jd(sa,sb,sbeta,sNpar,real(sNperp),sepol_pmz,n);
     end
 end

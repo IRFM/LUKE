@@ -13,7 +13,7 @@ function [waveparam,xyprop_dke_rf,xyP0_in_rf,yb_rf] = rfwave_dke_jd(dkeparam,dis
 [qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;
 %
 dke_mode = dkeparam.dke_mode;
-nmax = dkeparam.nmax_rf;
+n_rf_list = dkeparam.n_rf_list;
 %
 display_mode = display.display_mode;
 %
@@ -140,7 +140,7 @@ for iw = 1:length(waves),%
         % - sNpar -> sdNpar
         % - opt_disp, sNpar, omega_rf, equil -> sepol_pmz, sNperp, sphi_xyz
         %
-        ray = rayprocess_jd(ray,equil,opt_disp,omega_rf,nmax,method);
+        ray = rayprocess_jd(ray,equil,opt_disp,omega_rf,n_rf_list,method);
         %
         P0 = ray.P0;% Power launched in the ray (W) [1,1]
         %
