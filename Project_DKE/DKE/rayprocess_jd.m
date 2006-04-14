@@ -10,7 +10,31 @@ function ray = rayprocess_jd(ray,equil,opt_disp,omega_rf,nmax,method);
 %
 % equilibrium data with Fourier-enhanced poloidal precision and original radial grid
 %
-[theta,ppsin,psia,ptR,ptZ,ptBR,ptBZ,ptBphi,pB0,pR0,pBT0,pBp0,prho,pTe,pne,pzTi,pzni,zZi,zmi,pZeff,Rp,Zp] = equilibrium_jd(equil);
+%[theta,ppsin,psia,ptR,ptZ,ptBR,ptBZ,ptBphi,pB0,pR0,pBT0,pBp0,prho,pTe,pne,pzTi,pzni,zZi,zmi,pZeff,Rp,Zp] = equilibrium_jd(equil);
+[equilDKE_Fourier] = equilibrium_jd(equil);
+%
+theta = equilDKE_Fourier.mtheta;
+ppsin = equilDKE_Fourier.xpsin;
+psia = equilDKE_Fourier.psia;
+ptR = equilDKE_Fourier.XR;
+ptZ = equilDKE_Fourier.XZ;
+ptBR = equilDKE_Fourier.XBR;
+ptBZ = equilDKE_Fourier.XBZ;
+ptBphi = equilDKE_Fourier.XBphi;
+pB0 = equilDKE_Fourier.xB0;
+pR0 = equilDKE_Fourier.xR0;
+pBT0 = equilDKE_Fourier.xBT0;
+pBp0 = equilDKE_Fourier.xBp0;
+prho = equilDKE_Fourier.xrho;
+pTe = equilDKE_Fourier.xTe;
+pne = equilDKE_Fourier.xne;
+pzTi = equilDKE_Fourier.xzTi;
+pzni = equilDKE_Fourier.xzni;
+zZi = equilDKE_Fourier.zZi;
+zmi = equilDKE_Fourier.zmi;
+pZeff = equilDKE_Fourier.xZeff;
+Rp = equilDKE_Fourier.Rp;
+Zp = equilDKE_Fourier.Zp;
 %
 ptr = sqrt((ptR - Rp).^2 + (ptZ - Zp).^2); %minor radius on the (psi,stheta) grid
 ptBP = sqrt(ptBR.^2 + ptBZ.^2); %poloidal magnetic field on the (psi,stheta) grid

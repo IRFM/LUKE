@@ -1,6 +1,4 @@
-function [pn_f,dpn_f,pnm_S,dpnm_S,pnp_S,dpnp_S,pn_S,...
-    mhu_f,dmhu_f,mhum_S,dmhum_S,mhup_S,dmhup_S,mhu_S]...
-= momentumgrid_dke_jd(uniform,grid_power,dke_mode,r_dke,xmhu0T2,nmhu_S_in,np_S_in,pnmax_S,sfac,snmhu,snp,np_S_ref);
+function [momentumDKE] = momentumgrid_dke_jd(dkeparam,equilDKE,radialDKE);
 % 
 % Generates non uniform pitch angle and momentum grids 
 % In the case of a non-uniform grid, the code ensures that a minimum number of points are present 
@@ -41,23 +39,34 @@ function [pn_f,dpn_f,pnm_S,dpnm_S,pnp_S,dpnp_S,pn_S,...
 %
 %  by Joan Decker <jodecker@mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 %
-if nargin < 11,
+if nargin < 3,
 	error('Wrong number of input arguments in momentumgrid_dke_jd');
 end
+%
+dke_mode = dkeparam.dke_mode;
+uniform = dkeparam.grid_uniformity;
+grid_power = dkeparam.grid_power;
+grid_method = dkeparam.grid_method;
+nmhu_S_in = dkeparam.nmhu_S;
+np_S_in = dkeparam.np_S;
+pnmax_S = dkeparam.pnmax_S;
+snp = dkeparam.snp; 
+np_S_ref = dkeparam.np_S_ref;
+sfac0 = dkeparam.sfac0;% reduction factor for fine grid near mhu = 0
+sfac1 = dkeparam.sfac1; % reduction factor for fine grid near mhu = 1
+sfact = dkeparam.sfact; % reduction factor for fine grid near mhu = mhut
+snmhu0 = dkeparam.snmhu0;% number of fine grid points near mhu = 0
+snmhu1 = dkeparam.snmhu1;% number of fine grid points near mhu = 1
+snmhut = dkeparam.snmhut;% number of fine grid points near mhu = mhut
+%
+r_dke = radialDKE.r_dke;
+xmhu0T2 =  equilDKE.xmhu0T2;
 %
 if uniform == 1,%if uniform grid called, the old method is used for the mhu-grid
 	%grid_power = 0;
 end
 %
 %Pitch-angle grid
-%
-sfac0 = sfac(1); % reduction factor for fine grid near mhu = 0
-sfac1 = sfac(2); % reduction factor for fine grid near mhu = 1
-sfact = sfac(3); % reduction factor for fine grid near mhu = mhut
-%
-snmhu0 = snmhu(1); % number of fine grid points near mhu = 0
-snmhu1 = snmhu(2); % number of fine grid points near mhu = 1
-snmhut = snmhu(3); % number of fine grid points near mhu = mhut
 %
 if grid_power == 0,
     nmhumin = nmhu_S_in;
@@ -308,7 +317,21 @@ if abs(uniform) == 1,%for test only with uniform grid
 	dmhum_S = dmhu_S(1:nmhu_f);
 	dmhup_S = dmhu_S(2:nmhu_f+1);
 end
-
+%
+momentumDKE.pn = pn_f;
+momentumDKE.dpn = dpn_f;
+momentumDKE.pnm = pnm_S;
+momentumDKE.dpnm = dpnm_S;
+momentumDKE.pnp = pnp_S;
+momentumDKE.dpnp = dpnp_S;
+momentumDKE.pn_S = pn_S;
+momentumDKE.mhu = mhu_f;
+momentumDKE.dmhu = dmhu_f;
+momentumDKE.mhum = mhum_S;
+momentumDKE.dmhum = dmhum_S;
+momentumDKE.mhup = mhup_S;
+momentumDKE.dmhup = dmhup_S;
+momentumDKE.mhu_S = mhu_S;
 
 
 

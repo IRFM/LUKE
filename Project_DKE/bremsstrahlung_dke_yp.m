@@ -1,20 +1,18 @@
-function  [Zbremplasma] = bremsstrahlung_dke_yp(Zbremchord,equil,hxr,hxrparam,dkeparam,display,radial,mksa,momentum,dke_out)
+function  [Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,equilDKE,radialDKE,mksa,momentumDKE,dke_out,Zbremchord,hxr,hxrparam)
 %
 % Calculates the plasma bremsstrahlung emission. Call first the function bremchord_dke_yp.m
 %
 %   INPUTS:
 %   
 %       - Zbremchord: HXR diagnostic chord arrangement data structure
-%       - equil: Magnetic equilibrium structure
+%       - equilDKE: DKE magnetic equilibrium structure
 %       - hxr: Bremsstrahlung structure
 %       - hxrparam : Bremsstrahlung calculation and display parameter structure
 %       - dkeparam: DKE data structure
-%       - display: display structure
-%       - radial: Radial grid structure   
+%       - radialDKE: DKE radial grid structure   
 %       - mksa: MKSA structure   
-%       - momentum: momentum structure
-%       - radial: radial structure
-%       - dke_out: DKE data output structure
+%       - momentumDKE: DKE momentum structure
+%       - dke_out: DKE data output structure (distributions)
 %       
 %   OUTPUTS:
 %   
@@ -38,20 +36,49 @@ mask_hxr = Zbremchord.mask_hxr;
 ne_ref = mksa.ne_ref;
 betath_ref = mksa.betath_ref;
 Ec = mksa.Ec_ref;
-dmhu = momentum.dmhu;
-mhu = momentum.mhu;
-dpn = momentum.dpn;
-pn = momentum.pn;
-xpsin = radial.xpsin;
+%
+dmhu = momentumDKE.dmhu;
+mhu = momentumDKE.mhu;
+dpn = momentumDKE.dpn;
+pn = momentumDKE.pn;
+%
 r_dke = radial.r_dke;
-xpsin_S_dke = radial.xpsin_S_dke;
+%
 pnmax_S = dkeparam.pnmax_S;
 bounce_mode = dkeparam.bounce_mode;
 %
-[theta,xpsin,psia,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho1,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,xmhu0T2,xdV_dke,xdA_dke] = equilibrium_jd(equil,xpsin,xpsin_S_dke,display.display_mode,'spline',10);
+theta = equilDKE.mtheta;
+xpsin = equilDKE.xpsin;
+psia = equilDKE.psia;
+XR = equilDKE.XR;
+XZ = equilDKE.XZ;
+XBR = equilDKE.XBR;
+XBZ = equilDKE.XBZ;
+XBphi = equilDKE.XBphi;
+xB0 = equilDKE.xB0;
+xR0 = equilDKE.xR0;
+xBT0 = equilDKE.xBT0;
+xBp0 = equilDKE.xBp0;
+xrho = equilDKE.xrho;
+xTe = equilDKE.xTe;
+xne = equilDKE.xne;
+xzTi = equilDKE.xzTi;
+xzni = equilDKE.xzni;
+zZi = equilDKE.zZi;
+zmi = equilDKE.zmi;
+xZeff = equilDKE.xZeff;
+Rp = equilDKE.Rp;
+Zp = equilDKE.Zp;
+ap = equilDKE.ap;
+xmhu0T2 = equilDKE.xmhu0T2;
+xdV_dke = equilDKE.xdV_dke;
+xdA_dke = equilDKE.xdA_dke;
+sgnIP = equil.sgnIP;%Sign of the toroidal current direction when the tokamak is seen from the top (trigonometric direction)
+sgnBT = equil.sgnBT;%Sign of the toroidal magnetic field direction when the tokamak is seen from the top (trigonometric direction)
+%
 xzni_norm = xzni(:,r_dke)/ne_ref;
 xne_norm = xne(r_dke)/ne_ref;
-xrho = xrho1(r_dke);
+xrho = xrho(r_dke);
 %
 XXfinit = dke_out.XXfinit_ref(:,:,r_dke);
 XXf0 = dke_out.XXf0_ref(:,:,r_dke);
@@ -134,6 +161,7 @@ for i = 1:size(psin_hxr,1),%radial position
 %%%%%%		PSI_hxr(i,j) = 1;%low field side only
 			mhu_hxr = sign(mhu(:)).*sqrt(1-PSI_hxr(i,j)*(1 - mhu(:).^2));%mhu at a poloidal position that is different from Bmin
 			mhu_hxr = mhu_hxr(1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0);
+            Zbremplasma.mhu_hxr{i,j} = mhu_hxr;
 			Xf0_hxr = XXf0(:,1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0,i);%Non-thermal distribution function at poloidal location
 			Xf0_tp_hxr = XXf0_tp(:,1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0,i);
 			Xf0_g_hxr = XXf0_g(:,1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0,i);

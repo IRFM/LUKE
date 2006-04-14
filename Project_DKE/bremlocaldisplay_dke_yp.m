@@ -1,4 +1,4 @@
-function [] = bremlocaldisplay_dke_yp(equil,dkeparam,momentum,radial,display,dke_out,mksa,Zbremchord,Zbremplasma,r_display,t_display);
+function [] = bremlocaldisplay_dke_yp(equilDKE,dkeparam,momentumDKE,radialDKE,dke_out,mksa,Zbremchord,Zbremplasma,r_display,t_display);
 %
 % This function draws local properties of the plasma bremsstrahlung
 %
@@ -14,13 +14,14 @@ mask_hxr = Zbremchord.mask_hxr;
 ne_ref = mksa.ne_ref;
 betath_ref = mksa.betath_ref;
 Ec = mksa.Ec_ref;
-dmhu = momentum.dmhu;
-mhu = momentum.mhu;
-dpn = momentum.dpn;
-pn = momentum.pn;
-xpsin = radial.xpsin;
-r_dke = radial.r_dke;
-xpsin_S_dke = radial.xpsin_S_dke;
+%
+dmhu = momentumDKE.dmhu;
+mhu = momentumDKE.mhu;
+dpn = momentumDKE.dpn;
+pn = momentumDKE.pn;
+%
+r_dke = radialDKE.r_dke;
+%
 pnmax_S = dkeparam.pnmax_S;
 bounce_mode = dkeparam.bounce_mode;
 %
@@ -31,13 +32,41 @@ XXf0 = dke_out.XXf0_ref(:,:,r_dke);
 XXf0_tp = dke_out.XXf0_tp_ref(:,:,r_dke);
 XXf0_g = dke_out.XXf0_g_ref(:,:,r_dke);
 %
-pn2 = pn.*pn;
-gamma = sqrt(1 + pn2*betath_ref^2);
+theta = equilDKE.mtheta;
+xpsin = equilDKE.xpsin;
+psia = equilDKE.psia;
+XR = equilDKE.XR;
+XZ = equilDKE.XZ;
+XBR = equilDKE.XBR;
+XBZ = equilDKE.XBZ;
+XBphi = equilDKE.XBphi;
+xB0 = equilDKE.xB0;
+xR0 = equilDKE.xR0;
+xBT0 = equilDKE.xBT0;
+xBp0 = equilDKE.xBp0;
+xrho = equilDKE.xrho;
+xTe = equilDKE.xTe;
+xne = equilDKE.xne;
+xzTi = equilDKE.xzTi;
+xzni = equilDKE.xzni;
+zZi = equilDKE.zZi;
+zmi = equilDKE.zmi;
+xZeff = equilDKE.xZeff;
+Rp = equilDKE.Rp;
+Zp = equilDKE.Zp;
+ap = equilDKE.ap;
+xmhu0T2 = equilDKE.xmhu0T2;
+xdV_dke = equilDKE.xdV_dke;
+xdA_dke = equilDKE.xdA_dke;
+sgnIP = equil.sgnIP;%Sign of the toroidal current direction when the tokamak is seen from the top (trigonometric direction)
+sgnBT = equil.sgnBT;%Sign of the toroidal magnetic field direction when the tokamak is seen from the top (trigonometric direction)
 %
-[theta,xpsin,psia,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho1,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,xmhu0T2,xdV_dke,xdA_dke] = equilibrium_jd(equil,xpsin,xpsin_S_dke,0,'spline',10);
 xzni_norm = xzni(:,r_dke)/ne_ref;
 xne_norm = xne(r_dke)/ne_ref;
-xrho = xrho1(r_dke);
+xrho = xrho(r_dke);
+%
+pn2 = pn.*pn;
+gamma = sqrt(1 + pn2*betath_ref^2);
 %
 i_test = max(find(xrho <= r_display));%Normalized radius index for output and display
 j_test = max(find(theta_hxr(1,:) <= t_display*pi/180 + 2*pi));%Poloidal angle index for output and display

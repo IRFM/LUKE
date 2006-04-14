@@ -1,29 +1,87 @@
-function [ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM] = ...
-    coll_dke_jd(Xmhup,Xmhu2p,X1mmhu2p,Xmhum,Xmhu2m,X1mmhu2m,...
-        pn,pn2,dpn,pnm,pn2m,dpnm,pnp,pn2p,dpnp,Xpn,...
-        gamma,gammam,gammap,v,vm,vp,v2,v2m,v2p,...
-        sigma,sigmam,sigmap,z,zm,zp,J1,J2,...
-        xTe_norm,xzTi_norm,xne_norm,xzni_norm,betath_ref,zZi,zmi,...
-        XXRlambda_p2m1_p,XXRlambda_p2m1_m,XXRlambda_b_p1m1,XXRlambda_b_p1m1_p,XXRlambda_b_p1m1_m,...
-        XXRlambda_b_p3m2_p,XXRlambda_b_p3m2_m,XXRlambda_b_p1m2_p,XXRlambda_b_p1m2_m,...
-        spfac,coll_mode,dke_mode,display_mode,rdke,save_id,temppath);
+function [ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor] = coll_dke_jd(dkeparam,display,equilDKE,mksa,gridDKE,Zmomcoef,Zbouncecoef);
+%
+coll_mode = dkeparam.coll_mode;
+bounce_mode = dkeparam.bounce_mode;
+dke_mode = dkeparam.dke_mode;
+temppath = dkeparam.temppath;
+%
+display_mode = display.display_mode;
 %
 etime_coll = 0;
 time0 = clock;
 %
-%load([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'XXfM');
+%load([fullfile(temppath,'temp_DKE.mat'],'ZXXD_c','ZXXF_c','ZXXD_c_tp','ZXXF_c_tp','XXfM','XXILor');
 %
 if exist('XXfM') == 1, %The bounce averaging coefficients were calculated before.
   %
-%  load([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'ZXXD_c','ZXXF_c','ZXXD_c_tp','ZXXF_c_tp')
+%  load([fullfile(temppath,'temp_DKE.mat'],'ZXXD_c','ZXXF_c','ZXXD_c_tp','ZXXF_c_tp','XXfM','XXILor')
   %
   if display_mode >= 1,info_dke_yp(2,['Collision flux coefficients retrieved.']);end	
   %
 else
+  [xTe_norm,xne_norm,xzni_norm,xzTi_norm,xnloss_norm,xbetath,xlnc_e,xnhu,xrnhuth] = normcoef_dke_yp(mksa,equilDKE,gridDKE);
 %
-  [npn,nmhu] = size(Xmhup);%Size of the momentum grids for the distribution function (half grid)
-  nr = length(xTe_norm);%Size of the radial grid for the distribution function (half grid)
-  nr_dke = length(rdke);%Size of the effective radial grid for the drift kinetic equation (nr_dke = nr for FPE equation only)
+  betath_ref = mksa.betath_ref;
+%
+ zZi = equilDKE.zZi;
+ zmi = equilDKE.zmi;
+%
+  Xmhup = gridDKE.Xmhup;
+  Xmhu2p = gridDKE.Xmhu2p;
+  X1mmhu2p = gridDKE.X1mmhu2p;
+  Xmhum = gridDKE.Xmhum;
+  Xmhu2m = gridDKE.Xmhu2m;
+  X1mmhu2m = gridDKE.X1mmhu2m;
+  pn = gridDKE.pn;
+  pn2 = gridDKE.pn2;
+  dpn = gridDKE.dpn;
+  pnm = gridDKE.pnm;
+  pn2m = gridDKE.pn2m;
+  dpnm = gridDKE.dpnm;
+  pnp = gridDKE.pnp;
+  pn2p = gridDKE.pn2p;
+  dpnp = gridDKE.dpnp;
+  Xpn = gridDKE.Xpn;
+  spfac = gridDKE.spfac; 
+  mhu = gridDKE.mhu;
+  dmhu = gridDKE.dmhu;
+  rdke = gridDKE.rdke;
+  npn = gridDKE.npn;%Size of the momentum grids for the distribution function (half grid)
+  nmhu = gridDKE.nmhu;
+  nr = gridDKE.nr;%Size of the radial grid for the distribution function (half grid)
+  nr_dke =gridDKE.nr_dke;%Size of the effective radial grid for the drift kinetic equation (nr_dke = nr for FPE equation only)
+%
+  gamma = Zmomcoef.gamma;
+  gammam = Zmomcoef.gammam;
+  gammap = Zmomcoef.gammap;
+  v = Zmomcoef.v;
+  vm = Zmomcoef.vm;
+  vp = Zmomcoef.vp;
+  v2 = Zmomcoef.v2;
+  v2m = Zmomcoef.v2m;
+  v2p = Zmomcoef.v2p;
+  sigma = Zmomcoef.sigma;
+  sigmam = Zmomcoef.sigmam;
+  sigmap = Zmomcoef.sigmap;
+  z = Zmomcoef.z;
+  zm = Zmomcoef.zm;
+  zp = Zmomcoef.zp;
+  J1 = Zmomcoef.J1;
+  J2 = Zmomcoef.J2;
+%
+  XXRlambda_p2m1_p = Zbouncecoef.XXRlambda_p2m1_p;
+  XXRlambda_p2m1_m = Zbouncecoef.XXRlambda_p2m1_m;
+  XXRlambda_b_p1m1 = Zbouncecoef.XXRlambda_b_p1m1;
+  XXlambda_b_p3m2 =  Zbouncecoef.XXlambda_b_p3m2;
+  XXlambda_p2m1 =  Zbouncecoef.XXlambda_p2m1;
+  XXRlambda_b_p1m1_p = Zbouncecoef.XXRlambda_b_p1m1_p;
+  XXRlambda_b_p1m1_m = Zbouncecoef.XXRlambda_b_p1m1_m;
+  XXRlambda_b_p3m2_p = Zbouncecoef.XXRlambda_b_p3m2_p;
+  XXRlambda_b_p3m2_m = Zbouncecoef.XXRlambda_b_p3m2_m;
+  XXRlambda_b_p1m2_p = Zbouncecoef.XXRlambda_b_p1m2_p;
+  XXRlambda_b_p1m2_m = Zbouncecoef.XXRlambda_b_p1m2_m;
+  Zmask_f0_P = Zbouncecoef.Zmask_f0_P;
+
 %
 % Output files initialization
 %
@@ -84,7 +142,7 @@ else
 %
 %Relativistic Maxwellian distribution function normalized to the local density
 %
-  	 fM = maxwellian_dke_yp(gamma(:),pn2(:),dpn(:),xne_norm,xTe_norm,ir);
+  	fM = maxwellian_dke_yp(gamma(:),pn2(:),dpn(:),xne_norm,xTe_norm,ir);
     xfM = fM*ones(1,length(fM));
     XXfM(:,:,ir) = fM*ones(1,nmhu);
 %
@@ -190,7 +248,24 @@ else
     end
 %    
   end
-%  save([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'ZXXD_c','ZXXF_c','ZXXD_c_tp','ZXXF_c_tp','XXfM','-append');
+%
+%   
+%Pitch-angle integral for the Lorentz model (test mode only and initial guess for the drift kinetic equation, see documentation)
+%   
+XXILor =  zeros(npn,nmhu,nr);
+for ir_dke = 1:nr_dke,
+    jr2 = rdke(ir_dke);
+    if bounce_mode == 1
+        ILor_p = Zmask_f0_P{jr2}.*sum(((dmhu.*(mhu>=0).*XXlambda_b_p3m2(1,:,jr2)./XXlambda_p2m1(1,:,jr2))'*ones(1,nmhu)).*triu(ones(nmhu,nmhu)));
+        ILor_m = fliplr(ILor_p);
+        ILor = ILor_m + ILor_p;
+        XXILor(:,:,jr2) = ones(npn,1)*ILor;
+    else
+        XXILor(:,:,jr2) = zeros(npn,nmhu);
+    end 
+end 
+%
+%  save([fullfile(temppath,'temp_DKE.mat'],'ZXXD_c','ZXXF_c','ZXXD_c_tp','ZXXF_c_tp','XXfM','XXILor','-append');
   %
   etime_coll = etime_coll + etime(clock,time0);
   if display_mode >= 1,info_dke_yp(2,['Collision flux coefficients calculations done in ',num2str(etime_coll),' (s)']);end	

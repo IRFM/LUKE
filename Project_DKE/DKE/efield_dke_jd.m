@@ -1,27 +1,54 @@
-function [ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,xepsi] = ...
-    efield_dke_jd(xepsi_fsav,...
-        Xmhu,X1mmhu2p,X1mmhu2m,...
-        xqbar,xqtilde,xB0,xBT0,xR0,Rp,...
-        XXlambda_b_p1m3p4,XXRlambda_b_p1m1p2,XXRlambda_b_p1m1p2_p,XXRlambda_b_p1m1p2_m,...
-        XXRlambda_b_p2m2p2,XXRlambda_b_p2m2p2_p,XXRlambda_b_p2m2p2_m,...
-        bounce_mode,dke_mode,display_mode,rdke,save_id,temppath);
+function [ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,xepsi,xEfield_validity] = efield_dke_jd(dkeparam,display,equilDKE,mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,ZXXF_c)
+%
+display_mode = display.display_mode;
+%
+dke_mode = dkeparam.dke_mode;
+bounce_mode = dkeparam.bounce_mode;
+dke_mode = dkeparam.dke_mode;
+temppath = dkeparam.temppath;
 %
 etime_efield = 0;
 time0 = clock;
 %
-%load([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'xepsi');
+%load([fullfile(temppath,'temp_DKE.mat'],'xepsi');
 %
 if exist('xepsi') == 1, %The bounce averaging coefficients were calculated before.
   %
-%  load([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'ZXXD_e','ZXXF_e','ZXXD_e_tp','ZXXF_e_tp')
+%  load([fullfile(temppath,'temp_DKE.mat'],'ZXXD_e','ZXXF_e','ZXXD_e_tp','ZXXF_e_tp','xepsi','xEfield_validity')
   %
   if display_mode >= 1,info_dke_yp(2,['Electric field flux coefficients retrieved.']);end	
   %
 else
 %
-  [npn,nmhu] = size(Xmhu);%Size of the momentum grids for the distribution function (half grid)
-  nr = length(xepsi_fsav);%Size of the radial grid for the distribution function (half grid)
-  nr_dke = length(rdke);%Size of the effective radial grid for the drift kinetic equation (nr_dke = nr for FPE equation only)
+  xepsi_fsav = zeros(size(equilDKE.xrho));
+  if ~isempty(ohm),
+      xepsi_fsav = interp1(ohm.rho,ohm.epsi,equilDKE.xrho,'spline')/mksa.Edreicer_ref;%Normalized to the Dreicer value
+  end
+%
+  xrho = equilDKE.xrho;
+  xB0 = equilDKE.xB0;
+  xBT0 = equilDKE.xBT0;
+  xR0 = equilDKE.xR0;
+  Rp = equilDKE.Rp;
+  Xmhu = gridDKE.Xmhu;
+  X1mmhu2p = gridDKE.X1mmhu2p;
+  X1mmhu2m = gridDKE.X1mmhu2m;
+  ip_th_ref = gridDKE.ip_th_ref; 
+  rdke =gridDKE.rdke;
+  npn = gridDKE.npn;%Size of the momentum grids for the distribution function (half grid)
+  nmhu = gridDKE.nmhu;
+  nr = gridDKE.nr;%Size of the radial grid for the distribution function (half grid)
+  nr_dke =gridDKE.nr_dke;%Size of the effective radial grid for the drift kinetic equation (nr_dke = nr for FPE equation only)
+%
+  XXlambda_b_p1m3p4  = Zbouncecoef.XXlambda_b_p1m3p4;
+  XXRlambda_b_p1m1p2 = Zbouncecoef.XXRlambda_b_p1m1p2;
+  XXRlambda_b_p1m1p2_p = Zbouncecoef.XXRlambda_b_p1m1p2_p;
+  XXRlambda_b_p1m1p2_m = Zbouncecoef.XXRlambda_b_p1m1p2_m;
+  XXRlambda_b_p2m2p2  = Zbouncecoef.XXRlambda_b_p2m2p2;
+  XXRlambda_b_p2m2p2_p = Zbouncecoef.XXRlambda_b_p2m2p2_p;
+  XXRlambda_b_p2m2p2_m = Zbouncecoef.XXRlambda_b_p2m2p2_m;
+  xqbar = Zbouncecoef.xqbar;
+  xqtilde = Zbouncecoef.xqtilde;
 %
 % Output files initialization
 %
@@ -119,7 +146,17 @@ else
     end
 %
   end
-%  save([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'ZXXD_e','ZXXF_e','ZXXD_e_tp','ZXXF_e_tp','xepsi','-append');
+%
+xEfield_validity = max(squeeze(ZXXF_e.p_ij(ip_th_ref,[1,nmhu],:)./ZXXF_c.p_ij(ip_th_ref,[1,nmhu],:)));%Comparison between electric field and collisions pinches at pth_ref (if above 1, the code validity breaks close to p = 0 leading to numerical particle leak)                 
+if display_mode >= 2,
+    figure('Name','Code validity with Ohmic electric field'),semilogy(xrho,abs(xEfield_validity),'r+')
+    xlabel('r/a')
+    ylabel('Fp_e/Fp_coll at pth_ref')
+    zoom on, grid on
+    title('Code validity with Ohmic electric field')
+end
+%
+%  save([fullfile(temppath,'temp_DKE.mat'],'ZXXD_e','ZXXF_e','ZXXD_e_tp','ZXXF_e_tp','xepsi','xEfield_validity','-append');
   %
   etime_efield = etime_efield + etime(clock,time0);
   if display_mode >= 1,info_dke_yp(2,['Electric field flux coefficients calculations done in ',num2str(etime_efield),' (s)']);end	

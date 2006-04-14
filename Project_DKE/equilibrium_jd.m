@@ -1,5 +1,4 @@
-function [mtheta,xpsin,psia,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,xzTi,xzni,zZi,zmi,xZeff,Rp,Zp,ap,xmhu0T2,xdV_dke,xdA_dke] = ...
-    equilibrium_jd(equil,xpsin,xpsin_S_dke,display_mode,method,mfactor,fig_id)
+function [equilDKE] = equilibrium_jd(equil,radialDKE,display,method,mfactor,fig_id)
 %
 %   This function interpolates the equilibrium data on the radial grid.
 %
@@ -72,29 +71,32 @@ function [mtheta,xpsin,psia,XR,XZ,XBR,XBZ,XBphi,xB0,xR0,xBT0,xBp0,xrho,xTe,xne,x
 %
 %   By J. Decker RLE-MIT <jodecker@alum.mit.edu> and Y. Peysson DRFC-CEA <yves.peysson@cea.fr>
 %
-if nargin < 7
+if nargin < 6
     fig_id = 51;%Factor for super theta grid
     flag_id = 1;
 else
-    flag_id = 0;%
-end
-if nargin < 6
-    mfactor = 10;%Factor for super theta grid
+    flag_id = 0;
 end
 if nargin < 5
-    method = 'linear';%Interpolation method 
+    mfactor = 10;%Factor for super theta grid 
 end
 if nargin < 4
-    display_mode = 0;
+    method = 'linear';%Interpolation method 
 end
 if nargin < 3
-    xpsin_S_dke = NaN;%no incremental volume or surface calculations
+    display_mode = 0;
+else
+    display_mode = display.display_mode;
 end
 if nargin < 2
+    xpsin_S_dke = NaN;%no incremental volume or surface calculations
     xpsin = NaN;%the radial grid is the equilibrium grid
+else
+    xpsin_S_dke = radialDKE.xpsin_S_dke;
+    xpsin = radialDKE.xpsin_f;
 end
-if nargin < 1
-    error('no tokamak specified');
+if nargin < 1,
+    error('Not enough input arguments in equilibrium_jd.m');
 end
 %
 [qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;
@@ -305,15 +307,53 @@ if display_mode >= 2,
     %
     figure('Name','Magnetic equilibrium flux surface contour'),clf
 %    
-    [ax] = graph1D_jd(sR',sZ',0,0,'','','',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','r',2);pause(0.5)
-    [ax] = graph1D_jd(stR,stZ,0,0,'R(m)','Z(m)','Flux-surfaces labeled by \rho=0,0.1,0.2...1',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','b',0.5);pause(0.5)
-    axis('equal');  
+    [ax] = graph1D_jd(sR',sZ',0,0,'','','',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','r',2);drawnow
+    [ax] = graph1D_jd(stR,stZ,0,0,'R(m)','Z(m)','Flux-surfaces labeled by \rho=0,0.1,0.2...1',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','b',0.5);
+    axis('equal');drawnow  
 end
 %
 zZi = equil.zZi;
 zmi = equil.zmi;
-
-
-
+%
+if display_mode >=1,
+    disp('-------------------------------------------------------------------------------------------------------------------');
+    disp(['- Scenario name = ',equil.id]);
+    disp('-------------------------------------------------------------------------------------------------------------------');
+	disp(['------------------------------------- Tokamak magnetic equilibrium parameters ------------------------------------']);
+	disp(['- Plasma minor radius on LFS midplane (m) ap = ',num2str(ap)]);
+	disp(['- Plasma major radius on axis (m) Rp = ',num2str(Rp)]);
+	disp(['- Plasma elevation on axis (m) Zp = ',num2str(Zp)]);
+	disp(['- Edge poloidal flux (Wb) = ',num2str(psia)]);
+	disp('-------------------------------------------------------------------------------------------------------------------');
+end
+%
+equilDKE.mtheta = mtheta;
+equilDKE.xpsin = xpsin;
+equilDKE.psia = psia;
+equilDKE.XR = XR;
+equilDKE.XZ = XZ;
+equilDKE.XBR = XBR;
+equilDKE.XBZ = XBZ;
+equilDKE.XBphi = XBphi;
+equilDKE.xB0 = xB0;
+equilDKE.xR0 = xR0;
+equilDKE.xBT0 = xBT0;
+equilDKE.xBp0 = xBp0;
+equilDKE.xrho = xrho;
+equilDKE.xTe = xTe;
+equilDKE.xne = xne;
+equilDKE.xzTi = xzTi;
+equilDKE.xzni = xzni;
+equilDKE.zZi = zZi;
+equilDKE.zmi = zmi;
+equilDKE.xZeff = xZeff;
+equilDKE.Rp = Rp;
+equilDKE.Zp = Zp;
+equilDKE.ap = ap;
+equilDKE.xmhu0T2 = xmhu0T2;
+equilDKE.xdV_dke = xdV_dke;
+equilDKE.xdA_dke = xdA_dke;
+equilDKE.sgnIP = equil.sgnIP;%Sign of the toroidal current direction when the tokamak is seen from the top (trigonometric direction)
+equilDKE.sgnBT = equil.sgnBT;%Sign of the toroidal magnetic field direction when the tokamak is seen from the top (trigonometric direction)
 
 

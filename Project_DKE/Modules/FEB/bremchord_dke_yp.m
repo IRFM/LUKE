@@ -1,13 +1,13 @@
-function [Zbremchord] = bremchord_dke_yp(equil,hxr,hxrparam,radial);
+function [Zbremchord] = bremchord_dke_yp(equilDKE,radialDKE,hxr,hxrparam);
 %
 % This function calculates chord positions for bremsstrahlung tomography in a torus along unit vector g from DKE grid structure
 %
 % INPUTS
 %
-%       - equil: Magnetic equilibrium structure
+%       - equilDKE: Magnetic equilibrium structure used by DKE
+%       - radialDKE: Radial grid structure used by DKE
 %       - hxr: Bremsstrahlung structure
 %       - hxrparam : Bremsstrahlung calculation and display parameter structure
-%       - radial: Radial grid structure   
 %
 % OUTPUTS
 %       
@@ -22,11 +22,11 @@ function [Zbremchord] = bremchord_dke_yp(equil,hxr,hxrparam,radial);
 %
 %WARNING: the definitions used in the DKE code, and here crucial for HXR calculations are the following
 %         1) the frame (psi,s,phi) is direct
-%         2) BT.phi > 0 
+%         2) BT.phi > 0 (sgnBT > when BT turns in trigonometric direction when the tokamak is seen from the top. Definition used in DKE. Idem for the toroidal current Ip)
 %         3) Bp.s > 0
-% The consequence is that when BT.Ip > 0, (Ip is the plsma current vector) psi increases from the plasma center to the edge (the vector psi goes out of the plasma)
+% The consequence is that when BT.Ip > 0, (Ip is the plasma current vector) psi increases from the plasma center to the edge (the vector psi goes out of the plasma)
 % In most machines, BT is clockwise when the machine is viewed from the top (Z axis is positive towards the top) 
-% With the definitions above, if Ip is positive, psi is turned outward, Bp is counterclockwise poloidally, and s too. The Ampère theorem is OK !
+% With the definitions above, if Ip is positive, psi is turned outward, Bp is counterclockwise poloidally, and s too. The Ampere theorem is OK !
 % The HXR diagnostic arrangement is taking this frame of reference. Check the figures. Take care if BT is counterclockwise...
 %
 if nargin < 4,
@@ -36,14 +36,29 @@ end
 mfactor = hxrparam.mfactor;
 method = hxrparam.method;
 ns = hxrparam.ns;
-IPBT = equil.IPBT;
-xpsin = radial.xpsin_dke;
-xpsin_S = radial.xpsin_S_dke;
+%
+xpsin = radialDKE.xpsin_f_dke;
+xpsin_S = radialDKE.xpsin_S_dke;
+%
+theta = equilDKE.mtheta;
+ppsin = equilDKE.xpsin;
+psia = equilDKE.psia;
+ptR = equilDKE.XR;
+ptZ = equilDKE.XZ;
+ptBR = equilDKE.XBR;
+ptBZ = equilDKE.XBZ;
+ptBphi = equilDKE.XBphi;
+ptB0 = equilDKE.xB0;
+ptR0 = equilDKE.xR0;
+ptBT0 = equilDKE.xBT0;
+ptBp0 = equilDKE.xBp0;
+ptrho = equilDKE.xrho;
+sgnIP = equilDKE.sgnIP;
+sgnBT = equilDKE.sgnBT;
 %
 ns = abs(ns);%Force ns to be always positive
 nchords = length(hxr.alpha_hxr);%chord number
-%
-[theta,ppsin,psia,ptR,ptZ,ptBR,ptBZ,ptBphi,ptB0,ptR0,ptBT0,ptBp0,ptrho] = equilibrium_jd(equil,NaN,NaN,0,method,mfactor);
+IPBT = -sgnIP*sgnBT;%relative cosine of the toroidal current to the poloidal one
 %
 ptBR = -sign(IPBT)*ptBR;%Ip is positive, psi is turned outward, Bp is counterclockwise -> negative sign
 ptBZ = -sign(IPBT)*ptBZ;%Ip is positive, psi is turned outward, Bp is counterclockwise -> negative sign
@@ -213,6 +228,7 @@ Zbremchord.ZZ_pol = ZZ_pol;
 Zbremchord.HHR_pol = HHR_pol;
 Zbremchord.HHZ_pol = HHZ_pol;
 Zbremchord.VVR_pol = VVR_pol;
+Zbremchord.VVZ_pol = VVZ_pol;
 Zbremchord.ptR = ptR;
 Zbremchord.ptZ = ptZ;
 Zbremchord.BR_pol = BR_pol;
@@ -220,6 +236,9 @@ Zbremchord.BZ_pol = BZ_pol;
 Zbremchord.X_mfl_lcs = X_mfl_lcs;
 Zbremchord.Y_mfl_lcs = Y_mfl_lcs;
 Zbremchord.Z_mfl_lcs = Z_mfl_lcs;
+Zbremchord.BX_mfl_lcs = BX_mfl_lcs;
+Zbremchord.BY_mfl_lcs = BX_mfl_lcs;
+Zbremchord.Ipdir_mfl_lcs = Ipdir_mfl_lcs;
 Zbremchord.sR = sR;
 Zbremchord.sphi = sphi;
 Zbremchord.XX_tor_min = XX_tor_min;

@@ -1,6 +1,4 @@
-function [waveparam,xyprop_dke_rf,xyP0_in_rf,yb_rf] = ...
-    rfwave_dke_jd(equil,waves,xpsin,xpsin_dke,xdpsin_dke,xpsin_S_dke,r_dke,...
-    XR,XZ,XBR,XBZ,XBphi,ne_ref,lnc_e_ref,nmax,dke_mode,display_mode);
+function [waveparam,xyprop_dke_rf,xyP0_in_rf,yb_rf] = rfwave_dke_jd(dkeparam,display,equil,equilDKE,gridDKE,mksa,waves);
 % 
 %	RF input parameters for the Drift Kinetic equation solver (dke_4_1yp.m). 
 %
@@ -14,6 +12,26 @@ function [waveparam,xyprop_dke_rf,xyP0_in_rf,yb_rf] = ...
 %
 [qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;
 %
+dke_mode = dkeparam.dke_mode;
+nmax = dkeparam.nmax_rf;
+%
+display_mode = display.display_mode;
+%
+xpsin = gridDKE.xpsin;
+xpsin_dke = gridDKE.xpsin_dke;
+xdpsin_dke = gridDKE.xdpsin_dke;
+r_dke = gridDKE.rdke;
+xpsin_S_dke = gridDKE.xpsin_S_dke;
+%
+XR = equilDKE.XR;
+XZ = equilDKE.XZ;
+XBR = equilDKE.XBR;
+XBZ = equilDKE.XBZ;
+XBphi = equilDKE.XBphi;
+%
+ne_ref = mksa.ne_ref;
+lnc_e_ref = mksa.lnc_e_ref;
+%
 equil_id = equil.id;
 method = 'spline';%interpolation technique in psi
 %
@@ -22,7 +40,30 @@ nr = length(xpsin);
 %
 % equilibrium data with Fourier-enhanced poloidal precision and original radial grid
 %
-[theta,ppsin,psia,ptR,ptZ,ptBR,ptBZ,ptBphi,pB0,pR0,pBT0,pBp0,prho,pTe,pne,pzTi,pzni,zZi,zmi,pZeff,Rp,Zp] = equilibrium_jd(equil);
+[equilDKE_Fourier] = equilibrium_jd(equil);
+%
+theta = equilDKE_Fourier.mtheta;
+ppsin = equilDKE_Fourier.xpsin;
+psia = equilDKE_Fourier.psia;
+ptR = equilDKE_Fourier.XR;
+ptZ = equilDKE_Fourier.XZ;
+ptBR = equilDKE_Fourier.XBR;
+ptBZ = equilDKE_Fourier.XBZ;
+ptBphi = equilDKE_Fourier.XBphi;
+pB0 = equilDKE_Fourier.xB0;
+pR0 = equilDKE_Fourier.xR0;
+pBT0 = equilDKE_Fourier.xBT0;
+pBp0 = equilDKE_Fourier.xBp0;
+prho = equilDKE_Fourier.xrho;
+pTe = equilDKE_Fourier.xTe;
+pne = equilDKE_Fourier.xne;
+pzTi = equilDKE_Fourier.xzTi;
+pzni = equilDKE_Fourier.xzni;
+zZi = equilDKE_Fourier.zZi;
+zmi = equilDKE_Fourier.zmi;
+pZeff = equilDKE_Fourier.xZeff;
+Rp = equilDKE_Fourier.Rp;
+Zp = equilDKE_Fourier.Zp;
 %
 ptr = sqrt((ptR - Rp).^2 + (ptZ - Zp).^2); %minor radius on the (psi,stheta) grid
 ptBP = sqrt(ptBR.^2 + ptBZ.^2); %poloidal magnetic field on the (psi,stheta) grid

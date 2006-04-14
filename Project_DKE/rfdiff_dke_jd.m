@@ -1,11 +1,4 @@
-function [ZYXXD_rf,ZYXXF_rf,ZYXXD_rf_tp,ZYXXF_rf_tp,ylist_rf] = rfdiff_dke_jd(waveparam,nmax_rf,save_id,temppath,...
-    theta,XR,XZ,XBR,XBZ,XBphi,xB0,Rp,Zp,xqtilde,...
-    XXheaviside,XXheaviside_p,XXheaviside_m,... 
-    Xmhup,Xmhu,Xmhum,Xmhu2p,Xmhu2,Xmhu2m,X1mmhu2p,X1mmhu2,X1mmhu2m,Xdmhumm,Xdmhum,Xdmhu,Xdmhup,Xdmhupp,...
-    Xpnpp,Xpnp,Xpn,Xpnm,Xpnmm,Xdpnmm,Xdpnm,Xdpn,Xdpnp,Xdpnpp,...
-    Xgammapp,Xgammap,Xgamma,Xgammam,Xgammamm,...
-    Xxlambdap,Xxlambda,Xxlambdam,...
-    betath_ref,bounce_mode,dke_mode,rdke,display_mode)
+function [ZYXXD_rf,ZYXXF_rf,ZYXXD_rf_tp,ZYXXF_rf_tp,ylist_rf] = rfdiff_dke_jd(dkeparam,display,waveparam,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa)
 %
 % Calculates the RF quasilinear diffusion coefficient and the diffusion
 % tensor elements on a 3-D Grid: 2-D (p,mhu) in momentum; 1-D (rho) in space. 
@@ -54,11 +47,74 @@ function [ZYXXD_rf,ZYXXF_rf,ZYXXD_rf_tp,ZYXXF_rf_tp,ylist_rf] = rfdiff_dke_jd(wa
 %
 % by J. Decker (MIT/RLE) <jodecker@mit.edu> and Y. Peysson CEA/DRFC <yves.peysson@cea.fr>
 %
+etime_coll = 0;
+time0 = clock;
+%
 [qe,me] = pc_dke_yp;%Universal physics constant
 %
-[npn,nmhu] = size(Xpn);
-nr = length(xB0);
-nr_dke = length(rdke);
+nmax_rf = dkeparam.nmax_rf;
+temppath = dkeparam.temppath;
+bounce_mode = dkeparam.bounce_mode;
+dke_mode = dkeparam.dke_mode;
+%
+display_mode = display.display_mode;
+%
+theta = equilDKE.mtheta;
+XR = equilDKE.XR;
+XZ = equilDKE.XZ;
+XBR = equilDKE.XBR;
+XBZ = equilDKE.XBZ;
+XBphi = equilDKE.XBphi;
+xB0 = equilDKE.xB0;
+Rp = equilDKE.Rp;
+Zp = equilDKE.Zp;
+%
+XXheaviside = Zbouncecoef.XXheaviside;
+XXheaviside_p = Zbouncecoef.XXheaviside_p;
+XXheaviside_m = Zbouncecoef.XXheaviside_m;
+Xmhup = gridDKE.Xmhup;
+Xmhu = gridDKE.Xmhu;
+Xmhum = gridDKE.Xmhum;
+Xmhu2p = gridDKE.Xmhu2p;
+Xmhu2 = gridDKE.Xmhu2;
+Xmhu2m = gridDKE.Xmhu2m;
+X1mmhu2p = gridDKE.X1mmhu2p;
+X1mmhu2 = gridDKE.X1mmhu2;
+X1mmhu2m = gridDKE.X1mmhu2m;
+Xdmhumm = gridDKE.Xdmhumm;
+Xdmhum = gridDKE.Xdmhum;
+Xdmhu = gridDKE.Xdmhu;
+Xdmhup = gridDKE.Xdmhup;
+Xdmhupp = gridDKE.Xdmhupp;
+Xpnpp = gridDKE.Xpnpp;
+Xpnp = gridDKE.Xpnp;
+Xpn = gridDKE.Xpn;
+Xpnm = gridDKE.Xpnm;
+Xpnmm = gridDKE.Xpnmm;
+Xdpnmm = gridDKE.Xdpnmm;
+Xdpnm = gridDKE.Xdpnm;
+Xdpn = gridDKE.Xdpn;
+Xdpnp = gridDKE.Xdpnp;
+Xdpnpp = gridDKE.Xdpnpp;
+rdke = gridDKE.rdke;
+npn = gridDKE.npn;
+nmhu = gridDKE.nmhu;
+nr = gridDKE.nr;
+nr_dke = gridDKE.nr_dke;
+%
+Xgammapp = Zmomcoef.Xgammapp;
+Xgammap = Zmomcoef.Xgammap;
+Xgamma = Zmomcoef.Xgamma;
+Xgammam = Zmomcoef.Xgammam;
+Xgammamm = Zmomcoef.Xgammamm;
+%
+Xxlambdap = Zbouncecoef.Xxlambda_p;
+Xxlambda = Zbouncecoef.Xxlambda;
+Xxlambdam = Zbouncecoef.Xxlambda_m;
+xqtilde = Zbouncecoef.xqtilde;
+%
+betath_ref = mksa.betath_ref;
+%
 nb = size(waveparam,2);
 %
 % Output files initialization
@@ -236,11 +292,11 @@ for iy = ylist_rf,
     XXD0_rf = shiftdim(repmat(xyD0_rf(:,iy),[1,npn,nmhu]),1);% RF quasi-linear diffusion coefficient (nhuth_ref*pth_ref^2)
     %
     ynum = num2str(iy);
-    if exist([fullfile(temppath,'temp_DQL_'),save_id,'_',ynum,'.mat']) == 2,
+    if exist([fullfile(temppath,'temp_DQL_'),ynum,'.mat']) == 2,
         if dke_mode == 0,
-            load([fullfile(temppath,'temp_DQL_'),save_id,'_',ynum,'.mat'],'ZXXD_rf');
+            load([fullfile(temppath,'temp_DQL_'),ynum,'.mat'],'ZXXD_rf');
         else
-            load([fullfile(temppath,'temp_DQL_'),save_id,'_',ynum,'.mat'],'ZXXD_rf','ZXXD_rf_tp','ZXXF_rf_tp');
+            load([fullfile(temppath,'temp_DQL_'),ynum,'.mat'],'ZXXD_rf','ZXXD_rf_tp','ZXXF_rf_tp');
         end            
     %
         if display_mode >= 1,info_dke_yp(2,['RF matrix coefficients for effective ray #',ynum,' retrieved.']);end	
@@ -607,12 +663,12 @@ for iy = ylist_rf,
         end
         %
         if dke_mode == 0,
-            save([fullfile(temppath,'temp_DQL_'),save_id,'_',ynum,'.mat'],'ZXXD_rf');
+%            save([fullfile(temppath,'temp_DQL_'),save_id,'_',ynum,'.mat'],'ZXXD_rf');
         else
-            save([fullfile(temppath,'temp_DQL_'),save_id,'_',ynum,'.mat'],'ZXXD_rf','ZXXD_rf_tp','ZXXF_rf_tp');
+%            save([fullfile(temppath,'temp_DQL_'),save_id,'_',ynum,'.mat'],'ZXXD_rf','ZXXD_rf_tp','ZXXF_rf_tp');
         end            
         %
-        if display_mode >= 1,info_dke_yp(2,['RF matrix coefficients for effective ray #',ynum,' calculated and saved.']);end	
+        if display_mode >= 1,info_dke_yp(2,['RF matrix coefficients for effective ray #',ynum,' calculated.']);end	
         %
     end
     %
@@ -665,3 +721,6 @@ for iy = ylist_rf,
     %
     end
 end
+%
+if display_mode >= 1,info_dke_yp(2,['D and F tensor calculations for RF waves done in ',num2str(etime(clock,time0)),' (s)']);end
+

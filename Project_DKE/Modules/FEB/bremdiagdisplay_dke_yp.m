@@ -1,4 +1,4 @@
-function [] = bremdiagdisplay_dke_yp(equil,dkeparam,momentum,radial,display,dke_out,mksa,hxr,Zbremchord,Zbremplasma,Zbremdiag,chord_display,kphot_display);
+function [] = bremdiagdisplay_dke_yp(hxr,Zbremchord,Zbremplasma,Zbremdiag,chord_display,kphot_display);
 %
 % This function draws local properties of the plasma bremsstrahlung
 %
@@ -11,7 +11,6 @@ elseif nargin < 13,
     kphot_display = hxr.kphot(round(length(hxr.kphot)/2));%keV
 end
 nchords = length(hxr.alpha_hxr);
-IPBT = equil.IPBT;%Cosine between the plasma current and the toroidal B-field directions
 %
 Fig_bremplasma = figure('Name','Plasma bremsstrahlung spectrum');
 figure(Fig_bremplasma);

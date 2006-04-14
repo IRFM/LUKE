@@ -1,5 +1,4 @@
-function [xpsin_f,xpsin_f_dke,xdpsin_f_dke,xpsinm_S_dke,xdpsinm_S_dke,xpsinp_S_dke,xdpsinp_S_dke,xpsin_S_dke,r_dke,ir_display_out]...
-    = radialgrid_dke_jd(dke_mode,xpsin_S_dke,dpsin_dke,psin_display_in);
+function [radialDKE] = radialgrid_dke_jd(equil,dkeparam,display,xpsin_S_dke,xrho_S_dke)
 % 
 % Generates a non uniform radial grid. 
 %
@@ -30,6 +29,19 @@ function [xpsin_f,xpsin_f_dke,xdpsin_f_dke,xpsinm_S_dke,xdpsinm_S_dke,xpsinp_S_d
 %		displayed (graphic mode)
 %
 % by Joan Decker <jodecker@alum.mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
+%
+%
+dke_mode = dkeparam.dke_mode;
+dpsin_dke = dkeparam.dpsin_dke;%for drift kinetic calculations
+%
+if isempty(xpsin_S_dke) == 1,%when the grid is defined by normalized radius in the equatorial mid-plane reference
+   xpsin_S_dke = sort([xpsin_S_dke,rho2psi_jd(equil,xrho_S_dke)]);
+end
+if isnan(display.psin_display), 
+   psin_display_in=rho2psi_jd(equil,display.rho_display);
+else
+   psin_display_in = display.psin_display;
+end
 %
 xpsin_S_dke = sort(xpsin_S_dke);
 nr_S = length(xpsin_S_dke);
@@ -132,3 +144,17 @@ end
 %
 ir_display_out = r_dke(ir_dke_display_out);
 %
+radialDKE.xpsin_f = xpsin_f;
+radialDKE.xpsin_f_dke = xpsin_f_dke;
+radialDKE.xdpsin_f_dke = xdpsin_f_dke;
+radialDKE.xpsinm_S_dke = xpsinm_S_dke;
+radialDKE.xdpsinm_S_dke = xdpsinm_S_dke;
+radialDKE.xpsinp_S_dke = xpsinp_S_dke;
+radialDKE.xdpsinp_S_dke = xdpsinp_S_dke;
+radialDKE.xpsin_S_dke = xpsin_S_dke;
+radialDKE.r_dke = r_dke;
+radialDKE.ir_display_out = ir_display_out;
+
+
+
+
