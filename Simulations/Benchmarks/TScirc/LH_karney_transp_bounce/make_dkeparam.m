@@ -49,7 +49,7 @@ dkeparam.coll_mode = 2;%Relativistic collision operator: (0) Relativistic Maxwel
 dkeparam.rt_mode = 0;%RT-DKE power consistency
 dkeparam.nit_rf = 20;%Maximum number of iteration in ray-tracing. Works only if rt_mode = 1 and more than one radial point (default = 1)
 dkeparam.prec_rf = 1e-4;%relative precision in RT-DKE iterations
-dkeparam.nmax_rf = 3;%Maximum number of harmonics in the Dql calculations
+dkeparam.n_rf_list = [0];%Vector of selected harmonics in the Dql calculations [1,n_rf]
 %
 % Run mode
 %
