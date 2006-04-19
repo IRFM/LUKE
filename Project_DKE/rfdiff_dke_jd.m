@@ -47,6 +47,9 @@ function [ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf] = rfdiff_dke_jd(dkeparam,d
 %
 % by J. Decker (MIT/RLE) <jodecker@mit.edu> and Y. Peysson CEA/DRFC <yves.peysson@cea.fr>
 %
+etime_rf = 0;
+time0 = clock;
+%
 [qe,me] = pc_dke_yp;%Universal physics constant
 %
 rf_tol = eps('single');% threshold for calculation mask on deltares
@@ -886,3 +889,6 @@ gridindex_rf.mask_n = mask_n;
 %ZXXD_rf.mm_ijp =   sparse(iyn,iXX,double(ZXYD_rf.mm_ijp    ),nb*nn_rf,npn*nmhu*nr);
 %ZXXD_rf.mm_ijm =   sparse(iyn,iXX,double(ZXYD_rf.mm_ijm    ),nb*nn_rf,npn*nmhu*nr);
 %
+%
+etime_rf = etime_rf + etime(clock,time0);
+if display_mode >= 1,info_dke_yp(2,['RF flux coefficients calculations done in ',num2str(etime_rf),' (s)']);end	
