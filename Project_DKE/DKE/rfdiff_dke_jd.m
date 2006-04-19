@@ -310,7 +310,16 @@ for in = 1:nn_rf,
         XXdeltares_ij(XXmask_square) = (XXnparres_ij(XXmask_square) > XXnparmin_rf(XXmask_square)).*(XXnparmax_rf(XXmask_square) > XXnparres_ij(XXmask_square))./(XXnparmax_rf(XXmask_square) - XXnparmin_rf(XXmask_square));
         XXdeltares_ij(XXmask_gauss) = exp(-(XXnparres_ij(XXmask_gauss) - XXnpar_rf(XXmask_gauss)).^2./XXdnpar_rf(XXmask_gauss).^2)./XXdnpar_rf(XXmask_gauss)/sqrt(pi);
         %
-        XX_index = find((XXdeltares_ij >= rf_tol) | ((~XXheaviside | ~XXheavisidep | ~XXheavisidem) & flipdim(XXdeltares_ij,2) >= rf_tol));
+        XX_index_ij = (XXdeltares_ij >= rf_tol) | (~XXheaviside & flipdim(XXdeltares_ij,2) >= rf_tol);
+        %
+        % neighboring points are also accounted for
+        %
+        XX_index_immj = XX_index_ij;XX_index_immj(:,2:npn,:) = XX_index_ij(:,1:npn-1,:);
+        XX_index_ippj = XX_index_ij;XX_index_ippj(:,1:npn-1,:) = XX_index_ij(:,2:npn,:);
+        XX_index_ijmm = XX_index_ij;XX_index_ijmm(:,:,2:nmhu) = XX_index_ij(:,:,1:nmhu-1);
+        XX_index_ijpp = XX_index_ij;XX_index_ijpp(:,:,1:nmhu-1) = XX_index_ij(:,:,2:nmhu);      
+        %
+        XX_index = find(XX_index_ij | XX_index_immj | XX_index_ippj | XX_index_ijmm | XX_index_ijpp);
         %
         m_index = ceil(XX_index/(nr*npn));
         p_index = ceil((XX_index - (m_index - 1)*nr*npn)/nr);
@@ -334,7 +343,8 @@ close(h)
 %
 clear XXsigma XX1mmhu2 XXpn XXgamma XXpsib XXomegac XXmaskb XXmhub 
 clear XXomega_rf XXnparmin_rf XXnparmax_rf XXnpar_rf XXdnpar_rf
-clear XXmask_square  XXmask_gauss XXnparres_ij XXdeltares_ij XX_index
+clear XXmask_square  XXmask_gauss XXnparres_ij XXdeltares_ij 
+clear XX_index XX_index_ij XX_index_immj XX_index_ippj XX_index_ijmm XX_index_ijpp
 clear p_index m_index r_index y_index n_index
 %
 Xmask = (mask_m - 1)*npn + mask_p;%mask in momentum 2-D matrices
