@@ -2,7 +2,7 @@ function [ZP0,Zcurr,Znorm,ZXXS,XxRR_fsav,xMRR_flux,xMRR_tau,xRR_fsav,xne_norm_ou
     fmoments_dke_yp(dkeparam,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
                     XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
                     ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyD0_rf,gridindex_rf,...
-                    ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp)
+                    ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,XXILor)
 %
 %   Calculate moments of the electron distribution function.
 %
@@ -422,7 +422,7 @@ XYdpnp    = single(Xdpnp(iX));
 XYlambda  = single(XXlambda(iXX)); 
 %
 xqratio = xqtilde./xqhat;
-xynqratio = repmat(xqratio,[1,nb,nn_rf]);
+xynqratio = repmat(xqratio.',[1,nb,nn_rf]);
 %
 XYIntegrand = XYdmhu.*XYdpnm.*XYpnm.*XYpnm.*XYpnm.*XYlambda.*XYSp0_rf_imj./XYgammam;
 XYIntegrand = sparse(double(iX),double(ixyn),double(XYIntegrand),npn*nmhu,nr*nb*nn_rf);
@@ -538,8 +538,8 @@ XXIntegrand_ip = XXpnp(:,:,rdke).*XXpnp(:,:,rdke).*XXpnp(:,:,rdke).*XXlambda(:,:
                   XXdf0dmhu_ijm(:,:,rdke),XXdf0dmhu_ijp(:,:,rdke),XXdf0dpn_ijm(:,:,rdke),XXdf0dpn_ijp(:,:,rdke),XXf0_ijm(:,:,rdke),XXf0_ijp(:,:,rdke),...
                   ZXXD_c.mm_ijm(:,:,rdke),ZXXD_c.mm_ijp(:,:,rdke),ZXXD_c.mp_ijm(:,:,rdke),ZXXD_c.mp_ijp(:,:,rdke),ZXXF_c.m_ijm(:,:,rdke),ZXXF_c.m_ijp(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),XXpn(:,:,rdke));
 %
-xP0m_c_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXIntegrand_im.*ZXXS.p0_c_imj,1),1);
-xP0p_c_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpnp,XXIntegrand_ip.*ZXXS.p0_c_ipj,1),1);
+xP0m_c_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXIntegrand_im.*ZXXS.p0_c_imj,1),1).';
+xP0p_c_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpnp,XXIntegrand_ip.*ZXXS.p0_c_ipj,1),1).';
 %
 ZP0.x_c_fsav = (xP0m_c_fsav + xP0p_c_fsav)/2;
 %
@@ -583,8 +583,8 @@ end
                   XXdf0dmhu_ijm(:,:,rdke),XXdf0dmhu_ijp(:,:,rdke),XXdf0dpn_ijm(:,:,rdke),XXdf0dpn_ijp(:,:,rdke),XXf0_ijm(:,:,rdke),XXf0_ijp(:,:,rdke),...
                   ZXXD_e.mm_ijm(:,:,rdke),ZXXD_e.mm_ijp(:,:,rdke),ZXXD_e.mp_ijm(:,:,rdke),ZXXD_e.mp_ijp(:,:,rdke),ZXXF_e.m_ijm(:,:,rdke),ZXXF_e.m_ijp(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),XXpn(:,:,rdke));
 %
-xP0m_e_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXIntegrand_im.*ZXXS.p0_e_imj,1),1);
-xP0p_e_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpnp,XXIntegrand_ip.*ZXXS.p0_e_ipj,1),1);
+xP0m_e_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXIntegrand_im.*ZXXS.p0_e_imj,1),1).';
+xP0p_e_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpnp,XXIntegrand_ip.*ZXXS.p0_e_ipj,1),1).';
 %
 ZP0.x_e_fsav = (xP0m_e_fsav + xP0p_e_fsav)/2;
 %
@@ -611,8 +611,8 @@ if dke_mode >= 1
                       XXdf0dmhu_g_ijm(:,:,rdke),XXdf0dmhu_g_ijp(:,:,rdke),XXdf0dpn_g_ijm(:,:,rdke),XXdf0dpn_g_ijp(:,:,rdke),XXf0_g_ijm(:,:,rdke),XXf0_g_ijp(:,:,rdke),...
                       ZXXD_e.mm_ijm(:,:,rdke),ZXXD_e.mm_ijp(:,:,rdke),ZXXD_e.mp_ijm(:,:,rdke),ZXXD_e.mp_ijp(:,:,rdke),ZXXF_e.m_ijm(:,:,rdke),ZXXF_e.m_ijp(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),XXpn(:,:,rdke));
     %
-    xP0m_e_g_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXIntegrand_im.*ZXXS.p0_e_g_imj,1),1);
-    xP0p_e_g_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpnp,XXIntegrand_ip.*ZXXS.p0_e_g_ipj,1),1);
+    xP0m_e_g_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXIntegrand_im.*ZXXS.p0_e_g_imj,1),1).';
+    xP0p_e_g_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpnp,XXIntegrand_ip.*ZXXS.p0_e_g_ipj,1),1).';
     %
     ZP0.x_e_g_fsav = (xP0m_e_g_fsav + xP0p_e_g_fsav)/2;
 end
