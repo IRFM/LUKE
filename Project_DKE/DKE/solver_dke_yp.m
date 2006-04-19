@@ -1,4 +1,4 @@
-function [XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,radial_mode,memoryLU_f,memoryLU_g] = solver_dke_yp(dkeparam,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,XXsinksource,XXfinit)
+function [XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,radial_mode,memoryLU_f,memoryLU_g] = solver_dke_yp(dkeparam,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,XXsinksource,XXfM,XXfinit)
 %
 %
 %   Self-consistent 3-D relativistic solver of the drift kinetic equation in momentum space with Beliaev-Budker collision integrals 
@@ -276,23 +276,6 @@ prec_residu_f = ones(nr,nit_f);
 residu_g = ones(nr_dke,nit_g);
 prec_residu_g = ones(nr_dke,nit_g);
 %
-Pabs = zeros(1,nr);
-Pcoll = zeros(1,nr);
-trapped_fraction = NaN*ones(1,nr);
-curr_0_fsav = NaN*ones(1,nr);
-normf = NaN*ones(1,nr);
-Te_out_norm = NaN*ones(1,nr);
-RR = NaN*ones(nr,npn);  
-RR_fsav = NaN*ones(nr,npn);
-normf_fsav = NaN*ones(1,nr);
-curr_tot = NaN*ones(1,nr);
-curr_tot_fsav = NaN*ones(1,nr);
-curr_0 = NaN*ones(1,nr);
-Pcoll_tot_fsav = NaN*ones(1,nr);    
-Pabs_tot_fsav = NaN*ones(1,nr);
-currB = NaN*ones(1,nr);
-currB_fsav = NaN*ones(1,nr);
-%
 XXI = zeros(npn,nmhu,nr);
 XXI_g = zeros(npn,nmhu,nr);
 XXf0 = zeros(npn,nmhu,nr);
@@ -300,11 +283,7 @@ XXf0_tp = zeros(npn,nmhu,nr);
 XXf0_g = zeros(npn,nmhu,nr);
 XXf0_L_tp = zeros(npn,nmhu,nr);
 XXf0_L_g = zeros(npn,nmhu,nr);  
-XXSp = zeros(npn,nmhu,nr);
-XXSmhu = zeros(npn,nmhu,nr);
-XXfM = zeros(npn,nmhu,nr);
 XXf0_g_th = zeros(npn,nmhu,nr);
-XXddeltaimdrho_tp_c = zeros(npn,nmhu,nr);
 %
 time0 = clock;
 MMXdiag = diag(MMXP_f_t/time_scheme + MMXR_f_t/time_scheme + MMXT_f_t);

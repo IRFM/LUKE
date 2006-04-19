@@ -266,9 +266,8 @@ for ir_dke = 1:nr_dke,
 end 
 %
 %  save([fullfile(temppath,'temp_DKE.mat'],'ZXXD_c','ZXXF_c','ZXXD_c_tp','ZXXF_c_tp','XXfM','XXILor','-append');
-  %
-  etime_coll = etime_coll + etime(clock,time0);
-  if display_mode >= 1,info_dke_yp(2,['Collision flux coefficients calculations done in ',num2str(etime_coll),' (s)']);end	
-  %
+%
+etime_coll = etime_coll + etime(clock,time0);
+if display_mode >= 1,info_dke_yp(2,['Collision flux coefficients calculations done in ',num2str(etime_coll),' (s)']);end	
 %
 end
