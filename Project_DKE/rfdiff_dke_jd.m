@@ -120,14 +120,92 @@ nr_dke = length(rdke);
 nb = size(xyomega_rf,2);
 nn_rf = length(n_rf_list);
 %
+gridindex_rf.npn = npn;
+gridindex_rf.nmhu = nmhu;
+gridindex_rf.nr = nr;
+gridindex_rf.nr_dke = nr_dke;
+gridindex_rf.nb = nb;
+gridindex_rf.nn_rf = nn_rf;
+%
+% mask calculation of point that must be calculated
+%    
+mask_p = zeros(0,0,'uint32');%mask of indices in the momentum grid        
+mask_m = zeros(0,0,'uint32');%mask of indices in the pitch angle grid
+mask_y = zeros(0,0,'uint32');%mask of indices in the ray list
+mask_r = zeros(0,0,'uint32');%mask of indices in the radial grid
+mask_n = zeros(0,0,'uint32');%mask of indices in the harmonic number list
+%
 % Case where no RF wave is to be accounted for
 %
 if nb == 0,
     ZXYD_rf = [];
     ZXYD_rf_tp = [];
     ZXYF_rf_tp = [];
-    gridindex_rf = [];
     %
+    gridindex_rf.mask_p = mask_p;
+    gridindex_rf.mask_m = mask_m;
+    gridindex_rf.mask_y = mask_y;
+    gridindex_rf.mask_r = mask_r;
+    gridindex_rf.mask_n = mask_n;
+    %
+    ZXYD_rf.pp_ippj = [];
+    ZXYD_rf.pp_ipj = [];
+    ZXYD_rf.pp_ij = [];
+    ZXYD_rf.pp_imj = [];
+    ZXYD_rf.pp_immj = [];
+    ZXYD_rf.pm_ipj = [];
+    ZXYD_rf.pm_ij = [];
+    ZXYD_rf.pm_imj = [];
+    ZXYD_rf.mp_ijp = [];
+    ZXYD_rf.mp_ij = [];
+    ZXYD_rf.mp_ijm = [];
+    ZXYD_rf.mm_ijp = [];
+    ZXYD_rf.mm_ijm = [];
+%
+    ZXYF_rf.p_ippj = []; 
+    ZXYF_rf.p_ipj = [];    
+    ZXYF_rf.p_ij = [];    
+    ZXYF_rf.p_imj = [];    
+    ZXYF_rf.p_immj = [];  
+    ZXYF_rf.m_ijp = [];   
+    ZXYF_rf.m_ijm = [];   
+    %
+    if dke_mode == 1,
+        %
+        ZXYD_rf_tp.pp_ippj = [];
+        ZXYD_rf_tp.pp_ipj =  [];
+        ZXYD_rf_tp.pp_ij =   [];
+        ZXYD_rf_tp.pp_imj =  [];
+        ZXYD_rf_tp.pp_immj = [];
+        ZXYD_rf_tp.pm_ipj =  [];
+        ZXYD_rf_tp.pm_ij =   [];
+        ZXYD_rf_tp.pm_imj =  [];
+        ZXYD_rf_tp.mp_ijp =  [];
+        ZXYD_rf_tp.mp_ij =   [];
+        ZXYD_rf_tp.mp_ijm =  [];
+        ZXYD_rf_tp.mm_ijp =  [];
+        ZXYD_rf_tp.mm_ijm =  [];
+        %
+        % ---------------- Terms for wave-induced radial transport by adjoint technique (P. Helander model) ----------------
+        %
+        ZXYD_rf_tp.mp1_ijp = [];
+        ZXYD_rf_tp.mp1_ij =  [];
+        ZXYD_rf_tp.mp1_ijm = [];
+        ZXYD_rf_tp.mm1_ijp = [];
+        ZXYD_rf_tp.mm1_ijm = [];
+        %
+        ZXYF_rf_tp.p_ippj =  [];
+        ZXYF_rf_tp.p_ipj =   [];
+        ZXYF_rf_tp.p_ij =    [];
+        ZXYF_rf_tp.p_imj =   [];
+        ZXYF_rf_tp.p_immj =  [];
+        ZXYF_rf_tp.m_ijp =   [];
+        ZXYF_rf_tp.m_ijm =   [];
+    else
+        ZXYD_rf_tp = NaN;
+        ZXYF_rf_tp = NaN;
+    end            
+    %    
     return
 end
 %
@@ -179,14 +257,6 @@ XXgamma = permute(repmat(single(Xgamma),[1,1,nr]),[3,1,2]);
 XXheavisidep = permute(XXheavisidep,[3,1,2]);
 XXheaviside = permute(XXheaviside,[3,1,2]);
 XXheavisidem = permute(XXheavisidem,[3,1,2]);
-%
-% mask calculation of point that must be calculated
-%    
-mask_p = zeros(0,0,'uint32');%mask of indices in the momentum grid        
-mask_m = zeros(0,0,'uint32');%mask of indices in the pitch angle grid
-mask_y = zeros(0,0,'uint32');%mask of indices in the ray list
-mask_r = zeros(0,0,'uint32');%mask of indices in the radial grid
-mask_n = zeros(0,0,'uint32');%mask of indices in the harmonic number list
 %
 % Determination of (np*nmhu*nb*nr*n_rf)-space points to be accounted for
 %
@@ -786,13 +856,6 @@ gridindex_rf.mask_m = mask_m;
 gridindex_rf.mask_y = mask_y;
 gridindex_rf.mask_r = mask_r;
 gridindex_rf.mask_n = mask_n;
-%
-gridindex_rf.npn = npn;
-gridindex_rf.nmhu = nmhu;
-gridindex_rf.nr = nr;
-gridindex_rf.nr_dke = nr_dke;
-gridindex_rf.nb = nb;
-gridindex_rf.nn_rf = nn_rf;
 %
 %iXX = double(((mask_r - 1)*nmhu + (mask_m - 1))*npn + mask_p);
 %iyn = double((mask_n - 1)*nb + mask_y);
