@@ -1,4 +1,4 @@
-function [] = bremlocaldisplay_dke_yp(equilDKE,dkeparam,momentumDKE,radialDKE,dke_out,mksa,Zbremchord,Zbremplasma,r_display,t_display);
+function [] = bremlocaldisplay_dke_yp(dkeparam,display,equilDKE,momentumDKE,radialDKE,dke_out,mksa,Zbremchord,Zbremplasma,r_display,t_display);
 %
 % This function draws local properties of the plasma bremsstrahlung
 %
@@ -27,10 +27,10 @@ bounce_mode = dkeparam.bounce_mode;
 %
 kphot = Zbremplasma.kphot;
 %
-XXfinit = dke_out.XXfinit_ref(:,:,r_dke);
-XXf0 = dke_out.XXf0_ref(:,:,r_dke);
-XXf0_tp = dke_out.XXf0_tp_ref(:,:,r_dke);
-XXf0_g = dke_out.XXf0_g_ref(:,:,r_dke);
+XXfinit = dke_out.XXfinit(:,:,r_dke);
+XXf0 = dke_out.XXf0(:,:,r_dke);
+XXf0_tp = dke_out.XXf0_tp(:,:,r_dke);
+XXf0_g = dke_out.XXf0_g(:,:,r_dke);
 %
 theta = equilDKE.mtheta;
 xpsin = equilDKE.xpsin;
@@ -58,9 +58,6 @@ ap = equilDKE.ap;
 xmhu0T2 = equilDKE.xmhu0T2;
 xdV_dke = equilDKE.xdV_dke;
 xdA_dke = equilDKE.xdA_dke;
-sgnIP = equil.sgnIP;%Sign of the toroidal current direction when the tokamak is seen from the top (trigonometric direction)
-sgnBT = equil.sgnBT;%Sign of the toroidal magnetic field direction when the tokamak is seen from the top (trigonometric direction)
-%
 xzni_norm = xzni(:,r_dke)/ne_ref;
 xne_norm = xne(r_dke)/ne_ref;
 xrho = xrho(r_dke);
@@ -69,7 +66,8 @@ pn2 = pn.*pn;
 gamma = sqrt(1 + pn2*betath_ref^2);
 %
 i_test = max(find(xrho <= r_display));%Normalized radius index for output and display
-j_test = max(find(theta_hxr(1,:) <= t_display*pi/180 + 2*pi));%Poloidal angle index for output and display
+j_test = max(find(theta_hxr(1,:) <= t_display*pi/180));%Poloidal angle index for output and display
+if isempty(j_test), j_test = size(theta_hxr,2);end;%To avoid round-off that give an empty value close to theta = 0.
 %
 if ~mask_hxr(i_test,j_test),
    info_dke_yp(2,'WARNING: no chord is going through the plasma volume at the chosen radial and poloidal positions !');
@@ -94,13 +92,13 @@ figure(Fig_distri);
 ylab = ['f(norm initial: ',num2str(Zbremplasma.Znorm0_hxr{i_test,j_test}),', norm recontructed: ',num2str(Zbremplasma.Znormi_hxr{i_test,j_test}),')'];
 tit = ['Distribution function at {\rho} = ',num2str(rho_out),' and {\theta}_{pol} = ',num2str(theta_out*180/pi),' (Deg)'];
 %	
-graph1D_jd(pn,Zbremplasma.ZXf0_i{i_test,j_test}(:,1),0,1,'','','',NaN,'','','-','non','b',2);
+graph1D_jd(pn,Zbremplasma.ZXf0_i{i_test,j_test}(:,size(Zbremplasma.ZXf0_i{i_test,j_test},2)),0,1,'','','',NaN,'','','-','non','b',2);
 hold on			
-graph1D_jd(pn,Zbremplasma.ZXf0_i1{i_test,j_test}(:,1),0,1,'','','',NaN,'','','--','non','r',2);
-graph1D_jd(pn,Zbremplasma.ZXf0_i{i_test,j_test}(:,size(Zbremplasma.ZXf0_i1{i_test,j_test},2)),0,1,'','','',NaN,'','','-','non','c',2);
-graph1D_jd(pn,Zbremplasma.ZXf0_i1{i_test,j_test}(:,size(Zbremplasma.ZXf0_i{i_test,j_test},2)),0,1,'p_{||}/p_{Te}^{ref}',ylab,tit,NaN,'','','--','non','k',2);
+graph1D_jd(pn,Zbremplasma.ZXf0_i1{i_test,j_test}(:,size(Zbremplasma.ZXf0_i{i_test,j_test},2)),0,1,'','','',NaN,'','','--','non','r',2);
+graph1D_jd(pn,Zbremplasma.ZXf0_i{i_test,j_test}(:,1),0,1,'','','',NaN,'','','-','non','c',2);
+graph1D_jd(pn,Zbremplasma.ZXf0_i1{i_test,j_test}(:,1),0,1,'p_{||}/p_{Te}^{ref}',ylab,tit,NaN,'','','--','non','k',2);
 grid on,zoom on
-legend('Forward initial','Forward reconstructed (Legendre)','Backward initial','Backward reconstructed (Legendre)')
+legend('Forward initial','Forward reconstructed (Legendre)','Backward initial','backward reconstructed (Legendre)')
 %
 % Contour plot of the electron distribution function
 %

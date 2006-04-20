@@ -353,7 +353,5 @@ equilDKE.ap = ap;
 equilDKE.xmhu0T2 = xmhu0T2;
 equilDKE.xdV_dke = xdV_dke;
 equilDKE.xdA_dke = xdA_dke;
-equilDKE.sgnIP = equil.sgnIP;%Sign of the toroidal current direction when the tokamak is seen from the top (trigonometric direction)
-equilDKE.sgnBT = equil.sgnBT;%Sign of the toroidal magnetic field direction when the tokamak is seen from the top (trigonometric direction)
 
 

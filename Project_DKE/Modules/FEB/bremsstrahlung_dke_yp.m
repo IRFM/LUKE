@@ -1,4 +1,4 @@
-function  [Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,equilDKE,radialDKE,mksa,momentumDKE,dke_out,Zbremchord,hxr,hxrparam)
+function  [Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,display,equilDKE,radialDKE,mksa,momentumDKE,dke_out,Zbremchord,hxr,hxrparam)
 %
 % Calculates the plasma bremsstrahlung emission. Call first the function bremchord_dke_yp.m
 %
@@ -24,7 +24,7 @@ function  [Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,equilDKE,radialDKE,mksa
 % by Joan Decker <jodecker@mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 %
 if nargin < 10,
-   error('Not enough arguments in bremshtrahlung_dke_yp')
+   error('Not enough input arguments in bremshtrahlung_dke_yp')
 end
 %	
 vschords = Zbremchord.vschords;
@@ -32,6 +32,7 @@ psin_hxr = Zbremchord.psin_hxr;
 theta_hxr = Zbremchord.theta_hxr;
 PSI_hxr = Zbremchord.PSI_hxr;
 mask_hxr = Zbremchord.mask_hxr;
+Ipdir_mfl_lcs = Zbremchord.Ipdir_mfl_lcs;
 %
 ne_ref = mksa.ne_ref;
 betath_ref = mksa.betath_ref;
@@ -42,7 +43,7 @@ mhu = momentumDKE.mhu;
 dpn = momentumDKE.dpn;
 pn = momentumDKE.pn;
 %
-r_dke = radial.r_dke;
+r_dke = radialDKE.r_dke;
 %
 pnmax_S = dkeparam.pnmax_S;
 bounce_mode = dkeparam.bounce_mode;
@@ -73,17 +74,15 @@ ap = equilDKE.ap;
 xmhu0T2 = equilDKE.xmhu0T2;
 xdV_dke = equilDKE.xdV_dke;
 xdA_dke = equilDKE.xdA_dke;
-sgnIP = equil.sgnIP;%Sign of the toroidal current direction when the tokamak is seen from the top (trigonometric direction)
-sgnBT = equil.sgnBT;%Sign of the toroidal magnetic field direction when the tokamak is seen from the top (trigonometric direction)
 %
 xzni_norm = xzni(:,r_dke)/ne_ref;
 xne_norm = xne(r_dke)/ne_ref;
 xrho = xrho(r_dke);
 %
-XXfinit = dke_out.XXfinit_ref(:,:,r_dke);
-XXf0 = dke_out.XXf0_ref(:,:,r_dke);
-XXf0_tp = dke_out.XXf0_tp_ref(:,:,r_dke);
-XXf0_g = dke_out.XXf0_g_ref(:,:,r_dke);
+XXfinit = dke_out.XXfinit(:,:,r_dke);
+XXf0 = dke_out.XXf0(:,:,r_dke);
+XXf0_tp = dke_out.XXf0_tp(:,:,r_dke);
+XXf0_g = dke_out.XXf0_g(:,:,r_dke);
 %
 pn2 = pn.*pn;
 gamma = sqrt(1 + pn2*betath_ref^2);
@@ -171,8 +170,8 @@ for i = 1:size(psin_hxr,1),%radial position
 			Xf0_g_i = interp1(mhu_hxr(:),Xf0_g_hxr',x_leg(:),method)';
 %
 			Xf0_c = (Xf0_i.*(w_leg*ones(1,size(Xf0_i,1)))')*Pm';
-		   Xf0_tp_c = (Xf0_tp_i.*(w_leg*ones(1,size(Xf0_tp_i,1)))')*Pm';
-		   Xf0_g_c = (Xf0_g_i.*(w_leg*ones(1,size(Xf0_g_i,1)))')*Pm';
+		    Xf0_tp_c = (Xf0_tp_i.*(w_leg*ones(1,size(Xf0_tp_i,1)))')*Pm';
+		    Xf0_g_c = (Xf0_g_i.*(w_leg*ones(1,size(Xf0_g_i,1)))')*Pm';
 %
 			Xf0_c1 = permute(repmat(reshape(Xf0_c',n_gauleg+1,size(XXf0,1),1),[1,1,1,length(kphot)]),[1,2,4,3]);
 			Xf0_tp_c1 = permute(repmat(reshape(Xf0_tp_c',n_gauleg+1,size(XXf0_tp,1),1),[1,1,1,length(kphot)]),[1,2,4,3]);
@@ -192,7 +191,7 @@ for i = 1:size(psin_hxr,1),%radial position
 			Zbremplasma.ZXf0_i{i,j} = Xf0_i;
 			Zbremplasma.ZXf0_i1{i,j} = Xf0_i1;
 %
-% Local bremsstrahlung properties
+% Local bremsstrahlung properties (forward and backward with respect to B direction or p// since p// is taken positive)
 %
 			Zbremplasma.brem_forward{i,j} = permute(reshape(Pm_forward'*(squeeze(ZZIB(i,j,:,:))'.*(ones(size(IB_c1,2)*size(IB_c1,3),1)*cL'))',1,size(IB_c1,2),size(IB_c1,3)),[2,3,1]);%Forward emission
 			Zbremplasma.brem_backward{i,j} = permute(reshape(Pm_backward'*(squeeze(ZZIB(i,j,:,:))'.*(ones(size(IB_c1,2)*size(IB_c1,3),1)*cL'))',1,size(IB_c1,2),size(IB_c1,3)),[2,3,1]);%Backward emission
@@ -234,7 +233,7 @@ for ic = 1:size(vschords,3),%loop on each chord
    end
 %
 	sksid = vschords(10,s_mask,ic);%Zero for exact perpendicular observation or +1 forward, -1 backward, nothing when taking the exact magnetic topology
-	[Pm_bd] = leg_dke_yp(sksid,n_pol);%Legendre polynomial for the cosine of the angle between magnetic field line and line of sight
+	[Pm_bd] = leg_dke_yp(sksid,n_pol);%Legendre polynomial for the cosine of the angle between magnetic field line and line of sight (negative sign because electrons are flowing in the opposite direction to the plasma current)
 	Pm_bd1 = repmat(Pm_bd,[1,1,length(kphot)]);
 %	
 	cL1 = repmat(cL,[1,length(ir_spsi),length(kphot)]);
@@ -254,7 +253,9 @@ for ic = 1:size(vschords,3),%loop on each chord
 		lchord(ic) = 0;%Chord length calculation	   	
 	end
 %
-	info_dke_yp(2,['Line integration for chord #',int2str(ic),'/',int2str(size(vschords,3)),' done']);
+    if display.display_mode >= 1,
+	   info_dke_yp(2,['Line integration for chord #',int2str(ic),'/',int2str(size(vschords,3)),' done']);
+    end
 end	
 %
 Zbremplasma.kphot = kphot;

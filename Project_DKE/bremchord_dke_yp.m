@@ -1,11 +1,12 @@
-function [Zbremchord] = bremchord_dke_yp(equilDKE,radialDKE,hxr,hxrparam);
+function [Zbremchord,equilHXR] = bremchord_dke_yp(display,equil,radialDKE,Zcurr,hxr,hxrparam);
 %
 % This function calculates chord positions for bremsstrahlung tomography in a torus along unit vector g from DKE grid structure
 %
 % INPUTS
 %
-%       - equilDKE: Magnetic equilibrium structure used by DKE
+%       - equil: Magnetic equilibrium structure from numerical magnetic equilibrium code (no interpolation)
 %       - radialDKE: Radial grid structure used by DKE
+%       - dke_out: DKE data output
 %       - hxr: Bremsstrahlung structure
 %       - hxrparam : Bremsstrahlung calculation and display parameter structure
 %
@@ -17,17 +18,17 @@ function [Zbremchord] = bremchord_dke_yp(equilDKE,radialDKE,hxr,hxrparam);
 %          * Zbremchord.theta_hxr: poloidal angle values where the distribution function is calculated for the bremsstrahlung emission [npsi,ntheta]
 %          * Zbremchord.PSI_hxr: B/Bmin where the distribution function is calculated for the bremsstrahlung emission [npsi,ntheta]
 %          * Zbremchord.mask_hxr: locations where the distribution function is calculated for the bremsstrahlung emission [npsi,ntheta]
-%
+%       - equilHXR: magnetic equilibrium structure optimized for HR
+%       calculations
 % by J. Decker (jodecker@alum.mit.edu) and Y. Peysson (yves.peysson@cea.fr)
 %
 %WARNING: the definitions used in the DKE code, and here crucial for HXR calculations are the following
-%         1) the frame (psi,s,phi) is direct
-%         2) BT.phi > 0 (sgnBT > when BT turns in trigonometric direction when the tokamak is seen from the top. Definition used in DKE. Idem for the toroidal current Ip)
-%         3) Bp.s > 0
-% The consequence is that when BT.Ip > 0, (Ip is the plasma current vector) psi increases from the plasma center to the edge (the vector psi goes out of the plasma)
-% In most machines, BT is clockwise when the machine is viewed from the top (Z axis is positive towards the top) 
-% With the definitions above, if Ip is positive, psi is turned outward, Bp is counterclockwise poloidally, and s too. The Ampere theorem is OK !
-% The HXR diagnostic arrangement is taking this frame of reference. Check the figures. Take care if BT is counterclockwise...
+%         1) the toroidal frame (R,Z,phi) is direct (phi is positive clockwise when the tokamak is seen from the top)
+%         2) the poloidal frame (r,theta,phi) is direct
+%         3) (psi,s,phi) must be direct : if Ip.phi > 0, then B.theta > 0 and psi > 0, and s.theta > 0 (s as the same direction of theta)
+%         4) the sign of psi is the sign of Ip.phi
+% With the definitions above, if Ip is positive, psi is turned outward, Btheta is counterclockwise poloidally, and s too. The Ampere theorem is OK !
+% The HXR diagnostic arrangement is taking this frame of reference.
 %
 if nargin < 4,
    error('Not enough arguments in bremchord_dke_yp')
@@ -40,28 +41,24 @@ ns = hxrparam.ns;
 xpsin = radialDKE.xpsin_f_dke;
 xpsin_S = radialDKE.xpsin_S_dke;
 %
-theta = equilDKE.mtheta;
-ppsin = equilDKE.xpsin;
-psia = equilDKE.psia;
-ptR = equilDKE.XR;
-ptZ = equilDKE.XZ;
-ptBR = equilDKE.XBR;
-ptBZ = equilDKE.XBZ;
-ptBphi = equilDKE.XBphi;
-ptB0 = equilDKE.xB0;
-ptR0 = equilDKE.xR0;
-ptBT0 = equilDKE.xBT0;
-ptBp0 = equilDKE.xBp0;
-ptrho = equilDKE.xrho;
-sgnIP = equilDKE.sgnIP;
-sgnBT = equilDKE.sgnBT;
+[equilHXR] = equilibrium_jd(equil,radialDKE,display,'spline',mfactor);%Magnetic equilibrium for HXR
+%
+theta = equilHXR.mtheta;
+ppsin = equilHXR.xpsin;
+psia = equilHXR.psia;
+ptR = equilHXR.XR;
+ptZ = equilHXR.XZ;
+ptBR = equilHXR.XBR;
+ptBZ = equilHXR.XBZ;
+ptBphi = equilHXR.XBphi;
+ptB0 = equilHXR.xB0;
+ptR0 = equilHXR.xR0;
+ptBT0 = equilHXR.xBT0;
+ptBp0 = equilHXR.xBp0;
+ptrho = equilHXR.xrho;
 %
 ns = abs(ns);%Force ns to be always positive
 nchords = length(hxr.alpha_hxr);%chord number
-IPBT = -sgnIP*sgnBT;%relative cosine of the toroidal current to the poloidal one
-%
-ptBR = -sign(IPBT)*ptBR;%Ip is positive, psi is turned outward, Bp is counterclockwise -> negative sign
-ptBZ = -sign(IPBT)*ptBZ;%Ip is positive, psi is turned outward, Bp is counterclockwise -> negative sign
 %
 Rp = ptR(1,1);%Plasma major radius (m)
 Zp = ptZ(1,1);%Plasma vertical position (m)
@@ -73,8 +70,8 @@ smax = 3*(Rp + ap);%maximum chord length = R_hxr+a_hxr
 s = linspace(-smax,0,ns)'*ones(1,nchords);%for nchords (s negative by definition)
 % Poloidal plot
 for ir = 1:length(xpsin_S)
-   RR_pol(ir,:) = interp1(ppsin,ptR,xpsin_S(ir),method);
-   ZZ_pol(ir,:) = interp1(ppsin,ptZ,xpsin_S(ir),method);
+    RR_pol(ir,:) = interp1(ppsin,ptR,xpsin_S(ir),method);
+    ZZ_pol(ir,:) = interp1(ppsin,ptZ,xpsin_S(ir),method);
 	BR_pol(ir,:) = interp1(ppsin,ptBR,xpsin_S(ir),method);
 	BZ_pol(ir,:) = interp1(ppsin,ptBZ,xpsin_S(ir),method);
 end
@@ -105,8 +102,9 @@ BZ_mfl_lcs = interp1(theta,ptBZ(end,:),theta_mfl_lcs,method);
 Bphi_mfl_lcs = interp1(theta,ptBphi(end,:),theta_mfl_lcs,method);
 %
 ptBtheta = -ptBR.*sin(ones(size(ppsin(:)))*theta) + ptBZ.*cos(ones(size(ppsin(:)))*theta);
-Ipdir = sign(ptBtheta);%Btheta > 0 (clockwise) then Ip is counterclickwise from the top view (Bphi > 0, clockwise from top view). May change as function of plasma minor radius (negative shear case)
+Ipdir = sign(ptBtheta);%Btheta < 0 (clockwise poloidal) then Ip is counterclockwise toroidally from the top view (positive trigonometric). May change as function of plasma minor radius (negative shear case)
 Ipdir_mfl_lcs = sign(interp1(theta,Ipdir(end,:),theta_mfl_lcs,method));%Sign of Ip on the last closed magnetic surface
+Ipdkedir_mfl_lcs = -sign(Zcurr.x_tot_fsav(end))*ones(size(Ipdir_mfl_lcs));%Sign of the current calculated by DKE (- because of the elctron charge). If Ipdkedir_mfl_lcs and Ipdir_mfl_lcs, have the same sign, it is cocurrent, otherwise it is countercurrent
 %
 BX_mfl_lcs = BR_mfl_lcs.*cos(phi_mfl) - Bphi_mfl_lcs.*sin(phi_mfl);
 BY_mfl_lcs = BR_mfl_lcs.*sin(phi_mfl) + Bphi_mfl_lcs.*cos(phi_mfl);
@@ -195,9 +193,9 @@ gZ_hxr(~mask) = NaN;
 sBR=griddata(ptR,ptZ,ptBR,sR,sZ);
 sBZ=griddata(ptR,ptZ,ptBZ,sR,sZ);
 sBphi=griddata(ptR,ptZ,ptBphi,sR,sZ);
-sIpdir=sign(griddata(ptR,ptZ,Ipdir,sR,sZ));%sign function to enforce +/- 1. Only the sign is important here
+%sIpdir=sign(griddata(ptR,ptZ,Ipdir,sR,sZ));%sign function to enforce +/- 1. Only the sign is important here
 sB = sqrt(sBR.^2 + sBZ.^2 + sBphi.^2);
-sksid = -sIpdir.*((sBR.*cos(sphi) - sBphi.*sin(sphi)).*gX_hxr + (-sBR.*sin(sphi) + sBphi.*cos(sphi)).*gY_hxr + sBZ.*gZ_hxr)./sB;%cosine between magnetic field line and chord direction (towards the detector)
+sksid = ((sBR.*cos(sphi) - sBphi.*sin(sphi)).*gX_hxr + (-sBR.*sin(sphi) + sBphi.*cos(sphi)).*gY_hxr + sBZ.*gZ_hxr)./sB;%cosine between magnetic field line and chord direction (towards the detector)
 %
 vschords = zeros(16,ns,nchords);
 vschords(1,:,:) = s;
@@ -237,8 +235,9 @@ Zbremchord.X_mfl_lcs = X_mfl_lcs;
 Zbremchord.Y_mfl_lcs = Y_mfl_lcs;
 Zbremchord.Z_mfl_lcs = Z_mfl_lcs;
 Zbremchord.BX_mfl_lcs = BX_mfl_lcs;
-Zbremchord.BY_mfl_lcs = BX_mfl_lcs;
+Zbremchord.BY_mfl_lcs = BY_mfl_lcs;
 Zbremchord.Ipdir_mfl_lcs = Ipdir_mfl_lcs;
+Zbremchord.Ipdkedir_mfl_lcs = Ipdkedir_mfl_lcs;
 Zbremchord.sR = sR;
 Zbremchord.sphi = sphi;
 Zbremchord.XX_tor_min = XX_tor_min;
@@ -257,7 +256,4 @@ Zbremchord.psin_hxr = psin_hxr;
 Zbremchord.theta_hxr = theta_hxr;
 Zbremchord.PSI_hxr = PSI_hxr;
 Zbremchord.mask_hxr = mask_hxr;
-
-
-
-
+%
