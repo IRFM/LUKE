@@ -212,7 +212,7 @@ elseif dkeparam.dtn < 0,
     time_scheme = 2;%Crank-Nicholson differencing scheme
 end 
 %
-if isempty(MMXR_f_t) == 0, radial_mode = 1,else radial_mode = 0;end
+if isempty(MMXR_f_t) == 0, radial_mode = 1;else radial_mode = 0;end
 %
 spparms('default');%Set parameters for sparse matrix ordering algorithms and direct linear equation solver MatLab build-in functions only
 spparms('supernd',4);%Set parameters for sparse matrix ordering algorithms and direct linear equation solver MatLab build-in functions only
@@ -221,6 +221,8 @@ spparms('rreduce',4);%Set parameters for sparse matrix ordering algorithms and d
 %************************************************** Simulation parameter display ******************************************************** 
 %
 if display_mode >=1,
+    disp('-------------------------------------------------------------------------------------------------------------------');
+    disp('-------------------------------------------------------------------------------------------------------------------');
     disp('Kinetic calculation parameters: ');
 %Numerical transient operation
     if (store_mode == 0), disp('   - Matrices storage in RAM (fast mode)');
@@ -740,7 +742,7 @@ else
     XXf0_g = zeros(size(XXf0));
 end
 %  
-if dkeparam.coll_mode == 3,%Lorentz model (test mode only, see documentation)
+if dkeparam.coll_mode == 3 & dke_mode == 1,%Lorentz model (test mode only, see documentation)
     for ir_dke = 1:nr_dke,
         jr2 = rdke(ir_dke);
         XXf0_L_tp(:,:,jr2) = -xftp_norm(jr2)*(xdlnnedpsi(jr2) + xdlnTedpsi(jr2)*(Xpn2/xTe_norm(jr2)/2 - 1.5)).*Xpn.*Xmhu.*XXfM(:,:,jr2);

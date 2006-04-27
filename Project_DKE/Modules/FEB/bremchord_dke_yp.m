@@ -57,6 +57,8 @@ ptBT0 = equilHXR.xBT0;
 ptBp0 = equilHXR.xBp0;
 ptrho = equilHXR.xrho;
 %
+if length(ppsin)==1,error('Bremsstrahlung calculations cannot be performed when DKE results are obtained for a single radial position !');end
+%
 ns = abs(ns);%Force ns to be always positive
 nchords = length(hxr.alpha_hxr);%chord number
 %

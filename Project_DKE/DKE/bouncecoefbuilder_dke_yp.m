@@ -73,7 +73,10 @@ for ir = 1:nr,
         jmhut_min(ir) = min(find(Zmask_f0_Tm{ir})); 
         jmhut_max(ir) = max(find(Zmask_f0_Tp{ir})); 
         djmhut(ir) = (jmhut_max(ir) - jmhut_min(ir) + 1)/2;
-        ns_f(ir) = djmhut(ir);      
+        ns_f(ir) = djmhut(ir);
+        if djmhut(ir) <= 3,
+           error(['WARNING: Not enough pitch-angle grid points in the bounce region for accurate bounce-averaged calculations (increasing nmhu may solve the problem) !'])
+        end
     else
         Zmask_f0_t{ir} = logical(ones(1,nmhu));%All electrons are selected
         ns_f(ir) = 0;%Number of mhu values that are removed for implicit bounce averaged calculations       

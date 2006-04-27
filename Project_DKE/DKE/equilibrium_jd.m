@@ -327,6 +327,7 @@ if display_mode >=1,
 	disp('-------------------------------------------------------------------------------------------------------------------');
 end
 %
+equilDKE.tokname = equil.id;
 equilDKE.mtheta = mtheta;
 equilDKE.xpsin = xpsin;
 equilDKE.psia = psia;

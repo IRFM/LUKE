@@ -45,7 +45,7 @@ end
 %
 xpsin_S_dke = sort(xpsin_S_dke);
 nr_S = length(xpsin_S_dke);
-psinmin = 1e-3;
+psinmin = 1e-5;%May be reduced but often need larger number of pitch-angle grid points for DKE (increasing nmhu may help)
 psinmax = 1-psinmin;
 %
 if nr_S == 1,%Case of local studies, no fast electron transport

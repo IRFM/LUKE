@@ -51,8 +51,8 @@ if ~isempty(ripple),
 			end
 %			Ncoils = 1;%Ncoils is here forced to 1, as prescribed in Ref. M. Ju et al., Phys. Plasmas, 9 (2002) 493. Upper bound of ripple losses is then calculated
 %			xNq(ir) = Ncoils*xq(ir);%Exact N may be used but large values may lead to numerical instabilities due to round-off errors
-			[xthetabanana(ir),xthetaloss(ir),xpndetrap(ir),xEseuil(ir),xdeltaripple(ir)] = detrapmj3(xZeff(ir),ap,xBT0(ir),Rp,BeLi,Ip,xne(ir),xrho(ir));%WARNING: Only valid for the TORE SUPRA tokamak
-			xpndetrap(ir) = xpndetrap(ir)/mksa.betath_ref;
+			[xthetabanana(ir),xthetaloss(ir),pndetrap,xEseuil(ir),xdeltaripple(ir)] = detrapmj3(xZeff(ir),ap,xBT0(ir),Rp,BeLi,Ip,xne(ir),xrho(ir));%WARNING: Only valid for the TORE SUPRA tokamak
+			xpndetrap(ir) = pndetrap/mksa.betath_ref;
 %
 			xmhusupertrap(ir) = sin(pi*xthetaloss(ir)/180);
 			Xmaskrip = (Xpn > xpndetrap(ir)).*(abs(Xmhu) < xmhusupertrap(ir));

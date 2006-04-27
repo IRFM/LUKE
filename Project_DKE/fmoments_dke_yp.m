@@ -19,14 +19,19 @@ X1mmhu2 = gridDKE.X1mmhu2;
 Xdpnm = gridDKE.Xdpnm;
 Xdpnp = gridDKE.Xdpnp;
 Xdmhu = gridDKE.Xdmhu;
-%
+dmhum = gridDKE.dmhum;
 XXdpnm = gridDKE.XXdpnm;
 XXdpnp = gridDKE.XXdpnp;
 XXdmhum = gridDKE.XXdmhum;
 XXdmhup = gridDKE.XXdmhup;
 %
+xR0 = equilDKE.xR0;
+xBT0 = equilDKE.xBT0;
+xB0 = equilDKE.xB0;
+%
 Xgammam = Zmomcoef.Xgammam;
 Xgammap = Zmomcoef.Xgammap;
+v2 = Zmomcoef.v2;
 %
 XXlambda = Zbouncecoef.XXlambda;
 xqtilde = Zbouncecoef.xqtilde;
@@ -473,9 +478,9 @@ if dke_mode == 1,
         %
         XYIntegrand = XYdmhu.*XYdpnm.*XYpnm.*XYpnm.*XYmhu.*XYlambda.*XYSp0_rf_tp1_imj;
         XYIntegrand = sparse(double(iX),double(ixyn),double(XYIntegrand),npn*nmhu,nr*nb*nn_rf);
-        xggradpsi21 = 2*pi*xqratio.*(xR0.*xBT0./xB0).*sum(sum(full(reshape(sum(XYIntegrand),[nr,nb,nn_rf])),3),2);
+        xggradpsi21 = 2*pi*xqratio.*(xR0.*xBT0./xB0).*sum(sum(full(reshape(sum(XYIntegrand),[nr,nb,nn_rf])),3),2)';
         %
-        XYIntegrand = XYdmhum.*XYdpn.*XYpn.*XYpn.*XY1mmhu2m.*XYlambda.*XYRlambda_m.*XYSm0_rf_tp1_ijm;
+        XYIntegrand = XYdmhu.*XYdpn.*XYpn.*XYpn.*XY1mmhu2m.*XYlambda.*XYRlambda_m.*XYSm0_rf_tp1_ijm;
         XYIntegrand = sparse(double(iX),double(ixyn),double(XYIntegrand),npn*nmhu,nr*nb*nn_rf);
         xggradpsi1 = 2*pi*xynqratio.*full(reshape(sum(XYIntegrand),[nr,nb,nn_rf]));
     end
@@ -788,7 +793,12 @@ if dkeparam.coll_mode == 3,%Lorentz model (test mode only, see documentation)
     Zcurr.x_L_tp_fsav = 2*pi*(xqtilde(rdke)./xqbar(rdke)).*(Rp./xR0(rdke)).*(xBT0(rdke)./xB0(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_L_tp(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke).*XXlambda_p2m2p2(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
     Zcurr.x_L_g_fsav = 2*pi*(xq(rdke)./xqbar(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_L_g(:,:,rdke).*XXheaviside(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
     Zcurr.x_L_tot = Zcurr.x_0_fsav + Zcurr.x_L_tp_fsav + Zcurr.x_L_g_fsav;%Total current density
-end 
+end
+%
+%   Current direction generation
+%
+Zcurr.sign_Ip_equil = sign(equilDKE.psia);%Btheta < 0 (clockwise poloidal) then Ip is counterclockwise toroidally from the top view (positive trigonometric). 
+Zcurr.sign_Ip_DKE = -sign(Zcurr.x_tot_fsav(end));%Sign of the current calculated by DKE (- because of the elctron charge). If Zcurr.sign_Ip_equil and Zcurr.sign_Ip_DKE, have the same sign, it is co-current, otherwise it is countercurrent
 %
 %  Wave-induced radial transport by adjoint technique (P. Helander model)
 %
@@ -828,9 +838,9 @@ xRR_primary_fsav = XxRR_fsav(end,:);%Radial profile of primary runaway electron 
 %
 mask_xepsi = find(xepsi_rdke~=0);
 if ~isempty(mask_xepsi)
-    Zcurr.x_B_fsav = Zcurr.x_tot_fsav - 0.5*XxRR_fsav(npn-1,mask_xepsi)*max(v2)./xepsi_rdke(mask_xepsi);%Bulk current as defined by Karney (useful for non-zero large dc electric field only)
+    Zcurr.x_bulk_fsav = Zcurr.x_tot_fsav - 0.5*XxRR_fsav(npn-1,mask_xepsi)*max(v2)./xepsi_rdke(mask_xepsi);%Bulk current as defined by Karney (useful for non-zero large dc electric field only)
 else
-    Zcurr.x_B_fsav = Zcurr.x_tot_fsav;
+    Zcurr.x_bulk_fsav = Zcurr.x_tot_fsav;
 end 
 %
 % Knock-on runaway generation
@@ -875,7 +885,7 @@ end
 %   Volume or surface loss calculations must match if no additional source term 
 %   is added (XXlossripple = XXsource). Otherwise, only the surface loss must be considered
 %
-if sum(sum(sum(XXlossripple))) ~= 0 & isempty(findstr(tokname,'TS')) == 0,
+if sum(sum(sum(XXlossripple))) ~= 0 & isempty(findstr(equilDKE.tokname,'TS')) == 0,
     xMRR_tau = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlossripple(:,:,rdke).*XXf0(:,:,rdke).*XXpn2(:,:,rdke).*XXlambda(:,:,rdke),1),1)';%Flux of electrons leaving the plasma through the loss cone
 %
     XXmaskMRR_im = [zeros(1,nmhu,nr);abs(diff(XXlossripple~=0))];%Mask in p (only nhuloss ~=0 is considered)

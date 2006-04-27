@@ -210,7 +210,7 @@ for ir = 1:nr,
         mhu_t = mhu;
         Xpn2_t = Xpn2;
     elseif bounce_mode == 1,%Full implicit bounce-averaging calculations, fifteen diagonals mode
-        if djmhut(ir) > 3,%At least three points needed in the bounce domain
+         if djmhut(ir) > 3,%At least three points needed in the bounce domain        
             Xa_t = zeros(npn,nmhu - djmhut(ir));
             Xb_t = zeros(npn,nmhu - djmhut(ir));
             Xc_t = zeros(npn,nmhu - djmhut(ir));
@@ -235,10 +235,11 @@ for ir = 1:nr,
             Xf_t(:,Zmask_f0_t_P{ir}) = XXf(:,Zmask_f0_P{ir},ir);
             Xg_t(:,Zmask_f0_t_P{ir}) = XXg(:,Zmask_f0_P{ir},ir);
             Xh_t(:,Zmask_f0_t_P{ir}) = XXh(:,Zmask_f0_P{ir},ir);
-            Xi_t(:,Zmask_f0_t_P{ir}) = XXi(:,Zmask_f0_P{ir},ir);
+            Xi_t(:,Zmask_f0_t_P{ir}) = XXi(:,Zmask_f0_P{ir},ir);             
 %
 %Symmetrization of the trapped region
 %
+
             Xa_t(:,Zmask_f0_t_Tp{ir}) = (XXa(:,Zmask_f0_Tp{ir},ir) + fliplr(XXe(:,Zmask_f0_Tm{ir},ir)))/2;
             Xb_t(:,Zmask_f0_t_Tp{ir}) = (XXb(:,Zmask_f0_Tp{ir},ir) + fliplr(XXb(:,Zmask_f0_Tm{ir},ir)))/2;
             Xc_t(:,Zmask_f0_t_Tp{ir}) = (XXc(:,Zmask_f0_Tp{ir},ir) + fliplr(XXc(:,Zmask_f0_Tm{ir},ir)))/2;
@@ -281,11 +282,10 @@ for ir = 1:nr,
             Xn_t(:,nmhu/2 + 1 - djmhut(ir)) = 0;%df0(pn,mhu=pi/2) = 0
             Xo_t(:,nmhu/2 + 1 - djmhut(ir)) = 0;%df0(pn,mhu=pi/2) = 0
 %       
-            mhu_t = mhu(Zmask_f0_t{ir});            
-            Xpn2_t = Xpn2(:,Zmask_f0_t{ir});
-            
-        else
-            error(['WARNING: Not enough grid point in the bounce region for accurate bounce-averaged calculations at psin = ',num2str(xpsin(ir)),' !'])
+            mhu_t = mhu(Zmask_f0_t{ir});
+            Xpn2_t = Xpn2(:,Zmask_f0_t{ir});           
+         else
+            error(['WARNING: Not enough pitch-angle grid points in the bounce region for accurate bounce-averaged calculations (increasing nmhu may solve the problem) !'])
         end
     end
 %

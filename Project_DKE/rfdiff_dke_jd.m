@@ -137,6 +137,7 @@ mask_m = zeros(0,0,'uint32');%mask of indices in the pitch angle grid
 mask_y = zeros(0,0,'uint32');%mask of indices in the ray list
 mask_r = zeros(0,0,'uint32');%mask of indices in the radial grid
 mask_n = zeros(0,0,'uint32');%mask of indices in the harmonic number list
+mask_dke = zeros(0,0,'uint32');%mask of indices in the harmonic number list
 %
 % Case where no RF wave is to be accounted for
 %
@@ -150,6 +151,7 @@ if nb == 0,
     gridindex_rf.mask_y = mask_y;
     gridindex_rf.mask_r = mask_r;
     gridindex_rf.mask_n = mask_n;
+	gridindex_rf.mask_dke = mask_dke;
     %
     ZXYD_rf.pp_ippj = [];
     ZXYD_rf.pp_ipj = [];

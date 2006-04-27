@@ -273,6 +273,10 @@ if ~isempty(transpfaste),
       XXMr = XXMr.*XXpn2./XXlambda;%Partial Jacobian multiplication
       XXMrp = XXMrp.*XXpn2./XXlambda;%Partial Jacobian multiplication
 %
+      XXMrm(:,:,nr) = zeros(size(npn,nmhu));%Boundary condition at the plasma edge: f = fM
+      XXMr(:,:,nr) =  zeros(size(npn,nmhu));%Boundary condition at the plasma edge: f = fM
+      XXMrp(:,:,nr) = zeros(size(npn,nmhu));%Boundary condition at the plasma edge: f = fM
+%
 % Radial off-diagonal terms for fast electron transport
 %
       if bounce_mode == 0,
@@ -286,6 +290,7 @@ if ~isempty(transpfaste),
          MMXR_f_t = MMXR_f_t + sparse([1+nmhu*npn:nMMXP_f_t],[1:nMMXP_f_t-nmhu*npn],MMrm_t(1+npn*nmhu:nMMXP_f_t),nMMXP_f_t,nMMXP_f_t);
          MMXR_f_t = MMXR_f_t + sparse([1:nMMXP_f_t],[1:nMMXP_f_t],MMr_t,nMMXP_f_t,nMMXP_f_t);    
          MMXR_f_t = MMXR_f_t + sparse([1:nMMXP_f_t-nmhu*npn],[1+npn*nmhu:nMMXP_f_t],MMrp_t(1:nMMXP_f_t-nmhu*npn),nMMXP_f_t,nMMXP_f_t);
+%
          if display_mode >= 1,info_dke_yp(2,['Zero order configuration space matrix calculations done in ',num2str(etime(clock,time0)),' (s)']);end
       elseif bounce_mode == 1,    
          ir = 1;
