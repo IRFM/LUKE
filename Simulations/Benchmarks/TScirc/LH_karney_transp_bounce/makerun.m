@@ -1,7 +1,11 @@
+delete('*.mat')
+delete('*.bin')
+%
 make_equil_TScirc
 make_dkeparam
 make_display
 make_wave_TScirc_LH_karney_offaxis
+make_ohm
 make_transpfaste
 %
 rundke

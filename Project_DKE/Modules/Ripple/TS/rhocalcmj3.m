@@ -1,1 +1,8 @@
-function rho1=rhocalcmj3(E,delta,ne,zeff,a,R0,B0,NBOB);Ej=1.602e-16*E; deltaBmax=bmaxcalcmj3(E,delta,a,R0,B0,NBOB);sigma=sigmacalcmj3(E,delta,ne,zeff,a,R0,B0,NBOB);rho1=5*deltaBmax/(2*sigma*sqrt(2*delta));% facteur 5 devant rho <==> meme resultats que precedents 
+function rho1=rhocalcmj3(E,delta,ne,zeff,a,R0,B0,NBOB);
+
+Ej=1.602e-16*E; 
+
+deltaBmax=bmaxcalcmj3(E,delta,a,R0,B0,NBOB);
+sigma=sigmacalcmj3(E,delta,ne,zeff,a,R0,B0,NBOB);
+rho1=5*deltaBmax/(2*sigma*sqrt(2*delta));
+% facteur 5 devant rho <==> meme resultats que precedents 

@@ -109,8 +109,10 @@ end
 %
 clear xdn xdnr
 %
-dtn = [0.1,1,10,20,50,100];
-epsi = [0:0.02:0.2]
+%WARNING: boundary_mode_f must be 0 
+%
+dtn = [0.1,1,10,20,50,100,200,500,1000];
+epsi=0.2;
 xdn = zeros(length(dtn),length(epsi));
 xdnr = zeros(length(dtn),length(epsi));
 [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
@@ -123,6 +125,10 @@ for i=1:length(dtn)
 	  xdnr(i,j) = dke_out.XxRR_fsav(end,:)*dkeparam.dtn;
    end
 end
+%
+figure,graph1D_jd(dtn,abs(1-xdn),1,1,'Integration time step (dtn)','Particle losses per time step','',NaN,'','','-','non','r',2);hold on
+graph1D_jd(dtn,xdnr,1,1,'Integration time step (dtn)','Particle losses per time step','',NaN,'','','--','non','b',2);
+legend('Numerical','Runaway')
 %	    
 %************************************************************************************************************************************
 eval(['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);

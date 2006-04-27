@@ -25,12 +25,15 @@ else
 	info_dke_yp(2,['DKE data results in file ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat successfully loaded']);
 end
 %
-[Zbremchord] = bremchord_dke_yp(equilDKE,radialDKE,hxr,hxrparam);
-[Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,equilDKE,radialDKE,mksa,momentumDKE,dke_out,Zbremchord,hxr,hxrparam);
+[Zbremchord,equilHXR] = bremchord_dke_yp(display,equil,radialDKE,Zcurr,hxr,hxrparam);
+[Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,display,equilHXR,radialDKE,mksa,momentumDKE,dke_out,Zbremchord,hxr,hxrparam);
 [Zbremdiag] = bremdiag_dke_yp(Zbremplasma,hxr,hxrparam);
 %
 %For display HXR
 %
-%bremchorddisplay_dke_yp(Zbremchord)
-%bremlocaldisplay_dke_yp(equilDKE,dkeparam,momentumDKE,radialDKE,dke_out,mksa,Zbremchord,Zbremplasma,0.3,0)
-%bremdiagdisplay_dke_yp(hxr,Zbremchord,Zbremplasma,Zbremdiag,42,50)
+bremchorddisplay_dke_yp(Zbremchord,1);
+bremlocaldisplay_dke_yp(dkeparam,display,equilHXR,momentumDKE,radialDKE,dke_out,mksa,Zbremchord,Zbremplasma,0.3,180);
+bremdiagdisplay_dke_yp(hxr,Zbremchord,Zbremplasma,Zbremdiag,42,50);
+%
+eval(['save ',path_simul,'HXR_RESULTS_',id_equil,'_',id_simul,'_',id_hxr,'.mat Zbremchord Zbremplasma Zbremdiag equilHXR']);
+info_dke_yp(2,['Data saved in ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'_',id_hxr,'.mat']);

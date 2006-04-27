@@ -13,7 +13,7 @@ display.rho_display = 0.5;%Approximate radial position at which results are disp
 display.dp_cyl = 0.1;%Cylindrical momentum step for contour plot (pth_ref)
 display.nlevel = 30;%Number of level for contour plots
 %
-display.display_mode = 2;%Display mode: (0): no, (1): partial, (2): full
+display.display_mode = 1;%Display mode: (0): no, (1): partial, (2): full
 display.time_pause = 1;%Pause delay for figure display (s)
 display.diary_mode = 0;%Write in a file the output of the code in the MatLab command window: (0) no save, (1) save
 display.auto_mode = 0;%(0): Interactive mode for multiple radius output display, (1): automatic mode for one output display at rho_display

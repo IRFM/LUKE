@@ -46,7 +46,7 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 if exist([path_equil,'EQUIL_',id_equil,'.mat']) == 0,%Magnetic equilibrium
 	info_dke_yp(2,[path_equil,'EQUIL_',id_equil,'.mat does not exist']);
-	break
+	return
 else
 	eval(['load ',path_equil,'EQUIL_',id_equil,'.mat']);
 	info_dke_yp(2,'Structure ''equil'' successfully loaded');
@@ -54,7 +54,7 @@ end
 %
 if exist([path_dkeparam,'DKEPARAM_',id_dkeparam,'.mat']) == 0,%DKE simulation parameters 
 	info_dke_yp(2,[path_dkeparam,'DKEPARAM_',id_dkeparam,'.mat does not exist']);
-	break
+	return
 else
 	eval(['load ',path_dkeparam,'DKEPARAM_',id_dkeparam,'.mat']);
 	info_dke_yp(2,'Structure ''dkeparam'' successfully loaded');
@@ -62,7 +62,7 @@ end
 %
 if exist([path_display,'DISPLAY_',id_display,'.mat']) == 0,%DKE output display parameters
 	info_dke_yp(2,[path_display,'DISPLAY_',id_display,'.mat does not exist']);
-	break
+	return
 else
 	eval(['load ',path_display,'DISPLAY_',id_display,'.mat']);
 	info_dke_yp(2,'Structure ''display'' successfully loaded');
@@ -107,7 +107,83 @@ end
 %
 %************************************************************************************************************************************
 %
-[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+%Study of the ion charge effect of the LHCD efficiency
+%
+equil.zZi = [1,1,1,1];equil.pzni = species_dke_yp(equil.pne,ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 1
+[Znorm,Zcurr_Z1,ZP0_Z1,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+equil.zZi = [1,1,1,2];equil.pzni = species_dke_yp(equil.pne,2*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 2
+[Znorm,Zcurr_Z2,ZP0_Z2,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+equil.zZi = [1,1,1,3];equil.pzni = species_dke_yp(equil.pne,3*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 3
+[Znorm,Zcurr_Z3,ZP0_Z3,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+equil.zZi = [1,1,1,4];equil.pzni = species_dke_yp(equil.pne,4*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 4
+[Znorm,Zcurr_Z4,ZP0_Z4,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+equil.zZi = [1,1,1,5];equil.pzni = species_dke_yp(equil.pne,5*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 5
+[Znorm,Zcurr_Z5,ZP0_Z5,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+equil.zZi = [1,1,1,6];equil.pzni = species_dke_yp(equil.pne,6*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 6
+[Znorm,Zcurr_Z6,ZP0_Z6,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+equil.zZi = [1,1,1,7];equil.pzni = species_dke_yp(equil.pne,7*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 7
+[Znorm,Zcurr_Z7,ZP0_Z7,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+equil.zZi = [1,1,1,8];equil.pzni = species_dke_yp(equil.pne,8*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 8
+[Znorm,Zcurr_Z8,ZP0_Z8,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+equil.zZi = [1,1,1,9];equil.pzni = species_dke_yp(equil.pne,9*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 9
+[Znorm,Zcurr_Z9,ZP0_Z9,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+equil.zZi = [1,1,1,10];equil.pzni = species_dke_yp(equil.pne,10*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 10
+[Znorm,Zcurr_Z10,ZP0_Z10,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+%
+Zi = [1:1:10];
+jlh = [Zcurr_Z1.x_tot_fsav,Zcurr_Z2.x_tot_fsav,Zcurr_Z3.x_tot_fsav,Zcurr_Z4.x_tot_fsav,Zcurr_Z5.x_tot_fsav,Zcurr_Z6.x_tot_fsav,Zcurr_Z7.x_tot_fsav,Zcurr_Z8.x_tot_fsav,Zcurr_Z9.x_tot_fsav,Zcurr_Z10.x_tot_fsav];
+plh = [ZP0_Z1.x_rf_fsav,ZP0_Z2.x_rf_fsav,ZP0_Z3.x_rf_fsav,ZP0_Z4.x_rf_fsav,ZP0_Z5.x_rf_fsav,ZP0_Z6.x_rf_fsav,ZP0_Z7.x_rf_fsav,ZP0_Z8.x_rf_fsav,ZP0_Z9.x_rf_fsav,ZP0_Z10.x_rf_fsav];
+pcoll = -[ZP0_Z1.x_c_fsav,ZP0_Z2.x_c_fsav,ZP0_Z3.x_c_fsav,ZP0_Z4.x_c_fsav,ZP0_Z5.x_c_fsav,ZP0_Z6.x_c_fsav,ZP0_Z7.x_c_fsav,ZP0_Z8.x_c_fsav,ZP0_Z9.x_c_fsav,ZP0_Z10.x_c_fsav];
+%
+etalh = jlh./plh;
+vparmin = 1/(wave.rays{1}.sNpar(1)+imag(wave.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
+vparmax = 1/(wave.rays{1}.sNpar(1)-imag(wave.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
+etalh_th = 0.7*4.0*((vparmax^2-vparmin^2)/log(vparmax/vparmin))./(5+Zi);
+%
+figure,graph1D_jd(Zi,jlh,0,0,'Main ion charge','j_{lh}',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{||} = ',num2str(1)],NaN,'','','-','non','r',2);
+figure,graph1D_jd(Zi,plh,0,0,'Main ion charge','p_{lh} and p_{coll}',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{||} = ',num2str(1)],NaN,'','','-','non','r',2);hold on
+graph1D_jd(Zi,pcoll,0,0,'Main ion charge','p_{lh} and p_{coll}','',NaN,'','','-','non','b',2);hold on
+legend('LH power','Collision power')
+figure,graph1D_jd(Zi,etalh,0,0,'Main ion charge','LH CD efficiency \eta_{lh}',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{||} = ',num2str(1)],NaN,'','','-','non','r',2);hold on
+graph1D_jd(Zi,etalh_th,0,0,'Main ion charge','LH CD efficiency \eta_{lh}',[],NaN,'','','-','non','b',1);
+legend('DKE code','1-D modified model')
+%
+% Study of the D|| on the LHCD efficiency (Zeff = 1)
+%
+equil.zZi = [1,1,1,1];equil.pzni = species_dke_yp(equil.pne,ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 1
+P0_D1 = waves{1}.rays{1}.P0;%for D|| = 1
+%
+waves{1}.rays{1}.P0 = 0.1*P0_D1;%for D|| = 0.1
+[Znorm,Zcurr_D01,ZP0_D01,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+waves{1}.rays{1}.P0 = 0.2*P0_D1;%for D|| = 0.2
+[Znorm,Zcurr_D02,ZP0_D02,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+waves{1}.rays{1}.P0 = 0.5*P0_D1;%for D|| = 0.5
+[Znorm,Zcurr_D05,ZP0_D05,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+waves{1}.rays{1}.P0 = P0_D1;%for D|| = 1
+[Znorm,Zcurr_D1,ZP0_D1,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+waves{1}.rays{1}.P0 = 2*P0_D1;%for D|| = 2
+[Znorm,Zcurr_D2,ZP0_D2,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+waves{1}.rays{1}.P0 = 5*P0_D1;%for D|| = 5
+[Znorm,Zcurr_D5,ZP0_D5,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+waves{1}.rays{1}.P0 = 10*P0_D1;%for D|| = 10
+[Znorm,Zcurr_D10,ZP0_D10,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+waves{1}.rays{1}.P0 = 20*P0_D1;%for D|| = 20
+[Znorm,Zcurr_D20,ZP0_D20,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+%
+Dlh = [0.1,0.2,0.5,1,2,5,10,20];
+jlh1 = [Zcurr_D01.x_tot_fsav,Zcurr_D02.x_tot_fsav,Zcurr_D05.x_tot_fsav,Zcurr_D1.x_tot_fsav,Zcurr_D2.x_tot_fsav,Zcurr_D5.x_tot_fsav,Zcurr_D10.x_tot_fsav,Zcurr_D20.x_tot_fsav];
+plh1 = [ZP0_D01.x_rf_fsav,ZP0_D02.x_rf_fsav,ZP0_D05.x_rf_fsav,ZP0_D1.x_rf_fsav,ZP0_D2.x_rf_fsav,ZP0_D5.x_rf_fsav,ZP0_D10.x_rf_fsav,ZP0_D20.x_rf_fsav];
+pcoll1 = -[ZP0_D01.x_c_fsav,ZP0_D02.x_c_fsav,ZP0_D05.x_c_fsav,ZP0_D1.x_c_fsav,ZP0_D2.x_c_fsav,ZP0_D5.x_c_fsav,ZP0_D10.x_c_fsav,ZP0_D20.x_c_fsav];
+etalh1 = jlh1./plh1;
+etalh1_th = (0.7*4.0*((vparmax^2-vparmin^2)/log(vparmax/vparmin))./(5+1))*ones(size(Dlh));
+%
+figure,graph1D_jd(Dlh,jlh1,0,0,'D_{||lh}','j_{lh}',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', Zi = ',num2str(1)],NaN,'','','-','non','r',2);
+figure,graph1D_jd(Dlh,plh1,0,0,'D_{||lh}','p_{lh} and p_{coll}',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', Zi = ',num2str(1)],NaN,'','','-','non','r',2);hold on
+graph1D_jd(Dlh,pcoll1,0,0,'D_{||lh}','p_{lh} and p_{coll}','',NaN,'','','-','non','b',2);hold on
+legend('LH power','Collision power')
+figure,graph1D_jd(Dlh,etalh1,0,0,'D_{||lh}','LH CD efficiency \eta_{lh}',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', Zi = ',num2str(1)],NaN,'','','-','non','r',2);hold on
+graph1D_jd(Dlh,etalh1_th,0,0,'Main ion charge','LH CD efficiency \eta_{lh}',[],NaN,'','','-','non','b',1);
+legend('DKE code','1-D modified model')
 %	    
 %************************************************************************************************************************************
 eval(['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);

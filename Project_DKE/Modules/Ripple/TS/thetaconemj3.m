@@ -70,42 +70,43 @@ dis         = nZ-nZastar;
 dis1        = cat(2,dis(ind),0);
 dis2        = cat(2,0,dis(ind));
 indval         = find((dis1.*dis2) <=0);
-if length(indval) > 1,
-   indval(1)      = [];
-   indval(end)    = [];
-else 
-   indval =[];
+%if length(indval) > 1,
+%   indval(1)      = [];
+%   indval(end)    = [];
+%else 
+%   indval =[];
+%end
+indval(1)      = [];
+indval(end)    = [];
+indRb        = ind(indval-1);
+Rb           = nRastar(indRb);
+Zb           = nZastar(indRb);
+[Rb,iRb]     = max(Rb);
+Zb           = Zb(iRb);
+
+if rho>0.7 & length(indRb) ==0 
+   Rb = 10;
+   Zb = 10;
 end
-   indRb        = ind(indval-1);
-   Rb           = nRastar(indRb);
-   Zb           = nZastar(indRb);
-   [Rb,iRb]     = max(Rb);
-   Zb           = Zb(iRb);
 
-   if rho>0.7 & length(indRb) ==0 
-      Rb = 10;
-      Zb = 10;
-   end
+mulim           = zeros(size(rhos));
+thetabanane     = zeros(size(rhos));
+thetaloss       = zeros(size(rhos));
+thetaZBC        = zeros(size(rhos));
 
-  mulim           = zeros(size(rhos));
-  thetabanane     = zeros(size(rhos));
-  thetaloss       = zeros(size(rhos));
-  thetaZBC        = zeros(size(rhos));
+mubanane        = sqrt(2*rhos./(R0+rhos));
+thetabanane     = asin(mubanane)*180/pi;
 
-  mubanane        = sqrt(2*rhos./(R0+rhos));
-  thetabanane     = asin(mubanane)*180/pi;
+ind1            = find(Rb>0&Rb<10&(Rb-R0)>0);
+thetaZBC(ind1)  = atan(Zb(ind1)./(Rb(ind1)-R0));
+ind2            = find(Rb>0&Rb<10&(Rb-R0)<=0);
+thetaZBC(ind2)  = 0.5*pi+atan((R0-Rb(ind2))./Zb(ind2));
+ind3            = find(Rb==10);
+thetaZBC(ind3)  = pi*ones(1,length(ind3));
+thetaZBC        = thetaZBC*180/pi;
 
-  ind1            = find(Rb>0&Rb<10&(Rb-R0)>0);
-  thetaZBC(ind1)  = atan(Zb(ind1)./(Rb(ind1)-R0));
-  ind2            = find(Rb>0&Rb<10&(Rb-R0)<=0);
-  thetaZBC(ind2)  = 0.5*pi+atan((R0-Rb(ind2))./Zb(ind2));
-  ind3            = find(Rb==10);
-  thetaZBC(ind3)  = pi*ones(1,length(ind3));
-  thetaZBC        = thetaZBC*180/pi;
-
-  ind             = [ind1 ind2];
-  mulim(ind)      = sqrt(rhos(ind).*(1-cos(thetaZBC(ind)*pi/180))./(rhos(ind)+R0));
-  mulim(ind3)     = sqrt(2*rhos(ind3)./(R0+rhos(ind3)));
-  thetaloss(ind)  = asin(mulim(ind))*180/pi;
-  thetaloss(ind3) = asin(mulim(ind3))*180/pi;
-
+ind             = [ind1 ind2];
+mulim(ind)      = sqrt(rhos(ind).*(1-cos(thetaZBC(ind)*pi/180))./(rhos(ind)+R0));
+mulim(ind3)     = sqrt(2*rhos(ind3)./(R0+rhos(ind3)));
+thetaloss(ind)  = asin(mulim(ind))*180/pi;
+thetaloss(ind3) = asin(mulim(ind3))*180/pi;

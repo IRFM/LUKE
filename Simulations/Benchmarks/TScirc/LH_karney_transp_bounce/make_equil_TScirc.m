@@ -17,32 +17,32 @@ qopt = 0;%Option for q profile. (0): constant (default, uniform current, psi=rho
 %
 % Equilibrium parameters
 %
-ap = 0.7;%  Plasma minor radius on LFS midplane (m)
-Rp = 2.4;%  Plasma major radius on axis (m)
+ap = 0.22;%  Plasma minor radius on LFS midplane (m)
+Rp = 0.68;%  Plasma major radius on axis (m)
 Zp = 0;%  Global plasma vertical shift (m)
-Ip = 1.0;%  Plasma current (MA)  
-Bt = 3.6;%  Toroidal magnetic field on the magnetic axis (T) 
+Ip = -0.68;% Signed value of the plasma current (MA) (with R,Z,phi direct)
+Bt = 4;%  Signed value of the toroidal magnetic field on the magnetic axis (T) (with R,Z,phi direct)
 %
 Zi = [1,1,1,6];%  Ion types: (1) H/D/T, (2) He, ..., (6) C [1,p] (WARNING: Zi must be [1,1,1,imp1,imp2] for hydrogen plasmas)
 mi = [1,2,3,12];%  Ion mass (uma) [1,p] (WARNING: Zi must be [1,2,3,mimp1,mimp2] for hydrogen plasmas)
 fi = [0,1,0];%  Hydrogen isotopic fraction (H/D/T) [1,3] (WARNING: only used when hydrogen plasmas are considered)
 %
-qmin = NaN;%  Safety factor q0 at plasma center
+qmin = 3.2;%  Safety factor q0 at plasma center
 eq = NaN;%  Exponent for q radial profile (q = (qmax - qmin)*(r/a).^eq + qmin, qmax calaculated by the Ampere's theorem at the plasma edge with a circular plasma cross-section)
 %
 beta0 = 0.1;% 
 %
-Te0 = beta0^2*mc2;%  Core electron temperature (keV)
-Tea = 0*Te0;%  Edge electron temperature (keV)
-eTe = 1;%  Exponent for Te profile (Te(r) = (Te0-Tea)*(1-(r/a)^2)^eTe + Tea)
+Te0 = 7.5;%  Core electron temperature (keV)
+Tea = Te0;%  Edge electron temperature (keV)
+eTe = 2;%  Exponent for Te profile (Te(r) = (Te0-Tea)*(1-(r/a)^2)^eTe + Tea)
 %
-ne0 = 2.0e19;%  Core electron density (m-3)
-nea = 0*ne0;%  Edge electron density (m-3)
-ene = 1;%  Exponent for ne profile (ne(r) = (ne0-nea)*(1-(r/a)^2)^ene + nea)
+ne0 = 2.0e20;%  Core electron density (m-3)
+nea = 0.5e20;%  Edge electron density (m-3)
+ene = 0.5;%  Exponent for ne profile (ne(r) = (ne0-nea)*(1-(r/a)^2)^ene + nea)
 %
-Ti0 = Te0;%  Core ion temperature (keV)
-Tia = 0*Ti0;%  Edge ion temperature (keV)
-eTi = 1;%  Exponent for Ti profile (Ti(r) = (Ti0-Tia)*(1-(r/a)^2)^eTi + Tia)
+Ti0 = 4e20;%  Core ion temperature (keV)
+Tia = 0;%  Edge ion temperature (keV)
+eTi = 2;%  Exponent for Ti profile (Ti(r) = (Ti0-Tia)*(1-(r/a)^2)^eTi + Tia)
 %
 Zeff0 = 1;%  Core effective charge (a.u.)
 Zeffa = 1;%  Edge effective charge (a.u.)
@@ -50,6 +50,7 @@ eZeff = 0;%  Exponent for the effective charge (Zeff(r) = (Zeff0-Zeffa)*(1-(r/a)
 %
 equil.zZi = Zi;%[1,ni]
 equil.zmi = mi;%[1,ni]
+equil.fi = fi;%[1,3]
 %
 prho = linspace(0,1,npsi);%Uniform rho grid
 equil.theta = linspace(0,2*pi,ntheta);% Uniform theta grid
@@ -81,14 +82,14 @@ Xtheta = repmat(equil.theta,[npsi,1]);
 equil.R = Rp + ap*Xrho.*cos(Xtheta);
 equil.Z = Zp + ap*Xrho.*sin(Xtheta);
 %
-qmax = ap/Rp*Bt/Bpa;%Cylindrical safety factor at the plasma edge
+qmax = ap/Rp*abs(Bt/Bpa);%Cylindrical safety factor at the plasma edge
 %
 if qopt == 1,
     pq = (qmax - qmin)*prho.^eq + qmin;% Current profile defined by qmin and eq
 else 
     pq = qmax*ones(1,npsi);% Current profile defined with constant q (uniform current density)
 end
-pBpp = prho*ap/Rp*Bt./pq;
+pBpp = sign(Bpa)*prho*ap/Rp*abs(Bt)./pq;
 %
 spBpp = triu(repmat((pBpp(1:npsi-1) + pBpp(2:npsi))'/2,[1,npsi-1]));
 pdprho = diff(prho);
@@ -101,8 +102,6 @@ XBpp = repmat(pBpp',[1,ntheta]);
 equil.BR = -XBpp.*sin(Xtheta)*Rp./equil.R;
 equil.BZ = XBpp.*cos(Xtheta)*Rp./equil.R;
 equil.BPHI = Bt*Rp./equil.R;
-equil.sgnIP = +1;%Sign of the toroidal current direction when the tokamak is seen from the top (trigonometric direction, sgn > 0)
-equil.sgnBT = -1;%Sign of the toroidal magnetic field direction when the tokamak is seen from the top (trigonometric direction, sgn > 0)
 %
 filename = ['EQUIL_',equil.id,'.mat'];
 %

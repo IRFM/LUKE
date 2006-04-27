@@ -59,7 +59,7 @@ dkeparam.equil_mode = 1;%Equilibrium option: (0) circular concentric flux-surfac
 dkeparam.syn_mode = 0;%Synergy calculation: (0) none, (1) yes: the code runs twice, including once without RF or electric fields. (only if dke_mode = 1)
 %
 dkeparam.norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
-dkeparam.boundary_mode_f = 1;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
+dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 dkeparam.prec0_f = 1e-11;%Convergence level of the residu
 dkeparam.nit_f = 1;%Maximum number of iterations for f (> 1)
 dkeparam.initguess_f = 0;%Initial guess for the distribution function: (0) Maxwellian, (1) Fuchs model with Tperp for LH current drive only, (2) from a file
@@ -73,15 +73,15 @@ dkeparam.dtn = 10000;%Integration time step (1/nhuth_ref) (dtn > 0: fully implic
 %
 dkeparam.luproc = 0;%LU matrix inversion method: (-1) No LU, direct inversion, (0) MatLab build-in
 dkeparam.ludroptol = 1e-5;%Drop tolerance for the partial LU decomposition (recipes: droptol = max(1/dtn/nr,param_inv(1)))
-dkeparam.invproc = 1;%Iterative matrix inversion method:  (3) qmr iterative method (LU used), (2) bicg iterative method (LU used), (1) cgs iterative method (LU used), (0) Direct Matlab inversion (LU not used, (-1): MUMPS parallel fortran 95 direct inversion (LU not used) (-2) HYPRE parallel fortran 95 direct inversion (LU not used)
+dkeparam.invproc = -1;%Iterative matrix inversion method:  (3) qmr iterative method (LU used), (2) bicg iterative method (LU used), (1) cgs iterative method (LU used), (0) Direct Matlab inversion (LU not used, (-1): MUMPS parallel fortran 95 direct inversion (LU not used) (-2) HYPRE parallel fortran 95 direct inversion (LU not used)
 dkeparam.mlprecinv = 1e-5;%Accuracy for the MatLab build-in matrix inversion.
 dkeparam.mlmaxitinv = 20;%Maximum number of iterations for iterative method (between 1 and 20 usualy, if empty, mlmaxitinv = min(matrixdim,20). See matlab documentation.
-dkeparam.MUMPSparam.path = '../../../../MUMPS_4.6.1/dke/';%Directory path adress where compiled MUMPS program is located (empty: local directory)
+dkeparam.MUMPSparam.path = '/home/sccp/gsem/peysson/Project_DKE/MUMPS_4.6.1/dke/';%Directory path adress where compiled MUMPS program is located (empty: local directory)
 dkeparam.MUMPSparam.nproc = 2;%number of processor used by MUMPS (depends of the computer framework). Default is 1
 dkeparam.HYPREparam.path = '';%Directory path adress where compiled HYPRE program is located (empty: local directory)
 dkeparam.HYPREparam.nproc = 2;%number of processor used by HYPRE (depends of the computer framework). Default is 1
 %
 dkeparam.store_mode = 0;%Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight
-dkeparam.temppath = '';%Absolute directory path adress where temporary matrices are stored (empty: local directory)
+dkeparam.temppath = '/scratch';%Absolute directory path adress where temporary matrices are stored (empty: local directory)
 %
 eval(['save DKEPARAM_',dkeparam_id,'.mat dkeparam']);
