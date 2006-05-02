@@ -20,13 +20,13 @@ psin_S = [0.001];%Normalized poloidal flux grid where calculations are performed
 rho_S = [];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
 id_equil = 'TScirc';%For plasma equilibrium
-path_equil = '../Shared_file/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_equil = '../Shared_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_dkeparam = 'UNIFORM10010020';%For DKE code parameters
-path_dkeparam = '../Shared_file/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_dkeparam = '../Shared_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_display = 'VISUAL';%For output code display
-path_display = '../Shared_file/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_display = '../Shared_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_ohm = '';%For Ohmic electric contribution
 path_ohm = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
