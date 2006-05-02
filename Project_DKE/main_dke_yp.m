@@ -48,7 +48,7 @@ if ~isempty(waveparam), %initial value of the constant diffusion coefficient
     if sum(sum(isnan(waveparam(:,:,13)))),
        xyPabs_rf_dke_fsav_mksa = 0;%initial absorbed power density estimate
     else
-       xyPabs_rf_dke_fsav_mksa = waveparam(:,:,13).*waveparam(:,:,4).*waveparam(:,:,1)*me*mksa.lnc_e_ref*mksa.wpe_ref^2/(4*pi^2);
+       xyPabs_rf_dke_fsav_mksa = waveparam(:,:,13).*waveparam(:,:,4).*waveparam(:,:,1)*mksa.wmabs2;
     end
 %
     xyPinc_mod = xyPinc_in;
@@ -60,7 +60,7 @@ else
     nit_rf = 1;
     xyPinc_mod = '';
 end  
-residue_rf = '';
+residue_rf = [];
 %
 if nit_rf > 1,
     MMXR_f_t_in = MMXR_f_t*0;%No radial transport for initial quasilinear iterations
@@ -102,13 +102,13 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
     %
     if ~isempty(waveparam),%In the case of RF waves and quasilinear iteration
        if nit_rf > 1,    
-          [ZP0] = fmoments_dke_yp(dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,mksa,waveparam,radial_mode,Zdelta,XXsinksource,...
-              XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
-            ZXXD_rf,ZXXD_rf_tp,ZXXF_rf_tp,xyD0_rf,gridindex_rf);%Calculate RF absorbed power of the distribution function
-    	  if dke_mode >= 1,
+          [ZP0] = fmoments_dke_yp(dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
+            XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
+            ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyD0_rf,gridindex_rf);%Calculate RF absorbed power of the distribution function
+    	  if dkeparam_out.dke_mode >= 1,
 	         xyPabs_rf_dke_fsav_out = ZP0.xy_rf_fsav + ZP0.xy_rf_tp_fsav + ZP0.xy_rf_g_fsav; % flux-surface averaged density of absorbed power.
 	      else
-	         xyPabs_rf_dke_fsav_out = ZP0_ref.xy_rf_fsav; % flux-surface averaged density of absorbed power.
+	         xyPabs_rf_dke_fsav_out = ZP0.xy_rf_fsav; % flux-surface averaged density of absorbed power.
 	      end	    
           xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav_out*mksa.P_ref*1e6;%RF power (W)
           if nit_rf > 1,
@@ -116,7 +116,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
           end
 %
           residue_rf(it_rf) = max(max(abs(xyPinc_mod - xyPinc_mod_old)./xyPinc_in));
-		  if display_mode >= 1,figure(Fig_QLIter),plot(1:it_rf,residue_rf,'r+'),set(gca,'yscale','log'),axis([0,nit_rf,1e-5,1]),drawnow;end
+		  if display.display_mode >= 1,figure(Fig_QLIter),plot(1:it_rf,residue_rf,'r+'),set(gca,'yscale','log'),axis([0,nit_rf,1e-5,1]),drawnow;end
 %
 		  info_dke_yp(2,'---------------------------------------------------------');
           info_dke_yp(2,['Quasilinear iteration : ',int2str(it_rf),', Residu = ',num2str(residue_rf(it_rf)),', delta_rt = ',num2str(delta_rt)]);
@@ -134,7 +134,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
             end
          end     
   %      
-         if residue_rf(it_rf) <= prec_rf & it_rf > 10 & redfac == 1,
+         if residue_rf(it_rf) <= dkeparam_out.prec_rf & redfac == 1 & it_rf > 1%0,
             info_dke_yp(2,['Successfull convergence achieved for ray-tracing coupling after ',int2str(it_rf),' iterations !']);
             break
          else
