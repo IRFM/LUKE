@@ -1,11 +1,8 @@
 delete('*.mat')
 delete('*.bin')
 %
-make_equil_TScirc
-make_dkeparam
-make_display
 make_wave_TScirc_LH_karney
 make_hxr_param
 %
-rundke
+rundke_TScirc_LH_karney
 %runhxr
