@@ -47,6 +47,7 @@ mksa.wpe_ref = sqrt(ne_ref*qe^2/me/e0);%MKSA plasma frequency (s-1)
 pn_ref = momentumDKE.pn;
 mksa.Ec_ref = mc2*(sqrt(1+pn_ref.*pn_ref*mksa.betath_ref^2) - 1);%Fast electron kinetic energy in keV
 %
+mksa.wmabs2 = me*mksa.lnc_e_ref*mksa.wpe_ref^2/(4*pi^2);%coefficient relating the squared electric field amplitude to the diffusion coefficient
 
 
 
