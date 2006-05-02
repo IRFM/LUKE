@@ -17,21 +17,16 @@ Xpnm = gridDKE.Xpnm;
 Xpnp = gridDKE.Xpnp;
 X1mmhu2 = gridDKE.X1mmhu2;
 Xdpnm = gridDKE.Xdpnm;
-Xdpnp = gridDKE.Xdpnp;
+Xdpn = gridDKE.Xdpn;
 Xdmhu = gridDKE.Xdmhu;
-dmhum = gridDKE.dmhum;
+%
 XXdpnm = gridDKE.XXdpnm;
 XXdpnp = gridDKE.XXdpnp;
 XXdmhum = gridDKE.XXdmhum;
 XXdmhup = gridDKE.XXdmhup;
 %
-xR0 = equilDKE.xR0;
-xBT0 = equilDKE.xBT0;
-xB0 = equilDKE.xB0;
-%
 Xgammam = Zmomcoef.Xgammam;
 Xgammap = Zmomcoef.Xgammap;
-v2 = Zmomcoef.v2;
 %
 XXlambda = Zbouncecoef.XXlambda;
 xqtilde = Zbouncecoef.xqtilde;
@@ -39,15 +34,20 @@ xqhat =  Zbouncecoef.xqhat;
 %
 if nargout > 1,
     %
+	xR0 = equilDKE.xR0;
+	xBT0 = equilDKE.xBT0;
+	xB0 = equilDKE.xB0;
+	%
     dpnm = gridDKE.dpnm;
+    dpn = gridDKE.dpn;
     dpnp = gridDKE.dpnp;
     dmhu = gridDKE.dmhu;
+	dmhum = gridDKE.dmhum;
     %
     X1mmhu2m = gridDKE.X1mmhu2m;
     X1mmhu2p = gridDKE.X1mmhu2p;
     Xpn = gridDKE.Xpn;
     Xmhu = gridDKE.Xmhu;
-    Xdpn = gridDKE.Xdpn;
     %
     XXpnm = gridDKE.XXpnm;
     XXpnp = gridDKE.XXpnp;
@@ -58,6 +58,7 @@ if nargout > 1,
     %
     XXgammam = Zmomcoef.XXgammam;
     XXgammap = Zmomcoef.XXgammap;
+	v2 = Zmomcoef.v2;
     %
     XXRlambda_m = Zbouncecoef.XXRlambda_m;
     %
@@ -92,7 +93,7 @@ indexim(2:npn) = indexi(1:npn-1);
 %indexim(1) = indexi(1); since df/dp(p==0) = 0;
 %
 indexip(1:npn-1) = indexi(2:npn);
-%indexip(npn) = indexi(npn); assuming df/dp(p==pmax) = 0;
+%indexip(npn) = indexi(npn); f(p>pmax) = 0 enforced later;
 %
 indexjm(2:nmhu) = indexj(1:nmhu-1);
 %indexjm(1) = indexj(1); since df/dm(m==-1) = 0;
@@ -103,7 +104,7 @@ indexjp(1:nmhu-1) = indexj(2:nmhu);
 XXf0_ij = XXf0;
 %
 XXf0_immj = XXf0_ij(indexim,:,:);
-XXf0_ippj = XXf0_ij(indexip,:,:);
+XXf0_ippj = XXf0_ij(indexip,:,:);XXf0_ippj(npn,:,:) = 0;
 %
 XXf0_imj = (1 - XXdeltap_imj).*XXf0_ij + XXdeltap_imj.*XXf0_immj;
 XXf0_ipj = (1 - XXdeltap_ipj).*XXf0_ippj + XXdeltap_ipj.*XXf0_ij;
@@ -125,7 +126,7 @@ if dke_mode == 1,
     XXf0_tp_ij = XXf0_tp;
     %
     XXf0_tp_immj = XXf0_tp_ij(indexim,:,:);
-    XXf0_tp_ippj = XXf0_tp_ij(indexip,:,:);
+    XXf0_tp_ippj = XXf0_tp_ij(indexip,:,:);XXf0_tp_ippj(npn,:,:) = 0;
     %
     XXf0_tp_imj = (1 - XXdeltap_imj).*XXf0_tp_ij + XXdeltap_imj.*XXf0_tp_immj;
     XXf0_tp_ipj = (1 - XXdeltap_ipj).*XXf0_tp_ippj + XXdeltap_ipj.*XXf0_tp_ij;
@@ -146,7 +147,7 @@ if dke_mode == 1,
     XXf0_g_ij = XXf0_g;
     %
     XXf0_g_immj = XXf0_g_ij(indexim,:,:);
-    XXf0_g_ippj = XXf0_g_ij(indexip,:,:);
+    XXf0_g_ippj = XXf0_g_ij(indexip,:,:);XXf0_g_ippj(npn,:,:) = 0;
     %
     XXf0_g_imj = (1 - XXdeltap_imj).*XXf0_g_ij + XXdeltap_imj.*XXf0_g_immj;
     XXf0_g_ipj = (1 - XXdeltap_ipj).*XXf0_g_ippj + XXdeltap_ipj.*XXf0_g_ij;
@@ -173,11 +174,11 @@ if nargout > 1,
     XXf0_ijm = (1 - XXdeltam_ijm).*XXf0_ij + XXdeltam_ijm.*XXf0_ijmm;
     XXf0_ijp = (1 - XXdeltam_ijp).*XXf0_ippj + XXdeltam_ijp.*XXf0_ij;
     %
-    XXf0_immjm = XXf0_ijp(indexim,:,:);
-    XXf0_ippjm = XXf0_ijp(indexip,:,:);
+    XXf0_immjm = XXf0_ijm(indexim,:,:);
+    XXf0_ippjm = XXf0_ijm(indexip,:,:);XXf0_ippjm(npn,:,:) = 0;
     %
-    XXf0_immjp = XXf0_ijm(indexim,:,:);
-    XXf0_ippjp = XXf0_ijp(indexip,:,:);
+    XXf0_immjp = XXf0_ijp(indexim,:,:);
+    XXf0_ippjp = XXf0_ijp(indexip,:,:);XXf0_ippjp(npn,:,:) = 0;
     %
     XXdf0dmhu_ijm = (XXf0_ij - XXf0_ijmm)./XXdmhum;
     XXdf0dmhu_ijp = (XXf0_ijpp - XXf0_ij)./XXdmhup;
@@ -193,11 +194,11 @@ if nargout > 1,
         XXf0_tp_ijm = (1 - XXdeltam_ijm).*XXf0_tp_ij + XXdeltam_ijm.*XXf0_tp_ijmm;
         XXf0_tp_ijp = (1 - XXdeltam_ijp).*XXf0_tp_ippj + XXdeltam_ijp.*XXf0_tp_ij;
         %
-        XXf0_tp_immjm = XXf0_tp_ijp(indexim,:,:);
-        XXf0_tp_ippjm = XXf0_tp_ijp(indexip,:,:);
+        XXf0_tp_immjm = XXf0_tp_ijm(indexim,:,:);
+        XXf0_tp_ippjm = XXf0_tp_ijm(indexip,:,:);XXf0_tp_ippjm(npn,:,:) = 0;
         %
-        XXf0_tp_immjp = XXf0_tp_ijm(indexim,:,:);
-        XXf0_tp_ippjp = XXf0_tp_ijp(indexip,:,:);
+        XXf0_tp_immjp = XXf0_tp_ijp(indexim,:,:);
+        XXf0_tp_ippjp = XXf0_tp_ijp(indexip,:,:);XXf0_tp_ippjp(npn,:,:) = 0;
         %
         XXdf0dmhu_tp_ijm = (XXf0_tp_ij - XXf0_tp_ijmm)./XXdmhum;
         XXdf0dmhu_tp_ijp = (XXf0_tp_ijpp - XXf0_tp_ij)./XXdmhup;
@@ -212,11 +213,11 @@ if nargout > 1,
         XXf0_g_ijm = (1 - XXdeltam_ijm).*XXf0_g_ij + XXdeltam_ijm.*XXf0_g_ijmm;
         XXf0_g_ijp = (1 - XXdeltam_ijp).*XXf0_g_ippj + XXdeltam_ijp.*XXf0_g_ij;
         %
-        XXf0_g_immjm = XXf0_g_ijp(indexim,:,:);
-        XXf0_g_ippjm = XXf0_g_ijp(indexip,:,:);
+        XXf0_g_immjm = XXf0_g_ijm(indexim,:,:);
+        XXf0_g_ippjm = XXf0_g_ijm(indexip,:,:);XXf0_g_ippjm(npn,:,:) = 0;
         %
-        XXf0_g_immjp = XXf0_g_ijm(indexim,:,:);
-        XXf0_g_ippjp = XXf0_g_ijp(indexip,:,:);
+        XXf0_g_immjp = XXf0_g_ijp(indexim,:,:);
+        XXf0_g_ippjp = XXf0_g_ijp(indexip,:,:);XXf0_g_ippjp(npn,:,:) = 0;
         %
         XXdf0dmhu_g_ijm = (XXf0_g_ij - XXf0_g_ijmm)./XXdmhum;
         XXdf0dmhu_g_ijp = (XXf0_g_ijpp - XXf0_g_ij)./XXdmhup;
@@ -423,44 +424,43 @@ XYdmhu    = single(Xdmhu(iX));
 XYgammam  = single(Xgammam(iX));
 XYgammap  = single(Xgammap(iX));
 XYdpnm    = single(Xdpnm(iX));     
-XYdpnp    = single(Xdpnp(iX));     
+XYdpn     = single(Xdpn(iX));     
 XYlambda  = single(XXlambda(iXX)); 
 %
 xqratio = xqtilde./xqhat;
 xynqratio = repmat(xqratio.',[1,nb,nn_rf]);
 %
-XYIntegrand = XYdmhu.*XYdpnm.*XYpnm.*XYpnm.*XYpnm.*XYlambda.*XYSp0_rf_imj./XYgammam;
-XYIntegrand = sparse(double(iX),double(ixyn),double(XYIntegrand),npn*nmhu,nr*nb*nn_rf);
-xynP0m_rf_fsav = 2*pi*xynqratio.*full(reshape(sum(XYIntegrand),[nr,nb,nn_rf]));
+XYIntegrandm = XYpnm.*XYpnm.*XYpnm.*XYlambda.*XYSp0_rf_imj./XYgammam;
+XYIntegrandp = XYpnp.*XYpnp.*XYpnp.*XYlambda.*XYSp0_rf_ipj./XYgammap;
 %
-XYIntegrand = XYdmhu.*XYdpnp.*XYpnp.*XYpnp.*XYpnp.*XYlambda.*XYSp0_rf_ipj./XYgammap;
-XYIntegrand = sparse(double(iX),double(ixyn),double(XYIntegrand),npn*nmhu,nr*nb*nn_rf);
-xynP0p_rf_fsav = 2*pi*xynqratio.*full(reshape(sum(XYIntegrand),[nr,nb,nn_rf]));
+XYIntegrand = XYdmhu.*XYdpn.*(XYIntegrandm + XYIntegrandp)/2;
 %
-ZP0.xyn_rf_fsav = (xynP0m_rf_fsav + xynP0p_rf_fsav)/2;
+XYIntegrand = sparse(double(iX),double(ixyn),double(XYIntegrand),npn*nmhu,nr*nb*nn_rf);
+%
+ZP0.xyn_rf_fsav = 2*pi*xynqratio.*full(reshape(sum(XYIntegrand),[nr,nb,nn_rf]));
+%
 ZP0.xy_rf_fsav = sum(ZP0.xyn_rf_fsav,3);%sum over harmonic numbers
 ZP0.x_rf_fsav = sum(ZP0.xy_rf_fsav,2);%sum over rays
 %
 if dke_mode == 1,
     %
-    XYIntegrand = XYdmhu.*XYdpnm.*XYpnm.*XYpnm.*XYpnm.*XYlambda.*XYSp0_rf_tp_imj./XYgammam;
-    XYIntegrand = sparse(double(iX),double(ixyn),double(XYIntegrand),npn*nmhu,nr*nb*nn_rf);
-    xynP0m_rf_tp_fsav = 2*pi*xynqratio.*full(reshape(sum(XYIntegrand),[nr,nb,nn_rf]));
+    XYIntegrandm = XYpnm.*XYpnm.*XYpnm.*XYlambda.*XYSp0_rf_tp_imj./XYgammam;
+    XYIntegrandp = XYpnp.*XYpnp.*XYpnp.*XYlambda.*XYSp0_rf_tp_ipj./XYgammap;
     %
-    XYIntegrand = XYdmhu.*XYdpnp.*XYpnp.*XYpnp.*XYpnp.*XYlambda.*XYSp0_rf_tp_ipj./XYgammap;
-    XYIntegrand = sparse(double(iX),double(ixyn),double(XYIntegrand),npn*nmhu,nr*nb*nn_rf);
-    xynP0p_rf_tp_fsav = 2*pi*xynqratio.*full(reshape(sum(XYIntegrand),[nr,nb,nn_rf]));
+    XYIntegrand = XYdmhu.*XYdpn.*(XYIntegrandm + XYIntegrandp)/2;
     %
-    XYIntegrand = XYdmhu.*XYdpnm.*XYpnm.*XYpnm.*XYpnm.*XYlambda.*XYSp0_rf_g_imj./XYgammam;
     XYIntegrand = sparse(double(iX),double(ixyn),double(XYIntegrand),npn*nmhu,nr*nb*nn_rf);
-    xynP0m_rf_g_fsav = 2*pi*xynqratio.*full(reshape(sum(XYIntegrand),[nr,nb,nn_rf]));
     %
-    XYIntegrand = XYdmhu.*XYdpnp.*XYpnp.*XYpnp.*XYpnp.*XYlambda.*XYSp0_rf_g_ipj./XYgammap;
+    ZP0.xyn_rf_tp_fsav = 2*pi*xynqratio.*full(reshape(sum(XYIntegrand),[nr,nb,nn_rf]));
+    %
+    XYIntegrandm = XYpnm.*XYpnm.*XYpnm.*XYlambda.*XYSp0_rf_g_imj./XYgammam;
+    XYIntegrandp = XYpnp.*XYpnp.*XYpnp.*XYlambda.*XYSp0_rf_g_ipj./XYgammap;
+    %
+    XYIntegrand = XYdmhu.*XYdpn.*(XYIntegrandm + XYIntegrandp)/2;
+    %
     XYIntegrand = sparse(double(iX),double(ixyn),double(XYIntegrand),npn*nmhu,nr*nb*nn_rf);
-    xynP0p_rf_g_fsav = 2*pi*xynqratio.*full(reshape(sum(XYIntegrand),[nr,nb,nn_rf]));
     %
-    ZP0.xyn_rf_tp_fsav = (xynP0m_rf_tp_fsav + xynP0p_rf_tp_fsav)/2;
-    ZP0.xyn_rf_g_fsav = (xynP0m_rf_g_fsav + xynP0p_rf_g_fsav)/2;    
+    ZP0.xyn_rf_g_fsav = 2*pi*xynqratio.*full(reshape(sum(XYIntegrand),[nr,nb,nn_rf]));
     %
     ZP0.xy_rf_tp_fsav = sum(ZP0.xyn_rf_tp_fsav,3);%sum over harmonic numbers
     ZP0.xy_rf_g_fsav = sum(ZP0.xyn_rf_g_fsav,3);%sum over harmonic numbers
@@ -473,12 +473,11 @@ if dke_mode == 1,
         %  Wave-induced radial transport by adjoint technique (P. Helander model)
         %
         XYmhu = single(Xmhu(iX));     
-        XYdpn = single(Xdpn(iX));
         XYRlambda_m = single(Xdpn(iXX));
         %
         XYIntegrand = XYdmhu.*XYdpnm.*XYpnm.*XYpnm.*XYmhu.*XYlambda.*XYSp0_rf_tp1_imj;
         XYIntegrand = sparse(double(iX),double(ixyn),double(XYIntegrand),npn*nmhu,nr*nb*nn_rf);
-        xggradpsi21 = 2*pi*xqratio.*(xR0.*xBT0./xB0).*sum(sum(full(reshape(sum(XYIntegrand),[nr,nb,nn_rf])),3),2)';
+        xggradpsi21 = 2*pi*xqratio.*(xR0.*xBT0./xB0).*sum(sum(full(reshape(sum(XYIntegrand),[nr,nb,nn_rf])),3),2).';
         %
         XYIntegrand = XYdmhu.*XYdpn.*XYpn.*XYpn.*XY1mmhu2m.*XYlambda.*XYRlambda_m.*XYSm0_rf_tp1_ijm;
         XYIntegrand = sparse(double(iX),double(ixyn),double(XYIntegrand),npn*nmhu,nr*nb*nn_rf);
@@ -488,8 +487,8 @@ if dke_mode == 1,
 end
 %
 clear iX ixy ixyn
-clear XYIntegrand
-clear XYdmhu XYgamma XYgammap XYdpnm XYpnm XYdpnp XYpnp XYlambda XYpn XY1mmhu2m XYmhu XYdpn XYRlambda_m
+clear XYIntegrandm XYIntegrand XYIntegrandp
+clear XYdmhu XYgamma XYgammap XYdpnm XYpnm XYpnp XYlambda XYpn XY1mmhu2m XYmhu XYdpn XYRlambda_m
 %
 if nargout == 1,
     %
@@ -543,10 +542,7 @@ XXIntegrand_ip = XXpnp(:,:,rdke).*XXpnp(:,:,rdke).*XXpnp(:,:,rdke).*XXlambda(:,:
                   XXdf0dmhu_ijm(:,:,rdke),XXdf0dmhu_ijp(:,:,rdke),XXdf0dpn_ijm(:,:,rdke),XXdf0dpn_ijp(:,:,rdke),XXf0_ijm(:,:,rdke),XXf0_ijp(:,:,rdke),...
                   ZXXD_c.mm_ijm(:,:,rdke),ZXXD_c.mm_ijp(:,:,rdke),ZXXD_c.mp_ijm(:,:,rdke),ZXXD_c.mp_ijp(:,:,rdke),ZXXF_c.m_ijm(:,:,rdke),ZXXF_c.m_ijp(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),XXpn(:,:,rdke));
 %
-xP0m_c_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXIntegrand_im.*ZXXS.p0_c_imj,1),1).';
-xP0p_c_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpnp,XXIntegrand_ip.*ZXXS.p0_c_ipj,1),1).';
-%
-ZP0.x_c_fsav = (xP0m_c_fsav + xP0p_c_fsav)/2;
+ZP0.x_c_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpn,(XXIntegrand_im.*ZXXS.p0_c_imj + XXIntegrand_ip.*ZXXS.p0_c_ipj)/2,1),1).';
 %
 if dke_mode >= 1
     %
@@ -558,10 +554,7 @@ if dke_mode >= 1
                       XXdf0dmhu_tp_ijm(:,:,rdke),XXdf0dmhu_tp_ijp(:,:,rdke),XXdf0dpn_tp_ijm(:,:,rdke),XXdf0dpn_tp_ijp(:,:,rdke),XXf0_tp_ijm(:,:,rdke),XXf0_tp_ijp(:,:,rdke),...
                       ZXXD_c_tp.mm_ijm(:,:,rdke),ZXXD_c_tp.mm_ijp(:,:,rdke),ZXXD_c_tp.mp_ijm(:,:,rdke),ZXXD_c_tp.mp_ijp(:,:,rdke),ZXXF_c_tp.m_ijm(:,:,rdke),ZXXF_c_tp.m_ijp(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),XXpn(:,:,rdke));
     %
-    xP0m_c_tp_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXIntegrand_im.*ZXXS.p0_c_tp_imj,1),1);
-    xP0p_c_tp_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpnp,XXIntegrand_ip.*ZXXS.p0_c_tp_ipj,1),1);
-    %
-    ZP0.x_c_tp_fsav = (xP0m_c_tp_fsav + xP0p_c_tp_fsav)/2;
+    ZP0.x_c_tp_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpn,(XXIntegrand_im.*ZXXS.p0_c_tp_imj + XXIntegrand_ip.*ZXXS.p0_c_tp_ipj)/2,1),1).';
     %
     %f0_g contribution
     %
@@ -571,10 +564,7 @@ if dke_mode >= 1
                       XXdf0dmhu_g_ijm(:,:,rdke),XXdf0dmhu_g_ijp(:,:,rdke),XXdf0dpn_g_ijm(:,:,rdke),XXdf0dpn_g_ijp(:,:,rdke),XXf0_g_ijm(:,:,rdke),XXf0_g_ijp(:,:,rdke),...
                       ZXXD_c.mm_ijm(:,:,rdke),ZXXD_c.mm_ijp(:,:,rdke),ZXXD_c.mp_ijm(:,:,rdke),ZXXD_c.mp_ijp(:,:,rdke),ZXXF_c.m_ijm(:,:,rdke),ZXXF_c.m_ijp(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),XXpn(:,:,rdke));
     %
-    xP0m_c_g_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXIntegrand_im.*ZXXS.p0_c_g_imj,1),1);
-    xP0p_c_g_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpnp,XXIntegrand_ip.*ZXXS.p0_c_g_ipj,1),1);
-    %
-    ZP0.x_c_g_fsav = (xP0m_c_g_fsav + xP0p_c_g_fsav)/2;
+    ZP0.x_c_g_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpn,(XXIntegrand_im.*ZXXS.p0_c_g_imj + XXIntegrand_ip.*ZXXS.p0_c_g_ipj)/2,1),1).';
 end
 %
 %   Ohmic fluxes and power
@@ -588,10 +578,7 @@ end
                   XXdf0dmhu_ijm(:,:,rdke),XXdf0dmhu_ijp(:,:,rdke),XXdf0dpn_ijm(:,:,rdke),XXdf0dpn_ijp(:,:,rdke),XXf0_ijm(:,:,rdke),XXf0_ijp(:,:,rdke),...
                   ZXXD_e.mm_ijm(:,:,rdke),ZXXD_e.mm_ijp(:,:,rdke),ZXXD_e.mp_ijm(:,:,rdke),ZXXD_e.mp_ijp(:,:,rdke),ZXXF_e.m_ijm(:,:,rdke),ZXXF_e.m_ijp(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),XXpn(:,:,rdke));
 %
-xP0m_e_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXIntegrand_im.*ZXXS.p0_e_imj,1),1).';
-xP0p_e_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpnp,XXIntegrand_ip.*ZXXS.p0_e_ipj,1),1).';
-%
-ZP0.x_e_fsav = (xP0m_e_fsav + xP0p_e_fsav)/2;
+ZP0.x_e_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpn,(XXIntegrand_im.*ZXXS.p0_e_imj + XXIntegrand_ip.*ZXXS.p0_e_ipj)/2,1),1).';
 %
 if dke_mode >= 1
     %
@@ -603,10 +590,7 @@ if dke_mode >= 1
                       XXdf0dmhu_tp_ijm(:,:,rdke),XXdf0dmhu_tp_ijp(:,:,rdke),XXdf0dpn_tp_ijm(:,:,rdke),XXdf0dpn_tp_ijp(:,:,rdke),XXf0_tp_ijm(:,:,rdke),XXf0_tp_ijp(:,:,rdke),...
                       ZXXD_e_tp.mm_ijm(:,:,rdke),ZXXD_e_tp.mm_ijp(:,:,rdke),ZXXD_e_tp.mp_ijm(:,:,rdke),ZXXD_e_tp.mp_ijp(:,:,rdke),ZXXF_e_tp.m_ijm(:,:,rdke),ZXXF_e_tp.m_ijp(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),XXpn(:,:,rdke));
     %
-    xP0m_e_tp_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXIntegrand_im.*ZXXS.p0_e_tp_imj,1),1);
-    xP0p_e_tp_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpnp,XXIntegrand_ip.*ZXXS.p0_e_tp_ipj,1),1);
-    %
-    ZP0.x_e_tp_fsav = (xP0m_e_tp_fsav + xP0p_e_tp_fsav)/2;
+    ZP0.x_e_tp_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpn,(XXIntegrand_im.*ZXXS.p0_e_tp_imj + XXIntegrand_ip.*ZXXS.p0_e_tp_ipj)/2,1),1).';
     %
     %f0_g contribution
     %
@@ -616,10 +600,7 @@ if dke_mode >= 1
                       XXdf0dmhu_g_ijm(:,:,rdke),XXdf0dmhu_g_ijp(:,:,rdke),XXdf0dpn_g_ijm(:,:,rdke),XXdf0dpn_g_ijp(:,:,rdke),XXf0_g_ijm(:,:,rdke),XXf0_g_ijp(:,:,rdke),...
                       ZXXD_e.mm_ijm(:,:,rdke),ZXXD_e.mm_ijp(:,:,rdke),ZXXD_e.mp_ijm(:,:,rdke),ZXXD_e.mp_ijp(:,:,rdke),ZXXF_e.m_ijm(:,:,rdke),ZXXF_e.m_ijp(:,:,rdke),XX1mmhu2m(:,:,rdke),XX1mmhu2p(:,:,rdke),XXpn(:,:,rdke));
     %
-    xP0m_e_g_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpnm,XXIntegrand_im.*ZXXS.p0_e_g_imj,1),1).';
-    xP0p_e_g_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpnp,XXIntegrand_ip.*ZXXS.p0_e_g_ipj,1),1).';
-    %
-    ZP0.x_e_g_fsav = (xP0m_e_g_fsav + xP0p_e_g_fsav)/2;
+    ZP0.x_e_g_fsav = 2*pi*xqratio(rdke).*integral_dke_jd(dmhu,integral_dke_jd(dpn,(XXIntegrand_im.*ZXXS.p0_e_g_imj + XXIntegrand_ip.*ZXXS.p0_e_g_ipj)/2,1),1).';
 end
 %
 XXSp0_imj = ZXXS.p0_c_imj + ZXXS.p0_e_imj + ZXXS.p0_rf_imj;
@@ -795,11 +776,6 @@ if dkeparam.coll_mode == 3,%Lorentz model (test mode only, see documentation)
     Zcurr.x_L_tot = Zcurr.x_0_fsav + Zcurr.x_L_tp_fsav + Zcurr.x_L_g_fsav;%Total current density
 end
 %
-%   Current direction generation
-%
-Zcurr.sign_Ip_equil = sign(equilDKE.psia);%Btheta < 0 (clockwise poloidal) then Ip is counterclockwise toroidally from the top view (positive trigonometric). 
-Zcurr.sign_Ip_DKE = -sign(Zcurr.x_tot_fsav(end));%Sign of the current calculated by DKE (- because of the elctron charge). If Zcurr.sign_Ip_equil and Zcurr.sign_Ip_DKE, have the same sign, it is co-current, otherwise it is countercurrent
-%
 %  Wave-induced radial transport by adjoint technique (P. Helander model)
 %
 xX = ones(nr,1)*pn/sqrt(2);
@@ -838,9 +814,9 @@ xRR_primary_fsav = XxRR_fsav(end,:);%Radial profile of primary runaway electron 
 %
 mask_xepsi = find(xepsi_rdke~=0);
 if ~isempty(mask_xepsi)
-    Zcurr.x_bulk_fsav = Zcurr.x_tot_fsav - 0.5*XxRR_fsav(npn-1,mask_xepsi)*max(v2)./xepsi_rdke(mask_xepsi);%Bulk current as defined by Karney (useful for non-zero large dc electric field only)
+    Zcurr.x_B_fsav = Zcurr.x_tot_fsav - 0.5*XxRR_fsav(npn-1,mask_xepsi)*max(v2)./xepsi_rdke(mask_xepsi);%Bulk current as defined by Karney (useful for non-zero large dc electric field only)
 else
-    Zcurr.x_bulk_fsav = Zcurr.x_tot_fsav;
+    Zcurr.x_B_fsav = Zcurr.x_tot_fsav;
 end 
 %
 % Knock-on runaway generation
@@ -885,7 +861,7 @@ end
 %   Volume or surface loss calculations must match if no additional source term 
 %   is added (XXlossripple = XXsource). Otherwise, only the surface loss must be considered
 %
-if sum(sum(sum(XXlossripple))) ~= 0 & isempty(findstr(equilDKE.tokname,'TS')) == 0,
+if sum(sum(sum(XXlossripple))) ~= 0 & isempty(findstr(tokname,'TS')) == 0,
     xMRR_tau = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlossripple(:,:,rdke).*XXf0(:,:,rdke).*XXpn2(:,:,rdke).*XXlambda(:,:,rdke),1),1)';%Flux of electrons leaving the plasma through the loss cone
 %
     XXmaskMRR_im = [zeros(1,nmhu,nr);abs(diff(XXlossripple~=0))];%Mask in p (only nhuloss ~=0 is considered)
