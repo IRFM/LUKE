@@ -156,6 +156,7 @@ if nb == 0,
     ZXYD_rf.pp_ippj = [];
     ZXYD_rf.pp_ipj = [];
     ZXYD_rf.pp_ij = [];
+    ZXYD_rf.parpar_ij = [];
     ZXYD_rf.pp_imj = [];
     ZXYD_rf.pp_immj = [];
     ZXYD_rf.pm_ipj = [];
