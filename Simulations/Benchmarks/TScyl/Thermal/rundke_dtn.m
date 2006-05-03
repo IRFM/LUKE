@@ -7,8 +7,6 @@ clear functions
 close all
 warning off
 global nfig
-pause(1)
-[s,dossier,machine] = comput_dke_yp;
 %
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
@@ -20,13 +18,13 @@ psin_S = [0.001];%Normalized poloidal flux grid where calculations are performed
 rho_S = [];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
 id_equil = 'TScirc';%For plasma equilibrium
-path_equil = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_equil = '../../../Database/EQUIL_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_dkeparam = 'UNIFORM10010020';%For DKE code parameters
-path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_dkeparam = '../../../Database/DKEPARAM_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_display = 'PARTIAL_VISUAL';%For output code display
-path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_display = '../../../Database/DISPLAY_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_ohm = '';%For Ohmic electric contribution
 path_ohm = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path

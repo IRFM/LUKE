@@ -1,19 +1,21 @@
-id_simul = 'Thermal';%Simulation ID
-id_equil = 'TScirc';%For plasma equilibrium
+id_simul = 'LH_karney_transp_bounce';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
+id_equil = 'TScirc';%For plasma equilibrium
+path_equil = '../../../Database/EQUIL_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+%
 id_hxr = 'TS99';%For HXR diagnostic configuration
-path_hxr = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_hxr = '../../../Database/HXR_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 %************************************************************************************************************************************
 %************************************************************************************************************************************
 %************************************************************************************************************************************
 %
 if exist([path_hxr,'HXR_',id_hxr,'.mat']) == 0,%HXR
-	info_dke_yp(2,[path_equil,'HXR_',id_hxr,'.mat does not exist']);
+	info_dke_yp(2,[path_hxr,'HXR_',id_hxr,'.mat does not exist']);
 	break
 else
-	eval(['load ',path_equil,'HXR_',id_hxr,'.mat']);
+	eval(['load ',path_hxr,'HXR_',id_hxr,'.mat']);
 	info_dke_yp(2,'Structures ''hxr and hxrparam'' successfully loaded');
 end
 %
