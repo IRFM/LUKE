@@ -1,7 +1,0 @@
-make_equil_JETh77
-make_dkeparam
-make_display
-make_ohm
-make_transpfaste
-%
-rundke_JETh77
