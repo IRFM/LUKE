@@ -861,7 +861,7 @@ end
 %   Volume or surface loss calculations must match if no additional source term 
 %   is added (XXlossripple = XXsource). Otherwise, only the surface loss must be considered
 %
-if sum(sum(sum(XXlossripple))) ~= 0 & isempty(findstr(tokname,'TS')) == 0,
+if sum(sum(sum(XXlossripple))) ~= 0 & isempty(findstr(equilDKE.tokname,'TS')) == 0,
     xMRR_tau = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlossripple(:,:,rdke).*XXf0(:,:,rdke).*XXpn2(:,:,rdke).*XXlambda(:,:,rdke),1),1)';%Flux of electrons leaving the plasma through the loss cone
 %
     XXmaskMRR_im = [zeros(1,nmhu,nr);abs(diff(XXlossripple~=0))];%Mask in p (only nhuloss ~=0 is considered)
