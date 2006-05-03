@@ -269,7 +269,7 @@ XXheavisidem = permute(XXheavisidem,[3,1,2]);
 %
 % sum over harmonic numbers and rays
 %
-h = waitbar(0);
+if display_mode > 1, h = waitbar(0);end
 %
 for in = 1:nn_rf,
     %
@@ -339,13 +339,13 @@ for in = 1:nn_rf,
         mask_y = [mask_y;y_index];
         mask_n = [mask_n;n_index];
         %
-        waitbar((iy + nb*(in - 1))/(nb*nn_rf),h);
+        if display_mode > 1, waitbar((iy + nb*(in - 1))/(nb*nn_rf),h);end
         %
     end
     %
 end
 %
-close(h)
+if display_mode >1, close(h); end
 %
 clear XXsigma XX1mmhu2 XXpn XXgamma XXpsib XXomegac XXmaskb XXmhub 
 clear XXomega_rf XXnparmin_rf XXnparmax_rf XXnpar_rf XXdnpar_rf
