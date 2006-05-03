@@ -66,7 +66,11 @@ if ~isempty(transpfaste),
    alphaD = ap*ap/psia/psia;%For radial diffusion normalization
    alphaV = ap/psia;%For radial convection normalization
 %
-   xvparmin_r = transpfaste.vparmin*ones(size(xrho)).*xbetath/betath_ref;%Normalized to vth_ref
+   if transpfaste.norm_ref == 1,
+      xvparmin_r = transpfaste.vparmin*ones(size(xrho));%Normalized to vth_ref
+   elseif transpfaste.norm_ref == 0,
+      xvparmin_r = transpfaste.vparmin*ones(size(xrho)).*xbetath/betath_ref;%Normalized to vth (local)
+   end
    xDr = transpfaste.Dr0*(1 + transpfaste.pDr*xrho.^2);
    xVr = transpfaste.Vr0*(1 + transpfaste.pVr*xrho.^2);
 %
