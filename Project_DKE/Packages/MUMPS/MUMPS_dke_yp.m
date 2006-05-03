@@ -94,6 +94,8 @@ else
    error(['Error in MUMPS calculation. Flag =',int2str(flag),', Log = ',text]);
 end
 %
+delete('*.bin');%delete all bin files
+delete('.machines');%delete .machines file
 cd(initial_dir);%return to the initial working directory
 
   
