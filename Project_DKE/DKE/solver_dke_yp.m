@@ -1,4 +1,4 @@
-function [XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,radial_mode,memoryLU_f,memoryLU_g] = solver_dke_yp(dkeparam,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,XXsinksource,XXfM,XXfinit)
+function [XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,radial_mode,memoryLU_f,memoryLU_g] = solver_dke_yp(dkeparam,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,Xmask_r_edge,XXsinksource,XXfM,XXfinit)
 %
 %
 %   Self-consistent 3-D relativistic solver of the drift kinetic equation in momentum space with Beliaev-Budker collision integrals 
@@ -154,6 +154,7 @@ Xpn2 = gridDKE.Xpn2;
 Xpn2p = gridDKE.Xpn2p;
 xpsin = gridDKE.xpsin;
 rdke = gridDKE.rdke;
+xrho = gridDKE.rdke;
 %
 pn = gridDKE.pn;
 pn2 = gridDKE.pn2;
@@ -167,9 +168,6 @@ pn2 = gridDKE.pn2;
 masku = gridDKE.masku;
 maskl = gridDKE.maskl;
 ir_display = gridDKE.ir_display_out;
-%
-xpsin = gridDKE.xpsin;
-xrho = gridDKE.xrho;
 %
 z = Zmomcoef.z;
 z2 = Zmomcoef.z2;
@@ -288,6 +286,7 @@ XXf0_L_g = zeros(npn,nmhu,nr);
 XXf0_g_th = zeros(npn,nmhu,nr);
 %
 time0 = clock;
+%
 MMXdiag = diag(MMXP_f_t/time_scheme + MMXR_f_t/time_scheme + MMXT_f_t);
 if isempty(find(MMXdiag==0)) == 1, 
     MMXPDI_f_t = inv(diag(MMXdiag));
@@ -385,12 +384,13 @@ for it_f = 2:(nit_f+1),
         MMXIpn2_t = [];
         MMXsource_t = [];
 %
-        for ir = 1:nr,
-            if store_mode == 1,
-                load([fullfile(temppath,'MXP_'),save_id,'.mat'],'Zmask_f0_t');
-            end 
+        if store_mode == 1,
+           load([fullfile(temppath,'MXP_'),save_id,'.mat'],'Zmask_f0_t');
+        end 
 %
+        for ir = 1:nr-1,
             XI_t = XXI(:,Zmask_f0_t{ir},ir);
+%
             if boundary_mode_f > 0,
                 XI_t(1:boundary_mode_f,:) = 0;
             end
@@ -400,8 +400,24 @@ for it_f = 2:(nit_f+1),
             MMXIpn2_t = [MMXIpn2_t;(xqtilde(ir)/xB0(ir))*reshape((XI_t.*Zpn2_t{ir})',(nmhu - ns_f(ir))*npn,1)];%Zpn2_t is here as part of the partial Jacobian used to avoid singularities at p = 0 and psi = 0, and for pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2
         end 
 %
-        MMXq_t = MMXsource_t + MMXIpn2_t + (MMXT_f_t - (time_scheme - 1)*(MMXP_f_t + MMXR_f_t)/time_scheme)*MMXf0_t;%Right handside term of the Fokker-Planck equation
+       if isempty(Xmask_r_edge),%No anomalous radial transport
+           XI_t = XXI(:,Zmask_f0_t{nr},nr);
+           if boundary_mode_f > 0,
+               XI_t(1:boundary_mode_f,:) = 0;
+           end
 %
+           MMXf0_t = [MMXf0_t;reshape(XXf0(:,Zmask_f0_t{nr},nr)',(nmhu - ns_f(nr))*npn,1)];
+           MMXsource_t = [MMXsource_t;reshape(XXsinksource(:,Zmask_f0_t{nr},nr)',(nmhu - ns_f(nr))*npn,1)];
+           MMXIpn2_t = [MMXIpn2_t;(xqtilde(nr)/xB0(nr))*reshape((XI_t.*Zpn2_t{nr})',(nmhu - ns_f(nr))*npn,1)];%Zpn2_t is here as part of the partial Jacobian used to avoid singularities at p = 0 and psi = 0, and for pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2          
+       else,%Edge radial boundary condition: f(r/a = 1) = fM(r/a) where transport operates
+           MMXf0_t = [MMXf0_t;reshape(XXf0(:,Zmask_f0_t{nr},nr)',(nmhu - ns_f(nr))*npn,1)];
+%       MMXq_t(nMMXP_f_t-npn*(nmhu - ns_f(nr))+1:nMMXP_f_t) = xrho(nr)*time_scheme*reshape((Xf0_t'.*~Xmask_r_edge_t' + XfM_t'.*Xmask_r_edge_t').*Xpn2_t',(nmhu - ns(nr))*npn,1)/dtn;
+		   Xmask_r_edge_t = Xmask_r_edge(:,Zmask_f0_t{nr});  
+           MMXsource_t = [MMXsource_t;0*reshape(XXsinksource(:,Zmask_f0_t{nr},nr)',(nmhu - ns_f(nr))*npn,1)];
+           MMXIpn2_t = [MMXIpn2_t;0*(xqtilde(nr)/xB0(nr))*reshape((XI_t.*Zpn2_t{nr})',(nmhu - ns_f(nr))*npn,1)];%Zpn2_t is here as part of the partial Jacobian used to avoid singularities at p = 0 and psi = 0, and for pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2          
+       end
+%
+        MMXq_t = MMXsource_t + MMXIpn2_t + (MMXT_f_t - (time_scheme - 1)*(MMXP_f_t + MMXR_f_t)/time_scheme)*MMXf0_t;%Right handside term of the Fokker-Planck equation          
         MMXR_t = sparse(MMXPDI_f_t*MMXq_t - MMXPC_f_t*MMXf0_t);%Residu calculation for matrix inversion, force sparse type for the RHS, optimized for Matlab 
 %
         if dkeparam.invproc == 0,%Matlab direct inversion
