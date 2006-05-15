@@ -30,7 +30,7 @@ global nfig;
 %
 [XXsinksource] = sinksourcecoeffbuilder_dke_yp(dkeparam_out,display,equil,equilDKE,gridDKE,mksa,XXsinksource_in);%External sink and source contributions (for right-hand side part of the FP equation)
 [Zmripple] = mripplecoefbuilder_dke_yp(dkeparam_out,display,equil,equilDKE,gridDKE,mksa,ripple);%Magnetic ripple matrix coefficients
-[MMXR_f_t] = rad_dke_yp(dkeparam_out,display,equilDKE,gridDKE,mksa,Zbouncecoef,Zmomcoef,transpfaste);%Radial transport super matrix
+[MMXR_f_t,Xmask_r_edge] = rad_dke_yp(dkeparam_out,display,equilDKE,gridDKE,mksa,Zbouncecoef,Zmomcoef,transpfaste);%Radial transport super matrix
 [ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor] = coll_dke_jd(dkeparam_out,display,equilDKE,mksa,gridDKE,Zmomcoef,Zbouncecoef);%Collisions flux coefficients 
 [ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,xepsi,xEfield_validity] = efield_dke_jd(dkeparam_out,display,equilDKE,mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,ZXXF_c);%Electric field flux coefficients
 [ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf] = rfdiff_dke_jd(dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,radialDKE,waveparam);%RF waves flux coefficients
@@ -102,9 +102,9 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
     end     
 %
     [ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp] = raysum_rf_jd(dkeparam_out,ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyD0_rf,gridindex_rf);
-    [Zdelta,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,Zpn2_t,sm_f,sm_g,sm_tp] = matrixcalc_dke_yp(dkeparam_out,display,gridDKE,equilDKE,Zbouncecoef,mksa,Zmripple,ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXILor,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp);%Build the 3D DKE matrix
-    [XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,radial_mode,memoryLU_f,memoryLU_g] = solver_dke_yp(dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t_in,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,XXsinksource,XXfM,XXfinit);% Solve the DKE equation
-    %
+    [Zdelta,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,Zpn2_t,sm_f,sm_g,sm_tp] = matrixcalc_dke_yp(dkeparam_out,display,gridDKE,equilDKE,Zbouncecoef,mksa,Zmripple,ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXILor,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp,Xmask_r_edge);%Build the 3D DKE matrix
+    [XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,radial_mode,memoryLU_f,memoryLU_g] = solver_dke_yp(dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t_in,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,Xmask_r_edge,XXsinksource,XXfM,XXfinit);% Solve the DKE equation
+%
     if ~isempty(waveparam),%In the case of RF waves and quasilinear iteration
         if nit_rf > 1,  
             %

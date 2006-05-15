@@ -2,7 +2,7 @@ function [Zdelta,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,Zpn2_t,sm_f,sm_g,sm_t
                                                                        Zmripple,...
                                                                        ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXILor,...
                                                                        ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,...
-                                                                       ZYXXD_rf,ZYXXF_rf,ZYXXD_rf_tp,ZYXXF_rf_tp)
+                                                                       ZYXXD_rf,ZYXXF_rf,ZYXXD_rf_tp,ZYXXF_rf_tp,Xmask_r_edge)
 %
 %   Calculate the super matrix for the 3D electron relativistic drift kinetic solver.
 %
@@ -52,6 +52,7 @@ Xpn2 = gridDKE.Xpn2;
 Xpn2p = gridDKE.Xpn2p;
 xpsin = gridDKE.xpsin;
 rdke = gridDKE.rdke;
+xrho = gridDKE.xrho;
 %
 djmhut = Zbouncecoef.djmhut;
 Zmask_f0_P = Zbouncecoef.Zmask_f0_P;
@@ -196,7 +197,21 @@ for ir = 1:nr,
     XXb(1,:,ir) = 0;%Because of cross-derivatives
     XXh(1,:,ir) = 0;%Because of cross-derivatives
     XXf(1,:,ir) = 0;%Because of cross-derivatives
-%   
+%
+%Edge boundary conditions for radial transport (Maxwellian solution enforced where radial transport is non-zero)
+%
+	if ~isempty(Xmask_r_edge) & ir == nr,
+    	XXa(:,:,ir) = ~Xmask_r_edge.*XXa(:,:,ir);
+    	XXb(:,:,ir) = ~Xmask_r_edge.*XXb(:,:,ir);
+    	XXc(:,:,ir) = ~Xmask_r_edge.*XXc(:,:,ir);
+    	XXd(:,:,ir) = ~Xmask_r_edge.*XXd(:,:,ir);
+    	XXe(:,:,ir) = ~Xmask_r_edge.*XXe(:,:,ir);
+    	XXf(:,:,ir) = ~Xmask_r_edge.*XXf(:,:,ir);
+    	XXg(:,:,ir) = ~Xmask_r_edge.*XXg(:,:,ir);
+    	XXh(:,:,ir) = ~Xmask_r_edge.*XXh(:,:,ir);
+    	XXi(:,:,ir) = ~Xmask_r_edge.*XXi(:,:,ir);
+    end
+%
     if bounce_mode == 0,%No bounce averaging
         Xa_t = XXa(:,:,ir);
         Xb_t = XXb(:,:,ir);
@@ -239,7 +254,6 @@ for ir = 1:nr,
 %
 %Symmetrization of the trapped region
 %
-
             Xa_t(:,Zmask_f0_t_Tp{ir}) = (XXa(:,Zmask_f0_Tp{ir},ir) + fliplr(XXe(:,Zmask_f0_Tm{ir},ir)))/2;
             Xb_t(:,Zmask_f0_t_Tp{ir}) = (XXb(:,Zmask_f0_Tp{ir},ir) + fliplr(XXb(:,Zmask_f0_Tm{ir},ir)))/2;
             Xc_t(:,Zmask_f0_t_Tp{ir}) = (XXc(:,Zmask_f0_Tp{ir},ir) + fliplr(XXc(:,Zmask_f0_Tm{ir},ir)))/2;
