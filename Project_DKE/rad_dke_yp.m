@@ -78,22 +78,22 @@ if ~isempty(transpfaste),
    	  xEc_r_threshold(ir) = mc2*(sqrt(1+pn(ivpar_r_threshold).*pn(ivpar_r_threshold)*betath_ref^2) - 1);%in keV
 %
    	  if transpfaste.Dr_model==0,%No vpar dependence
-	     XDpsiv = xDr(ir)*ones(size(npn,nmhu)).*(abs(Xvpar) >= xvparmin_r(ir))/(psia*psia*nhu_ref);%Normalized to the central collision frequency
+	     XDpsiv = xDr(ir)*ones(size(npn,nmhu)).*(abs(Xvpar) >= xvparmin_r(ir))/(ap*ap*nhu_ref);%Normalized to the central collision frequency
 	  elseif transpfaste.Dr_model==1,%Magnetic turbulence model: Dr(r)*vpar_ref/vth_ref
-		 XDpsiv = xDr(ir)*(abs(Xvpar) - xvparmin_r(ir)).*(abs(Xvpar) >= xvparmin_r(ir))/xvparmin_r(ir)/(psia*psia*nhu_ref);%Normalized to the central collision frequency
+		 XDpsiv = xDr(ir)*(abs(Xvpar) - xvparmin_r(ir)).*(abs(Xvpar) >= xvparmin_r(ir))/xvparmin_r(ir)/(ap*ap*nhu_ref);%Normalized to the central collision frequency
       end
 	  XXDpsi(:,:,ir) = XDpsiv;%3-D radial diffusion matrix (radial profile dependence) (psi coordinate)
 	  xmaxDpsi(ir) = max(max(XXDpsi(:,:,ir)));%Maximum value of the radial diffusion coefficient (psi coordinate)
 %
       if transpfaste.Vr_model==0,%No vpar dependence
-	     XVpsiv = xVr(ir)*ones(size(npn,nmhu)).*(abs(Xvpar) >= xvparmin_r(ir))/(psia*nhu_ref);%Normalized to the central collision frequency (psi coordinate)
+	     XVpsiv = xVr(ir)*ones(size(npn,nmhu)).*(abs(Xvpar) >= xvparmin_r(ir))/(ap*nhu_ref);%Normalized to the central collision frequency (psi coordinate)
 	  elseif transpfaste.Vr_model==1,%Magnetic turbulence model: Vr(r) = Vr0(r)*vpar_ref/vth_ref
-	     XVpsiv = xVr(ir)*(abs(Xvpar) - xvparmin_r(ir)).*(abs(Xvpar) >= xvparmin_r(ir))/xvparmin_r(ir)/(psia*nhu_ref);%Normalized to the central collision frequency (psi coordinate)
+	     XVpsiv = xVr(ir)*(abs(Xvpar) - xvparmin_r(ir)).*(abs(Xvpar) >= xvparmin_r(ir))/xvparmin_r(ir)/(ap*nhu_ref);%Normalized to the central collision frequency (psi coordinate)
       end
 	  XXVpsi(:,:,ir) = XVpsiv;%3-D radial pinch matrix (radial profile dependence) (psi coordinate)
 	  xmaxVpsi(ir) = max(max(XXVpsi(:,:,ir)));%Maximum value of the radial convection coefficient (psi coordinate)
    end
-% 
+%
    if display_mode == 2,
       Fig_radialdiff = figure('Name','Fast electron radial diffusion');
 %	
@@ -223,7 +223,7 @@ if ~isempty(transpfaste),
 %
       XXR0p = (1 - XXdeltalp).*XXR0pp + XXdeltalp.*XXR0;%Evaluation on the flux grid (linear interpolation)
       XXR0m = (1 - XXdeltalm).*XXR0 + XXdeltalm.*XXR0mm;%Evaluation on the flux grid (linear interpolation)
-%
+%      
       XXqtilde = repmat(reshape(xqtilde',[1,1,nr]),[npn,nmhu,1]);
       XXqtildemm = zeros(npn,nmhu,nr);
       XXqtildemm(:,:,2:nr) = XXqtilde(:,:,1:nr-1);
@@ -244,7 +244,7 @@ if ~isempty(transpfaste),
 %
       XXB0 = repmat(reshape(xB0',[1,1,nr]),[npn,nmhu,1]);
       XXB0mm = zeros(npn,nmhu,nr);
-      XXp0mm(:,:,2:nr) = XXB0(:,:,1:nr-1);
+      XXB0mm(:,:,2:nr) = XXB0(:,:,1:nr-1);
       XXB0pp = zeros(npn,nmhu,nr);
       XXB0pp(:,:,1:nr-1) = XXB0(:,:,2:nr);
 %
@@ -259,21 +259,23 @@ if ~isempty(transpfaste),
       XXlambdap = (1 - XXdeltalp).*XXlambdapp + XXdeltalp.*XXlambda;%Evaluation on the flux grid (linear interpolation)
       XXlambdam = (1 - XXdeltalm).*XXlambda + XXdeltalm.*XXlambdamm;%Evaluation on the flux grid (linear interpolation)
 %   
-      XXalpharp = XXR0p.*XXqtildep.*XXBp0p.*XXlambdap./XXB0p;%Evaluation on the flux grid (linear interpolation)
-      XXalpharm = XXR0m.*XXqtildem.*XXBp0m.*XXlambdam./XXB0m;%Evaluation on the flux grid (linear interpolation)
+      XXgradpsinp = XXR0p.*XXBp0p*ap/psia;
+      XXgradpsinm = XXR0m.*XXBp0m*ap/psia;
+      XXalpharp = XXqtildep.*XXgradpsinp.*XXlambdap./XXB0p;%Evaluation on the flux grid (linear interpolation)
+      XXalpharm = XXqtildem.*XXgradpsinm.*XXlambdam./XXB0m;%Evaluation on the flux grid (linear interpolation)
       XXalpharm(:,:,1) = 0;%Force zero at the plasma center, which is the natural analytical limit (In cylindrical geometry, r=0)
       XXalpharp(:,:,nr) = 0;%Avoid NaN
 %
 %************************************************** Matrices calculation ******************************************************** 
+%  
+      XXMrm = -(XXalpharm.*XXgradpsinm./XXdpsinm./XXdpsin).*XXDpsim - (XXalpharm./XXdpsin).*XXVpsim.*XXdeltalm;
+      XXMr = (XXalpharp.*XXgradpsinp./XXdpsinp./XXdpsin).*XXDpsip + (XXalpharp./XXdpsin).*XXVpsip.*XXdeltalp + ...
+         (XXalpharm.*XXgradpsinm./XXdpsinm./XXdpsin).*XXDpsim - (XXalpharm./XXdpsin).*XXVpsim.*(1 - XXdeltalm);                    
+      XXMrp = -(XXalpharp.*XXgradpsinp./XXdpsinp./XXdpsin).*XXDpsip + (XXalpharp./XXdpsin).*XXVpsip.*(1 - XXdeltalp);
 %
-      XXMrm = -(XXalpharm.*XXR0m.*XXBp0m./XXdpsinm./XXdpsin).*XXDpsim - (XXalpharm./XXdpsin).*XXVpsim.*XXdeltalm;
-      XXMr = (XXalpharp.*XXR0p.*XXBp0p./XXdpsinp./XXdpsin).*XXDpsip + (XXalpharp./XXdpsin).*XXVpsip.*XXdeltalp + ...
-             (XXalpharm.*XXR0m.*XXBp0m./XXdpsinm./XXdpsin).*XXDpsim - (XXalpharm./XXdpsin).*XXVpsim.*(1 - XXdeltalm);                    
-      XXMrp = -(XXalpharp.*XXR0p.*XXBp0p./XXdpsinp./XXdpsin).*XXDpsip + (XXalpharp./XXdpsin).*XXVpsip.*(1 - XXdeltalp);
-%
-      XXMrm = XXMrm.*XXpn2./XXlambda;%Partial Jacobian multiplication
-      XXMr = XXMr.*XXpn2./XXlambda;%Partial Jacobian multiplication
-      XXMrp = XXMrp.*XXpn2./XXlambda;%Partial Jacobian multiplication      
+      XXMrm = (XXB0./XXqtilde).*XXMrm.*XXpn2./XXlambda;%Jacobian multiplication
+      XXMr = (XXB0./XXqtilde).*XXMr.*XXpn2./XXlambda;%Jacobian multiplication
+      XXMrp = (XXB0./XXqtilde).*XXMrp.*XXpn2./XXlambda;%Jacobian multiplication   
 %
       Xmask_r_edge = (XXDpsi(:,:,nr) > 0);
       XXMrm(:,:,nr) = 0;%Edge boundary condition (Maxwellian solution)
