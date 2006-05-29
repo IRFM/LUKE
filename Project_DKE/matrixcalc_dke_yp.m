@@ -67,7 +67,6 @@ Zmask_f0_t_Tp = Zbouncecoef.Zmask_f0_t_Tp;
 ns_f = Zbouncecoef.ns_f;     
 XXRlambda_m = Zbouncecoef.XXRlambda_m;
 XXRlambda_p = Zbouncecoef.XXRlambda_p;
-xqtilde = Zbouncecoef.xqtilde;
 sm_f = Zbouncecoef.sm_f;
 sm_T_f = Zbouncecoef.sm_T_f;
 blocksize_f_t = Zbouncecoef.blocksize_f_t;
@@ -94,11 +93,8 @@ MMH_tp = [];
 %
 spparms('default');%Set parameters for sparse matrix ordering algorithms and direct linear equation solver MatLab build-in functions only
 spparms('supernd',4);%Set parameters for sparse matrix ordering algorithms and direct linear equation solver MatLab build-in functions only
-spparms('rreduce',4);%Set parameters for sparse matrix ordering algorithms and direct linear equation solver MatLab build-in functions only
+spparms('rreduce',4);%Set parameters for sparse matrix ordering algorithms and direct linear equation solver MatLab build-in functions onlyXXdpsin
 %
-%   
-% Fokker-Planck (zero order) matrix calculation
-% 
 for ir = 1:nr,
 %
     XDpp_ippj = ZXXD_c.pp_ippj(:,:,ir) + ZXXD_e.pp_ippj(:,:,ir) + ZYXXD_rf.pp_ippj(:,:,ir);
@@ -386,8 +382,6 @@ for ir = 1:nr,
         MXo = reshape(Xo_t',(nmhu-ns_f(ir))*npn,1);%o(i+3/2,j+1/2+djmhut)
         MXP_f_t = MXP_f_t + sparse([1:(nmhu-ns_f(ir))*npn-(nmhu-ns_f(ir))-djmhut(ir)],[1+(nmhu-ns_f(ir))+djmhut(ir):(nmhu-ns_f(ir))*npn],MXo(1:length(MXo)-(nmhu-ns_f(ir))-djmhut(ir)),(nmhu-ns_f(ir))*npn,(nmhu-ns_f(ir))*npn);      
     end
-%
-    MXP_f_t = (xqtilde(ir)/xB0(ir))*MXP_f_t;%Partial Jacobian multiplication to avoid numerical singularities at p = 0  
 %    
     sm_f(ir+1) = sm_f(ir) + blocksize_f_t(ir);
     [i0_f,j0_f,s0_f] = find(MMXP_f_t);      
@@ -399,8 +393,8 @@ for ir = 1:nr,
 %Time diagonal matrix calculation
 %   
     MXT = reshape(Zpn2_t{ir}',(nmhu-ns_f(ir))*npn,1)/dtn;%Partial momentum Jacobian 
-    MXT_f_t = (xqtilde(ir)/xB0(ir))*sparse([1:(nmhu-ns_f(ir))*npn],[1:(nmhu-ns_f(ir))*npn],MXT,(nmhu-ns_f(ir))*npn,(nmhu-ns_f(ir))*npn);%Resizing for 3D calculations + multiplication by the remaining Jacobian
-%   
+    MXT_f_t = sparse([1:(nmhu-ns_f(ir))*npn],[1:(nmhu-ns_f(ir))*npn],MXT,(nmhu-ns_f(ir))*npn,(nmhu-ns_f(ir))*npn);%Resizing for 3D calculations + multiplication by the remaining Jacobian
+%
     sm_T_f(ir+1) = sm_T_f(ir) + blocksize_T_f_t(ir);
     [i0_T_f,j0_T_f,s0_T_f] = find(MMXT_f_t);        
     [m0_T_f,n0_T_f] = size(MMXT_f_t);
@@ -695,3 +689,6 @@ end
 if store_mode == 1,
 %    save([fullfile(temppath,'MXP_mat'],'Zmask_f0_t','Zmask_g','-append');
 end
+%
+
+

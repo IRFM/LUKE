@@ -192,7 +192,6 @@ XXlambda_b_p2 = Zbouncecoef.XXlambda_b_p2;
 XXlambda = Zbouncecoef.XXlambda;
 Zmask_f0_t = Zbouncecoef.Zmask_f0_t;
 ns_f = Zbouncecoef.ns_f; 
-xqtilde = Zbouncecoef.xqtilde;
 Zmask_g = Zbouncecoef.Zmask_g;
 ns_g = Zbouncecoef.ns_g;
 %
@@ -395,26 +394,29 @@ for it_f = 2:(nit_f+1),
                 XI_t(1:boundary_mode_f,:) = 0;
             end
 %
+        
             MMXf0_t = [MMXf0_t;reshape(XXf0(:,Zmask_f0_t{ir},ir)',(nmhu - ns_f(ir))*npn,1)];
             MMXsource_t = [MMXsource_t;reshape(XXsinksource(:,Zmask_f0_t{ir},ir)',(nmhu - ns_f(ir))*npn,1)];
-            MMXIpn2_t = [MMXIpn2_t;(xqtilde(ir)/xB0(ir))*reshape((XI_t.*Zpn2_t{ir})',(nmhu - ns_f(ir))*npn,1)];%Zpn2_t is here as part of the partial Jacobian used to avoid singularities at p = 0 and psi = 0, and for pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2
+            MMXIpn2_t = [MMXIpn2_t;reshape((XI_t.*Zpn2_t{ir})',(nmhu - ns_f(ir))*npn,1)];%Zpn2_t is here as part of the partial Jacobian used to avoid singularities at p = 0 and psi = 0, and for pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2
         end 
 %
-       if isempty(Xmask_r_edge),%No anomalous radial transport
+       if 1,%isempty(Xmask_r_edge),%No anomalous radial transport
            XI_t = XXI(:,Zmask_f0_t{nr},nr);
            if boundary_mode_f > 0,
                XI_t(1:boundary_mode_f,:) = 0;
            end
 %
+           
            MMXf0_t = [MMXf0_t;reshape(XXf0(:,Zmask_f0_t{nr},nr)',(nmhu - ns_f(nr))*npn,1)];
            MMXsource_t = [MMXsource_t;reshape(XXsinksource(:,Zmask_f0_t{nr},nr)',(nmhu - ns_f(nr))*npn,1)];
-           MMXIpn2_t = [MMXIpn2_t;(xqtilde(nr)/xB0(nr))*reshape((XI_t.*Zpn2_t{nr})',(nmhu - ns_f(nr))*npn,1)];%Zpn2_t is here as part of the partial Jacobian used to avoid singularities at p = 0 and psi = 0, and for pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2          
+           MMXIpn2_t = [MMXIpn2_t;reshape((XI_t.*Zpn2_t{nr})',(nmhu - ns_f(nr))*npn,1)];%Zpn2_t is here as part of the partial Jacobian used to avoid singularities at p = 0 and psi = 0, and for pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2
+
        else,%Edge radial boundary condition: f(r/a = 1) = fM(r/a) where transport operates
            MMXf0_t = [MMXf0_t;reshape(XXf0(:,Zmask_f0_t{nr},nr)',(nmhu - ns_f(nr))*npn,1)];
 %       MMXq_t(nMMXP_f_t-npn*(nmhu - ns_f(nr))+1:nMMXP_f_t) = xrho(nr)*time_scheme*reshape((Xf0_t'.*~Xmask_r_edge_t' + XfM_t'.*Xmask_r_edge_t').*Xpn2_t',(nmhu - ns(nr))*npn,1)/dtn;
 		   Xmask_r_edge_t = Xmask_r_edge(:,Zmask_f0_t{nr});  
-           MMXsource_t = [MMXsource_t;0*reshape(XXsinksource(:,Zmask_f0_t{nr},nr)',(nmhu - ns_f(nr))*npn,1)];
-           MMXIpn2_t = [MMXIpn2_t;0*(xqtilde(nr)/xB0(nr))*reshape((XI_t.*Zpn2_t{nr})',(nmhu - ns_f(nr))*npn,1)];%Zpn2_t is here as part of the partial Jacobian used to avoid singularities at p = 0 and psi = 0, and for pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2          
+           MMXsource_t = [MMXsource_t;reshape(XXsinksource(:,Zmask_f0_t{nr},nr)',(nmhu - ns_f(nr))*npn,1)];
+           MMXIpn2_t = [MMXIpn2_t;reshape((XI_t.*Zpn2_t{nr})',(nmhu - ns_f(nr))*npn,1)];%Zpn2_t is here as part of the partial Jacobian used to avoid singularities at p = 0 and psi = 0, and for pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2          
        end
 %
         MMXq_t = MMXsource_t + MMXIpn2_t + (MMXT_f_t - (time_scheme - 1)*(MMXP_f_t + MMXR_f_t)/time_scheme)*MMXf0_t;%Right handside term of the Fokker-Planck equation          
