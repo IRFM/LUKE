@@ -165,8 +165,11 @@ if bounce_mode == 1,
 %may be inserted here. Work to be done...
 %
 else  
-    [xq,xqtilde,xqbar,xqhat] = qfactors_dke_yp(Rp,Zp,XR,XZ,XBR,XBZ,XBphi);%q factors calculations
-%
+    %[xq,xqtilde,xqbar,xqhat] = qfactors_dke_yp(Rp,Zp,XR,XZ,XBR,XBZ,XBphi),%q factors calculations
+    xq = ones(1,nr);
+    xqtilde = ones(1,nr);
+    xqbar = ones(1,nr);
+    xqhat = ones(1,nr);
 	XXheaviside = ones(npn,nmhu,nr);
 	XXheaviside_p = ones(npn,nmhu,nr);
 	XXheaviside_m = ones(npn,nmhu,nr);
