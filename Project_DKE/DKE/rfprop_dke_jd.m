@@ -33,48 +33,56 @@ xymask_prop_dke = xyprop_dke ~= 0;%DKE points visited by the ray
 for iy = 1:ny 
     if max(xyprop_dke(:,iy)) == 1 %ray portion is propagating outward
         ir_dke = min(find(xyprop_dke(:,iy) == 1)); %position of ray start
-%    
+    %    
     elseif min(xyprop_dke(:,iy)) == -1 %ray portion is propagating inward
         ir_dke = max(find(xyprop_dke(:,iy) == -1)); %position of ray start
-%    
+        %    
     else %no RT-DKE consistency seeked for current ray
         continue
     end
     ir = r_dke(ir_dke);
-%   
-% check if new ray or only new portion
-%
+    %   
+    % check if new ray or only new portion
+    %
     if ~isempty(find(iy == yb)); %new ray
         bPrf = xyPinc_in(ir,iy); %initial power in the ray
         bPrf_mod = bPrf; %initial power in the ray
     end
-%    
+    %    
     while ir_dke <= nr_dke & ir_dke >= 1 & xyprop_dke(ir_dke,iy) ~= 0 % stay on current ray 
         ir = r_dke(ir_dke);
-        xyPinc_out(ir,iy) = bPrf; %incident power consistent with absorbed power
-        xyPinc_mod(ir,iy) = bPrf_mod; %incident power consistent with absorbed power
-%        
-        bPrf = max([bPrf - xyPrf_dke(ir_dke,iy),0]); %current step remaining power in the ray
-%
-% estimated next step remaining power in the ray 
-% based on approximate linear power absorbed vs incident power dependence.
-%
+        %
+        Pabs = xyPrf_dke(ir_dke,iy);% absorbed power in this step
+        Pabs = min(Pabs,bPrf);% cannot be more than incident power
+        %
+        xyPinc_out(ir,iy) = bPrf - Pabs/2; %incident power consistent with absorbed power
+        bPrf = bPrf - Pabs;%remaining power for next step
+        %
+        % estimated absorbed power in this step
+        % anticipating the effect of variations in incident power compared
+        % to previous QL iteration. This estimate 
+        % assumes linear power absorbed vs incident power dependence.
+        %
         if xyPinc_in(ir,iy) > 0
-            bPrf_mod = max([bPrf_mod - xyPrf_dke(ir_dke,iy)*xyPinc_mod(ir,iy)/xyPinc_in(ir,iy),0]);
+            Pabs_mod = xyPrf_dke(ir_dke,iy)*bPrf_mod/(xyPinc_in(ir,iy) + xyPrf_dke(ir_dke,iy)/2);% absorbed power in this step
         else
-            bPrf_mod = max([bPrf_mod - xyPrf_dke(ir_dke,iy),0]);
+            Pabs_mod = xyPrf_dke(ir_dke,iy);% absorbed power in this step
         end
-%
-% next FS
-%
+        Pabs_mod = min(Pabs_mod,bPrf_mod);% cannot be more than incident power
+        %
+        xyPinc_mod(ir,iy) = bPrf_mod - Pabs_mod/2; %incident power consistent with absorbed power
+        bPrf_mod = bPrf_mod - Pabs_mod;
+        % 
+        % next FS
+        %
         ir_dke = ir_dke + xyprop_dke(ir_dke,iy);
     end
-%
-% interpolation for the FP positions (only necessary if dke_mode == 1)
-%
+    %
+    % interpolation for the FP positions (only necessary if dke_mode == 1)
+    %
     if dke_mode == 1  
         xmask_prop_fp = [(min(r_dke(xymask_prop_dke(:,iy))) - 1):(max(r_dke(xymask_prop_dke(:,iy))) + 1)];%corresponding FP points
-%        
+        %        
         xyPinc_out(xmask_prop_fp,iy) = interp(xpsin_dke(xymask_prop_dke(:,iy)),xyPinc_out(xymask_prop_dke(:,iy)),xpsin(xmask_prop_fp),method);
         xyPinc_mod(xmask_prop_fp,iy) = interp(xpsin_dke(xymask_prop_dke(:,iy)),xyPinc_mod(xymask_prop_dke(:,iy)),xpsin(xmask_prop_fp),method);
     end
