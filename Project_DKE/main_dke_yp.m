@@ -69,12 +69,6 @@ end
 %
 residue_rf = [];
 %
-if nit_rf > 1,
-    MMXR_f_t_in = MMXR_f_t*0;%No radial transport for initial quasilinear iterations
-else
-    MMXR_f_t_in = MMXR_f_t;
-end
-%
 for it_rf=1:nit_rf % convergence in the ray-tracing mode
     if ~isempty(waveparam),%in the case of RF waves only
         %
@@ -84,7 +78,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
         %
         xyD0_rf_mod = xyD0_rf_in.*xyPinc_mod./xyPinc_in;% The diffusion coefficient is proportional to the incident power
         %
-        if 0,%nit_rf > 1,
+        if nit_rf > 1,
             if it_rf == 1,
                 redfac = max(sum(xyPinc_mod.'))/sum(max(xyPinc_in(:,yb)));
             else
@@ -103,7 +97,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
 %
     [ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp] = raysum_rf_jd(dkeparam_out,ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyD0_rf,gridindex_rf);
     [Zdelta,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,Zpn2_t,sm_f,sm_g,sm_tp] = matrixcalc_dke_yp(dkeparam_out,display,gridDKE,equilDKE,Zbouncecoef,mksa,Zmripple,ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXILor,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp,Xmask_r_edge);%Build the 3D DKE matrix
-    [XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,radial_mode,memoryLU_f,memoryLU_g] = solver_dke_yp(dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t_in,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,Xmask_r_edge,XXsinksource,XXfM,XXfinit);% Solve the DKE equation
+    [XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,radial_mode,memoryLU_f,memoryLU_g] = solver_dke_yp(dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,Xmask_r_edge,XXsinksource,XXfM,XXfinit);% Solve the DKE equation
 %
     if ~isempty(waveparam),%In the case of RF waves and quasilinear iteration
         if nit_rf > 1,  
@@ -137,18 +131,10 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
             info_dke_yp(2,['Quasilinear iteration : ',int2str(it_rf),', Residu = ',num2str(residue_rf(it_rf)),', delta_rt = ',num2str(delta_rt)]);
             info_dke_yp(2,'---------------------------------------------------------');
             %
-            if 0,it_rf > 2 & residue_rf(it_rf-1) < prec_rf*10,
+            if it_rf > 2 & residue_rf(it_rf-1) < prec_rf*10,
                 delta_rt = 0;
             end
-            %      
-            if residue_rf(it_rf) < 0.01,          
-                %delta_rt = delta_rt/1.1;%For increasing the quasilinear rate of convergence
-                if ~isempty(transpfaste),%If radial transport is no zero, it is turned on when quasilinear convergence is robust enough
-                    param_inv(1) = 1e-4;
-                    MMXR_f_t_in = MMXR_f_t;
-                end
-            end     
-            %      
+%      
             if residue_rf(it_rf) <= dkeparam_out.prec_rf & redfac == 1 & it_rf > 1%0,
                 info_dke_yp(2,['Successfull convergence achieved for ray-tracing coupling after ',int2str(it_rf),' iterations !']);
                 break
@@ -213,7 +199,7 @@ if dkeparam_out.syn_mode == 1,
     %
     [ZYXXD_rf,ZYXXF_rf,ZYXXD_rf_tp,ZYXXF_rf_tp,ylist_rf] = rfdiff_dke_jd(dkeparam_out,display,waveparam_bc,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa);% RF wave flux coefficients
     [MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,Zpn2_t,sm_f,sm_g,sm_tp] = matrixcalc_dke_yp(dkeparam_out,display,gridDKE,equilDKE,Zbouncecoef,mksa,Zmripple,ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXILor,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,ZYXXD_rf,ZYXXF_rf,ZYXXD_rf_tp,ZYXXF_rf_tp);%Build the 3D DKE matrix
-    [XXf0_bc,XXf0_bc_tp,XXf0_bc_g,XXf0_bc_L_tp,XXf0_bc_L_g,memoryLU_bc_f,memoryLU_bc_g] = solver_dke_yp(dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t_in,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,XXsinksource,XXfinit);% Solve the DKE equation
+    [XXf0_bc,XXf0_bc_tp,XXf0_bc_g,XXf0_bc_L_tp,XXf0_bc_L_g,memoryLU_bc_f,memoryLU_bc_g] = solver_dke_yp(dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,XXsinksource,XXfinit);% Solve the DKE equation
     [ZP0_bc,Zcurr_bc,Znor_bcm,ZXXS_bc,ZYXXD_bc_rf,XxRR_bc_fsav,xMRR_bc_flux,xMRR_bc_tau,xRR_bc_fsav,xne_norm_bc_out_bc,xTe_norm_bc_out,xft_bc_fsav,xfteff_bc_fsav] = fmoments_dke_yp(dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,[],radial_mode,Zdelta,XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,ZXXD_rf,ZXXD_rf_tp,ZXXF_rf_tp,ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp);%Calculate moments of the distribution function
 %
     time_bc_out = etime(clock,time0_bc);
