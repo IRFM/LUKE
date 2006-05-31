@@ -53,9 +53,19 @@ for iy = 1:ny
         ir = r_dke(ir_dke);
         %
         Pabs = xyPrf_dke(ir_dke,iy);% absorbed power in this step
-        Pabs = min(Pabs,bPrf);% cannot be more than incident power
         %
-        xyPinc_out(ir,iy) = bPrf - Pabs/2; %incident power consistent with absorbed power
+        if Pabs <= bPrf % absorbed power cannot be more than incident power
+            %
+            xyPinc_out(ir,iy) = bPrf - Pabs/2; %incident power consistent with absorbed power
+            %
+        else
+            %
+            xyPinc_out(ir,iy) = xyPinc_in(ir,iy)*bPrf/Pabs; %linear anticipation
+            %
+            Pabs = bPrf;
+            %
+        end
+        %
         bPrf = bPrf - Pabs;%remaining power for next step
         %
         % estimated absorbed power in this step
@@ -68,9 +78,19 @@ for iy = 1:ny
         else
             Pabs_mod = xyPrf_dke(ir_dke,iy);% absorbed power in this step
         end
-        Pabs_mod = min(Pabs_mod,bPrf_mod);% cannot be more than incident power
         %
-        xyPinc_mod(ir,iy) = bPrf_mod - Pabs_mod/2; %incident power consistent with absorbed power
+        if Pabs_mod <= bPrf_mod % absorbed power cannot be more than incident power
+            %
+            xyPinc_mod(ir,iy) = bPrf_mod - Pabs_mod/2; %incident power consistent with absorbed power
+            %
+        else
+            %
+            xyPinc_out(ir,iy) = xyPinc_in(ir,iy)*bPrf_mod/xyPrf_dke(ir_dke,iy); %linear anticipation
+            %
+            Pabs_mod = bPrf_mod;
+            %
+        end
+        %
         bPrf_mod = bPrf_mod - Pabs_mod;
         % 
         % next FS
