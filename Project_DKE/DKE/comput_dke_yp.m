@@ -28,11 +28,7 @@ elseif strcmp(machine,'PCWIN') == 1,
 	mex = '.dll';
 elseif strcmp(machine,'MAC') == 1,
 	s = '/';
-   dossier = '/Volumes/Ailefroide/CVS/Project_DKE';
-	mex = '.mex';
-elseif strcmp(machine,'MAC2') == 1,
-	s = ':';
-	dossier = 'Ailefroide:CVS:Project_DKE';
+   dossier = '/Users/Yves/CEA/Projets/Project_DKE/';
 	mex = '.mexmac';
 elseif strcmp(machine,'GLNXA64') == 1,
 	s = '/';
