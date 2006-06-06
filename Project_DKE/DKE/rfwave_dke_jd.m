@@ -1,4 +1,4 @@
-function [waveparam,xyprop_dke_rf,xyP0_in_rf,yb_rf] = rfwave_dke_jd(dkeparam,display,equil,equilDKE,gridDKE,mksa,waves);
+function [waveparam,xyprop_dke_rf,xyP0_in_rf,yb_rf,xys] = rfwave_dke_jd(dkeparam,display,equil,equilDKE,gridDKE,mksa,waves);
 % 
 %	RF input parameters for the Drift Kinetic equation solver (dke_4_1yp.m). 
 %
@@ -243,6 +243,7 @@ else
     xyP0_in_rf = xymask_prop_dke.*(ones(nr,1)*yP0(ib_rf_old));% initial incident power
 end
 %
+xys = xyvray(:,:,1);
 xythetab_rf = xyvray(:,:,3);
 xyNpar_in = xyvray(:,:,4);
 xyNperp_rf = xyvray(:,:,5);
