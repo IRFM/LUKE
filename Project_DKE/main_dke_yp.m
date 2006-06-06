@@ -26,7 +26,7 @@ global nfig;
 %
 [Zmomcoef] = momentumcoefbuilder_dke_yp(gridDKE,mksa);%Momentum space coefficients for FP calculations
 [Zbouncecoef] = bouncecoefbuilder_dke_yp(dkeparam_out,display,equilDKE,gridDKE);%bounce averaging coefficients
-[waveparam,xyprop_dke,xyPinc_in,yb] = rfwave_dke_jd(dkeparam_out,display,equil,equilDKE,gridDKE,mksa,waves);%RF wave parameters preprocessing calculations
+[waveparam,xyprop_dke,xyPinc_in,yb,xys] = rfwave_dke_jd(dkeparam_out,display,equil,equilDKE,gridDKE,mksa,waves);%RF wave parameters preprocessing calculations
 %
 [XXsinksource] = sinksourcecoeffbuilder_dke_yp(dkeparam_out,display,equil,equilDKE,gridDKE,mksa,XXsinksource_in);%External sink and source contributions (for right-hand side part of the FP equation)
 [Zmripple] = mripplecoefbuilder_dke_yp(dkeparam_out,display,equil,equilDKE,gridDKE,mksa,ripple);%Magnetic ripple matrix coefficients
@@ -72,18 +72,19 @@ residue_rf = [];
 for it_rf=1:nit_rf % convergence in the ray-tracing mode
     if ~isempty(waveparam),%in the case of RF waves only
         %
-        if 1,%it_rf > 1
+        if it_rf > 1,%1,
             xyPinc_mod = delta_rt*xyPinc_mod_old + (1 - delta_rt)*xyPinc_mod;
         end
         %
         xyD0_rf_mod = xyD0_rf_in.*xyPinc_mod./xyPinc_in;% The diffusion coefficient is proportional to the incident power
         %
-        if nit_rf > 1,
+        if 0,%nit_rf > 1,
             if it_rf == 1,
                 redfac = max(sum(xyPinc_mod.'))/sum(max(xyPinc_in(:,yb)));
             else
                 redfac = redfac - 1;
             end
+            %redfac = 10/it_rf;
             %
             redfac = max([redfac,1]);
             %
@@ -242,7 +243,9 @@ dke_out.memoryLU_g_out = memoryLU_g_out;
 dke_out.time_out = time_out;
 dke_out.waveparam = waveparam;
 dke_out.xyprop_dke = xyprop_dke;
+dke_out.xyPinc_in = xyPinc_in;
 dke_out.xyPinc_mod = xyPinc_mod;
+dke_out.xys = xys;
 dke_out.residue_rf = residue_rf;
 dke_out.yb = yb;
 dke_out.XXsource = XXsinksource_in;
