@@ -66,9 +66,9 @@ fid = fopen('MUMPS_B_in.bin','wb');fwrite(fid,B,'double');if (fclose(fid)~=0), e
 % Test processor charge to select the first less used regarding the total number of processors needed
 %
 if display_mode >=1,
-   unix(['qstat -f | awk ''$2=="BP" {print $0}'' | awk ''{print $1,$4}'' | sed -e ''s/all.q@//g'' | sed -e ''s/.cad.cea.fr./ /g'' | sed -e ''s/.cad.cea.f./ /g'' |  grep -v sequenceur | sed -e ''s/sequenceur@//g'' | awk ''{print $2,$1}'' | sort | uniq | awk ''{if (int(2.5-$1)>0) {i=i+int(2.5-$1);if (i<=100000) {printf "%s%s%s\n" " ",$2,":",int(2.5-$1)}}}''']);%all available nodes on the critrion of charge for bi-processors are listed
+   unix(['qstat -f | awk ''$2=="BP" {print $0}'' | awk ''{print $1,$4}'' | sed -e ''s/all.q@//g'' | sed -e ''s/.cad.cea.fr./ /g'' | sed -e ''s/.cad.cea.f./ /g'' |  grep -v sequenceur | sed -e ''s/sequenceur@//g'' | awk ''{print $2,$1}'' | sort | uniq | awk ''{if (int(2.5-$1)>0) {i=i+int(2.5-$1);if (i<=100000) {printf "%s%s%s\n" " ",$2,":",int(2.5-$1)}}}''  | grep -v NA ']);%all available nodes on the critrion of charge for bi-processors are listed
 end
-unix(['qstat -f | awk ''$2=="BP" {print $0}'' | awk ''{print $1,$4}'' | sed -e ''s/all.q@//g'' | sed -e ''s/.cad.cea.fr./ /g'' | sed -e ''s/.cad.cea.f./ /g'' |  grep -v sequenceur | sed -e ''s/sequenceur@//g'' | awk ''{print $2,$1}'' | sort | uniq | awk ''{if (int(2.5-$1)>0) {i=i+int(2.5-$1);if (i<=100000) {printf "%s%s%s\n" " ",$2,":",int(2.5-$1)}}}'' >! .machines']);%Select the nodes (1 or 2 processors per node), and when 0 processor is available, the node is not put in the list
+   unix(['qstat -f | awk ''$2=="BP" {print $0}'' | awk ''{print $1,$4}'' | sed -e ''s/all.q@//g'' | sed -e ''s/.cad.cea.fr./ /g'' | sed -e ''s/.cad.cea.f./ /g'' |  grep -v sequenceur | sed -e ''s/sequenceur@//g'' | awk ''{print $2,$1}'' | sort | uniq | awk ''{if (int(2.5-$1)>0) {i=i+int(2.5-$1);if (i<=100000) {printf "%s%s%s\n" " ",$2,":",int(2.5-$1)}}}'' | grep -v NA >! .machines']);%Select the nodes (1 or 2 processors per node), and when 0 processor is available, the node is not put in the list
 %
 fid = fopen('.machines','r');
 listactivenodes = fread(fid,'uint8=>char')';
