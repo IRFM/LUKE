@@ -85,7 +85,7 @@ for iy = 1:ny
             %
         else
             %
-            xyPinc_out(ir,iy) = xyPinc_in(ir,iy)*bPrf_mod/xyPrf_dke(ir_dke,iy); %linear anticipation
+            xyPinc_mod(ir,iy) = xyPinc_in(ir,iy)*bPrf_mod/xyPrf_dke(ir_dke,iy); %linear anticipation
             %
             Pabs_mod = bPrf_mod;
             %
