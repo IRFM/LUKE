@@ -128,19 +128,21 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
             %
             if display.display_mode >= 1,figure(Fig_QLIter),plot(1:it_rf,residue_rf,'r+'),set(gca,'yscale','log'),axis([0,nit_rf,1e-5,1]),drawnow;end
             %
-            info_dke_yp(2,'---------------------------------------------------------');
-            info_dke_yp(2,['Quasilinear iteration : ',int2str(it_rf),', Residu = ',num2str(residue_rf(it_rf)),', delta_rt = ',num2str(delta_rt)]);
-            info_dke_yp(2,'---------------------------------------------------------');
+            if display.display_mode >=1,
+               info_dke_yp(2,'---------------------------------------------------------');
+               info_dke_yp(2,['Quasilinear iteration : ',int2str(it_rf),', Residu = ',num2str(residue_rf(it_rf)),', delta_rt = ',num2str(delta_rt)]);
+               info_dke_yp(2,'---------------------------------------------------------');
+            end
             %
             if it_rf > 2 & residue_rf(it_rf-1) < prec_rf*10,
                 delta_rt = 0;
             end
 %      
-            if residue_rf(it_rf) <= dkeparam_out.prec_rf & redfac == 1 & it_rf > 1%0,
+            if residue_rf(it_rf) <= dkeparam_out.prec_rf & redfac == 1 & it_rf > 1 & display.display_mode >=1,
                 info_dke_yp(2,['Successfull convergence achieved for ray-tracing coupling after ',int2str(it_rf),' iterations !']);
                 break
-            else
-            info_dke_yp(2,['Iteration ',int2str(it_rf),', residue = ',num2str(residue_rf(it_rf))]);            
+            else   	
+               if display.display_mode >=1,info_dke_yp(2,['Iteration ',int2str(it_rf),', residue = ',num2str(residue_rf(it_rf))]);end       
             end
         end
     end

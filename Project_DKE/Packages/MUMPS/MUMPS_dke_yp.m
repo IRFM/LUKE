@@ -23,7 +23,9 @@ function [X,flag,text] = MUMPS_dke_yp(MUMPSparam,A,B,display_mode,temppath)
 %
 %By Joan Decker (CEA-DRFC, joan.decker@cea.fr) and Yves Peysson (CEA-DRFC, yves.peysson@cea.fr)
 %
-info_dke_yp(2,'MUMPS matrix inversion - parallel processing -')
+if display_mode >= 1,
+   info_dke_yp(2,'MUMPS matrix inversion - parallel processing -')
+end
 %
 %Write matrix A and vector B in MUMPS_in binary file
 %
