@@ -78,7 +78,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
         %
         xyD0_rf_mod = xyD0_rf_in.*xyPinc_mod./xyPinc_in;% The diffusion coefficient is proportional to the incident power
         %
-        if nit_rf > 1,
+        if 0,%nit_rf > 1,
             if it_rf == 1,
                 redfac = max(sum(xyPinc_mod.'))/sum(max(xyPinc_in(:,yb)));
             else
@@ -135,8 +135,8 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
             end
             %
 %      
-            if residue_rf(it_rf) <= dkeparam_out.prec_rf & redfac == 1 & it_rf > 1 & display.display_mode >=1,
-                info_dke_yp(2,['Successfull convergence achieved for ray-tracing coupling after ',int2str(it_rf),' iterations !']);
+            if residue_rf(it_rf) <= dkeparam_out.prec_rf & redfac == 1 & it_rf > 1,
+            	 if display.display_mode >=1,info_dke_yp(2,['Successfull convergence achieved for ray-tracing coupling after ',int2str(it_rf),' iterations !']);end
                 break
             else   	
                if display.display_mode >=1,info_dke_yp(2,['Iteration ',int2str(it_rf),', residue = ',num2str(residue_rf(it_rf))]);end       
