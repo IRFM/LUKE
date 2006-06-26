@@ -239,7 +239,7 @@ end
 iX = (gridindex_rf.mask_m - 1)*npn + gridindex_rf.mask_p;
 iXX = (gridindex_rf.mask_r - 1)*nmhu*npn + iX;
 ixy = (gridindex_rf.mask_y - 1)*nr + gridindex_rf.mask_r;
-ixyn = (gridindex_rf.mask_n - 1)*nmhu*npn + ixy;
+ixyn = (gridindex_rf.mask_n - 1)*nb*nr + ixy;
 iyn = (gridindex_rf.mask_n - 1)*nb + gridindex_rf.mask_y;
 %
 gridindex_rf = rmfield(gridindex_rf,['mask_r';'mask_m';'mask_p';'mask_n';'mask_y']);
@@ -437,7 +437,7 @@ XYIntegrand = XYdmhu.*XYdpn.*(XYIntegrandm + XYIntegrandp)/2;
 %
 XYIntegrand = sparse(double(iX),double(ixyn),double(XYIntegrand),npn*nmhu,nr*nb*nn_rf);
 %
-ZP0.xyn_rf_fsav = 2*pi*xynqratio.*full(reshape(sum(XYIntegrand),[nr,nb,nn_rf]));
+ZP0.xyn_rf_fsav = 2*pi*xynqratio.*reshape(full(sum(XYIntegrand)),[nr,nb,nn_rf]);
 %
 ZP0.xy_rf_fsav = sum(ZP0.xyn_rf_fsav,3);%sum over harmonic numbers
 ZP0.x_rf_fsav = sum(ZP0.xy_rf_fsav,2);%sum over rays
@@ -451,7 +451,7 @@ if dke_mode == 1,
     %
     XYIntegrand = sparse(double(iX),double(ixyn),double(XYIntegrand),npn*nmhu,nr*nb*nn_rf);
     %
-    ZP0.xyn_rf_tp_fsav = 2*pi*xynqratio.*full(reshape(sum(XYIntegrand),[nr,nb,nn_rf]));
+    ZP0.xyn_rf_tp_fsav = 2*pi*xynqratio.*reshape(full(sum(XYIntegrand)),[nr,nb,nn_rf]);
     %
     XYIntegrandm = XYpnm.*XYpnm.*XYpnm.*XYlambda.*XYSp0_rf_g_imj./XYgammam;
     XYIntegrandp = XYpnp.*XYpnp.*XYpnp.*XYlambda.*XYSp0_rf_g_ipj./XYgammap;
@@ -460,7 +460,7 @@ if dke_mode == 1,
     %
     XYIntegrand = sparse(double(iX),double(ixyn),double(XYIntegrand),npn*nmhu,nr*nb*nn_rf);
     %
-    ZP0.xyn_rf_g_fsav = 2*pi*xynqratio.*full(reshape(sum(XYIntegrand),[nr,nb,nn_rf]));
+    ZP0.xyn_rf_g_fsav = 2*pi*xynqratio.*reshape(full(sum(XYIntegrand)),[nr,nb,nn_rf]);
     %
     ZP0.xy_rf_tp_fsav = sum(ZP0.xyn_rf_tp_fsav,3);%sum over harmonic numbers
     ZP0.xy_rf_g_fsav = sum(ZP0.xyn_rf_g_fsav,3);%sum over harmonic numbers
@@ -477,11 +477,11 @@ if dke_mode == 1,
         %
         XYIntegrand = XYdmhu.*XYdpnm.*XYpnm.*XYpnm.*XYmhu.*XYlambda.*XYSp0_rf_tp1_imj;
         XYIntegrand = sparse(double(iX),double(ixyn),double(XYIntegrand),npn*nmhu,nr*nb*nn_rf);
-        xggradpsi21 = 2*pi*xqratio.*(xR0.*xBT0./xB0).*sum(sum(full(reshape(sum(XYIntegrand),[nr,nb,nn_rf])),3),2).';
+        xggradpsi21 = 2*pi*xqratio.*(xR0.*xBT0./xB0).*sum(sum(reshape(full(sum(XYIntegrand)),[nr,nb,nn_rf]),3),2).';
         %
         XYIntegrand = XYdmhu.*XYdpn.*XYpn.*XYpn.*XY1mmhu2m.*XYlambda.*XYRlambda_m.*XYSm0_rf_tp1_ijm;
         XYIntegrand = sparse(double(iX),double(ixyn),double(XYIntegrand),npn*nmhu,nr*nb*nn_rf);
-        xggradpsi1 = 2*pi*xynqratio.*full(reshape(sum(XYIntegrand),[nr,nb,nn_rf]));
+        xggradpsi1 = 2*pi*xynqratio.*reshape(full(sum(XYIntegrand)),[nr,nb,nn_rf]);
     end
     %    
 end
