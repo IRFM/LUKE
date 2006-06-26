@@ -360,7 +360,8 @@ SXY = size(Xmask);
 %
 % Vector construction
 %
-XYyn = n_rf_list(mask_n)./xyomegaratio(xymask);
+XYn_rf = reshape(n_rf_list(mask_n),[length(mask_n),1]);
+XYyn = XYn_rf./xyomegaratio(xymask);
 XYpsib = xypsib(xymask);   
 XYynb = XYyn.*XYpsib;
 %
@@ -478,8 +479,6 @@ clear XYZbfac
 %
 % Polarization vector is normalized to 1.  
 %
-XYn_rf = n_rf_list(mask_n);
-%
 XYepolp_rf = xyepolp_rf(xymask); 
 XYepolm_rf = xyepolm_rf(xymask); 
 XYepolz_rf = xyepolz_rf(xymask); 
@@ -527,13 +526,13 @@ end
 %
 Yxmask = (((mask_n - 1)*nr + (mask_r - 1))*nb + (mask_y - 1))*npn + mask_p;%mask in pnp-y-rho-n 4-D matrices
 %
-XYrespol_mhuflip.ippj = flipud(sparse(double(mask_m),double(Yxmask),double(XYrespol.ippj),nmhu,npn*nb*nr));
-XYrespol_mhuflip.ipj = flipud(sparse(double(mask_m),double(Yxmask),double(XYrespol.ipj),nmhu,npn*nb*nr));
-XYrespol_mhuflip.ij = flipud(sparse(double(mask_m),double(Yxmask),double(XYrespol.ij),nmhu,npn*nb*nr));
-XYrespol_mhuflip.imj = flipud(sparse(double(mask_m),double(Yxmask),double(XYrespol.imj),nmhu,npn*nb*nr));
-XYrespol_mhuflip.immj = flipud(sparse(double(mask_m),double(Yxmask),double(XYrespol.immj),nmhu,npn*nb*nr));
-XYrespol_mhuflip.ijp = flipud(sparse(double(mask_m),double(Yxmask),double(XYrespol.ijp),nmhu,npn*nb*nr));
-XYrespol_mhuflip.ijm = flipud(sparse(double(mask_m),double(Yxmask),double(XYrespol.ijm),nmhu,npn*nb*nr));
+XYrespol_mhuflip.ippj = flipud(sparse(double(mask_m),double(Yxmask),double(XYrespol.ippj),nmhu,npn*nb*nr*nn_rf));
+XYrespol_mhuflip.ipj = flipud(sparse(double(mask_m),double(Yxmask),double(XYrespol.ipj),nmhu,npn*nb*nr*nn_rf));
+XYrespol_mhuflip.ij = flipud(sparse(double(mask_m),double(Yxmask),double(XYrespol.ij),nmhu,npn*nb*nr*nn_rf));
+XYrespol_mhuflip.imj = flipud(sparse(double(mask_m),double(Yxmask),double(XYrespol.imj),nmhu,npn*nb*nr*nn_rf));
+XYrespol_mhuflip.immj = flipud(sparse(double(mask_m),double(Yxmask),double(XYrespol.immj),nmhu,npn*nb*nr*nn_rf));
+XYrespol_mhuflip.ijp = flipud(sparse(double(mask_m),double(Yxmask),double(XYrespol.ijp),nmhu,npn*nb*nr*nn_rf));
+XYrespol_mhuflip.ijm = flipud(sparse(double(mask_m),double(Yxmask),double(XYrespol.ijm),nmhu,npn*nb*nr*nn_rf));
 %
 XYmask = (Yxmask - 1)*nmhu + mask_m;
 %
