@@ -85,10 +85,12 @@ if nargin < 4
 end
 if nargin < 3
     display_mode = 0;
+elseif ~isstruct(display)
+    display_mode = display;
 else
     display_mode = display.display_mode;
 end
-if nargin < 2
+if nargin < 2 | ~isstruct(radialDKE),
     xpsin_S_dke = NaN;%no incremental volume or surface calculations
     xpsin = NaN;%the radial grid is the equilibrium grid
 else
@@ -261,7 +263,7 @@ end
 %
 if display_mode >= 2,
 %    
-    prho = (equil.R(:,1)' - Rp)/ap;
+    prho = (equil.R(:,1)' - Rp)/(equil.R(npsi,1)' - Rp);
 %
 % displays the equilibrium profiles
 %
