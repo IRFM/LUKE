@@ -531,8 +531,8 @@ XYrespol_mhuflip.ipj = flipud(sparse(double(mask_m),double(Yxmask),double(XYresp
 XYrespol_mhuflip.ij = flipud(sparse(double(mask_m),double(Yxmask),double(XYrespol.ij),nmhu,npn*nb*nr*nn_rf));
 XYrespol_mhuflip.imj = flipud(sparse(double(mask_m),double(Yxmask),double(XYrespol.imj),nmhu,npn*nb*nr*nn_rf));
 XYrespol_mhuflip.immj = flipud(sparse(double(mask_m),double(Yxmask),double(XYrespol.immj),nmhu,npn*nb*nr*nn_rf));
-XYrespol_mhuflip.ijp = flipud(sparse(double(mask_m),double(Yxmask),double(XYrespol.ijp),nmhu,npn*nb*nr*nn_rf));
-XYrespol_mhuflip.ijm = flipud(sparse(double(mask_m),double(Yxmask),double(XYrespol.ijm),nmhu,npn*nb*nr*nn_rf));
+XYrespol_mhuflip.ijp = flipud(sparse(double(mask_m),double(Yxmask),double(XYrespol.ijm),nmhu,npn*nb*nr*nn_rf));
+XYrespol_mhuflip.ijm = flipud(sparse(double(mask_m),double(Yxmask),double(XYrespol.ijp),nmhu,npn*nb*nr*nn_rf));
 %
 XYmask = (Yxmask - 1)*nmhu + mask_m;
 %
