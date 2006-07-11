@@ -1,4 +1,4 @@
-function [XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,radial_mode,memoryLU_f,memoryLU_g] = solver_dke_yp(dkeparam,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,Xmask_r_edge,XXsinksource,XXfM,XXfinit)
+function [XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,radial_mode,memoryLU_f,memoryLU_g] = solver_dke_yp(path,dkeparam,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,Xmask_r_edge,XXsinksource,XXfM,XXfinit)
 %
 %
 %   Self-consistent 3-D relativistic solver of the drift kinetic equation in momentum space with Beliaev-Budker collision integrals 
@@ -113,7 +113,7 @@ dke_mode = dkeparam.dke_mode;
 bounce_mode = dkeparam.bounce_mode;
 store_mode = dkeparam.store_mode;
 dtn = dkeparam.dtn;
-temppath = dkeparam.temppath;
+temppath = path.temppath;
 prec0_f = dkeparam.prec0_f;
 prec0_g = dkeparam.prec0_g;
 nit_f = dkeparam.nit_f;
@@ -431,7 +431,7 @@ for it_f = 2:(nit_f+1),
         elseif dkeparam.invproc == 3,%Matlab qmr iterative inversion method
             [MMXS_t,flaginv_f] = qmr(MMXPC_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_f_t,MMXU_f_t);
         elseif dkeparam.invproc == -1,%MUMPS FORTAN 95 parallel processing package (direct inversion)
-            [MMXS_t,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),display_mode,temppath);
+            [MMXS_t,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),display_mode,path);
         elseif dkeparam.invproc == -2,%HYPRE FORTAN 95 parallel processing package (direct inversion)
 %            [MMXS_t,dummy1,dummu2,flaginv_f] = HYPRE_dke_yp(dkeparam.HYPREparam,MMXPC_f_t,MMXR_t,dkeparam.ludroptol,temppath);
         end
