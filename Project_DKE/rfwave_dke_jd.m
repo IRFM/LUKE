@@ -190,9 +190,10 @@ nbb_rf = size(xyvray_dke,2);%number of ray subdivisions
 %
 if nb_rf == 0%no rays
     waveparam = zeros(nr,0,13);
-    xyprop_dke_rf = [];
-    xyP0_in_rf = [];
-    yb_rf = [];
+    xyprop_dke_rf = zeros(nr,0);
+    xyP0_in_rf = zeros(nr,0);
+    xys_rf = zeros(nr,0);
+    yb_rf = zeros(1,0);
     %    
     return
 end
