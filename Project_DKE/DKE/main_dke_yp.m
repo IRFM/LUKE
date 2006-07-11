@@ -65,6 +65,7 @@ if ~isempty(waveparam),%initialization of wave parameters
 else
     nit_rf = 1;
     xyPinc_mod = '';
+    xyPinc_mod_old = '';
 end  
 %
 residue_rf = [];
@@ -243,7 +244,7 @@ dke_out.time_out = time_out;
 dke_out.waveparam = waveparam;
 dke_out.xyprop_dke = xyprop_dke;
 dke_out.xyPinc_in = xyPinc_in;
-dke_out.xyPinc_mod = xyPinc_mod;
+dke_out.xyPinc_mod = xyPinc_mod_old;
 dke_out.xys = xys;
 dke_out.residue_rf = residue_rf;
 dke_out.yb = yb;
