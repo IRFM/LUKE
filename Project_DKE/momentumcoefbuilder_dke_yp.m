@@ -34,6 +34,8 @@ gammamm = [1,gamma(1:gridDKE.npn-1)];
 gammapp = [gamma(2:gridDKE.npn),gamma(gridDKE.npn)];
 Xgammamm = gammamm'*ones(1,gridDKE.nmhu);
 Xgammapp = gammapp'*ones(1,gridDKE.nmhu);
+XXgammamm = repmat(Xgammamm,[1,1,gridDKE.nr]);
+XXgammapp = repmat(Xgammapp,[1,1,gridDKE.nr]);
 %
 sigma = asinh(z);
 sigmam = asinh(zm);
@@ -90,6 +92,8 @@ Zmomcoef.gammamm = gammamm;
 Zmomcoef.gammapp = gammapp;
 Zmomcoef.Xgammamm = Xgammamm;
 Zmomcoef.Xgammapp = Xgammapp;
+Zmomcoef.XXgammamm = XXgammamm;
+Zmomcoef.XXgammapp = XXgammapp;
 %
 Zmomcoef.sigma = sigma;
 Zmomcoef.sigmam = sigmam;
