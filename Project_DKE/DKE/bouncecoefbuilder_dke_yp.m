@@ -1,4 +1,4 @@
-function [Zbouncecoef] = bouncecoeffbuilder_dke_yp(dkeparam,display,equilDKE,gridDKE)
+function [Zbouncecoef] = bouncecoeffbuilder_dke_yp(path,dkeparam,display,equilDKE,gridDKE)
 %
 %   Calculate bounce averaged coefficients for the 3D electron relativistic drift kinetic solver.
 %
@@ -20,7 +20,7 @@ xBp0 = equilDKE.xBp0;
 bounce_mode = dkeparam.bounce_mode;
 dke_mode = dkeparam.dke_mode;
 equil_mode = dkeparam.equil_mode;
-temppath = dkeparam.temppath;
+temppath = path.temppath;
 %
 display_mode = display.display_mode;
 %
