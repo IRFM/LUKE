@@ -4,14 +4,17 @@ function bounce_ripple_jd(bounce_mode,pnmax_S,xmhubounce2,ir_display,ripple,ppar
 %
 if bounce_mode >= 1,%Draw bounce domain boundaries
     line([0,pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))],'color','k');
+    set(gca,'linewidth',2);
     line([0,-pnmax_S*sqrt(xmhubounce2(ir_display))],[0,pnmax_S*sqrt(1 - xmhubounce2(ir_display))],'color','k');
+    set(gca,'linewidth',2);
 %
 	if isempty(ripple) == 0,
-    	if isnan(ripple.nhuloss) == 0,%Draw the magnetic ripple loss cone
-			hold on,plot(pparsupertrap_ref,pperpsupertrap_ref,'r'),hold off
-			line([xpndetrap_ref(ir_display)*xmhusupertrap(ir_display),pnmax_S*xmhusupertrap(ir_display)],[xpndetrap_ref(ir_display)*sqrt(1-xmhusupertrap(ir_display)^2),pnmax_S*sqrt(1-xmhusupertrap(ir_display)^2)],'LineStyle','-','color','r');
-			line([-xpndetrap_ref(ir_display)*xmhusupertrap(ir_display),-pnmax_S*xmhusupertrap(ir_display)],[xpndetrap_ref(ir_display)*sqrt(1-xmhusupertrap(ir_display)^2),pnmax_S*sqrt(1-xmhusupertrap(ir_display)^2)],'LineStyle','-','color','r');					
-    	end
+    	if isnan(ripple) == 0,%Draw the magnetic ripple loss cone
+			hold on,gcl = plot(pparsupertrap_ref,pperpsupertrap_ref,'g');hold off
+			set(gcl,'linewidth',2);
+			line([xpndetrap_ref(ir_display)*xmhusupertrap(ir_display),pnmax_S*xmhusupertrap(ir_display)],[xpndetrap_ref(ir_display)*sqrt(1-xmhusupertrap(ir_display)^2),pnmax_S*sqrt(1-xmhusupertrap(ir_display)^2)],'LineStyle','-','color','g','linewidth',2);
+			line([-xpndetrap_ref(ir_display)*xmhusupertrap(ir_display),-pnmax_S*xmhusupertrap(ir_display)],[xpndetrap_ref(ir_display)*sqrt(1-xmhusupertrap(ir_display)^2),pnmax_S*sqrt(1-xmhusupertrap(ir_display)^2)],'LineStyle','-','color','g','linewidth',2);					
+		end
     end
 end
 %
