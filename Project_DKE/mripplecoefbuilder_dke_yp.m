@@ -39,7 +39,7 @@ if ~isempty(ripple),
 %
    tokname = equil.id;%Tokamak name
 %
-   xnhuloss = ones(size(xrho))*1000/mksa.nhu_ref;%Normalized to the reference frequency(forced to very large loss frequency, otherwise no physical meaning)
+   xnhuloss = ones(size(xrho))*1000;%Normalized to the reference frequency(forced to very large loss frequency, otherwise no physical meaning)
 %
    for ir = 1:nr,
 		if isnan(xnhuloss(ir)) == 0 & bounce_mode == 1 & ~isempty(findstr(tokname,'TS')) == 1,%WARNING: only valid for the TORE SUPRA tokamak with large magnetic ripple
