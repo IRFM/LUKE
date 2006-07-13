@@ -77,12 +77,9 @@ dkeparam.ludroptol = 1e-4;%Drop tolerance for the partial LU decomposition (reci
 dkeparam.invproc = -1;%Iterative matrix inversion method:  (3) qmr iterative method (LU used), (2) bicg iterative method (LU used), (1) cgs iterative method (LU used), (0) Direct Matlab inversion (LU not used, (-1): MUMPS parallel fortran 95 direct inversion (LU not used) (-2) HYPRE parallel fortran 95 direct inversion (LU not used)
 dkeparam.mlprecinv = 1e-4;%Accuracy for the MatLab build-in matrix inversion.
 dkeparam.mlmaxitinv = 30;%Maximum number of iterations for iterative method (between 1 and 20 usualy, if empty, mlmaxitinv = min(matrixdim,20). See matlab documentation.
-dkeparam.MUMPSparam.path = '/home/sccp/gsem/peysson/Project_DKE/MUMPS_4.6.1/dke';%Directory path adress where compiled MUMPS program is located (empty: local directory)
 dkeparam.MUMPSparam.nproc = 4;%number of processor used by MUMPS (depends of the computer framework). Default is 1
-dkeparam.HYPREparam.path = '';%Directory path adress where compiled HYPRE program is located (empty: local directory)
 dkeparam.HYPREparam.nproc = 2;%number of processor used by HYPRE (depends of the computer framework). Default is 1
 %
 dkeparam.store_mode = 0;%Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight
-dkeparam.temppath = '/scratch';%Absolute directory path adress where temporary matrices are stored (empty: local directory)
 %
 eval(['save DKEPARAM_',dkeparam_id,'.mat dkeparam']);
