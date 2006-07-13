@@ -34,15 +34,15 @@ beta0 = 0.1;%
 %
 Te0 = 0.1;%  Core electron temperature (keV)
 Tea = Te0;%  Edge electron temperature (keV)
-eTe = 1;%  Exponent for Te profile (Te(r) = (Te0-Tea)*(1-(r/a)^2)^eTe + Tea)
+eTe = 0;%  Exponent for Te profile (Te(r) = (Te0-Tea)*(1-(r/a)^2)^eTe + Tea)
 %
 ne0 = 1.0e19;%  Core electron density (m-3)
 nea = ne0;%  Edge electron density (m-3)
-ene = 1;%  Exponent for ne profile (ne(r) = (ne0-nea)*(1-(r/a)^2)^ene + nea)
+ene = 0;%  Exponent for ne profile (ne(r) = (ne0-nea)*(1-(r/a)^2)^ene + nea)
 %
 Ti0 = Te0;%  Core ion temperature (keV)
 Tia = Ti0;%  Edge ion temperature (keV)
-eTi = 1;%  Exponent for Ti profile (Ti(r) = (Ti0-Tia)*(1-(r/a)^2)^eTi + Tia)
+eTi = 0;%  Exponent for Ti profile (Ti(r) = (Ti0-Tia)*(1-(r/a)^2)^eTi + Tia)
 %
 Zeff0 = 1;%  Core effective charge (a.u.)
 Zeffa = 1;%  Edge effective charge (a.u.)
