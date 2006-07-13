@@ -121,6 +121,7 @@ if exist(['helmex77',mexext]) == 3,
 	zz(ind) = [];
 	R_sep = spline(alpha',rr',theta_sep);%resampling on 201 points
 	Z_sep = spline(alpha',zz',theta_sep);%resampling on 201 points
+	figure(1),plot(R_sep,Z_sep);axis('equal')
 %
 	npsi = 101;%ONLY 101 radial profile grid points for HELMEX77
 	ntheta = 65;%ONLY 65 poloidal grid points for HELMEX77
@@ -129,11 +130,20 @@ if exist(['helmex77',mexext]) == 3,
 	ptot_in = interp1(1:npsi_guess,ptot_guess,linspace(1,201,101));%ONLY 101 radial profile grid points for HELMEX77
 	pj_in = interp1(1:npsi_guess,pj_guess,linspace(1,201,101));%ONLY 101 radial profile grid points for HELMEX77 
 %
+%	figure(2),plot(ppsi_in,'o')
+%	figure(3),plot(ppsi_in,ptot_in)
+%	figure(4),plot(ppsi_in,pj_in)	
+	init = [0,1e-3,1e-7];
+%
 	[C2,C3,rho2m,R,Zout,rho,Vp,drhoor,qpsi,ppsi,ftra,Fdia,psiT,B2,invB2,Sp, ...
 			rav,oor,drhoav,xshift,xrad,xell,xtriapos,xtrianeg,jout,iout,pout, ...
 			r2,oor2,r2tau2,drho2ob2,r3otau3,r3otau,BR,BZ,b,df2,kkbig,li, ...
 			dimerc,drmerc,balcrit,ifail]=...
-			helmex77(ppsi_in,ptot_in,pj_in,Rp,Bt,Ip*1e6,2,ap,0,0,0,R_sep,Z_sep,0,[],[],[],2);
+			helmex77(ppsi_in,ptot_in,pj_in*1e6,Rp,Bt,Ip*1e6,2,ap,0,0,0,R_sep,Z_sep,init,[],[],[],1);
+%			
+		keyboard		
+			
+			
 %	  
 		BPHI = (Fdia*ones(1,ntheta))./R;
 %
