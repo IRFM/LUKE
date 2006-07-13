@@ -7,7 +7,7 @@
 %
 clear all
 %
-equil.id = 'TScirc_flatprof_cyl';% scenario identification
+equil.id = 'TScirc';% scenario identification
 %
 [qe,me,mp,mn,e0,mu0,re,mc2,clum] = pc_dke_yp;
 %
@@ -18,7 +18,7 @@ qopt = 0;%Option for q profile. (0): constant (default, uniform current, psi=rho
 % Equilibrium parameters
 %
 ap = 0.7;%  Plasma minor radius on LFS midplane (m)
-Rp = 10000;%  Plasma major radius on axis (m)
+Rp = 2.4;%  Plasma major radius on axis (m)
 Zp = 0;%  Global plasma vertical shift (m)
 Ip = 1.0;% Signed value of the plasma current (MA) (with R,Z,phi direct)
 Bt = 3.6;%  Signed value of the toroidal magnetic field on the magnetic axis (T) (with R,Z,phi direct)
@@ -32,17 +32,17 @@ eq = NaN;%  Exponent for q radial profile (q = (qmax - qmin)*(r/a).^eq + qmin, q
 %
 beta0 = 0.1;% 
 %
-Te0 = 0.1;%  Core electron temperature (keV)
+Te0 = beta0^2*mc2;%  Core electron temperature (keV)
 Tea = Te0;%  Edge electron temperature (keV)
-eTe = 1;%  Exponent for Te profile (Te(r) = (Te0-Tea)*(1-(r/a)^2)^eTe + Tea)
+eTe = 0;%  Exponent for Te profile (Te(r) = (Te0-Tea)*(1-(r/a)^2)^eTe + Tea)
 %
-ne0 = 1.0e19;%  Core electron density (m-3)
+ne0 = 2.0e19;%  Core electron density (m-3)
 nea = ne0;%  Edge electron density (m-3)
-ene = 1;%  Exponent for ne profile (ne(r) = (ne0-nea)*(1-(r/a)^2)^ene + nea)
+ene = 0;%  Exponent for ne profile (ne(r) = (ne0-nea)*(1-(r/a)^2)^ene + nea)
 %
 Ti0 = Te0;%  Core ion temperature (keV)
 Tia = Ti0;%  Edge ion temperature (keV)
-eTi = 1;%  Exponent for Ti profile (Ti(r) = (Ti0-Tia)*(1-(r/a)^2)^eTi + Tia)
+eTi = 0;%  Exponent for Ti profile (Ti(r) = (Ti0-Tia)*(1-(r/a)^2)^eTi + Tia)
 %
 Zeff0 = 1;%  Core effective charge (a.u.)
 Zeffa = 1;%  Edge effective charge (a.u.)
