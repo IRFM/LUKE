@@ -1,3 +1,0 @@
-1) Why the numerical method may be so important for the conservative nature
-of the code (LH mainly) ? Matrix conditioning ?
-2) large Dql
