@@ -13,5 +13,6 @@ path.MUMPS = '/home/sccp/gsem/peysson/Packages/MUMPS_4.6.1/dke';%Where MUMPS mat
 path.HYPRE = '';%Where HYPRE matrix solver is stored
 path.PETSC = '';%Where PETSC matrix solver is stored
 path.temppath = '/scratch';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+path.mex = '/home/sccp/gsem/peysson/Project_DKE/MEX';
 %
 eval(['save PATH_',path_id ,'.mat path']);

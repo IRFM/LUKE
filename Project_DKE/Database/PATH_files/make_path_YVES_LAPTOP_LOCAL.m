@@ -13,5 +13,6 @@ path.MUMPS = '/Users/Yves/CEA/Projets/Packages/MUMPS_4.6.2_seq/dke_MAC';%Where M
 path.HYPRE = '';%Where HYPRE matrix solver is stored
 path.PETSC = '';%Where PETSC matrix solver is stored
 path.temppath = '';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+path.mex = '/Users/Yves/CEA/Projets/Project_DKE/MEX';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 eval(['save PATH_',path_id ,'.mat path']);
