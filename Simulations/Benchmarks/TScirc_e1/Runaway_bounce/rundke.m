@@ -17,6 +17,9 @@ path_simul = '';%if nothing is specified, the working directory is first used an
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
 rho_S = logspace(-4,-0.1,30);%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
+id_path = 'PC_DRFC_YVES';%For all paths used by DKE solver
+path_path = '../../../Database/PATH_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+%
 id_equil = 'TScirc_flatprof_e1';%For plasma equilibrium
 path_equil = '../../../Database/EQUIL_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
@@ -26,7 +29,7 @@ path_dkeparam = '../../../Database/DKEPARAM_files/';%if nothing is specified, th
 id_display = 'PARTIAL_VISUAL';%For output code display
 path_display = '../../../Database/DISPLAY_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_ohm = 'Efield_p005_flat';%For Ohmic electric contribution
+id_ohm = 'OHM_p005_flat';%For Ohmic electric contribution
 path_ohm = '../../../Database/OHM_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 ids_wave = {''};%For RF waves contribution (put all the type of waves needed)
@@ -41,6 +44,15 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %************************************************************************************************************************************
 %************************************************************************************************************************************
 %************************************************************************************************************************************
+%
+if exist([path_path,'PATH_',id_path,'.mat']) == 0,%Paths
+	info_dke_yp(2,[path_path,'PATH_',id_path,'.mat does not exist']);
+	break
+else
+	eval(['load ',path_path,'PATH_',id_path,'.mat']);
+	info_dke_yp(2,'Structure ''path'' successfully loaded');
+    if ~strcmp(path.computer,computer),error('The path structure is not consistent with the computer !'),end
+end
 %
 if exist([path_equil,'EQUIL_',id_equil,'.mat']) == 0,%Magnetic equilibrium
 	info_dke_yp(2,[path_equil,'EQUIL_',id_equil,'.mat does not exist']);
@@ -87,11 +99,11 @@ for iw = 1:length(ids_wave),
 	end
 end
 %
-if exist([path_transpfaste,'TRANSPFASTE_',id_transpfaste,'.mat']) == 0,%Fast electron radial transport 
+if exist([path_transpfaste,'TRANSP_',id_transpfaste,'.mat']) == 0,%Fast electron radial transport 
 	info_dke_yp(2,'Simulations are performed without fast electron radial transport');
 	transpfaste = '';
 else
-	eval(['load ',path_transpfaste,'TRANSPFASTE_',id_transpfaste,'.mat']);
+	eval(['load ',path_transpfaste,'TRANSP_',id_transpfaste,'.mat']);
 	info_dke_yp(2,'Structure ''transpfaste'' successfully loaded');
 end
 %
@@ -105,7 +117,7 @@ end
 %
 %************************************************************************************************************************************
 %
-[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
 %	    
 %************************************************************************************************************************************
 eval(['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
@@ -113,12 +125,16 @@ info_dke_yp(2,['Data saved in ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,
 %
 epsi_circ = gridDKE.xrho*equilDKE.ap/equilDKE.Rp;%Circular inverse aspect ratio
 norm_runrate = dke_out.XxRR_fsav(end,:)/max(dke_out.XxRR_fsav(end,:));
-norm_runrate1 = 1 - 1.2*sqrt(2*epsi_circ./(1+epsi_circ));
-norm_runrate1(norm_runrate1 < 0) = 0;
-figure,graph1D_jd(epsi_circ,norm_runrate,0,0,'Inverse aspect ratio','Normalized runaway rate','Runaway rate',NaN,'','','-','non','r',2);
-hold on
-graph1D_jd(epsi_circ,norm_runrate1,0,0,'Inverse aspect ratio','Normalized runaway rate','Runaway rate',NaN,'','','-','non','b',2);
-grid on,zoom on
-legend('DKE code','Approximate (trapped fraction)')
+%norm_runrate1 = 1 - 1.2*sqrt(2*epsi_circ./(1+epsi_circ));
+%norm_runrate1(norm_runrate1 < 0) = 0;
+figure(1),graph1D_jd(epsi_circ,norm_runrate,0,0,'Inverse aspect ratio','Normalized runaway rate','Runaway rate',NaN,'','','-','non','r',2);hold on
+%graph1D_jd(epsi_circ,norm_runrate1,0,0,'Inverse aspect ratio','Normalized runaway rate','Runaway rate',NaN,'','','-','non','b',2);
+%legend('DKE code','Approximate (trapped fraction)')
+savefig_dke_yp('runaway_bounce')
+%
+%************************************************************************************************************************************
+eval(['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
+info_dke_yp(2,['Data saved in ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
+
 
 
