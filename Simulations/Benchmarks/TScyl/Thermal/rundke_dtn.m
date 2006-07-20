@@ -9,10 +9,13 @@ warning off
 global nfig
 %
 % 
-% ***********************This part must be specified by the user, run make files if necessary) *****************************
+% ***********************This part must be specified by the user, run make files in $HOME/Database directory if necessary *****************************
 %
 id_simul = 'Thermal';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+%
+id_path = 'PC_DRFC_YVES';%For all paths used by DKE solver
+path_path = '../../../Database/PATH_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 psin_S = [0.001];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
 rho_S = [];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
@@ -41,6 +44,15 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %************************************************************************************************************************************
 %************************************************************************************************************************************
 %************************************************************************************************************************************
+%
+if exist([path_path,'PATH_',id_path,'.mat']) == 0,%Paths
+	info_dke_yp(2,[path_path,'PATH_',id_path,'.mat does not exist']);
+	break
+else
+	eval(['load ',path_path,'PATH_',id_path,'.mat']);
+	info_dke_yp(2,'Structure ''path'' successfully loaded');
+    if ~strcmp(path.computer,computer),error('The path structure is not consistent with the computer !'),end
+end
 %
 if exist([path_equil,'EQUIL_',id_equil,'.mat']) == 0,%Magnetic equilibrium
 	info_dke_yp(2,[path_equil,'EQUIL_',id_equil,'.mat does not exist']);
@@ -83,15 +95,16 @@ for iw = 1:length(ids_wave),
 		eval(['load ',paths_wave{iw},'WAVE_',id_equil,'_',ids_wave{iw},'.mat']);
 		info_dke_yp(2,['Structure ''wave'' ',ids_wave{iw},' successfully loaded']);
 		waves{ii} = wave;
+		clear wave
 		ii = ii + 1;
 	end
 end
 %
-if exist([path_transpfaste,'TRANSPFASTE_',id_transpfaste,'.mat']) == 0,%Fast electron radial transport 
+if exist([path_transpfaste,'TRANSP_',id_transpfaste,'.mat']) == 0,%Fast electron radial transport 
 	info_dke_yp(2,'Simulations are performed without fast electron radial transport');
 	transpfaste = '';
 else
-	eval(['load ',path_transpfaste,'TRANSPFASTE_',id_transpfaste,'.mat']);
+	eval(['load ',path_transpfaste,'TRANSP_',id_transpfaste,'.mat']);
 	info_dke_yp(2,'Structure ''transpfaste'' successfully loaded');
 end
 %
@@ -105,7 +118,18 @@ end
 %
 %************************************************************************************************************************************
 %
-[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+nit = 20;
+%dkeparam.dtn = 10;
+[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+ne(1) = Znorm.x_0_fsav;
+for i = 2:nit,
+   [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,dke_out.XXf0,[]);
+    ne(i) = Znorm.x_0_fsav;
+end
+%
+figure(1),graph1D_jd([1:nit]*dkeparam.dtn,ne*mksa.ne_ref,0,0,'Integration time step (t_{coll})','Electron density (10^{+19} m^{-3)}',['Maxwallian distr., dtn = ',int2str(dkeparam.dtn)],NaN,'','','-','+','r',2);
+axis([0,nit*dkeparam.dtn,mksa.ne_ref*0.99,mksa.ne_ref*1.01])
+savefig_dke_yp('thermaldensity')
 %	    
 %************************************************************************************************************************************
 eval(['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);

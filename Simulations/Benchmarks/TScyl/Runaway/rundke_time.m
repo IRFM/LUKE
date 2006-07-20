@@ -17,6 +17,9 @@ path_simul = '';%if nothing is specified, the working directory is first used an
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
 rho_S = [0.5];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
+id_path = 'PC_DRFC_YVES';%For all paths used by DKE solver
+path_path = '../../../Database/PATH_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+%
 id_equil = 'TScirc';%For plasma equilibrium
 path_equil = '../../../Database/EQUIL_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
@@ -26,7 +29,7 @@ path_dkeparam = '../../../Database/DKEPARAM_files/';%if nothing is specified, th
 id_display = 'PARTIAL_VISUAL';%For output code display
 path_display = '../../../Database/DISPLAY_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_ohm = 'Efield_p005_flat';%For Ohmic electric contribution
+id_ohm = 'OHM_p005_flat';%For Ohmic electric contribution
 path_ohm = '../../../Database/OHM_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 ids_wave = {''};%For RF waves contribution (put all the type of waves needed)
@@ -41,6 +44,15 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %************************************************************************************************************************************
 %************************************************************************************************************************************
 %************************************************************************************************************************************
+%
+if exist([path_path,'PATH_',id_path,'.mat']) == 0,%Paths
+	info_dke_yp(2,[path_path,'PATH_',id_path,'.mat does not exist']);
+	break
+else
+	eval(['load ',path_path,'PATH_',id_path,'.mat']);
+	info_dke_yp(2,'Structure ''path'' successfully loaded');
+    if ~strcmp(path.computer,computer),error('The path structure is not consistent with the computer !'),end
+end
 %
 if exist([path_equil,'EQUIL_',id_equil,'.mat']) == 0,%Magnetic equilibrium
 	info_dke_yp(2,[path_equil,'EQUIL_',id_equil,'.mat does not exist']);
@@ -83,15 +95,16 @@ for iw = 1:length(ids_wave),
 		eval(['load ',paths_wave{iw},'WAVE_',id_equil,'_',ids_wave{iw},'.mat']);
 		info_dke_yp(2,['Structure ''wave'' ',ids_wave{iw},' successfully loaded']);
 		waves{ii} = wave;
+		clear wave
 		ii = ii + 1;
 	end
 end
 %
-if exist([path_transpfaste,'TRANSPFASTE_',id_transpfaste,'.mat']) == 0,%Fast electron radial transport 
+if exist([path_transpfaste,'TRANSP_',id_transpfaste,'.mat']) == 0,%Fast electron radial transport 
 	info_dke_yp(2,'Simulations are performed without fast electron radial transport');
 	transpfaste = '';
 else
-	eval(['load ',path_transpfaste,'TRANSPFASTE_',id_transpfaste,'.mat']);
+	eval(['load ',path_transpfaste,'TRANSP_',id_transpfaste,'.mat']);
 	info_dke_yp(2,'Structure ''transpfaste'' successfully loaded');
 end
 %
@@ -109,16 +122,16 @@ clear xdn xdnr
 %
 %WARNING: boundary_mode_f must be 0 
 %
-dtn = [0.1,1,10,20,50,100,200,500,1000];
+dtn = [0.1,0.2,0.5,1,2,5,10,20,50,100,200,500,1000];
 epsi=0.2;
 xdn = zeros(length(dtn),length(epsi));
 xdnr = zeros(length(dtn),length(epsi));
-[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
 for i=1:length(dtn)
    for j=1:length(epsi)
       dkeparam.dtn = dtn(i);     
 	  ohm.epsi = epsi(j)*mksa.Edreicer_ref*ones(size(ohm.rho));
-	  [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+	  [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
 	  xdn(i,j) = Znorm.x_0_fsav;
 	  xdnr(i,j) = dke_out.XxRR_fsav(end,:)*dkeparam.dtn;
    end
@@ -127,6 +140,7 @@ end
 figure,graph1D_jd(dtn,abs(1-xdn),1,1,'Integration time step (dtn)','Particle losses per time step','',NaN,'','','-','non','r',2);hold on
 graph1D_jd(dtn,xdnr,1,1,'Integration time step (dtn)','Particle losses per time step','',NaN,'','','--','non','b',2);
 legend('Numerical','Runaway')
+savefig_dke_yp('runaway_loss')
 %	    
 %************************************************************************************************************************************
 eval(['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
