@@ -32,7 +32,7 @@ rayparam.dpsi = 0.01;
 rayparam.tol = 1.e-12;
 rayparam.kmax = 1000;
 
-%[t,x] = raytracing_yp(rayparam,equil_fit);
+%;
 
 
 
