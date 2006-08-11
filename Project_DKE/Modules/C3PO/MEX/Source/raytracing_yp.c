@@ -32,14 +32,12 @@
 struct raymagnetic {
     double *r;
     double *R;
-    double *salpha;
     double *calpha;
     double *BP;
     double *BPHI;
     double *B;
     double *drdx;
     double *dRdx;
-    double *dsalphadx;
     double *dcalphadx;
     double *dBPdx;
     double *dBPHIdx;
@@ -233,9 +231,9 @@ void mexFunction(   int     nlhs,
     if (!mxIsStruct(prhs[0])) mexErrMsgTxt("Input arguments must be structures");
     if (!mxIsStruct(prhs[1])) mexErrMsgTxt("Input arguments must be structures");
 
-/*
-* Get Input Arguments
-*/
+
+// Get Input Arguments
+
     rayparam = load_ray_param(RAYPARAM_IN);       
     equilparam = load_equil_param(EQUIL_IN);
 
@@ -251,18 +249,7 @@ void mexFunction(   int     nlhs,
     r_fit = load_equil_2D(EQUIL_IN,"r_fit");
     calpha_fit = load_equil_2D(EQUIL_IN,"calpha_fit");
     
-/*    double complex z,zz,zz1,zz2;
-    z = 3.0 + 4.0*I;
-    zz = csin(z);
-    zz1 = cexp(z);
-    zz2 = 1/z;
-    mexPrintf("zzr : %g\n",creal(zz));
-    mexPrintf("zzi : %g\n",cimag(zz));
-    mexPrintf("zz1r : %g\n",creal(zz1));
-    mexPrintf("zz1i : %g\n",cimag(zz1));
-    mexPrintf("zz2r : %g\n",creal(zz2));
-    mexPrintf("zz2i : %g\n",cimag(zz2));
-*/
+// Test mode only
     
     if (rayparam.testmode[0]) {// keep this section for tests if necessary
         mexPrintf("tol : %g\n",rayparam.tol[0]);
@@ -298,7 +285,7 @@ void mexFunction(   int     nlhs,
         mxFree(dBPHIdtheta); 
     }
     
-// Runge-Kutta part
+// Runge-Kutta 
 
     mxArray *T_TEMP,*Y_TEMP;
     mxArray *Y_OUT_TEMP1,*Y_OUT_TEMP2,*Y_OUT_TEMP3,*Y_OUT_TEMP4,*Y_OUT_TEMP5,*Y_OUT_TEMP6,*Y_OUT_TEMP7;
@@ -314,13 +301,13 @@ void mexFunction(   int     nlhs,
     register unsigned int   m,k,kk;
     unsigned int    M,K=0;
 
-    double  ts;
+    double ts;
     double s0[7];
-    double  *s1,*s2,*s3,*s4,*s5,*s6;
-    double  tau,delta,h,hmax,hmin;
-    double  ymax;
+    double *s1,*s2,*s3,*s4,*s5,*s6;
+    double tau,delta,h,hmax,hmin;
+    double ymax;
     
-    double  *ydel;
+    double *ydel;
     
     double t1,t2,t3,psi1,psi2,psi3,theta1,theta2,theta3,phi1,phi2,phi3,kpsi1,kpsi2,kpsi3,m1,m2,m3,n1,n2,n3,omega1,omega2,omega3;
     double *tempt,*temp0,*temp1,*temp2,*temp3,*temp4,*temp5,*temp6;
@@ -381,7 +368,6 @@ void mexFunction(   int     nlhs,
      * Create an array for ydel
      */
 
-//  ydel = create_real_array(M);mexFile MatLab version 4.2c
     ydel = (double *) mxCalloc((M),sizeof(double));
 
     /*
@@ -1070,7 +1056,7 @@ double dYdY[8][8];
 
 double *BPHI,*dBPHIdx,*BP,*dBPdx,*B,*dBdx;
 double *R,*dRdx,*r,*drdx;
-double *calpha,*dcalphadx,*salpha,*dsalphadx;
+double *calpha,*dcalphadx;
 double *Te,*dTedx,*ne,*dnedx;
 double *zTi,**dzTidx,*zni,**dznidx;
 double *wcn,*wpn2,*betath;
@@ -1110,7 +1096,6 @@ for (i=1;i<8;i++) {
 
 raymagnetic.r = mxCalloc(1,sizeof(double));
 raymagnetic.R = mxCalloc(1,sizeof(double));
-raymagnetic.salpha = mxCalloc(1,sizeof(double));
 raymagnetic.calpha = mxCalloc(1,sizeof(double));
 raymagnetic.BP = mxCalloc(1,sizeof(double));
 raymagnetic.BPHI = mxCalloc(1,sizeof(double));
@@ -1118,7 +1103,6 @@ raymagnetic.B = mxCalloc(1,sizeof(double));
 
 raymagnetic.drdx = mxCalloc(8,sizeof(double));
 raymagnetic.dRdx = mxCalloc(8,sizeof(double));
-raymagnetic.dsalphadx = mxCalloc(8,sizeof(double));
 raymagnetic.dcalphadx = mxCalloc(8,sizeof(double));
 raymagnetic.dBPdx = mxCalloc(8,sizeof(double));
 raymagnetic.dBPHIdx = mxCalloc(8,sizeof(double));
@@ -1171,10 +1155,6 @@ ppval_2D(BP_fit,Y[0],Y[1],&raymagnetic.BP[0],&raymagnetic.dBPdx[0],&raymagnetic.
 ppval_2D(R_fit,Y[0],Y[1],&raymagnetic.R[0],&raymagnetic.dRdx[0],&raymagnetic.dRdx[1]);
 ppval_2D(r_fit,Y[0],Y[1],&raymagnetic.r[0],&raymagnetic.drdx[0],&raymagnetic.drdx[1]);
 ppval_2D(calpha_fit,Y[0],Y[1],&raymagnetic.calpha[0],&raymagnetic.dcalphadx[0],&raymagnetic.dcalphadx[1]);
-
-raymagnetic.salpha[0] = sqrt(1-raymagnetic.calpha[0]*raymagnetic.calpha[0]);
-raymagnetic.dsalphadx[0] = - raymagnetic.dcalphadx[0]*raymagnetic.calpha[0]/raymagnetic.salpha[0];// calpha may never been zero
-raymagnetic.dsalphadx[1] = - raymagnetic.dcalphadx[1]*raymagnetic.calpha[0]/raymagnetic.salpha[0];// calpha may never been zero
 
 raymagnetic.B[0] = sqrt(pow(raymagnetic.BPHI[0],2)+pow(raymagnetic.BP[0],2));// total magnetic field
 raymagnetic.dBdx[0] = (raymagnetic.BP[0]*raymagnetic.dBPdx[0]+raymagnetic.BPHI[0]*raymagnetic.dBPHIdx[0])/raymagnetic.B[0];
@@ -1357,10 +1337,12 @@ for (i = 0;i<43;i++) {
     }
 }
 
-for (i = 0;i<8;i++) {
+for (i = 0;i<7;i++) {// 7 effective arguments in Ydot at present time
     Ydot[i] = dDtotdx[i]; 
 }
     
+
+// Memory is released 
 
     mxFree(Te);
     mxFree(ne);
@@ -1380,7 +1362,6 @@ for (i = 0;i<8;i++) {
     
     mxFree(raymagnetic.r);
     mxFree(raymagnetic.R);
-    mxFree(raymagnetic.salpha);
     mxFree(raymagnetic.calpha);
     mxFree(raymagnetic.BP);
     mxFree(raymagnetic.BPHI);
@@ -1388,7 +1369,6 @@ for (i = 0;i<8;i++) {
 
     mxFree(raymagnetic.drdx);
     mxFree(raymagnetic.dRdx);
-    mxFree(raymagnetic.dsalphadx);
     mxFree(raymagnetic.dcalphadx);
     mxFree(raymagnetic.dBPdx);
     mxFree(raymagnetic.dBPHIdx);
@@ -1438,9 +1418,8 @@ double complex *Npar1,*Nperp1,dNpardx1[],dNperpdx1[];
 raymagnetic_format raymagnetic;
 { 
     
-    double complex kpar1,dkpar1dx,dkpar1dx1,dkpar1dx2,dkpar1dx3,dkpar1dx4,dkpar1dx5,dkpar1dx6;
-    double complex kpar2,dkpar2dx,dkpar2dx1,dkpar2dx2,dkpar2dx3,dkpar2dx4,dkpar2dx5;
-    double complex kpar3,dkpar3dx,dkpar3dx1,dkpar3dx2,dkpar3dx3,dkpar3dx4;
+    double complex kpar1,dkpar1dx,dkpar1dx1,dkpar1dx2,dkpar1dx3,dkpar1dx4,dkpar1dx5;
+    double complex kpar2,dkpar2dx,dkpar2dx1,dkpar2dx2,dkpar2dx3,dkpar2dx4;
     double complex N2,dN2dx,dNpardx,dNperpdx;
     
     double complex k21,dk21dx,dk21dx1,dk21dx2,dk21dx3;
@@ -1450,46 +1429,36 @@ raymagnetic_format raymagnetic;
     
     register int i,j;
 
-    kpar1 = raymagnetic.R[0]*raymagnetic.BP[0]*Y[3]*raymagnetic.salpha[0]*raymagnetic.calpha[0]*raymagnetic.BP[0]/raymagnetic.B[0];
-    kpar2 = Y[4]/raymagnetic.r[0]*raymagnetic.calpha[0]*raymagnetic.BP[0]/raymagnetic.B[0];
-    kpar3 = Y[5]*raymagnetic.BPHI[0]/raymagnetic.R[0]/raymagnetic.B[0];
+    kpar1 = Y[4]/raymagnetic.r[0]*raymagnetic.calpha[0]*raymagnetic.BP[0]/raymagnetic.B[0];
+    kpar2 = Y[5]*raymagnetic.BPHI[0]/raymagnetic.R[0]/raymagnetic.B[0];
   
-    Npar1[0] = clum*(-kpar1 + kpar2 + kpar3)/Y[6];
+    Npar1[0] = clum*(kpar1 + kpar2)/Y[6];
     
     for (i=0;i<8;i++) {
-
-        dkpar1dx1 = raymagnetic.dRdx[i]*raymagnetic.BP[0]*Y[3]*raymagnetic.salpha[0]*raymagnetic.calpha[0]*raymagnetic.BP[0]/raymagnetic.B[0];
-        dkpar1dx2 = 2.0*raymagnetic.R[0]*raymagnetic.dBPdx[i]*Y[3]*raymagnetic.salpha[0]*raymagnetic.calpha[0]*raymagnetic.BP[0]/raymagnetic.B[0];
-        dkpar1dx3 = raymagnetic.R[0]*raymagnetic.BP[0]*dYdY[3][i]*raymagnetic.salpha[0]*raymagnetic.calpha[0]*raymagnetic.BP[0]/raymagnetic.B[0];
-        dkpar1dx4 = raymagnetic.R[0]*raymagnetic.BP[0]*Y[3]*raymagnetic.dsalphadx[i]*raymagnetic.calpha[0]*raymagnetic.BP[0]/raymagnetic.B[0];
-        dkpar1dx5 = raymagnetic.R[0]*raymagnetic.BP[0]*Y[3]*raymagnetic.salpha[0]*raymagnetic.dcalphadx[i]*raymagnetic.BP[0]/raymagnetic.B[0];
-        dkpar1dx6 = -raymagnetic.R[0]*raymagnetic.BP[0]*Y[3]*raymagnetic.salpha[0]*raymagnetic.calpha[0]*raymagnetic.BP[0]*raymagnetic.dBdx[i]/raymagnetic.B[0]/raymagnetic.B[0];
     
-        dkpar1dx = dkpar1dx1 + dkpar1dx2 + dkpar1dx3 + dkpar1dx4 + dkpar1dx5 + dkpar1dx6;
-    
-        dkpar2dx1 = dYdY[4][i]/raymagnetic.r[0]*raymagnetic.calpha[0]*raymagnetic.BP[0]/raymagnetic.B[0];
-        dkpar2dx2 = -raymagnetic.drdx[i]*Y[4]/raymagnetic.r[0]/raymagnetic.r[0]*raymagnetic.calpha[0]*raymagnetic.BP[0]/raymagnetic.B[0];
-        dkpar2dx3 = Y[4]/raymagnetic.r[0]*raymagnetic.dcalphadx[i]*raymagnetic.BP[0]/raymagnetic.B[0];
-        dkpar2dx4 = Y[4]/raymagnetic.r[0]*raymagnetic.calpha[0]*raymagnetic.dBPdx[i]/raymagnetic.B[0];
-        dkpar2dx5 = -Y[4]/raymagnetic.r[0]*raymagnetic.calpha[0]*raymagnetic.BP[0]*raymagnetic.dBdx[i]/raymagnetic.B[0]/raymagnetic.B[0];
+        dkpar1dx1 = dYdY[4][i]/raymagnetic.r[0]*raymagnetic.calpha[0]*raymagnetic.BP[0]/raymagnetic.B[0];
+        dkpar1dx2 = -raymagnetic.drdx[i]*Y[4]/raymagnetic.r[0]/raymagnetic.r[0]*raymagnetic.calpha[0]*raymagnetic.BP[0]/raymagnetic.B[0];
+        dkpar1dx3 = Y[4]/raymagnetic.r[0]*raymagnetic.dcalphadx[i]*raymagnetic.BP[0]/raymagnetic.B[0];
+        dkpar1dx4 = Y[4]/raymagnetic.r[0]*raymagnetic.calpha[0]*raymagnetic.dBPdx[i]/raymagnetic.B[0];
+        dkpar1dx5 = -Y[4]/raymagnetic.r[0]*raymagnetic.calpha[0]*raymagnetic.BP[0]*raymagnetic.dBdx[i]/raymagnetic.B[0]/raymagnetic.B[0];
         
-        dkpar2dx = dkpar2dx1 + dkpar2dx2 + dkpar2dx3 + dkpar2dx4 + dkpar2dx5;
+        dkpar1dx = dkpar1dx1 + dkpar1dx2 + dkpar1dx3 + dkpar1dx4 + dkpar1dx5;
  
-        dkpar3dx1 = dYdY[5][i]*raymagnetic.BPHI[0]/raymagnetic.R[0]/raymagnetic.B[0];
-        dkpar3dx2 = Y[5]*raymagnetic.dBPHIdx[i]/raymagnetic.R[0]/raymagnetic.B[0];
-        dkpar3dx3 = -Y[5]*raymagnetic.BPHI[0]*raymagnetic.dRdx[i]/raymagnetic.R[0]/raymagnetic.R[0]/raymagnetic.B[0];
-        dkpar3dx4 = Y[5]*raymagnetic.BPHI[0]/raymagnetic.R[0]*raymagnetic.dBdx[i]/raymagnetic.B[0]/raymagnetic.B[0];
+        dkpar2dx1 = dYdY[5][i]*raymagnetic.BPHI[0]/raymagnetic.R[0]/raymagnetic.B[0];
+        dkpar2dx2 = Y[5]*raymagnetic.dBPHIdx[i]/raymagnetic.R[0]/raymagnetic.B[0];
+        dkpar2dx3 = -Y[5]*raymagnetic.BPHI[0]*raymagnetic.dRdx[i]/raymagnetic.R[0]/raymagnetic.R[0]/raymagnetic.B[0];
+        dkpar2dx4 = Y[5]*raymagnetic.BPHI[0]/raymagnetic.R[0]*raymagnetic.dBdx[i]/raymagnetic.B[0]/raymagnetic.B[0];
     
-        dkpar3dx = dkpar3dx1 + dkpar3dx2 + dkpar3dx3 + dkpar3dx4;
+        dkpar2dx = dkpar2dx1 + dkpar2dx2 + dkpar2dx3 + dkpar2dx4;
         
-        dNpardx1[i] = clum*(-dkpar1dx + dkpar2dx + dkpar3dx)/Y[6];
+        dNpardx1[i] = clum*(dkpar1dx + dkpar2dx)/Y[6];
 //        mexPrintf("i,dNpardx[i]:%d,%g\n",i,dNpardx1[i]);
 //        mexPrintf("i,dYdY[3][i],dYdY[4][i],dYdY[5][i]:%d,%g,%g,%g\n",i,dYdY[3][i],dYdY[4][i],dYdY[4][i]);
     }
     
 
     k21 = raymagnetic.R[0]*raymagnetic.R[0]*raymagnetic.BP[0]*raymagnetic.BP[0]*Y[3]*Y[3];
-    k22 = 2.0*raymagnetic.R[0]*raymagnetic.BP[0]*raymagnetic.salpha[0]*Y[4]*Y[3]/raymagnetic.r[0];
+    k22 = 0.0;
     k23 = Y[4]*Y[4]/raymagnetic.r[0]/raymagnetic.r[0];
     k24 = Y[5]*Y[5]/raymagnetic.R[0]/raymagnetic.R[0];
     
@@ -1504,12 +1473,12 @@ raymagnetic_format raymagnetic;
         
         dk21dx = dk21dx1 + dk21dx2 + dk21dx3;
         
-        dk22dx1 = 2.0*raymagnetic.dRdx[i]*raymagnetic.BP[0]*raymagnetic.salpha[0]*Y[4]*Y[3]/raymagnetic.r[0];
-        dk22dx2 = 2.0*raymagnetic.R[0]*raymagnetic.dBPdx[i]*raymagnetic.salpha[0]*Y[4]*Y[3]/raymagnetic.r[0];
-        dk22dx3 = 2.0*raymagnetic.R[0]*raymagnetic.BP[0]*raymagnetic.dsalphadx[i]*Y[4]*Y[3]/raymagnetic.r[0];
-        dk22dx4 = 2.0*raymagnetic.R[0]*raymagnetic.BP[0]*raymagnetic.salpha[0]*dYdY[4][i]*Y[3]/raymagnetic.r[0];
-        dk22dx5 = 2.0*raymagnetic.R[0]*raymagnetic.BP[0]*raymagnetic.salpha[0]*Y[4]*dYdY[3][i]/raymagnetic.r[0];
-        dk22dx6 = -2.0*raymagnetic.R[0]*raymagnetic.BP[0]*raymagnetic.salpha[0]*Y[4]*Y[3]*raymagnetic.drdx[i]/raymagnetic.r[0]/raymagnetic.r[0];
+        dk22dx1 = 0.0;
+        dk22dx2 = 0.0;
+        dk22dx3 = 0.0;
+        dk22dx4 = 0.0;
+        dk22dx5 = 0.0;
+        dk22dx6 = 0.0;
         
         dk22dx = dk22dx1 + dk22dx2 + dk22dx3 + dk22dx4 + dk22dx5 + dk22dx6;
      
