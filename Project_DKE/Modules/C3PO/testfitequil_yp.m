@@ -342,7 +342,30 @@ figure('Name','Magnetic equilibrium flux surface contour')
 [ax] = graph1D_jd(R_fit1(1:10:end,1:20:end),Z_fit1(1:10:end,1:20:end),0,0,'','','',NaN,[Rmin,Rmax],[Zmin,Zmax],'--','none','c',1);drawnow
 [ax] = graph1D_jd(R_fit1(:,:)',Z_fit1(:,:)',0,0,'R(m)','Z(m)','Flux-surfaces labeled by \rho=0,0.1,0.2...1',NaN,[Rmin,Rmax],[Zmin,Zmax],'--','none','c',1);
 axis('equal');drawnow  
-
-
+%
+% Output for comparison with C raytracing_yp.c
+%
+psi = 0.25;
+theta = 1.7;
+%
+Te = ppval(equil_fit.Te_fit.pp_f,psi);
+dTedpsi = ppval_yp(equil_fit.Te_fit.pp_dfdpsi,psi);
+zni = ppval(equil_fit.zni_fit.pp_f,psi);
+dznidpsi = ppval_yp(equil_fit.zni_fit.pp_dfdpsi,psi);
+BPHI_a0 = ppval(equil_fit.BPHI_fit.pp_a0,psi);
+BPHI_an = ppval(equil_fit.BPHI_fit.pp_an,psi);
+BPHI_bn = ppval(equil_fit.BPHI_fit.pp_bn,psi);
+BPHI_da0dpsi = ppval(equil_fit.BPHI_fit.pp_da0dpsi,psi);
+BPHI_dandpsi = ppval(equil_fit.BPHI_fit.pp_dandpsi,psi);
+BPHI_dbndpsi = ppval(equil_fit.BPHI_fit.pp_dbndpsi,psi);
+BPHI = BPHI_a0 + BPHI_an'*cos(equil_fit.BPHI_fit.n*theta) + BPHI_bn'*sin(equil_fit.BPHI_fit.n*theta);
+dBPHIdtheta = -BPHI_an'*(equil_fit.BPHI_fit.n.*sin(equil_fit.BPHI_fit.n*theta)) + BPHI_bn'*(equil_fit.BPHI_fit.n.*cos(equil_fit.BPHI_fit.n*theta));
+dBPHIdpsi = BPHI_da0dpsi + BPHI_dandpsi'*cos(equil_fit.BPHI_fit.n*theta) + BPHI_dbndpsi'*sin(equil_fit.BPHI_fit.n*theta);
+%
+disp(['equil_fit.Te_fit.pp_f.coefs(1) = ',num2str(equil_fit.Te_fit.pp_f.coefs(1))]);
+disp(['equil_fit.zZi(4) = ',num2str(equil_fit.zZi(4))]);
+disp(['Te(0.25),dTdpsi(0.25) (keV) = ',num2str(Te),',',num2str(dTedpsi)]);
+disp(['zni(2,0.25),dznidpsi(2,0.25) (10+19 m-3) = ',num2str(zni(2)/1e19),',',num2str(dznidpsi(2)/1e19)]);
+disp(['BPHI(0.25,1.7),dTdpsi(0.25,1.7) (T) = ',num2str(BPHI),',',num2str(dBPHIdpsi),',',num2str(dBPHIdtheta)]);
 
 

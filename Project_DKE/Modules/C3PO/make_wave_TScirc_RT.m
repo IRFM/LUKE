@@ -23,16 +23,19 @@ end
 %
 method = 'spline';%nearest,spline,pchip,cubic
 [equil_fit] = fitequil_yp(equil,32,method);%Build 
-testfitequil_yp(equil,equil_fit);
+%testfitequil_yp(equil,equil_fit);
 %
+rayparam.testmode = 1;
+rayparam.tensortype = 0;
 rayparam.t0 = 0;
 rayparam.tfinal = 10;
 rayparam.dt0 = 0.1;
 rayparam.dpsi = 0.01;
 rayparam.tol = 1.e-12;
 rayparam.kmax = 1000;
-
-%;
+%
+y0 = [0.25,0,0,2*pi/0.001,0,600,[4]*2*pi*1e9];
+%[tout, yout] = raytracing_yp(rayparam,equil_fit,y0);
 
 
 
