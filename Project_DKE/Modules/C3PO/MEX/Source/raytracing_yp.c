@@ -32,12 +32,14 @@
 struct raymagnetic {
     double *r;
     double *R;
+    double *salpha;
     double *calpha;
     double *BP;
     double *BPHI;
     double *B;
     double *drdx;
     double *dRdx;
+    double *dsalphadx;
     double *dcalphadx;
     double *dBPdx;
     double *dBPHIdx;
@@ -1056,7 +1058,7 @@ double dYdY[8][8];
 
 double *BPHI,*dBPHIdx,*BP,*dBPdx,*B,*dBdx;
 double *R,*dRdx,*r,*drdx;
-double *calpha,*dcalphadx;
+double *calpha,*dcalphadx,*salpha,*dsalphadx;
 double *Te,*dTedx,*ne,*dnedx;
 double *zTi,**dzTidx,*zni,**dznidx;
 double *wcn,*wpn2,*betath;
@@ -1096,6 +1098,7 @@ for (i=1;i<8;i++) {
 
 raymagnetic.r = mxCalloc(1,sizeof(double));
 raymagnetic.R = mxCalloc(1,sizeof(double));
+raymagnetic.salpha = mxCalloc(1,sizeof(double));
 raymagnetic.calpha = mxCalloc(1,sizeof(double));
 raymagnetic.BP = mxCalloc(1,sizeof(double));
 raymagnetic.BPHI = mxCalloc(1,sizeof(double));
@@ -1103,6 +1106,7 @@ raymagnetic.B = mxCalloc(1,sizeof(double));
 
 raymagnetic.drdx = mxCalloc(8,sizeof(double));
 raymagnetic.dRdx = mxCalloc(8,sizeof(double));
+raymagnetic.dsalphadx = mxCalloc(8,sizeof(double));
 raymagnetic.dcalphadx = mxCalloc(8,sizeof(double));
 raymagnetic.dBPdx = mxCalloc(8,sizeof(double));
 raymagnetic.dBPHIdx = mxCalloc(8,sizeof(double));
@@ -1155,6 +1159,10 @@ ppval_2D(BP_fit,Y[0],Y[1],&raymagnetic.BP[0],&raymagnetic.dBPdx[0],&raymagnetic.
 ppval_2D(R_fit,Y[0],Y[1],&raymagnetic.R[0],&raymagnetic.dRdx[0],&raymagnetic.dRdx[1]);
 ppval_2D(r_fit,Y[0],Y[1],&raymagnetic.r[0],&raymagnetic.drdx[0],&raymagnetic.drdx[1]);
 ppval_2D(calpha_fit,Y[0],Y[1],&raymagnetic.calpha[0],&raymagnetic.dcalphadx[0],&raymagnetic.dcalphadx[1]);
+
+raymagnetic.salpha[0] = sqrt(1-raymagnetic.calpha[0]*raymagnetic.calpha[0]);
+raymagnetic.dsalphadx[0] = - raymagnetic.dcalphadx[0]*raymagnetic.calpha[0]/raymagnetic.salpha[0];// calpha may never been zero
+raymagnetic.dsalphadx[1] = - raymagnetic.dcalphadx[1]*raymagnetic.calpha[0]/raymagnetic.salpha[0];// calpha may never been zero
 
 raymagnetic.B[0] = sqrt(pow(raymagnetic.BPHI[0],2)+pow(raymagnetic.BP[0],2));// total magnetic field
 raymagnetic.dBdx[0] = (raymagnetic.BP[0]*raymagnetic.dBPdx[0]+raymagnetic.BPHI[0]*raymagnetic.dBPHIdx[0])/raymagnetic.B[0];
@@ -1337,10 +1345,10 @@ for (i = 0;i<43;i++) {
     }
 }
 
-for (i = 0;i<7;i++) {// 7 effective arguments in Ydot at present time
-    Ydot[i] = dDtotdx[i]; 
+for (i = 0;i<6;i++) {// 7 effective arguments in Ydot at present time
+    Ydot[i] = creal(dDtotdx[i]); 
 }
-    
+mexprintf("Ydot:%g,%g,%g,%g,%g,%g,%g\n",Ydot[0],Ydot[1],Ydot[2],Ydot[3],Ydot[4],Ydot[5],Ydot[6]);
 
 // Memory is released 
 
@@ -1362,6 +1370,7 @@ for (i = 0;i<7;i++) {// 7 effective arguments in Ydot at present time
     
     mxFree(raymagnetic.r);
     mxFree(raymagnetic.R);
+    mxFree(raymagnetic.salpha);
     mxFree(raymagnetic.calpha);
     mxFree(raymagnetic.BP);
     mxFree(raymagnetic.BPHI);
@@ -1369,6 +1378,7 @@ for (i = 0;i<7;i++) {// 7 effective arguments in Ydot at present time
 
     mxFree(raymagnetic.drdx);
     mxFree(raymagnetic.dRdx);
+    mxFree(raymagnetic.dsalphadx);
     mxFree(raymagnetic.dcalphadx);
     mxFree(raymagnetic.dBPdx);
     mxFree(raymagnetic.dBPHIdx);
@@ -1458,7 +1468,7 @@ raymagnetic_format raymagnetic;
     
 
     k21 = raymagnetic.R[0]*raymagnetic.R[0]*raymagnetic.BP[0]*raymagnetic.BP[0]*Y[3]*Y[3];
-    k22 = 0.0;
+    k22 = 2*raymagnetic.R[0]*raymagnetic.BP[0]*raymagnetic.salpha[0]*Y[4]*Y[3]/raymagnetic.r[0];
     k23 = Y[4]*Y[4]/raymagnetic.r[0]/raymagnetic.r[0];
     k24 = Y[5]*Y[5]/raymagnetic.R[0]/raymagnetic.R[0];
     
@@ -1473,12 +1483,12 @@ raymagnetic_format raymagnetic;
         
         dk21dx = dk21dx1 + dk21dx2 + dk21dx3;
         
-        dk22dx1 = 0.0;
-        dk22dx2 = 0.0;
-        dk22dx3 = 0.0;
-        dk22dx4 = 0.0;
-        dk22dx5 = 0.0;
-        dk22dx6 = 0.0;
+        dk22dx1 = 2*raymagnetic.dRdx[i]*raymagnetic.BP[0]*raymagnetic.salpha[0]*Y[4]*Y[3]/raymagnetic.r[0];
+        dk22dx2 = 2*raymagnetic.R[0]*raymagnetic.dBPdx[i]*raymagnetic.salpha[0]*Y[4]*Y[3]/raymagnetic.r[0];
+        dk22dx3 = 2*raymagnetic.R[0]*raymagnetic.BP[0]*raymagnetic.dsalphadx[i]*Y[4]*Y[3]/raymagnetic.r[0];
+        dk22dx4 = 2*raymagnetic.R[0]*raymagnetic.BP[0]*raymagnetic.salpha[0]*dYdY[4][i]*Y[3]/raymagnetic.r[0];
+        dk22dx5 = 2*raymagnetic.R[0]*raymagnetic.BP[0]*raymagnetic.salpha[0]*Y[4]*dYdY[3][i]/raymagnetic.r[0];
+        dk22dx6 = -2*raymagnetic.R[0]*raymagnetic.BP[0]*raymagnetic.salpha[0]*Y[4]*Y[3]*raymagnetic.drdx[i]/raymagnetic.r[0]/raymagnetic.r[0];
         
         dk22dx = dk22dx1 + dk22dx2 + dk22dx3 + dk22dx4 + dk22dx5 + dk22dx6;
      
