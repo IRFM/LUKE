@@ -393,9 +393,9 @@ void mexFunction(   int     nlhs,
      * The main loop
      */
 int ii;
-//    while ((t1 < rayparam.tfinal[0]) && (k < rayparam.kmax[0]-1)) {
-    for (ii=0;ii<=1;ii++) {
-        ii = ii + 1;
+    while ((t1 < rayparam.tfinal[0]) && (k < rayparam.kmax[0]-1)) {
+//    for (ii=0;ii<=1;ii++) {
+//        ii = ii + 1;
         if ((t1 + h) > rayparam.tfinal[0]) {
             h = rayparam.tfinal[0] - t1;
         }
@@ -414,14 +414,16 @@ int ii;
         s0[4] = m1;
         s0[5] = n1;
         s0[6] = omega1;
+        
+
 
         for  (m = 0; m < M; m++) {
             y[m] = s0[m];
         }
-        
+        mexPrintf("y:%g,%g,%g,%g,%g,%g,%g\n",y[0],y[1],y[2],y[3],y[4],y[5],y[6]);      
         ray(mxGetPr(Y_OUT_TEMP1),y,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,BPHI_fit,BP_fit,R_fit,Z_fit,r_fit,calpha_fit); 
         s1 = mxGetPr(Y_OUT_TEMP1);
-
+        mexPrintf("first guess\n");
 
         /* s2 = feval(F, t+h*alpha(1), y+h*s1*beta(1,1), param); */
 
@@ -1052,6 +1054,7 @@ double me = 9.10938188e-31;//Electron rest mass (Kg)
 double mp = 1.67262158e-27;//Proton rest mass (Kg)
 double epsi0 = 8.854187818e-12;//Free space permittivity (F/m)
 double mu0 = 12.566370614e-7;//Free space permeability (F/m)
+double clum = 299792458;//Speed of light (m/s)
 double mc2 = 510.998902;//Electron energy rest mass (keV)
 
 double complex D[43],dDdx[43][8],Dtot,dDtotdx[8];
@@ -1174,22 +1177,22 @@ raymagnetic.dBdx[1] = (raymagnetic.BP[0]*raymagnetic.dBPdx[1]+raymagnetic.BPHI[0
 // Normalized parameters
 
 wcn[0] = qe*raymagnetic.B[0]/me/Y[6];//electrons
-dwcndx[0][0] = qe*raymagnetic.dBdx[0]/me/Y[6];
-dwcndx[0][1] = qe*raymagnetic.dBdx[1]/me/Y[6];
+dwcndx[0][0] = qe*raymagnetic.dBdx[0]/me/Y[6]/clum;
+dwcndx[0][1] = qe*raymagnetic.dBdx[1]/me/Y[6]/clum;
 dwcndx[0][2] = 0.0;
 dwcndx[0][3] = 0.0;
 dwcndx[0][4] = 0.0;
 dwcndx[0][5] = 0.0;
-dwcndx[0][6] = -qe*raymagnetic.dBdx[0]/me/Y[6]/Y[6];
+dwcndx[0][6] = -qe*raymagnetic.dBdx[0]/me/Y[6]/clum/Y[6];
 dwcndx[0][7] = 0;
-wpn2[0] = qe*qe*ne[0]/epsi0/me/Y[6]/Y[6];//electrons
-dwpn2dx[0][0] = qe*qe*dnedx[0]/epsi0/me/Y[6]/Y[6];
+wpn2[0] = qe*qe*ne[0]/epsi0/me/Y[6]/clum/Y[6]/clum;//electrons
+dwpn2dx[0][0] = qe*qe*dnedx[0]/epsi0/me/Y[6]/clum/Y[6]/clum;
 dwpn2dx[0][1] = 0.0;
 dwpn2dx[0][2] = 0.0;
 dwpn2dx[0][3] = 0.0;
 dwpn2dx[0][4] = 0.0;
 dwpn2dx[0][5] = 0.0;
-dwpn2dx[0][6] = -2.0*qe*qe*dnedx[0]/epsi0/me/Y[6]/Y[6]/Y[6];
+dwpn2dx[0][6] = -2.0*qe*qe*dnedx[0]/epsi0/me/Y[6]/clum/Y[6]/clum/Y[6];
 dwpn2dx[0][7] = 0.0;
 betath[0] = sqrt(Te[0]/mc2);
 dbetathdx[0][0] = dTedx[0]/betath[0]/2.0;
@@ -1206,23 +1209,23 @@ dbetathdx[0][7] = 0.0;
 //mexPrintf("dwpn2dpsi,dwpn2dtheta:%g,%g\n",dwpn2dx[0][0],dwpn2dx[0][1]);
 
 for (is = 1;is < equilparam.ns[0]+1; is++) {
-    wcn[is] = qe*equilparam.zZi[is-1]*raymagnetic.B[0]/equilparam.zmi[is-1]/mp/Y[6];//ions
-    dwcndx[is][0] = qe*equilparam.zZi[is-1]*raymagnetic.dBdx[0]/equilparam.zmi[is-1]/mp/Y[6];
-    dwcndx[is][1] = qe*equilparam.zZi[is-1]*raymagnetic.dBdx[1]/equilparam.zmi[is-1]/mp/Y[6]; 
+    wcn[is] = qe*equilparam.zZi[is-1]*raymagnetic.B[0]/equilparam.zmi[is-1]/mp/Y[6]/clum;//ions
+    dwcndx[is][0] = qe*equilparam.zZi[is-1]*raymagnetic.dBdx[0]/equilparam.zmi[is-1]/mp/Y[6]/clum;
+    dwcndx[is][1] = qe*equilparam.zZi[is-1]*raymagnetic.dBdx[1]/equilparam.zmi[is-1]/mp/Y[6]/clum; 
     dwcndx[is][2] = 0.0; 
     dwcndx[is][3] = 0.0; 
     dwcndx[is][4] = 0.0; 
     dwcndx[is][5] = 0.0; 
-    dwcndx[is][6] = -qe*equilparam.zZi[is-1]*raymagnetic.dBdx[0]/equilparam.zmi[is-1]/mp/Y[6]/Y[6]; 
+    dwcndx[is][6] = -qe*equilparam.zZi[is-1]*raymagnetic.dBdx[0]/equilparam.zmi[is-1]/mp/Y[6]/clum/Y[6]; 
     dwcndx[is][7] = 0.0; 
-    wpn2[is] = qe*equilparam.zZi[is-1]*qe*equilparam.zZi[is-1]*zni[is-1]/epsi0/equilparam.zmi[is-1]/mp/Y[6]/Y[6];//ions
-    dwpn2dx[is][0] = qe*equilparam.zZi[is-1]*qe*equilparam.zZi[is-1]*dznidx[is-1][0]/epsi0/equilparam.zmi[is-1]/mp/Y[6]/Y[6];        
+    wpn2[is] = qe*equilparam.zZi[is-1]*qe*equilparam.zZi[is-1]*zni[is-1]/epsi0/equilparam.zmi[is-1]/mp/Y[6]/clum/Y[6]/clum;//ions
+    dwpn2dx[is][0] = qe*equilparam.zZi[is-1]*qe*equilparam.zZi[is-1]*dznidx[is-1][0]/epsi0/equilparam.zmi[is-1]/mp/Y[6]/clum/Y[6]/clum;        
     dwpn2dx[is][1] = 0.0;        
     dwpn2dx[is][2] = 0.0; 
     dwpn2dx[is][3] = 0.0; 
     dwpn2dx[is][4] = 0.0; 
     dwpn2dx[is][5] = 0.0; 
-    dwpn2dx[is][6] = -2.0*qe*equilparam.zZi[is-1]*qe*equilparam.zZi[is-1]*dznidx[is-1][0]/epsi0/equilparam.zmi[is-1]/mp/Y[6]/Y[6]/Y[6]; 
+    dwpn2dx[is][6] = -2.0*qe*equilparam.zZi[is-1]*qe*equilparam.zZi[is-1]*dznidx[is-1][0]/epsi0/equilparam.zmi[is-1]/mp/Y[6]/clum/Y[6]/clum/Y[6]; 
     dwpn2dx[is][7] = 0.0;     
     betath[is] = sqrt(zTi[is-1]*me/equilparam.zmi[is-1]/mp/mc2);
     dbetathdx[is][0] = dzTidx[is-1][0]/betath[is]/2.0;

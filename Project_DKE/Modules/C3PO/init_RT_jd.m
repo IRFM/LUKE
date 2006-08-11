@@ -1,23 +1,20 @@
-function xY = init_RT_jd(equil_in,xpsi,xtheta,xphi,xomega,xNpar,xm,xmode,nharm,method);
+function xY = init_RT_jd(equil_fit,xpsi,xtheta,xphi,xomega,xNpar,xm,xmode,kmode);
 %
 % This function solves the dispersion relation from initial positions and 
 % wave characteristics to initiate ray-tracing calculations.
 %
 %   INPUTS :
 %
-%       - equil_in: standard DKE equilibrium structure
+%       - equil_fit: fitted DKE equilibrium structure
 %       - xpsi: magnetic flux coordinate positions (Wb) [nx]
 %       - xtheta: poloidal positions (rad) [nx]
 %       - xphi: toroidal positions (rad) [nx]
 %       - xomega: wave frequencies (rad/s) [nx]
 %       - xNpar: parallel indices of refraction [nx]
 %       - xm: poloidal mode numbers [nx]
-%       - xmode: cold plasma mode [nx] : (0) m (1) p 
+%       - xmode: cold plasma mode [nx] : (-1) m (1) p 
 %           p is the slow mode when kperp > 0 (ex : LH slow wave)
-%       - nharm: number of harmonics used in the Fourier analysis 
-%           default : equil_in.length(theta) - 1
-%       - method: interpolation method 
-%           default : 'spline'
+%       - kmode: kinetic (1) or cold (0) plasma model
 %
 %   OUTPUTS :
 %
@@ -29,15 +26,11 @@ function xY = init_RT_jd(equil_in,xpsi,xtheta,xphi,xomega,xNpar,xm,xmode,nharm,m
 %               - xm [1,nx]
 %               - xn [1,nx]
 %               - xomega/clum (m^-1) [1,nx]
-%               - zeros [1,nx]
 %
 %   By J. Decker DRFC-CEA <joan.decker@cea.fr> and Y. Peysson DRFC-CEA <yves.peysson@cea.fr>
 %
-if nargin < 10,
-    method = 'spline';
-end
 if nargin < 9,
-    nharm = [];
+    kmode = 0;
 end
 if nargin < 8,
     error('Not enough input arguments')
@@ -56,9 +49,7 @@ if length(xtheta) ~= nx | length(xphi) ~= nx | length(xomega) ~= nx | length(xNp
     error('Input argument dimensions are not compatible');
 end
 %
-sigma = - sign(equil_in.ppsi(2) - equil_in.ppsi(1));%for a wave propagating inward.
-%
-[equil_fit] = fitequil_yp(equil_in,nharm,method);
+sigma = - sign(equil_fit.psia);%for a wave propagating inward.
 %
 xTe = ppval(equil_fit.Te_fit.pp_f,xpsi);
 xne = ppval(equil_fit.ne_fit.pp_f,xpsi);
@@ -139,7 +130,7 @@ for ix = 1:nx,
     %
     [Nperpp,Nperpm] = colddisp_dke_jd(xNpar(ix),xomega(ix),xne(ix),zxni(:,ix),zZi,zmi,xB(ix));
     %
-    if xmode(ix) == 0,
+    if xmode(ix) == -1,
         Nperpc = Nperpm;
     elseif xmode(ix) == 1,
         Nperpc = Nperpp;
@@ -149,17 +140,21 @@ for ix = 1:nx,
     %
     % Normalization
     %
-    sa = sZ.^2.*sxn(:,ix)./sm/e0/xomega(ix)^2;
-    sy = sZ*xB(ix)./sm/xomega(ix);
-    sbeta = sqrt(qe*sxT(:,ix)./sm/clum^2);
-    %
-    %   Kinetic plasma calculations
-    %
-    xNperp(ix) = kineticdisp_jd(sa,sy,sbeta,xNpar(ix),Nperpc,0);
+    if kmode == 1,
+        sa = sZ.^2.*sxn(:,ix)./sm/e0/xomega(ix)^2;
+        sy = sZ*xB(ix)./sm/xomega(ix);
+        sbeta = sqrt(qe*sxT(:,ix)./sm/clum^2);
+        %
+        %   Kinetic plasma calculations
+        %
+        xNperp(ix) = kineticdisp_jd(sa,sy,sbeta,xNpar(ix),Nperpc,0);
+    else
+        xNperp(ix) = Nperpc;
+    end
 end
 %
 xn = xR.*(xNpar.*xomega/clum - xm.*xc.*xp./xr)./xt;
 xkpsi = (xm.*xs./xr + sigma*sqrt(xNperp.^2.*xomega.^2/clum^2 - (xm.*xc./xr - xNpar.*xp.*xomega/clum).^2./xt.^2))./xR./xBp;
 %
-xY = [xpsi;xtheta;xphi;xkpsi;xm;xn;xomega/clum;zeros(1,nx)];
-
+xY = [xpsi;xtheta;xphi;xkpsi;xm;xn;xomega/clum];
+%xY = [xpsi;xtheta;xphi;xkpsi;xm;xn;xomega/clum;zeros(1,nx)];
