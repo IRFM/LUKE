@@ -43,8 +43,10 @@ end
 r = sqrt((equil_in.R - equil_out.Rp).^2 + (equil_in.Z - equil_out.Zp).^2);
 r(1,:) = eps;%to avoid singularity for cos(alpha) at psi = 0. 
 BP(1,:) = eps;%to avoid singularity for cos(alpha) at psi = 0. 
-calpha = (-equil_in.BZ.*(equil_in.R - equil_out.Rp) + equil_in.BR.*(equil_in.Z - equil_out.Zp))./r./BP;
+calpha = (equil_in.BZ.*(equil_in.R - equil_out.Rp) - equil_in.BR.*(equil_in.Z - equil_out.Zp))./r./BP;
+salpha = (equil_in.BZ.*(equil_in.Z - equil_out.Zp) + equil_in.BR.*(equil_in.R - equil_out.Rp))./r./BP;
 %
 equil_out.r_fit = interpequil_yp(method,r,equil_in.ppsi,equil_in.theta,nharm);%r coordinate
 equil_out.calpha_fit = interpequil_yp(method,calpha,equil_in.ppsi,equil_in.theta,nharm);%cos(alpha) (=1 for circular plasma cross-section)
+equil_out.salpha_fit = interpequil_yp(method,salpha,equil_in.ppsi,equil_in.theta,nharm);%sin(alpha) (=0 for circular plasma cross-section)
 
