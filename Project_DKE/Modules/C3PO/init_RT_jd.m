@@ -1,4 +1,4 @@
-function xY = init_RT_jd(equil_fit,xpsi,xtheta,xphi,xomega,xNpar,xm,xmode,kmode);
+function xY = init_RT_jd(equil_fit,xpsin,xtheta,xphi,xomega,xNpar,xm,xmode,kmode);
 %
 % This function solves the dispersion relation from initial positions and 
 % wave characteristics to initiate ray-tracing calculations.
@@ -6,7 +6,7 @@ function xY = init_RT_jd(equil_fit,xpsi,xtheta,xphi,xomega,xNpar,xm,xmode,kmode)
 %   INPUTS :
 %
 %       - equil_fit: fitted DKE equilibrium structure
-%       - xpsi: magnetic flux coordinate positions (Wb) [nx]
+%       - xpsin: normalized magnetic flux coordinate positions [nx]
 %       - xtheta: poloidal positions (rad) [nx]
 %       - xphi: toroidal positions (rad) [nx]
 %       - xomega: wave frequencies (rad/s) [nx]
@@ -19,10 +19,10 @@ function xY = init_RT_jd(equil_fit,xpsi,xtheta,xphi,xomega,xNpar,xm,xmode,kmode)
 %   OUTPUTS :
 %
 %       - xY: canonical coordinates vector [8,nx] decomposed into
-%               - xpsi (Wb) [1,nx]
+%               - xpsin [1,nx]
 %               - xtheta (rad) [1,nx]
 %               - xphi (rad) [1,nx]
-%               - xkpsi (Wb^-1) [1,nx]
+%               - xkpsin  [1,nx]
 %               - xm [1,nx]
 %               - xn [1,nx]
 %               - xomega/clum (m^-1) [1,nx]
@@ -36,14 +36,14 @@ if nargin < 8,
     error('Not enough input arguments')
 end
 %
-xpsi = xpsi(:).';
+xpsin = xpsin(:).';
 xtheta = xtheta(:).';
 xphi = xphi(:).';
 xomega = xomega(:).';
 xNpar = xNpar(:).';
 xm = xm(:).';
 %
-nx = length(xpsi);
+nx = length(xpsin);
 %
 if length(xtheta) ~= nx | length(xphi) ~= nx | length(xomega) ~= nx | length(xNpar) ~= nx | length(xm) ~= nx,
     error('Input argument dimensions are not compatible');
@@ -51,41 +51,41 @@ end
 %
 sigma = - sign(equil_fit.psia);%for a wave propagating inward.
 %
-xTe = ppval(equil_fit.Te_fit.pp_f,xpsi);
-xne = ppval(equil_fit.ne_fit.pp_f,xpsi);
-zxTi = ppval(equil_fit.zTi_fit.pp_f,xpsi);
-zxni = ppval(equil_fit.zni_fit.pp_f,xpsi);
+xTe = ppval(equil_fit.Te_fit.pp_f,xpsin);
+xne = ppval(equil_fit.ne_fit.pp_f,xpsin);
+zxTi = ppval(equil_fit.zTi_fit.pp_f,xpsin);
+zxni = ppval(equil_fit.zni_fit.pp_f,xpsin);
 %
 zmi = equil_fit.zmi;
 zZi = equil_fit.zZi;
 %
-BPHI_a0_fit = ppval(equil_fit.BPHI_fit.pp_a0,xpsi);
-BPHI_an_fit = ppval(equil_fit.BPHI_fit.pp_an,xpsi).';
-BPHI_bn_fit = ppval(equil_fit.BPHI_fit.pp_bn,xpsi).';
+BPHI_a0_fit = ppval(equil_fit.BPHI_fit.pp_a0,xpsin);
+BPHI_an_fit = ppval(equil_fit.BPHI_fit.pp_an,xpsin).';
+BPHI_bn_fit = ppval(equil_fit.BPHI_fit.pp_bn,xpsin).';
 %
-BP_a0_fit = ppval(equil_fit.BP_fit.pp_a0,xpsi);
-BP_an_fit = ppval(equil_fit.BP_fit.pp_an,xpsi).';
-BP_bn_fit = ppval(equil_fit.BP_fit.pp_bn,xpsi).';
+BP_a0_fit = ppval(equil_fit.BP_fit.pp_a0,xpsin);
+BP_an_fit = ppval(equil_fit.BP_fit.pp_an,xpsin).';
+BP_bn_fit = ppval(equil_fit.BP_fit.pp_bn,xpsin).';
 %
-R_a0_fit = ppval(equil_fit.R_fit.pp_a0,xpsi);
-R_an_fit = ppval(equil_fit.R_fit.pp_an,xpsi).';
-R_bn_fit = ppval(equil_fit.R_fit.pp_bn,xpsi).';
+R_a0_fit = ppval(equil_fit.R_fit.pp_a0,xpsin);
+R_an_fit = ppval(equil_fit.R_fit.pp_an,xpsin).';
+R_bn_fit = ppval(equil_fit.R_fit.pp_bn,xpsin).';
 %
-Z_a0_fit = ppval(equil_fit.Z_fit.pp_a0,xpsi);
-Z_an_fit = ppval(equil_fit.Z_fit.pp_an,xpsi).';
-Z_bn_fit = ppval(equil_fit.Z_fit.pp_bn,xpsi).';
+Z_a0_fit = ppval(equil_fit.Z_fit.pp_a0,xpsin);
+Z_an_fit = ppval(equil_fit.Z_fit.pp_an,xpsin).';
+Z_bn_fit = ppval(equil_fit.Z_fit.pp_bn,xpsin).';
 %
-r_a0_fit = ppval(equil_fit.r_fit.pp_a0,xpsi);
-r_an_fit = ppval(equil_fit.r_fit.pp_an,xpsi).';
-r_bn_fit = ppval(equil_fit.r_fit.pp_bn,xpsi).';
+r_a0_fit = ppval(equil_fit.r_fit.pp_a0,xpsin);
+r_an_fit = ppval(equil_fit.r_fit.pp_an,xpsin).';
+r_bn_fit = ppval(equil_fit.r_fit.pp_bn,xpsin).';
 %
-calpha_a0_fit = ppval(equil_fit.calpha_fit.pp_a0,xpsi);
-calpha_an_fit = ppval(equil_fit.calpha_fit.pp_an,xpsi).';
-calpha_bn_fit = ppval(equil_fit.calpha_fit.pp_bn,xpsi).';
+calpha_a0_fit = ppval(equil_fit.calpha_fit.pp_a0,xpsin);
+calpha_an_fit = ppval(equil_fit.calpha_fit.pp_an,xpsin).';
+calpha_bn_fit = ppval(equil_fit.calpha_fit.pp_bn,xpsin).';
 %
-salpha_a0_fit = ppval(equil_fit.salpha_fit.pp_a0,xpsi);
-salpha_an_fit = ppval(equil_fit.salpha_fit.pp_an,xpsi).';
-salpha_bn_fit = ppval(equil_fit.salpha_fit.pp_bn,xpsi).';
+salpha_a0_fit = ppval(equil_fit.salpha_fit.pp_a0,xpsin);
+salpha_an_fit = ppval(equil_fit.salpha_fit.pp_an,xpsin).';
+salpha_bn_fit = ppval(equil_fit.salpha_fit.pp_bn,xpsin).';
 %
 % Build interpolated magnetic fields
 %
@@ -156,5 +156,5 @@ end
 xn = xR.*(xNpar.*xomega/clum - xm.*xc.*xp./xr)./xt;
 xkpsi = (xm.*xs./xr + sigma*sqrt(xNperp.^2.*xomega.^2/clum^2 - (xm.*xc./xr - xNpar.*xp.*xomega/clum).^2./xt.^2))./xR./xBp;
 %
-xY = [xpsi;xtheta;xphi;xkpsi;xm;xn;xomega/clum];
-%xY = [xpsi;xtheta;xphi;xkpsi;xm;xn;xomega/clum;zeros(1,nx)];
+xY = [xpsin;xtheta;xphi;xkpsi*equil_fit.psia;xm;xn;xomega];
+%xY = [xpsi;xtheta;xphi;xkpsi*equil_fit.psia;xm;xn;xomega/clum;zeros(1,nx)];
