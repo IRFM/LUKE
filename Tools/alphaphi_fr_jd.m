@@ -81,14 +81,14 @@ xInt(~xmask) = NaN;
 %
 if nx*ns <= 1e7,%no loop needed on the position
     %
-    xInt(xmask_ellipse) = integral_fr_jd(xpperpmax(xmask_ellipse),xNpar(xmask_ellipse),xyn(xmask_ellipse),xbeta(xmask_ellipse),xepol_pmz(1,xmask_ellipse),xepol_pmz(2,xmask_ellipse),xepol_pmz(3,xmask_ellipse),xslperp(xmask_ellipse),n,ns,-1)...
-                        + integral_fr_jd(xpperpmax(xmask_ellipse),xNpar(xmask_ellipse),xyn(xmask_ellipse),xbeta(xmask_ellipse),xepol_pmz(1,xmask_ellipse),xepol_pmz(2,xmask_ellipse),xepol_pmz(3,xmask_ellipse),xslperp(xmask_ellipse),n,ns,+1);
+    xInt(xmask_ellipse) = integral_fr_jd(xpperpmax(1,xmask_ellipse),xNpar(1,xmask_ellipse),xyn(1,xmask_ellipse),xbeta(1,xmask_ellipse),xepol_pmz(1,xmask_ellipse),xepol_pmz(2,xmask_ellipse),xepol_pmz(3,xmask_ellipse),xslperp(1,xmask_ellipse),n,ns,-1)...
+                        + integral_fr_jd(xpperpmax(1,xmask_ellipse),xNpar(1,xmask_ellipse),xyn(1,xmask_ellipse),xbeta(1,xmask_ellipse),xepol_pmz(1,xmask_ellipse),xepol_pmz(2,xmask_ellipse),xepol_pmz(3,xmask_ellipse),xslperp(1,xmask_ellipse),n,ns,+1);
     %
-    xInt(xmask_parabola) = integral_fr_jd(xpperpmax(xmask_parabola),xNpar(xmask_parabola),xyn(xmask_parabola),xbeta(xmask_parabola),xepol_pmz(1,xmask_parabola),xepol_pmz(2,xmask_parabola),xepol_pmz(3,xmask_parabola),xslperp(xmask_parabola),n,ns,0);
+    xInt(xmask_parabola) = integral_fr_jd(xpperpmax(1,xmask_parabola),xNpar(1,xmask_parabola),xyn(1,xmask_parabola),xbeta(1,xmask_parabola),xepol_pmz(1,xmask_parabola),xepol_pmz(2,xmask_parabola),xepol_pmz(3,xmask_parabola),xslperp(1,xmask_parabola),n,ns,0);
     %
-    xInt(xmask_hyperbola) = integral_fr_jd(xpperpmax(xmask_hyperbola),xNpar(xmask_hyperbola),xyn(xmask_hyperbola),xbeta(xmask_hyperbola),xepol_pmz(1,xmask_hyperbola),xepol_pmz(2,xmask_hyperbola),xepol_pmz(3,xmask_hyperbola),xslperp(xmask_hyperbola),n,ns,-1);
+    xInt(xmask_hyperbola) = integral_fr_jd(xpperpmax(1,xmask_hyperbola),xNpar(1,xmask_hyperbola),xyn(1,xmask_hyperbola),xbeta(1,xmask_hyperbola),xepol_pmz(1,xmask_hyperbola),xepol_pmz(2,xmask_hyperbola),xepol_pmz(3,xmask_hyperbola),xslperp(1,xmask_hyperbola),n,ns,-1);
     %
-    xInt(xmask_straight) = integral_fr_jd(xpperpmax(xmask_straight),xNpar(xmask_straight),xyn(xmask_straight),xbeta(xmask_straight),xepol_pmz(1,xmask_straight),xepol_pmz(2,xmask_straight),xepol_pmz(3,xmask_straight),xslperp(xmask_straight),n,ns,NaN);
+    xInt(xmask_straight) = integral_fr_jd(xpperpmax(1,xmask_straight),xNpar(1,xmask_straight),xyn(1,xmask_straight),xbeta(1,xmask_straight),xepol_pmz(1,xmask_straight),xepol_pmz(2,xmask_straight),xepol_pmz(3,xmask_straight),xslperp(1,xmask_straight),n,ns,NaN);
     %
 else % loop needed on the position
     %
@@ -129,7 +129,7 @@ else
     xR = 1;
 end
 %
-xalphaphi = sqrt(pi/2)*xa.*xR.*xInt./xbeta./abs(xNpar);
+xalphaphi = sqrt(pi/2)*xa.*xR.*xInt./xbeta;
 %
 %   Subfunction for the perpendicular momentum space integral
 %
@@ -158,7 +158,7 @@ function xInt = integral_fr_jd(xpperpmax,xNpar,xyn,xbeta,xepol_p,xepol_m,xepol_z
         sxppar_res = (1 - sxyn)./sxbeta./sxNpar;
     end
     %
-    clear sxNpar sxsigma sxyn 
+    clear sxsigma sxyn 
     %
     sxepol_p =  repmat(xepol_p,[ns,1]);
     sxepol_m =  repmat(xepol_m,[ns,1]);
@@ -172,11 +172,11 @@ function xInt = integral_fr_jd(xpperpmax,xNpar,xyn,xbeta,xepol_p,xepol_m,xepol_z
     if ~isnan(res_opt),% relativistic case
         sxgamma = sqrt(1 + (sxppar_res.^2 + sxpperp.^2).*sxbeta.^2);
         %
-        sxfint = sxpperp.^3.*abs(sxtheta).^2.*exp(-(sxgamma - 1)./sxbeta.^2)./sxgamma;
+        sxfint = sxpperp.^3.*abs(sxtheta).^2.*exp(-(sxgamma - 1)./sxbeta.^2)./abs(sxgamma.*sxNpar - sxppar_res.*sxbeta);
         %
     else
         %
-        sxfint = sxpperp.^3.*abs(sxtheta).^2.*exp(-(sxppar_res.^2 + sxpperp.^2)/2);
+        sxfint = sxpperp.^3.*abs(sxtheta).^2.*exp(-(sxppar_res.^2 + sxpperp.^2)/2)./abs(sxNpar);
         %
     end        
     %
