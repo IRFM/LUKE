@@ -310,7 +310,7 @@ if imag(opt_disp) == 1,%relativistic calculation of the absorption coefficient
 	sbeta = sqrt(sTe/mc2);
     salphaphi_lin = zeros(1,ns);
     for n = n_rf_list,
-        salphaphi_lin = salphaphi_lin + omega_rf/clum*alphaphi_fr_jd(sa,sb,sbeta,sNpar,real(sNperp),sepol_pmz,n);
+        salphaphi_lin = salphaphi_lin + omega_rf/clum*alphaphi_fr_jd(sa,sb,sbeta,sNpar,real(sNperp),sepol_pmz,n,1);
     end
 end
 %
