@@ -465,7 +465,7 @@ void mexFunction(   int     nlhs,
      */
 //int ii=0;
     while ((t1 < rayparam.tfinal[0]) && (k < rayparam.kmax[0]-1)) {
-//    for (ii=0;ii<50;ii++) {
+//   for (ii=0;ii<20000;ii++) {
 //        ii++; 
         if ((t1 + h) > rayparam.tfinal[0]) {
             h = rayparam.tfinal[0] - t1;
@@ -597,9 +597,13 @@ void mexFunction(   int     nlhs,
             n2 = n1;
             omega2 = omega1;
 
-            
-            if ((psin1<11) && (psin2>1)) {//Specular reflexion enforced at psin = 1
-
+//            mexPrintf("psin1,psin2,theta1,theta2,phi1,phi2,kpsin1,kpsin2,m1,m2:%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n",psin1,psin2,theta1,theta2,phi1,phi2,kpsin1,kpsin2,m1,m2);
+            if ((psin1<1-rayparam.dpsin[0]) && (psin2>1-rayparam.dpsin[0])) {//Specular reflexion enforced at psin = 1            
+                  psin2 = psin1;
+                  kpsin2 = -kpsin1;
+                  phi2 = phi1;
+                  theta2 = theta1;
+                  m2 = m1;
             }
             
 
@@ -1470,7 +1474,7 @@ Ydot[4] = -creal(dDtotdx[1])/creal(dDtotdx[6]);
 Ydot[5] = 0.0; 
 Ydot[6] = 0.0; 
 
-//mexPrintf("dDtotdx:%g\n",creal(dDtotdx[5]));
+//mexPrintf("dDtotdw:%g\n",creal(dDtotdx[6]));
 //mexPrintf("Ydot:%g,%g,%g,%g,%g,%g,%g\n",Ydot[0],Ydot[1],Ydot[2],Ydot[3],Ydot[4],Ydot[5],Ydot[6]);
 
 // Memory is released 
