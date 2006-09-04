@@ -108,7 +108,7 @@ figure('Name','Poloidal angle')
 graph1D_jd(abs(yout(:,3)/2/pi),yout(:,2)/2/pi,0,0,'abs(\phi)/2\pi','\theta/2\pi','Poloidal angle',NaN,'','','-','none','r',2);drawnow;hold on
 %
 figure('Name','Normalized radial wavenumber')
-graph1D_jd(abs(yout(:,3)/2/pi),yout(:,1),0,0,'abs(\phi)/2\pi','kpsi*psia','Normalized radial wavenumber',NaN,'','','-','none','r',2);drawnow;hold on
+graph1D_jd(abs(yout(:,3)/2/pi),yout(:,4),0,0,'abs(\phi)/2\pi','kpsi*psia','Normalized radial wavenumber',NaN,'','','-','none','r',2);drawnow;hold on
 %
 D_ray = zeros(length(tout),1);
 for ii = 1:length(tout),
