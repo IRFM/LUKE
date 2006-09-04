@@ -6,6 +6,8 @@
 % by Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr> and J. Decker (DRFC/DSM/CEA) <joan.decker@cea.fr>
 %
 clear all
+close all
+clc
 %
 id_wave = 'test_RT';
 %
@@ -25,7 +27,7 @@ method = 'spline';%nearest,spline,pchip,cubic
 %testfitequil_yp(equil,equil_fit);
 f = 3.7;%GHz
 omega = 2*pi*f*1e9;
-y0 = init_RT_jd(equil_fit,0.95,0,0,omega,2,0,1,0)';
+y0 = init_RT_jd(equil_fit,0.98,0,0,omega,2,0,1,0)';
 %
 rayparam.testmode = 0;
 rayparam.tensortype = 0;
@@ -34,10 +36,14 @@ rayparam.tfinal = 40000;
 rayparam.dt0 = 1.e-4;
 rayparam.dpsin = 1.e-3;
 rayparam.tol = eps;
-rayparam.kmax = 10000;
+rayparam.kmax = 20000;
 %
-[tout, yout] = raytracing_yp(rayparam,equil_fit,y0);
-[Npar,Nperp,D] = raypostprocessing_yp(tout, yout,rayparam,equil_fit,omega);
+if isreal(y0(4)),
+   [tout, yout] = raytracing_yp(rayparam,equil_fit,y0);
+   [Npar,Nperp,D] = raypostprocessing_yp(tout, yout,rayparam,equil_fit,omega);
+else
+   error('kpsin has a non nul imaginary part !');
+end
 
 return
 
