@@ -1300,7 +1300,7 @@ for (is = 1;is < equilparam.ns[0]+1; is++) {
 
 for (i=0;i<8;i++) {
     for (j=0;j<8;j++) {
-        if ((i==j) && (i<6)) {
+        if ((i==j) && (i<7)) {
             dYdY[i][j] = 1.0;
         } else {
             dYdY[i][j] = 0.0;
