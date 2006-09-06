@@ -1,4 +1,4 @@
-function [Npar_ray,Nperp_ray,D_ray] = raypostprocessing_yp(tout,yout,rayparam,equil_fit,omega)
+function [psin_ray,theta_ray,phi_ray,R_ray,Z_ray,Npar_ray,Nperp_ray,epol_pmz_ray,phi_xyz_ray,D_ray] = raypostprocessing_yp(tout,yout,rayparam,equil_fit,omega)
 %
 % Post processing of the ray calculation
 %
@@ -13,6 +13,9 @@ function [Npar_ray,Nperp_ray,D_ray] = raypostprocessing_yp(tout,yout,rayparam,eq
 %
 % By Yves Peysson (CEA-DRFC, yves.peysson@cea.fr) and Joan Decker (CEA-DRFC, joan.decker@cea.fr)
 %
+psin_ray = yout(:,1);
+theta_ray = yout(:,2);
+phi_ray = yout(:,3); 
 %
 Te_ray = ppval(equil_fit.Te_fit.pp_f,yout(:,1));
 ne_ray = ppval(equil_fit.ne_fit.pp_f,yout(:,1));
@@ -81,8 +84,8 @@ Z_an_fit = ppval(equil_fit.Z_fit.pp_an,psin_fit);
 Z_bn_fit = ppval(equil_fit.Z_fit.pp_bn,psin_fit);
 %
 for ii = 1:ntheta_fit,
-   R_fit(:,ii) = R_a0_fit' + R_an_fit*cos(equil_fit.R_fit.n*theta_fit(ii)) + R_bn_fit*sin(equil_fit.R_fit.n*theta_fit(ii));
-   Z_fit(:,ii) = Z_a0_fit' + Z_an_fit*cos(equil_fit.Z_fit.n*theta_fit(ii)) + Z_bn_fit*sin(equil_fit.Z_fit.n*theta_fit(ii));
+   R_fit(:,ii) = R_a0_fit.' + R_an_fit*cos(equil_fit.R_fit.n*theta_fit(ii)) + R_bn_fit*sin(equil_fit.R_fit.n*theta_fit(ii));
+   Z_fit(:,ii) = Z_a0_fit.' + Z_an_fit*cos(equil_fit.Z_fit.n*theta_fit(ii)) + Z_bn_fit*sin(equil_fit.Z_fit.n*theta_fit(ii));
 end
 %
 Rmin = min(min(R_fit));
@@ -111,9 +114,13 @@ figure('Name','Normalized radial wavenumber')
 graph1D_jd(abs(yout(:,3)/2/pi),yout(:,4),0,0,'abs(\phi)/2\pi','kpsi*psia','Normalized radial wavenumber',NaN,'','','-','none','r',2);drawnow;hold on
 %
 D_ray = zeros(length(tout),1);
+epol_pmz_ray = zeros(length(tout),3);
+phi_xyz_ray = zeros(length(tout),3);
+%
 for ii = 1:length(tout),
     if rayparam.tensortype == 0,
-        [Nperpp,Nperpm,Kxyz] = colddisp_dke_jd(Npar_ray(ii),omega,ne_ray(ii),zni_ray(ii,:)',equil_fit.zZi,equil_fit.zmi,B_ray(ii));
+        [Nperpp,Nperpm,Kxyz,ep_xyz,em_xyz,ep_pmz,em_pmz,ep_pyk,em_pyk,phip_xyz,phim_xyz,phip_pmz,phim_pmz,phip_pyk,phim_pyk]...
+            = colddisp_dke_jd(Npar_ray(ii),omega,ne_ray(ii),zni_ray(ii,:)',equil_fit.zZi,equil_fit.zmi,B_ray(ii),Nperp_ray(ii));
     else
         error('not yet implemented')
     end
@@ -121,6 +128,8 @@ for ii = 1:length(tout),
     N = [Nperp_ray(ii);0;Npar_ray(ii)];
     N2 = Npar_ray(ii)^2+Nperp_ray(ii)^2;
     D_ray(ii) = det(N*N.'- eye(3)*N2 + Kxyz);
-    
+%    
+    epol_pmz_ray(ii,:) = ep_pmz.';
+    phi_xyz_ray(ii,:) = phip_xyz.';
 end
 figure('Name','Dispersion relation'),graph1D_jd(abs(yout(:,3)/2/pi),D_ray,0,0,'abs(\phi)/2\pi','Dispersion relation','',NaN,'','','-','none','r',2);drawnow
