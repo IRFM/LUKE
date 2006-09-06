@@ -254,7 +254,7 @@ void mexFunction(   int     nlhs,
     if (!mxIsStruct(prhs[1])) mexErrMsgTxt("Input arguments must be structures");
 
 
-// Get Input Arguments
+/* Get Input Arguments */
 
     rayparam = load_ray_param(RAYPARAM_IN);       
     equilparam = load_equil_param(EQUIL_IN);
@@ -272,9 +272,9 @@ void mexFunction(   int     nlhs,
     calpha_fit = load_equil_2D(EQUIL_IN,"calpha_fit");
     salpha_fit = load_equil_2D(EQUIL_IN,"salpha_fit");
     
-// Test mode only
+/* Test mode only */
     
-    if (rayparam.testmode[0]) {// keep this section for tests if necessary
+    if (rayparam.testmode[0]) {/* keep this section for tests if necessary */
         mexPrintf("tol : %g\n",rayparam.tol[0]);
         mexPrintf("zZi(4) : %g\n",equilparam.zZi[3]);
         
@@ -374,7 +374,7 @@ void mexFunction(   int     nlhs,
         
     }
     
-// Runge-Kutta 
+/* Runge-Kutta  */
 
     mxArray *T_TEMP,*Y_TEMP;
     mxArray *Y_OUT_TEMP1,*Y_OUT_TEMP2,*Y_OUT_TEMP3,*Y_OUT_TEMP4,*Y_OUT_TEMP5,*Y_OUT_TEMP6,*Y_OUT_TEMP7;
@@ -402,7 +402,7 @@ void mexFunction(   int     nlhs,
 
     y0 = mxGetPr(Y0_IN);
 
-//  M = max(mxGetM(Y0_IN),mxGetN(Y0_IN));// only the first five coordinates are evolving (psin,theta,phi,kpsin,m)
+/*  M = max(mxGetM(Y0_IN),mxGetN(Y0_IN)); only the first five coordinates are evolving (psin,theta,phi,kpsin,m) */
     
     /*
      * Create and Initialize Return Arguments
@@ -478,10 +478,10 @@ void mexFunction(   int     nlhs,
     /*
      * The main loop
      */
-//int ii=0;
+/*int ii=0;*/
     while ((t1 < rayparam.tfinal[0]) && (k < rayparam.kmax[0]-1)) {
-//   for (ii=0;ii<20000;ii++) {
-//        ii++; 
+/*   for (ii=0;ii<20000;ii++) {*/
+/*        ii++; */
         if ((t1 + h) > rayparam.tfinal[0]) {
             h = rayparam.tfinal[0] - t1;
         }
@@ -514,8 +514,8 @@ void mexFunction(   int     nlhs,
         for  (m = 0; m < M; m++) {
             y[m] = s0[m]+h*s1[m]*beta[0][0];
         }
-        y[5] = n1;// only the first five coordinates are evolving (psin,theta,phi,kpsin,m)
-        y[6] = omega1;// only the first five coordinates are evolving (psin,theta,phi,kpsin,m)
+        y[5] = n1;/* only the first five coordinates are evolving (psin,theta,phi,kpsin,m) */
+        y[6] = omega1;/* only the first five coordinates are evolving (psin,theta,phi,kpsin,m) */
 
         ray(mxGetPr(Y_OUT_TEMP2),y,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,BPHI_fit,BP_fit,R_fit,Z_fit,r_fit,calpha_fit,salpha_fit);
         s2 = mxGetPr(Y_OUT_TEMP2);
@@ -526,8 +526,8 @@ void mexFunction(   int     nlhs,
         for  (m = 0; m < M; m++) {
             y[m] = s0[m]+h*(s1[m]*beta[0][1] + s2[m]*beta[1][1]);
         }
-        y[5] = n1;// only the first five coordinates are evolving (psin,theta,phi,kpsin,m)
-        y[6] = omega1;// only the first five coordinates are evolving (psin,theta,phi,kpsin,m)
+        y[5] = n1;/* only the first five coordinates are evolving (psin,theta,phi,kpsin,m) */
+        y[6] = omega1;/* only the first five coordinates are evolving (psin,theta,phi,kpsin,m) */
 
         ray(mxGetPr(Y_OUT_TEMP3),y,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,BPHI_fit,BP_fit,R_fit,Z_fit,r_fit,calpha_fit,salpha_fit);
         s3 = mxGetPr(Y_OUT_TEMP3);
@@ -539,8 +539,8 @@ void mexFunction(   int     nlhs,
             y[m] = s0[m]+h*(s1[m]*beta[0][2] + s2[m]*beta[1][2]
                     +s3[m]*beta[2][2]);
         }
-        y[5] = n1;// only the first five coordinates are evolving (psin,theta,phi,kpsin,m)
-        y[6] = omega1;// only the first five coordinates are evolving (psin,theta,phi,kpsin,m)
+        y[5] = n1;/* only the first five coordinates are evolving (psin,theta,phi,kpsin,m) */
+        y[6] = omega1;/* only the first five coordinates are evolving (psin,theta,phi,kpsin,m)  */
         
         ray(mxGetPr(Y_OUT_TEMP4),y,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,BPHI_fit,BP_fit,R_fit,Z_fit,r_fit,calpha_fit,salpha_fit);
         s4 = mxGetPr(Y_OUT_TEMP4);
@@ -552,8 +552,8 @@ void mexFunction(   int     nlhs,
             y[m] = s0[m]+h*(s1[m]*beta[0][3] + s2[m]*beta[1][3]
                     +s3[m]*beta[2][3] + s4[m]*beta[3][3]);
         }
-        y[5] = n1;// only the first five coordinates are evolving (psin,theta,phi,kpsin,m)
-        y[6] = omega1;// only the first five coordinates are evolving (psin,theta,phi,kpsin,m)
+        y[5] = n1;/* only the first five coordinates are evolving (psin,theta,phi,kpsin,m) */
+        y[6] = omega1;/* only the first five coordinates are evolving (psin,theta,phi,kpsin,m) */
         
         ray(mxGetPr(Y_OUT_TEMP5),y,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,BPHI_fit,BP_fit,R_fit,Z_fit,r_fit,calpha_fit,salpha_fit);
         s5 = mxGetPr(Y_OUT_TEMP5);
@@ -566,8 +566,8 @@ void mexFunction(   int     nlhs,
                     +s3[m]*beta[2][4] + s4[m]*beta[3][4]
                     +s5[m]*beta[4][4]);
         }
-        y[5] = n1;// only the first five coordinates are evolving (psin,theta,phi,kpsin,m)
-        y[6] = omega1;// only the first five coordinates are evolving (psin,theta,phi,kpsin,m)
+        y[5] = n1;/* only the first five coordinates are evolving (psin,theta,phi,kpsin,m) */
+        y[6] = omega1;/* only the first five coordinates are evolving (psin,theta,phi,kpsin,m) */
         
         ray(mxGetPr(Y_OUT_TEMP6),y,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,BPHI_fit,BP_fit,R_fit,Z_fit,r_fit,calpha_fit,salpha_fit);
         s6 = mxGetPr(Y_OUT_TEMP6);
@@ -582,8 +582,8 @@ void mexFunction(   int     nlhs,
                     + s5[m]*gama[4][1] + s6[m]*gama[5][1]);
         }
 
-        delta = inf_norm(ydel,M-2);// only the first five coordinates are evolving (psin,theta,phi,kpsin,m)
-        ymax = inf_norm(s0,M-2);// only the first five coordinates are evolving (psin,theta,phi,kpsin,m)
+        delta = inf_norm(ydel,M-2);/* only the first five coordinates are evolving (psin,theta,phi,kpsin,m) */
+        ymax = inf_norm(s0,M-2);/* only the first five coordinates are evolving (psin,theta,phi,kpsin,m) */
         tau = rayparam.tol[0]*max(ymax,1.0);        
         
 
@@ -612,16 +612,16 @@ void mexFunction(   int     nlhs,
             n2 = n1;
             omega2 = omega1;
 
-//            mexPrintf("t1,psin2,theta2,phi2,kpsin2,m2:%g,%g,%g,%g,%g,%g\n",t1,psin2,theta2,phi2,kpsin2,m2);
-            if ((psin1<1-rayparam.dpsin[0]) && (psin2>1-rayparam.dpsin[0])) {//Specular reflexion enforced at psin = 1            
+/*            mexPrintf("t1,psin2,theta2,phi2,kpsin2,m2:%g,%g,%g,%g,%g,%g\n",t1,psin2,theta2,phi2,kpsin2,m2); */
+            if ((psin1<1-rayparam.dpsin[0]) && (psin2>1-rayparam.dpsin[0])) {/* Specular reflexion enforced at psin = 1  */           
                   psin2 = psin1;
                   phi2 = phi1;
                   theta2 = theta1;
                   s0[3] = - kpsin1;
                   dsolve(&kpsin2,s0,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,BPHI_fit,BP_fit,R_fit,Z_fit,r_fit,calpha_fit,salpha_fit);
-//                  kpsin2 = -kpsin1;
+/*                  kpsin2 = -kpsin1; */
                   m2 = m1;
-//            mexPrintf("t1,psin2,theta2,phi2,kpsin2,m2:%g,%g,%g,%g,%g,%g\n",t1,psin2,theta2,phi2,kpsin2,m2);
+/*            mexPrintf("t1,psin2,theta2,phi2,kpsin2,m2:%g,%g,%g,%g,%g,%g\n",t1,psin2,theta2,phi2,kpsin2,m2); */
             }
             
 
@@ -891,7 +891,7 @@ void ppval_1D(pp_1D_format in, double x,double y[],double dydx[])
                     i2 = k-1+j*(int)in.dim_f[0] + 2*(int)in.pieces_f[0]*(int)in.dim_f[0];
                     i3 = k-1+j*(int)in.dim_f[0] + 3*(int)in.pieces_f[0]*(int)in.dim_f[0];                    
                     y[k-1] = in.coefs_f[i0]*pow((x - in.breaks_f[j]),3) + in.coefs_f[i1]*pow((x - in.breaks_f[j]),2) + in.coefs_f[i2]*(x - in.breaks_f[j]) + in.coefs_f[i3];
-//                    mexPrintf("kk,y: %d,%g\n",k,y[k-1]); 
+/*                    mexPrintf("kk,y: %d,%g\n",k,y[k-1]);  */
                 }
             }
         }
@@ -909,7 +909,7 @@ void ppval_1D(pp_1D_format in, double x,double y[],double dydx[])
                     i1 = k-1+j*(int)in.dim_dfdpsin[0] + 1*(int)in.pieces_dfdpsin[0]*(int)in.dim_dfdpsin[0];
                     i2 = k-1+j*(int)in.dim_dfdpsin[0] + 2*(int)in.pieces_dfdpsin[0]*(int)in.dim_dfdpsin[0];                    
                     dydx[k-1] = in.coefs_dfdpsin[i0]*pow((x - in.breaks_dfdpsin[j]),2) + in.coefs_dfdpsin[i1]*(x - in.breaks_dfdpsin[j]) + in.coefs_dfdpsin[i2];
-//                    mexPrintf("k,dydx: %d%g\n",k,dydx[k-1]); 
+/*                    mexPrintf("k,dydx: %d%g\n",k,dydx[k-1]);  */
                 } else if ((int)in.order_dfdpsin[0] == 4) {
                     i0 = k-1+j*(int)in.dim_dfdpsin[0] + 0*(int)in.pieces_dfdpsin[0]*(int)in.dim_dfdpsin[0];
                     i1 = k-1+j*(int)in.dim_dfdpsin[0] + 1*(int)in.pieces_dfdpsin[0]*(int)in.dim_dfdpsin[0];
@@ -1115,7 +1115,7 @@ unsigned int N;
     return(temp_max);
 }
 
-/*General coordinate time evolution dY/dt with Y=[psin,theta,phi,kpsin,m,n,omega/c]*/
+/* General coordinate time evolution dY/dt with Y=[psin,theta,phi,kpsin,m,n,omega/c] */
 
 
 void ray(Ydot,Y,param,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,BPHI_fit,BP_fit,R_fit,Z_fit,r_fit,calpha_fit,salpha_fit)
@@ -1154,7 +1154,7 @@ susceptibilitytensor_format X;
 
 register int i,j;
 
-// Memory allocation
+/* Memory allocation */
 
 raymagnetic.r = mxCalloc(1,sizeof(double));
 raymagnetic.R = mxCalloc(1,sizeof(double));
@@ -1172,7 +1172,7 @@ raymagnetic.dBPdx = mxCalloc(M,sizeof(double));
 raymagnetic.dBPHIdx = mxCalloc(M,sizeof(double));
 raymagnetic.dBdx = mxCalloc(M,sizeof(double));
 
-for (i = 0;i < M; i++) {//initialisation
+for (i = 0;i < M; i++) {/*initialisation */
     raymagnetic.drdx[i] = 0.0;
     raymagnetic.dRdx[i] = 0.0;
     raymagnetic.dsalphadx[i] = 0.0;
@@ -1197,7 +1197,7 @@ for (i = 0;i < equilparam.ns[0]; i++) {
     rayprofiles.dznidx[i] = mxCalloc(M,sizeof(double));       
 }    
 
-for (i = 0;i < M; i++) {//initialisation
+for (i = 0;i < M; i++) {/*initialisation */
     rayprofiles.dTedx[i] = 0.0;
     rayprofiles.dnedx[i] = 0.0;
     
@@ -1221,7 +1221,7 @@ X.dXyydx = mxCalloc(M,sizeof(double complex));
 X.dXyzdx = mxCalloc(M,sizeof(double complex));
 X.dXzzdx = mxCalloc(M,sizeof(double complex));
 
-for (i=0;i<M;i++) {//initialisation
+for (i=0;i<M;i++) {/*initialisation */
     X.dXxxdx[i] = 0.0;
     X.dXxydx[i] = 0.0;
     X.dXxzdx[i] = 0.0;
@@ -1230,23 +1230,24 @@ for (i=0;i<M;i++) {//initialisation
     X.dXzzdx[i] = 0.0;
 }
 
-// Equilibrium interpolation at ray location
+/* Equilibrium interpolation at ray location */
 interpequil(raymagnetic,rayprofiles,Y,Te_fit,ne_fit,zTi_fit,zni_fit,BPHI_fit,BP_fit,R_fit,Z_fit,r_fit,calpha_fit,salpha_fit,equilparam.ns[0]);
 
-// Refractive index calculation
+/* Refractive index calculation */
 rayindex(Y,raymagnetic,equilparam,&Npar,&Nperp,dNpardx,dNperpdx);
-//mexPrintf("r,R,BP,kpsin,sina,cosa,B,BPHI:%g,%g,%g,%g,%g,%g,%g,%g\n",raymagnetic.r[0],raymagnetic.R[0],raymagnetic.BP[0],Y[3],raymagnetic.salpha[0],raymagnetic.calpha[0],raymagnetic.B[0],raymagnetic.BPHI[0]);
-//mexPrintf("Npar,w*dNpardw,Nperpr,Nperpi,w*dNperpdwr,w*dNperpdwi:%g,%g,%g,%g,%g,%g\n",Npar,dNpardx[6],Nperp,dNperpdx[6]);
-//mexPrintf("wce[0],w*dwcedw[0],wce[1],w*dwcedw[1]:%g,%g,%g,%g\n",wcn[0],dwcndx[0][6],wcn[1],dwcndx[1][6]);
-//mexPrintf("wpn2[0],w*dwpn2dw[0],wpn2[1],w*dwpn2dw[1]:%g,%g,%g,%g\n",wpn2[0],dwpn2dx[0][6],wpn2[1],dwpn2dx[1][6]);
-//mexPrintf("wce[0],dwcedn[0],wce[1],dwcedn[1]:%g,%g,%g,%g\n",wcn[0],dwcndx[0][5],wcn[1],dwcndx[1][5]);
-//mexPrintf("wpn2[0],dwpn2dn[0],wpn2[1],dwpn2dn[1]:%g,%g,%g,%g\n",wpn2[0],dwpn2dx[0][5],wpn2[1],dwpn2dx[1][5]);
+/*mexPrintf("r,R,BP,kpsin,sina,cosa,B,BPHI:%g,%g,%g,%g,%g,%g,%g,%g\n",raymagnetic.r[0],raymagnetic.R[0],raymagnetic.BP[0],Y[3],raymagnetic.salpha[0],raymagnetic.calpha[0],raymagnetic.B[0],raymagnetic.BPHI[0]);
+mexPrintf("Npar,w*dNpardw,Nperpr,Nperpi,w*dNperpdwr,w*dNperpdwi:%g,%g,%g,%g,%g,%g\n",Npar,dNpardx[6],Nperp,dNperpdx[6]);
+mexPrintf("wce[0],w*dwcedw[0],wce[1],w*dwcedw[1]:%g,%g,%g,%g\n",wcn[0],dwcndx[0][6],wcn[1],dwcndx[1][6]);
+mexPrintf("wpn2[0],w*dwpn2dw[0],wpn2[1],w*dwpn2dw[1]:%g,%g,%g,%g\n",wpn2[0],dwpn2dx[0][6],wpn2[1],dwpn2dx[1][6]);
+mexPrintf("wce[0],dwcedn[0],wce[1],dwcedn[1]:%g,%g,%g,%g\n",wcn[0],dwcndx[0][5],wcn[1],dwcndx[1][5]);
+mexPrintf("wpn2[0],dwpn2dn[0],wpn2[1],dwpn2dn[1]:%g,%g,%g,%g\n",wpn2[0],dwpn2dx[0][5],wpn2[1],dwpn2dx[1][5]);
+ */
 
-// Susceptibility tensor 
+/* Susceptibility tensor  */
 
 susceptibility(X,param.tensortype[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardx,Nperp,dNperpdx,Y[6]);
 
-// Dispersion relation
+/* Dispersion relation */
 
 Nperp4 = Nperp*Nperp*Nperp*Nperp;
 Nperp3 = Nperp*Nperp*Nperp;
@@ -1326,8 +1327,9 @@ for (i = 0;i<43;i++) {
     }
 }
 
-//disprel(&Dtot,X,Npar,Nperp);
-//mexPrintf("Dtotr,Dtoti:%g,%g\n",creal(Dtot),cimag(Dtot));
+/* disprel(&Dtot,X,Npar,Nperp);
+mexPrintf("Dtotr,Dtoti:%g,%g\n",creal(Dtot),cimag(Dtot));
+ */
 
 Ydot[0] = creal(dDtotdx[3])/creal(dDtotdx[6]); 
 Ydot[1] = creal(dDtotdx[4])/creal(dDtotdx[6]); 
@@ -1337,10 +1339,11 @@ Ydot[4] = -creal(dDtotdx[1])/creal(dDtotdx[6]);
 Ydot[5] = 0.0; 
 Ydot[6] = 0.0; 
 
-//mexPrintf("dDtotdw:%g\n",creal(dDtotdx[6]));
-//mexPrintf("Ydot:%g,%g,%g,%g,%g,%g,%g\n",Ydot[0],Ydot[1],Ydot[2],Ydot[3],Ydot[4],Ydot[5],Ydot[6]);
+/*mexPrintf("dDtotdw:%g\n",creal(dDtotdx[6]));
+mexPrintf("Ydot:%g,%g,%g,%g,%g,%g,%g\n",Ydot[0],Ydot[1],Ydot[2],Ydot[3],Ydot[4],Ydot[5],Ydot[6]);
+ */
 
-// Memory is released 
+/* Memory is released  */
     
     mxFree(raymagnetic.r);
     mxFree(raymagnetic.R);
@@ -1410,10 +1413,11 @@ pp_2D_format salpha_fit;
     double Npar,dNpardx[8];
     double complex Nperp,dNperpdx[8];
 
-    //double complex Nperp4,Nperp3,Nperp2,Nperp1;
-    //double Npar4,Npar3,Npar2,Npar1;
-    //double complex Xxx,Xxy,Xxz,Xyy,Xyz,Xzz;
-    //double complex Xxx2,Xxy2,Xxz2,Xyy2,Xyz2,Xzz2;
+/*   double complex Nperp4,Nperp3,Nperp2,Nperp1;
+     double Npar4,Npar3,Npar2,Npar1;
+     double complex Xxx,Xxy,Xxz,Xyy,Xyz,Xzz;
+     bdouble complex Xxx2,Xxy2,Xxz2,Xyy2,Xyz2,Xzz2;
+*/
 
     double frac,fracmax,exp,tol;
     double kpsin0,kpsin1,kpsin2,dkpsi;
@@ -1434,7 +1438,7 @@ pp_2D_format salpha_fit;
     
     maxit = 50;
 
-    // Memory allocation
+    /* Memory allocation */
 
     raymagnetic.r = mxCalloc(1,sizeof(double));
     raymagnetic.R = mxCalloc(1,sizeof(double));
@@ -1452,7 +1456,7 @@ pp_2D_format salpha_fit;
     raymagnetic.dBPHIdx = mxCalloc(M,sizeof(double));
     raymagnetic.dBdx = mxCalloc(M,sizeof(double));
 
-    for (i = 0;i < M; i++) {//initialisation
+    for (i = 0;i < M; i++) {/* initialisation */
         raymagnetic.drdx[i] = 0.0;
         raymagnetic.dRdx[i] = 0.0;
         raymagnetic.dsalphadx[i] = 0.0;
@@ -1477,7 +1481,7 @@ pp_2D_format salpha_fit;
         rayprofiles.dznidx[i] = mxCalloc(M,sizeof(double));       
     }    
 
-    for (i = 0;i < M; i++) {//initialisation
+    for (i = 0;i < M; i++) {/*initialisation */
         rayprofiles.dTedx[i] = 0.0;
         rayprofiles.dnedx[i] = 0.0;
     }
@@ -1505,7 +1509,7 @@ pp_2D_format salpha_fit;
     X.dXyzdx = mxCalloc(M,sizeof(double complex));
     X.dXzzdx = mxCalloc(M,sizeof(double complex));
 
-    for (i=0;i<M;i++) {//initialisation
+    for (i=0;i<M;i++) {/*initialisation */
         X.dXxxdx[i] = 0.0;
         X.dXxydx[i] = 0.0;
         X.dXxzdx[i] = 0.0;
@@ -1514,7 +1518,7 @@ pp_2D_format salpha_fit;
         X.dXzzdx[i] = 0.0;
     }
 
-    // Equilibrium interpolation at ray location
+    /* Equilibrium interpolation at ray location */
     interpequil(raymagnetic,rayprofiles,Y,Te_fit,ne_fit,zTi_fit,zni_fit,BPHI_fit,BP_fit,R_fit,Z_fit,r_fit,calpha_fit,salpha_fit,equilparam.ns[0]);
 
     kpsin0 = Y[3];
@@ -1523,17 +1527,17 @@ pp_2D_format salpha_fit;
     rayindex(Y,raymagnetic,equilparam,&Npar,&Nperp,dNpardx,dNperpdx);
     susceptibility(X,param.tensortype[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardx,Nperp,dNperpdx,Y[6]);
     disprel(&cD0,X,Npar,Nperp);
-    D0 = creal(cD0);// to be changed if non-hermitian susceptibility tensors are used
-//  mexPrintf("kpsin0,D0:%g,%g\n",kpsin0,D0);
+    D0 = creal(cD0);/* to be changed if non-hermitian susceptibility tensors are used */
+/*  mexPrintf("kpsin0,D0:%g,%g\n",kpsin0,D0); */
     
     Y[3] = kpsin1;
     rayindex(Y,raymagnetic,equilparam,&Npar,&Nperp,dNpardx,dNperpdx);
     susceptibility(X,param.tensortype[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardx,Nperp,dNperpdx,Y[6]);
     disprel(&cD1,X,Npar,Nperp);
-    D1 = creal(cD1);// to be changed if non-hermitian susceptibility tensors are used
-//  mexPrintf("kpsin1,D1:%g,%g\n",kpsin1,D1);
+    D1 = creal(cD1);/* to be changed if non-hermitian susceptibility tensors are used */
+/*  mexPrintf("kpsin1,D1:%g,%g\n",kpsin1,D1); */
 
-    // Search for root bounding interval
+    /* Search for root bounding interval */
 
     while ((D1*D0 > 0) && (fracmax < 100)){
         
@@ -1544,21 +1548,22 @@ pp_2D_format salpha_fit;
         rayindex(Y,raymagnetic,equilparam,&Npar,&Nperp,dNpardx,dNperpdx);
         susceptibility(X,param.tensortype[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardx,Nperp,dNperpdx,Y[6]);
         disprel(&cD1,X,Npar,Nperp);
-        D1 = creal(cD1);// to be changed if non-hermitian susceptibility tensors are used
-//      mexPrintf("kpsin1,D1:%g,%g\n",kpsin1,D1);
+        D1 = creal(cD1);/* to be changed if non-hermitian susceptibility tensors are used */
+/*      mexPrintf("kpsin1,D1:%g,%g\n",kpsin1,D1); */
     }
     
     if (D1*D0 > 0) {
-        kpsin[0] = kpsin0; // put error message
+        kpsin[0] = kpsin0;  /* put error message */
     }
-//    else if (fabs(D0) < tol){
-//        kpsin[0] = kpsin0;
-//    }
-//    else if (fabs(D1) < tol){
-//        kpsin[0] = kpsin1;
-//    }        
+/*    else if (fabs(D0) < tol){
+       kpsin[0] = kpsin0;
+    }
+    else if (fabs(D1) < tol){
+        kpsin[0] = kpsin1;
+    }        
+*/
     else {
-        if (fabs(D0) < fabs(D1)) { //Closest root is set to latest value.
+        if (fabs(D0) < fabs(D1)) { /*Closest root is set to latest value. */
             kpsin2 = kpsin0; 
             kpsin0 = kpsin1;
             kpsin1 = kpsin2;
@@ -1569,13 +1574,13 @@ pp_2D_format salpha_fit;
        
         j = 0;
         
-//        mexPrintf("fabs(D1),tol,j,maxit:%g,%g,%d,%d\n",fabs(D1),tol,j,maxit);
+/*        mexPrintf("fabs(D1),tol,j,maxit:%g,%g,%d,%d\n",fabs(D1),tol,j,maxit); */
          
-        while ((fabs(D1) > tol) && (j < maxit)) { //Secant loop.
+        while ((fabs(D1) > tol) && (j < maxit)) { /*Secant loop. */
             
-//          mexPrintf("kpsin0,D0,kpsin1,D1,frac,tol:%g,%g,%g,%g,%g,%g\n",kpsin0,D0,kpsin1,D1,frac,tol);
+/*          mexPrintf("kpsin0,D0,kpsin1,D1,frac,tol:%g,%g,%g,%g,%g,%g\n",kpsin0,D0,kpsin1,D1,frac,tol); */
             
-            dkpsi = (kpsin0 - kpsin1)*D1/(D1-D0); //Increment with respect to latest value.
+            dkpsi = (kpsin0 - kpsin1)*D1/(D1-D0); /*Increment with respect to latest value. */
             kpsin0 = kpsin1;
             D0 = D1;
             kpsin1 += dkpsi;
@@ -1584,22 +1589,22 @@ pp_2D_format salpha_fit;
             rayindex(Y,raymagnetic,equilparam,&Npar,&Nperp,dNpardx,dNperpdx);
             susceptibility(X,param.tensortype[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardx,Nperp,dNperpdx,Y[6]);
             disprel(&cD1,X,Npar,Nperp);
-            D1 = creal(cD1);// to be changed if non-hermitian susceptibility tensor are used
-//          mexPrintf("kpsin1,D1:%g,%g\n",kpsin1,D1);
+            D1 = creal(cD1);/* to be changed if non-hermitian susceptibility tensor are used */
+/*          mexPrintf("kpsin1,D1:%g,%g\n",kpsin1,D1); */
         }
         
-        if (fabs(D1) <= tol) { //Convergence.
+        if (fabs(D1) <= tol) { /*Convergence. */
             kpsin[0] = kpsin1;
         }
         else {
-            kpsin[0] = kpsin2; // put error message
+            kpsin[0] = kpsin2; /* put error message */
         }
     }    
     
     
-    // kpsin[0] = -Y[3]; //old method not accurate
+    /* kpsin[0] = -Y[3]; //old method not accurate */
 
-    // Memory is released 
+    /* Memory is released  */
     
     mxFree(raymagnetic.r);
     mxFree(raymagnetic.R);
@@ -1686,20 +1691,21 @@ double complex Nperp;
     Xyz2 = X.Xyz[0]*X.Xyz[0];
     Xzz2 = X.Xzz[0]*X.Xzz[0];
 
-    //mexPrintf("Nperp4r,Nperp4i:%g,%g\n",creal(Nperp4),cimag(Nperp4));
-    //mexPrintf("Npar:%g\n",Npar1);
-    //mexPrintf("Nperpr,Nperpi:%g,%g\n",creal(Nperp1),cimag(Nperp1));
-    //mexPrintf("Xxxr,XXxxi:%g,%g\n",creal(Xxx),cimag(Xxx));
-    //mexPrintf("Xxyr,XXxyi:%g,%g\n",creal(Xxy),cimag(Xxy));
-    //mexPrintf("Xxzr,XXxzi:%g,%g\n",creal(Xxz),cimag(Xxz));
-    //mexPrintf("Xyyr,XXyyi:%g,%g\n",creal(Xyy),cimag(Xyy));
-    //mexPrintf("Xyzr,XXyzi:%g,%g\n",creal(Xyz),cimag(Xyz));
-    //mexPrintf("Xzzr,XXzzi:%g,%g\n",creal(Xzz),cimag(Xzz));
+/*    mexPrintf("Nperp4r,Nperp4i:%g,%g\n",creal(Nperp4),cimag(Nperp4));
+    mexPrintf("Npar:%g\n",Npar1);
+    mexPrintf("Nperpr,Nperpi:%g,%g\n",creal(Nperp1),cimag(Nperp1));
+    mexPrintf("Xxxr,XXxxi:%g,%g\n",creal(Xxx),cimag(Xxx));
+    mexPrintf("Xxyr,XXxyi:%g,%g\n",creal(Xxy),cimag(Xxy));
+    mexPrintf("Xxzr,XXxzi:%g,%g\n",creal(Xxz),cimag(Xxz));
+    mexPrintf("Xyyr,XXyyi:%g,%g\n",creal(Xyy),cimag(Xyy));
+    mexPrintf("Xyzr,XXyzi:%g,%g\n",creal(Xyz),cimag(Xyz));
+    mexPrintf("Xzzr,XXzzi:%g,%g\n",creal(Xzz),cimag(Xzz));
 
-    //double complex Dtot1;
-    //Dtot1 = 1+2*Xxy*Xyz*Xxz+(Xxx+1)*Nperp4+(Xxx*Npar2-Xzz+2*Npar2-Xxy2-2*Xxx-Xxx*Xzz-2+Xxz2-Xyy+Npar2*Xzz-Xxx*Xyy)*Nperp2+(-2*Npar1*Xyy*Xxz-2*Npar1*Xxz+2*Xxy*Xyz*Npar1+2*Npar3*Xxz)*Nperp1-Xxx*Npar2*Xzz+Xxx*Xyy*Xzz-Npar2*Xyy*Xzz+Xyy*Xzz+Npar4*Xzz-Npar2*Xyy-Npar2*Xyz2+Xxx*Xzz-Xxx*Npar2+Xxx*Xyy+Xxy2*Xzz+Npar2*Xxz2-Xyy*Xxz2-2*Npar2*Xzz+Xyy+Xxx*Xyz2-Xxz2-2*Npar2+Xyz2+2*Nperp3*Npar1*Xxz+Xxx+Xzz+Npar4+Xxy2;
-    //mexPrintf("Dtot1:%g\n",Dtot1);
-
+    double complex Dtot1;
+    Dtot1 = 1+2*Xxy*Xyz*Xxz+(Xxx+1)*Nperp4+(Xxx*Npar2-Xzz+2*Npar2-Xxy2-2*Xxx-Xxx*Xzz-2+Xxz2-Xyy+Npar2*Xzz-Xxx*Xyy)*Nperp2+(-2*Npar1*Xyy*Xxz-2*Npar1*Xxz+2*Xxy*Xyz*Npar1+2*Npar3*Xxz)*Nperp1-Xxx*Npar2*Xzz+Xxx*Xyy*Xzz-Npar2*Xyy*Xzz+Xyy*Xzz+Npar4*Xzz-Npar2*Xyy-Npar2*Xyz2+Xxx*Xzz-Xxx*Npar2+Xxx*Xyy+Xxy2*Xzz+Npar2*Xxz2-Xyy*Xxz2-2*Npar2*Xzz+Xyy+Xxx*Xyz2-Xxz2-2*Npar2+Xyz2+2*Nperp3*Npar1*Xxz+Xxx+Xzz+Npar4+Xxy2;
+    mexPrintf("Dtot1:%g\n",Dtot1);
+*/
+    
     D[0] = Nperp4;
     D[1] = Xxx*Nperp4;
     D[2] = 2.0*Npar1*Xxz*Nperp3;
@@ -1744,9 +1750,9 @@ double complex Nperp;
     D[41] = Xxx*Xyy*Xzz;
     D[42] = 2.0*Xxy*Xyz*Xxz;
 
-    //for (i = 0;i<43;i++) {
-    //    mexPrintf("i,Dr,Di:%d,%g\n",i,creal(D[i]),cimag(D[i]));
-    //}
+    /* for (i = 0;i<43;i++) {
+        mexPrintf("i,Dr,Di:%d,%g\n",i,creal(D[i]),cimag(D[i]));
+    }*/
 
     Dtot[0] = 0.0;
     for (i = 0;i<43;i++) {
@@ -1760,28 +1766,29 @@ double tensortype,omega;
 double Npar,dNpardx[];
 double complex Nperp,dNperpdx[];
 
-//double Te,dTedx[],ne,dnedx[];
-//double zTi[],zni[];
-//double dzTidx[][M],dznidx[][M];
+/*double Te,dTedx[],ne,dnedx[];
+double zTi[],zni[];
+double dzTidx[][M],dznidx[][M];
+*/
 
 raymagnetic_format raymagnetic;
 rayprofiles_format rayprofiles;
 equilparam_format equilparam;
 {
-    double qe = 1.602176462e-19;//Absolute value of the electron charge (C)
-    double me = 9.10938188e-31;//Electron rest mass (Kg)
-    double mp = 1.67262158e-27;//Proton rest mass (Kg)
-    double epsi0 = 8.854187818e-12;//Free space permittivity (F/m)
-    double mu0 = 12.566370614e-7;//Free space permeability (F/m)
-    double clum = 299792458;//Speed of light (m/s)
-    double mc2 = 510.998902;//Electron energy rest mass (keV)
+    double qe = 1.602176462e-19;/*Absolute value of the electron charge (C) */
+    double me = 9.10938188e-31;/*Electron rest mass (Kg) */
+    double mp = 1.67262158e-27;/*Proton rest mass (Kg) */
+    double epsi0 = 8.854187818e-12;/*Free space permittivity (F/m) */
+    double mu0 = 12.566370614e-7;/*Free space permeability (F/m) */
+    double clum = 299792458;/*Speed of light (m/s) */
+    double mc2 = 510.998902;/*Electron energy rest mass (keV) */
 
     double wcn[equilparam.ns[0]+1],wpn2[equilparam.ns[0]+1],betath[equilparam.ns[0]+1];
     double dwcndx[equilparam.ns[0]+1][M],dwpn2dx[equilparam.ns[0]+1][M],dbetathdx[equilparam.ns[0]+1][M];
 
     int i,j,is;
     
-    for (i = 0;i < equilparam.ns[0] + 1; i++) {//initialisation
+    for (i = 0;i < equilparam.ns[0] + 1; i++) {/*initialisation */
         wcn[i] = 0.0;
         wpn2[i] = 0.0;
         betath[i] = 0.0;
@@ -1792,14 +1799,14 @@ equilparam_format equilparam;
         }
     }
     
-    // Normalized parameters
+    /* Normalized parameters */
 
-    wcn[0] = -qe*raymagnetic.B[0]/me/omega;//electrons
+    wcn[0] = -qe*raymagnetic.B[0]/me/omega;/*electrons */
     dwcndx[0][0] = -qe*raymagnetic.dBdx[0]/me/omega;
     dwcndx[0][1] = -qe*raymagnetic.dBdx[1]/me/omega;
     dwcndx[0][6] = -wcn[0];
 
-    wpn2[0] = qe*qe*rayprofiles.ne[0]/epsi0/me/omega/omega;//electrons
+    wpn2[0] = qe*qe*rayprofiles.ne[0]/epsi0/me/omega/omega;/*electrons */
     dwpn2dx[0][0] = qe*qe*rayprofiles.dnedx[0]/epsi0/me/omega/omega;
     dwpn2dx[0][6] = -2.0*wpn2[0];
 
@@ -1808,12 +1815,12 @@ equilparam_format equilparam;
 
     for (is = 1;is < equilparam.ns[0]+1; is++) {
         if (rayprofiles.zni[is-1] > 0.0) {
-            wcn[is] = qe*equilparam.zZi[is-1]*raymagnetic.B[0]/equilparam.zmi[is-1]/mp/omega;//ions
+            wcn[is] = qe*equilparam.zZi[is-1]*raymagnetic.B[0]/equilparam.zmi[is-1]/mp/omega;/*ions */
             dwcndx[is][0] = qe*equilparam.zZi[is-1]*raymagnetic.dBdx[0]/equilparam.zmi[is-1]/mp/omega;
             dwcndx[is][1] = qe*equilparam.zZi[is-1]*raymagnetic.dBdx[1]/equilparam.zmi[is-1]/mp/omega; 
             dwcndx[is][6] = -wcn[is]; 
 
-            wpn2[is] = qe*equilparam.zZi[is-1]*qe*equilparam.zZi[is-1]*rayprofiles.zni[is-1]/epsi0/equilparam.zmi[is-1]/mp/omega/omega;//ions
+            wpn2[is] = qe*equilparam.zZi[is-1]*qe*equilparam.zZi[is-1]*rayprofiles.zni[is-1]/epsi0/equilparam.zmi[is-1]/mp/omega/omega;/*ions */
             dwpn2dx[is][0] = qe*equilparam.zZi[is-1]*qe*equilparam.zZi[is-1]*rayprofiles.dznidx[is-1][0]/epsi0/equilparam.zmi[is-1]/mp/omega/omega;        
             dwpn2dx[is][6] = -2.0*wpn2[is]; 
 
@@ -1826,20 +1833,20 @@ equilparam_format equilparam;
     }
     
 if (tensortype == 0) {
-//        mexPrintf("Cold dielectric tensor\n");
+/*        mexPrintf("Cold dielectric tensor\n"); */
         coldtensor(X,equilparam.ns[0],Npar,dNpardx,Nperp,dNperpdx,wcn,dwcndx,wpn2,dwpn2dx,betath,dbetathdx);
     }
     if (tensortype == 1) {
-//        mexPrintf("Warm dielectric tensor\n");
-//        warmtensor(equilparam.ns[0],Npar,dNpardx,Nperp,dNperpdx,wcn,dwcndx,wpn2,dwpn2dx,betath,dbetathdx);
+/*        mexPrintf("Warm dielectric tensor\n");
+        warmtensor(equilparam.ns[0],Npar,dNpardx,Nperp,dNperpdx,wcn,dwcndx,wpn2,dwpn2dx,betath,dbetathdx); */
     }
     if (tensortype == 2) {
-//        mexPrintf("Hot dielectric tensor\n");
-//        hottensor(equilparam.ns[0],Npar,dNpardx,Nperp,dNperpdx,wcn,dwcndx,wpn2,dwpn2dx,betath,dbetathdx);
+/*        mexPrintf("Hot dielectric tensor\n");
+        hottensor(equilparam.ns[0],Npar,dNpardx,Nperp,dNperpdx,wcn,dwcndx,wpn2,dwpn2dx,betath,dbetathdx); */
     }
     if (tensortype == 3) {
-//        mexPrintf("Relativistic dielectric tensor\n");
-//        relativistictensor(equilparam.ns[0],Npar,dNpardx,Nperp,dNperpdx,wcn,dwcndx,wpn2,dwpn2dx,betath,dbetathdx);
+/*        mexPrintf("Relativistic dielectric tensor\n");
+        relativistictensor(equilparam.ns[0],Npar,dNpardx,Nperp,dNperpdx,wcn,dwcndx,wpn2,dwpn2dx,betath,dbetathdx); */
     }       
 
 } 
@@ -1864,11 +1871,11 @@ equilparam_format equilparam;
     double complex N24,dN24dx,dN24dx1,dN24dx2,dN24dx3;
     
     double psia;
-    double clum = 299792458;//Speed of light (m/s)
+    double clum = 299792458;/*Speed of light (m/s) */
 
     register int i,j;
     
-    //Covariant matrix
+    /*Covariant matrix */
 
     for (i=0;i<M;i++) {
         for (j=0;j<M;j++) {
@@ -1881,7 +1888,7 @@ equilparam_format equilparam;
     }
 
     
-    for (i=0;i<M;i++) {//initialisation
+    for (i=0;i<M;i++) {/*initialisation */
         dNpardx[i] = 0.0;
         dNperpdx[i] = 0.0;
     }
@@ -1913,8 +1920,8 @@ equilparam_format equilparam;
         dNpar2dx = dNpar2dx1 + dNpar2dx2 + dNpar2dx3 + dNpar2dx4 + dNpar2dx5;
         
         dNpardx[i] = dNpar1dx + dNpar2dx;
-//        mexPrintf("i,dNpardx[i]:%d,%g\n",i,dNpardx[i]);
-//        mexPrintf("i,dYdY[3][i],dYdY[4][i],dYdY[5][i]:%d,%g,%g,%g\n",i,dYdY[3][i],dYdY[4][i],dYdY[4][i]);
+/*        mexPrintf("i,dNpardx[i]:%d,%g\n",i,dNpardx[i]);
+       mexPrintf("i,dYdY[3][i],dYdY[4][i],dYdY[5][i]:%d,%g,%g,%g\n",i,dYdY[3][i],dYdY[4][i],dYdY[4][i]); */
     }
     
 
@@ -1960,7 +1967,7 @@ equilparam_format equilparam;
         dN2dx = dN21dx + dN22dx + dN23dx + dN24dx;
         
         dNperpdx[i] = (dN2dx - 2.0*Npar[0]*dNpardx[i])/Nperp[0]/2.0;
-//        mexPrintf("i,dNperpdx[i]:%d,%g\n",i,dNperpdx[i]);
+/*        mexPrintf("i,dNperpdx[i]:%d,%g\n",i,dNperpdx[i]); */
      }
     
 }
@@ -1986,7 +1993,7 @@ int ns;
     double dummyTi[ns],dummyni[ns];
     int i,is;
     
-    // Equilibrium interpolation
+    /* Equilibrium interpolation */
     ppval_1D(Te_fit,Y[0],&rayprofiles.Te[0],&rayprofiles.dTedx[0]);
     ppval_1D(ne_fit,Y[0],&rayprofiles.ne[0],&rayprofiles.dnedx[0]);
 
@@ -2001,8 +2008,9 @@ int ns;
     }
 
     for (i=0;i<ns;i++) {
-//        mexPrintf("i,Ti,dzTidx[0],dzTidx[1],dzTidx[2],dzTidx[3],dzTidx[4],dzTidx[5],dzTidx[6]:%d,%g,%g,%g,%g,%g,%g,%g,%g\n",i,rayprofiles.zTi[i],rayprofiles.dzTidx[i][0],rayprofiles.dzTidx[i][1],rayprofiles.dzTidx[i][2],rayprofiles.dzTidx[i][3],rayprofiles.dzTidx[i][4],rayprofiles.dzTidx[i][5],rayprofiles.dzTidx[i][6]);
-//        mexPrintf("i,ni,dznidx[0],dznidx[1],dznidx[2],dznidx[3],dznidx[4],dznidx[5],dznidx[6]:%d,%g,%g,%g,%g,%g,%g,%g,%g\n",i,rayprofiles.zni[i],rayprofiles.dznidx[i][0],rayprofiles.dznidx[i][1],rayprofiles.dznidx[i][2],rayprofiles.dznidx[i][3],rayprofiles.dznidx[i][4],rayprofiles.dznidx[i][5],rayprofiles.dznidx[i][6]);
+/*        mexPrintf("i,Ti,dzTidx[0],dzTidx[1],dzTidx[2],dzTidx[3],dzTidx[4],dzTidx[5],dzTidx[6]:%d,%g,%g,%g,%g,%g,%g,%g,%g\n",i,rayprofiles.zTi[i],rayprofiles.dzTidx[i][0],rayprofiles.dzTidx[i][1],rayprofiles.dzTidx[i][2],rayprofiles.dzTidx[i][3],rayprofiles.dzTidx[i][4],rayprofiles.dzTidx[i][5],rayprofiles.dzTidx[i][6]);
+        mexPrintf("i,ni,dznidx[0],dznidx[1],dznidx[2],dznidx[3],dznidx[4],dznidx[5],dznidx[6]:%d,%g,%g,%g,%g,%g,%g,%g,%g\n",i,rayprofiles.zni[i],rayprofiles.dznidx[i][0],rayprofiles.dznidx[i][1],rayprofiles.dznidx[i][2],rayprofiles.dznidx[i][3],rayprofiles.dznidx[i][4],rayprofiles.dznidx[i][5],rayprofiles.dznidx[i][6]);
+*/
     }
     
     ppval_2D(BPHI_fit,Y[0],Y[1],&raymagnetic.BPHI[0],&raymagnetic.dBPHIdx[0],&raymagnetic.dBPHIdx[1]);
@@ -2012,7 +2020,7 @@ int ns;
     ppval_2D(calpha_fit,Y[0],Y[1],&raymagnetic.calpha[0],&raymagnetic.dcalphadx[0],&raymagnetic.dcalphadx[1]);
     ppval_2D(salpha_fit,Y[0],Y[1],&raymagnetic.salpha[0],&raymagnetic.dsalphadx[0],&raymagnetic.dsalphadx[1]);
 
-    raymagnetic.B[0] = sqrt(pow(raymagnetic.BPHI[0],2)+pow(raymagnetic.BP[0],2));// total magnetic field
+    raymagnetic.B[0] = sqrt(pow(raymagnetic.BPHI[0],2)+pow(raymagnetic.BP[0],2));/* total magnetic field */
     raymagnetic.dBdx[0] = (raymagnetic.BP[0]*raymagnetic.dBPdx[0]+raymagnetic.BPHI[0]*raymagnetic.dBPHIdx[0])/raymagnetic.B[0];
     raymagnetic.dBdx[1] = (raymagnetic.BP[0]*raymagnetic.dBPdx[1]+raymagnetic.BPHI[0]*raymagnetic.dBPHIdx[1])/raymagnetic.B[0];
 
@@ -2103,13 +2111,13 @@ int ns;
         }
     }
     
-//    for (i = 0;i < M;i++) {
-//        mexPrintf("i,dbetathdx[1][i]:%d,%g\n",i,dbetathdx[1][i]);
-//        mexPrintf("i,dwcndx[1][i]:%d,%g\n",i,dwcndx[1][i]);
-//        mexPrintf("i,dwpn2dx[1][i]:%d,%g\n",i,dwpn2dx[1][i]);
-//        mexPrintf("i,dXxxdx,dXxydx,dXxzdx,dXyydx,dXyzdx,dXzzdx:%d,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n",i,X.dXxxdx[i],X.dXxydx[i],X.dXxzdx[i],X.dXyydx[i],X.dXyzdx[i],X.dXzzdx[i]);
-//        mexPrintf("i,dNpardx[i],dNperpdx[i]:%d,%g,%g\n",i,dNpardx[i],dNperpdx[i]);
-//    }
-    
+/*    for (i = 0;i < M;i++) {
+        mexPrintf("i,dbetathdx[1][i]:%d,%g\n",i,dbetathdx[1][i]);
+        mexPrintf("i,dwcndx[1][i]:%d,%g\n",i,dwcndx[1][i]);
+        mexPrintf("i,dwpn2dx[1][i]:%d,%g\n",i,dwpn2dx[1][i]);
+        mexPrintf("i,dXxxdx,dXxydx,dXxzdx,dXyydx,dXyzdx,dXzzdx:%d,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n",i,X.dXxxdx[i],X.dXxydx[i],X.dXxzdx[i],X.dXyydx[i],X.dXyzdx[i],X.dXzzdx[i]);
+        mexPrintf("i,dNpardx[i],dNperpdx[i]:%d,%g,%g\n",i,dNpardx[i],dNperpdx[i]);
+    }
+ */    
    
 }
