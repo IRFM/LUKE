@@ -612,14 +612,16 @@ void mexFunction(   int     nlhs,
             n2 = n1;
             omega2 = omega1;
 
-//            mexPrintf("psin1,psin2,theta1,theta2,phi1,phi2,kpsin1,kpsin2,m1,m2:%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n",psin1,psin2,theta1,theta2,phi1,phi2,kpsin1,kpsin2,m1,m2);
+//            mexPrintf("t1,psin2,theta2,phi2,kpsin2,m2:%g,%g,%g,%g,%g,%g\n",t1,psin2,theta2,phi2,kpsin2,m2);
             if ((psin1<1-rayparam.dpsin[0]) && (psin2>1-rayparam.dpsin[0])) {//Specular reflexion enforced at psin = 1            
                   psin2 = psin1;
                   phi2 = phi1;
                   theta2 = theta1;
+                  s0[3] = - kpsin1;
                   dsolve(&kpsin2,s0,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,BPHI_fit,BP_fit,R_fit,Z_fit,r_fit,calpha_fit,salpha_fit);
 //                  kpsin2 = -kpsin1;
                   m2 = m1;
+//            mexPrintf("t1,psin2,theta2,phi2,kpsin2,m2:%g,%g,%g,%g,%g,%g\n",t1,psin2,theta2,phi2,kpsin2,m2);
             }
             
 
@@ -1201,7 +1203,7 @@ for (i = 0;i < M; i++) {//initialisation
     
     for (j=0;j<equilparam.ns[0];j++) {
        rayprofiles.dzTidx[j][i] = 0.0;
-       rayprofiles.dznidx[j][i] = 0.0);
+       rayprofiles.dznidx[j][i] = 0.0;
     }
 }
 
@@ -1228,6 +1230,7 @@ for (i=0;i<M;i++) {//initialisation
     X.dXzzdx[i] = 0.0;
 }
 
+// Equilibrium interpolation at ray location
 interpequil(raymagnetic,rayprofiles,Y,Te_fit,ne_fit,zTi_fit,zni_fit,BPHI_fit,BP_fit,R_fit,Z_fit,r_fit,calpha_fit,salpha_fit,equilparam.ns[0]);
 
 // Refractive index calculation
@@ -1323,8 +1326,8 @@ for (i = 0;i<43;i++) {
     }
 }
 
-disprel(&Dtot,X,Npar,Nperp);
-mexPrintf("Dtotr,Dtoti:%g,%g\n",creal(Dtot),cimag(Dtot));
+//disprel(&Dtot,X,Npar,Nperp);
+//mexPrintf("Dtotr,Dtoti:%g,%g\n",creal(Dtot),cimag(Dtot));
 
 Ydot[0] = creal(dDtotdx[3])/creal(dDtotdx[6]); 
 Ydot[1] = creal(dDtotdx[4])/creal(dDtotdx[6]); 
@@ -1404,50 +1407,246 @@ pp_2D_format r_fit;
 pp_2D_format calpha_fit;
 pp_2D_format salpha_fit;
 {
-    
-    //double D1
-    
-       // #define MAXIT 30 Maximum allowed number of iterations.
+    double Npar,dNpardx[8];
+    double complex Nperp,dNperpdx[8];
 
-    //float rtsec(float (*func)(float), float x1, float x2, float xacc)
-    //Using the secant method, find the root of a function func thought to lie between x1 and x2.
-    //The root, returned as rtsec, is refined until its accuracy is ±xacc.
-    //{
-    //void nrerror(char error_text[]);
-    //int j;
-    //float fl,f,dx,swap,xl,rts;
+    //double complex Nperp4,Nperp3,Nperp2,Nperp1;
+    //double Npar4,Npar3,Npar2,Npar1;
+    //double complex Xxx,Xxy,Xxz,Xyy,Xyz,Xzz;
+    //double complex Xxx2,Xxy2,Xxz2,Xyy2,Xyz2,Xzz2;
+
+    double frac,fracmax,exp,tol;
+    double kpsin0,kpsin1,kpsin2,dkpsi;
+    double complex cD0,cD1;
+    double D0,D1,D2;
+    int maxit;
+
+    raymagnetic_format raymagnetic;
+    rayprofiles_format rayprofiles;
+    susceptibilitytensor_format X;
+
+    register int i,j;
     
-    //interpequil(raymagnetic,rayprofiles,Y,Te_fit,ne_fit,zTi_fit,zni_fit,BPHI_fit,BP_fit,R_fit,Z_fit,r_fit,calpha_fit,salpha_fit,equilparam.ns[0]);
-    //susceptibility(X,param.tensortype[0],equilparam,raymagnetic,Npar,dNpardx,Nperp,dNperpdx,Y[6],Te,dTedx,ne,dnedx,zTi,zni,dzTidx,dznidx);
-    //disprel(&D1,X,Npar,Nperp)
+    frac = 1 - 1e-4;
+    fracmax = 2;
+    exp = -1.5;
+    tol = 1e-8;
     
-    //fl=(*func)(x1);
-    //f=(*func)(x2);
-    //if (fabs(fl) < fabs(f)) { Pick the bound with the smaller function value as
-    //rts=x1; the most recent guess.
-    //xl=x2;
-    //swap=fl;
-    //fl=f;
-    //f=swap;
-    //} else {
-    //xl=x1;
-    //rts=x2;
-    //}
-    //for (j=1;j<=MAXIT;j++) { Secant loop.
-    //dx=(xl-rts)*f/(f-fl); Increment with respect to latest value.
-    //xl=rts;
-    //fl=f;
-    //rts += dx;
-    //f=(*func)(rts);
-    //if (fabs(dx) < xacc || f == 0.0) return rts; Convergence.
-    //}
-    //nrerror("Maximum number of iterations exceeded in rtsec");
-    //return 0.0; Never get here.
-    //}
+    maxit = 50;
+
+    // Memory allocation
+
+    raymagnetic.r = mxCalloc(1,sizeof(double));
+    raymagnetic.R = mxCalloc(1,sizeof(double));
+    raymagnetic.salpha = mxCalloc(1,sizeof(double));
+    raymagnetic.calpha = mxCalloc(1,sizeof(double));
+    raymagnetic.BP = mxCalloc(1,sizeof(double));
+    raymagnetic.BPHI = mxCalloc(1,sizeof(double));
+    raymagnetic.B = mxCalloc(1,sizeof(double));
+
+    raymagnetic.drdx = mxCalloc(M,sizeof(double));
+    raymagnetic.dRdx = mxCalloc(M,sizeof(double));
+    raymagnetic.dsalphadx = mxCalloc(M,sizeof(double));
+    raymagnetic.dcalphadx = mxCalloc(M,sizeof(double));
+    raymagnetic.dBPdx = mxCalloc(M,sizeof(double));
+    raymagnetic.dBPHIdx = mxCalloc(M,sizeof(double));
+    raymagnetic.dBdx = mxCalloc(M,sizeof(double));
+
+    for (i = 0;i < M; i++) {//initialisation
+        raymagnetic.drdx[i] = 0.0;
+        raymagnetic.dRdx[i] = 0.0;
+        raymagnetic.dsalphadx[i] = 0.0;
+        raymagnetic.dcalphadx[i] = 0.0;
+        raymagnetic.dBPdx[i] = 0.0;
+        raymagnetic.dBPHIdx[i] = 0.0;
+        raymagnetic.dBdx[i] = 0.0;
+    }
+
+    rayprofiles.Te = mxCalloc(1,sizeof(double));
+    rayprofiles.ne = mxCalloc(1,sizeof(double));
+    rayprofiles.zTi = mxCalloc(equilparam.ns[0],sizeof(double));
+    rayprofiles.zni = mxCalloc(equilparam.ns[0],sizeof(double));
+
+    rayprofiles.dTedx = mxCalloc(M,sizeof(double));
+    rayprofiles.dnedx = mxCalloc(M,sizeof(double));
+
+    rayprofiles.dzTidx = mxCalloc(equilparam.ns[0],sizeof(double *));
+    rayprofiles.dznidx = mxCalloc(equilparam.ns[0],sizeof(double *));
+    for (i = 0;i < equilparam.ns[0]; i++) {
+        rayprofiles.dzTidx[i] = mxCalloc(M,sizeof(double));       
+        rayprofiles.dznidx[i] = mxCalloc(M,sizeof(double));       
+    }    
+
+    for (i = 0;i < M; i++) {//initialisation
+        rayprofiles.dTedx[i] = 0.0;
+        rayprofiles.dnedx[i] = 0.0;
+    }
     
-    //susceptibility(X,param.tensortype[0],equilparam.ns[0],Npar,dNpardx,Nperp,dNperpdx,wcn,dwcndx,wpn2,dwpn2dx,betath,dbetathdx);
+    for (i=0;i<equilparam.ns[0];i++) {
+        rayprofiles.zTi[i] = 0.0;
+        rayprofiles.zni[i] = 0.0;             
+        for (j = 0;j < M; j++) {
+           rayprofiles.dzTidx[i][j] = 0.0;
+           rayprofiles.dznidx[i][j] = 0.0;
+        }
+    }
+
+    X.Xxx = mxCalloc(1,sizeof(double complex));
+    X.Xxy = mxCalloc(1,sizeof(double complex));
+    X.Xxz = mxCalloc(1,sizeof(double complex));
+    X.Xyy = mxCalloc(1,sizeof(double complex));
+    X.Xyz = mxCalloc(1,sizeof(double complex));
+    X.Xzz = mxCalloc(1,sizeof(double complex));
+
+    X.dXxxdx = mxCalloc(M,sizeof(double complex));
+    X.dXxydx = mxCalloc(M,sizeof(double complex));
+    X.dXxzdx = mxCalloc(M,sizeof(double complex));
+    X.dXyydx = mxCalloc(M,sizeof(double complex));
+    X.dXyzdx = mxCalloc(M,sizeof(double complex));
+    X.dXzzdx = mxCalloc(M,sizeof(double complex));
+
+    for (i=0;i<M;i++) {//initialisation
+        X.dXxxdx[i] = 0.0;
+        X.dXxydx[i] = 0.0;
+        X.dXxzdx[i] = 0.0;
+        X.dXyydx[i] = 0.0;
+        X.dXyzdx[i] = 0.0;
+        X.dXzzdx[i] = 0.0;
+    }
+
+    // Equilibrium interpolation at ray location
+    interpequil(raymagnetic,rayprofiles,Y,Te_fit,ne_fit,zTi_fit,zni_fit,BPHI_fit,BP_fit,R_fit,Z_fit,r_fit,calpha_fit,salpha_fit,equilparam.ns[0]);
+
+    kpsin0 = Y[3];
+    kpsin1 = frac*kpsin0;
     
-    kpsin[0] = -Y[3];
+    rayindex(Y,raymagnetic,equilparam,&Npar,&Nperp,dNpardx,dNperpdx);
+    susceptibility(X,param.tensortype[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardx,Nperp,dNperpdx,Y[6]);
+    disprel(&cD0,X,Npar,Nperp);
+    D0 = creal(cD0);// to be changed if non-hermitian susceptibility tensors are used
+//  mexPrintf("kpsin0,D0:%g,%g\n",kpsin0,D0);
+    
+    Y[3] = kpsin1;
+    rayindex(Y,raymagnetic,equilparam,&Npar,&Nperp,dNpardx,dNperpdx);
+    susceptibility(X,param.tensortype[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardx,Nperp,dNperpdx,Y[6]);
+    disprel(&cD1,X,Npar,Nperp);
+    D1 = creal(cD1);// to be changed if non-hermitian susceptibility tensors are used
+//  mexPrintf("kpsin1,D1:%g,%g\n",kpsin1,D1);
+
+    // Search for root bounding interval
+
+    while ((D1*D0 > 0) && (fracmax < 100)){
+        
+        frac = pow(frac,exp);
+        kpsin1 = frac*kpsin0;
+       
+        Y[3] = kpsin1;
+        rayindex(Y,raymagnetic,equilparam,&Npar,&Nperp,dNpardx,dNperpdx);
+        susceptibility(X,param.tensortype[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardx,Nperp,dNperpdx,Y[6]);
+        disprel(&cD1,X,Npar,Nperp);
+        D1 = creal(cD1);// to be changed if non-hermitian susceptibility tensors are used
+//      mexPrintf("kpsin1,D1:%g,%g\n",kpsin1,D1);
+    }
+    
+    if (D1*D0 > 0) {
+        kpsin[0] = kpsin0; // put error message
+    }
+//    else if (fabs(D0) < tol){
+//        kpsin[0] = kpsin0;
+//    }
+//    else if (fabs(D1) < tol){
+//        kpsin[0] = kpsin1;
+//    }        
+    else {
+        if (fabs(D0) < fabs(D1)) { //Closest root is set to latest value.
+            kpsin2 = kpsin0; 
+            kpsin0 = kpsin1;
+            kpsin1 = kpsin2;
+            D2 = D0;
+            D0 = D1;
+            D1 = D2;
+        }       
+       
+        j = 0;
+        
+//        mexPrintf("fabs(D1),tol,j,maxit:%g,%g,%d,%d\n",fabs(D1),tol,j,maxit);
+         
+        while ((fabs(D1) > tol) && (j < maxit)) { //Secant loop.
+            
+//          mexPrintf("kpsin0,D0,kpsin1,D1,frac,tol:%g,%g,%g,%g,%g,%g\n",kpsin0,D0,kpsin1,D1,frac,tol);
+            
+            dkpsi = (kpsin0 - kpsin1)*D1/(D1-D0); //Increment with respect to latest value.
+            kpsin0 = kpsin1;
+            D0 = D1;
+            kpsin1 += dkpsi;
+
+            Y[3] = kpsin1;
+            rayindex(Y,raymagnetic,equilparam,&Npar,&Nperp,dNpardx,dNperpdx);
+            susceptibility(X,param.tensortype[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardx,Nperp,dNperpdx,Y[6]);
+            disprel(&cD1,X,Npar,Nperp);
+            D1 = creal(cD1);// to be changed if non-hermitian susceptibility tensor are used
+//          mexPrintf("kpsin1,D1:%g,%g\n",kpsin1,D1);
+        }
+        
+        if (fabs(D1) <= tol) { //Convergence.
+            kpsin[0] = kpsin1;
+        }
+        else {
+            kpsin[0] = kpsin2; // put error message
+        }
+    }    
+    
+    
+    // kpsin[0] = -Y[3]; //old method not accurate
+
+    // Memory is released 
+    
+    mxFree(raymagnetic.r);
+    mxFree(raymagnetic.R);
+    mxFree(raymagnetic.salpha);
+    mxFree(raymagnetic.calpha);
+    mxFree(raymagnetic.BP);
+    mxFree(raymagnetic.BPHI);
+    mxFree(raymagnetic.B);
+
+    mxFree(raymagnetic.drdx);
+    mxFree(raymagnetic.dRdx);
+    mxFree(raymagnetic.dsalphadx);
+    mxFree(raymagnetic.dcalphadx);
+    mxFree(raymagnetic.dBPdx);
+    mxFree(raymagnetic.dBPHIdx);
+    mxFree(raymagnetic.dBdx);   
+    
+    mxFree(rayprofiles.Te);
+    mxFree(rayprofiles.ne);
+    mxFree(rayprofiles.zTi);
+    mxFree(rayprofiles.zni);
+
+    mxFree(rayprofiles.dTedx);
+    mxFree(rayprofiles.dnedx);
+    
+    for (i = 0;i < equilparam.ns[0]; i++) {
+        mxFree(rayprofiles.dzTidx[i]);       
+        mxFree(rayprofiles.dznidx[i]);       
+    }    
+    
+    mxFree(rayprofiles.dzTidx);
+    mxFree(rayprofiles.dznidx);
+
+    mxFree(X.Xxx);
+    mxFree(X.Xxy);
+    mxFree(X.Xxz);
+    mxFree(X.Xyy);
+    mxFree(X.Xyz);
+    mxFree(X.Xzz);
+
+    mxFree(X.dXxxdx);
+    mxFree(X.dXxydx);
+    mxFree(X.dXxzdx);
+    mxFree(X.dXyydx);
+    mxFree(X.dXyzdx);
+    mxFree(X.dXzzdx);
+    
 }
 
 void disprel(Dtot,X,Npar,Nperp)
