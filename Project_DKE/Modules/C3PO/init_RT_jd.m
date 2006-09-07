@@ -98,7 +98,7 @@ xBt = zeros(1,nx);
 xBp = zeros(1,nx);
 %
 for ix = 1:nx,
-    %
+%
     xR(ix) = R_a0_fit(ix) + R_an_fit(ix,:)*cos(equil_fit.R_fit.n*xtheta(ix)) + R_bn_fit(ix,:)*sin(equil_fit.R_fit.n*xtheta(ix));
     xZ(ix) = Z_a0_fit(ix) + Z_an_fit(ix,:)*cos(equil_fit.Z_fit.n*xtheta(ix)) + Z_bn_fit(ix,:)*sin(equil_fit.Z_fit.n*xtheta(ix));
     xr(ix) = r_a0_fit(ix) + r_an_fit(ix,:)*cos(equil_fit.r_fit.n*xtheta(ix)) + r_bn_fit(ix,:)*sin(equil_fit.r_fit.n*xtheta(ix));
@@ -163,7 +163,7 @@ xY = [xpsin;xtheta;xphi;xkpsi*equil_fit.psia;xm;xn;xomega];
 %
 % verification
 %
-if 0,
+if 1,
     xNpar2 = (xm.*xc.*xp./xr + xn.*xt./xR)*clum./xomega;
     xNperp2 = sqrt((xkpsi.^2.*xR.^2.*xBp.^2 - 2*xkpsi.*xR.*xBp.*xm.*xs./xr + xm.^2./xr.^2 + xn.^2/xR.^2)*clum^2./xomega^2 - xNpar.^2);
     [Nperpp2,Nperpm2,Kxyz,...

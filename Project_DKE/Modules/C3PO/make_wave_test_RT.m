@@ -11,7 +11,7 @@ clc
 %
 id_wave = 'test_RT';
 %
-id_equil = 'JETh77';'TScirc_flatprof_cyl_2';%For plasma equilibrium
+id_equil = 'TScirc';'JETh77';'TScirc_flatprof_cyl_2';%For plasma equilibrium
 path_equil = '';'../../Database/EQUIL_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 if exist([path_equil,'EQUIL_',id_equil,'.mat']) == 0,%Magnetic equilibrium
@@ -27,14 +27,14 @@ end
 % ray-tracing parameters
 %
 method = 'spline';%nearest,spline,pchip,cubic
-f_rf = 37;%00;%GHz
+f_rf = 3.7;%00;%GHz
 %
 psi0 = 0.98;
 theta0 = 0;
 phi0 = 0;
 %
 m0 = 50;
-Npar0 = 0.2;%initial index of refraction
+Npar0 = 2;%initial index of refraction
 xmode = 1;%cold plasma mode [nx] : (-1) m (1) p 
 %           p is the slow mode when kperp > 0 (ex : LH slow wave)
 kmode = 0;% kinetic (1) or cold (0) plasma model
@@ -42,11 +42,11 @@ kmode = 0;% kinetic (1) or cold (0) plasma model
 rayparam.testmode = 0;
 rayparam.tensortype = 0;
 rayparam.t0 = 0;
-rayparam.tfinal = 2000;
+rayparam.tfinal = 10000;
 rayparam.dt0 = 1.e-4;
 rayparam.dpsin = 1.e-3;
 rayparam.tol = eps;
-rayparam.kmax = 20000;
+rayparam.kmax = 40000;
 %
 % -------------------------------------------------------------------------
 %

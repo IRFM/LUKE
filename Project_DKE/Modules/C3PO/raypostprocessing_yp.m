@@ -68,6 +68,7 @@ for ii = 1:length(tout),
    BPHI_ray(ii) = BPHI_a0_ray(ii) + BPHI_an_ray(ii,:)*cos(equil_fit.BPHI_fit.n*yout(ii,2)) + BPHI_bn_ray(ii,:)*sin(equil_fit.BPHI_fit.n*yout(ii,2));
 end
 B_ray = sqrt(BP_ray.^2 + BPHI_ray.^2);
+salpha_ray = sign(salpha_ray).*sqrt(1 - calpha_ray.^2);
 %
 [qe,me,mp,mn,e0,mu0,re,mc2,clum] = pc_dke_yp;
 Npar_ray = clum*(yout(:,5).*calpha_ray.*BP_ray./r_ray./B_ray + yout(:,6).*BPHI_ray./R_ray./B_ray)/omega;
