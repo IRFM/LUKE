@@ -418,6 +418,16 @@ void mexFunction(   int     nlhs,
     n1 = y0[5];
     omega1 = y0[6];
 
+    /* solves the dispersion relation to have consistent initial input*/
+    
+    /*
+    mexPrintf("t1,psin1,theta1,phi1,kpsin1,m1,n1,omega1:%g,%g,%g,%g,%g,%g,%g,%g\n",t1,psin1,theta1,phi1,kpsin1,m1,n1,omega1);
+    
+    dsolve(&y0[3],y0,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,BPHI_fit,BP_fit,R_fit,Z_fit,r_fit,calpha_fit,salpha_fit);
+ 
+    mexPrintf("t1,y0[0],y0[1],y0[2],y0[3],y0[4],y0[5],y0[6]:%g,%g,%g,%g,%g,%g,%g,%g\n",t1,y0[0],y0[1],y0[2],y0[3],y0[4],y0[5],y0[6]);
+    */
+
     /*
      * Create arguments for calling user function
      */
@@ -1327,9 +1337,10 @@ for (i = 0;i<43;i++) {
     }
 }
 
-/* disprel(&Dtot,X,Npar,Nperp);
+/*
+disprel(&Dtot,X,Npar,Nperp);
 mexPrintf("Dtotr,Dtoti:%g,%g\n",creal(Dtot),cimag(Dtot));
- */
+*/
 
 Ydot[0] = creal(dDtotdx[3])/creal(dDtotdx[6]); 
 Ydot[1] = creal(dDtotdx[4])/creal(dDtotdx[6]); 
@@ -1758,6 +1769,9 @@ double complex Nperp;
     for (i = 0;i<43;i++) {
         Dtot[0] = Dtot[0] + D[i];
     }
+/*
+    mexPrintf("Dtot:%g\n",Dtot[0]);
+*/
 }
 
 void susceptibility(X,tensortype,equilparam,raymagnetic,rayprofiles,Npar,dNpardx,Nperp,dNperpdx,omega)
@@ -1933,6 +1947,9 @@ equilparam_format equilparam;
     N2 = N21 + N22 + N23 + N24;
     Nperp[0] = sqrt(N2 - Npar[0]*Npar[0]);
 
+    /*
+    mexPrintf("Nperp:%g\n",Nperp[0]); 
+    */
     for (i=0;i<M;i++) {
         
         dN21dx1 = clum*clum*2.0*raymagnetic.dRdx[i]*raymagnetic.R[0]*raymagnetic.BP[0]*raymagnetic.BP[0]*Y[3]/psia*Y[3]/psia/Y[6]/Y[6];
@@ -2019,7 +2036,21 @@ int ns;
     ppval_2D(r_fit,Y[0],Y[1],&raymagnetic.r[0],&raymagnetic.drdx[0],&raymagnetic.drdx[1]);
     ppval_2D(calpha_fit,Y[0],Y[1],&raymagnetic.calpha[0],&raymagnetic.dcalphadx[0],&raymagnetic.dcalphadx[1]);
     ppval_2D(salpha_fit,Y[0],Y[1],&raymagnetic.salpha[0],&raymagnetic.dsalphadx[0],&raymagnetic.dsalphadx[1]);
-
+    
+    mexPrintf("salpha[0],dsalphadx[0],dsalphadx[1],dsalphadx[2]:%g,%g,%g,%g\n",raymagnetic.salpha[0],raymagnetic.dsalphadx[0],raymagnetic.dsalphadx[1],raymagnetic.dsalphadx[2]);
+    if (fabs(raymagnetic.salpha[0]) == 0) { 
+        /* impossible to derive salpha and dsalphadx from calpha and dcalphadx, keep interpolated value*/
+    }
+    else {
+        raymagnetic.salpha[0] = raymagnetic.salpha[0]*sqrt(1 - raymagnetic.calpha[0]*raymagnetic.calpha[0])/fabs(raymagnetic.salpha[0]);
+        if (sqrt(1 - raymagnetic.calpha[0]*raymagnetic.calpha[0]) > 0) {
+            for (i=0;i<2;i++) {
+                raymagnetic.dsalphadx[i] = - raymagnetic.salpha[0]*raymagnetic.calpha[0]*raymagnetic.dcalphadx[i]/sqrt(1 - raymagnetic.calpha[0]*raymagnetic.calpha[0])/fabs(raymagnetic.salpha[0]);
+            }
+        }
+    }
+    mexPrintf("salpha[0],dsalphadx[0],dsalphadx[1],dsalphadx[2]:%g,%g,%g,%g\n",raymagnetic.salpha[0],raymagnetic.dsalphadx[0],raymagnetic.dsalphadx[1],raymagnetic.dsalphadx[2]);
+   
     raymagnetic.B[0] = sqrt(pow(raymagnetic.BPHI[0],2)+pow(raymagnetic.BP[0],2));/* total magnetic field */
     raymagnetic.dBdx[0] = (raymagnetic.BP[0]*raymagnetic.dBPdx[0]+raymagnetic.BPHI[0]*raymagnetic.dBPHIdx[0])/raymagnetic.B[0];
     raymagnetic.dBdx[1] = (raymagnetic.BP[0]*raymagnetic.dBPdx[1]+raymagnetic.BPHI[0]*raymagnetic.dBPHIdx[1])/raymagnetic.B[0];

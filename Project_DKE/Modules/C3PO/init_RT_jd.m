@@ -153,8 +153,27 @@ for ix = 1:nx,
     end
 end
 %
+xs = sign(xs)*sqrt(1 - xc.^2);
+%
 xn = xR.*(xNpar.*xomega/clum - xm.*xc.*xp./xr)./xt;
 xkpsi = (xm.*xs./xr + sigma*sqrt(xNperp.^2.*xomega.^2/clum^2 - (xm.*xc./xr - xNpar.*xp.*xomega/clum).^2./xt.^2))./xR./xBp;
 %
 xY = [xpsin;xtheta;xphi;xkpsi*equil_fit.psia;xm;xn;xomega];
 %xY = [xpsi;xtheta;xphi;xkpsi*equil_fit.psia;xm;xn;xomega/clum;zeros(1,nx)];
+%
+% verification
+%
+if 0,
+    xNpar2 = (xm.*xc.*xp./xr + xn.*xt./xR)*clum./xomega;
+    xNperp2 = sqrt((xkpsi.^2.*xR.^2.*xBp.^2 - 2*xkpsi.*xR.*xBp.*xm.*xs./xr + xm.^2./xr.^2 + xn.^2/xR.^2)*clum^2./xomega^2 - xNpar.^2);
+    [Nperpp2,Nperpm2,Kxyz,...
+        ep_xyz,em_xyz,ep_pmz,em_pmz,ep_pyk,em_pyk,...
+        phip_xyz,phim_xyz,phip_pmz,phim_pmz,phip_pyk,phim_pyk,...
+        Dp,Dm]...
+        = colddisp_dke_jd(xNpar2,xomega(ix),xne(ix),zxni(:,ix),zZi,zmi,xB(ix),xNperp2);
+    disp(['xNpar,xNperp,xNpar2,xNperp2,Dp,Dm:',num2str(xNpar),',',num2str(xNperp),',',...
+        num2str(xNpar2),',',num2str(xNperp2),',',num2str(Dp),',',num2str(Dm)]);
+end
+
+
+
