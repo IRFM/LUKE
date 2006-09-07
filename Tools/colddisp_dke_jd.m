@@ -1,4 +1,7 @@
-function [Nperpp,Nperpm,Kxyz,ep_xyz,em_xyz,ep_pmz,em_pmz,ep_pyk,em_pyk,phip_xyz,phim_xyz,phip_pmz,phim_pmz,phip_pyk,phim_pyk]...
+function [Nperpp,Nperpm,Kxyz,...
+    ep_xyz,em_xyz,ep_pmz,em_pmz,ep_pyk,em_pyk,...
+    phip_xyz,phim_xyz,phip_pmz,phim_pmz,phip_pyk,phim_pyk,...
+    Dp,Dm]...
     = colddisp_dke_jd(Npar,omega_rf,ne,zni,zZi,zmi,Bfield,Nperp);
 %
 % This function solves the dispersion relation and the wave equation
@@ -72,22 +75,22 @@ Kxyz = [Kperp,-i*Kxy,0;i*Kxy,Kperp,0;0,0,Kpar];
 %   Dispersion relation
 %
 if nargin == 8,%Nperp is an input variable
-   Nxyzp = [Nperp;0;Npar];
-   Nxyzm = [Nperp;0;Npar];
-   Nperpp = Nperp;
-   Nperpm = Nperp;
+    Nxyzp = [Nperp;0;Npar];
+    Nxyzm = [Nperp;0;Npar];
+    Nperpp = Nperp;
+    Nperpm = Nperp;
 elseif nargin == 7,%Nperp is calculated from the cold dispersion relation
-   A = Kperp;
-   B = (Npar^2 - Kperp)*(Kperp + Kpar) + Kxy^2;
-   C = Kpar*((Npar^2 - Kperp)^2 - Kxy^2);
-%
-   Nperpp = sqrt((-B + sqrt(B^2-4*A*C))/(2*A));
-   Nperpm = sqrt((-B - sqrt(B^2-4*A*C))/(2*A));
-%
-% Note: root + corresponds to the slow LH wave when Kperp > 0
-%
-   Nxyzp = [Nperpp;0;Npar];         
-   Nxyzm = [Nperpm;0;Npar]; 
+    A = Kperp;
+    B = (Npar^2 - Kperp)*(Kperp + Kpar) + Kxy^2;
+    C = Kpar*((Npar^2 - Kperp)^2 - Kxy^2);
+    %
+    Nperpp = sqrt((-B + sqrt(B^2-4*A*C))/(2*A));
+    Nperpm = sqrt((-B - sqrt(B^2-4*A*C))/(2*A));
+    %
+    % Note: root + corresponds to the slow LH wave when Kperp > 0
+    %
+    Nxyzp = [Nperpp;0;Npar];         
+    Nxyzm = [Nperpm;0;Npar]; 
 else
    error('Wrong number of input arguments in colddisp_dke_jd');
 end
@@ -99,6 +102,11 @@ Dxyzp = Nxyzp*Nxyzp.' - sum(Nxyzp.^2)*diag([1,1,1]) + Kxyz;
 %   Dispersion tensor for - root
 %
 Dxyzm = Nxyzm*Nxyzm.' - sum(Nxyzm.^2)*diag([1,1,1]) + Kxyz;
+%
+% verification (useful if nargin == 8)
+%
+Dp = det(Dxyzp);
+Dm = det(Dxyzm);
 %
 %   Eigenvectors
 %
