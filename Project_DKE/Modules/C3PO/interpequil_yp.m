@@ -23,6 +23,10 @@ function [Zpp_f] = interpequil_yp(method,f,psin,theta,nharm)
 if nargin == 3,
    Zpp_f.pp_f = interp1(psin(:),f',method,'pp');%Create piecewise polynomials
 %
+   if ~isfield(Zpp_f.pp_f,'orient'),
+       Zpp_f.pp_f.orient = 'first';
+   end
+%
    Zpp_f.pp_dfdpsin = Zpp_f.pp_f;%Derivative along psi
 %
    if Zpp_f.pp_f.order == 2,%Linear
@@ -64,6 +68,12 @@ elseif nargin >= 4,
    Zpp_f.pp_a0 = interp1(psin,a0,method,'pp');%Interpolation of Fourier series coefficients on a fine psi grid
    Zpp_f.pp_an = interp1(psin,an,method,'pp');%Interpolation of Fourier series coefficients on a fine psi grid
    Zpp_f.pp_bn = interp1(psin,bn,method,'pp');%Interpolation of Fourier series coefficients on a fine psi grid
+%   
+   if ~isfield(Zpp_f.pp_a0,'orient'),
+       Zpp_f.pp_a0.orient = 'first';
+       Zpp_f.pp_an.orient = 'first';
+       Zpp_f.pp_bn.orient = 'first';
+   end
 %
    Zpp_f.pp_da0dpsin = Zpp_f.pp_a0;
    Zpp_f.pp_dandpsin = Zpp_f.pp_an;
