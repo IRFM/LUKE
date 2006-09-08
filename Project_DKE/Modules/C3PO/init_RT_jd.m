@@ -98,7 +98,7 @@ xBt = zeros(1,nx);
 xBp = zeros(1,nx);
 %
 for ix = 1:nx,
-%
+    %
     xR(ix) = R_a0_fit(ix) + R_an_fit(ix,:)*cos(equil_fit.R_fit.n*xtheta(ix)) + R_bn_fit(ix,:)*sin(equil_fit.R_fit.n*xtheta(ix));
     xZ(ix) = Z_a0_fit(ix) + Z_an_fit(ix,:)*cos(equil_fit.Z_fit.n*xtheta(ix)) + Z_bn_fit(ix,:)*sin(equil_fit.Z_fit.n*xtheta(ix));
     xr(ix) = r_a0_fit(ix) + r_an_fit(ix,:)*cos(equil_fit.r_fit.n*xtheta(ix)) + r_bn_fit(ix,:)*sin(equil_fit.r_fit.n*xtheta(ix));
@@ -153,10 +153,12 @@ for ix = 1:nx,
     end
 end
 %
-xs = sign(xs)*sqrt(1 - xc.^2);
-%
 xn = xR.*(xNpar.*xomega/clum - xm.*xc.*xp./xr)./xt;
-xkpsi = (xm.*xs./xr + sigma*sqrt(xNperp.^2.*xomega.^2/clum^2 - (xm.*xc./xr - xNpar.*xp.*xomega/clum).^2./xt.^2))./xR./xBp;
+%
+% warning : in xkpsi do not use the relation sin^2 + cos^2 = 1 because of
+% intepolation errors
+%
+xkpsi = (xm.*xs./xr + sigma*sqrt(xNperp.^2.*xomega.^2/clum^2 + xm.^2.*(xs.^2 + xc.^2 - 1)./xr.^2 - (xm.*xc./xr - xNpar.*xp.*xomega/clum).^2./xt.^2))./xR./xBp;
 %
 xY = [xpsin;xtheta;xphi;xkpsi*equil_fit.psia;xm;xn;xomega];
 %xY = [xpsi;xtheta;xphi;xkpsi*equil_fit.psia;xm;xn;xomega/clum;zeros(1,nx)];
