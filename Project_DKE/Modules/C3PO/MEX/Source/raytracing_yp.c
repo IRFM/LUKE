@@ -1981,7 +1981,7 @@ pp_2D_format r_fit;
 pp_2D_format calpha_fit;
 pp_2D_format salpha_fit;
 {
-if (1) {/* interpolation from numerical equilibrium data*/
+if (0) {/* interpolation from numerical equilibrium data*/
     double dummyTi[equilparam.ns[0]],dummyni[equilparam.ns[0]];
     int i,is;
     
@@ -2045,7 +2045,7 @@ else { /* toroidal circular equilibrium from Bonoli and Ott, PoF 25, 359 (1982) 
     
     ne0 = 3.0e19;
     nea = ne0/10;
-    eTe = 1.0;
+    ene = 1.0;
     
     Ti0 = Te0;
     Tia = Ti0/10;
@@ -2104,6 +2104,8 @@ else { /* toroidal circular equilibrium from Bonoli and Ott, PoF 25, 359 (1982) 
     raymagnetic.dsalphadx[0] = 0.0;
     raymagnetic.dsalphadx[1] = 0.0;
     
+    
+    mexPrintf("rho,theta:%g,%g\n",Y[0],Y[1]);
     mexPrintf("Te[0],dTedx[0],dTedx[1],ne[0],dnedx[0],dnedx[1]:%g,%g,%g,%g,%g,%g\n",rayprofiles.Te[0],rayprofiles.dTedx[0],rayprofiles.dTedx[1],rayprofiles.ne[0],rayprofiles.dnedx[0],rayprofiles.dnedx[1]);
     for (is=0;is<equilparam.ns[0];is++) {
         mexPrintf("is,zTi[is],dzTidx[is][0],dzTidx[is][1],zni[is],dznidx[is][0],dznidx[is][1]:%d,%g,%g,%g,%g,%g,%g\n",is,rayprofiles.zTi[is],rayprofiles.dzTidx[is][0],rayprofiles.dzTidx[is][1],rayprofiles.zni[is],rayprofiles.dznidx[is][0],rayprofiles.dznidx[is][1]);
