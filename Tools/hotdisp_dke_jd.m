@@ -55,7 +55,7 @@ if nargin < 15,
    tol = 1e-5;
 end
 if nargin < 14,
-   NZ = 100;
+   NZ = 1000;
 end
 if nargin < 13,
    nmax = 10;
@@ -77,7 +77,6 @@ Nn = 2*nmax+1;
 n0 = nmax+1;
 %
 nit_disp = 50;
-NZ = 100;
 proxcoef = 1e-4;
 varfac = 100;
 %
@@ -101,13 +100,27 @@ bTs = sqrt([Te*1e3*qe/me/clum^2;zTi(:)*1e3*qe./(mp*zmi(:))/clum^2]);
 %
 zeta_sn = (1 - abs(ys)*n)/abs(Npar)/sqrt(2)./(bTs*ones(1,Nn));
 %
-%wb = waitbar(0);
-%for in = 1:Nn,
-    %[Z_sn(:,in),Zp_sn(:,in),Zpp_sn(:,in)] = Zplasma(zeta_sn(:,in),NZ);
-    %waitbar(in/Nn,wb);
-%end
-%close(wb)
-[Z_sn,Zp_sn,Zpp_sn] = Zplasma(zeta_sn,NZ);
+if exist('pdisp') == 3,%fortran file
+    if display_mode >= 1,
+       wb = waitbar(0,'Plasma dispersion function');
+    end
+    for is = 1:Ns,
+        Z_sn(is,:) = pdispm(zeta_sn(is,:));
+        if display_mode >= 1,
+           waitbar(in/Nn,wb);
+        end
+    end
+    if display_mode >= 1,
+       close(wb)
+    end
+    Zp_sn = -2*(1 + zeta_sn.*Z_sn);
+    Zpp_sn = -2*(Z_sn - 2*zeta_sn.*(1 + zeta_sn.*Z_sn));
+    %
+else
+    %
+    [Z_sn,Zp_sn,Zpp_sn] = Zplasma(zeta_sn,NZ);
+    %
+end
 %
 spar = sign(Npar);
 ss = sign(qs);
