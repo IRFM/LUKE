@@ -11,7 +11,7 @@ clc
 %
 id_wave = 'test_RT';
 %
-id_equil = 'TScirc';'JETh77';'TScirc_flatprof_cyl_2';%For plasma equilibrium
+id_equil = 'JETh77';'RTtest';'COMPASSh77';'TScirc_flatprof_cyl_2';%For plasma equilibrium
 path_equil = '';'../../Database/EQUIL_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 if exist([path_equil,'EQUIL_',id_equil,'.mat']) == 0,%Magnetic equilibrium
@@ -27,13 +27,14 @@ end
 % ray-tracing parameters
 %
 method = 'spline';%nearest,spline,pchip,cubic
+nharm = 32;%Number of harmonics in the magnetic equilibrium interpolation (less than ntheta_equil/2)
 f_rf = 3.7;%00;%GHz
 %
-psi0 = 0.98;
+rho0 = 0.98;
 theta0 = 0;
 phi0 = 0;
 %
-m0 = 50;
+m0 = 0;
 Npar0 = 2;%initial index of refraction
 xmode = 1;%cold plasma mode [nx] : (-1) m (1) p 
 %           p is the slow mode when kperp > 0 (ex : LH slow wave)
@@ -42,10 +43,10 @@ kmode = 0;% kinetic (1) or cold (0) plasma model
 rayparam.testmode = 0;
 rayparam.tensortype = 0;
 rayparam.t0 = 0;
-rayparam.tfinal = 10000;
-rayparam.dt0 = 1.e-4;
-rayparam.dpsin = 1.e-3;
-rayparam.tol = eps;
+rayparam.tfinal = 40000;
+rayparam.dt0 = 1.e-3;
+rayparam.drho = 1.e-3;
+rayparam.tol = 1e-12;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
 rayparam.kmax = 40000;
 %
 % -------------------------------------------------------------------------
@@ -62,26 +63,27 @@ opt_rf = 2; % [1,1]
 %
 % -------------------------------------------------------------------------
 %
-[equil_fit] = fitequil_yp(equil,32,method);%Build 
+[equil_fit] = fitequil_yp(equil,nharm,method);%Build vectorized magnetic equilibrium structure
 %testfitequil_yp(equil,equil_fit);
 %
 info_dke_yp(2,'Equilibrium interpolation coefficients calculated');
 %
 omega_rf = 2*pi*f_rf*1e9;
 %
-y0 = init_RT_jd(equil_fit,psi0,theta0,phi0,omega_rf,Npar0,m0,xmode,kmode)';
+y0 = init_RT_jd(equil,equil_fit,rho0,theta0,phi0,omega_rf,Npar0,m0,xmode,kmode)';
 %
 info_dke_yp(2,'Initial conditions calculated');
 %
 if isreal(y0(4)),
     %
-    [tout, yout] = raytracing_yp(rayparam,equil_fit,y0);
+    [tout, yout] = raytracing_yp(rayparam,equil_fit,y0);   
     %
     info_dke_yp(2,'Ray trajectories calculated');
     %
     [spsin,stheta,sphi,sR,sZ,sNpar,sNperp,sepol_pmz,sphi_xyz] = raypostprocessing_yp(tout, yout,rayparam,equil_fit,omega_rf);
     %
     info_dke_yp(2,'Ray processing done');
+    return
     %
 else
    error('kpsin has a non nul imaginary part !');

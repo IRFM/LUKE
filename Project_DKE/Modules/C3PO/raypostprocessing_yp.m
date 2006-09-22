@@ -17,6 +17,7 @@ psin_ray = yout(:,1);
 theta_ray = yout(:,2);
 phi_ray = yout(:,3); 
 %
+dRt0dpsin_ray = ppval(equil_fit.dRt0dpsin_fit.pp_f,yout(:,1));
 Te_ray = ppval(equil_fit.Te_fit.pp_f,yout(:,1));
 ne_ray = ppval(equil_fit.ne_fit.pp_f,yout(:,1));
 zTi_ray = ppval(equil_fit.zTi_fit.pp_f,yout(:,1));
@@ -30,21 +31,13 @@ Z_a0_ray = ppval(equil_fit.Z_fit.pp_a0,yout(:,1));
 Z_an_ray = ppval(equil_fit.Z_fit.pp_an,yout(:,1));
 Z_bn_ray = ppval(equil_fit.Z_fit.pp_bn,yout(:,1));
 %
-r_a0_ray = ppval(equil_fit.r_fit.pp_a0,yout(:,1));
-r_an_ray = ppval(equil_fit.r_fit.pp_an,yout(:,1));
-r_bn_ray = ppval(equil_fit.r_fit.pp_bn,yout(:,1));
+BR_a0_ray = ppval(equil_fit.BR_fit.pp_a0,yout(:,1));
+BR_an_ray = ppval(equil_fit.BR_fit.pp_an,yout(:,1));
+BR_bn_ray = ppval(equil_fit.BR_fit.pp_bn,yout(:,1));
 %
-calpha_a0_ray = ppval(equil_fit.calpha_fit.pp_a0,yout(:,1));
-calpha_an_ray = ppval(equil_fit.calpha_fit.pp_an,yout(:,1));
-calpha_bn_ray = ppval(equil_fit.calpha_fit.pp_bn,yout(:,1));
-%
-salpha_a0_ray = ppval(equil_fit.salpha_fit.pp_a0,yout(:,1));
-salpha_an_ray = ppval(equil_fit.salpha_fit.pp_an,yout(:,1));
-salpha_bn_ray = ppval(equil_fit.salpha_fit.pp_bn,yout(:,1));
-%
-BP_a0_ray = ppval(equil_fit.BP_fit.pp_a0,yout(:,1));
-BP_an_ray = ppval(equil_fit.BP_fit.pp_an,yout(:,1));
-BP_bn_ray = ppval(equil_fit.BP_fit.pp_bn,yout(:,1));
+BZ_a0_ray = ppval(equil_fit.BZ_fit.pp_a0,yout(:,1));
+BZ_an_ray = ppval(equil_fit.BZ_fit.pp_an,yout(:,1));
+BZ_bn_ray = ppval(equil_fit.BZ_fit.pp_bn,yout(:,1));
 %
 BPHI_a0_ray = ppval(equil_fit.BPHI_fit.pp_a0,yout(:,1));
 BPHI_an_ray = ppval(equil_fit.BPHI_fit.pp_an,yout(:,1));
@@ -52,37 +45,42 @@ BPHI_bn_ray = ppval(equil_fit.BPHI_fit.pp_bn,yout(:,1));
 %
 R_ray = zeros(length(tout),1);
 Z_ray = zeros(length(tout),1);
-r_ray = zeros(length(tout),1);
-calpha_ray = zeros(length(tout),1);
-salpha_ray = zeros(length(tout),1);
-BP_ray = zeros(length(tout),1);
+BR_ray = zeros(length(tout),1);
+BZ_ray = zeros(length(tout),1);
 BPHI_ray = zeros(length(tout),1);
+dRdtheta_ray = zeros(length(tout),1);
+dZdtheta_ray = zeros(length(tout),1);
 %
 for ii = 1:length(tout),
    R_ray(ii) = R_a0_ray(ii) + R_an_ray(ii,:)*cos(equil_fit.R_fit.n*yout(ii,2)) + R_bn_ray(ii,:)*sin(equil_fit.R_fit.n*yout(ii,2));
    Z_ray(ii) = Z_a0_ray(ii) + Z_an_ray(ii,:)*cos(equil_fit.Z_fit.n*yout(ii,2)) + Z_bn_ray(ii,:)*sin(equil_fit.Z_fit.n*yout(ii,2));
-   r_ray(ii) = r_a0_ray(ii) + r_an_ray(ii,:)*cos(equil_fit.r_fit.n*yout(ii,2)) + r_bn_ray(ii,:)*sin(equil_fit.r_fit.n*yout(ii,2));
-   calpha_ray(ii) = calpha_a0_ray(ii) + calpha_an_ray(ii,:)*cos(equil_fit.calpha_fit.n*yout(ii,2)) + calpha_bn_ray(ii,:)*sin(equil_fit.calpha_fit.n*yout(ii,2));
-   salpha_ray(ii) = salpha_a0_ray(ii) + salpha_an_ray(ii,:)*cos(equil_fit.salpha_fit.n*yout(ii,2)) + salpha_bn_ray(ii,:)*sin(equil_fit.salpha_fit.n*yout(ii,2));
-   BP_ray(ii) = BP_a0_ray(ii) + BP_an_ray(ii,:)*cos(equil_fit.BP_fit.n*yout(ii,2)) + BP_bn_ray(ii,:)*sin(equil_fit.BP_fit.n*yout(ii,2));
+   dRdtheta_ray(ii) = -R_an_ray(ii,:)*(equil_fit.R_fit.n.*sin(equil_fit.R_fit.n*yout(ii,2))) + R_bn_ray(ii,:)*(equil_fit.R_fit.n.*cos(equil_fit.R_fit.n*yout(ii,2)));
+   dZdtheta_ray(ii) = -Z_an_ray(ii,:)*(equil_fit.Z_fit.n.*sin(equil_fit.Z_fit.n*yout(ii,2))) + Z_bn_ray(ii,:)*(equil_fit.Z_fit.n.*cos(equil_fit.Z_fit.n*yout(ii,2)));   
+   BR_ray(ii) = BR_a0_ray(ii) + BR_an_ray(ii,:)*cos(equil_fit.BR_fit.n*yout(ii,2)) + BR_bn_ray(ii,:)*sin(equil_fit.BR_fit.n*yout(ii,2));
+   BZ_ray(ii) = BZ_a0_ray(ii) + BZ_an_ray(ii,:)*cos(equil_fit.BZ_fit.n*yout(ii,2)) + BZ_bn_ray(ii,:)*sin(equil_fit.BZ_fit.n*yout(ii,2));
    BPHI_ray(ii) = BPHI_a0_ray(ii) + BPHI_an_ray(ii,:)*cos(equil_fit.BPHI_fit.n*yout(ii,2)) + BPHI_bn_ray(ii,:)*sin(equil_fit.BPHI_fit.n*yout(ii,2));
 end
-B_ray = sqrt(BP_ray.^2 + BPHI_ray.^2);
-salpha_ray = sign(salpha_ray).*sqrt(1 - calpha_ray.^2);
+%
+BP_ray = sqrt(BR_ray.^2 + BZ_ray.^2);
+B_ray = sqrt(BR_ray.^2 + BZ_ray.^2 + BPHI_ray.^2);
+r_ray = sqrt((R_ray - equil_fit.Rp).^2 + (Z_ray - equil_fit.Zp).^2);
+salpha_ray = ((R_ray - equil_fit.Rp).*dRdtheta_ray + (Z_ray - equil_fit.Zp).*dZdtheta_ray)./r_ray./sqrt(dRdtheta_ray.^2 + dZdtheta_ray.^2);
+calpha_ray = sqrt(1.0 - salpha_ray.^2);
+gradrho_ray = R_ray.*BP_ray.*dRt0dpsin_ray/equil_fit.ap;
 %
 [qe,me,mp,mn,e0,mu0,re,mc2,clum] = pc_dke_yp;
 Npar_ray = clum*(yout(:,5).*calpha_ray.*BP_ray./r_ray./B_ray + yout(:,6).*BPHI_ray./R_ray./B_ray)/omega;
-Nperp_ray = sqrt(clum*clum*(yout(:,4).*yout(:,4).*R_ray.*R_ray.*BP_ray.*BP_ray/equil_fit.psia^2 - 2*yout(:,4).*yout(:,5).*R_ray.*BP_ray.*salpha_ray./r_ray/equil_fit.psia + (yout(:,5)./r_ray).^2 + (yout(:,6)./R_ray).^2)/omega/omega - Npar_ray.^2);
+Nperp_ray = sqrt(clum*clum*(yout(:,4).*yout(:,4).*gradrho_ray.*gradrho_ray/equil_fit.psia^2 - 2*yout(:,4).*yout(:,5).*gradrho_ray.*salpha_ray./r_ray/equil_fit.psia + (yout(:,5)./r_ray).^2 + (yout(:,6)./R_ray).^2)/omega/omega - Npar_ray.^2);
 %
 ntheta_fit= 65;
-psin_fit = linspace(0,1,15);
+rho_fit = linspace(0,1,15);
 theta_fit = linspace(0,2*pi,ntheta_fit);
-R_a0_fit = ppval(equil_fit.R_fit.pp_a0,psin_fit);
-R_an_fit = ppval(equil_fit.R_fit.pp_an,psin_fit);
-R_bn_fit = ppval(equil_fit.R_fit.pp_bn,psin_fit);
-Z_a0_fit = ppval(equil_fit.Z_fit.pp_a0,psin_fit);
-Z_an_fit = ppval(equil_fit.Z_fit.pp_an,psin_fit);
-Z_bn_fit = ppval(equil_fit.Z_fit.pp_bn,psin_fit);
+R_a0_fit = ppval(equil_fit.R_fit.pp_a0,rho_fit);
+R_an_fit = ppval(equil_fit.R_fit.pp_an,rho_fit);
+R_bn_fit = ppval(equil_fit.R_fit.pp_bn,rho_fit);
+Z_a0_fit = ppval(equil_fit.Z_fit.pp_a0,rho_fit);
+Z_an_fit = ppval(equil_fit.Z_fit.pp_an,rho_fit);
+Z_bn_fit = ppval(equil_fit.Z_fit.pp_bn,rho_fit);
 %
 for ii = 1:ntheta_fit,
    R_fit(:,ii) = R_a0_fit.' + R_an_fit*cos(equil_fit.R_fit.n*theta_fit(ii)) + R_bn_fit*sin(equil_fit.R_fit.n*theta_fit(ii));
@@ -112,7 +110,7 @@ figure('Name','Poloidal angle')
 graph1D_jd(abs(yout(:,3)/2/pi),yout(:,2)/2/pi,0,0,'abs(\phi)/2\pi','\theta/2\pi','Poloidal angle',NaN,'','','-','none','r',2);drawnow;hold on
 %
 figure('Name','Normalized radial wavenumber')
-graph1D_jd(abs(yout(:,3)/2/pi),yout(:,4),0,0,'abs(\phi)/2\pi','kpsi*psia','Normalized radial wavenumber',NaN,'','','-','none','r',2);drawnow;hold on
+graph1D_jd(abs(yout(:,3)/2/pi),yout(:,4),0,0,'abs(\phi)/2\pi','krho*ap','Normalized radial wavenumber',NaN,'','','-','none','r',2);drawnow;hold on
 %
 D_ray = zeros(length(tout),1);
 epol_pmz_ray = zeros(length(tout),3);
@@ -128,9 +126,10 @@ for ii = 1:length(tout),
 %        
     N = [Nperp_ray(ii);0;Npar_ray(ii)];
     N2 = Npar_ray(ii)^2+Nperp_ray(ii)^2;
-    D_ray(ii) = det(N*N.'- eye(3)*N2 + Kxyz);
+    D_ray(ii) = det(N*N.'/N2- eye(3) + Kxyz/N2);
 %    
     epol_pmz_ray(ii,:) = ep_pmz.';
     phi_xyz_ray(ii,:) = phip_xyz.';
 end
-figure('Name','Dispersion relation'),graph1D_jd(abs(yout(:,3)/2/pi),D_ray,0,0,'abs(\phi)/2\pi','Dispersion relation','',NaN,'','','-','none','r',2);drawnow
+figure('Name','Dispersion relation'),graph1D_jd(abs(yout(:,3)/2/pi),abs(D_ray),0,1,'abs(\phi)/2\pi','Dispersion relation','',NaN,'','','-','none','r',2);drawnow
+%

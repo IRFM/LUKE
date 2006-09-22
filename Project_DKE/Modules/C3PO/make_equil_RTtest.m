@@ -102,6 +102,7 @@ if qopt == 2,
     equil.ppsi = [0,ap*Rp*integral_dke_jd(pdprho,spBpp,1)'];
 elseif qopt == 1 % analytical thus more accurate 
     equil.ppsi = ap*Rp*Bpa*prho;
+    pBpp(1) = Bpa;
 else % analytical thus more accurate 
     equil.ppsi = ap*Rp*Bpa*prho.^2/2;
 end

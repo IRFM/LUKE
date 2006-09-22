@@ -16,39 +16,36 @@ elseif nargin == 2,
     method = 'spline';
 end
 %
-psia = equil_in.ppsi(end);
-%
 equil_out.id = equil_in.id;
 equil_out.method = method;
 equil_out.zZi = equil_in.zZi;
 equil_out.zmi = equil_in.zmi;
-equil_out.psia = psia;
 %
-equil_out.Te_fit = interpequil_yp(method,equil_in.pTe,equil_in.ppsi/psia);
-equil_out.ne_fit = interpequil_yp(method,equil_in.pne,equil_in.ppsi/psia);
-equil_out.zTi_fit = interpequil_yp(method,equil_in.pzTi,equil_in.ppsi/psia);
-equil_out.zni_fit = interpequil_yp(method,equil_in.pzni,equil_in.ppsi/psia);
+[rho] = psi2rho_jd(equil_in,equil_in.ppsi/equil_in.ppsi(end),method);
 %
-BP = sqrt(equil_in.BR.^2 + equil_in.BZ.^2);
-equil_out.BP_fit = interpequil_yp(method,BP,equil_in.ppsi/psia,equil_in.theta,nharm);%Poloidal B-field
-equil_out.BPHI_fit = interpequil_yp(method,equil_in.BPHI,equil_in.ppsi/psia,equil_in.theta,nharm);%Toroidal B-field
-equil_out.R_fit = interpequil_yp(method,equil_in.R,equil_in.ppsi/psia,equil_in.theta,nharm);%R coordinate
-equil_out.Z_fit = interpequil_yp(method,equil_in.Z,equil_in.ppsi/psia,equil_in.theta,nharm);%Z coordinate
+equil_out.psin_fit = interpequil_yp(method,equil_in.ppsi/equil_in.ppsi(end),rho);
+%
+Rt0_psin_fit = interpequil_yp(method,equil_in.R(:,1),equil_in.ppsi/equil_in.ppsi(end));%Rt0 = R(:,theta=0)
+dRt0dpsin_psin = ppval(Rt0_psin_fit.pp_dfdrho,equil_in.ppsi/equil_in.ppsi(end));
+equil_out.dRt0dpsin_fit = interpequil_yp(method,dRt0dpsin_psin,rho);
+%
+equil_out.Te_fit = interpequil_yp(method,equil_in.pTe,rho);
+equil_out.ne_fit = interpequil_yp(method,equil_in.pne,rho);
+equil_out.zTi_fit = interpequil_yp(method,equil_in.pzTi,rho);
+equil_out.zni_fit = interpequil_yp(method,equil_in.pzni,rho);
+%
+equil_out.BR_fit = interpequil_yp(method,equil_in.BR,rho,equil_in.theta,nharm);%BR field component
+equil_out.BZ_fit = interpequil_yp(method,equil_in.BZ,rho,equil_in.theta,nharm);%BZ field component
+equil_out.BPHI_fit = interpequil_yp(method,equil_in.BPHI,rho,equil_in.theta,nharm);%PHI field component
+equil_out.R_fit = interpequil_yp(method,equil_in.R,rho,equil_in.theta,nharm);%R coordinate
+equil_out.Z_fit = interpequil_yp(method,equil_in.Z,rho,equil_in.theta,nharm);%Z coordinate
 %
 if equil_in.ppsi(1) == 0,
    equil_out.Rp = equil_in.R(1,1);
    equil_out.Zp = equil_in.Z(1,1);
+   equil_out.ap = equil_in.R(end,1) - equil_in.R(1,1);
+   equil_out.psia = equil_in.ppsi(end);
 else
    error('equil_out.ppsi(1) must be equal to zero !');
 end
 %
-r = sqrt((equil_in.R - equil_out.Rp).^2 + (equil_in.Z - equil_out.Zp).^2);
-r(1,:) = eps;%to avoid singularity for cos(alpha) at psi = 0. 
-BP(1,:) = eps;%to avoid singularity for cos(alpha) at psi = 0. 
-calpha = (equil_in.BZ.*(equil_in.R - equil_out.Rp) - equil_in.BR.*(equil_in.Z - equil_out.Zp))./r./BP;
-salpha = (equil_in.BZ.*(equil_in.Z - equil_out.Zp) + equil_in.BR.*(equil_in.R - equil_out.Rp))./r./BP;
-%
-equil_out.r_fit = interpequil_yp(method,r,equil_in.ppsi/psia,equil_in.theta,nharm);%r coordinate
-equil_out.calpha_fit = interpequil_yp(method,calpha,equil_in.ppsi/psia,equil_in.theta,nharm);%cos(alpha) (=1 for circular plasma cross-section)
-equil_out.salpha_fit = interpequil_yp(method,salpha,equil_in.ppsi/psia,equil_in.theta,nharm);%sin(alpha) (=0 for circular plasma cross-section)
-
