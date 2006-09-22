@@ -97,11 +97,14 @@ end
 %
 %   Dispersion tensor for + root
 %
-Dxyzp = Nxyzp*Nxyzp.' - sum(Nxyzp.^2)*diag([1,1,1]) + Kxyz;
+N2p = Nperpp^2+Npar^2;
+N2m = Nperpm^2+Npar^2;
+%
+Dxyzp = Nxyzp*Nxyzp.'/N2p - sum(Nxyzp.^2/N2p)*diag([1,1,1]) + Kxyz/N2p;
 %
 %   Dispersion tensor for - root
 %
-Dxyzm = Nxyzm*Nxyzm.' - sum(Nxyzm.^2)*diag([1,1,1]) + Kxyz;
+Dxyzm = Nxyzm*Nxyzm.'/N2m - sum(Nxyzm.^2/N2m)*diag([1,1,1]) + Kxyz/N2m;
 %
 % verification (useful if nargin == 8)
 %
