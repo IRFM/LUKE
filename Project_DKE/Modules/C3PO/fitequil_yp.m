@@ -25,9 +25,9 @@ equil_out.zmi = equil_in.zmi;
 %
 equil_out.psin_fit = interpequil_yp(method,equil_in.ppsi/equil_in.ppsi(end),rho);
 %
-Rt0_psin_fit = interpequil_yp(method,equil_in.R(:,1),equil_in.ppsi/equil_in.ppsi(end));%Rt0 = R(:,theta=0)
-dRt0dpsin_psin = ppval(Rt0_psin_fit.pp_dfdrho,equil_in.ppsi/equil_in.ppsi(end));
-equil_out.dRt0dpsin_fit = interpequil_yp(method,dRt0dpsin_psin,rho);
+Rstar_psin_fit = interpequil_yp(method,equil_in.R(:,1),equil_in.ppsi/equil_in.ppsi(end));%Rstar = R(:,theta=0)
+dRstardpsin_psin = ppval(Rstar_psin_fit.pp_dfdrho,equil_in.ppsi/equil_in.ppsi(end));
+equil_out.dRstardpsin_fit = interpequil_yp(method,dRstardpsin_psin,rho);
 %
 equil_out.Te_fit = interpequil_yp(method,equil_in.pTe,rho);
 equil_out.ne_fit = interpequil_yp(method,equil_in.pne,rho);

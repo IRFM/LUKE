@@ -22,15 +22,15 @@ end
 prec = 1e-3;
 %
 [prho] = psi2rho_jd(equil_in,equil_in.ppsi/equil_in.ppsi(end),'spline');
-ppsin = equil_in.ppsi/equil_in.ppsi(end);
+ppsin = equil_in.ppsi(:)/equil_in.ppsi(end);
 dppsin = gradient(ppsin);
 dprho = gradient(prho);
 dtheta = gradient(equil_in.theta);
 %
-pTe = equil_in.pTe;
-pne = equil_in.pne;
-pzTi = equil_in.pzTi;
-pzni = equil_in.pzni;
+pTe = equil_in.pTe(:);
+pne = equil_in.pne(:);
+pzTi = equil_in.pzTi';
+pzni = equil_in.pzni';
 %
 BR = equil_in.BR + eps;
 BZ = equil_in.BZ + eps;
@@ -76,14 +76,16 @@ dBPdrho = dBPdrho./(dprho(:)*ones(1,length(dtheta)));
 dBdtheta = dBdtheta./(ones(length(dprho),1)*dtheta);
 dBdrho = dBdrho./(dprho(:)*ones(1,length(dtheta)));
 %
-dpsindrho = gradient(ppsin)./gradient(prho);
-dTedrho = gradient(pTe)./gradient(prho);
-dnedrho = gradient(pne)./gradient(prho);
-zdTidrho = gradient(pzTi)./(ones(size(pzTi,1),1)*gradient(prho));
-zdnidrho = gradient(pzni)./(ones(size(pzTi,1),1)*gradient(prho));
+dpsindrho = gradient(ppsin)./dprho(:);
+dTedrho = gradient(pTe)./dprho(:);
+dnedrho = gradient(pne)./dprho(:);
+for i = 1:length(equil_fit.zZi)
+   zdTidrho(:,i) = gradient(pzTi(:,i))./dprho(:);
+   zdnidrho(:,i) = gradient(pzni(:,i))./dprho(:);
+end
 %
-dRt0dpsin = gradient(equil_in.R(:,1))./dppsin(:);
-gradrho = equil_in.R.*BP.*(dRt0dpsin*ones(1,size(equil_in.R,2)))/equil_fit.ap;
+dRstardpsin = gradient(equil_in.R(:,1))./dppsin(:);
+gradrho = equil_in.R.*BP.*(dRstardpsin*ones(1,size(equil_in.R,2)))/equil_fit.ap/equil_fit.psia;
 [dgradrhodtheta,dgradrhodrho] = gradient(gradrho);%rho gradient
 dgradrhodtheta = dgradrhodtheta./(ones(length(dprho),1)*dtheta);
 dgradrhodrho = dgradrhodrho./(dprho(:)*ones(1,length(dtheta)));
@@ -133,10 +135,10 @@ if nargin < 3,
    rho_fit1 = prho(1:10:end);%New normalized radial grid for display 2-D magnetic field
    rho_fit1(1) = prec;
 %
-   dRt0dpsin_fit = ppval(equil_fit.dRt0dpsin_fit.pp_f,rho_fit1);dRt0dpsin_fit = dRt0dpsin_fit(:);
-   dRt0dpsin_fit1 = ppval_yp(equil_fit.dRt0dpsin_fit.pp_f,rho_fit1);dRt0dpsin_fit1 = dRt0dpsin_fit1(:); 
-   ddRt0dpsindrho_fit = ppval(equil_fit.dRt0dpsin_fit.pp_dfdrho,rho_fit1);ddRt0dpsindrho_fit = ddRt0dpsindrho_fit(:);
-   ddRt0dpsindrho_fit1 = ppval_yp(equil_fit.dRt0dpsin_fit.pp_dfdrho,rho_fit1);ddRt0dpsindrho_fit1 = ddRt0dpsindrho_fit1(:);
+   dRstardpsin_fit = ppval(equil_fit.dRstardpsin_fit.pp_f,rho_fit1);dRstardpsin_fit = dRstardpsin_fit(:);
+   dRstardpsin_fit1 = ppval_yp(equil_fit.dRstardpsin_fit.pp_f,rho_fit1);dRstardpsin_fit1 = dRstardpsin_fit1(:); 
+   ddRstardpsindrho_fit = ppval(equil_fit.dRstardpsin_fit.pp_dfdrho,rho_fit1);ddRstardpsindrho_fit = ddRstardpsindrho_fit(:);
+   ddRstardpsindrho_fit1 = ppval_yp(equil_fit.dRstardpsin_fit.pp_dfdrho,rho_fit1);ddRstardpsindrho_fit1 = ddRstardpsindrho_fit1(:);
 %
    R_a0_fit = ppval(equil_fit.R_fit.pp_a0,rho_fit1);R_a0_fit = R_a0_fit(:);
    R_an_fit = ppval(equil_fit.R_fit.pp_an,rho_fit1);
@@ -265,9 +267,9 @@ if nargin < 3,
       dBdtheta_fit(:,ii) = (BR_fit(:,ii).*dBRdtheta_fit(:,ii) + BZ_fit(:,ii).*dBZdtheta_fit(:,ii) + BPHI_fit(:,ii).*dBPHIdtheta_fit(:,ii))./B_fit(:,ii);
       dBdrho_fit(:,ii) = (BR_fit(:,ii).*dBRdrho_fit(:,ii) + BZ_fit(:,ii).*dBZdrho_fit(:,ii) + BPHI_fit(:,ii).*dBPHIdrho_fit(:,ii))./B_fit(:,ii);
 %      
-      gradrho_fit(:,ii) = R_fit(:,ii).*BP_fit(:,ii).*dRt0dpsin_fit/equil_fit.ap;
-      dgradrhodrho_fit(:,ii) = dRdrho_fit(:,ii).*BP_fit(:,ii).*dRt0dpsin_fit/equil_fit.ap + R_fit(:,ii).*dBPdrho_fit(:,ii).*dRt0dpsin_fit/equil_fit.ap + R_fit(:,ii).*BP_fit(:,ii).*ddRt0dpsindrho_fit/equil_fit.ap;
-      dgradrhodtheta_fit(:,ii) = dRdtheta_fit(:,ii).*BP_fit(:,ii).*dRt0dpsin_fit/equil_fit.ap + R_fit(:,ii).*dBPdtheta_fit(:,ii).*dRt0dpsin_fit/equil_fit.ap;     
+      gradrho_fit(:,ii) = R_fit(:,ii).*BP_fit(:,ii).*dRstardpsin_fit/equil_fit.ap;
+      dgradrhodrho_fit(:,ii) = dRdrho_fit(:,ii).*BP_fit(:,ii).*dRstardpsin_fit/equil_fit.ap + R_fit(:,ii).*dBPdrho_fit(:,ii).*dRstardpsin_fit/equil_fit.ap + R_fit(:,ii).*BP_fit(:,ii).*ddRstardpsindrho_fit/equil_fit.ap;
+      dgradrhodtheta_fit(:,ii) = dRdtheta_fit(:,ii).*BP_fit(:,ii).*dRstardpsin_fit/equil_fit.ap + R_fit(:,ii).*dBPdtheta_fit(:,ii).*dRstardpsin_fit/equil_fit.ap;     
 %
       R_fit1(:,ii) = R_a0_fit1 + R_an_fit1*cos(equil_fit.R_fit.n*theta_fit(ii)) + R_bn_fit1*sin(equil_fit.R_fit.n*theta_fit(ii));
       dRdtheta_fit1(:,ii) = -R_an_fit1*(equil_fit.R_fit.n.*sin(equil_fit.R_fit.n*theta_fit(ii))) + R_bn_fit1*(equil_fit.R_fit.n.*cos(equil_fit.R_fit.n*theta_fit(ii)));
@@ -325,9 +327,9 @@ if nargin < 3,
       dBdtheta_fit1(:,ii) = (BR_fit1(:,ii).*dBRdtheta_fit1(:,ii) + BZ_fit1(:,ii).*dBZdtheta_fit1(:,ii) + BPHI_fit1(:,ii).*dBPHIdtheta_fit1(:,ii))./B_fit1(:,ii);
       dBdrho_fit1(:,ii) = (BR_fit1(:,ii).*dBRdrho_fit1(:,ii) + BZ_fit1(:,ii).*dBZdrho_fit1(:,ii) + BPHI_fit1(:,ii).*dBPHIdrho_fit1(:,ii))./B_fit1(:,ii);
 %
-      gradrho_fit1(:,ii) = R_fit1(:,ii).*BP_fit1(:,ii).*dRt0dpsin_fit1/equil_fit.ap;
-      dgradrhodrho_fit1(:,ii) = dRdrho_fit1(:,ii).*BP_fit1(:,ii).*dRt0dpsin_fit1/equil_fit.ap + R_fit1(:,ii).*dBPdrho_fit1(:,ii).*dRt0dpsin_fit1/equil_fit.ap + R_fit1(:,ii).*BP_fit1(:,ii).*ddRt0dpsindrho_fit1/equil_fit.ap;
-      dgradrhodtheta_fit1(:,ii) = dRdtheta_fit1(:,ii).*BP_fit1(:,ii).*dRt0dpsin_fit1/equil_fit.ap + R_fit1(:,ii).*dBPdtheta_fit1(:,ii).*dRt0dpsin_fit1/equil_fit.ap;
+      gradrho_fit1(:,ii) = R_fit1(:,ii).*BP_fit1(:,ii).*dRstardpsin_fit1/equil_fit.ap;
+      dgradrhodrho_fit1(:,ii) = dRdrho_fit1(:,ii).*BP_fit1(:,ii).*dRstardpsin_fit1/equil_fit.ap + R_fit1(:,ii).*dBPdrho_fit1(:,ii).*dRstardpsin_fit1/equil_fit.ap + R_fit1(:,ii).*BP_fit1(:,ii).*ddRstardpsindrho_fit1/equil_fit.ap;
+      dgradrhodtheta_fit1(:,ii) = dRdtheta_fit1(:,ii).*BP_fit1(:,ii).*dRstardpsin_fit1/equil_fit.ap + R_fit1(:,ii).*dBPdtheta_fit1(:,ii).*dRstardpsin_fit1/equil_fit.ap;
    end
 %
 % Display results
@@ -351,11 +353,11 @@ if nargin < 3,
    subplot('position',[1/12,1/8,5/24,5/16])
    [ax] = graph1D_jd(rho_fit,zTi_fit,0,0,'\rho','T_i (keV)','',NaN,[0,1],[-eps,max(max(equil_in.pzTi))],'-','none','b',2);
    [ax] = graph1D_jd(rho_fit,zTi_fit1,0,0,'\rho','T_i (keV)','',NaN,[0,1],[-eps,max(max(equil_in.pzTi))],'-','none','c',1);
-   [ax] = graph1D_jd(prho(1:10:end),pzTi(:,1:10:end),0,0,'\rho','T_i (keV)','',NaN,[0,1],[-eps,max(max(equil_in.pzTi))],'--','non','r',1);
+   [ax] = graph1D_jd(prho(1:10:end),pzTi(1:10:end,:),0,0,'\rho','T_i (keV)','',NaN,[0,1],[-eps,max(max(equil_in.pzTi))],'--','non','r',1);
    subplot('position',[1/3+1/12,1/8,5/24,5/16])
    [ax] = graph1D_jd(rho_fit,zni_fit/1e19,0,0,'\rho','n_i (10^{19} m^{-3})','',NaN,[0,1],[-eps,max(max(equil_in.pzni/1e19))],'-','none','b',2);
    [ax] = graph1D_jd(rho_fit,zni_fit1/1e19,0,0,'\rho','n_i (10^{19} m^{-3})','',NaN,[0,1],[-eps,max(max(equil_in.pzni/1e19))],'-','none','c',1);
-   [ax] = graph1D_jd(prho(1:10:end),pzni(:,1:10:end)/1e19,0,0,'\rho','n_i (10^{19} m^{-3})','',NaN,[0,1],[-eps,max(max(equil_in.pzni/1e19))],'--','non','r',1);
+   [ax] = graph1D_jd(prho(1:10:end),pzni(1:10:end,:)/1e19,0,0,'\rho','n_i (10^{19} m^{-3})','',NaN,[0,1],[-eps,max(max(equil_in.pzni/1e19))],'--','non','r',1);
    subplot('position',[2/3+1/12,1/8,5/24,5/16])
 %
    figure('Name','Derivatives of magnetic equilibrium profile parameters'),clf
@@ -377,11 +379,11 @@ if nargin < 3,
    subplot('position',[1/12,1/8,5/24,5/16])
    [ax] = graph1D_jd(rho_fit,zdTidrho_fit,0,0,'\rho','','',NaN,NaN,NaN,'-','none','b',2);
    [ax] = graph1D_jd(rho_fit,zdTidrho_fit1,0,0,'\rho','','',NaN,NaN,NaN,'-','none','c',1);
-   [ax] = graph1D_jd(prho(1:10:end),zdTidrho(:,1:10:end),0,0,'\rho','dT_i/d\rho (keV)','',NaN,NaN,NaN,'--','non','r',1);
+   [ax] = graph1D_jd(prho(1:10:end),zdTidrho(1:10:end,:),0,0,'\rho','dT_i/d\rho (keV)','',NaN,NaN,NaN,'--','non','r',1);
    subplot('position',[1/3+1/12,1/8,5/24,5/16])
    [ax] = graph1D_jd(rho_fit,zdnidrho_fit/1e19,0,0,'\rho','n_i (10^{19} m^{-3})','',NaN,NaN,NaN,'-','none','b',2);
    [ax] = graph1D_jd(rho_fit,zdnidrho_fit1/1e19,0,0,'\rho','n_i (10^{19} m^{-3})','',NaN,NaN,NaN,'-','none','c',1);
-   [ax] = graph1D_jd(prho(1:10:end),zdnidrho(:,1:10:end)/1e19,0,0,'\rho','dn_i/d\rho (10^{19} m^{-3})','',NaN,NaN,NaN,'--','non','r',1);
+   [ax] = graph1D_jd(prho(1:10:end),zdnidrho(1:10:end,:)/1e19,0,0,'\rho','dn_i/d\rho (10^{19} m^{-3})','',NaN,NaN,NaN,'--','non','r',1);
    subplot('position',[2/3+1/12,1/8,5/24,5/16])
    [ax] = graph1D_jd(rho_fit,zdnidrho_fit/1e19,0,0,'\rho','n_i (10^{19} m^{-3})','',NaN,NaN,NaN,'-','none','b',2); 
 %
@@ -551,8 +553,8 @@ end
 %
 psin = ppval(equil_fit.psin_fit.pp_f,rho);
 dpsindrho = ppval(equil_fit.psin_fit.pp_dfdrho,rho);
-dRt0dpsin = ppval(equil_fit.dRt0dpsin_fit.pp_f,rho);
-ddRt0dpsindrho = ppval(equil_fit.dRt0dpsin_fit.pp_dfdrho,rho);
+dRstardpsin = ppval(equil_fit.dRstardpsin_fit.pp_f,rho);
+ddRstardpsindrho = ppval(equil_fit.dRstardpsin_fit.pp_dfdrho,rho);
 Te = ppval(equil_fit.Te_fit.pp_f,rho);
 dTedrho = ppval_yp(equil_fit.Te_fit.pp_dfdrho,rho);
 ne = ppval(equil_fit.ne_fit.pp_f,rho);
@@ -644,9 +646,9 @@ B = sqrt(BR^2 + BZ^2 + BPHI^2);
 dBdtheta = (BR*dBRdtheta + BZ*dBZdtheta + BPHI*dBPHIdtheta)/B;
 dBdrho = (BR*dBRdrho + BZ*dBZdrho + BPHI*dBPHIdrho)/B;
 %
-gradrho = R.*BP.*dRt0dpsin/equil_fit.ap;
-dgradrhodrho = dRdrho.*BP.*dRt0dpsin/equil_fit.ap + R.*dBPdrho.*dRt0dpsin/equil_fit.ap + R.*BP.*ddRt0dpsindrho/equil_fit.ap;
-dgradrhodtheta = dRdtheta.*BP.*dRt0dpsin/equil_fit.ap + R.*dBPdtheta.*dRt0dpsin/equil_fit.ap;
+gradrho = R.*BP.*dRstardpsin/equil_fit.ap/equil_fit.psia;
+dgradrhodrho = dRdrho.*BP.*dRstardpsin/equil_fit.psia/equil_fit.ap + R.*dBPdrho.*dRstardpsin/equil_fit.psia/equil_fit.ap + R.*BP.*ddRstardpsindrho/equil_fit.psia/equil_fit.ap;
+dgradrhodtheta = dRdtheta.*BP.*dRstardpsin/equil_fit.psia/equil_fit.ap + R.*dBPdtheta.*dRstardpsin/equil_fit.psia/equil_fit.ap;
 %
 disp(['equil_fit.zZi(4) = ',num2str(equil_fit.zZi(4))]);
 disp('--------------');

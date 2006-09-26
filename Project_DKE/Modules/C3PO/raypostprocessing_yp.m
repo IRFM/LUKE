@@ -17,7 +17,7 @@ psin_ray = yout(:,1);
 theta_ray = yout(:,2);
 phi_ray = yout(:,3); 
 %
-dRt0dpsin_ray = ppval(equil_fit.dRt0dpsin_fit.pp_f,yout(:,1));
+dRstardpsin_ray = ppval(equil_fit.dRstardpsin_fit.pp_f,yout(:,1));
 Te_ray = ppval(equil_fit.Te_fit.pp_f,yout(:,1));
 ne_ray = ppval(equil_fit.ne_fit.pp_f,yout(:,1));
 zTi_ray = ppval(equil_fit.zTi_fit.pp_f,yout(:,1));
@@ -66,11 +66,11 @@ B_ray = sqrt(BR_ray.^2 + BZ_ray.^2 + BPHI_ray.^2);
 r_ray = sqrt((R_ray - equil_fit.Rp).^2 + (Z_ray - equil_fit.Zp).^2);
 salpha_ray = ((R_ray - equil_fit.Rp).*dRdtheta_ray + (Z_ray - equil_fit.Zp).*dZdtheta_ray)./r_ray./sqrt(dRdtheta_ray.^2 + dZdtheta_ray.^2);
 calpha_ray = sqrt(1.0 - salpha_ray.^2);
-gradrho_ray = R_ray.*BP_ray.*dRt0dpsin_ray/equil_fit.ap;
+gradrho_ray = R_ray.*BP_ray.*dRstardpsin_ray/equil_fit.psia;
 %
 [qe,me,mp,mn,e0,mu0,re,mc2,clum] = pc_dke_yp;
 Npar_ray = clum*(yout(:,5).*calpha_ray.*BP_ray./r_ray./B_ray + yout(:,6).*BPHI_ray./R_ray./B_ray)/omega;
-Nperp_ray = sqrt(clum*clum*(yout(:,4).*yout(:,4).*gradrho_ray.*gradrho_ray/equil_fit.psia^2 - 2*yout(:,4).*yout(:,5).*gradrho_ray.*salpha_ray./r_ray/equil_fit.psia + (yout(:,5)./r_ray).^2 + (yout(:,6)./R_ray).^2)/omega/omega - Npar_ray.^2);
+Nperp_ray = sqrt(clum*clum*(yout(:,4).*yout(:,4).*gradrho_ray.*gradrho_ray/equil_fit.ap^2 - 2*yout(:,4).*yout(:,5).*gradrho_ray.*salpha_ray./r_ray/equil_fit.ap + (yout(:,5)./r_ray).^2 + (yout(:,6)./R_ray).^2)/omega/omega - Npar_ray.^2);
 %
 ntheta_fit= 65;
 rho_fit = linspace(0,1,15);
@@ -98,16 +98,21 @@ figure('Name','Ray trajectory')
 [ax] = graph1D_jd(R_ray,Z_ray,0,0,'R(m)','Z(m)','Flux-surfaces labeled by \rho=0,0.1,0.2...1',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','k',2);hold on
 axis('equal');drawnow  
 %
-figure('Name','Refractive index')
-graph1D_jd(abs(yout(:,3)/2/pi),Npar_ray,0,0,'','','',NaN,'','','-','none','r',2);drawnow;hold on
-graph1D_jd(abs(yout(:,3)/2/pi),Nperp_ray,0,0,'abs(\phi)/2\pi','Wave refractive index','',NaN,'','','-','none','b',2);drawnow;hold off
-legend('N_{||}','N_{\perp}')
+figure('Name','Parallel wave efractive index')
+graph1D_jd(abs(yout(:,3)/2/pi),Npar_ray,0,0,'abs(\phi)/2\pi','Parallel wave refractive index','',NaN,'','','-','none','r',2);drawnow;hold off
+%
+figure('Name','Perpendicular wave efractive index')
+graph1D_jd(abs(yout(:,3)/2/pi),Nperp_ray,0,0,'abs(\phi)/2\pi','Perpendicular wave refractive index','',NaN,'','','-','none','r',2);drawnow;hold off
 %
 figure('Name','Poloidal mode number')
 graph1D_jd(abs(yout(:,3)/2/pi),yout(:,5),0,0,'abs(\phi)/2\pi','m','Poloidal mode number',NaN,'','','-','none','r',2);drawnow;hold on
 %
 figure('Name','Poloidal angle')
 graph1D_jd(abs(yout(:,3)/2/pi),yout(:,2)/2/pi,0,0,'abs(\phi)/2\pi','\theta/2\pi','Poloidal angle',NaN,'','','-','none','r',2);drawnow;hold on
+%
+%
+figure('Name','Radial position')
+graph1D_jd(abs(yout(:,3)/2/pi),yout(:,1),0,0,'abs(\phi)/2\pi','rho','Normalized radial position',NaN,'','','-','none','r',2);drawnow;hold on
 %
 figure('Name','Normalized radial wavenumber')
 graph1D_jd(abs(yout(:,3)/2/pi),yout(:,4),0,0,'abs(\phi)/2\pi','krho*ap','Normalized radial wavenumber',NaN,'','','-','none','r',2);drawnow;hold on

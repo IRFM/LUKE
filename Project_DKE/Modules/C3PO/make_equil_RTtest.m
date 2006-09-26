@@ -19,9 +19,10 @@ qopt = 1;%Option for q profile. (0): constant (default, uniform current, psi=rho
 %
 % Equilibrium parameters
 %
-Rp = 3.0;%  Plasma major radius on axis (m)
+cyl = 1;
+Rp = 3.0*cyl;%  Plasma major radius on axis (m)
 Zp = 0.0;
-ep = 0.3;%  Inverse aspect ratio
+ep = 0.3/cyl;%  Inverse aspect ratio
 Ip = 1.0;% Signed value of the plasma current (MA) (with R,Z,phi direct)
 Bt = 3.0;%  Signed value of the toroidal magnetic field on the magnetic axis (T) (with R,Z,phi direct)
 %

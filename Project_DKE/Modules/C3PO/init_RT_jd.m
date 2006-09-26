@@ -50,9 +50,9 @@ if length(xtheta) ~= nx | length(xphi) ~= nx | length(xomega) ~= nx | length(xNp
     error('Input argument dimensions are not compatible');
 end
 %
-sigma = - sign(equil_fit.psia);%for a wave propagating inward.
+sigma = + sign(equil_fit.psia);%for a wave propagating inward (-LH, + EC ** to be checked)
 %
-xdRt0dpsin = ppval(equil_fit.dRt0dpsin_fit.pp_f,xrho);
+xdRstardpsin = ppval(equil_fit.dRstardpsin_fit.pp_f,xrho);
 xTe = ppval(equil_fit.Te_fit.pp_f,xrho);
 xne = ppval(equil_fit.ne_fit.pp_f,xrho);
 zxTi = ppval(equil_fit.zTi_fit.pp_f,xrho);
@@ -111,7 +111,7 @@ xBt = xBPHI;
 xB = sqrt(xBt.^2 + xBp.^2);
 xp = xBp./xB;
 xt = xBt./xB;
-xgradrho = xR.*xBp.*xdRt0dpsin/equil_fit.ap;
+xgradrho = xR.*xBp.*xdRstardpsin/equil_fit.psia/equil_fit.ap;%normalized to ap so that krho is normalized
 %
 % Resolution of the dispersion relation
 %
@@ -155,12 +155,10 @@ end
 %
 xn = xR.*(xNpar.*xomega/clum - xm.*xc.*xp./xr)./xt;
 %
-% warning : in xkrho do not use the relation sin^2 + cos^2 = 1 because of interpolation errors
+xkrho = (xm.*xs./xr + sigma*sqrt(xNperp.^2.*xomega.^2/clum^2 - (xm.*xc./xr - xNpar.*xp.*xomega/clum).^2./xt.^2))./xgradrho;
 %
-xkrho = (xm.*xs./xr + sigma*sqrt(xNperp.^2.*xomega.^2/clum^2 + xm.^2.*(xs.^2 + xc.^2 - 1)./xr.^2 - (xm.*xc./xr - xNpar.*xp.*xomega/clum).^2./xt.^2))./xgradrho;
-%
-xY = [xrho;xtheta;xphi;xkrho*equil_fit.ap;xm;xn;xomega];
-%xY = [xrho;xtheta;xphi;xkrho*equil_fit.psia;xm;xn;xomega/clum;zeros(1,nx)];
+xY = [xrho;xtheta;xphi;xkrho;xm;xn;xomega];
+%xY = [xrho;xtheta;xphi;xkrho;xm;xn;xomega/clum;zeros(1,nx)];
 %
 % verification
 %

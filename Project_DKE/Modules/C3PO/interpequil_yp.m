@@ -55,7 +55,7 @@ elseif nargin >= 4,
 %       
    FScoef = zeros(size(f,1),2*nharm + 1);
    for ii = 1:size(f,1),
-      FSfun = fscreate(theta,f(ii,:),nharm);%Fourier series coefficients calculations
+      FSfun = fscreate(theta,f(ii,:),nharm,'foh');%Fourier series coefficients calculations
       FScoef(ii,:) = FSfun('coef');   
    end
 %
