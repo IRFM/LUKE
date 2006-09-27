@@ -200,7 +200,7 @@ double sgn();
 #define SAFETY 0.8
 #define PGROW 0.2
 #define PSHRINK 0.25
-#define MAXIT 20000
+#define MAXIT 30000
 #define DRHO_EDGE 1e-3
 #define PI 3.14159265358979
 
@@ -595,7 +595,7 @@ void mexFunction(   int     nlhs,
  //                 s0[3] = - krho1;
  //                 dsolve(&krho2,s0,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,R_fit,Z_fit,BR_fit,BZ_fit,BPHI_fit,dRstardpsin_fit);
                   krho2 = -krho1; 
-                  m2 = -m1;
+                  m2 = m1;
             }
             
             if (fabs(rho2 - rho_step) >= rayparam.drho[0]) {//step stored in Matlab memory
@@ -1227,8 +1227,8 @@ for (i=0;i<M;i++) {/*initialisation */
 }
 
 /* Equilibrium interpolation at ray location */
-interpequil(raymagnetic,rayprofiles,equilparam,Y,Te_fit,ne_fit,zTi_fit,zni_fit,R_fit,Z_fit,BR_fit,BZ_fit,BPHI_fit,dRstardpsin_fit);
-//interpequil_test(raymagnetic,rayprofiles,equilparam,Y);
+//interpequil(raymagnetic,rayprofiles,equilparam,Y,Te_fit,ne_fit,zTi_fit,zni_fit,R_fit,Z_fit,BR_fit,BZ_fit,BPHI_fit,dRstardpsin_fit);
+interpequil_test(raymagnetic,rayprofiles,equilparam,Y);
 
 /* Refractive index calculation */
 rayindex(Y,raymagnetic,equilparam,&Npar,&Nperp,&N2,dNpardx,dNperpdx,dN2dx);
@@ -1898,11 +1898,11 @@ equilparam_format equilparam;
 { 
     double dYdY[M][M];
 
-    double Npar1,dNpar1dx,dNpar1dx1,dNpar1dx2,dNpar1dx3,dNpar1dx4,dNpar1dx5,dNpar1dx6;
-    double Npar2,dNpar2dx,dNpar2dx1,dNpar2dx2,dNpar2dx3,dNpar2dx4,dNpar2dx5;
+    double Npar1,dNpar1dx,dNpar1dx1,dNpar1dx2,dNpar1dx3,dNpar1dx4,dNpar1dx5;
+    double Npar2,dNpar2dx,dNpar2dx1,dNpar2dx2,dNpar2dx3,dNpar2dx4;
       
-    double complex N21,dN21dx,dN21dx1,dN21dx2,dN21dx3,dN21dx4;
-    double complex N22,dN22dx,dN22dx1,dN22dx2,dN22dx3,dN22dx4,dN22dx5,dN22dx6,dN22dx7;
+    double complex N21,dN21dx,dN21dx1,dN21dx2,dN21dx3;
+    double complex N22,dN22dx,dN22dx1,dN22dx2,dN22dx3,dN22dx4,dN22dx5,dN22dx6;
     double complex N23,dN23dx,dN23dx1,dN23dx2,dN23dx3;
     double complex N24,dN24dx,dN24dx1,dN24dx2,dN24dx3;
     
@@ -1932,25 +1932,25 @@ equilparam_format equilparam;
     ap = equilparam.ap[0];
     cnorm = clum/ap/Y[6];
 
-    Npar1 = Y[4]/raymagnetic.rn[0]*raymagnetic.calpha[0]*raymagnetic.BPn[0];
+    Npar1 = Y[4]*raymagnetic.calpha[0]*raymagnetic.BPn[0]/raymagnetic.rn[0];
     Npar2 = Y[5]*raymagnetic.BPHIn[0]/raymagnetic.Rn[0];
   
     Npar[0] = cnorm*(Npar1 + Npar2);
     
     for (i=0;i<M;i++) {
     
-        dNpar1dx1 = dYdY[4][i]/raymagnetic.rn[0]*raymagnetic.calpha[0]*raymagnetic.BPn[0];
-        dNpar1dx2 = -raymagnetic.drndx[i]*Y[4]/raymagnetic.rn[0]/raymagnetic.rn[0]*raymagnetic.calpha[0]*raymagnetic.BPn[0];
-        dNpar1dx3 = Y[4]/raymagnetic.rn[0]*raymagnetic.dcalphadx[i]*raymagnetic.BPn[0];
-        dNpar1dx4 = Y[4]/raymagnetic.rn[0]*raymagnetic.calpha[0]*raymagnetic.dBPndx[i];
-        dNpar1dx5 = -Y[4]/raymagnetic.rn[0]*raymagnetic.calpha[0]*raymagnetic.BPn[0]*dYdY[6][i];
+        dNpar1dx1 = dYdY[4][i]*raymagnetic.calpha[0]*raymagnetic.BPn[0]/raymagnetic.rn[0];
+        dNpar1dx2 = -raymagnetic.drndx[i]*Y[4]*raymagnetic.calpha[0]*raymagnetic.BPn[0]/raymagnetic.rn[0]/raymagnetic.rn[0];
+        dNpar1dx3 = Y[4]*raymagnetic.dcalphadx[i]*raymagnetic.BPn[0]/raymagnetic.rn[0];
+        dNpar1dx4 = Y[4]*raymagnetic.calpha[0]*raymagnetic.dBPndx[i]/raymagnetic.rn[0];
+        dNpar1dx5 = -Y[4]*raymagnetic.calpha[0]*raymagnetic.BPn[0]*dYdY[6][i]/raymagnetic.rn[0];
         
         dNpar1dx = dNpar1dx1 + dNpar1dx2 + dNpar1dx3 + dNpar1dx4 + dNpar1dx5;
  
         dNpar2dx1 = dYdY[5][i]*raymagnetic.BPHIn[0]/raymagnetic.Rn[0];
         dNpar2dx2 = Y[5]*raymagnetic.dBPHIndx[i]/raymagnetic.Rn[0];
         dNpar2dx3 = -Y[5]*raymagnetic.BPHIn[0]*raymagnetic.dRndx[i]/raymagnetic.Rn[0]/raymagnetic.Rn[0];
-        dNpar2dx4 = -Y[5]*raymagnetic.BPHIn[0]/raymagnetic.Rn[0]*dYdY[6][i];
+        dNpar2dx4 = -Y[5]*raymagnetic.BPHIn[0]*dYdY[6][i]/raymagnetic.Rn[0];
     
         dNpar2dx = dNpar2dx1 + dNpar2dx2 + dNpar2dx3 + dNpar2dx4;
         
