@@ -11,7 +11,7 @@ clc
 %
 id_wave = 'test_RT';
 %
-id_equil = 'TScirctest';'JETh77';'VERSATOR2';'COMPASSh77';'RTtest';'TScirc_flatprof_cyl_2';%For plasma equilibrium
+id_equil = 'RTtest';'JETh77';'VERSATOR2';'ITERh77';'TScirctest';'COMPASSh77';'TScirc_flatprof_cyl_2';%For plasma equilibrium
 path_equil = '';'../../Database/EQUIL_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 if exist([path_equil,'EQUIL_',id_equil,'.mat']) == 0,%Magnetic equilibrium
@@ -27,7 +27,7 @@ end
 % ray-tracing parameters
 %
 method = 'spline';%nearest,spline,pchip,cubic
-nharm = 2;%Number of harmonics in the magnetic equilibrium interpolation (less than ntheta_equil/2)
+nharm = 32;%Number of harmonics in the magnetic equilibrium interpolation (less than ntheta_equil/2)
 f_rf = 3.7;%GHz
 %
 rho0 = 0.98;
@@ -43,10 +43,10 @@ kmode = 0;% kinetic (1) or cold (0) plasma model
 rayparam.testmode = 0;
 rayparam.tensortype = 0;
 rayparam.t0 = 0;
-rayparam.tfinal = 4000;
+rayparam.tfinal = 3000000;
 rayparam.dt0 = 1.e-3;
 rayparam.drho = 1.e-4;
-rayparam.tol = 1e-15;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
+rayparam.tol = 1e-12;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
 rayparam.kmax = 60000;
 %
 % -------------------------------------------------------------------------
@@ -76,7 +76,7 @@ info_dke_yp(2,'Initial conditions calculated');
 %
 if isreal(y0(4)),
     %
-    [tout, yout] = raytracing_yp(rayparam,equil_fit,y0);   
+    [tout, yout] = raytracing_yp(rayparam,equil_fit,y0); 
     %
     info_dke_yp(2,'Ray trajectories calculated');
     %
