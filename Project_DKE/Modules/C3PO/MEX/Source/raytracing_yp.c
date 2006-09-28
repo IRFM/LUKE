@@ -83,6 +83,7 @@ struct rayparam {
     double *drho;
     double *tol;
     double *kmax;
+    double *ncyclharm;
 };
 
 struct equilparam {
@@ -185,6 +186,12 @@ pp_2D_format load_equil_2D();
 double inf_norm();
 double sgn();
 void buildXstruc();
+void calcY();
+void Zfried();
+void hottensor();
+void Zfried();
+void Gamma();
+void modBessel();
 
 /* Input Arguments */
 
@@ -204,6 +211,7 @@ void buildXstruc();
 #define MAXIT 30000
 #define DRHO_LIM 1e-14
 #define PI 3.14159265358979
+#define MAXCYCLHARM 101
 
 /* Fehlberg coefficients */
 
@@ -263,7 +271,7 @@ void mexFunction(   int     nlhs,
 /* Get Input Arguments */
 
     rayparam = load_ray_param(RAYPARAM_IN);       
-     equilparam = load_equil_param(EQUIL_IN);
+    equilparam = load_equil_param(EQUIL_IN);
 
     dRstardpsin_fit = load_equil_1D(EQUIL_IN,"dRstardpsin_fit"); 
     Te_fit = load_equil_1D(EQUIL_IN,"Te_fit");
@@ -718,6 +726,7 @@ mxArray *structure_name;
     data.tol = mxGetData(mxGetField(structure_name, 0, "tol"));   
     data.kmax = mxGetData(mxGetField(structure_name, 0, "kmax"));
     data.tensortype = mxGetData(mxGetField(structure_name, 0, "tensortype")); 
+    data.ncyclharm = mxGetData(mxGetField(structure_name, 0, "ncyclharm")); 
     
     return(data);
 }
@@ -1241,7 +1250,7 @@ rayindex(Y,raymagnetic,equilparam,&Npar,&Nperp,&N2,dNpardx,dNperpdx,dN2dx);
 
 /* Susceptibility tensor  */
 
-susceptibility(X,param.tensortype[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardx,Nperp,dNperpdx,Y[6]);
+susceptibility(X,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardx,Nperp,dNperpdx,Y[6]);
 
 if (flag) {//dipersion relation
     disprel(&Dtot,X,raymagnetic,Npar,Nperp,N2);
@@ -1570,14 +1579,14 @@ pp_1D_format dRstardpsin_fit;
     krho1 = frac*krho0;
     
     rayindex(Y,raymagnetic,equilparam,&Npar,&Nperp,&N2,dNpardx,dNperpdx,dN2dx);
-    susceptibility(X,param.tensortype[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardx,Nperp,dNperpdx,Y[6]);
+    susceptibility(X,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardx,Nperp,dNperpdx,Y[6]);
     disprel(&cD0,X,raymagnetic,Npar,Nperp);
     D0 = creal(cD0);/* to be changed if non-hermitian susceptibility tensors are used */
 /*  mexPrintf("krho0,D0:%g,%g\n",krho0,D0); */
     
     Y[3] = krho1;
     rayindex(Y,raymagnetic,equilparam,&Npar,&Nperp,&N2,dNpardx,dNperpdx,dN2dx);
-    susceptibility(X,param.tensortype[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardx,Nperp,dNperpdx,Y[6]);
+    susceptibility(X,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardx,Nperp,dNperpdx,Y[6]);
     disprel(&cD1,X,raymagnetic,Npar,Nperp,N2);
     D1 = creal(cD1);/* to be changed if non-hermitian susceptibility tensors are used */
 /*  mexPrintf("krho1,D1:%g,%g\n",krho1,D1); */
@@ -1591,7 +1600,7 @@ pp_1D_format dRstardpsin_fit;
        
         Y[3] = krho1;
         rayindex(Y,raymagnetic,equilparam,&Npar,&Nperp,&N2,dNpardx,dNperpdx,dN2dx);
-        susceptibility(X,param.tensortype[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardx,Nperp,dNperpdx,Y[6]);
+        susceptibility(X,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardx,Nperp,dNperpdx,Y[6]);
         disprel(&cD1,X,raymagnetic,Npar,Nperp,N2);
         D1 = creal(cD1);/* to be changed if non-hermitian susceptibility tensors are used */
 /*      mexPrintf("krho1,D1:%g,%g\n",krho1,D1); */
@@ -1632,7 +1641,7 @@ pp_1D_format dRstardpsin_fit;
 
             Y[3] = krho1;
             rayindex(Y,raymagnetic,equilparam,&Npar,&Nperp,&N2,dNpardx,dNperpdx,dN2dx);
-            susceptibility(X,param.tensortype[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardx,Nperp,dNperpdx,Y[6]);
+            susceptibility(X,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardx,Nperp,dNperpdx,Y[6]);
             disprel(&cD1,X,raymagnetic,Npar,Nperp,N2);
             D1 = creal(cD1);/* to be changed if non-hermitian susceptibility tensor are used */
 /*          mexPrintf("krho1,D1:%g,%g\n",krho1,D1); */
@@ -1818,9 +1827,10 @@ double complex Nperp,N2;
 
 }
 
-void susceptibility(X,tensortype,equilparam,raymagnetic,rayprofiles,Npar,dNpardx,Nperp,dNperpdx,omega)
+void susceptibility(X,tensortype,ncyclharm,equilparam,raymagnetic,rayprofiles,Npar,dNpardx,Nperp,dNperpdx,omega)
 susceptibilitytensor_format X;
 double tensortype,omega;
+int ncyclharm;
 double Npar,dNpardx[];
 double complex Nperp,dNperpdx[];
 
@@ -1884,23 +1894,23 @@ equilparam_format equilparam;
     
     if (tensortype == 0) {
 /*        mexPrintf("Cold dielectric tensor\n"); */
-        coldtensor(X,equilparam.ns[0],raymagnetic,Npar,dNpardx,Nperp,dNperpdx,wcn,dwcndx,wpn2,dwpn2dx,betath,dbetathdx);
+        coldtensor(X,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardx,Nperp,dNperpdx,wcn,dwcndx,wpn2,dwpn2dx,betath,dbetathdx);
     }
     if (tensortype == 1) {
 /*        mexPrintf("Warm dielectric tensor\n");
-        warmtensor(X,equilparam.ns[0],raymagnetic,Npar,dNpardx,Nperp,dNperpdx,wcn,dwcndx,wpn2,dwpn2dx,betath,dbetathdx); */
+        warmtensor(X,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardx,Nperp,dNperpdx,wcn,dwcndx,wpn2,dwpn2dx,betath,dbetathdx); */
     }
     if (tensortype == 2) {
-/*        mexPrintf("Hot dielectric tensor\n");
-        hottensor(X,equilparam.ns[0],raymagnetic,Npar,dNpardx,Nperp,dNperpdx,wcn,dwcndx,wpn2,dwpn2dx,betath,dbetathdx); */
+/*        mexPrintf("Hot dielectric tensor\n");*/
+        hottensor(X,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardx,Nperp,dNperpdx,wcn,dwcndx,wpn2,dwpn2dx,betath,dbetathdx); 
     }
     if (tensortype == 3) {
 /*        mexPrintf("Weak relativistic dielectric tensor\n");
-        weakrelativistictensor(X,equilparam.ns[0],raymagnetic,Npar,dNpardx,Nperp,dNperpdx,wcn,dwcndx,wpn2,dwpn2dx,betath,dbetathdx); */
+        weakrelativistictensor(X,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardx,Nperp,dNperpdx,wcn,dwcndx,wpn2,dwpn2dx,betath,dbetathdx); */
     }       
     if (tensortype == 4) {
 /*        mexPrintf("Full relativistic dielectric tensor\n");
-        fullrelativistictensor(X,equilparam.ns[0],raymagnetic,Npar,dNpardx,Nperp,dNperpdx,wcn,dwcndx,wpn2,dwpn2dx,betath,dbetathdx); */
+        fullrelativistictensor(X,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardx,Nperp,dNperpdx,wcn,dwcndx,wpn2,dwpn2dx,betath,dbetathdx); */
     }       
 
 } 
@@ -2027,9 +2037,10 @@ equilparam_format equilparam;
     
 }
 
-void coldtensor(X,ns,raymagnetic,Npar,dNpardx,Nperp,dNperpdx,wcn,dwcndx,wpn2,dwpn2dx,betath,dbetathdx)
+void coldtensor(X,ns,ncyclharm,raymagnetic,Npar,dNpardx,Nperp,dNperpdx,wcn,dwcndx,wpn2,dwpn2dx,betath,dbetathdx)
 susceptibilitytensor_format X;
 int ns;
+int ncyclharm;
 raymagnetic_format raymagnetic;
 double wcn[],wpn2[],betath[];
 double dwcndx[][M],dwpn2dx[][M],dbetathdx[][M];
@@ -2045,44 +2056,48 @@ double complex Nperp,dNperpdx[];
     
     int is,i;
     
-/* Dielectric tensor */
         
     for (is = 0;is < ns + 1;is++) {
+        
+/* Dielectric tensor */
+        
         Xxx[is] = - wpn2[is]/(1 - wcn[is]*wcn[is]);
         Xxy[is] = + wpn2[is]*wcn[is]*I/(1 - wcn[is]*wcn[is]);
         Xxz[is] = 0.0;
         Xyy[is] = - wpn2[is]/(1 - wcn[is]*wcn[is]);
         Xyz[is] = 0.0;
         Xzz[is] = - wpn2[is];
-    }
 
 /* derivatives of the dielectric tensor */
         
-    for (is = 0;is < ns + 1; is++) {
         dXxxdNperp[is] = 0.0;
         dXxydNperp[is] = 0.0;
         dXxzdNperp[is] = 0.0;
         dXyydNperp[is] = 0.0;
         dXyzdNperp[is] = 0.0;
         dXzzdNperp[is] = 0.0;
+
         dXxxdNpar[is] = 0.0;
         dXxydNpar[is] = 0.0;
         dXxzdNpar[is] = 0.0;
         dXyydNpar[is] = 0.0;
         dXyzdNpar[is] = 0.0;
         dXzzdNpar[is] = 0.0;
+
         dXxxdbetath[is] = 0.0;
         dXxydbetath[is] = 0.0;
         dXxzdbetath[is] = 0.0;
         dXyydbetath[is] = 0.0;
         dXyzdbetath[is] = 0.0;
         dXzzdbetath[is] = 0.0;
+
         dXxxdwcn[is] = -2.0*wpn2[is]*wcn[is]/(1 - wcn[is]*wcn[is])/(1 - wcn[is]*wcn[is]);
         dXxydwcn[is] = +(2.0*wpn2[is]*wcn[is]*wcn[is]/(1 - wcn[is]*wcn[is])/(1 - wcn[is]*wcn[is]) + wpn2[is]/(1 - wcn[is]*wcn[is]))*I;
         dXxzdwcn[is] = 0.0;
         dXyydwcn[is] = -2.0*wpn2[is]*wcn[is]/(1 - wcn[is]*wcn[is])/(1 - wcn[is]*wcn[is]);
         dXyzdwcn[is] = 0.0;
         dXzzdwcn[is] = 0.0;    
+
         dXxxdwpn2[is] = -1.0/(1 - wcn[is]*wcn[is]);
         dXxydwpn2[is] = +wcn[is]*I/(1 - wcn[is]*wcn[is]);
         dXxzdwpn2[is] = 0.0;
@@ -2463,95 +2478,274 @@ double x;
 }
 
 
+void hottensor(X,ns,ncyclharm,raymagnetic,Npar,dNpardx,Nperp,dNperpdx,wcn,dwcndx,wpn2,dwpn2dx,betath,dbetathdx)
+susceptibilitytensor_format X;
+int ns;
+int ncyclharm;
+raymagnetic_format raymagnetic;
+double wcn[],wpn2[],betath[];
+double dwcndx[][M],dwpn2dx[][M],dbetathdx[][M];
+double Npar,dNpardx[];
+double complex Nperp,dNperpdx[];
+{ 
+    double complex Xxx[ns+1],Xxy[ns+1],Xxz[ns+1],Xyy[ns+1],Xyz[ns+1],Xzz[ns+1];
+    double complex dXxxdNperp[ns+1],dXxydNperp[ns+1],dXxzdNperp[ns+1],dXyydNperp[ns+1],dXyzdNperp[ns+1],dXzzdNperp[ns+1];
+    double complex dXxxdNpar[ns+1],dXxydNpar[ns+1],dXxzdNpar[ns+1],dXyydNpar[ns+1],dXyzdNpar[ns+1],dXzzdNpar[ns+1];
+    double complex dXxxdbetath[ns+1],dXxydbetath[ns+1],dXxzdbetath[ns+1],dXyydbetath[ns+1],dXyzdbetath[ns+1],dXzzdbetath[ns+1];
+    double complex dXxxdwcn[ns+1],dXxydwcn[ns+1],dXxzdwcn[ns+1],dXyydwcn[ns+1],dXyzdwcn[ns+1],dXzzdwcn[ns+1];
+    double complex dXxxdwpn2[ns+1],dXxydwpn2[ns+1],dXxzdwpn2[ns+1],dXyydwpn2[ns+1],dXyzdwpn2[ns+1],dXzzdwpn2[ns+1];
+    
+    double Yxx[ns+1][2*ncyclharm+1],Yxy[ns+1][2*ncyclharm+1],Yxz[ns+1][2*ncyclharm+1],Yyy[ns+1][2*ncyclharm+1],Yyz[ns+1][2*ncyclharm+1],Yzz[ns+1][2*ncyclharm+1];
+    double dYxxdNperp[ns+1][2*ncyclharm+1],dYxydNperp[ns+1][2*ncyclharm+1],dYxzdNperp[ns+1][2*ncyclharm+1],dYyydNperp[ns+1][2*ncyclharm+1],dYyzdNperp[ns+1][2*ncyclharm+1],dYzzdNperp[ns+1][2*ncyclharm+1];
+    double dYxxdNpar[ns+1][2*ncyclharm+1],dYxydNpar[ns+1][2*ncyclharm+1],dYxzdNpar[ns+1][2*ncyclharm+1],dYyydNpar[ns+1][2*ncyclharm+1],dYyzdNpar[ns+1][2*ncyclharm+1],dYzzdNpar[ns+1][2*ncyclharm+1];
+    double dYxxdbetath[ns+1][2*ncyclharm+1],dYxydbetath[ns+1][2*ncyclharm+1],dYxzdbetath[ns+1][2*ncyclharm+1],dYyydbetath[ns+1][2*ncyclharm+1],dYyzdbetath[ns+1][2*ncyclharm+1],dYzzdbetath[ns+1][2*ncyclharm+1];
+    double dYxxdwcn[ns+1][2*ncyclharm+1],dYxydwcn[ns+1][2*ncyclharm+1],dYxzdwcn[ns+1][2*ncyclharm+1],dYyydwcn[ns+1][2*ncyclharm+1],dYyzdwcn[ns+1][2*ncyclharm+1],dYzzdwcn[ns+1][2*ncyclharm+1];
+    double dYxxdwpn2[ns+1][2*ncyclharm+1],dYxydwpn2[ns+1][2*ncyclharm+1],dYxzdwpn2[ns+1][2*ncyclharm+1],dYyydwpn2[ns+1][2*ncyclharm+1],dYyzdwpn2[ns+1][2*ncyclharm+1],dYzzdwpn2[ns+1][2*ncyclharm+1];
+    
+    double zeta,dzetadNperp,dzetadNpar,dzetadbetath,dzetadwcn,dzetadwpn2; 
+    
+    int is,i;
 
-void Zfried (double rzeta, double izeta, double * rZ, double * iZ) {
 
-    /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % Z dispersion function
-    % with complex argument zeta.
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % For real argument use also Dawson integral
-    % with Tchebychev polynomials
-    % Z=-2.0*dawson(zeta)+i*sqrt(pi)*exp(-zeta.*zeta);
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % For pure imaginary argument also use
-    % Z(i*x)=i*sqrt(pi)*exp(x.*x).*erfc(x)
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % Inspired by Gary R. Smith
-    % Phys. Fluids 27 (6) june 1984 p. 1510 
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    */
+    calcY(ns,ncyclharm,Npar,dNpardx,Nperp,dNperpdx,wcn,dwcndx,wpn2,dwpn2dx,betath,dbetathdx,Yxx,Yxy,Yxz,Yyy,Yyz,Yzz,dYxxdNperp,dYxydNperp,dYxzdNperp,dYyydNperp,dYyzdNperp,dYzzdNperp,dYxxdNpar,dYxydNpar,dYxzdNpar,dYyydNpar,dYyzdNpar,dYzzdNpar,dYxxdbetath,dYxydbetath,dYxzdbetath,dYyydbetath,dYyzdbetath,dYzzdbetath,dYxxdwcn,dYxydwcn,dYxzdwcn,dYyydwcn,dYyzdwcn,dYzzdwcn,dYxxdwpn2,dYxydwpn2,dYxzdwpn2,dYyydwpn2,dYyzdwpn2,dYzzdwpn2);
 
-    fcomplex zeta, zeta2, zeta_2, som, ZZ;
-    double criterion, sigma; 
-    int nn; 
+    for (is = 0;is < ns + 1;is++) {/* initialisation */           
+        Xxx[is] = 0.0;
+        Xxy[is] = 0.0;
+        Xxz[is] = 0.0;
+        Xyy[is] = 0.0;
+        Xyz[is] = 0.0;
+        Xzz[is] = 0.0;
 
-    /* % epsilon=1e-10
-    % b=4.74
-    % nmax1=58
-    % nmax2=25
-    % nmax3=27
+        dXxxdNperp[is] = 0.0;
+        dXxydNperp[is] = 0.0;
+        dXxzdNperp[is] = 0.0;
+        dXyydNperp[is] = 0.0;
+        dXyzdNperp[is] = 0.0;
+        dXzzdNperp[is] = 0.0;
 
-    % epsilon=1e-12 */
+        dXxxdNpar[is] = 0.0;
+        dXxydNpar[is] = 0.0;
+        dXxzdNpar[is] = 0.0;
+        dXyydNpar[is] = 0.0;
+        dXyzdNpar[is] = 0.0;
+        dXzzdNpar[is] = 0.0;
 
-    static double b=5.51; /* boundary between formulas */
-    static double nmax1=75; /* nmax for series expansion */
-    static double nmax2=34; /* nmax for continued fraction */
-    static double nmax3=27; /* nmax for asymptotic expansion */
-    static fcomplex czero={0.0,0.0};
-    static fcomplex cone={1.0,0.0};
-    static fcomplex isqrtpi={0.0,1.772453850905516};
+        dXxxdbetath[is] = 0.0;
+        dXxydbetath[is] = 0.0;
+        dXxzdbetath[is] = 0.0;
+        dXyydbetath[is] = 0.0;
+        dXyzdbetath[is] = 0.0;
+        dXzzdbetath[is] = 0.0;
 
-    zeta=Complex(rzeta,izeta);
-    zeta2=Cmul(zeta,zeta);
-    som=czero;
-    rzeta=abs(rzeta);
-    izeta=abs(izeta);
+        dXxxdwcn[is] = 0.0;
+        dXxydwcn[is] = 0.0;
+        dXxzdwcn[is] = 0.0;
+        dXyydwcn[is] = 0.0;
+        dXyzdwcn[is] = 0.0;
+        dXzzdwcn[is] = 0.0;    
 
-    /* Series expansion around zeta = 0
-     formula A10 */
-    if ((rzeta<=b)&(izeta<=2.0-1.5*rzeta/b)) {
-        for (nn=nmax1;nn>0;nn--) {
-            som=RCmul(1.0/nn,Cmul(zeta2,
-            Cadd(Complex(1.0/(2.0*nn+1.0),0.0),som)));
-        }
-        ZZ=Cmul(Cexp(-zeta2.r,-zeta2.i),
-        Csub(isqrtpi,RCmul(2.0,Cmul(zeta,Complex(som.r+1.0,som.i)))));
+        dXxxdwpn2[is] = 0.0;
+        dXxydwpn2[is] = 0.0;
+        dXxzdwpn2[is] = 0.0;
+        dXyydwpn2[is] = 0.0;
+        dXyzdwpn2[is] = 0.0;
+        dXzzdwpn2[is] = 0.0;    
     }
+    
+    for (is = 0;is < ns + 1;is++) {
+        for (i = -ncyclharm;i <= ncyclharm; i++) {
+            
+            zeta = (1.0 - i*wcn[is])/fabs(Npar)*betath[is];
+            dzetadNperp = 0.0;
+            dzetadNpar = -sgn(Npar)*zeta/Npar;
+            dzetadbetath = -zeta/betath[is];
+            dzetadwcn = - i/fabs(Npar)*betath[is];
+            dzetadwpn2 = 0.0;
+            
+/* Dielectric tensor */
+            
+            Xxx[is] = Xxx[is] + wpn2[is]*zeta*Yxx[is][i];
+            Xxy[is] = Xxy[is] + wpn2[is]*zeta*Yxy[is][i];
+            Xxz[is] = Xxz[is] + wpn2[is]*zeta*Yxz[is][i];
+            Xyy[is] = Xyy[is] + wpn2[is]*zeta*Yyy[is][i];
+            Xyz[is] = Xyz[is] + wpn2[is]*zeta*Yyz[is][i];
+            Xzz[is] = Xzz[is] + wpn2[is]*zeta*Yzz[is][i];
 
-    /* Continued fraction expansion
-     formula A12 & A13 */
+ /* derivatives of the dielectric tensor */
 
-    if (((rzeta<=b)&(izeta>2.0-1.5*rzeta/b))|((rzeta>b)&(izeta>0.5))) {
+            dXxxdNperp[is] = dXxxdNperp[is] + wpn2[is]*dzetadNperp*Yxx[is][i] + wpn2[is]*zeta*dYxxdNperp[is][i];
+            dXxydNperp[is] = dXxydNperp[is] + wpn2[is]*dzetadNperp*Yxy[is][i] + wpn2[is]*zeta*dYxydNperp[is][i];
+            dXxzdNperp[is] = dXxzdNperp[is] + wpn2[is]*dzetadNperp*Yxz[is][i] + wpn2[is]*zeta*dYxzdNperp[is][i];
+            dXyydNperp[is] = dXyydNperp[is] + wpn2[is]*dzetadNperp*Yyy[is][i] + wpn2[is]*zeta*dYyydNperp[is][i];
+            dXyzdNperp[is] = dXyzdNperp[is] + wpn2[is]*dzetadNperp*Yyz[is][i] + wpn2[is]*zeta*dYyzdNperp[is][i];
+            dXzzdNperp[is] = dXzzdNperp[is] + wpn2[is]*dzetadNperp*Yzz[is][i] + wpn2[is]*zeta*dYzzdNperp[is][i];
 
-        zeta_2=Cdiv(cone,zeta2);
-        for (nn=nmax2;nn>0;nn--) {
-            som=RCmul(-0.5*nn,Cdiv(zeta_2,Complex(som.r+1.0,som.i)));
-        }
-        ZZ=Cdiv(Complex(-1.0,0.0),Cmul(zeta,Complex(som.r+1.0,som.i)));
-        if (zeta.i<0.0) {
-            ZZ=Cadd(ZZ,RCmul(2.0,Cmul(isqrtpi,Cexp(-zeta2.r,-zeta2.i))));
+            dXxxdNpar[is] = dXxxdNpar[is] + wpn2[is]*dzetadNpar*Yxx[is][i] + wpn2[is]*zeta*dYxxdNpar[is][i];
+            dXxydNpar[is] = dXxydNpar[is] + wpn2[is]*dzetadNpar*Yxy[is][i] + wpn2[is]*zeta*dYxydNpar[is][i];
+            dXxzdNpar[is] = dXxzdNpar[is] + wpn2[is]*dzetadNpar*Yxz[is][i] + wpn2[is]*zeta*dYxzdNpar[is][i];
+            dXyydNpar[is] = dXyydNpar[is] + wpn2[is]*dzetadNpar*Yyy[is][i] + wpn2[is]*zeta*dYyydNpar[is][i];
+            dXyzdNpar[is] = dXyzdNpar[is] + wpn2[is]*dzetadNpar*Yyz[is][i] + wpn2[is]*zeta*dYyzdNpar[is][i];
+            dXzzdNpar[is] = dXzzdNpar[is] + wpn2[is]*dzetadNpar*Yzz[is][i] + wpn2[is]*zeta*dYzzdNpar[is][i];
+
+            dXxxdbetath[is] = dXxxdbetath[is] + wpn2[is]*dzetadbetath*Yxx[is][i] + wpn2[is]*zeta*dYxxdbetath[is][i];
+            dXxydbetath[is] = dXxydbetath[is] + wpn2[is]*dzetadbetath*Yxy[is][i] + wpn2[is]*zeta*dYxydbetath[is][i];
+            dXxzdbetath[is] = dXxzdbetath[is] + wpn2[is]*dzetadbetath*Yxz[is][i] + wpn2[is]*zeta*dYxzdbetath[is][i];
+            dXyydbetath[is] = dXyydbetath[is] + wpn2[is]*dzetadbetath*Yyy[is][i] + wpn2[is]*zeta*dYyydbetath[is][i];
+            dXyzdbetath[is] = dXyzdbetath[is] + wpn2[is]*dzetadbetath*Yyz[is][i] + wpn2[is]*zeta*dYyzdbetath[is][i];
+            dXzzdbetath[is] = dXzzdbetath[is] + wpn2[is]*dzetadbetath*Yzz[is][i] + wpn2[is]*zeta*dYzzdbetath[is][i];
+
+            dXxxdwcn[is] = dXxxdwcn[is] + wpn2[is]*dzetadwcn*Yxx[is][i] + wpn2[is]*zeta*dYxxdwcn[is][i];
+            dXxydwcn[is] = dXxydwcn[is] + wpn2[is]*dzetadwcn*Yxy[is][i] + wpn2[is]*zeta*dYxydwcn[is][i];
+            dXxzdwcn[is] = dXxzdwcn[is] + wpn2[is]*dzetadwcn*Yxz[is][i] + wpn2[is]*zeta*dYxzdwcn[is][i];
+            dXyydwcn[is] = dXyydwcn[is] + wpn2[is]*dzetadwcn*Yyy[is][i] + wpn2[is]*zeta*dYyydwcn[is][i];
+            dXyzdwcn[is] = dXyzdwcn[is] + wpn2[is]*dzetadwcn*Yyz[is][i] + wpn2[is]*zeta*dYyzdwcn[is][i];
+            dXzzdwcn[is] = dXzzdwcn[is] + wpn2[is]*dzetadwcn*Yzz[is][i] + wpn2[is]*zeta*dYzzdwcn[is][i];    
+
+            dXxxdwpn2[is] = dXxxdwpn2[is] + zeta*Yxx[is][i] + wpn2[is]*dzetadwpn2*Yxx[is][i] + wpn2[is]*zeta*dYxxdwpn2[is][i];
+            dXxydwpn2[is] = dXxydwpn2[is] + zeta*Yxy[is][i] + wpn2[is]*dzetadwpn2*Yxy[is][i] + wpn2[is]*zeta*dYxydwpn2[is][i];
+            dXxzdwpn2[is] = dXxzdwpn2[is] + zeta*Yxz[is][i] + wpn2[is]*dzetadwpn2*Yxz[is][i] + wpn2[is]*zeta*dYxzdwpn2[is][i];
+            dXyydwpn2[is] = dXyydwpn2[is] + zeta*Yyy[is][i] + wpn2[is]*dzetadwpn2*Yyy[is][i] + wpn2[is]*zeta*dYyydwpn2[is][i];
+            dXyzdwpn2[is] = dXyzdwpn2[is] + zeta*Yyz[is][i] + wpn2[is]*dzetadwpn2*Yyz[is][i] + wpn2[is]*zeta*dYyzdwpn2[is][i];
+            dXzzdwpn2[is] = dXzzdwpn2[is] + zeta*Yzz[is][i] + wpn2[is]*dzetadwpn2*Yzz[is][i] + wpn2[is]*zeta*dYzzdwpn2[is][i];    
         }
     }
+     
+    buildXstruc(X,ns,raymagnetic,dNpardx,dNperpdx,dwcndx,dwpn2dx,dbetathdx,Xxx,Xxy,Xxz,Xyy,Xyz,Xzz,dXxxdNperp,dXxydNperp,dXxzdNperp,dXyydNperp,dXyzdNperp,dXzzdNperp,dXxxdNpar,dXxydNpar,dXxzdNpar,dXyydNpar,dXyzdNpar,dXzzdNpar,dXxxdbetath,dXxydbetath,dXxzdbetath,dXyydbetath,dXyzdbetath,dXzzdbetath,dXxxdwcn,dXxydwcn,dXxzdwcn,dXyydwcn,dXyzdwcn,dXzzdwcn,dXxxdwpn2,dXxydwpn2,dXxzdwpn2,dXyydwpn2,dXyzdwpn2,dXzzdwpn2);
+} 
 
-    /* %% Asymptotic expansion
-    %% formula A15 */
-    if ((rzeta>b)&(izeta<=0.5)) {
-        zeta_2=Cdiv(cone,zeta2);
-        for (nn=nmax3;nn>0;nn--) {
-            som=RCmul(nn-0.5,Cmul(zeta_2,Complex(som.r+1.0,som.i)));
+
+void calcY(ns,ncyclharm,Npar,dNpardx,Nperp,dNperpdx,wcn,dwcndx,wpn2,dwpn2dx,betath,dbetathdx,Yxx,Yxy,Yxz,Yyy,Yyz,Yzz,dYxxdNperp,dYxydNperp,dYxzdNperp,dYyydNperp,dYyzdNperp,dYzzdNperp,dYxxdNpar,dYxydNpar,dYxzdNpar,dYyydNpar,dYyzdNpar,dYzzdNpar,dYxxdbetath,dYxydbetath,dYxzdbetath,dYyydbetath,dYyzdbetath,dYzzdbetath,dYxxdwcn,dYxydwcn,dYxzdwcn,dYyydwcn,dYyzdwcn,dYzzdwcn,dYxxdwpn2,dYxydwpn2,dYxzdwpn2,dYyydwpn2,dYyzdwpn2,dYzzdwpn2)
+int ns;
+int ncyclharm;
+double Npar,dNpardx[M];
+double complex Nperp,dNperpdx[M];
+double wcn[],dwcndx[][M],wpn2[],dwpn2dx[][M],betath[],dbetathdx[][M];
+double complex Yxx[][MAXCYCLHARM],Yxy[][MAXCYCLHARM],Yxz[][MAXCYCLHARM],Yyy[][MAXCYCLHARM],Yyz[][MAXCYCLHARM],Yzz[][MAXCYCLHARM];
+double complex dYxxdNperp[][MAXCYCLHARM],dYxydNperp[][MAXCYCLHARM],dYxzdNperp[][MAXCYCLHARM],dYyydNperp[][MAXCYCLHARM],dYyzdNperp[][MAXCYCLHARM],dYzzdNperp[][MAXCYCLHARM];
+double complex dYxxdNpar[][MAXCYCLHARM],dYxydNpar[][MAXCYCLHARM],dYxzdNpar[][MAXCYCLHARM],dYyydNpar[][MAXCYCLHARM],dYyzdNpar[][MAXCYCLHARM],dYzzdNpar[][MAXCYCLHARM];
+double complex dYxxdbetath[][MAXCYCLHARM],dYxydbetath[][MAXCYCLHARM],dYxzdbetath[][MAXCYCLHARM],dYyydbetath[][MAXCYCLHARM],dYyzdbetath[][MAXCYCLHARM],dYzzdbetath[][MAXCYCLHARM];
+double complex dYxxdwcn[][MAXCYCLHARM],dYxydwcn[][MAXCYCLHARM],dYxzdwcn[][MAXCYCLHARM],dYyydwcn[][MAXCYCLHARM],dYyzdwcn[][MAXCYCLHARM],dYzzdwcn[][MAXCYCLHARM];
+double complex dYxxdwpn2[][MAXCYCLHARM],dYxydwpn2[][MAXCYCLHARM],dYxzdwpn2[][MAXCYCLHARM],dYyydwpn2[][MAXCYCLHARM],dYyzdwpn2[][MAXCYCLHARM],dYzzdwpn2[][MAXCYCLHARM];
+{ 
+    double zeta,dzetadNperp,dzetadNpar,dzetadbetath,dzetadwcn,dzetadwpn2;
+    double complex lambda,dlambdadNperp,dlambdadNpar,dlambdadbetath,dlambdadwcn,dlambdadwpn2;
+    double complex Z,Zp,Zpp,G,Gp,Gpp;
+    double sigmas;
+    
+    int is,i;  
+ 
+    if (2*ncyclharm+1 > MAXCYCLHARM) {mexPrintf("******** WARNING: the code is limited to 50 cylotron harmonics only ! ********");}
+    
+    for (is = 0;is < ns + 1;is++) {
+        
+        sigmas = sgn(-1.0+2.0*is);/* sign of the charge, electron is always first, the ions */
+        
+        for (i = -ncyclharm;i <= ncyclharm; i++) {
+            
+            zeta = (1.0 - i*wcn[is])/fabs(Npar)*betath[is];
+            dzetadNperp = 0.0;
+            dzetadNpar = -sgn(Npar)*zeta/Npar;
+            dzetadbetath = -zeta/betath[is];
+            dzetadwcn = - i/fabs(Npar)*betath[is];
+            dzetadwpn2 = 0.0;
+            
+            lambda = Nperp*betath[is]/wcn[is];
+            dlambdadNperp = betath[is]/wcn[is];
+            dlambdadNpar = 0.0;
+            dlambdadbetath = Nperp/wcn[is];
+            dlambdadwcn = - lambda/wcn[is];
+            dlambdadwpn2 = 0.0;
+            
+            Zfried(zeta,&Z,&Zp,&Zpp);
+            Gamma(i,lambda,&G,&Gp,&Gpp);
+            
+/* Dielectric tensor */
+            
+            Yxx[is][i] = 0.0;
+            
+            
+            
+            
+            Yxx[is][i] = i*i*G*Z/lambda;
+            Yxy[is][i] = I*sigmas*i*Gp*Z;
+            Yxz[is][i] = -sgn(Npar)*i*G*Zp/sqrt(2.0*lambda);
+            Yyy[is][i] = (i*i*G/lambda - 2.0*lambda*Gp)*Z;
+            Yyz[is][i] = I*sigmas*sgn(Npar)*sqrt(lambda/2.0)*Gp*Zp;
+            Yzz[is][i] = -G*zeta*Zp;
+
+ /* derivatives of the dielectric tensor */
+
+            dYxxdNperp[is][i] = i*i*Gp*dlambdadNperp*Z/lambda + i*i*G*Zp*dzetadNperp - i*i*G*Z*dlambdadNperp/lambda/lambda;
+            dYxydNperp[is][i] = I*sigmas*i*Gpp*dlambdadNperp*Z + I*sigmas*i*Gp*Zp*dzetadNperp;
+            dYxzdNperp[is][i] = -sgn(Npar)*i*Gp*dlambdadNperp*Zp/sqrt(2.0*lambda) - sgn(Npar)*i*G*Zpp*dzetadNperp/sqrt(2.0*lambda) + sgn(Npar)*i*G*Zp*dlambdadNperp/sqrt(2.0*lambda)/(2.0*lambda);
+            dYyydNperp[is][i] = (i*i*Gp*dlambdadNperp/lambda - i*i*G*dlambdadNperp/lambda/lambda - 2.0*dlambdadNperp*Gp - 2.0*lambda*dlambdadNperp*Gpp)*Z + (i*i*G/lambda - 2.0*lambda*Gp)*Zp*dzetadNperp;
+            dYyzdNperp[is][i] = I*sigmas*sgn(Npar)*dlambdadNperp*Gp*Zp/sqrt(lambda/2.0)/4.0 + I*sigmas*sgn(Npar)*sqrt(lambda/2.0)*Gpp*dlambdadNperp*Zp + I*sigmas*sgn(Npar)*sqrt(lambda/2.0)*Gp*Zpp*dzetadNperp;
+            dYzzdNperp[is][i] = -Gp*dlambdadNperp*zeta*Zp - G*dzetadNperp*Zp - G*zeta*Zpp*dzetadNperp;
+
+            dYxxdNpar[is][i] = i*i*Gp*dlambdadNpar*Z/lambda + i*i*G*Zp*dzetadNpar - i*i*G*Z*dlambdadNpar/lambda/lambda;
+            dYxydNpar[is][i] = I*sigmas*i*Gpp*dlambdadNpar*Z + I*sigmas*i*Gp*Zp*dzetadNpar;
+            dYxzdNpar[is][i] = -sgn(Npar)*i*Gp*dlambdadNpar*Zp/sqrt(2.0*lambda) - sgn(Npar)*i*G*Zpp*dzetadNpar/sqrt(2.0*lambda) + sgn(Npar)*i*G*Zp*dlambdadNpar/sqrt(2.0*lambda)/(2.0*lambda);
+            dYyydNpar[is][i] = (i*i*Gp*dlambdadNpar/lambda - i*i*G*dlambdadNpar/lambda/lambda - 2.0*dlambdadNpar*Gp - 2.0*lambda*dlambdadNpar*Gpp)*Z + (i*i*G/lambda - 2.0*lambda*Gp)*Zp*dzetadNpar;
+            dYyzdNpar[is][i] = I*sigmas*sgn(Npar)*dlambdadNpar*Gp*Zp/sqrt(lambda/2.0)/4.0 + I*sigmas*sgn(Npar)*sqrt(lambda/2.0)*Gpp*dlambdadNpar*Zp + I*sigmas*sgn(Npar)*sqrt(lambda/2.0)*Gp*Zpp*dzetadNpar;
+            dYzzdNpar[is][i] = -Gp*dlambdadNpar*zeta*Zp - G*dzetadNpar*Zp - G*zeta*Zpp*dzetadNpar;
+
+            dYxxdbetath[is][i] = i*i*Gp*dlambdadbetath*Z/lambda + i*i*G*Zp*dzetadbetath - i*i*G*Z*dlambdadbetath/lambda/lambda;
+            dYxydbetath[is][i] = I*sigmas*i*Gpp*dlambdadbetath*Z + I*sigmas*i*Gp*Zp*dzetadbetath;
+            dYxzdbetath[is][i] = -sgn(Npar)*i*Gp*dlambdadbetath*Zp/sqrt(2.0*lambda) - sgn(Npar)*i*G*Zpp*dzetadbetath/sqrt(2.0*lambda) + sgn(Npar)*i*G*Zp*dlambdadbetath/sqrt(2.0*lambda)/(2.0*lambda);
+            dYyydbetath[is][i] = (i*i*Gp*dlambdadbetath/lambda - i*i*G*dlambdadbetath/lambda/lambda - 2.0*dlambdadbetath*Gp - 2.0*lambda*dlambdadbetath*Gpp)*Z + (i*i*G/lambda - 2.0*lambda*Gp)*Zp*dzetadbetath;
+            dYyzdbetath[is][i] = I*sigmas*sgn(Npar)*dlambdadbetath*Gp*Zp/sqrt(lambda/2.0)/4.0 + I*sigmas*sgn(Npar)*sqrt(lambda/2.0)*Gpp*dlambdadbetath*Zp + I*sigmas*sgn(Npar)*sqrt(lambda/2.0)*Gp*Zpp*dzetadbetath;
+            dYzzdbetath[is][i] = -Gp*dlambdadbetath*zeta*Zp - G*dzetadbetath*Zp - G*zeta*Zpp*dzetadbetath;
+
+            dYxxdwcn[is][i] = i*i*Gp*dlambdadwcn*Z/lambda + i*i*G*Zp*dzetadwcn - i*i*G*Z*dlambdadwcn/lambda/lambda;
+            dYxydwcn[is][i] = I*sigmas*i*Gpp*dlambdadwcn*Z + I*sigmas*i*Gp*Zp*dzetadwcn;
+            dYxzdwcn[is][i] = -sgn(Npar)*i*Gp*dlambdadwcn*Zp/sqrt(2.0*lambda) - sgn(Npar)*i*G*Zpp*dzetadwcn/sqrt(2.0*lambda) + sgn(Npar)*i*G*Zp*dlambdadwcn/sqrt(2.0*lambda)/(2.0*lambda);
+            dYyydwcn[is][i] = (i*i*Gp*dlambdadwcn/lambda - i*i*G*dlambdadwcn/lambda/lambda - 2.0*dlambdadwcn*Gp - 2.0*lambda*dlambdadwcn*Gpp)*Z + (i*i*G/lambda - 2.0*lambda*Gp)*Zp*dzetadwcn;
+            dYyzdwcn[is][i] = I*sigmas*sgn(Npar)*dlambdadwcn*Gp*Zp/sqrt(lambda/2.0)/4.0 + I*sigmas*sgn(Npar)*sqrt(lambda/2.0)*Gpp*dlambdadwcn*Zp + I*sigmas*sgn(Npar)*sqrt(lambda/2.0)*Gp*Zpp*dzetadwcn;
+            dYzzdwcn[is][i] = -Gp*dlambdadwcn*zeta*Zp - G*dzetadwcn*Zp - G*zeta*Zpp*dzetadwcn;    
+
+            dYxxdwpn2[is][i] = i*i*Gp*dlambdadwpn2*Z/lambda + i*i*G*Zp*dzetadwpn2 - i*i*G*Z*dlambdadwpn2/lambda/lambda;
+            dYxydwpn2[is][i] = I*sigmas*i*Gpp*dlambdadwpn2*Z + I*sigmas*i*Gp*Zp*dzetadwpn2;
+            dYxzdwpn2[is][i] = -sgn(Npar)*i*Gp*dlambdadwpn2*Zp/sqrt(2.0*lambda) - sgn(Npar)*i*G*Zpp*dzetadwpn2/sqrt(2.0*lambda) + sgn(Npar)*i*G*Zp*dlambdadwpn2/sqrt(2.0*lambda)/(2.0*lambda);
+            dYyydwpn2[is][i] = (i*i*Gp*dlambdadwpn2/lambda - i*i*G*dlambdadwpn2/lambda/lambda - 2.0*dlambdadwpn2*Gp - 2.0*lambda*dlambdadwpn2*Gpp)*Z + (i*i*G/lambda - 2.0*lambda*Gp)*Zp*dzetadwpn2;
+            dYyzdwpn2[is][i] = I*sigmas*sgn(Npar)*dlambdadwpn2*Gp*Zp/sqrt(lambda/2.0)/4.0 + I*sigmas*sgn(Npar)*sqrt(lambda/2.0)*Gpp*dlambdadwpn2*Zp + I*sigmas*sgn(Npar)*sqrt(lambda/2.0)*Gp*Zpp*dzetadwpn2;
+            dYzzdwpn2[is][i] = -Gp*dlambdadwpn2*zeta*Zp - G*dzetadwpn2*Zp - G*zeta*Zpp*dzetadwpn2;    
         }
-        ZZ=Cdiv(Complex(-1.0-som.r,-som.i),zeta);
-        criterion=0.7853981633974483331/rzeta;
-        sigma=(zeta.i<criterion)+(zeta.i<-criterion);
-        if (sigma>0.0) {
-            ZZ=Cadd(ZZ,RCmul(sigma,Cmul(isqrtpi,Cexp(-zeta2.r,-zeta2.i))));
-        }
-    }
+    }   
+}
 
-    * rZ=ZZ.r;
-    * iZ=ZZ.i;
+void Gamma(n,z,g,gp,gpp)
+int n;
+double complex z,*g,*gp,*gpp;
+{ 
+    double complex mBn,mBnp,mBnpp;
+    
+    modBessel(n,z,mBn,mBnp,mBnpp);
+    
+    g[0] = cexp(-z)*mBn;
+    gp[0] = -g[0] + cexp(-z)*mBnp;
+    gpp[0] = g[0] - cexp(-z)*(2.0*mBnp - mBnpp);
+    
+}
 
-} /* end of Zfried */
 
+void Zfried(zeta,Z,Zp,Zpp)
+double zeta;
+double complex *Z,*Zp,*Zpp;
+{
+    
+    
+    
+    
+}
+
+
+void modBessel(n,z,mBn,mBnp,mBnpp)
+int n;
+double complex z,*mBn,*mBnp,*mBnpp;
+{   
+    mBn[0] = 0.0;
+    mBnp[0] = 0.0;
+    mBnpp[0] = 0.0;
+}
 
