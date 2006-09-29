@@ -187,11 +187,14 @@ double inf_norm();
 double sgn();
 void buildXstruc();
 void calcY();
-void Zfried();
+void Zdisp();
+void ZFriedConte();
 void hottensor();
-void Zfried();
 void Gamma();
 void modBessel();
+void imagBessel();
+void dawson();
+void smith();
 
 /* Input Arguments */
 
@@ -267,6 +270,10 @@ void mexFunction(   int     nlhs,
     if (!mxIsStruct(prhs[0])) mexErrMsgTxt("Input arguments must be structures");
     if (!mxIsStruct(prhs[1])) mexErrMsgTxt("Input arguments must be structures");
 
+/*    double complex iBn,iBnp,iBnpp;   
+    modBessel(-5.4,(double complex)(3.0 +1.2*I),&iBn,&iBnp,&iBnpp);
+    mexPrintf("Bessel(-5.4,3.+1.2*i),Bp,Bpp:%g,%g,%g,%g,%g,%g\n",iBn,iBnp,iBnpp);
+*/
 
 /* Get Input Arguments */
 
@@ -2657,16 +2664,11 @@ double complex dYxxdwpn2[][MAXCYCLHARM],dYxydwpn2[][MAXCYCLHARM],dYxzdwpn2[][MAX
             dlambdadwcn = - lambda/wcn[is];
             dlambdadwpn2 = 0.0;
             
-            Zfried(zeta,&Z,&Zp,&Zpp);
-            Gamma(i,lambda,&G,&Gp,&Gpp);
+            Zdisp((double complex)zeta,&Z,&Zp,&Zpp);
+            Gamma((double)i,lambda,&G,&Gp,&Gpp);
             
 /* Dielectric tensor */
-            
-            Yxx[is][i] = 0.0;
-            
-            
-            
-            
+                       
             Yxx[is][i] = i*i*G*Z/lambda;
             Yxy[is][i] = I*sigmas*i*Gp*Z;
             Yxz[is][i] = -sgn(Npar)*i*G*Zp/sqrt(2.0*lambda);
@@ -2714,13 +2716,13 @@ double complex dYxxdwpn2[][MAXCYCLHARM],dYxydwpn2[][MAXCYCLHARM],dYxzdwpn2[][MAX
     }   
 }
 
-void Gamma(n,z,g,gp,gpp)
-int n;
+void Gamma(nhu,z,g,gp,gpp)
+int nhu;
 double complex z,*g,*gp,*gpp;
 { 
     double complex mBn,mBnp,mBnpp;
     
-    modBessel(n,z,mBn,mBnp,mBnpp);
+    modBessel(nhu,z,&mBn,&mBnp,&mBnpp);
     
     g[0] = cexp(-z)*mBn;
     gp[0] = -g[0] + cexp(-z)*mBnp;
@@ -2729,23 +2731,252 @@ double complex z,*g,*gp,*gpp;
 }
 
 
-void Zfried(zeta,Z,Zp,Zpp)
-double zeta;
+void Zdisp(z,Z,Zp,Zpp)
+double complex z;
 double complex *Z,*Zp,*Zpp;
+{  
+
+    ZFriedConte(z,Z);
+
+    Zp[0] = -2.0*(1.0 + z*Z[0]);
+    Zpp[0] = 4.0*z + Z[0]*(4*z*z - 2.0);
+}
+
+void ZFriedConte(z,Z)
+double complex z;
+double complex *Z;
 {
-    
-    
-    
-    
+    double daw,x,y;
+    if (cimag(z) == 0.0) {//pure real argument
+        x = creal(z);
+        dawson(x,&daw);
+        Z[0]=-2.0*daw+I*sqrt(PI)*exp(x*x);
+    } else if (creal(z) == 0.0) {//pure imaginary argument
+        y = cimag(z);
+        Z[0] = I*sqrt(PI)*exp(y*y)*erfc(-y);
+    } else {
+        smith(z,Z); 
+    }
 }
 
 
-void modBessel(n,z,mBn,mBnp,mBnpp)
-int n;
+void modBessel(nhu,z,mBn,mBnp,mBnpp)
+double nhu;
 double complex z,*mBn,*mBnp,*mBnpp;
 {   
-    mBn[0] = 0.0;
-    mBnp[0] = 0.0;
-    mBnpp[0] = 0.0;
+    double complex iBn,iBnp,iBnpp;
+    
+    imagBessel(nhu,I*z,&iBn,&iBnp,&iBnpp);
+
+    mBn[0] = cpow(-I,nhu)*iBn;
+    mBnp[0] = -cpow(-I,nhu+1.0)*iBnp;
+    mBnpp[0] = -cpow(-I,nhu)*iBnpp;
+    
+//    mexPrintf("modBesseln:%g,%g\n",mBn[0]);
+    
 }
+
+
+
+void imagBessel(nhu,z,iBn,iBnp,iBnpp)
+double nhu;
+double complex z,*iBn,*iBnp,*iBnpp;
+{   
+    mxArray *rhs[3], *lhs[1];
+    
+    double  *pr,*pi;
+    double complex Besseln,Besselnm1,Besselnm2;
+    double *Bessel_r,*Bessel_i;
+    
+    rhs[0] = mxCreateString("J");
+    rhs[1] = mxCreateDoubleMatrix(1, 1, mxREAL);
+    rhs[2] = mxCreateDoubleMatrix(1, 1, mxCOMPLEX);
+    
+    pr = mxGetPr(rhs[2]);
+    pr[0] = creal(z);
+    pi = mxGetPi(rhs[2]);
+    pi[0] = cimag(z);
+    
+    pr = mxGetPr(rhs[1]);
+    pr[0] = nhu;
+    mexCallMATLAB(1,lhs,3,rhs,"besselmx");//call the MatLab built-in Bessel function: [w,ierr] = besselmx(double('J'),0,z)
+    Bessel_r = mxGetData(lhs[0]);
+    Bessel_i = mxGetImagData(lhs[0]);
+    Besseln = Bessel_r[0] + I*Bessel_i[0];
+    
+//    mexPrintf("Besseln:%g,%g\n",Besseln);
+    
+    pr = mxGetPr(rhs[1]);
+    pr[0] = nhu - 1.0;
+    mexCallMATLAB(1,lhs,3,rhs,"besselmx");//call the MatLab built-in Bessel function: [w,ierr] = besselmx(double('J'),0,z)
+    Bessel_r = mxGetData(lhs[0]);
+    Bessel_i = mxGetImagData(lhs[0]);
+    Besselnm1 = Bessel_r[0] + I*Bessel_i[0];
+    
+//    mexPrintf("Besseln:%g,%g\n",Besselnm1);
+    
+    
+    pr = mxGetPr(rhs[1]);
+    pr[0] = nhu - 2.0;
+    mexCallMATLAB(1,lhs,3,rhs,"besselmx");//call the MatLab built-in Bessel function: [w,ierr] = besselmx(double('J'),0,z)
+    Bessel_r = mxGetData(lhs[0]);
+    Bessel_i = mxGetImagData(lhs[0]);
+    Besselnm2 = Bessel_r[0] + I*Bessel_i[0];
+
+//    mexPrintf("Besseln:%g,%g\n",Besselnm2);
+  
+    iBn[0] = Besseln;
+    iBnp[0] = Besselnm1 - nhu*Besseln/z;
+    iBnpp[0] = Besselnm2 + (2.0*nhu - 1.0)*Besselnm1/z + nhu*(nhu + 1.0)*Besseln/z/z;
+    
+    /* cleanup allocated memory */
+    
+    mxDestroyArray(rhs[0]);
+    mxDestroyArray(rhs[1]);
+    mxDestroyArray(rhs[2]);
+    mxDestroyArray(lhs[0]);
+}
+
+
+
+void smith(z,Z) 
+double complex z, *Z;
+{
+
+    /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Z dispersion function
+    % with complex argument zeta.
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % For real argument use also Dawson integral
+    % with Tchebychev polynomials
+    % Z=-2.0*dawson(zeta)+i*sqrt(pi)*exp(-zeta.*zeta);
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % For pure imaginary argument also use
+    % Z(i*x)=i*sqrt(pi)*exp(x.*x).*erfc(-x)
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Inspired by Gary R. Smith
+    % Phys. Fluids 27 (6) june 1984 p. 1510 
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    */
+
+    double complex z2, z_2, som, ZZ;
+    double rz,iz;
+    double criterion, sigma; 
+    int nn; 
+
+    /* % epsilon=1e-10
+    % b=4.74
+    % nmax1=58
+    % nmax2=25
+    % nmax3=27
+
+    % epsilon=1e-12 */
+
+    static double b=5.51; /* boundary between formulas */
+    static double nmax1=75; /* nmax for series expansion */
+    static double nmax2=34; /* nmax for continued fraction */
+    static double nmax3=27; /* nmax for asymptotic expansion */
+    static double complex czero = 0.0;
+    static double complex cone = 1.0;
+    static double complex isqrtpi = 1.772453850905516*I;
+
+    z2=z*z;
+    som=czero;
+    rz=abs(creal(z));
+    iz=abs(cimag(z));
+
+    /* Series expansion around zeta = 0
+     formula A10 */
+    if ((rz <= b) & (iz <= 2.0-1.5*rz/b)) {
+        for (nn = nmax1;nn > 0;nn--) {
+            som = 1.0/nn*z2*1.0/(2.0*nn + 1.0 + som);
+        }
+        ZZ = cexp(-z2)*(isqrtpi - 2.0*z*(som + 1.0));
+    }
+
+    /* Continued fraction expansion
+     formula A12 & A13 */
+
+    if (((rz <= b) & (iz > 2.0-1.5*rz/b)) | ((rz > b) & (iz > 0.5))) {
+
+        z_2 = cone/z2;
+        for (nn = nmax2;nn > 0;nn--) {
+            som = -0.5*nn*z_2/(som + 1.0);
+        }
+        ZZ = -1.0/(z*(som + 1.0));        
+        if (cimag(z) < 0.0) {
+            ZZ = ZZ + 2.0*isqrtpi*cexp(-z2);
+        }
+    }
+
+    /* %% Asymptotic expansion
+    %% formula A15 */
+    if ((rz > b) & (iz <= 0.5)) {
+        z_2 = cone/z2;
+        for (nn = nmax3;nn > 0;nn--) {
+            som = (nn-0.5)*z_2*(som + 1.0);
+        }
+        ZZ = -(som + 1.0)/z;    
+        criterion = 0.7853981633974483331/rz;
+        sigma = (cimag(z) < criterion) + (cimag(z) < -criterion);
+        if (sigma>0.0) {
+            ZZ = ZZ + sigma*isqrtpi*cexp(-z2);
+        }
+    }
+
+    Z[0] = ZZ;
+} 
+
+
+
+void dawson(zeta,dwork) 
+double zeta;
+double *dwork;
+{
+
+   /*     A FUNCTION TO EVALUATE DAWSON'S INTEGRAL,    
+         Dawson(Zeta) = Integral ( t=0->Zeta ) Exp(t**2-Zeta**2) dt,
+         = -0.5 * Real part of Fried & Conte Z function   
+         USING A CHEBYCHEV POLYNOMIAL SERIES.  */
+
+    static double half = 0.5; 
+    static double one = 1.0; 
+    static double two = 2.0; 
+    static double ten = 10.0;
+    /* nmax=    5         => 1e-2 precision
+               10         => 1e-4
+               15         => 1e-6
+               20         => single
+               50         => double */
+    static int nmax=50;
+    
+    static double tcoef [51]={2.3770636862073187, -0.2214259431356961, -0.0232524179380925, 0.1327809189298409, -0.1325824891002065,
+          0.0825446940740374, -0.0337827509774703, 0.0070874724137126, 0.0009814185303952, -0.0010948499244205,
+          0.0001341521888280,0.0001204181702739,-0.0000351287219323,-0.0000146145750095,0.0000062641524139,
+          0.0000022709548584,-0.0000010280349044,-0.0000004487400975,0.0000001532631036,0.0000001005306690,
+          -0.0000000166366048,-0.0000000226490692,-0.0000000006425396,0.0000000046258504,0.0000000011681305,
+          -0.0000000007317958,-0.0000000004540732,0.0000000000395128,0.0000000001175806,0.0000000000278655,
+          -0.0000000000190620,-0.0000000000134858,-0.0000000000001751,0.0000000000033395,0.0000000000013606,
+          -0.0000000000003122,-0.0000000000004896,-0.0000000000001295,0.0000000000000741,0.0000000000000694,
+          0.0000000000000122,-0.0000000000000135,-0.0000000000000101,-0.0000000000000013,0.0000000000000022,
+          0.0000000000000016,0.0000000000000002,-0.0000000000000004,-0.0000000000000003,0.0000000000000000,
+          0.0000000000000001};
+    double zeta2, t, twot, tn, tnm1,tnm2;
+    int ind;
+
+    zeta2=zeta*zeta;
+    t=(zeta2-ten)/(zeta2+ten);
+    twot=two*t;
+    tnm1=one;
+    tn=t;
+    dwork[0]=half*tcoef[0]*tnm1+tcoef[1]*tn;
+    for (ind=2;ind<=nmax;ind++) {
+       tnm2=tnm1;
+       tnm1=tn;
+       tn=twot*tnm1-tnm2;
+       dwork[0] += tcoef[ind]*tn;
+    }
+    dwork[0] *= zeta/(one+two*zeta2);  
+}
+
 

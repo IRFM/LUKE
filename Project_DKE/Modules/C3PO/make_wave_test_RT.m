@@ -41,13 +41,14 @@ xmode = 1;%cold plasma mode [nx] : (-1) m (1) p
 kmode = 0;% kinetic (1) or cold (0) plasma model
 %
 rayparam.testmode = 0;
-rayparam.tensortype = 0;
+rayparam.tensortype = 0;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
 rayparam.t0 = 0;
-rayparam.tfinal = 3000000;
+rayparam.tfinal = 17000;
 rayparam.dt0 = 1.e-3;
 rayparam.drho = 1.e-4;
 rayparam.tol = 1e-12;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
 rayparam.kmax = 60000;
+rayparam.ncyclharm = 3;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
 %
 % -------------------------------------------------------------------------
 %
