@@ -23,15 +23,16 @@ cyl = 1;
 Rp = 3.0*cyl;%  Plasma major radius on axis (m)
 Zp = 0.0;
 ep = 0.3/cyl;%  Inverse aspect ratio
-Ip = 1.0;% Signed value of the plasma current (MA) (with R,Z,phi direct)
+Ip = 1;% Signed value of the plasma current (MA) (with R,Z,phi direct)
 Bt = 3.0;%  Signed value of the toroidal magnetic field on the magnetic axis (T) (with R,Z,phi direct)
 %
 Zi = [1,1,1,6];%  Ion types: (1) H/D/T, (2) He, ..., (6) C [1,p] (WARNING: Zi must be [1,1,1,imp1,imp2] for hydrogen plasmas)
 mi = [1,2,3,12];%  Ion mass (uma) [1,p] (WARNING: Zi must be [1,2,3,mimp1,mimp2] for hydrogen plasmas)
 fi = [0,1,0];%  Hydrogen isotopic fraction (H/D/T) [1,3] (WARNING: only used when hydrogen plasmas are considered)
 %
-qmin = NaN;%  Safety factor q0 at plasma center
-eq = NaN;%  Exponent for q radial profile (q = (qmax - qmin)*(r/a).^eq + qmin, qmax calaculated by the Ampere's theorem at the plasma edge with a circular plasma cross-section)
+qopt = 2;
+qmin = 1;%  Safety factor q0 at plasma center
+eq = 2;%  Exponent for q radial profile (q = (qmax - qmin)*(r/a).^eq + qmin, qmax calaculated by the Ampere's theorem at the plasma edge with a circular plasma cross-section)
 %
 Te0 = 4.0;%  Core electron temperature (keV)
 Tea = Te0/10;%  Edge electron temperature (keV)

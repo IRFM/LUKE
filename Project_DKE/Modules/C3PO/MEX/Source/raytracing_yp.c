@@ -211,8 +211,7 @@ void smith();
 #define SAFETY 0.8
 #define PGROW 0.2
 #define PSHRINK 0.25
-#define MAXIT 30000
-#define DRHO_LIM 1e-14
+#define MAXIT 20000
 #define PI 3.14159265358979
 #define MAXCYCLHARM 101
 
@@ -310,28 +309,28 @@ void mexFunction(   int     nlhs,
             
         Te = mxCalloc(1,sizeof(double));
         dTedrho = mxCalloc(1,sizeof(double));
-        ppval_1D(Te_fit,0.25,Te,dTedrho);
+        ppval_1D(Te_fit,rayparam.drho[0],0.25,Te,dTedrho);
         mexPrintf("Te(0.25),dTedrho(0.25) (keV): %g,%g\n",Te[0],dTedrho[0]);    
         mxFree(Te);
         mxFree(dTedrho);
         
         ne = mxCalloc(1,sizeof(double));
         dnedrho = mxCalloc(1,sizeof(double));
-        ppval_1D(ne_fit,0.25,ne,dnedrho);
+        ppval_1D(ne_fit,rayparam.drho[0],0.25,ne,dnedrho);
         mexPrintf("ne(0.25),dnedrho(0.25) (10+19 m-3): %g,%g\n",ne[0]/1e19,dnedrho[0]/1e19);    
         mxFree(ne);
         mxFree(dnedrho);
 
         zTi = mxCalloc(equilparam.ns[0],sizeof(double));
         dzTidrho = mxCalloc(equilparam.ns[0],sizeof(double));
-        ppval_1D(zTi_fit,0.25,zTi,dzTidrho);
+        ppval_1D(zTi_fit,rayparam.drho[0],0.25,zTi,dzTidrho);
         mexPrintf("zTi(2,0.25),dzTidrho(2,0.25) (keV): %g,%g\n",zTi[1],dzTidrho[1]);
         mxFree(zTi);
         mxFree(dzTidrho);
         
         zni = mxCalloc(equilparam.ns[0],sizeof(double));
         dznidrho = mxCalloc(equilparam.ns[0],sizeof(double));
-        ppval_1D(zni_fit,0.25,zni,dznidrho);
+        ppval_1D(zni_fit,rayparam.drho[0],0.25,zni,dznidrho);
         mexPrintf("zni(2,0.25),dznidrho(2,0.25) (10+19 m-3): %g,%g\n",zni[1]/1e19,dznidrho[1]/1e19);
         mxFree(zni);
         mxFree(dznidrho);
@@ -341,7 +340,7 @@ void mexFunction(   int     nlhs,
         dRdtheta = mxCalloc(1,sizeof(double));
         d2Rdtheta2 = mxCalloc(1,sizeof(double));
         d2Rdthetadrho = mxCalloc(1,sizeof(double));
-        ppval_2D(R_fit,0.25,0.2,R,dRdrho,dRdtheta,d2Rdtheta2,d2Rdthetadrho);
+        ppval_2D(R_fit,rayparam.drho[0],0.25,0.2,R,dRdrho,dRdtheta,d2Rdtheta2,d2Rdthetadrho);
         mexPrintf("R(0.25,0.2),dRdrho(0.25,0.2),dRdtheta(0.25,0.2) (m): %g,%g,%g\n",R[0],dRdrho[0],dRdtheta[0],d2Rdtheta2[0],d2Rdthetadrho[0]);
         mxFree(R);
         mxFree(dRdrho); 
@@ -354,7 +353,7 @@ void mexFunction(   int     nlhs,
         dZdtheta = mxCalloc(1,sizeof(double));
         d2Zdtheta2 = mxCalloc(1,sizeof(double));
         d2Zdthetadrho = mxCalloc(1,sizeof(double));
-        ppval_2D(Z_fit,0.25,0.2,Z,dZdrho,dZdtheta,d2Zdtheta2,d2Zdthetadrho);
+        ppval_2D(Z_fit,rayparam.drho[0],0.25,0.2,Z,dZdrho,dZdtheta,d2Zdtheta2,d2Zdthetadrho);
         mexPrintf("Z(0.25,0.2),dZdrho(0.25,0.2),dZdtheta(0.25,0.2) (m): %g,%g,%g\n",Z[0],dZdrho[0],dZdtheta[0],d2Zdtheta2[0],d2Zdthetadrho[0]);
         mxFree(Z);
         mxFree(dZdrho); 
@@ -365,7 +364,7 @@ void mexFunction(   int     nlhs,
         BR = mxCalloc(1,sizeof(double));
         dBRdrho = mxCalloc(1,sizeof(double));
         dBRdtheta = mxCalloc(1,sizeof(double));
-        ppval_2D(BR_fit,0.25,0.2,BR,dBRdrho,dBRdtheta,&dummy1,&dummy2);
+        ppval_2D(BR_fit,rayparam.drho[0],0.25,0.2,BR,dBRdrho,dBRdtheta,&dummy1,&dummy2);
         mexPrintf("BR(0.25,0.2),dBRdrho(0.25,0.2),dBRdtheta(0.25,0.2) (T): %g,%g,%g\n",BR[0],dBRdrho[0],dBRdtheta[0]);
         mxFree(BR);
         mxFree(dBRdrho); 
@@ -374,7 +373,7 @@ void mexFunction(   int     nlhs,
         BZ = mxCalloc(1,sizeof(double));
         dBZdrho = mxCalloc(1,sizeof(double));
         dBZdtheta = mxCalloc(1,sizeof(double));
-        ppval_2D(BZ_fit,0.25,0.2,BZ,dBZdrho,dBZdtheta,&dummy1,&dummy2);
+        ppval_2D(BZ_fit,rayparam.drho[0],0.25,0.2,BZ,dBZdrho,dBZdtheta,&dummy1,&dummy2);
         mexPrintf("BZ(0.25,0.2),dBZdrho(0.25,0.2),dBZdtheta(0.25,0.2) (T): %g,%g,%g\n",BZ[0],dBZdrho[0],dBZdtheta[0]);
         mxFree(BZ);
         mxFree(dBZdrho); 
@@ -383,7 +382,7 @@ void mexFunction(   int     nlhs,
         BPHI = mxCalloc(1,sizeof(double));
         dBPHIdrho = mxCalloc(1,sizeof(double));
         dBPHIdtheta = mxCalloc(1,sizeof(double));
-        ppval_2D(BPHI_fit,0.25,0.2,BPHI,dBPHIdrho,dBPHIdtheta,&dummy1,&dummy2);
+        ppval_2D(BPHI_fit,rayparam.drho[0],0.25,0.2,BPHI,dBPHIdrho,dBPHIdtheta,&dummy1,&dummy2);
         mexPrintf("BPHI(0.25,0.2),dBPHIdrho(0.25,0.2),dBPHIdtheta(0.25,0.2) (T): %g,%g,%g\n",BPHI[0],dBPHIdrho[0],dBPHIdtheta[0]);
         mxFree(BPHI);
         mxFree(dBPHIdrho); 
@@ -408,7 +407,7 @@ void mexFunction(   int     nlhs,
     double ydel[M];
     
     double t1,t2,rho1,rho2,theta1,theta2,phi1,phi2,krho1,krho2,m1,m2,n1,n2,omega1,omega2;
-    double rho_step,theta_step;
+    double rho_step,m_step;
 
     y0 = mxGetPr(Y0_IN);
     
@@ -425,6 +424,9 @@ void mexFunction(   int     nlhs,
     m1 = y0[4];
     n1 = y0[5];
     omega1 = y0[6];
+    
+    rho_step = rho1;
+    m_step = m1;
 
     /* solves the dispersion relation to have consistent initial input*/
     
@@ -563,7 +565,6 @@ void mexFunction(   int     nlhs,
         delta = inf_norm(ydel,M-3);/* only the first five coordinates are evolving (rho,theta,phi,krho,m) */
         ymax = inf_norm(s0,M-3);/* only the first five coordinates are evolving (rho,theta,phi,krho,m) */
         tau = rayparam.tol[0]*fmax(ymax,1.0);
-        
 
         /*
          * Update the solution only if the error is acceptable
@@ -590,9 +591,9 @@ void mexFunction(   int     nlhs,
             n2 = n1;
             omega2 = omega1;
 
-            mexPrintf("t1,h,rho2,theta2,phi2,krho2,m2:%g,%g,%g,%g,%g,%g,%g\n",t1,h,rho2,theta2,phi2,krho2,m2); 
+            mexPrintf("t1,delta,ymax,h,rho2,theta2,phi2,krho2,m2:%g,%g,%g,%g,%g,%g,%g,%g,%g\n",t1,delta,ymax,h,rho2,theta2,phi2,krho2,m2); 
             
-            if (rho2 < DRHO_LIM) {// Boundary condition at rho = 0  
+            if (rho2 < rayparam.drho[0]) {// Boundary condition at rho = 0  
                 
                 rho2 = rho1;
                 theta2 = theta1 + PI;
@@ -600,10 +601,10 @@ void mexFunction(   int     nlhs,
                 krho2 = -krho1;
                 m2 = m1;
                 rho_step = rho2;
-                theta_step = theta2;
+                m_step = m2;
               }
             
-            if (rho2 > (1.0 - DRHO_LIM)) {/* Specular reflexion enforced at rho = 1  */ 
+            if (rho2 > (1.0 - rayparam.drho[0])) {/* Specular reflexion enforced at rho = 1  */ 
                   mexPrintf("*****************specular reflection at rho = %g**************************\n",rho1);
                   rho2 = rho1;
                   phi2 = phi1;
@@ -614,6 +615,8 @@ void mexFunction(   int     nlhs,
                   m2 = m1;
             }
             
+    //        if (fabs(m2 - m_step) >= 1) {//step stored in Matlab memory
+
             if (fabs(rho2 - rho_step) >= rayparam.drho[0]) {//step stored in Matlab memory
 
 //          if (fabs(rho2 - rho_step) >= rayparam.drho[0] && fabs(theta2 - theta_step) >= 1e-2) {//step stored in Matlab memory
@@ -628,7 +631,7 @@ void mexFunction(   int     nlhs,
                 temp6[K] = omega2;
                 
                 rho_step = rho2;
-                theta_step = theta2;
+                m_step = m2;
                 k++;
             }
             
@@ -869,12 +872,12 @@ char *field_name;
 }
 
 
-void ppval_1D(pp_1D_format in, double x,double y[],double dydx[])
+void ppval_1D(pp_1D_format in,double drho_lim,double x,double y[],double dydx[])
 {
     register int j,k;
     int i0,i1,i2,i3;
  
-    if (x>1.0 - DRHO_LIM) {x = 1 - DRHO_LIM/2.0;}//Avoid points outside the separatrix
+    if (x>1.0 - drho_lim) {x = 1.0 - drho_lim/2.0;}//Avoid points outside the separatrix
     
     for (j = 0;j < (int)in.pieces_f[0];j++) {
         if ((x>=in.breaks_f[j]) && (x<=in.breaks_f[j+1])) {
@@ -928,13 +931,13 @@ void ppval_1D(pp_1D_format in, double x,double y[],double dydx[])
 
 
 
-void ppval_2D(pp_2D_format in, double x, double t, double* y, double* dydx, double* dydt, double* d2ydt2, double* d2ydtdx)
+void ppval_2D(pp_2D_format in,double drho_lim, double x, double t, double* y, double* dydx, double* dydt, double* d2ydt2, double* d2ydtdx)
 {
     register int j,k;
     int i0,i1,i2,i3;
     double *a0,*an,*bn,*da0dx,*dandx,*dbndx;
     
-    if (x>1.0 - DRHO_LIM) {x = 1 - DRHO_LIM/2.0;}//Avoid points outside the separatrix
+    if (x>1.0 - drho_lim) {x = 1 - drho_lim/2.0;}//Avoid points outside the separatrix
 
     a0 = mxCalloc((int)in.dim_a0[0],sizeof(double));
     da0dx = mxCalloc((int)in.dim_da0drho[0],sizeof(double));
@@ -1245,7 +1248,7 @@ for (i=0;i<M;i++) {/*initialisation */
 }
 
 /* Equilibrium interpolation at ray location */
-interpequil(raymagnetic,rayprofiles,equilparam,Y,Te_fit,ne_fit,zTi_fit,zni_fit,R_fit,Z_fit,BR_fit,BZ_fit,BPHI_fit,dRstardpsin_fit);
+interpequil(param,raymagnetic,rayprofiles,equilparam,Y,Te_fit,ne_fit,zTi_fit,zni_fit,R_fit,Z_fit,BR_fit,BZ_fit,BPHI_fit,dRstardpsin_fit);
 //interpequil_test(raymagnetic,rayprofiles,equilparam,Y);
 
 
@@ -1580,7 +1583,7 @@ pp_1D_format dRstardpsin_fit;
 
     /* Equilibrium interpolation at ray location */
 //    interpequil_test(raymagnetic,rayprofiles,equilparam,Y);
-     interpequil(raymagnetic,rayprofiles,equilparam,Y,Te_fit,ne_fit,zTi_fit,zni_fit,R_fit,Z_fit,BR_fit,BZ_fit,BPHI_fit,dRstardpsin_fit);
+     interpequil(param,raymagnetic,rayprofiles,equilparam,Y,Te_fit,ne_fit,zTi_fit,zni_fit,R_fit,Z_fit,BR_fit,BZ_fit,BPHI_fit,dRstardpsin_fit);
 
     krho0 = Y[3];
     krho1 = frac*krho0;
@@ -2200,7 +2203,8 @@ double complex dXxxdwpn2[],dXxydwpn2[],dXxzdwpn2[],dXyydwpn2[],dXyzdwpn2[],dXzzd
 
 
 
-void interpequil(raymagnetic,rayprofiles,equilparam,Y,Te_fit,ne_fit,zTi_fit,zni_fit,R_fit,Z_fit,BR_fit,BZ_fit,BPHI_fit,dRstardpsin_fit)
+void interpequil(rayparam,raymagnetic,rayprofiles,equilparam,Y,Te_fit,ne_fit,zTi_fit,zni_fit,R_fit,Z_fit,BR_fit,BZ_fit,BPHI_fit,dRstardpsin_fit)
+rayparam_format rayparam;
 raymagnetic_format raymagnetic;
 rayprofiles_format rayprofiles;
 equilparam_format equilparam;
@@ -2235,17 +2239,17 @@ pp_1D_format dRstardpsin_fit;
     
     /* Equilibrium interpolation */
     
-    ppval_1D(dRstardpsin_fit,Y[0],&dRstardpsin,&ddRstardpsindrho);
+    ppval_1D(dRstardpsin_fit,rayparam.drho[0],Y[0],&dRstardpsin,&ddRstardpsindrho);
     
-    ppval_1D(Te_fit,Y[0],&rayprofiles.Te[0],&rayprofiles.dTedx[0]);
-    ppval_1D(ne_fit,Y[0],&rayprofiles.ne[0],&rayprofiles.dnedx[0]);
+    ppval_1D(Te_fit,rayparam.drho[0],Y[0],&rayprofiles.Te[0],&rayprofiles.dTedx[0]);
+    ppval_1D(ne_fit,rayparam.drho[0],Y[0],&rayprofiles.ne[0],&rayprofiles.dnedx[0]);
     
-    ppval_1D(zTi_fit,Y[0],rayprofiles.zTi,dummyTi);
+    ppval_1D(zTi_fit,rayparam.drho[0],Y[0],rayprofiles.zTi,dummyTi);
     for (is=0;is<equilparam.ns[0];is++) {
         rayprofiles.dzTidx[is][0] = dummyTi[is];
     }
     
-    ppval_1D(zni_fit,Y[0],rayprofiles.zni,dummyni);
+    ppval_1D(zni_fit,rayparam.drho[0],Y[0],rayprofiles.zni,dummyni);
     for (is=0;is<equilparam.ns[0];is++) {
         if (rayprofiles.zni > 0) {
             rayprofiles.dznidx[is][0] = dummyni[is];
@@ -2258,11 +2262,11 @@ pp_1D_format dRstardpsin_fit;
 
     }*/
  
-    ppval_2D(R_fit,Y[0],Y[1],&R,&dRdrho,&dRdtheta,&d2Rdtheta2,&d2Rdthetadrho);
-    ppval_2D(Z_fit,Y[0],Y[1],&Z,&dZdrho,&dZdtheta,&d2Zdtheta2,&d2Zdthetadrho);
-    ppval_2D(BR_fit,Y[0],Y[1],&BR,&dBRdrho,&dBRdtheta,&dummy1,&dummy2);
-    ppval_2D(BZ_fit,Y[0],Y[1],&BZ,&dBZdrho,&dBZdtheta,&dummy1,&dummy2);
-    ppval_2D(BPHI_fit,Y[0],Y[1],&BPHI,&dBPHIdrho,&dBPHIdtheta,&dummy1,&dummy2);  
+    ppval_2D(R_fit,rayparam.drho[0],Y[0],Y[1],&R,&dRdrho,&dRdtheta,&d2Rdtheta2,&d2Rdthetadrho);
+    ppval_2D(Z_fit,rayparam.drho[0],Y[0],Y[1],&Z,&dZdrho,&dZdtheta,&d2Zdtheta2,&d2Zdthetadrho);
+    ppval_2D(BR_fit,rayparam.drho[0],Y[0],Y[1],&BR,&dBRdrho,&dBRdtheta,&dummy1,&dummy2);
+    ppval_2D(BZ_fit,rayparam.drho[0],Y[0],Y[1],&BZ,&dBZdrho,&dBZdtheta,&dummy1,&dummy2);
+    ppval_2D(BPHI_fit,rayparam.drho[0],Y[0],Y[1],&BPHI,&dBPHIdrho,&dBPHIdtheta,&dummy1,&dummy2);  
     
     BP = sqrt(BR*BR + BZ*BZ);
     dBPdrho = (BR*dBRdrho + BZ*dBZdrho)/BP;
@@ -2365,7 +2369,7 @@ double Y[];
    
     if (equilparam.ns[0] > 4) mexErrMsgTxt("Only one high-Z impurity allowed in analytical equilibrium");
 
-    cyl = 1;//cylindrical factor
+    cyl = 1000.;//cylindrical factor
     BT0 = 3.0;
     Rp = 3.0*cyl;
     ep = 0.3/cyl;

@@ -1,4 +1,4 @@
-function [equil_out] = fitequil_yp(equil_in,nharm,method)
+function [equil_out] = fitequil_yp(equil_in,nharm,method,ngrid)
 %
 % Build vectorial tokamak magnetic equilibrium from its numerical counterpart
 % 1-D: use interp1 MatLab built-in function (spline, bi-cubic, linear,
@@ -12,8 +12,12 @@ function [equil_out] = fitequil_yp(equil_in,nharm,method)
 if nargin == 1, 
     nharm = [];
     method = 'spline';
+    ngrid = 2000;
 elseif nargin == 2, 
     method = 'spline';
+    ngrid = 2000;
+elseif nargin == 3, 
+    ngrid = 2000;   
 end
 %
 equil_out.id = equil_in.id;
@@ -23,22 +27,41 @@ equil_out.zmi = equil_in.zmi;
 %
 [rho] = psi2rho_jd(equil_in,equil_in.ppsi/equil_in.ppsi(end),method);
 %
-equil_out.psin_fit = interpequil_yp(method,equil_in.ppsi/equil_in.ppsi(end),rho);
+%Resampling on a finer mesh before spline-Fourier calculations
 %
-Rstar_psin_fit = interpequil_yp(method,equil_in.R(:,1),equil_in.ppsi/equil_in.ppsi(end));%Rstar = R(:,theta=0)
-dRstardpsin_psin = ppval(Rstar_psin_fit.pp_dfdrho,equil_in.ppsi/equil_in.ppsi(end));
-equil_out.dRstardpsin_fit = interpequil_yp(method,dRstardpsin_psin,rho);
+srho = linspace(0,1,ngrid).^2;
+spsin = interp1(rho,equil_in.ppsi/equil_in.ppsi(end),srho,method);
+sRstar = interp1(rho,equil_in.R(:,1),srho,method);
 %
-equil_out.Te_fit = interpequil_yp(method,equil_in.pTe,rho);
-equil_out.ne_fit = interpequil_yp(method,equil_in.pne,rho);
-equil_out.zTi_fit = interpequil_yp(method,equil_in.pzTi,rho);
-equil_out.zni_fit = interpequil_yp(method,equil_in.pzni,rho);
+sTe = interp1(rho,equil_in.pTe,srho,method);
+sne = interp1(rho,equil_in.pne,srho,method);
+szTi = interp1(rho,equil_in.pzTi',srho',method)';
+szni = interp1(rho,equil_in.pzni',srho',method)';
 %
-equil_out.BR_fit = interpequil_yp(method,equil_in.BR,rho,equil_in.theta,nharm);%BR field component
-equil_out.BZ_fit = interpequil_yp(method,equil_in.BZ,rho,equil_in.theta,nharm);%BZ field component
-equil_out.BPHI_fit = interpequil_yp(method,equil_in.BPHI,rho,equil_in.theta,nharm);%PHI field component
-equil_out.R_fit = interpequil_yp(method,equil_in.R,rho,equil_in.theta,nharm);%R coordinate
-equil_out.Z_fit = interpequil_yp(method,equil_in.Z,rho,equil_in.theta,nharm);%Z coordinate
+sBR = interp1(rho,equil_in.BR,srho,method);%BR field component
+sBZ = interp1(rho,equil_in.BZ,srho,method);%BZ field component
+sBPHI = interp1(rho,equil_in.BPHI,srho,method);%PHI field component
+sR = interp1(rho,equil_in.R,srho,method);%R coordinate
+sZ = interp1(rho,equil_in.Z,srho,method);%Z coordinate
+%
+% Calculation of the vectorial magnetic equilibrium
+%
+equil_out.psin_fit = interpequil_yp(method,spsin,srho);
+%
+sRstar_psin_fit = interpequil_yp(method,sR(:,1),spsin);%Rstar = R(:,theta=0)
+sdRstardpsin_psin = ppval(sRstar_psin_fit.pp_dfdrho,spsin);
+equil_out.dRstardpsin_fit = interpequil_yp(method,sdRstardpsin_psin,srho);
+%
+equil_out.Te_fit = interpequil_yp(method,sTe,srho);
+equil_out.ne_fit = interpequil_yp(method,sne,srho);
+equil_out.zTi_fit = interpequil_yp(method,szTi,srho);
+equil_out.zni_fit = interpequil_yp(method,szni,srho);
+%
+equil_out.BR_fit = interpequil_yp(method,sBR,srho,equil_in.theta,nharm);%BR field component
+equil_out.BZ_fit = interpequil_yp(method,sBZ,srho,equil_in.theta,nharm);%BZ field component
+equil_out.BPHI_fit = interpequil_yp(method,sBPHI,srho,equil_in.theta,nharm);%PHI field component
+equil_out.R_fit = interpequil_yp(method,sR,srho,equil_in.theta,nharm);%R coordinate
+equil_out.Z_fit = interpequil_yp(method,sZ,srho,equil_in.theta,nharm);%Z coordinate
 %
 if equil_in.ppsi(1) == 0,
    equil_out.Rp = equil_in.R(1,1);
@@ -48,4 +71,3 @@ if equil_in.ppsi(1) == 0,
 else
    error('equil_out.ppsi(1) must be equal to zero !');
 end
-%

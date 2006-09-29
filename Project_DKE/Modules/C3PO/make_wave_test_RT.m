@@ -27,7 +27,7 @@ end
 % ray-tracing parameters
 %
 method = 'spline';%nearest,spline,pchip,cubic
-nharm = 32;%Number of harmonics in the magnetic equilibrium interpolation (less than ntheta_equil/2)
+nharm = 2;%Number of harmonics in the magnetic equilibrium interpolation (less than ntheta_equil/2)
 f_rf = 3.7;%GHz
 %
 rho0 = 0.98;
@@ -35,17 +35,19 @@ theta0 = 0;
 phi0 = 0.0;
 %
 m0 = 0;
-Npar0 = 2;%initial index of refraction
+Npar0 = 2.0;%initial index of refraction
 xmode = 1;%cold plasma mode [nx] : (-1) m (1) p 
 %           p is the slow mode when kperp > 0 (ex : LH slow wave)
 kmode = 0;% kinetic (1) or cold (0) plasma model
+ngridresample = 1001;%Number of grid points for resample the radial profile of magnetic equilibrium parameters
+opt_load = 1;%Reload existing vectorial magnetic equilibrium (1) or overwrite it (0).
 %
 rayparam.testmode = 0;
 rayparam.tensortype = 0;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
 rayparam.t0 = 0;
 rayparam.tfinal = 17000;
 rayparam.dt0 = 1.e-3;
-rayparam.drho = 1.e-4;
+rayparam.drho = 1.e-3;
 rayparam.tol = 1e-12;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
 rayparam.kmax = 60000;
 rayparam.ncyclharm = 3;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
@@ -64,10 +66,16 @@ opt_rf = 2; % [1,1]
 %
 % -------------------------------------------------------------------------
 %
-[equil_fit] = fitequil_yp(equil,nharm,method);%Build vectorized magnetic equilibrium structure
-%testfitequil_yp(equil,equil_fit);
-%
-info_dke_yp(2,'Equilibrium interpolation coefficients calculated');
+if opt_load*exist(['EQUILV_',equil.id,'.mat']),
+   load(['EQUILV_',equil.id,'.mat'],'equil_fit');
+   info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil.id,' is reloaded.']);
+else
+   info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil.id,' is calculated.']);
+   [equil_fit] = fitequil_yp(equil,nharm,method,ngridresample);%Build vectorized magnetic equilibrium structure
+   save(['EQUILV_',equil_fit.id,'.mat'],'equil_fit');
+   info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil_fit.id,' is saved.']);
+  % testfitequil_yp(equil,equil_fit);
+end
 %
 omega_rf = 2*pi*f_rf*1e9;
 %
