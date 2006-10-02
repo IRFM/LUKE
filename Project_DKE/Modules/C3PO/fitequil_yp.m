@@ -31,7 +31,6 @@ equil_out.zmi = equil_in.zmi;
 %
 srho = linspace(0,1,ngrid).^2;
 spsin = interp1(rho,equil_in.ppsi/equil_in.ppsi(end),srho,method);
-sRstar = interp1(rho,equil_in.R(:,1),srho,method);
 %
 sTe = interp1(rho,equil_in.pTe,srho,method);
 sne = interp1(rho,equil_in.pne,srho,method);
