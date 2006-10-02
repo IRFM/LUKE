@@ -50,7 +50,7 @@ if length(xtheta) ~= nx | length(xphi) ~= nx | length(xomega) ~= nx | length(xNp
     error('Input argument dimensions are not compatible');
 end
 %
-sigma = + sign(equil_fit.psia);%for a wave propagating inward (-LH, + EC ** to be checked ?????)
+sigma = - sign(equil_fit.psia);%for a wave propagating inward (-LH, + EC ** to be checked ?????)
 %
 xdRstardpsin = ppval(equil_fit.dRstardpsin_fit.pp_f,xrho);
 xTe = ppval(equil_fit.Te_fit.pp_f,xrho);
@@ -111,7 +111,7 @@ xBt = xBPHI;
 xB = sqrt(xBt.^2 + xBp.^2);
 xp = xBp./xB;
 xt = xBt./xB;
-xgradrho = xR.*xBp.*xdRstardpsin/equil_fit.psia/equil_fit.ap;%normalized to ap so that krho is normalized
+xgradrho = xR.*xBp.*xdRstardpsin/equil_fit.psia/equil_fit.ap;
 %
 % Resolution of the dispersion relation
 %
@@ -128,7 +128,7 @@ for ix = 1:nx,
     %
     % Cold plasma calculations
     %
-    [Nperpp,Nperpm] = colddisp_dke_jd(xNpar(ix),xomega(ix),xne(ix),zxni(:,ix),zZi,zmi,xB(ix));
+    [Nperpp,Nperpm] = colddisp_dke_jd(xNpar(ix),xomega(ix),xne(ix),zxni(:,ix),zZi,zmi,xB(ix))
     %
     if xmode(ix) == -1,
         Nperpc = Nperpm;
@@ -155,10 +155,9 @@ end
 %
 xn = xR.*(xNpar.*xomega/clum - xm.*xc.*xp./xr)./xt;
 %
-xkrho = (xm.*xs./xr + sigma*sqrt(xNperp.^2.*xomega.^2/clum^2 - (xm.*xc./xr - xNpar.*xp.*xomega/clum).^2./xt.^2))./xgradrho;
+xkrho = (xm.*xs./xr + sigma*sqrt(-(xm.*xc./xr).^2 - (xn./xR).^2 + (xNperp.^2 + xNpar.^2).*xomega.^2/clum^2))./xgradrho;
 %
 xY = [xrho;xtheta;xphi;xkrho;xm;xn;xomega];
-%xY = [xrho;xtheta;xphi;xkrho;xm;xn;xomega/clum;zeros(1,nx)];
 %
 % verification
 %
