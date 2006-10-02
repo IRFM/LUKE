@@ -13,7 +13,7 @@ equil.id = 'RTtest';% scenario identification
 %
 npsi = 101;% number of points in psi grid
 ntheta = 65;% number of points in theta grid
-qopt = 1;%Option for q profile. (0): constant (default, uniform current, psi=rho^2), 
+qopt = 2;%Option for q profile. (0): constant (default, uniform current, psi=rho^2), 
 %                               (1): linear (psi=rho),
 %                               (2):  from qmin and eq
 %
@@ -30,7 +30,6 @@ Zi = [1,1,1,6];%  Ion types: (1) H/D/T, (2) He, ..., (6) C [1,p] (WARNING: Zi mu
 mi = [1,2,3,12];%  Ion mass (uma) [1,p] (WARNING: Zi must be [1,2,3,mimp1,mimp2] for hydrogen plasmas)
 fi = [0,1,0];%  Hydrogen isotopic fraction (H/D/T) [1,3] (WARNING: only used when hydrogen plasmas are considered)
 %
-qopt = 2;
 qmin = 1;%  Safety factor q0 at plasma center
 eq = 2;%  Exponent for q radial profile (q = (qmax - qmin)*(r/a).^eq + qmin, qmax calaculated by the Ampere's theorem at the plasma edge with a circular plasma cross-section)
 %
@@ -39,7 +38,7 @@ Tea = Te0/10;%  Edge electron temperature (keV)
 eTe = 1.0;%  Exponent for Te profile (Te(r) = (Te0-Tea)*(1-(r/a)^2)^eTe + Tea)
 %
 ne0 = 3.0e19;%  Core electron density (m-3)
-nea = ne0/10;%  Edge electron density (m-3)
+nea = 1e-10;%  Edge electron density (m-3)
 ene = 1.0;%  Exponent for ne profile (ne(r) = (ne0-nea)*(1-(r/a)^2)^ene + nea)
 %
 Ti0 = Te0;%  Core ion temperature (keV)
@@ -86,17 +85,18 @@ Xtheta = repmat(equil.theta,[npsi,1]);
 equil.R = Rp + ap*Xrho.*cos(Xtheta);
 equil.Z = Zp + ap*Xrho.*sin(Xtheta);
 %
-qmax = ap/Rp*abs(Bt/Bpa);%Cylindrical safety factor at the plasma edge
+qmax = ep*cyl*abs(Bt/Bpa);%Cylindrical safety factor at the plasma edge
 %
 if qopt == 2,
-    pq = (qmax - qmin)*prho.^eq + qmin;% Current profile defined by qmin and eq
+    pq = (qmax - qmin)*prho.^eq + qmin;% Current profile defined by qmin and eq (q profile is taken independent of the cylindrical limit)
+%
 elseif qopt == 1 
     pq = qmax*prho;% Current profile defined with linear q (psin = rho)
     pq(1) = eps;
 else
     pq = qmax*ones(1,npsi);% Current profile defined with constant q (uniform current density)
 end
-pBpp = sign(Bpa)*prho*ap/Rp*abs(Bt)./pq;
+pBpp = sign(Bpa)*prho*ep*cyl*abs(Bt)./pq;
 %
 if qopt == 2,
     spBpp = triu(repmat((pBpp(1:npsi-1) + pBpp(2:npsi))'/2,[1,npsi-1]));
