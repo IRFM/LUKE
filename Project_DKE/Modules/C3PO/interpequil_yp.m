@@ -21,6 +21,7 @@ function [Zpp_f] = interpequil_yp(method,f,rho,theta,nharm)
 % By Yves Peysson (CEA-DRFC, yves.peysson@cea.fr) and Joan Decker (CEA-DRFC, joan.decker@cea.fr)
 %
 if nargin == 3,
+%
    Zpp_f.pp_f = interp1(rho(:),f',method,'pp');%Create piecewise polynomials
 %
    if ~isfield(Zpp_f.pp_f,'orient'),

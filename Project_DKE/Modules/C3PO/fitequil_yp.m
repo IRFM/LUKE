@@ -22,8 +22,8 @@ end
 %
 equil_out.id = equil_in.id;
 equil_out.method = method;
-equil_out.zZi = equil_in.zZi;
-equil_out.zmi = equil_in.zmi;
+if ~isempty(equil_in.zZi),equil_out.zZi = equil_in.zZi;else equil_out.zZi = [0,0,0];end
+if ~isempty(equil_in.zmi),equil_out.zmi = equil_in.zmi;else equil_out.zmi = [1,1,1];end
 %
 [rho] = psi2rho_jd(equil_in,equil_in.ppsi/equil_in.ppsi(end),method);
 %
@@ -32,10 +32,10 @@ equil_out.zmi = equil_in.zmi;
 srho = linspace(0,1,ngrid).^2;
 spsin = interp1(rho,equil_in.ppsi/equil_in.ppsi(end),srho,method);
 %
-sTe = interp1(rho,equil_in.pTe,srho,method);
-sne = interp1(rho,equil_in.pne,srho,method);
-szTi = interp1(rho,equil_in.pzTi',srho',method)';
-szni = interp1(rho,equil_in.pzni',srho',method)';
+if ~isempty(equil_in.pTe),sTe = interp1(rho,equil_in.pTe,srho,method);else sTe = srho*0.0;end
+if ~isempty(equil_in.pne),sne = interp1(rho,equil_in.pne,srho,method);else sne = srho*0.0;end
+if ~isempty(equil_in.pzTi),szTi = interp1(rho,equil_in.pzTi',srho',method)';else szTi = zeros(length(srho),3)';end
+if ~isempty(equil_in.pzni),szni = interp1(rho,equil_in.pzni',srho',method)';else szni = zeros(length(srho),3)';end
 %
 sBR = interp1(rho,equil_in.BR,srho,method);%BR field component
 sBZ = interp1(rho,equil_in.BZ,srho,method);%BZ field component

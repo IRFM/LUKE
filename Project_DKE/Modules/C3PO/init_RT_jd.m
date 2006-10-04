@@ -137,6 +137,8 @@ for ix = 1:nx,
     else
         error('Wrond input in xmode')
     end        
+   
+    
     %
     % Normalization
     %
@@ -155,7 +157,7 @@ end
 %
 xn = xR.*(xNpar.*xomega/clum - xm.*xc.*xp./xr)./xt;
 %
-xkrho = (xm.*xs./xr + sigma*sqrt(-(xm.*xc./xr).^2 - (xn./xR).^2 + (xNperp.^2 + xNpar.^2).*xomega.^2/clum^2))./xgradrho;
+xkrho = (xm.*xs./xr + sigma*sqrt(-(xm.*xc./xr).^2 - (xn./xR).^2 + (xNperp.^2 + xNpar.^2).*xomega.^2/clum^2))./xgradrho
 %
 xY = [xrho;xtheta;xphi;xkrho;xm;xn;xomega];
 %

@@ -23,13 +23,13 @@ ne_ray = ppval(equil_fit.ne_fit.pp_f,yout(:,1));
 zTi_ray = ppval(equil_fit.zTi_fit.pp_f,yout(:,1));
 zni_ray = ppval(equil_fit.zni_fit.pp_f,yout(:,1));
 %
-R_a0_ray = ppval(equil_fit.R_fit.pp_a0,yout(:,1));
-R_an_ray = ppval(equil_fit.R_fit.pp_an,yout(:,1));
-R_bn_ray = ppval(equil_fit.R_fit.pp_bn,yout(:,1));
+R_a0_ray = ppval_yp(equil_fit.R_fit.pp_a0,yout(:,1));
+R_an_ray = ppval_yp(equil_fit.R_fit.pp_an,yout(:,1));
+R_bn_ray = ppval_yp(equil_fit.R_fit.pp_bn,yout(:,1));
 %
-Z_a0_ray = ppval(equil_fit.Z_fit.pp_a0,yout(:,1));
-Z_an_ray = ppval(equil_fit.Z_fit.pp_an,yout(:,1));
-Z_bn_ray = ppval(equil_fit.Z_fit.pp_bn,yout(:,1));
+Z_a0_ray = ppval_yp(equil_fit.Z_fit.pp_a0,yout(:,1));
+Z_an_ray = ppval_yp(equil_fit.Z_fit.pp_an,yout(:,1));
+Z_bn_ray = ppval_yp(equil_fit.Z_fit.pp_bn,yout(:,1));
 %
 BR_a0_ray = ppval(equil_fit.BR_fit.pp_a0,yout(:,1));
 BR_an_ray = ppval(equil_fit.BR_fit.pp_an,yout(:,1));
@@ -98,10 +98,12 @@ figure('Name','Ray trajectory')
 [ax] = graph1D_jd(R_ray,Z_ray,0,0,'R(m)','Z(m)','Flux-surfaces labeled by \rho=0,0.1,0.2...1',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','k',2);hold on
 axis('equal');drawnow  
 %
-figure('Name','Parallel wave efractive index')
+figure('Name','Parallel wave refractive index')
 graph1D_jd(abs(yout(:,3)/2/pi),Npar_ray,0,0,'abs(\phi)/2\pi','Parallel wave refractive index','',NaN,'','','-','none','r',2);drawnow;hold off
+graph1D_jd(abs(yout(:,3)/2/pi),6.5./sqrt(Te_ray),0,0,'abs(\phi)/2\pi','Parallel wave refractive index','',NaN,'','','-','none','b',2);drawnow;hold off
+legend('Ray-tracing','Landau damping');
 %
-figure('Name','Perpendicular wave efractive index')
+figure('Name','Perpendicular wave refractive index')
 graph1D_jd(abs(yout(:,3)/2/pi),Nperp_ray,0,0,'abs(\phi)/2\pi','Perpendicular wave refractive index','',NaN,'','','-','none','r',2);drawnow;hold off
 %
 figure('Name','Poloidal mode number')

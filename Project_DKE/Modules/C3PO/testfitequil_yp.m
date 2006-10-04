@@ -77,11 +77,18 @@ dBdtheta = dBdtheta./(ones(length(dprho),1)*dtheta);
 dBdrho = dBdrho./(dprho(:)*ones(1,length(dtheta)));
 %
 dpsindrho = gradient(ppsin)./dprho(:);
-dTedrho = gradient(pTe)./dprho(:);
-dnedrho = gradient(pne)./dprho(:);
-for i = 1:length(equil_fit.zZi)
-   zdTidrho(:,i) = gradient(pzTi(:,i))./dprho(:);
-   zdnidrho(:,i) = gradient(pzni(:,i))./dprho(:);
+if ~isempty(pTe),dTedrho = gradient(pTe)./dprho(:);else pTe = 0.0*rho(:);dTedrho = 0.0*rho(:);end
+if ~isempty(pne),dnedrho = gradient(pne)./dprho(:);else pne = 0.0*rho(:);dnedrho = 0.0*rho(:);end
+if ~isempty(equil_in.zZi),
+   for i = 1:length(equil_in.zZi)
+      zdTidrho(:,i) = gradient(pzTi(:,i))./dprho(:);
+      zdnidrho(:,i) = gradient(pzni(:,i))./dprho(:);
+   end
+else
+   pzTi = 0.0*zeros(length(rho(:)),3);
+   pzni = 0.0*zeros(length(rho(:)),3);
+   zdTidrho = 0.0*zeros(length(rho(:)),3);
+   zdnidrho = 0.0*zeros(length(rho(:)),3);
 end
 %
 dRstardpsin = gradient(equil_in.R(:,1))./dppsin(:);
@@ -650,7 +657,6 @@ gradrho = R.*BP.*dRstardpsin/equil_fit.ap/equil_fit.psia;
 dgradrhodrho = dRdrho.*BP.*dRstardpsin/equil_fit.psia/equil_fit.ap + R.*dBPdrho.*dRstardpsin/equil_fit.psia/equil_fit.ap + R.*BP.*ddRstardpsindrho/equil_fit.psia/equil_fit.ap;
 dgradrhodtheta = dRdtheta.*BP.*dRstardpsin/equil_fit.psia/equil_fit.ap + R.*dBPdtheta.*dRstardpsin/equil_fit.psia/equil_fit.ap;
 %
-disp(['equil_fit.zZi(4) = ',num2str(equil_fit.zZi(4))]);
 disp('--------------');
 disp(['equil_fit.Te_fit.pp_f.coefs(1) = ',num2str(equil_fit.Te_fit.pp_f.coefs(1))]);
 disp(['equil_fit.Te_fit.pp_dfdrho.coefs(1) = ',num2str(equil_fit.Te_fit.pp_dfdrho.coefs(1))]);
