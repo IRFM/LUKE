@@ -9,21 +9,21 @@ if nargin < 2,
 end
     
 %
-[pathstr,name,ext] = fileparts('filename')fileparts(filename)
+[pathstr,name,ext] = fileparts(filename);
 %
 if (nargin == 2) & ~isempty(strfind(ext,'f')),
 	error('FORTRAN files require to specify compiling options (f77 or f90) !')
 end
 %
-path_path = '../../../Database/PATH_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_path = '../../Database/PATH_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 if exist([path_path,'PATH_',id_path,'.mat']) == 0,%Paths
 	info_dke_yp(2,[path_path,'PATH_',id_path,'.mat does not exist. Set all paths in the ~/Project_DKE/Database/PATH_files/']);
-	break
+	return
 else
 	eval(['load ',path_path,'PATH_',id_path,'.mat']);
 	info_dke_yp(2,'Structure ''path'' successfully loaded');
-    if ~strcmp(path.computer,computer),error('The path structure is not consistent with the computer !'),end
+        if ~strcmp(path.computer,computer),error('The path structure is not consistent with the computer !'),end
 end
 %
 if isempty(opts) | ~isempty(strfind(ext,'c')),%C language
@@ -33,6 +33,6 @@ elseif strcmp(opts,'f77') & ~isempty(strfind(ext,'f')),%FORTRAN 77 language
 elseif strcmp(opts,'f90') & ~isempty(strfind(ext,'f')),%FORTRAN 90 language
    eval(['mex -v -f ',path.mex,'/mexopts_f77.sh ',filename]);
 else
-  	error('The type of file is not recognized by its extension !')
+   error('The type of file is not recognized by its extension !')
 end
    
