@@ -28,14 +28,14 @@ end
 %
 method = 'spline';%nearest,spline,pchip,cubic
 nharm = 32;%Number of harmonics in the magnetic equilibrium interpolation (less than ntheta_equil/2)
-f_rf = 1500;%GHz
+f_rf = 5.3015e-2;%GHz
 %
 rho0 = 0.98;
-theta0 = 6*pi/2/16;
+theta0 = pi/2;
 phi0 = 0;
 %
 m0 = 0;
-Npar0 = 0.9;%initial index of refraction
+Npar0 = 0.1;%initial index of refraction
 xmode = 1;%cold plasma mode [nx] : (-1) m (1) p 
 %           p is the slow mode when kperp > 0 (ex : LH slow wave)
 kmode = 0;% kinetic (1) or cold (0) plasma model
@@ -45,11 +45,11 @@ opt_load = 1;%Reload existing vectorial magnetic equilibrium (1) or overwrite it
 rayparam.testmode = 0;
 rayparam.tensortype = 0;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
 rayparam.t0 = 0;
-rayparam.tfinal = 100000;
+rayparam.tfinal = 100;
 rayparam.dt0 = 1.e-4;
 rayparam.drho = 1.e-4;
 rayparam.tol = 1e-10;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
-rayparam.kmax = 10000;
+rayparam.kmax = 3000;
 rayparam.ncyclharm = 3;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
 %
 % -------------------------------------------------------------------------

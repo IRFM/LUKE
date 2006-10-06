@@ -50,7 +50,7 @@ if length(xtheta) ~= nx | length(xphi) ~= nx | length(xomega) ~= nx | length(xNp
     error('Input argument dimensions are not compatible');
 end
 %
-sigma = - sign(equil_fit.psia);%for a wave propagating inward (-LH, + EC ** to be checked ?????)
+sigma = + sign(equil_fit.psia);%for a wave propagating inward (-LH, + EC ** to be checked ?????)
 %
 xdRstardpsin = ppval(equil_fit.dRstardpsin_fit.pp_f,xrho);
 xTe = ppval(equil_fit.Te_fit.pp_f,xrho);

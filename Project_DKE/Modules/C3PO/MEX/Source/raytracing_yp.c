@@ -1249,8 +1249,8 @@ for (i=0;i<M;i++) {/*initialisation */
 }
 
 /* Equilibrium interpolation at ray location */
-//interpequil(param,raymagnetic,rayprofiles,equilparam,Y,Te_fit,ne_fit,zTi_fit,zni_fit,R_fit,Z_fit,BR_fit,BZ_fit,BPHI_fit,dRstardpsin_fit);
-interpequil_test(raymagnetic,rayprofiles,equilparam,Y);
+interpequil(param,raymagnetic,rayprofiles,equilparam,Y,Te_fit,ne_fit,zTi_fit,zni_fit,R_fit,Z_fit,BR_fit,BZ_fit,BPHI_fit,dRstardpsin_fit);
+//interpequil_test(raymagnetic,rayprofiles,equilparam,Y);
 
 
 /* Refractive index calculation */
@@ -1279,7 +1279,7 @@ Npar4 = Npar1*Npar1*Npar1*Npar1;
 
 N6 = N2*N2*N2;
 
-mexPrintf("N2,dN2dx[i],%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n",N2,dN2dx[0],dN2dx[1],dN2dx[2],dN2dx[3],dN2dx[4],dN2dx[5],dN2dx[6],dN2dx[7]);
+//mexPrintf("N2,dN2dx[i],%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n",N2,dN2dx[0],dN2dx[1],dN2dx[2],dN2dx[3],dN2dx[4],dN2dx[5],dN2dx[6],dN2dx[7]);
 
 Xxx = X.Xxx[0];
 Xxy = X.Xxy[0];
@@ -1363,7 +1363,7 @@ Ydot[4] = creal(dDtotdx[1])/creal(dDtotdx[6]);
 Ydot[5] = 0.0; 
 Ydot[6] = 0.0; 
 
-/*
+
 // test for the cold dispersion relation
 double complex P0,P2,P4,dP0dx[M],dP2dx[M],dP4dx[M];
 double complex Kpar,Kperp,Kxy,dKpardx[M],dKperpdx[M],dKxydx[M];
@@ -1401,12 +1401,12 @@ Ydot_cold[3] = creal(dDtot_colddx[0])/creal(dDtot_colddx[6]);
 Ydot_cold[4] = creal(dDtot_colddx[1])/creal(dDtot_colddx[6]);
 Ydot_cold[5] = 0.0; 
 Ydot_cold[6] = 0.0; 
-*/
 
-//mexPrintf("dDtotdw:%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n",dDtotdx[0],dDtotdx[1],dDtotdx[2],dDtotdx[3],dDtotdx[4],dDtotdx[5],dDtotdx[6]);
-//mexPrintf("dDtot_colddw:%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n",dDtot_colddx[0],dDtot_colddx[1],dDtot_colddx[2],dDtot_colddx[3],dDtot_colddx[4],dDtot_colddx[5],dDtot_colddx[6]);
-//mexPrintf("Ydot:%g,%g,%g,%g,%g,%g,%g\n",Ydot[0],Ydot[1],Ydot[2],Ydot[3],Ydot[4],Ydot[5],Ydot[6]);
-//mexPrintf("Ydot_cold:%g,%g,%g,%g,%g,%g,%g\n",Ydot_cold[0],Ydot_cold[1],Ydot_cold[2],Ydot_cold[3],Ydot_cold[4],Ydot_cold[5],Ydot_cold[6]);
+
+mexPrintf("dDtotdw:%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n",dDtotdx[0],dDtotdx[1],dDtotdx[2],dDtotdx[3],dDtotdx[4],dDtotdx[5],dDtotdx[6]);
+mexPrintf("dDtot_colddw:%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n",dDtot_colddx[0],dDtot_colddx[1],dDtot_colddx[2],dDtot_colddx[3],dDtot_colddx[4],dDtot_colddx[5],dDtot_colddx[6]);
+mexPrintf("Ydot:%g,%g,%g,%g,%g,%g,%g\n",Ydot[0],Ydot[1],Ydot[2],Ydot[3],Ydot[4],Ydot[5],Ydot[6]);
+mexPrintf("Ydot_cold:%g,%g,%g,%g,%g,%g,%g\n",Ydot_cold[0],Ydot_cold[1],Ydot_cold[2],Ydot_cold[3],Ydot_cold[4],Ydot_cold[5],Ydot_cold[6]);
 
 
 /* Memory is released  */
@@ -1979,6 +1979,8 @@ equilparam_format equilparam;
     ap = equilparam.ap[0];
     cnorm = clum/ap/Y[6];
     
+    mexPrintf("clum_norm,ap,clum,Y[6]:%g,%g,%g,%g\n",cnorm,ap,clum,Y[6]);
+    
     if (mode == 1) {// 
     
         Npar1 = Y[4]*raymagnetic.calpha[0]*raymagnetic.BPn[0];
@@ -2021,7 +2023,7 @@ equilparam_format equilparam;
         N2[0] = cnorm*cnorm*(N21 + N22 + N23 + N24);
         Nperp[0] = sqrt(N2[0] - Npar[0]*Npar[0]);
         
-        mexPrintf("Npar,Nperp,N2:%g,%g,%g,%g,%g\n",Npar[0]/raymagnetic.rn[0],Nperp[0]/raymagnetic.rn[0],N2[0]/raymagnetic.rn[0]/raymagnetic.rn[0]); 
+//        mexPrintf("Npar,Nperp,N2:%g,%g,%g,%g,%g\n",Npar[0]/raymagnetic.rn[0],Nperp[0]/raymagnetic.rn[0],N2[0]/raymagnetic.rn[0]/raymagnetic.rn[0]); 
         
         for (i=0;i<M;i++) {
         
@@ -2051,7 +2053,7 @@ equilparam_format equilparam;
             dN24dx4 = 2.0*Y[5]*Y[5]*raymagnetic.drndx[i]*raymagnetic.rn[0]/raymagnetic.Rn[0]/raymagnetic.Rn[0];
             dN24dx3 = -2.0*Y[5]*Y[5]*raymagnetic.rn[0]*raymagnetic.rn[0]/raymagnetic.Rn[0]/raymagnetic.Rn[0]*dYdY[6][i];
         
-            dN24dx = 0.0*(dN24dx1 + dN24dx2 + dN24dx3 + dN24dx4);
+            dN24dx = dN24dx1 + dN24dx2 + dN24dx3 + dN24dx4;
         
             dN2dx[i] = cnorm*cnorm*(dN21dx + dN22dx + dN23dx + dN24dx);
 
@@ -2061,9 +2063,9 @@ equilparam_format equilparam;
         }
         
         
-        
-         mexPrintf("dN2dx[]:%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n",dN2dx[0],dN2dx[1],dN2dx[2],dN2dx[3],dN2dx[4],dN2dx[5],dN2dx[6],dN2dx[7]); 
-        mexPrintf("r,2*r*drdx[]:%g,%g,%g,%g,%g,%g,%g,%g,%g\n",raymagnetic.rn[0],2.0*raymagnetic.rn[0]*raymagnetic.drndx[0],2.0*raymagnetic.rn[0]*raymagnetic.drndx[1],2.0*raymagnetic.rn[0]*raymagnetic.drndx[2],2.0*raymagnetic.rn[0]*raymagnetic.drndx[3],2.0*raymagnetic.rn[0]*raymagnetic.drndx[4],2.0*raymagnetic.rn[0]*raymagnetic.drndx[5],2.0*raymagnetic.rn[0]*raymagnetic.drndx[6],2.0*raymagnetic.rn[0]*raymagnetic.drndx[7],2.0*raymagnetic.rn[0]*raymagnetic.drndx[8]); 
+      mexPrintf("Y[]:%g,%g,%g,%g,%g,%g,%g\n",Y[0],Y[1],Y[2],Y[3],Y[4],Y[5]);
+      mexPrintf("r,2*r*drdx[]:%g,%g,%g,%g,%g,%g,%g,%g,%g\n",raymagnetic.rn[0],2.0*raymagnetic.rn[0]*raymagnetic.drndx[0],2.0*raymagnetic.rn[0]*raymagnetic.drndx[1],2.0*raymagnetic.rn[0]*raymagnetic.drndx[2],2.0*raymagnetic.rn[0]*raymagnetic.drndx[3],2.0*raymagnetic.rn[0]*raymagnetic.drndx[4],2.0*raymagnetic.rn[0]*raymagnetic.drndx[5],2.0*raymagnetic.rn[0]*raymagnetic.drndx[6],2.0*raymagnetic.rn[0]*raymagnetic.drndx[7],2.0*raymagnetic.rn[0]*raymagnetic.drndx[8]); 
+      mexPrintf("dN2dx[]:%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n",dN2dx[0],dN2dx[1],dN2dx[2],dN2dx[3],dN2dx[4],dN2dx[5],dN2dx[6],dN2dx[7]); 
 
     } else {
         
@@ -2381,15 +2383,15 @@ pp_1D_format dRstardpsin_fit;
         mexPrintf("is,zTi[is],dzTidx[is][0],dzTidx[is][1],zni[is],dznidx[is][0],dznidx[is][1]:%d,%g,%g,%g,%g,%g,%g\n",is,rayprofiles.zTi[is],rayprofiles.dzTidx[is][0],rayprofiles.dzTidx[is][1],rayprofiles.zni[is],rayprofiles.dznidx[is][0],rayprofiles.dznidx[is][1]);
     }*/
     
-//     mexPrintf("rn[0],drndx[0],drndx[1],Rn[0],dRndx[0],dRndx[1]:%g,%g,%g,%g,%g,%g\n",raymagnetic.rn[0],raymagnetic.drndx[0],raymagnetic.drndx[1],raymagnetic.Rn[0],raymagnetic.dRndx[0],raymagnetic.dRndx[1]);
-//     mexPrintf("BPn[0],dBPndx[0],dBPndx[1]:%g,%g,%g\n",raymagnetic.BPn[0],raymagnetic.dBPndx[0],raymagnetic.dBPndx[1]);
-//     mexPrintf("BPHIn[0],dBPHIndx[0],dBPHIndx[1]:%g,%g,%g\n",raymagnetic.BPHIn[0],raymagnetic.dBPHIndx[0],raymagnetic.dBPHIndx[1]);
-//     mexPrintf("B[0],dBdx[0],dBdx[1]:%g,%g,%g\n",raymagnetic.B[0],raymagnetic.dBdx[0],raymagnetic.dBdx[1]);
-//     mexPrintf("salpha[0],dsalphadx[0],dsalphadx[1]:%g,%g,%g\n",raymagnetic.salpha[0],raymagnetic.dsalphadx[0],raymagnetic.dsalphadx[1]);
-//     mexPrintf("calpha[0],dcalphadx[0],dcalphadx[1]:%g,%g,%g\n",raymagnetic.calpha[0],raymagnetic.dcalphadx[0],raymagnetic.dcalphadx[1]);
-//    mexPrintf("gradrhon[0],dgradrhondx[0],dgradrhondx[1]:%g,%g,%g\n",raymagnetic.gradrhon[0],raymagnetic.dgradrhondx[0],raymagnetic.dgradrhondx[1]);
-//    mexPrintf("dRstardpsin,ddRstardpsindrho,psia:%g,%g,%gma\n",dRstardpsin,ddRstardpsindrho,equilparam.psia[0]);
-
+/*     mexPrintf("rn[0],drndx[0],drndx[1],Rn[0],dRndx[0],dRndx[1]:%g,%g,%g,%g,%g,%g\n",raymagnetic.rn[0],raymagnetic.drndx[0],raymagnetic.drndx[1],raymagnetic.Rn[0],raymagnetic.dRndx[0],raymagnetic.dRndx[1]);
+     mexPrintf("BPn[0],dBPndx[0],dBPndx[1]:%g,%g,%g\n",raymagnetic.BPn[0],raymagnetic.dBPndx[0],raymagnetic.dBPndx[1]);
+     mexPrintf("BPHIn[0],dBPHIndx[0],dBPHIndx[1]:%g,%g,%g\n",raymagnetic.BPHIn[0],raymagnetic.dBPHIndx[0],raymagnetic.dBPHIndx[1]);
+     mexPrintf("B[0],dBdx[0],dBdx[1]:%g,%g,%g\n",raymagnetic.B[0],raymagnetic.dBdx[0],raymagnetic.dBdx[1]);
+     mexPrintf("salpha[0],dsalphadx[0],dsalphadx[1]:%g,%g,%g\n",raymagnetic.salpha[0],raymagnetic.dsalphadx[0],raymagnetic.dsalphadx[1]);
+     mexPrintf("calpha[0],dcalphadx[0],dcalphadx[1]:%g,%g,%g\n",raymagnetic.calpha[0],raymagnetic.dcalphadx[0],raymagnetic.dcalphadx[1]);
+    mexPrintf("gradrhon[0],dgradrhondx[0],dgradrhondx[1]:%g,%g,%g\n",raymagnetic.gradrhon[0],raymagnetic.dgradrhondx[0],raymagnetic.dgradrhondx[1]);
+    mexPrintf("dRstardpsin,ddRstardpsindrho,psia:%g,%g,%gma\n",dRstardpsin,ddRstardpsindrho,equilparam.psia[0]);
+*/
 }
 
 
