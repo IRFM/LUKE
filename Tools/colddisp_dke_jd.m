@@ -53,7 +53,12 @@ function [Nperpp,Nperpm,Kxyz,...
 [qe,me,mp,mn,e0] = pc_dke_yp;
 %
 ns = [ne;zni(:)];
-qs = qe*[-1;zZi(:)];
+if zZi(1) == 0 | zZi(2) == 0 | zZi(3) == 0,
+   qs = qe*[0;zZi(:)];%vacuum case, no charge
+else
+   qs = qe*[-1;zZi(:)];    
+end
+
 ms = [me;mp*zmi(:)];
 %
 wps = sqrt(ns.*qs.^2/e0./ms);
