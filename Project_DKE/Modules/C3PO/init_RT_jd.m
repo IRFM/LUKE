@@ -50,7 +50,7 @@ if length(xtheta) ~= nx | length(xphi) ~= nx | length(xomega) ~= nx | length(xNp
     error('Input argument dimensions are not compatible');
 end
 %
-sigma = + sign(equil_fit.psia);%for a wave propagating inward (-LH, + EC ** to be checked ?????)
+sigma = + sign(equil_fit.psia);%for a wave propagating inward 
 %
 xdRstardpsin = ppval(equil_fit.dRstardpsin_fit.pp_f,xrho);
 xTe = ppval(equil_fit.Te_fit.pp_f,xrho);
@@ -103,14 +103,16 @@ for ix = 1:nx,
     %    
 end
 %
+sigmaIp =  sign((-equil.BR(end,1).*sin(equil.theta(1)) + equil.BZ(end,1).*cos(equil.theta(1))));%Sign of the plasma current
+%
 xr = sqrt((xR - equil_fit.Rp).^2 + (xZ - equil_fit.Zp).^2);
 xs = ((xR - equil_fit.Rp).*xdRdtheta + (xZ - equil_fit.Zp).*xdZdtheta)./xr./sqrt(xdRdtheta.^2 + xdZdtheta.^2);
 xc = sqrt(1.0 - xs.^2);
 xBp = sqrt(xBR.^2 + xBZ.^2); 
 xBt = xBPHI; 
 xB = sqrt(xBt.^2 + xBp.^2);
-xp = xBp./xB;
-xt = xBt./xB;
+xBtheta = sigmaIp*xBp./xB;
+xBphi = sign(xBPHI).*xBt./xB;
 xgradrho = xR.*xBp.*xdRstardpsin/equil_fit.psia/equil_fit.ap;
 %
 % Resolution of the dispersion relation
@@ -155,7 +157,7 @@ for ix = 1:nx,
     end
 end
 %
-xn = xR.*(xNpar.*xomega/clum - xm.*xc.*xp./xr)./xt;
+xn = xR.*(xNpar.*xomega/clum - xm.*xc.*xBtheta./xr)./xBphi
 %
 xkrho = (xm.*xs./xr + sigma*sqrt(-(xm.*xc./xr).^2 - (xn./xR).^2 + (xNperp.^2 + xNpar.^2).*xomega.^2/clum^2))./xgradrho
 %
@@ -164,15 +166,11 @@ xY = [xrho;xtheta;xphi;xkrho;xm;xn;xomega];
 % verification
 %
 if 1,
-    xNpar2 = (xm.*xc.*xp./xr + xn.*xt./xR)*clum./xomega;
+    xNpar2 = (xm.*xc.*xBtheta./xr + xn.*xBphi./xR)*clum./xomega;
     xNperp2 = sqrt((xkrho.^2.*xgradrho.^2 - 2*xkrho.*xgradrho.*xm.*xs./xr + xm.^2./xr.^2 + xn.^2/xR.^2)*clum^2./xomega^2 - xNpar.^2);
-    [Nperpp2,Nperpm2,Kxyz,...
-        ep_xyz,em_xyz,ep_pmz,em_pmz,ep_pyk,em_pyk,...
-        phip_xyz,phim_xyz,phip_pmz,phim_pmz,phip_pyk,phim_pyk,...
-        Dp,Dm]...
+    [Nperpp2,Nperpm2,Kxyz,ep_xyz,em_xyz,ep_pmz,em_pmz,ep_pyk,em_pyk,phip_xyz,phim_xyz,phip_pmz,phim_pmz,phip_pyk,phim_pyk,Dp,Dm]...
         = colddisp_dke_jd(xNpar2,xomega(ix),xne(ix),zxni(:,ix),zZi,zmi,xB(ix),xNperp2);
-    disp(['xNpar,xNperp,xNpar2,xNperp2,Dp,Dm:',num2str(xNpar),',',num2str(xNperp),',',...
-        num2str(xNpar2),',',num2str(xNperp2),',',num2str(Dp),',',num2str(Dm)]);
+    disp(['xNpar,xNperp,xNpar2,xNperp2,Dp,Dm:',num2str(xNpar),',',num2str(xNperp),',',num2str(xNpar2),',',num2str(xNperp2),',',num2str(Dp),',',num2str(Dm)]);
 end
 
 
