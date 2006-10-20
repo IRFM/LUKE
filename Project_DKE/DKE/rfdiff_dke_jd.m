@@ -438,25 +438,25 @@ XYdeltares.immj = zeros(SXY,'single');
 XYdeltares.ijp = zeros(SXY,'single');
 XYdeltares.ijm = zeros(SXY,'single');
 %
-XYdeltares.ippj(XYmask_square) = (XYnparres.ij(XYmask_square) > XYnparmin_rf(XYmask_square)).*(XYnparmax_rf(XYmask_square) > XYnparres.ij(XYmask_square))./XYdnpar_rf_square(XYmask_square);
+XYdeltares.ippj(XYmask_square) = (XYnparres.ippj(XYmask_square) > XYnparmin_rf(XYmask_square)).*(XYnparmax_rf(XYmask_square) > XYnparres.ippj(XYmask_square))./XYdnpar_rf_square(XYmask_square);
 XYdeltares.ippj(XYmask_gauss) = exp(-(XYnparres.ippj(XYmask_gauss) - XYnpar_rf(XYmask_gauss)).^2./XYdnpar_rf_gauss(XYmask_gauss).^2)./XYdnpar_rf_gauss(XYmask_gauss)/sqrt(pi);
 %
-XYdeltares.ipj(XYmask_square) = (XYnparres.ij(XYmask_square) > XYnparmin_rf(XYmask_square)).*(XYnparmax_rf(XYmask_square) > XYnparres.ij(XYmask_square))./XYdnpar_rf_square(XYmask_square);
+XYdeltares.ipj(XYmask_square) = (XYnparres.ipj(XYmask_square) > XYnparmin_rf(XYmask_square)).*(XYnparmax_rf(XYmask_square) > XYnparres.ipj(XYmask_square))./XYdnpar_rf_square(XYmask_square);
 XYdeltares.ipj(XYmask_gauss) = exp(-(XYnparres.ipj(XYmask_gauss) - XYnpar_rf(XYmask_gauss)).^2./XYdnpar_rf_gauss(XYmask_gauss).^2)./XYdnpar_rf_gauss(XYmask_gauss)/sqrt(pi);
 %
 XYdeltares.ij(XYmask_square) = (XYnparres.ij(XYmask_square) > XYnparmin_rf(XYmask_square)).*(XYnparmax_rf(XYmask_square) > XYnparres.ij(XYmask_square))./XYdnpar_rf_square(XYmask_square);
 XYdeltares.ij(XYmask_gauss) = exp(-(XYnparres.ij(XYmask_gauss) - XYnpar_rf(XYmask_gauss)).^2./XYdnpar_rf_gauss(XYmask_gauss).^2)./XYdnpar_rf_gauss(XYmask_gauss)/sqrt(pi);
 %
-XYdeltares.imj(XYmask_square) = (XYnparres.ij(XYmask_square) > XYnparmin_rf(XYmask_square)).*(XYnparmax_rf(XYmask_square) > XYnparres.ij(XYmask_square))./XYdnpar_rf_square(XYmask_square);
+XYdeltares.imj(XYmask_square) = (XYnparres.imj(XYmask_square) > XYnparmin_rf(XYmask_square)).*(XYnparmax_rf(XYmask_square) > XYnparres.imj(XYmask_square))./XYdnpar_rf_square(XYmask_square);
 XYdeltares.imj(XYmask_gauss) = exp(-(XYnparres.imj(XYmask_gauss) - XYnpar_rf(XYmask_gauss)).^2./XYdnpar_rf_gauss(XYmask_gauss).^2)./XYdnpar_rf_gauss(XYmask_gauss)/sqrt(pi);
 %
-XYdeltares.immj(XYmask_square) = (XYnparres.ij(XYmask_square) > XYnparmin_rf(XYmask_square)).*(XYnparmax_rf(XYmask_square) > XYnparres.ij(XYmask_square))./XYdnpar_rf_square(XYmask_square);
+XYdeltares.immj(XYmask_square) = (XYnparres.immj(XYmask_square) > XYnparmin_rf(XYmask_square)).*(XYnparmax_rf(XYmask_square) > XYnparres.immj(XYmask_square))./XYdnpar_rf_square(XYmask_square);
 XYdeltares.immj(XYmask_gauss) = exp(-(XYnparres.immj(XYmask_gauss) - XYnpar_rf(XYmask_gauss)).^2./XYdnpar_rf_gauss(XYmask_gauss).^2)./XYdnpar_rf_gauss(XYmask_gauss)/sqrt(pi);
 %
-XYdeltares.ijp(XYmask_square) = (XYnparres.ij(XYmask_square) > XYnparmin_rf(XYmask_square)).*(XYnparmax_rf(XYmask_square) > XYnparres.ij(XYmask_square))./XYdnpar_rf_square(XYmask_square);
+XYdeltares.ijp(XYmask_square) = (XYnparres.ijp(XYmask_square) > XYnparmin_rf(XYmask_square)).*(XYnparmax_rf(XYmask_square) > XYnparres.ijp(XYmask_square))./XYdnpar_rf_square(XYmask_square);
 XYdeltares.ijp(XYmask_gauss) = exp(-(XYnparres.ijp(XYmask_gauss) - XYnpar_rf(XYmask_gauss)).^2./XYdnpar_rf_gauss(XYmask_gauss).^2)./XYdnpar_rf_gauss(XYmask_gauss)/sqrt(pi);
 %
-XYdeltares.ijm(XYmask_square) = (XYnparres.ij(XYmask_square) > XYnparmin_rf(XYmask_square)).*(XYnparmax_rf(XYmask_square) > XYnparres.ij(XYmask_square))./XYdnpar_rf_square(XYmask_square);
+XYdeltares.ijm(XYmask_square) = (XYnparres.ijm(XYmask_square) > XYnparmin_rf(XYmask_square)).*(XYnparmax_rf(XYmask_square) > XYnparres.ijm(XYmask_square))./XYdnpar_rf_square(XYmask_square);
 XYdeltares.ijm(XYmask_gauss) = exp(-(XYnparres.ijm(XYmask_gauss) - XYnpar_rf(XYmask_gauss)).^2./XYdnpar_rf_gauss(XYmask_gauss).^2)./XYdnpar_rf_gauss(XYmask_gauss)/sqrt(pi);
 %
 clear XYnparres XYmask_square XYmask_gauss XYnparmin_rf XYnparmax_rf XYnpar_rf XYdnpar_rf_gauss XYdnpar_rf_square
@@ -638,18 +638,7 @@ XYDrf.immj(~XYold) = XYrespol.immj(~XYold).*XYDfac(~XYold).*XYgammamm(~XYold)./X
 XYDrf.ijp(~XYold) = XYrespol.ijp(~XYold).*XYDfacp(~XYold).*XYgamma(~XYold)./XYpn(~XYold)./abs(XYmhup(~XYold));
 XYDrf.ijm(~XYold) = XYrespol.ijm(~XYold).*XYDfacm(~XYold).*XYgamma(~XYold)./XYpn(~XYold)./abs(XYmhum(~XYold));
 %
-% Drf = 0 on the last momentum grid point
-%
-%XYmask_last = (XYpn  == max(XYpn));%(XYpn> 17);%
-%XYDrf.ippj(XYmask_last) = 0;%XYDrf.ippj(XYmask_last).*(18 - XYpn(XYmask_last)).*(XYpn(XYmask_last)  < 18);
-%XYDrf.ipj(XYmask_last) = 0;%XYDrf.ipj(XYmask_last).*(18 - XYpn(XYmask_last)).*(XYpn(XYmask_last)  < 18);
-%XYDrf.ij(XYmask_last) = 0;%XYDrf.ij(XYmask_last).*(18 - XYpn(XYmask_last)).*(XYpn(XYmask_last)  < 18);
-%XYDrf.imj(XYmask_last) = 0;%XYDrf.imj(XYmask_last).*(18 - XYpn(XYmask_last)).*(XYpn(XYmask_last)  < 18);
-%XYDrf.immj(XYmask_last) = 0;%XYDrf.immj(XYmask_last).*(18 - XYpn(XYmask_last)).*(XYpn(XYmask_last)  < 18);
-%XYDrf.ijp(XYmask_last) = 0;%XYDrf.ijp(XYmask_last).*(18 - XYpn(XYmask_last)).*(XYpn(XYmask_last)  < 18);
-%XYDrf.ijm(XYmask_last) = 0;%XYDrf.ijm(XYmask_last).*(18 - XYpn(XYmask_last)).*(XYpn(XYmask_last)  < 18);
-%
-clear XYrespol XYDfacp XYDfac XYDfacm %XYmask_last 
+clear XYrespol XYDfacp XYDfac XYDfacm  
 %
 if dke_mode == 0,
     %
