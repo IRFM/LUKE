@@ -52,15 +52,16 @@ for ii = 1:length(rho),
    BPHI(ii) = BPHI_a0(ii) + BPHI_an(ii,:)*cos(equil_fit.BPHI_fit.n*theta(ii)) + BPHI_bn(ii,:)*sin(equil_fit.BPHI_fit.n*theta(ii));
 end
 %
+sigmaIp =  sign(-BR(1)*sin(theta(1)) + BZ(1)*cos(theta(1)));%Sign of the plasma current
 BP = sqrt(BR.^2 + BZ.^2);
 B = sqrt(BR.^2 + BZ.^2 + BPHI.^2);
 r = sqrt((R - equil_fit.Rp).^2 + (Z - equil_fit.Zp).^2);
 salpha = ((R - equil_fit.Rp).*dRdtheta + (Z - equil_fit.Zp).*dZdtheta)./r./sqrt(dRdtheta.^2 + dZdtheta.^2);
 calpha = sqrt(1.0 - salpha.^2);
-gradrho = R.*BP.*dRstardpsin_ray/equil_fit.psia;
+gradrho = R.*BP.*dRstardpsin_ray(:)/equil_fit.psia;
 %
 [qe,me,mp,mn,e0,mu0,re,mc2,clum] = pc_dke_yp;
-Npar = clum*(m.*calpha.*BP./r./B + n.*BPHI./R./B)./omega;
+Npar = clum*(sigmaIp*m.*calpha.*BP./r./B + n.*BPHI./R./B)./omega;
 Nperp = sqrt(clum*clum*(krho.*krho.*gradrho.*gradrho/equil_fit.ap^2 - 2*krho.*m.*gradrho.*salpha./r/equil_fit.ap + (m./r).^2 + (n./R).^2)./omega./omega - Npar.^2);
 %
 D = zeros(length(rho),1);
