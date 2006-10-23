@@ -103,10 +103,14 @@ hrztheta = atan((hrzZ - Zp)./(hrzR - Rp)) + pi*(hrzR < Rp) + 2*pi*(hrzR > Rp & h
 %
 [x1c,x2c,col] = contlimit_jd(srR,szZ,srzpsin',[-1,0.999]);
 %
-% need to select more generally... this is a temporary solution    
+% selects the plasma among various closed systems   
 %
-sRa = x1c{1};%sRa = x1c{3};
-sZa = x2c{1};%sZa = x2c{3};
+for ic = 1:length(x1c),
+    nc(ic) = length(x1c{ic});
+end
+ic = find(nc == max(nc)); 
+sRa = x1c{ic};
+sZa = x2c{ic};
 %
 % change to (r,theta) grid
 %
@@ -231,8 +235,8 @@ p2tdpsindz = griddata(hXpsin,hXtheta,hXdpsindz,p2psin',ttheta,gdmethod)';
 %p2tR = griddata(hXpsin,hXtheta,hXR,p2psin',ttheta,gdmethod)';
 %p2tZ = griddata(hXpsin,hXtheta,hXZ,p2psin',ttheta,gdmethod)';
 %
-ptdpsindr = [zeros(1,nt);interp1(p2psin,p2tdpsindr,[p2psin,1],method)];
-ptdpsindz = [zeros(1,nt);interp1(p2psin,p2tdpsindz,[p2psin,1],method)];
+ptdpsindr = [zeros(1,nt);interp1(p2psin,p2tdpsindr,[p2psin,1],method,'extrap')];
+ptdpsindz = [zeros(1,nt);interp1(p2psin,p2tdpsindz,[p2psin,1],method,'extrap')];
 %
 if display_mode >= 2,
     %
@@ -268,4 +272,15 @@ if display_mode >= 2,
     axis('equal');  
     axis([Rmin,Rmax,Zmin,Zmax]);
     print_jd(p_opt,[filename,'_rhotheta']);
+    %
+    figure(52),clf
+%    
+    sspsin = linspace(0,1,21);
+    sR = interp1(sqrt(ppsin),ptR,sspsin,method);  
+    sZ = interp1(sqrt(ppsin),ptZ,sspsin,method); 
+    
+    [ax] = graph1D_jd(sR',sZ',0,0,'R','Z','',NaN,[Rmin,Rmax],[Zmin,Zmax],style,marker,color1,width1,siz,gca,red);pause(0.5)
+    axis('equal');  
+    axis([Rmin,Rmax,Zmin,Zmax]);
+    print_jd(p_opt,[filename,'_spsin']);
 end
