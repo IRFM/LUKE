@@ -1,4 +1,4 @@
-function equil_EFIT_jd(filename,type,display_mode,p_opt,dispname)
+function equil_EFIT_jd(filename,type,display_mode,p_opt,dispname,savename,Zeff)
 %
 % This function reads the equilibrium parameters from eqdsk files created
 % by EFIT and saved in the formatted text file "filename.efit", as well as
@@ -14,10 +14,16 @@ function equil_EFIT_jd(filename,type,display_mode,p_opt,dispname)
 %
 % by J. Decker (jodecke@alum.mit.edu) 11/01/04
 %
+if nargin < 7 & type == 3,
+    Zeff = 1;
+end
+if nargin < 6
+    savename = filename;
+end
 if nargin < 5
     dispname = filename;
 end
-method = 'spline';
+method = 'linear';%'spline';
 np = 101;
 nt = 65;
 %
@@ -26,13 +32,14 @@ nt = 65;
 % Reads EFIT eqdsk data
 %
 efitname = [filename,'.efit'];
-[rR,zZ,rzpsin,psia,xpsin,xF,xp,xq,Rv,Zv,Bv,Rp,Zp,Ip] = eqdsk_jd(efitname,display_mode,p_opt,dispname);
+[rR,zZ,rzpsin,psia,xpsin,xF,xp,xq,Rv,Zv,Bv,Rp,Zp,Ip] = eqdsk_jd(efitname,display_mode,p_opt,dispname,savename);
 %
 % Reads EFIT numerical text T and n data
 %
-[yrho,yTe,yne,yTi,yni] = Teneprof_jd(filename,type,display_mode,p_opt,dispname);
+profname = [filename,'.prof'];
+[yrho,yTe,yne,yTi,yni,zZi,zmi,fi] = Teneprof_jd(profname,type,display_mode,p_opt,dispname,savename);
 %
-[R,Z,dpsindr,dpsindz,ppsin,theta] = rz2pt_jd(rR,zZ,Rp,Zp,rzpsin,np,nt,method,display_mode,p_opt,filename);
+[R,Z,dpsindr,dpsindz,ppsin,theta] = rz2pt_jd(rR,zZ,Rp,Zp,rzpsin,np,nt,method,display_mode,p_opt,savename);
 %
 ppsi = ppsin*psia;
 BR = dpsindz*psia./R;
@@ -43,9 +50,9 @@ F = repmat(pF',[1,nt]);
 %
 BPHI = F./R;
 %
-zZi = [1,1,1,6];
-zmi = [1,2,3,12];
-fi = [0,1,0];
+%zZi = [1,1,1,6];
+%zmi = [1,2,3,12];
+%fi = [0,1,0];
 %
 %ftra = [];%Approximate trapped fraction
 %HXR = NaN;
@@ -53,6 +60,12 @@ fi = [0,1,0];
 Rmax = R(np,1);%Major radius where the last close flux-surface crosses the LFS midplane
 ap =  Rmax - Rp;%Plasma minor radius on the LFS midplane 
 prho = (R(:,1)' - Rp)/ap;
+%
+xq_h = (xq(1:end-1) + xq(2:end)).'/2;
+xdpsin = diff(xpsin);
+xpsiT = [0,cumsum(xq_h.*xdpsin)];
+xpsinT = xpsiT/xpsiT(end);
+pspsinT = sqrt(interp1(xpsin,xpsinT,ppsin));
 %
 if type == 0 | type == 2,
     pTe = interp1(yrho,yTe,prho,method)/1e3;
@@ -65,6 +78,7 @@ if type == 0 | type == 2,
     pnimp = (pne-pni)/(Zimp-1);
     pnH = pni-pnimp;
     %
+    fi = [0,1,0];
     pzni = [fi'*pnH;pnimp];
     pzTi = ones(4,1)*pTi;
     %
@@ -73,6 +87,27 @@ elseif type == 1,%yrho = sqrt(psin)
     pne = interp1(yrho.^2,yne,ppsin,method);
     pzTi = interp1(yrho.^2,yTi',ppsin,method)'/1e3;
     pzni = interp1(yrho.^2,yni',ppsin,method)';    
+elseif type == 3 | type == 4,%yrho = sqrt(psinT)
+    pTe = interp1(yrho,yTe,pspsinT,method)/1e3;
+    pne = interp1(yrho,yne,pspsinT,method);
+    pTi = interp1(yrho,yTi,pspsinT,method)/1e3;
+    
+    pnH = pne*(zZi(4) - Zeff)/(zZi(4) - 1);
+    pnZ = pne*(Zeff - 1)/zZi(4)/(zZi(4) - 1);
+    pzni = [fi.'*pnH;pnZ];
+    pzTi = ones(4,1)*pTi;
+% elseif type == 4,%yrho = sqrt(psin)
+%     pTe = interp1(yrho.^2,yTe,ppsin,method)/1e3;
+%     pne = interp1(yrho.^2,yne,ppsin,method);
+%     pTi = interp1(yrho.^2,yTi,ppsin,method)/1e3;
+% %    pzni = interp1(yrho.^2,yni.',ppsin,method).';
+%     
+%     fi = [0,0.5,0.5];
+%     pnH = pne*(zZi(4) - Zeff)/(zZi(4) - 1);
+%     pnZ = pne*(Zeff - 1)/zZi(4)/(zZi(4) - 1);
+%     pzni = [fi.'*pnH;pnZ];
+%     
+%     pzTi = ones(4,1)*pTi;
 end
 %
 if display_mode == 2 
@@ -104,12 +139,17 @@ if display_mode == 2
     ylim = NaN;
     leg = ['B_T';'B_P';'B  '];
 %
-    graph1D_jd(rx,rBPHI,0,0,'','','',NaN,xlim,ylim,style,marker,color1,width,siz,gca,red,lspace,bspace);
+    graph1D_jd(rx,-rBPHI,0,0,'','','',NaN,xlim,ylim,style,marker,color1,width,siz,gca,red,lspace,bspace);
     graph1D_jd(rx,rBP,0,0,'','','',NaN,xlim,ylim,style,marker,color2,width);
     graph1D_jd(rx,rB,0,0,xlab,ylab,tit,leg,xlim,ylim,style,marker,color3,width);
-    print_jd(p_opt,[filename,'_Bfield']);
+    print_jd(p_opt,[savename,'_Bfield']);
 end
 %
+R(:,65) = R(:,1);
+Z(:,65) = Z(:,1);
+BR(:,65) = BR(:,1);
+BZ(:,65) = BZ(:,1);
+BPHI(:,65) = BPHI(:,1);
 %
 %savename = ['EQUIL_',filename,'.mat'];
 %
@@ -117,7 +157,7 @@ end
 %
 % new equil structure
 %
-equil.id = filename;
+equil.id = savename;
 equil.zZi = zZi;
 equil.zmi = zmi;
 equil.theta = theta;
@@ -132,14 +172,13 @@ equil.BR = BR;
 equil.BZ = BZ;
 equil.BPHI = BPHI;
 %
-savename = ['EQUIL_',filename,'.mat'];
-eval(['save ',savename,' equil'])
+eval(['save EQUIL_',savename,' equil'])
 %
-return
+%return
 %
 % Verify consistency
 %
-yp = (yTe.*yne + yTi.*yni)*qe;%pressure from Tene data
+yp = (yTe.*yne + sum(yTi.*yni,1))*qe;%pressure from Tene data
 %
 pp = interp1(xpsin,xp,ppsin,method);
 figure(13),clf
@@ -148,12 +187,13 @@ xlab = 'r/a';
 ylab = 'p';
 xlim = [0,1];
 ylim = NaN;
-leg = ['Tene';'EFIT'];
+leg = ['T_en_e + T_in_i';
+       'EFIT           '];
 %
 graph1D_jd(yrho,yp/1e4,0,0,'','','',NaN,xlim,ylim,style,marker,color1,width,siz,gca,red,lspace,bspace);
 graph1D_jd(prho,pp/1e4,0,0,xlab,ylab,tit,leg,xlim,ylim,style,marker,color2,width,siz);
 set(gca,'XTick',[0:0.2:1]);
-print_jd(p_opt,[filename,'_p_comp']);
+print_jd(p_opt,[savename,'_p_comp']);
 
 
 
