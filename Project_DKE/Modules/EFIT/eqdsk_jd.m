@@ -1,16 +1,21 @@
-function [R,Z,psin,psia,xpsin,xF,xp,xq,Rv,Zv,Bv,Rp,Zp,Ip] = eqdsk_jd(filename,display_mode,p_opt,dispname);
+function [R,Z,psin,psia,xpsin,xF,xp,xq,Rv,Zv,Bv,Rp,Zp,Ip] = eqdsk_jd(filename,display_mode,p_opt,dispname,savename);
 %
 % This function reads the equilibrium parameters from eqdsk files created
 % by EFIT and saved in the formatted text file "filename"
 %
 % by J. Decker (jodecke@alum.mit.edu) 10/28/04
 %
+if nargin < 5
+    savename = filename;
+end
 if nargin < 4
     dispname = filename;
 end
 fid = fopen(filename);
 name = fscanf(fid,'%s',1);
 date = fscanf(fid,'%s',1);
+%dummy = fscanf(fid,'%d',1);
+time = fscanf(fid,'%s',1);
 ipestg = fscanf(fid,'%d',1);
 %
 data = fscanf(fid,'%d',3);
@@ -114,54 +119,55 @@ if display_mode >= 2,
     axis('equal');
     axis([xlim,ylim]);
     %set(gca,'XTick',[0:1:2],'YTick',[-2:2]);
-    print_jd(p_opt,[name,'_psi_RZ']);
+    print_jd(p_opt,[savename,'_psi_RZ']);
     %
     figure(2),clf
     %
-    xlab = '\psi/\psi_a';
+    %xlab = '\psi/\psi_a';
+    xlab = '\psi_n^{1/2}';
     ylab = 'F(\psi)=RB_{\phi}';
     xlim = [0,1];
     ylim = NaN;
     %
-    graph1D_jd(xpsin,fpsiar,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color,width,siz,gca,red,lspace,bspace);
+    graph1D_jd(sqrt(xpsin),fpsiar,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color,width,siz,gca,red,lspace,bspace);
     set(gca,'XTick',[0:0.2:1]);
-    print_jd(p_opt,[name,'_F_psi']);
+    print_jd(p_opt,[savename,'_F_psi']);
     %
     figure(3),clf
     %
     ylab = 'p(\psi)';
     ylim = NaN;
     %
-    graph1D_jd(xpsin,prar,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color,width,siz,gca,red,lspace,bspace);
+    graph1D_jd(sqrt(xpsin),prar,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color,width,siz,gca,red,lspace,bspace);
     set(gca,'XTick',[0:0.2:1]);
-    print_jd(p_opt,[name,'_p_psi']);
+    print_jd(p_opt,[savename,'_p_psi']);
     %
     figure(4),clf
     %
     ylab = 'dF/d\psi';
     ylim = NaN;
     %
-    graph1D_jd(xpsin,ffpar,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color,width,siz,gca,red,lspace,bspace);
+    graph1D_jd(sqrt(xpsin),ffpar,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color,width,siz,gca,red,lspace,bspace);
     set(gca,'XTick',[0:0.2:1]);
-    print_jd(p_opt,[name,'_dF_psi']);
+    print_jd(p_opt,[savename,'_dF_psi']);
     %
     figure(5),clf
     %
     ylab = 'dp/d\psi';
     ylim = NaN;
     %
-    graph1D_jd(xpsin,ppar,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color,width,siz,gca,red,lspace,bspace);
+    graph1D_jd(sqrt(xpsin),ppar,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color,width,siz,gca,red,lspace,bspace);
     set(gca,'XTick',[0:0.2:1]);
-    print_jd(p_opt,[name,'_dp_psi']);
+    print_jd(p_opt,[savename,'_dp_psi']);
     %
     figure(6),clf
     %
     ylab = 'q(\psi)';
     ylim = NaN;
     %
-    graph1D_jd(xpsin,qar,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color,width,siz,gca,red,lspace,bspace);
+    graph1D_jd(sqrt(xpsin),qar,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color,width,siz,gca,red,lspace,bspace);
     set(gca,'XTick',[0:0.2:1]);
-    print_jd(p_opt,[name,'_q_psi']);
+    print_jd(p_opt,[savename,'_q_psi']);
     %
     figure(7),clf
     %
@@ -183,7 +189,7 @@ if display_mode >= 2,
     axis('equal');
     axis([xlim,ylim]);
     %set(gca,'XTick',[0:1:2],'YTick',[-2:2]);
-    print_jd(p_opt,[name,'_rho_RZ']);
+    print_jd(p_opt,[savename,'_rho_RZ']);
  end
 
 
