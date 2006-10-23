@@ -23,14 +23,11 @@ if nargin < 2
     error('no psi grid specified');
 end
 %
-npsi = size(equil.R,1);
+npsi = length(equil.ppsi);
 nr = length(psin);
 %
-Rp = equil.R(1,1);%major radius of Magnetic Axis
-%
-Rmax = equil.R(npsi,1);%major radius where the last close flux-surface crosses the LFS midplane
-ap =  Rmax - Rp;%plasma radius on the LFS midplane 
-prho = (equil.R(:,1) - Rp)/ap;
+ap =  equil.x(npsi,1);%plasma radius on the LFS midplane 
+prho = equil.x(:,1)/ap;
 %
 psia = equil.ppsi(npsi);%poloidal flux at the edge
 ppsin = equil.ppsi/psia;%normalized poloidal flux
