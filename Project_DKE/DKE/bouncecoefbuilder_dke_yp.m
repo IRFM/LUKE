@@ -7,13 +7,13 @@ function [Zbouncecoef] = bouncecoeffbuilder_dke_yp(path,dkeparam,display,equilDK
 Rp = equilDKE.Rp;
 Zp = equilDKE.Zp;
 ap = equilDKE.ap;
-XR = equilDKE.XR;
-XZ = equilDKE.XZ;
-XBR = equilDKE.XBR;
-XBZ = equilDKE.XBZ;
+Xx = equilDKE.Xx;
+Xy = equilDKE.Xy;
+XBx = equilDKE.XBx;
+XBy = equilDKE.XBy;
 XBphi = equilDKE.XBphi;
 xB0 = equilDKE.xB0;
-xR0 = equilDKE.xR0;
+xx0 = equilDKE.xx0;
 xBT0 = equilDKE.xBT0;
 xBp0 = equilDKE.xBp0;
 %
@@ -56,8 +56,8 @@ rdke = gridDKE.rdke;
      XXlambda_b_p1m3p4]...
 =  bounceparam_dke_yp(bounce_mode,equil_mode,display_mode,temppath,...
      mhu,mhum,mhup,Xmhu,Xmhum,Xmhup,...
-     XR,XZ,XBR,XBZ,XBphi,...
-     xmhubounce2,xB0,xR0,xBT0,xBp0,Rp,Zp,ap);
+     Xx,Xy,XBx,XBy,XBphi,...
+     xmhubounce2,xB0,xx0,xBT0,xBp0,Rp,Zp,ap);
 %
 sm_f = zeros(1,nr+1);
 sm_T_f = zeros(1,nr+1);
@@ -176,6 +176,7 @@ Zbouncecoef.xq = xq;
 Zbouncecoef.xqtilde = xqtilde;
 Zbouncecoef.xqbar = xqbar;
 Zbouncecoef.xqhat = xqhat;
+%
 Zbouncecoef.XXheaviside = XXheaviside;
 Zbouncecoef.XXheaviside_p = XXheaviside_p;
 Zbouncecoef.XXheaviside_m = XXheaviside_m;

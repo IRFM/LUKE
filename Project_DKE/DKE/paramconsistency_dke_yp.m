@@ -1,9 +1,10 @@
-function [dkeparam] = paramconsistency_dke_yp(dkeparam,psin_S,rho_S)
+function [dkeparam] = paramconsistency_dke_yp(dkeparam,equil,psin_S,rho_S)
 %
 % Cross-check input parameter consistency
 %
 %by Y.Peysson (CEA-DRFC) <yves.peysson@cea.fr> and J. Decker (MIT/RLE) <joan.decker@cea.fr>
 %
+if isinf(equil.Rp),dkeparam.bounce_mode == 0;end
 if dkeparam.bounce_mode == 0,dkeparam.dke_mode = 0;end
 if dkeparam.dke_mode == 1,dkeparam.bounce_mode = 1;end
 if dkeparam.bounce_mode > 1,dkeparam.bounce_mode = 1;end

@@ -1,4 +1,4 @@
-function [xyPinc_out,xyPinc_mod] = rfprop_dke_jd(yb,xyprop_dke,xyPinc_in,xyPabs_dke,xdV_dke,xpsin,xpsin_dke,r_dke,dke_mode);
+function [xyP0_2piRp_out,xyP0_2piRp_mod] = rfprop_dke_jd(yb,xyprop_dke,xyP0_2piRp_in,xyPabs_dke,xdV_2piRp_dke,xpsin,xpsin_dke,r_dke,dke_mode);
 %
 % This function ensures consistency between the power travelling with RF
 % rays and the power absorbed by the plasma. Iterations between
@@ -8,24 +8,24 @@ function [xyPinc_out,xyPinc_mod] = rfprop_dke_jd(yb,xyprop_dke,xyPinc_in,xyPabs_
 %
 %       - yb: list of ray starts
 %       - xyprop_dke: propagation factors at DKE FS
-%       - xyPinc_in: input incident power at each FP position
+%       - xyP0_2piRp_in: input incident power at each FP position
 %       - xyPabs: absorbed power density in the DKE FS
 %       - xydV_dke: incremental volume in the DKE FS
 %
 %   OUTPUTS:
 %
-%       - xyPinc_out: calculated current step incident power at each FP position
-%       - xyPinc_mod: estimated next step incident power at each FP position
+%       - xyP0_2piRp_out: calculated current step incident power at each FP position
+%       - xyP0_2piRp_mod: estimated next step incident power at each FP position
 %
 % by J. Decker (jodecker@alum.mit.edu) and Y. Peysson (yves.peysson@cea.fr)
 %
 [nr_dke,ny] = size(xyprop_dke);
 %
-xyPinc_out = xyPinc_in;%default values
-xyPinc_mod = xyPinc_in;%default values
+xyP0_2piRp_out = xyP0_2piRp_in;%default values
+xyP0_2piRp_mod = xyP0_2piRp_in;%default values
 %
-xydV_dke = xdV_dke'*ones(1,ny);
-xyPrf_dke = xyPabs_dke.*xydV_dke;%power absorbed from each ray within each FS
+xydV_2piRp_dke = xdV_2piRp_dke'*ones(1,ny);
+xyPrf_dke = xyPabs_dke.*xydV_2piRp_dke;%power absorbed from each ray within each FS
 xyPrf_dke(xyPrf_dke < 0) = 0;
 %
 xymask_prop_dke = xyprop_dke ~= 0;%DKE points visited by the ray
@@ -45,7 +45,7 @@ for iy = 1:ny
     % check if new ray or only new portion
     %
     if ~isempty(find(iy == yb)); %new ray
-        bPrf = xyPinc_in(ir,iy); %initial power in the ray
+        bPrf = xyP0_2piRp_in(ir,iy); %initial power in the ray
         bPrf_mod = bPrf; %initial power in the ray
     end
     %    
@@ -56,11 +56,11 @@ for iy = 1:ny
         %
         if Pabs <= bPrf % absorbed power cannot be more than incident power
             %
-            xyPinc_out(ir,iy) = bPrf - Pabs/2; %incident power consistent with absorbed power
+            xyP0_2piRp_out(ir,iy) = bPrf - Pabs/2; %incident power consistent with absorbed power
             %
         else
             %
-            xyPinc_out(ir,iy) = xyPinc_in(ir,iy)*bPrf/Pabs; %linear anticipation
+            xyP0_2piRp_out(ir,iy) = xyP0_2piRp_in(ir,iy)*bPrf/Pabs; %linear anticipation
             %
             Pabs = bPrf;
             %
@@ -73,19 +73,19 @@ for iy = 1:ny
         % to previous QL iteration. This estimate 
         % assumes linear power absorbed vs incident power dependence.
         %
-        if xyPinc_in(ir,iy) > 0
-            Pabs_mod = xyPrf_dke(ir_dke,iy)*bPrf_mod/(xyPinc_in(ir,iy) + xyPrf_dke(ir_dke,iy)/2);% absorbed power in this step
+        if xyP0_2piRp_in(ir,iy) > 0
+            Pabs_mod = xyPrf_dke(ir_dke,iy)*bPrf_mod/(xyP0_2piRp_in(ir,iy) + xyPrf_dke(ir_dke,iy)/2);% absorbed power in this step
         else
             Pabs_mod = xyPrf_dke(ir_dke,iy);% absorbed power in this step
         end
         %
         if Pabs_mod <= bPrf_mod % absorbed power cannot be more than incident power
             %
-            xyPinc_mod(ir,iy) = bPrf_mod - Pabs_mod/2; %incident power consistent with absorbed power
+            xyP0_2piRp_mod(ir,iy) = bPrf_mod - Pabs_mod/2; %incident power consistent with absorbed power
             %
         else
             %
-            xyPinc_mod(ir,iy) = xyPinc_in(ir,iy)*bPrf_mod/xyPrf_dke(ir_dke,iy); %linear anticipation
+            xyP0_2piRp_mod(ir,iy) = xyP0_2piRp_in(ir,iy)*bPrf_mod/xyPrf_dke(ir_dke,iy); %linear anticipation
             %
             Pabs_mod = bPrf_mod;
             %
@@ -103,8 +103,8 @@ for iy = 1:ny
     if dke_mode == 1  
         xmask_prop_fp = [(min(r_dke(xymask_prop_dke(:,iy))) - 1):(max(r_dke(xymask_prop_dke(:,iy))) + 1)];%corresponding FP points
         %        
-        xyPinc_out(xmask_prop_fp,iy) = interp(xpsin_dke(xymask_prop_dke(:,iy)),xyPinc_out(xymask_prop_dke(:,iy)),xpsin(xmask_prop_fp),method);
-        xyPinc_mod(xmask_prop_fp,iy) = interp(xpsin_dke(xymask_prop_dke(:,iy)),xyPinc_mod(xymask_prop_dke(:,iy)),xpsin(xmask_prop_fp),method);
+        xyP0_2piRp_out(xmask_prop_fp,iy) = interp(xpsin_dke(xymask_prop_dke(:,iy)),xyP0_2piRp_out(xymask_prop_dke(:,iy)),xpsin(xmask_prop_fp),method);
+        xyP0_2piRp_mod(xmask_prop_fp,iy) = interp(xpsin_dke(xymask_prop_dke(:,iy)),xyP0_2piRp_mod(xymask_prop_dke(:,iy)),xpsin(xmask_prop_fp),method);
     end
 end
         

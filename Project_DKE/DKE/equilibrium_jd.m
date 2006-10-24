@@ -105,13 +105,13 @@ end
 %
 % CASE OF LOCAL CALCULATION INDEPENDENT OF ANY ACTUAL TOKAMAK GENOMETRY
 %
-[npsi,ntheta] = size(equil.R);
+[npsi,ntheta] = size(equil.ptx);
 %
 if strcmp(equil.id,'LOCAL')
     mtheta = equil.theta;
-    ppsin = equil.ppsi;
+    psin = equil.psi;
     if isnan(xpsin)
-        xpsin = ppsin;
+        xpsin = psin;
     end
     nr = length(xpsin);
     psia = NaN;
@@ -155,57 +155,59 @@ end
 %
 mtheta = 0:2*pi/((ntheta-1)*mfactor):2*pi*((ntheta-1)*mfactor-1)/((ntheta-1)*mfactor); %super theta grid
 %
-mR = interpft(equil.R(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
-mZ = interpft(equil.Z(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
-mBR = interpft(equil.BR(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
-mBZ = interpft(equil.BZ(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
-mBPHI = interpft(equil.BPHI(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
+mx = interpft(equil.ptx(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
+my = interpft(equil.pty(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
+mBx = interpft(equil.ptBx(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
+mBy = interpft(equil.ptBy(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
+mBPHI = interpft(equil.ptBPHI(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
 %
 mtheta = [mtheta,2*pi]; %2*pi point retrieved (for future interpolation)
-mR = [mR,mR(:,1)]; %2*pi point retrieved
-mZ = [mZ,mZ(:,1)]; %2*pi point retrieved
-mBR = [mBR,mBR(:,1)]; %2*pi point retrieved
-mBZ = [mBZ,mBZ(:,1)]; %2*pi point retrieved
+mx = [mx,mx(:,1)]; %2*pi point retrieved
+my = [my,my(:,1)]; %2*pi point retrieved
+mBx = [mBx,mBx(:,1)]; %2*pi point retrieved
+mBy = [mBy,mBy(:,1)]; %2*pi point retrieved
 mBPHI = [mBPHI,mBPHI(:,1)]; %2*pi point retrieved
 %
 nmtheta = length(mtheta);
 %
-Rp = mR(1,1);%Major radius of magnetic Axis
-Zp = mZ(1,1);%Elevation of magnetic Axis
+Rp = equil.Rp;%Major radius of magnetic Axis
+Zp = equil.Zp;%Elevation of magnetic Axis
 %
-Rmax = mR(npsi,1);%Major radius where the last close flux-surface crosses the LFS midplane
-ap =  Rmax - Rp;%Plasma minor radius on the LFS midplane 
+ap =  mx(npsi,1);%Plasma minor radius on the LFS midplane 
 %
-psia = equil.ppsi(npsi);%Poloidal flux at the edge
-ppsin = equil.ppsi/psia;%Normalized poloidal flux
+psia = equil.psi(npsi);%Poloidal flux at the edge
+psin = equil.psi/psia;%Normalized poloidal flux
 %
 pZeff = sum(equil.pzni.*repmat((equil.zZi.^2)',[1,npsi]))./equil.pne;%Effective charge (a.u.)
 %
 if isnan(xpsin)
-    xpsin = ppsin;
+    xpsin = psin;
+end
+if isnan(xpsin_S_dke)
+    xpsin_S_dke = psin;
 end
 %
 nr = length(xpsin);
 %
 % Interpolation of calculation grid
 %
-XR = interp1(ppsin,mR,xpsin,method);
-XZ = interp1(ppsin,mZ,xpsin,method);
-XBR = interp1(ppsin,mBR,xpsin,method);
-XBZ = interp1(ppsin,mBZ,xpsin,method);
-XBphi = interp1(ppsin,mBPHI,xpsin,method);
+Xx = interp1(psin,mx,xpsin,method);
+Xy = interp1(psin,my,xpsin,method);
+XBx = interp1(psin,mBx,xpsin,method);
+XBy = interp1(psin,mBy,xpsin,method);
+XBphi = interp1(psin,mBPHI,xpsin,method);
 %
-xrho = (XR(:,1)' - Rp)/ap;%Normalized radius on the horizontal LFS midplane                          
+xrho = Xx(:,1)'/ap;%Normalized radius on the horizontal LFS midplane                          
 %
-xTe = interp1(ppsin,equil.pTe,xpsin,method);
-xne = interp1(ppsin,equil.pne,xpsin,method);
-xzTi = interp1(ppsin,equil.pzTi',xpsin,method)';
-xzni = interp1(ppsin,equil.pzni',xpsin,method)';
-xZeff = interp1(ppsin,pZeff,xpsin,method);
+xTe = interp1(psin,equil.pTe,xpsin,method);
+xne = interp1(psin,equil.pne,xpsin,method);
+xzTi = interp1(psin,equil.pzTi.',xpsin,method).';
+xzni = interp1(psin,equil.pzni.',xpsin,method).';
+xZeff = interp1(psin,pZeff,xpsin,method);
 %
 XBT = abs(XBphi);%Toroidal B-field
-XBp = sqrt(XBR.^2 + XBZ.^2);%Poloidal B-field
-XB = sqrt(XBphi.^2 + XBR.^2 + XBZ.^2);%Total B-field
+XBp = sqrt(XBx.^2 + XBy.^2);%Poloidal B-field
+XB = sqrt(XBphi.^2 + XBx.^2 + XBy.^2);%Total B-field
 %
 %index 0 refers to the minimum of the magnetic field
 %
@@ -217,45 +219,45 @@ xmhu0T2 = 1 - xB0./xBmax; %Pitch-angle (squared) at the trapped-passing boundary
 xiB0 = (xiB0 - 1)*nr + (1:nr);%Indices in (psi,theta) grid corresponding of B=Bmin
 xBT0 = XBT(xiB0);%Toroidal field at B=Bmin
 xBp0 = XBp(xiB0);%Poroidal field at B=Bmin
-xR0 = XR(xiB0);%Major radius at B=Bmin
+xx0 = Xx(xiB0);%Major radius at B=Bmin
 %
 % FS volume and poloidal surface
 %
 if ~isnan(xpsin_S_dke)
 % half grids in theta and psi (for trapezoidal integration avoiding singularities)
     hmtheta = (mtheta(1:nmtheta-1) + mtheta(2:nmtheta))/2;
-    hppsin = (ppsin(1:npsi-1) + ppsin(2:npsi))/2;
-    hmR = (mR(1:npsi-1,1:nmtheta-1) + mR(2:npsi,1:nmtheta-1) + mR(1:npsi-1,2:nmtheta) + mR(2:npsi,2:nmtheta))/4;
-    hmZ = (mZ(1:npsi-1,1:nmtheta-1) + mZ(2:npsi,1:nmtheta-1) + mZ(1:npsi-1,2:nmtheta) + mZ(2:npsi,2:nmtheta))/4;
-    hmBR = (mBR(1:npsi-1,1:nmtheta-1) + mBR(2:npsi,1:nmtheta-1) + mBR(1:npsi-1,2:nmtheta) + mBR(2:npsi,2:nmtheta))/4;
-    hmBZ = (mBZ(1:npsi-1,1:nmtheta-1) + mBZ(2:npsi,1:nmtheta-1) + mBZ(1:npsi-1,2:nmtheta) + mBZ(2:npsi,2:nmtheta))/4;
+    hppsin = (psin(1:npsi-1) + psin(2:npsi))/2;
+    hmx = (mx(1:npsi-1,1:nmtheta-1) + mx(2:npsi,1:nmtheta-1) + mx(1:npsi-1,2:nmtheta) + mx(2:npsi,2:nmtheta))/4;
+    hmy = (my(1:npsi-1,1:nmtheta-1) + my(2:npsi,1:nmtheta-1) + my(1:npsi-1,2:nmtheta) + my(2:npsi,2:nmtheta))/4;
+    hmBx = (mBx(1:npsi-1,1:nmtheta-1) + mBx(2:npsi,1:nmtheta-1) + mBx(1:npsi-1,2:nmtheta) + mBx(2:npsi,2:nmtheta))/4;
+    hmBy = (mBy(1:npsi-1,1:nmtheta-1) + mBy(2:npsi,1:nmtheta-1) + mBy(1:npsi-1,2:nmtheta) + mBy(2:npsi,2:nmtheta))/4;
     hmBPHI = (mBPHI(1:npsi-1,1:nmtheta-1) + mBPHI(2:npsi,1:nmtheta-1) + mBPHI(1:npsi-1,2:nmtheta) + mBPHI(2:npsi,2:nmtheta))/4;
 %
-    dpsi = abs(diff(equil.ppsi));
+    dpsi = abs(diff(equil.psi));
     dmtheta = diff(mtheta);
-% FS Volume
-    hmFV = 2*pi*((hmR - Rp).^2 + (hmZ - Zp).^2)./abs(hmBR.*(hmZ - Zp) - hmBZ.*(hmR - Rp));
+% FS Volume per 2pi*Rp
+    hmFV_2piRp = (hmx.^2 + hmy.^2)./abs(hmBx.*hmy - hmBy.*hmx)/ap;
 %
-    pdV = integral_dke_jd(dmtheta,hmFV,2);
-    spdV = triu(repmat(pdV,[1,npsi-1]));
-    pV = [0,integral_dke_jd(dpsi,spdV,1)'];
+    pdV_2piRp = integral_dke_jd(dmtheta,hmFV_2piRp,2);
+    spdV_2piRp = triu(repmat(pdV_2piRp,[1,npsi-1]));
+    pV_2piRp = [0,integral_dke_jd(dpsi,spdV_2piRp,1)'];
 %    
 % FS poloidal surface
-    hmFA = ((hmR - Rp).^2 + (hmZ - Zp).^2)./abs(hmBR.*(hmZ - Zp) - hmBZ.*(hmR - Rp))./hmR;
+    hmFA = (hmx.^2 + hmy.^2)./abs(hmBx.*hmy - hmBy.*hmx)./(1 + hmx/Rp)/ap;
 %
     pdA = integral_dke_jd(dmtheta,hmFA,2);
     spdA = triu(repmat(pdA,[1,npsi-1]));
     pA = [0,integral_dke_jd(dpsi,spdA,1)'];
 %
 % DKE FS volume and poloidal surface
-    xV_S_dke = interp1(ppsin,pV,xpsin_S_dke,method);
-    xA_S_dke = interp1(ppsin,pA,xpsin_S_dke,method);
+    xV_2piRp_S_dke = interp1(psin,pV_2piRp,xpsin_S_dke,method);
+    xA_S_dke = interp1(psin,pA,xpsin_S_dke,method);
 %
 % DKE FS invremental volume and poloidal surface
-    xdV_dke = diff(xV_S_dke);
+    xdV_2piRp_dke = diff(xV_2piRp_S_dke);
     xdA_dke = diff(xA_S_dke);
 else
-    xdV_dke = NaN;
+    xdV_2piRp_dke = NaN;
     xdA_dke = NaN;
 end
 %
@@ -263,7 +265,7 @@ end
 %
 if display_mode >= 2,
 %    
-    prho = (equil.R(:,1)' - Rp)/(equil.R(npsi,1)' - Rp);
+    prho = mx(:,1)'/ap;
 %
 % displays the equilibrium profiles
 %
@@ -273,7 +275,7 @@ if display_mode >= 2,
        set(gca,'position',[0,0,1,1]);
 %
        subplot('position',[1/12,0.5+1/16,5/24,5/16])
-          [ax] = graph1D_jd(prho,ppsin,0,0,'','','',NaN,[0,1],[-eps,1],'-','none','b',0.5);
+          [ax] = graph1D_jd(prho,psin,0,0,'','','',NaN,[0,1],[-eps,1],'-','none','b',0.5);
           [ax] = graph1D_jd(xrho,xpsin,0,0,'\rho','\psi_n','',NaN,[0,1],[-eps,1],'none','+','r',2);
        subplot('position',[1/3+1/12,0.5+1/16,5/24,5/16])
           [ax] = graph1D_jd(prho,equil.pTe,0,0,'','','',NaN,[0,1],[-eps,max(equil.pTe)],'-','none','b',0.5);
@@ -296,21 +298,21 @@ if display_mode >= 2,
 %       
     srho = linspace(0,1,21);
     stheta = linspace(0,2*pi,31);
-    sR = interp1(prho,mR,srho,method);  
-    sZ = interp1(prho,mZ,srho,method); 
-    stR = interp1(mtheta,mR',stheta,method)';  
-    stZ = interp1(mtheta,mZ',stheta,method)';    
+    sx = interp1(prho,mx,srho,method);  
+    sy = interp1(prho,my,srho,method); 
+    stx = interp1(mtheta,mx',stheta,method)';  
+    sty = interp1(mtheta,my',stheta,method)';    
 %
-    Rmin = min(min(equil.R));
-    Rmax = max(max(equil.R));
-    Zmin = min(min(equil.Z));
-    Zmax = max(max(equil.Z));
+    xmin = min(min(equil.ptx));
+    xmax = max(max(equil.ptx));
+    ymin = min(min(equil.pty));
+    ymax = max(max(equil.pty));
    
     %
     figure('Name','Magnetic equilibrium flux surface contour'),clf
 %    
-    [ax] = graph1D_jd(sR',sZ',0,0,'','','',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','r',2);drawnow
-    [ax] = graph1D_jd(stR,stZ,0,0,'R(m)','Z(m)','Flux-surfaces labeled by \rho=0,0.1,0.2...1',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','b',0.5);
+    [ax] = graph1D_jd(sx',sy',0,0,'','','',NaN,[xmin,xmax],[ymin,ymax],'-','none','r',2);drawnow
+    [ax] = graph1D_jd(stx,sty,0,0,'x(m)','y(m)','Flux-surfaces labeled by \rho=0,0.1,0.2...1',NaN,[xmin,xmax],[ymin,ymax],'-','none','b',0.5);
     axis('equal');drawnow  
 end
 %
@@ -333,13 +335,13 @@ equilDKE.tokname = equil.id;
 equilDKE.mtheta = mtheta;
 equilDKE.xpsin = xpsin;
 equilDKE.psia = psia;
-equilDKE.XR = XR;
-equilDKE.XZ = XZ;
-equilDKE.XBR = XBR;
-equilDKE.XBZ = XBZ;
+equilDKE.Xx = Xx;
+equilDKE.Xy = Xy;
+equilDKE.XBx = XBx;
+equilDKE.XBy = XBy;
 equilDKE.XBphi = XBphi;
 equilDKE.xB0 = xB0;
-equilDKE.xR0 = xR0;
+equilDKE.xx0 = xx0;
 equilDKE.xBT0 = xBT0;
 equilDKE.xBp0 = xBp0;
 equilDKE.xrho = xrho;
@@ -354,7 +356,7 @@ equilDKE.Rp = Rp;
 equilDKE.Zp = Zp;
 equilDKE.ap = ap;
 equilDKE.xmhu0T2 = xmhu0T2;
-equilDKE.xdV_dke = xdV_dke;
+equilDKE.xdV_2piRp_dke = xdV_2piRp_dke;
 equilDKE.xdA_dke = xdA_dke;
 
 

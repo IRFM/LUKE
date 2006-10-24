@@ -28,7 +28,7 @@ else
   xrho = equilDKE.xrho;
   xB0 = equilDKE.xB0;
   xBT0 = equilDKE.xBT0;
-  xR0 = equilDKE.xR0;
+  xx0 = equilDKE.xx0;
   Rp = equilDKE.Rp;
   Xmhu = gridDKE.Xmhu;
   X1mmhu2p = gridDKE.X1mmhu2p;
@@ -109,7 +109,7 @@ else
     if bounce_mode == 0,
         xepsi(ir) = xepsi_fsav(ir);
     elseif bounce_mode == 1,
-        xepsi(ir) = xepsi_fsav(ir)*(xqbar(ir)/xqtilde(ir))*(xB0(ir)/xBT0(ir))*(xR0(ir)/Rp)/XXlambda_b_p1m3p4(1,1,ir);%Value at Bmin for FP or DKE calculations
+        xepsi(ir) = xepsi_fsav(ir)*(xqbar(ir)/xqtilde(ir))*(xB0(ir)/xBT0(ir))*(1+xx0(ir)/Rp)/XXlambda_b_p1m3p4(1,1,ir);%Value at Bmin for FP or DKE calculations
     end
     if xepsi(ir) > 0.05, 
 %        info_dke_yp(2,'WARNING: Ohmic electric field is likely too large. See the documentation');%To be consistent with the assumption of the linearized Fokker-Planck equation

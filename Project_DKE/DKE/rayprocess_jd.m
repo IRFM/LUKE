@@ -1,4 +1,4 @@
-function ray = rayprocess_jd(ray,equil,opt_disp,omega_rf,n_rf_list,method);
+function ray = rayprocess_jd(ray,equilDKE_Fourier,opt_disp,omega_rf,n_rf_list,method);
 %
 % This function calculates missing ray info if needed. 
 % Also calculates the correct Nperp, polarization and power flow if required 
@@ -10,19 +10,17 @@ function ray = rayprocess_jd(ray,equil,opt_disp,omega_rf,n_rf_list,method);
 %
 % equilibrium data with Fourier-enhanced poloidal precision and original radial grid
 %
-%[theta,ppsin,psia,ptR,ptZ,ptBR,ptBZ,ptBphi,pB0,pR0,pBT0,pBp0,prho,pTe,pne,pzTi,pzni,zZi,zmi,pZeff,Rp,Zp] = equilibrium_jd(equil);
-[equilDKE_Fourier] = equilibrium_jd(equil);
 %
 theta = equilDKE_Fourier.mtheta;
 ppsin = equilDKE_Fourier.xpsin;
 psia = equilDKE_Fourier.psia;
-ptR = equilDKE_Fourier.XR;
-ptZ = equilDKE_Fourier.XZ;
-ptBR = equilDKE_Fourier.XBR;
-ptBZ = equilDKE_Fourier.XBZ;
+ptx = equilDKE_Fourier.Xx;
+pty = equilDKE_Fourier.Xy;
+ptBx = equilDKE_Fourier.XBx;
+ptBy = equilDKE_Fourier.XBy;
 ptBphi = equilDKE_Fourier.XBphi;
 pB0 = equilDKE_Fourier.xB0;
-pR0 = equilDKE_Fourier.xR0;
+px0 = equilDKE_Fourier.xx0;
 pBT0 = equilDKE_Fourier.xBT0;
 pBp0 = equilDKE_Fourier.xBp0;
 prho = equilDKE_Fourier.xrho;
@@ -36,20 +34,36 @@ pZeff = equilDKE_Fourier.xZeff;
 Rp = equilDKE_Fourier.Rp;
 Zp = equilDKE_Fourier.Zp;
 %
-ptr = sqrt((ptR - Rp).^2 + (ptZ - Zp).^2); %minor radius on the (psi,stheta) grid
-ptBP = sqrt(ptBR.^2 + ptBZ.^2); %poloidal magnetic field on the (psi,stheta) grid
+ptr = sqrt(ptx.^2 + pty.^2); %minor radius on the (psi,stheta) grid
+ptBP = sqrt(ptBx.^2 + ptBy.^2); %poloidal magnetic field on the (psi,stheta) grid
 ptB = sqrt(ptBP.^2 + ptBphi.^2); %magnetic field on the (psi,stheta) grid
 %
-sR = ray.sR;% Ray location (major radius) along the propagation [1,ns]
-sphi = ray.sphi;% Ray location (toroidal angle) along the propagation [1,ns]
-sZ = ray.sZ;% Ray location (vertical) along the propagation [1,ns]
+if ~isinf(Rp), %toroidal FP calculations
+    if ~isfield(ray,'sphi') | ~isfield(ray,'sn'),% check for toroidal ray tracing
+        error('cylindrical ray tracing and toroidal FP codes are incompatible');
+    else
+        sphi = ray.sphi;% Ray location (toroidal angle) along the propagation [1,ns]
+        sn = ray.sn;% Ray wave number (toroidal) along the propagation [1,ns]
+    end
+    tor_mode = 1;
+else
+    if ~isfield(ray,'sz') | ~isfield(ray,'skz'),% check for cylindrical ray tracing
+        error('toroidal ray tracing and cylindrical FP codes are incompatible');
+    else
+        sz = ray.sz;% Ray longitudinal position
+        skz = ray.skz;% Ray wave vector along the axis [1,ns]
+    end
+    tor_mode = 0;
+end
+%
+sx = ray.sx;% Ray location (major radius) along the propagation [1,ns]
+sy = ray.sy;% Ray location (vertical) along the propagation [1,ns]
 ss = ray.ss;% Ray propagation distance parameter for each ray (put to NaN once the ray is absorbed) [1,ns]
 spsin = ray.spsin;% Ray location (normalized magnetic flux) along the propagation [1,ns]
 stheta = ray.stheta;% Ray location (poloidal angle) along the propagation [1,ns]
 %
-skR = ray.skR;% Ray wave vector (major radius) along the propagation [1,ns]
-sn = ray.sn;% Ray wave number (toroidal) along the propagation [1,ns]
-skZ = ray.skZ;% Ray wave vector (vertical) along the propagation [1,ns]
+skx = ray.skx;% Ray wave vector (major radius) along the propagation [1,ns]
+sky = ray.sky;% Ray wave vector (vertical) along the propagation [1,ns]
 %
 sNpar = ray.sNpar;% Ray parallel wave number [1,ns]
 sNperp = ray.sNperp;% Ray perpendicular wave number [1,ns]
@@ -62,15 +76,28 @@ sphi_xyz = ray.sphi_xyz;% normalized power flow [3,ns]
 % Calculates ss (distance along the ray) if missing.
 %
 if isempty(ss),
-    if isempty(sR) | isempty(sphi) | isempty(sZ)
-        error('Ray-tracing data incomplete')
-    end
-    ns = length(sR);
-    ss(1) = 0;
-    if ns > 1,
-        sRh = (sR(1:ns-1) + sR(2:ns))/2;
-        ds = sqrt(diff(sR).^2 + (sRh.*diff(sphi)).^2 + diff(sZ).^2);
-        ss(2:ns) = cumsum(ds);
+    if tor_mode == 1,
+        if isempty(sx) | isempty(sphi) | isempty(sy)
+            error('Ray-tracing data incomplete')
+        end
+        ns = length(sx);
+        ss(1) = 0;
+        if ns > 1,
+            sR = Rp + sx;
+            sRh = (sR(1:ns-1) + sR(2:ns))/2;
+            ds = sqrt(diff(sx).^2 + (sRh.*diff(sphi)).^2 + diff(sy).^2);
+            ss(2:ns) = cumsum(ds);
+        end
+    else
+        if isempty(sx) | isempty(sy) | isempty(sz)
+            error('Ray-tracing data incomplete')
+        end
+        ns = length(sx);
+        ss(1) = 0;
+        if ns > 1,
+            ds = sqrt(diff(sx).^2 + diff(sy).^2 + diff(sz).^2);
+            ss(2:ns) = cumsum(ds);
+        end
     end
 else 
     ns = length(ss);
@@ -81,16 +108,16 @@ mask = [1,find(diff(ss) > 0) + 1];
 % Calculates spsin and stheta (normalized flux and poloidal angle, location along the ray) and sR sZ sphi if missing.
 %
 if isempty(spsin) | isempty(stheta),
-    if isempty(sR) | isempty(sZ)
+    if isempty(sx) | isempty(sy)
         error('Ray-tracing data incomplete')
     end
     %
     % ray position in (r,theta) coordinates
     %
-    sR = sR + eps*(sR == Rp); %to avoid singularities
-    sZ = sZ + eps*(sZ == Zp); %to avoid singularities
-    sr = sqrt((sR - Rp).^2 + (sZ - Zp).^2); %minor radius
-    stheta = atan((sZ - Zp)./(sR - Rp)) + pi - pi*(sR > Rp).*sign(sZ - Zp); %poloidal angle [0,2*pi]
+    sx(sx == 0) = eps; %to avoid singularities
+    sy(sy == 0) = eps; %to avoid singularities
+    sr = sqrt(sx.^2 + sy.^2); %minor radius
+    stheta = atan(sy./sx) + pi - pi*(sx > 0).*sign(sy); %poloidal angle [0,2*pi]
     %
     % interpolation for r at ray poloidal locations    
     %
@@ -117,22 +144,34 @@ if isempty(spsin) | isempty(stheta),
     end
     spsin(spsin <= 0) = eps;
 else
-    if isempty(sR) | isempty(sZ)
-        sR = interp2(theta,ppsin,ptR,stheta,sypsin,method);
-        sZ = interp2(theta,ppsin,ptZ,stheta,sypsin,method);
-        if ~isempty(sNpar)
-            ssigmah = sign((sNpar(1:ns-1,:) + sNpar(2:ns,:))/2);
-        elseif ~isempty(sn)
-            ssigmah = sign((sn(1:ns-1,:) + sn(2:ns,:))/2);
+    if isempty(sx) | isempty(sy),
+        sx = interp2(theta,ppsin,ptx,stheta,sypsin,method);
+        sy = interp2(theta,ppsin,pty,stheta,sypsin,method);
+        if tor_mode == 1,
+            if ~isempty(sNpar)
+                ssigmah = sign((sNpar(1:ns-1,:) + sNpar(2:ns,:))/2);
+            elseif ~isempty(sn)
+                ssigmah = sign((sn(1:ns-1,:) + sn(2:ns,:))/2);
+            else
+                error('propagation data is imcomplete')
+            end
+            sphi(1,:) = 0;
+            sR = Rp + sx;
+            sRh = (sR(1:ns-1,:) + sR(2:ns,:))/2;
+            dsphi = sqrt(diff(ss).^2 - diff(sx).^2 - diff(sy).^2).*ssigmah./sRh;
+            sphi(2:ns) = cumsum(dsphi);
         else
-            error('propagation data is imcomplete')
-        end
-        sphi(1,:) = 0;
-        sRh = (sR(1:ns-1,:) + sR(2:ns,:))/2;
-        dsphi = sqrt(diff(ss).^2 - diff(sRh).^2 - diff(sZ).^2)./sRh.*ssigmah;
-        sphi(2:ns) = cumsum(dsphi);
+            if ~isempty(sNpar)
+                ssigmah = sign((sNpar(1:ns-1,:) + sNpar(2:ns,:))/2);
+            elseif ~isempty(skz)
+                ssigmah = sign((skz(1:ns-1,:) + skz(2:ns,:))/2);
+            else
+                error('propagation data is imcomplete')
+            end
+            sz = sqrt(diff(ss).^2 - diff(sx).^2 - diff(sy).^2).*ssigmah;
+        end            
     end
-    sr = sqrt((sR - Rp).^2 + (sZ - Zp).^2); %minor radius
+    sr = sqrt(sx.^2 + sy.^2); %minor radius
     %
 %    is0 = min(find(spsin < 1)); %position where the ray enters the plasma 
 %    ismax = min([find(spsin >= 1 & ss > ss(is0)) - 1,ns]); %position where the ray leaves the plasma (if applicable) 
@@ -154,17 +193,27 @@ stheta = stheta(mask);
 %
 sr = sr(mask);
 %
-sR = sR(mask);
-sphi = sphi(mask);
-sZ = sZ(mask);
+sx = sx(mask);
+sy = sy(mask);
+%
+if tor_mode == 1,
+    sphi = sphi(mask);
+    if ~isempty(sn),
+        sn = sn(mask);
+    end
+else
+    sz = sz(mask);
+    if ~isempty(skz),
+        skz = skz(mask);
+    end
+end
 %
 ss = ss(mask);
 ss = ss - ss(1);%reinitialize ss 
 %
-if ~isempty(skR) & ~isempty(sn) & ~isempty(skZ)
-    skR = skR(mask);
-    sn = sn(mask);
-    skZ = skZ(mask);
+if ~isempty(skx) & ~isempty(skZ)
+    skx = skx(mask);
+    sky = sky(mask);
 end
 if ~isempty(sNpar)
     sNpar = sNpar(mask);
@@ -187,31 +236,45 @@ end
 %
 % Calculates Equilibrium properties along the ray
 %
-sBR = interp2(theta,ppsin,ptBR,stheta,spsin,method);
+sBx = interp2(theta,ppsin,ptBx,stheta,spsin,method);
 sBphi = interp2(theta,ppsin,ptBphi,stheta,spsin,method);
-sBZ = interp2(theta,ppsin,ptBZ,stheta,spsin,method);
+sBy = interp2(theta,ppsin,ptBy,stheta,spsin,method);
 sB = interp2(theta,ppsin,ptB,stheta,spsin,method);
 sne = interp1(ppsin,pne,spsin,method);
 szni = interp1(ppsin,pzni',spsin,method)';
 sTe = interp1(ppsin,pTe,spsin,method);
 szTi = interp1(ppsin,pzTi',spsin,method)';
 %
-% Calculates Npar and Nperp from kR,n and kZ if needed.
+% Calculates Npar and Nperp from kx,n and kZ if needed.
 %
 if isempty(sNpar),
-    if isempty(skR) | isempty(sn) | isempty(skZ) 
-        error('Ray-tracing data incomplete')
-    end
-    if isempty(sR)
-        sR = interp2(theta,ppsin,ptR,st,spsin,method);
-    end
-    %
-    skpar = (skR.*sBR + sn.*sBphi./sR + skZ.*sBZ)./sqrt(sBR.^2 + sBphi.^2 + sBZ.^2);
-    sNpar = skpar*clum/omega_rf;
-    %
-    if isempty(sNperp), 
-        skperp = sqrt(skR.^2 + (sn./sR).^2 + skZ.^2 - skpar.^2);
-        sNperp = skperp*clum/omega_rf;
+    if tor_mode == 1,
+        if isempty(skx) | isempty(sn) | isempty(skZ) 
+            error('Ray-tracing data incomplete')
+        end
+    %    if isempty(sR)
+    %        sR = interp2(theta,ppsin,ptR,st,spsin,method);
+    %    end
+        %
+        sR = Rp + sx;
+        skpar = (skR.*sBR + sn.*sBphi./sR + skZ.*sBZ)./sqrt(sBR.^2 + sBphi.^2 + sBZ.^2);
+        sNpar = skpar*clum/omega_rf;
+        %
+        if isempty(sNperp), 
+            skperp = sqrt(skR.^2 + (sn./sR).^2 + skZ.^2 - skpar.^2);
+            sNperp = skperp*clum/omega_rf;
+        end
+    else
+        if isempty(skx) | isempty(sky) | isempty(skz) 
+            error('Ray-tracing data incomplete')
+        end
+        skpar = (skx.*sBx + sky.*sBy + skz.*sBz)./sqrt(sBx.^2 + sBy.^2 + sBz.^2);
+        sNpar = skpar*clum/omega_rf;
+        %
+        if isempty(sNperp), 
+            skperp = sqrt(skx.^2 + sky.^2 + skz.^2 - skpar.^2);
+            sNperp = skperp*clum/omega_rf;
+        end        
     end
 end
 %
@@ -250,7 +313,7 @@ else
         end
     elseif real(opt_disp) == 2, % non-relativistic hot plasma dispersion tensor for sepol_pmz, sNperp and phi_xyz (hotdisp_dke_jd)
         for is=1:ns,
-            [sNperp(is),e_xyz,sepol_pmz(:,is),e_pyk,D,X,X_s,X_sn,salphaphi_lin(is),phiT_xyz,phiP_xyz]...
+            [sNperp(is),e_xyz,sepol_pmz(:,is),e_pyk,D,X,X_s,X_sn,salphaphi_lin(is),sphiT_xyz(:,is),sphiP_xyz(:,is)]...
                 = hotdisp_dke_jd(sNpar(is),omega_rf,sTe(is),sne(is),szTi(:,is),szni(:,is),zZi,zmi,sB(is),sNperp(is),1);
         end
         sphi_xyz = real(sphiP_xyz + sphiT_xyz);
@@ -273,23 +336,33 @@ else
         stheta = stheta(smask_ht);
         %
         sr = sr(smask_ht);
-        sR = sR(smask_ht);
-        sphi = sphi(smask_ht);
-        sZ = sZ(smask_ht);
+        sx = sx(smask_ht);
+        sy = sy(smask_ht);
+        %
+        if tor_mode == 1,
+            sphi = sphi(smask_ht);
+            if ~isempty(sn)
+                sn = sn(smask_ht);
+            end               
+        else
+            sz = sz(smask_ht);
+            if ~isempty(skz)
+                skz = skz(smask_ht);
+            end               
+        end
         %
         sNpar = sNpar(smask_ht);
         sdNpar = sdNpar(smask_ht);
         %
-        if ~isempty(skR) & ~isempty(sn) & ~isempty(skZ)
-            skR = skR(smask_ht);
-            sn = sn(smask_ht);
-            skZ = skZ(smask_ht);
+        if ~isempty(skx) & ~isempty(sky)
+            skx = skx(smask_ht);
+            sky = sky(smask_ht);
         end        
         %
         sB = sB(smask_ht);
-        sBR = sBR(smask_ht);
+        sBx = sBx(smask_ht);
+        sBy = sBy(smask_ht);
         sBphi = sBphi(smask_ht);
-        sBZ = sBZ(smask_ht);
         %
         sne = sne(smask_ht);
         szni = szni(:,smask_ht);
@@ -314,16 +387,26 @@ if imag(opt_disp) == 1,%relativistic calculation of the absorption coefficient
     end
 end
 %
-ray.sR = sR;% Ray location (major radius) along the propagation [1,ns]
-ray.sphi = sphi;% Ray location (toroidal angle) along the propagation [1,ns]
-ray.sZ = sZ;% Ray location (vertical) along the propagation [1,ns]
+ray.sx = sx;% Ray location (major radius) along the propagation [1,ns]
+ray.sy = sy;% Ray location (vertical) along the propagation [1,ns]
 ray.ss = ss;% Ray propagation distance parameter for each ray (put to NaN once the ray is absorbed) [1,ns]
 ray.spsin = spsin;% Ray location (normalized magnetic flux) along the propagation [1,ns]
 ray.stheta = stheta;% Ray location (poloidal angle) along the propagation [1,ns]
 %
-ray.skR = skR;% Ray wave vector (major radius) along the propagation [1,ns]
-ray.sn = sn;% Ray wave number (toroidal) along the propagation [1,ns]
-ray.skZ = skZ;% Ray wave vector (vertical) along the propagation [1,ns]
+if tor_mode == 1,
+    ray.sphi = sphi;% Ray location (toroidal angle) along the propagation [1,ns]
+    if ~isempty(sn)
+        ray.sn = sn;% Ray wave number (toroidal) along the propagation [1,ns]
+    end               
+else
+    ray.sz = sz;% Ray location (toroidal angle) along the propagation [1,ns]
+    if ~isempty(skz)
+        ray.skz = skz;
+    end               
+end
+%
+ray.skx = skx;% Ray wave vector (major radius) along the propagation [1,ns]
+ray.sky = sky;% Ray wave vector (vertical) along the propagation [1,ns]
 %
 ray.sNpar = sNpar;% Ray parallel wave number [1,ns]
 ray.sNperp = real(sNperp);% Ray perpendicular wave number [1,ns]
@@ -338,9 +421,9 @@ ray.sphi_xyz = sphi_xyz;% normalized power flow [3,ns]
 ray.sr = sr;
 %
 ray.sB = sB;
-ray.sBR = sBR;
+ray.sBx = sBx;
+ray.sBy = sBy;
 ray.sBphi = sBphi;
-ray.sBZ = sBZ;
 %
 ray.sne = sne;
 ray.szni = szni;

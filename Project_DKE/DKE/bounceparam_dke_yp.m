@@ -14,16 +14,18 @@ function [xq,xqtilde,xqbar,xqhat,...
 	 XXlambda_b_p1m3p4]...
 =  bounceparam_dke_yp(bounce_mode,equil_mode,display_mode,temppath,...
     mhu,mhum,mhup,Xmhu,Xmhum,Xmhup,...
-    XR,XZ,XBR,XBZ,XBphi,...
-    xmhubounce2,xB0,xR0,xBT0,xBp0,Rp,Zp,ap);
+    Xx,Xy,XBx,XBy,XBphi,...
+    xmhubounce2,xB0,xx0,xBT0,xBp0,Rp,Zp,ap);
 %
 %by Y.Peysson <yves.peysson@cea.fr> (CEA-DRFC) and J. Decker <joan.decker@cea.fr> (CEA-DRFC)
 %
 etime_bounce = 0;
 time0 = clock;
 %
-[nr,nt] = size(XR);
+[nr,nt] = size(Xx);
 [npn,nmhu] = size(Xmhu);
+%
+[xq,xqtilde,xqbar,xqhat] = qfactors_dke_yp(equil_mode,Rp,ap,Xx,Xy,XBx,XBy,XBphi,xx0,xB0,xBT0,xBp0);%q factors calculations
 %
 if bounce_mode == 1,
 %    load([fullfile(temppath,'temp_DKE.mat'],'xq');
@@ -49,15 +51,12 @@ if bounce_mode == 1,
     %
   else
   
-    [xq,xqtilde,xqbar,xqhat,xymaskT,...
-    xylambda,xylambda_p2m1,xylambda_p2m2p2,xylambda_b_p1p1,xylambda_b_p1m1p2,xylambda_b_p1m1,xylambda_b_p1m2,xylambda_b_p2m2p2,xylambda_b_p3m2,xylambda_b_p2,xylambda_b_p1m3p4]...
-= bounce_dke_jd(equil_mode,mhu,XR,XZ,XBR,XBZ,XBphi,xmhubounce2,xB0,xR0,xBT0,xBp0,Rp,Zp,ap);
-    [xq,xqtilde,xqbar,xqhat,xymaskT_p,...
-    xylambda_p,xylambda_p2m1_p,xylambda_p2m2p2_p,xylambda_b_p1p1_p,xylambda_b_p1m1p2_p,xylambda_b_p1m1_p,xylambda_b_p1m2_p,xylambda_b_p2m2p2_p,xylambda_b_p3m2_p,xylambda_b_p2_p,xylambda_b_p1m3p4_p]...
-= bounce_dke_jd(equil_mode,mhup,XR,XZ,XBR,XBZ,XBphi,xmhubounce2,xB0,xR0,xBT0,xBp0,Rp,Zp,ap,xymaskT,+1);
-    [xq,xqtilde,xqbar,xqhat,xymaskT_m,...
-    xylambda_m,xylambda_p2m1_m,xylambda_p2m2p2_m,xylambda_b_p1p1_m,xylambda_b_p1m1p2_m,xylambda_b_p1m1_m,xylambda_b_p1m2_m,xylambda_b_p2m2p2_m,xylambda_b_p3m2_m,xylambda_b_p2_m,xylambda_b_p1m3p4_m]...
-= bounce_dke_jd(equil_mode,mhum,XR,XZ,XBR,XBZ,XBphi,xmhubounce2,xB0,xR0,xBT0,xBp0,Rp,Zp,ap,xymaskT,-1);
+    [xymaskT,xylambda,xylambda_p2m1,xylambda_p2m2p2,xylambda_b_p1p1,xylambda_b_p1m1p2,xylambda_b_p1m1,xylambda_b_p1m2,xylambda_b_p2m2p2,xylambda_b_p3m2,xylambda_b_p2,xylambda_b_p1m3p4]...
+= bounce_dke_jd(equil_mode,mhu,Xx,Xy,XBx,XBy,XBphi,xmhubounce2,xB0,xx0,xBT0,xBp0,xqtilde,Rp,Zp,ap);
+    [xymaskT,xylambda_p,xylambda_p2m1_p,xylambda_p2m2p2_p,xylambda_b_p1p1_p,xylambda_b_p1m1p2_p,xylambda_b_p1m1_p,xylambda_b_p1m2_p,xylambda_b_p2m2p2_p,xylambda_b_p3m2_p,xylambda_b_p2_p,xylambda_b_p1m3p4_p]...
+= bounce_dke_jd(equil_mode,mhup,Xx,Xy,XBx,XBy,XBphi,xmhubounce2,xB0,xx0,xBT0,xBp0,xqtilde,Rp,Zp,ap,xymaskT,+1);
+    [xymaskT,xylambda_m,xylambda_p2m1_m,xylambda_p2m2p2_m,xylambda_b_p1p1_m,xylambda_b_p1m1p2_m,xylambda_b_p1m1_m,xylambda_b_p1m2_m,xylambda_b_p2m2p2_m,xylambda_b_p3m2_m,xylambda_b_p2_m,xylambda_b_p1m3p4_m]...
+= bounce_dke_jd(equil_mode,mhum,Xx,Xy,XBx,XBy,XBphi,xmhubounce2,xB0,xx0,xBT0,xBp0,xqtilde,Rp,Zp,ap,xymaskT,-1);
 %
 	XXheaviside = repmat(reshape(~xymaskT',[1,nmhu,nr]),[npn,1,1]);%For selecting the circulating population only                      
 	XXheaviside_p = repmat(reshape(~xymaskT_p',[1,nmhu,nr]),[npn,1,1]);%For selecting the circulating population only                      
@@ -165,11 +164,6 @@ if bounce_mode == 1,
 %may be inserted here. Work to be done...
 %
 else  
-    %[xq,xqtilde,xqbar,xqhat] = qfactors_dke_yp(Rp,Zp,XR,XZ,XBR,XBZ,XBphi),%q factors calculations
-    xq = ones(1,nr);
-    xqtilde = ones(1,nr);
-    xqbar = ones(1,nr);
-    xqhat = ones(1,nr);
 	XXheaviside = ones(npn,nmhu,nr);
 	XXheaviside_p = ones(npn,nmhu,nr);
 	XXheaviside_m = ones(npn,nmhu,nr);
