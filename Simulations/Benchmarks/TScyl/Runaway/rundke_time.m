@@ -119,6 +119,8 @@ end
 %************************************************************************************************************************************
 %
 clear xdn xdnr
+dkeparam.opt_load = 0;
+dkeparam.opt_save = 0;
 %
 %WARNING: boundary_mode_f must be 0 
 %
@@ -126,12 +128,12 @@ dtn = [0.1,0.2,0.5,1,2,5,10,20,50,100,200,500,1000];
 epsi=0.2;
 xdn = zeros(length(dtn),length(epsi));
 xdnr = zeros(length(dtn),length(epsi));
-[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
 for i=1:length(dtn)
    for j=1:length(epsi)
       dkeparam.dtn = dtn(i);     
 	  ohm.epsi = epsi(j)*mksa.Edreicer_ref*ones(size(ohm.rho));
-	  [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+	  [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
 	  xdn(i,j) = Znorm.x_0_fsav;
 	  xdnr(i,j) = dke_out.XxRR_fsav(end,:)*dkeparam.dtn;
    end

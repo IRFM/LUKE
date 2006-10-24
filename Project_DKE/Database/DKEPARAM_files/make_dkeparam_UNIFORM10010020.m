@@ -81,5 +81,7 @@ dkeparam.MUMPSparam.nproc = 1;%number of processor used by MUMPS (depends of the
 dkeparam.HYPREparam.nproc = 2;%number of processor used by HYPRE (depends of the computer framework). Default is 1
 %
 dkeparam.store_mode = 0;%Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight
+dkeparam.opt_save = 1;%Save intermediate calculations
+dkeparam.opt_load = 1;;%Load intermediate calculations
 %
 eval(['save DKEPARAM_',dkeparam_id,'.mat dkeparam']);

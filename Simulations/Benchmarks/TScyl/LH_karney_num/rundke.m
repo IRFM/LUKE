@@ -17,7 +17,7 @@ path_simul = '';%if nothing is specified, the working directory is first used an
 psin_S = [0.001];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
 rho_S = [];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
-id_path = 'PC_DRFC_YVES';%For all paths used by DKE solver
+id_path = 'LAPTOP_YVES';%For all paths used by DKE solver
 path_path = '../../../Database/PATH_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_equil = 'TScirc';%For plasma equilibrium
@@ -125,14 +125,17 @@ dkeparam.invproc = 1;%CGS
 dkeparam.ludroptol = 0;%Full LU factorization for preconditionning
 dkeparam.mlprecinv = 1-4;
 dkeparam.mlmaxitinv = 4;
-[Znorm_LU,Zcurr_LU,ZP0_LU,dke_out_LU,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+dkeparam.opt_load = 0;
+dkeparam.opt_save = 0;
+[Znorm_LU,Zcurr_LU,ZP0_LU,dke_out_LU,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
 disp('Full LU calculation done')
+return
 %
 for j = 1:3,%Numerical method (CGS, BICG, QMR)
     for i = 1:nit,%droptolerance scan
       dkeparam.ludroptol = dludroptol(i);
       dkeparam.invproc  = j;
-      [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+      [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
 % 
       memory_f(i,dkeparam.invproc) = dke_out.memoryLU_f_out;
       time_f(i,dkeparam.invproc) = dke_out.time_out;
@@ -142,7 +145,6 @@ for j = 1:3,%Numerical method (CGS, BICG, QMR)
       Pcoll_f(i,dkeparam.invproc) = ZP0.x_c_fsav.*mksa.P_ref;
 %
       disp(['Incomplete LU calculation #',int2str(i),' with lmatrix inversion method #',int2str(j),'  done'])
-
     end
 end
 %

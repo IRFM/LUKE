@@ -124,6 +124,8 @@ dludroptol = logspace(-6,-2,nit);
 dkeparam.invproc = 1;%CGS  
 dkeparam.mlprecinv = 1-4;
 dkeparam.mlmaxitinv = 4;
+dkeparam.opt_load = 0;
+dkeparam.opt_save = 0;
 %
 dmesh = 5;
 nmesh = 6;
@@ -132,7 +134,7 @@ for j = 1:nmesh,%Scan radial mesh size
    rho_S = linspace(0,1,j*dmesh);
    for i = 1:nit,%droptolerance scan       
       dkeparam.ludroptol = dludroptol(i);
-      [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+      [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
 % 
       memory_f(i,j) = dke_out.memoryLU_f_out;
       time_f(i,j) = dke_out.time_out;
@@ -149,7 +151,7 @@ dkeparam.invproc = -1;%MUMPS
 %
 for j = 1:nmesh,%Scan radial mesh size
    rho_S = linspace(0,1,j*dmesh);
-   [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+   [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
 % 
    time_f_MUMPS(j) = dke_out.time_out;
    norm_f_MUMPS{j} = Znorm.x_0_fsav.*mksa.ne_ref;
