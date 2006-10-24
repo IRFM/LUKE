@@ -9,65 +9,66 @@ if nargin < 7,
    error('Wrong number of input arguments for rad_dke_yp');
 end
 %
-[qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;%Universal physics constants
-%
-npn = gridDKE.npn;
-nmhu = gridDKE.nmhu;
-nr = gridDKE.nr;
-xpsin = gridDKE.xpsin_dke;
-xdpsin = gridDKE.xdpsin_dke;
-xpsinm = gridDKE.xpsinm_dke;
-xdpsinm = gridDKE.xdpsinm_dke;
-xpsinp = gridDKE.xpsinp_dke;
-xdpsinp = gridDKE.xdpsinp_dke;
-XXpn2 = gridDKE.XXpn2;
-Xmhu = gridDKE.Xmhu;
-Xmhu2 = gridDKE.Xmhu2;
-xmhubounce2 = gridDKE.xmhubounce2;
-pn = gridDKE.pn;
-ir_display = gridDKE.ir_display_out;
-mhu = gridDKE.mhu;
-%
-gamma = Zmomcoef.gamma;
-Xvpar = Zmomcoef.Xvpar;
-%
-ns_f = Zbouncecoef.ns_f;
-XXlambda = Zbouncecoef.XXlambda;
-blocksize_f_t = Zbouncecoef.blocksize_f_t;
-xqtilde = Zbouncecoef.xqtilde;
-%
-xR0 = equilDKE.xR0;
-xBp0 = equilDKE.xBp0;
-xB0 = equilDKE.xB0;
-ap = equilDKE.ap;
-psia = equilDKE.psia;
-xrho = equilDKE.xrho;
-%
-betath_ref = mksa.betath_ref;
-nhu_ref = mksa.nhu_ref;
-%
-bounce_mode = dkeparam.bounce_mode;
-temppath = path.temppath;
-%
-dp_cyl = display.dp_cyl;
-nlevel = display.nlevel;
-display_mode = display.display_mode;
+Xmask_r_edge = [];
 %
 nMMXP_f_t = max(cumsum(Zbouncecoef.blocksize_f_t));
 %
-Xmask_r_edge = [];
-%
 if ~isempty(transpfaste), 
-   time0 = clock;
+    %
+    [qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;%Universal physics constants
+    %
+    npn = gridDKE.npn;
+    nmhu = gridDKE.nmhu;
+    nr = gridDKE.nr;
+    xpsin = gridDKE.xpsin_dke;
+    xdpsin = gridDKE.xdpsin_dke;
+    xpsinm = gridDKE.xpsinm_dke;
+    xdpsinm = gridDKE.xdpsinm_dke;
+    xpsinp = gridDKE.xpsinp_dke;
+    xdpsinp = gridDKE.xdpsinp_dke;
+    XXpn2 = gridDKE.XXpn2;
+    Xmhu = gridDKE.Xmhu;
+    Xmhu2 = gridDKE.Xmhu2;
+    xmhubounce2 = gridDKE.xmhubounce2;
+    pn = gridDKE.pn;
+    ir_display = gridDKE.ir_display_out;
+    mhu = gridDKE.mhu;
+    %
+    gamma = Zmomcoef.gamma;
+    Xvpar = Zmomcoef.Xvpar;
+    %
+    ns_f = Zbouncecoef.ns_f;
+    XXlambda = Zbouncecoef.XXlambda;
+    blocksize_f_t = Zbouncecoef.blocksize_f_t;
+    xqtilde = Zbouncecoef.xqtilde;
+    %
+    xR0 = equilDKE.xR0;
+    xBp0 = equilDKE.xBp0;
+    xB0 = equilDKE.xB0;
+    ap = equilDKE.ap;
+    psia = equilDKE.psia;
+    xrho = equilDKE.xrho;
+    %
+    betath_ref = mksa.betath_ref;
+    nhu_ref = mksa.nhu_ref;
+    %
+    bounce_mode = dkeparam.bounce_mode;
+    temppath = path.temppath;
+    %
+    dp_cyl = display.dp_cyl;
+    nlevel = display.nlevel;
+    display_mode = display.display_mode;
+    %
+    time0 = clock;
 %
-   [xTe_norm,xne_norm,xzni_norm,xzTi_norm,xnloss_norm,xbetath,xlnc_e,xnhu,xrnhuth] = normcoef_dke_yp(mksa,equilDKE,gridDKE);   
+    [xTe_norm,xne_norm,xzni_norm,xzTi_norm,xnloss_norm,xbetath,xlnc_e,xnhu,xrnhuth] = normcoef_dke_yp(mksa,equilDKE,gridDKE);   
 %
-   XXDpsi = zeros(npn,nmhu,nr);%Defined on the distribution function grid (half grid) (psi coordinate)
-   XXVpsi = zeros(npn,nmhu,nr);%Defined on the distribution function grid (half grid) (psi coordinate)
+    XXDpsi = zeros(npn,nmhu,nr);%Defined on the distribution function grid (half grid) (psi coordinate)
+    XXVpsi = zeros(npn,nmhu,nr);%Defined on the distribution function grid (half grid) (psi coordinate)
 %
-   if transpfaste.norm_ref == 1,
-      xvparmin_r = transpfaste.vparmin*ones(size(xrho));%Normalized to vth_ref
-   elseif transpfaste.norm_ref == 0,
+    if transpfaste.norm_ref == 1,
+        xvparmin_r = transpfaste.vparmin*ones(size(xrho));%Normalized to vth_ref
+    elseif transpfaste.norm_ref == 0,
       xvparmin_r = transpfaste.vparmin*ones(size(xrho)).*xbetath/betath_ref;%Normalized to vth (local)
    end
    xDr = transpfaste.Dr0*(1 + transpfaste.pDr*xrho.^2);
