@@ -4,7 +4,7 @@ function [iabs_out,rho_ray,theta_ray,phi_ray,R_ray,Z_ray,Npar_ray,Nperp_ray,epol
 %
 % INPUT
 %    - tout: ray time (w*t) [1,nray)
-%    - yout: ray coordinate (psin,theta,phi,kpsin,m,n) [6,nray) (Nota:   kpsin = kspi*psia,psin = psi/psia)
+%    - yout: ray coordinate (psin,theta,phi,kpsin,m,n) [6,nray) (Nota: krho = krho*ap, rho = (R(:,0)-Rp)/ap
 %    - rayparam: ray-tracing parameter
 %    - equil_fit: interpolated magnetic equilibrium structure
 %    - omega: wave frequency (s-1) [1,1]
@@ -101,16 +101,16 @@ end
 ntheta_fit= 65;
 rho_fit = linspace(0,1,15);
 theta_fit = linspace(0,2*pi,ntheta_fit);
-R_a0_fit = ppval(equil_fit.R_fit.pp_a0,rho_fit);
-R_an_fit = ppval(equil_fit.R_fit.pp_an,rho_fit);
-R_bn_fit = ppval(equil_fit.R_fit.pp_bn,rho_fit);
-Z_a0_fit = ppval(equil_fit.Z_fit.pp_a0,rho_fit);
-Z_an_fit = ppval(equil_fit.Z_fit.pp_an,rho_fit);
-Z_bn_fit = ppval(equil_fit.Z_fit.pp_bn,rho_fit);
+x_a0_fit = ppval(equil_fit.x_fit.pp_a0,rho_fit);
+x_an_fit = ppval(equil_fit.x_fit.pp_an,rho_fit);
+x_bn_fit = ppval(equil_fit.x_fit.pp_bn,rho_fit);
+y_a0_fit = ppval(equil_fit.y_fit.pp_a0,rho_fit);
+y_an_fit = ppval(equil_fit.y_fit.pp_an,rho_fit);
+y_bn_fit = ppval(equil_fit.y_fit.pp_bn,rho_fit);
 %
 for ii = 1:ntheta_fit,
-   R_fit(:,ii) = R_a0_fit.' + R_an_fit*cos(equil_fit.R_fit.n*theta_fit(ii)) + R_bn_fit*sin(equil_fit.R_fit.n*theta_fit(ii));
-   Z_fit(:,ii) = Z_a0_fit.' + Z_an_fit*cos(equil_fit.Z_fit.n*theta_fit(ii)) + Z_bn_fit*sin(equil_fit.Z_fit.n*theta_fit(ii));
+   R_fit(:,ii) = equil_fit.Rp + x_a0_fit.' + x_an_fit*cos(equil_fit.x_fit.n*theta_fit(ii)) + x_bn_fit*sin(equil_fit.x_fit.n*theta_fit(ii));
+   Z_fit(:,ii) = equil_fit.Zp + y_a0_fit.' + y_an_fit*cos(equil_fit.y_fit.n*theta_fit(ii)) + y_bn_fit*sin(equil_fit.y_fit.n*theta_fit(ii));
 end
 %
 Rmin = min(min(R_fit));

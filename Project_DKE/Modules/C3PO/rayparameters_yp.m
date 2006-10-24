@@ -8,27 +8,31 @@ function [R,Z,Npar,Nperp,epol_pmz,phi_xyz,D,Te,ne,zTi,zni,BP,BPHI,B,r,salpha,gra
 %
 % By Yves Peysson (CEA-DRFC, yves.peysson@cea.fr) and Joan Decker (CEA-DRFC, joan.decker@cea.fr)
 %
-dRstardpsin_ray = ppval(equil_fit.dRstardpsin_fit.pp_f,rho);
-Te = ppval(equil_fit.Te_fit.pp_f,rho);
-ne = ppval(equil_fit.ne_fit.pp_f,rho);
-zTi = ppval(equil_fit.zTi_fit.pp_f,rho);
-zni = ppval(equil_fit.zni_fit.pp_f,rho);
+dRstardpsin_ray = ppval(equil_fit.dxstardpsin_fit.pp_f,rho);
 %
-R_a0 = ppval_yp(equil_fit.R_fit.pp_a0,rho);
-R_an = ppval_yp(equil_fit.R_fit.pp_an,rho);
-R_bn = ppval_yp(equil_fit.R_fit.pp_bn,rho);
+if isfield(equil_fit,'Te_fit'),Te = ppval(equil_fit.Te_fit.pp_f,rho);else Te = zeros(size(rho));end
+if isfield(equil_fit,'ne_fit'),ne = ppval(equil_fit.ne_fit.pp_f,rho);else ne = zeros(size(rho));end
+if isfield(equil_fit,'zTi_fit'),zTi = ppval(equil_fit.zTi_fit.pp_f,rho);else zTi = zeros(length(rho),length(equil_fit.zZi));end
+if isfield(equil_fit,'zni_fit'),zni = ppval(equil_fit.zni_fit.pp_f,rho);else zni = zeros(length(rho),length(equil_fit.zZi));end
 %
-Z_a0 = ppval_yp(equil_fit.Z_fit.pp_a0,rho);
-Z_an = ppval_yp(equil_fit.Z_fit.pp_an,rho);
-Z_bn = ppval_yp(equil_fit.Z_fit.pp_bn,rho);
+Rp = equil_fit.Rp;
+Zp = equil_fit.Zp;
 %
-BR_a0 = ppval(equil_fit.BR_fit.pp_a0,rho);
-BR_an = ppval(equil_fit.BR_fit.pp_an,rho);
-BR_bn = ppval(equil_fit.BR_fit.pp_bn,rho);
+x_a0 = ppval_yp(equil_fit.x_fit.pp_a0,rho);
+x_an = ppval_yp(equil_fit.x_fit.pp_an,rho);
+x_bn = ppval_yp(equil_fit.x_fit.pp_bn,rho);
 %
-BZ_a0 = ppval(equil_fit.BZ_fit.pp_a0,rho);
-BZ_an = ppval(equil_fit.BZ_fit.pp_an,rho);
-BZ_bn = ppval(equil_fit.BZ_fit.pp_bn,rho);
+y_a0 = ppval_yp(equil_fit.y_fit.pp_a0,rho);
+y_an = ppval_yp(equil_fit.y_fit.pp_an,rho);
+y_bn = ppval_yp(equil_fit.y_fit.pp_bn,rho);
+%
+Bx_a0 = ppval(equil_fit.Bx_fit.pp_a0,rho);
+Bx_an = ppval(equil_fit.Bx_fit.pp_an,rho);
+Bx_bn = ppval(equil_fit.Bx_fit.pp_bn,rho);
+%
+By_a0 = ppval(equil_fit.By_fit.pp_a0,rho);
+By_an = ppval(equil_fit.By_fit.pp_an,rho);
+By_bn = ppval(equil_fit.By_fit.pp_bn,rho);
 %
 BPHI_a0 = ppval(equil_fit.BPHI_fit.pp_a0,rho);
 BPHI_an = ppval(equil_fit.BPHI_fit.pp_an,rho);
@@ -43,20 +47,20 @@ dRdtheta = zeros(length(rho),1);
 dZdtheta = zeros(length(rho),1);
 %
 for ii = 1:length(rho),
-   R(ii) = R_a0(ii) + R_an(ii,:)*cos(equil_fit.R_fit.n*theta(ii)) + R_bn(ii,:)*sin(equil_fit.R_fit.n*theta(ii));
-   Z(ii) = Z_a0(ii) + Z_an(ii,:)*cos(equil_fit.Z_fit.n*theta(ii)) + Z_bn(ii,:)*sin(equil_fit.Z_fit.n*theta(ii));
-   dRdtheta(ii) = -R_an(ii,:)*(equil_fit.R_fit.n.*sin(equil_fit.R_fit.n*theta(ii))) + R_bn(ii,:)*(equil_fit.R_fit.n.*cos(equil_fit.R_fit.n*theta(ii)));
-   dZdtheta(ii) = -Z_an(ii,:)*(equil_fit.Z_fit.n.*sin(equil_fit.Z_fit.n*theta(ii))) + Z_bn(ii,:)*(equil_fit.Z_fit.n.*cos(equil_fit.Z_fit.n*theta(ii)));   
-   BR(ii) = BR_a0(ii) + BR_an(ii,:)*cos(equil_fit.BR_fit.n*theta(ii)) + BR_bn(ii,:)*sin(equil_fit.BR_fit.n*theta(ii));
-   BZ(ii) = BZ_a0(ii) + BZ_an(ii,:)*cos(equil_fit.BZ_fit.n*theta(ii)) + BZ_bn(ii,:)*sin(equil_fit.BZ_fit.n*theta(ii));
+   R(ii) = Rp + x_a0(ii) + x_an(ii,:)*cos(equil_fit.x_fit.n*theta(ii)) + x_bn(ii,:)*sin(equil_fit.x_fit.n*theta(ii));
+   Z(ii) = Zp + y_a0(ii) + y_an(ii,:)*cos(equil_fit.y_fit.n*theta(ii)) + y_bn(ii,:)*sin(equil_fit.y_fit.n*theta(ii));
+   dRdtheta(ii) = -x_an(ii,:)*(equil_fit.x_fit.n.*sin(equil_fit.x_fit.n*theta(ii))) + x_bn(ii,:)*(equil_fit.x_fit.n.*cos(equil_fit.x_fit.n*theta(ii)));
+   dZdtheta(ii) = -y_an(ii,:)*(equil_fit.y_fit.n.*sin(equil_fit.y_fit.n*theta(ii))) + y_bn(ii,:)*(equil_fit.y_fit.n.*cos(equil_fit.y_fit.n*theta(ii)));   
+   BR(ii) = Bx_a0(ii) + Bx_an(ii,:)*cos(equil_fit.Bx_fit.n*theta(ii)) + Bx_bn(ii,:)*sin(equil_fit.Bx_fit.n*theta(ii));
+   BZ(ii) = By_a0(ii) + By_an(ii,:)*cos(equil_fit.By_fit.n*theta(ii)) + By_bn(ii,:)*sin(equil_fit.By_fit.n*theta(ii));
    BPHI(ii) = BPHI_a0(ii) + BPHI_an(ii,:)*cos(equil_fit.BPHI_fit.n*theta(ii)) + BPHI_bn(ii,:)*sin(equil_fit.BPHI_fit.n*theta(ii));
 end
 %
 sigmaIp =  sign(-BR(1)*sin(theta(1)) + BZ(1)*cos(theta(1)));%Sign of the plasma current
 BP = sqrt(BR.^2 + BZ.^2);
 B = sqrt(BR.^2 + BZ.^2 + BPHI.^2);
-r = sqrt((R - equil_fit.Rp).^2 + (Z - equil_fit.Zp).^2);
-salpha = ((R - equil_fit.Rp).*dRdtheta + (Z - equil_fit.Zp).*dZdtheta)./r./sqrt(dRdtheta.^2 + dZdtheta.^2);
+r = sqrt((R - Rp).^2 + (Z - Zp).^2);
+salpha = ((R - Rp).*dRdtheta + (Z - Zp).*dZdtheta)./r./sqrt(dRdtheta.^2 + dZdtheta.^2);
 calpha = sqrt(1.0 - salpha.^2);
 gradrho = R.*BP.*dRstardpsin_ray(:)/equil_fit.psia;
 %
