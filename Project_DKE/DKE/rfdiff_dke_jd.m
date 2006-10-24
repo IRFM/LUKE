@@ -61,10 +61,10 @@ dke_mode = dkeparam.dke_mode;
 display_mode = display.display_mode;
 %
 theta = equilDKE.mtheta;
-XR = equilDKE.XR;
-XZ = equilDKE.XZ;
-XBR = equilDKE.XBR;
-XBZ = equilDKE.XBZ;
+Xx = equilDKE.Xx;
+Xy = equilDKE.Xy;
+XBx = equilDKE.XBx;
+XBy = equilDKE.XBy;
 XBphi = equilDKE.XBphi;
 xB0 = equilDKE.xB0;
 Rp = equilDKE.Rp;
@@ -88,7 +88,6 @@ Xgamma = Zmomcoef.Xgamma;
 Xgammam = Zmomcoef.Xgammam;
 Xgammamm = Zmomcoef.Xgammamm;
 %
-xqtilde = Zbouncecoef.xqtilde;
 Xxlambdap = Zbouncecoef.Xxlambda_p;
 Xxlambda = Zbouncecoef.Xxlambda;
 Xxlambdam = Zbouncecoef.Xxlambda_m;
@@ -217,7 +216,7 @@ end
 %
 % Magnetic geometry parameters at theta = thetab_rf
 %
-[xyBb_rf,xyBPb_rf,xyrb_rf] = mg_interp_jd(theta,XR,XZ,XBR,XBZ,XBphi,Rp,Zp,xythetab_rf);%
+[xyBb_rf] = mg_interp_jd(theta,Xx,Xy,XBx,XBy,XBphi,xythetab_rf);
 %
 xyB0 = repmat(single(xB0).',[1,nb]);
 %
@@ -226,16 +225,12 @@ if bounce_mode > 0,
     xypsib = xyBb_rf./xyB0; %Ratio of magnetic fields at theta = thetab_rf
     xyomegac = qe*xyB0/me; % cyclotron frequency at B=Bmin 
     %
-    xyqtildeb_rf = xyBb_rf.*xyrb_rf./xyBPb_rf/Rp;
-    %
 else
     %
     %   when bounce_mode = 0, we need to take the cyclotron frequency at theta = thetab_rf 
     %
     xypsib = ones(nr,nb,'single'); %Ratio of magnetic fields at theta = thetab_rf
     xyomegac = qe*xyBb_rf/me; % cyclotron frequency at B=Bmin 
-    %
-    xyqtildeb_rf = ones(nr,nb,'single');
     %
 end
 %
@@ -361,7 +356,7 @@ SXY = size(Xmask);
 % Vector construction
 %
 XYn_rf = reshape(n_rf_list(mask_n),[length(mask_n),1]);
-XYyn = XYn_rf./xyomegaratio(xymask);
+XYyn = XYn_rf./reshape(xyomegaratio(xymask),[length(mask_n),1]);%to prevent matlab bug w
 XYpsib = xypsib(xymask);   
 XYynb = XYyn.*XYpsib;
 %
@@ -580,9 +575,6 @@ XYlambdap = Xxlambdap(Xxmask);
 XYlambda = Xxlambda(Xxmask);        
 XYlambdam = Xxlambdam(Xxmask);        
 %
-XYqtilde = xqtilde(mask_r);
-XYqratio = xyqtildeb_rf(xymask)./XYqtilde(:); 
-%
 clear Xxmask 
 %
 XYlambdap(XYlambdap == 0) = eps('single');
@@ -595,9 +587,9 @@ XYmhum = single(Xmhum(Xmask));
 %
 clear Xmask 
 %
-XYDfacp = XYmhup.*XYmhup.*XYqratio.*XYpsib./XYlambdap./XYmhubp./XYmhubp;
-XYDfac = XYmhu.*XYmhu.*XYqratio.*XYpsib./XYlambda./XYmhub./XYmhub;
-XYDfacm = XYmhum.*XYmhum.*XYqratio.*XYpsib./XYlambdam./XYmhubm./XYmhubm;
+XYDfacp = XYmhup.*XYmhup.*XYpsib./XYlambdap./XYmhubp./XYmhubp;
+XYDfac = XYmhu.*XYmhu.*XYpsib./XYlambda./XYmhub./XYmhub;
+XYDfacm = XYmhum.*XYmhum.*XYpsib./XYlambdam./XYmhubm./XYmhubm;
 %
 if dke_mode == 0,
     %
@@ -701,13 +693,13 @@ if dke_mode == 1,
     %
     clear XYtrapped_p XYtrapped XYtrapped_m XYrespol_tp_mhuflip
     %
-    XYDfacp_D_tp = XYsigmap.*abs(XYmhup).*XYqratio./XYlambdap./XYmhubp;
-    XYDfac_D_tp = XYsigma.*abs(XYmhu).*XYqratio./XYlambda./XYmhub;
-    XYDfacm_D_tp = XYsigmam.*abs(XYmhum).*XYqratio./XYlambdam./XYmhubm;
+    XYDfacp_D_tp = XYsigmap.*abs(XYmhup)./XYlambdap./XYmhubp;
+    XYDfac_D_tp = XYsigma.*abs(XYmhu)./XYlambda./XYmhub;
+    XYDfacm_D_tp = XYsigmam.*abs(XYmhum)./XYlambdam./XYmhubm;
     %
-    XYDfacp_F_tp = (1 - XYpsib).*XYmhup.*XYmhup.*XYqratio.*XYmhup./XYlambdap./XYmhubp./XYmhubp./XYmhubp;
-    XYDfac_F_tp = (1 - XYpsib).*XYmhu.*XYmhu.*XYqratio.*XYmhu./XYlambda./XYmhub./XYmhub./XYmhub;
-    XYDfacm_F_tp = (1 - XYpsib).*XYmhum.*XYmhum.*XYqratio.*XYmhum./XYlambdam./XYmhubm./XYmhubm./XYmhubm;
+    XYDfacp_F_tp = (1 - XYpsib).*XYmhup.*XYmhup.*XYmhup./XYlambdap./XYmhubp./XYmhubp./XYmhubp;
+    XYDfac_F_tp = (1 - XYpsib).*XYmhu.*XYmhu.*XYmhu./XYlambda./XYmhub./XYmhub./XYmhub;
+    XYDfacm_F_tp = (1 - XYpsib).*XYmhum.*XYmhum.*XYmhum./XYlambdam./XYmhubm./XYmhubm./XYmhubm;
     %
     clear XYpsib XYsigmap XYsigma XYsigmam XYlambdap XYlambda XYlambdam XYqratio XYmhubp XYmhub XYmhubm 
     %

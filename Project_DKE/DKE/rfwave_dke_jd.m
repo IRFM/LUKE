@@ -1,4 +1,4 @@
-function [waveparam,xyprop_dke_rf,xyP0_in_rf,yb_rf,xys_rf] = rfwave_dke_jd(dkeparam,display,equil,equilDKE,gridDKE,mksa,waves);
+function [waveparam,xyprop_dke_rf,xyP0_2piRp_in_rf,yb_rf,xys_rf] = rfwave_dke_jd(dkeparam,display,equil,equilDKE,gridDKE,Zbouncecoef,mksa,waves);
 % 
 %	RF input parameters for the Drift Kinetic equation solver (dke_4_1yp.m). 
 %
@@ -23,17 +23,23 @@ xdpsin_dke = gridDKE.xdpsin_dke;
 r_dke = gridDKE.rdke;
 xpsin_S_dke = gridDKE.xpsin_S_dke;
 %
-XR = equilDKE.XR;
-XZ = equilDKE.XZ;
-XBR = equilDKE.XBR;
-XBZ = equilDKE.XBZ;
+Xx = equilDKE.Xx;
+Xy = equilDKE.Xy;
+XBx = equilDKE.XBx;
+XBy = equilDKE.XBy;
 XBphi = equilDKE.XBphi;
+xB0 = equilDKE.xB0;
+Rp = equilDKE.Rp;
+ap = equilDKE.ap;
+%
+xqtilde = Zbouncecoef.xqtilde;
+xqhat = Zbouncecoef.xqhat;
 %
 ne_ref = mksa.ne_ref;
 lnc_e_ref = mksa.lnc_e_ref;
 %
 equil_id = equil.id;
-method = 'spline';%interpolation technique in psi
+method = 'linear';%'spline';%interpolation technique in psi
 %
 nr_dke = length(xpsin_dke);
 nr = length(xpsin);
@@ -45,13 +51,13 @@ nr = length(xpsin);
 theta = equilDKE_Fourier.mtheta;
 ppsin = equilDKE_Fourier.xpsin;
 psia = equilDKE_Fourier.psia;
-ptR = equilDKE_Fourier.XR;
-ptZ = equilDKE_Fourier.XZ;
-ptBR = equilDKE_Fourier.XBR;
-ptBZ = equilDKE_Fourier.XBZ;
+ptx = equilDKE_Fourier.Xx;
+pty = equilDKE_Fourier.Xy;
+ptBx = equilDKE_Fourier.XBx;
+ptBy = equilDKE_Fourier.XBy;
 ptBphi = equilDKE_Fourier.XBphi;
 pB0 = equilDKE_Fourier.xB0;
-pR0 = equilDKE_Fourier.xR0;
+px0 = equilDKE_Fourier.xx0;
 pBT0 = equilDKE_Fourier.xBT0;
 pBp0 = equilDKE_Fourier.xBp0;
 prho = equilDKE_Fourier.xrho;
@@ -65,8 +71,8 @@ pZeff = equilDKE_Fourier.xZeff;
 Rp = equilDKE_Fourier.Rp;
 Zp = equilDKE_Fourier.Zp;
 %
-ptr = sqrt((ptR - Rp).^2 + (ptZ - Zp).^2); %minor radius on the (psi,stheta) grid
-ptBP = sqrt(ptBR.^2 + ptBZ.^2); %poloidal magnetic field on the (psi,stheta) grid
+ptr = sqrt(ptx.^2 + pty.^2); %minor radius on the (psi,stheta) grid
+ptBP = sqrt(ptBx.^2 + ptBy.^2); %poloidal magnetic field on the (psi,stheta) grid
 ptB = sqrt(ptBP.^2 + ptBphi.^2); %magnetic field on the (psi,stheta) grid
 %
 ibw = 0;
@@ -83,6 +89,16 @@ for iw = 1:length(waves),%
     if wave.equil_id ~= equil_id
         error('DKE and WAVE equilibria are different')
     end
+    %
+    if isfield(wave,'model') & wave.model(1:2) == 'FW',%full wave simulation
+        waveparam = wave;
+        xyprop_dke_rf = zeros(nr,0);
+        xyP0_2piRp_in_rf = zeros(nr,0);
+        xys_rf = zeros(nr,0);
+        yb_rf = zeros(1,0);
+        %    
+        return
+    end        
     %
     omega_rf = wave.omega_rf;% The wave frequency (in rad/s) [1,1]
     rays = wave.rays;%list of rays {1,nb}
@@ -140,20 +156,13 @@ for iw = 1:length(waves),%
         % - sNpar -> sdNpar
         % - opt_disp, sNpar, omega_rf, equil -> sepol_pmz, sNperp, sphi_xyz
         %
-        ray = rayprocess_jd(ray,equil,opt_disp,omega_rf,n_rf_list,method);
+        ray = rayprocess_jd(ray,equilDKE_Fourier,opt_disp,omega_rf,n_rf_list,method);
         %
-        P0 = ray.P0;% Power launched in the ray (W) [1,1]
+        P0_2piRp = ray.P0_2piRp;% Power launched in the ray (W) [1,1]
         %
-        sR = ray.sR(1:min(ismax,length(ray.sR)));% Ray location (major radius) along the propagation [1,ns]
-        sphi = ray.sphi(1:min(ismax,length(ray.sphi)));% Ray location (toroidal angle) along the propagation [1,ns]
-        sZ = ray.sZ(1:min(ismax,length(ray.sZ)));% Ray location (vertical) along the propagation [1,ns]
         ss = ray.ss(1:min(ismax,length(ray.ss)));% Ray propagation distance parameter for each ray (put to NaN once the ray is absorbed) [1,ns]
         spsin = ray.spsin(1:min(ismax,length(ray.spsin)));% Ray location (normalized magnetic flux) along the propagation [1,ns]
         stheta = ray.stheta(1:min(ismax,length(ray.stheta)));% Ray location (poloidal angle) along the propagation [1,ns]
-        %
-        skR = ray.skR(1:min(ismax,length(ray.skR)));% Ray wave vector (major radius) along the propagation [1,ns]
-        sn = ray.sn(1:min(ismax,length(ray.sn)));% Ray wave number (toroidal) along the propagation [1,ns]
-        skZ = ray.skZ(1:min(ismax,length(ray.skZ)));% Ray wave vector (vertical) along the propagation [1,ns]
         %
         sNpar = ray.sNpar(1:min(ismax,length(ray.sNpar)));% Ray parallel wave number [1,ns]
         sNperp = ray.sNperp(1:min(ismax,length(ray.sNperp)));% Ray perpendicular wave number [1,ns]
@@ -174,7 +183,7 @@ for iw = 1:length(waves),%
         vsrays{ibw} = vsray;
         yomega_rf(ibw) = omega_rf;
         yopt_rf(ibw) = opt_rf;
-        yP0(ibw) = P0;
+        yP0_2piRp(ibw) = P0_2piRp;
     end
 end
 %
@@ -191,7 +200,7 @@ nbb_rf = size(xyvray_dke,2);%number of ray subdivisions
 if nb_rf == 0%no rays
     waveparam = zeros(nr,0,13);
     xyprop_dke_rf = zeros(nr,0);
-    xyP0_in_rf = zeros(nr,0);
+    xyP0_2piRp_in_rf = zeros(nr,0);
     xys_rf = zeros(nr,0);
     yb_rf = zeros(1,0);
     %    
@@ -215,14 +224,14 @@ xyopt_rf = ones(nr,1)*yopt_rf(ib_rf_old);% FLR option
 %
 % parameters that vary along the ray and are so far calculated for dke positions only
 %
-% Note: for positions that are not visited by the ray, we set xyP0_in_rf = 0
+% Note: for positions that are not visited by the ray, we set xyP0_2piRp_in_rf = 0
 %
 xymask_prop_dke = xyprop_dke_rf ~= 0;%DKE points visited by the ray
 if dke_mode == 1 % interpolation for the FP positions (only necessary if dke_mode == 1)
 %    
     xyvray = zeros(nr,nbb_rf,12);
     xyfinc_rf = zeros(nr,nbb_rf);
-    xyP0_in_rf = zeros(nr,nbb_rf);
+    xyP0_2piRp_in_rf = zeros(nr,nbb_rf);
 %     
     for ibb = 1:nbb_rf
         xmask_prop_fp = [(min(r_dke(xymask_prop_dke(:,ibb))) - 1):(max(r_dke(xymask_prop_dke(:,ibb))) + 1)];%corresponding FP points
@@ -230,18 +239,18 @@ if dke_mode == 1 % interpolation for the FP positions (only necessary if dke_mod
         if nr_dke == 1,
             xyvray(xmask_prop_fp,ibb,:) = repmat(xyvray_dke(xymask_prop_dke(:,ibb),ibb,:),[3,1,1]);
             xyfinc_rf(xmask_prop_fp,ibb) = repmat(xyfinc_dke_rf(xymask_prop_dke(:,ibb),ibb),[3,1,1]);
-            xyP0_in_rf(xmask_prop_fp,ibb) = yP0(ib_rf_old(ibb));% initial incident power
+            xyP0_2piRp_in_rf(xmask_prop_fp,ibb) = yP0_2piRp(ib_rf_old(ibb));% initial incident power
         else
             xyvray(xmask_prop_fp,ibb,:) = interp1(xpsin_dke(xymask_prop_dke(:,ibb)),xyvray_dke(xymask_prop_dke(:,ibb)),xpsin(xmask_prop_fp),method);
             xyfinc_rf(xmask_prop_fp,ibb) = interp1(xpsin_dke(xymask_prop_dke(:,ibb)),xyfinc_dke_rf(xymask_prop_dke(:,ibb)),xpsin(xmask_prop_fp),method);
-            xyP0_in_rf(xmask_prop_fp,ibb) = yP0(ib_rf_old(ibb));% initial incident power
+            xyP0_2piRp_in_rf(xmask_prop_fp,ibb) = yP0_2piRp(ib_rf_old(ibb));% initial incident power
         end
 %        
     end
 else
     xyvray = xyvray_dke;
     xyfinc_rf = xyfinc_dke_rf;
-    xyP0_in_rf = xymask_prop_dke.*(ones(nr,1)*yP0(ib_rf_old));% initial incident power
+    xyP0_2piRp_in_rf = xymask_prop_dke.*(ones(nr,1)*yP0_2piRp(ib_rf_old));% initial incident power
 end
 %
 xys_rf = xyvray(:,:,1);
@@ -280,9 +289,16 @@ xyabsphi_xyz_rf = sqrt(abs(xyphix_rf).^2 + abs(xyphiy_rf).^2 + abs(xyphiz_rf).^2
 xyabsphi_xyz_rf(xyabsphi_xyz_rf == 0) = eps;%avoid singularities
 xydNpar_rf(xydNpar_rf == 0) = eps;%avoid singularities
 %
-[xyBb_rf,xyBPb_rf,xyrb_rf,xyRb_rf] = mg_interp_jd(theta,XR,XZ,XBR,XBZ,XBphi,Rp,Zp,xythetab_rf,method);
+[xyBb_rf,xyBPb_rf,xyrb_rf,xycosb_rf,xyxb_rf] = mg_interp_jd(theta,Xx,Xy,XBx,XBy,XBphi,xythetab_rf,method);
 %
-xyD0_rf_ref = xyfinc_rf.*xyP0_in_rf./(xyrb_rf.*xyRb_rf*me*lnc_e_ref.*xyomega_rf*wpe_ref^2.*xyabsphi_xyz_rf);
+xyB0 = repmat(xB0.',[1,nbb_rf]);
+xyqhat = repmat(xqhat.',[1,nbb_rf]);
+xyqtilde = repmat(xqtilde.',[1,nbb_rf]);
+%
+xyFhat = xyrb_rf.*xyB0/(ap*xyBPb_rf.*xyqhat.*xycosb_rf.*(1 + xyxb_rf/Rp));
+xyFtilde = xyrb_rf.*xyBb_rf/(ap*xyBPb_rf.*xyqtilde.*xycosb_rf);
+%
+xyD0_rf_ref = 2*pi*xyfinc_rf.*xyP0_2piRp_in_rf.*xyFhat.*xyFtilde./(xyrb_rf.*me*lnc_e_ref.*xyomega_rf*wpe_ref^2.*xyabsphi_xyz_rf);
 %
 waveparam = zeros(nr,nbb_rf,13);
 %
