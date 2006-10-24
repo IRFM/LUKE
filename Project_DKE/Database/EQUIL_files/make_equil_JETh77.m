@@ -185,19 +185,22 @@ if exist(['helmex77',mexext]) == 3,
 %		
 %		Transfer to the equil structure
 %
-		equil.ppsi = ppsi;
+		equil.psi = ppsi;
 		equil.theta = theta;
-		equil.R = R;
-		equil.Z = Z;
-		equil.BR = BR;
-		equil.BZ = BZ;
-		equil.BPHI = BPHI;
+		equil.ptx = R - Rp;
+		equil.pty = Z - Zp;
+		equil.ptBx = BR;
+		equil.ptBy = BZ;
+		equil.ptBPHI = BPHI;
 		equil.pTe = pTe;
 		equil.pne = pne;
 		equil.pzTi = pzTi;
 		equil.pzni = pzni;
 		equil.zZi = zZi;
 		equil.zmi = zmi;
+		equil.Rp = Rp;
+      equil.Zp = Zp;
+%      
 		equil.ftra = ftra;
 %
 		filename = ['EQUIL_',equil.id,'.mat'];  

@@ -178,17 +178,17 @@ syphi = [0]*ones(ns,nb_lh);% so that the calculated finc is 1.
 for i_lh = blist_lh,
     ray.P0 = yP0_lh(i_lh)';% Power launched in the ray (W) [1,1]
         %
-    ray.sR = syR(:,i_lh)';% Ray location (major radius) along the propagation [1,ns]
+    ray.sx = syR(:,i_lh)' - equil.Rp;% Ray location (major radius) along the propagation [1,ns]
     ray.sphi = syZ(:,i_lh)';% Ray location (toroidal angle) along the propagation [1,ns]
-    ray.sZ = syphi(:,i_lh)';% Ray location (vertical) along the propagation [1,ns]
+    ray.sy = syphi(:,i_lh)' - equil.Zp;% Ray location (vertical) along the propagation [1,ns]
         %
     ray.ss = [];% Ray propagation distance parameter for each ray (put to NaN once the ray is absorbed) [1,ns]
     ray.spsin = [];% Ray location (normalized magnetic flux) along the propagation [1,ns]
     ray.stheta = [];% Ray location (poloidal angle) along the propagation [1,ns]
         %
-    ray.skR = [];% Ray wave vector (major radius) along the propagation [1,ns]
+    ray.skx = [];% Ray wave vector (major radius) along the propagation [1,ns]
     ray.sn = [];% Ray wave number (toroidal) along the propagation [1,ns]
-    ray.skZ = [];% Ray wave vector (vertical) along the propagation [1,ns]
+    ray.sky = [];% Ray wave vector (vertical) along the propagation [1,ns]
         %
     ray.sNpar = syNpar_lh(:,i_lh)';% Ray parallel wave number [1,ns]
     ray.sNperp = syNperp_lh(:,i_lh)';% Ray perpendicular wave number [1,ns]

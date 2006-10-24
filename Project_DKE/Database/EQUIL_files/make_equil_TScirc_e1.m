@@ -79,8 +79,10 @@ Bpa = (4*pi*1e-7)*Ip*1e6/(2*pi*ap);% Poloidal Field at the edge, Ampere's theore
 Xrho = repmat(prho',[1,ntheta]);
 Xtheta = repmat(equil.theta,[npsi,1]);
 %
-equil.R = Rp + ap*Xrho.*cos(Xtheta);
-equil.Z = Zp + ap*Xrho.*sin(Xtheta);
+equil.ptx = ap*Xrho.*cos(Xtheta);
+equil.pty = ap*Xrho.*sin(Xtheta);
+equil.Rp = Rp;
+equil.Zp = Zp;
 %
 qmax = ap/Rp*abs(Bt/Bpa);%Cylindrical safety factor at the plasma edge
 %
@@ -93,15 +95,15 @@ pBpp = sign(Bpa)*prho*ap/Rp*abs(Bt)./pq;
 %
 spBpp = triu(repmat((pBpp(1:npsi-1) + pBpp(2:npsi))'/2,[1,npsi-1]));
 pdprho = diff(prho);
-equil.ppsi = [0,ap*Rp*integral_dke_jd(pdprho,spBpp,1)'];
+equil.psi = [0,ap*Rp*integral_dke_jd(pdprho,spBpp,1)'];
 %
 %psia = ap*Rp*Bpa/2; %poloidal flux at the edge
 %ppsi = prho.^2*psia; %poloidal flux profile
 %
 XBpp = repmat(pBpp',[1,ntheta]);
-equil.BR = -XBpp.*sin(Xtheta)*Rp./equil.R;
-equil.BZ = XBpp.*cos(Xtheta)*Rp./equil.R;
-equil.BPHI = Bt*Rp./equil.R;
+equil.ptBx = -XBpp.*sin(Xtheta)*Rp./(equil.ptx + Rp);
+equil.ptBy = XBpp.*cos(Xtheta)*Rp./(equil.ptx + Rp);
+equil.ptBPHI = Bt*Rp./(equil.ptx + Rp);
 %
 filename = ['EQUIL_',equil.id,'.mat'];
 %
