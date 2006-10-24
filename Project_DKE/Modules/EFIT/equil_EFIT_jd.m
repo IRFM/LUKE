@@ -15,7 +15,7 @@ function equil_EFIT_jd(filename,type,display_mode,p_opt,dispname,savename,Zeff)
 % by J. Decker (jodecke@alum.mit.edu) 11/01/04
 %
 if nargin < 7 & type == 3,
-    Zeff = 1;
+    Zeff = NaN;
 end
 if nargin < 6
     savename = filename;
@@ -23,100 +23,76 @@ end
 if nargin < 5
     dispname = filename;
 end
-method = 'linear';%'spline';
-np = 101;
+method = 'spline';%'linear';
 nt = 65;
-%
-[qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;
 %
 % Reads EFIT eqdsk data
 %
 efitname = [filename,'.efit'];
-[rR,zZ,rzpsin,psia,xpsin,xF,xp,xq,Rv,Zv,Bv,Rp,Zp,Ip] = eqdsk_jd(efitname,display_mode,p_opt,dispname,savename);
+[x,y,xypsin,psia,psin,pF,pp,pq,Rp,Zp] = eqdsk_jd(efitname,display_mode,p_opt,dispname,savename);
 %
 % Reads EFIT numerical text T and n data
 %
 profname = [filename,'.prof'];
-[yrho,yTe,yne,yTi,yni,zZi,zmi,fi] = Teneprof_jd(profname,type,display_mode,p_opt,dispname,savename);
+[yrho,yspsin,yspsinT,yTe,yne,yzTi,yzni,zZi,zmi] = Teneprof_jd(profname,type,display_mode,p_opt,Zeff,dispname,savename);
 %
-[R,Z,dpsindr,dpsindz,ppsin,theta] = rz2pt_jd(rR,zZ,Rp,Zp,rzpsin,np,nt,method,display_mode,p_opt,savename);
+[ptx,pty,ptdpsindx,ptdpsindy,psin,theta] = rz2pt_jd(x,y,xypsin,psin,nt,method,display_mode,p_opt,savename);
 %
-ppsi = ppsin*psia;
-BR = dpsindz*psia./R;
-BZ = -dpsindr*psia./R;
+np = length(psin);
+psi = psin*psia;
+ptR = Rp + ptx;
+ptBx = ptdpsindy*psia./ptR;
+ptBy = -ptdpsindx*psia./ptR;
 %
-pF = interp1(xpsin,xF,ppsin,method);
-F = repmat(pF',[1,nt]);
+% Warning: The PHI direction in the equil structure is such that
+% (x,y,phi) and (r,theta,phi) are right-handed systems. This is likely
+% the opposite direction from the EFIT PHI coordinate. However, 
+% because EFIT does not give any indication concerning the direction
+% of the toroidal current (as psi is always minimum on the axis in EFIT)
+% it is necessary to check both the direction of BPHI and the sign of 
+% psia. These can be adjusted retrospectively in the equil structure.
 %
-BPHI = F./R;
+ptF = repmat(pF.',[1,nt]);
 %
-%zZi = [1,1,1,6];
-%zmi = [1,2,3,12];
-%fi = [0,1,0];
+ptBPHI = ptF./ptR;
 %
-%ftra = [];%Approximate trapped fraction
-%HXR = NaN;
+ap =  ptx(np,1);%Plasma minor radius on the LFS midplane 
+prho = ptx(:,1).'/ap;
 %
-Rmax = R(np,1);%Major radius where the last close flux-surface crosses the LFS midplane
-ap =  Rmax - Rp;%Plasma minor radius on the LFS midplane 
-prho = (R(:,1)' - Rp)/ap;
+pq_h = (pq(1:end-1) + pq(2:end))/2;
+pdpsin = diff(psin);
+ppsiT = [0,cumsum(pq_h.*pdpsin)];
+pspsinT = sqrt(ppsiT/ppsiT(end));
 %
-xq_h = (xq(1:end-1) + xq(2:end)).'/2;
-xdpsin = diff(xpsin);
-xpsiT = [0,cumsum(xq_h.*xdpsin)];
-xpsinT = xpsiT/xpsiT(end);
-pspsinT = sqrt(interp1(xpsin,xpsinT,ppsin));
+pspsin = sqrt(psin);
 %
-if type == 0 | type == 2,
-    pTe = interp1(yrho,yTe,prho,method)/1e3;
+if ~isempty(yrho),% profiles given on rho grid
+    pTe = interp1(yrho,yTe,prho,method);
     pne = interp1(yrho,yne,prho,method);
-    pTi = interp1(yrho,yTi,prho,method)/1e3;
-    pni = interp1(yrho,yni,prho,method);
+    pzTi = interp1(yrho,yzTi.',prho,method).';
+    pzni = interp1(yrho,yzni.',prho,method).';
     %
-    Zimp = zZi(4);
+elseif ~isempty(yspsin),% profiles given on poloidal flux based grid
+    pTe = interp1(yspsin,yTe,pspsin,method);
+    pne = interp1(yspsin,yne,pspsin,method);
+    pzTi = interp1(yspsin,yTi.',pspsin,method).';
+    pzni = interp1(yspsin,yni.',pspsin,method).'; 
     %
-    pnimp = (pne-pni)/(Zimp-1);
-    pnH = pni-pnimp;
+elseif ~isempty(yspsinT),% profiles given on toroidal flux based grid
+    pTe = interp1(yspsinT,yTe,pspsinT,method);
+    pne = interp1(yspsinT,yne,pspsinT,method);
+    pzTi = interp1(yspsinT,yzTi.',pspsinT,method).';
+    pzni = interp1(yspsinT,yzni.',pspsinT,method).';    
     %
-    fi = [0,1,0];
-    pzni = [fi'*pnH;pnimp];
-    pzTi = ones(4,1)*pTi;
-    %
-elseif type == 1,%yrho = sqrt(psin)
-    pTe = interp1(yrho.^2,yTe,ppsin,method)/1e3;
-    pne = interp1(yrho.^2,yne,ppsin,method);
-    pzTi = interp1(yrho.^2,yTi',ppsin,method)'/1e3;
-    pzni = interp1(yrho.^2,yni',ppsin,method)';    
-elseif type == 3 | type == 4,%yrho = sqrt(psinT)
-    pTe = interp1(yrho,yTe,pspsinT,method)/1e3;
-    pne = interp1(yrho,yne,pspsinT,method);
-    pTi = interp1(yrho,yTi,pspsinT,method)/1e3;
-    
-    pnH = pne*(zZi(4) - Zeff)/(zZi(4) - 1);
-    pnZ = pne*(Zeff - 1)/zZi(4)/(zZi(4) - 1);
-    pzni = [fi.'*pnH;pnZ];
-    pzTi = ones(4,1)*pTi;
-% elseif type == 4,%yrho = sqrt(psin)
-%     pTe = interp1(yrho.^2,yTe,ppsin,method)/1e3;
-%     pne = interp1(yrho.^2,yne,ppsin,method);
-%     pTi = interp1(yrho.^2,yTi,ppsin,method)/1e3;
-% %    pzni = interp1(yrho.^2,yni.',ppsin,method).';
-%     
-%     fi = [0,0.5,0.5];
-%     pnH = pne*(zZi(4) - Zeff)/(zZi(4) - 1);
-%     pnZ = pne*(Zeff - 1)/zZi(4)/(zZi(4) - 1);
-%     pzni = [fi.'*pnH;pnZ];
-%     
-%     pzTi = ones(4,1)*pTi;
 end
 %
-if display_mode == 2 
+if display_mode == 2, 
 %
     rx = [-fliplr(prho(2:np)),prho];
-    rBR = [fliplr(BR(2:np,(nt+1)/2)'),BR(:,1)'];
-    rBZ = [fliplr(BZ(2:np,(nt+1)/2)'),BZ(:,1)'];
-    rBPHI = [fliplr(BPHI(2:np,(nt+1)/2)'),BPHI(:,1)'];
-    rBP = sqrt(rBR.^2 + rBZ.^2);
+    rBx = [fliplr(ptBx(2:np,(nt+1)/2)'),ptBx(:,1)'];
+    rBy = [fliplr(ptBy(2:np,(nt+1)/2)'),ptBy(:,1)'];
+    rBPHI = [fliplr(ptBPHI(2:np,(nt+1)/2)'),ptBPHI(:,1)'];
+    rBP = sqrt(rBx.^2 + rBy.^2);
     rB = sqrt(rBP.^2 + rBPHI.^2);
 %
     style = '-';
@@ -139,61 +115,73 @@ if display_mode == 2
     ylim = NaN;
     leg = ['B_T';'B_P';'B  '];
 %
-    graph1D_jd(rx,-rBPHI,0,0,'','','',NaN,xlim,ylim,style,marker,color1,width,siz,gca,red,lspace,bspace);
+    graph1D_jd(rx,abs(rBPHI),0,0,'','','',NaN,xlim,ylim,style,marker,color1,width,siz,gca,red,lspace,bspace);
     graph1D_jd(rx,rBP,0,0,'','','',NaN,xlim,ylim,style,marker,color2,width);
     graph1D_jd(rx,rB,0,0,xlab,ylab,tit,leg,xlim,ylim,style,marker,color3,width);
     print_jd(p_opt,[savename,'_Bfield']);
 end
 %
-R(:,65) = R(:,1);
-Z(:,65) = Z(:,1);
-BR(:,65) = BR(:,1);
-BZ(:,65) = BZ(:,1);
-BPHI(:,65) = BPHI(:,1);
+ptx(:,65) = ptx(:,1);
+pty(:,65) = pty(:,1);
+ptBx(:,65) = ptBx(:,1);
+ptBy(:,65) = ptBy(:,1);
+ptBPHI(:,65) = ptBPHI(:,1);
 %
-%savename = ['EQUIL_',filename,'.mat'];
-%
-%eval(['save ',savename,' ppsi theta R Z BR BZ BPHI pTe pne pzTi pzni zZi zmi ftra HXR'])
-%
-% new equil structure
+% equil structure
 %
 equil.id = savename;
 equil.zZi = zZi;
 equil.zmi = zmi;
+equil.psi = psia*psin;
 equil.theta = theta;
 equil.pTe = pTe;
 equil.pne = pne;
 equil.pzTi = pzTi;
 equil.pzni = pzni;
-equil.R = R;
-equil.Z = Z;
-equil.ppsi = ppsi;
-equil.BR = BR;
-equil.BZ = BZ;
-equil.BPHI = BPHI;
+equil.ptx = ptx;
+equil.pty = pty;
+equil.ptBx = ptBx;
+equil.ptBy = ptBy;
+equil.ptBPHI = ptBPHI;
+equil.Rp = Rp;
+equil.Zp = Zp;
 %
 eval(['save EQUIL_',savename,' equil'])
 %
-%return
+% Verify consistency on pressure between profiles and EFIT
 %
-% Verify consistency
-%
-yp = (yTe.*yne + sum(yTi.*yni,1))*qe;%pressure from Tene data
-%
-pp = interp1(xpsin,xp,ppsin,method);
-figure(13),clf
-%
-xlab = 'r/a';
-ylab = 'p';
-xlim = [0,1];
-ylim = NaN;
-leg = ['T_en_e + T_in_i';
-       'EFIT           '];
-%
-graph1D_jd(yrho,yp/1e4,0,0,'','','',NaN,xlim,ylim,style,marker,color1,width,siz,gca,red,lspace,bspace);
-graph1D_jd(prho,pp/1e4,0,0,xlab,ylab,tit,leg,xlim,ylim,style,marker,color2,width,siz);
-set(gca,'XTick',[0:0.2:1]);
-print_jd(p_opt,[savename,'_p_comp']);
+if display_mode == 2, 
+    qe = pc_dke_yp;
+    %
+    yp = (yTe.*yne + sum(yzTi.*yzni,1))*qe*1e3;%pressure from Tene data
+    %
+    figure(13),clf
+    %
+    if ~isempty(yrho),
+        xlab = '\rho';
+        pdisp = prho;
+        ydisp = yrho;
+    elseif ~isempty(yspsin)
+        xlab = '\psi_n^{1/2}';
+        pdisp = pspsin;
+        ydisp = yspsin;
+    elseif ~isempty(yspsinT)
+        xlab = '\psi_{nT}^{1/2}';
+        pdisp = pspsinT;
+        ydisp = yspsinT;
+    end  
+    %
+    ylab = 'p (hPa)';
+    xlim = [0,1];
+    ylim = NaN;
+    leg = ['T_en_e + T_in_i';
+           'EFIT           '];
+    %
+    graph1D_jd(ydisp,yp/1e5,0,0,'','','',NaN,xlim,ylim,style,marker,color1,width,siz,gca,red,lspace,bspace);
+    graph1D_jd(pdisp,pp/1e5,0,0,xlab,ylab,tit,leg,xlim,ylim,style,marker,color2,width,siz);
+    set(gca,'XTick',[0:0.2:1]);
+    print_jd(p_opt,[savename,'_p_comp']);
+end
 
 
 

@@ -1,4 +1,4 @@
-function [prho,pTe,pne,pTi,pni,zZi,zmi,fi] = Teneprof_jd(filename,type,display_mode,p_opt,dispname,savename);
+function [prho,pspsin,pspsinT,pTe,pne,pzTi,pzni,zZi,zmi] = Teneprof_jd(filename,type,display_mode,p_opt,Zeff,dispname,savename);
 %
 % This function reads the temperature and density parameters from text or
 % binary files in which the columns are respectively the radial position r/a, Te,
@@ -12,17 +12,18 @@ end
 if nargin < 5
     dispname = filename;
 end
-if type == 0%ascii
+%
+prho = [];
+pspsin = [];
+pspsinT = [];
+%
+if type == 0,%ascii
     [prho,pTe,pne,pTi,pni] = textread(filename,'%n%n%n%n%n');
-elseif type == 1%.mat
+elseif type == 1,%.mat
     eval(['load ',filename,' prho pTe pne pTi pni']);
-    zZi = [1,1,1,6];
-    zmi = [1,2,3,12];
-elseif type == 2%ascii - 203040
+elseif type == 2,%ascii - 203040
     [prho,pTi,pTe,pni,pne] = textread(filename,'%n%n%n%n%n');
-    zZi = [1,1,1,6];
-    zmi = [1,2,3,12];
-elseif type == 3%ascii formatted (CMOD)
+elseif type == 3,%ascii formatted (CMOD)
     pne = [];
     pTe = [];
     fid = fopen(filename);
@@ -49,17 +50,56 @@ elseif type == 3%ascii formatted (CMOD)
             end
         end
     end
-    
-    pne = pne*1e19;
-    pTe = pTe*1e3;
-    pTi = pTe*2/3;
-    pni = pne;
-    prho = linspace(0,1,length(pne));
-    zZi = [1,1,1,6];
-    zmi = [1,2,3,12];    
     fclose(fid);
-elseif type == 4%ascii formatted (ITER)
-    prho = [];
+    clear fid s t d
+    %
+    pne = pne*1e19;
+    pTi = pTe*2/3;
+    pspsinT = linspace(0,1,length(pne));
+    %
+elseif type == 3.1,%ascii formatted (CMOD)
+    pne = [];
+    pTe = [];
+    fid = fopen(filename);
+    s = 0;
+    while isempty(s) | s ~= -1,
+        s = fgetl(fid);
+        if isempty(findstr(s,'Density')),
+            continue
+        else
+            s = fgetl(fid);
+            s = fgetl(fid);
+            while ~isempty(s),
+                d = sscanf(s,'%f').';
+                pne = [pne,d];
+                s = fgetl(fid);
+            end
+            break
+        end
+    end
+    while isempty(s) | s ~= -1,
+        s = fgetl(fid);
+        if isempty(findstr(s,'genray')),
+            continue
+        else
+            s = fgetl(fid);
+            s = fgetl(fid);
+            while s ~= -1,
+                d = sscanf(s,'%f');
+                pTe = [pTe,d(1)];                    
+                s = fgetl(fid);
+            end
+            break
+        end
+    end
+    fclose(fid);
+    clear fid s d
+    %
+    pTi = pTe*2/3;
+    pspsinT = linspace(0,1,length(pne));
+    %
+elseif type == 4,%ascii formatted (ITER)
+    pspsinT = [];
     pne = [];
     pTe = [];
     pTi = [];
@@ -70,7 +110,7 @@ elseif type == 4%ascii formatted (ITER)
     s = fgetl(fid);
     while ~isempty(s),
         d = sscanf(s,'%f %f %f %f');
-        prho = [prho,d(1)];        
+        pspsinT = [pspsinT,d(1)];        
         pne = [pne,d(2)];
         pTe = [pTe,d(3)];
         pTi = [pTi,d(4)];
@@ -81,16 +121,62 @@ elseif type == 4%ascii formatted (ITER)
         d = sscanf(s,'%f %f %f');
         zZi = [zZi,d(1)];
         zmi = [zmi,d(2)];
-        pni = [pni;pne*d(3)];
+        pzni = [pni;pne*d(3)];
         s = fgetl(fid);
     end
-    pne = pne*1e19;
-    pni = pni*1e19;
-    pTe = pTe*1e3;
-    pTi = pTi*1e3;
     fclose(fid);
-    
+    clear fid s d
+    %
+    pne = pne*1e19;
+    pzni = pni*1e19;
+    pTe = pTe;
+    pTi = pTi;
+    %
+    clear pzni % ion densities recalculated from Zeff
     fi = [0,0.5,0.5];
+end
+%
+if type < 4,
+    %
+    zZi = [1,1,1,6];
+    zmi = [1,2,3,12];
+    fi = [0,1,0];
+    %
+end
+%
+nz = length(zZi);
+%
+if type == 0 | type == 2,
+    %
+    pTe = pTe/1e3;
+    pTi = pTi/1e3;
+    %
+    Zimp = zZi(4);
+    %
+    pnimp = (pne-pni)/(Zimp-1);
+    pnH = pni-pnimp;
+    %
+    pzni = [fi'*pnH;pnimp];
+    pzTi = ones(nz,1)*pTi;
+    %
+elseif type == 1,
+    %
+    pTe = pTe/1e3;
+    pTi = pTi/1e3;
+    %
+    pzni = pni;
+    pzTi = pTi;
+    %
+    pspsin = prho;
+    prho = [];
+    %
+elseif type >= 3,
+    %
+    pnH = pne*(zZi(4) - Zeff)/(zZi(4) - 1);
+    pnZ = pne*(Zeff - 1)/zZi(4)/(zZi(4) - 1);
+    pzni = [fi.'*pnH;pnZ];
+    pzTi = ones(nz,1)*pTi;
+    %
 end
 %
 if display_mode >= 2,
@@ -105,18 +191,24 @@ if display_mode >= 2,
     bspace = 0.6;
     tit = [dispname];
     %
+    if ~isempty(prho),
+        xlab = '\rho';
+        pdisp = prho;
+    elseif ~isempty(pspsin)
+        xlab = '\psi_n^{1/2}';
+        pdisp = pspsin;
+    elseif ~isempty(pspsinT)
+        xlab = '\psi_{nT}^{1/2}';
+        pdisp = pspsinT;
+    end        
+    %
     figure(8),clf
     %
-    if type == 0,
-        xlab = '\rho';
-    else
-        xlab = '\psi_n^{1/2}';
-    end    
     ylab = 'T_e (keV)';
     xlim = [0,1];
     ylim = NaN;
     %
-    graph1D_jd(prho,pTe/1e3,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color,width,siz,gca,red,lspace,bspace);
+    graph1D_jd(pdisp,pTe,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color,width,siz,gca,red,lspace,bspace);
     set(gca,'XTick',[0:0.2:1]);
     set(gca,'ylim',[0,max(get(gca,'ylim'))])
     print_jd(p_opt,[savename,'_Te_rho']);
@@ -125,7 +217,7 @@ if display_mode >= 2,
     %
     ylab = 'n_e (\times 10^{19} m^{-3})';
     %
-    graph1D_jd(prho,pne/1e19,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color,width,siz,gca,red,lspace,bspace);
+    graph1D_jd(pdisp,pne/1e19,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color,width,siz,gca,red,lspace,bspace);
     set(gca,'XTick',[0:0.2:1]);
     set(gca,'ylim',[0,max(get(gca,'ylim'))])
     print_jd(p_opt,[savename,'_ne_rho']);
@@ -134,7 +226,7 @@ if display_mode >= 2,
     %
     ylab = 'T_i (keV)';
     %
-    graph1D_jd(prho,pTi/1e3,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color,width,siz,gca,red,lspace,bspace);
+    graph1D_jd(pdisp,pzTi,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color,width,siz,gca,red,lspace,bspace);
     set(gca,'XTick',[0:0.2:1]);
     set(gca,'ylim',[0,max(get(gca,'ylim'))])
     print_jd(p_opt,[savename,'_Ti_rho']);
@@ -143,7 +235,7 @@ if display_mode >= 2,
     %
     ylab = 'n_i (\times 10^{19} m^{-3})';
     %
-    graph1D_jd(prho,pni/1e19,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color,width,siz,gca,red,lspace,bspace);
+    graph1D_jd(pdisp,pzni/1e19,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color,width,siz,gca,red,lspace,bspace);
     set(gca,'XTick',[0:0.2:1]);
     set(gca,'ylim',[0,max(get(gca,'ylim'))])
     print_jd(p_opt,[savename,'_ni_rho']);
