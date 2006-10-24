@@ -1,4 +1,4 @@
-function [XXsinksource] = sinksourcecoeffbuilder_dke_yp(dkeparam,display,equil,equilDKE,gridDKE,mksa,XXsinksource_in)
+function [XXsinksource] = sinksourcecoeffbuilder_dke_yp(dkeparam,display,gridDKE,mksa,XXsinksource_in)
 %
 %   Calculate the external sink and source coefficients for the 3D electron
 %   relativistic drift kinetic solver (right-hand side terms of the FP
