@@ -1,4 +1,4 @@
-function [Zpp_f] = interpequil_yp(method,f,rho,theta,nharm)
+function [Zpp_f] = interpequilpt_yp(method,f,rho,theta,nharm)
 %
 % Build vectorial tokamak magnetic equilibrium from its numerical counterpart
 % 1-D: use interp1 MatLab built-in function (spline, bi-cubic, linear,

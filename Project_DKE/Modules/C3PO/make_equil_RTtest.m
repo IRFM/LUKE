@@ -2,8 +2,8 @@
 %   This script generates the data file of an ideal circular equilibrium based on
 %   equilibrium profile parameters
 %
-%   By J. Decker <jodecker@alum.mit.edu> and Y. Peysson <yves.peysson@cea.fr>
-%   Created Feb. 17, 2004
+%   By J. Decker <joan.decker@cea.fr> and Y. Peysson <yves.peysson@cea.fr>
+%  
 %
 clear all
 %
@@ -82,8 +82,8 @@ Bpa = (4*pi*1e-7)*Ip*1e6/(2*pi*ap);% Poloidal Field at the edge, Ampere's theore
 Xrho = repmat(prho',[1,ntheta]);
 Xtheta = repmat(equil.theta,[npsi,1]);
 %
-equil.R = Rp + ap*Xrho.*cos(Xtheta);
-equil.Z = Zp + ap*Xrho.*sin(Xtheta);
+equil.ptx = ap*Xrho.*cos(Xtheta);
+equil.pty = ap*Xrho.*sin(Xtheta);
 %
 qmax = ep*cyl*abs(Bt/Bpa);%Cylindrical safety factor at the plasma edge
 %
@@ -101,18 +101,28 @@ pBpp = sign(Bpa)*prho*ep*cyl*abs(Bt)./pq;
 if qopt == 2,
     spBpp = triu(repmat((pBpp(1:npsi-1) + pBpp(2:npsi))'/2,[1,npsi-1]));
     pdprho = diff(prho);
-    equil.ppsi = [0,ap*Rp*integral_dke_jd(pdprho,spBpp,1)'];
+    equil.psi = [0,ap*Rp*integral_dke_jd(pdprho,spBpp,1)'];
 elseif qopt == 1 % analytical thus more accurate 
-    equil.ppsi = ap*Rp*Bpa*prho;
+    equil.psi = ap*Rp*Bpa*prho;
     pBpp(1) = Bpa;
 else % analytical thus more accurate 
-    equil.ppsi = ap*Rp*Bpa*prho.^2/2;
+    equil.psi = ap*Rp*Bpa*prho.^2/2;
 end
 %
 XBpp = repmat(pBpp',[1,ntheta]);
-equil.BR = -XBpp.*sin(Xtheta)*Rp./equil.R;
-equil.BZ = XBpp.*cos(Xtheta)*Rp./equil.R;
-equil.BPHI = Bt*Rp./equil.R;
+equil.ptBx = -XBpp.*sin(Xtheta)*Rp./(equil.ptx + Rp);
+equil.ptBy = XBpp.*cos(Xtheta)*Rp./(equil.ptx + Rp);
+equil.ptBPHI = Bt*Rp./(equil.ptx + Rp);
+%
+equil.Rp = Rp;
+equil.Zp = Zp;
+%
+equil.x = linspace(-ap,ap,2*npsi-1);
+equil.y = linspace(-ap,ap,2*npsi-1);
+xyx = equil.x(:)*ones(1,2*npsi-1);
+xyy = ones(2*npsi-1,1)*equil.y;
+equil.xypsi = Rp*Bpa*(xyx.^2 + xyy.^2)/2/ap;
+equil.pF = Bt*Rp*ones(1,npsi);
 %
 filename = ['EQUIL_',equil.id,'.mat'];
 %
