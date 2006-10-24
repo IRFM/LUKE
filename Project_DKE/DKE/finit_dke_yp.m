@@ -36,7 +36,7 @@ XXfinit = zeros(npn,nmhu,nr);%Defined on the distribution function grid (half gr
 if size(waveparam,2) ~= 1,
     dkeparam.initguess_f = 0;
 else
-    if isnan(waveparam(ir_display,1,5)) == 1 | isnan(waveparam(ir_display,1,6)) == 1,
+    if isstruct(waveparam) | isnan(waveparam(ir_display,1,5)) == 1 | isnan(waveparam(ir_display,1,6)) == 1,
          dkeparam.initguess_f = 0;
     else
          xvparmin_lh = 1./waveparam(:,1,6)/mksa.betath_ref;
