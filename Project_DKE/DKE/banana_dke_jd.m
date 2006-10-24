@@ -1,4 +1,4 @@
-function [YMdt,YMmask,YMF,YMPSIB,YMmhu0,YMmhu,YMR,xymaskT,nm2] = banana_dke_jd(ymhu0,Rp,Zp,XR,XZ,XBR,XBZ,XBphi);
+function [YMdt,YMmask,YMF,YMPSIB,YMmhu0,YMmhu,YMx,xymaskT,nm2] = banana_dke_jd(ymhu0,Rp,ap,Xx,Xy,XBx,XBy,XBphi);
 %
 % Calculation of the poloidal positions of the two banana tips for accurate numerical integration over the poloidal angle
 % close to the trapped/passing limit. All output quantities are given on this new grid 
@@ -23,13 +23,13 @@ function [YMdt,YMmask,YMF,YMPSIB,YMmhu0,YMmhu,YMR,xymaskT,nm2] = banana_dke_jd(y
 %
 % by Joan Decker <jodecker@mit.edu> (MIT/RLE) and  Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC) 
 %
-[np,nt] = size(XR);
+[np,nt] = size(Xx);
 nmhu = length(ymhu0);
 %
 theta = linspace(0,2*pi,nt);%Poloidal angular grid
 %
 XBT = abs(XBphi);%Toroidal B-field
-XBP = sqrt(XBR.^2 + XBZ.^2);%Poloidal B-field
+XBP = sqrt(XBx.^2 + XBy.^2);%Poloidal B-field
 XB = sqrt(XBT.^2 + XBP.^2);%Total B-field
 %
 xBmin = min(XB'); % Minimum of B on FS
@@ -100,44 +100,44 @@ else
 end
 %	
 XtB = XB';
-XtBR = XBR';
-XtBZ = XBZ';
+XtBx = XBx';
+XtBy = XBy';
 XtBphi = XBphi';
-XtR = XR';
-XtZ = XZ';
+Xtx = Xx';
+Xty = Xy';
 %
 xyB1min =  reshape(XtB(Zi1min),[np,nmhu]);
 xyB1max =  reshape(XtB(Zi1max),[np,nmhu]);
 xyB2min =  reshape(XtB(Zi2min),[np,nmhu]);
 xyB2max =  reshape(XtB(Zi2max),[np,nmhu]);
 %
-xyBR1min =  reshape(XtBR(Zi1min),[np,nmhu]);
-xyBR1max =  reshape(XtBR(Zi1max),[np,nmhu]);
-xyBR2min =  reshape(XtBR(Zi2min),[np,nmhu]);
-xyBR2max =  reshape(XtBR(Zi2max),[np,nmhu]);
+xyBx1min =  reshape(XtBx(Zi1min),[np,nmhu]);
+xyBx1max =  reshape(XtBx(Zi1max),[np,nmhu]);
+xyBx2min =  reshape(XtBx(Zi2min),[np,nmhu]);
+xyBx2max =  reshape(XtBx(Zi2max),[np,nmhu]);
 %
-xyBZ1min =  reshape(XtBZ(Zi1min),[np,nmhu]);
-xyBZ1max =  reshape(XtBZ(Zi1max),[np,nmhu]);
-xyBZ2min =  reshape(XtBZ(Zi2min),[np,nmhu]);
-xyBZ2max =  reshape(XtBZ(Zi2max),[np,nmhu]);
+xyBy1min =  reshape(XtBy(Zi1min),[np,nmhu]);
+xyBy1max =  reshape(XtBy(Zi1max),[np,nmhu]);
+xyBy2min =  reshape(XtBy(Zi2min),[np,nmhu]);
+xyBy2max =  reshape(XtBy(Zi2max),[np,nmhu]);
 %
 xyBphi1min =  reshape(XtBphi(Zi1min),[np,nmhu]);
 xyBphi1max =  reshape(XtBphi(Zi1max),[np,nmhu]);
 xyBphi2min =  reshape(XtBphi(Zi2min),[np,nmhu]);
 xyBphi2max =  reshape(XtBphi(Zi2max),[np,nmhu]);
 %
-xyR1min =  reshape(XtR(Zi1min),[np,nmhu]);
-xyR1max =  reshape(XtR(Zi1max),[np,nmhu]);
-xyR2min =  reshape(XtR(Zi2min),[np,nmhu]);
-xyR2max =  reshape(XtR(Zi2max),[np,nmhu]);
+xyx1min =  reshape(Xtx(Zi1min),[np,nmhu]);
+xyx1max =  reshape(Xtx(Zi1max),[np,nmhu]);
+xyx2min =  reshape(Xtx(Zi2min),[np,nmhu]);
+xyx2max =  reshape(Xtx(Zi2max),[np,nmhu]);
 %
-xyZ1min =  reshape(XtZ(Zi1min),[np,nmhu]);
-xyZ1max =  reshape(XtZ(Zi1max),[np,nmhu]);
-xyZ2min =  reshape(XtZ(Zi2min),[np,nmhu]);
-xyZ2max =  reshape(XtZ(Zi2max),[np,nmhu]);
+xyy1min =  reshape(Xty(Zi1min),[np,nmhu]);
+xyy1max =  reshape(Xty(Zi1max),[np,nmhu]);
+xyy2min =  reshape(Xty(Zi2min),[np,nmhu]);
+xyy2max =  reshape(Xty(Zi2max),[np,nmhu]);
 %
-xyY1 = xyBR1min.*xyBR1max + xyBZ1min.*xyBZ1max + xyBphi1min.*xyBphi1max;
-xyY2 = xyBR2min.*xyBR2max + xyBZ2min.*xyBZ2max + xyBphi2min.*xyBphi2max;
+xyY1 = xyBx1min.*xyBx1max + xyBy1min.*xyBy1max + xyBphi1min.*xyBphi1max;
+xyY2 = xyBx2min.*xyBx2max + xyBy2min.*xyBy2max + xyBphi2min.*xyBphi2max;
 %
 xydelta1 = sqrt((xyY1 - xyBb.^2).^2 - (xyBb.^2 - xyB1min.^2).*(xyBb.^2 - xyB1max.^2));
 xydelta2 = sqrt((xyY2 - xyBb.^2).^2 - (xyBb.^2 - xyB2min.^2).*(xyBb.^2 - xyB2max.^2));
@@ -181,43 +181,43 @@ xyTthetaT2 = xytheta2min + (xytheta2max - xytheta2min).*xyalpha2;
 xyTthetaT1(~xymaskT) = 0;
 xyTthetaT2(~xymaskT) = 0;
 %
-xyBRT1 = xyBR1min + (xyBR1max - xyBR1min).*(xyTthetaT1 - xytheta1min)./(xytheta1max - xytheta1min);
-xyBRT2 = xyBR2min + (xyBR2max - xyBR2min).*(xyTthetaT2 - xytheta2min)./(xytheta2max - xytheta2min);
+xyBxT1 = xyBx1min + (xyBx1max - xyBx1min).*(xyTthetaT1 - xytheta1min)./(xytheta1max - xytheta1min);
+xyBxT2 = xyBx2min + (xyBx2max - xyBx2min).*(xyTthetaT2 - xytheta2min)./(xytheta2max - xytheta2min);
 %
-xyBZT1 = xyBZ1min + (xyBZ1max - xyBZ1min).*(xyTthetaT1 - xytheta1min)./(xytheta1max - xytheta1min);
-xyBZT2 = xyBZ2min + (xyBZ2max - xyBZ2min).*(xyTthetaT2 - xytheta2min)./(xytheta2max - xytheta2min);
+xyByT1 = xyBy1min + (xyBy1max - xyBy1min).*(xyTthetaT1 - xytheta1min)./(xytheta1max - xytheta1min);
+xyByT2 = xyBy2min + (xyBy2max - xyBy2min).*(xyTthetaT2 - xytheta2min)./(xytheta2max - xytheta2min);
 %
 xyBphiT1 = xyBphi1min + (xyBphi1max - xyBphi1min).*(xyTthetaT1 - xytheta1min)./(xytheta1max - xytheta1min);
 xyBphiT2 = xyBphi2min + (xyBphi2max - xyBphi2min).*(xyTthetaT2 - xytheta2min)./(xytheta2max - xytheta2min);
 %
-xyRT1 = xyR1min + (xyR1max - xyR1min).*(xyTthetaT1 - xytheta1min)./(xytheta1max - xytheta1min);
-xyRT2 = xyR2min + (xyR2max - xyR2min).*(xyTthetaT2 - xytheta2min)./(xytheta2max - xytheta2min);
+xyxT1 = xyx1min + (xyx1max - xyx1min).*(xyTthetaT1 - xytheta1min)./(xytheta1max - xytheta1min);
+xyxT2 = xyx2min + (xyx2max - xyx2min).*(xyTthetaT2 - xytheta2min)./(xytheta2max - xytheta2min);
 %
-xyZT1 = xyZ1min + (xyZ1max - xyZ1min).*(xyTthetaT1 - xytheta1min)./(xytheta1max - xytheta1min);
-xyZT2 = xyZ2min + (xyZ2max - xyZ2min).*(xyTthetaT2 - xytheta2min)./(xytheta2max - xytheta2min);
+xyyT1 = xyy1min + (xyy1max - xyy1min).*(xyTthetaT1 - xytheta1min)./(xytheta1max - xytheta1min);
+xyyT2 = xyy2min + (xyy2max - xyy2min).*(xyTthetaT2 - xytheta2min)./(xytheta2max - xytheta2min);
 %
-xyBRT1(~xymaskT) = xyBR1min(~xymaskT);
-xyBRT2(~xymaskT) = xyBR2min(~xymaskT);
+xyBxT1(~xymaskT) = xyBx1min(~xymaskT);
+xyBxT2(~xymaskT) = xyBx2min(~xymaskT);
 %
-xyBZT1(~xymaskT) = xyBZ1min(~xymaskT);
-xyBZT2(~xymaskT) = xyBZ2min(~xymaskT);
+xyByT1(~xymaskT) = xyBy1min(~xymaskT);
+xyByT2(~xymaskT) = xyBy2min(~xymaskT);
 %
 xyBphiT1(~xymaskT) = xyBphi1min(~xymaskT);
 xyBphiT2(~xymaskT) = xyBphi2min(~xymaskT);
 %
-xyRT1(~xymaskT) = xyR1min(~xymaskT);
-xyRT2(~xymaskT) = xyR2min(~xymaskT);
+xyxT1(~xymaskT) = xyx1min(~xymaskT);
+xyxT2(~xymaskT) = xyx2min(~xymaskT);
 %
-xyZT1(~xymaskT) = xyZ1min(~xymaskT);
-xyZT2(~xymaskT) = xyZ2min(~xymaskT);
+xyyT1(~xymaskT) = xyy1min(~xymaskT);
+xyyT2(~xymaskT) = xyy2min(~xymaskT);
 %
 Ytheta = repmat(theta',[1,np,nmhu]);
 %
-YBR = repmat(XBR',[1,1,nmhu]);	
-YBZ = repmat(XBZ',[1,1,nmhu]);
+YBx = repmat(XBx',[1,1,nmhu]);	
+YBy = repmat(XBy',[1,1,nmhu]);
 YBphi = repmat(XBphi',[1,1,nmhu]);
-YR = repmat(XR',[1,1,nmhu]);
-YZ = repmat(XZ',[1,1,nmhu]);
+Yx = repmat(Xx',[1,1,nmhu]);
+Yy = repmat(Xy',[1,1,nmhu]);
 %
 xyBT1 = xyBb;
 xyBT2 = xyBb;
@@ -226,23 +226,23 @@ xyBT2(~xymaskT) = xyB2min(~xymaskT);
 %
 YTtheta = [Ytheta;reshape(xyTthetaT1,[1,np,nmhu]);reshape(xyTthetaT2,[1,np,nmhu])];
 YTB = [YB;reshape(xyBT1,[1,np,nmhu]);reshape(xyBT2,[1,np,nmhu])];
-YTBR = [YBR;reshape(xyBRT1,[1,np,nmhu]);reshape(xyBRT2,[1,np,nmhu])];
-YTBZ = [YBZ;reshape(xyBZT1,[1,np,nmhu]);reshape(xyBZT2,[1,np,nmhu])];
+YTBx = [YBx;reshape(xyBxT1,[1,np,nmhu]);reshape(xyBxT2,[1,np,nmhu])];
+YTBy = [YBy;reshape(xyByT1,[1,np,nmhu]);reshape(xyByT2,[1,np,nmhu])];
 YTBphi = [YBphi;reshape(xyBphiT1,[1,np,nmhu]);reshape(xyBphiT2,[1,np,nmhu])];
-YTR = [YR;reshape(xyRT1,[1,np,nmhu]);reshape(xyRT2,[1,np,nmhu])];
-YTZ = [YZ;reshape(xyZT1,[1,np,nmhu]);reshape(xyZT2,[1,np,nmhu])];
+YTx = [Yx;reshape(xyxT1,[1,np,nmhu]);reshape(xyxT2,[1,np,nmhu])];
+YTy = [Yy;reshape(xyyT1,[1,np,nmhu]);reshape(xyyT2,[1,np,nmhu])];
 %
 nt2 = nt + 2;%Two poloidal angle values are added corresponding to banana tips
 %
-clear YB YBR YBZ YBphi YR YZ Ytheta
+clear YB YBx YBy YBphi Yx Yy Ytheta
 %
 [YTtheta,YTiT] = sort(YTtheta);
 ZTB = reshape(YTB,[nt2*np*nmhu,1]);
-ZTBR = reshape(YTBR,[nt2*np*nmhu,1]);
-ZTBZ = reshape(YTBZ,[nt2*np*nmhu,1]);
+ZTBx = reshape(YTBx,[nt2*np*nmhu,1]);
+ZTBy = reshape(YTBy,[nt2*np*nmhu,1]);
 ZTBphi = reshape(YTBphi,[nt2*np*nmhu,1]);
-ZTR = reshape(YTR,[nt2*np*nmhu,1]);
-ZTZ = reshape(YTZ,[nt2*np*nmhu,1]);
+ZTx = reshape(YTx,[nt2*np*nmhu,1]);
+ZTy = reshape(YTy,[nt2*np*nmhu,1]);
 %
 if np > 1,
 	csum1 = repmat(repmat([1:np]',1,nmhu),[1,1],nt2);% cumsum(ones(np,nmhu,nt2))
@@ -254,26 +254,26 @@ else
 end
 %
 YTB = reshape(ZTB(ZTiT),[nt2,np,nmhu]);
-YTBR = reshape(ZTBR(ZTiT),[nt2,np,nmhu]);
-YTBZ = reshape(ZTBZ(ZTiT),[nt2,np,nmhu]);
+YTBx = reshape(ZTBx(ZTiT),[nt2,np,nmhu]);
+YTBy = reshape(ZTBy(ZTiT),[nt2,np,nmhu]);
 YTBphi = reshape(ZTBphi(ZTiT),[nt2,np,nmhu]);
-YTR = reshape(ZTR(ZTiT),[nt2,np,nmhu]);
-YTZ = reshape(ZTZ(ZTiT),[nt2,np,nmhu]);
+YTx = reshape(ZTx(ZTiT),[nt2,np,nmhu]);
+YTy = reshape(ZTy(ZTiT),[nt2,np,nmhu]);
 %
-clear ZTB ZTBR ZTBZ ZTBphi ZTR ZTZ ZTiT
+clear ZTB ZTBx ZTBy ZTBphi ZTx ZTy ZTiT
 %
 % Half grid in theta for integration
 %
-YMBR = (YTBR(1:nt2-1,:,:) + YTBR(2:nt2,:,:))/2;
-clear YTBR
+YMBx = (YTBx(1:nt2-1,:,:) + YTBx(2:nt2,:,:))/2;
+clear YTBx
 %
-YMBZ = (YTBZ(1:nt2-1,:,:) + YTBZ(2:nt2,:,:))/2;
-clear YTBZ
+YMBy = (YTBy(1:nt2-1,:,:) + YTBy(2:nt2,:,:))/2;
+clear YTBy
 %
 YMBphi = (YTBphi(1:nt2-1,:,:) + YTBphi(2:nt2,:,:))/2;
 clear YTBphi
 %
-YMB = sqrt(YMBR.^2 + YMBZ.^2 + YMBphi.^2); 
+YMB = sqrt(YMBx.^2 + YMBy.^2 + YMBphi.^2); 
 %
 nm2 = nt2 - 1;
 %
@@ -285,9 +285,9 @@ YMPSIB = YMB./YMBmin;%Ratio of B-field to its minimum on flux surface
 YMBb = YMBmin./YM1mmhu02;%B-field at turning point
 clear YM1mmhu02 YMBmin
 %
-YMR = (YTR(1:nt2-1,:,:) + YTR(2:nt2,:,:))/2;
-YMZ = (YTZ(1:nt2-1,:,:) + YTZ(2:nt2,:,:))/2;
-clear YTZ
+YMx = (YTx(1:nt2-1,:,:) + YTx(2:nt2,:,:))/2;
+YMy = (YTy(1:nt2-1,:,:) + YTy(2:nt2,:,:))/2;
+clear YTy
 %
 YMmask = YMB <= YMBb;%Mask on the integration over B
 %
@@ -295,7 +295,7 @@ clear YMBb
 %
 YMmhu = sign(YMmhu0).*sqrt(1 - YMPSIB.*(1 - YMmhu0.^2));%Pitch-angle cosine of (psi,theta,mhu)
 YMmhu(~YMmask) = eps;%Avoid numerical singularities
-YMF = YMB.*((YMR - Rp).^2 + (YMZ - Zp).^2).*YMmhu0./abs(YMBR.*(YMZ - Zp) - YMBZ.*(YMR - Rp))./YMmhu/Rp;
+YMF = YMB.*(YMx.^2 + YMy.^2).*YMmhu0./abs(YMBx.*YMy - YMBy.*YMx)./YMmhu/ap;
 YMF(find(isinf(YMF))) = 1;%To avoid Inf and NaN
 YMdt = diff(YTtheta);
 %

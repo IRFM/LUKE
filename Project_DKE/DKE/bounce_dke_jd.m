@@ -1,6 +1,5 @@
-function [xq,xqtilde,xqbar,xqhat,xymaskT,...
-    xylambda_p0p0,xylambda_p2m1,xylambda_p2m2p2,xylambda_b_p1p1,xylambda_b_p1m1p2,xylambda_b_p1m1,xylambda_b_p1m2,xylambda_b_p2m2p2,xylambda_b_p3m2,xylambda_b_p2,xylambda_b_p1m3p4]...
-= bounce_dke_jd(equil_mode,ymhu0,XR,XZ,XBR,XBZ,XBphi,xmhubounce2,xB0,xR0,xBT0,xBp0,Rp,Zp,ap,xymaskT_in,sign)
+function [xymaskT,xylambda_p0p0,xylambda_p2m1,xylambda_p2m2p2,xylambda_b_p1p1,xylambda_b_p1m1p2,xylambda_b_p1m1,xylambda_b_p1m2,xylambda_b_p2m2p2,xylambda_b_p3m2,xylambda_b_p2,xylambda_b_p1m3p4]...
+= bounce_dke_jd(equil_mode,ymhu0,Xx,Xy,XBx,XBy,XBphi,xmhubounce2,xB0,xx0,xBT0,xBp0,xqtilde,Rp,Zp,ap,xymaskT_in,sign)
 %
 % calculates bounce averaging coefficients needed for solving the electron drift-kinetic-equation. 
 %
@@ -28,10 +27,10 @@ end
 % Case of a numerical equilibrium
 %
 nmhu = length(ymhu0);
-[nr,nt] = size(XR);
+[nr,nt] = size(Xx);
 %
 if equil_mode == 1,
-	[YMdt,YMmask,YMF,YMPSIB,YMmhu0,YMmhu,YMR,xymaskT,nm2] = banana_dke_jd(ymhu0,Rp,Zp,XR,XZ,XBR,XBZ,XBphi);	
+	[YMdt,YMmask,YMF,YMPSIB,YMmhu0,YMmhu,YMx,xymaskT,nm2] = banana_dke_jd(ymhu0,Rp,ap,Xx,Xy,XBx,XBy,XBphi);	
 elseif equil_mode == 0,
 	for ir = 1:nr   
 		xymaskT(ir,:) = ymhu0.^2 < xmhubounce2(ir);		
@@ -50,10 +49,9 @@ end
 %
 if equil_mode == 1
 %
-    [xq,xqtilde,xqbar,xqhat] = qfactors_dke_yp(Rp,Zp,XR,XZ,XBR,XBZ,XBphi);%q factors calculations
     xyqtilde = repmat(xqtilde',[1,nmhu]);
 %
-    YMR0 = repmat(xR0,[nm2,1,nmhu]);
+    YMx0 = repmat(xx0,[nm2,1,nmhu]);
 %
     YMYM01 = YMmhu./YMmhu0;
 	YMYM02 = YMYM01.*YMYM01;
@@ -63,7 +61,7 @@ if equil_mode == 1
 	YMPSIBM2 = YMPSIBM1.*YMPSIBM1;
 	YMPSIBM3 = YMPSIBM1.*YMPSIBM2;
 %
-    YMR0YMR1 = YMR0./YMR;
+    YMR0YMR1 = (1 + YMx0)./(1 + YMx);
     YMR0YMR2 = YMR0YMR1.*YMR0YMR1;
 	YMR0YMR4 = YMR0YMR2.*YMR0YMR2;
 %
@@ -131,7 +129,7 @@ if equil_mode == 1
     end
 else,%Ideal equilibrium with circular concentric flux-surfaces.
     m = 30;
-    xrho = (xR0 - Rp)/ap; %note: for the sake of bounce-averaged calculations in the
+    xrho = xx0/ap; %note: for the sake of bounce-averaged calculations in the
                           %      analytical limit of circ. conc.
                           %      flux-surfaces, we need theta0 = 0, thus
                           %      this definition of xrho. Of course, when
@@ -139,11 +137,6 @@ else,%Ideal equilibrium with circular concentric flux-surfaces.
                           %      with, the two definitions coincide.
     xia = xrho*ap/Rp;
 %    
-    xq = xia.*xBT0./xBp0./sqrt(1 - xia.^2);
-    xqtilde = xia.*xB0./xBp0;
-    xqbar = xia.*xB0./xBp0./(1 + xia);
-    xqhat = xqbar;
-%
     ymhu0(find(ymhu0==0)) = eps;%Avoid numerical singularities
     ymhu2 = ymhu0.^2;
 %
