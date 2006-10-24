@@ -4,9 +4,6 @@ function [gridDKE] = matrix3Dgridbuilder_dke_yp(dkeparam,display,equilDKE,radial
 %
 %   by Y. Peysson (CEA-DRFC) (yves.peysson@cea.fr) and J. Decker (CEA-DRFC) (joan.decker@cea.fr)
 %
-Rp = equilDKE.Rp;
-Zp = equilDKE.Zp;
-ap = equilDKE.ap;
 xmhubounce2 = equilDKE.xmhu0T2;
 xrho = equilDKE.xrho;
 %
