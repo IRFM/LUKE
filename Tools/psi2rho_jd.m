@@ -23,16 +23,16 @@ if nargin < 2
     error('no psi grid specified');
 end
 %
-npsi = length(equil.psi);
+npsi = length(equil.psi_apRp);
 nr = length(psin);
 %
 ap =  equil.ptx(npsi,1);%plasma radius on the LFS midplane 
 prho = equil.ptx(:,1)/ap;
 %
-psia = equil.psi(npsi);%poloidal flux at the edge
+psia = equil.psi_apRp(npsi);%poloidal flux at the edge
 %
 % Interpolation of calculation grid
 %
-rho = interp1(equil.psi/psia,prho,psin,method);
+rho = interp1(equil.psi_apRp/psia,prho,psin,method);
 
 

@@ -175,8 +175,8 @@ Zp = equil.Zp;%Elevation of magnetic Axis
 %
 ap =  mx(npsi,1);%Plasma minor radius on the LFS midplane 
 %
-psia = equil.psi(npsi);%Poloidal flux at the edge
-psin = equil.psi/psia;%Normalized poloidal flux
+psia = equil.psi_apRp(npsi);%Poloidal flux at the edge
+psin = equil.psi_apRp/psia;%Normalized poloidal flux
 %
 pZeff = sum(equil.pzni.*repmat((equil.zZi.^2)',[1,npsi]))./equil.pne;%Effective charge (a.u.)
 %
@@ -233,7 +233,7 @@ if ~isnan(xpsin_S_dke)
     hmBy = (mBy(1:npsi-1,1:nmtheta-1) + mBy(2:npsi,1:nmtheta-1) + mBy(1:npsi-1,2:nmtheta) + mBy(2:npsi,2:nmtheta))/4;
     hmBPHI = (mBPHI(1:npsi-1,1:nmtheta-1) + mBPHI(2:npsi,1:nmtheta-1) + mBPHI(1:npsi-1,2:nmtheta) + mBPHI(2:npsi,2:nmtheta))/4;
 %
-    dpsi = abs(diff(equil.psi));
+    dpsi = abs(diff(equil.psi_apRp));
     dmtheta = diff(mtheta);
 % FS Volume per 2pi*Rp
     hmFV_2piRp = (hmx.^2 + hmy.^2)./abs(hmBx.*hmy - hmBy.*hmx)/ap;
