@@ -73,12 +73,12 @@ pBpp = sign(Bpa)*prho*ep*cyl*abs(Bt)./pq;
 if qopt == 2,
     spBpp = triu(repmat((pBpp(1:npsi-1) + pBpp(2:npsi))'/2,[1,npsi-1]));
     pdprho = diff(prho);
-    equil.psi = [0,ap*Rp*integral_dke_jd(pdprho,spBpp,1)'];
+    equil.psi_apRp = [0,ap^2*integral_dke_jd(pdprho,spBpp,1)'];%psi_apRp = psi(toroidal usual)*ap/Rp for the cylindrical limit
 elseif qopt == 1 % analytical thus more accurate 
-    equil.psi = ap*Rp*Bpa*prho;
+    equil.psi_apRp = ap^2*Bpa*prho;%psi_apRp = psi(toroidal usual)*ap/Rp for the cylindrical limit
     pBpp(1) = Bpa;
 else % analytical thus more accurate 
-    equil.psi = ap*Rp*Bpa*prho.^2/2;
+    equil.psi_apRp = ap^2*Bpa*prho.^2/2;%psi_apRp = psi(toroidal usual)*ap/Rp for the cylindrical limit
 end
 %
 XBpp = repmat(pBpp',[1,ntheta]);
@@ -93,7 +93,7 @@ equil.x = linspace(-ap,ap,2*npsi-1);
 equil.y = linspace(-ap,ap,2*npsi-1);
 xyx = equil.x(:)*ones(1,2*npsi-1);
 xyy = ones(2*npsi-1,1)*equil.y;
-equil.xypsi = Rp*Bpa*(xyx.^2 + xyy.^2)/2/ap;
+equil.xypsi_apRp = Bpa*(xyx.^2 + xyy.^2)/2;%psi_apRp = psi(toroidal usual)*ap/Rp for the cylindrical limit
 equil.pF = Bt*Rp*ones(1,npsi);
 %
 filename = ['EQUIL_',equil.id,'.mat'];

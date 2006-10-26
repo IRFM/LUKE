@@ -40,15 +40,19 @@ equil_out.id = equil_in.id;
 equil_out.method = method;
 if ~isempty(equil_in.zZi),equil_out.zZi = equil_in.zZi;else equil_out.zZi = [0,0,0];end
 if ~isempty(equil_in.zmi),equil_out.zmi = equil_in.zmi;else equil_out.zmi = [1,1,1];end
-psia = equil_in.psi(end);
+%
+ap = equil_in.ptx(end,1);
+psi = equil_in.psi_apRp*Rp/ap;
+psia = equil_in.psi_apRp(end)*Rp/ap;
+xypsi = equil_in.xypsi_apRp*Rp/ap;
 %
 if mode == 1,
-   [rho] = psi2rho_jd(equil_in,equil_in.psi/psia,method);
+   [rho] = psi2rho_jd(equil_in,psi/psia,method);
 %
 %Resampling on a finer mesh close to psi = 0 before spline-Fourier calculations. 
 %
    srho = linspace(0,1,ngrid).^2;
-   spsin = interp1(rho,equil_in.psi/psia,srho,method);
+   spsin = interp1(rho,psi/psia,srho,method);
 %
    if ~isempty(equil_in.pTe),sTe = interp1(rho,equil_in.pTe,srho,method);end
    if ~isempty(equil_in.pne),sne = interp1(rho,equil_in.pne,srho,method);end
@@ -82,11 +86,11 @@ if mode == 1,
    equil_out.x_fit = interpequilpt_yp(method,sx,srho,equil_in.theta,nharm);%x coordinate
    equil_out.y_fit = interpequilpt_yp(method,sy,srho,equil_in.theta,nharm);%y coordinate
 else
-   if ~isempty(equil_in.pTe),xyTe = interp1(equil_in.psi,equil_in.pTe,equil_in.xypsi,method);end
-   if ~isempty(equil_in.pne),xyne = interp1(equil_in.psi,equil_in.pne,equil_in.xypsi,method);end
+   if ~isempty(equil_in.pTe),xyTe = interp1(psi,equil_in.pTe,xypsi,method);end
+   if ~isempty(equil_in.pne),xyne = interp1(psi,equil_in.pne,xypsi,method);end
    for ii = 1:length(equil_in.zZi),
-      if ~isempty(equil_in.pzTi),xyzTi(:,:,ii) = interp1(equil_in.psi,equil_in.pzTi(ii,:),equil_in.xypsi,method);end
-      if ~isempty(equil_in.pzni),xyzni(:,:,ii) = interp1(equil_in.psi,equil_in.pzni(ii,:),equil_in.xypsi,method);end
+      if ~isempty(equil_in.pzTi),xyzTi(:,:,ii) = interp1(psi,equil_in.pzTi(ii,:),xypsi,method);end
+      if ~isempty(equil_in.pzni),xyzni(:,:,ii) = interp1(psi,equil_in.pzni(ii,:),xypsi,method);end
    end
 %
    if ~isempty(equil_in.pTe),equil_out.Te_fit = interpequilxy_yp(method,xyTe,equil_in.x,equil_in.y);end
@@ -94,8 +98,8 @@ else
    if ~isempty(equil_in.pzTi),equil_out.zTi_fit = interpequilxy_yp(method,xyzTi,equil_in.x,equil_in.y);end
    if ~isempty(equil_in.pzni),equil_out.zni_fit = interpequilxy_yp(method,xyzni,equil_in.x,equil_in.y);end
 %
-  xyF = interp1(equil_in.ppsi,equil_in.pF,equil_in.xypsi,method);
-  [xydpsidy,xydpsidx] = gradient(equil_in.xypsi,equil_in.x,equil_in.y);
+  xyF = interp1(psi,equil_in.pF,xypsi,method);
+  [xydpsidy,xydpsidx] = gradient(xypsi,equil_in.x,equil_in.y);
   xyx = equil_in.x(:)*ones(1,length(equil_in.y));
   xyy = ones(length(equil_in.x),1)*equil_in.y;
 %
@@ -103,7 +107,7 @@ else
   xyBy = -xydpsidx./xyx;
   xyBPHI = xyF./xyx;
 %
-  equil_out.psin_fit = interpequilxy_yp(method,equil_in.xypsi,equil_in.x,equil_in.y);%poloidal magnetic field
+  equil_out.psin_fit = interpequilxy_yp(method,xypsi,equil_in.x,equil_in.y);%poloidal magnetic field
   equil_out.Bx_fit = interpequilxy_yp(method,xyBx,equil_in.x,equil_in.y);%Bx field component
   equil_out.By_fit = interpequilxy_yp(method,xyBy,equil_in.x,equil_in.y);%By field component
   equil_out.BPHI_fit = interpequilxy_yp(method,xyBPHI,equil_in.x,equil_in.y);%PHI field component
@@ -111,10 +115,10 @@ else
   equil_out.y_fit = interpequilxy_yp(method,equil_in.y,equil_in.y);%y coordinate
 end
 %
-if equil_in.psi(1) == 0,
+if psi(1) == 0,
    equil_out.Rp = equil_in.Rp;
    equil_out.Zp = equil_in.Zp;
-   equil_out.ap = equil_in.ptx(end,1);
+   equil_out.ap = ap;
    equil_out.psia = psia;
 else
    error('equil_out.psi(1) must be equal to zero !');
