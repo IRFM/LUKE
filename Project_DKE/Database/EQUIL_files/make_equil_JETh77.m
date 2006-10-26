@@ -185,7 +185,7 @@ if exist(['helmex77',mexext]) == 3,
 %		
 %		Transfer to the equil structure
 %
-		equil.psi = ppsi;
+		equil.psi_apRp = ppsi*ap/Rp;%psi_apRp = psi(toroidal usual)*ap/Rp for the cylindrical limit
 		equil.theta = theta;
 		equil.ptx = R - Rp;
 		equil.pty = Z - Zp;
@@ -199,7 +199,7 @@ if exist(['helmex77',mexext]) == 3,
 		equil.zZi = zZi;
 		equil.zmi = zmi;
 		equil.Rp = Rp;
-      equil.Zp = Zp;
+        equil.Zp = Zp;
 %      
 		equil.ftra = ftra;
 %

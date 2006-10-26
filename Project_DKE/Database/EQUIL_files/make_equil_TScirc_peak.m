@@ -95,7 +95,7 @@ pBpp = sign(Bpa)*prho*ap/Rp*abs(Bt)./pq;
 %
 spBpp = triu(repmat((pBpp(1:npsi-1) + pBpp(2:npsi))'/2,[1,npsi-1]));
 pdprho = diff(prho);
-equil.psi = [0,ap*Rp*integral_dke_jd(pdprho,spBpp,1)'];
+equil.psi_apRp = [0,ap^2*integral_dke_jd(pdprho,spBpp,1)'];%psi_apRp = psi(toroidal usual)*ap/Rp for the cylindrical limit
 %
 %psia = ap*Rp*Bpa/2; %poloidal flux at the edge
 %ppsi = prho.^2*psia; %poloidal flux profile
