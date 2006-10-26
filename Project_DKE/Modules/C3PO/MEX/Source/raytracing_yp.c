@@ -19,9 +19,7 @@
 
     REFERENCE: none
 
-    LAST UPDATE: 23/07/2006
-
-    by Y.PEYSSON (CEA-DRFC)  <yves.peysson@cea.fr> and Joan Decker (CEA-DRFC) <joan.decker@cea.fr>
+    by Y.PEYSSON (CEA-DRFC)  <yves.peysson@cea.fr>, Joan Decker (CEA-DRFC) <joan.decker@cea.fr> and Laurent Colas (CEA-DRFC) <laurent.colas@cea.fr>
 */
 
 #include <complex.h>
