@@ -8,7 +8,7 @@ function gkE = dresp_dke_yp(res,phf,kd,k)
 %       Input:
 %
 %               - res: fit parameters of the energy resolution of the detectors [m,2]
-%               - phf: photofraction determined using the "MCDET.for" Monte-carlo hard x-ray absorption
+%               - phf: photofraction determined using the "mcdet.f" Monte-carlo hard x-ray absorption
 %                          code at energies kd [m,p]
 %               - kd: reference energies for the photofraction [m,p]
 %               - k: photon energy (keV) [1,n]
@@ -18,19 +18,16 @@ function gkE = dresp_dke_yp(res,phf,kd,k)
 %               - gkE: full detector's response matrix (keV-1) [n,n]
 %
 %
-%by Y.PEYSSON CEA-DRFC 27/06/1991 <peysson@fedv09.cad.cea.fr>
-%revised for MatLab 4.1 (25/08/1994) 
+%by Y.PEYSSON CEA-DRFC <yves.peysson@cea.fr>
 %
 if nargin < 4,
-        infoyp(2,'Wrong number of input arguments for dresp_dke_yp');
-        return;
+   error('Wrong number of input arguments for dresp_dke_yp');
 end
 %
 [qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;%Physics constant
 %
 if min(size(k)) > 1,
         error('k must be a vector');
-        return;
 end
 k = k(:);
 k = k';

@@ -29,15 +29,14 @@ function [att] = attlin_dke_yp(mat,k)
 %
 %		- att: lineic attenuation (cm-1) [1,m]
 %
-%by Y.PEYSSON CEA-DRFC 14/06/1991 <peysson@fedv09.cad.cea.fr>
-%revised for MatLab 4.1 (19/08/1994) 
+%by Y.PEYSSON CEA-DRFC <yves.peysson@cea.fr>
 %
 if nargin < 2,
-	infoyp(2,'Wrong number of input arguments for attlin_dke_yp');
+	info_dke_yp(2,'Wrong number of input arguments for attlin_dke_yp');
 	return;
 end
 if length(find(k>1100 | k<10))~=0,
-	infoyp(2,'Warning: some energy values are outside of the range of validity !');
+	info_dke_yp(2,'Warning: some energy values are outside of the range of validity !');
 end
 %
 sk = size(k);
