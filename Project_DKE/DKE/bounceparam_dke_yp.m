@@ -30,7 +30,7 @@ time0 = clock;
 if bounce_mode == 1,
 %    load([fullfile(temppath,'temp_DKE.mat'],'xq');
     %
-  if exist('xq') == 1, %The bounce averaging coefficients were calculated before.
+  %if exist('xq') == 1, %The bounce averaging coefficients were calculated before.
     %
 %    load([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'xqtilde','xqbar','xqhat',...
 %    'XXheaviside','XXheaviside_p','XXheaviside_m',...
@@ -47,15 +47,15 @@ if bounce_mode == 1,
 %    'XXlambda_b_p2',...
 %	 'XXlambda_b_p1m3p4')
     %
-    if display_mode >= 1,info_dke_yp(2,['Bounce averaging coefficients retrieved.']);end	
+    %if display_mode >= 1,info_dke_yp(2,['Bounce averaging coefficients retrieved.']);end	
     %
-  else
+  %else
   
     [xymaskT,xylambda,xylambda_p2m1,xylambda_p2m2p2,xylambda_b_p1p1,xylambda_b_p1m1p2,xylambda_b_p1m1,xylambda_b_p1m2,xylambda_b_p2m2p2,xylambda_b_p3m2,xylambda_b_p2,xylambda_b_p1m3p4]...
 = bounce_dke_jd(equil_mode,mhu,Xx,Xy,XBx,XBy,XBphi,xmhubounce2,xB0,xx0,xBT0,xBp0,xqtilde,Rp,Zp,ap);
-    [xymaskT,xylambda_p,xylambda_p2m1_p,xylambda_p2m2p2_p,xylambda_b_p1p1_p,xylambda_b_p1m1p2_p,xylambda_b_p1m1_p,xylambda_b_p1m2_p,xylambda_b_p2m2p2_p,xylambda_b_p3m2_p,xylambda_b_p2_p,xylambda_b_p1m3p4_p]...
+    [xymaskT_p,xylambda_p,xylambda_p2m1_p,xylambda_p2m2p2_p,xylambda_b_p1p1_p,xylambda_b_p1m1p2_p,xylambda_b_p1m1_p,xylambda_b_p1m2_p,xylambda_b_p2m2p2_p,xylambda_b_p3m2_p,xylambda_b_p2_p,xylambda_b_p1m3p4_p]...
 = bounce_dke_jd(equil_mode,mhup,Xx,Xy,XBx,XBy,XBphi,xmhubounce2,xB0,xx0,xBT0,xBp0,xqtilde,Rp,Zp,ap,xymaskT,+1);
-    [xymaskT,xylambda_m,xylambda_p2m1_m,xylambda_p2m2p2_m,xylambda_b_p1p1_m,xylambda_b_p1m1p2_m,xylambda_b_p1m1_m,xylambda_b_p1m2_m,xylambda_b_p2m2p2_m,xylambda_b_p3m2_m,xylambda_b_p2_m,xylambda_b_p1m3p4_m]...
+    [xymaskT_m,xylambda_m,xylambda_p2m1_m,xylambda_p2m2p2_m,xylambda_b_p1p1_m,xylambda_b_p1m1p2_m,xylambda_b_p1m1_m,xylambda_b_p1m2_m,xylambda_b_p2m2p2_m,xylambda_b_p3m2_m,xylambda_b_p2_m,xylambda_b_p1m3p4_m]...
 = bounce_dke_jd(equil_mode,mhum,Xx,Xy,XBx,XBy,XBphi,xmhubounce2,xB0,xx0,xBT0,xBp0,xqtilde,Rp,Zp,ap,xymaskT,-1);
 %
 	XXheaviside = repmat(reshape(~xymaskT',[1,nmhu,nr]),[npn,1,1]);%For selecting the circulating population only                      
@@ -159,7 +159,7 @@ if bounce_mode == 1,
     etime_bounce = etime_bounce + etime(clock,time0);
     if display_mode >= 1,info_dke_yp(2,['Bounce averaging coefficients calculations done in ',num2str(etime_bounce),' (s)']);end	
 %
-  end
+  %end
 %Non-axisymmetric corrections as done by M. Ju et al. in Phys. Plasmas, 9 (2002) 493 (to be used only with FP calculations, and tested for TORE SUPRA only)
 %may be inserted here. Work to be done...
 %

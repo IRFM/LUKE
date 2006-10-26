@@ -13,14 +13,14 @@ function [xymaskT,xylambda_p0p0,xylambda_p2m1,xylambda_p2m2p2,xylambda_b_p1p1,xy
 %
 % by Joan Decker <jodecker@mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 %
-if nargin < 16,
+if nargin < 17,
 	sign = 0;
 	xymaskT_in = NaN;
 end
-if nargin == 16,
+if nargin == 17,
 	error('Inconsistent number of arguments');
 end
-if nargin < 15,
+if nargin < 16,
 	error('Not enough arguments');
 end
 %

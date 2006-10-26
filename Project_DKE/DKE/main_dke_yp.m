@@ -174,7 +174,7 @@ if ~isstruct(waveparam) & ~isempty(waveparam),%initialization of wave parameters
     %
     [xyP0_2piRp_out,xyP0_2piRp_mod] = rfprop_dke_jd(yb,xyprop_dke,xyP0_2piRp_in,xyPabs_rf_dke_fsav_mksa,equilDKE.xdV_2piRp_dke,gridDKE.xpsin,gridDKE.xpsin_dke,gridDKE.rdke,dkeparam_out.dke_mode);
     %
-    zP0_2piRp_inc = raypath_jd(xyP0_2piRp_mod,xyprop_dke,yb,radialDKE.r_dke);
+    zP_0_2piRp = raypath_jd(xyP0_2piRp_mod,xyprop_dke,yb,radialDKE.r_dke);
     zS = raypath_jd(xys,xyprop_dke,yb,radialDKE.r_dke);
     xyP0_2piRp_mod_old = xyP0_2piRp_in;
     xymask = (xyP0_2piRp_in == 0);
@@ -246,7 +246,7 @@ for it_rf=1:nit_rf % convergence in the ray-tracing mode
             %
             xyP0_2piRp_mod_old = xyP0_2piRp_mod;
             %
-            [xyP0_2piRp_out,xyP0_2piRp_mod] = rfprop_dke_jd(yb,xyprop_dke,xyP0_2piRp_mod_old,xyPabs_rf_dke_fsav_mksa,equilDKE.xdV_dke,gridDKE.xpsin,gridDKE.xpsin_dke,gridDKE.rdke,dkeparam_out.dke_mode);
+            [xyP0_2piRp_out,xyP0_2piRp_mod] = rfprop_dke_jd(yb,xyprop_dke,xyP0_2piRp_mod_old,xyPabs_rf_dke_fsav_mksa,equilDKE.xdV_2piRp_dke,gridDKE.xpsin,gridDKE.xpsin_dke,gridDKE.rdke,dkeparam_out.dke_mode);
             %
             residue_rf(it_rf) = max(max(abs(xyP0_2piRp_mod - xyP0_2piRp_mod_old)./xyP0_2piRp_in));
             %

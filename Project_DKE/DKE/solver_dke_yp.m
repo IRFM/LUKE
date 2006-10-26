@@ -376,7 +376,7 @@ if display_mode == 2,
 end
 %
 for it_f = 2:(nit_f+1),     
-    if sum(residu_f(:,it_f-1) >= prec0_f) >= 1 & sum(prec_residu_f(:,it_f-1)) >= prec0_f ,%| it_f < 7
+    if sum(residu_f(:,it_f-1) >= prec0_f) >= 1 %& sum(prec_residu_f(:,it_f-1)) >= prec0_f ,%| it_f < 7
 %   
         MMXf0_t = [];
         MMXq_t = [];

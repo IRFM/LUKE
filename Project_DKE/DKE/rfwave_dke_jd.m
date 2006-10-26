@@ -295,8 +295,8 @@ xyB0 = repmat(xB0.',[1,nbb_rf]);
 xyqhat = repmat(xqhat.',[1,nbb_rf]);
 xyqtilde = repmat(xqtilde.',[1,nbb_rf]);
 %
-xyFhat = xyrb_rf.*xyB0/(ap*xyBPb_rf.*xyqhat.*xycosb_rf.*(1 + xyxb_rf/Rp));
-xyFtilde = xyrb_rf.*xyBb_rf/(ap*xyBPb_rf.*xyqtilde.*xycosb_rf);
+xyFhat = xyrb_rf.*xyB0./(ap*xyBPb_rf.*xyqhat.*xycosb_rf.*(1 + xyxb_rf/Rp));
+xyFtilde = xyrb_rf.*xyBb_rf./(ap*xyBPb_rf.*xyqtilde.*xycosb_rf);
 %
 xyD0_rf_ref = 2*pi*xyfinc_rf.*xyP0_2piRp_in_rf.*xyFhat.*xyFtilde./(xyrb_rf.*me*lnc_e_ref.*xyomega_rf*wpe_ref^2.*xyabsphi_xyz_rf);
 %
