@@ -39,7 +39,8 @@ profname = [filename,'.prof'];
 [ptx,pty,ptdpsindx,ptdpsindy,psin,theta] = rz2pt_jd(x,y,xypsin,psin,nt,method,display_mode,p_opt,savename);
 %
 np = length(psin);
-psi = psin*psia;
+ap = ptx(np,1);%Plasma minor radius on the LFS midplane
+psi_apRp = psin*psia*ap/Rp;%The poloidal flux coordinate is normalized by the aspect ratio 
 ptR = Rp + ptx;
 ptBx = ptdpsindy*psia./ptR;
 ptBy = -ptdpsindx*psia./ptR;
@@ -56,7 +57,6 @@ ptF = repmat(pF.',[1,nt]);
 %
 ptBPHI = ptF./ptR;
 %
-ap =  ptx(np,1);%Plasma minor radius on the LFS midplane 
 prho = ptx(:,1).'/ap;
 %
 pq_h = (pq(1:end-1) + pq(2:end))/2;
@@ -132,7 +132,7 @@ ptBPHI(:,65) = ptBPHI(:,1);
 equil.id = savename;
 equil.zZi = zZi;
 equil.zmi = zmi;
-equil.psi = psia*psin;
+equil.psi_apRp = psi_apRp;
 equil.theta = theta;
 equil.pTe = pTe;
 equil.pne = pne;
