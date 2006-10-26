@@ -94,9 +94,9 @@ for iw = 1:length(waves);
         % normalization
         %
         xvpar = xvpar/mksa.betath_ref;
-        xDql_LD = xDql_LD/mksa.nhu_ref/mksa.betath_ref^2;
-        xDql_MX = xDql_MX/mksa.nhu_ref/mksa.betath_ref^2;
-        xDql_TT = xDql_TT/mksa.nhu_ref/mksa.betath_ref^2;
+        xDql_LD = xDql_LD/mksa.nhu_ref;
+        xDql_MX = xDql_MX/mksa.nhu_ref*mksa.betath_ref^2;
+        xDql_TT = xDql_TT/mksa.nhu_ref*mksa.betath_ref^4;
         %
         % smoothing of the diffusion coefficient
         % based on the vpar grid for mhu = 1
