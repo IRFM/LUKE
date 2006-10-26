@@ -282,6 +282,7 @@ dpn_S_0 = dpn_S_ref/pgridfactor;%Momentum step close to p = 0
 dpn_threshold = 0.1;
 ip = 1;
 while pn_S(ip) <= pnmax_S + dpn_S_ref*1e-3,%Small steps close to p = 0
+%   dpn_S(ip) = (dpn_S_ref-dpn_S_0)*tanh((np_S - ip - np_S_ref)/25)/2 + (dpn_S_ref+dpn_S_0)/2;
    dpn_S(ip) = (dpn_S_ref-dpn_S_0)*tanh((ip-np_S_ref))/2 + (dpn_S_ref+dpn_S_0)/2;
 	pn_S(ip+1) = pn_S(ip) + dpn_S(ip);
 	ip = ip+1;
