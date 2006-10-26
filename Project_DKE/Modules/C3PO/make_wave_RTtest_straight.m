@@ -110,7 +110,7 @@ end
 %
 ns = length(spsin);
 %
-ray.P0 = P0*1e6;% Power launched in the ray (W) [1,1]
+ray.P0_2piRp = P0*1e6/2/pi/equil.Rp;%Initial lineic power density in the ray (W/m) [1,1]
 %
 ray.sx = sR.' - equil_fit.Rp;% Ray location (major radius) along the propagation [1,ns]
 ray.sphi = sphi.';% Ray location (toroidal angle) along the propagation [1,ns]
