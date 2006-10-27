@@ -1,4 +1,4 @@
-function [] = bremlocaldisplay_dke_yp(dkeparam,display,equilDKE,momentumDKE,radialDKE,dke_out,mksa,Zbremchord,Zbremplasma,r_display,t_display);
+function [] = bremlocaldisplay_dke_yp(dkeparam,display,equilDKE,momentumDKE,radialDKE,dke_out,mksa,Zbremchord,Zbremplasma,r_display,t_display,p_opt,filename);
 %
 % This function draws local properties of the plasma bremsstrahlung
 %
@@ -73,7 +73,12 @@ i_test = max(find(xrho <= r_display));%Normalized radius index for output and di
 j_test = max(find(theta_hxr(1,:) <= t_display*pi/180));%Poloidal angle index for output and display
 if isempty(j_test), j_test = size(theta_hxr,2);end;%To avoid round-off that give an empty value close to theta = 0.
 %
-if ~mask_hxr(i_test,j_test),
+for j = 0:3,%Search the closest cell where a chord is going through
+   if mask_hxr(i_test,j_test + j), j_testref = j_test + j;break;end
+end
+j_test = j_testref;
+%
+if ~mask_hxr(i_test,j_testref),
    info_dke_yp(2,'WARNING: no chord is going through the plasma volume at the chosen radial and poloidal positions !');
    [i_test1,j_test1]=find(mask_hxr==1);
    disp('Choose one of these index values (i,j) for which one chord crosses the plasma volume')
@@ -90,10 +95,10 @@ theta_out = theta_hxr(1,j_test);
 %
 % Test of the reconstruction of the distribution function on the Legendre polynomial basis
 %
-Fig_distri = figure('Name','Distribution function');
-figure(Fig_distri);
-ylab = ['f(norm initial: ',num2str(Zbremplasma.Znorm0_hxr{i_test,j_test}),', norm recontructed: ',num2str(Zbremplasma.Znormi_hxr{i_test,j_test}),')'];
-tit = ['Distribution function at {\rho} = ',num2str(rho_out),' and {\theta}_{pol} = ',num2str(theta_out*180/pi),' (Deg)'];
+figure('Name','Distribution function','Position',[360,278,760,585]);
+%ylab = ['f(norm initial: ',num2str(Zbremplasma.Znorm0_hxr{i_test,j_test}),', norm recontructed: ',num2str(Zbremplasma.Znormi_hxr{i_test,j_test}),')'];
+ylab = 'f_{0}/n_{e0}';
+tit = 'Distribution function';
 %	
 graph1D_jd(pn,Zbremplasma.ZXf0_i{i_test,j_test}(:,size(Zbremplasma.ZXf0_i{i_test,j_test},2)),0,1,'','','',NaN,'','','-','non','b',2);
 hold on			
@@ -101,7 +106,10 @@ graph1D_jd(pn,Zbremplasma.ZXf0_i1{i_test,j_test}(:,size(Zbremplasma.ZXf0_i{i_tes
 graph1D_jd(pn,Zbremplasma.ZXf0_i{i_test,j_test}(:,1),0,1,'','','',NaN,'','','-','non','c',2);
 graph1D_jd(pn,Zbremplasma.ZXf0_i1{i_test,j_test}(:,1),0,1,'p_{||}/p_{Te}^{ref}',ylab,tit,NaN,'','','--','non','k',2);
 grid on,zoom on
-legend('Forward initial','Forward reconstructed (Legendre)','Backward initial','backward reconstructed (Legendre)')
+legend('Forward DKE','Forward Legendre','Backward DKE','Backward Legendre','Location','West')
+xxlimit = xlim;yylimit = ylim;
+ht = text(xxlimit(1)+1,yylimit(1)*6,['\rho = ',num2str(rho_out),' and \theta_{pol} = ',num2str(theta_out*180/pi),' (Deg)']);set(ht,'fontsize',20);
+print_jd(p_opt,[filename,'_DistributionFunction']);
 %
 % Contour plot of the electron distribution function
 %
@@ -132,42 +140,44 @@ Xpperp_cyl = pperp_cyl(:)*ones(1,length(ppar_cyl));
 xlim1 = [-pnmax_S,pnmax_S];xlim2 = [0,pnmax_S];
 siz = 20;red = 0.95;
 %
-Fig_districontour1 = figure('Name','Distribution function contour at B=Bmin');
-figure(Fig_districontour1);
+figure('Name','Distribution function contour at B=Bmin','Position',[360,278,760,585]);
 graph2D_jd(ppar_cyl,pperp_cyl,Xfinit_cyl','','','',xlim1,xlim2,0,betath_ref,[0:0.5:pnmax_S],0,'-','b',0.5,siz,red,max(max(Xf0_cyl)));
 graph2D_jd(ppar_cyl,pperp_cyl,Xf0_cyl','p_{||}/p_{Te}^{ref}','p_{\perp}/p_{Te}^{ref}','Distribution function',xlim1,xlim2,0,betath_ref,[0:0.5:pnmax_S],0,'-','r',2,siz,red,max(max(Xfinit_cyl)));
 axis('equal');
-faxis = axis;dfaxis = (faxis(2) - faxis(1))/100; 
-text(faxis(1) + dfaxis,faxis(2) - dfaxis,['{\rho} = ',num2str(rho_out),', {\theta}_{pol} = 0']);
+xxlimit = xlim;yylimit = ylim;
+ht = text(xxlimit(1)+1,yylimit(1),['\rho = ',num2str(rho_out),' and \theta_{pol} = 0 (Deg)']);set(ht,'fontsize',20);
 %s
 if bounce_mode >= 1,%Draw bounce domain boundaries
    mhubounce2_0 = 1 - 1/max(PSI_hxr(i_test,:));
    line([0,pnmax_S*sqrt(mhubounce2_0)],[0,pnmax_S*sqrt(1 - mhubounce2_0)],'color','k');
    line([0,-pnmax_S*sqrt(mhubounce2_0)],[0,pnmax_S*sqrt(1 - mhubounce2_0)],'color','k');
 end				
+print_jd(p_opt,[filename,'_DistributionFunctionBmin']);
 %
-Fig_districontour2 = figure('Name','Distribution function contour');
-figure(Fig_districontour2);
+figure('Name','Distribution function contour','Position',[360,278,760,585]);
 graph2D_jd(ppar_cyl,pperp_cyl,Xfinit_cyl','','','',xlim1,xlim2,0,betath_ref,[0:0.5:pnmax_S],0,'-','b',0.5,siz,red,max(max(Xf_hxr_cyl)));
 graph2D_jd(ppar_cyl,pperp_cyl,Xf_hxr_cyl','p_{||}/p_{Te}^{ref}','p_{\perp}/p_{Te}^{ref}','Distribution function',xlim1,xlim2,0,betath_ref,[0:0.5:pnmax_S],0,'-','r',2,siz,red,max(max(Xfinit_cyl)));
 axis('equal');
-faxis = axis;dfaxis = (faxis(2) - faxis(1))/100; 
-text(faxis(1) + dfaxis,faxis(2) - dfaxis,['{\rho} = ',num2str(rho_out),', {\theta}_{pol} = ',num2str(theta_out*180/pi),' (Deg)']);
+xxlimit = xlim;yylimit = ylim;
+ht = text(xxlimit(1)+1,yylimit(1),['\rho = ',num2str(rho_out),' and \theta_{pol} = ',num2str(theta_out*180/pi),' (Deg)']);set(ht,'fontsize',20);
 %
 if bounce_mode >= 1,%Draw bounce domain boundaries
    mhubounce2 = 1 - PSI_hxr(i_test,j_test)/max(PSI_hxr(i_test,:));
    line([0,pnmax_S*sqrt(mhubounce2)],[0,pnmax_S*sqrt(1 - mhubounce2)],'color','k');
    line([0,-pnmax_S*sqrt(mhubounce2)],[0,pnmax_S*sqrt(1 - mhubounce2)],'color','k');
-end					
+end
+print_jd(p_opt,[filename,'_DistributionFunctionB']);
 %
 % Local bremsstrahlung properties
 %
-Fig_brem = figure('Name','Local bremshrahlung forward - perp - backward');
-figure(Fig_brem);
+figure('Name','Local bremshrahlung forward - perp - backward','Position',[360,278,760,585]);
 graph1D_jd(kphot,Zbremplasma.brem_forward{i_test,j_test},0,1,'','','',NaN,'','','-','non','r',2);
 graph1D_jd(kphot,Zbremplasma.brem_backward{i_test,j_test},0,1,'','','',NaN,'','','-','non','b',2);
-graph1D_jd(kphot,Zbremplasma.brem_4pi{i_test,j_test},0,1,'','','',NaN,'','','-.','non','g',2);
-graph1D_jd(kphot,Zbremplasma.brem_perp{i_test,j_test},0,1,'Photon energy (keV)','Photon density (s-1*m-3*keV-1*str-1)',['Bremsstrahlung emission at {\rho} = ',num2str(rho_out),' and {\theta}_{pol} = ',num2str(theta_out*180/pi),' (Deg)'],NaN,'','','-','non','k',2);
+graph1D_jd(kphot,Zbremplasma.brem_4pi{i_test,j_test},0,1,'','','',NaN,[0,200],'','-.','non','g',2);
+graph1D_jd(kphot,Zbremplasma.brem_perp{i_test,j_test},0,1,'Photon energy (keV)','Photon density (s-1*m-3*keV-1*str-1)','Bremsstrahlung emission',NaN,'','','-','non','k',2);
 legend('Forward','Backward','Mean 4{\pi}','Perp.')
+xxlimit = xlim;yylimit = ylim;
+ht = text(xxlimit(1)+1,yylimit(1)*6,['\rho = ',num2str(rho_out),' and \theta_{pol} = ',num2str(theta_out*180/pi),' (Deg)']);set(ht,'fontsize',20);
 grid on
+print_jd(p_opt,[filename,'_LocalBremsstrahlung']);
 %

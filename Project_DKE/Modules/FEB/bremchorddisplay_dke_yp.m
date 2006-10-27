@@ -1,4 +1,4 @@
-function [] = bremchorddisplay_dke_yp(Zbremchord,chordnum_disp)
+function [] = bremchorddisplay_dke_yp(equilHXR,Zbremchord,chordnum_disp,p_opt,filename)
 %
 % This function draws chord positions for bremsstrahlung tomography
 %
@@ -10,7 +10,19 @@ function [] = bremchorddisplay_dke_yp(Zbremchord,chordnum_disp)
 %
 % by J. Decker (jodecker@alum.mit.edu) and Y. Peysson (yves.peysson@cea.fr)
 %
-if nargin == 1, chordnum_disp= []; end
+if nargin < 2, error('Not enough input argument in bremchorddisplay_dke_yp');end
+if nargin == 2, 
+    chordnum_disp= [];
+    p_opt = 2;
+    filename = '';
+end
+if nargin == 3, 
+    p_opt = 2;
+    filename = '';
+end
+if nargin == 4, 
+    filename = '';
+end
 %
 ptrho = Zbremchord.ptrho;
 xq = Zbremchord.xq;
@@ -47,16 +59,22 @@ HHX = Zbremchord.HHX;
 HHY = Zbremchord.HHY;
 xpsin_S = Zbremchord.xpsin_S;
 %
-Fig_safetyfactor = figure('Name','Safety factor');
-figure(Fig_safetyfactor);
+figure('Name','Safety factor','Position',[360,278,760,585]);
 [ax] = graph1D_jd(ptrho,xq,0,0,'Normalized radius {\rho}','q','Safety factor',NaN,'','','-','none','b',2);drawnow;%Safety factor profile
+print_jd(p_opt,[filename,'_SafetyFactor']);
 %
-Fig_Brempol = figure('Name','Bremsstrahlung tomography (Poloidal view)');
-figure(Fig_Brempol);
+figure('Name','Bremsstrahlung tomography (Poloidal view)','Position',[360,278,760,585]);
 [ax] = graph1D_jd(sR,sZ,0,0,'','','',NaN,'','','-','none','b',2);drawnow;%Poloidal plot
 hold on
+for ichord = 2:size(sR,2),
+   sRc = sR(~isnan(sR(:,ichord)),ichord);
+   sZc = sZ(~isnan(sZ(:,ichord)),ichord);
+   if ~isempty(sRc) & ~isempty(sZc)
+      ht = text(sRc(end),sZc(end),['  #',int2str(ichord)]);set(ht,'fontsize',10);
+   end
+end
 if isempty(chordnum_disp) == 0,
-   [ax] = graph1D_jd(sR(:,chordnum_disp),sZ(:,chordnum_disp),0,0,'','','',NaN,'','','-','none','y',2);drawnow;%Poloidal plot
+   [ax] = graph1D_jd(sR(:,chordnum_disp),sZ(:,chordnum_disp),0,0,'','','',NaN,'','','-','none','g',2);drawnow;%Poloidal plot
 end
 for ir = 1:length(xpsin_S),
    graph1D_jd(RR_pol(ir,:),ZZ_pol(ir,:),0,0,'','','',NaN,'','','-','non','r',1);
@@ -68,19 +86,19 @@ graph1D_jd(HHR_pol,HHZ_pol,0,0,'','','',NaN,'','','-.','non','r',1);
 graph1D_jd(VVR_pol,VVZ_pol,0,0,'','','',NaN,'','','-.','non','r',1);
 graph1D_jd(ptR,ptZ,0,0,'X=R (m)','Z (m)','Bremsstrahlung tomography (Poloidal view)',NaN,'','','-','non','r',1);
 hold off
+print_jd(p_opt,[filename,'_PoloidalView']);
 %
-Fig_Bpol = figure('Name','Poloidal field');
-figure(Fig_Bpol);
+figure('Name','Poloidal field','Position',[360,278,760,585]);
 quiver(RR_pol,ZZ_pol,BR_pol,BZ_pol);
 axis('equal');
 hold on
 graph1D_jd(ptR,ptZ,0,0,'','','',NaN,'','','-','non','c',1);
 graph1D_jd(HHR_pol,HHZ_pol,0,0,'','','',NaN,'','','-.','non','r',1);
-graph1D_jd(VVR_pol,VVZ_pol,0,0,'X=R (m)','Z (m)','Poloidal field (T)',NaN,'','','-.','non','r',1);
-hold off  	
+graph1D_jd(VVR_pol,VVZ_pol,0,0,'X=R (m)','Z (m)','B_{\theta} field (T)',NaN,'','','-.','non','r',1);
+hold off
+print_jd(p_opt,[filename,'_BthetaField']);
 %
-Fig_Bremtor = figure('Name','Bremsstrahlung tomography (Toroidal top view, Z = 0)');
-figure(Fig_Bremtor);
+figure('Name','Bremsstrahlung tomography (Toroidal top view, Z = 0)','Position',[360,278,760,585]);
 h = quiver(X_mfl_lcs(1:40:end),Y_mfl_lcs(1:40:end),BX_mfl_lcs(1:40:end),BY_mfl_lcs(1:40:end),0.5);%Magnetic field line direction
 set(h,'Color','k');
 hold on
@@ -100,3 +118,4 @@ graph1D_jd(X_mfl_lcs(find(Z_mfl_lcs>=0)),Y_mfl_lcs(find(Z_mfl_lcs>=0)),0,0,'X (m
 hold off
 set(gca,'YDir','rev');%Because the reference is indirect by definition
 %
+print_jd(p_opt,[filename,'_TopView']);

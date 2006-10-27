@@ -1,4 +1,4 @@
-function  [Zbremdiag] = bremdiag_dke_yp(Zbremplasma,hxr,hxrparam)
+function  [Zbremdiag] = bremdiag_dke_yp(Zbremplasma,hxr,hxrparam,dt)
 %
 % Calculates the bremsstrahlung emission as merasured by the HXR diagnostic
 %taking into account of the detector's response function. 
@@ -11,6 +11,7 @@ function  [Zbremdiag] = bremdiag_dke_yp(Zbremplasma,hxr,hxrparam)
 %       - Zbremplasma.brem_bd_out: Plasma photon number per unit energy (keV) and time (s) for each chord [nchord,nk] (given by bremsstrahlung_dke_yp.m)
 %       - hxr: Bremsstrahlung structure
 %       - hxrparam : Bremsstrahlung calculation and display parameter structure
+%       - dt: integration time step (s) [1,1]
 %      
 %   OUTPUTS:
 %
@@ -56,12 +57,20 @@ for ik = 1:size(hxr.kdiag_hxr,2)-1,
 	brem_bd_plasma(:,ik) = sum(brem_bd_interp(:,min(find(kinterp >= hxr.kdiag_hxr(1,ik))):max(find(kinterp < hxr.kdiag_hxr(2,ik))))')'*dkinterp;
 end
 %
-wbrem_bd_plasma = brem_bd_plasma.*repmat(kfit,[size(brem_bd_plasma,1),1])./repmat(dkfit,[size(brem_bd_plasma,1),1]);% per keV but taking into account of the channel energy width
 for ic = 1:size(brem_bd_plasma,1),	
-	pfit = polyfit(kfit(ikfitmin:ikfitmax),log(wbrem_bd_plasma(ic,ikfitmin:ikfitmax)),1);
-	tphot_plasma(ic) = -1/pfit(1);
-	afit_plasma(ic) = exp(pfit(2));
+   [Tph,eTph,A,eA,Q] = tphfit_dke_yp(kfit(ikfitmin:ikfitmax)',dt*brem_bd_plasma(ic,ikfitmin:ikfitmax)',sqrt(dt*brem_bd_plasma(ic,ikfitmin:ikfitmax))');
+    tphot_plasma(ic) = Tph;
+    etphot_plasma(ic) = eTph;
+    afit_plasma(ic) = A;
+    eafit_plasma(ic) = eA;
+    Q_plasma(ic) = Q;
 end
+%wbrem_bd_plasma = brem_bd_plasma.*repmat(kfit,[size(brem_bd_plasma,1),1])./repmat(dkfit,[size(brem_bd_plasma,1),1]);% per keV but taking into account of the channel energy width
+%for ic = 1:size(brem_bd_plasma,1),	
+%	pfit = polyfit(kfit(ikfitmin:ikfitmax),log(wbrem_bd_plasma(ic,ikfitmin:ikfitmax)),1);
+%	tphot_plasma(ic) = -1/pfit(1);
+%	afit_plasma(ic) = exp(pfit(2));
+%end
 %
 % Convolution with detector response
 %
@@ -77,7 +86,7 @@ tc = hxr.tc_hxr;%type of material for the detector shield (Al ou Be) [1,m]
 ed = hxr.ed_hxr;%thickness of the detector (mm) [1,m]
 td = hxr.td_hxr;%type of material for the detector (BGO,CsI,NaI,Ge or CdTe) [1,m]
 %
-meanabsx = zeros(size(wbrem_bd_plasma));%Mean attenuation per channel
+meanabsx = zeros(size(brem_bd_plasma));%Mean attenuation per channel
 brem_bd_diag_interp = zeros(size(brem_bd_interp));
 brem_bd_diag = zeros(size(brem_bd_plasma));
 %
@@ -114,14 +123,31 @@ for ic = 1:size(brem_bd_interp,1),
 		brem_bd_diag(ic,ik) = sum(brem_bd_diag_interp(ic,min(find(kinterp >= hxr.kdiag_hxr(1,ik))):max(find(kinterp < hxr.kdiag_hxr(2,ik))))')'*dkinterp;
 	end
 %	
-	wbrem_bd_plasma_exp(ic,:) = brem_bd_diag(ic,:).*kfit./dkfit./meanabsx(ic,:);% per keV but taking into account of the channel energy width and mean attenuation per channel	
-	pfit = polyfit(kfit(ikfitmin:ikfitmax),log(wbrem_bd_plasma_exp(ic,ikfitmin:ikfitmax)),1);
-	tphot_plasma_exp(ic) = -1/pfit(1);
-	afit_plasma_exp(ic) = exp(pfit(2));
-	if tphot_plasma_exp(ic) <=0, %Remove negative or null values
-		tphot_plasma_exp(ic) = NaN;
-		afit_plasma_exp(ic) = NaN;
-	end
+   for ic = 1:size(brem_bd_plasma,1),	
+      [Tph,eTph,A,eA,Q] = tphfit_dke_yp(kfit(ikfitmin:ikfitmax)',dt*brem_bd_diag(ic,ikfitmin:ikfitmax)',sqrt(dt*brem_bd_diag(ic,ikfitmin:ikfitmax))');
+      if Tph <=0, %Remove negative or null values
+	     Tph = NaN;
+         eTph = NaN;
+		 A = NaN;
+         eA = NaN;
+         Q = NaN;
+      end
+%
+      tphot_plasma_exp(ic) = Tph;
+      etphot_plasma_exp(ic) = eTph;
+      afit_plasma_exp(ic) = A;
+      eafit_plasma_exp(ic) = eA;
+      Q_plasma_exp(ic) = Q;
+   end
+
+%	wbrem_bd_plasma_exp(ic,:) = brem_bd_diag(ic,:).*kfit./dkfit./meanabsx(ic,:);% per keV but taking into account of the channel energy width and mean attenuation per channel	
+%	pfit = polyfit(kfit(ikfitmin:ikfitmax),log(wbrem_bd_plasma_exp(ic,ikfitmin:ikfitmax)),1);
+%	tphot_plasma_exp(ic) = -1/pfit(1);
+%	afit_plasma_exp(ic) = exp(pfit(2));
+%	if tphot_plasma_exp(ic) <=0, %Remove negative or null values
+%		tphot_plasma_exp(ic) = NaN;
+%		afit_plasma_exp(ic) = NaN;
+%	end
 %
 	info_dke_yp(2,['Convolution with detector''s response function for chord #',int2str(ic),'/',int2str(size(brem_bd_interp,1)),' done']);		
 end
@@ -133,7 +159,14 @@ Zbremdiag.dkfit = dkfit;
 Zbremdiag.brem_bd_plasma = brem_bd_plasma;
 Zbremdiag.brem_bd_diag = brem_bd_diag;
 Zbremdiag.tphot_plasma = tphot_plasma;
+Zbremdiag.etphot_plasma = etphot_plasma;
 Zbremdiag.afit_plasma = afit_plasma;
+Zbremdiag.eafit_plasma = eafit_plasma;
+Zbremdiag.Q_plasma = Q_plasma;
 Zbremdiag.tphot_plasma_exp = tphot_plasma_exp;
+Zbremdiag.etphot_plasma_exp = etphot_plasma_exp;
 Zbremdiag.afit_plasma_exp = afit_plasma_exp;
+Zbremdiag.eafit_plasma_exp = eafit_plasma_exp;
+Zbremdiag.Q_plasma_exp = Q_plasma_exp;
 Zbremdiag.meanabsx = meanabsx;
+Zbremdiag.dt = dt;
