@@ -1,4 +1,4 @@
-function [ax] = graph1D_jd(x,y,logx,logy,xlab,ylab,tit,leg,xlim,ylim,style,marker,color,width,siz,ax,red,lspace,bspace);
+function [ax] = graph1D_jd(x,y,logx,logy,xlab,ylab,tit,leg,xlim,ylim,style,marker,color,width,siz,ax,red,lspace,bspace,eym,eyp);
 
 if nargin < 19
     bspace = NaN;
@@ -71,7 +71,12 @@ elseif logx == 1 & logy == 1
     set(ax,'yscale','log');
     gcl = loglog(x,y,'parent',ax);
 else
-    gcl = plot(x,y,'parent',ax);
+    if nargin >= 20,
+     gcl = errorbar(x,y,eym,eyp,'parent',ax);
+    else
+        gcl = plot(x,y,'parent',ax);
+    end
+
 end
 hold off
 %
