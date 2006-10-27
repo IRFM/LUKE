@@ -50,7 +50,7 @@ bounce_mode = dkeparam.bounce_mode;
 %
 Rp = equilDKE.Rp;
 Zp = equilDKE.Zp;
-ap = equilDKE.Xx(end,1)
+ap = equilDKE.Xx(end,1);
 %
 theta = equilDKE.mtheta;
 xpsin = equilDKE.xpsin;
@@ -72,9 +72,6 @@ xzni = equilDKE.xzni;
 zZi = equilDKE.zZi;
 zmi = equilDKE.zmi;
 xZeff = equilDKE.xZeff;
-Rp = equilDKE.Rp;
-Zp = equilDKE.Zp;
-ap = equilDKE.ap;
 xmhu0T2 = equilDKE.xmhu0T2;
 xdV_dke = equilDKE.xdV_2piRp_dke*2*pi*Rp;
 xdA_dke = equilDKE.xdA_dke;

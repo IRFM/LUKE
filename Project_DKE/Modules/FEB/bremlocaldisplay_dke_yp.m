@@ -83,7 +83,6 @@ if ~mask_hxr(i_test,j_test),
    ii1 = input_dke_yp(['Give the index (between 1 and ',int2str(max(ii)),')'],1);
    i_test = i_test1(ii1);
    j_test = j_test1(ii1);
-   %return
 end
 %
 rho_out = xrho(i_test);
