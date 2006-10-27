@@ -1,4 +1,4 @@
-function [khisto1,Tphi,eTphi,Qi,Tpho,eTpho,Qo,TphADC,eTphADC,QADC,Tphcode,eTphcode,Qcode] = pileup_dke_yp(pileupsim,diag)
+function [Ni_s,khisto1,Tphi_s,eTphi_s,Qi_s,Tpho_s,eTpho_s,Qo_s,TphADC_s,eTphADC_s,QADC_s,Tphcode_s,eTphcode_s,Qcode_s] = pileup_dke_yp(pileupsim,diag)
 %
 % Study of of pile-up and dead-time for x-ray spectrometry at high counting rate
 % Global study based on Poisson statistics. Monte-Carlo simulation.
@@ -47,12 +47,14 @@ Nc = Ni./exp((tp+tl)*Ni*1e-6);%if tc < (tl-tp),From pile-up theory
 delta = (Ni-Ncc)./Ni;%Only valid for moderate count rate
 index = find(delta<=seuil);
 %
-[ax] = graph1D_jd(Ni,Ncc,0,0,'Input count rate (photon/s)','Output count rate (cps/s)',['Pile-up effect ',tok,'-',namediag],NaN,[0,max(Ni)*1.01],[0,max(Nc)*1.5],'-','none','r',2);
-[ax] = graph1D_jd(Ni,Nc,0,0,'Input count rate (photon/s)','Output count rate (cps/s)',['Pile-up effect ',tok,'-',namediag],NaN,[0,max(Ni)*1.01],[0,max(Nc)*1.5],'--','none','g',2);
-[ax] = graph1D_jd(Ni,Ni,0,0,'Input count rate (photon/s)','Output count rate (cps/s)',['Pile-up effect ',tok,'-',namediag],NaN,[0,max(Ni)*1.01],[0,max(Nc)*1.5],'-.','none','k',2);
-legend('Pile-up + ADC','Pile-up only','Ideal');
-[ax] = graph1D_jd([Ni(max(index)),Ni(max(index))],[1,max(Nc)*1.5],0,0,'Input count rate (photon/s)','Output count rate (cps/s)',['Pile-up effect ',tok,'-',namediag],NaN,[0,max(Ni)*1.01],[0,max(Nc)*1.5],'--','none','b',1);
-[ax] = graph1D_jd([1,max(Ni)],[Ncc(max(index)),Ncc(max(index))],0,0,'Input count rate (photon/s)','Output count rate (cps/s)',['Pile-up effect ',tok,'-',namediag],NaN,[0,max(Ni)*1.01],[0,max(Nc)*1.5],'--','none','b',1);
+figure('Name','Pile-up level'),
+[ax] = graph1D_jd(Ni,Ncc,0,0,'Input count rate (photon/s)','Output count rate (cps/s)',['Pile-up effect ',tok,' ',namediag],NaN,[0,max(Ni)*1.01],[0,max(Nc)*1.5],'-','none','r',2);
+[ax] = graph1D_jd(Ni,Nc,0,0,'Input count rate (photon/s)','Output count rate (cps/s)',['Pile-up effect ',tok,' ',namediag],NaN,[0,max(Ni)*1.01],[0,max(Nc)*1.5],'--','none','g',2);
+[ax] = graph1D_jd(Ni,Ni,0,0,'Input count rate (photon/s)','Output count rate (cps/s)',['Pile-up effect ',tok,' ',namediag],NaN,[0,max(Ni)*1.01],[0,max(Nc)*1.5],'-.','none','k',2);
+legend('Pile-up + ADC','Pile-up only','Ideal','Location','South');
+[ax] = graph1D_jd([Ni(max(index)),Ni(max(index))],[1,max(Nc)*1.5],0,0,'Input count rate (pulse/s)','Output count rate (cps/s)',['Pile-up effect ',tok,' ',namediag],NaN,[0,max(Ni)*1.01],[0,max(Nc)*1.5],'--','none','b',1);
+[ax] = graph1D_jd([1,max(Ni)],[Ncc(max(index)),Ncc(max(index))],0,0,'Input count rate (pulse/s)','Output count rate (cps/s)',['Pile-up effect ',tok,' ',namediag],NaN,[0,max(Ni)*1.01],[0,max(Nc)*1.5],'--','none','b',1);
+ht = text(0,1.05*Ncc(max(index)),['  ',int2str(pileupsim.seuil*100),'% pile-up']);set(ht,'fontsize',20);
 axis('square');
 print_jd(p_opt,[filename,'_CountRate']);
 %
@@ -81,25 +83,22 @@ alpha = beta*tp/(tl-tp);
 a = k0/((tp^(alpha+beta))*((beta/alpha)^beta));
 t = [0:tl/100:tl];y = a*(t.^alpha).*((tl-t).^beta);
 figure('Name','Amplifier pulse shape'),
-[ax] = graph1D_jd(t,y,0,0,'Time (microsecond)','E (keV)',['Amplifier pulse shape ',tok,'-',namediag],NaN,'','','-','none','r',2);
+[ax] = graph1D_jd(t,y,0,0,'Time (microsecond)','E (keV)',['Amplifier pulse shape ',tok,' ',namediag],NaN,'','','-','none','r',2);
 print_jd(p_opt,[filename,'_PulseModel']);
 %
 % Monte-Carlo calculation
 %
-if modeMC == 1,
-    Ni_in = Ni(max(index));
-else   
-    Ni_in = NiMC;
-end   
-%    
-[ki,ko,kADC,kkADC,emp,kcode,khisto,khisto1,histoki,histoko,histokADC,histokcode] = fpilup_dke_yp(diag,nreset,Ni_in,kmin0,k0,ech,typspec,pur);
-%
+Ni_in = Ni(max(index));
+[ki,ko,kADC,kkADC,emp,kcode,khisto,khisto1,histoki,histoko,histokADC,histokcode] = fpilup_dke_yp(diag,nreset,Ni_in,kmin0,k0,ech,typspec,pur);  
+khisto1
+khisto
+
 %  Display initial spectrum 
 %   
 maxfig = 10^(round(log(max(hist_dke_yp(ki,khisto)))/log(10))+1);
 %
 figure('Name','Pile-up effect/Spectrum IN'),   
-hist_dke_yp(ki,khisto,'k (keV)','',['Spectrum IN, Ntot = ',int2str(length(ki)),' (cps/s)'],[0,kmax],[1,maxfig],'m','-',2);
+hist_dke_yp(ki,khisto,'Pulse energy E (keV)','',['Spectrum IN, N_{tot} = ',int2str(length(ki)),' (cps/s)'],[0,kmax],[1,maxfig],'m','-',2);
 if typspec==2,
    kint = (khisto1>=diag.khistotphmin & khisto1 <=diag.khistotphmax);
    [Tphi,eTphi,Ai,eAi,Qi] = tphfit_dke_yp(khisto1(kint)',histoki(kint)',sqrt(histoki(kint)'));
@@ -115,7 +114,7 @@ print_jd(p_opt,[filename,'_IN_PulseSpectrum']);
 %	Display detected spectrum 
 %
 figure('Name','Pile-up effect/Spectrum OUT'),
-hist_dke_yp(ko,khisto,'k (keV)','',['Spectrum OUT, Ntot = ',int2str(length(ko)),' (cps/s)'],[0,kmax],[1,maxfig],'m','-',2);
+hist_dke_yp(ko,khisto,'Pulse energy E (keV)','',['Spectrum OUT, N_{tot} = ',int2str(length(ko)),' (cps/s)'],[0,kmax],[1,maxfig],'m','-',2);
 if typspec==2,
    [Tpho,eTpho,Ao,eAo,Qo] = tphfit_dke_yp(khisto1(kint)',histoko(kint)',sqrt(histoko(kint)'));
    pfit = polyfit(khisto1,log(histoko),1);
@@ -130,7 +129,7 @@ print_jd(p_opt,[filename,'_OUT_PulseSpectrum']);
 %	Display dead time spectrum
 %
 figure('Name','Pile-up effect/Spectrum OUT + coding dead-time'),
-hist_dke_yp(kkADC,khisto,'k (keV)','',['Spectrum OUT + coding dead-time, Ntot = ',int2str(length(ki)),' (cps/s)'],[0,kmax],[1,maxfig],'m','-',2);
+hist_dke_yp(kkADC,khisto,'Pulse energy E (keV)','',['Spectrum OUT + coding dead-time, N_{tot} = ',int2str(length(ki)),' (cps/s)'],[0,kmax],[1,maxfig],'m','-',2);
 if typspec==2,
    [TphADC,eTphADC,AADC,eAADC,QADC] = tphfit_dke_yp(khisto1(kint)',histokADC(kint)',sqrt(histokADC(kint)'));
    pfit = polyfit(khisto1,log(histokADC),1);
@@ -145,13 +144,13 @@ print_jd(p_opt,[filename,'_OUTWithDeadTime_PulseSpectrum']);
 %	Display measured spectrum
 %
 if pur==0,
-   titlemode = ['Measured spectrum (PUR OFF), Ntot = ',int2str(length(kcode)),' (cps/s)'];
+   titlemode = ['Measured spectrum (PUR OFF), N_{tot} = ',int2str(length(kcode)),' (cps/s)'];
 elseif pur==1,
-   titlemode = ['Measured spectrum (PUR ON), Ntot = ',int2str(length(kcode)),' (cps/s)'];
+   titlemode = ['Measured spectrum (PUR ON), N_{tot} = ',int2str(length(kcode)),' (cps/s)'];
 end
 %
 figure('Name','Pile-up effect/Measured spectrum'),
-hist_dke_yp(kcode,khisto,'k (keV)','',titlemode,[0,kmax],[1,maxfig],'m','-',2);
+hist_dke_yp(kcode,khisto,'Pulse energy E (keV)','',titlemode,[0,kmax],[1,maxfig],'m','-',2);
 if typspec==2,
    [Tphcode,eTphcode,Acode,eAcode,Qcode] = tphfit_dke_yp(khisto1(kint)',histokcode(kint)',sqrt(histokcode(kint)'));
    pfit = polyfit(khisto1,log(histokcode),1);
@@ -165,7 +164,7 @@ print_jd(p_opt,[filename,'_MeasuredSpectrum']);
 %
 %	Summary
 %
-info_dke_yp(2,['Number of incoming pulses : ',int2str(Ni_in),' (photon/s)'])
+info_dke_yp(2,['Number of incoming pulses : ',int2str(Ni_in),' (pulses/s)'])
 info_dke_yp(2,['Fraction of piled pulses : ',num2str(100*(sum(emp==1)+sum((emp==2)/2))*ech/Ni_in),' (%)'])
 info_dke_yp(2,['Fraction of lost pulses (coding dead-time)  : ',num2str(100*sum(kADC==-1)*ech/Ni_in),' (%)'])
 skcode = size(kcode);
@@ -190,4 +189,45 @@ if typspec==2,
     end
 end
 %
+Ni_s(1) = Ni_in;
+Tphi_s(1) = Tphi;
+eTphi_s(1) = eTphi;
+Qi_s(1) = Qi;
+Tpho_s(1) = Tpho;
+eTpho_s(1) = eTpho;
+Qo_s(1) = Qo;
+TphADC_s(1) = TphADC;
+eTphADC_s(1) = eTphADC;
+QADC_s(1) = QADC;
+Tphcode_s(1) = Tphcode;
+eTphcode_s(1) = eTphcode;
+Qcode_s(1) = Qcode;
+%
+if modeMC == 2,
+   for ii = 1:length(NiMC),
+      [ki,ko,kADC,kkADC,emp,kcode,khisto,khisto1,histoki,histoko,histokADC,histokcode] = fpilup_dke_yp(diag,nreset,NiMC(ii),kmin0,k0,ech,typspec,pur);  
+      if typspec==2,
+         kint = (khisto1>=diag.khistotphmin & khisto1 <=diag.khistotphmax);
+         [Tphi,eTphi,Ai,eAi,Qi] = tphfit_dke_yp(khisto1(kint)',histoki(kint)',sqrt(histoki(kint)'));
+         [Tpho,eTpho,Ao,eAo,Qo] = tphfit_dke_yp(khisto1(kint)',histoko(kint)',sqrt(histoko(kint)'));
+         [TphADC,eTphADC,AADC,eAADC,QADC] = tphfit_dke_yp(khisto1(kint)',histokADC(kint)',sqrt(histokADC(kint)'));
+         [Tphcode,eTphcode,Acode,eAcode,Qcode] = tphfit_dke_yp(khisto1(kint)',histokcode(kint)',sqrt(histokcode(kint)'));
+%        
+         Ni_s(ii+1) = NiMC(ii);
+         Tphi_s(ii+1) = Tphi;
+         eTphi_s(ii+1) = eTphi;
+         Qi_s(ii+1) = Qi;
+         Tpho_s(ii+1) = Tpho;
+         eTpho_s(ii+1) = eTpho;
+         Qo_s(ii+1) = Qo;
+         TphADC_s(ii+1) = TphADC;
+         eTphADC_s(ii+1) = eTphADC;
+         QADC_s(ii+1) = QADC;
+         Tphcode_s(ii+1) = Tphcode;
+         eTphcode_s(ii+1) = eTphcode;
+         Qcode_s(ii+1) = Qcode;
+         info_dke_yp(2,['Monte-Carlo calculations for a count rate of ',int2str(NiMC(ii)),' ph/s done.']);
+      end
+   end
+end   
 
