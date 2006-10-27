@@ -32,16 +32,20 @@ XXf0 = dke_out.XXf0(:,:,r_dke);
 XXf0_tp = dke_out.XXf0_tp(:,:,r_dke);
 XXf0_g = dke_out.XXf0_g(:,:,r_dke);
 %
+Rp = equilDKE.Rp;
+Zp = equilDKE.Zp;
+ap = equilDKE.Xx(end,1);
+%
 theta = equilDKE.mtheta;
 xpsin = equilDKE.xpsin;
-psia = equilDKE.psia;
-XR = equilDKE.XR;
-XZ = equilDKE.XZ;
-XBR = equilDKE.XBR;
-XBZ = equilDKE.XBZ;
+psia_apRp = equilDKE.psia_apRp;
+XR = equilDKE.Xx + Rp;
+XZ = equilDKE.Xy + Zp;
+XBR = equilDKE.XBx;
+XBZ = equilDKE.XBy;
 XBphi = equilDKE.XBphi;
 xB0 = equilDKE.xB0;
-xR0 = equilDKE.xR0;
+xR0 = equilDKE.xx0 + Rp;
 xBT0 = equilDKE.xBT0;
 xBp0 = equilDKE.xBp0;
 xrho = equilDKE.xrho;
@@ -56,7 +60,7 @@ Rp = equilDKE.Rp;
 Zp = equilDKE.Zp;
 ap = equilDKE.ap;
 xmhu0T2 = equilDKE.xmhu0T2;
-xdV_dke = equilDKE.xdV_dke;
+xdV_dke = equilDKE.xdV_2piRp_dke*2*pi*Rp;
 xdA_dke = equilDKE.xdA_dke;
 xzni_norm = xzni(:,r_dke)/ne_ref;
 xne_norm = xne(r_dke)/ne_ref;
@@ -79,7 +83,7 @@ if ~mask_hxr(i_test,j_test),
    ii1 = input_dke_yp(['Give the index (between 1 and ',int2str(max(ii)),')'],1);
    i_test = i_test1(ii1);
    j_test = j_test1(ii1);
-   return
+   %return
 end
 %
 rho_out = xrho(i_test);

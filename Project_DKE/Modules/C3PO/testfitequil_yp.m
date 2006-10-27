@@ -21,10 +21,10 @@ end
 %
 prec = 1e-3;
 %
-[prho] = psi2rho_jd(equil_in,equil_in.psi/equil_in.psi(end),'spline');
-psin = equil_in.psi(:)/equil_in.psi(end);
-dpsin = gradient(psin);
-dprho = gradient(prho);
+psin = equil_in.psi_apRp/equil_in.psi_apRp(end);
+[prho] = psi2rho_jd(equil_in,psin,'spline');
+dpsin = gradient(psin(:));
+dprho = gradient(prho(:));
 dtheta = gradient(equil_in.theta);
 %
 pTe = equil_in.pTe(:);
@@ -45,19 +45,6 @@ BP = sqrt(BR.^2 + BZ.^2);
 B = sqrt(BR.^2 + BZ.^2 + BPHI.^2);
 r = sqrt((R - Rp).^2 + (Z - Zp).^2)+eps;
 %
-salpha = (BZ.*(Z - Zp) + BR.*(R - Rp))./r./BP;
-calpha =  (-BR.*(Z - Zp) + BZ.*(R - Rp))./r./BP;
-salpha(1,:) = salpha(2,:);
-calpha(1,:) = calpha(2,:);
-%
-[dcalphadtheta,dcalphadrho] = gradient(calpha);%
-dcalphadtheta = dcalphadtheta./(ones(length(dprho),1)*dtheta);
-dcalphadrho = dcalphadrho./(dprho(:)*ones(1,length(dtheta)));
-%
-[dsalphadtheta,dsalphadrho] = gradient(salpha);%
-dsalphadtheta = dsalphadtheta./(ones(length(dprho),1)*dtheta);
-dsalphadrho = dsalphadrho./(dprho(:)*ones(1,length(dtheta)));
-%
 [drdtheta,drdrho] = gradient(r);%r
 drdtheta = drdtheta./(ones(length(dprho),1)*dtheta);
 drdrho = drdrho./(dprho(:)*ones(1,length(dtheta)));
@@ -69,6 +56,19 @@ dRdrho = dRdrho./(dprho(:)*ones(1,length(dtheta)));
 [dZdtheta,dZdrho] = gradient(Z);%XZ
 dZdtheta = dZdtheta./(ones(length(dprho),1)*dtheta);
 dZdrho = dZdrho./(dprho(:)*ones(1,length(dtheta)));
+%
+salpha = ((R - Rp).*dRdtheta + (Z - Zp).*dZdtheta)./(r+eps)./sqrt(dRdtheta.^2 + dZdtheta.^2);
+calpha = sqrt(1.0 - salpha.^2);
+salpha(1,:) = salpha(2,:);
+calpha(1,:) = calpha(2,:);
+%
+[dcalphadtheta,dcalphadrho] = gradient(calpha);%
+dcalphadtheta = dcalphadtheta./(ones(length(dprho),1)*dtheta);
+dcalphadrho = dcalphadrho./(dprho(:)*ones(1,length(dtheta)));
+%
+[dsalphadtheta,dsalphadrho] = gradient(salpha);%
+dsalphadtheta = dsalphadtheta./(ones(length(dprho),1)*dtheta);
+dsalphadrho = dsalphadrho./(dprho(:)*ones(1,length(dtheta)));
 %
 [dBPHIdtheta,dBPHIdrho] = gradient(BPHI);%Toroidal magnetic field
 dBPHIdtheta = dBPHIdtheta./(ones(length(dprho),1)*dtheta);
@@ -82,7 +82,7 @@ dBPdrho = dBPdrho./(dprho(:)*ones(1,length(dtheta)));
 dBdtheta = dBdtheta./(ones(length(dprho),1)*dtheta);
 dBdrho = dBdrho./(dprho(:)*ones(1,length(dtheta)));
 %
-dpsindrho = gradient(psin)./dprho(:);
+dpsindrho = dpsin./dprho;
 if ~isempty(pTe),dTedrho = gradient(pTe)./dprho(:);end
 if ~isempty(pne),dnedrho = gradient(pne)./dprho(:);end
 if ~isempty(equil_in.zZi),

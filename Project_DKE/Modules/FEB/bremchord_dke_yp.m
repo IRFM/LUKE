@@ -1,9 +1,10 @@
-function [Zbremchord,equilHXR] = bremchord_dke_yp(display,equil,radialDKE,Zcurr,hxr,hxrparam);
+function [Zbremchord,equilHXR] = bremchord_dke_yp(dkeparam,display,equil,radialDKE,Zcurr,hxr,hxrparam);
 %
 % This function calculates chord positions for bremsstrahlung tomography in a torus along unit vector g from DKE grid structure
 %
 % INPUTS
 %
+%       - dkeparam: DKE data structure
 %       - equil: Magnetic equilibrium structure from numerical magnetic equilibrium code (no interpolation)
 %       - radialDKE: Radial grid structure used by DKE
 %       - dke_out: DKE data output
@@ -20,7 +21,8 @@ function [Zbremchord,equilHXR] = bremchord_dke_yp(display,equil,radialDKE,Zcurr,
 %          * Zbremchord.mask_hxr: locations where the distribution function is calculated for the bremsstrahlung emission [npsi,ntheta]
 %       - equilHXR: magnetic equilibrium structure optimized for HR
 %       calculations
-% by J. Decker (jodecker@alum.mit.edu) and Y. Peysson (yves.peysson@cea.fr)
+%
+% by Y. Peysson (CEA-DRFC) <yves.peysson@cea.fr> and J. Decker (CEA-DRFC) <joan.decker@cea.fr> 
 %
 %WARNING: the definitions used in the DKE code, and here crucial for HXR calculations are the following
 %         1) the toroidal frame (R,Z,phi) is direct (phi is positive clockwise when the tokamak is seen from the top)
@@ -30,7 +32,7 @@ function [Zbremchord,equilHXR] = bremchord_dke_yp(display,equil,radialDKE,Zcurr,
 % With the definitions above, if Ip is positive, psi is turned outward, Btheta is counterclockwise poloidally, and s too. The Ampere theorem is OK !
 % The HXR diagnostic arrangement is taking this frame of reference.
 %
-if nargin < 4,
+if nargin < 5,
    error('Not enough arguments in bremchord_dke_yp')
 end
 %	
@@ -43,16 +45,20 @@ xpsin_S = radialDKE.xpsin_S_dke;
 %
 [equilHXR] = equilibrium_jd(equil,radialDKE,display,'spline',mfactor);%Magnetic equilibrium for HXR
 %
+Rp = equilHXR.Rp;%Plasma major radius (m)
+Zp = equilHXR.Zp;%Plasma vertical position (m)
+ap = equilHXR.Xx(end,1);%Plasma minor radius (m)
+%
 theta = equilHXR.mtheta;
 ppsin = equilHXR.xpsin;
-psia = equilHXR.psia;
-ptR = equilHXR.XR;
-ptZ = equilHXR.XZ;
-ptBR = equilHXR.XBR;
-ptBZ = equilHXR.XBZ;
+psia_apRp = equilHXR.psia_apRp;
+ptR = equilHXR.Xx + Rp;
+ptZ = equilHXR.Xy + Zp;
+ptBR = equilHXR.XBx;
+ptBZ = equilHXR.XBy;
 ptBphi = equilHXR.XBphi;
 ptB0 = equilHXR.xB0;
-ptR0 = equilHXR.xR0;
+ptR0 = equilHXR.xx0 + Rp;
 ptBT0 = equilHXR.xBT0;
 ptBp0 = equilHXR.xBp0;
 ptrho = equilHXR.xrho;
@@ -62,9 +68,8 @@ if length(ppsin)==1,error('Bremsstrahlung calculations cannot be performed when 
 ns = abs(ns);%Force ns to be always positive
 nchords = length(hxr.alpha_hxr);%chord number
 %
-Rp = ptR(1,1);%Plasma major radius (m)
-Zp = ptZ(1,1);%Plasma vertical position (m)
-xq = qfactors_dke_yp(Rp,Zp,ptR,ptZ,ptBR,ptBZ,ptBphi);%Safety factor
+xq = qfactors_dke_yp(dkeparam.equil_mode,Rp,ap,equilHXR.Xx,equilHXR.Xy,equilHXR.XBx,equilHXR.XBy,equilHXR.XBphi,equilHXR.xx0,equilHXR.xB0,equilHXR.xBT0,equilHXR.xBp0);%Safety factors
+%
 r_lcs = sqrt((ptR(length(ppsin),:) - Rp).^2 + (ptZ(length(ppsin),:) - Zp).^2);%Minor radius of the last closed magnetic surface
 ap = max([r_lcs(1),max(r_lcs)]);%Max of low field side  minor radius and maximum minor radius
 %
@@ -134,6 +139,7 @@ sh = s.*sin(beta_hxr);
 sR = sqrt(R_hxr.^2 + sh.^2 + 2*R_hxr.*sh.*cos(alpha_hxr));
 sR = sR + eps*(sR == Rp);%to avoid singularities
 sZ = Z_hxr + sZ;
+%
 sZ = sZ + eps*(sZ == Zp);%to avoid singularities
 sphi = rem(2*pi - acos((sR.^2 + R_hxr.^2 - sh.^2)./(2*sR.*R_hxr)).*sign(alpha_hxr),2*pi);%Toroidal angle
 spsi = griddata(ptR,ptZ,ppsin(:)*ones(1,length(theta)),sR,sZ);%Flux surface value
@@ -192,9 +198,9 @@ gX_hxr(~mask) = NaN;
 gY_hxr(~mask) = NaN;
 gZ_hxr(~mask) = NaN;
 %
-sBR=griddata(ptR,ptZ,ptBR,sR,sZ);
-sBZ=griddata(ptR,ptZ,ptBZ,sR,sZ);
-sBphi=griddata(ptR,ptZ,ptBphi,sR,sZ);
+sBR = griddata(ptR,ptZ,ptBR,sR,sZ);
+sBZ = griddata(ptR,ptZ,ptBZ,sR,sZ);
+sBphi = griddata(ptR,ptZ,ptBphi,sR,sZ);
 %sIpdir=sign(griddata(ptR,ptZ,Ipdir,sR,sZ));%sign function to enforce +/- 1. Only the sign is important here
 sB = sqrt(sBR.^2 + sBZ.^2 + sBphi.^2);
 sksid = ((sBR.*cos(sphi) - sBphi.*sin(sphi)).*gX_hxr + (-sBR.*sin(sphi) + sBphi.*cos(sphi)).*gY_hxr + sBZ.*gZ_hxr)./sB;%cosine between magnetic field line and chord direction (towards the detector)

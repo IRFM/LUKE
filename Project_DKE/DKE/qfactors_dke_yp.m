@@ -52,7 +52,7 @@ if equil_mode == 1,
     %
     %q (safety factor)
     %
-    XMF = XMBphi.*XMr2./XMrBpcos./(1 + XMx/Rp)/ap;
+    XMF = abs(XMBphi).*XMr2./XMrBpcos./(1 + XMx/Rp)/ap;
     xq = squeeze(sum(XMF.*XMdt))/(2*pi);
     %
     %qtilde

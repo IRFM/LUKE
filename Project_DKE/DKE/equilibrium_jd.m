@@ -40,11 +40,11 @@ function [equilDKE] = equilibrium_jd(equil,radialDKE,display,method,mfactor,fig_
 %
 %       - theta: poloidal angle grid [1,ntheta]
 %       - xpsin: normalized poloidal flux grid [1,nr]
-%       - psia: poloidal flux at the edge [1,1]
-%       - XR: major radius [nr,ntheta]
-%       - XZ: elevation [nr,ntheta]
-%       - XBR: B-field component in R direction [nr,ntheta]
-%       - XBZ: B-field component in Z direction [nr,ntheta]
+%       - psia_apRp: Edge normalized cylindrical poloidal flux (Wb) [1,1]
+%       - Xx: major radius [nr,ntheta]
+%       - Xy: elevation [nr,ntheta]
+%       - XBx: B-field component in R direction [nr,ntheta]
+%       - XBy: B-field component in Z direction [nr,ntheta]
 %       - XBPHI: B-field component in PHI direction [nr,ntheta]
 %       - xB0: minimum magnetic field on a flux-surface [1,nr]
 %       - xR0: corresponding major radius [1,nr]
@@ -175,8 +175,8 @@ Zp = equil.Zp;%Elevation of magnetic Axis
 %
 ap =  mx(npsi,1);%Plasma minor radius on the LFS midplane 
 %
-psia = equil.psi_apRp(npsi);%Poloidal flux at the edge
-psin = equil.psi_apRp/psia;%Normalized poloidal flux
+psia_apRp = equil.psi_apRp(npsi);%Poloidal flux at the edge
+psin = equil.psi_apRp/psia_apRp;%Normalized poloidal flux
 %
 pZeff = sum(equil.pzni.*repmat((equil.zZi.^2)',[1,npsi]))./equil.pne;%Effective charge (a.u.)
 %
@@ -327,14 +327,14 @@ if display_mode >=1,
 	disp(['- Plasma minor radius on LFS midplane (m) ap = ',num2str(ap)]);
 	disp(['- Plasma major radius on axis (m) Rp = ',num2str(Rp)]);
 	disp(['- Plasma elevation on axis (m) Zp = ',num2str(Zp)]);
-	disp(['- Edge poloidal flux (Wb) = ',num2str(psia)]);
+	disp(['- Edge normalized cylindrical poloidal flux (Wb) = ',num2str(psia_apRp)]);
 	disp('-------------------------------------------------------------------------------------------------------------------');
 end
 %
 equilDKE.tokname = equil.id;
 equilDKE.mtheta = mtheta;
 equilDKE.xpsin = xpsin;
-equilDKE.psia = psia;
+equilDKE.psia_apRp = psia_apRp;
 equilDKE.Xx = Xx;
 equilDKE.Xy = Xy;
 equilDKE.XBx = XBx;

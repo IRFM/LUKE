@@ -48,16 +48,20 @@ r_dke = radialDKE.r_dke;
 pnmax_S = dkeparam.pnmax_S;
 bounce_mode = dkeparam.bounce_mode;
 %
+Rp = equilDKE.Rp;
+Zp = equilDKE.Zp;
+ap = equilDKE.Xx(end,1)
+%
 theta = equilDKE.mtheta;
 xpsin = equilDKE.xpsin;
-psia = equilDKE.psia;
-XR = equilDKE.XR;
-XZ = equilDKE.XZ;
-XBR = equilDKE.XBR;
-XBZ = equilDKE.XBZ;
+psia_apRp = equilDKE.psia_apRp;
+XR = equilDKE.Xx + Rp;
+XZ = equilDKE.Xy + Zp;
+XBR = equilDKE.XBx;
+XBZ = equilDKE.XBy;
 XBphi = equilDKE.XBphi;
 xB0 = equilDKE.xB0;
-xR0 = equilDKE.xR0;
+xR0 = equilDKE.xx0 + Rp;
 xBT0 = equilDKE.xBT0;
 xBp0 = equilDKE.xBp0;
 xrho = equilDKE.xrho;
@@ -72,7 +76,7 @@ Rp = equilDKE.Rp;
 Zp = equilDKE.Zp;
 ap = equilDKE.ap;
 xmhu0T2 = equilDKE.xmhu0T2;
-xdV_dke = equilDKE.xdV_dke;
+xdV_dke = equilDKE.xdV_2piRp_dke*2*pi*Rp;
 xdA_dke = equilDKE.xdA_dke;
 %
 xzni_norm = xzni(:,r_dke)/ne_ref;

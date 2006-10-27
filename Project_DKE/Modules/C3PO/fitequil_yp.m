@@ -41,10 +41,11 @@ equil_out.method = method;
 if ~isempty(equil_in.zZi),equil_out.zZi = equil_in.zZi;else equil_out.zZi = [0,0,0];end
 if ~isempty(equil_in.zmi),equil_out.zmi = equil_in.zmi;else equil_out.zmi = [1,1,1];end
 %
+Rp = equil_in.Rp;
 ap = equil_in.ptx(end,1);
 psi = equil_in.psi_apRp*Rp/ap;
 psia = equil_in.psi_apRp(end)*Rp/ap;
-xypsi = equil_in.xypsi_apRp*Rp/ap;
+%xypsi = equil_in.xypsi_apRp*Rp/ap;
 %
 if mode == 1,
    [rho] = psi2rho_jd(equil_in,psi/psia,method);

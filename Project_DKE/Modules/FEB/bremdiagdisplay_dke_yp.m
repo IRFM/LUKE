@@ -4,10 +4,10 @@ function [] = bremdiagdisplay_dke_yp(hxr,Zbremchord,Zbremplasma,Zbremdiag,chord_
 %
 % by J. Decker (joan.decker@cea.fr) and Y. Peysson (yves.peysson@cea.fr)
 %
-if nargin < 12,
+if nargin < 5,
    chord_display = 1;
    kphot_display = hxr.kphot(round(length(hxr.kphot)/2));%keV
-elseif nargin < 13,
+elseif nargin < 6,
     kphot_display = hxr.kphot(round(length(hxr.kphot)/2));%keV
 end
 nchords = length(hxr.alpha_hxr);
