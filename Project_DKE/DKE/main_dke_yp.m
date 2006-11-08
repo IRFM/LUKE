@@ -85,11 +85,11 @@ else
 end
 %
 if dkeparam_in.opt_load*exist(['temp',filesep,'DKE_TEMP_',id_simul,'_rfwave.mat']),
-	load(['temp',filesep,'DKE_TEMP_',id_simul,'_rfwave.mat'],'waveparam','xyprop_dke','xyPinc_in','yb','xys');
+	load(['temp',filesep,'DKE_TEMP_',id_simul,'_rfwave.mat'],'waveparam','xyprop_dke','xyP0_2piRp_in','yb','xys');
     info_dke_yp(2,['File temp',filesep,'DKE_TEMP_',id_simul,'_rfwave.mat reloaded.']);
 else   
 	[waveparam,xyprop_dke,xyP0_2piRp_in,yb,xys] = rfwave_dke_jd(dkeparam_out,display,equil,equilDKE,gridDKE,Zbouncecoef,mksa,waves);%RF wave parameters preprocessing calculations
-    if dkeparam_in.opt_save,save(['temp',filesep,'DKE_TEMP_',id_simul,'_rfwave.mat'],'waveparam','xyprop_dke','xyPinc_in','yb','xys');end
+    if dkeparam_in.opt_save,save(['temp',filesep,'DKE_TEMP_',id_simul,'_rfwave.mat'],'waveparam','xyprop_dke','xyP0_2piRp_in','yb','xys');end
 end
 %
 if dkeparam_in.opt_load*exist(['temp',filesep,'DKE_TEMP_',id_simul,'_XXsinksource.mat']),

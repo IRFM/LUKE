@@ -29,10 +29,8 @@ nr = length(psin);
 ap =  equil.ptx(npsi,1);%plasma radius on the LFS midplane 
 prho = equil.ptx(:,1)/ap;
 %
-psia = equil.psi_apRp(npsi);%poloidal flux at the edge
-%
 % Interpolation of calculation grid
 %
-rho = interp1(equil.psi_apRp/psia,prho,psin,method);
+rho = interp1(equil.psi_apRp/equil.psi_apRp(npsi),prho,psin,method);
 
 

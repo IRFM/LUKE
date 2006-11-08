@@ -50,7 +50,6 @@ nr = length(xpsin);
 %
 theta = equilDKE_Fourier.mtheta;
 ppsin = equilDKE_Fourier.xpsin;
-psia = equilDKE_Fourier.psia;
 ptx = equilDKE_Fourier.Xx;
 pty = equilDKE_Fourier.Xy;
 ptBx = equilDKE_Fourier.XBx;
