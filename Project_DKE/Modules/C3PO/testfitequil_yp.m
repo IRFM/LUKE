@@ -1,4 +1,4 @@
-function [] = testfitequil_yp(equil_in,equil_fit,rho,theta)
+function [R,Z] = testfitequil_yp(equil_in,equil_fit,rho,theta)
 %
 % Test the interpolated magnetic equilibrium
 %
@@ -18,6 +18,9 @@ if nargin <3,% Output for comparison with C raytracing_yp.c
    rho = 0.25;
    theta = 0.2;
 end
+%
+R = [];
+Z = [];
 %
 prec = 1e-3;
 %
@@ -151,38 +154,38 @@ if nargin < 3,
    ddRstardpsindrho_fit = ppval(equil_fit.dxstardpsin_fit.pp_dfdrho,rho_fit1);ddRstardpsindrho_fit = ddRstardpsindrho_fit(:);
    ddRstardpsindrho_fit1 = ppval_yp(equil_fit.dxstardpsin_fit.pp_dfdrho,rho_fit1);ddRstardpsindrho_fit1 = ddRstardpsindrho_fit1(:);
 %
-   x_a0_fit = ppval(equil_fit.x_fit.pp_a0,rho_fit1);x_a0_fit = x_a0_fit(:);
+   x_a0_fit = ppval(equil_fit.x_fit.pp_a0,rho_fit1);
    x_an_fit = ppval(equil_fit.x_fit.pp_an,rho_fit1);
    x_bn_fit = ppval(equil_fit.x_fit.pp_bn,rho_fit1);
-   x_da0drho_fit = ppval(equil_fit.x_fit.pp_da0drho,rho_fit1);x_da0drho_fit = x_da0drho_fit(:);
+   x_da0drho_fit = ppval(equil_fit.x_fit.pp_da0drho,rho_fit1);
    x_dandrho_fit = ppval(equil_fit.x_fit.pp_dandrho,rho_fit1);
    x_dbndrho_fit = ppval(equil_fit.x_fit.pp_dbndrho,rho_fit1);
 %
-   y_a0_fit = ppval(equil_fit.y_fit.pp_a0,rho_fit1);y_a0_fit = y_a0_fit(:);
+   y_a0_fit = ppval(equil_fit.y_fit.pp_a0,rho_fit1);
    y_an_fit = ppval(equil_fit.y_fit.pp_an,rho_fit1);
    y_bn_fit = ppval(equil_fit.y_fit.pp_bn,rho_fit1);
-   y_da0drho_fit = ppval(equil_fit.y_fit.pp_da0drho,rho_fit1);y_da0drho_fit = y_da0drho_fit(:);
+   y_da0drho_fit = ppval(equil_fit.y_fit.pp_da0drho,rho_fit1);
    y_dandrho_fit = ppval(equil_fit.y_fit.pp_dandrho,rho_fit1);
    y_dbndrho_fit = ppval(equil_fit.y_fit.pp_dbndrho,rho_fit1);
 %
-   Bx_a0_fit = ppval(equil_fit.Bx_fit.pp_a0,rho_fit1);Bx_a0_fit = Bx_a0_fit(:);
+   Bx_a0_fit = ppval(equil_fit.Bx_fit.pp_a0,rho_fit1);
    Bx_an_fit = ppval(equil_fit.Bx_fit.pp_an,rho_fit1);
    Bx_bn_fit = ppval(equil_fit.Bx_fit.pp_bn,rho_fit1);
-   Bx_da0drho_fit = ppval(equil_fit.Bx_fit.pp_da0drho,rho_fit1);Bx_da0drho_fit = Bx_da0drho_fit(:);
+   Bx_da0drho_fit = ppval(equil_fit.Bx_fit.pp_da0drho,rho_fit1);
    Bx_dandrho_fit = ppval(equil_fit.Bx_fit.pp_dandrho,rho_fit1);
    Bx_dbndrho_fit = ppval(equil_fit.Bx_fit.pp_dbndrho,rho_fit1);
 %
-   By_a0_fit = ppval(equil_fit.By_fit.pp_a0,rho_fit1);By_a0_fit = By_a0_fit(:);
+   By_a0_fit = ppval(equil_fit.By_fit.pp_a0,rho_fit1);
    By_an_fit = ppval(equil_fit.By_fit.pp_an,rho_fit1);
    By_bn_fit = ppval(equil_fit.By_fit.pp_bn,rho_fit1);
-   By_da0drho_fit = ppval(equil_fit.By_fit.pp_da0drho,rho_fit1);By_da0drho_fit = By_da0drho_fit(:);
+   By_da0drho_fit = ppval(equil_fit.By_fit.pp_da0drho,rho_fit1);
    By_dandrho_fit = ppval(equil_fit.By_fit.pp_dandrho,rho_fit1);
    By_dbndrho_fit = ppval(equil_fit.By_fit.pp_dbndrho,rho_fit1);
 %
-   BPHI_a0_fit = ppval(equil_fit.BPHI_fit.pp_a0,rho_fit1);BPHI_a0_fit = BPHI_a0_fit(:);
+   BPHI_a0_fit = ppval(equil_fit.BPHI_fit.pp_a0,rho_fit1);
    BPHI_an_fit = ppval(equil_fit.BPHI_fit.pp_an,rho_fit1);
    BPHI_bn_fit = ppval(equil_fit.BPHI_fit.pp_bn,rho_fit1);
-   BPHI_da0drho_fit = ppval(equil_fit.BPHI_fit.pp_da0drho,rho_fit1);BPHI_da0drho_fit = BPHI_da0drho_fit(:);
+   BPHI_da0drho_fit = ppval(equil_fit.BPHI_fit.pp_da0drho,rho_fit1);
    BPHI_dandrho_fit = ppval(equil_fit.BPHI_fit.pp_dandrho,rho_fit1);
    BPHI_dbndrho_fit = ppval(equil_fit.BPHI_fit.pp_dbndrho,rho_fit1);
 %
@@ -223,18 +226,11 @@ if nargin < 3,
 %
 % Build interpolated quantities
 %
-   for ii = 1:ntheta_fit,
-      R_fit(:,ii) = Rp + x_a0_fit + x_an_fit*cos(equil_fit.x_fit.n*theta_fit(ii)) + x_bn_fit*sin(equil_fit.x_fit.n*theta_fit(ii));
-      dRdtheta_fit(:,ii) = -x_an_fit*(equil_fit.x_fit.n.*sin(equil_fit.x_fit.n*theta_fit(ii))) + x_bn_fit*(equil_fit.x_fit.n.*cos(equil_fit.x_fit.n*theta_fit(ii)));
-      d2Rdtheta2_fit(:,ii) = -x_an_fit*(equil_fit.x_fit.n.^2.*cos(equil_fit.x_fit.n*theta_fit(ii))) - x_bn_fit*(equil_fit.x_fit.n.^2.*sin(equil_fit.x_fit.n*theta_fit(ii)));
-      dRdrho_fit(:,ii) = x_da0drho_fit + x_dandrho_fit*cos(equil_fit.x_fit.n*theta_fit(ii)) + x_dbndrho_fit*sin(equil_fit.x_fit.n*theta_fit(ii));
-      d2Rdthetadrho_fit(:,ii) = -x_dandrho_fit*(equil_fit.x_fit.n.*sin(equil_fit.x_fit.n*theta_fit(ii))) + x_dbndrho_fit*(equil_fit.x_fit.n.*cos(equil_fit.x_fit.n*theta_fit(ii)));
-%
-      Z_fit(:,ii) = Zp + y_a0_fit + y_an_fit*cos(equil_fit.y_fit.n*theta_fit(ii)) + y_bn_fit*sin(equil_fit.y_fit.n*theta_fit(ii));
-      dZdtheta_fit(:,ii) = -y_an_fit*(equil_fit.y_fit.n.*sin(equil_fit.y_fit.n*theta_fit(ii))) + y_bn_fit*(equil_fit.y_fit.n.*cos(equil_fit.y_fit.n*theta_fit(ii)));
-      d2Zdtheta2_fit(:,ii) = -y_an_fit*(equil_fit.y_fit.n.^2.*cos(equil_fit.y_fit.n*theta_fit(ii))) - y_bn_fit*(equil_fit.y_fit.n.^2.*sin(equil_fit.y_fit.n*theta_fit(ii)));
-      dZdrho_fit(:,ii) = y_da0drho_fit + y_dandrho_fit*cos(equil_fit.y_fit.n*theta_fit(ii)) + y_dbndrho_fit*sin(equil_fit.y_fit.n*theta_fit(ii));
-      d2Zdthetadrho_fit(:,ii) = -y_dandrho_fit*(equil_fit.y_fit.n.*sin(equil_fit.y_fit.n*theta_fit(ii))) + y_dbndrho_fit*(equil_fit.y_fit.n.*cos(equil_fit.y_fit.n*theta_fit(ii)));
+   for ii = 1:ntheta_fit, 
+      [R_fit(:,ii),dRdtheta_fit(:,ii),d2Rdtheta2_fit(:,ii),dRdrho_fit(:,ii),d2Rdthetadrho_fit(:,ii)] = calcval_yp(equil_fit,x_a0_fit,x_an_fit,x_bn_fit,x_da0drho_fit,x_dandrho_fit,x_dbndrho_fit,theta_fit(ii));
+      R_fit(:,ii) = R_fit(:,ii) + Rp;
+      [Z_fit(:,ii),dZdtheta_fit(:,ii),d2Zdtheta2_fit(:,ii),dZdrho_fit(:,ii),d2Zdthetadrho_fit(:,ii)] = calcval_yp(equil_fit,y_a0_fit,y_an_fit,y_bn_fit,y_da0drho_fit,y_dandrho_fit,y_dbndrho_fit,theta_fit(ii));
+      Z_fit(:,ii) = Z_fit(:,ii) + Zp;
 %  
       r_fit(:,ii) = sqrt((R_fit(:,ii) - Rp).^2 + (Z_fit(:,ii) - Zp).^2);
       if (r_fit(1,ii) == 0), r_fit(1,ii) = prec; end
@@ -258,17 +254,9 @@ if nargin < 3,
       dcalphadtheta_fit(:,ii) = -salpha_fit(:,ii).*dsalphadtheta_fit(:,ii)./calpha_fit(:,ii);
       dcalphadrho_fit(:,ii) = -salpha_fit(:,ii).*dsalphadrho_fit(:,ii)./calpha_fit(:,ii);;
 %
-      BR_fit(:,ii) = Bx_a0_fit + Bx_an_fit*cos(equil_fit.Bx_fit.n*theta_fit(ii)) + Bx_bn_fit*sin(equil_fit.Bx_fit.n*theta_fit(ii));
-      dBRdtheta_fit(:,ii) = -Bx_an_fit*(equil_fit.Bx_fit.n.*sin(equil_fit.Bx_fit.n*theta_fit(ii))) + Bx_bn_fit*(equil_fit.Bx_fit.n.*cos(equil_fit.Bx_fit.n*theta_fit(ii)));
-      dBRdrho_fit(:,ii) = Bx_da0drho_fit + Bx_dandrho_fit*cos(equil_fit.Bx_fit.n*theta_fit(ii)) + Bx_dbndrho_fit*sin(equil_fit.Bx_fit.n*theta_fit(ii));
-%
-      BZ_fit(:,ii) = By_a0_fit + By_an_fit*cos(equil_fit.By_fit.n*theta_fit(ii)) + By_bn_fit*sin(equil_fit.By_fit.n*theta_fit(ii));
-      dBZdtheta_fit(:,ii) = -By_an_fit*(equil_fit.By_fit.n.*sin(equil_fit.By_fit.n*theta_fit(ii))) + By_bn_fit*(equil_fit.By_fit.n.*cos(equil_fit.By_fit.n*theta_fit(ii)));
-      dBZdrho_fit(:,ii) = By_da0drho_fit + By_dandrho_fit*cos(equil_fit.By_fit.n*theta_fit(ii)) + By_dbndrho_fit*sin(equil_fit.By_fit.n*theta_fit(ii));
-%
-      BPHI_fit(:,ii) = BPHI_a0_fit + BPHI_an_fit*cos(equil_fit.BPHI_fit.n*theta_fit(ii)) + BPHI_bn_fit*sin(equil_fit.BPHI_fit.n*theta_fit(ii));
-      dBPHIdtheta_fit(:,ii) = -BPHI_an_fit*(equil_fit.BPHI_fit.n.*sin(equil_fit.BPHI_fit.n*theta_fit(ii))) + BPHI_bn_fit*(equil_fit.BPHI_fit.n.*cos(equil_fit.BPHI_fit.n*theta_fit(ii)));
-      dBPHIdrho_fit(:,ii) = BPHI_da0drho_fit + BPHI_dandrho_fit*cos(equil_fit.BPHI_fit.n*theta_fit(ii)) + BPHI_dbndrho_fit*sin(equil_fit.BPHI_fit.n*theta_fit(ii));
+      [BR_fit(:,ii),dBRdtheta_fit(:,ii),dummy,dBRdrho_fit(:,ii),dummy] = calcval_yp(equil_fit,Bx_a0_fit,Bx_an_fit,Bx_bn_fit,Bx_da0drho_fit,Bx_dandrho_fit,Bx_dbndrho_fit,theta_fit(ii));
+      [BZ_fit(:,ii),dBZdtheta_fit(:,ii),dummy,dBZdrho_fit(:,ii),dummy] = calcval_yp(equil_fit,By_a0_fit,By_an_fit,By_bn_fit,By_da0drho_fit,By_dandrho_fit,By_dbndrho_fit,theta_fit(ii));
+      [BPHI_fit(:,ii),dBPHIdtheta_fit(:,ii),dummy,dBPHIdrho_fit(:,ii),dummy] = calcval_yp(equil_fit,BPHI_a0_fit,BPHI_an_fit,BPHI_bn_fit,BPHI_da0drho_fit,BPHI_dandrho_fit,BPHI_dbndrho_fit,theta_fit(ii));
 %
       BP_fit(:,ii) = sqrt(BR_fit(:,ii).^2 + BZ_fit(:,ii).^2);
       dBPdtheta_fit(:,ii) = (BR_fit(:,ii).*dBRdtheta_fit(:,ii) + BZ_fit(:,ii).*dBZdtheta_fit(:,ii))./BP_fit(:,ii);
@@ -282,17 +270,10 @@ if nargin < 3,
       dgradrhodrho_fit(:,ii) = dRdrho_fit(:,ii).*BP_fit(:,ii).*dRstardpsin_fit/equil_fit.ap + R_fit(:,ii).*dBPdrho_fit(:,ii).*dRstardpsin_fit/equil_fit.ap + R_fit(:,ii).*BP_fit(:,ii).*ddRstardpsindrho_fit/equil_fit.ap/equil_fit.psia;
       dgradrhodtheta_fit(:,ii) = dRdtheta_fit(:,ii).*BP_fit(:,ii).*dRstardpsin_fit/equil_fit.ap + R_fit(:,ii).*dBPdtheta_fit(:,ii).*dRstardpsin_fit/equil_fit.ap/equil_fit.psia;     
 %
-      R_fit1(:,ii) = Rp + x_a0_fit1 + x_an_fit1*cos(equil_fit.x_fit.n*theta_fit(ii)) + x_bn_fit1*sin(equil_fit.x_fit.n*theta_fit(ii));
-      dRdtheta_fit1(:,ii) = -x_an_fit1*(equil_fit.x_fit.n.*sin(equil_fit.x_fit.n*theta_fit(ii))) + x_bn_fit1*(equil_fit.x_fit.n.*cos(equil_fit.x_fit.n*theta_fit(ii)));
-      d2Rdtheta2_fit1(:,ii) = -x_an_fit1*(equil_fit.x_fit.n.^2.*cos(equil_fit.x_fit.n*theta_fit(ii))) - x_bn_fit1*(equil_fit.x_fit.n.^2.*sin(equil_fit.x_fit.n*theta_fit(ii)));
-      dRdrho_fit1(:,ii) = x_da0drho_fit1 + x_dandrho_fit1*cos(equil_fit.x_fit.n*theta_fit(ii)) + x_dbndrho_fit1*sin(equil_fit.x_fit.n*theta_fit(ii));
-      d2Rdthetadrho_fit1(:,ii) = -x_dandrho_fit1*(equil_fit.x_fit.n.*sin(equil_fit.x_fit.n*theta_fit(ii))) + x_dbndrho_fit1*(equil_fit.x_fit.n.*cos(equil_fit.x_fit.n*theta_fit(ii)));
-%
-      Z_fit1(:,ii) = Zp + y_a0_fit1 + y_an_fit1*cos(equil_fit.y_fit.n*theta_fit(ii)) + y_bn_fit1*sin(equil_fit.y_fit.n*theta_fit(ii));
-      dZdtheta_fit1(:,ii) = -y_an_fit1*(equil_fit.y_fit.n.*sin(equil_fit.y_fit.n*theta_fit(ii))) + y_bn_fit1*(equil_fit.y_fit.n.*cos(equil_fit.y_fit.n*theta_fit(ii)));
-      d2Zdtheta2_fit1(:,ii) = -y_an_fit1*(equil_fit.y_fit.n.^2.*cos(equil_fit.y_fit.n*theta_fit(ii))) - y_bn_fit1*(equil_fit.y_fit.n.^2.*sin(equil_fit.y_fit.n*theta_fit(ii)));
-      dZdrho_fit1(:,ii) = y_da0drho_fit1 + y_dandrho_fit1*cos(equil_fit.y_fit.n*theta_fit(ii)) + y_dbndrho_fit1*sin(equil_fit.y_fit.n*theta_fit(ii));
-      d2Zdthetadrho_fit1(:,ii) = -y_dandrho_fit1*(equil_fit.y_fit.n.*sin(equil_fit.y_fit.n*theta_fit(ii))) + y_dbndrho_fit1*(equil_fit.y_fit.n.*cos(equil_fit.y_fit.n*theta_fit(ii)));
+      [R_fit1(:,ii),dRdtheta_fit1(:,ii),d2Rdtheta2_fit1(:,ii),dRdrho_fit1(:,ii),d2Rdthetadrho_fit1(:,ii)] = calcval_yp(equil_fit,x_a0_fit1,x_an_fit1,x_bn_fit,x_da0drho_fit1,x_dandrho_fit1,x_dbndrho_fit1,theta_fit(ii));
+      R_fit1(:,ii) = R_fit1(:,ii) + Rp;
+      [Z_fit1(:,ii),dZdtheta_fit1(:,ii),d2Zdtheta2_fit1(:,ii),dZdrho_fit1(:,ii),d2Zdthetadrho_fit1(:,ii)] = calcval_yp(equil_fit,y_a0_fit1,y_an_fit1,y_bn_fit,y_da0drho_fit1,y_dandrho_fit1,y_dbndrho_fit1,theta_fit(ii));
+      Z_fit1(:,ii) = Z_fit1(:,ii) + Zp;
 %
       r_fit1(:,ii) = sqrt((R_fit1(:,ii) - Rp).^2 + (Z_fit1(:,ii) - Zp).^2);
       if (r_fit1(1,ii) == 0), r_fit1(1,ii) = prec; end
@@ -318,17 +299,9 @@ if nargin < 3,
       dcalphadtheta_fit1(:,ii) = -salpha_fit1(:,ii).*dsalphadtheta_fit1(:,ii)./calpha_fit1(:,ii);
       dcalphadrho_fit1(:,ii) = -salpha_fit1(:,ii).*dsalphadrho_fit1(:,ii)./calpha_fit1(:,ii);;
 %
-      BR_fit1(:,ii) = Bx_a0_fit1 + Bx_an_fit1*cos(equil_fit.Bx_fit.n*theta_fit(ii)) + Bx_bn_fit1*sin(equil_fit.Bx_fit.n*theta_fit(ii));
-      dBRdtheta_fit1(:,ii) = -Bx_an_fit1*(equil_fit.Bx_fit.n.*sin(equil_fit.Bx_fit.n*theta_fit(ii))) + Bx_bn_fit1*(equil_fit.Bx_fit.n.*cos(equil_fit.Bx_fit.n*theta_fit(ii)));
-      dBRdrho_fit1(:,ii) = Bx_da0drho_fit1 + Bx_dandrho_fit1*cos(equil_fit.Bx_fit.n*theta_fit(ii)) + Bx_dbndrho_fit1*sin(equil_fit.Bx_fit.n*theta_fit(ii));
-%
-      BZ_fit1(:,ii) = By_a0_fit1 + By_an_fit1*cos(equil_fit.By_fit.n*theta_fit(ii)) + By_bn_fit1*sin(equil_fit.By_fit.n*theta_fit(ii));
-      dBZdtheta_fit1(:,ii) = -By_an_fit1*(equil_fit.By_fit.n.*sin(equil_fit.By_fit.n*theta_fit(ii))) + By_bn_fit1*(equil_fit.By_fit.n.*cos(equil_fit.By_fit.n*theta_fit(ii)));
-      dBZdrho_fit1(:,ii) = By_da0drho_fit1 + By_dandrho_fit1*cos(equil_fit.By_fit.n*theta_fit(ii)) + By_dbndrho_fit1*sin(equil_fit.By_fit.n*theta_fit(ii));
-%
-      BPHI_fit1(:,ii) = BPHI_a0_fit1 + BPHI_an_fit1*cos(equil_fit.BPHI_fit.n*theta_fit(ii)) + BPHI_bn_fit1*sin(equil_fit.BPHI_fit.n*theta_fit(ii));
-      dBPHIdtheta_fit1(:,ii) = -BPHI_an_fit1*(equil_fit.BPHI_fit.n.*sin(equil_fit.BPHI_fit.n*theta_fit(ii))) + BPHI_bn_fit1*(equil_fit.BPHI_fit.n.*cos(equil_fit.BPHI_fit.n*theta_fit(ii)));
-      dBPHIdrho_fit1(:,ii) = BPHI_da0drho_fit1 + BPHI_dandrho_fit1*cos(equil_fit.BPHI_fit.n*theta_fit(ii)) + BPHI_dbndrho_fit1*sin(equil_fit.BPHI_fit.n*theta_fit(ii));
+      [BR_fit1(:,ii),dBRdtheta_fit1(:,ii),dummy,dBRdrho_fit1(:,ii),dummy] = calcval_yp(equil_fit,Bx_a0_fit1,Bx_an_fit1,Bx_bn_fit1,Bx_da0drho_fit1,Bx_dandrho_fit1,Bx_dbndrho_fit1,theta_fit(ii));
+      [BZ_fit1(:,ii),dBZdtheta_fit1(:,ii),dummy,dBZdrho_fit1(:,ii),dummy] = calcval_yp(equil_fit,By_a0_fit1,By_an_fit1,By_bn_fit1,By_da0drho_fit1,By_dandrho_fit1,By_dbndrho_fit1,theta_fit(ii));
+      [BPHI_fit1(:,ii),dBPHIdtheta_fit1(:,ii),dummy,dBPHIdrho_fit1(:,ii),dummy] = calcval_yp(equil_fit,BPHI_a0_fit1,BPHI_an_fit1,BPHI_bn_fit1,BPHI_da0drho_fit1,BPHI_dandrho_fit1,BPHI_dbndrho_fit1,theta_fit(ii));
 %
       BP_fit1(:,ii) = sqrt(BR_fit1(:,ii).^2 + BZ_fit1(:,ii).^2);
       dBPdtheta_fit1(:,ii) = (BR_fit1(:,ii).*dBRdtheta_fit1(:,ii) + BZ_fit1(:,ii).*dBZdtheta_fit1(:,ii))./BP_fit1(:,ii);
@@ -416,7 +389,7 @@ if nargin < 3,
 %
 % Magnetic equilibrium coordinates
 %
-   figure('Name','R coordinate'),
+   figure('Name','Z coordinate'),
    [ax] = graph1D_jd(theta_fit,R_fit,0,0,'','','',NaN,NaN,NaN,'-','none','b',2);
    [ax] = graph1D_jd(theta_fit,R_fit1,0,0,'','','',NaN,NaN,NaN,'-','none','c',1);
    [ax] = graph1D_jd(equil_in.theta(1:2:end),R(1:10:end,1:2:end),0,0,'\theta (rd)','R (m)','Blue: ppval interp., Cyan: ppval_{yp} interp.',NaN,NaN,NaN,'--','non','r',1);
@@ -605,12 +578,9 @@ if nargin == 4,
    x_bn = ppval(equil_fit.x_fit.pp_bn,rho);
    x_da0drho = ppval(equil_fit.x_fit.pp_da0drho,rho);
    x_dandrho = ppval(equil_fit.x_fit.pp_dandrho,rho);
-   x_dbndrho = ppval(equil_fit.x_fit.pp_dbndrho,rho);
-   R = Rp + x_a0 + x_an'*cos(equil_fit.x_fit.n*theta) + x_bn'*sin(equil_fit.x_fit.n*theta);
-   dRdtheta = -x_an'*(equil_fit.x_fit.n.*sin(equil_fit.x_fit.n*theta)) + x_bn'*(equil_fit.x_fit.n.*cos(equil_fit.x_fit.n*theta));
-   d2Rdtheta2 = -x_an'*(equil_fit.x_fit.n.^2.*cos(equil_fit.x_fit.n*theta)) - x_bn'*(equil_fit.x_fit.n.^2.*sin(equil_fit.x_fit.n*theta));
-   dRdrho = x_da0drho + x_dandrho'*cos(equil_fit.x_fit.n*theta) + x_dbndrho'*sin(equil_fit.x_fit.n*theta);
-   d2Rdthetadrho = -x_dandrho'*(equil_fit.x_fit.n.*sin(equil_fit.x_fit.n*theta)) + x_dbndrho'*(equil_fit.x_fit.n.*cos(equil_fit.x_fit.n*theta));
+   x_dbndrho = ppval(equil_fit.x_fit.pp_dbndrho,rho); 
+   [R,dRdtheta,d2Rdtheta2,dRdrho,d2Rdthetadrho] = calcval_yp(equil_fit,x_a0,x_an,x_bn,x_da0drho,x_dandrho,x_dbndrho,theta);
+   R = R + Rp;
 %
    y_a0 = ppval(equil_fit.y_fit.pp_a0,rho);
    y_an = ppval(equil_fit.y_fit.pp_an,rho);
@@ -618,11 +588,8 @@ if nargin == 4,
    y_da0drho = ppval(equil_fit.y_fit.pp_da0drho,rho);
    y_dandrho = ppval(equil_fit.y_fit.pp_dandrho,rho);
    y_dbndrho = ppval(equil_fit.y_fit.pp_dbndrho,rho);
-   Z = Zp + y_a0 + y_an'*cos(equil_fit.y_fit.n*theta) + y_bn'*sin(equil_fit.y_fit.n*theta);
-   dZdtheta = -y_an'*(equil_fit.y_fit.n.*sin(equil_fit.y_fit.n*theta)) + y_bn'*(equil_fit.y_fit.n.*cos(equil_fit.y_fit.n*theta));
-   d2Zdtheta2 = -y_an'*(equil_fit.y_fit.n.^2.*cos(equil_fit.y_fit.n*theta)) - y_bn'*(equil_fit.y_fit.n.^2.*sin(equil_fit.y_fit.n*theta));
-   dZdrho = y_da0drho + y_dandrho'*cos(equil_fit.y_fit.n*theta) + y_dbndrho'*sin(equil_fit.y_fit.n*theta);
-   d2Zdthetadrho = -y_dandrho'*(equil_fit.y_fit.n.*sin(equil_fit.y_fit.n*theta)) + y_dbndrho'*(equil_fit.y_fit.n.*cos(equil_fit.y_fit.n*theta));
+   [Z,dZdtheta,d2Zdtheta2,dZdrho,d2Zdthetadrho] = calcval_yp(equil_fit,y_a0,y_an,y_bn,y_da0drho,y_dandrho,y_dbndrho,theta);
+   Z = Z + Zp;
 %
    r = sqrt((R - Rp).^2 + (Z - Zp).^2);
    drdtheta = (dRdtheta.*(R - Rp) + dZdtheta.*(Z - Zp))./r;
@@ -650,9 +617,8 @@ if nargin == 4,
    Bx_da0drho = ppval(equil_fit.Bx_fit.pp_da0drho,rho);
    Bx_dandrho = ppval(equil_fit.Bx_fit.pp_dandrho,rho);
    Bx_dbndrho = ppval(equil_fit.Bx_fit.pp_dbndrho,rho);
-   BR = Bx_a0 + Bx_an'*cos(equil_fit.Bx_fit.n*theta) + Bx_bn'*sin(equil_fit.Bx_fit.n*theta);
-   dBRdtheta = -Bx_an'*(equil_fit.Bx_fit.n.*sin(equil_fit.Bx_fit.n*theta)) + Bx_bn'*(equil_fit.Bx_fit.n.*cos(equil_fit.Bx_fit.n*theta));
-   dBRdrho = Bx_da0drho + Bx_dandrho'*cos(equil_fit.Bx_fit.n*theta) + Bx_dbndrho'*sin(equil_fit.Bx_fit.n*theta);
+   Bx_dbndrho = ppval(equil_fit.Bx_fit.pp_dbndrho,rho);
+   [BR,dBRdtheta,d2BRdtheta2,dBRdrho,d2BRdthetadrho] = calcval_yp(equil_fit,Bx_a0,Bx_an,Bx_bn,Bx_da0drho,Bx_dandrho,Bx_dbndrho,theta);
 %
    By_a0 = ppval(equil_fit.By_fit.pp_a0,rho);
    By_an = ppval(equil_fit.By_fit.pp_an,rho);
@@ -660,9 +626,7 @@ if nargin == 4,
    By_da0drho = ppval(equil_fit.By_fit.pp_da0drho,rho);
    By_dandrho = ppval(equil_fit.By_fit.pp_dandrho,rho);
    By_dbndrho = ppval(equil_fit.By_fit.pp_dbndrho,rho);
-   BZ = By_a0 + By_an'*cos(equil_fit.By_fit.n*theta) + By_bn'*sin(equil_fit.By_fit.n*theta);
-   dBZdtheta = -By_an'*(equil_fit.By_fit.n.*sin(equil_fit.By_fit.n*theta)) + By_bn'*(equil_fit.By_fit.n.*cos(equil_fit.By_fit.n*theta));
-   dBZdrho = By_da0drho + By_dandrho'*cos(equil_fit.By_fit.n*theta) + By_dbndrho'*sin(equil_fit.By_fit.n*theta);
+   [BZ,dBZdtheta,d2BZdtheta2,dBZdrho,d2BZdthetadrho] = calcval_yp(equil_fit,By_a0,By_an,By_bn,By_da0drho,By_dandrho,By_dbndrho,theta);
 %
    BPHI_a0 = ppval(equil_fit.BPHI_fit.pp_a0,rho);
    BPHI_an = ppval(equil_fit.BPHI_fit.pp_an,rho);
@@ -670,9 +634,7 @@ if nargin == 4,
    BPHI_da0drho = ppval(equil_fit.BPHI_fit.pp_da0drho,rho);
    BPHI_dandrho = ppval(equil_fit.BPHI_fit.pp_dandrho,rho);
    BPHI_dbndrho = ppval(equil_fit.BPHI_fit.pp_dbndrho,rho);
-   BPHI = BPHI_a0 + BPHI_an'*cos(equil_fit.BPHI_fit.n*theta) + BPHI_bn'*sin(equil_fit.BPHI_fit.n*theta);
-   dBPHIdtheta = -BPHI_an'*(equil_fit.BPHI_fit.n.*sin(equil_fit.BPHI_fit.n*theta)) + BPHI_bn'*(equil_fit.BPHI_fit.n.*cos(equil_fit.BPHI_fit.n*theta));
-   dBPHIdrho = BPHI_da0drho + BPHI_dandrho'*cos(equil_fit.BPHI_fit.n*theta) + BPHI_dbndrho'*sin(equil_fit.BPHI_fit.n*theta);
+   [BPHI,dBPHIdtheta,d2BPHIdtheta2,dBPHIdrho,d2BPHIdthetadrho] = calcval_yp(equil_fit,BPHI_a0,BPHI_an,BPHI_bn,BPHI_da0drho,BPHI_dandrho,BPHI_dbndrho,theta);
 %
    BP = sqrt(BR^2 + BZ^2);
    dBPdtheta = (BR*dBRdtheta + BZ*dBZdtheta)/BP;
@@ -686,38 +648,40 @@ if nargin == 4,
    dgradrhodrho = dRdrho.*BP.*dRstardpsin/equil_fit.psia/equil_fit.ap + R.*dBPdrho.*dRstardpsin/equil_fit.psia/equil_fit.ap + R.*BP.*ddRstardpsindrho/equil_fit.psia/equil_fit.ap;
    dgradrhodtheta = dRdtheta.*BP.*dRstardpsin/equil_fit.psia/equil_fit.ap + R.*dBPdtheta.*dRstardpsin/equil_fit.psia/equil_fit.ap;
 %
-   disp('--------------');
-   if isfield(equil_fit,'Te_fit'),
-      disp(['equil_fit.Te_fit.pp_f.coefs(1) = ',num2str(equil_fit.Te_fit.pp_f.coefs(1))]);
-      disp(['equil_fit.Te_fit.pp_dfdrho.coefs(1) = ',num2str(equil_fit.Te_fit.pp_dfdrho.coefs(1))]);
-   end
-   disp(['equil_fit.BPHI_fit.n = ',num2str(equil_fit.BPHI_fit.n(1))]);
-   disp(['equil_fit.BPHI_fit.bn_f.coefs(1) = ',num2str(equil_fit.BPHI_fit.pp_bn.coefs(1))]);
-   disp(['equil_fit.BPHI_fit.bn_f.coefs(1) = ',num2str(equil_fit.BPHI_fit.pp_dbndrho.coefs(1))]);
-   disp('--------------');
-   if isfield(equil_fit,'Te_fit'),
-      disp(['Te(',num2str(rho),'),dTedrho(',num2str(rho),') (keV) = ',num2str(Te),',',num2str(dTedrho)]);
-   end
-   if isfield(equil_fit,'ne_fit'),
-      disp(['ne(',num2str(rho),'),dnedrho(',num2str(rho),') (10+19 m-3) = ',num2str(ne/1e19),',',num2str(dnedrho/1e19)]);
-   end
-   if isfield(equil_fit,'zTi_fit'),
-      disp(['zTi(2,',num2str(rho),'),dzTidrho(2,',num2str(rho),') (keV) = ',num2str(zTi(2)),',',num2str(dzTidrho(2))]);
-   end
-   if isfield(equil_fit,'zni_fit'),
-      disp(['zni(2,',num2str(rho),'),dznidrho(2,',num2str(rho),') (10+19 m-3) = ',num2str(zni(2)/1e19),',',num2str(dznidrho(2)/1e19)]);
-   end
+   if nargout ~= 2,
+      disp('--------------');
+      if isfield(equil_fit,'Te_fit'),
+         disp(['equil_fit.Te_fit.pp_f.coefs(1) = ',num2str(equil_fit.Te_fit.pp_f.coefs(1))]);
+         disp(['equil_fit.Te_fit.pp_dfdrho.coefs(1) = ',num2str(equil_fit.Te_fit.pp_dfdrho.coefs(1))]);
+      end
+      disp(['equil_fit.BPHI_fit.n = ',num2str(equil_fit.BPHI_fit.n(1))]);
+      disp(['equil_fit.BPHI_fit.bn_f.coefs(1) = ',num2str(equil_fit.BPHI_fit.pp_bn.coefs(1))]);
+      disp(['equil_fit.BPHI_fit.bn_f.coefs(1) = ',num2str(equil_fit.BPHI_fit.pp_dbndrho.coefs(1))]);
+      disp('--------------');
+      if isfield(equil_fit,'Te_fit'),
+         disp(['Te(',num2str(rho),'),dTedrho(',num2str(rho),') (keV) = ',num2str(Te),',',num2str(dTedrho)]);
+      end
+      if isfield(equil_fit,'ne_fit'),
+         disp(['ne(',num2str(rho),'),dnedrho(',num2str(rho),') (10+19 m-3) = ',num2str(ne/1e19),',',num2str(dnedrho/1e19)]);
+      end
+      if isfield(equil_fit,'zTi_fit'),
+         disp(['zTi(2,',num2str(rho),'),dzTidrho(2,',num2str(rho),') (keV) = ',num2str(zTi(2)),',',num2str(dzTidrho(2))]);
+      end
+      if isfield(equil_fit,'zni_fit'),
+         disp(['zni(2,',num2str(rho),'),dznidrho(2,',num2str(rho),') (10+19 m-3) = ',num2str(zni(2)/1e19),',',num2str(dznidrho(2)/1e19)]);
+      end
 %
-   disp(['R(',num2str(rho),',',num2str(theta),'),dRdrho(',num2str(rho),',',num2str(theta),'),dRdtheta(',num2str(rho),',',num2str(theta),'),d2Rdtheta2(',num2str(rho),',',num2str(theta),'),d2Rdthetadrho(',num2str(rho),',',num2str(theta),') (m) = ',num2str(R),',',num2str(dRdrho),',',num2str(dRdtheta),',',num2str(d2Rdtheta2),',',num2str(d2Rdthetadrho)]);
-   disp(['Z(',num2str(rho),',',num2str(theta),'),dZdrho(',num2str(rho),',',num2str(theta),'),dZdtheta(',num2str(rho),',',num2str(theta),'),d2Zdtheta2(',num2str(rho),',',num2str(theta),'),d2Zdthetadrho(',num2str(rho),',',num2str(theta),') (m) = ',num2str(Z),',',num2str(dZdrho),',',num2str(dZdtheta),',',num2str(d2Zdtheta2),',',num2str(d2Zdthetadrho)]);
-   disp(['r(',num2str(rho),',',num2str(theta),'),drdrho(',num2str(rho),',',num2str(theta),'),drdtheta(',num2str(rho),',',num2str(theta),') (m) = ',num2str(r),',',num2str(drdrho),',',num2str(drdtheta)]);
-   disp(['BR(',num2str(rho),',',num2str(theta),'),dBRdrho(',num2str(rho),',',num2str(theta),'),dBRdtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(BR),',',num2str(dBRdrho),',',num2str(dBRdtheta)]);
-   disp(['BZ(',num2str(rho),',',num2str(theta),'),dBZdrho(',num2str(rho),',',num2str(theta),'),dBZdtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(BZ),',',num2str(dBZdrho),',',num2str(dBZdtheta)]);
-   disp(['BPHI(',num2str(rho),',',num2str(theta),'),dBPHIdrho(',num2str(rho),',',num2str(theta),'),dBPHIdtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(BPHI),',',num2str(dBPHIdrho),',',num2str(dBPHIdtheta)]);
-   disp(['BP(',num2str(rho),',',num2str(theta),'),dBPdrho(',num2str(rho),',',num2str(theta),'),dBPdtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(BP),',',num2str(dBPdrho),',',num2str(dBPdtheta)]);
-   disp(['B(',num2str(rho),',',num2str(theta),'),dBdrho(',num2str(rho),',',num2str(theta),'),dBdtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(B),',',num2str(dBdrho),',',num2str(dBdtheta)]);
-   disp(['calpha(',num2str(rho),',',num2str(theta),'),dcalphadrho(',num2str(rho),',',num2str(theta),'),dcalphadtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(calpha),',',num2str(dcalphadrho),',',num2str(dcalphadtheta)]);
-   disp(['salpha(',num2str(rho),',',num2str(theta),'),dsalphadrho(',num2str(rho),',',num2str(theta),'),dsalphadtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(salpha),',',num2str(dsalphadrho),',',num2str(dsalphadtheta)]);
-   disp(['gradrho(',num2str(rho),',',num2str(theta),'),dgradrhodrho(',num2str(rho),',',num2str(theta),'),dgradrhodtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(gradrho),',',num2str(dgradrhodrho),',',num2str(dgradrhodtheta)]);
+      disp(['R(',num2str(rho),',',num2str(theta),'),dRdrho(',num2str(rho),',',num2str(theta),'),dRdtheta(',num2str(rho),',',num2str(theta),'),d2Rdtheta2(',num2str(rho),',',num2str(theta),'),d2Rdthetadrho(',num2str(rho),',',num2str(theta),') (m) = ',num2str(R),',',num2str(dRdrho),',',num2str(dRdtheta),',',num2str(d2Rdtheta2),',',num2str(d2Rdthetadrho)]);
+      disp(['Z(',num2str(rho),',',num2str(theta),'),dZdrho(',num2str(rho),',',num2str(theta),'),dZdtheta(',num2str(rho),',',num2str(theta),'),d2Zdtheta2(',num2str(rho),',',num2str(theta),'),d2Zdthetadrho(',num2str(rho),',',num2str(theta),') (m) = ',num2str(Z),',',num2str(dZdrho),',',num2str(dZdtheta),',',num2str(d2Zdtheta2),',',num2str(d2Zdthetadrho)]);
+      disp(['r(',num2str(rho),',',num2str(theta),'),drdrho(',num2str(rho),',',num2str(theta),'),drdtheta(',num2str(rho),',',num2str(theta),') (m) = ',num2str(r),',',num2str(drdrho),',',num2str(drdtheta)]);
+      disp(['BR(',num2str(rho),',',num2str(theta),'),dBRdrho(',num2str(rho),',',num2str(theta),'),dBRdtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(BR),',',num2str(dBRdrho),',',num2str(dBRdtheta)]);
+      disp(['BZ(',num2str(rho),',',num2str(theta),'),dBZdrho(',num2str(rho),',',num2str(theta),'),dBZdtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(BZ),',',num2str(dBZdrho),',',num2str(dBZdtheta)]);
+      disp(['BPHI(',num2str(rho),',',num2str(theta),'),dBPHIdrho(',num2str(rho),',',num2str(theta),'),dBPHIdtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(BPHI),',',num2str(dBPHIdrho),',',num2str(dBPHIdtheta)]);
+      disp(['BP(',num2str(rho),',',num2str(theta),'),dBPdrho(',num2str(rho),',',num2str(theta),'),dBPdtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(BP),',',num2str(dBPdrho),',',num2str(dBPdtheta)]);
+      disp(['B(',num2str(rho),',',num2str(theta),'),dBdrho(',num2str(rho),',',num2str(theta),'),dBdtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(B),',',num2str(dBdrho),',',num2str(dBdtheta)]);
+      disp(['calpha(',num2str(rho),',',num2str(theta),'),dcalphadrho(',num2str(rho),',',num2str(theta),'),dcalphadtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(calpha),',',num2str(dcalphadrho),',',num2str(dcalphadtheta)]);
+      disp(['salpha(',num2str(rho),',',num2str(theta),'),dsalphadrho(',num2str(rho),',',num2str(theta),'),dsalphadtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(salpha),',',num2str(dsalphadrho),',',num2str(dsalphadtheta)]);
+      disp(['gradrho(',num2str(rho),',',num2str(theta),'),dgradrhodrho(',num2str(rho),',',num2str(theta),'),dgradrhodtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(gradrho),',',num2str(dgradrhodrho),',',num2str(dgradrhodtheta)]);
+   end
 end
 
