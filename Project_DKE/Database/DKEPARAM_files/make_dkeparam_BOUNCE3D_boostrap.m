@@ -78,7 +78,11 @@ dkeparam.invproc = 1;%Iterative matrix inversion method:  (3) qmr iterative meth
 dkeparam.mlprecinv = 1e-5;%Accuracy for the MatLab build-in matrix inversion.
 dkeparam.mlmaxitinv = 4;%Maximum number of iterations for iterative method (between 1 and 20 usualy, if empty, mlmaxitinv = min(matrixdim,20). See matlab documentation.
 dkeparam.MUMPSparam.nproc = 4;%number of processor used by MUMPS (depends of the computer framework). Default is 1
-dkeparam.HYPREparam.nproc = 2;%number of processor used by HYPRE (depends of the computer framework). Default is 1
+dkeparam.PETScparam.nproc = 1;%number of processor used by PETSc (depends of the computer framework). Default is 1
+dkeparam.PETScparam.matrixtype = ' ';%Matrix type used by PETSc. For SUPERLU use '-matload_type superlu_dist' otherwise ' '. See PETSc documentation
+dkeparam.PETScparam.kspmethod = ' ';%KSP method used by PETSc. '-ksp_type preonly': no iteration, direct matrix solve. Otherwise '-ksp_type bicg' or '-ksp_type bcgs'  for example. See PETSc documentation
+dkeparam.PETScparam.pcmethod = ' ';%Preconditioning method used by PETSc. '-pc_type lu' for SUPERLU or '-pc-type hypre' for HYPRE.  See PETSc documentation
+dkeparam.temppath = '';%Absolute directory path adress where temporary matrices are stored (empty: local directory)
 %
 dkeparam.store_mode = 0;%Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight
 dkeparam.opt_save = 1;%Save intermediate calculations

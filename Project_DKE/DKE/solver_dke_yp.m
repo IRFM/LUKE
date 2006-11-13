@@ -97,6 +97,7 @@ function [XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,radial_mode,memoryLU_f,memoryLU
 %
 %Fokker-Planck part originally done by Y. Peysson 
 %Drift kinetic calculations for arbitrary magnetic equilibrium done by J. Decker (MIT-RLE) <jodecker@mit.edu> and Y. Peysson (CEA-DRFC) <yves.peysson@cea.fr>
+%PETSc implementation by Frederic Teisseire (CEA-DRFC) <frederic.tesseire@cea.fr>
 %
 if nargin < 9,
     error('Wrong number of input arguments in solver_dke_yp')
@@ -232,6 +233,7 @@ if display_mode >=1,
     elseif (dkeparam.invproc == 2),  disp('   - MatLab BICG iterative matrix inversion method');
     elseif (dkeparam.invproc == 3),  disp('   - MatLab QMR iterative matrix inversion method');
     elseif (dkeparam.invproc == -1),  disp('   - MUMPS matrix inversion - FORTRAN 95 parallel processing');end
+    elseif (dkeparam.invproc == -30),  disp('   - PETSc matrix inversion');
 %Boundary and normalization conditions
     if (dkeparam.norm_mode_f == 1),    disp('   - Normalization of f0 at each iteration and radius');
     elseif (dkeparam.norm_mode_f == 0),disp('   - No normalization of f0 at each iteration and radius: fully natural conservative mode');end
@@ -682,16 +684,16 @@ if dke_mode == 1,
                [MMXS_t,flaginv_g] = qmr(MMXPC_g_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_g_t,MMXU_g_t);
             elseif dkeparam.invproc == -1,%MUMPS FORTAN 95 parallel processing package (direct inversion)
                [MMXS_t,flaginv_g] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_g_t,full(MMXR_t),display_mode,temppath);
-            elseif dkeparam.invproc == -2,%HYPRE FORTAN 95 parallel processing package (direct inversion)
-%               [MMXS_t,flaginv_g] = HYPRE_dke_yp(dkeparam.HYPREparam,MMXPC_g_t,MMXR_t,dkeparam.ludroptol,temppath);
+            elseif dkeparam.invproc == -30,%Solving with PETSc
+               [MMXS_t,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),display_mode,path);
             end
 %
             if flaginv_g == 2 & dkeparam.invproc > 1,
                error('WARNING: Matrix ill-conditionned. No inversion possible for the first order Fokker-Planck equation. Try to reduce drop tolerance parameter for LU factorization...!');
             elseif flaginv_g ~= 0 & dkeparam.invproc == -1,
                error(['WARNING: Error ',int2str(flaginv_g),' in MUMPS matrix inversion for the first order Fokker-Planck equation. See MUMPS documentation !']);
-            elseif flaginv_g ~= 0 & dkeparam.invproc == -2,
-               error(['WARNING: Error ',int2str(flaginv_g),' in HYPRE matrix inversion for the first order Fokker-Planck equation. See HYPRE documentation !']);
+            elseif flaginv_g ~= 0 & dkeparam.invproc == -30,
+               error(['WARNING: Error ',int2str(flaginv_g),' in PETSc matrix inversion for the first order Fokker-Planck equation. See PETSc documentation !']);
             end
 %
             MMXf1_g_t = MMXf0_g_t + MMXS_t;
