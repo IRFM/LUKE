@@ -74,9 +74,10 @@ if strcmp(path.computer,'GLNXA64'),%Parallel processing
    end   
 %    
    if display_mode >=1,
-      unix(['qstat -f | awk ''$2=="BP" {print $0}'' | awk ''{print $1,$4}'' | sed -e ''s/all.q@//g'' | sed -e ''s/.cad.cea.fr./ /g'' | sed -e ''s/.cad.cea.f./ /g'' |  grep -v sequenceur | sed -e ''s/sequenceur@//g'' | awk ''{print $2,$1}'' | sort | uniq | grep -v NA | awk ''{if (int(2.5-$1)>0) {i=i+int(2.5-$1);if (i<=100000) {printf "%s%s%s\n" " ",$2,":",int(2.5-$1)}}}''']);%all available nodes on the critrion of charge for bi-processors are listed
+      ! mcharge 1
+   else
+      ! mcharge 0     	
    end
-   unix(['qstat -f | awk ''$2=="BP" {print $0}'' | awk ''{print $1,$4}'' | sed -e ''s/all.q@//g'' | sed -e ''s/.cad.cea.fr./ /g'' | sed -e ''s/.cad.cea.f./ /g'' |  grep -v sequenceur | sed -e ''s/sequenceur@//g'' | awk ''{print $2,$1}'' | sort | uniq | grep -v NA | awk ''{if (int(2.5-$1)>0) {i=i+int(2.5-$1);if (i<=100000) {printf "%s%s%s\n" " ",$2,":",int(2.5-$1)}}}''>! .machines']);%Select the nodes (1 or 2 processors per node), and when 0 processor is available, the node is not put in the list
 %
    fid = fopen('.machines','r');
    listactivenodes = fread(fid,'uint8=>char')';
