@@ -74,11 +74,12 @@ if strcmp(path.computer,'GLNXA64'),%Parallel processing
    end   
 %    
    if display_mode >=1,
-      ! mcharge 1
+      unix([MUMPSpath,'mcharge 1']);
    else
-      ! mcharge 0     	
+      unix([MUMPSpath,'mcharge 0']);
    end
 %
+   pause(1
    fid = fopen('.machines','r');
    listactivenodes = fread(fid,'uint8=>char')';
    fclose(fid);
