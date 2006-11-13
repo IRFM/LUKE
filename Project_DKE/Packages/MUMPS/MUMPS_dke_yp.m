@@ -79,7 +79,6 @@ if strcmp(path.computer,'GLNXA64'),%Parallel processing
       unix([MUMPSpath,'mcharge 0']);
    end
 %
-   pause(1
    fid = fopen('.machines','r');
    listactivenodes = fread(fid,'uint8=>char')';
    fclose(fid);
