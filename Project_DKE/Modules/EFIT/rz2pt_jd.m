@@ -193,7 +193,7 @@ sXdpsindy = [sXdpsindy;sXdpsindy(smaskm)];
 %
 hpsin = psin(2:np-1);
 %
-gdmethod = 'linear';
+gdmethod = 'cubic';
 %
 hptr = griddata(sXpsin,sXtheta,sXr,hpsin.',theta,gdmethod).';
 tra = interp1(sthetaa,sra,theta,method);
