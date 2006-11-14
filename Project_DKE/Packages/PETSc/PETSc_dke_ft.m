@@ -92,9 +92,9 @@ if strcmp(path.computer,'GLNXA64'),%Parallel processing
    end   
 %    
    if display_mode >=1,
-      unix([PETScpath,'mcharge 1']);
+      unix([PETScpath,'DKE/mcharge 1']);
    else
-      unix(PETScpath,'mcharge 0']);
+      unix([PETScpath,'DKE/mcharge 0']);
    end
 %
    fid = fopen('.machines','r');
@@ -115,8 +115,8 @@ if strcmp(path.computer,'GLNXA64'),%Parallel processing
 %     - rhs: location of PETSc binary file of the b vector
 %     - ksp_type: sets KSP method. see PETSc manual
 %     - scratchdir: indicates the /scratch directory to the C program.
-   [flag,text] = unix([PETScpath,'/bin/petscmpirun -np ',int2str(nproc),' ', PETScpath,'DKE/PETSc_DKE_ft -f PETSc_in_A.bin -rhs PETSc_in_b.bin  -scratchdir ',path.temppath,' ',mattype,' ',kspmethod, ' ', pcmethod]);
-%
+   [flag,text] = unix([PETScpath,'bin/petscmpirun -np ',int2str(nprocmax),' -machinefile .machines ',PETScpath,'DKE/PETSc_DKE_ft -f PETSc_in_A.bin -rhs PETSc_in_b.bin  -scratchdir ',path.temppath,' ',mattype,' ',kspmethod, ' ', pcmethod]);
+   %
     delete('.machines');%delete .machines file
 elseif strcmp(path.computer,'MAC'),%Parallel or sequential processing
    %nproc = 1;% Single processor enforced
