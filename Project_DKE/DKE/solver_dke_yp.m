@@ -433,17 +433,17 @@ for it_f = 2:(nit_f+1),
         elseif dkeparam.invproc == 3,%Matlab qmr iterative inversion method
             [MMXS_t,flaginv_f] = qmr(MMXPC_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_f_t,MMXU_f_t);
         elseif dkeparam.invproc == -1,%MUMPS FORTAN 95 parallel processing package (direct inversion)
-            [MMXS_t,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),display_mode,path);
-        elseif dkeparam.invproc == -2,%HYPRE FORTAN 95 parallel processing package (direct inversion)
-%            [MMXS_t,dummy1,dummu2,flaginv_f] = HYPRE_dke_yp(dkeparam.HYPREparam,MMXPC_f_t,MMXR_t,dkeparam.ludroptol,temppath);
+            tic,[MMXS_t,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),display_mode,path);toc
+        elseif dkeparam.invproc == -30,%Solving with PETSc
+            tic,[MMXS_t,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),display_mode,path);toc
         end
 %
         if flaginv_f == 2 & dkeparam.invproc > 1,
             error('WARNING: Matrix ill-conditionned. No inversion possible for the zero order Fokker-Planck equation. Try to reduce drop tolerance parameter for LU factorization...!');
         elseif flaginv_f ~= 0 & dkeparam.invproc == -1,
             error(['WARNING: Error ',int2str(flaginv_f),' in MUMPS matrix inversion for the zero order Fokker-Planck equation. See MUMPS documentation !']);
-        elseif flaginv_f ~= 0 & dkeparam.invproc == -2,
-            error(['WARNING: Error ',int2str(flaginv_f),' in HYPRE matrix inversion for the zero order Fokker-Planck equation. See HYPRE documentation !']);
+        elseif flaginv_f ~= 0 & dkeparam.invproc == -30,
+            error(['WARNING: Error ',int2str(flaginv_f),' in PETSc matrix inversion for the zero order Fokker-Planck equation. See PETSc documentation !']);
         end
 %
         MMXf1_t = MMXf0_t + MMXS_t;
