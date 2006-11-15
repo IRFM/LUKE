@@ -42,15 +42,15 @@ dkeparam.ref_mode = 0;%Reference values: (0) from core Te and ne, (1) from Te an
 %
 % Dql and collision operator
 %
-dkeparam.Dqlmax = 1;% Maximum value of Dql. All values larger are enforced to Dqlmax.
 dkeparam.coll_mode = 2;%Relativistic collision operator: (0) Relativistic Maxwellian background, (1) High-velocity limit, (2) Linearized Belaiev-Budker (3) Non-relativistic Lorentz model, (4) Non-relativistic Maxwellian background
 %
 % Ray-tracing and RF waves
 %
 dkeparam.rt_mode = 1;%RT-DKE power consistency
 dkeparam.nit_rf = 20;%Maximum number of iteration in ray-tracing. Works only if rt_mode = 1 and more than one radial point (default = 1)
-dkeparam.prec_rf = 1e-4;%relative precision in RT-DKE iterations
-dkeparam.nmax_rf = 0;%Maximum number of harmonics in the Dql calculations
+dkeparam.prec_rf = 1e-2;%relative precision in RT-DKE iterations
+dkeparam.n_rf_list = [0];%List of harmonics in the Dql calculations
+dkeparam.delta_rt = 0.5;%smoothering parameter of quasilinear iterations
 %
 % Run mode
 %
@@ -70,17 +70,19 @@ dkeparam.boundary_mode_g = 0;%Number of points where the first distribution func
 dkeparam.prec0_g = 1e-10;%Convergence level of the residu (if NaN, iterations stop with nit_g)
 dkeparam.nit_g = 100;%Maximum number of iterations for g
 %
-%WARNING: param_inv must evolve like [1e-5,<2-3],[1e-4,<4-5],[1e-3,<9-10],[1e-2,<19-20] when RF waves are applied. Otherwise, density is not conserved !
-%Values may have to be adjusted regarding the matrix size 
-%Quite all inversion methods here proposed are equivalent in term of rate of convergence. 
-%If matrix preconditionning is ill-conditionned, try to reduce param_inv(1) and param_inv(2) accordingly
-%
 dkeparam.dtn = 10000;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
-dkeparam.invproc = 1;%Iterative matrix inversion method: (1) cgs iterative method, (2) bicg iterative method, (3) qmr iterative method
-dkeparam.param1_inv = 1e-4;%Parameters for the matrix inversion procedure. Minimum value of the drop tolerance for the partial LU decomposition (drop tol = max(1/dtn/nr,param_inv(1)))
-dkeparam.param2_inv = 4;%Parameters for the matrix inversion procedure. Maximum number of iteration for iterative method< 20 (param_inv(1) depends of boundary_mode, if param_inv(1)=0, full LU factorization)
-dkeparam.store_mode = 0;%Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight
 %
-dkeparam.temppath = 'D:\Temp';%Path for the temporary files created.
+dkeparam.luproc = 0;%LU matrix inversion method: (-1) No LU, direct inversion, (0) MatLab build-in
+dkeparam.ludroptol = 1e-5;%Drop tolerance for the partial LU decomposition (recipes: droptol = max(1/dtn/nr,param_inv(1)))
+dkeparam.invproc = 1;%Iterative matrix inversion method:  (3) qmr iterative method (LU used), (2) bicg iterative method (LU used), (1) cgs iterative method (LU used), (0) Direct Matlab inversion (LU not used, (-1): MUMPS parallel fortran 95 direct inversion (LU not used) (-2) HYPRE parallel fortran 95 direct inversion (LU not used)
+dkeparam.mlprecinv = 1e-5;%Accuracy for the MatLab build-in matrix inversion.
+dkeparam.mlmaxitinv = 4;%Maximum number of iterations for iterative method (between 1 and 20 usualy, if empty, mlmaxitinv = min(matrixdim,20). See matlab documentation.
+dkeparam.MUMPSparam.path = '../../../../MUMPS_4.6.1/dke/';%Directory path adress where compiled MUMPS program is located (empty: local directory)
+dkeparam.MUMPSparam.nproc = 1;%number of processor used by MUMPS (depends of the computer framework). Default is 1
+dkeparam.HYPREparam.path = '';%Directory path adress where compiled HYPRE program is located (empty: local directory)
+dkeparam.HYPREparam.nproc = 2;%number of processor used by HYPRE (depends of the computer framework). Default is 1
+%
+dkeparam.store_mode = 0;%Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight
+dkeparam.temppath = '';%Absolute directory path adress where temporary matrices are stored (empty: local directory)
 %
 eval(['save DKEPARAM_',dkeparam_id,'.mat dkeparam']);
