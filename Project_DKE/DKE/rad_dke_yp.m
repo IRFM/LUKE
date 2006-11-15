@@ -42,11 +42,12 @@ if ~isempty(transpfaste),
     blocksize_f_t = Zbouncecoef.blocksize_f_t;
     xqtilde = Zbouncecoef.xqtilde;
     %
-    xR0 = equilDKE.xR0;
+    xx0 = equilDKE.xx0;
     xBp0 = equilDKE.xBp0;
     xB0 = equilDKE.xB0;
     ap = equilDKE.ap;
-    psia = equilDKE.psia;
+    Rp = equilDKE.Rp;
+    psia_apRp = equilDKE.psia_apRp;
     xrho = equilDKE.xrho;
     %
     betath_ref = mksa.betath_ref;
@@ -115,12 +116,12 @@ if ~isempty(transpfaste),
 	  text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['rho = ',num2str(xrho(ir_display))]);
 	  text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*10,['v//-threshold(norm) = ',num2str(xvparmin_r(ir_display))]);
 	  text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*15,['Ec-threshold = ',num2str(xEc_r_threshold(ir_display)),' (keV)']);
-	  xlabel('ppar/pth-ref');ylabel('pperp/pth-ref');title('Radial diffusion coefficient (nhu-ref*psia*psia)');
+	  xlabel('ppar/pth-ref');ylabel('pperp/pth-ref');title('Radial diffusion coefficient (nhu-ref*psia_apRp*psia_apRp)');
 %
 	   subplot(122),plot(pn./gamma,XXDpsi(:,nmhu,ir_display),'b');
 	   faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
 	   text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['mhu = 1']);
-	   xlabel('v/vth-ref');ylabel('Dr (nhu-ref*psia*psia)');title('Radial diffusion coefficient ');drawnow
+	   xlabel('v/vth-ref');ylabel('Dr (nhu-ref*psia_apRp*psia_apRp)');title('Radial diffusion coefficient ');drawnow
 %
        Fig_radialpinch = figure('Name','Fast electron radial pinch');
 	   figure(Fig_radialpinch),subplot(121);zoom on,
@@ -140,12 +141,12 @@ if ~isempty(transpfaste),
 	   text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['rho = ',num2str(xrho(ir_display))]);
 	   text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*10,['v//-threshold(norm) = ',num2str(xvparmin_r(ir_display))]);
 	   text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*15,['Ec-threshold = ',num2str(xEc_r_threshold(ir_display)),' (keV)']);
-	   xlabel('ppar/pth-ref');ylabel('pperp/pth-ref');title('Radial convection coefficient (nhu-ref*psia)');
+	   xlabel('ppar/pth-ref');ylabel('pperp/pth-ref');title('Radial convection coefficient (nhu-ref*psia_apRp)');
 %
 	   subplot(122),plot(pn./gamma,XXVpsi(:,nmhu,ir_display),'r');
 	   faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
 	   text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['mhu = 1']);
-       xlabel('v/vth-ref');ylabel('Vr (nhu-ref*psia)');title('Radial convection coefficient ');drawnow
+       xlabel('v/vth-ref');ylabel('Vr (nhu-ref*psia_apRp)');title('Radial convection coefficient ');drawnow
 %
       Fig_radialtranspvthreshold = figure('Name','Fast electron radial transport velocity threshold');
        figure(Fig_radialtranspvthreshold);
@@ -165,12 +166,12 @@ if ~isempty(transpfaste),
 	   subplot(121),plot(xrho,xmaxDpsi,'b-o');grid on;zoom on;
 	   if sum(xmaxDpsi) ~= 0,axis([0,1,0,1.1*max(xmaxDpsi)]);end
 	   xlabel('rho');
-	   ylabel('Maximum value (nhu-ref*psia*psia)');
+	   ylabel('Maximum value (nhu-ref*psia_apRp*psia_apRp)');
 	   title('Radial diffusion');
 	   subplot(122),plot(xrho,xmaxVpsi,'r-o');grid on;zoom on;
 	   if sum(xmaxVpsi) ~= 0,axis([0,1,0,1.1*max(xmaxVpsi)]);end
 	   xlabel('rho');
-	   ylabel('Maximum value (nhu-ref*psia)');
+	   ylabel('Maximum value (nhu-ref*psia_apRp)');
 	   title('Radial convection');drawnow
    end
  %
@@ -216,14 +217,14 @@ if ~isempty(transpfaste),
       XXVpsip = (1 - XXdeltalp).*XXVpsipp + XXdeltalp.*XXVpsi;%Evaluation of the convection on the flux grid (linear interpolation)
       XXVpsim = (1 - XXdeltalm).*XXVpsi + XXdeltalm.*XXVpsimm;%Evaluation of the convection on the flux grid (linear interpolation)
 %
-      XXR0 = repmat(reshape(xR0',[1,1,nr]),[npn,nmhu,1]);
-      XXR0mm = zeros(npn,nmhu,nr);
-      XXR0mm(:,:,2:nr) = XXR0(:,:,1:nr-1);
-      XXR0pp = zeros(npn,nmhu,nr);
-      XXR0pp(:,:,1:nr-1) = XXR0(:,:,2:nr);
+      XXx0 = repmat(reshape(xx0',[1,1,nr]),[npn,nmhu,1]);
+      XXx0mm = zeros(npn,nmhu,nr);
+      XXx0mm(:,:,2:nr) = XXx0(:,:,1:nr-1);
+      XXx0pp = zeros(npn,nmhu,nr);
+      XXx0pp(:,:,1:nr-1) = XXx0(:,:,2:nr);
 %
-      XXR0p = (1 - XXdeltalp).*XXR0pp + XXdeltalp.*XXR0;%Evaluation on the flux grid (linear interpolation)
-      XXR0m = (1 - XXdeltalm).*XXR0 + XXdeltalm.*XXR0mm;%Evaluation on the flux grid (linear interpolation)
+      XXx0p = (1 - XXdeltalp).*XXx0pp + XXdeltalp.*XXx0;%Evaluation on the flux grid (linear interpolation)
+      XXx0m = (1 - XXdeltalm).*XXx0 + XXdeltalm.*XXx0mm;%Evaluation on the flux grid (linear interpolation)
 %      
       XXqtilde = repmat(reshape(xqtilde',[1,1,nr]),[npn,nmhu,1]);
       XXqtildemm = zeros(npn,nmhu,nr);
@@ -260,8 +261,8 @@ if ~isempty(transpfaste),
       XXlambdap = (1 - XXdeltalp).*XXlambdapp + XXdeltalp.*XXlambda;%Evaluation on the flux grid (linear interpolation)
       XXlambdam = (1 - XXdeltalm).*XXlambda + XXdeltalm.*XXlambdamm;%Evaluation on the flux grid (linear interpolation)
 %   
-      XXgradpsinp = XXR0p.*XXBp0p*ap/psia;
-      XXgradpsinm = XXR0m.*XXBp0m*ap/psia;
+      XXgradpsinp = (1.0 + XXx0p/Rp).*XXBp0p*ap/psia_apRp;
+      XXgradpsinm = (1.0 + XXx0m/Rp).*XXBp0m*ap/psia_apRp;
       XXalpharp = XXqtildep.*XXgradpsinp.*XXlambdap./XXB0p;%Evaluation on the flux grid (linear interpolation)
       XXalpharm = XXqtildem.*XXgradpsinm.*XXlambdam./XXB0m;%Evaluation on the flux grid (linear interpolation)
       XXalpharm(:,:,1) = 0;%Force zero at the plasma center, which is the natural analytical limit (In cylindrical geometry, r=0)
