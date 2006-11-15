@@ -55,22 +55,9 @@ for MatLab 4.1 (22/08/1994)
 #define e_OUT       plhs[2]
 #define t_OUT       plhs[3]
     
-#define max(A, B)   ((A) > (B) ? (A) : (B))
-#define min(A, B)   ((A) < (B) ? (A) : (B))
-#define abs(A)      ((A) >= 0 ? (A) : -(A))
 
-static
-#ifdef __STDC__
-    xgamma(
-    double x,
-    double y,
-    double *re,
-    double *im
-    )
-#else
-    xgamma(x,y,re,im)
+static  xgamma(x,y,re,im)
     double x,y,*re,*im;
-#endif
 {
 
     double w,re2,im2,fn,xs,m,at;
@@ -79,7 +66,7 @@ static
     
     w = 2.5066283;
     
-    if (abs(x)-3.0 < 0) {   
+    if (fabs(x)-3.0 < 0) {  
         if (x < 0) {
             xs = x-3.0;
             m = 1;
@@ -87,7 +74,7 @@ static
             xs = x+3.0;
             m = 2;
         }
-    } else if (abs(x)-3.0 >= 0) {
+    } else if (fabs(x)-3.0 >= 0) {
         xs = x;
         m = 3;
     }
@@ -152,7 +139,7 @@ double a,b,c,d,e,f,x,*re,*im;
           
     delta = (double)1.0e-07;
     
-    if (abs(x) < 1.0) {
+    if (fabs(x) < 1.0) {
         h1 = a;
         h2 = c;
         h3 = e;
@@ -181,7 +168,7 @@ double a,b,c,d,e,f,x,*re,*im;
         im[0] = im[0]+h11;
         h10 = h7;
         
-        while (abs(h10) > delta || abs(h11) > delta) {
+        while (fabs(h10) > delta || fabs(h11) > delta) {
             h1 = h1+1.0;
             h2 = h2+1.0;
             h3 = h3+1.0;
@@ -223,7 +210,7 @@ double a,b,c,d,g,x,*re,*im;
     
     delta = (double)1.0e-07;
     
-    if(abs(x) < 1.0) {
+    if(fabs(x) < 1.0) {
         h1 = a;
         h2 = c;
         h3 = g;
@@ -246,7 +233,7 @@ double a,b,c,d,g,x,*re,*im;
         im[0] = im[0]+h7;
         h6 = h11;
                 
-        while (abs(h6) > delta || abs(h7) > delta) {   
+        while (fabs(h6) > delta || fabs(h7) > delta) {   
             h1 = h1+(double)1.0;
             h2 = h2+(double)1.0;
             h3 = h3+(double)1.0;
@@ -641,19 +628,13 @@ unsigned int m,n,mode;
 
 
 
-#ifdef __STDC__
-void mexFunction(
-    int     nlhs,
-    Matrix  *plhs[],
+void mexFunction(   int     nlhs,
+    mxArray *plhs[],
     int     nrhs,
-    Matrix  *prhs[]
-    )
-#else
-mexFunction(nlhs, plhs, nrhs, prhs)
-int nlhs, nrhs;
-Matrix *plhs[], *prhs[];
-#endif
+    const mxArray   *prhs[]
+)
 {
+
     double  *seEHout,*ecout,*eout,*tout;
     
     double  *ec,*e,*t,*Z;
@@ -723,37 +704,37 @@ Matrix *plhs[], *prhs[];
     /* Check the dimensions of ec and e.  ec and e can be m X 1 or 1 X m. */
     
 
-    if (min(mec,nec) != 1 || min(me,ne) != 1 || min(mt,nt) != 1) {
+    if (fmin(mec,nec) != 1 || fmin(me,ne) != 1 || fmin(mt,nt) != 1) {
         mexErrMsgTxt("The function eh_dke_yp requires that ec and e be vectors.");
     } 
     
-    if (max(mec,nec) != 1 && min(me,ne) != 1 && min(mt,nt) != 1) {
+    if (fmax(mec,nec) != 1 && fmin(me,ne) != 1 && fmin(mt,nt) != 1) {
         mexErrMsgTxt("The function eh_dkeyp requires only two vectors as input arguments.");
     } 
 
-    if (max(mt,nt) == 1) {
+    if (fmax(mt,nt) == 1) {
         mode = 1;
-        n = max(mec,nec);
-        m = max(me,ne);
+        n = fmax(mec,nec);
+        m = fmax(me,ne);
     }
-    if  (max(me,ne) == 1) {
+    if  (fmax(me,ne) == 1) {
         mode = 2;
-        n = max(mec,nec);
-        m = max(mt,nt);     
+        n = fmax(mec,nec);
+        m = fmax(mt,nt);        
     }
-    if  (max(mec,nec) == 1) {
+    if  (fmax(mec,nec) == 1) {
         mode = 3;   
-        n = max(mt,nt);
-        m = max(me,ne);
+        n = fmax(mt,nt);
+        m = fmax(me,ne);
     }
 
     
     /* Create matrix for the return arguments */
 
-    seEH_OUT = mxCreateFull(m, n, REAL);
-    ec_OUT = mxCreateFull(m, n, REAL);
-    e_OUT = mxCreateFull(m, n, REAL);
-    t_OUT = mxCreateFull(m, n, REAL);
+    seEH_OUT = mxCreateDoubleMatrix(m, n, mxREAL);
+    ec_OUT = mxCreateDoubleMatrix(m, n, mxREAL);
+    e_OUT = mxCreateDoubleMatrix(m, n, mxREAL);
+    t_OUT = mxCreateDoubleMatrix(m, n, mxREAL);
 
     /* Assign pointers to the various parameters */
 
