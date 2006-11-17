@@ -14,13 +14,13 @@ function equil_EFIT_jd(filename,type,display_mode,p_opt,dispname,savename,Zeff)
 %
 % by J. Decker (jodecke@alum.mit.edu) 11/01/04
 %
-if nargin < 7 & type == 3,
+if nargin < 7,% & type == 3
     Zeff = NaN;
 end
-if nargin < 6
+if nargin < 6,
     savename = filename;
 end
-if nargin < 5
+if nargin < 5,
     dispname = filename;
 end
 method = 'spline';%'linear';
@@ -75,8 +75,8 @@ if ~isempty(yrho),% profiles given on rho grid
 elseif ~isempty(yspsin),% profiles given on poloidal flux based grid
     pTe = interp1(yspsin,yTe,pspsin,method);
     pne = interp1(yspsin,yne,pspsin,method);
-    pzTi = interp1(yspsin,yTi.',pspsin,method).';
-    pzni = interp1(yspsin,yni.',pspsin,method).'; 
+    pzTi = interp1(yspsin,yzTi.',pspsin,method).';
+    pzni = interp1(yspsin,yzni.',pspsin,method).'; 
     %
 elseif ~isempty(yspsinT),% profiles given on toroidal flux based grid
     pTe = interp1(yspsinT,yTe,pspsinT,method);

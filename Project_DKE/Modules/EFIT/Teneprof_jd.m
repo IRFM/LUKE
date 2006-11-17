@@ -20,7 +20,7 @@ pspsinT = [];
 if type == 0,%ascii
     [prho,pTe,pne,pTi,pni] = textread(filename,'%n%n%n%n%n');
 elseif type == 1,%.mat
-    eval(['load ',filename,' prho pTe pne pTi pni']);
+    eval(['load -mat ',filename,' prho pTe pne pTi pni']);
 elseif type == 2,%ascii - 203040
     [prho,pTi,pTe,pni,pne] = textread(filename,'%n%n%n%n%n');
 elseif type == 3,%ascii formatted (CMOD)
