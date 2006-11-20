@@ -21,18 +21,20 @@ else
    end
 end
 %
-Nrays = length(rayinit);
+Nrays = length(rayinit.yrho0);
 %
 kray = 0;
 %
+omega_rf = rayinit.omega_rf;
+%
 wave.equil_id = equil.id;
-wave.omega_rf = waveparam.omega_rf;
+wave.omega_rf = omega_rf;
 wave.opt_rf = waveparam.opt_rf;
 wave.opt_disp = 0+i;  % option for solving the wave equation, which gives (ray.sepol_pmz, ray.sphi, ray.sNperp) 
 %
 for iray = 1:Nrays,
 %
-      y0 = init_RT_jd(equil,equil_fit,rayinit(iray).rho0,rayinit(iray).theta0,rayinit(iray).phi0,waveparam.omega_rf,rayinit(iray).Npar0,rayinit(iray).m0,waveparam.xmode,waveparam.sigma,waveparam.kmode)';
+      y0 = init_RT_jd(equil,equil_fit,rayinit.yrho0(iray),rayinit.ytheta0(iray),rayinit.yphi0(iray),omega_rf,rayinit.yNpar0(iray),rayinit.ym0(iray),waveparam.xmode,waveparam.sigma,waveparam.kmode)';
 %
       info_dke_yp(2,['Initial conditions of ray #',int2str(iray),' is calculated']);
 %
@@ -43,7 +45,7 @@ for iray = 1:Nrays,
          info_dke_yp(2,['Trajectory of ray #',int2str(iray),' is calculated']);
 %
          filename_in = [id_wave,'_ray_',int2str(iray)];
-         [iabs_out,srho,stheta,sphi,sR,sZ,sNpar,sNperp,sepol_pmz,sphi_xyz] = raypostprocessing_yp(tout,yout,rayparam,equil_fit,waveparam.omega_rf,display.ray,display.p_opt,filename_in);
+         [iabs_out,srho,stheta,sphi,sR,sZ,sNpar,sNperp,sepol_pmz,sphi_xyz] = raypostprocessing_yp(tout,yout,rayparam,equil_fit,omega_rf,display.ray,display.p_opt,filename_in);
          if display.ray == 1,
              pause
          end
@@ -51,7 +53,7 @@ for iray = 1:Nrays,
 %
 % building ray for Fp calculations
 %
-         ray.P0_2piRp = rayinit(iray).P0_2piRp;%Initial lineic power density in the ray (W/m) [1,1]
+         ray.P0_2piRp = rayinit.yP0_2piRp(iray);%Initial lineic power density in the ray (W/m) [1,1]
 %
          ray.sx = sR(1:iabs).' - equil_fit.Rp;% Ray location (major radius) along the propagation [1,ns]
          ray.sphi = sphi(1:iabs).';% Ray location (toroidal angle) along the propagation [1,ns]
@@ -67,7 +69,7 @@ for iray = 1:Nrays,
 %
          ray.sNpar = sNpar(1:iabs).';% Ray parallel wave number [1,ns]
          ray.sNperp = sNperp(1:iabs).';% Ray perpendicular wave number [1,ns]
-         ray.sdNpar = rayinit(iray).dNpar0*ones(1,iabs);% Ray spectral width in Npar [1,ns] 
+         ray.sdNpar = rayinit.ydNpar0(iray)*ones(1,iabs);% Ray spectral width in Npar [1,ns] 
 %       if sdNpar is real -> gaussian spectrum, if sdNpar is imag. ->
 %       square spectrum (centered on sNpar)
          ray.sepol_pmz = sepol_pmz(1:iabs,:).';% polarization vector [3,ns] complex
