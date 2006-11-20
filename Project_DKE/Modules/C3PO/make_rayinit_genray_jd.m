@@ -133,7 +133,7 @@ rayinit.yphi0 = bphi_in;
 rayinit.ym0 = m0*ones(1,nb);
 rayinit.yNpar0 = bNpar_in;
 rayinit.ydNpar0 = bdNpar_in;
-rayinit.yP0_2piRp_in = bP0_2piRp_in;
+rayinit.yP0_2piRp = bP0_2piRp_in;
 %
 save_str = ['RAYINIT_',id_equil,'_',id_rayinit,'.mat'];
 eval(['save ',save_str,' rayinit']);
