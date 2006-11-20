@@ -1,25 +1,25 @@
 /*
   
-    raytracing.c    MEX file implementation of a universal ray-tracing for electron waves
+	raytracing.c	MEX file implementation of a universal ray-tracing for electron waves
 
-    call -> [tout, yout] = raytracing_yp(rayparam,equil,y0)
+	call -> [tout, yout] = raytracing_yp(rayparam,equil,y0)
 
-    INPUT: 
+	INPUT: 
 
-    - rayparam: parameters for ray-tracing structure [1,1]
-    - equil: numerical equilibrium structure [1,1]
+	- rayparam: parameters for ray-tracing structure [1,1]
+   	- equil: numerical equilibrium structure [1,1]
     - y0: ray initial conditions [1,1]
 
-    OUTPUT: 
+	OUTPUT: 
 
-    - tout: returned integration time points (row-vector).
-    - yout: returned solution, one solution column-vector per tout-value.
+	- tout: returned integration time points (row-vector).
+	- yout: returned solution, one solution column-vector per tout-value.
 
-    WARNING: none
+	WARNING: none
 
-    REFERENCE: none
+	REFERENCE: none
 
-    by Y.PEYSSON (CEA-DRFC)  <yves.peysson@cea.fr>, Joan Decker (CEA-DRFC) <joan.decker@cea.fr> and Laurent Colas (CEA-DRFC) <laurent.colas@cea.fr>
+	by Y.PEYSSON (CEA-DRFC)  <yves.peysson@cea.fr>, Joan Decker (CEA-DRFC) <joan.decker@cea.fr> and Laurent Colas (CEA-DRFC) <laurent.colas@cea.fr>
 */
 
 #include <complex.h>
@@ -209,16 +209,16 @@ void ImFdnest();
 
 /* Input Arguments */
 
-#define RAYPARAM_IN  prhs[0]
-#define EQUIL_IN     prhs[1]
-#define Y0_IN    prhs[2]
+#define	RAYPARAM_IN	 prhs[0]
+#define	EQUIL_IN	 prhs[1]
+#define	Y0_IN	 prhs[2]
 
 /* Output Arguments */
 
-#define T_OUT   plhs[0]
-#define Y_OUT   plhs[1]
+#define	T_OUT	plhs[0]
+#define	Y_OUT	plhs[1]
 
-#define MC 8
+#define	MC 8
 #define SAFETY 0.8
 #define PGROW 0.2
 #define PSHRINK 0.25
@@ -238,19 +238,19 @@ static double beta[5][5] = {
 };
 
 static double gama[6][2] = {
-    {   902880.0/7618050.0,   -2090.0/752400.0 },
-    {                  0.0,                0.0 },
-    {  3953664.0/7618050.0,   22528.0/752400.0 },
-    {  3855735.0/7618050.0,   21970.0/752400.0 },
-    { -1371249.0/7618050.0,  -15048.0/752400.0 },
-    {   277020.0/7618050.0,  -27360.0/752400.0 }
+	{   902880.0/7618050.0,   -2090.0/752400.0 },
+	{                  0.0,                0.0 },
+	{  3953664.0/7618050.0,   22528.0/752400.0 },
+	{  3855735.0/7618050.0,   21970.0/752400.0 },
+	{ -1371249.0/7618050.0,  -15048.0/752400.0 },
+	{   277020.0/7618050.0,  -27360.0/752400.0 }
 };
 
 
-void mexFunction(   int     nlhs,
-    mxArray *plhs[],
-    int     nrhs,
-    const mxArray   *prhs[]
+void mexFunction(	int		nlhs,
+	mxArray	*plhs[],
+	int		nrhs,
+	const mxArray	*prhs[]
 )
 {
     
@@ -268,13 +268,13 @@ void mexFunction(   int     nlhs,
     double *y,*dZdrho,*dZdtheta,*d2Zdtheta2,*d2Zdthetadrho;
     double dummy1,dummy2;
     
-    /* Check out the arguments */
+	/* Check out the arguments */
 
-    if (nrhs != 3) {
-        mexErrMsgTxt("Wrong number of input arguments for raytracing_yp");
-    } else if (nlhs != 2) {
-        mexErrMsgTxt("Wrong number of output arguments for raytracing_yp");
-    }
+	if (nrhs != 3) {
+		mexErrMsgTxt("Wrong number of input arguments for raytracing_yp");
+	} else if (nlhs != 2) {
+		mexErrMsgTxt("Wrong number of output arguments for raytracing_yp");
+	}
     
     if (!mxIsStruct(prhs[0])) mexErrMsgTxt("Input arguments must be structures");
     if (!mxIsStruct(prhs[1])) mexErrMsgTxt("Input arguments must be structures");
@@ -408,19 +408,19 @@ void mexFunction(   int     nlhs,
     
 /* Runge-Kutta  */
 
-    double  *tout,*yout; 
-    double  *toutp,*youtp;
-    double  *y0,*y1;
+    double	*tout,*yout; 
+    double	*toutp,*youtp;
+    double	*y0,*y1;
 
-    register unsigned int   K=0,m,k=0,kk,ii=0;
+    register unsigned int	K=0,m,k=0,kk,ii=0;
 
     double *s0,*s1,*s2,*s3,*s4,*s5,*s6;
     double *tempt,*temp0,*temp1,*temp2,*temp3,*temp4,*temp5,*temp6;
 
     double ymax,tau,delta,h,hmax,hmin;
-    
+	
     double ydel[MC];
-    
+	
     double t1,t2,rho1,rho2,theta1,theta2,phi1,phi2,krho1,krho2,m1,m2,n1,n2,omega1,omega2;
     double rho_step,m_step;
     
@@ -428,9 +428,9 @@ void mexFunction(   int     nlhs,
 
     y0 = mxGetPr(Y0_IN);
     
-    /*
-     * Create and Initialize Return Arguments
-     */
+/*
+Create and Initialize Return Arguments
+*/
 
     t1 = rayparam.t0[0];
     
@@ -445,9 +445,9 @@ void mexFunction(   int     nlhs,
     rho_step = rho1;
     m_step = m1;
 
-    /*
-     * Create arguments for calling user function
-     */
+/*
+Create arguments for calling user function
+*/
 
     tempt = mxCalloc(rayparam.kmax[0],sizeof(double));
     temp0 = mxCalloc(rayparam.kmax[0],sizeof(double));
@@ -467,9 +467,9 @@ void mexFunction(   int     nlhs,
     s5 = mxCalloc(MC,sizeof(double));
     s6 = mxCalloc(MC,sizeof(double));
 
-    /*
-     * Initialization
-     */
+/*
+Initialization
+*/
 
     h = rayparam.dt0[0];
 
@@ -479,144 +479,135 @@ void mexFunction(   int     nlhs,
     temp2[0] = phi1;
     temp3[0] = krho1;
     temp4[0] = m1;
-    temp5[0] = n1;  
+    temp5[0] = n1;	
     temp6[0] = omega1;
 
-    /*
-     * The main loop
-     */
+/*
+The main loop
+*/
     
    while ((t1 < rayparam.tfinal[0]) && (k < rayparam.kmax[0]-1)) {
         ii++; 
 /*        mexPrintf("ii:%d\n",ii);*/
-        if ((t1 + h) > rayparam.tfinal[0]) {
-            h = rayparam.tfinal[0] - t1;
-        }
+	if ((t1 + h) > rayparam.tfinal[0]) {
+	    h = rayparam.tfinal[0] - t1;
+	}
         if (ii > rayparam.kmax[0]) {
-            goto Endloop;
+	    goto Endloop;
             flag = 0;
-        }
+	}
         
-        /*
-         * Compute the slopes
-         */
+/*
+Compute the slopes
+*/
 
-        /* ts = t  and  s0 = y */
+/* ts = t  and  s0 = y */
 
-        s0[0] = rho1;
-        s0[1] = theta1;
-        s0[2] = phi1;
-        s0[3] = krho1;
-        s0[4] = m1;
+	s0[0] = rho1;
+	s0[1] = theta1;
+	s0[2] = phi1;
+	s0[3] = krho1;
+	s0[4] = m1;
         s0[5] = n1;
         s0[6] = omega1;
         
-        for  (m = 0; m < MC; m++) {
-            y1[m] = s0[m];
-        }
+	for  (m = 0; m < MC; m++) {
+	    y1[m] = s0[m];
+	}
         
-        ray(s1,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,0);          
-        /* s2 = feval(F, t+h*alpha(1), y1+h*s1*beta(1,1), param); */
+        ray(s1,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,0);	        
+		/* s2 = feval(F, t+h*alpha(1), y1+h*s1*beta(1,1), param); */
 
-        for  (m = 0; m < MC-3; m++) {/* only the first five coordinates are evolving (rho,theta,phi,krho,m) */
-            y1[m] = s0[m]+h*s1[m]*beta[0][0];
-        }
+	for  (m = 0; m < MC-3; m++) {/* only the first five coordinates are evolving (rho,theta,phi,krho,m) */
+	    y1[m] = s0[m]+h*s1[m]*beta[0][0];
+	}
          
             
         ray(s2,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,0);
-        /* s3 = feval(F, t+h*alpha(2), y1+h*[s1*beta(2,1)+s2*beta(2,2)], param); */
+		/* s3 = feval(F, t+h*alpha(2), y1+h*[s1*beta(2,1)+s2*beta(2,2)], param); */
 
-        for  (m = 0; m < MC-3; m++) {
-            y1[m] = s0[m]+h*(s1[m]*beta[0][1] + s2[m]*beta[1][1]);
-        }
+	for  (m = 0; m < MC-3; m++) {
+	    y1[m] = s0[m]+h*(s1[m]*beta[0][1] + s2[m]*beta[1][1]);
+	}
 
-        ray(s3,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,0);
+	ray(s3,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,0);
 
-        /* s4 = feval(F, t+h*alpha(3), y1+h*[s1*beta(3,1)+s2*beta(3,2)+...], param); */
+		/* s4 = feval(F, t+h*alpha(3), y1+h*[s1*beta(3,1)+s2*beta(3,2)+...], param); */
 
-        for  (m = 0; m < MC-3; m++) {
-            y1[m] = s0[m]+h*(s1[m]*beta[0][2] + s2[m]*beta[1][2]
-                    +s3[m]*beta[2][2]);
-        }
+	for  (m = 0; m < MC-3; m++) {
+	    y1[m] = s0[m]+h*(s1[m]*beta[0][2] + s2[m]*beta[1][2] + s3[m]*beta[2][2]);
+	}
  
         ray(s4,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,0);
 
         /* s5 = feval(F, t+h*alpha(4), y1+h*[s1*beta(4,1)+s2*beta(4,2)+...], param); */
 
-        for  (m = 0; m < MC-3; m++) {
-            y1[m] = s0[m]+h*(s1[m]*beta[0][3] + s2[m]*beta[1][3]
-                    +s3[m]*beta[2][3] + s4[m]*beta[3][3]);
-        }
+	for  (m = 0; m < MC-3; m++) {
+	    y1[m] = s0[m]+h*(s1[m]*beta[0][3] + s2[m]*beta[1][3] + s3[m]*beta[2][3] + s4[m]*beta[3][3]);
+	}
 
 
         ray(s5,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,0);
 
         /* s6 = feval(F, t+h*alpha(5), y1+h*[s1*beta(5,1)+s2*beta(5,2)+...], param); */
 
-        for  (m = 0; m < MC-3; m++) {
-            y1[m] = s0[m]+h*(s1[m]*beta[0][4] + s2[m]*beta[1][4]
-                    +s3[m]*beta[2][4] + s4[m]*beta[3][4]
-                    +s5[m]*beta[4][4]);
-        }
+	for  (m = 0; m < MC-3; m++) {
+	    y1[m] = s0[m]+h*(s1[m]*beta[0][4] + s2[m]*beta[1][4] + s3[m]*beta[2][4] + s4[m]*beta[3][4] + s5[m]*beta[4][4]);
+	}
         
-        ray(s6,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,0);
+	ray(s6,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,0);
 
-        /*
-         * Estimate the error and the acceptable error
-         */
+/*
+Estimate the error and the acceptable error
+*/
 
-        for  (m = 0; m < MC-3; m++) {
-            ydel[m] = h*(s1[m]*gama[0][1] + s2[m]*gama[1][1]
-                    + s3[m]*gama[2][1] + s4[m]*gama[3][1]
-                    + s5[m]*gama[4][1] + s6[m]*gama[5][1]);
-        }
+	for  (m = 0; m < MC-3; m++) {
+	    ydel[m] = h*(s1[m]*gama[0][1] + s2[m]*gama[1][1] + s3[m]*gama[2][1] + s4[m]*gama[3][1] + s5[m]*gama[4][1] + s6[m]*gama[5][1]);
+	}
 
-        delta = inf_norm(ydel,MC-3);/* only the first five coordinates are evolving (rho,theta,phi,krho,m) */
-        ymax = inf_norm(s0,MC-3);/* only the first five coordinates are evolving (rho,theta,phi,krho,m) */
-        tau = rayparam.tol[0]*fmax(ymax,1.0);
+	delta = inf_norm(ydel,MC-3);/* only the first five coordinates are evolving (rho,theta,phi,krho,m) */
+	ymax = inf_norm(s0,MC-3);/* only the first five coordinates are evolving (rho,theta,phi,krho,m) */
+	tau = rayparam.tol[0]*fmax(ymax,1.0);
 
-        /*
-         * Update the solution only if the error is acceptable
-         */
+/*
+Update the solution only if the error is acceptable
+*/    
         
-        
-        
-/*         mexPrintf("t1,delta,ymax,h,rho1,theta1,phi1,krho1,m1:%g,%g,%g,%g,%g,%g,%g,%g,%g\n",t1,delta,ymax,h,rho1,theta1,phi1,krho1,m1); */
+/*      mexPrintf("t1,delta,ymax,h,rho1,theta1,phi1,krho1,m1:%g,%g,%g,%g,%g,%g,%g,%g,%g\n",t1,delta,ymax,h,rho1,theta1,phi1,krho1,m1); */
 
-         if (delta <= tau) {
-            
-            t2 = t1 + h;
-            rho2 = rho1 + h*(s1[0]*gama[0][0] + s2[0]*gama[1][0]
-                     + s3[0]*gama[2][0] + s4[0]*gama[3][0]
-                     + s5[0]*gama[4][0] + s6[0]*gama[5][0]);
-            theta2 = theta1 + h*(s1[1]*gama[0][0] + s2[1]*gama[1][0]
-                     + s3[1]*gama[2][0] + s4[1]*gama[3][0]
-                     + s5[1]*gama[4][0] + s6[1]*gama[5][0]);
-            phi2 = phi1 + h*(s1[2]*gama[0][0] + s2[2]*gama[1][0]
-                     + s3[2]*gama[2][0] + s4[2]*gama[3][0]
-                     + s5[2]*gama[4][0] + s6[2]*gama[5][0]);
-            krho2 = krho1 + h*(s1[3]*gama[0][0] + s2[3]*gama[1][0]
-                     + s3[3]*gama[2][0] + s4[3]*gama[3][0]
-                     + s5[3]*gama[4][0] + s6[3]*gama[5][0]);
-            m2 = m1 + h*(s1[4]*gama[0][0] + s2[4]*gama[1][0]
-                     + s3[4]*gama[2][0] + s4[4]*gama[3][0]
-                     + s5[4]*gama[4][0] + s6[4]*gama[5][0]);
+        if (delta <= tau) {
+			
+	    t2 = t1 + h;
+	    rho2 = rho1 + h*(s1[0]*gama[0][0] + s2[0]*gama[1][0]
+				     + s3[0]*gama[2][0] + s4[0]*gama[3][0]
+				     + s5[0]*gama[4][0] + s6[0]*gama[5][0]);
+	    theta2 = theta1 + h*(s1[1]*gama[0][0] + s2[1]*gama[1][0]
+				     + s3[1]*gama[2][0] + s4[1]*gama[3][0]
+				     + s5[1]*gama[4][0] + s6[1]*gama[5][0]);
+	    phi2 = phi1 + h*(s1[2]*gama[0][0] + s2[2]*gama[1][0]
+				     + s3[2]*gama[2][0] + s4[2]*gama[3][0]
+				     + s5[2]*gama[4][0] + s6[2]*gama[5][0]);
+	    krho2 = krho1 + h*(s1[3]*gama[0][0] + s2[3]*gama[1][0]
+				     + s3[3]*gama[2][0] + s4[3]*gama[3][0]
+				     + s5[3]*gama[4][0] + s6[3]*gama[5][0]);
+	    m2 = m1 + h*(s1[4]*gama[0][0] + s2[4]*gama[1][0]
+				     + s3[4]*gama[2][0] + s4[4]*gama[3][0]
+				     + s5[4]*gama[4][0] + s6[4]*gama[5][0]);
             n2 = n1;
             omega2 = omega1;
             
 
 /*           mexPrintf("t1,rho2,theta2,phi2,krho2,m2:%g,%g,%g,%g,%g,%g\n",t1,rho2,theta2,phi2,krho2,m2); */
                
-            if (rho2 < rayparam.drho[0]) {/* Boundary condition at rho = 0  */
-                
+            if (rho2 < rayparam.drho[0]) {/* Boundary condition at rho = 0  */     
                 rho2 = rho1;
-                theta2 = theta1 + PI;
+		theta2 = theta1 + PI;
                 phi2 = phi1;
-                krho2 = -krho1;
+		krho2 = -krho1;
                 m2 = m1;
                 rho_step = rho2;
                 m_step = m2;
-              }
+            }
             
            
             if (rho2 > 1.0) {/* Wave reflexion at rho = 1  */ 
@@ -634,18 +625,9 @@ void mexFunction(   int     nlhs,
                     s0[3] = krho1;
                     s0[4] = m1;
                     s0[5] = n1;
-                    s0[6] = omega1; 
-                    
-                    mexPrintf("test1\n");
-                    
-                    
-                    dsolve(0,&krho2,s0,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit);
-                    
-                    mexPrintf("test2,krho2:%g,%g\n",krho2);
-                    
-                    
-                    
-                    
+                    s0[6] = omega1;  		    
+                    dsolve(0,&krho2,s0,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit); 
+/*                    mexPrintf("test2a,krho2,cimag(krho2):%g,%g,%g\n",krho2,cimag(krho2));*/	    
                     if (cimag(krho2) == 0.0) {/* ray may propagate in vacuum. Propagation is stopped */
                         mexPrintf("********************************** The wave leaves the plasma at rho = %g**********************************\n",rho1);
                         flag = 1;
@@ -672,12 +654,12 @@ void mexFunction(   int     nlhs,
                 temp4[K] = m2;
                 temp5[K] = n2;
                 temp6[K] = omega2;
-                
-                rho_step = rho2;
+				
+		rho_step = rho2;
                 m_step = m2;
-                k++;
+		k++;
             }
-            
+			
             t1 = t2;
             rho1 = rho2;
             theta1 = theta2;
@@ -688,10 +670,10 @@ void mexFunction(   int     nlhs,
             omega1 = omega2;
         
         }
-    
-        /*
-         * Update the step size
-         */
+	
+/*
+Update the step size
+*/
         
         if (delta) {
             if (delta < tau) {
@@ -717,13 +699,15 @@ void mexFunction(   int     nlhs,
     }
     
 Endloop:
+
     
-    /* Create final matrix for transferring data to MatLab */
-    
+/* Create final matrix for transferring data to MatLab */
+	
     T_OUT = mxCreateDoubleMatrix(K,1,mxREAL);
     Y_OUT = mxCreateDoubleMatrix(K,MC,mxREAL);
     tout = mxGetPr(T_OUT);
-    yout = mxGetPr(Y_OUT);  
+    yout = mxGetPr(Y_OUT);	
+	
     for (kk = 0;kk < K; kk++) {
         tout[kk] = tempt[kk];
     }
@@ -736,39 +720,36 @@ Endloop:
     for (kk = 0;kk < K; kk++) {
         yout[kk + 2*K] = temp2[kk];
     }
-    for (kk = 0;kk < K; kk++) {
+   for (kk = 0;kk < K; kk++) {
         yout[kk + 3*K] = temp3[kk];
-    }
-    for (kk = 0;kk < K; kk++) {
+   }
+   for (kk = 0;kk < K; kk++) {
         yout[kk + 4*K] = temp4[kk];
-    }
-    for (kk = 0;kk < K; kk++) {
+   }
+   for (kk = 0;kk < K; kk++) {
         yout[kk + 5*K] = temp5[kk];
-    }
-    for (kk = 0;kk < K; kk++) {
+   }
+   for (kk = 0;kk < K; kk++) {
         yout[kk + 6*K] = temp6[kk];
-    }
+   }
 
-    mxFree(tempt);
-    mxFree(temp0);
-    mxFree(temp1);
-    mxFree(temp2);
-    mxFree(temp3);
-    mxFree(temp4);
-    mxFree(temp5);
-    mxFree(temp6);
-    
-    mxFree(y1);
-    mxFree(s0);
-    mxFree(s1);
-    mxFree(s2);
-    mxFree(s3);
-    mxFree(s4);
-    mxFree(s5);
-    mxFree(s6);
+   mxFree(tempt);
+   mxFree(temp0);
+   mxFree(temp1);
+   mxFree(temp2);
+   mxFree(temp3);
+   mxFree(temp4);
+   mxFree(temp5);
+   mxFree(temp6);
 
-
-
+   mxFree(y1);
+   mxFree(s0);
+   mxFree(s1);
+   mxFree(s2);
+   mxFree(s3);
+   mxFree(s4);
+   mxFree(s5);
+   mxFree(s6);
 }
 
 
@@ -1162,19 +1143,19 @@ void ppval_2D(pp_2D_format in,double drho_lim, double x, double t, double* y, do
 }
 
 double inf_norm(y,N)
-double  y[];
+double	y[];
 unsigned int N;
 {
-    register unsigned int m;
-    double  temp_max;
+	register unsigned int m;
+	double	temp_max;
 
-    temp_max = fabs(y[0]);
+	temp_max = fabs(y[0]);
 
-    for (m = 1; m < N; m++) {
-        temp_max = fmax(temp_max,fabs(y[m]));
-    }
+	for (m = 1; m < N; m++) {
+		temp_max = fmax(temp_max,fabs(y[m]));
+	}
 
-    return(temp_max);
+	return(temp_max);
 }
 
 /* General coordinate time evolution dY/dt with Y=[rho,theta,phi,krho,m,n,omega/c] */
@@ -1688,7 +1669,7 @@ pp_1D_format dxstardpsin_fit;
     raymagnetic.dBPndY = mxCalloc(MC,sizeof(double));
     raymagnetic.dBPHIndY = mxCalloc(MC,sizeof(double));
     raymagnetic.dBdY = mxCalloc(MC,sizeof(double));
-    raymagnetic.dgradrhondY = mxCalloc(1,sizeof(double));
+    raymagnetic.dgradrhondY = mxCalloc(MC,sizeof(double));
 
     for (i = 0;i < MC; i++) {/* initialisation */
         raymagnetic.drndY[i] = 0.0;
@@ -1700,7 +1681,7 @@ pp_1D_format dxstardpsin_fit;
         raymagnetic.dBPHIndY[i] = 0.0;
         raymagnetic.dBdY[i] = 0.0;
     }
-
+    
     rayprofiles.Te = mxCalloc(1,sizeof(double));
     rayprofiles.ne = mxCalloc(1,sizeof(double));
     rayprofiles.zTi = mxCalloc(equilparam.ns[0],sizeof(double));
@@ -2015,7 +1996,7 @@ double complex Nperp,N2;
         Dtot[0] = Dtot[0] + D[i];
     }
 
-    mexPrintf("Dtot:%g\n",Dtot[0]);
+/*    mexPrintf("Dtot:%g\n",Dtot[0]);*/
 
 }
 
@@ -2093,18 +2074,18 @@ equilparam_format equilparam;
 /*        mexPrintf("Warm dielectric tensor\n");
             warmtensor(X,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY); */
         }
-        if (tensortype == 2) {
+	    if (tensortype == 2) {
 /*        mexPrintf("Hot dielectric tensor\n");*/
             hottensor(X,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY); 
         }
         if (tensortype == 3) {
         mexPrintf("Weak relativistic dielectric tensor\n");
             weakrelativistictensor(X,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY);
-        }       
+	    }		
         if (tensortype == 4) {
 /*        mexPrintf("Full relativistic dielectric tensor\n");
             fullrelativistictensor(X,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY); */
-        }       
+	    }		
         
     } else {
         vacuumtensor(X);
@@ -2173,7 +2154,7 @@ equilparam_format equilparam;
           mexPrintf("Y[0],Y[1],Y[2],Y[3],Y[4],Y[5]:%g,%g,%g,%g,%g,%g\n",Y[0],Y[1],Y[2],Y[3],Y[4],Y[5]);
           mexPrintf("Y[4],raymagnetic.calpha[0],raymagnetic.sigmaIp[0],raymagnetic.BPn[0],raymagnetic.rn[0],Y[5],raymagnetic.BPHIn[0],raymagnetic.Rn[0]:%g,%g,%g,%g,%g,%g,%g,%g\n",Y[4],raymagnetic.calpha[0],raymagnetic.sigmaIp[0],raymagnetic.BPn[0],raymagnetic.rn[0],Y[5],raymagnetic.BPHIn[0],raymagnetic.Rn[0]);
 */
-    
+	
         for (i=0;i<MC;i++) {
     
             dNpar1dY1 = dYdY[4][i]*raymagnetic.calpha[0]*raymagnetic.sigmaIp[0]*raymagnetic.BPn[0];
@@ -2206,7 +2187,7 @@ equilparam_format equilparam;
         Nperp[0] = sqrt(N2[0] - Npar[0]*Npar[0]);
         
 /*        mexPrintf("Npar,Nperp,N2:%g,%g,%g,%g,%g\n",Npar[0]/raymagnetic.rn[0],Nperp[0]/raymagnetic.rn[0],N2[0]/raymagnetic.rn[0]/raymagnetic.rn[0]); */
-        
+	    
         for (i=0;i<MC;i++) {
         
             dN21dY1 = 2.0*raymagnetic.rn[0]*raymagnetic.rn[0]*raymagnetic.gradrhon[0]*raymagnetic.dgradrhondY[i]*Y[3]*Y[3];
@@ -3081,7 +3062,7 @@ double complex z,*iBn,*iBnp,*iBnpp;
 {   
     mxArray *rhs[3], *lhs[1];
     
-    double  *pr,*pi;
+    double	*pr,*pi;
     double complex Besseln,Besselnm1,Besselnm2;
     double *Bessel_r,*Bessel_i;
     
@@ -3159,7 +3140,7 @@ double complex z, *Z;
     double complex z2, z_2, som, ZZ;
     double rz,iz;
     double criterion, sigma; 
-    int nn; 
+    int nn;	
 
 /* % epsilon=1e-10
 % b=4.74
@@ -3240,11 +3221,11 @@ double *dwork;
     static double two = 2.0; 
     static double ten = 10.0;
     
-/* nmax=    5         => 1e-2 precision
-               10         => 1e-4
-               15         => 1e-6
-               20         => single
-               50         => double 
+/* nmax=	5 	      => 1e-2 precision
+    	       10	      => 1e-4
+    	       15	      => 1e-6
+    	       20	      => single
+    	       50	      => double 
 */
     static int nmax = 50;
     
@@ -3375,7 +3356,7 @@ double complex Nperp,dNperpdx[];
    ne is normalized ne => X=e^2*ne/(me*epsilon0*omega0^2)
    B is normalized B => Y=e*B/(me*omega0)
     k is normalized k => k*clumn = refractive index 
-*/  
+*/ 	
 
     npar2 = Npar*Npar;
     te = betath[0]*betath[0];
@@ -3426,7 +3407,7 @@ double complex Nperp,dNperpdx[];
     twopsi2F902 = twopsi2*dF70da;
     dtwopsi2F902dTe = -mu2*twopsi2*(dF70da-dF50da+halfnpar2*(dF90da-2.0*dF70da+dF50da)) - mu*twopsi2F902;
     dtwopsi2F902dnpar2 = twopsi2*halfmu*(dF90da-2.0*dF70da+dF50da)+mu*dF70da;
-     
+	 
     twopsi2F1102 = twopsi2*dF90da;
     dtwopsi2F1102dTe = -mu2*twopsi2*(dF90da-dF70da+halfnpar2*(dF110da-2.0*dF90da+dF70da)) - mu*twopsi2F1102;
     dtwopsi2F1102dnpar2=twopsi2*halfmu*(dF110da-2.0*dF90da+dF70da)+mu*dF90da;
@@ -3493,12 +3474,12 @@ double complex Nperp,dNperpdx[];
     dF911dY = -mu*dF71da;
     dF911dTe = -mu2*(delta1*dF71da+halfnpar2*(dF91da-dF71da));
     dF911dnpar2 = halfmu*(dF91da-dF71da); 
-     
+	 
     twopsi2F912 = twopsi2*dF71da;
     dtwopsi2F912dY = -twopsi2*mu*(dF71da-dF51da);
     dtwopsi2F912dTe = -mu2*twopsi2*(delta1*(dF71da-dF51da) + halfnpar2*(dF91da-2.0*dF71da+dF51da)) - mu*twopsi2F912;
     dtwopsi2F912dnpar2 = twopsi2*halfmu*(dF91da-2.0*dF71da+dF51da)+mu*dF71da;
-     
+	 
     twopsi2F1112 = twopsi2*dF91da;
     dtwopsi2F1112dY = -twopsi2*mu*(dF91da-dF71da);
     dtwopsi2F1112dTe = -mu2*twopsi2*(delta1*(dF91da-dF71da) + halfnpar2*(dF111da-2.0*dF91da+dF71da)) - mu*twopsi2F1112;
@@ -3534,41 +3515,41 @@ double complex Nperp,dNperpdx[];
         dtwopsi2I1112dnpar2 = twopsi2*halfmu*(dI111da-2.0*dI91da+dI71da)+mu*dI91da;
     } else {
         I51 = 0.0;
-    I71 = 0.0;
-    I91 = 0.0;
-    dI51dz = 0.0;
-    dI71dz = 0.0;
-    dI91dz = 0.0;
+	I71 = 0.0;
+	I91 = 0.0;
+	dI51dz = 0.0;
+	dI71dz = 0.0;
+	dI91dz = 0.0;
         dI51da = 0.0;
-    dI71da = 0.0;
-    dI91da = 0.0;
-    dI111da = 0.0;
+	dI71da = 0.0;
+	dI91da = 0.0;
+	dI111da = 0.0;
         muI51 = 0.0;
-    dmuI51dY = 0.0;
-    dmuI51dTe = 0.0;
-    dmuI51dnpar2 = 0.0;
+	dmuI51dY = 0.0;
+	dmuI51dTe = 0.0;
+	dmuI51dnpar2 = 0.0;
         dI71dY = 0.0;
-    dI71dTe = 0.0;
-    dI71dnpar2 = 0.0;
+	dI71dTe = 0.0;
+	dI71dnpar2 = 0.0;
         dI91dY = 0.0;
-    dI91dTe = 0.0;
-    dI91dnpar2 = 0.0;
+	dI91dTe = 0.0;
+	dI91dnpar2 = 0.0;
         muI711 = 0.0;
-    dmuI711dY = 0.0;
-    dmuI711dTe = 0.0;
-    dmuI711dnpar2 = 0.0;
+	dmuI711dY = 0.0;
+	dmuI711dTe = 0.0;
+	dmuI711dnpar2 = 0.0;
         I911 = 0.0;
-    dI911dY = 0.0;
-    dI911dTe = 0.0;
-    dI911dnpar2 = 0.0;
+	dI911dY = 0.0;
+	dI911dTe = 0.0;
+	dI911dnpar2 = 0.0;
         twopsi2I912  = 0.0;
-    dtwopsi2I912dY  = 0.0;
-    dtwopsi2I912dTe  = 0.0;
-    dtwopsi2I912dnpar2  = 0.0;
+	dtwopsi2I912dY  = 0.0;
+	dtwopsi2I912dTe  = 0.0;
+	dtwopsi2I912dnpar2  = 0.0;
         twopsi2I1112 = 0.0;
-    dtwopsi2I1112dY = 0.0;
-    dtwopsi2I1112dTe = 0.0;
-    dtwopsi2I1112dnpar2 = 0.0;
+	dtwopsi2I1112dY = 0.0;
+	dtwopsi2I1112dTe = 0.0;
+	dtwopsi2I1112dnpar2 = 0.0;
     }
 
 /* Resonant terms N = +2 */
@@ -3611,26 +3592,26 @@ double complex Nperp,dNperpdx[];
         dtwopsi2I1122dnpar2 = twopsi2*halfmu*(dI112da-2.0*dI92da+dI72da)+mu*dI92da;
     } else {
         I72 = 0.0;
-    I92 = 0.0;
-    dI72dz = 0.0;
-    dI92dz = 0.0;
+	I92 = 0.0;
+	dI72dz = 0.0;
+	dI92dz = 0.0;
         dI72da = 0.0;
-    dI92da = 0.0;
-    dI112da = 0.0;         
+	dI92da = 0.0;
+	dI112da = 0.0;         
         dI72dY = 0.0;
-    dI72dTe = 0.0;
-    dI72dnpar2 = 0.0;
+	dI72dTe = 0.0;
+	dI72dnpar2 = 0.0;
         dI92dY = 0.0;
-    dI92dTe = 0.0;
-    dI92dnpar2 = 0.0;
+	dI92dTe = 0.0;
+	dI92dnpar2 = 0.0;
         I921 = 0.0;
-    dI921dY = 0.0;
-    dI921dTe = 0.0;
-    dI921dnpar2 = 0.0;
+	dI921dY = 0.0;
+	dI921dTe = 0.0;
+	dI921dnpar2 = 0.0;
         twopsi2I1122 = 0.0;
-    dtwopsi2I1122dY = 0.0;
-    dtwopsi2I1122dTe = 0.0;
-    dtwopsi2I1122dnpar2 = 0.0;
+	dtwopsi2I1122dY = 0.0;
+	dtwopsi2I1122dTe = 0.0;
+	dtwopsi2I1122dnpar2 = 0.0;
     }
 
 /* Resonant terms N = +3 */
@@ -3650,9 +3631,9 @@ double complex Nperp,dNperpdx[];
     } else {
         I93 = 0.0; dI93dz = 0.0;
         dI93da = 0.0;
-    dI93dY = 0.0;
-    dI93dTe = 0.0;
-    dI93dnpar2 = 0.0;
+	dI93dY = 0.0;
+	dI93dTe = 0.0;
+	dI93dnpar2 = 0.0;
     }
 
          
@@ -3696,7 +3677,7 @@ double complex Nperp,dNperpdx[];
 
     twopsi2F11_12 = twopsi2F9_12; dtwopsi2F11_12dY = dtwopsi2F9_12dY; 
     dtwopsi2F11_12dTe = dtwopsi2F9_12dTe; dtwopsi2F11_12dnpar2 = dtwopsi2F9_12dnpar2; 
-     
+	 
     F7_2 = te*delta_2_1;
     dF7_2dY = -2.0*te*delta_2_2;
     dF7_2dTe = delta_2_1;
@@ -3775,7 +3756,7 @@ double complex Nperp,dNperpdx[];
     dP0dTe = -XX*((dmuF50dTe+dtwopsi2muF702dTe) + I*(dmuI50dTe+dtwopsi2muI702dTe));
     dP0dnpar2 = -XX*((dmuF50dnpar2 +dtwopsi2muF702dnpar2) + I*(dmuI50dnpar2 +dtwopsi2muI702dnpar2));
 
-    dP1dX = coeff1*((2.0*(F70+twopsi2F902)-(F71+twopsi2F912)-(F7_1+twopsi2F9_12)) + I*(2.0*(I70+twopsi2I902)-(I71+twopsi2I912)));                            
+    dP1dX = coeff1*((2.0*(F70+twopsi2F902)-(F71+twopsi2F912)-(F7_1+twopsi2F9_12)) + I*(2.0*(I70+twopsi2I902)-(I71+twopsi2I912)));                        	 
     P1 = XX*dP1dX;
     dP1dY = -2.0*coeff4*dP1dX-coeff2*((dF71dY+dtwopsi2F912dY+dF7_1dY+dtwopsi2F9_12dY) + I*(dI71dY+dtwopsi2I912dY));
     dP1dTe = coeff2*((2.0*(dF70dTe+dtwopsi2F902dTe)-(dF71dTe+dtwopsi2F912dTe)-(dF7_1dTe+dtwopsi2F9_12dTe)) + I*(2.0*(dI70dTe+dtwopsi2I902dTe)-(dI71dTe+dtwopsi2I912dTe))); 
@@ -3878,7 +3859,7 @@ double complex Nperp,dNperpdx[];
 
 /* Dielectric tensor for electrons, STIX frame */
 /* Marco BRAMBILLA, "Kinetic theory of plasma waves" 
-    equation (24.1) */
+	equation (24.1) */
    
     Xxx[0] = S;
     Xxy[0] = 0.5*I*(L-RR);
@@ -4016,361 +3997,361 @@ double *RF5,*RF7,*RF9,*dRF5dz,*dRF7dz,*dRF9dz,*dRF3da,*dRF5da,*dRF7da,*dRF9da,*d
     nb = ((nb) > (1000) ? (1000) : (nb)); /* nb is limited to 1000 */
 
     if ((fabs(z-a)>10.0*limit)&(a>sqrttwoe_6)) {
-        for (n = 0;n<nb;n++) {
-            Cqj[n] = 1.0;
-        }
-            oldcoeff = 1.0;     
-            compteur = 1; /* !! = j+1 in Robinson formula !! */
-            az1 = 1.0/(a-z);
-            terme = az1;
-        /* S1 = 0.0; */
-        S2 = 0.0;
-        S3 = 0.0; 
-        S4 = 0.0; /* S5 = 0.0; S6 = 0.0; */
-        /* dS1dz = 0.0 ; */
-        dS2dz = 0.0;
-        dS3dz = 0.0;
-        dS4dz = 0.0; /* dS5dz = 0.0; dS6dz = 0.0; */
-        dS1da = 0.0;
-        dS2da = 0.0;
-        dS3da = 0.0; 
-        dS4da = 0.0;
-        dS5da = 0.0;
+		for (n = 0;n<nb;n++) {
+			Cqj[n] = 1.0;
+		}
+	      	oldcoeff = 1.0;     
+	      	compteur = 1; /* !! = j+1 in Robinson formula !! */
+	      	az1 = 1.0/(a-z);
+      		terme = az1;
+		/* S1 = 0.0; */
+		S2 = 0.0;
+		S3 = 0.0; 
+		S4 = 0.0; /* S5 = 0.0; S6 = 0.0; */
+		/* dS1dz = 0.0 ; */
+		dS2dz = 0.0;
+		dS3dz = 0.0;
+		dS4dz = 0.0; /* dS5dz = 0.0; dS6dz = 0.0; */
+		dS1da = 0.0;
+		dS2da = 0.0;
+		dS3da = 0.0; 
+		dS4da = 0.0;
+		dS5da = 0.0;
       
-        while (((Cqj[0]/oldcoeff)<limit)&(compteur<nb-qmax)& (fabs(terme)>0.0)) {
+		while (((Cqj[0]/oldcoeff)<limit)&(compteur<nb-qmax)& (fabs(terme)>0.0)) {
 
 /* S1- = (Cqj[0]*terme); */
-                S2 -= (Cqj[1]*terme);
-                S3 -= (Cqj[2]*terme);
-                S4 -= (Cqj[3]*terme);
+         		S2 -= (Cqj[1]*terme);
+         		S3 -= (Cqj[2]*terme);
+			    S4 -= (Cqj[3]*terme);
 /* S5- = (Cqj[4]*terme); */        
 /* S6- = (Cqj[5]*terme); */
-                terme *= az1;
-                terme1 = -compteur*terme;      
+        		terme *= az1;
+         		terme1 = -compteur*terme;      
 /* dS1dz+ = (Cqj[0]*terme1); */
-                dS2dz += (Cqj[1]*terme1);
-                dS3dz += (Cqj[2]*terme1);
-                dS4dz += (Cqj[3]*terme1);
+         		dS2dz += (Cqj[1]*terme1);
+         		dS3dz += (Cqj[2]*terme1);
+         		dS4dz += (Cqj[3]*terme1);
 /* dS5dz+ = (Cqj[4]*terme1);*/
 /* dS6dz+ = (Cqj[5]*terme1);*/
-                terme1 *= ((compteur+1.0)*az1);        
-                dS1da += (Cqj[1]*terme1);
-                dS2da += (Cqj[2]*terme1);
-                dS3da += (Cqj[3]*terme1);
-                dS4da += (Cqj[4]*terme1);
+         		terme1 *= ((compteur+1.0)*az1);        
+		        dS1da += (Cqj[1]*terme1);
+		        dS2da += (Cqj[2]*terme1);
+		        dS3da += (Cqj[3]*terme1);
+			    dS4da += (Cqj[4]*terme1);
                 dS5da += (Cqj[5]*terme1);
-                oldcoeff = Cqj[0];
-    /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %% Update coefficients
-    %% P.A. Robinson, J. Math. Phys. vol. 27, N¡5, May 1986
-    %% formula (36)
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-            for (n = 0;n<nb-compteur;n++) {
-                Cqj[n] = Cqj[n]*(0.5+compteur+n)+a*Cqj[n+1];
-            }
-            compteur++;     
-          } /* end while */
+        		oldcoeff = Cqj[0];
+	/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% Update coefficients
+	%% P.A. Robinson, J. Math. Phys. vol. 27, N¡5, May 1986
+	%% formula (36)
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+			for (n = 0;n<nb-compteur;n++) {
+				Cqj[n] = Cqj[n]*(0.5+compteur+n)+a*Cqj[n+1];
+			}
+			compteur++;		
+	      } /* end while */
    
-    }   /* endif */
+	}	/* endif */
 
-    /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %% value for a = 0
-    %% P.A. Robinson, J. Math. Phys. vol. 27, N¡5, May 1986
-    %% formula (3)
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+	/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% value for a = 0
+	%% P.A. Robinson, J. Math. Phys. vol. 27, N¡5, May 1986
+	%% formula (3)
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
-    if (a <= sqrttwoe_6) {
+	if (a <= sqrttwoe_6) {
                 Fdnest(z,5,&S6,&dS6dz);
-        Fdnest(z,4,&S5,&dS5dz);
-        Fdnest(z,3,&S4,&dS4dz);
-        Fdnest(z,2,&S3,&dS3dz);
-        Fdnest(z,1,&S2,&dS2dz);
-        Fdnest(z,0,&S1,&dS1dz);
-        dS1da = dS2dz-dS1dz;
-        dS2da = dS3dz-dS2dz;
-        dS3da = dS4dz-dS3dz;
-        dS4da = dS5dz-dS4dz;
+		Fdnest(z,4,&S5,&dS5dz);
+		Fdnest(z,3,&S4,&dS4dz);
+		Fdnest(z,2,&S3,&dS3dz);
+		Fdnest(z,1,&S2,&dS2dz);
+		Fdnest(z,0,&S1,&dS1dz);
+		dS1da = dS2dz-dS1dz;
+	   	dS2da = dS3dz-dS2dz;
+   		dS3da = dS4dz-dS3dz;
+		dS4da = dS5dz-dS4dz;
                 dS5da = dS6dz-dS5dz;
-    }
+ 	}
 
-    /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %% Series expansion in a
-    %% P.A. Robinson, J. Math. Phys. vol. 27, N¡5, May 1986
-    %% formula (10)
-    %% valid for small a
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+	/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% Series expansion in a
+	%% P.A. Robinson, J. Math. Phys. vol. 27, N¡5, May 1986
+	%% formula (10)
+	%% valid for small a
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
-    if ((a>sqrttwoe_6)&(a <= 9.0)&(fabs(z-a)>6.0)&(fabs(z-a)<10*limit)) {
-        if (a<=1.0) { /* some optimization for rel. error < 1e-12 */
-            nmax = 13;
-        } else if (a<=3) {
-            nmax = 22;
-        } else {
-            nmax = 37;
-        }
-        z_a = z-a;
+	if ((a>sqrttwoe_6)&(a <= 9.0)&(fabs(z-a)>6.0)&(fabs(z-a)<10*limit)) {
+		if (a<=1.0) { /* some optimization for rel. error < 1e-12 */
+			nmax = 13;
+		} else if (a<=3) {
+			nmax = 22;
+		} else {
+			nmax = 37;
+		}
+   		z_a = z-a;
 
                 Fdnest(z_a,nmax+5,&F6,&dF6);
-        Fdnest(z_a,nmax+4,&F5,&dF5);
-        Fdnest(z_a,nmax+3,&F4,&dF4);
-        Fdnest(z_a,nmax+2,&F3,&dF3);
-        Fdnest(z_a,nmax+1,&F2,&dF2);
-        Fdnest(z_a,nmax  ,&F1,&dF1);
+		Fdnest(z_a,nmax+4,&F5,&dF5);
+		Fdnest(z_a,nmax+3,&F4,&dF4);
+		Fdnest(z_a,nmax+2,&F3,&dF3);
+		Fdnest(z_a,nmax+1,&F2,&dF2);
+		Fdnest(z_a,nmax  ,&F1,&dF1);
 
-        /* S1 = 0.0; */
-        S2 = 0.0;
-        S3 = 0.0;
-        S4 = 0.0; /* S5 = 0.0; S6 = 0.0; */
-        /* dS1dz = 0.0; */
-        dS2dz = 0.0;
-        dS3dz = 0.0;
-        dS4dz = 0.0; /* dS5dz = 0.0; dS6dz = 0.0; */ 
-        dS1da = 0.0;
-        dS2da = 0.0;
-        dS3da = 0.0;
-        dS4da = 0.0;
-        dS5da = 0.0;
+		/* S1 = 0.0; */
+		S2 = 0.0;
+		S3 = 0.0;
+		S4 = 0.0; /* S5 = 0.0; S6 = 0.0; */
+		/* dS1dz = 0.0; */
+		dS2dz = 0.0;
+		dS3dz = 0.0;
+		dS4dz = 0.0; /* dS5dz = 0.0; dS6dz = 0.0; */ 
+		dS1da = 0.0;
+		dS2da = 0.0;
+		dS3da = 0.0;
+		dS4da = 0.0;
+		dS5da = 0.0;
 
-        for (n = nmax;n>0;n--) {
-            coeff = a/n;
-            /* S1 = coeff*(S1+F1); */
-            S2 = coeff*(S2+F2);
-            S3 = coeff*(S3+F3);
+		for (n = nmax;n>0;n--) {
+			coeff = a/n;
+			/* S1 = coeff*(S1+F1); */
+			S2 = coeff*(S2+F2);
+			S3 = coeff*(S3+F3);
                         S4 = coeff*(S4+F4);
                         /* S5 = coeff*(S5+F5);
                      S6 = coeff*(S6+F6); */
-            /* dS1dz = coeff*(dS1dz+dF1) */;
-            dS2dz = coeff*(dS2dz+dF2);
-            dS3dz = coeff*(dS3dz+dF3);
-            dS4dz = coeff*(dS4dz+dF4);
-            /* dS5dz = coeff*(dS5dz+dF5);
+			/* dS1dz = coeff*(dS1dz+dF1) */;
+			dS2dz = coeff*(dS2dz+dF2);
+			dS3dz = coeff*(dS3dz+dF3);
+			dS4dz = coeff*(dS4dz+dF4);
+			/* dS5dz = coeff*(dS5dz+dF5);
                            dS6dz = coeff*(dS6dz+dF6); */
-            dS1da = coeff*((dF2-dF1)+dS1da);
-            dS2da = coeff*((dF3-dF2)+dS2da);
-                dS3da = coeff*((dF4-dF3)+dS3da);
-            dS4da = coeff*((dF5-dF4)+dS4da);
+			dS1da = coeff*((dF2-dF1)+dS1da);
+			dS2da = coeff*((dF3-dF2)+dS2da);
+      			dS3da = coeff*((dF4-dF3)+dS3da);
+			dS4da = coeff*((dF5-dF4)+dS4da);
                         dS5da = coeff*((dF6-dF5)+dS5da);
-            /* F6 = F5;*/
+			/* F6 = F5;*/
                         F5 = F4;
-            F4 = F3;
-            F3 = F2;
-            F2 = F1;
-            dF6 = dF5;
-            dF5 = dF4;
-            dF4 = dF3;
-            dF3 = dF2;
-            dF2 = dF1;
-            Fdnest(z_a,n-1,&F1,&dF1);
-        }   /* end for*/
+			F4 = F3;
+			F3 = F2;
+			F2 = F1;
+			dF6 = dF5;
+			dF5 = dF4;
+			dF4 = dF3;
+			dF3 = dF2;
+			dF2 = dF1;
+			Fdnest(z_a,n-1,&F1,&dF1);
+		}   /* end for*/
 
-        expo = exp(-a);
-        /* S1 = expo*(S1+F1); */
-        S2 = expo*(S2+F2);
-        S3 = expo*(S3+F3);
+		expo = exp(-a);
+		/* S1 = expo*(S1+F1); */
+		S2 = expo*(S2+F2);
+		S3 = expo*(S3+F3);
                 S4 = expo*(S4+F4);
                 /* S5 = expo*(S5+F5);
                S6 = expo*(S6+F6);*/
-        /* dS1dz = expo*(dS1dz+dF1); */
-        dS2dz = expo*(dS2dz+dF2);
-        dS3dz = expo*(dS3dz+dF3);
-        dS4dz = expo*(dS4dz+dF4);
-        /* dS5dz = expo*(dS5dz+dF5); */
+		/* dS1dz = expo*(dS1dz+dF1); */
+		dS2dz = expo*(dS2dz+dF2);
+		dS3dz = expo*(dS3dz+dF3);
+		dS4dz = expo*(dS4dz+dF4);
+		/* dS5dz = expo*(dS5dz+dF5); */
                 /* dS6dz = expo*(dS6dz+dF6); */
-        dS1da = expo*(dS1da+(dF2-dF1));
-        dS2da = expo*(dS2da+(dF3-dF2));
-        dS3da = expo*(dS3da+(dF4-dF3));
-        dS4da = expo*(dS4da+(dF5-dF4));
+		dS1da = expo*(dS1da+(dF2-dF1));
+		dS2da = expo*(dS2da+(dF3-dF2));
+   		dS3da = expo*(dS3da+(dF4-dF3));
+   		dS4da = expo*(dS4da+(dF5-dF4));
                 dS5da = expo*(dS5da+(dF6-dF5));
 
-    } /* end if ((a>0.0)&(a<=9.0)&(fabs(z-a)>6.0)&(fabs(z-a)<10*limit)) */
+	} /* end if ((a>0.0)&(a<=9.0)&(fabs(z-a)>6.0)&(fabs(z-a)<10*limit)) */
 
-    if ((a>0.0)&(a<=9.0)&(fabs(z-a)<=6.0)) {
-        if (a<=1.0) {/* some optimization for rel. error < 1e-12 */
-            nmax = 13;
-        } else if (a<=3) {
-            nmax = 22;
-        } else {
-            nmax = 37;
-        }
-        z_a = z-a;
-        coeff = 1.0;
-        Fdnest(z_a,0,&F1,&dF1);
-        F2 = (1.0-z_a*F1)*0.66666666666666666667; /* use recursion relation */
-        F3 = (1.0-z_a*F2)*0.4;
-        F4 = (1.0-z_a*F3)*0.2857142857142857176;
-        F5 = (1.0-z_a*F4)*0.22222222222222222222;
+	if ((a>0.0)&(a<=9.0)&(fabs(z-a)<=6.0)) {
+		if (a<=1.0) {/* some optimization for rel. error < 1e-12 */
+			nmax = 13;
+		} else if (a<=3) {
+			nmax = 22;
+		} else {
+			nmax = 37;
+		}
+ 		z_a = z-a;
+   		coeff = 1.0;
+		Fdnest(z_a,0,&F1,&dF1);
+		F2 = (1.0-z_a*F1)*0.66666666666666666667; /* use recursion relation */
+		F3 = (1.0-z_a*F2)*0.4;
+		F4 = (1.0-z_a*F3)*0.2857142857142857176;
+		F5 = (1.0-z_a*F4)*0.22222222222222222222;
                 F6 = (1.0-z_a*F5)*0.18181818181818181818;
 
-        dF2 = F2-F1; /* use derivation relation */
-        dF3 = F3-F2;
-        dF4 = F4-F3;
-        dF5 = F5-F4;
+		dF2 = F2-F1; /* use derivation relation */
+		dF3 = F3-F2;
+		dF4 = F4-F3;
+		dF5 = F5-F4;
                 dF6 = F6-F5;
-        d2F1 = dF2-dF1; /* derivation relation again */
-        d2F2 = dF3-dF2;
-        d2F3 = dF4-dF3;
-        d2F4 = dF5-dF4;
+		d2F1 = dF2-dF1; /* derivation relation again */
+   		d2F2 = dF3-dF2;
+   		d2F3 = dF4-dF3;
+		d2F4 = dF5-dF4;
                 d2F5 = dF6-dF5;
-        /* S1 = F1; */
-        S2 = F2; 
-        S3 = F3; 
-        S4 = F4; 
-        /* S5 = F5;
+		/* S1 = F1; */
+   		S2 = F2; 
+		S3 = F3; 
+		S4 = F4; 
+		/* S5 = F5;
                S6 = F6; */ 
-        /* dS1dz = dF1; */
-        dS2dz = dF2;
-        dS3dz = dF3; 
-        dS4dz = dF4; 
-        /* dS5dz = dF5;
+		/* dS1dz = dF1; */
+   		dS2dz = dF2;
+		dS3dz = dF3; 
+		dS4dz = dF4; 
+		/* dS5dz = dF5;
                dS6dz = dF6; */
-        dS1da = d2F1;
-        dS2da = d2F2;
-        dS3da = d2F3;
-        dS4da = d2F4;
+		dS1da = d2F1;
+		dS2da = d2F2;
+		dS3da = d2F3;
+		dS4da = d2F4;
                 dS5da = d2F5;
-        for (n = 1;n<=nmax;n++) {
-                /* F1 = F2; */ 
-            F2 = F3;
-            F3 = F4;
-            F4 = F5;
-            F5 = F6;
-                dF1 = dF2;
-            dF2 = dF3;
-            dF3 = dF4;
-            dF4 = dF5;
-            dF5 = dF6;
-                d2F1 = d2F2;
-            d2F2 = d2F3;
-            d2F3 = d2F4;
-            d2F4 = d2F5;
+		for (n = 1;n<=nmax;n++) {
+		        /* F1 = F2; */ 
+			F2 = F3;
+			F3 = F4;
+			F4 = F5;
+			F5 = F6;
+		        dF1 = dF2;
+			dF2 = dF3;
+			dF3 = dF4;
+			dF4 = dF5;
+			dF5 = dF6;
+		        d2F1 = d2F2;
+			d2F2 = d2F3;
+			d2F3 = d2F4;
+			d2F4 = d2F5;
         
-                F6 = (1.0-z_a*F6)/(n+5.5);
-                dF6=F6-F5;
-                d2F5 = dF6-dF5;
-                coeff*=(a/n);
-                /* S1 += (coeff*F1); */
-                S2 += (coeff*F2);
-            S3 += (coeff*F3); 
-            S4 += (coeff*F4);
-            /* S5 += (coeff*F5);
+        		F6 = (1.0-z_a*F6)/(n+5.5);
+		        dF6=F6-F5;
+		        d2F5 = dF6-dF5;
+		        coeff*=(a/n);
+		        /* S1 += (coeff*F1); */
+		        S2 += (coeff*F2);
+			S3 += (coeff*F3); 
+			S4 += (coeff*F4);
+			/* S5 += (coeff*F5);
                            S6 += (coeff*F6); */
-                /* dS1dz += (coeff*dF1); */
-                dS2dz += (coeff*dF2);
-            dS3dz += (coeff*dF3); 
-            dS4dz += (coeff*dF4); 
-            /* dS5dz += (coeff*dF5);
+		        /* dS1dz += (coeff*dF1); */
+		        dS2dz += (coeff*dF2);
+			dS3dz += (coeff*dF3); 
+			dS4dz += (coeff*dF4); 
+			/* dS5dz += (coeff*dF5);
                       dS6dz += (coeff*dF6); */
-                dS1da += (coeff*d2F1); 
-            dS2da += (coeff*d2F2);
-                dS3da += (coeff*d2F3);
-            dS4da += (coeff*d2F4);
+		        dS1da += (coeff*d2F1); 
+			dS2da += (coeff*d2F2);
+		        dS3da += (coeff*d2F3);
+			dS4da += (coeff*d2F4);
                         dS5da += (coeff*d2F5);
-        }
-        expo = exp(-a);
+		}
+		expo = exp(-a);
 
-        /* S1 *= expo; */
-        S2 *= expo;
-        S3 *= expo;
-        S4 = expo;
-        /*S5 *= expo;
+		/* S1 *= expo; */
+   		S2 *= expo;
+   		S3 *= expo;
+   		S4 = expo;
+   		/*S5 *= expo;
                S6 *= expo;
-        dS1dz *= expo; */
-        dS2dz *= expo;
-        dS3dz *= expo;
-        dS4dz *= expo;
-        /*   dS5dz *= expo;
-                  dS6dz *= expo; */     
-        dS1da *= expo;
-        dS2da *= expo;
-        dS3da *= expo;
-        dS4da *= expo;
+		dS1dz *= expo; */
+   		dS2dz *= expo;
+   		dS3dz *= expo;
+   		dS4dz *= expo;
+   		/*   dS5dz *= expo;
+                  dS6dz *= expo; */		
+		dS1da *= expo;
+   		dS2da *= expo;
+   		dS3da *= expo;
+		dS4da *= expo;
                 dS5da *= expo;
 
-    } /* end if ((a>0.0)&(a<=9.0)&(fabs(z-a)<=6.0)) */  
+	} /* end if ((a>0.0)&(a<=9.0)&(fabs(z-a)<=6.0)) */  
 
 
-    /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       %% Recursion formula
-       %% P.A. Robinson, J. Math. Phys. vol. 27, N¡5, May 1986
-       %% formula (10)
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+	/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	   %% Recursion formula
+	   %% P.A. Robinson, J. Math. Phys. vol. 27, N¡5, May 1986
+ 	   %% formula (10)
+	   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
 
-    if ((a>9.0)&(fabs(z-a)<=(10*limit))) {
-        phi2 = a-z;
-        psi = sqrt(a);
-        /*   %%% Sign conventions for phi => 
-             %%% See Brambilla p. 146 formula (16.51) */
+	if ((a>9.0)&(fabs(z-a)<=(10*limit))) {
+   		phi2 = a-z;
+   		psi = sqrt(a);
+		/*   %%% Sign conventions for phi => 
+   		     %%% See Brambilla p. 146 formula (16.51) */
    
-        /*phi = conj(sqrt(phi2)); */
-        if (phi2>0.0) {
-            phi = sqrt(phi2);
-            /* Z is real, contains no imaginary part */
-            
-/*          Z1 = -2.0*dawson(psi-phi);
-/*          Z2 = -2.0*dawson(-psi-phi); 
+		/*phi = conj(sqrt(phi2)); */
+		if (phi2>0.0) {
+			phi = sqrt(phi2);
+			/* Z is real, contains no imaginary part */
+			
+/*			Z1 = -2.0*dawson(psi-phi);
+/*			Z2 = -2.0*dawson(-psi-phi); 
 /*                        S0 = -0.5*(Z1+Z2)/phi; /* F1_2 */
-/*          S1 = 0.5*(Z2-Z1)/psi; /* F3_2 */
-            dawson(psi-phi,&daw);
-            rZ1 = -2.0*daw;
-            dawson(-psi-phi,&daw);
-            rZ2 = -2.0*daw; 
+/*			S1 = 0.5*(Z2-Z1)/psi; /* F3_2 */
+			dawson(psi-phi,&daw);
+			rZ1 = -2.0*daw;
+			dawson(-psi-phi,&daw);
+			rZ2 = -2.0*daw; 
                         S0 = -0.5*(rZ1+rZ2)/phi; /* F1_2 */
-            S1 = 0.5*(rZ2-rZ1)/psi; /* F3_2 */
+			S1 = 0.5*(rZ2-rZ1)/psi; /* F3_2 */
 
                 } else if (phi2 == 0.0) {
                         S0 = 0.0;
-            dawson(psi,&daw);
+			dawson(psi,&daw);
                         S1 = 2.0*daw/psi;
-        } else { /* (phi2<0.0) */
-            phi = -sqrt(-phi2);
-/*          Zfried (psi,-phi,&rZ1,&iZ1);
-            Zfried (-psi,-phi,&rZ2,&iZ2); */
-            /* only the real part is retained */
-/*          S0 = -0.5*(iZ1+iZ2)/phi; /* F1_2 */
-/*          S1 = 0.5*(rZ2-rZ1)/psi; /* F3_2 */
-            ZFriedConte(psi-I*phi,&Z1);
-            ZFriedConte(-psi-I*phi,&Z2);
-            S0 = -0.5*(cimag(Z1)+cimag(Z2))/phi; /* F1_2 */
-            S1 = 0.5*(creal(Z2)-creal(rZ1))/psi; /* F3_2 */
+		} else { /* (phi2<0.0) */
+			phi = -sqrt(-phi2);
+/*			Zfried (psi,-phi,&rZ1,&iZ1);
+			Zfried (-psi,-phi,&rZ2,&iZ2); */
+			/* only the real part is retained */
+/*			S0 = -0.5*(iZ1+iZ2)/phi; /* F1_2 */
+/*			S1 = 0.5*(rZ2-rZ1)/psi; /* F3_2 */
+			ZFriedConte(psi-I*phi,&Z1);
+			ZFriedConte(-psi-I*phi,&Z2);
+			S0 = -0.5*(cimag(Z1)+cimag(Z2))/phi; /* F1_2 */
+			S1 = 0.5*(creal(Z2)-creal(rZ1))/psi; /* F3_2 */
 
-        }
+		}
   
-        S2 = (1.0+phi2*S0-0.5*S1)/a; /* F_5/2 */
-        S3 = (1.0+phi2*S1-1.5*S2)/a; /* F_7/2 */
-        S4 = (1.0+phi2*S2-2.5*S3)/a; /* F_9/2 */
-        S5 = (1.0+phi2*S3-3.5*S4)/a; /* F_11/2 */
+ 		S2 = (1.0+phi2*S0-0.5*S1)/a; /* F_5/2 */
+ 		S3 = (1.0+phi2*S1-1.5*S2)/a; /* F_7/2 */
+   		S4 = (1.0+phi2*S2-2.5*S3)/a; /* F_9/2 */
+		S5 = (1.0+phi2*S3-3.5*S4)/a; /* F_11/2 */
                 S6 = (1.0+phi2*S4-4.5*S5)/a; /* F_13/2 */ 
-        dS1dz = S1-S0;
-        dS2dz = S2-S1;
-        dS3dz = S3-S2;
-        dS4dz = S4-S3;
-        dS5dz = S5-S4;
+		dS1dz = S1-S0;
+   		dS2dz = S2-S1;
+   		dS3dz = S3-S2;
+   		dS4dz = S4-S3;
+		dS5dz = S5-S4;
                 dS6dz = S6-S5;
-        dS1da = dS2dz-dS1dz;
-        dS2da = dS3dz-dS2dz;
-        dS3da = dS4dz-dS3dz;
-        dS4da = dS5dz-dS4dz;
+		dS1da = dS2dz-dS1dz;
+   		dS2da = dS3dz-dS2dz;
+   		dS3da = dS4dz-dS3dz;
+		dS4da = dS5dz-dS4dz;
                 dS5da = dS6dz-dS5dz;
 
-    } /* end if ((a>9.0)&(fabs(z-a)<=(10*limit))) */
+	} /* end if ((a>9.0)&(fabs(z-a)<=(10*limit))) */
 
 /* *RF3 = S1; */
-    *RF5 = S2;
-    *RF7 = S3;
-    *RF9 = S4;
+	*RF5 = S2;
+	*RF7 = S3;
+	*RF9 = S4;
 /* *RF11 = S5; */
 /* *RF13 = S6; */
 /* *dRF3dz = dS1dz; */
-    *dRF5dz = dS2dz;
-    *dRF7dz = dS3dz;
-    *dRF9dz = dS4dz;
+	*dRF5dz = dS2dz;
+	*dRF7dz = dS3dz;
+	*dRF9dz = dS4dz;
 /* *dRF11dz = dS5dz; */
 /* *dRF13dz = dS6dz; */
-    *dRF3da  = dS1da;
-    *dRF5da  = dS2da;
-    *dRF7da  = dS3da;
-    *dRF9da  = dS4da;
+	*dRF3da  = dS1da;
+	*dRF5da  = dS2da;
+	*dRF7da  = dS3da;
+	*dRF9da  = dS4da;
     *dRF11da = dS5da;
 
 } 
@@ -4383,7 +4364,7 @@ double *RF5,*RF7,*RF9,*dRF5dz,*dRF7dz,*dRF9dz,*dRF3da,*dRF5da,*dRF7da,*dRF9da,*d
 
 void ImShka(double z, double a, 
              double * IF5, double * IF7, double * IF9,
-         double * dIF5dz, double * dIF7dz, double * dIF9dz,
+	     double * dIF5dz, double * dIF7dz, double * dIF9dz,
              double * dIF3da, double * dIF5da, double * dIF7da, 
              double * dIF9da, double * dIF11da) {
 
@@ -4404,17 +4385,17 @@ static double sqrttwoe_6 = 1.414e-6;
 
    if (z>=a) {
    /* No absorption */
-    /* IS1 = 0.0 ; IS3 = 0.0 */
-    IS5 = 0.0; IS7 = 0.0;  IS9 = 0.0; /* IS11 = 0.0; IS13 = 0.0; */
-    /* dIS3dz = 0.0 */
-    dIS5dz = 0.0;
-    dIS7dz = 0.0; 
-    dIS9dz = 0.0; /* dIS11dz = 0.0; dIS13dz = 0.0*/ 
-    dIS3da = 0.0;
-    dIS5da = 0.0;
-    dIS7da = 0.0;
-    dIS9da = 0.0;
-    dIS11da = 0.0;
+	/* IS1 = 0.0 ; IS3 = 0.0 */
+	IS5 = 0.0; IS7 = 0.0;  IS9 = 0.0; /* IS11 = 0.0; IS13 = 0.0; */
+	/* dIS3dz = 0.0 */
+   	dIS5dz = 0.0;
+	dIS7dz = 0.0; 
+	dIS9dz = 0.0; /* dIS11dz = 0.0; dIS13dz = 0.0*/ 
+   	dIS3da = 0.0;
+	dIS5da = 0.0;
+	dIS7da = 0.0;
+	dIS9da = 0.0;
+	dIS11da = 0.0;
    } else if ((z<a) & (a<=sqrttwoe_6)) {
    /* a==0 Shkarovski function => Dnestrovski function %% */
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -4474,7 +4455,7 @@ static double sqrttwoe_6 = 1.414e-6;
          }
          IS5 *= bes2;
          bes0 = bes1;
-     bes1 = bes2;
+	 bes1 = bes2;
          if (argum>4.0e-1) { /* Normalized modified Bessel function I_5/2 */
             bes2 = bes0-3.0*bes1*arg1;
          } else {
@@ -4499,8 +4480,8 @@ static double sqrttwoe_6 = 1.414e-6;
          }
          IS9 *= bes2;
          bes0 = bes1;
-     bes1 = bes2;
-     if (argum>1.9) {
+	 bes1 = bes2;
+	 if (argum>1.9) {
             bes2 = bes0-7.0*bes1*arg1;
          } else { /* Normalized modified Bessel function I_9/2 */
             bes2 = argum*argum*argum*argum*0.001058201058201058201*
@@ -4514,8 +4495,8 @@ static double sqrttwoe_6 = 1.414e-6;
          }
          IS11 *= bes2;
          bes0 = bes1;
-     bes1 = bes2;
-     if (argum>3.4) {
+	 bes1 = bes2;
+	 if (argum>3.4) {
             bes2 = bes0-9.0*bes1*arg1;
          } else { /* Normalized modified Bessel function I_11/2 */
             bes2 = argum*argum*argum*argum*argum*9.62000962000962e-5*
@@ -4645,12 +4626,12 @@ double *F,*dFdz;
         dFrdz=0.0;
         multi=nmx+q-0.5;
         for (n = nmx;n > 1;n--) {
-        Fr = -z_1*multi*(1.0 + Fr);
+	    Fr = -z_1*multi*(1.0 + Fr);
             dFrdz = z_1*multi*(n*z_1 - dFrdz);
             multi--;
         }
-    Fr = z_1*(1.0 + Fr);
-    dFrdz = z_1*(dFrdz-z_1);
+	Fr = z_1*(1.0 + Fr);
+	dFrdz = z_1*(dFrdz-z_1);
 
     } else if ((z >= lmt1) & (z < lmt2)) {
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -4671,7 +4652,7 @@ double *F,*dFdz;
         expo=exp(z);
 /* !!!! Formula only valid for z<=0 
    !!!! Extra terms should be added for z>0 !!!! */
-    
+	
         Fr=-expo*(Fr+1.0/multi);
         dFrdz=-expo*(dFrdz+1.0/multi/(multi+1.0));
 
@@ -4687,18 +4668,18 @@ double *F,*dFdz;
         if (z = 0.0) {
             ksi = sqrt(z);
             Fr = 2.0-twosqrtpi*ksi*erfc(ksi)*exp(z);
-    } else {
+	} else {
             ksi = -sqrt(-z);
-        dawson(ksi,&daw);
+	    dawson(ksi,&daw);
             Fr = 2.0 - 4.0*ksi*daw;
         }
         
-    /* Then apply recurrence relation F_q+1/2 => F_q+3/2
+	/* Then apply recurrence relation F_q+1/2 => F_q+3/2
    ! recurrence relation becomes unstable for large |z| arguments ! */
-        oldFr = (1.0 - 0.5*Fr)/(z + 1.0e-16);
+    	oldFr = (1.0 - 0.5*Fr)/(z + 1.0e-16);
         for (n = 1;n <= q;n++) {
-        if (n == q) {
-            oldFr=Fr;
+   	    if (n == q) {
+	        oldFr=Fr;
             }     
             Fr = (1.0 - z*Fr)/(n + 0.5);
         }
