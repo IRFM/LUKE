@@ -86,13 +86,13 @@ sigmaIp =  sign((-equil.ptBx(end,1).*sin(equil.theta(1)) + equil.ptBy(end,1).*co
 %
 xR = xx + equil_fit.Rp;
 xr = sqrt(xx.^2 + xy.^2);
-xs = (xx.*xdxdtheta + xy.*xdydtheta)./xr./sqrt(xdxdtheta.^2 + xdydtheta.^2);
-xc = sqrt(1.0 - xs.^2);
+xs = sigmaIp*(xx.*xdxdtheta + xy.*xdydtheta)./xr./sqrt(xdxdtheta.^2 + xdydtheta.^2);
+xc = sigmaIp*sqrt(1.0 - xs.^2);
 xBp = sqrt(xBx.^2 + xBy.^2); 
 xBt = xBPHI; 
 xB = sqrt(xBt.^2 + xBp.^2);
-xBtheta = sigmaIp*xBp./xB;
-xBphi = sign(xBPHI).*xBt./xB;
+xBtheta = xBp./xB;
+xBphi = xBt./xB;
 xgradrho = xR.*xBp.*xdxstardpsin/equil_fit.psia/equil_fit.ap;
 %
 % Resolution of the dispersion relation
