@@ -44,6 +44,7 @@ struct raymagnetic {
     double *dcalphadY;
     double *gradrhon;
     double *dgradrhondY;
+    double *sigmaIp;
 };
 
 struct rayprofiles {
@@ -220,7 +221,7 @@ void ImFdnest();
 #define	MC 8
 #define SAFETY 0.8
 #define PGROW 0.2
-#define PSHRINK 0.1
+#define PSHRINK 0.25
 #define PI 3.14159265358979
 #define MAXCYCLHARM 101
 
@@ -1210,6 +1211,7 @@ raymagnetic.BPHIn = mxCalloc(1,sizeof(double));
 raymagnetic.salpha = mxCalloc(1,sizeof(double));
 raymagnetic.calpha = mxCalloc(1,sizeof(double));
 raymagnetic.gradrhon = mxCalloc(1,sizeof(double));
+raymagnetic.sigmaIp = mxCalloc(1,sizeof(double));
 
 raymagnetic.drndY = mxCalloc(MC,sizeof(double));
 raymagnetic.dRndY = mxCalloc(MC,sizeof(double));
@@ -1469,6 +1471,7 @@ mexPrintf("Ydot_cold:%g,%g,%g,%g,%g,%g,%g\n",Ydot_cold[0],Ydot_cold[1],Ydot_cold
     mxFree(raymagnetic.salpha);
     mxFree(raymagnetic.calpha);
     mxFree(raymagnetic.gradrhon);
+    mxFree(raymagnetic.sigmaIp);
     
     mxFree(raymagnetic.drndY);
     mxFree(raymagnetic.dRndY);
@@ -1549,6 +1552,7 @@ pp_1D_format dxstardpsin_fit;
     raymagnetic.salpha = mxCalloc(1,sizeof(double));
     raymagnetic.calpha = mxCalloc(1,sizeof(double));
     raymagnetic.gradrhon = mxCalloc(1,sizeof(double));
+    raymagnetic.sigmaIp = mxCalloc(1,sizeof(double));
 
     raymagnetic.drndY = mxCalloc(MC,sizeof(double));
     raymagnetic.dRndY = mxCalloc(MC,sizeof(double));
@@ -1597,6 +1601,7 @@ pp_1D_format dxstardpsin_fit;
     mxFree(raymagnetic.salpha);
     mxFree(raymagnetic.calpha);
     mxFree(raymagnetic.gradrhon);
+    mxFree(raymagnetic.sigmaIp);
     
     mxFree(raymagnetic.drndY);
     mxFree(raymagnetic.dRndY);
@@ -1659,6 +1664,7 @@ pp_1D_format dxstardpsin_fit;
     raymagnetic.BPHIn = mxCalloc(1,sizeof(double));
     raymagnetic.B = mxCalloc(1,sizeof(double));
     raymagnetic.gradrhon = mxCalloc(1,sizeof(double));
+    raymagnetic.sigmaIp = mxCalloc(1,sizeof(double));
 
     raymagnetic.drndY = mxCalloc(MC,sizeof(double));
     raymagnetic.dRndY = mxCalloc(MC,sizeof(double));
@@ -1838,6 +1844,7 @@ pp_1D_format dxstardpsin_fit;
     mxFree(raymagnetic.BPHIn);
     mxFree(raymagnetic.B);
     mxFree(raymagnetic.gradrhon);
+    mxFree(raymagnetic.sigmaIp);
 
     mxFree(raymagnetic.drndY);
     mxFree(raymagnetic.dRndY);
@@ -2141,7 +2148,7 @@ equilparam_format equilparam;
     
     if (mode == 1) { 
         
-        Npar1 = Y[4]*raymagnetic.calpha[0]*raymagnetic.BPn[0];
+        Npar1 = Y[4]*raymagnetic.calpha[0]*raymagnetic.sigmaIp[0]*raymagnetic.BPn[0];
         Npar2 = raymagnetic.rn[0]*Y[5]*raymagnetic.BPHIn[0]/raymagnetic.Rn[0];
   
         Npar[0] = cnorm*(Npar1 + Npar2);
@@ -2149,15 +2156,15 @@ equilparam_format equilparam;
 /*
           mexPrintf("Nparth:%g\n",Npar[0]/raymagnetic.rn[0]);
           mexPrintf("Y[0],Y[1],Y[2],Y[3],Y[4],Y[5]:%g,%g,%g,%g,%g,%g\n",Y[0],Y[1],Y[2],Y[3],Y[4],Y[5]);
-          mexPrintf("Y[4],raymagnetic.calpha[0],raymagnetic.BPn[0],raymagnetic.rn[0],Y[5],raymagnetic.BPHIn[0],raymagnetic.Rn[0]:%g,%g,%g,%g,%g,%g,%g\n",Y[4],raymagnetic.calpha[0],raymagnetic.BPn[0],raymagnetic.rn[0],Y[5],raymagnetic.BPHIn[0],raymagnetic.Rn[0]);
+          mexPrintf("Y[4],raymagnetic.calpha[0],raymagnetic.sigmaIp[0],raymagnetic.BPn[0],raymagnetic.rn[0],Y[5],raymagnetic.BPHIn[0],raymagnetic.Rn[0]:%g,%g,%g,%g,%g,%g,%g,%g\n",Y[4],raymagnetic.calpha[0],raymagnetic.sigmaIp[0],raymagnetic.BPn[0],raymagnetic.rn[0],Y[5],raymagnetic.BPHIn[0],raymagnetic.Rn[0]);
 */
 	
         for (i=0;i<MC;i++) {
     
-            dNpar1dY1 = dYdY[4][i]*raymagnetic.calpha[0]*raymagnetic.BPn[0];
-            dNpar1dY2 = Y[4]*raymagnetic.dcalphadY[i]*raymagnetic.BPn[0];
-            dNpar1dY3 = Y[4]*raymagnetic.calpha[0]*raymagnetic.dBPndY[i];
-            dNpar1dY4 = -Y[4]*raymagnetic.calpha[0]*raymagnetic.BPn[0]*dYdY[6][i];
+            dNpar1dY1 = dYdY[4][i]*raymagnetic.calpha[0]*raymagnetic.sigmaIp[0]*raymagnetic.BPn[0];
+            dNpar1dY2 = Y[4]*raymagnetic.dcalphadY[i]*raymagnetic.sigmaIp[0]*raymagnetic.BPn[0];
+            dNpar1dY3 = Y[4]*raymagnetic.calpha[0]*raymagnetic.sigmaIp[0]*raymagnetic.dBPndY[i];
+            dNpar1dY4 = -Y[4]*raymagnetic.calpha[0]*raymagnetic.sigmaIp[0]*raymagnetic.BPn[0]*dYdY[6][i];
         
             dNpar1dY = dNpar1dY1 + dNpar1dY2 + dNpar1dY3 + dNpar1dY4;
  
@@ -2503,7 +2510,7 @@ double dRstardpsin,ddRstardpsindrho;
     double BP,dBPdrho,dBPdtheta;
     double B,dBdrho,dBdtheta;
     double salpha,dsalphadrho,dsalphadtheta;
-    double sn,sigmaIp;
+    double sn;
 
     
 /*    WARNING: the definitions used in the DKE code, and here crucial for HXR calculations are the following
@@ -2512,10 +2519,10 @@ double dRstardpsin,ddRstardpsindrho;
           3) (psi,s,phi) must be direct : if Ip.phi > 0, then B.theta > 0 and psi > 0, and s.theta > 0 (s as the same direction of theta)
           4) the sign of psi is the sign of Ip.phi
   With the definitions above, if Ip is positive, psi is turned outward, Btheta is counterclockwise poloidally, and s too. The Ampere theorem is OK !
-  This definition is used also for DKE and HXR calculations
+  This definition is used either for DKE and HXR calculations
  */   
     
-    sigmaIp =  sgn(-BR*sin(theta) + BZ*cos(theta));/* Sign of the plasma current (only valid for tokamak, not for RFP !) */
+    raymagnetic.sigmaIp[0] =  sgn(-BR*sin(theta) + BZ*cos(theta));/* Sign of the plasma current (only valid for tokamak, not for RFP !) */
 
     BP = sqrt(BR*BR + BZ*BZ);/* Poloidal magnetic field */
     dBPdrho = (BR*dBRdrho + BZ*dBZdrho)/BP;
@@ -2550,25 +2557,23 @@ double dRstardpsin,ddRstardpsindrho;
     raymagnetic.dRndY[1] = dRdtheta/equilparam.ap[0];    
     
     sn = sqrt(dRdtheta*dRdtheta + dZdtheta*dZdtheta);
-    salpha = sigmaIp*((R - equilparam.Rp[0])*dRdtheta + (Z - equilparam.Zp[0])*dZdtheta)/r/sn;
-    dsalphadrho = sigmaIp*((dRdtheta*dRdrho + dZdtheta*dZdrho)/r/sn 
-                           + ((R - equilparam.Rp[0])*d2Rdthetadrho + (Z - equilparam.Zp[0])*d2Zdthetadrho)/r/sn
-                           - drdrho*salpha/r
-                           - (dRdtheta*d2Rdthetadrho + dZdtheta*d2Zdthetadrho)*salpha/sn/sn
-                          );
-    dsalphadtheta = sigmaIp*(sn/r
-                             + ((R - equilparam.Rp[0])*d2Rdtheta2 + (Z - equilparam.Zp[0])*d2Zdtheta2)/r/sn
-                             - drdtheta*salpha/r 
-                             - (dRdtheta*d2Rdtheta2 + dZdtheta*d2Zdtheta2)*salpha/sn/sn
-                            );    
+    salpha = ((R - equilparam.Rp[0])*dRdtheta + (Z - equilparam.Zp[0])*dZdtheta)/r/sn;
+    dsalphadrho = (dRdtheta*dRdrho + dZdtheta*dZdrho)/r/sn 
+                  + ((R - equilparam.Rp[0])*d2Rdthetadrho + (Z - equilparam.Zp[0])*d2Zdthetadrho)/r/sn
+                  - drdrho*salpha/r
+                  - (dRdtheta*d2Rdthetadrho + dZdtheta*d2Zdthetadrho)*salpha/sn/sn;
+    dsalphadtheta = sn/r
+                    + ((R - equilparam.Rp[0])*d2Rdtheta2 + (Z - equilparam.Zp[0])*d2Zdtheta2)/r/sn
+                    - drdtheta*salpha/r 
+                    - (dRdtheta*d2Rdtheta2 + dZdtheta*d2Zdtheta2)*salpha/sn/sn;    
     
     raymagnetic.salpha[0] = salpha;
     raymagnetic.dsalphadY[0] = dsalphadrho;
     raymagnetic.dsalphadY[1] = dsalphadtheta;
     
-    raymagnetic.calpha[0] = sigmaIp*sqrt(1.0 - salpha*salpha);
-    raymagnetic.dcalphadY[0] = -sigmaIp*salpha*dsalphadrho/sqrt(1.0 - salpha*salpha);
-    raymagnetic.dcalphadY[1] = -sigmaIp*salpha*dsalphadtheta/sqrt(1.0 - salpha*salpha); 
+    raymagnetic.calpha[0] = sqrt(1.0 - salpha*salpha);
+    raymagnetic.dcalphadY[0] = -salpha*dsalphadrho/sqrt(1.0 - salpha*salpha);
+    raymagnetic.dcalphadY[1] = -salpha*dsalphadtheta/sqrt(1.0 - salpha*salpha); 
 
     raymagnetic.gradrhon[0] = R*BP*dRstardpsin/equilparam.psia[0];
     raymagnetic.dgradrhondY[0] = (dRdrho*BP*dRstardpsin + R*dBPdrho*dRstardpsin + R*BP*ddRstardpsindrho)/equilparam.psia[0];
@@ -2621,7 +2626,7 @@ double Y[];
     double BPHI,dBPHIdrho,dBPHIdtheta;
     double R,dRdrho,dRdtheta;
     
-    double Ip,BPa,qmin,qmax,eq,q,dqdrho,sigmaIp;
+    double Ip,BPa,qmin,qmax,eq,q,dqdrho;
     
     int is;
    
@@ -2704,7 +2709,7 @@ double Y[];
     dBPdtheta = -cyl*ep*Rp*dRdtheta*Y[0]*fabs(BPHI0)/R/R/q;/* cylindrical limit by construction */
 /*     mexPrintf("cyl,ep,Rp,BPa,qmax,q,dqdrho,Y[0],BP,BPHI0,R,dBPdrho,dBPdtheta:%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n",cyl,ep,Rp,BPa,qmax,q,dqdrho,Y[0],BP,BPHI0,R,dBPdrho,dBPdtheta); */
       
-    sigmaIp = sgn(Ip);
+    raymagnetic.sigmaIp[0] = sgn(Ip);
     
     B = sqrt(BP*BP + BPHI*BPHI);
     dBdrho = (BP*dBPdrho + BPHI*dBPHIdrho)/B;
@@ -2722,13 +2727,13 @@ double Y[];
     raymagnetic.dBdY[0] = dBdrho;
     raymagnetic.dBdY[1] = dBdtheta;
 
-    raymagnetic.calpha[0] = sigmaIp*1.0;
-    raymagnetic.dcalphadY[0] = sigmaIp*0.0;
-    raymagnetic.dcalphadY[1] = sigmaIp*0.0;
+    raymagnetic.calpha[0] = 1.0;
+    raymagnetic.dcalphadY[0] = 0.0;
+    raymagnetic.dcalphadY[1] = 0.0;
     
-    raymagnetic.salpha[0] = sigmaIp*0.0;
-    raymagnetic.dsalphadY[0] = sigmaIp*0.0;
-    raymagnetic.dsalphadY[1] = sigmaIp*0.0;
+    raymagnetic.salpha[0] = 0.0;
+    raymagnetic.dsalphadY[0] = 0.0;
+    raymagnetic.dsalphadY[1] = 0.0;
     
     raymagnetic.gradrhon[0] = 1.0;
     raymagnetic.dgradrhondY[0] = 0.0;
