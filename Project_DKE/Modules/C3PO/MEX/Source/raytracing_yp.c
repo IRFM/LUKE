@@ -198,7 +198,7 @@ void imagBessel();
 void dawson();
 void smith();
 void vacuumtensor();
-void reflection();
+int reflection();
 void build_raymagnetic();
 void weakrelativistictensor();
 void Shka();
@@ -221,7 +221,7 @@ void ImFdnest();
 #define	MC 8
 #define SAFETY 0.8
 #define PGROW 0.2
-#define PSHRINK 0.25
+#define PSHRINK 0.1
 #define PI 3.14159265358979
 #define MAXCYCLHARM 101
 
@@ -616,7 +616,7 @@ Update the solution only if the error is acceptable
                     rho2 = rho1;
                     phi2 = phi1;
                     theta2 = theta1;
-                    reflection(rayparam,equilparam,&krho2,rho1,theta1,krho1,m1,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit);
+                    if (reflection(rayparam,equilparam,&krho2,rho1,theta1,krho1,m1,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit) == -1) {goto Endloop;}                                           
                     m2 = m1;
                 } else {/* The code calculates if the reflection must takes place. It calculates kpsi for vacuum (keeping the magnetic field) ray leaves the plasma only if kspi is real.*/
                     s0[0] = rho1;
@@ -637,7 +637,7 @@ Update the solution only if the error is acceptable
                         rho2 = rho1;
                         phi2 = phi1;
                         theta2 = theta1;
-                        reflection(rayparam,equilparam,&krho2,rho1,theta1,krho1,m1,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit);
+                        if (reflection(rayparam,equilparam,&krho2,rho1,theta1,krho1,m1,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit) == -1) {goto Endloop;}                                           
                         m2 = m1;  
                     }
                 }
@@ -680,7 +680,9 @@ Update the step size
                 h = SAFETY*h*pow(tau/delta,PGROW);   
             } else {
                 h = SAFETY*h*pow(tau/delta,PSHRINK);                
-            }
+            }	    
+/*	    mexPrintf("delta,tau,rho1,krho1,h:%g,%g,%g,%g,%g,%g\n",delta,tau,rho1,krho1,h);*/
+	  	    
         } else {       
            mexPrintf("WARNING delta :%g, the loop is stopped.\n",delta);
            if (flag == 0) {
@@ -1514,7 +1516,7 @@ mexPrintf("Ydot_cold:%g,%g,%g,%g,%g,%g,%g\n",Ydot_cold[0],Ydot_cold[1],Ydot_cold
 
 
 
-void reflection(rayparam,equilparam,krho2,rho1,theta1,krho1,m1,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit)
+int reflection(rayparam,equilparam,krho2,rho1,theta1,krho1,m1,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit)
 rayparam_format rayparam;
 equilparam_format equilparam;
 double *krho2;
@@ -1576,15 +1578,17 @@ pp_1D_format dxstardpsin_fit;
         - raymagnetic.gradrhon[0]*krho1*(-krho1*raymagnetic.gradrhon[0] + 2*m1*raymagnetic.salpha[0]/raymagnetic.rn[0]);
     krho2p = (m1*raymagnetic.salpha[0]/raymagnetic.rn[0] + sqrt(delta))/raymagnetic.gradrhon[0];
     krho2m = (m1*raymagnetic.salpha[0]/raymagnetic.rn[0] - sqrt(delta))/raymagnetic.gradrhon[0];
-
+        
     if (sgn(krho2p)*sgn(krho1) < 0) { 
         krho2[0] = krho2p;
     } else {
         krho2[0] = krho2m;
     }
 
-    if (sgn(krho2p)*sgn(krho2m) >= 0) {
-        mexPrintf("WARNING: Problem for the wave reflection at the plasma edge !");
+    if (sgn(krho2p)*sgn(krho2m) >= 0) {	
+/*	mexPrintf("delta,krho1,krho2p,krho2m:%g,%g,%g,%g\n",delta,krho1,krho2p,krho2m);	*/
+        mexPrintf("WARNING: Problem for the wave reflection at the plasma edge. Try to modify dt0 or PSHRINK is raytracing_yp.c !\n");
+	return(-1);
     }
 
 /* Memory is released  */
