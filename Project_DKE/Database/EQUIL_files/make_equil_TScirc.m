@@ -81,8 +81,6 @@ Xtheta = repmat(equil.theta,[npsi,1]);
 %
 equil.ptx = ap*Xrho.*cos(Xtheta);
 equil.pty = ap*Xrho.*sin(Xtheta);
-equil.Rp = Rp;
-equil.Zp = Zp;
 %
 qmax = ap/Rp*abs(Bt/Bpa);%Cylindrical safety factor at the plasma edge
 %
@@ -91,19 +89,20 @@ if qopt == 1,
 else 
     pq = qmax*ones(1,npsi);% Current profile defined with constant q (uniform current density)
 end
-pBpp = sign(Bpa)*prho*ap/Rp*abs(Bt)./pq;
+pBpp = sign(Bpa)*prho*abs(Bt)./pq;
 %
 spBpp = triu(repmat((pBpp(1:npsi-1) + pBpp(2:npsi))'/2,[1,npsi-1]));
 pdprho = diff(prho);
 equil.psi_apRp = [0,ap^2*integral_dke_jd(pdprho,spBpp,1)'];%psi_apRp = psi(toroidal usual)*ap/Rp for the cylindrical limit
 %
-%psia_apRp = ap^2*Bpa/2; %poloidal flux at the edge
-%psi_apRp = prho.^2*psia_apRp; %poloidal flux profile
 %
 XBpp = repmat(pBpp',[1,ntheta]);
 equil.ptBx = -XBpp.*sin(Xtheta)*Rp./(equil.ptx + Rp);
 equil.ptBy = XBpp.*cos(Xtheta)*Rp./(equil.ptx + Rp);
 equil.ptBPHI = Bt*Rp./(equil.ptx + Rp);
+%
+equil.Rp = Rp;
+equil.Zp = Zp;
 %
 filename = ['EQUIL_',equil.id,'.mat'];
 %
