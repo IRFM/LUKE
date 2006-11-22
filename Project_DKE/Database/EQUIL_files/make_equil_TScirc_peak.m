@@ -81,8 +81,6 @@ Xtheta = repmat(equil.theta,[npsi,1]);
 %
 equil.ptx = ap*Xrho.*cos(Xtheta);
 equil.pty = ap*Xrho.*sin(Xtheta);
-equil.Rp = Rp;
-equil.Zp = Zp;
 %
 qmax = ap/Rp*abs(Bt/Bpa);%Cylindrical safety factor at the plasma edge
 %
@@ -97,13 +95,14 @@ spBpp = triu(repmat((pBpp(1:npsi-1) + pBpp(2:npsi))'/2,[1,npsi-1]));
 pdprho = diff(prho);
 equil.psi_apRp = [0,ap^2*integral_dke_jd(pdprho,spBpp,1)'];%psi_apRp = psi(toroidal usual)*ap/Rp for the cylindrical limit
 %
-%psia = ap*Rp*Bpa/2; %poloidal flux at the edge
-%ppsi = prho.^2*psia; %poloidal flux profile
 %
 XBpp = repmat(pBpp',[1,ntheta]);
 equil.ptBx = -XBpp.*sin(Xtheta)*Rp./(equil.ptx + Rp);
 equil.ptBy = XBpp.*cos(Xtheta)*Rp./(equil.ptx + Rp);
 equil.ptBPHI = Bt*Rp./(equil.ptx + Rp);
+%
+equil.Rp = Rp;
+equil.Zp = Zp;
 %
 filename = ['EQUIL_',equil.id,'.mat'];
 %

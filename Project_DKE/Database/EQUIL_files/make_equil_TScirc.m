@@ -89,7 +89,7 @@ if qopt == 1,
 else 
     pq = qmax*ones(1,npsi);% Current profile defined with constant q (uniform current density)
 end
-pBpp = sign(Bpa)*prho*abs(Bt)./pq;
+pBpp = sign(Bpa)*prho*ap/Rp*abs(Bt)./pq;
 %
 spBpp = triu(repmat((pBpp(1:npsi-1) + pBpp(2:npsi))'/2,[1,npsi-1]));
 pdprho = diff(prho);
