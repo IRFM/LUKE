@@ -13,7 +13,7 @@ clear all
 %
 id_wave = 'LH_karney_offaxis_2';
 %
-id_equil = 'TScirc_flatprof_e1';%For plasma equilibrium
+id_equil = 'TScirc_e1';%For plasma equilibrium
 path_equil = '../EQUIL_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 if exist([path_equil,'EQUIL_',id_equil,'.mat']) == 0,%Magnetic equilibrium

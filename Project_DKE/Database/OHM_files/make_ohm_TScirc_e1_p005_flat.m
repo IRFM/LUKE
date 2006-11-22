@@ -9,7 +9,7 @@ clear all
 %
 id_ohm = 'OHM_p005_flat';
 %
-id_equil = 'TScirc_flatprof_e1';%For loading the plasma equilibrium
+id_equil = 'TScirc_e1';%For loading the plasma equilibrium
 path_equil = '../EQUIL_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 % Normlized Ohmic electric field profile calculation
