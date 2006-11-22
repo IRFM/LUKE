@@ -1,4 +1,4 @@
-function rayinit = main_rayinit_launch_jd(equil,launch,ns,method)
+function rayinit = main_rayinit_launch_jd(equil,launch,dNpar0,ns,method)
 %
 % This function creates the rayinit structure based on ray launching parameters. Straight ray
 % propagation is assumed up to the last closed flux-surface.
@@ -16,12 +16,16 @@ function rayinit = main_rayinit_launch_jd(equil,launch,ns,method)
 %
 % by J. Decker (RLE/MIT) <jodecker@mit.edu> and Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr>
 %
-if nargin < 4,
+if nargin < 5,
     method = 'cubic';
 end
-if nargin < 3,
+if nargin < 4,
     ns = 1000;
 end
+if nargin < 3,
+    dNpar0 = NaN;
+end
+
 %
 [qe,me,mp,mn,e0,mu0,re,mc2,clum] = pc_dke_yp;
 %
@@ -92,7 +96,7 @@ for iy = 1:ny,
     Bp0 = sqrt(Bx0.^2 + By0.^2);
     cosalpha = (By0*syx(is0,iy) - Bx0*syy(is0,iy))/r0/Bp0;
     Ns0 = (Nx0*Bx0 + Ny0*By0)/Bp0;
-    m0 = r0*Ns0*omega_rf/clum/cosalpha;
+    m0 = r0*Ns0*rayinit.omega_rf/clum/cosalpha;
     %
     rayinit.yrho0(iy) = rho0;%Initial radial position at launch
     rayinit.ytheta0(iy) = theta0;%Initial poloidal position at launch
@@ -100,7 +104,7 @@ for iy = 1:ny,
     rayinit.ym0(iy) = m0;%Initial poloidal mode number
     rayinit.yNpar0(iy) = Npar0;%Initial index of refraction
     rayinit.ydNpar0(iy) = dNpar0;%initial Ray spectral width
-    rayinit.yP0_2piRp(iy) = P0_2piRp;%Lineic initial power density initial power in the ray (W/m)
+    rayinit.yP0_2piRp(iy) = yP0_2piRp(iy);%Lineic initial power density initial power in the ray (W/m)
     %
 end
 %

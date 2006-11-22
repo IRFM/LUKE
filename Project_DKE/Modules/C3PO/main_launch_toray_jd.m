@@ -25,8 +25,8 @@ if method == 1,
     %
     % method 1
     %
-    [ny] = textread([path_file,filename],'%n',1);
-    [yX_L,yY_L,yZ_L,ybeta_L,yalpha_L] = textread([path_file,filename],'%n%n%n%n%n',ny+1);
+    [ny] = textread(filename,'%n',1);
+    [yX_L,yY_L,yZ_L,ybeta_L,yalpha_L] = textread(filename,'%n%n%n%n%n',ny+1);
     %
     yX_L = yX_L(2:ny+1).'; 
     yY_L = yY_L(2:ny+1).';
@@ -38,7 +38,7 @@ else
     %
     % method 2
     %
-    fid = fopen([path_file,filename]);
+    fid = fopen(filename);
     ny = fscanf(fid,'%d',1);
     for iray = 1:ny,
         raydata = fscanf(fid,'%f',5);
@@ -72,7 +72,7 @@ launch.yphi_L = yphi_L;
 launch.yalpha_L = yalpha_L;
 launch.ybeta_L = ybeta_L;
 %
-launch.yP_L = P0/ny;
+launch.yP_L = P0/ny*ones(1,ny);
 %
 
 
