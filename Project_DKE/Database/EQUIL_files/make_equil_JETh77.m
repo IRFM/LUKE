@@ -6,6 +6,7 @@
 %   Created Feb. 17, 2004
 %
 clear all
+close all
 %
 equil.id = 'JETh77';% scenario identification
 %
@@ -29,13 +30,13 @@ ntheta_guess = 201;%Number of poloidal positions for the guessed separatrix
 npsi = 101;%ONLY 101 radial profile grid points for HELMEX77
 ntheta = 65;%ONLY 65 poloidal grid points for HELMEX77
 %
-Ip = 1.3;%  Plasma current (MA)  
-j0 = 0.4;%  Core toroidal curent density (MA/m2) [1,1]
+Ip = 5;%  Plasma current (MA)  
+j0 = 10.4;%  Core toroidal curent density (MA/m2) [1,1]
 ja = 0;%    Edge toroidal curent density (MA/m2) [1,1]
-ej = 2;%    Exponent for j profile -> j(psin) = (j0-ja)*(1-(psin)^2)^ej + ja) [1,1]
+ej = 3.0;%    Exponent for j profile -> j(psin) = (j0-ja)*(1-(psin)^2)^ej + ja) [1,1]
 %
-qmin = 1;%  Safety factor q0 at plasma center
-eq = 1;%  Exponent for q radial profile (q = (qmax - qmin)*(r/a).^eq + qmin, qmax calaculated by the Ampere's theorem at the plasma edge with a circular plasma cross-section)
+qmin = 0.5;%  Safety factor q0 at plasma center
+eq = 3;%  Exponent for q radial profile (q = (qmax - qmin)*(r/a).^eq + qmin, qmax calaculated by the Ampere's theorem at the plasma edge with a circular plasma cross-section)
 qopt = 1;%Option for q profile. (0): constant (default, uniform current, psi=rho^2), (1): from qmin and eq 
 %
 Bt = 3.5;%  Toroidal magnetic field on the magnetic axis (T) 
@@ -45,17 +46,17 @@ mi = [1,2,3,12];%  Ion mass (uma) [1,p] (WARNING: Zi must be [1,2,3,mimp1,mimp2]
 fi = [0,1,0];%  Hydrogen isotopic fraction (H/D/T) [1,3] (WARNING: only used when hydrogen plasmas are considered)
 %
 Te0 = 5;%  Core electron temperature (keV)
-dTea = 0.1*Te0;%  Edge electron temperature parameter
+dTea = 0.1;%  Edge electron temperature parameter
 eTe1 = 2;%  Exponent #1 for Te profile 
 eTe2 = 2;%  Exponent #1 for Te profile 
 %
 ne0 = 2.0e19;%  Core electron density (m-3)
-dnea = 0.01*ne0;%  Edge electron density parameter
+dnea = 0.01;%  Edge electron density parameter
 ene1 = 2;%  Exponent #1 for ne profile 
 ene2 = 0.5;%  Exponent #2 for ne profile
 %
 Ti0 = 2;%  Core ion temperature (keV)
-dTia = 00.1*Ti0;%  Edge ion temperature (keV)
+dTia = 0.1;%  Edge ion temperature (keV)
 eTi1 = 2;%  Exponent #1 for Ti profile
 eTi2 = 2;%  Exponent #1 for Ti profile
 %
@@ -135,19 +136,17 @@ if exist(['helmex77',mexext]) == 3,
 %   
     figure('Name','JETh77 separatrix')
     [ax] = graph1D_jd(R_sep0 - Rp_guess,Z_sep0 - Zp_guess,0,0,'R - R_{p} (m)','Z - Z_{p} (m)','JETh77 separatrix',NaN,'','','--','none','b',2);
-    [ax] = graph1D_jd(R_sep0(1,1) - Rp_guess,Z_sep0(1,1) - Zp_guess,0,0,'R - R_{p} (m)','Z - Z_{p} (m)','JETh77 separatrix',NaN,'','','none','+','b',2);
     axis('equal')
     zoom on
 %
-        zoom on
-%
 % For the input to HELENA
 %
-    ap_in = ap_guess;
-    Rp_in = Rp_guess;
-    Zp_in = Zp_guess;
-    R_in = R_sep0;
-    Z_in = Z_sep0 - Zp_in;%because HELENA work only at Zp = 0.
+ %
+   ap_in = ap_guess;
+   Rp_in = Rp_guess;
+   Zp_in = Zp_guess;
+   R_in = R_sep0;
+   Z_in = Z_sep0 - Zp_in;%because HELENA work only at Zp = 0.
 %
     Bt_in = Bt;
 %
@@ -162,13 +161,13 @@ if exist(['helmex77',mexext]) == 3,
 			r2,oor2,r2tau2,drho2ob2,r3otau3,r3otau,BR,BZ,b,df2,kkbig,li, ...
 			dimerc,drmerc,balcrit,ifail]=...
 			helmex77(ppsi_in,ptot_in,pj_in*1e6,Rp_in,Bt_in,Ip*1e6,2,ap_in,0,0,0,R_in,Z_in,init,[],[],[],1);
-%			
-		BPHI = (Fdia*ones(1,ntheta))./R;
+%	  
+	BPHI = (Fdia*ones(1,ntheta))./R;
 %
-		ap_helmex = R(npsi,1) - R(1,1);
-		Rp_helmex = R(1,1);
-		Bt_helmex = BPHI(1,1);
-		disp(' ');
+	ap_helmex = R(npsi,1) - R(1,1);
+	Rp_helmex = R(1,1);
+	Bt_helmex = BPHI(1,1);
+	disp(' ');
 	if ap_helmex ~= ap_in
 	   disp(['Minor radius from ptok (in): ',num2str(ap_in),', from HELMEX77 (kept): ',num2str(ap_helmex)])
     else 
@@ -185,49 +184,59 @@ if exist(['helmex77',mexext]) == 3,
        Bt_helmex = Bt_in;
 	end
 %
-		ppsi = ppsi/2/pi;%In order to match the defintion of ppsi in DKE
-		ppsin = ppsi'/max(ppsi);%Normalized flux grid
-		theta = linspace(0,2*pi,ntheta);% uniform theta grid
+	ppsi = ppsi/2/pi;%In order to match the defintion of ppsi in DKE
+	ppsin = ppsi'/max(ppsi);%Normalized flux grid
+	theta = linspace(0,2*pi,ntheta);% uniform theta grid
 %
 %Plasma parameters
 %
-	  pTe = Te0*((1 - dTea)*(1 - ppsin.^eTe1).^eTe2 + dTea);%Electron temperature (keV)
+	pTe = Te0*((1 - dTea)*(1 - ppsin.^eTe1).^eTe2 + dTea);%Electron temperature (keV)
     pne = ne0*((1 - dnea)*(1 - ppsin.^ene1).^ene2 + dnea);%Electron density (m-3)
     pTi = Ti0*((1 - dTia)*(1 - ppsin.^eTi1).^eTi2 + dTia);%Ion temperatures (keV)
 %
     pZeff = 0.5*(Zeffa - Zeff0)*tanh(eZeff*(ppsin - xZeff)) + 0.5*(Zeffa + Zeff0);% Effective charge (a.u.)
 %
-%
 %Ion parameters
 %
-		pzTi = repmat(pTi,[length(zZi),1]); %same temperature for all ion species
-		pzni = species_dke_yp(pne,pZeff,zZi,fi);
+	pzTi = repmat(pTi,[length(zZi),1]); %same temperature for all ion species
+	pzni = species_dke_yp(pne,pZeff,zZi,fi);
 %
-      Zp_helmex = Zout(1,1);%Vertical position of the plasma at theta = 0
-      Y_helmex = Zout - Zp_helmex;%HELMEX77 calculate magnetic equilibrium at Zp = 0 but small vertical shift must be corrected. The vertical shift of the magnetic flux surfaces must be added after HELENA calculations  
+    Zp_helmex = Zout(1,1);%Vertical position of the plasma at theta = 0
+    Y_helmex = Zout - Zp_helmex;%HELMEX77 calculate magnetic equilibrium at Zp = 0 but small vertical shift must be corrected. The vertical shift of the magnetic flux surfaces must be added after HELENA calculations  
 %		
 %		Transfer to the equil structure
 %
-	   equil.psi_apRp = ppsi*ap_helmex/Rp_helmex;%psi_apRp = psi(toroidal usual)*ap/Rp for the cylindrical limit
-	   equil.theta = theta;
-	   equil.ptx = R - Rp_helmex;
-	   equil.pty = Y_helmex;
-	   equil.ptBx = BR;
-	   equil.ptBy = BZ;
-	   equil.ptBPHI = BPHI;
-	   equil.pTe = pTe;
-	   equil.pne = pne;
-	   equil.pzTi = pzTi;
-	   equil.pzni = pzni;
-	   equil.zZi = zZi;
-	   equil.zmi = zmi;
-	   equil.Rp = Rp_helmex;
-      equil.Zp = Zp_helmex;
+    figure(1),
+    [ax] = graph1D_jd(R(npsi,:) - Rp_helmex,Y_helmex(npsi,:),0,0,'R - R_{p} (m)','Z - Z_{p} (m)','JETh77 separatrix',NaN,'','','--','none','r',2);
+     legend('Guess','HELENA');
+    [ax] = graph1D_jd(R_sep0(1,1) - Rp_guess,Z_sep0(1,1) - Zp_guess,0,0,'R - R_{p} (m)','Z - Z_{p} (m)','JETh77 separatrix',NaN,'','','none','+','b',2);
+    [ax] = graph1D_jd(R(npsi,1) - Rp_helmex,Y_helmex(npsi,1),0,0,'R - R_{p} (m)','Z - Z_{p} (m)','JETh77 separatrix',NaN,'','','none','*','r',2);
+%  
+    figure('name','JETh77 magnetic equilibrium')
+    [ax] = graph1D_jd(R(npsi,:),Zout(npsi,:),0,0,'R (m)','Z (m)','JETh77 separatrix',NaN,'','','--','none','r',2);
+    [ax] = graph1D_jd(R(npsi,1),Zout(npsi,1),0,0,'R (m)','Z (m)','JETh77 separatrix',NaN,'','','none','*','r',2);
+    axis('equal')
 %
-		equil.ftra = ftra;
+	equil.psi_apRp = ppsi*ap_helmex/Rp_helmex;%psi_apRp = psi(toroidal usual)*ap/Rp for the cylindrical limit
+	equil.theta = theta;
+	equil.ptx = R - Rp_helmex;
+	equil.pty = Y_helmex;
+	equil.ptBx = BR;
+	equil.ptBy = BZ;
+	equil.ptBPHI = BPHI;
+	equil.pTe = pTe;
+	equil.pne = pne;
+	equil.pzTi = pzTi;
+	equil.pzni = pzni;
+	equil.zZi = zZi;
+	equil.zmi = zmi;
+	equil.Rp = Rp_helmex;
+    equil.Zp = Zp_helmex;
 %
-		filename = ['EQUIL_',equil.id,'.mat'];  
-		eval(['save ',filename,' equil']);
+	equil.ftra = ftra;
+%
+	filename = ['EQUIL_',equil.id,'.mat'];  
+    eval(['save ',filename,' equil']);
 else
 	error(['The mexfile helmex77',mexext,' does not exists ! Compile it for the computer you are using...']);
 end
