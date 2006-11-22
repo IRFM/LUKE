@@ -132,6 +132,28 @@ psia = (psia - psip);
 xypsin = xypsi/psia;
 rpsin = linspace(0,1,nnr);
 %
+% EFIT sign treatment
+%
+% By convention, the EFIT calculations always give psia > 0 regardless of the direction of the
+% toroidal current. The signs of Bv and Ip are given with respect to phi_eqdsk which is such that
+% (R,phi_eqdsk,Z) is right handed. The sign of phi_dke is opposite such that (R,Z,phi_dke) and
+% (r,theta,phi_dke) be both right handed. The outputs of eqdsk_jd must respect the DKE convention.
+% In that case the signs of Ip and of psia must be identical.
+%
+Ip = - Ip;
+Bv = - Bv;
+rF = - rF;
+rdFdpsi = - rdFdpsi;
+%
+if sign(Ip) ~= sign(psia),
+    psia = - psia;
+end
+%
+if sign(Bv) ~= sign(rF(1)),
+    rF = - rF;
+    rdFdpsi = - rdFdpsi;
+end
+%
 if display_mode >= 2,
     %
     style = '-';

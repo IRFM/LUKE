@@ -42,19 +42,13 @@ np = length(psin);
 ap = ptx(np,1);%Plasma minor radius on the LFS midplane
 psi_apRp = psin*psia*ap/Rp;%The poloidal flux coordinate is normalized by the aspect ratio 
 ptR = Rp + ptx;
-ptBx = ptdpsindy*psia./ptR;
-ptBy = -ptdpsindx*psia./ptR;
 %
-% Warning: The PHI direction in the equil structure is such that
-% (x,y,phi) and (r,theta,phi) are right-handed systems. This is likely
-% the opposite direction from the EFIT PHI coordinate. However, 
-% because EFIT does not give any indication concerning the direction
-% of the toroidal current (as psi is always minimum on the axis in EFIT)
-% it is necessary to check both the direction of BPHI and the sign of 
-% psia. These can be adjusted retrospectively in the equil structure.
+% Note that in DKE we have B = F.gradphi + gradphi x gradpsi.
+%
+ptBx = -ptdpsindy*psia./ptR;
+ptBy = ptdpsindx*psia./ptR;
 %
 ptF = repmat(pF.',[1,nt]);
-%
 ptBPHI = ptF./ptR;
 %
 prho = ptx(:,1).'/ap;
