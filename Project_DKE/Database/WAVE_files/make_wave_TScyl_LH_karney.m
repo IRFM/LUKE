@@ -153,11 +153,11 @@ syphi_y_lh = [0]*ones(ns,nb_lh);%Not relevant
 %
 %Normalization of the diffusion coefficient for comparison with old calc. (Karney, Shoucri), see rfdiff_dke_jd
 %
-synorm_lh = (srho*equilDKE.ap*equilDKE.Rp*me.*slnc_e.*swpe.^2*omega_lh)'*ones(1,nb_lh).*abs(syphi_z_lh)./syepol_z_lh.^2;
+synorm_2piRp_lh = (srho*equilDKE.ap*me.*slnc_e.*swpe.^2*omega_lh)'*ones(1,nb_lh).*abs(syphi_z_lh)./syepol_z_lh.^2/2/pi;
 %
-syP0_lh = zeros(ns,nb_lh);
-syP0_lh(:,ytest_maskNpars_lh) = synorm_lh(:,ytest_maskNpars_lh).*syD0_lh(:,ytest_maskNpars_lh).*(syNparmax_lh(:,ytest_maskNpars_lh) - syNparmin_lh(:,ytest_maskNpars_lh));%Square power spectrum
-syP0_lh(:,ytest_maskNparg_lh) = synorm_lh(:,ytest_maskNparg_lh).*syD0_lh(:,ytest_maskNparg_lh).*sydNpar_lh(:,ytest_maskNparg_lh)*sqrt(pi);%Gaussien power spectrum
+syP0_2piRp_lh = zeros(ns,nb_lh);
+syP0_2piRp_lh(:,ytest_maskNpars_lh) = synorm_2piRp_lh(:,ytest_maskNpars_lh).*syD0_lh(:,ytest_maskNpars_lh).*(syNparmax_lh(:,ytest_maskNpars_lh) - syNparmin_lh(:,ytest_maskNpars_lh));%Square power spectrum
+syP0_2piRp_lh(:,ytest_maskNparg_lh) = synorm_2piRp_lh(:,ytest_maskNparg_lh).*syD0_lh(:,ytest_maskNparg_lh).*sydNpar_lh(:,ytest_maskNparg_lh)*sqrt(pi);%Gaussien power spectrum
 %
 % Note: The initial power in the ray is a scalar. In order to take into
 % account the location dependence calculated above, and which results from
@@ -165,29 +165,29 @@ syP0_lh(:,ytest_maskNparg_lh) = synorm_lh(:,ytest_maskNparg_lh).*syD0_lh(:,ytest
 % while P0 is taken to be its maximum value along the ray. 
 % (since Dql ~ P/|phi|)
 %
-yP0_lh = max(syP0_lh);
-syphi_z_lh = syphi_z_lh.*(ones(ns,1)*yP0_lh)./(syP0_lh+eps);
+yP0_2piRp_lh = max(syP0_2piRp_lh);
+syphi_z_lh = syphi_z_lh.*(ones(ns,1)*yP0_2piRp_lh)./(syP0_2piRp_lh+eps);
 %
 %
 syNperp_lh = syNpar_lh./syepol_z_lh;%Electrostatic limit. Indicative, not relevant in small FLR limit
 %
-syR = equilDKE.Rp + equilDKE.ap*syrho.*cos(sythetab_lh);
-syZ = equilDKE.Zp + equilDKE.ap*syrho.*sin(sythetab_lh);
-syphi = [0]*ones(ns,nb_lh);% so that the calculated finc is 1.
+syx = equilDKE.ap*syrho.*cos(sythetab_lh);
+syy = equilDKE.ap*syrho.*sin(sythetab_lh);
+syz = [0]*ones(ns,nb_lh);% so that the calculated finc is 1.
 %
 for i_lh = blist_lh,
-    ray.P0 = yP0_lh(i_lh)';% Power launched in the ray (W) [1,1]
+    ray.P0_2piRp = yP0_2piRp_lh(i_lh)';% Power launched in the ray (W) [1,1]
         %
-    ray.sx = syR(:,i_lh)' - equil.Rp;% Ray location (major radius) along the propagation [1,ns]
-    ray.sphi = syZ(:,i_lh)';% Ray location (toroidal angle) along the propagation [1,ns]
-    ray.sy = syphi(:,i_lh)' - equil.Zp;% Ray location (vertical) along the propagation [1,ns]
+    ray.sx = syx(:,i_lh)';% Ray location (major radius) along the propagation [1,ns]
+    ray.sz = syz(:,i_lh)';% Ray location (vertical) along the propagation [1,ns]
+    ray.sy = syy(:,i_lh)';% Ray location (toroidal angle) along the propagation [1,ns]
         %
     ray.ss = [];% Ray propagation distance parameter for each ray (put to NaN once the ray is absorbed) [1,ns]
     ray.spsin = [];% Ray location (normalized magnetic flux) along the propagation [1,ns]
     ray.stheta = [];% Ray location (poloidal angle) along the propagation [1,ns]
         %
     ray.skx = [];% Ray wave vector (major radius) along the propagation [1,ns]
-    ray.sn = [];% Ray wave number (toroidal) along the propagation [1,ns]
+    ray.skz = [];% Ray wave number (toroidal) along the propagation [1,ns]
     ray.sky = [];% Ray wave vector (vertical) along the propagation [1,ns]
         %
     ray.sNpar = syNpar_lh(:,i_lh)';% Ray parallel wave number [1,ns]
