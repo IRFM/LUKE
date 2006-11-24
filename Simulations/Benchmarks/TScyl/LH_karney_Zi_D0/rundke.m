@@ -21,7 +21,7 @@ rho_S = [];%Normalized radial flux grid where calculations are performed (0 < rh
 id_path = 'LAPTOP_YVES';%For all paths used by DKE solver
 path_path = '../../../Database/PATH_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_equil = 'TScirc';%For plasma equilibrium
+id_equil = 'TScyl';%For plasma equilibrium
 path_equil = '../../../Database/EQUIL_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_dkeparam = 'UNIFORM10010020';%For DKE code parameters
@@ -129,7 +129,6 @@ dkeparam.opt_save = 0;
 %
 equil.zZi = [1,1,1,1];equil.pzni = species_dke_yp(equil.pne,ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 1
 [Znorm,Zcurr_Z1,ZP0_Z1,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
-return
 equil.zZi = [1,1,1,2];equil.pzni = species_dke_yp(equil.pne,2*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 2
 [Znorm,Zcurr_Z2,ZP0_Z2,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
 equil.zZi = [1,1,1,3];equil.pzni = species_dke_yp(equil.pne,3*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 3
@@ -176,23 +175,23 @@ savefig_dke_yp('effLH_Zi')
 % Study of the D|| on the LHCD efficiency (Zeff = 1)
 %
 equil.zZi = [1,1,1,1];equil.pzni = species_dke_yp(equil.pne,ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 1
-P0_D1 = waves{1}.rays{1}.P0;%for D|| = 1
+P0_2piRp_D1 = waves{1}.rays{1}.P0_2piRp;%for D|| = 1
 %
-waves{1}.rays{1}.P0 = 0.1*P0_D1;%for D|| = 0.1
+waves{1}.rays{1}.P0_2piRp = 0.1*P0_2piRp_D1;%for D|| = 0.1
 [Znorm,Zcurr_D01,ZP0_D01,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
-waves{1}.rays{1}.P0 = 0.2*P0_D1;%for D|| = 0.2
+waves{1}.rays{1}.P0_2piRp = 0.2*P0_2piRp_D1;%for D|| = 0.2
 [Znorm,Zcurr_D02,ZP0_D02,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
-waves{1}.rays{1}.P0 = 0.5*P0_D1;%for D|| = 0.5
+waves{1}.rays{1}.P0_2piRp = 0.5*P0_2piRp_D1;%for D|| = 0.5
 [Znorm,Zcurr_D05,ZP0_D05,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
-waves{1}.rays{1}.P0 = P0_D1;%for D|| = 1
+waves{1}.rays{1}.P0_2piRp = P0_2piRp_D1;%for D|| = 1
 [Znorm,Zcurr_D1,ZP0_D1,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
-waves{1}.rays{1}.P0 = 2*P0_D1;%for D|| = 2
+waves{1}.rays{1}.P0_2piRp = 2*P0_2piRp_D1;%for D|| = 2
 [Znorm,Zcurr_D2,ZP0_D2,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
-waves{1}.rays{1}.P0 = 5*P0_D1;%for D|| = 5
+waves{1}.rays{1}.P0_2piRp = 5*P0_2piRp_D1;%for D|| = 5
 [Znorm,Zcurr_D5,ZP0_D5,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
-waves{1}.rays{1}.P0 = 10*P0_D1;%for D|| = 10
+waves{1}.rays{1}.P0_2piRp = 10*P0_2piRp_D1;%for D|| = 10
 [Znorm,Zcurr_D10,ZP0_D10,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
-waves{1}.rays{1}.P0 = 20*P0_D1;%for D|| = 20
+waves{1}.rays{1}.P0_2piRp = 20*P0_2piRp_D1;%for D|| = 20
 [Znorm,Zcurr_D20,ZP0_D20,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
 %
 Dlh = [0.1,0.2,0.5,1,2,5,10,20];

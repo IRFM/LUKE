@@ -14,13 +14,13 @@ global nfig
 id_simul = 'Thermal';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_path = 'PC_DRFC_YVES';%For all paths used by DKE solver
+id_path = 'LAPTOP_YVES';%For all paths used by DKE solver
 path_path = '../../../Database/PATH_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 psin_S = [0.001];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
 rho_S = [];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
-id_equil = 'TScirc';%For plasma equilibrium
+id_equil = 'TScyl';%For plasma equilibrium
 path_equil = '../../../Database/EQUIL_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_dkeparam = 'UNIFORM10010020';%For DKE code parameters

@@ -22,7 +22,7 @@ rho_S = [0.05:0.02:0.2,0.22:0.03:0.6,0.62:0.05:0.95];%Normalized radial flux gri
 id_path = 'PC_DRFC_YVES';%For all paths used by DKE solver
 path_path = '../../../Database/PATH_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_equil = 'TScirc_flatprof_cyl';%For plasma equilibrium
+id_equil = 'TScyl';%For plasma equilibrium
 path_equil = '../../../Database/EQUIL_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_dkeparam = 'UNIFORM10010020_MUMPS';%For DKE code parameters

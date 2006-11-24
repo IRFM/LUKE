@@ -17,10 +17,10 @@ path_simul = '';%if nothing is specified, the working directory is first used an
 psin_S = [0.001];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
 rho_S = [];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
-id_path = 'PC_DRFC_YVES';%For all paths used by DKE solver
+id_path = 'LAPTOP_YVES';%For all paths used by DKE solver
 path_path = '../../../Database/PATH_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_equil = 'TScirc_flatprof_e1';%For plasma equilibrium
+id_equil = 'TScyl';%For plasma equilibrium
 path_equil = '../../../Database/EQUIL_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_dkeparam = 'UNIFORM10010020_coll0';%For DKE code parameters
@@ -160,7 +160,7 @@ RR = [dke_out_Z1.XxRR_fsav(end,:),dke_out_Z2.XxRR_fsav(end,:),dke_out_Z3.XxRR_fs
 Z_kulsrud =[1,2,3,10];
 RR_kulsrud = [3.177,1.735,1.047,0.09]*1e-4;%Kulsrud (PRL, 31,11, (1972) 690
 %
-figure(1),figure,graph1D_jd(Z,RR,0,1,'Main ion charge (Z)','Runaway loss rate','',NaN,'','','-','non','r',2);hold on
+figure(1),graph1D_jd(Z,RR,0,1,'Main ion charge (Z)','Runaway loss rate','',NaN,'','','-','non','r',2);hold on
 graph1D_jd(Z_kulsrud,RR_kulsrud,0,1,'Main ion charge (Z)','Runaway loss rate','',NaN,'','','none','*','g',2);hold on
 graph1D_jd(1,3.177e-4,0,1,'Main ion charge (Z)','Runaway loss rate','',NaN,'','','none','+','b',2);
 legend('DKE','Kulsrud et al.','Kruskal-Bernstein');

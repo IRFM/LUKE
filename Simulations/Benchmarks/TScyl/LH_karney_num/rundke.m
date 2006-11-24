@@ -20,7 +20,7 @@ rho_S = [];%Normalized radial flux grid where calculations are performed (0 < rh
 id_path = 'LAPTOP_YVES';%For all paths used by DKE solver
 path_path = '../../../Database/PATH_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_equil = 'TScirc';%For plasma equilibrium
+id_equil = 'TScyl';%For plasma equilibrium
 path_equil = '../../../Database/EQUIL_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_dkeparam = 'UNIFORM10010020';%For DKE code parameters
@@ -129,7 +129,6 @@ dkeparam.opt_load = 0;
 dkeparam.opt_save = 0;
 [Znorm_LU,Zcurr_LU,ZP0_LU,dke_out_LU,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
 disp('Full LU calculation done')
-return
 %
 for j = 1:3,%Numerical method (CGS, BICG, QMR)
     for i = 1:nit,%droptolerance scan
@@ -149,10 +148,10 @@ for j = 1:3,%Numerical method (CGS, BICG, QMR)
 end
 %
 %dkeparam.invproc = 0;
-%[Znorm_directML,Zcurr_directML,ZP0_directML,dke_out_directML,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+%[Znorm_directML,Zcurr_directML,ZP0_directML,dke_out_directML,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
 %disp(['Direct MatLab calculation done'])
 dkeparam.invproc = -1;
-[Znorm_MUMPS,Zcurr_MUMPS,ZP0_MUMPS,dke_out_MUMPS,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm_MUMPS,Zcurr_MUMPS,ZP0_MUMPS,dke_out_MUMPS,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
 disp(['Direct MUMPS calculation done'])
 %
 vparmin = 1/(waves{1}.rays{1}.sNpar(1)+imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;

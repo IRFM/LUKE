@@ -1,7 +1,7 @@
 id_simul = 'LH_karney_transp_nobounce';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_equil = 'TScirc';%For plasma equilibrium
+id_equil = 'TScyl';%For plasma equilibrium
 path_equil = '../../../Database/EQUIL_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_hxr = 'TS99';%For HXR diagnostic configuration
