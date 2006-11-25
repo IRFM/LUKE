@@ -26,8 +26,8 @@ end
 %
 omega_lh = [4]*2*pi*1e9; %(GHz -> rad/s). Wave frequency [1,1] Indicative, no effect in small FLR limit
 %Option parameter for cross-comparison between old LH code: 
-%	- (1): FLR limit and 1/vpar dependence
-%	- (2): FLR limit and no 1/vpar dependence and old grid technique for Dlh calculations (Karney, Shoucri) (see rfdiff_dke_jd)
+%	- (1): 1/vpar dependence
+%	- (2): no 1/vpar dependence and old grid technique for Dlh calculations (Karney, Shoucri) (see rfdiff_dke_jd)
 opt_lh = 2; % [1,1]
 %
 %

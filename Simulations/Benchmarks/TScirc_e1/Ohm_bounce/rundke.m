@@ -16,11 +16,12 @@ path_simul = '';%if nothing is specified, the working directory is first used an
 %
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
 rho_S = linspace(0.01,0.95,30);%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+rho_S = [0.5];
 %
-id_path = 'PC_DRFC_YVES';%For all paths used by DKE solver
+id_path = 'LAPTOP_YVES';%For all paths used by DKE solver
 path_path = '../../../Database/PATH_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_equil = 'TScirc_flatprof_e1';%For plasma equilibrium
+id_equil = 'TScirc_e1';%For plasma equilibrium
 path_equil = '../../../Database/EQUIL_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_dkeparam = 'BOUNCE3D_MUMPS';%For DKE code parameters
@@ -118,9 +119,10 @@ end
 %
 %************************************************************************************************************************************
 %
-dkeparam.invproc = -1;
+dkeparam.invproc = 1;
 dkeparam.opt_load = 0;
 dkeparam.opt_save = 0;
+dkeparam.equil_mode = 1;
 %
 [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
 %	    

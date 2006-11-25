@@ -19,7 +19,7 @@ path_simul = '';%if nothing is specified, the working directory is first used an
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
 rho_S = [0.05:0.02:0.2,0.22:0.03:0.6,0.62:0.05:0.95];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
-id_path = 'PC_DRFC_YVES';%For all paths used by DKE solver
+id_path = 'LAPTOP_YVES';%For all paths used by DKE solver
 path_path = '../../../Database/PATH_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_equil = 'TScyl';%For plasma equilibrium
@@ -120,7 +120,8 @@ end
 %
 %************************************************************************************************************************************
 %
-dkeparam.MUMPSparam.nproc = 4;%Number of processors
+dkeparam.invproc = 1;%Number of processors
+dkeparam.MUMPSparam.nproc = 1;%Number of processors
 dkeparam.opt_load = 0;
 dkeparam.opt_save = 0;
 % 

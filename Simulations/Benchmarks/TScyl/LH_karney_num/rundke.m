@@ -186,7 +186,7 @@ graph1D_jd(dludroptol,-Pcoll_f(:,2),1,0,'Drop tolerance parameter \delta_{LU}','
 graph1D_jd(dludroptol,-Pcoll_f(:,3),1,0,'Drop tolerance parameter \delta_{LU}','p_{LH} and p_{coll}',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1)],NaN,'','','-.','none','g',2);
 legend('LH (CGS)','LH (BICG)','LH (QMR)','Collision (CGS)','Collision (BICG)','Collision (QMR)')
 savefig_dke_yp('PLHPcollludroptol')
-%
+% 
 figure(6),graph1D_jd(dludroptol,abs(curr_f(:,1))./Prf_f(:,1),1,0,'Drop tolerance parameter \delta_{LU}','|\eta| (MA.m/MW)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1)],NaN,'','','none','+','r',2);hold on
 graph1D_jd(dludroptol,abs(curr_f(:,2))./Prf_f(:,2),1,0,'Drop tolerance parameter \delta_{LU}','|\eta| (MA.m/MW)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1)],NaN,'','','none','x','b',2);hold on
 graph1D_jd(dludroptol,abs(curr_f(:,3))./Prf_f(:,3),1,0,'Drop tolerance parameter \delta_{LU}','|\eta| (MA.m/MW)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1)],NaN,'','','none','*','g',2);
