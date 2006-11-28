@@ -176,7 +176,7 @@ syZ = equilDKE.Zp + equilDKE.ap*syrho.*sin(sythetab_lh);
 syphi = [0]*ones(ns,nb_lh);% so that the calculated finc is 1.
 %
 for i_lh = blist_lh,
-    ray.P0 = yP0_lh(i_lh)';% Power launched in the ray (W) [1,1]
+    ray.P0_2piRp = yP0_lh(i_lh)'/(2*pi*equilDKE.Rp);% Power launched in the ray (W) [1,1]
         %
     ray.sx = syR(:,i_lh)'- equil.Rp;% Ray location (major radius) along the propagation [1,ns]
     ray.sphi = syZ(:,i_lh)';% Ray location (toroidal angle) along the propagation [1,ns]

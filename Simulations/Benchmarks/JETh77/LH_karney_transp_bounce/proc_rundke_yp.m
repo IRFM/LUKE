@@ -36,7 +36,7 @@ P_rf = ZP0_10.x_rf_fsav.'*mksa.P_ref;
 xrho = gridDKE.xrho; 
 %
 I_rf = sum(J_rf.*equilDKE.xdA_dke);
-p_rf = sum(P_rf.*equilDKE.xdV_dke);
+p_rf = sum(P_rf.*equilDKE.xdV_2piRp_dke);
 Eta_rf = I_rf/p_rf;
 %
 disp(['RF current: ',num2str(I_rf),' MA'])
