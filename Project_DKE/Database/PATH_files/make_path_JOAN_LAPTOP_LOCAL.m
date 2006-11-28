@@ -11,7 +11,7 @@ path.path_id = path_id;
 path.computer = 'PCWIN';%machine type and supported OS
 path.MUMPS = 'D:/Work/Packages/MUMPS_4.6.1/dke';%Where MUMPS matrix solver is stored
 path.PETSC = '';%Where PETSC matrix solver is stored
-path.temppath = '';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+path.temppathroot = '';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 path.mex = 'D:/Work/Project_DKE/MEX';
 %
 eval(['save PATH_',path_id ,'.mat path']);

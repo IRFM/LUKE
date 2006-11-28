@@ -11,7 +11,7 @@ path.path_id = path_id;
 path.computer = 'MAC';%machine type and supported OS
 path.MUMPS = '/Users/Yves/CEA/Projets/Packages/MUMPS_4.6.2_seq/dke';%Where MUMPS matrix solver is stored
 path.PETSC = '';%Where PETSC matrix solver is stored
-path.temppath = '';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+path.temppathroot = '';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 path.mex = '/Users/Yves/CEA/Projets/Project_DKE/MEX';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 eval(['save PATH_',path_id ,'.mat path']);
