@@ -15,7 +15,7 @@ filename = id_wave;
 %
 id_equil = 'RTtest';%For plasma equilibrium
 mode_equil = 1;%Magnetic equilibrium grid type: (1): (psi-theta), (2): (x-y)
-path_equil = '';'../../Database/EQUIL_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_equil = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 if exist([path_equil,'EQUIL_',id_equil,'.mat']) == 0,%Magnetic equilibrium
 	info_dke_yp(2,[path_equil,'EQUIL_',id_equil,'.mat does not exist']);
