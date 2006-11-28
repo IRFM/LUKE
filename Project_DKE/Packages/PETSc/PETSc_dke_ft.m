@@ -42,9 +42,11 @@ end
 flag = 0;
 %
 initial_dir = cd;
-if isempty(path.temppath) == 0,%Local saving
-   cd(path.temppath);%Move to scratch directory
+d = dir(path.temppath);
+if ~exist(path.temppath);
+	mkdir(path.temppath);%Create calculation directory
 end
+cd(path.temppath);%Move to calculation directory	
 %
 %Write matrix A and vector B in PETSc binary file
 %

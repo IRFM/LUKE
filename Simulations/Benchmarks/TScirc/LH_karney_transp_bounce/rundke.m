@@ -52,6 +52,7 @@ else
 	eval(['load ',path_path,'PATH_',id_path,'.mat']);
 	info_dke_yp(2,'Structure ''path'' successfully loaded');
     if ~strcmp(path.computer,computer),error('The path structure is not consistent with the computer !'),end
+    path.temppath = [path.temppathroot,filesep,timeid_jd(clock)];
 end
 %
 if exist([path_equil,'EQUIL_',id_equil,'.mat']) == 0,%Magnetic equilibrium
@@ -124,8 +125,8 @@ dkeparam.opt_save = 0;
 % 
 % Dpsipsi scan (0 -> 100 m2/s
 %
-transpfaste.Dr_model = 0;
-transpfaste.vparmin = 2.8;
+transpfaste.Dr_model = 1;
+transpfaste.vparmin = 3.5;
 %
 transpfaste.Dr0 = 0;
 [Znorm0,Zcurr0,ZP0_0,dke_out0,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);

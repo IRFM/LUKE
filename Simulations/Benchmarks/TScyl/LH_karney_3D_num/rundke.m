@@ -52,6 +52,7 @@ else
 	eval(['load ',path_path,'PATH_',id_path,'.mat']);
 	info_dke_yp(2,'Structure ''path'' successfully loaded');
     if ~strcmp(path.computer,computer),error('The path structure is not consistent with the computer !'),end
+    path.temppath = [path.temppathroot,filesep,timeid_jd(clock)];
 end
 %
 if exist([path_equil,'EQUIL_',id_equil,'.mat']) == 0,%Magnetic equilibrium

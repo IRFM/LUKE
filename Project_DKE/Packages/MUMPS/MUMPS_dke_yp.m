@@ -49,9 +49,11 @@ end
 flag = 0;
 %
 initial_dir = cd;
-if isempty(path.temppath) == 0,%Local saving
-   cd(path.temppath);%Move to scratch directory
+d = dir(path.temppath);
+if ~exist(path.temppath);
+	mkdir(path.temppath);%Create calculation directory
 end
+cd(path.temppath);%Move to calculation directory	
 %
 % Write one file per variable for MatLab <-> FORTRAN in the scratch directory
 %
