@@ -45,77 +45,7 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %************************************************************************************************************************************
 %************************************************************************************************************************************
 %
-if exist([path_path,'PATH_',id_path,'.mat']) == 0,%Paths
-	info_dke_yp(2,[path_path,'PATH_',id_path,'.mat does not exist']);
-	break
-else
-	eval(['load ',path_path,'PATH_',id_path,'.mat']);
-	info_dke_yp(2,'Structure ''path'' successfully loaded');
-    if ~strcmp(path.computer,computer),error('The path structure is not consistent with the computer !'),end
-    path.temppath = [path.temppathroot,filesep,timeid_jd(clock)];
-end
-%
-if exist([path_equil,'EQUIL_',id_equil,'.mat']) == 0,%Magnetic equilibrium
-	info_dke_yp(2,[path_equil,'EQUIL_',id_equil,'.mat does not exist']);
-	break
-else
-	eval(['load ',path_equil,'EQUIL_',id_equil,'.mat']);
-	info_dke_yp(2,'Structure ''equil'' successfully loaded');
-end
-%
-if exist([path_dkeparam,'DKEPARAM_',id_dkeparam,'.mat']) == 0,%DKE simulation parameters 
-	info_dke_yp(2,[path_dkeparam,'DKEPARAM_',id_dkeparam,'.mat does not exist']);
-	break
-else
-	eval(['load ',path_dkeparam,'DKEPARAM_',id_dkeparam,'.mat']);
-	info_dke_yp(2,'Structure ''dkeparam'' successfully loaded');
-end
-%
-if exist([path_display,'DISPLAY_',id_display,'.mat']) == 0,%DKE output display parameters
-	info_dke_yp(2,[path_display,'DISPLAY_',id_display,'.mat does not exist']);
-	break
-else
-	eval(['load ',path_display,'DISPLAY_',id_display,'.mat']);
-	info_dke_yp(2,'Structure ''display'' successfully loaded');
-end
-%
-if exist([path_ohm,'OHM_',id_equil,'_',id_ohm,'.mat']) == 0,%Ohmic electric field 
-	info_dke_yp(2,['Simulations are performed without Ohmic Efield']);
-	ohm = '';
-else
-	eval(['load ',path_ohm,'OHM_',id_equil,'_',id_ohm,'.mat']);
-	info_dke_yp(2,['Structure ''ohm'' ',id_ohm,' successfully loaded']);
-end
-%
-ii=1;
-waves = '';%List of structure for multiple RF waves
-for iw = 1:length(ids_wave),
-	if exist([paths_wave{iw},'WAVE_',id_equil,'_',ids_wave{iw},'.mat']) == 0,%RF waves
-		info_dke_yp(2,['Simulations are performed without the RF wave number: ',int2str(iw)]);
-	else
-		eval(['load ',paths_wave{iw},'WAVE_',id_equil,'_',ids_wave{iw},'.mat']);
-		info_dke_yp(2,['Structure ''wave'' ',ids_wave{iw},' successfully loaded']);
-		waves{ii} = wave;
-		ii = ii + 1;
-		clear wave
-	end
-end
-%
-if exist([path_transpfaste,'TRANSP_',id_transpfaste,'.mat']) == 0,%Fast electron radial transport 
-	info_dke_yp(2,'Simulations are performed without fast electron radial transport');
-	transpfaste = '';
-else
-	eval(['load ',path_transpfaste,'TRANSP_',id_transpfaste,'.mat']);
-	info_dke_yp(2,'Structure ''transpfaste'' successfully loaded');
-end
-%
-if exist([path_ripple,'RIPPLE_',id_ripple,'.mat']) == 0,%Magnetic ripple losses
-	info_dke_yp(2,'Simulations are performed without fast electron magnetic ripple losses');
-	ripple = '';
-else
-	eval(['load ',path_ripple,'RIPPLE_',id_ripple,'.mat']);
-	info_dke_yp(2,'Structure ''ripple'' successfully loaded');
-end
+[dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple] = load_structures_yp(id_path,path_path,id_equil,path_equil,id_dkeparam,path_dkeparam,id_display,path_display,id_ohm,path_ohm,ids_wave,paths_wave,id_transpfaste,path_transpfaste,id_ripple,path_ripple);
 %
 %************************************************************************************************************************************
 %
@@ -125,13 +55,13 @@ dkeparam.opt_load = 0;
 dkeparam.opt_save = 0;
 %
 dkeparam.coll_mode = 0;
-[Znorm,Zcurr0,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr0,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
 dkeparam.coll_mode = 1;
-[Znorm,Zcurr1,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr1,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
 dkeparam.coll_mode = 2;
-[Znorm,Zcurr2,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr2,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
 dkeparam.coll_mode = 4;
-[Znorm,Zcurr4,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr4,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
 %
 sigma0 = Zcurr0.x_tot_fsav/(ohm.epsi(gridDKE.ir_display_out)/mksa.Edreicer_ref);
 sigma1 = Zcurr1.x_tot_fsav/(ohm.epsi(gridDKE.ir_display_out)/mksa.Edreicer_ref);
@@ -140,13 +70,13 @@ sigma4 = Zcurr4.x_tot_fsav/(ohm.epsi(gridDKE.ir_display_out)/mksa.Edreicer_ref);
 %
 dkeparam.coll_mode = 2;
 equil.zZi = [1,1,1,2];equil.pzni = species_dke_yp(equil.pne,2*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 2
-[Znorm,Zcurr_Z2,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr_Z2,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
 equil.zZi = [1,1,1,5];equil.pzni = species_dke_yp(equil.pne,5*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 5
-[Znorm,Zcurr_Z5,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr_Z5,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
 equil.zZi = [1,1,1,10];equil.pzni = species_dke_yp(equil.pne,10*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 10
-[Znorm,Zcurr_Z10,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr_Z10,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
 equil.zZi = [1,1,1,20];equil.pzni = species_dke_yp(equil.pne,20*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 20
-[Znorm,Zcurr_Z20,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr_Z20,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
 %
 sigma_Z1 = sigma2;
 sigma_Z2 = Zcurr_Z2.x_tot_fsav/(ohm.epsi(gridDKE.ir_display_out)/mksa.Edreicer_ref);
