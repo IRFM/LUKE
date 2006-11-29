@@ -1,4 +1,4 @@
-function [X,flag,text] = PETSc_dke_ft(PETScparam,A,B,display_mode,path)
+function [X,flag,text] = PETSc_dke_ft(PETScparam,A,B,display_mode,dkepath)
 %
 %Link with the parallel matrix solver package PETSc written in C. 
 %Adapted to the Saturne computers of the CEA-DRFC
@@ -11,7 +11,7 @@ function [X,flag,text] = PETSc_dke_ft(PETScparam,A,B,display_mode,path)
 %	 - A: Matrix [n,n]
 %   - B: Vector for solving the linear system of equations AX=B [n,1]  
 %   - display_mode: display some results [1,1]
-%   - path: paths structure
+%   - dkepath: paths structure
 %
 % OUTPUTS:
 %
@@ -34,19 +34,19 @@ else
    nproc = PETScparam.nproc;
 end
 %
-if isempty(path.PETSc),%Local saving
-   PETScpath = path.PETSc;
+if isempty(dkepath.PETSc),%Local saving
+   PETScpath = dkepath.PETSc;
 else
-   PETScpath = [path.PETSc,filesep];
+   PETScpath = [dkepath.PETSc,filesep];
 end
 flag = 0;
 %
 initial_dir = cd;
-d = dir(path.temppath);
-if ~exist(path.temppath);
-	mkdir(path.temppath);%Create calculation directory
+d = dir(dkepath.temppath);
+if ~exist(dkepath.temppath);
+	mkdir(dkepath.temppath);%Create calculation directory
 end
-cd(path.temppath);%Move to calculation directory	
+cd(dkepath.temppath);%Move to calculation directory	
 %
 %Write matrix A and vector B in PETSc binary file
 %
@@ -85,7 +85,7 @@ pcmethod = PETScparam.pcmethod;
 %
 %Test processor charge to select the first less used regarding the total number of processors needed
 %
-if strcmp(path.computer,'GLNXA64'),%Parallel processing
+if strcmp(dkepath.computer,'GLNXA64'),%Parallel processing
    if PETScparam.nproc > 15, 
       nproc = 15;
       info_dke_yp(2,'The number of processors has been enforced to 15 !');
@@ -117,10 +117,10 @@ if strcmp(path.computer,'GLNXA64'),%Parallel processing
 %     - rhs: location of PETSc binary file of the b vector
 %     - ksp_type: sets KSP method. see PETSc manual
 %     - scratchdir: indicates the /scratch directory to the C program.
-   [flag,text] = unix([PETScpath,'bin/petscmpirun -np ',int2str(nprocmax),' -machinefile .machines ',PETScpath,'DKE/PETSc_DKE_ft -f PETSc_in_A.bin -rhs PETSc_in_b.bin  -scratchdir ',path.temppath,' ',mattype,' ',kspmethod, ' ', pcmethod]);
+   [flag,text] = unix([PETScpath,'bin/petscmpirun -np ',int2str(nprocmax),' -machinefile .machines ',PETScpath,'DKE/PETSc_DKE_ft -f PETSc_in_A.bin -rhs PETSc_in_b.bin  -scratchdir ',dkepath.temppath,' ',mattype,' ',kspmethod, ' ', pcmethod]);
    %
     delete('.machines');%delete .machines file
-elseif strcmp(path.computer,'MAC'),%Parallel or sequential processing
+elseif strcmp(dkepath.computer,'MAC'),%Parallel or sequential processing
    %nproc = 1;% Single processor enforced
    %[flag,text]=unix([MUMPSpath,'mumpsdke']);  
 end

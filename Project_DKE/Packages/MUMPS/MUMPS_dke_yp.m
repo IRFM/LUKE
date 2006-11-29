@@ -1,4 +1,4 @@
-function [X,flag,text] = MUMPS_dke_yp(MUMPSparam,A,B,display_mode,path)
+function [X,flag,text] = MUMPS_dke_yp(MUMPSparam,A,B,display_mode,dkepath)
 %
 %Link with the parallel matrix solver package MUMPS written in FORTAN 95. This is a modified package wich is able to 
 %read binary files written by MatLab, which needs to be compiled first. 
@@ -12,7 +12,7 @@ function [X,flag,text] = MUMPS_dke_yp(MUMPSparam,A,B,display_mode,path)
 %	- A: Matrix [n,n]
 %   - B: Vector for solving the linear system of equations AX=B [n,1]  
 %   - display_mode: display some results [1,1]
-%   - path: paths structure
+%   - dkepath: paths structure
 %
 % OUTPUTS:
 %
@@ -41,19 +41,19 @@ else
    nproc = MUMPSparam.nproc;
 end
 %
-if isempty(path.MUMPS),%Local saving
-   MUMPSpath = path.MUMPS;
+if isempty(dkepath.MUMPS),%Local saving
+   MUMPSpath = dkepath.MUMPS;
 else
-   MUMPSpath = [path.MUMPS,filesep];
+   MUMPSpath = [dkepath.MUMPS,filesep];
 end
 flag = 0;
 %
 initial_dir = cd;
-d = dir(path.temppath);
-if ~exist(path.temppath);
-	mkdir(path.temppath);%Create calculation directory
+d = dir(dkepath.temppath);
+if ~exist(dkepath.temppath);
+	mkdir(dkepath.temppath);%Create calculation directory
 end
-cd(path.temppath);%Move to calculation directory	
+cd(dkepath.temppath);%Move to calculation directory	
 %
 % Write one file per variable for MatLab <-> FORTRAN in the scratch directory
 %
@@ -67,7 +67,7 @@ fid = fopen('MUMPS_B_in.bin','wb');fwrite(fid,B,'double');if (fclose(fid)~=0), e
 %
 % Test processor charge to select the first less used regarding the total number of processors needed
 %
-if strcmp(path.computer,'GLNXA64'),%Parallel processing
+if strcmp(dkepath.computer,'GLNXA64'),%Parallel processing
    if MUMPSparam.nproc > 15, 
       nproc = 15;
       info_dke_yp(2,'The number of processors has been enforced to 15 !');
@@ -97,7 +97,7 @@ if strcmp(path.computer,'GLNXA64'),%Parallel processing
    [flag,text]=unix(['/usr/local/pgi/linux86-64/6.0/bin/mpirun -np ',int2str(nprocmax),' -machinefile .machines ',MUMPSpath,'mumpsdke']);
 %
     delete('.machines');%delete .machines file
-elseif strcmp(path.computer,'MAC'),%Parallel or sequential processing
+elseif strcmp(dkepath.computer,'MAC'),%Parallel or sequential processing
    nproc = 1;% Single processor enforced
    [flag,text]=unix([MUMPSpath,'mumpsdke']);  
 end
