@@ -1,8 +1,8 @@
 function [Nperpp,Nperpm,Kxyz,...
     ep_xyz,em_xyz,ep_pmz,em_pmz,ep_pyk,em_pyk,...
     phip_xyz,phim_xyz,phip_pmz,phim_pmz,phip_pyk,phim_pyk,...
-    Dp,Dm]...
-    = colddisp_dke_jd(Npar,omega_rf,ne,zni,zZi,zmi,Bfield,Nperp);
+    sigmap,sigmam,Dp,Dm]...
+    = colddisp_dke_jd(Npar,omega_rf,ne,zni,zZi,zmi,Bfield,Nperp)
 %
 % This function solves the dispersion relation and the wave equation
 % in the linear cold plasma model. It calculates the perpendicular index of
@@ -40,12 +40,14 @@ function [Nperpp,Nperpm,Kxyz,...
 %       - em_pmz: polarization vector in the (p,m,z) coordinates (root -) [3,1]  
 %       - ep_pyk: polarization vector in the (p,y,k) coordinates (root +) [3,1]  
 %       - em_pyk: polarization vector in the (p,y,k) coordinates (root -) [3,1] 
-%       - phip_xyz: power flow vector in the (x,y,z) coordinates (root +) [3,1]
-%       - phim_xyz: power flow vector in the (x,y,z) coordinates (root -) [3,1] 
-%       - phip_pmz: power flow vector in the (p,m,z) coordinates (root +) [3,1] 
-%       - phim_pmz: power flow vector in the (p,m,z) coordinates (root -) [3,1]  
-%       - phip_pyk: power flow vector in the (p,y,k) coordinates (root +) [3,1]  
-%       - phim_pyk: power flow vector in the (p,y,k) coordinates (root -) [3,1] 
+%       - phip_xyz: normalized power flow vector in the (x,y,z) coordinates (root +) [3,1]
+%       - phim_xyz: normalized power flow vector in the (x,y,z) coordinates (root -) [3,1] 
+%       - phip_pmz: normalized power flow vector in the (p,m,z) coordinates (root +) [3,1] 
+%       - phim_pmz: normalized power flow vector in the (p,m,z) coordinates (root -) [3,1]  
+%       - phip_pyk: normalized power flow vector in the (p,y,k) coordinates (root +) [3,1]  
+%       - phim_pyk: normalized power flow vector in the (p,y,k) coordinates (root -) [3,1] 
+%       - sigmap: normalized energy density (root +) [1,1] 
+%       - sigmam: normalized energy density (root -) [1,1] 
 %
 % created 05/02/2003
 % by Joan Decker <jodecker@alum.mit.edu> (MIT/RLE) and  Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
@@ -53,12 +55,11 @@ function [Nperpp,Nperpm,Kxyz,...
 [qe,me,mp,mn,e0] = pc_dke_yp;
 %
 ns = [ne;zni(:)];
-if zZi(1) == 0 | zZi(2) == 0 | zZi(3) == 0,
-   qs = qe*[0;zZi(:)];%vacuum case, no charge
-else
-   qs = qe*[-1;zZi(:)];    
+qs = qe*[-1;zZi(:)];    
+if zZi(1) == 0,
+   qs = qs*0;%vacuum case, no charge
 end
-
+%
 ms = [me;mp*zmi(:)];
 %
 wps = sqrt(ns.*qs.^2/e0./ms);
@@ -164,3 +165,15 @@ phip_pmz = real(Npmzp - (Npmzp.'*ep_pmz)*conj(ep_pmz));
 phim_pmz = real(Npmzm - (Npmzm.'*em_pmz)*conj(em_pmz)); 
 phip_pyk = real(Npykp - (Npykp.'*ep_pyk)*conj(ep_pyk)); 
 phim_pyk = real(Npykm - (Npykm.'*em_pyk)*conj(em_pyk));
+%
+%   Energy density 
+%
+wdKperpdw = 2*sum(ps.^2./(1 - ys.^2).^2);
+wdKpardw = 2*sum(ps.^2);
+wdKxydw = -sum((3 - ys.^2).*ps.^2.*ys./(1 - ys.^2).^2);
+%
+wdKxyzdw = [wdKperpdw,-i*wdKxydw,0;i*wdKxydw,wdKperpdw,0;0,0,wdKpardw];
+%
+sigmap = ep_xyz'*(wdKxyzdw - 2*real(Nxyzp*Nxyzp.' - sum(Nxyzp.^2)*diag([1,1,1])))*ep_xyz/2;
+sigmam = em_xyz'*(wdKxyzdw - 2*real(Nxyzm*Nxyzm.' - sum(Nxyzm.^2)*diag([1,1,1])))*em_xyz/2;
+%
