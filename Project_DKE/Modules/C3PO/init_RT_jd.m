@@ -112,10 +112,10 @@ xNperp = zeros(1,1);
     dummy,dummy,dummy,dummy,dummy,dummy,...
     phip_xyz,phim_xyz] = colddisp_dke_jd(xNpar,xomega,xne,zxni,zZi,zmi,xB);
 %
-if mmode == -1,
+if mmode == 1,
     Nperpc = Nperpm;
     phic_xyz = phim_xyz;
-elseif mmode == 1,
+elseif mmode == -1,
     Nperpc = Nperpp;
     phic_xyz = phip_xyz;
 else
@@ -148,7 +148,7 @@ xY = [xrho;xtheta;xphi;xkrho;xm;xn;xomega];
 %
 % verification
 %
-if 1,
+if 0,
     xNpar2 = (xm.*xc.*xBsn./xr + xn.*xBphin./xR)*clum./xomega;
     xNperp2 = sqrt((xkrho*xgradrho - xs.*xm./xr).^2 + (xBphin.*xc.*xm./xr - xBsn.*xn./xR).^2)*clum./xomega;
     [Nperpp2,Nperpm2,Kxyz,ep_xyz,em_xyz,ep_pmz,em_pmz,ep_pyk,em_pyk,phip_xyz,phim_xyz,phip_pmz,phim_pmz,phip_pyk,phim_pyk,sigmap,sigmam,Dp,Dm]...
