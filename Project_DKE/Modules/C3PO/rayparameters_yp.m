@@ -62,7 +62,7 @@ B = sqrt(BR.^2 + BZ.^2 + BPHI.^2);
 r = sqrt((R - Rp).^2 + (Z - Zp).^2);
 salpha = ((R - Rp).*dRdtheta + (Z - Zp).*dZdtheta)./r./sqrt(dRdtheta.^2 + dZdtheta.^2);
 calpha = sqrt(1.0 - salpha.^2);
-gradrho = R.*BP.*dRstardpsin_ray(:)/equil_fit.psia;
+gradrho = R.*BP.*dRstardpsin_ray(:)/abs(equil_fit.psia);
 %
 [qe,me,mp,mn,e0,mu0,re,mc2,clum] = pc_dke_yp;
 Npar = clum*(sigmaIp*m.*calpha.*BP./r./B + n.*BPHI./R./B)./omega;
