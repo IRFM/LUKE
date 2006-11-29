@@ -1,33 +1,56 @@
-function rayinit = main_rayinit_launch_jd(equil,launch,dNpar0,ns,method)
+function rayinit = main_rayinit_launch_jd(equil,launch)
 %
 % This function creates the rayinit structure based on ray launching parameters. Straight ray
 % propagation is assumed up to the last closed flux-surface.
 %
 % INPUTS:
+%Launch structure fields:
 %
-%   -structure launch:
-%       - omega_rf : wave angular frequency (rad/s)
+%       - type = Type of wave (LH or EC;
+%       - omega_rf = [4.6]*2*pi*1e9;%wave angular frequency (rad/s)
+%
+%Specific to LH wave
+%
+%       - bPlhtotp = [0.2]*1e6;%initial power in the ray (W) (main lobe) [1,n_lobe]
+%       - bNpar0p = [-2.6];%Initial Npar value (main lobe) [1,n_lobe]
+%       - bwidthp = [0.2];%ray spectral width for Fokker-Planck calculations [1,n_lobe]
+%       - ry0p = [-0.0535;0.0001;0.0535];%vertical launching positions [m_pol,1]
+%
+%       - bPlhtotm = []*1e6;%initial power in the ray (W) (satellite lobe) [1,n_lobe]
+%       - bNpar0m = [];%Initial Npar value (satellite lobe) [1,n_lobe]
+%       - bwidthm = [];%ray spectral width for Fokker-Planck calculations [1,n_lobe]
+%       - ry0m = [];%vertical launching positions [m_pol,1]
+%
+%       - m0 = 0;%initial poloidal mode number
+%       - phi0 = 0;%toroidal angle position
+%       - i_ref = length(equil.psi_apRp) - 1;%Initial radial position index
+%       - LFS = 1;% (-1) high field side launching, (1) low field side launching
+%
+%Specific to EC wave
+%
 %       - yR_L : major radius position of launching (m)
 %       - yZ_L : vertical position of launching (m)
 %       - yphi_L : toroidal angle position of launching (rad), (R,Z,phi) right handed
 %       - yalpha_L : horizontal angle with respect to R (rad)
 %       - ybeta_L : vertical angle with respect to Z (rad) 
 %       - yP_L : power launched in the ray (W)
+%       - dNpar0 :  initial power spectrum width. May be NaN
+%       - ns : (1000)
+%       - method: ('cubic')
 %
-% by J. Decker (RLE/MIT) <jodecker@mit.edu> and Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr>
+% by J. Decker (CEA-DRFC) <joan.decker@cea.fr> and Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr>
 %
-if nargin < 5,
-    method = 'cubic';
+if nargin < 2,
+    error('Not enough input arguments in main_rayinit_launch_jd');
 end
-if nargin < 4,
-    ns = 1000;
-end
-if nargin < 3,
-    dNpar0 = NaN;
-end
-
 %
 [qe,me,mp,mn,e0,mu0,re,mc2,clum] = pc_dke_yp;
+%
+if launch.type == 'EC',
+   dNpar0 = launch.dNpar0;
+ns = launch.ns;
+method = launch.method;
+%
 %
 ny = length(launch.yP_L);
 %
@@ -108,3 +131,43 @@ for iy = 1:ny,
     %
 end
 %
+elseif launch.type == 'LH',
+    bP0 = [launch.bPlhtotp,launch.bPlhtotm];%initial power in the ray (W)
+    bNpar0 = [launch.bNpar0p,launch.bNpar0m];%Initial Npar value
+    bdNpar0 = [launch.bwidthp,launch.bwidthm];%ray spectral width for Fokker-Planck calculations
+    rby0 = [launch.ry0p*ones(1,length(launch.bPlhtotp)),launch.ry0m*ones(1,length(launch.bPlhtotp))];
+%
+% Ray initial characteristics
+%
+    tmask = diff(equil.pty(launch.i_ref,:))*launch.LFS > 0;
+%
+    rbx0 = interp1(equil.pty(launch.i_ref,tmask),equil.ptx(launch.i_ref,tmask),rby0,'spline');
+    rbx0(rbx0 == 0) = eps;
+    rbtheta0 = atan(rby0./rbx0) + pi*(rbx0 < 0) + 2*pi*(rbx0 > 0 & rby0 < 0);
+%
+    rho0 = psi2rho_jd(equil,equil.psi_apRp(launch.i_ref)/equil.psi_apRp(end),'spline');%Initial radial position at launch%
+%
+    rayinit.omega_rf = launch.omega_rf;
+%
+    iy = 0;
+%
+    nb = size(rby0,2);% number of beams
+    nr = size(rby0,1);% number of poloidal locations
+%
+    bP0_2piRp = bP0/(2*pi*equil.Rp);
+%
+    for ib = 1:nb,
+        for ir = 1:nr,
+            iy = iy + 1;
+%
+            rayinit.yrho0(iy) = rho0;%Initial radial position at launch
+            rayinit.ytheta0(iy) = rbtheta0(ir,ib);%Initial poloidal position at launch
+            rayinit.yphi0(iy) = launch.phi0;%Initial toroidal position at launch
+            rayinit.ym0(iy) = launch.m0;%Initial poloidal mode number
+            rayinit.yNpar0(iy) = bNpar0(ib);%Initial index of refraction
+            rayinit.ydNpar0(iy) = bdNpar0(ib);%initial Ray spectral width
+           rayinit.yP0_2piRp(iy) = bP0_2piRp(ib)/nr;%Lineic initial power density initial power in the ray (W/m)
+%
+       end
+   end
+end
