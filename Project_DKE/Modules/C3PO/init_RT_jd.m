@@ -1,4 +1,4 @@
-function xY = init_RT_jd(equil,equil_fit,xrho,xtheta,xphi,xomega,xNpar,xm,xmode,sigma,kmode);
+function xY = init_RT_jd(equil,equil_fit,xrho,xtheta,xphi,xomega,xNpar,xm,mmode,kmode);
 %
 % This function solves the dispersion relation from initial positions and 
 % wave characteristics to initiate ray-tracing calculations.
@@ -37,7 +37,7 @@ end
 if nargin < 9,
     error('Not enough input arguments')
 end
-if abs(sigma) ~= 1,error('Parameter ''sigma'' for the wave direction at launch must be +1 or +1');end
+%if abs(sigma) ~= 1,error('Parameter ''sigma'' for the wave direction at launch must be +1 or +1');end
 %
 xpsin = rho2psi_jd(equil,xrho,'spline');
 %
@@ -82,18 +82,18 @@ BPHI_bn_fit = ppval(equil_fit.BPHI_fit.pp_bn,xrho);
 [xBy,dummy,dummy,dummy,dummy] = calcval_yp(equil_fit,By_a0_fit,By_an_fit,By_bn_fit,[],[],[],xtheta);
 [xBPHI,dummy,dummy,dummy,dummy] = calcval_yp(equil_fit,BPHI_a0_fit,BPHI_an_fit,BPHI_bn_fit,[],[],[],xtheta);
 %
-sigmaIp =  sign((-equil.ptBx(end,1).*sin(equil.theta(1)) + equil.ptBy(end,1).*cos(equil.theta(1))));%Sign of the plasma current
+sigmaIp =  sign(equil_fit.psia);%Sign of the plasma current
 %
 xR = xx + equil_fit.Rp;
 xr = sqrt(xx.^2 + xy.^2);
-xs = sigmaIp*(xx.*xdxdtheta + xy.*xdydtheta)./xr./sqrt(xdxdtheta.^2 + xdydtheta.^2);
-xc = sigmaIp*sqrt(1.0 - xs.^2);
+xs = (xx.*xdxdtheta + xy.*xdydtheta)./xr./sqrt(xdxdtheta.^2 + xdydtheta.^2);
+xc = sqrt(1.0 - xs.^2);
 xBp = sqrt(xBx.^2 + xBy.^2); 
 xBt = xBPHI; 
 xB = sqrt(xBt.^2 + xBp.^2);
-xBtheta = xBp./xB;
-xBphi = xBt./xB;
-xgradrho = xR.*xBp.*xdxstardpsin/equil_fit.psia/equil_fit.ap;
+xBsn = sigmaIp*xBp./xB;
+xBphin = xBt./xB;
+xgradrho = xR.*xBp.*xdxstardpsin/abs(equil_fit.psia)/equil_fit.ap;
 %
 % Resolution of the dispersion relation
 %
@@ -108,15 +108,23 @@ xNperp = zeros(1,1);
 %
 % Cold plasma calculations
 %
-[Nperpp,Nperpm] = colddisp_dke_jd(xNpar,xomega,xne,zxni,zZi,zmi,xB);
+[Nperpp,Nperpm,dummy,...
+    dummy,dummy,dummy,dummy,dummy,dummy,...
+    phip_xyz,phim_xyz] = colddisp_dke_jd(xNpar,xomega,xne,zxni,zZi,zmi,xB);
 %
-if xmode == -1,
+if mmode == -1,
     Nperpc = Nperpm;
-elseif xmode == 1,
+    phic_xyz = phim_xyz;
+elseif mmode == 1,
     Nperpc = Nperpp;
+    phic_xyz = phip_xyz;
 else
-    error('Wrond input in xmode')
+    error('Wrond input in mmode')
 end
+%
+% Sign for choosing the inward propagating root
+%
+sigma = -sign(phic_xyz(1));
 %
 % Normalization
 %
@@ -132,7 +140,7 @@ else
     xNperp = Nperpc;
 end
 %
-xn = xR.*(xNpar.*xomega/clum - xm.*xc.*xBtheta./xr)./xBphi;
+xn = xR.*(xNpar.*xomega/clum - xm.*xc.*xBsn./xr)./xBphin;
 %
 xkrho = (xm.*xs./xr + sigma*sqrt(-(xm.*xc./xr).^2 - (xn./xR).^2 + (xNperp.^2 + xNpar.^2).*xomega.^2/clum^2))./xgradrho;
 %
@@ -141,11 +149,11 @@ xY = [xrho;xtheta;xphi;xkrho;xm;xn;xomega];
 % verification
 %
 if 1,
-    xNpar2 = (xm.*xc.*xBtheta./xr + xn.*xBphi./xR)*clum./xomega;
-    xNperp2 = sqrt((xkrho.^2.*xgradrho.^2 - 2*xkrho.*xgradrho.*xm.*xs./xr + xm.^2./xr.^2 + xn.^2/xR.^2)*clum^2./xomega^2 - xNpar.^2);
-    [Nperpp2,Nperpm2,Kxyz,ep_xyz,em_xyz,ep_pmz,em_pmz,ep_pyk,em_pyk,phip_xyz,phim_xyz,phip_pmz,phim_pmz,phip_pyk,phim_pyk,Dp,Dm]...
+    xNpar2 = (xm.*xc.*xBsn./xr + xn.*xBphin./xR)*clum./xomega;
+    xNperp2 = sqrt((xkrho*xgradrho - xs.*xm./xr).^2 + (xBphin.*xc.*xm./xr - xBsn.*xn./xR).^2)*clum./xomega;
+    [Nperpp2,Nperpm2,Kxyz,ep_xyz,em_xyz,ep_pmz,em_pmz,ep_pyk,em_pyk,phip_xyz,phim_xyz,phip_pmz,phim_pmz,phip_pyk,phim_pyk,sigmap,sigmam,Dp,Dm]...
         = colddisp_dke_jd(xNpar2,xomega,xne,zxni,zZi,zmi,xB,xNperp2);
-%    disp(['xNpar,xNperp,xNpar2,xNperp2,Dp,Dm:',num2str(xNpar),',',num2str(xNperp),',',num2str(xNpar2),',',num2str(xNperp2),',',num2str(Dp),',',num2str(Dm)]);
+    disp(['xNpar,xNperp,xNpar2,xNperp2,Dp,Dm:',num2str(xNpar),',',num2str(xNperp),',',num2str(xNpar2),',',num2str(xNperp2),',',num2str(Dp),',',num2str(Dm)]);
 end
 
 
