@@ -80,7 +80,7 @@ for iray = 1:Nrays,
 %
          info_dke_yp(2,['Ray #',int2str(iray),' is processed']);
       else
-         warning('kpsin has a non nul imaginary part !');        
+         disp('kpsin has a non nul imaginary part !');        
       end
 end
 %
