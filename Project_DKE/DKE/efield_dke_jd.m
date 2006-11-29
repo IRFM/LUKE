@@ -1,11 +1,11 @@
-function [ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,xepsi,xEfield_validity] = efield_dke_jd(path,dkeparam,display,equilDKE,mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,ZXXF_c)
+function [ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,xepsi,xEfield_validity] = efield_dke_jd(dkepath,dkeparam,display,equilDKE,mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,ZXXF_c)
 %
 display_mode = display.display_mode;
 %
 dke_mode = dkeparam.dke_mode;
 bounce_mode = dkeparam.bounce_mode;
 dke_mode = dkeparam.dke_mode;
-temppath = path.temppath;
+temppath = dkepath.temppath;
 %
 etime_efield = 0;
 time0 = clock;

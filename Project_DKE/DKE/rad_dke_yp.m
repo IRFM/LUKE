@@ -1,4 +1,4 @@
-function [MMXR_f_t,Xmask_r_edge] = rad_dke_yp(path,dkeparam,display,equilDKE,gridDKE,mksa,Zbouncecoef,Zmomcoef,transpfaste)
+function [MMXR_f_t,Xmask_r_edge] = rad_dke_yp(dkepath,dkeparam,display,equilDKE,gridDKE,mksa,Zbouncecoef,Zmomcoef,transpfaste)
 %
 % Calculation of the anomalous radial fast electron transport matrix coefficients for arbitrary magnetic plasma equilibrium 
 %
@@ -54,7 +54,7 @@ if ~isempty(transpfaste),
     nhu_ref = mksa.nhu_ref;
     %
     bounce_mode = dkeparam.bounce_mode;
-    temppath = path.temppath;
+    temppath = dkepath.temppath;
     %
     dp_cyl = display.dp_cyl;
     nlevel = display.nlevel;

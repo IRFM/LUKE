@@ -1,9 +1,9 @@
-function [ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor] = coll_dke_jd(path,dkeparam,display,equilDKE,mksa,gridDKE,Zmomcoef,Zbouncecoef);
+function [ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor] = coll_dke_jd(dkepath,dkeparam,display,equilDKE,mksa,gridDKE,Zmomcoef,Zbouncecoef);
 %
 coll_mode = dkeparam.coll_mode;
 bounce_mode = dkeparam.bounce_mode;
 dke_mode = dkeparam.dke_mode;
-temppath = path.temppath;
+temppath = dkepath.temppath;
 %
 display_mode = display.display_mode;
 %

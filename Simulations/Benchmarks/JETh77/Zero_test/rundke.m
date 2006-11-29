@@ -50,8 +50,8 @@ if exist([path_path,'PATH_',id_path,'.mat']) == 0,%Paths
 else
 	eval(['load ',path_path,'PATH_',id_path,'.mat']);
 	info_dke_yp(2,'Structure ''path'' successfully loaded');
-    if ~strcmp(path.computer,computer),error('The path structure is not consistent with the computer !'),end
-    path.temppath = [path.temppathroot,filesep,timeid_jd(clock)];
+    if ~strcmp(dkepath.computer,computer),error('The path structure is not consistent with the computer !'),end
+    dkepath.temppath = [dkepath.temppathroot,filesep,timeid_jd(clock)];
 end
 %
 if exist([path_equil,'EQUIL_',id_equil,'.mat']) == 0,%Magnetic equilibrium
@@ -123,11 +123,11 @@ dkeparam.opt_save = 0;
 %
 transpfaste.Dr0 = 5;
 %
-[Znorm_p,Zcurr_p,ZP0_p,dke_out_p,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm_p,Zcurr_p,ZP0_p,dke_out_p,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
 %
 ohm.epsi = -ohm.epsi;%The Ohmic electric field is reversed
 waves{1}.rays{1}.sNpar = -waves{1}.rays{1}.sNpar;%The wave direction is reversed
-[Znorm_m,Zcurr_m,ZP0_m,dke_out_m,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,path,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm_m,Zcurr_m,ZP0_m,dke_out_m,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
 %
 figure(1),graph1D_jd(gridDKE.xrho,Zcurr_p.x_tot_fsav,0,0,'\rho','Current density','',NaN,'','','-','none','r',2);hold on
 graph1D_jd(gridDKE.xrho,Zcurr_m.x_tot_fsav,0,0,'\rho','Current density','',NaN,'','','-','none','b',2);hold on
