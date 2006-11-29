@@ -11,7 +11,7 @@
 %TCIDATA{Version=5.50.0.2890}
 %TCIDATA{CSTFile=C:\swp55\styles\article\Joan Decker article.cst}
 %TCIDATA{Created=Friday, August 11, 2006 11:13:28}
-%TCIDATA{LastRevised=Tuesday, November 28, 2006 13:05:53}
+%TCIDATA{LastRevised=Wednesday, November 29, 2006 09:56:20}
 %TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
 %TCIDATA{<META NAME="SaveForMode" CONTENT="1">}
 %TCIDATA{BibliographyScheme=Manual}
@@ -246,11 +246,11 @@ and the dispersion relation becomes%
 \mathcal{D}\left(  \mathbf{k},\omega\right)   &  =\left(  K_{xx}-N_{\Vert}%
 ^{2}\right)  \left(  K_{yy}-N^{2}\right)  \left(  K_{zz}-N_{\bot}^{2}\right)
 \\
-&  +2K_{xy}K_{yz}\left(  K_{xz}+N_{\bot}N_{\Vert}\right) \nonumber\\
+&  +2K_{xy}K_{yz}\left(  K_{xz}+N_{\bot}N_{\Vert}\right)  \nonumber\\
 &  -\left(  K_{yy}-N^{2}\right)  \left(  K_{xz}+N_{\bot}N_{\Vert}\right)
 ^{2}\nonumber\\
 &  +K_{yz}^{2}\left(  K_{xx}-N_{\Vert}^{2}\right)  +K_{xy}^{2}\left(
-K_{zz}-N_{\bot}^{2}\right) \nonumber
+K_{zz}-N_{\bot}^{2}\right)  \nonumber
 \end{align}
 rearranged in powers of $N_{\bot}$ as%
 \begin{equation}
@@ -258,17 +258,20 @@ rearranged in powers of $N_{\bot}$ as%
 }^{3}+P_{2}N_{\bot}^{2}+P_{1}N_{\bot}+P_{0}%
 \end{equation}
 with
-\begin{align}
-P_{4}  &  =K_{xx}\\
-P_{3}  &  =2K_{xz}N_{\Vert}\\
-P_{2}  &  =\left(  K_{xx}+K_{zz}\right)  N_{\Vert}^{2}-\left(  K_{yy}%
+\[%
+\begin{array}
+[c]{l}%
+P_{4}=K_{xx}\\
+P_{3}=2K_{xz}N_{\Vert}\\
+P_{2}=\left(  K_{xx}+K_{zz}\right)  N_{\Vert}^{2}-\left(  K_{yy}%
 +K_{zz}\right)  K_{xx}+K_{xz}^{2}-K_{xy}^{2}\\
-P_{1}  &  =2N_{\Vert}\left(  K_{xz}N_{\Vert}^{2}+K_{xy}K_{yz}-K_{yy}%
-K_{xz}\right) \\
-P_{0}  &  =N_{\Vert}^{4}K_{zz}+\left(  K_{xz}^{2}-K_{yz}^{2}-\left[
-K_{xx}+K_{yy}\right]  K_{zz}\right)  N_{\Vert}^{2}+K_{yy}K_{xx}K_{zz}%
-+2K_{xy}K_{yz}K_{xz}+K_{yz}^{2}K_{xx}-K_{yy}K_{xz}^{2}+K_{xy}^{2}K_{zz}%
-\end{align}
+P_{1}=2N_{\Vert}\left(  K_{xz}N_{\Vert}^{2}+K_{xy}K_{yz}-K_{yy}K_{xz}\right)
+\\
+P_{0}=N_{\Vert}^{4}K_{zz}+\left(  K_{xz}^{2}-K_{yz}^{2}-\left[  K_{xx}%
++K_{yy}\right]  K_{zz}\right)  N_{\Vert}^{2}+K_{yy}K_{xx}K_{zz}\\
+\qquad+2K_{xy}K_{yz}K_{xz}+K_{yz}^{2}K_{xx}-K_{yy}K_{xz}^{2}+K_{xy}^{2}K_{zz}%
+\end{array}
+\]
 
 
 \subsection{Cold plasma model}
@@ -362,29 +365,36 @@ P_{0}^{\text{C}}  &  =K_{\Vert}^{\text{C}}\left[  \left(  N_{\Vert}%
 
 \section{Canonical coordinates in a toroidal plasma}
 
+\subsection{Coordinate system}
+
 In an axisymmetric toroidal plasma we define the coordinate system $\left(
-\psi,\theta,\phi\right)  $ where $\theta$ is the poloidal angle orientated
+\rho,\theta,\phi\right)  $ where $\theta$ is the poloidal angle orientated
 counterclockwise from the horizontal outboard midplane, $\phi$ is the toroidal
-angle orientated clockwise from the top, and $\psi$ is the flux coordinate.
-The magnetic field is expressed as%
+angle orientated clockwise from the top, and $\rho$ is a radial coordinate
+that varies between $0$ on the axis and $1$ at the plasma edge. $\rho
+=\rho\left(  \psi\right)  $ is a flux function. The magnetic field is
+expressed as%
 \begin{equation}
 \mathbf{B}=I\left(  \psi\right)  \mathbf{\nabla}\phi+\mathbf{\nabla}\phi
 \times\mathbf{\nabla}\psi
 \end{equation}
 which can be rewritten as%
 \begin{equation}
-\mathbf{B}=\sigma_{\phi}B_{T}\widehat{\mathbf{\phi}}+B_{P}\widehat{\mathbf{s}}%
+\mathbf{B}=\sigma_{B}B_{T}\widehat{\mathbf{\phi}}+\sigma_{I}B_{P}%
+\widehat{\mathbf{s}}%
 \end{equation}
-where $\sigma_{\phi}$ is the sign of $B_{\phi}$ and $B_{T}=\left\vert I\left(
-\psi\right)  \right\vert /R$ and $B_{P}=\left\Vert \mathbf{\nabla}%
-\psi\right\Vert /R$ are definite positive since $\widehat{\mathbf{s}}%
-=\widehat{\mathbf{\phi}}\times\widehat{\mathbf{\psi}}$ with $\mathbf{\nabla
-}\psi=\left\Vert \mathbf{\nabla}\psi\right\Vert \widehat{\mathbf{\psi}}$.
+where $\sigma_{B}$ is the sign of $B_{\phi}$ and $\sigma_{I}$ is the sign of
+$I_{\phi}$. $B_{T}=\left\vert I\left(  \psi\right)  \right\vert /R$ and
+$B_{P}=\left\Vert \mathbf{\nabla}\psi\right\Vert /R$ are definite positive and
+$\widehat{\mathbf{s}}=\widehat{\mathbf{\phi}}\times\widehat{\mathbf{\rho}}$
+with $\mathbf{\nabla}\rho=\left\Vert \mathbf{\nabla}\rho\right\Vert
+\widehat{\mathbf{\rho}}$ such that $\widehat{\mathbf{s}}$ is orientated
+counter-clockwise in the poloidal plane.
 
-In the $\left(  \psi,\theta,\phi\right)  $ coordinate system the covariant
+In the $\left(  \rho,\theta,\phi\right)  $ coordinate system the covariant
 coordinates of the wave vector $\mathbf{k}$ are%
 \begin{equation}
-k_{i}=\left(  k_{\psi},m,n\right)
+k_{i}=\left(  k_{\rho},m,n\right)
 \end{equation}
 The Poisson matrix of cannonically conjugate $\mathbf{X}$ and $\mathbf{k}$ is
 \begin{equation}
@@ -395,33 +405,51 @@ The Poisson matrix of cannonically conjugate $\mathbf{X}$ and $\mathbf{k}$ is
 \end{equation}
 
 
+\subsection{Parallel index of refraction}
+
 The parallel index of refraction is defined as%
 \begin{align}
-k_{\Vert}  &  =\dfrac{1}{B}\mathbf{k}\cdot\mathbf{B}\\
+k_{\Vert} &  =\dfrac{1}{B}\mathbf{k}\cdot\mathbf{B}\\
 &  =\dfrac{1}{B}k_{i}B^{j}%
 \end{align}
 Here $B^{j}$ are the contravariant coordinates of $\mathbf{B}$, given by%
 \begin{equation}
 B^{j}=\mathbf{B}\cdot\mathbf{e}^{j}%
 \end{equation}
-where $\mathbf{e}^{j}$ $=\left(  \left\Vert \mathbf{\nabla}\psi\right\Vert
-\widehat{\mathbf{\psi}},\dfrac{\widehat{\mathbf{\theta}}}{r},\dfrac
+where $\mathbf{e}^{j}$ $=\left(  \left\Vert \mathbf{\nabla}\rho\right\Vert
+\widehat{\mathbf{\rho}},\dfrac{\widehat{\mathbf{\theta}}}{r},\dfrac
 {\widehat{\mathbf{\phi}}}{R}\right)  $ such that the contravariant coordinates
 of $\mathbf{B}$ are
 \begin{equation}
-B^{j}=\left(  0,\dfrac{B_{P}}{r}\cos\alpha,\dfrac{\sigma_{\phi}B_{T}}%
-{R}\right)
+B^{j}=\left(  0,\dfrac{\sigma_{I}B_{P}}{r}\cos\alpha,\dfrac{\sigma_{\phi}%
+B_{T}}{R}\right)
 \end{equation}
+where $\alpha$ is the angle from $\widehat{\mathbf{\rho}}$ to $\widehat
+{\mathbf{r}}$ such that%
+\begin{equation}%
+\begin{array}
+[c]{l}%
+\widehat{\mathbf{\rho}}\cdot\widehat{\mathbf{r}}=\cos\alpha\\
+\widehat{\mathbf{\rho}}\cdot\widehat{\mathbf{\theta}}=-\sin\alpha\\
+\widehat{\mathbf{s}}\cdot\widehat{\mathbf{r}}=\sin\alpha\\
+\widehat{\mathbf{s}}\cdot\widehat{\mathbf{\theta}}=\cos\alpha
+\end{array}
+\end{equation}
+Because $\widehat{\mathbf{\rho}}$ is orientated outward we have $-\pi
+/2<\alpha<\pi/2$. 
+
 Thus we have%
 \begin{equation}
-k_{\Vert}=\dfrac{B_{P}}{B}\cos\alpha\dfrac{m}{r}+\sigma_{\phi}\dfrac{B_{T}}%
-{B}\dfrac{n}{R}%
+\fbox{$k_{\Vert}=\sigma_{I}\cos\alpha\dfrac{B_{P}}{B}\dfrac{m}{r}+\sigma
+_{B}\dfrac{B_{T}}{B}\dfrac{n}{R}$}%
 \end{equation}
 
 
-Other demonstration. If we take the expression
+\subsubsection{Other demonstration}
+
+If we take the expression
 \begin{align}
-k_{\Vert}  &  =\dfrac{1}{B}\mathbf{k}\cdot\mathbf{B}\\
+k_{\Vert} &  =\dfrac{1}{B}\mathbf{k}\cdot\mathbf{B}\\
 &  =\dfrac{1}{B}g^{ij}k_{i}B_{j}%
 \end{align}
 with%
@@ -429,68 +457,73 @@ with%
 g^{ij}=\mathbf{e}^{i}\cdot\mathbf{e}^{j}=\left(
 \begin{array}
 [c]{ccc}%
-\left\Vert \mathbf{\nabla}\psi\right\Vert ^{2} & -\dfrac{\left\Vert
-\mathbf{\nabla}\psi\right\Vert \sin\alpha}{r} & 0\\
--\dfrac{\left\Vert \mathbf{\nabla}\psi\right\Vert \sin\alpha}{r} & \dfrac
+\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2} & -\dfrac{\left\Vert
+\mathbf{\nabla}\rho\right\Vert \sin\alpha}{r} & 0\\
+-\dfrac{\left\Vert \mathbf{\nabla}\rho\right\Vert \sin\alpha}{r} & \dfrac
 {1}{r^{2}} & 0\\
 0 & 0 & \dfrac{1}{R^{2}}%
 \end{array}
 \right)
 \end{equation}
 and the magnetic field in the covariant basis $\mathbf{e}_{i}$ $=\left(
-\dfrac{\widehat{\mathbf{r}}}{\left\Vert \mathbf{\nabla}\psi\right\Vert
+\dfrac{\widehat{\mathbf{r}}}{\left\Vert \mathbf{\nabla}\rho\right\Vert
 \cos\alpha},\dfrac{r\widehat{\mathbf{s}}}{\cos\alpha},R\widehat{\mathbf{\phi}%
 }\right)  $
 \begin{equation}
-B_{j}=\left(  \dfrac{\sin\alpha B_{P}}{\left\Vert \mathbf{\nabla}%
-\psi\right\Vert \cos\alpha},\dfrac{rB_{P}}{\cos\alpha},RB_{\phi}\right)
+B_{j}=\left(  \sigma_{I}\dfrac{\sin\alpha B_{P}}{\left\Vert \mathbf{\nabla
+}\rho\right\Vert \cos\alpha},\sigma_{I}\dfrac{rB_{P}}{\cos\alpha},\sigma
+_{B}RB_{T}\right)
 \end{equation}
 such that
 \begin{equation}
 k_{\Vert}=\dfrac{1}{B}\left(  k_{\psi},m,n\right)  \left(
 \begin{array}
 [c]{ccc}%
-\left\Vert \mathbf{\nabla}\psi\right\Vert ^{2} & -\dfrac{\left\Vert
-\mathbf{\nabla}\psi\right\Vert \sin\alpha}{r} & 0\\
--\dfrac{\left\Vert \mathbf{\nabla}\psi\right\Vert \sin\alpha}{r} & \dfrac
+\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2} & -\dfrac{\left\Vert
+\mathbf{\nabla}\rho\right\Vert \sin\alpha}{r} & 0\\
+-\dfrac{\left\Vert \mathbf{\nabla}\rho\right\Vert \sin\alpha}{r} & \dfrac
 {1}{r^{2}} & 0\\
 0 & 0 & \dfrac{1}{R^{2}}%
 \end{array}
 \right)  \left(
 \begin{array}
 [c]{c}%
-\dfrac{\sin\alpha B_{P}}{\left\Vert \mathbf{\nabla}\psi\right\Vert \cos\alpha
-}\\
-\dfrac{rB_{P}}{\cos\alpha}\\
-R\sigma_{\phi}B_{T}%
+\sigma_{I}\dfrac{\sin\alpha B_{P}}{\left\Vert \mathbf{\nabla}\rho\right\Vert
+\cos\alpha}\\
+\sigma_{I}\dfrac{rB_{P}}{\cos\alpha}\\
+\sigma_{B}RB_{T}%
 \end{array}
 \right)
 \end{equation}%
 \begin{equation}
-k_{\Vert}=\dfrac{1}{B}\left[  \left(  k_{\psi}\left\Vert \mathbf{\nabla}%
-\psi\right\Vert ^{2}-\dfrac{m\left\Vert \mathbf{\nabla}\psi\right\Vert
-\sin\alpha}{r}\right)  \dfrac{\sin\alpha B_{P}}{\left\Vert \mathbf{\nabla}%
-\psi\right\Vert \cos\alpha}+\left(  -\dfrac{\left\Vert \mathbf{\nabla}%
-\psi\right\Vert \sin\alpha}{r}k_{\psi}+\dfrac{m}{r^{2}}\right)  \dfrac{rB_{P}%
-}{\cos\alpha}+\dfrac{n\sigma_{\phi}}{R^{2}}RB_{T}\right]
+k_{\Vert}=\dfrac{1}{B}\left[  \left(  k_{\rho}\left\Vert \mathbf{\nabla}%
+\rho\right\Vert ^{2}-\dfrac{m\left\Vert \mathbf{\nabla}\rho\right\Vert
+\sin\alpha}{r}\right)  \sigma_{I}\dfrac{\sin\alpha B_{P}}{\left\Vert
+\mathbf{\nabla}\rho\right\Vert \cos\alpha}+\left(  -\dfrac{\left\Vert
+\mathbf{\nabla}\rho\right\Vert \sin\alpha}{r}k_{\rho}+\dfrac{m}{r^{2}}\right)
+\sigma_{I}\dfrac{rB_{P}}{\cos\alpha}+\dfrac{n\sigma_{B}}{R^{2}}RB_{T}\right]
 \end{equation}%
 \begin{equation}
-k_{\Vert}=\left[  \dfrac{m\cos\alpha}{r}\dfrac{B_{P}}{B}+\dfrac{n\sigma_{\phi
-}}{R}\dfrac{B_{T}}{B}\right]
+k_{\Vert}=\left[  \sigma_{I}\cos\alpha\dfrac{B_{P}}{B}\dfrac{m}{r}+\sigma
+_{B}\dfrac{B_{T}}{B}\dfrac{n}{R}\right]
 \end{equation}
+
+
+\subsection{Perpendicular index of refraction}
+
 Then
 \begin{equation}
 \mathbf{k}^{2}=g^{ij}k_{i}k_{j}%
 \end{equation}%
 \begin{equation}
-\mathbf{k}^{2}=k_{\psi}\left(  k_{\psi}\left\Vert \mathbf{\nabla}%
-\psi\right\Vert ^{2}-m\dfrac{\left\Vert \mathbf{\nabla}\psi\right\Vert
-\sin\alpha}{r}\right)  +m\left(  \dfrac{m}{r^{2}}-k_{\psi}\dfrac{\left\Vert
-\mathbf{\nabla}\psi\right\Vert \sin\alpha}{r}\right)  +\dfrac{n^{2}}{R^{2}}%
+\mathbf{k}^{2}=k_{\rho}\left(  k_{\rho}\left\Vert \mathbf{\nabla}%
+\rho\right\Vert ^{2}-m\dfrac{\left\Vert \mathbf{\nabla}\rho\right\Vert
+\sin\alpha}{r}\right)  +m\left(  \dfrac{m}{r^{2}}-k_{\rho}\dfrac{\left\Vert
+\mathbf{\nabla}\rho\right\Vert \sin\alpha}{r}\right)  +\dfrac{n^{2}}{R^{2}}%
 \end{equation}%
 \begin{equation}
-\mathbf{k}^{2}=k_{\psi}^{2}\left\Vert \mathbf{\nabla}\psi\right\Vert
-^{2}-2k_{\psi}\left\Vert \mathbf{\nabla}\psi\right\Vert \dfrac{m\sin\alpha}%
+\mathbf{k}^{2}=k_{\rho}^{2}\left\Vert \mathbf{\nabla}\rho\right\Vert
+^{2}-2k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \dfrac{m\sin\alpha}%
 {r}+\dfrac{m^{2}}{r^{2}}+\dfrac{n^{2}}{R^{2}}%
 \end{equation}%
 \begin{equation}
@@ -498,86 +531,94 @@ k_{\bot}^{2}=\mathbf{k}^{2}-k_{\Vert}^{2}%
 \end{equation}
 
 
+\subsection{Calculation of $k_{\rho}$ and $n$ as a function of $m$, $k_{\Vert
+}$ and $k_{\bot}$}
+
 In the initial conditions we are given $m$ and $k_{\Vert}$. Then $k_{\bot}$ is
-calculated from the dispersion relation. We need to express $k_{\psi}$ and $n$
+calculated from the dispersion relation. We need to express $k_{\rho}$ and $n$
 as a function of $m$, $k_{\Vert}$ and $k_{\bot}$. We have%
 \begin{equation}
-k_{\bot}^{2}=k_{\psi}^{2}\left\Vert \mathbf{\nabla}\psi\right\Vert
-^{2}-2k_{\psi}\left\Vert \mathbf{\nabla}\psi\right\Vert \dfrac{m\sin\alpha}%
+k_{\bot}^{2}=k_{\rho}^{2}\left\Vert \mathbf{\nabla}\rho\right\Vert
+^{2}-2k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \dfrac{m\sin\alpha}%
 {r}+\dfrac{m^{2}}{r^{2}}+\dfrac{n^{2}}{R^{2}}-k_{\Vert}^{2}%
 \end{equation}%
 \begin{equation}
-k_{\Vert}=\dfrac{m\cos\alpha}{r}P+\dfrac{n\sigma_{\phi}}{R}T
+k_{\Vert}=\sigma_{I}P\cos\alpha\dfrac{m}{r}+\sigma_{B}T\dfrac{n}{R}%
 \end{equation}
 where $P=\dfrac{B_{P}}{B}$ and $T=\dfrac{B_{T}}{B}$. We get an expression for
 $n$%
 \begin{equation}
-n=\dfrac{\sigma_{\phi}R}{T}\left(  k_{\Vert}-\dfrac{m\cos\alpha}{r}P\right)
+n=\sigma_{B}\dfrac{R}{T}\left(  k_{\Vert}-\sigma_{I}P\cos\alpha\dfrac{m}%
+{r}\right)
 \end{equation}
 which is inserted back in () to get%
 \begin{equation}
-k_{\bot}^{2}=k_{\psi}^{2}\left\Vert \mathbf{\nabla}\psi\right\Vert
-^{2}-2k_{\psi}\left\Vert \mathbf{\nabla}\psi\right\Vert \dfrac{m\sin\alpha}%
-{r}+\dfrac{m^{2}}{r^{2}}+\dfrac{1}{T^{2}}\left(  k_{\Vert}-\dfrac{m\cos\alpha
-}{r}P\right)  ^{2}-k_{\Vert}^{2}%
+k_{\bot}^{2}=k_{\rho}^{2}\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2}%
+-2\sin\alpha\dfrac{m}{r}k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert
++\dfrac{m^{2}}{r^{2}}+\dfrac{1}{T^{2}}\left(  k_{\Vert}-\sigma_{I}P\cos
+\alpha\dfrac{m}{r}\right)  ^{2}-k_{\Vert}^{2}%
 \end{equation}%
 \begin{equation}
-k_{\bot}^{2}=k_{\psi}^{2}\left\Vert \mathbf{\nabla}\psi\right\Vert
-^{2}-2\dfrac{m}{r}\left(  k_{\psi}\left\Vert \mathbf{\nabla}\psi\right\Vert
-\sin\alpha+\dfrac{P}{T^{2}}k_{\Vert}\cos\alpha\right)  +\dfrac{m^{2}}{r^{2}%
-}\left(  1+\cos^{2}\alpha\dfrac{P^{2}}{T^{2}}\right)  +\dfrac{P^{2}}{T^{2}%
-}k_{\Vert}^{2}%
+k_{\bot}^{2}=k_{\rho}^{2}\left\Vert \mathbf{\nabla}\rho\right\Vert
+^{2}-2\dfrac{m}{r}\left(  \sin\alpha k_{\rho}\left\Vert \mathbf{\nabla}%
+\rho\right\Vert +\sigma_{I}\dfrac{P}{T^{2}}\cos\alpha k_{\Vert}\right)
++\dfrac{m^{2}}{r^{2}}\left(  1+\dfrac{P^{2}}{T^{2}}\cos^{2}\alpha\right)
++\dfrac{P^{2}}{T^{2}}k_{\Vert}^{2}%
 \end{equation}
 Defining $T=\cos\mu$ and $P=\sin\mu$%
 \begin{equation}
-n=\sigma_{\phi}R\left(  \dfrac{k_{\Vert}}{\cos\mu}-\dfrac{m}{r}\cos\alpha
-\tan\mu\right)
+n=\sigma_{B}R\left(  \dfrac{k_{\Vert}}{\cos\mu}-\sigma_{I}\tan\mu\cos
+\alpha\dfrac{m}{r}\right)
 \end{equation}%
 \begin{equation}
-k_{\bot}^{2}=k_{\psi}^{2}\left\Vert \mathbf{\nabla}\psi\right\Vert
-^{2}-2\dfrac{m}{r}\left(  k_{\psi}\left\Vert \mathbf{\nabla}\psi\right\Vert
-\sin\alpha+\dfrac{\tan\mu\cos\alpha}{\cos\mu}k_{\Vert}\right)  +\dfrac{m^{2}%
-}{r^{2}}\left(  1+\cos^{2}\alpha\tan^{2}\mu\right)  +\tan^{2}\mu k_{\Vert}^{2}%
+k_{\bot}^{2}=k_{\rho}^{2}\left\Vert \mathbf{\nabla}\rho\right\Vert
+^{2}-2\dfrac{m}{r}\left(  \sin\alpha k_{\rho}\left\Vert \mathbf{\nabla}%
+\rho\right\Vert +\sigma_{I}\dfrac{\tan\mu}{\cos\mu}\cos\alpha k_{\Vert
+}\right)  +\dfrac{m^{2}}{r^{2}}\left(  1+\tan^{2}\mu\cos^{2}\alpha\right)
++\tan^{2}\mu k_{\Vert}^{2}%
 \end{equation}
 
 
-For circular cross sections, $\alpha=0$ and we can choose $\psi=r$.
+For circular cross sections, $\alpha=0$ and $k_{\rho}\left\Vert \mathbf{\nabla
+}\rho\right\Vert =k_{r}$.
 \begin{equation}
-n=\sigma_{\phi}R\left(  \dfrac{k_{\Vert}}{\cos\mu}-\dfrac{m}{r}\tan\mu\right)
+n=\sigma_{B}R\left(  \dfrac{k_{\Vert}}{\cos\mu}-\sigma_{I}\tan\mu\dfrac{m}%
+{r}\right)
 \end{equation}%
 \begin{equation}
-k_{\bot}^{2}=k_{r}^{2}-2\dfrac{m}{r}\dfrac{\tan\mu}{\cos\mu}k_{\Vert}%
-+\dfrac{m^{2}}{r^{2}\cos^{2}\mu}+\tan^{2}\mu k_{\Vert}^{2}%
+k_{\bot}^{2}=k_{r}^{2}-2\sigma_{I}\dfrac{m}{r}\dfrac{\tan\mu}{\cos\mu}%
+k_{\Vert}+\dfrac{m^{2}}{r^{2}\cos^{2}\mu}+\tan^{2}\mu k_{\Vert}^{2}%
 \end{equation}
 For purely toroidal fields $\mu=0$
 \begin{equation}
-n=\sigma_{\phi}Rk_{\Vert}%
+n=\sigma_{B}Rk_{\Vert}%
 \end{equation}%
 \begin{equation}
 k_{\bot}^{2}=k_{r}^{2}+\dfrac{m^{2}}{r^{2}}%
 \end{equation}
-Now find $k_{\psi}$%
+Now find $k_{\rho}$%
 \begin{equation}
-k_{\psi}^{2}\left\Vert \mathbf{\nabla}\psi\right\Vert ^{2}-2k_{\psi}\left\Vert
-\mathbf{\nabla}\psi\right\Vert \dfrac{m\sin\alpha}{r}+\dfrac{m^{2}}{r^{2}%
-}+\dfrac{1}{T^{2}}\left(  k_{\Vert}-\dfrac{m\cos\alpha}{r}P\right)
-^{2}-k_{\Vert}^{2}-k_{\bot}^{2}=0
+k_{\rho}^{2}\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2}-2\sin\alpha
+\dfrac{m}{r}k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert +\dfrac{m^{2}%
+}{r^{2}}+\dfrac{1}{T^{2}}\left(  k_{\Vert}-\sigma_{I}P\cos\alpha\dfrac{m}%
+{r}\right)  ^{2}-k_{\Vert}^{2}-k_{\bot}^{2}=0
 \end{equation}%
 \begin{equation}
-k_{\psi}^{2}\left\Vert \mathbf{\nabla}\psi\right\Vert ^{2}-2k_{\psi}\left\Vert
-\mathbf{\nabla}\psi\right\Vert \dfrac{m\sin\alpha}{r}+\left(  1+\cos^{2}%
-\alpha\dfrac{P^{2}}{T^{2}}\right)  \dfrac{m^{2}}{r^{2}}+\dfrac{P^{2}}{T^{2}%
-}k_{\Vert}^{2}-2\dfrac{P}{T^{2}}\dfrac{m}{r}k_{\Vert}\cos\alpha-k_{\bot}^{2}=0
+k_{\rho}^{2}\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2}-2\sin\alpha
+\dfrac{m}{r}k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert +\left(
+1+\dfrac{P^{2}}{T^{2}}\cos^{2}\alpha\right)  \dfrac{m^{2}}{r^{2}}+\dfrac
+{P^{2}}{T^{2}}k_{\Vert}^{2}-2\sigma_{I}\dfrac{P}{T^{2}}\cos\alpha\dfrac{m}%
+{r}k_{\Vert}-k_{\bot}^{2}=0
 \end{equation}
 defining%
 \begin{equation}
-X=k_{\psi}\left\Vert \mathbf{\nabla}\psi\right\Vert
+X=k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert
 \end{equation}%
 \begin{align}
-B  &  =\sin\alpha\dfrac{m}{r}\\
-C  &  =\left(  1+\cos^{2}\alpha\dfrac{P^{2}}{T^{2}}\right)  \dfrac{m^{2}%
-}{r^{2}}+\dfrac{P^{2}}{T^{2}}k_{\Vert}^{2}-2\dfrac{P}{T^{2}}\dfrac{m}%
-{r}k_{\Vert}\cos\alpha-k_{\bot}^{2}%
+B &  =\sin\alpha\dfrac{m}{r}\\
+C &  =\left(  1+\dfrac{P^{2}}{T^{2}}\cos^{2}\alpha\right)  \dfrac{m^{2}}%
+{r^{2}}+\dfrac{P^{2}}{T^{2}}k_{\Vert}^{2}-2\sigma_{I}\dfrac{P}{T^{2}}\dfrac
+{m}{r}k_{\Vert}\cos\alpha-k_{\bot}^{2}%
 \end{align}
 we have%
 \begin{equation}
@@ -589,33 +630,33 @@ X=B\pm\sqrt{B^{2}-C}%
 \end{equation}
 which gives%
 \begin{equation}
-k_{\psi}=\dfrac{1}{\left\Vert \mathbf{\nabla}\psi\right\Vert }\left[
+k_{\rho}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[
 \sin\alpha\dfrac{m}{r}\pm\sqrt{\sin^{2}\alpha\dfrac{m^{2}}{r^{2}}-\left[
-\left(  1+\cos^{2}\alpha\dfrac{P^{2}}{T^{2}}\right)  \dfrac{m^{2}}{r^{2}%
-}+\dfrac{P^{2}}{T^{2}}k_{\Vert}^{2}-2\dfrac{P}{T^{2}}\dfrac{m}{r}k_{\Vert}%
-\cos\alpha-k_{\bot}^{2}\right]  }\right]
+\left(  1+\dfrac{P^{2}}{T^{2}}\cos^{2}\alpha\right)  \dfrac{m^{2}}{r^{2}%
+}+\dfrac{P^{2}}{T^{2}}k_{\Vert}^{2}-2\sigma_{I}\dfrac{P}{T^{2}}\dfrac{m}%
+{r}k_{\Vert}\cos\alpha-k_{\bot}^{2}\right]  }\right]
 \end{equation}
 rewriten as%
 \begin{equation}
-k_{\psi}=\dfrac{1}{\left\Vert \mathbf{\nabla}\psi\right\Vert }\left[
+k_{\rho}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[
 \sin\alpha\dfrac{m}{r}\pm\sqrt{k_{\bot}^{2}-\dfrac{1}{T^{2}}\left(  \cos
-\alpha\dfrac{m}{r}-Pk_{\Vert}\right)  ^{2}}\right]
+\alpha\dfrac{m}{r}-\sigma_{I}Pk_{\Vert}\right)  ^{2}}\right]
 \end{equation}%
 \begin{equation}
-k_{\psi}=\dfrac{1}{\left\Vert \mathbf{\nabla}\psi\right\Vert }\left[
+k_{\rho}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[
 \sin\alpha\dfrac{m}{r}\pm\sqrt{k_{\bot}^{2}-\dfrac{1}{\cos^{2}\mu}\left(
-\cos\alpha\dfrac{m}{r}-\sin\mu k_{\Vert}\right)  ^{2}}\right]
+\cos\alpha\dfrac{m}{r}-\sigma_{I}\sin\mu k_{\Vert}\right)  ^{2}}\right]
 \end{equation}
 For circular cross sections, $\alpha=0$
 \begin{equation}
-k_{\psi}=\pm\dfrac{1}{\left\Vert \mathbf{\nabla}\psi\right\Vert }\sqrt
-{k_{\bot}^{2}-\dfrac{1}{\cos^{2}\mu}\left(  \dfrac{m}{r}-\sin\mu k_{\Vert
-}\right)  ^{2}}%
-\end{equation}
-and we can choose $\psi=r$%
-\begin{equation}
-k_{r}=\pm\sqrt{k_{\bot}^{2}-\dfrac{1}{\cos^{2}\mu}\left(  \dfrac{m}{r}-\sin\mu
+k_{\rho}=\pm\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\sqrt
+{k_{\bot}^{2}-\dfrac{1}{\cos^{2}\mu}\left(  \dfrac{m}{r}-\sigma_{I}\sin\mu
 k_{\Vert}\right)  ^{2}}%
+\end{equation}
+and $k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert =k_{r}$%
+\begin{equation}
+k_{r}=\pm\sqrt{k_{\bot}^{2}-\dfrac{1}{\cos^{2}\mu}\left(  \dfrac{m}{r}%
+-\sigma_{I}\sin\mu k_{\Vert}\right)  ^{2}}%
 \end{equation}
 
 
@@ -624,63 +665,171 @@ For purely toroidal fields $\mu=0$%
 k_{r}=\pm\sqrt{k_{\bot}^{2}-\dfrac{m^{2}}{r^{2}}}%
 \end{equation}
 To sum up%
-\begin{align}
-n  &  =\dfrac{\sigma_{\phi}R}{T}\left(  k_{\Vert}-\dfrac{m\cos\alpha}%
-{r}P\right) \\
-k_{\psi}  &  =\dfrac{1}{\left\Vert \mathbf{\nabla}\psi\right\Vert }\left[
-\sin\alpha\dfrac{m}{r}+\sigma_{\psi}\sqrt{k_{\bot}^{2}-\dfrac{1}{T^{2}}\left(
-\cos\alpha\dfrac{m}{r}-Pk_{\Vert}\right)  ^{2}}\right]
-\end{align}
-where $\sigma_{\psi}=\pm1$.
+\begin{equation}
+\fbox{$%
+\begin{array}
+[c]{l}%
+n=\sigma_{B}\dfrac{R}{T}\left(  k_{\Vert}-\sigma_{I}P\cos\alpha\dfrac{m}%
+{r}\right)  \\
+k_{\rho}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[
+\sin\alpha\dfrac{m}{r}+\sigma_{\rho}\sqrt{k_{\bot}^{2}-\dfrac{1}{T^{2}}\left(
+\cos\alpha\dfrac{m}{r}-\sigma_{I}Pk_{\Vert}\right)  ^{2}}\right]
+\end{array}
+$}%
+\end{equation}
+where $\sigma_{\rho}=\pm1$. We can also express $k_{\rho}$ as
+\begin{equation}
+\fbox{$k_{\rho}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[
+\sin\alpha\dfrac{m}{r}+\sigma_{\rho}\sqrt{k^{2}-\cos^{2}\alpha\dfrac{m^{2}%
+}{r^{2}}-\dfrac{n^{2}}{R^{2}}}\right]  $}%
+\end{equation}
+
+
+\subsection{Calculation of $k_{\rho}$, $m$ and $n$ as a function of
+$\mathbf{k}$}
+
+The vector $\mathbf{k}$ is projected onto the covariant basis $\mathbf{e}_{i}$
+$=\left(  \dfrac{\widehat{\mathbf{r}}}{\left\Vert \mathbf{\nabla}%
+\rho\right\Vert \cos\alpha},\dfrac{r\widehat{\mathbf{s}}}{\cos\alpha
+},R\widehat{\mathbf{\phi}}\right)  $, such that
+\begin{equation}%
+\begin{array}
+[c]{l}%
+k_{\rho}=\dfrac{\widehat{\mathbf{r}}\cdot\mathbf{k}}{\left\Vert \mathbf{\nabla
+}\rho\right\Vert \cos\alpha}\\
+m=\dfrac{r\widehat{\mathbf{s}}\cdot\mathbf{k}}{\cos\alpha}\\
+n=R\widehat{\mathbf{\phi}}\cdot\mathbf{k}%
+\end{array}
+\end{equation}
+If $\mathbf{k}$ is expressed in coordinates $\left(  R,Z,\phi\right)  $ as
+$\mathbf{k}=k_{R}\widehat{\mathbf{R}}+k_{Z}\widehat{\mathbf{Z}}+k_{\phi
+}\widehat{\mathbf{\phi}}$ or in coordinates $\left(  r,\theta,\phi\right)  $
+as $\mathbf{k}=k_{r}\widehat{\mathbf{r}}+k_{\theta}\widehat{\mathbf{\theta}%
+}+k_{\phi}\widehat{\mathbf{\phi}}$ we get%
+\begin{equation}%
+\begin{array}
+[c]{l}%
+k_{\rho}=\dfrac{k_{r}}{\left\Vert \mathbf{\nabla}\rho\right\Vert \cos\alpha}\\
+m=r\left(  k_{\theta}+k_{r}\tan\alpha\right)  \\
+n=Rk_{\phi}%
+\end{array}
+\end{equation}
+where%
+\begin{equation}%
+\begin{array}
+[c]{l}%
+k_{r}=k_{R}\cos\theta+k_{Z}\sin\theta\\
+k_{\theta}=-k_{R}\sin\theta+k_{Z}\cos\theta
+\end{array}
+\end{equation}
+Note that we retrieve%
+\begin{equation}%
+\begin{array}
+[c]{l}%
+k_{\Vert}=\sigma_{I}P\left(  \widehat{\mathbf{s}}\cdot\mathbf{k}\right)
++\sigma_{B}T\left(  \widehat{\mathbf{\phi}}\cdot\mathbf{k}\right)
+=\dfrac{\mathbf{B}\cdot\mathbf{k}}{\left\Vert \mathbf{B}\right\Vert }\\
+k_{\bot}=\sqrt{\left[  \left(  \widehat{\mathbf{\rho}}\cdot\mathbf{k}\right)
+^{2}+\left(  \widehat{\mathbf{s}}\cdot\mathbf{k}\right)  ^{2}+\left(
+\widehat{\mathbf{\phi}}\cdot\mathbf{k}\right)  ^{2}-k_{\Vert}^{2}\right]
+}=\sqrt{k^{2}-k_{\Vert}^{2}}%
+\end{array}
+\end{equation}
+since%
+\begin{equation}%
+\begin{array}
+[c]{l}%
+\widehat{\mathbf{s}}\cdot\mathbf{k}=\sin\alpha k_{r}+\cos\alpha k_{\theta}\\
+\widehat{\mathbf{\rho}}\cdot\mathbf{k}=\cos\alpha k_{r}-\sin\alpha k_{\theta}%
+\end{array}
+\end{equation}
+
+
+\subsection{Calculation of $k_{\bot}$ and $k_{\Vert}$ as a function of
+$k_{\rho}$, $m$ and $n$}
 
 We also may want to express $k_{\bot}$ and $k_{\Vert}$ as a function of
-$k_{\psi}$, $m$ and $n$. from ()%
+$k_{\rho}$, $m$ and $n$. from ()%
 \begin{equation}
-k_{\Vert}=\dfrac{m\cos\alpha}{r}P+\dfrac{n\sigma_{\phi}}{R}T
+k_{\Vert}=\sigma_{I}P\cos\alpha\dfrac{m}{r}+\sigma_{B}T\dfrac{n}{R}%
 \end{equation}
 which is inserted back in () to give
 \begin{equation}
-k_{\bot}^{2}=k_{\psi}^{2}\left\Vert \mathbf{\nabla}\psi\right\Vert
-^{2}-2k_{\psi}\left\Vert \mathbf{\nabla}\psi\right\Vert \dfrac{m\sin\alpha}%
-{r}+\left(  1-\cos^{2}\alpha P^{2}\right)  \dfrac{m^{2}}{r^{2}}-2\sigma_{\phi
-}TP\cos\alpha\dfrac{m}{r}\dfrac{n}{R}+P^{2}\dfrac{n^{2}}{R^{2}}%
+k_{\bot}^{2}=k_{\rho}^{2}\left\Vert \mathbf{\nabla}\rho\right\Vert
+^{2}-2k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \sin\alpha\dfrac{m}%
+{r}+\left(  1-\cos^{2}\alpha P^{2}\right)  \dfrac{m^{2}}{r^{2}}-2\sigma
+_{B}\sigma_{I}TP\cos\alpha\dfrac{m}{r}\dfrac{n}{R}+P^{2}\dfrac{n^{2}}{R^{2}}%
 \end{equation}
 rearranged as%
 \begin{equation}
-k_{\bot}^{2}=\left(  k_{\psi}\left\Vert \mathbf{\nabla}\psi\right\Vert
--\dfrac{m\sin\alpha}{r}\right)  ^{2}+\left(  \sigma_{\phi}T\cos\alpha\dfrac
-{m}{r}-P\dfrac{n}{R}\right)  ^{2}%
+k_{\bot}^{2}=\left(  k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert
+-\sin\alpha\dfrac{m}{r}\right)  ^{2}+\left(  \sigma_{B}T\cos\alpha\dfrac{m}%
+{r}-\sigma_{I}P\dfrac{n}{R}\right)  ^{2}%
 \end{equation}
-For circular cross sections, $\alpha=0$
+For circular cross sections, $\alpha=0$%
 \begin{equation}
-k_{\bot}^{2}=\left(  k_{\psi}\left\Vert \mathbf{\nabla}\psi\right\Vert
-\right)  ^{2}+\left(  \sigma_{\phi}T\dfrac{m}{r}-P\dfrac{n}{R}\right)  ^{2}%
+k_{\Vert}=\sigma_{I}P\dfrac{m}{r}+\sigma_{B}T\dfrac{n}{R}%
 \end{equation}
-and we can choose $\psi=r$%
 \begin{equation}
-k_{\bot}^{2}=k_{r}^{2}+\left(  \sigma_{\phi}T\dfrac{m}{r}-P\dfrac{n}%
+k_{\bot}^{2}=k_{\rho}^{2}\left\Vert \mathbf{\nabla}\rho\right\Vert
+^{2}+\left(  \sigma_{B}T\dfrac{m}{r}-\sigma_{I}P\dfrac{n}{R}\right)  ^{2}%
+\end{equation}
+and $k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert =k_{r}$%
+\begin{equation}
+k_{\bot}^{2}=k_{r}^{2}+\left(  \sigma_{B}T\dfrac{m}{r}-\sigma_{I}P\dfrac{n}%
 {R}\right)  ^{2}%
 \end{equation}
-For purely toroidal fields $\mu=0$%
+For purely toroidal fields $\mu=0$ or $P=0$%
+\begin{equation}
+k_{\Vert}=\sigma_{B}\dfrac{n}{R}%
+\end{equation}%
 \begin{equation}
 k_{\bot}^{2}=k_{r}^{2}+\dfrac{m^{2}}{r^{2}}%
 \end{equation}
 To sum up%
+\begin{equation}
+\fbox{$%
+\begin{array}
+[c]{l}%
+k_{\Vert}=\sigma_{I}P\cos\alpha\dfrac{m}{r}+\sigma_{B}T\dfrac{n}{R}\\
+k_{\bot}=\sqrt{\left(  k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert
+-\sin\alpha\dfrac{m}{r}\right)  ^{2}+\left(  \sigma_{B}T\cos\alpha\dfrac{m}%
+{r}-\sigma_{I}P\dfrac{n}{R}\right)  ^{2}}%
+\end{array}
+$}%
+\end{equation}
+
+
+\subsection{Calculation of $\left\Vert \mathbf{\nabla}\rho\right\Vert $}
+
+So far the only restriction over the radial coordinate $\rho$ is that it is a
+monotonic flux function going from $0$ at the center to $1$ at the edge. as an
+example, we can take $\rho\left(  \psi\right)  =x\left(  \psi,0\right)
+/a_{p}$ where $x$ is defined as a function of $\left(  \psi,\theta\right)  $
+and $a_{p}=x\left(  \psi_{a},0\right)  $. We have then
 \begin{align}
-k_{\Vert}  &  =\dfrac{m\cos\alpha}{r}P+\dfrac{n\sigma_{\phi}}{R}T\\
-k_{\bot}  &  =\sigma_{\bot}\sqrt{\left(  k_{\psi}\left\Vert \mathbf{\nabla
-}\psi\right\Vert -\dfrac{m\sin\alpha}{r}\right)  ^{2}+\left(  \sigma_{\phi
-}T\cos\alpha\dfrac{m}{r}-P\dfrac{n}{R}\right)  ^{2}}%
+\mathbf{\nabla}\rho & =\left.  \dfrac{\partial x}{\partial\psi}\right\vert
+_{\theta=0}\mathbf{\nabla}\psi\\
+& =\left.  \dfrac{\partial x}{\partial\psi}\right\vert _{\theta=0}%
+RB_{P}\widehat{\mathbf{\psi}}\\
+& =\dfrac{\partial\rho}{\partial\overline{\psi}}\dfrac{a_{p}RB_{P}}{\psi_{a}%
+}\widehat{\mathbf{\psi}}%
 \end{align}
-where $\sigma_{\bot}=\pm1$.
+with $\overline{\psi}=\psi/\psi_{a}$. Thus%
+\begin{equation}
+\fbox{$\left\Vert \mathbf{\nabla}\rho\right\Vert =\dfrac{\partial\rho
+}{\partial\overline{\psi}}\dfrac{a_{p}RB_{P}}{\left\vert \psi_{a}\right\vert
+}$}%
+\end{equation}
+Note that $\partial\rho/\partial\overline{\psi}$ is definite positive.
 
 \subsection{Derivatives}
 
 We find
 \begin{equation}
-\frac{\partial N_{\bot}}{\partial k_{\psi}}=\dfrac{c\left\Vert \mathbf{\nabla
-}\psi\right\Vert }{\omega k_{\bot}}\left(  k_{\psi}\left\Vert \mathbf{\nabla
-}\psi\right\Vert -\dfrac{m\sin\alpha}{r}\right)
+\frac{\partial N_{\bot}}{\partial k_{\rho}}=\dfrac{c\left\Vert \mathbf{\nabla
+}\rho\right\Vert }{\omega k_{\bot}}\left(  k_{\rho}\left\Vert \mathbf{\nabla
+}\rho\right\Vert -\sin\alpha\dfrac{m}{r}\right)
 \end{equation}%
 \begin{equation}
 \frac{\partial N_{\bot}}{\partial\omega}=-\dfrac{N_{\bot}}{\omega}%
@@ -836,47 +985,47 @@ solved. The value of $n$ is given by launching conditions.
 
 \section{Inward propagating ray}
 
-The equation for $k_{\psi}$ has two solutions corresponding to inward and
+The equation for $k_{\rho}$ has two solutions corresponding to inward and
 outward propagating waves. The solution is chosen such that the ray initially
 propagates inward, meaning
 \begin{equation}
-\sigma_{I}\frac{d\psi}{dt}<0
+\frac{d\rho}{dt}<0
 \end{equation}
 where $\sigma_{I}$ is the sign of $I_{\phi}$ and thus of $\cos\alpha$. We have%
 \begin{equation}
-\frac{d\psi}{dt}=\frac{\partial\mathcal{D}}{\partial k_{\psi}}/\frac
+\frac{d\rho}{dt}=\frac{\partial\mathcal{D}}{\partial k_{\rho}}/\frac
 {\partial\mathcal{D}}{\partial\omega}%
 \end{equation}
 where%
 \begin{align}
-\frac{\partial\mathcal{D}}{\partial k_{\psi}}  &  =\frac{\partial N_{\bot}%
-}{\partial k_{\psi}}\frac{\partial\mathcal{D}}{\partial N_{\bot}}%
-+\frac{\partial N_{\Vert}}{\partial k_{\psi}}\frac{\partial\mathcal{D}%
+\frac{\partial\mathcal{D}}{\partial k_{\rho}} &  =\frac{\partial N_{\bot}%
+}{\partial k_{\rho}}\frac{\partial\mathcal{D}}{\partial N_{\bot}}%
++\frac{\partial N_{\Vert}}{\partial k_{\rho}}\frac{\partial\mathcal{D}%
 }{\partial N_{\Vert}}\\
-&  =\frac{\partial N_{\bot}}{\partial k_{\psi}}\frac{\partial\mathcal{D}%
+&  =\frac{\partial N_{\bot}}{\partial k_{\rho}}\frac{\partial\mathcal{D}%
 }{\partial N_{\bot}}%
 \end{align}
-since $N_{\Vert}$ is independent of $k_{\psi}$. For positive energy waves with
+since $N_{\Vert}$ is independent of $k_{\rho}$. For positive energy waves with
 $\partial\mathcal{D}/\partial\omega>0$ the condition () thus becomes,%
 \begin{equation}
-\sigma_{I}\frac{\partial N_{\bot}}{\partial k_{\psi}}\frac{\partial
-\mathcal{D}}{\partial N_{\bot}}<0
+\frac{\partial N_{\bot}}{\partial k_{\rho}}\frac{\partial\mathcal{D}}{\partial
+N_{\bot}}<0
 \end{equation}
 We have%
 \begin{equation}
-\frac{\partial N_{\bot}}{\partial k_{\psi}}=\dfrac{c\left\Vert \mathbf{\nabla
-}\psi\right\Vert }{\omega k_{\bot}}\left(  k_{\psi}\left\Vert \mathbf{\nabla
-}\psi\right\Vert -\dfrac{m\sin\alpha}{r}\right)
+\frac{\partial N_{\bot}}{\partial k_{\rho}}=\dfrac{c\left\Vert \mathbf{\nabla
+}\rho\right\Vert }{\omega k_{\bot}}\left(  k_{\rho}\left\Vert \mathbf{\nabla
+}\rho\right\Vert -\sin\alpha\dfrac{m}{r}\right)
 \end{equation}
-In general $\left\vert k_{\psi}\right\vert \left\Vert \mathbf{\nabla}%
-\psi\right\Vert >\dfrac{\left\vert m\sin\alpha\right\vert }{r}$ such that ()
+In general $\left\vert k_{\rho}\right\vert \left\Vert \mathbf{\nabla}%
+\rho\right\Vert >\dfrac{\left\vert m\sin\alpha\right\vert }{r}$ such that ()
 reduces to%
 \begin{equation}
-\sigma_{I}k_{\psi}\frac{\partial\mathcal{D}}{\partial N_{\bot}}<0
+k_{\rho}\frac{\partial\mathcal{D}}{\partial N_{\bot}}<0
 \end{equation}
 or equivalently%
 \begin{equation}
-\sigma_{I}k_{\psi}\overline{S}_{\bot}<0
+k_{\rho}\overline{S}_{\bot}<0
 \end{equation}
 where $\overline{S}_{\bot}$ is the energy flow density.
 
