@@ -26,7 +26,7 @@ path_equil = '../../../Database/EQUIL_files/';%if nothing is specified, the work
 id_dkeparam = 'BOUNCE3D_MUMPS';%For DKE code parameters
 path_dkeparam = '../../../Database/DKEPARAM_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_display = 'PARTIAL_VISUAL';%For output code display
+id_display = 'NO_DISPLAY';%For output code display
 path_display = '../../../Database/DISPLAY_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_ohm = '';%For Ohmic electric contribution
@@ -56,19 +56,6 @@ dkeparam.opt_save = 0;
 % 
 % Dpsipsi scan (0 -> 100 m2/s
 %
-transpfaste.vparmin = 3.5;
-
-
-transpfaste.Dr0 = 10;
-[Znorm10,Zcurr10,ZP0_10,dke_out10,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
-disp('D=10 m2/s done');
-graph1D_jd(gridDKE.xrho,Zcurr10.x_tot_fsav,0,0,'\rho','CPU time (s)','',NaN,'','','-','none','m',2);hold on
-
-return
-
-
-
-
 %
 transpfaste.Dr0 = 0;
 [Znorm0,Zcurr0,ZP0_0,dke_out0,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
