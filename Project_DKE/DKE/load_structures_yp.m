@@ -56,11 +56,11 @@ for iw = 1:length(ids_wave),
 	end
 end
 %
-if exist([path_transpfaste,'TRANSPFASTE_',id_transpfaste,'.mat']) == 0,%Fast electron radial transport 
+if exist([path_transpfaste,'TRANSP_',id_transpfaste,'.mat']) == 0,%Fast electron radial transport 
 	info_dke_yp(2,'Simulations are performed without fast electron radial transport');
 	transpfaste = '';
 else
-	eval(['load ',path_transpfaste,'TRANSPFASTE_',id_transpfaste,'.mat']);
+	eval(['load ',path_transpfaste,'TRANSP_',id_transpfaste,'.mat']);
 	info_dke_yp(2,'Structure ''transpfaste'' successfully loaded');
 end
 %
