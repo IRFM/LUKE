@@ -38,8 +38,8 @@ blist_lh = [1]; %Index of selected scenarios for the LH wave. [1,n_scenario_lh]
 %
 norm_ref = 1;%Normalization procedure for the LH quasilinear diffusion coefficient and spectrum boundaries
 %               (0) from local values Te and ne, (1) from central values Te0 and ne0 
-yvparmin_lh = [3];%LH wave square N// Spectrum: Lower limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
-yvparmax_lh = [5];%LH wave square N// Spectrum: Upper limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
+yvparmin_lh = [4];%LH wave square N// Spectrum: Lower limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
+yvparmax_lh = [7];%LH wave square N// Spectrum: Upper limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
 %
 yNparmin_lh = [NaN];%LH wave square N// Spectrum: Lower limit [1,n_scenario_lh]
 yNparmax_lh = [NaN];%LH wave square N// Spectrum: Upper limit [1,n_scenario_lh]
