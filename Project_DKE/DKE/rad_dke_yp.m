@@ -261,8 +261,8 @@ if ~isempty(transpfaste),
       XXlambdap = (1 - XXdeltalp).*XXlambdapp + XXdeltalp.*XXlambda;%Evaluation on the flux grid (linear interpolation)
       XXlambdam = (1 - XXdeltalm).*XXlambda + XXdeltalm.*XXlambdamm;%Evaluation on the flux grid (linear interpolation)
 %   
-      XXgradpsinp = (1.0 + XXx0p/Rp).*XXBp0p*ap/psia_apRp;
-      XXgradpsinm = (1.0 + XXx0m/Rp).*XXBp0m*ap/psia_apRp;
+      XXgradpsinp = (1.0 + XXx0p/Rp).*XXBp0p*ap^2/psia_apRp;
+      XXgradpsinm = (1.0 + XXx0m/Rp).*XXBp0m*ap^2/psia_apRp;
       XXalpharp = XXqtildep.*XXgradpsinp.*XXlambdap./XXB0p;%Evaluation on the flux grid (linear interpolation)
       XXalpharm = XXqtildem.*XXgradpsinm.*XXlambdam./XXB0m;%Evaluation on the flux grid (linear interpolation)
       XXalpharm(:,:,1) = 0;%Force zero at the plasma center, which is the natural analytical limit (In cylindrical geometry, r=0)
