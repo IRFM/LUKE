@@ -1,0 +1,15 @@
+For compiling the raytracing code C3PO,
+type the following commands in the directory
+~/Modules/RT/MEX/Bin/<machine_<type>
+
+where <machine_<type> may be GLNXA64 or MACG4 or any other type of 
+computer
+
+
+mex -c ../../Source/raytracing_interp_yp.c 
+mex -c ../../Source/raytracing_dieltensor_yp.c 
+mex -c ../../Source/raytracing_load_yp.c 
+
+then
+
+mex ../../Source/raytracing_yp.c raytracing_dieltensor_yp.o raytracing_interp_yp.o raytracing_load_yp.o 
