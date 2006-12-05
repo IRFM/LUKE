@@ -48,7 +48,7 @@ xpsin_S = radialDKE.xpsin_S_dke;
 %
 Rp = equil.Rp;%Plasma major radius (m)
 Zp = equil.Zp;%Plasma vertical position (m)
-ap = equil.ptx(end,1),%Plasma minor radius (m)
+ap = equil.ptx(end,1);%Plasma minor radius (m)
 theta = equil.theta;
 ppsin = equil.psi_apRp/equil.psi_apRp(end);
 ptR = equil.ptx + equil.Rp;
@@ -113,6 +113,7 @@ ptBtheta = -ptBR.*sin(ones(size(ppsin(:)))*theta) + ptBZ.*cos(ones(size(ppsin(:)
 Ipdir = sign(ptBtheta);%Btheta < 0 (clockwise poloidal) then Ip is counterclockwise toroidally from the top view (positive trigonometric). May change as function of plasma minor radius (negative shear case)
 Ipdir_mfl_lcs = sign(interp1(theta,Ipdir(end,:),theta_mfl_lcs,method));%Sign of Ip on the last closed magnetic surface
 Ipdkedir_mfl_lcs = -sign(Zcurr.x_tot_fsav(end))*ones(size(Ipdir_mfl_lcs));%Sign of the current calculated by DKE (- because of the elctron charge). If Ipdkedir_mfl_lcs and Ipdir_mfl_lcs, have the same sign, it is cocurrent, otherwise it is countercurrent
+Ipdir_psia = sign(equil.psi_apRp(end))
 %
 BX_mfl_lcs = BR_mfl_lcs.*cos(phi_mfl) - Bphi_mfl_lcs.*sin(phi_mfl);
 BY_mfl_lcs = BR_mfl_lcs.*sin(phi_mfl) + Bphi_mfl_lcs.*cos(phi_mfl);
@@ -202,7 +203,6 @@ gZ_hxr(~mask) = NaN;
 sBR = griddata(ptR,ptZ,ptBR,sR,sZ);
 sBZ = griddata(ptR,ptZ,ptBZ,sR,sZ);
 sBphi = griddata(ptR,ptZ,ptBphi,sR,sZ);
-%sIpdir=sign(griddata(ptR,ptZ,Ipdir,sR,sZ));%sign function to enforce +/- 1. Only the sign is important here
 sB = sqrt(sBR.^2 + sBZ.^2 + sBphi.^2);
 sksid = ((sBR.*cos(sphi) - sBphi.*sin(sphi)).*gX_hxr + (-sBR.*sin(sphi) + sBphi.*cos(sphi)).*gY_hxr + sBZ.*gZ_hxr)./sB;%cosine between magnetic field line and chord direction (towards the detector)
 %

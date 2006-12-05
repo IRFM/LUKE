@@ -102,9 +102,12 @@ figure('Name','Bremsstrahlung tomography (Toroidal top view, Z = 0)','Position',
 h = quiver(X_mfl_lcs(1:40:end),Y_mfl_lcs(1:40:end),BX_mfl_lcs(1:40:end),BY_mfl_lcs(1:40:end),0.5);%Magnetic field line direction
 set(h,'Color','k');
 hold on
-h = quiver(X_mfl_lcs(20:40:end),Y_mfl_lcs(20:40:end),Ipdir_mfl_lcs(20:40:end).*BX_mfl_lcs(20:40:end),Ipdir_mfl_lcs(20:40:end).*BY_mfl_lcs(20:40:end),0.5);%Current direction on magnetic field line direction
+sssB = sign(BY_mfl_lcs(1));%sign at phi = 0. if BPHI > 0, sss < 0, and for BPHI < 0, sss > 0
+sssIp = sign(Ipdir_mfl_lcs(1));
+sssIPdke = sign(Ipdkedir_mfl_lcs(1));
+h = quiver(X_mfl_lcs(20:40:end),Y_mfl_lcs(20:40:end),sssIp*sssB*BX_mfl_lcs(20:40:end),sssIp*sssB*BY_mfl_lcs(20:40:end),0.5);%Current direction on magnetic field line direction
 set(h,'Color','g');
-h = quiver(X_mfl_lcs(20:40:end),Y_mfl_lcs(20:40:end),Ipdkedir_mfl_lcs(20:40:end).*BX_mfl_lcs(20:40:end),Ipdkedir_mfl_lcs(20:40:end).*BY_mfl_lcs(20:40:end),0.3);%Current direction on magnetic field line direction
+h = quiver(X_mfl_lcs(20:40:end),Y_mfl_lcs(20:40:end),sssIPdke*sssB*BX_mfl_lcs(20:40:end),sssIPdke*sssB*BY_mfl_lcs(20:40:end),0.3);%Current direction on magnetic field line direction
 set(h,'Color','m');
 axis('equal');	
 graph1D_jd(sR.*cos(sphi),sR.*sin(sphi),0,0,'','','',NaN,'','','-','non','b',2);
