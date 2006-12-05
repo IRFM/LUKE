@@ -66,7 +66,7 @@ print_jd(p_opt,[filename,'_SafetyFactor']);
 figure('Name','Bremsstrahlung tomography (Poloidal view)','Position',[360,278,760,585]);
 [ax] = graph1D_jd(sR,sZ,0,0,'','','',NaN,'','','-','none','b',2);drawnow;%Poloidal plot
 hold on
-for ichord = 2:size(sR,2),
+for ichord = 1:size(sR,2),
    sRc = sR(~isnan(sR(:,ichord)),ichord);
    sZc = sZ(~isnan(sZ(:,ichord)),ichord);
    if ~isempty(sRc) & ~isempty(sZc)
@@ -83,7 +83,7 @@ axis('equal');
 graph1D_jd(HHR_pol,HHZ_pol,0,0,'','','',NaN,'','','-.','non','r',1);
 graph1D_jd(VVR_pol,VVZ_pol,0,0,'','','',NaN,'','','-.','non','r',1);
 graph1D_jd(HHR_pol,HHZ_pol,0,0,'','','',NaN,'','','-.','non','r',1);
-graph1D_jd(VVR_pol,VVZ_pol,0,0,'','','',NaN,'','','-.','non','r',1);
+graph1D_jd(VVR_pol,VVZ_pol,0,0,'','','',NaN,'','','-.','non','r',1); 
 graph1D_jd(ptR,ptZ,0,0,'X=R (m)','Z (m)','Bremsstrahlung tomography (Poloidal view)',NaN,'','','-','non','r',1);
 hold off
 print_jd(p_opt,[filename,'_PoloidalView']);
@@ -114,7 +114,9 @@ graph1D_jd(XX_tor_max,YY_tor_max,0,0,'','','',NaN,'','','-','non','r',2);
 graph1D_jd(VVX,VVY,0,0,'','','',NaN,'','','-.','non','r',1);
 graph1D_jd(HHX,HHY,0,0,'','','',NaN,'','','-.','non','r',1);
 graph1D_jd(X_mfl_lcs(1:3:end),Y_mfl_lcs(1:3:end),0,0,'','','',NaN,'','',':','non','k',1);%Z < 0 
-graph1D_jd(X_mfl_lcs(find(Z_mfl_lcs>=0)),Y_mfl_lcs(find(Z_mfl_lcs>=0)),0,0,'X (m)','Y (m)','Bremsstrahlung tomography (Toroidal top view, Z = 0)','B-field, (Ip: green, Ip-dke: magenta)','','','-','non','k',1);%Z >= 0 
+i_mfl_lcs = find(Z_mfl_lcs>=0);
+graph1D_jd(X_mfl_lcs(i_mfl_lcs(1:end-1)),Y_mfl_lcs(i_mfl_lcs(1:end-1)),0,0,'X (m)','Y (m)','Bremsstrahlung tomography (Toroidal top view, Z = 0)','B-field, (Ip: green, Ip-dke: magenta)','','','-','non','k',1);%Z >= 0 
+graph1D_jd(X_mfl_lcs(i_mfl_lcs(1)),Y_mfl_lcs(i_mfl_lcs(1)),0,0,'X (m)','Y (m)','Bremsstrahlung tomography (Toroidal top view, Z = 0)','B-field, (Ip: green, Ip-dke: magenta)','','','non','*','k',1);%Z >= 0 
 hold off
 set(gca,'YDir','rev');%Because the reference is indirect by definition
 %
