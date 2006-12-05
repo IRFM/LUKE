@@ -56,6 +56,7 @@ brem_bd_interp = interp1(kphot,brem_bd_in',kinterp,method)';
 for ik = 1:size(hxr.kdiag_hxr,2)-1,
 	brem_bd_plasma(:,ik) = sum(brem_bd_interp(:,min(find(kinterp >= hxr.kdiag_hxr(1,ik))):max(find(kinterp < hxr.kdiag_hxr(2,ik))))')'*dkinterp;
 end
+brem_bd_plasma = abs(brem_bd_plasma);
 %
 for ic = 1:size(brem_bd_plasma,1),	
    [Tph,eTph,A,eA,Q] = tphfit_dke_yp(kfit(ikfitmin:ikfitmax)',dt*brem_bd_plasma(ic,ikfitmin:ikfitmax)',sqrt(dt*brem_bd_plasma(ic,ikfitmin:ikfitmax))');
@@ -123,12 +124,14 @@ for ic = 1:size(brem_bd_interp,1),
 		brem_bd_diag(ic,ik) = sum(brem_bd_diag_interp(ic,min(find(kinterp >= hxr.kdiag_hxr(1,ik))):max(find(kinterp < hxr.kdiag_hxr(2,ik))))')'*dkinterp;
 	end
 %	
+	brem_bd_diag = abs(brem_bd_diag);
+%
    for ic = 1:size(brem_bd_plasma,1),	
       [Tph,eTph,A,eA,Q] = tphfit_dke_yp(kfit(ikfitmin:ikfitmax)',dt*brem_bd_diag(ic,ikfitmin:ikfitmax)',sqrt(dt*brem_bd_diag(ic,ikfitmin:ikfitmax))');
       if Tph <=0, %Remove negative or null values
-	     Tph = NaN;
+	      Tph = NaN;
          eTph = NaN;
-		 A = NaN;
+		   A = NaN;
          eA = NaN;
          Q = NaN;
       end
