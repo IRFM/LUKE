@@ -102,12 +102,12 @@ figure('Name','Bremsstrahlung tomography (Toroidal top view, Z = 0)','Position',
 h = quiver(X_mfl_lcs(1:40:end),Y_mfl_lcs(1:40:end),BX_mfl_lcs(1:40:end),BY_mfl_lcs(1:40:end),0.5);%Magnetic field line direction
 set(h,'Color','k');
 hold on
-sssB = sign(BY_mfl_lcs(1));%sign at phi = 0. if BPHI > 0, sss < 0, and for BPHI < 0, sss > 0
+sssB = sign(BY_mfl_lcs(1));%sign at phi = 0. if BPHI < 0, sssB < 0, and for BPHI > 0, sssB > 0
 sssIp = sign(Ipdir_mfl_lcs(1));
-sssIPdke = sign(Ipdkedir_mfl_lcs(1));
+sssIpdke = sign(Ipdkedir_mfl_lcs(1));
 h = quiver(X_mfl_lcs(20:40:end),Y_mfl_lcs(20:40:end),sssIp*sssB*BX_mfl_lcs(20:40:end),sssIp*sssB*BY_mfl_lcs(20:40:end),0.5);%Current direction on magnetic field line direction
 set(h,'Color','g');
-h = quiver(X_mfl_lcs(20:40:end),Y_mfl_lcs(20:40:end),sssIPdke*sssB*BX_mfl_lcs(20:40:end),sssIPdke*sssB*BY_mfl_lcs(20:40:end),0.3);%Current direction on magnetic field line direction
+h = quiver(X_mfl_lcs(20:40:end),Y_mfl_lcs(20:40:end),sssIpdke*sssB*BX_mfl_lcs(20:40:end),sssIpdke*sssB*BY_mfl_lcs(20:40:end),0.3);%Current direction on magnetic field line direction
 set(h,'Color','m');
 axis('equal');	
 graph1D_jd(sR.*cos(sphi),sR.*sin(sphi),0,0,'','','',NaN,'','','-','non','b',2);
@@ -124,3 +124,17 @@ hold off
 set(gca,'YDir','rev');%Because the reference is indirect by definition
 %
 print_jd(p_opt,[filename,'_TopView']);
+%
+disp('***************************************************************************************************************************************************')
+disp('WARNING: the definitions used in the DKE code, and here crucial for HXR calculations are the following');
+disp('   1) the toroidal frame (R,Z,phi) is direct (phi is positive clockwise when the tokamak is seen from the top)');
+disp('   2) the poloidal frame (r,theta,phi) is direct');
+disp('   3) (psi,s,phi) must be direct : if Ip.phi > 0, then B.theta > 0 and psi > 0, and s.theta > 0 (s as the same direction of theta)');
+disp('   4) the sign of psi is the sign of Ip.phi');
+disp('With the definitions above, if Ip is positive, psi is turned outward, Btheta is counterclockwise poloidally, and s too. The Ampere theorem is OK !');
+disp('The HXR diagnostic arrangement is taking this frame of reference.');
+disp('-----------------------------------------------------------');
+disp(['Sign of Bphi: ',int2str(sssB),' / Sign of Ip: ',int2str(sssIp),' / Sign of Ip_LUKE: ',int2str(sssIpdke)]);
+disp('***************************************************************************************************************************************************')
+
+
