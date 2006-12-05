@@ -43,38 +43,39 @@ ns = hxrparam.ns;
 xpsin = radialDKE.xpsin_f_dke;
 xpsin_S = radialDKE.xpsin_S_dke;
 %
-[equilHXR] = equilibrium_jd(equil,radialDKE,display,'spline',mfactor);%Magnetic equilibrium for HXR
+[equilHXR] = equilibrium_jd(equil,radialDKE,display,'spline',mfactor);%Magnetic equilibrium for HXR at points of the distribution function
 %
-Rp = equilHXR.Rp;%Plasma major radius (m)
-Zp = equilHXR.Zp;%Plasma vertical position (m)
-ap = equilHXR.Xx(end,1);%Plasma minor radius (m)
 %
-theta = equilHXR.mtheta;
-ppsin = equilHXR.xpsin;
-psia_apRp = equilHXR.psia_apRp;
-ptR = equilHXR.Xx + Rp;
-ptZ = equilHXR.Xy + Zp;
-ptBR = equilHXR.XBx;
-ptBZ = equilHXR.XBy;
-ptBphi = equilHXR.XBphi;
-ptB0 = equilHXR.xB0;
-ptR0 = equilHXR.xx0 + Rp;
-ptBT0 = equilHXR.xBT0;
-ptBp0 = equilHXR.xBp0;
-ptrho = equilHXR.xrho;
+Rp = equil.Rp;%Plasma major radius (m)
+Zp = equil.Zp;%Plasma vertical position (m)
+ap = equil.ptx(end,1),%Plasma minor radius (m)
+theta = equil.theta;
+ppsin = equil.psi_apRp/equil.psi_apRp(end);
+ptR = equil.ptx + equil.Rp;
+ptZ = equil.pty + equil.Zp;
+ptBR = equil.ptBx;
+ptBZ = equil.ptBy;
+ptBphi = equil.ptBPHI;
+ptBT = ptBphi;
+ptBp = sqrt(ptBR.^2 + ptBZ.^2);
+ptB = sqrt(ptBR.^2 + ptBZ.^2 + ptBphi.^2);
+ptB0 = ptB(:,1);
+ptR0 = equil.ptx(:,1) + Rp;
+ptBT0 = ptBT(:,1);
+ptBp0 = ptBp(:,1);
+ptrho = psi2rho_jd(equil,ppsin,'spline');
 %
 if length(ppsin)==1,error('Bremsstrahlung calculations cannot be performed when DKE results are obtained for a single radial position !');end
 %
 ns = abs(ns);%Force ns to be always positive
 nchords = length(hxr.alpha_hxr);%chord number
 %
-xq = qfactors_dke_yp(dkeparam.equil_mode,Rp,ap,equilHXR.Xx,equilHXR.Xy,equilHXR.XBx,equilHXR.XBy,equilHXR.XBphi,equilHXR.xx0,equilHXR.xB0,equilHXR.xBT0,equilHXR.xBp0);%Safety factors
+xq = ap*qfactors_dke_yp(dkeparam.equil_mode,Rp,ap,ptR-Rp,ptZ-Zp,ptBR,ptBZ,ptBphi,ptR0-Rp,ptB0,ptBT0,ptBp0)/Rp;%Safety factor
 %
 r_lcs = sqrt((ptR(length(ppsin),:) - Rp).^2 + (ptZ(length(ppsin),:) - Zp).^2);%Minor radius of the last closed magnetic surface
-ap = max([r_lcs(1),max(r_lcs)]);%Max of low field side  minor radius and maximum minor radius
 %
 smax = 3*(Rp + ap);%maximum chord length = R_hxr+a_hxr
-s = linspace(-smax,0,ns)'*ones(1,nchords);%for nchords (s negative by definition)
+s = linspace(-smax,+smax,ns)'*ones(1,nchords);%for nchords (s negative by definition)
 % Poloidal plot
 for ir = 1:length(xpsin_S)
     RR_pol(ir,:) = interp1(ppsin,ptR,xpsin_S(ir),method);
