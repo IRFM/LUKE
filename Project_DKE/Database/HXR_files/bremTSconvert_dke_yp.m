@@ -21,8 +21,26 @@ end
 %	
 [tok,Rp,ap,epsip,hp,Rm,Ri,ai,fi,nv,nv0,tv,kv,mv,sd,r1,r2,lc,lf,lfp,EG,kdiag,ef,tf,ea,ta,ec,tc,td,res,lod,lad,ed,lpm,phf,kd,Gain,Offset,pur,chordstatus] = partok_dke_yp('TS',day,month,year);
 %
-hxr.R_hxr = (Ri + ai*cos(tv*pi/180))/1000;% reference major radius (m)
-hxr.Z_hxr = ai*sin(tv*pi/180)/1000;% reference vertical position (m)
+R_TS = (Ri + ai*cos(tv*pi/180))/1000;% reference major radius (m)
+Z_TS = ai*sin(tv*pi/180)/1000;% reference vertical position (m)
+%
+L = [-4:1:4];%Chord length
+R = zeros(length(mv),length(L));
+Z = zeros(length(mv),length(L));
+figure(1),
+circle([Ri/1000,0],ai/1000,1000);
+hold on
+for chord = 1:length(mv),
+	   R(chord,:) = R_TS(chord) + L*cos(mv(chord)*pi/180);
+	   Z(chord,:) = Z_TS(chord) + L*sin(mv(chord)*pi/180);
+end
+plot(R',Z'),
+hold off
+axis('equal')
+xlabel('R(m)');ylabel('Z(m)')
+%
+hxr.R_hxr = R_TS;% reference major radius (m)
+hxr.Z_hxr = Z_TS;% reference vertical position (m)
 %
 hxr.alpha_hxr = -kv*pi/180;%horizontal angle (with respect to R) [-pi...pi]. The negative sign comes from the fact that kv is defined in a direct frame, while alpha_hxr corresponds to an indirect frame
 hxr.beta_hxr = pi/2 - mv*pi/180;%vertical angle (with respect to Z) [0...pi]
