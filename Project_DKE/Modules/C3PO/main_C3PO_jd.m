@@ -47,7 +47,7 @@ for iray = 1:Nrays,
          filename_in = [id_wave,'_ray_',int2str(iray)];
          [iabs_out,srho,stheta,sphi,sR,sZ,sNpar,sNperp,sepol_pmz,sphi_xyz] = raypostprocessing_yp(tout,yout,rayparam,equil_fit,omega_rf,display.ray,display.p_opt,filename_in);
          if display.ray == 1,
-             pause
+             pause(5)
          end
          iabs = min(length(srho),round(iabs_out*1.1));
 %
