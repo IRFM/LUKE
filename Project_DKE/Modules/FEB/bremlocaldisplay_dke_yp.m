@@ -73,8 +73,12 @@ i_test = max(find(xrho <= r_display));%Normalized radius index for output and di
 j_test = max(find(theta_hxr(1,:) <= t_display*pi/180));%Poloidal angle index for output and display
 if isempty(j_test), j_test = size(theta_hxr,2);end;%To avoid round-off that give an empty value close to theta = 0.
 %
-for j = 0:3,%Search the closest cell where a chord is going through
-   if mask_hxr(i_test,j_test + j), j_testref = j_test + j;break;end
+for j = 0:5,%Search the closest cell where a chord is going through
+   if mask_hxr(i_test,j_test + j), 
+   	j_testref = j_test + j;break;
+   else
+   	j_testref = 1;
+   end
 end
 j_test = j_testref;
 %
