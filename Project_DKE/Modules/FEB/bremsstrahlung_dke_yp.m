@@ -1,11 +1,11 @@
-function  [Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,display,equilDKE,radialDKE,mksa,momentumDKE,dke_out,Zbremchord,hxr,hxrparam)
+function  [Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,display,equilHXR,radialDKE,mksa,momentumDKE,dke_out,Zbremchord,hxr,hxrparam)
 %
 % Calculates the plasma bremsstrahlung emission. Call first the function bremchord_dke_yp.m
 %
 %   INPUTS:
 %   
 %       - Zbremchord: HXR diagnostic chord arrangement data structure
-%       - equilDKE: DKE magnetic equilibrium structure
+%       - equilHXR: HXR magnetic equilibrium structure
 %       - hxr: Bremsstrahlung structure
 %       - hxrparam : Bremsstrahlung calculation and display parameter structure
 %       - dkeparam: DKE data structure
@@ -48,33 +48,32 @@ r_dke = radialDKE.r_dke;
 pnmax_S = dkeparam.pnmax_S;
 bounce_mode = dkeparam.bounce_mode;
 %
-Rp = equilDKE.Rp;
-Zp = equilDKE.Zp;
-ap = equilDKE.Xx(end,1);
-%
-theta = equilDKE.mtheta;
-xpsin = equilDKE.xpsin;
-psia_apRp = equilDKE.psia_apRp;
-XR = equilDKE.Xx + Rp;
-XZ = equilDKE.Xy + Zp;
-XBR = equilDKE.XBx;
-XBZ = equilDKE.XBy;
-XBphi = equilDKE.XBphi;
-xB0 = equilDKE.xB0;
-xR0 = equilDKE.xx0 + Rp;
-xBT0 = equilDKE.xBT0;
-xBp0 = equilDKE.xBp0;
-xrho = equilDKE.xrho;
-xTe = equilDKE.xTe;
-xne = equilDKE.xne;
-xzTi = equilDKE.xzTi;
-xzni = equilDKE.xzni;
-zZi = equilDKE.zZi;
-zmi = equilDKE.zmi;
-xZeff = equilDKE.xZeff;
-xmhu0T2 = equilDKE.xmhu0T2;
-xdV_dke = equilDKE.xdV_2piRp_dke*2*pi*Rp;
-xdA_dke = equilDKE.xdA_dke;
+Rp = equilHXR.Rp;
+Zp = equilHXR.Zp;
+ap = equilHXR.Xx(end,1);
+theta = equilHXR.mtheta;
+xpsin = equilHXR.xpsin;
+psia_apRp = equilHXR.psia_apRp;
+XR = equilHXR.Xx + Rp;
+XZ = equilHXR.Xy + Zp;
+XBR = equilHXR.XBx;
+XBZ = equilHXR.XBy;
+XBphi = equilHXR.XBphi;
+xB0 = equilHXR.xB0;
+xR0 = equilHXR.xx0 + Rp;
+xBT0 = equilHXR.xBT0;
+xBp0 = equilHXR.xBp0;
+xrho = equilHXR.xrho;
+xTe = equilHXR.xTe;
+xne = equilHXR.xne;
+xzTi = equilHXR.xzTi;
+xzni = equilHXR.xzni;
+zZi = equilHXR.zZi;
+zmi = equilHXR.zmi;
+xZeff = equilHXR.xZeff;
+xmhu0T2 = equilHXR.xmhu0T2;
+xdV_dke = equilHXR.xdV_2piRp_dke*2*pi*Rp;
+xdA_dke = equilHXR.xdA_dke;
 %
 xzni_norm = xzni(:,r_dke)/ne_ref;
 xne_norm = xne(r_dke)/ne_ref;
@@ -161,7 +160,7 @@ for i = 1:size(psin_hxr,1),%radial position
 %%%%%%		PSI_hxr(i,j) = 1;%low field side only
 			mhu_hxr = sign(mhu(:)).*sqrt(1-PSI_hxr(i,j)*(1 - mhu(:).^2));%mhu at a poloidal position that is different from Bmin
 			mhu_hxr = mhu_hxr(1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0);
-            Zbremplasma.mhu_hxr{i,j} = mhu_hxr;
+         Zbremplasma.mhu_hxr{i,j} = mhu_hxr;
 			Xf0_hxr = XXf0(:,1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0,i);%Non-thermal distribution function at poloidal location
 			Xf0_tp_hxr = XXf0_tp(:,1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0,i);
 			Xf0_g_hxr = XXf0_g(:,1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0,i);
@@ -171,8 +170,8 @@ for i = 1:size(psin_hxr,1),%radial position
 			Xf0_g_i = interp1(mhu_hxr(:),Xf0_g_hxr',x_leg(:),method)';
 %
 			Xf0_c = (Xf0_i.*(w_leg*ones(1,size(Xf0_i,1)))')*Pm';
-		    Xf0_tp_c = (Xf0_tp_i.*(w_leg*ones(1,size(Xf0_tp_i,1)))')*Pm';
-		    Xf0_g_c = (Xf0_g_i.*(w_leg*ones(1,size(Xf0_g_i,1)))')*Pm';
+		   Xf0_tp_c = (Xf0_tp_i.*(w_leg*ones(1,size(Xf0_tp_i,1)))')*Pm';
+		   Xf0_g_c = (Xf0_g_i.*(w_leg*ones(1,size(Xf0_g_i,1)))')*Pm';
 %
 			Xf0_c1 = permute(repmat(reshape(Xf0_c',n_gauleg+1,size(XXf0,1),1),[1,1,1,length(kphot)]),[1,2,4,3]);
 			Xf0_tp_c1 = permute(repmat(reshape(Xf0_tp_c',n_gauleg+1,size(XXf0_tp,1),1),[1,1,1,length(kphot)]),[1,2,4,3]);
