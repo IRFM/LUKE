@@ -311,7 +311,7 @@ for in = 1:nn_rf,
         XXdeltares_ij(XXmask_square) = (XXnparres_ij(XXmask_square) > XXnparmin_rf(XXmask_square)).*(XXnparmax_rf(XXmask_square) > XXnparres_ij(XXmask_square))./(XXnparmax_rf(XXmask_square) - XXnparmin_rf(XXmask_square));
         XXdeltares_ij(XXmask_gauss) = exp(-(XXnparres_ij(XXmask_gauss) - XXnpar_rf(XXmask_gauss)).^2./XXdnpar_rf(XXmask_gauss).^2)./XXdnpar_rf(XXmask_gauss)/sqrt(pi);
         %
-        XX_index_ij = (XXdeltares_ij >= rf_tol) | (~XXheaviside & flipdim(XXdeltares_ij,2) >= rf_tol);
+        XX_index_ij = XXmaskb & ((XXdeltares_ij >= rf_tol) | (~XXheaviside & flipdim(XXdeltares_ij,3) >= rf_tol));
         %
         % neighboring points are also accounted for
         %
@@ -634,7 +634,7 @@ clear XYrespol XYDfacp XYDfac XYDfacm
 %
 if dke_mode == 0,
     %
-    clear XYgammapp XYgammap XYgamma XYgammam XYgammamm
+    clear XYgammapp XYgammamm
     clear XYpnpp XYpnp XYpn XYpnm XYpnmm
     %
 end
@@ -644,20 +644,20 @@ end
 ZXYD_rf.pp_ippj = XY1mmhu2.*XYDrf.ippj;
 ZXYD_rf.pp_ipj = XY1mmhu2.*XYDrf.ipj;                                     
 ZXYD_rf.pp_ij = XY1mmhu2.*XYDrf.ij;                                      
-ZXYD_rf.parpar_ij = XY1mmhu2.*(1 - XYyn).^2.*XYDrf.ij./XYmhu./XYmhu; 
+ZXYD_rf.parpar_ij = XY1mmhu2.*(1 - XYyn./XYgamma).^2.*XYDrf.ij./XYmhu./XYmhu; 
 ZXYD_rf.pp_imj = XY1mmhu2.*XYDrf.imj;
 ZXYD_rf.pp_immj = XY1mmhu2.*XYDrf.immj;
 %
-ZXYD_rf.pm_ipj = - sqrt(XY1mmhu2).*(XY1mmhu2 - XYyn).*XYDrf.ipj./XYmhu;
-ZXYD_rf.pm_ij = - sqrt(XY1mmhu2).*(XY1mmhu2 - XYyn).*XYDrf.ij./XYmhu;
-ZXYD_rf.pm_imj = - sqrt(XY1mmhu2).*(XY1mmhu2 - XYyn).*XYDrf.imj./XYmhu;
+ZXYD_rf.pm_ipj = - sqrt(XY1mmhu2).*(XY1mmhu2 - XYyn./XYgammap).*XYDrf.ipj./XYmhu;
+ZXYD_rf.pm_ij = - sqrt(XY1mmhu2).*(XY1mmhu2 - XYyn./XYgamma).*XYDrf.ij./XYmhu;
+ZXYD_rf.pm_imj = - sqrt(XY1mmhu2).*(XY1mmhu2 - XYyn./XYgammam).*XYDrf.imj./XYmhu;
 %
-ZXYD_rf.mp_ijp = - sqrt(XY1mmhu2p).*(XY1mmhu2p - XYyn).*XYDrf.ijp./XYmhup;
-ZXYD_rf.mp_ij = - sqrt(XY1mmhu2).*(XY1mmhu2 - XYyn).*XYDrf.ij./XYmhu;
-ZXYD_rf.mp_ijm = - sqrt(XY1mmhu2m).*(XY1mmhu2m - XYyn).*XYDrf.ijm./XYmhum;
+ZXYD_rf.mp_ijp = - sqrt(XY1mmhu2p).*(XY1mmhu2p - XYyn./XYgamma).*XYDrf.ijp./XYmhup;
+ZXYD_rf.mp_ij = - sqrt(XY1mmhu2).*(XY1mmhu2 - XYyn./XYgamma).*XYDrf.ij./XYmhu;
+ZXYD_rf.mp_ijm = - sqrt(XY1mmhu2m).*(XY1mmhu2m - XYyn./XYgamma).*XYDrf.ijm./XYmhum;
 %
-ZXYD_rf.mm_ijp = (XY1mmhu2p - XYyn).^2.*XYDrf.ijp./XYmhup./XYmhup;
-ZXYD_rf.mm_ijm = (XY1mmhu2m - XYyn).^2.*XYDrf.ijm./XYmhum./XYmhum;
+ZXYD_rf.mm_ijp = (XY1mmhu2p - XYyn./XYgamma).^2.*XYDrf.ijp./XYmhup./XYmhup;
+ZXYD_rf.mm_ijm = (XY1mmhu2m - XYyn./XYgamma).^2.*XYDrf.ijm./XYmhum./XYmhum;
 %
 clear XYDrf 
 %
@@ -857,6 +857,7 @@ else
 end            
 %
 clear XYmhup XYmhu XYmhum XY1mmhu2p XY1mmhu2 XY1mmhu2m XYyn XYold
+clear XYgammap XYgamma XYgammam 
 %
 gridindex_rf.mask_p = mask_p;
 gridindex_rf.mask_m = mask_m;
