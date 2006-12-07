@@ -48,116 +48,117 @@ end
 %
 if launch.type == 'EC',
    dNpar0 = launch.dNpar0;
-ns = launch.ns;
-method = launch.method;
+   ns = launch.ns;
+   method = launch.method;
 %
 %
-ny = length(launch.yP_L);
+   ny = length(launch.yP_L);
 %
-ptr = sqrt(equil.ptx.^2 + equil.pty.^2);
-smax = max(max(ptr));
-s = linspace(0,smax,ns);
+   ptr = sqrt(equil.ptx.^2 + equil.pty.^2);
+   smax = max(max(ptr));
+   s = linspace(0,smax,ns);
 %
 % Straight ray propagation to reach first closed flux surface
 %
-[sysh,sysZ,syR,syZ,syphi,syalpha,sybeta,sygR,sygZ,sygphi] = raypath_prop_jd(launch.yR_L,launch.yZ_L,-launch.yphi_L,launch.yalpha_L,launch.ybeta_L,s);
+   [sysh,sysZ,syR,syZ,syphi,syalpha,sybeta,sygR,sygZ,sygphi] = raypath_prop_jd(launch.yR_L,launch.yZ_L,-launch.yphi_L,launch.yalpha_L,launch.ybeta_L,s);
 % The definition of phi in raypath_prop_jd is opposite from the definition in DKE
-syx = syR - equil.Rp;
-syy = syZ - equil.Zp;
-syphi = - syphi;
-sygphi = - sygphi;
+   syx = syR - equil.Rp;
+   syy = syZ - equil.Zp;
+   syphi = - syphi;
+   sygphi = - sygphi;
 %
-syr = sqrt(syx.^2 + syy.^2);
-syx(syx == 0) = eps;
-sytheta = atan(syy./syx) + pi*(syx < 0) + 2*pi*(syx > 0 & syy < 0);
+   syr = sqrt(syx.^2 + syy.^2);
+   syx(syx == 0) = eps;
+   sytheta = atan(syy./syx) + pi*(syx < 0) + 2*pi*(syx > 0 & syy < 0);
 %
 % In vacuum N = g; 
 %
-syNx = sygR;
-syNy = sygZ;
-syNphi = sygphi;
+   syNx = sygR;
+   syNy = sygZ;
+   syNphi = sygphi;
 %
-yP0_2piRp = launch.yP_L/(2*pi*equil.Rp);
+   yP0_2piRp = launch.yP_L/(2*pi*equil.Rp);
 %
-psi_apRp = equil.psi_apRp;
-psin = psi_apRp/psi_apRp(end);
+   psi_apRp = equil.psi_apRp;
+   psin = psi_apRp/psi_apRp(end);
 %
-rayinit.omega_rf = launch.omega_rf;
+   rayinit.omega_rf = launch.omega_rf;
 %
-for iy = 1:ny,    
-    %
-    % interpolation for r at ray poloidal locations    
-    %
-    pstr = interp1(equil.theta,ptr.',sytheta(:,iy),method).';%r(psi,st)
-    %
-    % interpolation for psi at ray position (along cst theta lines)
-    %
-    %spsin = interp1(pstr,ppsin,sr,method);%psi(s)
-    for is = 1:ns 
-        spsin(is) = interp1(pstr(:,is),psin,syr(is,iy),method,NaN);%psi(s)
-    end
-    %
-    is0 = min(find(~isnan(spsin)));
-    %
-    psin0 = spsin(is0);
-    %
-    r0 = syr(is0,iy);
-    theta0 = sytheta(is0,iy);
-    phi0 = syphi(is0,iy);
-    Nx0 = syNx(is0,iy);
-    Ny0 = syNy(is0,iy);
-    Nphi0 = syNphi(is0,iy);
-    %
-    rho0 = psi2rho_jd(equil,psin0);
-    %
-    Bx0 = interp2(psin,equil.theta,equil.ptBx.',psin0,theta0,method);
-    By0 = interp2(psin,equil.theta,equil.ptBy.',psin0,theta0,method);
-    BPHI0 = interp2(psin,equil.theta,equil.ptBPHI.',psin0,theta0,method);    
-    %
-    Npar0 = (Nx0*Bx0 + Ny0*By0 + Nphi0*BPHI0)/sqrt(Bx0.^2 + By0.^2 + BPHI0.^2);
-    %
-    Bp0 = sqrt(Bx0.^2 + By0.^2);
-    cosalpha = (By0*syx(is0,iy) - Bx0*syy(is0,iy))/r0/Bp0;
-    Ns0 = (Nx0*Bx0 + Ny0*By0)/Bp0;
-    m0 = r0*Ns0*rayinit.omega_rf/clum/cosalpha;
-    %
-    rayinit.yrho0(iy) = rho0;%Initial radial position at launch
-    rayinit.ytheta0(iy) = theta0;%Initial poloidal position at launch
-    rayinit.yphi0(iy) = phi0;%Initial toroidal position at launch
-    rayinit.ym0(iy) = m0;%Initial poloidal mode number
-    rayinit.yNpar0(iy) = Npar0;%Initial index of refraction
-    rayinit.ydNpar0(iy) = dNpar0;%initial Ray spectral width
-    rayinit.yP0_2piRp(iy) = yP0_2piRp(iy);%Lineic initial power density initial power in the ray (W/m)
-    %
-end
+   for iy = 1:ny,    
 %
+% interpolation for r at ray poloidal locations    
+%
+      pstr = interp1(equil.theta,ptr.',sytheta(:,iy),method).';%r(psi,st)
+%
+% interpolation for psi at ray position (along cst theta lines)
+%
+%spsin = interp1(pstr,ppsin,sr,method);%psi(s)
+      for is = 1:ns 
+         spsin(is) = interp1(pstr(:,is),psin,syr(is,iy),method,NaN);%psi(s)
+      end
+%
+      is0 = min(find(~isnan(spsin)));
+%
+      psin0 = spsin(is0);
+%
+      r0 = syr(is0,iy);
+      theta0 = sytheta(is0,iy);
+      phi0 = syphi(is0,iy);
+      Nx0 = syNx(is0,iy);
+      Ny0 = syNy(is0,iy);
+      Nphi0 = syNphi(is0,iy);
+%
+      rho0 = psi2rho_jd(equil,psin0);
+%
+      Bx0 = interp2(psin,equil.theta,equil.ptBx.',psin0,theta0,method);
+      By0 = interp2(psin,equil.theta,equil.ptBy.',psin0,theta0,method);
+      BPHI0 = interp2(psin,equil.theta,equil.ptBPHI.',psin0,theta0,method);    
+%
+      Npar0 = (Nx0*Bx0 + Ny0*By0 + Nphi0*BPHI0)/sqrt(Bx0.^2 + By0.^2 + BPHI0.^2);
+%
+      Bp0 = sqrt(Bx0.^2 + By0.^2);
+      cosalpha = (By0*syx(is0,iy) - Bx0*syy(is0,iy))/r0/Bp0;
+      Ns0 = (Nx0*Bx0 + Ny0*By0)/Bp0;
+      m0 = r0*Ns0*rayinit.omega_rf/clum/cosalpha;
+%
+      rayinit.yrho0(iy) = rho0;%Initial radial position at launch
+      rayinit.ytheta0(iy) = theta0;%Initial poloidal position at launch
+      rayinit.yphi0(iy) = phi0;%Initial toroidal position at launch
+      rayinit.ym0(iy) = m0;%Initial poloidal mode number
+      rayinit.yNpar0(iy) = Npar0;%Initial index of refraction
+      rayinit.ydNpar0(iy) = dNpar0;%initial Ray spectral width
+      rayinit.yP0_2piRp(iy) = yP0_2piRp(iy);%Lineic initial power density initial power in the ray (W/m)
+%
+   end
 elseif launch.type == 'LH',
-    bP0 = [launch.bPlhtotp,launch.bPlhtotm];%initial power in the ray (W)
-    bNpar0 = [launch.bNpar0p,launch.bNpar0m];%Initial Npar value
-    bdNpar0 = [launch.bwidthp,launch.bwidthm];%ray spectral width for Fokker-Planck calculations
-    rby0 = [launch.ry0p*ones(1,length(launch.bPlhtotp)),launch.ry0m*ones(1,length(launch.bPlhtotp))];
+  	for ia = 1:size(launch.bPlhtot,1),%number of antennas at the SAME frequency
+      bP0 = launch.bPlhtot(ia,:);%initial power in the ray (W) [1,n_lobe]
+      bNpar0 = launch.bNpar0(ia,:);%Initial Npar value [1,n_lobe]
+      bdNpar0 = launch.bdNpar0(ia,:);%ray spectral width for Fokker-Planck calculations [1,n_lobe]
+      rby0 = [launch.ry0(ia,:)'*ones(1,length(bP0))];%[m_pol,n_lobe]
 %
 % Ray initial characteristics
 %
-    tmask = diff(equil.pty(launch.i_ref,:))*launch.LFS > 0;
+      tmask = diff(equil.pty(launch.i_ref,:))*launch.LFS(ia) > 0;
 %
-    rbx0 = interp1(equil.pty(launch.i_ref,tmask),equil.ptx(launch.i_ref,tmask),rby0,'spline');
-    rbx0(rbx0 == 0) = eps;
-    rbtheta0 = atan(rby0./rbx0) + pi*(rbx0 < 0) + 2*pi*(rbx0 > 0 & rby0 < 0);
+      rbx0 = interp1(equil.pty(launch.i_ref,tmask),equil.ptx(launch.i_ref,tmask),rby0,'spline');
+      rbx0(rbx0 == 0) = eps;
+      rbtheta0 = atan(rby0./rbx0) + pi*(rbx0 < 0) + 2*pi*(rbx0 > 0 & rby0 < 0);
 %
-    rho0 = psi2rho_jd(equil,equil.psi_apRp(launch.i_ref)/equil.psi_apRp(end),'spline');%Initial radial position at launch%
+      rho0 = psi2rho_jd(equil,equil.psi_apRp(launch.i_ref)/equil.psi_apRp(end),'spline');%Initial radial position at launch%
 %
-    rayinit.omega_rf = launch.omega_rf;
+      rayinit.omega_rf = launch.omega_rf(ia);%wave frequency for each antenna 
+      if ia > 1 & (launch.omega_rf(ia) ~= launch.omega_rf(ia-1)),error('LH wave frequencies must be identical !');end
 %
-    iy = 0;
+      nb = size(rby0,2);% number of beams
+      nr = size(rby0,1);% number of poloidal locations
 %
-    nb = size(rby0,2);% number of beams
-    nr = size(rby0,1);% number of poloidal locations
+      bP0_2piRp = bP0/(2*pi*equil.Rp);
 %
-    bP0_2piRp = bP0/(2*pi*equil.Rp);
+      iy = (ia - 1)*nb*nr;
 %
-    for ib = 1:nb,
-        for ir = 1:nr,
+      for ib = 1:nb,
+         for ir = 1:nr,
             iy = iy + 1;
 %
             rayinit.yrho0(iy) = rho0;%Initial radial position at launch
@@ -166,8 +167,9 @@ elseif launch.type == 'LH',
             rayinit.ym0(iy) = launch.m0;%Initial poloidal mode number
             rayinit.yNpar0(iy) = bNpar0(ib);%Initial index of refraction
             rayinit.ydNpar0(iy) = bdNpar0(ib);%initial Ray spectral width
-           rayinit.yP0_2piRp(iy) = bP0_2piRp(ib)/nr;%Lineic initial power density initial power in the ray (W/m)
+            rayinit.yP0_2piRp(iy) = bP0_2piRp(ib)/nr;%Lineic initial power density initial power in the ray (W/m)
 %
-       end
+         end
+      end
    end
 end
