@@ -14,7 +14,7 @@ id_rayinit = 'GENRAY';%
 % Source file parameters
 %
 filename = 'genray.nc';
-path_file = 'Source_files/';
+path_file = '../GENRAY/Source_files/';
 %
 % Equilibrium parameters
 %
@@ -23,7 +23,7 @@ path_equil = '../../EQUIL/';%if nothing is specified, the working directory is f
 %
 % Wave parameters
 %
-m0 = 0;
+m0 = NaN;
 %
 method = 'spline';
 %
@@ -49,7 +49,7 @@ data_out_netcdf = load_netcdf_jd([path_file,filename]);
           syNpar,sydNpar,syNperp,...
           syepol_x,syepol_y,syepol_z,syphi_x,...
           syalpha,syB,syne,syTe,...
-          yP0_in,yR_in,yZ_in,yphi_in,yNtor,yNpol] = process_genray_jd(data_out_netcdf);
+          yP0_in,yR_in,yZ_in,yphi_in,yNtor_in,yNpol_in] = process_genray_jd(data_out_netcdf);
 %
 ny = length(yR_in);   
 %
@@ -81,23 +81,46 @@ end
 %
 yrho_in = psi2rho_jd(equil,ypsin_in);
 %
-yNpar_in = syNpar(1,:);
-%
-% if opt.checkNpar == 1,
-%     yBx_in = interp2(psin,theta,equil.ptBx.',ytheta_in,ypsin_in,method);
-%     yBy_in = interp2(psin,theta,equil.ptBy.',ytheta_in,ypsin_in,method);
-%     yBPHI_in = interp2(psin,theta,equil.ptBPHI.',ytheta_in,ypsin_in,method);
-%     %
-%     yBP_in = -sign(yBy_in).*sqrt(yBx_in.^2 + yBy_in.^2);
-%     yBT_in = yBPHI_in;
-%     yB_in = sqrt(yBP_in.^2 + yBT_in.^2);
-%     %
-%     yP_in = yBP_in./yB_in;
-%     yT_in = yBT_in./yB_in;
-%     %
-%     yNpar_in = yP_in.*yNpol + yT_in.*yNtor;
-%     %
-% end
+if isnan(m0),%calculate m0 from yNpol and n0 from yNtor
+    yBx_in = interp2(psin,theta,equil.ptBx.',ypsin_in,ytheta_in,method);
+    yBy_in = interp2(psin,theta,equil.ptBy.',ypsin_in,ytheta_in,method);
+    yBPHI_in = interp2(psin,theta,equil.ptBPHI.',ypsin_in,ytheta_in,method);
+    %
+    yBP_in = sqrt(yBx_in.^2 + yBy_in.^2);
+    yBT_in = yBPHI_in;
+    yB_in = sqrt(yBP_in.^2 + yBT_in.^2);
+    %
+    yP_in = yBP_in./yB_in;
+    yT_in = yBT_in./yB_in;
+    %
+    yNphi_in = yNtor_in;
+    yn0_in = yR_in.*yNphi_in*omega_rf/clum;
+    %
+    ycalpha_in = (yBy_in.*yx_in - yBx_in.*yy_in)./yr_in./yBP_in;
+    %
+    if 0,%determine yNpar_in from ym0_in and yn0_in
+        yNs_in = yNpol_in;
+        ym0_in = yr_in.*yNs_in*omega_rf/clum./ycalpha_in;
+        %
+        yNpar_in = (ycalpha_in.*yP_in.*ym0_in./yr_in + sign(yBPHI_in).*yT_in.*yn0_in./yR_in)*clum/omega_rf;
+        %yNpar_in = yNpol_in.*yP_in + yNtor_in.*sign(yBPHI_in).*yT_in;
+        figure(1),clf
+        plot(1:ny,yNpar_in,'b',1:ny,syNpar(1,:),'r--');
+        legend({'From m0 and no','From syNpar(1,:)'});
+    else %determine ym0_i from yNpar_inn and yn0_in
+        yNpar_in = syNpar(1,:);
+        %
+        ym0_in = (yNpar_in*omega_rf/clum - sign(yBPHI_in).*yT_in.*yn0_in./yR_in).*yr_in./ycalpha_in./yP_in;
+        %ym0_in = yr_in.*yNpol_in*omega_rf/clum./ycalpha_in;
+        figure(1),clf
+        plot(1:ny,yr_in.*yNpol_in*omega_rf/clum./ycalpha_in,'b',1:ny,ym0_in,'r--');
+        legend({'From yNpol','From syNpar(1,:) and yNtor'});
+    end        
+    %
+else
+    ym0_in = m0*ones(1,nb);
+    yNpar_in = syNpar(1,:);
+end
 %
 % Identify the different beams
 %
@@ -112,6 +135,7 @@ end
 brho_in = yrho_in(iy_peak);
 btheta_in = ytheta_in(iy_peak);
 bphi_in = yphi_in(iy_peak);
+ym0_in = ym0_in(iy_peak);
 bNpar_in = yNpar_in(iy_peak);
 %
 bymin = [1,iy_dip];
@@ -130,7 +154,7 @@ rayinit.omega_rf = omega_rf;
 rayinit.yrho0 = brho_in;
 rayinit.ytheta0 = btheta_in;
 rayinit.yphi0 = bphi_in;
-rayinit.ym0 = m0*ones(1,nb);
+rayinit.ym0 = ym0_in;
 rayinit.yNpar0 = bNpar_in;
 rayinit.ydNpar0 = bdNpar_in;
 rayinit.yP0_2piRp = bP0_2piRp_in;
