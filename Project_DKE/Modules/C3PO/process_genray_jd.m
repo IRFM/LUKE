@@ -2,7 +2,7 @@ function [id_equil,omega_rf,ays,aypsin,ayR,ayZ,ayphi,...
           ayNpar,aydNpar,ayNperp,...
           ayepol_x,ayepol_y,ayepol_z,ayphi_x,...
           ayalpha,ayB,ayne,ayTe,...
-          yP0,yr_in,yz_in,yphi_in,yNtor,yNpol] = process_genray_jd(data_out_netcdf);
+          yP0,yr_in,yz_in,yphi_in,yNtor_in,yNpol_in] = process_genray_jd(data_out_netcdf);
 %
 % This function normalizes genray NETCDF data to DKE standards
 %
@@ -28,7 +28,10 @@ nx = size(ays,1);
 %
 ayR = data_out_netcdf.wr.'/100;
 ayZ = data_out_netcdf.wz.'/100;
-ayphi = data_out_netcdf.wphi.';
+%
+% warning : phi in DKE is opposite from genray standards
+%
+ayphi =  - data_out_netcdf.wphi.';
 %
 ayNpar = data_out_netcdf.wnpar.';
 aydNpar = data_out_netcdf.wdnpar.';
@@ -49,7 +52,10 @@ ayTe = data_out_netcdf.ste.';
 
 yr_in = data_out_netcdf.r_starting.';
 yz_in = data_out_netcdf.z_starting.';
-yphi_in = data_out_netcdf.phi_starting.';
-
-yNtor = data_out_netcdf.N_toroidal_starting.';
-yNpol = data_out_netcdf.N_poloidal_starting.';
+%
+% warning : phi in DKE is opposite from genray standards
+%
+yphi_in = - data_out_netcdf.phi_starting.';
+yNtor_in =  - data_out_netcdf.N_toroidal_starting.';
+%
+yNpol_in = data_out_netcdf.N_poloidal_starting.';
