@@ -1,4 +1,4 @@
-function [launch] = make_display_cronos(config)
+function [display] = make_display_cronos(config)
 %
 % Create the structure display for CRONOS
 % 

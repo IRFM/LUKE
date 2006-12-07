@@ -1,4 +1,4 @@
-function [launch] = make_dkeparam_cronos(config)
+function [dkeparam] = make_dkeparam_cronos(config)
 %
 % Create the strucure dkeparam for CRONOS
 % 
@@ -49,7 +49,7 @@ if strcmp(config,'LH_RT');%For the Lower Hybrid wave simulations
    dkeparam.rt_mode = 1;%RT-DKE power consistency method
    dkeparam.nit_rf = 20;%Maximum number of iteration in ray-tracing. Works only if rt_mode = 1 and more than one radial point (default = 1)
    dkeparam.prec_rf = 1e-2;%relative precision in RT-DKE iterations
-   dkeparam.n_rf_list = [0];%List of harmonics in the Dql calculations
+   dkeparam.n_rf_list = [0:3];%List of harmonics in the Dql calculations
    dkeparam.delta_rt = 0.5;%smoothering parameter of quasilinear iterations
 %
 % Run mode
@@ -132,7 +132,7 @@ elseif strcmp(config,'EC_RT');%For the Electron Cyclotron wave simulations
    dkeparam.rt_mode = 1;%RT-DKE power consistency
    dkeparam.nit_rf = 20;%Maximum number of iteration in ray-tracing. Works only if rt_mode = 1 and more than one radial point (default = 1)
    dkeparam.prec_rf = 1e-2;%relative precision in RT-DKE iterations
-   dkeparam.n_rf_list = [1,2,3];%List of harmonics in the Dql calculations
+   dkeparam.n_rf_list = [0:3];%List of harmonics in the Dql calculations
    dkeparam.delta_rt = 0.5;%smoothering parameter of quasilinear iterations
 %
 % Run mode
@@ -170,7 +170,7 @@ elseif strcmp(config,'EC_RT');%For the Electron Cyclotron wave simulations
    dkeparam.temppath = '';%Absolute directory path adress where temporary matrices are stored (empty: local directory)
    dkeparam.opt_load = 0;%Load intermediate calculations
    dkeparam.opt_save = 0;%Save intermediate calculations
-elseif
+elseif strcmp(config,'LH+EC_RT');%For the mixte Lower Hybrid + Electron Cyclotron wave simulations
    error('The dkeparam configuration LH+EC_RT is not yet implemented')  	
 else
    error('The dkeparam configuration name does not exists')  	

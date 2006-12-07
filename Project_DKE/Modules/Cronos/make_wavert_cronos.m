@@ -1,4 +1,4 @@
-function [waveparam,fitequilparam,rayparam,raydisplay] = make_wavert_cronos(config)
+function [waveparam,fitequilparam,rayparam,raydisplay] = make_wavert_cronos(config,dkeparam)
 %
 % Create the structures waveparam,fitequilparam,rayparam,raydisplay used by C3PO for CRONOS
 % 

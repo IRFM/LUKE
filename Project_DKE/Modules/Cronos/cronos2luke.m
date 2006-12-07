@@ -1,28 +1,24 @@
 % zstarwars profil de depot hybride + EC calcule par C3PO + LUKE
 %--------------------------------------------------------------
-% fichier z_c3po_luke.m -> fichiers source dans repertoire /Project_DKE
-%
-%
-% fonction Matlab 5 :
+% fichier zstarwars.m -> fichiers source dans repertoire ~/Project_DKE/Modules/Cronos/
 %
 % Cette fonction calcule le depot pour l'onde hybride et de l'onde EC avec le code cinetique LUKE
 % et le trace de rayon C3PO.
-% Elle doit etre utilisee lorsqu'on est en asservissement sur le flux au bord
 % 
 % syntaxe  :
 %  
-%      [sortie,memoire] = z_c3po_luke(parametre,proto,cons,exp,geo,equi,injection, ...
-%                             prof,neo,impur,phy,composition,gene,memoire);
+%      [sortie,memoire] = zstarwars(parametre,proto,cons,cons_spec,geo,equi,injection,prof,neo,impur,phy,composition,gene,memoire);
 %
 % entree :
 %
 %      parametre       =    parametre propre a la fonction (param.cons.hyb)
 %      proto           =    prototype de la structure pour les sources, valeurs a zeros (proto = zsourceproto;)
 %      cons            =    consigne de puissance par coupleur (data.cons.hyb)
+%      cons_spec       =    spectre en puissance par coupleur (data.cons.hybspec)
 %      geo             =    geometrie du plasma (data.geo)
 %      equi            =    donnees de l'equilibre plasma (data.equi)
 %      injection       =    consigne d'injection de gaz (data.cons.c)
-%      prof            =    profils des donnees calculees par le code (data.prof)
+%      prof            =    profils des donnees calculees par le code (data.prof) 
 %      neo             =    donnees neoclassiques (data.neo)
 %      impur           =    sous strcuture des impurtes (data.impur)
 %      phy             =    constantes physiques (param.phys)
@@ -47,7 +43,7 @@
 
 %-------------------------------------------------------------
 %
-function [sortie,memoire] = zstarwars(par,proto,cons,experience,geo,equi,injection,prof,neo,impur,phy,compo,gene,memoire)
+function [sortie,memoire] = zstarwars(par,proto,cons,cons_spec,geo,equi,injection,prof,neo,impur,phy,compo,gene,memoire);
                              
 if nargin <= 1 
 	if nargin == 0
@@ -62,7 +58,7 @@ if nargin <= 1
 %
 % LUKE PARAMETERS
 %
-   valeur.rt_mode = 1%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p
+    valeur.rt_mode = 1%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p
 	type.rt_mode = 'list';%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p
 	borne.rt_mode = {1,2,3};%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p
 	defaut.rt_mode = 1;%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p
@@ -170,7 +166,7 @@ if nargin <= 1
 	type.launchtype = 'list';%Type of electron wave, LH or EC
 	borne.launchtype = {'LH','EC'};%Type of electron wave, LH or EC
 	defaut.launchtype = 'LH';%Type of electron wave, LH or EC
-	info.launchtype = Type of electron wave, LH or EC';
+	info.launchtype = 'Type of electron wave, LH or EC';
 %
 	valeur.kmode = 0;%Dielectric tensor (0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
 	type.kmode = 'list';%Dielectric tensor (0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
@@ -222,7 +218,7 @@ if nargin <= 1
 %
    valeur.conf = 'MIXTE';% configuration antennes / machine
    type.conf = 'string';% configuration antennes / machine
-   borne.conf = {'TS','JET','CIEL','MIXTE','ITER5GHz','ITER3.7GHz'};% configuration antennes / machine
+   borne.conf = {'TS','MIXTE','CIEL','CMOD','SST1','COMPASS','JET','FTU','ITER3.7GHz','ITER5GHz','DEMO3.7GHz','DEMO5.0GHz'};% configuration antennes / machine
    defaut.conf = 'MIXTE';% configuration antennes / machine
    info.conf = 'Configuration antennas / tokamak';
 %
@@ -248,16 +244,24 @@ if nargin <= 1
 %	     
 % CRONOS PARAMETERS
 %
-   sortie.valeur=valeur;
-   sortie.type=type;
-   sortie.borne=borne;
-   sortie.defaut=defaut;
-   sortie.info=info;
-   sortie.interface=interface;
+   interface.ts = '';                    % nom de la fonction d'interfacage avec les donnees TS
+   interface.jet = '';                   % nom de la fonction d'interfacage avec les donnees Jet 
+%
+   sortie.valeur = valeur;
+   sortie.type = type;
+   sortie.borne = borne;
+   sortie.defaut = defaut;
+   sortie.info = info;
+   sortie.interface = interface;
    sortie.description = 'Calcul du depot de puissance Hybride avec DELPHINE (RT/FP)';   % description (une ligne) de la fonction
    sortie.help = '';                            % nom du fichier d'aide s'il existe, sinon aide de la fonction
    sortie.gui  ='';                             % nom de l'interface graphique specifique si elle existe
    sortie.controle = '';                        % nom de la fonction de controle des valeurs si elle existe
+%
+
+
+
+
    return
 end
 %
@@ -280,12 +284,13 @@ sortie.err = 0;% on definit le flag d'erreur a 0 par defaut (pas d'erreur)
 % PARAMETRES EQUILIBRE
 %
 equil.id = 'cronos';
-equil.ppsi = -equi.psi+equi.psi(1);%Match already the defintion of ppsi in DKE (psi(helena)/2/pi))
-equil.theta = linspace(0,2*pi,size(equi.R,2));
 equil.Rp = double(equi.R(1,1,1));
 equil.Zp = double(equi.Z(1,1,1));
-equil.ptx = squeeze(double(equi.R)) - Rp;
-equil.pty = squeeze(double(equi.Z)) - Zp;
+equil.ptx = squeeze(double(equi.R)) - equil.Rp;
+equil.pty = squeeze(double(equi.Z)) - equil.Rp;
+equil.ap = equil.ptx(end,1);
+equil.psi_apRp = (-equi.psi+equi.psi(1))*equil.ap/equil.Rp;%Match already the defintion of ppsi in DKE (psi(helena)/2/pi))
+equil.theta = linspace(0,2*pi,size(equi.R,2));
 equil.ptBx = squeeze(double(equi.BR));
 equil.ptBy = squeeze(double(equi.BZ));
 equil.ptBPHI = squeeze(double(equi.BPHI));
@@ -317,11 +322,12 @@ equil.zmi = zmi;
 %
 % --------- Load first all parameters that are in files ------------
 %
-[launch] = make_wavelaunch_cronos(par.conf,equil);
+[launch_lh] = make_wavelaunch_lh_cronos(equil,par.conf,cons,cons_spec);%for the LH wave
+launch_ec = [];%[launch_ec] = make_wavelaunch_ec_cronos(equil,par.conf,cons);%for the EC wave
 [dkeparam] = make_dkeparam_cronos(par.make_dkeparam);
 [display] = make_display_cronos(par.make_display);
 par.make_path = 'PC_DRFC_CRONOS';[dkepath] = make_path_cronos(par.make_path);
-[waveparam,fitequilparam,rayparam,raydisplay] = make_wavert_cronos(par.make_wavert);
+[waveparam,fitequilparam,rayparam,raydisplay] = make_wavert_cronos(par.make_wavert,dkeparam);
 %
 % --------- Override parameters that are in files ------------
 %
@@ -349,28 +355,44 @@ ripple.ripple = par.ripple;
 %
 % PARAMETRES FAST ELECTRON TRANSPORT 
 %
-transpfaste.vparmin_r = valeur.vparmin_r;%Lower limit of the parallel velocity dependence of the radial diffusion and pinch (vth_ref or vth)
-transpfaste.norm_ref = valeur.norm_ref;%Normalization procedure for the lower limit of radial transport parallel velocity dependence: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref
-transpfaste.Dr0 = valeur.Dr0;%Core radial diffusion coefficient (m^2/s)
-transpfaste.pDr = valeur.pDr;%Coefficient for the Dr radial profile
-transpfaste.Vr0 = valeur.Vr0;%Core radial pinch coefficient (m/s)
-transpfaste.pVr = valeur.pVr;%Coefficient for the Vr radial profile
-transpfaste.Dr_model = valeur.Dr_model;%Radial diffusion type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth),
-transpfaste.Vr_model = valeur.Vr_model;%Radial pinch type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth),
+transpfaste.vparmin_r = par.vparmin_r;%Lower limit of the parallel velocity dependence of the radial diffusion and pinch (vth_ref or vth)
+transpfaste.norm_ref = par.norm_ref;%Normalization procedure for the lower limit of radial transport parallel velocity dependence: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref
+transpfaste.Dr0 = par.Dr0;%Core radial diffusion coefficient (m^2/s)
+transpfaste.pDr = par.pDr;%Coefficient for the Dr radial profile
+transpfaste.Vr0 = par.Vr0;%Core radial pinch coefficient (m/s)
+transpfaste.pVr = par.pVr;%Coefficient for the Vr radial profile
+transpfaste.Dr_model = par.Dr_model;%Radial diffusion type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth),
+transpfaste.Vr_model = par.Vr_model;%Radial pinch type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth),
 %
-% PARAMETRES WAVE LH + EC (C3PO)
+% PARAMETRES WAVE LH + EC (C3PO) 
 %
-wavestructs{1}.launch = launch;
-wavestructs{1}.waveparam = waveparam;
-wavestructs{1}.fitequilparam = fitequilparam;
-wavestructs{1}.rayparam = rayparam;
-wavestructs{1}.raydisplay = raydisplay;
+if ~isempty(launch_lh),%LH wave
+   wavestructs{1}.launch = launch_lh;
+   wavestructs{1}.waveparam = waveparam;
+   wavestructs{1}.fitequilparam = fitequilparam;
+   wavestructs{1}.rayparam = rayparam;
+   wavestructs{1}.raydisplay = raydisplay;
 %
-wavestructs{1}.launch.type = valeur.launchtype;%Type of electron wave, LH or EC
-wavestructs{1}.waveparam.kmode = valeur.kmode;%Dielectric tensor (0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
-wavestructs{1}.rayparam.tfinal = valeur.tfinal;%Ray length in normalized time
-wavestructs{1}.rayparam.dt0 = valeur.dt0;%Normalized time step for ray-tracing (important for a good accuracy of the ray trajectory close to X-point especially)
-wavestructs{1}.rayparam.tensortype = wavestructs{1}.waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
+   wavestructs{1}.launch.type = par.launchtype;%Type of electron wave, LH or EC
+   wavestructs{1}.waveparam.kmode = par.kmode;%Dielectric tensor (0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
+   wavestructs{1}.rayparam.tfinal = par.tfinal;%Ray length in normalized time
+   wavestructs{1}.rayparam.dt0 = par.dt0;%Normalized time step for ray-tracing (important for a good accuracy of the ray trajectory close to X-point especially)
+   wavestructs{1}.rayparam.tensortype = wavestructs{1}.waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
+end
+%
+if ~isempty(launch_ec)%EC wave
+   wavestructs{2}.launch = launch_ec;
+   wavestructs{2}.waveparam = waveparam;
+   wavestructs{2}.fitequilparam = fitequilparam;
+   wavestructs{2}.rayparam = rayparam;
+   wavestructs{2}.raydisplay = raydisplay;
+%
+   wavestructs{2}.launch.type = par.launchtype;%Type of electron wave, LH or EC
+   wavestructs{2}.waveparam.kmode = par.kmode;%Dielectric tensor (0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
+   wavestructs{2}.rayparam.tfinal = par.tfinal;%Ray length in normalized time
+   wavestructs{2}.rayparam.dt0 = par.dt0;%Normalized time step for ray-tracing (important for a good accuracy of the ray trajectory close to X-point especially)
+   wavestructs{2}.rayparam.tensortype = wavestructs{2}.waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
+end
 %
 %--------------------------- Execution du trace de rayon C3PO et du code cinetique LUKE --------------------------- 
 %
@@ -403,4 +425,6 @@ if par.save,
 	save(fullfile(chemin,sprintf('last_luke@%s',int2str(fix(gene.t*1000)))));
 end
 %
+
+
 
