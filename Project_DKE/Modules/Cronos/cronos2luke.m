@@ -352,7 +352,7 @@ end
 %
 %--------------------------- Execution du trace de rayon C3PO et du code cinetique LUKE --------------------------- 
 %
-[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert('cronos',wavestructs,dkeparam.rt_mode,[],par.rho_S,dkepath,equil,dkeparam,display,ohm,transpfaste,ripple,[],[]);
+[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert('cronos',wavestructs,[],par.rho_S,dkepath,equil,dkeparam,display,ohm,transpfaste,ripple,[],[]);
 %
 if 1,
 	I_tot = sum(Zcurr.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref);
