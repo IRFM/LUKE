@@ -1,4 +1,4 @@
-function [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert(id_simul,wavestructs,mode_calc,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in)
+function [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert(id_simul,wavestructs,mode_calc,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,transpfaste,ripple,XXf0_in,XXsinksource_in)
 %
 % Ray-tracing + quasilinear kinetic calculations using LUKE. Tool for implementation in other calculation packages.
 %
