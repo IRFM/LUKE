@@ -58,7 +58,7 @@ elseif dkeparam.rt_mode == 3,
       eta_old = eta;
 %
       for ib = 1:length(waves{1}.rays),
-         waves{1}.rays{ib}.sdNpar = waves{1}.rays{ib}.sNpar*dNpar_fac;
+         waves{1}.rays{ib}.sdNpar = abs(waves{1}.rays{ib}.sNpar)*dNpar_fac;
       end
 %
       dNstr = num2str(dNpar_fac);
@@ -134,7 +134,7 @@ elseif dkeparam.rt_mode == 3,
    eval(['diary ',path_simul,'DKE_DIARY_',id_equil,'_',id_simul,'.txt']);
 %
    for ib = 1:length(waves{1}.rays),
-      waves{1}.rays{ib}.sdNpar = waves{1}.rays{ib}.sNpar*dNpar_fac;
+      waves{1}.rays{ib}.sdNpar = abs(waves{1}.rays{ib}.sNpar)*dNpar_fac;
    end
 %
    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
