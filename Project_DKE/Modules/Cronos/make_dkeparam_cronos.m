@@ -4,8 +4,7 @@ function [dkeparam] = make_dkeparam_cronos(config)
 % 
 %by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
 %
-if strcmp(config,'LH_RT');%For the Lower Hybrid wave simulations
-   dkeparam_id = 'LH_RT';%Set here the name (identifier) of the drift kinetic code parameters
+if strfind(config,'LH');%For the Lower Hybrid wave simulations
 %
 %Mesh size calculation
 %
@@ -87,8 +86,7 @@ if strcmp(config,'LH_RT');%For the Lower Hybrid wave simulations
    dkeparam.opt_load = 0;%Load intermediate calculations
    dkeparam.opt_save = 0;%Save intermediate calculations
 %
-elseif strcmp(config,'EC_RT');%For the Electron Cyclotron wave simulations
-   dkeparam_id = 'EC_RT';%Set here the name (identifier) of the drift kinetic code parameters
+elseif strfing(config,'EC') | strfing(config,'EBW');%For the Electron Cyclotron wave simulations
 %
 %Mesh size calculation
 %
@@ -170,8 +168,6 @@ elseif strcmp(config,'EC_RT');%For the Electron Cyclotron wave simulations
    dkeparam.temppath = '';%Absolute directory path adress where temporary matrices are stored (empty: local directory)
    dkeparam.opt_load = 0;%Load intermediate calculations
    dkeparam.opt_save = 0;%Save intermediate calculations
-elseif strcmp(config,'LH+EC_RT');%For the mixte Lower Hybrid + Electron Cyclotron wave simulations
-   error('The dkeparam configuration LH+EC_RT is not yet implemented')  	
 else
    error('The dkeparam configuration name does not exists')  	
 end

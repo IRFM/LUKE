@@ -7,11 +7,11 @@
 % 
 % syntaxe  :
 %  
-%      [sortie,memoire] = zstarwars(parametre,proto,cons,cons_spec,geo,equi,injection,prof,neo,impur,phy,composition,gene,memoire);
+%      [sortie,memoire] = zstarwars(par,proto,cons,cons_spec,geo,equi,injection,prof,neo,impur,phy,compo,gene,memoire);
 %
 % entree :
 %
-%      parametre       =    parametre propre a la fonction (param.cons.hyb)
+%      par       =    parametre propre a la fonction (param.cons.hyb)
 %      proto           =    prototype de la structure pour les sources, valeurs a zeros (proto = zsourceproto;)
 %      cons            =    consigne de puissance par coupleur (data.cons.hyb)
 %      cons_spec       =    spectre en puissance par coupleur (data.cons.hybspec)
@@ -22,7 +22,7 @@
 %      neo             =    donnees neoclassiques (data.neo)
 %      impur           =    sous strcuture des impurtes (data.impur)
 %      phy             =    constantes physiques (param.phys)
-%      composition     =    composition du plasma: charge et masse des atomes (param.compo)
+%      compo     =    composition du plasma: charge et masse des atomes (param.compo)
 %      gene            =    parametres generaux (param.gene)
 %      memoire         =    structure des dernieres valeurs calculees
 % 
@@ -58,7 +58,7 @@ if nargin <= 1
 %
 % LUKE PARAMETERS
 %
-    valeur.rt_mode = 1%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p
+   valeur.rt_mode = 1%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p
 	type.rt_mode = 'list';%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p
 	borne.rt_mode = {1,2,3};%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p
 	defaut.rt_mode = 1;%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p
@@ -162,49 +162,19 @@ if nargin <= 1
 %
 % WAVE PARAMETERS (C3PO)
 %
-	valeur.launchtype = 'LH';%Type of electron wave, LH or EC
-	type.launchtype = 'list';%Type of electron wave, LH or EC
-	borne.launchtype = {'LH','EC'};%Type of electron wave, LH or EC
-	defaut.launchtype = 'LH';%Type of electron wave, LH or EC
-	info.launchtype = 'Type of electron wave, LH or EC';
-%
 	valeur.kmode = 0;%Dielectric tensor (0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
 	type.kmode = 'list';%Dielectric tensor (0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
 	borne.kmode = {0,1,2,3,4};%Dielectric tensor (0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
 	defaut.kmode = 0;%Dielectric tensor (0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
 	info.kmode = 'Dielectric tensor (0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)';
 %
-	valeur.tfinal = 20000;%Ray length in normalized time
-	type.tfinal = 'integer';%Ray length in normalized time
-	borne.tfinal = [1,100000];%Ray length in normalized time
-	defaut.tfinal = 20000;%Ray length in normalized time
-	info.tfinal = 'Ray length in normalized time';
-% 
-	valeur.dt0 = 1e-5;%Normalized time step for ray-tracing (important for a good accuracy of the ray trajectory close to X-point especially)
-	type.dt0 = 'float';%Normalized time step for ray-tracing (important for a good accuracy of the ray trajectory close to X-point especially)
-	borne.dt0 = [1e-3,1e-6];%Normalized time step for ray-tracing (important for a good accuracy of the ray trajectory close to X-point especially)
-	defaut.dt0 = 1e-5;%Normalized time step for ray-tracing (important for a good accuracy of the ray trajectory close to X-point especially)
-	info.dt0 = 'Normalized time step for ray-tracing (important for a good accuracy of the ray trajectory close to X-point especially)';
-%
 %  INPUT FILE PARAMETERS
-%
-	valeur.make_dkeparam = 'LH_RT';%Advanced control parameters for LUKE and quasilinear selfconsistency
-	type.make_dkeparam = 'list';%Advanced control parameters for LUKE and quasilinear selfconsistency
-	borne.make_dkeparam = {'LH_RT','EC_RT','LH+EC_RT'};%Advanced control parameters for LUKE and quasilinear selfconsistency
-	defaut.make_dkeparam = 'LH_RT';%Advanced control parameters for LUKE and quasilinear selfconsistency
-	info.make_dkeparam = 'Advanced control parameters for LUKE and quasilinear selfconsistency';
 %
 	valeur.make_display = 'NO_DISPLAY';%Advanced display parameters for LUKE and quasilinear selfconsistency
 	type.make_display = 'list';%Advanced display parameters for LUKE and quasilinear selfconsistency
 	borne.make_display = {'NO_DISPLAY','PARTIAL_VISUAL','VISUAL'};%Advanced display parameters for LUKE and quasilinear selfconsistency
 	defaut.make_display = 'NO_DISPLAY';%Advanced display parameters for LUKE and quasilinear selfconsistency
 	info.make_display = 'Advanced display parameters for LUKE and quasilinear selfconsistency';
-%
-	valeur.make_wavert = 'LH_RT';%Advanced parameters for C3PO ray-tracing
-	type.make_wavert = 'list';%Advanced parameters for C3PO ray-tracing
-	borne.make_wavert = {'LH_RT','EC_RT','LH+EC_RT'};%Advanced parameters for C3PO ray-tracing
-	defaut.make_wavert = 'LH_RT';%Advanced parameters for C3PO ray-tracing
-	info.make_wavert = 'Advanced parameters for C3PO ray-tracing';
 %
 %  RUN PARAMETERS
 %
@@ -258,10 +228,6 @@ if nargin <= 1
    sortie.gui  ='';                             % nom de l'interface graphique specifique si elle existe
    sortie.controle = '';                        % nom de la fonction de controle des valeurs si elle existe
 %
-
-
-
-
    return
 end
 %
@@ -321,13 +287,13 @@ equil.zZi = zZi;
 equil.zmi = zmi;
 %
 % --------- Load first all parameters that are in files ------------
+%************************* A modifier et preciser
+par.launchtype = 'LH';%must be specified ('LH','EC','EBW','LH_EC')
 %
-[launch_lh] = make_wavelaunch_lh_cronos(equil,par.conf,cons,cons_spec);%for the LH wave
-launch_ec = [];%[launch_ec] = make_wavelaunch_ec_cronos(equil,par.conf,cons);%for the EC wave
-[dkeparam] = make_dkeparam_cronos(par.make_dkeparam);
+[launchs] = make_wavelaunchs_cronos(equil,par.conf,cons,cons_spec);%for the all RF waves
+[dkeparam] = make_dkeparam_cronos(par.launchtype);
 [display] = make_display_cronos(par.make_display);
 par.make_path = 'PC_DRFC_CRONOS';[dkepath] = make_path_cronos(par.make_path);
-[waveparam,fitequilparam,rayparam,raydisplay] = make_wavert_cronos(par.make_wavert,dkeparam);
 %
 % --------- Override parameters that are in files ------------
 %
@@ -366,37 +332,27 @@ transpfaste.Vr_model = par.Vr_model;%Radial pinch type: (0) no vpar dependence, 
 %
 % PARAMETRES WAVE LH + EC (C3PO) 
 %
-if ~isempty(launch_lh),%LH wave
-   wavestructs{1}.launch = launch_lh;
-   wavestructs{1}.waveparam = waveparam;
-   wavestructs{1}.fitequilparam = fitequilparam;
-   wavestructs{1}.rayparam = rayparam;
-   wavestructs{1}.raydisplay = raydisplay;
+
+for iw = 1:length(launchs),
+   if strfind(par.launchtype,launchs{1}.type),%Extract only the selected waves
+   	[waveparam,fitequilparam,rayparam,raydisplay] = make_wavert_cronos(launchs{1}.type,dkeparam);%parameter for ray-tracing are adapted to the selected wave
+%   	
+      wavestructs{iw}.launch = launchs{iw};
+      wavestructs{iw}.waveparam = waveparam;
+      wavestructs{iw}.fitequilparam = fitequilparam;
+      wavestructs{iw}.rayparam = rayparam;
+      wavestructs{iw}.raydisplay = raydisplay;
 %
-   wavestructs{1}.launch.type = par.launchtype;%Type of electron wave, LH or EC
-   wavestructs{1}.waveparam.kmode = par.kmode;%Dielectric tensor (0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
-   wavestructs{1}.rayparam.tfinal = par.tfinal;%Ray length in normalized time
-   wavestructs{1}.rayparam.dt0 = par.dt0;%Normalized time step for ray-tracing (important for a good accuracy of the ray trajectory close to X-point especially)
-   wavestructs{1}.rayparam.tensortype = wavestructs{1}.waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
+      wavestructs{iw}.wavesolver = 'C3PO';
+      wavestructs{iw}.waveparam.kmode = par.kmode;%Dielectric tensor (0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
+      wavestructs{iw}.rayparam.tensortype = wavestructs{iw}.waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
+   end
 end
 %
-if ~isempty(launch_ec)%EC wave
-   wavestructs{2}.launch = launch_ec;
-   wavestructs{2}.waveparam = waveparam;
-   wavestructs{2}.fitequilparam = fitequilparam;
-   wavestructs{2}.rayparam = rayparam;
-   wavestructs{2}.raydisplay = raydisplay;
-%
-   wavestructs{2}.launch.type = par.launchtype;%Type of electron wave, LH or EC
-   wavestructs{2}.waveparam.kmode = par.kmode;%Dielectric tensor (0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
-   wavestructs{2}.rayparam.tfinal = par.tfinal;%Ray length in normalized time
-   wavestructs{2}.rayparam.dt0 = par.dt0;%Normalized time step for ray-tracing (important for a good accuracy of the ray trajectory close to X-point especially)
-   wavestructs{2}.rayparam.tensortype = wavestructs{2}.waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
-end
 %
 %--------------------------- Execution du trace de rayon C3PO et du code cinetique LUKE --------------------------- 
 %
-[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert(id_simul,wavestructs,mode_calc,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert('cronos',wavestructs,dkeparam.rt_mode,[],par.rho_S,dkepath,equil,dkeparam,display,ohm,transpfaste,ripple,[],[]);
 %
 if 1,
 	I_tot = sum(Zcurr.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref);

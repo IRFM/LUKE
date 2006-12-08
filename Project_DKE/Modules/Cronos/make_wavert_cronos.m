@@ -2,7 +2,7 @@ function [waveparam,fitequilparam,rayparam,raydisplay] = make_wavert_cronos(conf
 %
 % Create the structures waveparam,fitequilparam,rayparam,raydisplay used by C3PO for CRONOS
 % 
-if strcmp(config,'LH_RT');%For the Lower Hybrid wave simulations
+if strfind(config,'LH');%For the Lower Hybrid wave simulations
 %
 % Wave parameters
 %
@@ -43,7 +43,7 @@ if strcmp(config,'LH_RT');%For the Lower Hybrid wave simulations
    raydisplay.equilibrium = 0;
    raydisplay.p_opt = -1;%Printing or saving option of the figures
 
-elseif strcmp(config,'EC_RT');%For the Electron Cyclotron wave simulations
+elseif strfind(config,'EC') | strfind(config,'EBW');;%For the Electron Cyclotron or EBW wave simulations
 %
 % Wave parameters
 %
