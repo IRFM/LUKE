@@ -70,13 +70,12 @@ elseif dkeparam.rt_mode == 3,
 %
       eval(['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'_',dNstr(1:min(4,length(dNstr))),'.mat']);
 %
-      diary off
-%
 % CD efficiency (A/W)
 %
-      Prf = sum(ZP0.x_rf_fsav(:).*equilDKE.xdV_2piRp_dke(:)*2*pi*equilDKE.Rp*mksa.P_ref);
-      Itot = sum(Zcurr.x_tot_fsav(:).*equilDKE.xdA_dke(:)*abs(mksa.j_ref));
-      eta = abs(Itot/Prf);
+      Prf = sum(ZP0.x_rf_fsav(:).*equilDKE.xdV_2piRp_dke(:)*2*pi*equilDKE.Rp*mksa.P_ref),
+      Itot = sum(Zcurr.x_tot_fsav(:).*equilDKE.xdA_dke(:)*abs(mksa.j_ref)),
+      eta = abs(Itot/Prf),
+      diary off
 % 
 % density of power absorbed (normalized) 
 %
