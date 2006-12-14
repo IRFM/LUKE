@@ -253,10 +253,10 @@ equil.id = 'cronos';
 equil.Rp = double(equi.R(1,1,1));
 equil.Zp = double(equi.Z(1,1,1));
 equil.ptx = squeeze(double(equi.R)) - equil.Rp;
-equil.pty = squeeze(double(equi.Z)) - equil.Rp;
+equil.pty = squeeze(double(equi.Z)) - equil.Zp;
 equil.ap = equil.ptx(end,1);
 equil.psi_apRp = (-equi.psi+equi.psi(1))*equil.ap/equil.Rp;%Match already the defintion of ppsi in DKE (psi(helena)/2/pi))
-equil.theta = linspace(0,2*pi,size(equi.R,2));
+equil.theta = linspace(0,2*pi,size(equi.R,3));
 equil.ptBx = squeeze(double(equi.BR));
 equil.ptBy = squeeze(double(equi.BZ));
 equil.ptBPHI = squeeze(double(equi.BPHI));
@@ -264,12 +264,13 @@ equil.pTe = prof.te/1000;%en keV
 equil.pne = prof.ne;
 %
 zH = find(compo.a == 1);
+
 zD = find(compo.a == 2 & compo.z == 1);
 zT = find(compo.a == 3 & compo.z == 1);
 zimp = find(compo.z > 1);
 %
 % profil de densite electronique (m-3)
-%
+%wavestructs
 pzni = zeros((3+length(zimp)),length(prof.ne));
 pzTi = ones((3+length(zimp)),1)*prof.ti/1000;%All impurities have the same ion temperature
 if ~isempty(zH),pzni(1,:) = squeeze(impur.impur(1,:,zH));end
@@ -294,21 +295,24 @@ par.launchtype = 'LH';%must be specified ('LH','EC','EBW','LH_EC')
 [dkeparam] = make_dkeparam_cronos(par.launchtype);
 [display] = make_display_cronos(par.make_display);
 par.make_path = 'PC_DRFC_CRONOS';[dkepath] = make_path_cronos(par.make_path);
+dkepath.temppath = [dkepath.temppathroot,filesep,'CRONOS',filesep,timeid_jd(clock)];%Temporary subdirectory in scratch folder
 %
 % --------- Override parameters that are in files ------------
 %
 % PARAMETRES LUKE
 %
-dkeparam.rt_mode = par.rt_mode;%RT-DKE power consistency
+dkeparam.rt_mode = 0*par.rt_mode + 1;%RT-DKE power consistency
 dkeparam.nit_rf = par.nit_rf;%Maximum number of iteration in ray-tracing. Works only if rt_mode = 1 and more than one radial point (default = 1)
 dkeparam.dke_mode = par.dke_mode;%Fokker-Planck equation (0), Drift Kinetic equation (1)
 dkeparam.dtn = par.dtn;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
 dkeparam.invproc = par.invproc;%Iterative matrix inversion method: (1) cgs iterative method, (2) bicg iterative method, (3) qmr iterative method
+dkeparam.n_rf_list = 0;%For LH only
 %
-% PARAMETRES DISPLAY
+% PARAMETRES DISP1LAY
 %
 display.rho_display  = par.rho_display;%Approximate radial position at which results are displayed if display.display_mode >= 1 [1,1]. Not used if NaN
 display.display_mode = par.display_mode;%Display mode: (0): no, (1): partial, (2): full
+display.display_mode = 'PARTIAL_VISUAL',%%%%%%%%%%%%%%%%%%
 %
 % PARAMETRES OHMIC 
 %
@@ -321,7 +325,7 @@ ripple.ripple = par.ripple;
 %
 % PARAMETRES FAST ELECTRON TRANSPORT 
 %
-transpfaste.vparmin_r = par.vparmin_r;%Lower limit of the parallel velocity dependence of the radial diffusion and pinch (vth_ref or vth)
+transpfaste.vparmin = par.vparmin_r;%Lower limit of the parallel velocity dependence of the radial diffusion and pinch (vth_ref or vth)
 transpfaste.norm_ref = par.norm_ref;%Normalization procedure for the lower limit of radial transport parallel velocity dependence: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref
 transpfaste.Dr0 = par.Dr0;%Core radial diffusion coefficient (m^2/s)
 transpfaste.pDr = par.pDr;%Coefficient for the Dr radial profile
@@ -337,6 +341,7 @@ for iw = 1:length(launchs),
    if strfind(par.launchtype,launchs{1}.type),%Extract only the selected waves
    	[waveparam,fitequilparam,rayparam,raydisplay] = make_wavert_cronos(launchs{1}.type,dkeparam);%parameter for ray-tracing are adapted to the selected wave
 %   	
+      wavestructs{iw}.id_wave = par.conf;
       wavestructs{iw}.launch = launchs{iw};
       wavestructs{iw}.waveparam = waveparam;
       wavestructs{iw}.fitequilparam = fitequilparam;
@@ -346,6 +351,8 @@ for iw = 1:length(launchs),
       wavestructs{iw}.wavesolver = 'C3PO';
       wavestructs{iw}.waveparam.kmode = par.kmode;%Dielectric tensor (0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
       wavestructs{iw}.rayparam.tensortype = wavestructs{iw}.waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
+      wavestructs{iw}.raydisplay.ray = 1,%%%%%%%%%%%%%%%%%%
+      wavestructs{iw}.rayparam.tfinal = 3000,%%%%%%%%%%%%%%%%%%
    end
 end
 %
@@ -354,7 +361,10 @@ end
 %
 [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert('cronos',wavestructs,[],par.rho_S,dkepath,equil,dkeparam,display,ohm,transpfaste,ripple,[],[]);
 %
-if 1,
+rmdir(dkepath.temppath,'s');%remove directory where temporary  calculations are performed
+rmfield(dkepath, 'temppath');%remove path of the directory where temporary  calculations are performed
+%
+if strcmp(display.display_mode,'PARTIAL_VISUAL') | strcmp(display.display_mode,'VISUAL') ,
 	I_tot = sum(Zcurr.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref);
 	figure('Name','Current profile'),
 	graph1D_jd(equilDKE.xrho,Zcurr.x_0_fsav*mksa.j_ref,0,0,'\rho','J_{tot} (MA/m^2)',['CMOD,I_{tot} = ',num2str(I_tot*1000),' (kA)'],NaN,'','','-','none','r',2);drawnow
