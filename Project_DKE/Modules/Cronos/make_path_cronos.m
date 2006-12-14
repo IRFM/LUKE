@@ -9,10 +9,10 @@ if strcmp(config,'PC_DRFC_CRONOS');
 %
    dkepath.path_id = path_id;
    dkepath.computer = 'GLNXA64';%machine type and supported OS
-   dkepath.MUMPS = '/home/sccp/gsem/peysson/Packages/MUMPS_4.6.1/dke';%Where MUMPS matrix solver is stored
+   dkepath.MUMPS = '/home/sccp/gsem/basiuk/Projet_Cronos/source/hyb/DKE/MUMPS_4.6.1/dke';%Where MUMPS matrix solver is stored
    dkepath.PETSC = '/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p0';%Where PETSC matrix solver is stored
    dkepath.temppathroot = '/scratch';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
-   dkepath.mex = '/home/sccp/gsem/peysson/Project_DKE/MEX';
+   dkepath.mex = '/home/sccp/gsem/basiuk/Projet_Cronos/MEX';
 else
    error('The path configuration name does not exists');
 end
