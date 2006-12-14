@@ -22,7 +22,7 @@ if strfind(config,'LH');%For the Lower Hybrid wave simulations
    fitequilparam.method = 'spline';%nearest,spline,pchip,cubic
    fitequilparam.nharm = 32;%Number of harmonics in the magnetic equilibrium interpolation (less than ntheta_equil/2)
    fitequilparam.ngridresample = 1001;%Number of grid points for resampling the radial profile of magnetic equilibrium parameters
-   fitequilparam.opt_load = 1;%Reload existing vectorial magnetic equilibrium (1) or overwrite it (0).
+   fitequilparam.opt_load = 0;%Reload existing vectorial magnetic equilibrium (1) or overwrite it (0).
 %
 % Global parameters for the ray-tracing
 %
