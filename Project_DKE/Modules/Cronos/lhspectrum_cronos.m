@@ -5,7 +5,7 @@ function [Plhtot,Npar0] = lhspectrum_cronos(directivity,cons,cons_spec)
 %
 %by Y.Peysson <yves.peysson@cea.fr> (CEA-DRFC) and J. Decker <joan.decker@cea.fr> (CEA-DRFC)
 %
-if length(cons_spec) == 1,%no input power spectrum from coupling code like SWAN
+if 1,%length(cons_spec) == 1,%no input power spectrum from coupling code like SWAN
    Plhtot = abs(cons(:)).*directivity(:);%initial power in the ray (W) (main lobe) [n_antenna,m_lobe]
    Npar0 = angle(cons(:));%Initial Npar value (main lobe) [n_antenna,m_lobe]
 else
