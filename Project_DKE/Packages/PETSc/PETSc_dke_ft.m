@@ -34,10 +34,10 @@ else
    nproc = PETScparam.nproc;
 end
 %
-if isempty(dkepath.PETSc),%Local saving
-   PETScpath = dkepath.PETSc;
+if isempty(dkepath.PETSC),%Local saving
+   PETScpath = dkepath.PETSC;
 else
-   PETScpath = [dkepath.PETSc,filesep];
+   PETScpath = [dkepath.PETSC,filesep];
 end
 flag = 0;
 %
