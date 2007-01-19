@@ -11,14 +11,15 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,d
 if fitparam.opt_load*exist(['EQUILV_',equil.id,'.mat']),
    load(['EQUILV_',equil.id,'.mat'],'equil_fit');
    info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil.id,' is reloaded.']);
-else
-   info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil.id,' is being calculated.']);
+  else
+   info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil.id,' is being calculated.']);   
    [equil_fit] = fitequil_yp(equil,fitparam.mode_equil,fitparam.method,fitparam.ngridresample,fitparam.nharm);
    save(['EQUILV_',equil_fit.id,'.mat'],'equil_fit');
    info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil_fit.id,' is saved.']);
-   if display.equilibrium,
-       testfitequil_yp(equil,equil_fit);
-   end
+end
+%
+if display.equilibrium,
+   testfitequil_yp(equil,equil_fit);
 end
 %
 Nrays = length(rayinit.yrho0);
