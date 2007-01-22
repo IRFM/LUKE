@@ -1,4 +1,4 @@
-function equil_EFIT_jd(filename,type,display_mode,p_opt,dispname,savename,Zeff)
+function equil = equil_EFIT_jd(filename,type,display_mode,p_opt,dispname,savename,Zeff)
 %
 % This function reads the equilibrium parameters from eqdsk files created
 % by EFIT and saved in the formatted text file "filename.efit", as well as
