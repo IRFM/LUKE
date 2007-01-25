@@ -429,7 +429,7 @@ void mexFunction(	int		nlhs,
 
     double ymax,tau,delta,h,hmax,hmin;
 	
-    double ydel[MC];
+    double ydel[MC],ys[7];
 	
     double t1,t2,rho1,rho2,theta1,theta2,phi1,phi2,krho1,krho2,m1,m2,n1,n2,omega1,omega2;
     double rho_step,m_step;
@@ -573,11 +573,19 @@ Estimate the error and the acceptable error
 
 	for  (m = 0; m < MC-3; m++) {
 	    ydel[m] = h*(s1[m]*gama[0][1] + s2[m]*gama[1][1] + s3[m]*gama[2][1] + s4[m]*gama[3][1] + s5[m]*gama[4][1] + s6[m]*gama[5][1]);
+        ys[0] = s0[m];
+        ys[1] = s1[m];
+        ys[2] = s2[m];
+        ys[3] = s3[m];
+        ys[4] = s4[m];
+        ys[5] = s5[m];
+        ys[6] = s6[m];
+        ymax = inf_norm(ys,7);
+        ydel[m] = ydel[m]/ymax;
 	}
 
 	delta = inf_norm(ydel,MC-3);/* only the first five coordinates are evolving (rho,theta,phi,krho,m) */
-	ymax = inf_norm(s0,MC-3);/* only the first five coordinates are evolving (rho,theta,phi,krho,m) */
-	tau = rayparam.tol[0]*fmax(ymax,1.0);
+	tau = rayparam.tol[0];
 
 /*
 Update the solution only if the error is acceptable
