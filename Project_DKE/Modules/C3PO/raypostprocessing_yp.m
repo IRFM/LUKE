@@ -40,7 +40,9 @@ m_ray = yout(:,5);
 n_ray = yout(:,6);
 omega_ray = yout(:,7);
 %
-[R_ray,Z_ray,Npar_ray,Nperp_ray,epol_pmz_ray,phi_xyz_ray,D_ray,Te_ray,ne_ray,zTi_ray,zni_ray,BP_ray,BPHI_ray,B_ray,r_ray,salpha_ray,gradrho_ray] = rayparameters_yp(rayparam,equil_fit,omega_ray,rho_ray,theta_ray,phi_ray,krho_ray,m_ray,n_ray);
+[R_ray,Z_ray,Npar_ray,Nperp_ray,epol_pmz_ray,phi_xyz_ray,D_ray,Te_ray,ne_ray,zTi_ray,zni_ray,BP_ray,BPHI_ray,B_ray,r_ray,salpha_ray,gradrho_ray,pmode_ray] = rayparameters_yp(rayparam,equil_fit,omega_ray,rho_ray,theta_ray,phi_ray,krho_ray,m_ray,n_ray);
+%
+pmode_ray = logical(pmode_ray);
 %
 if rem(abs(1-Npar_ray(1)^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation. Calculate the exact theoretical solution 
     cnorm = clum/omega_ray(1)/equil_fit.ap;
@@ -139,13 +141,14 @@ iabs_out = iabs(1);
 %
 if display_mode,
    figure('Name','Poloidal ray trajectory')
-   [ax] = graph1D_jd(R_ray,Z_ray,0,0,'R(m)','Z(m)',['Poloidal ray trajectory',subtitle],NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','k',2);hold on
+   [ax] = graph1D_jd(R_ray(pmode_ray),Z_ray(pmode_ray),0,0,'R(m)','Z(m)',['Poloidal Ray trajectory',subtitle],NaN,[Rmin,Rmax],[Zmin,Zmax],'none','.','r',2);hold on
+   [ax] = graph1D_jd(R_ray(~pmode_ray),Z_ray(~pmode_ray),0,0,'R(m)','Z(m)',['Poloidal Ray trajectory',subtitle],NaN,[Rmin,Rmax],[Zmin,Zmax],'none','.','b',2);hold on
 %
    if rem(abs(1-Npar_ray(1)^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation.
       [ax] = graph1D_jd(sqrt(X_vac0_c(1,:).^2+X_vac0_c(2,:).^2)*equil_fit.ap,X_vac0_c(3,:)*equil_fit.ap,0,0,'R(m)','Z(m)',['Ray trajectory',subtitle],NaN,[Rmin,Rmax],[Zmin,Zmax],'--','none','r',2);hold on
       legend('Ray-tracing','Analytic');
    else
-      [ax] = graph1D_jd(R_ray(1:iabs(1)),Z_ray(1:iabs(1)),0,0,'R(m)','Z(m)',['Ray trajectory',subtitle],NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','m',2);hold on 
+      [ax] = graph1D_jd(R_ray(iabs(1):end),Z_ray(iabs(1):end),0,0,'R(m)','Z(m)',['Ray trajectory',subtitle],NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','k',2);hold on 
    end
    [ax] = graph1D_jd(R_fit,Z_fit,0,0,'','','',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','b',1);drawnow
    [ax] = graph1D_jd(R_fit',Z_fit',0,0,'R(m)','Z(m)',['Ray trajectory',subtitle],NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','b',1);hold on
@@ -160,13 +163,14 @@ if display_mode,
    print_jd(p_opt,[filename,'_Ray']);
 %
    figure('Name','Toroidal ray trajectory')
-   [ax] = graph1D_jd(X_ray,Y_ray,0,0,'X(m)','y(m)',['Toroidal ray trajectory',subtitle],NaN,[-Rmax,Rmax],[-Rmax,Rmax],'-','none','k',2);hold on
+   [ax] = graph1D_jd(X_ray(pmode_ray),Y_ray(pmode_ray),0,0,'X(m)','y(m)',['Toroidal ray trajectory',subtitle],NaN,[-Rmax,Rmax],[-Rmax,Rmax],'none','.','r',2);hold on
+   [ax] = graph1D_jd(X_ray(~pmode_ray),Y_ray(~pmode_ray),0,0,'X(m)','y(m)',['Toroidal ray trajectory',subtitle],NaN,[-Rmax,Rmax],[-Rmax,Rmax],'none','.','b',2);hold on
 %
    if rem(abs(1-Npar_ray(1)^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation.
       [ax] = graph1D_jd(sqrt(X_vac0_c(1,:).^2+X_vac0_c(2,:).^2)*equil_fit.ap,sqrt(X_vac0_c(1,:).^2+X_vac0_c(2,:).^2)*equil_fit.ap,0,0,'R(m)','Z(m)',['Toroidal ray trajectory',subtitle],NaN,[-Rmax,Rmax],[-Rmax,Rmax],'--','none','r',2);hold on
       legend('Ray-tracing','Analytic');
    else
-      [ax] = graph1D_jd(X_ray(1:iabs(1)),Y_ray(1:iabs(1)),0,0,'X(m)','Y(m)',['Toroidal ray trajectory',subtitle],NaN,[-Rmax,Rmax],[-Rmax,Rmax],'-','none','m',2);hold on 
+      [ax] = graph1D_jd(X_ray(iabs(1):end),Y_ray(iabs(1):end),0,0,'X(m)','Y(m)',['Toroidal ray trajectory',subtitle],NaN,[-Rmax,Rmax],[-Rmax,Rmax],'-','none','k',2);hold on 
    end
    [ax] = graph1D_jd(Xmin,Ymin,0,0,'','','',NaN,[-Rmax,Rmax],[-Rmax,Rmax],'-','none','b',1);drawnow
    [ax] = graph1D_jd(Xmax,Ymax,0,0,'X(m)','Y(m)','',NaN,[-Rmax,Rmax],[-Rmax,Rmax],'-','none','b',1);hold on
@@ -241,7 +245,10 @@ if display_mode,
    end
    print_jd(p_opt,[filename,'_Radialwavenumber']);
 %
-   figure('Name','Dispersion relation'),graph1D_jd(abs(phi_ray/2/pi),abs(D_ray),0,1,'abs(\phi)/2\pi','D',['Dispersion relation',subtitle],NaN,'','','-','none','k',2);drawnow
+   figure('Name','Dispersion relation'),
+   graph1D_jd(abs(phi_ray(pmode_ray)/2/pi),abs(D_ray(pmode_ray)),0,1,'abs(\phi)/2\pi','D',['Dispersion relation',subtitle],NaN,'','','none','.','r',2);
+      graph1D_jd(abs(phi_ray(~pmode_ray)/2/pi),abs(D_ray(~pmode_ray)),0,1,'abs(\phi)/2\pi','D',['Dispersion relation',subtitle],NaN,'','','none','.','b',2);drawnow
+      legend({'mode p','mode m'})
    if rem(abs(1-Npar_ray(1)^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation.
       [ax] = graph1D_jd(phi_vac/2/pi,D_vac,0,0,'abs(\phi)/2\pi','D',['Dispersion relation',subtitle],NaN,'','','--','none','r',2);hold on
       legend('Ray-tracing','Analytic');
