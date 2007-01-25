@@ -37,7 +37,7 @@ for iray = 1:Nrays,
 %
       y0 = init_RT_jd(equil,equil_fit,rayinit.yrho0(iray),rayinit.ytheta0(iray),rayinit.yphi0(iray),omega_rf,rayinit.yNpar0(iray),rayinit.ym0(iray),waveparam.mmode,waveparam.kmode)';
 %
-      info_dke_yp(2,['Initial conditions of ray #',int2str(iray),' is calculated']);
+      info_dke_yp(2,['Initial conditions of ray #',int2str(iray),' are calculated']);
 %
       if isreal(y0(4)),
 %
