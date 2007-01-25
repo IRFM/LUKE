@@ -88,7 +88,7 @@ end
 %
 omega_rf = 2*pi*f_rf*1e9;
 %
-y0 = init_RT_jd(equil,equil_fit,rho0,theta0,phi0,omega_rf,Npar0,m0,xmode,sigma,kmode)';
+y0 = init_RT_jd(equil,equil_fit,rho0,theta0,phi0,omega_rf,Npar0,m0,xmode,kmode)';
 %
 info_dke_yp(2,'Initial conditions calculated');
 %
@@ -98,7 +98,7 @@ if isreal(y0(4)),
     %
     info_dke_yp(2,'Ray trajectories calculated');
     %
-    [spsin,stheta,sphi,sR,sZ,sNpar,sNperp,sepol_pmz,sphi_xyz] = raypostprocessing_yp(tout, yout,rayparam,equil_fit,omega_rf,display_ray,p_opt,filename);
+    [iabs_out,srho,stheta,sphi,sR,sZ,sNpar,sNperp,sepol_pmz,sphi_xyz] = raypostprocessing_yp(tout,yout,rayparam,equil_fit,omega_rf,display_ray,p_opt,filename);
     %
     info_dke_yp(2,'Ray processing done');
     %
