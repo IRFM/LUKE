@@ -518,14 +518,14 @@ Compute the slopes
 	s0[2] = phi1;
 	s0[3] = krho1;
 	s0[4] = m1;
-        s0[5] = n1;
-        s0[6] = omega1;
+    s0[5] = n1;
+    s0[6] = omega1;
         
 	for  (m = 0; m < MC; m++) {
 	    y1[m] = s0[m];
 	}
         
-        ray(s1,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,0);	        
+        ray(s1,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,1);	        
 		/* s2 = feval(F, t+h*alpha(1), y1+h*s1*beta(1,1), param); */
 
 	for  (m = 0; m < MC-3; m++) {/* only the first five coordinates are evolving (rho,theta,phi,krho,m) */
@@ -619,9 +619,9 @@ Update the solution only if the error is acceptable
                
             if (rho2 < rayparam.drho[0]) {/* Boundary condition at rho = 0  */     
                 rho2 = rho1;
-		theta2 = theta1 + PI;
+		        theta2 = theta1 + PI;
                 phi2 = phi1;
-		krho2 = -krho1;
+		        krho2 = -krho1;
                 m2 = m1;
                 rho_step = rho2;
                 m_step = m2;
@@ -1625,7 +1625,7 @@ double complex Nperp,N2;
         Dtot[0] = Dtot[0] + D[i];
     }
 
-/*    mexPrintf("Dtot:%g\n",Dtot[0]);*/
+    mexPrintf("Dtot:%g\n",Dtot[0]);
 
 }
 
@@ -2011,8 +2011,15 @@ pp_1D_format dxstardpsin_fit;
         mexPrintf("i,Ti,dzTidY[0],dzTidY[1],dzTidY[2],dzTidY[3],dzTidY[4],dzTidY[5],dzTidY[6]:%d,%g,%g,%g,%g,%g,%g,%g,%g\n",i,rayprofiles.zTi[i],rayprofiles.dzTidY[i][0],rayprofiles.dzTidY[i][1],rayprofiles.dzTidY[i][2],rayprofiles.dzTidY[i][3],rayprofiles.dzTidY[i][4],rayprofiles.dzTidY[i][5],rayprofiles.dzTidY[i][6]);
         mexPrintf("i,ni,dznidY[0],dznidY[1],dznidY[2],dznidY[3],dznidY[4],dznidY[5],dznidY[6]:%d,%g,%g,%g,%g,%g,%g,%g,%g\n",i,rayprofiles.zni[i],rayprofiles.dznidY[i][0],rayprofiles.dznidY[i][1],rayprofiles.dznidY[i][2],rayprofiles.dznidY[i][3],rayprofiles.dznidY[i][4],rayprofiles.dznidY[i][5],rayprofiles.dznidY[i][6]);
 
-    }*/    
+    }*/   
         
+/*        
+        mexPrintf("rho,theta:%g,%g\n",Y[0],Y[1]);
+        mexPrintf("Te[0],dTedY[0],dTedY[1],ne[0],dnedY[0],dnedY[1]:%g,%g,%g,%g,%g,%g\n",rayprofiles.Te[0],rayprofiles.dTedY[0],rayprofiles.dTedY[1],rayprofiles.ne[0],rayprofiles.dnedY[0],rayprofiles.dnedY[1]);
+        for (is=0;is<equilparam.ns[0];is++) {
+           mexPrintf("is,zTi[is],dzTidY[is][0],dzTidY[is][1],zni[is],dznidY[is][0],dznidY[is][1]:%d,%g,%g,%g,%g,%g,%g\n",is,rayprofiles.zTi[is],rayprofiles.dzTidY[is][0],rayprofiles.dzTidY[is][1],rayprofiles.zni[is],rayprofiles.dznidY[is][0],rayprofiles.dznidY[is][1]);
+        }
+        */
     }
 
  
@@ -2112,24 +2119,17 @@ double dRstardpsin,ddRstardpsindrho;
     raymagnetic.gradrhon[0] = R*BP*dRstardpsin/fabs(equilparam.psia[0]);
     raymagnetic.dgradrhondY[0] = (dRdrho*BP*dRstardpsin + R*dBPdrho*dRstardpsin + R*BP*ddRstardpsindrho)/fabs(equilparam.psia[0]);
     raymagnetic.dgradrhondY[1] = (dRdtheta*BP*dRstardpsin + R*dBPdtheta*dRstardpsin)/fabs(equilparam.psia[0]);
-   
-    
-/*    mexPrintf("rho,theta:%g,%g\n",Y[0],Y[1]);
-    mexPrintf("Te[0],dTedY[0],dTedY[1],ne[0],dnedY[0],dnedY[1]:%g,%g,%g,%g,%g,%g\n",rayprofiles.Te[0],rayprofiles.dTedY[0],rayprofiles.dTedY[1],rayprofiles.ne[0],rayprofiles.dnedY[0],rayprofiles.dnedY[1]);
-    for (is=0;is<equilparam.ns[0];is++) {
-        mexPrintf("is,zTi[is],dzTidY[is][0],dzTidY[is][1],zni[is],dznidY[is][0],dznidY[is][1]:%d,%g,%g,%g,%g,%g,%g\n",is,rayprofiles.zTi[is],rayprofiles.dzTidY[is][0],rayprofiles.dzTidY[is][1],rayprofiles.zni[is],rayprofiles.dznidY[is][0],rayprofiles.dznidY[is][1]);
-    }*/
-    
-/*     mexPrintf("rn[0],drndY[0],drndY[1],Rn[0],dRndY[0],dRndY[1]:%g,%g,%g,%g,%g,%g\n",raymagnetic.rn[0],raymagnetic.drndY[0],raymagnetic.drndY[1],raymagnetic.Rn[0],raymagnetic.dRndY[0],raymagnetic.dRndY[1]);
-     mexPrintf("Bsn[0],dBsndY[0],dBsndY[1]:%g,%g,%g\n",raymagnetic.Bsn[0],raymagnetic.dBsndY[0],raymagnetic.dBsndY[1]);
-     mexPrintf("BPHIn[0],dBPHIndY[0],dBPHIndY[1]:%g,%g,%g\n",raymagnetic.BPHIn[0],raymagnetic.dBPHIndY[0],raymagnetic.dBPHIndY[1]);
-     mexPrintf("B[0],dBdY[0],dBdY[1]:%g,%g,%g\n",raymagnetic.B[0],raymagnetic.dBdY[0],raymagnetic.dBdY[1]);
-     mexPrintf("salpha[0],dsalphadY[0],dsalphadY[1]:%g,%g,%g\n",raymagnetic.salpha[0],raymagnetic.dsalphadY[0],raymagnetic.dsalphadY[1]);
-*/ 
-/*   
-     mexPrintf("calpha[0],dcalphadY[0],dcalphadY[1]:%g,%g,%g\n",raymagnetic.calpha[0],raymagnetic.dcalphadY[0],raymagnetic.dcalphadY[1]);
-     mexPrintf("gradrhon[0],dgradrhondY[0],dgradrhondY[1]:%g,%g,%g\n",raymagnetic.gradrhon[0],raymagnetic.dgradrhondY[0],raymagnetic.dgradrhondY[1]);
-     mexPrintf("dRstardpsin,ddRstardpsindrho,psia:%g,%g,%gma\n",dRstardpsin,ddRstardpsindrho,equilparam.psia[0]);
+/*    
+    mexPrintf("rn[0],drndY[0],drndY[1],Rn[0],dRndY[0],dRndY[1]:%g,%g,%g,%g,%g,%g\n",raymagnetic.rn[0],raymagnetic.drndY[0],raymagnetic.drndY[1],raymagnetic.Rn[0],raymagnetic.dRndY[0],raymagnetic.dRndY[1]);
+    mexPrintf("Bsn[0],dBsndY[0],dBsndY[1]:%g,%g,%g\n",raymagnetic.Bsn[0],raymagnetic.dBsndY[0],raymagnetic.dBsndY[1]);
+    mexPrintf("BPHIn[0],dBPHIndY[0],dBPHIndY[1]:%g,%g,%g\n",raymagnetic.BPHIn[0],raymagnetic.dBPHIndY[0],raymagnetic.dBPHIndY[1]);
+    mexPrintf("B[0],dBdY[0],dBdY[1]:%g,%g,%g\n",raymagnetic.B[0],raymagnetic.dBdY[0],raymagnetic.dBdY[1]);
+    mexPrintf("salpha[0],dsalphadY[0],dsalphadY[1]:%g,%g,%g\n",raymagnetic.salpha[0],raymagnetic.dsalphadY[0],raymagnetic.dsalphadY[1]);
+ 
+  
+    mexPrintf("calpha[0],dcalphadY[0],dcalphadY[1]:%g,%g,%g\n",raymagnetic.calpha[0],raymagnetic.dcalphadY[0],raymagnetic.dcalphadY[1]);
+    mexPrintf("gradrhon[0],dgradrhondY[0],dgradrhondY[1]:%g,%g,%g\n",raymagnetic.gradrhon[0],raymagnetic.dgradrhondY[0],raymagnetic.dgradrhondY[1]);
+    mexPrintf("dRstardpsin,ddRstardpsindrho,psia:%g,%g,%gma\n",dRstardpsin,ddRstardpsindrho,equilparam.psia[0]);
 */
 }
 
@@ -2159,6 +2159,7 @@ double Y[];
     double BP,dBPdrho,dBPdtheta;
     double BPHI,dBPHIdrho,dBPHIdtheta;
     double R,dRdrho,dRdtheta;
+    double Zeff0,Zeffa,eZeff,pZeff,dpZeffdrho;
     
     double Ip,BPa,qmin,qmax,eq,q,dqdrho,sigmaIp;
     
@@ -2168,53 +2169,69 @@ double Y[];
 
     cyl = 1.0;/* cylindrical factor */
     
-    BPHI0 = 3.0;/* Signed toroidal magnetic component (T), see the conventions */
-    Rp = 3.0*cyl;
-    ep = 0.3/cyl;
+    BPHI0 = 3.658;/* Signed toroidal magnetic component (T), see the conventions */
+    Rp = 2.4609*cyl;
+    ep = 0.2588/cyl;
     
-    Te0 = 4.0;
-    Tea = Te0/10.0;
-    eTe = 1.0;
+    Te0 = 4.576;
+    Tea = 1.36e-2;
+    eTe = 6.0;
     
-    ne0 = 3.0e+19;
-    nea = 1e-10;
-    ene = 1.0;
+    ne0 = 5.696e+19;
+    nea = 2.214e+19;
+    ene = 2.0;
     
     Ti0 = Te0;
-    Tia = Ti0/10.0;
-    eTi = 1.0;
+    Tia = Tea;
+    eTi = eTe;
     
     fi[0] = 0.0;
     fi[1] = 1.0;
-    fi[2] = 0.0;    
+    fi[2] = 0.0;
     
     Ip = 1.0;/* sign toroidal component of the plasma current (MA), see the conventions */
-    qmin = 1.0;/* Edge safety factor q */
-    eq = 2.0;/* q=0 flat q profile */
+    qmin = 1.3;/* Edge safety factor q */
+    eq = 3.0;/* q=0 flat q profile */
     
-    equilparam.zZi[0] = 0.0;/* vacuum case */
-        
+    if (equilparam.ns[0] == 3) {
+       Zeff0 = 1.0;/* No impurity case, only hydrogen */
+       Zeffa = 1.0;
+       eZeff = 0.0;
+    } else {
+       Zeff0 = 2.667;/* Effective charge for a single fully ionized impurity only */
+       Zeffa = 3.789;
+       eZeff = 2.0;    
+    }
+   
+    
+    if (equilparam.zZi[0] == 0.0) {/* vacuum case. No need of density !*/
+       Zeff0 = 0.0;
+       Zeffa = 0.0;
+       eZeff = 0.0;
+    }   
+    
+    pZeff = Zeff0 + (Zeffa-Zeff0)*pow(Y[0],eZeff);
+    dpZeffdrho = eZeff*(Zeffa-Zeff0)*pow(Y[0],eZeff-1);
+   
     rayprofiles.Te[0] = Tea + (Te0 - Tea)*pow(1 - Y[0]*Y[0],eTe);
     rayprofiles.dTedY[0] = -2*Y[0]*eTe*(Te0 - Tea)*pow(1 - Y[0]*Y[0],eTe - 1);  
     
     rayprofiles.ne[0] = nea + (ne0 - nea)*pow(1 - Y[0]*Y[0],ene);
     rayprofiles.dnedY[0] = -2*Y[0]*ene*(ne0 - nea)*pow(1 - Y[0]*Y[0],ene - 1);  
     
-    /* impurity calculation to be implemeted */
-    
     for (is=0;is<equilparam.ns[0];is++) {
         rayprofiles.zTi[is] = Tia + (Ti0 - Tia)*pow(1 - Y[0]*Y[0],eTi);
         rayprofiles.dzTidY[is][0] = -2*Y[0]*eTi*(Ti0 - Tia)*pow(1 - Y[0]*Y[0],eTi - 1);     
     }
     
-    for (is=0;is<3;is++) {
-        rayprofiles.zni[is] = fi[is]*(nea + (ne0 - nea)*pow(1 - Y[0]*Y[0],ene));
-        rayprofiles.dznidY[is][0] = -fi[is]*(2*Y[0]*ene*(ne0 - nea)*pow(1 - Y[0]*Y[0],ene - 1));       
+    for (is=0;is<3;is++) { /*For a single impurity fully stripped. Only the first is selected after the isotope of hydrogen */
+        rayprofiles.zni[is] = fi[is]*rayprofiles.ne[0]*(equilparam.zZi[3] - pZeff)/(equilparam.zZi[3]-1.0);
+        rayprofiles.dznidY[is][0] = fi[is]*(rayprofiles.dnedY[0]*(equilparam.zZi[3] - pZeff) - rayprofiles.ne[0]*dpZeffdrho)/(equilparam.zZi[3]-1.0);     
     }
     
-    for (is=3;is<equilparam.ns[0];is++) {
-        rayprofiles.zni[is] = 0;
-        rayprofiles.dznidY[is][0] = 0;         
+    for (is=3;is<equilparam.ns[0];is++) {/*For a single impurity fully stripped. Only the first is selected after the isotope of hydrogen */
+        rayprofiles.zni[is] = rayprofiles.ne[0]*(pZeff - 1.0)/(equilparam.zZi[3]-1)/equilparam.zZi[3];
+        rayprofiles.dznidY[is][0] = (rayprofiles.dnedY[0]*(pZeff - 1.0) + rayprofiles.ne[0]*dpZeffdrho)/(equilparam.zZi[3]-1)/equilparam.zZi[3];         
     }
 
     raymagnetic.rn[0] = Y[0];
@@ -2273,13 +2290,15 @@ double Y[];
     raymagnetic.dgradrhondY[0] = 0.0;
     raymagnetic.dgradrhondY[1] = 0.0;
     
-/*
+/*    
+    mexPrintf("---- Interpequil_test ----\n");
     mexPrintf("rho,theta:%g,%g\n",Y[0],Y[1]);
     mexPrintf("Te[0],dTedY[0],dTedY[1],ne[0],dnedY[0],dnedY[1]:%g,%g,%g,%g,%g,%g\n",rayprofiles.Te[0],rayprofiles.dTedY[0],rayprofiles.dTedY[1],rayprofiles.ne[0],rayprofiles.dnedY[0],rayprofiles.dnedY[1]);
     for (is=0;is<equilparam.ns[0];is++) {
         mexPrintf("is,zTi[is],dzTidY[is][0],dzTidY[is][1],zni[is],dznidY[is][0],dznidY[is][1]:%d,%g,%g,%g,%g,%g,%g\n",is,rayprofiles.zTi[is],rayprofiles.dzTidY[is][0],rayprofiles.dzTidY[is][1],rayprofiles.zni[is],rayprofiles.dznidY[is][0],rayprofiles.dznidY[is][1]);
-    }*/
+    }
     
+   
     mexPrintf("rn[0],drndY[0],drndY[1],Rn[0],dRndY[0],dRndY[1]:%g,%g,%g,%g,%g,%g\n",raymagnetic.rn[0],raymagnetic.drndY[0],raymagnetic.drndY[1],raymagnetic.Rn[0],raymagnetic.dRndY[0],raymagnetic.dRndY[1]);
     mexPrintf("Bsn[0],dBsndY[0],dBsndY[1]:%g,%g,%g\n",raymagnetic.Bsn[0],raymagnetic.dBsndY[0],raymagnetic.dBsndY[1]);
     mexPrintf("BPHIn[0],dBPHIndY[0],dBPHIndY[1]:%g,%g,%g\n",raymagnetic.BPHIn[0],raymagnetic.dBPHIndY[0],raymagnetic.dBPHIndY[1]);
@@ -2287,7 +2306,7 @@ double Y[];
     mexPrintf("salpha[0],dsalphadY[0],dsalphadY[1]:%g,%g,%g\n",raymagnetic.salpha[0],raymagnetic.dsalphadY[0],raymagnetic.dsalphadY[1]);
     mexPrintf("calpha[0],dcalphadY[0],dcalphadY[1]:%g,%g,%g\n",raymagnetic.calpha[0],raymagnetic.dcalphadY[0],raymagnetic.dcalphadY[1]);
     mexPrintf("gradrhon[0],dgradrhondY[0],dgradrhondY[1]:%g,%g,%g\n",raymagnetic.gradrhon[0],raymagnetic.dgradrhondY[0],raymagnetic.dgradrhondY[1]);
-
+*/
 }
 
 
