@@ -1,25 +1,25 @@
 /*
   
-	raytracing.c	MEX file implementation of a universal ray-tracing for electron waves
+    raytracing.c    MEX file implementation of a universal ray-tracing for electron waves
 
-	call -> [tout, yout] = raytracing_yp(rayparam,equil,y0)
+    call -> [tout, yout] = raytracing_yp(rayparam,equil,y0)
 
-	INPUT: 
+    INPUT: 
 
-	- rayparam: parameters for ray-tracing structure [1,1]
-   	- equil: numerical equilibrium structure [1,1]
+    - rayparam: parameters for ray-tracing structure [1,1]
+    - equil: numerical equilibrium structure [1,1]
     - y0: ray initial conditions [1,1]
 
-	OUTPUT: 
+    OUTPUT: 
 
-	- tout: returned integration time points (row-vector).
-	- yout: returned solution, one solution column-vector per tout-value.
+    - tout: returned integration time points (row-vector).
+    - yout: returned solution, one solution column-vector per tout-value.
 
-	WARNING: none
+    WARNING: none
 
-	REFERENCE: none
+    REFERENCE: none
 
-	by Y.PEYSSON (CEA-DRFC)  <yves.peysson@cea.fr>, Joan Decker (CEA-DRFC) <joan.decker@cea.fr> and Laurent Colas (CEA-DRFC) <laurent.colas@cea.fr>
+    by Y.PEYSSON (CEA-DRFC)  <yves.peysson@cea.fr>, Joan Decker (CEA-DRFC) <joan.decker@cea.fr> and Laurent Colas (CEA-DRFC) <laurent.colas@cea.fr>
 */
 
 #include <complex.h>
@@ -218,20 +218,20 @@ void ImFdnest();
 
 /* Input Arguments */
 
-#define	RAYPARAM_IN	 prhs[0]
-#define	EQUIL_IN	 prhs[1]
-#define	Y0_IN	 prhs[2]
+#define RAYPARAM_IN  prhs[0]
+#define EQUIL_IN     prhs[1]
+#define Y0_IN    prhs[2]
 
 /* Output Arguments */
 
-#define	T_OUT	plhs[0]
-#define	Y_OUT	plhs[1]
+#define T_OUT   plhs[0]
+#define Y_OUT   plhs[1]
 
-#define	MC 8
+#define MC 8
 #define SAFETY 0.8
 #define PGROW 0.2
 #define PSHRINK 0.25
-#define	MC 8
+#define MC 8
 #define PI 3.14159265358979
 
 
@@ -248,19 +248,19 @@ static double beta[5][5] = {
 };
 
 static double gama[6][2] = {
-	{   902880.0/7618050.0,   -2090.0/752400.0 },
-	{                  0.0,                0.0 },
-	{  3953664.0/7618050.0,   22528.0/752400.0 },
-	{  3855735.0/7618050.0,   21970.0/752400.0 },
-	{ -1371249.0/7618050.0,  -15048.0/752400.0 },
-	{   277020.0/7618050.0,  -27360.0/752400.0 }
+    {   902880.0/7618050.0,   -2090.0/752400.0 },
+    {                  0.0,                0.0 },
+    {  3953664.0/7618050.0,   22528.0/752400.0 },
+    {  3855735.0/7618050.0,   21970.0/752400.0 },
+    { -1371249.0/7618050.0,  -15048.0/752400.0 },
+    {   277020.0/7618050.0,  -27360.0/752400.0 }
 };
 
 
-void mexFunction(	int		nlhs,
-	mxArray	*plhs[],
-	int		nrhs,
-	const mxArray	*prhs[]
+void mexFunction(   int     nlhs,
+    mxArray *plhs[],
+    int     nrhs,
+    const mxArray   *prhs[]
 )
 {
     
@@ -278,13 +278,13 @@ void mexFunction(	int		nlhs,
     double *y,*dZdrho,*dZdtheta,*d2Zdtheta2,*d2Zdthetadrho;
     double dummy1,dummy2;
     
-	/* Check out the arguments */
+    /* Check out the arguments */
 
-	if (nrhs != 3) {
-		mexErrMsgTxt("Wrong number of input arguments for raytracing_yp");
-	} else if (nlhs != 2) {
-		mexErrMsgTxt("Wrong number of output arguments for raytracing_yp");
-	}
+    if (nrhs != 3) {
+        mexErrMsgTxt("Wrong number of input arguments for raytracing_yp");
+    } else if (nlhs != 2) {
+        mexErrMsgTxt("Wrong number of output arguments for raytracing_yp");
+    }
     
     if (!mxIsStruct(prhs[0])) mexErrMsgTxt("Input arguments must be structures");
     if (!mxIsStruct(prhs[1])) mexErrMsgTxt("Input arguments must be structures");
@@ -418,19 +418,19 @@ void mexFunction(	int		nlhs,
     
 /* Runge-Kutta  */
 
-    double	*tout,*yout; 
-    double	*toutp,*youtp;
-    double	*y0,*y1;
+    double  *tout,*yout; 
+    double  *toutp,*youtp;
+    double  *y0,*y1;
 
-    register unsigned int	K=0,m,k=0,kk,ii=0;
+    register unsigned int   K=0,m,k=0,kk,ii=0;
 
     double *s0,*s1,*s2,*s3,*s4,*s5,*s6;
     double *tempt,*temp0,*temp1,*temp2,*temp3,*temp4,*temp5,*temp6;
 
     double ymax,tau,delta,h,hmax,hmin;
-	
+    
     double ydel[MC],ys[7];
-	
+    
     double t1,t2,rho1,rho2,theta1,theta2,phi1,phi2,krho1,krho2,m1,m2,n1,n2,omega1,omega2;
     double rho_step,m_step;
     
@@ -489,7 +489,7 @@ Initialization
     temp2[0] = phi1;
     temp3[0] = krho1;
     temp4[0] = m1;
-    temp5[0] = n1;	
+    temp5[0] = n1;  
     temp6[0] = omega1;
 
 /*
@@ -499,13 +499,13 @@ The main loop
    while ((t1 < rayparam.tfinal[0]) && (k < rayparam.kmax[0]-1)) {
         ii++; 
 /*        mexPrintf("ii:%d\n",ii);*/
-	if ((t1 + h) > rayparam.tfinal[0]) {
-	    h = rayparam.tfinal[0] - t1;
-	}
+    if ((t1 + h) > rayparam.tfinal[0]) {
+        h = rayparam.tfinal[0] - t1;
+    }
         if (ii > rayparam.kmax[0]) {
-	    goto Endloop;
+        goto Endloop;
             flag = 0;
-	}
+    }
         
 /*
 Compute the slopes
@@ -513,66 +513,66 @@ Compute the slopes
 
 /* ts = t  and  s0 = y */
 
-	s0[0] = rho1;
-	s0[1] = theta1;
-	s0[2] = phi1;
-	s0[3] = krho1;
-	s0[4] = m1;
-    s0[5] = n1;
-    s0[6] = omega1;
+    s0[0] = rho1;
+    s0[1] = theta1;
+    s0[2] = phi1;
+    s0[3] = krho1;
+    s0[4] = m1;
+        s0[5] = n1;
+        s0[6] = omega1;
         
-	for  (m = 0; m < MC; m++) {
-	    y1[m] = s0[m];
-	}
+    for  (m = 0; m < MC; m++) {
+        y1[m] = s0[m];
+    }
         
-        ray(s1,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,1);	        
-		/* s2 = feval(F, t+h*alpha(1), y1+h*s1*beta(1,1), param); */
+        ray(s1,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,0);          
+        /* s2 = feval(F, t+h*alpha(1), y1+h*s1*beta(1,1), param); */
 
-	for  (m = 0; m < MC-3; m++) {/* only the first five coordinates are evolving (rho,theta,phi,krho,m) */
-	    y1[m] = s0[m]+h*s1[m]*beta[0][0];
-	}
+    for  (m = 0; m < MC-3; m++) {/* only the first five coordinates are evolving (rho,theta,phi,krho,m) */
+        y1[m] = s0[m]+h*s1[m]*beta[0][0];
+    }
          
             
         ray(s2,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,0);
-		/* s3 = feval(F, t+h*alpha(2), y1+h*[s1*beta(2,1)+s2*beta(2,2)], param); */
+        /* s3 = feval(F, t+h*alpha(2), y1+h*[s1*beta(2,1)+s2*beta(2,2)], param); */
 
-	for  (m = 0; m < MC-3; m++) {
-	    y1[m] = s0[m]+h*(s1[m]*beta[0][1] + s2[m]*beta[1][1]);
-	}
+    for  (m = 0; m < MC-3; m++) {
+        y1[m] = s0[m]+h*(s1[m]*beta[0][1] + s2[m]*beta[1][1]);
+    }
 
-	ray(s3,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,0);
+    ray(s3,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,0);
 
-		/* s4 = feval(F, t+h*alpha(3), y1+h*[s1*beta(3,1)+s2*beta(3,2)+...], param); */
+        /* s4 = feval(F, t+h*alpha(3), y1+h*[s1*beta(3,1)+s2*beta(3,2)+...], param); */
 
-	for  (m = 0; m < MC-3; m++) {
-	    y1[m] = s0[m]+h*(s1[m]*beta[0][2] + s2[m]*beta[1][2] + s3[m]*beta[2][2]);
-	}
+    for  (m = 0; m < MC-3; m++) {
+        y1[m] = s0[m]+h*(s1[m]*beta[0][2] + s2[m]*beta[1][2] + s3[m]*beta[2][2]);
+    }
  
         ray(s4,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,0);
 
         /* s5 = feval(F, t+h*alpha(4), y1+h*[s1*beta(4,1)+s2*beta(4,2)+...], param); */
 
-	for  (m = 0; m < MC-3; m++) {
-	    y1[m] = s0[m]+h*(s1[m]*beta[0][3] + s2[m]*beta[1][3] + s3[m]*beta[2][3] + s4[m]*beta[3][3]);
-	}
+    for  (m = 0; m < MC-3; m++) {
+        y1[m] = s0[m]+h*(s1[m]*beta[0][3] + s2[m]*beta[1][3] + s3[m]*beta[2][3] + s4[m]*beta[3][3]);
+    }
 
 
         ray(s5,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,0);
 
         /* s6 = feval(F, t+h*alpha(5), y1+h*[s1*beta(5,1)+s2*beta(5,2)+...], param); */
 
-	for  (m = 0; m < MC-3; m++) {
-	    y1[m] = s0[m]+h*(s1[m]*beta[0][4] + s2[m]*beta[1][4] + s3[m]*beta[2][4] + s4[m]*beta[3][4] + s5[m]*beta[4][4]);
-	}
+    for  (m = 0; m < MC-3; m++) {
+        y1[m] = s0[m]+h*(s1[m]*beta[0][4] + s2[m]*beta[1][4] + s3[m]*beta[2][4] + s4[m]*beta[3][4] + s5[m]*beta[4][4]);
+    }
         
-	ray(s6,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,0);
+    ray(s6,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,0);
 
 /*
 Estimate the error and the acceptable error
 */
 
-	for  (m = 0; m < MC-3; m++) {
-	    ydel[m] = h*(s1[m]*gama[0][1] + s2[m]*gama[1][1] + s3[m]*gama[2][1] + s4[m]*gama[3][1] + s5[m]*gama[4][1] + s6[m]*gama[5][1]);
+    for  (m = 0; m < MC-3; m++) {
+        ydel[m] = h*(s1[m]*gama[0][1] + s2[m]*gama[1][1] + s3[m]*gama[2][1] + s4[m]*gama[3][1] + s5[m]*gama[4][1] + s6[m]*gama[5][1]);
         ys[0] = s0[m];
         ys[1] = s1[m];
         ys[2] = s2[m];
@@ -582,10 +582,10 @@ Estimate the error and the acceptable error
         ys[6] = s6[m];
         ymax = inf_norm(ys,7);
         ydel[m] = ydel[m]/ymax;
-	}
+    }
 
-	delta = inf_norm(ydel,MC-3);/* only the first five coordinates are evolving (rho,theta,phi,krho,m) */
-	tau = rayparam.tol[0];
+    delta = inf_norm(ydel,MC-3);/* only the first five coordinates are evolving (rho,theta,phi,krho,m) */
+    tau = rayparam.tol[0];
 
 /*
 Update the solution only if the error is acceptable
@@ -594,23 +594,23 @@ Update the solution only if the error is acceptable
 /*      mexPrintf("t1,delta,ymax,h,rho1,theta1,phi1,krho1,m1:%g,%g,%g,%g,%g,%g,%g,%g,%g\n",t1,delta,ymax,h,rho1,theta1,phi1,krho1,m1); */
 
         if (delta <= tau) {
-			
-	    t2 = t1 + h;
-	    rho2 = rho1 + h*(s1[0]*gama[0][0] + s2[0]*gama[1][0]
-				     + s3[0]*gama[2][0] + s4[0]*gama[3][0]
-				     + s5[0]*gama[4][0] + s6[0]*gama[5][0]);
-	    theta2 = theta1 + h*(s1[1]*gama[0][0] + s2[1]*gama[1][0]
-				     + s3[1]*gama[2][0] + s4[1]*gama[3][0]
-				     + s5[1]*gama[4][0] + s6[1]*gama[5][0]);
-	    phi2 = phi1 + h*(s1[2]*gama[0][0] + s2[2]*gama[1][0]
-				     + s3[2]*gama[2][0] + s4[2]*gama[3][0]
-				     + s5[2]*gama[4][0] + s6[2]*gama[5][0]);
-	    krho2 = krho1 + h*(s1[3]*gama[0][0] + s2[3]*gama[1][0]
-				     + s3[3]*gama[2][0] + s4[3]*gama[3][0]
-				     + s5[3]*gama[4][0] + s6[3]*gama[5][0]);
-	    m2 = m1 + h*(s1[4]*gama[0][0] + s2[4]*gama[1][0]
-				     + s3[4]*gama[2][0] + s4[4]*gama[3][0]
-				     + s5[4]*gama[4][0] + s6[4]*gama[5][0]);
+            
+        t2 = t1 + h;
+        rho2 = rho1 + h*(s1[0]*gama[0][0] + s2[0]*gama[1][0]
+                     + s3[0]*gama[2][0] + s4[0]*gama[3][0]
+                     + s5[0]*gama[4][0] + s6[0]*gama[5][0]);
+        theta2 = theta1 + h*(s1[1]*gama[0][0] + s2[1]*gama[1][0]
+                     + s3[1]*gama[2][0] + s4[1]*gama[3][0]
+                     + s5[1]*gama[4][0] + s6[1]*gama[5][0]);
+        phi2 = phi1 + h*(s1[2]*gama[0][0] + s2[2]*gama[1][0]
+                     + s3[2]*gama[2][0] + s4[2]*gama[3][0]
+                     + s5[2]*gama[4][0] + s6[2]*gama[5][0]);
+        krho2 = krho1 + h*(s1[3]*gama[0][0] + s2[3]*gama[1][0]
+                     + s3[3]*gama[2][0] + s4[3]*gama[3][0]
+                     + s5[3]*gama[4][0] + s6[3]*gama[5][0]);
+        m2 = m1 + h*(s1[4]*gama[0][0] + s2[4]*gama[1][0]
+                     + s3[4]*gama[2][0] + s4[4]*gama[3][0]
+                     + s5[4]*gama[4][0] + s6[4]*gama[5][0]);
             n2 = n1;
             omega2 = omega1;
             
@@ -619,9 +619,9 @@ Update the solution only if the error is acceptable
                
             if (rho2 < rayparam.drho[0]) {/* Boundary condition at rho = 0  */     
                 rho2 = rho1;
-		        theta2 = theta1 + PI;
+        theta2 = theta1 + PI;
                 phi2 = phi1;
-		        krho2 = -krho1;
+        krho2 = -krho1;
                 m2 = m1;
                 rho_step = rho2;
                 m_step = m2;
@@ -643,9 +643,9 @@ Update the solution only if the error is acceptable
                     s0[3] = krho1;
                     s0[4] = m1;
                     s0[5] = n1;
-                    s0[6] = omega1;  		    
+                    s0[6] = omega1;             
                     dsolve(0,&krho2,s0,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit); 
-/*                    mexPrintf("test2a,krho2,cimag(krho2):%g,%g,%g\n",krho2,cimag(krho2));*/	    
+/*                    mexPrintf("test2a,krho2,cimag(krho2):%g,%g,%g\n",krho2,cimag(krho2));*/       
                     if (cimag(krho2) == 0.0) {/* ray may propagate in vacuum. Propagation is stopped */
                         mexPrintf("********************************** The wave leaves the plasma at rho = %g**********************************\n",rho1);
                         flag = 1;
@@ -672,12 +672,12 @@ Update the solution only if the error is acceptable
                 temp4[K] = m2;
                 temp5[K] = n2;
                 temp6[K] = omega2;
-				
-		rho_step = rho2;
+                
+        rho_step = rho2;
                 m_step = m2;
-		k++;
+        k++;
             }
-			
+            
             t1 = t2;
             rho1 = rho2;
             theta1 = theta2;
@@ -688,7 +688,7 @@ Update the solution only if the error is acceptable
             omega1 = omega2;
         
         }
-	
+    
 /*
 Update the step size
 */
@@ -698,9 +698,9 @@ Update the step size
                 h = SAFETY*h*pow(tau/delta,PGROW);   
             } else {
                 h = SAFETY*h*pow(tau/delta,PSHRINK);                
-            }	    
-/*	    mexPrintf("delta,tau,rho1,krho1,h:%g,%g,%g,%g,%g,%g\n",delta,tau,rho1,krho1,h);*/
-	  	    
+            }       
+/*      mexPrintf("delta,tau,rho1,krho1,h:%g,%g,%g,%g,%g,%g\n",delta,tau,rho1,krho1,h);*/
+            
         } else {       
            mexPrintf("WARNING delta :%g, the loop is stopped.\n",delta);
            if (flag == 0) {
@@ -722,12 +722,12 @@ Endloop:
 
     
 /* Create final matrix for transferring data to MatLab */
-	
+    
     T_OUT = mxCreateDoubleMatrix(K,1,mxREAL);
     Y_OUT = mxCreateDoubleMatrix(K,MC,mxREAL);
     tout = mxGetPr(T_OUT);
-    yout = mxGetPr(Y_OUT);	
-	
+    yout = mxGetPr(Y_OUT);  
+    
     for (kk = 0;kk < K; kk++) {
         tout[kk] = tempt[kk];
     }
@@ -776,19 +776,19 @@ Endloop:
 
 
 double inf_norm(y,N)
-double	y[];
+double  y[];
 unsigned int N;
 {
-	register unsigned int m;
-	double	temp_max;
+    register unsigned int m;
+    double  temp_max;
 
-	temp_max = fabs(y[0]);
+    temp_max = fabs(y[0]);
 
-	for (m = 1; m < N; m++) {
-		temp_max = fmax(temp_max,fabs(y[m]));
-	}
+    for (m = 1; m < N; m++) {
+        temp_max = fmax(temp_max,fabs(y[m]));
+    }
 
-	return(temp_max);
+    return(temp_max);
 }
 
 /* General coordinate time evolution dY/dt with Y=[rho,theta,phi,krho,m,n,omega/c] */
@@ -823,8 +823,6 @@ int flag;
     double Npar4,Npar3,Npar2,Npar1;
     double complex Xxx,Xxy,Xxz,Xyy,Xyz,Xzz;
     double complex Xxx2,Xxy2,Xxz2,Xyy2,Xyz2,Xzz2;
-
-    double rn2,drn2dY[MC];
 
     raymagnetic_format raymagnetic;
     rayprofiles_format rayprofiles;
@@ -881,7 +879,6 @@ int flag;
     for (i = 0;i < MC; i++) {/*initialisation */
         rayprofiles.dTedY[i] = 0.0;
         rayprofiles.dnedY[i] = 0.0;
-        drn2dY[i] = 0.0;
     
         for (j=0;j<equilparam.ns[0];j++) {
            rayprofiles.dzTidY[j][i] = 0.0;
@@ -959,59 +956,51 @@ int flag;
     Xyz2 = X.Xyz[0]*X.Xyz[0];
     Xzz2 = X.Xzz[0]*X.Xzz[0];
 
-    rn2 = raymagnetic.rn[0]*raymagnetic.rn[0];
-
-
-    for (i=0;i<MC;i++) {
-        drn2dY[i] = 2.0*raymagnetic.drndY[i]*raymagnetic.rn[0];
-    }
-
-
     for (i = 0;i<MC;i++) {
     
         dN6m1 = 3*dN2dY[i]/N6/N2;
     
-        dDdY[0][i] = 4.0*rn2*Nperp3*dNperpdY[i]/N6 - rn2*Nperp4*dN6m1 + drn2dY[i]*Nperp4/N6;
+        dDdY[0][i] = 4.0*Nperp3*dNperpdY[i]/N6 - Nperp4*dN6m1;
         dDdY[1][i] = X.dXxxdY[i]*Nperp4/N6 + 4.0*Xxx*Nperp3*dNperpdY[i]/N6 - Xxx*Nperp4*dN6m1;
         dDdY[2][i] = 2.0*dNpardY[i]*Xxz*Nperp3/N6 + 2.0*Npar1*X.dXxzdY[i]*Npar3/N6 + 6.0*Npar1*Xxz*dNperpdY[i]*Nperp2/N6 - 2.0*Npar1*Xxz*Nperp3*dN6m1;    
         dDdY[3][i] = 2.0*Npar1*dNpardY[i]*Xxx*Nperp2/N6 + Npar2*X.dXxxdY[i]*Nperp2/N6 + 2.0*Npar2*Xxx*Nperp1*dNperpdY[i]/N6 - Npar2*Xxx*Nperp2*dN6m1;
         dDdY[4][i] = 2.0*Npar1*dNpardY[i]*Xzz*Nperp2/N6 + Npar2*X.dXzzdY[i]*Nperp2/N6 + 2.0*Npar2*Xzz*Nperp1*dNperpdY[i]/N6 - Npar2*Xzz*Nperp2*dN6m1;
-        dDdY[5][i] = 4.0*rn2*Npar1*dNpardY[i]*Nperp2/N6 + 4.0*rn2*Npar2*Nperp1*dNperpdY[i]/N6 - 2.0*rn2*Npar2*Nperp2*dN6m1 + 2.0*drn2dY[i]*Npar2*Nperp2/N6;
-        dDdY[6][i] = -2.0*rn2*X.dXxxdY[i]*Nperp2/N6 - 4.0*rn2*Xxx*Nperp1*dNperpdY[i]/N6 + 2.0*rn2*Xxx*Nperp2*dN6m1 - 2.0*drn2dY[i]*Xxx*Nperp2/N6;
-        dDdY[7][i] = -rn2*X.dXyydY[i]*Nperp2/N6 - 2.0*rn2*Xyy*Nperp1*dNperpdY[i]/N6 + rn2*Xyy*Nperp2*dN6m1 - Xyy*drn2dY[i]*Nperp2/N6;
-        dDdY[8][i] = -rn2*X.dXzzdY[i]*Nperp2/N6 - 2.0*rn2*Xzz*Nperp1*dNperpdY[i]/N6 + rn2*Xzz*Nperp2*dN6m1 - drn2dY[i]*Xzz*Nperp2/N6;
+        dDdY[5][i] = 4.0*Npar1*dNpardY[i]*Nperp2/N6 + 4.0*Npar2*Nperp1*dNperpdY[i]/N6 - 2.0*Npar2*Nperp2*dN6m1;
+        dDdY[6][i] = -2.0*X.dXxxdY[i]*Nperp2/N6 - 4.0*Xxx*Nperp1*dNperpdY[i]/N6 + 2.0*Xxx*Nperp2*dN6m1;
+        dDdY[7][i] = -X.dXyydY[i]*Nperp2/N6 - 2.0*Xyy*Nperp1*dNperpdY[i]/N6 + Xyy*Nperp2*dN6m1;
+        dDdY[8][i] = -X.dXzzdY[i]*Nperp2/N6 - 2.0*Xzz*Nperp1*dNperpdY[i]/N6 + Xzz*Nperp2*dN6m1;
         dDdY[9][i] = -X.dXxxdY[i]*Xzz*Nperp2/N6 - Xxx*X.dXzzdY[i]*Nperp2/N6 - 2.0*Xxx*Xzz*Nperp1*dNperpdY[i]/N6 + Xxx*Xzz*Nperp2*dN6m1;
         dDdY[10][i] = 2.0*Xxz*X.dXxzdY[i]*Nperp2/N6 + 2.0*Xxz2*Nperp1*dNperpdY[i]/N6 - Xxz2*Nperp2*dN6m1;
         dDdY[11][i] = -X.dXxxdY[i]*Xyy*Nperp2/N6 - Xxx*X.dXyydY[i]*Nperp2/N6 - 2.0*Xxx*Xyy*Nperp1*dNperpdY[i]/N6 + Xxx*Xyy*Nperp2*dN6m1;
         dDdY[12][i] = -2.0*X.dXxydY[i]*Xxy*Nperp2/N6 - 2.0*Xxy2*Nperp1*dNperpdY[i]/N6 + Xxy2*Nperp2*dN6m1;
-        dDdY[13][i] = -4.0*rn2*rn2*Nperp1*dNperpdY[i]/N6 + 2.0*rn2*rn2*Nperp2*dN6m1 - 4.0*rn2*drn2dY[i]*Nperp2/N6;
+        dDdY[13][i] = -4.0*Nperp1*dNperpdY[i]/N6 + 2.0*Nperp2*dN6m1;
         dDdY[14][i] = -2.0*dNpardY[i]*Xyy*Xxz*Nperp1/N6 - 2.0*Npar1*X.dXyydY[i]*Xxz*Nperp1/N6 - 2.0*Npar1*Xyy*X.dXxzdY[i]*Nperp1/N6 - 2.0*Npar1*Xyy*Xxz*dNperpdY[i]/N6 + 2.0*Npar1*Xyy*Xxz*Nperp1*dN6m1;
         dDdY[15][i] = 2.0*dNpardY[i]*Xxy*Xyz*Nperp1/N6 + 2.0*Npar1*X.dXxydY[i]*Xyz*Nperp1/N6 + 2.0*Npar1*Xxy*X.dXyzdY[i]*Nperp1/N6 + 2.0*Npar1*Xxy*Xyz*dNperpdY[i]/N6 - 2.0*Npar1*Xxy*Xyz*Nperp1*dN6m1;
-        dDdY[16][i] = -2.0*rn2*dNpardY[i]*Xxz*Nperp1/N6 - 2.0*rn2*Npar1*X.dXxzdY[i]*Nperp1/N6 - 2.0*rn2*Npar1*Xxz*dNperpdY[i]/N6 + 2.0*rn2*Npar1*Xxz*Nperp1*dN6m1 - 2.0*drn2dY[i]*Npar1*Xxz*Nperp1/N6;
+        dDdY[16][i] = -2.0*dNpardY[i]*Xxz*Nperp1/N6 - 2.0*Npar1*X.dXxzdY[i]*Nperp1/N6 - 2.0*Npar1*Xxz*dNperpdY[i]/N6 + 2.0*Npar1*Xxz*Nperp1*dN6m1;
         dDdY[17][i] = 6.0*Npar2*dNpardY[i]*Xxz*Nperp1/N6 + 2.0*Npar3*X.dXxzdY[i]*Nperp1/N6 + 2.0*Npar3*Xxz*dNperpdY[i]/N6 - 2.0*Npar3*Xxz*Nperp1*dN6m1;
-        dDdY[18][i] = -rn2*rn2*rn2*dN6m1 + 3.0*drn2dY[i]*rn2*rn2/N6;
+        dDdY[18][i] = -dN6m1;
         dDdY[19][i] = 4.0*Npar3*Xzz*dNpardY[i]/N6 + Npar4*X.dXzzdY[i]/N6 - Npar4*Xzz*dN6m1;    
-        dDdY[20][i] = 4.0*rn2*Npar3*dNpardY[i]/N6 - rn2*Npar4*dN6m1 + drn2dY[i]*Npar4/N6;
+        dDdY[20][i] = 4.0*Npar3*dNpardY[i]/N6 - Npar4*dN6m1;
         dDdY[21][i] = 2.0*Npar1*dNpardY[i]*Xxz2/N6 + 2.0*Npar2*Xxz*X.dXxzdY[i]/N6 - Npar2*Xxz2*dN6m1;
         dDdY[22][i] = -2.0*Npar1*dNpardY[i]*Xyy*Xzz/N6 - Npar2*X.dXyydY[i]*Xzz/N6 - Npar2*Xyy*X.dXzzdY[i]/N6 + Npar2*Xyy*Xzz*dN6m1;
         dDdY[23][i] = -2.0*Npar1*dNpardY[i]*Xxx*Xzz/N6 - Npar2*X.dXxxdY[i]*Xzz/N6 - Npar2*Xxx*X.dXzzdY[i]/N6 + Npar2*Xxx*Xzz*dN6m1;
-        dDdY[24][i] = -4.0*rn2*Npar1*dNpardY[i]*Xzz/N6 - 2.0*rn2*Npar2*X.dXzzdY[i]/N6 + 2.0*rn2*Npar2*Xzz*dN6m1 - 2.0*drn2dY[i]*Npar2*Xzz/N6;
-        dDdY[25][i] = -2.0*rn2*Npar1*dNpardY[i]*Xyy/N6 - rn2*Npar2*X.dXyydY[i]/N6 + rn2*Npar2*Xyy*dN6m1 - drn2dY[i]*Npar2*Xyy/N6;
+        dDdY[24][i] = -4.0*Npar1*dNpardY[i]*Xzz/N6 - 2.0*Npar2*X.dXzzdY[i]/N6 + 2.0*Npar2*Xzz*dN6m1;
+        dDdY[25][i] = -2.0*Npar1*dNpardY[i]*Xyy/N6 - Npar2*X.dXyydY[i]/N6 + Npar2*Xyy*dN6m1;
         dDdY[26][i] = -2.0*Npar1*dNpardY[i]*Xyz2/N6 - 2.0*Npar2*Xyz*X.dXyzdY[i]/N6 + Npar2*Xyz2*dN6m1;
-        dDdY[27][i] = -2.0*rn2*Npar1*dNpardY[i]*Xxx/N6 - rn2*Npar2*X.dXxxdY[i]/N6 + rn2*Npar2*Xxx*dN6m1 - drn2dY[i]*Npar2*Xxx/N6;
-        dDdY[28][i] = -4.0*rn2*rn2*Npar1*dNpardY[i]/N6 + 2.0*rn2*rn2*Npar2*dN6m1 - 4.0*drn2dY[i]*rn2*Npar2/N6;
-        dDdY[29][i] = rn2*X.dXyydY[i]*Xzz/N6 + rn2*Xyy*X.dXzzdY[i]/N6 - rn2*Xyy*Xzz*dN6m1 + drn2dY[i]*Xyy*Xzz/N6;
-        dDdY[30][i] = rn2*X.dXxxdY[i]*Xzz/N6 + rn2*Xxx*X.dXzzdY[i]/N6 - rn2*Xxx*Xzz*dN6m1 + drn2dY[i]*Xxx*Xzz/N6;
-        dDdY[31][i] = rn2*X.dXxxdY[i]*Xyy/N6 + rn2*Xxx*X.dXyydY[i]/N6 - rn2*Xxx*Xyy*dN6m1 + drn2dY[i]*Xxx*Xyy/N6;
+        dDdY[27][i] = -2.0*Npar1*dNpardY[i]*Xxx/N6 - Npar2*X.dXxxdY[i]/N6 + Npar2*Xxx*dN6m1;
+        dDdY[28][i] = -4.0*Npar1*dNpardY[i]/N6 + 2.0*Npar2*dN6m1;
+        dDdY[29][i] = X.dXyydY[i]*Xzz/N6 + Xyy*X.dXzzdY[i]/N6 - Xyy*Xzz*dN6m1;
+        dDdY[30][i] = X.dXxxdY[i]*Xzz/N6 + Xxx*X.dXzzdY[i]/N6 - Xxx*Xzz*dN6m1;
+        dDdY[31][i] = X.dXxxdY[i]*Xyy/N6 + Xxx*X.dXyydY[i]/N6 - Xxx*Xyy*dN6m1;
         dDdY[32][i] = X.dXxxdY[i]*Xyz2/N6 + 2.0*Xxx*Xyz*X.dXyzdY[i]/N6 - Xxx*Xyz2*dN6m1;
-        dDdY[33][i] = 2.0*rn2*Xyz*X.dXyzdY[i]/N6 - rn2*Xyz2*dN6m1 + drn2dY[i]*Xyz2/N6;
-        dDdY[34][i] = rn2*rn2*X.dXxxdY[i]/N6 - rn2*rn2*Xxx*dN6m1 + 2.0*drn2dY[i]*rn2*Xxx/N6;
-        dDdY[35][i] = 2.0*rn2*Xxy*X.dXxydY[i]/N6 - rn2*Xxy2*dN6m1 + drn2dY[i]*Xxy2/N6;
+        dDdY[33][i] = 2.0*Xyz*X.dXyzdY[i]/N6 - Xyz2*dN6m1;
+        dDdY[34][i] = X.dXxxdY[i]/N6 - Xxx*dN6m1;
+        dDdY[35][i] = 2.0*Xxy*X.dXxydY[i]/N6 - Xxy2*dN6m1;
         dDdY[36][i] = 2.0*Xxy*X.dXxydY[i]*Xzz/N6 + Xxy2*X.dXzzdY[i]/N6 - Xxy2*Xzz*dN6m1;    
-        dDdY[37][i] = -2.0*rn2*Xxz*X.dXxzdY[i]/N6 + rn2*Xxz2*dN6m1 - drn2dY[i]*Xxz2/N6;
+        dDdY[37][i] = -2.0*Xxz*X.dXxzdY[i]/N6 + Xxz2*dN6m1;
         dDdY[38][i] = -X.dXyydY[i]*Xxz2/N6 - 2.0*Xyy*Xxz*X.dXxzdY[i]/N6 + Xyy*Xxz2*dN6m1;
-        dDdY[39][i] = rn2*rn2*X.dXyydY[i]/N6 - rn2*rn2*Xyy*dN6m1 + 2.0*drn2dY[i]*rn2*Xyy/N6;
-        dDdY[40][i] = rn2*rn2*X.dXzzdY[i]/N6 - rn2*rn2*Xzz*dN6m1 + 2.0*drn2dY[i]*rn2*Xzz/N6;
+        dDdY[39][i] = X.dXyydY[i]/N6 - Xyy*dN6m1;
+        dDdY[40][i] = X.dXzzdY[i]/N6 - Xzz*dN6m1;
         dDdY[41][i] = X.dXxxdY[i]*Xyy*Xzz/N6 + Xxx*X.dXyydY[i]*Xzz/N6 + Xxx*Xyy*X.dXzzdY[i]/N6 - Xxx*Xyy*Xzz*dN6m1;
         dDdY[42][i] = 2.0*X.dXxydY[i]*Xyz*Xxz/N6 + 2.0*Xxy*X.dXyzdY[i]*Xxz/N6 + 2.0*Xxy*Xyz*X.dXxzdY[i]/N6 - 2.0*Xxy*Xyz*Xxz*dN6m1;
     }
@@ -1035,11 +1024,11 @@ int flag;
         Ydot[5] = 0.0; 
         Ydot[6] = 0.0; 
     } else {/* vacuum case */
-        Ydot[0] = -creal(dN2dY[3] - drn2dY[3])/creal(dN2dY[6] - drn2dY[6]); 
-        Ydot[1] = -creal(dN2dY[4] - drn2dY[4])/creal(dN2dY[6] - drn2dY[6]); 
-        Ydot[2] = -creal(dN2dY[5] - drn2dY[5])/creal(dN2dY[6] - drn2dY[6]); 
-        Ydot[3] = creal(dN2dY[0] - drn2dY[0])/creal(dN2dY[6] - drn2dY[6]); 
-        Ydot[4] = creal(dN2dY[1] - drn2dY[1])/creal(dN2dY[6] - drn2dY[6]);
+        Ydot[0] = -creal(dN2dY[3])/creal(dN2dY[6]); 
+        Ydot[1] = -creal(dN2dY[4])/creal(dN2dY[6]); 
+        Ydot[2] = -creal(dN2dY[5])/creal(dN2dY[6]); 
+        Ydot[3] = creal(dN2dY[0])/creal(dN2dY[6]); 
+        Ydot[4] = creal(dN2dY[1])/creal(dN2dY[6]);
         Ydot[5] = 0.0; 
         Ydot[6] = 0.0; 
     }
@@ -1052,8 +1041,8 @@ int flag;
     double complex Dot_cold,dDtot_colddY[MC];
     double Ydot_cold[MC];
 
-    Kpar = (rn2 + Xzz)/N2;
-    Kperp = (rn2 + Xxx)/N2;
+    Kpar = (1 + Xzz)/N2;
+    Kperp = (1 + Xxx)/N2;
     Kxy = I*Xxy/N2;
 
     P0 = Kpar*((Npar2/N2 - Kperp)*(Npar2/N2 - Kperp) - Kxy*Kxy);
@@ -1064,8 +1053,8 @@ int flag;
     mexPrintf("Dtot_cold:%g,%g\n",Dot_cold);
 
     for (i=0;i<MC;i++) {
-        dKpardY[i] = drn2dY[i]/N2 + X.dXzzdY[i]/N2 - (rn2+Xzz)*dN2dY[i]/N2/N2;
-        dKperpdY[i] = drn2dY[i]/N2 + X.dXxxdY[i]/N2 - (rn2+Xxx)*dN2dY[i]/N2/N2;
+        dKpardY[i] = X.dXzzdY[i]/N2 - (1+Xzz)*dN2dY[i]/N2/N2;
+        dKperpdY[i] = X.dXxxdY[i]/N2 - (1+Xxx)*dN2dY[i]/N2/N2;
         dKxydY[i] = I*X.dXxydY[i]/N2 - I*Xxy*dN2dY[i]/N2/N2;  
         dP0dY[i] = dKpardY[i]*((Npar2/N2 - Kperp)*(Npar2/N2 - Kperp) - Kxy*Kxy) + Kpar*(2*(Npar2/N2 - Kperp)*(2*Npar1*dNpardY[i]/N2 - Npar2*dN2dY[i]/N2/N2 - dKperpdY[i]) - 2*Kxy*dKxydY[i]);  
         dP2dY[i] = (2*Npar1*dNpardY[i]/N2 - Npar2*dN2dY[i]/N2/N2 - dKperpdY[i])*(Kpar + Kperp) + (Npar2/N2 - Kperp)*(dKpardY[i] + dKperpdY[i]) + 2*Kxy*dKxydY[i];
@@ -1084,7 +1073,7 @@ int flag;
 
 
     /* 
-    mexPrintf("dN2dY[1],drn2dY[1]:%g,%g\n",dN2dY[1],drn2dY[1]);
+    mexPrintf("dN2dY[1]:%g\n",dN2dY[1]);
     mexPrintf("dDtotdY:%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n",dDtotdY[0],dDtotdY[1],dDtotdY[2],dDtotdY[3],dDtotdY[4],dDtotdY[5],dDtotdY[6],dDtotdY[7]);
     mexPrintf("dDtot_colddY:%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n",dDtot_colddY[0],dDtot_colddY[1],dDtot_colddY[2],dDtot_colddY[3],dDtot_colddY[4],dDtot_colddY[5],dDtot_colddY[6]);
     mexPrintf("Ydot:%g,%g,%g,%g,%g,%g,%g,%g\n",Ydot[0],Ydot[1],Ydot[2],Ydot[3],Ydot[4],Ydot[5],Ydot[6],Ydot[7]);
@@ -1213,10 +1202,10 @@ pp_1D_format dxstardpsin_fit;
         krho2[0] = krho2m;
     }
 
-    if (sgn(krho2p)*sgn(krho2m) >= 0) {	
-/*	mexPrintf("delta,krho1,krho2p,krho2m:%g,%g,%g,%g\n",delta,krho1,krho2p,krho2m);	*/
+    if (sgn(krho2p)*sgn(krho2m) >= 0) { 
+/*  mexPrintf("delta,krho1,krho2p,krho2m:%g,%g,%g,%g\n",delta,krho1,krho2p,krho2m); */
         mexPrintf("WARNING: Problem for the wave reflection at the plasma edge. Try to modify dt0 or PSHRINK is raytracing_yp.c !\n");
-	return(-1);
+    return(-1);
     }
 
 /* Memory is released  */
@@ -1527,8 +1516,6 @@ double complex Nperp,N2;
 
     double complex D[43],N6;
     
-    double rn2;
-
     int i;
 
     Nperp1 = Nperp;
@@ -1555,8 +1542,6 @@ double complex Nperp,N2;
     Xyz2 = X.Xyz[0]*X.Xyz[0];
     Xzz2 = X.Xzz[0]*X.Xzz[0];
     
-    rn2 = raymagnetic.rn[0]*raymagnetic.rn[0];
-
 /*
     mexPrintf("Nperp4r,Nperp4i:%g,%g\n",creal(Nperp4),cimag(Nperp4));
     mexPrintf("Npar:%g\n",Npar1);
@@ -1569,50 +1554,51 @@ double complex Nperp,N2;
     mexPrintf("Xzzr,XXzzi:%g,%g\n",creal(Xzz),cimag(Xzz));
 
     double complex Dtot1;
-    Dtot1 = (Xxx+rn2)*Nperp4/N6+2*Npar1*Xxz*Nperp3/N6-(-2*rn2*Npar2+Xyy*rn2-Npar2*Xzz+Xxy2+rn2*Xzz-Xxz2+Xxx*Xzz+Xxx*Xyy+2*rn2*rn2+2*Xxx*rn2-Xxx*Npar2)*Nperp2/N6-(2*Npar1*rn2*Xxz+2*Npar1*Xyy*Xxz-2*Xxy*Xyz*Npar-2*Npar3*Xxz)*Nperp1/N6-(-rn2*rn2*rn2-Xxx*Xyz2-Xxy2*Xzz+Xyy*Xxz2-2*Xxy*Xyz*Xxz-Xxx*Xyy*Xzz-rn2*rn2*Xzz+2*rn2*rn2*Npar2-rn2*rn2*Xyy-rn2*Xyz2-Npar4*rn2-Xxx*rn2*rn2-Xxy2*rn2+rn2*Xxz2+2*rn2*Npar2*Xzz-rn2*Xyy*Xzz+Npar2*Xyy*rn2-Xxx*rn2*Xzz+Xxx*rn2*Npar2-Xxx*Xyy*rn2-Npar4*Xzz+Npar2*Xyz2-Npar2*Xxz2+Npar2*Xyy*Xzz+Xxx*Npar2*Xzz)/N6;   
-    mexPrintf("Dtot1:%g\n",Dtot1);*/
+    Dtot1 = (Xxx+1)*Nperp4/N6+2*Npar1*Xxz*Nperp3/N6-(-2*Npar2+Xyy-Npar2*Xzz+Xxy2+Xzz-Xxz2+Xxx*Xzz+Xxx*Xyy+2+2*Xxx-Xxx*Npar2)*Nperp2/N6-(2*Npar1*Xxz+2*Npar1*Xyy*Xxz-2*Xxy*Xyz*Npar-2*Npar3*Xxz)*Nperp1/N6-(-1-Xxx*Xyz2-Xxy2*Xzz+Xyy*Xxz2-2*Xxy*Xyz*Xxz-Xxx*Xyy*Xzz-Xzz+2*Npar2-Xyy-Xyz2-Npar4-Xxx-Xxy2+Xxz2+2*Npar2*Xzz-Xyy*Xzz+Npar2*Xyy-Xxx*Xzz+Xxx*Npar2-Xxx*Xyy-Npar4*Xzz+Npar2*Xyz2-Npar2*Xxz2+Npar2*Xyy*Xzz+Xxx*Npar2*Xzz)/N6;   
+    mexPrintf("Dtot1:%g\n",Dtot1);
+*/
 
-    D[0] = rn2*Nperp4/N6;
+    D[0] = Nperp4/N6;
     D[1] = Xxx*Nperp4/N6;
     D[2] = 2.0*Npar1*Xxz*Nperp3/N6;
     D[3] = Npar2*Xxx*Nperp2/N6;
     D[4] = Npar2*Xzz*Nperp2/N6;
-    D[5] = 2.0*rn2*Npar2*Nperp2/N6;
-    D[6] = -2.0*rn2*Xxx*Nperp2/N6;
-    D[7] = -Xyy*rn2*Nperp2/N6;
-    D[8] = -rn2*Xzz*Nperp2/N6;
+    D[5] = 2.0*Npar2*Nperp2/N6;
+    D[6] = -2.0*Xxx*Nperp2/N6;
+    D[7] = -Xyy*Nperp2/N6;
+    D[8] = -Xzz*Nperp2/N6;
     D[9] = -Xxx*Xzz*Nperp2/N6;
     D[10] = Xxz2*Nperp2/N6;
     D[11] = -Xxx*Xyy*Nperp2/N6;
     D[12] = -Xxy2*Nperp2/N6;
-    D[13] = -2.0*rn2*rn2*Nperp2/N6;    
+    D[13] = -2.0*Nperp2/N6;    
     D[14] = -2.0*Npar1*Xyy*Xxz*Nperp1/N6;
     D[15] = 2.0*Npar1*Xxy*Xyz*Nperp1/N6;
-    D[16] = -2.0*rn2*Npar1*Xxz*Nperp1/N6;
+    D[16] = -2.0*Npar1*Xxz*Nperp1/N6;
     D[17] = 2.0*Npar3*Xxz*Nperp1/N6;
-    D[18] = rn2*rn2*rn2/N6;
+    D[18] = 1/N6;
     D[19] = Npar4*Xzz/N6;
-    D[20] = rn2*Npar4/N6;
+    D[20] = Npar4/N6;
     D[21] = Npar2*Xxz2/N6;
     D[22] = -Npar2*Xyy*Xzz/N6;
     D[23] = -Npar2*Xxx*Xzz/N6;
-    D[24] = -2.0*rn2*Npar2*Xzz/N6;
-    D[25] = -rn2*Npar2*Xyy/N6;
+    D[24] = -2.0*Npar2*Xzz/N6;
+    D[25] = -Npar2*Xyy/N6;
     D[26] = -Npar2*Xyz2/N6;
-    D[27] = -rn2*Npar2*Xxx/N6;
-    D[28] = -2.0*rn2*rn2*Npar2/N6;
-    D[29] = rn2*Xyy*Xzz/N6;
-    D[30] = rn2*Xxx*Xzz/N6;
-    D[31] = rn2*Xxx*Xyy/N6;
+    D[27] = -Npar2*Xxx/N6;
+    D[28] = -2.0*Npar2/N6;
+    D[29] = Xyy*Xzz/N6;
+    D[30] = Xxx*Xzz/N6;
+    D[31] = Xxx*Xyy/N6;
     D[32] = Xxx*Xyz2/N6;
-    D[33] = rn2*Xyz2/N6;
-    D[34] = rn2*rn2*Xxx/N6;
-    D[35] = rn2*Xxy2/N6;
+    D[33] = Xyz2/N6;
+    D[34] = Xxx/N6;
+    D[35] = Xxy2/N6;
     D[36] = Xxy2*Xzz/N6;
-    D[37] = -rn2*Xxz2/N6;
+    D[37] = -Xxz2/N6;
     D[38] = -Xyy*Xxz2/N6;
-    D[39] = rn2*rn2*Xyy/N6;
-    D[40] = rn2*rn2*Xzz/N6;
+    D[39] = Xyy/N6;
+    D[40] = Xzz/N6;
     D[41] = Xxx*Xyy*Xzz/N6;
     D[42] = 2.0*Xxy*Xyz*Xxz/N6;
 
@@ -1625,7 +1611,7 @@ double complex Nperp,N2;
         Dtot[0] = Dtot[0] + D[i];
     }
 
-    mexPrintf("Dtot:%g\n",Dtot[0]);
+/*    mexPrintf("Dtot:%g\n",Dtot[0]);*/
 
 }
 
@@ -1703,18 +1689,18 @@ equilparam_format equilparam;
 /*        mexPrintf("Warm dielectric tensor\n");
             warmtensor(X,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY); */
         }
-	    if (tensortype == 2) {
+        if (tensortype == 2) {
 /*        mexPrintf("Hot dielectric tensor\n");*/
             hottensor(X,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY); 
         }
         if (tensortype == 3) {
         mexPrintf("Weak relativistic dielectric tensor\n");
             weakrelativistictensor(X,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY);
-	    }		
+        }       
         if (tensortype == 4) {
 /*        mexPrintf("Full relativistic dielectric tensor\n");
             fullrelativistictensor(X,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY); */
-	    }		
+        }       
         
     } else {
         vacuumtensor(X);
@@ -1734,13 +1720,13 @@ equilparam_format equilparam;
 { 
     double dYdY[MC][MC];
 
-    double Npar1,dNpar1dY,dNpar1dY1,dNpar1dY2,dNpar1dY3,dNpar1dY4;
-    double Npar2,dNpar2dY,dNpar2dY1,dNpar2dY2,dNpar2dY3,dNpar2dY4,dNpar2dY5;
+    double Npar1,dNpar1dY,dNpar1dY1,dNpar1dY2,dNpar1dY3,dNpar1dY4,dNpar1dY5;
+    double Npar2,dNpar2dY,dNpar2dY1,dNpar2dY2,dNpar2dY3,dNpar2dY4;
       
-    double complex N21,dN21dY,dN21dY1,dN21dY2,dN21dY3,dN21dY4;
+    double complex N21,dN21dY,dN21dY1,dN21dY2,dN21dY3;
     double complex N22,dN22dY,dN22dY1,dN22dY2,dN22dY3,dN22dY4,dN22dY5,dN22dY6;
-    double complex N23,dN23dY,dN23dY1,dN23dY2;
-    double complex N24,dN24dY,dN24dY1,dN24dY2,dN24dY3,dN24dY4;
+    double complex N23,dN23dY,dN23dY1,dN23dY2,dN23dY3;
+    double complex N24,dN24dY,dN24dY1,dN24dY2,dN24dY3;
     
     double ap,cnorm;
     double clum = 299792458;/*Speed of light (m/s) */
@@ -1773,33 +1759,33 @@ equilparam_format equilparam;
     
     if (mode == 1) { 
         
-        Npar1 = Y[4]*raymagnetic.calpha[0]*raymagnetic.Bsn[0];
-        Npar2 = raymagnetic.rn[0]*Y[5]*raymagnetic.BPHIn[0]/raymagnetic.Rn[0];
+        Npar1 = Y[4]*raymagnetic.calpha[0]*raymagnetic.Bsn[0]/raymagnetic.rn[0];
+        Npar2 = Y[5]*raymagnetic.BPHIn[0]/raymagnetic.Rn[0];
   
         Npar[0] = cnorm*(Npar1 + Npar2);
         
 /*
-          mexPrintf("Nparth:%g\n",Npar[0]/raymagnetic.rn[0]);
+          mexPrintf("Nparth:%g\n",Npar[0]);
           mexPrintf("Y[0],Y[1],Y[2],Y[3],Y[4],Y[5]:%g,%g,%g,%g,%g,%g\n",Y[0],Y[1],Y[2],Y[3],Y[4],Y[5]);
           mexPrintf("Y[4],raymagnetic.calpha[0],raymagnetic.Bsn[0],raymagnetic.rn[0],Y[5],raymagnetic.BPHIn[0],raymagnetic.Rn[0]:%g,%g,%g,%g,%g,%g,%g\n",Y[4],raymagnetic.calpha[0],raymagnetic.Bsn[0],raymagnetic.rn[0],Y[5],raymagnetic.BPHIn[0],raymagnetic.Rn[0]);
 */
-	
+    
         for (i=0;i<MC;i++) {
     
-            dNpar1dY1 = dYdY[4][i]*raymagnetic.calpha[0]*raymagnetic.Bsn[0];
-            dNpar1dY2 = Y[4]*raymagnetic.dcalphadY[i]*raymagnetic.Bsn[0];
-            dNpar1dY3 = Y[4]*raymagnetic.calpha[0]*raymagnetic.dBsndY[i];
-            dNpar1dY4 = -Y[4]*raymagnetic.calpha[0]*raymagnetic.Bsn[0]*dYdY[6][i];
+            dNpar1dY1 = dYdY[4][i]*raymagnetic.calpha[0]*raymagnetic.Bsn[0]/raymagnetic.rn[0];
+            dNpar1dY2 = Y[4]*raymagnetic.dcalphadY[i]*raymagnetic.Bsn[0]/raymagnetic.rn[0];
+            dNpar1dY3 = Y[4]*raymagnetic.calpha[0]*raymagnetic.dBsndY[i]/raymagnetic.rn[0];
+            dNpar1dY4 = -Y[4]*raymagnetic.calpha[0]*raymagnetic.Bsn[0]*dYdY[6][i]/raymagnetic.rn[0];
+            dNpar1dY5 = -Y[4]*raymagnetic.calpha[0]*raymagnetic.Bsn[0]*raymagnetic.drndY[i]/raymagnetic.rn[0]/raymagnetic.rn[0];
         
-            dNpar1dY = dNpar1dY1 + dNpar1dY2 + dNpar1dY3 + dNpar1dY4;
+            dNpar1dY = dNpar1dY1 + dNpar1dY2 + dNpar1dY3 + dNpar1dY4 + dNpar1dY5;
  
-            dNpar2dY1 = raymagnetic.rn[0]*dYdY[5][i]*raymagnetic.BPHIn[0]/raymagnetic.Rn[0];
-            dNpar2dY2 = raymagnetic.drndY[i]*Y[5]*raymagnetic.BPHIn[0]/raymagnetic.Rn[0];
-            dNpar2dY3 = raymagnetic.rn[0]*Y[5]*raymagnetic.dBPHIndY[i]/raymagnetic.Rn[0];
-            dNpar2dY4 = -raymagnetic.rn[0]*Y[5]*raymagnetic.BPHIn[0]*raymagnetic.dRndY[i]/raymagnetic.Rn[0]/raymagnetic.Rn[0];
-            dNpar2dY5 = -raymagnetic.rn[0]*Y[5]*raymagnetic.BPHIn[0]*dYdY[6][i]/raymagnetic.Rn[0];
+            dNpar2dY1 = dYdY[5][i]*raymagnetic.BPHIn[0]/raymagnetic.Rn[0];
+            dNpar2dY2 = Y[5]*raymagnetic.dBPHIndY[i]/raymagnetic.Rn[0];
+            dNpar2dY3 = -Y[5]*raymagnetic.BPHIn[0]*raymagnetic.dRndY[i]/raymagnetic.Rn[0]/raymagnetic.Rn[0];
+            dNpar2dY4 = -Y[5]*raymagnetic.BPHIn[0]*dYdY[6][i]/raymagnetic.Rn[0];
     
-            dNpar2dY = dNpar2dY1 + dNpar2dY2 + dNpar2dY3 + dNpar2dY4 + dNpar2dY5;
+            dNpar2dY = dNpar2dY1 + dNpar2dY2 + dNpar2dY3 + dNpar2dY4;
         
             dNpardY[i] = cnorm*(dNpar1dY + dNpar2dY);
              
@@ -1807,45 +1793,44 @@ equilparam_format equilparam;
           /*  mexPrintf("i,dYdY[3][i],dYdY[4][i],dYdY[5][i]:%d,%g,%g,%g\n",i,dYdY[3][i],dYdY[4][i],dYdY[4][i]); */
         }
     
-        N21 = raymagnetic.rn[0]*raymagnetic.rn[0]*raymagnetic.gradrhon[0]*raymagnetic.gradrhon[0]*Y[3]*Y[3];
-        N22 = -2.0*raymagnetic.rn[0]*raymagnetic.gradrhon[0]*raymagnetic.salpha[0]*Y[4]*Y[3];
-        N23 = Y[4]*Y[4];
-        N24 = Y[5]*Y[5]*raymagnetic.rn[0]*raymagnetic.rn[0]/raymagnetic.Rn[0]/raymagnetic.Rn[0];
+        N21 = raymagnetic.gradrhon[0]*raymagnetic.gradrhon[0]*Y[3]*Y[3];
+        N22 = -2.0*raymagnetic.gradrhon[0]*raymagnetic.salpha[0]*Y[4]*Y[3]/raymagnetic.rn[0];
+        N23 = Y[4]*Y[4]/raymagnetic.rn[0]/raymagnetic.rn[0];
+        N24 = Y[5]*Y[5]/raymagnetic.Rn[0]/raymagnetic.Rn[0];
     
         N2[0] = cnorm*cnorm*(N21 + N22 + N23 + N24);
         Nperp[0] = sqrt(N2[0] - Npar[0]*Npar[0]);
         
-/*        mexPrintf("Npar,Nperp,N2:%g,%g,%g,%g,%g\n",Npar[0]/raymagnetic.rn[0],Nperp[0]/raymagnetic.rn[0],N2[0]/raymagnetic.rn[0]/raymagnetic.rn[0]); */
-	    
+/*        mexPrintf("Npar,Nperp,N2:%g,%g,%g,%g,%g\n",Npar[0],Nperp[0],N2[0]); */
+        
         for (i=0;i<MC;i++) {
         
-            dN21dY1 = 2.0*raymagnetic.rn[0]*raymagnetic.rn[0]*raymagnetic.gradrhon[0]*raymagnetic.dgradrhondY[i]*Y[3]*Y[3];
-            dN21dY2 = 2.0*raymagnetic.rn[0]*raymagnetic.rn[0]*raymagnetic.gradrhon[0]*raymagnetic.gradrhon[0]*dYdY[3][i]*Y[3];
-            dN21dY3 = 2.0*raymagnetic.drndY[i]*raymagnetic.rn[0]*raymagnetic.gradrhon[0]*raymagnetic.gradrhon[0]*Y[3]*Y[3];
-            dN21dY4 = -2.0*raymagnetic.rn[0]*raymagnetic.rn[0]*raymagnetic.gradrhon[0]*raymagnetic.gradrhon[0]*Y[3]*Y[3]*dYdY[6][i];
+            dN21dY1 = 2.0*raymagnetic.gradrhon[0]*raymagnetic.dgradrhondY[i]*Y[3]*Y[3];
+            dN21dY2 = 2.0*raymagnetic.gradrhon[0]*raymagnetic.gradrhon[0]*dYdY[3][i]*Y[3];
+            dN21dY3 = -2.0*raymagnetic.gradrhon[0]*raymagnetic.gradrhon[0]*Y[3]*Y[3]*dYdY[6][i];
         
-            dN21dY = dN21dY1 + dN21dY2 + dN21dY3 + dN21dY4;
+            dN21dY = dN21dY1 + dN21dY2 + dN21dY3;
         
-            dN22dY1 = -2.0*raymagnetic.rn[0]*raymagnetic.dgradrhondY[i]*raymagnetic.salpha[0]*Y[4]*Y[3];
-            dN22dY2 = -2.0*raymagnetic.rn[0]*raymagnetic.gradrhon[0]*raymagnetic.dsalphadY[i]*Y[4]*Y[3];
-            dN22dY3 = -2.0*raymagnetic.rn[0]*raymagnetic.gradrhon[0]*raymagnetic.salpha[0]*dYdY[4][i]*Y[3];
-            dN22dY4 = -2.0*raymagnetic.rn[0]*raymagnetic.gradrhon[0]*raymagnetic.salpha[0]*Y[4]*dYdY[3][i];
-            dN22dY5 = -2.0*raymagnetic.drndY[i]*raymagnetic.gradrhon[0]*raymagnetic.salpha[0]*Y[4]*Y[3];
-            dN22dY6 = 4.0*raymagnetic.rn[0]*raymagnetic.gradrhon[0]*raymagnetic.salpha[0]*Y[4]*Y[3]*dYdY[6][i];
+            dN22dY1 = -2.0*raymagnetic.dgradrhondY[i]*raymagnetic.salpha[0]*Y[4]*Y[3]/raymagnetic.rn[0];
+            dN22dY2 = -2.0*raymagnetic.gradrhon[0]*raymagnetic.dsalphadY[i]*Y[4]*Y[3]/raymagnetic.rn[0];
+            dN22dY3 = -2.0*raymagnetic.gradrhon[0]*raymagnetic.salpha[0]*dYdY[4][i]*Y[3]/raymagnetic.rn[0];
+            dN22dY4 = -2.0*raymagnetic.gradrhon[0]*raymagnetic.salpha[0]*Y[4]*dYdY[3][i]/raymagnetic.rn[0];
+            dN22dY5 = 2.0*raymagnetic.drndY[i]*raymagnetic.gradrhon[0]*raymagnetic.salpha[0]*Y[4]*Y[3]/raymagnetic.rn[0]/raymagnetic.rn[0];
+            dN22dY6 = 4.0*raymagnetic.gradrhon[0]*raymagnetic.salpha[0]*Y[4]*Y[3]*dYdY[6][i]/raymagnetic.rn[0];
         
             dN22dY = dN22dY1 + dN22dY2 + dN22dY3 + dN22dY4 + dN22dY5 + dN22dY6;
      
-            dN23dY1 = 2.0*dYdY[4][i]*Y[4];
-            dN23dY2 = -2.0*Y[4]*Y[4]*dYdY[6][i];
+            dN23dY1 = 2.0*dYdY[4][i]*Y[4]/raymagnetic.rn[0]/raymagnetic.rn[0];
+            dN23dY2 = -2.0*Y[4]*Y[4]*dYdY[6][i]/raymagnetic.rn[0]/raymagnetic.rn[0];
+            dN23dY3 = -2.0*raymagnetic.drndY[i]*Y[4]*Y[4]/raymagnetic.rn[0]/raymagnetic.rn[0]/raymagnetic.rn[0];
         
-            dN23dY = dN23dY1 + dN23dY2;
+            dN23dY = dN23dY1 + dN23dY2 + dN23dY3;
     
-            dN24dY1 = 2.0*dYdY[5][i]*Y[5]*raymagnetic.rn[0]*raymagnetic.rn[0]/raymagnetic.Rn[0]/raymagnetic.Rn[0];
-            dN24dY2 = -2.0*Y[5]*Y[5]*raymagnetic.rn[0]*raymagnetic.rn[0]*raymagnetic.dRndY[i]/raymagnetic.Rn[0]/raymagnetic.Rn[0]/raymagnetic.Rn[0];
-            dN24dY4 = 2.0*Y[5]*Y[5]*raymagnetic.drndY[i]*raymagnetic.rn[0]/raymagnetic.Rn[0]/raymagnetic.Rn[0];
-            dN24dY3 = -2.0*Y[5]*Y[5]*raymagnetic.rn[0]*raymagnetic.rn[0]/raymagnetic.Rn[0]/raymagnetic.Rn[0]*dYdY[6][i];
+            dN24dY1 = 2.0*dYdY[5][i]*Y[5]/raymagnetic.Rn[0]/raymagnetic.Rn[0];
+            dN24dY2 = -2.0*Y[5]*Y[5]*raymagnetic.dRndY[i]/raymagnetic.Rn[0]/raymagnetic.Rn[0]/raymagnetic.Rn[0];
+            dN24dY3 = -2.0*Y[5]*Y[5]/raymagnetic.Rn[0]/raymagnetic.Rn[0]*dYdY[6][i];
         
-            dN24dY = dN24dY1 + dN24dY2 + dN24dY3 + dN24dY4;
+            dN24dY = dN24dY1 + dN24dY2 + dN24dY3;
         
             dN2dY[i] = cnorm*cnorm*(dN21dY + dN22dY + dN23dY + dN24dY);
 
@@ -1872,10 +1857,9 @@ equilparam_format equilparam;
 
 
 
-void buildXstruc(X,ns,raymagnetic,dNpardY,dNperpdY,dwcndY,dwpn2dY,dbetathdY,Xxx,Xxy,Xxz,Xyy,Xyz,Xzz,dXxxdNperp,dXxydNperp,dXxzdNperp,dXyydNperp,dXyzdNperp,dXzzdNperp,dXxxdNpar,dXxydNpar,dXxzdNpar,dXyydNpar,dXyzdNpar,dXzzdNpar,dXxxdbetath,dXxydbetath,dXxzdbetath,dXyydbetath,dXyzdbetath,dXzzdbetath,dXxxdwcn,dXxydwcn,dXxzdwcn,dXyydwcn,dXyzdwcn,dXzzdwcn,dXxxdwpn2,dXxydwpn2,dXxzdwpn2,dXyydwpn2,dXyzdwpn2,dXzzdwpn2)
+void buildXstruc(X,ns,dNpardY,dNperpdY,dwcndY,dwpn2dY,dbetathdY,Xxx,Xxy,Xxz,Xyy,Xyz,Xzz,dXxxdNperp,dXxydNperp,dXxzdNperp,dXyydNperp,dXyzdNperp,dXzzdNperp,dXxxdNpar,dXxydNpar,dXxzdNpar,dXyydNpar,dXyzdNpar,dXzzdNpar,dXxxdbetath,dXxydbetath,dXxzdbetath,dXyydbetath,dXyzdbetath,dXzzdbetath,dXxxdwcn,dXxydwcn,dXxzdwcn,dXyydwcn,dXyzdwcn,dXzzdwcn,dXxxdwpn2,dXxydwpn2,dXxzdwpn2,dXyydwpn2,dXyzdwpn2,dXzzdwpn2)
 susceptibilitytensor_format X;
 int ns;
-raymagnetic_format raymagnetic;
 double dwcndY[][MC],dwpn2dY[][MC],dbetathdY[][MC],dNpardY[];
 double complex dNperpdY[];
 double complex Xxx[],Xxy[],Xxz[],Xyy[],Xyz[],Xzz[];
@@ -1885,41 +1869,24 @@ double complex dXxxdbetath[],dXxydbetath[],dXxzdbetath[],dXyydbetath[],dXyzdbeta
 double complex dXxxdwcn[],dXxydwcn[],dXxzdwcn[],dXyydwcn[],dXyzdwcn[],dXzzdwcn[];
 double complex dXxxdwpn2[],dXxydwpn2[],dXxzdwpn2[],dXyydwpn2[],dXyzdwpn2[],dXzzdwpn2[];
 {
-    double complex dXxxdrn2[ns+1],dXxydrn2[ns+1],dXxzdrn2[ns+1],dXyydrn2[ns+1],dXyzdrn2[ns+1],dXzzdrn2[ns+1];
-    double rn2,drn2dY[MC];
     
     int i,is;
-
-    rn2 = raymagnetic.rn[0]*raymagnetic.rn[0];
-    for (i = 0;i < MC; i++) {
-        drn2dY[i] = 2.0*raymagnetic.drndY[i]*raymagnetic.rn[0];
-    }
     
-    X.Xxx[0] = rn2*Xxx[0];
-    X.Xxy[0] = rn2*Xxy[0];
-    X.Xxz[0] = rn2*Xxz[0];
-    X.Xyy[0] = rn2*Xyy[0];
-    X.Xyz[0] = rn2*Xyz[0];
-    X.Xzz[0] = rn2*Xzz[0];
+    X.Xxx[0] = Xxx[0];
+    X.Xxy[0] = Xxy[0];
+    X.Xxz[0] = Xxz[0];
+    X.Xyy[0] = Xyy[0];
+    X.Xyz[0] = Xyz[0];
+    X.Xzz[0] = Xzz[0];
 
-    for (is = 1;is < ns + 1;is++) {/* dielectric tensor multiplied by rn2 */
-        X.Xxx[0] = X.Xxx[0] + rn2*Xxx[is];
-        X.Xxy[0] = X.Xxy[0] + rn2*Xxy[is];
-        X.Xxz[0] = X.Xxz[0] + rn2*Xxz[is];
-        X.Xyy[0] = X.Xyy[0] + rn2*Xyy[is];
-        X.Xyz[0] = X.Xyz[0] + rn2*Xyz[is];
-        X.Xzz[0] = X.Xzz[0] + rn2*Xzz[is];           
+    for (is = 1;is < ns + 1;is++) {
+        X.Xxx[0] = X.Xxx[0] + Xxx[is];
+        X.Xxy[0] = X.Xxy[0] + Xxy[is];
+        X.Xxz[0] = X.Xxz[0] + Xxz[is];
+        X.Xyy[0] = X.Xyy[0] + Xyy[is];
+        X.Xyz[0] = X.Xyz[0] + Xyz[is];
+        X.Xzz[0] = X.Xzz[0] + Xzz[is];           
     }
-
-    for (is = 0;is < ns + 1; is++) {/* derivatives of the dielectric tensor to rn2 */
-        dXxxdrn2[is] = Xxx[is];
-        dXxydrn2[is] = Xxy[is];
-        dXxzdrn2[is] = Xxz[is];
-        dXyydrn2[is] = Xyy[is];
-        dXyzdrn2[is] = Xyz[is];
-        dXzzdrn2[is] = Xzz[is];
-    }
-
 
     for (i = 0;i < MC;i++) {/* Initialisation */
          X.dXxxdY[i] = 0.0;
@@ -1933,12 +1900,12 @@ double complex dXxxdwpn2[],dXxydwpn2[],dXxzdwpn2[],dXyydwpn2[],dXyzdwpn2[],dXzzd
     
     for (i = 0;i < MC;i++) {
         for (is = 0;is < ns + 1;is++) {
-            X.dXxxdY[i] = X.dXxxdY[i] + dXxxdrn2[is]*drn2dY[i] + rn2*dXxxdNperp[is]*dNperpdY[i] + rn2*dXxxdNpar[is]*dNpardY[i] + rn2*dXxxdbetath[is]*dbetathdY[is][i] + rn2*dXxxdwcn[is]*dwcndY[is][i] + rn2*dXxxdwpn2[is]*dwpn2dY[is][i];
-            X.dXxydY[i] = X.dXxydY[i] + dXxydrn2[is]*drn2dY[i] + rn2*dXxydNperp[is]*dNperpdY[i] + rn2*dXxydNpar[is]*dNpardY[i] + rn2*dXxydbetath[is]*dbetathdY[is][i] + rn2*dXxydwcn[is]*dwcndY[is][i] + rn2*dXxydwpn2[is]*dwpn2dY[is][i];
-            X.dXxzdY[i] = X.dXxzdY[i] + dXxzdrn2[is]*drn2dY[i] + rn2*dXxzdNperp[is]*dNperpdY[i] + rn2*dXxzdNpar[is]*dNpardY[i] + rn2*dXxzdbetath[is]*dbetathdY[is][i] + rn2*dXxzdwcn[is]*dwcndY[is][i] + rn2*dXxzdwpn2[is]*dwpn2dY[is][i];
-            X.dXyydY[i] = X.dXyydY[i] + dXyydrn2[is]*drn2dY[i] + rn2*dXyydNperp[is]*dNperpdY[i] + rn2*dXyydNpar[is]*dNpardY[i] + rn2*dXyydbetath[is]*dbetathdY[is][i] + rn2*dXyydwcn[is]*dwcndY[is][i] + rn2*dXyydwpn2[is]*dwpn2dY[is][i];
-            X.dXyzdY[i] = X.dXyzdY[i] + dXyzdrn2[is]*drn2dY[i] + rn2*dXyzdNperp[is]*dNperpdY[i] + rn2*dXyzdNpar[is]*dNpardY[i] + rn2*dXyzdbetath[is]*dbetathdY[is][i] + rn2*dXyzdwcn[is]*dwcndY[is][i] + rn2*dXyzdwpn2[is]*dwpn2dY[is][i];
-            X.dXzzdY[i] = X.dXzzdY[i] + dXzzdrn2[is]*drn2dY[i] + rn2*dXzzdNperp[is]*dNperpdY[i] + rn2*dXzzdNpar[is]*dNpardY[i] + rn2*dXzzdbetath[is]*dbetathdY[is][i] + rn2*dXzzdwcn[is]*dwcndY[is][i] + rn2*dXzzdwpn2[is]*dwpn2dY[is][i];      
+            X.dXxxdY[i] = X.dXxxdY[i] + dXxxdNperp[is]*dNperpdY[i] + dXxxdNpar[is]*dNpardY[i] + dXxxdbetath[is]*dbetathdY[is][i] + dXxxdwcn[is]*dwcndY[is][i] + dXxxdwpn2[is]*dwpn2dY[is][i];
+            X.dXxydY[i] = X.dXxydY[i] + dXxydNperp[is]*dNperpdY[i] + dXxydNpar[is]*dNpardY[i] + dXxydbetath[is]*dbetathdY[is][i] + dXxydwcn[is]*dwcndY[is][i] + dXxydwpn2[is]*dwpn2dY[is][i];
+            X.dXxzdY[i] = X.dXxzdY[i] + dXxzdNperp[is]*dNperpdY[i] + dXxzdNpar[is]*dNpardY[i] + dXxzdbetath[is]*dbetathdY[is][i] + dXxzdwcn[is]*dwcndY[is][i] + dXxzdwpn2[is]*dwpn2dY[is][i];
+            X.dXyydY[i] = X.dXyydY[i] + dXyydNperp[is]*dNperpdY[i] + dXyydNpar[is]*dNpardY[i] + dXyydbetath[is]*dbetathdY[is][i] + dXyydwcn[is]*dwcndY[is][i] + dXyydwpn2[is]*dwpn2dY[is][i];
+            X.dXyzdY[i] = X.dXyzdY[i] + dXyzdNperp[is]*dNperpdY[i] + dXyzdNpar[is]*dNpardY[i] + dXyzdbetath[is]*dbetathdY[is][i] + dXyzdwcn[is]*dwcndY[is][i] + dXyzdwpn2[is]*dwpn2dY[is][i];
+            X.dXzzdY[i] = X.dXzzdY[i] + dXzzdNperp[is]*dNperpdY[i] + dXzzdNpar[is]*dNpardY[i] + dXzzdbetath[is]*dbetathdY[is][i] + dXzzdwcn[is]*dwcndY[is][i] + dXzzdwpn2[is]*dwpn2dY[is][i];      
         }
     }
     
