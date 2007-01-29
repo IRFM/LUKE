@@ -125,10 +125,10 @@ Zmax = max(max(Z_fit));
 %
 X_ray = R_ray.*cos(phi_ray);
 Y_ray = R_ray.*sin(phi_ray);
-Xmin = Rmin*cos(phi_ray);   
-Ymin = Rmin*sin(phi_ray); 
-Xmax = Rmax*cos(phi_ray);   
-Ymax = Rmax*sin(phi_ray); 
+Xmin_fit = Rmin*cos(phi_fit);   
+Ymin_fit = Rmin*sin(phi_fit); 
+Xmax_fit = Rmax*cos(phi_fit);   
+Ymax_fit = Rmax*sin(phi_fit); 
 Xp_fit = equil_fit.Rp*cos(phi_fit);   
 Yp_fit = equil_fit.Rp*sin(phi_fit); 
 ss = sign(diff(rho_ray));
@@ -167,13 +167,13 @@ if display_mode,
    [ax] = graph1D_jd(X_ray(~pmode_ray),Y_ray(~pmode_ray),0,0,'X(m)','y(m)',['Toroidal ray trajectory',subtitle],NaN,[-Rmax,Rmax],[-Rmax,Rmax],'none','.','b',2);hold on
 %
    if rem(abs(1-Npar_ray(1)^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation.
-      [ax] = graph1D_jd(sqrt(X_vac0_c(1,:).^2+X_vac0_c(2,:).^2)*equil_fit.ap,sqrt(X_vac0_c(1,:).^2+X_vac0_c(2,:).^2)*equil_fit.ap,0,0,'R(m)','Z(m)',['Toroidal ray trajectory',subtitle],NaN,[-Rmax,Rmax],[-Rmax,Rmax],'--','none','r',2);hold on
+      [ax] = graph1D_jd(X_vac0_c(1,:)*equil_fit.ap,X_vac0_c(2,:)*equil_fit.ap,0,0,'X(m)','Y(m)',['Toroidal ray trajectory',subtitle],NaN,[-Rmax,Rmax],[-Rmax,Rmax],'--','none','r',2);hold on
       legend('Ray-tracing','Analytic');
    else
       [ax] = graph1D_jd(X_ray(iabs(1):end),Y_ray(iabs(1):end),0,0,'X(m)','Y(m)',['Toroidal ray trajectory',subtitle],NaN,[-Rmax,Rmax],[-Rmax,Rmax],'-','none','k',2);hold on 
    end
-   [ax] = graph1D_jd(Xmin,Ymin,0,0,'','','',NaN,[-Rmax,Rmax],[-Rmax,Rmax],'-','none','b',1);drawnow
-   [ax] = graph1D_jd(Xmax,Ymax,0,0,'X(m)','Y(m)','',NaN,[-Rmax,Rmax],[-Rmax,Rmax],'-','none','b',1);hold on
+   [ax] = graph1D_jd(Xmin_fit,Ymin_fit,0,0,'','','',NaN,[-Rmax,Rmax],[-Rmax,Rmax],'-','none','b',1);drawnow
+   [ax] = graph1D_jd(Xmax_fit,Ymax_fit,0,0,'X(m)','Y(m)','',NaN,[-Rmax,Rmax],[-Rmax,Rmax],'-','none','b',1);hold on
    [ax] = graph1D_jd(Xp_fit,Yp_fit,0,0,'X(m)','Y(m)',['Toroidal ray trajectory',subtitle],NaN,[-Rmax,Rmax],[-Rmax,Rmax],'--','none','b',1);hold on
 %
    for ii = 1:length(X_ray)-2,
