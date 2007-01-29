@@ -89,11 +89,6 @@ struct polynomial_piecewise_2D {
     mxChar  *orient_dbndrho;
 };
 
-
-
-
-
-
 struct rayprofiles {
     double *Te;
     double *ne;
@@ -104,7 +99,6 @@ struct rayprofiles {
     double **dzTidY;
     double **dznidY;
 };
-
 
 struct rayparam {
     double *testmode;
@@ -129,7 +123,6 @@ struct equilparam {
     double *psia;
 };
 
-
 struct raymagnetic {
     double *rn;
     double *drndY;
@@ -149,8 +142,6 @@ struct raymagnetic {
     double *dgradrhondY;
 };
 
-
-
 struct susceptibilitytensor {
     double complex *Xxx;
     double complex *Xxy;
@@ -165,9 +156,6 @@ struct susceptibilitytensor {
     double complex *dXyzdY;
     double complex *dXzzdY; 
 };
-
-
-
 
 typedef struct polynomial_piecewise_1D pp_1D_format;
 typedef struct polynomial_piecewise_2D pp_2D_format;
@@ -443,7 +431,7 @@ Create and Initialize Return Arguments
 */
 
     t1 = rayparam.t0[0];
-    
+
     rho1 = y0[0];
     theta1 = y0[1];
     phi1 = y0[2];
@@ -451,6 +439,14 @@ Create and Initialize Return Arguments
     m1 = y0[4];
     n1 = y0[5];
     omega1 = y0[6];
+    
+/*
+Solves the dispersion relation internally to remove numerical errors from initial conditions
+
+    mexPrintf("krho1:%g\n",krho1);   
+    dsolve(1,&krho1,y0,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit); 
+    mexPrintf("krho1:%g\n",krho1);         
+*/
     
     rho_step = rho1;
     m_step = m1;
@@ -518,8 +514,8 @@ Compute the slopes
     s0[2] = phi1;
     s0[3] = krho1;
     s0[4] = m1;
-        s0[5] = n1;
-        s0[6] = omega1;
+    s0[5] = n1;
+    s0[6] = omega1;
         
     for  (m = 0; m < MC; m++) {
         y1[m] = s0[m];
@@ -619,9 +615,9 @@ Update the solution only if the error is acceptable
                
             if (rho2 < rayparam.drho[0]) {/* Boundary condition at rho = 0  */     
                 rho2 = rho1;
-        theta2 = theta1 + PI;
+		        theta2 = theta1 + PI;
                 phi2 = phi1;
-        krho2 = -krho1;
+		        krho2 = -krho1;
                 m2 = m1;
                 rho_step = rho2;
                 m_step = m2;
@@ -911,7 +907,7 @@ int flag;
 
     /* Equilibrium interpolation at ray location */
     interpequil(param,raymagnetic,rayprofiles,equilparam,Y,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit);
-    /* interpequil_test(raymagnetic,rayprofiles,equilparam,Y);*/
+    /*  interpequil_test(raymagnetic,rayprofiles,equilparam,Y);*/
 
 
     /* Refractive index calculation */
@@ -1035,7 +1031,7 @@ int flag;
 
 
     /* test for the cold dispersion relation */
-    /*
+/*    
     double complex P0,P2,P4,dP0dY[MC],dP2dY[MC],dP4dY[MC];
     double complex Kpar,Kperp,Kxy,dKpardY[MC],dKperpdY[MC],dKxydY[MC];
     double complex Dot_cold,dDtot_colddY[MC];
@@ -1062,24 +1058,24 @@ int flag;
         dDtot_colddY[i] = dP4dY[i]*Nperp4/N2/N2 + dP2dY[i]*Nperp2/N2 + dP0dY[i] + P4*(4*Nperp3*dNperpdY[i]/N2/N2 - 2*Nperp4*dN2dY[i]/N2/N2/N2) + P2*(2*Nperp*dNperpdY[i]/N2 - Nperp2*dN2dY[i]/N2/N2);
     }
 
-    Ydot_cold[0] = -creal(dDtot_colddY[3])/creal(dDtot_colddY[6]); 
-    Ydot_cold[1] = -creal(dDtot_colddY[4])/creal(dDtot_colddY[6]); 
-    Ydot_cold[2] = -creal(dDtot_colddY[5])/creal(dDtot_colddY[6]); 
-    Ydot_cold[3] = creal(dDtot_colddY[0])/creal(dDtot_colddY[6]); 
-    Ydot_cold[4] = creal(dDtot_colddY[1])/creal(dDtot_colddY[6]);
-    Ydot_cold[5] = 0.0; 
-    Ydot_cold[6] = 0.0; 
-    */
-
-
-    /* 
+    Ydot[0] = -creal(dDtot_colddY[3])/creal(dDtot_colddY[6]); 
+    Ydot[1] = -creal(dDtot_colddY[4])/creal(dDtot_colddY[6]); 
+    Ydot[2] = -creal(dDtot_colddY[5])/creal(dDtot_colddY[6]); 
+    Ydot[3] = creal(dDtot_colddY[0])/creal(dDtot_colddY[6]); 
+    Ydot[4] = creal(dDtot_colddY[1])/creal(dDtot_colddY[6]); 
+    Ydot[5] = 0.0; 
+    Ydot[6] = 0.0; 
+*/
+    
+/*
+    
     mexPrintf("dN2dY[1]:%g\n",dN2dY[1]);
     mexPrintf("dDtotdY:%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n",dDtotdY[0],dDtotdY[1],dDtotdY[2],dDtotdY[3],dDtotdY[4],dDtotdY[5],dDtotdY[6],dDtotdY[7]);
     mexPrintf("dDtot_colddY:%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n",dDtot_colddY[0],dDtot_colddY[1],dDtot_colddY[2],dDtot_colddY[3],dDtot_colddY[4],dDtot_colddY[5],dDtot_colddY[6]);
     mexPrintf("Ydot:%g,%g,%g,%g,%g,%g,%g,%g\n",Ydot[0],Ydot[1],Ydot[2],Ydot[3],Ydot[4],Ydot[5],Ydot[6],Ydot[7]);
     mexPrintf("Ydot_cold:%g,%g,%g,%g,%g,%g,%g\n",Ydot_cold[0],Ydot_cold[1],Ydot_cold[2],Ydot_cold[3],Ydot_cold[4],Ydot_cold[5],Ydot_cold[6]);
-    */
-
+    
+*/
     /* Memory is released  */
     
     mxFree(raymagnetic.rn);
@@ -1266,7 +1262,7 @@ pp_1D_format dxstardpsin_fit;
     frac = 1 - 1e-4;
     fracmax = 2;
     exp = -1.5;
-    tol = 1e-8;
+    tol = 1e-12;
     
     maxit = 50;
 
@@ -1355,7 +1351,7 @@ pp_1D_format dxstardpsin_fit;
 
     /* Equilibrium interpolation at ray location */
     interpequil(param,raymagnetic,rayprofiles,equilparam,Y,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit);
-/*     interpequil_test(raymagnetic,rayprofiles,equilparam,Y);*/
+    /*interpequil_test(raymagnetic,rayprofiles,equilparam,Y);*/
 
     krho0 = Y[3];
     krho1 = frac*krho0;
@@ -1365,7 +1361,7 @@ pp_1D_format dxstardpsin_fit;
         susceptibility(X,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Nperp,dNperpdY,Y[6]);
     }
         
-    disprel(&cD0,X,raymagnetic,Npar,Nperp);
+    disprel(&cD0,X,raymagnetic,Npar,Nperp,N2);
     D0 = creal(cD0);/* to be changed if non-hermitian susceptibility tensors are used */
 /*  mexPrintf("krho0,D0:%g,%g\n",krho0,D0); */
     
@@ -1611,7 +1607,7 @@ double complex Nperp,N2;
         Dtot[0] = Dtot[0] + D[i];
     }
 
-/*    mexPrintf("Dtot:%g\n",Dtot[0]);*/
+    mexPrintf("Dtot:%g\n",Dtot[0]);
 
 }
 
@@ -1853,9 +1849,6 @@ equilparam_format equilparam;
     }
     
 }
-
-
-
 
 void buildXstruc(X,ns,dNpardY,dNperpdY,dwcndY,dwpn2dY,dbetathdY,Xxx,Xxy,Xxz,Xyy,Xyz,Xzz,dXxxdNperp,dXxydNperp,dXxzdNperp,dXyydNperp,dXyzdNperp,dXzzdNperp,dXxxdNpar,dXxydNpar,dXxzdNpar,dXyydNpar,dXyzdNpar,dXzzdNpar,dXxxdbetath,dXxydbetath,dXxzdbetath,dXyydbetath,dXyzdbetath,dXzzdbetath,dXxxdwcn,dXxydwcn,dXxzdwcn,dXyydwcn,dXyzdwcn,dXzzdwcn,dXxxdwpn2,dXxydwpn2,dXxzdwpn2,dXyydwpn2,dXyzdwpn2,dXzzdwpn2)
 susceptibilitytensor_format X;
@@ -2119,46 +2112,46 @@ double Y[];
     double Ti0,Tia,eTi;
     double fi[3];
     
-    double Rp;
+    double Rp,ap,rho,theta,cyl;
     double BPHI0,BP0,dBP0dY1;
-    double ep,cyl;
     double B,dBdrho,dBdtheta;
     double BP,dBPdrho,dBPdtheta;
     double BPHI,dBPHIdrho,dBPHIdtheta;
     double R,dRdrho,dRdtheta;
     double Zeff0,Zeffa,eZeff,pZeff,dpZeffdrho;
     
-    double Ip,BPa,qmin,qmax,eq,q,dqdrho,sigmaIp;
+    double Ip,BPa,sigmaIp;
     
     int is;
    
     if (equilparam.ns[0] > 4) mexErrMsgTxt("Only one high-Z impurity allowed in analytical equilibrium");
 
+    rho = Y[0];
+    theta = Y[1];
+    
     cyl = 1.0;/* cylindrical factor */
     
-    BPHI0 = 3.658;/* Signed toroidal magnetic component (T), see the conventions */
-    Rp = 2.4609*cyl;
-    ep = 0.2588/cyl;
+    Rp = 3.05*cyl;
+    ap = 0.95;
+    BPHI0 = 3.2;/* Signed toroidal magnetic component (T), see the conventions */
+    Ip = 3.5;/* Signed toroidal component of the plasma current (MA), see the conventions */
     
-    Te0 = 4.576;
-    Tea = 1.36e-2;
-    eTe = 6.0;
+    Te0 = 6.0;
+    Tea = 0.1;
+    eTe = 1.5;
     
-    ne0 = 5.696e+19;
-    nea = 2.214e+19;
-    ene = 2.0;
+    ne0 = 5.0e+19;
+    nea = 0.01e+19;
+    ene = 1.0;
     
     Ti0 = Te0;
     Tia = Tea;
     eTi = eTe;
     
-    fi[0] = 0.0;
-    fi[1] = 1.0;
+    fi[0] = 1.0;
+    fi[1] = 0.0;
     fi[2] = 0.0;
     
-    Ip = 1.0;/* sign toroidal component of the plasma current (MA), see the conventions */
-    qmin = 1.3;/* Edge safety factor q */
-    eq = 3.0;/* q=0 flat q profile */
     
     if (equilparam.ns[0] == 3) {
        Zeff0 = 1.0;/* No impurity case, only hydrogen */
@@ -2177,18 +2170,18 @@ double Y[];
        eZeff = 0.0;
     }   
     
-    pZeff = Zeff0 + (Zeffa-Zeff0)*pow(Y[0],eZeff);
-    dpZeffdrho = eZeff*(Zeffa-Zeff0)*pow(Y[0],eZeff-1);
+    pZeff = Zeff0 + (Zeffa-Zeff0)*pow(rho,eZeff);
+    dpZeffdrho = eZeff*(Zeffa-Zeff0)*pow(rho,eZeff-1);
    
-    rayprofiles.Te[0] = Tea + (Te0 - Tea)*pow(1 - Y[0]*Y[0],eTe);
-    rayprofiles.dTedY[0] = -2*Y[0]*eTe*(Te0 - Tea)*pow(1 - Y[0]*Y[0],eTe - 1);  
+    rayprofiles.Te[0] = Tea + (Te0 - Tea)*pow(1 - rho*rho,eTe);
+    rayprofiles.dTedY[0] = -2*rho*eTe*(Te0 - Tea)*pow(1 - rho*rho,eTe - 1);  
     
-    rayprofiles.ne[0] = nea + (ne0 - nea)*pow(1 - Y[0]*Y[0],ene);
-    rayprofiles.dnedY[0] = -2*Y[0]*ene*(ne0 - nea)*pow(1 - Y[0]*Y[0],ene - 1);  
+    rayprofiles.ne[0] = nea + (ne0 - nea)*pow(1 - rho*rho,ene);
+    rayprofiles.dnedY[0] = -2*rho*ene*(ne0 - nea)*pow(1 - rho*rho,ene - 1);  
     
     for (is=0;is<equilparam.ns[0];is++) {
-        rayprofiles.zTi[is] = Tia + (Ti0 - Tia)*pow(1 - Y[0]*Y[0],eTi);
-        rayprofiles.dzTidY[is][0] = -2*Y[0]*eTi*(Ti0 - Tia)*pow(1 - Y[0]*Y[0],eTi - 1);     
+        rayprofiles.zTi[is] = Tia + (Ti0 - Tia)*pow(1 - rho*rho,eTi);
+        rayprofiles.dzTidY[is][0] = -2*rho*eTi*(Ti0 - Tia)*pow(1 - rho*rho,eTi - 1);     
     }
     
     for (is=0;is<3;is++) { /*For a single impurity fully stripped. Only the first is selected after the isotope of hydrogen */
@@ -2201,31 +2194,29 @@ double Y[];
         rayprofiles.dznidY[is][0] = (rayprofiles.dnedY[0]*(pZeff - 1.0) + rayprofiles.ne[0]*dpZeffdrho)/(equilparam.zZi[3]-1)/equilparam.zZi[3];         
     }
 
-    raymagnetic.rn[0] = Y[0];
-    raymagnetic.drndY[0] = 1;
+    raymagnetic.rn[0] = rho;
+    raymagnetic.drndY[0] = 1.0;
     raymagnetic.drndY[1] = 0.0;
     
-    R = Rp*(1.0 + ep*Y[0]*cos(Y[1]));
-    dRdrho = Rp*ep*cos(Y[1]);
-    dRdtheta = -Rp*ep*Y[0]*sin(Y[1]);
+    R = Rp + ap*rho*cos(theta);
+    dRdrho = ap*cos(theta);
+    dRdtheta = -ap*rho*sin(theta);
     
     raymagnetic.Rn[0] = R/equilparam.ap[0];
     raymagnetic.dRndY[0] = dRdrho/equilparam.ap[0];
     raymagnetic.dRndY[1] = dRdtheta/equilparam.ap[0];
     
     BPHI = Rp*BPHI0/R;
-    dBPHIdrho = -Rp*BPHI0*dRdrho/R/R;
-    dBPHIdtheta =  -Rp*BPHI0*dRdtheta/R/R;
+    dBPHIdrho = -BPHI*dRdrho/R;
+    dBPHIdtheta =  -BPHI*dRdtheta/R;
     
-    BPa = 0.2*fabs(Ip)/Rp/ep;
-    qmax = ep*cyl*fabs(BPHI0)/BPa;/* cylindrical limit */
-    q = (qmax - qmin)*pow(Y[0],eq) + qmin;
-    dqdrho = eq*(qmax - qmin)*pow(Y[0],eq - 1.0);
+    BPa = 0.2*fabs(Ip)/ap;/* MA */
     
-    BP = cyl*ep*Rp*Y[0]*fabs(BPHI0)/q/R;/* Poloidal magnetic field, cylindrical limit */
-    dBPdrho = cyl*ep*Rp*(fabs(BPHI0)/q/R - dqdrho*Y[0]*fabs(BPHI0)/q/q/R - dRdrho*Y[0]*fabs(BPHI0)/R/R/q);
-    dBPdtheta = -cyl*ep*Rp*dRdtheta*Y[0]*fabs(BPHI0)/R/R/q;/* cylindrical limit by construction */
-/*     mexPrintf("cyl,ep,Rp,BPa,qmax,q,dqdrho,Y[0],BP,BPHI0,R,dBPdrho,dBPdtheta:%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n",cyl,ep,Rp,BPa,qmax,q,dqdrho,Y[0],BP,BPHI0,R,dBPdrho,dBPdtheta); */
+    BP = BPa*(1 - pow(1 - rho*rho,2))*Rp/R/rho;/* Poloidal magnetic field, cylindrical limit */
+    dBPdrho = BPa*(4*(1 - rho*rho) - (1 - pow(1 - rho*rho,2))/rho/rho)*Rp/R - BP*dRdrho/R;
+    dBPdtheta = -BP*dRdtheta/R;
+  
+    /* mexPrintf("ap,Rp,BPa,rho,BP,BPHI0,R,dBPdrho,dBPdtheta:%g,%g,%g,%g,%g,%g,%g,%g,%g\n",ap,Rp,BPa,rho,BP,BPHI0,R,dBPdrho,dBPdtheta); */
       
     sigmaIp = sgn(Ip);
     
@@ -2257,9 +2248,9 @@ double Y[];
     raymagnetic.dgradrhondY[0] = 0.0;
     raymagnetic.dgradrhondY[1] = 0.0;
     
-/*    
+/*   
     mexPrintf("---- Interpequil_test ----\n");
-    mexPrintf("rho,theta:%g,%g\n",Y[0],Y[1]);
+    mexPrintf("rho,theta:%g,%g\n",rho,theta);
     mexPrintf("Te[0],dTedY[0],dTedY[1],ne[0],dnedY[0],dnedY[1]:%g,%g,%g,%g,%g,%g\n",rayprofiles.Te[0],rayprofiles.dTedY[0],rayprofiles.dTedY[1],rayprofiles.ne[0],rayprofiles.dnedY[0],rayprofiles.dnedY[1]);
     for (is=0;is<equilparam.ns[0];is++) {
         mexPrintf("is,zTi[is],dzTidY[is][0],dzTidY[is][1],zni[is],dznidY[is][0],dznidY[is][1]:%d,%g,%g,%g,%g,%g,%g\n",is,rayprofiles.zTi[is],rayprofiles.dzTidY[is][0],rayprofiles.dzTidY[is][1],rayprofiles.zni[is],rayprofiles.dznidY[is][0],rayprofiles.dznidY[is][1]);
