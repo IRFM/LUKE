@@ -11,7 +11,7 @@
 %TCIDATA{Version=5.50.0.2953}
 %TCIDATA{CSTFile=C:\swp55\styles\article\Joan Decker article.cst}
 %TCIDATA{Created=Friday, August 11, 2006 11:13:28}
-%TCIDATA{LastRevised=Tuesday, January 30, 2007 13:47:40}
+%TCIDATA{LastRevised=Tuesday, January 30, 2007 15:44:09}
 %TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
 %TCIDATA{<META NAME="SaveForMode" CONTENT="1">}
 %TCIDATA{BibliographyScheme=Manual}
@@ -59,8 +59,8 @@ $t$ is the time. The continuity equation - or charge conservation - relates
 the the charge density $\rho\left(  \mathbf{X},t\right)  $ to the current
 density $\mathbf{J}\left(  \mathbf{X},t\right)  $
 \begin{equation}
-\frac{\partial\rho}{\partial t}+\mathbf{\nabla}\cdot\mathbf{J}%
-=0\label{continuity}%
+\frac{\partial\rho}{\partial t}+\mathbf{\nabla}\cdot\mathbf{J}=0
+\label{continuity}%
 \end{equation}
 
 
@@ -85,12 +85,11 @@ d^{3}\mathbf{X}^{\prime}\int dt^{\prime}\mathbb{S}\left(  \mathbf{X}%
 \mathbf{X}^{\prime},t^{\prime}\right)  \label{constitutive}%
 \end{equation}
 where $\mathbb{S}\left(  \mathbf{X},\mathbf{X}^{\prime},t,t^{\prime}\right)  $
-is the conductivity tensor which depends of the equilibrium properties of the
-medium. 
+is the conductivity tensor which depends of the equilibrium properties of the medium.
 
 \subsection{Fourier transform in an infinite uniform plasma}
 
-In a infinite  plasma with an homogeneous constant equilibrium which is
+In a infinite plasma with an homogeneous constant equilibrium which is
 invariant by translation in space and time, the conductivity tensor is only a
 function of the relative distance in space and time, and Eq.
 \ref{constitutive} may be rewritten as%
@@ -195,7 +194,7 @@ is the susceptibility tensor and $\mathbb{I}$ is the unit matrix.
 
 Introducing the index of refraction%
 \begin{equation}
-\mathbf{N}\equiv\frac{c}{\omega}\mathbf{k}\label{indexrefraction}%
+\mathbf{N}\equiv\frac{c}{\omega}\mathbf{k} \label{indexrefraction}%
 \end{equation}
 the wave equation becomes%
 \begin{equation}
@@ -204,7 +203,7 @@ the wave equation becomes%
 \end{equation}
 or equivalently%
 \begin{equation}
-\mathbb{D}\cdot\mathbf{E}_{\mathbf{k}}=0\label{maxwellwaveeq1}%
+\mathbb{D}\cdot\mathbf{E}_{\mathbf{k}}=0 \label{maxwellwaveeq1}%
 \end{equation}
 where $\mathbb{D}\left(  \mathbf{N},\omega\right)  $
 \begin{equation}
@@ -237,7 +236,7 @@ determinant of the dispersion tensor must be zero,
 \begin{equation}
 \mathcal{D}\left(  \mathbf{N},\beta_{Ts},\overline{\omega}_{ps},\overline
 {\omega}_{cs}\right)  \equiv\det\mathbb{D}\left(  \mathbf{N},\beta
-_{Ts},\overline{\omega}_{ps},\overline{\omega}_{cs}\right)  =0\label{disprel}%
+_{Ts},\overline{\omega}_{ps},\overline{\omega}_{cs}\right)  =0 \label{disprel}%
 \end{equation}
 which defines the dispersion relation. This relation gives the local
 electromagnetic eigenmodes that can be excited independently in the homogenous
@@ -283,16 +282,16 @@ and the dispersion relation becomes%
 \mathcal{D}\left(  \mathbf{k},\omega\right)   &  =\left(  K_{xx}-N_{\Vert}%
 ^{2}\right)  \left(  K_{yy}-N^{2}\right)  \left(  K_{zz}-N_{\bot}^{2}\right)
 \\
-&  +2K_{xy}K_{yz}\left(  K_{xz}+N_{\bot}N_{\Vert}\right)  \nonumber\\
+&  +2K_{xy}K_{yz}\left(  K_{xz}+N_{\bot}N_{\Vert}\right) \nonumber\\
 &  -\left(  K_{yy}-N^{2}\right)  \left(  K_{xz}+N_{\bot}N_{\Vert}\right)
 ^{2}\nonumber\\
 &  +K_{yz}^{2}\left(  K_{xx}-N_{\Vert}^{2}\right)  +K_{xy}^{2}\left(
-K_{zz}-N_{\bot}^{2}\right)  \nonumber
+K_{zz}-N_{\bot}^{2}\right) \nonumber
 \end{align}
 rearranged in powers of $N_{\bot}$ as%
 \begin{equation}
 \mathcal{D}\left(  \mathbf{k},\omega\right)  =P_{4}N_{\bot}^{4}+P_{3}N_{\bot
-}^{3}+P_{2}N_{\bot}^{2}+P_{1}N_{\bot}+P_{0}\label{disprel2}%
+}^{3}+P_{2}N_{\bot}^{2}+P_{1}N_{\bot}+P_{0} \label{disprel2}%
 \end{equation}
 with
 \begin{equation}%
@@ -335,7 +334,7 @@ X_{xz}\right)  N_{\bot}\nonumber\\
 In preparation for calculating the derivatives, it is useful to split the
 dispersion relation in a sum of products%
 \begin{equation}
-\mathcal{D}=\sum_{k=1}^{k=43}\mathcal{D}^{\left(  k\right)  }\label{dispexp2}%
+\mathcal{D}=\sum_{k=1}^{k=43}\mathcal{D}^{\left(  k\right)  } \label{dispexp2}%
 \end{equation}
 where%
 \begin{equation}%
@@ -429,7 +428,7 @@ k}\right\Vert
 \end{equation}
 the dispersion relation (\ref{disprel}) must still be satisfied locally. It is
 then possible to determine the evolution of wave characteristics using
-ray-tracing techniques  
+ray-tracing techniques
 
 \subsection{Ray equations}
 
@@ -450,7 +449,7 @@ measure of distance along the trajectory.
 \cdot\mathbf{\dot{X}}\delta\tau+\frac{\partial\mathcal{D}}{\partial t}\dot
 {t}\delta\tau\mathbf{+}\frac{\partial\mathcal{D}}{\partial\mathbf{k}}%
 \cdot\mathbf{\dot{k}}\delta\tau\mathbf{+}\frac{\partial\mathcal{D}}%
-{\partial\omega}\dot{\omega}\delta\tau=0\label{deltaD2}%
+{\partial\omega}\dot{\omega}\delta\tau=0 \label{deltaD2}%
 \end{equation}
 where $\mathbf{\dot{X}=}d\mathbf{X/}d\tau,$ $\mathbf{\dot{k}=}d\mathbf{k/}%
 d\tau,$ $\dot{t}\mathbf{=}dt\mathbf{/}d\tau$ and $\dot{\omega}=d\omega
@@ -486,18 +485,18 @@ along with the wave energy flows. In the stationary case, i.e. $\partial
 only the three first equations remain. If the time $t$ is considered as the
 evolution parameter of the ray, two equations are necessary
 \begin{align}
-\frac{d\mathbf{r}}{dt} &  =-\frac{\partial\mathcal{D}}{\partial\mathbf{k}%
+\frac{d\mathbf{r}}{dt}  &  =-\frac{\partial\mathcal{D}}{\partial\mathbf{k}%
 }/\frac{\partial\mathcal{D}}{\partial\omega}\label{rayeq1a}\\
-\frac{d\mathbf{k}}{dt} &  =\frac{\partial\mathcal{D}}{\partial\mathbf{X}%
-}/\frac{\partial\mathcal{D}}{\partial\omega}\label{rayeq2a}%
+\frac{d\mathbf{k}}{dt}  &  =\frac{\partial\mathcal{D}}{\partial\mathbf{X}%
+}/\frac{\partial\mathcal{D}}{\partial\omega} \label{rayeq2a}%
 \end{align}
 which are the usual forms found in the litterature. However, one may also keep
 the simple form%
 \begin{align}
-\frac{d\mathbf{X}}{d\tau} &  =\frac{\partial\mathcal{D}}{\partial\mathbf{k}%
+\frac{d\mathbf{X}}{d\tau}  &  =\frac{\partial\mathcal{D}}{\partial\mathbf{k}%
 }\label{rayeq1b}\\
-\frac{d\mathbf{k}}{d\tau} &  =-\frac{\partial\mathcal{D}}{\partial\mathbf{r}%
-}\label{rayeq2b}%
+\frac{d\mathbf{k}}{d\tau}  &  =-\frac{\partial\mathcal{D}}{\partial\mathbf{r}}
+\label{rayeq2b}%
 \end{align}
 if the determination of the group velocity from $\partial\mathcal{D}%
 /\partial\omega$ is not necessary. This reduces the number of derivative to perform.
@@ -540,15 +539,15 @@ all species $s$
 Since $\mathbb{X}^{s}=\mathbb{X}^{s}\left(  \mathbf{N},\beta_{Ts}%
 ,\overline{\omega}_{ps},\overline{\omega}_{cs}\right)  ,$%
 \begin{align}
-\frac{\partial X_{ij}^{s}}{\partial\mathbf{Y}}  & =\frac{\partial X_{ij}^{s}%
+\frac{\partial X_{ij}^{s}}{\partial\mathbf{Y}}  &  =\frac{\partial X_{ij}^{s}%
 }{\partial N_{\bot}}\frac{\partial N_{\bot}}{\partial\mathbf{Y}}%
 +\frac{\partial X_{ij}^{s}}{\partial N_{\Vert}}\frac{\partial N_{\Vert}%
 }{\partial\mathbf{Y}}\nonumber\\
-& +\frac{\partial X_{ij}^{s}}{\partial\beta_{Ts}}\frac{\partial\beta_{Ts}%
+&  +\frac{\partial X_{ij}^{s}}{\partial\beta_{Ts}}\frac{\partial\beta_{Ts}%
 }{\partial\mathbf{Y}}+\frac{\partial X_{ij}^{s}}{\partial\overline{\omega
 }_{ps}}\frac{\partial\overline{\omega}_{ps}}{\partial\mathbf{Y}}%
 +\frac{\partial X_{ij}^{s}}{\partial\overline{\omega}_{cs}}\frac
-{\partial\overline{\omega}_{cs}}{\partial\mathbf{Y}}\label{derivatives}%
+{\partial\overline{\omega}_{cs}}{\partial\mathbf{Y}} \label{derivatives}%
 \end{align}
 In this equation the derivatives of the susceptibility tensor depend upon the
 plasma model (i.e. cold, kinetic, etc). However, the derivatives with respect
@@ -602,21 +601,21 @@ The Poisson matrix of cannonically conjugate $\mathbf{X}$ and $\mathbf{k}$ is
 In the canonically conjugate systems $\left(  \rho,\theta,\phi\right)  $ and
 $\left(  k_{\rho},m,n\right)  $ the ray equations becomes
 \begin{align}
-\frac{d\rho}{dt} &  =\frac{\partial\mathcal{D}}{\partial k_{\rho}}%
+\frac{d\rho}{dt}  &  =\frac{\partial\mathcal{D}}{\partial k_{\rho}}%
 /\frac{\partial\mathcal{D}}{\partial\omega}\label{h1}\\
-\frac{d\theta}{dt} &  =\frac{\partial\mathcal{D}}{\partial m}/\frac
+\frac{d\theta}{dt}  &  =\frac{\partial\mathcal{D}}{\partial m}/\frac
 {\partial\mathcal{D}}{\partial\omega}\label{h2}\\
-\frac{d\phi}{dt} &  =\frac{\partial\mathcal{D}}{\partial n}/\frac
-{\partial\mathcal{D}}{\partial\omega}\label{h3}%
+\frac{d\phi}{dt}  &  =\frac{\partial\mathcal{D}}{\partial n}/\frac
+{\partial\mathcal{D}}{\partial\omega} \label{h3}%
 \end{align}
 and
 \begin{align}
-\frac{dk_{\rho}}{dt} &  =-\frac{\partial\mathcal{D}}{\partial\rho}%
+\frac{dk_{\rho}}{dt}  &  =-\frac{\partial\mathcal{D}}{\partial\rho}%
 /\frac{\partial\mathcal{D}}{\partial\omega}\label{h4}\\
-\frac{dm}{dt} &  =-\frac{\partial\mathcal{D}}{\partial\theta}/\frac
+\frac{dm}{dt}  &  =-\frac{\partial\mathcal{D}}{\partial\theta}/\frac
 {\partial\mathcal{D}}{\partial\omega}\label{h5}\\
-\frac{dn}{dt} &  =-\frac{\partial\mathcal{D}}{\partial\phi}/\frac
-{\partial\mathcal{D}}{\partial\omega}\label{h6}%
+\frac{dn}{dt}  &  =-\frac{\partial\mathcal{D}}{\partial\phi}/\frac
+{\partial\mathcal{D}}{\partial\omega} \label{h6}%
 \end{align}
 
 
@@ -755,9 +754,9 @@ and since $\beta_{Ts}$ is independent of $\omega$%
 \end{equation}
 Since we consider a constant axisymmetric equilibrium%
 \begin{align}
-\frac{\partial\beta_{Ts}}{\partial t}  & =\frac{\partial\overline{\omega}%
-_{ps}}{\partial t}=\frac{\partial\overline{\omega}_{cs}}{\partial t}=0\\
-\frac{\partial\beta_{Ts}}{\partial\phi}  & =\frac{\partial\overline{\omega
+\frac{\partial\beta_{Ts}}{\partial t}  &  =\frac{\partial\overline{\omega
+}_{ps}}{\partial t}=\frac{\partial\overline{\omega}_{cs}}{\partial t}=0\\
+\frac{\partial\beta_{Ts}}{\partial\phi}  &  =\frac{\partial\overline{\omega
 }_{ps}}{\partial\phi}=\frac{\partial\overline{\omega}_{cs}}{\partial\phi}=0
 \end{align}
 The coordinate $\rho$ is a flux function like the temperature and density such
@@ -779,23 +778,23 @@ and we are left with calculating%
 Explicitly we find%
 
 \begin{align}
-\frac{\partial\beta_{Ts}}{\partial\rho}  & =\frac{\partial}{\partial\rho
+\frac{\partial\beta_{Ts}}{\partial\rho}  &  =\frac{\partial}{\partial\rho
 }\left(  \sqrt{\frac{\kappa T_{s}}{m_{s}c^{2}}}\right)  =\dfrac{\beta_{Ts}%
 }{2T_{s}}\frac{\partial T_{s}}{\partial\rho}\\
-\frac{\partial\overline{\omega}_{ps}}{\partial\rho}  & =\frac{\partial
+\frac{\partial\overline{\omega}_{ps}}{\partial\rho}  &  =\frac{\partial
 }{\partial\rho}\left(  \dfrac{1}{\omega}\sqrt{\frac{q_{s}^{2}n_{s}%
 }{\varepsilon_{0}m_{s}}}\right)  =\dfrac{\overline{\omega}_{ps}}{2n_{s}}%
 \frac{\partial n_{s}}{\partial\rho}\\
-\frac{\partial\overline{\omega}_{cs}}{\partial\rho}  & =\frac{\partial
+\frac{\partial\overline{\omega}_{cs}}{\partial\rho}  &  =\frac{\partial
 }{\partial\rho}\left(  \frac{q_{s}B_{0}}{m_{s}\omega}\right)  =\dfrac
 {\overline{\omega}_{cs}}{B_{0}}\frac{\partial B_{0}}{\partial\rho}\\
-\frac{\partial\overline{\omega}_{cs}}{\partial\theta}  & =\frac{\partial
+\frac{\partial\overline{\omega}_{cs}}{\partial\theta}  &  =\frac{\partial
 }{\partial\theta}\left(  \frac{q_{s}B_{0}}{m_{s}\omega}\right)  =\dfrac
 {\overline{\omega}_{cs}}{B_{0}}\frac{\partial B_{0}}{\partial\theta}\\
-\frac{\partial\overline{\omega}_{ps}}{\partial\omega}  & =\frac{\partial
+\frac{\partial\overline{\omega}_{ps}}{\partial\omega}  &  =\frac{\partial
 }{\partial\omega}\left(  \dfrac{1}{\omega}\sqrt{\frac{q_{s}^{2}n_{s}%
 }{\varepsilon_{0}m_{s}}}\right)  =-\dfrac{\overline{\omega}_{ps}}{\omega}\\
-\frac{\partial\overline{\omega}_{cs}}{\partial\omega}  & =\frac{\partial
+\frac{\partial\overline{\omega}_{cs}}{\partial\omega}  &  =\frac{\partial
 }{\partial\omega}\left(  \frac{q_{s}B_{0}}{m_{s}\omega}\right)  =-\dfrac
 {\overline{\omega}_{cs}}{\omega}%
 \end{align}
@@ -923,7 +922,7 @@ refraction}
 
 If we take the expression
 \begin{align}
-k_{\Vert} &  =\dfrac{1}{B}\mathbf{k}\cdot\mathbf{B}\\
+k_{\Vert}  &  =\dfrac{1}{B}\mathbf{k}\cdot\mathbf{B}\\
 &  =\dfrac{1}{B}g^{ij}k_{i}B_{j}%
 \end{align}
 with%
@@ -981,8 +980,6 @@ k_{\Vert}=\dfrac{1}{B}\left[  \left(  k_{\rho}\left\Vert \mathbf{\nabla}%
 k_{\Vert}=\left[  \sigma_{I}\cos\alpha\dfrac{B_{P}}{B}\dfrac{m}{r}+\sigma
 _{B}\dfrac{B_{T}}{B}\dfrac{n}{R}\right]
 \end{equation}
-
-
 
 
 \subsection{Calculation of $k_{\rho}$ and $n$ as a function of $m$, $k_{\Vert
@@ -1164,9 +1161,10 @@ as $\mathbf{k}=k_{r}\widehat{\mathbf{r}}+k_{\theta}\widehat{\mathbf{\theta}%
 \begin{array}
 [c]{l}%
 k_{\rho}=\dfrac{k_{r}}{\left\Vert \mathbf{\nabla}\rho\right\Vert \cos\alpha}\\
-m=r\left(  k_{\theta}+k_{r}\tan\alpha\right) \\
+m=r\left(  k_{\theta}+k_{r}\tan\alpha\right)  \\
 n=Rk_{\phi}%
 \end{array}
+\label{projection}%
 \end{equation}
 where%
 \begin{equation}%
@@ -1336,37 +1334,326 @@ harmonics numbers $n$%
 \end{equation}
 where%
 \begin{align}
-\mathbb{Y}_{\text{M},xx}^{s,n} &  =\frac{n^{2}}{\lambda_{s}}\Gamma_{ns}%
+\mathbb{Y}_{\text{M},xx}^{s,n}  &  =\frac{n^{2}}{\lambda_{s}}\Gamma_{ns}%
 Z_{ns}\label{a}\\
-\mathbb{Y}_{\text{M},yy}^{s,n} &  =\left(  \frac{n^{2}}{\lambda_{s}}%
+\mathbb{Y}_{\text{M},yy}^{s,n}  &  =\left(  \frac{n^{2}}{\lambda_{s}}%
 \Gamma_{ns}-2\lambda_{s}n^{2}\Gamma_{ns}^{\prime}\right)  Z_{ns}\label{b}\\
-\mathbb{Y}_{\text{M},zz}^{s,n} &  =-\Gamma_{ns}\zeta_{ns}Z_{ns}^{\prime
+\mathbb{Y}_{\text{M},zz}^{s,n}  &  =-\Gamma_{ns}\zeta_{ns}Z_{ns}^{\prime
 }\label{c}\\
-\mathbb{Y}_{\text{M},xy}^{s,n} &  =i\sigma_{s}n\Gamma_{ns}^{\prime}%
+\mathbb{Y}_{\text{M},xy}^{s,n}  &  =i\sigma_{s}n\Gamma_{ns}^{\prime}%
 Z_{ns}\label{d}\\
-\mathbb{Y}_{\text{M},yx}^{s,n} &  =-\mathbb{Y}_{\text{M},xy}^{s,n}\label{e}\\
-\mathbb{Y}_{\text{M},xz}^{s,n} &  =-\sigma_{\Vert}\frac{n}{\sqrt{2\lambda_{s}%
-}}\Gamma_{ns}Z_{ns}^{\prime}\label{f}\\
-\mathbb{Y}_{\text{M},xz}^{s,n} &  =\mathbb{Y}_{\text{M},zx}^{s,n}\label{g}\\
-\mathbb{Y}_{\text{M},yz}^{s,n} &  =i\sigma_{s}\sigma_{\Vert}\sqrt
+\mathbb{Y}_{\text{M},yx}^{s,n}  &  =-\mathbb{Y}_{\text{M},xy}^{s,n}\label{e}\\
+\mathbb{Y}_{\text{M},xz}^{s,n}  &  =-\sigma_{\Vert}\frac{n}{\sqrt{2\lambda
+_{s}}}\Gamma_{ns}Z_{ns}^{\prime}\label{f}\\
+\mathbb{Y}_{\text{M},xz}^{s,n}  &  =\mathbb{Y}_{\text{M},zx}^{s,n}\label{g}\\
+\mathbb{Y}_{\text{M},yz}^{s,n}  &  =i\sigma_{s}\sigma_{\Vert}\sqrt
 {\frac{\lambda_{s}}{2}}\Gamma_{ns}^{\prime}Z_{ns}^{\prime}\label{h}\\
-\mathbb{Y}_{\text{M},zy}^{s,n} &  =-\mathbb{Y}_{\text{M},yz}^{s,n}\label{i}%
+\mathbb{Y}_{\text{M},zy}^{s,n}  &  =-\mathbb{Y}_{\text{M},yz}^{s,n} \label{i}%
 \end{align}
 with%
 \begin{align*}
-\Gamma_{ns} &  =e^{-\lambda_{s}}I_{n}\left(  \lambda_{s}\right)  \\
-Z_{ns} &  =Z\left(  \zeta_{ns}\right)  \\
-\lambda_{s} &  =\left(  N_{\bot}\overline{\omega}_{cs}\beta_{Ts}\right)
+\Gamma_{ns}  &  =e^{-\lambda_{s}}I_{n}\left(  \lambda_{s}\right) \\
+Z_{ns}  &  =Z\left(  \zeta_{ns}\right) \\
+\lambda_{s}  &  =\left(  N_{\bot}\overline{\omega}_{cs}\beta_{Ts}\right)
 ^{2}\\
-\zeta_{ns} &  =\frac{1-n\overline{\omega}_{cs}}{\sqrt{2}\left\vert N_{\Vert
+\zeta_{ns}  &  =\frac{1-n\overline{\omega}_{cs}}{\sqrt{2}\left\vert N_{\Vert
 }\right\vert \beta_{Ts}}\\
-\sigma_{s} &  =\text{sign}\left(  q_{s}\right)  \\
-\sigma_{\Vert} &  =\text{sign}\left(  N_{\Vert}\right)
+\sigma_{s}  &  =\text{sign}\left(  q_{s}\right) \\
+\sigma_{\Vert}  &  =\text{sign}\left(  N_{\Vert}\right)
 \end{align*}
 where $I_{n}\left(  N_{\Vert}\right)  $ is the modified Bessel function of the
 first kind and $Z\left(  N_{\Vert}\right)  $ is the plasma dispersion function.
 
 \subsection{Derivatives}
 
+\section{Benchmarking of C3PO}
+
+\subsection{JET-like plasma}
+
+\subsubsection{Equilibrium}
+
+A JET-like equilibrium was used in \cite{hei99} where results from a
+ray-tracing code using the cold plasma model is presented. A circular
+concentric toroidal plasma is considered such that%
+\begin{equation}
+\rho=\dfrac{r}{a_{p}}%
+\end{equation}
+with the following equilibrium parameters%
+\begin{equation}%
+\begin{array}
+[c]{cc}%
+R_{p} & 3.05\text{ m}\\
+a_{p} & 0.95\text{ m}\\
+B_{T0} & 3.2\text{ T}\\
+I_{p} & 3.5\text{ MA}%
+\end{array}
+\end{equation}
+and the following profiles%
+\begin{equation}%
+\begin{array}
+[c]{l}%
+n_{e}\left(  \rho\right)  =\left(  n_{e0}-n_{ea}\right)  \left(  1-\rho
+^{2}\right)  +n_{ea}\\
+J_{z}\left(  \rho\right)  =J_{0}\left(  1-\rho^{2}\right)  ^{\alpha}%
+\end{array}
+\end{equation}
+with%
+\begin{equation}%
+\begin{array}
+[c]{l}%
+n_{e0}=5\times10^{19}\text{ m}^{-3}\\
+n_{ea}=0.01\times10^{19}\text{ m}^{-3}%
+\end{array}
+\end{equation}
+The total current is then%
+\begin{equation}
+I_{P}=2\pi\int_{0}^{a_{p}}J_{z}rdr=\pi J_{0}\dfrac{a_{p}^{2}}{\left(
+\alpha+1\right)  }%
+\end{equation}
+such that
+\begin{equation}
+J_{0}=\dfrac{\left(  \alpha+1\right)  I_{P}}{\pi a_{p}^{2}}%
+\end{equation}
+The magnetic field profile is
+\begin{equation}%
+\begin{array}
+[c]{c}%
+B_{T}=B_{T0}\dfrac{R_{p}}{R}\\
+B_{P}=\widehat{B}_{P}\dfrac{R_{p}}{R}%
+\end{array}
+\end{equation}
+with $R=R_{p}+\rho a_{p}\cos\theta$ and from Ampere's law
+\begin{equation}
+\dfrac{1}{r}\dfrac{d}{dr}\left(  rB_{P}\right)  =\mu_{0}J_{z}%
+\end{equation}
+we get%
+\begin{equation}
+\widehat{B}_{P}=\dfrac{1}{r}\mu_{0}J_{0}\int_{0}^{r}r\left(  1-\dfrac{r^{2}%
+}{a_{p}^{2}}\right)  ^{\alpha}dr=\dfrac{\widehat{B}_{Pa}}{\rho}\left[
+1-\left(  1-\rho^{2}\right)  ^{\alpha+1}\right]
+\end{equation}
+with%
+\begin{equation}
+\widehat{B}_{Pa}=\dfrac{\mu_{0}I_{P}}{2\pi a_{p}}%
+\end{equation}
+The poloidal flux coordinate $\overline{\psi}=a_{p}\int_{0}^{r}B_{P}dr$ is
+then%
+\begin{align}
+\overline{\psi} &  =a_{p}\dfrac{\mu_{0}I_{P}}{2\pi}\int_{0}^{r}\dfrac{1}%
+{r}\left[  1-\left(  1-\dfrac{r^{2}}{a_{p}^{2}}\right)  ^{\alpha+1}\right]
+dr\\
+&  =a_{p}\dfrac{\mu_{0}I_{P}}{2\pi}\int_{0}^{\rho}\dfrac{1}{\rho}\left[
+1-\left(  1-\rho^{2}\right)  ^{\alpha+1}\right]  d\rho
+\end{align}
+In the case $\alpha=1$ it gives%
+\begin{equation}
+\overline{\psi}=a_{p}\dfrac{\mu_{0}I_{P}}{2\pi}\int_{0}^{\rho}\dfrac{1}{\rho
+}\left[  1-\left(  1-\rho^{2}\right)  ^{2}\right]  d\rho
+\end{equation}
+defining $\rho=\sin\theta$ gives%
+\begin{equation}%
+\begin{array}
+[c]{c}%
+1-\rho^{2}=\cos^{2}\theta\\
+d\rho=\cos\theta d\theta
+\end{array}
+\nonumber
+\end{equation}
+and%
+\begin{align}
+\overline{\psi} &  =a_{p}\dfrac{\mu_{0}I_{P}}{2\pi}\int_{0}^{\theta}\sin
+\theta\left[  1+\cos^{2}\theta\right]  \cos\theta d\theta\nonumber\\
+&  =a_{p}\dfrac{\mu_{0}I_{P}}{2\pi}\dfrac{1}{4}\left(  1-\cos^{4}%
+\theta\right)  +a_{p}\dfrac{\mu_{0}I_{P}}{2\pi}\dfrac{1}{2}\left(  1-\cos
+^{2}\theta\right)  \nonumber\\
+&  =a_{p}\dfrac{\mu_{0}I_{P}}{2\pi}\sin^{2}\theta\dfrac{1}{2}\left[
+1+\dfrac{1}{2}\left(  1+\cos^{2}\theta\right)  \right]  \nonumber\\
+&  =a_{p}\dfrac{\mu_{0}I_{P}}{2\pi}\rho^{2}\left[  1-\dfrac{1}{4}\rho
+^{2}\right]
+\end{align}
+and finally for $\alpha=1$ we gather%
+\[
+\fbox{$%
+\begin{array}
+[c]{l}%
+J_{z}=\dfrac{2I_{P}}{\pi a_{p}^{2}}\left(  1-\rho^{2}\right)  \\
+\widehat{B}_{P}=\dfrac{\mu_{0}I_{P}}{2\pi a_{p}}\dfrac{1}{\rho}\left[
+1-\left(  1-\rho^{2}\right)  ^{2}\right]  \\
+\overline{\psi}=a_{p}\dfrac{\mu_{0}I_{P}}{2\pi}\rho^{2}\left[  1-\dfrac{1}%
+{4}\rho^{2}\right]
+\end{array}
+$}%
+\]
+Note that the q profile is approximately (to order $\epsilon$)%
+\begin{equation}
+q\simeq\dfrac{r}{R_{p}}\dfrac{B_{T}}{B_{P}}\simeq\dfrac{r}{R}\dfrac{B_{T0}%
+}{B_{P}}%
+\end{equation}
+which gives%
+\begin{equation}
+q\simeq\dfrac{B_{T0}}{\widehat{B}_{Pa}}\dfrac{a_{p}}{R_{p}}\dfrac{\rho^{2}%
+}{1-\left(  1-\rho^{2}\right)  ^{\alpha+1}}%
+\end{equation}
+and for $\alpha=1$%
+\begin{equation}
+\fbox{$q\simeq\dfrac{B_{T0}}{\widehat{B}_{Pa}}\dfrac{a_{p}}{R_{p}}\dfrac
+{\rho^{2}}{1-\left(  1-\rho^{2}\right)  ^{2}}$}%
+\end{equation}
+
+
+\subsubsection{Wave initial conditions}
+
+The ray is launched in the slow mode from the position%
+\begin{equation}%
+\begin{array}
+[c]{l}%
+\rho_{0}=0.968\\
+\theta_{0}=0\\
+\phi_{0}=0
+\end{array}
+\end{equation}
+with the spectral properties%
+\begin{equation}%
+\begin{array}
+[c]{l}%
+\omega/\left(  2\pi\right)  =3.7\text{ GHz}\\
+N_{\phi0}=2.0\\
+m_{0}=0
+\end{array}
+\end{equation}
+From (\ref{projection}) the initial $n$ can be determined%
+\begin{equation}
+n_{0}=\dfrac{\omega R_{0}}{c}N_{\phi0}%
+\end{equation}
+and then the parallel index of refraction is
+\begin{equation}
+N_{\Vert0}=\sigma_{B}\dfrac{B_{T}}{B}N_{\phi0}%
+\end{equation}
+
+
+\subsubsection{Results}
+
+The results are plotted in the figures below. The wave is mode-converted from
+the slow to the fast mode several times. The results agree remarkably well
+with those from \cite{hei99}.%
+
+%TCIMACRO{\FRAME{ftbhFU}{3.6002in}{2.3999in}{0pt}{\Qcb{Poloidal projection of
+%the ray trajectory. The red curve corresponds to the slow mode and the blue
+%curve corresponds to the fast mode.}}{}{ray_20_traj_poloidal.eps}%
+%{\special{ language "Scientific Word";  type "GRAPHIC";
+%maintain-aspect-ratio TRUE;  display "USEDEF";  valid_file "F";
+%width 3.6002in;  height 2.3999in;  depth 0pt;  original-width 8.5988in;
+%original-height 5.1024in;  cropleft "0";  croptop "1";  cropright "1";
+%cropbottom "0";
+%filename '../Examples/JETlike/WAVE/figures/ray_20_traj_poloidal.eps';file-properties "XNPEU";}%
+%}}%
+%BeginExpansion
+\begin{figure}
+[tbh]
+\begin{center}
+\includegraphics[
+height=2.3999in,
+width=3.6002in
+]%
+{../Examples/JETlike/WAVE/figures/ray_20_traj_poloidal.eps}%
+\caption{Poloidal projection of the ray trajectory. The red curve corresponds
+to the slow mode and the blue curve corresponds to the fast mode.}%
+\end{center}
+\end{figure}
+%EndExpansion%
+%TCIMACRO{\FRAME{ftbhFU}{3.6002in}{2.3999in}{0pt}{\Qcb{Toroidal projection of
+%the ray trajectory. The red curve corresponds to the slow mode and the blue
+%curve corresponds to the fast mode.}}{}{ray_20_traj_toroidal.eps}%
+%{\special{ language "Scientific Word";  type "GRAPHIC";
+%maintain-aspect-ratio TRUE;  display "USEDEF";  valid_file "F";
+%width 3.6002in;  height 2.3999in;  depth 0pt;  original-width 8.5988in;
+%original-height 5.0626in;  cropleft "0";  croptop "1";  cropright "1";
+%cropbottom "0";
+%filename '../Examples/JETlike/WAVE/figures/ray_20_traj_toroidal.eps';file-properties "XNPEU";}%
+%}}%
+%BeginExpansion
+\begin{figure}
+[tbh]
+\begin{center}
+\includegraphics[
+height=2.3999in,
+width=3.6002in
+]%
+{../Examples/JETlike/WAVE/figures/ray_20_traj_toroidal.eps}%
+\caption{Toroidal projection of the ray trajectory. The red curve corresponds
+to the slow mode and the blue curve corresponds to the fast mode.}%
+\end{center}
+\end{figure}
+%EndExpansion%
+%TCIMACRO{\FRAME{ftbhFU}{3.6002in}{2.3999in}{0pt}{\Qcb{Poloidal mode number
+%along the ray trajectory.}}{}{ray_20_m.eps}%
+%{\special{ language "Scientific Word";  type "GRAPHIC";
+%maintain-aspect-ratio TRUE;  display "USEDEF";  valid_file "F";
+%width 3.6002in;  height 2.3999in;  depth 0pt;  original-width 6.0027in;
+%original-height 4.5083in;  cropleft "0";  croptop "1";  cropright "1";
+%cropbottom "0";
+%filename '../Examples/JETlike/WAVE/figures/ray_20_m.eps';file-properties "XNPEU";}%
+%}}%
+%BeginExpansion
+\begin{figure}
+[tbh]
+\begin{center}
+\includegraphics[
+height=2.3999in,
+width=3.6002in
+]%
+{../Examples/JETlike/WAVE/figures/ray_20_m.eps}%
+\caption{Poloidal mode number along the ray trajectory.}%
+\end{center}
+\end{figure}
+%EndExpansion%
+%TCIMACRO{\FRAME{ftbhFU}{3.6002in}{2.3999in}{0pt}{\Qcb{Parallel index or
+%refraction along the ray trajectory.}}{}{ray_20_npar.eps}%
+%{\special{ language "Scientific Word";  type "GRAPHIC";
+%maintain-aspect-ratio TRUE;  display "USEDEF";  valid_file "F";
+%width 3.6002in;  height 2.3999in;  depth 0pt;  original-width 6.0027in;
+%original-height 4.5083in;  cropleft "0";  croptop "1";  cropright "1";
+%cropbottom "0";
+%filename '../Examples/JETlike/WAVE/figures/ray_20_Npar.eps';file-properties "XNPEU";}%
+%}}%
+%BeginExpansion
+\begin{figure}
+[tbh]
+\begin{center}
+\includegraphics[
+height=2.3999in,
+width=3.6002in
+]%
+{../Examples/JETlike/WAVE/figures/ray_20_Npar.eps}%
+\caption{Parallel index or refraction along the ray trajectory.}%
+\end{center}
+\end{figure}
+%EndExpansion%
+%TCIMACRO{\FRAME{ftbhFU}{3.6002in}{2.3999in}{0pt}{\Qcb{Dispersion relation
+%along the ray trajectory.}}{}{ray_20_disprel.eps}%
+%{\special{ language "Scientific Word";  type "GRAPHIC";
+%maintain-aspect-ratio TRUE;  display "USEDEF";  valid_file "F";
+%width 3.6002in;  height 2.3999in;  depth 0pt;  original-width 6.0027in;
+%original-height 4.5083in;  cropleft "0";  croptop "1";  cropright "1";
+%cropbottom "0";
+%filename '../Examples/JETlike/WAVE/figures/ray_20_disprel.eps';file-properties "XNPEU";}%
+%}}%
+%BeginExpansion
+\begin{figure}
+[tbh]
+\begin{center}
+\includegraphics[
+height=2.3999in,
+width=3.6002in
+]%
+{../Examples/JETlike/WAVE/figures/ray_20_disprel.eps}%
+\caption{Dispersion relation along the ray trajectory.}%
+\end{center}
+\end{figure}
+%EndExpansion
+
+
+\bibliographystyle{unsrt}
+\bibliography{Bibjd,lhcdjd}
 
 \end{document}
