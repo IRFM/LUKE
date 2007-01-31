@@ -426,7 +426,7 @@ void mexFunction(   int     nlhs,
 
     double  *tout,*yout; 
     double  *toutp,*youtp;
-    double  *y0,*y1;
+    double  *y0,*y1,*y0_in;
 
     register unsigned int   K=0,m,k=0,kk,ii=0;
 
@@ -440,11 +440,42 @@ void mexFunction(   int     nlhs,
     double t1,t2,rho1,rho2,theta1,theta2,phi1,phi2,krho1,krho2,m1,m2,n1,n2,omega1,omega2;
     double rho_step,m_step;
 
-    y0 = mxGetPr(Y0_IN);
+/*
+Create arguments for calling user function
+*/
+
+    tempt = mxCalloc(rayparam.kmax[0],sizeof(double));
+    temp0 = mxCalloc(rayparam.kmax[0],sizeof(double));
+    temp1 = mxCalloc(rayparam.kmax[0],sizeof(double));
+    temp2 = mxCalloc(rayparam.kmax[0],sizeof(double));
+    temp3 = mxCalloc(rayparam.kmax[0],sizeof(double));
+    temp4 = mxCalloc(rayparam.kmax[0],sizeof(double));
+    temp5 = mxCalloc(rayparam.kmax[0],sizeof(double));
+    temp6 = mxCalloc(rayparam.kmax[0],sizeof(double));
+
+    y0 = mxCalloc(MC,sizeof(double));
+    y1 = mxCalloc(MC,sizeof(double));
+    s0 = mxCalloc(MC,sizeof(double));
+    s1 = mxCalloc(MC,sizeof(double));
+    s2 = mxCalloc(MC,sizeof(double));
+    s3 = mxCalloc(MC,sizeof(double));
+    s4 = mxCalloc(MC,sizeof(double));
+    s5 = mxCalloc(MC,sizeof(double));
+    s6 = mxCalloc(MC,sizeof(double));
+    
+    y0_in = mxGetPr(Y0_IN);
     
 /*
 Create and Initialize Return Arguments
 */
+    
+    y0[0] = y0_in[0];/* Necessary to separe data from mex and matlab */
+    y0[1] = y0_in[1];
+    y0[2] = y0_in[2];
+    y0[3] = y0_in[3];
+    y0[4] = y0_in[4];
+    y0[5] = y0_in[5];
+    y0[6] = y0_in[6];
 
     t1 = rayparam.t0[0];
 
@@ -466,29 +497,6 @@ Create and Initialize Return Arguments
     
     rho_step = rho1;
     m_step = m1;
-
-/*
-Create arguments for calling user function
-*/
-
-    tempt = mxCalloc(rayparam.kmax[0],sizeof(double));
-    temp0 = mxCalloc(rayparam.kmax[0],sizeof(double));
-    temp1 = mxCalloc(rayparam.kmax[0],sizeof(double));
-    temp2 = mxCalloc(rayparam.kmax[0],sizeof(double));
-    temp3 = mxCalloc(rayparam.kmax[0],sizeof(double));
-    temp4 = mxCalloc(rayparam.kmax[0],sizeof(double));
-    temp5 = mxCalloc(rayparam.kmax[0],sizeof(double));
-    temp6 = mxCalloc(rayparam.kmax[0],sizeof(double));
-
-    y1 = mxCalloc(MC,sizeof(double));
-    s0 = mxCalloc(MC,sizeof(double));
-    s1 = mxCalloc(MC,sizeof(double));
-    s2 = mxCalloc(MC,sizeof(double));
-    s3 = mxCalloc(MC,sizeof(double));
-    s4 = mxCalloc(MC,sizeof(double));
-    s5 = mxCalloc(MC,sizeof(double));
-    s6 = mxCalloc(MC,sizeof(double));
-
 /*
 Initialization
 */
