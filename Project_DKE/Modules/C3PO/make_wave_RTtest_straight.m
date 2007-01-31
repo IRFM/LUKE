@@ -15,7 +15,7 @@ filename = id_wave;
 %
 id_equil = 'RTtest_vacuum';%For plasma equilibrium
 mode_equil = 1;%Magnetic equilibrium grid type: (1): (psi-theta), (2): (x-y)
-path_equil = '';'../../Database/EQUIL_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_equil = '../EQUIL/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 if exist([path_equil,'EQUIL_',id_equil,'.mat']) == 0,%Magnetic equilibrium
 	info_dke_yp(2,[path_equil,'EQUIL_',id_equil,'.mat does not exist']);
@@ -41,8 +41,8 @@ theta0 = pi/4;
 phi0 = 0;
 %
 m0 = -0.3*10000;
-Npar0 = 0.8;%initial index of refraction (between 0 and 1)
-xmode = 1;%cold plasma mode [nx] : (-1) m (1) p 
+Npar0 = 0.5;%initial index of refraction (between 0 and 1)
+mmode = -1;%cold plasma mode [nx] : (1) m (-1) p 
 %           p is the slow mode when kperp > 0 (ex : LH slow wave)
 kmode = 0;% kinetic (1) or cold (0) plasma model
 sigma = -1;% Inward or outward direction (+1,-1)
@@ -88,7 +88,7 @@ end
 %
 omega_rf = 2*pi*f_rf*1e9;
 %
-y0 = init_RT_jd(equil,equil_fit,rho0,theta0,phi0,omega_rf,Npar0,m0,xmode,kmode)';
+y0 = init_RT_jd(equil,equil_fit,rho0,theta0,phi0,omega_rf,Npar0,m0,mmode,kmode)';
 %
 info_dke_yp(2,'Initial conditions calculated');
 %
@@ -108,7 +108,7 @@ end
 %
 % building ray for Fp calculations
 %
-ns = length(spsin);
+ns = length(srho);
 %
 ray.P0_2piRp = P0*1e6/2/pi/equil.Rp;%Initial lineic power density in the ray (W/m) [1,1]
 %
@@ -117,8 +117,8 @@ ray.sphi = sphi.';% Ray location (toroidal angle) along the propagation [1,ns]
 ray.sy = sZ.' - equil_fit.Zp;% Ray location (vertical) along the propagation [1,ns]
 %
 ray.ss = [];% Ray propagation distance parameter for each ray (put to NaN once the ray is absorbed) [1,ns]
-ray.spsin = spsin.';% Ray location (normalized magnetic flux) along the propagation [1,ns]
-ray.stheta = stheta.';% Ray location (poloidal angle) along the propagation [1,ns]
+ray.spsin = [];% Ray location (normalized magnetic flux) along the propagation [1,ns]
+ray.stheta = [];% Ray location (poloidal angle) along the propagation [1,ns]
 %
 ray.skx = [];% Ray wave vector (major radius) along the propagation [1,ns]
 ray.sn = [];% Ray wave number (toroidal) along the propagation [1,ns]

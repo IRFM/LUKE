@@ -15,7 +15,7 @@ filename = id_wave;
 %
 id_equil = 'RTtest';%For plasma equilibrium
 mode_equil = 1;%Magnetic equilibrium grid type: (1): (psi-theta), (2): (x-y)
-path_equil = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_equil = '../EQUIL/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 if exist([path_equil,'EQUIL_',id_equil,'.mat']) == 0,%Magnetic equilibrium
 	info_dke_yp(2,[path_equil,'EQUIL_',id_equil,'.mat does not exist']);
@@ -42,7 +42,7 @@ phi0 = 0;
 %
 m0 = 0;
 Npar0 = 2;%initial index of refraction
-xmode = 1;%cold plasma mode [nx] : (-1) m (1) p 
+mmode = -1;%cold plasma mode [nx] : (1) m (-1) p 
 %           p is the slow mode when kperp > 0 (ex : LH slow wave)
 kmode = 0;% kinetic (1) or cold (0) plasma model
 sigma = +1;% Inward or outward direction (+1,-1)
@@ -88,18 +88,25 @@ end
 %
 omega_rf = 2*pi*f_rf*1e9;
 %
-y0 = init_RT_jd(equil,equil_fit,rho0,theta0,phi0,omega_rf,Npar0,m0,xmode,sigma,kmode)';
+y0 = init_RT_jd(equil,equil_fit,rho0,theta0,phi0,omega_rf,Npar0,m0,mmode,kmode)';
 %
 info_dke_yp(2,'Initial conditions calculated');
 %
 if isreal(y0(4)),
     %
-    tic,[tout, yout] = raytracing_yp(rayparam,equil_fit,y0);toc
+    [tout, yout] = raytracing_yp(rayparam,equil_fit,y0);
     %
-    info_dke_yp(2,'Ray trajectories calculated');
+    info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium)');
     %
-    [spsin,stheta,sphi,sR,sZ,sNpar,sNperp,sepol_pmz,sphi_xyz] = raypostprocessing_yp(tout, yout,rayparam,equil_fit,omega_rf,display_ray,p_opt,filename);
+    filename = [id_wave,'_numeric'];
+    [iabs_out,srho,stheta,sphi,sR,sZ,sNpar,sNperp,sepol_pmz,sphi_xyz] = raypostprocessing_yp(tout,yout,rayparam,equil_fit,omega_rf,display_ray,p_opt,filename,' (numeric)');
     %
+    [tout, yout] = raytracing_yp(rayparam,equil_fit,y0,1);
+    %
+    filename = [id_wave,'_analytic'];
+    info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
+    %
+    [iabs_out,srho,stheta,sphi,sR,sZ,sNpar,sNperp,sepol_pmz,sphi_xyz] = raypostprocessing_yp(tout,yout,rayparam,equil_fit,omega_rf,display_ray,p_opt,filename,' (Analytic)');
     info_dke_yp(2,'Ray processing done');
     %
 else
@@ -108,7 +115,7 @@ end
 %
 % building ray for Fp calculations
 %
-ns = length(spsin);
+ns = length(srho);
 %
 ray.P0_2piRp = P0*1e6/2/pi/equil.Rp;%Initial lineic power density in the ray (W/m) [1,1]
 %
@@ -117,8 +124,8 @@ ray.sphi = sphi.';% Ray location (toroidal angle) along the propagation [1,ns]
 ray.sy = sZ.' - equil_fit.Zp;% Ray location (vertical) along the propagation [1,ns]
 %
 ray.ss = [];% Ray propagation distance parameter for each ray (put to NaN once the ray is absorbed) [1,ns]
-ray.spsin = spsin.';% Ray location (normalized magnetic flux) along the propagation [1,ns]
-ray.stheta = stheta.';% Ray location (poloidal angle) along the propagation [1,ns]
+ray.spsin = [];% Ray location (normalized magnetic flux) along the propagation [1,ns]
+ray.stheta = [];% Ray location (poloidal angle) along the propagation [1,ns]
 %
 ray.skx = [];% Ray wave vector (major radius) along the propagation [1,ns]
 ray.sn = [];% Ray wave number (toroidal) along the propagation [1,ns]
