@@ -178,6 +178,7 @@ void dsolve();
 void disprel();
 void interpequil();
 void interpequil_test();
+void load_idealequil_test();
 equilparam_format load_equil_param();
 rayparam_format load_ray_param();
 pp_1D_format load_equil_1D();
@@ -209,6 +210,7 @@ void ImFdnest();
 #define RAYPARAM_IN  prhs[0]
 #define EQUIL_IN     prhs[1]
 #define Y0_IN    prhs[2]
+#define FLAG_IN prhs[3]
 
 /* Output Arguments */
 
@@ -221,6 +223,7 @@ void ImFdnest();
 #define PSHRINK 0.25
 #define MC 8
 #define PI 3.14159265358979
+
 
 
 /* Fehlberg coefficients */
@@ -265,17 +268,32 @@ void mexFunction(   int     nlhs,
     double *x,*dRdrho,*dRdtheta,*d2Rdtheta2,*d2Rdthetadrho;
     double *y,*dZdrho,*dZdtheta,*d2Zdtheta2,*d2Zdthetadrho;
     double dummy1,dummy2;
+    double flag;
     
     /* Check out the arguments */
 
-    if (nrhs != 3) {
+    if (nrhs < 3) {
         mexErrMsgTxt("Wrong number of input arguments for raytracing_yp");
-    } else if (nlhs != 2) {
+    }
+ 
+    if (nrhs > 4) {
+        mexErrMsgTxt("Wrong number of input arguments for raytracing_yp");
+    }
+      
+    if (nlhs != 2) {
         mexErrMsgTxt("Wrong number of output arguments for raytracing_yp");
     }
     
     if (!mxIsStruct(prhs[0])) mexErrMsgTxt("Input arguments must be structures");
     if (!mxIsStruct(prhs[1])) mexErrMsgTxt("Input arguments must be structures");
+    
+    if (nrhs == 3) {
+        flag = 0;
+    } else {
+        flag = *(mxGetPr(FLAG_IN));
+    }
+    
+    
 
 /*    double complex iBn,iBnp,iBnpp;   
     modBessel(-5.4,(double complex)(3.0 +1.2*I),&iBn,&iBnp,&iBnpp);
@@ -421,8 +439,6 @@ void mexFunction(   int     nlhs,
     
     double t1,t2,rho1,rho2,theta1,theta2,phi1,phi2,krho1,krho2,m1,m2,n1,n2,omega1,omega2;
     double rho_step,m_step;
-    
-    int flag;
 
     y0 = mxGetPr(Y0_IN);
     
@@ -440,13 +456,13 @@ Create and Initialize Return Arguments
     n1 = y0[5];
     omega1 = y0[6];
     
-/*
-Solves the dispersion relation internally to remove numerical errors from initial conditions
 
-    mexPrintf("krho1:%g\n",krho1);   
-    dsolve(1,&krho1,y0,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit); 
-    mexPrintf("krho1:%g\n",krho1);         
-*/
+/* Solves the dispersion relation internally to remove numerical errors from initial conditions */
+    if (fabs(flag) > 0) {
+       /*mexPrintf("krho1:%g\n",krho1); */  
+       dsolve(1,&krho1,y0,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag); 
+       /*mexPrintf("krho1:%g\n",krho1); */        
+    }
     
     rho_step = rho1;
     m_step = m1;
@@ -521,7 +537,7 @@ Compute the slopes
         y1[m] = s0[m];
     }
         
-        ray(s1,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,0);          
+        ray(s1,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag);          
         /* s2 = feval(F, t+h*alpha(1), y1+h*s1*beta(1,1), param); */
 
     for  (m = 0; m < MC-3; m++) {/* only the first five coordinates are evolving (rho,theta,phi,krho,m) */
@@ -529,14 +545,14 @@ Compute the slopes
     }
          
             
-        ray(s2,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,0);
+        ray(s2,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag);
         /* s3 = feval(F, t+h*alpha(2), y1+h*[s1*beta(2,1)+s2*beta(2,2)], param); */
 
     for  (m = 0; m < MC-3; m++) {
         y1[m] = s0[m]+h*(s1[m]*beta[0][1] + s2[m]*beta[1][1]);
     }
 
-    ray(s3,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,0);
+        ray(s3,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag);
 
         /* s4 = feval(F, t+h*alpha(3), y1+h*[s1*beta(3,1)+s2*beta(3,2)+...], param); */
 
@@ -544,7 +560,7 @@ Compute the slopes
         y1[m] = s0[m]+h*(s1[m]*beta[0][2] + s2[m]*beta[1][2] + s3[m]*beta[2][2]);
     }
  
-        ray(s4,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,0);
+        ray(s4,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag);
 
         /* s5 = feval(F, t+h*alpha(4), y1+h*[s1*beta(4,1)+s2*beta(4,2)+...], param); */
 
@@ -553,7 +569,7 @@ Compute the slopes
     }
 
 
-        ray(s5,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,0);
+        ray(s5,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag);
 
         /* s6 = feval(F, t+h*alpha(5), y1+h*[s1*beta(5,1)+s2*beta(5,2)+...], param); */
 
@@ -561,7 +577,7 @@ Compute the slopes
         y1[m] = s0[m]+h*(s1[m]*beta[0][4] + s2[m]*beta[1][4] + s3[m]*beta[2][4] + s4[m]*beta[3][4] + s5[m]*beta[4][4]);
     }
         
-    ray(s6,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,0);
+    ray(s6,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag);
 
 /*
 Estimate the error and the acceptable error
@@ -640,7 +656,7 @@ Update the solution only if the error is acceptable
                     s0[4] = m1;
                     s0[5] = n1;
                     s0[6] = omega1;             
-                    dsolve(0,&krho2,s0,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit); 
+                    dsolve(0,&krho2,s0,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag); 
 /*                    mexPrintf("test2a,krho2,cimag(krho2):%g,%g,%g\n",krho2,cimag(krho2));*/       
                     if (cimag(krho2) == 0.0) {/* ray may propagate in vacuum. Propagation is stopped */
                         mexPrintf("********************************** The wave leaves the plasma at rho = %g**********************************\n",rho1);
@@ -805,7 +821,7 @@ pp_2D_format BPHI_fit;
 pp_2D_format Bx_fit;
 pp_2D_format By_fit;
 pp_1D_format dxstardpsin_fit;
-int flag;
+double flag;
 {
 
 
@@ -906,9 +922,11 @@ int flag;
     }
 
     /* Equilibrium interpolation at ray location */
-    interpequil(param,raymagnetic,rayprofiles,equilparam,Y,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit);
-    /*  interpequil_test(raymagnetic,rayprofiles,equilparam,Y);*/
-
+    if (flag == 0) {
+       interpequil(param,raymagnetic,rayprofiles,equilparam,Y,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit);
+    } else {
+       interpequil_test(raymagnetic,rayprofiles,equilparam,Y,flag);
+    }
 
     /* Refractive index calculation */
     rayindex(1,Y,raymagnetic,equilparam,&Npar,&Nperp,&N2,dNpardY,dNperpdY,dN2dY);
@@ -921,7 +939,7 @@ int flag;
 
     susceptibility(X,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Nperp,dNperpdY,Y[6]);
 
-    if (flag) {/* dipersion relation */
+    if (flag < 0) {/* dipersion relation */
         disprel(&Dtot,X,raymagnetic,Npar,Nperp,N2);
     }
 
@@ -1226,7 +1244,7 @@ pp_1D_format dxstardpsin_fit;
 }
 
 
-void dsolve(mode,krho,Y,param,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit)
+void dsolve(mode,krho,Y,param,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag)
 int mode;
 double *krho;
 double Y[];
@@ -1242,6 +1260,7 @@ pp_2D_format Bx_fit;
 pp_2D_format By_fit;
 pp_2D_format BPHI_fit;
 pp_1D_format dxstardpsin_fit;
+double flag;
 {
     double Npar,dNpardY[MC];
     double complex Nperp,dNperpdY[MC];
@@ -1350,8 +1369,11 @@ pp_1D_format dxstardpsin_fit;
     }
 
     /* Equilibrium interpolation at ray location */
-    interpequil(param,raymagnetic,rayprofiles,equilparam,Y,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit);
-    /*interpequil_test(raymagnetic,rayprofiles,equilparam,Y);*/
+    if (flag == 0) {
+        interpequil(param,raymagnetic,rayprofiles,equilparam,Y,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit);
+    } else {
+        interpequil_test(raymagnetic,rayprofiles,equilparam,Y,flag);
+    }
 
     krho0 = Y[3];
     krho1 = frac*krho0;
@@ -2094,11 +2116,12 @@ double dRstardpsin,ddRstardpsindrho;
 }
 
 
-void interpequil_test(raymagnetic,rayprofiles,equilparam,Y)
+void interpequil_test(raymagnetic,rayprofiles,equilparam,Y,flag)
 raymagnetic_format raymagnetic;
 rayprofiles_format rayprofiles;
-equilparam_format equilparam;
+equilparam_format equilparam;/* is an output in this case, since nothing is used from MatLab */
 double Y[];
+double flag;
 {
 /* toroidal circular equilibrium from Bonoli and Ott, PoF 25, 359 (1982) */
     
@@ -2110,9 +2133,9 @@ double Y[];
     double Te0,Tea,eTe;
     double ne0,nea,ene;
     double Ti0,Tia,eTi;
-    double fi[3];
+    double fi[3],zZi[4],zmi[4];
     
-    double Rp,ap,rho,theta,cyl;
+    double Zp,Rp,ap,rho,theta,cyl;
     double BPHI0,BP0,dBP0dY1;
     double B,dBdrho,dBdtheta;
     double BP,dBPdrho,dBPdtheta;
@@ -2120,68 +2143,53 @@ double Y[];
     double R,dRdrho,dRdtheta;
     double Zeff0,Zeffa,eZeff,pZeff,dpZeffdrho;
     
-    double Ip,BPa,sigmaIp;
+    double Ip,BPa,sigmaIp,eq,qmin,qmax,q,dqdrho,ep;
     
-    int is;
+    int is,ns;
    
-    if (equilparam.ns[0] > 4) mexErrMsgTxt("Only one high-Z impurity allowed in analytical equilibrium");
-
     rho = Y[0];
     theta = Y[1];
     
-    cyl = 1.0;/* cylindrical factor */
+    load_idealequil_test(flag,&cyl,&Zp,&Rp,&ap,&BPHI0,&Ip,&eq,&qmin,&Te0,&Tea,&eTe,&ne0,&nea,&ene,&Ti0,&Tia,&eTi,&Zeff0,&Zeffa,&eZeff,&ns,fi,zZi,zmi);
     
-    Rp = 3.05*cyl;
-    ap = 0.95;
-    BPHI0 = 3.2;/* Signed toroidal magnetic component (T), see the conventions */
-    Ip = 3.5;/* Signed toroidal component of the plasma current (MA), see the conventions */
-    
-    Te0 = 6.0;
-    Tea = 0.1;
-    eTe = 1.5;
-    
-    ne0 = 5.0e+19;
-    nea = 0.01e+19;
-    ene = 1.0;
-    
-    Ti0 = Te0;
-    Tia = Tea;
-    eTi = eTe;
-    
-    fi[0] = 1.0;
-    fi[1] = 0.0;
-    fi[2] = 0.0;
-    
-    
-    if (equilparam.ns[0] == 3) {
-       Zeff0 = 1.0;/* No impurity case, only hydrogen */
-       Zeffa = 1.0;
-       eZeff = 0.0;
-    } else {
-       Zeff0 = 2.667;/* Effective charge for a single fully ionized impurity only */
-       Zeffa = 3.789;
-       eZeff = 2.0;    
-    }
-   
-    
-    if (equilparam.zZi[0] == 0.0) {/* vacuum case. No need of density !*/
-       Zeff0 = 0.0;
-       Zeffa = 0.0;
-       eZeff = 0.0;
-    }   
-    
+    ep = ap/Rp;
+        
+/* 
+    mexPrintf("ap,Rp,Zp,BPHI0,Ip,eq,qmin,Te0,Tea,eTe,ne0,nea,ene,Ti0,Tia,eTi,Zeff0,Zeffa,eZeff,n=%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n",ap,Rp,Zp,BPHI0,Ip,eq,qmin,Te0,Tea,eTe,ne0,nea,ene,Ti0,Tia,eTi,Zeff0,Zeffa,eZeff);
+    mexPrintf("fi[0],fi[1],fi[2],zZi[0],zZi[1],zZi[2],zmi[0],zmi[1],zmi[2]=%g,%g,%g,%g,%g,%g,%g,%g,%g\n",fi[0],fi[1],fi[2],zZi[0],zZi[1],zZi[2],zmi[0],zmi[1],zmi[2]);
+*/      
     pZeff = Zeff0 + (Zeffa-Zeff0)*pow(rho,eZeff);
     dpZeffdrho = eZeff*(Zeffa-Zeff0)*pow(rho,eZeff-1);
+    
+    if (ns > 4) {
+       mexErrMsgTxt("Only one fully stripped impurity can be used !"); 
+    }
    
-    rayprofiles.Te[0] = Tea + (Te0 - Tea)*pow(1 - rho*rho,eTe);
-    rayprofiles.dTedY[0] = -2*rho*eTe*(Te0 - Tea)*pow(1 - rho*rho,eTe - 1);  
+    if ((abs(flag) == 1) || (abs(flag) == 2))  {/*Jetlike and RTtest */
     
-    rayprofiles.ne[0] = nea + (ne0 - nea)*pow(1 - rho*rho,ene);
-    rayprofiles.dnedY[0] = -2*rho*ene*(ne0 - nea)*pow(1 - rho*rho,ene - 1);  
+       rayprofiles.Te[0] = Tea + (Te0 - Tea)*pow(1 - rho*rho,eTe);
+       rayprofiles.dTedY[0] = -2*rho*eTe*(Te0 - Tea)*pow(1 - rho*rho,eTe - 1);  
     
-    for (is=0;is<equilparam.ns[0];is++) {
-        rayprofiles.zTi[is] = Tia + (Ti0 - Tia)*pow(1 - rho*rho,eTi);
-        rayprofiles.dzTidY[is][0] = -2*rho*eTi*(Ti0 - Tia)*pow(1 - rho*rho,eTi - 1);     
+       rayprofiles.ne[0] = nea + (ne0 - nea)*pow(1 - rho*rho,ene);
+       rayprofiles.dnedY[0] = -2*rho*ene*(ne0 - nea)*pow(1 - rho*rho,ene - 1);  
+    
+    
+       for (is=0;is<ns;is++) {
+           rayprofiles.zTi[is] = Tia + (Ti0 - Tia)*pow(1 - rho*rho,eTi);
+           rayprofiles.dzTidY[is][0] = -2*rho*eTi*(Ti0 - Tia)*pow(1 - rho*rho,eTi - 1);     
+       }
+    } else if ((abs(flag) == 3) || (abs(flag) == 4)) {/*VERSATOR2 and PLT */        
+        
+       rayprofiles.Te[0] = Tea + (Te0 - Tea)*(exp(-eTe*Y[0]*Y[0]) - exp(-eTe))/(1 - exp(-eTe));
+       rayprofiles.dTedY[0] = -2*eTe*Y[0]*(Te0 - Tea)*exp(-eTe*Y[0]*Y[0])/(1 - exp(-eTe));  
+    
+       rayprofiles.ne[0] = nea + (ne0 - nea)*(exp(ene) - exp(ene*Y[0]*Y[0]))/(exp(ene) - 1);
+       rayprofiles.dnedY[0] = -2*ene*Y[0]*(ne0 - nea)*exp(ene*Y[0]*Y[0])/(exp(ene) - 1);  
+    
+       for (is=0;is<ns;is++) {
+           rayprofiles.zTi[is] = Tia + (Ti0 - Tia)*(exp(-eTi*Y[0]*Y[0]) - exp(-eTi))/(1 - exp(-eTi));
+           rayprofiles.dzTidY[is][0] = -2*eTi*Y[0]*(Ti0 - Tia)*exp(-eTi*Y[0]*Y[0])/(1 - exp(-eTi));;     
+       }
     }
     
     for (is=0;is<3;is++) { /*For a single impurity fully stripped. Only the first is selected after the isotope of hydrogen */
@@ -2189,10 +2197,18 @@ double Y[];
         rayprofiles.dznidY[is][0] = fi[is]*(rayprofiles.dnedY[0]*(equilparam.zZi[3] - pZeff) - rayprofiles.ne[0]*dpZeffdrho)/(equilparam.zZi[3]-1.0);     
     }
     
-    for (is=3;is<equilparam.ns[0];is++) {/*For a single impurity fully stripped. Only the first is selected after the isotope of hydrogen */
+    for (is=3;is<ns;is++) {/*For a single impurity fully stripped. Only the first is selected after the isotope of hydrogen */
         rayprofiles.zni[is] = rayprofiles.ne[0]*(pZeff - 1.0)/(equilparam.zZi[3]-1)/equilparam.zZi[3];
         rayprofiles.dznidY[is][0] = (rayprofiles.dnedY[0]*(pZeff - 1.0) + rayprofiles.ne[0]*dpZeffdrho)/(equilparam.zZi[3]-1)/equilparam.zZi[3];         
     }
+              
+    equilparam.zZi = zZi;
+    equilparam.zmi = zmi;
+    equilparam.ns[0] = ns;
+
+    equilparam.Rp[0] = Rp;
+    equilparam.ap[0] = ap;
+    equilparam.Zp[0] = Zp;
 
     raymagnetic.rn[0] = rho;
     raymagnetic.drndY[0] = 1.0;
@@ -2202,20 +2218,41 @@ double Y[];
     dRdrho = ap*cos(theta);
     dRdtheta = -ap*rho*sin(theta);
     
-    raymagnetic.Rn[0] = R/equilparam.ap[0];
-    raymagnetic.dRndY[0] = dRdrho/equilparam.ap[0];
-    raymagnetic.dRndY[1] = dRdtheta/equilparam.ap[0];
+    raymagnetic.Rn[0] = R/ap;
+    raymagnetic.dRndY[0] = dRdrho/ap;
+    raymagnetic.dRndY[1] = dRdtheta/ap;
     
     BPHI = Rp*BPHI0/R;
     dBPHIdrho = -BPHI*dRdrho/R;
     dBPHIdtheta =  -BPHI*dRdtheta/R;
     
     BPa = 0.2*fabs(Ip)/ap;/* MA */
+    qmax = ep*cyl*fabs(BPHI0)/BPa;/* cylindrical limit */
     
-    BP = BPa*(1 - pow(1 - rho*rho,2))*Rp/R/rho;/* Poloidal magnetic field, cylindrical limit */
-    dBPdrho = BPa*(4*(1 - rho*rho) - (1 - pow(1 - rho*rho,2))/rho/rho)*Rp/R - BP*dRdrho/R;
+    if ((abs(flag) == 1) || (abs(flag) == 3) ||(abs(flag) == 4))  {/*RTtest, VERSATOR2 and PLT */
+       q = (qmax - qmin)*pow(Y[0],eq) + qmin;
+       dqdrho = eq*(qmax - qmin)*pow(Y[0],eq - 1.0);
+       equilparam.psia[0] = ap*ap*fabs(BPHI0)*log(qmax/qmin)/(qmax - qmin)/2;
+ /*      mexPrintf("qmax,BPa,equilparam.psia[0] = %g,%g,%g\n",qmax,BPa,equilparam.psia[0]);*/
+        
+    } else if(abs(flag) == 2) {/*JETlike */
+  //  BP = BPa*(1 - pow(1 - rho*rho,2))*Rp/R/rho;/* Poloidal magnetic field, cylindrical limit */
+  //  dBPdrho = BPa*(4*(1 - rho*rho) - (1 - pow(1 - rho*rho,2))/rho/rho)*Rp/R - BP*dRdrho/R;
+       
+       if (Y[0] == 0.0) {
+          q = qmax/(1+eq);
+          dqdrho = 0.0;   
+       } else {
+          q = qmax*pow(Y[0],2)/(1 - pow(1-Y[0]*Y[0],1+eq));  
+          dqdrho = 2*q*(1 - (eq+1)*pow(1-Y[0]*Y[0],eq)*q/qmax)/Y[0];    
+       }        
+       equilparam.psia[0] = ap*ap*BPa*3/4;  
+    }
+     
+    BP = qmax*BPa*Rp*Y[0]/q/R;/* Poloidal magnetic field, cylindrical limit */
+    dBPdrho = qmax*BPa*Rp*(1.0 - dqdrho*Y[0]/q - dRdrho*Y[0]/R)/q/R;
     dBPdtheta = -BP*dRdtheta/R;
-  
+    
     /* mexPrintf("ap,Rp,BPa,rho,BP,BPHI0,R,dBPdrho,dBPdtheta:%g,%g,%g,%g,%g,%g,%g,%g,%g\n",ap,Rp,BPa,rho,BP,BPHI0,R,dBPdrho,dBPdtheta); */
       
     sigmaIp = sgn(Ip);
@@ -2248,11 +2285,12 @@ double Y[];
     raymagnetic.dgradrhondY[0] = 0.0;
     raymagnetic.dgradrhondY[1] = 0.0;
     
+    
 /*   
     mexPrintf("---- Interpequil_test ----\n");
     mexPrintf("rho,theta:%g,%g\n",rho,theta);
     mexPrintf("Te[0],dTedY[0],dTedY[1],ne[0],dnedY[0],dnedY[1]:%g,%g,%g,%g,%g,%g\n",rayprofiles.Te[0],rayprofiles.dTedY[0],rayprofiles.dTedY[1],rayprofiles.ne[0],rayprofiles.dnedY[0],rayprofiles.dnedY[1]);
-    for (is=0;is<equilparam.ns[0];is++) {
+    for (is=0;is<ns;is++) {
         mexPrintf("is,zTi[is],dzTidY[is][0],dzTidY[is][1],zni[is],dznidY[is][0],dznidY[is][1]:%d,%g,%g,%g,%g,%g,%g\n",is,rayprofiles.zTi[is],rayprofiles.dzTidY[is][0],rayprofiles.dzTidY[is][1],rayprofiles.zni[is],rayprofiles.dznidY[is][0],rayprofiles.dznidY[is][1]);
     }
     
@@ -2278,6 +2316,181 @@ double x;
 }
 
 
+void load_idealequil_test(flag,cyl,Zp,Rp,ap,BPHI0,Ip,eq,qmin,Te0,Tea,eTe,ne0,nea,ene,Ti0,Tia,eTi,Zeff0,Zeffa,eZeff,ns,fi,zZi,zmi)
+double *cyl,*Zp,*Rp,*ap,*BPHI0,*Ip,*eq,*qmin,*Te0,*Tea,*eTe,*ne0,*nea,*ene,*Ti0,*Tia,*eTi,*Zeff0,*Zeffa,*eZeff;
+double fi[],zZi[],zmi[];
+double flag;
+int *ns;
+{
 
+   if (fabs(flag) == 1) {/* RTtest case */
+      cyl[0] = 1.0;/* cylindrical factor */
+    
+      Rp[0] = 3.0*cyl[0];
+      Zp[0] = 0;
+      ap[0] = 0.9;
+      BPHI0[0] = 3.0;/* Signed toroidal magnetic component (T), see the conventions */
+      Ip[0] = 1.0;/* Signed toroidal component of the plasma current (MA), see the conventions */
+      qmin[0] = 1.0;/* Edge safety factor q */
+      eq[0] = 2.0;/* q=0 flat q profile */
+
+      Te0[0] = 4.0;
+      Tea[0] = Te0[0]/10.0;
+      eTe[0] = 1.0;
+    
+      ne0[0] = 3.0e+19;
+      nea[0] = 1e-10;
+      ene[0] = 1.0;
+    
+      Ti0[0] = Te0[0];
+      Tia[0] = Tea[0];
+      eTi[0] = eTe[0];
+    
+      fi[0] = 1.0;
+      fi[1] = 0.0;
+      fi[2] = 0.0;
+         
+      zZi[0] = 1.0;
+      zZi[1] = 1.0;
+      zZi[2] = 1.0;
+      zZi[3] = 6.0;/* Carbon */
+      
+      zmi[0] = 1.0;
+      zmi[1] = 2.0;
+      zmi[2] = 3.0;
+      zmi[3] = 12.0;/* Carbon */
+      
+      ns[0] = 4;   
+      
+      Zeff0[0] = 1.0;/* No impurity case, only hydrogen */
+      Zeffa[0] = 1.0;
+      eZeff[0] = 0.0;
+      
+   } else if (fabs(flag) == 2) {/* Jetlike case */
+      cyl[0] = 1.0;/* cylindrical factor */
+    
+      Rp[0] = 3.05*cyl[0];
+      Zp[0] = 0;
+      ap[0] = 0.95;
+      BPHI0[0] = 3.2;/* Signed toroidal magnetic component (T), see the conventions */
+      Ip[0] = 3.5;/* Signed toroidal component of the plasma current (MA), see the conventions */
+      qmin[0] = 1.0;/* Edge safety factor q */
+      eq[0] = 1.0;/* q=0 flat q profile */
+
+      Te0[0] = 6.0;
+      Tea[0] = 0.1;
+      eTe[0] = 1.5;
+    
+      ne0[0] = 5.0e+19;
+      nea[0] = 0.01e+19;
+      ene[0] = 1.0;
+    
+      Ti0[0] = Te0[0];
+      Tia[0] = Tea[0];
+      eTi[0] = eTe[0];
+    
+      fi[0] = 1.0;
+      fi[1] = 0.0;
+      fi[2] = 0.0;
+         
+      zZi[0] = 1.0;
+      zZi[1] = 1.0;
+      zZi[2] = 1.0;
+      
+      zmi[0] = 1.0;
+      zmi[1] = 2.0;
+      zmi[2] = 3.0;
+      
+      ns[0] = 3;   
+      
+      Zeff0[0] = 1.0;/* No impurity case, only hydrogen */
+      Zeffa[0] = 1.0;
+      eZeff[0] = 0.0;
+   } else if (fabs(flag) == 3) {/* VERSATOR2 case */
+      cyl[0] = 1.0;/* cylindrical factor */
+    
+      Rp[0] = 0.4*cyl[0];
+      Zp[0] = 0;
+      ap[0] = 0.325*0.4;
+      BPHI0[0] = 1.4;/* Signed toroidal magnetic component (T), see the conventions */
+      Ip[0] = 0.05;/* Signed toroidal component of the plasma current (MA), see the conventions */
+      qmin[0] = 1.0;/* Edge safety factor q */
+      eq[0] = 2.0;/* q=0 flat q profile */
+
+      Te0[0] = 0.40;
+      Tea[0] = 0.02;
+      eTe[0] = 3.94;
+    
+      ne0[0] = 2.0e19;
+      nea[0] = 2e18;
+      ene[0] = 0.1;
+    
+      Ti0[0] = 0.15;
+      Tia[0] = 0.02;
+      eTi[0] = 3.94;
+    
+      fi[0] = 1.0;
+      fi[1] = 0.0;
+      fi[2] = 0.0;
+         
+      zZi[0] = 1.0;
+      zZi[1] = 1.0;
+      zZi[2] = 1.0;
+      zZi[3] = 6.0;
+      
+      zmi[0] = 1.0;
+      zmi[1] = 2.0;
+      zmi[2] = 3.0;
+      zmi[3] = 12.0;
+      
+      ns[0] = 4;   
+      
+      Zeff0[0] = 1.0;/* No impurity case, only hydrogen */
+      Zeffa[0] = 1.0;
+      eZeff[0] = 0.0;
+   } else if (fabs(flag) == 4) {/* PLT case */
+      cyl[0] = 1.0;/* cylindrical factor */
+    
+      Rp[0] = 1.32*cyl[0];
+      Zp[0] = 0;
+      ap[0] = 0.303*1.32;
+      BPHI0[0] = 3.1;/* Signed toroidal magnetic component (T), see the conventions */
+      Ip[0] = 0.2;/* Signed toroidal component of the plasma current (MA), see the conventions */
+      qmin[0] = 1.0;/* Edge safety factor q */
+      eq[0] = 2.0;/* q=0 flat q profile */
+
+      Te0[0] = 1.5;
+      Tea[0] = 0.03;
+      eTe[0] = 3.99;
+    
+      ne0[0] = 0.5625e19;
+      nea[0] = 0.5625e18;
+      ene[0] = -0.571;
+    
+      Ti0[0] = 0.5;
+      Tia[0] = 0.03;
+      eTi[0] = 2.90;
+    
+      fi[0] = 1.0;
+      fi[1] = 0.0;
+      fi[2] = 0.0;
+         
+      zZi[0] = 1.0;
+      zZi[1] = 1.0;
+      zZi[2] = 1.0;
+      zZi[3] = 6.0;
+      
+      zmi[0] = 1.0;
+      zmi[1] = 2.0;
+      zmi[2] = 3.0;
+      zmi[3] = 12.0;
+      
+      ns[0] = 4;   
+      
+      Zeff0[0] = 1.0;/* No impurity case, only hydrogen */
+      Zeffa[0] = 1.0;
+      eZeff[0] = 0.0;
+    }
+}
 
 
