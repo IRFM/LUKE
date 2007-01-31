@@ -8,14 +8,17 @@
 \usepackage{amssymb}%
 \setcounter{MaxMatrixCols}{30}
 %TCIDATA{OutputFilter=latex2.dll}
-%TCIDATA{Version=5.50.0.2953}
-%TCIDATA{CSTFile=C:\swp55\styles\article\Joan Decker article.cst}
+%TCIDATA{Version=5.50.0.2890}
+%TCIDATA{CSTFile=article.cst}
 %TCIDATA{Created=Friday, August 11, 2006 11:13:28}
-%TCIDATA{LastRevised=Tuesday, January 30, 2007 15:44:09}
+%TCIDATA{LastRevised=Wednesday, January 31, 2007 14:29:29}
 %TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
 %TCIDATA{<META NAME="SaveForMode" CONTENT="1">}
 %TCIDATA{BibliographyScheme=Manual}
 %TCIDATA{<META NAME="DocumentShell" CONTENT="Joan Decker\letter_jd_A4">}
+%TCIDATA{ComputeDefs=
+%$q=q_{\min}$
+%}
 %BeginMSIPreambleData
 \providecommand{\U}[1]{\protect\rule{.1in}{.1in}}
 %EndMSIPreambleData
@@ -1161,7 +1164,7 @@ as $\mathbf{k}=k_{r}\widehat{\mathbf{r}}+k_{\theta}\widehat{\mathbf{\theta}%
 \begin{array}
 [c]{l}%
 k_{\rho}=\dfrac{k_{r}}{\left\Vert \mathbf{\nabla}\rho\right\Vert \cos\alpha}\\
-m=r\left(  k_{\theta}+k_{r}\tan\alpha\right)  \\
+m=r\left(  k_{\theta}+k_{r}\tan\alpha\right) \\
 n=Rk_{\phi}%
 \end{array}
 \label{projection}%
@@ -1484,7 +1487,7 @@ J_{z}=\dfrac{2I_{P}}{\pi a_{p}^{2}}\left(  1-\rho^{2}\right)  \\
 \end{array}
 $}%
 \]
-Note that the q profile is approximately (to order $\epsilon$)%
+Note that the $q$ profile is approximately (to order $\epsilon$)%
 \begin{equation}
 q\simeq\dfrac{r}{R_{p}}\dfrac{B_{T}}{B_{P}}\simeq\dfrac{r}{R}\dfrac{B_{T0}%
 }{B_{P}}%
@@ -1499,6 +1502,25 @@ and for $\alpha=1$%
 \fbox{$q\simeq\dfrac{B_{T0}}{\widehat{B}_{Pa}}\dfrac{a_{p}}{R_{p}}\dfrac
 {\rho^{2}}{1-\left(  1-\rho^{2}\right)  ^{2}}$}%
 \end{equation}
+
+
+The $q$ profile may be expressed in a slightly modified form%
+\begin{equation}
+q\simeq q_{\max}\dfrac{\rho^{2}}{1-\left(  1-\rho^{2}\right)  ^{\alpha+1}}%
+\end{equation}
+with $q\left(  0\right)  =q_{\max}/(1+\alpha)$ and
+\begin{equation}
+q_{\max}=\dfrac{B_{T0}}{\widehat{B}_{Pa}}\dfrac{a_{p}}{R_{p}}%
+\end{equation}
+
+
+Note that
+\begin{align}
+\lim_{\rho\rightarrow0}q  & =\frac{q_{\max}}{\alpha+1}\\
+\lim_{\rho\rightarrow0}\frac{dq}{d\rho}  & =0
+\end{align}
+
+
 
 
 \subsubsection{Wave initial conditions}
@@ -1539,13 +1561,13 @@ with those from \cite{hei99}.%
 
 %TCIMACRO{\FRAME{ftbhFU}{3.6002in}{2.3999in}{0pt}{\Qcb{Poloidal projection of
 %the ray trajectory. The red curve corresponds to the slow mode and the blue
-%curve corresponds to the fast mode.}}{}{ray_20_traj_poloidal.eps}%
+%curve corresponds to the fast mode.}}{}{JETliketest_numeric_RayPoloidal.eps}%
 %{\special{ language "Scientific Word";  type "GRAPHIC";
 %maintain-aspect-ratio TRUE;  display "USEDEF";  valid_file "F";
 %width 3.6002in;  height 2.3999in;  depth 0pt;  original-width 8.5988in;
 %original-height 5.1024in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename '../Examples/JETlike/WAVE/figures/ray_20_traj_poloidal.eps';file-properties "XNPEU";}%
+%filename 'JETliketest_numeric_RayPoloidal.eps';file-properties "NPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -1555,7 +1577,7 @@ with those from \cite{hei99}.%
 height=2.3999in,
 width=3.6002in
 ]%
-{../Examples/JETlike/WAVE/figures/ray_20_traj_poloidal.eps}%
+{JETliketest_numeric_RayPoloidal.eps}%
 \caption{Poloidal projection of the ray trajectory. The red curve corresponds
 to the slow mode and the blue curve corresponds to the fast mode.}%
 \end{center}
@@ -1563,13 +1585,13 @@ to the slow mode and the blue curve corresponds to the fast mode.}%
 %EndExpansion%
 %TCIMACRO{\FRAME{ftbhFU}{3.6002in}{2.3999in}{0pt}{\Qcb{Toroidal projection of
 %the ray trajectory. The red curve corresponds to the slow mode and the blue
-%curve corresponds to the fast mode.}}{}{ray_20_traj_toroidal.eps}%
+%curve corresponds to the fast mode.}}{}{JETliketest_numeric_RayToroidal.eps}%
 %{\special{ language "Scientific Word";  type "GRAPHIC";
 %maintain-aspect-ratio TRUE;  display "USEDEF";  valid_file "F";
 %width 3.6002in;  height 2.3999in;  depth 0pt;  original-width 8.5988in;
 %original-height 5.0626in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename '../Examples/JETlike/WAVE/figures/ray_20_traj_toroidal.eps';file-properties "XNPEU";}%
+%filename 'JETliketest_numeric_RayToroidal.eps';file-properties "NPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -1579,7 +1601,7 @@ to the slow mode and the blue curve corresponds to the fast mode.}%
 height=2.3999in,
 width=3.6002in
 ]%
-{../Examples/JETlike/WAVE/figures/ray_20_traj_toroidal.eps}%
+{JETliketest_numeric_RayToroidal.eps}%
 \caption{Toroidal projection of the ray trajectory. The red curve corresponds
 to the slow mode and the blue curve corresponds to the fast mode.}%
 \end{center}
@@ -1592,7 +1614,7 @@ to the slow mode and the blue curve corresponds to the fast mode.}%
 %width 3.6002in;  height 2.3999in;  depth 0pt;  original-width 6.0027in;
 %original-height 4.5083in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename '../Examples/JETlike/WAVE/figures/ray_20_m.eps';file-properties "XNPEU";}%
+%filename 'Examples/JETlike/WAVE/figures/ray_20_m.eps';file-properties "NPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -1602,7 +1624,7 @@ to the slow mode and the blue curve corresponds to the fast mode.}%
 height=2.3999in,
 width=3.6002in
 ]%
-{../Examples/JETlike/WAVE/figures/ray_20_m.eps}%
+{Examples/JETlike/WAVE/figures/ray_20_m.eps}%
 \caption{Poloidal mode number along the ray trajectory.}%
 \end{center}
 \end{figure}
@@ -1614,7 +1636,7 @@ width=3.6002in
 %width 3.6002in;  height 2.3999in;  depth 0pt;  original-width 6.0027in;
 %original-height 4.5083in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename '../Examples/JETlike/WAVE/figures/ray_20_Npar.eps';file-properties "XNPEU";}%
+%filename 'Examples/JETlike/WAVE/figures/ray_20_Npar.eps';file-properties "NPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -1624,7 +1646,7 @@ width=3.6002in
 height=2.3999in,
 width=3.6002in
 ]%
-{../Examples/JETlike/WAVE/figures/ray_20_Npar.eps}%
+{Examples/JETlike/WAVE/figures/ray_20_Npar.eps}%
 \caption{Parallel index or refraction along the ray trajectory.}%
 \end{center}
 \end{figure}
@@ -1636,7 +1658,7 @@ width=3.6002in
 %width 3.6002in;  height 2.3999in;  depth 0pt;  original-width 6.0027in;
 %original-height 4.5083in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename '../Examples/JETlike/WAVE/figures/ray_20_disprel.eps';file-properties "XNPEU";}%
+%filename 'Examples/JETlike/WAVE/figures/ray_20_disprel.eps';file-properties "NPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -1646,14 +1668,141 @@ width=3.6002in
 height=2.3999in,
 width=3.6002in
 ]%
-{../Examples/JETlike/WAVE/figures/ray_20_disprel.eps}%
+{Examples/JETlike/WAVE/figures/ray_20_disprel.eps}%
 \caption{Dispersion relation along the ray trajectory.}%
 \end{center}
 \end{figure}
 %EndExpansion
 
 
+\subsection{VERSATOR II and PLT plasmas}
+
+\subsubsection{Equilibrium}
+
+Lower Hybrid current drive simulations have been performed for $VERSATOR$ II
+and $PLT$ tokamaks which both have almost circular concentric magnetic flux
+surfaces (\cite{bon84},\cite{bon86}). For the benchmark, the Shafranov shift
+is neglected, and a circular concentric toroidal plasma is considered as for
+the previous case, with the following magnetic equilibrium parameters%
+\begin{equation}%
+\begin{array}
+[c]{ccc}
+& VERSATOR\text{ II} & PLT\\
+R_{p} & 0.4\text{ m} & 1.32\text{ m}\\
+a_{p} & 0.13\text{ m} & 0.4\text{ m}\\
+B_{T0} & 1.4\text{ T} & 3.1\text{ T}\\
+I_{p} & 0.05\text{ MA} & 0.2\text{ MA}%
+\end{array}
+\end{equation}
+with the following profiles
+\begin{equation}
+n_{e}\left(  \rho\right)  =\left(  n_{e0}-n_{ea}\right)  \frac{e^{\alpha_{n}%
+}-e^{\alpha_{n}\rho^{2}}}{e^{\alpha_{n}}-1}+n_{ea}%
+\end{equation}
+and%
+\begin{equation}%
+\begin{array}
+[c]{ccc}
+& VERSATOR\text{ II} & PLT\\
+n_{e0} & 2.0\times10^{19}\text{ m}^{-3} & 0.5625\times10^{19}\text{ m}^{-3}\\
+n_{ea} & 2.0\times10^{18}\text{ m}^{-3} & 0.5625\times10^{18}\text{ m}^{-3}\\
+\alpha_{n} & 0.1 & -0.571
+\end{array}
+\end{equation}
+In the calculations, the scrappe-off layer is not considered, since the
+specular reflection is enforced on the last closed magnetic surface for the
+Lower Hybrid wave.
+
+For both tokamaks, a flat $Z_{eff}$ profile is considered, with $Z_{eff}=4$
+for $VERSATOR$ II and $Z_{eff}=2$ for $PLT.$ For $VERSATOR$ II, the plasma is
+made of hydrogen ions, while deuterium ions are taken for $PLT$. For both
+machines, a fully stripped single impurity model is considered, using carbon
+ions $m_{c}=12,$ $Z_{c}=6.$
+
+The magnetic equilibrium is charaterized by a parabolic safety factor profile%
+\begin{equation}
+q\left(  \rho\right)  =q_{\min}+\left(  q_{\max}-q_{\min}\right)  \rho^{2}%
+\end{equation}
+which may be expressed in the form%
+\begin{equation}
+q=q_{\min}\left(  1+\xi_{B}\right)  \rho^{2}%
+\end{equation}
+with
+\begin{equation}
+\xi_{B}=\frac{q_{\max}}{q_{\min}}-1
+\end{equation}
+according to references (\cite{bon84},\cite{bon86}). 
+
+The poloidal flux coordinate $\overline{\psi}$ is then
+\begin{equation}
+\overline{\psi}=\frac{1}{2}\frac{B_{T0}}{q_{\max}-q_{\min}}\frac{a_{p}^{3}%
+}{R_{p}}\ln\left[  \frac{q\left(  \rho\right)  }{q_{\min}}\right]
+\end{equation}
+which leads to%
+\begin{equation}
+\overline{\psi}_{a}=\frac{1}{2}\frac{B_{T0}}{q_{\max}-q_{\min}}\frac{a_{p}%
+^{3}}{R_{p}}\ln\left[  \frac{q_{\max}}{q_{\min}}\right]
+\end{equation}
+
+
+
+
+
+
+\subsubsection{Wave initial conditions}
+
+For both tokamaks, the ray is launched in the slow mode from the position%
+\begin{equation}%
+\begin{array}
+[c]{l}%
+\rho_{0}=0.99\\
+\theta_{0}=0\\
+\phi_{0}=0
+\end{array}
+\end{equation}
+with the spectral properties%
+\begin{equation}%
+\begin{array}
+[c]{ccc}
+& VERSATOR\text{ II} & PLT\\
+\omega/\left(  2\pi\right)   & 0.8\text{ GHz} & 0.8\text{ GHz}\\
+N_{\Vert0} & 5.0 & 1.33\\
+m_{0} & -25 & +20
+\end{array}
+\end{equation}
+
+
+The non-zero $m_{0}$ arises from the fact that simulation in references
+(\cite{bon84},\cite{bon86}) use $m_{0}=0$ in the scrape-off layer and not at
+$\overline{\psi}_{a}.$ 
+
+
+
+
+
+\subsubsection{Results}
+
+The results are plotted in the figures below. The agreement is found withe
+references (\cite{bon84},\cite{bon86}) is rather satisfactory, though some
+differences arise from the differences in the magnetic equilibrium. An
+excellent agreement is found between numerical and analytical magnetic
+equilibrium.  
+
+\bigskip
+
+\bigskip
+
+\bigskip
+
+\bigskip
+
+\bigskip
+
+\bigskip
+
 \bibliographystyle{unsrt}
 \bibliography{Bibjd,lhcdjd}
+
+
 
 \end{document}
