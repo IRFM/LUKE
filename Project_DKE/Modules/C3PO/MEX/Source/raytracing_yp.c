@@ -439,6 +439,8 @@ void mexFunction(   int     nlhs,
     
     double t1,t2,rho1,rho2,theta1,theta2,phi1,phi2,krho1,krho2,m1,m2,n1,n2,omega1,omega2;
     double rho_step,m_step;
+    
+    int flag1;
 
 /*
 Create arguments for calling user function
@@ -490,9 +492,9 @@ Create and Initialize Return Arguments
 
 /* Solves the dispersion relation internally to remove numerical errors from initial conditions */
     if (fabs(flag) > 0) {
-       /*mexPrintf("krho1:%g\n",krho1); */  
+    /*   mexPrintf("krho1:%g\n",krho1); */
        dsolve(1,&krho1,y0,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag); 
-       /*mexPrintf("krho1:%g\n",krho1); */        
+    /*      mexPrintf("krho1:%g\n",krho1); */               
     }
     
     rho_step = rho1;
@@ -524,7 +526,7 @@ The main loop
     }
         if (ii > rayparam.kmax[0]) {
         goto Endloop;
-            flag = 0;
+            flag1 = 0;
     }
         
 /*
@@ -668,7 +670,7 @@ Update the solution only if the error is acceptable
 /*                    mexPrintf("test2a,krho2,cimag(krho2):%g,%g,%g\n",krho2,cimag(krho2));*/       
                     if (cimag(krho2) == 0.0) {/* ray may propagate in vacuum. Propagation is stopped */
                         mexPrintf("********************************** The wave leaves the plasma at rho = %g**********************************\n",rho1);
-                        flag = 1;
+                        flag1 = 1;
                         goto Endloop;  
                     } else {/* ray may not propagate in vacuum. Wave reflection is performed at plasma edge */
                         mexPrintf("********************************** Wave reflection takes place at rho = %g**********************************\n",rho1);
@@ -723,10 +725,10 @@ Update the step size
             
         } else {       
            mexPrintf("WARNING delta :%g, the loop is stopped.\n",delta);
-           if (flag == 0) {
+           if (flag1 == 0) {
                mexPrintf("---> The maximum number of iteration is reached.\n",delta);
            }
-           if (flag == 1) {
+           if (flag1 == 1) {
                mexPrintf("---> The ray leaves the plasma.\n",delta);
            }
            goto Endloop;
@@ -1637,7 +1639,7 @@ double complex Nperp,N2;
         Dtot[0] = Dtot[0] + D[i];
     }
 
-    mexPrintf("Dtot:%g\n",Dtot[0]);
+   /* mexPrintf("Dtot:%g\n",Dtot[0]);*/
 
 }
 
@@ -2123,7 +2125,6 @@ double dRstardpsin,ddRstardpsindrho;
 */
 }
 
-
 void interpequil_test(raymagnetic,rayprofiles,equilparam,Y,flag)
 raymagnetic_format raymagnetic;
 rayprofiles_format rayprofiles;
@@ -2254,7 +2255,7 @@ double flag;
           q = qmax*pow(Y[0],2)/(1 - pow(1-Y[0]*Y[0],1+eq));  
           dqdrho = 2*q*(1 - (eq+1)*pow(1-Y[0]*Y[0],eq)*q/qmax)/Y[0];    
        }        
-       equilparam.psia[0] = ap*ap*BPa*3/4;  
+       equilparam.psia[0] = ap*ap*Rp*BPa*3/4/ap;  
     }
      
     BP = qmax*BPa*Rp*Y[0]/q/R;/* Poloidal magnetic field, cylindrical limit */
@@ -2293,8 +2294,8 @@ double flag;
     raymagnetic.dgradrhondY[0] = 0.0;
     raymagnetic.dgradrhondY[1] = 0.0;
     
-    
-/*   
+/*    
+   
     mexPrintf("---- Interpequil_test ----\n");
     mexPrintf("rho,theta:%g,%g\n",rho,theta);
     mexPrintf("Te[0],dTedY[0],dTedY[1],ne[0],dnedY[0],dnedY[1]:%g,%g,%g,%g,%g,%g\n",rayprofiles.Te[0],rayprofiles.dTedY[0],rayprofiles.dTedY[1],rayprofiles.ne[0],rayprofiles.dnedY[0],rayprofiles.dnedY[1]);
@@ -2303,13 +2304,13 @@ double flag;
     }
     
    
-    mexPrintf("rn[0],drndY[0],drndY[1],Rn[0],dRndY[0],dRndY[1]:%g,%g,%g,%g,%g,%g\n",raymagnetic.rn[0],raymagnetic.drndY[0],raymagnetic.drndY[1],raymagnetic.Rn[0],raymagnetic.dRndY[0],raymagnetic.dRndY[1]);
-    mexPrintf("Bsn[0],dBsndY[0],dBsndY[1]:%g,%g,%g\n",raymagnetic.Bsn[0],raymagnetic.dBsndY[0],raymagnetic.dBsndY[1]);
-    mexPrintf("BPHIn[0],dBPHIndY[0],dBPHIndY[1]:%g,%g,%g\n",raymagnetic.BPHIn[0],raymagnetic.dBPHIndY[0],raymagnetic.dBPHIndY[1]);
-    mexPrintf("B[0],dBdY[0],dBdY[1]:%g,%g,%g\n",raymagnetic.B[0],raymagnetic.dBdY[0],raymagnetic.dBdY[1]);
-    mexPrintf("salpha[0],dsalphadY[0],dsalphadY[1]:%g,%g,%g\n",raymagnetic.salpha[0],raymagnetic.dsalphadY[0],raymagnetic.dsalphadY[1]);
-    mexPrintf("calpha[0],dcalphadY[0],dcalphadY[1]:%g,%g,%g\n",raymagnetic.calpha[0],raymagnetic.dcalphadY[0],raymagnetic.dcalphadY[1]);
-    mexPrintf("gradrhon[0],dgradrhondY[0],dgradrhondY[1]:%g,%g,%g\n",raymagnetic.gradrhon[0],raymagnetic.dgradrhondY[0],raymagnetic.dgradrhondY[1]);
+    mexPrintf("rn[0],drndY[0],drndY[1],Rn[0],dRndY[0],dRndY[1]:%15.10g,%15.10g,%15.10g,%15.10g,%15.10g,%15.10g\n",raymagnetic.rn[0],raymagnetic.drndY[0],raymagnetic.drndY[1],raymagnetic.Rn[0],raymagnetic.dRndY[0],raymagnetic.dRndY[1]);
+    mexPrintf("Bsn[0],dBsndY[0],dBsndY[1]:%15.10g,%15.10g,%15.10g\n",raymagnetic.Bsn[0],raymagnetic.dBsndY[0],raymagnetic.dBsndY[1]);
+    mexPrintf("BPHIn[0],dBPHIndY[0],dBPHIndY[1]:%15.10g,%15.10g,%15.10g\n",raymagnetic.BPHIn[0],raymagnetic.dBPHIndY[0],raymagnetic.dBPHIndY[1]);
+    mexPrintf("B[0],dBdY[0],dBdY[1]:%15.10g,%15.10g,%15.10g\n",raymagnetic.B[0],raymagnetic.dBdY[0],raymagnetic.dBdY[1]);
+    mexPrintf("salpha[0],dsalphadY[0],dsalphadY[1]:%15.10g,%15.10g,%15.10g\n",raymagnetic.salpha[0],raymagnetic.dsalphadY[0],raymagnetic.dsalphadY[1]);
+    mexPrintf("calpha[0],dcalphadY[0],dcalphadY[1]:%15.10g,%15.10g,%15.10g\n",raymagnetic.calpha[0],raymagnetic.dcalphadY[0],raymagnetic.dcalphadY[1]);
+    mexPrintf("gradrhon[0],dgradrhondY[0],dgradrhondY[1]:%15.10g,%15.10g,%15.10g\n",raymagnetic.gradrhon[0],raymagnetic.dgradrhondY[0],raymagnetic.dgradrhondY[1]);
 */
 }
 
@@ -2500,5 +2501,4 @@ int *ns;
       eZeff[0] = 0.0;
     }
 }
-
 
