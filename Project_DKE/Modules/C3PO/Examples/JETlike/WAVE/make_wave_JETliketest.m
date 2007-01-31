@@ -11,7 +11,7 @@ clc
 %
 id_wave = 'JETliketest';% scenario identification (see paper Plasma Phys. Control. Fusion 41 (1999) 1231 - J.A. Heikkinen et al.)
 %
-p_opt = -1;%Printing or saving option of the figures
+p_opt = 2;%Printing or saving option of the figures
 filename = id_wave;
 %
 id_equil = 'JETliketest';%For plasma equilibrium
@@ -121,12 +121,19 @@ info_dke_yp(2,'Initial conditions calculated');
 %
 if isreal(y0(4)),
     %
-    tic,[tout, yout] = raytracing_yp(rayparam,equil_fit,y0);toc
+    [tout, yout] = raytracing_yp(rayparam,equil_fit,y0);
     %
-    info_dke_yp(2,'Ray trajectories calculated');
+    info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium)');
     %
-    [spsin,stheta,sphi,sR,sZ,sNpar,sNperp,sepol_pmz,sphi_xyz] = raypostprocessing_yp(tout, yout,rayparam,equil_fit,omega_rf,display_ray,p_opt,filename);
+    filename = [id_wave,'_numeric'];
+    [iabs_out,srho,stheta,sphi,sR,sZ,sNpar,sNperp,sepol_pmz,sphi_xyz] = raypostprocessing_yp(tout,yout,rayparam,equil_fit,omega_rf,display_ray,p_opt,filename,' (numeric)');
     %
+    [tout, yout] = raytracing_yp(rayparam,equil_fit,y0,2);
+    %
+    filename = [id_wave,'_analytic'];
+    info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
+    %
+    [iabs_out,srho,stheta,sphi,sR,sZ,sNpar,sNperp,sepol_pmz,sphi_xyz] = raypostprocessing_yp(tout,yout,rayparam,equil_fit,omega_rf,display_ray,p_opt,filename,' (Analytic)');
     info_dke_yp(2,'Ray processing done');
     %
 else
@@ -135,7 +142,7 @@ end
 %
 % building ray for Fp calculations
 %
-ns = length(spsin);
+ns = length(srho);
 %
 ray.P0_2piRp = P0*1e6/2/pi/equil.Rp;%Initial lineic power density in the ray (W/m) [1,1]
 %
@@ -144,8 +151,8 @@ ray.sphi = sphi.';% Ray location (toroidal angle) along the propagation [1,ns]
 ray.sy = sZ.' - equil_fit.Zp;% Ray location (vertical) along the propagation [1,ns]
 %
 ray.ss = [];% Ray propagation distance parameter for each ray (put to NaN once the ray is absorbed) [1,ns]
-ray.spsin = spsin.';% Ray location (normalized magnetic flux) along the propagation [1,ns]
-ray.stheta = stheta.';% Ray location (poloidal angle) along the propagation [1,ns]
+ray.spsin = [];% Ray location (normalized magnetic flux) along the propagation [1,ns]
+ray.stheta = [];% Ray location (poloidal angle) along the propagation [1,ns]
 %
 ray.skx = [];% Ray wave vector (major radius) along the propagation [1,ns]
 ray.sn = [];% Ray wave number (toroidal) along the propagation [1,ns]
