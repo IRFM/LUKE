@@ -45,8 +45,8 @@ Ti0 = Te0;%  Core ion temperature (keV)
 Tia = Ti0/10;%  Edge ion temperature (keV)
 eTi = 1.0;%  Exponent for Ti profile (Ti(r) = (Ti0-Tia)*(1-(r/a)^2)^eTi + Tia)
 %
-Zeff0 = 4;%  Core effective charge (a.u.)
-Zeffa = 4;%  Edge effective charge (a.u.)
+Zeff0 = 1;%  Core effective charge (a.u.)
+Zeffa = 1;%  Edge effective charge (a.u.)
 eZeff = 0;%  Exponent for the effective charge (Zeff(r) = (Zeff0-Zeffa)*(1-(r/a)^2)^eZeff + Zeffa)
 %
 equil.zZi = Zi;%[1,ni]
