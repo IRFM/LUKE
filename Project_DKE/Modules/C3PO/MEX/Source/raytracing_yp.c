@@ -2453,8 +2453,8 @@ int *ns;
       
       ns[0] = 4;   
       
-      Zeff0[0] = 1.0;/* No impurity case, only hydrogen */
-      Zeffa[0] = 1.0;
+      Zeff0[0] = 2.0;/* No impurity case, only hydrogen */
+      Zeffa[0] = 2.0;
       eZeff[0] = 0.0;
    } else if (fabs(flag) == 4) {/* PLT case */
       cyl[0] = 1.0;/* cylindrical factor */
@@ -2495,8 +2495,8 @@ int *ns;
       
       ns[0] = 4;   
       
-      Zeff0[0] = 1.0;/* No impurity case, only hydrogen */
-      Zeffa[0] = 1.0;
+      Zeff0[0] = 4.0;/* No impurity case, only hydrogen */
+      Zeffa[0] = 4.0;
       eZeff[0] = 0.0;
     }
 }
