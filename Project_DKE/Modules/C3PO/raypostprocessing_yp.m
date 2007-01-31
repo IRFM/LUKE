@@ -160,7 +160,7 @@ if display_mode,
    end
 %
    axis('equal');drawnow  
-   print_jd(p_opt,[filename,'_Ray']);
+   print_jd(p_opt,[filename,'_RayPoloidal']);
 %
    figure('Name','Toroidal ray trajectory')
    [ax] = graph1D_jd(X_ray(pmode_ray),Y_ray(pmode_ray),0,0,'X(m)','y(m)',['Toroidal ray trajectory',subtitle],NaN,[-Rmax,Rmax],[-Rmax,Rmax],'none','.','r',2);hold on
@@ -183,7 +183,7 @@ if display_mode,
    end
 %
    axis('equal');drawnow  
-   print_jd(p_opt,[filename,'_Ray']);  
+   print_jd(p_opt,[filename,'_RayToroidal']);  
 %
    figure('Name','Parallel wave refractive index')
    graph1D_jd(abs(phi_ray/2/pi),Npar_ray,0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index',subtitle],NaN,'',[min(Npar_ray),max(Npar_ray)]','-','none','k',2);drawnow;hold off
