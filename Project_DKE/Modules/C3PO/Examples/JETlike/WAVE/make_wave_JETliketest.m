@@ -52,7 +52,7 @@ opt_load = 1;%Reload existing vectorial magnetic equilibrium (1) or overwrite it
 rayparam.testmode = 0;
 rayparam.tensortype = 0;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
 rayparam.t0 = 0;
-rayparam.tfinal = 5000;
+rayparam.tfinal = 10000;
 rayparam.dt0 = 1.e-4;
 rayparam.drho = 1.e-4;
 rayparam.tol = 1e-12;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
