@@ -106,7 +106,7 @@ elseif qopt == 1 % analytical thus more accurate
     equil.psi_apRp = ap^2*Bpa*prho;%psi_apRp = psi(toroidal usual)*ap/Rp for the cylindrical limit
     pBpp(1) = Bpa;
 else % analytical thus more accurate 
-    equil.psi_apRp = ap^2*Bpa*prho.^2/2;%psi_apRp = psi(toroidal usual)*ap/Rp for the cylindrical limit
+    equil.psi_apRp = ap^2*Bpa*prho.^2/2;%psi_apRp = psi(poloidal usual)*ap/Rp for the cylindrical limit
 end
 %
 XBpp = repmat(pBpp',[1,ntheta]);
