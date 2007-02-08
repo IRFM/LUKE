@@ -1,4 +1,4 @@
-function [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert(id_simul,wavestructs,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,transpfaste,ripple,XXf0_in,XXsinksource_in)
+function [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert(id_simul,wavestructs,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,transpfaste,ripple,XXf0_in,XXsinksource_in,reloadray)
 %
 % Ray-tracing + quasilinear kinetic calculations using LUKE. Tool for implementation in other calculation packages.
 %
@@ -7,14 +7,25 @@ function [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoe
 %
 %Ray-tracing calculations
 %
-for iw = 1:length(wavestructs),
-   if strcmp(wavestructs{iw}.wavesolver,'C3PO'),% C3P0 ray tracing
-		rayinits{iw} = main_rayinit_launch_jd(equil,wavestructs{iw}.launch);
-	   wave = main_C3PO_jd(wavestructs{iw}.id_wave,equil,rayinits{iw},wavestructs{iw}.waveparam,wavestructs{iw}.fitequilparam,wavestructs{iw}.rayparam,wavestructs{iw}.raydisplay);%Ray calculations
-      waves{iw} = wave_process_jd(equil,wave,dkeparam.n_rf_list);%Wave processing and relativistic linear damping
-   else
-	   error('This ray-tracing is not yet linked to LUKE !')
-   end
+if nargin < 14,
+   reloadray = 0;%rays are calculated by C3PO and not reload
+end
+%
+path_simul = '';
+%
+if reloadray == 0 | exist('C3POrays.mat') == 0,
+   for iw = 1:length(wavestructs),
+      if strcmp(wavestructs{iw}.wavesolver,'C3PO'),% C3P0 ray tracing
+	   	rayinits{iw} = main_rayinit_launch_jd(equil,wavestructs{iw}.launch);
+	      wave = main_C3PO_jd(wavestructs{iw}.id_wave,equil,rayinits{iw},wavestructs{iw}.waveparam,wavestructs{iw}.fitequilparam,wavestructs{iw}.rayparam,wavestructs{iw}.raydisplay);%Ray calculations
+         waves{iw} = wave_process_jd(equil,wave,dkeparam.n_rf_list);%Wave processing and relativistic linear damping
+      else
+	      error('This ray-tracing is not yet linked to LUKE !')
+      end
+     end
+     save C3POrays.mat waves rayinits wavestructs
+else
+    load C3POrays.mat
 end
 %
 % 3-D relativistic bounce averaged quasilinear kinetic calculations (LUKE)
@@ -64,11 +75,11 @@ elseif dkeparam.rt_mode == 3,
       dNstr = num2str(dNpar_fac);
 %
       for is=1:length(dNstr),if dNstr(is) == '.',dNstr(is) = 'p';end,end
-      eval(['diary ',path_simul,'DKE_DIARY_',id_equil,'_',id_simul,'_',dNstr(1:min(4,length(dNstr))),'.txt']);
+      eval(['diary ',path_simul,'DKE_DIARY_',equil.id,'_',id_simul,'_',dNstr(1:min(4,length(dNstr))),'.txt']);
 %
       [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
 %
-      eval(['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'_',dNstr(1:min(4,length(dNstr))),'.mat']);
+      eval(['save ',path_simul,'DKE_RESULTS_',equil.id,'_',id_simul,'_',dNstr(1:min(4,length(dNstr))),'.mat']);
 %
 % CD efficiency (A/W)
 %
@@ -130,7 +141,7 @@ elseif dkeparam.rt_mode == 3,
        end
    end
 %
-   eval(['diary ',path_simul,'DKE_DIARY_',id_equil,'_',id_simul,'.txt']);
+   eval(['diary ',path_simul,'DKE_DIARY_',equil.id,'_',id_simul,'.txt']);
 %
    for ib = 1:length(waves{1}.rays),
       waves{1}.rays{ib}.sdNpar = abs(waves{1}.rays{ib}.sNpar)*dNpar_fac;
