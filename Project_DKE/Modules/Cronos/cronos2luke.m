@@ -356,10 +356,11 @@ for iw = 1:length(launchs),
    end
 end
 %
+reloadrays = 0;
 %
 %--------------------------- Execution du trace de rayon C3PO et du code cinetique LUKE --------------------------- 
 %
-[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert('cronos',wavestructs,[],par.rho_S,dkepath,equil,dkeparam,display,ohm,transpfaste,ripple,[],[]);
+[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert('cronos',wavestructs,[],par.rho_S,dkepath,equil,dkeparam,display,ohm,transpfaste,ripple,[],[],reloadrays);
 %
 rmdir(dkepath.temppath,'s');%remove directory where temporary  calculations are performed
 rmfield(dkepath, 'temppath');%remove path of the directory where temporary  calculations are performed
