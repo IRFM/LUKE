@@ -11,7 +11,7 @@
 %TCIDATA{Version=5.50.0.2890}
 %TCIDATA{CSTFile=article.cst}
 %TCIDATA{Created=Friday, August 11, 2006 11:13:28}
-%TCIDATA{LastRevised=Thursday, February 01, 2007 17:55:10}
+%TCIDATA{LastRevised=Monday, February 12, 2007 18:05:30}
 %TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
 %TCIDATA{<META NAME="SaveForMode" CONTENT="1">}
 %TCIDATA{BibliographyScheme=Manual}
@@ -37,26 +37,26 @@
 \maketitle
 \tableofcontents
 
-\section{\bigskip Intriduction}
+\section{\bigskip Introduction}
 
-Ray-tracing is a master piece in the set of codes for tokamak current drive by
-radio-frequency waves. So far, numerous ray-tracing tools have been developped
-since the first attempt at the beginning of the 80's. In most cases, they are
-dedicated to a specific type of wave by using a dedicated dielectric tensor,
-like the Lower Hybrid (LH) wave or the Electron Cyclotron wave (EC). Since ray
-trajectories are very sensitive to the plasma magnetic equilibrium, codes
-which are able to consider arbitrary magnetic tokamak configuration have been
-developped, often using the simple $\left(  R,Z\right)  $ cartesian coordinate
-system because of the simple form of its Jacobian. However, this coordinate
-system does not reflect that magnetic flux surfaces are close inside the
-separatrix, and that the densities and temperatures are only functions of the
-poloidal flux surface coordinate $\psi.$ Consequently, cartesian ray-tracing
-must use extensively $2^{nd}$ order derivatives. Since ray-tracing results
-must be linked to Fokker-Planck kinetic codes for calculating the wave power
-absorption profile in the plasma, it is therefore natural to use the same
-curvilinear coordinate system, which contains naturally the topological
-structure of the magnetic configuration, and avoids consequently all numerical
-conversions for kinetic calculations. 
+Ray-tracing is a master piece in the set of codes for calculating tokamak
+current drive by radio-frequency waves. So far, numerous ray-tracing tools
+have been developped since the first attempt at the beginning of the 80's. In
+most cases, they are dedicated to a specific type of wave by using a dedicated
+dielectric tensor, like the Lower Hybrid (LH) wave or the Electron Cyclotron
+wave (EC). Since ray trajectories are very sensitive to the plasma magnetic
+equilibrium, codes which are able to consider arbitrary magnetic tokamak
+configuration have been developped, often using the simple $\left(
+R,Z\right)  $ cartesian coordinate system because of the simple form of its
+Jacobian. However, this coordinate system does not reflect that magnetic flux
+surfaces are closed surfaces inside the separatrix, and that the densities and
+temperatures are only functions of the poloidal flux surface coordinate
+$\psi.$ Consequently, cartesian ray-tracing must use extensively $2^{nd}$
+order derivatives. Since ray-tracing results must be linked to Fokker-Planck
+kinetic codes for calculating the wave power absorption profile in the plasma,
+it is therefore natural to use the same curvilinear coordinate system, which
+contains also the topological structure of the magnetic configuration, and
+avoids consequently all numerical conversions for kinetic calculations.
 
 For this purpose, a new ray-tracing code has been developped, which is
 designed to be valid for arbitrary type of wave frequencies, provided the WKB
@@ -65,25 +65,25 @@ designed to be as general as possible, namely for Lower Hybrid, Electron
 Cyclotron or Electron Bernstein waves. For this purpose, the structure of the
 code offers the possibility to implement not only the cold plasma dielectric
 tensor, but any type of tensor corresponding to warm, hot, weakly and strongly
-relativist limits. Consequently, complex type variables are used, a
-specificity which is important when linear weak damping must be evaluated
+relativist limits respectively. Consequently, complex type variables are used,
+a specificity which is important when linear weak damping must be evaluated
 along the rays. In addition, a numerical effort has been made on the technique
 for calculating all magnetic equilibrium quantities and their first and second
 derivatives in the fastest possible way. For this purpose, a spline-Fourier
 expansion is used, which offers both the advantages of fastness without
 sacrificing accuracy.
 
-Based on a standard 6th order Runge-Kutta differential equation solver, the
-ray-tracing which is a mexfile\footnote{The code runs in the MatLab 7
-programming environment.} written in C language has been extensively benchmark
-against other existing codes for various types of waves, and also with
-analytical models for simple magnetic configuration. In Sec. $1$, the linear
-wave theory in an infinite uniform medium is recalled, while ray-tracing in
-slowly varying plasma is discussed in Sec. $2$. The curvilinear canonical
-coordinates in an axisymmetric toroidal plasma are introduced in Sec. $3$, and
-in Sec. $4$ all numerical methods are presented. The Appendix is dedicated to
-the properties of the coordinate system, the expressions of the cold and hot
-plasma dielectric tensor, and the benchmarking. 
+Based on a standard $6^{th}$ order Runge-Kutta differential equation solver,
+the ray-tracing which is a mexfile\footnote{The code runs in the MatLab 7
+programming environment.} written in $C$ language has been extensively
+benchmarked against other existing codes for various types of waves, and also
+with analytical models for simple magnetic configurations. In Sec. $1$, the
+linear wave theory in an infinite uniform medium is recalled, while
+ray-tracing in slowly varying plasma is discussed in Sec. $2$. The curvilinear
+canonical coordinates in an axisymmetric toroidal plasma are introduced in
+Sec. $3$, and in Sec. $4$ all numerical methods are presented. The Appendix is
+dedicated to the properties of the coordinate system, the expressions of the
+cold and hot plasma dielectric tensor, and the benchmarking results.
 
 \section{Linear wave theory in an infinite uniform plasma}
 
@@ -669,8 +669,8 @@ and
 
 
 For an axisymmetric magnetic configuration, $\partial\mathcal{D}/\partial
-\phi=0$ such that $n$ is an invariant. Therefore, only five equations must be
-solved. The value of $n$ is given by launching conditions.
+\phi=0$ such that $n$ is an invariant (\ref{pey96}). Therefore, only five
+equations must be solved. The value of $n$ is given by launching conditions.
 
 \subsection{Parallel index of refraction}
 
@@ -921,7 +921,7 @@ The equation for $k_{\rho}$ has two solutions corresponding to inward and
 outward propagating waves. The solution is chosen such that the ray initially
 propagates inward, meaning
 \begin{equation}
-\frac{d\rho}{dt}<0\label{inward}%
+\frac{d\rho}{dt}<0 \label{inward}%
 \end{equation}
 where $\sigma_{I}$ is the sign of $I_{\phi}$ and thus of $\cos\alpha$. We have%
 \begin{equation}
@@ -930,7 +930,7 @@ where $\sigma_{I}$ is the sign of $I_{\phi}$ and thus of $\cos\alpha$. We have%
 \end{equation}
 where%
 \begin{align}
-\frac{\partial\mathcal{D}}{\partial k_{\rho}} &  =\frac{\partial N_{\bot}%
+\frac{\partial\mathcal{D}}{\partial k_{\rho}}  &  =\frac{\partial N_{\bot}%
 }{\partial k_{\rho}}\frac{\partial\mathcal{D}}{\partial N_{\bot}}%
 +\frac{\partial N_{\Vert}}{\partial k_{\rho}}\frac{\partial\mathcal{D}%
 }{\partial N_{\Vert}}\\
@@ -942,7 +942,7 @@ $\partial\mathcal{D}/\partial\omega>0$ the condition (\ref{inward}) thus
 becomes,%
 \begin{equation}
 \frac{\partial N_{\bot}}{\partial k_{\rho}}\frac{\partial\mathcal{D}}{\partial
-N_{\bot}}<0\label{inward2}%
+N_{\bot}}<0 \label{inward2}%
 \end{equation}
 We have%
 \begin{equation}
@@ -966,241 +966,253 @@ where $\overline{S}_{\bot}$ is the energy flow density.
 
 \subsection{Magnetic equilibrium interpolation}
 
-Sur le plan num\'{e}rique, les codes d'\'{e}quilibre fournissent
-g\'{e}n\'{e}ralement les valeurs des composantes de $\mathbf{B}$ sur une
-grille num\'{e}rique discr\`{e}te \`{a} deux dimensions $\left(  \psi
-,\theta\right)  $, ce qui pose un probl\`{e}me de pr\'{e}cision lorsque la
-valeur du champ et de ses d\'{e}riv\'{e}es spatiales doivent \^{e}tre
-d\'{e}termin\'{e}es \`{a} une position situ\'{e}e hors des points de grille.
-Il faut alors interpoler, et la m\'{e}thode utilis\'{e}e doit offrir le
-maximum de pr\'{e}cision possible, afin d'\'{e}viter l'accumulation des
-erreurs dans les calculs. Par ailleurs, il est important que la m\'{e}thode
-soit la plus rapide possible.
+Since magnetic equilibrium codes give field components on a discrete two
+dimensional grid mesh $\left(  \psi,\theta\right)  $, it is necessary to
+perform numerical interpolation. This procedure must be fast and very
+accurate, especially for all first and second derivatives on which the
+ray-tracing is very sensitive. Indeed, coarse interpolation may lead to
+inacceptable cumulative error along the ray path, and finally wrong trajectory.
 
-Une des approches les plus puissantes est de vectoriser l'\'{e}quilibre
-num\'{e}rique en utilisant la nature p\'{e}riodique des quantit\'{e}s selon
-l'angle polo\"{\i}dal $\theta\footnote{A noter que cette m\'{e}thode est
-universelle, et peut donc \^{e}tre appliqu\'{e}e pour tous les codes
-d'\'{e}quilibre, quelle que soit la m\'{e}thode de calcul utilis\'{e}e. Dans
-le cas o\`{u} l'\'{e}quation de Grad-Shafranov est r\'{e}solue par une
-m\'{e}thode d'\'{e}l\'{e}ments finis, il peut \^{e}tre plus int\'{e}ressant
-d'utiliser les \'{e}l\'{e}ments finis qui poss\`{e}dent par construction les
-m\^{e}mes propri\'{e}t\'{e}s de continuit\'{e} et de d\'{e}rivabilit\'{e} que
-la m\'{e}thode g\'{e}n\'{e}rale pr\'{e}sent\'{e}e, car cela \'{e}vite d'avoir
-\`{a} interpoler \`{a} partir des points de grille.}.$ Pour toute
-quantit\acute{e} de la forme $f\left(  \psi_i,\theta\right)  ,$ il est
-possible de l'exprimer comme une somme de Fourier%
+\bigskip Among all possible methods$\footnote{Note that this method is
+universal, and may be used from any numerical data provided from a Grad
+Shafranov equation solver. However, since some codes are using finite elements
+techniques, it may be also useful to use them directly instead of performing
+anadditional interpolation procedure based on a spline-Fourier expansion.
+Indeed, finite elements have also all nice properties for calculating magnetic
+field values at any radial and poloidal positions, but first and second
+derivatives may be also calculated with an excellent accuracy. The choice to
+use the spline-Fourier expansion is therefore only guided by the need to have
+a ray-tracing solver as general as possible.}$, one of the most powerful is
+based on the combination of Fourier expansion and spline interpolation, taking
+into account of the periodic nature of the poloidal angle $\theta.$ The usual
+approach is then to express all functions $g\left(  \psi,\theta\right)  $ as a
+Fourier sum%
+
 \begin{equation}
-f\left(  \psi_{i},\theta\right)  =a_{0}\left(  \psi_{i}\right)  +\sum
-_{n=1}^{n=N}a_{n}^{c}\left(  \psi_{i}\right)  \cos\left(  n\theta\right)
-+a_{n}^{s}\left(  \psi_{i}\right)  \sin\left(  n\theta\right) \label{Fourier}%
+g\left(  \psi,\theta\right)  =a_{0}\left(  \psi\right)  +\sum_{n=1}^{n=N}%
+a_{n}^{c}\left(  \psi\right)  \cos\left(  n\theta\right)  +a_{n}^{s}\left(
+\psi\right)  \sin\left(  n\theta\right)  \label{Fourier}%
 \end{equation}
-o\grave{u} $N\leq N_\theta,$ $N_\theta$ est le nombre de points de grille en
-$\theta$ sur laquelle la fonction $f\left(  \psi_i,\theta\right)  $ est
-donn\acute{e}e. Une fois calcul\acute{e}e les coefficients $a_n^(c,s)\left(
-\psi_i\right)  $ en tous les points de la grille radiale $\psi_i,$ $1\leq
-i\leq N_\psi,$ on effectue une interpolation polynomiale pour obtenir la
-valeur des coefficients $a_n^(c,s)\left(  \psi\right)  $ en tous points du
-plasma. La m\acute{e}thode traditionnelle est bas\acute{e}e sur une
-interpolation de type "cubic spline", utilisant un ensemble de polyn\hat{o}mes
-de degr\acute{e} 3, dont les coefficients sont calcul\acute{e}s pour
-satisfaire la continuit\acute{e} des coefficients $a_n^(c,s)$ en chaque point
-$\psi_i,$ ainsi que la continuit\acute{e} des d\acute{e}riv\acute{e}es
-premi\grave{e}re et seconde. Donc chaque coefficient peut s'exprimer sous la
-forme%
+where $N\leq N_{\theta}/2,$ $N_{\theta}$ is the number of discrete poloidal
+values according to the Shannon theorem.
+
+First, all Fourier $a_{n}^{(c,s)}\left(  \psi_{i}\right)  $ coefficients are
+determined on each discrete magnetic flux surface $\psi_{i},$ from the set of
+linear equations%
+\begin{equation}
+g\left(  \psi_{i},\theta_{j}\right)  =a_{0}\left(  \psi_{i}\right)
++\sum_{n=1}^{n=N}a_{n}^{c}\left(  \psi_{i}\right)  \cos\left(  n\theta
+_{j}\right)  +a_{n}^{s}\left(  \psi_{i}\right)  \sin\left(  n\theta
+_{j}\right)
+\end{equation}
+then each coefficient $a_{n}^{(c,s)}\left(  \psi\right)  $ at all radial
+position is deduced by a usual cubic spline interpolation%
+
 \begin{equation}
 a_{n}^{(c,s)}\left(  \psi\right)  =\sum_{\left[  \psi_{i},\psi_{i+1}\right[
 }\alpha_{i}^{(c,s)}\psi^{3}+\beta_{i}^{(c,s)}\psi^{2}+\gamma_{i}^{(c,s)}%
-\psi+\delta_{i}^{(c,s)}\label{cubicspline}%
+\psi+\delta_{i}^{(c,s)} \label{cubicspline}%
 \end{equation}
+the $3^{rd}$ order polynomial coefficients being calculated so that at all
+nodes $\psi_{i},$ $a_{n}^{(c,s)}\left(  \psi\right)  $ is continuous, as well
+as the first and second derivatives.
 
+Then all required derivatives at any $\left(  \psi,\theta\right)  $ position
+may be easily obtained, according to the relations%
 
-A partir de cette technique, il est facile de calculer la valeur de $f$ en
-tous points $\left(  \psi,\theta\right)  ,$ mais aussi les d\'{e}riv\'{e}es,
-selon les relations%
 \begin{align}
-\frac{\partial f\left(  \psi,\theta\right)  }{\partial\theta}  & =\sum
+\frac{\partial g\left(  \psi,\theta\right)  }{\partial\theta}  &  =\sum
 _{n=1}^{n=N}-a_{n}^{c}\left(  \psi\right)  n\sin\left(  n\theta\right)
 +a_{n}^{s}\left(  \psi\right)  n\cos\left(  n\theta\right)
 \label{derivee1_theta}\\
-\frac{\partial^{2}f\left(  \psi,\theta\right)  }{\partial\theta^{2}}  &
+\frac{\partial^{2}g\left(  \psi,\theta\right)  }{\partial\theta^{2}}  &
 =\sum_{n=1}^{n=N}a_{n}^{c}\left(  \psi\right)  n^{2}\cos\left(  n\theta
 \right)  -a_{n}^{s}\left(  \psi\right)  n^{2}\sin\left(  n\theta\right)
 \label{derivee2_theta}\\
-\frac{\partial f\left(  \psi,\theta\right)  }{\partial\psi}  & =\frac{\partial
-a_{0}^{c}\left(  \psi\right)  }{\partial\psi}+\sum_{n=1}^{n=N}\frac{\partial
-a_{n}^{c}\left(  \psi\right)  }{\partial\psi}\cos\left(  n\theta\right)
-+\frac{\partial a_{n}^{s}\left(  \psi\right)  }{\partial\psi}\sin\left(
-n\theta\right) \label{derivee1_psi}\\
-\frac{\partial^{2}f\left(  \psi,\theta\right)  }{\partial\psi^{2}}  &
+\frac{\partial g\left(  \psi,\theta\right)  }{\partial\psi}  &  =\frac
+{\partial a_{0}^{c}\left(  \psi\right)  }{\partial\psi}+\sum_{n=1}^{n=N}%
+\frac{\partial a_{n}^{c}\left(  \psi\right)  }{\partial\psi}\cos\left(
+n\theta\right)  +\frac{\partial a_{n}^{s}\left(  \psi\right)  }{\partial\psi
+}\sin\left(  n\theta\right) \label{derivee1_psi}\\
+\frac{\partial^{2}g\left(  \psi,\theta\right)  }{\partial\psi^{2}}  &
 =\frac{\partial^{2}a_{0}^{c}\left(  \psi\right)  }{\partial\psi^{2}}%
 +\sum_{n=1}^{n=N}\frac{\partial^{2}a_{n}^{c}\left(  \psi\right)  }%
 {\partial\psi^{2}}\cos\left(  n\theta\right)  +\frac{\partial^{2}a_{n}%
 ^{s}\left(  \psi\right)  }{\partial\psi^{2}}\sin\left(  n\theta\right)
 \label{derivee2_psi}\\
-\frac{\partial^{2}f\left(  \psi,\theta\right)  }{\partial\psi\partial\theta}
-& =\frac{\partial a_{0}^{c}\left(  \psi\right)  }{\partial\psi}+\sum
+\frac{\partial^{2}g\left(  \psi,\theta\right)  }{\partial\psi\partial\theta}
+&  =\frac{\partial a_{0}^{c}\left(  \psi\right)  }{\partial\psi}+\sum
 _{n=1}^{n=N}-\frac{\partial a_{n}^{c}\left(  \psi\right)  }{\partial\psi}%
 n\sin\left(  n\theta\right)  +\frac{\partial a_{n}^{s}\left(  \psi\right)
-}{\partial\psi}n\cos\left(  n\theta\right) \label{derivee2_psitheta}%
+}{\partial\psi}n\cos\left(  n\theta\right)  \label{derivee2_psitheta}%
 \end{align}
-o\`{u}%
+where%
 \begin{align}
 \frac{\partial a_{n}^{(c,s)}\left(  \psi\right)  }{\partial\psi}  &
 =\sum_{\left[  \psi_{i},\psi_{i+1}\right[  }3\alpha_{i}^{(c,s)}\psi^{2}%
 +2\beta_{i}^{(c,s)}\psi+\gamma_{i}^{(c,s)}\label{derivepsi1}\\
 \frac{\partial^{2}a_{n}^{(c,s)}\left(  \psi\right)  }{\partial\psi^{2}}  &
 =\sum_{\left[  \psi_{i},\psi_{i+1}\right[  }6\alpha_{i}^{(c,s)}\psi+2\beta
-_{i}^{(c,s)}\label{derivepsi2}%
+_{i}^{(c,s)} \label{derivepsi2}%
 \end{align}
 
 
-A noter que pour les param\`{e}tres comme le profil de densit\'{e} ou de
-temp\'{e}rature entrant en ligne de compte pour l'\'{e}quilibre
-magn\'{e}tique, qui ne d\'{e}pendent que de la coordonn\'{e}es $\psi,$ une
-simple interpolation de type "spline cubique" est effectu\'{e}e, analogue
-\`{a} celle concernant les coefficients $a_{n}^{(c,s)}\left(  \psi\right)  .$
+Note that for density and temperature profiles, only a simple cubic spline
+interpolation is performed, since these parameters are function of $\psi$.
+With usualy $65$ poloidal angle values and $101$ radial discrete positions,
+the relative accuracy of the magnetic equlibrium is of the order of $10^{-4}$
+approximately. Larger numerical errors may occur near a $X$-point, where the
+local curvature radius of all magnetic flux surfaces becomes very small. In
+that case and if a more detailed interpolated magnetic reconstruction is
+required, more poloidal points must be used in this region of the plasma,
+keeping the same total number of poloidal values on a non-uniform grid. When
+some smoothing is needed, it is always possible to use less $a_{n}^{(c,s)}$ in
+the Fourier expansion series.
 
 \subsection{Runge-Kutta differential equation solver}
 
-Les relations (\ref{h1}-\ref{h5}) forment un syst\`{e}me d'\'{e}quations
-diff\'{e}rentielles du premier ordre coupl\'{e}es entre elles. Etant donn\'{e}
-la condition initiale $\left(  k_{\psi0},m_{0},n_{0}\right)  $ \`{a} la
-position $\left(  \psi_{0},\theta_{0},\phi_{0}\right)  ,$ le probl\`{e}me
-consiste \`{a} trouver la solution $\left(  k_{\psi}\left(  t\right)
-,m\left(  t\right)  ,n\left(  t\right)  \right)  $ ainsi que la position
-spatiale du rayon au temps $t,$ $\left(  \psi\left(  t\right)  ,\theta\left(
-t\right)  ,\phi\left(  t\right)  \right)  .$ Mis \`{a} part quelques cas
-tr\`{e}s simples dans une configuration magn\'{e}tique form\'{e}e de surfaces
-de flux magn\'{e}tiques circulaires et concentriques, il est n\'{e}cessaire de
-r\'{e}soudre num\'{e}riquement ces \'{e}quations, en \'{e}vitant que l'erreur
-num\'{e}rique ne se propage.
+\bigskip Relations (\ref{h1}-\ref{h5}) form a system of first order coupled
+differential equations. Knowing the initial wave characteristics $\left(
+k_{\psi0},m_{0},n_{0}\right)  $ at the position $\left(  \psi_{0},\theta
+_{0},\phi_{0}\right)  ,$ the problem is to evaluate $\left(  k_{\psi
+},m,n\right)  $ and $\left(  \psi,\theta,\phi\right)  $ at all values of the
+time parameter $t.$
 
-Il existe plusieurs m\'{e}thodes num\'{e}riques pour arriver \`{a} cette
-objectif, la plus courante \'{e}tant celle bas\'{e}e sur l'algorithme de
-Runge-Kutta du noms de leurs auteurs, qui appartient \`{a} la famille des
-algorithmes d'Euler-cauchy. On cherche \`{a} r\'{e}soudre de mani\`{e}re
-it\'{e}rative l'\'{e}quation diff\'{e}rentielle du type $y^{\prime}\left(
-x\right)  =f\left(  x,y\left(  x\right)  \right)  ,$ o\`{u} dans le cas
-pr\'{e}sent, la fonctionnelle $f$ correspond aux d\'{e}riv\'{e}es partielles
-de $\mathcal{D}.$ La r\`{e}gle de r\'{e}currence est du type
+There are several algorithms for solving this initial value problem,
+minimizing propagation of the numerical error. One of the most popular is the
+Runge-Kutta algorithm which belongs to the Euler-Cauchy algorithm
+family\footnote{There exists other methods used also for ray-tracing named
+"predictor-corrector" which belong to the general Adams algorithm family.}.
+The procedure consists in solving the differential equations of the type
+$y^{\prime}\left(  x\right)  =g\left(  x,y\left(  x\right)  \right)  $ by an
+iterative method, with the recurrence rule
 \begin{equation}
 y_{n+1}=y_{n}+h\varphi\left(  x_{n},y_{n},h\right)
 \end{equation}
-connaissant la condition initiale $y_{0}=y\left(  x_{0}\right)  .$
+and the initial condition $y_{0}=y\left(  x_{0}\right)  .$
 
-On cherche une solution de la forme
+A solution of the form is seeked
 \begin{equation}
 \varphi\left(  x,y,h\right)  =\alpha_{1}f\left(  x,y\left(  x\right)  \right)
 +\alpha_{2}f\left(  x+\alpha h,y+\beta hf\left(  x,y\right)  \right)
 \label{phiRK}%
 \end{equation}
-de sorte qu'il n'y ait pas de d\'{e}riv\'{e}es num\'{e}riques peu pr\'{e}cises
-\`{a} calculer qui rentre en ligne de compte. En d\'{e}veloppant $y\left(
-x\right)  $ selon une s\'{e}rie de Taylor \`{a} l'ordre $2,$ on obtient
+so that no numerical derivatives must be calculated. From a Taylor series
+expansion of $y\left(  x\right)  $ up to the second order, one obtains
 \begin{align}
-\frac{y\left(  x+h\right)  -y\left(  x\right)  }{h}  & =y^{\prime}\left(
+\frac{y\left(  x+h\right)  -y\left(  x\right)  }{h}  &  =y^{\prime}\left(
 x\right)  +\frac{h}{2}y^{\prime\prime}\left(  x\right)  +O\left(  h^{2}\right)
 \\
-& =f\left(  x,y\right)  +\frac{h}{2}f^{(1)}\left(  x,y\right)  +O\left(
+&  =f\left(  x,y\right)  +\frac{h}{2}f^{(1)}\left(  x,y\right)  +O\left(
 h^{2}\right)
 \end{align}
-o\`{u}%
+where%
 \begin{equation}
 f^{(1)}\left(  x,y\right)  =\frac{\partial f}{\partial x}+f\frac{\partial
 f}{\partial y}%
 \end{equation}
 
 
-Un d\'{e}veloppement analogue donne%
+A similar expansion gives%
 \begin{equation}
 f\left(  x+\alpha h,y+\beta hf\left(  x,y\right)  \right)  =f+\alpha
 h\frac{\partial f}{\partial x}+\beta hf\frac{\partial f}{\partial y}+O\left(
 h^{2}\right)
 \end{equation}
-et l'expression de $\varphi$ devient%
+and up to the $2^{nd},$ $\varphi$ becomes%
 \begin{equation}
 \varphi\left(  x,y,h\right)  =\left(  \alpha_{1}+\alpha_{2}\right)  f\left(
 x,y\right)  +h\left[  \alpha\alpha_{2}\frac{\partial f}{\partial x}%
 +\beta\alpha_{2}f\frac{\partial f}{\partial y}\right]  +O\left(  h^{2}\right)
 \end{equation}
-d'o\`{u}%
+so that%
 \begin{align}
 \frac{y\left(  x+h\right)  -y\left(  x\right)  }{h}-\varphi\left(
-x,y,h\right)   & =\left(  1-\alpha_{1}-\alpha_{2}\right) \nonumber\\
-& +h\left(  \frac{1}{2}-\alpha\alpha_{2}\right)  \frac{\partial f}{\partial
+x,y,h\right)   &  =\left(  1-\alpha_{1}-\alpha_{2}\right) \nonumber\\
+&  +h\left(  \frac{1}{2}-\alpha\alpha_{2}\right)  \frac{\partial f}{\partial
 x}\nonumber\\
-& +h\left(  \frac{1}{2}-\beta\alpha_{2}\right)  \frac{\partial f}{\partial
+&  +h\left(  \frac{1}{2}-\beta\alpha_{2}\right)  \frac{\partial f}{\partial
 y}+O\left(  h^{2}\right)
 \end{align}
 
 
-Afin d'\'{e}liminer les d\'{e}riv\'{e}es et d'\^{e}tre pr\'{e}cis \`{a}
-l'ordre deux, on doit avoir%
+Inorder to eleiminate all derivatives, and to obtain a second order accurate
+calculation, coefficients must satisfy the relations%
 \begin{align}
-\alpha_{1}+\alpha_{2}  & =1\\
-\alpha\alpha_{2}  & =1/2\\
-\beta\alpha_{2}  & =1/2
+\alpha_{1}+\alpha_{2}  &  =1\\
+\alpha\alpha_{2}  &  =1/2\\
+\beta\alpha_{2}  &  =1/2
 \end{align}
-ce qui implique%
+which implies%
 \begin{align}
-\alpha & =\beta=\frac{1}{2\alpha_{2}}\\
-\alpha_{1}  & =1-\alpha_{2}%
+\alpha &  =\beta=\frac{1}{2\alpha_{2}}\\
+\alpha_{1}  &  =1-\alpha_{2}%
 \end{align}
 
 
-Dans ces conditions, la solution est
+Then the solution is
 \begin{equation}
 \varphi\left(  x,y,h\right)  =\left(  1-\alpha\right)  f\left(  x,y\right)
 +\alpha f\left(  x+\frac{h}{2\alpha},y+\frac{h}{2\alpha}f\left(  x,y\right)
 \right)
 \end{equation}
-o\`{u} le cas $\alpha=1/2$ correspond \`{a} l'algorithme de Eun, et celui
-$\alpha=1$ \`{a} lalgorithme d'Euler modifi\'{e}. Pour un algorithme de
-Runge-Kutta d'ordre deux, on proc\`{e}de donc de la mani\`{e}re suivante%
+where the case $\alpha=1/2$ corresponds to the Eun's algorithm, while
+$\alpha=1$ is corresponding to the modified Euler's algorithm.
+
+A second order Runge-Kutta algorithm is then correponding to the following
+procedure,%
 \begin{align}
-y_{n+1}  & =y_{n}+h\varphi\left(  x_{n},y_{n},h\right) \\
-\varphi\left(  x_{n},y_{n},h\right)   & =\left(  1-\alpha\right)  k_{1}+\alpha
-k_{2}\\
-k_{1}  & =f\left(  x,y\right) \\
-k_{2}  & =f\left(  x+\frac{h}{2\alpha},y+\frac{h}{2\alpha}k_{1}\right)
+y_{n+1}  &  =y_{n}+h\varphi\left(  x_{n},y_{n},h\right) \\
+\varphi\left(  x_{n},y_{n},h\right)   &  =\left(  1-\alpha\right)
+k_{1}+\alpha k_{2}\\
+k_{1}  &  =f\left(  x,y\right) \\
+k_{2}  &  =f\left(  x+\frac{h}{2\alpha},y+\frac{h}{2\alpha}k_{1}\right)
 \end{align}
 
 
-On peut choisir le param\`{e}tre $\alpha$ suivant la nature du probl\`{e}me
-\'{e}tudi\'{e}, et le param\`{e}tre $h,$ qui doit \^{e}tre petit peut-\^{e}tre
-adapt\'{e} en fonction de la courbure locale de la fonction $f.$ C'est ce que
-l'on appelle la m\'{e}thode de Runge-Kutta adaptative.
+The parameter $\alpha$ is chosen depending upon the studied problem, and
+parameter $h,$ which must be small, may be adjusted at each iteration step, as
+function of the local curvature of the ray path. This is the adaptative
+Runge-Kutta method, widely used for solving this type of problem.
 
-Il est possible de poursuivre le d\'{e}veloppement de Taylor \`{a} des ordres
-plus \'{e}lev\'{e}s $4$ ou $6,$ et on parle alors de m\'{e}thode Runge-Kutta
-d'ordre $4$ ou $6$. Ainsi \`{a} l'ordre $4,$ les \'{e}quations de Runge-Kutta
-sont%
+\bigskip This procedure, which has been highlighted for order $2,$ may be
+expanded in a similar manner for higher orders. Detailed calculations are not
+given, since they are particularly lenght and tedious. The result for order
+$4$ is%
+
 \begin{align}
-y_{n+1}  & =y_{n}+h\varphi\left(  x_{n},y_{n},h\right) \\
-\varphi\left(  x_{n},y_{n},h\right)   & =\frac{1}{6}\left(  k_{1}%
+y_{n+1}  &  =y_{n}+h\varphi\left(  x_{n},y_{n},h\right) \\
+\varphi\left(  x_{n},y_{n},h\right)   &  =\frac{1}{6}\left(  k_{1}%
 +2k_{2}+2k_{3}+k_{4}\right) \\
-k_{1}  & =f\left(  x,y\right) \\
-k_{2}  & =f\left(  x+\frac{h}{2},y+\frac{h}{2}k_{1}\right) \\
-k_{3}  & =f\left(  x+\frac{h}{2},y+\frac{h}{2}k_{2}\right) \\
-k_{4}  & =f\left(  x+h,y+hk_{3}\right)
+k_{1}  &  =f\left(  x,y\right) \\
+k_{2}  &  =f\left(  x+\frac{h}{2},y+\frac{h}{2}k_{1}\right) \\
+k_{3}  &  =f\left(  x+\frac{h}{2},y+\frac{h}{2}k_{2}\right) \\
+k_{4}  &  =f\left(  x+h,y+hk_{3}\right)
+\end{align}
+and order $6$ is
+\begin{align}
+y_{n+1}  &  =y_{n}+h\varphi\left(  x_{n},y_{n},h\right) \\
+\varphi\left(  x_{n},y_{n},h\right)   &  =\frac{1}{6}\left(  k_{1}%
++2k_{2}+2k_{3}+k_{4}\right) \\
+k_{1}  &  =f\left(  x,y\right) \\
+k_{2}  &  =f\left(  x+\frac{h}{2},y+\frac{h}{2}k_{1}\right) \\
+k_{3}  &  =f\left(  x+\frac{h}{2},y+\frac{h}{2}k_{2}\right) \\
+k_{4}  &  =f\left(  x+h,y+hk_{3}\right)
 \end{align}
 
 
-Plus pr\'{e}cises que celle de l'ordre deux ici pr\'{e}sent\'{e}e, elles
-n\'{e}cessitent deux ou trois fois plus d'\'{e}valuation de la fonction $f,$
-ce qui ralentit les calculs, mais ceux-ci sont par ailleurs plus pr\'{e}cis.
-Il n'y a pas de recette simple permettant de faire le choix de l'ordre de la
-m\'{e}thode Runge-Kutta, afin d'avoir la m\'{e}thode num\'{e}rique la plus
-efficace en terme de temps de calcul. Le trac\'{e} de rayon demandant en
-g\'{e}n\'{e}ral une pr\'{e}cision num\'{e}rique tr\`{e}s grande, i.e.
-$\left\vert \mathcal{D}\right\vert \leq10^{-10},$ on utilise la m\'{e}thode de
-Runge-Kutta \`{a} l'ordre $6,$ \`{a} laquelle on adjoint une technique de pas
-adaptatif, afin d'acc\'{e}lerer les calculs dans les r\'{e}gions o\`{u} les
-variations sont faibles\footnote{Il existe d'autres m\'{e}thodes pour
-r\'{e}soudre les \'{e}quations de rayon, comme la m\'{e}thode dite
-"pr\'{e}dicteur-correcteur", appartenant \`{a} la famille des algorithmes
-Adams.}.
+More precise at each time step that the second order, they requires naturaly
+for extrapolation and therefore calculations are by a factor $3$ between the
+second order and the sixth order. Nevertheless, the main advantage is that
+local small curvature radii may described much more accurately, without
+decreasing $h$ to much.
+
+In the ray-tracing, a sixth order adaptative Runge-Kutta integration method is
+used. The numerical accuracy abtains with this method is very satisfactory,
+and the condition $\left\vert \mathcal{D}\right\vert \leq10^{-10}$ may be
+maintained along the ray path in almost all conditions. A slight reduction of
+the numerical accuracy on $\left\vert \mathcal{D}\right\vert $ is observed
+after the cold fast wave conversion mode.
 
 \bigskip\appendix{}
 
@@ -1851,8 +1863,7 @@ with those from \cite{hei99}.%
 %width 5.796in;  height 4.3638in;  depth 0pt;  original-width 7.4581in;
 %original-height 5.6066in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename 'V:/JETlike/WAVE/figures/JETliketest_numeric_RayPoloidal.eps';file-properties "XNPEU";}%
-%}}%
+%filename 'JETliketest_numeric_RayPoloidal.eps';file-properties "XNPEU";}}}%
 %BeginExpansion
 \begin{figure}
 [ptb]
@@ -1861,7 +1872,7 @@ with those from \cite{hei99}.%
 height=4.3638in,
 width=5.796in
 ]%
-{../Examples/JETlike/WAVE/figures/JETliketest_numeric_RayPoloidal.eps}%
+{JETliketest_numeric_RayPoloidal.eps}%
 \caption{Poloidal projection of the ray trajectory. The red curve corresponds
 to the slow mode and the blue curve corresponds to the fast mode. (numeric
 magnetic equilibrium). $N_{\phi0}=-2.0$}%
@@ -1877,7 +1888,7 @@ magnetic equilibrium). $N_{\phi0}=-2.0$}%
 %width 5.796in;  height 4.3638in;  depth 0pt;  original-width 7.4581in;
 %original-height 5.6066in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename 'V:/JETlike/WAVE/figures/JETliketest_analytic_RayPoloidal.eps';file-properties "XNPEU";}%
+%filename 'JETlike/WAVE/figures/JETliketest_analytic_RayPoloidal.eps';file-properties "NPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -1887,7 +1898,7 @@ magnetic equilibrium). $N_{\phi0}=-2.0$}%
 height=4.3638in,
 width=5.796in
 ]%
-{../Examples/JETlike/WAVE/figures/JETliketest_analytic_RayPoloidal.eps}%
+{JETlike/WAVE/figures/JETliketest_analytic_RayPoloidal.eps}%
 \caption{Poloidal projection of the ray trajectory. The red curve corresponds
 to the slow mode and the blue curve corresponds to the fast mode. (Analytic
 magnetic equilibrium). $N_{\phi0}=-2.0$}%
@@ -1903,7 +1914,7 @@ magnetic equilibrium). $N_{\phi0}=-2.0$}%
 %width 5.796in;  height 4.3638in;  depth 0pt;  original-width 7.4581in;
 %original-height 5.6066in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename 'V:/JETlike/WAVE/figures/JETliketest18_numeric_RayPoloidal.eps';file-properties "XNPEU";}%
+%filename 'JETlike/WAVE/figures/JETliketest18_numeric_RayPoloidal.eps';file-properties "NPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -1913,7 +1924,7 @@ magnetic equilibrium). $N_{\phi0}=-2.0$}%
 height=4.3638in,
 width=5.796in
 ]%
-{../Examples/JETlike/WAVE/figures/JETliketest18_numeric_RayPoloidal.eps}%
+{JETlike/WAVE/figures/JETliketest18_numeric_RayPoloidal.eps}%
 \caption{Poloidal projection of the ray trajectory. The red curve corresponds
 to the slow mode and the blue curve corresponds to the fast mode. (Numeric
 magnetic equilibrium). $N_{\phi0}=-1.8$}%
@@ -1929,7 +1940,7 @@ magnetic equilibrium). $N_{\phi0}=-1.8$}%
 %width 5.796in;  height 4.3638in;  depth 0pt;  original-width 7.4581in;
 %original-height 5.6066in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename 'V:/JETlike/WAVE/figures/JETliketest18_analytic_RayPoloidal.eps';file-properties "XNPEU";}%
+%filename 'JETlike/WAVE/figures/JETliketest18_analytic_RayPoloidal.eps';file-properties "NPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -1939,7 +1950,7 @@ magnetic equilibrium). $N_{\phi0}=-1.8$}%
 height=4.3638in,
 width=5.796in
 ]%
-{../Examples/JETlike/WAVE/figures/JETliketest18_analytic_RayPoloidal.eps}%
+{JETlike/WAVE/figures/JETliketest18_analytic_RayPoloidal.eps}%
 \caption{Poloidal projection of the ray trajectory. The red curve corresponds
 to the slow mode and the blue curve corresponds to the fast mode. (Analytic
 magnetic equilibrium). $N_{\phi0}=-1.8$}%
@@ -1953,8 +1964,7 @@ magnetic equilibrium). $N_{\phi0}=-1.8$}%
 %width 5.8591in;  height 3.4126in;  depth 0pt;  original-width 5.8003in;
 %original-height 3.3667in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename 'V:/JETlike/WAVE/Paper_Heikkinen_et_al.jpg';file-properties "XNPEU";}%
-%}}%
+%filename 'JETlike/WAVE/Paper_Heikkinen_et_al.jpg';file-properties "NPEU";}}}%
 %BeginExpansion
 \begin{figure}
 [ptb]
@@ -1965,7 +1975,7 @@ natwidth=5.800300in,
 height=3.4126in,
 width=5.8591in
 ]%
-{../Examples/JETlike/WAVE/Paper_Heikkinen_et_al.eps}%
+{JETlike/WAVE/Paper_Heikkinen_et_al.jpg}%
 \caption{Poloidal projection of the ray trajectory from reference
 \cite{hei99}}%
 \end{center}
@@ -1979,7 +1989,7 @@ width=5.8591in
 %width 5.796in;  height 4.3638in;  depth 0pt;  original-width 7.4581in;
 %original-height 5.6066in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename 'V:/JETlike/WAVE/figures/JETliketest_numeric_PoloidalMode.eps';file-properties "XNPEU";}%
+%filename 'JETlike/WAVE/figures/JETliketest_numeric_PoloidalMode.eps';file-properties "NPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -1989,7 +1999,7 @@ width=5.8591in
 height=4.3638in,
 width=5.796in
 ]%
-{../Examples/JETlike/WAVE/figures/JETliketest_numeric_PoloidalMode.eps}%
+{JETlike/WAVE/figures/JETliketest_numeric_PoloidalMode.eps}%
 \caption{Poloidal mode number along the ray trajectory. (Numeric magnetic
 equilibrium). $N_{\phi0}=-2.0$}%
 \end{center}
@@ -2003,7 +2013,7 @@ equilibrium). $N_{\phi0}=-2.0$}%
 %width 5.796in;  height 4.3638in;  depth 0pt;  original-width 7.4581in;
 %original-height 5.6066in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename 'V:/JETlike/WAVE/figures/JETliketest_numeric_Npar.eps';file-properties "XNPEU";}%
+%filename 'JETlike/WAVE/figures/JETliketest_numeric_Npar.eps';file-properties "NPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -2013,7 +2023,7 @@ equilibrium). $N_{\phi0}=-2.0$}%
 height=4.3638in,
 width=5.796in
 ]%
-{../Examples/JETlike/WAVE/figures/JETliketest_numeric_Npar.eps}%
+{JETlike/WAVE/figures/JETliketest_numeric_Npar.eps}%
 \caption{Parallel refractive index or refraction along the ray trajectory.
 (Numeric magnetic equilibrium). $N_{\phi0}=-2.0$}%
 \end{center}
@@ -2026,7 +2036,7 @@ width=5.796in
 %valid_file "F";  width 5.796in;  height 4.3638in;  depth 0pt;
 %original-width 7.4581in;  original-height 5.6066in;  cropleft "0";
 %croptop "1";  cropright "1";  cropbottom "0";
-%filename 'V:/JETlike/WAVE/figures/JETliketest_numeric_Disp.eps';file-properties "XNPEU";}%
+%filename 'JETlike/WAVE/figures/JETliketest_numeric_Disp.eps';file-properties "NPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -2036,7 +2046,7 @@ width=5.796in
 height=4.3638in,
 width=5.796in
 ]%
-{../Examples/JETlike/WAVE/figures/JETliketest_numeric_Disp.eps}%
+{JETlike/WAVE/figures/JETliketest_numeric_Disp.eps}%
 \caption{Dispersion relation along the ray trajectory. (Numeric magnetic
 equilibrium). $N_{\phi0}=-2.0$}%
 \end{center}
@@ -2044,7 +2054,7 @@ equilibrium). $N_{\phi0}=-2.0$}%
 %EndExpansion
 
 
-\subsubsection{Numerical performances }
+\subsubsection{Numerical performances}
 
 For the calculations of the magnetic equilibrium quantities (values,
 derivatives) in the ray-tracing code, the magnetic equilibrium, defined on a
@@ -2053,7 +2063,7 @@ poloidal direction respectively, is vectorized using a Fourier series
 expansion with $32$ harmonics and the Matlab built-in cubic spline
 interpolation for the Fourier coefficients. The vectorization procedure takes
 typically $8.3$ seconds on computer equipped with a 64 bits biprocessor AMD
-opteron clocked at $2.4$ GHz, with $4$ GBytes of RAM memory. 
+opteron clocked at $2.4$ GHz, with $4$ GBytes of RAM memory.
 
 Ray calculation parameters for the example here presented are representative
 of almost all ray-tracing calculations used for tokamak current drive
@@ -2061,7 +2071,7 @@ simulation. Ray parameters are stored in the memory each time the radial
 increment $\Delta\rho$ is larger than $10^{-4}.$ For refined ray calculation,
 $\Delta\rho$ may be lowered, but the value here used gives satisfactory
 results for all simualtions which have been performed with the code. In the
-$6^{th}$ order Runge-Kutta procedure, the generalized  incremental step $h$ is
+$6^{th}$ order Runge-Kutta procedure, the generalized incremental step $h$ is
 adjusted so that the norm\footnote{The infinite norm $\left\Vert
 \mathbf{X}\right\Vert _{\infty}=\max_{i\in\left[  1,N\right]  }\left(
 \left\vert X_{i}\right\vert \right)  $ is used, where $N$ is the diemension of
@@ -2093,7 +2103,7 @@ Lower Hybrid current drive simulations have been performed for $VERSATOR$ II
 and $PLT$ tokamaks which both have almost circular concentric magnetic flux
 surfaces (\cite{bon84},\cite{bon86}). For the benchmark, the Shafranov shift
 is neglected, and a plasma with exact circular concentric magnetic flux
-surfaces  is considered as for the previous case, with the following magnetic
+surfaces is considered as for the previous case, with the following magnetic
 equilibrium parameters%
 \begin{equation}%
 \begin{array}
@@ -2202,7 +2212,7 @@ the plasma center to closely.%
 %width 7.5273in;  height 5.6645in;  depth 0pt;  original-width 7.4581in;
 %original-height 5.6066in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename 'V:/VERSATOR2/WAVE/figures/VERSATOR2test_numeric_RayPoloidal.eps';file-properties "XNPEU";}%
+%filename 'VERSATOR2/WAVE/figures/VERSATOR2test_numeric_RayPoloidal.eps';file-properties "NPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -2212,7 +2222,7 @@ the plasma center to closely.%
 height=5.6645in,
 width=7.5273in
 ]%
-{../Examples/VERSATOR2/WAVE/figures/VERSATOR2test_numeric_RayPoloidal.eps}%
+{VERSATOR2/WAVE/figures/VERSATOR2test_numeric_RayPoloidal.eps}%
 \caption{Poloidal projection of the ray trajectory. The red curve corresponds
 to the slow mode and the blue curve corresponds to the fast mode. (Numeric
 magnetic equilibrium). $VERSATOR$ II, $N_{\Vert0}=5.0$}%
@@ -2228,7 +2238,7 @@ magnetic equilibrium). $VERSATOR$ II, $N_{\Vert0}=5.0$}%
 %width 7.5273in;  height 5.6645in;  depth 0pt;  original-width 7.4581in;
 %original-height 5.6066in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename 'V:/VERSATOR2/WAVE/figures/VERSATOR2test_analytic_RayPoloidal.eps';file-properties "XNPEU";}%
+%filename 'VERSATOR2/WAVE/figures/VERSATOR2test_analytic_RayPoloidal.eps';file-properties "NPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -2238,7 +2248,7 @@ magnetic equilibrium). $VERSATOR$ II, $N_{\Vert0}=5.0$}%
 height=5.6645in,
 width=7.5273in
 ]%
-{../Examples/VERSATOR2/WAVE/figures/VERSATOR2test_analytic_RayPoloidal.eps}%
+{VERSATOR2/WAVE/figures/VERSATOR2test_analytic_RayPoloidal.eps}%
 \caption{Poloidal projection of the ray trajectory. The red curve corresponds
 to the slow mode and the blue curve corresponds to the fast mode. (Analytic
 magnetic equilibrium). $VERSATOR$ II, $N_{\Vert0}=5.0$}%
@@ -2258,7 +2268,7 @@ a numerical or an analytical magnetic equilibrium is clearly visible.%
 %width 7.5273in;  height 5.6645in;  depth 0pt;  original-width 7.4581in;
 %original-height 5.6066in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename 'V:/PLT/WAVE/figures/PLTtest_numeric_RayPoloidal.eps';file-properties "XNPEU";}%
+%filename 'PLT/WAVE/figures/PLTtest_numeric_RayPoloidal.eps';file-properties "NPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -2268,7 +2278,7 @@ a numerical or an analytical magnetic equilibrium is clearly visible.%
 height=5.6645in,
 width=7.5273in
 ]%
-{../Examples/PLT/WAVE/figures/PLTtest_numeric_RayPoloidal.eps}%
+{PLT/WAVE/figures/PLTtest_numeric_RayPoloidal.eps}%
 \caption{Poloidal projection of the ray trajectory. The red curve corresponds
 to the slow mode and the blue curve corresponds to the fast mode. (Numeric
 magnetic equilibrium). $PLT$, $N_{\Vert0}=1.33$}%
@@ -2284,7 +2294,7 @@ magnetic equilibrium). $PLT$, $N_{\Vert0}=1.33$}%
 %width 7.5273in;  height 5.6645in;  depth 0pt;  original-width 7.4581in;
 %original-height 5.6066in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename 'V:/PLT/WAVE/figures/PLTtest_analytic_RayPoloidal.eps';file-properties "XNPEU";}%
+%filename 'PLT/WAVE/figures/PLTtest_analytic_RayPoloidal.eps';file-properties "NPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -2294,7 +2304,7 @@ magnetic equilibrium). $PLT$, $N_{\Vert0}=1.33$}%
 height=5.6645in,
 width=7.5273in
 ]%
-{../Examples/PLT/WAVE/figures/PLTtest_analytic_RayPoloidal.eps}%
+{PLT/WAVE/figures/PLTtest_analytic_RayPoloidal.eps}%
 \caption{Poloidal projection of the ray trajectory. The red curve corresponds
 to the slow mode and the blue curve corresponds to the fast mode. (Analytic
 magnetic equilibrium). $PLT$, $N_{\Vert0}=1.33$}%
@@ -2323,7 +2333,7 @@ the very weakly absorbed waves.%
 %valid_file "F";  width 7.5273in;  height 5.6645in;  depth 0pt;
 %original-width 7.4581in;  original-height 5.6066in;  cropleft "0";
 %croptop "1";  cropright "1";  cropbottom "0";
-%filename 'V:/PLT/WAVE/figures/PLTtest_analytic_RhoComp.eps';file-properties "XNPEU";}%
+%filename 'PLT/WAVE/figures/PLTtest_analytic_RhoComp.eps';file-properties "NPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -2333,7 +2343,7 @@ the very weakly absorbed waves.%
 height=5.6645in,
 width=7.5273in
 ]%
-{../Examples/PLT/WAVE/figures/PLTtest_analytic_RhoComp.eps}%
+{PLT/WAVE/figures/PLTtest_analytic_RhoComp.eps}%
 \caption{Radial position of the ray trajectory as function of the toroidal
 angle ($PLT$). $N_{\Vert}=1.33$}%
 \end{center}
@@ -2346,7 +2356,7 @@ angle ($PLT$). $N_{\Vert}=1.33$}%
 %valid_file "F";  width 7.5273in;  height 5.6645in;  depth 0pt;
 %original-width 7.4581in;  original-height 5.6066in;  cropleft "0";
 %croptop "1";  cropright "1";  cropbottom "0";
-%filename 'V:/PLT/WAVE/figures/PLTtest_analytic_ThetaComp.eps';file-properties "XNPEU";}%
+%filename 'PLT/WAVE/figures/PLTtest_analytic_ThetaComp.eps';file-properties "NPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -2356,7 +2366,7 @@ angle ($PLT$). $N_{\Vert}=1.33$}%
 height=5.6645in,
 width=7.5273in
 ]%
-{../Examples/PLT/WAVE/figures/PLTtest_analytic_ThetaComp.eps}%
+{PLT/WAVE/figures/PLTtest_analytic_ThetaComp.eps}%
 \caption{Poloidal position of the ray trajectory as function of the toroidal
 angle ($PLT$). $N_{\Vert}=1.33$}%
 \end{center}
@@ -2370,7 +2380,7 @@ angle ($PLT$). $N_{\Vert}=1.33$}%
 %width 7.5273in;  height 5.6645in;  depth 0pt;  original-width 7.4581in;
 %original-height 5.6066in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename 'V:/PLT/WAVE/figures/PLTtest_analytic_NparComp.eps';file-properties "XNPEU";}%
+%filename 'PLT/WAVE/figures/PLTtest_analytic_NparComp.eps';file-properties "NPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -2380,7 +2390,7 @@ angle ($PLT$). $N_{\Vert}=1.33$}%
 height=5.6645in,
 width=7.5273in
 ]%
-{../Examples/PLT/WAVE/figures/PLTtest_analytic_NparComp.eps}%
+{PLT/WAVE/figures/PLTtest_analytic_NparComp.eps}%
 \caption{Parallel refractive index or refraction along the ray trajectory as
 function of the toroidal angle ($PLT$). $N_{\Vert}=1.33$}%
 \end{center}
@@ -2394,7 +2404,7 @@ function of the toroidal angle ($PLT$). $N_{\Vert}=1.33$}%
 %width 7.5273in;  height 5.6645in;  depth 0pt;  original-width 7.4581in;
 %original-height 5.6066in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename 'V:/PLT/WAVE/figures/PLTtest_analytic_NperpComp.eps';file-properties "XNPEU";}%
+%filename 'PLT/WAVE/figures/PLTtest_analytic_NperpComp.eps';file-properties "NPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -2404,7 +2414,7 @@ function of the toroidal angle ($PLT$). $N_{\Vert}=1.33$}%
 height=5.6645in,
 width=7.5273in
 ]%
-{../Examples/PLT/WAVE/figures/PLTtest_analytic_NperpComp.eps}%
+{PLT/WAVE/figures/PLTtest_analytic_NperpComp.eps}%
 \caption{Perpendicular refractive index or refraction along the ray trajectory
 as function of the toroidal angle ($PLT$). $N_{\Vert}=1.33$}%
 \end{center}
@@ -2439,6 +2449,160 @@ q\left(  \rho\right)  =q_{\min}+\left(  q_{\max}-q_{\min}\right)  \rho^{2}%
 \end{equation}
 with $q_{\min}=1$ and $q_{\max}$ deduces from Amp\`{e}re's law.
 
+Since rays are straight lines, it is possible to calculate exactly rays
+trajectories from geometrical arguments. The starting point of the
+calculations is the initial value of the wave vector $\mathbf{k}_{0}=k_{\rho
+0}\widehat{\rho}+k_{\theta0}\widehat{\U{3b8} }+k_{\phi0}\widehat{\phi},$ since
+$\left\vert \nabla\rho\right\vert =1$ in this case, where $k_{\theta0}%
+=m_{0}a_{p}/\rho_{0}$ and $k_{\phi}=n_{0}a_{p}/R_{0}$. For an easy
+representation, it is necessary to express $\mathbf{k}_{0}$ is cartesian
+coordinates, using the relation $\mathbf{k}_{0}^{cartesian}=\overline
+{\overline{M}}_{cc0}\cdot\mathbf{k}_{0}^{curvilinear}$. Since $\left(
+\widehat{\rho},\widehat{\U{3b8} },\widehat{\phi}\right)  $ is a direct frame,
+the matrix of transfer between coordinates is%
+\begin{align}
+\overline{\overline{M}}_{cc0}\left(  \theta_{0},\phi_{0}\right)    & =\left(
+\begin{array}
+[c]{ccc}%
+\widehat{\rho}\cdot\widehat{x} & \widehat{\U{3b8} }\cdot\widehat{y} &
+\widehat{\phi}\cdot\widehat{z}\\
+\widehat{\rho}\cdot\widehat{x} & \widehat{\U{3b8} }\cdot\widehat{y} &
+\widehat{\phi}\cdot\widehat{z}\\
+\widehat{\rho}\cdot\widehat{x} & \widehat{\U{3b8} }\cdot\widehat{y} &
+\widehat{\phi}\cdot\widehat{z}%
+\end{array}
+\right)  \nonumber\\
+& =\left(
+\begin{array}
+[c]{ccc}%
+\cos\theta_{0}\cos\phi_{0} & -\sin\theta_{0}\cos\phi_{0} & -\sin\phi_{0}\\
+\cos\theta_{0}\sin\phi_{0} & -\sin\theta_{0}\sin\phi_{0} & \cos\phi_{0}\\
+\sin\theta_{0} & \cos\theta_{0} & 0
+\end{array}
+\right)
+\end{align}
+using the fact that $\widehat{\phi}\times\widehat{\rho}=\widehat{\U{3b8} },$
+and $\widehat{\phi}\cdot\widehat{z}=0.$
+
+The initial position at launch in normalized coordinates $\left(  \overline
+{x}_{0},\overline{y}_{0},\overline{z}_{0}\right)  $ is given by the relations%
+\begin{align}
+\overline{x}_{0}  & =\left(  \frac{R_{p}}{a_{p}}+\rho_{0}\cos\theta
+_{0}\right)  \cos\phi_{0}\\
+\overline{y}_{0}  & =\left(  \frac{R_{p}}{a_{p}}+\rho_{0}\cos\theta
+_{0}\right)  \sin\phi_{0}\\
+\overline{z}_{0}  & =\rho_{0}\sin\theta_{0}%
+\end{align}
+where $\left(  \rho_{0},\theta_{0},\phi_{0}\right)  $ are initial curvilinear
+coordinates. Since the ray is a straight line, its position is given by the
+parametric equation%
+\begin{align}
+\overline{x}^{\left(  l+1\right)  }  & =\overline{x}_{0}+k_{x0}\left[
+s\left(  l+1\right)  -s\left(  l\right)  \right]  \\
+\overline{y}^{\left(  l+1\right)  }  & =\overline{y}_{0}+k_{y0}\left[
+s\left(  l+1\right)  -s\left(  l\right)  \right]  \\
+\overline{z}^{\left(  l+1\right)  }  & =\overline{z}_{0}+k_{z0}\left[
+s\left(  l+1\right)  -s\left(  l\right)  \right]
+\end{align}
+where $s\left(  l\right)  $ is the ray length at the $l^{th}$ increment,
+starting from $s\left(  l=0\right)  =0$ at $\left(  \overline{x}_{0}%
+,\overline{y}_{0},\overline{z}_{0}\right)  .$Once $\left(  \overline
+{x}^{\left(  l\right)  },\overline{y}^{\left(  l\right)  },\overline
+{z}^{\left(  l\right)  }\right)  $ known, it is possible to determine back
+$\left(  \rho,\theta,\phi\right)  $ for all $l$ values, using the inverted
+relations%
+\begin{align}
+\rho^{\left(  l\right)  }  & =\sqrt{\left(  \frac{\overline{x}^{\left(
+l\right)  }}{\cos\phi^{\left(  l\right)  }}-\frac{R_{p}}{a_{p}}\right)
+^{2}+\overline{z}^{\left(  l\right)  2}}\label{form1}\\
+\theta^{\left(  l\right)  }  & =\sin^{-1}\left(  \frac{\overline{z}^{\left(
+l\right)  }}{\rho^{\left(  l\right)  }}\right)  H\left(  \sqrt{\overline
+{x}^{\left(  l\right)  2}+\overline{y}^{\left(  l\right)  2}}-\frac{R_{p}%
+}{a_{p}}\right)  +\left[  \pi sgn\left(  \theta^{\left(  l-1\right)  }\right)
+-\sin^{-1}\left(  \frac{\overline{z}^{\left(  l\right)  }}{\rho^{\left(
+l\right)  }}\right)  \right]  H\left(  \frac{R_{p}}{a_{p}}-\sqrt{\overline
+{x}^{\left(  l\right)  2}+\overline{y}^{\left(  l\right)  2}}\right)
+\label{form2}\\
+\phi^{\left(  l\right)  }  & =\tan^{-1}\left(  \frac{\overline{y}^{\left(
+l\right)  }}{\overline{x}^{\left(  l\right)  }}\right)  +\pi H\left(
+-\overline{x}^{\left(  l\right)  }\right)  \label{form3}%
+\end{align}
+In addition, $R^{\left(  l\right)  }/a_{p}=$ $\sqrt{\overline{x}^{\left(
+l\right)  2}+\overline{y}^{\left(  l\right)  2}}.$From the determination of
+$\left(  \rho^{\left(  l\right)  },\theta^{\left(  l\right)  },\phi^{\left(
+l\right)  }\right)  ,$ it is possible to evaluate $\mathbf{k}_{l}%
+^{curvilinear}$at all positions, since $\mathbf{k}_{l}^{cartesian}%
+=\mathbf{k}_{0}^{cartesian}$ (no deviation), by using the invert relation%
+\begin{equation}
+\mathbf{k}_{l}^{curvilinear}=\overline{\overline{M}}_{cc\left(  l\right)
+}^{-1}\cdot\mathbf{k}_{0}^{cartesian}%
+\end{equation}
+and where $\overline{\overline{M}}_{cc\left(  l\right)  }$ is the matrix of
+transfer at $\left(  \theta^{\left(  l\right)  },\phi^{\left(  l\right)
+}\right)  .$ Finally
+\begin{align}
+m^{\left(  l\right)  }  & =k_{\theta}^{\left(  l\right)  }\rho^{\left(
+l\right)  }/a_{p}\\
+n^{\left(  l\right)  }  & =k_{\phi}^{\left(  l\right)  }R^{\left(  l\right)
+}/a_{p}%
+\end{align}
+
+
+In order to keep the ray inside the toroidal chamber, a specular reflexion is
+enforced at $\overline{\psi}_{a}.$If the condition $\rho^{\left(  l\right)
+}>1$ is encountered, then the new direction of the ray $\mathbf{k}_{0\left(
+i+1\right)  }^{cartesian}$ of the $i+1$ ray segment is deduced from
+$\mathbf{k}_{0\left(  i\right)  }^{cartesian}$ according to the conditions
+\begin{align}
+\mathbf{k}_{0\left(  i+1\right)  }^{cartesian}\cdot\widehat{\rho}^{\left(
+l-1\right)  }  & =-\mathbf{k}_{0\left(  i\right)  }^{cartesian}\cdot
+\widehat{\rho}^{\left(  l-1\right)  }\\
+\mathbf{k}_{0\left(  i+1\right)  }^{cartesian}\cdot\widehat{\U{3b8} }^{\left(
+l-1\right)  }  & =\mathbf{k}_{0\left(  i\right)  }^{cartesian}\cdot
+\widehat{\U{3b8} }^{\left(  l-1\right)  }\\
+\mathbf{k}_{0\left(  i+1\right)  }^{cartesian}\cdot\widehat{\phi}^{\left(
+l-1\right)  }  & =\mathbf{k}_{0\left(  i\right)  }^{cartesian}\cdot
+\widehat{\phi}^{\left(  l-1\right)  }%
+\end{align}
+where $\left(  \widehat{\rho},\widehat{\U{3b8} },\widehat{\phi}\right)  $ are
+used at the increment $\left(  l-1\right)  .$ It corresponds to the relation%
+\begin{equation}
+\mathbf{k}_{0\left(  i+1\right)  }^{cartesian}=\left[  \overline{\overline{M}%
+}_{cc1}^{-1}\left(  \theta^{\left(  l-1\right)  },\phi^{\left(  l-1\right)
+}\right)  \cdot\overline{\overline{M}}_{cc2}\left(  \theta^{\left(
+l-1\right)  },\phi^{\left(  l-1\right)  }\right)  \right]  \cdot
+\mathbf{k}_{0\left(  i\right)  }^{cartesian}%
+\end{equation}
+with%
+\begin{equation}
+\overline{\overline{M}}_{cc1}\left(  \theta,\phi\right)  =\left(
+\begin{array}
+[c]{ccc}%
+\cos\theta\cos\phi & \cos\theta\sin\phi & \sin\theta\\
+-\sin\theta\cos\phi & -\sin\theta\sin\phi & \cos\theta\\
+\sin\phi & -\cos\phi & 0
+\end{array}
+\right)
+\end{equation}
+and
+
+\bigskip%
+\begin{equation}
+\overline{\overline{M}}_{cc2}\left(  \theta,\phi\right)  =\left(
+\begin{array}
+[c]{ccc}%
+-\cos\theta\cos\phi & -\cos\theta\sin\phi & -\sin\theta\\
+-\sin\theta\cos\phi & -\sin\theta\sin\phi & \cos\theta\\
+\sin\phi & -\cos\phi & 0
+\end{array}
+\right)
+\end{equation}
+
+
+Finally, after the reflexion, $\left(  \rho^{\left(  l\right)  }%
+,\theta^{\left(  l\right)  },\phi^{\left(  l\right)  }\right)  $ are
+determined using relations \ref{form1},\ref{form2} and \ref{form3}.
+
 \subsubsection{Wave initial conditions}
 
 In the exemple here given, the ray is launched from the position%
@@ -2455,7 +2619,7 @@ with spectral properties%
 \begin{array}
 [c]{cc}
 & RT\\
-\omega/\left(  2\pi\right)   & 530.15\text{ GHz}\\
+\omega/\left(  2\pi\right)  & 530.15\text{ GHz}\\
 N_{\Vert0} & 0.5\\
 m_{0} & -3000
 \end{array}
@@ -2477,7 +2641,7 @@ excellent.%
 %valid_file "F";  width 7.5273in;  height 5.6645in;  depth 0pt;
 %original-width 7.4581in;  original-height 5.6066in;  cropleft "0";
 %croptop "1";  cropright "1";  cropbottom "0";
-%filename 'V:/RTtest/WAVE/figures/test_RT_straight_RayToroidal.eps';file-properties "XNPEU";}%
+%filename 'RTtest/WAVE/figures/test_RT_straight_RayToroidal.eps';file-properties "NPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -2487,7 +2651,7 @@ excellent.%
 height=5.6645in,
 width=7.5273in
 ]%
-{../Examples/RTtest/WAVE/figures/test_RT_straight_RayToroidal.eps}%
+{RTtest/WAVE/figures/test_RT_straight_RayToroidal.eps}%
 \caption{Toroidal projection of the ray trajectory of an electromagnetic wave
 in vacuum.}%
 \end{center}
@@ -2500,7 +2664,7 @@ in vacuum.}%
 %valid_file "F";  width 7.5273in;  height 5.6645in;  depth 0pt;
 %original-width 7.4581in;  original-height 5.6066in;  cropleft "0";
 %croptop "1";  cropright "1";  cropbottom "0";
-%filename 'V:/RTtest/WAVE/figures/test_RT_straight_RayPoloidal.eps';file-properties "XNPEU";}%
+%filename 'RTtest/WAVE/figures/test_RT_straight_RayPoloidal.eps';file-properties "NPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -2510,7 +2674,7 @@ in vacuum.}%
 height=5.6645in,
 width=7.5273in
 ]%
-{../Examples/RTtest/WAVE/figures/test_RT_straight_RayPoloidal.eps}%
+{RTtest/WAVE/figures/test_RT_straight_RayPoloidal.eps}%
 \caption{Poloidal projection of the ray trajectory of an electromagnetic wave
 in vacuum.}%
 \end{center}
