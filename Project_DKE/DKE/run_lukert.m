@@ -23,7 +23,7 @@ if reloadray == 0 | exist('C3POrays.mat') == 0,
 	      error('This ray-tracing is not yet linked to LUKE !')
       end
      end
-     save C3POrays.mat waves rayinits wavestructs
+     save C3POrays.mat waves
 else
     load C3POrays.mat
 end
@@ -39,11 +39,28 @@ if dkeparam.rt_mode == 1,
 % Case with sdNpar proportional to sNpar (in waves structure)
 %
 elseif dkeparam.rt_mode == 2,
-   for ib=1:length(waves{1}.rays),
-   	waves{1}.rays{ib}.sdNpar = waves{1}.rays{ib}.sNpar*waves{1}.rays{ib}.sdNpar(1)/waves{1}.rays{ib}.sNpar(1);
+  	for iw = 1:length(wavestructs),
+      for ib=1:length(waves{iw}.rays),
+   	   waves{iw}.rays{ib}.sdNpar = waves{iw}.rays{ib}.sNpar*waves{iw}.rays{ib}.sdNpar(1)/waves{iw}.rays{ib}.sNpar(1);
+   	end
    end
    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
 %
+%
+% Case with sdNpar proportional to ss (in waves structure)
+%
+elseif dkeparam.rt_mode == 4,
+%
+	keyboard
+	a_sdNpar = 1e-2;
+%
+	for iw = 1:length(wavestructs),
+      for ib=1:length(waves{iw}.rays),
+   	   waves{iw}.rays{ib}.sdNpar = waves{iw}.rays{ib}.sdNpar(1) + a_sdNpar*waves{iw}.rays{ib}.ss;
+      end
+   end
+   [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
+
 % Case of optimized sdNpar proportional to sNpar (in waves structure) so that the CD efficiency is maximed.
 %
 elseif dkeparam.rt_mode == 3,
@@ -51,11 +68,15 @@ elseif dkeparam.rt_mode == 3,
 %
 %waves{1}.opt_disp = 0;
 %
-   for ib = 1:length(waves{1}.rays),
-      waves{1}.rays{ib} = rayprocess_jd(waves{1}.rays{ib},equilDKE_Fourier,waves{1}.opt_disp,waves{1}.omega_rf,dkeparam.n_rf_list,'spline');
+   for iw = 1:length(wavestructs),
+      for ib = 1:length(waves{iw}.rays),
+         waves{iw}.rays{ib} = rayprocess_jd(waves{iw}.rays{ib},equilDKE_Fourier,waves{iw}.opt_disp,waves{iw}.omega_rf,dkeparam.n_rf_list,'spline');
+      end
    end
 %
-   waves{1}.opt_disp = 0;
+   for iw = 1:length(wavestructs),
+      waves{iw}.opt_disp = 0;
+   end
 %
    dNpar_fac = 0.15;
    dNpar_step = 0.025;
@@ -68,8 +89,10 @@ elseif dkeparam.rt_mode == 3,
 %
       eta_old = eta;
 %
-      for ib = 1:length(waves{1}.rays),
-         waves{1}.rays{ib}.sdNpar = abs(waves{1}.rays{ib}.sNpar)*dNpar_fac;
+      for iw = 1:length(wavestructs),
+         for ib = 1:length(waves{iw}.rays),
+            waves{iw}.rays{ib}.sdNpar = abs(waves{iw}.rays{ib}.sNpar)*dNpar_fac;
+         end
       end
 %
       dNstr = num2str(dNpar_fac);
@@ -113,11 +136,13 @@ elseif dkeparam.rt_mode == 3,
        zs = raypath_jd(dke_out.xys,dke_out.xyprop_dke,dke_out.yb,gridDKE.rdke);
        zalphaphi = raypath_jd(xyalphaphi,dke_out.xyprop_dke,dke_out.yb,gridDKE.rdke);
 %
-       for ib = 1:length(waves{1}.rays),
-          zind = find(diff(zs{ib}) == 0);
-          zs{ib}(zind + 1) = zs{ib}(zind + 1)+1000*eps;
+       for iw = 1:length(wavestructs),
+          for ib = 1:length(waves{iw}.rays),
+             zind = find(diff(zs{ib}) == 0);
+             zs{ib}(zind + 1) = zs{ib}(zind + 1)+1000*eps;
 %
-          waves{1}.rays{ib}.salphaphi_lin = interp1(zs{ib},zalphaphi{ib},waves{1}.rays{ib}.ss,'linear',0);   
+             waves{iw}.rays{ib}.salphaphi_lin = interp1(zs{ib},zalphaphi{ib},waves{iw}.rays{ib}.ss,'linear',0);   
+          end
        end
 %
        if eta > eta_old,
@@ -143,8 +168,10 @@ elseif dkeparam.rt_mode == 3,
 %
    eval(['diary ',path_simul,'DKE_DIARY_',equil.id,'_',id_simul,'.txt']);
 %
-   for ib = 1:length(waves{1}.rays),
-      waves{1}.rays{ib}.sdNpar = abs(waves{1}.rays{ib}.sNpar)*dNpar_fac;
+   for iw = 1:length(wavestructs),
+      for ib = 1:length(waves{iw}.rays),
+         waves{iw}.rays{ib}.sdNpar = abs(waves{iw}.rays{ib}.sNpar)*dNpar_fac;
+      end
    end
 %
    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
