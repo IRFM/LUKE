@@ -51,12 +51,9 @@ elseif dkeparam.rt_mode == 2,
 %
 elseif dkeparam.rt_mode == 4,
 %
-	keyboard
-	a_sdNpar = 1e-2;
-%
 	for iw = 1:length(wavestructs),
       for ib=1:length(waves{iw}.rays),
-   	   waves{iw}.rays{ib}.sdNpar = waves{iw}.rays{ib}.sdNpar(1) + a_sdNpar*waves{iw}.rays{ib}.ss;
+   	   waves{iw}.rays{ib}.sdNpar = waves{iw}.rays{ib}.sdNpar(1) + wavestructs{iw}.a_sdNpar*waves{iw}.rays{ib}.ss;
       end
    end
    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
