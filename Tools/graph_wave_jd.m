@@ -22,9 +22,9 @@ end
 %
 nr_dep = 100;
 %
-if isnan(ymask),
+if ~iscell(ymask),
     ymask = '';
-    for iw = length(waves),
+    for iw = 1:length(waves),
         ymask{iw} = 1:length(waves{iw}.rays);
     end
 end
@@ -766,6 +766,41 @@ axis('equal');
 axis([xlim,ylim]);
 %
 %
+figure(2),clf
+%
+xlim = [-(Rp + xmax),(Rp + xmax)];
+ylim = [-(Rp + xmax),(Rp + xmax)];
+xlab = 'X (m)';
+ylab = 'Y (m)';
+tit = '';
+%
+phi_disp = linspace(0,2*pi,1000);
+%
+[ax] = graph1D_jd((Rp + xmax)*cos(phi_disp),(Rp + xmax)*sin(phi_disp),0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color5,width2,siz,gca,red,lspace,bspace);
+for iy = 1:ny,
+    mask_max = 1:rays{iy}.is_abs_max;
+    graph1D_jd((Rp + rays{iy}.sx(mask_max)).*cos(rays{iy}.sphi(mask_max)),(Rp + rays{iy}.sx(mask_max)).*sin(rays{iy}.sphi(mask_max)),0,0,'','','',NaN,xlim,ylim,style,marker,rays{iy}.color,width1,siz);
+    if isfield(rays{iy},'mask_abs'),
+        mask_abs = rays{iy}.mask_abs;
+        graph1D_jd((Rp + rays{iy}.sx(mask_abs)).*cos(rays{iy}.sphi(mask_abs)),(Rp + rays{iy}.sx(mask_abs)).*sin(rays{iy}.sphi(mask_abs)),0,0,'','','',NaN,xlim,ylim,style,marker,color5,width1,siz);
+    end
+    if ~isempty(rays{iy}.init),
+        graph1D_jd((Rp + rays{iy}.init.x0).*cos(rays{iy}.init.phi0),(Rp + rays{iy}.init.x0).*sin(rays{iy}.init.phi0),0,0,'','','',NaN,xlim,ylim,style2,marker3,rays{iy}.color,width2,siz);
+    end        
+end
+% if exist('launch','var') == 1,
+%     [ax] = graph1D_jd([yR_L;yR_L + ydR_L],[yZ_L;yZ_L + ydZ_L],0,0,'','','',NaN,xlim,ylim,style,marker,color3,width2,siz);
+% end
+% if exist('wave_s','var') == 1,
+%     [ax] = graph1D_jd(syR_s,syZ_s,0,0,'','','',NaN,xlim,ylim,style,marker,color4,width2,siz);
+% end
+% if 0,opt.res >= 1,
+%     [ax] = graph2D_jd(R,Z,yres','','','',xlim,ylim,0,NaN,[1:10],0,style,color5,width1,siz);
+% end
+axis('equal');
+axis([xlim,ylim]);
+%
+%
 % subplot frame
 %
 if ny == 1,nl = 1;nc = 1;
@@ -793,7 +828,7 @@ for iy = 1:ny,
     Nmax = max([Nmax,abs(rays{iy}.sNpar(end))]);
 end
 %
-figure(2),clf
+figure(3),clf
 xlim = [0,smax];
 ylim = [0,Nmax];
 xlab = 's (m)';
@@ -816,7 +851,7 @@ end
 %
 set(gcf,'resize','on')
 %
-figure(3),clf
+figure(4),clf
 xlim = [0,1];
 ylim = NaN;
 xlab = '\rho';
@@ -832,7 +867,7 @@ end
 %
 set(gcf,'resize','on')
 %
-figure(4),clf
+figure(5),clf
 xlim = [0,ny+1];
 ylim = [0,1];
 xlab = 'ray #';
@@ -841,7 +876,7 @@ tit = '';
 %
 graph1D_jd(1:ny,yrho_abs,0,0,xlab,ylab,tit,NaN,xlim,ylim,style2,marker1,color2,width1,siz,gca,red,lspace,bspace);
 %
-figure(5),clf
+figure(6),clf
 xlim = [0,ny+1];
 ylim = [0,Nmax];
 xlab = 'ray #';
