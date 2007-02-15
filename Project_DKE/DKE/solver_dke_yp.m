@@ -286,6 +286,17 @@ XXf0_L_tp = zeros(npn,nmhu,nr);
 XXf0_L_g = zeros(npn,nmhu,nr);  
 XXf0_g_th = zeros(npn,nmhu,nr);
 %
+if ~isfield(dkeparam.PETScparam,'cloop'),%Backward compatibility
+	warning('dkeparam.PETScparam.cloop field does not exists. It is created and the calculation is done with Matlab Built-in function. Please fixe the missing field in the dkeparam structure');	
+	dkeparam.PETScparam.cloop = 0;
+   dkeparam.luproc = 0;%LU matrix inversion method: (-1) No LU, direct inversion, (0) MatLab build-in
+   dkeparam.ludroptol = 1e-5;%Drop tolerance for the partial LU decomposition (recipes: droptol = max(1/dtn/nr,param_inv(1)))
+   dkeparam.invproc = 1;%Iterative matrix inversion method:  (3) qmr iterative method (LU used), (2) bicg iterative method (LU used), (1) cgs iterative method (LU used), (0) Direct Matlab inversion (LU not used, (-1): MUMPS parallel fortran 95 direct inversion (LU not used) (-30) PETSc
+   dkeparam.mlprecinv = 1e-5;%Accuracy for the MatLab build-in matrix inversion.
+   dkeparam.mlmaxitinv = 4;%Maximum number of iterations for iterative method (between 1 and 20 usualy, if empty, mlmaxitinv = min(matrixdim,20). See matlab documentation.
+end
+%
+%
 time0 = clock;
 %
 MMXdiag = diag(MMXP_f_t/time_scheme + MMXR_f_t/time_scheme + MMXT_f_t);
@@ -293,14 +304,12 @@ if isempty(find(MMXdiag==0)) == 1,
     MMXPDI_f_t = inv(diag(MMXdiag));
     MMXPC_f_t = MMXPDI_f_t*(MMXP_f_t/time_scheme + MMXR_f_t/time_scheme + MMXT_f_t);%Main diagonal matrix preconditionning
 %
-    if dkeparam.luproc == 0,%MatLab build-in matrix incomplete factorization
+    if dkeparam.luproc == 0 & dkeparam.invproc >=1,%MatLab build-in matrix incomplete factorization only
        [MMXL_f_t,MMXU_f_t] = luinc(MMXPC_f_t,dkeparam.ludroptol); 
-    elseif dkeparam.luproc == 1;%HYPRE matrix incomplete factorization
-       [dummy1,dummy2,MMXL_f_t,MMXU_f_t] = HYPRE_dke_yp(dkeparam.HYPREparam,MMXPC_f_t,[],dkeparam.ludroptol,temppath);
     end
 %
     time_f = etime(clock,time0);
-    if dkeparam.luproc >= 0,
+    if dkeparam.luproc >= 0 & dkeparam.invproc >=1,
        memoryLU_f = (getfield(whos('MMXL_f_t'),'bytes') + getfield(whos('MMXU_f_t'),'bytes'))/1000000;
     end
 else
@@ -312,14 +321,12 @@ if dke_mode == 1,
     MMXPDI_g_t = inv(diag(diag(MMXP_g_t)));
     MMXPC_g_t = MMXPDI_g_t*MMXP_g_t;%Main diagonal matrix preconditionning
 %
-    if dkeparam.luproc == 0,%MatLab build-in matrix incomplete factorization
+    if dkeparam.luproc == 0 & dkeparam.invproc >=1,%MatLab build-in matrix incomplete factorization only
        [MMXL_g_t,MMXU_g_t] = luinc(MMXPC_g_t,dkeparam.ludroptol); 
-    elseif dkeparam.luproc == 1;%HYPRE matrix incomplete factorization
-       [dummy1,dummy2,MMXL_f_t,MMXU_f_t] = HYPRE_dke_yp(dkeparam.HYPREparam,MMXPC_f_t,[],dkeparam.ludroptol,temppath);
     end
 %
     time_g = etime(clock,time0);
-    if dkeparam.luproc >= 0,
+    if dkeparam.luproc >= 0 & dkeparam.invproc >=1,
        memoryLU_g = (getfield(whos('MMXL_g_t'),'bytes') + getfield(whos('MMXU_g_t'),'bytes'))/1000000;
     end
 end
@@ -368,117 +375,131 @@ end
 %
 time0 = clock;
 XXf0 = XXfinit;%Initial guess (normalized to xne_norm)
-for ir = 1:nr,
-    normf0(ir,1) = 2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,XXfinit(:,:,ir),2),1);
-    curr0(ir,1) = 2*pi*integral_dke_jd(dpn',pn2'.*(pn'./gamma').*integral_dke_jd(dmhu,Xmhu.*XXfinit(:,:,ir),2),1)*xne_norm(ir)/normf0(ir,1);
-end
 %
-if display_mode == 2,
-	Fig_FPEconvstatus = figure('Name','Fokker-Planck equation convergence status');
-end
+if dkeparam.PETScparam.cloop,
+	writeCloopinput_dke_ft(nit_f,boundary_mode_f,bounce_mode,dkeparam.coll_mode,dkeparam.norm_mode_f,prec0_f,display_mode,betath_ref,xTe_norm,xne_norm,dtn,mhu,nmhu,npn,ns_f,nr,sm_f,...
+      masku,maskl,dpn,dmhu,xpn,xpn2,xpn3,xsigma,xgamma,xz,xz2,pn,pn2,pn3,...
+      sigma,gamma,z,z2,xJ1,xJ2,xJ3,xJ4,J1,J2,J3,J4,...
+      Xmhu,XXsinksource,Xmask_r_edge,XXfM,XXfinit,XXRlambda_b_p1p1,rdke,Xpn2,Zpn2_t,...
+      Zmask_f0_t,...
+      MMXT_f_t,MMXR_f_t,MMXP_f_t,MMXPC_f_t,MMXPDI_f_t,...
+      XXI,XXf0,time_scheme,dkepath);
+      %
+   ['mpirun -np ',int2str(dkeparam.PETScparam.nproc),' -machinefile ',dkepath.PETSC,'/machinefile ',dkepath.PETSC,'/DKE/SolverLoop_DKE_c',' ',dkeparam.PETScparam.matrixtype,' ',dkeparam.PETScparam.kspmethod, ' ',dkeparam.PETScparam.pcmethod]
+   unix(['mpirun -np ',int2str(dkeparam.PETScparam.nproc),' -machinefile ',dkepath.PETSC,'/machinefile ',dkepath.PETSC,'/DKE/SolverLoop_DKE_c',' ',dkeparam.PETScparam.matrixtype,' ',dkeparam.PETScparam.kspmethod, ' ',dkeparam.PETScparam.pcmethod])
+   XXf0 = ReadBinaryArray_mex_c([dkepath.variables.output,'/XXf0']);
+else
 %
-for it_f = 2:(nit_f+1),     
-    if sum(residu_f(:,it_f-1) >= prec0_f) >= 1 %& sum(prec_residu_f(:,it_f-1)) >= prec0_f ,%| it_f < 7
+   for ir = 1:nr,
+       normf0(ir,1) = 2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,XXfinit(:,:,ir),2),1);
+       curr0(ir,1) = 2*pi*integral_dke_jd(dpn',pn2'.*(pn'./gamma').*integral_dke_jd(dmhu,Xmhu.*XXfinit(:,:,ir),2),1)*xne_norm(ir)/normf0(ir,1);
+   end
+%
+   if display_mode == 2,
+   	Fig_FPEconvstatus = figure('Name','Fokker-Planck equation convergence status');
+   end
+%
+   for it_f = 2:(nit_f+1),     
+       if sum(residu_f(:,it_f-1) >= prec0_f) >= 1 %& sum(prec_residu_f(:,it_f-1)) >= prec0_f ,%| it_f < 7
 %   
-        MMXf0_t = [];
-        MMXq_t = [];
-        MMXIpn2_t = [];
-        MMXsource_t = [];
+           MMXf0_t = [];
+           MMXq_t = [];
+           MMXIpn2_t = [];
+           MMXsource_t = [];
 %
-        if store_mode == 1,
-           load([fullfile(temppath,'MXP_'),save_id,'.mat'],'Zmask_f0_t');
-        end 
+           if store_mode == 1,
+              load([fullfile(temppath,'MXP_'),save_id,'.mat'],'Zmask_f0_t');
+           end 
 %
-        for ir = 1:nr-1,
-            XI_t = XXI(:,Zmask_f0_t{ir},ir);
+           for ir = 1:nr-1,
+               XI_t = XXI(:,Zmask_f0_t{ir},ir);
 %
-            if boundary_mode_f > 0,
-                XI_t(1:boundary_mode_f,:) = 0;
-            end
+               if boundary_mode_f > 0,
+                  XI_t(1:boundary_mode_f,:) = 0;
+               end
 %
         
-            MMXf0_t = [MMXf0_t;reshape(XXf0(:,Zmask_f0_t{ir},ir)',(nmhu - ns_f(ir))*npn,1)];
-            MMXsource_t = [MMXsource_t;reshape(XXsinksource(:,Zmask_f0_t{ir},ir)',(nmhu - ns_f(ir))*npn,1)];
-            MMXIpn2_t = [MMXIpn2_t;reshape((XI_t.*Zpn2_t{ir})',(nmhu - ns_f(ir))*npn,1)];%Zpn2_t is here as part of the partial Jacobian used to avoid singularities at p = 0 and psi = 0, and for pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2
-        end 
+               MMXf0_t = [MMXf0_t;reshape(XXf0(:,Zmask_f0_t{ir},ir)',(nmhu - ns_f(ir))*npn,1)];
+               MMXsource_t = [MMXsource_t;reshape(XXsinksource(:,Zmask_f0_t{ir},ir)',(nmhu - ns_f(ir))*npn,1)];
+               MMXIpn2_t = [MMXIpn2_t;reshape((XI_t.*Zpn2_t{ir})',(nmhu - ns_f(ir))*npn,1)];%Zpn2_t is here as part of the partial Jacobian used to avoid singularities at p = 0 and psi = 0, and for pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2
+           end 
 %
-       if 1,%isempty(Xmask_r_edge),%No anomalous radial transport
-           XI_t = XXI(:,Zmask_f0_t{nr},nr);
-           if boundary_mode_f > 0,
-               XI_t(1:boundary_mode_f,:) = 0;
-           end
-%
-           
-           MMXf0_t = [MMXf0_t;reshape(XXf0(:,Zmask_f0_t{nr},nr)',(nmhu - ns_f(nr))*npn,1)];
-           MMXsource_t = [MMXsource_t;reshape(XXsinksource(:,Zmask_f0_t{nr},nr)',(nmhu - ns_f(nr))*npn,1)];
-           MMXIpn2_t = [MMXIpn2_t;reshape((XI_t.*Zpn2_t{nr})',(nmhu - ns_f(nr))*npn,1)];%Zpn2_t is here as part of the partial Jacobian used to avoid singularities at p = 0 and psi = 0, and for pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2
+          if 1,%isempty(Xmask_r_edge),%No anomalous radial transport
+              XI_t = XXI(:,Zmask_f0_t{nr},nr);
+              if boundary_mode_f > 0,
+                  XI_t(1:boundary_mode_f,:) = 0;
+              end
+%          
+              MMXf0_t = [MMXf0_t;reshape(XXf0(:,Zmask_f0_t{nr},nr)',(nmhu - ns_f(nr))*npn,1)];
+              MMXsource_t = [MMXsource_t;reshape(XXsinksource(:,Zmask_f0_t{nr},nr)',(nmhu - ns_f(nr))*npn,1)];
+              MMXIpn2_t = [MMXIpn2_t;reshape((XI_t.*Zpn2_t{nr})',(nmhu - ns_f(nr))*npn,1)];%Zpn2_t is here as part of the partial Jacobian used to avoid singularities at p = 0 and psi = 0, and for pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2
 
-       else,%Edge radial boundary condition: f(r/a = 1) = fM(r/a) where transport operates
-           MMXf0_t = [MMXf0_t;reshape(XXf0(:,Zmask_f0_t{nr},nr)',(nmhu - ns_f(nr))*npn,1)];
+          else,%Edge radial boundary condition: f(r/a = 1) = fM(r/a) where transport operates
+             MMXf0_t = [MMXf0_t;reshape(XXf0(:,Zmask_f0_t{nr},nr)',(nmhu - ns_f(nr))*npn,1)];
 %       MMXq_t(nMMXP_f_t-npn*(nmhu - ns_f(nr))+1:nMMXP_f_t) = xrho(nr)*time_scheme*reshape((Xf0_t'.*~Xmask_r_edge_t' + XfM_t'.*Xmask_r_edge_t').*Xpn2_t',(nmhu - ns(nr))*npn,1)/dtn;
-		   Xmask_r_edge_t = Xmask_r_edge(:,Zmask_f0_t{nr});  
-           MMXsource_t = [MMXsource_t;reshape(XXsinksource(:,Zmask_f0_t{nr},nr)',(nmhu - ns_f(nr))*npn,1)];
-           MMXIpn2_t = [MMXIpn2_t;reshape((XI_t.*Zpn2_t{nr})',(nmhu - ns_f(nr))*npn,1)];%Zpn2_t is here as part of the partial Jacobian used to avoid singularities at p = 0 and psi = 0, and for pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2          
-       end
+    		    Xmask_r_edge_t = Xmask_r_edge(:,Zmask_f0_t{nr});  
+             MMXsource_t = [MMXsource_t;reshape(XXsinksource(:,Zmask_f0_t{nr},nr)',(nmhu - ns_f(nr))*npn,1)];
+             MMXIpn2_t = [MMXIpn2_t;reshape((XI_t.*Zpn2_t{nr})',(nmhu - ns_f(nr))*npn,1)];%Zpn2_t is here as part of the partial Jacobian used to avoid singularities at p = 0 and psi = 0, and for pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2          
+          end
 %
-        MMXq_t = MMXsource_t + MMXIpn2_t + (MMXT_f_t - (time_scheme - 1)*(MMXP_f_t + MMXR_f_t)/time_scheme)*MMXf0_t;%Right handside term of the Fokker-Planck equation          
-        MMXR_t = sparse(MMXPDI_f_t*MMXq_t - MMXPC_f_t*MMXf0_t);%Residu calculation for matrix inversion, force sparse type for the RHS, optimized for Matlab 
+          MMXq_t = MMXsource_t + MMXIpn2_t + (MMXT_f_t - (time_scheme - 1)*(MMXP_f_t + MMXR_f_t)/time_scheme)*MMXf0_t;%Right handside term of the Fokker-Planck equation          
+          MMXR_t = sparse(MMXPDI_f_t*MMXq_t - MMXPC_f_t*MMXf0_t);%Residu calculation for matrix inversion, force sparse type for the RHS, optimized for Matlab 
 %
-        if dkeparam.invproc == 0,%Matlab direct inversion
-            MMXS_t = MMXR_t\MMXPC_f_t;
-        elseif dkeparam.invproc == 1,%Matlab cgs iterative inversion method
-            [MMXS_t,flaginv_f] = cgs(MMXPC_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_f_t,MMXU_f_t);
-        elseif dkeparam.invproc == 2,%Matlab bicg iterative inversion method      
-            [MMXS_t,flaginv_f] = bicg(MMXPC_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_f_t,MMXU_f_t); 
-        elseif dkeparam.invproc == 3,%Matlab qmr iterative inversion method
-            [MMXS_t,flaginv_f] = qmr(MMXPC_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_f_t,MMXU_f_t);
-        elseif dkeparam.invproc == -1,%MUMPS FORTAN 95 parallel processing package (direct inversion)
-            tic,[MMXS_t,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),display_mode,dkepath);toc
-        elseif dkeparam.invproc == -30,%Solving with PETSc
-            tic,[MMXS_t,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),display_mode,dkepath);toc
-        end
+          if dkeparam.invproc == 0,%Matlab direct inversion
+             MMXS_t = MMXR_t\MMXPC_f_t;
+          elseif dkeparam.invproc == 1,%Matlab cgs iterative inversion method
+             [MMXS_t,flaginv_f] = cgs(MMXPC_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_f_t,MMXU_f_t);
+          elseif dkeparam.invproc == 2,%Matlab bicg iterative inversion method      
+             [MMXS_t,flaginv_f] = bicg(MMXPC_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_f_t,MMXU_f_t); 
+          elseif dkeparam.invproc == 3,%Matlab qmr iterative inversion method
+             [MMXS_t,flaginv_f] = qmr(MMXPC_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_f_t,MMXU_f_t);
+          elseif dkeparam.invproc == -1,%MUMPS FORTAN 95 parallel processing package (direct inversion)
+             [MMXS_t,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),display_mode,dkepath);
+          elseif dkeparam.invproc == -30,%Solving with PETSc
+             [MMXS_t,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),display_mode,dkepath);
+          end
 %
-        if flaginv_f == 2 & dkeparam.invproc > 1,
-            error('WARNING: Matrix ill-conditionned. No inversion possible for the zero order Fokker-Planck equation. Try to reduce drop tolerance parameter for LU factorization...!');
-        elseif flaginv_f ~= 0 & dkeparam.invproc == -1,
-            error(['WARNING: Error ',int2str(flaginv_f),' in MUMPS matrix inversion for the zero order Fokker-Planck equation. See MUMPS documentation !']);
-        elseif flaginv_f ~= 0 & dkeparam.invproc == -30,
-            error(['WARNING: Error ',int2str(flaginv_f),' in PETSc matrix inversion for the zero order Fokker-Planck equation. See PETSc documentation !']);
-        end
+          if flaginv_f == 2 & dkeparam.invproc > 1,
+             error('WARNING: Matrix ill-conditionned. No inversion possible for the zero order Fokker-Planck equation. Try to reduce drop tolerance parameter for LU factorization...!');
+          elseif flaginv_f ~= 0 & dkeparam.invproc == -1,
+             error(['WARNING: Error ',int2str(flaginv_f),' in MUMPS matrix inversion for the zero order Fokker-Planck equation. See MUMPS documentation !']);
+          elseif flaginv_f ~= 0 & dkeparam.invproc == -30,
+             error(['WARNING: Error ',int2str(flaginv_f),' in PETSc matrix inversion for the zero order Fokker-Planck equation. See PETSc documentation !']);
+          end
 %
-        MMXf1_t = MMXf0_t + MMXS_t;
+          MMXf1_t = MMXf0_t + MMXS_t;
 %           
-        for ir = 1:nr,
-            Xf1_t = reshape(MMXf1_t(sm_f(ir)+1:sm_f(ir+1)),nmhu - ns_f(ir),npn)';
+          for ir = 1:nr,
+             Xf1_t = reshape(MMXf1_t(sm_f(ir)+1:sm_f(ir+1)),nmhu - ns_f(ir),npn)';
 %
-            if bounce_mode == 0,
+             if bounce_mode == 0,
                 Xf1 = Xf1_t;
-            elseif bounce_mode == 1,
+             elseif bounce_mode == 1,
                 Xf1 = zeros(npn,nmhu);
                 Xf1(:,1:nmhu/2 - ns_f(ir)) = Xf1_t(:,1:nmhu/2 - ns_f(ir));
                 Xf1(:,nmhu/2 + 1:nmhu) = Xf1_t(:,nmhu/2 + 1 - ns_f(ir):nmhu - ns_f(ir));
                 Xf1(:,nmhu/2 + 1 - ns_f(ir):nmhu/2) = fliplr(Xf1_t(:,nmhu/2 + 1 - ns_f(ir):nmhu/2));
-            end
+             end
 %
-            normf0(ir,it_f) = 2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,XXf0(:,:,ir),2),1);            
-            normf1(ir,it_f) = 2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,Xf1,2),1);           
-            curr0(ir,it_f) = 2*pi*integral_dke_jd(dpn',pn2'.*(pn'./gamma').*integral_dke_jd(dmhu,Xmhu.*XXf0(:,:,ir),2),1)*xne_norm(ir)/normf0(ir,it_f);
-            curr1(ir,it_f) = 2*pi*integral_dke_jd(dpn',pn2'.*(pn'./gamma').*integral_dke_jd(dmhu,Xmhu.*Xf1,2),1)*xne_norm(ir)/normf1(ir,it_f);
-            prec_curr(ir,it_f) = (curr1(ir,it_f) - curr0(ir,it_f))/curr0(ir,it_f);
-            prec_normf(ir,it_f) = (normf1(ir,it_f) - normf0(ir,1))/normf0(ir,1);
-            residu_f(ir,it_f) = sqrt(2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,(Xf1-XXf0(:,:,ir)).^2.*XXf0(:,:,ir),2),1)/normf1(ir,it_f)/dtn/dtn);%As done by J.P. Bizarro et al., Nuclear Fusion, 37 (1997) 1509
-            prec_residu_f(ir,it_f) = abs((residu_f(ir,it_f) - residu_f(ir,it_f-1))/residu_f(ir,it_f));%For radial transport calculations    
+             normf0(ir,it_f) = 2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,XXf0(:,:,ir),2),1);            
+             normf1(ir,it_f) = 2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,Xf1,2),1);           
+             curr0(ir,it_f) = 2*pi*integral_dke_jd(dpn',pn2'.*(pn'./gamma').*integral_dke_jd(dmhu,Xmhu.*XXf0(:,:,ir),2),1)*xne_norm(ir)/normf0(ir,it_f);
+             curr1(ir,it_f) = 2*pi*integral_dke_jd(dpn',pn2'.*(pn'./gamma').*integral_dke_jd(dmhu,Xmhu.*Xf1,2),1)*xne_norm(ir)/normf1(ir,it_f);
+             prec_curr(ir,it_f) = (curr1(ir,it_f) - curr0(ir,it_f))/curr0(ir,it_f);
+             prec_normf(ir,it_f) = (normf1(ir,it_f) - normf0(ir,1))/normf0(ir,1);
+             residu_f(ir,it_f) = sqrt(2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,(Xf1-XXf0(:,:,ir)).^2.*XXf0(:,:,ir),2),1)/normf1(ir,it_f)/dtn/dtn);%As done by J.P. Bizarro et al., Nuclear Fusion, 37 (1997) 1509
+             prec_residu_f(ir,it_f) = abs((residu_f(ir,it_f) - residu_f(ir,it_f-1))/residu_f(ir,it_f));%For radial transport calculations    
 %
-            if display_mode >= 1,
-            	 disp(' ');           	 
+             if display_mode >= 1,
+                disp(' ');           	 
                 info_dke_yp(2,['Quasilinear iteration : ',int2str(it_rf),', Fokker-Planck iteration : ',int2str(it_f-1),' / ',int2str(nit_f),', Residu = ',num2str(residu_f(ir,it_f)),' / ',num2str(prec0_f)]);
                 info_dke_yp(2,['   Normalized poloidal magnetic flux: ',num2str(xpsin(ir))]);
                 info_dke_yp(2,['      Normalized radius on LFS midplane: ',num2str(xrho(ir)),' / Radius index number: ',int2str(ir)]);
                 disp(['                - Density [t-1]: ',num2str(normf0(ir,it_f-1)),' - [t]: ',num2str(normf1(ir,it_f)),' / Relative variation [t-t0]: ',num2str(prec_normf(ir,it_f)),' / Absolute variation [dt]: ',num2str(normf1(ir,it_f) - normf0(ir,it_f))]);               
                 disp(['                - Current [t-1]: ',num2str(curr0(ir,it_f-1)),' - [t]: ',num2str(curr1(ir,it_f)),' / Current relative accuracy [dt]: ',num2str(prec_curr(ir,it_f))]);
-            end
+             end
 %
-            if display_mode == 2,
+             if display_mode == 2,
                 if dke_mode == 1,
                     if ir == ir_display-1,
                         figure(Fig_FPEconvstatus),subplot(321),semilogy(-pn,XXfM(:,2,ir),'g--',pn,XXfM(:,nmhu-1,ir),'g--',-pn,Xf1(:,2),'r-',pn,Xf1(:,nmhu-1),'r-');%f(perp = 0)
@@ -549,15 +570,16 @@ for it_f = 2:(nit_f+1),
             normf0(ir,it_f) = normf1(ir,it_f);
             curr0(ir,it_f) = curr1(ir,it_f);
 %           
-        end
-    else            
+         end
+      else            
         if sum(prec_residu_f(:,it_f-1)) < prec0_f,info_dke_yp(2,['WARNING: stationnary residu but convergence not achieved for f0 after ',int2str(it_f),' iterations. Time step likely too large !']);end
         if sum(residu_f(:,it_f-1) >= prec0_f) == 0 & display_mode > 0,
-            info_dke_yp(2,['Successfull convergence achieved for f0 after ',int2str(it_f-2),' iterations !']);
+           info_dke_yp(2,['Successfull convergence achieved for f0 after ',int2str(it_f-2),' iterations !']);
         end
         break;
-    end
-    if it_f == nit_f,info_dke_yp(2,['WARNING: convergence not achieved for f0 after ',int2str(nit_f),' iterations. Time step too small !']);end
+      end
+      if it_f == nit_f,info_dke_yp(2,['WARNING: convergence not achieved for f0 after ',int2str(nit_f),' iterations. Time step too small !']);end
+   end
 end
 if display_mode >= 1,info_dke_yp(2,['Convergence achieved for zero order Fokker-Planck calculations in ',num2str(etime(clock,time0)),' (s)']);end
 if dkeparam.invproc == -1 & display_mode >= 1,info_dke_yp(2,['Number of processors used for MUMPS matrix inversion : ',int2str(dkeparam.MUMPSparam.nproc)]);end%MUMPS FORTAN 95 parallel processing package
