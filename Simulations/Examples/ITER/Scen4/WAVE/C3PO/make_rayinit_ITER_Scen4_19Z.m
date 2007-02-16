@@ -54,13 +54,16 @@ else
 end
 %
 nb = length(launch.bNpar0);
-launch.dNpar0 = zeros(1,nb);
+launch.bdNpar0 = zeros(1,nb);
 %
 for ib = 1:nb,
     launch.bdNpar0(ib) = spectrum_sinc_jd(launch.bNpar0(ib),launch.bwidth(ib));
 end
 %
 launch.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
+%
+save_str = ['LAUNCH_',id_equil,'_',id_rayinit,'.mat'];% not used, for reference only
+eval(['save ',save_str,' launch']);
 %
 % Ray initial characteristics
 %
