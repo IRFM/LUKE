@@ -2,15 +2,18 @@
 clear all
 close all
 %
-select = [1,2,3];
-%select = [1,2];
-%
 %list = {'19Z_2','20Z_2','21Z_2'};
-leglist = ['N_{||} = 1.9';'N_{||} = 2.0';'N_{||} = 2.1'];
-list = {'19Z_Alpha_5p0_fineGrid','20Z_Alpha_5p0_fineGrid','21Z_Alpha_5p0_fineGrid'};
 %
-%list = {'21Z_Alpha_5p0_fineGrid','21Z_Alpha_3p7_fineGrid'};
-%leglist = ['\omega/2\pi = 5.0 GHz';'\omega/2\pi = 3.7 GHz'];
+select = [1,2,3];
+%list = {'19Z_Alpha_3p7_fineGrid','20Z_Alpha_3p7_fineGrid','21Z_Alpha_3p7_fineGrid'};
+list = {'19Z_Alpha_5p0_fineGrid','20Z_Alpha_5p0_fineGrid','21Z_Alpha_5p0_fineGrid'};
+leglist = ['N_{||} = 1.9';'N_{||} = 2.0';'N_{||} = 2.1'];
+%
+%select = [1,2];
+%list = {'19Z_Alpha_3p7_fineGrid','19Z_Alpha_5p0_fineGrid'};
+%list = {'20Z_Alpha_3p7_fineGrid','20Z_Alpha_5p0_fineGrid'};
+%list = {'21Z_Alpha_3p7_fineGrid','21Z_Alpha_5p0_fineGrid'};
+%leglist = ['\omega/2\pi = 3.7 GHz';'\omega/2\pi = 5.0 GHz'];
 %
 color = {'r','b',[0,0.75,0]};
 %
@@ -59,7 +62,7 @@ color2 = 'b';
 %
 figure(1);clf
 %
-xlab = 'rho';
+xlab = 'r/a';
 ylab = 'S_{LH} (MW/m^3)';
 xlim = [0,1];
 ylim = NaN;
@@ -68,12 +71,12 @@ for il = 1:Nl-1,
     graph1D_jd(xrho_P{il},xP{il},0,0,'','','',NaN,xlim,ylim,style,marker,color{select(il)},width2,siz);
 end
 graph1D_jd(xrho_P{Nl},xP{Nl},0,0,xlab,ylab,tit,leg,xlim,ylim,style,marker,color{select(Nl)},width2,siz,gca,red,lspace,bspace);
-grid off
+%grid off
 set(gca,'xtick',[0:0.2:1])
 %
 figure(2);clf
 %
-xlab = 'rho';
+xlab = 'r/a';
 ylab = 'J_{LH} (MA/m^2)';
 xlim = [0,1];
 ylim = NaN;
@@ -84,6 +87,6 @@ for il = 1:Nl-1,
 end
 %graph1D_jd(xrho_P{Nl},xJ{Nl},0,0,xlab,ylab,tit,leg_I,xlim,ylim,style,marker,color{select(Nl)},width2,siz,gca,red,lspace,bspace);
 graph1D_jd(xrho_P{Nl},-xJ{Nl},0,0,xlab,ylab,tit,leg_I,xlim,ylim,style,marker,color{select(Nl)},width2,siz,gca,red,lspace,bspace);
-grid off
+%grid off
 set(gca,'xtick',[0:0.2:1])
     
