@@ -7,8 +7,10 @@ select = [1,2];
 %
 %list = {'19Z_2','20Z_2','21Z_2'};
 %leglist = ['N_{||} = 1.9';'N_{||} = 2.0';'N_{||} = 2.1'];
-list = {'19Z_2','conv_19Z_2'};
-leglist = ['N_{||} = 1.9 old ';'N_{||} = 1.9 conv'];
+list = {'20Z_Alpha_3p7_fineGrid','21Z_Alpha_3p7_fineGrid'};
+leglist = ['N_{||} = 2.0';'N_{||} = 2.1'];
+%list = {'20Z_Alpha_5p0_fineGrid','20Z_Alpha_3p7_fineGrid'};
+%leglist = ['\omega/2\pi = 5.0 GHz';'\omega/2\pi = 3.7 GHz'];
 %
 color = {'r','b',[0,0.75,0]};
 %
@@ -16,7 +18,7 @@ Nl = length(select);
 leg = leglist(select,:);
 %
 for il = 1:Nl,
-    load(['DKE_RESULTS_ITER_Scen4_',list{select(il)}]);
+    load(['DKE_RESULTS_ITER_Scen4_IAEA06_',list{select(il)}]);
     %
     xrho_P{select(il)} = sqrt(gridDKE.xpsin);  
     xJ{il} = Zcurr.x_0_fsav*mksa.j_ref;
