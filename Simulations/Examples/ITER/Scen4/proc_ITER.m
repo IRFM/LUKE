@@ -4,16 +4,20 @@ close all
 %
 %list = {'19Z_2','20Z_2','21Z_2'};
 %
-select = [1,2,3];
+%select = [1,2,3];
 %list = {'19Z_Alpha_3p7_fineGrid','20Z_Alpha_3p7_fineGrid','21Z_Alpha_3p7_fineGrid'};
-list = {'19Z_Alpha_5p0_fineGrid','20Z_Alpha_5p0_fineGrid','21Z_Alpha_5p0_fineGrid'};
-leglist = ['N_{||} = 1.9';'N_{||} = 2.0';'N_{||} = 2.1'];
+%list = {'19Z_Alpha_5p0_fineGrid','20Z_Alpha_5p0_fineGrid','21Z_Alpha_5p0_fineGrid'};
+%leglist = ['N_{||} = 1.9';'N_{||} = 2.0';'N_{||} = 2.1'];
 %
-%select = [1,2];
+select = [1,2];
 %list = {'19Z_Alpha_3p7_fineGrid','19Z_Alpha_5p0_fineGrid'};
-%list = {'20Z_Alpha_3p7_fineGrid','20Z_Alpha_5p0_fineGrid'};
+list = {'20Z_Alpha_3p7_fineGrid','20Z_Alpha_5p0_fineGrid'};
 %list = {'21Z_Alpha_3p7_fineGrid','21Z_Alpha_5p0_fineGrid'};
-%leglist = ['\omega/2\pi = 3.7 GHz';'\omega/2\pi = 5.0 GHz'];
+leglist = ['\omega/2\pi = 3.7 GHz';'\omega/2\pi = 5.0 GHz'];
+%
+%list = {'20Z_Alpha_5p0_fineGrid','20Z_Alpha_5p0_noBounce'};
+%list = {'20Z_Alpha_3p7_fineGrid','20Z_Alpha_3p7_noBounce'};
+%leglist = ['Magnetic trapping On ';'Magnetic trapping Off'];
 %
 color = {'r','b',[0,0.75,0]};
 %
