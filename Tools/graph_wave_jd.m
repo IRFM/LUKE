@@ -1,26 +1,27 @@
-function graph_wave_jd(equil,waves,rayinits,n_rf_list,opt,rho_disp,ymask,xvar,colors)
+function graph_wave_jd(equil,waves,rayinits,n_rf_list,nr_dep,opt,rho_disp,ymask,xvar,yabs,colors)
 %
 % This function plots the characteristics of wave data
 %
 % by J. Decker 02/04/03
 %
-if nargin < 9
+if nargin < 11
     colors = {'b','r',[0,0.5,0],'m','c'};
 end
-if nargin < 8
+if nargin < 10
+    yabs = NaN;
+end
+if nargin < 9
     xvar = 's';
 end
-if nargin < 7
+if nargin < 8
     ymask = NaN;
 end
-if nargin < 6
+if nargin < 7
     rho_disp = [0:0.1:1];
 end
 %
 %clear all
 %load toto
-%
-nr_dep = 100;
 %
 if ~iscell(ymask),
     ymask = '';
@@ -91,11 +92,17 @@ Y_disp = [(Rp + xmin)*sin(PHI_disp);(Rp + xmax)*sin(PHI_disp)];
 iy = 0;
 rays = '';
 for iw = 1:length(waves),
+    ibb = 0;
     for ib = ymask{iw},
+        ibb = ibb + 1;
         iy = iy + 1; 
         rays{iy} = waves{iw}.rays{ib};
         rays{iy}.omega_rf = waves{iw}.omega_rf;
         rays{iy}.color = colors{iw};
+        rays{iy}.srho = psi2rho_jd(equil,rays{iy}.spsin);
+        if iscell(yabs),
+            rays{iy}.mask_abs = yabs{iw}(1,ibb):yabs{iw}(2,ibb);
+        end
         if isempty(rayinits{iw}),
             rays{iy}.init = '';
         else
@@ -397,20 +404,21 @@ end
 %
 % Damping
 %
-rho_dep_S = linspace(0,1,nr_dep+1);
-rho_dep = (rho_dep_S(1:end-1) + rho_dep_S(2:end))/2;
-drho_dep = diff(rho_dep_S);
-%
 yrho_abs = zeros(1,ny);
 yPtot_abs = zeros(1,ny);
 yNpar_abs = zeros(1,ny);
 %
+dPdrho = 0;
+%
 for iy = 1:ny,
     ns = length(rays{iy}.ss);
+    %
     if isfield(rays{iy},'sP_2piRp'),
         sP_2piRp_norm = rays{iy}.sP_2piRp/rays{iy}.sP_2piRp(1);
         sdP_2piRp_ds_norm = rays{iy}.sdP_2piRp_ds/max(rays{iy}.sdP_2piRp_ds+eps);
-        rays{iy}.mask_abs = find(sdP_2piRp_ds_norm > 0.01);
+        if ~iscell(yabs),
+            rays{iy}.mask_abs = find(sdP_2piRp_ds_norm > 0.01);
+        end
         if opt.abs_max == 1,
             rays{iy}.is_abs_max = min([ns,find(sP_2piRp_norm < 0.001)]);        
         else
@@ -418,52 +426,26 @@ for iy = 1:ny,
         end
         rays{iy}.is_abs = find(sdP_2piRp_ds_norm == max(sdP_2piRp_ds_norm)); 
         rays{iy}.is_abs = rays{iy}.is_abs(1);
-        srho = psi2rho_jd(equil,rays{iy}.spsin);
-        yrho_abs(iy) = srho(rays{iy}.is_abs);
+        %
+        yrho_abs(iy) = rays{iy}.srho(rays{iy}.is_abs);
         yNpar_abs(iy) = rays{iy}.sNpar(rays{iy}.is_abs);
         yPtot_abs(iy) = 1 - sP_2piRp_norm(end);
         %
-        rays{iy}.dPnormdrho = zeros(1,nr_dep);
-        srhop = srho(1);
-        irho_depp = find(srhop > rho_dep_S(1:end-1) & srhop <= rho_dep_S(2:end));
-        for is = 2:ns,
-            srhom = srhop;
-            irho_depm = irho_depp;
-            srhop = srho(is);
-            irho_depp = find(srhop > rho_dep_S(1:end-1) & srhop <= rho_dep_S(2:end));
-            sPm = sP_2piRp_norm(is-1);
-            sPp = sP_2piRp_norm(is);
-            %
-            if is == 302,
-                is = 302;
-            end
-            
-            %
-            if irho_depm == irho_depp,
-                rays{iy}.dPnormdrho(irho_depm) = rays{iy}.dPnormdrho(irho_depm) + ...
-                    (sPm - sPp)/drho_dep(irho_depm);
-            elseif srhop > srhom,
-                rays{iy}.dPnormdrho(irho_depm) = rays{iy}.dPnormdrho(irho_depm) + ...
-                    (sPm - sPp)*(rho_dep_S(irho_depm + 1) - srhom)/(srhop - srhom)/drho_dep(irho_depm);
-                rays{iy}.dPnormdrho(irho_depm+1:irho_depp-1) = rays{iy}.dPnormdrho(irho_depm+1:irho_depp-1) + ...
-                    (sPm - sPp)*(rho_dep_S(irho_depm+2:irho_depp) - rho_dep_S(irho_depm+1:irho_depp-1))/(srhop - srhom)./drho_dep(irho_depm+1:irho_depp-1);
-                rays{iy}.dPnormdrho(irho_depp) = rays{iy}.dPnormdrho(irho_depp) + ...
-                    (sPm - sPp)*(srhop - rho_dep_S(irho_depp))/(srhop - srhom)/drho_dep(irho_depm);
-            else
-                rays{iy}.dPnormdrho(irho_depm) = rays{iy}.dPnormdrho(irho_depm) + ...
-                    (sPm - sPp)*(srhom - rho_dep_S(irho_depm))/(srhom - srhop)/drho_dep(irho_depm);
-                rays{iy}.dPnormdrho(irho_depp+1:irho_depm-1) = rays{iy}.dPnormdrho(irho_depp+1:irho_depm-1) + ...
-                    (sPm - sPp)*(rho_dep_S(irho_depp+2:irho_depm) - rho_dep_S(irho_depp+1:irho_depm-1))/(srhom - srhop)./drho_dep(irho_depp+1:irho_depm-1);
-                rays{iy}.dPnormdrho(irho_depp) = rays{iy}.dPnormdrho(irho_depp) + ...
-                    (sPm - sPp)*(rho_dep_S(irho_depp + 1) - srhop)/(srhom - srhop)/drho_dep(irho_depm);
-            end     
-        end
+        rays{iy} = radialdampingprofile_jd(equil,rays{iy},nr_dep);
         %
-        info_dke_yp(2,['radial damping of ray #',num2str(iy),' calculated']);
+        dPdrho = dPdrho + rays{iy}.dPnormdrho*rays{iy}.P0_2piRp*2*pi*equil.Rp;
+        %
     else
         rays{iy}.is_abs_max = ns
+        rays{iy}.is_abs = NaN;
+        yrho_abs(iy) = NaN;
+        yNpar_abs(iy) = NaN;
+        yPtot_abs(iy) = NaN;
     end
 end
+%
+rho_dep = rays{1}.rho_dep;
+%
 yPtot_abs  
 %     rho0
 %     theta0
@@ -823,29 +805,51 @@ elseif ny <= 35,nl = 5;nc = 7;end
 %
 smax = 0;
 Nmax = 0;
+Spmax = 0;
 for iy = 1:ny,
     smax = max(smax,rays{iy}.ss(end));
-    Nmax = max([Nmax,abs(rays{iy}.sNpar(end))]);
+    Nmax = max([Nmax,abs(rays{iy}.sNpar)]);
+    Spmax = max([Spmax,abs(rays{iy}.sphi_xyz(1,:))]);
 end
 %
 figure(3),clf
 xlim = [0,smax];
 ylim = [0,Nmax];
 xlab = 's (m)';
-ylab = '';
+ylab = '';%'N_{||}';
 tit = '';
 %
 for iy = 1:ny,
     txt = ['ray #',num2str(iy)];
     subplot(nl,nc,iy),
     graph1D_jd(rays{iy}.ss,abs(rays{iy}.sNpar),0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width1,siz);
-    text(0,0,txt)
+    %text(0,0,txt)
     if opt.TeNpar == 1,
         graph1D_jd(rays{iy}.ss,6.5./sqrt(rays{iy}.sTe),0,0,'','','',NaN,xlim,ylim,style3,marker,color2,width1,siz);
     end
     if isfield(rays{iy},'mask_abs'),
         mask_abs = rays{iy}.mask_abs;
         graph1D_jd(rays{iy}.ss(mask_abs),abs(rays{iy}.sNpar(mask_abs)),0,0,'','','',NaN,xlim,ylim,style,marker,color5,width1,siz);
+    end
+end
+%
+figure(10),clf
+xlim = [0,smax];
+ylim = [0,Spmax];
+xlab = 's (m)';
+ylab = '';%'S_{\perp}';
+tit = '';
+%
+for iy = 1:ny,
+    txt = ['ray #',num2str(iy)];
+    %sphi_abs = sqrt(abs(rays{iy}.sphi_xyz(1,:)).^2 + abs(rays{iy}.sphi_xyz(2,:)).^2 + abs(rays{iy}.sphi_xyz(3,:)).^2);
+    sphi_abs = abs(rays{iy}.sphi_xyz(1,:));
+    subplot(nl,nc,iy),
+    graph1D_jd(rays{iy}.ss,sphi_abs,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width1,siz);
+    %text(0,0,txt)
+    if isfield(rays{iy},'mask_abs'),
+        mask_abs = rays{iy}.mask_abs;
+        graph1D_jd(rays{iy}.ss(mask_abs),sphi_abs(mask_abs),0,0,'','','',NaN,xlim,ylim,style,marker,color5,width1,siz);
     end
 end
 %
@@ -861,7 +865,7 @@ tit = '';
 for iy = 1:ny,
     txt = ['ray #',num2str(iy)];
     subplot(nl,nc,iy),
-    graph1D_jd(rho_dep,rays{iy}.dPnormdrho,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color2,width1,siz);
+    graph1D_jd(rays{iy}.rho_dep,rays{iy}.dPnormdrho,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color2,width1,siz);
     text(0,0,txt)
 end
 %
@@ -884,6 +888,15 @@ ylab = 'N_{||}^{abs}';
 tit = '';
 %
 graph1D_jd(1:ny,abs(yNpar_abs),0,0,xlab,ylab,tit,NaN,xlim,ylim,style2,marker1,color2,width1,siz,gca,red,lspace,bspace);
+%
+figure(6),clf
+xlim = [0,1];
+ylim = NaN;
+xlab = '\rho';
+ylab = 'dPd\rho';
+tit = 'Total power deposition profile';
+%
+graph1D_jd(rho_dep,dPdrho,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width1,siz,gca,red,lspace,bspace);
 
 return
 %
