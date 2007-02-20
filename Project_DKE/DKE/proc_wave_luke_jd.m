@@ -66,6 +66,7 @@ zs = raypath_jd(xys,xyprop_dke,yb,1:nr);
 zP0_2piRp_mod = raypath_jd(xyP0_2piRp_mod,xyprop_dke,yb,1:nr);
 %
 rdPdrho_lin = 0;
+P0tot_2piRp = 0;
 ibb = 0;
 %
 for iw = 1:length(waves),
@@ -77,6 +78,8 @@ for iw = 1:length(waves),
         ibb = ibb + 1;
         %
         ray = waves{iw}.rays{ib};
+        P0tot_2piRp = P0tot_2piRp + ray.P0_2piRp;
+        %
         ray.srho = psi2rho_jd(equil,ray.spsin);
         ray = radialdampingprofile_jd(equil,ray,nr_dep);
         rdPdrho_lin = rdPdrho_lin + ray.dPnormdrho*ray.P0_2piRp*2*pi*equil.Rp;
@@ -162,13 +165,15 @@ color5 = 'k';
 figure(3);clf
 %
 xlab = 'r/a';
-ylab = 'dP/d\rho';
+ylab = 'dP/d\rho (norm.)';
 xlim = NaN;
 ylim = NaN;
+leg = ['LUKE  ';...
+       'linear']; 
 %
-graph1D_jd(xrho,xdPdrho,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker2,color1,width2,siz,gca,red,lspace,bspace);
-%graph1D_jd(xrho,xdPdrho_lin,0,0,'','','',leg,xlim,ylim,style,marker,color2,width2,siz);
-graph1D_jd(rho_dep,rdPdrho_lin,0,0,'','','',leg,xlim,ylim,style,marker,color2,width2,siz);
+graph1D_jd(xrho,xdPdrho/P0tot_2piRp,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker2,color1,width2,siz,gca,red,lspace,bspace);
+%graph1D_jd(xrho,xdPdrho_lin/P0tot_2piRp,0,0,'','','',leg,xlim,ylim,style,marker,color2,width2,siz);
+graph1D_jd(rho_dep,rdPdrho_lin/P0tot_2piRp,0,0,'','','',leg,xlim,ylim,style,marker,color2,width2,siz);
 %
 %
 figure(4);clf
@@ -212,8 +217,8 @@ for iw = 1:length(waves),
         ray = waves{iw}.rays{ib};
         %
         %graph1D_jd(wbss{iw,ib},wbsP{iw,ib},0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width2,siz,gca,red,lspace,bspace);
-        graph1D_jd(ray.ss,ray.sP_2piRp*2*pi*equil.Rp,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width2,siz,gca,red,lspace,bspace);
-        graph1D_jd(ray.zs,ray.zP0_2piRp_mod*2*pi*equil.Rp,0,0,'','','',leg,xlim,ylim,style,marker2,color2,width2);
+        graph1D_jd(ray.ss,ray.sP_2piRp/ray.P0_2piRp,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width2,siz,gca,red,lspace,bspace);
+        graph1D_jd(ray.zs,ray.zP0_2piRp_mod/ray.P0_2piRp,0,0,'','','',leg,xlim,ylim,style,marker2,color2,width2);
         %
         figure(100*iw + 10 + ib)
         %
