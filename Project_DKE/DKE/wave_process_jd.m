@@ -1,4 +1,4 @@
-function wave = wave_process_jd(equil,wave,n_rf_list,method);
+function wave = wave_process_jd(equil,wave,n_rf_list,opt_cut,method);
 %
 % This function completes the missing wave characteristics. In particular, it calculates the wave
 % absorption coefficient and the wave lilnear damping.
@@ -6,8 +6,11 @@ function wave = wave_process_jd(equil,wave,n_rf_list,method);
 % by 	J. Decker (DRFC/DSM/CEA) <joan.decker@cea.fr> 
 % and   Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr>
 %
-if nargin < 4,
+if nargin < 5,
     method = 'linear';%'spline';%interpolation technique in psi
+end
+if nargin < 4,
+    opt_cut = 1;%'spline';%interpolation technique in psi
 end
 %
 % Equilibrium data with Fourier-enhanced poloidal precision and original radial grid
@@ -30,6 +33,18 @@ for ib = 1:length(wave.rays),
         sds = diff(ray.ss);
         ray.sP_2piRp = ray.P0_2piRp*exp(-[0,cumsum(salpha_lin_h.*sds)]);
         ray.sdP_2piRp_ds = salpha_lin.*ray.sP_2piRp;
+        %
+        if opt_cut == 1,
+            ns = length(ray.ss);
+            is_max = min([ns,round(find(ray.sP_2piRp < ray.P0_2piRp/1000)*1.1)]);
+            frays = fieldnames(ray);
+            for ifield = 1:length(frays),
+                eval(['ns_field = length(ray.',frays{ifield},');'])
+                if ns_field == ns,
+                    eval(['ray.',frays{ifield},' = ray.',frays{ifield},'(:,1:is_max);'])
+                end
+            end
+        end
     end
     wave.rays{ib} = ray;
    info_dke_yp(2,['Damping of ray #',num2str(ib),' calculated']);    
