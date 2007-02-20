@@ -339,9 +339,9 @@ transpfaste.Vr_model = par.Vr_model;%Radial pinch type: (0) no vpar dependence, 
 
 for iw = 1:length(launchs),
    if strfind(par.launchtype,launchs{1}.type),%Extract only the selected waves
-   	[waveparam,fitequilparam,rayparam,raydisplay] = make_wavert_cronos(launchs{1}.type,dkeparam);%parameter for ray-tracing are adapted to the selected wave
+   	[waveparam,fitequilparam,rayparam,raydisplay] = make_wavert_cronos(launchs{iw}.type,dkeparam);%parameter for ray-tracing are adapted to the selected wave
 %   	
-      wavestructs{iw}.id_wave = par.conf;
+      wavestructs{iw}.id = [par.conf,'_',int2str(iw)];
       wavestructs{iw}.launch = launchs{iw};
       wavestructs{iw}.waveparam = waveparam;
       wavestructs{iw}.fitequilparam = fitequilparam;
@@ -356,11 +356,11 @@ for iw = 1:length(launchs),
    end
 end
 %
-reloadrays = 0;
+opt_save = 0;
 %
 %--------------------------- Execution du trace de rayon C3PO et du code cinetique LUKE --------------------------- 
 %
-[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert('cronos',wavestructs,[],par.rho_S,dkepath,equil,dkeparam,display,ohm,transpfaste,ripple,[],[],reloadrays);
+[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert('cronos',wavestructs,[],[],par.rho_S,dkepath,equil,dkeparam,display,ohm,transpfaste,ripple,[],[],opt_save);
 %
 rmdir(dkepath.temppath,'s');%remove directory where temporary  calculations are performed
 rmfield(dkepath, 'temppath');%remove path of the directory where temporary  calculations are performed
