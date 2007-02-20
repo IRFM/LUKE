@@ -47,8 +47,8 @@ for iw = (nw + 1):(nw + length(wavestructs)),
             save(savestr,'wave');
         end
         %
-        if isfield('wavestruct','a_sdNpar') == 1,
-            wave.a_sdNpar = wavestruct.a_sdNpar;
+        if isfield('wavestruct.launch','a_sdNpar') == 1,
+            wave.a_sdNpar = wavestruct.launch.a_sdNpar;
         end
         %
         waves{iw} = wave;    
