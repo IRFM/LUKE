@@ -14,6 +14,7 @@ pause(1)
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
 id_simul = '20Z_Alpha_5p0_fineGrid';%Simulation ID
+%id_simul = '20Z_Alpha_5p0_noBounce';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
@@ -48,6 +49,7 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %************************************************************************************************************************************
 %
 dkeparam.delta_rt = 0.25;
+%dkeparam.bounce_mode = 0;
 %
 [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
 %	    
