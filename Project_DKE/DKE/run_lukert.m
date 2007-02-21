@@ -1,4 +1,4 @@
-function [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert(id_simul,wavestructs,waves,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,transpfaste,ripple,XXf0_in,XXsinksource_in,opt_save)
+function [varargout] = run_lukert(id_simul,wavestructs,waves,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,transpfaste,ripple,XXf0_in,XXsinksource_in,opt_save)
 %
 % Ray-tracing + quasilinear kinetic calculations using LUKE. Tool for implementation in other calculation packages.
 %
@@ -9,7 +9,7 @@ function [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoe
 %
 if nargin < 15,
    opt_save = 0;%rays are calculated by C3PO and not reload
-end
+end 
 %
 path_simul = '';
 %
@@ -32,8 +32,8 @@ for iw = (nw + 1):(nw + length(wavestructs)),
     wavestruct = wavestructs{iw};
     %
     if strcmp(wavestruct.wavesolver,'C3PO'),% C3P0 ray tracing
-	   	rayinit = main_rayinit_launch_jd(equil,wavestruct.launch);
-	    wave = main_C3PO_jd(wavestruct.id_wave,equil,rayinit,wavestruct.waveparam,wavestruct.fitequilparam,wavestruct.rayparam,wavestruct.raydisplay);%Ray calculations
+	     rayinit = main_rayinit_launch_jd(equil,wavestruct.launch);
+	     wave = main_C3PO_jd(wavestruct.id,equil,rayinit,wavestruct.waveparam,wavestruct.fitequilparam,wavestruct.rayparam,wavestruct.raydisplay);%Ray calculations
         wave = wave_process_jd(equil,wave,dkeparam.n_rf_list);%Wave processing and relativistic linear damping
         if opt_save == 1,
             mkdir('WAVE')
@@ -205,3 +205,40 @@ elseif dkeparam.rt_mode == 3,
    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
 end
 %
+if dkeparam.rt >= 1,%Variable number of outputs (only if LUKE is running otherwise no output)
+	if nargout >= 1,varargout{1} = {Znorm};end
+	if nargout >= 2,varargout{2} = {Zcurr};end
+	if nargout >= 3,varargout{3} = {ZP0};end
+	if nargout >= 4,varargout{4} = {dke_out};end
+	if nargout >= 5,varargout{5} = {radialDKE};end
+	if nargout >= 6,varargout{6} = {equilDKE};end
+	if nargout >= 7,varargout{7} = {momentumDKE};end
+	if nargout >= 8,varargout{8} = {gridDKE};end
+	if nargout >= 9,varargout{9} = {Zmomcoef};end
+	if nargout >= 10,varargout{10} = {Zbouncecoef};end
+	if nargout >= 11,varargout{11} = {Zmripple};end
+	if nargout >= 12,varargout{12} = {mksa};end
+	if nargout >= 13,varargout{13} = {XXsinksource};end
+end		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
