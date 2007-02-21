@@ -45,7 +45,7 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %************************************************************************************************************************************
 %************************************************************************************************************************************
 %
-[dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple] = load_structures_yp('dkepath',id_path,path_path,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'display',id_display,path_display,'ohm',id_ohm,path_ohm,'waves',ids_wave,paths_wave,'transpfaste',id_transpfaste,path_transpfaste,'ripple',id_ripple,path_ripple);
+[dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple] = load_structures_yp('dkepath',id_path,path_path,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'dkedisplay',id_display,path_display,'ohm',id_ohm,path_ohm,'waves',ids_wave,paths_wave,'transpfaste',id_transpfaste,path_transpfaste,'ripple',id_ripple,path_ripple);
 %
 %************************************************************************************************************************************
 %
@@ -53,25 +53,25 @@ dkeparam.opt_load = 0;
 dkeparam.opt_save = 0;
 %
 equil.zZi = [1,1,1,1];equil.pzni = species_dke_yp(equil.pne,ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 1
-[Znorm,Zcurr,ZP0,dke_out_Z1,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr,ZP0,dke_out_Z1,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 equil.zZi = [1,1,1,2];equil.pzni = species_dke_yp(equil.pne,2*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 2
-[Znorm,Zcurr,ZP0,dke_out_Z2] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr,ZP0,dke_out_Z2] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 equil.zZi = [1,1,1,3];equil.pzni = species_dke_yp(equil.pne,3*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 3
-[Znorm,Zcurr,ZP0,dke_out_Z3] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr,ZP0,dke_out_Z3] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 equil.zZi = [1,1,1,4];equil.pzni = species_dke_yp(equil.pne,4*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 4
-[Znorm,Zcurr,ZP0,dke_out_Z4] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr,ZP0,dke_out_Z4] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 equil.zZi = [1,1,1,5];equil.pzni = species_dke_yp(equil.pne,5*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 5
-[Znorm,Zcurr,ZP0,dke_out_Z5] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr,ZP0,dke_out_Z5] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 equil.zZi = [1,1,1,6];equil.pzni = species_dke_yp(equil.pne,6*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 6
-[Znorm,Zcurr,ZP0,dke_out_Z6] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr,ZP0,dke_out_Z6] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 equil.zZi = [1,1,1,7];equil.pzni = species_dke_yp(equil.pne,7*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 7
-[Znorm,Zcurr,ZP0,dke_out_Z7] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr,ZP0,dke_out_Z7] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 equil.zZi = [1,1,1,8];equil.pzni = species_dke_yp(equil.pne,8*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 8
-[Znorm,Zcurr,ZP0,dke_out_Z8] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr,ZP0,dke_out_Z8] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 equil.zZi = [1,1,1,9];equil.pzni = species_dke_yp(equil.pne,9*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 9
-[Znorm,Zcurr,ZP0,dke_out_Z9] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr,ZP0,dke_out_Z9] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 equil.zZi = [1,1,1,10];equil.pzni = species_dke_yp(equil.pne,10*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 10
-[Znorm,Zcurr,ZP0,dke_out_Z10] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr,ZP0,dke_out_Z10] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 disp('-------------------------------------------------------------------------------------------------------------------');
 disp('-------------------------------------------------------------------------------------------------------------------');

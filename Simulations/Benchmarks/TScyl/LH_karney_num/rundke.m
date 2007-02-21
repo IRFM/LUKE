@@ -45,7 +45,7 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %************************************************************************************************************************************
 %************************************************************************************************************************************
 %
-[dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple] = load_structures_yp('dkepath',id_path,path_path,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'display',id_display,path_display,'ohm',id_ohm,path_ohm,'waves',ids_wave,paths_wave,'transpfaste',id_transpfaste,path_transpfaste,'ripple',id_ripple,path_ripple);
+[dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple] = load_structures_yp('dkepath',id_path,path_path,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'dkedisplay',id_display,path_display,'ohm',id_ohm,path_ohm,'waves',ids_wave,paths_wave,'transpfaste',id_transpfaste,path_transpfaste,'ripple',id_ripple,path_ripple);
 %
 %************************************************************************************************************************************
 %
@@ -58,14 +58,14 @@ dkeparam.mlprecinv = 1-4;
 dkeparam.mlmaxitinv = 4;
 dkeparam.opt_load = 0;
 dkeparam.opt_save = 0;
-[Znorm_LU,Zcurr_LU,ZP0_LU,dke_out_LU,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm_LU,Zcurr_LU,ZP0_LU,dke_out_LU,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 disp('Full LU calculation done')
 %
 for j = 1:3,%Numerical method (CGS, BICG, QMR)
     for i = 1:nit,%droptolerance scan
       dkeparam.ludroptol = dludroptol(i);
       dkeparam.invproc  = j;
-      [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+      [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 % 
       memory_f(i,dkeparam.invproc) = dke_out.memoryLU_f_out;
       time_f(i,dkeparam.invproc) = dke_out.time_out;
@@ -79,10 +79,10 @@ for j = 1:3,%Numerical method (CGS, BICG, QMR)
 end
 %
 %dkeparam.invproc = 0;
-%[Znorm_directML,Zcurr_directML,ZP0_directML,dke_out_directML] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+%[Znorm_directML,Zcurr_directML,ZP0_directML,dke_out_directML] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %disp(['Direct MatLab calculation done'])
 dkeparam.invproc = -1;
-[Znorm_MUMPS,Zcurr_MUMPS,ZP0_MUMPS,dke_out_MUMPS] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm_MUMPS,Zcurr_MUMPS,ZP0_MUMPS,dke_out_MUMPS] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 disp(['Direct MUMPS calculation done'])
 %
 vparmin = 1/(waves{1}.rays{1}.sNpar(1)+imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
