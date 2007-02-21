@@ -55,14 +55,14 @@ dkeparam.opt_load = 0;
 dkeparam.opt_save = 0;
 %
 [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-ne(1) = Znorm.x_0_fsav;
+ne(1) = Znorm{1}.x_0_fsav;
 for i = 2:nit,
-   [Znorm,Zcurr,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,dke_out.XXf0,[]);
-    ne(i) = Znorm.x_0_fsav;
+   [Znorm,Zcurr,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,dke_out{1}.XXf0,[]);
+    ne(i) = Znorm{1}.x_0_fsav;
 end
 %
-figure(1),graph1D_jd([1:nit]*dkeparam.dtn,ne*mksa.ne_ref,0,0,'Integration time step (t_{coll})','Electron density (10^{+19} m^{-3)}',['Maxwallian distr., dtn = ',int2str(dkeparam.dtn)],NaN,'','','-','+','r',2);
-axis([0,nit*dkeparam.dtn,mksa.ne_ref*0.99,mksa.ne_ref*1.01])
+figure(1),graph1D_jd([1:nit]*dkeparam.dtn,ne*mksa{1}.ne_ref,0,0,'Integration time step (t_{coll})','Electron density (10^{+19} m^{-3)}',['Maxwallian distr., dtn = ',int2str(dkeparam.dtn)],NaN,'','','-','+','r',2);
+axis([0,nit*dkeparam.dtn,mksa{1}.ne_ref*0.99,mksa{1}.ne_ref*1.01])
 savefig_dke_yp('thermaldensity')
 %	    
 %************************************************************************************************************************************

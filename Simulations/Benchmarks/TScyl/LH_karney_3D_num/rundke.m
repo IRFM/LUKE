@@ -67,13 +67,13 @@ for j = 1:nmesh,%Scan radial mesh size
       dkeparam.ludroptol = dludroptol(i);
       [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 % 
-      memory_f(i,j) = dke_out{1}.memoryLU_f_out;
-      time_f(i,j) = dke_out{1}.time_out;
+      memory_f(i,j) = dke_out.memoryLU_f_out;
+      time_f(i,j) = dke_out.time_out;
       rho_f{i,j} = rho_S;
-      norm_f{i,j} = Znorm{1}.x_0_fsav.*mksa{1}.ne_ref;
-      curr_f{i,j} = Zcurr{1}.x_0_fsav.*mksa{1}.j_ref;
-      Prf_f{i,j} = ZP0{1}.x_rf_fsav.*mksa{1}.P_ref;
-      Pcoll_f{i,j} = ZP0{1}.x_c_fsav.*mksa{1}.P_ref;
+      norm_f{i,j} = Znorm.x_0_fsav.*mksa.ne_ref;
+      curr_f{i,j} = Zcurr.x_0_fsav.*mksa.j_ref;
+      Prf_f{i,j} = ZP0.x_rf_fsav.*mksa.P_ref;
+      Pcoll_f{i,j} = ZP0.x_c_fsav.*mksa.P_ref;
 %
       disp(['Calculation in MatLab with incomplete LU calculation #',int2str(i),' with radial mesh size #',int2str(j*dmesh),'  done'])
     end
@@ -86,12 +86,12 @@ for j = 1:nmesh,%Scan radial mesh size
    rho_S = linspace(0,1,j*dmesh);
    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 % 
-   time_f_MUMPS(j) = dke_out{1}.time_out;
+   time_f_MUMPS(j) = dke_out.time_out;
    rho_f_MUMPS{j} = rho_S;
-   norm_f_MUMPS{j} = Znorm{1}.x_0_fsav.*mksa{1}.ne_ref;
-   curr_f_MUMPS{j} = Zcurr{1}.x_0_fsav.*mksa{1}.j_ref;
-   Prf_f_MUMPS{j} = ZP0{1}.x_rf_fsav.*mksa{1}.P_ref;
-   Pcoll_f_MUMPS{j} = ZP0{1}.x_c_fsav.*mksa{1}.P_ref;
+   norm_f_MUMPS{j} = Znorm.x_0_fsav.*mksa.ne_ref;
+   curr_f_MUMPS{j} = Zcurr.x_0_fsav.*mksa.j_ref;
+   Prf_f_MUMPS{j} = ZP0.x_rf_fsav.*mksa.P_ref;
+   Pcoll_f_MUMPS{j} = ZP0.x_c_fsav.*mksa.P_ref;
 %
    disp(['Calculation with MUMPS done with radial mesh size #',int2str(j*dmesh),'  done'])
 end
@@ -107,12 +107,12 @@ for j = 1:nmesh,%Scan radial mesh size
    rho_S = linspace(0,1,j*dmesh);
    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 % 
-   time_f_PETSc_slu_i(j) = dke_out{1}.time_out;
+   time_f_PETSc_slu_i(j) = dke_out.time_out;
    rho_f_PETSc_slu_i{j} = rho_S;
-   norm_f_PETSc_slu_i{j} = Znorm{1}.x_0_fsav.*mksa{1}.ne_ref;
-   curr_f_PETSc_slu_i{j} = Zcurr{1}.x_0_fsav.*mksa{1}.j_ref;
-   Prf_f_PETSc_slu_i{j} = ZP0{1}.x_rf_fsav.*mksa{1}.P_ref;
-   Pcoll_f_PETSc_slu_i{j} = ZP0{1}.x_c_fsav.*mksa{1}.P_ref;
+   norm_f_PETSc_slu_i{j} = Znorm.x_0_fsav.*mksa.ne_ref;
+   curr_f_PETSc_slu_i{j} = Zcurr.x_0_fsav.*mksa.j_ref;
+   Prf_f_PETSc_slu_i{j} = ZP0.x_rf_fsav.*mksa.P_ref;
+   Pcoll_f_PETSc_slu_i{j} = ZP0.x_c_fsav.*mksa.P_ref;
 %
    disp(['Calculation with PETSc (SUPERLU) done with radial mesh size #',int2str(j*dmesh),' (collision operator loop in C)  done'])
 end
@@ -123,12 +123,12 @@ for j = 1:nmesh,%Scan radial mesh size
    rho_S = linspace(0,1,j*dmesh);
    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 % 
-   time_f_PETSc_slu_e(j) = dke_out{1}.time_out;
+   time_f_PETSc_slu_e(j) = dke_out.time_out;
    rho_f_PETSc_slu_e{j} = rho_S;
-   norm_f_PETSc_slu_e{j} = Znorm{1}.x_0_fsav.*mksa{1}.ne_ref;
-   curr_f_PETSc_slu_e{j} = Zcurr{1}.x_0_fsav.*mksa{1}.j_ref;
-   Prf_f_PETSc_slu_e{j} = ZP0{1}.x_rf_fsav.*mksa{1}.P_ref;
-   Pcoll_f_PETSc_slu_e{j} = ZP0{1}.x_c_fsav.*mksa{1}.P_ref;
+   norm_f_PETSc_slu_e{j} = Znorm.x_0_fsav.*mksa.ne_ref;
+   curr_f_PETSc_slu_e{j} = Zcurr.x_0_fsav.*mksa.j_ref;
+   Prf_f_PETSc_slu_e{j} = ZP0.x_rf_fsav.*mksa.P_ref;
+   Pcoll_f_PETSc_slu_e{j} = ZP0.x_c_fsav.*mksa.P_ref;
    
 %
    disp(['Calculation with PETSc (SUPERLU) done with radial mesh size #',int2str(j*dmesh),' (collision operator loop in MatLab)  done'])
@@ -145,12 +145,12 @@ for j = 1:nmesh,%Scan radial mesh size
    rho_S = linspace(0,1,j*dmesh);
    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 % 
-   time_f_PETSc_bcgs_i(j) = dke_out{1}.time_out;
+   time_f_PETSc_bcgs_i(j) = dke_out.time_out;
    rho_f_PETSc_bcgs_i{j} = rho_S;
-   norm_f_PETSc_bcgs_i{j} = Znorm{1}.x_0_fsav.*mksa{1}.ne_ref;
-   curr_f_PETSc_bcgs_i{j} = Zcurr{1}.x_0_fsav.*mksa{1}.j_ref;
-   Prf_f_PETSc_bcgs_i{j} = ZP0{1}.x_rf_fsav.*mksa{1}.P_ref;
-   Pcoll_f_PETSc_bcgs_i{j} = ZP0{1}.x_c_fsav.*mksa{1}.P_ref;
+   norm_f_PETSc_bcgs_i{j} = Znorm.x_0_fsav.*mksa.ne_ref;
+   curr_f_PETSc_bcgs_i{j} = Zcurr.x_0_fsav.*mksa.j_ref;
+   Prf_f_PETSc_bcgs_i{j} = ZP0.x_rf_fsav.*mksa.P_ref;
+   Pcoll_f_PETSc_bcgs_i{j} = ZP0.x_c_fsav.*mksa.P_ref;
 %
    disp(['Calculation with PETSc (SUPERLU) done with radial mesh size #',int2str(j*dmesh),' (collision operator loop in C)  done'])
 end
@@ -161,18 +161,18 @@ for j = 1:nmesh,%Scan radial mesh size
    rho_S = linspace(0,1,j*dmesh);
    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 % 
-   time_f_PETSc_bcgs_e(j) = dke_out{1}.time_out;
+   time_f_PETSc_bcgs_e(j) = dke_out.time_out;
    rho_f_PETSc_bcgs_e{j} = rho_S;
-   norm_f_PETSc_bcgs_e{j} = Znorm{1}.x_0_fsav.*mksa{1}.ne_ref;
-   curr_f_PETSc_bcgs_e{j} = Zcurr{1}.x_0_fsav.*mksa{1}.j_ref;
-   Prf_f_PETSc_bcgs_e{j} = ZP0{1}.x_rf_fsav.*mksa{1}.P_ref;
-   Pcoll_f_PETSc_bcgs_e{j} = ZP0{1}.x_c_fsav.*mksa{1}.P_ref;
+   norm_f_PETSc_bcgs_e{j} = Znorm.x_0_fsav.*mksa.ne_ref;
+   curr_f_PETSc_bcgs_e{j} = Zcurr.x_0_fsav.*mksa.j_ref;
+   Prf_f_PETSc_bcgs_e{j} = ZP0.x_rf_fsav.*mksa.P_ref;
+   Pcoll_f_PETSc_bcgs_e{j} = ZP0.x_c_fsav.*mksa.P_ref;
 %
    disp(['Calculation with PETSc (SUPERLU) done with radial mesh size #',int2str(j*dmesh),' (collision operator loop in MatLab)  done'])
 end
 %
-vparmin = 1/(waves{1}.rays{1}.sNpar(1)+imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa{1}.betath_ref;
-vparmax = 1/(waves{1}.rays{1}.sNpar(1)-imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa{1}.betath_ref;
+vparmin = 1/(waves.rays.sNpar(1)+imag(waves.rays.sdNpar(1))/2)/mksa.betath_ref;
+vparmax = 1/(waves.rays.sNpar(1)-imag(waves.rays.sdNpar(1))/2)/mksa.betath_ref;
 %
 figure(1),graph1D_jd(dludroptol,time_f(:,1),1,0,'Drop tolerance parameter \delta_{LU}','Full computational time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','-','none','r',2);hold on
 graph1D_jd(dludroptol,time_f(:,2),1,0,'Drop tolerance parameter \delta_{LU}','Full computational time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','--','none','b',2);hold on

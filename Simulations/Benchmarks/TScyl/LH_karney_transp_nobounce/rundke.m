@@ -134,8 +134,8 @@ Dpsipsi=[0,0.1,1,10];
 tCPU = [dke_out0.time_out,dke_out01.time_out,dke_out1.time_out,dke_out10.time_out];
 tCPU1 = [dke_out10_1.time_out,dke_out10_2.time_out,dke_out10_3.time_out,dke_out10_4.time_out,dke_out10_5.time_out,dke_out10_6.time_out,dke_out10_7.time_out,dke_out10_8.time_out,dke_out10_9.time_out,dke_out10_10.time_out];
 %
-vparmin = 1/(waves{1}.rays{1}.sNpar(1)+imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
-vparmax = 1/(waves{1}.rays{1}.sNpar(1)-imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
+vparmin = 1/(waves.rays.sNpar(1)+imag(waves.rays.sdNpar(1))/2)/mksa.betath_ref;
+vparmax = 1/(waves.rays.sNpar(1)-imag(waves.rays.sdNpar(1))/2)/mksa.betath_ref;
 %
 figure(1),graph1D_jd(Dpsipsi,tCPU,1,0,'D_{\psi\psi} (m^{2}/s)','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','r',2);
 axis([0.1,10,0,300])

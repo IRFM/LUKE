@@ -85,7 +85,7 @@ if iscell(id_path) & iscell(path_path),
         if ~strcmp(dkepath.computer,computer),error('The path structure is not consistent with the computer !'),end
         dkepath.temppath = [dkepath.temppathroot,filesep,timeid_jd(clock)];
     end
-    varargout(flag_path) = {dkepath};
+    varargout{flag_path} = dkepath;
 end
 %
 if iscell(id_equil) & iscell(path_equil),
@@ -95,7 +95,7 @@ if iscell(id_equil) & iscell(path_equil),
 	    eval(['load ',path_equil{1},'EQUIL_',id_equil{1},'.mat']);
 	    info_dke_yp(2,'Structure ''equil'' successfully loaded');
     end
-    varargout(flag_equil) = {equil};
+    varargout{flag_equil} = equil;
 end
 %
 if iscell(id_dkeparam) & iscell(path_dkeparam),
@@ -105,7 +105,7 @@ if iscell(id_dkeparam) & iscell(path_dkeparam),
 	    eval(['load ',path_dkeparam{1},'DKEPARAM_',id_dkeparam{1},'.mat']);
 	    info_dke_yp(2,'Structure ''dkeparam'' successfully loaded');
     end
-    varargout(flag_dkeparam) = {dkeparam};
+    varargout{flag_dkeparam} = dkeparam;
 end
 %
 if iscell(id_display) & iscell(path_display),
@@ -113,9 +113,9 @@ if iscell(id_display) & iscell(path_display),
 	    error([path_display{1},'DISPLAY_',id_display{1},'.mat does not exist']);
     else
 	    eval(['load ',path_display{1},'DISPLAY_',id_display{1},'.mat']);
-	    info_dke_yp(2,'Structure ''display'' successfully loaded');
+	    info_dke_yp(2,'Structure ''dkedisplay'' successfully loaded');
 	  end
-    varargout(flag_display) = {dkedisplay};
+    varargout{flag_display} = dkedisplay;
 end
 %
 if iscell(id_ohm) & iscell(path_ohm),
@@ -126,7 +126,7 @@ if iscell(id_ohm) & iscell(path_ohm),
 	    eval(['load ',path_ohm{1},'OHM_',id_equil{1},'_',id_ohm{1},'.mat']);
 	    info_dke_yp(2,['Structure ''ohm'' ',id_ohm{1},' successfully loaded']);
     end
-    varargout(flag_ohm) = {ohm};
+    varargout{flag_ohm} = ohm;
 end
 %
 ii=1;
@@ -142,7 +142,7 @@ if iscell(ids_wave) & iscell(paths_wave),
 		    ii = ii + 1;
         end
     end
-    varargout(flag_wave) = {waves};
+    varargout{flag_wave} = waves;
 end
 %
 if iscell(id_transpfaste) & iscell(path_transpfaste),
@@ -153,7 +153,7 @@ if iscell(id_transpfaste) & iscell(path_transpfaste),
 	    eval(['load ',path_transpfaste{1},'TRANSP_',id_transpfaste{1},'.mat']);
 	    info_dke_yp(2,'Structure ''transpfaste'' successfully loaded');
     end
-    varargout(flag_transpfaste) = {transpfaste};
+    varargout{flag_transpfaste} = transpfaste;
 end
 %
 if iscell(id_ripple) & iscell(path_ripple),
@@ -164,7 +164,7 @@ if iscell(id_ripple) & iscell(path_ripple),
 	    eval(['load ',path_ripple{1},'RIPPLE_',id_ripple{1},'.mat']);
 	    info_dke_yp(2,'Structure ''ripple'' successfully loaded');
     end
-    varargout(flag_ripple) = {ripple};
+    varargout{flag_ripple} = ripple;
 end
 %
 

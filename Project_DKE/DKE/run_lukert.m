@@ -206,19 +206,19 @@ elseif dkeparam.rt_mode == 3,
 end
 %
 if dkeparam.rt >= 1,%Variable number of outputs (only if LUKE is running otherwise no output)
-	if nargout >= 1,varargout{1} = {Znorm};end
-	if nargout >= 2,varargout{2} = {Zcurr};end
-	if nargout >= 3,varargout{3} = {ZP0};end
-	if nargout >= 4,varargout{4} = {dke_out};end
-	if nargout >= 5,varargout{5} = {radialDKE};end
-	if nargout >= 6,varargout{6} = {equilDKE};end
-	if nargout >= 7,varargout{7} = {momentumDKE};end
-	if nargout >= 8,varargout{8} = {gridDKE};end
-	if nargout >= 9,varargout{9} = {Zmomcoef};end
-	if nargout >= 10,varargout{10} = {Zbouncecoef};end
-	if nargout >= 11,varargout{11} = {Zmripple};end
-	if nargout >= 12,varargout{12} = {mksa};end
-	if nargout >= 13,varargout{13} = {XXsinksource};end
+	if nargout >= 1,varargout{1} = Znorm;end
+	if nargout >= 2,varargout{2} = Zcurr;end
+	if nargout >= 3,varargout{3} = ZP0;end
+	if nargout >= 4,varargout{4} = dke_out;end
+	if nargout >= 5,varargout{5} = radialDKE;end
+	if nargout >= 6,varargout{6} = equilDKE;end
+	if nargout >= 7,varargout{7} = momentumDKE;end
+	if nargout >= 8,varargout{8} = gridDKE;end
+	if nargout >= 9,varargout{9} = Zmomcoef;end
+	if nargout >= 10,varargout{10} = Zbouncecoef;end
+	if nargout >= 11,varargout{11} = Zmripple;end
+	if nargout >= 12,varargout{12} = mksa;end
+	if nargout >= 13,varargout{13} = XXsinksource;end
 end		
 
 
