@@ -10,6 +10,7 @@ if strcmp(config,'TS');%For the Lower Hybrid wave simulations
 %
 % ------- LH antenna #1 (C1) -------
 % 
+   launchs{1}.id = 'Coupleur_C1';
    launchs{1}.type = 'LH';
    launchs{1}.omega_rf = [3.7]*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
@@ -30,7 +31,8 @@ if strcmp(config,'TS');%For the Lower Hybrid wave simulations
    launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
 %
 % ------- LH antenna #2 (C2) -------
-% 
+%
+   launchs{2}.id = 'Coupleur_C2';
    launchs{2}.type = 'LH';
    launchs{2}.omega_rf = [3.7]*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
@@ -56,6 +58,7 @@ elseif strcmp(config,'MIXTE');%For the Lower Hybrid wave simulations
 %
 % ------- LH antenna #1 (C2) -------
 % 
+   launchs{1}.id = 'Coupleur_C2';
    launchs{1}.type = 'LH';
    launchs{1}.omega_rf = [3.7]*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
@@ -77,6 +80,7 @@ elseif strcmp(config,'MIXTE');%For the Lower Hybrid wave simulations
 %
 % ------- LH antenna #2 (C3) -------
 % 
+   launchs{2}.id = 'Coupleur_C3';
    launchs{2}.type = 'LH';
    launchs{2}.omega_rf = [3.7]*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %

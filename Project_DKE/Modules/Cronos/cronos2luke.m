@@ -341,7 +341,7 @@ for iw = 1:length(launchs),
    if strfind(par.launchtype,launchs{1}.type),%Extract only the selected waves
    	[waveparam,fitequilparam,rayparam,raydisplay] = make_wavert_cronos(launchs{iw}.type,dkeparam);%parameter for ray-tracing are adapted to the selected wave
 %   	
-      wavestructs{iw}.id = [par.conf,'_',int2str(iw)];
+      wavestructs{iw}.id = [par.conf,'_',launchs{iw}.id];
       wavestructs{iw}.launch = launchs{iw};
       wavestructs{iw}.waveparam = waveparam;
       wavestructs{iw}.fitequilparam = fitequilparam;
