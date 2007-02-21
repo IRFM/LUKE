@@ -67,14 +67,14 @@ for j = 1:3,%Numerical method (CGS, BICG, QMR)
       dkeparam.invproc  = j;
       [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 % 
-      memory_f(i,dkeparam.invproc) = dke_out.memoryLU_f_out;
-      time_f(i,dkeparam.invproc) = dke_out.time_out;
-      norm_f(i,dkeparam.invproc) = Znorm.x_0_fsav.*mksa.ne_ref;
-      curr_f(i,dkeparam.invproc) = Zcurr.x_0_fsav.*mksa.j_ref;
-      Prf_f(i,dkeparam.invproc) = ZP0.x_rf_fsav.*mksa.P_ref;
-      Pcoll_f(i,dkeparam.invproc) = ZP0.x_c_fsav.*mksa.P_ref;
+      memory_f(i,dkeparam.invproc) = dke_out{1}.memoryLU_f_out;
+      time_f(i,dkeparam.invproc) = dke_out{1}.time_out;
+      norm_f(i,dkeparam.invproc) = Znorm{1}.x_0_fsav.*mksa{1}.ne_ref;
+      curr_f(i,dkeparam.invproc) = Zcurr{1}.x_0_fsav.*mksa{1}.j_ref;
+      Prf_f(i,dkeparam.invproc) = ZP0{1}.x_rf_fsav.*mksa{1}.P_ref;
+      Pcoll_f(i,dkeparam.invproc) = ZP0{1}.x_c_fsav.*mksa{1}.P_ref;
 %
-      disp(['Incomplete LU calculation #',int2str(i),' with lmatrix inversion method #',int2str(j),'  done'])
+      disp(['Calculation with MatLab incomplete LU calculation #',int2str(i),' with matrix inversion method #',int2str(j),'  done'])
     end
 end
 %
@@ -85,8 +85,8 @@ dkeparam.invproc = -1;
 [Znorm_MUMPS,Zcurr_MUMPS,ZP0_MUMPS,dke_out_MUMPS] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 disp(['Direct MUMPS calculation done'])
 %
-vparmin = 1/(waves{1}.rays{1}.sNpar(1)+imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
-vparmax = 1/(waves{1}.rays{1}.sNpar(1)-imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
+vparmin = 1/(waves{1}.rays{1}.sNpar(1)+imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa{1}.betath_ref;
+vparmax = 1/(waves{1}.rays{1}.sNpar(1)-imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa{1}.betath_ref;
 %
 figure(1),graph1D_jd(dludroptol,time_f(:,1),1,0,'Drop tolerance parameter \delta_{LU}','Full computational time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1)],NaN,'','','none','+','r',2);hold on
 graph1D_jd(dludroptol,time_f(:,2),1,0,'Drop tolerance parameter \delta_{LU}','Full computational time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1)],NaN,'','','none','x','b',2);hold on
@@ -130,12 +130,12 @@ disp(['droptolerance: ',num2str(dludroptol(end-1)),' - Full CPU time: ',num2str(
 disp(['ne: ',num2str(round(norm_f(end-1,1)/1e+16)/1e3),' (10+19 m-3) - JLH: ',num2str(abs(curr_f(end-1,1))),' (MA/m2) - PLH: ',num2str(Prf_f(end-1,1)),' (MW/m3) - Pcoll: ',num2str(-Pcoll_f(end-1,1)),' (MW/m3)'])
 disp('-------------------')
 disp('Full LU precondtionning, CGS iterative Krylov algorithm')
-disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(dke_out_LU.time_out),' (s) - LU memory size: ',num2str(dke_out_LU.memoryLU_f_out),' (MBytes)'])
-disp(['ne: ',num2str(round(Znorm_LU.x_0_fsav.*mksa.ne_ref)/1e+19),' (10+19 m-3) - JLH: ',num2str(abs(Zcurr_LU.x_0_fsav.*mksa.j_ref)),' (MA/m2) - PLH: ',num2str(ZP0_LU.x_rf_fsav.*mksa.P_ref),' (MW/m3) - Pcoll: ',num2str(-ZP0_LU.x_c_fsav.*mksa.P_ref),' (MW/m3)'])
+disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(dke_out_LU{1}.time_out),' (s) - LU memory size: ',num2str(dke_out_LU{1}.memoryLU_f_out),' (MBytes)'])
+disp(['ne: ',num2str(round(Znorm_LU{1}.x_0_fsav.*mksa{1}.ne_ref)/1e+19),' (10+19 m-3) - JLH: ',num2str(abs(Zcurr_LU{1}.x_0_fsav.*mksa{1}.j_ref)),' (MA/m2) - PLH: ',num2str(ZP0_LU{1}.x_rf_fsav.*mksa{1}.P_ref),' (MW/m3) - Pcoll: ',num2str(-ZP0_LU{1}.x_c_fsav.*mksa{1}.P_ref),' (MW/m3)'])
 disp('-------------------')
 disp('Direct matrix inversion MUMPS')
-disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(dke_out_MUMPS.time_out),' (s)'])
-disp(['ne: ',num2str(round(Znorm_MUMPS.x_0_fsav.*mksa.ne_ref)/1e+19),' (10+19 m-3) - JLH: ',num2str(abs(Zcurr_MUMPS.x_0_fsav.*mksa.j_ref)),' (MA/m2) - PLH: ',num2str(ZP0_MUMPS.x_rf_fsav.*mksa.P_ref),' (MW/m3) - Pcoll: ',num2str(-ZP0_MUMPS.x_c_fsav.*mksa.P_ref),' (MW/m3)'])
+disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(dke_out_MUMPS{1}.time_out),' (s)'])
+disp(['ne: ',num2str(round(Znorm_MUMPS{1}.x_0_fsav.*mksa{1}.ne_ref)/1e+19),' (10+19 m-3) - JLH: ',num2str(abs(Zcurr_MUMPS{1}.x_0_fsav.*mksa{1}.j_ref)),' (MA/m2) - PLH: ',num2str(ZP0_MUMPS{1}.x_rf_fsav.*mksa{1}.P_ref),' (MW/m3) - Pcoll: ',num2str(-ZP0_MUMPS{1}.x_c_fsav.*mksa{1}.P_ref),' (MW/m3)'])
 %	    
 %************************************************************************************************************************************
 eval(['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
