@@ -115,7 +115,6 @@ if iscell(id_display) & iscell(path_display),
 	    eval(['load ',path_display{1},'DISPLAY_',id_display{1},'.mat']);
 	    info_dke_yp(2,'Structure ''display'' successfully loaded');
 	  end
-	 dkedisplay = display;%because display is used by Matlab as a command/function
     varargout(flag_display) = {dkedisplay};
 end
 %
