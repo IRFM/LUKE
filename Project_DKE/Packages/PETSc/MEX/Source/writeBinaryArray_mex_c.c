@@ -60,11 +60,11 @@ mexFunction( int nlhs, mxArray *plhs[],
  if(class==mxCELL_CLASS){
  mexPrintf("Cell Array \n");
  cm=mxGetNumberOfDimensions(prhs[1]);
- mexPrintf("%i\t",cm);
+ /*mexPrintf("%i\t",cm);*/
  cn=mxGetDimensions(prhs[1]);
  for(j=0;j<cm;j++){p=(*(cn+j))*p;}
- mexPrintf("%i\t",cn[0]);
- mexPrintf("%i\n",cn[1]);
+ /*mexPrintf("%i\t",cn[0]);
+ mexPrintf("%i\n",cn[1]);*/
  int ind[2];
  ind[1]=0;
  ind[0]=0;
@@ -82,7 +82,7 @@ mexFunction( int nlhs, mxArray *plhs[],
     pr=mxGetPr(cell);
     m = mxGetNumberOfDimensions(cell);
     n = mxGetDimensions(cell); 
-    mexPrintf("%i\t",m);
+    /*mexPrintf("%i\t",m);*/
  
     for(j=0;j<m;j++){p=(*(n+j))*p;}
     ind[1] ++;

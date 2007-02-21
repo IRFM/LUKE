@@ -60,11 +60,11 @@ mexFunction( int nlhs, mxArray *plhs[],
  if(class==mxCELL_CLASS){
  mexPrintf("Cell Array \n");
  cm=mxGetNumberOfDimensions(prhs[1]);
- mexPrintf("%i\t",cm);
+ /*mexPrintf("%i\t",cm);*/
  cn=mxGetDimensions(prhs[1]);
  for(j=0;j<cm;j++){p=(*(cn+j))*p;}
- mexPrintf("%i\t",cn[0]);
- mexPrintf("%i\n",cn[1]);
+ /*mexPrintf("%i\t",cn[0]);
+ mexPrintf("%i\n",cn[1]);*/
  int ind[2];
  ind[1]=0;
  ind[0]=0;
@@ -82,7 +82,7 @@ mexFunction( int nlhs, mxArray *plhs[],
     pr=mxGetPr(cell);
     m = mxGetNumberOfDimensions(cell);
     n = mxGetDimensions(cell); 
-    mexPrintf("%i\t",m);
+    /*mexPrintf("%i\t",m);*/
  
     for(j=0;j<m;j++){p=(*(n+j))*p;}
     ind[1] ++;
@@ -92,7 +92,7 @@ mexFunction( int nlhs, mxArray *plhs[],
     fwrite (n,sizeof(int),m,io); 
     fwrite (&p,sizeof(int),one,io);  
     fwrite(pr, sizeof(int),p,io); 
-    mexPrintf("pr=%i\t",*(pr+1));
+    /*mexPrintf("pr=%i\t",*(pr+1));*/
    }
  ind[0]++;
  }
@@ -110,17 +110,17 @@ mexFunction( int nlhs, mxArray *plhs[],
   fwrite (&ARRAY_FILE_COOKIE,sizeof(int),one,io);   
 /*   mexPrintf("%s=%d\n","MAT_FILE_COOKIE",MAT_FILE_COOKIE); */
   fwrite (&m,sizeof(int),one,io);
-  mexPrintf("%s=%d\n","m",m); 
+  /*mexPrintf("%s=%d\n","m",m); */
 
   fwrite (n,sizeof(int),m,io); 
   fwrite (&p,sizeof(int),one,io);
   
-  for(i=0;i<m;i++){
+  /*for(i=0;i<m;i++){
    mexPrintf("%i\n",*(n+i));}   
-   mexPrintf("%s=%d\n","p",p); 
+   mexPrintf("%s=%d\n","p",p);*/ 
    
   fwrite(pr, sizeof(int),p,io);
-  for(i=0;i<p;i++){mexPrintf("%i\t",*(pr+i));}
+  /*for(i=0;i<p;i++){mexPrintf("%i\t",*(pr+i));}*/
   
 }
 
