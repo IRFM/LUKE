@@ -45,7 +45,7 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %************************************************************************************************************************************
 %************************************************************************************************************************************
 %
-[dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple] = load_structures_yp(id_path,path_path,id_equil,path_equil,id_dkeparam,path_dkeparam,id_display,path_display,id_ohm,path_ohm,ids_wave,paths_wave,id_transpfaste,path_transpfaste,id_ripple,path_ripple);
+[dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple] = load_structures_yp('dkepath',id_path,path_path,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'display',id_display,path_display,'ohm',id_ohm,path_ohm,'waves',ids_wave,paths_wave,'transpfaste',id_transpfaste,path_transpfaste,'ripple',id_ripple,path_ripple);
 %
 %************************************************************************************************************************************
 %
@@ -64,7 +64,7 @@ for i=1:length(dtn)
    for j=1:length(epsi)
       dkeparam.dtn = dtn(i);     
 	  ohm.epsi = epsi(j)*mksa.Edreicer_ref*ones(size(ohm.rho));
-	  [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
+	  [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,[],[]);
 	  xdn(i,j) = Znorm.x_0_fsav;
 	  xdnr(i,j) = dke_out.XxRR_fsav(end,:)*dkeparam.dtn;
    end
