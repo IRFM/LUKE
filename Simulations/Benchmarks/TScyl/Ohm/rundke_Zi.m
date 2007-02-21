@@ -63,10 +63,10 @@ dkeparam.coll_mode = 2;
 dkeparam.coll_mode = 4;
 [Znorm,Zcurr4,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
-sigma0 = Zcurr0.x_tot_fsav/(ohm.epsi(gridDKE.ir_display_out)/mksa.Edreicer_ref);
-sigma1 = Zcurr1.x_tot_fsav/(ohm.epsi(gridDKE.ir_display_out)/mksa.Edreicer_ref);
-sigma2 = Zcurr2.x_tot_fsav/(ohm.epsi(gridDKE.ir_display_out)/mksa.Edreicer_ref);
-sigma4 = Zcurr4.x_tot_fsav/(ohm.epsi(gridDKE.ir_display_out)/mksa.Edreicer_ref);
+sigma0 = Zcurr0{1}.x_tot_fsav/(ohm.epsi(gridDKE{1}.ir_display_out)/mksa{1}.Edreicer_ref);
+sigma1 = Zcurr1{1}.x_tot_fsav/(ohm.epsi(gridDKE{1}.ir_display_out)/mksa{1}.Edreicer_ref);
+sigma2 = Zcurr2{1}.x_tot_fsav/(ohm.epsi(gridDKE{1}.ir_display_out)/mksa{1}.Edreicer_ref);
+sigma4 = Zcurr4{1}.x_tot_fsav/(ohm.epsi(gridDKE{1}.ir_display_out)/mksa{1}.Edreicer_ref);
 %
 dkeparam.coll_mode = 2;
 equil.zZi = [1,1,1,2];equil.pzni = species_dke_yp(equil.pne,2*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 2
@@ -79,10 +79,10 @@ equil.zZi = [1,1,1,20];equil.pzni = species_dke_yp(equil.pne,20*ones(size(equil.
 [Znorm,Zcurr_Z20,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 sigma_Z1 = sigma2;
-sigma_Z2 = Zcurr_Z2.x_tot_fsav/(ohm.epsi(gridDKE.ir_display_out)/mksa.Edreicer_ref);
-sigma_Z5 = Zcurr_Z5.x_tot_fsav/(ohm.epsi(gridDKE.ir_display_out)/mksa.Edreicer_ref);
-sigma_Z10 = Zcurr_Z10.x_tot_fsav/(ohm.epsi(gridDKE.ir_display_out)/mksa.Edreicer_ref);
-sigma_Z20 = Zcurr_Z20.x_tot_fsav/(ohm.epsi(gridDKE.ir_display_out)/mksa.Edreicer_ref);
+sigma_Z2 = Zcurr_Z2{1}.x_tot_fsav/(ohm.epsi(gridDKE{1}.ir_display_out)/mksa{1}.Edreicer_ref);
+sigma_Z5 = Zcurr_Z5{1}.x_tot_fsav/(ohm.epsi(gridDKE{1}.ir_display_out)/mksa{1}.Edreicer_ref);
+sigma_Z10 = Zcurr_Z10{1}.x_tot_fsav/(ohm.epsi(gridDKE{1}.ir_display_out)/mksa{1}.Edreicer_ref);
+sigma_Z20 = Zcurr_Z20{1}.x_tot_fsav/(ohm.epsi(gridDKE{1}.ir_display_out)/mksa{1}.Edreicer_ref);
 %
 disp('-------------------------------------------------------------------------------------------------------------------');
 disp('-------------------------------------------------------------------------------------------------------------------');

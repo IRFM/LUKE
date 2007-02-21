@@ -80,13 +80,13 @@ equil.zZi = [1,1,1,10];equil.pzni = species_dke_yp(equil.pne,10*ones(size(equil.
 [Znorm,Zcurr_Z10,ZP0_Z10] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 Zi = [1:1:10];
-jlh = [Zcurr_Z1.x_tot_fsav,Zcurr_Z2.x_tot_fsav,Zcurr_Z3.x_tot_fsav,Zcurr_Z4.x_tot_fsav,Zcurr_Z5.x_tot_fsav,Zcurr_Z6.x_tot_fsav,Zcurr_Z7.x_tot_fsav,Zcurr_Z8.x_tot_fsav,Zcurr_Z9.x_tot_fsav,Zcurr_Z10.x_tot_fsav];
-plh = [ZP0_Z1.x_rf_fsav,ZP0_Z2.x_rf_fsav,ZP0_Z3.x_rf_fsav,ZP0_Z4.x_rf_fsav,ZP0_Z5.x_rf_fsav,ZP0_Z6.x_rf_fsav,ZP0_Z7.x_rf_fsav,ZP0_Z8.x_rf_fsav,ZP0_Z9.x_rf_fsav,ZP0_Z10.x_rf_fsav];
-pcoll = -[ZP0_Z1.x_c_fsav,ZP0_Z2.x_c_fsav,ZP0_Z3.x_c_fsav,ZP0_Z4.x_c_fsav,ZP0_Z5.x_c_fsav,ZP0_Z6.x_c_fsav,ZP0_Z7.x_c_fsav,ZP0_Z8.x_c_fsav,ZP0_Z9.x_c_fsav,ZP0_Z10.x_c_fsav];
+jlh = [Zcurr_Z1{1}.x_tot_fsav,Zcurr_Z2{1}.x_tot_fsav,Zcurr_Z3{1}.x_tot_fsav,Zcurr_Z4{1}.x_tot_fsav,Zcurr_Z5{1}.x_tot_fsav,Zcurr_Z6{1}.x_tot_fsav,Zcurr_Z7{1}.x_tot_fsav,Zcurr_Z8{1}.x_tot_fsav,Zcurr_Z9{1}.x_tot_fsav,Zcurr_Z10{1}.x_tot_fsav];
+plh = [ZP0_Z1{1}.x_rf_fsav,ZP0_Z2{1}.x_rf_fsav,ZP0_Z3{1}.x_rf_fsav,ZP0_Z4{1}.x_rf_fsav,ZP0_Z5{1}.x_rf_fsav,ZP0_Z6{1}.x_rf_fsav,ZP0_Z7{1}.x_rf_fsav,ZP0_Z8{1}.x_rf_fsav,ZP0_Z9{1}.x_rf_fsav,ZP0_Z10{1}.x_rf_fsav];
+pcoll = -[ZP0_Z1{1}.x_c_fsav,ZP0_Z2{1}.x_c_fsav,ZP0_Z3{1}.x_c_fsav,ZP0_Z4{1}.x_c_fsav,ZP0_Z5{1}.x_c_fsav,ZP0_Z6{1}.x_c_fsav,ZP0_Z7{1}.x_c_fsav,ZP0_Z8{1}.x_c_fsav,ZP0_Z9{1}.x_c_fsav,ZP0_Z10{1}.x_c_fsav];
 %
 etalh = jlh./plh;
-vparmin = 1/(waves{1}.rays{1}.sNpar(1)+imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
-vparmax = 1/(waves{1}.rays{1}.sNpar(1)-imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
+vparmin = 1/(waves{1}.rays{1}.sNpar(1)+imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa{1}.betath_ref;
+vparmax = 1/(waves{1}.rays{1}.sNpar(1)-imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa{1}.betath_ref;
 etalh_th = 6*etalh(1)./(5+Zi);
 %
 figure(1),graph1D_jd(Zi,jlh,0,0,'Main ion charge','j_{LH}',['D_{|| ||LH} = ',num2str(1)],NaN,'','','-','non','r',2);
@@ -126,9 +126,9 @@ waves{1}.rays{1}.P0_2piRp = 20*P0_2piRp_D1;%for D|| = 20
 [Znorm,Zcurr_D20,ZP0_D20] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 Dlh = [0.1,0.2,0.5,1,2,5,10,20];
-jlh1 = [Zcurr_D01.x_tot_fsav,Zcurr_D02.x_tot_fsav,Zcurr_D05.x_tot_fsav,Zcurr_D1.x_tot_fsav,Zcurr_D2.x_tot_fsav,Zcurr_D5.x_tot_fsav,Zcurr_D10.x_tot_fsav,Zcurr_D20.x_tot_fsav];
-plh1 = [ZP0_D01.x_rf_fsav,ZP0_D02.x_rf_fsav,ZP0_D05.x_rf_fsav,ZP0_D1.x_rf_fsav,ZP0_D2.x_rf_fsav,ZP0_D5.x_rf_fsav,ZP0_D10.x_rf_fsav,ZP0_D20.x_rf_fsav];
-pcoll1 = -[ZP0_D01.x_c_fsav,ZP0_D02.x_c_fsav,ZP0_D05.x_c_fsav,ZP0_D1.x_c_fsav,ZP0_D2.x_c_fsav,ZP0_D5.x_c_fsav,ZP0_D10.x_c_fsav,ZP0_D20.x_c_fsav];
+jlh1 = [Zcurr_D01{1}.x_tot_fsav,Zcurr_D02{1}.x_tot_fsav,Zcurr_D05{1}.x_tot_fsav,Zcurr_D1{1}.x_tot_fsav,Zcurr_D2{1}.x_tot_fsav,Zcurr_D5{1}.x_tot_fsav,Zcurr_D10{1}.x_tot_fsav,Zcurr_D20{1}.x_tot_fsav];
+plh1 = [ZP0_D01{1}.x_rf_fsav,ZP0_D02{1}.x_rf_fsav,ZP0_D05{1}.x_rf_fsav,ZP0_D1{1}.x_rf_fsav,ZP0_D2{1}.x_rf_fsav,ZP0_D5{1}.x_rf_fsav,ZP0_D10{1}.x_rf_fsav,ZP0_D20{1}.x_rf_fsav];
+pcoll1 = -[ZP0_D01{1}.x_c_fsav,ZP0_D02{1}.x_c_fsav,ZP0_D05{1}.x_c_fsav,ZP0_D1{1}.x_c_fsav,ZP0_D2{1}.x_c_fsav,ZP0_D5{1}.x_c_fsav,ZP0_D10{1}.x_c_fsav,ZP0_D20{1}.x_c_fsav];
 etalh1 = jlh1./plh1;
 %
 figure(4),graph1D_jd(Dlh,jlh1,0,0,'D_{|| ||LH}','j_{LH}',['Zi = ',num2str(1)],NaN,'','','-','non','r',2);
