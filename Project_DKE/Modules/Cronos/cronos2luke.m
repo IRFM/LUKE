@@ -255,7 +255,7 @@ sortie.err = 0;% on definit le flag d'erreur a 0 par defaut (pas d'erreur)
 %
 % PARAMETRES EQUILIBRE
 %
-equil.id = ['CRONOS_',par.conf];
+equil.id = ['CRONOS_','32299','_k',int2str(gene.k)];%gene.k is the time slice
 equil.Rp = double(equi.R(1,1,1));
 equil.Zp = double(equi.Z(1,1,1));
 equil.ptx = squeeze(double(equi.R)) - equil.Rp;
@@ -304,7 +304,7 @@ par.launchtype = 'LH';%must be specified ('LH','EC','EBW','LH_EC')
 %
 [launchs] = make_wavelaunchs_cronos(equil,gene.signe,par.conf,cons,cons_spec);%for the all RF waves
 [dkeparam] = make_dkeparam_cronos(par.launchtype);
-[display] = make_display_cronos(par.make_display);
+[dkedisplay] = make_display_cronos(par.make_display);
 par.make_path = 'PC_DRFC_CRONOS';[dkepath] = make_path_cronos(par.make_path);
 dkepath.temppath = [dkepath.temppathroot,filesep,'CRONOS',filesep,timeid_jd(clock)];%Temporary subdirectory in scratch folder
 %
@@ -321,9 +321,9 @@ dkeparam.n_rf_list = 0;%For LH only
 %
 % PARAMETRES DISP1LAY
 %
-display.rho_display  = par.rho_display;%Approximate radial position at which results are displayed if display.display_mode >= 1 [1,1]. Not used if NaN
-display.display_mode = par.display_mode;%Display mode: (0): no, (1): partial, (2): full
-display.display_mode = 'PARTIAL_VISUAL',%%%%%%%%%%%%%%%%%%
+dkedisplay.rho_display  = par.rho_display;%Approximate radial position at which results are displayed if display.display_mode >= 1 [1,1]. Not used if NaN
+dkedisplay.display_mode = par.display_mode;%Display mode: (0): no, (1): partial, (2): full
+dkedisplay.display_mode = 'PARTIAL_VISUAL',%%%%%%%%%%%%%%%%%%
 %
 % PARAMETRES OHMIC 
 %
@@ -352,7 +352,8 @@ for iw = 1:length(launchs),
    if strfind(par.launchtype,launchs{1}.type),%Extract only the selected waves
    	[waveparam,fitequilparam,rayparam,raydisplay] = make_wavert_cronos(launchs{iw}.type,dkeparam);%parameter for ray-tracing are adapted to the selected wave
 %   	
-      wavestructs{iw}.id = ['CRONOS_',par.conf,'_',launchs{iw}.id];
+      wavestructs{iw}.id = [par.conf,'_',launchs{iw}.id];
+      wavestructs{iw}.equil_id = equil.id;
       wavestructs{iw}.launch = launchs{iw};
       wavestructs{iw}.waveparam = waveparam;
       wavestructs{iw}.fitequilparam = fitequilparam;
@@ -370,12 +371,12 @@ opt_save = 0;%For debugging or scan only.
 %
 %--------------------------- Execution du trace de rayon C3PO et du code cinetique LUKE --------------------------- 
 %
-[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert('cronos',wavestructs,[],[],par.rho_S,dkepath,equil,dkeparam,display,ohm,transpfaste,ripple,[],[],opt_save);
+[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert('cronos',wavestructs,[],[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[],opt_save);
 %
 rmdir(dkepath.temppath,'s');%remove directory where temporary  calculations are performed
 rmfield(dkepath, 'temppath');%remove path of the directory where temporary  calculations are performed
 %
-if strcmp(display.display_mode,'PARTIAL_VISUAL') | strcmp(display.display_mode,'VISUAL') ,
+if strcmp(dkedisplay.display_mode,'PARTIAL_VISUAL') | strcmp(dkedisplay.display_mode,'VISUAL') ,
 	I_tot = sum(Zcurr.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref);
 	figure('Name','Current profile'),
 	graph1D_jd(equilDKE.xrho,Zcurr.x_0_fsav*mksa.j_ref,0,0,'\rho','J_{tot} (MA/m^2)',['CMOD,I_{tot} = ',num2str(I_tot*1000),' (kA)'],NaN,'','','-','none','r',2);drawnow
