@@ -27,7 +27,7 @@ path_path = '';%if nothing is specified, the working directory is first used and
 id_equil = 'MIXTE';%For plasma equilibrium
 path_equil = 'EQUIL/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-ids_wave = {'MIXTE_Coupleur_C2','MIXTE_Coupleur_C3'};%For RF waves contribution (put all the type of waves needed)
+ids_wave = {'Coupleur_C2','Coupleur_C3'};%For RF waves contribution (put all the type of waves needed)
 paths_wave = {'WAVE/C3PO/','WAVE/C3PO/'};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 [dkepath,equil,waves] = load_structures_yp('dkepath',id_path,path_path,'equil',id_equil,path_equil,'waves',ids_wave,paths_wave);
