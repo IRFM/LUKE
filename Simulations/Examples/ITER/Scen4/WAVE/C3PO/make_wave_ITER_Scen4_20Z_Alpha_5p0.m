@@ -24,7 +24,7 @@ path_rayinit = '';
 %
 % Display parameters
 %
-display.ray = 1;
+display.ray = 0;
 display.equilibrium = 0;
 display.p_opt = -1;%Printing or saving option of the figures
 %
