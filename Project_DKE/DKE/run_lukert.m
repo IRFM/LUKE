@@ -205,7 +205,7 @@ elseif dkeparam.rt_mode == 3,
    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
 end
 %
-if dkeparam.rt >= 1,%Variable number of outputs (only if LUKE is running otherwise no output)
+if dkeparam.rt_mode >= 1,%Variable number of outputs (only if LUKE is running otherwise no output)
 	if nargout >= 1,varargout{1} = Znorm;end
 	if nargout >= 2,varargout{2} = Zcurr;end
 	if nargout >= 3,varargout{3} = ZP0;end
