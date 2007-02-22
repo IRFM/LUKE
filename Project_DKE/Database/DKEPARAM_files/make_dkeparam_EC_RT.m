@@ -82,9 +82,9 @@ dkeparam.PETScparam.nproc = 1;%number of processor used by PETSc (depends of the
 dkeparam.PETScparam.matrixtype = ' ';%Matrix type used by PETSc. For SUPERLU use '-matload_type superlu_dist' otherwise ' '. See PETSc documentation
 dkeparam.PETScparam.kspmethod = ' ';%KSP method used by PETSc. '-ksp_type preonly': no iteration, direct matrix solve. Otherwise '-ksp_type bicg' or '-ksp_type bcgs'  for example. See PETSc documentation
 dkeparam.PETScparam.pcmethod = ' ';%Preconditioning method used by PETSc. '-pc_type lu' for SUPERLU or '-pc-type hypre' for HYPRE.  See PETSc documentation
+dkeparam.PETScparam.cloop = 0;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
 %
 dkeparam.store_mode = 0;%Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight
-dkeparam.temppath = '';%Absolute directory path adress where temporary matrices are stored (empty: local directory)
 dkeparam.opt_load = 0;%Load intermediate calculations
 dkeparam.opt_save = 0;%Save intermediate calculations
 %
