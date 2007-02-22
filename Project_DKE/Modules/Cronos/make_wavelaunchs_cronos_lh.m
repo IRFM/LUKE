@@ -1,4 +1,4 @@
-function [launchs] = make_wavelaunchs_cronos(equil,config,cons,cons_spec)
+function [launchs] = make_wavelaunchs_cronos(equil,signe,config,cons,cons_spec)
 %
 % Create the structure launch for CRONOS
 %
@@ -16,7 +16,7 @@ if strcmp(config,'TS');%For the Lower Hybrid wave simulations
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
@@ -38,7 +38,7 @@ if strcmp(config,'TS');%For the Lower Hybrid wave simulations
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
    launchs{2}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{2}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
 %
@@ -64,7 +64,7 @@ elseif strcmp(config,'MIXTE');%For the Lower Hybrid wave simulations
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,cons(1),cons_spec);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(1),cons_spec);%Power and parallel refractive index [1,n_lobe]
    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
@@ -86,7 +86,7 @@ elseif strcmp(config,'MIXTE');%For the Lower Hybrid wave simulations
 %
    directivity = [0.6];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,cons(2),cons_spec);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(2),cons_spec);%Power and parallel refractive index [1,n_lobe]
    launchs{2}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{2}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
@@ -106,12 +106,13 @@ elseif strcmp(config,'CIEL');%For the Lower Hybrid wave simulations
 %
 % ------- LH antenna #1 (C2) -------
 % 
+   launchs{1}.id = 'Coupleur_C1';
    launchs{1}.type = 'LH';
    launchs{1}.omega_rf = [3.7]*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.6];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
@@ -127,12 +128,13 @@ elseif strcmp(config,'CIEL');%For the Lower Hybrid wave simulations
 %
 % ------- LH antenna #2 (C3) -------
 % 
+   launchs{2}.id = 'Coupleur_C3';
    launchs{2}.type = 'LH';
    launchs{2}.omega_rf = [3.7]*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.6];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
    launchs{2}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{2}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
@@ -152,12 +154,13 @@ elseif strcmp(config,'CMOD');%For the Lower Hybrid wave simulations
 %
 % ------- LH antenna #1 -------
 % 
+   launchs{1}.id = 'Antenna_1';
    launchs{1}.type = 'LH';
    launchs{1}.omega_rf = [4.6]*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [1.0];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
@@ -177,12 +180,13 @@ elseif strcmp(config,'JET');%For the Lower Hybrid wave simulations
 %
 % ------- LH antenna #1 -------
 % 
+   launchs{1}.id = 'Antenna_1';
    launchs{1}.type = 'LH';
    launchs{1}.omega_rf = [3.7]*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
@@ -198,12 +202,13 @@ elseif strcmp(config,'JET');%For the Lower Hybrid wave simulations
 %
 % ------- LH antenna #2 -------
 % 
+   launchs{2}.id = 'Antenna_2';
    launchs{2}.type = 'LH';
    launchs{2}.omega_rf = [3.7]*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
    launchs{2}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{2}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
@@ -223,12 +228,13 @@ elseif strcmp(config,'ITER3.7GHz');%For the Lower Hybrid wave simulations
 %
 % ------- LH antenna #1 -------
 % 
+   launchs{1}.id = 'Antenna_1';
    launchs{1}.type = 'LH';
    launchs{1}.omega_rf = [3.7]*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
@@ -244,12 +250,13 @@ elseif strcmp(config,'ITER3.7GHz');%For the Lower Hybrid wave simulations
 %
 % ------- LH antenna #2 -------
 % 
+   launchs{2}.id = 'Antenna_2';
    launchs{2}.type = 'LH';
    launchs{2}.omega_rf = [3.7]*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
    launchs{2}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{2}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
@@ -269,12 +276,13 @@ elseif strcmp(config,'ITER5GHz');%For the Lower Hybrid wave simulations
 %
 % ------- LH antenna #1 -------
 % 
+   launchs{1}.id = 'Antenna_1';
    launchs{1}.type = 'LH';
    launchs{1}.omega_rf = [5.0]*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
@@ -290,12 +298,13 @@ elseif strcmp(config,'ITER5GHz');%For the Lower Hybrid wave simulations
 %
 % ------- LH antenna #2 -------
 % 
+   launchs{2}.id = 'Antenna_2';
    launchs{2}.type = 'LH';
    launchs{2}.omega_rf = [5.0]*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
    launchs{2}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{2}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
@@ -315,17 +324,18 @@ elseif strcmp(config,'FTU')
 %
 % ------- LH antenna #1 -------
 % 
+   launchs{1}.id = 'Antenna_1';
    launchs{1}.type = 'LH';
    launchs{1}.omega_rf = [8.0]*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.85];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
    launchs{1}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-   launchs{1}.a_sdNpar = 0.00;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
+   launchs{1}.a_sdNpar = 0.05;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
 %
    launchs{1}.ry0 = [0,0,0,0,0,0];%vertical launching positions (m) [1,m_pol]
 % 
@@ -340,17 +350,18 @@ elseif strcmp(config,'SST1')
 %
 % ------- LH antenna #1 -------
 % 
+   launchs{1}.id = 'Antenna_1';
    launchs{1}.type = 'LH';
    launchs{1}.omega_rf = [3.7]*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.75];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
    launchs{1}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-   launchs{1}.a_sdNpar = 0.00;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
+   launchs{1}.a_sdNpar = 0.0;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
 %
    launchs{1}.ry0 = [0,0,0,0,0,0];%vertical launching positions (m) [1,m_pol]
 % 
@@ -365,12 +376,13 @@ elseif strcmp(config,'DEMO3.7GHz')
 %
 % ------- LH antenna #1 -------
 % 
+   launchs{1}.id = 'Antenna_1';
    launchs{1}.type = 'LH';
    launchs{1}.omega_rf = [3.7]*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
@@ -386,12 +398,13 @@ elseif strcmp(config,'DEMO3.7GHz')
 %
 % ------- LH antenna #2 -------
 % 
+   launchs{2}.id = 'Antenna_2';
    launchs{2}.type = 'LH';
    launchs{2}.omega_rf = [3.7]*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
    launchs{2}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{2}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
@@ -411,12 +424,13 @@ elseif strcmp(config,'DEMO5.0GHz')
 %
 % ------- LH antenna #1 -------
 % 
+   launchs{1}.id = 'Antenna_1';
    launchs{1}.type = 'LH';
    launchs{1}.omega_rf = [5.0]*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
@@ -432,12 +446,13 @@ elseif strcmp(config,'DEMO5.0GHz')
 %
 % ------- LH antenna #2 -------
 % 
+   launchs{2}.id = 'Antenna_2';
    launchs{2}.type = 'LH';
    launchs{2}.omega_rf = [5.0]*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
    launchs{2}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{2}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
@@ -457,12 +472,13 @@ elseif strcmp(config,'COMPASS');%For the Lower Hybrid wave simulations
 %
 % ------- LH antenna #1 -------
 % 
+   launchs{1}.id = 'Antenna_1';
    launchs{1}.type = 'LH';
    launchs{1}.omega_rf = [1.3]*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %

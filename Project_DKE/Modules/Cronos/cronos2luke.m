@@ -58,11 +58,11 @@ if nargin <= 1
 %
 % LUKE PARAMETERS
 %
-   valeur.rt_mode = 1%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p
-	type.rt_mode = 'list';%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p
-	borne.rt_mode = {1,2,3};%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p
-	defaut.rt_mode = 1;%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p
-	info.rt_mode = '%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p';
+   valeur.rt_mode = 4%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p, (4) -> dNpar proportional to s
+	type.rt_mode = 'list';%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p, (4) -> dNpar proportional to s
+	borne.rt_mode = {1,2,3,4};%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p, (4) -> dNpar proportional to s
+	defaut.rt_mode = 4;%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p, (4) -> dNpar proportional to s
+	info.rt_mode = '%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p';, (4) -> dNpar proportional to s
 %
 	valeur.nit_rf = 40;%Maximum number of iteration in ray-tracing. 
 	type.nit_rf = 'integer';%Maximum number of iteration in ray-tracing. 
@@ -167,6 +167,12 @@ if nargin <= 1
 	borne.kmode = {0,1,2,3,4};%Dielectric tensor (0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
 	defaut.kmode = 0;%Dielectric tensor (0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
 	info.kmode = 'Dielectric tensor (0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)';
+%	
+	valeur.ray_tfinal = 10000;%Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)
+	type.ray_tfinal = 'float';%Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)
+	borne.ray_tfinal = [1000,20000];%Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)
+	defaut.ray_tfinal = 10000;%Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)
+	info.ray_tfinal = 'Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)';
 %
 %  INPUT FILE PARAMETERS
 %
@@ -249,7 +255,7 @@ sortie.err = 0;% on definit le flag d'erreur a 0 par defaut (pas d'erreur)
 %
 % PARAMETRES EQUILIBRE
 %
-equil.id = 'cronos';
+equil.id = ['CRONOS_',par.conf];
 equil.Rp = double(equi.R(1,1,1));
 equil.Zp = double(equi.Z(1,1,1));
 equil.ptx = squeeze(double(equi.R)) - equil.Rp;
@@ -260,11 +266,16 @@ equil.theta = linspace(0,2*pi,size(equi.R,3));
 equil.ptBx = squeeze(double(equi.BR));
 equil.ptBy = squeeze(double(equi.BZ));
 equil.ptBPHI = squeeze(double(equi.BPHI));
+%
+equil.ptBPHI = gene.signe.b0*equil.ptBPHI;%Bphi is counter-clockwise in TS (WARNING: in rtluke, Ip > 0 and Bphi > 0 when clockwise from the top view of the tokamak, opposite from CRONOS def)
+equil.ptBx = gene.signe.ip*equil.ptBx;%Ip is counter-clockwise in TS
+equil.ptBy = gene.signe.ip*equil.ptBy;%Ip is counter-clockwise in TS
+equil.psi_apRp = gene.signe.ip*equil.psi_apRp;%Ip is counter-clockwise in TS
+%
 equil.pTe = prof.te/1000;%en keV
 equil.pne = prof.ne;
 %
 zH = find(compo.a == 1);
-
 zD = find(compo.a == 2 & compo.z == 1);
 zT = find(compo.a == 3 & compo.z == 1);
 zimp = find(compo.z > 1);
@@ -291,7 +302,7 @@ equil.zmi = zmi;
 %************************* A modifier et preciser
 par.launchtype = 'LH';%must be specified ('LH','EC','EBW','LH_EC')
 %
-[launchs] = make_wavelaunchs_cronos(equil,par.conf,cons,cons_spec);%for the all RF waves
+[launchs] = make_wavelaunchs_cronos(equil,gene.signe,par.conf,cons,cons_spec);%for the all RF waves
 [dkeparam] = make_dkeparam_cronos(par.launchtype);
 [display] = make_display_cronos(par.make_display);
 par.make_path = 'PC_DRFC_CRONOS';[dkepath] = make_path_cronos(par.make_path);
@@ -301,7 +312,7 @@ dkepath.temppath = [dkepath.temppathroot,filesep,'CRONOS',filesep,timeid_jd(cloc
 %
 % PARAMETRES LUKE
 %
-dkeparam.rt_mode = 0*par.rt_mode + 1;%RT-DKE power consistency
+dkeparam.rt_mode = par.rt_mode;%RT-DKE power consistency
 dkeparam.nit_rf = par.nit_rf;%Maximum number of iteration in ray-tracing. Works only if rt_mode = 1 and more than one radial point (default = 1)
 dkeparam.dke_mode = par.dke_mode;%Fokker-Planck equation (0), Drift Kinetic equation (1)
 dkeparam.dtn = par.dtn;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
@@ -341,7 +352,7 @@ for iw = 1:length(launchs),
    if strfind(par.launchtype,launchs{1}.type),%Extract only the selected waves
    	[waveparam,fitequilparam,rayparam,raydisplay] = make_wavert_cronos(launchs{iw}.type,dkeparam);%parameter for ray-tracing are adapted to the selected wave
 %   	
-      wavestructs{iw}.id = [par.conf,'_',launchs{iw}.id];
+      wavestructs{iw}.id = ['CRONOS_',par.conf,'_',launchs{iw}.id];
       wavestructs{iw}.launch = launchs{iw};
       wavestructs{iw}.waveparam = waveparam;
       wavestructs{iw}.fitequilparam = fitequilparam;
@@ -349,14 +360,13 @@ for iw = 1:length(launchs),
       wavestructs{iw}.raydisplay = raydisplay;
 %
       wavestructs{iw}.wavesolver = 'C3PO';
-      wavestructs{iw}.waveparam.kmode = par.kmode;%Dielectric tensor (0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
-      wavestructs{iw}.rayparam.tensortype = wavestructs{iw}.waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
-      wavestructs{iw}.raydisplay.ray = 1,%%%%%%%%%%%%%%%%%%
-      wavestructs{iw}.rayparam.tfinal = 3000,%%%%%%%%%%%%%%%%%%
+      wavestructs{iw}.waveparam.kmode = par.kmode;%Dielectric tensor (0:cold,1:warm,2:hot;3:weak relativistic,4:full relativistic)
+      wavestructs{iw}.rayparam.tensortype = wavestructs{iw}.waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak relativistic,4:full relativistic)
+      wavestructs{iw}.rayparam.tfinal = par.ray_tfinal;
    end
 end
 %
-opt_save = 0;
+opt_save = 0;%For debugging or scan only.
 %
 %--------------------------- Execution du trace de rayon C3PO et du code cinetique LUKE --------------------------- 
 %

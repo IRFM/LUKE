@@ -1,4 +1,4 @@
-function [Plhtot,Npar0] = lhspectrum_cronos(directivity,cons,cons_spec)
+function [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons,cons_spec)
 %
 % Calculate initial N// et PLH for C3PO from simplified or full power spectrum (from SWAN coupling code for example)
 %
@@ -7,8 +7,12 @@ function [Plhtot,Npar0] = lhspectrum_cronos(directivity,cons,cons_spec)
 %
 if 1,%length(cons_spec) == 1,%no input power spectrum from coupling code like SWAN
    Plhtot = abs(cons(:)).*directivity(:);%initial power in the ray (W) (main lobe) [n_antenna,m_lobe]
-   Npar0 = angle(cons(:));%Initial Npar value (main lobe) [n_antenna,m_lobe]
+   Npar0 = -signe.ip*signe.b0*angle(cons(:));%Initial Npar value (main lobe) [n_antenna,m_lobe]
 else
+  	
+  	
+ %%WARNING the signe is not properly set here %%%%%%% 	
+  	
   	for ia = 1:size(cons_spec.npar,3),%loop on the number of LH antennas
 	   Npar_p = cons_spec.npar(1,find(cons_spec.npar(1,:,ia) > 0),ia);
 	   Plh_p = cons_specpow(1,find(cons_spec.npar(1,:,ia) > 0),ia);
