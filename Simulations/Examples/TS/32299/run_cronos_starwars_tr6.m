@@ -24,7 +24,7 @@ rho_S = [0.05:0.05:0.6,0.7,0.8,0.9];;%Normalized radial flux grid where calculat
 id_path = 'PC_DRFC_YVES';%For all paths used by DKE solver
 path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_equil = 'MIXTE';%For plasma equilibrium
+id_equil = 'CRONOS_MIXTE';%For plasma equilibrium
 path_equil = 'EQUIL/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 ids_wave = {'Coupleur_C2','Coupleur_C3'};%For RF waves contribution (put all the type of waves needed)
