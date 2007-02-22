@@ -28,7 +28,7 @@ lspace2 = 0.5;
 bspace = 0.7;
 bspace2 = 0.5;
 %
-load(filename,'ZP0','Zcurr','gridDKE','mksa','equilDKE','dke_out','display','dkeparam')
+load(filename,'ZP0','Zcurr','gridDKE','mksa','equilDKE','dke_out','dkedisplay','dkeparam')
 %
 J_rf = -Zcurr.x_0_fsav*mksa.j_ref;
 P_rf = ZP0.x_rf_fsav.'*mksa.P_ref; 
@@ -96,15 +96,15 @@ end
 %
 figure(nfig0+4),clf
 %
-[logXf0_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(log(dke_out.XXf0(:,:,ir_display)),gridDKE.pn,gridDKE.mhu,display.dp_cyl);%Spherical to cylindrical coordinate transformation
+[logXf0_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(log(dke_out.XXf0(:,:,ir_display)),gridDKE.pn,gridDKE.mhu,dkedisplay.dp_cyl);%Spherical to cylindrical coordinate transformation
 Xf0_cyl_ref = exp(logXf0_cyl_ref);%For accurate representation in figures 
 %
-[logXfinit_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(log(dke_out.XXfinit(:,:,ir_display)),gridDKE.pn,gridDKE.mhu,display.dp_cyl);%Spherical to cylindrical coordinate transformation
+[logXfinit_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(log(dke_out.XXfinit(:,:,ir_display)),gridDKE.pn,gridDKE.mhu,dkedisplay.dp_cyl);%Spherical to cylindrical coordinate transformation
 Xfinit_cyl_ref = exp(logXfinit_cyl_ref);%For accurate representation in figures 
 %
 xyD0_rf = ones(dke_out.gridindex_rf.nr,1);
 [ZXXD_rf] = raysum_rf_jd(dkeparam,dke_out.ZXYD_rf,dke_out.ZXYD_rf_tp,dke_out.ZXYF_rf_tp,xyD0_rf,dke_out.gridindex_rf);
-[XDparpar_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(ZXXD_rf.parpar_ij(:,:,ir_display),gridDKE.pn,gridDKE.mhu,display.dp_cyl);%Spherical to cylindrical coordinate transformation
+[XDparpar_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(ZXXD_rf.parpar_ij(:,:,ir_display),gridDKE.pn,gridDKE.mhu,dkedisplay.dp_cyl);%Spherical to cylindrical coordinate transformation
 %
 Xppar_cyl_ref = ones(length(pperp_cyl_ref),1)*ppar_cyl_ref(:)';%Grid for the distribution functions only
 Xpperp_cyl_ref = pperp_cyl_ref(:)*ones(1,length(ppar_cyl_ref));
