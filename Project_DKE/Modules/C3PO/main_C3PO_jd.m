@@ -50,15 +50,14 @@ for iray = 1:Nrays,
          if display.ray == 1,
              pause(5)
          end
-         iabs = min(length(srho),round(iabs_out*1.1));
 %
 % building ray for Fp calculations
 %
          ray.P0_2piRp = rayinit.yP0_2piRp(iray);%Initial lineic power density in the ray (W/m) [1,1]
 %
-         ray.sx = sR(1:iabs).' - equil_fit.Rp;% Ray location (major radius) along the propagation [1,ns]
-         ray.sphi = sphi(1:iabs).';% Ray location (toroidal angle) along the propagation [1,ns]
-         ray.sy = sZ(1:iabs).' - equil_fit.Zp;% Ray location (vertical) along the propagation [1,ns]
+         ray.sx = sR.' - equil_fit.Rp;% Ray location (major radius) along the propagation [1,ns]
+         ray.sphi = sphi.';% Ray location (toroidal angle) along the propagation [1,ns]
+         ray.sy = sZ.' - equil_fit.Zp;% Ray location (vertical) along the propagation [1,ns]
 %
          ray.ss = [];% Ray propagation distance parameter for each ray (put to NaN once the ray is absorbed) [1,ns]
          ray.spsin = [];% Ray location (normalized magnetic flux) along the propagation [1,ns]
@@ -68,13 +67,13 @@ for iray = 1:Nrays,
          ray.sn = [];% Ray wave number (toroidal) along the propagation [1,ns]
          ray.sky = [];% Ray wave vector (vertical) along the propagation [1,ns]
 %
-         ray.sNpar = sNpar(1:iabs).';% Ray parallel wave number [1,ns]
-         ray.sNperp = sNperp(1:iabs).';% Ray perpendicular wave number [1,ns]
-         ray.sdNpar = rayinit.ydNpar0(iray)*ones(1,iabs);% Ray spectral width in Npar [1,ns] 
+         ray.sNpar = sNpar.';% Ray parallel wave number [1,ns]
+         ray.sNperp = sNperp.';% Ray perpendicular wave number [1,ns]
+         ray.sdNpar = rayinit.ydNpar0(iray)*ones(1,length(srho));% Ray spectral width in Npar [1,ns] 
 %       if sdNpar is real -> gaussian spectrum, if sdNpar is imag. ->
 %       square spectrum (centered on sNpar)
-         ray.sepol_pmz = sepol_pmz(1:iabs,:).';% polarization vector [3,ns] complex
-         ray.sphi_xyz = sphi_xyz(1:iabs,:).';% normalized power flow [3,ns]
+         ray.sepol_pmz = sepol_pmz.';% polarization vector [3,ns] complex
+         ray.sphi_xyz = sphi_xyz.';% normalized power flow [3,ns]
 %
          kray = kray + 1;
          wave.rays{kray} = ray;
