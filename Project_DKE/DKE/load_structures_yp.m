@@ -133,11 +133,11 @@ ii=1;
 waves = '';%List of structure for multiple RF waves
 if iscell(ids_wave) & iscell(paths_wave),
     for iw = 1:length(ids_wave{1}),
-	    if exist([paths_wave{iw}{1},'WAVE_',id_equil{1},'_',ids_wave{iw}{1},'.mat']) == 0,%RF waves
+	    if exist([paths_wave{1}{iw},'WAVE_',id_equil{1},'_',ids_wave{1}{iw},'.mat']) == 0,%RF waves
 		    info_dke_yp(2,['Simulations are performed without the RF wave number: ',int2str(iw)]);
-        else
-		    eval(['load ',paths_wave{iw}{1},'WAVE_',id_equil{1},'_',ids_wave{iw}{1},'.mat']);
-		    info_dke_yp(2,['Structure ''wave'' ',ids_wave{iw}{1},' successfully loaded']);
+		   else
+		    eval(['load ',paths_wave{1}{iw},'WAVE_',id_equil{1},'_',ids_wave{1}{iw},'.mat']);
+		    info_dke_yp(2,['Structure ''wave'' ',ids_wave{1}{iw},' successfully loaded']);
 		    waves{ii} = wave;
 		    ii = ii + 1;
         end
