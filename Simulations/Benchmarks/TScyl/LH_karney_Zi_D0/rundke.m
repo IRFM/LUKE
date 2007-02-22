@@ -85,8 +85,8 @@ plh = [ZP0_Z1.x_rf_fsav,ZP0_Z2.x_rf_fsav,ZP0_Z3.x_rf_fsav,ZP0_Z4.x_rf_fsav,ZP0_Z
 pcoll = -[ZP0_Z1.x_c_fsav,ZP0_Z2.x_c_fsav,ZP0_Z3.x_c_fsav,ZP0_Z4.x_c_fsav,ZP0_Z5.x_c_fsav,ZP0_Z6.x_c_fsav,ZP0_Z7.x_c_fsav,ZP0_Z8.x_c_fsav,ZP0_Z9.x_c_fsav,ZP0_Z10.x_c_fsav];
 %
 etalh = jlh./plh;
-vparmin = 1/(waves.rays.sNpar(1)+imag(waves.rays.sdNpar(1))/2)/mksa.betath_ref;
-vparmax = 1/(waves.rays.sNpar(1)-imag(waves.rays.sdNpar(1))/2)/mksa.betath_ref;
+vparmin = 1/(waves{1}.rays{1}.sNpar(1)+imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
+vparmax = 1/(waves{1}.rays{1}.sNpar(1)-imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
 etalh_th = 6*etalh(1)./(5+Zi);
 %
 figure(1),graph1D_jd(Zi,jlh,0,0,'Main ion charge','j_{LH}',['D_{|| ||LH} = ',num2str(1)],NaN,'','','-','non','r',2);
@@ -106,23 +106,23 @@ savefig_dke_yp('effLH_Zi')
 % Study of the D|| on the LHCD efficiency (Zeff = 1)
 %
 equil.zZi = [1,1,1,1];equil.pzni = species_dke_yp(equil.pne,ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 1
-P0_2piRp_D1 = waves.rays.P0_2piRp;%for D|| = 1
+P0_2piRp_D1 = waves{1}.rays{1}.P0_2piRp;%for D|| = 1
 %
-waves.rays.P0_2piRp = 0.1*P0_2piRp_D1;%for D|| = 0.1
+waves{1}.rays{1}.P0_2piRp = 0.1*P0_2piRp_D1;%for D|| = 0.1
 [Znorm,Zcurr_D01,ZP0_D01] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-waves.rays.P0_2piRp = 0.2*P0_2piRp_D1;%for D|| = 0.2
+waves{1}.rays{1}.P0_2piRp = 0.2*P0_2piRp_D1;%for D|| = 0.2
 [Znorm,Zcurr_D02,ZP0_D02] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-waves.rays.P0_2piRp = 0.5*P0_2piRp_D1;%for D|| = 0.5
+waves{1}.rays{1}.P0_2piRp = 0.5*P0_2piRp_D1;%for D|| = 0.5
 [Znorm,Zcurr_D05,ZP0_D05] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-waves.rays.P0_2piRp = P0_2piRp_D1;%for D|| = 1
+waves{1}.rays{1}.P0_2piRp = P0_2piRp_D1;%for D|| = 1
 [Znorm,Zcurr_D1,ZP0_D1] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-waves.rays.P0_2piRp = 2*P0_2piRp_D1;%for D|| = 2
+waves{1}.rays{1}.P0_2piRp = 2*P0_2piRp_D1;%for D|| = 2
 [Znorm,Zcurr_D2,ZP0_D2] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-waves.rays.P0_2piRp = 5*P0_2piRp_D1;%for D|| = 5
+waves{1}.rays{1}.P0_2piRp = 5*P0_2piRp_D1;%for D|| = 5
 [Znorm,Zcurr_D5,ZP0_D5] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-waves.rays.P0_2piRp = 10*P0_2piRp_D1;%for D|| = 10
+waves{1}.rays{1}.P0_2piRp = 10*P0_2piRp_D1;%for D|| = 10
 [Znorm,Zcurr_D10,ZP0_D10] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-waves.rays.P0_2piRp = 20*P0_2piRp_D1;%for D|| = 20
+waves{1}.rays{1}.P0_2piRp = 20*P0_2piRp_D1;%for D|| = 20
 [Znorm,Zcurr_D20,ZP0_D20] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 Dlh = [0.1,0.2,0.5,1,2,5,10,20];

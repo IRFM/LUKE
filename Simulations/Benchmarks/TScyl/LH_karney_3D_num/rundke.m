@@ -171,8 +171,8 @@ for j = 1:nmesh,%Scan radial mesh size
    disp(['Calculation with PETSc (SUPERLU) done with radial mesh size #',int2str(j*dmesh),' (collision operator loop in MatLab)  done'])
 end
 %
-vparmin = 1/(waves.rays.sNpar(1)+imag(waves.rays.sdNpar(1))/2)/mksa.betath_ref;
-vparmax = 1/(waves.rays.sNpar(1)-imag(waves.rays.sdNpar(1))/2)/mksa.betath_ref;
+vparmin = 1/(waves{1}.rays{1}.sNpar(1)+imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
+vparmax = 1/(waves{1}.rays{1}.sNpar(1)-imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
 %
 figure(1),graph1D_jd(dludroptol,time_f(:,1),1,0,'Drop tolerance parameter \delta_{LU}','Full computational time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','-','none','r',2);hold on
 graph1D_jd(dludroptol,time_f(:,2),1,0,'Drop tolerance parameter \delta_{LU}','Full computational time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','--','none','b',2);hold on
