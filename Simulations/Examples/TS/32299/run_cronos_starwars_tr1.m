@@ -11,10 +11,10 @@ pause(1)
 %
 % ---------------------------------------------- Simulation RT + LUKE ----------------------------------------------
 %
-% 
+%  
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
-id_simul = 'MIXTE_tr0p5_a0p05';%Simulation ID
+id_simul = 'tr0p2_a0p05';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 load ('gigajoule_pouryves_luke.mat','dkeparam','display','transpfaste','ohm','ripple');
 %
@@ -24,13 +24,13 @@ rho_S = [0.05:0.05:0.6,0.7,0.8,0.9];;%Normalized radial flux grid where calculat
 id_path = 'PC_DRFC_YVES';%For all paths used by DKE solver
 path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_equil = 'MIXE_test';%For plasma equilibrium
+id_equil = 'MIXTE';%For plasma equilibrium
 path_equil = 'EQUIL/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-ids_wave = {'gigajoule_1','gigajoule_2'};%For RF waves contribution (put all the type of waves needed)
+ids_wave = {'MIXTE_Coupleur_C2','MIXTE_Coupleur_C3'};%For RF waves contribution (put all the type of waves needed)
 paths_wave = {'WAVE/C3PO/','WAVE/C3PO/'};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-[dkepath,equil,dummy,dummy,dummy,waves,dummy,dummy] = load_structures_yp(id_path,path_path,id_equil,path_equil,'','','','','','',ids_wave,paths_wave,'','','','');
+[dkepath,equil,waves] = load_structures_yp('dkepath',id_path,path_path,'equil',id_equil,path_equil,'waves',ids_wave,paths_wave);
 %
 %************************************************************************************************************************************
 %
@@ -38,7 +38,7 @@ paths_wave = {'WAVE/C3PO/','WAVE/C3PO/'};%if nothing is specified, the working d
 waves{1}.a_sdNpar = 0.05;
 waves{2}.a_sdNpar = 0.05;
 %
-transpfaste.Dr0 = 0.5;%Fast electron radial transport
+transpfaste.Dr0 = 0.2;%Fast electron radial transport
 transpfaste.vparmin = 3.5;
 %
 dkeparam.rt_mode = 4;%Quasilinear iteration
