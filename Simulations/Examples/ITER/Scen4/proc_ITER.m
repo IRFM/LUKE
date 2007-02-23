@@ -2,6 +2,9 @@
 clear all
 close all
 %
+si = -1;
+opt_rho = 1;
+%
 ids_equil = {'ITER_Scen4_IAEA06'};% if same for all runs, just give one 
 %
 %select = [1,2,3];
@@ -21,4 +24,4 @@ leglist = ['\omega/2\pi = 3.7 GHz';'\omega/2\pi = 5.0 GHz'];
 %leglist = ['Magnetic trapping On ';'Magnetic trapping Off'];
 %
 %
-compres_luke_jd(ids_equil,ids_wave(select),leglist(select,:))
+compres_luke_jd(ids_equil,ids_wave(select),leglist(select,:),si,opt_rho)
