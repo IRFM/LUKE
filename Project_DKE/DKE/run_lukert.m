@@ -32,9 +32,14 @@ for iw = (nw + 1):(nw + length(wavestructs)),
     wavestruct = wavestructs{iw};
     %
     if strcmp(wavestruct.wavesolver,'C3PO'),% C3P0 ray tracing
-	     rayinit = main_rayinit_launch_jd(equil,wavestruct.launch);
-	     wave = main_C3PO_jd(wavestruct.id,equil,rayinit,wavestruct.waveparam,wavestruct.fitequilparam,wavestruct.rayparam,wavestruct.raydisplay);%Ray calculations
+	    rayinit = main_rayinit_launch_jd(equil,wavestruct.launch);
+	    wave = main_C3PO_jd(wavestruct.id,equil,rayinit,wavestruct.waveparam,wavestruct.fitequilparam,wavestruct.rayparam,wavestruct.raydisplay);%Ray calculations
         wave = wave_process_jd(equil,wave,dkeparam.n_rf_list);%Wave processing and relativistic linear damping
+        %
+        if isfield(wavestruct.launch,'a_sdNpar') == 1,
+            wave.a_sdNpar = wavestruct.launch.a_sdNpar;
+        end
+        %
         if opt_save == 1,
             mkdir('WAVE')
             cd WAVE
@@ -45,10 +50,6 @@ for iw = (nw + 1):(nw + length(wavestructs)),
             %
             savestr = ['WAVE/C3PO/WAVE_',equil.id,'_',wavestruct.id,'.mat'];
             save(savestr,'wave');
-        end
-        %
-        if isfield(wavestruct.launch,'a_sdNpar') == 1,
-            wave.a_sdNpar = wavestruct.launch.a_sdNpar;
         end
         %
         waves{iw} = wave;    
