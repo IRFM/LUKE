@@ -19,12 +19,12 @@ fitparam.mode_equil = 1;%Magnetic equilibrium grid type: (1): (psi-theta), (2): 
 %
 % initial ray conditions
 %
-id_rayinit = '19Z';
+id_rayinit = id_wave;
 path_rayinit = '';
 %
 % Display parameters
 %
-display.ray = 1;
+display.ray = 0;
 display.equilibrium = 0;
 display.p_opt = -1;%Printing or saving option of the figures
 %
