@@ -28,6 +28,7 @@ kray = 0;
 %
 omega_rf = rayinit.omega_rf;
 %
+wave.id = id_wave;
 wave.equil_id = equil.id;
 wave.omega_rf = omega_rf;
 wave.opt_rf = waveparam.opt_rf;
