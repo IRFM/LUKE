@@ -244,6 +244,12 @@ if (all(abs(cons)< 2e5) | all(angle(cons)<=1)),% test sur la puissance. Calcul s
     return
 end
 %
+%
+% info machine
+%
+from = evalin('base','param.from');
+machine = from.machine;
+shot    = from.shot.num;
 sortie = proto;
 sortie.err = 0;% on definit le flag d'erreur a 0 par defaut (pas d'erreur)
 %
@@ -255,7 +261,7 @@ sortie.err = 0;% on definit le flag d'erreur a 0 par defaut (pas d'erreur)
 %
 % PARAMETRES EQUILIBRE
 %
-equil.id = ['CRONOS_','32299','_k',int2str(gene.k)];%gene.k is the time slice
+equil.id = ['CRONOS_',int2str(shot),'_k',int2str(gene.k)];%gene.k is the time slice
 equil.Rp = double(equi.R(1,1,1));
 equil.Zp = double(equi.Z(1,1,1));
 equil.ptx = squeeze(double(equi.R)) - equil.Rp;
