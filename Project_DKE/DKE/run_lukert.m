@@ -1,4 +1,4 @@
-function [varargout] = run_lukert(id_simul,wavestructs,waves,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,transpfaste,ripple,XXf0_in,XXsinksource_in,opt_save)
+function [varargout] = run_lukert(id_simul,wavestructs,waves,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,XXf0_in,XXsinksource_in,opt_save)
 %
 % Ray-tracing + quasilinear kinetic calculations using LUKE. Tool for implementation in other calculation packages.
 %
@@ -25,9 +25,9 @@ if opt_save == 1 & exist(['EQUIL/EQUIL_',equil.id,'.mat']) == 0,
     save(savestr,'equil');
 end    
 %
-nw = length(waves);
+nw0 = length(waves);
 %
-for iw = (nw + 1):(nw + length(wavestructs)),
+for iw = (nw0 + 1):(nw0 + length(wavestructs)),
     %
     wavestruct = wavestructs{iw};
     %
@@ -60,150 +60,196 @@ end
 %
 clear wavestruct rayinit wave 
 %
+nw = length(waves);
+for iw = 1:nw,
+    nb(iw) = length(waves{iw}.rays);
+end
+%
 % 3-D relativistic bounce averaged quasilinear kinetic calculations (LUKE)
 %
 if dkeparam.rt_mode == 1,
 %
 % Case with sdNpar given by the waves structure (usualy constant along ray propagation)
 %
-   [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
+    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
 %
 % Case with sdNpar proportional to sNpar (in waves structure)
 %
 elseif dkeparam.rt_mode == 2,
-  	for iw = 1:length(wavestructs),
-      for ib=1:length(waves{iw}.rays),
-   	   waves{iw}.rays{ib}.sdNpar = waves{iw}.rays{ib}.sNpar*waves{iw}.rays{ib}.sdNpar(1)/waves{iw}.rays{ib}.sNpar(1);
-   	end
-   end
-   [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
+    for iw = 1:nw,
+        for ib = 1:nb(iw),
+            waves{iw}.rays{ib}.sdNpar = waves{iw}.rays{ib}.sNpar*waves{iw}.rays{ib}.sdNpar(1)/waves{iw}.rays{ib}.sNpar(1);
+        end
+    end
+    %
+    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
 %
+% *************************************************************************
 %
 % Case with sdNpar proportional to ss (in waves structure)
 %
 elseif dkeparam.rt_mode == 4,
+    %
+    for iw = 1:nw,
+        for ib = 1:nb(iw),
+            waves{iw}.rays{ib}.sdNpar = waves{iw}.rays{ib}.sdNpar(1) + waves{iw}.a_sdNpar*waves{iw}.rays{ib}.ss;
+        end
+    end
+    %
+    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
 %
-	for iw = 1:length(waves),
-      for ib=1:length(waves{iw}.rays),
-   	   waves{iw}.rays{ib}.sdNpar = waves{iw}.rays{ib}.sdNpar(1) + waves{iw}.a_sdNpar*waves{iw}.rays{ib}.ss;
-      end
-   end
-   [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
-
-% Case of optimized sdNpar proportional to sNpar (in waves structure) so that the CD efficiency is maximed.
+% *************************************************************************
 %
-elseif dkeparam.rt_mode == 3,
-   [equilDKE_Fourier] = equilibrium_jd(equil);
+% Seek mode : optimize according to highest driven current
 %
-%waves{1}.opt_disp = 0;
-%
-   for iw = 1:length(wavestructs),
-      for ib = 1:length(waves{iw}.rays),
-         waves{iw}.rays{ib} = rayprocess_jd(waves{iw}.rays{ib},equilDKE_Fourier,waves{iw}.opt_disp,waves{iw}.omega_rf,dkeparam.n_rf_list,'spline');
-      end
-   end
-%
-   for iw = 1:length(wavestructs),
-      waves{iw}.opt_disp = 0;
-   end
-%
-   dNpar_fac = 0.15;
-   dNpar_step = 0.025;
-%
-   opt_fac = 0;
-   eta = 0;
-   firststep = 1;
-%
-   while opt_fac == 0,
-%
-      eta_old = eta;
-%
-      for iw = 1:length(wavestructs),
-         for ib = 1:length(waves{iw}.rays),
-            waves{iw}.rays{ib}.sdNpar = abs(waves{iw}.rays{ib}.sNpar)*dNpar_fac;
-         end
-      end
-%
-      dNstr = num2str(dNpar_fac);
-%
-      for is=1:length(dNstr),if dNstr(is) == '.',dNstr(is) = 'p';end,end
-      eval(['diary ',path_simul,'DKE_DIARY_',equil.id,'_',id_simul,'_',dNstr(1:min(4,length(dNstr))),'.txt']);
-%
-      [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
-%
-      eval(['save ',path_simul,'DKE_RESULTS_',equil.id,'_',id_simul,'_',dNstr(1:min(4,length(dNstr))),'.mat']);
-%
-% CD efficiency (A/W)
-%
-      Prf = sum(ZP0.x_rf_fsav(:).*equilDKE.xdV_2piRp_dke(:)*2*pi*equilDKE.Rp*mksa.P_ref),
-      Itot = sum(Zcurr.x_tot_fsav(:).*equilDKE.xdA_dke(:)*abs(mksa.j_ref)),
-      eta = abs(Itot/Prf),
-      diary off
-% 
-% density of power absorbed (normalized) 
-%
-      if dkeparam.dke_mode >= 1,
-         xyPabs_rf_dke_fsav = ZP0.xy_rf_fsav + ZP0.xy_rf_tp_fsav + ZP0.xy_rf_g_fsav; % flux-surface averaged density of absorbed power.
-       else
-         xyPabs_rf_dke_fsav = ZP0.xy_rf_fsav; % flux-surface averaged density of absorbed power.
-       end	    
-% 
-% density of power absorbed (MKSA) 
-%
-       xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav*mksa.P_ref*1e6;%RF power (W)
-%
-% absorption coefficient (1/m)
-%
-       xyD0_rf = dke_out.waveparam(:,:,4).*dke_out.xyP0_2piRp_mod./dke_out.xyP0_2piRp_in;
-%
-       xyD0_rf(xyD0_rf == 0) = eps;
-%
-       xyalphaphi = xyPabs_rf_dke_fsav_mksa./xyD0_rf./dke_out.waveparam(:,:,1)/mksa.wmabs2;%absorption coefficient
-%
-% absorption coefficient along the rays
-%
-       zs = raypath_jd(dke_out.xys,dke_out.xyprop_dke,dke_out.yb,gridDKE.rdke);
-       zalphaphi = raypath_jd(xyalphaphi,dke_out.xyprop_dke,dke_out.yb,gridDKE.rdke);
-%
-       for iw = 1:length(wavestructs),
-          for ib = 1:length(waves{iw}.rays),
-             zind = find(diff(zs{ib}) == 0);
-             zs{ib}(zind + 1) = zs{ib}(zind + 1)+1000*eps;
-%
-             waves{iw}.rays{ib}.salphaphi_lin = interp1(zs{ib},zalphaphi{ib},waves{iw}.rays{ib}.ss,'linear',0);   
-          end
-       end
-%
-       if eta > eta_old,
-%
-          dNpar_fac = dNpar_fac + dNpar_step;
-%
-          if eta_old > 0,
-             firststep = 0;
-           end
-%
-       elseif firststep == 1,
-%
-          dNpar_step = - dNpar_step
-          dNpar_fac = dNpar_fac + 2*dNpar_step;
-          firststep = 0;
-       else
-%
-          opt_fac = 1;
-          dNpar_fac = dNpar_fac - dNpar_step;
-%
-       end
-   end
-%
-   eval(['diary ',path_simul,'DKE_DIARY_',equil.id,'_',id_simul,'.txt']);
-%
-   for iw = 1:length(wavestructs),
-      for ib = 1:length(waves{iw}.rays),
-         waves{iw}.rays{ib}.sdNpar = abs(waves{iw}.rays{ib}.sNpar)*dNpar_fac;
-      end
-   end
-%
-   [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,display,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
+elseif dkeparam.rt_mode == 3,%
+    %
+    if isfield(dkeparam,'seekparam'),
+        %
+        submode = dkeparam.seekparam.submode;
+        %
+        if submode == 1,%case where sdNpar/sNar is a constant factor
+            val = dkeparam.seekparam.f_sdNpar_in;%This is in dkeparam because it is the same for all waves
+            step = dkeparam.seekparam.f_step;
+        elseif submode == 2,
+            val = dkeparam.seekparam.a_sdNpar_in;%This is in dkeparam because it is the same for all waves
+            step = dkeparam.seekparam.a_step;
+            %
+            for iw = 1:nw,
+                for ib = 1:nb(iw),
+                    sdNpar_in{iw}(ib) = waves{iw}.rays{ib}.sdNpar(1);
+                end
+            end
+        else
+            error('unknown method in rt_mode 3')
+        end
+    else
+        error('dkeparam.seekparam must be specified for rt_mode 3')
+    end
+    %
+    opt_loop = 0;
+    eta = 0;
+    firststep = 1;
+    %
+    while opt_loop == 0,
+        %
+        eta_old = eta;
+        %
+        for iw = 1:nw,
+            for ib = 1:nb(iw),
+                if submode == 1,
+                    waves{iw}.rays{ib}.sdNpar = abs(waves{iw}.rays{ib}.sNpar)*val;
+                elseif submode == 2,
+                    waves{iw}.rays{ib}.sdNpar = sdNpar_in{iw}(ib) + waves{iw}.rays{ib}.ss*val;
+                end
+            end
+        end
+        %
+        dNstr = num2str(val);
+        dNstr = dNstr(1:min(5,length(dNstr)));
+        %
+        for is=1:length(dNstr),if dNstr(is) == '.',dNstr(is) = 'p';end,end
+        %
+        % eval(['diary ',path_simul,'DKE_DIARY_',equil.id,'_',id_simul,'_',dNstr,'.txt']);
+        %
+        [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
+        %
+        eval(['save ',path_simul,'DKE_RESULTS_',equil.id,'_',id_simul,'_',dNstr,'.mat']);
+        %
+        % CD efficiency (A/W)
+        %
+        Prf = sum(ZP0.x_rf_fsav(:).*equilDKE.xdV_2piRp_dke(:)*2*pi*equilDKE.Rp*mksa.P_ref);
+        Itot = sum(Zcurr.x_tot_fsav(:).*equilDKE.xdA_dke(:)*abs(mksa.j_ref));
+        eta = abs(Itot/Prf);
+        %
+        disp(['--> Step ',dNstr,' calculated. eta = ',num2str(eta),' A/W'])
+        %
+        % diary off
+        % 
+        % density of power absorbed (normalized) 
+        %
+        if dkeparam.dke_mode >= 1,
+            xyPabs_rf_dke_fsav = ZP0.xy_rf_fsav + ZP0.xy_rf_tp_fsav + ZP0.xy_rf_g_fsav; % flux-surface averaged density of absorbed power.
+        else
+            xyPabs_rf_dke_fsav = ZP0.xy_rf_fsav; % flux-surface averaged density of absorbed power.
+        end	    
+        % 
+        % density of power absorbed (MKSA) 
+        %
+        xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav*mksa.P_ref*1e6;%RF power (W)
+        %
+        % absorption coefficient (1/m)
+        %
+        xyD0_rf = dke_out.waveparam(:,:,4).*dke_out.xyP0_2piRp_mod./dke_out.xyP0_2piRp_in;
+        %
+        xyD0_rf(xyD0_rf == 0) = eps;
+        %
+        xyalphaphi = xyPabs_rf_dke_fsav_mksa./xyD0_rf./dke_out.waveparam(:,:,1)/mksa.wmabs2;%absorption coefficient
+        %
+        % absorption coefficient along the rays
+        %
+        zs = raypath_jd(dke_out.xys,dke_out.xyprop_dke,dke_out.yb,gridDKE.rdke);
+        zalphaphi = raypath_jd(xyalphaphi,dke_out.xyprop_dke,dke_out.yb,gridDKE.rdke);
+        %
+        ibb = 0;
+        %
+        for iw = 1:nw,
+            for ib = 1:nb(iw),
+                ibb = ibb + 1;
+                zind = find(diff(zs{ibb}) == 0);
+                zs{ibb}(zind + 1) = zs{ibb}(zind + 1)+1000*eps;
+                %
+                waves{iw}.rays{ib}.salphaphi_lin = interp1(zs{ibb},zalphaphi{ibb},waves{iw}.rays{ib}.ss,'linear',0);   
+            end
+        end
+        %
+        if eta > eta_old,
+            %
+            val = val + step;
+            %
+            if eta_old > 0,
+                firststep = 0;
+            end
+            %
+        elseif firststep == 1,
+            %
+            step = - step;
+            val = val + 2*step;
+            %
+            firststep = 0;
+            %
+        else
+            %
+            opt_loop = 1;
+            %
+            val = val - step;
+            %
+        end
+        %
+        if opt_loop == 0 & val < 0,
+            %
+            opt_loop = 1;
+            %
+            val = val - step;
+            %
+        end
+    end
+    %
+    % eval(['diary ',path_simul,'DKE_DIARY_',equil.id,'_',id_simul,'.txt']);
+    %
+    for iw = 1:nw,
+        for ib = 1:nb(iw),
+            if submode == 1,
+                waves{iw}.rays{ib}.sdNpar = abs(waves{iw}.rays{ib}.sNpar)*val;
+            elseif submode == 2,
+                waves{iw}.rays{ib}.sdNpar = sdNpar_in{iw}(ib) + waves{iw}.rays{ib}.ss*val;
+            end
+        end
+    end
+    %
+    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
+    %
+    % diary off
 end
 %
 if dkeparam.rt_mode >= 1,%Variable number of outputs (only if LUKE is running otherwise no output)
