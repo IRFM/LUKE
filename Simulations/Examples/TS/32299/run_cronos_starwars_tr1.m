@@ -11,13 +11,12 @@ pause(1)
 %
 % ---------------------------------------------- Simulation RT + LUKE ----------------------------------------------
 %
-%  
+% 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
 id_simul = 'tr0p2_a0p05';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
-load ('gigajoule_pouryves_luke.mat','dkeparam','display','transpfaste','ohm','ripple');
-dkedisplay = display;%A enlever après un nouveau run cronos
+load ('gigajoule_pouryves_luke.mat','dkeparam','dkedisplay','transpfaste','ohm','ripple');
 %
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
 rho_S = [0.05:0.05:0.6,0.7,0.8,0.9];;%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
