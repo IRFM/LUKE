@@ -154,54 +154,21 @@ elseif dkeparam.rt_mode == 3,%
         %
         [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
         %
-        eval(['save ',path_simul,'DKE_RESULTS_',equil.id,'_',id_simul,'_',dNstr,'.mat']);
-        %
         % CD efficiency (A/W)
         %
         Prf = sum(ZP0.x_rf_fsav(:).*equilDKE.xdV_2piRp_dke(:)*2*pi*equilDKE.Rp*mksa.P_ref);
         Itot = sum(Zcurr.x_tot_fsav(:).*equilDKE.xdA_dke(:)*abs(mksa.j_ref));
         eta = abs(Itot/Prf);
         %
+        eval(['save ',path_simul,'DKE_RESULTS_',equil.id,'_',id_simul,'_',dNstr,'.mat']);
+        %
         disp(['--> Step ',dNstr,' calculated. eta = ',num2str(eta),' A/W'])
         %
         % diary off
-        % 
-        % density of power absorbed (normalized) 
         %
-        if dkeparam.dke_mode >= 1,
-            xyPabs_rf_dke_fsav = ZP0.xy_rf_fsav + ZP0.xy_rf_tp_fsav + ZP0.xy_rf_g_fsav; % flux-surface averaged density of absorbed power.
-        else
-            xyPabs_rf_dke_fsav = ZP0.xy_rf_fsav; % flux-surface averaged density of absorbed power.
-        end	    
-        % 
-        % density of power absorbed (MKSA) 
+        % This function calculates the power deposited along each ray using LUKE results. 
         %
-        xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav*mksa.P_ref*1e6;%RF power (W)
-        %
-        % absorption coefficient (1/m)
-        %
-        xyD0_rf = dke_out.waveparam(:,:,4).*dke_out.xyP0_2piRp_mod./dke_out.xyP0_2piRp_in;
-        %
-        xyD0_rf(xyD0_rf == 0) = eps;
-        %
-        xyalphaphi = xyPabs_rf_dke_fsav_mksa./xyD0_rf./dke_out.waveparam(:,:,1)/mksa.wmabs2;%absorption coefficient
-        %
-        % absorption coefficient along the rays
-        %
-        zs = raypath_jd(dke_out.xys,dke_out.xyprop_dke,dke_out.yb,gridDKE.rdke);
-        zalphaphi = raypath_jd(xyalphaphi,dke_out.xyprop_dke,dke_out.yb,gridDKE.rdke);
-        %
-        ibb = 0;
-        %
-        for iw = 1:nw,
-            for ib = 1:nb(iw),
-                ibb = ibb + 1;
-                zind = find(diff(zs{ibb}) == 0);
-                zs{ibb}(zind + 1) = zs{ibb}(zind + 1)+1000*eps;
-                %
-                waves{iw}.rays{ib}.salphaphi_lin = interp1(zs{ibb},zalphaphi{ibb},waves{iw}.rays{ib}.ss,'linear',0);   
-            end
-        end
+        waves = alphaphi_luke_jd(waves,ZP0,mksa,dke_out,gridDKE,dkeparam);
         %
         if eta > eta_old,
             %
