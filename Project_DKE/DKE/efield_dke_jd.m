@@ -106,7 +106,7 @@ else
   end
 
   for ir = 1:nr,
-    if bounce_mode == 0,
+    if bounce_mode == 0 | xepsi_fsav(ir) == 0,
         xepsi(ir) = xepsi_fsav(ir);
     elseif bounce_mode == 1,
         xepsi(ir) = xepsi_fsav(ir)*(xqbar(ir)/xqtilde(ir))*(xB0(ir)/xBT0(ir))*(1+xx0(ir)/Rp)/XXlambda_b_p1m3p4(1,1,ir);%Value at Bmin for FP or DKE calculations
