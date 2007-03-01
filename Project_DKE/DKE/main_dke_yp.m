@@ -148,7 +148,6 @@ for it_rf=1:nit_rf, % convergence in the ray-tracing mode
                     drawnow;
                 end
             end
-            pause
 %
             if display.display_mode >=1,
                 info_dke_yp(2,'---------------------------------------------------------');
