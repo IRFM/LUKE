@@ -47,14 +47,17 @@ function [ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf] = rfdiff_dke_jd(dkeparam,d
 %
 % by J. Decker (MIT/RLE) <jodecker@mit.edu> and Y. Peysson CEA/DRFC <yves.peysson@cea.fr>
 %
+%clear
+%load toto2
+%
 etime_rf = 0;
 time0 = clock;
 %
-[qe,me] = pc_dke_yp;%Universal physics constant
+[qe,me,mp,mn,e0] = pc_dke_yp;%Universal physics constant
 %
 rf_tol = eps('single');% threshold for calculation mask on deltares
 %
-n_rf_list = dkeparam.n_rf_list;
+n_rf_list = single(dkeparam.n_rf_list);
 bounce_mode = dkeparam.bounce_mode;
 dke_mode = dkeparam.dke_mode;
 %
@@ -69,6 +72,8 @@ XBphi = equilDKE.XBphi;
 xB0 = equilDKE.xB0;
 Rp = equilDKE.Rp;
 Zp = equilDKE.Zp;
+ap = equilDKE.ap;
+xdV_2piRp_dke = equilDKE.xdV_2piRp_dke;
 %
 Xmhup = gridDKE.Xmhup;
 Xmhu = gridDKE.Xmhu;
@@ -88,6 +93,8 @@ Xgamma = Zmomcoef.Xgamma;
 Xgammam = Zmomcoef.Xgammam;
 Xgammamm = Zmomcoef.Xgammamm;
 %
+xqtilde = Zbouncecoef.xqtilde;
+xqhat = Zbouncecoef.xqhat;
 Xxlambdap = Zbouncecoef.Xxlambda_p;
 Xxlambda = Zbouncecoef.Xxlambda;
 Xxlambdam = Zbouncecoef.Xxlambda_m;
@@ -96,45 +103,60 @@ XXheaviside = Zbouncecoef.XXheaviside;
 XXheavisidem = Zbouncecoef.XXheaviside_m;
 %
 betath_ref = mksa.betath_ref;
+ne_ref = mksa.ne_ref;
+lnc_e_ref = mksa.lnc_e_ref;
 %
 rdke = radialDKE.r_dke;
 %
+Xsigmap = sign(Xmhup);
+Xsigma = sign(Xmhu);
+Xsigmam = sign(Xmhum);
+%
+pnmax = max(Xpn(:,1));
+%
 % RF wave parameters
 %
-xyomega_rf =    single(waveparam(:,:,1));% RF wave frequency 
-xyopt =         single(waveparam(:,:,2));% options for Larmor radius effects and/or LH calc.  0:exact, 1:approx (kperp*rhoe<<1), 2: kperp*rhoe<<1 and old LH calc. (Karney, Shoucri)                                        
-xythetab_rf =   single(waveparam(:,:,3));% poloidal location of RF beam  (bounce_mode>0 only)
-xyD0_rf =       single(waveparam(:,:,4));% RF quasi-linear diffusion coefficient (nhuth_ref*pth_ref^2)
-xynparmin_rf =  single(waveparam(:,:,5));% Square N// spectrum: Lower limit
-xynparmax_rf =  single(waveparam(:,:,6));% Square N// spectrum: Upper limit
-xynpar_rf =     single(waveparam(:,:,7));% Gaussian N// spectrum: peak n//
-xydnpar_rf =    single(waveparam(:,:,8));% Gaussian N// spectrum: width in n//
-xynperp_rf =    single(waveparam(:,:,9));% RF wave : n_perp
-xyepolp_rf =    single(waveparam(:,:,10));% RF wave : polarization plus
-xyepolm_rf =    single(waveparam(:,:,11));% RF wave : polarization minus
-xyepolz_rf =    single(waveparam(:,:,12));% RF wave : polarization parallel
+biy_rf = uint32(waveparam.biy_rf);% subray the fragment belongs to
+bir_rf = uint32(waveparam.bir_rf);% FS the fragment belongs to
+bds_rf = single(waveparam.bds_rf);% ray fragement path length
+bomega_rf = single(waveparam.bomega_rf);% RF wave frequency 
+bopt_rf = uint32(waveparam.bopt_rf);% options for Larmor radius effects and/or LH calc.  
+%                               - 0:exact, 
+%                               - 1:approx (kperp*rhoe<<1)
+%                               - 2: kperp*rhoe<<1 and old LH calc. (Karney, Shoucri)
+bthetab_rf = single(waveparam.bthetab_rf);% poloidal location along the ray (bounce_mode>0 only)
+bB_rf = single(waveparam.bB_rf);% B field along the ray
+bnpar_rf = single(waveparam.bNpar_rf);% n_par along the ray
+bdnpar_rf = single(waveparam.bdNpar_rf);% dn_par along the ray
+bnperp_rf = single(waveparam.bNperp_rf);%  n_perp along the ray
+bepolp_rf = single(waveparam.bepolp_rf);%  polarization plus along the ray
+bepolm_rf = single(waveparam.bepolm_rf);%  polarization minus along the ray
+bepolz_rf = single(waveparam.bepolz_rf);%  polarization parallel along the ray
+bphinorm_rf = single(waveparam.bphinorm_rf);%  normalized energy flow density along the ray
 %
 clear dkeparam display equilDKE gridDKE Zmomcoef Zbouncecoef mksa radialDKE waveparam
 %
 [npn,nmhu] = size(Xpn);
 nr = length(xB0);
 nr_dke = length(rdke);
-nb = size(xyomega_rf,2);
+nb = length(biy_rf);
+ny = double(max([biy_rf,0]));
 nn_rf = length(n_rf_list);
 %
 gridindex_rf.npn = npn;
 gridindex_rf.nmhu = nmhu;
 gridindex_rf.nr = nr;
 gridindex_rf.nr_dke = nr_dke;
-gridindex_rf.nb = nb;
+gridindex_rf.ny = ny;
 gridindex_rf.nn_rf = nn_rf;
 %
 % mask calculation of point that must be calculated
 %    
 mask_p = zeros(0,0,'uint32');%mask of indices in the momentum grid        
 mask_m = zeros(0,0,'uint32');%mask of indices in the pitch angle grid
-mask_y = zeros(0,0,'uint32');%mask of indices in the ray list
 mask_r = zeros(0,0,'uint32');%mask of indices in the radial grid
+mask_b = zeros(0,0,'uint32');%mask of indices in the ray fragments list
+mask_y = zeros(0,0,'uint32');%mask of indices in the subray list
 mask_n = zeros(0,0,'uint32');%mask of indices in the harmonic number list
 mask_dke = zeros(0,0,'uint32');%mask of indices in the harmonic number list
 %
@@ -147,8 +169,8 @@ if nb == 0,
     %
     gridindex_rf.mask_p = mask_p;
     gridindex_rf.mask_m = mask_m;
-    gridindex_rf.mask_y = mask_y;
     gridindex_rf.mask_r = mask_r;
+    gridindex_rf.mask_y = mask_y;
     gridindex_rf.mask_n = mask_n;
 	gridindex_rf.mask_dke = mask_dke;
     %
@@ -214,50 +236,100 @@ if nb == 0,
     return
 end
 %
-% Magnetic geometry parameters at theta = thetab_rf
 %
-[xyBb_rf] = mg_interp_jd(theta,Xx,Xy,XBx,XBy,XBphi,xythetab_rf);
 %
-xyB0 = repmat(single(xB0).',[1,nb]);
-%
-if bounce_mode > 0,          
-    %   
-    xypsib = xyBb_rf./xyB0; %Ratio of magnetic fields at theta = thetab_rf
-    xyomegac = qe*xyB0/me; % cyclotron frequency at B=Bmin 
-    %
-else
-    %
-    %   when bounce_mode = 0, we need to take the cyclotron frequency at theta = thetab_rf 
-    %
-    xypsib = ones(nr,nb,'single'); %Ratio of magnetic fields at theta = thetab_rf
-    xyomegac = qe*xyBb_rf/me; % cyclotron frequency at B=Bmin 
-    %
+[biy_rf_sort,ib_sort] = sort(biy_rf);
+bomega_rf_sort = bomega_rf(ib_sort);
+iy_sort = 1+[0,find(diff(biy_rf_sort) ~= 0)];
+if iy_sort ~= (1:ny),
+    error('subray list is inconsistent')
 end
 %
-xyomegaratio = xyomega_rf./xyomegac;
+yomega_rf = bomega_rf_sort(iy_sort);
 %
-xykperprho = xynperp_rf.*xyomegaratio*betath_ref;
-xyZbfac = xykperprho./sqrt(xypsib);% momentum-independent factor in XYZb
+if length(theta) > 1,
+    xbxb_rf = interp1(theta,Xx.',bthetab_rf);
+    xbyb_rf = interp1(theta,Xy.',bthetab_rf);
+    xbBxb_rf = interp1(theta,XBx.',bthetab_rf);
+    xbByb_rf = interp1(theta,XBy.',bthetab_rf);
+    xbBphib_rf = interp1(theta,XBphi.',bthetab_rf);
+else
+    xbxb_rf = Xx;
+    xbyb_rf = Xy;
+    xbBxb_rf = XBx;
+    xbByb_rf = XBy;
+    xbBphib_rf = XBphi;
+end    
 %
-% Considers a square or a Gaussian shape for the spectrum,
-% depending upon the condition isnan of xynparmin_rf and xynpar_rf
+if nr > 1,
+    xbxb_rf = xbxb_rf.';
+    xbyb_rf = xbyb_rf.';
+    xbBxb_rf = xbBxb_rf.';
+    xbByb_rf = xbByb_rf.';
+    xbBphib_rf = xbBphib_rf.';    
+end
 %
-xymask_square = ~isnan(xynparmin_rf) & ~isnan(xynparmax_rf);%Square power spectrum in N//
-xymask_gauss = ~isnan(xynpar_rf) & ~isnan(xydnpar_rf);%Gaussian power spectrum in N//  
+xbrb_rf = sqrt(xbxb_rf.^2 + xbyb_rf.^2);% minor radius at theta = thetab_rf at the center of any FS
+xbBPb_rf = sqrt(xbBxb_rf.^2 + xbByb_rf.^2);% poloidal magnetic field at theta = thetab_rf at the center of any FS
+xbBb_rf = sqrt(xbBPb_rf.^2 + xbBphib_rf.^2);% magnetic field at theta = thetab_rf at the center of any FS
+xbcosb_rf = abs(xbBxb_rf.*xbyb_rf - xbByb_rf.*xbxb_rf)./xbrb_rf./xbBPb_rf;
 %
-Xsigmap = sign(Xmhup);
-Xsigma = sign(Xmhu);
-Xsigmam = sign(Xmhum);
+xbmask_rf = uint32((0:nb-1)*nr) + bir_rf;
+bxb_rf = xbxb_rf(xbmask_rf);% horizontal poloidal position at theta = thetab_rf at the center of the FS
+bBPb_rf = xbBPb_rf(xbmask_rf);% poloidal magnetic field at theta = thetab_rf at the center of the FS
+bBb_rf = xbBb_rf(xbmask_rf);% magnetic field at theta = thetab_rf at the center of the FS
+brb_rf = xbrb_rf(xbmask_rf);% minor radius at theta = thetab_rf at the center of the FS
+bcosb_rf = xbcosb_rf(xbmask_rf);% cos alpha at theta = thetab_rf at the center of the FS
 %
-XXsigma =  permute(repmat(single(Xsigma),[1,1,nr]),[3,1,2]);
-XX1mmhu2 = permute(repmat(single(X1mmhu2),[1,1,nr]),[3,1,2]);
+%if bounce_mode > 0,
+    bB0 = single(xB0(bir_rf));
+    %
+    bpsib = bBb_rf./bB0; %Ratio of magnetic fields at theta = thetab_rf at the center of the FS
+%else
+%    bpsib = ones(1,nb); %Ratio of magnetic fields at theta = thetab_rf at the center of the FS
+%end
 %
-XXpn = permute(repmat(single(Xpn),[1,1,nr]),[3,1,2]);
-XXgamma = permute(repmat(single(Xgamma),[1,1,nr]),[3,1,2]);
+bomegaratio = qe*bB_rf./bomega_rf/me; % cyclotron frequency along the ray path
 %
-XXheavisidep = permute(XXheavisidep,[3,1,2]);
-XXheaviside = permute(XXheaviside,[3,1,2]);
-XXheavisidem = permute(XXheavisidem,[3,1,2]);
+bkperprho = bnperp_rf*betath_ref./bomegaratio;
+bZbfac = bkperprho.*sqrt(bpsib);% momentum-independent factor in XBZb
+%
+% Spectral properties
+%
+bnparmin_rf = NaN*ones(1,nb,'single');
+bnparmax_rf = NaN*ones(1,nb,'single');
+%
+bmask_gauss = (imag(bdnpar_rf) == 0);
+%
+bnparmin_rf(~bmask_gauss) = bnpar_rf(~bmask_gauss) - imag(bdnpar_rf(~bmask_gauss))/2;
+bnparmax_rf(~bmask_gauss) = bnpar_rf(~bmask_gauss) + imag(bdnpar_rf(~bmask_gauss))/2;
+%
+bnparmin_rf(bmask_gauss) = bnpar_rf(bmask_gauss) - bdnpar_rf(bmask_gauss).*sqrt(-log(rf_tol*sqrt(pi)*bdnpar_rf(bmask_gauss)));
+bnparmax_rf(bmask_gauss) = bnpar_rf(bmask_gauss) + bdnpar_rf(bmask_gauss).*sqrt(-log(rf_tol*sqrt(pi)*bdnpar_rf(bmask_gauss)));
+%
+bdnpar_rf = abs(bdnpar_rf);
+%
+% Diffusion coefficient (normalized to the incident power per unit length along the major radius in W/m)
+%
+wpe_ref = sqrt(ne_ref*qe^2/e0/me);
+%
+bphinorm_rf(bphinorm_rf == 0) = eps('single');%avoid singularities
+%
+bqtilde = single(xqtilde(bir_rf));
+bdV_2piRp_dke = single(xdV_2piRp_dke(bir_rf));
+%
+bFtilde = brb_rf.*bBb_rf./(ap*bBPb_rf.*bqtilde.*bcosb_rf);
+%
+if ~isempty(bds_rf),
+    bD0_rf = 4*pi^2*bds_rf.*bFtilde./(me*lnc_e_ref*wpe_ref^2.*bomega_rf.*bphinorm_rf.*bdV_2piRp_dke);
+else
+    %
+    % note that in this case bphinorm_rf should be replaced by bphi_perp_rf
+    %
+    bqhat = single(xqhat(bir_rf));
+    bFhat = brb_rf.*bB0./(ap*bBPb_rf.*bqhat.*bcosb_rf*(1 + bxb_rf/Rp));    
+    bD0_rf = 4*pi^2.*bFhat.*bFtilde./(me*lnc_e_ref*wpe_ref^2.*bomega_rf.*bphinorm_rf*2*pi.*brb_rf);
+end
 %
 % Determination of (np*nmhu*nb*nr*n_rf)-space points to be accounted for
 %
@@ -268,73 +340,75 @@ if display_mode > 1, h = waitbar(0);end
 %
 for in = 1:nn_rf,
     %
-    for iy = 1:nb,
+    n_rf = n_rf_list(in);
+    %
+    % Preselection based on the momentum space localization of the resonance curves
+    %
+    % See J. Decker PoP 13, 112503 (2006) Eq. 32
+    %
+    byn_rf = n_rf*bomegaratio;
+    %
+    bmask_n1 = (bnpar_rf == 1);
+    bmask_yn = (abs(bnpar_rf) > 1 | byn_rf > sqrt(1 - bnpar_rf.^2));
+    bpn_res = abs((abs(bnpar_rf).*byn_rf - sqrt(byn_rf.^2 + bnpar_rf.^2 - 1))./(1 - bnpar_rf.^2))/betath_ref;
+    bpn_res_n1 = abs(1 - byn_rf.^2)./(2*byn_rf*betath_ref);
+    bpn_res(bmask_n1) = bpn_res_n1(bmask_n1);
+    %
+    bmask_n1_min = (bnparmin_rf == 1);
+    bmask_yn_min = (abs(bnparmin_rf) > 1 | byn_rf > sqrt(1 - bnparmin_rf.^2));
+    bpn_res_min = abs((abs(bnparmin_rf).*byn_rf - sqrt(byn_rf.^2 + bnparmin_rf.^2 - 1))./(1 - bnparmin_rf.^2))/betath_ref;
+    bpn_res_n1_min = abs(1 - byn_rf.^2)./(2*byn_rf*betath_ref);
+    bpn_res_min(bmask_n1_min) = bpn_res_n1_min(bmask_n1_min);
+    %
+    bmask_n1_max = (bnparmax_rf == 1);
+    bmask_yn_max = (abs(bnparmax_rf) > 1 | byn_rf > sqrt(1 - bnparmax_rf.^2));
+    bpn_res_max = abs((abs(bnparmax_rf).*byn_rf - sqrt(byn_rf.^2 + bnparmax_rf.^2 - 1))./(1 - bnparmax_rf.^2))/betath_ref;
+    bpn_res_n1_max = abs(1 - byn_rf.^2)./(2*byn_rf*betath_ref);
+    bpn_res_max(bmask_n1_max) = bpn_res_n1_max(bmask_n1_max);
+    %
+    bmask = find((bmask_yn & bpn_res < pnmax) | (bmask_yn_min & bpn_res_min < pnmax) | (bmask_yn_max & bpn_res_max < pnmax));
+    %
+    for ib = bmask,   
         %
-        % sparse matrices mask calculation
-        %    
-        XXpsib = repmat(xypsib(:,iy),[1,npn,nmhu]);%Ratio of magnetic fields at theta = thetab_rf  
-        XXomegac = repmat(xyomegac(:,iy),[1,npn,nmhu]);% cyclotron frequency at B=Bmin 
-        %
-        if bounce_mode > 0,          
-            %   
-            XXmaskb = (XXpsib.*XX1mmhu2 <= 1); % condition thetab_rf < thetaT
-            %    
-            XXmhub = XXmaskb.*XXsigma.*sqrt(1 - XXpsib.*XX1mmhu2);%mhu at theta = thetab_rf
-            %
-        else
-            %
-            XXmaskb = ones(nr,npn,nmhu,'single');
-            %
-            XXmhub = permute(repmat(single(Xmhu),[1,1,nr]),[3,1,2]);
-            %    
-        end
+        Xmaskb = (bpsib(ib).*X1mmhu2 <= 1); % condition thetab_rf < thetaT
         %	    
-        XXmhub(XXmhub == 0) = eps('single');
-        %
-        XXomega_rf = repmat(xyomega_rf(:,iy),[1,npn,nmhu]);
-        XXnparmin_rf = repmat(xynparmin_rf(:,iy),[1,npn,nmhu]);
-        XXnparmax_rf = repmat(xynparmax_rf(:,iy),[1,npn,nmhu]);
-        XXnpar_rf = repmat(xynpar_rf(:,iy),[1,npn,nmhu]);
-        XXdnpar_rf = repmat(xydnpar_rf(:,iy),[1,npn,nmhu]);
-        %
-        XXmask_square = repmat(xymask_square(:,iy),[1,npn,nmhu]);
-        XXmask_gauss = repmat(xymask_gauss(:,iy),[1,npn,nmhu]);            
+        Xmhub = Xmaskb.*Xsigma.*sqrt(1 - bpsib(ib).*X1mmhu2);%mhu at theta = thetab_rf at the center of the FS
+        Xmhub(Xmhub == 0) = eps('single');
         %
         % Resonance Condition: resonant Npar
         %
-        XXnparres_ij = (XXgamma - n_rf_list(in).*XXomegac.*XXpsib./XXomega_rf)/betath_ref./XXpn./XXmhub;
+        Xnparres_ij = (Xgamma - n_rf.*bomegaratio(ib))./Xpn./Xmhub/betath_ref;
         %
         % Resonance Condition: delta function (normalized to: int(deltares d_npar) = 1)
         %
-        XXdeltares_ij = zeros(nr,npn,nmhu);
+        if bmask_gauss(ib),
+            Xdeltares_ij = exp(-(Xnparres_ij - bnpar_rf(ib)).^2./bdnpar_rf(ib).^2)./bdnpar_rf(ib)/sqrt(pi);
+        else
+            Xdeltares_ij = (Xnparres_ij > bnparmin_rf(ib)).*(bnparmax_rf(ib) > Xnparres_ij)./bdnpar_rf(ib);
+        end
         %
-        XXdeltares_ij(XXmask_square) = (XXnparres_ij(XXmask_square) > XXnparmin_rf(XXmask_square)).*(XXnparmax_rf(XXmask_square) > XXnparres_ij(XXmask_square))./(XXnparmax_rf(XXmask_square) - XXnparmin_rf(XXmask_square));
-        XXdeltares_ij(XXmask_gauss) = exp(-(XXnparres_ij(XXmask_gauss) - XXnpar_rf(XXmask_gauss)).^2./XXdnpar_rf(XXmask_gauss).^2)./XXdnpar_rf(XXmask_gauss)/sqrt(pi);
-        %
-        XX_index_ij = XXmaskb & ((XXdeltares_ij >= rf_tol) | (~XXheaviside & flipdim(XXdeltares_ij,3) >= rf_tol));
+        X_index_ij = (Xdeltares_ij >= rf_tol) | (~XXheaviside(:,:,bir_rf(ib)) & fliplr(Xdeltares_ij) >= rf_tol);
         %
         % neighboring points are also accounted for
         %
-        XX_index_immj = XX_index_ij;XX_index_immj(:,2:npn,:) = XX_index_ij(:,1:npn-1,:);
-        XX_index_ippj = XX_index_ij;XX_index_ippj(:,1:npn-1,:) = XX_index_ij(:,2:npn,:);
-        XX_index_ijmm = XX_index_ij;XX_index_ijmm(:,:,2:nmhu) = XX_index_ij(:,:,1:nmhu-1);
-        XX_index_ijpp = XX_index_ij;XX_index_ijpp(:,:,1:nmhu-1) = XX_index_ij(:,:,2:nmhu);      
+        X_index_immj = X_index_ij;X_index_immj(2:npn,:) = X_index_ij(1:npn-1,:);
+        X_index_ippj = X_index_ij;X_index_ippj(1:npn-1,:) = X_index_ij(2:npn,:);
+        X_index_ijmm = X_index_ij;X_index_ijmm(:,2:nmhu) = X_index_ij(:,1:nmhu-1);
+        X_index_ijpp = X_index_ij;X_index_ijpp(:,1:nmhu-1) = X_index_ij(:,2:nmhu);      
         %
-        XX_index = find(XX_index_ij | XX_index_immj | XX_index_ippj | XX_index_ijmm | XX_index_ijpp);
+        X_index = find(X_index_ij | X_index_immj | X_index_ippj | X_index_ijmm | X_index_ijpp);
         %
-        m_index = ceil(XX_index/(nr*npn));
-        p_index = ceil((XX_index - (m_index - 1)*nr*npn)/nr);
-        r_index = XX_index - ((m_index - 1)*npn + (p_index - 1))*nr;
-        y_index = iy*ones(size(XX_index));
-        n_index = in*ones(size(XX_index));
+        m_index = ceil(X_index/npn);
+        p_index = X_index - (m_index - 1)*npn;
+        b_index = ib*ones(size(X_index));
+        n_index = in*ones(size(X_index));
         %
         mask_p = [mask_p;p_index];
         mask_m = [mask_m;m_index];
-        mask_r = [mask_r;r_index];
-        mask_y = [mask_y;y_index];
+        mask_b = [mask_b;b_index];
         mask_n = [mask_n;n_index];
         %
-        if display_mode > 1, waitbar((iy + nb*(in - 1))/(nb*nn_rf),h);end
+        if display_mode > 1, waitbar((ib + nb*(in - 1))/(nb*nn_rf),h);end
         %
     end
     %
@@ -346,35 +420,414 @@ clear XXsigma XX1mmhu2 XXpn XXgamma XXpsib XXomegac XXmaskb XXmhub
 clear XXomega_rf XXnparmin_rf XXnparmax_rf XXnpar_rf XXdnpar_rf
 clear XXmask_square  XXmask_gauss XXnparres_ij XXdeltares_ij 
 clear XX_index XX_index_ij XX_index_immj XX_index_ippj XX_index_ijmm XX_index_ijpp
-clear p_index m_index r_index y_index n_index
+clear p_index m_index r_index b_index n_index
 %
 Xmask = (mask_m - 1)*npn + mask_p;%mask in momentum 2-D matrices
-xymask = (mask_y - 1)*nr + mask_r;%mask in y-rho 2-D matrices
 %
-SXY = size(Xmask);
+SXB = size(Xmask);
+nXB = length(Xmask);
 %
 % Vector construction
 %
-XYn_rf = reshape(n_rf_list(mask_n),[length(mask_n),1]);
-XYyn = XYn_rf./reshape(xyomegaratio(xymask),[length(mask_n),1]);%to prevent matlab bug w
-XYpsib = xypsib(xymask);   
-XYynb = XYyn.*XYpsib;
+XBn_rf = n_rf_list(mask_n);
+if nn_rf > 1,
+    XBn_rf = XBn_rf.';
+end
 %
-XYpnpp = single(Xpnpp(Xmask));
-XYpnp = single(Xpnp(Xmask));
-XYpn = single(Xpn(Xmask));
-XYpnm = single(Xpnm(Xmask));
-XYpnmm = single(Xpnmm(Xmask));
+if nb > 1, 
+    XByn = XBn_rf.*bomegaratio(mask_b).';
+    XBpsib = bpsib(mask_b).';   
+else
+    XByn = XBn_rf.*bomegaratio(mask_b);
+    XBpsib = bpsib(mask_b);   
+end
 %
-XYgammapp = single(Xgammapp(Xmask));
-XYgammap = single(Xgammap(Xmask));
-XYgamma = single(Xgamma(Xmask));
-XYgammam = single(Xgammam(Xmask));
-XYgammamm = single(Xgammamm(Xmask));
+XBpnpp = single(Xpnpp(Xmask));
+XBpnp = single(Xpnp(Xmask));
+XBpn = single(Xpn(Xmask));
+XBpnm = single(Xpnm(Xmask));
+XBpnmm = single(Xpnmm(Xmask));
 %
-XYsigmap = single(Xsigmap(Xmask));
-XYsigma = single(Xsigma(Xmask));
-XYsigmam = single(Xsigmam(Xmask));
+XBgammapp = single(Xgammapp(Xmask));
+XBgammap = single(Xgammap(Xmask));
+XBgamma = single(Xgamma(Xmask));
+XBgammam = single(Xgammam(Xmask));
+XBgammamm = single(Xgammamm(Xmask));
+%
+XBsigmap = single(Xsigmap(Xmask));
+XBsigma = single(Xsigma(Xmask));
+XBsigmam = single(Xsigmam(Xmask));
+%
+XB1mmhu2p = single(X1mmhu2p(Xmask));
+XB1mmhu2 = single(X1mmhu2(Xmask));
+XB1mmhu2m = single(X1mmhu2m(Xmask));
+%
+XB1mmhu2p(XB1mmhu2p == 0) = eps('single');
+XB1mmhu2(XB1mmhu2 == 0) =  eps('single');
+XB1mmhu2m(XB1mmhu2m == 0) =  eps('single');
+%
+XBmaskb = (XBpsib.*XB1mmhu2p <= 1) & (XBpsib.*XB1mmhu2 <= 1) & (XBpsib.*XB1mmhu2m <= 1);
+%
+XBmhubp = XBmaskb.*XBsigmap.*sqrt(1 - XBpsib.*XB1mmhu2p);
+XBmhub = XBmaskb.*XBsigma.*sqrt(1 - XBpsib.*XB1mmhu2);
+XBmhubm = XBmaskb.*XBsigmam.*sqrt(1 - XBpsib.*XB1mmhu2m);
+%
+clear XBmaskb
+%
+if dke_mode == 0,
+    %
+    clear XBsigmap XBsigma XBsigmam
+    %            
+end     
+%
+XBmhubp(XBmhubp == 0) = eps('single');
+XBmhub(XBmhub == 0) =  eps('single');
+XBmhubm(XBmhubm == 0) =  eps('single');
+%
+% Resonant Npar
+%
+XBnparres.ippj = (XBgammapp - XByn)./XBpnpp./XBmhub/betath_ref;
+XBnparres.ipj = (XBgammap - XByn)./XBpnp./XBmhub/betath_ref;
+XBnparres.ij = (XBgamma - XByn)./XBpn./XBmhub/betath_ref;
+XBnparres.imj = (XBgammam - XByn)./XBpnm./XBmhub/betath_ref;
+XBnparres.immj = (XBgammamm - XByn)./XBpnmm./XBmhub/betath_ref;
+XBnparres.ijp = (XBgamma - XByn)./XBpn./XBmhubp/betath_ref;
+XBnparres.ijm = (XBgamma - XByn)./XBpn./XBmhubm/betath_ref;
+%
+clear XByn
+%
+% Resonance Condition: delta function (normalized to: int(deltares d_npar) = 1)
+%
+if nb > 1,
+    XBmask_gauss = bmask_gauss(mask_b).';
+    XBmask_square = ~bmask_gauss(mask_b).';
+    %
+    XBnparmin_rf = bnparmin_rf(mask_b).';
+    XBnparmax_rf = bnparmax_rf(mask_b).';
+    XBnpar_rf = bnpar_rf(mask_b).';
+    XBdnpar_rf = bdnpar_rf(mask_b).';
+    %
+    XBZbfac = bZbfac(mask_b).';
+else
+    XBmask_gauss = bmask_gauss(mask_b);
+    XBmask_square = ~bmask_gauss(mask_b);
+    %
+    XBnparmin_rf = bnparmin_rf(mask_b);
+    XBnparmax_rf = bnparmax_rf(mask_b);
+    XBnpar_rf = bnpar_rf(mask_b);
+    XBdnpar_rf = bdnpar_rf(mask_b);
+    %
+    XBZbfac = bZbfac(mask_b);
+end    
+%
+XBdeltares.ippj = zeros(SXB,'single');
+XBdeltares.ipj = zeros(SXB,'single');
+XBdeltares.ij = zeros(SXB,'single');
+XBdeltares.imj = zeros(SXB,'single');
+XBdeltares.immj = zeros(SXB,'single');
+XBdeltares.ijp = zeros(SXB,'single');
+XBdeltares.ijm = zeros(SXB,'single');
+%
+XBdeltares.ippj(XBmask_square) = (XBnparres.ippj(XBmask_square) > XBnparmin_rf(XBmask_square)).*(XBnparmax_rf(XBmask_square) > XBnparres.ippj(XBmask_square))./XBdnpar_rf(XBmask_square);
+XBdeltares.ippj(XBmask_gauss) = exp(-(XBnparres.ippj(XBmask_gauss) - XBnpar_rf(XBmask_gauss)).^2./XBdnpar_rf(XBmask_gauss).^2)./XBdnpar_rf(XBmask_gauss)/sqrt(pi);
+%
+XBdeltares.ipj(XBmask_square) = (XBnparres.ipj(XBmask_square) > XBnparmin_rf(XBmask_square)).*(XBnparmax_rf(XBmask_square) > XBnparres.ipj(XBmask_square))./XBdnpar_rf(XBmask_square);
+XBdeltares.ipj(XBmask_gauss) = exp(-(XBnparres.ipj(XBmask_gauss) - XBnpar_rf(XBmask_gauss)).^2./XBdnpar_rf(XBmask_gauss).^2)./XBdnpar_rf(XBmask_gauss)/sqrt(pi);
+%
+XBdeltares.ij(XBmask_square) = (XBnparres.ij(XBmask_square) > XBnparmin_rf(XBmask_square)).*(XBnparmax_rf(XBmask_square) > XBnparres.ij(XBmask_square))./XBdnpar_rf(XBmask_square);
+XBdeltares.ij(XBmask_gauss) = exp(-(XBnparres.ij(XBmask_gauss) - XBnpar_rf(XBmask_gauss)).^2./XBdnpar_rf(XBmask_gauss).^2)./XBdnpar_rf(XBmask_gauss)/sqrt(pi);
+%
+XBdeltares.imj(XBmask_square) = (XBnparres.imj(XBmask_square) > XBnparmin_rf(XBmask_square)).*(XBnparmax_rf(XBmask_square) > XBnparres.imj(XBmask_square))./XBdnpar_rf(XBmask_square);
+XBdeltares.imj(XBmask_gauss) = exp(-(XBnparres.imj(XBmask_gauss) - XBnpar_rf(XBmask_gauss)).^2./XBdnpar_rf(XBmask_gauss).^2)./XBdnpar_rf(XBmask_gauss)/sqrt(pi);
+%
+XBdeltares.immj(XBmask_square) = (XBnparres.immj(XBmask_square) > XBnparmin_rf(XBmask_square)).*(XBnparmax_rf(XBmask_square) > XBnparres.immj(XBmask_square))./XBdnpar_rf(XBmask_square);
+XBdeltares.immj(XBmask_gauss) = exp(-(XBnparres.immj(XBmask_gauss) - XBnpar_rf(XBmask_gauss)).^2./XBdnpar_rf(XBmask_gauss).^2)./XBdnpar_rf(XBmask_gauss)/sqrt(pi);
+%
+XBdeltares.ijp(XBmask_square) = (XBnparres.ijp(XBmask_square) > XBnparmin_rf(XBmask_square)).*(XBnparmax_rf(XBmask_square) > XBnparres.ijp(XBmask_square))./XBdnpar_rf(XBmask_square);
+XBdeltares.ijp(XBmask_gauss) = exp(-(XBnparres.ijp(XBmask_gauss) - XBnpar_rf(XBmask_gauss)).^2./XBdnpar_rf(XBmask_gauss).^2)./XBdnpar_rf(XBmask_gauss)/sqrt(pi);
+%
+XBdeltares.ijm(XBmask_square) = (XBnparres.ijm(XBmask_square) > XBnparmin_rf(XBmask_square)).*(XBnparmax_rf(XBmask_square) > XBnparres.ijm(XBmask_square))./XBdnpar_rf(XBmask_square);
+XBdeltares.ijm(XBmask_gauss) = exp(-(XBnparres.ijm(XBmask_gauss) - XBnpar_rf(XBmask_gauss)).^2./XBdnpar_rf(XBmask_gauss).^2)./XBdnpar_rf(XBmask_gauss)/sqrt(pi);
+%
+clear XBnparres XBmask_square XBmask_gauss XBnparmin_rf XBnparmax_rf XBnpar_rf XBdnpar_rf
+%
+% FLR factor k_perp*rho_perp
+% 
+XBZb.ippj = -XBZbfac.*XBpnpp.*sqrt(XB1mmhu2);
+XBZb.ipj = -XBZbfac.*XBpnp.*sqrt(XB1mmhu2);
+XBZb.ij = -XBZbfac.*XBpn.*sqrt(XB1mmhu2);
+XBZb.imj = -XBZbfac.*XBpnm.*sqrt(XB1mmhu2);
+XBZb.immj = -XBZbfac.*XBpnmm.*sqrt(XB1mmhu2);
+XBZb.ijp = -XBZbfac.*XBpn.*sqrt(XB1mmhu2p);
+XBZb.ijm = -XBZbfac.*XBpn.*sqrt(XB1mmhu2m);
+%
+clear XBZbfac
+%
+% Polarization term 
+%
+% Polarization vector is normalized to 1.  
+%
+if nb > 1,
+    XBepolp_rf = bepolp_rf(mask_b).'; 
+    XBepolm_rf = bepolm_rf(mask_b).'; 
+    XBepolz_rf = bepolz_rf(mask_b).'; 
+    %
+    XBlre = (bopt_rf(mask_b).' == 0); %(0): exact calculation for the Bessel functions, otherwise, limit k_perp*rho_perp << 1
+else
+    XBepolp_rf = bepolp_rf(mask_b); 
+    XBepolm_rf = bepolm_rf(mask_b); 
+    XBepolz_rf = bepolz_rf(mask_b); 
+    %
+    XBlre = (bopt_rf(mask_b) == 0); %(0): exact calculation for the Bessel functions, otherwise, limit k_perp*rho_perp << 1
+end
+%
+XBmhuratiop = XBmhubp./sqrt(XBpsib.*XB1mmhu2p);
+XBmhuratio = XBmhub./sqrt(XBpsib.*XB1mmhu2);
+XBmhuratiom = XBmhubm./sqrt(XBpsib.*XB1mmhu2m);
+%
+clear XB1mmhu2p XB1mmhu2 XB1mmhu2m
+%
+XBpolb.ippj = XBepolp_rf.*besselj_dke_jd(XBn_rf + 1,XBZb.ippj,XBlre)/sqrt(2) + XBepolm_rf.*besselj_dke_jd(XBn_rf - 1,XBZb.ippj,XBlre)/sqrt(2)...
+   - XBmhuratio.*XBepolz_rf.*besselj_dke_jd(XBn_rf,XBZb.ippj,XBlre);
+XBpolb.ipj = XBepolp_rf.*besselj_dke_jd(XBn_rf + 1,XBZb.ipj,XBlre)/sqrt(2) + XBepolm_rf.*besselj_dke_jd(XBn_rf - 1,XBZb.ipj,XBlre)/sqrt(2)...
+   - XBmhuratio.*XBepolz_rf.*besselj_dke_jd(XBn_rf,XBZb.ipj,XBlre);
+XBpolb.ij = XBepolp_rf.*besselj_dke_jd(XBn_rf + 1,XBZb.ij,XBlre)/sqrt(2) + XBepolm_rf.*besselj_dke_jd(XBn_rf - 1,XBZb.ij,XBlre)/sqrt(2)...
+   - XBmhuratio.*XBepolz_rf.*besselj_dke_jd(XBn_rf,XBZb.ij,XBlre);
+XBpolb.imj = XBepolp_rf.*besselj_dke_jd(XBn_rf + 1,XBZb.imj,XBlre)/sqrt(2) + XBepolm_rf.*besselj_dke_jd(XBn_rf - 1,XBZb.imj,XBlre)/sqrt(2)...
+   - XBmhuratio.*XBepolz_rf.*besselj_dke_jd(XBn_rf,XBZb.imj,XBlre);
+XBpolb.immj = XBepolp_rf.*besselj_dke_jd(XBn_rf + 1,XBZb.immj,XBlre)/sqrt(2) + XBepolm_rf.*besselj_dke_jd(XBn_rf - 1,XBZb.immj,XBlre)/sqrt(2)...
+   - XBmhuratio.*XBepolz_rf.*besselj_dke_jd(XBn_rf,XBZb.immj,XBlre);
+XBpolb.ijp = XBepolp_rf.*besselj_dke_jd(XBn_rf + 1,XBZb.ijp,XBlre)/sqrt(2) + XBepolm_rf.*besselj_dke_jd(XBn_rf - 1,XBZb.ijp,XBlre)/sqrt(2)...
+   - XBmhuratiop.*XBepolz_rf.*besselj_dke_jd(XBn_rf,XBZb.ijp,XBlre);
+XBpolb.ijm = XBepolp_rf.*besselj_dke_jd(XBn_rf + 1,XBZb.ijm,XBlre)/sqrt(2) + XBepolm_rf.*besselj_dke_jd(XBn_rf - 1,XBZb.ijm,XBlre)/sqrt(2)...
+   - XBmhuratiom.*XBepolz_rf.*besselj_dke_jd(XBn_rf,XBZb.ijm,XBlre);    
+%
+clear XBZb XBn_rf XBepolp_rf XBepolm_rf XBepolz_rf XBlre XBmhuratiop XBmhuratio XBmhuratiom 
+%
+XBrespol.ippj = XBdeltares.ippj.*abs(XBpolb.ippj).^2;
+XBrespol.ipj = XBdeltares.ipj.*abs(XBpolb.ipj).^2;
+XBrespol.ij = XBdeltares.ij.*abs(XBpolb.ij).^2;
+XBrespol.imj = XBdeltares.imj.*abs(XBpolb.imj).^2;
+XBrespol.immj = XBdeltares.immj.*abs(XBpolb.immj).^2;
+XBrespol.ijp = XBdeltares.ijp.*abs(XBpolb.ijp).^2;
+XBrespol.ijm = XBdeltares.ijm.*abs(XBpolb.ijm).^2;
+%
+clear XBdeltares XBpolb
+%
+%Sum over sigma for trapped particles - case FP
+%
+if dke_mode == 1,
+    %
+    XBrespol_tp = XBrespol;
+    %
+end
+%
+Yxmask = ((mask_n - 1)*nb + (mask_b - 1))*npn + mask_p;%mask in pnp-y-rho-n 4-D matrices
+%
+XBrespol_mhuflip.ippj = flipud(sparse(double(mask_m),double(Yxmask),double(XBrespol.ippj),nmhu,npn*nb*nn_rf));
+XBrespol_mhuflip.ipj = flipud(sparse(double(mask_m),double(Yxmask),double(XBrespol.ipj),nmhu,npn*nb*nn_rf));
+XBrespol_mhuflip.ij = flipud(sparse(double(mask_m),double(Yxmask),double(XBrespol.ij),nmhu,npn*nb*nn_rf));
+XBrespol_mhuflip.imj = flipud(sparse(double(mask_m),double(Yxmask),double(XBrespol.imj),nmhu,npn*nb*nn_rf));
+XBrespol_mhuflip.immj = flipud(sparse(double(mask_m),double(Yxmask),double(XBrespol.immj),nmhu,npn*nb*nn_rf));
+XBrespol_mhuflip.ijp = flipud(sparse(double(mask_m),double(Yxmask),double(XBrespol.ijm),nmhu,npn*nb*nn_rf));
+XBrespol_mhuflip.ijm = flipud(sparse(double(mask_m),double(Yxmask),double(XBrespol.ijp),nmhu,npn*nb*nn_rf));
+%
+XBmask = (Yxmask - 1)*nmhu + mask_m;
+%
+XBrespol_mhuflip.ippj = single(full(XBrespol_mhuflip.ippj(XBmask)));
+XBrespol_mhuflip.ipj = single(full(XBrespol_mhuflip.ipj(XBmask)));
+XBrespol_mhuflip.ij = single(full(XBrespol_mhuflip.ij(XBmask)));
+XBrespol_mhuflip.imj = single(full(XBrespol_mhuflip.imj(XBmask)));
+XBrespol_mhuflip.immj = single(full(XBrespol_mhuflip.immj(XBmask)));
+XBrespol_mhuflip.ijp = single(full(XBrespol_mhuflip.ijp(XBmask)));
+XBrespol_mhuflip.ijm = single(full(XBrespol_mhuflip.ijm(XBmask))); 
+%
+if dke_mode == 0,
+    %
+    clear Yxmask XBmask
+    %
+end
+%
+if nb > 1,
+    mask_r = bir_rf(mask_b).';
+else
+    mask_r = bir_rf(mask_b);
+end    
+%
+XXmask = ((mask_m - 1)*npn + (mask_p - 1))*nr + mask_r;%mask in rho-momentum 3-D matrices
+%
+XBtrapped_p = ~XXheavisidep(XXmask);
+XBtrapped = ~XXheaviside(XXmask);
+XBtrapped_m = ~XXheavisidem(XXmask);     
+%
+clear XXmask XXheavisidep XXheaviside XXheavisidem
+%
+XBrespol.ippj(XBtrapped) = (XBrespol.ippj(XBtrapped) + XBrespol_mhuflip.ippj(XBtrapped))/2;
+XBrespol.ipj(XBtrapped) = (XBrespol.ipj(XBtrapped) + XBrespol_mhuflip.ipj(XBtrapped))/2;
+XBrespol.ij(XBtrapped) = (XBrespol.ij(XBtrapped) + XBrespol_mhuflip.ij(XBtrapped))/2;
+XBrespol.imj(XBtrapped) = (XBrespol.imj(XBtrapped) + XBrespol_mhuflip.imj(XBtrapped))/2;
+XBrespol.immj(XBtrapped) = (XBrespol.immj(XBtrapped) + XBrespol_mhuflip.immj(XBtrapped))/2;
+XBrespol.ijp(XBtrapped_p) = (XBrespol.ijp(XBtrapped_p) + XBrespol_mhuflip.ijp(XBtrapped_p))/2;
+XBrespol.ijm(XBtrapped_m) = (XBrespol.ijm(XBtrapped_m) + XBrespol_mhuflip.ijm(XBtrapped_m))/2;
+%
+clear XBrespol_mhuflip
+%
+if dke_mode == 0,
+    %
+    clear XBtrapped_p XBtrapped XBtrapped_m
+    %            
+end
+%
+Xxmask = (mask_r - 1)*nmhu + mask_m;%mask in mhu-rho 2-D matrices
+%
+XBlambdap = Xxlambdap(Xxmask);
+XBlambda = Xxlambda(Xxmask);        
+XBlambdam = Xxlambdam(Xxmask);        
+%
+clear Xxmask 
+%
+XBlambdap(XBlambdap == 0) = eps('single');
+XBlambda(XBlambda == 0) =  eps('single');
+XBlambdam(XBlambdam == 0) =  eps('single');
+%
+XBmhup = single(Xmhup(Xmask));
+XBmhu = single(Xmhu(Xmask));
+XBmhum = single(Xmhum(Xmask));
+%
+clear Xmask 
+%
+if nb > 1,
+    XBD0_rf = bD0_rf(mask_b).';
+else
+    XBD0_rf = bD0_rf(mask_b);
+end
+%
+XBDfacp = XBD0_rf.*XBmhup.*XBmhup.*XBpsib./XBlambdap./XBmhubp./XBmhubp;
+XBDfac = XBD0_rf.*XBmhu.*XBmhu.*XBpsib./XBlambda./XBmhub./XBmhub;
+XBDfacm = XBD0_rf.*XBmhum.*XBmhum.*XBpsib./XBlambdam./XBmhubm./XBmhubm;
+%
+clear XBD0_rf
+%
+if dke_mode == 0,
+    %
+    clear XBpsib XBmhubp XBmhub XBmhubm XBlambdap XBlambda XBlambdam XBqratio
+    %            
+end     
+%
+%QL Diffusion Coefficient
+%    
+if nb > 1,
+    XBold = (bopt_rf(mask_b).' == 2); %(2): no 1/vpar dependence (old method, benchmark Karney Shoucri) 
+else
+    XBold = (bopt_rf(mask_b) == 2); %(2): no 1/vpar dependence (old method, benchmark Karney Shoucri) 
+end
+%
+if max(XBold(:)) > 0
+    if display_mode >= 1,info_dke_yp(1,'WARNING: Old technique for calculating the LH matrix coefficients, for comparaison with previous versions (Karney, Shoucri)');end
+end
+%
+XBDrf.ippj = zeros(SXB,'single');
+XBDrf.ipj = zeros(SXB,'single');
+XBDrf.ij = zeros(SXB,'single');
+XBDrf.imj = zeros(SXB,'single');
+XBDrf.immj = zeros(SXB,'single');
+XBDrf.ijp = zeros(SXB,'single');
+XBDrf.ijm = zeros(SXB,'single');
+%
+XBDrf.ippj(XBold) = XBrespol.ippj(XBold).*XBDfac(XBold);
+XBDrf.ipj(XBold) = XBrespol.ipj(XBold).*XBDfac(XBold);
+XBDrf.ij(XBold) = XBrespol.ij(XBold).*XBDfac(XBold);
+XBDrf.imj(XBold) = XBrespol.imj(XBold).*XBDfac(XBold);
+XBDrf.immj(XBold) = XBrespol.immj(XBold).*XBDfac(XBold);
+XBDrf.ijp(XBold) = XBrespol.ijp(XBold).*XBDfacp(XBold);
+XBDrf.ijm(XBold) = XBrespol.ijm(XBold).*XBDfacm(XBold);
+%
+XBDrf.ippj(~XBold) = XBrespol.ippj(~XBold).*XBDfac(~XBold).*XBgammapp(~XBold)./XBpnpp(~XBold)./abs(XBmhu(~XBold));
+XBDrf.ipj(~XBold) = XBrespol.ipj(~XBold).*XBDfac(~XBold).*XBgammap(~XBold)./XBpnp(~XBold)./abs(XBmhu(~XBold));
+XBDrf.ij(~XBold) = XBrespol.ij(~XBold).*XBDfac(~XBold).*XBgamma(~XBold)./XBpn(~XBold)./abs(XBmhu(~XBold));
+XBDrf.imj(~XBold) = XBrespol.imj(~XBold).*XBDfac(~XBold).*XBgammam(~XBold)./XBpnm(~XBold)./abs(XBmhu(~XBold));
+XBDrf.immj(~XBold) = XBrespol.immj(~XBold).*XBDfac(~XBold).*XBgammamm(~XBold)./XBpnmm(~XBold)./abs(XBmhu(~XBold));
+XBDrf.ijp(~XBold) = XBrespol.ijp(~XBold).*XBDfacp(~XBold).*XBgamma(~XBold)./XBpn(~XBold)./abs(XBmhup(~XBold));
+XBDrf.ijm(~XBold) = XBrespol.ijm(~XBold).*XBDfacm(~XBold).*XBgamma(~XBold)./XBpn(~XBold)./abs(XBmhum(~XBold));
+%
+clear XBrespol XBDfacp XBDfac XBDfacm 
+clear XBgammapp XBgammap XBgamma XBgammam XBgammamm   
+clear XBmhup XBmhu XBmhum
+%
+if dke_mode == 0,
+    %
+    clear XBpnpp XBpnp XBpn XBpnm XBpnmm XBold
+    %
+end
+%
+% Sum over all fragments within a flux surface
+%
+%
+Xnmask = ((mask_n - 1)*nmhu + mask_m - 1)*npn + mask_p;%mask in pnp-y-rho-n 4-D matrices
+%
+if nb > 1,
+    mask_y = biy_rf(mask_b).';
+else
+    mask_y = biy_rf(mask_b);
+end
+%
+clear mask_b
+%
+xymask = (mask_y - 1)*nr + mask_r;
+%
+XYDrf.ippj = sparse(double(xymask),double(Xnmask),double(XBDrf.ippj),nr*ny,npn*nmhu*nn_rf);
+XYDrf.ipj = sparse(double(xymask),double(Xnmask),double(XBDrf.ipj),nr*ny,npn*nmhu*nn_rf);
+XYDrf.ij = sparse(double(xymask),double(Xnmask),double(XBDrf.ij),nr*ny,npn*nmhu*nn_rf);
+XYDrf.imj = sparse(double(xymask),double(Xnmask),double(XBDrf.imj),nr*ny,npn*nmhu*nn_rf);
+XYDrf.immj = sparse(double(xymask),double(Xnmask),double(XBDrf.immj),nr*ny,npn*nmhu*nn_rf);
+XYDrf.ijp = sparse(double(xymask),double(Xnmask),double(XBDrf.ijp),nr*ny,npn*nmhu*nn_rf);
+XYDrf.ijm = sparse(double(xymask),double(Xnmask),double(XBDrf.ijm),nr*ny,npn*nmhu*nn_rf);
+%
+clear Xnmask xymask XBDrf
+%
+XYmask = find(XYDrf.ippj | XYDrf.ipj | XYDrf.ij | XYDrf.imj...
+    | XYDrf.immj | XYDrf.ijp | XYDrf.ijm);
+%
+if nr*ny == 1,
+    XYmask = XYmask.';
+end
+%
+mask_n = ceil(XYmask/(nmhu*npn*ny*nr));
+mask_m = ceil((XYmask - (mask_n - 1)*nmhu*npn*ny*nr)/(npn*ny*nr));
+mask_p = ceil((XYmask - ((mask_n - 1)*nmhu + mask_m - 1)*npn*ny*nr)/(ny*nr));
+mask_y = ceil((XYmask - (((mask_n - 1)*nmhu + mask_m - 1)*npn + mask_p - 1)*ny*nr)/nr);
+mask_r = XYmask - ((((mask_n - 1)*nmhu + mask_m - 1)*npn + mask_p - 1)*ny + mask_y - 1)*nr;
+%
+XYmask = uint32(XYmask);
+mask_n = uint32(mask_n);
+mask_m = uint32(mask_m);
+mask_p = uint32(mask_p);
+mask_y = uint32(mask_y);
+mask_r = uint32(mask_r);
+%
+XYDrf.ippj = single(full(XYDrf.ippj(XYmask)));
+XYDrf.ipj = single(full(XYDrf.ipj(XYmask)));
+XYDrf.ij = single(full(XYDrf.ij(XYmask)));
+XYDrf.imj = single(full(XYDrf.imj(XYmask)));
+XYDrf.immj = single(full(XYDrf.immj(XYmask)));
+XYDrf.ijp = single(full(XYDrf.ijp(XYmask)));
+XYDrf.ijm = single(full(XYDrf.ijm(XYmask))); 
+%
+if nr*ny == 1,
+    XYDrf.ippj = XYDrf.ippj.';
+    XYDrf.ipj = XYDrf.ipj.';
+    XYDrf.ij = XYDrf.ij.';
+    XYDrf.imj = XYDrf.imj.';
+    XYDrf.immj = XYDrf.immj.';
+    XYDrf.ijp = XYDrf.ijp.';
+    XYDrf.ijm = XYDrf.ijm.';
+end
+%
+clear XYmask
+%
+% QL diffusion tensor elements
+%
+Xmask = (mask_m - 1)*npn + mask_p;
 %
 XY1mmhu2p = single(X1mmhu2p(Xmask));
 XY1mmhu2 = single(X1mmhu2(Xmask));
@@ -384,280 +837,50 @@ XY1mmhu2p(XY1mmhu2p == 0) = eps('single');
 XY1mmhu2(XY1mmhu2 == 0) =  eps('single');
 XY1mmhu2m(XY1mmhu2m == 0) =  eps('single');
 %
-XYmaskb = (XYpsib.*XY1mmhu2p <= 1) & (XYpsib.*XY1mmhu2 <= 1) & (XYpsib.*XY1mmhu2m <= 1);
-%
-XYmhubp = XYmaskb.*XYsigmap.*sqrt(1 - XYpsib.*XY1mmhu2p);
-XYmhub = XYmaskb.*XYsigma.*sqrt(1 - XYpsib.*XY1mmhu2);
-XYmhubm = XYmaskb.*XYsigmam.*sqrt(1 - XYpsib.*XY1mmhu2m);
-%
-clear XYmaskb
-%
-if dke_mode == 0,
-    %
-    clear XYsigmap XYsigma XYsigmam
-    %            
-end     
-%
-XYmhubp(XYmhubp == 0) = eps('single');
-XYmhub(XYmhub == 0) =  eps('single');
-XYmhubm(XYmhubm == 0) =  eps('single');
-%
-% Resonant Npar
-%
-XYnparres.ippj = (XYgammapp - XYynb)./XYpnpp./XYmhub/betath_ref;
-XYnparres.ipj = (XYgammap - XYynb)./XYpnp./XYmhub/betath_ref;
-XYnparres.ij = (XYgamma - XYynb)./XYpn./XYmhub/betath_ref;
-XYnparres.imj = (XYgammam - XYynb)./XYpnm./XYmhub/betath_ref;
-XYnparres.immj = (XYgammamm - XYynb)./XYpnmm./XYmhub/betath_ref;
-XYnparres.ijp = (XYgamma - XYynb)./XYpn./XYmhubp/betath_ref;
-XYnparres.ijm = (XYgamma - XYynb)./XYpn./XYmhubm/betath_ref;
-%
-clear XYynb 
-%
-% Resonance Condition: delta function (normalized to: int(deltares d_npar) = 1)
-%
-XYmask_square = xymask_square(xymask);
-XYmask_gauss = xymask_gauss(xymask);
-%
-XYnparmin_rf = xynparmin_rf(xymask);
-XYnparmax_rf = xynparmax_rf(xymask);
-XYnpar_rf = xynpar_rf(xymask);
-XYdnpar_rf_gauss = xydnpar_rf(xymask);
-XYdnpar_rf_square = xynparmax_rf(xymask) - xynparmin_rf(xymask);       
-%
-XYdeltares.ippj = zeros(SXY,'single');
-XYdeltares.ipj = zeros(SXY,'single');
-XYdeltares.ij = zeros(SXY,'single');
-XYdeltares.imj = zeros(SXY,'single');
-XYdeltares.immj = zeros(SXY,'single');
-XYdeltares.ijp = zeros(SXY,'single');
-XYdeltares.ijm = zeros(SXY,'single');
-%
-XYdeltares.ippj(XYmask_square) = (XYnparres.ippj(XYmask_square) > XYnparmin_rf(XYmask_square)).*(XYnparmax_rf(XYmask_square) > XYnparres.ippj(XYmask_square))./XYdnpar_rf_square(XYmask_square);
-XYdeltares.ippj(XYmask_gauss) = exp(-(XYnparres.ippj(XYmask_gauss) - XYnpar_rf(XYmask_gauss)).^2./XYdnpar_rf_gauss(XYmask_gauss).^2)./XYdnpar_rf_gauss(XYmask_gauss)/sqrt(pi);
-%
-XYdeltares.ipj(XYmask_square) = (XYnparres.ipj(XYmask_square) > XYnparmin_rf(XYmask_square)).*(XYnparmax_rf(XYmask_square) > XYnparres.ipj(XYmask_square))./XYdnpar_rf_square(XYmask_square);
-XYdeltares.ipj(XYmask_gauss) = exp(-(XYnparres.ipj(XYmask_gauss) - XYnpar_rf(XYmask_gauss)).^2./XYdnpar_rf_gauss(XYmask_gauss).^2)./XYdnpar_rf_gauss(XYmask_gauss)/sqrt(pi);
-%
-XYdeltares.ij(XYmask_square) = (XYnparres.ij(XYmask_square) > XYnparmin_rf(XYmask_square)).*(XYnparmax_rf(XYmask_square) > XYnparres.ij(XYmask_square))./XYdnpar_rf_square(XYmask_square);
-XYdeltares.ij(XYmask_gauss) = exp(-(XYnparres.ij(XYmask_gauss) - XYnpar_rf(XYmask_gauss)).^2./XYdnpar_rf_gauss(XYmask_gauss).^2)./XYdnpar_rf_gauss(XYmask_gauss)/sqrt(pi);
-%
-XYdeltares.imj(XYmask_square) = (XYnparres.imj(XYmask_square) > XYnparmin_rf(XYmask_square)).*(XYnparmax_rf(XYmask_square) > XYnparres.imj(XYmask_square))./XYdnpar_rf_square(XYmask_square);
-XYdeltares.imj(XYmask_gauss) = exp(-(XYnparres.imj(XYmask_gauss) - XYnpar_rf(XYmask_gauss)).^2./XYdnpar_rf_gauss(XYmask_gauss).^2)./XYdnpar_rf_gauss(XYmask_gauss)/sqrt(pi);
-%
-XYdeltares.immj(XYmask_square) = (XYnparres.immj(XYmask_square) > XYnparmin_rf(XYmask_square)).*(XYnparmax_rf(XYmask_square) > XYnparres.immj(XYmask_square))./XYdnpar_rf_square(XYmask_square);
-XYdeltares.immj(XYmask_gauss) = exp(-(XYnparres.immj(XYmask_gauss) - XYnpar_rf(XYmask_gauss)).^2./XYdnpar_rf_gauss(XYmask_gauss).^2)./XYdnpar_rf_gauss(XYmask_gauss)/sqrt(pi);
-%
-XYdeltares.ijp(XYmask_square) = (XYnparres.ijp(XYmask_square) > XYnparmin_rf(XYmask_square)).*(XYnparmax_rf(XYmask_square) > XYnparres.ijp(XYmask_square))./XYdnpar_rf_square(XYmask_square);
-XYdeltares.ijp(XYmask_gauss) = exp(-(XYnparres.ijp(XYmask_gauss) - XYnpar_rf(XYmask_gauss)).^2./XYdnpar_rf_gauss(XYmask_gauss).^2)./XYdnpar_rf_gauss(XYmask_gauss)/sqrt(pi);
-%
-XYdeltares.ijm(XYmask_square) = (XYnparres.ijm(XYmask_square) > XYnparmin_rf(XYmask_square)).*(XYnparmax_rf(XYmask_square) > XYnparres.ijm(XYmask_square))./XYdnpar_rf_square(XYmask_square);
-XYdeltares.ijm(XYmask_gauss) = exp(-(XYnparres.ijm(XYmask_gauss) - XYnpar_rf(XYmask_gauss)).^2./XYdnpar_rf_gauss(XYmask_gauss).^2)./XYdnpar_rf_gauss(XYmask_gauss)/sqrt(pi);
-%
-clear XYnparres XYmask_square XYmask_gauss XYnparmin_rf XYnparmax_rf XYnpar_rf XYdnpar_rf_gauss XYdnpar_rf_square
-%
-% FLR factor k_perp*rho_perp
-% 
-XYZbfac = xyZbfac(xymask);
-%
-XYZb.ippj = -XYZbfac.*XYpnpp.*sqrt(XY1mmhu2);
-XYZb.ipj = -XYZbfac.*XYpnp.*sqrt(XY1mmhu2);
-XYZb.ij = -XYZbfac.*XYpn.*sqrt(XY1mmhu2);
-XYZb.imj = -XYZbfac.*XYpnm.*sqrt(XY1mmhu2);
-XYZb.immj = -XYZbfac.*XYpnmm.*sqrt(XY1mmhu2);
-XYZb.ijp = -XYZbfac.*XYpn.*sqrt(XY1mmhu2p);
-XYZb.ijm = -XYZbfac.*XYpn.*sqrt(XY1mmhu2m);
-%
-clear XYZbfac
-%
-% Polarization term 
-%
-% Polarization vector is normalized to 1.  
-%
-XYepolp_rf = xyepolp_rf(xymask); 
-XYepolm_rf = xyepolm_rf(xymask); 
-XYepolz_rf = xyepolz_rf(xymask); 
-%
-XYlre = xyopt(xymask) == 0; %(0): exact calculation for the Bessel functions, otherwise, limit k_perp*rho_perp << 1
-%
-XYmhuratiop = XYmhubp./sqrt(XYpsib.*XY1mmhu2p);
-XYmhuratio = XYmhub./sqrt(XYpsib.*XY1mmhu2);
-XYmhuratiom = XYmhubm./sqrt(XYpsib.*XY1mmhu2m);
-%
-XYpolb.ippj = XYepolp_rf.*besselj_dke_jd(XYn_rf + 1,XYZb.ippj,XYlre)/sqrt(2) + XYepolm_rf.*besselj_dke_jd(XYn_rf - 1,XYZb.ippj,XYlre)/sqrt(2)...
-   - XYmhuratio.*XYepolz_rf.*besselj_dke_jd(XYn_rf,XYZb.ippj,XYlre);
-XYpolb.ipj = XYepolp_rf.*besselj_dke_jd(XYn_rf + 1,XYZb.ipj,XYlre)/sqrt(2) + XYepolm_rf.*besselj_dke_jd(XYn_rf - 1,XYZb.ipj,XYlre)/sqrt(2)...
-   - XYmhuratio.*XYepolz_rf.*besselj_dke_jd(XYn_rf,XYZb.ipj,XYlre);
-XYpolb.ij = XYepolp_rf.*besselj_dke_jd(XYn_rf + 1,XYZb.ij,XYlre)/sqrt(2) + XYepolm_rf.*besselj_dke_jd(XYn_rf - 1,XYZb.ij,XYlre)/sqrt(2)...
-   - XYmhuratio.*XYepolz_rf.*besselj_dke_jd(XYn_rf,XYZb.ij,XYlre);
-XYpolb.imj = XYepolp_rf.*besselj_dke_jd(XYn_rf + 1,XYZb.imj,XYlre)/sqrt(2) + XYepolm_rf.*besselj_dke_jd(XYn_rf - 1,XYZb.imj,XYlre)/sqrt(2)...
-   - XYmhuratio.*XYepolz_rf.*besselj_dke_jd(XYn_rf,XYZb.imj,XYlre);
-XYpolb.immj = XYepolp_rf.*besselj_dke_jd(XYn_rf + 1,XYZb.immj,XYlre)/sqrt(2) + XYepolm_rf.*besselj_dke_jd(XYn_rf - 1,XYZb.immj,XYlre)/sqrt(2)...
-   - XYmhuratio.*XYepolz_rf.*besselj_dke_jd(XYn_rf,XYZb.immj,XYlre);
-XYpolb.ijp = XYepolp_rf.*besselj_dke_jd(XYn_rf + 1,XYZb.ijp,XYlre)/sqrt(2) + XYepolm_rf.*besselj_dke_jd(XYn_rf - 1,XYZb.ijp,XYlre)/sqrt(2)...
-   - XYmhuratiop.*XYepolz_rf.*besselj_dke_jd(XYn_rf,XYZb.ijp,XYlre);
-XYpolb.ijm = XYepolp_rf.*besselj_dke_jd(XYn_rf + 1,XYZb.ijm,XYlre)/sqrt(2) + XYepolm_rf.*besselj_dke_jd(XYn_rf - 1,XYZb.ijm,XYlre)/sqrt(2)...
-   - XYmhuratiom.*XYepolz_rf.*besselj_dke_jd(XYn_rf,XYZb.ijm,XYlre);    
-%
-clear XYZb XYn_rf XYepolp_rf XYepolm_rf XYepolz_rf XYlre XYmhuratiop XYmhuratio XYmhuratiom 
-%
-XYrespol.ippj = XYdeltares.ippj.*abs(XYpolb.ippj).^2;
-XYrespol.ipj = XYdeltares.ipj.*abs(XYpolb.ipj).^2;
-XYrespol.ij = XYdeltares.ij.*abs(XYpolb.ij).^2;
-XYrespol.imj = XYdeltares.imj.*abs(XYpolb.imj).^2;
-XYrespol.immj = XYdeltares.immj.*abs(XYpolb.immj).^2;
-XYrespol.ijp = XYdeltares.ijp.*abs(XYpolb.ijp).^2;
-XYrespol.ijm = XYdeltares.ijm.*abs(XYpolb.ijm).^2;
-%
-clear XYdeltares XYpolb
-%
-%Sum over sigma for trapped particles - case FP
-%
-if dke_mode == 1,
-    %
-    XYrespol_tp = XYrespol;
-    %
-end
-%
-Yxmask = (((mask_n - 1)*nr + (mask_r - 1))*nb + (mask_y - 1))*npn + mask_p;%mask in pnp-y-rho-n 4-D matrices
-%
-XYrespol_mhuflip.ippj = flipud(sparse(double(mask_m),double(Yxmask),double(XYrespol.ippj),nmhu,npn*nb*nr*nn_rf));
-XYrespol_mhuflip.ipj = flipud(sparse(double(mask_m),double(Yxmask),double(XYrespol.ipj),nmhu,npn*nb*nr*nn_rf));
-XYrespol_mhuflip.ij = flipud(sparse(double(mask_m),double(Yxmask),double(XYrespol.ij),nmhu,npn*nb*nr*nn_rf));
-XYrespol_mhuflip.imj = flipud(sparse(double(mask_m),double(Yxmask),double(XYrespol.imj),nmhu,npn*nb*nr*nn_rf));
-XYrespol_mhuflip.immj = flipud(sparse(double(mask_m),double(Yxmask),double(XYrespol.immj),nmhu,npn*nb*nr*nn_rf));
-XYrespol_mhuflip.ijp = flipud(sparse(double(mask_m),double(Yxmask),double(XYrespol.ijm),nmhu,npn*nb*nr*nn_rf));
-XYrespol_mhuflip.ijm = flipud(sparse(double(mask_m),double(Yxmask),double(XYrespol.ijp),nmhu,npn*nb*nr*nn_rf));
-%
-XYmask = (Yxmask - 1)*nmhu + mask_m;
-%
-XYrespol_mhuflip.ippj = single(full(XYrespol_mhuflip.ippj(XYmask)));
-XYrespol_mhuflip.ipj = single(full(XYrespol_mhuflip.ipj(XYmask)));
-XYrespol_mhuflip.ij = single(full(XYrespol_mhuflip.ij(XYmask)));
-XYrespol_mhuflip.imj = single(full(XYrespol_mhuflip.imj(XYmask)));
-XYrespol_mhuflip.immj = single(full(XYrespol_mhuflip.immj(XYmask)));
-XYrespol_mhuflip.ijp = single(full(XYrespol_mhuflip.ijp(XYmask)));
-XYrespol_mhuflip.ijm = single(full(XYrespol_mhuflip.ijm(XYmask))); 
-%
-if dke_mode == 0,
-    %
-    clear Yxmask XYmask
-    %
-end
-%
-XXmask = ((mask_m - 1)*npn + (mask_p - 1))*nr + mask_r;%mask in rho-momentum 3-D matrices
-%
-XYtrapped_p = ~XXheavisidep(XXmask);
-XYtrapped = ~XXheaviside(XXmask);
-XYtrapped_m = ~XXheavisidem(XXmask);     
-%
-clear XXmask XXheavisidep XXheaviside XXheavisidem
-%
-XYrespol.ippj(XYtrapped) = (XYrespol.ippj(XYtrapped) + XYrespol_mhuflip.ippj(XYtrapped))/2;
-XYrespol.ipj(XYtrapped) = (XYrespol.ipj(XYtrapped) + XYrespol_mhuflip.ipj(XYtrapped))/2;
-XYrespol.ij(XYtrapped) = (XYrespol.ij(XYtrapped) + XYrespol_mhuflip.ij(XYtrapped))/2;
-XYrespol.imj(XYtrapped) = (XYrespol.imj(XYtrapped) + XYrespol_mhuflip.imj(XYtrapped))/2;
-XYrespol.immj(XYtrapped) = (XYrespol.immj(XYtrapped) + XYrespol_mhuflip.immj(XYtrapped))/2;
-XYrespol.ijp(XYtrapped_p) = (XYrespol.ijp(XYtrapped_p) + XYrespol_mhuflip.ijp(XYtrapped_p))/2;
-XYrespol.ijm(XYtrapped_m) = (XYrespol.ijm(XYtrapped_m) + XYrespol_mhuflip.ijm(XYtrapped_m))/2;
-%
-clear XYrespol_mhuflip
-%
-if dke_mode == 0,
-    %
-    clear XYtrapped_p XYtrapped XYtrapped_m
-    %            
-end
-%
-Xxmask = (mask_r - 1)*nmhu + mask_m;%mask in mhu-rho 2-D matrices
-%
-XYlambdap = Xxlambdap(Xxmask);
-XYlambda = Xxlambda(Xxmask);        
-XYlambdam = Xxlambdam(Xxmask);        
-%
-clear Xxmask 
-%
-XYlambdap(XYlambdap == 0) = eps('single');
-XYlambda(XYlambda == 0) =  eps('single');
-XYlambdam(XYlambdam == 0) =  eps('single');
+XYgammap = single(Xgammap(Xmask));
+XYgamma = single(Xgamma(Xmask));
+XYgammam = single(Xgammam(Xmask));
 %
 XYmhup = single(Xmhup(Xmask));
 XYmhu = single(Xmhu(Xmask));
 XYmhum = single(Xmhum(Xmask));
 %
-clear Xmask 
+XYomega_rf = yomega_rf(mask_y);
+if ny > 1,
+    XYomega_rf = XYomega_rf.';
+end    
+XYB0 = single(xB0(mask_r));
+if nr > 1,
+    XYB0 = XYB0.';
+end    
+XYomegaratio0 = qe*XYB0./XYomega_rf/me; % cyclotron frequency along the ray path
 %
-XYDfacp = XYmhup.*XYmhup.*XYpsib./XYlambdap./XYmhubp./XYmhubp;
-XYDfac = XYmhu.*XYmhu.*XYpsib./XYlambda./XYmhub./XYmhub;
-XYDfacm = XYmhum.*XYmhum.*XYpsib./XYlambdam./XYmhubm./XYmhubm;
-%
-if dke_mode == 0,
-    %
-    clear XYpsib XYmhubp XYmhub XYmhubm XYlambdap XYlambda XYlambdam XYqratio
-    %            
-end     
-%
-%QL Diffusion Coefficient
-%    
-XYold = xyopt(xymask) == 2; %(2): no 1/vpar dependence (old method, benchmark Karney Shoucri) 
-if max(XYold(:)) > 0
-    if display_mode >= 1,info_dke_yp(1,'WARNING: Old technique for calculating the LH matrix coefficients, for comparaison with previous versions (Karney, Shoucri)');end
+XYn = n_rf_list(mask_n);
+if nn_rf > 1,
+    XYn = XYn.';
 end
 %
-clear xymask
+XYyn0 = XYomegaratio0.*XYn;
 %
-XYDrf.ippj = zeros(SXY,'single');
-XYDrf.ipj = zeros(SXY,'single');
-XYDrf.ij = zeros(SXY,'single');
-XYDrf.imj = zeros(SXY,'single');
-XYDrf.immj = zeros(SXY,'single');
-XYDrf.ijp = zeros(SXY,'single');
-XYDrf.ijm = zeros(SXY,'single');
-%
-XYDrf.ippj(XYold) = XYrespol.ippj(XYold).*XYDfac(XYold);
-XYDrf.ipj(XYold) = XYrespol.ipj(XYold).*XYDfac(XYold);
-XYDrf.ij(XYold) = XYrespol.ij(XYold).*XYDfac(XYold);
-XYDrf.imj(XYold) = XYrespol.imj(XYold).*XYDfac(XYold);
-XYDrf.immj(XYold) = XYrespol.immj(XYold).*XYDfac(XYold);
-XYDrf.ijp(XYold) = XYrespol.ijp(XYold).*XYDfacp(XYold);
-XYDrf.ijm(XYold) = XYrespol.ijm(XYold).*XYDfacm(XYold);
-%
-XYDrf.ippj(~XYold) = XYrespol.ippj(~XYold).*XYDfac(~XYold).*XYgammapp(~XYold)./XYpnpp(~XYold)./abs(XYmhu(~XYold));
-XYDrf.ipj(~XYold) = XYrespol.ipj(~XYold).*XYDfac(~XYold).*XYgammap(~XYold)./XYpnp(~XYold)./abs(XYmhu(~XYold));
-XYDrf.ij(~XYold) = XYrespol.ij(~XYold).*XYDfac(~XYold).*XYgamma(~XYold)./XYpn(~XYold)./abs(XYmhu(~XYold));
-XYDrf.imj(~XYold) = XYrespol.imj(~XYold).*XYDfac(~XYold).*XYgammam(~XYold)./XYpnm(~XYold)./abs(XYmhu(~XYold));
-XYDrf.immj(~XYold) = XYrespol.immj(~XYold).*XYDfac(~XYold).*XYgammamm(~XYold)./XYpnmm(~XYold)./abs(XYmhu(~XYold));
-XYDrf.ijp(~XYold) = XYrespol.ijp(~XYold).*XYDfacp(~XYold).*XYgamma(~XYold)./XYpn(~XYold)./abs(XYmhup(~XYold));
-XYDrf.ijm(~XYold) = XYrespol.ijm(~XYold).*XYDfacm(~XYold).*XYgamma(~XYold)./XYpn(~XYold)./abs(XYmhum(~XYold));
-%
-clear XYrespol XYDfacp XYDfac XYDfacm  
-%
-if dke_mode == 0,
-    %
-    clear XYgammapp XYgammamm
-    clear XYpnpp XYpnp XYpn XYpnm XYpnmm
-    %
-end
-%	    
-% QL diffusion tensor elements
+clear XYomega_rf XYB0 XYomegaratio0
 %
 ZXYD_rf.pp_ippj = XY1mmhu2.*XYDrf.ippj;
 ZXYD_rf.pp_ipj = XY1mmhu2.*XYDrf.ipj;                                     
 ZXYD_rf.pp_ij = XY1mmhu2.*XYDrf.ij;                                      
-ZXYD_rf.parpar_ij = XY1mmhu2.*(1 - XYyn./XYgamma).^2.*XYDrf.ij./XYmhu./XYmhu; 
+ZXYD_rf.parpar_ij = XY1mmhu2.*(1 - XYyn0./XYgamma).^2.*XYDrf.ij./XYmhu./XYmhu; 
 ZXYD_rf.pp_imj = XY1mmhu2.*XYDrf.imj;
 ZXYD_rf.pp_immj = XY1mmhu2.*XYDrf.immj;
 %
-ZXYD_rf.pm_ipj = - sqrt(XY1mmhu2).*(XY1mmhu2 - XYyn./XYgammap).*XYDrf.ipj./XYmhu;
-ZXYD_rf.pm_ij = - sqrt(XY1mmhu2).*(XY1mmhu2 - XYyn./XYgamma).*XYDrf.ij./XYmhu;
-ZXYD_rf.pm_imj = - sqrt(XY1mmhu2).*(XY1mmhu2 - XYyn./XYgammam).*XYDrf.imj./XYmhu;
+ZXYD_rf.pm_ipj = - sqrt(XY1mmhu2).*(XY1mmhu2 - XYyn0./XYgammap).*XYDrf.ipj./XYmhu;
+ZXYD_rf.pm_ij = - sqrt(XY1mmhu2).*(XY1mmhu2 - XYyn0./XYgamma).*XYDrf.ij./XYmhu;
+ZXYD_rf.pm_imj = - sqrt(XY1mmhu2).*(XY1mmhu2 - XYyn0./XYgammam).*XYDrf.imj./XYmhu;
 %
-ZXYD_rf.mp_ijp = - sqrt(XY1mmhu2p).*(XY1mmhu2p - XYyn./XYgamma).*XYDrf.ijp./XYmhup;
-ZXYD_rf.mp_ij = - sqrt(XY1mmhu2).*(XY1mmhu2 - XYyn./XYgamma).*XYDrf.ij./XYmhu;
-ZXYD_rf.mp_ijm = - sqrt(XY1mmhu2m).*(XY1mmhu2m - XYyn./XYgamma).*XYDrf.ijm./XYmhum;
+ZXYD_rf.mp_ijp = - sqrt(XY1mmhu2p).*(XY1mmhu2p - XYyn0./XYgamma).*XYDrf.ijp./XYmhup;
+ZXYD_rf.mp_ij = - sqrt(XY1mmhu2).*(XY1mmhu2 - XYyn0./XYgamma).*XYDrf.ij./XYmhu;
+ZXYD_rf.mp_ijm = - sqrt(XY1mmhu2m).*(XY1mmhu2m - XYyn0./XYgamma).*XYDrf.ijm./XYmhum;
 %
-ZXYD_rf.mm_ijp = (XY1mmhu2p - XYyn./XYgamma).^2.*XYDrf.ijp./XYmhup./XYmhup;
-ZXYD_rf.mm_ijm = (XY1mmhu2m - XYyn./XYgamma).^2.*XYDrf.ijm./XYmhum./XYmhum;
+ZXYD_rf.mm_ijp = (XY1mmhu2p - XYyn0./XYgamma).^2.*XYDrf.ijp./XYmhup./XYmhup;
+ZXYD_rf.mm_ijm = (XY1mmhu2m - XYyn0./XYgamma).^2.*XYDrf.ijm./XYmhum./XYmhum;
 %
 clear XYDrf 
 %
@@ -856,8 +1079,8 @@ else
     ZXYF_rf_tp = NaN;
 end            
 %
-clear XYmhup XYmhu XYmhum XY1mmhu2p XY1mmhu2 XY1mmhu2m XYyn XYold
-clear XYgammap XYgamma XYgammam 
+clear XYgammap XYgamma XYgammam
+clear XYmhup XYmhu XYmhum XY1mmhu2p XY1mmhu2 XY1mmhu2m XYyn0 XYold
 %
 gridindex_rf.mask_p = mask_p;
 gridindex_rf.mask_m = mask_m;

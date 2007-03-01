@@ -1,7 +1,7 @@
 function [ZP0,Zcurr,Znorm,ZXXS,XxRR_fsav,xMRR_flux,xMRR_tau,xRR_fsav,xne_norm_out,xTe_norm_out,xft_fsav,xfteff_fsav] = ...
     fmoments_dke_yp(dkepath,dkeparam,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
                     XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
-                    ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyD0_rf,gridindex_rf,...
+                    ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp,gridindex_rf,...
                     ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,XXILor)
 %
 %   Calculate moments of the electron distribution function.
@@ -74,7 +74,7 @@ npn = gridindex_rf.npn;
 nmhu = gridindex_rf.nmhu;
 nr = gridindex_rf.nr;
 nr_dke = gridindex_rf.nr_dke;
-nb = gridindex_rf.nb;
+ny = gridindex_rf.ny;
 nn_rf = gridindex_rf.nn_rf;
 rdke = gridDKE.rdke;
 %
@@ -239,17 +239,17 @@ end
 iX = (gridindex_rf.mask_m - 1)*npn + gridindex_rf.mask_p;
 iXX = (gridindex_rf.mask_r - 1)*nmhu*npn + iX;
 ixy = (gridindex_rf.mask_y - 1)*nr + gridindex_rf.mask_r;
-ixyn = (gridindex_rf.mask_n - 1)*nb*nr + ixy;
-iyn = (gridindex_rf.mask_n - 1)*nb + gridindex_rf.mask_y;
+ixyn = (gridindex_rf.mask_n - 1)*ny*nr + ixy;
+iyn = (gridindex_rf.mask_n - 1)*ny + gridindex_rf.mask_y;
 %
 gridindex_rf = rmfield(gridindex_rf,['mask_r';'mask_m';'mask_p';'mask_n';'mask_y']);
 %
-XYD0_rf = xyD0_rf(ixy);
+XYP0_2piRp = xyP0_2piRp(ixy);
 %
-ZXYD_rf.pp_ipj = ZXYD_rf.pp_ipj.*XYD0_rf;
-ZXYD_rf.pp_imj = ZXYD_rf.pp_imj.*XYD0_rf;
-ZXYD_rf.pm_ipj = ZXYD_rf.pm_ipj.*XYD0_rf;
-ZXYD_rf.pm_imj = ZXYD_rf.pm_imj.*XYD0_rf;
+ZXYD_rf.pp_ipj = ZXYD_rf.pp_ipj.*XYP0_2piRp;
+ZXYD_rf.pp_imj = ZXYD_rf.pp_imj.*XYP0_2piRp;
+ZXYD_rf.pm_ipj = ZXYD_rf.pm_ipj.*XYP0_2piRp;
+ZXYD_rf.pm_imj = ZXYD_rf.pm_imj.*XYP0_2piRp;
 %
 XYFp_rf_imj = 0;
 XYFp_rf_ipj = 0;
@@ -269,13 +269,13 @@ XYpnp = single(Xpnp(iX));
 %
 if dke_mode == 1,
     %
-    ZXYD_rf_tp.pp_ipj = ZXYD_rf_tp.pp_ipj.*XYD0_rf;
-    ZXYD_rf_tp.pp_imj = ZXYD_rf_tp.pp_imj.*XYD0_rf;
-    ZXYD_rf_tp.pm_ipj = ZXYD_rf_tp.pm_ipj.*XYD0_rf;
-    ZXYD_rf_tp.pm_imj = ZXYD_rf_tp.pm_imj.*XYD0_rf;
+    ZXYD_rf_tp.pp_ipj = ZXYD_rf_tp.pp_ipj.*XYP0_2piRp;
+    ZXYD_rf_tp.pp_imj = ZXYD_rf_tp.pp_imj.*XYP0_2piRp;
+    ZXYD_rf_tp.pm_ipj = ZXYD_rf_tp.pm_ipj.*XYP0_2piRp;
+    ZXYD_rf_tp.pm_imj = ZXYD_rf_tp.pm_imj.*XYP0_2piRp;
     %
-    ZXYF_rf_tp.p_ipj = ZXYF_rf_tp.p_ipj.*XYD0_rf;
-    ZXYF_rf_tp.p_imj = ZXYF_rf_tp.p_imj.*XYD0_rf;
+    ZXYF_rf_tp.p_ipj = ZXYF_rf_tp.p_ipj.*XYP0_2piRp;
+    ZXYF_rf_tp.p_imj = ZXYF_rf_tp.p_imj.*XYP0_2piRp;
     %
     XYf0_tp_imj = single(XXf0_tp_imj(iXX));
     XYf0_tp_ipj = single(XXf0_tp_ipj(iXX));
@@ -318,10 +318,10 @@ if nargout == 1,
     end
 else
     %
-    ZXYD_rf.mm_ijm = ZXYD_rf.mm_ijm.*XYD0_rf;
-    ZXYD_rf.mm_ijp = ZXYD_rf.mm_ijp.*XYD0_rf;
-    ZXYD_rf.mp_ijm = ZXYD_rf.mp_ijm.*XYD0_rf;
-    ZXYD_rf.mp_ijp = ZXYD_rf.mp_ijp.*XYD0_rf;
+    ZXYD_rf.mm_ijm = ZXYD_rf.mm_ijm.*XYP0_2piRp;
+    ZXYD_rf.mm_ijp = ZXYD_rf.mm_ijp.*XYP0_2piRp;
+    ZXYD_rf.mp_ijm = ZXYD_rf.mp_ijm.*XYP0_2piRp;
+    ZXYD_rf.mp_ijp = ZXYD_rf.mp_ijp.*XYP0_2piRp;
     %
     XYFm_rf_ijm = 0;
     XYFm_rf_ijp = 0;
@@ -351,13 +351,13 @@ else
         %
         %f1 contribution
         %
-        ZXYD_rf_tp.mm_ijm = ZXYD_rf_tp.mm_ijm.*XYD0_rf;
-        ZXYD_rf_tp.mm_ijp = ZXYD_rf_tp.mm_ijp.*XYD0_rf;
-        ZXYD_rf_tp.mp_ijm = ZXYD_rf_tp.mp_ijm.*XYD0_rf;
-        ZXYD_rf_tp.mp_ijp = ZXYD_rf_tp.mp_ijp.*XYD0_rf;
+        ZXYD_rf_tp.mm_ijm = ZXYD_rf_tp.mm_ijm.*XYP0_2piRp;
+        ZXYD_rf_tp.mm_ijp = ZXYD_rf_tp.mm_ijp.*XYP0_2piRp;
+        ZXYD_rf_tp.mp_ijm = ZXYD_rf_tp.mp_ijm.*XYP0_2piRp;
+        ZXYD_rf_tp.mp_ijp = ZXYD_rf_tp.mp_ijp.*XYP0_2piRp;
         %
-        ZXYF_rf_tp.m_ijm = ZXYF_rf_tp.m_ijm.*XYD0_rf;
-        ZXYF_rf_tp.m_ijp = ZXYF_rf_tp.m_ijp.*XYD0_rf;
+        ZXYF_rf_tp.m_ijm = ZXYF_rf_tp.m_ijm.*XYP0_2piRp;
+        ZXYF_rf_tp.m_ijp = ZXYF_rf_tp.m_ijp.*XYP0_2piRp;
         %
         XYf0_tp_ijm = single(XXf0_tp_ijm(iXX));
         XYf0_tp_ijp = single(XXf0_tp_ijp(iXX));
@@ -391,10 +391,10 @@ else
         %
         %  Wave-induced radial transport by adjoint technique (P. Helander model)
         %
-        ZXYD_rf_tp.mm1_ijm = ZXYD_rf_tp.mm1_ijm.*XYD0_rf;
-        ZXYD_rf_tp.mm1_ijp = ZXYD_rf_tp.mm1_ijp.*XYD0_rf;
-        ZXYD_rf_tp.mp1_ijm = ZXYD_rf_tp.mp1_ijm.*XYD0_rf;
-        ZXYD_rf_tp.mp1_ijp = ZXYD_rf_tp.mp1_ijp.*XYD0_rf;
+        ZXYD_rf_tp.mm1_ijm = ZXYD_rf_tp.mm1_ijm.*XYP0_2piRp;
+        ZXYD_rf_tp.mm1_ijp = ZXYD_rf_tp.mm1_ijp.*XYP0_2piRp;
+        ZXYD_rf_tp.mp1_ijm = ZXYD_rf_tp.mp1_ijm.*XYP0_2piRp;
+        ZXYD_rf_tp.mp1_ijp = ZXYD_rf_tp.mp1_ijp.*XYP0_2piRp;
         %
         %
         [XYSp0_rf_tp1_imj,XYSp0_rf_tp1_ipj,XYSm0_rf_tp1_ijm,XYSm0_rf_tp1_ijp] = ...
@@ -408,7 +408,7 @@ else
     %
 end
 %
-clear XYD0_rf ZXYD_rf ZXYD_rf_tp ZXYF_rf_tp 
+clear XYP0_2piRp ZXYD_rf ZXYD_rf_tp ZXYF_rf_tp 
 %
 clear XYf0_imj XYf0_ipj XYdf0dpn_imj XYdf0dpn_ipj XYdf0dmhu_imj XYdf0dmhu_ipj
 clear XYf0_tp_imj XYf0_tp_ipj XYdf0dpn_tp_imj XYdf0dpn_tp_ipj XYdf0dmhu_tp_imj XYdf0dmhu_tp_ipj
@@ -428,16 +428,16 @@ XYdpn     = single(Xdpn(iX));
 XYlambda  = single(XXlambda(iXX)); 
 %
 xqratio = xqtilde./xqhat;
-xynqratio = repmat(xqratio.',[1,nb,nn_rf]);
+xynqratio = repmat(xqratio.',[1,ny,nn_rf]);
 %
 XYIntegrandm = XYpnm.*XYpnm.*XYpnm.*XYlambda.*XYSp0_rf_imj./XYgammam;
 XYIntegrandp = XYpnp.*XYpnp.*XYpnp.*XYlambda.*XYSp0_rf_ipj./XYgammap;
 %
 XYIntegrand = XYdmhu.*XYdpn.*(XYIntegrandm + XYIntegrandp)/2;
 %
-XYIntegrand = sparse(double(iX),double(ixyn),double(XYIntegrand),npn*nmhu,nr*nb*nn_rf);
+XYIntegrand = sparse(double(iX),double(ixyn),double(XYIntegrand),npn*nmhu,nr*ny*nn_rf);
 %
-ZP0.xyn_rf_fsav = 2*pi*xynqratio.*reshape(full(sum(XYIntegrand)),[nr,nb,nn_rf]);
+ZP0.xyn_rf_fsav = 2*pi*xynqratio.*reshape(full(sum(XYIntegrand)),[nr,ny,nn_rf]);
 %
 ZP0.xy_rf_fsav = sum(ZP0.xyn_rf_fsav,3);%sum over harmonic numbers
 ZP0.x_rf_fsav = sum(ZP0.xy_rf_fsav,2);%sum over rays
@@ -449,18 +449,18 @@ if dke_mode == 1,
     %
     XYIntegrand = XYdmhu.*XYdpn.*(XYIntegrandm + XYIntegrandp)/2;
     %
-    XYIntegrand = sparse(double(iX),double(ixyn),double(XYIntegrand),npn*nmhu,nr*nb*nn_rf);
+    XYIntegrand = sparse(double(iX),double(ixyn),double(XYIntegrand),npn*nmhu,nr*ny*nn_rf);
     %
-    ZP0.xyn_rf_tp_fsav = 2*pi*xynqratio.*reshape(full(sum(XYIntegrand)),[nr,nb,nn_rf]);
+    ZP0.xyn_rf_tp_fsav = 2*pi*xynqratio.*reshape(full(sum(XYIntegrand)),[nr,ny,nn_rf]);
     %
     XYIntegrandm = XYpnm.*XYpnm.*XYpnm.*XYlambda.*XYSp0_rf_g_imj./XYgammam;
     XYIntegrandp = XYpnp.*XYpnp.*XYpnp.*XYlambda.*XYSp0_rf_g_ipj./XYgammap;
     %
     XYIntegrand = XYdmhu.*XYdpn.*(XYIntegrandm + XYIntegrandp)/2;
     %
-    XYIntegrand = sparse(double(iX),double(ixyn),double(XYIntegrand),npn*nmhu,nr*nb*nn_rf);
+    XYIntegrand = sparse(double(iX),double(ixyn),double(XYIntegrand),npn*nmhu,nr*ny*nn_rf);
     %
-    ZP0.xyn_rf_g_fsav = 2*pi*xynqratio.*reshape(full(sum(XYIntegrand)),[nr,nb,nn_rf]);
+    ZP0.xyn_rf_g_fsav = 2*pi*xynqratio.*reshape(full(sum(XYIntegrand)),[nr,ny,nn_rf]);
     %
     ZP0.xy_rf_tp_fsav = sum(ZP0.xyn_rf_tp_fsav,3);%sum over harmonic numbers
     ZP0.xy_rf_g_fsav = sum(ZP0.xyn_rf_g_fsav,3);%sum over harmonic numbers
@@ -476,12 +476,12 @@ if dke_mode == 1,
         XYRlambda_m = single(Xdpn(iXX));
         %
         XYIntegrand = XYdmhu.*XYdpnm.*XYpnm.*XYpnm.*XYmhu.*XYlambda.*XYSp0_rf_tp1_imj;
-        XYIntegrand = sparse(double(iX),double(ixyn),double(XYIntegrand),npn*nmhu,nr*nb*nn_rf);
-        xggradpsi21 = 2*pi*xqratio.*(xR0.*xBT0./xB0).*sum(sum(reshape(full(sum(XYIntegrand)),[nr,nb,nn_rf]),3),2).';
+        XYIntegrand = sparse(double(iX),double(ixyn),double(XYIntegrand),npn*nmhu,nr*ny*nn_rf);
+        xggradpsi21 = 2*pi*xqratio.*(xR0.*xBT0./xB0).*sum(sum(reshape(full(sum(XYIntegrand)),[nr,ny,nn_rf]),3),2).';
         %
         XYIntegrand = XYdmhu.*XYdpn.*XYpn.*XYpn.*XY1mmhu2m.*XYlambda.*XYRlambda_m.*XYSm0_rf_tp1_ijm;
-        XYIntegrand = sparse(double(iX),double(ixyn),double(XYIntegrand),npn*nmhu,nr*nb*nn_rf);
-        xggradpsi1 = 2*pi*xynqratio.*reshape(full(sum(XYIntegrand)),[nr,nb,nn_rf]);
+        XYIntegrand = sparse(double(iX),double(ixyn),double(XYIntegrand),npn*nmhu,nr*ny*nn_rf);
+        xggradpsi1 = 2*pi*xynqratio.*reshape(full(sum(XYIntegrand)),[nr,ny,nn_rf]);
     end
     %    
 end
@@ -498,22 +498,22 @@ end
 %
 % Sum over rays and harmonics for RF fluxes
 %
-ZXXS.p0_rf_imj = reshape(full(sum(sparse(double(iyn),double(iXX),double(XYSp0_rf_imj),nb*nn_rf,npn*nmhu*nr),1)),[npn,nmhu,nr]);
-ZXXS.p0_rf_ipj = reshape(full(sum(sparse(double(iyn),double(iXX),double(XYSp0_rf_ipj),nb*nn_rf,npn*nmhu*nr),1)),[npn,nmhu,nr]);
-ZXXS.m0_rf_ijm = reshape(full(sum(sparse(double(iyn),double(iXX),double(XYSm0_rf_ijm),nb*nn_rf,npn*nmhu*nr),1)),[npn,nmhu,nr]);
-ZXXS.m0_rf_ijp = reshape(full(sum(sparse(double(iyn),double(iXX),double(XYSm0_rf_ijp),nb*nn_rf,npn*nmhu*nr),1)),[npn,nmhu,nr]);
+ZXXS.p0_rf_imj = reshape(full(sum(sparse(double(iyn),double(iXX),double(XYSp0_rf_imj),ny*nn_rf,npn*nmhu*nr),1)),[npn,nmhu,nr]);
+ZXXS.p0_rf_ipj = reshape(full(sum(sparse(double(iyn),double(iXX),double(XYSp0_rf_ipj),ny*nn_rf,npn*nmhu*nr),1)),[npn,nmhu,nr]);
+ZXXS.m0_rf_ijm = reshape(full(sum(sparse(double(iyn),double(iXX),double(XYSm0_rf_ijm),ny*nn_rf,npn*nmhu*nr),1)),[npn,nmhu,nr]);
+ZXXS.m0_rf_ijp = reshape(full(sum(sparse(double(iyn),double(iXX),double(XYSm0_rf_ijp),ny*nn_rf,npn*nmhu*nr),1)),[npn,nmhu,nr]);
 %
 if dke_mode == 1,
     %
-    ZXXS.p0_rf_tp_imj = reshape(full(sum(sparse(double(iyn),double(iXX),double(XYSp0_rf_tp_imj),nb*nn_rf,npn*nmhu*nr),1)),[npn,nmhu,nr]);
-    ZXXS.p0_rf_tp_ipj = reshape(full(sum(sparse(double(iyn),double(iXX),double(XYSp0_rf_tp_ipj),nb*nn_rf,npn*nmhu*nr),1)),[npn,nmhu,nr]);
-    ZXXS.m0_rf_tp_ijm = reshape(full(sum(sparse(double(iyn),double(iXX),double(XYSm0_rf_tp_ijm),nb*nn_rf,npn*nmhu*nr),1)),[npn,nmhu,nr]);
-    ZXXS.m0_rf_tp_ijp = reshape(full(sum(sparse(double(iyn),double(iXX),double(XYSm0_rf_tp_ijp),nb*nn_rf,npn*nmhu*nr),1)),[npn,nmhu,nr]);
+    ZXXS.p0_rf_tp_imj = reshape(full(sum(sparse(double(iyn),double(iXX),double(XYSp0_rf_tp_imj),ny*nn_rf,npn*nmhu*nr),1)),[npn,nmhu,nr]);
+    ZXXS.p0_rf_tp_ipj = reshape(full(sum(sparse(double(iyn),double(iXX),double(XYSp0_rf_tp_ipj),ny*nn_rf,npn*nmhu*nr),1)),[npn,nmhu,nr]);
+    ZXXS.m0_rf_tp_ijm = reshape(full(sum(sparse(double(iyn),double(iXX),double(XYSm0_rf_tp_ijm),ny*nn_rf,npn*nmhu*nr),1)),[npn,nmhu,nr]);
+    ZXXS.m0_rf_tp_ijp = reshape(full(sum(sparse(double(iyn),double(iXX),double(XYSm0_rf_tp_ijp),ny*nn_rf,npn*nmhu*nr),1)),[npn,nmhu,nr]);
     %
-    ZXXS.p0_rf_g_imj = reshape(full(sum(sparse(double(iyn),double(iXX),double(XYSp0_rf_g_imj),nb*nn_rf,npn*nmhu*nr),1)),[npn,nmhu,nr]);
-    ZXXS.p0_rf_g_ipj = reshape(full(sum(sparse(double(iyn),double(iXX),double(XYSp0_rf_g_ipj),nb*nn_rf,npn*nmhu*nr),1)),[npn,nmhu,nr]);
-    ZXXS.m0_rf_g_ijm = reshape(full(sum(sparse(double(iyn),double(iXX),double(XYSm0_rf_g_ijm),nb*nn_rf,npn*nmhu*nr),1)),[npn,nmhu,nr]);
-    ZXXS.m0_rf_g_ijp = reshape(full(sum(sparse(double(iyn),double(iXX),double(XYSm0_rf_g_ijp),nb*nn_rf,npn*nmhu*nr),1)),[npn,nmhu,nr]);
+    ZXXS.p0_rf_g_imj = reshape(full(sum(sparse(double(iyn),double(iXX),double(XYSp0_rf_g_imj),ny*nn_rf,npn*nmhu*nr),1)),[npn,nmhu,nr]);
+    ZXXS.p0_rf_g_ipj = reshape(full(sum(sparse(double(iyn),double(iXX),double(XYSp0_rf_g_ipj),ny*nn_rf,npn*nmhu*nr),1)),[npn,nmhu,nr]);
+    ZXXS.m0_rf_g_ijm = reshape(full(sum(sparse(double(iyn),double(iXX),double(XYSm0_rf_g_ijm),ny*nn_rf,npn*nmhu*nr),1)),[npn,nmhu,nr]);
+    ZXXS.m0_rf_g_ijp = reshape(full(sum(sparse(double(iyn),double(iXX),double(XYSm0_rf_g_ijp),ny*nn_rf,npn*nmhu*nr),1)),[npn,nmhu,nr]);
     %
 end
 %
@@ -789,7 +789,7 @@ end
 %   Wave-induced radial transport by adjoint technique (P. Helander model)
 %
 if dke_mode == 1,
-    if nb > 0,
+    if ny > 0,
          xggradpsi = xggradpsi1 - xggradpsi21 - xggradpsi22;
          xVr = xggradpsi.*xR0(rdke).*xBp0(rdke)./xne_norm(rdke);
          ZWiTransp_fsav{1} = xggradpsi;%For all rays

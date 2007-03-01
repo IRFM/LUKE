@@ -33,14 +33,14 @@ else
    [mksa] = mksacoefbuilder_dke_yp(dkeparam_out,display,equilDKE,radialDKE,momentumDKE,gridDKE);%MKSA quantities calculations
    [Zmomcoef] = momentumcoefbuilder_dke_yp(gridDKE,mksa);%Momentum space coefficients for FP calculations
    [Zbouncecoef] = bouncecoefbuilder_dke_yp(dkepath,dkeparam_out,display,equilDKE,gridDKE);%bounce averaging coefficients
-   [waveparam,xyprop_dke,xyP0_2piRp_in,yb,xys] = rfwave_dke_jd(dkeparam_out,display,equil,equilDKE,gridDKE,Zbouncecoef,mksa,waves);%RF wave parameters preprocessing calculations
+   [waveparam,xyprop_dke,xyP0_2piRp_mod,yb,xys] = rfwave_dke_jd(dkeparam_out,display,equil,equilDKE,gridDKE,Zbouncecoef,mksa,waves);%RF wave parameters preprocessing calculations
    [XXsinksource] = sinksourcecoeffbuilder_dke_yp(dkeparam_out,display,gridDKE,mksa,XXsinksource_in);%External sink and source contributions (for right-hand side part of the FP equation)
    [Zmripple] = mripplecoefbuilder_dke_yp(dkeparam_out,display,equil,equilDKE,gridDKE,mksa,ripple);%Magnetic ripple matrix coefficients
    [MMXR_f_t,Xmask_r_edge] = rad_dke_yp(dkepath,dkeparam_out,display,equilDKE,gridDKE,mksa,Zbouncecoef,Zmomcoef,transpfaste);%Radial transport super matrix
    [ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor] = coll_dke_jd(dkepath,dkeparam_out,display,equilDKE,mksa,gridDKE,Zmomcoef,Zbouncecoef);%Collisions flux coefficients 
    [ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,xepsi,xEfield_validity] = efield_dke_jd(dkepath,dkeparam_out,display,equilDKE,mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,ZXXF_c);%Electric field flux coefficients
 %
-   if ~isstruct(waveparam),% ray tracing simulation
+   if strcmp(waveparam.model,'RT'),% ray tracing simulation
       [ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf] = rfdiff_dke_jd(dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,radialDKE,waveparam);%RF waves flux coefficients
    elseif strcmp(waveparam.model,'FW_BIL')%full wave model by R. Bilato
       [ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf] = rfdiff_dke_fw_jd(dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,radialDKE,waves);%RF waves flux coefficients
@@ -56,146 +56,124 @@ end
 %
 time0 = clock;
 %
-if ~isstruct(waveparam) & ~isempty(waveparam),%initialization of wave parameters  
-   xyD0_rf_in = waveparam(:,:,4);%initial value of the constant diffusion coefficient
-   delta_rt = dkeparam_out.delta_rt;%smoothering parameter of quasilinear iterations
-%
-% initial absorbed power density estimate: either none or from linear model if calculated
-%
-   if sum(sum(isnan(waveparam(:,:,13)))),
-      xyPabs_rf_dke_fsav_mksa = 0;
-   else
-      xyPabs_rf_dke_fsav_mksa = waveparam(:,:,13).*waveparam(:,:,4).*waveparam(:,:,1)*mksa.wmabs2;
-   end
-%    
-% initial power flow along the ray, calculated from xyPabs_rf_dke_fsav_mksa
-%
-   [xyP0_2piRp_out,xyP0_2piRp_mod] = rfprop_dke_jd(yb,xyprop_dke,xyP0_2piRp_in,xyPabs_rf_dke_fsav_mksa,equilDKE.xdV_2piRp_dke,gridDKE.xpsin,gridDKE.xpsin_dke,gridDKE.rdke,dkeparam_out.dke_mode);
-%
-   zP_0_2piRp = raypath_jd(xyP0_2piRp_mod,xyprop_dke,yb,radialDKE.r_dke);
-   zS = raypath_jd(xys,xyprop_dke,yb,radialDKE.r_dke);
-   xyP0_2piRp_mod_old = xyP0_2piRp_in;
-   xymask = (xyP0_2piRp_in == 0);
-   xyP0_2piRp_in(xymask) = eps; %to avoid singularities
-   nit_rf = dkeparam_out.nit_rf;
-   if nit_rf > 1 & display.display_mode >= 1,
-       Fig_QLIter = figure('Name','Quasilinear iteration');
-       Fig_Pray = figure('Name','Power absorption along rays');
-   end
+if strcmp(waveparam.model,'RT') & ~isempty(waveparam.bomega_rf),%initialization of wave parameters  
+    %
+    delta_rt = dkeparam_out.delta_rt;%smoothering parameter of quasilinear iterations
+    %
+    zP_0_2piRp = raypath_jd(xyP0_2piRp_mod,xyprop_dke,yb,radialDKE.r_dke);
+    zS = raypath_jd(xys,xyprop_dke,yb,radialDKE.r_dke);
+    nit_rf = dkeparam_out.nit_rf;
+    if nit_rf > 1 & display.display_mode >= 1,
+        Fig_QLIter = figure('Name','Quasilinear iteration');
+        Fig_Pray = figure('Name','Power absorption along rays');
+    end
 else
-   nit_rf = 1;
-   xyP0_2piRp_mod = '';
-   xyP0_2piRp_mod_old = '';
-   xyP0_2piRp_in = '';
+    nit_rf = 1;
+    redfac = 1;
+    xyP0_2piRp_mod = '';
 end  
 %
 residue_rf = [];
 %
 for it_rf=1:nit_rf, % convergence in the ray-tracing mode
-   if ~isstruct(waveparam), 
-      if ~isempty(waveparam),%in the case of RF waves only
-%
-         if it_rf > 1,%1,
-             xyP0_2piRp_mod = delta_rt*xyP0_2piRp_mod_old + (1 - delta_rt)*xyP0_2piRp_mod;
-         end
-%
-         xyD0_rf_mod = xyD0_rf_in.*xyP0_2piRp_mod./xyP0_2piRp_in;% The diffusion coefficient is proportional to the incident power
-%
-         if 0,%nit_rf > 1,
-             if it_rf == 1,
-                 redfac = max(sum(xyP0_2piRp_mod.'))/sum(max(xyP0_2piRp_in(:,yb)));
-             else
-                 redfac = redfac - 1;
-             end
-             %redfac = 10/it_rf;
+    if strcmp(waveparam.model,'RT') & ~isempty(waveparam.bomega_rf),%in the case of RF waves only
+        %
+        if it_rf > 1,%1,
+            xyP0_2piRp_mod = delta_rt*xyP0_2piRp_mod_old + (1 - delta_rt)*xyP0_2piRp_mod;
+        end
+        %
+        if 0,%nit_rf > 1,
+            if it_rf == 1,
+                redfac = max(sum(xyP0_2piRp_mod.'))/sum(max(xyP0_2piRp_in(:,yb)));
+            else
+                redfac = redfac - 1;
+            end
+            %redfac = 10/it_rf;
+            %
+            redfac = max([redfac,1]);
              %
-             redfac = max([redfac,1]);
-             %
-         else
-             redfac = 1;
-         end
-         xyD0_rf = xyD0_rf_mod./redfac;
-      else
-         xyD0_rf = zeros(gridDKE.nr,0);
-      end     
-   else
-      xyD0_rf = ones(gridindex_rf.nr,1);
-   end
-%
-   [ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp] = raysum_rf_jd(dkeparam_out,ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyD0_rf,gridindex_rf);
-   [Zdelta,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,Zpn2_t,sm_f,sm_g,sm_tp] = matrixcalc_dke_yp(dkeparam_out,display,gridDKE,equilDKE,Zbouncecoef,mksa,Zmripple,ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXILor,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp,Xmask_r_edge);%Build the 3D DKE matrix
-   [XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,radial_mode,memoryLU_f,memoryLU_g] = solver_dke_yp(dkepath,dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,Xmask_r_edge,XXsinksource,XXfM,XXfinit);% Solve the DKE equation
-%
-   if ~isstruct(waveparam) & ~isempty(waveparam),%In the case of RF waves and quasilinear iteration
-      if nit_rf > 1,  
-%
-% Calculation of the density of power absorbed for all rays
-%
-         [ZP0] = fmoments_dke_yp(dkepath,dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
-            XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
-            ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyD0_rf,gridindex_rf);%Calculate RF absorbed power of the distribution function
-         if dkeparam_out.dke_mode >= 1,
-            xyPabs_rf_dke_fsav_out = ZP0.xy_rf_fsav + ZP0.xy_rf_tp_fsav + ZP0.xy_rf_g_fsav; % flux-surface averaged density of absorbed power.
-         else
-            xyPabs_rf_dke_fsav_out = ZP0.xy_rf_fsav; % flux-surface averaged density of absorbed power.
-         end	    
-         xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav_out*mksa.P_ref*1e6;%RF power (W)
-         if nit_rf > 1,
-            xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav_mksa*redfac;
-         end
-%
-% Calculation of the power flow along the rays from DKE calculations
-%
-         xyP0_2piRp_mod_old = xyP0_2piRp_mod;
-%
-         [xyP0_2piRp_out,xyP0_2piRp_mod] = rfprop_dke_jd(yb,xyprop_dke,xyP0_2piRp_mod_old,xyPabs_rf_dke_fsav_mksa,equilDKE.xdV_2piRp_dke,gridDKE.xpsin,gridDKE.xpsin_dke,gridDKE.rdke,dkeparam_out.dke_mode);
-%
-         residue_rf(it_rf) = max(max(abs(xyP0_2piRp_mod - xyP0_2piRp_mod_old)./xyP0_2piRp_in));
-%
-         if display.display_mode >= 1,
-            figure(Fig_QLIter),
-            [ax] = graph1D_jd(1:it_rf,residue_rf,0,1,'Iteration number','\DeltaP/P','Quasilinear convergence',NaN,[0,nit_rf],[dkeparam_out.prec_rf,1],'none','+','r',2);
-            grid  on
-            drawnow;
-%                
+        else
+            redfac = 1;
+        end
+    end
+    %
+    [ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp] = raysum_rf_jd(dkeparam_out,ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod/redfac,gridindex_rf);
+    [Zdelta,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,Zpn2_t,sm_f,sm_g,sm_tp] = matrixcalc_dke_yp(dkeparam_out,display,gridDKE,equilDKE,Zbouncecoef,mksa,Zmripple,ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXILor,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp,Xmask_r_edge);%Build the 3D DKE matrix
+    [XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,radial_mode,memoryLU_f,memoryLU_g] = solver_dke_yp(dkepath,dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,Xmask_r_edge,XXsinksource,XXfM,XXfinit);% Solve the DKE equation
+    %
+    xyP0_2piRp_mod_old = xyP0_2piRp_mod;
+    %
+    if strcmp(waveparam.model,'RT') & ~isempty(waveparam.bomega_rf),%In the case of RF waves and quasilinear iteration
+        if nit_rf > 1,  
+            %
+            % Calculation of the density of power absorbed for all rays
+            %
+            [ZP0] = fmoments_dke_yp(dkepath,dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
+                XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
+                ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod,gridindex_rf);%Calculate RF absorbed power of the distribution function
+            if dkeparam_out.dke_mode >= 1,
+                xyPabs_rf_dke_fsav_out = ZP0.xy_rf_fsav + ZP0.xy_rf_tp_fsav + ZP0.xy_rf_g_fsav; % flux-surface averaged density of absorbed power.
+            else
+                xyPabs_rf_dke_fsav_out = ZP0.xy_rf_fsav; % flux-surface averaged density of absorbed power.
+            end	    
+            xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav_out*mksa.P_ref*1e6;%RF power (W)
+            %
+            % Calculation of the power flow along the rays from DKE calculations
+            %
             zP_0_2piRp_old = zP_0_2piRp;
+            %
+            [xyP0_2piRp_out,xyP0_2piRp_mod] = rfprop_dke_jd(yb,xyprop_dke,xyP0_2piRp_mod_old,xyPabs_rf_dke_fsav_mksa,equilDKE.xdV_2piRp_dke,gridDKE.xpsin,gridDKE.xpsin_dke,gridDKE.rdke,dkeparam_out.dke_mode);
+            %
             zP_0_2piRp = raypath_jd(xyP0_2piRp_mod,xyprop_dke,yb,radialDKE.r_dke);
+            %
+            for iray = 1:length(yb),
+                yresidue_rf(iray,it_rf) = max(abs(zP_0_2piRp{iray} - zP_0_2piRp_old{iray})./zP_0_2piRp{iray}(1));
+            end
+            %
+            residue_rf(it_rf) = max(yresidue_rf(:,it_rf));
+            %
+            if display.display_mode >= 1,
+                figure(Fig_QLIter),
+                [ax] = graph1D_jd(1:it_rf,residue_rf,0,1,'Iteration number','\DeltaP/P','Quasilinear convergence',NaN,[0,nit_rf],[dkeparam_out.prec_rf,1],'none','+','r',2);
+                grid  on
+                drawnow;                
 %             
-            for iray = 1:length(waves{1}.rays),
-               figure(Fig_Pray + iray - 1);clf
-               [ax] = graph1D_jd(zS{iray},zP_0_2piRp_old{iray},0,0,'','P_{LH}/2\piR_p (W/m)',['QL convergence, ray #',int2str(iray)],NaN,'','','--','none','r',2);
-               [ax] = graph1D_jd(zS{iray},zP_0_2piRp{iray},0,0,'','P_{LH}/2\piR_p (W/m)',['QL convergence, ray #',int2str(iray)],NaN,'','','-','none','r',2);
-               legend(['Iteration #',int2str(it_rf-1)],['Iteration #',int2str(it_rf)])
-               grid on
-               drawnow;
+                for iray = 1:length(zS),
+                    figure(Fig_Pray + iray - 1);clf
+                    [ax] = graph1D_jd(zS{iray},zP_0_2piRp_old{iray},0,0,'','P_{LH}/2\piR_p (W/m)',['QL convergence, ray #',int2str(iray)],NaN,'','','--','none','r',2);
+                    [ax] = graph1D_jd(zS{iray},zP_0_2piRp{iray},0,0,'','P_{LH}/2\piR_p (W/m)',['QL convergence, ray #',int2str(iray)],NaN,'','','-','none','r',2);
+                    legend(['Iteration #',int2str(it_rf-1)],['Iteration #',int2str(it_rf)])
+                    title(['Ray #',num2str(iray),', residue: ',num2str(yresidue_rf(iray,it_rf))])
+                    grid on
+                    drawnow;
+                end
             end
-         end
+            pause
 %
-         if display.display_mode >=1,
-            info_dke_yp(2,'---------------------------------------------------------');
-            info_dke_yp(2,['Quasilinear iteration : ',int2str(it_rf),', Residu = ',num2str(residue_rf(it_rf)),', delta_rt = ',num2str(delta_rt)]);
-            info_dke_yp(2,'---------------------------------------------------------');
-         end
-%  
-         if residue_rf(it_rf) <= dkeparam_out.prec_rf & redfac == 1 & it_rf > 1,
-            if display.display_mode >=1,info_dke_yp(2,['Successfull convergence achieved for ray-tracing coupling after ',int2str(it_rf),' iterations !']);
-               break
-            else   	
-               if display.display_mode >=1,info_dke_yp(2,['Iteration ',int2str(it_rf),', residue = ',num2str(residue_rf(it_rf))]);end       
+            if display.display_mode >=1,
+                info_dke_yp(2,'---------------------------------------------------------');
+                info_dke_yp(2,['Quasilinear iteration : ',int2str(it_rf),', Residu = ',num2str(residue_rf(it_rf)),', delta_rt = ',num2str(delta_rt)]);
+                info_dke_yp(2,'---------------------------------------------------------');
             end
-         end     
-      end
-   end
+%  
+            if residue_rf(it_rf) <= dkeparam_out.prec_rf & redfac == 1 & it_rf > 1,
+                if display.display_mode >=1,info_dke_yp(2,['Successfull convergence achieved for ray-tracing coupling after ',int2str(it_rf),' iterations !']);end
+                break
+            else   	
+                if display.display_mode >=1,info_dke_yp(2,['Iteration ',int2str(it_rf),', residue = ',num2str(residue_rf(it_rf))]);end       
+            end
+        end     
+    end
 end
 %
 [ZP0,Zcurr,Znorm,ZXXS,XxRR_fsav,xMRR_flux,xMRR_tau,xRR_fsav,xne_norm_out,xTe_norm_out,xft_fsav,xfteff_fsav] = ...
     fmoments_dke_yp(dkepath,dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
     XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
-    ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyD0_rf,gridindex_rf,...
+    ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod,gridindex_rf,...
     ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,XXILor);%Calculate moments of the distribution function
 %   RF wave quasilinear diffusion
 %
-if ~isstruct(waveparam) & ~isempty(waveparam),%In the case of RF waves and quasilinear iteration
+if ~isstruct(waveparam) & ~isempty(waveparam.bomega_rf),%In the case of RF waves and quasilinear iteration
     [qe,me] = pc_dke_yp;%Universal physics constants
     blist_lh = find(round(waveparam(1,:,1)./(qe*min(equilDKE.xB0)/me)) == 0);
     nb_lh = length(blist_lh);
@@ -285,7 +263,6 @@ dke_out.memoryLU_g_out = memoryLU_g_out;
 dke_out.time_out = time_out;
 dke_out.waveparam = waveparam;
 dke_out.xyprop_dke = xyprop_dke;
-dke_out.xyP0_2piRp_in = xyP0_2piRp_in;
 dke_out.xyP0_2piRp_mod = xyP0_2piRp_mod_old;
 dke_out.xys = xys;
 dke_out.residue_rf = residue_rf;
