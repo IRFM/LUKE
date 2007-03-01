@@ -1,6 +1,6 @@
-run_cronos_C3PO
-run_cronos_starwars
-run_cronos_starwars_tr1
+%run_cronos_C3PO
+%run_cronos_starwars
+%run_cronos_starwars_tr1
 run_cronos_starwars_tr2
 run_cronos_starwars_tr3
 run_cronos_starwars_tr4
