@@ -101,7 +101,13 @@ for iw = 1:length(waves),%
     end        
     %
     omega_rf = wave.omega_rf;% The wave frequency (in rad/s) [1,1]
-    dsmin = wave.dsmin;%minimum interval for ray fragments    
+	%
+	if isfield(wave,'dsmin'),
+    	dsmin = wave.dsmin;%minimum interval for ray fragments
+	else
+		dsmin = Inf;
+	end
+	%    
     %rays = wave.rays;%list of rays {1,nb}
     opt_rf = wave.opt_rf;%option for FLR calculations [1,1]
     opt_disp = wave.opt_disp;  % option for solving the wave equation, which gives (ray.sepol_pmz, ray.sphi, ray.sNperp) 
