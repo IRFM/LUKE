@@ -10,7 +10,9 @@ if nargin < 5,
     method = 'linear';%'spline';%interpolation technique in psi
 end
 if nargin < 4,
-    opt_cut = 1;%'spline';%interpolation technique in psi
+    opt_cut = 1;% (0) does not cut the ray
+                % (1) cuts ray part beyond linear damping
+                % (2) cuts ray part beyond double linear damping
 end
 %
 % Equilibrium data with Fourier-enhanced poloidal precision and original radial grid
@@ -31,12 +33,19 @@ for ib = 1:length(wave.rays),
         salpha_lin(isnan(salpha_lin)) = 0;
         salpha_lin_h = (salpha_lin(1:end-1) + salpha_lin(2:end))/2;
         sds = diff(ray.ss);
-        ray.sP_2piRp = ray.P0_2piRp*exp(-[0,cumsum(salpha_lin_h.*sds)]);
+        ray.stau = [0,cumsum(salpha_lin_h.*sds)];
+        ray.sP_2piRp = ray.P0_2piRp*exp(-ray.stau);
         ray.sdP_2piRp_ds = salpha_lin.*ray.sP_2piRp;
         %
-        if opt_cut == 1,
+        if opt_cut >= 1,
             ns = length(ray.ss);
-            is_max = min([ns,round(find(ray.sP_2piRp < ray.P0_2piRp/1000)*1.1)]);
+            %
+            if opt_cut == 1,
+                is_max = min([ns,find(ray.stau > 10)]);
+            elseif opt_cut == 2,
+                is_max = min([ns,find(ray.stau > 20)]);
+            end
+            %
             frays = fieldnames(ray);
             for ifield = 1:length(frays),
                 eval(['ns_field = length(ray.',frays{ifield},');'])
@@ -47,7 +56,7 @@ for ib = 1:length(wave.rays),
         end
     end
     wave.rays{ib} = ray;
-   info_dke_yp(2,['Damping of ray #',num2str(ib),' calculated']);    
+    info_dke_yp(2,['Damping of ray #',num2str(ib),' calculated']);    
 end
 %
 wave.opt_disp = 0;
