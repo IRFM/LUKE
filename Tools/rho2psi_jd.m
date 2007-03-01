@@ -21,6 +21,10 @@ if nargin < 2
     error('no rho grid specified');
 end
 %
+if strcmp(equil.id,'LOCAL'),
+    psin = rho;
+    return
+end
 npsi = length(equil.psi_apRp);
 nr = length(rho);
 %

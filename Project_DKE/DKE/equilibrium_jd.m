@@ -72,7 +72,7 @@ function [equilDKE] = equilibrium_jd(equil,radialDKE,display,method,mfactor,fig_
 %   By J. Decker RLE-MIT <jodecker@alum.mit.edu> and Y. Peysson DRFC-CEA <yves.peysson@cea.fr>
 %
 if nargin < 6
-    fig_id = 51;%Factor for super theta grid
+    fig_id = 51;
     flag_id = 1;
 else
     flag_id = 0;
@@ -107,47 +107,72 @@ end
 %
 [npsi,ntheta] = size(equil.ptx);
 %
-if strcmp(equil.id,'LOCAL')
-    mtheta = equil.theta;
-    psin = equil.psi;
+if strcmp(equil.id,'LOCAL'),
+    %
+    % Note that circular flux-surfaces are assumed in this case
+    %
+    if npsi ~= 1 | ntheta ~= 1,
+        error('LOCAL is reserved for equilibria with one (psi,theta) position only')
+    end
     if isnan(xpsin)
-        xpsin = psin;
+        %disp('WARNING : xpsin is enforced to the value 0.5')
+        xpsin = 0.5;
     end
-    nr = length(xpsin);
-    psia = NaN;
+    %    
+    theta = equil.theta;
     %
-    XR = interp1(ppsin,equil.R,xpsin,'linear');
-    XZ = interp1(ppsin,equil.Z,xpsin,'linear');
-    XBR = interp1(ppsin,equil.BR,xpsin,'linear');
-    XBZ = interp1(ppsin,equil.BZ,xpsin,'linear');
-    XBphi = interp1(ppsin,equil.BPHI,xpsin,'linear');
-    xB0 = equil.BR(2,1);
-    xBT0 = xB0;
-    xBp0 = xB0;
-    xrho = interp1(ppsin,equil.prho,xpsin,'linear');
-    xTe = interp1(ppsin,equil.pTe,xpsin,'linear');
-    xne = interp1(ppsin,equil.pne,xpsin,'linear');
-    xzTi = interp1(ppsin,equil.pzTi',xpsin,'linear')';
-    xzni = interp1(ppsin,equil.pzni',xpsin,'linear')';
-    zZi = equil.zZi;
-    zmi = equil.zmi;
-    Rp = equil.R(1,1);
-    Zp = equil.Z(1,1);
-    xR0 = equil.R(2,1);
-    ap = xR0-Rp;
+    xBT = abs(equil.ptBPHI);%Toroidal B-field
+    xBp = sqrt(equil.ptBx.^2 + equil.ptBy.^2);%Poloidal B-field
+    xB = sqrt(xBT.^2 + xBp.^2);%Total B-field
     %
-    xmhu0T2 = interp1(ppsin,equil.pmhu0T2,xpsin,'linear');
-    xmhu0T2_new = 2*(xR0-Rp)/xR0;
-    if abs(xmhu0T2_new - xmhu0T2)>1e-4
-        error('something is wrong in the geometry')
-    else
-        xmhu0T2 = xmhu0T2_new;
-    end
-    xdV_dke = equil.xdV_dke;
-    xdA_dke = equil.xdA_dke;
-%    
-    xZeff = sum(xzni.*repmat((zZi.^2)',[1,nr]))./xne;%Effective charge (a.u.)
-%
+    %index 0 refers to the minimum of the magnetic field
+    %
+    xr = sqrt(equil.ptx.^2 + equil.pty.^2);
+    ep = xr/equil.Rp;
+    xB0 = xB*(1 + ep*cos(theta))/(1 + ep);
+    xBT0 = xBT*(1 + ep*cos(theta))/(1 + ep);%Toroidal field at B=Bmin
+    xBp0 = xBp*(1 + ep*cos(theta))/(1 + ep);%Poroidal field at B=Bmin
+    %
+    xBmax = xB*(1 + ep*cos(theta))/(1 - ep);
+    xmhu0T2 = 1 - xB0./xBmax; %Pitch-angle (squared) at the trapped-passing boundary
+    %
+    xx0 = xr;%
+    %
+    xrho = xpsin;
+    xZeff = sum(equil.pzni.*equil.zZi.'.^2)./equil.pne;%Effective charge (a.u.)
+    %
+    ap = xr/xrho;
+    xdV_2piRp_dke = NaN;
+    xdA_dke = NaN;
+    %
+    equilDKE.tokname = equil.id;
+    equilDKE.mtheta = theta;
+    equilDKE.xpsin = xpsin;
+    equilDKE.psia_apRp = equil.psi_apRp(end);
+    equilDKE.Xx = equil.ptx;
+    equilDKE.Xy = equil.pty;
+    equilDKE.XBx = equil.ptBx;
+    equilDKE.XBy = equil.ptBy;
+    equilDKE.XBphi = equil.ptBPHI;
+    equilDKE.xB0 = xB0;
+    equilDKE.xx0 = xx0;
+    equilDKE.xBT0 = xBT0;
+    equilDKE.xBp0 = xBp0;
+    equilDKE.xrho = xrho;
+    equilDKE.xTe = equil.pTe;
+    equilDKE.xne = equil.pne;
+    equilDKE.xzTi = equil.pzTi;
+    equilDKE.xzni = equil.pzni;
+    equilDKE.zZi = equil.zZi;
+    equilDKE.zmi = equil.zmi;
+    equilDKE.xZeff = xZeff;
+    equilDKE.Rp = equil.Rp;
+    equilDKE.Zp = equil.Zp;
+    equilDKE.ap = ap;
+    equilDKE.xmhu0T2 = xmhu0T2;
+    equilDKE.xdV_2piRp_dke = xdV_2piRp_dke;
+    equilDKE.xdA_dke = xdA_dke;
+    %
     return
 end
 %

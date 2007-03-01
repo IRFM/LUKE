@@ -114,29 +114,37 @@ if isempty(spsin) | isempty(stheta),
     % ray position in (r,theta) coordinates
     %
     sx(sx == 0) = eps; %to avoid singularities
-    sy(sy == 0) = eps; %to avoid singularities
+    %sy(sy == 0) = eps; %to avoid singularities
     sr = sqrt(sx.^2 + sy.^2); %minor radius
-    stheta = atan(sy./sx) + pi - pi*(sx > 0).*sign(sy); %poloidal angle [0,2*pi]
+    ssy = sign(sy);
+    ssy(ssy == 0) = 1;
+    stheta = atan(sy./sx) + pi - pi*(sx > 0).*ssy; %poloidal angle [0,2*pi]
     %
-    % interpolation for r at ray poloidal locations    
-    %
-    pstr = interp1(theta,ptr',stheta,method)';%r(psi,st)
-    %
-    % interpolation for psi at ray position (along cst theta lines)
-    %
-    %spsin = interp1(pstr,ppsin,sr,method);%psi(s)
-    method2 = 'linear';
-    for is = 1:ns 
-        spsin(is) = interp1(pstr(:,is),ppsin,sr(is),method2,1);%psi(s)
+    if ns > 1,
+        %
+        % interpolation for r at ray poloidal locations    
+        %
+        pstr = interp1(theta,ptr',stheta,method)';%r(psi,st)
+        %
+        % interpolation for psi at ray position (along cst theta lines)
+        %
+        %spsin = interp1(pstr,ppsin,sr,method);%psi(s)
+        method2 = 'linear';
+        for is = 1:ns 
+            spsin(is) = interp1(pstr(:,is),ppsin,sr(is),method2,1);%psi(s)
+        end
+        %
+        % remove ray parts outlise the FS.
+        %
+        %imask_1 = min(find(~isnan(spsin)));
+        %imask_2 = min([find(isnan(spsin(imask_1:ns))),ns - imask_1 + 2]);
+        %mask = [imask_1:imask_1 + imask_2 - 2];
+        %
+        % positive values only for spsin
+        %
+    else
+        spsin = ppsin;
     end
-    %
-    % remove ray parts outlise the FS.
-    %
-    %imask_1 = min(find(~isnan(spsin)));
-    %imask_2 = min([find(isnan(spsin(imask_1:ns))),ns - imask_1 + 2]);
-    %mask = [imask_1:imask_1 + imask_2 - 2];
-    %
-    % positive values only for spsin
     %
     if min(spsin) < -0
         error('The psin interpolation has produced negative values')
@@ -235,14 +243,25 @@ end
 %
 % Calculates Equilibrium properties along the ray
 %
-sBx = interp2(theta,ppsin,ptBx,stheta,spsin,method);
-sBphi = interp2(theta,ppsin,ptBphi,stheta,spsin,method);
-sBy = interp2(theta,ppsin,ptBy,stheta,spsin,method);
-sB = interp2(theta,ppsin,ptB,stheta,spsin,method);
-sne = interp1(ppsin,pne,spsin,method);
-szni = interp1(ppsin,pzni',spsin,method)';
-sTe = interp1(ppsin,pTe,spsin,method);
-szTi = interp1(ppsin,pzTi',spsin,method)';
+if ns > 1,
+    sBx = interp2(theta,ppsin,ptBx,stheta,spsin,method);
+    sBphi = interp2(theta,ppsin,ptBphi,stheta,spsin,method);
+    sBy = interp2(theta,ppsin,ptBy,stheta,spsin,method);
+    sB = interp2(theta,ppsin,ptB,stheta,spsin,method);
+    sne = interp1(ppsin,pne,spsin,method);
+    szni = interp1(ppsin,pzni',spsin,method)';
+    sTe = interp1(ppsin,pTe,spsin,method);
+    szTi = interp1(ppsin,pzTi',spsin,method)';
+else
+    sBx = ptBx;
+    sBphi = ptBphi;
+    sBy = ptBy;
+    sB = ptB;
+    sne = pne;
+    szni = pzni;
+    sTe = pTe;
+    szTi = pzTi;
+end    
 %
 % Calculates Npar and Nperp from kx,n and kZ if needed.
 %
