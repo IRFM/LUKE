@@ -92,7 +92,7 @@ if nx*ns <= 1e7,%no loop needed on the position
     %
 else % loop needed on the position
     %
-    h = waitbar(0,'Calculation of the absorption coefficient');
+    %h = waitbar(0,'Calculation of the absorption coefficient');
     %
     for ix = 1:nx,
             %
@@ -115,11 +115,11 @@ else % loop needed on the position
             %           
         end  
         %
-        waitbar(ix/nx,h);
+        %waitbar(ix/nx,h);
         %
     end
     %
-    close(h);
+    %close(h);
     %
 end
 %
