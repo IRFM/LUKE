@@ -161,7 +161,7 @@ elseif dkeparam.rt_mode == 3,%
         % CD efficiency (A/W)
         %
         Prf = sum(ZP0.x_rf_fsav(:).*equilDKE.xdV_2piRp_dke(:)*2*pi*equilDKE.Rp*mksa.P_ref);
-        Itot = sum(Zcurr.x_tot_fsav(:).*equilDKE.xdA_dke(:)*abs(mksa.j_ref));
+        Itot = sum(Zcurr.x_tot_fsav(:).*equilDKE.xdA_dke(:)*mksa.j_ref);
         eta = abs(Itot/Prf);
         %
         eval(['save ',path_simul,'DKE_RESULTS_',equil.id,'_',id_simul,'_',dNstr,'.mat']);
