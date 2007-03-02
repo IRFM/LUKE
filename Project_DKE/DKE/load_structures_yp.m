@@ -93,7 +93,14 @@ if exist('flag_path','var'),%Paths
         if ~strcmp(dkepath.computer,computer),
             error('The path structure is not consistent with the computer !'),
         end
+        %
         dkepath.temppath = [dkepath.temppathroot,filesep,timeid_jd(clock)];
+        %
+        % Set path if required
+        %
+        if isfield(dkepath,'pathfile') & ~isempty(dkepath.pathfile),
+            eval(dkepath.pathfile)
+        end
     end
     varargout{flag_path} = dkepath;
 end
