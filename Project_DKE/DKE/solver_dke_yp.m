@@ -286,7 +286,7 @@ XXf0_L_tp = zeros(npn,nmhu,nr);
 XXf0_L_g = zeros(npn,nmhu,nr);  
 XXf0_g_th = zeros(npn,nmhu,nr);
 %
-if ~isfield(dkeparam.PETScparam,'cloop'),%Backward compatibility
+if ~isfield(dkeparam.PETScparam,'cloop') & dkeparam.invproc == -30,%Backward compatibility
 	warning('dkeparam.PETScparam.cloop field does not exists. It is created and the calculation is done with Matlab Built-in function. Please fixe the missing field in the dkeparam structure');	
 	dkeparam.PETScparam.cloop = 0;
    dkeparam.luproc = 0;%LU matrix inversion method: (-1) No LU, direct inversion, (0) MatLab build-in
@@ -294,8 +294,7 @@ if ~isfield(dkeparam.PETScparam,'cloop'),%Backward compatibility
    dkeparam.invproc = 1;%Iterative matrix inversion method:  (3) qmr iterative method (LU used), (2) bicg iterative method (LU used), (1) cgs iterative method (LU used), (0) Direct Matlab inversion (LU not used, (-1): MUMPS parallel fortran 95 direct inversion (LU not used) (-30) PETSc
    dkeparam.mlprecinv = 1e-5;%Accuracy for the MatLab build-in matrix inversion.
    dkeparam.mlmaxitinv = 4;%Maximum number of iterations for iterative method (between 1 and 20 usualy, if empty, mlmaxitinv = min(matrixdim,20). See matlab documentation.
-end
-%
+  end
 %
 time0 = clock;
 %
