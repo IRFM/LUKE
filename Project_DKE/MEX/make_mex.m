@@ -15,7 +15,7 @@ if (nargin == 2) & ~isempty(strfind(ext,'f')),
 	error('FORTRAN files require to specify compiling options (f77 or f90) !')
 end
 %
-path_path = '../../Database/PATH_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_path = '../Database/PATH_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 if exist([path_path,'PATH_',id_path,'.mat']) == 0,%Paths
 	info_dke_yp(2,[path_path,'PATH_',id_path,'.mat does not exist. Set all paths in the ~/Project_DKE/Database/PATH_files/']);
