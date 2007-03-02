@@ -10,7 +10,7 @@ if nargin < 5,
     method = 'linear';%'spline';%interpolation technique in psi
 end
 if nargin < 4,
-    opt_cut = 1;% (0) does not cut the ray
+    opt_cut = 2;% (0) does not cut the ray
                 % (1) cuts ray part beyond linear damping
                 % (2) cuts ray part beyond double linear damping
 end
