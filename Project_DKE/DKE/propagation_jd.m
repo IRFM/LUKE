@@ -198,7 +198,7 @@ for ib = 1:nb
         end
         %
         ss_S = [ss(ismask_red),ssiscross];%vector of fragment limits
-        spsin_S = [spsin(ismask_red),xspsin_S(ir_cross)];%corresponding psin values
+        spsin_S = [spsin(ismask_red),xpsin_S(ir_cross)];%corresponding psin values
         %
         [ss_S,iss_S] = sort(ss_S);
         spsin_S = spsin_S(iss_S);
