@@ -172,7 +172,7 @@ elseif dkeparam.rt_mode == 3,%
         %
         % This function calculates the power deposited along each ray using LUKE results. 
         %
-        waves = alphaphi_luke_jd(waves,ZP0,mksa,dke_out,gridDKE,dkeparam);
+        waves = alphaphi_luke_jd(waves,dke_out,gridDKE);
         %
         if eta > eta_old,
             %
