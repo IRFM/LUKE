@@ -654,7 +654,7 @@ else
     mask_r = bir_rf(mask_b);
 end    
 %
-XXmask = ((mask_m - 1)*npn + (mask_p - 1))*nr + mask_r;%mask in rho-momentum 3-D matrices
+XXmask = ((mask_r - 1)*nmhu + (mask_m - 1))*npn + mask_p;%mask in rho-momentum 3-D matrices
 %
 XBtrapped_p = ~XXheavisidep(XXmask);
 XBtrapped = ~XXheaviside(XXmask);
