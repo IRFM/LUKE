@@ -197,7 +197,7 @@ elseif dkeparam.rt_mode == 3,%
             %
         end
         %
-        if opt_loop == 0 & val < 0,
+        if opt_loop == 0 & val < -1000*eps,
             %
             opt_loop = 1;
             %
