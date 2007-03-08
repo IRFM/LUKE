@@ -11,6 +11,11 @@ clc
 %
 id_wave = '19Z';
 %
+% Path parameters
+%
+id_dkepath = 'LUKE_DRFC';%For all paths used by DKE solver
+path_dkepath = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+%
 % Equilibrium parameters
 %
 id_equil = 'ITER_Scen4_IAEA06';%For plasma equilibrium
@@ -19,8 +24,8 @@ fitparam.mode_equil = 1;%Magnetic equilibrium grid type: (1): (psi-theta), (2): 
 %
 % initial ray conditions
 %
-id_rayinit = id_wave;
-path_rayinit = '';
+ids_rayinit = {id_wave};
+paths_rayinit = {''};
 %
 % Display parameters
 %
@@ -39,6 +44,8 @@ waveparam.kmode = 0;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativisti
 %	- (2): small FLR effects and no 1/vpar dependence and old grid technique for DQL calculations (Karney, Shoucri) (see rfdiff_dke_jd)
 %
 waveparam.opt_rf = 0;
+%
+waveparam.dsmin = Inf;%minimum size for ray fragments
 %
 n_rf_list = 0;
 %
@@ -68,29 +75,15 @@ rayparam.reflection = 1;%1:Enforce wave reflection at plasma boundary, 0: the co
 %
 % -------------------------------------------------------------------------
 %
-% Load equilibrium
+% Load structures
 %
-if exist([path_equil,'EQUIL_',id_equil,'.mat']) == 0,%Magnetic equilibrium
-	info_dke_yp(2,[path_equil,'EQUIL_',id_equil,'.mat does not exist']);
-	return
-else
-	eval(['load ',path_equil,'EQUIL_',id_equil,'.mat']);
-	info_dke_yp(2,'Structure ''equil'' successfully loaded');
-end
+[equil,rayinits,dkepath] = load_structures_yp('equil',id_equil,path_equil,'rayinits',ids_rayinit,paths_rayinit,'dkepath',id_dkepath,path_dkepath);
 %
-% load initial ray conditions 
-%
-if exist([path_rayinit,'RAYINIT_',id_equil,'_',id_rayinit,'.mat']) == 0,%Initial ray conditions
-	info_dke_yp(2,[path_rayinit,'RAYINIT_',id_equil,'_',id_rayinit,'.mat does not exist']);
-	return
-else
-    eval(['load ',path_rayinit,'RAYINIT_',id_equil,'_',id_rayinit,'.mat']);
-	info_dke_yp(2,'Structure ''rayinit'' successfully loaded');
-end
+% -------------------------------------------------------------------------
 %
 % C3P0 ray tracing
 %
-wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,display);
+wave = main_C3PO_jd(id_wave,equil,rayinits{1},waveparam,fitparam,rayparam,display);
 %
 % Wave processing and relativistic linear damping
 %

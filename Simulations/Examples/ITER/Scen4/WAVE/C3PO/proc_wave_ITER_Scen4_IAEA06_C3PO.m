@@ -42,49 +42,11 @@ xvar = 's';
 %
 % -------------------------------------------------------------------------
 %
-% Load equilibrium
+% Load structures
 %
-if exist([path_equil,'EQUIL_',id_equil,'.mat']) == 0,%Magnetic equilibrium
-	info_dke_yp(2,[path_equil,'EQUIL_',id_equil,'.mat does not exist']);
-	return
-else
-	eval(['load ',path_equil,'EQUIL_',id_equil,'.mat']);
-	info_dke_yp(2,'Structure ''equil'' successfully loaded');
-end
-%
-% load waves
-%
-ii=1;
-for iw = 1:length(ids_wave),
-	if exist([paths_wave{iw},'WAVE_',id_equil,'_',ids_wave{iw},'.mat']) == 0,%RF waves
-		info_dke_yp(2,[paths_wave{iw},'WAVE_',id_equil,'_',ids_wave{iw},'.mat does not exist']);
-        return
-	else
-		eval(['load ',paths_wave{iw},'WAVE_',id_equil,'_',ids_wave{iw},'.mat']);
-		info_dke_yp(2,[paths_wave{iw},'WAVE_',id_equil,'_',ids_wave{iw},'.mat successfully loaded']);
-		waves{ii} = wave;
-		ii = ii + 1;
-	end
-end
-%
-% load initial ray conditions 
-%
-ii=1;
-for iw = 1:length(ids_wave),
-	if isempty(ids_rayinit{iw}),
-        rayinits{iw} = '';
-    elseif exist([paths_rayinit{iw},'RAYINIT_',id_equil,'_',ids_rayinit{iw},'.mat']) == 0,%Initial ray conditions
-		info_dke_yp(2,[paths_rayinit{iw},'RAYINIT_',id_equil,'_',ids_rayinit{iw},'.mat does not exist']);
-        return
-	else
-		eval(['load ',paths_rayinit{iw},'RAYINIT_',id_equil,'_',ids_rayinit{iw},'.mat']);
-		info_dke_yp(2,[paths_rayinit{iw},'RAYINIT_',id_equil,'_',ids_rayinit{iw},'.mat successfully loaded']);
-		rayinits{iw} = rayinit;
-	end
-end
+[equil,waves,rayinits] = load_structures_yp('equil',id_equil,path_equil,'waves',ids_wave,paths_wave,'rayinits',ids_rayinit,paths_rayinit);
 %
 % -------------------------------------------------------------------------
 %
 graph_wave_jd(equil,waves,rayinits,n_rf_list,nr_dep,opt,rho_disp,ymask,xvar,yabs);
 %
-
