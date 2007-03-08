@@ -96,6 +96,10 @@ if exist('flag_path','var'),%Paths
         %
         dkepath.temppath = [dkepath.temppathroot,filesep,timeid_jd(clock)];
         %
+        if isfield(dkepath,'PETSc_DIR'),
+            unix(['setenv PETSC_DIR ',dkepath.PETSc_DIR]);
+        end
+        %
         % Set path if required
         %
         if isfield(dkepath,'pathfile') & ~isempty(dkepath.pathfile),

@@ -34,6 +34,8 @@ addpath([luke_root,'Modules/RT']);
 addpath([luke_root,'Modules/RT/MEX/Bin']);
 addpath([luke_root,'Modules/Cronos']);
 addpath([luke_root,'Packages/MUMPS']);
+addpath([luke_root,'Packages/PETSc']);
+addpath([luke_root,'Packages/PETSc/MEX/Bin/GLNXA64']);
 addpath([luke_root,'Database/PATH_files']);
 addpath([luke_root,'Database/DISPLAY_files']);
 addpath([luke_root,'Database/DKEPARAM_files']);
