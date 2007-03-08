@@ -5,6 +5,7 @@
 %
 clear all
 close all
+setpath_luke_jd
 
 % file name
 
