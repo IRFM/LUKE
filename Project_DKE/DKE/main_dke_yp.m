@@ -246,9 +246,9 @@ dke_out.XXf0_g = XXf0_g;
 dke_out.XXf0_L_tp = XXf0_L_tp;
 dke_out.XXf0_L_g = XXf0_L_g;
 dke_out.ZXXS = ZXXS;
-dke_out.ZXYD_rf = ZXYD_rf;
-dke_out.ZXYD_rf_tp = ZXYD_rf_tp;
-dke_out.ZXYF_rf_tp = ZXYF_rf_tp;
+dke_out.ZXXD_rf = ZXXD_rf;
+dke_out.ZXXD_rf_tp = ZXXD_rf_tp;
+dke_out.ZXXF_rf_tp = ZXXF_rf_tp;
 dke_out.gridindex_rf = gridindex_rf;
 dke_out.XxRR_fsav = XxRR_fsav;
 dke_out.xMRR_flux = xMRR_flux;
@@ -317,6 +317,20 @@ else
 end
 %
 % Flexible output
+%
+savefields_radialDKE = {'xpsin_f','xpsin_f_dke','xdpsin_f_dke','xpsin_S_dke','r_dke'};
+savefields_momentumDKE = {'pn','pn_S','dpn','mhu','mhu_S','dmhu'};
+savefields_gridDKE = {'X1mmhu2','xmhubounce2'};
+savefields_Zmomcoef = {'gamma','v'};
+savefields_Zbouncecoef = {'xq','xqtilde','xqbar','xqhat','XXheaviside','Xxlambda'};
+savefields_Zmripple = {};
+%
+radialDKE = selectfields_jd(radialDKE,savefields_radialDKE);
+momentumDKE = selectfields_jd(momentumDKE,savefields_momentumDKE);
+gridDKE = selectfields_jd(gridDKE,savefields_gridDKE);
+Zmomcoef = selectfields_jd(Zmomcoef,savefields_Zmomcoef);
+Zbouncecoef = selectfields_jd(Zbouncecoef,savefields_Zbouncecoef);
+Zmripple = selectfields_jd(Zmripple,savefields_Zmripple);
 %
 if nargout >= 1,varargout{1} = Znorm;end
 if nargout >= 2,varargout{2} = Zcurr;end
