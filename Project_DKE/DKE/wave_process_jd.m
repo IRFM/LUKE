@@ -1,4 +1,4 @@
-function wave = wave_process_jd(equil,wave,n_rf_list,opt_cut,method);
+function wave = wave_process_jd(equil,wave,n_rf_list,cut_fac,method);
 %
 % This function completes the missing wave characteristics. In particular, it calculates the wave
 % absorption coefficient and the wave lilnear damping.
@@ -10,9 +10,7 @@ if nargin < 5,
     method = 'linear';%'spline';%interpolation technique in psi
 end
 if nargin < 4,
-    opt_cut = 2;% (0) does not cut the ray
-                % (1) cuts ray part beyond linear damping
-                % (2) cuts ray part beyond double linear damping
+    cut_fac = 2;% the ray is cut when P/P_in = exp(-10*cut_fac). Use Inf if the whole ray is to be kept
 end
 %
 % Equilibrium data with Fourier-enhanced poloidal precision and original radial grid
@@ -37,21 +35,14 @@ for ib = 1:length(wave.rays),
         ray.sP_2piRp = ray.P0_2piRp*exp(-ray.stau);
         ray.sdP_2piRp_ds = salpha_lin.*ray.sP_2piRp;
         %
-        if opt_cut >= 1,
-            ns = length(ray.ss);
-            %
-            if opt_cut == 1,
-                is_max = min([ns,find(ray.stau > 10)]);
-            elseif opt_cut == 2,
-                is_max = min([ns,find(ray.stau > 20)]);
-            end
-            %
-            frays = fieldnames(ray);
-            for ifield = 1:length(frays),
-                eval(['ns_field = length(ray.',frays{ifield},');'])
-                if ns_field == ns,
-                    eval(['ray.',frays{ifield},' = ray.',frays{ifield},'(:,1:is_max);'])
-                end
+        ns = length(ray.ss);
+        is_max = min([ns,find(ray.stau > 10*cut_fac)]);
+        %
+        frays = fieldnames(ray);
+        for ifield = 1:length(frays),
+            eval(['ns_field = length(ray.',frays{ifield},');'])
+            if ns_field == ns,
+                eval(['ray.',frays{ifield},' = ray.',frays{ifield},'(:,1:is_max);'])
             end
         end
     end
