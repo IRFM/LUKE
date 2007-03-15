@@ -5,7 +5,7 @@
 %by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
 %
 clear all
-path_id = 'PC_DRFC_YVES';%Set here the name path parameters (user specific)
+path_id = 'DRFC_JOAN';%Set here the name path parameters (user specific)
 %
 path_root = '/home/sccp/gsem/peysson/';
 %
@@ -18,5 +18,6 @@ dkepath.temppathroot = '/scratch';%Absolute root directory path adress where tem
 dkepath.mex = [path_root,'Project_DKE/MEX'];
 dkepath.variables.input = [path_root,'Packages/petsc-2.3.2-p8/DKE/DKESolver_variables'];%directory where all inout variables are written
 dkepath.variables.output = [path_root,'Packages/petsc-2.3.2-p8/DKE/DKESolver_output'];%location directory where the distribution function is written by C program before going back to matlab
+dkepath.pathfile = 'setpath_PC_DRFC_YVES';
 %
 eval(['save PATH_',path_id ,'.mat dkepath']);
