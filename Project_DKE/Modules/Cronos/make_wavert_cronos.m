@@ -15,6 +15,8 @@ if strfind(config,'LH');%For the Lower Hybrid wave simulations
 %	- (2): small FLR effects and no 1/vpar dependence and old grid technique for DQL calculations (Karney, Shoucri) (see rfdiff_dke_jd)
 %
    waveparam.opt_rf = 1;
+   waveparam.dsmin = Inf;
+   waveparam.cut_fac = 2;
 %
 % Equilibrium parameters for the ray-tracing
 %
@@ -56,6 +58,8 @@ elseif strfind(config,'EC') | strfind(config,'EBW');;%For the Electron Cyclotron
 %	- (2): small FLR effects and no 1/vpar dependence and old grid technique for DQL calculations (Karney, Shoucri) (see rfdiff_dke_jd)
 %
    waveparam.opt_rf = 0;
+   waveparam.dsmin = 0;
+   waveparam.cut_fac = 2;
 %
 % Equilibrium parameters for the ray-tracing
 %
