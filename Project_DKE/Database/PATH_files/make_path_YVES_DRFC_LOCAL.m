@@ -5,7 +5,7 @@
 %by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
 %
 clear all
-path_id = 'DRFC_JOAN';%Set here the name path parameters (user specific)
+path_id = 'PC_DRFC_YVES';%Set here the name path parameters (user specific)
 %
 path_root = '/home/sccp/gsem/peysson/';
 %

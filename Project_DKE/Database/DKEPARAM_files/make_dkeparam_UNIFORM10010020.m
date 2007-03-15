@@ -85,7 +85,7 @@ dkeparam.PETScparam.pcmethod = ' ';%Preconditioning method used by PETSc. '-pc_t
 dkeparam.PETScparam.cloop = 0;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
 %
 dkeparam.store_mode = 0;%Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight
-dkeparam.opt_save = 1;%Save intermediate calculations
-dkeparam.opt_load = 1;;%Load intermediate calculations
+dkeparam.opt_save = 0;%Save intermediate calculations
+dkeparam.opt_load = 0;;%Load intermediate calculations
 %
 eval(['save DKEPARAM_',dkeparam_id,'.mat dkeparam']);
