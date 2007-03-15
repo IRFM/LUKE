@@ -1,4 +1,4 @@
-function wave = wave_process_jd(equil,wave,n_rf_list,cut_fac,method);
+function wave = wave_process_jd(equil,wave,n_rf_list,method);
 %
 % This function completes the missing wave characteristics. In particular, it calculates the wave
 % absorption coefficient and the wave lilnear damping.
@@ -6,11 +6,8 @@ function wave = wave_process_jd(equil,wave,n_rf_list,cut_fac,method);
 % by 	J. Decker (DRFC/DSM/CEA) <joan.decker@cea.fr> 
 % and   Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr>
 %
-if nargin < 5,
-    method = 'linear';%'spline';%interpolation technique in psi
-end
 if nargin < 4,
-    cut_fac = 2;% the ray is cut when P/P_in = exp(-10*cut_fac). Use Inf if the whole ray is to be kept
+    method = 'linear';%'spline';%interpolation technique in psi
 end
 %
 % Equilibrium data with Fourier-enhanced poloidal precision and original radial grid
@@ -36,7 +33,10 @@ for ib = 1:length(wave.rays),
         ray.sdP_2piRp_ds = salpha_lin.*ray.sP_2piRp;
         %
         ns = length(ray.ss);
-        is_max = min([ns,find(ray.stau > 10*cut_fac)]);
+        is_max = min([ns,find(ray.stau > 10*wave.cut_fac)]);
+        if is_max == ns & ~isinf(wave.cut_fac),
+            disp('WARNING: The ray might be too short. Increase tfinal')
+        end
         %
         frays = fieldnames(ray);
         for ifield = 1:length(frays),
