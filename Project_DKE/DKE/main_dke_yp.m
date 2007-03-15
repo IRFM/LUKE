@@ -155,9 +155,26 @@ for it_rf=1:nit_rf, % convergence in the ray-tracing mode
                 info_dke_yp(2,'---------------------------------------------------------');
             end
 %  
-            if residue_rf(it_rf) <= dkeparam_out.prec_rf & redfac == 1 & it_rf > 1,
-                if display.display_mode >=1,info_dke_yp(2,['Successfull convergence achieved for ray-tracing coupling after ',int2str(it_rf),' iterations !']);end
-                break
+            if (residue_rf(it_rf) <= dkeparam_out.prec_rf & redfac == 1 & it_rf > 1) | it_rf == nit_rf,
+                P_0_2piRp_in = 0;
+                P_0_2piRp_out = 0;
+                for iray = 1:length(yb),
+                    P_0_2piRp_in = P_0_2piRp_in + zP_0_2piRp{iray}(1);
+                    P_0_2piRp_out = P_0_2piRp_out + zP_0_2piRp{iray}(end);
+                end
+                %
+                abs_frac = (P_0_2piRp_in - P_0_2piRp_out)/P_0_2piRp_in;
+                %
+                if isfield(dkeparam,'abs_lim') & abs_frac < abs_lim,
+                    error('The power was not fully absorbed. To bypass this error set abs_lim to 0')
+                end
+                %
+                if residue_rf(it_rf) <= dkeparam_out.prec_rf & redfac == 1 & it_rf > 1,
+                    if display.display_mode >=1,info_dke_yp(2,['Successfull convergence achieved for ray-tracing coupling after ',int2str(it_rf),' iterations !']);end
+                    break
+                else
+                    info_dke_yp(2,['WARNING: convergence for ray-tracing coupling was not achieved after ',int2str(it_rf),' iterations !']);                  
+                end
             else   	
                 if display.display_mode >=1,info_dke_yp(2,['Iteration ',int2str(it_rf),', residue = ',num2str(residue_rf(it_rf))]);end       
             end

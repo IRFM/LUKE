@@ -51,6 +51,7 @@ dkeparam.nit_rf = 20;%Maximum number of iteration in ray-tracing. Works only if 
 dkeparam.prec_rf = 1e-2;%relative precision in RT-DKE iterations
 dkeparam.n_rf_list = [0];%List of harmonics in the Dql calculations
 dkeparam.delta_rt = 0.5;%smoothering parameter of quasilinear iterations
+dkeparam.abs_lim = 0.95;%minimum required absorption fraction
 %
 % Run mode
 %
