@@ -26,7 +26,7 @@ addpath([luke_root,'Modules/FEB/Pile-up']);
 addpath([luke_root,'Modules/FEB']);
 addpath([luke_root,'Modules/FEB/MEX/Bin']);
 addpath([luke_root,'Modules/Helena']);
-addpath([luke_root,'Modules/Helena/MEX/Bin']);
+addpath([luke_root,'Modules/Helena/MEX/Bin/GLNXA64']);
 addpath([luke_root,'Modules/R2D2']);
 addpath([luke_root,'Modules/R2D2/MEX/Bin']);
 addpath([luke_root,'Modules/EFIT']);
