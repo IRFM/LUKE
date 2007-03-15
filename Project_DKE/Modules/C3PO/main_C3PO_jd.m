@@ -34,6 +34,11 @@ wave.omega_rf = omega_rf;
 wave.opt_rf = waveparam.opt_rf;
 wave.opt_disp = 0+i;  % option for solving the wave equation, which gives (ray.sepol_pmz, ray.sphi, ray.sNperp) 
 wave.dsmin = waveparam.dsmin;
+if isfield(waveparam,'cut_fac'),
+	wave.cut_fac = waveparam.cut_fac;
+else
+	wave.cut_fac = 2;
+end
 %
 for iray = 1:Nrays,
 %
