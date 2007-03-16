@@ -165,8 +165,8 @@ for it_rf=1:nit_rf, % convergence in the ray-tracing mode
                 %
                 abs_frac = (P_0_2piRp_in - P_0_2piRp_out)/P_0_2piRp_in;
                 %
-                if isfield(dkeparam,'abs_lim') & abs_frac < abs_lim,
-                    error('The power was not fully absorbed. To bypass this error set abs_lim to 0')
+                if isfield(dkeparam_out,'abs_lim') & abs_frac < dkeparam_out.abs_lim,
+                    error('The power was not fully absorbed. To bypass this error set dkeparam.abs_lim to 0')
                 end
                 %
                 if residue_rf(it_rf) <= dkeparam_out.prec_rf & redfac == 1 & it_rf > 1,

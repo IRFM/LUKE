@@ -50,6 +50,8 @@ if strfind(config,'LH');%For the Lower Hybrid wave simulations
    dkeparam.prec_rf = 1e-2;%relative precision in RT-DKE iterations
    dkeparam.n_rf_list = [0:3];%List of harmonics in the Dql calculations
    dkeparam.delta_rt = 0.5;%smoothering parameter of quasilinear iterations
+   dkeparam.abs_lim = 0.95;%minimum required absorption fraction
+%
 %
 % Run mode
 %
@@ -132,6 +134,8 @@ elseif strfing(config,'EC') | strfing(config,'EBW');%For the Electron Cyclotron 
    dkeparam.prec_rf = 1e-2;%relative precision in RT-DKE iterations
    dkeparam.n_rf_list = [0:3];%List of harmonics in the Dql calculations
    dkeparam.delta_rt = 0.5;%smoothering parameter of quasilinear iterations
+   dkeparam.abs_lim = 0.95;%minimum required absorption fraction
+%
 %
 % Run mode
 %
