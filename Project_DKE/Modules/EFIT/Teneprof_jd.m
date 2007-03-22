@@ -19,6 +19,8 @@ pspsinT = [];
 %
 if type == 0,%ascii
     [prho,pTe,pne,pTi,pni] = textread(filename,'%n%n%n%n%n');
+elseif type == 0.1,
+    [psi,pTe,pne,pZeff] = textread(filename,'%n%n%n%n');    
 elseif type == 1,%.mat
     eval(['load -mat ',filename,' prho pTe pne pTi pni']);
 elseif type == 2,%ascii - 203040
@@ -158,6 +160,25 @@ if type == 0 | type == 2,
     %
     pzni = [fi'*pnH;pnimp];
     pzTi = ones(nz,1)*pTi;
+    %
+elseif type == 0.1,
+    %
+    fi = [0,0.5,0.5];
+    %
+    pTe = pTe.';
+    pTi = pTe;
+    pne = pne.'*1e19;
+    pZeff = pZeff.';
+    psi = psi.';
+    %
+    Zimp = zZi(4);
+    %
+    pnH = pne.*(zZi(4) - pZeff)/(zZi(4) - 1);
+    pnZ = pne.*(pZeff - 1)/zZi(4)/(zZi(4) - 1);
+    pzni = [fi.'*pnH;pnZ];
+    pzTi = ones(nz,1)*pTi;
+    %
+    pspsin = sqrt(psi);
     %
 elseif type == 1,
     %
