@@ -69,6 +69,12 @@ sNperp = ray.sNperp;% Ray perpendicular wave number [1,ns]
 sdNpar = ray.sdNpar;% Ray spectral width in Npar [1,ns] 
 %       if sdNpar is real -> gaussian spectrum, if sdNpar is imag. -> square spectrum (centered on sNpar)
 %
+if isfield(ray,'swidth'),
+    swidth = ray.swidth;
+else
+    swidth = [];
+end
+%
 sepol_pmz = ray.sepol_pmz;% polarization vector [3,ns] complex
 sphi_xyz = ray.sphi_xyz;% normalized power flow [3,ns]
 %
@@ -231,6 +237,9 @@ end
 if ~isempty(sdNpar)
     sdNpar = sdNpar(mask);
 end
+if ~isempty(swidth)
+    swidth = swidth(mask);
+end
 if ~isempty(sepol_pmz)
     sepol_pmz = sepol_pmz(:,mask);
 end
@@ -294,12 +303,6 @@ if isempty(sNpar),
             sNperp = skperp*clum/omega_rf;
         end        
     end
-end
-%
-% Calculates sdNpar if needed.
-%
-if isempty(sdNpar),
-    sdNpar = 0.01*ones(1,ns);%assume a gaussian spectrum with this arbitrary width
 end
 %
 if real(opt_disp) == 0, %sepol_pmz, sNperp and phi_xyz given by ray-tracing
@@ -392,6 +395,17 @@ else
         error('model not yet implemented');
     else
         error('invalid disp option');
+    end
+end
+%
+% Calculates sdNpar if needed.
+%
+if isempty(sdNpar),
+    if ~isempty(swidth),
+        sphi_norm = sqrt(abs(sphi_xyz(1,:).^2 + sphi_xyz(2,:).^2 + sphi_xyz(3,:).^2));
+        sdNpar = clum.*abs(sphi_xyz(1,:))./sphi_norm/omega_rf./swidth;
+    else
+        sdNpar = 0.01*ones(1,ns);%assume a gaussian spectrum with this arbitrary width
     end
 end
 %
