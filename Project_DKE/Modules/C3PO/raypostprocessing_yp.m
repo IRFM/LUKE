@@ -124,7 +124,7 @@ Zmax = max(max(Z_fit));
 % For toroidal display
 %
 X_ray = R_ray.*cos(phi_ray);
-Y_ray = R_ray.*sin(phi_ray);
+Y_ray = - R_ray.*sin(phi_ray);%Note : phi is clockwise from top
 Xmin_fit = Rmin*cos(phi_fit);   
 Ymin_fit = Rmin*sin(phi_fit); 
 Xmax_fit = Rmax*cos(phi_fit);   
