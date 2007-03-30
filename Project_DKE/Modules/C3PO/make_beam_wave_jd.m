@@ -19,8 +19,6 @@ end
 %
 ray = wave.rays{1};
 %
-wave = rmfield(wave,'rays');
-%
 if ~isfield(ray,'swidth'),
     warning('No beam width specified. Beam width determined from dNpar')
     clum = 3e8;
@@ -34,6 +32,8 @@ end
 if nd == 1 | nchi == 1,
     return
 end
+%
+wave = rmfield(wave,'rays');
 %
 sx = ray.sx;
 sy = ray.sy;
