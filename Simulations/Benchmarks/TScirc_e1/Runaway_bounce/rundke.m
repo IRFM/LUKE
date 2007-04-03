@@ -50,8 +50,6 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %************************************************************************************************************************************
 %
 dkeparam.invproc = 1;
-dkeparam.opt_load = 0;
-dkeparam.opt_save = 0;
 %
 [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %	    
@@ -59,7 +57,7 @@ dkeparam.opt_save = 0;
 eval(['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
 info_dke_yp(2,['Data saved in ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
 %
-epsi_circ = gridDKE.xrho*equilDKE.ap/equilDKE.Rp;%Circular inverse aspect ratio
+epsi_circ = equilDKE.xrho*equilDKE.ap/equilDKE.Rp;%Circular inverse aspect ratio
 norm_runrate = dke_out.XxRR_fsav(end,:)/max(dke_out.XxRR_fsav(end,:));
 %norm_runrate1 = 1 - 1.2*sqrt(2*epsi_circ./(1+epsi_circ));
 %norm_runrate1(norm_runrate1 < 0) = 0;

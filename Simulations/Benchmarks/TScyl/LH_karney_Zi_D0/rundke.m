@@ -55,8 +55,6 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %dkeparam.invproc = -1;
 %dkeparam.np_S = 201;
 %dkeparam.nmhu_S = 201;
-dkeparam.opt_load = 0;
-dkeparam.opt_save = 0;
 %
 equil.zZi = [1,1,1,1];equil.pzni = species_dke_yp(equil.pne,ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 1
 [Znorm,Zcurr_Z1,ZP0_Z1,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);

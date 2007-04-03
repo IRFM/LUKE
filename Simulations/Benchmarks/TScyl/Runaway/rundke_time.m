@@ -50,8 +50,6 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %************************************************************************************************************************************
 %
 clear xdn xdnr
-dkeparam.opt_load = 0;
-dkeparam.opt_save = 0;
 %
 %WARNING: boundary_mode_f must be 0 
 %

@@ -51,14 +51,12 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %************************************************************************************************************************************
 %
 dkeparam.invproc =  1;
-dkeparam.opt_load = 0;
-dkeparam.opt_save = 0;
 %
 [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %	    
 %************************************************************************************************************************************
 %
-epsi_circ = gridDKE.xrho*equilDKE.ap/equilDKE.Rp;%Circular inverse aspect ratio
+epsi_circ = equilDKE.xrho*equilDKE.ap/equilDKE.Rp;%Circular inverse aspect ratio
 sigman = Zcurr.x_tot_fsav/Zcurr.x_tot_fsav(1);
 figure(1),graph1D_jd(epsi_circ,1./sigman,0,1,'Inverse aspect ratio','Normalized conductivity','Normalized conductivity',NaN,'','','none','+','r',2);hold on
 graph1D_jd(epsi_circ,1./(1 - 1.95*sqrt(epsi_circ) + 0.95*epsi_circ),0,1,'Inverse aspect ratio','Normalized resistivity','Normalized resistivity',NaN,'','','-','non','b',1);

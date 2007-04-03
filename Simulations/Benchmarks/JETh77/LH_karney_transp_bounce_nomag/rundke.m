@@ -77,10 +77,10 @@ disp('D=10 m2/s done');
 vparmin = round(1/(waves{1}.rays{1}.sNpar(1)+imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref);
 vparmax = round(1/(waves{1}.rays{1}.sNpar(1)-imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref);
 %
-figure(1),graph1D_jd(gridDKE.xrho,Zcurr0.x_tot_fsav,0,0,'','','',NaN,'','','-','none','r',2);hold on
-graph1D_jd(gridDKE.xrho,Zcurr01.x_tot_fsav,0,0,'','','',NaN,'','','-','none','m',1);hold on
-graph1D_jd(gridDKE.xrho,Zcurr1.x_tot_fsav,0,0,'','','',NaN,'','','-','none','m',1);hold on
-graph1D_jd(gridDKE.xrho,Zcurr10.x_tot_fsav,0,0,'\rho','J_{LH}',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','--','none','b',1);hold on
+figure(1),graph1D_jd(equilDKE.xrho,Zcurr0.x_tot_fsav,0,0,'','','',NaN,'','','-','none','r',2);hold on
+graph1D_jd(equilDKE.xrho,Zcurr01.x_tot_fsav,0,0,'','','',NaN,'','','-','none','m',1);hold on
+graph1D_jd(equilDKE.xrho,Zcurr1.x_tot_fsav,0,0,'','','',NaN,'','','-','none','m',1);hold on
+graph1D_jd(equilDKE.xrho,Zcurr10.x_tot_fsav,0,0,'\rho','J_{LH}',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','--','none','b',1);hold on
 legend('D_{\psi\psi} = 0 (m^{2}/s)','D_{\psi\psi} = 0.1 (m^{2}/s)','D_{\psi\psi} = 1 (m^{2}/s)','D_{\psi\psi} = 10 (m^{2}/s)')
 savefig_dke_yp('profcurr_Dpsipsi')
 %	    

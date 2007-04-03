@@ -46,10 +46,8 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 [dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple] = load_structures_yp('dkepath',id_path,path_path,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'dkedisplay',id_display,path_display,'ohm',id_ohm,path_ohm,'waves',ids_wave,paths_wave,'transpfaste',id_transpfaste,path_transpfaste,'ripple',id_ripple,path_ripple);
 %
-%************************************************************************************************************************************
-%
-dkeparam.opt_load = 0;
-dkeparam.opt_save = 0;
+%**************************************************************************
+%**************************************************************************
 %
 transpfaste.Dr0 = 5;
 %

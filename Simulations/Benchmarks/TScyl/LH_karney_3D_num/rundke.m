@@ -55,8 +55,6 @@ dludroptol = logspace(-6,-2,nit);
 dkeparam.invproc = 1;%CGS  
 dkeparam.mlprecinv = 1-4;
 dkeparam.mlmaxitinv = 4;
-dkeparam.opt_load = 0;
-dkeparam.opt_save = 0;
 %
 dmesh = 5;
 nmesh = 6;
@@ -94,6 +92,38 @@ for j = 1:nmesh,%Scan radial mesh size
    Pcoll_f_MUMPS{j} = ZP0.x_c_fsav.*mksa.P_ref;
 %
    disp(['Calculation with MUMPS done with radial mesh size #',int2str(j*dmesh),'  done'])
+end
+%
+dkeparam.invproc = -2;%MUMPSMEX
+%
+for j = 1:nmesh,%Scan radial mesh size
+   rho_S = linspace(0,1,j*dmesh);
+   [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+% 
+   time_f_MUMPSMEX(j) = dke_out.time_out;
+   rho_f_MUMPSMEX{j} = rho_S;
+   norm_f_MUMPSMEX{j} = Znorm.x_0_fsav.*mksa.ne_ref;
+   curr_f_MUMPSMEX{j} = Zcurr.x_0_fsav.*mksa.j_ref;
+   Prf_f_MUMPSMEX{j} = ZP0.x_rf_fsav.*mksa.P_ref;
+   Pcoll_f_MUMPSMEX{j} = ZP0.x_c_fsav.*mksa.P_ref;
+%
+   disp(['Calculation with MUMPSMEX done with radial mesh size #',int2str(j*dmesh),'  done'])
+end
+%
+dkeparam.invproc = -3;%SUPERLUMEX
+%
+for j = 1:nmesh,%Scan radial mesh size
+   rho_S = linspace(0,1,j*dmesh);
+   [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+% 
+   time_f_SUPERLU(j) = dke_out.time_out;
+   rho_f_SUPERLU{j} = rho_S;
+   norm_f_SUPERLU{j} = Znorm.x_0_fsav.*mksa.ne_ref;
+   curr_f_SUPERLU{j} = Zcurr.x_0_fsav.*mksa.j_ref;
+   Prf_f_SUPERLU{j} = ZP0.x_rf_fsav.*mksa.P_ref;
+   Pcoll_f_SUPERLU{j} = ZP0.x_c_fsav.*mksa.P_ref;
+%
+   disp(['Calculation with SUPERLU done with radial mesh size #',int2str(j*dmesh),'  done'])
 end
 %
 dkeparam.invproc = -30;%PETSc
@@ -192,6 +222,7 @@ graph1D_jd(dludroptol,memory_f(:,6),1,0,'Drop tolerance parameter \delta_{LU}','
 legend('n_{\psi} = 4','n_{\psi} = 9','n_{\psi} = 14','n_{\psi} = 19','n_{\psi} = 24','n_{\psi} = 29')
 savefig_dke_yp('memoryludroptol')
 %
+diary testmatinv.txt
 disp('-------------------')
 disp('Incomplete LU preconditionning, CGS iterative Krylov algorithm, npsi = 30')
 disp(['droptolerance: ',num2str(dludroptol(end-1)),' - Full CPU time: ',num2str(time_f(end-1,6)),' (s) - LU memory size: ',num2str(memory_f(end-1,6)),' (MBytes)'])
@@ -200,6 +231,14 @@ disp('-------------------')
 disp('Matrix inversion with MUMPS (4 processors), npsi = 30')
 disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(time_f_MUMPS(6)),' (s)'])
 disp(['ne(0): ',num2str(round(norm_f_MUMPS{6}(1)/1e+16)/1e3),' (10+19 m-3) - Jlh(0): ',num2str(abs(curr_f_MUMPS{6}(1))),' (MA/m2) - Plh(0): ',num2str(Prf_f_MUMPS{6}(1)),' (MW/m3) - Pcoll(0): ',num2str(-Pcoll_f_MUMPS{6}(1)),' (MW/m3)'])
+disp('-------------------')
+disp('Matrix inversion MUMPSMEX')
+disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(time_f_MUMPSMEX(6)),' (s)'])
+disp(['ne(0): ',num2str(round(norm_f_MUMPSMEX{6}(1)/1e+16)/1e3),' (10+19 m-3) - Jlh(0): ',num2str(abs(curr_f_MUMPSMEX{6}(1))),' (MA/m2) - Plh(0): ',num2str(Prf_f_MUMPSMEX{6}(1)),' (MW/m3) - Pcoll(0): ',num2str(-Pcoll_f_MUMPSMEX{6}(1)),' (MW/m3)'])
+disp('-------------------')
+disp('Matrix inversion SUPERLUMEX')
+disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(time_f_SUPERLUMEX(6)),' (s)'])
+disp(['ne(0): ',num2str(round(norm_f_SUPERLUMEX{6}(1)/1e+16)/1e3),' (10+19 m-3) - Jlh(0): ',num2str(abs(curr_f_SUPERLUMEX{6}(1))),' (MA/m2) - Plh(0): ',num2str(Prf_f_SUPERLUMEX{6}(1)),' (MW/m3) - Pcoll(0): ',num2str(-Pcoll_f_SUPERLUMEX{6}(1)),' (MW/m3)'])
 disp('-------------------')
 disp('Matrix inversion with PETSc (SUPERLU, 1 processor) (collision loop in MatLab), npsi = 30')
 disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(time_f_PETSc_slu_e(6)),' (s)'])
@@ -216,6 +255,7 @@ disp('-------------------')
 disp('Matrix inversion with PETSc (BCGS, 1 processor) (collision loop in C), npsi = 30')
 disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(time_f_PETSc_bcgs_i(6)),' (s)'])
 disp(['ne(0): ',num2str(round(norm_f_PETSc_bcgs_i{6}(1)/1e+16)/1e3),' (10+19 m-3) - Jlh(0): ',num2str(abs(curr_f_PETSc_bcgs_i{6}(1))),' (MA/m2) - Plh(0): ',num2str(Prf_f_PETSc_bcgs_i{6}(1)),' (MW/m3) - Pcoll(0): ',num2str(-Pcoll_f_PETSc_bcgs_i{6}(1)),' (MW/m3)'])
+diary off
 %	    
 %************************************************************************************************************************************
 eval(['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);

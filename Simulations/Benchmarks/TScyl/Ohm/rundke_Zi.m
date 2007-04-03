@@ -51,8 +51,9 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 %Case Zeff = 1 (in make_equil)
 %
-dkeparam.opt_load = 0;
-dkeparam.opt_save = 0;
+dkeparam.invproc = 1;
+%
+ir_display_out = 1;
 %
 dkeparam.coll_mode = 0;
 [Znorm,Zcurr0,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
@@ -63,10 +64,10 @@ dkeparam.coll_mode = 2;
 dkeparam.coll_mode = 4;
 [Znorm,Zcurr4,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
-sigma0 = Zcurr0.x_tot_fsav/(ohm.epsi(gridDKE.ir_display_out)/mksa.Edreicer_ref);
-sigma1 = Zcurr1.x_tot_fsav/(ohm.epsi(gridDKE.ir_display_out)/mksa.Edreicer_ref);
-sigma2 = Zcurr2.x_tot_fsav/(ohm.epsi(gridDKE.ir_display_out)/mksa.Edreicer_ref);
-sigma4 = Zcurr4.x_tot_fsav/(ohm.epsi(gridDKE.ir_display_out)/mksa.Edreicer_ref);
+sigma0 = Zcurr0.x_tot_fsav/(ohm.epsi(ir_display_out)/mksa.Edreicer_ref);
+sigma1 = Zcurr1.x_tot_fsav/(ohm.epsi(ir_display_out)/mksa.Edreicer_ref);
+sigma2 = Zcurr2.x_tot_fsav/(ohm.epsi(ir_display_out)/mksa.Edreicer_ref);
+sigma4 = Zcurr4.x_tot_fsav/(ohm.epsi(ir_display_out)/mksa.Edreicer_ref);
 %
 dkeparam.coll_mode = 2;
 equil.zZi = [1,1,1,2];equil.pzni = species_dke_yp(equil.pne,2*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 2
@@ -79,10 +80,10 @@ equil.zZi = [1,1,1,20];equil.pzni = species_dke_yp(equil.pne,20*ones(size(equil.
 [Znorm,Zcurr_Z20,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 sigma_Z1 = sigma2;
-sigma_Z2 = Zcurr_Z2.x_tot_fsav/(ohm.epsi(gridDKE.ir_display_out)/mksa.Edreicer_ref);
-sigma_Z5 = Zcurr_Z5.x_tot_fsav/(ohm.epsi(gridDKE.ir_display_out)/mksa.Edreicer_ref);
-sigma_Z10 = Zcurr_Z10.x_tot_fsav/(ohm.epsi(gridDKE.ir_display_out)/mksa.Edreicer_ref);
-sigma_Z20 = Zcurr_Z20.x_tot_fsav/(ohm.epsi(gridDKE.ir_display_out)/mksa.Edreicer_ref);
+sigma_Z2 = Zcurr_Z2.x_tot_fsav/(ohm.epsi(ir_display_out)/mksa.Edreicer_ref);
+sigma_Z5 = Zcurr_Z5.x_tot_fsav/(ohm.epsi(ir_display_out)/mksa.Edreicer_ref);
+sigma_Z10 = Zcurr_Z10.x_tot_fsav/(ohm.epsi(ir_display_out)/mksa.Edreicer_ref);
+sigma_Z20 = Zcurr_Z20.x_tot_fsav/(ohm.epsi(ir_display_out)/mksa.Edreicer_ref);
 %
 disp('-------------------------------------------------------------------------------------------------------------------');
 disp('-------------------------------------------------------------------------------------------------------------------');
