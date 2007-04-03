@@ -9,7 +9,9 @@ path_id = 'LAPTOP_YVES';%Set here the name path parameters (user specific)
 %
 dkepath.path_id = path_id;
 dkepath.computer = 'MAC';%machine type and supported OS
-dkepath.MUMPS = '/Users/Yves/CEA/Projets/Packages/MUMPS_4.6.2_seq/dke';%Where MUMPS matrix solver is stored
+dkepath.SUPERLU = '/Users/Yves/CEA/Projets/Packages/SuperLU_3.0';%Where MUMPS matrix solver is stored
+%dkepath.MUMPS = '/Users/Yves/CEA/Projets/Packages/MUMPS_4.6.4_absoft_seq/dke';%Where MUMPS matrix solver is stored
+dkepath.MUMPS = '/Users/Yves/CEA/Projets/Packages/MUMPS_4.6.4_g95_seq/dke';%Where MUMPS matrix solver is stored
 dkepath.PETSC = '';%Where PETSC matrix solver is stored
 dkepath.temppathroot = '';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 dkepath.mex = '/Users/Yves/CEA/Projets/Project_DKE/MEX';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
