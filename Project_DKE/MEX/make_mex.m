@@ -22,16 +22,17 @@ if exist([path_path,'PATH_',id_path,'.mat']) == 0,%Paths
 	return
 else
 	eval(['load ',path_path,'PATH_',id_path,'.mat']);
-	info_dke_yp(2,'Structure ''path'' successfully loaded');
-        if ~strcmp(path.computer,computer),error('The path structure is not consistent with the computer !'),end
+	info_dke_yp(2,'Structure ''dkepath'' successfully loaded');
+        if ~strcmp(dkepath.computer,computer),error('The path structure is not consistent with the computer !'),end
 end
 %
+['mex -v -f ',dkepath.mex,'/mexopts_f77.sh ',filename]
 if isempty(opts) | ~isempty(strfind(ext,'c')),%C language
-   eval(['mex -v -f ',path.mex,'/mexopts_f77.sh ',filename]);
+   eval(['mex -v -f ',dkepath.mex,'/mexopts_f77.sh ',filename]);
 elseif strcmp(opts,'f77') & ~isempty(strfind(ext,'f')),%FORTRAN 77 language
-   eval(['mex -v -f ',path.mex,'/mexopts_f90.sh ',filename]);
+   eval(['mex -v -f ',dkepath.mex,'/mexopts_f90.sh ',filename]);
 elseif strcmp(opts,'f90') & ~isempty(strfind(ext,'f')),%FORTRAN 90 language
-   eval(['mex -v -f ',path.mex,'/mexopts_f77.sh ',filename]);
+   eval(['mex -v -f ',dkepath.mex,'/mexopts_f77.sh ',filename]);
 else
    error('The type of file is not recognized by its extension !')
 end
