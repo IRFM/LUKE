@@ -6,3 +6,7 @@
 6) CD $HOME/Packages/MUMPS and open MUMPS_dke_yp.m file. Modify the m-file according to your environment, starting from the examples already given inside.
 7) Select the option for using MUMPS in your favorite DKE parameter file placed in the directory $HOME/Database/DKEPARAM_files/ 
 
+Note A: 1) MUMPS_dke_yp.m is the interface of parallel or sequential versions of MUMPS (if one or several processors are used)
+        2) MUMPSMEX_dke_yp.m is an implementation of a MEX version of MUMPS (sequential only). The MATLAB directly of MUMPS must be set in the MatLab path
+
+Note B: 1) in the MEX directory, bin mexfiles for specific machines are given. They are compiled in the officials distributions of the MUMPS package
