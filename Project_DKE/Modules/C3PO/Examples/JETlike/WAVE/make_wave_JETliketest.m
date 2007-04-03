@@ -121,59 +121,27 @@ info_dke_yp(2,'Initial conditions calculated');
 %
 if isreal(y0(4)),
     %
-    [tout, yout] = raytracing_yp(rayparam,equil_fit,y0);
+    [tout0, yout0] = raytracing_yp(rayparam,equil_fit,y0);
     %
     info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium)');
     %
     filename = [id_wave,'_numeric'];
-    [iabs_out,srho,stheta,sphi,sR,sZ,sNpar,sNperp,sepol_pmz,sphi_xyz] = raypostprocessing_yp(tout,yout,rayparam,equil_fit,omega_rf,display_ray,p_opt,filename,' (numeric)');
+    [iabs_out0,srho0,stheta0,sphi0,sR0,sZ0,sNpar0,sNperp0,sepol_pmz0,sphi_xyz0] = raypostprocessing_yp(tout0,yout0,rayparam,equil_fit,omega_rf,display_ray,p_opt,filename,' (numeric)');
     %
-    [tout, yout] = raytracing_yp(rayparam,equil_fit,y0,2);
+    [tout1, yout1] = raytracing_yp(rayparam,equil_fit,y0,2);
     %
     filename = [id_wave,'_analytic'];
     info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
     %
-    [iabs_out,srho,stheta,sphi,sR,sZ,sNpar,sNperp,sepol_pmz,sphi_xyz] = raypostprocessing_yp(tout,yout,rayparam,equil_fit,omega_rf,display_ray,p_opt,filename,' (Analytic)');
+    [iabs_out1,srho1,stheta1,sphi1,sR1,sZ1,sNpar1,sNperp1,sepol_pmz1,sphi_xyz1] = raypostprocessing_yp(tout1,yout1,rayparam,equil_fit,omega_rf,display_ray,p_opt,filename,' (Analytic)');
     info_dke_yp(2,'Ray processing done');
     %
 else
    error('kpsin has a non nul imaginary part !');
 end
 %
-% building ray for Fp calculations
-%
-ns = length(srho);
-%
-ray.P0_2piRp = P0*1e6/2/pi/equil.Rp;%Initial lineic power density in the ray (W/m) [1,1]
-%
-ray.sx = sR.' - equil_fit.Rp;% Ray location (major radius) along the propagation [1,ns]
-ray.sphi = sphi.';% Ray location (toroidal angle) along the propagation [1,ns]
-ray.sy = sZ.' - equil_fit.Zp;% Ray location (vertical) along the propagation [1,ns]
-%
-ray.ss = [];% Ray propagation distance parameter for each ray (put to NaN once the ray is absorbed) [1,ns]
-ray.spsin = [];% Ray location (normalized magnetic flux) along the propagation [1,ns]
-ray.stheta = [];% Ray location (poloidal angle) along the propagation [1,ns]
-%
-ray.skx = [];% Ray wave vector (major radius) along the propagation [1,ns]
-ray.sn = [];% Ray wave number (toroidal) along the propagation [1,ns]
-ray.sky = [];% Ray wave vector (vertical) along the propagation [1,ns]
-%
-ray.sNpar = sNpar.';% Ray parallel wave number [1,ns]
-ray.sNperp = sNperp.';% Ray perpendicular wave number [1,ns]
-ray.sdNpar = dNpar*ones(1,ns);% Ray spectral width in Npar [1,ns] 
-%       if sdNpar is real -> gaussian spectrum, if sdNpar is imag. ->
-%       square spectrum (centered on sNpar)
-ray.sepol_pmz = sepol_pmz.';% polarization vector [3,ns] complex
-ray.sphi_xyz = sphi_xyz.';% normalized power flow [3,ns]
-%
-wave.omega_rf = omega_rf;
-wave.opt_rf = opt_rf;%option for FLR calculations [1,1]
-wave.opt_disp = 0+i;  % option for solving the wave equation, which gives (ray.sepol_pmz, ray.sphi, ray.sNperp) 
-wave.equil_id = id_equil;
-wave.rays{1} = ray;
-%
-save_str = ['WAVE_',id_equil,'_',id_wave,'.mat'];
-eval(['save ',save_str,' wave']);
+save_str = ['RAY_RESULTS_',id_equil,'_',id_wave,'.mat'];
+eval(['save ',save_str]);
 %
 info_dke_yp(2,'Wave parameters saved');
 %
