@@ -55,7 +55,7 @@ if launch.type == 'EC',
    ny = length(launch.yP_L);
 %
    ptr = sqrt(equil.ptx.^2 + equil.pty.^2);
-   smax = max(max(ptr));
+   smax = 2*max(max(ptr));
    s = linspace(0,smax,ns);
 %
 % Straight ray propagation to reach first closed flux surface
