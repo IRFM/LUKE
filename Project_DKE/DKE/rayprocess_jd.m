@@ -409,13 +409,16 @@ if isempty(sdNpar),
     end
 end
 %
-if imag(opt_disp) == 1,%relativistic calculation of the absorption coefficient
+if imag(opt_disp) >= 1,%calculation of the absorption coefficient
+    %
+    rel_opt = (imag(opt_disp) == 1);
+    %
     sa = sne*qe^2/e0/me/omega_rf^2;
     sb = sB*qe/me/omega_rf;
 	sbeta = sqrt(sTe/mc2);
     salphaphi_lin = zeros(1,ns);
     for n = n_rf_list,
-        salphaphi_lin = salphaphi_lin + omega_rf/clum*alphaphi_fr_jd(sa,sb,sbeta,sNpar,real(sNperp),sepol_pmz,n,1);
+        salphaphi_lin = salphaphi_lin + omega_rf/clum*alphaphi_fr_jd(sa,sb,sbeta,sNpar,real(sNperp),sepol_pmz,n,rel_opt);
     end
 end
 %
