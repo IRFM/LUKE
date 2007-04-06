@@ -279,7 +279,7 @@ for ib = 1:nb
         %
         mask_interp = [1,1 + find(diff(spsin(ismask)) ~= 0)];
         if ns_mask > 1,
-            xys(xmask,iy) = interp1(spsin(ismask(mask_interp)),ss(ismask(mask_interp)),xpsin(xmask),method);
+            xys(xmask,iy) = interp1(spsin(ismask(mask_interp)),ss(ismask(mask_interp)),xpsin(xmask),method).';
         else
             xys(xmask,iy) = ray.ss(ismask);
         end
