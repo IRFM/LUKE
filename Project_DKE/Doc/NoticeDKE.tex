@@ -34,7 +34,7 @@
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{amsmath}
-\usepackage{fancyheadings}
+\usepackage{fancyhdr}
 \usepackage{nomencl}
 
 \setcounter{MaxMatrixCols}{10}
@@ -48,7 +48,7 @@
 \bibliographystyle{unsrt}
 \addtolength{\headwidth}{\marginparsep}
 \addtolength{\headwidth}{\marginparwidth}
-%%\pagestyle{fancyplain}
+\pagestyle{fancyplain}
 \newcommand{\erf}{Erf}
 \renewcommand{\chaptermark}[1]{\markboth{\thechapter. #1}{}}
 \renewcommand{\sectionmark}[1]{\markright{\thesection. #1}{}}
@@ -90,11 +90,11 @@ physical limitations.
 \listoffigures
 \listoftables
 
-%%\ifpdf
-%%\DeclareGraphicsExtensions{.pdf, .jpg, .tif}
-%%\else
-%%\DeclareGraphicsExtensions{.eps, .jpg}
-%%\fi
+%\ifpdf
+%\DeclareGraphicsExtensions{.pdf, .jpg, .tif}
+%\else
+%\DeclareGraphicsExtensions{.eps, .jpg}
+%\fi
 
 %\printglossary
 
@@ -565,7 +565,7 @@ physical limitations.
 
 %TCIMACRO{\QSubDoc{Include BounceCoef}{\input{BounceCoef.tex}}}%
 %BeginExpansion
-\input{BounceCoef.tex}%
+%\input{BounceCoef.tex}%
 %EndExpansion
 
 \chapter{Effective trapped fraction for Circular Concentric FS}
@@ -586,7 +586,7 @@ physical limitations.
 
 %TCIMACRO{\QSubDoc{Include pitchangle}{\input{pitchangle.tex}}}%
 %BeginExpansion
-\input{pitchangle.tex}%
+%\input{pitchangle.tex}%
 %EndExpansion
 
 \chapter{Alternative discrete cross-derivatives coefficients}
@@ -605,6 +605,7 @@ physical limitations.
 %EndExpansion
 
 \newpage
+
 
 \bibliographystyle{plain}
 \bibliography{biblio}
