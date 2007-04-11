@@ -9,6 +9,8 @@ function [varargout] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam_
 %
 %by Y.Peysson (CEA-DRFC) <yves.peysson@cea.fr> and J. Decker (MIT/RLE) <joan.decker@cea.fr>
 %
+dke_warnings = '';
+%
 if nargin ~= 13,
     error('Wrong number of input arguments in main_dke_yp')
 end
@@ -165,8 +167,15 @@ for it_rf=1:nit_rf, % convergence in the ray-tracing mode
                 %
                 abs_frac = (P_0_2piRp_in - P_0_2piRp_out)/P_0_2piRp_in;
                 %
-                if isfield(dkeparam_out,'abs_lim') & abs_frac < dkeparam_out.abs_lim,
-                    error('The power was not fully absorbed. To bypass this error set dkeparam.abs_lim to 0')
+                dke_warnings = '';               
+                if isfield(dkeparam_out,'abs_lim') 
+                    if abs_frac < dkeparam_out.abs_lim,
+                       dke_warnings = warning('The RF power is not fully absorbed. To bypass this error set dkeparam.abs_lim between 0 and 1')
+                    end
+                else 
+                    if abs_frac < 0.95,%95% of the RF power must be absorbed for an acceptable quasilinear solution
+                       error('The RF power is not fully absorbed. To bypass this error set dkeparam.abs_lim between 0 and 1')
+                    end
                 end
                 %
                 if residue_rf(it_rf) <= dkeparam_out.prec_rf & redfac == 1 & it_rf > 1,
@@ -362,5 +371,7 @@ if nargout >= 10,varargout{10} = Zbouncecoef;end
 if nargout >= 11,varargout{11} = Zmripple;end
 if nargout >= 12,varargout{12} = mksa;end
 if nargout >= 13,varargout{13} = XXsinksource;end
+if nargout >= 14,varargout{14} = dke_warnings;end   
+
 	
 

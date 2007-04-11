@@ -58,11 +58,17 @@ if nargin <= 1
 %
 % LUKE PARAMETERS
 %
-   valeur.rt_mode = 4%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p, (4) -> dNpar proportional to s
+    valeur.abs_lim = 0.95;%Relative level of RF power absorption that is accpeted for in the quasilinear convergence loop (0: no threshold, 1: full absorption)
+	type.abs_lim = 'float';%Relative level of RF power absorption that is accpeted for in the quasilinear convergence loop (0: no threshold, 1: full absorption)
+	borne.abs_lim = [0,1];%Relative level of RF power absorption that is accpeted for in the quasilinear convergence loop (0: no threshold, 1: full absorption)
+	defaut.abs_lim = 0.95;%Relative level of RF power absorption that is accpeted for in the quasilinear convergence loop (0: no threshold, 1: full absorption)
+	info.abs_lim = 'Relative level of RF power absorption that is accpeted for in the quasilinear convergence loop (0: no threshold, 1: full absorption)';
+%
+    valeur.rt_mode = 4%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p, (4) -> dNpar proportional to s
 	type.rt_mode = 'list';%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p, (4) -> dNpar proportional to s
 	borne.rt_mode = {1,2,3,4};%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p, (4) -> dNpar proportional to s
 	defaut.rt_mode = 4;%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p, (4) -> dNpar proportional to s
-	info.rt_mode = '%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p';, (4) -> dNpar proportional to s
+	info.rt_mode = 'RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p, (4) -> dNpar proportional to s';
 %
 	valeur.nit_rf = 40;%Maximum number of iteration in ray-tracing. 
 	type.nit_rf = 'integer';%Maximum number of iteration in ray-tracing. 
@@ -120,7 +126,7 @@ if nargin <= 1
 %
 	valeur.norm_ref = 1;%Normalization procedure for the lower limit of radial transport parallel velocity dependence: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref
 	type.norm_ref = 'list';%Normalization procedure for the lower limit of radial transport parallel velocity dependence: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref
-   borne.norm_ref = {0,1};%Normalization procedure for the lower limit of radial transport parallel velocity dependence: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref
+    borne.norm_ref = {0,1};%Normalization procedure for the lower limit of radial transport parallel velocity dependence: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref
 	defaut.norm_ref = 1;%Normalization procedure for the lower limit of radial transport parallel velocity dependence: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref
 	info.norm_ref = 'Normalization procedure for the lower limit of radial transport parallel velocity dependence: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref ';
 %
@@ -210,9 +216,9 @@ if nargin <= 1
    type.alpha = 'integer';% si 1, calcule l'absorption sur les particules alpha
    borne.alpha = {0,1};% si 1, calcule l'absorption sur les particules alpha
    defaut.alpha = 0;% si 1, calcule l'absorption sur les particules alpha
-	info.alpha = 'if 1, calculates absorption by alpha particles';
+   info.alpha = 'if 1, calculates absorption by alpha particles';
 %
-	valeur.save  = 0;%sauvegarde du contexte
+   valeur.save  = 0;%sauvegarde du contexte
    type.save = 'list';%sauvegarde du contexte
    borne.save = {0,1};%sauvegarde du contexte
    defaut.save = 0;%sauvegarde du contexte
@@ -319,13 +325,14 @@ dkepath.temppath = [dkepath.temppathroot,filesep,'CRONOS',filesep,timeid_jd(cloc
 % PARAMETRES LUKE
 %
 dkeparam.rt_mode = par.rt_mode;%RT-DKE power consistency
+dkeparam.abs_lim = par.abs_lim;%Relative level of RF power absorption that is accpeted for in the quasilinear convergence loop (0: no threshold, 1: full absorption)
 dkeparam.nit_rf = par.nit_rf;%Maximum number of iteration in ray-tracing. Works only if rt_mode = 1 and more than one radial point (default = 1)
 dkeparam.dke_mode = par.dke_mode;%Fokker-Planck equation (0), Drift Kinetic equation (1)
 dkeparam.dtn = par.dtn;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
 dkeparam.invproc = par.invproc;%Iterative matrix inversion method: (1) cgs iterative method, (2) bicg iterative method, (3) qmr iterative method
-dkeparam.n_rf_list = 0;%For LH only
+dkeparam.n_rf_list = 0;%************** For LH only ***********************
 %
-% PARAMETRES DISP1LAY
+% PARAMETRES DISPLAY
 %
 dkedisplay.rho_display  = par.rho_display;%Approximate radial position at which results are displayed if display.display_mode >= 1 [1,1]. Not used if NaN
 dkedisplay.display_mode = par.display_mode;%Display mode: (0): no, (1): partial, (2): full
@@ -377,7 +384,24 @@ opt_save = 0;%For debugging or scan only.
 %
 %--------------------------- Execution du trace de rayon C3PO et du code cinetique LUKE --------------------------- 
 %
-[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert('cronos',wavestructs,[],[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[],opt_save);
+ik = 1;
+while 1,
+   [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = run_lukert('cronos',wavestructs,[],[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[],opt_save);
+   if isempty(dke_warnings),
+       break;
+   else
+       info_dke_yp(2,'The RF power is not absorbed at an acceptable level for the quasilinear solution. The ray-tracing is relaunched with extended ray lengths');
+%
+       for iw = 1:length(launchs),
+          wavestructs{iw}.rayparam.tfinal = wavestructs{iw}.rayparam.tfinal*1.5^ik;
+          wavestructs{iw}.rayparam.kmax = wavestructs{iw}.rayparam.kmax*1.5^ik;
+          ik = ik + 1;
+          if ik > 10;
+              error('The RF power cannot absorbed at an acceptable level for the quasilinear solution even is ray lengths have been extended. Something is going wrong !!!');
+          end
+       end
+   end
+end
 %
 rmdir(dkepath.temppath,'s');%remove directory where temporary  calculations are performed
 rmfield(dkepath, 'temppath');%remove path of the directory where temporary  calculations are performed
