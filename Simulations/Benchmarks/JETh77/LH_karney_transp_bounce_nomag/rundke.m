@@ -16,26 +16,26 @@ path_simul = '';%if nothing is specified, the working directory is first used an
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
 rho_S = [0.05:0.02:0.2,0.22:0.03:0.6,0.62:0.05:0.95];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
-id_path = 'PC_DRFC_YVES';%For all paths used by DKE solver
-path_path = '../../../Database/PATH_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+id_path = '';%For all paths used by DKE solver
+path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_equil = 'JETh77';%For plasma equilibrium
-path_equil = '../../../Database/EQUIL_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_equil = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_dkeparam = 'BOUNCE3D_MUMPS';%For DKE code parameters
-path_dkeparam = '../../../Database/DKEPARAM_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_display = 'NO_DISPLAY';%For output code display
-path_display = '../../../Database/DISPLAY_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_ohm = '';%For Ohmic electric contribution
 path_ohm = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 ids_wave = {'LH_karney_offaxis_2'};%For RF waves contribution (put all the type of waves needed)
-paths_wave = {'../../../Database/WAVE_files/'};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+paths_wave = {''};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_transpfaste = 'nomagneticturbulence';%For fast electron radial transport
-path_transpfaste = '../../../Database/TRANSP_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_transpfaste = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_ripple = '';%For fast electron magnetic ripple losses
 path_ripple = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
@@ -77,10 +77,10 @@ disp('D=10 m2/s done');
 vparmin = round(1/(waves{1}.rays{1}.sNpar(1)+imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref);
 vparmax = round(1/(waves{1}.rays{1}.sNpar(1)-imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref);
 %
-figure(1),graph1D_jd(equilDKE.xrho,Zcurr0.x_tot_fsav,0,0,'','','',NaN,'','','-','none','r',2);hold on
-graph1D_jd(equilDKE.xrho,Zcurr01.x_tot_fsav,0,0,'','','',NaN,'','','-','none','m',1);hold on
-graph1D_jd(equilDKE.xrho,Zcurr1.x_tot_fsav,0,0,'','','',NaN,'','','-','none','m',1);hold on
-graph1D_jd(equilDKE.xrho,Zcurr10.x_tot_fsav,0,0,'\rho','J_{LH}',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','--','none','b',1);hold on
+figure(1),clf,graph1D_jd(equilDKE.xrho,Zcurr0.x_tot_fsav,0,0,'','','',NaN,'','','-','none','r',2,20,gca,0.85,0.7,0.5);hold on
+graph1D_jd(equilDKE.xrho,Zcurr01.x_tot_fsav,0,0,'','','',NaN,'','','-','none','m',1,20,gca,0.85,0.7,0.5);hold on
+graph1D_jd(equilDKE.xrho,Zcurr1.x_tot_fsav,0,0,'','','',NaN,'','','-','none','m',1,20,gca,0.85,0.7,0.5);hold on
+graph1D_jd(equilDKE.xrho,Zcurr10.x_tot_fsav,0,0,'\rho','J_{LH}',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','--','none','b',1,20,gca,0.85,0.7,0.5);hold on
 legend('D_{\psi\psi} = 0 (m^{2}/s)','D_{\psi\psi} = 0.1 (m^{2}/s)','D_{\psi\psi} = 1 (m^{2}/s)','D_{\psi\psi} = 10 (m^{2}/s)')
 savefig_dke_yp('profcurr_Dpsipsi')
 %	    

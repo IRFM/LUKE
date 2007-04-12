@@ -14,20 +14,20 @@ global nfig
 id_simul = 'Thermal';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_path = 'PC_DRFC_YVES';%For all paths used by DKE solver
-path_path = '../../../Database/PATH_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+id_path = '';%For all paths used by DKE solver
+path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 psin_S = [0.001];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
 rho_S = [];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
 id_equil = 'TScyl';%For plasma equilibrium
-path_equil = '../../../Database/EQUIL_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_equil = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_dkeparam = 'UNIFORM10010020';%For DKE code parameters
-path_dkeparam = '../../../Database/DKEPARAM_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_display = 'PARTIAL_VISUAL';%For output code display
-path_display = '../../../Database/DISPLAY_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_ohm = '';%For Ohmic electric contribution
 path_ohm = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
@@ -51,6 +51,7 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 nit = 20;
 %dkeparam.dtn = 10;
+%dkeparam.invproc = -2;
 %
 [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 ne(1) = Znorm.x_0_fsav;
@@ -59,7 +60,7 @@ for i = 2:nit,
     ne(i) = Znorm.x_0_fsav;
 end
 %
-figure(1),graph1D_jd([1:nit]*dkeparam.dtn,ne*mksa.ne_ref,0,0,'Integration time step (t_{coll})','Electron density (10^{+19} m^{-3)}',['Maxwallian distr., dtn = ',int2str(dkeparam.dtn)],NaN,'','','-','+','r',2);
+figure(1),clf,graph1D_jd([1:nit]*dkeparam.dtn,ne*mksa.ne_ref,0,0,'Integration time step (t_{coll})','Electron density (10^{+19} m^{-3)}',['Maxwallian distr., dtn = ',int2str(dkeparam.dtn)],NaN,'','','-','+','r',2,20,gca,0.85,0.7,0.5);
 axis([0,nit*dkeparam.dtn,mksa.ne_ref*0.99,mksa.ne_ref*1.01])
 savefig_dke_yp('thermaldensity')
 %	    

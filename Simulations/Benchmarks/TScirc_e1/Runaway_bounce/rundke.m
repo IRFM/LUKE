@@ -17,20 +17,20 @@ path_simul = '';%if nothing is specified, the working directory is first used an
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
 rho_S = logspace(-4,-0.1,30);%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
-id_path = 'PC_DRFC_YVES';%For all paths used by DKE solver
-path_path = '../../../Database/PATH_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+id_path = '';%For all paths used by DKE solver
+path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_equil = 'TScirc_e1';%For plasma equilibrium
-path_equil = '../../../Database/EQUIL_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_equil = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_dkeparam = 'BOUNCE3D_MUMPS_m201';%For DKE code parameters
-path_dkeparam = '../../../Database/DKEPARAM_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_display = 'PARTIAL_VISUAL';%For output code display
-path_display = '../../../Database/DISPLAY_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_ohm = 'OHM_p005_flat';%For Ohmic electric contribution
-path_ohm = '../../../Database/OHM_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_ohm = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 ids_wave = {''};%For RF waves contribution (put all the type of waves needed)
 paths_wave = {''};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
@@ -49,7 +49,7 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 %************************************************************************************************************************************
 %
-dkeparam.invproc = 1;
+%dkeparam.invproc = -2;
 %
 [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %	    
@@ -61,8 +61,8 @@ epsi_circ = equilDKE.xrho*equilDKE.ap/equilDKE.Rp;%Circular inverse aspect ratio
 norm_runrate = dke_out.XxRR_fsav(end,:)/max(dke_out.XxRR_fsav(end,:));
 %norm_runrate1 = 1 - 1.2*sqrt(2*epsi_circ./(1+epsi_circ));
 %norm_runrate1(norm_runrate1 < 0) = 0;
-figure(1),graph1D_jd(epsi_circ,norm_runrate,0,0,'Inverse aspect ratio','Normalized runaway rate','Runaway rate',NaN,'','','-','non','r',2);hold on
-%graph1D_jd(epsi_circ,norm_runrate1,0,0,'Inverse aspect ratio','Normalized runaway rate','Runaway rate',NaN,'','','-','non','b',2);
+figure(1),clf,graph1D_jd(epsi_circ,norm_runrate,0,0,'Inverse aspect ratio','Normalized runaway rate','Runaway rate',NaN,'','','-','non','r',2,20,gca,0.85,0.7,0.5);hold on
+%graph1D_jd(epsi_circ,norm_runrate1,0,0,'Inverse aspect ratio','Normalized runaway rate','Runaway rate',NaN,'','','-','non','b',2,20,gca,0.85,0.7,0.5);
 %legend('DKE code','Approximate (trapped fraction)')
 savefig_dke_yp('runaway_bounce')
 %

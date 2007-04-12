@@ -17,23 +17,23 @@ path_simul = '';%if nothing is specified, the working directory is first used an
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
 rho_S = [];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
-id_path = 'PC_DRFC_YVES';%For all paths used by DKE solver
-path_path = '../../../Database/PATH_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+id_path = '';%For all paths used by DKE solver
+path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_equil = 'TScyl';%For plasma equilibrium
-path_equil = '../../../Database/EQUIL_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_equil = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_dkeparam = 'UNIFORM10010020';%For DKE code parameters
-path_dkeparam = '../../../Database/DKEPARAM_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_display = 'NO_DISPLAY';%For output code display
-path_display = '../../../Database/DISPLAY_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_ohm = '';%For Ohmic electric contribution
 path_ohm = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 ids_wave = {'LH_karney'};%For RF waves contribution (put all the type of waves needed)
-paths_wave = {'../../../Database/WAVE_files/'};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+paths_wave = {''};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_transpfaste = '';%For fast electron radial transport
 path_transpfaste = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
@@ -204,21 +204,21 @@ end
 vparmin = 1/(waves{1}.rays{1}.sNpar(1)+imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
 vparmax = 1/(waves{1}.rays{1}.sNpar(1)-imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
 %
-figure(1),graph1D_jd(dludroptol,time_f(:,1),1,0,'Drop tolerance parameter \delta_{LU}','Full computational time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','-','none','r',2);hold on
-graph1D_jd(dludroptol,time_f(:,2),1,0,'Drop tolerance parameter \delta_{LU}','Full computational time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','--','none','b',2);hold on
-graph1D_jd(dludroptol,time_f(:,3),1,0,'Drop tolerance parameter \delta_{LU}','Full computational time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','-.','none','g',2);
-graph1D_jd(dludroptol,time_f(:,4),1,0,'Drop tolerance parameter \delta_{LU}','Full computational time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','-','none','r',1);
-graph1D_jd(dludroptol,time_f(:,5),1,0,'Drop tolerance parameter \delta_{LU}','Full computational time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','--','none','b',1);
-graph1D_jd(dludroptol,time_f(:,6),1,0,'Drop tolerance parameter \delta_{LU}','Full computational time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','-.','none','g',1);
+figure(1),clf,graph1D_jd(dludroptol,time_f(:,1),1,0,'Drop tolerance parameter \delta_{LU}','Full computational time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','-','none','r',2,20,gca,0.85,0.7,0.5);hold on
+graph1D_jd(dludroptol,time_f(:,2),1,0,'Drop tolerance parameter \delta_{LU}','Full computational time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','--','none','b',2,20,gca,0.85,0.7,0.5);hold on
+graph1D_jd(dludroptol,time_f(:,3),1,0,'Drop tolerance parameter \delta_{LU}','Full computational time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','-.','none','g',2,20,gca,0.85,0.7,0.5);
+graph1D_jd(dludroptol,time_f(:,4),1,0,'Drop tolerance parameter \delta_{LU}','Full computational time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','-','none','r',1,20,gca,0.85,0.7,0.5);
+graph1D_jd(dludroptol,time_f(:,5),1,0,'Drop tolerance parameter \delta_{LU}','Full computational time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','--','none','b',1,20,gca,0.85,0.7,0.5);
+graph1D_jd(dludroptol,time_f(:,6),1,0,'Drop tolerance parameter \delta_{LU}','Full computational time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','-.','none','g',1,20,gca,0.85,0.7,0.5);
 legend('n_{\psi} = 4','n_{\psi} = 9','n_{\psi} = 14','n_{\psi} = 19','n_{\psi} = 24','n_{\psi} = 29')
 savefig_dke_yp('timeludroptol')
 %
-figure(2),graph1D_jd(dludroptol,memory_f(:,1),1,0,'Drop tolerance parameter \delta_{LU}','LU matrix size (MBytes)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','-','none','r',2);hold on
-graph1D_jd(dludroptol,memory_f(:,2),1,0,'Drop tolerance parameter \delta_{LU}','LU matrix size (MBytes)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','--','none','b',2);hold on
-graph1D_jd(dludroptol,memory_f(:,3),1,0,'Drop tolerance parameter \delta_{LU}','LU matrix size (MBytes)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','-.','none','g',2);
-graph1D_jd(dludroptol,memory_f(:,4),1,0,'Drop tolerance parameter \delta_{LU}','LU matrix size (MBytes)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','-','none','r',1);
-graph1D_jd(dludroptol,memory_f(:,5),1,0,'Drop tolerance parameter \delta_{LU}','LU matrix size (MBytes)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','--','none','b',1);
-graph1D_jd(dludroptol,memory_f(:,6),1,0,'Drop tolerance parameter \delta_{LU}','LU matrix size (MBytes)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','-.','none','g',1);
+figure(2),clf,graph1D_jd(dludroptol,memory_f(:,1),1,0,'Drop tolerance parameter \delta_{LU}','LU matrix size (MBytes)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','-','none','r',2,20,gca,0.85,0.7,0.5);hold on
+graph1D_jd(dludroptol,memory_f(:,2),1,0,'Drop tolerance parameter \delta_{LU}','LU matrix size (MBytes)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','--','none','b',2,20,gca,0.85,0.7,0.5);hold on
+graph1D_jd(dludroptol,memory_f(:,3),1,0,'Drop tolerance parameter \delta_{LU}','LU matrix size (MBytes)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','-.','none','g',2,20,gca,0.85,0.7,0.5);
+graph1D_jd(dludroptol,memory_f(:,4),1,0,'Drop tolerance parameter \delta_{LU}','LU matrix size (MBytes)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','-','none','r',1,20,gca,0.85,0.7,0.5);
+graph1D_jd(dludroptol,memory_f(:,5),1,0,'Drop tolerance parameter \delta_{LU}','LU matrix size (MBytes)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','--','none','b',1,20,gca,0.85,0.7,0.5);
+graph1D_jd(dludroptol,memory_f(:,6),1,0,'Drop tolerance parameter \delta_{LU}','LU matrix size (MBytes)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','-.','none','g',1,20,gca,0.85,0.7,0.5);
 legend('n_{\psi} = 4','n_{\psi} = 9','n_{\psi} = 14','n_{\psi} = 19','n_{\psi} = 24','n_{\psi} = 29')
 savefig_dke_yp('memoryludroptol')
 %

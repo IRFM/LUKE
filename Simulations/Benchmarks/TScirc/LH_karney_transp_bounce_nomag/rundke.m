@@ -17,26 +17,26 @@ path_simul = '';%if nothing is specified, the working directory is first used an
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
 rho_S = [0.05:0.02:0.2,0.22:0.03:0.6,0.62:0.05:0.95];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
-id_path = 'PC_DRFC_YVES';%For all paths used by DKE solver
-path_path = '../../../Database/PATH_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+id_path = '';%For all paths used by DKE solver
+path_path = '.';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_equil = 'TScirc';%For plasma equilibrium
-path_equil = '../../../Database/EQUIL_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_equil = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_dkeparam = 'BOUNCE3D_MUMPS';%For DKE code parameters
-path_dkeparam = '../../../Database/DKEPARAM_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_display = 'NO_DISPLAY';%For output code display
-path_display = '../../../Database/DISPLAY_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_ohm = '';%For Ohmic electric contribution
 path_ohm = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 ids_wave = {'LH_karney_offaxis_2'};%For RF waves contribution (put all the type of waves needed)
-paths_wave = {'../../../Database/WAVE_files/'};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+paths_wave = {''};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_transpfaste = 'nomagneticturbulence';%For fast electron radial transport
-path_transpfaste = '../../../Database/TRANSP_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_transpfaste = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_ripple = '';%For fast electron magnetic ripple losses
 path_ripple = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
@@ -133,24 +133,24 @@ tCPU1 = [dke_out10_1.time_out,dke_out10_2.time_out,dke_out10_3.time_out,dke_out1
 vparmin = 1/(waves{1}.rays{1}.sNpar(1)+imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
 vparmax = 1/(waves{1}.rays{1}.sNpar(1)-imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
 %
-figure(1),graph1D_jd(Dpsipsi,tCPU,1,0,'D_{\psi\psi} (m^{2}/s)','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','r',2);
+figure(1),clf,graph1D_jd(Dpsipsi,tCPU,1,0,'D_{\psi\psi} (m^{2}/s)','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','r',2,20,gca,0.85,0.7,0.5);
 axis([0.1,10,0,300])
 savefig_dke_yp('tCPU_Dpsipsi')
 %
-figure(2),graph1D_jd([1:10],tCPU1,0,0,'Number of processors)','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2),', D_{\psi\psi}  = 10 (m^{2}/s)'],NaN,'','','-','none','r',2);
+figure(2),clf,graph1D_jd([1:10],tCPU1,0,0,'Number of processors)','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2),', D_{\psi\psi}  = 10 (m^{2}/s)'],NaN,'','','-','none','r',2,20,gca,0.85,0.7,0.5);
 axis([1,10,0,400])
 savefig_dke_yp('tCPUDpsipsi10_Nproc')
 %
-figure(3),graph1D_jd(equilDKE.xrho,Zcurr0.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','r',2);hold on
-graph1D_jd(equilDKE.xrho,Zcurr01.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','b',2);hold on
-%graph1D_jd(equilDKE.xrho,Zcurr02.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','g',1);hold on
-%graph1D_jd(equilDKE.xrho,Zcurr05.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','c',1);hold on
-graph1D_jd(equilDKE.xrho,Zcurr1.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','g',2);hold on
-%graph1D_jd(equilDKE.xrho,Zcurr2.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','k',1);hold on
-%graph1D_jd(equilDKE.xrho,Zcurr5.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','--','none','r',1);hold on
-graph1D_jd(equilDKE.xrho,Zcurr10.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','m',2);hold on
-graph1D_jd(equilDKE.xrho,Zcurr20.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','k',2);hold on
-graph1D_jd(equilDKE.xrho,besselj(0,2.4*equilDKE.xrho)*Zcurr20.x_tot_fsav(1),0,0,'\rho','current density',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','none','+','r',2);
+figure(3),clf,graph1D_jd(equilDKE.xrho,Zcurr0.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','r',2,20,gca,0.85,0.7,0.5);hold on
+graph1D_jd(equilDKE.xrho,Zcurr01.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','b',2,20,gca,0.85,0.7,0.5);hold on
+%graph1D_jd(equilDKE.xrho,Zcurr02.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','g',1,20,gca,0.85,0.7,0.5);hold on
+%graph1D_jd(equilDKE.xrho,Zcurr05.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','c',1,20,gca,0.85,0.7,0.5);hold on
+graph1D_jd(equilDKE.xrho,Zcurr1.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','g',2,20,gca,0.85,0.7,0.5);hold on
+%graph1D_jd(equilDKE.xrho,Zcurr2.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','k',1,20,gca,0.85,0.7,0.5);hold on
+%graph1D_jd(equilDKE.xrho,Zcurr5.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','--','none','r',1,20,gca,0.85,0.7,0.5);hold on
+graph1D_jd(equilDKE.xrho,Zcurr10.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','m',2,20,gca,0.85,0.7,0.5);hold on
+graph1D_jd(equilDKE.xrho,Zcurr20.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','k',2,20,gca,0.85,0.7,0.5);hold on
+graph1D_jd(equilDKE.xrho,besselj(0,2.4*equilDKE.xrho)*Zcurr20.x_tot_fsav(1),0,0,'\rho','current density',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','none','+','r',2,20,gca,0.85,0.7,0.5);
 legend('D_{\psi\psi} = 0 (m^{2}/s)','D_{\psi\psi} = 0.1 (m^{2}/s)','D_{\psi\psi} = 1 (m^{2}/s)','D_{\psi\psi} = 10 (m^{2}/s)','D_{\psi\psi} = 20 (m^{2}/s)','J_{0}(2.4*\rho)')
 savefig_dke_yp('Jprof_Dpsipsi')
 

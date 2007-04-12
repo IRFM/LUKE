@@ -18,23 +18,23 @@ path_simul = '';%if nothing is specified, the working directory is first used an
 psin_S = [0.001];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
 rho_S = [];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
-id_path = 'PC_DRFC_YVES';%For all paths used by DKE solver
-path_path = '../../../Database/PATH_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+id_path = '';%For all paths used by DKE solver
+path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_equil = 'TScyl';%For plasma equilibrium
-path_equil = '../../../Database/EQUIL_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_equil = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_dkeparam = 'UNIFORM10010020';%For DKE code parameters
-path_dkeparam = '../../../Database/DKEPARAM_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_display = 'PARTIAL_VISUAL';%For output code display
-path_display = '../../../Database/DISPLAY_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_ohm = '';%For Ohmic electric contribution
 path_ohm = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 ids_wave = {'LH_karney_g'};%For RF waves contribution (put all the type of waves needed)
-paths_wave = {'../../../Database/WAVE_files/'};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+paths_wave = {''};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_transpfaste = '';%For fast electron radial transport
 path_transpfaste = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
@@ -52,7 +52,7 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 %Study of the ion charge effect of the LHCD efficiency
 %
-%dkeparam.invproc = -1;
+%dkeparam.invproc = -2;
 %dkeparam.np_S = 201;
 %dkeparam.nmhu_S = 201;
 %
@@ -87,16 +87,16 @@ vparmin = 1/(waves{1}.rays{1}.sNpar(1)+imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.
 vparmax = 1/(waves{1}.rays{1}.sNpar(1)-imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
 etalh_th = 6*etalh(1)./(5+Zi);
 %
-figure(1),graph1D_jd(Zi,jlh,0,0,'Main ion charge','j_{LH}',['D_{|| ||LH} = ',num2str(1)],NaN,'','','-','non','r',2);
+figure(1),clf,graph1D_jd(Zi,jlh,0,0,'Main ion charge','j_{LH}',['D_{|| ||LH} = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,0.85,0.7,0.5);
 savefig_dke_yp('jLH_Zi')
 %
-figure(2),graph1D_jd(Zi,plh,0,0,'Main ion charge','p_{LH} and p_{coll}',['D_{|| ||LH} = ',num2str(1)],NaN,'','','-','non','r',2);hold on
-graph1D_jd(Zi,pcoll,0,0,'Main ion charge','p_{LH} and p_{coll}','',NaN,'','','none','+','b',2);hold on
+figure(2),clf,graph1D_jd(Zi,plh,0,0,'Main ion charge','p_{LH} and p_{coll}',['D_{|| ||LH} = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,0.85,0.7,0.5);hold on
+graph1D_jd(Zi,pcoll,0,0,'Main ion charge','p_{LH} and p_{coll}','',NaN,'','','none','+','b',2,20,gca,0.85,0.7,0.5);hold on
 legend('LH power','Collision power')
 savefig_dke_yp('PlhPcoll_Zi')
 %
-figure(3),graph1D_jd(Zi,etalh,0,0,'Main ion charge','LH CD efficiency \eta_{LH}',['D_{|| ||LH} = ',num2str(1)],NaN,'','','-','non','r',2);hold on
-graph1D_jd(Zi,etalh_th,0,0,'Main ion charge','LH CD efficiency \eta_{LH}',[],NaN,'','','none','+','b',2);
+figure(3),clf,graph1D_jd(Zi,etalh,0,0,'Main ion charge','LH CD efficiency \eta_{LH}',['D_{|| ||LH} = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,0.85,0.7,0.5);hold on
+graph1D_jd(Zi,etalh_th,0,0,'Main ion charge','LH CD efficiency \eta_{LH}',[],NaN,'','','none','+','b',2,20,gca,0.85,0.7,0.5);
 legend('DKE code','4/(Z+5)')
 axis([0,10,0,20])
 savefig_dke_yp('effLH_Zi')
@@ -129,15 +129,15 @@ plh1 = [ZP0_D01.x_rf_fsav,ZP0_D02.x_rf_fsav,ZP0_D05.x_rf_fsav,ZP0_D1.x_rf_fsav,Z
 pcoll1 = -[ZP0_D01.x_c_fsav,ZP0_D02.x_c_fsav,ZP0_D05.x_c_fsav,ZP0_D1.x_c_fsav,ZP0_D2.x_c_fsav,ZP0_D5.x_c_fsav,ZP0_D10.x_c_fsav,ZP0_D20.x_c_fsav];
 etalh1 = jlh1./plh1;
 %
-figure(4),graph1D_jd(Dlh,jlh1,0,0,'D_{|| ||LH}','j_{LH}',['Zi = ',num2str(1)],NaN,'','','-','non','r',2);
+figure(4),clf,graph1D_jd(Dlh,jlh1,0,0,'D_{|| ||LH}','j_{LH}',['Zi = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,0.85,0.7,0.5);
 savefig_dke_yp('jLH_DLH')
 %
-figure(5),graph1D_jd(Dlh,plh1,0,0,'D_{|| ||LH}','p_{LH} and p_{coll}',['Zi = ',num2str(1)],NaN,'','','-','non','r',2);hold on
-graph1D_jd(Dlh,pcoll1,0,0,'D_{||LH}','p_{lh} and p_{coll}','',NaN,'','','none','+','b',2);hold on
+figure(5),clf,graph1D_jd(Dlh,plh1,0,0,'D_{|| ||LH}','p_{LH} and p_{coll}',['Zi = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,0.85,0.7,0.5);hold on
+graph1D_jd(Dlh,pcoll1,0,0,'D_{||LH}','p_{lh} and p_{coll}','',NaN,'','','none','+','b',2,20,gca,0.85,0.7,0.5);hold on
 legend('LH power','Collision power')
 savefig_dke_yp('PLHPcoll_DLH')
 %
-figure(6),graph1D_jd(Dlh,etalh1,0,0,'D_{|| ||LH}','LH CD efficiency \eta_{LH}',['Zi = ',num2str(1)],NaN,'','','-','non','r',2);hold on
+figure(6),clf,graph1D_jd(Dlh,etalh1,0,0,'D_{|| ||LH}','LH CD efficiency \eta_{LH}',['Zi = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,0.85,0.7,0.5);hold on
 savefig_dke_yp('effLH_DLH')
 %	    
 %************************************************************************************************************************************

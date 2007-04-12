@@ -17,20 +17,20 @@ path_simul = '';%if nothing is specified, the working directory is first used an
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
 rho_S = [0.5];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
-id_path = 'PC_DRFC_YVES';%For all paths used by DKE solver
-path_path = '../../../Database/PATH_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+id_path = '';%For all paths used by DKE solver
+path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_equil = 'TScyl';%For plasma equilibrium
-path_equil = '../../../Database/EQUIL_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_equil = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_dkeparam = 'UNIFORM10010020_nit1';%For DKE code parameters
-path_dkeparam = '../../../Database/DKEPARAM_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_display = 'PARTIAL_VISUAL';%For output code display
-path_display = '../../../Database/DISPLAY_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_ohm = 'OHM_p005_flat';%For Ohmic electric contribution
-path_ohm = '../../../Database/OHM_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_ohm = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 ids_wave = {''};%For RF waves contribution (put all the type of waves needed)
 paths_wave = {''};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
@@ -50,6 +50,7 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %************************************************************************************************************************************
 %
 clear xdn xdnr
+%dkeparam.invproc = -2;
 %
 %WARNING: boundary_mode_f must be 0 
 %
@@ -68,8 +69,8 @@ for i=1:length(dtn)
    end
 end
 %
-figure,graph1D_jd(dtn,abs(1-xdn),1,1,'Integration time step (dtn)','Particle losses per time step','',NaN,'','','-','non','r',2);hold on
-graph1D_jd(dtn,xdnr,1,1,'Integration time step (dtn)','Particle losses per time step','',NaN,'','','--','non','b',2);
+figure,clf,graph1D_jd(dtn,abs(1-xdn),1,1,'Integration time step (dtn)','Particle losses per time step','',NaN,'','','-','non','r',2,20,gca,0.85,0.7,0.5);hold on
+graph1D_jd(dtn,xdnr,1,1,'Integration time step (dtn)','Particle losses per time step','',NaN,'','','--','non','b',2,20,gca,0.85,0.7,0.5);
 legend('Numerical','Runaway')
 savefig_dke_yp('runaway_loss')
 %	    
