@@ -83,29 +83,39 @@ for i=1:3:length(varargin),
 end
 %
 if exist('flag_path','var'),%Paths
-    filename = [path_path,'PATH_',id_path,'.mat'];
-    if exist(filename) == 0,
-	    error([filename,' does not exist']);
+    %
+    if isempty(id_path),%path is taken relative to local directory
+        dkepath = path_LUKE_LOCAL;
+        info_dke_yp(2,['Local LUKE path selected']);
     else
-	    load(filename);
-	    info_dke_yp(2,['Structure ''path'': ',filename,' successfully loaded']);
         %
-        if ~strcmp(dkepath.computer,computer),
-            error('The path structure is not consistent with the computer !'),
-        end
+        filename = [path_path,'PATH_',id_path,'.mat'];
         %
-        dkepath.temppath = [dkepath.temppathroot,filesep,timeid_jd(clock)];
-        %
-%        if isfield(dkepath,'PETSc_DIR'),
-%            unix(['setenv PETSC_DIR ',dkepath.PETSc_DIR]);
-%        end
-        %
-        % Set path if required
-        %
-        if isfield(dkepath,'pathfile') & ~isempty(dkepath.pathfile),
-            eval(dkepath.pathfile)
+        if exist(filename) == 0,
+            error([filename,' does not exist']);
+        else
+            load(filename);
+            info_dke_yp(2,['Structure ''path'': ',filename,' successfully loaded']);
+            %
+            if ~strcmp(dkepath.computer,computer),
+                error('The path structure is not consistent with the computer !'),
+            end
+            %
+%           if isfield(dkepath,'PETSc_DIR'),
+%               unix(['setenv PETSC_DIR ',dkepath.PETSc_DIR]);
+%           end
+            %
         end
     end
+    %
+    % set temp path
+    %
+    dkepath.temppath = [dkepath.temppathroot,filesep,timeid_jd(clock)];
+    %
+    % Set path for Project_DKE
+    %
+    setpath_luke_jd(dkepath.luke_root)
+    %
     varargout{flag_path} = dkepath;
 end
 %
@@ -161,17 +171,16 @@ if exist('flag_wave','var'),
     waves = '';%List of structures for multiple RF waves
     if isempty(ids_wave{1}),
         info_dke_yp(2,['Simulations are performed without RF Waves']);
-    else
-        for iw = 1:length(ids_wave),
-            filename = [paths_wave{iw},'WAVE_',id_equil,'_',ids_wave{iw},'.mat'];
-            if exist(filename) == 0,
-                info_dke_yp(2,['Warning : Structure ',filename,' could not be loaded']);
-            else
-                load(filename);
-                info_dke_yp(2,['Structure ''wave'': ',filename,' successfully loaded']);
-                ii = ii + 1;
-                waves{ii} = wave;
-            end
+    end
+    for iw = 1:length(ids_wave),
+        filename = [paths_wave{iw},'WAVE_',id_equil,'_',ids_wave{iw},'.mat'];
+	    if exist(filename) == 0,
+            info_dke_yp(2,['Warning : Structure ',filename,' could not be loaded']);
+        else
+            load(filename);
+            info_dke_yp(2,['Structure ''wave'': ',filename,' successfully loaded']);
+		    ii = ii + 1;
+		    waves{ii} = wave;
         end
     end
     varargout{flag_wave} = waves;
@@ -182,17 +191,16 @@ if exist('flag_rayinit','var'),
     rayinits = '';%List of structures for multiple RF waves
     if isempty(ids_rayinit{1}),
         info_dke_yp(2,['No initial conditions requested']);
-    else
-        for iw = 1:length(ids_rayinit),
-            filename = [paths_rayinit{iw},'RAYINIT_',id_equil,'_',ids_rayinit{iw},'.mat'];
-            if exist(filename) == 0,
-                info_dke_yp(2,['Warning : Structure ',filename,' could not be loaded']);
-            else
-                load(filename);
-                info_dke_yp(2,['Structure ''rayinit'': ',filename,' successfully loaded']);
-                ii = ii + 1;
-                rayinits{ii} = rayinit;
-            end
+    end
+    for iw = 1:length(ids_rayinit),
+        filename = [paths_rayinit{iw},'RAYINIT_',id_equil,'_',ids_rayinit{iw},'.mat'];
+	    if exist(filename) == 0,
+            info_dke_yp(2,['Warning : Structure ',filename,' could not be loaded']);
+        else
+            load(filename);
+            info_dke_yp(2,['Structure ''rayinit'': ',filename,' successfully loaded']);
+		    ii = ii + 1;
+		    rayinits{ii} = rayinit;
         end
     end
     varargout{flag_rayinit} = rayinits;
