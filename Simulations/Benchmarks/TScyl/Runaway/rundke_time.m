@@ -50,7 +50,7 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %************************************************************************************************************************************
 %
 clear xdn xdnr
-%dkeparam.invproc = -2;
+if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
 %WARNING: boundary_mode_f must be 0 
 %

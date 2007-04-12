@@ -52,7 +52,7 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 %Study of the ion charge effect of the LHCD efficiency
 %
-%dkeparam.invproc = -2;
+if exist('dmumpsmex');dkeparam.invproc = -2;end
 %dkeparam.np_S = 201;
 %dkeparam.nmhu_S = 201;
 %

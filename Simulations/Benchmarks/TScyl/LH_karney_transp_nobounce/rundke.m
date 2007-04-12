@@ -51,11 +51,9 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 %************************************************************************************************************************************
 %
-%dkeparam.invproc = -2;%Matrix inversion method
-dkeparam.MUMPSparam.nproc = 4;%Number of processors
-% 
-% Dpsipsi scan (0 -> 100 m2/s
+if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
+% Dpsipsi scan (0 -> 100 m2/s)
 %
 transpfaste.Dr0 = 0;
 [Znorm0,Zcurr0,ZP0_0,dke_out0,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);

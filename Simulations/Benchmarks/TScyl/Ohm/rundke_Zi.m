@@ -51,7 +51,7 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 %Case Zeff = 1 (in make_equil)
 %
-dkeparam.invproc = -2;
+if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
 ir_display_out = 1;
 %

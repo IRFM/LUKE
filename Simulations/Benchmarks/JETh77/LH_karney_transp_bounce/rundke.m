@@ -48,14 +48,7 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 %************************************************************************************************************************************
 %
-dkeparam.opt_load = 0;
-dkeparam.opt_save = 0;
-%
-dkeparam.invproc = -30;%Number of processors
-dkeparam.PETScparam.nproc = 1;%number of processor used by PETSc (depends of the computer framework). Default is 1
-dkeparam.PETScparam.matrixtype = '-matload_type superlu_dist';%Matrix type used by PETSc. For SUPERLU use '-matload_type superlu_dist' otherwise ' '. See PETSc documentation
-dkeparam.PETScparam.kspmethod = '-ksp_type preonly';%KSP method used by PETSc. '-ksp_type preonly': no iteration, direct matrix solve. Otherwise '-ksp_type bicg' or '-ksp_type bcgs'  for example. See PETSc documentation
-dkeparam.PETScparam.pcmethod = '-pc_type lu';%Preconditioning method used by PETSc. '-pc_type lu' for SUPERLU or '-pc-type hypre' for HYPRE.  See PETSc documentation
+if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
 equil.pTe = equil.pTe(1) + equil.pTe*0;%Uniform profile enforced for comparison with TScirc case
 equil.pne = equil.pne(1) + equil.pne*0;%Uniform profile enforced for comparison with TScirc case

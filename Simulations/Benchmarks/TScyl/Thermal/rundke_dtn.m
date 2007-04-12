@@ -51,7 +51,7 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 nit = 20;
 %dkeparam.dtn = 10;
-%dkeparam.invproc = -2;
+if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
 [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 ne(1) = Znorm.x_0_fsav;

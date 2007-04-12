@@ -51,7 +51,7 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 dkeparam.nmhu_S = 151;
 dkeparam.np_S = 151;
-%dkeparam.invproc = -2;
+if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
 addpath('rippleTS');
 %

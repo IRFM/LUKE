@@ -48,7 +48,7 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 %************************************************************************************************************************************
 %
-dkeparam.MUMPSparam.nproc = 4;%Number of processors
+if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
 equil.pTe = equil.pTe(1) + equil.pTe*0;%Uniform profile enforced for comparison with TScirc case
 equil.pne = equil.pne(1) + equil.pne*0;%Uniform profile enforced for comparison with TScirc case
