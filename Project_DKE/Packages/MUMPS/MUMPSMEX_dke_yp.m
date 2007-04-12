@@ -22,6 +22,7 @@ B_MUMPSMEX = MMXR_t;
 %
 if job_MUMPSMEX == 1,
    id_MUMPSMEX = initmumps;
+   id_MUMPSMEX.ICNTL(1:4) = -1;%no display during runtime
    id_MUMPSMEX = dmumps(id_MUMPSMEX);
    id_MUMPSMEX.JOB = job_MUMPSMEX;
    id_MUMPSMEX = dmumps(id_MUMPSMEX,A_MUMPSMEX);% Call to mumps
