@@ -44,6 +44,10 @@ for iw = (nw0 + 1):(nw0 + length(wavestructs)),
             wave.a_sdNpar = wavestruct.launch.a_sdNpar;
         end
         %
+        if isfield(wavestruct.launch,'b_sdNpar') == 1,
+            wave.b_sdNpar = wavestruct.launch.b_sdNpar;
+        end
+        %
         if opt_save == 1,
             mkdir('WAVE')
             cd WAVE
@@ -101,6 +105,23 @@ elseif dkeparam.rt_mode == 4,
     end
     %
     [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
+%
+% *************************************************************************
+%
+% Case with sdNpar increasing at each caustic point
+%
+elseif dkeparam.rt_mode == 5,
+    %
+    for iw = 1:nw,
+        for ib = 1:nb(iw),
+            scaustic = logical([0,diff(waves{iw}.rays{ib}.pmode) ~= 0]);
+            sscattering = cumsum(scaustic);
+            %
+            waves{iw}.rays{ib}.sdNpar = waves{iw}.rays{ib}.sdNpar(1)*waves{iw}.b_sdNpar.^sscattering;
+        end
+    end
+    %
+    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
 %
 % *************************************************************************
 %
