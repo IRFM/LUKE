@@ -39,19 +39,20 @@ dkepath.MUMPS = [dkepath.luke_root,'Packages/MUMPS_4.6.4_S_pgf/dke'];
 if exist(dkepath.MUMPS),disp('- MUMPS_S_PGF90'),tic,[MMXS_t_MUMPS_S_PGF90,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t_mumps_s_pgf90 = toc;disp(['Elapsed time is ',num2str(t_mumps_s_pgf90),' seconds.']);end
 %
 %PETSc
-%   
+%  
+dkepath.PETSC = [dkepath.luke_root,'Packages/petsc-2.3.2-p8'];
 dkeparam.invproc = -30;%Number of processors
 dkeparam.PETScparam.nproc = 1;%number of processor used by PETSc (depends of the computer framework). Default is 1
 dkeparam.PETScparam.matrixtype = '';%Matrix type used by PETSc. For SUPERLU use '-matload_type superlu_dist' otherwise ' '. See PETSc documentation
 dkeparam.PETScparam.kspmethod = '-ksp_type bcgs';%KSP method used by PETSc. '-ksp_type preonly': no iteration, direct matrix solve. Otherwise '-ksp_type bicg' or '-ksp_type bcgs'  for example. See PETSc documentation
 dkeparam.PETScparam.pcmethod = '';%Preconditioning method used by PETSc. '-pc_type lu' for SUPERLU or '-pc-type hypre' for HYPRE.  See PETSc documentation 
 dkeparam.PETScparam.cloop = 0;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
-if exist(dkepath.MUMPS),disp('- PETSc-PGF90-BCGS (1 processor)'),tic,[MMXS_t_PETSC_BCGS_1P,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),display_mode,dkepath);t_petsc_bcgs_1p = toc;disp(['Elapsed time is ',num2str(t_petsc_bcgs_1p),' seconds.']);end
+if exist(dkepath.PETSC),disp('- PETSc-PGF90-BCGS (1 processor)'),tic,[MMXS_t_PETSC_BCGS_1P,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),display_mode,dkepath);t_petsc_bcgs_1p = toc;disp(['Elapsed time is ',num2str(t_petsc_bcgs_1p),' seconds.']);end
 %
 dkeparam.PETScparam.matrixtype = '-matload_type superlu_dist';%Matrix type used by PETSc. For SUPERLU use '-matload_type superlu_dist' otherwise ' '. See PETSc documentation
 dkeparam.PETScparam.kspmethod = '-ksp_type preonly';%KSP method used by PETSc. '-ksp_type preonly': no iteration, direct matrix solve. Otherwise '-ksp_type bicg' or '-ksp_type bcgs'  for example. See PETSc documentation
 dkeparam.PETScparam.pcmethod = '-pc_type lu';%Preconditioning method used by PETSc. '-pc_type lu' for SUPERLU or '-pc-type hypre' for HYPRE.  See PETSc documentation
-if exist(dkepath.MUMPS),disp('- PETSc-PGF90-SUPERLUDIST (1 processor)'),tic,[MMXS_t_PETSC_SUPELUDIST_1P,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),display_mode,dkepath);t_petsc_superludist_1p = toc;disp(['Elapsed time is ',num2str(t_petsc_superludist_1p),' seconds.']);end
+if exist(dkepath.PETSC),disp('- PETSc-PGF90-SUPERLUDIST (1 processor)'),tic,[MMXS_t_PETSC_SUPELUDIST_1P,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),display_mode,dkepath);t_petsc_superludist_1p = toc;disp(['Elapsed time is ',num2str(t_petsc_superludist_1p),' seconds.']);end
 %
 if exist('dmumpsmex');disp('- MEX-MUMPS'),tic,job_MUMPSMEX = 3;MUMPSMEX_dke_yp;t_mumpsmex = toc;MMXS_t_MUMPSMEX = id_MUMPSMEX.SOL;disp(['Elapsed time is ',num2str(t_mumpsmex),' seconds per inversion + ILU time (once): ',num2str(t_ilumumpsmex),' seconds.']);job_MUMPSMEX = -2;MUMPSMEX_dke_yp;end
 if exist('mexlusolve');disp('- MEX-SUPERLU'),tic,[MMXS_t_SUPERLU] = lusolve(MMXPC_f_t,MMXR_t);t_slu = toc;disp(['Elapsed time is ',num2str(t_slu),' seconds.']);end
