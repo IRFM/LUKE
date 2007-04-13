@@ -49,8 +49,7 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 %************************************************************************************************************************************
 %
-dkeparam.invproc = -1;%Inversion method
-dkeparam.MUMPSparam.nproc = 4;%Number of processors
+if exist('dmumpsmex');dkeparam.invproc = -2;end
 % 
 % Dpsipsi scan (0 -> 100 m2/s)
 %
@@ -90,7 +89,9 @@ disp('D=20 m2/s done');
 %
 transpfaste.Dr0 = 10;
 %
-if strcmp(computer,'GLNXA64'),
+if strcmp(computer,'GLNXA64'),%Test parallel processing performances (on the cluster only)
+   dkeparam.invproc = -1;
+%
    Znorm10_4 = Znorm10;%Calculations already done
    Zcurr10_4 = Zcurr10;
    ZP0_10_4 = ZP0_10;

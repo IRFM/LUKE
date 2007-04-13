@@ -77,128 +77,135 @@ for j = 1:nmesh,%Scan radial mesh size
     end
 end
 %
-dkeparam.invproc = -1;%MUMPS
-dkeparam.MUMPSparam.nproc = 4;%number of processor used by MUMPS (depends of the computer framework).
+if isfield(dkepath,'MUMPS'),
+   dkeparam.invproc = -1;%MUMPS
+   dkeparam.MUMPSparam.nproc = 1;%number of processor used by MUMPS (depends of the computer framework).
 %
-for j = 1:nmesh,%Scan radial mesh size
-   rho_S = linspace(0,1,j*dmesh);
-   [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+   for j = 1:nmesh,%Scan radial mesh size
+      rho_S = linspace(0,1,j*dmesh);
+      [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 % 
-   time_f_MUMPS(j) = dke_out.time_out;
-   rho_f_MUMPS{j} = rho_S;
-   norm_f_MUMPS{j} = Znorm.x_0_fsav.*mksa.ne_ref;
-   curr_f_MUMPS{j} = Zcurr.x_0_fsav.*mksa.j_ref;
-   Prf_f_MUMPS{j} = ZP0.x_rf_fsav.*mksa.P_ref;
-   Pcoll_f_MUMPS{j} = ZP0.x_c_fsav.*mksa.P_ref;
+      time_f_MUMPS(j) = dke_out.time_out;
+      rho_f_MUMPS{j} = rho_S;
+      norm_f_MUMPS{j} = Znorm.x_0_fsav.*mksa.ne_ref;
+      curr_f_MUMPS{j} = Zcurr.x_0_fsav.*mksa.j_ref;
+      Prf_f_MUMPS{j} = ZP0.x_rf_fsav.*mksa.P_ref;
+      Pcoll_f_MUMPS{j} = ZP0.x_c_fsav.*mksa.P_ref;
 %
-   disp(['Calculation with MUMPS done with radial mesh size #',int2str(j*dmesh),'  done'])
+      disp(['Calculation with MUMPS done with radial mesh size #',int2str(j*dmesh),'  done'])
+   end
 end
 %
-dkeparam.invproc = -2;%MUMPSMEX
+if exist('dmumpsmex'),
+   dkeparam.invproc = -2;%MUMPSMEX
 %
-for j = 1:nmesh,%Scan radial mesh size
-   rho_S = linspace(0,1,j*dmesh);
-   [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+   for j = 1:nmesh,%Scan radial mesh size
+      rho_S = linspace(0,1,j*dmesh);
+      [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 % 
-   time_f_MUMPSMEX(j) = dke_out.time_out;
-   rho_f_MUMPSMEX{j} = rho_S;
-   norm_f_MUMPSMEX{j} = Znorm.x_0_fsav.*mksa.ne_ref;
-   curr_f_MUMPSMEX{j} = Zcurr.x_0_fsav.*mksa.j_ref;
-   Prf_f_MUMPSMEX{j} = ZP0.x_rf_fsav.*mksa.P_ref;
-   Pcoll_f_MUMPSMEX{j} = ZP0.x_c_fsav.*mksa.P_ref;
+      time_f_MUMPSMEX(j) = dke_out.time_out;
+      rho_f_MUMPSMEX{j} = rho_S;
+      norm_f_MUMPSMEX{j} = Znorm.x_0_fsav.*mksa.ne_ref;
+      curr_f_MUMPSMEX{j} = Zcurr.x_0_fsav.*mksa.j_ref;
+      Prf_f_MUMPSMEX{j} = ZP0.x_rf_fsav.*mksa.P_ref;
+      Pcoll_f_MUMPSMEX{j} = ZP0.x_c_fsav.*mksa.P_ref;
 %
-   disp(['Calculation with MUMPSMEX done with radial mesh size #',int2str(j*dmesh),'  done'])
+      disp(['Calculation with MUMPSMEX done with radial mesh size #',int2str(j*dmesh),'  done'])
+   end
 end
 %
-dkeparam.invproc = -3;%SUPERLUMEX
+if exist('mexlusolve'),
+   dkeparam.invproc = -3;%SUPERLUMEX
 %
-for j = 1:nmesh,%Scan radial mesh size
-   rho_S = linspace(0,1,j*dmesh);
-   [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+   for j = 1:nmesh,%Scan radial mesh size
+      rho_S = linspace(0,1,j*dmesh);
+      [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 % 
-   time_f_SUPERLU(j) = dke_out.time_out;
-   rho_f_SUPERLU{j} = rho_S;
-   norm_f_SUPERLU{j} = Znorm.x_0_fsav.*mksa.ne_ref;
-   curr_f_SUPERLU{j} = Zcurr.x_0_fsav.*mksa.j_ref;
-   Prf_f_SUPERLU{j} = ZP0.x_rf_fsav.*mksa.P_ref;
-   Pcoll_f_SUPERLU{j} = ZP0.x_c_fsav.*mksa.P_ref;
+      time_f_SUPERLU(j) = dke_out.time_out;
+      rho_f_SUPERLU{j} = rho_S;
+      norm_f_SUPERLU{j} = Znorm.x_0_fsav.*mksa.ne_ref;
+      curr_f_SUPERLU{j} = Zcurr.x_0_fsav.*mksa.j_ref;
+      Prf_f_SUPERLU{j} = ZP0.x_rf_fsav.*mksa.P_ref;
+      Pcoll_f_SUPERLU{j} = ZP0.x_c_fsav.*mksa.P_ref;
 %
-   disp(['Calculation with SUPERLU done with radial mesh size #',int2str(j*dmesh),'  done'])
+      disp(['Calculation with SUPERLU done with radial mesh size #',int2str(j*dmesh),'  done'])
+   end
 end
 %
-dkeparam.invproc = -30;%PETSc
-dkeparam.PETScparam.nproc = 1;%number of processor used by PETSc (depends of the computer framework). Default is 1
-dkeparam.PETScparam.matrixtype = '-matload_type superlu_dist';%Matrix type used by PETSc. For SUPERLU use '-matload_type superlu_dist' otherwise ' '. See PETSc documentation
-dkeparam.PETScparam.kspmethod = '-ksp_type preonly';%KSP method used by PETSc. '-ksp_type preonly': no iteration, direct matrix solve. Otherwise '-ksp_type bicg' or '-ksp_type bcgs'  for example. See PETSc documentation
-dkeparam.PETScparam.pcmethod = '-pc_type lu';%Preconditioning method used by PETSc. '-pc_type lu' for SUPERLU or '-pc-type hypre' for HYPRE.  See PETSc documentation
-dkeparam.PETScparam.cloop = 1;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
+if isfield(dkepath,'PETSC'),
+    dkeparam.invproc = -30;%PETSc
+    dkeparam.PETScparam.nproc = 1;%number of processor used by PETSc (depends of the computer framework). Default is 1
+    dkeparam.PETScparam.matrixtype = '-matload_type superlu_dist';%Matrix type used by PETSc. For SUPERLU use '-matload_type superlu_dist' otherwise ' '. See PETSc documentation
+    dkeparam.PETScparam.kspmethod = '-ksp_type preonly';%KSP method used by PETSc. '-ksp_type preonly': no iteration, direct matrix solve. Otherwise '-ksp_type bicg' or '-ksp_type bcgs'  for example. See PETSc documentation
+    dkeparam.PETScparam.pcmethod = '-pc_type lu';%Preconditioning method used by PETSc. '-pc_type lu' for SUPERLU or '-pc-type hypre' for HYPRE.  See PETSc documentation
+    dkeparam.PETScparam.cloop = 1;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
 %
-for j = 1:nmesh,%Scan radial mesh size
-   rho_S = linspace(0,1,j*dmesh);
-   [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    for j = 1:nmesh,%Scan radial mesh size
+        rho_S = linspace(0,1,j*dmesh);
+        [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 % 
-   time_f_PETSc_slu_i(j) = dke_out.time_out;
-   rho_f_PETSc_slu_i{j} = rho_S;
-   norm_f_PETSc_slu_i{j} = Znorm.x_0_fsav.*mksa.ne_ref;
-   curr_f_PETSc_slu_i{j} = Zcurr.x_0_fsav.*mksa.j_ref;
-   Prf_f_PETSc_slu_i{j} = ZP0.x_rf_fsav.*mksa.P_ref;
-   Pcoll_f_PETSc_slu_i{j} = ZP0.x_c_fsav.*mksa.P_ref;
+        time_f_PETSc_slu_i(j) = dke_out.time_out;
+        rho_f_PETSc_slu_i{j} = rho_S;
+        norm_f_PETSc_slu_i{j} = Znorm.x_0_fsav.*mksa.ne_ref;
+        curr_f_PETSc_slu_i{j} = Zcurr.x_0_fsav.*mksa.j_ref;
+        Prf_f_PETSc_slu_i{j} = ZP0.x_rf_fsav.*mksa.P_ref;
+        Pcoll_f_PETSc_slu_i{j} = ZP0.x_c_fsav.*mksa.P_ref;
 %
-   disp(['Calculation with PETSc (SUPERLU) done with radial mesh size #',int2str(j*dmesh),' (collision operator loop in C)  done'])
-end
+        disp(['Calculation with PETSc (SUPERLU) done with radial mesh size #',int2str(j*dmesh),' (collision operator loop in C)  done'])
+    end
 %
-dkeparam.PETScparam.cloop = 0;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
+    dkeparam.PETScparam.cloop = 0;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
 %
-for j = 1:nmesh,%Scan radial mesh size
-   rho_S = linspace(0,1,j*dmesh);
-   [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    for j = 1:nmesh,%Scan radial mesh size
+        rho_S = linspace(0,1,j*dmesh);
+        [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 % 
-   time_f_PETSc_slu_e(j) = dke_out.time_out;
-   rho_f_PETSc_slu_e{j} = rho_S;
-   norm_f_PETSc_slu_e{j} = Znorm.x_0_fsav.*mksa.ne_ref;
-   curr_f_PETSc_slu_e{j} = Zcurr.x_0_fsav.*mksa.j_ref;
-   Prf_f_PETSc_slu_e{j} = ZP0.x_rf_fsav.*mksa.P_ref;
-   Pcoll_f_PETSc_slu_e{j} = ZP0.x_c_fsav.*mksa.P_ref;
-   
+        time_f_PETSc_slu_e(j) = dke_out.time_out;
+        rho_f_PETSc_slu_e{j} = rho_S;
+        norm_f_PETSc_slu_e{j} = Znorm.x_0_fsav.*mksa.ne_ref;
+        curr_f_PETSc_slu_e{j} = Zcurr.x_0_fsav.*mksa.j_ref;
+        Prf_f_PETSc_slu_e{j} = ZP0.x_rf_fsav.*mksa.P_ref;
+        Pcoll_f_PETSc_slu_e{j} = ZP0.x_c_fsav.*mksa.P_ref;
 %
-   disp(['Calculation with PETSc (SUPERLU) done with radial mesh size #',int2str(j*dmesh),' (collision operator loop in MatLab)  done'])
-end
+        disp(['Calculation with PETSc (SUPERLU) done with radial mesh size #',int2str(j*dmesh),' (collision operator loop in MatLab)  done'])
+    end
 %
-dkeparam.invproc = -30;%PETSc
-dkeparam.PETScparam.nproc = 1;%number of processor used by PETSc (depends of the computer framework). Default is 1
-dkeparam.PETScparam.matrixtype = '';%Matrix type used by PETSc. For SUPERLU use '-matload_type superlu_dist' otherwise ' '. See PETSc documentation
-dkeparam.PETScparam.kspmethod = '-ksp_type bcgs';%KSP method used by PETSc. '-ksp_type preonly': no iteration, direct matrix solve. Otherwise '-ksp_type bicg' or '-ksp_type bcgs'  for example. See PETSc documentation
-dkeparam.PETScparam.pcmethod = '';%Preconditioning method used by PETSc. '-pc_type lu' for SUPERLU or '-pc-type hypre' for HYPRE.  See PETSc documentation
-dkeparam.PETScparam.cloop = 1;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
+    dkeparam.invproc = -30;%PETSc
+    dkeparam.PETScparam.nproc = 1;%number of processor used by PETSc (depends of the computer framework). Default is 1
+    dkeparam.PETScparam.matrixtype = '';%Matrix type used by PETSc. For SUPERLU use '-matload_type superlu_dist' otherwise ' '. See PETSc documentation
+    dkeparam.PETScparam.kspmethod = '-ksp_type bcgs';%KSP method used by PETSc. '-ksp_type preonly': no iteration, direct matrix solve. Otherwise '-ksp_type bicg' or '-ksp_type bcgs'  for example. See PETSc documentation
+    dkeparam.PETScparam.pcmethod = '';%Preconditioning method used by PETSc. '-pc_type lu' for SUPERLU or '-pc-type hypre' for HYPRE.  See PETSc documentation
+    dkeparam.PETScparam.cloop = 1;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
 %
-for j = 1:nmesh,%Scan radial mesh size
-   rho_S = linspace(0,1,j*dmesh);
-   [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    for j = 1:nmesh,%Scan radial mesh size
+        rho_S = linspace(0,1,j*dmesh);
+        [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 % 
-   time_f_PETSc_bcgs_i(j) = dke_out.time_out;
-   rho_f_PETSc_bcgs_i{j} = rho_S;
-   norm_f_PETSc_bcgs_i{j} = Znorm.x_0_fsav.*mksa.ne_ref;
-   curr_f_PETSc_bcgs_i{j} = Zcurr.x_0_fsav.*mksa.j_ref;
-   Prf_f_PETSc_bcgs_i{j} = ZP0.x_rf_fsav.*mksa.P_ref;
-   Pcoll_f_PETSc_bcgs_i{j} = ZP0.x_c_fsav.*mksa.P_ref;
+        time_f_PETSc_bcgs_i(j) = dke_out.time_out;
+        rho_f_PETSc_bcgs_i{j} = rho_S;
+        norm_f_PETSc_bcgs_i{j} = Znorm.x_0_fsav.*mksa.ne_ref;
+        curr_f_PETSc_bcgs_i{j} = Zcurr.x_0_fsav.*mksa.j_ref;
+        Prf_f_PETSc_bcgs_i{j} = ZP0.x_rf_fsav.*mksa.P_ref;
+        Pcoll_f_PETSc_bcgs_i{j} = ZP0.x_c_fsav.*mksa.P_ref;
 %
-   disp(['Calculation with PETSc (SUPERLU) done with radial mesh size #',int2str(j*dmesh),' (collision operator loop in C)  done'])
-end
+        disp(['Calculation with PETSc (SUPERLU) done with radial mesh size #',int2str(j*dmesh),' (collision operator loop in C)  done'])
+    end
 %
-dkeparam.PETScparam.cloop = 0;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
+    dkeparam.PETScparam.cloop = 0;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
 %
-for j = 1:nmesh,%Scan radial mesh size
-   rho_S = linspace(0,1,j*dmesh);
-   [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    for j = 1:nmesh,%Scan radial mesh size
+        rho_S = linspace(0,1,j*dmesh);
+        [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 % 
-   time_f_PETSc_bcgs_e(j) = dke_out.time_out;
-   rho_f_PETSc_bcgs_e{j} = rho_S;
-   norm_f_PETSc_bcgs_e{j} = Znorm.x_0_fsav.*mksa.ne_ref;
-   curr_f_PETSc_bcgs_e{j} = Zcurr.x_0_fsav.*mksa.j_ref;
-   Prf_f_PETSc_bcgs_e{j} = ZP0.x_rf_fsav.*mksa.P_ref;
-   Pcoll_f_PETSc_bcgs_e{j} = ZP0.x_c_fsav.*mksa.P_ref;
+        time_f_PETSc_bcgs_e(j) = dke_out.time_out;
+        rho_f_PETSc_bcgs_e{j} = rho_S;
+        norm_f_PETSc_bcgs_e{j} = Znorm.x_0_fsav.*mksa.ne_ref;
+        curr_f_PETSc_bcgs_e{j} = Zcurr.x_0_fsav.*mksa.j_ref;
+        Prf_f_PETSc_bcgs_e{j} = ZP0.x_rf_fsav.*mksa.P_ref;
+        Pcoll_f_PETSc_bcgs_e{j} = ZP0.x_c_fsav.*mksa.P_ref;
 %
-   disp(['Calculation with PETSc (SUPERLU) done with radial mesh size #',int2str(j*dmesh),' (collision operator loop in MatLab)  done'])
+        disp(['Calculation with PETSc (SUPERLU) done with radial mesh size #',int2str(j*dmesh),' (collision operator loop in MatLab)  done'])
+    end
 end
 %
 vparmin = 1/(waves{1}.rays{1}.sNpar(1)+imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
@@ -228,33 +235,42 @@ disp('Incomplete LU preconditionning, CGS iterative Krylov algorithm, npsi = 30'
 disp(['droptolerance: ',num2str(dludroptol(end-1)),' - Full CPU time: ',num2str(time_f(end-1,6)),' (s) - LU memory size: ',num2str(memory_f(end-1,6)),' (MBytes)'])
 disp(['ne(0): ',num2str(round(norm_f{end-1,6}(1)/1e+16)/1e3),' (10+19 m-3) - Jlh(0): ',num2str(abs(curr_f{end-1,6}(1))),' (MA/m2) - Plh(0): ',num2str(Prf_f{end-1,6}(1)),' (MW/m3) - Pcoll(0): ',num2str(-Pcoll_f{end-1,6}(1)),' (MW/m3)'])
 disp('-------------------')
-disp('Matrix inversion with MUMPS (4 processors), npsi = 30')
-disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(time_f_MUMPS(6)),' (s)'])
-disp(['ne(0): ',num2str(round(norm_f_MUMPS{6}(1)/1e+16)/1e3),' (10+19 m-3) - Jlh(0): ',num2str(abs(curr_f_MUMPS{6}(1))),' (MA/m2) - Plh(0): ',num2str(Prf_f_MUMPS{6}(1)),' (MW/m3) - Pcoll(0): ',num2str(-Pcoll_f_MUMPS{6}(1)),' (MW/m3)'])
-disp('-------------------')
-disp('Matrix inversion MUMPSMEX')
-disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(time_f_MUMPSMEX(6)),' (s)'])
-disp(['ne(0): ',num2str(round(norm_f_MUMPSMEX{6}(1)/1e+16)/1e3),' (10+19 m-3) - Jlh(0): ',num2str(abs(curr_f_MUMPSMEX{6}(1))),' (MA/m2) - Plh(0): ',num2str(Prf_f_MUMPSMEX{6}(1)),' (MW/m3) - Pcoll(0): ',num2str(-Pcoll_f_MUMPSMEX{6}(1)),' (MW/m3)'])
-disp('-------------------')
-disp('Matrix inversion SUPERLUMEX')
-disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(time_f_SUPERLUMEX(6)),' (s)'])
-disp(['ne(0): ',num2str(round(norm_f_SUPERLUMEX{6}(1)/1e+16)/1e3),' (10+19 m-3) - Jlh(0): ',num2str(abs(curr_f_SUPERLUMEX{6}(1))),' (MA/m2) - Plh(0): ',num2str(Prf_f_SUPERLUMEX{6}(1)),' (MW/m3) - Pcoll(0): ',num2str(-Pcoll_f_SUPERLUMEX{6}(1)),' (MW/m3)'])
-disp('-------------------')
-disp('Matrix inversion with PETSc (SUPERLU, 1 processor) (collision loop in MatLab), npsi = 30')
-disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(time_f_PETSc_slu_e(6)),' (s)'])
-disp(['ne(0): ',num2str(round(norm_f_PETSc_slu_e{6}(1)/1e+16)/1e3),' (10+19 m-3) - Jlh(0): ',num2str(abs(curr_f_PETSc_slu_e{6}(1))),' (MA/m2) - Plh(0): ',num2str(Prf_f_PETSc_slu_e{6}(1)),' (MW/m3) - Pcoll(0): ',num2str(-Pcoll_f_PETSc_slu_e{6}(1)),' (MW/m3)'])
-disp('-------------------')
-disp('Matrix inversion with PETSc (SUPERLU, 1 processor) (collision loop in C), npsi = 30')
-disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(time_f_PETSc_slu_i(6)),' (s)'])
-disp(['ne(0): ',num2str(round(norm_f_PETSc_slu_i{6}(1)/1e+16)/1e3),' (10+19 m-3) - Jlh(0): ',num2str(abs(curr_f_PETSc_slu_i{6}(1))),' (MA/m2) - Plh(0): ',num2str(Prf_f_PETSc_slu_i{6}(1)),' (MW/m3) - Pcoll(0): ',num2str(-Pcoll_f_PETSc_slu_i{6}(1)),' (MW/m3)'])
-disp('-------------------')
-disp('Matrix inversion with PETSc (BCGS, 1 processor) (collision loop in MatLab), npsi = 30')
-disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(time_f_PETSc_bcgs_e(6)),' (s)'])
-disp(['ne(0): ',num2str(round(norm_f_PETSc_bcgs_e{6}(1)/1e+16)/1e3),' (10+19 m-3) - Jlh(0): ',num2str(abs(curr_f_PETSc_bcgs_e{6}(1))),' (MA/m2) - Plh(0): ',num2str(Prf_f_PETSc_bcgs_e{6}(1)),' (MW/m3) - Pcoll(0): ',num2str(-Pcoll_f_PETSc_bcgs_e{6}(1)),' (MW/m3)'])
-disp('-------------------')
-disp('Matrix inversion with PETSc (BCGS, 1 processor) (collision loop in C), npsi = 30')
-disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(time_f_PETSc_bcgs_i(6)),' (s)'])
-disp(['ne(0): ',num2str(round(norm_f_PETSc_bcgs_i{6}(1)/1e+16)/1e3),' (10+19 m-3) - Jlh(0): ',num2str(abs(curr_f_PETSc_bcgs_i{6}(1))),' (MA/m2) - Plh(0): ',num2str(Prf_f_PETSc_bcgs_i{6}(1)),' (MW/m3) - Pcoll(0): ',num2str(-Pcoll_f_PETSc_bcgs_i{6}(1)),' (MW/m3)'])
+if isfield(dkepath,'MUMPS'),
+    disp('Matrix inversion with MUMPS (1 processors), npsi = 30')
+    disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(time_f_MUMPS(6)),' (s)'])
+    disp(['ne(0): ',num2str(round(norm_f_MUMPS{6}(1)/1e+16)/1e3),' (10+19 m-3) - Jlh(0): ',num2str(abs(curr_f_MUMPS{6}(1))),' (MA/m2) - Plh(0): ',num2str(Prf_f_MUMPS{6}(1)),' (MW/m3) - Pcoll(0): ',num2str(-Pcoll_f_MUMPS{6}(1)),' (MW/m3)'])
+    disp('-------------------')
+end
+if exist('dmumpsmex'),
+    disp('Matrix inversion MUMPSMEX')
+    disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(time_f_MUMPSMEX(6)),' (s)'])
+    disp(['ne(0): ',num2str(round(norm_f_MUMPSMEX{6}(1)/1e+16)/1e3),' (10+19 m-3) - Jlh(0): ',num2str(abs(curr_f_MUMPSMEX{6}(1))),' (MA/m2) - Plh(0): ',num2str(Prf_f_MUMPSMEX{6}(1)),' (MW/m3) - Pcoll(0): ',num2str(-Pcoll_f_MUMPSMEX{6}(1)),' (MW/m3)'])
+    disp('-------------------')
+end
+if exist('mexlusolve'),
+    disp('Matrix inversion SUPERLUMEX')
+    disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(time_f_SUPERLUMEX(6)),' (s)'])
+    disp(['ne(0): ',num2str(round(norm_f_SUPERLUMEX{6}(1)/1e+16)/1e3),' (10+19 m-3) - Jlh(0): ',num2str(abs(curr_f_SUPERLUMEX{6}(1))),' (MA/m2) - Plh(0): ',num2str(Prf_f_SUPERLUMEX{6}(1)),' (MW/m3) - Pcoll(0): ',num2str(-Pcoll_f_SUPERLUMEX{6}(1)),' (MW/m3)'])
+    disp('-------------------')
+end
+if isfield(dkepath,'PETSC'),
+    disp('Matrix inversion with PETSc (SUPERLU, 1 processor) (collision loop in MatLab), npsi = 30')
+    disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(time_f_PETSc_slu_e(6)),' (s)'])
+    disp(['ne(0): ',num2str(round(norm_f_PETSc_slu_e{6}(1)/1e+16)/1e3),' (10+19 m-3) - Jlh(0): ',num2str(abs(curr_f_PETSc_slu_e{6}(1))),' (MA/m2) - Plh(0): ',num2str(Prf_f_PETSc_slu_e{6}(1)),' (MW/m3) - Pcoll(0): ',num2str(-Pcoll_f_PETSc_slu_e{6}(1)),' (MW/m3)'])
+    disp('-------------------')
+    disp('Matrix inversion with PETSc (SUPERLU, 1 processor) (collision loop in C), npsi = 30')
+    disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(time_f_PETSc_slu_i(6)),' (s)'])
+    disp(['ne(0): ',num2str(round(norm_f_PETSc_slu_i{6}(1)/1e+16)/1e3),' (10+19 m-3) - Jlh(0): ',num2str(abs(curr_f_PETSc_slu_i{6}(1))),' (MA/m2) - Plh(0): ',num2str(Prf_f_PETSc_slu_i{6}(1)),' (MW/m3) - Pcoll(0): ',num2str(-Pcoll_f_PETSc_slu_i{6}(1)),' (MW/m3)'])
+    disp('-------------------')
+    disp('Matrix inversion with PETSc (BCGS, 1 processor) (collision loop in MatLab), npsi = 30')
+    disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(time_f_PETSc_bcgs_e(6)),' (s)'])
+    disp(['ne(0): ',num2str(round(norm_f_PETSc_bcgs_e{6}(1)/1e+16)/1e3),' (10+19 m-3) - Jlh(0): ',num2str(abs(curr_f_PETSc_bcgs_e{6}(1))),' (MA/m2) - Plh(0): ',num2str(Prf_f_PETSc_bcgs_e{6}(1)),' (MW/m3) - Pcoll(0): ',num2str(-Pcoll_f_PETSc_bcgs_e{6}(1)),' (MW/m3)'])
+    disp('-------------------')
+    disp('Matrix inversion with PETSc (BCGS, 1 processor) (collision loop in C), npsi = 30')
+    disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(time_f_PETSc_bcgs_i(6)),' (s)'])
+    disp(['ne(0): ',num2str(round(norm_f_PETSc_bcgs_i{6}(1)/1e+16)/1e3),' (10+19 m-3) - Jlh(0): ',num2str(abs(curr_f_PETSc_bcgs_i{6}(1))),' (MA/m2) - Plh(0): ',num2str(Prf_f_PETSc_bcgs_i{6}(1)),' (MW/m3) - Pcoll(0): ',num2str(-Pcoll_f_PETSc_bcgs_i{6}(1)),' (MW/m3)'])
+end
+%
 diary off
 %	    
 %************************************************************************************************************************************

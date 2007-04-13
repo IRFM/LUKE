@@ -91,7 +91,9 @@ disp('D=20 m2/s done');
 %
 transpfaste.Dr0 = 10;
 %
-if strcmp(computer,'GLNXA64'),
+if strcmp(computer,'GLNXA64'),%Test parallel processing performances (on the cluster only)
+   dkeparam.invproc = -1;
+%    
    Znorm10_4 = Znorm10;%Calculations already done
    Zcurr10_4 = Zcurr10;
    ZP0_10_4 = ZP0_10;
