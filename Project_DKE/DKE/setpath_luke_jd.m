@@ -1,21 +1,23 @@
-function setpath_luke_jd(luke_root)
+function setpath_luke_jd(luke_root,dkepath)
 %
 % This script sets the path such that the simulations run on the specified LUKE version.
 %
 
 %
-%remove old DKE path
+%remove old DKE and packages path
 %
 P = [path,':'];
 %
 while ~isempty(P),
     ilim = min(find(P == ':'));
     pathline = P(1:ilim-1);
-    if strfind(pathline,'Project_DKE'),
+    if strfind(pathline,'LUKE'),
         rmpath(pathline);
     end
     P(1:ilim) = '';
 end
+%
+% Path for DKE
 %
 addpath([luke_root,'Project_DKE/Modules/FEB/Response']);
 addpath([luke_root,'Project_DKE/Modules/FEB/Pile-up']);
@@ -42,3 +44,10 @@ addpath([luke_root,'Project_DKE/Database/TRANSP_files']);
 addpath([luke_root,'Project_DKE/Database/RIPPLE_files']);
 addpath([luke_root,'Project_DKE/MEX']);
 addpath([luke_root,'Project_DKE/DKE']);
+%
+% Path for external packages
+%
+if nargin >= 2 & isfield(dkepath,'MUMPSMEX'),
+    addpath(dkepath.MUMPSMEX);
+end
+%

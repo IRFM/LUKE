@@ -114,7 +114,7 @@ if exist('flag_path','var'),%Paths
     %
     % Set path for Project_DKE
     %
-    setpath_luke_jd(dkepath.luke_root)
+    setpath_luke_jd(dkepath.luke_root,dkepath)
     %
     varargout{flag_path} = dkepath;
 end
