@@ -247,8 +247,14 @@ if display_mode,
 %
    figure('Name','Dispersion relation'),
    graph1D_jd(abs(phi_ray(pmode_ray)/2/pi),abs(D_ray(pmode_ray)),0,1,'abs(\phi)/2\pi','D',['Dispersion relation',subtitle],NaN,'','','none','.','r',2);
-      graph1D_jd(abs(phi_ray(~pmode_ray)/2/pi),abs(D_ray(~pmode_ray)),0,1,'abs(\phi)/2\pi','D',['Dispersion relation',subtitle],NaN,'','','none','.','b',2);drawnow
-      legend({'mode p','mode m'})
+   graph1D_jd(abs(phi_ray(~pmode_ray)/2/pi),abs(D_ray(~pmode_ray)),0,1,'abs(\phi)/2\pi','D',['Dispersion relation',subtitle],NaN,'','','none','.','b',2);drawnow
+   if isempty(phi_ray(pmode_ray))
+       legend({'mode m'})
+   elseif isempty(phi_ray(~pmode_ray))
+       legend({'mode p'})
+   else
+       legend({'mode p','mode m'})
+   end
    if rem(abs(1-Npar_ray(1)^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation.
       [ax] = graph1D_jd(phi_vac/2/pi,D_vac,0,0,'abs(\phi)/2\pi','D',['Dispersion relation',subtitle],NaN,'','','--','none','r',2);hold on
       legend('Ray-tracing','Analytic');
