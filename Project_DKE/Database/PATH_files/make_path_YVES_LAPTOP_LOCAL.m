@@ -13,11 +13,8 @@ dkepath.path_id = path_id;
 dkepath.computer = 'MAC';%machine type and supported OS
 %dkepath.MUMPS = [path_root,'Packages/MUMPS_4.6.4_S_absoft/dke'];%Where script MUMPS matrix solver is stored
 dkepath.MUMPS = [path_root,'Packages/MUMPS_4.6.4_S_g95/dke'];%Where MUMPS matrix solver (independent program) is stored
-dkepath.PETSC = '';%Where PETSC matrix solver is stored
 dkepath.temppathroot = '';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 dkepath.mex = [path_root,'Project_DKE/MEX'];%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
-dkepath.variables.input='';%directory where all in-out variables are written
-dkepath.variables.output='';%location directory where the distribution function is written by C program before going back to matlab
 dkepath.luke_root = path_root;
 %
 eval(['save PATH_',path_id ,'.mat dkepath']);
