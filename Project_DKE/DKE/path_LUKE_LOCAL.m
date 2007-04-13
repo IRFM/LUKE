@@ -16,10 +16,14 @@ ind_root = min(find(curr_dir(ind_LUKE_dir:end) == '/'));
 %
 path_root = curr_dir(1:ind_LUKE_dir + ind_root - 1);
 %
+filename = [path_root,'project_DKE/Database/PATH_files/PATH_LOCAL.mat'];
+if exist(filename),
+    load(filename);
+    return
+end
+%
 dkepath.path_id = path_id;
 dkepath.computer = computer;%machine type and supported OS
-dkepath.MUMPS = [path_root,'Packages/MUMPS_4.6.4_S_g95/dke'];%Where MUMPS matrix solver is stored
-dkepath.MUMPSMEX = [path_root,'Packages/MUMPS_4.6.4_S_g95/MATLAB'];%Where MUMPS matrix solver is stored
 dkepath.temppathroot = '';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 dkepath.mex = [path_root,'Project_DKE/MEX'];
 dkepath.luke_root = path_root;
