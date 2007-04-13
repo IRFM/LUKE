@@ -62,7 +62,7 @@ for iray = 1:Nrays,
          info_dke_yp(2,['Trajectory of ray #',int2str(iray),' is calculated']);
 %
          filename_in = [id_wave,'_ray_',int2str(iray)];
-         [iabs_out,srho,stheta,sphi,sR,sZ,sNpar,sNperp,sepol_pmz,sphi_xyz] = raypostprocessing_yp(tout,yout,rayparam,equil_fit,omega_rf,display.ray,display.p_opt,filename_in);
+         [iabs_out,srho,stheta,sphi,sR,sZ,sNpar,sNperp,sepol_pmz,sphi_xyz,pmode] = raypostprocessing_yp(tout,yout,rayparam,equil_fit,omega_rf,display.ray,display.p_opt,filename_in);
          if display.ray == 1,
              pause(5)
          end
@@ -90,6 +90,8 @@ for iray = 1:Nrays,
 %       square spectrum (centered on sNpar)
          ray.sepol_pmz = sepol_pmz.';% polarization vector [3,ns] complex
          ray.sphi_xyz = sphi_xyz.';% normalized power flow [3,ns]
+%
+         ray.pmode = pmode.';%(1) cold mode p, (0) cold mode m (p is the slow LH wave)  
 %
          kray = kray + 1;
          wave.rays{kray} = ray;

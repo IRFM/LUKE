@@ -1,4 +1,4 @@
-function [iabs_out,rho_ray,theta_ray,phi_ray,R_ray,Z_ray,Npar_ray,Nperp_ray,epol_pmz_ray,phi_xyz_ray,D_ray] = raypostprocessing_yp(tout,yout,rayparam,equil_fit,omega,display_mode,p_opt,filename,subtitle)
+function [iabs_out,rho_ray,theta_ray,phi_ray,R_ray,Z_ray,Npar_ray,Nperp_ray,epol_pmz_ray,phi_xyz_ray,pmode_ray,D_ray] = raypostprocessing_yp(tout,yout,rayparam,equil_fit,omega,display_mode,p_opt,filename,subtitle)
 %
 % Post processing of the ray calculation
 %
