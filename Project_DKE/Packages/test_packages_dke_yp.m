@@ -11,8 +11,10 @@ elseif mode == 1
    load testLU3D.mat;delete testmatinv-3D;diary testmatinv-3D;disp(['3-D LUKE matrix inversion performances on ',computer]);disp('----------------------------------------------')
 end
 %
-if strcmp(computer,'MAC'),load ../Database/PATH_files/PATH_LAPTOP_YVES.mat,dkepath.temppath = '/tmp';end
-if strcmp(computer,'GLNXA64'),load ../Database/PATH_files/PATH_PC_DRFC_YVES.mat,dkepath.temppath = '/scratch';end
+dkepath = path_LUKE_LOCAL;
+dkepath.temppath = pwd;
+%
+luke_root = dkepath.luke_root;
 %
 % Tests
 %
@@ -30,67 +32,69 @@ disp('-------------------')
 %
 % MUMPS solver
 %
-% 4.6.4 release
-dkepath.MUMPS = [dkepath.luke_root,'Packages/MUMPS_4.6.4_S_absoft/dke'];
-if exist(dkepath.MUMPS),disp('- MUMPS_4.6.4_S_ABSOFT'),tic,[MMXS_t_MUMPS_464_S_ABSOFT,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t_mumps_s_absoft = toc;disp(['Elapsed time is ',num2str(t_mumps_s_absoft),' seconds.']);end
-dkepath.MUMPS = [dkepath.luke_root,'Packages/MUMPS_4.6.4_S_g95/dke'];
-if exist(dkepath.MUMPS),disp('- MUMPS_4.6.4_S_G95'),tic,[MMXS_t_MUMPS_464_S_G95,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t_mumps_s_g95 = toc;disp(['Elapsed time is ',num2str(t_mumps_s_g95),' seconds.']);end
-dkeparam.MUMPSparam.nproc = 4;
-dkepath.MUMPS = [dkepath.luke_root,'Packages/MUMPS_4.6.4_P_pgf/dke'];   
-if exist(dkepath.MUMPS),disp('- MUMPS_4.6.4_P_PGF90 (4 processors)'),tic,[MMXS_t_MUMPS_464_P_PGF90_4P,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t_mumps_p_pgf90_4p = toc;disp(['Elapsed time is ',num2str(t_mumps_p_pgf90_4p),' seconds.']);end
-dkeparam.MUMPSparam.nproc = 1;
-dkepath.MUMPS = [dkepath.luke_root,'Packages/MUMPS_4.6.4_P_pgf/dke'];   
-if exist(dkepath.MUMPS),disp('- MUMPS_4.6.4_P_PGF90 (1 processor)'),tic,[MMXS_t_MUMPS_464_P_PGF90_1P,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t_mumps_p_pgf90_1p = toc;disp(['Elapsed time is ',num2str(t_mumps_p_pgf90_1p),' seconds.']);end
-dkepath.MUMPS = [dkepath.luke_root,'Packages/MUMPS_4.6.4_S_pgf/dke'];
-if exist(dkepath.MUMPS),disp('- MUMPS_4.6.4_S_PGF90'),tic,[MMXS_t_MUMPS_464_S_PGF90,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t_mumps_s_pgf90 = toc;disp(['Elapsed time is ',num2str(t_mumps_s_pgf90),' seconds.']);end
+isim = 0;
 %
-cdold = cd;
-cdnew = [dkepath.luke_root,'Packages/MUMPS_4.6.4_S_g95/MATLAB'];
-if exist(cdnew),
-   cd(cdnew);
-   if exist('dmumpsmex');disp('- MUMPSMEX_4.6.4-ILU'),tic,job_MUMPSMEX = 1;MUMPSMEX_dke_yp;job_MUMPSMEX = 2;MUMPSMEX_dke_yp;t_ilumumpsmex = toc;;disp(['Elapsed time is ',num2str(t_ilumumpsmex),' seconds.']);end
-   if exist('dmumpsmex');disp('- MUMPSMEX_4.6.4-SOLVE'),tic,job_MUMPSMEX = 3;MUMPSMEX_dke_yp;t_mumpsmex = toc;MMXS_t_MUMPSMEX_464_g95 = id_MUMPSMEX.SOL;disp(['Elapsed time is ',num2str(t_mumpsmex),' seconds per inversion + ILU time (once): ',num2str(t_ilumumpsmex),' seconds.']);job_MUMPSMEX = -2;MUMPSMEX_dke_yp;end
-end
-cdnew = [dkepath.luke_root,'Packages/MUMPS_4.6.4_S_pgf/MATLAB'];
-if exist(cdnew),
-   cd(cdnew);
-   if exist('dmumpsmex');disp('- MUMPSMEX_4.6.4-ILU'),tic,job_MUMPSMEX = 1;MUMPSMEX_dke_yp;job_MUMPSMEX = 2;MUMPSMEX_dke_yp;t_ilumumpsmex = toc;;disp(['Elapsed time is ',num2str(t_ilumumpsmex),' seconds.']);end
-   if exist('dmumpsmex');disp('- MUMPSMEX_4.6.4-SOLVE'),tic,job_MUMPSMEX = 3;MUMPSMEX_dke_yp;t_mumpsmex = toc;MMXS_t_MUMPSMEX_464_pgf = id_MUMPSMEX.SOL;disp(['Elapsed time is ',num2str(t_mumpsmex),' seconds per inversion + ILU time (once): ',num2str(t_ilumumpsmex),' seconds.']);job_MUMPSMEX = -2;MUMPSMEX_dke_yp;end
-end
-cd(cdold);
+% MUMPSMEX packages
 %
-% 4.7.0 release
-%
-dkepath.MUMPS = [dkepath.luke_root,'Packages/MUMPS_4.7.0_S_absoft/dke'];
-if exist(dkepath.MUMPS),disp('- MUMPS_4.7.0_S_ABSOFT'),tic,[MMXS_t_MUMPS_470_S_ABSOFT,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t_mumps_s_absoft = toc;disp(['Elapsed time is ',num2str(t_mumps_s_absoft),' seconds.']);end
-dkepath.MUMPS = [dkepath.luke_root,'Packages/MUMPS_4.6.4_S_g95/dke'];
-if exist(dkepath.MUMPS),disp('- MUMPS_4.7.0_S_G95'),tic,[MMXS_t_MUMPS_470_S_G95,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t_mumps_s_g95 = toc;disp(['Elapsed time is ',num2str(t_mumps_s_g95),' seconds.']);end
-dkeparam.MUMPSparam.nproc = 4;
-dkepath.MUMPS = [dkepath.luke_root,'Packages/MUMPS_4.7.0_P_pgf/dke'];   
-if exist(dkepath.MUMPS),disp('- MUMPS_4.7.0_P_PGF90 (4 processors)'),tic,[MMXS_t_MUMPS_470_P_PGF90_4P,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t_mumps_p_pgf90_4p = toc;disp(['Elapsed time is ',num2str(t_mumps_p_pgf90_4p),' seconds.']);end
-dkeparam.MUMPSparam.nproc = 1;
-dkepath.MUMPS = [dkepath.luke_root,'Packages/MUMPS_4.7.0_P_pgf/dke'];   
-if exist(dkepath.MUMPS),disp('- MUMPS_4.7.0_P_PGF90 (1 processor)'),tic,[MMXS_t_MUMPS_470_P_PGF90_1P,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t_mumps_p_pgf90_1p = toc;disp(['Elapsed time is ',num2str(t_mumps_p_pgf90_1p),' seconds.']);end
-dkepath.MUMPS = [dkepath.luke_root,'Packages/MUMPS_4.6.4_S_pgf/dke'];
-if exist(dkepath.MUMPS),disp('- MUMPS_4.7.0_S_PGF90'),tic,[MMXS_t_MUMPS_470_S_PGF90,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t_mumps_s_pgf90 = toc;disp(['Elapsed time is ',num2str(t_mumps_s_pgf90),' seconds.']);end
-%
-cdold = cd;
-%
-cdnew = [dkepath.luke_root,'Packages/MUMPS_4.7.0_S_g95/MATLAB'];
-if exist(cdnew),
-   cd(cdnew);
-   if exist('dmumpsmex');disp('- MUMPSMEX_4.7.0-ILU'),tic,job_MUMPSMEX = 1;MUMPSMEX_dke_yp;job_MUMPSMEX = 2;MUMPSMEX_dke_yp;t_ilumumpsmex = toc;;disp(['Elapsed time is ',num2str(t_ilumumpsmex),' seconds.']);end
-   if exist('dmumpsmex');disp('- MUMPSMEX_4.7.0-SOLVE'),tic,job_MUMPSMEX = 3;MUMPSMEX_dke_yp;t_mumpsmex = toc;MMXS_t_MUMPSMEX_470_g95 = id_MUMPSMEX.SOL;disp(['Elapsed time is ',num2str(t_mumpsmex),' seconds per inversion + ILU time (once): ',num2str(t_ilumumpsmex),' seconds.']);job_MUMPSMEX = -2;MUMPSMEX_dke_yp;end
-end
-cdnew = [dkepath.luke_root,'Packages/MUMPS_4.7.0_S_pgf/MATLAB'];
-if exist(cdnew),
-   cd(cdnew);
-   if exist('dmumpsmex');disp('- MUMPSMEX_4.7.0-ILU'),tic,job_MUMPSMEX = 1;MUMPSMEX_dke_yp;job_MUMPSMEX = 2;MUMPSMEX_dke_yp;t_ilumumpsmex = toc;;disp(['Elapsed time is ',num2str(t_ilumumpsmex),' seconds.']);end
-   if exist('dmumpsmex');disp('- MUMPSMEX_4.7.0-SOLVE'),tic,job_MUMPSMEX = 3;MUMPSMEX_dke_yp;t_mumpsmex = toc;MMXS_t_MUMPSMEX_470_pgf = id_MUMPSMEX.SOL;disp(['Elapsed time is ',num2str(t_mumpsmex),' seconds per inversion + ILU time (once): ',num2str(t_ilumumpsmex),' seconds.']);job_MUMPSMEX = -2;MUMPSMEX_dke_yp;end
+if exist([luke_root,'Packages']),
+    list_of_packages = dir([luke_root,'Packages']);
+    for ifile = 1:length(list_of_packages),
+        if length(list_of_packages(ifile).name) >= 5 & list_of_packages(ifile).name(1:5) == 'MUMPS' & ~isempty(strfind(list_of_packages(ifile).name,'_S_')),
+            dkepath.MUMPSMEX = [luke_root,'Packages/',list_of_packages(ifile).name,'/MATLAB'];
+            addpath(dkepath.MUMPSMEX)
+            if exist(dkepath.MUMPSMEX),
+                isim = isim + 1;
+                disp(['- ',list_of_packages(ifile).name,'-ILU']),tic,job_MUMPSMEX = 1;MUMPSMEX_dke_yp;job_MUMPSMEX = 2;MUMPSMEX_dke_yp;t_ilumumpsmex = toc;
+				disp(['- ',list_of_packages(ifile).name,'-SOLVE']),tic,job_MUMPSMEX = 3;MUMPSMEX_dke_yp;t_mumpsmex = toc;MMXS_t_MUMPS = id_MUMPSMEX.SOL;disp(['Elapsed time is ',num2str(t_mumpsmex),' seconds per inversion + ILU time (once): ',num2str(t_ilumumpsmex),' seconds.']);job_MUMPSMEX = -2;MUMPSMEX_dke_yp;
+                ZMMXS_t{isim} = MMXS_t_MUMPS;
+                Zname{isim} = ['MEX_',list_of_packages(ifile).name];
+            end
+            rmpath(dkepath.MUMPSMEX)
+        end
+    end
 end
 %
-cd(cdold);
 disp('-------------------')
+%
+if exist([luke_root,'Packages']),
+    list_of_packages = dir([luke_root,'Packages']);
+    for ifile = 1:length(list_of_packages),
+        %
+        % MUMPS packages
+        %
+        if length(list_of_packages(ifile).name) >= 5 & list_of_packages(ifile).name(1:5) == 'MUMPS',
+            dkepath.MUMPS = [luke_root,'Packages/',list_of_packages(ifile).name,'/dke'];
+            if exist(dkepath.MUMPS),
+                %
+                % MUMPS sequenciel
+                %
+                if ~isempty(strfind(list_of_packages(ifile).name,'_S_'))
+                    isim = isim + 1;
+                    disp(['- ',list_of_packages(ifile).name]),tic,[MMXS_t_MUMPS,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t_mumps = toc;disp(['Elapsed time is ',num2str(t_mumps),' seconds.']);
+                    ZMMXS_t{isim} = MMXS_t_MUMPS;
+                    Zname{isim} = list_of_packages(ifile).name;
+                end
+                %
+                % MUMPS parallel
+                %
+                if ~isempty(strfind(list_of_packages(ifile).name,'_P_'))
+                    dkeparam.MUMPSparam.nproc = 4;%case with 4 processors
+                    isim = isim + 1;
+                    disp(['- ',list_of_packages(ifile).name,', np = 4']),tic,[MMXS_t_MUMPS,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t_mumps = toc;disp(['Elapsed time is ',num2str(t_mumps),' seconds.']);
+                    ZMMXS_t{isim} = MMXS_t_MUMPS;
+                    Zname{isim} = [list_of_packages(ifile).name,'_np_4'];
+                    %
+                    dkeparam.MUMPSparam.nproc = 1;%case with 1 processor
+                    isim = isim + 1;
+                    disp(['- ',list_of_packages(ifile).name,', np = 1']),tic,[MMXS_t_MUMPS,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t_mumps = toc;disp(['Elapsed time is ',num2str(t_mumps),' seconds.']);
+                    ZMMXS_t{isim} = MMXS_t_MUMPS;
+                    Zname{isim} = [list_of_packages(ifile).name,'_np_1'];                    
+                end
+            end
+        end
+    end
+end
+%
 %
 %PETSc
 %  
@@ -121,25 +125,12 @@ figure('Name','MATLAB-CGS'),plot(MMXS_t_cgs),title(['MATLAB-CGS on ',computer])
 figure('Name','MATLAB-BICG'),plot(MMXS_t_bicg),title(['MATLAB-BICG on ',computer])
 figure('Name','MATLAB-QMR'),plot(MMXS_t_qmr),title(['MATLAB-QMR on ',computer])
 %
-if exist('MMXS_t_MUMPS_464_S_ABSOFT'),figure('Name','MUMPS_4.6.4-ABSOFT-SEQ'),plot(MMXS_t_MUMPS_464_S_ABSOFT),title(['MUMPS-ABSOFT-SEQ on ',computer]);end
-if exist('MMXS_t_MUMPS_464_S_G95'),figure('Name','MUMPS_4.6.4-G95-SEQ'),plot(MMXS_t_MUMPS_464_S_G95),title(['MUMPS-G95-SEQ on ',computer]);end
-if exist('MMXS_t_MUMPS_464_P_PGF90_4P'),figure('Name','MUMPS_4.6.4-PGF90-PAR'),plot(MMXS_t_MUMPS_464_P_PGF90_4P),title(['MUMPS-PGF90-PAR (4 procs) on ',computer]);end
-if exist('MMXS_t_MUMPS_464_P_PGF90_1P'),figure('Name','MUMPS_4.6.4-PGF90-PAR'),plot(MMXS_t_MUMPS_464_P_PGF90_1P),title(['MUMPS-PGF90-PAR (1 proc) on ',computer]);end
-if exist('MMXS_t_MUMPS_464_S_PGF90'),figure('Name','MUMPS_4.6.4-PGF90-SEQ'),plot(MMXS_t_MUMPS_464_S_PGF90),title(['MUMPS-PGF90-SEQ on ',computer]);end
-%
-if exist('MMXS_t_MUMPS_470_S_ABSOFT'),figure('Name','MUMPS_4.7.0-ABSOFT-SEQ'),plot(MMXS_t_MUMPS_470_S_ABSOFT),title(['MUMPS-ABSOFT-SEQ on ',computer]);end
-if exist('MMXS_t_MUMPS_470_S_G95'),figure('Name','MUMPS_4.7.0-G95-SEQ'),plot(MMXS_t_MUMPS_470_S_G95),title(['MUMPS-G95-SEQ on ',computer]);end
-if exist('MMXS_t_MUMPS_470_P_PGF90_4P'),figure('Name','MUMPS_4.7.0-PGF90-PAR'),plot(MMXS_t_MUMPS_470_P_PGF90_4P),title(['MUMPS-PGF90-PAR (4 procs) on ',computer]);end
-if exist('MMXS_t_MUMPS_470_P_PGF90_1P'),figure('Name','MUMPS_4.7.0-PGF90-PAR'),plot(MMXS_t_MUMPS_470_P_PGF90_1P),title(['MUMPS-PGF90-PAR (1 proc) on ',computer]);end
-if exist('MMXS_t_MUMPS_470_S_PGF90'),figure('Name','MUMPS_4.7.0-PGF90-SEQ'),plot(MMXS_t_MUMPS_470_S_PGF90),title(['MUMPS-PGF90-SEQ on ',computer]);end
+for iisim = 1:isim,
+    figure('Name',Zname{iisim}),plot(ZMMXS_t{isim}),title([Zname{iisim},' on ',computer]);
+end
 %
 if exist('MMXS_t_PETSC_232p8_BCGS_1P'),figure('Name','PETSC_2.3.2-p8_BCGS_1P'),plot(MMXS_t_PETSC_232p8_BCGS_1P),title(['PETSC_BCGS_1P on ',computer]);end
 if exist('MMXS_t_PETSC_232p8_SUPELUDIST_1P'),figure('Name','PETSC_2.3.2-p8_SUPELUDIST_1P'),plot(MMXS_t_PETSC_232p8_SUPELUDIST_1P),title(['PETSC_SUPELUDIST_1P on ',computer]);end
-%
-if exist('MMXS_t_MUMPSMEX_464_g95');figure('Name','MEX-MUMPS_4.6.4-G95'),plot(MMXS_t_MUMPSMEX_464_g95),title(['MEX-MUMPS_4.6.4-G95 on ',computer]);end
-if exist('MMXS_t_MUMPSMEX_464_pgf');figure('Name','MEX-MUMPS_4.6.4-PGF'),plot(MMXS_t_MUMPSMEX_464_pgf),title(['MEX-MUMPS_4.6.4-PGF on ',computer]);end
-if exist('MMXS_t_MUMPSMEX_470_g95');figure('Name','MEX-MUMPS_4.6.4-G95'),plot(MMXS_t_MUMPSMEX_470_g95),title(['MEX-MUMPS_4.7.0-G95 on ',computer]);end
-if exist('MMXS_t_MUMPSMEX_470_pgf');figure('Name','MEX-MUMPS_4.7.0-PGF'),plot(MMXS_t_MUMPSMEX_470_pgf),title(['MEX-MUMPS_4.7.0-PGF on ',computer]);end
 %
 if exist('mexlusolve');figure('Name','MEX-SUPERLU_3.0'),plot(MMXS_t_SUPERLU),title(['MEX-SUPERLU on ',computer]);end
 diary off
