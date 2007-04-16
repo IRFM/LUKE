@@ -94,9 +94,9 @@ if strcmp(dkepath.computer,'GLNXA64'),%Parallel processing
    end   
 %    
    if display_mode >=1,
-      unix([PETScpath,'DKE/mcharge 1']);
+      unix('mcharge 1');
    else
-      unix([PETScpath,'DKE/mcharge 0']);
+      unix('mcharge 0');
    end
 %
    fid = fopen('.machines','r');
