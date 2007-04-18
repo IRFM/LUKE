@@ -17,7 +17,7 @@ if param.nproc > 15,
 	nproc = 15;
 	info_dke_yp(2,'The number of processors has been enforced to 15 !');
 else
-	nproc = PETSCparam.nproc;
+	nproc = param.nproc;
 end   
 %
 % Dynamic evaluation of the cluster charge
