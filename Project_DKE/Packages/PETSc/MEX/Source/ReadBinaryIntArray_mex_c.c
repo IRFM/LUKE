@@ -40,19 +40,19 @@ void mexFunction(int nlhs, mxArray *plhs[],
  
  cookie = mxCalloc(1,sizeof(int));
  if (cookie == NULL) {mexErrMsgTxt("Memory allocation error in ReadBinaryIntArray_mex !");}
- result = fread(cookie,sizeof(int),1,TENSOR);// copy the file into the buffer:
+ result = fread(cookie,sizeof(int),1,TENSOR);/* copy the file into the buffer:*/
  if (result != 1) {mexErrMsgTxt("Reading file problem in ReadBinaryIntArray_mex !");}
  /*mexPrintf("Cookie=%i\n",cookie[0]);*//* Display COOKIE */
  
  ndims = mxCalloc(1,sizeof(int));
  if (ndims == NULL) {mexErrMsgTxt("Memory allocation error in ReadBinaryIntArray_mex !");}
- result = fread(ndims,sizeof(int),1,TENSOR);// copy the file into the buffer:
+ result = fread(ndims,sizeof(int),1,TENSOR);/*copy the file into the buffer:*/
  if (result != 1) {mexErrMsgTxt("Reading file problem in ReadBinaryIntArray_mex !");}
  /*mexPrintf("Ndims=%i\n",ndims[0]);*//* Display Ndims */
 
  dim = mxCalloc(ndims[0],sizeof(int));
  if (dim == NULL) {mexErrMsgTxt("Memory allocation error in ReadBinaryIntArray_mex !");}
- result = fread(dim,sizeof(int),ndims[0],TENSOR);// copy the file into the buffer:
+ result = fread(dim,sizeof(int),ndims[0],TENSOR);/* copy the file into the buffer:*/
  if (result != ndims[0]) {mexErrMsgTxt("Reading file problem in ReadBinaryIntArray_mex !");}
  /*for (ii = 0;ii < ndims[0];ii++) {
      mexPrintf("dim[%i]=%i\n",ii,dim[ii]);
@@ -60,13 +60,13 @@ void mexFunction(int nlhs, mxArray *plhs[],
 
  size = mxCalloc(1,sizeof(int));
  if (size == NULL) {mexErrMsgTxt("Memory allocation error in ReadBinaryIntArray_mex !");}
- result = fread(size,sizeof(int),1,TENSOR);// copy the file into the buffer:
+ result = fread(size,sizeof(int),1,TENSOR);/* copy the file into the buffer:*/
  if (result != 1) {mexErrMsgTxt("Reading file problem in ReadBinaryIntArray_mex !");}
  /*mexPrintf("Size=%i\n",size[0]);*//* Display Size */
  
  vals = mxCalloc(size[0],sizeof(int));
  if (vals == NULL) {mexErrMsgTxt("Memory allocation error in ReadBinaryIntArray_mex !");}
- result = fread(vals,sizeof(int),size[0],TENSOR);// copy the file into the buffer:
+ result = fread(vals,sizeof(int),size[0],TENSOR);/* copy the file into the buffer:*/
  if (result != size[0]) {mexErrMsgTxt("Reading file problem in ReadBinaryIntArray_mex !");}
  /* for (ii = 0;ii < size[0];ii++) {
      mexPrintf("vals[%i]=%i\n",ii,vals[ii]);
