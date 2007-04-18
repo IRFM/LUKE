@@ -24,9 +24,9 @@ end
 % Dynamic evaluation of the cluster charge
 %
 if display_mode >=1,
-	unix([dkepath.luke_root,'/Packages/mcharge 1']);
+	unix([dkepath.luke_root,'Packages/mcharge 1']);
 else
-	unix([dkepath.luke_root,'/Packages/mcharge 1']);
+	unix([dkepath.luke_root,'Packages/mcharge 0']);
 end
 %
 fid = fopen('.machines','r');
