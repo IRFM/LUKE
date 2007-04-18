@@ -34,19 +34,7 @@ N = size(A,2);
 [AI,AJ,AV] = find(A);
 NA = length(AI);%number of non-zero elements
 %
-if MUMPSparam.nproc > 15, 
-   nproc = 15;
-   info_dke_yp(2,'The number of processors has been enforced to 15 !');
-else
-   nproc = MUMPSparam.nproc;
-end
-%
-if isempty(dkepath.MUMPS),%Local saving
-   MUMPSpath = dkepath.MUMPS;
-else
-   MUMPSpath = [dkepath.MUMPS,filesep];
-end
-flag = 0;
+flag = 0;text = '';
 %
 initial_dir = cd;
 d = dir(dkepath.temppath);
@@ -65,41 +53,16 @@ fid = fopen('MUMPS_AJ_in.bin','wb');fwrite(fid,AJ,'double');if (fclose(fid)~=0),
 fid = fopen('MUMPS_AV_in.bin','wb');fwrite(fid,AV,'double');if (fclose(fid)~=0), error('Impossible to write input file for MUMPS AV in the scratch directory');end
 fid = fopen('MUMPS_B_in.bin','wb');fwrite(fid,B,'double');if (fclose(fid)~=0), error('Impossible to write input file for MUMPS B in the scratch directory');end
 %
-% Test processor charge to select the first less used regarding the total number of processors needed
+% Computer management
 %
-if strcmp(dkepath.computer,'GLNXA64'),%Parallel processing
-   if MUMPSparam.nproc > 15, 
-      nproc = 15;
-      info_dke_yp(2,'The number of processors has been enforced to 15 !');
-   else
-      nproc = MUMPSparam.nproc;
-   end   
-%    
-   if display_mode >=1,
-      unix('mcharge 1');
-   else
-      unix('mcharge 0');
-   end
+nproc = nproc_dke_yp(display_mode,MUMPSparam);
 %
-   fid = fopen('.machines','r');
-   listactivenodes = fread(fid,'uint8=>char')';
-   fclose(fid);
-   proc = listactivenodes(strfind(listactivenodes,':')+1);
-   nprocmax = sum(str2num(proc(:)));%Maximum number of available processors (usually nprocmax = nproc, except is nproc is too large or the computing charge is too heavy)
-   if nprocmax <= nproc & display_mode >=1,
-      info_dke_yp(2,['Number of processors requested : ',int2str(nproc),', number of processors available: ',int2str(nprocmax)]);%less processors are available
-   end
-%
-   if nproc <= nprocmax,nprocmax = nproc;end,%In order to be able to use odd number of processors, while the  
-%
-%Execute MUMPS on N processors in the scratch directory
-%
-   [flag,text]=unix(['/usr/local/pgi/linux86-64/6.0/bin/mpirun -np ',int2str(nprocmax),' -machinefile .machines ',MUMPSpath,'mumpsdke']);
-%
-    delete('.machines');%delete .machines file
-elseif strcmp(dkepath.computer,'MAC'),%Parallel or sequential processing
-   nproc = 1;% Single processor enforced
-   [flag,text]=unix([MUMPSpath,'mumpsdke']);  
+if nproc > 1,%Parallel processing is invoked
+   if display_mode >= 1,info_dke_yp(2,'Matrix inversion by MUMPS solver - parallel processing -');end
+   [flag,text] = unix(['mpirun -np ',int2str(nproc),' -machinefile .machines',dkepath.MUMPS,'/mumpsdke']);
+else,%Sequential processing is invoked
+   if display_mode >= 1,info_dke_yp(2,'Matrix inversion by MUMPS solver - sequential processing -');end
+   [flag,text] = unix([dkepath.MUMPS,'/mumpsdke']);
 end
 %
 % Read one file per variable for MatLab <-> MUMPS FORTRAN

@@ -8,7 +8,7 @@ function [X,flag,text] = PETSc_dke_ft(PETScparam,A,B,display_mode,dkepath)
 % INPUTS:
 %
 %   - PETScparam: Structure for controling PETSc program. 
-%	 - A: Matrix [n,n]
+%	- A: Matrix [n,n]
 %   - B: Vector for solving the linear system of equations AX=B [n,1]  
 %   - display_mode: display some results [1,1]
 %   - dkepath: paths structure
@@ -22,24 +22,12 @@ function [X,flag,text] = PETSc_dke_ft(PETScparam,A,B,display_mode,dkepath)
 %By Joan Decker (CEA-DRFC, joan.decker@cea.fr) ,Yves Peysson (CEA-DRFC,yves.peysson@cea.fr), Frederic Teisseire (CEA-DRFC)
 %
 if display_mode >= 1,
-    %info_dke_yp(2,'Matrix inversion by PETSc solver - parallel or sequential processing -')
+    info_dke_yp(2,'Matrix inversion by PETSc solver - parallel or sequential processing -')
 end
 %
 if nargin < 5,error('Wrong number of input arguments in PETSc_dke_ft !');end
 %
-if PETScparam.nproc > 15, 
-   nproc = 15;
-   info_dke_yp(2,'The number of processors has been enforced to 15 !');
-else
-   nproc = PETScparam.nproc;
-end
-%
-if isempty(dkepath.PETSC),%Local saving
-   PETScpath = dkepath.PETSC;
-else
-   PETScpath = [dkepath.PETSC,filesep];
-end
-flag = 0;
+flag = 0;text = '';
 %
 initial_dir = cd;
 d = dir(dkepath.temppath);
@@ -83,7 +71,9 @@ mattype = PETScparam.matrixtype;
 kspmethod = PETScparam.kspmethod;
 pcmethod = PETScparam.pcmethod;
 %
-%Test processor charge to select the first less used regarding the total number of processors needed
+% Computer management
+%
+nproc = nproc_dke_yp(display_mode,PETScparam);
 %
 if strcmp(dkepath.computer,'GLNXA64'),%Parallel processing
    if PETScparam.nproc > 15, 
@@ -108,21 +98,20 @@ if strcmp(dkepath.computer,'GLNXA64'),%Parallel processing
       info_dke_yp(2,['Number of processors requested : ',int2str(nproc),', number of processors available: ',int2str(nprocmax)]);%less processors are available
    end
 %
-   if nproc <= nprocmax,nprocmax = nproc;end,%In order to be able to use odd number of processors, while the  
-%
-% Run PETSc on N processors in the /scratch directory
+% Run PETSc on N processors (if nproc > 1)
 %     - np: specifies number of processors to run on. See mpirun options.
 %     - machinefile: specifies a list of available machines to run on. See mpirun options.
 %     - f: location of PETSc binary file of the A matrix
 %     - rhs: location of PETSc binary file of the b vector
 %     - ksp_type: sets KSP method. see PETSc manual
 %     - scratchdir: indicates the /scratch directory to the C program.
-   [flag,text] = unix(['mpirun -np ',int2str(nprocmax),' -machinefile .machines ',PETScpath,'DKE/PETSc_DKE_ft -f PETSc_in_A.bin -rhs PETSc_in_b.bin  -scratchdir ',dkepath.temppath,' ',mattype,' ',kspmethod, ' ', pcmethod]);
-   %
-    delete('.machines');%delete .machines file
-elseif strcmp(dkepath.computer,'MAC'),%Parallel or sequential processing
-   %nproc = 1;% Single processor enforced
-   %[flag,text]=unix([MUMPSpath,'mumpsdke']);  
+%
+if nproc > 1,%Parallel processing is invoked
+   if display_mode >= 1,info_dke_yp(2,'Matrix inversion by PETSc solver - parallel processing -');end
+   [flag,text] = unix(['mpirun -np ',int2str(nproc),' -machinefile .machines',dkepath.PETSc.dir,'/DKE/PETSc_DKE_ft -f PETSc_in_A.bin -rhs PETSc_in_b.bin  -scratchdir ',dkepath.temppath,' ',mattype,' ',kspmethod, ' ', pcmethod]);
+else,%Sequential processing is invoked
+   if display_mode >= 1,info_dke_yp(2,'Matrix inversion by PETSc solver - sequential processing -');end
+   [flag,text] = unix([dkepath.PETSc.dir,'/DKE/PETSc_DKE_ft -f PETSc_in_A.bin -rhs PETSc_in_b.bin  -scratchdir ',dkepath.temppath,' ',mattype,' ',kspmethod, ' ', pcmethod]);
 end
 %
 % Read solution from PETSc binary file
