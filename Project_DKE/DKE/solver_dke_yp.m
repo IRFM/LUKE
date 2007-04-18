@@ -382,6 +382,7 @@ time0 = clock;
 XXf0 = XXfinit;%Initial guess (normalized to xne_norm)
 %
 if dkeparam.PETScparam.cloop & dkeparam.invproc == -30,
+%
 	writeCloopinput_dke_ft(nit_f,boundary_mode_f,bounce_mode,dkeparam.coll_mode,dkeparam.norm_mode_f,prec0_f,display_mode,betath_ref,xTe_norm,xne_norm,dtn,mhu,nmhu,npn,ns_f,nr,sm_f,...
       masku,maskl,dpn,dmhu,xpn,xpn2,xpn3,xsigma,xgamma,xz,xz2,pn,pn2,pn3,...
       sigma,gamma,z,z2,xJ1,xJ2,xJ3,xJ4,J1,J2,J3,J4,...
@@ -389,10 +390,8 @@ if dkeparam.PETScparam.cloop & dkeparam.invproc == -30,
       Zmask_f0_t,...
       MMXT_f_t,MMXR_f_t,MMXP_f_t,MMXPC_f_t,MMXPDI_f_t,...
       XXI,XXf0,time_scheme,dkepath);
-      %
-   ['mpirun -np ',int2str(dkeparam.PETScparam.nproc),' -machinefile ',dkepath.PETSC,'/machinefile ',dkepath.PETSC,'/DKE/SolverLoop_DKE_c',' ',dkeparam.PETScparam.matrixtype,' ',dkeparam.PETScparam.kspmethod, ' ',dkeparam.PETScparam.pcmethod]
-   unix(['mpirun -np ',int2str(dkeparam.PETScparam.nproc),' -machinefile ',dkepath.PETSC,'/machinefile ',dkepath.PETSC,'/DKE/SolverLoop_DKE_c',' ',dkeparam.PETScparam.matrixtype,' ',dkeparam.PETScparam.kspmethod, ' ',dkeparam.PETScparam.pcmethod])
-   XXf0 = ReadBinaryArray_mex_c([dkepath.variables.output,'/XXf0']);
+% 
+	[XXf0] = PETSc_Cloop_dke_ft(dkeparam.PETScparam,display_mode,dkepath);
 else
 %
    for ir = 1:nr,
