@@ -12,13 +12,15 @@ int i,j=0,k;
 char* file2="/home/sccp/gsem/FT090307/Project_DKE/fred/Csource/B";*/
 d-=1; /*for Consistency with Matlab indices starting at 1*/
 
-printf("start integral\n");
+/* printf("start integral\n");*/
 if(A.sizedim[d]!=B.sizedim[1]){
 printf("dimension mismatch\n");
 printf("sizeA=%i\n",A.sizedim[d]);
 printf("sizeB=%i\n",B.sizedim[1]);
 return;}
-else{printf("sizeA=%i\n",A.sizedim[d]);}
+else{
+/* printf("sizeA=%i\n",A.sizedim[d]);*/
+}
 /*printf("sizeB=%i\n",B.sizedim[1]);*/
 int *depth=malloc((A.ndims+1)*sizeof(int));
 int ndims;
@@ -60,5 +62,5 @@ for(i=0;i<depth[d];i++){
 
 /*fprintf(stdout,"C.ndims=%i\n",(*C).ndims);
 for(i=0;i<(*C).ndims;i++){fprintf(stdout,"%i\n",(*C).sizedim[i]);}*/
-printf("integral done\n");
+/* printf("integral done\n");*/
 }

@@ -7,7 +7,7 @@ int division(struct Tensor A,struct Tensor B,struct Tensor* C)
 {
 int i;
 
-fprintf(stdout,"Checking B");
+/* fprintf(stdout,"Checking B");*/
  for(i=0;i<B.size;i++){
      if(B.vals[i]==0.0){return -1;}
  }
@@ -45,6 +45,6 @@ else {/*fprintf(stdout,"divCase2\n");*/
     }
 }
 
-fprintf(stdout,"end\n");
+/* fprintf(stdout,"end\n");*/
 return 0;
 }

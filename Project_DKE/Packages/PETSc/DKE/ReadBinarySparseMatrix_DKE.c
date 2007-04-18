@@ -9,7 +9,7 @@ void ReadBinarySparseMatrix_DKE(char* file,struct SparseMatrix *A)
 FILE* TENSOR;
 int i;
 int cookie;
-fprintf(stdout,"Opening\n");
+/*fprintf(stdout,"Opening\n");*/
 TENSOR=fopen(file,"r");
 
 /*fprintf(stdout,"Reading cookie\n");*/
@@ -38,5 +38,5 @@ fprintf(stdout,"%i \t", ((*A).n));
 fprintf(stdout,"%i \t", ((*A).nnz));*/
 
 fclose(TENSOR);
-fprintf(stdout,"end read\n");
+/*fprintf(stdout,"end read\n");*/
 }

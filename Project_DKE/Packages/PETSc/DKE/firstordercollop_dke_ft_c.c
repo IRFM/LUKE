@@ -18,7 +18,7 @@ struct Tensor J1, struct Tensor J2, struct Tensor J3, struct Tensor J4,struct
 Tensor xTe_norm,struct Tensor *I1,struct Tensor *I2)
 
 {
-printf("FIRSTORDERCOLLOP\n");
+/* printf("FIRSTORDERCOLLOP\n");*/
 int i,j,sdim[2];
 struct Tensor A;
 struct Tensor B1,B2,B3,B5; /*A,B are intermediate tensor variables*/
@@ -107,7 +107,7 @@ Tensor_Sum((*I1),B2,1.0,&(*I1));
 
 
 /*7th line*/
-fprintf(stdout,"line 7=======================\n");
+/* fprintf(stdout,"line 7=======================\n");*/
 product(A,xJ3,&B3);
 division(B3,xz,&B3);
 division(B3,xgamma,&B3);
@@ -121,7 +121,7 @@ for(i=0;i<B2.size;i++){B2.vals[i]=B2.vals[i]/2.0;}
 Tensor_Sum((*I1),B2,1.0,&(*I1));
 
 /*8th line*/
-fprintf(stdout,"line 8=======================\n");
+/* fprintf(stdout,"line 8=======================\n");*/
 product(A,xJ1,&B3);
 division(B3,xz2,&B3);
 division(B3,xgamma,&B3);
@@ -132,7 +132,7 @@ for(i=0;i<B2.size;i++){B2.vals[i]=B2.vals[i]/2.0;}
 Tensor_Sum((*I1),B2,1.0,&(*I1));
 
 /*10th line*/
-fprintf(stdout,"line 10=======================\n");
+/* fprintf(stdout,"line 10=======================\n");*/
 product(A,xJ4,&B3);
 division(B3,xz,&B3);
 division(B3,xgamma,&B3);

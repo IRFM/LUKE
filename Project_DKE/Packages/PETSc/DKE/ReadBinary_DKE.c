@@ -7,7 +7,7 @@ void ReadBinary_DKE(char* file,struct Tensor *A)
 FILE* TENSOR;
 int i;
 int cookie;
-fprintf(stdout,"Opening\n");
+/*fprintf(stdout,"Opening\n");*/
 TENSOR=fopen(file,"r");
 if(!TENSOR){printf("couldn't open file\n");}
 
@@ -23,7 +23,7 @@ fread((*A).sizedim,sizeof(int),(*A).ndims,TENSOR);
 
 
 fread(&((*A).size),sizeof(int),1,TENSOR);
-
+/*fprintf(stdout,"YP*******,size=%d\n",(*A).size);*/
 
 /*fprintf(stdout,"%i \n", *pp);*/
 
@@ -31,11 +31,18 @@ fread(&((*A).size),sizeof(int),1,TENSOR);
 fprintf(stdout,"%i \n", *(*n+i));}*/
 
 
+
 ((*A).vals)=malloc((*A).size*sizeof(DOUBLE));
 fread((*A).vals,sizeof(DOUBLE),(*A).size,TENSOR);
+
+/*fprintf(stdout,"YP*******,toto=%d\n",toto);
+fprintf(stdout,"YP*******,sizeofdouble=%d\n",sizeof(DOUBLE));
+fprintf(stdout,"YP*******,sizeofint=%d\n",sizeof(int));*/
+
+
 
 /*for(i=0;i<*pp;i++){
 fprintf(stdout,"%g \t", *(*vals+i));}*/
 fclose(TENSOR);
-fprintf(stdout,"end read\n");
+/* fprintf(stdout,"end read\n");*/
 }

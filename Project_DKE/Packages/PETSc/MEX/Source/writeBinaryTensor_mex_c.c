@@ -63,19 +63,26 @@ for(i=0;i<m;i++){p=(*(n+i))*p;}
 
   io = fopen(filename,"w");
   fwrite (&MAT_FILE_COOKIE,sizeof(int),one,io);   
-/*   mexPrintf("%s=%d\n","MAT_FILE_COOKIE",MAT_FILE_COOKIE); */
+  /* mexPrintf("%s=%d\n","MAT_FILE_COOKIE",MAT_FILE_COOKIE); */
   fwrite (&m,sizeof(int),one,io);
- /* mexPrintf("%s=%d\n","m",m);*/ 
+  /*mexPrintf("%s=%d\n","m",m);*/
 
   fwrite (n,sizeof(int),m,io); 
   fwrite (&p,sizeof(int),one,io);
-  
-/* for(i=0;i<m;i++){
-   mexPrintf("%i\n",*(n+i));}   
+ 
+ /* for(i=0;i<m;i++){
+  mexPrintf("%i\n",*(n+i));}  
    mexPrintf("%s=%d\n","p",p);*/
    
+   
+   
+   
+   
   fwrite(pr, sizeof(double),p,io);
- /* for(i=0;i<p;i++){mexPrintf("%g\t",*(pr+i));}*/
+/*   mexPrintf("%s=%d\n","sizeofdouble",sizeof(double));
+   mexPrintf("%s=%d\n","sizeofint",sizeof(int));*/
+  
+/*  for(i=0;i<p;i++){mexPrintf("%g\t",*(pr+i));}*/
   
   fclose(io);
 

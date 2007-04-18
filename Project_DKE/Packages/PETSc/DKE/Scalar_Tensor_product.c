@@ -6,7 +6,7 @@
 void Scalar_Tensor_product(DOUBLE s,struct Tensor A,struct Tensor* B)
 {
 int i;
-fprintf(stdout,"starting S_T_P\n");
+/* fprintf(stdout,"starting S_T_P\n");*/
 /*(*B).ndims=A.ndims;
 fprintf(stdout,"allocating Bsizedim S_T_P\n");
 (*B).sizedim=A.sizedim;

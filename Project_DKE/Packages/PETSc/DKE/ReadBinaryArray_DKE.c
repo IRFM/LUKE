@@ -7,7 +7,7 @@ void ReadBinaryArray_DKE(char* file,struct Tensor **Array)
 FILE* TENSOR;
 int i;
 int cookie;
-fprintf(stdout,"Opening\n");
+/*fprintf(stdout,"Opening\n");*/
 TENSOR=fopen(file,"r");
 
 /*fprintf(stdout,"Reading cookie\n");*/
@@ -32,11 +32,11 @@ fread(&pc,sizeof(int),1,TENSOR);
    for(i=0;i<nc[0];i++){
       for(j=0;j<nc[1];j++){
      
-fread(&((*Array)[i+nc[0]*j].ndims),sizeof(int),1,TENSOR);fprintf(stdout,"%i\n",(*Array)[i+nc[0]*j].ndims);
+fread(&((*Array)[i+nc[0]*j].ndims),sizeof(int),1,TENSOR);/* fprintf(stdout,"%i\n",(*Array)[i+nc[0]*j].ndims)*/;
       (*Array)[i+nc[0]*j].sizedim=malloc((*Array)[i+nc[0]*j].ndims*sizeof(int));
       fread((*Array)[i+nc[0]*j].sizedim,sizeof(int),(*Array)[i+nc[0]*j].ndims,TENSOR);
      
-fread(&((*Array)[i+nc[0]*j].size),sizeof(int),1,TENSOR);fprintf(stdout,"%i\n",(*Array)[i+nc[0]*j].size);
+fread(&((*Array)[i+nc[0]*j].size),sizeof(int),1,TENSOR);/* fprintf(stdout,"%i\n",(*Array)[i+nc[0]*j].size)*/;
       ((*Array)[i+nc[0]*j].vals)=malloc((*Array)[i+nc[0]*j].size*sizeof(DOUBLE));
       fread((*Array)[i+nc[0]*j].vals,sizeof(DOUBLE),(*Array)[i+nc[0]*j].size,TENSOR);
          for(k=0;k<(*Array)[i+nc[0]*j].size;k++){
@@ -64,5 +64,5 @@ fread((**Array).vals,sizeof(DOUBLE),(**Array).size,TENSOR);
 }*/
 
 fclose(TENSOR);
-fprintf(stdout,"end read\n");
+/*fprintf(stdout,"end read\n");*/
 }

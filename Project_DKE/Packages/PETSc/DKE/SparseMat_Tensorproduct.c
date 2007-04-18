@@ -34,5 +34,5 @@ for(j=0;j<(*C).size;j++){
          (*C).vals[A.ir[p]]+=A.vals[p]*B.vals[j];
       }
 }
-printf("done SparseMat_Tensorproduct\n");
+/* printf("done SparseMat_Tensorproduct\n");*/
 }

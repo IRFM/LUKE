@@ -55,75 +55,71 @@ mexFunction( int nlhs, mxArray *plhs[],
   if (status != 0) 
     mexWarnMsgTxt("Not enough space. String is truncated.");
     
- class=mxGetClassID(prhs[1]);  
+  class=mxGetClassID(prhs[1]);  
+
+  if (class==mxCELL_CLASS) {
+    /*   mexPrintf("Cell Array \n");*/
+      cm = mxGetNumberOfDimensions(prhs[1]);
+    /*    mexPrintf("%i\t",cm);*/
+      cn = mxGetDimensions(prhs[1]);
+      for (j=0;j<cm;j++){p=(*(cn+j))*p;}
+     /*  mexPrintf("%i\t",cn[0]);*/
+      /*  mexPrintf("%i\n",cn[1]);*/
+      int ind[2];
+      ind[1]=0;
+      ind[0]=0;
  
- if(class==mxCELL_CLASS){
- mexPrintf("Cell Array \n");
- cm=mxGetNumberOfDimensions(prhs[1]);
- /*mexPrintf("%i\t",cm);*/
- cn=mxGetDimensions(prhs[1]);
- for(j=0;j<cm;j++){p=(*(cn+j))*p;}
- /*mexPrintf("%i\t",cn[0]);
- mexPrintf("%i\n",cn[1]);*/
- int ind[2];
- ind[1]=0;
- ind[0]=0;
- io = fopen(filename,"w");
- fwrite (&CELLARRAY_FILE_COOKIE,sizeof(int),one,io);
- fwrite (&cm,sizeof(int),one,io);
- fwrite (cn,sizeof(int),cm,io); 
- fwrite (&p,sizeof(int),one,io);
+      io = fopen(filename,"w");
+      fwrite (&CELLARRAY_FILE_COOKIE,sizeof(int),one,io);
+      fwrite (&cm,sizeof(int),one,io);
+      fwrite (cn,sizeof(int),cm,io); 
+      fwrite (&p,sizeof(int),one,io);
  
- for(i=0;i<cn[0];i++){
-    for(k=0;k<cn[1];k++){
-    p=1;
-    index=mxCalcSingleSubscript(prhs[1],cm,ind);
-    cell=mxGetCell(prhs[1],index);
-    pr=mxGetPr(cell);
-    m = mxGetNumberOfDimensions(cell);
-    n = mxGetDimensions(cell); 
-    /*mexPrintf("%i\t",m);*/
+      for (i=0;i<cn[0];i++){
+          for(k=0;k<cn[1];k++){
+              p=1;
+              index=mxCalcSingleSubscript(prhs[1],cm,ind);
+              cell=mxGetCell(prhs[1],index);
+              pr=mxGetPr(cell);
+              m = mxGetNumberOfDimensions(cell);
+              n = mxGetDimensions(cell); 
+            /*   mexPrintf("%i\t",m);*/
  
-    for(j=0;j<m;j++){p=(*(n+j))*p;}
-    ind[1] ++;
+              for(j=0;j<m;j++){p=(*(n+j))*p;}
+              ind[1] ++;
     
     /*Writing to file*/ 
-    fwrite (&m,sizeof(int),one,io);
-    fwrite (n,sizeof(int),m,io); 
-    fwrite (&p,sizeof(int),one,io);  
-    fwrite(pr, sizeof(int),p,io); 
-    /*mexPrintf("pr=%i\t",*(pr+1));*/
-   }
- ind[0]++;
- }
-}
+              fwrite (&m,sizeof(int),one,io);
+              fwrite (n,sizeof(int),m,io); 
+              fwrite (&p,sizeof(int),one,io);  
+              fwrite(pr, sizeof(int),p,io); 
+             /*   mexPrintf("pr=%i\t",*(pr+1));*/
+          }
+          ind[0]++;
+      }
+  } else{
+       /*  mexPrintf("NA\n");*/
+      pr = mxGetPr(prhs[1]);
+      m = mxGetNumberOfDimensions(prhs[1]);
+      n = mxGetDimensions(prhs[1]); 
+      
+      for(i=0;i<m;i++){
+          p=(*(n+i))*p;
+         /*    mexPrintf("%s=%d\n","p",p);*/
+      }
  
- else{ mexPrintf("NA\n");
-  pr = mxGetPr(prhs[1]);
-  m = mxGetNumberOfDimensions(prhs[1]);
-  n = mxGetDimensions(prhs[1]); 
-  
-  
-  for(i=0;i<m;i++){p=(*(n+i))*p;}
-
-  io = fopen(filename,"w");
-  fwrite (&ARRAY_FILE_COOKIE,sizeof(int),one,io);   
-/*   mexPrintf("%s=%d\n","MAT_FILE_COOKIE",MAT_FILE_COOKIE); */
-  fwrite (&m,sizeof(int),one,io);
-  /*mexPrintf("%s=%d\n","m",m); */
-
-  fwrite (n,sizeof(int),m,io); 
-  fwrite (&p,sizeof(int),one,io);
-  
-  /*for(i=0;i<m;i++){
-   mexPrintf("%i\n",*(n+i));}   
-   mexPrintf("%s=%d\n","p",p);*/ 
-   
-  fwrite(pr, sizeof(int),p,io);
-  /*for(i=0;i<p;i++){mexPrintf("%i\t",*(pr+i));}*/
-  
-}
-
- fclose(io);
+      io = fopen(filename,"w");
+        fwrite (&ARRAY_FILE_COOKIE,sizeof(int),one,io);   
+       /*   mexPrintf("%s=%d\n","ARRAY_FILE_COOKIE",ARRAY_FILE_COOKIE); */
+        fwrite (&m,sizeof(int),one,io);
+       /*   mexPrintf("%s=%d\n","m",m); */
+       /*   mexPrintf("%s=%d\n","n",n[0]); */
+     
+ 
+      fwrite (n,sizeof(int),m,io); 
+      fwrite (&p,sizeof(int),one,io); 
+      fwrite(pr, sizeof(int),p,io); 
+  }
+  fclose(io);
   return;
 }

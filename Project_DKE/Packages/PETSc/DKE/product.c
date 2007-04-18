@@ -36,5 +36,5 @@ return -1;}
        (*C).vals[i]=A.vals[i]*B.vals[i];
     }
 }
-fprintf(stdout,"endprod\n");
+/* fprintf(stdout,"endprod\n");*/
 return 0;}

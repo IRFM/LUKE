@@ -5,7 +5,7 @@
 int Tensor_Sum(struct Tensor A,struct Tensor B,DOUBLE m,struct Tensor *C)
 {
 /*Does A+m*B*/
-printf("Begon Tensor-Sum");
+/* printf("Begon Tensor-Sum");*/
 int i;
 if(A.ndims!=B.ndims){printf("dimension mismatch 1");return -1;}
 else {
