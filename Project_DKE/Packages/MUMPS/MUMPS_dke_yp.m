@@ -55,7 +55,7 @@ fid = fopen('MUMPS_B_in.bin','wb');fwrite(fid,B,'double');if (fclose(fid)~=0), e
 %
 % Computer management
 %
-nproc = nproc_dke_yp(display_mode,MUMPSparam);
+nproc = nproc_dke_yp(display_mode,MUMPSparam,dkepath);
 %
 if nproc > 1,%Parallel processing is invoked
    if display_mode >= 1,info_dke_yp(2,'Matrix inversion by MUMPS solver - parallel processing -');end

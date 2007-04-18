@@ -36,7 +36,7 @@ if exist([dkepath.PETSc.variables.output,'/XXf0']),delete([dkepath.PETSc.variabl
 %
 % Computer management
 %
-nproc = nproc_dke_yp(display_mode,PETScparam);
+nproc = nproc_dke_yp(display_mode,PETScparam,dkepath);
 %
 if nproc > 1,%Parallel processing is invoked
     if display_mode >= 1,info_dke_yp(2,'Matrix inversion by PETSc solver - parallel processing -');end

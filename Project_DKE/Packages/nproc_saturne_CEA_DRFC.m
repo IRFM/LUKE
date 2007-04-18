@@ -1,4 +1,4 @@
-function [nproc] = nproc_saturne_CEA_DRFC(display_mode,param)
+function [nproc] = nproc_saturne_CEA_DRFC(display_mode,param,dkepath)
 %
 % Calculate the optimal number of processors for SATURNE cluster @ CEA-DRFC
 %
@@ -6,6 +6,7 @@ function [nproc] = nproc_saturne_CEA_DRFC(display_mode,param)
 %
 %  - display_mode: display some results [1,1]
 %  - param: Structure for controling program. 
+%  - dkepath: Structure of the paths 
 %
 % OUTPUTS:
 %
@@ -23,9 +24,9 @@ end
 % Dynamic evaluation of the cluster charge
 %
 if display_mode >=1,
-	unix('mcharge 1');
+	unix([dkepath.luke_root,'/Packages/mcharge 1']);
 else
-	unix('mcharge 0');
+	unix([dkepath.luke_root,'/Packages/mcharge 1']);
 end
 %
 fid = fopen('.machines','r');
