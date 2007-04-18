@@ -17,7 +17,7 @@ PETSc_DKE_ft : 	PETSc_DKE_ft.o  chkopts
 	${RM} PETSc_DKE_ft.o
 	
 SolverLoop_DKE_c : SolverLoop_DKE_c.o  chkopts
-	-${CLINKER}  -o SolverLoop_DKE_c SolverLoop_DKE_c.o division.o\
+	-${CLINKER}  -o  SolverLoop_DKE_c SolverLoop_DKE_c.o division.o\
 firstordercollop_dke_ft_c.o integral_dke_jd.o product.o ReadBinaryArray_DKE.o\
 ReadBinary_DKE.o ReadBinarySparseMatrix_DKE.o Scalar_Tensor_product.o\
 Tensor_Sum.o ReadBinaryIntArray_DKE.o Tensor_Create.o SparseMat_Tensorproduct.o\
