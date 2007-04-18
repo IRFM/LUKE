@@ -75,29 +75,6 @@ pcmethod = PETScparam.pcmethod;
 %
 nproc = nproc_dke_yp(display_mode,PETScparam);
 %
-if strcmp(dkepath.computer,'GLNXA64'),%Parallel processing
-   if PETScparam.nproc > 15, 
-      nproc = 15;
-      info_dke_yp(2,'The number of processors has been enforced to 15 !');
-   else
-      nproc = PETScparam.nproc;
-   end   
-%    
-   if display_mode >=1,
-      unix('mcharge 1');
-   else
-      unix('mcharge 0');
-   end
-%
-   fid = fopen('.machines','r');
-   listactivenodes = fread(fid,'uint8=>char')';
-   fclose(fid);
-   proc = listactivenodes(strfind(listactivenodes,':')+1);
-   nprocmax = sum(str2num(proc(:)));%Maximum number of available processors (usually nprocmax = nproc, except is nproc is too large or the computing charge is too heavy)
-   if nprocmax <= nproc & display_mode >=1,
-      info_dke_yp(2,['Number of processors requested : ',int2str(nproc),', number of processors available: ',int2str(nprocmax)]);%less processors are available
-   end
-%
 % Run PETSc on N processors (if nproc > 1)
 %     - np: specifies number of processors to run on. See mpirun options.
 %     - machinefile: specifies a list of available machines to run on. See mpirun options.
