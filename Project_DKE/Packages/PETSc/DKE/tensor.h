@@ -1,5 +1,7 @@
 
-typedef long double DOUBLE;
+/* typedef long double DOUBLE; commenté par YP 18/04/2007*/
+
+typedef double DOUBLE;
 typedef int INT;
 struct Tensor {
 int ndims;
