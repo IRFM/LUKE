@@ -5,7 +5,7 @@
 %by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
 %
 clear all
-path_id = 'PC_DRFC_YVES';%Set here the name path parameters (user specific)
+path_id = 'LOCAL';%Set here the name path parameters (user specific)
 %
 path_root = '/home/sccp/gsem/peysson/LUKE/';
 %
@@ -14,12 +14,11 @@ dkepath.computer = 'GLNXA64';%machine type and supported OS
 dkepath.MUMPS = [path_root,'Packages/MUMPS_4.7.0_P_pgf/dke'];%Where MUMPS matrix solver is stored (distributed computing version)
 dkepath.MUMPSMEX = [path_root,'Packages/MUMPS_4.7.0_S_pgf/MATLAB'];%Where MUMPS matrix solver (independent program) is stored
 dkepath.SUPERLUMEX = [path_root,'Packages/SuperLU_3.0/MATLAB'];%Where MUMPS matrix solver (independent program) is stored
-dkepath.PETSC = [path_root,'Packages/petsc-2.3.2-p8'];%Where PETSC matrix solver is stored
-dkepath.PETSc_DIR = [path_root,'Packages/petsc-2.3.2-p8'];
+dkepath.PETSc.dir = [path_root,'Packages/petsc-2.3.2-p8'];%Where PETSC matrix solver (independent program) is stored
+dkepath.PETSc.variables.input = [path_root,'Packages/petsc-2.3.2-p8/DKE/DKESolver_variables'];%directory where all inout variables are written
+dkepath.PETSc.variables.output = [path_root,'Packages/petsc-2.3.2-p8/DKE/DKESolver_output'];%location directory where the distribution function is written by C program before going back to matlab
 dkepath.temppathroot = '/scratch';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 dkepath.mex = [path_root,'Project_DKE/MEX'];
-dkepath.variables.input = [path_root,'Packages/petsc-2.3.2-p8/DKE/DKESolver_variables'];%directory where all inout variables are written
-dkepath.variables.output = [path_root,'Packages/petsc-2.3.2-p8/DKE/DKESolver_output'];%location directory where the distribution function is written by C program before going back to matlab
 dkepath.luke_root = path_root;
 %
 eval(['save PATH_',path_id ,'.mat dkepath']);
