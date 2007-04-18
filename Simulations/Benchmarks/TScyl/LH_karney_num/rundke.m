@@ -47,7 +47,8 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 [dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple] = load_structures_yp('dkepath',id_path,path_path,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'dkedisplay',id_display,path_display,'ohm',id_ohm,path_ohm,'waves',ids_wave,paths_wave,'transpfaste',id_transpfaste,path_transpfaste,'ripple',id_ripple,path_ripple);
 %
-%************************************************************************************************************************************
+%**************************************************************************
+%**************************************************************************
 %
 nit = 6;
 dludroptol = logspace(-6,-2,nit);
@@ -99,21 +100,26 @@ if exist('mexlusolve'),
     disp(['SUPERLUMEX calculation done'])
 end
 %
-if isfield(dkepath,'PETSC'),
+if isfield(dkepath,'PETSc'),
     dkeparam.invproc = -30;
     dkeparam.PETScparam.nproc = 1;%number of processor used by PETSc (depends of the computer framework). Default is 1
-    dkeparam.PETScparam.matrixtype = '-matload_type superlu_dist';%Matrix type used by PETSc. For SUPERLU use '-matload_type superlu_dist' otherwise ' '. See PETSc documentation
-    dkeparam.PETScparam.kspmethod = '-ksp_type preonly';%KSP method used by PETSc. '-ksp_type preonly': no iteration, direct matrix solve. Otherwise '-ksp_type bicg' or '-ksp_type bcgs'  for example. See PETSc documentation
-    dkeparam.PETScparam.pcmethod = '-pc_type lu';%Preconditioning method used by PETSc. '-pc_type lu' for SUPERLU or '-pc-type hypre' for HYPRE.  See PETSc documentation
-    dkeparam.PETScparam.cloop = 0;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
-    [Znorm_PETScSUPERLU0,Zcurr_PETScSUPERLU0,ZP0_PETScSUPERLU0,dke_out_PETScSUPERLU0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-    disp(['PETSc/SUPERLU calculation done (first collision operator loop in MatLab).'])
-    dkeparam.PETScparam.cloop = 1;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
-    [Znorm_PETScSUPERLU1,Zcurr_PETScSUPERLU1,ZP0_PETScSUPERLU1,dke_out_PETScSUPERLU1] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-    disp(['PETSc/SUPERLU calculation done (first collision operator loop in C).'])
 %
-    dkeparam.invproc = -30;
-    dkeparam.PETScparam.nproc = 1;%number of processor used by PETSc (depends of the computer framework). Default is 1
+    [flag,message] = unix('uname -n');
+    if strfind(message,'saturne'),%this option runs only on the SATURNE CEA-DRFC cluster
+        dkeparam.PETScparam.matrixtype = '-matload_type superlu_dist';%Matrix type used by PETSc. For SUPERLU use '-matload_type superlu_dist' otherwise ' '. See PETSc documentation
+        dkeparam.PETScparam.kspmethod = '-ksp_type preonly';%KSP method used by PETSc. '-ksp_type preonly': no iteration, direct matrix solve. Otherwise '-ksp_type bicg' or '-ksp_type bcgs'  for example. See PETSc documentation
+        dkeparam.PETScparam.pcmethod = '-pc_type lu';%Preconditioning method used by PETSc. '-pc_type lu' for SUPERLU or '-pc-type hypre' for HYPRE.  See PETSc documentation
+        dkeparam.PETScparam.cloop = 0;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
+        [Znorm_PETScSUPERLU0,Zcurr_PETScSUPERLU0,ZP0_PETScSUPERLU0,dke_out_PETScSUPERLU0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+        disp(['PETSc/SUPERLU calculation done (first collision operator loop in MatLab).'])
+        dkeparam.PETScparam.cloop = 1;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
+        [Znorm_PETScSUPERLU1,Zcurr_PETScSUPERLU1,ZP0_PETScSUPERLU1,dke_out_PETScSUPERLU1] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+        disp(['PETSc/SUPERLU calculation done (first collision operator loop in C).'])
+        flag_PETSC = 1;
+    else
+        flag_PETSC = 0;
+    end
+    %
     dkeparam.PETScparam.matrixtype = '';%Matrix type used by PETSc. For SUPERLU use '-matload_type superlu_dist' otherwise ' '. See PETSc documentation
     dkeparam.PETScparam.kspmethod = '-ksp_type bcgs';%KSP method used by PETSc. '-ksp_type preonly': no iteration, direct matrix solve. Otherwise '-ksp_type bicg' or '-ksp_type bcgs'  for example. See PETSc documentation
     dkeparam.PETScparam.pcmethod = '';%Preconditioning method used by PETSc. '-pc_type lu' for SUPERLU or '-pc-type hypre' for HYPRE.  See PETSc documentation
@@ -122,7 +128,7 @@ if isfield(dkepath,'PETSC'),
     disp(['PETSc/BCGS calculation done (first collision operator loop in MatLab).'])
     dkeparam.PETScparam.cloop = 1;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
     [Znorm_PETScBCGS1,Zcurr_PETScBCGS1,ZP0_PETScBCGS1,dke_out_PETScBCGS1] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-    disp(['PETSc/BCGS calculation done (first collision operator loop in C).'])
+    disp(['PETSc/BCGS calculation done (first collision operator loop in C).'])  
 end
 %
 vparmin = 1/(waves{1}.rays{1}.sNpar(1)+imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
@@ -192,19 +198,21 @@ if exist('mexlusolve'),
     disp(['ne: ',num2str(round(Znorm_SUPERLUMEX.x_0_fsav.*mksa.ne_ref)/1e+19),' (10+19 m-3) - JLH: ',num2str(abs(Zcurr_SUPERLUMEX.x_0_fsav.*mksa.j_ref)),' (MA/m2) - PLH: ',num2str(ZP0_SUPERLUMEX.x_rf_fsav.*mksa.P_ref),' (MW/m3) - Pcoll: ',num2str(-ZP0_SUPERLUMEX.x_c_fsav.*mksa.P_ref),' (MW/m3)'])
     disp('-------------------')
 end
-if isfield(dkepath,'PETSC'),
-    disp('Matrix inversion PETSc/SUPERLU, 1 processor and first order collision correction in MatLab')
-    disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(dke_out_PETScSUPERLU0.time_out),' (s)'])
-    disp(['ne: ',num2str(round(Znorm_PETScSUPERLU0.x_0_fsav.*mksa.ne_ref)/1e+19),' (10+19 m-3) - JLH: ',num2str(abs(Zcurr_PETScSUPERLU0.x_0_fsav.*mksa.j_ref)),' (MA/m2) - PLH: ',num2str(ZP0_PETScSUPERLU0.x_rf_fsav.*mksa.P_ref),' (MW/m3) - Pcoll: ',num2str(-ZP0_PETScSUPERLU0.x_c_fsav.*mksa.P_ref),' (MW/m3)'])
-    disp('-------------------')
-    disp('Matrix inversion PETSc/SUPERLU, 1 processor and first order collision correction in C')
-    disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(dke_out_PETScSUPERLU1.time_out),' (s)'])
-    disp(['ne: ',num2str(round(Znorm_PETScSUPERLU1.x_0_fsav.*mksa.ne_ref)/1e+19),' (10+19 m-3) - JLH: ',num2str(abs(Zcurr_PETScSUPERLU1.x_0_fsav.*mksa.j_ref)),' (MA/m2) - PLH: ',num2str(ZP0_PETScSUPERLU1.x_rf_fsav.*mksa.P_ref),' (MW/m3) - Pcoll: ',num2str(-ZP0_PETScSUPERLU1.x_c_fsav.*mksa.P_ref),' (MW/m3)'])
-    disp('-------------------')
+if isfield(dkepath,'PETSc'),
+    if flag_PETSC == 1,
+        disp('Matrix inversion PETSc/SUPERLU, 1 processor and first order collision correction in MatLab')
+        disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(dke_out_PETScSUPERLU0.time_out),' (s)'])
+        disp(['ne: ',num2str(round(Znorm_PETScSUPERLU0.x_0_fsav.*mksa.ne_ref)/1e+19),' (10+19 m-3) - JLH: ',num2str(abs(Zcurr_PETScSUPERLU0.x_0_fsav.*mksa.j_ref)),' (MA/m2) - PLH: ',num2str(ZP0_PETScSUPERLU0.x_rf_fsav.*mksa.P_ref),' (MW/m3) - Pcoll: ',num2str(-ZP0_PETScSUPERLU0.x_c_fsav.*mksa.P_ref),' (MW/m3)'])
+        disp('-------------------')
+        disp('Matrix inversion PETSc/SUPERLU, 1 processor and first order collision correction in C')
+        disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(dke_out_PETScSUPERLU1.time_out),' (s)'])
+        disp(['ne: ',num2str(round(Znorm_PETScSUPERLU1.x_0_fsav.*mksa.ne_ref)/1e+19),' (10+19 m-3) - JLH: ',num2str(abs(Zcurr_PETScSUPERLU1.x_0_fsav.*mksa.j_ref)),' (MA/m2) - PLH: ',num2str(ZP0_PETScSUPERLU1.x_rf_fsav.*mksa.P_ref),' (MW/m3) - Pcoll: ',num2str(-ZP0_PETScSUPERLU1.x_c_fsav.*mksa.P_ref),' (MW/m3)'])
+        disp('-------------------')
+    end
     disp('Matrix inversion PETSc/BCGS, 1 processor and first order collision correction in MatLab')
     disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(dke_out_PETScBCGS0.time_out),' (s)'])
     disp(['ne: ',num2str(round(Znorm_PETScBCGS0.x_0_fsav.*mksa.ne_ref)/1e+19),' (10+19 m-3) - JLH: ',num2str(abs(Zcurr_PETScBCGS0.x_0_fsav.*mksa.j_ref)),' (MA/m2) - PLH: ',num2str(ZP0_PETScBCGS0.x_rf_fsav.*mksa.P_ref),' (MW/m3) - Pcoll: ',num2str(-ZP0_PETScBCGS0.x_c_fsav.*mksa.P_ref),' (MW/m3)'])
-    disp('-------------------')
+    disp('-------------------')  
     disp('Matrix inversion PETSc/BCGS, 1 processor and first order collision correction in C')
     disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(dke_out_PETScBCGS1.time_out),' (s)'])
     disp(['ne: ',num2str(round(Znorm_PETScBCGS1.x_0_fsav.*mksa.ne_ref)/1e+19),' (10+19 m-3) - JLH: ',num2str(abs(Zcurr_PETScBCGS1.x_0_fsav.*mksa.j_ref)),' (MA/m2) - PLH: ',num2str(ZP0_PETScBCGS1.x_rf_fsav.*mksa.P_ref),' (MW/m3) - Pcoll: ',num2str(-ZP0_PETScBCGS1.x_c_fsav.*mksa.P_ref),' (MW/m3)'])
