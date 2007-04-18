@@ -27,7 +27,7 @@ struct Tensor B;
 /*printf("Asize=%i,%i\n",(*A).sizedim[0],(*A).sizedim[1]);*/
 s[0]=(*A).sizedim[1];
 s[1]=(*A).sizedim[0];
-printf("s=%i,%i\n",s[0],s[1]);
+/* printf("s=%i,%i\n",s[0],s[1]);*/
 Tensor_Create(2,s,&B);
 /*printf("s=%i,%i\n",B.sizedim[0],B.sizedim[1]);*/
 

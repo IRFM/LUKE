@@ -79,17 +79,17 @@ nnz=jc[n]-jc[0];
 
   io = fopen(filename,"w");
   fwrite (&MAT_FILE_COOKIE,sizeof(int),one,io);   
-/*   mexPrintf("%s=%d\n","MAT_FILE_COOKIE",MAT_FILE_COOKIE); */
+   /* mexPrintf("%s=%d\n","MAT_FILE_COOKIE",MAT_FILE_COOKIE); */
   fwrite (&n,sizeof(int),one,io); 
-/*   mexPrintf("%s=%d\n","n",n); */
+   /* mexPrintf("%s=%d\n","n",n); */
   fwrite (&m,sizeof(int),one,io); 
-/*   mexPrintf("%s=%d\n","m",m);   */
+   /* mexPrintf("%s=%d\n","m",m);  */ 
   fwrite (&nnz,sizeof(int),one,io); 
-/*   mexPrintf("%s=%d\n","nnz",nnz);   */
+   /* mexPrintf("%s=%d\n","nnz",nnz); */  
 nnzr=mxCalloc(n,sizeof(int));
   for (j=0;j<n;j++) {
     nnzr[j]=jc[j+1]-jc[j];
-/*     mexPrintf("%s=%d\n","nnzr",nnzr); */
+     /* mexPrintf("%s=%d\n","nnzr",nnzr); */
   }
   fwrite (jc,sizeof(int),n+1,io); 
   fwrite (ir,sizeof(int),(size_t) nnz,io); /* row indices of of nonzero elements of A' (column indices of A) */

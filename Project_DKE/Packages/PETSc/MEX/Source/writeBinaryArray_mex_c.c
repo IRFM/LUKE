@@ -58,7 +58,7 @@ mexFunction( int nlhs, mxArray *plhs[],
  class=mxGetClassID(prhs[1]);  
  
  if(class==mxCELL_CLASS){
- mexPrintf("Cell Array \n");
+ /*mexPrintf("Cell Array \n");*/
  cm=mxGetNumberOfDimensions(prhs[1]);
  /*mexPrintf("%i\t",cm);*/
  cn=mxGetDimensions(prhs[1]);

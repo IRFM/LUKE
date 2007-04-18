@@ -36,7 +36,7 @@ VEC_FILE_COOKIE=1211214;
 if (size(X,2) == 1) || (multiVec==1) 
     if ~isBig
 % X is a vector
-  disp('Saving vector..');
+%  disp('Saving vector..');
   fid=fopen(filename,'w','ieee-be');  
   nv=size(X,2);
   for it=1:nv
@@ -45,15 +45,15 @@ if (size(X,2) == 1) || (multiVec==1)
     fwrite(fid,full(X(:,it)),'float64');
   end
   fclose(fid);
-  disp(['Wrote ' num2str(nv) ' vectors'])
+%  disp(['Wrote ' num2str(nv) ' vectors'])
  
     else
-    disp('using mexfile')
+%    disp('using mexfile')
     writePetscBinaryVec_mex_c(filename,X');
 end
 else 
 % X is a matrix
-  disp('Saving matrix');
+%  disp('Saving matrix');
   if ~isBig
 	fid=fopen(filename,'w','ieee-be');
 	[M,N]=size(X);
@@ -73,7 +73,7 @@ else
     fwrite(fid,ii-1,'int');
     fwrite(fid,aa,'float64');
   else
-      disp('using mexfile')
+%      disp('using mexfile')
     writePetscBinaryMat_mex_c(filename,X')
   end
 end
