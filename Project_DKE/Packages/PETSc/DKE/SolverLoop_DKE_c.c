@@ -53,62 +53,62 @@ struct Tensor pprec0_f;
 struct IntTensor* pdisplay_mode;
 
 
-
-/*fprintf(stdout,"Read nmhu\n");*/ReadBinaryIntArray_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/nmhu",&pnmhu);
+/*printf("READING INPUT VARIABLES\n");*/
+/*fprintf(stdout,"Read nmhu\n");*/ReadBinaryIntArray_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/nmhu",&pnmhu);
 int nmhu=(*pnmhu).vals[0];
-/*fprintf(stdout,"Read npn\n");*/ReadBinaryIntArray_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/npn",&pnpn);
+/*fprintf(stdout,"Read npn\n");*/ReadBinaryIntArray_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/npn",&pnpn);
 int npn=(*pnpn).vals[0];
-/*fprintf(stdout,"Read ns_f\n");*/ReadBinaryIntArray_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/ns_f",&(pns_f));
+/*fprintf(stdout,"Read ns_f\n");*/ReadBinaryIntArray_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/ns_f",&(pns_f));
 int* ns_f=(*pns_f).vals;
-/*fprintf(stdout,"Read nr\n");*/ReadBinaryIntArray_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/nr",&(pnr));
+/*fprintf(stdout,"Read nr\n");*/ReadBinaryIntArray_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/nr",&(pnr));
 int nr=(*pnr).vals[0];
-/*fprintf(stdout,"Read sm_f\n");*/ReadBinaryIntArray_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/sm_f",&(psm_f));
+/*fprintf(stdout,"Read sm_f\n");*/ReadBinaryIntArray_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/sm_f",&(psm_f));
 int* sm_f=(*psm_f).vals;
-/*fprintf(stdout,"Read time_scheme\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/time_scheme",&timescheme);
+/*fprintf(stdout,"Read time_scheme\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/time_scheme",&timescheme);
 double time_scheme=timescheme.vals[0];
-/*fprintf(stdout,"Read dtn\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/dtn",&(dtn));
-/*fprintf(stdout,"Read mhu\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/mhu",&mhu);
+/*fprintf(stdout,"Read dtn\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/dtn",&(dtn));
+/*fprintf(stdout,"Read mhu\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/mhu",&mhu);
 
-/*fprintf(stdout,"Read nit_f\n");*/ReadBinaryIntArray_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/nit_f",&(pnit_f));
+/*fprintf(stdout,"Read nit_f\n");*/ReadBinaryIntArray_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/nit_f",&(pnit_f));
 int nit_f=(*pnit_f).vals[0];
-/*fprintf(stdout,"Read boundary_mode_f\n");*/ReadBinaryIntArray_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/boundary_mode_f",&pboundary_mode_f);
+/*fprintf(stdout,"Read boundary_mode_f\n");*/ReadBinaryIntArray_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/boundary_mode_f",&pboundary_mode_f);
 int boundary_mode_f=(*pboundary_mode_f).vals[0];
-/*fprintf(stdout,"Read bounce_mode\n");*/ReadBinaryIntArray_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/bounce_mode",&pbounce_mode);
+/*fprintf(stdout,"Read bounce_mode\n");*/ReadBinaryIntArray_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/bounce_mode",&pbounce_mode);
 int bounce_mode=(*pbounce_mode).vals[0];
-/*fprintf(stdout,"Read coll_mode\n");*/ReadBinaryIntArray_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/coll_mode",&pcoll_mode);
+/*fprintf(stdout,"Read coll_mode\n");*/ReadBinaryIntArray_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/coll_mode",&pcoll_mode);
 int coll_mode=(*pcoll_mode).vals[0];
-/*fprintf(stdout,"Read norm_mode_f\n");*/ReadBinaryIntArray_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/norm_mode_f",&pnorm_mode_f);
+/*fprintf(stdout,"Read norm_mode_f\n");*/ReadBinaryIntArray_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/norm_mode_f",&pnorm_mode_f);
 int norm_mode_f=(*pnorm_mode_f).vals[0];
-/*fprintf(stdout,"Read prec0_f\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/prec0_f",&pprec0_f);
+/*fprintf(stdout,"Read prec0_f\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/prec0_f",&pprec0_f);
 /*printf("prec0=%i\n",(pprec0_f).ndims);*/
 double prec0_f=(pprec0_f).vals[0];
-/*fprintf(stdout,"Read display_mode\n");*/ReadBinaryIntArray_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/display_mode",&pdisplay_mode);
+/*fprintf(stdout,"Read display_mode\n");*/ReadBinaryIntArray_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/display_mode",&pdisplay_mode);
 int display_mode=(*pdisplay_mode).vals[0];
 
 
-/*fprintf(stdout,"Read Xmhu\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/Xmhu",&Xmhu);
-/*fprintf(stdout,"Read XXsinksource\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/XXsinksource",&XXsinksource);
-/*fprintf(stdout,"Read Xmask_r_edge\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/Xmask_r_edge",&Xmask_r_edge);
-/*fprintf(stdout,"Read Xpn2\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/Xpn2",&Xpn2);
-/*fprintf(stdout,"Read XXI\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/XXI",&XXI);
-/*fprintf(stdout,"Read XXfM\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/XXfM",&XXfM);
-/*fprintf(stdout,"Read XXRlambda_b_p1p1\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/XXRlambda_b_p1p1",&XXRlambda_b_p1p1);
-/*fprintf(stdout,"Read XXfinit\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/XXfinit",&XXfinit);
+/*fprintf(stdout,"Read Xmhu\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/Xmhu",&Xmhu);
+/*fprintf(stdout,"Read XXsinksource\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/XXsinksource",&XXsinksource);
+/*fprintf(stdout,"Read Xmask_r_edge\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/Xmask_r_edge",&Xmask_r_edge);
+/*fprintf(stdout,"Read Xpn2\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/Xpn2",&Xpn2);
+/*fprintf(stdout,"Read XXI\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/XXI",&XXI);
+/*fprintf(stdout,"Read XXfM\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/XXfM",&XXfM);
+/*fprintf(stdout,"Read XXRlambda_b_p1p1\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/XXRlambda_b_p1p1",&XXRlambda_b_p1p1);
+/*fprintf(stdout,"Read XXfinit\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/XXfinit",&XXfinit);
  /*MMXT_f_t,MMXR_f_t,MMXP_f_t  must be read from sparse format*/
-/*fprintf(stdout,"Read MMXT_f_t\n");*/ReadBinarySparseMatrix_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/MMXT_f_t",&MMXT_f_t);
-/*fprintf(stdout,"Read MMXR_f_t\n");*/ReadBinarySparseMatrix_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/MMXR_f_t",&MMXR_f_t);
-/*fprintf(stdout,"Read MMXP_f_t\n");*/ReadBinarySparseMatrix_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/MMXP_f_t",&MMXP_f_t);
-/*fprintf(stdout,"ReadMMXPC_f_t\n");*/ReadBinarySparseMatrix_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/MMXPC_f_t",&MMXPC_f_t);
-/*fprintf(stdout,"ReadMMXPDI_f_t\n");*/ReadBinarySparseMatrix_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/MMXPDI_f_t",&MMXPDI_f_t);
+/*fprintf(stdout,"Read MMXT_f_t\n");*/ReadBinarySparseMatrix_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/MMXT_f_t",&MMXT_f_t);
+/*fprintf(stdout,"Read MMXR_f_t\n");*/ReadBinarySparseMatrix_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/MMXR_f_t",&MMXR_f_t);
+/*fprintf(stdout,"Read MMXP_f_t\n");*/ReadBinarySparseMatrix_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/MMXP_f_t",&MMXP_f_t);
+/*fprintf(stdout,"ReadMMXPC_f_t\n");*/ReadBinarySparseMatrix_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/MMXPC_f_t",&MMXPC_f_t);
+/*fprintf(stdout,"ReadMMXPDI_f_t\n");*/ReadBinarySparseMatrix_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/MMXPDI_f_t",&MMXPDI_f_t);
 
-/*fprintf(stdout,"Read Zmask_f0_t\n");*/ReadBinaryIntArray_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/Zmask_f0_t",&Zmask_f0_t);
+/*fprintf(stdout,"Read Zmask_f0_t\n");*/ReadBinaryIntArray_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/Zmask_f0_t",&Zmask_f0_t);
 
-/*fprintf(stdout,"ReadZpn2_t\n");*/ReadBinaryArray_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/Zpn2_t",&Zpn2_t);
+/*fprintf(stdout,"ReadZpn2_t\n");*/ReadBinaryArray_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/Zpn2_t",&Zpn2_t);
 
-/*fprintf(stdout,"Read dmhu\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/dmhu",&dmhu);
+/*fprintf(stdout,"Read dmhu\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/dmhu",&dmhu);
 
 /*Need to initialize the following variables*/
-/*fprintf(stdout,"Read XXf0\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/XXf0",&XXf0);
+/*fprintf(stdout,"Read XXf0\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/XXf0",&XXf0);
 
 /*===========================================*/
 
@@ -137,36 +137,36 @@ struct Tensor I1,I2;
 
 /*READING VARIABLES FOR firstordercollop_dke_ft*/
 
-/*fprintf(stdout,"Readf1\n");*//*ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/f1",&f1);*/
-/*fprintf(stdout,"Read dpn\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/dpn",&dpn);
-/*fprintf(stdout,"Read xpn\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/xpn",&xpn);
-/*fprintf(stdout,"Read xpn2\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/xpn2",&xpn2);
-/*fprintf(stdout,"Read xpn3\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/xpn3",&xpn3);
-/*fprintf(stdout,"Read masku\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/masku",&masku);
-/*fprintf(stdout,"Read maskl\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/maskl",&maskl);
-/*fprintf(stdout,"Read xgamma\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/xgamma",&xgamma);
-/*fprintf(stdout,"Read xsigma\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/xsigma",&xsigma);
-/*fprintf(stdout,"Read xz\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/xz",&xz);
-/*fprintf(stdout,"Read xz2\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/xz2",&xz2);
-/*fprintf(stdout,"Read pn\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/pn",&pn);
-/*fprintf(stdout,"Read pn2\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/pn2",&pn2);
-/*fprintf(stdout,"Read pn3\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/pn3",&pn3);
-/*fprintf(stdout,"Read gamma\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/gamma",&gamma);
-/*fprintf(stdout,"Read sigma\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/sigma",&sigma);
-/*fprintf(stdout,"Read z\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/z",&z);
-/*fprintf(stdout,"Read z2\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/z2",&z2);
-/*fprintf(stdout,"Read xJ1\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/xJ1",&xJ1);
-/*fprintf(stdout,"Read xJ2\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/xJ2",&xJ2);
-/*fprintf(stdout,"Read xJ3\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/xJ3",&xJ3);
-/*fprintf(stdout,"Read xJ4\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/xJ4",&xJ4);
-/*fprintf(stdout,"Read J1\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/J1",&J1);
-/*fprintf(stdout,"Read J2\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/J2",&J2);
-/*fprintf(stdout,"Read J3\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/J3",&J3);
-/*fprintf(stdout,"Read J4\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/J4",&J4);
-/*fprintf(stdout,"Read xne_norm\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/xne_norm",&xne_norm);
-/*fprintf(stdout,"Read xTe_norm\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/xTe_norm",&xTe_norm);
-/*fprintf(stdout,"Read betath_ref\n");*/ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/betath_ref",&betath_ref);
-
+/*fprintf(stdout,"Readf1\n");*//*ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/f1",&f1);*/
+/*fprintf(stdout,"Read dpn\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/dpn",&dpn);
+/*fprintf(stdout,"Read xpn\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/xpn",&xpn);
+/*fprintf(stdout,"Read xpn2\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/xpn2",&xpn2);
+/*fprintf(stdout,"Read xpn3\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/xpn3",&xpn3);
+/*fprintf(stdout,"Read masku\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/masku",&masku);
+/*fprintf(stdout,"Read maskl\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/maskl",&maskl);
+/*fprintf(stdout,"Read xgamma\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/xgamma",&xgamma);
+/*fprintf(stdout,"Read xsigma\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/xsigma",&xsigma);
+/*fprintf(stdout,"Read xz\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/xz",&xz);
+/*fprintf(stdout,"Read xz2\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/xz2",&xz2);
+/*fprintf(stdout,"Read pn\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/pn",&pn);
+/*fprintf(stdout,"Read pn2\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/pn2",&pn2);
+/*fprintf(stdout,"Read pn3\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/pn3",&pn3);
+/*fprintf(stdout,"Read gamma\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/gamma",&gamma);
+/*fprintf(stdout,"Read sigma\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/sigma",&sigma);
+/*fprintf(stdout,"Read z\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/z",&z);
+/*fprintf(stdout,"Read z2\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/z2",&z2);
+/*fprintf(stdout,"Read xJ1\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/xJ1",&xJ1);
+/*fprintf(stdout,"Read xJ2\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/xJ2",&xJ2);
+/*fprintf(stdout,"Read xJ3\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/xJ3",&xJ3);
+/*fprintf(stdout,"Read xJ4\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/xJ4",&xJ4);
+/*fprintf(stdout,"Read J1\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/J1",&J1);
+/*fprintf(stdout,"Read J2\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/J2",&J2);
+/*fprintf(stdout,"Read J3\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/J3",&J3);
+/*fprintf(stdout,"Read J4\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/J4",&J4);
+/*fprintf(stdout,"Read xne_norm\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/xne_norm",&xne_norm);
+/*fprintf(stdout,"Read xTe_norm\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/xTe_norm",&xTe_norm);
+/*fprintf(stdout,"Read betath_ref\n");*/ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/betath_ref",&betath_ref);
+/*printf("END READ\n");*/
 /*END READ*/
 
 sdim=malloc(2*sizeof(int));
@@ -175,6 +175,7 @@ struct Tensor XI_t,MMXf0_t,MMXsource_t,MMXIpn2_t,Xf1;
 int sizeMMX;
 /*                      */
 
+/*printf("INITIALIZING VARIABLES\n");*/
 /*Begin Fokker_Planck solver loop*/
 
 sdim[0]=nr;
@@ -208,7 +209,7 @@ for(ir=0;ir<nr;ir++){
 	integral_dke_jd(dmhu,SXXfinit,2,&B);
 	/*printf("SXXfinit=%i %i\n",SXXfinit.sizedim[0],SXXf0.sizedim[1]);
 	printf("Bdims=%i %i\n",B.sizedim[0],B.sizedim[1]);*/
-	/*fprintf(stdout,"Read pn2\n");ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/pn2",&pn2);*/
+	/*fprintf(stdout,"Read pn2\n");ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/pn2",&pn2);*/
 	/*printf("pn2dims=%i %i\n",pn2.sizedim[0],pn2.sizedim[1]);*/
 	product(pn2,B,&B);
 	/*printf("Bdims=%i %i\n",B.sizedim[0],B.sizedim[1]);*/
@@ -225,6 +226,7 @@ for(ir=0;ir<nr;ir++){
         curr0.vals[ir+0*curr0.sizedim[0]]=2.0*Pi*D.vals[0]*xne_norm.vals[ir]/normf0.vals[ir+normf0.sizedim[0]*0];
 
 }
+/* printf("END INITIALIZATION\n");*/
 
 /*PETSC variables*/
 Vec x,b;
@@ -244,20 +246,25 @@ Vec xseq;
 /*Initialize PETSc environment*/
 /*                            */
 
+/* printf("SETTING UP PETSc OBJECTS\n");*/
 /*LOAD SYSTEM MATRIX AS PETSC OBJECT MAT*/
-ierr=PetscViewerBinaryOpen(PETSC_COMM_WORLD,"/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/PMMXPC_f_t",FILE_MODE_READ,&fd);CHKERRQ(ierr);
+ierr=PetscViewerBinaryOpen(PETSC_COMM_WORLD,"/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/PMMXPC_f_t",FILE_MODE_READ,&fd);CHKERRQ(ierr);
 ierr = MatLoad(fd,MATAIJ,&PMMXPC_f_t);CHKERRQ(ierr);
 if (flg){ierr = PetscViewerDestroy(fd);CHKERRQ(ierr);}
 ierr=KSPCreate(PETSC_COMM_WORLD,&ksp);CHKERRQ(ierr);
   ierr=KSPSetOperators(ksp,PMMXPC_f_t,PMMXPC_f_t,SAME_PRECONDITIONER);CHKERRQ(ierr);
+
   ierr=KSPSetFromOptions(ksp);CHKERRQ(ierr);
   ierr=KSPGetPC(ksp,&pc);CHKERRQ(ierr);
   ierr=PCSetFromOptions(pc);CHKERRQ(ierr);
+  ierr=KSPSetOperators(ksp,PMMXPC_f_t,PMMXPC_f_t,SAME_PRECONDITIONER);CHKERRQ(ierr);
+
+/* printf("END SETUP\n");*/
 
 /*nit_f=3;*/
-
+/* printf("BEGIN LOOP\n");*/
 for(it_f=1;it_f<=nit_f;it_f++){
-    /*Control iterations depending on error.*/
+    /*Control iterations depending on error. ADD CONDITIONS OVER NORM */
   
   sum3=0;
   sum4=0.0; 
@@ -266,9 +273,9 @@ for(it_f=1;it_f<=nit_f;it_f++){
   sum4+=(prec_residu_f.vals[i+(it_f-1)*prec_residu_f.sizedim[0]]);
   }
   
-    if(sum3>=1 && sum4 >=1/*convergence condition*/)
+    if(sum3>=1 /*&& sum4 >=1.0*//*convergence condition*/)
 {
-       fprintf(stdout,"it==%i\n================================================================================",it_f);
+      /*  printf("RHS COMPUTATION\n");*/
        /*fprintf(stdout,"nrvals=%i\n",nr);*/
        /*Allocation for MMXf0_t,MMXsource_t,MMXIpn2_t*/
        sizeMMX=0;
@@ -342,7 +349,8 @@ SXXf02.vals[i+j*SXXf02.sizedim[0]]=XXf0.vals[i+k*XXf0.sizedim[0]+ir*XXf0.sizedim
           }
 	   
 	   /*printf("SXXf02 done\n");*/
-	   Tensor_Save("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_output/SXXf02",SXXf02);
+	  
+/*Tensor_Save("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_output/SXXf02",SXXf02);*/
 	   
            Tensor_Transpose(&SXXf02);
 	  
@@ -394,6 +402,7 @@ SXXsinksource2.vals[i+j*SXXsinksource2.sizedim[0]]=XXsinksource.vals[i+k*XXsinks
 	  
        }/*for(ir=0,....)*/    
           
+       /*Scalar_Tensor_product(-1.0,XI_t,&XI_t);*/	/*Weird sign problem for XI_t*/
        		    
        if(1){/*isempty(Xmask_r_edge),No anomalous radial transport*/
           /*fprintf(stdout,"================================\n");*/
@@ -445,7 +454,7 @@ SXXf02.vals[i+j*SXXf02.sizedim[0]]=XXf0.vals[i+k*XXf0.sizedim[0]+(nr-1)*XXf0.siz
 		
 	
                 Tensor_Transpose(&SXXf02);
-Tensor_Save("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_output/SXXf02test3",SXXf02);
+/*Tensor_Save("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_output/SXXf02test3",SXXf02);*/
 			        
 	        for(i=0;i<SXXf02.size;i++){
                     MMXf0_t.vals[i+i0]=SXXf02.vals[i];
@@ -469,7 +478,7 @@ SXXsinksource2.vals[i+j*SXXsinksource2.sizedim[0]]=XXsinksource.vals[i+k*XXsinks
                 j++;
 	     }
           }
-	       Tensor_Save("SXXsinksource2test",SXXsinksource2);
+	       /*Tensor_Save("SXXsinksource2test",SXXsinksource2);*/
                Tensor_Transpose(&SXXsinksource2);
 	  
 	       for(i=0;i<SXXsinksource2.size;i++){
@@ -479,7 +488,7 @@ SXXsinksource2.vals[i+j*SXXsinksource2.sizedim[0]]=XXsinksource.vals[i+k*XXsinks
 	       free(SXXsinksource2.vals);free(SXXsinksource2.sizedim);
 	   
 	       j0+=i; 
-	       Tensor_Save("Zpn2",Zpn2_t[(nr-1)]);	       
+	       /*Tensor_Save("Zpn2",Zpn2_t[(nr-1)]);*/	       
 	       product(XI_t,Zpn2_t[(nr-1)],&A);
 	       Tensor_Transpose(&A);	
 	       for(j=0;j<A.size;j++){	          		 
@@ -498,11 +507,14 @@ printf("MMXsource.size=%i=========================================\n",MMXsource_
   }/*end if(1)*/
        
        else {
-          fprintf(stdout,"else\n");
+      /*    fprintf(stdout,"else\n");*/
        
           /*Declaration and allocation of Xmask_r_edge_t*/      
           sdim[0]=Xmask_r_edge.sizedim[0];
-          sdim[1]==Zmask_f0_t[nr-1].size;
+		  /*YP error ?????**********************/
+		  /*sdim[1]==Zmask_f0_t[nr-1].size;*/
+          sdim[1]=Zmask_f0_t[nr-1].size;
+		  /*YP error ?????**********************/
           Tensor_Create(2,sdim,&Xmask_r_edge_t);
        
            sdim[0]=XXf0.sizedim[0];
@@ -560,10 +572,10 @@ printf("MMXsource.size=%i=========================================\n",MMXsource_
      
  /*SAVES===================================================================*/
 
-Tensor_Save("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_output/XI_t_test",XI_t);
-Tensor_Save("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_output/MMXf0_t_test",MMXf0_t);
-Tensor_Save("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_output/MMXsource_t_test",MMXsource_t);
-Tensor_Save("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_output/MMXIpn2_t_test",MMXIpn2_t);
+/*Tensor_Save("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_output/XI_t_test",XI_t);
+Tensor_Save("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_output/MMXf0_t_test",MMXf0_t);
+Tensor_Save("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_output/MMXsource_t_test",MMXsource_t);
+Tensor_Save("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_output/MMXIpn2_t_test",MMXIpn2_t);*/
 
  /*Tensor_Save("XI_t_test",XI_t);
  Tensor_Save("MMXf0_t_test",MMXf0_t);
@@ -585,19 +597,20 @@ Tensor_Save("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_outpu
         SparseMat_Tensorproduct(MMXPDI_f_t,MMXq_t,&BT); 
 	SparseMat_Tensorproduct(MMXPC_f_t,MMXf0_t,&MMXR_t); 
 	Tensor_Sum(BT,MMXR_t,-1.0,&MMXR_t);  
-	printf("computed MMXR_t\n");
 	
         free(BT.sizedim);free(BT.vals);
 	free(BP.sizedim);free(BP.vals);
 	free(BR.sizedim);free(BR.vals);
 	
+/* 	printf("RHS COMPUTED\n");*/
 
-Tensor_Save("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_output/MMXq_tc",MMXq_t);
-Tensor_Save("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_output/MMXR_tc",MMXR_t);
+/*Tensor_Save("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_output/MMXq_tc",MMXq_t);
+Tensor_Save("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_output/MMXR_tc",MMXR_t);*/
 	
   /*Solving step.Computation of MMS_t*/
+/*   printf("CREATING PETSc PARALLEL OBJECTS\n");*/
   ierr=VecCreate(PETSC_COMM_WORLD,&b);CHKERRQ(ierr);
- ierr=VecSetSizes(b,PETSC_DECIDE,MMXR_t.size);CHKERRQ(ierr);
+  ierr=VecSetSizes(b,PETSC_DECIDE,MMXR_t.size);CHKERRQ(ierr);
   ierr=VecSetType(b,VECMPI);CHKERRQ(ierr);
   ierr=VecGetOwnershipRange(b,&low,&high);CHKERRQ(ierr);
   ix=malloc((high-low)*sizeof(int));
@@ -610,9 +623,10 @@ Tensor_Save("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_outpu
   ierr=VecDuplicate(b,&x);CHKERRQ(ierr);
   ierr=VecCopy(b,x);CHKERRQ(ierr);
   
+/*   printf("SOLVING\n");*/
   ierr=KSPSolve(ksp,b,x);CHKERRQ(ierr);
   
-  ;
+ /*  printf("RETRIEVING SOLUTION\n");*/
   VecScatterCreateToAll(x,&vecscat,&xseq);
   VecScatterBegin(x,xseq,INSERT_VALUES,SCATTER_FORWARD,vecscat);
   VecScatterEnd(x,xseq,INSERT_VALUES,SCATTER_FORWARD,vecscat);
@@ -628,8 +642,7 @@ Tensor_Save("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_outpu
   VecDestroy(b);VecDestroy(x);VecDestroy(xseq);
   
   free(ix);free(y);
-Tensor_Save("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_output/MMXS_tc",MMXS_t);
-  
+/*Tensor_Save("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_output/MMXS_tc",MMXS_t);*/
   
   
   
@@ -637,6 +650,7 @@ Tensor_Save("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_outpu
          Tensor_Sum(MMXf0_t,MMXS_t,1.0,&MMXf1_t);
 	 free(MMXS_t.vals);free(MMXS_t.sizedim);
 	 
+	 /*printf("COMPUTING Xf1_t\n");*/
          for(ir=0;ir<nr;ir++){
 	/*Computation of Xf1_t=F(MMXf1_t,sm_f,nmhu,ns_f_npn)*/
 	   sdim[0]=nmhu-ns_f[ir];
@@ -647,11 +661,10 @@ Tensor_Save("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_outpu
 	   Xf1_t.vals[i]=MMXf1_t.vals[i+sm_f[ir]];
 	   }
 	   Tensor_Transpose(&Xf1_t);
-if(ir==0){	  
-Tensor_Save("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_output/Xf1_t",Xf1_t);
-}	  
+	  
 	/*Computation of Xf1=F(Xf1_t, nmhu, ns_f, ir)*/
-	   
+	 /*printf("COMPUTING Xf1\n");*/
+
 	   if(bounce_mode==0){
 	      Tensor_Create(Xf1_t.ndims,Xf1_t.sizedim,&Xf1);
 	      for(i=0;i<Xf1.size;i++){	  
@@ -681,9 +694,9 @@ Xf1.vals[i+Xf1.sizedim[0]*(j+nmhu/2-ns_f[ir])]=Xf1_t.vals[i+Xf1.sizedim[0]*(nmhu
 	      }
 
 	    }  
-	    if(ir==0){
-	Tensor_Save("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_output/Xf1",Xf1);
-    }
+	    
+	 /*printf("COMPUTING NORMS,CURRENTS, ACCURACIES\n");*/
+
    /*Computation of normf0,normf1,curr0, curr1, prec_curr, prec_norm,
    residu_f_prec_residu_f*/
 	sdim[0]=XXf0.sizedim[0];
@@ -697,7 +710,7 @@ Xf1.vals[i+Xf1.sizedim[0]*(j+nmhu/2-ns_f[ir])]=Xf1_t.vals[i+Xf1.sizedim[0]*(nmhu
 		
 	/*printf("SXXF0=%i %i\n",SXXf0.sizedim[0],SXXf0.sizedim[1]);
 	printf("Bdims=%i %i\n",B.sizedim[0],B.sizedim[1]);*/
-	/*fprintf(stdout,"Read pn2\n");ReadBinary_DKE("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/pn2",&pn2);*/
+	/*fprintf(stdout,"Read pn2\n");ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/pn2",&pn2);*/
 	product(pn2,B,&B);
 	Tensor_Transpose(&B);
 	integral_dke_jd(dpn,B,1,&C);	
@@ -705,7 +718,6 @@ Xf1.vals[i+Xf1.sizedim[0]*(j+nmhu/2-ns_f[ir])]=Xf1_t.vals[i+Xf1.sizedim[0]*(nmhu
 	free(B.vals);free(B.sizedim);
 	free(C.vals);free(C.sizedim);
 	
-	printf("normf1\n");
 	integral_dke_jd(dmhu,Xf1,2,&B);	
 	product(pn2,B,&B);
 	Tensor_Transpose(&B);
@@ -714,7 +726,6 @@ Xf1.vals[i+Xf1.sizedim[0]*(j+nmhu/2-ns_f[ir])]=Xf1_t.vals[i+Xf1.sizedim[0]*(nmhu
 	free(B.vals);free(B.sizedim);
 	free(C.vals);free(C.sizedim);
 
-Tensor_Save("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_output/normf1",normf1);
 
 	product(Xmhu,SXXf0,&B);
 	integral_dke_jd(dmhu,B,2,&C);
@@ -744,7 +755,6 @@ Tensor_Save("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_outpu
        	
         prec_curr.vals[ir+prec_curr.sizedim[0]*it_f]=(curr1.vals[ir+curr1.sizedim[0]*it_f]-curr0.vals[ir+curr0.sizedim[0]*it_f])/curr0.vals[ir+curr0.sizedim[0]*it_f];
 
-Tensor_Save("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_output/prec_curr",prec_curr);
 
         prec_normf.vals[ir+prec_normf.sizedim[0]*it_f]=(normf1.vals[ir+normf1.sizedim[0]*it_f]-normf0.vals[ir+normf0.sizedim[0]*1])/normf0.vals[ir+0*normf0.sizedim[0]];
 	
@@ -762,12 +772,13 @@ Tensor_Save("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_outpu
 	free(D.vals);free(D.sizedim);
 	  
         prec_residu_f.vals[ir+prec_residu_f.sizedim[0]*it_f]=absolute((residu_f.vals[ir+residu_f.sizedim[0]*it_f]-residu_f.vals[ir+residu_f.sizedim[0]*(it_f-1)])/residu_f.vals[ir+residu_f.sizedim[0]*it_f]);
-/*prec_residu_f.vals[ir+prec_residu_f.sizedim[0]*it_f]=abs((residu_f.vals[ir+residu_f.sizedim[0]*it_f]-residu_f.vals[ir+residu_f.sizedim[0]*(it_f-1)]));*/
 
-   
+   	 
+
         if(coll_mode==2){
 	   /*Computation of f1,I1,I2,XI=F(I1,I2,f1,ir,XXFM,XXRlambda_b_p1p1,gamma,
    mhu,pn,pn2),XXI=F(X1)*/
+   /*printf("COMPUTING f1,I1,I2,XI,XXI\n");*/
            sdim[0]=npn;
            sdim[1]=mhu.sizedim[1];
            Tensor_Create(2,sdim,&B);
@@ -787,11 +798,7 @@ Tensor_Save("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_outpu
 	    Tensor_Create(2,sdim,&xTe_normir);
 	    Tensor_Fill(&xTe_normir ,xTe_norm.vals[ir]);
 	    firstordercollop_dke_ft_c2(f1,betath_ref,masku,maskl,dpn,xpn,xpn2,xpn3,xsigma,xgamma,xz,xz2,pn,pn2,pn3,sigma,gamma,z,z2,xJ1,xJ2,xJ3,xJ4,J1,J2,J3,J4,xTe_normir,&I1,&I2);
-	   if(ir==0){
-	   Tensor_Save("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_output/f1",f1);	  
-Tensor_Save("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_output/I1",I1);
-Tensor_Save("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_output/I2",I2);
-	   }
+
 	   sdim[1]=mhu.sizedim[1];
 	   sdim[0]=XXfM.sizedim[0];
 	   Tensor_Create(2,sdim,&XI);
@@ -837,9 +844,7 @@ Tensor_Save("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_outpu
 XXI.vals[i+j*XXI.sizedim[0]+ir*XXI.sizedim[0]*XXI.sizedim[1]]=XI.vals[i+j*XI.sizedim[0]];		 
 	      }
 	   }
-if(ir==0){
-Tensor_Save("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_output/XI",XI);
-}
+
 	      /*printf("%i!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n",it_f);*/
 	      /*free(f1.vals);free(f1.sizedim);*/	      
 	      free(B.vals);free(B.sizedim);
@@ -858,9 +863,10 @@ Tensor_Save("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_outpu
               }
 	   }
 	}
-	 
+	 /*printf("COMPUTING XXf0\n");*/
 	if(norm_mode_f==1){
 	   /*Computation of XXfo=F(X1,xne_norm(ir),normf1*/
+	   
 	  for(i=0;i<XXf0.sizedim[0];i++){
 	      for(j=0;j<XXf0.sizedim[1];j++){		   
                 
@@ -902,7 +908,7 @@ XXf0.vals[i+j*XXf0.sizedim[0]+ir*XXf0.sizedim[0]*XXf0.sizedim[1]]=Xf1.vals[i+j*X
           sum2+=(residu_f.vals[i+(it_f-1)*residu_f.sizedim[0]]>=prec0_f);
        }
         if(sum2==0 && display_mode>0){
-	   printf("Successfull convergence achieved for f0 after %i iterations",it_f-2);
+	   printf("Successfull convergence achieved for f0 after %i iterations\n",it_f-2);
 	}  
 	break;     
     }
@@ -910,12 +916,9 @@ XXf0.vals[i+j*XXf0.sizedim[0]+ir*XXf0.sizedim[0]*XXf0.sizedim[1]]=Xf1.vals[i+j*X
     if(it_f==nit_f){
        printf("WARNING: convergence not achieved for f0 after %i iterations.Time step too small",nit_f);
     }
-    Tensor_Save("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_output/XXI",XXI);
-Tensor_Save("/home/sccp/gsem/peysson/Packages/petsc-2.3.2-p8/DKE/DKESolver_output/XXf0",XXf0);
-   /* if display_mode >= 1,info_dke_yp(2,['Convergence achieved for zero order Fokker-Planck calculations in ',num2str(etime(clock,time0)),' (s)']);end
-if dkeparam.invproc == -1 & display_mode >= 1,info_dke_yp(2,['Number of
-processors used for MUMPS matrix inversion :
-',int2str(dkeparam.MUMPSparam.nproc)]);end*/ 
+   
+Tensor_Save("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_output/XXf0",XXf0);
+ 
   
 /*free(XI_t.sizedim);free(XI_t.vals);
 free(MMXf0_t.vals);free(MMXf0_t.sizedim);
@@ -936,14 +939,9 @@ free(prec_normf.sizedim);free(prec_normf.vals);
 free(residu_f.sizedim);free(residu_f.vals);
 free(prec_residu_f.sizedim);free(prec_residu_f.vals);*/
 
-printf("END\n");
 /*FREE AND SAVES*/
-
+/* printf("FREEING MEMORY\n");*/
 KSPDestroy(ksp);
-/*PCDestroy(pc);*/
-
-/*printf("size=%i,%i,%i\n",XXf0.sizedim[0],XXf0.sizedim[1],XXf0.sizedim[2]);*/
-printf("done saving\n");
 
 /*free(XXI.vals);free(XXf0.vals);free(XXsinksource.vals);
 free(dpn.vals);
@@ -956,9 +954,8 @@ free(dpn.vals);
  free(sigma.vals);free(gamma.vals);
  free(xJ1.vals);free(xJ2.vals);free(xJ3.vals);free(xJ4.vals);
  free(J1.vals);free(J2.vals);free(J3.vals);free(J4.vals);
- free(xTe_norm.vals);free(betath_ref.vals);
+ free(xTe_norm.vals);free(betath_ref.vals);*/
  
- /*END FREE AND SAVES*/
 
 /*free(index.vals);free(index.sizedim);*/
 /*Tensor_Save("curr0",curr0);
@@ -970,10 +967,9 @@ Tensor_Save("prec_curr",prec_curr);
 Tensor_Save("residu_f",residu_f);
 Tensor_Save("prec_residu_f",prec_residu_f);*/
 
-printf("nit_f=%i\n",nit_f);
-printf("it_f=%i\n",it_f);
-printf("coll_mode=%i\n",coll_mode);
 /*ierr=PetscFinalize();CHKERRQ(ierr);*/
 
 }
+
+
     
