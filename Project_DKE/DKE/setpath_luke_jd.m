@@ -31,6 +31,7 @@ addpath([luke_root,'Project_DKE/Modules/EFIT']);
 addpath([luke_root,'Project_DKE/Modules/RT']);
 addpath([luke_root,'Project_DKE/Modules/RT/MEX/Bin']);
 addpath([luke_root,'Project_DKE/Modules/Cronos']);
+addpath([luke_root,'Project_DKE/Packages']);
 addpath([luke_root,'Project_DKE/Packages/MUMPS']);
 addpath([luke_root,'Project_DKE/Packages/PETSc']);
 addpath([luke_root,'Project_DKE/Packages/PETSc/MEX/Bin']);
@@ -47,7 +48,12 @@ addpath([luke_root,'Project_DKE/DKE']);
 %
 % Path for external packages
 %
-if nargin >= 2 & isfield(dkepath,'MUMPSMEX'),
-    addpath(dkepath.MUMPSMEX);
+if nargin >= 2, 
+    if isfield(dkepath,'MUMPSMEX'),
+        addpath(dkepath.MUMPSMEX);
+    end
+    if isfield(dkepath,'SUPERLUMEX'),
+        addpath(dkepath.SUPERLUMEX);
+    end
 end
 %
