@@ -59,7 +59,7 @@ nproc = nproc_dke_yp(display_mode,MUMPSparam,dkepath);
 %
 if nproc > 1,%Parallel processing is invoked
    if display_mode >= 1,info_dke_yp(2,'Matrix inversion by MUMPS solver - parallel processing -');end
-   [flag,text] = unix(['mpirun -np ',int2str(nproc),' -machinefile .machines',dkepath.MUMPS,'/mumpsdke']);
+   [flag,text] = unix(['mpirun -np ',int2str(nproc),' -machinefile .machines ',dkepath.MUMPS,'/mumpsdke']);
 else,%Sequential processing is invoked
    if display_mode >= 1,info_dke_yp(2,'Matrix inversion by MUMPS solver - sequential processing -');end
    [flag,text] = unix([dkepath.MUMPS,'/mumpsdke']);

@@ -85,7 +85,7 @@ nproc = nproc_dke_yp(display_mode,PETScparam,dkepath);
 %
 if nproc > 1,%Parallel processing is invoked
    if display_mode >= 1,info_dke_yp(2,'Matrix inversion by PETSc solver - parallel processing -');end
-   [flag,text] = unix(['mpirun -np ',int2str(nproc),' -machinefile .machines',dkepath.PETSc.dir,'/DKE/PETSc_DKE_ft -f PETSc_in_A.bin -rhs PETSc_in_b.bin  -scratchdir ',dkepath.temppath,' ',mattype,' ',kspmethod, ' ', pcmethod]);
+   [flag,text] = unix(['mpirun -np ',int2str(nproc),' -machinefile .machines ',dkepath.PETSc.dir,'/DKE/PETSc_DKE_ft -f PETSc_in_A.bin -rhs PETSc_in_b.bin  -scratchdir ',dkepath.temppath,' ',mattype,' ',kspmethod, ' ', pcmethod]);
 else,%Sequential processing is invoked
    if display_mode >= 1,info_dke_yp(2,'Matrix inversion by PETSc solver - sequential processing -');end
    [flag,text] = unix([dkepath.PETSc.dir,'/DKE/PETSc_DKE_ft -f PETSc_in_A.bin -rhs PETSc_in_b.bin  -scratchdir ',dkepath.temppath,' ',mattype,' ',kspmethod, ' ', pcmethod]);

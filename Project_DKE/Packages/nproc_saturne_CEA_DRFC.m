@@ -18,15 +18,15 @@ if param.nproc > 15,
 	nproc = 15;
 	info_dke_yp(2,'The number of processors has been enforced to 15 !');
 else
-	nproc = param.nproc;
+	nproc = max(2,param.nproc);%2 processors enforced on Saturne cluster
 end   
 %
 % Dynamic evaluation of the cluster charge
 %
 if display_mode >=1,
-	unix([dkepath.luke_root,'Packages/mcharge 1']);
+	unix([dkepath.luke_root,'Project_DKE/Packages/mcharge 1']);
 else
-	unix([dkepath.luke_root,'Packages/mcharge 0']);
+	unix([dkepath.luke_root,'Project_DKE/Packages/mcharge 0']);
 end
 %
 fid = fopen('.machines','r');
