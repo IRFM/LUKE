@@ -18,7 +18,7 @@ dkepath.luke_root = path_root;
 %dkepath.MUMPS.par = [path_root,''];%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
 dkepath.MUMPS.seq = [path_root,'Packages/MUMPS_4.7.2_S_g95/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
 %dkepath.MUMPS.seq = [path_root,'Packages/MUMPS_4.7.2_S_absoft/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
-dkepath.MUMPS.mex = [path_root,'Packages/MUMPS_4.7.2_S_g95/dke'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.MUMPS.mex = [path_root,'Packages/MUMPS_4.7.2_S_g95/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
 %
 %dkepath.PETSc.par = [path_root,'P'];%Where PETSc matrix solver is stored (stand-alone application for parallel processing)
 dkepath.PETSc.seq = [path_root,'Packages/petsc-2.3.2-p10_S_g95/DKE'];%Where PETSc matrix solver is stored (stand-alone application for sequential processing)
