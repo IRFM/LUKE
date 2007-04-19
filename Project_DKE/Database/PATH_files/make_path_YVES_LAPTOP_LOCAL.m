@@ -23,8 +23,6 @@ dkepath.MUMPS.mex = [path_root,'Packages/MUMPS_4.7.2_S_g95/MATLAB'];%Where MUMPS
 %dkepath.PETSc.par = [path_root,'P'];%Where PETSc matrix solver is stored (stand-alone application for parallel processing)
 dkepath.PETSc.seq = [path_root,'Packages/petsc-2.3.2-p10_S_g95/DKE'];%Where PETSc matrix solver is stored (stand-alone application for sequential processing)
 %dkepath.PETSc.mex = [path_root,''];%Where PETSc matrix solver is stored (MEX function)
-dkepath.PETSc.variables.input = [dkepath.temppathroot,'/DKESolver_variables'];%directory where all inout variables are written by PETSc
-dkepath.PETSc.variables.output = [dkepath.temppathroot,'/DKESolver_output'];%location directory where the distribution function is written by C PETSc program before going back to matlab
 %
 dkepath.SUPERLU.mex = [path_root,'Packages/SuperLU_3.0/MATLAB'];%Where SUPERLU matrix solver is stored (MEX function)
 %

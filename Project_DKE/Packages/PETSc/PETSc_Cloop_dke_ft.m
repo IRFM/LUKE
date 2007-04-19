@@ -32,7 +32,8 @@ if ~exist(dkepath.temppath);
 end
 cd(dkepath.temppath);%Move to calculation directory	
 %
-if exist([dkepath.PETSc.variables.output,'/XXf0']),delete([dkepath.PETSc.variables.output,'/XXf0']);end,%Remove the existing initial value to be sure that XXf0 is well created by PETSc
+dir_in = [dkepath.temppath,'/DKESolver_variables/'];
+dir_out = [dkepath.temppath,'/DKESolver_output/'];
 %
 % Computer management
 %
@@ -41,29 +42,29 @@ nproc = nproc_dke_yp(display_mode,PETScparam,dkepath);
 if nproc > 1,%Parallel processing is invoked
 	if isfield(dkepath.PETSc,'par'),
         if display_mode >= 1,info_dke_yp(2,'Matrix inversion by PETSc solver - parallel processing -');end
-        [flag,text] = unix(['mpirun -np ',int2str(nproc),' -machinefile .machines',dkepath.PETSc.par,'/SolverLoop_DKE_c',' ',PETScparam.matrixtype,' ',PETScparam.kspmethod,' ',PETScparam.pcmethod]);      
+        [flag,text] = unix(['mpirun -np ',int2str(nproc),' -machinefile .machines',dkepath.PETSc.par,'/SolverLoop_DKE_c',' ',dir_in,' ',dir_out,' ',PETScparam.matrixtype,' ',PETScparam.kspmethod,' ',PETScparam.pcmethod]);      
     elseif isfield(dkepath.PETSc,'seq'),
         if display_mode >= 1,info_dke_yp(2,'Matrix inversion by PETSc solver - sequential processing enforced, no parallel processing package on this machine ! -');end
-        [flag,text] = unix([dkepath.PETSc.seq,'/SolverLoop_DKE_c',' ',PETScparam.matrixtype,' ',PETScparam.kspmethod, ' ',PETScparam.pcmethod]);
+        [flag,text] = unix([dkepath.PETSc.seq,'/SolverLoop_DKE_c',' ',dir_in,' ',dir_out,' ',PETScparam.matrixtype,' ',PETScparam.kspmethod, ' ',PETScparam.pcmethod]);
     else
         error('PETSc package not correctly named for LUKE: <pakage name+version>_P_<compiler name> or  <pakage name+version>_S_<compiler name>');
     end
 elseif nproc == 1,%Sequential processing is invoked
     if isfield(dkepath.PETSc,'seq'),
         if display_mode >= 1,info_dke_yp(2,'Matrix inversion by PETSc solver - sequential processing -');end
-        [flag,text] = unix([dkepath.PETSc.seq,'/SolverLoop_DKE_c',' ',PETScparam.matrixtype,' ',PETScparam.kspmethod, ' ',PETScparam.pcmethod]);
+        [flag,text] = unix([dkepath.PETSc.seq,'/SolverLoop_DKE_c',' ',dir_in,' ',dir_out,' ',PETScparam.matrixtype,' ',PETScparam.kspmethod, ' ',PETScparam.pcmethod]);
     elseif isfield(dkepath.PETSc,'par'),
         if display_mode >= 1,info_dke_yp(2,'Matrix inversion by PETSc solver - parallel processing enforced, no sequential processing package on this machine !  -');end
-        [flag,text] = unix(['mpirun -np ',int2str(nproc),' -machinefile .machines',dkepath.PETSc.par,'/SolverLoop_DKE_c',' ',PETScparam.matrixtype,' ',PETScparam.kspmethod,' ',PETScparam.pcmethod]);      
+        [flag,text] = unix(['mpirun -np ',int2str(nproc),' -machinefile .machines',dkepath.PETSc.par,'/SolverLoop_DKE_c',' ',dir_in,' ',dir_out,' ',PETScparam.matrixtype,' ',PETScparam.kspmethod,' ',PETScparam.pcmethod]);      
     else
         error('PETSc package not correctly named for LUKE: <pakage name+version>_P_<compiler name> or  <pakage name+version>_S_<compiler name>');
     end
 end
 %
-if exist([dkepath.PETSc.variables.output,'/XXf0']),
-	XXf0 = ReadBinaryArray_mex_c([dkepath.PETSc.variables.output,'/XXf0']);
+if exist([dkepath.temppath,'/DKESolver_output/XXf0']),
+	XXf0 = ReadBinaryArray_mex_c([dkepath.temppath,'/DKESolver_output/XXf0']);
 else
-	error(['PETSc is going wrong and solution XXf0 is not created in the sub-directory ',dkepath.PETSc.variables.output,' !']);
+	error(['PETSc is going wrong and solution XXf0 is not created in the sub-directory ',dkepath.temppath,'/DKESolver_output !']);
 end
 %
 cd(initial_dir);%return to the initial working directory
