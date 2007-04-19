@@ -101,7 +101,7 @@ if exist('dmumpsmex'),
 %
    for j = 1:nmesh,%Scan radial mesh size
       rho_S = linspace(0,1,j*dmesh);
-      [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+      [Znorm,Zcurr,ZP0,dke_out,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 % 
       time_f_MUMPSMEX(j) = dke_out.time_out;
       rho_f_MUMPSMEX{j} = rho_S;
@@ -119,7 +119,7 @@ if exist('mexlusolve'),
 %
    for j = 1:nmesh,%Scan radial mesh size
       rho_S = linspace(0,1,j*dmesh);
-      [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+      [Znorm,Zcurr,ZP0,dke_out,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 % 
       time_f_SUPERLU(j) = dke_out.time_out;
       rho_f_SUPERLU{j} = rho_S;
@@ -161,7 +161,7 @@ if isfield(dkepath,'PETSC'),
 %
         for j = 1:nmesh,%Scan radial mesh size
             rho_S = linspace(0,1,j*dmesh);
-            [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+            [Znorm,Zcurr,ZP0,dke_out,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 % 
             time_f_PETSc_slu_e(j) = dke_out.time_out;
             rho_f_PETSc_slu_e{j} = rho_S;
@@ -200,7 +200,7 @@ if isfield(dkepath,'PETSC'),
 %
     for j = 1:nmesh,%Scan radial mesh size
         rho_S = linspace(0,1,j*dmesh);
-        [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+        [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 % 
         time_f_PETSc_bcgs_e(j) = dke_out.time_out;
         rho_f_PETSc_bcgs_e{j} = rho_S;
