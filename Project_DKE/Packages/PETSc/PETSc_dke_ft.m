@@ -84,11 +84,25 @@ nproc = nproc_dke_yp(display_mode,PETScparam,dkepath);
 %     - scratchdir: indicates the /scratch directory to the C program.
 %
 if nproc > 1,%Parallel processing is invoked
-   if display_mode >= 1,info_dke_yp(2,'Matrix inversion by PETSc solver - parallel processing -');end
-   [flag,text] = unix(['mpirun -np ',int2str(nproc),' -machinefile .machines ',dkepath.PETSc.dir,'/DKE/PETSc_DKE_ft -f PETSc_in_A.bin -rhs PETSc_in_b.bin  -scratchdir ',dkepath.temppath,' ',mattype,' ',kspmethod, ' ', pcmethod]);
-else,%Sequential processing is invoked
-   if display_mode >= 1,info_dke_yp(2,'Matrix inversion by PETSc solver - sequential processing -');end
-   [flag,text] = unix([dkepath.PETSc.dir,'/DKE/PETSc_DKE_ft -f PETSc_in_A.bin -rhs PETSc_in_b.bin  -scratchdir ',dkepath.temppath,' ',mattype,' ',kspmethod, ' ', pcmethod]);
+	if isfield(dkepath.PETSc,'par'),
+        if display_mode >= 1,info_dke_yp(2,'Matrix inversion by PETSc solver - parallel processing -');end
+        [flag,text] = unix(['mpirun -np ',int2str(nproc),' -machinefile .machines',dkepath.PETSc.par,'/PETSc_DKE_ft -f PETSc_in_A.bin -rhs PETSc_in_b.bin  -scratchdir ',dkepath.temppath,' ',mattype,' ',kspmethod, ' ', pcmethod]);
+    elseif isfield(dkepath.PETSc,'seq'),
+        if display_mode >= 1,info_dke_yp(2,'Matrix inversion by PETSc solver - sequential processing enforced, no parallel processing package on this machine ! -');end
+        [flag,text] = unix([dkepath.PETSc.seq,'/PETSc_DKE_ft -f PETSc_in_A.bin -rhs PETSc_in_b.bin  -scratchdir ',dkepath.temppath,' ',mattype,' ',kspmethod, ' ', pcmethod]);
+    else
+        error('PETSc package not correctly named for LUKE: <pakage name+version>_P_<compiler name> or  <pakage name+version>_S_<compiler name>');
+    end
+elseif nproc == 1,%Sequential processing is invoked
+    if isfield(dkepath.PETSc,'seq'),
+        if display_mode >= 1,info_dke_yp(2,'Matrix inversion by PETSc solver - sequential processing -');end
+        [flag,text] = unix([dkepath.PETSc.seq,'/PETSc_DKE_ft -f PETSc_in_A.bin -rhs PETSc_in_b.bin  -scratchdir ',dkepath.temppath,' ',mattype,' ',kspmethod, ' ', pcmethod]);
+    elseif isfield(dkepath.PETSc,'par'),
+        if display_mode >= 1,info_dke_yp(2,'Matrix inversion by PETSc solver - parallel processing enforced, no sequential processing package on this machine !  -');end
+        [flag,text] = unix(['mpirun -np ',int2str(nproc),' -machinefile .machines',dkepath.PETSc.par,'/PETSc_DKE_ft -f PETSc_in_A.bin -rhs PETSc_in_b.bin  -scratchdir ',dkepath.temppath,' ',mattype,' ',kspmethod, ' ', pcmethod]);
+    else
+        error('PETSc package not correctly named for LUKE: <pakage name+version>_P_<compiler name> or  <pakage name+version>_S_<compiler name>');
+    end
 end
 %
 % Read solution from PETSc binary file
@@ -105,6 +119,7 @@ else
 end
 %
 delete('*.bin');%delete all bin files
+delete('*.bin.info');%delete all bin files
 cd(initial_dir);%return to the initial working directory
 
   

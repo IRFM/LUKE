@@ -22,10 +22,6 @@ function [X,flag,text] = MUMPS_dke_yp(MUMPSparam,A,B,display_mode,dkepath)
 %
 %By Joan Decker (CEA-DRFC, joan.decker@cea.fr) and Yves Peysson (CEA-DRFC, yves.peysson@cea.fr)
 %
-if display_mode >= 1,
-   info_dke_yp(2,'Matrix inversion by MUMPS solver - parallel or sequential processing -')
-end
-%
 %Write matrix A and vector B in MUMPS_in binary file
 %
 if nargin < 5,error('Wrong number of input arguments in MUMPS_dke_yp !');end
@@ -58,11 +54,25 @@ fid = fopen('MUMPS_B_in.bin','wb');fwrite(fid,B,'double');if (fclose(fid)~=0), e
 nproc = nproc_dke_yp(display_mode,MUMPSparam,dkepath);
 %
 if nproc > 1,%Parallel processing is invoked
-   if display_mode >= 1,info_dke_yp(2,'Matrix inversion by MUMPS solver - parallel processing -');end
-   [flag,text] = unix(['mpirun -np ',int2str(nproc),' -machinefile .machines ',dkepath.MUMPS,'/mumpsdke']);
-else,%Sequential processing is invoked
-   if display_mode >= 1,info_dke_yp(2,'Matrix inversion by MUMPS solver - sequential processing -');end
-   [flag,text] = unix([dkepath.MUMPS,'/mumpsdke']);
+	if isfield(dkepath.MUMPS,'par'),
+        if display_mode >= 1,info_dke_yp(2,'Matrix inversion by MUMPS solver - parallel processing -');end
+        [flag,text] = unix(['mpirun -np ',int2str(nproc),' -machinefile .machines',dkepath.MUMPS.par,'/mumpsdke']);
+    elseif isfield(dkepath.MUMPS,'seq'),
+        if display_mode >= 1,info_dke_yp(2,'Matrix inversion by PETSc solver - sequential processing enforced, no parallel processing package on this machine ! -');end
+        [flag,text] = unix([dkepath.MUMPS.seq,'/mumpsdke']);
+    else
+        error('MUMPS package not correctly named for LUKE: <pakage name+version>_P_<compiler name> or  <pakage name+version>_S_<compiler name>');
+    end
+elseif nproc == 1,%Sequential processing is invoked
+    if isfield(dkepath.MUMPS,'seq'),
+        if display_mode >= 1,info_dke_yp(2,'Matrix inversion by MUMPS solver - sequential processing -');end
+        [flag,text] = unix([dkepath.MUMPS.seq,'/mumpsdke']);
+    elseif isfield(dkepath.MUMPS,'par'),
+        if display_mode >= 1,info_dke_yp(2,'Matrix inversion by MUMPS solver - parallel processing enforced, no sequential processing package on this machine !  -');end
+        [flag,text] = unix(['mpirun -np ',int2str(nproc),' -machinefile .machines',dkepath.MUMPS.par,'/mumpsdke']);
+    else
+        error('MUMPS package not correctly named for LUKE: <pakage name+version>_P_<compiler name> or  <pakage name+version>_S_<compiler name>');
+    end
 end
 %
 % Read one file per variable for MatLab <-> MUMPS FORTRAN
