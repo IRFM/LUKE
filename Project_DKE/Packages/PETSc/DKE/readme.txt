@@ -10,6 +10,28 @@ For compiling SolverLoop_DKE_c.c, type in the current directory
 
 (use pgcc instead of gcc for Portland C/C++ compiler on GLNXA64)
 
+pgcc -c division.c
+pgcc -c firstordercollop_dke_ft_c.c
+pgcc -c integral_dke_jd.c 
+pgcc -c product.c 
+pgcc -c ReadBinaryArray_DKE.c
+pgcc -c ReadBinary_DKE.c
+pgcc -c ReadBinarySparseMatrix_DKE.c
+pgcc -c Scalar_Tensor_product.c
+pgcc -c Tensor_Sum.c
+pgcc -c ReadBinaryIntArray_DKE.c
+pgcc -c Tensor_Create.c
+pgcc -c SparseMat_Tensorproduct.c
+pgcc -c Tensor_Transpose.c
+pgcc -c absolute.c
+pgcc -c Tensor_Save.c
+pgcc -c IntTensor_Save.c
+pgcc -c Tensor_Fill.c
+
+
+or 
+
+
 gcc -c division.c
 gcc -c firstordercollop_dke_ft_c.c
 gcc -c integral_dke_jd.c 
