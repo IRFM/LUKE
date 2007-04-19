@@ -84,19 +84,19 @@ end
 %
 if isfield(dkepath,'MUMPS'),
    dkeparam.invproc = -1;
-   [Znorm_MUMPS,Zcurr_MUMPS,ZP0_MUMPS,dke_out_MUMPS] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+   [Znorm_MUMPS,Zcurr_MUMPS,ZP0_MUMPS,dke_out_MUMPS,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
    disp(['Direct MUMPS calculation done'])
 end
 %
 if exist('dmumpsmex'),
     dkeparam.invproc = -2;
-    [Znorm_MUMPSMEX,Zcurr_MUMPSMEX,ZP0_MUMPSMEX,dke_out_MUMPSMEX] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [Znorm_MUMPSMEX,Zcurr_MUMPSMEX,ZP0_MUMPSMEX,dke_out_MUMPSMEX,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     disp(['MUMPSMEX calculation done'])
 end
 %
 if exist('mexlusolve'),
     dkeparam.invproc = -3;
-    [Znorm_SUPERLUMEX,Zcurr_SUPERLUMEX,ZP0_SUPERLUMEX,dke_out_SUPERLUMEX] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [Znorm_SUPERLUMEX,Zcurr_SUPERLUMEX,ZP0_SUPERLUMEX,dke_out_SUPERLUMEX,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     disp(['SUPERLUMEX calculation done'])
 end
 %
@@ -110,10 +110,10 @@ if isfield(dkepath,'PETSc'),
         dkeparam.PETScparam.kspmethod = '-ksp_type preonly';%KSP method used by PETSc. '-ksp_type preonly': no iteration, direct matrix solve. Otherwise '-ksp_type bicg' or '-ksp_type bcgs'  for example. See PETSc documentation
         dkeparam.PETScparam.pcmethod = '-pc_type lu';%Preconditioning method used by PETSc. '-pc_type lu' for SUPERLU or '-pc-type hypre' for HYPRE.  See PETSc documentation
         dkeparam.PETScparam.cloop = 0;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
-        [Znorm_PETScSUPERLU0,Zcurr_PETScSUPERLU0,ZP0_PETScSUPERLU0,dke_out_PETScSUPERLU0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+        [Znorm_PETScSUPERLU0,Zcurr_PETScSUPERLU0,ZP0_PETScSUPERLU0,dke_out_PETScSUPERLU0,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
         disp(['PETSc/SUPERLU calculation done (first collision operator loop in MatLab).'])
         dkeparam.PETScparam.cloop = 1;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
-        [Znorm_PETScSUPERLU1,Zcurr_PETScSUPERLU1,ZP0_PETScSUPERLU1,dke_out_PETScSUPERLU1] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+        [Znorm_PETScSUPERLU1,Zcurr_PETScSUPERLU1,ZP0_PETScSUPERLU1,dke_out_PETScSUPERLU1,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
         disp(['PETSc/SUPERLU calculation done (first collision operator loop in C).'])
         flag_PETSC = 1;
     else
@@ -124,10 +124,10 @@ if isfield(dkepath,'PETSc'),
     dkeparam.PETScparam.kspmethod = '-ksp_type bcgs';%KSP method used by PETSc. '-ksp_type preonly': no iteration, direct matrix solve. Otherwise '-ksp_type bicg' or '-ksp_type bcgs'  for example. See PETSc documentation
     dkeparam.PETScparam.pcmethod = '';%Preconditioning method used by PETSc. '-pc_type lu' for SUPERLU or '-pc-type hypre' for HYPRE.  See PETSc documentation
     dkeparam.PETScparam.cloop = 0;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
-    [Znorm_PETScBCGS0,Zcurr_PETScBCGS0,ZP0_PETScBCGS0,dke_out_PETScBCGS0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [Znorm_PETScBCGS0,Zcurr_PETScBCGS0,ZP0_PETScBCGS0,dke_out_PETScBCGS0,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     disp(['PETSc/BCGS calculation done (first collision operator loop in MatLab).'])
     dkeparam.PETScparam.cloop = 1;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
-    [Znorm_PETScBCGS1,Zcurr_PETScBCGS1,ZP0_PETScBCGS1,dke_out_PETScBCGS1] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [Znorm_PETScBCGS1,Zcurr_PETScBCGS1,ZP0_PETScBCGS1,dke_out_PETScBCGS1,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     disp(['PETSc/BCGS calculation done (first collision operator loop in C).'])  
 end
 %
