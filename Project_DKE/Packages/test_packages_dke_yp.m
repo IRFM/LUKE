@@ -6,13 +6,13 @@ disp('Test performances of matrix inversion routines on your computer')
 disp('---------------------------------------------------------------')
 mode = input_dke_yp('2-D (0) or 3-D (1) input matrix ?',0);disp(' ');
 if mode ==0,
-   load testLU2D.mat;delete testmatinv-2D;diary testmatinv-2D;disp(['2-D LUKE matrix inversion performances on ',computer]);disp('----------------------------------------------')
+   load testLU2D.mat;if exist('testmatinv-2D'),delete testmatinv-2D;end;diary testmatinv-2D;disp(['2-D LUKE matrix inversion performances on ',computer]);disp('----------------------------------------------')
 elseif mode == 1
-   load testLU3D.mat;delete testmatinv-3D;diary testmatinv-3D;disp(['3-D LUKE matrix inversion performances on ',computer]);disp('----------------------------------------------')
+   load testLU3D.mat;if exist('testmatinv-3D'),delete testmatinv-3D;end;diary testmatinv-3D;disp(['3-D LUKE matrix inversion performances on ',computer]);disp('----------------------------------------------')
 end
 %
 dkepath = path_LUKE_LOCAL;
-dkepath.temppath = pwd;
+dkepath.temppath = [dkepath.temppathroot,filesep,timeid_jd(clock)];
 luke_root = dkepath.luke_root;
 %
 % Tests
