@@ -12,7 +12,7 @@ else
 # echo " WITHOUT USING THE FIRST 5 NODES"
 endif
 
-echo "---------------------------------"
+#echo "---------------------------------"
 
 #echo "SATURNE CHARGE:"
 #echo "***************"
