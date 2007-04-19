@@ -101,10 +101,6 @@ if exist('flag_path','var'),%Paths
                 error('The path structure is not consistent with the computer !'),
             end
             %
-%           if isfield(dkepath,'PETSc_DIR'),
-%               unix(['setenv PETSC_DIR ',dkepath.PETSc_DIR]);
-%           end
-            %
         end
     end
     %
