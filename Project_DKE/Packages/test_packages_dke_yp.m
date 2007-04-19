@@ -135,7 +135,7 @@ if exist([luke_root,'Packages']),
                     dkeparam.PETScparam.pcmethod = '';%Preconditioning method used by PETSc. '-pc_type lu' for SUPERLU or '-pc-type hypre' for HYPRE.  See PETSc documentation                
                     dkeparam.PETScparam.cloop = 0;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)                                       
                     isim = isim + 1;
-                    disp(['- ',list_of_packages(ifile).name,', np = 4 bcgs (parallel processing, stand-alone application)']),tic,[MMXS_t_PETSc,flaginv_f] = PETSc_dke_yp(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t_petsc = toc;disp(['Elapsed time is ',num2str(t_petsc),' seconds.']);
+                    disp(['- ',list_of_packages(ifile).name,', np = 4 bcgs (parallel processing, stand-alone application)']),tic,[MMXS_t_PETSc,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t_petsc = toc;disp(['Elapsed time is ',num2str(t_petsc),' seconds.']);
                     ZMMXS_t{isim} = MMXS_t_PETSc;
                     Zname{isim} = [list_of_packages(ifile).name,'_np_4_bgcs_Mloop'];
                     %
@@ -145,7 +145,7 @@ if exist([luke_root,'Packages']),
                     dkeparam.PETScparam.pcmethod = '';%Preconditioning method used by PETSc. '-pc_type lu' for SUPERLU or '-pc-type hypre' for HYPRE.  See PETSc documentation                
                     dkeparam.PETScparam.cloop = 0;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)                   
                     isim = isim + 1;
-                    disp(['- ',list_of_packages(ifile).name,', np = 1 bcgs (parallel processing, stand-alone application)']),tic,[MMXS_t_PETSc,flaginv_f] = PETSc_dke_yp(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t_petsc = toc;disp(['Elapsed time is ',num2str(t_petsc),' seconds.']);
+                    disp(['- ',list_of_packages(ifile).name,', np = 1 bcgs (parallel processing, stand-alone application)']),tic,[MMXS_t_PETSc,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t_petsc = toc;disp(['Elapsed time is ',num2str(t_petsc),' seconds.']);
                     ZMMXS_t{isim} = MMXS_t_PETSc;
                     Zname{isim} = [list_of_packages(ifile).name,'_np_1_bgcs_Mloop'];
 %
@@ -157,7 +157,7 @@ if exist([luke_root,'Packages']),
                         dkeparam.PETScparam.pcmethod = '-pc_type lu';%Preconditioning method used by PETSc. '-pc_type lu' for SUPERLU or '-pc-type hypre' for HYPRE.  See PETSc documentation                
                         dkeparam.PETScparam.cloop = 0;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)                   
                         isim = isim + 1;
-                        disp(['- ',list_of_packages(ifile).name,', np = 1 superlu_dist (parallel processing, stand-alone application)']),tic,[MMXS_t_PETSc,flaginv_f] = PETSc_dke_yp(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t_petsc = toc;disp(['Elapsed time is ',num2str(t_petsc),' seconds.']);
+                        disp(['- ',list_of_packages(ifile).name,', np = 1 superlu_dist (parallel processing, stand-alone application)']),tic,[MMXS_t_PETSc,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t_petsc = toc;disp(['Elapsed time is ',num2str(t_petsc),' seconds.']);
                         ZMMXS_t{isim} = MMXS_t_PETSc;
                         Zname{isim} = [list_of_packages(ifile).name,'_np_1_superludist_Mloop'];
 %
@@ -167,7 +167,7 @@ if exist([luke_root,'Packages']),
                         dkeparam.PETScparam.pcmethod = '-pc_type lu';%Preconditioning method used by PETSc. '-pc_type lu' for SUPERLU or '-pc-type hypre' for HYPRE.  See PETSc documentation                
                         dkeparam.PETScparam.cloop = 0;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)                   
                         isim = isim + 1;
-                        disp(['- ',list_of_packages(ifile).name,', np = 4 superlu_dist (parallel processing, stand-alone application)']),tic,[MMXS_t_PETSc,flaginv_f] = PETSc_dke_yp(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t_petsc = toc;disp(['Elapsed time is ',num2str(t_petsc),' seconds.']);
+                        disp(['- ',list_of_packages(ifile).name,', np = 4 superlu_dist (parallel processing, stand-alone application)']),tic,[MMXS_t_PETSc,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t_petsc = toc;disp(['Elapsed time is ',num2str(t_petsc),' seconds.']);
                         ZMMXS_t{isim} = MMXS_t_PETSc;
                         Zname{isim} = [list_of_packages(ifile).name,'_np_4_superludist_Mloop'];
 
