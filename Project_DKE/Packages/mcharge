@@ -1,0 +1,64 @@
+#!/bin/csh -f
+
+#echo "---------------------------------"
+#echo "  CHOOSE THE BEST SATURNE NODES"
+
+# ufirst=1 if first 5 nodes are used, =0 else
+set ufirst = 0
+
+if ($ufirst == 1) then
+# echo "     USING THE FIRST 5 NODES"
+else
+# echo " WITHOUT USING THE FIRST 5 NODES"
+endif
+
+echo "---------------------------------"
+
+#echo "SATURNE CHARGE:"
+#echo "***************"
+#qstat -f | grep saturne | grep -v batch | grep -v inter | awk '{print $1,$4}' | sed -e 's/all.q@//g' | sed -e 's/.cad.cea.fr./ /g' | sed -e 's/.cad.cea.f./ /g' | grep -v sequenceur | sed -e 's/sequenceur@//g' | awk '{print $2,$1}' | sort | uniq | awk '{print $1,"for",$2}'
+
+qstat -f | grep saturne | grep -v batch | grep -v inter | awk '{print $1,$4}' | sed -e 's/all.q@//g' | sed -e 's/.cad.cea.fr./ /g' | sed -e 's/.cad.cea.f./ /g' | grep -v sequenceur | sed -e 's/sequenceur@//g' | awk '{print $2,$1}' | sort | uniq | grep -v NA >! .machines.tmp
+
+# Remove nodes from 1 to 5, dedicated to interactive runs
+cat .machines.tmp  | awk '$2!="saturne1" {print $0}' >! .machines.tmp0
+cat .machines.tmp0 | awk '$2!="saturne2" {print $0}' >! .machines.tmp1
+cat .machines.tmp1 | awk '$2!="saturne3" {print $0}' >! .machines.tmp2
+cat .machines.tmp2 | awk '$2!="saturne4" {print $0}' >! .machines.tmp3
+cat .machines.tmp3 | awk '$2!="saturne5" {print $0}' >! .machines.tmp4
+
+# provisoire: saturne11 marche pas!
+cat .machines.tmp4 | awk '$2!="saturne11" {print $0}' >! .machines.tmp44
+mv .machines.tmp44 .machines.tmp4
+
+cat .machines.tmp4 | awk '$2!="saturne17" {print $0}' >! .machines.tmp44
+mv .machines.tmp44 .machines.tmp4
+
+
+
+if ($ufirst == 1) then
+ mv .machines.tmp .machines
+else
+ mv .machines.tmp4 .machines
+endif
+
+cat .machines | awk '{ {i=i+int(2.5-$1) ; {print $2":"int(2.5-$1) }}}' | sed -e 's/:0/:1/g' >! .machines.tmp5
+
+mv .machines.tmp5 .machines
+
+cat .machines      | sed -e 's/-1/1/g' >! .machines.tmp6
+cat .machines.tmp6 | sed -e 's/-2/1/g' >! .machines.tmp7
+cat .machines.tmp7 | sed -e 's/-3/1/g' >! .machines.tmp6
+cat .machines.tmp6 | sed -e 's/-4/1/g' >! .machines.tmp7
+cat .machines.tmp7 | sed -e 's/-5/1/g' >! .machines.tmp6
+mv .machines.tmp6 .machines
+
+#echo "---------------------------------"
+#echo "MACHINE FILE:"
+#echo "*************"
+#cat .machines
+#echo "---------------------------------"
+
+#qstat -f | grep saturne | grep -v batch | grep -v inter | awk '{print $1,$4}' | sed -e 's/all.q@//g' | sed -e 's/.cad.cea.fr./ /g' | sed -e 's/.cad.cea.f./ /g' | grep -v sequenceur | sed -e 's/sequenceur@//g' | awk '{print $2,$1}' | sort | uniq | awk '{if ( int ( 2.5-$1 ) > 0 ) {i=i+int ( 2.5-$1 ) ; {printf "%s%s%s\n",$2,":",int ( 2.5-$1 ) }}}' >! .machines
+
+rm -f .machines.tmp*
