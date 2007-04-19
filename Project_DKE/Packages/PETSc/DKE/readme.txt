@@ -1,5 +1,8 @@
 For compiling SolverLoop_DKE_c.c, type in the current directory
 
+WARNING: if you install the PETSc package with a given name, like PETSc_dir, and want to work with LUKE, you must rename it 
+PETSc_dir_S_<compiler_name> (single processor computations) or PETSc_dir_P_<compiler_name> (multi-processor computations) AFTER ALL compilations. If it is necessary to re-compile some applications in DKE, change back to the initial name of the directory for the compilation phase, and rename the PETS_dir
+as it was before. Do separate directories for single or multiprocessor calculations.
 1) create a environment variable PETSC_DIR (setenv PETSC_DIR = <pathPETSc>)
 
 2) copy $HOME/LUKE/Project_DKE/Packages/PETSc/DKE directory into PETSC_DIR
