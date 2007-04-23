@@ -131,7 +131,9 @@ if strcmp(computer,'GLNXA64'),%Test parallel processing performances (on the clu
   return
 Dpsipsi=[0,0.1,1,10];
 tCPU = [dke_out0.time_out,dke_out01.time_out,dke_out1.time_out,dke_out10.time_out];
-tCPU1 = [dke_out10_1.time_out,dke_out10_2.time_out,dke_out10_3.time_out,dke_out10_4.time_out,dke_out10_5.time_out,dke_out10_6.time_out,dke_out10_7.time_out,dke_out10_8.time_out,dke_out10_9.time_out,dke_out10_10.time_out];
+if strcmp(computer,'GLNXA64'),%Test parallel processing performances (on the cluster only)
+    tCPU1 = [dke_out10_1.time_out,dke_out10_2.time_out,dke_out10_3.time_out,dke_out10_4.time_out,dke_out10_5.time_out,dke_out10_6.time_out,dke_out10_7.time_out,dke_out10_8.time_out,dke_out10_9.time_out,dke_out10_10.time_out];
+end
 %
 vparmin = 1/(waves{1}.rays{1}.sNpar(1)+imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
 vparmax = 1/(waves{1}.rays{1}.sNpar(1)-imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
@@ -140,9 +142,11 @@ figure(1),clf,graph1D_jd(Dpsipsi,tCPU,1,0,'D_{\psi\psi} (m^{2}/s)','CPU time (s)
 axis([0.1,10,0,300])
 savefig_dke_yp('tCPU_Dpsipsi')
 %
-figure(2),clf,graph1D_jd([1:10],tCPU1,0,0,'Number of processors)','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2),', D_{\psi\psi}  = 10 (m^{2}/s)'],NaN,'','','-','none','r',2,20,gca,0.85,0.7,0.5);
-axis([1,10,0,400])
-savefig_dke_yp('tCPUDpsipsi10_Nproc')
+if strcmp(computer,'GLNXA64'),%Test parallel processing performances (on the cluster only)
+    figure(2),clf,graph1D_jd([1:10],tCPU1,0,0,'Number of processors)','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2),', D_{\psi\psi}  = 10 (m^{2}/s)'],NaN,'','','-','none','r',2,20,gca,0.85,0.7,0.5);
+    axis([1,10,0,400])
+    savefig_dke_yp('tCPUDpsipsi10_Nproc')
+end
 %
 figure(3),clf,graph1D_jd(equilDKE.xrho,Zcurr0.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','r',2,20,gca,0.85,0.7,0.5);hold on
 graph1D_jd(equilDKE.xrho,Zcurr01.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','b',2,20,gca,0.85,0.7,0.5);hold on
