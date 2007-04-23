@@ -27,9 +27,17 @@ Z_TS = ai*sin(tv*pi/180)/1000;% reference vertical position (m)
 L = [-4:1:4];%Chord length
 R = zeros(length(mv),length(L));
 Z = zeros(length(mv),length(L));
-figure(1),
-circle([Ri/1000,0],ai/1000,1000);
-hold on
+%
+% Display Tore Supra chamber for chord arrangement
+%
+npoints = 1000;
+theta = [0:(npoints-1) 0] * 2 * pi / npoints;
+Rc = Ri/1000;
+Zc = 0;
+radius = ai/1000;
+RR = (radius * cos(theta) + Rc * ones(1,npoints+1));
+ZZ = (radius * sin(theta) + Zc * ones(1,npoints+1));
+figure(1), plot(RR,ZZ,'r-');hold on
 for chord = 1:length(mv),
 	   R(chord,:) = R_TS(chord) + L*cos(mv(chord)*pi/180);
 	   Z(chord,:) = Z_TS(chord) + L*sin(mv(chord)*pi/180);
@@ -38,6 +46,8 @@ plot(R',Z'),
 hold off
 axis('equal')
 xlabel('R(m)');ylabel('Z(m)')
+%
+% Build 
 %
 hxr.R_hxr = R_TS;% reference major radius (m)
 hxr.Z_hxr = Z_TS;% reference vertical position (m)
@@ -72,3 +82,45 @@ hxr.td_hxr = td;%type of material for the detector (BGO,CsI,NaI,Ge or CdTe) [1,m
 hxr.kdiag_hxr = kdiag;%Measured photon energy spectrum (keV) [1,k]
 %
 hxr.kphot = [20:10:180];%Photon energy in keV
+
+
+
+function [xx,yy] = circle(x,y,radius,arg4)
+% CIRCLE : Plot a circle.
+%
+% circle(x, y, radius,'c') plots a circle with specified center and radius, 
+%       in color 'c' (optional).
+% [xx,yy] = circle(x, y, radius) returns coords instead of plotting;
+%       in this case the optional fourth argument is # of points to use.
+%
+% If x, y, and radius are vectors then one circle is plotted for each element.
+%
+% John Gilbert, Xerox PARC, 1992.
+% Copyright (c) 1990-1996 by Xerox Corporation.  All rights reserved.
+% HELP COPYRIGHT for complete copyright and licensing notice.
+
+c = 'r-';
+npoints = 100;
+if nargin >= 4
+    if nargout < 1
+        c = arg4;
+    else
+        npoints = arg4;
+    end
+end
+
+% Make the arguments column vectors
+x = x(:);
+y = y(:);
+radius = radius(:);
+
+theta = [0:(npoints-1) 0] * 2 * pi / npoints;
+xx = radius * cos(theta) + x * ones(1,npoints+1);
+yy = radius * sin(theta) + y * ones(1,npoints+1);
+xx = xx';
+yy = yy';
+
+if nargout < 1
+    plot(xx,yy,c)
+end
+
