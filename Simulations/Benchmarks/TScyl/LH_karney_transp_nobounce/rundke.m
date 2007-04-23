@@ -56,11 +56,11 @@ if exist('dmumpsmex');dkeparam.invproc = -2;end
 % Dpsipsi scan (0 -> 100 m2/s)
 %
 transpfaste.Dr0 = 0;
-[Znorm0,Zcurr0,ZP0_0,dke_out0,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-disp('D=0 m2/s done');
+tic,[Znorm0,Zcurr0,ZP0_0,dke_out0,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+toc,disp('D=0 m2/s done');
 transpfaste.Dr0 = 0.1;
-[Znorm01,Zcurr01,ZP0_01,dke_out01] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-disp('D=0.1 m2/s done');
+tic,[Znorm01,Zcurr01,ZP0_01,dke_out01] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+toc,disp('D=0.1 m2/s done');
 transpfaste.Dr0 = 0.2;
 %[Znorm02,Zcurr02,ZP0_02,dke_out02] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %disp('D=0.2 m2/s done');
@@ -68,8 +68,8 @@ transpfaste.Dr0 = 0.2;
 %[Znorm05,Zcurr05,ZP0_05,dke_out05] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %disp('D=0.5 m2/s done');
 transpfaste.Dr0 = 1;
-[Znorm1,Zcurr1,ZP0_1,dke_out1] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-disp('D=1 m2/s done');
+tic,[Znorm1,Zcurr1,ZP0_1,dke_out1] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+toc,disp('D=1 m2/s done');
 %transpfaste.Dr0 = 2;
 %[Znorm2,Zcurr2,ZP0_2,dke_out2] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %disp('D=2 m2/s done');
@@ -77,11 +77,11 @@ disp('D=1 m2/s done');
 %[Znorm5,Zcurr5,ZP0_5,dke_out5] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %disp('D=5 m2/s done');
 transpfaste.Dr0 = 10;
-[Znorm10,Zcurr10,ZP0_10,dke_out10] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-disp('D=10 m2/s done');
+tic,[Znorm10,Zcurr10,ZP0_10,dke_out10] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+toc,disp('D=10 m2/s done');
 transpfaste.Dr0= 20;
-[Znorm20,Zcurr20,ZP0_20,dke_out20] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-disp('D=20 m2/s done');
+tic,[Znorm20,Zcurr20,ZP0_20,dke_out20] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+toc,disp('D=20 m2/s done');
 %[Znorm50,Zcurr50,ZP0_50,dke_out50] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %disp('D=50 m2/s done');
 %[Znorm100,Zcurr100,ZP0_100,dke_out100] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
@@ -128,6 +128,7 @@ if strcmp(computer,'GLNXA64'),%Test parallel processing performances (on the clu
    disp('Nproc = 10 done');
   end  
 %  
+  return
 Dpsipsi=[0,0.1,1,10];
 tCPU = [dke_out0.time_out,dke_out01.time_out,dke_out1.time_out,dke_out10.time_out];
 tCPU1 = [dke_out10_1.time_out,dke_out10_2.time_out,dke_out10_3.time_out,dke_out10_4.time_out,dke_out10_5.time_out,dke_out10_6.time_out,dke_out10_7.time_out,dke_out10_8.time_out,dke_out10_9.time_out,dke_out10_10.time_out];
