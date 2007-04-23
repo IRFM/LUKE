@@ -21,11 +21,21 @@ A_MUMPSMEX = MMXPC_f_t;
 B_MUMPSMEX = MMXR_t;
 %
 if job_MUMPSMEX == 1,
-   id_MUMPSMEX = initmumps;
-   id_MUMPSMEX.ICNTL(1:4) = -1;%no display during runtime
-   id_MUMPSMEX = dmumps(id_MUMPSMEX);
-   id_MUMPSMEX.JOB = job_MUMPSMEX;
-   id_MUMPSMEX = dmumps(id_MUMPSMEX,A_MUMPSMEX);% Call to mumps
+    id_MUMPSMEX = initmumps;
+    id_MUMPSMEX.ICNTL(1:4) = -1;%no display during runtime
+    id_MUMPSMEX = dmumps(id_MUMPSMEX);
+    id_MUMPSMEX.JOB = job_MUMPSMEX;
+    id_MUMPSMEX = dmumps(id_MUMPSMEX,A_MUMPSMEX);% Call to mumps
+	if isfield(dkeparam.MUMPSparam,'thresholdpivoting'),
+        if ~isempty(dkeparam.MUMPSparam.thresholdpivoting) | ~isnan(dkeparam.MUMPSparam.thresholdpivoting),
+            id_MUMPSMEX.CNTL(1) = dkeparam.MUMPSparam.thresholdpivoting;%Relative threshold for numerical pivoting in the MUMPS partial LU decomposition (default MUMPS = 1e-2 for non-symmetric matrices)
+        end
+    end
+	if isfield(dkeparam.MUMPSparam,'precinv'),
+        if ~isempty(dkeparam.MUMPSparam.precinv) | ~isnan(dkeparam.MUMPSparam.precinv),
+            id_MUMPSMEX.CNTL(2) = dkeparam.MUMPSparam.precinv;%Drop tolerance for the MUMPS partial LU decomposition
+        end
+    end    
 elseif job_MUMPSMEX == 2,
    id_MUMPSMEX.JOB = job_MUMPSMEX;
    id_MUMPSMEX = dmumps(id_MUMPSMEX,A_MUMPSMEX);% Call to mumps
@@ -34,7 +44,7 @@ elseif job_MUMPSMEX == 3 | job_MUMPSMEX == 6,
    id_MUMPSMEX.RHS = full(B_MUMPSMEX);
    id_MUMPSMEX = dmumps(id_MUMPSMEX,A_MUMPSMEX);% Call to mumps
    if(norm(A_MUMPSMEX*id_MUMPSMEX.SOL - id_MUMPSMEX.RHS,'inf') > sqrt(eps))
-	  warning('Precision of the matrix inversion may not be OK (MUMPSMEX)');
+	  warning('Precision of the matrix inversion may not be OK (MUMPSMEX). Try to increase the dkeparam.MUMPSparam.thresholdpivoting parameters (see MUMPS documentation).');
    end
    X_MUMPSMEX = id_MUMPSMEX.SOL;
    flag_MUMPSMEX = 0;
