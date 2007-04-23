@@ -86,6 +86,8 @@ dkeparam.ludroptol = 1e-5;%Drop tolerance for the built-in MatLab partial LU dec
 dkeparam.mlmaxitinv = 4;%Maximum number of iterations for iterative built-in MatLab matrix inversion method (between 1 and 20 usualy, if empty, mlmaxitinv = min(matrixdim,20). See matlab documentation.
 dkeparam.mlprecinv = 1e-5;%Accuracy for the MatLab build-in matrix inversion.
 dkeparam.MUMPSparam.nproc = 1;%number of processor used by MUMPS (depends of the computer framework). Default is 1
+dkeparam.MUMPSparam.thresholdpivoting = '';%Relative threshold for numerical pivoting in the MUMPS partial LU decomposition (default MUMPS = 1e-2: NaN or empty or field not existing). Increasing this parameter will reduce sparcity. Less than 1.
+dkeparam.MUMPSparam.precinv = '';%Accuracy for the MUMPS matrix inversion.(default MUMPS: NaN or empty or field not existing). Only for the solve phase.
 dkeparam.PETScparam.nproc = 1;%number of processor used by PETSc (depends of the computer framework). Default is 1
 dkeparam.PETScparam.matrixtype = ' ';%Matrix type used by PETSc. For SUPERLU use '-matload_type superlu_dist' otherwise ' '. See PETSc documentation
 dkeparam.PETScparam.kspmethod = ' ';%KSP method used by PETSc. '-ksp_type preonly': no iteration, direct matrix solve. Otherwise '-ksp_type bicg' or '-ksp_type bcgs'  for example. See PETSc documentation
