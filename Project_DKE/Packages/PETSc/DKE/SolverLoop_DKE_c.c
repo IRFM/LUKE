@@ -9,6 +9,8 @@ static char help[] = "Solver loop";
 int main(int argc, char **args){
 PetscErrorCode ierr;
  ierr=PetscInitialize(&argc,&args,(char *)0,help);CHKERRQ(ierr);
+PetscMPIInt rank;
+MPI_Comm_rank(PETSC_COMM_WORLD,&rank);
 DOUBLE Pi=4.0*atan(1.0);
 int it_f,ir;
 int i,j,k;
@@ -79,10 +81,8 @@ strcpy(buff,dir_in);strcat(buff,"");
 
 /*fprintf(stdout,"Read nmhu\n");*/strcpy(buff,dir_in);strcat(buff,"nmhu");ReadBinaryIntArray_DKE(buff,&pnmhu);
 int nmhu=(*pnmhu).vals[0];
-/*printf("nmhu = %i\n",nmhu);*/
 /*fprintf(stdout,"Read npn\n");*/strcpy(buff,dir_in);strcat(buff,"npn");ReadBinaryIntArray_DKE(buff,&pnpn);
 int npn=(*pnpn).vals[0];
-/*printf("npn = %i\n",npn);*/
 /*fprintf(stdout,"Read ns_f\n");*/strcpy(buff,dir_in);strcat(buff,"ns_f");ReadBinaryIntArray_DKE(buff,&(pns_f));
 int* ns_f=(*pns_f).vals;
 /*fprintf(stdout,"Read nr\n");*/strcpy(buff,dir_in);strcat(buff,"nr");ReadBinaryIntArray_DKE(buff,&(pnr));
@@ -162,7 +162,6 @@ struct Tensor I1,I2;
 
 /*fprintf(stdout,"Readf1\n");*//*ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/f1",&f1);*/
 /*fprintf(stdout,"Read dpn\n");*/strcpy(buff,dir_in);strcat(buff,"dpn");ReadBinary_DKE(buff,&dpn);
-/*printf("dpn = %f\n",dpn.vals[0]);*/
 /*fprintf(stdout,"Read xpn\n");*/strcpy(buff,dir_in);strcat(buff,"xpn");ReadBinary_DKE(buff,&xpn);
 /*fprintf(stdout,"Read xpn2\n");*/strcpy(buff,dir_in);strcat(buff,"xpn2");ReadBinary_DKE(buff,&xpn2);
 /*fprintf(stdout,"Read xpn3\n");*/strcpy(buff,dir_in);strcat(buff,"xpn3");ReadBinary_DKE(buff,&xpn3);
@@ -179,9 +178,6 @@ struct Tensor I1,I2;
 /*fprintf(stdout,"Read sigma\n");*/strcpy(buff,dir_in);strcat(buff,"sigma");ReadBinary_DKE(buff,&sigma);
 /*fprintf(stdout,"Read z\n");*/strcpy(buff,dir_in);strcat(buff,"z");ReadBinary_DKE(buff,&z);
 /*fprintf(stdout,"Read z2\n");*/strcpy(buff,dir_in);strcat(buff,"z2");ReadBinary_DKE(buff,&z2);
-
-
-
 /*fprintf(stdout,"Read xJ1\n");*/strcpy(buff,dir_in);strcat(buff,"xJ1");ReadBinary_DKE(buff,&xJ1);
 /*fprintf(stdout,"Read xJ2\n");*/strcpy(buff,dir_in);strcat(buff,"xJ2");ReadBinary_DKE(buff,&xJ2);
 /*fprintf(stdout,"Read xJ3\n");*/strcpy(buff,dir_in);strcat(buff,"xJ3");ReadBinary_DKE(buff,&xJ3);
@@ -190,24 +186,22 @@ struct Tensor I1,I2;
 /*fprintf(stdout,"Read J2\n");*/strcpy(buff,dir_in);strcat(buff,"J2");ReadBinary_DKE(buff,&J2);
 /*fprintf(stdout,"Read J3\n");*/strcpy(buff,dir_in);strcat(buff,"J3");ReadBinary_DKE(buff,&J3);
 /*fprintf(stdout,"Read J4\n");*/strcpy(buff,dir_in);strcat(buff,"J4");ReadBinary_DKE(buff,&J4);
-
-
 /*fprintf(stdout,"Read xne_norm\n");*/strcpy(buff,dir_in);strcat(buff,"xne_norm");ReadBinary_DKE(buff,&xne_norm);
 /*fprintf(stdout,"Read xTe_norm\n");*/strcpy(buff,dir_in);strcat(buff,"xTe_norm");ReadBinary_DKE(buff,&xTe_norm);
 /*fprintf(stdout,"Read betath_ref\n");*/strcpy(buff,dir_in);strcat(buff,"betath_ref");ReadBinary_DKE(buff,&betath_ref);
-/*printf("END READ\n");*/
+if (rank==0){
+printf("END READ\n");
+}
 /*END READ*/
-/*printf("YP**************0\n");*/
-
-
 
 sdim=malloc(2*sizeof(int));
 /*Intermediate variables*/
 struct Tensor XI_t,MMXf0_t,MMXsource_t,MMXIpn2_t,Xf1;
 int sizeMMX;
 /*                      */
-
-/*printf("INITIALIZING VARIABLES\n");*/
+if (rank==0){
+printf("INITIALIZING VARIABLES\n");
+}
 /*Begin Fokker_Planck solver loop*/
 
 sdim[0]=nr;
@@ -228,7 +222,7 @@ Tensor_Fill(&prec_curr,0.0);
 Tensor_Fill(&prec_normf,0.0);
 Tensor_Fill(&residu_f,1.0);
 Tensor_Fill(&prec_residu_f,1.0);
-Tensor_Save("normf1",normf1);
+
 for(ir=0;ir<nr;ir++){
         sdim[0]=XXf0.sizedim[0];
 	sdim[1]=XXf0.sizedim[1];
@@ -241,7 +235,7 @@ for(ir=0;ir<nr;ir++){
 	integral_dke_jd(dmhu,SXXfinit,2,&B);
 	/*printf("SXXfinit=%i %i\n",SXXfinit.sizedim[0],SXXf0.sizedim[1]);
 	printf("Bdims=%i %i\n",B.sizedim[0],B.sizedim[1]);*/
-	/*fprintf(stdout,"Read pn2\n");ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/pn2",&pn2);*/
+	/*fprintf(stdout,"Read pn2\n");ReadBinary_DKE("/cgc_data/zineb/data/LUKE/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/pn2",&pn2);*/
 	/*printf("pn2dims=%i %i\n",pn2.sizedim[0],pn2.sizedim[1]);*/
 	product(pn2,B,&B);
 	/*printf("Bdims=%i %i\n",B.sizedim[0],B.sizedim[1]);*/
@@ -258,7 +252,7 @@ for(ir=0;ir<nr;ir++){
         curr0.vals[ir+0*curr0.sizedim[0]]=2.0*Pi*D.vals[0]*xne_norm.vals[ir]/normf0.vals[ir+normf0.sizedim[0]*0];
 
 }
-/* printf("END INITIALIZATION\n");*/
+if (rank==0){printf("END INITIALIZATION\n");}
 
 /*PETSC variables*/
 Vec x,b;
@@ -278,26 +272,21 @@ Vec xseq;
 /*Initialize PETSc environment*/
 /*                            */
 
-/* printf("SETTING UP PETSc OBJECTS\n");*/
+if (rank==0){printf("SETTING UP PETSc OBJECTS\n");}
 /*LOAD SYSTEM MATRIX AS PETSC OBJECT MAT*/
 strcpy(buff,dir_in);strcat(buff,"PMMXPC_f_t");
 ierr=PetscViewerBinaryOpen(PETSC_COMM_WORLD,buff,FILE_MODE_READ,&fd);CHKERRQ(ierr);
 ierr = MatLoad(fd,MATAIJ,&PMMXPC_f_t);CHKERRQ(ierr);
 if (flg){ierr = PetscViewerDestroy(fd);CHKERRQ(ierr);}
-ierr=KSPCreate(PETSC_COMM_WORLD,&ksp);CHKERRQ(ierr);
-  ierr=KSPSetOperators(ksp,PMMXPC_f_t,PMMXPC_f_t,SAME_PRECONDITIONER);CHKERRQ(ierr);
-
+ierr=KSPCreate(PETSC_COMM_WORLD,&ksp);CHKERRQ(ierr); 
+ierr=KSPSetOperators(ksp,PMMXPC_f_t,PMMXPC_f_t,SAME_PRECONDITIONER);CHKERRQ(ierr);
   ierr=KSPSetFromOptions(ksp);CHKERRQ(ierr);
   ierr=KSPGetPC(ksp,&pc);CHKERRQ(ierr);
   ierr=PCSetFromOptions(pc);CHKERRQ(ierr);
-  ierr=KSPSetOperators(ksp,PMMXPC_f_t,PMMXPC_f_t,SAME_PRECONDITIONER);CHKERRQ(ierr);
+if (rank==0){printf("END SETUP\n");}
 
-/* printf("END SETUP\n");*/
-
-/*nit_f=3;*/
-/* printf("BEGIN LOOP\n");*/
+if (rank==0){printf("BEGIN LOOP\n");}
 for(it_f=1;it_f<=nit_f;it_f++){
-    /*Control iterations depending on error. ADD CONDITIONS OVER NORM */
   
   sum3=0;
   sum4=0.0; 
@@ -305,10 +294,14 @@ for(it_f=1;it_f<=nit_f;it_f++){
   sum3+=(residu_f.vals[i+(it_f-1)*residu_f.sizedim[0]]>=prec0_f);
   sum4+=(prec_residu_f.vals[i+(it_f-1)*prec_residu_f.sizedim[0]]);
   }
-  
-    if(sum3>=1 /*&& sum4 >=1.0*//*convergence condition*/)
+  /*printf("prec=%g\n",prec0_f);
+  printf("sum3=%i\n",sum3);printf("sum4=%g\n",sum4);*/
+    if(sum3>=1)/*convergence condition)*/
 {
-      /*  printf("RHS COMPUTATION\n");*/
+/*for(i=0;i<residu_f.sizedim[0];i++){
+ printf("residu=%g ",residu_f.vals[i+(it_f-1)*residu_f.sizedim[0]]);
+ }*/
+       if (rank==0){printf("RHS COMPUTATION\n");}
        /*fprintf(stdout,"nrvals=%i\n",nr);*/
        /*Allocation for MMXf0_t,MMXsource_t,MMXIpn2_t*/
        sizeMMX=0;
@@ -349,14 +342,7 @@ XI_t.vals[i+j*XI_t.sizedim[0]]=XXI.vals[i+k*XXI.sizedim[0]+ir*XXI.sizedim[0]*XXI
                 j++;
 	     }
           } 
-          /*for(i=0;i<XI_t.sizedim[0];i++){
-              for(j=0;j<XI_t.sizedim[1];j++){k=j;
-	         while(Zmask_f0_t[ir].vals[k]==0 && k<Zmask_f0_t[ir].size){ 
-		          k++;
-		       }		       
-                       XI_t.vals[i+j*XI_t.sizedim[0]]=XXI.vals[i+k*XXI.sizedim[0]+ir*XXI.sizedim[0]*XXI.sizedim[1]];
-	      }
-           }*/
+         
            /*printf("XI_t done\n");*/
 	   if(boundary_mode_f>0){
               for(i=0;i<boundary_mode_f;i++){
@@ -383,7 +369,7 @@ SXXf02.vals[i+j*SXXf02.sizedim[0]]=XXf0.vals[i+k*XXf0.sizedim[0]+ir*XXf0.sizedim
 	   
 	   /*printf("SXXf02 done\n");*/
 	  
-/*Tensor_Save("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_output/SXXf02",SXXf02);*/
+/*Tensor_Save("/cgc_data/zineb/data/LUKE/Packages/petsc-2.3.2-p8/DKE/DKESolver_output/SXXf02",SXXf02);*/
 	   
            Tensor_Transpose(&SXXf02);
 	  
@@ -468,7 +454,6 @@ XI_t.vals[i+j*XI_t.sizedim[0]]=XXI.vals[i+k*XXI.sizedim[0]+(nr-1)*XXI.sizedim[0]
 	           }
                 }
 	        
-		Scalar_Tensor_product(-1.0,XI_t,&XI_t);/*Weird sign problem for XI_t*/
 		
 	   
 	        sdim[0]=XXf0.sizedim[0];
@@ -487,7 +472,7 @@ SXXf02.vals[i+j*SXXf02.sizedim[0]]=XXf0.vals[i+k*XXf0.sizedim[0]+(nr-1)*XXf0.siz
 		
 	
                 Tensor_Transpose(&SXXf02);
-/*Tensor_Save("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_output/SXXf02test3",SXXf02);*/
+/*Tensor_Save("/cgc_data/zineb/data/LUKE/Packages/petsc-2.3.2-p8/DKE/DKESolver_output/SXXf02test3",SXXf02);*/
 			        
 	        for(i=0;i<SXXf02.size;i++){
                     MMXf0_t.vals[i+i0]=SXXf02.vals[i];
@@ -540,14 +525,11 @@ printf("MMXsource.size=%i=========================================\n",MMXsource_
   }/*end if(1)*/
        
        else {
-      /*    fprintf(stdout,"else\n");*/
+          fprintf(stdout,"else\n");
        
           /*Declaration and allocation of Xmask_r_edge_t*/      
           sdim[0]=Xmask_r_edge.sizedim[0];
-		  /*YP error ?????**********************/
-		  /*sdim[1]==Zmask_f0_t[nr-1].size;*/
-          sdim[1]=Zmask_f0_t[nr-1].size;
-		  /*YP error ?????**********************/
+          sdim[1]==Zmask_f0_t[nr-1].size;
           Tensor_Create(2,sdim,&Xmask_r_edge_t);
        
            sdim[0]=XXf0.sizedim[0];
@@ -605,10 +587,10 @@ printf("MMXsource.size=%i=========================================\n",MMXsource_
      
  /*SAVES===================================================================*/
 
-/*Tensor_Save("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_output/XI_t_test",XI_t);
-Tensor_Save("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_output/MMXf0_t_test",MMXf0_t);
-Tensor_Save("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_output/MMXsource_t_test",MMXsource_t);
-Tensor_Save("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_output/MMXIpn2_t_test",MMXIpn2_t);*/
+/*Tensor_Save("/cgc_data/zineb/data/LUKE/Packages/petsc-2.3.2-p8/DKE/DKESolver_output/XI_t_test",XI_t);
+Tensor_Save("/cgc_data/zineb/data/LUKE/Packages/petsc-2.3.2-p8/DKE/DKESolver_output/MMXf0_t_test",MMXf0_t);
+Tensor_Save("/cgc_data/zineb/data/LUKE/Packages/petsc-2.3.2-p8/DKE/DKESolver_output/MMXsource_t_test",MMXsource_t);
+Tensor_Save("/cgc_data/zineb/data/LUKE/Packages/petsc-2.3.2-p8/DKE/DKESolver_output/MMXIpn2_t_test",MMXIpn2_t);*/
 
  /*Tensor_Save("XI_t_test",XI_t);
  Tensor_Save("MMXf0_t_test",MMXf0_t);
@@ -635,13 +617,13 @@ Tensor_Save("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver
 	free(BP.sizedim);free(BP.vals);
 	free(BR.sizedim);free(BR.vals);
 	
-/* 	printf("RHS COMPUTED\n");*/
+	if (rank==0){printf("RHS COMPUTED\n");}
 
-/*Tensor_Save("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_output/MMXq_tc",MMXq_t);
-Tensor_Save("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_output/MMXR_tc",MMXR_t);*/
+/*Tensor_Save("/cgc_data/zineb/data/LUKE/Packages/petsc-2.3.2-p8/DKE/DKESolver_output/MMXq_tc",MMXq_t);
+Tensor_Save("/cgc_data/zineb/data/LUKE/Packages/petsc-2.3.2-p8/DKE/DKESolver_output/MMXR_tc",MMXR_t);*/
 	
   /*Solving step.Computation of MMS_t*/
-/*   printf("CREATING PETSc PARALLEL OBJECTS\n");*/
+  if (rank==0){printf("CREATING PETSc PARALLEL OBJECTS\n");}
   ierr=VecCreate(PETSC_COMM_WORLD,&b);CHKERRQ(ierr);
   ierr=VecSetSizes(b,PETSC_DECIDE,MMXR_t.size);CHKERRQ(ierr);
   ierr=VecSetType(b,VECMPI);CHKERRQ(ierr);
@@ -656,10 +638,10 @@ Tensor_Save("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver
   ierr=VecDuplicate(b,&x);CHKERRQ(ierr);
   ierr=VecCopy(b,x);CHKERRQ(ierr);
   
-/*   printf("SOLVING\n");*/
+  if (rank==0){printf("SOLVING\n");}
   ierr=KSPSolve(ksp,b,x);CHKERRQ(ierr);
   
- /*  printf("RETRIEVING SOLUTION\n");*/
+  if (rank==0){printf("RETRIEVING SOLUTION\n");}
   VecScatterCreateToAll(x,&vecscat,&xseq);
   VecScatterBegin(x,xseq,INSERT_VALUES,SCATTER_FORWARD,vecscat);
   VecScatterEnd(x,xseq,INSERT_VALUES,SCATTER_FORWARD,vecscat);
@@ -675,8 +657,10 @@ Tensor_Save("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver
   VecDestroy(b);VecDestroy(x);VecDestroy(xseq);
   
   free(ix);free(y);
-/*Tensor_Save("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_output/MMXS_tc",MMXS_t);*/
-  
+if(it_f==1){
+strcpy(buff,dir_out);strcat(buff,"MMXS_tLU");Tensor_Save(buff,MMXS_t);
+/*Tensor_Save("/cgc_data/zineb/data/LUKE/Packages/petsc-2.3.2-p8/DKE/DKESolver_output/MMXS_tLU",MMXS_t);*/
+} 
   
   
   /*Computation of MMXf1_t=MMXf0_t+MMXS_t*/
@@ -743,7 +727,7 @@ Xf1.vals[i+Xf1.sizedim[0]*(j+nmhu/2-ns_f[ir])]=Xf1_t.vals[i+Xf1.sizedim[0]*(nmhu
 		
 	/*printf("SXXF0=%i %i\n",SXXf0.sizedim[0],SXXf0.sizedim[1]);
 	printf("Bdims=%i %i\n",B.sizedim[0],B.sizedim[1]);*/
-	/*fprintf(stdout,"Read pn2\n");ReadBinary_DKE("/Users/Yves/CEA/Projets/LUKE/Packages/petsc-2.3.2-p10/DKE/DKESolver_variables/pn2",&pn2);*/
+	/*fprintf(stdout,"Read pn2\n");ReadBinary_DKE("/cgc_data/zineb/data/LUKE/Packages/petsc-2.3.2-p8/DKE/DKESolver_variables/pn2",&pn2);*/
 	product(pn2,B,&B);
 	Tensor_Transpose(&B);
 	integral_dke_jd(dpn,B,1,&C);	
@@ -879,12 +863,13 @@ XXI.vals[i+j*XXI.sizedim[0]+ir*XXI.sizedim[0]*XXI.sizedim[1]]=XI.vals[i+j*XI.siz
 	   }
 
 	      /*printf("%i!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n",it_f);*/
-	      /*free(f1.vals);free(f1.sizedim);*/	      
+	      free(f1.vals);free(f1.sizedim);      
 	      free(B.vals);free(B.sizedim);
 	      free(I1.vals);free(I1.sizedim);
 	      free(I2.vals);free(I2.sizedim);
 	      free(XI.vals);free(XI.sizedim);
-	      
+	      free(SXXfM.vals);free(SXXfM.sizedim);
+	      free(SXXRlambda_b_p1p1.vals);free(SXXRlambda_b_p1p1.sizedim);
 	      /*free(C.vals);free(C.sizedim);*/
 	      
 	}
@@ -928,54 +913,57 @@ XXf0.vals[i+j*XXf0.sizedim[0]+ir*XXf0.sizedim[0]*XXf0.sizedim[1]]=Xf1.vals[i+j*X
        
       free(Xf1_t.sizedim);free(Xf1_t.vals);free(Xf1.sizedim);free(Xf1.vals);    
         }
+	
+  free(MMXf0_t.vals); free(MMXf0_t.sizedim);    
+  free(MMXsource_t.vals); free(MMXsource_t.sizedim);      
+  free(MMXIpn2_t.vals);free(MMXIpn2_t.sizedim);
+  
  }
     else{
     sum1=0.0;
        for(i=0;i<prec_residu_f.sizedim[0];i++){
           sum1+=prec_residu_f.vals[i+(it_f-1)*prec_residu_f.sizedim[0]];
        }
-       if(sum1<prec0_f){printf("WARNING: stationnary residu but convergence not achieved for f0 after %i iterations\n",it_f);
+      if(sum1<prec0_f){if (rank==0){printf("WARNING: stationnary residu but convergence not achieved for f0 after %i iterations\n",it_f);}
        }
        sum2=0;
        for(i=0;i<residu_f.sizedim[0];i++){
           sum2+=(residu_f.vals[i+(it_f-1)*residu_f.sizedim[0]]>=prec0_f);
        }
         if(sum2==0 && display_mode>0){
-	   printf("Successfull convergence achieved for f0 after %i iterations\n",it_f-2);
+	  if (rank==0){printf("Successfull convergence achieved for f0 after %i iterations\n",it_f-2);}
 	}  
 	break;     
     }
     
     if(it_f==nit_f){
-       printf("WARNING: convergence not achieved for f0 after %i iterations.Time step too small",nit_f);
+      if (rank==0){printf("WARNING: convergence not achieved for f0 after %i iterations.Time step too small",nit_f);}
     }
+   
 strcpy(buff,dir_out);strcat(buff,"XXf0");Tensor_Save(buff,XXf0);
- 
-  
-/*free(XI_t.sizedim);free(XI_t.vals);
-free(MMXf0_t.vals);free(MMXf0_t.sizedim);
-free(MMXsource_t.vals);free(MMXsource_t.sizedim);
-free(MMXIpn2_t.vals);free(MMXIpn2_t.sizedim);
-free(A.vals);free(A.sizedim);
-free(f1.vals);free(f1.sizedim);*/
+strcpy(buff,dir_out);strcat(buff,"residu_f1");Tensor_Save(buff,residu_f);
+
+
 
 
  }	
  
-/*free(normf0.sizedim);free(normf0.vals);*/
-/*free(normf1.sizedim);free(normf1.vals);*/
-/*free(curr0.sizedim);free(curr0.vals);*/
-/*free(curr1.sizedim);free(curr1.vals);
+/*free(normf0.sizedim);free(normf0.vals);
+free(normf1.sizedim);free(normf1.vals);
+free(curr0.sizedim);free(curr0.vals);
+free(curr1.sizedim);free(curr1.vals);
 free(prec_curr.sizedim);free(prec_curr.vals);
 free(prec_normf.sizedim);free(prec_normf.vals);
 free(residu_f.sizedim);free(residu_f.vals);
 free(prec_residu_f.sizedim);free(prec_residu_f.vals);*/
 
 /*FREE AND SAVES*/
-/* printf("FREEING MEMORY\n");*/
+printf("FREEING MEMORY\n");
 KSPDestroy(ksp);
 
-/*free(XXI.vals);free(XXf0.vals);free(XXsinksource.vals);
+/*free(XXI.vals);free(XXf0.vals);
+free(XXI.sizedim);free(XXf0.sizedim);
+free(XXsinksource.vals);
 free(dpn.vals);
  free(xpn.vals);free(xpn2.vals);free(xpn3.vals);
  free(masku.vals);free(maskl.vals);
@@ -986,7 +974,19 @@ free(dpn.vals);
  free(sigma.vals);free(gamma.vals);
  free(xJ1.vals);free(xJ2.vals);free(xJ3.vals);free(xJ4.vals);
  free(J1.vals);free(J2.vals);free(J3.vals);free(J4.vals);
- free(xTe_norm.vals);free(betath_ref.vals);*/
+ free(xTe_norm.vals);free(betath_ref.vals);
+free(XXsinksource.sizedim);
+free(dpn.sizedim);
+ free(xpn.sizedim);free(xpn2.sizedim);free(xpn3.sizedim);
+ free(masku.sizedim);free(maskl.sizedim);
+ free(xsigma.sizedim);free(xgamma.sizedim);
+ free(xz.sizedim);free(xz2.sizedim);
+ free(z.sizedim);free(z2.sizedim);
+ free(pn.sizedim);free(pn2.sizedim);free(pn3.sizedim);
+ free(sigma.sizedim);free(gamma.sizedim);
+ free(xJ1.sizedim);free(xJ2.sizedim);free(xJ3.sizedim);free(xJ4.sizedim);
+ free(J1.sizedim);free(J2.sizedim);free(J3.sizedim);free(J4.sizedim);
+ free(xTe_norm.sizedim);free(betath_ref.sizedim);*/
  
 
 /*free(index.vals);free(index.sizedim);*/
@@ -999,9 +999,7 @@ Tensor_Save("prec_curr",prec_curr);
 Tensor_Save("residu_f",residu_f);
 Tensor_Save("prec_residu_f",prec_residu_f);*/
 
-/*ierr=PetscFinalize();CHKERRQ(ierr);*/
+ierr=PetscFinalize();CHKERRQ(ierr);
 
 }
-
-
     
