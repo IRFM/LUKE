@@ -19,7 +19,7 @@ function [nproc] = nproc_dke_yp(display_mode,param,dkepath);
 [status,message_net] = unix('uname -n');%Network name of the machine
 %
 if status == 0,
-    if strfind(message_proc,'powerpc')>0 & strfind(message_net,'peysson')>0,%Personal computer of Yves Peysson   
+    if (strfind(message_proc,'powerpc')>0 & strfind(message_net,'peysson')>0) | strfind(message_proc,'unknown'),%Personal computer of Yves Peysson   
         nproc = 1;
     elseif strfind(message_proc,'x86_64')>0 & strfind(message_net,'saturne')>0,%SATURNE cluster @ CEA-DRFC     
         nproc = nproc_saturne_CEA_DRFC(display_mode,param,dkepath);
