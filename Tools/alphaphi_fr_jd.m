@@ -47,16 +47,69 @@ xbeta = xbeta(:).';
 xNpar = xNpar(:).';
 xNperp = xNperp(:).';
 %
-xmask = ~isnan(xa) & ~isnan(xb) & ~isnan(xbeta) & ~isnan(xNpar) & ~isnan(xNperp) & ~isnan(sum(xepol_pmz));
-%
-nx = length(xa);
-%
-if size(xepol_pmz) == [nx,3],
-    xepol_pmz = xepol_pmz.';
+if size(xepol_pmz,2) == 3,
+    if size(xepol_pmz,1) == 3,
+        warning('Dimension of xepol_pmz is ambiguous');
+    else
+        xepol_pmz = xepol_pmz.';
+    end
 end
-if length(xb) ~= nx | length(xbeta) ~= nx | length(xNpar) ~= nx | length(xNperp) ~= nx | size(xepol_pmz) ~= [3,nx] | length(n) ~= 1,
-    error('Input dimensions mismatch')
+%
+nx = max([length(xa),length(xb),length(xbeta),length(xNpar),length(xNperp),size(xepol_pmz,2)]);
+%
+if length(xa) ~= nx,
+    if length(xa) == 1,
+        xa = xa*ones(1,nx);
+    else
+        error('Argument dimension mismatch')
+    end
 end
+%
+if length(xb) ~= nx,
+    if length(xb) == 1,
+        xb = xb*ones(1,nx);
+    else
+        error('Argument dimension mismatch')
+    end
+end
+%
+if length(xbeta) ~= nx,
+    if length(xbeta) == 1,
+        xbeta = xbeta*ones(1,nx);
+    else
+        error('Argument dimension mismatch')
+    end
+end
+%
+if length(xNpar) ~= nx,
+    if length(xNpar) == 1,
+        xNpar = xNpar*ones(1,nx);
+    else
+        error('Argument dimension mismatch')
+    end
+end
+%
+if length(xNperp) ~= nx,
+    if length(xNperp) == 1,
+        xNperp = xNperp*ones(1,nx);
+    else
+        error('Argument dimension mismatch')
+    end
+end
+%
+if size(xepol_pmz,2) ~= nx,
+    if size(xepol_pmz,2) == 1,
+        xepol_pmz = xepol_pmz*ones(1,nx);
+    else
+        error('Argument dimension mismatch')
+    end
+end
+%
+if size(xepol_pmz,1) ~= 3,
+    error('Argument dimension mismatch')
+end
+%
+xmask = ~isnan(xa) & ~isnan(xb) & ~isnan(xbeta) & ~isnan(xNpar) & ~isnan(xNperp) & ~isnan(sum(xepol_pmz,1));
 %
 xyn = xb*n;
 xslperp = xNperp.*xbeta./xb;
