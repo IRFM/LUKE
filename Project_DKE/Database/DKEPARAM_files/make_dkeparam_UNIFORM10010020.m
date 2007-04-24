@@ -73,7 +73,7 @@ dkeparam.nit_g = 50;%Maximum number of iterations for g
 %
 dkeparam.dtn = 10000;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
 %
-dkeparam.invproc = -2;%Iterative matrix inversion methods
+dkeparam.invproc = 1;%Iterative matrix inversion methods
 % (3) Matlab built-in qmr iterative method (MatLab built-in partial LU factorization used)
 % (2) Matlab built-in bicg iterative method (MatLab built-in partial LU factorization used) 
 % (1) Matlab built-in cgs iterative method (MatLab built-in partial LU factorizsation used)
