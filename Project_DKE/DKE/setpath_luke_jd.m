@@ -49,10 +49,10 @@ addpath([luke_root,'Project_DKE/DKE']);
 % Path for external packages
 %
 if nargin >= 2, 
-    if isfield(dkepath.MUMPS,'mex'),
+    if isfield(dkepath,'MUMPS') & isfield(dkepath.MUMPS,'mex'),
         addpath(dkepath.MUMPS.mex);
     end
-    if isfield(dkepath.SUPERLU,'mex'),
+    if isfield(dkepath,'SUPERLU') & isfield(dkepath.SUPERLU,'mex'),
         addpath(dkepath.SUPERLU.mex);
     end
 end
