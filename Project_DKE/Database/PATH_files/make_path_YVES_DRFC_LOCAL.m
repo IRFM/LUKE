@@ -14,7 +14,7 @@ path_root = '/home/sccp/gsem/peysson/LUKE/';
 %
 dkepath.path_id = path_id;
 dkepath.computer = 'GLNXA64';%machine type and supported OS
-dkepath.temppathroot = '/scratch';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+dkepath.temppathroot = '/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 dkepath.mex = [path_root,'Project_DKE/MEX'];
 dkepath.luke_root = path_root;
 %
