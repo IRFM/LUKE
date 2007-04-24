@@ -106,7 +106,7 @@ if exist('flag_path','var'),%Paths
     %
     % set temp path
     %
-    dkepath.temppath = [dkepath.temppathroot,filesep,timeid_jd(clock)];
+    dkepath.temppath = [dkepath.temppathroot,timeid_jd(clock)];
     %
     % Set path for Project_DKE
     %
