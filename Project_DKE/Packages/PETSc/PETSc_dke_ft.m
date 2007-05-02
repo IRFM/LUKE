@@ -73,7 +73,7 @@ pcmethod = PETScparam.pcmethod;
 %
 % Computer management
 %
-%nproc_dke_yp(display_mode,PETScparam,dkepath);
+nproc = nproc_dke_yp(display_mode,PETScparam,dkepath);
 %
 % Run PETSc on N processors (if nproc > 1)
 %     - np: specifies number of processors to run on. See mpirun options.
