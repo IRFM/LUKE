@@ -18,14 +18,14 @@ dkepath.temppathroot = '/scratch/';%Absolute root directory path adress where te
 dkepath.mex = [path_root,'Project_DKE/MEX'];
 dkepath.luke_root = path_root;
 %
-dkepath.MUMPS.par = [path_root,'Packages/MUMPS_4.6.4_P_pgf/dke'];%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
-dkepath.MUMPS.seq = [path_root,'Packages/MUMPS_4.6.4_S_pgf/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
-dkepath.MUMPS.mex = [path_root,'Packages/MUMPS_4.6.4_S_pgf/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.MUMPS.par = [path_root,'Packages/Bin/MUMPS/MUMPS_4.6.4_P_mpichpgf/dke'];%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
+dkepath.MUMPS.seq = [path_root,'Packages/Bin/MUMPS/MUMPS_4.6.4_S_pgf/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
+dkepath.MUMPS.mex = [path_root,'Packages/Bin/MUMPS/MUMPS_4.6.4_S_pgf/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
 %
-dkepath.PETSc.par = [path_root,'Packages/petsc-2.3.2-p8_P_pgf/DKE'];%Where PETSc matrix solver is stored (stand-alone application for parallel processing)
+dkepath.PETSc.par = [path_root,'Packages/Bin/PETSC/petsc-2.3.2-p8_P_mpichpgf/DKE'];%Where PETSc matrix solver is stored (stand-alone application for parallel processing)
 %dkepath.PETSc.seq = [path_root,''];%Where PETSc matrix solver is stored (stand-alone application for sequential processing)
 %dkepath.PETSc.mex = [path_root,''];%Where PETSc matrix solver is stored (MEX function)
 %
-dkepath.SUPERLU.mex = [path_root,'Packages/SuperLU_3.0/MATLAB'];%Where SUPERLU matrix solver is stored (MEX function)
+dkepath.SUPERLU.mex = [path_root,'Packages/Bin/SUPERLU/SuperLU_3.0-pgcc/MATLAB'];%Where SUPERLU matrix solver is stored (MEX function)
 %
 eval(['save PATH_',path_id ,'.mat dkepath']);
