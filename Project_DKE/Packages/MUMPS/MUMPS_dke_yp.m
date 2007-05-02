@@ -56,7 +56,7 @@ nproc = nproc_dke_yp(display_mode,MUMPSparam,dkepath);
 if nproc > 1,%Parallel processing is invoked
 	if isfield(dkepath.MUMPS,'par'),
         if display_mode >= 1,info_dke_yp(2,'Matrix inversion by MUMPS solver - parallel processing -');end
-        [flag,text] = unix(['mpirun -np ',int2str(nproc),' -machinefile .machines ',dkepath.MUMPS.par,'/mumpsdke']);
+        [flag,text] = unix([dkepath.MUMPS.mpipath,'mpirun -np ',int2str(nproc),' -machinefile .machines ',dkepath.MUMPS.par,'/mumpsdke']);
     elseif isfield(dkepath.MUMPS,'seq'),
         if display_mode >= 1,info_dke_yp(2,'Matrix inversion by PETSc solver - sequential processing enforced, no parallel processing package on this machine ! -');end
         [flag,text] = unix([dkepath.MUMPS.seq,'/mumpsdke']);
@@ -69,7 +69,7 @@ elseif nproc == 1,%Sequential processing is invoked
         [flag,text] = unix([dkepath.MUMPS.seq,'/mumpsdke']);
     elseif isfield(dkepath.MUMPS,'par'),
         if display_mode >= 1,info_dke_yp(2,'Matrix inversion by MUMPS solver - parallel processing enforced, no sequential processing package on this machine !  -');end
-        [flag,text] = unix(['mpirun -np ',int2str(nproc),' -machinefile .machines ',dkepath.MUMPS.par,'/mumpsdke']);
+        [flag,text] = unix([dkepath.MUMPS.mpipath,'mpirun -np ',int2str(nproc),' -machinefile .machines ',dkepath.MUMPS.par,'/mumpsdke']);
     else
         error('MUMPS package not correctly named for LUKE: <pakage name+version>_P_<compiler name> or  <pakage name+version>_S_<compiler name>');
     end
