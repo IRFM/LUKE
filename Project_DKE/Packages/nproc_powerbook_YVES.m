@@ -20,4 +20,6 @@ if param.nproc > 4,
 else
 	nproc = max(4,param.nproc);%4 processors enforced on powerbook G4
 end   
-
+%
+fid = fopen('.machines','w');
+fclose(fid);
