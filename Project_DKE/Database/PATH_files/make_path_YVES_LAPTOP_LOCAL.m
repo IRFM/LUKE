@@ -21,7 +21,7 @@ dkepath.MUMPS.seq = [path_root,'Packages/Bin/MUMPS/MUMPS_4.7.2_S_g95/dke'];%Wher
 dkepath.MUMPS.mex = [path_root,'Packages/Bin/MUMPS/MUMPS_4.7.2_S_g95/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.MUMPS.mpipath = ['/usr/local/openmpig95/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
 %
-%dkepath.PETSc.par = [path_root,'Packages/Bin/PETSC/petsc-2.3.2-p10_P_mpich2g95/DKE'];%Where PETSc matrix solver is stored (stand-alone application for parallel processing)
+dkepath.PETSc.par = [path_root,'Packages/Bin/PETSC/petsc-2.3.2-p10_P_openmpig95/DKE'];%Where PETSc matrix solver is stored (stand-alone application for parallel processing)
 dkepath.PETSc.seq = [path_root,'Packages/Bin/PETSC/petsc-2.3.2-p10_S_g95/DKE'];%Where PETSc matrix solver is stored (stand-alone application for sequential processing)
 %dkepath.PETSc.mex = [path_root,''];%Where PETSc matrix solver is stored (MEX function)
 dkepath.PETSc.mpipath = ['/usr/local/openmpig95/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
