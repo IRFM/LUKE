@@ -33,11 +33,11 @@ isim = 0;
 %
 % MUMPS packages (MEX application)
 %
-if exist([luke_root,'Packages']),
-    list_of_packages = dir([luke_root,'Packages']);
+if exist([luke_root,'Packages/Bin/MUMPS']),
+    list_of_packages = dir([luke_root,'Packages/Bin/MUMPS']);
     for ifile = 1:length(list_of_packages),
         if length(list_of_packages(ifile).name) >= 5 & list_of_packages(ifile).name(1:5) == 'MUMPS' & ~isempty(strfind(list_of_packages(ifile).name,'_S_')),
-            dkepath.MUMPS.mex = [luke_root,'Packages/',list_of_packages(ifile).name,'/MATLAB'];
+            dkepath.MUMPS.mex = [luke_root,'Packages/Bin/MUMPS/',list_of_packages(ifile).name,'/MATLAB'];
             if exist(dkepath.MUMPS.mex),
                 addpath(dkepath.MUMPS.mex)
                 isim = isim + 1;
@@ -55,15 +55,15 @@ disp('--------------------------------------')
 %
 % MUMPS packages (stand-alone application)
 %
-if exist([luke_root,'Packages']),
-    list_of_packages = dir([luke_root,'Packages']);
+if exist([luke_root,'Packages/Bin/MUMPS']),
+    list_of_packages = dir([luke_root,'Packages/Bin/MUMPS']);
     for ifile = 1:length(list_of_packages),
         if length(list_of_packages(ifile).name) >= 5 & list_of_packages(ifile).name(1:5) == 'MUMPS',
 %
 % Sequential processing (stand-alone application)
 %
             if ~isempty(strfind(list_of_packages(ifile).name,'_S_'))
-                dkepath.MUMPS.seq = [luke_root,'Packages/',list_of_packages(ifile).name,'/dke'];
+                dkepath.MUMPS.seq = [luke_root,'Packages/Bin/MUMPS/',list_of_packages(ifile).name,'/dke'];
                 if isfield(dkepath.MUMPS,'par'),rmfield(dkepath.MUMPS,'par');end
                 if exist(dkepath.MUMPS.seq),                    
                     isim = isim + 1;
@@ -76,7 +76,7 @@ if exist([luke_root,'Packages']),
 % Parallel processing (stand-alone application)
 %
             if ~isempty(strfind(list_of_packages(ifile).name,'_P_'))
-                dkepath.MUMPS.par = [luke_root,'Packages/',list_of_packages(ifile).name,'/dke'];
+                dkepath.MUMPS.par = [luke_root,'Packages/Bin/MUMPS/',list_of_packages(ifile).name,'/dke'];
                 if isfield(dkepath.MUMPS,'seq'),rmfield(dkepath.MUMPS,'seq');end
                 if exist(dkepath.MUMPS.par),                                   
                     dkeparam.MUMPSparam.nproc = 4;%case with 4 processors
@@ -99,8 +99,8 @@ disp('--------------------------------------')
 %
 % PETSc packages (stand-alone application)
 %
-if exist([luke_root,'Packages']),
-    list_of_packages = dir([luke_root,'Packages']);
+if exist([luke_root,'Packages/Bin/PETSC']),
+    list_of_packages = dir([luke_root,'Packages/Bin/PETSC']);
     for ifile = 1:length(list_of_packages),   
         if length(list_of_packages(ifile).name) >= 5 & list_of_packages(ifile).name(1:5) == 'petsc',
 
@@ -108,7 +108,7 @@ if exist([luke_root,'Packages']),
 % Sequential processing (stand-alone application)
 %
             if ~isempty(strfind(list_of_packages(ifile).name,'_S_'))
-                dkepath.PETSc.seq = [luke_root,'Packages/',list_of_packages(ifile).name,'/DKE'];
+                dkepath.PETSc.seq = [luke_root,'Packages/Bin/PETSC/',list_of_packages(ifile).name,'/DKE'];
                 if isfield(dkepath.PETSc,'par'),rmfield(dkepath.PETSc,'par');end
                 if exist(dkepath.PETSc.seq),
                     dkeparam.PETScparam.nproc = 1;%case with 1 processor
@@ -126,7 +126,7 @@ if exist([luke_root,'Packages']),
 % Parallel processing (stand-alone application)
 %
             if ~isempty(strfind(list_of_packages(ifile).name,'_P_'))
-                dkepath.PETSc.par = [luke_root,'Packages/',list_of_packages(ifile).name,'/DKE'];
+                dkepath.PETSc.par = [luke_root,'Packages/Bin/PETSC/',list_of_packages(ifile).name,'/DKE'];
                 if isfield(dkepath.PETSc,'seq'),rmfield(dkepath.PETSc,'seq');end
                 if exist(dkepath.PETSc.par),
                     dkeparam.PETScparam.nproc = 4;%case with 4 processors
@@ -177,16 +177,16 @@ if exist([luke_root,'Packages']),
         end
     end
 end           
-disp('--------------------------------------')           
+disp('--------------------------------------')   
 %
 % SUPERLU packages (MEX application)
 %
-if exist([luke_root,'Packages']),
-    list_of_packages = dir([luke_root,'Packages']);
+if exist([luke_root,'Packages/Bin/SUPERLU']),
+    list_of_packages = dir([luke_root,'Packages/Bin/SUPERLU']);
     for ifile = 1:length(list_of_packages),   
         if length(list_of_packages(ifile).name) >= 7 
             if list_of_packages(ifile).name(1:7) == 'SuperLU',
-                dkepath.SUPERLU.mex = [luke_root,'Packages/',list_of_packages(ifile).name,'/MATLAB'];
+                dkepath.SUPERLU.mex = [luke_root,'Packages/Bin/SUPERLU/',list_of_packages(ifile).name,'/MATLAB'];
                 if exist(dkepath.SUPERLU.mex),
                     addpath(dkepath.SUPERLU.mex)
                     if exist('mexlusolve');isim = isim + 1;disp('- SUPERLU (MEX)'),tic,[MMXS_t_SUPERLU] = lusolve(MMXPC_f_t,MMXR_t);t_slu = toc;disp(['Elapsed time is ',num2str(t_slu),' seconds.']);end
