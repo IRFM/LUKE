@@ -20,7 +20,7 @@ function [nproc] = nproc_dke_yp(display_mode,param,dkepath);
 %
 if status == 0,
     if (strfind(message_proc,'powerpc')>0 & strfind(message_net,'peysson')>0) | strfind(message_proc,'unknown'),%Personal computer of Yves Peysson
-        nproc = nproc_saturne_powerbook_YVES(display_mode,param,dkepath);
+        nproc = nproc_powerbook_YVES(display_mode,param,dkepath);
     elseif strfind(message_proc,'x86_64')>0 & strfind(message_net,'saturne')>0,%SATURNE cluster @ CEA-DRFC     
         nproc = nproc_saturne_CEA_DRFC(display_mode,param,dkepath);
     elseif strfind(message_proc,'YOUR_PROCESSOR_NAME')>0 & strfind(message_net,'YOUR_COMPUTER')>0,%YOUR computer. Replace here the name of your machine
