@@ -1,8 +1,8 @@
-function [waveparam,fitequilparam,rayparam,raydisplay] = make_wavert_cronos(config,dkeparam)
+function [waveparam,fitequilparam,rayparam,raydisplay] = make_wavert_cronos(config)
 %
 % Create the structures waveparam,fitequilparam,rayparam,raydisplay used by C3PO for CRONOS
 % 
-if strfind(config,'LH');%For the Lower Hybrid wave simulations
+if strcmp(config,'LH');%For the Lower Hybrid wave simulations
 %
 % Wave parameters
 %
@@ -29,14 +29,14 @@ if strfind(config,'LH');%For the Lower Hybrid wave simulations
 % Global parameters for the ray-tracing
 %
    rayparam.testmode = 0;
-   rayparam.tensortype =    waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
+   rayparam.tensortype = waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
    rayparam.t0 = 0;
    rayparam.tfinal = 20000;
    rayparam.dt0 = 1.e-5;
    rayparam.drho = 1.e-4;
    rayparam.tol = 1e-12;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
    rayparam.kmax = 100000;
-   rayparam.ncyclharm = dkeparam.n_rf_list;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
+   rayparam.ncyclharm = 50;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
    rayparam.reflection = 1;%1:Enforce wave reflection at plasma boundary, 0: the code calculates itself if the ray must leave of not the plasma
 %
 % Ray display mode
@@ -44,8 +44,8 @@ if strfind(config,'LH');%For the Lower Hybrid wave simulations
    raydisplay.ray = 0;
    raydisplay.equilibrium = 0;
    raydisplay.p_opt = -1;%Printing or saving option of the figures
-
-elseif strfind(config,'EC') | strfind(config,'EBW');;%For the Electron Cyclotron or EBW wave simulations
+%
+elseif strcmp(config,'EC') | strcmp(config,'EBW');;%For the Electron Cyclotron or EBW wave simulations
 %
 % Wave parameters
 %
@@ -72,23 +72,22 @@ elseif strfind(config,'EC') | strfind(config,'EBW');;%For the Electron Cyclotron
 % Global parameters for the ray-tracing
 %
    rayparam.testmode = 0;
-   rayparam.tensortype =    waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
+   rayparam.tensortype = waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
    rayparam.t0 = 0;
    rayparam.tfinal = 2000;
    rayparam.dt0 = 1.e-5;
    rayparam.drho = 1.e-4;
    rayparam.tol = 1e-12;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
    rayparam.kmax = 100000;
-   rayparam.ncyclharm = dkeparam.n_rf_list;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
-   rayparam.reflection = 1;%1:Enforce wave reflection at plasma boundary, 0: the code calculates itself if the ray must leave of not the plasma
+   rayparam.ncyclharm = 50;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
+   rayparam.reflection = 0;%1:Enforce wave reflection at plasma boundary, 0: the code calculates itself if the ray must leave of not the plasma
 %
 % Ray display mode
 %
    raydisplay.ray = 0;
    raydisplay.equilibrium = 0;
    raydisplay.p_opt = -1;%Printing or saving option of the figures
-elseif strcmp(config,'LH+EC_RT');%For the Electron Cyclotron wave simulations
-   error('The wavert configuration LH+EC_RT is not yet implemented')  	
+%
 else
    error('The wavert configuration name does not exists')  	
 end
