@@ -75,15 +75,15 @@ else
     %
     MUMPS_par = uigetdir(initdir,'Select Parallel MUMPS directory: "dke"');%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
     MUMPS_seq = uigetdir(initdir,'Select Sequential MUMPS directory: "dke"');%Where MUMPS matrix solver is stored (stand-alone application for sequential processing)
-    MUMPS_mex = uigetdir(initdir,'Select Mex MUMPS entry directory: "MATLAB"');%Where MUMPS matrix solver is stored (stand-alone application for MEX processing)
+    MUMPS_mex = uigetdir(initdir,'Select Mex MUMPS directory: "MATLAB"');%Where MUMPS matrix solver is stored (stand-alone application for MEX processing)
     %
-    MUMPS_mpi = uigetdir('/','Select mpirun or mpiexec directory for MUMPS. Cancel to use system path.');%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
+    MUMPS_mpi = uigetdir('/','Select mpi directory for MUMPS: "bin". Cancel to use system path.');%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
     %
     PETSc_par = uigetdir(initdir,'Select Parallel PETSc directory: "DKE"');%Where PETSc matrix solver is stored (stand-alone application for parallel processing)
     PETSc_seq = uigetdir(initdir,'Select Sequential PETSc directory: "DKE"');%Where PETSc matrix solver is stored (stand-alone application for sequential processing)
     PETSc_mex = uigetdir(initdir,'Select Mex PETSc directory: "MATLAB"');%Where PETSc matrix solver is stored (stand-alone application for MEX processing)
     %
-    PETSc_mpi = uigetdir('/','Select mpirun or mpiexec directory for PETSc. Cancel to use system path.');%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
+    PETSc_mpi = uigetdir('/','Select mpi directory for PETSc: "bin". Cancel to use system path.');%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
     %
     SUPERLU_mex = uigetdir(initdir,'Select Mex SUPERLU directory: "MATLAB"');%Where SUPERLU matrix solver is stored (stand-alone application for MEX processing)
     %
@@ -97,7 +97,7 @@ else
         dkepath.MUMPS.mex = MUMPS_mex;
     end
     if MUMPS_mpi ~= 0,
-        dkepath.MUMPS.mpipath = MUMPS_mpi;
+        dkepath.MUMPS.mpipath = [MUMPS_mpi,'/'];
     else
         dkepath.MUMPS.mpipath = '';
     end
@@ -111,7 +111,7 @@ else
         dkepath.PETSc.mex = PETSc_mex;
     end
     if PETSc_mpi ~= 0,
-        dkepath.PETSc.mpipath = PETSc_mpi;
+        dkepath.PETSc.mpipath = [PETSc_mpi,'/'];
     else
         dkepath.PETSc.mpipath = '';
     end
