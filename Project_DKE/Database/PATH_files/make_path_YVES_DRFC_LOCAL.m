@@ -18,7 +18,7 @@ dkepath.temppathroot = '/scratch/';%Absolute root directory path adress where te
 dkepath.mex = [path_root,'Project_DKE/MEX'];
 dkepath.luke_root = path_root;
 %
-dkepath.MUMPS.par = [path_root,'Packages/Bin/MUMPS/MUMPS_4.6.4_P_mpichpgf/dke'];%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
+dkepath.MUMPS.par = [path_root,'Packages/Bin/MUMPS/MUMPS_4.7.2_P_mpichpgf/dke'];%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
 dkepath.MUMPS.seq = [path_root,'Packages/Bin/MUMPS/MUMPS_4.6.4_S_pgf/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
 dkepath.MUMPS.mex = [path_root,'Packages/Bin/MUMPS/MUMPS_4.6.4_S_pgf/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.MUMPS.mpipath = ['/usr/local/pgi/linux86-64/6.0/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
