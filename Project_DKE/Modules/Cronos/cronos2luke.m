@@ -11,7 +11,7 @@
 %
 % entree :
 %
-%      par       =    parametre propre a la fonction (param.cons.hyb)
+%      par             =    parametre propre a la fonction (param.cons.hyb)
 %      proto           =    prototype de la structure pour les sources, valeurs a zeros (proto = zsourceproto;)
 %      cons            =    consigne de puissance par coupleur (data.cons.hyb)
 %      cons_spec       =    spectre en puissance par coupleur (data.cons.hybspec)
@@ -22,7 +22,7 @@
 %      neo             =    donnees neoclassiques (data.neo)
 %      impur           =    sous strcuture des impurtes (data.impur)
 %      phy             =    constantes physiques (param.phys)
-%      compo     =    composition du plasma: charge et masse des atomes (param.compo)
+%      compo           =    composition du plasma: charge et masse des atomes (param.compo)
 %      gene            =    parametres generaux (param.gene)
 %      memoire         =    structure des dernieres valeurs calculees
 % 
@@ -43,13 +43,13 @@
 
 %-------------------------------------------------------------
 %
-function [sortie,memoire] = zstarwars(par,proto,cons,cons_spec,geo,equi,injection,prof,neo,impur,phy,compo,gene,memoire);
-                             
+function [sortie,memoire] = zstarwars(varargin);
+%                             
 if nargin <= 1 
 	if nargin == 0
-		nbhyb = 1;
+		nbfce = 1;
 	else
-		nbhyb = par;   
+		nbfce = varargin{1};   
 	end
 	langue = getappdata(0,'langue_cronos');
 %
@@ -64,7 +64,7 @@ if nargin <= 1
 	defaut.abs_lim = 0.95;%Relative level of RF power absorption that is accpeted for in the quasilinear convergence loop (0: no threshold, 1: full absorption)
 	info.abs_lim = 'Relative level of RF power absorption that is accpeted for in the quasilinear convergence loop (0: no threshold, 1: full absorption)';
 %
-    valeur.rt_mode = 4%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p, (4) -> dNpar proportional to s
+    valeur.rt_mode = 4;%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p, (4) -> dNpar proportional to s
 	type.rt_mode = 'list';%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p, (4) -> dNpar proportional to s
 	borne.rt_mode = {1,2,3,4};%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p, (4) -> dNpar proportional to s
 	defaut.rt_mode = 4;%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p, (4) -> dNpar proportional to s
@@ -166,7 +166,7 @@ if nargin <= 1
 	defaut.Vr_model = 0;%Radial pinch type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth),
 	info.Vr_model = 'Radial pinch type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth)';
 %
-% WAVE PARAMETERS (C3PO)
+% RAY-TRACING PARAMETERS (C3PO)
 %
 	valeur.kmode = 0;%Dielectric tensor (0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
 	type.kmode = 'list';%Dielectric tensor (0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
@@ -174,10 +174,10 @@ if nargin <= 1
 	defaut.kmode = 0;%Dielectric tensor (0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
 	info.kmode = 'Dielectric tensor (0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)';
 %	
-	valeur.ray_tfinal = 10000;%Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)
+	valeur.ray_tfinal = 20000;%Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)
 	type.ray_tfinal = 'float';%Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)
-	borne.ray_tfinal = [1000,20000];%Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)
-	defaut.ray_tfinal = 10000;%Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)
+	borne.ray_tfinal = [1000,40000];%Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)
+	defaut.ray_tfinal = 20000;%Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)
 	info.ray_tfinal = 'Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)';
 %
 %  INPUT FILE PARAMETERS
@@ -196,33 +196,86 @@ if nargin <= 1
 	defaut.rho_S = 0;%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 	info.rho_S = 'Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)';
 %
-% CONFIGURATION PARAMETERS
+% LH PARAMETERS
 %
-   valeur.conf = 'MIXTE';% configuration antennes / machine
-   type.conf = 'string';% configuration antennes / machine
-   borne.conf = {'TS','MIXTE','CIEL','CMOD','SST1','COMPASS','JET','FTU','ITER3.7GHz','ITER5GHz','DEMO3.7GHz','DEMO5.0GHz'};% configuration antennes / machine
-   defaut.conf = 'MIXTE';% configuration antennes / machine
-   info.conf = 'Configuration antennas / tokamak';
+    valeur.conf = 'MIXTE';% configuration antennes / machine
+    type.conf = 'string';% configuration antennes / machine
+    borne.conf = {'TS','MIXTE','CIEL','CMOD','SST1','COMPASS','JET','FTU','ITER3.7GHz','ITER5GHz','DEMO3.7GHz','DEMO5.0GHz'};% configuration antennes / machine
+    defaut.conf = 'MIXTE';% configuration antennes / machine
+    info.conf = 'Configuration antennas / tokamak';
 %
 % OTHER PARAMETERS (NOT USED)
 %  
-   valeur.effmult  = 1;% ****************facteur phenomenologique qui multiplie l'efficacite de generation de courant
-   type.effmult = 'float';% facteur phenomenologique qui multiplie l'efficacite de generation de courant
-   borne.effmult = [0,100];% facteur phenomenologique qui multiplie l'efficacite de generation de courant
-   defaut.effmult = 1;% facteur phenomenologique qui multiplie l'efficacite de generation de courant
-   info.effmult = 'multiplier of the current drive efficiency';
+%    valeur.effmult  = 1;% ****************facteur phenomenologique qui multiplie l'efficacite de generation de courant
+%    type.effmult = 'float';% facteur phenomenologique qui multiplie l'efficacite de generation de courant
+%    borne.effmult = [0,100];% facteur phenomenologique qui multiplie l'efficacite de generation de courant
+%    defaut.effmult = 1;% facteur phenomenologique qui multiplie l'efficacite de generation de courant
+%    info.effmult = 'multiplier of the current drive efficiency';
+% %
+%    valeur.alpha = 0;% si 1, calcule l'absorption sur les particules alpha
+%    type.alpha = 'integer';% si 1, calcule l'absorption sur les particules alpha
+%    borne.alpha = {0,1};% si 1, calcule l'absorption sur les particules alpha
+%    defaut.alpha = 0;% si 1, calcule l'absorption sur les particules alpha
+%    info.alpha = 'if 1, calculates absorption by alpha particles';
+% %
+%    valeur.save  = 0;%sauvegarde du contexte
+%    type.save = 'list';%sauvegarde du contexte
+%    borne.save = {0,1};%sauvegarde du contexte
+%    defaut.save = 0;%sauvegarde du contexte
+%    info.save = 'Temporary data saved.';
 %
-   valeur.alpha = 0;% si 1, calcule l'absorption sur les particules alpha
-   type.alpha = 'integer';% si 1, calcule l'absorption sur les particules alpha
-   borne.alpha = {0,1};% si 1, calcule l'absorption sur les particules alpha
-   defaut.alpha = 0;% si 1, calcule l'absorption sur les particules alpha
-   info.alpha = 'if 1, calculates absorption by alpha particles';
+
 %
-   valeur.save  = 0;%sauvegarde du contexte
-   type.save = 'list';%sauvegarde du contexte
-   borne.save = {0,1};%sauvegarde du contexte
-   defaut.save = 0;%sauvegarde du contexte
-   info.save = 'Temporary data saved.';
+% EC PARAMETERS
+%
+%
+% Note : parameters nd and nchi to replace nbcouronne and nbray to be implemented
+%
+	valeur.modpolar     = 2.*ones(1,nbfce);% mode polarisation : 1 -> X, 2 -> O [2]
+	type.modpolar       = 'integer';% type de la donnnee
+    borne.modpolar      = {1,2};
+	defaut.modpolar     = 2;
+	info.modpolar       = 'polarisation mode : 1 -> X, 2 -> O [2]';
+%
+	valeur.freq_ghz     = 118.*ones(1,nbfce);% frequence en  Ghz [TS = 118]
+    type.freq_ghz       = 'float';% type de la donnnee
+	borne.freq_ghz      = [1,1000];
+	defaut.freq_ghz     = 118;
+	info.freq_ghz       = 'frequency [Ghz, TS = 118]';
+%
+	valeur.rant         = 3.53.*ones(1,nbfce);% position en R du dernier miroir (m) [TS = 3.53]
+    type.rant           = 'float';% type de la donnnee
+	borne.rant          = [0,30];
+	defaut.rant         = 3.53; 
+	info.rant           = 'last mirror major radius (m) [TS = 3.53]';
+%
+	if nbfce == 3
+        valeur.zant = [0,0.2,-0.2];% position en Z du dernier miroir (m) [valeurs par defaut antenne TS]
+	else
+        valeur.zant = zeros(1,nbfce);
+	end
+    type.zant           = 'float';% type de la donnnee
+	borne.zant          = [-20,20];
+	defaut.zant         = 0;
+	info.zant           = 'last mirror altitude  (m) [0]' ;            
+%
+	valeur.angle_pol    = 0.*ones(1,nbfce);% angle d'injection dans le plan poloidal par rapport a l'horizontal, en degres (Ts = -20 a 20, >0 vers le haut) [0]
+    type.angle_pol      = 'float';% type de la donnnee
+	borne.angle_pol     = [-90,90];
+	defaut.angle_pol    = 0;
+	info.angle_pol      = 'poloidal injection angle [degree]  (Ts = -20 a 20, >0 vers le haut) [0]';
+%
+	valeur.angle_tor    = 0.*ones(1,nbfce);% angle d'injection dans le plan toroidal par rapport a la normal a Btor en degres (Ts = -30 a 30, >0 dans le sens de ip) [10]
+    type.angle_tor      = 'float';% type de la donnnee
+	borne.angle_tor     = [-90,90];
+	defaut.angle_tor    = 10;
+	info.angle_tor      = 'toroidal injection angle [degree]  (Ts = -30 a 30, >0 dans le sens de ip) [10]';
+%
+    valeur.angle_var    = 0 .* ones(1,nbfce);% angle des miroirs passes en consigne si =1
+    type.angle_var      = 'integer';% type de la donnnee
+	borne.angle_var     = {0,1};
+	defaut.angle_var    = 0;
+	info.angle_var      = 'if set at  1, antena mirrors angles are given as reference in input';
 %	     
 % CRONOS PARAMETERS
 %
@@ -235,7 +288,7 @@ if nargin <= 1
    sortie.defaut = defaut;
    sortie.info = info;
    sortie.interface = interface;
-   sortie.description = 'Calcul du depot de puissance Hybride avec DELPHINE (RT/FP)';   % description (une ligne) de la fonction
+   sortie.description = 'Calcul du depot de puissance Hybride et/ou FCE avec LUKE';   % description (une ligne) de la fonction
    sortie.help = '';                            % nom du fichier d'aide s'il existe, sinon aide de la fonction
    sortie.gui  ='';                             % nom de l'interface graphique specifique si elle existe
    sortie.controle = '';                        % nom de la fonction de controle des valeurs si elle existe
@@ -245,9 +298,42 @@ end
 %
 % --------------------------- RUN STARWARS ------------------------
 %
-if (all(abs(cons)< 2e5) | all(angle(cons)<=1)),% test sur la puissance. Calcul si P > 200 kW seulement
-    sortie = proto;
-    return
+if nargin == 14,% LH case
+    par = varargin{1};
+    proto = varargin{2};
+    cons = varargin{3};
+    cons_spec = varargin{4};
+    geo = varargin{5};
+    equi = varargin{6};
+    injection = varargin{7};
+    prof = varargin{8};
+    neo = varargin{9};
+    impur = varargin{10};
+    phy = varargin{11};
+    compo = varargin{12};
+    gene = varargin{13};
+    memoire = varargin{14};
+    %
+    if (all(abs(cons)< 2e5) | all(angle(cons)<=1)),% test sur la puissance. Calcul si P > 200 kW seulement
+        sortie = proto;
+        return
+    end
+elseif nargin == 13,% FCE case
+    par = varargin{1};
+    proto = varargin{2};
+    cons = varargin{3};
+    geo = varargin{4};
+    equi = varargin{5};
+    injection = varargin{6};
+    prof = varargin{7};
+    neo = varargin{8};
+    impur = varargin{9};
+    phy = varargin{10};
+    compo = varargin{11};
+    gene = varargin{12};
+    memoire = varargin{13};
+else
+    error('Wrong number of inputs in zstarwars')
 end
 %
 %
@@ -261,63 +347,49 @@ sortie.err = 0;% on definit le flag d'erreur a 0 par defaut (pas d'erreur)
 %
 %--------------------------- LIEN AVEC C3PO + LUKE ------------------
 %
-%
-% Load parameters that are controlled from GUI
-%
-%
 % PARAMETRES EQUILIBRE
 %
-equil.id = ['CRONOS_',int2str(shot),'_k',int2str(gene.k)];%gene.k is the time slice
-equil.Rp = double(equi.R(1,1,1));
-equil.Zp = double(equi.Z(1,1,1));
-equil.ptx = squeeze(double(equi.R)) - equil.Rp;
-equil.pty = squeeze(double(equi.Z)) - equil.Zp;
-equil.ap = equil.ptx(end,1);
-equil.psi_apRp = (-equi.psi+equi.psi(1))*equil.ap/equil.Rp;%Match already the defintion of ppsi in DKE (psi(helena)/2/pi))
-equil.theta = linspace(0,2*pi,size(equi.R,3));
-equil.ptBx = squeeze(double(equi.BR));
-equil.ptBy = squeeze(double(equi.BZ));
-equil.ptBPHI = squeeze(double(equi.BPHI));
+equil = make_equil_cronos(shot,equi,gene,prof,compo,impur);
 %
-equil.ptBPHI = gene.signe.b0*equil.ptBPHI;%Bphi is counter-clockwise in TS (WARNING: in rtluke, Ip > 0 and Bphi > 0 when clockwise from the top view of the tokamak, opposite from CRONOS def)
-equil.ptBx = gene.signe.ip*equil.ptBx;%Ip is counter-clockwise in TS
-equil.ptBy = gene.signe.ip*equil.ptBy;%Ip is counter-clockwise in TS
-equil.psi_apRp = gene.signe.ip*equil.psi_apRp;%Ip is counter-clockwise in TS
+% Determines run type
 %
-equil.pTe = prof.te/1000;%en keV
-equil.pne = prof.ne;
-%
-zH = find(compo.a == 1);
-zD = find(compo.a == 2 & compo.z == 1);
-zT = find(compo.a == 3 & compo.z == 1);
-zimp = find(compo.z > 1);
-%
-% profil de densite electronique (m-3)
-%wavestructs
-pzni = zeros((3+length(zimp)),length(prof.ne));
-pzTi = ones((3+length(zimp)),1)*prof.ti/1000;%All impurities have the same ion temperature
-if ~isempty(zH),pzni(1,:) = squeeze(impur.impur(1,:,zH));end
-if ~isempty(zD),pzni(2,:) = squeeze(impur.impur(1,:,zD));end
-if ~isempty(zT),pzni(3,:) = squeeze(impur.impur(1,:,zT));end
-%
-pzni(4:(3+length(zimp)),:) = squeeze(impur.impur(1,:,zimp))';
-pzTi(4:(3+length(zimp)),:) = repmat(prof.ti/1000,length(zimp),1);%en keV
-zZi = [1,1,1,compo.z(zimp)];
-zmi = [1,2,3,compo.a(zimp)];
-%
-equil.pzTi = pzTi;
-equil.pzni = pzni;
-equil.zZi = zZi;
-equil.zmi = zmi;
+switch par.luke_mode
+  %    
+  case 'mixte'
+    %
+    % Mixed LH and EC waves case
+    %
+    [launchs_lh] = make_wavelaunchs_cronos_lh(equil,gene.signe,par.lh_param.conf,cons.lh_cons,cons_spec);%for the LH waves
+    [launchs_ec] = make_wavelaunchs_cronos_ec(equil,par.ecrh_param,cons.ecrh_cons);%for the EC waves
+    %    
+    launchs = [launchs_lh,launchs_ec];
+    par.launchtype = 'LH';
+    %
+  case 'lh'
+    %
+    % LH waves only
+    %
+    [launchs] = make_wavelaunchs_cronos_lh(equil,gene.signe,par.conf,cons,cons_spec);%for the LH waves
+    par.launchtype = 'LH';
+    %    
+  case 'ecrh'
+    %
+    % EC waves only
+    %
+    [launchs] = make_wavelaunchs_cronos_ec(equil,par,cons);%for the EC waves    
+    par.launchtype = 'EC';
+    %
+  otherwise
+    %
+    error('luke mode could not be determined')
+    %      
+end
 %
 % --------- Load first all parameters that are in files ------------
-%************************* A modifier et preciser
-par.launchtype = 'LH';%must be specified ('LH','EC','EBW','LH_EC')
 %
-[launchs] = make_wavelaunchs_cronos(equil,gene.signe,par.conf,cons,cons_spec);%for the all RF waves
 [dkeparam] = make_dkeparam_cronos(par.launchtype);
 [dkedisplay] = make_display_cronos(par.make_display);
-par.make_path = 'PC_DRFC_CRONOS';[dkepath] = make_path_cronos(par.make_path);
+[dkepath] = path_LUKE_LOCAL;
 dkepath.temppath = [dkepath.temppathroot,filesep,'CRONOS',filesep,timeid_jd(clock)];%Temporary subdirectory in scratch folder
 %
 % --------- Override parameters that are in files ------------
@@ -330,13 +402,13 @@ dkeparam.nit_rf = par.nit_rf;%Maximum number of iteration in ray-tracing. Works 
 dkeparam.dke_mode = par.dke_mode;%Fokker-Planck equation (0), Drift Kinetic equation (1)
 dkeparam.dtn = par.dtn;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
 dkeparam.invproc = par.invproc;%Iterative matrix inversion method: (1) cgs iterative method, (2) bicg iterative method, (3) qmr iterative method
-dkeparam.n_rf_list = 0;%************** For LH only ***********************
+dkeparam.n_rf_list = 0:3;
 %
 % PARAMETRES DISPLAY
 %
 dkedisplay.rho_display  = par.rho_display;%Approximate radial position at which results are displayed if display.display_mode >= 1 [1,1]. Not used if NaN
 dkedisplay.display_mode = par.display_mode;%Display mode: (0): no, (1): partial, (2): full
-dkedisplay.display_mode = 'PARTIAL_VISUAL',%%%%%%%%%%%%%%%%%%
+%dkedisplay.display_mode = 'PARTIAL_VISUAL',%%%%%%%%%%%%%%%%%%
 %
 % PARAMETRES OHMIC 
 %
@@ -362,22 +434,20 @@ transpfaste.Vr_model = par.Vr_model;%Radial pinch type: (0) no vpar dependence, 
 %
 
 for iw = 1:length(launchs),
-   if strfind(par.launchtype,launchs{1}.type),%Extract only the selected waves
-   	[waveparam,fitequilparam,rayparam,raydisplay] = make_wavert_cronos(launchs{iw}.type,dkeparam);%parameter for ray-tracing are adapted to the selected wave
-%   	
-      wavestructs{iw}.id = [par.conf,'_',launchs{iw}.id];
-      wavestructs{iw}.equil_id = equil.id;
-      wavestructs{iw}.launch = launchs{iw};
-      wavestructs{iw}.waveparam = waveparam;
-      wavestructs{iw}.fitequilparam = fitequilparam;
-      wavestructs{iw}.rayparam = rayparam;
-      wavestructs{iw}.raydisplay = raydisplay;
-%
-      wavestructs{iw}.wavesolver = 'C3PO';
-      wavestructs{iw}.waveparam.kmode = par.kmode;%Dielectric tensor (0:cold,1:warm,2:hot;3:weak relativistic,4:full relativistic)
-      wavestructs{iw}.rayparam.tensortype = wavestructs{iw}.waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak relativistic,4:full relativistic)
-      wavestructs{iw}.rayparam.tfinal = par.ray_tfinal;
-   end
+    [waveparam,fitequilparam,rayparam,raydisplay] = make_wavert_cronos(launchs{iw}.type);%parameter for ray-tracing are adapted to the selected wave
+    %   	
+    wavestructs{iw}.id = [par.conf,'_',launchs{iw}.id];
+    wavestructs{iw}.equil_id = equil.id;
+    wavestructs{iw}.launch = launchs{iw};
+    wavestructs{iw}.waveparam = waveparam;
+    wavestructs{iw}.fitequilparam = fitequilparam;
+    wavestructs{iw}.rayparam = rayparam;
+    wavestructs{iw}.raydisplay = raydisplay;
+    %
+    wavestructs{iw}.wavesolver = 'C3PO';
+    wavestructs{iw}.waveparam.kmode = par.kmode;%Dielectric tensor (0:cold,1:warm,2:hot;3:weak relativistic,4:full relativistic)
+    wavestructs{iw}.rayparam.tensortype = wavestructs{iw}.waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak relativistic,4:full relativistic)
+    wavestructs{iw}.rayparam.tfinal = par.ray_tfinal;
 end
 %
 opt_save = 0;%For debugging or scan only.
