@@ -1,4 +1,4 @@
-function [launchs] = make_wavelaunchs_cronos(equil,signe,config,cons,cons_spec)
+function [launchs] = make_wavelaunchs_cronos_lh(equil,signe,config,cons,cons_spec)
 %
 % Create the structure launch for CRONOS
 %
