@@ -37,14 +37,14 @@ end
 %
 path_root = [path_root,'/'];
 %
-filename = [path_root,'project_DKE/Database/PATH_files/PATH_LOCAL.mat'];
+filename = [path_root,'Project_DKE/Database/PATH_files/PATH_LOCAL.mat'];
 if exist(filename),
-    disp([path_root,'project_DKE/Database/PATH_files/PATH_LOCAL.mat has been loaded'])
+    disp([path_root,'Project_DKE/Database/PATH_files/PATH_LOCAL.mat has been loaded'])
     load(filename);
     return
 end
 %
-disp([path_root,'project_DKE/Database/PATH_files/PATH_LOCAL.mat was not found.'])
+disp([path_root,'Project_DKE/Database/PATH_files/PATH_LOCAL.mat was not found.'])
 %
 uisetpath_flag = '';
 %
@@ -73,15 +73,19 @@ else
     %
     initdir = [path_root,'Packages/'];
     %
-    [dummy,MUMPS_par] = uigetfile([initdir,'mumpsdke.*'],'Select Parallel MUMPS entry file');%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
-    [dummy,MUMPS_seq] = uigetfile([initdir,'mumpsdke.*'],'Select Sequential MUMPS entry file');%Where MUMPS matrix solver is stored (stand-alone application for sequential processing)
-    [dummy,MUMPS_mex] = uigetfile([initdir,'dmumpsmex.*'],'Select Mex MUMPS entry file');%Where MUMPS matrix solver is stored (stand-alone application for MEX processing)
+    MUMPS_par = uigetdir(initdir,'Select Parallel MUMPS directory: "dke"');%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
+    MUMPS_seq = uigetdir(initdir,'Select Sequential MUMPS directory: "dke"');%Where MUMPS matrix solver is stored (stand-alone application for sequential processing)
+    MUMPS_mex = uigetdir(initdir,'Select Mex MUMPS entry directory: "MATLAB"');%Where MUMPS matrix solver is stored (stand-alone application for MEX processing)
     %
-    [dummy,PETSc_par] = uigetfile([initdir,'PETSc_DKE_ft.*'],'Select Parallel PETSc entry file');%Where PETSc matrix solver is stored (stand-alone application for parallel processing)
-    [dummy,PETSc_seq] = uigetfile([initdir,'PETSc_DKE_ft.*'],'Select Sequential PETSc entry file');%Where PETSc matrix solver is stored (stand-alone application for sequential processing)
-    [dummy,PETSc_mex] = uigetfile([initdir,'PETSc_DKE_ft.*'],'Select Mex PETSc entry file');%Where PETSc matrix solver is stored (stand-alone application for MEX processing)
+    MUMPS_mpi = uigetdir('/','Select mpirun or mpiexec directory for MUMPS. Cancel to use system path.');%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
     %
-    [dummy,SUPERLU_mex] = uigetfile([initdir,'mexsuperlu.*'],'Select Mex SUPERLU entry file');%Where SUPERLU matrix solver is stored (stand-alone application for MEX processing)
+    PETSc_par = uigetdir(initdir,'Select Parallel PETSc directory: "DKE"');%Where PETSc matrix solver is stored (stand-alone application for parallel processing)
+    PETSc_seq = uigetdir(initdir,'Select Sequential PETSc directory: "DKE"');%Where PETSc matrix solver is stored (stand-alone application for sequential processing)
+    PETSc_mex = uigetdir(initdir,'Select Mex PETSc directory: "MATLAB"');%Where PETSc matrix solver is stored (stand-alone application for MEX processing)
+    %
+    PETSc_mpi = uigetdir('/','Select mpirun or mpiexec directory for PETSc. Cancel to use system path.');%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
+    %
+    SUPERLU_mex = uigetdir(initdir,'Select Mex SUPERLU directory: "MATLAB"');%Where SUPERLU matrix solver is stored (stand-alone application for MEX processing)
     %
     if MUMPS_par ~= 0,
         dkepath.MUMPS.par = MUMPS_par;
@@ -92,6 +96,11 @@ else
     if MUMPS_mex ~= 0,
         dkepath.MUMPS.mex = MUMPS_mex;
     end
+    if MUMPS_mpi ~= 0,
+        dkepath.MUMPS.mpipath = MUMPS_mpi;
+    else
+        dkepath.MUMPS.mpipath = '';
+    end
     if PETSc_par ~= 0,
         dkepath.PETSc.par = PETSc_par;
     end
@@ -101,12 +110,17 @@ else
     if PETSc_mex ~= 0,
         dkepath.PETSc.mex = PETSc_mex;
     end
+    if PETSc_mpi ~= 0,
+        dkepath.PETSc.mpipath = PETSc_mpi;
+    else
+        dkepath.PETSc.mpipath = '';
+    end
     if SUPERLU_mex ~= 0,
         dkepath.SUPERLU.mex = SUPERLU_mex;
     end
     %
-    save([path_root,'project_DKE/Database/PATH_files/PATH_LOCAL.mat'],'dkepath');
-    disp([path_root,'project_DKE/Database/PATH_files/PATH_LOCAL.mat is created.'])
+    save([path_root,'Project_DKE/Database/PATH_files/PATH_LOCAL.mat'],'dkepath');
+    disp([path_root,'Project_DKE/Database/PATH_files/PATH_LOCAL.mat is created.'])
     %
 end
 %
