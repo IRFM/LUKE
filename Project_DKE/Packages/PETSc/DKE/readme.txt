@@ -59,9 +59,6 @@ gcc -c Tensor_Fill.c
 
 7) set in the path file (see in $HOME/LUKE/Project_DKE/Database/PATH_files/)
 
-dkepath.PETSC = <petscdir>;%Where PETSC matrix solver (independent program) is stored
-dkepath.PETSc_DIR = <petscdir>;
-dkepath.variables.input = [<petscdir>/DKE/DKESolver_variables'];%directory where all inout variables are written
-dkepath.variables.output = [<petscdir>/DKE/DKESolver_output'];%location directory where the distribution function is written by C program before going back to matlab
-
+mode séquentiel (1 processeur): dkepath.PETSC.seq = <petscdir>;%Where PETSC matrix solver (independent program) is stored
+mode parallèle (n processeurs): dkepath.PETSC.par = <petscdir>;%Where PETSC matrix solver (independent program) is stored
 
