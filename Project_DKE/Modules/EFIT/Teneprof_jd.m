@@ -4,7 +4,7 @@ function [prho,pspsin,pspsinT,pTe,pne,pzTi,pzni,zZi,zmi] = Teneprof_jd(filename,
 % binary files in which the columns are respectively the radial position r/a, Te,
 % ne, Ti and ni
 %
-% by J. Decker (jodecke@alum.mit.edu) 11/01/04
+% by J. Decker (jodecke@alum.mit.edu)  and Y. Peysson (yves.peysson@cea.fr)
 %
 if nargin < 6
     savename = filename;
@@ -136,6 +136,30 @@ elseif type == 4,%ascii formatted (ITER)
     %
     clear pzni % ion densities recalculated from Zeff
     fi = [0,0.5,0.5];
+elseif type == 5,%ascii formatted (MST)
+    prho = [];
+    pspsin = [];
+    pspsinT = [];
+    pne = [];
+    pTe = [];
+    fid = fopen(filename);
+    s = 0;
+    s = fgetl(fid);
+    for ii = 1:s,
+        s = fgetl(fid);
+        d = sscanf(s,'%f %f %f');        
+        prho = [prho,d(1)];
+        pne = [pne,d(2)];
+        pTe = [pTe,d(3)];% in eV units     
+    end
+    fclose(fid);
+%
+    prho = prho/max(prho);
+    pTe = pTe/1e3;%keV
+    zZi = [1,1,1];%No impurity
+    zmi = [1,2,3];
+    fi = [0,1,0];%Deuterium plasma
+    pTi = pTe/2.0;%As done in RANT3D/AORSA   
 end
 %
 if type < 4,
@@ -192,13 +216,16 @@ elseif type == 1,
     prho = [];
     %
 end
-if type == 1 | type>= 3,
+if type == 1 | type>= 3 & type ~=5,
     %
     pnH = pne*(zZi(4) - Zeff)/(zZi(4) - 1);
     pnZ = pne*(Zeff - 1)/zZi(4)/(zZi(4) - 1);
     pzni = [fi.'*pnH;pnZ];
     pzTi = ones(nz,1)*pTi;
-    %
+else
+    pnH = pne;
+    pzni = [fi.'*pnH];
+    pzTi = [fi.'*pTi];
 end
 %
 if display_mode >= 2,
