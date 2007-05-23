@@ -1,4 +1,4 @@
-function xY = init_RT_jd(equil,equil_fit,xrho,xtheta,xphi,xomega,xNpar,xm,mmode,kmode);
+function xY = init_RT_jd(equil,equil_fit,xrho,xtheta,xphi,xomega,xNpar,xm,xn,mmode,kmode);
 %
 % This function solves the dispersion relation from initial positions and 
 % wave characteristics to initiate ray-tracing calculations.
@@ -13,6 +13,7 @@ function xY = init_RT_jd(equil,equil_fit,xrho,xtheta,xphi,xomega,xNpar,xm,mmode,
 %       - xomega: wave frequencies (rad/s) [1,1]
 %       - xNpar: parallel indices of refraction [1,1]
 %       - xm: poloidal mode numbers [1,1]
+%       - xn: toroidal mode numbers [1,1]
 %       - xmode: cold plasma mode [1,1] : (-1) m (1) p 
 %           p is the slow mode when kperp > 0 (ex : LH slow wave)
 %       - sigma: direction of the wave propagation (outward, or inward)
@@ -41,7 +42,7 @@ end
 %
 xpsin = rho2psi_jd(equil,xrho,'spline');
 %
-if length(xtheta) ~= 1 | length(xphi) ~= 1 | length(xomega) ~= 1 | length(xNpar) ~= 1 | length(xm) ~= 1,
+if length(xtheta) ~= 1 | length(xphi) ~= 1 | length(xomega) ~= 1 | length(xNpar) ~= 1 | length(xm) ~= 1 | length(xn) ~= 1,,
     error('Input argument dimensions are not compatible');
 end
 %
@@ -119,7 +120,7 @@ elseif mmode == -1,
     Nperpc = Nperpp;
     phic_xyz = phip_xyz;
 else
-    error('Wrond input in mmode')
+    error('Wrong input in mmode')
 end
 %
 % Sign for choosing the inward propagating root
@@ -140,7 +141,11 @@ else
     xNperp = Nperpc;
 end
 %
-xn = xR.*(xNpar.*xomega/clum - xm.*xc.*xBsn./xr)./xBphin;
+if isnan(xn),%xm is specified at the plasma edge (tokamak case)
+    xn = xR.*(xNpar.*xomega/clum - xm.*xc.*xBsn./xr)./xBphin;
+elseif isnan(xm),%xn is specified at the plasma edge (RFP case)
+    xm = xr.*(xNpar.*xomega/clum - xn.*xBphin./xR)./xc./xBsn; 
+end
 %
 xkrho = (xm.*xs./xr + sigma*sqrt(-(xm.*xc./xr).^2 - (xn./xR).^2 + (xNperp.^2 + xNpar.^2).*xomega.^2/clum^2))./xgradrho;
 %
