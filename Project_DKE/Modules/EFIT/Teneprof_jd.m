@@ -143,14 +143,11 @@ elseif type == 5,%ascii formatted (MST)
     pne = [];
     pTe = [];
     fid = fopen(filename);
-    s = 0;
-    s = fgetl(fid);
-    for ii = 1:s,
-        s = fgetl(fid);
-        d = sscanf(s,'%f %f %f');        
+    for ii = 1:sscanf(fgetl(fid),'%f'),
+        d = sscanf(fgetl(fid),'%f %f %f');     
         prho = [prho,d(1)];
         pne = [pne,d(2)];
-        pTe = [pTe,d(3)];% in eV units     
+        pTe = [pTe,d(3)];% in eV units    
     end
     fclose(fid);
 %
