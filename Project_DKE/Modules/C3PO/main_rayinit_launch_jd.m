@@ -46,6 +46,9 @@ end
 %
 [qe,me,mp,mn,e0,mu0,re,mc2,clum] = pc_dke_yp;
 %
+if isfield(launch,'m0') == 0,launch.m0 = NaN;end
+if isfield(launch,'n0') == 0,launch.n0 = NaN;end
+%
 if launch.type == 'EC',
    dNpar0 = launch.dNpar0;
    ns = launch.ns;
@@ -125,6 +128,7 @@ if launch.type == 'EC',
       rayinit.ytheta0(iy) = theta0;%Initial poloidal position at launch
       rayinit.yphi0(iy) = phi0;%Initial toroidal position at launch
       rayinit.ym0(iy) = m0;%Initial poloidal mode number
+      rayinit.yn0(iy) = launch.n0;%Initial toroidal mode number
       rayinit.yNpar0(iy) = Npar0;%Initial index of refraction
       rayinit.ydNpar0(iy) = dNpar0;%initial Ray spectral width
       rayinit.yP0_2piRp(iy) = yP0_2piRp(iy);%Lineic initial power density initial power in the ray (W/m)
@@ -163,6 +167,7 @@ elseif launch.type == 'LH',
          rayinit.ytheta0(iy) = rbtheta0(ir,ib);%Initial poloidal position at launch
          rayinit.yphi0(iy) = launch.phi0;%Initial toroidal position at launch
          rayinit.ym0(iy) = launch.m0;%Initial poloidal mode number
+         rayinit.yn0(iy) = launch.n0;%Initial toroidal mode number
          rayinit.yNpar0(iy) = bNpar0(ib);%Initial index of refraction
          rayinit.ydNpar0(iy) = bdNpar0(ib);%initial Ray spectral width
          rayinit.yP0_2piRp(iy) = bP0_2piRp(ib)/nr;%Lineic initial power density initial power in the ray (W/m)
