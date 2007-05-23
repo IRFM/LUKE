@@ -33,7 +33,7 @@ load(filename,'ZP0','Zcurr','gridDKE','mksa','equilDKE','dke_out','dkedisplay','
 J_rf = -Zcurr.x_0_fsav*mksa.j_ref;
 P_rf = ZP0.x_rf_fsav.'*mksa.P_ref; 
 %
-xrho = gridDKE.xrho; 
+xrho = equilDKE.xrho; 
 %
 I_rf = sum(J_rf.*equilDKE.xdA_dke);
 p_rf = sum(P_rf.*equilDKE.xdV_2piRp_dke);
