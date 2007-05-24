@@ -241,7 +241,7 @@ elseif strcmp(config,'ITER3.7GHz');%For the Lower Hybrid wave simulations
    launchs{1}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
    launchs{1}.a_sdNpar = 0.00;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
 %
-   launchs{1}.ry0 = [0,0,0,0,0,0];%vertical launching positions (m) [1,m_pol]
+   launchs{1}.ry0 = [0];%vertical launching positions (m) [1,m_pol]
 % 
    launchs{1}.m0 = [0];%initial poloidal mode number [1,1]
    launchs{1}.phi0 = [0];%toroidal angle position [1,1]
@@ -263,7 +263,7 @@ elseif strcmp(config,'ITER3.7GHz');%For the Lower Hybrid wave simulations
    launchs{2}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations (main lobe) [1,n_lobe]
    launchs{2}.a_sdNpar = 0.00;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
 %
-   launchs{2}.ry0 = [0,0,0,0,0,0];%vertical launching positions (m) [1,m_pol]
+   launchs{2}.ry0 = [0];%vertical launching positions (m) [1,m_pol]
 % 
    launchs{2}.m0 = [0];%initial poloidal mode number [1,1]
    launchs{2}.phi0 = [0];%toroidal angle position [1,1]
@@ -289,7 +289,7 @@ elseif strcmp(config,'ITER5GHz');%For the Lower Hybrid wave simulations
    launchs{1}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
    launchs{1}.a_sdNpar = 0.00;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
 %
-   launchs{1}.ry0 = [0,0,0,0,0,0];%vertical launching positions (m) [1,m_pol]
+   launchs{1}.ry0 = [0];%vertical launching positions (m) [1,m_pol]
 % 
    launchs{1}.m0 = [0];%initial poloidal mode number [1,1]
    launchs{1}.phi0 = [0];%toroidal angle position [1,1]
@@ -311,7 +311,7 @@ elseif strcmp(config,'ITER5GHz');%For the Lower Hybrid wave simulations
    launchs{2}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations (main lobe) [1,n_lobe]
    launchs{2}.a_sdNpar = 0.00;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
 %
-   launchs{2}.ry0 = [0,0,0,0,0,0];%vertical launching positions (m) [1,m_pol]
+   launchs{2}.ry0 = [0];%vertical launching positions (m) [1,m_pol]
 % 
    launchs{2}.m0 = [0];%initial poloidal mode number [1,1]
    launchs{2}.phi0 = [0];%toroidal angle position [1,1]
@@ -337,7 +337,7 @@ elseif strcmp(config,'FTU')
    launchs{1}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
    launchs{1}.a_sdNpar = 0.05;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
 %
-   launchs{1}.ry0 = [0,0,0,0,0,0];%vertical launching positions (m) [1,m_pol]
+   launchs{1}.ry0 = [0];%vertical launching positions (m) [1,m_pol]
 % 
    launchs{1}.m0 = [0];%initial poloidal mode number [1,1]
    launchs{1}.phi0 = [0];%toroidal angle position [1,1]
@@ -363,7 +363,7 @@ elseif strcmp(config,'SST1')
    launchs{1}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
    launchs{1}.a_sdNpar = 0.0;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
 %
-   launchs{1}.ry0 = [0,0,0,0,0,0];%vertical launching positions (m) [1,m_pol]
+   launchs{1}.ry0 = [0];%vertical launching positions (m) [1,m_pol]
 % 
    launchs{1}.m0 = [0];%initial poloidal mode number [1,1]
    launchs{1}.phi0 = [0];%toroidal angle position [1,1]
@@ -389,7 +389,7 @@ elseif strcmp(config,'DEMO3.7GHz')
    launchs{1}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
    launchs{1}.a_sdNpar = 0.00;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
 %
-   launchs{1}.ry0 = [0,0,0,0,0,0];%vertical launching positions (m) [1,m_pol]
+   launchs{1}.ry0 = [0];%vertical launching positions (m) [1,m_pol]
 % 
    launchs{1}.m0 = [0];%initial poloidal mode number [1,1]
    launchs{1}.phi0 = [0];%toroidal angle position [1,1]
@@ -411,7 +411,7 @@ elseif strcmp(config,'DEMO3.7GHz')
    launchs{2}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations (main lobe) [1,n_lobe]
    launchs{2}.a_sdNpar = 0.00;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
 %
-   launchs{2}.ry0 = [0,0,0,0,0,0];%vertical launching positions (m) [1,m_pol]
+   launchs{2}.ry0 = [0];%vertical launching positions (m) [1,m_pol]
 % 
    launchs{2}.m0 = [0];%initial poloidal mode number [1,1]
    launchs{2}.phi0 = [0];%toroidal angle position [1,1]
@@ -437,7 +437,7 @@ elseif strcmp(config,'DEMO5.0GHz')
    launchs{1}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
    launchs{1}.a_sdNpar = 0.00;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
 %
-   launchs{1}.ry0 = [0,0,0,0,0,0];%vertical launching positions (m) [1,m_pol]
+   launchs{1}.ry0 = [0];%vertical launching positions (m) [1,m_pol]
 % 
    launchs{1}.m0 = [0];%initial poloidal mode number [1,1]
    launchs{1}.phi0 = [0];%toroidal angle position [1,1]
@@ -459,7 +459,7 @@ elseif strcmp(config,'DEMO5.0GHz')
    launchs{2}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations (main lobe) [1,n_lobe]
    launchs{2}.a_sdNpar = 0.00;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
 %
-   launchs{2}.ry0 = [0,0,0,0,0,0];%vertical launching positions (m) [1,m_pol]
+   launchs{2}.ry0 = [0];%vertical launching positions (m) [1,m_pol]
 % 
    launchs{2}.m0 = [0];%initial poloidal mode number [1,1]
    launchs{2}.phi0 = [0];%toroidal angle position [1,1]
