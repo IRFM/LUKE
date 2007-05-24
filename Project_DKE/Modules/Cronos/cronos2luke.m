@@ -389,7 +389,7 @@ end
 %
 [dkeparam] = make_dkeparam_cronos(par.launchtype);
 [dkedisplay] = make_display_cronos(par.make_display);
-[dkepath] = path_LUKE_LOCAL;
+dkepath=getappdata(0,'DKEPATH');
 dkepath.temppath = [dkepath.temppathroot,filesep,'CRONOS',filesep,timeid_jd(clock)];%Temporary subdirectory in scratch folder
 %
 % --------- Override parameters that are in files ------------
@@ -455,48 +455,88 @@ opt_save = 0;%For debugging or scan only.
 %--------------------------- Execution du trace de rayon C3PO et du code cinetique LUKE --------------------------- 
 %
 ik = 1;
-while 1,
-   [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = run_lukert('cronos',wavestructs,[],[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[],opt_save);
-   if isempty(dke_warnings),
-       break;
-   else
-       info_dke_yp(2,'The RF power is not absorbed at an acceptable level for the quasilinear solution. The ray-tracing is relaunched with extended ray lengths');
 %
-       for iw = 1:length(launchs),
-          wavestructs{iw}.rayparam.tfinal = wavestructs{iw}.rayparam.tfinal*1.5^ik;
-          wavestructs{iw}.rayparam.kmax = wavestructs{iw}.rayparam.kmax*1.5^ik;
-          ik = ik + 1;
-          if ik > 10;
-              error('The RF power cannot absorbed at an acceptable level for the quasilinear solution even is ray lengths have been extended. Something is going wrong !!!');
-          end
-       end
+% gestion des signes
+%
+% co courant ohm.epsi < 0 et N// < 0 dans LUKE
+%
+signe = evalin('base','param.gene.signe');
+%
+% pour CRONOS N// > 0 co courant
+%
+if sign(angle(cons)) > 0
+   ohm.epsi=-abs(ohm.epsi)*sign(signe.ip)*sign(signe.b0); 
+   for k=1:length(wavestructs)
+       eval(['wavestructs{',int2str(k),'}.launch.bNpar0 = abs(wavestructs{',int2str(k),'}.launch.bNpar0) * (-1);'])
+   end    
+else
+   ohm.epsi=abs(ohm.epsi)*sign(signe.ip)*sign(signe.b0); 
+   for k=1:length(wavestruct)
+       eval(['wavestructs{',int2str(k),'}.launch.bNpar0 = abs(wavestructs{',int2str(k),'}.launch.bNpar0);'])
+   end    
+end
+if sum(abs(ohm.epsi)) > 0,%Calculate the Ohmic electric field contribution to the plasma current
+   [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp('cronos',[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,'',transpfaste,ripple,[],[]);
+end
+%
+while 1,
+   [Znorm_RF,Zcurr_RF,ZP0_RF,dke_out_RF,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = run_lukert('cronos',wavestructs,[],[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[],opt_save);
+   if isempty(dke_warnings),
+      break;
+   else
+      info_dke_yp(2,'The RF power is not absorbed at an acceptable level for the quasilinear solution. The ray-tracing is relaunched with extended ray lengths');
+%
+      for iw = 1:length(launchs),
+         wavestructs{iw}.rayparam.tfinal = wavestructs{iw}.rayparam.tfinal*1.5^ik;
+         wavestructs{iw}.rayparam.kmax = wavestructs{iw}.rayparam.kmax*1.5^ik;
+         ik = ik + 1;
+         if ik > 10;
+            error('The RF power cannot absorbed at an acceptable level for the quasilinear solution even is ray lengths have been extended. Something is going wrong !!!');
+         end
+      end
    end
 end
 %
-rmdir(dkepath.temppath,'s');%remove directory where temporary  calculations are performed
-rmfield(dkepath, 'temppath');%remove path of the directory where temporary  calculations are performed
+if strcmp(dkedisplay.display_mode,'PARTIAL_VISUAL') | strcmp(dkedisplay.display_mode,'VISUAL'),
+   if sum(abs(ohm.epsi)) > 0,	
+	  I_ohm = sum(Zcurr.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref);
+	  figure('Name','Ohmic current profile'),
+	  graph1D_jd(equilDKE.xrho,Zcurr.x_0_fsav*mksa.j_ref,0,0,'\rho','J_{tot} (MA/m^2)',[par.machine_nom,',I_{tot} = ',num2str(I_ohm*1000),' (kA)'],NaN,'','','-','none','r',2);drawnow
+%	  print_jd(p_opt,[filename,'_Curr']);
 %
-if strcmp(dkedisplay.display_mode,'PARTIAL_VISUAL') | strcmp(dkedisplay.display_mode,'VISUAL') ,
-	I_tot = sum(Zcurr.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref);
+	  POHM_ohm = sum(ZP0.x_e_fsav.*equilDKE.xdV_2piRp_dke*mksa.P_ref*2*pi*equilDKE.Rp);
+	  figure('Name','Ohmic Power'),
+	  graph1D_jd(equilDKE.xrho,ZP0_RF.x_e_fsav*mksa.P_ref,0,0,'\rho','P_{OHM} (MW/m^3)',[par.machine_nom,',P_{OHM} = ',num2str(POHM_ohm*1000),' (kW)'],NaN,'','','-','none','r',2);drawnow
+%	  print_jd(p_opt,[filename,'_Ohm']);
+   end		
+%
+	I_tot = sum(Zcurr_RF.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref);
 	figure('Name','Current profile'),
-	graph1D_jd(equilDKE.xrho,Zcurr.x_0_fsav*mksa.j_ref,0,0,'\rho','J_{tot} (MA/m^2)',['CMOD,I_{tot} = ',num2str(I_tot*1000),' (kA)'],NaN,'','','-','none','r',2);drawnow
-	print_jd(p_opt,[filename,'_Curr']);
+	graph1D_jd(equilDKE.xrho,Zcurr_RF.x_0_fsav*mksa.j_ref,0,0,'\rho','J_{tot} (MA/m^2)',[par.machine_nom,',I_{tot} = ',num2str(I_tot*1000),' (kA)'],NaN,'','','-','none','r',2);drawnow
+%	print_jd(p_opt,[filename,'_Curr']);
 %
-	PLH_tot = sum(ZP0.x_rf_fsav.*equilDKE.xdV_2piRp_dke(:)*mksa.P_ref*2*pi*equilDKE.Rp);
+	PLH_tot = sum(ZP0_RF.x_rf_fsav.*equilDKE.xdV_2piRp_dke(:)*mksa.P_ref*2*pi*equilDKE.Rp);
 	figure('Name','LH Power'),
-	graph1D_jd(equilDKE.xrho,ZP0.x_rf_fsav*mksa.P_ref,0,0,'\rho','P_{LH} (MW/m^3)',['CMOD,P_{LH} = ',num2str(PLH_tot*1000),' (kW)'],NaN,'','','-','none','r',2);drawnow
-	print_jd(p_opt,[filename,'_RF_Power']);
+	graph1D_jd(equilDKE.xrho,ZP0_RF.x_rf_fsav*mksa.P_ref,0,0,'\rho','P_{LH} (MW/m^3)',[par.machine_nom,',P_{LH} = ',num2str(PLH_tot*1000),' (kW)'],NaN,'','','-','none','r',2);drawnow
+%	print_jd(p_opt,[filename,'_RF_Power']);
 %
-	POHM_tot = sum(ZP0.x_e_fsav.*equilDKE.xdV_2piRp_dke*mksa.P_ref*2*pi*equilDKE.Rp);
+	POHM_tot = sum(ZP0_RF.x_e_fsav.*equilDKE.xdV_2piRp_dke*mksa.P_ref*2*pi*equilDKE.Rp);
 	figure('Name','Ohmic Power'),
-	graph1D_jd(equilDKE.xrho,ZP0.x_e_fsav*mksa.P_ref,0,0,'\rho','P_{OHM} (MW/m^3)',['CMOD,P_{OHM} = ',num2str(POHM_tot*1000),' (kW)'],NaN,'','','-','none','r',2);drawnow
-	print_jd(p_opt,[filename,'_Ohm']);
+	graph1D_jd(equilDKE.xrho,ZP0_RF.x_e_fsav*mksa.P_ref,0,0,'\rho','P_{OHM} (MW/m^3)',[par.machine_nom,',P_{OHM} = ',num2str(POHM_tot*1000),' (kW)'],NaN,'','','-','none','r',2);drawnow
+%	print_jd(p_opt,[filename,'_Ohm']);
 end
 %
 %--------------------------- REMPLISSAGE DE LA STRUCTURE DE SORTIE POUR CRONOS --------------------------- 
 %
-sortie.j = interp1(radialDKE.xpsin,(Zcurr_fsav{1,1} + Zcurr_fsav{1,2} + Zcurr_fsav{1,3})*mksa.j_ref,gene.x);
-sortie.el = interp1(radialDKE.xpsin,(sum(ZP0_fsav{3,1} + ZP0_fsav{3,2} + ZP0_fsav{3,3},2))*mksa.P_ref,gene.x);
+equilDKE.xcron = interp1(abs(equi.psi-equi.psi(1))/max(abs(equi.psi-equi.psi(1))),gene.x,equilDKE.xpsin);
+%
+if sum(abs(ohm.epsi)) > 0,%Only the RF current + the synergistic Ohmic/RF current contribution is kept
+   sortie.j = interp1(equilDKE.xcron,(Zcurr_RF.x_tot_fsav - Zcurr.x_tot_fsav)*mksa.j_ref,gene.x);
+   sortie.el = interp1(equilDKE.xcron,(ZP0_RF.x_rf_fsav + ZP0_RF.x_e_fsav' - ZP0.x_e_fsav')*mksa.P_ref,gene.x);
+else
+   sortie.j = interp1(equilDKE.xcron,Zcurr.x_tot_fsav*mksa.j_ref,gene.x);
+   sortie.el = interp1(equilDKE.xcron,(ZP0.x_rf_fsav + ZP0.x_e_fsav')*mksa.P_ref,gene.x);
+end
 %
 if par.save,
    [chemin,void] = fileparts(gene.rapsauve);
