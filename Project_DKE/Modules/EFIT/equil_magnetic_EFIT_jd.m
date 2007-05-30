@@ -53,6 +53,9 @@ ptBy = ptdpsindx*psia./ptR;
 ptF = repmat(pF.',[1,nt]);
 ptBPHI = ptF./ptR;
 %
+ptBP = sqrt(ptBx.^2 +ptBy.^2);
+ptB = sqrt(ptBP.^2 + ptBPHI.^2);
+%
 prho = ptx(:,1).'/ap;
 %
 pq_h = (pq(1:end-1) + pq(2:end))/2;
@@ -95,6 +98,13 @@ if display_mode == 2,
     graph1D_jd(rx,rBP,0,0,'','','',NaN,xlim,ylim,style,marker,color2,width);
     graph1D_jd(rx,rB,0,0,xlab,ylab,tit,leg,xlim,ylim,style,marker,color3,width);
     print_jd(p_opt,[savename,'_Bfield']);
+%
+    figure(13),,clf
+    graph1D_jd(theta,ptB(2,:),0,0,'','','',NaN,'','',style,marker,'b',width);hold on
+    plot(theta,ptB([2:end],:))
+    legend(['r/a = ',num2str(prho(2))])
+    axis([0,2*pi,0,ceil(max(max(ptB([2:end],:)))*10)/10])
+    xlabel('\theta (rd)'),ylabel('B(T)'),title([dispname])
 end
 %
 ptx(:,65) = ptx(:,1);
