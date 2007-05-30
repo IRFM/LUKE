@@ -272,6 +272,10 @@ dke_out.XXf0_g = XXf0_g;
 dke_out.XXf0_L_tp = XXf0_L_tp;
 dke_out.XXf0_L_g = XXf0_L_g;
 dke_out.ZXXS = ZXXS;
+dke_out.ZXXD_c = ZXXD_c;
+dke_out.ZXXF_c = ZXXF_c;
+dke_out.ZXXD_e = ZXXD_e;
+dke_out.ZXXF_e = ZXXF_e;
 dke_out.ZXXD_rf = ZXXD_rf;
 dke_out.ZXXD_rf_tp = ZXXD_rf_tp;
 dke_out.ZXXF_rf_tp = ZXXF_rf_tp;
@@ -345,7 +349,7 @@ end
 % Flexible output
 %
 savefields_radialDKE = {'xpsin_f','xpsin_f_dke','xdpsin_f_dke','xpsin_S_dke','r_dke'};
-savefields_momentumDKE = {'pn','pn_S','dpn','mhu','mhu_S','dmhu'};
+savefields_momentumDKE = {'pn','pnp','pn_S','dpn','mhu','mhu_S','dmhu'};
 savefields_gridDKE = {'X1mmhu2','xmhubounce2'};
 savefields_Zmomcoef = {'gamma','v'};
 savefields_Zbouncecoef = {'xq','xqtilde','xqbar','xqhat','XXheaviside','Xxlambda'};
