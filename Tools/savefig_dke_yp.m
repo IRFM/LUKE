@@ -15,10 +15,11 @@ else
         mkdir(dirfig);
     end
 %
+    dir_old = pwd;
     cd(dirfig)
     eval(['print -depsc -loose -tiff -r600 ',figname,'.eps'])
     saveas(gcf,figname,'fig')
-    cd ..
+    cd(dir_old)
 end
         
 
