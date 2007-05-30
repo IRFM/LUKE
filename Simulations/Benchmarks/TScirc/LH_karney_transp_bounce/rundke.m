@@ -133,24 +133,24 @@ tCPU1 = [dke_out10_1.time_out,dke_out10_2.time_out,dke_out10_3.time_out,dke_out1
 vparmin = 1/(waves{1}.rays{1}.sNpar(1)+imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
 vparmax = 1/(waves{1}.rays{1}.sNpar(1)-imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
 %
-figure(1),clf,graph1D_jd(Dpsipsi,tCPU,1,0,'D_{\psi\psi} (m^{2}/s)','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','r',2,20,gca,0.85,0.7,0.5);
+figure(1),clf,graph1D_jd(Dpsipsi,tCPU,1,0,'D_{\psi\psi} (m^{2}/s)','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','r',2,20,gca,1,0.6,0.6);
 axis([0.1,10,0,300])
 savefig_dke_yp('tCPU_Dpsipsi')
 %
-figure(2),clf,graph1D_jd([1:10],tCPU1,0,0,'Number of processors)','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2),', D_{\psi\psi}  = 10 (m^{2}/s)'],NaN,'','','-','none','r',2,20,gca,0.85,0.7,0.5);
+figure(2),clf,graph1D_jd([1:10],tCPU1,0,0,'Number of processors)','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2),', D_{\psi\psi}  = 10 (m^{2}/s)'],NaN,'','','-','none','r',2,20,gca,1,0.6,0.6);
 axis([1,10,0,400])
 savefig_dke_yp('tCPUDpsipsi10_Nproc')
 %
-figure(3),clf,graph1D_jd(equilDKE.xrho,Zcurr0.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','r',2,20,gca,0.85,0.7,0.5);hold on
-graph1D_jd(equilDKE.xrho,Zcurr01.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','b',2,20,gca,0.85,0.7,0.5);hold on
-%graph1D_jd(equilDKE.xrho,Zcurr02.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','g',1,20,gca,0.85,0.7,0.5);hold on
-%graph1D_jd(equilDKE.xrho,Zcurr05.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','c',1,20,gca,0.85,0.7,0.5);hold on
-graph1D_jd(equilDKE.xrho,Zcurr1.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','g',2,20,gca,0.85,0.7,0.5);hold on
-%graph1D_jd(equilDKE.xrho,Zcurr2.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','k',1,20,gca,0.85,0.7,0.5);hold on
-%graph1D_jd(equilDKE.xrho,Zcurr5.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','--','none','r',1,20,gca,0.85,0.7,0.5);hold on
-graph1D_jd(equilDKE.xrho,Zcurr10.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','m',2,20,gca,0.85,0.7,0.5);hold on
-graph1D_jd(equilDKE.xrho,Zcurr20.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','k',2,20,gca,0.85,0.7,0.5);hold on
-graph1D_jd(equilDKE.xrho,besselj(0,2.4*equilDKE.xrho)*Zcurr20.x_tot_fsav(1),0,0,'\rho','current density',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','none','+','r',2,20,gca,0.85,0.7,0.5);
+figure(3),clf,graph1D_jd(equilDKE.xrho,Zcurr0.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','r',2,20,gca,1,0.6,0.6);hold on
+graph1D_jd(equilDKE.xrho,Zcurr01.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','b',2,20,gca,1,0.6,0.6);hold on
+%graph1D_jd(equilDKE.xrho,Zcurr02.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','g',1,20,gca,1,0.6,0.6);hold on
+%graph1D_jd(equilDKE.xrho,Zcurr05.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','c',1,20,gca,1,0.6,0.6);hold on
+graph1D_jd(equilDKE.xrho,Zcurr1.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','g',2,20,gca,1,0.6,0.6);hold on
+%graph1D_jd(equilDKE.xrho,Zcurr2.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','k',1,20,gca,1,0.6,0.6);hold on
+%graph1D_jd(equilDKE.xrho,Zcurr5.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','--','none','r',1,20,gca,1,0.6,0.6);hold on
+graph1D_jd(equilDKE.xrho,Zcurr10.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','m',2,20,gca,1,0.6,0.6);hold on
+graph1D_jd(equilDKE.xrho,Zcurr20.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','k',2,20,gca,1,0.6,0.6);hold on
+graph1D_jd(equilDKE.xrho,besselj(0,2.4*equilDKE.xrho)*Zcurr20.x_tot_fsav(1),0,0,'\rho','current density',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','none','+','r',2,20,gca,1,0.6,0.6);
 legend('D_{\psi\psi} = 0 (m^{2}/s)','D_{\psi\psi} = 0.1 (m^{2}/s)','D_{\psi\psi} = 1 (m^{2}/s)','D_{\psi\psi} = 10 (m^{2}/s)','D_{\psi\psi} = 20 (m^{2}/s)','J_{0}(2.4*\rho)')
 savefig_dke_yp('Jprof_Dpsipsi')
 

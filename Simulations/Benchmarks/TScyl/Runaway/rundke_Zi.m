@@ -50,7 +50,8 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %**************************************************************************
 %**************************************************************************
 %
-%dkeparam.invproc = -2;
+if exist('dmumpsmex');dkeparam.invproc = -2;end
+%
 equil.zZi = [1,1,1,1];equil.pzni = species_dke_yp(equil.pne,ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 1
 [Znorm,Zcurr,ZP0,dke_out_Z1,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 equil.zZi = [1,1,1,2];equil.pzni = species_dke_yp(equil.pne,2*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 2
@@ -90,9 +91,9 @@ RR = [dke_out_Z1.XxRR_fsav(end,:),dke_out_Z2.XxRR_fsav(end,:),dke_out_Z3.XxRR_fs
 Z_kulsrud =[1,2,3,10];
 RR_kulsrud = [3.177,1.735,1.047,0.09]*1e-4;%Kulsrud (PRL, 31,11, (1972) 690
 %
-figure(1),clf,graph1D_jd(Z,RR,0,1,'Main ion charge (Z)','Runaway loss rate','',NaN,'','','-','non','r',2,20,gca,0.85,0.7,0.5);hold on
-graph1D_jd(Z_kulsrud,RR_kulsrud,0,1,'Main ion charge (Z)','Runaway loss rate','',NaN,'','','none','*','g',2,20,gca,0.85,0.7,0.5);hold on
-graph1D_jd(1,3.177e-4,0,1,'Main ion charge (Z)','Runaway loss rate','',NaN,'','','none','+','b',2,20,gca,0.85,0.7,0.5);
+figure(1),clf,graph1D_jd(Z,RR,0,1,'Main ion charge (Z)','Runaway loss rate','',NaN,'','','-','non','r',2,20,gca,1,0.6,0.6);hold on
+graph1D_jd(Z_kulsrud,RR_kulsrud,0,1,'Main ion charge (Z)','Runaway loss rate','',NaN,'','','none','*','g',2,20,gca,1,0.6,0.6);hold on
+graph1D_jd(1,3.177e-4,0,1,'Main ion charge (Z)','Runaway loss rate','',NaN,'','','none','+','b',2,20,gca,1,0.6,0.6);
 legend('DKE','Kulsrud et al.','Kruskal-Bernstein');
 savefig_dke_yp('runaway_Zi')
 %

@@ -59,21 +59,21 @@ ohm.epsi = -ohm.epsi;%The Ohmic electric field is reversed
 waves{1}.rays{1}.sNpar = -waves{1}.rays{1}.sNpar;%The wave direction is reversed
 [Znorm_m,Zcurr_m,ZP0_m,dke_out_m] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
-figure(1),clf,graph1D_jd(gridDKE.xrho,Zcurr_p.x_tot_fsav,0,0,'\rho','Current density','',NaN,'','','-','none','r',2,20,gca,0.85,0.7,0.5);hold on
-graph1D_jd(gridDKE.xrho,Zcurr_m.x_tot_fsav,0,0,'\rho','Current density','',NaN,'','','-','none','b',2,20,gca,0.85,0.7,0.5);hold on
-graph1D_jd(gridDKE.xrho,Zcurr_p.x_tot_fsav+Zcurr_m.x_tot_fsav,0,0,'\rho','Current density','',NaN,'','','none','*','g',2,20,gca,0.85,0.7,0.5);
+figure(1),clf,graph1D_jd(gridDKE.xrho,Zcurr_p.x_tot_fsav,0,0,'\rho','Current density','',NaN,'','','-','none','r',2,20,gca,1,0.6,0.6);hold on
+graph1D_jd(gridDKE.xrho,Zcurr_m.x_tot_fsav,0,0,'\rho','Current density','',NaN,'','','-','none','b',2,20,gca,1,0.6,0.6);hold on
+graph1D_jd(gridDKE.xrho,Zcurr_p.x_tot_fsav+Zcurr_m.x_tot_fsav,0,0,'\rho','Current density','',NaN,'','','none','*','g',2,20,gca,1,0.6,0.6);
 legend('N_{||} > 0, E_{field} > 0','N_{||}< 0, E_{field} < 0','Sum')
 savefig_dke_yp('profcurr_testzero')
 %
-figure(2),clf,graph1D_jd(gridDKE.xrho,ZP0_p.x_rf_fsav,0,0,'','','',NaN,'','','-','none','r',2,20,gca,0.85,0.7,0.5);hold on
-graph1D_jd(gridDKE.xrho,ZP0_p.x_c_fsav,0,0,'','','',NaN,'','','--','none','r',2,20,gca,0.85,0.7,0.5);hold on
-graph1D_jd(gridDKE.xrho,ZP0_m.x_rf_fsav,0,0,'','','',NaN,'','','none','+','b',2,20,gca,0.85,0.7,0.5);
-graph1D_jd(gridDKE.xrho,ZP0_m.x_c_fsav,0,0,'\rho','Power','',NaN,'','','none','*','b',2,20,gca,0.85,0.7,0.5);
+figure(2),clf,graph1D_jd(gridDKE.xrho,ZP0_p.x_rf_fsav,0,0,'','','',NaN,'','','-','none','r',2,20,gca,1,0.6,0.6);hold on
+graph1D_jd(gridDKE.xrho,ZP0_p.x_c_fsav,0,0,'','','',NaN,'','','--','none','r',2,20,gca,1,0.6,0.6);hold on
+graph1D_jd(gridDKE.xrho,ZP0_m.x_rf_fsav,0,0,'','','',NaN,'','','none','+','b',2,20,gca,1,0.6,0.6);
+graph1D_jd(gridDKE.xrho,ZP0_m.x_c_fsav,0,0,'\rho','Power','',NaN,'','','none','*','b',2,20,gca,1,0.6,0.6);
 legend('P_{LH}: N_{||} > 0, E_{field} > 0','P_{coll}: N_{||} > 0, E_{field} > 0','P_{LH}: N_{||} < 0, E_{field} < 0','P_{coll}: N_{||} < 0, E_{field} < 0')
 savefig_dke_yp('profP_testzero')
 %
-figure(3),clf,graph1D_jd(gridDKE.xrho,Znorm_p.x_0_fsav,0,0,'','','',NaN,'','','-','none','r',2,20,gca,0.85,0.7,0.5);hold on
-graph1D_jd(gridDKE.xrho,Znorm_m.x_0_fsav,0,0,'\rho','Density','',NaN,'','','none','*','b',2,20,gca,0.85,0.7,0.5);
+figure(3),clf,graph1D_jd(gridDKE.xrho,Znorm_p.x_0_fsav,0,0,'','','',NaN,'','','-','none','r',2,20,gca,1,0.6,0.6);hold on
+graph1D_jd(gridDKE.xrho,Znorm_m.x_0_fsav,0,0,'\rho','Density','',NaN,'','','none','*','b',2,20,gca,1,0.6,0.6);
 legend('N_{||} > 0, E_{field} > 0','N_{||} < 0, E_{field} < 0')
 savefig_dke_yp('profne_testzero')
 %	    

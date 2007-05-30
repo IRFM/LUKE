@@ -60,22 +60,22 @@ addpath('rippleTS');
 vparmin = 1/(waves{1}.rays{1}.sNpar(1)+imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
 vparmax = 1/(waves{1}.rays{1}.sNpar(1)-imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
 %
-figure(1),clf,graph1D_jd(equilDKE.xrho*equilDKE.ap+equilDKE.Rp,dke_out.xMRR_flux,0,0,'','','',NaN,'','','-','non','r',2,20,gca,0.85,0.7,0.5);
-graph1D_jd(equilDKE.xrho*equilDKE.ap+equilDKE.Rp,dke_out.xMRR_tau,0,0,'R(m)','Magnetic ripple loss rate',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{||lh} = ',num2str(1),', Zi = ',num2str(1)],NaN,'','','--','non','b',2,20,gca,0.85,0.7,0.5);hold on
+figure(1),clf,graph1D_jd(equilDKE.xrho*equilDKE.ap+equilDKE.Rp,dke_out.xMRR_flux,0,0,'','','',NaN,'','','-','non','r',2,20,gca,1,0.6,0.6);
+graph1D_jd(equilDKE.xrho*equilDKE.ap+equilDKE.Rp,dke_out.xMRR_tau,0,0,'R(m)','Magnetic ripple loss rate',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{||lh} = ',num2str(1),', Zi = ',num2str(1)],NaN,'','','--','non','b',2,20,gca,1,0.6,0.6);hold on
 legend('Flux calculations','\tau calculations')
 savefig_dke_yp(['ripplelossrate'])
 %
-figure(2),clf,graph1D_jd(equilDKE.xrho*equilDKE.ap+equilDKE.Rp,ZP0.x_rf_fsav,0,0,'R(m)','P_{lh}',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),num2str(vparmax),', D_{||lh} = ',num2str(1),', Zi = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,0.85,0.7,0.5);hold on
-graph1D_jd(equilDKE.xrho*equilDKE.ap+equilDKE.Rp,-ZP0.x_c_fsav,0,0,'R(m)','P_{lh}',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),num2str(vparmax),', D_{||lh} = ',num2str(1),', Zi = ',num2str(1)],NaN,'','','-','non','b',1,20,gca,0.85,0.7,0.5);
+figure(2),clf,graph1D_jd(equilDKE.xrho*equilDKE.ap+equilDKE.Rp,ZP0.x_rf_fsav,0,0,'R(m)','P_{lh}',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),num2str(vparmax),', D_{||lh} = ',num2str(1),', Zi = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,1,0.6,0.6);hold on
+graph1D_jd(equilDKE.xrho*equilDKE.ap+equilDKE.Rp,-ZP0.x_c_fsav,0,0,'R(m)','P_{lh}',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),num2str(vparmax),', D_{||lh} = ',num2str(1),', Zi = ',num2str(1)],NaN,'','','-','non','b',1,20,gca,1,0.6,0.6);
 legend('P_{lh}','P_{coll}')
 savefig_dke_yp(['powerdensity'])
 %
-figure(3),clf,graph1D_jd(equilDKE.xrho*equilDKE.ap+equilDKE.Rp,Zmripple.xthetabanana,0,0,'R(m)','Angle (deg.)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),num2str(vparmax),', D_{||lh} = ',num2str(1),', Zi = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,0.85,0.7,0.5);hold on
-graph1D_jd(equilDKE.xrho*equilDKE.ap+equilDKE.Rp,Zmripple.xthetaloss,0,0,'R(m)','Angle (deg.)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),num2str(vparmax),', D_{||lh} = ',num2str(1),', Zi = ',num2str(1)],NaN,'','','--','non','b',2,20,gca,0.85,0.7,0.5);
+figure(3),clf,graph1D_jd(equilDKE.xrho*equilDKE.ap+equilDKE.Rp,Zmripple.xthetabanana,0,0,'R(m)','Angle (deg.)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),num2str(vparmax),', D_{||lh} = ',num2str(1),', Zi = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,1,0.6,0.6);hold on
+graph1D_jd(equilDKE.xrho*equilDKE.ap+equilDKE.Rp,Zmripple.xthetaloss,0,0,'R(m)','Angle (deg.)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),num2str(vparmax),', D_{||lh} = ',num2str(1),', Zi = ',num2str(1)],NaN,'','','--','non','b',2,20,gca,1,0.6,0.6);
 legend('Banana cone angle','Loss cone angle')
 savefig_dke_yp(['losscone'])
 %
-figure(4),clf,graph1D_jd(equilDKE.xrho*equilDKE.ap+equilDKE.Rp,Zmripple.xpndetrap,0,0,'R(m)','Magnetic ripple p_{detrap}/p_{th-ref}',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),num2str(vparmax),', D_{||lh} = ',num2str(1),', Zi = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,0.85,0.7,0.5);hold on
+figure(4),clf,graph1D_jd(equilDKE.xrho*equilDKE.ap+equilDKE.Rp,Zmripple.xpndetrap,0,0,'R(m)','Magnetic ripple p_{detrap}/p_{th-ref}',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),num2str(vparmax),', D_{||lh} = ',num2str(1),', Zi = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,1,0.6,0.6);hold on
 savefig_dke_yp(['detrap'])
 %	    
 %************************************************************************************************************************************

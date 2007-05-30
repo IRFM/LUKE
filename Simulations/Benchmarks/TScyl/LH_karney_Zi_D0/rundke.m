@@ -87,16 +87,16 @@ vparmin = 1/(waves{1}.rays{1}.sNpar(1)+imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.
 vparmax = 1/(waves{1}.rays{1}.sNpar(1)-imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
 etalh_th = 6*etalh(1)./(5+Zi);
 %
-figure(1),clf,graph1D_jd(Zi,jlh,0,0,'Main ion charge','j_{LH}',['D_{|| ||LH} = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,0.85,0.7,0.5);
+figure(1),clf,graph1D_jd(Zi,jlh,0,0,'Main ion charge','j_{LH}',['D_{|| ||LH} = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,1,0.6,0.6);
 savefig_dke_yp('jLH_Zi')
 %
-figure(2),clf,graph1D_jd(Zi,plh,0,0,'Main ion charge','p_{LH} and p_{coll}',['D_{|| ||LH} = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,0.85,0.7,0.5);hold on
-graph1D_jd(Zi,pcoll,0,0,'Main ion charge','p_{LH} and p_{coll}','',NaN,'','','none','+','b',2,20,gca,0.85,0.7,0.5);hold on
+figure(2),clf,graph1D_jd(Zi,plh,0,0,'Main ion charge','p_{LH} and p_{coll}',['D_{|| ||LH} = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,1,0.6,0.6);hold on
+graph1D_jd(Zi,pcoll,0,0,'Main ion charge','p_{LH} and p_{coll}','',NaN,'','','none','+','b',2,20,gca,1,0.6,0.6);hold on
 legend('LH power','Collision power')
 savefig_dke_yp('PlhPcoll_Zi')
 %
-figure(3),clf,graph1D_jd(Zi,etalh,0,0,'Main ion charge','LH CD efficiency \eta_{LH}',['D_{|| ||LH} = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,0.85,0.7,0.5);hold on
-graph1D_jd(Zi,etalh_th,0,0,'Main ion charge','LH CD efficiency \eta_{LH}',[],NaN,'','','none','+','b',2,20,gca,0.85,0.7,0.5);
+figure(3),clf,graph1D_jd(Zi,etalh,0,0,'Main ion charge','LH CD efficiency \eta_{LH}',['D_{|| ||LH} = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,1,0.6,0.6);hold on
+graph1D_jd(Zi,etalh_th,0,0,'Main ion charge','LH CD efficiency \eta_{LH}',[],NaN,'','','none','+','b',2,20,gca,1,0.6,0.6);
 legend('DKE code','4/(Z+5)')
 axis([0,10,0,20])
 savefig_dke_yp('effLH_Zi')
@@ -129,15 +129,15 @@ plh1 = [ZP0_D01.x_rf_fsav,ZP0_D02.x_rf_fsav,ZP0_D05.x_rf_fsav,ZP0_D1.x_rf_fsav,Z
 pcoll1 = -[ZP0_D01.x_c_fsav,ZP0_D02.x_c_fsav,ZP0_D05.x_c_fsav,ZP0_D1.x_c_fsav,ZP0_D2.x_c_fsav,ZP0_D5.x_c_fsav,ZP0_D10.x_c_fsav,ZP0_D20.x_c_fsav];
 etalh1 = jlh1./plh1;
 %
-figure(4),clf,graph1D_jd(Dlh,jlh1,0,0,'D_{|| ||LH}','j_{LH}',['Zi = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,0.85,0.7,0.5);
+figure(4),clf,graph1D_jd(Dlh,jlh1,0,0,'D_{|| ||LH}','j_{LH}',['Zi = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,1,0.6,0.6);
 savefig_dke_yp('jLH_DLH')
 %
-figure(5),clf,graph1D_jd(Dlh,plh1,0,0,'D_{|| ||LH}','p_{LH} and p_{coll}',['Zi = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,0.85,0.7,0.5);hold on
-graph1D_jd(Dlh,pcoll1,0,0,'D_{||LH}','p_{lh} and p_{coll}','',NaN,'','','none','+','b',2,20,gca,0.85,0.7,0.5);hold on
+figure(5),clf,graph1D_jd(Dlh,plh1,0,0,'D_{|| ||LH}','p_{LH} and p_{coll}',['Zi = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,1,0.6,0.6);hold on
+graph1D_jd(Dlh,pcoll1,0,0,'D_{||LH}','p_{lh} and p_{coll}','',NaN,'','','none','+','b',2,20,gca,1,0.6,0.6);hold on
 legend('LH power','Collision power')
 savefig_dke_yp('PLHPcoll_DLH')
 %
-figure(6),clf,graph1D_jd(Dlh,etalh1,0,0,'D_{|| ||LH}','LH CD efficiency \eta_{LH}',['Zi = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,0.85,0.7,0.5);hold on
+figure(6),clf,graph1D_jd(Dlh,etalh1,0,0,'D_{|| ||LH}','LH CD efficiency \eta_{LH}',['Zi = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,1,0.6,0.6);hold on
 savefig_dke_yp('effLH_DLH')
 %	    
 %************************************************************************************************************************************

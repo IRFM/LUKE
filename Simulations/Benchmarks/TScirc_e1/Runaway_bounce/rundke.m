@@ -61,8 +61,8 @@ epsi_circ = equilDKE.xrho*equilDKE.ap/equilDKE.Rp;%Circular inverse aspect ratio
 norm_runrate = dke_out.XxRR_fsav(end,:)/max(dke_out.XxRR_fsav(end,:));
 %norm_runrate1 = 1 - 1.2*sqrt(2*epsi_circ./(1+epsi_circ));
 %norm_runrate1(norm_runrate1 < 0) = 0;
-figure(1),clf,graph1D_jd(epsi_circ,norm_runrate,0,0,'Inverse aspect ratio','Normalized runaway rate','Runaway rate',NaN,'','','-','non','r',2,20,gca,0.85,0.7,0.5);hold on
-%graph1D_jd(epsi_circ,norm_runrate1,0,0,'Inverse aspect ratio','Normalized runaway rate','Runaway rate',NaN,'','','-','non','b',2,20,gca,0.85,0.7,0.5);
+figure(1),clf,graph1D_jd(epsi_circ,norm_runrate,0,0,'Inverse aspect ratio','Normalized runaway rate','Runaway rate',NaN,'','','-','non','r',2,20,gca,1,0.6,0.6);hold on
+%graph1D_jd(epsi_circ,norm_runrate1,0,0,'Inverse aspect ratio','Normalized runaway rate','Runaway rate',NaN,'','','-','non','b',2,20,gca,1,0.6,0.6);
 %legend('DKE code','Approximate (trapped fraction)')
 savefig_dke_yp('runaway_bounce')
 %

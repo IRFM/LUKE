@@ -60,7 +60,7 @@ for i = 2:nit,
     ne(i) = Znorm.x_0_fsav;
 end
 %
-figure(1),clf,graph1D_jd([1:nit]*dkeparam.dtn,ne*mksa.ne_ref,0,0,'Integration time step (t_{coll})','Electron density (10^{+19} m^{-3)}',['Maxwallian distr., dtn = ',int2str(dkeparam.dtn)],NaN,'','','-','+','r',2,20,gca,0.85,0.7,0.5);
+figure(1),clf,graph1D_jd([1:nit]*dkeparam.dtn,ne*mksa.ne_ref,0,0,'Integration time step (t_{coll})','Electron density (10^{+19} m^{-3)}',['Maxwallian distr., dtn = ',int2str(dkeparam.dtn)],NaN,'','','-','+','r',2,20,gca,1,0.6,0.6);
 axis([0,nit*dkeparam.dtn,mksa.ne_ref*0.99,mksa.ne_ref*1.01])
 savefig_dke_yp('thermaldensity')
 %	    

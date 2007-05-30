@@ -108,9 +108,9 @@ sigma_Lor = [12.766/20];
 Zi_Karney = [1,2,5,10];
 sigma_Karney= [7.429,4.377,2.078,1.133];
 %
-figure(1),clf,graph1D_jd(Zi_DKE,sigma_DKE,0,0,'Main ion charge Z_{i}','','E_{||}/E_{Dreicer} = 0.001',NaN,'','','-','none','r',2,20,gca,0.85,0.7,0.5);hold on
-graph1D_jd(Zi_Karney,sigma_Karney,0,0,'Main ion charge Z_{i}','Normalized conductivity \sigma','E_{||}/E_{Dreicer} = 0.001',NaN,'','','none','*','g',2,20,gca,0.85,0.7,0.5);hold on
-graph1D_jd(Zi_Lor,sigma_Lor,0,0,'Main ion charge Z_{i}','','E_{||}/E_{Dreicer} = 0.001',NaN,'','','none','+','b',2,20,gca,0.85,0.7,0.5);hold on
+figure(1),clf,graph1D_jd(Zi_DKE,sigma_DKE,0,0,'Main ion charge Z_{i}','','E_{||}/E_{Dreicer} = 0.001',NaN,'','','-','none','r',2,20,gca,1,0.6,0.6);hold on
+graph1D_jd(Zi_Karney,sigma_Karney,0,0,'Main ion charge Z_{i}','Normalized conductivity \sigma','E_{||}/E_{Dreicer} = 0.001',NaN,'','','none','*','g',2,20,gca,1,0.6,0.6);hold on
+graph1D_jd(Zi_Lor,sigma_Lor,0,0,'Main ion charge Z_{i}','','E_{||}/E_{Dreicer} = 0.001',NaN,'','','none','+','b',2,20,gca,1,0.6,0.6);hold on
 legend('DKE','Karney','Z_{i} = \infty')
 savefig_dke_yp('conductivity_Zi')
 %

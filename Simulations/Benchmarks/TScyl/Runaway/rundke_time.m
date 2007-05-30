@@ -69,8 +69,8 @@ for i=1:length(dtn)
    end
 end
 %
-figure,clf,graph1D_jd(dtn,abs(1-xdn),1,1,'Integration time step (dtn)','Particle losses per time step','',NaN,'','','-','non','r',2,20,gca,0.85,0.7,0.5);hold on
-graph1D_jd(dtn,xdnr,1,1,'Integration time step (dtn)','Particle losses per time step','',NaN,'','','--','non','b',2,20,gca,0.85,0.7,0.5);
+figure,clf,graph1D_jd(dtn,abs(1-xdn),1,1,'Integration time step (dtn)','Particle losses per time step','',NaN,'','','-','non','r',2,20,gca,1,0.6,0.6);hold on
+graph1D_jd(dtn,xdnr,1,1,'Integration time step (dtn)','Particle losses per time step','',NaN,'','','--','non','b',2,20,gca,1,0.6,0.6);
 legend('Numerical','Runaway')
 savefig_dke_yp('runaway_loss')
 %	    
