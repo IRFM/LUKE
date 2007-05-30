@@ -53,6 +53,6 @@ for iw = 1:nw,
     launch.mmode = (par.modpolar(iw) == 1);%(1) for X mode
     launch.dNpar0 = dNpar0;
     %
-    launch{iw} = launch;
+    launchs{iw} = launch;
 end
 %
