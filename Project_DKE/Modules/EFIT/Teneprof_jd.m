@@ -222,7 +222,7 @@ if type == 1 | type>= 3 & type ~=5,
 else
     pnH = pne;
     pzni = [fi.'*pnH];
-    pzTi = [fi.'*pTi];
+    pzTi = ones(nz,1)*pTi;
 end
 %
 if display_mode >= 2,
