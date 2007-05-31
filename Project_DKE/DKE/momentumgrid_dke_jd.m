@@ -234,7 +234,7 @@ else
     %sdmhutmin = diff(mhu(length(mhu) - 1:length(mhu)));
     mhu = [mhu,makegrid_dke_jd(xmhut(N),snmhut,sdmhut,1,snmhu1,sdmhu1,sdmhu1,dmhu,grid_power)];
 %
-    mhu = mhu(find(diff([-1,mhu]) > 10*eps));
+    mhu = sort(mhu(find(diff([-1,mhu]) > 10*eps)));%Sorting for RFP since the trapped domain is not monotonic with the minor radius
     mhu_S = [-fliplr(mhu(2:length(mhu))),mhu];
 %
 end
