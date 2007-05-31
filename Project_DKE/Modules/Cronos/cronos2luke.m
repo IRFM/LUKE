@@ -33,15 +33,8 @@
 %                         pas utiliser dans cette fonction, reserve pour d'autres modules)
 % 
 %
-% fonction ecrite par Y. Peyssson, J. Decker et V. Basiuk, poste 6290 ou 6126
-% version 3.0, du 28/11/2006.
-% 
-% 
-% liste des modifications : 
-%-------------------------------------------------------------
-
-
-%-------------------------------------------------------------
+% fonction ecrite par Y. Peyssson, J. Decker et V. Basiuk, poste 6290 ou
+% 6126
 %
 function [sortie,memoire] = zstarwars(varargin);
 %                             
@@ -387,9 +380,9 @@ end
 %
 % --------- Load first all parameters that are in files ------------
 %
-[dkeparam] = make_dkeparam_cronos(par.launchtype);
-[dkedisplay] = make_display_cronos(par.make_display);
-dkepath=getappdata(0,'DKEPATH');
+[dkeparam]       = make_dkeparam_cronos(par.launchtype);
+[dkedisplay]     = make_display_cronos(par.make_display);
+dkepath          = getappdata(0,'DKEPATH');
 dkepath.temppath = [dkepath.temppathroot,filesep,'CRONOS',filesep,timeid_jd(clock)];%Temporary subdirectory in scratch folder
 %
 % --------- Override parameters that are in files ------------
@@ -410,10 +403,12 @@ dkedisplay.rho_display  = par.rho_display;%Approximate radial position at which 
 dkedisplay.display_mode = par.display_mode;%Display mode: (0): no, (1): partial, (2): full
 %dkedisplay.display_mode = 'PARTIAL_VISUAL',%%%%%%%%%%%%%%%%%%
 %
-% PARAMETRES OHMIC 
+% PARAMETRES OHMIC, transformation en flux poloidal puis en coordonnees radials de LUKE
 %
-ohm.rho = gene.x;%Arbitrary normalized minor radius
-ohm.epsi = prof.epar;%(V/m)
+signe = evalin('base','param.gene.signe');%Toroidal Bfield and plasma current sign (CRONOS convention: > 0 when counter-clockwise from top view)
+%
+ohm.rho  = par.rho_S;
+ohm.epsi = -sign(signe.ip)*sign(signe.b0)*abs(interp1(abs(equi.psi-equi.psi(1))/max(abs(equi.psi-equi.psi(1))),prof.epar,rho2psi_jd(equil,par.rho_S)));%(V/m). Here Efield sign is always co-current by definition, in order to retrieve both amplitude and sign of Ip without any RF wave
 %
 % PARAMETRES RIPPLE 
 %
@@ -421,12 +416,12 @@ ripple.ripple = par.ripple;
 %
 % PARAMETRES FAST ELECTRON TRANSPORT 
 %
-transpfaste.vparmin = par.vparmin_r;%Lower limit of the parallel velocity dependence of the radial diffusion and pinch (vth_ref or vth)
+transpfaste.vparmin  = par.vparmin_r;%Lower limit of the parallel velocity dependence of the radial diffusion and pinch (vth_ref or vth)
 transpfaste.norm_ref = par.norm_ref;%Normalization procedure for the lower limit of radial transport parallel velocity dependence: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref
-transpfaste.Dr0 = par.Dr0;%Core radial diffusion coefficient (m^2/s)
-transpfaste.pDr = par.pDr;%Coefficient for the Dr radial profile
-transpfaste.Vr0 = par.Vr0;%Core radial pinch coefficient (m/s)
-transpfaste.pVr = par.pVr;%Coefficient for the Vr radial profile
+transpfaste.Dr0      = par.Dr0;%Core radial diffusion coefficient (m^2/s)
+transpfaste.pDr      = par.pDr;%Coefficient for the Dr radial profile
+transpfaste.Vr0      = par.Vr0;%Core radial pinch coefficient (m/s)
+transpfaste.pVr      = par.pVr;%Coefficient for the Vr radial profile
 transpfaste.Dr_model = par.Dr_model;%Radial diffusion type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth),
 transpfaste.Vr_model = par.Vr_model;%Radial pinch type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth),
 %
@@ -456,27 +451,17 @@ opt_save = 0;%For debugging or scan only.
 %
 ik = 1;
 %
-% gestion des signes
+% For CRONOS, N//> 0 means always co-current, whatever the toroidal Bfield or the direction of Ip
 %
-% co courant ohm.epsi < 0 et N// < 0 dans LUKE
+for k=1:length(wavestructs)
+	eval(['wavestructs{',int2str(k),'}.launch.bNpar0 = (-1)*sign(signe.ip)*sign(signe.b0)*wavestructs{',int2str(k),'}.launch.bNpar0;'])
+end    
 %
-signe = evalin('base','param.gene.signe');
-%
-% pour CRONOS N// > 0 co courant
-%
-if sign(angle(cons)) > 0
-   ohm.epsi=-abs(ohm.epsi)*sign(signe.ip)*sign(signe.b0); 
-   for k=1:length(wavestructs)
-       eval(['wavestructs{',int2str(k),'}.launch.bNpar0 = abs(wavestructs{',int2str(k),'}.launch.bNpar0) * (-1);'])
-   end    
-else
-   ohm.epsi=abs(ohm.epsi)*sign(signe.ip)*sign(signe.b0); 
-   for k=1:length(wavestruct)
-       eval(['wavestructs{',int2str(k),'}.launch.bNpar0 = abs(wavestructs{',int2str(k),'}.launch.bNpar0);'])
-   end    
-end
-if sum(abs(ohm.epsi)) > 0,%Calculate the Ohmic electric field contribution to the plasma current
-   [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp('cronos',[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,'',transpfaste,ripple,[],[]);
+if sum(abs(ohm.epsi)) ~= 0,%Calculate the Ohmic electric field contribution to the plasma current
+    dkeparam.bounce_mode = 0;
+    [Znorm0,Zcurr0,ZP00,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp('cronos',[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,'',transpfaste,ripple,[],[]);
+    dkeparam.bounce_mode = 1;
+   [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp('cronos',[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,'',transpfaste,ripple,[],[]);
 end
 %
 while 1,
@@ -506,7 +491,7 @@ if strcmp(dkedisplay.display_mode,'PARTIAL_VISUAL') | strcmp(dkedisplay.display_
 %
 	  POHM_ohm = sum(ZP0.x_e_fsav.*equilDKE.xdV_2piRp_dke*mksa.P_ref*2*pi*equilDKE.Rp);
 	  figure('Name','Ohmic Power'),
-	  graph1D_jd(equilDKE.xrho,ZP0_RF.x_e_fsav*mksa.P_ref,0,0,'\rho','P_{OHM} (MW/m^3)',[par.machine_nom,',P_{OHM} = ',num2str(POHM_ohm*1000),' (kW)'],NaN,'','','-','none','r',2);drawnow
+	  graph1D_jd(equilDKE.xrho,ZP0.x_e_fsav*mksa.P_ref,0,0,'\rho','P_{OHM} (MW/m^3)',[par.machine_nom,',P_{OHM} = ',num2str(POHM_ohm*1000),' (kW)'],NaN,'','','-','none','r',2);drawnow
 %	  print_jd(p_opt,[filename,'_Ohm']);
    end		
 %
@@ -531,8 +516,10 @@ end
 equilDKE.xcron = interp1(abs(equi.psi-equi.psi(1))/max(abs(equi.psi-equi.psi(1))),gene.x,equilDKE.xpsin);
 %
 if sum(abs(ohm.epsi)) > 0,%Only the RF current + the synergistic Ohmic/RF current contribution is kept
-   sortie.j = interp1(equilDKE.xcron,(Zcurr_RF.x_tot_fsav - Zcurr.x_tot_fsav)*mksa.j_ref,gene.x);
+   sortie.j  = interp1(equilDKE.xcron,(Zcurr_RF.x_tot_fsav - Zcurr.x_tot_fsav)*mksa.j_ref,gene.x);
    sortie.el = interp1(equilDKE.xcron,(ZP0_RF.x_rf_fsav + ZP0_RF.x_e_fsav' - ZP0.x_e_fsav')*mksa.P_ref,gene.x);
+   johm      = interp1(equilDKE.xcron,Zcurr.x_tot*mksa.j_ref,gene.x);
+   pohm      = interp1(equilDKE.xcron,ZP0.x_e_fsav*mksa.P_ref,gene.x);
 else
    sortie.j = interp1(equilDKE.xcron,Zcurr.x_tot_fsav*mksa.j_ref,gene.x);
    sortie.el = interp1(equilDKE.xcron,(ZP0.x_rf_fsav + ZP0.x_e_fsav')*mksa.P_ref,gene.x);
