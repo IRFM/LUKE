@@ -9,6 +9,8 @@ Steps for (un)installing LUKE
 4) If you wish to use external linear algebra packages (MUMPS, PETSc and SUPERLU are supported) 
   - Install packages (for example in LUKE/Packages)
   - Edit make_path_LUKE.m to set path for installed packages 
+		OR
+  - The path can be set interactively during the first run
 5) It's done. No need to relaunch Matlab !
 ========================================================
  UNINSTALL LUKE
