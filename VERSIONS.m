@@ -7,7 +7,7 @@ A directory Simulations has been created. It contains the Examples folder.
 
 ====> LUKE/Project_DKE/Database/DKEPARAM_files
 
-U make_dkeparam_BOUNCE3D_MUMPS.m (abslim added and package parameters)
+U make_dkeparam_BOUNCE3D_MUMPS.m (abslim added and package parameters + MUMPSmex parameters)
 U make_dkeparam_BOUNCE3D_MUMPS_m201.m
 U make_dkeparam_BOUNCE3D_boostrap.m
 U make_dkeparam_EC_RT.m
@@ -21,10 +21,16 @@ U make_dkeparam_UNIFORM10010020_nit1.m
 
 ====> LUKE/Project_DKE/Database/PATH_files
 
-U make_path_LUKE_DRFC.m (mise a jour packages)
+U make_path_LUKE_DRFC.m (removed)
+U make_path_LUKE.m (generic LOCAL .mat path file)
+
+====> LUKE/Project_DKE/Database/HXR_files
+
+U bremTSconvert_dke_yp.m (circle function replaced)
 
 ====> LUKE/Project_DKE/DKE
 
+U alphaphi_fr_jd.m (scalar entries possible)
 U disp_hot_jd.m
 U disp_jd.m
 U load_structures_yp.m (path changed with local option)
@@ -33,7 +39,7 @@ U path_LUKE_LOCAL.m
 U propagation_jd.m
 U rayprocess_jd.m (dNpar a partir de beam width)
 U run_lukert.m (dNpar increased at each caustic + warnings)
-U setpath_luke_jd.m (now a function)
+U setpath_luke_jd.m (now a function, mex as field)
 U solver_dke_yp.m (mumpsmex added + petsc modified)
 U writeCloopinput_dke_ft.m (gestion des repertoires temporaires)
 
@@ -45,6 +51,7 @@ U make_mex.m (path->dkepath)
 
 U make_dkeparam_cronos.m (new packages)
 U zstarwars.m (abslim)
+U make_wavelaunchs_cronos_lh.m (replaces make_wavelaunchs_cronos.m and ITER correction)
 
 ====> LUKE/Project_DKE/Modules/EFIT
 
@@ -75,7 +82,7 @@ U Compile.text (path corrected)
 
 U MUMPS_dke_yp.m (nproc and MPI managing)
 U readme.txt
-U MUMPSMEX_dke_yp.m (MEX file for MUMPS)
+U MUMPSMEX_dke_yp.m (MEX file for MUMPS + extra parameters)
 
 ====> LUKE/Project_DKE/Packages/PETSc
 
@@ -96,7 +103,7 @@ U ReadBinaryIntArray_DKE.c (display off)
 U ReadBinarySparseMatrix_DKE.c (display off)
 U readme.txt
 U Scalar_Tensor_product.c (display off)
-U SolverLoop_DKE_c.c (dynamic path managing)
+U SolverLoop_DKE_c.c (dynamic path managing + correction for current calculation)
 U SparseMat_Tensorproduct.c (display off)
 U tensor.h (long double -> double)
 U Tensor_Create.c (display off)
@@ -136,11 +143,14 @@ U Examples/TScirc_peak/LH_karney_ripple/rundke.m (paths simplified + mumpsmex op
 U Examples/TScyl/LH_karney_3D_num/rundke.m (paths simplified + mumpsmex option)
 U Examples/TScyl/LH_karney_Zi_D0/rundke.m (paths simplified + mumpsmex option)
 U Examples/TScyl/LH_karney_num/rundke.m (paths simplified + mumpsmex option)
-U Examples/TScyl/LH_karney_transp_nobounce/rundke.m (paths simplified + mumpsmex option)
+U Examples/TScyl/LH_karney_transp_nobounce/rundke.m (paths simplified + mumpsmex option + parallel option)
 U Examples/TScyl/Ohm_Zi/rundke.m (paths simplified + mumpsmex option)
 U Examples/TScyl/Runaway_Zi_nobounce/rundke.m (paths simplified + mumpsmex option)
 U Examples/TScyl/Runaway_particle_loss/rundke.m (paths simplified + mumpsmex option)
 U Examples/TScyl/Thermal/rundke.m (paths simplified + mumpsmex option)
 
 ****************************************************************************************************
+
+
+
 
