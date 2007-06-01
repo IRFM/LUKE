@@ -157,6 +157,29 @@ elseif type == 5,%ascii formatted (MST)
     zmi = [1,2,3];
     fi = [0,1,0];%Deuterium plasma
     pTi = pTe/2.0;%As done in RANT3D/AORSA   
+elseif type == 6,%ascii formatted (FTU)
+    prho = [];
+    pspsin = [];
+    pspsinT = [];
+    pne = [];
+    pTe = [];
+    fid = fopen(filename);
+    s = fgetl(fid);
+    dummy = sscanf(s,'%s');
+    s = fgetl(fid);
+    while s ~= -1,
+        d = sscanf(s,'%f %f %f');     
+        pspsin = [pspsin,d(1)];
+        pne = [pne,d(2)];
+        pTe = [pTe,d(3)];% in eV units    
+        s = fgetl(fid);        
+    end
+    fclose(fid);
+%
+    zZi = [1,1,1];%No impurity
+    zmi = [1,2,3];
+    fi = [0,1,0];%Deuterium plasma
+    pTi = pTe/2.0;%As done in RANT3D/AORSA  
 end
 %
 if type < 4,
@@ -213,7 +236,7 @@ elseif type == 1,
     prho = [];
     %
 end
-if type == 1 | type>= 3 & type ~=5,
+if type == 1 | type>= 3 & type ~=5 & type ~=6,
     %
     pnH = pne*(zZi(4) - Zeff)/(zZi(4) - 1);
     pnZ = pne*(Zeff - 1)/zZi(4)/(zZi(4) - 1);
