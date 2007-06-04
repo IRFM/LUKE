@@ -151,6 +151,96 @@ U Examples/TScyl/Thermal/rundke.m (paths simplified + mumpsmex option)
 
 ****************************************************************************************************
 
+LUKE Version 1.2
 
+====> LUKE/Project_DKE/Database/
 
+U make_all.m (made into a function and PATH_files removed)
+U clearmat.m (clear .mat files)
 
+====> LUKE/Project_DKE/DKE
+
+U main_dke_yp.m (sorties runaways)
+U momentumgrid_dke_jd.m (Sorting mhu so that mhu is monotonic. Important for RFP simulations only)
+U path_LUKE_LOCAL.m (PATH_LOCAL is also searched in matlab PATH. It can also be built interactively during the first run)
+U savefig_dke_yp.m (Pour que les figures soient archivées dans un dossier au choix)
+
+====> LUKE/Project_DKE/MEX/Bin
+
+U readme.txt (to create Bin directory)
+
+====> LUKE/Project_DKE/Modules/Cronos
+
+U make_dkeparam_cronos.m (Mise en place des options de calcul pour MUMPS et des méthodes diverses)
+U make_equil_cronos.m (new function for building "equil" from Cronos data)
+U make_wavelaunchs_cronos_ec.m (make launch parameters for EC waves)
+U make_wavelaunchs_cronos_lh.m (replaces make_wavelaunchs_cronos.m and ITER correction)
+U make_wavert_cronos.m (a few corrections)
+U zstarwars.m (EC wave incorporated, path and ohmic corrections)
+
+====> LUKE/Project_DKE/Modules/EFIT
+
+U Teneprof_jd.m (ajouts de RFP et FTU) 
+U equil_magnetic_EFIT_jd.m (Trace la dependence poloidale de B pour identifier l'existence de minimum secondaires le cas échéant)
+
+====> LUKE/Project_DKE/Modules/FEB/MEX/Bin
+
+U readme.txt (to create Bin directory)
+
+====> LUKE/Project_DKE/Modules/Helena
+
+U MEX/Bin/readme.txt (to create Bin directory)
+U MEX/Source/helmex77.f (Correction des lignes mal positionnées faisant planter g95)
+
+====> LUKE/Project_DKE/Modules/RT
+
+U init_RT_jd.m (Possibilité de choisir m0 ou n0 comme condition initiale (pour tokamak ou RFP))
+U main_C3PO_jd.m (")
+U main_rayinit_launch_jd.m (")
+
+====> LUKE/Project_DKE/Packages
+
+U nproc_dke_yp.m (PC case added)
+U test_packages_dke_yp.m (Calcul avec moyenne et stockage des graphiques)
+
+====> LUKE/Project_DKE/Packages/MUMPS
+
+U MUMPS_dke_yp.m (Prend en compte le chemin vers le type de mpi utilisé. A définir dans PATH_files)
+
+====> LUKE/Project_DKE/Packages/PETSc
+
+U PETSc_Cloop_dke_ft.m (Prend en compte le chemin vers le type de mpi utilisé. A définir dans PATH_files)
+U PETSc_dke_ft.m (")
+
+====> LUKE/Simulations/Examples/JETh77
+
+U LH_karney_transp_bounce/rundke.m (graphic output)
+U LH_karney_transp_bounce_nomag/rundke.m (") 
+U LH_karney_transp_bounce_petsc/rundke.m (")
+U Zero_test/rundke.m (")
+
+====> LUKE/Simulations/Examples/TScirc
+
+U LH_karney_transp_bounce/rundke.m (") 
+U LH_karney_transp_bounce_nomag/rundke.m (") 
+
+====> LUKE/Simulations/Examples/TScirc_e1
+
+U Ohm_bounce/rundke.m (cyl calc. for reference and better comparison with Sigmar-Coppi)
+U Runaway_bounce/rundke.m (graphic output)
+
+====> LUKE/Simulations/Examples/TScirc_peak
+
+U LH_karney_ripple/proc_rundke_yp.m (correction)
+U LH_karney_ripple/rundke.m (graphic output)
+
+====> LUKE/Simulations/Examples/TScyl
+
+U LH_karney_3D_num/rundke.m
+U LH_karney_Zi_D0/rundke.m
+U LH_karney_num/rundke.m
+U LH_karney_transp_nobounce/rundke.m
+U Ohm_Zi/rundke.m
+U Runaway_Zi_nobounce/rundke.m
+U Runaway_particle_loss/rundke.m
+U Thermal/rundke.m
