@@ -65,19 +65,7 @@ disp(['The LUKE paths have been installed.']);
 %
 % Build *.mat and *.mex files if possible
 %
-cd([luke_root,'/Project_DKE/MEX/Bin']);
-if exist(['trapz_dke_yp.',mexext]) == 0,
-    mex ../Source/trapz_dke_yp.c
-    disp(['The trapz_dke_yp.',mexext,' mexfile has been done.'])
-end
-cd([luke_root,'/Project_DKE/Modules/RT/MEX/Bin']);
-if exist(['raytracing_yp.',mexext]) == 0,
-    mex -c ../Source/raytracing_interp_yp.c 
-    mex -c ../Source/raytracing_dieltensor_yp.c 
-    mex -c ../Source/raytracing_load_yp.c 
-    mex ../Source/raytracing_yp.c raytracing_dieltensor_yp.o raytracing_interp_yp.o raytracing_load_yp.o 
-    disp(['The raytracing_yp.',mexext,' mexfile has been done.'])
-end
+mex_compile_luke(luke_root)
 %
 cd([luke_root,'/Project_DKE/Database']);
 make_all(0);
