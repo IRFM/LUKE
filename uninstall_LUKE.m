@@ -48,6 +48,9 @@ end
 cd([path_LUKE,'/Project_DKE/Modules/RT/MEX/Bin']);
 if exist(['raytracing_yp.',mexext]),
     delete(['raytracing_yp.',mexext])
+    delete(['raytracing_dieltensor_yp.o']) 
+    delete(['raytracing_load_yp.o'])
+    delete(['raytracing_interp_yp.o'])
     disp(['The raytracing_yp.',mexext,' mexfile has been removed.'])
 end
 %
