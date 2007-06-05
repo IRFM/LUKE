@@ -29,7 +29,7 @@ if exist(startuppath),%startup.m file already exist
     sf2 = strfind(char(sfile'),'%%%%%%%%%%%%%%%%%%%%END-LUKE-PATH%%%%%%%%%%%%%%%%%%%%');
     while length(sf1)>0
         sfile = sfile([1:max(1,sf1(1)-1),sf2(1)+53:length(sfile)]);
-        sf1 = strfind(char(sfile'),'%%%%%%%%%%%%%%%%%%%%END-LUKE-PATH%%%%%%%%%%%%%%%%%%%%');
+        sf1 = strfind(char(sfile'),'%%%%%%%%%%%%%%%%%%%%BEGIN-LUKE-PATH%%%%%%%%%%%%%%%%%%%%');
         sf2 = strfind(char(sfile'),'%%%%%%%%%%%%%%%%%%%%END-LUKE-PATH%%%%%%%%%%%%%%%%%%%%');
     end
     fclose(fid);

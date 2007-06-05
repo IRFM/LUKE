@@ -6,7 +6,7 @@ path_id = 'LOCAL';%Set here the name path parameters (user specific)
 %
 curr_dir = pwd;
 %
-ind_LUKE_dir = strfind(curr_dir,'LUKE');
+ind_LUKE_dir = strfind(curr_dir,'LUKE_');
 %
 if ~isempty(ind_LUKE_dir),
     %
@@ -20,7 +20,7 @@ else
     %
     all_dir = path;
     %
-    ind_LUKE_dir = min(strfind(all_dir,'LUKE'));
+    ind_LUKE_dir = min(strfind(all_dir,'LUKE_'));
     %
     if isempty(ind_LUKE_dir),
         error('There is no LUKE folder in the current directory or in the path');
@@ -39,8 +39,8 @@ path_root = [path_root,'/'];
 %
 filename = [path_root,'Project_DKE/Database/PATH_files/PATH_LOCAL.mat'];
 if exist(filename),
-    disp([path_root,'Project_DKE/Database/PATH_files/PATH_LOCAL.mat has been loaded'])
     load(filename);
+    disp([path_root,'Project_DKE/Database/PATH_files/PATH_LOCAL.mat has been loaded'])
     return
 end
 %
