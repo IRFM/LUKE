@@ -11,7 +11,7 @@ P = [path,':'];
 while ~isempty(P),
     ilim = min(find(P == ':'));
     pathline = P(1:ilim-1);
-    if strfind(pathline,'LUKE'),
+    if strfind(pathline,'LUKE') & ~strfind(pathline,'Project_DKE/Database/PATH_files'),
         rmpath(pathline);
     end
     P(1:ilim) = '';
@@ -30,7 +30,6 @@ addpath([luke_root,'Project_DKE/Modules/Cronos']);
 addpath([luke_root,'Project_DKE/Packages']);
 addpath([luke_root,'Project_DKE/Packages/MUMPS']);
 addpath([luke_root,'Project_DKE/Packages/PETSc']);
-addpath([luke_root,'Project_DKE/Database/PATH_files']);
 addpath([luke_root,'Project_DKE/Database/DISPLAY_files']);
 addpath([luke_root,'Project_DKE/Database/DKEPARAM_files']);
 addpath([luke_root,'Project_DKE/Database/EQUIL_files']);
