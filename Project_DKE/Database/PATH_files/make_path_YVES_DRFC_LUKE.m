@@ -17,6 +17,7 @@ dkepath.local_id = local_id;
 dkepath.computer = 'GLNXA64';%machine type and supported OS
 dkepath.temppathroot = '/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 dkepath.luke_root = luke_root;
+dkepath.local_root = local_root;
 %
 dkepath.MUMPS.par = [local_root,'Packages/Bin/MUMPS/MUMPS_4.7.2_P_mpichpgf/dke'];%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
 dkepath.MUMPS.seq = [local_root,'Packages/Bin/MUMPS/MUMPS_4.6.4_S_pgf/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
