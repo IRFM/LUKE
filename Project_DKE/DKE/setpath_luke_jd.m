@@ -22,19 +22,14 @@ end
 addpath([luke_root,'Project_DKE/Modules/FEB/Response']);
 addpath([luke_root,'Project_DKE/Modules/FEB/Pile-up']);
 addpath([luke_root,'Project_DKE/Modules/FEB']);
-addpath([luke_root,'Project_DKE/Modules/FEB/MEX/Bin']);
 addpath([luke_root,'Project_DKE/Modules/Helena']);
-addpath([luke_root,'Project_DKE/Modules/Helena/MEX/Bin']);
 addpath([luke_root,'Project_DKE/Modules/R2D2']);
-addpath([luke_root,'Project_DKE/Modules/R2D2/MEX/Bin']);
 addpath([luke_root,'Project_DKE/Modules/EFIT']);
 addpath([luke_root,'Project_DKE/Modules/RT']);
-addpath([luke_root,'Project_DKE/Modules/RT/MEX/Bin']);
 addpath([luke_root,'Project_DKE/Modules/Cronos']);
 addpath([luke_root,'Project_DKE/Packages']);
 addpath([luke_root,'Project_DKE/Packages/MUMPS']);
 addpath([luke_root,'Project_DKE/Packages/PETSc']);
-addpath([luke_root,'Project_DKE/Packages/PETSc/MEX/Bin']);
 addpath([luke_root,'Project_DKE/Database/PATH_files']);
 addpath([luke_root,'Project_DKE/Database/DISPLAY_files']);
 addpath([luke_root,'Project_DKE/Database/DKEPARAM_files']);
@@ -43,8 +38,23 @@ addpath([luke_root,'Project_DKE/Database/WAVE_files']);
 addpath([luke_root,'Project_DKE/Database/OHM_files']);
 addpath([luke_root,'Project_DKE/Database/TRANSP_files']);
 addpath([luke_root,'Project_DKE/Database/RIPPLE_files']);
-addpath([luke_root,'Project_DKE/MEX']);
 addpath([luke_root,'Project_DKE/DKE']);
+%
+% Path for MEX files
+%
+if nargin >= 2, 
+    if ~isfield(dkepath,'mex')
+        addpath([luke_root,'Project_DKE/MEX/Bin']);
+        addpath([luke_root,'Project_DKE/Packages/PETSc/MEX/Bin']);
+        addpath([luke_root,'Project_DKE/Modules/RT/MEX/Bin']);
+        addpath([luke_root,'Project_DKE/Modules/R2D2/MEX/Bin']);
+        addpath([luke_root,'Project_DKE/Modules/Helena/MEX/Bin']);
+        addpath([luke_root,'Project_DKE/Modules/FEB/MEX/Bin']);
+    else
+        addpath(dkepath.mex);
+    end
+end
+%
 %
 % Path for external packages
 %

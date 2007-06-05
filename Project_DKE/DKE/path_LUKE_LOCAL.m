@@ -56,7 +56,6 @@ end
 %
 dkepath.path_id = path_id;
 dkepath.computer = computer;%machine type and supported OS
-dkepath.mex = [path_root,'Project_DKE/MEX'];
 dkepath.luke_root = path_root;
 %
 if uisetpath_flag == 'n',
@@ -124,5 +123,4 @@ else
     %
 end
 %
-
 

@@ -108,9 +108,16 @@ if exist('flag_path','var'),%Paths
     %
     dkepath.temppath = [dkepath.temppathroot,timeid_jd(clock)];
     %
+    % dynamic compilation of MEX files
+    %
+    if ~strcmp(dkepath.path_id,'LOCAL'),
+        dkepath.mex = [dkepath.temppath,'MEX'];
+        mex_compile_luke(dkepath.luke_root,dkepath.mex);
+    end
+    %
     % Set path for Project_DKE
     %
-    setpath_luke_jd(dkepath.luke_root,dkepath)
+    setpath_luke_jd(dkepath.luke_root,dkepath);
     %
     varargout{flag_path} = dkepath;
 end
