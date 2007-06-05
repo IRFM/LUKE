@@ -17,6 +17,10 @@ while ~isempty(P),
     P(1:ilim) = '';
 end
 %
+if nargin == 0, 
+    return
+end
+%
 % Path for DKE
 %
 addpath([luke_root,'Project_DKE/Modules/FEB/Response']);

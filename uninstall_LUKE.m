@@ -25,7 +25,7 @@ if exist(startuppath),%startup.m file already exist
     sf2 = strfind(char(sfile'),'%%%%%%%%%%%%%%%%%%%%END-LUKE-PATH%%%%%%%%%%%%%%%%%%%%');
     while length(sf1)>0
         sfile = sfile([1:max(1,sf1(1)-1),sf2(1)+53:length(sfile)]);
-        sf1 = strfind(char(sfile'),'%%%%%%%%%%%%%%%%%%%%END-LUKE-PATH%%%%%%%%%%%%%%%%%%%%');
+        sf1 = strfind(char(sfile'),'%%%%%%%%%%%%%%%%%%%%BEGIN-LUKE-PATH%%%%%%%%%%%%%%%%%%%%');
         sf2 = strfind(char(sfile'),'%%%%%%%%%%%%%%%%%%%%END-LUKE-PATH%%%%%%%%%%%%%%%%%%%%');
     end
     fclose(fid);
@@ -36,14 +36,7 @@ end
 %
 disp(['The startup.m file has been cleaned from LUKE path']);
 %
-% Run startup.m and remove paths
-%
 path_LUKE = pwd;
-cd(pathforstartup);
-startup;
-cd(path_LUKE);
-%
-disp(['The LUKE paths have been removed.']);
 %
 % Remove *.mat and *.mex files if possible
 %
@@ -60,6 +53,12 @@ end
 %
 cd([path_LUKE,'/Project_DKE/Database']);
 remove_all(0);
+%
+% Remove paths
+%
+setpath_luke_jd
+%
+disp(['The LUKE paths have been removed.']);
 cd(path_LUKE);
 
 
