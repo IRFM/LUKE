@@ -5,10 +5,10 @@
 %by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
 %
 clear all
-path_id = 'LUKE';%Set here the name path parameters (user specific)
+path_id = 'LOCAL';%Set here the name path parameters (user specific)
 %
 luke_root = '/home/lukeuser/Work/LUKE_1_2/';
-local_root = '/home/lukeuser/Work/';
+local_root = '/home/lukeuser/Work/LUKE_1_2/';
 %
 dkepath.path_id = path_id;
 dkepath.computer = computer;%machine type and supported OS
