@@ -31,4 +31,4 @@ dkepath.PETSc.mpipath = ['/usr/local/pgi/linux86-64/6.0/bin/'];%Absolute path to
 %
 dkepath.SUPERLU.mex = [local_root,'Packages/Bin/SUPERLU/SuperLU_3.0-pgcc/MATLAB'];%Where SUPERLU matrix solver is stored (MEX function)
 %
-eval(['save local_',local_id ,'.mat dkepath']);
+eval(['save PATH_',local_id ,'.mat dkepath']);
