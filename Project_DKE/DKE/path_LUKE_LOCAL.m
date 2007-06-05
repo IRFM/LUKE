@@ -57,6 +57,7 @@ end
 dkepath.path_id = path_id;
 dkepath.computer = computer;%machine type and supported OS
 dkepath.luke_root = path_root;
+dkepath.local_root = path_root;
 %
 if uisetpath_flag == 'n',
     dkepath.temppathroot = '';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)

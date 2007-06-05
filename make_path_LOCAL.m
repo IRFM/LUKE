@@ -14,6 +14,7 @@ dkepath.path_id = path_id;
 dkepath.computer = computer;%machine type and supported OS
 dkepath.temppathroot = '/home/lukeuser/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 dkepath.luke_root = luke_root;
+dkepath.local_root = local_root;
 %
 %dkepath.MUMPS.par = [local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_P_mpichgfor/dke'];%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
 %dkepath.MUMPS.seq = [local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_gfor/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
@@ -25,6 +26,6 @@ dkepath.MUMPS.mpipath = [''];%Absolute path to the correct mpirun or mpiexec (ma
 %dkepath.PETSc.mex = [local_root,''];%Where PETSc matrix solver is stored (MEX function)
 dkepath.PETSc.mpipath = ['/usr/local/openmpig95/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
 %
-dkepath.SUPERLU.mex = [local_root,'Packages/Bin/SUPERLU/SuperLU_3.0/MATLAB'];%Where SUPERLU matrix solver is stored (MEX function)
+%dkepath.SUPERLU.mex = [local_root,'Packages/Bin/SUPERLU/SuperLU_3.0/MATLAB'];%Where SUPERLU matrix solver is stored (MEX function)
 %
 eval(['save PATH_',path_id ,'.mat dkepath']);

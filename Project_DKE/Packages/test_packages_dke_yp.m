@@ -14,7 +14,7 @@ end
 %
 dkepath = path_LUKE_LOCAL;
 dkepath.temppath = [dkepath.temppathroot,filesep,timeid_jd(clock)];
-luke_root = dkepath.luke_root;
+local_root = dkepath.local_root;
 %
 % Tests
 %
@@ -44,11 +44,11 @@ while ipass < npass,
 %
 % MUMPS packages (MEX application)
 %
-    if exist([luke_root,'Packages/Bin/MUMPS']),
-        list_of_packages = dir([luke_root,'Packages/Bin/MUMPS']);
+    if exist([local_root,'Packages/Bin/MUMPS']),
+        list_of_packages = dir([local_root,'Packages/Bin/MUMPS']);
         for ifile = 1:length(list_of_packages),
             if length(list_of_packages(ifile).name) >= 5 & list_of_packages(ifile).name(1:5) == 'MUMPS' & ~isempty(strfind(list_of_packages(ifile).name,'_S_')),
-                dkepath.MUMPS.mex = [luke_root,'Packages/Bin/MUMPS/',list_of_packages(ifile).name,'/MATLAB'];
+                dkepath.MUMPS.mex = [local_root,'Packages/Bin/MUMPS/',list_of_packages(ifile).name,'/MATLAB'];
                 if exist(dkepath.MUMPS.mex),
                     addpath(dkepath.MUMPS.mex)
                     isim = isim + 1;disp(['- ',list_of_packages(ifile).name,'-ILU (MEX)']),tic,job_MUMPSMEX = 1;MUMPSMEX_dke_yp;job_MUMPSMEX = 2;MUMPSMEX_dke_yp;t(isim) = toc;
@@ -66,15 +66,15 @@ while ipass < npass,
 %
 % MUMPS packages (stand-alone application)
 %
-    if exist([luke_root,'Packages/Bin/MUMPS']),
-        list_of_packages = dir([luke_root,'Packages/Bin/MUMPS']);
+    if exist([local_root,'Packages/Bin/MUMPS']),
+        list_of_packages = dir([local_root,'Packages/Bin/MUMPS']);
         for ifile = 1:length(list_of_packages),
             if length(list_of_packages(ifile).name) >= 5 & list_of_packages(ifile).name(1:5) == 'MUMPS',
 %
 % Sequential processing (stand-alone application)
 %
                 if ~isempty(strfind(list_of_packages(ifile).name,'_S_'))
-                    dkepath.MUMPS.seq = [luke_root,'Packages/Bin/MUMPS/',list_of_packages(ifile).name,'/dke'];
+                    dkepath.MUMPS.seq = [local_root,'Packages/Bin/MUMPS/',list_of_packages(ifile).name,'/dke'];
                     if isfield(dkepath.MUMPS,'par'),rmfield(dkepath.MUMPS,'par');end
                     if exist(dkepath.MUMPS.seq),                    
                         isim = isim + 1;disp(['- ',list_of_packages(ifile).name,' (sequential processing, stand-alone application)']),tic,[MMXS_t_MUMPS,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds.']);
@@ -86,7 +86,7 @@ while ipass < npass,
 % Parallel processing (stand-alone application)
 %
                 if ~isempty(strfind(list_of_packages(ifile).name,'_P_'))
-                    dkepath.MUMPS.par = [luke_root,'Packages/Bin/MUMPS/',list_of_packages(ifile).name,'/dke'];
+                    dkepath.MUMPS.par = [local_root,'Packages/Bin/MUMPS/',list_of_packages(ifile).name,'/dke'];
                     if isfield(dkepath.MUMPS,'seq'),rmfield(dkepath.MUMPS,'seq');end
                     if exist(dkepath.MUMPS.par),                                   
                         dkeparam.MUMPSparam.nproc = 4;%case with 4 processors
@@ -107,8 +107,8 @@ while ipass < npass,
 %
 % PETSc packages (stand-alone application)
 %
-    if exist([luke_root,'Packages/Bin/PETSC']),
-        list_of_packages = dir([luke_root,'Packages/Bin/PETSC']);
+    if exist([local_root,'Packages/Bin/PETSC']),
+        list_of_packages = dir([local_root,'Packages/Bin/PETSC']);
         for ifile = 1:length(list_of_packages),   
             if length(list_of_packages(ifile).name) >= 5 & list_of_packages(ifile).name(1:5) == 'petsc',
 
@@ -116,7 +116,7 @@ while ipass < npass,
 % Sequential processing (stand-alone application)
 %
                 if ~isempty(strfind(list_of_packages(ifile).name,'_S_'))
-                    dkepath.PETSc.seq = [luke_root,'Packages/Bin/PETSC/',list_of_packages(ifile).name,'/DKE'];
+                    dkepath.PETSc.seq = [local_root,'Packages/Bin/PETSC/',list_of_packages(ifile).name,'/DKE'];
                     if isfield(dkepath.PETSc,'par'),rmfield(dkepath.PETSc,'par');end
                     if exist(dkepath.PETSc.seq),
                         dkeparam.PETScparam.nproc = 1;%case with 1 processor
@@ -133,7 +133,7 @@ while ipass < npass,
 % Parallel processing (stand-alone application)
 %
                 if ~isempty(strfind(list_of_packages(ifile).name,'_P_'))
-                    dkepath.PETSc.par = [luke_root,'Packages/Bin/PETSC/',list_of_packages(ifile).name,'/DKE'];
+                    dkepath.PETSc.par = [local_root,'Packages/Bin/PETSC/',list_of_packages(ifile).name,'/DKE'];
                     if isfield(dkepath.PETSc,'seq'),rmfield(dkepath.PETSc,'seq');end
                     if exist(dkepath.PETSc.par),
                         dkeparam.PETScparam.nproc = 4;%case with 4 processors
@@ -183,12 +183,12 @@ while ipass < npass,
 %
 % SUPERLU packages (MEX application)
 %
-    if exist([luke_root,'Packages/Bin/SUPERLU']),
-        list_of_packages = dir([luke_root,'Packages/Bin/SUPERLU']);
+    if exist([local_root,'Packages/Bin/SUPERLU']),
+        list_of_packages = dir([local_root,'Packages/Bin/SUPERLU']);
         for ifile = 1:length(list_of_packages),   
             if length(list_of_packages(ifile).name) >= 7 
                 if list_of_packages(ifile).name(1:7) == 'SuperLU',
-                    dkepath.SUPERLU.mex = [luke_root,'Packages/Bin/SUPERLU/',list_of_packages(ifile).name,'/MATLAB'];
+                    dkepath.SUPERLU.mex = [local_root,'Packages/Bin/SUPERLU/',list_of_packages(ifile).name,'/MATLAB'];
                     if exist(dkepath.SUPERLU.mex),
                         addpath(dkepath.SUPERLU.mex)
                         if exist('mexlusolve');isim = isim + 1;disp(['- ',list_of_packages(ifile).name,'-SOLVE (MEX)']),tic,[MMXS_t_SUPERLU] = lusolve(MMXPC_f_t,MMXR_t);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds.']);end
@@ -215,7 +215,7 @@ if npass > 1,
     stdtt = std(tt);%Standard deviation on several runs
 %
     for iisim = 1:isim,
-        figure('Name',Zname{iisim}),graph1D_jd([1:npass],tt(:,iisim),0,0,'Number of passes','Computing time (s)',[strrep(Zname{iisim},'_','-'),' on ',computer],[num2str(meantt(iisim)),'(s) ± ',num2str(stdtt(iisim))],[1,npass],[0,2*max(tt(:,iisim))],'-','non','r',2,20,gca,0.85,0.7,0.5);hold on    
+        figure('Name',Zname{iisim}),graph1D_jd([1:npass],tt(:,iisim),0,0,'Number of passes','Computing time (s)',[strrep(Zname{iisim},'_','-'),' on ',computer],[num2str(meantt(iisim)),'(s) ï¿½ ',num2str(stdtt(iisim))],[1,npass],[0,2*max(tt(:,iisim))],'-','non','r',2,20,gca,0.85,0.7,0.5);hold on    
         savefig_dke_yp(Zname{iisim},dirfig);
     end
 end
