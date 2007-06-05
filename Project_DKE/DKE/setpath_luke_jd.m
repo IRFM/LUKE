@@ -11,7 +11,7 @@ P = [path,':'];
 while ~isempty(P),
     ilim = min(find(P == ':'));
     pathline = P(1:ilim-1);
-    if strfind(pathline,'LUKE') & ~strfind(pathline,'Project_DKE/Database/PATH_files'),
+    if ~isempty(strfind(pathline,'LUKE')) & isempty(strfind(pathline,'Project_DKE/Database/PATH_files')),
         rmpath(pathline);
     end
     P(1:ilim) = '';
