@@ -46,6 +46,7 @@ fprintf(fid,'\n%s\n','%%%%%%%%%%%%%%%%%%%BEGIN-LUKE-PATH%%%%%%%%%%%%%%%%%%%');
 localpath = [pwd,'/'];
 eval(['fprintf(fid,''%s\n'',''luke_root = ''''',localpath,''''';'');']);
 fprintf(fid,'%s\n','addpath([luke_root,''Project_DKE/DKE'']);');
+fprintf(fid,'%s\n','addpath([luke_root,''Project_DKE/Database/PATH_files'']);');
 fprintf(fid,'%s\n','setpath_luke_jd(luke_root);');
 fprintf(fid,'%s\n','%%%%%%%%%%%%%%%%%%%%END-LUKE-PATH%%%%%%%%%%%%%%%%%%%%');
 fclose(fid);
