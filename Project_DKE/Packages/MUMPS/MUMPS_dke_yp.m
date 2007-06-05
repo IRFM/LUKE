@@ -33,7 +33,6 @@ NA = length(AI);%number of non-zero elements
 flag = 0;text = '';
 %
 initial_dir = cd;
-d = dir(dkepath.temppath);
 if ~exist(dkepath.temppath);
 	mkdir(dkepath.temppath);%Create calculation directory
 end

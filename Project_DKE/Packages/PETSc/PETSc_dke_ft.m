@@ -30,7 +30,6 @@ if nargin < 5,error('Wrong number of input arguments in PETSc_dke_ft !');end
 flag = 0;text = '';
 %
 initial_dir = cd;
-d = dir(dkepath.temppath);
 if ~exist(dkepath.temppath);
 	mkdir(dkepath.temppath);%Create calculation directory
 end
