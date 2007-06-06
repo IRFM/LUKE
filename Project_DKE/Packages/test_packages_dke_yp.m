@@ -49,7 +49,7 @@ while ipass < npass,
         for ifile = 1:length(list_of_packages),
             if length(list_of_packages(ifile).name) >= 5 & list_of_packages(ifile).name(1:5) == 'MUMPS' & ~isempty(strfind(list_of_packages(ifile).name,'_S_')),
                 dkepath.MUMPS.mex = [local_root,'Packages/Bin/MUMPS/',list_of_packages(ifile).name,'/MATLAB'];
-                if exist(dkepath.MUMPS.mex),
+                if exist([dkepath.MUMPS.mex,filesep,'dmumpsmex.',mexext]),
                     addpath(dkepath.MUMPS.mex)
                     isim = isim + 1;disp(['- ',list_of_packages(ifile).name,'-ILU (MEX)']),tic,job_MUMPSMEX = 1;MUMPSMEX_dke_yp;job_MUMPSMEX = 2;MUMPSMEX_dke_yp;t(isim) = toc;
                     Zname{isim} = ['MEX_',list_of_packages(ifile).name,'_LU_FACTORISATION'];
