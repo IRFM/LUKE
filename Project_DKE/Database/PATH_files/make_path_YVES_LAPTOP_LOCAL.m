@@ -7,8 +7,8 @@
 clear all
 path_id = 'LOCAL';%Set here the name path parameters (user specific)
 %
-luke_root = '/Users/Yves/CEA/Projets/';
-local_root = luke_root;
+local_root = '/Users/Yves/CEA/Projets/';
+luke_root = [local_root,'LUKE/'];
 %
 dkepath.path_id = path_id;
 dkepath.computer = computer;%machine type and supported OS
