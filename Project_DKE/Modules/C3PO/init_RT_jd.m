@@ -77,11 +77,11 @@ BPHI_bn_fit = ppval(equil_fit.BPHI_fit.pp_bn,xrho);
 %
 % Build interpolated magnetic fields
 %	
-[xx,xdxdtheta,dummy,dummy,dummy] = calcval_yp(equil_fit,x_a0_fit,x_an_fit,x_bn_fit,[],[],[],xtheta);
-[xy,xdydtheta,dummy,dummy,dummy] = calcval_yp(equil_fit,y_a0_fit,y_an_fit,y_bn_fit,[],[],[],xtheta);
-[xBx,dummy,dummy,dummy,dummy] = calcval_yp(equil_fit,Bx_a0_fit,Bx_an_fit,Bx_bn_fit,[],[],[],xtheta);
-[xBy,dummy,dummy,dummy,dummy] = calcval_yp(equil_fit,By_a0_fit,By_an_fit,By_bn_fit,[],[],[],xtheta);
-[xBPHI,dummy,dummy,dummy,dummy] = calcval_yp(equil_fit,BPHI_a0_fit,BPHI_an_fit,BPHI_bn_fit,[],[],[],xtheta);
+[xx,xdxdtheta] = calcval_yp(equil_fit,xtheta,x_a0_fit,x_an_fit,x_bn_fit);
+[xy,xdydtheta] = calcval_yp(equil_fit,xtheta,y_a0_fit,y_an_fit,y_bn_fit);
+[xBx] = calcval_yp(equil_fit,xtheta,Bx_a0_fit,Bx_an_fit,Bx_bn_fit);
+[xBy] = calcval_yp(equil_fit,xtheta,By_a0_fit,By_an_fit,By_bn_fit);
+[xBPHI] = calcval_yp(equil_fit,xtheta,BPHI_a0_fit,BPHI_an_fit,BPHI_bn_fit);
 %
 sigmaIp =  sign(equil_fit.psia);%Sign of the plasma current
 %

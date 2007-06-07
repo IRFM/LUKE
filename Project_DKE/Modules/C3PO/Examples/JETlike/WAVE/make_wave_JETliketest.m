@@ -104,9 +104,9 @@ omega_rf = 2*pi*f_rf*1e9;
     %
     % Build interpolated magnetic fields
     %	
-    [xBx,dummy,dummy,dummy,dummy] = calcval_yp(equil_fit,Bx_a0_fit,Bx_an_fit,Bx_bn_fit,[],[],[],theta0);
-    [xBy,dummy,dummy,dummy,dummy] = calcval_yp(equil_fit,By_a0_fit,By_an_fit,By_bn_fit,[],[],[],theta0);
-    [xBPHI,dummy,dummy,dummy,dummy] = calcval_yp(equil_fit,BPHI_a0_fit,BPHI_an_fit,BPHI_bn_fit,[],[],[],theta0);
+    [xBx] = calcval_yp(equil_fit,theta0,Bx_a0_fit,Bx_an_fit,Bx_bn_fit);
+    [xBy] = calcval_yp(equil_fit,theta0,By_a0_fit,By_an_fit,By_bn_fit);
+    [xBPHI] = calcval_yp(equil_fit,theta0,BPHI_a0_fit,BPHI_an_fit,BPHI_bn_fit);
     %
     xBp = sqrt(xBx.^2 + xBy.^2); 
     xBt = xBPHI; 

@@ -227,9 +227,9 @@ if nargin < 3,
 % Build interpolated quantities
 %
    for ii = 1:ntheta_fit, 
-      [R_fit(:,ii),dRdtheta_fit(:,ii),d2Rdtheta2_fit(:,ii),dRdrho_fit(:,ii),d2Rdthetadrho_fit(:,ii)] = calcval_yp(equil_fit,x_a0_fit(:),x_an_fit,x_bn_fit,x_da0drho_fit(:),x_dandrho_fit,x_dbndrho_fit,theta_fit(ii));
+      [R_fit(:,ii),dRdtheta_fit(:,ii),d2Rdtheta2_fit(:,ii),dRdrho_fit(:,ii),d2Rdthetadrho_fit(:,ii)] = calcval_yp(equil_fit,theta_fit(ii),x_a0_fit(:),x_an_fit,x_bn_fit,x_da0drho_fit(:),x_dandrho_fit,x_dbndrho_fit);
       R_fit(:,ii) = R_fit(:,ii) + Rp;
-      [Z_fit(:,ii),dZdtheta_fit(:,ii),d2Zdtheta2_fit(:,ii),dZdrho_fit(:,ii),d2Zdthetadrho_fit(:,ii)] = calcval_yp(equil_fit,y_a0_fit(:),y_an_fit,y_bn_fit,y_da0drho_fit(:),y_dandrho_fit,y_dbndrho_fit,theta_fit(ii));
+      [Z_fit(:,ii),dZdtheta_fit(:,ii),d2Zdtheta2_fit(:,ii),dZdrho_fit(:,ii),d2Zdthetadrho_fit(:,ii)] = calcval_yp(equil_fit,theta_fit(ii),y_a0_fit(:),y_an_fit,y_bn_fit,y_da0drho_fit(:),y_dandrho_fit,y_dbndrho_fit);
       Z_fit(:,ii) = Z_fit(:,ii) + Zp;
 %  
       r_fit(:,ii) = sqrt((R_fit(:,ii) - Rp).^2 + (Z_fit(:,ii) - Zp).^2);
@@ -254,9 +254,9 @@ if nargin < 3,
       dcalphadtheta_fit(:,ii) = -salpha_fit(:,ii).*dsalphadtheta_fit(:,ii)./calpha_fit(:,ii);
       dcalphadrho_fit(:,ii) = -salpha_fit(:,ii).*dsalphadrho_fit(:,ii)./calpha_fit(:,ii);;
 %
-      [BR_fit(:,ii),dBRdtheta_fit(:,ii),dummy,dBRdrho_fit(:,ii),dummy] = calcval_yp(equil_fit,Bx_a0_fit(:),Bx_an_fit,Bx_bn_fit,Bx_da0drho_fit(:),Bx_dandrho_fit,Bx_dbndrho_fit,theta_fit(ii));
-      [BZ_fit(:,ii),dBZdtheta_fit(:,ii),dummy,dBZdrho_fit(:,ii),dummy] = calcval_yp(equil_fit,By_a0_fit(:),By_an_fit,By_bn_fit,By_da0drho_fit(:),By_dandrho_fit,By_dbndrho_fit,theta_fit(ii));
-      [BPHI_fit(:,ii),dBPHIdtheta_fit(:,ii),dummy,dBPHIdrho_fit(:,ii),dummy] = calcval_yp(equil_fit,BPHI_a0_fit(:),BPHI_an_fit,BPHI_bn_fit,BPHI_da0drho_fit(:),BPHI_dandrho_fit,BPHI_dbndrho_fit,theta_fit(ii));
+      [BR_fit(:,ii),dBRdtheta_fit(:,ii),dummy,dBRdrho_fit(:,ii),dummy] = calcval_yp(equil_fit,theta_fit(ii),Bx_a0_fit(:),Bx_an_fit,Bx_bn_fit,Bx_da0drho_fit(:),Bx_dandrho_fit,Bx_dbndrho_fit);
+      [BZ_fit(:,ii),dBZdtheta_fit(:,ii),dummy,dBZdrho_fit(:,ii),dummy] = calcval_yp(equil_fit,theta_fit(ii),By_a0_fit(:),By_an_fit,By_bn_fit,By_da0drho_fit(:),By_dandrho_fit,By_dbndrho_fit);
+      [BPHI_fit(:,ii),dBPHIdtheta_fit(:,ii),dummy,dBPHIdrho_fit(:,ii),dummy] = calcval_yp(equil_fit,theta_fit(ii),BPHI_a0_fit(:),BPHI_an_fit,BPHI_bn_fit,BPHI_da0drho_fit(:),BPHI_dandrho_fit,BPHI_dbndrho_fit);
 %
       BP_fit(:,ii) = sqrt(BR_fit(:,ii).^2 + BZ_fit(:,ii).^2);
       dBPdtheta_fit(:,ii) = (BR_fit(:,ii).*dBRdtheta_fit(:,ii) + BZ_fit(:,ii).*dBZdtheta_fit(:,ii))./BP_fit(:,ii);
@@ -270,9 +270,9 @@ if nargin < 3,
       dgradrhodrho_fit(:,ii) = dRdrho_fit(:,ii).*BP_fit(:,ii).*dRstardpsin_fit/equil_fit.ap + R_fit(:,ii).*dBPdrho_fit(:,ii).*dRstardpsin_fit/equil_fit.ap + R_fit(:,ii).*BP_fit(:,ii).*ddRstardpsindrho_fit/equil_fit.ap/equil_fit.psia;
       dgradrhodtheta_fit(:,ii) = dRdtheta_fit(:,ii).*BP_fit(:,ii).*dRstardpsin_fit/equil_fit.ap + R_fit(:,ii).*dBPdtheta_fit(:,ii).*dRstardpsin_fit/equil_fit.ap/equil_fit.psia;     
 %
-      [R_fit1(:,ii),dRdtheta_fit1(:,ii),d2Rdtheta2_fit1(:,ii),dRdrho_fit1(:,ii),d2Rdthetadrho_fit1(:,ii)] = calcval_yp(equil_fit,x_a0_fit1,x_an_fit1,x_bn_fit,x_da0drho_fit1,x_dandrho_fit1,x_dbndrho_fit1,theta_fit(ii));
+      [R_fit1(:,ii),dRdtheta_fit1(:,ii),d2Rdtheta2_fit1(:,ii),dRdrho_fit1(:,ii),d2Rdthetadrho_fit1(:,ii)] = calcval_yp(equil_fit,theta_fit(ii),x_a0_fit1,x_an_fit1,x_bn_fit,x_da0drho_fit1,x_dandrho_fit1,x_dbndrho_fit1);
       R_fit1(:,ii) = R_fit1(:,ii) + Rp;
-      [Z_fit1(:,ii),dZdtheta_fit1(:,ii),d2Zdtheta2_fit1(:,ii),dZdrho_fit1(:,ii),d2Zdthetadrho_fit1(:,ii)] = calcval_yp(equil_fit,y_a0_fit1,y_an_fit1,y_bn_fit,y_da0drho_fit1,y_dandrho_fit1,y_dbndrho_fit1,theta_fit(ii));
+      [Z_fit1(:,ii),dZdtheta_fit1(:,ii),d2Zdtheta2_fit1(:,ii),dZdrho_fit1(:,ii),d2Zdthetadrho_fit1(:,ii)] = calcval_yp(equil_fit,theta_fit(ii),y_a0_fit1,y_an_fit1,y_bn_fit,y_da0drho_fit1,y_dandrho_fit1,y_dbndrho_fit1);
       Z_fit1(:,ii) = Z_fit1(:,ii) + Zp;
 %
       r_fit1(:,ii) = sqrt((R_fit1(:,ii) - Rp).^2 + (Z_fit1(:,ii) - Zp).^2);
@@ -299,9 +299,9 @@ if nargin < 3,
       dcalphadtheta_fit1(:,ii) = -salpha_fit1(:,ii).*dsalphadtheta_fit1(:,ii)./calpha_fit1(:,ii);
       dcalphadrho_fit1(:,ii) = -salpha_fit1(:,ii).*dsalphadrho_fit1(:,ii)./calpha_fit1(:,ii);;
 %
-      [BR_fit1(:,ii),dBRdtheta_fit1(:,ii),dummy,dBRdrho_fit1(:,ii),dummy] = calcval_yp(equil_fit,Bx_a0_fit1,Bx_an_fit1,Bx_bn_fit1,Bx_da0drho_fit1,Bx_dandrho_fit1,Bx_dbndrho_fit1,theta_fit(ii));
-      [BZ_fit1(:,ii),dBZdtheta_fit1(:,ii),dummy,dBZdrho_fit1(:,ii),dummy] = calcval_yp(equil_fit,By_a0_fit1,By_an_fit1,By_bn_fit1,By_da0drho_fit1,By_dandrho_fit1,By_dbndrho_fit1,theta_fit(ii));
-      [BPHI_fit1(:,ii),dBPHIdtheta_fit1(:,ii),dummy,dBPHIdrho_fit1(:,ii),dummy] = calcval_yp(equil_fit,BPHI_a0_fit1,BPHI_an_fit1,BPHI_bn_fit1,BPHI_da0drho_fit1,BPHI_dandrho_fit1,BPHI_dbndrho_fit1,theta_fit(ii));
+      [BR_fit1(:,ii),dBRdtheta_fit1(:,ii),dummy,dBRdrho_fit1(:,ii),dummy] = calcval_yp(equil_fit,theta_fit(ii),Bx_a0_fit1,Bx_an_fit1,Bx_bn_fit1,Bx_da0drho_fit1,Bx_dandrho_fit1,Bx_dbndrho_fit1);
+      [BZ_fit1(:,ii),dBZdtheta_fit1(:,ii),dummy,dBZdrho_fit1(:,ii),dummy] = calcval_yp(equil_fit,theta_fit(ii),By_a0_fit1,By_an_fit1,By_bn_fit1,By_da0drho_fit1,By_dandrho_fit1,By_dbndrho_fit1);
+      [BPHI_fit1(:,ii),dBPHIdtheta_fit1(:,ii),dummy,dBPHIdrho_fit1(:,ii),dummy] = calcval_yp(equil_fit,theta_fit(ii),BPHI_a0_fit1,BPHI_an_fit1,BPHI_bn_fit1,BPHI_da0drho_fit1,BPHI_dandrho_fit1,BPHI_dbndrho_fit1);
 %
       BP_fit1(:,ii) = sqrt(BR_fit1(:,ii).^2 + BZ_fit1(:,ii).^2);
       dBPdtheta_fit1(:,ii) = (BR_fit1(:,ii).*dBRdtheta_fit1(:,ii) + BZ_fit1(:,ii).*dBZdtheta_fit1(:,ii))./BP_fit1(:,ii);
@@ -579,7 +579,7 @@ if nargin == 4,
    x_da0drho = ppval(equil_fit.x_fit.pp_da0drho,rho);
    x_dandrho = ppval(equil_fit.x_fit.pp_dandrho,rho);
    x_dbndrho = ppval(equil_fit.x_fit.pp_dbndrho,rho); 
-   [R,dRdtheta,d2Rdtheta2,dRdrho,d2Rdthetadrho] = calcval_yp(equil_fit,x_a0,x_an,x_bn,x_da0drho,x_dandrho,x_dbndrho,theta);
+   [R,dRdtheta,d2Rdtheta2,dRdrho,d2Rdthetadrho] = calcval_yp(equil_fit,theta,x_a0,x_an,x_bn,x_da0drho,x_dandrho,x_dbndrho);
    R = R + Rp;
 %
    y_a0 = ppval(equil_fit.y_fit.pp_a0,rho);
@@ -588,7 +588,7 @@ if nargin == 4,
    y_da0drho = ppval(equil_fit.y_fit.pp_da0drho,rho);
    y_dandrho = ppval(equil_fit.y_fit.pp_dandrho,rho);
    y_dbndrho = ppval(equil_fit.y_fit.pp_dbndrho,rho);
-   [Z,dZdtheta,d2Zdtheta2,dZdrho,d2Zdthetadrho] = calcval_yp(equil_fit,y_a0,y_an,y_bn,y_da0drho,y_dandrho,y_dbndrho,theta);
+   [Z,dZdtheta,d2Zdtheta2,dZdrho,d2Zdthetadrho] = calcval_yp(equil_fit,theta,y_a0,y_an,y_bn,y_da0drho,y_dandrho,y_dbndrho);
    Z = Z + Zp;
 %
    r = sqrt((R - Rp).^2 + (Z - Zp).^2);
@@ -618,7 +618,7 @@ if nargin == 4,
    Bx_dandrho = ppval(equil_fit.Bx_fit.pp_dandrho,rho);
    Bx_dbndrho = ppval(equil_fit.Bx_fit.pp_dbndrho,rho);
    Bx_dbndrho = ppval(equil_fit.Bx_fit.pp_dbndrho,rho);
-   [BR,dBRdtheta,d2BRdtheta2,dBRdrho,d2BRdthetadrho] = calcval_yp(equil_fit,Bx_a0,Bx_an,Bx_bn,Bx_da0drho,Bx_dandrho,Bx_dbndrho,theta);
+   [BR,dBRdtheta,d2BRdtheta2,dBRdrho,d2BRdthetadrho] = calcval_yp(equil_fit,theta,Bx_a0,Bx_an,Bx_bn,Bx_da0drho,Bx_dandrho,Bx_dbndrho);
 %
    By_a0 = ppval(equil_fit.By_fit.pp_a0,rho);
    By_an = ppval(equil_fit.By_fit.pp_an,rho);
@@ -626,7 +626,7 @@ if nargin == 4,
    By_da0drho = ppval(equil_fit.By_fit.pp_da0drho,rho);
    By_dandrho = ppval(equil_fit.By_fit.pp_dandrho,rho);
    By_dbndrho = ppval(equil_fit.By_fit.pp_dbndrho,rho);
-   [BZ,dBZdtheta,d2BZdtheta2,dBZdrho,d2BZdthetadrho] = calcval_yp(equil_fit,By_a0,By_an,By_bn,By_da0drho,By_dandrho,By_dbndrho,theta);
+   [BZ,dBZdtheta,d2BZdtheta2,dBZdrho,d2BZdthetadrho] = calcval_yp(equil_fit,theta,By_a0,By_an,By_bn,By_da0drho,By_dandrho,By_dbndrho);
 %
    BPHI_a0 = ppval(equil_fit.BPHI_fit.pp_a0,rho);
    BPHI_an = ppval(equil_fit.BPHI_fit.pp_an,rho);
@@ -634,7 +634,7 @@ if nargin == 4,
    BPHI_da0drho = ppval(equil_fit.BPHI_fit.pp_da0drho,rho);
    BPHI_dandrho = ppval(equil_fit.BPHI_fit.pp_dandrho,rho);
    BPHI_dbndrho = ppval(equil_fit.BPHI_fit.pp_dbndrho,rho);
-   [BPHI,dBPHIdtheta,d2BPHIdtheta2,dBPHIdrho,d2BPHIdthetadrho] = calcval_yp(equil_fit,BPHI_a0,BPHI_an,BPHI_bn,BPHI_da0drho,BPHI_dandrho,BPHI_dbndrho,theta);
+   [BPHI,dBPHIdtheta,d2BPHIdtheta2,dBPHIdrho,d2BPHIdthetadrho] = calcval_yp(equil_fit,theta,BPHI_a0,BPHI_an,BPHI_bn,BPHI_da0drho,BPHI_dandrho,BPHI_dbndrho);
 %
    BP = sqrt(BR^2 + BZ^2);
    dBPdtheta = (BR*dBRdtheta + BZ*dBZdtheta)/BP;
