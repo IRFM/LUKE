@@ -13,7 +13,7 @@ local_id = 'LOCAL';%Set here the name path parameters (user specific)
 luke_root = '/home/sccp/gsem/peysson/LUKE/';
 local_root = '/home/sccp/gsem/peysson/';
 %
-dkepath.local_id = local_id;
+dkepath.path_id = local_id;
 dkepath.computer = 'GLNXA64';%machine type and supported OS
 dkepath.temppathroot = '/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 dkepath.luke_root = luke_root;
