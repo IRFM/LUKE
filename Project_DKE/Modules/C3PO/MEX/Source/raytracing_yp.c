@@ -422,6 +422,91 @@ void mexFunction(   int     nlhs,
           
     }
     
+    raymagnetic_format raymagnetic;
+    rayprofiles_format rayprofiles;
+    susceptibilitytensor_format X;
+    
+    register int i,j;
+
+    /* Memory allocation */
+
+    raymagnetic.rn = mxCalloc(1,sizeof(double));
+    raymagnetic.Rn = mxCalloc(1,sizeof(double));
+    raymagnetic.Bsn = mxCalloc(1,sizeof(double));
+    raymagnetic.B = mxCalloc(1,sizeof(double));
+    raymagnetic.BPHIn = mxCalloc(1,sizeof(double));
+    raymagnetic.salpha = mxCalloc(1,sizeof(double));
+    raymagnetic.calpha = mxCalloc(1,sizeof(double));
+    raymagnetic.gradrhon = mxCalloc(1,sizeof(double));
+
+    raymagnetic.drndY = mxCalloc(MC,sizeof(double));
+    raymagnetic.dRndY = mxCalloc(MC,sizeof(double));
+    raymagnetic.dBsndY = mxCalloc(MC,sizeof(double));
+    raymagnetic.dBPHIndY = mxCalloc(MC,sizeof(double));
+    raymagnetic.dBdY = mxCalloc(MC,sizeof(double));
+    raymagnetic.dsalphadY = mxCalloc(MC,sizeof(double));
+    raymagnetic.dcalphadY = mxCalloc(MC,sizeof(double));
+    raymagnetic.dgradrhondY = mxCalloc(MC,sizeof(double));
+
+    for (i = 0;i < MC; i++) {/*initialisation */
+        raymagnetic.drndY[i] = 0.0;
+        raymagnetic.dRndY[i] = 0.0;
+        raymagnetic.dsalphadY[i] = 0.0;
+        raymagnetic.dcalphadY[i] = 0.0;
+        raymagnetic.dgradrhondY[i] = 0.0;
+        raymagnetic.dBsndY[i] = 0.0;
+        raymagnetic.dBPHIndY[i] = 0.0;
+        raymagnetic.dBdY[i] = 0.0;
+    }
+
+    rayprofiles.Te = mxCalloc(1,sizeof(double));
+    rayprofiles.ne = mxCalloc(1,sizeof(double));
+    rayprofiles.zTi = mxCalloc(equilparam.ns[0],sizeof(double));
+    rayprofiles.zni = mxCalloc(equilparam.ns[0],sizeof(double));
+
+    rayprofiles.dTedY = mxCalloc(MC,sizeof(double));
+    rayprofiles.dnedY = mxCalloc(MC,sizeof(double));
+
+    rayprofiles.dzTidY = mxCalloc(equilparam.ns[0],sizeof(double *));
+    rayprofiles.dznidY = mxCalloc(equilparam.ns[0],sizeof(double *));
+    for (i = 0;i < equilparam.ns[0]; i++) {
+        rayprofiles.dzTidY[i] = mxCalloc(MC,sizeof(double));       
+        rayprofiles.dznidY[i] = mxCalloc(MC,sizeof(double));       
+    }    
+
+    for (i = 0;i < MC; i++) {/*initialisation */
+        rayprofiles.dTedY[i] = 0.0;
+        rayprofiles.dnedY[i] = 0.0;
+    
+        for (j=0;j<equilparam.ns[0];j++) {
+           rayprofiles.dzTidY[j][i] = 0.0;
+           rayprofiles.dznidY[j][i] = 0.0;
+        }
+    }
+
+    X.Xxx = mxCalloc(1,sizeof(double complex));
+    X.Xxy = mxCalloc(1,sizeof(double complex));
+    X.Xxz = mxCalloc(1,sizeof(double complex));
+    X.Xyy = mxCalloc(1,sizeof(double complex));
+    X.Xyz = mxCalloc(1,sizeof(double complex));
+    X.Xzz = mxCalloc(1,sizeof(double complex));
+
+    X.dXxxdY = mxCalloc(MC,sizeof(double complex));
+    X.dXxydY = mxCalloc(MC,sizeof(double complex));
+    X.dXxzdY = mxCalloc(MC,sizeof(double complex));
+    X.dXyydY = mxCalloc(MC,sizeof(double complex));
+    X.dXyzdY = mxCalloc(MC,sizeof(double complex));
+    X.dXzzdY = mxCalloc(MC,sizeof(double complex));
+
+    for (i=0;i<MC;i++) {/*initialisation */
+        X.dXxxdY[i] = 0.0;
+        X.dXxydY[i] = 0.0;
+        X.dXxzdY[i] = 0.0;
+        X.dXyydY[i] = 0.0;
+        X.dXyzdY[i] = 0.0;
+        X.dXzzdY[i] = 0.0;
+    }
+    
 /* Runge-Kutta  */
 
     double  *tout,*yout; 
@@ -493,7 +578,7 @@ Create and Initialize Return Arguments
 /* Solves the dispersion relation internally to remove numerical errors from initial conditions */
     if (fabs(flag) > 0) {
     /*   mexPrintf("krho1:%g\n",krho1); */
-       dsolve(1,&krho1,y0,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag); 
+       dsolve(1,&krho1,y0,raymagnetic,rayprofiles,X,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag); 
     /*      mexPrintf("krho1:%g\n",krho1); */               
     }
     
@@ -547,7 +632,7 @@ Compute the slopes
         y1[m] = s0[m];
     }
         
-        ray(s1,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag);          
+        ray(s1,y1,raymagnetic,rayprofiles,X,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag);          
         /* s2 = feval(F, t+h*alpha(1), y1+h*s1*beta(1,1), param); */
 
     for  (m = 0; m < MC-3; m++) {/* only the first five coordinates are evolving (rho,theta,phi,krho,m) */
@@ -555,14 +640,14 @@ Compute the slopes
     }
          
             
-        ray(s2,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag);
+        ray(s2,y1,raymagnetic,rayprofiles,X,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag);
         /* s3 = feval(F, t+h*alpha(2), y1+h*[s1*beta(2,1)+s2*beta(2,2)], param); */
 
     for  (m = 0; m < MC-3; m++) {
         y1[m] = s0[m]+h*(s1[m]*beta[0][1] + s2[m]*beta[1][1]);
     }
 
-        ray(s3,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag);
+        ray(s3,y1,raymagnetic,rayprofiles,X,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag);
 
         /* s4 = feval(F, t+h*alpha(3), y1+h*[s1*beta(3,1)+s2*beta(3,2)+...], param); */
 
@@ -570,7 +655,7 @@ Compute the slopes
         y1[m] = s0[m]+h*(s1[m]*beta[0][2] + s2[m]*beta[1][2] + s3[m]*beta[2][2]);
     }
  
-        ray(s4,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag);
+        ray(s4,y1,raymagnetic,rayprofiles,X,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag);
 
         /* s5 = feval(F, t+h*alpha(4), y1+h*[s1*beta(4,1)+s2*beta(4,2)+...], param); */
 
@@ -579,7 +664,7 @@ Compute the slopes
     }
 
 
-        ray(s5,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag);
+        ray(s5,y1,raymagnetic,rayprofiles,X,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag);
 
         /* s6 = feval(F, t+h*alpha(5), y1+h*[s1*beta(5,1)+s2*beta(5,2)+...], param); */
 
@@ -587,7 +672,7 @@ Compute the slopes
         y1[m] = s0[m]+h*(s1[m]*beta[0][4] + s2[m]*beta[1][4] + s3[m]*beta[2][4] + s4[m]*beta[3][4] + s5[m]*beta[4][4]);
     }
         
-    ray(s6,y1,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag);
+        ray(s6,y1,raymagnetic,rayprofiles,X,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag);
 
 /*
 Estimate the error and the acceptable error
@@ -656,7 +741,7 @@ Update the solution only if the error is acceptable
                     rho2 = rho1;
                     phi2 = phi1;
                     theta2 = theta1;
-                    if (reflection(rayparam,equilparam,&krho2,rho1,theta1,krho1,m1,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit) == -1) {goto Endloop;}                                           
+                    if (reflection(rayparam,equilparam,raymagnetic,&krho2,rho1,theta1,krho1,m1,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit) == -1) {goto Endloop;}                                           
                     m2 = m1;
                 } else {/* The code calculates if the reflection must takes place. It calculates kpsi for vacuum (keeping the magnetic field) ray leaves the plasma only if kspi is real.*/
                     s0[0] = rho1;
@@ -666,7 +751,7 @@ Update the solution only if the error is acceptable
                     s0[4] = m1;
                     s0[5] = n1;
                     s0[6] = omega1;             
-                    dsolve(0,&krho2,s0,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag); 
+                    dsolve(0,&krho2,s0,raymagnetic,rayprofiles,X,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag); 
 /*                    mexPrintf("test2a,krho2,cimag(krho2):%g,%g,%g\n",krho2,cimag(krho2));*/       
                     if (cimag(krho2) == 0.0) {/* ray may propagate in vacuum. Propagation is stopped */
                         mexPrintf("********************************** The wave leaves the plasma at rho = %g**********************************\n",rho1);
@@ -677,7 +762,7 @@ Update the solution only if the error is acceptable
                         rho2 = rho1;
                         phi2 = phi1;
                         theta2 = theta1;
-                        if (reflection(rayparam,equilparam,&krho2,rho1,theta1,krho1,m1,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit) == -1) {goto Endloop;}                                           
+                        if (reflection(rayparam,equilparam,raymagnetic,&krho2,rho1,theta1,krho1,m1,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit) == -1) {goto Endloop;}                                           
                         m2 = m1;  
                     }
                 }
@@ -775,6 +860,56 @@ Endloop:
         yout[kk + 6*K] = temp6[kk];
    }
 
+    /* Memory is released  */
+    
+    mxFree(raymagnetic.rn);
+    mxFree(raymagnetic.Rn);
+    mxFree(raymagnetic.Bsn);
+    mxFree(raymagnetic.BPHIn);
+    mxFree(raymagnetic.B);
+    mxFree(raymagnetic.salpha);
+    mxFree(raymagnetic.calpha);
+    mxFree(raymagnetic.gradrhon);
+    
+    mxFree(raymagnetic.drndY);
+    mxFree(raymagnetic.dRndY);
+    mxFree(raymagnetic.dBsndY);
+    mxFree(raymagnetic.dBPHIndY);
+    mxFree(raymagnetic.dBdY);   
+    mxFree(raymagnetic.dsalphadY);
+    mxFree(raymagnetic.dcalphadY);
+    mxFree(raymagnetic.dgradrhondY);
+    
+    mxFree(rayprofiles.Te);
+    mxFree(rayprofiles.ne);
+    mxFree(rayprofiles.zTi);
+    mxFree(rayprofiles.zni);
+
+    mxFree(rayprofiles.dTedY);
+    mxFree(rayprofiles.dnedY);
+    
+    for (i = 0;i < equilparam.ns[0]; i++) {
+        mxFree(rayprofiles.dzTidY[i]);       
+        mxFree(rayprofiles.dznidY[i]);       
+    }    
+    
+    mxFree(rayprofiles.dzTidY);
+    mxFree(rayprofiles.dznidY);
+
+    mxFree(X.Xxx);
+    mxFree(X.Xxy);
+    mxFree(X.Xxz);
+    mxFree(X.Xyy);
+    mxFree(X.Xyz);
+    mxFree(X.Xzz);
+
+    mxFree(X.dXxxdY);
+    mxFree(X.dXxydY);
+    mxFree(X.dXxzdY);
+    mxFree(X.dXyydY);
+    mxFree(X.dXyzdY);
+    mxFree(X.dXzzdY);
+
    mxFree(tempt);
    mxFree(temp0);
    mxFree(temp1);
@@ -816,9 +951,12 @@ unsigned int N;
 /* General coordinate time evolution dY/dt with Y=[rho,theta,phi,krho,m,n,omega/c] */
 
 
-void ray(Ydot,Y,param,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag)
+void ray(Ydot,Y,raymagnetic,rayprofiles,X,param,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag)
 double Y[];
 double Ydot[];
+raymagnetic_format raymagnetic;
+rayprofiles_format rayprofiles;
+susceptibilitytensor_format X;
 rayparam_format param;
 equilparam_format equilparam;
 pp_1D_format Te_fit;
@@ -834,6 +972,7 @@ pp_1D_format dxstardpsin_fit;
 double flag;
 {
 
+    register int i,j;
 
     double complex dDdY[43][MC],Dtot,dDtotdY[MC];
 
@@ -845,91 +984,6 @@ double flag;
     double Npar4,Npar3,Npar2,Npar1;
     double complex Xxx,Xxy,Xxz,Xyy,Xyz,Xzz;
     double complex Xxx2,Xxy2,Xxz2,Xyy2,Xyz2,Xzz2;
-
-    raymagnetic_format raymagnetic;
-    rayprofiles_format rayprofiles;
-    susceptibilitytensor_format X;
-
-    register int i,j;
-
-    /* Memory allocation */
-
-    raymagnetic.rn = mxCalloc(1,sizeof(double));
-    raymagnetic.Rn = mxCalloc(1,sizeof(double));
-    raymagnetic.Bsn = mxCalloc(1,sizeof(double));
-    raymagnetic.B = mxCalloc(1,sizeof(double));
-    raymagnetic.BPHIn = mxCalloc(1,sizeof(double));
-    raymagnetic.salpha = mxCalloc(1,sizeof(double));
-    raymagnetic.calpha = mxCalloc(1,sizeof(double));
-    raymagnetic.gradrhon = mxCalloc(1,sizeof(double));
-
-    raymagnetic.drndY = mxCalloc(MC,sizeof(double));
-    raymagnetic.dRndY = mxCalloc(MC,sizeof(double));
-    raymagnetic.dBsndY = mxCalloc(MC,sizeof(double));
-    raymagnetic.dBPHIndY = mxCalloc(MC,sizeof(double));
-    raymagnetic.dBdY = mxCalloc(MC,sizeof(double));
-    raymagnetic.dsalphadY = mxCalloc(MC,sizeof(double));
-    raymagnetic.dcalphadY = mxCalloc(MC,sizeof(double));
-    raymagnetic.dgradrhondY = mxCalloc(MC,sizeof(double));
-
-    for (i = 0;i < MC; i++) {/*initialisation */
-        raymagnetic.drndY[i] = 0.0;
-        raymagnetic.dRndY[i] = 0.0;
-        raymagnetic.dsalphadY[i] = 0.0;
-        raymagnetic.dcalphadY[i] = 0.0;
-        raymagnetic.dgradrhondY[i] = 0.0;
-        raymagnetic.dBsndY[i] = 0.0;
-        raymagnetic.dBPHIndY[i] = 0.0;
-        raymagnetic.dBdY[i] = 0.0;
-    }
-
-    rayprofiles.Te = mxCalloc(1,sizeof(double));
-    rayprofiles.ne = mxCalloc(1,sizeof(double));
-    rayprofiles.zTi = mxCalloc(equilparam.ns[0],sizeof(double));
-    rayprofiles.zni = mxCalloc(equilparam.ns[0],sizeof(double));
-
-    rayprofiles.dTedY = mxCalloc(MC,sizeof(double));
-    rayprofiles.dnedY = mxCalloc(MC,sizeof(double));
-
-    rayprofiles.dzTidY = mxCalloc(equilparam.ns[0],sizeof(double *));
-    rayprofiles.dznidY = mxCalloc(equilparam.ns[0],sizeof(double *));
-    for (i = 0;i < equilparam.ns[0]; i++) {
-        rayprofiles.dzTidY[i] = mxCalloc(MC,sizeof(double));       
-        rayprofiles.dznidY[i] = mxCalloc(MC,sizeof(double));       
-    }    
-
-    for (i = 0;i < MC; i++) {/*initialisation */
-        rayprofiles.dTedY[i] = 0.0;
-        rayprofiles.dnedY[i] = 0.0;
-    
-        for (j=0;j<equilparam.ns[0];j++) {
-           rayprofiles.dzTidY[j][i] = 0.0;
-           rayprofiles.dznidY[j][i] = 0.0;
-        }
-    }
-
-    X.Xxx = mxCalloc(1,sizeof(double complex));
-    X.Xxy = mxCalloc(1,sizeof(double complex));
-    X.Xxz = mxCalloc(1,sizeof(double complex));
-    X.Xyy = mxCalloc(1,sizeof(double complex));
-    X.Xyz = mxCalloc(1,sizeof(double complex));
-    X.Xzz = mxCalloc(1,sizeof(double complex));
-
-    X.dXxxdY = mxCalloc(MC,sizeof(double complex));
-    X.dXxydY = mxCalloc(MC,sizeof(double complex));
-    X.dXxzdY = mxCalloc(MC,sizeof(double complex));
-    X.dXyydY = mxCalloc(MC,sizeof(double complex));
-    X.dXyzdY = mxCalloc(MC,sizeof(double complex));
-    X.dXzzdY = mxCalloc(MC,sizeof(double complex));
-
-    for (i=0;i<MC;i++) {/*initialisation */
-        X.dXxxdY[i] = 0.0;
-        X.dXxydY[i] = 0.0;
-        X.dXxzdY[i] = 0.0;
-        X.dXyydY[i] = 0.0;
-        X.dXyzdY[i] = 0.0;
-        X.dXzzdY[i] = 0.0;
-    }
 
     /* Equilibrium interpolation at ray location */
     if (flag == 0) {
@@ -1104,63 +1158,15 @@ double flag;
     mexPrintf("Ydot_cold:%g,%g,%g,%g,%g,%g,%g\n",Ydot_cold[0],Ydot_cold[1],Ydot_cold[2],Ydot_cold[3],Ydot_cold[4],Ydot_cold[5],Ydot_cold[6]);
     
 */
-    /* Memory is released  */
-    
-    mxFree(raymagnetic.rn);
-    mxFree(raymagnetic.Rn);
-    mxFree(raymagnetic.Bsn);
-    mxFree(raymagnetic.BPHIn);
-    mxFree(raymagnetic.B);
-    mxFree(raymagnetic.salpha);
-    mxFree(raymagnetic.calpha);
-    mxFree(raymagnetic.gradrhon);
-    
-    mxFree(raymagnetic.drndY);
-    mxFree(raymagnetic.dRndY);
-    mxFree(raymagnetic.dBsndY);
-    mxFree(raymagnetic.dBPHIndY);
-    mxFree(raymagnetic.dBdY);   
-    mxFree(raymagnetic.dsalphadY);
-    mxFree(raymagnetic.dcalphadY);
-    mxFree(raymagnetic.dgradrhondY);
-    
-    mxFree(rayprofiles.Te);
-    mxFree(rayprofiles.ne);
-    mxFree(rayprofiles.zTi);
-    mxFree(rayprofiles.zni);
-
-    mxFree(rayprofiles.dTedY);
-    mxFree(rayprofiles.dnedY);
-    
-    for (i = 0;i < equilparam.ns[0]; i++) {
-        mxFree(rayprofiles.dzTidY[i]);       
-        mxFree(rayprofiles.dznidY[i]);       
-    }    
-    
-    mxFree(rayprofiles.dzTidY);
-    mxFree(rayprofiles.dznidY);
-
-    mxFree(X.Xxx);
-    mxFree(X.Xxy);
-    mxFree(X.Xxz);
-    mxFree(X.Xyy);
-    mxFree(X.Xyz);
-    mxFree(X.Xzz);
-
-    mxFree(X.dXxxdY);
-    mxFree(X.dXxydY);
-    mxFree(X.dXxzdY);
-    mxFree(X.dXyydY);
-    mxFree(X.dXyzdY);
-    mxFree(X.dXzzdY);
 
 }
 
 
 
-int reflection(rayparam,equilparam,krho2,rho1,theta1,krho1,m1,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit)
+int reflection(rayparam,equilparam,raymagnetic,krho2,rho1,theta1,krho1,m1,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit)
 rayparam_format rayparam;
 equilparam_format equilparam;
+raymagnetic_format raymagnetic;
 double *krho2;
 double rho1,theta1,krho1,m1;
 pp_2D_format x_fit;
@@ -1170,7 +1176,6 @@ pp_2D_format Bx_fit;
 pp_2D_format By_fit;
 pp_1D_format dxstardpsin_fit;
 {
-    raymagnetic_format raymagnetic;
 
     double x,R,dRdrho,dRdtheta,d2Rdtheta2,d2Rdthetadrho;
     double y,Z,dZdrho,dZdtheta,d2Zdtheta2,d2Zdthetadrho;
@@ -1181,28 +1186,6 @@ pp_1D_format dxstardpsin_fit;
     double dummy1,dummy2;
     
     double delta, krho2p,krho2m;
-
-    register int i,j;
-
-/* Memory allocation */
-
-    raymagnetic.rn = mxCalloc(1,sizeof(double));
-    raymagnetic.Rn = mxCalloc(1,sizeof(double));
-    raymagnetic.Bsn = mxCalloc(1,sizeof(double));
-    raymagnetic.B = mxCalloc(1,sizeof(double));
-    raymagnetic.BPHIn = mxCalloc(1,sizeof(double));
-    raymagnetic.salpha = mxCalloc(1,sizeof(double));
-    raymagnetic.calpha = mxCalloc(1,sizeof(double));
-    raymagnetic.gradrhon = mxCalloc(1,sizeof(double));
-
-    raymagnetic.drndY = mxCalloc(MC,sizeof(double));
-    raymagnetic.dRndY = mxCalloc(MC,sizeof(double));
-    raymagnetic.dBsndY = mxCalloc(MC,sizeof(double));
-    raymagnetic.dBPHIndY = mxCalloc(MC,sizeof(double));
-    raymagnetic.dBdY = mxCalloc(MC,sizeof(double));
-    raymagnetic.dsalphadY = mxCalloc(MC,sizeof(double));
-    raymagnetic.dcalphadY = mxCalloc(MC,sizeof(double));
-    raymagnetic.dgradrhondY = mxCalloc(MC,sizeof(double));
 
     ppval_1D(dxstardpsin_fit,rayparam.drho[0],rho1,&dRstardpsin,&ddRstardpsindrho);
     ppval_2D(x_fit,rayparam.drho[0],rho1,theta1,&x,&dRdrho,&dRdtheta,&d2Rdtheta2,&d2Rdthetadrho);
@@ -1232,32 +1215,16 @@ pp_1D_format dxstardpsin_fit;
     return(-1);
     }
 
-/* Memory is released  */
-    
-    mxFree(raymagnetic.rn);
-    mxFree(raymagnetic.Rn);
-    mxFree(raymagnetic.Bsn);
-    mxFree(raymagnetic.BPHIn);
-    mxFree(raymagnetic.B);
-    mxFree(raymagnetic.salpha);
-    mxFree(raymagnetic.calpha);
-    mxFree(raymagnetic.gradrhon);
-    
-    mxFree(raymagnetic.drndY);
-    mxFree(raymagnetic.dRndY);
-    mxFree(raymagnetic.dBsndY);
-    mxFree(raymagnetic.dBPHIndY);
-    mxFree(raymagnetic.dBdY);   
-    mxFree(raymagnetic.dsalphadY);
-    mxFree(raymagnetic.dcalphadY);
-    mxFree(raymagnetic.dgradrhondY);
 }
 
 
-void dsolve(mode,krho,Y,param,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag)
+void dsolve(mode,krho,Y,raymagnetic,rayprofiles,X,param,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag)
 int mode;
 double *krho;
 double Y[];
+raymagnetic_format raymagnetic;
+rayprofiles_format rayprofiles;
+susceptibilitytensor_format X;
 rayparam_format param;
 equilparam_format equilparam;
 pp_1D_format Te_fit;
@@ -1282,11 +1249,7 @@ double flag;
     double D0,D1,D2;
     int maxit;
 
-    raymagnetic_format raymagnetic;
-    rayprofiles_format rayprofiles;
-    susceptibilitytensor_format X;
-
-    register int i,j;
+    register int j;
     
     frac = 1 - 1e-4;
     fracmax = 2;
@@ -1294,89 +1257,6 @@ double flag;
     tol = 1e-12;
     
     maxit = 50;
-
-    /* Memory allocation */
-
-    raymagnetic.rn = mxCalloc(1,sizeof(double));
-    raymagnetic.Rn = mxCalloc(1,sizeof(double));
-    raymagnetic.salpha = mxCalloc(1,sizeof(double));
-    raymagnetic.calpha = mxCalloc(1,sizeof(double));
-    raymagnetic.Bsn = mxCalloc(1,sizeof(double));
-    raymagnetic.BPHIn = mxCalloc(1,sizeof(double));
-    raymagnetic.B = mxCalloc(1,sizeof(double));
-    raymagnetic.gradrhon = mxCalloc(1,sizeof(double));
-
-    raymagnetic.drndY = mxCalloc(MC,sizeof(double));
-    raymagnetic.dRndY = mxCalloc(MC,sizeof(double));
-    raymagnetic.dsalphadY = mxCalloc(MC,sizeof(double));
-    raymagnetic.dcalphadY = mxCalloc(MC,sizeof(double));
-    raymagnetic.dBsndY = mxCalloc(MC,sizeof(double));
-    raymagnetic.dBPHIndY = mxCalloc(MC,sizeof(double));
-    raymagnetic.dBdY = mxCalloc(MC,sizeof(double));
-    raymagnetic.dgradrhondY = mxCalloc(MC,sizeof(double));
-
-    for (i = 0;i < MC; i++) {/* initialisation */
-        raymagnetic.drndY[i] = 0.0;
-        raymagnetic.dRndY[i] = 0.0;
-        raymagnetic.dsalphadY[i] = 0.0;
-        raymagnetic.dcalphadY[i] = 0.0;
-        raymagnetic.dgradrhondY[i] = 0.0;
-        raymagnetic.dBsndY[i] = 0.0;
-        raymagnetic.dBPHIndY[i] = 0.0;
-        raymagnetic.dBdY[i] = 0.0;
-    }
-    
-    rayprofiles.Te = mxCalloc(1,sizeof(double));
-    rayprofiles.ne = mxCalloc(1,sizeof(double));
-    rayprofiles.zTi = mxCalloc(equilparam.ns[0],sizeof(double));
-    rayprofiles.zni = mxCalloc(equilparam.ns[0],sizeof(double));
-
-    rayprofiles.dTedY = mxCalloc(MC,sizeof(double));
-    rayprofiles.dnedY = mxCalloc(MC,sizeof(double));
-
-    rayprofiles.dzTidY = mxCalloc(equilparam.ns[0],sizeof(double *));
-    rayprofiles.dznidY = mxCalloc(equilparam.ns[0],sizeof(double *));
-    for (i = 0;i < equilparam.ns[0]; i++) {
-        rayprofiles.dzTidY[i] = mxCalloc(MC,sizeof(double));       
-        rayprofiles.dznidY[i] = mxCalloc(MC,sizeof(double));       
-    }    
-
-    for (i = 0;i < MC; i++) {/*initialisation */
-        rayprofiles.dTedY[i] = 0.0;
-        rayprofiles.dnedY[i] = 0.0;
-    }
-    
-    for (i=0;i<equilparam.ns[0];i++) {
-        rayprofiles.zTi[i] = 0.0;
-        rayprofiles.zni[i] = 0.0;             
-        for (j = 0;j < MC; j++) {
-           rayprofiles.dzTidY[i][j] = 0.0;
-           rayprofiles.dznidY[i][j] = 0.0;
-        }
-    }
-
-    X.Xxx = mxCalloc(1,sizeof(double complex));
-    X.Xxy = mxCalloc(1,sizeof(double complex));
-    X.Xxz = mxCalloc(1,sizeof(double complex));
-    X.Xyy = mxCalloc(1,sizeof(double complex));
-    X.Xyz = mxCalloc(1,sizeof(double complex));
-    X.Xzz = mxCalloc(1,sizeof(double complex));
-
-    X.dXxxdY = mxCalloc(MC,sizeof(double complex));
-    X.dXxydY = mxCalloc(MC,sizeof(double complex));
-    X.dXxzdY = mxCalloc(MC,sizeof(double complex));
-    X.dXyydY = mxCalloc(MC,sizeof(double complex));
-    X.dXyzdY = mxCalloc(MC,sizeof(double complex));
-    X.dXzzdY = mxCalloc(MC,sizeof(double complex));
-
-    for (i=0;i<MC;i++) {/*initialisation */
-        X.dXxxdY[i] = 0.0;
-        X.dXxydY[i] = 0.0;
-        X.dXxzdY[i] = 0.0;
-        X.dXyydY[i] = 0.0;
-        X.dXyzdY[i] = 0.0;
-        X.dXzzdY[i] = 0.0;
-    }
 
     /* Equilibrium interpolation at ray location */
     if (flag == 0) {
@@ -1476,56 +1356,6 @@ double flag;
     
     
     /* krho[0] = -Y[3]; /* old method not accurate */ 
-
-    /* Memory is released  */
-    
-    mxFree(raymagnetic.rn);
-    mxFree(raymagnetic.Rn);
-    mxFree(raymagnetic.salpha);
-    mxFree(raymagnetic.calpha);
-    mxFree(raymagnetic.Bsn);
-    mxFree(raymagnetic.BPHIn);
-    mxFree(raymagnetic.B);
-    mxFree(raymagnetic.gradrhon);
-
-    mxFree(raymagnetic.drndY);
-    mxFree(raymagnetic.dRndY);
-    mxFree(raymagnetic.dsalphadY);
-    mxFree(raymagnetic.dcalphadY);
-    mxFree(raymagnetic.dBsndY);
-    mxFree(raymagnetic.dBPHIndY);
-    mxFree(raymagnetic.dBdY);  
-    mxFree(raymagnetic.dgradrhondY);
-    
-    mxFree(rayprofiles.Te);
-    mxFree(rayprofiles.ne);
-    mxFree(rayprofiles.zTi);
-    mxFree(rayprofiles.zni);
-
-    mxFree(rayprofiles.dTedY);
-    mxFree(rayprofiles.dnedY);
-    
-    for (i = 0;i < equilparam.ns[0]; i++) {
-        mxFree(rayprofiles.dzTidY[i]);       
-        mxFree(rayprofiles.dznidY[i]);       
-    }    
-    
-    mxFree(rayprofiles.dzTidY);
-    mxFree(rayprofiles.dznidY);
-
-    mxFree(X.Xxx);
-    mxFree(X.Xxy);
-    mxFree(X.Xxz);
-    mxFree(X.Xyy);
-    mxFree(X.Xyz);
-    mxFree(X.Xzz);
-
-    mxFree(X.dXxxdY);
-    mxFree(X.dXxydY);
-    mxFree(X.dXxzdY);
-    mxFree(X.dXyydY);
-    mxFree(X.dXyzdY);
-    mxFree(X.dXzzdY);
     
 }
 
