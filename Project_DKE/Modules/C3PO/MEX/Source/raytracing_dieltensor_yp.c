@@ -11,6 +11,8 @@ struct raymagnetic {
     double *drndY;
     double *Rn;
     double *dRndY;
+    double *Zn;
+    double *dZndY;
     double *Bsn;
     double *dBsndY;
     double *BPHIn;
