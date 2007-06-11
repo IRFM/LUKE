@@ -88,11 +88,15 @@ struct rayparam {
     double *t0;
     double *tfinal;
     double *dt0;
-    double *drho;
+    double *dS;
     double *tol;
     double *kmax;
     double *ncyclharm;
     double *reflection;
+    double *rel_opt;
+    double *nperp;
+    double *pperpmax;
+    double *tau_lim;
 };
 
 struct equilparam {
@@ -126,12 +130,16 @@ mxArray *structure_name;
     data.t0 = mxGetData(mxGetField(structure_name, 0, "t0"));
     data.tfinal = mxGetData(mxGetField(structure_name, 0, "tfinal"));
     data.dt0 = mxGetData(mxGetField(structure_name, 0, "dt0"));
-    data.drho = mxGetData(mxGetField(structure_name, 0, "drho"));
+    data.dS = mxGetData(mxGetField(structure_name, 0, "dS"));
     data.tol = mxGetData(mxGetField(structure_name, 0, "tol"));   
     data.kmax = mxGetData(mxGetField(structure_name, 0, "kmax"));
     data.tensortype = mxGetData(mxGetField(structure_name, 0, "tensortype")); 
     data.ncyclharm = mxGetData(mxGetField(structure_name, 0, "ncyclharm")); 
     data.reflection = mxGetData(mxGetField(structure_name, 0, "reflection")); 
+    data.rel_opt = mxGetData(mxGetField(structure_name, 0, "rel_opt")); 
+    data.nperp = mxGetData(mxGetField(structure_name, 0, "nperp")); 
+    data.pperpmax = mxGetData(mxGetField(structure_name, 0, "pperpmax")); 
+    data.tau_lim = mxGetData(mxGetField(structure_name, 0, "tau_lim")); 
     
     return(data);
 }
