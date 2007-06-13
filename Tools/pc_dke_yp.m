@@ -1,4 +1,4 @@
-function [qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp
+function [varargout] = pc_dke_yp
 %
 % Calculates the universal physics constants
 % (see www.tcaep.co.uk/science/constant)
@@ -31,4 +31,18 @@ re = 2.817940285e-15;%Classical electron radius (m)
 mc2 = 510.998902;%Electron energy rest mass (keV)
 clum = 299792458;%Speed of light (m/s)
 alpha = 7.297352533e-3;%Fine structure constant (~1/137)
+kB = 1.3806504e-23;;%Boltzmann's constant (J/K-1)
+%
+if nargout >= 1, varargout{1} = qe;end
+if nargout >= 2, varargout{2} = me;end
+if nargout >= 3, varargout{3} = mp;end
+if nargout >= 4, varargout{4} = mn;end
+if nargout >= 5, varargout{5} = e0;end
+if nargout >= 6, varargout{6} = mu0;end
+if nargout >= 7, varargout{7} = re;end
+if nargout >= 8, varargout{8} = mc2;end
+if nargout >= 9, varargout{9} = clum;end
+if nargout >= 10, varargout{10} = alpha;end
+if nargout >= 11, varargout{11} = kB;end
+
    
