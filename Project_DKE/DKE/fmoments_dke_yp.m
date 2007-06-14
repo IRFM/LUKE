@@ -763,13 +763,20 @@ if dkeparam.coll_mode == 3,%Lorentz model (test mode only, see documentation)
     Zcurr.x_L_tot = Zcurr.x_0 + Zcurr.x_L_tp + Zcurr.x_L_g;%Total current density
 end 
 %
-%   Flux surface averaged current
+%   Flux surface averaged current (two definitions, fsav is LUKE, vfsav is CRONOS)
 %
 Zcurr.x_0_fsav = 2*pi*(xq(rdke)./xqbar(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0(:,:,rdke).*XXheaviside(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
 Zcurr.x_0_vfsav = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0(:,:,rdke).*XXheaviside(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
 Zcurr.x_tp_fsav = 2*pi*(xqtilde(rdke)./xqbar(rdke))./(1 + xx0(rdke)/Rp).*(xBT0(rdke)./xB0(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_tp(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke).*XXlambda_p2m2p2(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
+%************* to be updated YP 14/06/07 *************
+Zcurr.x_tp_vfsav = 2*pi*(xqtilde(rdke)./xqbar(rdke))./(1 + xx0(rdke)/Rp).*(xBT0(rdke)./xB0(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_tp(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke).*XXlambda_p2m2p2(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
+%*************
 Zcurr.x_g_fsav = 2*pi*(xq(rdke)./xqbar(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_g(:,:,rdke).*XXheaviside(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
-Zcurr.x_tot_fsav = Zcurr.x_0_fsav + Zcurr.x_tp_fsav + Zcurr.x_g_fsav;%Total current density
+%************* to be updated YP 14/06/07 *************
+Zcurr.x_g_vfsav = 2*pi*(xq(rdke)./xqbar(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_g(:,:,rdke).*XXheaviside(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
+%*************
+Zcurr.x_tot_fsav = Zcurr.x_0_fsav + Zcurr.x_tp_fsav + Zcurr.x_g_fsav;%Total flux surface averaged current density (LUKE definition)
+Zcurr.x_tot_vfsav = Zcurr.x_0_vfsav + Zcurr.x_tp_vfsav + Zcurr.x_g_vfsav;%Total flux surface averaged current density (CRONOS definition)
 %
 if dkeparam.coll_mode == 3,%Lorentz model (test mode only, see documentation)
     Zcurr.x_L_tp_fsav = 2*pi*(xqtilde(rdke)./xqbar(rdke))./(1 + xx0(rdke)/Rp).*(xBT0(rdke)./xB0(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_L_tp(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke).*XXlambda_p2m2p2(:,:,rdke)./XXgamma(:,:,rdke),1),1)';

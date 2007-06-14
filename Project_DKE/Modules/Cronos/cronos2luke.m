@@ -51,13 +51,13 @@ if nargin <= 1
 %
 % LUKE PARAMETERS
 %
-    valeur.abs_lim = 0.95;%Relative level of RF power absorption that is accpeted for in the quasilinear convergence loop (0: no threshold, 1: full absorption)
+	valeur.abs_lim = 0.95;%Relative level of RF power absorption that is accpeted for in the quasilinear convergence loop (0: no threshold, 1: full absorption)
 	type.abs_lim = 'float';%Relative level of RF power absorption that is accpeted for in the quasilinear convergence loop (0: no threshold, 1: full absorption)
 	borne.abs_lim = [0,1];%Relative level of RF power absorption that is accpeted for in the quasilinear convergence loop (0: no threshold, 1: full absorption)
 	defaut.abs_lim = 0.95;%Relative level of RF power absorption that is accpeted for in the quasilinear convergence loop (0: no threshold, 1: full absorption)
 	info.abs_lim = 'Relative level of RF power absorption that is accpeted for in the quasilinear convergence loop (0: no threshold, 1: full absorption)';
 %
-    valeur.rt_mode = 4;%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p, (4) -> dNpar proportional to s
+	valeur.rt_mode = 4;%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p, (4) -> dNpar proportional to s
 	type.rt_mode = 'list';%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p, (4) -> dNpar proportional to s
 	borne.rt_mode = {1,2,3,4};%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p, (4) -> dNpar proportional to s
 	defaut.rt_mode = 4;%RT-FP quasilinear selfconsistency method: (1) -> fixed dNpar given at the antenna, (2) -> dNpar proportional to Npar, (3) dNpar proportional to Npar but its value is chosen automatiicaly to maximize j/p, (4) -> dNpar proportional to s
@@ -81,11 +81,11 @@ if nargin <= 1
 	defaut.dtn = 10000;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
 	info.dtn = 'Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)';
 %
-	valeur.invproc = 1;%Iterative matrix inversion method: (1) cgs iterative method, (2) bicg iterative method, (3) qmr iterative method
+	valeur.invproc = -2;%Iterative matrix inversion method: (1) cgs iterative method, (2) bicg iterative method, (3) qmr iterative method
 	type.invproc = 'list';%Iterative matrix inversion method: (1) cgs iterative method, (2) bicg iterative method, (3) qmr iterative method
-	borne.invproc = {-1,1,2,3};%Iterative matrix inversion method: (1) cgs iterative method, (2) bicg iterative method, (3) qmr iterative method
+	borne.invproc = {-30,-3,-2,-1,0,1,1,2,3};%Iterative matrix inversion method: (1) cgs iterative method, (2) bicg iterative method, (3) qmr iterative method
 	defaut.invproc = 1;%Iterative matrix inversion method: (1) cgs iterative method, (2) bicg iterative method, (3) qmr iterative method
-	info.invproc = 'Iterative matrix inversion method: (1) cgs iterative method, (2) bicg iterative method, (3) qmr iterative method';
+	info.invproc = 'Iterative matrix inversion method: (-30) PETSc interface (see data structure below) (-3): SUPERLUMEX sequential direct matrix inversion (LU matrix factorization done for each time a matrix inversion is called) (-2): MUMPSMEX sequential fortran 95 inversion using MUMPS LU matrix factorization (-1): MUMPS parallel (or sequential) fortran 95 direct inversion (LU matrix factorization done for each time a matrix inversion is called) (0) Matlab built-in direct inversion without any LU factorization (NOT RECOMMANDED !) (1) cgs iterative method, (2) bicg iterative method, (3) qmr iterative method';
 %
 % DISPLAY PARAMETERS
 %
@@ -119,7 +119,7 @@ if nargin <= 1
 %
 	valeur.norm_ref = 1;%Normalization procedure for the lower limit of radial transport parallel velocity dependence: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref
 	type.norm_ref = 'list';%Normalization procedure for the lower limit of radial transport parallel velocity dependence: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref
-    borne.norm_ref = {0,1};%Normalization procedure for the lower limit of radial transport parallel velocity dependence: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref
+	borne.norm_ref = {0,1};%Normalization procedure for the lower limit of radial transport parallel velocity dependence: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref
 	defaut.norm_ref = 1;%Normalization procedure for the lower limit of radial transport parallel velocity dependence: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref
 	info.norm_ref = 'Normalization procedure for the lower limit of radial transport parallel velocity dependence: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref ';
 %
@@ -183,7 +183,7 @@ if nargin <= 1
 %
 %  RUN PARAMETERS
 %
-	valeur.rho_S = [0.05:0.06:0.95];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+	valeur.rho_S = [0.02:0.06:0.97];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 	type.rho_S = 'float';%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 	borne.rho_S = [0,1];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 	defaut.rho_S = 0;%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
@@ -193,7 +193,7 @@ if nargin <= 1
 %
     valeur.conf = 'MIXTE';% configuration antennes / machine
     type.conf = 'string';% configuration antennes / machine
-    borne.conf = {'TS','MIXTE','CIEL','CMOD','SST1','COMPASS','JET','FTU','ITER3.7GHz','ITER5GHz','DEMO3.7GHz','DEMO5.0GHz'};% configuration antennes / machine
+    borne.conf = {'TS','MIXTE','CIEL','CMOD','SST1','COMPASS','JET','FTU','ITER3.7GHz','ITER5GHz','DEMO3.7GHz','DEMO5.0GHz','Ohmic'};% configuration antennes / machine
     defaut.conf = 'MIXTE';% configuration antennes / machine
     info.conf = 'Configuration antennas / tokamak';
 %
@@ -226,18 +226,18 @@ if nargin <= 1
 %
 	valeur.modpolar     = 2.*ones(1,nbfce);% mode polarisation : 1 -> X, 2 -> O [2]
 	type.modpolar       = 'integer';% type de la donnnee
-    borne.modpolar      = {1,2};
+	borne.modpolar      = {1,2};
 	defaut.modpolar     = 2;
 	info.modpolar       = 'polarisation mode : 1 -> X, 2 -> O [2]';
 %
 	valeur.freq_ghz     = 118.*ones(1,nbfce);% frequence en  Ghz [TS = 118]
-    type.freq_ghz       = 'float';% type de la donnnee
+	type.freq_ghz       = 'float';% type de la donnnee
 	borne.freq_ghz      = [1,1000];
 	defaut.freq_ghz     = 118;
 	info.freq_ghz       = 'frequency [Ghz, TS = 118]';
 %
 	valeur.rant         = 3.53.*ones(1,nbfce);% position en R du dernier miroir (m) [TS = 3.53]
-    type.rant           = 'float';% type de la donnnee
+	type.rant           = 'float';% type de la donnnee
 	borne.rant          = [0,30];
 	defaut.rant         = 3.53; 
 	info.rant           = 'last mirror major radius (m) [TS = 3.53]';
@@ -247,25 +247,25 @@ if nargin <= 1
 	else
         valeur.zant = zeros(1,nbfce);
 	end
-    type.zant           = 'float';% type de la donnnee
+        type.zant           = 'float';% type de la donnnee
 	borne.zant          = [-20,20];
 	defaut.zant         = 0;
 	info.zant           = 'last mirror altitude  (m) [0]' ;            
 %
 	valeur.angle_pol    = 0.*ones(1,nbfce);% angle d'injection dans le plan poloidal par rapport a l'horizontal, en degres (Ts = -20 a 20, >0 vers le haut) [0]
-    type.angle_pol      = 'float';% type de la donnnee
+	type.angle_pol      = 'float';% type de la donnnee
 	borne.angle_pol     = [-90,90];
 	defaut.angle_pol    = 0;
 	info.angle_pol      = 'poloidal injection angle [degree]  (Ts = -20 a 20, >0 vers le haut) [0]';
 %
 	valeur.angle_tor    = 0.*ones(1,nbfce);% angle d'injection dans le plan toroidal par rapport a la normal a Btor en degres (Ts = -30 a 30, >0 dans le sens de ip) [10]
-    type.angle_tor      = 'float';% type de la donnnee
+	type.angle_tor      = 'float';% type de la donnnee
 	borne.angle_tor     = [-90,90];
 	defaut.angle_tor    = 10;
 	info.angle_tor      = 'toroidal injection angle [degree]  (Ts = -30 a 30, >0 dans le sens de ip) [10]';
 %
-    valeur.angle_var    = 0 .* ones(1,nbfce);% angle des miroirs passes en consigne si =1
-    type.angle_var      = 'integer';% type de la donnnee
+	valeur.angle_var    = 0 .* ones(1,nbfce);% angle des miroirs passes en consigne si =1
+	type.angle_var      = 'integer';% type de la donnnee
 	borne.angle_var     = {0,1};
 	defaut.angle_var    = 0;
 	info.angle_var      = 'if set at  1, antena mirrors angles are given as reference in input';
@@ -308,9 +308,12 @@ if nargin == 14,% LH case
     memoire = varargin{14};
     %
     if (all(abs(cons)< 2e5) | all(angle(cons)<=1)),% test sur la puissance. Calcul si P > 200 kW seulement
-        sortie = proto;
-        return
-    end
+		sortie = proto;
+		disp('zstarwars in ohmic mode')
+		if ~strcmp(par.conf,'Ohmic')
+			return
+		end
+	end
 elseif nargin == 13,% FCE case
     par = varargin{1};
     proto = varargin{2};
@@ -362,7 +365,11 @@ switch par.luke_mode
     %
     % LH waves only
     %
-    [launchs] = make_wavelaunchs_cronos_lh(equil,gene.signe,par.conf,cons,cons_spec);%for the LH waves
+    if strcmp(par.conf,'Ohmic')
+      [launchs] = make_wavelaunchs_cronos_lh(equil,gene.signe,'MIXTE',cons,cons_spec);%for the LH waves
+    else
+      [launchs] = make_wavelaunchs_cronos_lh(equil,gene.signe,par.conf,cons,cons_spec);%for the LH waves
+    end
     par.launchtype = 'LH';
     %    
   case 'ecrh'
@@ -380,10 +387,15 @@ end
 %
 % --------- Load first all parameters that are in files ------------
 %
-[dkeparam]       = make_dkeparam_cronos(par.launchtype);
-[dkedisplay]     = make_display_cronos(par.make_display);
+dkeparam         = make_dkeparam_cronos(par.launchtype);
+dkedisplay       = make_display_cronos(par.make_display);
 dkepath          = getappdata(0,'DKEPATH');
 dkepath.temppath = [dkepath.temppathroot,filesep,'CRONOS',filesep,timeid_jd(clock)];%Temporary subdirectory in scratch folder
+%
+% MUMPS sous basiuk pour l'instant
+%
+root=getappdata(0,'root');
+dkepath.MUMPS.mex = [root,'/source/hyb/LUKE/MUMPS_4.6.4_S_g95/MATLAB'];
 %
 % --------- Override parameters that are in files ------------
 %
@@ -407,8 +419,26 @@ dkedisplay.display_mode = par.display_mode;%Display mode: (0): no, (1): partial,
 %
 signe = evalin('base','param.gene.signe');%Toroidal Bfield and plasma current sign (CRONOS convention: > 0 when counter-clockwise from top view)
 %
-ohm.rho  = par.rho_S;
-ohm.epsi = -sign(signe.ip)*sign(signe.b0)*abs(interp1(abs(equi.psi-equi.psi(1))/max(abs(equi.psi-equi.psi(1))),prof.epar,rho2psi_jd(equil,par.rho_S)));%(V/m). Here Efield sign is always co-current by definition, in order to retrieve both amplitude and sign of Ip without any RF wave
+% psipncronos    : coordonnee radiale normalisee de CRONOS en flux poloidal
+% psipncronoshel : coordonnee radiale normalisee en flux poloidal associee a HELENA pour BR BZ et BPHI
+% psitncronoshel : coordonnee radiale normalisee en flux toroidal associee a HELENA pour BR BZ et BPHI 
+% psipn_jd       : coordonnee radiale normalisee en flux poloidal associee a LUKE
+%
+ohm.rho        = par.rho_S;
+psipncronos    = abs(equi.psi-equi.psi(1))/max(abs(equi.psi-equi.psi(1)));
+psipncronoshel = abs(equi.psiRZ-equi.psiRZ(1))/max(abs(equi.psiRZ-equi.psiRZ(1)));
+psitncronoshel = equi.rhoRZ/equi.rhomax;
+psipn_ohm       = rho2psi_jd(equil,par.rho_S);
+%---------------------------------------------------------
+% calcul du champ // pour LUKE (avec gestion des signes)
+% passage de prof.epar de la grille en x sur la grille HELENA
+% puis passage sur la grille LUKE en faisant correspondre rhohel et psihel
+% puis multiplication par le facteur geometrique (pour s'assurer que l'integrale redonne le courant)
+% ohm.epsi : V/m
+% Here Efield sign is always co-current by definition, in order to retrieve both amplitude and sign of Ip without any RF wave
+%----------------------------------------------------------
+ohm.epsi     = -sign(signe.ip)*sign(signe.b0)*abs(interp1(gene.x,prof.epar,psitncronoshel));
+ohm.epsi     = complex(interp1(psipncronoshel,ohm.epsi,psi_ohm));%Imaginary for considering the definition of the flux surface averaging of CRONOS in LUKE
 %
 % PARAMETRES RIPPLE 
 %
@@ -458,8 +488,8 @@ for k=1:length(wavestructs)
 end    
 %
 if sum(abs(ohm.epsi)) ~= 0,%Calculate the Ohmic electric field contribution to the plasma current
-    dkeparam.bounce_mode = 0;
-    [Znorm0,Zcurr0,ZP00,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp('cronos',[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,'',transpfaste,ripple,[],[]);
+%    dkeparam.bounce_mode = 0;
+%    [Znorm0,Zcurr0,ZP00,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp('cronos',[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,'',transpfaste,ripple,[],[]);
     dkeparam.bounce_mode = 1;
    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp('cronos',[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,'',transpfaste,ripple,[],[]);
 end
@@ -483,10 +513,12 @@ while 1,
 end
 %
 if strcmp(dkedisplay.display_mode,'PARTIAL_VISUAL') | strcmp(dkedisplay.display_mode,'VISUAL'),
-   if sum(abs(ohm.epsi)) > 0,	
+   if sum(abs(real(ohm.epsi))) > 0 | sum(abs(imag(ohm.epsi))) > 0,	
 	  I_ohm = sum(Zcurr.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref);
 	  figure('Name','Ohmic current profile'),
-	  graph1D_jd(equilDKE.xrho,Zcurr.x_0_fsav*mksa.j_ref,0,0,'\rho','J_{tot} (MA/m^2)',[par.machine_nom,',I_{tot} = ',num2str(I_ohm*1000),' (kA)'],NaN,'','','-','none','r',2);drawnow
+	  graph1D_jd(equilDKE.xrho,Zcurr.x_0_fsav*mksa.j_ref,0,0,'\rho','J_{tot} (MA/m^2)',[par.machine_nom,',I_{tot} = ',num2str(I_ohm*1000),' (kA)'],NaN,'','','-','none','r',2);hold on
+	  graph1D_jd(equilDKE.xrho,Zcurr.x_0_vfsav*mksa.j_ref,0,0,'\rho','J_{tot} (MA/m^2)',[par.machine_nom,',I_{tot} = ',num2str(I_ohm*1000),' (kA)'],NaN,'','','-','none','b',2);hold off,drawnow
+      legend('LUKE flux surface averaging','CRONOS flux surface averaging')
 %	  print_jd(p_opt,[filename,'_Curr']);
 %
 	  POHM_ohm = sum(ZP0.x_e_fsav.*equilDKE.xdV_2piRp_dke*mksa.P_ref*2*pi*equilDKE.Rp);
@@ -497,7 +529,9 @@ if strcmp(dkedisplay.display_mode,'PARTIAL_VISUAL') | strcmp(dkedisplay.display_
 %
 	I_tot = sum(Zcurr_RF.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref);
 	figure('Name','Current profile'),
-	graph1D_jd(equilDKE.xrho,Zcurr_RF.x_0_fsav*mksa.j_ref,0,0,'\rho','J_{tot} (MA/m^2)',[par.machine_nom,',I_{tot} = ',num2str(I_tot*1000),' (kA)'],NaN,'','','-','none','r',2);drawnow
+	graph1D_jd(equilDKE.xrho,Zcurr_RF.x_0_fsav*mksa.j_ref,0,0,'\rho','J_{tot} (MA/m^2)',[par.machine_nom,',I_{tot} = ',num2str(I_tot*1000),' (kA)'],NaN,'','','-','none','r',2);hold on
+	graph1D_jd(equilDKE.xrho,Zcurr_RF.x_0_vfsav*mksa.j_ref,0,0,'\rho','J_{tot} (MA/m^2)',[par.machine_nom,',I_{tot} = ',num2str(I_tot*1000),' (kA)'],NaN,'','','-','none','b',2);hold off,drawnow
+    legend('LUKE flux surface averaging','CRONOS flux surface averaging')
 %	print_jd(p_opt,[filename,'_Curr']);
 %
 	PLH_tot = sum(ZP0_RF.x_rf_fsav.*equilDKE.xdV_2piRp_dke(:)*mksa.P_ref*2*pi*equilDKE.Rp);
@@ -513,17 +547,28 @@ end
 %
 %--------------------------- REMPLISSAGE DE LA STRUCTURE DE SORTIE POUR CRONOS --------------------------- 
 %
-equilDKE.xcron = interp1(abs(equi.psi-equi.psi(1))/max(abs(equi.psi-equi.psi(1))),gene.x,equilDKE.xpsin);
+% calcul du flux toroidal normalise associé a la grille de LUKE 
+%
+equilDKE.xcron = interp1(psincronos,gene.x,equilDKE.xpsin);
+%
+% preparation des variables de sortie (sortie.j, sortie.el) pour CRONOS sur la bonne grille
+% et avec les bonnes unites
 %
 if sum(abs(ohm.epsi)) > 0,%Only the RF current + the synergistic Ohmic/RF current contribution is kept
-   sortie.j  = interp1(equilDKE.xcron,(Zcurr_RF.x_tot_fsav - Zcurr.x_tot_fsav)*mksa.j_ref,gene.x);
+   sortie.j  = interp1(equilDKE.xcron,(Zcurr_RF.x_tot_vfsav - Zcurr.x_tot_vfsav)*mksa.j_ref,gene.x)*1e6;
    sortie.el = interp1(equilDKE.xcron,(ZP0_RF.x_rf_fsav + ZP0_RF.x_e_fsav' - ZP0.x_e_fsav')*mksa.P_ref,gene.x);
-   johm      = interp1(equilDKE.xcron,Zcurr.x_tot*mksa.j_ref,gene.x);
-   pohm      = interp1(equilDKE.xcron,ZP0.x_e_fsav*mksa.P_ref,gene.x);
 else
-   sortie.j = interp1(equilDKE.xcron,Zcurr.x_tot_fsav*mksa.j_ref,gene.x);
+   sortie.j = interp1(equilDKE.xcron,Zcurr.x_tot_vfsav*mksa.j_ref,gene.x)*1e6;
    sortie.el = interp1(equilDKE.xcron,(ZP0.x_rf_fsav + ZP0.x_e_fsav')*mksa.P_ref,gene.x);
 end
+%
+% blindage : 0 au bord, au centre on recopie la premiere valeur non nulle
+%
+indnan = find(isnan(sortie.j));
+indmax = max(indnan(gene.x(indnan) < 0.5))+1;
+sortie.j(indnan(gene.x(indnan) > 0.5))=0;
+sortie.j(indnan(gene.x(indnan) < 0.5))=sortie.j(indmax);
+
 %
 if par.save,
    [chemin,void] = fileparts(gene.rapsauve);
