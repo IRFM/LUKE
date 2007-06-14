@@ -1,5 +1,9 @@
 function [ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,xepsi,xEfield_validity] = efield_dke_jd(dkepath,dkeparam,display,equilDKE,mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,ZXXF_c)
 %
+% Calculate matrix coefficient for the Ohmic electric field in LUKE
+%
+% by Y. PEYSSON, CEA-DRFC (yves.peysson@cea.fr) and J. DECKER (joan.decke@cea.fr) 
+%
 display_mode = display.display_mode;
 %
 dke_mode = dkeparam.dke_mode;
@@ -41,6 +45,7 @@ else
   nr_dke =gridDKE.nr_dke;%Size of the effective radial grid for the drift kinetic equation (nr_dke = nr for FPE equation only)
 %
   XXlambda_b_p1m3p4  = Zbouncecoef.XXlambda_b_p1m3p4;
+  XXlambda_b_p1m2p2  = Zbouncecoef.XXlambda_b_p1m2p2;
   XXRlambda_b_p1m1p2 = Zbouncecoef.XXRlambda_b_p1m1p2;
   XXRlambda_b_p1m1p2_p = Zbouncecoef.XXRlambda_b_p1m1p2_p;
   XXRlambda_b_p1m1p2_m = Zbouncecoef.XXRlambda_b_p1m1p2_m;
@@ -49,6 +54,7 @@ else
   XXRlambda_b_p2m2p2_m = Zbouncecoef.XXRlambda_b_p2m2p2_m;
   xqbar = Zbouncecoef.xqbar;
   xqtilde = Zbouncecoef.xqtilde;
+  xqhat = Zbouncecoef.xqhat;
 %
 % Output files initialization
 %
@@ -109,7 +115,11 @@ else
     if bounce_mode == 0 | xepsi_fsav(ir) == 0,
         xepsi(ir) = xepsi_fsav(ir);
     elseif bounce_mode == 1,
-        xepsi(ir) = xepsi_fsav(ir)*(xqbar(ir)/xqtilde(ir))*(xB0(ir)/xBT0(ir))*(1+xx0(ir)/Rp)/XXlambda_b_p1m3p4(1,1,ir);%Value at Bmin for FP or DKE calculations
+        if isreal(xepsi_fsav),%flux surface-averaging definition of LUKE using surface densities
+            xepsi(ir) = xepsi_fsav(ir)*(xqbar(ir)/xqtilde(ir))*(xB0(ir)/xBT0(ir))*(1+xx0(ir)/Rp)/XXlambda_b_p1m3p4(1,1,ir);%Value at Bmin for FP or DKE calculations
+        else,%flux surface-averaging definition of CRONOS using volume densities
+            xepsi(ir) = imag(xepsi_fsav(ir))*(xqhat(ir)/xqtilde(ir))/XXlambda_b_p1m2p2(1,1,ir);%Value at Bmin for FP or DKE calculations            
+        end
     end
     if xepsi(ir) > 0.05, 
 %        info_dke_yp(2,'WARNING: Ohmic electric field is likely too large. See the documentation');%To be consistent with the assumption of the linearized Fokker-Planck equation

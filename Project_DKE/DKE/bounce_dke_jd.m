@@ -1,4 +1,4 @@
-function [xymaskT,xylambda_p0p0,xylambda_p2m1,xylambda_p2m2p2,xylambda_b_p1p1,xylambda_b_p1m1p2,xylambda_b_p1m1,xylambda_b_p1m2,xylambda_b_p2m2p2,xylambda_b_p3m2,xylambda_b_p2,xylambda_b_p1m3p4]...
+function [xymaskT,xylambda_p0p0,xylambda_p2m1,xylambda_p2m2p2,xylambda_b_p1p1,xylambda_b_p1m1p2,xylambda_b_p1m1,xylambda_b_p1m2,xylambda_b_p2m2p2,xylambda_b_p3m2,xylambda_b_p2,xylambda_b_p1m3p4,xylambda_b_p1m2p2]...
 = bounce_dke_jd(equil_mode,ymhu0,Xx,Xy,XBx,XBy,XBphi,xmhubounce2,xB0,xx0,xBT0,xBp0,xqtilde,Rp,Zp,ap,xymaskT_in,sign)
 %
 % calculates bounce averaging coefficients needed for solving the electron drift-kinetic-equation. 
@@ -78,6 +78,10 @@ if equil_mode == 1
     Yweight_p1m3p4 = YMYM01.*YMPSIBM3.*YMR0YMR4;
     xylambda_p1m3p4 = reshape(sum(YMmaskYMdtYMF.*Yweight_p1m3p4)/(2*pi),[nr,nmhu])./xyqtilde;
     xylambda_b_p1m3p4 = not_xymaskT.*xylambda_p1m3p4;
+%
+    Yweight_p1m2p2 = YMYM01.*YMPSIBM2.*YMR0YMR2;
+    xylambda_p1m2p2 = reshape(sum(YMmaskYMdtYMF.*Yweight_p1m2p2)/(2*pi),[nr,nmhu])./xyqtilde;
+    xylambda_b_p1m2p2 = not_xymaskT.*xylambda_p1m2p2;
 %
 %Fokker-Planck weights
 %
@@ -187,5 +191,6 @@ else,%Ideal equilibrium with circular concentric flux-surfaces.
     xylambda_b_p2 = xylambda_b_p2m2p2;
     xylambda_b_p1m1p2 = xylambda_b_p1p1;
     xylambda_b_p1m3p4 = xylambda_b_p1p1;
+    xylambda_b_p1m2p2 = ones(size(xylambda_b_p1m3p4));
  end      
   
