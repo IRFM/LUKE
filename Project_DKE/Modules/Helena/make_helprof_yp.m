@@ -35,11 +35,9 @@ profile.current = (profparam.j0 - profparam.ja)*(1 - x.^2).^profparam.ej + profp
 %
 if profparam.gridtype == 1,%sqrt(psi) grid
     profile.ipai = 11;
-%    profile.igam = 11;
     profile.icur = 11;
 else,%psi grid
     profile.ipai = 7;
-%    profile.igam = 7;
     profile.icur = 2;
 end
 
