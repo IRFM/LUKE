@@ -1,0 +1,440 @@
+% A4 is 21 x 29.7 cm
+% leave 2.5 cm margins
+
+\documentclass[a4paper,12pt]{article}%
+\usepackage[dvips]{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}%
+\setcounter{MaxMatrixCols}{30}
+%TCIDATA{OutputFilter=latex2.dll}
+%TCIDATA{Version=5.50.0.2953}
+%TCIDATA{CSTFile=C:\swp55\styles\article\Joan Decker article.cst}
+%TCIDATA{Created=Saturday, March 24, 2007 21:51:26}
+%TCIDATA{LastRevised=Sunday, March 25, 2007 19:31:13}
+%TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
+%TCIDATA{<META NAME="SaveForMode" CONTENT="1">}
+%TCIDATA{BibliographyScheme=Manual}
+%TCIDATA{<META NAME="DocumentShell" CONTENT="Joan Decker\letter_jd_A4">}
+%BeginMSIPreambleData
+\providecommand{\U}[1]{\protect\rule{.1in}{.1in}}
+%EndMSIPreambleData
+\setlength{\textwidth}{16 true cm}
+\setlength{\textheight}{24.7 true cm}
+\setlength{\headheight}{0 true cm}
+\setlength{\headsep}{0 true cm}
+\setlength{\oddsidemargin}{0 true cm}
+\setlength{\evensidemargin}{0 true cm}
+\setlength{\topmargin}{0 true cm}
+\begin{document}
+
+\title{LUKE Simulations of LHCD in ITER}
+\author{Joan Decker and Yves Peysson}
+\date{\today}
+\maketitle
+
+\section{Introduction}
+
+The LUKE ray-tracing/Fokker-Planck package is used to perform simulations of
+LHCD in ITER. An up/down symmetric ITER Scenario 4 equilibrium is used. The
+equilibrium data were provided by P. Bonoli for ITER simulations presented at
+the IAEA conference in 2006. Figures representing the equilibrium are
+available in Section 2. In section 3 a scan in $N_{\Vert}$ is performed for
+the wave frequencies $f=5.0$ GHz and $f=3.7$ GHz, respectively. A\ poloidal
+scan of ray lauching positions is presented in section 4. The results are
+discussed in Section 5.
+
+\section{Equilibrium}
+
+The magnetic equilibrium is plotted in Fig. \ref{equil} and the profiles in
+Fig. \ref{prof}.
+
+\section{$N_{\Vert}$ scan at $f=5.0$ GHz and $f=3.7$ GHz}
+
+For each scan, six rays starting from the outboard side are launched into the
+plasma and propagated by the ray-tracing code C3PO. The six rays correspond to
+the positive and negative lobes at the three different vertical launching
+positions $Z=-0.5/0/0.5$ m. The total power in $P=30$ MW. The current
+deposition profiles and total current corresponding to a scan with $N_{\Vert
+}=1.9/2.0/2.1$ are shown in Fig. \ref{Jrf5p0} and \ref{Jrf3p7} corresponding
+to the frequencies $f=5.0$ GHz and $f=3.7$ GHz, respectively. It is found that
+the current drive efficiency increases for lower $N_{\Vert}$.\ This trend is
+expected since the velocity $v_{\Vert}=c/N_{\Vert}$ of resonant electrons is
+larger for lower $N_{\Vert}$. We note that the trend holds in all cases except
+for $f=3.7$ GHz and $N_{\Vert}=1.9$ where the driven current is much lower
+than expected.
+
+For a given initial value of $N_{\Vert}$ (except the case $N_{\Vert}=1.9$),
+the current drive efficiency is significantly higher for $f=3.7$ GHz than for
+$f=5.0$ GHz. To interprete this results the rays are showed in Fig.
+\ref{n2p0_rays} for $N_{\Vert}=2.0$ and each frequency. The value of
+$N_{\Vert}$ at the location of maximum power deposition is displayed in Fig.
+\ref{n2p0_Npar}. We observe that the ray propagation is different for the two
+frequencies. When $f=3.7$ GHz, the rays experience more refraction and a
+larger $N_{\Vert}$ downshift and thus propagate further into the plasma. This
+explains the larger current drive efficiency.
+
+In order to explain what happens for $f=3.7$ GHz and $N_{\Vert}=1.9$, the rays
+are shown in Fig. \ref{n1p9_rays} for $N_{\Vert}=1.9$ and each frequency. The
+value of $N_{\Vert}$ at the location of maximum power deposition is displayed
+in Fig. \ref{n1p9_Npar}. We observe that for $f=3.7$ GHz two of the three rays
+experience so much refraction that they propagate back towards the edge
+without being damped. After reflection on the edge they experience a very
+large $N_{\Vert}$ upshift leading to very inefficient current drive localized
+close to the edge.
+
+\section{Poloidal scan}
+
+Rays were launched from 16 different, uniformly distributed, poloidal
+locations with $f=5.0$ GHz and initial $N_{\Vert}=2.0$. These rays are shown
+on Fig. \ref{raypol}. Rays are counted counted-clockwise starting with the ray
+launched from the horizontal outboard midplane. On Fig. \ref{rhopol} and Fig.
+\ref{nparpol}, the damping radial location and corresponding $N_{\Vert}$ value
+are displayed, respectively, as a function of the ray number. It is found that
+rays lauched from the horizontal midplane or slightly above (either on the LFS
+or the HFS) experience a larger downshift and propagate further into the
+plasma than rays lauched from the top or bottom of the plasma. Because these
+rays at absorbed at a lower value of $N_{\Vert}$ they also have the potential
+for more efficient current drive.
+
+\section{Discussions and Conclusions}
+
+Concerning the poloidal location of ray launching, it is demonstrated that
+rays experience a larger $N_{\Vert}$ downshift and thus propagate further into
+the plasma if they are launched on or slightly above the horizontal midplane.
+There are no significant differences between LFS and HFS launching.
+
+For a given frequency, rays launched with a lower $N_{\Vert}$ propagate
+further into the plasma and lead to a larger current drive efficiency. This
+trend holds when lowering $N_{\Vert}$ until the rays are refracted back to the
+edge before being damped, in which case the contribution of such ray to
+driving current drops considerably. For a given initial $N_{\Vert}$, rays
+launched at the frequency $f=3.7$ GHz experience a stronger downshift and thus
+drive more current than with $f=5.0$ GHz. This also means that the limit in
+$N_{\Vert}$ for which the ray is reflected back to the edge before being
+damped, which must be avoided, is higher in the case where $f=3.7$ GHz.
+
+More generally, this limit in $N_{\Vert}$ results from the balance between
+refraction - which depends upon the density profile - and damping - which
+depends upon the temperature profile. The objective is to keep $N_{\Vert}$
+high enough such that the ray is damped before being refracted, but low enough
+to maintain a good current drive efficiency.
+
+The maximum current drive efficiency that can be obtained is similar with
+$f=3.7$ GHz and with $f=5.0$ GHz, but it occurs at a higher value of
+$N_{\Vert}$ in the $f=3.7$ GHz case.%
+
+%TCIMACRO{\FRAME{ftbhFU}{6.0494in}{4.5558in}{0pt}{\Qcb{Magnetic equilibrium of
+%ITER scenario 4. The red and blue lines are contours of constant $\psi$ and
+%$\theta$, respectively.}}{\Qlb{equil}}{iter_scen4_iaea06_equil.eps}%
+%{\special{ language "Scientific Word";  type "GRAPHIC";
+%maintain-aspect-ratio TRUE;  display "USEDEF";  valid_file "F";
+%width 6.0494in;  height 4.5558in;  depth 0pt;  original-width 5.834in;
+%original-height 4.3863in;  cropleft "0";  croptop "1";  cropright "1";
+%cropbottom "0";
+%filename 'EQUIL/figures/ITER_Scen4_IAEA06_equil.eps';file-properties "XNPEU";}%
+%}}%
+%BeginExpansion
+\begin{figure}
+[tbh]
+\begin{center}
+\includegraphics[
+height=4.5558in,
+width=6.0494in
+]%
+{EQUIL/figures/ITER_Scen4_IAEA06_equil.eps}%
+\caption{Magnetic equilibrium of ITER scenario 4. The red and blue lines are
+contours of constant $\psi$ and $\theta$, respectively.}%
+\label{equil}%
+\end{center}
+\end{figure}
+%EndExpansion%
+%TCIMACRO{\FRAME{ftbhFU}{6.0494in}{3.6426in}{0pt}{\Qcb{Radial profiles of
+%normalized poloidal magnetic flux, electron temperature, electron density, ion
+%temperatures, ion densities, and effective charge for the ITER Scenario 4
+%equilibrium.}}{\Qlb{prof}}{iter_scen4_iaea06_prof.eps}%
+%{\special{ language "Scientific Word";  type "GRAPHIC";
+%maintain-aspect-ratio TRUE;  display "USEDEF";  valid_file "F";
+%width 6.0494in;  height 3.6426in;  depth 0pt;  original-width 9.9998in;
+%original-height 6.0027in;  cropleft "0";  croptop "1";  cropright "1";
+%cropbottom "0";
+%filename 'EQUIL/figures/ITER_Scen4_IAEA06_prof.eps';file-properties "XNPEU";}%
+%}}%
+%BeginExpansion
+\begin{figure}
+[tbh]
+\begin{center}
+\includegraphics[
+height=3.6426in,
+width=6.0494in
+]%
+{EQUIL/figures/ITER_Scen4_IAEA06_prof.eps}%
+\caption{Radial profiles of normalized poloidal magnetic flux, electron
+temperature, electron density, ion temperatures, ion densities, and effective
+charge for the ITER Scenario 4 equilibrium.}%
+\label{prof}%
+\end{center}
+\end{figure}
+%EndExpansion
+%
+
+%TCIMACRO{\FRAME{ftbhFU}{3.6002in}{2.3999in}{0pt}{\Qcb{Current density profile
+%and total driven current for $f=5.0$ GHz and $N_{\Vert}=1.9$ (red), $N_{\Vert
+%}=2.0$ (blue), and $N_{\Vert}=2.1$ (green). }}{\Qlb{Jrf5p0}}%
+%{iter_scen4_iaea06_f5p0_npar_jrf.eps}{\special{ language "Scientific Word";
+%type "GRAPHIC";  maintain-aspect-ratio TRUE;  display "USEDEF";
+%valid_file "F";  width 3.6002in;  height 2.3999in;  depth 0pt;
+%original-width 5.834in;  original-height 4.3863in;  cropleft "0";
+%croptop "1";  cropright "1";  cropbottom "0";
+%filename 'figures/ITER_Scen4_IAEA06_f5p0_Npar_JRF.eps';file-properties "XNPEU";}%
+%}}%
+%BeginExpansion
+\begin{figure}
+[tbh]
+\begin{center}
+\includegraphics[
+height=2.3999in,
+width=3.6002in
+]%
+{figures/ITER_Scen4_IAEA06_f5p0_Npar_JRF.eps}%
+\caption{Current density profile and total driven current for $f=5.0$ GHz and
+$N_{\Vert}=1.9$ (red), $N_{\Vert}=2.0$ (blue), and $N_{\Vert}=2.1$ (green). }%
+\label{Jrf5p0}%
+\end{center}
+\end{figure}
+%EndExpansion
+%
+
+%TCIMACRO{\FRAME{ftbhFU}{3.6002in}{2.3999in}{0pt}{\Qcb{Current density profile
+%and total driven current for $f=3.7$ GHz and $N_{\Vert}=1.9$ (red), $N_{\Vert
+%}=2.0$ (blue), and $N_{\Vert}=2.1$ (green). }}{\Qlb{Jrf3p7}}%
+%{iter_scen4_iaea06_f3p7_npar_jrf.eps}{\special{ language "Scientific Word";
+%type "GRAPHIC";  maintain-aspect-ratio TRUE;  display "USEDEF";
+%valid_file "F";  width 3.6002in;  height 2.3999in;  depth 0pt;
+%original-width 5.834in;  original-height 4.3863in;  cropleft "0";
+%croptop "1";  cropright "1";  cropbottom "0";
+%filename 'figures/ITER_Scen4_IAEA06_f3p7_Npar_JRF.eps';file-properties "XNPEU";}%
+%}}%
+%BeginExpansion
+\begin{figure}
+[tbh]
+\begin{center}
+\includegraphics[
+height=2.3999in,
+width=3.6002in
+]%
+{figures/ITER_Scen4_IAEA06_f3p7_Npar_JRF.eps}%
+\caption{Current density profile and total driven current for $f=3.7$ GHz and
+$N_{\Vert}=1.9$ (red), $N_{\Vert}=2.0$ (blue), and $N_{\Vert}=2.1$ (green). }%
+\label{Jrf3p7}%
+\end{center}
+\end{figure}
+%EndExpansion
+%
+
+%TCIMACRO{\FRAME{ftbhFU}{6.0494in}{4.5558in}{0pt}{\Qcb{Poloidal ray
+%trajectories of the three rays corresponding to the positive lobe and three
+%different poloidal launching positions. The rays are calculated for $N_{\Vert
+%}=2.0$, and $f=5.0$ GHz (blue) or $f=3.7$ GHz (red).}}{\Qlb{n2p0_rays}%
+%}{iter_scen4_iaea06_npar20_rays.eps}{\special{ language "Scientific Word";
+%type "GRAPHIC";  maintain-aspect-ratio TRUE;  display "USEDEF";
+%valid_file "F";  width 6.0494in;  height 4.5558in;  depth 0pt;
+%original-width 5.834in;  original-height 4.3863in;  cropleft "0";
+%croptop "1";  cropright "1";  cropbottom "0";
+%filename 'WAVE/C3PO/figures/ITER_Scen4_IAEA06_Npar20_rays.eps';file-properties "XNPEU";}%
+%}}%
+%BeginExpansion
+\begin{figure}
+[tbh]
+\begin{center}
+\includegraphics[
+height=4.5558in,
+width=6.0494in
+]%
+{WAVE/C3PO/figures/ITER_Scen4_IAEA06_Npar20_rays.eps}%
+\caption{Poloidal ray trajectories of the three rays corresponding to the
+positive lobe and three different poloidal launching positions. The rays are
+calculated for $N_{\Vert}=2.0$, and $f=5.0$ GHz (blue) or $f=3.7$ GHz (red).}%
+\label{n2p0_rays}%
+\end{center}
+\end{figure}
+%EndExpansion
+%
+
+%TCIMACRO{\FRAME{ftbhFU}{3.6002in}{2.3999in}{0pt}{\Qcb{Value of $N_{\Vert}$ at
+%the location of maximum power deposition for the six rays shown in Fig.
+%\ref{n2p0_rays}. Rays \#1,2,3 correspond to $f=5.0$ GHz and $Z=-0.5/0/0.5$ m,
+%while rays \#4,5,6 correspond to the same vertical launching positions with
+%$f=3.7$ GHz.}}{\Qlb{n2p0_Npar}}{iter_scen4_iaea06_npar20_npars.eps}%
+%{\special{ language "Scientific Word";  type "GRAPHIC";
+%maintain-aspect-ratio TRUE;  display "USEDEF";  valid_file "F";
+%width 3.6002in;  height 2.3999in;  depth 0pt;  original-width 5.834in;
+%original-height 4.3863in;  cropleft "0";  croptop "1";  cropright "1";
+%cropbottom "0";
+%filename 'WAVE/C3PO/figures/ITER_Scen4_IAEA06_Npar20_Npars.eps';file-properties "XNPEU";}%
+%}}%
+%BeginExpansion
+\begin{figure}
+[tbh]
+\begin{center}
+\includegraphics[
+height=2.3999in,
+width=3.6002in
+]%
+{WAVE/C3PO/figures/ITER_Scen4_IAEA06_Npar20_Npars.eps}%
+\caption{Value of $N_{\Vert}$ at the location of maximum power deposition for
+the six rays shown in Fig. \ref{n2p0_rays}. Rays \#1,2,3 correspond to $f=5.0$
+GHz and $Z=-0.5/0/0.5$ m, while rays \#4,5,6 correspond to the same vertical
+launching positions with $f=3.7$ GHz.}%
+\label{n2p0_Npar}%
+\end{center}
+\end{figure}
+%EndExpansion
+%
+
+%TCIMACRO{\FRAME{ftbhFU}{6.0494in}{4.5558in}{0pt}{\Qcb{Poloidal ray
+%trajectories of the three rays corresponding to the positive lobe and three
+%different poloidal launching positions. The rays are calculated for $N_{\Vert
+%}=1.9$, and $f=5.0$ GHz (blue) or $f=3.7$ GHz (red).}}{\Qlb{n1p9_rays}%
+%}{iter_scen4_iaea06_npar19_rays.eps}{\special{ language "Scientific Word";
+%type "GRAPHIC";  maintain-aspect-ratio TRUE;  display "USEDEF";
+%valid_file "F";  width 6.0494in;  height 4.5558in;  depth 0pt;
+%original-width 5.834in;  original-height 4.3863in;  cropleft "0";
+%croptop "1";  cropright "1";  cropbottom "0";
+%filename 'WAVE/C3PO/figures/ITER_Scen4_IAEA06_Npar19_rays.eps';file-properties "XNPEU";}%
+%}}%
+%BeginExpansion
+\begin{figure}
+[tbh]
+\begin{center}
+\includegraphics[
+height=4.5558in,
+width=6.0494in
+]%
+{WAVE/C3PO/figures/ITER_Scen4_IAEA06_Npar19_rays.eps}%
+\caption{Poloidal ray trajectories of the three rays corresponding to the
+positive lobe and three different poloidal launching positions. The rays are
+calculated for $N_{\Vert}=1.9$, and $f=5.0$ GHz (blue) or $f=3.7$ GHz (red).}%
+\label{n1p9_rays}%
+\end{center}
+\end{figure}
+%EndExpansion
+%
+
+%TCIMACRO{\FRAME{ftbhFU}{3.6002in}{2.3999in}{0pt}{\Qcb{Value of $N_{\Vert}$ at
+%the location of maximum power deposition for the six rays shown in Fig.
+%\ref{n1p9_rays}. Rays \#1,2,3 correspond to $f=5.0$ GHz and $Z=-0.5/0/0.5$ m,
+%while rays \#4,5,6 correspond to the same vertical launching positions with
+%$f=3.7$ GHz.}}{\Qlb{n1p9_Npar}}{iter_scen4_iaea06_npar19_npars.eps}%
+%{\special{ language "Scientific Word";  type "GRAPHIC";
+%maintain-aspect-ratio TRUE;  display "USEDEF";  valid_file "F";
+%width 3.6002in;  height 2.3999in;  depth 0pt;  original-width 5.834in;
+%original-height 4.3863in;  cropleft "0";  croptop "1";  cropright "1";
+%cropbottom "0";
+%filename 'WAVE/C3PO/figures/ITER_Scen4_IAEA06_Npar19_Npars.eps';file-properties "XNPEU";}%
+%}}%
+%BeginExpansion
+\begin{figure}
+[tbh]
+\begin{center}
+\includegraphics[
+height=2.3999in,
+width=3.6002in
+]%
+{WAVE/C3PO/figures/ITER_Scen4_IAEA06_Npar19_Npars.eps}%
+\caption{Value of $N_{\Vert}$ at the location of maximum power deposition for
+the six rays shown in Fig. \ref{n1p9_rays}. Rays \#1,2,3 correspond to $f=5.0$
+GHz and $Z=-0.5/0/0.5$ m, while rays \#4,5,6 correspond to the same vertical
+launching positions with $f=3.7$ GHz.}%
+\label{n1p9_Npar}%
+\end{center}
+\end{figure}
+%EndExpansion
+%
+
+%TCIMACRO{\FRAME{ftbhFU}{6.0494in}{4.5558in}{0pt}{\Qcb{Poloidal trajectories of
+%LH rays. The black lines represent the ray portion where damping is
+%significant.}}{\Qlb{raypol}}{iter_scen4_iaea06_poloidal_rays.eps}%
+%{\special{ language "Scientific Word";  type "GRAPHIC";
+%maintain-aspect-ratio TRUE;  display "USEDEF";  valid_file "F";
+%width 6.0494in;  height 4.5558in;  depth 0pt;  original-width 5.834in;
+%original-height 4.3863in;  cropleft "0";  croptop "1";  cropright "1";
+%cropbottom "0";
+%filename 'Poloidal/WAVE/figures/ITER_Scen4_IAEA06_poloidal_rays.eps';file-properties "XNPEU";}%
+%}}%
+%BeginExpansion
+\begin{figure}
+[tbh]
+\begin{center}
+\includegraphics[
+height=4.5558in,
+width=6.0494in
+]%
+{Poloidal/WAVE/figures/ITER_Scen4_IAEA06_poloidal_rays.eps}%
+\caption{Poloidal trajectories of LH rays. The black lines represent the ray
+portion where damping is significant.}%
+\label{raypol}%
+\end{center}
+\end{figure}
+%EndExpansion
+%
+
+%TCIMACRO{\FRAME{ftbhFU}{3.6002in}{2.3999in}{0pt}{\Qcb{Radial position of the
+%peak location $\rho^{\text{abs}}$ in the power deposition profile.
+%$\rho^{\text{abs}}\left(  \psi\right)  $ corresponds to $r/a$ where the flux
+%surface $\psi$ crosses the outboard horizontal midplace.}}{\Qlb{rhopol}%
+%}{iter_scen4_iaea06_poloidal_rhoabs.eps}%
+%{\special{ language "Scientific Word";  type "GRAPHIC";
+%maintain-aspect-ratio TRUE;  display "USEDEF";  valid_file "F";
+%width 3.6002in;  height 2.3999in;  depth 0pt;  original-width 5.834in;
+%original-height 4.3863in;  cropleft "0";  croptop "1";  cropright "1";
+%cropbottom "0";
+%filename 'Poloidal/WAVE/figures/ITER_Scen4_IAEA06_poloidal_rhoabs.eps';file-properties "XNPEU";}%
+%}}%
+%BeginExpansion
+\begin{figure}
+[tbh]
+\begin{center}
+\includegraphics[
+height=2.3999in,
+width=3.6002in
+]%
+{Poloidal/WAVE/figures/ITER_Scen4_IAEA06_poloidal_rhoabs.eps}%
+\caption{Radial position of the peak location $\rho^{\text{abs}}$ in the power
+deposition profile. $\rho^{\text{abs}}\left(  \psi\right)  $ corresponds to
+$r/a$ where the flux surface $\psi$ crosses the outboard horizontal midplace.}%
+\label{rhopol}%
+\end{center}
+\end{figure}
+%EndExpansion
+%
+
+%TCIMACRO{\FRAME{ftbhFU}{3.6002in}{2.3999in}{0pt}{\Qcb{Value of $N_{\Vert}$
+%along the ray at the position of maximum damping $\rho^{\text{abs}}$.}%
+%}{\Qlb{nparpol}}{iter_scen4_iaea06_poloidal_nparabs.eps}%
+%{\special{ language "Scientific Word";  type "GRAPHIC";
+%maintain-aspect-ratio TRUE;  display "USEDEF";  valid_file "F";
+%width 3.6002in;  height 2.3999in;  depth 0pt;  original-width 5.834in;
+%original-height 4.3863in;  cropleft "0";  croptop "1";  cropright "1";
+%cropbottom "0";
+%filename 'Poloidal/WAVE/figures/ITER_Scen4_IAEA06_poloidal_Nparabs.eps';file-properties "XNPEU";}%
+%}}%
+%BeginExpansion
+\begin{figure}
+[tbh]
+\begin{center}
+\includegraphics[
+height=2.3999in,
+width=3.6002in
+]%
+{Poloidal/WAVE/figures/ITER_Scen4_IAEA06_poloidal_Nparabs.eps}%
+\caption{Value of $N_{\Vert}$ along the ray at the position of maximum damping
+$\rho^{\text{abs}}$.}%
+\label{nparpol}%
+\end{center}
+\end{figure}
+%EndExpansion
+
+
+
+\end{document}
