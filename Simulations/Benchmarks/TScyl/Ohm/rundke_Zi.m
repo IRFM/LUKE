@@ -55,7 +55,7 @@ if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
 ir_display_out = 1;
 %
-dkeparam.coll_mode = 0;
+dkeparam.coll_mode = 0;%Zeff = 1
 [Znorm,Zcurr0,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 dkeparam.coll_mode = 1;
 [Znorm,Zcurr1,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
@@ -79,6 +79,8 @@ equil.zZi = [1,1,1,10];equil.pzni = species_dke_yp(equil.pne,10*ones(size(equil.
 equil.zZi = [1,1,1,20];equil.pzni = species_dke_yp(equil.pne,20*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 20
 [Znorm,Zcurr_Z20,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
+sigma_Z1s = 1e9*(equil.pTe(1))^1.5/1.65/mksa.lnc_e_ref/abs(mksa.j_ref*1e6/mksa.Edreicer_ref);%Spitzer conductivity (from 'Tokamaks' by J. Wesson, Oxford Science Publication, 3rd Eds., 2004)
+%
 sigma_Z1 = sigma2;
 sigma_Z2 = Zcurr_Z2.x_tot_fsav/(ohm.epsi(ir_display_out)/mksa.Edreicer_ref);
 sigma_Z5 = Zcurr_Z5.x_tot_fsav/(ohm.epsi(ir_display_out)/mksa.Edreicer_ref);
@@ -89,11 +91,12 @@ disp('--------------------------------------------------------------------------
 disp('-------------------------------------------------------------------------------------------------------------------');
 disp(['Ohmic conductivity for the relativistic Maxwellian background collision operator : ',num2str(sigma0),', Karney = 3.773']);
 disp(['Ohmic conductivity for the high velocity limit collision operator : ',num2str(sigma1),', Karney = 2.837']);
-disp(['Ohmic conductivity for the linearized Belaiev-Budker collision operator : ',num2str(sigma2),', Karney = 7.429']);
+disp(['Ohmic conductivity for the linearized Belaiev-Budker collision operator : ',num2str(sigma2),', Karney = 7.429, Spitzer = ',num2str(sigma_Z1s)]);
 disp(['Ohmic conductivity for the non-relativistic Maxwellian background collision operator : ',num2str(sigma4),', Karney = 3.773']);
 %
 disp('-------------------------------------------------------------------------------------------------------------------');
 %
+disp(['Ohmic conductivity from Spitzer formula (Zeff = 1) : ',num2str(sigma_Z1s)]);
 disp(['Ohmic conductivity for the linearized Belaiev-Budker collision operator (Zeff = 1) : ',num2str(sigma_Z1)]);
 disp(['Ohmic conductivity for the linearized Belaiev-Budker collision operator (Zeff = 2) : ',num2str(sigma_Z2)]);
 disp(['Ohmic conductivity for the linearized Belaiev-Budker collision operator (Zeff = 5): ',num2str(sigma_Z5)]);
@@ -104,14 +107,19 @@ disp(['Approximate analytical Ohmic conductivity for the non-relativistic Lorent
 Zi_DKE = [1,2,5,10,20];
 Zi_Lor = [20];
 sigma_DKE = [sigma_Z1,sigma_Z2,sigma_Z5,sigma_Z10,sigma_Z20];
-sigma_Lor = [12.766/20];
+%sigma_highvelocity = sqrt(2/pi)*16*(3*Zi_DKE+13)./(Zi_DKE+3)./(Zi_DKE+5)/3;
+sigma_Lor = [sqrt(2/pi)*16/20];
 Zi_Karney = [1,2,5,10];
 sigma_Karney= [7.429,4.377,2.078,1.133];
+Zi_Spitzer = 1;
+sigma_Spitzer = sigma_Z1s;
 %
 figure(1),clf,graph1D_jd(Zi_DKE,sigma_DKE,0,0,'Main ion charge Z_{i}','','E_{||}/E_{Dreicer} = 0.001',NaN,'','','-','none','r',2,20,gca,1,0.6,0.6);hold on
 graph1D_jd(Zi_Karney,sigma_Karney,0,0,'Main ion charge Z_{i}','Normalized conductivity \sigma','E_{||}/E_{Dreicer} = 0.001',NaN,'','','none','*','g',2,20,gca,1,0.6,0.6);hold on
+%graph1D_jd(Zi_DKE,sigma_highvelocity,0,0,'Main ion charge Z_{i}','','E_{||}/E_{Dreicer} = 0.001',NaN,'','','none','o','b',2,20,gca,1,0.6,0.6);hold on
+graph1D_jd(Zi_Spitzer,sigma_Spitzer,0,0,'Main ion charge Z_{i}','','E_{||}/E_{Dreicer} = 0.001',NaN,'','','none','x','b',2,20,gca,1,0.6,0.6);hold on
 graph1D_jd(Zi_Lor,sigma_Lor,0,0,'Main ion charge Z_{i}','','E_{||}/E_{Dreicer} = 0.001',NaN,'','','none','+','b',2,20,gca,1,0.6,0.6);hold on
-legend('DKE','Karney','Z_{i} = \infty')
+legend('LUKE (Linearized coll.)','Karney (Linearized coll.)','Spitzer Z = 1','Z_{i} = \infty (Lorentz model)')
 savefig_dke_yp('conductivity_Zi')
 %
 disp('-------------------------------------------------------------------------------------------------------------------');	    
