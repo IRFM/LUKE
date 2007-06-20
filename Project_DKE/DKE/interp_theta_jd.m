@@ -1,4 +1,4 @@
-function [Ytheta1,Ytheta2] = interp_theta_jd(theta,XBx,XBy,XBz,YBb)
+function [Ytheta1,Ytheta2,YF1,YF2] = interp_theta_jd(theta,XBx,XBy,XBz,YBb,XF)
 %
 % This function calculates the positions Ytheta1 and Ytheta2 located respectively between two grid 
 % positions Xtheta(i1a) and Xtheta(i1b) for Ytheta1, and Xtheta(i2a) and Xtheta(i2b) for Ytheta2,
@@ -11,6 +11,7 @@ function [Ytheta1,Ytheta2] = interp_theta_jd(theta,XBx,XBy,XBz,YBb)
 %
 % This function is restricted to the case where XB=sqrt(XBx^2 + XBy^2 + XBz^2) has only one maximum 
 % and one minimum, such that the equation B(theta) = YBb has either 2 solutions or none.
+% The function also interpolates the data XF at the theta location  
 %
 %   INPUT :
 %
@@ -19,11 +20,14 @@ function [Ytheta1,Ytheta2] = interp_theta_jd(theta,XBx,XBy,XBz,YBb)
 %       - XBy : y component of the magnetic field [nt,np]. Must be periodic with XBy(nt,:) = XBy(1,:)
 %       - XBz : z component of the magnetic field [nt,np]. Must be periodic with XBz(nt,:) = XBz(1,:)
 %       - YBb : magnetic field amplitude at position theta [np,nb].
+%       - XF : data to be interpolated (optional) [nt,np,nf,...].
 %
 %   OUTPUT :
 %
 %       - Ytheta1 : interpolated position, solution 1 [np,nb]. Ytheta1[ip,iY] = NaN if there no solution.
-%       - Ytheta2 : interpolated position, solution 1 [np,nb]. Ytheta2[ip,iY] = NaN if there no solution.
+%       - Ytheta2 : interpolated position, solution 2 [np,nb]. Ytheta2[ip,iY] = NaN if there no solution.
+%       - XF : data interpolated at theta = theta1 (optional) [np,nb,nf,...].
+%       - XF : data interpolated at theta = theta2 (optional) [np,nb,nf,...].
 %
 % by J. Decker (joan.decker@cea.fr) and Y. Peysson (yves.peysson@cea.fr)
 %
@@ -55,6 +59,17 @@ end
 %
 nb = size(YBb,2);
 %
+if nargin < 6,
+    XF = zeros(np,nb,0);
+end
+%
+sF = size(XF); 
+if sF(1) ~= nt | sF(2) ~= np,
+    error('Input variables dimensions mismatch');
+end
+%
+% ----------------------------------------------------------------
+%
 XB = sqrt(XBx.^2 + XBy.^2 + XBz.^2);
 %
 % calculation of the number of extrema of B
@@ -72,6 +87,9 @@ pBmax = (XB(1:nt-1,:) == repmat(max(XB,[],1),[nt-1,1]));
 %
 if sum(pBmin,1) ~= ones(1,np),
     error('The magnetic field must have one minimum only');
+end
+if sum(pBmax,1) ~= ones(1,np),
+    error('The magnetic field must have one maximum only');
 end
 %    
 XCS = cumsum(ones(nt-1,np),1);
@@ -186,22 +204,48 @@ Yit_Bmax = repmat(pit_Bmax,[1,nb]);
 %
 Ytheta1 = NaN*ones(np,nb);
 Ytheta2 = NaN*ones(np,nb);
-Ytheta1(Ymask1) = Yit_Bmax(Ymask1);
-Ytheta2(Ymask1) = Yit_Bmax(Ymask1);
-
+Ytheta1(Ymask1) = theta(Yit_Bmax(Ymask1));
+Ytheta2(Ymask1) = theta(Yit_Bmax(Ymask1));
+%
 Yi1min = Yi1min(Ymask) + Yit_Bmin(Ymask) - 1;
 Yi1max = Yi1max(Ymask) + Yit_Bmin(Ymask) - 1;
 Yi2min = Yi2min(Ymask) + Yit_Bmin(Ymask) - 1;
 Yi2max = Yi2max(Ymask) + Yit_Bmin(Ymask) - 1;
-
+%
 Yi1min(Yi1min > nt - 1) = Yi1min(Yi1min > nt - 1) - (nt-1); 
 Yi1max(Yi1max > nt - 1) = Yi1max(Yi1max > nt - 1) - (nt-1); 
 Yi2min(Yi2min > nt - 1) = Yi2min(Yi2min > nt - 1) - (nt-1); 
 Yi2max(Yi2max > nt - 1) = Yi2max(Yi2max > nt - 1) - (nt-1); 
-
+%
 Ytheta1(Ymask) = theta(Yi1min).'.*(1 - Yalpha1) + theta(Yi1max).'.*Yalpha1;
 Ytheta2(Ymask) = theta(Yi2min).'.*(1 - Yalpha2) + theta(Yi2max).'.*Yalpha2;
-
+%
+if nargout > 2,
+    %
+    if length(sF) == 2,
+        sF = [sF,1];
+    end
+    %
+    sFp = prod(sF(3:end));
+    %
+    YF1 = NaN*ones(np*nb,sFp);
+    YF2 = NaN*ones(np*nb,sFp);
+    %
+    XF = reshape(XF,[nt*np,sFp]);
+    %
+    YF1(Ymask1,:) = XF(Yit_Bmax(Ymask1) + Yipshift(Ymask1),:);
+    YF2(Ymask1,:) = XF(Yit_Bmax(Ymask1) + Yipshift(Ymask1),:);
+    %
+    Yalpha1 = repmat(Yalpha1.',[1,sFp]);
+    Yalpha2 = repmat(Yalpha2.',[1,sFp]);    
+    %
+    YF1(Ymask,:) = XF(Yi1min + Yipshift(Ymask),:).*(1 - Yalpha1) + XF(Yi1max + Yipshift(Ymask),:).*Yalpha1;
+    YF2(Ymask,:) = XF(Yi2min + Yipshift(Ymask),:).*(1 - Yalpha2) + XF(Yi2max + Yipshift(Ymask),:).*Yalpha2;
+    %
+    YF1 = reshape(YF1,[np,nb,sFp]);
+    YF2 = reshape(YF2,[np,nb,sFp]);    
+    %
+end
 
 
 
