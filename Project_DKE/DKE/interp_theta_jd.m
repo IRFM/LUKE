@@ -106,6 +106,7 @@ XbCS = cumsum(ones(nt,np*nb));
 %
 Xbimax = (XbB > XbBb).*XbCS;
 YBb = XbBb(1,Ymask);
+nY = length(YBb);
 %
 % clear XbBb XbB XbCS
 %
@@ -131,25 +132,25 @@ YiX1max = Yi1max(Ymask) + Yipshift(Ymask);
 YiX2min = Yi2min(Ymask) + Yipshift(Ymask);
 YiX2max = Yi2max(Ymask) + Yipshift(Ymask);
 %
-YBx1min = XBx(YiX1min);
-YBx1max = XBx(YiX1max);
-YBx2min = XBx(YiX2min);
-YBx2max = XBx(YiX2max);
+YBx1min = reshape(XBx(YiX1min),[1,nY]);
+YBx1max = reshape(XBx(YiX1max),[1,nY]);
+YBx2min = reshape(XBx(YiX2min),[1,nY]);
+YBx2max = reshape(XBx(YiX2max),[1,nY]);
 %
-YBy1min = XBy(YiX1min);
-YBy1max = XBy(YiX1max);
-YBy2min = XBy(YiX2min);
-YBy2max = XBy(YiX2max);
+YBy1min = reshape(XBy(YiX1min),[1,nY]);
+YBy1max = reshape(XBy(YiX1max),[1,nY]);
+YBy2min = reshape(XBy(YiX2min),[1,nY]);
+YBy2max = reshape(XBy(YiX2max),[1,nY]);
 %
-YBz1min = XBz(YiX1min);
-YBz1max = XBz(YiX1max);
-YBz2min = XBz(YiX2min);
-YBz2max = XBz(YiX2max);
+YBz1min = reshape(XBz(YiX1min),[1,nY]);
+YBz1max = reshape(XBz(YiX1max),[1,nY]);
+YBz2min = reshape(XBz(YiX2min),[1,nY]);
+YBz2max = reshape(XBz(YiX2max),[1,nY]);
 %
-YB1min = XB(YiX1min);
-YB1max = XB(YiX1max);
-YB2min = XB(YiX2min);
-YB2max = XB(YiX2max);
+YB1min = reshape(XB(YiX1min),[1,nY]);
+YB1max = reshape(XB(YiX1max),[1,nY]);
+YB2min = reshape(XB(YiX2min),[1,nY]);
+YB2max = reshape(XB(YiX2max),[1,nY]);
 %
 Y1 = YBx1min.*YBx1max + YBy1min.*YBy1max + YBz1min.*YBz1max;
 Y2 = YBx2min.*YBx2max + YBy2min.*YBy2max + YBz2min.*YBz2max;
