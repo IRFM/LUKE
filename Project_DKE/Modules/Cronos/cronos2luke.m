@@ -309,10 +309,11 @@ if nargin == 14,% LH case
     %
     if (all(abs(cons)< 2e5) | all(angle(cons)<=1)),% test sur la puissance. Calcul si P > 200 kW seulement
 		sortie = proto;
-		disp('zstarwars in ohmic mode')
+		disp('no LH/ECRH injected power')
 		if ~strcmp(par.conf,'Ohmic')
 			return
 		end
+		disp('zstarwars in ohmic mode')		
 	end
 elseif nargin == 13,% FCE case
     par = varargin{1};
@@ -438,7 +439,7 @@ psipn_ohm       = rho2psi_jd(equil,par.rho_S);
 % Here Efield sign is always co-current by definition, in order to retrieve both amplitude and sign of Ip without any RF wave
 %----------------------------------------------------------
 ohm.epsi     = -sign(signe.ip)*sign(signe.b0)*abs(interp1(gene.x,prof.epar,psitncronoshel));
-ohm.epsi     = complex(interp1(psipncronoshel,ohm.epsi,psi_ohm));%Imaginary for considering the definition of the flux surface averaging of CRONOS in LUKE
+ohm.epsi     = complex(interp1(psipncronoshel,ohm.epsi,psipn_ohm));%Imaginary for considering the definition of the flux surface averaging of CRONOS in LUKE
 %
 % PARAMETRES RIPPLE 
 %
