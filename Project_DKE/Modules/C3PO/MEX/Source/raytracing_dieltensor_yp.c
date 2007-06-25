@@ -36,6 +36,18 @@ struct susceptibilitytensor {
     double complex *Xyy;
     double complex *Xyz;
     double complex *Xzz;
+    double complex *dXxxdNperp;
+    double complex *dXxydNperp;
+    double complex *dXxzdNperp;
+    double complex *dXyydNperp;
+    double complex *dXyzdNperp;
+    double complex *dXzzdNperp;
+    double complex *dXxxdNpar;
+    double complex *dXxydNpar;
+    double complex *dXxzdNpar;
+    double complex *dXyydNpar;
+    double complex *dXyzdNpar;
+    double complex *dXzzdNpar;
     double complex *dXxxdY;
     double complex *dXxydY;
     double complex *dXxzdY;
