@@ -12,73 +12,51 @@ function [xq,xqtilde,xqbar,xqhat,...
 	 XXlambda_b_p3m2,XXRlambda_b_p3m2_m,XXRlambda_b_p3m2_p,...
     XXlambda_b_p2,...
 	 XXlambda_b_p1m3p4,XXlambda_b_p1m2p2]...
-=  bounceparam_dke_yp(bounce_mode,equil_mode,display_mode,temppath,...
-    mhu,mhum,mhup,Xmhu,Xmhum,Xmhup,...
-    Xx,Xy,XBx,XBy,XBphi,...
-    xmhubounce2,xB0,xx0,xBT0,xBp0,Rp,Zp,ap);
+=  bounceparam_dke_yp(bounce_mode,equil_mode,display_mode,...
+    mhu,mhum,mhup,npn,equilDKE)
 %
 %by Y.Peysson <yves.peysson@cea.fr> (CEA-DRFC) and J. Decker <joan.decker@cea.fr> (CEA-DRFC)
 %
 etime_bounce = 0;
 time0 = clock;
 %
-[nr,nt] = size(Xx);
-[npn,nmhu] = size(Xmhu);
+nr = size(equilDKE.Xx,1);
+nmhu = length(mhu);
 %
-[xq,xqtilde,xqbar,xqhat] = qfactors_dke_yp(equil_mode,Rp,ap,Xx,Xy,XBx,XBy,XBphi,xx0,xB0,xBT0,xBp0);%q factors calculations
+[xq,xqtilde,xqbar,xqhat] = qfactors_dke_yp(equil_mode,equilDKE.Rp,equilDKE.ap,...
+    equilDKE.Xx,equilDKE.Xy,equilDKE.XBx,equilDKE.XBy,equilDKE.XBphi,...
+    equilDKE.xx0,equilDKE.xB0,equilDKE.xBT0,equilDKE.xBp0);%q factors calculations
 %
 if bounce_mode == 1,
-%    load([fullfile(temppath,'temp_DKE.mat'],'xq');
     %
-  %if exist('xq') == 1, %The bounce averaging coefficients were calculated before.
-    %
-%    load([fullfile(temppath,'temp_DKE_'),save_id,'.mat'],'xqtilde','xqbar','xqhat',...
-%    'XXheaviside','XXheaviside_p','XXheaviside_m',...
-%    'Xxlambda','Xxlambda_p','Xxlambda_m',...
-%    'XXlambda','XXRlambda_m','XXRlambda_p',...
-%	 'XXlambda_p2m1','XXRlambda_p2m1_m','XXRlambda_p2m1_p',...
-%    'XXlambda_p2m2p2',...
-%    'XXRlambda_b_p1p1',...
-%    'XXlambda_b_p1m1p2','XXRlambda_b_p1m1p2','XXRlambda_b_p1m1p2_m','XXRlambda_b_p1m1p2_p',...
-%	 'XXlambda_b_p1m1','XXRlambda_b_p1m1','XXRlambda_b_p1m1_m','XXRlambda_b_p1m1_p',...
-%    'XXRlambda_b_p1m2_m','XXRlambda_b_p1m2_p',...
-%    'XXlambda_b_p2m2p2','XXRlambda_b_p2m2p2','XXRlambda_b_p2m2p2_m','XXRlambda_b_p2m2p2_p',...
-%	 'XXlambda_b_p3m2','XXRlambda_b_p3m2_m','XXRlambda_b_p3m2_p',...
-%    'XXlambda_b_p2',...
-%	 'XXlambda_b_p1m3p4','XXlambda_b_p1m2p2')
-    %
-    %if display_mode >= 1,info_dke_yp(2,['Bounce averaging coefficients retrieved.']);end	
-    %
-  %else
-  
     [xymaskT,xylambda,xylambda_p2m1,xylambda_p2m2p2,xylambda_b_p1p1,xylambda_b_p1m1p2,xylambda_b_p1m1,xylambda_b_p1m2,xylambda_b_p2m2p2,xylambda_b_p3m2,xylambda_b_p2,xylambda_b_p1m3p4,xylambda_b_p1m2p2]...
-= bounce_dke_jd(equil_mode,mhu,Xx,Xy,XBx,XBy,XBphi,xmhubounce2,xB0,xx0,xBT0,xBp0,xqtilde,Rp,Zp,ap);
+        = bounce_dke_jd(equil_mode,mhu,equilDKE,xqtilde);
     [xymaskT_p,xylambda_p,xylambda_p2m1_p,xylambda_p2m2p2_p,xylambda_b_p1p1_p,xylambda_b_p1m1p2_p,xylambda_b_p1m1_p,xylambda_b_p1m2_p,xylambda_b_p2m2p2_p,xylambda_b_p3m2_p,xylambda_b_p2_p,xylambda_b_p1m3p4_p,xylambda_b_p1m2p2_p]...
-= bounce_dke_jd(equil_mode,mhup,Xx,Xy,XBx,XBy,XBphi,xmhubounce2,xB0,xx0,xBT0,xBp0,xqtilde,Rp,Zp,ap,xymaskT,+1);
+        = bounce_dke_jd(equil_mode,mhup,equilDKE,xqtilde,xymaskT,+1);
     [xymaskT_m,xylambda_m,xylambda_p2m1_m,xylambda_p2m2p2_m,xylambda_b_p1p1_m,xylambda_b_p1m1p2_m,xylambda_b_p1m1_m,xylambda_b_p1m2_m,xylambda_b_p2m2p2_m,xylambda_b_p3m2_m,xylambda_b_p2_m,xylambda_b_p1m3p4_m,xylambda_b_p1m2p2_m]...
-= bounce_dke_jd(equil_mode,mhum,Xx,Xy,XBx,XBy,XBphi,xmhubounce2,xB0,xx0,xBT0,xBp0,xqtilde,Rp,Zp,ap,xymaskT,-1);
+        = bounce_dke_jd(equil_mode,mhum,equilDKE,xqtilde,xymaskT,-1);
 %
 	XXheaviside = repmat(reshape(~xymaskT',[1,nmhu,nr]),[npn,1,1]);%For selecting the circulating population only                      
 	XXheaviside_p = repmat(reshape(~xymaskT_p',[1,nmhu,nr]),[npn,1,1]);%For selecting the circulating population only                      
 	XXheaviside_m = repmat(reshape(~xymaskT_m',[1,nmhu,nr]),[npn,1,1]);%For selecting the circulating population only                      
-%
+    %
 	XXlambda = repmat(reshape(xylambda',[1,nmhu,nr]),[npn,1,1]);
 	XXlambda_p = repmat(reshape(xylambda_p',[1,nmhu,nr]),[npn,1,1]);
 	XXlambda_m = repmat(reshape(xylambda_m',[1,nmhu,nr]),[npn,1,1]);
 	XXRlambda_p = XXlambda_p./XXlambda;
 	XXRlambda_m = XXlambda_m./XXlambda;	
-%
+    %
 	Xxlambda = xylambda';
 	Xxlambda_p = xylambda_p';
 	Xxlambda_m = xylambda_m'; 
-%
-%For flux surface averaged Ohmic electric field
-%
+    %
+    %For flux surface averaged Ohmic electric field
+    %
 	XXlambda_b_p1m3p4 = repmat(reshape(xylambda_b_p1m3p4',[1,nmhu,nr]),[npn,1,1]);
     XXlambda_b_p1m2p2 = repmat(reshape(xylambda_b_p1m2p2',[1,nmhu,nr]),[npn,1,1]);
-%
-%Fokker-Planck terms
-%
+	%
+	%Fokker-Planck terms
+	%
 	XXlambda_p2m1 = repmat(reshape(xylambda_p2m1',[1,nmhu,nr]),[npn,1,1]);
 	XXlambda_p2m1_p = repmat(reshape(xylambda_p2m1_p',[1,nmhu,nr]),[npn,1,1]);
 	XXlambda_p2m1_m = repmat(reshape(xylambda_p2m1_m',[1,nmhu,nr]),[npn,1,1]);
@@ -86,10 +64,10 @@ if bounce_mode == 1,
 	XXRlambda_p2m1_p(find(isnan(XXRlambda_p2m1_p))) = eps;
 	XXRlambda_p2m1_m = XXlambda_p2m1_m./XXlambda_m;
 	XXRlambda_p2m1_m(find(isnan(XXRlambda_p2m1_m))) = eps;
-%
+    %
 	XXlambda_b_p1p1 = repmat(reshape(xylambda_b_p1p1',[1,nmhu,nr]),[npn,1,1]);
 	XXRlambda_b_p1p1 = XXlambda_b_p1p1./XXlambda;	
-%
+    %
 	XXlambda_b_p1m1p2 = repmat(reshape(xylambda_b_p1m1p2',[1,nmhu,nr]),[npn,1,1]);
 	XXlambda_b_p1m1p2_p = repmat(reshape(xylambda_b_p1m1p2_p',[1,nmhu,nr]),[npn,1,1]);
 	XXlambda_b_p1m1p2_m = repmat(reshape(xylambda_b_p1m1p2_m',[1,nmhu,nr]),[npn,1,1]);
@@ -98,11 +76,11 @@ if bounce_mode == 1,
 	XXRlambda_b_p1m1p2_p(find(isnan(XXRlambda_b_p1m1p2_p))) = eps;
 	XXRlambda_b_p1m1p2_m = XXlambda_b_p1m1p2_m./XXlambda_m;
 	XXRlambda_b_p1m1p2_m(find(isnan(XXRlambda_b_p1m1p2_m))) = eps;
-%
-%Drift kinetic terms
-%
+    %
+    %Drift kinetic terms
+    %
 	XXlambda_p2m2p2 = repmat(reshape(xylambda_p2m2p2',[1,nmhu,nr]),[npn,1,1]);
-%
+    %
     XXlambda_b_p1m1 = repmat(reshape(xylambda_b_p1m1',[1,nmhu,nr]),[npn,1,1]);
 	XXlambda_b_p1m1_p = repmat(reshape(xylambda_b_p1m1_p',[1,nmhu,nr]),[npn,1,1]);
 	XXlambda_b_p1m1_m = repmat(reshape(xylambda_b_p1m1_m',[1,nmhu,nr]),[npn,1,1]);
@@ -111,7 +89,7 @@ if bounce_mode == 1,
 	XXRlambda_b_p1m1_p(find(isnan(XXRlambda_b_p1m1_p))) = eps;
 	XXRlambda_b_p1m1_m = XXlambda_b_p1m1_m./XXlambda_m;
 	XXRlambda_b_p1m1_m(find(isnan(XXRlambda_b_p1m1_m))) = eps;
-%
+    %
 	XXlambda_b_p1m2 = repmat(reshape(xylambda_b_p1m2',[1,nmhu,nr]),[npn,1,1]);
 	XXlambda_b_p1m2_p = repmat(reshape(xylambda_b_p1m2_p',[1,nmhu,nr]),[npn,1,1]);
 	XXlambda_b_p1m2_m = repmat(reshape(xylambda_b_p1m2_m',[1,nmhu,nr]),[npn,1,1]);
@@ -119,7 +97,7 @@ if bounce_mode == 1,
 	XXRlambda_b_p1m2_p(find(isnan(XXRlambda_b_p1m2_p))) = eps;
 	XXRlambda_b_p1m2_m = XXlambda_b_p1m2_m./XXlambda_m;
 	XXRlambda_b_p1m2_m(find(isnan(XXRlambda_b_p1m2_m))) = eps;
-%
+    %
 	XXlambda_b_p2m2p2 = repmat(reshape(xylambda_b_p2m2p2',[1,nmhu,nr]),[npn,1,1]);
 	XXRlambda_b_p2m2p2 = XXlambda_b_p2m2p2./XXlambda;
 	XXlambda_b_p2m2p2_p = repmat(reshape(xylambda_b_p2m2p2_p',[1,nmhu,nr]),[npn,1,1]);
@@ -128,7 +106,7 @@ if bounce_mode == 1,
 	XXRlambda_b_p2m2p2_p(find(isnan(XXRlambda_b_p2m2p2_p))) = eps;
 	XXRlambda_b_p2m2p2_m = XXlambda_b_p2m2p2_m./XXlambda_m;
 	XXRlambda_b_p2m2p2_m(find(isnan(XXRlambda_b_p2m2p2_m))) = eps;
-%
+    %
 	XXlambda_b_p3m2 = repmat(reshape(xylambda_b_p3m2',[1,nmhu,nr]),[npn,1,1]);
 	XXlambda_b_p3m2_p = repmat(reshape(xylambda_b_p3m2_p',[1,nmhu,nr]),[npn,1,1]);
 	XXlambda_b_p3m2_m = repmat(reshape(xylambda_b_p3m2_m',[1,nmhu,nr]),[npn,1,1]);
@@ -136,31 +114,14 @@ if bounce_mode == 1,
 	XXRlambda_b_p3m2_p(find(isnan(XXRlambda_b_p3m2_p))) = eps;
 	XXRlambda_b_p3m2_m = XXlambda_b_p3m2_m./XXlambda_m;
 	XXRlambda_b_p3m2_m(find(isnan(XXRlambda_b_p3m2_m))) = eps;
-%
+    %
 	XXlambda_b_p2 = repmat(reshape(xylambda_b_p2',[1,nmhu,nr]),[npn,1,1]);
     XXlambda_b_p2_p = repmat(reshape(xylambda_b_p2_p',[1,nmhu,nr]),[npn,1,1]);
     XXlambda_b_p2_m = repmat(reshape(xylambda_b_p2_m',[1,nmhu,nr]),[npn,1,1]);
-%
     %
-%    save([fullfile(temppath,'temp_DKE.mat'],'xq','xqtilde','xqbar','xqhat',...
-%    'XXheaviside','XXheaviside_p','XXheaviside_m',...
-%    'Xxlambda','Xxlambda_p','Xxlambda_m',...
-%    'XXlambda','XXRlambda_m','XXRlambda_p',...
-%	 'XXlambda_p2m1','XXRlambda_p2m1_m','XXRlambda_p2m1_p',...
-%    'XXlambda_p2m2p2',...
-%    'XXRlambda_b_p1p1',...
-%    'XXlambda_b_p1m1p2','XXRlambda_b_p1m1p2','XXRlambda_b_p1m1p2_m','XXRlambda_b_p1m1p2_p',...
-%	 'XXlambda_b_p1m1','XXRlambda_b_p1m1','XXRlambda_b_p1m1_m','XXRlambda_b_p1m1_p',...
-%    'XXRlambda_b_p1m2_m','XXRlambda_b_p1m2_p',...
-%    'XXlambda_b_p2m2p2','XXRlambda_b_p2m2p2','XXRlambda_b_p2m2p2_m','XXRlambda_b_p2m2p2_p',...
-%	 'XXlambda_b_p3m2','XXRlambda_b_p3m2_m','XXRlambda_b_p3m2_p',...
-%    'XXlambda_b_p2',...
-%	 'XXlambda_b_p1m3p4','XXlambda_b_p1m2p2','-append')
-%
     etime_bounce = etime_bounce + etime(clock,time0);
     if display_mode >= 1,info_dke_yp(2,['Bounce averaging coefficients calculations done in ',num2str(etime_bounce),' (s)']);end	
 %
-  %end
 %Non-axisymmetric corrections as done by M. Ju et al. in Phys. Plasmas, 9 (2002) 493 (to be used only with FP calculations, and tested for TORE SUPRA only)
 %may be inserted here. Work to be done...
 %
@@ -168,62 +129,62 @@ else
 	XXheaviside = ones(npn,nmhu,nr);
 	XXheaviside_p = ones(npn,nmhu,nr);
 	XXheaviside_m = ones(npn,nmhu,nr);
-%
+    %
 	XXlambda = ones(npn,nmhu,nr);
 	Xxlambda = ones(nmhu,nr);
 	Xxlambda_p = ones(nmhu,nr);
 	Xxlambda_m = ones(nmhu,nr);
-%	
+    %	
 	XXRlambda_m = ones(npn,nmhu,nr);
 	XXRlambda_p = ones(npn,nmhu,nr);	
-%
+    %
 	XXlambda_p2m1 = ones(npn,nmhu,nr);
 	XXlambda_p2m1_p = ones(npn,nmhu,nr);
 	XXlambda_p2m1_m = ones(npn,nmhu,nr);
 	XXRlambda_p2m1_p = ones(npn,nmhu,nr);
 	XXRlambda_p2m1_m = ones(npn,nmhu,nr);
-%
+    %
 	XXlambda_p2m2p2 = ones(npn,nmhu,nr);
-%
+    %
 	XXRlambda_b_p1p1 = ones(npn,nmhu,nr);
-%
+    %
 	XXlambda_b_p1m1p2 = ones(npn,nmhu,nr);
 	XXlambda_b_p1m1p2_p = ones(npn,nmhu,nr);
 	XXlambda_b_p1m1p2_m = ones(npn,nmhu,nr);
 	XXRlambda_b_p1m1p2 = ones(npn,nmhu,nr);
 	XXRlambda_b_p1m1p2_p = ones(npn,nmhu,nr);
 	XXRlambda_b_p1m1p2_m = ones(npn,nmhu,nr);
-%
+    %
 	XXlambda_b_p1m1 = ones(npn,nmhu,nr);
 	XXlambda_b_p1m1_p = ones(npn,nmhu,nr);
 	XXlambda_b_p1m1_m = ones(npn,nmhu,nr);
 	XXRlambda_b_p1m1 = ones(npn,nmhu,nr);
 	XXRlambda_b_p1m1_p = ones(npn,nmhu,nr);
 	XXRlambda_b_p1m1_m = ones(npn,nmhu,nr);
-%
+    %
 	XXlambda_b_p1m2 = ones(npn,nmhu,nr);
 	XXlambda_b_p1m2_p = ones(npn,nmhu,nr);
 	XXlambda_b_p1m2_m = ones(npn,nmhu,nr);
 	XXRlambda_b_p1m2_p = ones(npn,nmhu,nr);
 	XXRlambda_b_p1m2_m = ones(npn,nmhu,nr);
-%	
+    %	
 	XXlambda_b_p2m2p2 = ones(npn,nmhu,nr);
 	XXRlambda_b_p2m2p2 = ones(npn,nmhu,nr);
 	XXlambda_b_p2m2p2_p = ones(npn,nmhu,nr);
 	XXlambda_b_p2m2p2_m = ones(npn,nmhu,nr);
 	XXRlambda_b_p2m2p2_p = ones(npn,nmhu,nr);
 	XXRlambda_b_p2m2p2_m = ones(npn,nmhu,nr);		
-%
+    %
 	XXlambda_b_p3m2 = ones(npn,nmhu,nr);
 	XXlambda_b_p3m2_p = ones(npn,nmhu,nr);
 	XXlambda_b_p3m2_m = ones(npn,nmhu,nr);
 	XXRlambda_b_p3m2_p = ones(npn,nmhu,nr);
 	XXRlambda_b_p3m2_m = ones(npn,nmhu,nr);
-%
+    %
 	XXlambda_b_p2 = ones(npn,nmhu,nr);
 	XXlambda_b_p2_p = ones(npn,nmhu,nr);
 	XXlambda_b_p2_m = ones(npn,nmhu,nr);
-%
+    %
 	XXlambda_b_p1m3p4 = ones(npn,nmhu,nr);	
     XXlambda_b_p1m2p2 = ones(npn,nmhu,nr);	
 end

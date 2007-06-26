@@ -4,33 +4,15 @@ function [Zbouncecoef] = bouncecoeffbuilder_dke_yp(dkepath,dkeparam,display,equi
 %
 %   by Y. Peysson (CEA-DRFC) (yves.peysson@cea.fr) and J. Decker (CEA-DRFC) (joan.decker@cea.fr)
 %
-Rp = equilDKE.Rp;
-Zp = equilDKE.Zp;
-ap = equilDKE.ap;
-Xx = equilDKE.Xx;
-Xy = equilDKE.Xy;
-XBx = equilDKE.XBx;
-XBy = equilDKE.XBy;
-XBphi = equilDKE.XBphi;
-xB0 = equilDKE.xB0;
-xx0 = equilDKE.xx0;
-xBT0 = equilDKE.xBT0;
-xBp0 = equilDKE.xBp0;
-%
 bounce_mode = dkeparam.bounce_mode;
 dke_mode = dkeparam.dke_mode;
 equil_mode = dkeparam.equil_mode;
-temppath = dkepath.temppath;
 %
 display_mode = display.display_mode;
 %
 mhu = gridDKE.mhu;
 mhum = gridDKE.mhum;
 mhup = gridDKE.mhup;
-Xmhu = gridDKE.Xmhu;
-Xmhum = gridDKE.Xmhum;
-Xmhup = gridDKE.Xmhup;
-xmhubounce2 = gridDKE.xmhubounce2;
 nr = gridDKE.nr;
 nmhu = gridDKE.nmhu;
 npn = gridDKE.npn;
@@ -54,10 +36,8 @@ rdke = gridDKE.rdke;
      XXlambda_b_p3m2,XXRlambda_b_p3m2_m,XXRlambda_b_p3m2_p,...
      XXlambda_b_p2,...
      XXlambda_b_p1m3p4,XXlambda_b_p1m2p2]...
-=  bounceparam_dke_yp(bounce_mode,equil_mode,display_mode,temppath,...
-     mhu,mhum,mhup,Xmhu,Xmhum,Xmhup,...
-     Xx,Xy,XBx,XBy,XBphi,...
-     xmhubounce2,xB0,xx0,xBT0,xBp0,Rp,Zp,ap);
+=  bounceparam_dke_yp(bounce_mode,equil_mode,display_mode,...
+     mhu,mhum,mhup,npn,equilDKE);
 %
 sm_f = zeros(1,nr+1);
 sm_T_f = zeros(1,nr+1);

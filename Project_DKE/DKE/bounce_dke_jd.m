@@ -1,5 +1,5 @@
 function [xymaskT,xylambda_p0p0,xylambda_p2m1,xylambda_p2m2p2,xylambda_b_p1p1,xylambda_b_p1m1p2,xylambda_b_p1m1,xylambda_b_p1m2,xylambda_b_p2m2p2,xylambda_b_p3m2,xylambda_b_p2,xylambda_b_p1m3p4,xylambda_b_p1m2p2]...
-= bounce_dke_jd(equil_mode,ymhu0,Xx,Xy,XBx,XBy,XBphi,xmhubounce2,xB0,xx0,xBT0,xBp0,xqtilde,Rp,Zp,ap,xymaskT_in,sign)
+= bounce_dke_jd(equil_mode,ymhu0,equilDKE,xqtilde,xymaskT_in,sign)
 %
 % calculates bounce averaging coefficients needed for solving the electron drift-kinetic-equation. 
 %
@@ -13,27 +13,27 @@ function [xymaskT,xylambda_p0p0,xylambda_p2m1,xylambda_p2m2p2,xylambda_b_p1p1,xy
 %
 % by Joan Decker <jodecker@mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 %
-if nargin < 17,
+if nargin < 5,
 	sign = 0;
 	xymaskT_in = NaN;
 end
-if nargin == 17,
+if nargin == 5,
 	error('Inconsistent number of arguments');
 end
-if nargin < 16,
+if nargin < 4,
 	error('Not enough arguments');
 end
 %
 % Case of a numerical equilibrium
 %
 nmhu = length(ymhu0);
-[nr,nt] = size(Xx);
+nr = size(equilDKE.Xx,1);
 %
 if equil_mode == 1,
-	[YMdt,YMmask,YMF,YMPSIB,YMmhu0,YMmhu,YMx,xymaskT,nm2] = banana_dke_jd(ymhu0,Rp,ap,Xx,Xy,XBx,XBy,XBphi);	
+	[YMdt,YMmask,YMF,YMPSIB,YMmhu0,YMmhu,YMx,xymaskT,nm2] = banana_dke_jd(ymhu0,equilDKE.ap,equilDKE.Xx,equilDKE.Xy,equilDKE.XBx,equilDKE.XBy,equilDKE.XBphi);	
 elseif equil_mode == 0,
 	for ir = 1:nr   
-		xymaskT(ir,:) = ymhu0.^2 < xmhubounce2(ir);		
+		xymaskT(ir,:) = ymhu0.^2 < equilDKE.xmhu0T2(ir);		
 	end
 end			
 %
@@ -51,7 +51,7 @@ if equil_mode == 1
 %
     xyqtilde = repmat(xqtilde',[1,nmhu]);
 %
-    YMx0 = repmat(xx0,[nm2,1,nmhu]);
+    YMx0 = repmat(equilDKE.xx0,[nm2,1,nmhu]);
 %
     YMYM01 = YMmhu./YMmhu0;
 	YMYM02 = YMYM01.*YMYM01;
@@ -61,7 +61,7 @@ if equil_mode == 1
 	YMPSIBM2 = YMPSIBM1.*YMPSIBM1;
 	YMPSIBM3 = YMPSIBM1.*YMPSIBM2;
 %
-    YMR0YMR1 = (1 + YMx0/Rp)./(1 + YMx/Rp);
+    YMR0YMR1 = (1 + YMx0/equilDKE.Rp)./(1 + YMx/equilDKE.Rp);
     YMR0YMR2 = YMR0YMR1.*YMR0YMR1;
 	YMR0YMR4 = YMR0YMR2.*YMR0YMR2;
 %
@@ -133,19 +133,19 @@ if equil_mode == 1
     end
 else,%Ideal equilibrium with circular concentric flux-surfaces.
     m = 30;
-    xrho = xx0/ap; %note: for the sake of bounce-averaged calculations in the
+    xrho = equilDKE.xx0/equilDKE.ap; %note: for the sake of bounce-averaged calculations in the
                           %      analytical limit of circ. conc.
                           %      flux-surfaces, we need theta0 = 0, thus
                           %      this definition of xrho. Of course, when
                           %      the configuration is circ. conc. ro start
                           %      with, the two definitions coincide.
-    xia = xrho*ap/Rp;
+    xia = xrho*equilDKE.ap/equilDKE.Rp;
 %    
     ymhu0(find(ymhu0==0)) = eps;%Avoid numerical singularities
     ymhu2 = ymhu0.^2;
 %
     for ir = 1:nr 
-        YJ = jseries_dke_jd(sqrt(xmhubounce2(ir)),ymhu0,m); 
+        YJ = jseries_dke_jd(sqrt(xmhu0T2(ir)),ymhu0,m); 
 %   
         chim = zeros(m+1,1);
         chim_tp = zeros(m+1,1);
@@ -156,7 +156,7 @@ else,%Ideal equilibrium with circular concentric flux-surfaces.
         for i = 1:m,
         	chim(i+1) = (2*i - 3)/(2*i)*chim(i);
         	chim_tp(i+1) = (2*i - 1)/(2*i)*chim_tp(i);
-        	mhutrap2m(i+1) = xmhubounce2(ir)*mhutrap2m(i);
+        	mhutrap2m(i+1) = xmhu0T2(ir)*mhutrap2m(i);
         end
 %
         Ymchim = chim*ones(1,nmhu);
@@ -167,7 +167,7 @@ else,%Ideal equilibrium with circular concentric flux-surfaces.
         Ymhu2(Ymhu2==0) = eps;
         Ymmhu2(Ymmhu2==0) = eps;
 %    
-        ysstar = 1/sqrt(1- xmhubounce2(ir)).*ones(1,nmhu);
+        ysstar = 1/sqrt(1- xmhu0T2(ir)).*ones(1,nmhu);
         ylambda = 2/pi*sum(Ymchim(1:m,:).*Ymmhutrap2m(1:m,:).*YJ(1:m,:));
         ylambda(ylambda==0) = eps;
         ydeltalambda = 2/pi*sum(Ymchim(1:m,:).*Ymmhutrap2m(2:m+1,:).*YJ(2:m+1,:));
