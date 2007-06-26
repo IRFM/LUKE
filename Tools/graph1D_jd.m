@@ -106,7 +106,7 @@ end
 if ~isempty(xlab),xl = xlabel(xlab);set(xl,'fontsize',siz);end
 if ~isempty(ylab),yl = ylabel(ylab);set(yl,'fontsize',siz);end
 if ~isempty(tit),tl = title(tit);set(tl,'fontsize',siz);end
-if ~isnan(leg)
+if iscell(leg) | ~isnan(leg)
     lg = legend(leg);
     set(lg,'fontsize',siz);
 end
