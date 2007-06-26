@@ -92,17 +92,18 @@ if sum(pBmax,1) ~= ones(1,np),
     error('The magnetic field must have one maximum only');
 end
 %    
-XCS = cumsum(ones(nt-1,np),1);
+XCS1 = repmat((1:nt-1).',[1,np]);%cumsum(ones(nt-1,np),1);
+XCS2 = repmat(1:np,[nt-1,1]);%cumsum(ones(nt-1,np),2);
 %
-pit_Bmin = sum(pBmin.*XCS);
-pit_Bmax = sum(pBmax.*XCS);
+pit_Bmin = sum(pBmin.*XCS1);
+pit_Bmax = sum(pBmax.*XCS1);
 %
 % construction of the matrix of indices
 %
-Xit_Bmin = XCS + repmat(pit_Bmin,[nt-1,1]) - 1;
+Xit_Bmin = XCS1 + repmat(pit_Bmin,[nt-1,1]) - 1;
 Xit_Bmin(Xit_Bmin > nt-1) = Xit_Bmin(Xit_Bmin > nt-1) - (nt-1);
 %
-Xit_Bmin = Xit_Bmin + nt*(cumsum(ones(nt-1,np),2)-1);
+Xit_Bmin = Xit_Bmin + nt*(XCS2-1);
 %
 % permutation of the magnetic field matrices
 %
@@ -120,7 +121,7 @@ XbB = reshape(XbB,[nt,np*nb]);
 Ymask = XbB(1,:) <= XbBb(1,:) & sum(XbB > XbBb,1) > 0;
 Ymask1 = max(XbB,[],1) == XbBb(1,:);% particular case where B(theta) = max(XB)
 %
-XbCS = cumsum(ones(nt,np*nb));
+XbCS = repmat((1:nt).',[1,np*nb]);%cumsum(ones(nt,np*nb));
 %
 Xbimax = (XbB > XbBb).*XbCS;
 YBb = XbBb(1,Ymask);
