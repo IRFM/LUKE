@@ -117,9 +117,15 @@ if ~isnan(ylim)
     set(gca,'ylim',ylim);
 end
 %
-xl = xlabel(xlab);set(xl,'fontsize',siz);
-yl = ylabel(ylab);set(yl,'fontsize',siz);
-tl = title(tit);set(tl,'fontsize',siz);
+if ~isempty(xlab),
+    xl = xlabel(xlab);set(xl,'fontsize',siz);
+end
+if ~isempty(ylab),
+    yl = ylabel(ylab);set(yl,'fontsize',siz);
+end
+if ~isempty(tit),
+    tl = title(tit);set(tl,'fontsize',siz);
+end
 %
 set(gca,'fontsize',siz);
 %
