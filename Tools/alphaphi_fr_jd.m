@@ -1,4 +1,4 @@
-function xalphaphi = alphaphi_fr_jd(xa,xb,xbeta,xNpar,xNperp,xepol_pmz,n,rel_opt,ns,pperpmax);
+function xalphaphi = alphaphi_fr_jd(xa,xb,xbeta,xNpar,xNperp,xepol_pmz,n,rel_opt,ns,pperpmax,mex);
 %
 %   ALPHAPHI_FR_JD 
 %
@@ -21,6 +21,7 @@ function xalphaphi = alphaphi_fr_jd(xa,xb,xbeta,xNpar,xNperp,xepol_pmz,n,rel_opt
 %           - pperpmax: maximum value for pperp integration [1,1] (default: 10)
 %               Note: pperpmax valid only where xNpar >= 1; 
 %                     elsewhere, pperpmax chosen by ellipse max position.
+%           - mex: (1) use or (0) not of the mex version if it exists
 %
 %   OUTPUTS :
 %
@@ -28,6 +29,9 @@ function xalphaphi = alphaphi_fr_jd(xa,xb,xbeta,xNpar,xNperp,xepol_pmz,n,rel_opt
 %
 %   by J. Decker 11/17/05
 %
+if nargin < 11,
+    mex = 1;
+end
 if nargin < 10,
     pperpmax = 10;
 end
@@ -108,6 +112,15 @@ end
 if size(xepol_pmz,1) ~= 3,
     error('Argument dimension mismatch')
 end
+%
+% USE OF MEX FILE IF IT EXISTS
+%
+if mex == 1 & exist('alphaphimex_jd'),
+    xalphaphi = alphaphimex_jd(xa,xb,xbeta,xNpar,xNperp,xepol_pmz(1,:),xepol_pmz(2,:),xepol_pmz(3,:),n,rel_opt,ns,pperpmax); 
+    return
+end
+%
+% MATLAB IMPLEMENTATION
 %
 xmask = ~isnan(xa) & ~isnan(xb) & ~isnan(xbeta) & ~isnan(xNpar) & ~isnan(xNperp) & ~isnan(sum(xepol_pmz,1));
 %
