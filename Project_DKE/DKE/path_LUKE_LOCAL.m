@@ -6,11 +6,21 @@ path_id = 'LOCAL';%Set here the name path parameters (user specific)
 %
 curr_dir = pwd;
 %
-ind_LUKE_dir = strfind(curr_dir,'/LUKE');
+if strfind(computer,'PCWIN'),    
+    delim = '\';
+    pathdelim = ';';
+else
+    delim = '/';
+    pathdelim = ':';
+end
+%
+lukestr = [delim,'LUKE'];
+%
+ind_LUKE_dir = strfind(curr_dir,lukestr);
 %
 if ~isempty(ind_LUKE_dir),
     %
-    ind_root = min(find(curr_dir(ind_LUKE_dir+1:end) == '/'));
+    ind_root = min(find(curr_dir(ind_LUKE_dir+1:end) == delim));
     %
     path_root = curr_dir(1:ind_LUKE_dir + ind_root - 1);
     %
@@ -20,7 +30,7 @@ else
     %
     all_dir = path;
     %
-    ind_LUKE_dir = min(strfind(all_dir,'/LUKE'));
+    ind_LUKE_dir = min(strfind(all_dir,lukestr));
     %
     if isempty(ind_LUKE_dir),
         error('There is no LUKE folder in the current directory or in the path');
@@ -28,14 +38,14 @@ else
     %
     disp('LUKE folder in the path searched for PATH_LOCAL.mat')
     %
-    ind_root_beg = max([0,find(all_dir(1:ind_LUKE_dir) == ':')]);
-    ind_root_end = min(find(all_dir(ind_LUKE_dir+1:end) == '/' | all_dir(ind_LUKE_dir+1:end) == ':'));
+    ind_root_beg = max([0,find(all_dir(1:ind_LUKE_dir) == pathdelim)]);
+    ind_root_end = min(find(all_dir(ind_LUKE_dir+1:end) == delim | all_dir(ind_LUKE_dir+1:end) == pathdelim));
     %
     path_root = all_dir(ind_root_beg + 1:ind_LUKE_dir + ind_root_end - 1);
     %
 end
 %
-path_root = [path_root,'/'];
+path_root = [path_root,delim];
 %
 filename = [path_root,'Project_DKE/Database/PATH_files/PATH_LOCAL.mat'];
 if exist(filename),

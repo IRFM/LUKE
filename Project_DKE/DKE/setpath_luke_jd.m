@@ -9,9 +9,19 @@ function setpath_luke_jd(luke_root,dkepath)
 P = [path,':'];
 %
 while ~isempty(P),
-    ilim = min(find(P == ':'));
+    if strfind(computer,'PCWIN'),
+        pathdelim = ';';
+        pathstr = 'Project_DKE\Database\PATH_files';
+    else
+        pathdelim = ':';
+        pathstr = 'Project_DKE/Database/PATH_files';
+    end
+    ilim = min(find(P == pathdelim));
+    if isempty(ilim),
+        ilim = length(P);
+    end
     pathline = P(1:ilim-1);
-    if ~isempty(strfind(pathline,'LUKE')) & isempty(strfind(pathline,'Project_DKE/Database/PATH_files')),
+    if ~isempty(strfind(pathline,'LUKE')) & isempty(strfind(pathline,pathstr)),
         rmpath(pathline);
     end
     P(1:ilim) = '';
