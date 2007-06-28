@@ -20,7 +20,7 @@ end
 ray = wave.rays{1};
 %
 if ~isfield(ray,'swidth'),
-    warning('No beam width specified. Beam width determined from dNpar')
+    %warning('No beam width specified. Beam width determined from dNpar')
     clum = 3e8;
     sphi_perp = abs(ray.sphi_xyz(1,:));
     sphi_norm = sqrt(abs(ray.sphi_xyz(1,:)).^2 + abs(ray.sphi_xyz(2,:)).^2 + abs(ray.sphi_xyz(3,:)).^2);
