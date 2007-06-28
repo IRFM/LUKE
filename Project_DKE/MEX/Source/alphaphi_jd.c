@@ -129,13 +129,10 @@ int n,ns,resopt;
             sigma = -1;
         }}        
         
-        if (resopt < 0) {/* branch m */
-            pparres = (npar*yn - sigma*sqrt(yn2 - (1 - npar2)*(1 + beta2*pperp2)))/(beta*(1 - npar2));
-            
-            /* mexPrintf("m,pparres,npar,npar2,sigma,yn,yn2,beta,beta2,pperp2 : %i,%g,%g,%g,%i,%g,%g,%g,%g,%g\n",m,pparres,npar,npar2,sigma,yn,yn2,beta,beta2,pperp2); */
-            
+        if (resopt == -1) {/* branch m */
+            pparres = (npar*yn - sigma*sqrt(yn2 - (1 - npar2)*(1 + beta2*pperp2)))/(beta*(1 - npar2));            
         } else {
-        if (resopt > 0) {/* branch p */
+        if (resopt == 1) {/* branch p */
             pparres = (npar*yn + sigma*sqrt(yn2 - (1 - npar2)*(1 + beta2*pperp2)))/(beta*(1 - npar2));
         } else {
         if (resopt == 0) {/* branch 0 */
@@ -143,6 +140,8 @@ int n,ns,resopt;
         } else { /* non-relativistic calculation */
             pparres = (1 - yn)/beta/npar;
         }}}
+
+        /* mexPrintf("m,pparres,npar,npar2,sigma,yn,yn2,beta,beta2,pperp2 : %i,%g,%g,%g,%i,%g,%g,%g,%g,%g\n",m,pparres,npar,npar2,sigma,yn,yn2,beta,beta2,pperp2); */
 
         pparres2 = pparres*pparres;
         
@@ -161,6 +160,8 @@ int n,ns,resopt;
             /* mexPrintf("m,pparres,pperp,theta2,gamma,fint : %i,%g,%g,%g,%g,%g\n",m,pparres,pperp,theta2,gamma,fint); */
         } else {
             fint = pperp2*pperp*theta2*exp(-(pparres2 + pperp2)/2)/fabs(npar);
+            
+             /* mexPrintf("m,pparres,pperp,theta2,npar,fint : %i,%g,%g,%g,%g,%g\n",m,pparres,pperp,theta2,npar,fint); */
         }
 
         absint = absint + fint*dpperp;
