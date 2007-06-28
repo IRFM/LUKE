@@ -37,6 +37,7 @@ by Joan Decker (CEA-DRFC) <joan.decker@cea.fr> and Yves Peysson (CEA-DRFC)  <yve
 
 /*#include <math.h>*/
 #include "mex.h"
+#include <complex.h>
 
 /* subroutines list */
 
@@ -49,13 +50,16 @@ double alphaphi_jd();
 #define XBETA_IN        prhs[2]
 #define XNPAR_IN        prhs[3]
 #define XNPERP_IN       prhs[4]
-#define XEPOLP_IN       prhs[5]
-#define XEPOLM_IN       prhs[6]
-#define XEPOLZ_IN       prhs[7]
-#define N_IN            prhs[8]
-#define REL_OPT_IN      prhs[9]
-#define NS_IN           prhs[10]
-#define PPERPMAX_IN     prhs[11]
+#define XEPOLP_R_IN     prhs[5]
+#define XEPOLP_I_IN     prhs[6]
+#define XEPOLM_R_IN     prhs[7]
+#define XEPOLM_I_IN     prhs[8]
+#define XEPOLZ_R_IN     prhs[9]
+#define XEPOLZ_I_IN     prhs[10]
+#define N_IN            prhs[11]
+#define REL_OPT_IN      prhs[12]
+#define NS_IN           prhs[13]
+#define PPERPMAX_IN     prhs[14]
 
 /* Output Arguments */
 
@@ -68,8 +72,11 @@ void mexFunction( int nlhs, mxArray *plhs[],
     
     int n,rel_opt,ns;
     double pperpmax;
-    double *xa,*xb,*xbeta,*xnpar,*xnperp,*xepolp,*xepolm,*xepolz;
+    double *xa,*xb,*xbeta,*xnpar,*xnperp;
+    double *xepolp_r,*xepolp_i,*xepolm_r,*xepolm_i,*xepolz_r,*xepolz_i;
     double *xalphaphi;
+    
+    double complex xepolp,xepolm,xepolz;
     
     int nx,m;
     
@@ -79,27 +86,27 @@ void mexFunction( int nlhs, mxArray *plhs[],
         mexErrMsgTxt("Wrong number of output arguments for alphaphi_fr_jd");
     }
     
-    if (nrhs < 9) {
+    if (nrhs < 12) {
         mexErrMsgTxt("Not enough input arguments calling alphaphi_fr_jd");
     }
  
-    if (nrhs > 12) {
+    if (nrhs > 15) {
         mexErrMsgTxt("Too many input arguments calling alphaphi_fr_jd");
     }
       
-    if (nrhs < 10) {
+    if (nrhs < 13) {
         rel_opt = 0;} 
     else {
         rel_opt = *mxGetPr(REL_OPT_IN);
     }    
     
-    if (nrhs < 11) {
+    if (nrhs < 14) {
         ns = 1000;} 
     else {
         ns = *mxGetPr(NS_IN);
     }    
     
-    if (nrhs < 12) {
+    if (nrhs < 15) {
         pperpmax = 10;} 
     else {
         pperpmax = *mxGetPr(PPERPMAX_IN);
@@ -112,9 +119,12 @@ void mexFunction( int nlhs, mxArray *plhs[],
     xbeta = mxGetPr(XBETA_IN);
     xnpar = mxGetPr(XNPAR_IN);
     xnperp = mxGetPr(XNPERP_IN);
-    xepolp = mxGetPr(XEPOLP_IN);
-    xepolm = mxGetPr(XEPOLM_IN);
-    xepolz = mxGetPr(XEPOLZ_IN);
+    xepolp_r = mxGetPr(XEPOLP_R_IN);
+    xepolp_i = mxGetPr(XEPOLP_I_IN);
+    xepolm_r = mxGetPr(XEPOLM_R_IN);
+    xepolm_i = mxGetPr(XEPOLM_I_IN);
+    xepolz_r = mxGetPr(XEPOLZ_R_IN);
+    xepolz_i = mxGetPr(XEPOLZ_I_IN);
     
     n = *mxGetPr(N_IN);
     
@@ -134,13 +144,20 @@ void mexFunction( int nlhs, mxArray *plhs[],
     mexPrintf("xbeta[0],xbeta[1] : %g,%g\n",xbeta[0],xbeta[1]);
     mexPrintf("xnpar[0],xnpar[1] : %g,%g\n",xnpar[0],xnpar[1]);
     mexPrintf("xnperp[0],xnperp[1] : %g,%g\n",xnperp[0],xnperp[1]);
-    mexPrintf("xepolp[0],xepolp[1] : %g,%g\n",xepolp[0],xepolp[1]);
-    mexPrintf("xepolm[0],xepolm[1] : %g,%g\n",xepolm[0],xepolm[1]);
-    mexPrintf("xepolz[0],xepolz[1] : %g,%g\n",xepolz[0],xepolz[1]);
-    mexPrintf("n,rel_opt,ns,pperpmax : %i,%i,%i,%g\n",n,rel_opt,ns,pperpmax);*/
     
+    mexPrintf("n,rel_opt,ns,pperpmax : %i,%i,%i,%g\n",n,rel_opt,ns,pperpmax);*/
+
     for (m = 0; m < nx; m++) {
-        xalphaphi[m] = alphaphi_jd(xa[m],xb[m],xbeta[m],xnpar[m],xnperp[m],xepolp[m],xepolm[m],xepolz[m],n,rel_opt,ns,pperpmax);
+        
+        xepolp = xepolp_r[m] + I*xepolp_i[m];
+        xepolm = xepolm_r[m] + I*xepolm_i[m];
+        xepolz = xepolz_r[m] + I*xepolz_i[m];
+        
+        /*mexPrintf("xepolp : %g + I*%g\n",creal(xepolp),cimag(xepolp));
+        mexPrintf("xepolm : %g + I*%g\n",creal(xepolm),cimag(xepolm));
+        mexPrintf("xepolz : %g + I*%g\n",creal(xepolz),cimag(xepolz));*/
+    
+        xalphaphi[m] = alphaphi_jd(xa[m],xb[m],xbeta[m],xnpar[m],xnperp[m],xepolp,xepolm,xepolz,n,rel_opt,ns,pperpmax);
     }
      
 }

@@ -17,9 +17,9 @@ int n,rel_opt,ns;
     mexPrintf("beta : %g\n",beta);
     mexPrintf("npar : %g\n",npar);
     mexPrintf("nperp : %g\n",nperp);
-    mexPrintf("epolp : %g\n",epolp);
-    mexPrintf("epolm : %g\n",epolm);
-    mexPrintf("epolz : %g\n",epolz);
+    mexPrintf("epolp : %g + i*%g\n",creal(epolp),cimag(epolp));
+    mexPrintf("epolm : %g + i*%g\n",creal(epolm),cimag(epolm));
+    mexPrintf("epolz : %g + i*%g\n",creal(epolz),cimag(epolz));
     mexPrintf("n,rel_opt,ns,pperpmax : %i,%i,%i,%g\n",n,rel_opt,ns,pperpmax);*/
 
     /*return(a);*/
@@ -97,7 +97,8 @@ int n,ns,resopt;
 {
     /* simple method extracted from MATLAB version */
     
-    double absint,fint,dpperp,pperp,pperp2,pparres,pparres2,zeta,theta,theta2,gamma;
+    double absint,fint,dpperp,pperp,pperp2,pparres,pparres2,zeta,theta2,gamma;
+    double complex theta;
     double yn2,npar2,beta2;
     int m,sigma;
     
@@ -149,7 +150,7 @@ int n,ns,resopt;
         
         zeta = pperp*slperp;
         theta = (epolp*_jn(n+1,zeta) + epolm*_jn(n-1,zeta))/sqrt(2) + epolz*_jn(n,zeta)*pparres/pperp;
-        theta2 = fabs(theta)*fabs(theta);
+        theta2 = cabs(theta)*cabs(theta);
         
         /* integrand */
         
