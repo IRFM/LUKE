@@ -1,4 +1,5 @@
 #include <math.h>
+#include <complex.h>
 #include <bessel_IK_jd.h>
 /*#include "mex.h"*/
 #define PI 3.141592653589793
@@ -6,7 +7,8 @@
 double integral_fr_jd();
 
 double alphaphi_jd(a,b,beta,npar,nperp,epolp,epolm,epolz,n,rel_opt,ns,pperpmax)
-double a,b,beta,npar,nperp,epolp,epolm,epolz,pperpmax;
+double a,b,beta,npar,nperp,pperpmax;
+double complex epolp,epolm,epolz;
 int n,rel_opt,ns;
 {   /* Local test */
      
@@ -89,7 +91,8 @@ int n,rel_opt,ns;
 }
 
 double integral_fr_jd(pperpmax,npar,yn,beta,epolp,epolm,epolz,slperp,n,ns,resopt) 
-double pperpmax,npar,yn,beta,epolp,epolm,epolz,slperp;
+double pperpmax,npar,yn,beta,slperp;
+double complex epolp,epolm,epolz;
 int n,ns,resopt;
 {
     /* simple method extracted from MATLAB version */
