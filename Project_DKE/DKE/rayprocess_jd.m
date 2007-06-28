@@ -108,7 +108,7 @@ else
     ns = length(ss);
 end
 %
-mask = [1,find(diff(ss) > 0) + 1];
+%mask = [1,find(diff(ss) > 0) + 1];
 %
 % Calculates spsin and stheta (normalized flux and poloidal angle, location along the ray) and sR sZ sphi if missing.
 %
@@ -191,76 +191,98 @@ else
 %    mask = is0:ismax;
 end    
 %
-try
+if isfield(ray,'salphaphi_lin'),
     salphaphi_lin = ray.salphaphi_lin;
-catch
-    salphaphi_lin = NaN*ones(1,ns);
-end
-%
-% remove unwanted ray parts
-%
-ns = length(mask);
-%
-spsin = spsin(mask);%part of ray outside the last flux-surface
-stheta = stheta(mask);
-%
-sr = sr(mask);
-%
-sx = sx(mask);
-sy = sy(mask);
-%
-if tor_mode == 1,
-    sphi = sphi(mask);
-    if ~isempty(sn),
-        sn = sn(mask);
-    end
 else
-    sz = sz(mask);
-    if ~isempty(skz),
-        skz = skz(mask);
-    end
+    salphaphi_lin = NaN*ones(1,ns);
+    opt_disp = opt_disp + i;
 end
-%
-ss = ss(mask);
-ss = ss - ss(1);%reinitialize ss 
-%
-if ~isempty(skx) & ~isempty(skZ)
-    skx = skx(mask);
-    sky = sky(mask);
-end
-if ~isempty(sNpar)
-    sNpar = sNpar(mask);
-end
-if ~isempty(sNperp)
-    sNperp = sNperp(mask);
-end
-if ~isempty(sdNpar)
-    sdNpar = sdNpar(mask);
-end
-if ~isempty(swidth)
-    swidth = swidth(mask);
-end
-if ~isempty(sepol_pmz)
-    sepol_pmz = sepol_pmz(:,mask);
-end
-if ~isempty(sphi_xyz)
-    sphi_xyz = sphi_xyz(:,mask);
-end
-if ~isempty(salphaphi_lin)
-    salphaphi_lin = salphaphi_lin(:,mask);
-end
+% %
+% % remove unwanted ray parts
+% %
+% ns = length(mask);
+% %
+% spsin = spsin(mask);%part of ray outside the last flux-surface
+% stheta = stheta(mask);
+% %
+% sr = sr(mask);
+% %
+% sx = sx(mask);
+% sy = sy(mask);
+% %
+% if tor_mode == 1,
+%     sphi = sphi(mask);
+%     if ~isempty(sn),
+%         sn = sn(mask);
+%     end
+% else
+%     sz = sz(mask);
+%     if ~isempty(skz),
+%         skz = skz(mask);
+%     end
+% end
+% %
+% ss = ss(mask);
+% ss = ss - ss(1);%reinitialize ss 
+% %
+% if ~isempty(skx) & ~isempty(skZ)
+%     skx = skx(mask);
+%     sky = sky(mask);
+% end
+% if ~isempty(sNpar)
+%     sNpar = sNpar(mask);
+% end
+% if ~isempty(sNperp)
+%     sNperp = sNperp(mask);
+% end
+% if ~isempty(sdNpar)
+%     sdNpar = sdNpar(mask);
+% end
+% if ~isempty(swidth)
+%     swidth = swidth(mask);
+% end
+% if ~isempty(sepol_pmz)
+%     sepol_pmz = sepol_pmz(:,mask);
+% end
+% if ~isempty(sphi_xyz)
+%     sphi_xyz = sphi_xyz(:,mask);
+% end
+% if ~isempty(salphaphi_lin)
+%     salphaphi_lin = salphaphi_lin(:,mask);
+% end
 %
 % Calculates Equilibrium properties along the ray
 %
 if ns > 1,
-    sBx = interp2(theta,ppsin,ptBx,stheta,spsin,method);
-    sBphi = interp2(theta,ppsin,ptBphi,stheta,spsin,method);
-    sBy = interp2(theta,ppsin,ptBy,stheta,spsin,method);
-    sB = interp2(theta,ppsin,ptB,stheta,spsin,method);
-    sne = interp1(ppsin,pne,spsin,method);
-    szni = interp1(ppsin,pzni',spsin,method)';
-    sTe = interp1(ppsin,pTe,spsin,method);
-    szTi = interp1(ppsin,pzTi',spsin,method)';
+    %
+    if isfield(ray,'sBx') & isfield(ray,'sBy') & isfield(ray,'sBphi'),
+        sBx = ray.sBx;
+        sBy = ray.sBy;
+        sBphi = ray.sBphi;            
+    else
+        sBx = interp2(theta,ppsin,ptBx,stheta,spsin,method);
+        sBy = interp2(theta,ppsin,ptBy,stheta,spsin,method);
+        sBphi = interp2(theta,ppsin,ptBphi,stheta,spsin,method);
+    end
+    % 
+    if isfield(ray,'sB')
+        sB = ray.sB;
+    else
+        sB = interp2(theta,ppsin,ptB,stheta,spsin,method);
+    end
+    %
+    if isfield(ray,'sne') & isfield(ray,'szni') & isfield(ray,'sTe') & isfield(ray,'szTi'),
+        sne = ray.sne;
+        szni = ray.szni;
+        sTe = ray.sTe;
+        szTi = ray.szTi;
+    else
+        sne = interp1(ppsin,pne,spsin,method);
+        szni = interp1(ppsin,pzni',spsin,method)';
+        sTe = interp1(ppsin,pTe,spsin,method);
+        szTi = interp1(ppsin,pzTi',spsin,method)';
+    end
+    %
 else
     sBx = ptBx;
     sBphi = ptBphi;
@@ -295,6 +317,7 @@ if isempty(sNpar),
         if isempty(skx) | isempty(sky) | isempty(skz) 
             error('Ray-tracing data incomplete')
         end
+        %
         skpar = (skx.*sBx + sky.*sBy + skz.*sBz)./sqrt(sBx.^2 + sBy.^2 + sBz.^2);
         sNpar = skpar*clum/omega_rf;
         %
