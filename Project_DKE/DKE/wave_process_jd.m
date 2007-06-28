@@ -22,19 +22,26 @@ for ib = 1:length(wave.rays),
     % Ray linear damping
     %
     salphaphi_lin = ray.salphaphi_lin;
-    if sum(~isnan(salphaphi_lin)) > 0,%absorption coefficient was calculated
+    if any(~isnan(salphaphi_lin)),%absorption coefficient was calculated
+        %
         sphi_norm = sqrt(abs(ray.sphi_xyz(1,:)).^2 + abs(ray.sphi_xyz(2,:)).^2 + abs(ray.sphi_xyz(3,:)).^2);
         salpha_lin = salphaphi_lin./sphi_norm;
         salpha_lin(isnan(salpha_lin)) = 0;
-        salpha_lin_h = (salpha_lin(1:end-1) + salpha_lin(2:end))/2;
-        sds = diff(ray.ss);
-        ray.stau = [0,cumsum(salpha_lin_h.*sds)];
+        %
+        if ~isfield(ray,'stau') | all(isnan(ray.stau)),
+            %
+            salpha_lin_h = (salpha_lin(1:end-1) + salpha_lin(2:end))/2;
+            sds = diff(ray.ss);
+            ray.stau = [0,cumsum(salpha_lin_h.*sds)];
+            %
+        end
+        %
         ray.sP_2piRp = ray.P0_2piRp*exp(-ray.stau);
         ray.sdP_2piRp_ds = salpha_lin.*ray.sP_2piRp;
         %
         ns = length(ray.ss);
         is_max = min([ns,find(ray.stau > 10*wave.cut_fac)]);
-        if is_max == ns & ~isinf(wave.cut_fac),
+        if ray.stau(end) < 10*wave.cut_fac & ~isinf(wave.cut_fac),
             disp('WARNING: The ray might be too short. Increase tfinal')
         end
         %
