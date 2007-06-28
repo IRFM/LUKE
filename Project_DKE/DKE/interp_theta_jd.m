@@ -213,10 +213,10 @@ Yi1max = Yi1max(Ymask) + Yit_Bmin(Ymask) - 1;
 Yi2min = Yi2min(Ymask) + Yit_Bmin(Ymask) - 1;
 Yi2max = Yi2max(Ymask) + Yit_Bmin(Ymask) - 1;
 %
-Yi1min(Yi1min > nt - 1) = Yi1min(Yi1min > nt - 1) - (nt-1); 
-Yi1max(Yi1max > nt - 1) = Yi1max(Yi1max > nt - 1) - (nt-1); 
-Yi2min(Yi2min > nt - 1) = Yi2min(Yi2min > nt - 1) - (nt-1); 
-Yi2max(Yi2max > nt - 1) = Yi2max(Yi2max > nt - 1) - (nt-1); 
+Yi1min(Yi1min > nt) = Yi1min(Yi1min > nt) - nt; 
+Yi1max(Yi1max > nt) = Yi1max(Yi1max > nt) - nt; 
+Yi2min(Yi2min > nt) = Yi2min(Yi2min > nt) - nt; 
+Yi2max(Yi2max > nt) = Yi2max(Yi2max > nt) - nt; 
 %
 Ytheta1(Ymask) = theta(Yi1min).'.*(1 - Yalpha1) + theta(Yi1max).'.*Yalpha1;
 Ytheta2(Ymask) = theta(Yi2min).'.*(1 - Yalpha2) + theta(Yi2max).'.*Yalpha2;
