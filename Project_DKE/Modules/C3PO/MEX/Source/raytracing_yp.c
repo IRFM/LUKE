@@ -300,7 +300,7 @@ void mexFunction(   int     nlhs,
         mexErrMsgTxt("Wrong number of input arguments for raytracing_yp");
     }
  
-    if (nlhs < 2 || nrhs > 3) {
+    if (nlhs < 2 || nlhs > 3) {
         mexErrMsgTxt("Wrong number of output arguments for raytracing_yp");
     }
     
