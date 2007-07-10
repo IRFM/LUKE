@@ -66,15 +66,15 @@ U main_rayinit_launch_jd.m (ray length increased)
 U make_beam_wave_jd.m (beam-like damping)
 U raypostprocessing_yp.m (pmode and toroidal projection)
 
-====> LUKE/Project_DKE/Modules/RT/Examples
+====> LUKE/Project_DKE/Modules/Examples
 
 U run_all.m (run all examples)
 
-====> LUKE/Project_DKE/Modules/RT/Examples/JETlike/WAVE
+====> LUKE/Project_DKE/Modules/Examples/JETlike/WAVE
 
 U make_wave_JETliketest.m (simplified output)
 
-====> LUKE/Project_DKE/Modules/RT/MEX/Bin
+====> LUKE/Project_DKE/Modules/MEX/Bin
 
 U Compile.text (path corrected)
 
@@ -244,3 +244,76 @@ U Ohm_Zi/rundke.m (")
 U Runaway_Zi_nobounce/rundke.m (") 
 U Runaway_particle_loss/rundke.m (") 
 U Thermal/rundke.m (") 
+
+****************************************************************************************************
+
+LUKE Version 1.3
+
+Main changes include:
+
+- calculation of wave absorption and other characteristics included in C3PO
+- improvement and generalization of theta interpolation at given magnetic field values
+- compatibility of i/o with CRONOS flux-surface averaging
+
+
+====> LUKE/Project_DKE/DKE
+
+U alphaphi_fr_jd.m (possibility to use the MEX version)
+U banana_dke_jd.m (use of the function interp_theta_jd and other improvements)
+U bounce_dke_jd.m (new coefficient & simplification by using the structure equilDKE)
+U bouncecoefbuilder_dke_yp.m (")
+U bounceparam_dke_yp.m (")
+U efield_dke_jd.m (compatibility with CRONOS flux-surface averaging included)
+U fmoments_dke_yp.m (")
+U graph1D_jd.m (marker size and legend as cell)
+U graph2D_jd.m (labelling optional)
+U interp_theta_jd.m (new function, theta interpolation at given magnetic field values)
+U mex_compile_luke.m (PC case added)
+U path_LUKE_LOCAL.m (made PC compatible)
+U pc_dke_yp.m (use of varargout)
+U rayprocess_jd.m (case where variables are already calculated is treated)
+U setpath_luke_jd.m (made PC compatible)
+U wave_process_jd.m (treats the case where ray.tau exists already)
+
+====> LUKE/Project_DKE/MEX/
+
+U Source/alphaphi_jd.c (wave absorption calculation, used by alphaphimex_jd and C3PO)
+U Source/alphaphimex_jd.c (mex calculation of the absorption coefficient)
+U Source/bessel_IK_jd.h (bessel functions I and K)
+
+====> LUKE/Project_DKE/Packages
+
+U test_packages_dke_yp.m (Test for the existence of mex file)
+
+====> LUKE/Project_DKE/Modules/Cronos
+
+U zstarwars.m (compatibility of i/o with CRONOS flux-surface averaging)
+
+====> LUKE/Project_DKE/Modules/Helena
+
+U equil_helmag_yp.m (Helena for LUKE as stand-alone application)
+U equil_helprof_yp.m (")
+U make_equil_helena.m (")
+U make_helprof_yp.m (")
+U make_helsep_yp.m (")
+U run_helena_yp.m (")
+U Application/hel12b.f (")
+
+====> LUKE/Project_DKE/Modules/RT
+
+U calcval_yp.m (modification of i/o)
+U init_RT_jd.m (")
+U main_C3PO_jd.m (modified to work with the new version of raytracing_yp : absorption calculated in C)
+U make_beam_wave_jd.m (warning removed)
+U raypostprocessing_yp.m (modified to work with the new version of raytracing_yp : absorption calculated in C)
+U testfitequil_yp.m (modification of i/o)
+U Examples/JETlike/WAVE/make_wave_JETliketest.m (")
+U Examples/JETlike/WAVE/make_wave_JETliketest_bis.m(")
+U MEX/Source/raytracing_dieltensor_yp.c (calculation of wave absorption and other characteristics included in C3PO)
+U MEX/Source/raytracing_load_yp.c (")
+U MEX/Source/raytracing_yp.c (")
+
+====> LUKE/Simulations/Examples/TScyl
+
+U Ohm_Zi/rundke.m (Spitzer conductivity added)
+
