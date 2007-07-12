@@ -95,7 +95,7 @@ if nargin <= 1
 	defaut.rho_display = 0.3;%Approximate radial position at which results are displayed if defaut.display_mode >= 1 [1,1]. Not used if NaN
 	info.rho_display = 'Approximate radial position at which results are displayed if info.display_mode >= 1 [1,1]. Not used if NaN';
 % 
-	valeur.display_mode = 1;%Display mode: (0): no, (1): partial, (2): full
+	valeur.display_mode = 0;%Display mode: (0): no, (1): partial, (2): full
 	type.display_mode = 'list';%Display mode: (0): no, (1): partial, (2): full
  	borne.display_mode = {0,1,2};%Display mode: (0): no, (1): partial, (2): full
 	defaut.display_mode = 0;%Display mode: (0): no, (1): partial, (2): full
@@ -414,7 +414,6 @@ dkeparam.n_rf_list = 0:3;
 %
 dkedisplay.rho_display  = par.rho_display;%Approximate radial position at which results are displayed if display.display_mode >= 1 [1,1]. Not used if NaN
 dkedisplay.display_mode = par.display_mode;%Display mode: (0): no, (1): partial, (2): full
-%dkedisplay.display_mode = 'PARTIAL_VISUAL',%%%%%%%%%%%%%%%%%%
 %
 % PARAMETRES OHMIC, transformation en flux poloidal puis en coordonnees radials de LUKE
 %
@@ -484,9 +483,9 @@ ik = 1;
 %
 % For CRONOS, N//> 0 means always co-current, whatever the toroidal Bfield or the direction of Ip
 %
-for k=1:length(wavestructs)
-	eval(['wavestructs{',int2str(k),'}.launch.bNpar0 = (-1)*sign(signe.ip)*sign(signe.b0)*wavestructs{',int2str(k),'}.launch.bNpar0;'])
-end    
+%for k=1:length(wavestructs)
+%	eval(['wavestructs{',int2str(k),'}.launch.bNpar0 = (-1)*sign(signe.ip)*sign(signe.b0)*wavestructs{',int2str(k),'}.launch.bNpar0;'])
+%end    
 %
 if sum(abs(ohm.epsi)) ~= 0,%Calculate the Ohmic electric field contribution to the plasma current
 %    dkeparam.bounce_mode = 0;
@@ -550,7 +549,7 @@ end
 %
 % calcul du flux toroidal normalise associé a la grille de LUKE 
 %
-equilDKE.xcron = interp1(psincronos,gene.x,equilDKE.xpsin);
+equilDKE.xcron = interp1(psipncronos,gene.x,equilDKE.xpsin);
 %
 % preparation des variables de sortie (sortie.j, sortie.el) pour CRONOS sur la bonne grille
 % et avec les bonnes unites
@@ -571,10 +570,29 @@ sortie.j(indnan(gene.x(indnan) > 0.5))=0;
 sortie.j(indnan(gene.x(indnan) < 0.5))=sortie.j(indmax);
 
 %
-if par.save,
-   [chemin,void] = fileparts(gene.rapsauve);
-	save(fullfile(chemin,sprintf('last_luke@%s',int2str(fix(gene.t*1000)))));
+if sum(abs(ohm.epsi)) > 0,%Only the RF current + the synergistic Ohmic/RF current contribution is kept
+   sortie.j  = interp1(equilDKE.xcron,(Zcurr_RF.x_tot_vfsav - Zcurr.x_tot_vfsav)*mksa.j_ref,gene.x)*1e6;
+   sortie.el = interp1(equilDKE.xcron,(ZP0_RF.x_rf_fsav + ZP0_RF.x_e_fsav' - ZP0.x_e_fsav')*mksa.P_ref,gene.x)*1e6;
+else
+   sortie.j = interp1(equilDKE.xcron,Zcurr.x_tot_vfsav*mksa.j_ref,gene.x)*1e6;
+   sortie.el = interp1(equilDKE.xcron,(ZP0.x_rf_fsav + ZP0.x_e_fsav')*mksa.P_ref,gene.x)*1e6;
 end
+%
+% blindage : 0 au bord, au centre on recopie la premiere valeur non nulle
+%
+indnan = find(isnan(sortie.j));
+indmax = max(indnan(gene.x(indnan) < 0.5))+1;
+sortie.j(indnan(gene.x(indnan) > 0.5))=0;
+sortie.j(indnan(gene.x(indnan) < 0.5))=sortie.j(indmax);
+sortie.el(indnan(gene.x(indnan) > 0.5))=0;
+sortie.el(indnan(gene.x(indnan) < 0.5))=sortie.el(indmax);
+sortie.el(sortie.el<0)=0;
+
+%
+%if par.save,
+%   [chemin,void] = fileparts(gene.rapsauve);
+%   save(fullfile(chemin,sprintf('last_luke@%s',int2str(fix(gene.t*1000)))));
+%end
 %
 
 
