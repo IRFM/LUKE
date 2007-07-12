@@ -7,7 +7,7 @@
 clear all
 path_id = 'LOCAL';%Set here the name path parameters (user specific)
 %
-luke_root = '/home/lukeuser/Work/LUKE_1_2/';
+luke_root = '/home/lukeuser/Work/LUKE_1_3/';
 local_root = '/home/lukeuser/Work/';
 %
 dkepath.path_id = path_id;
@@ -24,7 +24,7 @@ dkepath.MUMPS.mpipath = [''];%Absolute path to the correct mpirun or mpiexec (ma
 %dkepath.PETSc.par = [local_root,'Packages/Bin/PETSC/petsc-2.3.3-p0_P_mpichf90/DKE'];%Where PETSc matrix solver is stored (stand-alone application for parallel processing)
 %dkepath.PETSc.seq = [local_root,''];%Where PETSc matrix solver is stored (stand-alone application for sequential processing)
 %dkepath.PETSc.mex = [local_root,''];%Where PETSc matrix solver is stored (MEX function)
-dkepath.PETSc.mpipath = ['/usr/local/openmpig95/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
+%dkepath.PETSc.mpipath = ['/usr/local/openmpig95/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
 %
 %dkepath.SUPERLU.mex = [local_root,'Packages/Bin/SUPERLU/SuperLU_3.0/MATLAB'];%Where SUPERLU matrix solver is stored (MEX function)
 %
