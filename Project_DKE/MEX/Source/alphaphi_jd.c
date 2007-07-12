@@ -148,7 +148,7 @@ int n,ns,resopt;
         /* polarization term */
         
         zeta = pperp*slperp;
-        theta = (epolp*_jn(n+1,zeta) + epolm*_jn(n-1,zeta))/sqrt(2) + epolz*_jn(n,zeta)*pparres/pperp;
+        theta = (epolp*jn(n+1,zeta) + epolm*jn(n-1,zeta))/sqrt(2) + epolz*jn(n,zeta)*pparres/pperp;
         theta2 = cabs(theta)*cabs(theta);
         
         /* integrand */
