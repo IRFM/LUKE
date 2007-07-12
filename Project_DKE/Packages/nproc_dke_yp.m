@@ -23,6 +23,8 @@ if status == 0,
         nproc = nproc_powerbook_YVES(display_mode,param,dkepath);
     elseif strfind(message_proc,'x86_64')>0 & strfind(message_net,'saturne')>0,%SATURNE cluster @ CEA-DRFC     
         nproc = nproc_saturne_CEA_DRFC(display_mode,param,dkepath);
+    elseif strfind(message_proc,'Intel')>0,
+        nproc = 1;
     elseif strfind(message_proc,'YOUR_PROCESSOR_NAME')>0 & strfind(message_net,'YOUR_COMPUTER')>0,%YOUR computer. Replace here the name of your machine
         error('Your computer is not recognized by PETSc_Cloop_dke_ft.m. Please open the file and add the parameters of your environment !') 
 % PUT HERE A FUNCTION SPECIFIC TO YOUR MACHINE THAT CALCULATES THE ADEQUATE NUMBER OF PROCESSORS
