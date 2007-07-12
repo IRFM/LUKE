@@ -587,7 +587,13 @@ sortie.j(indnan(gene.x(indnan) < 0.5))=sortie.j(indmax);
 sortie.el(indnan(gene.x(indnan) > 0.5))=0;
 sortie.el(indnan(gene.x(indnan) < 0.5))=sortie.el(indmax);
 sortie.el(sortie.el<0)=0;
-
+%
+% distribution function for use in CRONOS
+%
+memoire.data.edistribution.f0 = dke_out_RF.XXf0;
+memoire.data.edistribution.p = momentumDKE.pn*mksa.betath_ref;
+memoire.data.edistribution.mhu0 = momentumDKE.mhu;
+memoire.data.edistribution.psin = equilDKE.xpsin;
 %
 %if par.save,
 %   [chemin,void] = fileparts(gene.rapsauve);
