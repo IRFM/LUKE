@@ -8,7 +8,6 @@ close all
 warning off
 global nfig
 pause(1)
-[s,dossier,machine] = comput_dke_yp;
 %
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************

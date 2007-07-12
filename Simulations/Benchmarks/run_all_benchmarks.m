@@ -24,7 +24,7 @@ cd ../..
 %
 forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
 cd(['TScyl',filesep,'Runaway_Zi_nobounce']);
-if exist('DKE_RESULTS_TScyl_Runaway_Zi_nobounce.mat') == 0 | forcerun,
+if exist('DKE_RESULTS_TScyl_lowTene_Runaway_Zi_nobounce.mat') == 0 | forcerun,
    rundke
 else
    info_dke_yp(2,['Simulation TScyl',filesep,'Runaway_Zi_nobounce skipped because already done !']) 
