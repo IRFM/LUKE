@@ -1,10 +1,13 @@
-function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,display);
+function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,display,flag);
 %
 % This function calculates the ray initial characteristics and launches the C3PO ray-tracing code
 %
 % by 	J. Decker (DRFC/DSM/CEA) <joan.decker@cea.fr> 
 % and   Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr>
-
+%
+if nargin < 8,
+    flag = 0;%numerical equilibrium used by default
+end
 %
 % Build or load vectorized magnetic equilibrium structure
 %
@@ -70,7 +73,7 @@ for iray = 1:Nrays,
     %
     if isreal(y0(4)),
         %
-        [tout, yout, yproc] = raytracing_yp(rayparam,equil_fit,y0);
+        [tout, yout, yproc] = raytracing_yp(rayparam,equil_fit,y0,flag);
         %
         info_dke_yp(2,['Trajectory of ray #',int2str(iray),' is calculated']);
         %
