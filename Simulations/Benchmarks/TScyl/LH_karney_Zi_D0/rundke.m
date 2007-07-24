@@ -53,8 +53,7 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %Study of the ion charge effect of the LHCD efficiency
 %
 if exist('dmumpsmex');dkeparam.invproc = -2;end
-%dkeparam.np_S = 201;
-%dkeparam.nmhu_S = 201;
+dkeparam.norm_mode_f = 1;
 %
 equil.zZi = [1,1,1,1];equil.pzni = species_dke_yp(equil.pne,ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 1
 [Znorm,Zcurr_Z1,ZP0_Z1,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
@@ -107,38 +106,48 @@ equil.zZi = [1,1,1,1];equil.pzni = species_dke_yp(equil.pne,ones(size(equil.pne)
 P0_2piRp_D1 = waves{1}.rays{1}.P0_2piRp;%for D|| = 1
 %
 waves{1}.rays{1}.P0_2piRp = 0.1*P0_2piRp_D1;%for D|| = 0.1
-[Znorm,Zcurr_D01,ZP0_D01] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm_D01,Zcurr_D01,ZP0_D01] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 waves{1}.rays{1}.P0_2piRp = 0.2*P0_2piRp_D1;%for D|| = 0.2
-[Znorm,Zcurr_D02,ZP0_D02] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm_D02,Zcurr_D02,ZP0_D02] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 waves{1}.rays{1}.P0_2piRp = 0.5*P0_2piRp_D1;%for D|| = 0.5
-[Znorm,Zcurr_D05,ZP0_D05] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm_D05,Zcurr_D05,ZP0_D05] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 waves{1}.rays{1}.P0_2piRp = P0_2piRp_D1;%for D|| = 1
-[Znorm,Zcurr_D1,ZP0_D1] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm_D1,Zcurr_D1,ZP0_D1] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 waves{1}.rays{1}.P0_2piRp = 2*P0_2piRp_D1;%for D|| = 2
-[Znorm,Zcurr_D2,ZP0_D2] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm_D2,Zcurr_D2,ZP0_D2] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 waves{1}.rays{1}.P0_2piRp = 5*P0_2piRp_D1;%for D|| = 5
-[Znorm,Zcurr_D5,ZP0_D5] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm_D5,Zcurr_D5,ZP0_D5] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 waves{1}.rays{1}.P0_2piRp = 10*P0_2piRp_D1;%for D|| = 10
-[Znorm,Zcurr_D10,ZP0_D10] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm_D10,Zcurr_D10,ZP0_D10] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 waves{1}.rays{1}.P0_2piRp = 20*P0_2piRp_D1;%for D|| = 20
-[Znorm,Zcurr_D20,ZP0_D20] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm_D20,Zcurr_D20,ZP0_D20] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+waves{1}.rays{1}.P0_2piRp = 50*P0_2piRp_D1;%for D|| = 50
+[Znorm_D50,Zcurr_D50,ZP0_D50] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+waves{1}.rays{1}.P0_2piRp = 100*P0_2piRp_D1;%for D|| = 100
+[Znorm_D100,Zcurr_D100,ZP0_D100] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+waves{1}.rays{1}.P0_2piRp = 200*P0_2piRp_D1;%for D|| = 200
+[Znorm_D200,Zcurr_D200,ZP0_D200] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
-Dlh = [0.1,0.2,0.5,1,2,5,10,20];
-jlh1 = [Zcurr_D01.x_tot_fsav,Zcurr_D02.x_tot_fsav,Zcurr_D05.x_tot_fsav,Zcurr_D1.x_tot_fsav,Zcurr_D2.x_tot_fsav,Zcurr_D5.x_tot_fsav,Zcurr_D10.x_tot_fsav,Zcurr_D20.x_tot_fsav];
-plh1 = [ZP0_D01.x_rf_fsav,ZP0_D02.x_rf_fsav,ZP0_D05.x_rf_fsav,ZP0_D1.x_rf_fsav,ZP0_D2.x_rf_fsav,ZP0_D5.x_rf_fsav,ZP0_D10.x_rf_fsav,ZP0_D20.x_rf_fsav];
-pcoll1 = -[ZP0_D01.x_c_fsav,ZP0_D02.x_c_fsav,ZP0_D05.x_c_fsav,ZP0_D1.x_c_fsav,ZP0_D2.x_c_fsav,ZP0_D5.x_c_fsav,ZP0_D10.x_c_fsav,ZP0_D20.x_c_fsav];
+Dlh = [0.1,0.2,0.5,1,2,5,10,20,50,100,200];
+nlh1 = [Znorm_D01.x_0_fsav,Znorm_D02.x_0_fsav,Znorm_D05.x_0_fsav,Znorm_D1.x_0_fsav,Znorm_D2.x_0_fsav,Znorm_D5.x_0_fsav,Znorm_D10.x_0_fsav,Znorm_D20.x_0_fsav,Znorm_D50.x_0_fsav,Znorm_D100.x_0_fsav,Znorm_D200.x_0_fsav];
+jlh1 = [Zcurr_D01.x_tot_fsav,Zcurr_D02.x_tot_fsav,Zcurr_D05.x_tot_fsav,Zcurr_D1.x_tot_fsav,Zcurr_D2.x_tot_fsav,Zcurr_D5.x_tot_fsav,Zcurr_D10.x_tot_fsav,Zcurr_D20.x_tot_fsav,Zcurr_D50.x_tot_fsav,Zcurr_D100.x_tot_fsav,Zcurr_D200.x_tot_fsav];
+plh1 = [ZP0_D01.x_rf_fsav,ZP0_D02.x_rf_fsav,ZP0_D05.x_rf_fsav,ZP0_D1.x_rf_fsav,ZP0_D2.x_rf_fsav,ZP0_D5.x_rf_fsav,ZP0_D10.x_rf_fsav,ZP0_D20.x_rf_fsav,ZP0_D50.x_rf_fsav,ZP0_D100.x_rf_fsav,ZP0_D200.x_rf_fsav];
+pcoll1 = -[ZP0_D01.x_c_fsav,ZP0_D02.x_c_fsav,ZP0_D05.x_c_fsav,ZP0_D1.x_c_fsav,ZP0_D2.x_c_fsav,ZP0_D5.x_c_fsav,ZP0_D10.x_c_fsav,ZP0_D20.x_c_fsav,ZP0_D50.x_c_fsav,ZP0_D100.x_c_fsav,ZP0_D200.x_c_fsav];
 etalh1 = jlh1./plh1;
 %
-figure(4),clf,graph1D_jd(Dlh,jlh1,0,0,'D_{|| ||LH}','j_{LH}',['Zi = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,1,0.6,0.6);
+figure(4),clf,graph1D_jd(Dlh,jlh1,1,0,'D_{|| ||LH}','j_{LH}',['Zi = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,1,0.6,0.6);
 savefig_dke_yp('jLH_DLH')
 %
-figure(5),clf,graph1D_jd(Dlh,plh1,0,0,'D_{|| ||LH}','p_{LH} and p_{coll}',['Zi = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,1,0.6,0.6);hold on
+figure(5),clf,graph1D_jd(Dlh,plh1,1,0,'D_{|| ||LH}','p_{LH} and p_{coll}',['Zi = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,1,0.6,0.6);hold on
 graph1D_jd(Dlh,pcoll1,0,0,'D_{||LH}','p_{lh} and p_{coll}','',NaN,'','','none','+','b',2,20,gca,1,0.6,0.6);hold on
 legend('LH power','Collision power')
 savefig_dke_yp('PLHPcoll_DLH')
 %
-figure(6),clf,graph1D_jd(Dlh,etalh1,0,0,'D_{|| ||LH}','LH CD efficiency \eta_{LH}',['Zi = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,1,0.6,0.6);hold on
+figure(6),clf,graph1D_jd(Dlh,etalh1,1,0,'D_{|| ||LH}','LH CD efficiency \eta_{LH}',['Zi = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,1,0.6,0.6);hold on
 savefig_dke_yp('effLH_DLH')
+%
+figure(7),clf,graph1D_jd(Dlh,nlh1,1,0,'D_{|| ||LH}','ne_{LH}',['Zi = ',num2str(1)],NaN,'','','-','non','r',2,20,gca,1,0.6,0.6);hold on
+savefig_dke_yp('neLH_DLH')
 %	    
 %************************************************************************************************************************************
 eval(['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
