@@ -23,7 +23,7 @@ path_path = '';%if nothing is specified, the working directory is first used and
 id_equil = 'TScyl';%For plasma equilibrium
 path_equil = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_dkeparam = 'UNIFORM10010020_nit1';%For DKE code parameters
+id_dkeparam = 'UNIFORM10010020';%For DKE code parameters
 path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_display = 'PARTIAL_VISUAL';%For output code display
@@ -49,15 +49,15 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 %************************************************************************************************************************************
 %
-clear xdn xdnr
+dkeparam.boundary_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
+dkeparam.nit_f = 1;%Enforcing a single iteration
 if exist('dmumpsmex');dkeparam.invproc = -2;end
-%
-%WARNING: boundary_mode_f must be 0 
 %
 dtn = [0.1,0.2,0.5,1,2,5,10,20,50,100,200,500,1000];
 epsi=0.2;
 xdn = zeros(length(dtn),length(epsi));
 xdnr = zeros(length(dtn),length(epsi));
+%
 [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 for i=1:length(dtn)
    for j=1:length(epsi)

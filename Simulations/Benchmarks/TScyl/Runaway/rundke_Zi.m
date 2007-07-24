@@ -23,7 +23,7 @@ path_path = '';%if nothing is specified, the working directory is first used and
 id_equil = 'TScyl_lowTene';%For plasma equilibrium
 path_equil = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_dkeparam = 'UNIFORM10010020_coll0';%For DKE code parameters
+id_dkeparam = 'UNIFORM10010020';%For DKE code parameters
 path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_display = 'PARTIAL_VISUAL';%For output code display
@@ -50,6 +50,7 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %**************************************************************************
 %**************************************************************************
 %
+dkeparam.coll_mode = 0;%For comparison with theoretical results
 if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
 equil.zZi = [1,1,1,1];equil.pzni = species_dke_yp(equil.pne,ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 1
