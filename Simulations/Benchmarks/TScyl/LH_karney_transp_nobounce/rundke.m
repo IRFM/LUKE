@@ -24,7 +24,7 @@ path_path = '';%if nothing is specified, the working directory is first used and
 id_equil = 'TScyl';%For plasma equilibrium
 path_equil = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_dkeparam = 'UNIFORM10010020_MUMPS';%For DKE code parameters
+id_dkeparam = 'UNIFORM10010020';%For DKE code parameters
 path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_display = 'NO_DISPLAY';%For output code display
