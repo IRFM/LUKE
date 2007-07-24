@@ -61,10 +61,10 @@ if exist('dmumpsmex');dkeparam_cyl.invproc = -2;dkeparam.invproc = -2;end
 epsi_circ = equilDKE.xrho*equilDKE.ap/equilDKE.Rp;%Circular inverse aspect ratio
 sigman_luke = Zcurr.x_tot_fsav/Zcurr_cyl.x_tot_fsav;
 sigman_sc = 1 - 1.95*sqrt(epsi_circ) + 0.95*epsi_circ;
-figure(1),clf,graph1D_jd(epsi_circ,1./sigman_luke,0,1,'Inverse aspect ratio','Normalized conductivity','Normalized conductivity',NaN,'','','none','+','r',2,20,gca,1,0.6,0.6);hold on
+figure(1),clf,graph1D_jd(epsi_circ,1./sigman_luke,0,1,'Inverse aspect ratio','Normalized conductivity','Normalized conductivity',NaN,'','','none','.','r',2,20,gca,1,0.6,0.6);hold on
 graph1D_jd(epsi_circ,1./sigman_sc,0,1,'Inverse aspect ratio','Normalized resistivity','Normalized resistivity',NaN,'','','-','non','b',1,20,gca,1,0.6,0.6);
 legend('DKE code','Sigmar-Coppi')
-savefig_dke_yp('ohm_bounce','Figures/')
+savefig_dke_yp('ohm_bounce')
 %
 %************************************************************************************************************************************
 %
