@@ -186,6 +186,45 @@ mBx = interpft(equil.ptBx(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolat
 mBy = interpft(equil.ptBy(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
 mBPHI = interpft(equil.ptBPHI(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
 %
+% Remove Fourier components if secondary exprema exist
+%
+nc = (ntheta-1)*mfactor/2 + 1;%central fft point
+t = 1;
+%
+while t <= (ntheta-1)/2,
+    %
+    mB = sqrt(mBx.^2 + mBy.^2 + mBPHI.^2);% total magnetic field
+    %
+    nextr = sum(diff(sign(diff(mB.'))) ~= 0);
+    %
+    if all(nextr <= 2),
+        break
+    end
+    %
+    fmx = fft(mx.');
+    fmy = fft(my.');
+    fmBx = fft(mBx.');
+    fmBy = fft(mBy.');
+    fmBPHI = fft(mBPHI.');
+    %
+    mask = (nc - (mfactor-1)*(ntheta-1)/2 - t + 1):(nc + (mfactor-1)*(ntheta-1)/2 + t - 1);
+    %
+    fmx(mask,:) = 0;
+    fmy(mask,:) = 0;
+    fmBx(mask,:) = 0;
+    fmBy(mask,:) = 0;
+    fmBPHI(mask,:) = 0;
+    %
+    mx = ifft(fmx).';
+    my = ifft(fmy).';
+    mBx = ifft(fmBx).';
+    mBy = ifft(fmBy).';
+    mBPHI = ifft(fmBPHI).';
+    %
+    t = t + 1;
+    %
+end
+%
 mtheta = [mtheta,2*pi]; %2*pi point retrieved (for future interpolation)
 mx = [mx,mx(:,1)]; %2*pi point retrieved
 my = [my,my(:,1)]; %2*pi point retrieved
