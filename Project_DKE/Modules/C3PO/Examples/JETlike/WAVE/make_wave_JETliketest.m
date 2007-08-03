@@ -10,6 +10,7 @@ close all
 clc
 %
 id_wave = 'JETliketest';
+flag_analytic = 2;
 %
 % Path parameters
 %
@@ -149,7 +150,7 @@ wave_numeric = main_C3PO_jd([id_wave,'_numeric'],equil,rayinit,waveparam,fitpara
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium)');
 %
-wave_analytic = main_C3PO_jd([id_wave,'_analytic'],equil,rayinit,waveparam,fitparam,rayparam,display,2);
+wave_analytic = main_C3PO_jd([id_wave,'_analytic'],equil,rayinit,waveparam,fitparam,rayparam,display,flag_analytic);
 %
 info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
 %
