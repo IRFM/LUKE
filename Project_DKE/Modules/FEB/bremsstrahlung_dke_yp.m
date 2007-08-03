@@ -160,7 +160,7 @@ for i = 1:size(psin_hxr,1),%radial position
 %%%%%%		PSI_hxr(i,j) = 1;%low field side only
 			mhu_hxr = sign(mhu(:)).*sqrt(1-PSI_hxr(i,j)*(1 - mhu(:).^2));%mhu at a poloidal position that is different from Bmin
 			mhu_hxr = mhu_hxr(1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0);
-         Zbremplasma.mhu_hxr{i,j} = mhu_hxr;
+            Zbremplasma.mhu_hxr{i,j} = mhu_hxr;
 			Xf0_hxr = XXf0(:,1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0,i);%Non-thermal distribution function at poloidal location
 			Xf0_tp_hxr = XXf0_tp(:,1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0,i);
 			Xf0_g_hxr = XXf0_g(:,1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0,i);
@@ -170,8 +170,8 @@ for i = 1:size(psin_hxr,1),%radial position
 			Xf0_g_i = interp1(mhu_hxr(:),Xf0_g_hxr',x_leg(:),method)';
 %
 			Xf0_c = (Xf0_i.*(w_leg*ones(1,size(Xf0_i,1)))')*Pm';
-		   Xf0_tp_c = (Xf0_tp_i.*(w_leg*ones(1,size(Xf0_tp_i,1)))')*Pm';
-		   Xf0_g_c = (Xf0_g_i.*(w_leg*ones(1,size(Xf0_g_i,1)))')*Pm';
+		    Xf0_tp_c = (Xf0_tp_i.*(w_leg*ones(1,size(Xf0_tp_i,1)))')*Pm';
+		    Xf0_g_c = (Xf0_g_i.*(w_leg*ones(1,size(Xf0_g_i,1)))')*Pm';
 %
 			Xf0_c1 = permute(repmat(reshape(Xf0_c',n_gauleg+1,size(XXf0,1),1),[1,1,1,length(kphot)]),[1,2,4,3]);
 			Xf0_tp_c1 = permute(repmat(reshape(Xf0_tp_c',n_gauleg+1,size(XXf0_tp,1),1),[1,1,1,length(kphot)]),[1,2,4,3]);
@@ -207,7 +207,7 @@ brem_bd_out = zeros(size(vschords,3),length(kphot));
 lchord = zeros(size(vschords,3));
 for ic = 1:size(vschords,3),%loop on each chord  
 	s_mask = ~isnan(vschords(7,:,ic));%Location where chord is inside the plasma
-   s_length = sum(s_mask);%Number of points along the chord inside the plasma
+    s_length = sum(s_mask);%Number of points along the chord inside the plasma
 	ir_spsi = vschords(8,s_mask,ic);
 	it_st = vschords(9,s_mask,ic);
 %
@@ -241,7 +241,7 @@ for ic = 1:size(vschords,3),%loop on each chord
 	brem_bd = squeeze(sum(Pm_bd1.*IB1.*cL1,1));%Local bremsstrahlung emission in the direction of the detector
 %	
 	s = vschords(1,s_mask,ic);
-   if size(s,2) > 0
+    if size(s,2) > 0
        s = s - s(1);%s=0 where the chord enter the plasma towards the detector
        ds = [diff(s),0];%Elementary chord length for integration
        ds1 = repmat(ds',[1,length(kphot)]);
