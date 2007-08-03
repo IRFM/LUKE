@@ -93,7 +93,7 @@ for iray = 1:Nrays,
         %
         ray.ss = ss.';% Ray propagation distance parameter for each ray (put to NaN once the ray is absorbed) [1,ns]
         ray.spsin = [];% Ray location (normalized magnetic flux) along the propagation [1,ns]
-        ray.stheta = [];% Ray location (poloidal angle) along the propagation [1,ns]
+        ray.stheta = stheta.';% Ray location (poloidal angle) along the propagation [1,ns]
         %
         ray.skx = [];% Ray wave vector (major radius) along the propagation [1,ns]
         ray.sn = [];% Ray wave number (toroidal) along the propagation [1,ns]
