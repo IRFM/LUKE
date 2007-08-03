@@ -7,7 +7,7 @@
 clear all
 path_id = 'LUKE';%Set here the name path parameters (user specific)
 %
-luke_root = '/Volumes/PC-LUKE/LUKE_1_2/';
+luke_root = '/Volumes/PC-LUKE/LUKE_1_3/';
 local_root = '/Users/Yves/CEA/Projets/';
 %
 dkepath.path_id = path_id;
