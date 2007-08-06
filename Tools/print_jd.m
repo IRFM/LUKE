@@ -1,20 +1,27 @@
-function print_jd(opt,savename,fignum,res)
+function print_jd(opt,savename,savedir,fignum,res)
 %
 % prints (opt = 0) and (opt = 1) / or (opt = 2, default) saves to file the current figure under the name savename
 %
 % by J. Decker (jodecker@alum.mit.edu) 09/28/04
 %
-if nargin < 4
+if nargin < 5
     res = 600;
 end
-if nargin < 3
+if nargin < 4
     fignum = NaN;
+end
+if nargin < 3
+    savedir = NaN;
 end
 if nargin < 2
     savename = NaN;
 end
 if nargin < 1
     opt = 1;
+end
+%
+if isnan(savedir),
+    savedir = 'figures';
 end
 if ~isnan(fignum),
     figure(fignum)
@@ -32,19 +39,23 @@ set(gca, 'XTickMode','manual');
 set(gca, 'YTickMode','manual');
 set(gca, 'ZTickMode','manual');
 %
-%
 if opt >= 0 & opt <= 1,
     print
 end
 %
 if opt >= 1,
-    if exist('figures','dir') ~= 7
-        mkdir('figures')
+    if exist(savedir,'dir') ~= 7
+        mkdir(savedir)
     end
-    cd figures
-    eval(['print -depsc -loose -r',num2str(res),' ',savename,'.eps']); 
-    eval(['print -dmeta -r',num2str(res),' ',savename,'.emf']); 
+    wd = pwd;
+    cd(savedir)
+    eval(['print -depsc -loose -tiff -r',num2str(res),' ',savename,'.eps']); 
     saveas(gcf,savename,'fig')
-    cd ..
+    if strcmp(computer,'PCWIN'),
+        eval(['print -dmeta -r',num2str(res),' ',savename,'.emf']); 
+    else
+        eval(['print -djpeg90 -r',num2str(res),' ',savename,'.jpg']); 
+    end    
+    cd(wd)
 end
 
