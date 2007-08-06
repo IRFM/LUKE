@@ -70,7 +70,10 @@ end
 %
 % ----------------------------------------------------------------
 %
-XB = sqrt(XBx.^2 + XBy.^2 + XBz.^2);
+XBT = abs(XBz);%Toroidal B-field
+XBP = sqrt(XBx.^2 + XBy.^2);%Poloidal B-field
+XB = sqrt(XBT.^2 + XBP.^2);%Total B-field
+%XB = sqrt(XBx.^2 + XBy.^2 + XBz.^2);
 %
 % calculation of the number of extrema of B
 %
