@@ -54,7 +54,7 @@ dkinterp = kinterp(2) - kinterp(1);
 brem_bd_interp = interp1(kphot,brem_bd_in',kinterp,method)';
 %
 for ik = 1:size(hxr.kdiag_hxr,2)-1,
-	brem_bd_plasma(:,ik) = sum(brem_bd_interp(:,min(find(kinterp >= hxr.kdiag_hxr(1,ik))):max(find(kinterp < hxr.kdiag_hxr(2,ik))))')'*dkinterp;
+	brem_bd_plasma(:,ik) = sum(brem_bd_interp(:,min(find(kinterp >= hxr.kdiag_hxr(1,ik))):max(find(kinterp < hxr.kdiag_hxr(2,ik))))')'*dkinterp;%number of photons in energy channel ik per unit time
 end
 brem_bd_plasma = abs(brem_bd_plasma);
 %
@@ -66,6 +66,7 @@ for ic = 1:size(brem_bd_plasma,1),
     eafit_plasma(ic) = eA;
     Q_plasma(ic) = Q;
 end
+%
 %wbrem_bd_plasma = brem_bd_plasma.*repmat(kfit,[size(brem_bd_plasma,1),1])./repmat(dkfit,[size(brem_bd_plasma,1),1]);% per keV but taking into account of the channel energy width
 %for ic = 1:size(brem_bd_plasma,1),	
 %	pfit = polyfit(kfit(ikfitmin:ikfitmax),log(wbrem_bd_plasma(ic,ikfitmin:ikfitmax)),1);
@@ -108,8 +109,8 @@ for ic = 1:size(brem_bd_interp,1),
 		if (ef(ic-1) ~= ef(ic)) | (tf(ic-1) ~= tf(ic)) | (ea(ic-1) ~= ea(ic)) | (ta(ic-1) ~= ta(ic)) | (ec(ic-1) ~= ec(ic)) | (tc(ic-1) ~= tc(ic)) | (ed(ic-1) ~= ed(ic)) | (td(ic-1) ~= td(ic))
 			absxinterp = absx_dke_yp(kinterp,0,0,ef(ic),tf(ic,:),ea(ic),ta(ic,:),ec(ic),tc(ic,:),ed(ic),td(ic,:));%Air contribution is neglected (k > 10 keV only)
 			Tabsxinterp = repmat(absxinterp(:),[1,size(brem_bd_interp,2)]);
-		end		
-   end
+        end		
+    end
 %
 	gkEinterp_out{ic} = gkEinterp;%For display of the response function
 %
@@ -121,27 +122,25 @@ for ic = 1:size(brem_bd_interp,1),
 	end
 %
 	for ik = 1:size(hxr.kdiag_hxr,2)-1,
-		brem_bd_diag(ic,ik) = sum(brem_bd_diag_interp(ic,min(find(kinterp >= hxr.kdiag_hxr(1,ik))):max(find(kinterp < hxr.kdiag_hxr(2,ik))))')'*dkinterp;
+		brem_bd_diag(ic,ik) = sum(brem_bd_diag_interp(ic,min(find(kinterp >= hxr.kdiag_hxr(1,ik))):max(find(kinterp < hxr.kdiag_hxr(2,ik))))')'*dkinterp;%number of pulses in energy channel ik per unit time
 	end
 %	
 	brem_bd_diag = abs(brem_bd_diag);
 %
-   for ic = 1:size(brem_bd_plasma,1),	
-      [Tph,eTph,A,eA,Q] = tphfit_dke_yp(kfit(ikfitmin:ikfitmax)',dt*brem_bd_diag(ic,ikfitmin:ikfitmax)',sqrt(dt*brem_bd_diag(ic,ikfitmin:ikfitmax))');
-      if Tph <=0, %Remove negative or null values
-	      Tph = NaN;
-         eTph = NaN;
-		   A = NaN;
-         eA = NaN;
-         Q = NaN;
-      end
+    [Tph,eTph,A,eA,Q] = tphfit_dke_yp(kfit(ikfitmin:ikfitmax)',dt*brem_bd_diag(ic,ikfitmin:ikfitmax)',sqrt(dt*brem_bd_diag(ic,ikfitmin:ikfitmax))');
+    if Tph <=0, %Remove negative or null values
+	   Tph = NaN;
+       eTph = NaN;
+	   A = NaN;
+       eA = NaN;
+       Q = NaN;
+    end
 %
-      tphot_plasma_exp(ic) = Tph;
-      etphot_plasma_exp(ic) = eTph;
-      afit_plasma_exp(ic) = A;
-      eafit_plasma_exp(ic) = eA;
-      Q_plasma_exp(ic) = Q;
-   end
+    tphot_plasma_exp(ic) = Tph;
+    etphot_plasma_exp(ic) = eTph;
+    afit_plasma_exp(ic) = A;
+    eafit_plasma_exp(ic) = eA;
+    Q_plasma_exp(ic) = Q;
 
 %	wbrem_bd_plasma_exp(ic,:) = brem_bd_diag(ic,:).*kfit./dkfit./meanabsx(ic,:);% per keV but taking into account of the channel energy width and mean attenuation per channel	
 %	pfit = polyfit(kfit(ikfitmin:ikfitmax),log(wbrem_bd_plasma_exp(ic,ikfitmin:ikfitmax)),1);
