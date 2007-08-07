@@ -99,7 +99,7 @@ theta_out = theta_hxr(1,j_test);
 %
 % Test of the reconstruction of the distribution function on the Legendre polynomial basis
 %
-figure('Name','Distribution function','Position',[360,278,760,585]);
+figure('Name','Distribution function');
 %ylab = ['f(norm initial: ',num2str(Zbremplasma.Znorm0_hxr{i_test,j_test}),', norm recontructed: ',num2str(Zbremplasma.Znormi_hxr{i_test,j_test}),')'];
 ylab = 'f_{0}/n_{e0}';
 tit = 'Distribution function';
@@ -144,7 +144,7 @@ Xpperp_cyl = pperp_cyl(:)*ones(1,length(ppar_cyl));
 xlim1 = [-pnmax_S,pnmax_S];xlim2 = [0,pnmax_S];
 siz = 20;red = 0.95;
 %
-figure('Name','Distribution function contour at B=Bmin','Position',[360,278,760,585]);
+figure('Name','Distribution function contour at B=Bmin');
 graph2D_jd(ppar_cyl,pperp_cyl,Xfinit_cyl','','','',xlim1,xlim2,0,betath_ref,[0:0.5:pnmax_S],0,'-','b',0.5,siz,red,max(max(Xf0_cyl)));
 graph2D_jd(ppar_cyl,pperp_cyl,Xf0_cyl','p_{||}/p_{Te}^{ref}','p_{\perp}/p_{Te}^{ref}','Distribution function',xlim1,xlim2,0,betath_ref,[0:0.5:pnmax_S],0,'-','r',2,siz,red,max(max(Xfinit_cyl)));
 axis('equal');
@@ -158,7 +158,7 @@ if bounce_mode >= 1,%Draw bounce domain boundaries
 end				
 print_jd(p_opt,[filename,'_DistributionFunctionBmin']);
 %
-figure('Name','Distribution function contour','Position',[360,278,760,585]);
+figure('Name','Distribution function contour');
 graph2D_jd(ppar_cyl,pperp_cyl,Xfinit_cyl','','','',xlim1,xlim2,0,betath_ref,[0:0.5:pnmax_S],0,'-','b',0.5,siz,red,max(max(Xf_hxr_cyl)));
 graph2D_jd(ppar_cyl,pperp_cyl,Xf_hxr_cyl','p_{||}/p_{Te}^{ref}','p_{\perp}/p_{Te}^{ref}','Distribution function',xlim1,xlim2,0,betath_ref,[0:0.5:pnmax_S],0,'-','r',2,siz,red,max(max(Xfinit_cyl)));
 axis('equal');
@@ -174,7 +174,7 @@ print_jd(p_opt,[filename,'_DistributionFunctionB']);
 %
 % Local bremsstrahlung properties
 %
-figure('Name','Local bremshrahlung forward - perp - backward','Position',[360,278,760,585]);
+figure('Name','Local bremshrahlung forward - perp - backward');
 graph1D_jd(kphot,Zbremplasma.brem_forward{i_test,j_test},0,1,'','','',NaN,'','','-','non','r',2);
 graph1D_jd(kphot,Zbremplasma.brem_backward{i_test,j_test},0,1,'','','',NaN,'','','-','non','b',2);
 graph1D_jd(kphot,Zbremplasma.brem_4pi{i_test,j_test},0,1,'','','',NaN,[0,200],'','-.','non','g',2);

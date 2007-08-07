@@ -24,31 +24,31 @@ if nargin < 8,
 end
 nchords = length(hxr.alpha_hxr);
 %
-figure('Name','Plasma bremsstrahlung spectrum','Position',[360,278,760,585]);
+figure('Name','Plasma bremsstrahlung spectrum');
 graph1D_jd(Zbremdiag.kfit,Zbremdiag.brem_bd_plasma(chord_display,:),0,1,'Photon energy k (keV)','dN_{phot}/dk.dt [keV^{-1}.s^{-1}]',['Non-thermal Bremsstrahlung, chord #',num2str(chord_display)],NaN,'','','-','non','b',2);
 print_jd(p_opt,[filename,'_PlasmaSpectrum']);
 %	
-figure('Name','Pulse bremsstrahlung spectrum','Position',[360,278,760,585]);
+figure('Name','Pulse bremsstrahlung spectrum');
 graph1D_jd(Zbremdiag.kfit,Zbremdiag.brem_bd_diag(chord_display,:),0,1,'Pulse energy channel E (keV)','dN_{pulse}/dE.dt [keV^{-1}.s^{-1}]',['HXR diagnostic count rate, chord #',num2str(chord_display)],NaN,'','','-','non','b',2);
 print_jd(p_opt,[filename,'_PulseSpectrum']);
 %	
 ikphot_display = max(find(Zbremdiag.kfit <= kphot_display));
 %
-figure('Name','Plasma bremsstrahlung profile','Position',[360,278,760,585]);
+figure('Name','Plasma bremsstrahlung profile');
 graph1D_jd([1:length(Zbremdiag.tphot_plasma)],Zbremdiag.brem_bd_plasma(:,ikphot_display),0,0,'Chord number','dN_{phot}/dk.dt [keV^{-1}.s^{-1}]',['HXR diagnostic count rate, k=',num2str(Zbremdiag.kfit(ikphot_display)),' (keV)'],NaN,'','','-','non','b',2);
 print_jd(p_opt,[filename,'_PlasmaHXRProfile']);
 %	
-figure('Name','Pulse bremsstrahlung profile','Position',[360,278,760,585]);
+figure('Name','Pulse bremsstrahlung profile');
 graph1D_jd([1:length(Zbremdiag.tphot_plasma)],Zbremdiag.brem_bd_diag(:,ikphot_display),0,0,'Chord number','dN_{pulse}/dE.dt [keV^{-1}.s^{-1}]',['HXR diagnostic count rate, E=',num2str(Zbremdiag.kfit(ikphot_display)),' (keV)'],NaN,'','','-','non','b',2);
 print_jd(p_opt,[filename,'_PulseHXRProfile']);
 %
-figure('Name','Plasma photon temperature','Position',[360,278,760,585]);
+figure('Name','Plasma photon temperature');
 graph1D_jd([1:length(Zbremdiag.tphot_plasma)],Zbremdiag.tphot_plasma,0,0,'Chord number','T_{phot} [keV]','k.dN_{phot}/dk.dt = A.exp(-k/T_{phot}) [50-110 keV]',NaN,'',[0,100],'-','non','b',2,20,gca,1,NaN,NaN,Zbremdiag.etphot_plasma,Zbremdiag.etphot_plasma);
 xxlimit = xlim;yylimit = ylim;
 ht = text(xxlimit(2)*0.8,yylimit(2)*0.9,['\Deltat = ',num2str(Zbremdiag.dt),' (s)']);set(ht,'fontsize',20);
 print_jd(p_opt,[filename,'_PlasmaTph']);
 %	
-figure('Name','Measured photon temperature','Position',[360,278,760,585]);
+figure('Name','Measured photon temperature');
 graph1D_jd([1:length(Zbremdiag.tphot_plasma)],Zbremdiag.tphot_plasma_exp,0,0,'Chord number','T_{phot}^{*} [keV]','E.dN_{pulse}/dE.dt.{\eta}_{E} = A.exp(-E/T_{phot}^{*}) [50-110 keV]',NaN,'',[0,100],'-','non','r',2,20,gca,1,NaN,NaN,Zbremdiag.etphot_plasma_exp,Zbremdiag.etphot_plasma_exp);
 xxlimit = xlim;yylimit = ylim;
 ht = text(xxlimit(2)*0.8,yylimit(2)*0.9,['\Deltat = ',num2str(Zbremdiag.dt),' (s)']);set(ht,'fontsize',20);
@@ -60,11 +60,11 @@ print_jd(p_opt,[filename,'_PulseTph']);
 %	figure(10016),
 %	graph1D_jd([1:length(tphot_plasma)],afit_plasma_exp,0,0,'Chord number','A^{*}(E=0) [s^{-1}]','E.dN_{pulse}/dE.dt.{\eta}_{E} = A.exp(-E/T_{phot}^{*})@E=0 [50-110 keV]',NaN,'','','-','non','r',2);
 %
-figure('Name','Mean HXR absorption efficiency','Position',[360,278,760,585]);
+figure('Name','Mean HXR absorption efficiency');
 graph1D_jd(Zbremdiag.kfit,Zbremdiag.meanabsx,0,0,'Photon energy channel (keV)','{\eta}_{E}','Mean stopping efficiency {\eta}_{E}',NaN,'','','-','non','r',2);
 print_jd(p_opt,[filename,'_MeanAbsorptionEfficiency']);
 %
-figure('Name','Detector HXR response','Position',[360,278,760,585]);
+figure('Name','Detector HXR response');
 ikinterp_display = max(find(Zbremdiag.kinterp <= kphot_display));
 graph1D_jd(Zbremdiag.kinterp,Zbremdiag.gkEinterp_out{chord_display}(ikinterp_display,:),0,0,'Photon energy k','G_{kE}',['Detector response function @k=',num2str(Zbremdiag.kinterp(ikinterp_display)),' (keV), chord#',int2str(chord_display)],NaN,'','','-','non','r',2);
 xxlimit = xlim;yylimit = ylim;

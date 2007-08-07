@@ -59,11 +59,11 @@ HHX = Zbremchord.HHX;
 HHY = Zbremchord.HHY;
 xpsin_S = Zbremchord.xpsin_S;
 %
-figure('Name','Safety factor','Position',[360,278,760,585]);
+figure('Name','Safety factor');
 [ax] = graph1D_jd(ptrho,xq,0,0,'Normalized radius {\rho}','q','Safety factor',NaN,'','','-','none','b',2);drawnow;%Safety factor profile
 print_jd(p_opt,[filename,'_SafetyFactor']);
 %
-figure('Name','Bremsstrahlung tomography (Poloidal view)','Position',[360,278,760,585]);
+figure('Name','Bremsstrahlung tomography (Poloidal view)');
 [ax] = graph1D_jd(sR,sZ,0,0,'','','',NaN,'','','-','none','b',2);drawnow;%Poloidal plot
 hold on
 for ichord = 1:size(sR,2),
@@ -88,7 +88,7 @@ graph1D_jd(ptR,ptZ,0,0,'X=R (m)','Z (m)','Bremsstrahlung tomography (Poloidal vi
 hold off
 print_jd(p_opt,[filename,'_PoloidalView']);
 %
-figure('Name','Poloidal field','Position',[360,278,760,585]);
+figure('Name','Poloidal field');
 quiver(RR_pol,ZZ_pol,BR_pol,BZ_pol);
 axis('equal');
 hold on
@@ -98,7 +98,7 @@ graph1D_jd(VVR_pol,VVZ_pol,0,0,'X=R (m)','Z (m)','B_{\theta} field (T)',NaN,'','
 hold off
 print_jd(p_opt,[filename,'_BthetaField']);
 %
-figure('Name','Bremsstrahlung tomography (Toroidal top view, Z = 0)','Position',[360,278,760,585]);
+figure('Name','Bremsstrahlung tomography (Toroidal top view, Z = 0)');
 h = quiver(X_mfl_lcs(1:40:end),Y_mfl_lcs(1:40:end),BX_mfl_lcs(1:40:end),BY_mfl_lcs(1:40:end),0.5);%Magnetic field line direction
 set(h,'Color','k');
 hold on
