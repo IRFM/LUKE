@@ -317,3 +317,75 @@ U MEX/Source/raytracing_yp.c (")
 
 U Ohm_Zi/rundke.m (Spitzer conductivity added)
 
+----------------------------------------------------------------------------------------------------
+
+LUKE Release 1.3.1
+
+- batch of the version LUKE 1.3
+
+====> LUKE/Project_DKE/Database/DKEPARAM_files
+
+U make_dkeparam_NONUNIFORM10010020.m (Cas grille non uniforme added)
+
+====> LUKE/Project_DKE/Database/PATH_files
+
+U make_path_LOCAL.m (updated for LUKE 1.3)
+U make_path_LUKE.m (updated for LUKE 1.3)
+
+====> LUKE/Project_DKE/DKE
+
+U LUKEversion_jd.m
+U conc_struct_jd.m (moved here from M_tools)
+U equilibrium_jd.m (smoothing of the equilibrium if secondary extrema are present)
+U interp_theta_jd.m (small correction for numerical precision)
+U mex_compile_luke.m (c form of alphaphi included)
+U print_jd.m (moved here from M_tools - blend of print_jd and savefig_dke_yp)
+
+====> LUKE/Project_DKE/MEX
+
+U Source/alphaphi_jd.c (correction for use in linux)
+
+====> LUKE/Project_DKE/Modules/Cronos
+
+U make_dkeparam_cronos.m (nmhu = 121)
+U make_wavelaunchs_cronos_lh.m (one ITER antenna removed)
+U zstarwars.m (distribution is passed as output + a few corrections in the electric field management)
+
+====> LUKE/Project_DKE/Modules/FEB
+
+U bremchorddisplay_dke_yp.m (Correction figures qui bombent avec MatLab 2007a)
+U bremdiag_dke_yp.m (Correction de la boucle)
+U bremdiagdisplay_dke_yp.m (Correction figures qui bombent avec MatLab 2007a)
+U bremlocaldisplay_dke_yp.m (")
+U bremsstrahlung_dke_yp.m (Retrait d'un facteur 2pi compté deux fois)
+
+====> LUKE/Project_DKE/Modules/RT
+
+U main_C3PO_jd.m (flag option added + theta saved in as a ray parameter)
+U Examples/JETlike/WAVE/make_wave_JETliketest.m (use of main_c3po_jd)
+U Examples/JETlike/WAVE/make_wave_JETliketest_bis.m (")
+U Examples/PLT/WAVE/make_wave_PLTtest.m (")
+U Examples/RTtest/WAVE/make_wave_RTtest.m (")
+U Examples/RTtest/WAVE/make_wave_RTtest_straight.m (")
+U Bin/Compile.text (modified to work with the new version of raytracing_yp : absorption calculated in C)
+
+====> LUKE/Project_DKE/Packages
+
+U nproc_dke_yp.m (PC case added)
+
+====> LUKE/Simulations/Examples
+
+U run_all_examples.m (correction in the existence test)
+U JETh77/Zero_test/rundke.m (E = 0.08ED)
+U TScirc/Thermal/rundke.m (ce cas torique est ajouté)
+U TScirc_e1/Ohm_bounce/rundke.m (Pas de sous dossier Figures)
+U TScirc_e1/Runaway_bounce/rundke.m (Champ electrique à 0.08 pour limiter le nombre de cas)
+U TScyl/LH_Karney/rundke.m (original karney case added)
+U TScyl/LH_karney_Zi_D0/rundke.m (Suivi de la densité et normalisation)
+U TScyl/LH_karney_num/rundke.m (sequencial MUMPS test)
+U TScyl/LH_karney_transp_nobounce/rundke.m (small correction + Retrait mumps de dkeparam par defaut)
+U TScyl/Ohm_Zi/rundke.m (save name changed)
+U TScyl/Runaway_Zi_nobounce/rundke.m (dkeparam par defaut)
+U TScyl/Runaway_particle_loss/rundke.m (" + dkeparam par defaut)
+U TScyl/Thermal/rundke.m (Comparaison grilles uniformes et non-uniformes)
+
