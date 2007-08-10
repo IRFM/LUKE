@@ -287,7 +287,7 @@ elseif strcmp(config,'ITER5GHz');%For the Lower Hybrid wave simulations
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
    launchs{1}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-   launchs{1}.a_sdNpar = 0.05;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
+   launchs{1}.a_sdNpar = 0.00;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
 %
    launchs{1}.ry0 = [0];%vertical launching positions (m) [1,m_pol]
 % 
@@ -296,8 +296,6 @@ elseif strcmp(config,'ITER5GHz');%For the Lower Hybrid wave simulations
    launchs{1}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
    launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
 %
-<<<<<<< make_wavelaunchs_cronos_lh.m
-=======
 % ------- LH antenna #2 -------
 % 
    launchs{2}.id = 'Antenna_2';
@@ -320,7 +318,6 @@ elseif strcmp(config,'ITER5GHz');%For the Lower Hybrid wave simulations
    launchs{2}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
    launchs{2}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]  
 %
->>>>>>> 1.7
 % -------------------------------- FT-U --------------------------------
 %
 elseif strcmp(config,'FTU')
