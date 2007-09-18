@@ -1,4 +1,4 @@
-function [MMXR_f_t,Xmask_r_edge] = rad_dke_yp(dkepath,dkeparam,display,equilDKE,gridDKE,mksa,Zbouncecoef,Zmomcoef,transpfaste)
+function [MMXR_f_t,Xmask_r_edge] = rad_dke_yp(dkeparam,display,equilDKE,gridDKE,mksa,Zbouncecoef,Zmomcoef,transpfaste)
 %
 % Calculation of the anomalous radial fast electron transport matrix coefficients for arbitrary magnetic plasma equilibrium 
 %
@@ -15,16 +15,13 @@ nMMXP_f_t = max(cumsum(Zbouncecoef.blocksize_f_t));
 %
 if ~isempty(transpfaste), 
     %
-    [qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;%Universal physics constants
+    [qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
     %
     npn = gridDKE.npn;
     nmhu = gridDKE.nmhu;
     nr = gridDKE.nr;
-    xpsin = gridDKE.xpsin_dke;
     xdpsin = gridDKE.xdpsin_dke;
-    xpsinm = gridDKE.xpsinm_dke;
     xdpsinm = gridDKE.xdpsinm_dke;
-    xpsinp = gridDKE.xpsinp_dke;
     xdpsinp = gridDKE.xdpsinp_dke;
     XXpn2 = gridDKE.XXpn2;
     Xmhu = gridDKE.Xmhu;
@@ -54,7 +51,6 @@ if ~isempty(transpfaste),
     nhu_ref = mksa.nhu_ref;
     %
     bounce_mode = dkeparam.bounce_mode;
-    temppath = dkepath.temppath;
     %
     dp_cyl = display.dp_cyl;
     nlevel = display.nlevel;
@@ -62,7 +58,7 @@ if ~isempty(transpfaste),
     %
     time0 = clock;
 %
-    [xTe_norm,xne_norm,xzni_norm,xzTi_norm,xnloss_norm,xbetath,xlnc_e,xnhu,xrnhuth] = normcoef_dke_yp(mksa,equilDKE,gridDKE);   
+    [xTe_norm,xne_norm,xzni_norm,xzTi_norm,xnloss_norm,xbetath] = normcoef_dke_yp(mksa,equilDKE,gridDKE);   
 %
     XXDpsi = zeros(npn,nmhu,nr);%Defined on the distribution function grid (half grid) (psi coordinate)
     XXVpsi = zeros(npn,nmhu,nr);%Defined on the distribution function grid (half grid) (psi coordinate)
@@ -75,8 +71,13 @@ if ~isempty(transpfaste),
    xDr = transpfaste.Dr0*(1 + transpfaste.pDr*xrho.^2);
    xVr = transpfaste.Vr0*(1 + transpfaste.pVr*xrho.^2);
 %
+   xmaxDpsi = zeros(1,nr);
+   xmaxVpsi = zeros(1,nr);
+   xEc_r_threshold = zeros(1,nr);
+%
    for ir = 1:nr,	
-	  ivpar_r_threshold = min(find(abs(Xvpar) >= xvparmin_r(ir)));
+      ivpar_r_threshold = find(abs(Xvpar) >= xvparmin_r(ir),1);
+%
    	  xEc_r_threshold(ir) = mc2*(sqrt(1+pn(ivpar_r_threshold).*pn(ivpar_r_threshold)*betath_ref^2) - 1);%in keV
 %
    	  if transpfaste.Dr_model==0,%No vpar dependence
@@ -97,45 +98,45 @@ if ~isempty(transpfaste),
    end
 %
    if display_mode == 2,
-      Fig_radialdiff = figure('Name','Fast electron radial diffusion');
+        Fig_radialdiff = figure('Name','Fast electron radial diffusion');
 %	
-	  figure(Fig_radialdiff),subplot(121);zoom on;
-	  [XDpsiv_cyl,ppar_cyl,dppar_cyl,pperp_cyl,dpperp_cyl] = s2c_dke_yp(XXDpsi(:,:,ir_display),pn,mhu,dp_cyl);
+        figure(Fig_radialdiff),subplot(121);zoom on;
+        [XDpsiv_cyl,ppar_cyl,dppar_cyl,pperp_cyl] = s2c_dke_yp(XXDpsi(:,:,ir_display),pn,mhu,dp_cyl);
 %
-	  Xppar_cyl = ones(length(pperp_cyl),1)*ppar_cyl(:)';
-	  Xpperp_cyl = pperp_cyl(:)*ones(1,length(ppar_cyl));
-	  Xp_cyl = sqrt(Xppar_cyl.*Xppar_cyl + Xpperp_cyl.*Xpperp_cyl);
+        Xppar_cyl = ones(length(pperp_cyl),1)*ppar_cyl(:)';
+        Xpperp_cyl = pperp_cyl(:)*ones(1,length(ppar_cyl));
+        Xp_cyl = sqrt(Xppar_cyl.*Xppar_cyl + Xpperp_cyl.*Xpperp_cyl);
 %
-	  XDpsiv_cyl = XDpsiv_cyl.*(XDpsiv_cyl>0);%Remove negative values
-	  XDpsiv_cyl = XDpsiv_cyl.*(Xp_cyl<max(ppar_cyl));%Remove values above max(ppar)
+        XDpsiv_cyl = XDpsiv_cyl.*(XDpsiv_cyl>0);%Remove negative values
+        XDpsiv_cyl = XDpsiv_cyl.*(Xp_cyl<max(ppar_cyl));%Remove values above max(ppar)
  %
- 	  C = contourf(ppar_cyl,pperp_cyl,XDpsiv_cyl,nlevel);
-      if xmaxDpsi(ir_display)>0,colorbar;end
- 	  axis('equal');
-	  faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
-	  text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['rho = ',num2str(xrho(ir_display))]);
-	  text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*10,['v//-threshold(norm) = ',num2str(xvparmin_r(ir_display))]);
-	  text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*15,['Ec-threshold = ',num2str(xEc_r_threshold(ir_display)),' (keV)']);
-	  xlabel('ppar/pth-ref');ylabel('pperp/pth-ref');title('Radial diffusion coefficient (nhu-ref*psia_apRp*psia_apRp)');
+        contourf(ppar_cyl,pperp_cyl,XDpsiv_cyl,nlevel);
+        if xmaxDpsi(ir_display)>0,colorbar;end
+        axis('equal');
+        faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
+        text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['rho = ',num2str(xrho(ir_display))]);
+        text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*10,['v//-threshold(norm) = ',num2str(xvparmin_r(ir_display))]);
+        text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*15,['Ec-threshold = ',num2str(xEc_r_threshold(ir_display)),' (keV)']);
+        xlabel('ppar/pth-ref');ylabel('pperp/pth-ref');title('Radial diffusion coefficient (nhu-ref*psia_apRp*psia_apRp)');
 %
-	   subplot(122),plot(pn./gamma,XXDpsi(:,nmhu,ir_display),'b');
-	   faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
-	   text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['mhu = 1']);
-	   xlabel('v/vth-ref');ylabel('Dr (nhu-ref*psia_apRp*psia_apRp)');title('Radial diffusion coefficient ');drawnow
+        subplot(122),plot(pn./gamma,XXDpsi(:,nmhu,ir_display),'b');
+        faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
+        text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,'mhu = 1');
+        xlabel('v/vth-ref');ylabel('Dr (nhu-ref*psia_apRp*psia_apRp)');title('Radial diffusion coefficient ');drawnow
 %
-       Fig_radialpinch = figure('Name','Fast electron radial pinch');
-	   figure(Fig_radialpinch),subplot(121);zoom on,
-	   [XVpsiv_cyl,ppar_cyl,dppar_cyl,pperp_cyl,dpperp_cyl] = s2c_dke_yp(XXVpsi(:,:,ir_display),pn,mhu,dp_cyl);
+        Fig_radialpinch = figure('Name','Fast electron radial pinch');
+        figure(Fig_radialpinch),subplot(121);zoom on,
+        [XVpsiv_cyl,ppar_cyl,dppar_cyl,pperp_cyl] = s2c_dke_yp(XXVpsi(:,:,ir_display),pn,mhu,dp_cyl);
 %
-	   Xppar_cyl = ones(length(pperp_cyl),1)*ppar_cyl(:)';
-	   Xpperp_cyl = pperp_cyl(:)*ones(1,length(ppar_cyl));
-	   Xp_cyl = sqrt(Xppar_cyl.*Xppar_cyl + Xpperp_cyl.*Xpperp_cyl);
+        Xppar_cyl = ones(length(pperp_cyl),1)*ppar_cyl(:)';
+        Xpperp_cyl = pperp_cyl(:)*ones(1,length(ppar_cyl));
+        Xp_cyl = sqrt(Xppar_cyl.*Xppar_cyl + Xpperp_cyl.*Xpperp_cyl);
 %
 	   XVpsiv_cyl = XVpsiv_cyl.*(XVpsiv_cyl>0);%Remove negative values
 	   XVpsiv_cyl = XVpsiv_cyl.*(Xp_cyl<max(ppar_cyl));%Remove values above max(ppar)
 %
- 	   C = contourf(ppar_cyl,pperp_cyl,XVpsiv_cyl,nlevel);
-        if xmaxVpsi(ir_display)>0,colorbar;end
+ 	   contourf(ppar_cyl,pperp_cyl,XVpsiv_cyl,nlevel);
+       if xmaxVpsi(ir_display)>0,colorbar;end
  	   axis('equal');
 	   faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
 	   text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['rho = ',num2str(xrho(ir_display))]);
@@ -145,7 +146,7 @@ if ~isempty(transpfaste),
 %
 	   subplot(122),plot(pn./gamma,XXVpsi(:,nmhu,ir_display),'r');
 	   faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
-	   text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['mhu = 1']);
+	   text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,'mhu = 1');
        xlabel('v/vth-ref');ylabel('Vr (nhu-ref*psia_apRp)');title('Radial convection coefficient ');drawnow
 %
       Fig_radialtranspvthreshold = figure('Name','Fast electron radial transport velocity threshold');
@@ -173,15 +174,9 @@ if ~isempty(transpfaste),
 	   xlabel('rho');
 	   ylabel('Maximum value (nhu-ref*psia_apRp)');
 	   title('Radial convection');drawnow
-   end
- %
-   XXMrm = zeros(nmhu,npn,nr);
-   XXMr = zeros(nmhu,npn,nr);
-   XXMrp = zeros(nmhu,npn,nr);
-%   
-%   load([fullfile(temppath,'temp_DKE.mat'],'MMXR_f_t');
+    end
 %
-   if exist('MMXR_f_t') == 1, %The radial matrix was calculated before.
+   if exist('MMXR_f_t','var') == 1, %The radial matrix was calculated before.
    
    else
       MMXR_f_t = sparse(nMMXP_f_t,nMMXP_f_t);%Create supermatrix
@@ -189,14 +184,11 @@ if ~isempty(transpfaste),
       xdpsinmm = [0,xdpsin(1:nr-1)];
       xdpsinpp = [xdpsin(2:nr),0];
 %
-      XXpsin = reshape(repmat(xpsin,[npn*nmhu,1]),[npn,nmhu,nr]);
-      XXdpsin = reshape(repmat(xdpsin,[npn*nmhu,1]),[npn,nmhu,nr]);   
-      XXpsinm = reshape(repmat(xpsinm,[npn*nmhu,1]),[npn,nmhu,nr]);   
-      XXdpsinm = reshape(repmat(xdpsinm,[npn*nmhu,1]),[npn,nmhu,nr]); 
-      XXpsinp = reshape(repmat(xpsinp,[npn*nmhu,1]),[npn,nmhu,nr]);   
-      XXdpsinp = reshape(repmat(xdpsinp,[npn*nmhu,1]),[npn,nmhu,nr]); 
-      XXdpsinmm = reshape(repmat(xdpsinmm,[npn*nmhu,1]),[npn,nmhu,nr]);   
-      XXdpsinpp = reshape(repmat(xdpsinpp,[npn*nmhu,1]),[npn,nmhu,nr]);
+      XXdpsin = reshape(repmat(xdpsin,npn*nmhu,1),[npn,nmhu,nr]);   
+      XXdpsinm = reshape(repmat(xdpsinm,npn*nmhu,1),[npn,nmhu,nr]); 
+      XXdpsinp = reshape(repmat(xdpsinp,npn*nmhu,1),[npn,nmhu,nr]); 
+      XXdpsinmm = reshape(repmat(xdpsinmm,npn*nmhu,1),[npn,nmhu,nr]);   
+      XXdpsinpp = reshape(repmat(xdpsinpp,npn*nmhu,1),[npn,nmhu,nr]);
 %
       XXdeltalp = XXdpsinpp./(XXdpsinpp + XXdpsin);%Grid interpolation coefficients
       XXdeltalm = XXdpsin./(XXdpsinmm + XXdpsin);%Grid interpolation coefficients
@@ -293,9 +285,9 @@ if ~isempty(transpfaste),
          XXMrp = permute(XXMrp,[2,1,3]);
          MMrp_t = reshape(XXMrp,npn*nmhu*nr,1,1);
 %
-         MMXR_f_t = MMXR_f_t + sparse([1+nmhu*npn:nMMXP_f_t],[1:nMMXP_f_t-nmhu*npn],MMrm_t(1+npn*nmhu:nMMXP_f_t),nMMXP_f_t,nMMXP_f_t);
-         MMXR_f_t = MMXR_f_t + sparse([1:nMMXP_f_t],[1:nMMXP_f_t],MMr_t,nMMXP_f_t,nMMXP_f_t);    
-         MMXR_f_t = MMXR_f_t + sparse([1:nMMXP_f_t-nmhu*npn],[1+npn*nmhu:nMMXP_f_t],MMrp_t(1:nMMXP_f_t-nmhu*npn),nMMXP_f_t,nMMXP_f_t);
+         MMXR_f_t = MMXR_f_t + sparse(1+nmhu*npn:nMMXP_f_t,1:nMMXP_f_t-nmhu*npn,MMrm_t(1+npn*nmhu:nMMXP_f_t),nMMXP_f_t,nMMXP_f_t);
+         MMXR_f_t = MMXR_f_t + sparse(1:nMMXP_f_t,1:nMMXP_f_t,MMr_t,nMMXP_f_t,nMMXP_f_t);    
+         MMXR_f_t = MMXR_f_t + sparse(1:nMMXP_f_t-nmhu*npn,1+npn*nmhu:nMMXP_f_t,MMrp_t(1:nMMXP_f_t-nmhu*npn),nMMXP_f_t,nMMXP_f_t);
 %
          if display_mode >= 1,info_dke_yp(2,['Zero order configuration space matrix calculations done in ',num2str(etime(clock,time0)),' (s)']);end
       elseif bounce_mode == 1,    
@@ -319,38 +311,42 @@ if ~isempty(transpfaste),
          MMXR_f_t_j = zeros(nMMXP_f_t*11*nr,1);
          MMXR_f_t_v = zeros(nMMXP_f_t*11*nr,1);
 %
-         i = [1+ib0:ibp];
-         j = [1+ib0:ibp];
+         i = 1+ib0:ibp;
+         j = 1+ib0:ibp;
          ia = 1;ib = ia+length(i);                 
          MMXR_f_t_i(ia:ib-1) = i;
          MMXR_f_t_j(ia:ib-1) = j;
          MMXR_f_t_v(ia:ib-1) = MMr_t;
 %           
+% Notations: bc: backward + circulating, t: trapped (half positive part only), fc: forward + circulating
+%           
          XMrp = XXMrp(:,:,ir);
          XMrp_t = XMrp(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
-         XMrp1_t = XMrp_t.*(Xmhu(:,Xmask_f0) < 0).*(Xmhu2(:,Xmask_f0) > xmhubounce2(ir+1));
-         XMrp2_t = XMrp_t.*(Xmhu(:,Xmask_f0) < 0).*(Xmhu2(:,Xmask_f0) < xmhubounce2(ir+1)).*(Xmhu2(:,Xmask_f0) > xmhubounce2(ir));
-         XMrp3_t = XMrp_t.*(Xmhu(:,Xmask_f0) > 0);
+         XMrp1_t = XMrp_t.*(Xmhu(:,Xmask_f0) < 0).*(Xmhu2(:,Xmask_f0) > xmhubounce2(ir+1));%bc -> bc
+         XMrp2_t = XMrp_t.*(Xmhu(:,Xmask_f0) < 0).*(Xmhu2(:,Xmask_f0) < xmhubounce2(ir+1)).*(Xmhu2(:,Xmask_f0) > xmhubounce2(ir));%bc -> t
+         XMrp3_t = XMrp_t.*(Xmhu(:,Xmask_f0) > 0);%fc + t -> fc + t
 %   
          for ip = 1:npn, 
-            i = [ib0+(nmhu-ns_f(ir))*(ip-1)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhup];
-            j = [ibp+(nmhu-ns_f(ir+1))*(ip-1)+1:ibp+(nmhu-ns_f(ir+1))*(ip-1)+imhup];
+            i = ib0+(nmhu-ns_f(ir))*(ip-1)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhup;
+            j = ibp+(nmhu-ns_f(ir+1))*(ip-1)+1:ibp+(nmhu-ns_f(ir+1))*(ip-1)+imhup;
             ia = ib;ib = ia+length(i);
             MMXR_f_t_i(ia:ib-1) = i;
             MMXR_f_t_j(ia:ib-1) = j;
-            MMXR_f_t_v(ia:ib-1) = XMrp1_t(ip,[1:imhup])';
-            i = [ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*ip];
-            j = [ibp+(nmhu-ns_f(ir+1))*(ip-1)+imhup+1:ibp+(nmhu-ns_f(ir+1))*ip];
+            MMXR_f_t_v(ia:ib-1) = XMrp1_t(ip,1:imhup)';%bc -> bc
+%
+            i = ib0+(nmhu-ns_f(ir))*(ip-1)+imhup+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0;
+            j = ibp+(nmhu-ns_f(ir+1))*(ip-1)+((nmhu-ns_f(ir+1))-imhup):-1:ibp+(nmhu-ns_f(ir+1))*(ip-1)+((nmhu-ns_f(ir+1))-imhu0)+1;
             ia = ib;ib = ia+length(i);
             MMXR_f_t_i(ia:ib-1) = i;
             MMXR_f_t_j(ia:ib-1) = j;
-            MMXR_f_t_v(ia:ib-1) = XMrp3_t(ip,[imhu0+1:nmhu-ns_f(ir)])';            
-            i = [ib0+(nmhu-ns_f(ir))*(ip-1)+imhup+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0];
-            j = [ibp+(nmhu-ns_f(ir+1))*(ip-1)+((nmhu-ns_f(ir+1))-imhup):-1:ibp+(nmhu-ns_f(ir+1))*(ip-1)+((nmhu-ns_f(ir+1))-imhu0)+1];
+            MMXR_f_t_v(ia:ib-1) = XMrp2_t(ip,imhup+1:imhu0)';%bc -> t
+%
+            i = ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*ip;
+            j = ibp+(nmhu-ns_f(ir+1))*(ip-1)+imhup+1:ibp+(nmhu-ns_f(ir+1))*ip;
             ia = ib;ib = ia+length(i);
             MMXR_f_t_i(ia:ib-1) = i;
             MMXR_f_t_j(ia:ib-1) = j;
-            MMXR_f_t_v(ia:ib-1) = XMrp2_t(ip,[imhup+1:imhu0])';
+            MMXR_f_t_v(ia:ib-1) = XMrp3_t(ip,imhu0+1:nmhu-ns_f(ir))';%fc + t -> fc + t 
          end 
 %
          for ir = 2:nr-1,
@@ -378,57 +374,83 @@ if ~isempty(transpfaste),
             XMr_t = XMr(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
             MMr_t = reshape(XMr_t',npn*(nmhu-ns_f(ir)),1,1);
 %           
-            i = [1+ib0:ibp];
-            j = [1+ib0:ibp];
+            i = 1+ib0:ibp;
+            j = 1+ib0:ibp;
             ia = ib;ib = ia+length(i); 
             MMXR_f_t_i(ia:ib-1) = i;
             MMXR_f_t_j(ia:ib-1) = j;
             MMXR_f_t_v(ia:ib-1) = MMr_t;
 %           
+% Notations: bc: backward + circulating, t: trapped (half positive part only), fc: forward + circulating
+%
             XMrp = XXMrp(:,:,ir);
             XMrp_t = XMrp(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
-            XMrp1_t = XMrp_t.*(Xmhu(:,Xmask_f0) < 0).*(Xmhu2(:,Xmask_f0) > xmhubounce2(ir+1));
-            XMrp2_t = XMrp_t.*(Xmhu(:,Xmask_f0) < 0).*(Xmhu2(:,Xmask_f0) < xmhubounce2(ir+1)).*(Xmhu2(:,Xmask_f0) > xmhubounce2(ir));
-            XMrp3_t = XMrp_t.*(Xmhu(:,Xmask_f0) > 0);           
+            XMrp1_t = XMrp_t.*(Xmhu(:,Xmask_f0) < 0).*(Xmhu2(:,Xmask_f0) > xmhubounce2(ir+1));%bc -> bc
+            XMrp2_t = XMrp_t.*(Xmhu(:,Xmask_f0) < 0).*(Xmhu2(:,Xmask_f0) < xmhubounce2(ir+1)).*(Xmhu2(:,Xmask_f0) > xmhubounce2(ir));%bc -> t
+            XMrp3_t = XMrp_t.*(Xmhu(:,Xmask_f0) > 0);%t+fc -> t+fc     
 %           
             XMrm = XXMrm(:,:,ir);
             XMrm_t = XMrm(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
-            XMrm1_t = XMrm_t.*(Xmhu(:,Xmask_f0) < 0).*(Xmhu2(:,Xmask_f0) > xmhubounce2(ir));
-            XMrm2_t = XMrm_t.*(Xmhu(:,Xmask_f0) > 0);
+            XMrm1_t = XMrm_t.*(Xmhu(:,Xmask_f0) < 0).*(Xmhu2(:,Xmask_f0) > xmhubounce2(ir));%bc -> bc
+            XMrm2_t = XMrm_t.*(Xmhu(:,Xmask_f0) > 0).*(Xmhu2(:,Xmask_f0) < xmhubounce2(ir-1));%t -> t
+            XMrm3_t = XMrm_t.*(Xmhu(:,Xmask_f0) > 0).*(Xmhu2(:,Xmask_f0) > xmhubounce2(ir-1)).*(Xmhu2(:,Xmask_f0) < xmhubounce2(ir));%t -> fc
+            XMrm4_t = XMrm_t.*(Xmhu(:,Xmask_f0) > 0).*(Xmhu2(:,Xmask_f0) > xmhubounce2(ir));%fc -> fc
 %            
             for ip = 1:npn, 
-               i = [ib0+(nmhu-ns_f(ir))*(ip-1)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhup];
-               j = [ibp+(nmhu-ns_f(ir+1))*(ip-1)+1:ibp+(nmhu-ns_f(ir+1))*(ip-1)+imhup];
+               i = ib0+(nmhu-ns_f(ir))*(ip-1)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhup;
+               j = ibp+(nmhu-ns_f(ir+1))*(ip-1)+1:ibp+(nmhu-ns_f(ir+1))*(ip-1)+imhup;
                ia = ib;ib = ia+length(i);     
                MMXR_f_t_i(ia:ib-1) = i;
                MMXR_f_t_j(ia:ib-1) = j;
-               MMXR_f_t_v(ia:ib-1) = XMrp1_t(ip,[1:imhup])';
-               i = [ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*ip];
-               j = [ibp+(nmhu-ns_f(ir+1))*(ip-1)+imhup+1:ibp+(nmhu-ns_f(ir+1))*ip];
+               MMXR_f_t_v(ia:ib-1) = XMrp1_t(ip,1:imhup)';%bc -> bc
+%               
+               i = ib0+(nmhu-ns_f(ir))*(ip-1)+imhup+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0;
+               j = ibp+(nmhu-ns_f(ir+1))*(ip-1)+((nmhu-ns_f(ir+1))-imhup):-1:ibp+(nmhu-ns_f(ir+1))*(ip-1)+((nmhu-ns_f(ir+1))-imhu0)+1;
                ia = ib;ib = ia+length(i);
                MMXR_f_t_i(ia:ib-1) = i;
                MMXR_f_t_j(ia:ib-1) = j;
-               MMXR_f_t_v(ia:ib-1) = XMrp3_t(ip,[imhu0+1:nmhu-ns_f(ir)])'; 
-               i = [ib0+(nmhu-ns_f(ir))*(ip-1)+imhup+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0];
-               j = [ibp+(nmhu-ns_f(ir+1))*(ip-1)+((nmhu-ns_f(ir+1))-imhup):-1:ibp+(nmhu-ns_f(ir+1))*(ip-1)+((nmhu-ns_f(ir+1))-imhu0)+1];
+               MMXR_f_t_v(ia:ib-1) = XMrp2_t(ip,imhup+1:imhu0)';  
+%               
+               i = ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*ip;
+               j = ibp+(nmhu-ns_f(ir+1))*(ip-1)+imhup+1:ibp+(nmhu-ns_f(ir+1))*ip;
                ia = ib;ib = ia+length(i);
                MMXR_f_t_i(ia:ib-1) = i;
                MMXR_f_t_j(ia:ib-1) = j;
-               MMXR_f_t_v(ia:ib-1) = XMrp2_t(ip,[imhup+1:imhu0])';  
-               i = [ib0+(nmhu-ns_f(ir))*(ip-1)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0];
-               j = [ibm+(nmhu-ns_f(ir-1))*(ip-1)+1:ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhu0];
+               MMXR_f_t_v(ia:ib-1) = XMrp3_t(ip,imhu0+1:nmhu-ns_f(ir))'; 
+% 
+               i = ib0+(nmhu-ns_f(ir))*(ip-1)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0;
+               j = ibm+(nmhu-ns_f(ir-1))*(ip-1)+1:ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhu0;
                ia = ib;ib = ia+length(i);
                MMXR_f_t_i(ia:ib-1) = i;
                MMXR_f_t_j(ia:ib-1) = j;
-               MMXR_f_t_v(ia:ib-1) = XMrm1_t(ip,[1:imhu0])';               
-               i = [ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*ip];
-               j = [ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhum+1:ibm+(nmhu-ns_f(ir-1))*ip];
-               ia = ib;ib = ia+length(i);
-               MMXR_f_t_i(ia:ib-1) = i;
-               MMXR_f_t_j(ia:ib-1) = j;
-               MMXR_f_t_v(ia:ib-1) = XMrm2_t(ip,[imhu0+1:nmhu-ns_f(ir)])';
-            end 
+               MMXR_f_t_v(ia:ib-1) = XMrm1_t(ip,1:imhu0)'; 
 %
+               i = ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*(ip-1)+((nmhu-ns_f(ir))-imhum);
+               j = ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhum+1:ibm+(nmhu-ns_f(ir-1))*(ip-1)+((nmhu-ns_f(ir-1))-imhum);
+               ia = ib;ib = ia+length(i);
+               MMXR_f_t_i(ia:ib-1) = i;
+               MMXR_f_t_j(ia:ib-1) = j;
+               MMXR_f_t_v(ia:ib-1) = XMrm2_t(ip,imhu0+1:((nmhu-ns_f(ir))-imhum))'; 
+%
+               i = ib0+(nmhu-ns_f(ir))*(ip-1)+((nmhu-ns_f(ir))-imhum)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+((nmhu-ns_f(ir))-imhu0);
+               j = ibm+(nmhu-ns_f(ir-1))*(ip-1)+((nmhu-ns_f(ir-1))-imhum)+1:ibm+(nmhu-ns_f(ir-1))*(ip-1)+((nmhu-ns_f(ir-1))-imhu0);               
+               ia = ib;ib = ia+length(i);
+               MMXR_f_t_i(ia:ib-1) = i;
+               MMXR_f_t_j(ia:ib-1) = j;
+               MMXR_f_t_v(ia:ib-1) = XMrm3_t(ip,((nmhu-ns_f(ir))-imhum)+1:((nmhu-ns_f(ir))-imhu0))'/2; 
+               j = ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhum:-1:ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhu0+1;
+               ia = ib;ib = ia+length(i);
+               MMXR_f_t_i(ia:ib-1) = i;
+               MMXR_f_t_j(ia:ib-1) = j;
+               MMXR_f_t_v(ia:ib-1) = XMrm3_t(ip,((nmhu-ns_f(ir))-imhum)+1:((nmhu-ns_f(ir))-imhu0))'/2; 
+%       
+               i = ib0+(nmhu-ns_f(ir))*(ip-1)+(nmhu-ns_f(ir))-imhu0+1:ib0+(nmhu-ns_f(ir))*ip;
+               j = ibm+(nmhu-ns_f(ir-1))*(ip-1)+(nmhu-ns_f(ir-1))-imhu0+1:ibm+(nmhu-ns_f(ir-1))*ip;
+               ia = ib;ib = ia+length(i);
+               MMXR_f_t_i(ia:ib-1) = i;
+               MMXR_f_t_j(ia:ib-1) = j;
+               MMXR_f_t_v(ia:ib-1) = XMrm4_t(ip,(nmhu-ns_f(ir))-imhu0+1:nmhu-ns_f(ir))';
+            end 
          end
 %
          ir = nr;
@@ -448,8 +470,8 @@ if ~isempty(transpfaste),
          XMr_t = XMr(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
          MMr_t = reshape(XMr_t',npn*(nmhu-ns_f(ir)),1,1);
 %        
-         i = [1+ib0:ibp];
-         j = [1+ib0:ibp];
+         i = 1+ib0:ibp;
+         j = 1+ib0:ibp;
          ia = ib;ib = ia+length(i);
          MMXR_f_t_i(ia:ib-1) = i;
          MMXR_f_t_j(ia:ib-1) = j;
@@ -458,26 +480,48 @@ if ~isempty(transpfaste),
          XMrm = XXMrm(:,:,ir);
          XMrm_t = XMrm(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
          XMrm1_t = XMrm_t.*(Xmhu(:,Xmask_f0) < 0).*(Xmhu2(:,Xmask_f0) > xmhubounce2(ir));
-         XMrm2_t = XMrm_t.*(Xmhu(:,Xmask_f0) > 0);
+%         XMrm2_t = XMrm_t.*(Xmhu(:,Xmask_f0) > 0);
+         XMrm2_t = XMrm_t.*(Xmhu(:,Xmask_f0) > 0).*(Xmhu2(:,Xmask_f0) < xmhubounce2(ir-1));%t -> t
+         XMrm3_t = XMrm_t.*(Xmhu(:,Xmask_f0) > 0).*(Xmhu2(:,Xmask_f0) > xmhubounce2(ir-1)).*(Xmhu2(:,Xmask_f0) < xmhubounce2(ir));%t -> fc
+         XMrm4_t = XMrm_t.*(Xmhu(:,Xmask_f0) > 0).*(Xmhu2(:,Xmask_f0) > xmhubounce2(ir));%fc -> fc
+
 %   
-        for ip = 1:npn,       
-           i = [ib0+(nmhu-ns_f(ir))*(ip-1)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0];
-           j = [ibm+(nmhu-ns_f(ir-1))*(ip-1)+1:ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhu0];
-           ia = ib;ib = ia+length(i);
-           MMXR_f_t_i(ia:ib-1) = i;
-           MMXR_f_t_j(ia:ib-1) = j;
-           MMXR_f_t_v(ia:ib-1) = XMrm1_t(ip,[1:imhu0])';      
-           i = [ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*ip];
-           j = [ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhum+1:ibm+(nmhu-ns_f(ir-1))*ip];
-           ia = ib;ib = ia+length(i);
-           MMXR_f_t_i(ia:ib-1) = i;
-           MMXR_f_t_j(ia:ib-1) = j;
-           MMXR_f_t_v(ia:ib-1) = XMrm2_t(ip,[imhu0+1:nmhu-ns_f(ir)])';
+        for ip = 1:npn, 
+               i = ib0+(nmhu-ns_f(ir))*(ip-1)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0;
+               j = ibm+(nmhu-ns_f(ir-1))*(ip-1)+1:ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhu0;
+               ia = ib;ib = ia+length(i);
+               MMXR_f_t_i(ia:ib-1) = i;
+               MMXR_f_t_j(ia:ib-1) = j;
+               MMXR_f_t_v(ia:ib-1) = XMrm1_t(ip,1:imhu0)'; 
+%
+               i = ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*(ip-1)+((nmhu-ns_f(ir))-imhum);
+               j = ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhum+1:ibm+(nmhu-ns_f(ir-1))*(ip-1)+((nmhu-ns_f(ir-1))-imhum);
+               ia = ib;ib = ia+length(i);
+               MMXR_f_t_i(ia:ib-1) = i;
+               MMXR_f_t_j(ia:ib-1) = j;
+               MMXR_f_t_v(ia:ib-1) = XMrm2_t(ip,imhu0+1:((nmhu-ns_f(ir))-imhum))'; 
+%
+               i = ib0+(nmhu-ns_f(ir))*(ip-1)+((nmhu-ns_f(ir))-imhum)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+((nmhu-ns_f(ir))-imhu0);
+               j = ibm+(nmhu-ns_f(ir-1))*(ip-1)+((nmhu-ns_f(ir-1))-imhum)+1:ibm+(nmhu-ns_f(ir-1))*(ip-1)+((nmhu-ns_f(ir-1))-imhu0);
+               ia = ib;ib = ia+length(i);
+               MMXR_f_t_i(ia:ib-1) = i;
+               MMXR_f_t_j(ia:ib-1) = j;
+               MMXR_f_t_v(ia:ib-1) = XMrm3_t(ip,((nmhu-ns_f(ir))-imhum)+1:((nmhu-ns_f(ir))-imhu0))'/2;
+               j = ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhum:-1:ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhu0+1;
+               ia = ib;ib = ia+length(i);
+               MMXR_f_t_i(ia:ib-1) = i;
+               MMXR_f_t_j(ia:ib-1) = j;
+               MMXR_f_t_v(ia:ib-1) = XMrm3_t(ip,((nmhu-ns_f(ir))-imhum)+1:((nmhu-ns_f(ir))-imhu0))'/2; 
+%       
+               i = ib0+(nmhu-ns_f(ir))*(ip-1)+(nmhu-ns_f(ir))-imhu0+1:ib0+(nmhu-ns_f(ir))*ip;
+               j = ibm+(nmhu-ns_f(ir-1))*(ip-1)+(nmhu-ns_f(ir-1))-imhu0+1:ibm+(nmhu-ns_f(ir-1))*ip;
+               ia = ib;ib = ia+length(i);
+               MMXR_f_t_i(ia:ib-1) = i;
+               MMXR_f_t_j(ia:ib-1) = j;
+               MMXR_f_t_v(ia:ib-1) = XMrm4_t(ip,(nmhu-ns_f(ir))-imhu0+1:nmhu-ns_f(ir))';
         end
 %
         MMXR_f_t = sparse(MMXR_f_t_i(1:ib-1),MMXR_f_t_j(1:ib-1),MMXR_f_t_v(1:ib-1),nMMXP_f_t,nMMXP_f_t);%Create sparse radial transport matrix
-%
-%       save([fullfile(temppath,'temp_DKE.mat'],'MMXR_f_t');	
 %
          if display_mode >= 1,info_dke_yp(2,['Zero order configuration space matrix calculations done in ',num2str(etime(clock,time0)),' (s)']);end
       end 
