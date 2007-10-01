@@ -389,3 +389,19 @@ U TScyl/Runaway_Zi_nobounce/rundke.m (dkeparam par defaut)
 U TScyl/Runaway_particle_loss/rundke.m (" + dkeparam par defaut)
 U TScyl/Thermal/rundke.m (Comparaison grilles uniformes et non-uniformes)
 
+----------------------------------------------------------------------------------------------------
+
+LUKE Release 1.3.2
+
+- batch of the version LUKE 1.3
+	- runaway avalanches
+	- corrected radial transport
+
+====> LUKE/Project_DKE/DKE
+
+U Bfit_dke_ds.m (interpolation function for avanlanche runaway calculations)
+U main_dke_yp.m (different arguments for sinksourcecoeffbuilder_dke_yp.m and rad_dke_yp.m)
+U rad_dke_yp.m (correction on trapped electron radial fluxes)
+U runaway_sinksource.m (avanlanche runaway calculations)
+U sinksourcecoeffbuilder_dke_yp.m (modified treatment of trapped electrons)
+U thetastar_dke_ds.m (theta star calculations for avanlanche runaway calculations)
