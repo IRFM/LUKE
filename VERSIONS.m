@@ -405,3 +405,5 @@ U rad_dke_yp.m (correction on trapped electron radial fluxes)
 U runaway_sinksource.m (avanlanche runaway calculations)
 U sinksourcecoeffbuilder_dke_yp.m (modified treatment of trapped electrons)
 U thetastar_dke_ds.m (theta star calculations for avanlanche runaway calculations)
+U zstarwars.m (MUMPS path managed in cronos path file)
+
