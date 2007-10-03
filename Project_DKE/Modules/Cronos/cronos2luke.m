@@ -393,11 +393,6 @@ dkedisplay       = make_display_cronos(par.make_display);
 dkepath          = getappdata(0,'DKEPATH');
 dkepath.temppath = [dkepath.temppathroot,filesep,'CRONOS',filesep,timeid_jd(clock)];%Temporary subdirectory in scratch folder
 %
-% MUMPS sous basiuk pour l'instant
-%
-root=getappdata(0,'root');
-dkepath.MUMPS.mex = [root,'/source/hyb/LUKE/MUMPS_4.6.4_S_g95/MATLAB'];
-%
 % --------- Override parameters that are in files ------------
 %
 % PARAMETRES LUKE
