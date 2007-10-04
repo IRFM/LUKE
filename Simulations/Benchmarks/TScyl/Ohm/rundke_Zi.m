@@ -29,7 +29,7 @@ path_dkeparam = '';%if nothing is specified, the working directory is first used
 id_display = 'PARTIAL_VISUAL';%For output code display
 path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_ohm = 'OHM_p001_flat';%For Ohmic electric contribution
+id_ohm = '';%For Ohmic electric contribution
 path_ohm = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 ids_wave = {''};%For RF waves contribution (put all the type of waves needed)
@@ -49,80 +49,79 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 %************************************************************************************************************************************
 %
-%Case Zeff = 1 (in make_equil)
-%
 if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
-ir_display_out = 1;
+epsi = 0.001;
+betath = 0.01;%validated for NR limit
 %
-dkeparam.coll_mode = 0;%Zeff = 1
-[Znorm,Zcurr0,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-dkeparam.coll_mode = 1;
-[Znorm,Zcurr1,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-dkeparam.coll_mode = 2;
-[Znorm,Zcurr2,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-dkeparam.coll_mode = 4;
-[Znorm,Zcurr4,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+%dkeparam.pnmax_S = 15;
+%dkeparam.np_S = 166;
+%dkeparam.nmhu_S = 221;
+%dkeparam.grid_uniformity = 0;
+%dkeparam.spfac = 20;
 %
-sigma0 = Zcurr0.x_tot_fsav/(ohm.epsi(ir_display_out)/mksa.Edreicer_ref);
-sigma1 = Zcurr1.x_tot_fsav/(ohm.epsi(ir_display_out)/mksa.Edreicer_ref);
-sigma2 = Zcurr2.x_tot_fsav/(ohm.epsi(ir_display_out)/mksa.Edreicer_ref);
-sigma4 = Zcurr4.x_tot_fsav/(ohm.epsi(ir_display_out)/mksa.Edreicer_ref);
+equil.pzTi = 1e-10*ones(size(equil.pzTi));
 %
-dkeparam.coll_mode = 2;
-equil.zZi = [1,1,1,2];equil.pzni = species_dke_yp(equil.pne,2*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 2
-[Znorm,Zcurr_Z2,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-equil.zZi = [1,1,1,5];equil.pzni = species_dke_yp(equil.pne,5*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 5
-[Znorm,Zcurr_Z5,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-equil.zZi = [1,1,1,10];equil.pzni = species_dke_yp(equil.pne,10*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 10
-[Znorm,Zcurr_Z10,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-equil.zZi = [1,1,1,20];equil.pzni = species_dke_yp(equil.pne,20*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 20
-[Znorm,Zcurr_Z20,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+Zi_list = [1:20];
 %
-sigma_Z1s = 1e9*(equil.pTe(1))^1.5/1.65/mksa.lnc_e_ref/abs(mksa.j_ref*1e6/mksa.Edreicer_ref);%Spitzer conductivity (from 'Tokamaks' by J. Wesson, Oxford Science Publication, 3rd Eds., 2004)
+[qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
 %
-sigma_Z1 = sigma2;
-sigma_Z2 = Zcurr_Z2.x_tot_fsav/(ohm.epsi(ir_display_out)/mksa.Edreicer_ref);
-sigma_Z5 = Zcurr_Z5.x_tot_fsav/(ohm.epsi(ir_display_out)/mksa.Edreicer_ref);
-sigma_Z10 = Zcurr_Z10.x_tot_fsav/(ohm.epsi(ir_display_out)/mksa.Edreicer_ref);
-sigma_Z20 = Zcurr_Z20.x_tot_fsav/(ohm.epsi(ir_display_out)/mksa.Edreicer_ref);
+equil.pTe = betath^2*mc2*ones(size(equil.pTe));
 %
-disp('-------------------------------------------------------------------------------------------------------------------');
-disp('-------------------------------------------------------------------------------------------------------------------');
-disp(['Ohmic conductivity for the relativistic Maxwellian background collision operator : ',num2str(sigma0),', Karney = 3.773']);
-disp(['Ohmic conductivity for the high velocity limit collision operator : ',num2str(sigma1),', Karney = 2.837']);
-disp(['Ohmic conductivity for the linearized Belaiev-Budker collision operator : ',num2str(sigma2),', Karney = 7.429, Spitzer = ',num2str(sigma_Z1s)]);
-disp(['Ohmic conductivity for the non-relativistic Maxwellian background collision operator : ',num2str(sigma4),', Karney = 3.773']);
+ohm = ohm_flat(equil,epsi);
 %
-disp('-------------------------------------------------------------------------------------------------------------------');
+for iZi = 1:length(Zi_list),
+    %
+    Zi = Zi_list(iZi);
+    equil.zZi = [1,1,1,Zi];
+    equil.pzni = [0;0;0;1/Zi]*equil.pne;
+    %
+    dkeparam.coll_mode = 0;% Relativistic Maxwellian background
+    [Znorm,Zcurr0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    %
+    dkeparam.coll_mode = 1;% High-velocity limit
+    [Znorm,Zcurr1] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    %
+    dkeparam.coll_mode = 2;% Linearized Belaiev-Budker
+    [Znorm,Zcurr2] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    %
+    sigma_0(iZi) = Zcurr0.x_0/epsi;
+    sigma_1(iZi) = Zcurr1.x_0/epsi;
+    sigma_2(iZi) = Zcurr2.x_0/epsi;
+    %
+    sigma_Lor(iZi) = sqrt(2/pi)*16./Zi;
+    %
+end
 %
-disp(['Ohmic conductivity from Spitzer formula (Zeff = 1) : ',num2str(sigma_Z1s)]);
-disp(['Ohmic conductivity for the linearized Belaiev-Budker collision operator (Zeff = 1) : ',num2str(sigma_Z1)]);
-disp(['Ohmic conductivity for the linearized Belaiev-Budker collision operator (Zeff = 2) : ',num2str(sigma_Z2)]);
-disp(['Ohmic conductivity for the linearized Belaiev-Budker collision operator (Zeff = 5): ',num2str(sigma_Z5)]);
-disp(['Ohmic conductivity for the linearized Belaiev-Budker collision operator (Zeff = 10) : ',num2str(sigma_Z10)]);
-disp(['Ohmic conductivity for the linearized Belaiev-Budker collision operator (Zeff = 20) : ',num2str(sigma_Z20)]);
-disp(['Approximate analytical Ohmic conductivity for the non-relativistic Lorentz collision operator (Zeff = 20): ',num2str(12.766/20)]);
+sigma_Z1s = 1/100*sqrt(me*qe/10)/(1.65*mu0*e0^2);%Spitzer conductivity (from 'Tokamaks' by J. Wesson, Oxford Science Publication, 3rd Eds., 2004)
 %
-Zi_DKE = [1,2,5,10,20];
-Zi_Lor = [20];
-sigma_DKE = [sigma_Z1,sigma_Z2,sigma_Z5,sigma_Z10,sigma_Z20];
-%sigma_highvelocity = sqrt(2/pi)*16*(3*Zi_DKE+13)./(Zi_DKE+3)./(Zi_DKE+5)/3;
-sigma_Lor = [sqrt(2/pi)*16/20];
 Zi_Karney = [1,2,5,10];
-sigma_Karney= [7.429,4.377,2.078,1.133];
-Zi_Spitzer = 1;
-sigma_Spitzer = sigma_Z1s;
+sigma_Karney_0 = [3.773,2.824,1.660,0.998];
+sigma_Karney_1 = [2.837,2.310,1.489,0.938];
+sigma_Karney_2 = [7.429,4.377,2.078,1.133];
 %
-figure(1),clf,graph1D_jd(Zi_DKE,sigma_DKE,0,0,'Main ion charge Z_{i}','','E_{||}/E_{Dreicer} = 0.001',NaN,'','','-','none','r',2,20,gca,1,0.6,0.6);hold on
-graph1D_jd(Zi_Karney,sigma_Karney,0,0,'Main ion charge Z_{i}','Normalized conductivity \sigma','E_{||}/E_{Dreicer} = 0.001',NaN,'','','none','*','g',2,20,gca,1,0.6,0.6);hold on
-%graph1D_jd(Zi_DKE,sigma_highvelocity,0,0,'Main ion charge Z_{i}','','E_{||}/E_{Dreicer} = 0.001',NaN,'','','none','o','b',2,20,gca,1,0.6,0.6);hold on
-graph1D_jd(Zi_Spitzer,sigma_Spitzer,0,0,'Main ion charge Z_{i}','','E_{||}/E_{Dreicer} = 0.001',NaN,'','','none','x','b',2,20,gca,1,0.6,0.6);hold on
-graph1D_jd(Zi_Lor,sigma_Lor,0,0,'Main ion charge Z_{i}','','E_{||}/E_{Dreicer} = 0.001',NaN,'','','none','+','b',2,20,gca,1,0.6,0.6);hold on
-legend('LUKE (Linearized coll.)','Karney (Linearized coll.)','Spitzer Z = 1','Z_{i} = \infty (Lorentz model)')
-savefig_dke_yp('conductivity_Zi')
-%
-disp('-------------------------------------------------------------------------------------------------------------------');	    
 %************************************************************************************************************************************
+%
+figure(1),clf
+%
+leg = {'Linearized','High v limit','Maxwellian'};
+xlim = [0,max(Zi_list)];
+ylim = [0,8];
+xlab = 'Z_i';
+ylab = '\sigma';
+tit = 'Non-relativistic plasma';
+graph1D_jd(Zi_list,sigma_2,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.5);
+graph1D_jd(Zi_list,sigma_1,0,0,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
+graph1D_jd(Zi_list,sigma_0,0,0,'','','',leg,xlim,ylim,'-','none','m',2,20,gca);
+graph1D_jd(Zi_Karney,sigma_Karney_2,0,0,xlab,ylab,tit,NaN,xlim,ylim,'none','+','r',2,20,gca,0.9,0.7,0.5);
+graph1D_jd(Zi_Karney,sigma_Karney_1,0,0,'','','',NaN,xlim,ylim,'none','+','b',2,20,gca);
+graph1D_jd(Zi_Karney,sigma_Karney_0,0,0,'','','',NaN,xlim,ylim,'none','+','m',2,20,gca);
+graph1D_jd(Zi_list,sigma_Lor,0,0,'','','',NaN,xlim,ylim,'--','none','k',2,20,gca);
+graph1D_jd(1,sigma_Z1s,0,0,'','','',NaN,xlim,ylim,'none','x','k',2,20,gca);
+%
+print_jd(2,'fig_sigma_Zi','.',1)
+%
+%************************************************************************************************************************************
+%
 eval(['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
 info_dke_yp(2,['Data saved in ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
