@@ -12,7 +12,7 @@ dkeparam_id = 'NONUNIFORM10010020';%Set here the name (identifier) of the drift 
 dkeparam.grid_uniformity = 0;%Pitch-angle and momentum grids uniformity: (0) no, (1) yes (-1 for specific test for DKE, transient and pitch-angle grid only)
 dkeparam.grid_method = 1;%Pitch-angle grid calculation technique: (0): old method, (1) new method
 dkeparam.nmhu_S = 101;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
-dkeparam.np_S = 101;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run) WARNING: must be adjusted so that effective momentum point number is larger than thepitch-angle one.
+dkeparam.np_S = 88;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run) WARNING: must be adjusted so that effective momentum point number is larger than thepitch-angle one.
 dkeparam.pnmax_S = 20;%Maximum value of the flux momentum grid (pth_ref)
 %
 %Pitch-angle grid
@@ -63,7 +63,7 @@ dkeparam.syn_mode = 0;%Synergy calculation: (0) none, (1) yes: the code runs twi
 dkeparam.norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
 dkeparam.boundary_mode_f = 1;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 dkeparam.prec0_f = 1e-11;%Convergence level of the residu
-dkeparam.nit_f = 2;%Maximum number of iterations for f (> 1)
+dkeparam.nit_f = 50;%Maximum number of iterations for f (> 1)
 dkeparam.initguess_f = 0;%Initial guess for the distribution function: (0) Maxwellian, (1) Fuchs model with Tperp for LH current drive only, (2) from a file
 dkeparam.initfile_f = '';%If initguess_f = 2. The file must be in the directory Project_DKE, and created by dke_4_1yp.m 
 %
