@@ -107,6 +107,9 @@ end
 %
 [npsi,ntheta] = size(equil.ptx);
 %
+Rp = equil.Rp;%Major radius of magnetic Axis
+Zp = equil.Zp;%Elevation of magnetic Axis
+%
 if strcmp(equil.id,'LOCAL'),
     %
     % Note that circular flux-surfaces are assumed in this case
@@ -191,7 +194,7 @@ mBPHI = interpft(equil.ptBPHI(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interp
 nc = (ntheta-1)*mfactor/2 + 1;%central fft point
 t = 1;
 %
-while t <= (ntheta-1)/2,
+while Rp < Inf & t <= (ntheta-1)/2,
     %
     mB = sqrt(mBx.^2 + mBy.^2 + mBPHI.^2);% total magnetic field
     %
@@ -233,9 +236,6 @@ mBy = [mBy,mBy(:,1)]; %2*pi point retrieved
 mBPHI = [mBPHI,mBPHI(:,1)]; %2*pi point retrieved
 %
 nmtheta = length(mtheta);
-%
-Rp = equil.Rp;%Major radius of magnetic Axis
-Zp = equil.Zp;%Elevation of magnetic Axis
 %
 ap =  mx(npsi,1);%Plasma minor radius on the LFS midplane 
 %
