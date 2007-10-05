@@ -44,6 +44,7 @@ if nargin < 3,
 end
 %
 dke_mode = dkeparam.dke_mode;
+bounce_mode = dkeparam.bounce_mode;
 uniform = dkeparam.grid_uniformity;
 grid_power = dkeparam.grid_power;
 grid_method = dkeparam.grid_method;
@@ -225,14 +226,18 @@ else
     xmhut = sqrt(xmhu0T2);
     N = length(xmhut);
 %
-    mhu = makegrid_dke_jd(0,snmhu0,sdmhu0,xmhut(1),snmhut,sdmhut,snmhu0,dmhu,grid_power);
-    for ix=1:N-1,
+    if bounce_mode > 0,
+        mhu = makegrid_dke_jd(0,snmhu0,sdmhu0,xmhut(1),snmhut,sdmhut,snmhu0,dmhu,grid_power);
+        for ix=1:N-1,
+            %sdmhutmin = diff(mhu(length(mhu) - 1:length(mhu)));
+            %snmhut_new = max([snmhut - fix(log(sdmhut/sdmhutmin)/log(grid_power)),1]);
+            mhu = [mhu,makegrid_dke_jd(xmhut(ix),snmhut,sdmhut,xmhut(ix+1),snmhut,sdmhut,1,dmhu,grid_power)];
+        end
         %sdmhutmin = diff(mhu(length(mhu) - 1:length(mhu)));
-        %snmhut_new = max([snmhut - fix(log(sdmhut/sdmhutmin)/log(grid_power)),1]);
-        mhu = [mhu,makegrid_dke_jd(xmhut(ix),snmhut,sdmhut,xmhut(ix+1),snmhut,sdmhut,1,dmhu,grid_power)];
+        mhu = [mhu,makegrid_dke_jd(xmhut(N),snmhut,sdmhut,1,snmhu1,sdmhu1,snmhu1,dmhu,grid_power)];
+    else
+        mhu = makegrid_dke_jd(0,snmhu0,sdmhu0,1,snmhu1,sdmhu1,snmhu0+snmhu1,dmhu,grid_power);
     end
-    %sdmhutmin = diff(mhu(length(mhu) - 1:length(mhu)));
-    mhu = [mhu,makegrid_dke_jd(xmhut(N),snmhut,sdmhut,1,snmhu1,sdmhu1,sdmhu1,dmhu,grid_power)];
 %
     mhu = sort(mhu(find(diff([-1,mhu]) > 10*eps)));%Sorting for RFP since the trapped domain is not monotonic with the minor radius
     mhu_S = [-fliplr(mhu(2:length(mhu))),mhu];
