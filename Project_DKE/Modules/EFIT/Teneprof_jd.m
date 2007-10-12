@@ -21,7 +21,7 @@ if type == 0,%ascii
     [prho,pTe,pne,pTi,pni] = textread(filename,'%n%n%n%n%n');
 elseif type == 0.1,
     [psi,pTe,pne,pZeff] = textread(filename,'%n%n%n%n');    
-elseif type == 1,%.mat
+elseif type == 1 | type == 1.1 ,%.mat
     eval(['load -mat ',filename,' prho pTe pne pTi Zeff']);
 elseif type == 2,%ascii - 203040
     [prho,pTi,pTe,pni,pne] = textread(filename,'%n%n%n%n%n');
@@ -236,7 +236,7 @@ elseif type == 1,
     prho = [];
     %
 end
-if type == 1 | type>= 3 & type ~=5 & type ~=6,
+if type == 1 |  type == 1.1 | type>= 3 & type ~=5 & type ~=6,
     %
     pnH = pne*(zZi(4) - Zeff)/(zZi(4) - 1);
     pnZ = pne*(Zeff - 1)/zZi(4)/(zZi(4) - 1);
