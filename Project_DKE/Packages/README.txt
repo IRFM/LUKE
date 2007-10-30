@@ -10,6 +10,11 @@ tested successfuly:
 2) MAC - Apple Mac OS X on PPC (32 bits, powerbook)
     - MUMPS.4.6.4 (sequential & mex) with g95 fortran compiler and gcc-4.0 C/C++ compiler
     - MUMPS.4.6.4 (sequential & mex) with Absoft fortran compiler and Absoft C/C++ compiler
+    - MUMPS.4.7.2 (sequential & mex) with g95 fortran compiler and gcc-4.0 C/C++ compiler
+    - MUMPS.4.7.2 (sequential & mex) with Absoft fortran compiler and Absoft C/C++ compiler
+    - MUMPS.4.7.3 (sequential & mex) with g95 fortran compiler and gcc-4.0 C/C++ compiler
+    - PETSc-2.3.2-p10 (parallel, with/without SUPERLU_dist_2.0) with pgf90 fortran compiler and gcc-3.2 C/C++ compiler
+    - PETSc-2.3.3-p6 (parallel, with/without SUPERLU_dist_2.0) with pgf90 fortran compiler and gcc-3.2 C/C++ compiler
     - SUPERLU_3.0 (mex) with gcc-4.0 C/C++ compiler
 3) PCWIN - Microsoft Windows on x86 (32 bits, laptop)
     -
