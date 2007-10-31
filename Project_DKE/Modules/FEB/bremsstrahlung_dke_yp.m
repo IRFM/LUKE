@@ -133,11 +133,14 @@ Zbremplasma.seHC = seHC;
 seBHE_c=(reshape(seBHE,n_gauleg,size(seBHE,2)*size(seBHE,3)*size(seBHE,4))'.*(w_leg*ones(1,size(seBHE,2)*size(seBHE,3)*size(seBHE,4)))')*Pm';
 seHC_c=(reshape(seHC,n_gauleg,size(seBHE,2)*size(seBHE,3))'.*(w_leg*ones(1,size(seHC,2)*size(seHC,3)))')*Pm';
 %
-%For test only
+%%%%%%%%%% For test only (beginning section) %%%%%%%%%%%%%%
+%
 Zbremplasma.seBHE1 = reshape((Pm'*(seBHE_c.*(ones(size(seBHE,2)*size(seBHE,3)*size(seBHE,4),1)*cL'))'),size(seBHE,1),size(seBHE,2),size(seBHE,3),size(seBHE,4));
 Zbremplasma.seHC1 = reshape((Pm'*(seHC_c.*(ones(size(seHC,2)*size(seHC,3),1)*cL'))'),size(seHC,1),size(seHC,2),size(seHC,3));
 Zbremplasma.epsiBHE = (seBHE-Zbremplasma.seBHE1)./seBHE;Zbremplasma.epsiBHE(isnan(Zbremplasma.epsiBHE)==1)=0;
 Zbremplasma.epsiHC = (seHC-Zbremplasma.seHC1)./seHC;Zbremplasma.epsiHC(isnan(Zbremplasma.epsiHC)==1)=0;
+%
+%%%%%%%%%% For test only (end section) %%%%%%%%%%%%%%
 %
 seBHE_c1 = repmat(reshape(seBHE_c',n_gauleg+1,size(seBHE,2),size(seBHE,3),size(seBHE,4)),[1,1,1,1,size(XXf0,3)]);
 ni_c1 = shiftdim(repmat(xzni_norm,[1,1,n_gauleg+1,size(seBHE,2),size(seBHE,3)]),2);
@@ -156,7 +159,7 @@ for i = 1:size(psin_hxr,1),%radial position
 	for j = 1:size(psin_hxr,2),%poloidal position
 %
 		if mask_hxr(i,j),%A chord is going through the elementary plasma volume. So the distribution function is calculated
-%%%%%%		PSI_hxr(i,j) = max(PSI_hxr(i,:));%high field side only
+%%%%%%      PSI_hxr(i,j) = max(PSI_hxr(i,:));%high field side only
 %%%%%%		PSI_hxr(i,j) = 1;%low field side only
 			mhu_hxr = sign(mhu(:)).*sqrt(1-PSI_hxr(i,j)*(1 - mhu(:).^2));%mhu at a poloidal position that is different from Bmin
 			mhu_hxr = mhu_hxr(1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0);
@@ -165,22 +168,23 @@ for i = 1:size(psin_hxr,1),%radial position
 			Xf0_tp_hxr = XXf0_tp(:,1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0,i);
 			Xf0_g_hxr = XXf0_g(:,1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0,i);
 %
-			Xf0_i = interp1(mhu_hxr(:),Xf0_hxr',x_leg(:),method)';
+			Xf0_i = interp1(mhu_hxr(:),Xf0_hxr',x_leg(:),method)';%Interpolation of the distribution function on the Legendre polynomial pitch-angle grid
 			Xf0_tp_i = interp1(mhu_hxr(:),Xf0_tp_hxr',x_leg(:),method)';
 			Xf0_g_i = interp1(mhu_hxr(:),Xf0_g_hxr',x_leg(:),method)';
 %
-			Xf0_c = (Xf0_i.*(w_leg*ones(1,size(Xf0_i,1)))')*Pm';
+			Xf0_c = (Xf0_i.*(w_leg*ones(1,size(Xf0_i,1)))')*Pm';%Calculation of the Legendre coefficients for local values of the distribution function
 		    Xf0_tp_c = (Xf0_tp_i.*(w_leg*ones(1,size(Xf0_tp_i,1)))')*Pm';
 		    Xf0_g_c = (Xf0_g_i.*(w_leg*ones(1,size(Xf0_g_i,1)))')*Pm';
 %
-			Xf0_c1 = permute(repmat(reshape(Xf0_c',n_gauleg+1,size(XXf0,1),1),[1,1,1,length(kphot)]),[1,2,4,3]);
+			Xf0_c1 = permute(repmat(reshape(Xf0_c',n_gauleg+1,size(XXf0,1),1),[1,1,1,length(kphot)]),[1,2,4,3]);%Same as Xf0_c but expanded for all photon energies 
 			Xf0_tp_c1 = permute(repmat(reshape(Xf0_tp_c',n_gauleg+1,size(XXf0_tp,1),1),[1,1,1,length(kphot)]),[1,2,4,3]);
 			Xf0_g_c1 = permute(repmat(reshape(Xf0_g_c',n_gauleg+1,size(XXf0_g,1),1),[1,1,1,length(kphot)]),[1,2,4,3]);
+%
 			dIB_c1 = pn_c1.*pn_c1.*pn_c1.*BREM_c1(:,:,:,i).*(Xf0_c1 + Xf0_tp_c1 + Xf0_g_c1)./gamma_c1;
-			IB_c1 = 2*pi*integral_dke_jd(dpn,dIB_c1,2);%Momentum integration
+			IB_c1 = 2*pi*integral_dke_jd(dpn,dIB_c1,2);%Momentum integration 
 			ZZIB(i,j,:,:) = reshape(IB_c1,n_gauleg+1,size(IB_c1,2)*size(IB_c1,3))*ne_ref^2*betath_ref*clum/mc2;%MKSA units(s-1*m-3*kev-1*str-1)
 %
-			Xf0_i1 = (Pm'*(Xf0_c.*(ones(size(Xf0_i,1),1)*cL'))')';
+			Xf0_i1 = (Pm'*(Xf0_c.*(ones(size(Xf0_i,1),1)*cL'))')';%Distribution function on the Legendre polynomials pitch-angle grid back calculated
 			epsif0 = (Xf0_i-Xf0_i1)./Xf0_i;epsif0(isnan(epsif0)==1)=0;
 			norm0_hxr(i,j) = 2*pi*integral_dke_jd(dpn',pn2'.*trapz_dke_yp([mhu_hxr,Xf0_hxr'])',1);
 			normi_hxr(i,j) = 2*pi*integral_dke_jd(dpn',pn2'.*trapz_dke_yp([x_leg,Xf0_i'])',1);
