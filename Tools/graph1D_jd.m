@@ -82,11 +82,11 @@ hold off
 %
 set(gcl,'linestyle',style);
 set(gcl,'marker',marker);
-if ~strcmp(style,'none'),
+%if ~strcmp(style,'none'),
     set(gcl,'linewidth',width);
-else
-    set(gcl,'markersize',width);
-end
+%else
+    set(gcl,'markersize',8);
+%end
 if ~isnan(color)
     set(gcl,'color',color);
 end
