@@ -51,7 +51,7 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
-betath = 0.01;%validated for NR limit
+betath = 0.001;%validated for NR limit
 %
 [qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
 %
@@ -61,11 +61,13 @@ equil.pzTi = 1e-10*ones(size(equil.pzTi));
 dkeparam.boundary_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
 dkeparam.nit_f = 1;%Enforcing a single iteration
 %
-dtn_list = logspace(-1,4,21);
+dtn_list = logspace(0,5,25);
 %
 epsi = 0.04;%corresponds to pc/pT = 5
 %
 ohm = ohm_flat(equil,epsi);
+%
+RR_kulsrud = 1.914*1e-6;%Kulsrud (PRL, 31,11, (1972) 690)
 %
 for idtn = 1:length(dtn_list),
     dtn = dtn_list(idtn);
@@ -75,22 +77,24 @@ for idtn = 1:length(dtn_list),
     %
 	xdn(idtn) = Znorm.x_0_fsav;
 	xdnr(idtn) = dke_out.XxRR_fsav(end,:)*dtn;
+    xdnK(idtn) = RR_kulsrud*dtn;
 end
 %
 %************************************************************************************************************************************
 %
 figure(1),clf
 %
-leg = {'Volumic losses','Runaway losses'};
-xlim = 10.^[-1,4];
-ylim = 10.^[-25,0];
+leg = {'Volumic losses','Boundary losses','Runaway losses'};
+xlim = 10.^[0,5];
+ylim = 10.^[-10,0];
 xlab = '\Deltat';
 ylab = '\Deltan/n_0';
 tit = '';
 graph1D_jd(dtn_list,abs(1-xdn),1,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
 graph1D_jd(dtn_list,xdnr,1,1,'','','',leg,xlim,ylim,'--','none','b',2,20,gca);
-set(gca,'ytick',[1e-025 1e-020 1e-015 1e-010 1e-005 1e-000])
-set(gca,'xtick',[1e-01 1 10 100 1000 10000])
+graph1D_jd(dtn_list,xdnK,1,1,'','','',leg,xlim,ylim,'--','none','k',0.5,20,gca);
+set(gca,'ytick',[1e-010 1e-08 1e-06 1e-04 1e-02 1e-000])
+set(gca,'xtick',[1 10 100 1000 10000 100000])
 set(gca,'XMinorGrid','off')
 set(gca,'XMinorTick','on')
 %
