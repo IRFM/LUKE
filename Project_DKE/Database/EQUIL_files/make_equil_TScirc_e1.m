@@ -17,7 +17,7 @@ qopt = 0;%Option for q profile. (0): constant (default, uniform current, psi=rho
 %
 % Equilibrium parameters
 %
-ap = 2.39;%  Plasma minor radius on LFS midplane (m)
+ap = 2.3;%  Plasma minor radius on LFS midplane (m)
 Rp = 2.4;%  Plasma major radius on axis (m)
 Zp = 0;%  Global plasma vertical shift (m)
 Ip = 1.0;% Signed value of the plasma current (MA) (with R,Z,phi direct)
