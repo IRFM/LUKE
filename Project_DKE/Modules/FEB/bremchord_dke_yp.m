@@ -43,27 +43,29 @@ ns = hxrparam.ns;
 xpsin = radialDKE.xpsin_f_dke;
 xpsin_S = radialDKE.xpsin_S_dke;
 %
-[equilHXR] = equilibrium_jd(equil,radialDKE,display,'spline',mfactor);%Magnetic equilibrium for HXR at points of the distribution function
+mfactor = 3
+[equilHXR] = equilibrium_jd(equil,radialDKE,display,'spline',mfactor),%Magnetic equilibrium for HXR at points of the distribution function
 %
+%   This function interpolates the equilibrium data on the radial grid.
 %
-Rp = equil.Rp;%Plasma major radius (m)
-Zp = equil.Zp;%Plasma vertical position (m)
-ap = equil.ptx(end,1);%Plasma minor radius (m)
-theta = equil.theta;
-ppsin = equil.psi_apRp/equil.psi_apRp(end);
-ptR = equil.ptx + equil.Rp;
-ptZ = equil.pty + equil.Zp;
-ptBR = equil.ptBx;
-ptBZ = equil.ptBy;
-ptBphi = equil.ptBPHI;
+Rp = equilHXR.Rp;%Plasma major radius (m)
+Zp = equilHXR.Zp;%Plasma vertical position (m)
+ap = equilHXR.ap;%Plasma minor radius (m)
+theta = equilHXR.mtheta;
+ppsin = equilHXR.xpsin;
+ptR = equilHXR.Xx + Rp;
+ptZ = equilHXR.Xy + Zp;
+ptBR = equilHXR.XBx;
+ptBZ = equilHXR.XBy;
+ptBphi = equilHXR.XBphi;
 ptBT = ptBphi;
 ptBp = sqrt(ptBR.^2 + ptBZ.^2);
 ptB = sqrt(ptBR.^2 + ptBZ.^2 + ptBphi.^2);
 ptB0 = ptB(:,1);
-ptR0 = equil.ptx(:,1) + Rp;
+ptR0 = equilHXR.Xx(:,1) + Rp;
 ptBT0 = ptBT(:,1);
 ptBp0 = ptBp(:,1);
-ptrho = psi2rho_jd(equil,ppsin,'spline');
+ptrho = equilHXR.xrho;
 %
 if length(ppsin)==1,error('Bremsstrahlung calculations cannot be performed when DKE results are obtained for a single radial position !');end
 %
