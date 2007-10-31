@@ -91,15 +91,18 @@ figure(1),clf
 %leg = {'Uniform','Non-uniform'};
 leg = {'Free mode','f(0) enforced'};
 xlim = [0,tnmax];
-xlab = 'Integration time step (\times\tau_c)';
-ylab = 'Normalized n_e variations';
-tit = 'Uniform grid, T_i = T_e';
-graph1D_jd([0:nit_f(1)]*dtn_list(1),normf0_u{1}-1,0,0,xlab,ylab,tit,NaN,xlim,NaN,'-','+','r',2,20,gca,0.9,0.7,0.5);
-graph1D_jd([0:nit_f(1)]*dtn_list(1),normf0{1}-1,0,0,'','','',leg,xlim,NaN,'-','o','b',2,20,gca);
+ylim = [-8,8]*1e-5;
+xlab = 'time (\times\tau_c)';
+ylab = '\Deltan/n_0';
+tit = '';
+graph1D_jd([0:nit_f(1)]*dtn_list(1),normf0_u{1}-1,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd([0:nit_f(1)]*dtn_list(1),normf0{1}-1,0,0,'','','',leg,xlim,ylim,'-','o','b',2,20,gca);
 for idtn = 2:length(dtn_list);
-    graph1D_jd([0:nit_f(idtn)]*dtn_list(idtn),normf0_u{idtn}-1,0,0,'','','',NaN,xlim,NaN,'-','+','r',2,20,gca);
-    graph1D_jd([0:nit_f(idtn)]*dtn_list(idtn),normf0{idtn}-1  ,0,0,'','','',NaN,xlim,NaN,'-','o','b',2,20,gca);
+    graph1D_jd([0:nit_f(idtn)]*dtn_list(idtn),normf0_u{idtn}-1,0,0,'','','',NaN,xlim,ylim,'-','+','r',2,20,gca);
+    graph1D_jd([0:nit_f(idtn)]*dtn_list(idtn),normf0{idtn}-1  ,0,0,'','','',NaN,xlim,ylim,'-','o','b',2,20,gca);
 end
+set(gca,'xtick',[0:0.2:1]*tnmax)
+set(gca,'ytick',[-8:4:8]*1e-5)
 %
 % Case with Ti = Te/2
 %
@@ -147,15 +150,18 @@ end
 figure(2),clf
 %leg = {'Uniform','Non-uniform'};
 %xlim = [0,tnmax];
-%xlab = 'Integration time step (\times\tau_c)';
-%ylab = 'Normalized n_e variations';
-tit = 'Uniform grid, T_i = T_e/2';
-graph1D_jd([0:nit_f(1)]*dtn_list(1),normf0_2_u{1}-1,0,0,xlab,ylab,tit,NaN,xlim,NaN,'-','+','r',2,20,gca,0.9,0.7,0.5);
-graph1D_jd([0:nit_f(1)]*dtn_list(1),normf0_2{1}-1,0,0,'','','',leg,xlim,NaN,'-','o','b',2,20,gca);
+ylim = [-4,4]*1e-3;
+%xlab = 'time (\times\tau_c)';
+%ylab = '\Deltan/n_0';
+tit = '';
+graph1D_jd([0:nit_f(1)]*dtn_list(1),normf0_2_u{1}-1,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd([0:nit_f(1)]*dtn_list(1),normf0_2{1}-1,0,0,'','','',leg,xlim,ylim,'-','o','b',2,20,gca);
 for idtn = 2:length(dtn_list);
-    graph1D_jd([0:nit_f(idtn)]*dtn_list(idtn),normf0_2_u{idtn}-1,0,0,'','','',NaN,xlim,NaN,'-','+','r',2,20,gca);
-    graph1D_jd([0:nit_f(idtn)]*dtn_list(idtn),normf0_2{idtn}-1  ,0,0,'','','',NaN,xlim,NaN,'-','o','b',2,20,gca);
+    graph1D_jd([0:nit_f(idtn)]*dtn_list(idtn),normf0_2_u{idtn}-1,0,0,'','','',NaN,xlim,ylim,'-','+','r',2,20,gca);
+    graph1D_jd([0:nit_f(idtn)]*dtn_list(idtn),normf0_2{idtn}-1  ,0,0,'','','',NaN,xlim,ylim,'-','o','b',2,20,gca);
 end
+set(gca,'xtick',[0:0.2:1]*tnmax)
+set(gca,'ytick',[-4:2:4]*1e-3)
 %	    
 %************************************************************************************************************************************
 %

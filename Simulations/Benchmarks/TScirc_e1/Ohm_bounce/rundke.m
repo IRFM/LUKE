@@ -62,6 +62,9 @@ betath = 0.01;%validated for NR limit
 equil.pTe = betath^2*mc2*ones(size(equil.pTe));
 equil.pzTi = 1e-10*ones(size(equil.pzTi));
 %
+equil_cyl.pTe = betath^2*mc2*ones(size(equil_cyl.pTe));
+equil_cyl.pzTi = 1e-10*ones(size(equil_cyl.pzTi));
+%
 ohm_cyl = ohm_flat(equil_cyl,epsi);
 ohm = ohm_flat(equil,epsi);
 %

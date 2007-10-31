@@ -108,10 +108,12 @@ tit = '';
 graph1D_jd(epsi_list,sigma_2,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
 graph1D_jd(epsi_list,sigma_1,1,0,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
 graph1D_jd(epsi_list,sigma_0,1,0,'','','',leg,xlim,ylim,'-','none','m',2,20,gca);
-graph1D_jd(xlim,[sigma_Z1s,sigma_Z1s],1,0,'','','',NaN,xlim,ylim,'-','none','k',2,20,gca);
+graph1D_jd(xlim,[sigma_Z1s,sigma_Z1s],1,0,'','','',NaN,xlim,ylim,'-','none','k',0.5,20,gca);
 graph1D_jd(xlim,[sigma_Karney_nr_2,sigma_Karney_nr_2],0,0,'','','',NaN,xlim,ylim,'--','none','r',2,20,gca);
 graph1D_jd(xlim,[sigma_Karney_nr_1,sigma_Karney_nr_1],0,0,'','','',NaN,xlim,ylim,'--','none','b',2,20,gca);
 graph1D_jd(xlim,[sigma_Karney_nr_0,sigma_Karney_nr_0],0,0,'','','',NaN,xlim,ylim,'--','none','m',2,20,gca);
+graph1D_jd([1,1]/dkeparam.pnmax_S^2,ylim,0,0,'','','',NaN,xlim,ylim,'--','none','k',2,20,gca);
+
 set(gca,'ytick',[0:2:10])
 set(gca,'xtick',[1e-06 1e-5 0.0001 0.001 0.01 0.1 1])
 %set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})

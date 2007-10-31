@@ -83,7 +83,7 @@ for ibetath = 1:length(betath_list),
     dkeparam.coll_mode = 2;% Linearized Belaiev-Budker
     [Znorm,Zcurr2] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
-    dkeparam.coll_mode = 4;% Linearized Belaiev-Budker
+    dkeparam.coll_mode = 4;% Maxwellian Background
     [Znorm,Zcurr4] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     sigma_0(ibetath) = Zcurr0.x_0/epsi;
@@ -116,7 +116,7 @@ graph1D_jd(betath_list,sigma_2,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,
 graph1D_jd(betath_list,sigma_1,1,0,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
 graph1D_jd(betath_list,sigma_0,1,0,'','','',NaN,xlim,ylim,'-','none','m',2,20,gca);
 graph1D_jd(betath_list,sigma_4,1,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
-graph1D_jd(xlim,[sigma_Z1s,sigma_Z1s],1,0,'','','',NaN,xlim,ylim,'-','none','k',2,20,gca);
+graph1D_jd(xlim,[sigma_Z1s,sigma_Z1s],1,0,'','','',NaN,xlim,ylim,'-','none','k',0.5,20,gca);
 graph1D_jd(betath_Karney,sigma_Karney,0,0,xlab,ylab,tit,NaN,xlim,ylim,'none','+','r',2,20,gca);
 graph1D_jd(xlim,[sigma_Karney_nr_2,sigma_Karney_nr_2],0,0,'','','',NaN,xlim,ylim,'--','none','r',2,20,gca);
 graph1D_jd(xlim,[sigma_Karney_nr_1,sigma_Karney_nr_1],0,0,'','','',NaN,xlim,ylim,'--','none','b',2,20,gca);
