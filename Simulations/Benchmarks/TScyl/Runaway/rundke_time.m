@@ -29,7 +29,7 @@ path_dkeparam = '';%if nothing is specified, the working directory is first used
 id_display = 'PARTIAL_VISUAL';%For output code display
 path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_ohm = 'OHM_p005_flat';%For Ohmic electric contribution
+id_ohm = '';%For Ohmic electric contribution
 path_ohm = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 ids_wave = {''};%For RF waves contribution (put all the type of waves needed)
@@ -49,31 +49,54 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 %************************************************************************************************************************************
 %
-dkeparam.boundary_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
-dkeparam.nit_f = 1;%Enforcing a single iteration
 if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
-dtn = [0.1,0.2,0.5,1,2,5,10,20,50,100,200,500,1000];
-epsi=0.2;
-xdn = zeros(length(dtn),length(epsi));
-xdnr = zeros(length(dtn),length(epsi));
+betath = 0.01;%validated for NR limit
 %
-[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-for i=1:length(dtn)
-   for j=1:length(epsi)
-      dkeparam.dtn = dtn(i);     
-	  ohm.epsi = epsi(j)*mksa.Edreicer_ref*ones(size(ohm.rho));
-	  [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-	  xdn(i,j) = Znorm.x_0_fsav;
-	  xdnr(i,j) = dke_out.XxRR_fsav(end,:)*dkeparam.dtn;
-   end
+[qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
+%
+equil.pTe = betath^2*mc2*ones(size(equil.pTe));
+equil.pzTi = 1e-10*ones(size(equil.pzTi));
+%
+dkeparam.boundary_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
+dkeparam.nit_f = 1;%Enforcing a single iteration
+%
+dtn_list = logspace(-1,4,21);
+%
+epsi = 0.04;%corresponds to pc/pT = 5
+%
+ohm = ohm_flat(equil,epsi);
+%
+for idtn = 1:length(dtn_list),
+    dtn = dtn_list(idtn);
+    dkeparam.dtn = dtn;     
+    %
+	[Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    %
+	xdn(idtn) = Znorm.x_0_fsav;
+	xdnr(idtn) = dke_out.XxRR_fsav(end,:)*dtn;
 end
 %
-figure,clf,graph1D_jd(dtn,abs(1-xdn),1,1,'Integration time step (dtn)','Particle losses per time step','',NaN,'','','-','non','r',2,20,gca,1,0.6,0.6);hold on
-graph1D_jd(dtn,xdnr,1,1,'Integration time step (dtn)','Particle losses per time step','',NaN,'','','--','non','b',2,20,gca,1,0.6,0.6);
-legend('Numerical','Runaway')
-savefig_dke_yp('runaway_loss')
-%	    
 %************************************************************************************************************************************
+%
+figure(1),clf
+%
+leg = {'Volumic losses','Runaway losses'};
+xlim = 10.^[-1,4];
+ylim = 10.^[-25,0];
+xlab = '\Deltat';
+ylab = '\Deltan/n_0';
+tit = '';
+graph1D_jd(dtn_list,abs(1-xdn),1,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(dtn_list,xdnr,1,1,'','','',leg,xlim,ylim,'--','none','b',2,20,gca);
+set(gca,'ytick',[1e-025 1e-020 1e-015 1e-010 1e-005 1e-000])
+set(gca,'xtick',[1e-01 1 10 100 1000 10000])
+set(gca,'XMinorGrid','off')
+set(gca,'XMinorTick','on')
+%
+print_jd(2,'fig_runaway_loss','.',1)
+%
+%************************************************************************************************************************************
+%
 eval(['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
 info_dke_yp(2,['Data saved in ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);

@@ -20,7 +20,7 @@ rho_S = [];%Normalized radial flux grid where calculations are performed (0 < rh
 id_path = '';%For all paths used by DKE solver
 path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_equil = 'TScyl_lowTene';%For plasma equilibrium
+id_equil = 'TScyl';%For plasma equilibrium
 path_equil = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_dkeparam = 'UNIFORM10010020';%For DKE code parameters
@@ -29,7 +29,7 @@ path_dkeparam = '';%if nothing is specified, the working directory is first used
 id_display = 'PARTIAL_VISUAL';%For output code display
 path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_ohm = 'OHM_p008_flat';%For Ohmic electric contribution
+id_ohm = '';%For Ohmic electric contribution
 path_ohm = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 ids_wave = {''};%For RF waves contribution (put all the type of waves needed)
@@ -50,55 +50,66 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %**************************************************************************
 %**************************************************************************
 %
-dkeparam.coll_mode = 0;%For comparison with theoretical results
 if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
-equil.zZi = [1,1,1,1];equil.pzni = species_dke_yp(equil.pne,ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 1
-[Znorm,Zcurr,ZP0,dke_out_Z1,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-equil.zZi = [1,1,1,2];equil.pzni = species_dke_yp(equil.pne,2*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 2
-[Znorm,Zcurr,ZP0,dke_out_Z2] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-equil.zZi = [1,1,1,3];equil.pzni = species_dke_yp(equil.pne,3*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 3
-[Znorm,Zcurr,ZP0,dke_out_Z3] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-equil.zZi = [1,1,1,4];equil.pzni = species_dke_yp(equil.pne,4*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 4
-[Znorm,Zcurr,ZP0,dke_out_Z4] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-equil.zZi = [1,1,1,5];equil.pzni = species_dke_yp(equil.pne,5*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 5
-[Znorm,Zcurr,ZP0,dke_out_Z5] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-equil.zZi = [1,1,1,6];equil.pzni = species_dke_yp(equil.pne,6*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 6
-[Znorm,Zcurr,ZP0,dke_out_Z6] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-equil.zZi = [1,1,1,7];equil.pzni = species_dke_yp(equil.pne,7*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 7
-[Znorm,Zcurr,ZP0,dke_out_Z7] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-equil.zZi = [1,1,1,8];equil.pzni = species_dke_yp(equil.pne,8*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 8
-[Znorm,Zcurr,ZP0,dke_out_Z8] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-equil.zZi = [1,1,1,9];equil.pzni = species_dke_yp(equil.pne,9*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 9
-[Znorm,Zcurr,ZP0,dke_out_Z9] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-equil.zZi = [1,1,1,10];equil.pzni = species_dke_yp(equil.pne,10*ones(size(equil.pne)),equil.zZi,equil.fi);%for Zeff = 10
-[Znorm,Zcurr,ZP0,dke_out_Z10] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+dkeparam.coll_mode = 0;%For comparison with theoretical results
+betath = 0.01;%validated for NR limit
 %
-disp('-------------------------------------------------------------------------------------------------------------------');
-disp('-------------------------------------------------------------------------------------------------------------------');
-disp(['Runaway rate (Zeff = 1) : ',num2str(dke_out_Z1.XxRR_fsav(end,:))]);
-disp(['Runaway rate (Zeff = 2) : ',num2str(dke_out_Z2.XxRR_fsav(end,:))]);
-disp(['Runaway rate (Zeff = 3) : ',num2str(dke_out_Z3.XxRR_fsav(end,:))]);
-disp(['Runaway rate (Zeff = 4) : ',num2str(dke_out_Z4.XxRR_fsav(end,:))]);
-disp(['Runaway rate (Zeff = 5) : ',num2str(dke_out_Z5.XxRR_fsav(end,:))]);
-disp(['Runaway rate (Zeff = 6) : ',num2str(dke_out_Z6.XxRR_fsav(end,:))]);
-disp(['Runaway rate (Zeff = 7) : ',num2str(dke_out_Z7.XxRR_fsav(end,:))]);
-disp(['Runaway rate (Zeff = 8) : ',num2str(dke_out_Z8.XxRR_fsav(end,:))]);
-disp(['Runaway rate (Zeff = 9) : ',num2str(dke_out_Z9.XxRR_fsav(end,:))]);
-disp(['Runaway rate (Zeff = 10) : ',num2str(dke_out_Z10.XxRR_fsav(end,:))]);
+equil.pzTi = 1e-10*ones(size(equil.pzTi));
 %
-Z =[1:10];
-RR = [dke_out_Z1.XxRR_fsav(end,:),dke_out_Z2.XxRR_fsav(end,:),dke_out_Z3.XxRR_fsav(end,:),dke_out_Z4.XxRR_fsav(end,:),dke_out_Z5.XxRR_fsav(end,:),dke_out_Z6.XxRR_fsav(end,:),dke_out_Z7.XxRR_fsav(end,:),dke_out_Z8.XxRR_fsav(end,:),dke_out_Z9.XxRR_fsav(end,:),dke_out_Z10.XxRR_fsav(end,:)];
-Z_kulsrud =[1,2,3,10];
-RR_kulsrud = [3.177,1.735,1.047,0.09]*1e-4;%Kulsrud (PRL, 31,11, (1972) 690
+Zi_list = [1:20];
+epsi_list = [0.04,0.06,0.08,0.10];
 %
-figure(1),clf,graph1D_jd(Z,RR,0,1,'Main ion charge (Z)','Runaway loss rate','',NaN,'','','-','non','r',2,20,gca,1,0.6,0.6);hold on
-graph1D_jd(Z_kulsrud,RR_kulsrud,0,1,'Main ion charge (Z)','Runaway loss rate','',NaN,'','','none','*','g',2,20,gca,1,0.6,0.6);hold on
-graph1D_jd(1,3.177e-4,0,1,'Main ion charge (Z)','Runaway loss rate','',NaN,'','','none','+','b',2,20,gca,1,0.6,0.6);
-legend('DKE','Kulsrud et al.','Kruskal-Bernstein');
-savefig_dke_yp('runaway_Zi')
+[qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
 %
-disp('-------------------------------------------------------------------------------------------------------------------');	    
+equil.pTe = betath^2*mc2*ones(size(equil.pTe));
+%
+for iZi = 1:length(Zi_list),
+    %
+    Zi = Zi_list(iZi);
+    equil.zZi = [1,1,1,Zi];
+    equil.pzni = [0;0;0;1/Zi]*equil.pne;
+    %
+    for iepsi = 1:length(epsi_list),
+        %
+        epsi = epsi_list(iepsi);
+        %
+        ohm = ohm_flat(equil,epsi);
+        %
+        [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+        %
+        RR(iZi,iepsi) = dke_out.XxRR_fsav(end,:);
+        %
+    end
+    %
+end
+%
+Zi_kulsrud =[1,2,3,10];
+RR_kulsrud = 1e-4*[ 0.01914,NaN   ,NaN  ,NaN  ;...%Kulsrud (PRL, 31,11, (1972) 690)
+                    0.5411 ,0.2611,NaN  ,NaN  ;...  
+                    3.177  ,1.735 ,1.047,0.09 ;...
+                    10.04  ,5.839 ,3.757,0.449].';
+%
 %************************************************************************************************************************************
+%
+figure(1),clf
+%
+leg = {'E/E_D = 0.04','E/E_D = 0.06','E/E_D = 0.08','E/E_D = 0.10'};
+xlim = [0,20];
+ylim = 10.^[-6,-3];
+xlab = 'Z_i';
+ylab = '\Gamma_R';
+tit = '';
+graph1D_jd(Zi_list,RR,0,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(Zi_kulsrud,RR_kulsrud,0,1,'','','',leg,xlim,ylim,'none','+','',2,20,gca);
+set(gca,'ytick',[1e-6 1e-5 1e-4 1e-3])
+set(gca,'xtick',[0:2:20])
+set(gca,'YMinorGrid','off')
+set(gca,'YMinorTick','on')
+%
+print_jd(2,'fig_runaway_Zi','.',1)
+%
+%************************************************************************************************************************************
+%
 eval(['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
 info_dke_yp(2,['Data saved in ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
