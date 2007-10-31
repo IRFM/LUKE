@@ -51,7 +51,7 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
-epsi = 0.01;
+epsi = 0.001;
 %
 %dkeparam.pnmax_S = 15;
 %dkeparam.np_S = 166;
