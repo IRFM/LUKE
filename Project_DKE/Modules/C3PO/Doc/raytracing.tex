@@ -8,10 +8,10 @@
 \usepackage{amssymb}%
 \setcounter{MaxMatrixCols}{30}
 %TCIDATA{OutputFilter=latex2.dll}
-%TCIDATA{Version=5.50.0.2890}
-%TCIDATA{CSTFile=article.cst}
+%TCIDATA{Version=5.50.0.2953}
+%TCIDATA{CSTFile=Joan Decker article.cst}
 %TCIDATA{Created=Friday, August 11, 2006 11:13:28}
-%TCIDATA{LastRevised=Wednesday, May 23, 2007 17:04:32}
+%TCIDATA{LastRevised=Wednesday, November 21, 2007 23:40:30}
 %TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
 %TCIDATA{<META NAME="SaveForMode" CONTENT="1">}
 %TCIDATA{BibliographyScheme=Manual}
@@ -39,51 +39,54 @@
 
 \section{\bigskip Introduction}
 
-Ray-tracing is a master piece in the set of codes for calculating tokamak
-current drive by radio-frequency waves. So far, numerous ray-tracing tools
-have been developped since the first attempt at the beginning of the 80's. In
-most cases, they are dedicated to a specific type of wave by using a dedicated
-dielectric tensor, like the Lower Hybrid (LH) wave or the Electron Cyclotron
-wave (EC). Since ray trajectories are very sensitive to the plasma magnetic
-equilibrium, codes which are able to consider arbitrary magnetic tokamak
-configuration have been developped, often using the simple $\left(
-R,Z\right)  $ cartesian coordinate system because of the simple form of its
-Jacobian. However, this coordinate system does not reflect that magnetic flux
-surfaces are closed surfaces inside the separatrix, and that the densities and
-temperatures are only functions of the poloidal flux surface coordinate
-$\psi.$ Consequently, cartesian ray-tracing must use extensively $2^{nd}$
-order derivatives. Since ray-tracing results must be linked to Fokker-Planck
-kinetic codes for calculating the wave power absorption profile in the plasma,
-it is therefore natural to use the same curvilinear coordinate system, which
-contains also the topological structure of the magnetic configuration, and
-avoids consequently all numerical conversions for kinetic calculations.
+In order to calculate power and current deposition from RF waves in plasmas,
+it is necessary to determine the wave characteristics inside the plasma. In a
+quasi-stationary plasma where the equilibrium varies on a scale that is much
+larger than the wavelength, it is possible to calculate the wave propagation
+from the antenna or mirror conditions and the equilibrium properties using the
+ray-tracing techniques. This method has been used extensively in the past
+[refs] for solving the lower-hybrid and electron cyclotron wave propagation.
 
-For this purpose, a new ray-tracing code has been developped, which is
-designed to be valid for arbitrary type of wave frequencies, provided the WKB
-approximation is satisfied. Based on a curvilinear coordinate system, it is
-designed to be as general as possible, namely for Lower Hybrid, Electron
-Cyclotron or Electron Bernstein waves. For this purpose, the structure of the
-code offers the possibility to implement not only the cold plasma dielectric
-tensor, but any type of tensor corresponding to warm, hot, weakly and strongly
-relativist limits respectively. Consequently, complex type variables are used,
-a specificity which is important when linear weak damping must be evaluated
-along the rays. In addition, a numerical effort has been made on the technique
-for calculating all magnetic equilibrium quantities and their first and second
-derivatives in the fastest possible way. For this purpose, a spline-Fourier
-expansion is used, which offers both the advantages of fastness without
-sacrificing accuracy.
+Many ray tracing codes in axisymmetric toroidal plasmas use the
+toroidal coordinates $(R,Z,\phi)$ which are attractive because of
+the simplicity of implementing the equations in this system. In this
+work we use the flux coordinates $(,\theta,\phi)$ instead. While the
+equations in this system require somewhat more complicated metric
+coefficients, there are several advantages to this choice: first,
+any equilibrium property that is a flux function, such as the
+density and temperature - or more generally the distribution
+function -, depends upon $\rho$ only; second, the periodicity of the
+coordinate $\theta$ allows the use of Fourier series that are
+particularly useful for accurate interpolation and the calculation
+of derivatives up to second order; third, this system is used by a
+variety of codes that are coupled to the ray-tracing solver, such as
+equilibrium codes (HELENA) and Fokker-Planck solvers (LUKE). Using
+the same system in the ray-tracing code saves any coordinates
+conversion.
 
-Based on a standard $6^{th}$ order Runge-Kutta differential equation solver,
-the ray-tracing which is a mexfile\footnote{The code runs in the MatLab 7
-programming environment.} written in $C$ language has been extensively
-benchmarked against other existing codes for various types of waves, and also
-with analytical models for simple magnetic configurations. In Sec. $1$, the
-linear wave theory in an infinite uniform medium is recalled, while
-ray-tracing in slowly varying plasma is discussed in Sec. $2$. The curvilinear
-canonical coordinates in an axisymmetric toroidal plasma are introduced in
-Sec. $3$, and in Sec. $4$ all numerical methods are presented. The Appendix is
-dedicated to the properties of the coordinate system, the expressions of the
-cold and hot plasma dielectric tensor, and the benchmarking results.
+The new ray-tracing code developed here is designed for arbitrary
+wave frequencies (including the lower hybrid and electron cyclotron
+frequency ranges), provided the WKB approximation is valid. The
+structure of the code allows to choose from several dielectric
+tensor types: cold plasma, "warm" plasma [ref bonoli], and kinetic
+plasma in the non-, weakly-, or fully relativistic regime. In
+addition to ray trajectories, the code calculates waves properties
+of interest for heating and current drive calculations such as the
+polarization, energy flow and linear absorption.
+
+Based on a standard $6^{th}$ order Runge-Kutta differential scheme, the
+ray-tracing code uses a spline-Fourier expansion for equilibrium
+interpolation, which results in fast yet accurate calculations. The code is
+distributed as a mexfile\footnote{The code runs in the MatLab 7 programming
+environment.} written in $C$ language. It is benchmarked extensively for
+various types of waves against both existing codes and analytical models. In
+Sec. $1$, the linear wave theory in an infinite uniform medium is presented.
+Ray-tracing in slowly varying plasma is derived in Sec. $2$. The curvilinear
+canonical flux coordinates in an axisymmetric toroidal plasma are introduced
+in Sec. $3$. In Sec. $4$, numerical methods are presented. The Appendix
+includes some properties of the coordinate system, explicit expressions for
+the dispersion relations and some derivatives, the cold and hot plasma
+dielectric tensor, and the benchmarking results.
 
 \section{Linear wave theory in an infinite uniform plasma}
 
@@ -107,11 +110,11 @@ where $\mathbf{E}\left(  \mathbf{X},t\right)  $ and $\mathbf{B}\left(
 \mathbf{X},t\right)  $ and $\mathbf{J}\left(  \mathbf{X},t\right)  $ are the
 charge and current densities. Here, $\mathbf{X}$ is the vector position, and
 $t$ is the time. The continuity equation - or charge conservation - relates
-the the charge density $\rho\left(  \mathbf{X},t\right)  $ to the current
-density $\mathbf{J}\left(  \mathbf{X},t\right)  $
+the charge density $\rho\left(  \mathbf{X},t\right)  $ to the current density
+$\mathbf{J}\left(  \mathbf{X},t\right)  $
 \begin{equation}
-\frac{\partial\rho}{\partial t}+\mathbf{\nabla}\cdot\mathbf{J}=0
-\label{continuity}%
+\frac{\partial\rho}{\partial t}+\mathbf{\nabla}\cdot\mathbf{J}%
+=0\label{continuity}%
 \end{equation}
 
 
@@ -131,12 +134,12 @@ expressed in general as a convolution%
 %BeginExpansion
 {\displaystyle\iiint}
 %EndExpansion
-d^{3}\mathbf{X}^{\prime}\int dt^{\prime}\mathbb{S}\left(  \mathbf{X}%
+d^{3}\mathbf{X}^{\prime}\int dt^{\prime}\;\mathbb{S}\left(  \mathbf{X}%
 ,\mathbf{X}^{\prime},t,t^{\prime}\right)  \cdot\mathbf{E}\left(
 \mathbf{X}^{\prime},t^{\prime}\right)  \label{constitutive}%
 \end{equation}
 where $\mathbb{S}\left(  \mathbf{X},\mathbf{X}^{\prime},t,t^{\prime}\right)  $
-is the conductivity tensor which depends of the equilibrium properties of the medium.
+is the conductivity tensor, which depends upon the plasma equilibrium.
 
 \subsection{Fourier transform in an infinite uniform plasma}
 
@@ -150,31 +153,38 @@ function of the relative distance in space and time, and Eq.
 %BeginExpansion
 {\displaystyle\iiint}
 %EndExpansion
-d^{3}\mathbf{X}^{\prime}\int dt^{\prime}\mathbb{S}\left(  \mathbf{X}%
+d^{3}\mathbf{X}^{\prime}\int dt^{\prime}\;\mathbb{S}\left(  \mathbf{X}%
 -\mathbf{X}^{\prime},t-t^{\prime}\right)  \cdot\mathbf{E}\left(
 \mathbf{X}^{\prime},t^{\prime}\right)  \label{constitutive2}%
 \end{equation}
-
-
-Then, fields and current can be Fourier analyzed, i.e. represented as a
-superposition of time-harmonic plane waves%
+Applying the Fourier transform to the fields yields%
 \begin{equation}%
 \begin{array}
 [c]{l}%
-\mathbf{E}\left(  \mathbf{X},t\right)  =\int d\omega%
+\mathbf{E}\left(  \mathbf{X},t\right)  =%
+%TCIMACRO{\dint }%
+%BeginExpansion
+{\displaystyle\int}
+%EndExpansion
+d\omega%
 %TCIMACRO{\diiint }%
 %BeginExpansion
 {\displaystyle\iiint}
 %EndExpansion
-d^{3}\mathbf{kE}_{\mathbf{k}}\left(  \mathbf{k},\omega\right)  e^{i\left(
-\mathbf{k\cdot X}-\omega t\right)  }\\
-\mathbf{J}\left(  \mathbf{X},t\right)  =\int d\omega%
+d^{3}\mathbf{k\;E}_{\mathbf{k}}\left(  \mathbf{k},\omega\right)  e^{i\left(
+\mathbf{k}\cdot\mathbf{X}-\omega t\right)  }\\
+\mathbf{J}\left(  \mathbf{X},t\right)  =%
+%TCIMACRO{\dint }%
+%BeginExpansion
+{\displaystyle\int}
+%EndExpansion
+d\omega%
 %TCIMACRO{\diiint }%
 %BeginExpansion
 {\displaystyle\iiint}
 %EndExpansion
-d^{3}\mathbf{kJ}_{\mathbf{k}}\left(  \mathbf{k},\omega\right)  e^{i\left(
-\mathbf{k\cdot X}-\omega t\right)  }%
+d^{3}\mathbf{k\;J}_{\mathbf{k}}\left(  \mathbf{k},\omega\right)  e^{i\left(
+\mathbf{k}\cdot\mathbf{X}-\omega t\right)  }%
 \end{array}
 \end{equation}
 with the reverse relations%
@@ -182,36 +192,34 @@ with the reverse relations%
 \begin{array}
 [c]{l}%
 \mathbf{E}_{\mathbf{k}}\left(  \mathbf{k},\omega\right)  =\dfrac{1}{\left(
-2\pi\right)  ^{3}}%
+2\pi\right)  ^{4}}%
 %TCIMACRO{\diiint }%
 %BeginExpansion
 {\displaystyle\iiint}
 %EndExpansion
-d^{3}\mathbf{X}\int dt\mathbf{E}\left(  \mathbf{X},t\right)  e^{-i\left(
-\mathbf{k\cdot X}-\omega t\right)  }\\
+d^{3}\mathbf{X}\int dt\;\mathbf{E}\left(  \mathbf{X},t\right)  e^{-i\left(
+\mathbf{k}\cdot\mathbf{X}-\omega t\right)  }\\
 \mathbf{J}_{\mathbf{k}}\left(  \mathbf{k},\omega\right)  =\dfrac{1}{\left(
-2\pi\right)  ^{3}}%
+2\pi\right)  ^{4}}%
 %TCIMACRO{\diiint }%
 %BeginExpansion
 {\displaystyle\iiint}
 %EndExpansion
-d^{3}\mathbf{X}\int dt\mathbf{J}\left(  \mathbf{X},t\right)  e^{-i\left(
-\mathbf{k\cdot X}-\omega t\right)  }%
+d^{3}\mathbf{X}\int dt\;\mathbf{J}\left(  \mathbf{X},t\right)  e^{-i\left(
+\mathbf{k}\cdot\mathbf{X}-\omega t\right)  }%
 \end{array}
 \end{equation}
-such that (\ref{constitutive2}) becomes
+(\ref{constitutive2}) becomes
 \begin{equation}
 \mathbf{J}_{\mathbf{k}}\left(  \mathbf{k},\omega\right)  =\mathbb{S}\left(
 \mathbf{k},\omega\right)  \cdot\mathbf{E}_{\mathbf{k}}\left(  \mathbf{k}%
 ,\omega\right)  \label{constitutivefourier}%
 \end{equation}
-
-
-Applying the Fourier transform to the Maxwell's equations lead to%
+Similarly, applying the Fourier transform to the Maxwell's equations gives%
 \begin{equation}%
 \begin{array}
 [c]{l}%
-i\mathbf{k}\cdot\mathbf{E}_{\mathbf{k}}=\frac{\rho_{\mathbf{k}}}%
+i\mathbf{k}\cdot\mathbf{E}_{\mathbf{k}}=\dfrac{\rho_{\mathbf{k}}}%
 {\varepsilon_{0}}\\
 i\mathbf{k}\cdot\mathbf{B}_{\mathbf{k}}=0\\
 i\mathbf{k}\times\mathbf{E}_{\mathbf{k}}=i\omega\mathbf{B}_{\mathbf{k}}\\
@@ -245,7 +253,7 @@ is the susceptibility tensor and $\mathbb{I}$ is the unit matrix.
 
 Introducing the index of refraction%
 \begin{equation}
-\mathbf{N}\equiv\frac{c}{\omega}\mathbf{k} \label{indexrefraction}%
+\mathbf{N}\equiv\frac{c}{\omega}\mathbf{k}\label{indexrefraction}%
 \end{equation}
 the wave equation becomes%
 \begin{equation}
@@ -254,7 +262,7 @@ the wave equation becomes%
 \end{equation}
 or equivalently%
 \begin{equation}
-\mathbb{D}\cdot\mathbf{E}_{\mathbf{k}}=0 \label{maxwellwaveeq1}%
+\mathbb{D}\cdot\mathbf{E}_{\mathbf{k}}=0\label{maxwellwaveeq1}%
 \end{equation}
 where $\mathbb{D}\left(  \mathbf{N},\omega\right)  $
 \begin{equation}
@@ -266,9 +274,12 @@ contribution from all species%
 \begin{equation}
 \mathbb{X}=\sum_{s}\mathbb{X}^{s}%
 \end{equation}
-Thus it depends from the following non-dimensional parameters : the refractive
-index $\mathbf{N\ }$and for all plasma species $s$ : the thermal velocity
-normalized to the speed of light $\beta_{Ts}=v_{Ts}/c$, the ratios
+In the case where the distribution function of the species $s$ is a
+Maxwellian, $\mathbb{X}^{s}$ depends upon the following
+non-dimensional parameters : the refractive index $\mathbf{N}$, the
+thermal velocity normalized to the speed of light
+$\beta_{Ts}=v_{Ts}/c$ where $v_{Ts}=\sqrt{kT_{s}/m_{s}}$, and the
+ratios
 $\overline{\omega}_{ps}=\omega_{ps}/\omega$ and $\overline{\omega}_{cs}%
 =\omega_{cs}/\omega$ of the plasma frequency $\omega_{ps}=\sqrt{q_{s}^{2}%
 n_{s}/\varepsilon_{0}m_{s}}$ and the cyclotron frequency $\omega_{cs}%
@@ -282,187 +293,71 @@ _{Ts},\overline{\omega}_{ps},\overline{\omega}_{cs}\right)
 
 \subsection{Dispersion relation}
 
-In order to obtain non-trival solutions to the Eq. \ref{maxwellwaveeq1}, the
-determinant of the dispersion tensor must be zero,
+In order to obtain non-trivial solutions to the Eq.
+\ref{maxwellwaveeq1}, the determinant of the dispersion tensor must
+be zero,
 \begin{equation}
 \mathcal{D}\left(  \mathbf{N},\beta_{Ts},\overline{\omega}_{ps},\overline
 {\omega}_{cs}\right)  \equiv\det\mathbb{D}\left(  \mathbf{N},\beta
-_{Ts},\overline{\omega}_{ps},\overline{\omega}_{cs}\right)  =0 \label{disprel}%
+_{Ts},\overline{\omega}_{ps},\overline{\omega}_{cs}\right)  =0\label{disprel}%
 \end{equation}
 which defines the dispersion relation. This relation gives the local
 electromagnetic eigenmodes that can be excited independently in the homogenous
-plasma. It can be solved for either $\omega\left(  \mathbf{N}\right)  $ or
-$N_{i}\left(  \omega,N_{j},N_{k}\right)  $ where $i,j,k$ is a permutation of
-coordinates of $\mathbf{N}$.
+plasma. It can be solved for either $\omega\left(  N_{\Vert},N_{\bot}\right)
+$, $N_{\Vert}\left(  \omega,N_{\bot}\right)  $ or $N_{\bot}\left(
+\omega,N_{\Vert}\right)  $. The polarization of any eigenmode resulting from
+equation (\ref{disprel}) is determined by the corresponding eigenvector of the
+wave equation (\ref{maxwellwaveeq1}).
 
-\subsection{Explicit expressions}
+Explicit expressions of the dispersion relation are given in Appendix A1.
 
-In a cartesian system $\left(  x,y,z\right)  $ defined such that the
-background magnetic field is%
+\subsection{Weak damping approximation}
+
+Assuming that $\omega$ and $N_{\Vert}$ are given real quantities,
+(\ref{disprel}) generally leads to a complex $N_{\bot}=N_{\bot r}+iN_{\bot i}%
+$. Meanwhile, the dispersion tensor $\mathbb{D}$ can be generally decomposed
+as $\mathbb{D}=\mathbb{D}^{\text{H}}+i\mathbb{D}^{\text{A}}$ where
+$\mathbb{D}^{\text{H}}=(\mathbb{D}+\mathbb{D}^{\dag})/2$ and $\mathbb{D}%
+^{\text{A}}=(\mathbb{D}-\mathbb{D}^{\dag})/2i$ are the hermitian and
+antihermitian parts of $\mathbb{D}$, respectively. In this work, the weak
+damping approximation is considered, which is valid if $|D_{ij}^{\text{A}}%
+|\ll|D_{ij}^{\text{A}}|$.\ In that case, it can be shown \cite{dec06} that
+$|N_{\bot i}|\ll|N_{\bot r}|$ and $N_{\bot r}$ can be determined from solving
+the approximate wave equation%
 \begin{equation}
-\mathbf{B}_{0}=B_{0}\widehat{\mathbf{z}}%
+\mathbb{D}^{\text{H}}\left(  N_{\bot r}\right)  \cdot\mathbf{E}_{\mathbf{k}%
+}=0\label{maxwellwaveeq2}%
 \end{equation}
-and the wave index of refraction is%
+with dispersion relation%
 \begin{equation}
-\mathbf{N}=N_{\Vert}\widehat{\mathbf{z}}+N_{\bot}\widehat{\mathbf{x}}%
+\mathcal{D}^{\text{H}}\left(  N_{\Vert},N_{\bot r},\beta_{Ts},\overline
+{\omega}_{ps},\overline{\omega}_{cs}\right)  \equiv\det\mathbb{D}^{\text{H}%
+}\left(  N_{\Vert},N_{\bot r},\beta_{Ts},\overline{\omega}_{ps},\overline
+{\omega}_{cs}\right)  =0\label{disprel3}%
 \end{equation}
-the permittivity tensor can be expressed explicitly as%
-\begin{equation}
-\mathbb{K=}\left(
-\begin{array}
-[c]{ccc}%
-K_{xx} & K_{xy} & K_{xz}\\
--K_{xy} & K_{yy} & K_{yz}\\
-K_{xz} & -K_{yz} & K_{zz}%
-\end{array}
-\right)
-\end{equation}
-such that the dispersion tensor is
-\begin{equation}
-\mathbb{D=}\left(
-\begin{array}
-[c]{ccc}%
-K_{xx}-N_{\Vert}^{2} & K_{xy} & K_{xz}+N_{\bot}N_{\Vert}\\
--K_{xy} & K_{yy}-N^{2} & K_{yz}\\
-K_{xz}+N_{\bot}N_{\Vert} & -K_{yz} & K_{zz}-N_{\bot}^{2}%
-\end{array}
-\right)
-\end{equation}
-and the dispersion relation becomes%
-\begin{align}
-\mathcal{D}\left(  \mathbf{k},\omega\right)   &  =\left(  K_{xx}-N_{\Vert}%
-^{2}\right)  \left(  K_{yy}-N^{2}\right)  \left(  K_{zz}-N_{\bot}^{2}\right)
-\\
-&  +2K_{xy}K_{yz}\left(  K_{xz}+N_{\bot}N_{\Vert}\right) \nonumber\\
-&  -\left(  K_{yy}-N^{2}\right)  \left(  K_{xz}+N_{\bot}N_{\Vert}\right)
-^{2}\nonumber\\
-&  +K_{yz}^{2}\left(  K_{xx}-N_{\Vert}^{2}\right)  +K_{xy}^{2}\left(
-K_{zz}-N_{\bot}^{2}\right) \nonumber
-\end{align}
-rearranged in powers of $N_{\bot}$ as%
-\begin{equation}
-\mathcal{D}\left(  \mathbf{k},\omega\right)  =P_{4}N_{\bot}^{4}+P_{3}N_{\bot
-}^{3}+P_{2}N_{\bot}^{2}+P_{1}N_{\bot}+P_{0} \label{disprel2}%
-\end{equation}
-with
+In this approximation, the time-averaged densities of energy flow $\mathbf{S}$
+and dissipation $P$ can be obtained from
 \begin{equation}%
 \begin{array}
 [c]{l}%
-P_{4}=K_{xx}\\
-P_{3}=2K_{xz}N_{\Vert}\\
-P_{2}=\left(  K_{xx}+K_{zz}\right)  N_{\Vert}^{2}-\left(  K_{yy}%
-+K_{zz}\right)  K_{xx}+K_{xz}^{2}-K_{xy}^{2}\\
-P_{1}=2N_{\Vert}\left(  K_{xz}N_{\Vert}^{2}+K_{xy}K_{yz}-K_{yy}K_{xz}\right)
-\\
-P_{0}=N_{\Vert}^{4}K_{zz}+\left(  K_{xz}^{2}-K_{yz}^{2}-\left[  K_{xx}%
-+K_{yy}\right]  K_{zz}\right)  N_{\Vert}^{2}+K_{yy}K_{xx}K_{zz}\\
-\qquad+2K_{xy}K_{yz}K_{xz}+K_{yz}^{2}K_{xx}-K_{yy}K_{xz}^{2}+K_{xy}^{2}K_{zz}%
+\mathbf{S}=-\dfrac{\varepsilon_{0}c}{4}\dfrac{\partial}{\partial\mathbf{N}%
+}\left(  \mathbf{E}_{\mathbf{k}}^{\ast}\cdot\mathbb{D}^{\text{H}}%
+\cdot\mathbf{E}_{\mathbf{k}}\right)  \\
+P=\dfrac{\varepsilon_{0}\omega}{2}\mathbf{E}_{\mathbf{k}}^{\ast}%
+\cdot\mathbb{D}^{\text{A}}\cdot\mathbf{E}_{\mathbf{k}}%
 \end{array}
-\label{dispexp}%
 \end{equation}
-The dispersion relation (\ref{disprel2}) can be further expanded as%
-
-\begin{align}
-\mathcal{D}  &  =\left(  1+X_{xx}\right)  N_{\bot}^{4}\nonumber\\
-&  +\left(  2N_{\Vert}X_{xz}\right)  N_{\bot}^{3}\nonumber\\
-&  +\left(  N_{\Vert}^{2}\left(  X_{xx}+X_{zz}+2\right)  -2X_{xx}%
--X_{yy}-X_{zz}\right. \nonumber\\
-&  \left.  -X_{xx}X_{zz}+X_{xz}^{2}-X_{xx}X_{yy}-X_{xy}^{2}-2\right)  N_{\bot
-}^{2}\nonumber\\
-&  +2N_{\Vert}\left(  -X_{yy}X_{xz}+X_{xy}X_{yz}-X_{xz}+N_{\Vert}^{2}%
-X_{xz}\right)  N_{\bot}\nonumber\\
-&  +1+N_{\Vert}^{4}\left(  X_{zz}+1\right) \nonumber\\
-&  +N_{\Vert}^{2}\left(  X_{xz}^{2}-X_{yy}X_{zz}-X_{xx}X_{zz}-2X_{zz}%
--X_{yy}-X_{yz}^{2}-X_{xx}-2\right) \nonumber\\
-&  +X_{yy}X_{zz}+X_{xx}X_{zz}+X_{xx}X_{yy}\nonumber\\
-&  +X_{xx}X_{yz}^{2}+X_{yz}^{2}+X_{xx}+X_{xy}^{2}+X_{xy}^{2}X_{zz}-X_{xz}%
-^{2}\nonumber\\
-&  -X_{yy}X_{xz}^{2}+X_{yy}+X_{zz}\nonumber\\
-&  +X_{xx}X_{yy}X_{zz}+2X_{xy}X_{yz}X_{xz} \label{D}%
-\end{align}
-
-
-In preparation for calculating the derivatives, it is useful to split the
-dispersion relation in a sum of products%
+Note that the imaginary part of the wave vector can be calculated using%
 \begin{equation}
-\mathcal{D}=\sum_{k=1}^{k=43}\mathcal{D}^{\left(  k\right)  } \label{dispexp2}%
+N_{\bot i}=\dfrac{c}{2\omega}\dfrac{P}{S_{\bot}}%
 \end{equation}
-where%
-\begin{equation}%
-\begin{array}
-[c]{l}%
-\mathcal{D}^{\left(  1\right)  }=N_{\bot}^{4}\\
-\mathcal{D}^{\left(  2\right)  }=X_{xx}N_{\bot}^{4}\\
-\mathcal{D}^{\left(  3\right)  }=2N_{\Vert}X_{xz}N_{\bot}^{3}\\
-\mathcal{D}^{\left(  4\right)  }=N_{\Vert}^{2}X_{xx}N_{\bot}^{2}\\
-\mathcal{D}^{\left(  5\right)  }=N_{\Vert}^{2}X_{zz}N_{\bot}^{2}\\
-\mathcal{D}^{\left(  6\right)  }=2N_{\Vert}^{2}N_{\bot}^{2}\\
-\mathcal{D}^{\left(  7\right)  }=-2X_{xx}N_{\bot}^{2}\\
-\mathcal{D}^{\left(  8\right)  }=-X_{yy}N_{\bot}^{2}\\
-\mathcal{D}^{\left(  9\right)  }=-X_{zz}N_{\bot}^{2}\\
-\mathcal{D}^{\left(  10\right)  }=-X_{xx}X_{zz}N_{\bot}^{2}%
-\end{array}
-\end{equation}%
-\begin{equation}%
-\begin{array}
-[c]{l}%
-\mathcal{D}^{\left(  11\right)  }=X_{xz}^{2}N_{\bot}^{2}\\
-\mathcal{D}^{\left(  12\right)  }=-X_{xx}X_{yy}N_{\bot}^{2}\\
-\mathcal{D}^{\left(  13\right)  }=-X_{xy}^{2}N_{\bot}^{2}\\
-\mathcal{D}^{\left(  14\right)  }=-2N_{\bot}^{2}\\
-\mathcal{D}^{\left(  15\right)  }=-2N_{\Vert}X_{yy}X_{xz}N_{\bot}\\
-\mathcal{D}^{\left(  16\right)  }=2N_{\Vert}X_{xy}X_{yz}N_{\bot}\\
-\mathcal{D}^{\left(  17\right)  }=-2N_{\Vert}X_{xz}N_{\bot}\\
-\mathcal{D}^{\left(  18\right)  }=2N_{\Vert}^{3}X_{xz}N_{\bot}\\
-\mathcal{D}^{\left(  19\right)  }=1\\
-\mathcal{D}^{\left(  20\right)  }=N_{\Vert}^{4}X_{zz}%
-\end{array}
-\end{equation}%
-\begin{equation}%
-\begin{array}
-[c]{l}%
-\mathcal{D}^{\left(  21\right)  }=N_{\Vert}^{4}\\
-\mathcal{D}^{\left(  22\right)  }=N_{\Vert}^{2}X_{xz}^{2}\\
-\mathcal{D}^{\left(  23\right)  }=-N_{\Vert}^{2}X_{yy}X_{zz}\\
-\mathcal{D}^{\left(  24\right)  }=-N_{\Vert}^{2}X_{xx}X_{zz}\\
-\mathcal{D}^{\left(  25\right)  }=-2N_{\Vert}^{2}X_{zz}\\
-\mathcal{D}^{\left(  26\right)  }=-N_{\Vert}^{2}X_{yy}\\
-\mathcal{D}^{\left(  27\right)  }=-N_{\Vert}^{2}X_{yz}^{2}\\
-\mathcal{D}^{\left(  28\right)  }=-N_{\Vert}^{2}X_{xx}\\
-\mathcal{D}^{\left(  29\right)  }=-2N_{\Vert}^{2}\\
-\mathcal{D}^{\left(  30\right)  }=X_{yy}X_{zz}%
-\end{array}
-\end{equation}%
-\begin{equation}%
-\begin{array}
-[c]{l}%
-\mathcal{D}^{\left(  31\right)  }=X_{xx}X_{zz}\\
-\mathcal{D}^{\left(  32\right)  }=X_{xx}X_{yy}\\
-\mathcal{D}^{\left(  33\right)  }=X_{xx}X_{yz}^{2}\\
-\mathcal{D}^{\left(  34\right)  }=X_{yz}^{2}\\
-\mathcal{D}^{\left(  35\right)  }=X_{xx}\\
-\mathcal{D}^{\left(  36\right)  }=X_{xy}^{2}\\
-\mathcal{D}^{\left(  37\right)  }=X_{xy}^{2}X_{zz}\\
-\mathcal{D}^{\left(  38\right)  }=-X_{xz}^{2}\\
-\mathcal{D}^{\left(  39\right)  }=-X_{yy}X_{xz}^{2}\\
-\mathcal{D}^{\left(  40\right)  }=X_{yy}%
-\end{array}
-\end{equation}%
-\begin{equation}%
-\begin{array}
-[c]{l}%
-\mathcal{D}^{\left(  41\right)  }=X_{zz}\\
-\mathcal{D}^{\left(  42\right)  }=X_{xx}X_{yy}X_{zz}\\
-\mathcal{D}^{\left(  43\right)  }=2X_{xy}X_{yz}X_{xz}%
-\end{array}
-\end{equation}
-
+which yields the ray damping.
 
 \section{Ray tracing in a slowly varying plasma}
 
 \subsection{WKB Approximation}
 
-In a slightly nonuniform plasma, such that
+In a slightly nonuniform plasma where
 \begin{equation}
 \left\Vert \mathbf{k}\right\Vert \gg\dfrac{\left\Vert \mathbf{\nabla}%
 \beta_{Ts}\right\Vert }{\beta_{Ts}},\dfrac{\left\Vert \mathbf{\nabla}%
@@ -473,15 +368,17 @@ In a slightly nonuniform plasma, such that
 and the wave characteristics also vary slowly
 \begin{equation}
 \left\Vert \mathbf{k}\right\Vert ^{2}\gg\left\Vert \mathbf{\nabla
-k}\right\Vert
+}k\right\Vert
 \end{equation}
-the dispersion relation (\ref{disprel}) must still be satisfied locally. It is
-then possible to determine the evolution of wave characteristics using
-ray-tracing techniques
+the wave equation (\ref{maxwellwaveeq2}) and dispersion relation
+(\ref{disprel3}) are still be satisfied locally, under the WKB
+approximation. The wave vector $\mathbf{k}$ is then a slowly varying
+function of space and $\mathbf{k}\left(  \mathbf{X}\right)  $ can be
+determined using ray-tracing techniques.
 
 \subsection{Ray equations}
 
-Ray equations in anisotropic an inhomogeneous plasma are defined by the
+Ray equations in a plasma slowly varying in space and time are defined by the
 condition (\ref{disprel}) $\mathcal{D}\left(  \mathbf{X},t,\mathbf{k,}%
 \omega\right)  =0$ along the ray trajectory. Therefore, at all points along
 the ray trajectory, the condition
@@ -498,7 +395,7 @@ measure of distance along the trajectory.
 \cdot\mathbf{\dot{X}}\delta\tau+\frac{\partial\mathcal{D}}{\partial t}\dot
 {t}\delta\tau\mathbf{+}\frac{\partial\mathcal{D}}{\partial\mathbf{k}}%
 \cdot\mathbf{\dot{k}}\delta\tau\mathbf{+}\frac{\partial\mathcal{D}}%
-{\partial\omega}\dot{\omega}\delta\tau=0 \label{deltaD2}%
+{\partial\omega}\dot{\omega}\delta\tau=0\label{deltaD2}%
 \end{equation}
 where $\mathbf{\dot{X}=}d\mathbf{X/}d\tau,$ $\mathbf{\dot{k}=}d\mathbf{k/}%
 d\tau,$ $\dot{t}\mathbf{=}dt\mathbf{/}d\tau$ and $\dot{\omega}=d\omega
@@ -508,9 +405,9 @@ that are canonically conjugate to those of the position vector $\mathbf{X}$%
 \left\{  X_{i},k_{j}\right\}  =\delta_{ij}%
 \end{equation}
 where $\left\{  \ldots\right\}  $ is Poisson bracket, $\delta_{ij}$ is the
-Kronecker delta, $X_{i}$ and $k_{j}$ being the coordinate of $\mathbf{X}$ and
-$\mathbf{k}$ respectively. The frequency $\omega$ and the time $t$ being also
-canonically conjugate, the relations%
+Kronecker delta symbol, $X_{i}$ and $k_{j}$ being the coordinate of
+$\mathbf{X}$ and $\mathbf{k}$ respectively. The frequency $\omega$ and the
+time $t$ being also canonically conjugate, the relations%
 \[%
 \begin{array}
 [c]{l}%
@@ -520,123 +417,69 @@ canonically conjugate, the relations%
 \dfrac{d\omega}{d\tau}=\dfrac{\partial\mathcal{D}}{\partial t}%
 \end{array}
 \]
-may be deduced from the Hamiltonian nature of $\mathcal{D}$, and
-Eq.\ref{deltaD2} is automatically satisfied. These four equations are
-therefore the ray equations. From the first and the third equations, one
-deduce directly the relation between the group velocity $\mathbf{v}_{g}$
+result from the Hamiltonian nature of $\mathcal{D}$, and Eq.\ref{deltaD2} is
+automatically satisfied. These four equations are therefore the ray equations.
+From the first and the third equations
 \begin{equation}
 \frac{d\mathbf{X}}{dt}=\frac{\partial\mathcal{D}}{\partial\mathbf{k}}%
 /\frac{\partial\mathcal{D}}{\partial\omega}=\frac{\partial\omega}%
 {\partial\mathbf{k}}=\mathbf{v}_{g}%
 \end{equation}
-along with the wave energy flows. In the stationary case, i.e. $\partial
-\mathcal{D}/\partial t=0,$ $\omega$ is a constant of the ray dynamics, and
-only the three first equations remain. If the time $t$ is considered as the
-evolution parameter of the ray, two equations are necessary
+meaning that the ray is directed along the group velocity $\mathbf{v}_{g}$. In
+a constant plasma $\partial\mathcal{D}/\partial t=0$ and $\omega$ is a
+constant of the ray dynamics. The time $t$ is considered as the evolution
+parameter of the ray and the two remaining equations are
 \begin{align}
-\frac{d\mathbf{r}}{dt}  &  =-\frac{\partial\mathcal{D}}{\partial\mathbf{k}%
+\frac{d\mathbf{r}}{dt} &  =-\frac{\partial\mathcal{D}}{\partial\mathbf{k}%
 }/\frac{\partial\mathcal{D}}{\partial\omega}\label{rayeq1a}\\
-\frac{d\mathbf{k}}{dt}  &  =\frac{\partial\mathcal{D}}{\partial\mathbf{X}%
-}/\frac{\partial\mathcal{D}}{\partial\omega} \label{rayeq2a}%
+\frac{d\mathbf{k}}{dt} &  =\frac{\partial\mathcal{D}}{\partial\mathbf{X}%
+}/\frac{\partial\mathcal{D}}{\partial\omega}\label{rayeq2a}%
 \end{align}
-which are the usual forms found in the litterature. However, one may also keep
+which are the usual forms found in the literature. However, one may
+also keep
 the simple form%
 \begin{align}
-\frac{d\mathbf{X}}{d\tau}  &  =\frac{\partial\mathcal{D}}{\partial\mathbf{k}%
+\frac{d\mathbf{X}}{d\tau} &  =\frac{\partial\mathcal{D}}{\partial\mathbf{k}%
 }\label{rayeq1b}\\
-\frac{d\mathbf{k}}{d\tau}  &  =-\frac{\partial\mathcal{D}}{\partial\mathbf{r}}
-\label{rayeq2b}%
+\frac{d\mathbf{k}}{d\tau} &  =-\frac{\partial\mathcal{D}}{\partial\mathbf{r}%
+}\label{rayeq2b}%
 \end{align}
 if the determination of the group velocity from $\partial\mathcal{D}%
-/\partial\omega$ is not necessary. This reduces the number of derivative to perform.
-
-\subsection{Explicit expressions}
-
-We define $\mathbf{Y}$ the 8-dimension vector that represents the phase-space
-coordinates%
-\begin{equation}
-\mathbf{Y}=\left(
-\begin{array}
-[c]{c}%
-\mathbf{X}\\
-\mathbf{k}\\
-t\\
-\omega
-\end{array}
-\right)
-\end{equation}
-The ray equations (\ref{rayeq1a}-\ref{rayeq1b}) require to evaluate the
-derivatives of the dispersion relation (\ref{disprel}) with respect to the
-coordinates of $\mathbf{Y}$. From the expansion (\ref{dispexp2}) we obtain
-\begin{equation}
-\frac{\partial\mathcal{D}}{\partial\mathbf{Y}}=\sum_{k=1}^{k=43}\frac
-{\partial\mathcal{D}^{\left(  k\right)  }}{\partial\mathbf{Y}}%
-\end{equation}
-where the evaluation of $\partial\mathcal{D}^{\left(  k\right)  }%
-/\partial\mathbf{Y}$ requires to evaluate the derivatives%
-\begin{equation}
-\frac{\partial N_{\Vert}}{\partial\mathbf{Y}};\quad\frac{\partial N_{\bot}%
-}{\partial\mathbf{Y}};\quad\frac{\partial X_{ij}}{\partial\mathbf{Y}}%
-\end{equation}
-with $i=\left\{  x,y,z\right\}  $ and $j=\left\{  x,y,z\right\}  $. The
-derivatives of the susceptibility tensor include the sum of contribution of
-all species $s$
-\begin{equation}
-\frac{\partial X_{ij}}{\partial\mathbf{Y}}=\sum_{s}\frac{\partial X_{ij}^{s}%
-}{\partial\mathbf{Y}}%
-\end{equation}
-Since $\mathbb{X}^{s}=\mathbb{X}^{s}\left(  \mathbf{N},\beta_{Ts}%
-,\overline{\omega}_{ps},\overline{\omega}_{cs}\right)  ,$%
-\begin{align}
-\frac{\partial X_{ij}^{s}}{\partial\mathbf{Y}}  &  =\frac{\partial X_{ij}^{s}%
-}{\partial N_{\bot}}\frac{\partial N_{\bot}}{\partial\mathbf{Y}}%
-+\frac{\partial X_{ij}^{s}}{\partial N_{\Vert}}\frac{\partial N_{\Vert}%
-}{\partial\mathbf{Y}}\nonumber\\
-&  +\frac{\partial X_{ij}^{s}}{\partial\beta_{Ts}}\frac{\partial\beta_{Ts}%
-}{\partial\mathbf{Y}}+\frac{\partial X_{ij}^{s}}{\partial\overline{\omega
-}_{ps}}\frac{\partial\overline{\omega}_{ps}}{\partial\mathbf{Y}}%
-+\frac{\partial X_{ij}^{s}}{\partial\overline{\omega}_{cs}}\frac
-{\partial\overline{\omega}_{cs}}{\partial\mathbf{Y}} \label{derivatives}%
-\end{align}
-In this equation the derivatives of the susceptibility tensor depend upon the
-plasma model (i.e. cold, kinetic, etc). However, the derivatives with respect
-to $\mathbf{Y}$ are function of the coordinate system, which must now be
-explicitly determined.
+/\partial\omega$ is not required. This reduces the number of derivative to calculate.
 
 \section{Canonical coordinates in an axisymmetric toroidal plasma}
 
-\subsection{Coordinate system}
+\subsection{Flux coordinate system}
 
 In an axisymmetric toroidal plasma we define the coordinate system $\left(
-\rho,\theta,\phi\right)  $ where $\theta$ is the poloidal angle orientated
+\rho,\theta,\phi\right)  $ where $\theta$ is the poloidal angle measured
 counterclockwise from the horizontal outboard midplane, $\phi$ is the toroidal
-angle orientated clockwise from the top, and $\rho$ is a radial coordinate
-that varies between $0$ on the axis and $1$ at the plasma edge. $\rho
-=\rho\left(  \psi\right)  $ is a flux function. The magnetic field is
-expressed as%
+angle measured clockwise from the top, and $\rho$ is a radial coordinate that
+varies between $0$ on the axis and $1$ at the plasma edge. $\rho=\rho\left(
+\psi\right)  $ must be a flux function. The magnetic field is expressed as%
 \begin{equation}
 \mathbf{B}=I\left(  \psi\right)  \mathbf{\nabla}\phi+\mathbf{\nabla}\phi
 \times\mathbf{\nabla}\psi
 \end{equation}
 which can be rewritten as%
 \begin{equation}
-\mathbf{B}=\sigma_{B}B_{T}\widehat{\mathbf{\phi}}+\sigma_{I}B_{P}%
-\widehat{\mathbf{s}}%
+\mathbf{B}=\sigma_{B}B_{T}\mathbf{\hat{\phi}}+\sigma_{I}B_{P}\mathbf{\hat{s}}%
 \end{equation}
 where $\sigma_{B}$ is the sign of $B_{\phi}$ and $\sigma_{I}$ is the sign of
 $I_{\phi}$. $B_{T}=\left\vert I\left(  \psi\right)  \right\vert /R$ and
 $B_{P}=\left\Vert \mathbf{\nabla}\psi\right\Vert /R$ are definite positive and
-$\widehat{\mathbf{s}}=\widehat{\mathbf{\phi}}\times\widehat{\mathbf{\rho}}$
-with $\mathbf{\nabla}\rho=\left\Vert \mathbf{\nabla}\rho\right\Vert
-\widehat{\mathbf{\rho}}$ such that $\widehat{\mathbf{s}}$ is orientated
-counter-clockwise in the poloidal plane.
+$\mathbf{\hat{s}}=\mathbf{\hat{\phi}}\times\mathbf{\hat{\rho}}$ with
+$\mathbf{\nabla}\rho=\left\Vert \mathbf{\nabla}\rho\right\Vert \mathbf{\hat
+{\rho}}$ such that $\mathbf{\hat{s}}$ is orientated counter-clockwise in the
+poloidal plane.
 
 In the $\left(  \rho,\theta,\phi\right)  $ coordinate system the covariant
 coordinates of the wave vector $\mathbf{k}$ are%
 \begin{equation}
 k_{i}=\left(  k_{\rho},m,n\right)
 \end{equation}
-The Poisson matrix of cannonically conjugate $\mathbf{X}$ and $\mathbf{k}$ is
+The Poisson matrix of canonically conjugate $\mathbf{X}$ and
+$\mathbf{k}$ is
 \begin{equation}
 \left\{  \mathbf{X},\mathbf{k}\right\}  =\dfrac{\partial\mathbf{X}}%
 {\partial\mathbf{X}}\cdot\dfrac{\partial\mathbf{k}}{\partial\mathbf{k}}%
@@ -669,24 +512,28 @@ and
 
 
 For an axisymmetric magnetic configuration, $\partial\mathcal{D}/\partial
-\phi=0$ such that $n$ is an invariant (\ref{pey96}). Therefore, only five
-equations must be solved. The value of $n$ is given by launching conditions.
+\phi=0$ such that $n$ is an invariant (\ref{h6}). Therefore, only the
+equations (\ref{h1}-\ref{h5})need to be solved. The value of $n$ is determined
+from launching conditions.
 
 \subsection{Parallel index of refraction}
 
 The parallel index of refraction is defined as%
 \begin{align}
-k_{\Vert}  &  =\dfrac{1}{B}\mathbf{k}\cdot\mathbf{B}\\
+k_{\Vert} &  =\dfrac{1}{B}\mathbf{k}\cdot\mathbf{B}\\
 &  =\dfrac{1}{B}k_{i}B^{j}%
 \end{align}
 Here $B^{j}$ are the contravariant coordinates of $\mathbf{B}$, given by%
 \begin{equation}
 B^{j}=\mathbf{B}\cdot\mathbf{e}^{j}%
 \end{equation}
-where $\mathbf{e}^{j}$ $=\left(  \left\Vert \mathbf{\nabla}\rho\right\Vert
-\widehat{\mathbf{\rho}},\dfrac{\widehat{\mathbf{\theta}}}{r},\dfrac
-{\widehat{\mathbf{\phi}}}{R}\right)  $ such that the contravariant coordinates
-of $\mathbf{B}$ are
+where
+\begin{equation}
+\mathbf{e}^{j}=\left(  \left\Vert \mathbf{\nabla}\rho\right\Vert
+\mathbf{\hat{\rho}},\dfrac{\mathbf{\hat{\theta}}}{r},\dfrac{\mathbf{\hat{\phi
+}}}{R}\right)
+\end{equation}
+such that the contravariant coordinates of $\mathbf{B}$ are
 \begin{equation}
 B^{j}=\left(  0,\dfrac{\sigma_{I}B_{P}}{r}\cos\alpha,\dfrac{\sigma_{\phi}%
 B_{T}}{R}\right)
@@ -696,14 +543,14 @@ where $\alpha$ is the angle from $\widehat{\mathbf{\rho}}$ to $\widehat
 \begin{equation}%
 \begin{array}
 [c]{l}%
-\widehat{\mathbf{\rho}}\cdot\widehat{\mathbf{r}}=\cos\alpha\\
-\widehat{\mathbf{\rho}}\cdot\widehat{\mathbf{\theta}}=-\sin\alpha\\
-\widehat{\mathbf{s}}\cdot\widehat{\mathbf{r}}=\sin\alpha\\
-\widehat{\mathbf{s}}\cdot\widehat{\mathbf{\theta}}=\cos\alpha
+\mathbf{\hat{\rho}}\cdot\mathbf{\hat{r}}=\cos\alpha\\
+\mathbf{\hat{\rho}}\cdot\mathbf{\hat{\theta}}=-\sin\alpha\\
+\mathbf{\hat{s}}\cdot\mathbf{\hat{r}}=\sin\alpha\\
+\mathbf{\hat{s}}\cdot\mathbf{\hat{\theta}}=\cos\alpha
 \end{array}
 \end{equation}
-Because $\widehat{\mathbf{\rho}}$ is orientated outward we have $-\pi
-/2<\alpha<\pi/2$.
+Because $\mathbf{\hat{\rho}}$ is orientated outward we have $-\pi/2<\alpha
+<\pi/2$.
 
 Thus we have%
 \begin{equation}
@@ -851,12 +698,13 @@ Explicitly we find%
 
 \subsection{Specular reflection at the plasma edge}
 
-Sometimes a wave is to be reflected within the scrape-off layer, which is
-outside the domain of application of the code. In this case, a specular
-reflection is enforced just before the last closed flux-surface at the
-location $\left(  \rho_{1},\theta_{1},\phi_{1}\right)  $ where the indident
-wave vector is $\left(  k_{\rho1},m_{1},n_{1}\right)  $. The condition for the
-specular reflection is
+Sometimes a wave is to be reflected within the scrape-off layer,
+which is outside the domain of application of the code. In this
+case, a specular reflection is enforced just before the last closed
+flux-surface at the location $\left(
+\rho_{1},\theta_{1},\phi_{1}\right)  $ where the incident wave
+vector is $\left(  k_{\rho1},m_{1},n_{1}\right)  $. The condition
+for the specular reflection is
 \begin{equation}%
 \begin{array}
 [c]{l}%
@@ -968,106 +816,100 @@ where $\overline{S}_{\bot}$ is the energy flow density.
 
 Since magnetic equilibrium codes give field components on a discrete two
 dimensional grid mesh $\left(  \psi,\theta\right)  $, it is necessary to
-perform numerical interpolation. This procedure must be fast and very
-accurate, especially for all first and second derivatives on which the
-ray-tracing is very sensitive. Indeed, coarse interpolation may lead to
-inacceptable cumulative error along the ray path, and finally wrong trajectory.
+perform a numerical interpolation at the ray location. This procedure must be
+fast and very accurate an include first and second derivatives on which the
+ray-tracing is very sensitive. Indeed, coarse interpolation may lead to large
+cumulative errors along the ray path and, ultimately, a wrong trajectory.
 
-\bigskip Among all possible methods$\footnote{Note that this method is
-universal, and may be used from any numerical data provided from a Grad
-Shafranov equation solver. However, since some codes are using finite elements
+\bigskip Among several methods\footnote{Note that this method is universal,
+and may be used from any numerical data provided from a Grad Shafranov
+equation solver. However, since some codes are using finite elements
 techniques, it may be also useful to use them directly instead of performing
-anadditional interpolation procedure based on a spline-Fourier expansion.
-Indeed, finite elements have also all nice properties for calculating magnetic
-field values at any radial and poloidal positions, but first and second
-derivatives may be also calculated with an excellent accuracy. The choice to
-use the spline-Fourier expansion is therefore only guided by the need to have
-a ray-tracing solver as general as possible.}$, one of the most powerful is
-based on the combination of Fourier expansion and spline interpolation, taking
-into account of the periodic nature of the poloidal angle $\theta.$ The usual
-approach is then to express all functions $g\left(  \psi,\theta\right)  $ as a
-Fourier sum%
+an additional interpolation procedure based on a spline-Fourier expansion.
+Indeed, finite elements contain all data needed for calculating magnetic field
+values at any radial and poloidal positions, and first and second derivatives
+may be also calculated with an excellent accuracy. The choice to use the
+spline-Fourier expansion is therefore only guided by the need to have a
+ray-tracing solver as general as possible.}, the combination of Fourier
+expansion and spline interpolation is chosen, taking into account of the
+periodic nature of the poloidal angle $\theta$. Any function $g\left(
+\psi,\theta\right)  $ is expressed as a Fourier sum%
 
 \begin{equation}
 g\left(  \psi,\theta\right)  =a_{0}\left(  \psi\right)  +\sum_{n=1}^{n=N}%
 a_{n}^{c}\left(  \psi\right)  \cos\left(  n\theta\right)  +a_{n}^{s}\left(
 \psi\right)  \sin\left(  n\theta\right)  \label{Fourier}%
 \end{equation}
-where $N\leq N_{\theta}/2,$ $N_{\theta}$ is the number of discrete poloidal
-values according to the Shannon theorem.
-
-First, all Fourier $a_{n}^{(c,s)}\left(  \psi_{i}\right)  $ coefficients are
-determined on each discrete magnetic flux surface $\psi_{i},$ from the set of
-linear equations%
+where $N\leq N_{\theta}/2$ according to the Shannon theorem where $N_{\theta}$
+is the number of discrete poloidal values. The Fourier $a_{n}^{(c,s)}\left(
+\psi_{i}\right)  $ coefficients are determined on each discrete magnetic flux
+surface $\psi_{i}$ according to
 \begin{equation}
-g\left(  \psi_{i},\theta_{j}\right)  =a_{0}\left(  \psi_{i}\right)
-+\sum_{n=1}^{n=N}a_{n}^{c}\left(  \psi_{i}\right)  \cos\left(  n\theta
-_{j}\right)  +a_{n}^{s}\left(  \psi_{i}\right)  \sin\left(  n\theta
-_{j}\right)
+g\left(  \psi_{i},\theta\right)  =a_{0,i}+\sum_{n=1}^{n=N}a_{n,i}^{c}%
+\cos\left(  n\theta\right)  +a_{n,i}^{s}\sin\left(  n\theta\right)
 \end{equation}
-then each coefficient $a_{n}^{(c,s)}\left(  \psi\right)  $ at all radial
-position is deduced by a usual cubic spline interpolation%
+then the coefficients $a_{n}^{(c,s)}\left(  \psi\right)  $ at any radial
+position $\psi_{i}<\psi<\psi_{i+1}$ is obtained using a usual cubic spline interpolation%
 
 \begin{equation}
-a_{n}^{(c,s)}\left(  \psi\right)  =\sum_{\left[  \psi_{i},\psi_{i+1}\right[
-}\alpha_{i}^{(c,s)}\psi^{3}+\beta_{i}^{(c,s)}\psi^{2}+\gamma_{i}^{(c,s)}%
-\psi+\delta_{i}^{(c,s)} \label{cubicspline}%
+a_{n}^{(c,s)}\left(  \psi\right)  =\alpha_{n,i}^{(c,s)}\psi^{3}+\beta
+_{n,i}^{(c,s)}\psi^{2}+\gamma_{n,i}^{(c,s)}\psi+\delta_{n,i}^{(c,s)}%
+\label{cubicspline}%
 \end{equation}
-the $3^{rd}$ order polynomial coefficients being calculated so that at all
-nodes $\psi_{i},$ $a_{n}^{(c,s)}\left(  \psi\right)  $ is continuous, as well
-as the first and second derivatives.
+the 3$^{\text{rd}}$ order polynomial coefficients being calculated so that at
+all nodes $\psi_{i},$ $a_{n}^{(c,s)}\left(  \psi\right)  $ is continuous, as
+well as its first and second derivatives.
 
-Then all required derivatives at any $\left(  \psi,\theta\right)  $ position
-may be easily obtained, according to the relations%
+Then the derivatives at any $\left(  \psi,\theta\right)  $ position are
+obtained from the relations%
 
 \begin{align}
-\frac{\partial g\left(  \psi,\theta\right)  }{\partial\theta}  &  =\sum
-_{n=1}^{n=N}-a_{n}^{c}\left(  \psi\right)  n\sin\left(  n\theta\right)
-+a_{n}^{s}\left(  \psi\right)  n\cos\left(  n\theta\right)
+\frac{\partial g\left(  \psi,\theta\right)  }{\partial\theta} &  =\sum
+_{n=1}^{n=N}n\left[  -a_{n}^{c}\left(  \psi\right)  \sin\left(  n\theta
+\right)  +a_{n}^{s}\left(  \psi\right)  \cos\left(  n\theta\right)  \right]
 \label{derivee1_theta}\\
-\frac{\partial^{2}g\left(  \psi,\theta\right)  }{\partial\theta^{2}}  &
-=\sum_{n=1}^{n=N}a_{n}^{c}\left(  \psi\right)  n^{2}\cos\left(  n\theta
-\right)  -a_{n}^{s}\left(  \psi\right)  n^{2}\sin\left(  n\theta\right)
-\label{derivee2_theta}\\
-\frac{\partial g\left(  \psi,\theta\right)  }{\partial\psi}  &  =\frac
-{\partial a_{0}^{c}\left(  \psi\right)  }{\partial\psi}+\sum_{n=1}^{n=N}%
-\frac{\partial a_{n}^{c}\left(  \psi\right)  }{\partial\psi}\cos\left(
-n\theta\right)  +\frac{\partial a_{n}^{s}\left(  \psi\right)  }{\partial\psi
-}\sin\left(  n\theta\right) \label{derivee1_psi}\\
-\frac{\partial^{2}g\left(  \psi,\theta\right)  }{\partial\psi^{2}}  &
-=\frac{\partial^{2}a_{0}^{c}\left(  \psi\right)  }{\partial\psi^{2}}%
-+\sum_{n=1}^{n=N}\frac{\partial^{2}a_{n}^{c}\left(  \psi\right)  }%
-{\partial\psi^{2}}\cos\left(  n\theta\right)  +\frac{\partial^{2}a_{n}%
-^{s}\left(  \psi\right)  }{\partial\psi^{2}}\sin\left(  n\theta\right)
-\label{derivee2_psi}\\
+\frac{\partial^{2}g\left(  \psi,\theta\right)  }{\partial\theta^{2}} &
+=\sum_{n=1}^{n=N}-n^{2}\left[  a_{n}^{c}\left(  \psi\right)  \cos\left(
+n\theta\right)  +a_{n}^{s}\left(  \psi\right)  \sin\left(  n\theta\right)
+\right]  \label{derivee2_theta}\\
+\frac{\partial g\left(  \psi,\theta\right)  }{\partial\psi} &  =\frac
+{da_{0}^{c}\left(  \psi\right)  }{d\psi}+\sum_{n=1}^{n=N}\frac{da_{n}%
+^{c}\left(  \psi\right)  }{d\psi}\cos\left(  n\theta\right)  +\frac{da_{n}%
+^{s}\left(  \psi\right)  }{d\psi}\sin\left(  n\theta\right)
+\label{derivee1_psi}\\
+\frac{\partial^{2}g\left(  \psi,\theta\right)  }{\partial\psi^{2}} &
+=\frac{d^{2}a_{0}^{c}\left(  \psi\right)  }{d\psi^{2}}+\sum_{n=1}^{n=N}%
+\frac{d^{2}a_{n}^{c}\left(  \psi\right)  }{d\psi^{2}}\cos\left(
+n\theta\right)  +\frac{d^{2}a_{n}^{s}\left(  \psi\right)  }{d\psi^{2}}%
+\sin\left(  n\theta\right)  \label{derivee2_psi}\\
 \frac{\partial^{2}g\left(  \psi,\theta\right)  }{\partial\psi\partial\theta}
-&  =\frac{\partial a_{0}^{c}\left(  \psi\right)  }{\partial\psi}+\sum
-_{n=1}^{n=N}-\frac{\partial a_{n}^{c}\left(  \psi\right)  }{\partial\psi}%
-n\sin\left(  n\theta\right)  +\frac{\partial a_{n}^{s}\left(  \psi\right)
-}{\partial\psi}n\cos\left(  n\theta\right)  \label{derivee2_psitheta}%
+&  =\frac{da_{0}^{c}\left(  \psi\right)  }{d\psi}+\sum_{n=1}^{n=N}n\left[
+-\frac{da_{n}^{c}\left(  \psi\right)  }{d\psi}\sin\left(  n\theta\right)
++\frac{da_{n}^{s}\left(  \psi\right)  }{d\psi}\cos\left(  n\theta\right)
+\right]  \label{derivee2_psitheta}%
 \end{align}
 where%
 \begin{align}
-\frac{\partial a_{n}^{(c,s)}\left(  \psi\right)  }{\partial\psi}  &
-=\sum_{\left[  \psi_{i},\psi_{i+1}\right[  }3\alpha_{i}^{(c,s)}\psi^{2}%
-+2\beta_{i}^{(c,s)}\psi+\gamma_{i}^{(c,s)}\label{derivepsi1}\\
-\frac{\partial^{2}a_{n}^{(c,s)}\left(  \psi\right)  }{\partial\psi^{2}}  &
-=\sum_{\left[  \psi_{i},\psi_{i+1}\right[  }6\alpha_{i}^{(c,s)}\psi+2\beta
-_{i}^{(c,s)} \label{derivepsi2}%
+\frac{da_{n}^{(c,s)}\left(  \psi\right)  }{d\psi} &  =3\alpha_{n,i}%
+^{(c,s)}\psi^{2}+2\beta_{n,i}^{(c,s)}\psi+\gamma_{n,i}^{(c,s)}%
+\label{derivepsi1}\\
+\frac{d^{2}a_{n}^{(c,s)}\left(  \psi\right)  }{d\psi^{2}} &  =6\alpha
+_{n,i}^{(c,s)}\psi+2\beta_{n,i}^{(c,s)}\label{derivepsi2}%
 \end{align}
 
 
-Note that for density and temperature profiles, only a simple cubic spline
-interpolation is performed, since these parameters are function of $\psi$.
-With usualy $65$ poloidal angle values and $101$ radial discrete positions,
-the relative accuracy of the magnetic equlibrium is of the order of $10^{-4}$
-approximately. Larger numerical errors may occur near a $X$-point, where the
-local curvature radius of all magnetic flux surfaces becomes very small. In
-that case and if a more detailed interpolated magnetic reconstruction is
-required, more poloidal points must be used in this region of the plasma,
-keeping the same total number of poloidal values on a non-uniform grid. When
-some smoothing is needed, it is always possible to use less $a_{n}^{(c,s)}$ in
-the Fourier expansion series.
+Note that for density and temperature profiles only a cubic spline
+interpolation is performed, since these parameters are function of
+$\psi$ only. With typically $65$ poloidal angle values and $101$
+radial discrete positions, the relative accuracy of the magnetic
+equilibrium is of the order of $10^{-4}$ approximately. Larger
+numerical errors may occur near a X-point, where the local curvature
+radius of all magnetic flux surfaces becomes very small. In that
+case and if a more detailed interpolated magnetic reconstruction is
+required, more poloidal points must be used in this region of the
+plasma, keeping the same total number of poloidal values on a
+non-uniform grid. When some smoothing is needed, it is always
+possible to use less coefficients in the Fourier expansion series.
 
 \subsection{Runge-Kutta differential equation solver}
 
@@ -1084,25 +926,25 @@ Runge-Kutta algorithm which belongs to the Euler-Cauchy algorithm
 family\footnote{There exists other methods used also for ray-tracing named
 "predictor-corrector" which belong to the general Adams algorithm family.}.
 The procedure consists in solving the differential equations of the type
-$y^{\prime}\left(  x\right)  =g\left(  x,y\left(  x\right)  \right)  $ by an
+$y^{\prime}\left(  x\right)  =f\left(  x,y\left(  x\right)  \right)  $ by an
 iterative method, with the recurrence rule
 \begin{equation}
 y_{n+1}=y_{n}+h\varphi\left(  x_{n},y_{n},h\right)
 \end{equation}
-and the initial condition $y_{0}=y\left(  x_{0}\right)  .$
+and the initial condition $y_{0}=y\left(  x_{0}\right)  $.
 
-A solution of the form is seeked
+A solution of the following form is seeked
 \begin{equation}
 \varphi\left(  x,y,h\right)  =\alpha_{1}f\left(  x,y\left(  x\right)  \right)
 +\alpha_{2}f\left(  x+\alpha h,y+\beta hf\left(  x,y\right)  \right)
 \label{phiRK}%
 \end{equation}
-so that no numerical derivatives must be calculated. From a Taylor series
+so that no numerical derivatives need to be calculated. From a Taylor series
 expansion of $y\left(  x\right)  $ up to the second order, one obtains
 \begin{align}
-\frac{y\left(  x+h\right)  -y\left(  x\right)  }{h}  &  =y^{\prime}\left(
-x\right)  +\frac{h}{2}y^{\prime\prime}\left(  x\right)  +O\left(  h^{2}\right)
-\\
+\frac{y\left(  x+h\right)  -y\left(  x\right)  }{h} &  =y^{\prime}\left(
+x\right)  +\frac{h}{2}y^{\prime\prime}\left(  x\right)  +O\left(
+h^{2}\right)  \\
 &  =f\left(  x,y\right)  +\frac{h}{2}f^{(1)}\left(  x,y\right)  +O\left(
 h^{2}\right)
 \end{align}
@@ -1119,7 +961,7 @@ f\left(  x+\alpha h,y+\beta hf\left(  x,y\right)  \right)  =f+\alpha
 h\frac{\partial f}{\partial x}+\beta hf\frac{\partial f}{\partial y}+O\left(
 h^{2}\right)
 \end{equation}
-and up to the $2^{nd},$ $\varphi$ becomes%
+Thus, up to the $2^{\text{nd }}$order, $\varphi$ becomes%
 \begin{equation}
 \varphi\left(  x,y,h\right)  =\left(  \alpha_{1}+\alpha_{2}\right)  f\left(
 x,y\right)  +h\left[  \alpha\alpha_{2}\frac{\partial f}{\partial x}%
@@ -1128,7 +970,7 @@ x,y\right)  +h\left[  \alpha\alpha_{2}\frac{\partial f}{\partial x}%
 so that%
 \begin{align}
 \frac{y\left(  x+h\right)  -y\left(  x\right)  }{h}-\varphi\left(
-x,y,h\right)   &  =\left(  1-\alpha_{1}-\alpha_{2}\right) \nonumber\\
+x,y,h\right)   &  =\left(  1-\alpha_{1}-\alpha_{2}\right)  \nonumber\\
 &  +h\left(  \frac{1}{2}-\alpha\alpha_{2}\right)  \frac{\partial f}{\partial
 x}\nonumber\\
 &  +h\left(  \frac{1}{2}-\beta\alpha_{2}\right)  \frac{\partial f}{\partial
@@ -1136,17 +978,17 @@ y}+O\left(  h^{2}\right)
 \end{align}
 
 
-Inorder to eleiminate all derivatives, and to obtain a second order accurate
-calculation, coefficients must satisfy the relations%
+In order to obtain a second order accurate calculation, the coefficients must
+satisfy the relations%
 \begin{align}
-\alpha_{1}+\alpha_{2}  &  =1\\
-\alpha\alpha_{2}  &  =1/2\\
-\beta\alpha_{2}  &  =1/2
+\alpha_{1}+\alpha_{2} &  =1\\
+\alpha\alpha_{2} &  =1/2\\
+\beta\alpha_{2} &  =1/2
 \end{align}
 which implies%
 \begin{align}
 \alpha &  =\beta=\frac{1}{2\alpha_{2}}\\
-\alpha_{1}  &  =1-\alpha_{2}%
+\alpha_{1} &  =1-\alpha_{2}%
 \end{align}
 
 
@@ -1159,7 +1001,8 @@ Then the solution is
 where the case $\alpha=1/2$ corresponds to the Eun's algorithm, while
 $\alpha=1$ is corresponding to the modified Euler's algorithm.
 
-A second order Runge-Kutta algorithm is then correponding to the following
+A second order Runge-Kutta algorithm is then corresponding to the
+following
 procedure,%
 \begin{align}
 y_{n+1}  &  =y_{n}+h\varphi\left(  x_{n},y_{n},h\right) \\
@@ -1176,57 +1019,242 @@ function of the local curvature of the ray path. This is the adaptative
 Runge-Kutta method, widely used for solving this type of problem.
 
 \bigskip This procedure, which has been highlighted for order $2,$ may be
-expanded in a similar manner for higher orders. Detailed calculations are not
-given, since they are particularly lenght and tedious. The result for order
-$4$ is%
+expanded in a similar manner to higher orders. Detailed calculations
+can be found in the literature.
 
-\begin{align}
-y_{n+1}  &  =y_{n}+h\varphi\left(  x_{n},y_{n},h\right) \\
-\varphi\left(  x_{n},y_{n},h\right)   &  =\frac{1}{6}\left(  k_{1}%
-+2k_{2}+2k_{3}+k_{4}\right) \\
-k_{1}  &  =f\left(  x,y\right) \\
-k_{2}  &  =f\left(  x+\frac{h}{2},y+\frac{h}{2}k_{1}\right) \\
-k_{3}  &  =f\left(  x+\frac{h}{2},y+\frac{h}{2}k_{2}\right) \\
-k_{4}  &  =f\left(  x+h,y+hk_{3}\right)
-\end{align}
-and order $6$ is
-\begin{align}
-y_{n+1}  &  =y_{n}+h\varphi\left(  x_{n},y_{n},h\right) \\
-\varphi\left(  x_{n},y_{n},h\right)   &  =\frac{1}{6}\left(  k_{1}%
-+2k_{2}+2k_{3}+k_{4}\right) \\
-k_{1}  &  =f\left(  x,y\right) \\
-k_{2}  &  =f\left(  x+\frac{h}{2},y+\frac{h}{2}k_{1}\right) \\
-k_{3}  &  =f\left(  x+\frac{h}{2},y+\frac{h}{2}k_{2}\right) \\
-k_{4}  &  =f\left(  x+h,y+hk_{3}\right)
-\end{align}
-
-
-More precise at each time step that the second order, they requires naturaly
-for extrapolation and therefore calculations are by a factor $3$ between the
-second order and the sixth order. Nevertheless, the main advantage is that
-local small curvature radii may described much more accurately, without
-decreasing $h$ to much.
-
-In the ray-tracing, a sixth order adaptative Runge-Kutta integration method is
-used. The numerical accuracy abtains with this method is very satisfactory,
-and the condition $\left\vert \mathcal{D}\right\vert \leq10^{-10}$ may be
-maintained along the ray path in almost all conditions. A slight reduction of
-the numerical accuracy on $\left\vert \mathcal{D}\right\vert $ is observed
-after the cold fast wave conversion mode.
+In the ray-tracing code, a sixth order adaptative Runge-Kutta integration
+method is used. The numerical accuracy obtained with this method is very
+satisfactory, and the condition $\left\vert \mathcal{D}\right\vert
+\leq10^{-10}$ may be maintained along the ray path in almost all conditions. A
+slight reduction of the numerical accuracy on $\left\vert \mathcal{D}%
+\right\vert $ is observed after the cold/fast wave mode conversion.
 
 \bigskip\appendix{}
+
+\section{Explicit expressions}
+
+In a cartesian system $\left(  x,y,z\right)  $ defined such that the
+background magnetic field is%
+\begin{equation}
+\mathbf{B}_{0}=B_{0}\mathbf{\hat{z}}%
+\end{equation}
+and the wave index of refraction is%
+\begin{equation}
+\mathbf{N}=N_{\Vert}\mathbf{\hat{z}}+N_{\bot}\mathbf{\hat{x}}%
+\end{equation}
+the permittivity tensor can be expressed explicitly as%
+\begin{equation}
+\mathbb{K=}\left(
+\begin{array}
+[c]{ccc}%
+K_{xx} & K_{xy} & K_{xz}\\
+-K_{xy} & K_{yy} & K_{yz}\\
+K_{xz} & -K_{yz} & K_{zz}%
+\end{array}
+\right)
+\end{equation}
+such that the dispersion tensor is
+\begin{equation}
+\mathbb{D=}\left(
+\begin{array}
+[c]{ccc}%
+K_{xx}-N_{\Vert}^{2} & K_{xy} & K_{xz}+N_{\bot}N_{\Vert}\\
+-K_{xy} & K_{yy}-N^{2} & K_{yz}\\
+K_{xz}+N_{\bot}N_{\Vert} & -K_{yz} & K_{zz}-N_{\bot}^{2}%
+\end{array}
+\right)
+\end{equation}
+and the dispersion relation becomes%
+\begin{align}
+\mathcal{D}\left(  \mathbf{k},\omega\right)   &  =\left(  K_{xx}-N_{\Vert}%
+^{2}\right)  \left(  K_{yy}-N^{2}\right)  \left(  K_{zz}-N_{\bot}^{2}\right)
+\\
+&  +2K_{xy}K_{yz}\left(  K_{xz}+N_{\bot}N_{\Vert}\right)  \nonumber\\
+&  -\left(  K_{yy}-N^{2}\right)  \left(  K_{xz}+N_{\bot}N_{\Vert}\right)
+^{2}\nonumber\\
+&  +K_{yz}^{2}\left(  K_{xx}-N_{\Vert}^{2}\right)  +K_{xy}^{2}\left(
+K_{zz}-N_{\bot}^{2}\right)  \nonumber
+\end{align}
+rearranged in powers of $N_{\bot}$ as%
+\begin{equation}
+\mathcal{D}\left(  \mathbf{k},\omega\right)  =P_{4}N_{\bot}^{4}+P_{3}N_{\bot
+}^{3}+P_{2}N_{\bot}^{2}+P_{1}N_{\bot}+P_{0}\label{disprel2}%
+\end{equation}
+with
+\begin{equation}%
+\begin{array}
+[c]{l}%
+P_{4}=K_{xx}\\
+P_{3}=2K_{xz}N_{\Vert}\\
+P_{2}=\left(  K_{xx}+K_{zz}\right)  N_{\Vert}^{2}-\left(  K_{yy}%
++K_{zz}\right)  K_{xx}+K_{xz}^{2}-K_{xy}^{2}\\
+P_{1}=2N_{\Vert}\left(  K_{xz}N_{\Vert}^{2}+K_{xy}K_{yz}-K_{yy}K_{xz}\right)
+\\
+P_{0}=N_{\Vert}^{4}K_{zz}+\left(  K_{xz}^{2}-K_{yz}^{2}-\left[  K_{xx}%
++K_{yy}\right]  K_{zz}\right)  N_{\Vert}^{2}+K_{yy}K_{xx}K_{zz}\\
+\qquad+2K_{xy}K_{yz}K_{xz}+K_{yz}^{2}K_{xx}-K_{yy}K_{xz}^{2}+K_{xy}^{2}K_{zz}%
+\end{array}
+\label{dispexp}%
+\end{equation}
+The dispersion relation (\ref{disprel2}) can be further expanded as%
+
+\begin{align}
+\mathcal{D}  &  =\left(  1+X_{xx}\right)  N_{\bot}^{4}\nonumber\\
+&  +\left(  2N_{\Vert}X_{xz}\right)  N_{\bot}^{3}\nonumber\\
+&  +\left(  N_{\Vert}^{2}\left(  X_{xx}+X_{zz}+2\right)  -2X_{xx}%
+-X_{yy}-X_{zz}\right. \nonumber\\
+&  \left.  -X_{xx}X_{zz}+X_{xz}^{2}-X_{xx}X_{yy}-X_{xy}^{2}-2\right)  N_{\bot
+}^{2}\nonumber\\
+&  +2N_{\Vert}\left(  -X_{yy}X_{xz}+X_{xy}X_{yz}-X_{xz}+N_{\Vert}^{2}%
+X_{xz}\right)  N_{\bot}\nonumber\\
+&  +1+N_{\Vert}^{4}\left(  X_{zz}+1\right) \nonumber\\
+&  +N_{\Vert}^{2}\left(  X_{xz}^{2}-X_{yy}X_{zz}-X_{xx}X_{zz}-2X_{zz}%
+-X_{yy}-X_{yz}^{2}-X_{xx}-2\right) \nonumber\\
+&  +X_{yy}X_{zz}+X_{xx}X_{zz}+X_{xx}X_{yy}\nonumber\\
+&  +X_{xx}X_{yz}^{2}+X_{yz}^{2}+X_{xx}+X_{xy}^{2}+X_{xy}^{2}X_{zz}-X_{xz}%
+^{2}\nonumber\\
+&  -X_{yy}X_{xz}^{2}+X_{yy}+X_{zz}\nonumber\\
+&  +X_{xx}X_{yy}X_{zz}+2X_{xy}X_{yz}X_{xz} \label{D}%
+\end{align}
+
+
+In preparation for calculating the derivatives, it is useful to split the
+dispersion relation in a sum of products%
+\begin{equation}
+\mathcal{D}=\sum_{k=1}^{k=43}\mathcal{D}^{\left(  k\right)  }\label{dispexp2}%
+\end{equation}
+where%
+\begin{equation}%
+\begin{array}
+[c]{l}%
+\mathcal{D}^{\left(  1\right)  }=N_{\bot}^{4}\\
+\mathcal{D}^{\left(  2\right)  }=X_{xx}N_{\bot}^{4}\\
+\mathcal{D}^{\left(  3\right)  }=2N_{\Vert}X_{xz}N_{\bot}^{3}\\
+\mathcal{D}^{\left(  4\right)  }=N_{\Vert}^{2}X_{xx}N_{\bot}^{2}\\
+\mathcal{D}^{\left(  5\right)  }=N_{\Vert}^{2}X_{zz}N_{\bot}^{2}\\
+\mathcal{D}^{\left(  6\right)  }=2N_{\Vert}^{2}N_{\bot}^{2}\\
+\mathcal{D}^{\left(  7\right)  }=-2X_{xx}N_{\bot}^{2}\\
+\mathcal{D}^{\left(  8\right)  }=-X_{yy}N_{\bot}^{2}\\
+\mathcal{D}^{\left(  9\right)  }=-X_{zz}N_{\bot}^{2}\\
+\mathcal{D}^{\left(  10\right)  }=-X_{xx}X_{zz}N_{\bot}^{2}%
+\end{array}
+\end{equation}%
+\begin{equation}%
+\begin{array}
+[c]{l}%
+\mathcal{D}^{\left(  11\right)  }=X_{xz}^{2}N_{\bot}^{2}\\
+\mathcal{D}^{\left(  12\right)  }=-X_{xx}X_{yy}N_{\bot}^{2}\\
+\mathcal{D}^{\left(  13\right)  }=-X_{xy}^{2}N_{\bot}^{2}\\
+\mathcal{D}^{\left(  14\right)  }=-2N_{\bot}^{2}\\
+\mathcal{D}^{\left(  15\right)  }=-2N_{\Vert}X_{yy}X_{xz}N_{\bot}\\
+\mathcal{D}^{\left(  16\right)  }=2N_{\Vert}X_{xy}X_{yz}N_{\bot}\\
+\mathcal{D}^{\left(  17\right)  }=-2N_{\Vert}X_{xz}N_{\bot}\\
+\mathcal{D}^{\left(  18\right)  }=2N_{\Vert}^{3}X_{xz}N_{\bot}\\
+\mathcal{D}^{\left(  19\right)  }=1\\
+\mathcal{D}^{\left(  20\right)  }=N_{\Vert}^{4}X_{zz}%
+\end{array}
+\end{equation}%
+\begin{equation}%
+\begin{array}
+[c]{l}%
+\mathcal{D}^{\left(  21\right)  }=N_{\Vert}^{4}\\
+\mathcal{D}^{\left(  22\right)  }=N_{\Vert}^{2}X_{xz}^{2}\\
+\mathcal{D}^{\left(  23\right)  }=-N_{\Vert}^{2}X_{yy}X_{zz}\\
+\mathcal{D}^{\left(  24\right)  }=-N_{\Vert}^{2}X_{xx}X_{zz}\\
+\mathcal{D}^{\left(  25\right)  }=-2N_{\Vert}^{2}X_{zz}\\
+\mathcal{D}^{\left(  26\right)  }=-N_{\Vert}^{2}X_{yy}\\
+\mathcal{D}^{\left(  27\right)  }=-N_{\Vert}^{2}X_{yz}^{2}\\
+\mathcal{D}^{\left(  28\right)  }=-N_{\Vert}^{2}X_{xx}\\
+\mathcal{D}^{\left(  29\right)  }=-2N_{\Vert}^{2}\\
+\mathcal{D}^{\left(  30\right)  }=X_{yy}X_{zz}%
+\end{array}
+\end{equation}%
+\begin{equation}%
+\begin{array}
+[c]{l}%
+\mathcal{D}^{\left(  31\right)  }=X_{xx}X_{zz}\\
+\mathcal{D}^{\left(  32\right)  }=X_{xx}X_{yy}\\
+\mathcal{D}^{\left(  33\right)  }=X_{xx}X_{yz}^{2}\\
+\mathcal{D}^{\left(  34\right)  }=X_{yz}^{2}\\
+\mathcal{D}^{\left(  35\right)  }=X_{xx}\\
+\mathcal{D}^{\left(  36\right)  }=X_{xy}^{2}\\
+\mathcal{D}^{\left(  37\right)  }=X_{xy}^{2}X_{zz}\\
+\mathcal{D}^{\left(  38\right)  }=-X_{xz}^{2}\\
+\mathcal{D}^{\left(  39\right)  }=-X_{yy}X_{xz}^{2}\\
+\mathcal{D}^{\left(  40\right)  }=X_{yy}%
+\end{array}
+\end{equation}%
+\begin{equation}%
+\begin{array}
+[c]{l}%
+\mathcal{D}^{\left(  41\right)  }=X_{zz}\\
+\mathcal{D}^{\left(  42\right)  }=X_{xx}X_{yy}X_{zz}\\
+\mathcal{D}^{\left(  43\right)  }=2X_{xy}X_{yz}X_{xz}%
+\end{array}
+\end{equation}
+
+
+We define $\mathbf{Y}$ the 8-dimension vector that represents the phase-space
+coordinates%
+\begin{equation}
+\mathbf{Y}=\left(
+\begin{array}
+[c]{c}%
+\mathbf{X}\\
+\mathbf{k}\\
+t\\
+\omega
+\end{array}
+\right)
+\end{equation}
+The ray equations (\ref{rayeq1a}-\ref{rayeq1b}) require to evaluate the
+derivatives of the dispersion relation (\ref{disprel}) with respect to the
+coordinates of $\mathbf{Y}$. From the expansion (\ref{dispexp2}) we obtain
+\begin{equation}
+\frac{\partial\mathcal{D}}{\partial\mathbf{Y}}=\sum_{k=1}^{k=43}\frac
+{\partial\mathcal{D}^{\left(  k\right)  }}{\partial\mathbf{Y}}%
+\end{equation}
+where the evaluation of $\partial\mathcal{D}^{\left(  k\right)  }%
+/\partial\mathbf{Y}$ requires to evaluate the derivatives%
+\begin{equation}
+\frac{\partial N_{\Vert}}{\partial\mathbf{Y}};\quad\frac{\partial N_{\bot}%
+}{\partial\mathbf{Y}};\quad\frac{\partial X_{ij}}{\partial\mathbf{Y}}%
+\end{equation}
+with $i=\left\{  x,y,z\right\}  $ and $j=\left\{  x,y,z\right\}  $. The
+derivatives of the susceptibility tensor include the sum of contribution of
+all species $s$
+\begin{equation}
+\frac{\partial X_{ij}}{\partial\mathbf{Y}}=\sum_{s}\frac{\partial X_{ij}^{s}%
+}{\partial\mathbf{Y}}%
+\end{equation}
+Since $\mathbb{X}^{s}=\mathbb{X}^{s}\left(  \mathbf{N},\beta_{Ts}%
+,\overline{\omega}_{ps},\overline{\omega}_{cs}\right)  ,$%
+\begin{align}
+\frac{\partial X_{ij}^{s}}{\partial\mathbf{Y}} &  =\frac{\partial X_{ij}^{s}%
+}{\partial N_{\bot}}\frac{\partial N_{\bot}}{\partial\mathbf{Y}}%
++\frac{\partial X_{ij}^{s}}{\partial N_{\Vert}}\frac{\partial N_{\Vert}%
+}{\partial\mathbf{Y}}\nonumber\\
+&  +\frac{\partial X_{ij}^{s}}{\partial\beta_{Ts}}\frac{\partial\beta_{Ts}%
+}{\partial\mathbf{Y}}+\frac{\partial X_{ij}^{s}}{\partial\overline{\omega
+}_{ps}}\frac{\partial\overline{\omega}_{ps}}{\partial\mathbf{Y}}%
++\frac{\partial X_{ij}^{s}}{\partial\overline{\omega}_{cs}}\frac
+{\partial\overline{\omega}_{cs}}{\partial\mathbf{Y}}\label{derivatives}%
+\end{align}
+In this equation the derivatives of the susceptibility tensor depend upon the
+plasma model (i.e. cold, kinetic, etc). However, the derivatives with respect
+to $\mathbf{Y}$ are function of the coordinate system.
 
 \section{Various properties of the coordinates system}
 
 \subsection{\bigskip Alternative calculation of the parallel index of
 refraction}
 
-If we take the expression
+The following expression is considered
 \begin{align}
-k_{\Vert}  &  =\dfrac{1}{B}\mathbf{k}\cdot\mathbf{B}\\
+k_{\Vert} &  =\dfrac{1}{B}\mathbf{k}\cdot\mathbf{B}\\
 &  =\dfrac{1}{B}g^{ij}k_{i}B_{j}%
 \end{align}
-with%
+with the metric coefficients%
 \begin{equation}
 g^{ij}=\mathbf{e}^{i}\cdot\mathbf{e}^{j}=\left(
 \begin{array}
@@ -1239,10 +1267,13 @@ g^{ij}=\mathbf{e}^{i}\cdot\mathbf{e}^{j}=\left(
 \end{array}
 \right)
 \end{equation}
-and the magnetic field in the covariant basis $\mathbf{e}_{i}$ $=\left(
-\dfrac{\widehat{\mathbf{r}}}{\left\Vert \mathbf{\nabla}\rho\right\Vert
-\cos\alpha},\dfrac{r\widehat{\mathbf{s}}}{\cos\alpha},R\widehat{\mathbf{\phi}%
-}\right)  $
+The magnetic field in the covariant basis
+\begin{equation}
+\mathbf{e}_{i}=\left(  \dfrac{\widehat{\mathbf{r}}}{\left\Vert \mathbf{\nabla
+}\rho\right\Vert \cos\alpha},\dfrac{r\widehat{\mathbf{s}}}{\cos\alpha
+},R\widehat{\mathbf{\phi}}\right)
+\end{equation}
+has the following coordinates
 \begin{equation}
 B_{j}=\left(  \sigma_{I}\dfrac{\sin\alpha B_{P}}{\left\Vert \mathbf{\nabla
 }\rho\right\Vert \cos\alpha},\sigma_{I}\dfrac{rB_{P}}{\cos\alpha},\sigma
@@ -1268,7 +1299,8 @@ k_{\Vert}=\dfrac{1}{B}\left(  k_{\psi},m,n\right)  \left(
 \sigma_{B}RB_{T}%
 \end{array}
 \right)
-\end{equation}%
+\end{equation}
+which gives%
 \begin{equation}
 k_{\Vert}=\dfrac{1}{B}\left[  \left(  k_{\rho}\left\Vert \mathbf{\nabla}%
 \rho\right\Vert ^{2}-\dfrac{m\left\Vert \mathbf{\nabla}\rho\right\Vert
@@ -1276,7 +1308,8 @@ k_{\Vert}=\dfrac{1}{B}\left[  \left(  k_{\rho}\left\Vert \mathbf{\nabla}%
 \mathbf{\nabla}\rho\right\Vert \cos\alpha}+\left(  -\dfrac{\left\Vert
 \mathbf{\nabla}\rho\right\Vert \sin\alpha}{r}k_{\rho}+\dfrac{m}{r^{2}}\right)
 \sigma_{I}\dfrac{rB_{P}}{\cos\alpha}+\dfrac{n\sigma_{B}}{R^{2}}RB_{T}\right]
-\end{equation}%
+\end{equation}
+and simplifies to%
 \begin{equation}
 k_{\Vert}=\left[  \sigma_{I}\cos\alpha\dfrac{B_{P}}{B}\dfrac{m}{r}+\sigma
 _{B}\dfrac{B_{T}}{B}\dfrac{n}{R}\right]
@@ -1286,14 +1319,15 @@ _{B}\dfrac{B_{T}}{B}\dfrac{n}{R}\right]
 \subsection{Calculation of $k_{\rho}$ and $n$ as a function of $m$, $k_{\Vert
 }$ and $k_{\bot}$}
 
-In the initial conditions we are given $m$ and $k_{\Vert}$. Then $k_{\bot}$ is
-calculated from the dispersion relation. We need to express $k_{\rho}$ and $n$
-as a function of $m$, $k_{\Vert}$ and $k_{\bot}$. We have%
+Generally, the initial conditions determine $m$ and $k_{\Vert}$. Then
+$k_{\bot}$ is calculated from the dispersion relation. We need to express
+$k_{\rho}$ and $n$ as a function of $m$, $k_{\Vert}$ and $k_{\bot}$. We have%
 \begin{equation}
 k_{\bot}^{2}=k_{\rho}^{2}\left\Vert \mathbf{\nabla}\rho\right\Vert
 ^{2}-2k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \dfrac{m\sin\alpha}%
-{r}+\dfrac{m^{2}}{r^{2}}+\dfrac{n^{2}}{R^{2}}-k_{\Vert}^{2}%
-\end{equation}%
+{r}+\dfrac{m^{2}}{r^{2}}+\dfrac{n^{2}}{R^{2}}-k_{\Vert}^{2}\label{kperp}%
+\end{equation}
+and%
 \begin{equation}
 k_{\Vert}=\sigma_{I}P\cos\alpha\dfrac{m}{r}+\sigma_{B}T\dfrac{n}{R}%
 \end{equation}
@@ -1303,58 +1337,14 @@ $n$%
 n=\sigma_{B}\dfrac{R}{T}\left(  k_{\Vert}-\sigma_{I}P\cos\alpha\dfrac{m}%
 {r}\right)  \label{toroidalwavenumberdef}%
 \end{equation}
-which is inserted back in () to get%
+which is inserted back in (\ref{kperp}) to get%
 \begin{equation}
 k_{\bot}^{2}=k_{\rho}^{2}\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2}%
 -2\sin\alpha\dfrac{m}{r}k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert
 +\dfrac{m^{2}}{r^{2}}+\dfrac{1}{T^{2}}\left(  k_{\Vert}-\sigma_{I}P\cos
 \alpha\dfrac{m}{r}\right)  ^{2}-k_{\Vert}^{2}\label{kperp2def}%
-\end{equation}%
-\begin{equation}
-k_{\bot}^{2}=k_{\rho}^{2}\left\Vert \mathbf{\nabla}\rho\right\Vert
-^{2}-2\dfrac{m}{r}\left(  \sin\alpha k_{\rho}\left\Vert \mathbf{\nabla}%
-\rho\right\Vert +\sigma_{I}\dfrac{P}{T^{2}}\cos\alpha k_{\Vert}\right)
-+\dfrac{m^{2}}{r^{2}}\left(  1+\dfrac{P^{2}}{T^{2}}\cos^{2}\alpha\right)
-+\dfrac{P^{2}}{T^{2}}k_{\Vert}^{2}%
 \end{equation}
-Defining $T=\cos\mu$ and $P=\sin\mu$%
-\begin{equation}
-n=\sigma_{B}R\left(  \dfrac{k_{\Vert}}{\cos\mu}-\sigma_{I}\tan\mu\cos
-\alpha\dfrac{m}{r}\right)
-\end{equation}%
-\begin{equation}
-k_{\bot}^{2}=k_{\rho}^{2}\left\Vert \mathbf{\nabla}\rho\right\Vert
-^{2}-2\dfrac{m}{r}\left(  \sin\alpha k_{\rho}\left\Vert \mathbf{\nabla}%
-\rho\right\Vert +\sigma_{I}\dfrac{\tan\mu}{\cos\mu}\cos\alpha k_{\Vert
-}\right)  +\dfrac{m^{2}}{r^{2}}\left(  1+\tan^{2}\mu\cos^{2}\alpha\right)
-+\tan^{2}\mu k_{\Vert}^{2}%
-\end{equation}
-
-
-For circular cross sections, $\alpha=0$ and $k_{\rho}\left\Vert \mathbf{\nabla
-}\rho\right\Vert =k_{r}$.
-\begin{equation}
-n=\sigma_{B}R\left(  \dfrac{k_{\Vert}}{\cos\mu}-\sigma_{I}\tan\mu\dfrac{m}%
-{r}\right)
-\end{equation}%
-\begin{equation}
-k_{\bot}^{2}=k_{r}^{2}-2\sigma_{I}\dfrac{m}{r}\dfrac{\tan\mu}{\cos\mu}%
-k_{\Vert}+\dfrac{m^{2}}{r^{2}\cos^{2}\mu}+\tan^{2}\mu k_{\Vert}^{2}%
-\end{equation}
-For purely toroidal fields $\mu=0$
-\begin{equation}
-n=\sigma_{B}Rk_{\Vert}%
-\end{equation}%
-\begin{equation}
-k_{\bot}^{2}=k_{r}^{2}+\dfrac{m^{2}}{r^{2}}%
-\end{equation}
-Now find $k_{\rho}$%
-\begin{equation}
-k_{\rho}^{2}\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2}-2\sin\alpha
-\dfrac{m}{r}k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert +\dfrac{m^{2}%
-}{r^{2}}+\dfrac{1}{T^{2}}\left(  k_{\Vert}-\sigma_{I}P\cos\alpha\dfrac{m}%
-{r}\right)  ^{2}-k_{\Vert}^{2}-k_{\bot}^{2}=0
-\end{equation}%
+and $k_{\rho}$ is solution of the equation%
 \begin{equation}
 k_{\rho}^{2}\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2}-2\sin\alpha
 \dfrac{m}{r}k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert +\left(
@@ -1362,15 +1352,18 @@ k_{\rho}^{2}\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2}-2\sin\alpha
 {P^{2}}{T^{2}}k_{\Vert}^{2}-2\sigma_{I}\dfrac{P}{T^{2}}\cos\alpha\dfrac{m}%
 {r}k_{\Vert}-k_{\bot}^{2}=0
 \end{equation}
-defining%
+
+
+Defining%
 \begin{equation}
 X=k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert
-\end{equation}%
+\end{equation}
+and%
 \begin{align}
-B  &  =\sin\alpha\dfrac{m}{r}\\
-C  &  =\left(  1+\dfrac{P^{2}}{T^{2}}\cos^{2}\alpha\right)  \dfrac{m^{2}%
-}{r^{2}}+\dfrac{P^{2}}{T^{2}}k_{\Vert}^{2}-2\sigma_{I}\dfrac{P}{T^{2}}%
-\dfrac{m}{r}k_{\Vert}\cos\alpha-k_{\bot}^{2}%
+B &  =\sin\alpha\dfrac{m}{r}\\
+C &  =\left(  1+\dfrac{P^{2}}{T^{2}}\cos^{2}\alpha\right)  \dfrac{m^{2}}%
+{r^{2}}+\dfrac{P^{2}}{T^{2}}k_{\Vert}^{2}-2\sigma_{I}\dfrac{P}{T^{2}}\dfrac
+{m}{r}k_{\Vert}\cos\alpha-k_{\bot}^{2}%
 \end{align}
 we have%
 \begin{equation}
@@ -1383,38 +1376,8 @@ X=B\pm\sqrt{B^{2}-C}%
 which gives%
 \begin{equation}
 k_{\rho}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[
-\sin\alpha\dfrac{m}{r}\pm\sqrt{\sin^{2}\alpha\dfrac{m^{2}}{r^{2}}-\left[
-\left(  1+\dfrac{P^{2}}{T^{2}}\cos^{2}\alpha\right)  \dfrac{m^{2}}{r^{2}%
-}+\dfrac{P^{2}}{T^{2}}k_{\Vert}^{2}-2\sigma_{I}\dfrac{P}{T^{2}}\dfrac{m}%
-{r}k_{\Vert}\cos\alpha-k_{\bot}^{2}\right]  }\right]
-\end{equation}
-rewriten as%
-\begin{equation}
-k_{\rho}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[
 \sin\alpha\dfrac{m}{r}\pm\sqrt{k_{\bot}^{2}-\dfrac{1}{T^{2}}\left(  \cos
 \alpha\dfrac{m}{r}-\sigma_{I}Pk_{\Vert}\right)  ^{2}}\right]
-\end{equation}%
-\begin{equation}
-k_{\rho}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[
-\sin\alpha\dfrac{m}{r}\pm\sqrt{k_{\bot}^{2}-\dfrac{1}{\cos^{2}\mu}\left(
-\cos\alpha\dfrac{m}{r}-\sigma_{I}\sin\mu k_{\Vert}\right)  ^{2}}\right]
-\end{equation}
-For circular cross sections, $\alpha=0$
-\begin{equation}
-k_{\rho}=\pm\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\sqrt
-{k_{\bot}^{2}-\dfrac{1}{\cos^{2}\mu}\left(  \dfrac{m}{r}-\sigma_{I}\sin\mu
-k_{\Vert}\right)  ^{2}}%
-\end{equation}
-and $k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert =k_{r}$%
-\begin{equation}
-k_{r}=\pm\sqrt{k_{\bot}^{2}-\dfrac{1}{\cos^{2}\mu}\left(  \dfrac{m}{r}%
--\sigma_{I}\sin\mu k_{\Vert}\right)  ^{2}}%
-\end{equation}
-
-
-For purely toroidal fields $\mu=0$%
-\begin{equation}
-k_{r}=\pm\sqrt{k_{\bot}^{2}-\dfrac{m^{2}}{r^{2}}}%
 \end{equation}
 To sum up%
 \begin{equation}
@@ -1423,7 +1386,7 @@ To sum up%
 [c]{l}%
 n=\sigma_{B}\dfrac{R}{T}\left(  k_{\Vert}-\sigma_{I}P\cos\alpha\dfrac{m}%
 {r}\right)  \\
-m=\sigma_{I}\frac{r}{P\cos\alpha}\left(  k_{\Vert}-\sigma_{B}T\dfrac{n}%
+m=\sigma_{I}\dfrac{r}{P\cos\alpha}\left(  k_{\Vert}-\sigma_{B}T\dfrac{n}%
 {R}\right)  \\
 k_{\rho}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[
 \sin\alpha\dfrac{m}{r}+\sigma_{\rho}\sqrt{k_{\bot}^{2}-\dfrac{1}{T^{2}}\left(
@@ -1442,29 +1405,32 @@ where $\sigma_{\rho}=\pm1$. We can also express $k_{\rho}$ as
 \subsection{Calculation of $k_{\rho}$, $m$ and $n$ as a function of
 $\mathbf{k}$}
 
-The vector $\mathbf{k}$ is projected onto the covariant basis $\mathbf{e}_{i}$
-$=\left(  \dfrac{\widehat{\mathbf{r}}}{\left\Vert \mathbf{\nabla}%
-\rho\right\Vert \cos\alpha},\dfrac{r\widehat{\mathbf{s}}}{\cos\alpha
-},R\widehat{\mathbf{\phi}}\right)  $, such that
+The vector $\mathbf{k}$ is projected onto the covariant basis
+\begin{equation}
+\mathbf{e}_{i}=\left(  \dfrac{\mathbf{\hat{r}}}{\left\Vert \mathbf{\nabla}%
+\rho\right\Vert \cos\alpha},\dfrac{r\mathbf{\hat{s}}}{\cos\alpha
+},R\mathbf{\hat{\phi}}\right)
+\end{equation}
+such that
 \begin{equation}%
 \begin{array}
 [c]{l}%
-k_{\rho}=\dfrac{\widehat{\mathbf{r}}\cdot\mathbf{k}}{\left\Vert \mathbf{\nabla
+k_{\rho}=\dfrac{\mathbf{\hat{r}}\cdot\mathbf{k}}{\left\Vert \mathbf{\nabla
 }\rho\right\Vert \cos\alpha}\\
-m=\dfrac{r\widehat{\mathbf{s}}\cdot\mathbf{k}}{\cos\alpha}\\
-n=R\widehat{\mathbf{\phi}}\cdot\mathbf{k}%
+m=\dfrac{r\mathbf{\hat{s}}\cdot\mathbf{k}}{\cos\alpha}\\
+n=R\mathbf{\hat{\phi}}\cdot\mathbf{k}%
 \end{array}
 \end{equation}
 If $\mathbf{k}$ is expressed in coordinates $\left(  R,Z,\phi\right)  $ as
-$\mathbf{k}=k_{R}\widehat{\mathbf{R}}+k_{Z}\widehat{\mathbf{Z}}+k_{\phi
-}\widehat{\mathbf{\phi}}$ or in coordinates $\left(  r,\theta,\phi\right)  $
-as $\mathbf{k}=k_{r}\widehat{\mathbf{r}}+k_{\theta}\widehat{\mathbf{\theta}%
-}+k_{\phi}\widehat{\mathbf{\phi}}$ we get%
+$\mathbf{k}=k_{R}\mathbf{\hat{R}}+k_{Z}\mathbf{\hat{Z}}+k_{\phi}%
+\mathbf{\hat{\phi}}$ or in coordinates $\left(  r,\theta,\phi\right)  $ as
+$\mathbf{k}=k_{r}\mathbf{\hat{r}}+k_{\theta}\mathbf{\hat{\theta}}+k_{\phi
+}\mathbf{\hat{\phi}}$ we get%
 \begin{equation}%
 \begin{array}
 [c]{l}%
 k_{\rho}=\dfrac{k_{r}}{\left\Vert \mathbf{\nabla}\rho\right\Vert \cos\alpha}\\
-m=r\left(  k_{\theta}+k_{r}\tan\alpha\right) \\
+m=r\left(  k_{\theta}+k_{r}\tan\alpha\right)  \\
 n=Rk_{\phi}%
 \end{array}
 \label{projection}%
@@ -1481,21 +1447,21 @@ Note that we retrieve%
 \begin{equation}%
 \begin{array}
 [c]{l}%
-k_{\Vert}=\sigma_{I}P\left(  \widehat{\mathbf{s}}\cdot\mathbf{k}\right)
-+\sigma_{B}T\left(  \widehat{\mathbf{\phi}}\cdot\mathbf{k}\right)
-=\dfrac{\mathbf{B}\cdot\mathbf{k}}{\left\Vert \mathbf{B}\right\Vert }\\
-k_{\bot}=\sqrt{\left[  \left(  \widehat{\mathbf{\rho}}\cdot\mathbf{k}\right)
-^{2}+\left(  \widehat{\mathbf{s}}\cdot\mathbf{k}\right)  ^{2}+\left(
-\widehat{\mathbf{\phi}}\cdot\mathbf{k}\right)  ^{2}-k_{\Vert}^{2}\right]
-}=\sqrt{k^{2}-k_{\Vert}^{2}}%
+k_{\Vert}=\sigma_{I}P\left(  \mathbf{\hat{s}}\cdot\mathbf{k}\right)
++\sigma_{B}T\left(  \mathbf{\hat{\phi}}\cdot\mathbf{k}\right)  =\dfrac
+{\mathbf{B}\cdot\mathbf{k}}{\left\Vert \mathbf{B}\right\Vert }\\
+k_{\bot}=\sqrt{\left[  \left(  \mathbf{\hat{\rho}}\cdot\mathbf{k}\right)
+^{2}+\left(  \mathbf{\hat{s}}\cdot\mathbf{k}\right)  ^{2}+\left(
+\mathbf{\hat{\phi}}\cdot\mathbf{k}\right)  ^{2}-k_{\Vert}^{2}\right]  }%
+=\sqrt{k^{2}-k_{\Vert}^{2}}%
 \end{array}
 \end{equation}
 since%
 \begin{equation}%
 \begin{array}
 [c]{l}%
-\widehat{\mathbf{s}}\cdot\mathbf{k}=\sin\alpha k_{r}+\cos\alpha k_{\theta}\\
-\widehat{\mathbf{\rho}}\cdot\mathbf{k}=\cos\alpha k_{r}-\sin\alpha k_{\theta}%
+\mathbf{\hat{s}}\cdot\mathbf{k}=\sin\alpha k_{r}+\cos\alpha k_{\theta}\\
+\mathbf{\hat{\rho}}\cdot\mathbf{k}=\cos\alpha k_{r}-\sin\alpha k_{\theta}%
 \end{array}
 \end{equation}
 
@@ -1520,26 +1486,6 @@ rearranged as%
 k_{\bot}^{2}=\left(  k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert
 -\sin\alpha\dfrac{m}{r}\right)  ^{2}+\left(  \sigma_{B}T\cos\alpha\dfrac{m}%
 {r}-\sigma_{I}P\dfrac{n}{R}\right)  ^{2}%
-\end{equation}
-For circular cross sections, $\alpha=0$%
-\begin{equation}
-k_{\Vert}=\sigma_{I}P\dfrac{m}{r}+\sigma_{B}T\dfrac{n}{R}%
-\end{equation}%
-\begin{equation}
-k_{\bot}^{2}=k_{\rho}^{2}\left\Vert \mathbf{\nabla}\rho\right\Vert
-^{2}+\left(  \sigma_{B}T\dfrac{m}{r}-\sigma_{I}P\dfrac{n}{R}\right)  ^{2}%
-\end{equation}
-and $k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert =k_{r}$%
-\begin{equation}
-k_{\bot}^{2}=k_{r}^{2}+\left(  \sigma_{B}T\dfrac{m}{r}-\sigma_{I}P\dfrac{n}%
-{R}\right)  ^{2}%
-\end{equation}
-For purely toroidal fields $\mu=0$ or $P=0$%
-\begin{equation}
-k_{\Vert}=\sigma_{B}\dfrac{n}{R}%
-\end{equation}%
-\begin{equation}
-k_{\bot}^{2}=k_{r}^{2}+\dfrac{m^{2}}{r^{2}}%
 \end{equation}
 To sum up%
 \begin{equation}
@@ -1567,9 +1513,9 @@ have then
 \mathbf{\nabla}\rho &  =\dfrac{1}{a_{p}}\left.  \dfrac{\partial N_{\Vert}%
 }{\partial\psi}\right\vert _{\theta=0}\mathbf{\nabla}\psi\\
 &  =\dfrac{1}{a_{p}}\left.  \dfrac{\partial N_{\Vert}}{\partial\psi
-}\right\vert _{\theta=0}RB_{P}\widehat{\mathbf{\psi}}\\
+}\right\vert _{\theta=0}RB_{P}\mathbf{\hat{\psi}}\\
 &  =\dfrac{\partial\rho}{\partial\overline{\psi}}\dfrac{RB_{P}}{\psi_{a}%
-}\widehat{\mathbf{\psi}}%
+}\mathbf{\hat{\psi}}%
 \end{align}
 with $\overline{\psi}=\psi/\psi_{a}$. Thus%
 \begin{equation}
@@ -1859,7 +1805,7 @@ with those from \cite{hei99}.%
 %width 5.796in;  height 4.3638in;  depth 0pt;  original-width 7.4581in;
 %original-height 5.6066in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename '../Examples/JETlike/WAVE/figures/JETliketest_numeric_RayPoloidal.eps';file-properties "NPEU";}%
+%filename '../Examples/JETlike/WAVE/figures/JETliketest_numeric_RayPoloidal.eps';file-properties "XNPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -1885,7 +1831,7 @@ magnetic equilibrium). $N_{\phi0}=-2.0$}%
 %width 5.796in;  height 4.3638in;  depth 0pt;  original-width 7.4581in;
 %original-height 5.6066in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename 'JETliketest_analytic_RayPoloidal.eps';file-properties "XNPEU";}}}%
+%filename 'JETliketest_analytic_RayPoloidal.eps';file-properties "NPEU";}}}%
 %BeginExpansion
 \begin{figure}
 [ptb]
@@ -1910,7 +1856,7 @@ magnetic equilibrium). $N_{\phi0}=-2.0$}%
 %width 5.796in;  height 4.3638in;  depth 0pt;  original-width 7.4581in;
 %original-height 5.6066in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename '../Examples/JETlike/WAVE/figures/JETliketest_numeric_RayPoloidal.eps';file-properties "NPEU";}%
+%filename '../Examples/JETlike/WAVE/figures/JETliketest_numeric_RayPoloidal.eps';file-properties "XNPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -1936,7 +1882,7 @@ magnetic equilibrium). $N_{\phi0}=-1.8$}%
 %width 5.796in;  height 4.3638in;  depth 0pt;  original-width 7.4581in;
 %original-height 5.6066in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename 'JETliketest_analytic_RayPoloidal.eps';file-properties "XNPEU";}}}%
+%filename 'JETliketest_analytic_RayPoloidal.eps';file-properties "NPEU";}}}%
 %BeginExpansion
 \begin{figure}
 [ptb]
@@ -1959,7 +1905,7 @@ magnetic equilibrium). $N_{\phi0}=-1.8$}%
 %width 5.8591in;  height 3.4126in;  depth 0pt;  original-width 5.8003in;
 %original-height 3.3667in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename '../Examples/JETlike/WAVE/Paper_Heikkinen_et_al.jpg';file-properties "NPEU";}%
+%filename '../Examples/JETlike/WAVE/Paper_Heikkinen_et_al.jpg';file-properties "XNPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -1985,7 +1931,7 @@ width=5.8591in
 %width 5.796in;  height 4.3638in;  depth 0pt;  original-width 7.4581in;
 %original-height 5.6066in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename '../Examples/JETlike/WAVE/figures/JETliketest_numeric_PoloidalMode.eps';file-properties "NPEU";}%
+%filename '../Examples/JETlike/WAVE/figures/JETliketest_numeric_PoloidalMode.eps';file-properties "XNPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -2009,7 +1955,7 @@ equilibrium). $N_{\phi0}=-2.0$}%
 %width 5.796in;  height 4.3638in;  depth 0pt;  original-width 7.4581in;
 %original-height 5.6066in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename '../Examples/JETlike/WAVE/figures/JETliketest_numeric_Npar.eps';file-properties "NPEU";}%
+%filename '../Examples/JETlike/WAVE/figures/JETliketest_numeric_Npar.eps';file-properties "XNPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -2032,7 +1978,7 @@ width=5.796in
 %valid_file "F";  width 5.796in;  height 4.3638in;  depth 0pt;
 %original-width 7.4581in;  original-height 5.6066in;  cropleft "0";
 %croptop "1";  cropright "1";  cropbottom "0";
-%filename '../Examples/JETlike/WAVE/figures/JETliketest_numeric_Disp.eps';file-properties "NPEU";}%
+%filename '../Examples/JETlike/WAVE/figures/JETliketest_numeric_Disp.eps';file-properties "XNPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -2061,28 +2007,31 @@ interpolation for the Fourier coefficients. The vectorization procedure takes
 typically $8.3$ seconds on computer equipped with a 64 bits biprocessor AMD
 opteron clocked at $2.4$ GHz, with $4$ GBytes of RAM memory.
 
-Ray calculation parameters for the example here presented are representative
-of almost all ray-tracing calculations used for tokamak current drive
-simulation. Ray parameters are stored in the memory each time the radial
-increment $\Delta\rho$ is larger than $10^{-4}.$ For refined ray calculation,
-$\Delta\rho$ may be lowered, but the value here used gives satisfactory
-results for all simualtions which have been performed with the code. In the
-$6^{th}$ order Runge-Kutta procedure, the generalized incremental step $h$ is
+Ray calculation parameters for the example here presented are
+representative of almost all ray-tracing calculations used for
+tokamak current drive simulation. Ray parameters are stored in the
+memory each time the radial increment $\Delta\rho$ is larger than
+$10^{-4}.$ For refined ray calculation, $\Delta\rho$ may be lowered,
+but the value here used gives satisfactory results for all
+simulations which have been performed with the code. In the $6^{th}$
+order Runge-Kutta procedure, the generalized incremental step $h$ is
 adjusted so that the norm\footnote{The infinite norm $\left\Vert
-\mathbf{X}\right\Vert _{\infty}=\max_{i\in\left[  1,N\right]  }\left(
-\left\vert X_{i}\right\vert \right)  $ is used, where $N$ is the diemension of
-teh vector $\mathbf{X}.$} of the variation along the six directions of
-extrapolation never exceeds the tolerance level which is set to $10^{-12}.$
-The tolerance level is arbitrarily chosen so that the ray trajectory as well
-as all wave parameters are independent of its value. Below $10^{-10},$ the
-gain on the ray accuray is usualy marginal as compared to the increase of the
+\mathbf{X}\right\Vert _{\infty}=\max_{i\in\left[  1,N\right] }\left(
+\left\vert X_{i}\right\vert \right)  $ is used, where $N$ is the
+dimension of TeX vector $\mathbf{X}.$} of the variation along the
+six directions of extrapolation never exceeds the tolerance level
+which is set to $10^{-12}.$ The tolerance level is arbitrarily
+chosen so that the ray trajectory as well as all wave parameters are
+independent of its value. Below $10^{-10},$ the gain on the ray
+accuracy is usually marginal as compared to the increase of the
 computer time consumption.
 
-The initial time increment is set to $\Delta t_{0}=10^{-4}$ in normalized
-units, and the calculation ends when $t_{end}=10000,$ with a maximum of
-$60000$ values stored in the meory. Since the time step evolves along the ray
-trajectory depending upon the ray curvature, the effective number of values is
-much less, and in this exemple, $t_{end}$ is reached for $5499$ points.
+The initial time increment is set to $\Delta t_{0}=10^{-4}$ in
+normalized units, and the calculation ends when $t_{end}=10000,$
+with a maximum of $60000$ values stored in the memory. Since the
+time step evolves along the ray trajectory depending upon the ray
+curvature, the effective number of values is much less, and in this
+example, $t_{end}$ is reached for $5499$ points.
 
 For the numerical equilibrium, the ray trajectory is calculed in $35.15$
 seconds, while only $1.21$ seconds are needed for the analytic equilibrium.
@@ -2126,9 +2075,9 @@ n_{ea} & 2.0\times10^{18}\text{ m}^{-3} & 0.5625\times10^{18}\text{ m}^{-3}\\
 \alpha_{n} & 0.1 & -0.571
 \end{array}
 \end{equation}
-In the calculations, the scrappe-off layer is not considered, since the
-specular reflection is enforced on the last closed magnetic surface for the
-Lower Hybrid wave.
+In the calculations, the scrape-off layer is not considered, since
+the specular reflection is enforced on the last closed magnetic
+surface for the Lower Hybrid wave.
 
 For both tokamaks, a flat $Z_{eff}$ profile is considered, with $Z_{eff}=4$
 for $VERSATOR$ II and $Z_{eff}=2$ for $PLT.$ For $VERSATOR$ II, the plasma is
@@ -2136,7 +2085,7 @@ made of hydrogen ions, while deuterium ions are taken for $PLT$. For both
 machines, a fully stripped single impurity model is considered, using carbon
 ions $m_{c}=12,$ $Z_{c}=6.$
 
-The magnetic equilibrium is charaterized by a parabolic safety factor profile%
+The magnetic equilibrium is characterized by a parabolic safety factor profile%
 \begin{equation}
 q\left(  \rho\right)  =q_{\min}+\left(  q_{\max}-q_{\min}\right)  \rho^{2}%
 \end{equation}
@@ -2208,7 +2157,7 @@ the plasma center to closely.%
 %width 5.796in;  height 4.3638in;  depth 0pt;  original-width 7.4581in;
 %original-height 5.6066in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename '../Examples/VERSATOR2/WAVE/figures/VERSATOR2test_numeric_RayPoloidal.eps';file-properties "NPEU";}%
+%filename '../Examples/VERSATOR2/WAVE/figures/VERSATOR2test_numeric_RayPoloidal.eps';file-properties "XNPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -2234,7 +2183,7 @@ magnetic equilibrium). $VERSATOR$ II, $N_{\Vert0}=5.0$}%
 %width 5.796in;  height 4.3638in;  depth 0pt;  original-width 7.4581in;
 %original-height 5.6066in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename '../Examples/VERSATOR2/WAVE/figures/VERSATOR2test_analytic_RayPoloidal.eps';file-properties "NPEU";}%
+%filename '../Examples/VERSATOR2/WAVE/figures/VERSATOR2test_analytic_RayPoloidal.eps';file-properties "XNPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -2264,7 +2213,7 @@ a numerical or an analytical magnetic equilibrium is clearly visible.%
 %width 5.796in;  height 4.3638in;  depth 0pt;  original-width 7.4581in;
 %original-height 5.6066in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename '../Examples/PLT/WAVE/figures/PLTtest_numeric_RayPoloidal.eps';file-properties "NPEU";}%
+%filename '../Examples/PLT/WAVE/figures/PLTtest_numeric_RayPoloidal.eps';file-properties "XNPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -2290,7 +2239,7 @@ magnetic equilibrium). $PLT$, $N_{\Vert0}=1.33$}%
 %width 5.796in;  height 4.3638in;  depth 0pt;  original-width 7.4581in;
 %original-height 5.6066in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename '../Examples/PLT/WAVE/figures/PLTtest_analytic_RayPoloidal.eps';file-properties "NPEU";}%
+%filename '../Examples/PLT/WAVE/figures/PLTtest_analytic_RayPoloidal.eps';file-properties "XNPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -2309,18 +2258,20 @@ magnetic equilibrium). $PLT$, $N_{\Vert0}=1.33$}%
 %EndExpansion
 
 
-However, there is now anomalous behaviour especially when the ray propagates
-close to the plasma center, since the cumulative error is increasing
-progressively for all wave parameters. In particular, regarding the spectral
-width associated to the ray for quasilinear damping, it is likely that the
-slight difference will have no deleterious consequences on the power
-absorption profile for the case of $PLT$, since a rather strong $N_{\Vert}$
-upshift takes place after few passes in the plasma. This result points out the
-well known problem in very weakly absorbing plasma, that power absorption
-profile becomes strongly affected by the cumulative error along the ray path.
-It is important to note that the numerical tolerance in the Runge-Kutta
-algorithm has almost no influence (here taken to $10^{-12}$), the sensitivity
-of the ray trajectory to magnetic equilibrium being an intrinsic property of
+However, there is now anomalous behavior especially when the ray
+propagates close to the plasma center, since the cumulative error is
+increasing progressively for all wave parameters. In particular,
+regarding the spectral width associated to the ray for quasilinear
+damping, it is likely that the slight difference will have no
+deleterious consequences on the power absorption profile for the
+case of $PLT$, since a rather strong $N_{\Vert}$ upshift takes place
+after few passes in the plasma. This result points out the well
+known problem in very weakly absorbing plasma, that power absorption
+profile becomes strongly affected by the cumulative error along the
+ray path. It is important to note that the numerical tolerance in
+the Runge-Kutta algorithm has almost no influence (here taken to
+$10^{-12}$), the sensitivity of the ray trajectory to magnetic
+equilibrium being an intrinsic property of
 the very weakly absorbed waves.%
 %TCIMACRO{\FRAME{ftbpFU}{5.796in}{4.3638in}{0pt}{\Qcb{Radial position of the
 %ray trajectory as function of the toroidal angle ($PLT$). $N_{\Vert}=1.33$}}%
@@ -2329,7 +2280,7 @@ the very weakly absorbed waves.%
 %valid_file "F";  width 5.796in;  height 4.3638in;  depth 0pt;
 %original-width 7.4581in;  original-height 5.6066in;  cropleft "0";
 %croptop "1";  cropright "1";  cropbottom "0";
-%filename '../Examples/PLT/WAVE/figures/PLTtest_analytic_RhoComp.eps';file-properties "NPEU";}%
+%filename '../Examples/PLT/WAVE/figures/PLTtest_analytic_RhoComp.eps';file-properties "XNPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -2352,7 +2303,7 @@ angle ($PLT$). $N_{\Vert}=1.33$}%
 %valid_file "F";  width 5.796in;  height 4.3638in;  depth 0pt;
 %original-width 7.4581in;  original-height 5.6066in;  cropleft "0";
 %croptop "1";  cropright "1";  cropbottom "0";
-%filename '../Examples/PLT/WAVE/figures/PLTtest_analytic_ThetaComp.eps';file-properties "NPEU";}%
+%filename '../Examples/PLT/WAVE/figures/PLTtest_analytic_ThetaComp.eps';file-properties "XNPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -2368,15 +2319,15 @@ angle ($PLT$). $N_{\Vert}=1.33$}%
 \end{center}
 \end{figure}
 %EndExpansion%
-%TCIMACRO{\FRAME{ftbpFU}{5.796in}{4.3638in}{0pt}{\Qcb{Parallel refractive
-%index or refraction along the ray trajectory as function of the toroidal angle
+%TCIMACRO{\FRAME{ftbpFU}{5.796in}{4.3638in}{0pt}{\Qcb{Parallel refractive index
+%or refraction along the ray trajectory as function of the toroidal angle
 %($PLT$). $N_{\Vert}=1.33$}}{}{plttest_analytic_nparcomp.eps}%
 %{\special{ language "Scientific Word";  type "GRAPHIC";
 %maintain-aspect-ratio TRUE;  display "USEDEF";  valid_file "F";
 %width 5.796in;  height 4.3638in;  depth 0pt;  original-width 7.4581in;
 %original-height 5.6066in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename '../Examples/PLT/WAVE/figures/PLTtest_analytic_NparComp.eps';file-properties "NPEU";}%
+%filename '../Examples/PLT/WAVE/figures/PLTtest_analytic_NparComp.eps';file-properties "XNPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -2400,7 +2351,7 @@ function of the toroidal angle ($PLT$). $N_{\Vert}=1.33$}%
 %width 5.796in;  height 4.3638in;  depth 0pt;  original-width 7.4581in;
 %original-height 5.6066in;  cropleft "0";  croptop "1";  cropright "1";
 %cropbottom "0";
-%filename '../Examples/PLT/WAVE/figures/PLTtest_analytic_NperpComp.eps';file-properties "NPEU";}%
+%filename '../Examples/PLT/WAVE/figures/PLTtest_analytic_NperpComp.eps';file-properties "XNPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -2477,8 +2428,8 @@ the matrix of transfer between coordinates is%
 \end{array}
 \right)
 \end{align}
-using the fact that $\widehat{\phi}\times\widehat{\rho}=\widehat{\theta},$
-and $\widehat{\phi}\cdot\widehat{z}=0.$
+using the fact that $\widehat{\phi}\times\widehat{\rho}=\widehat{\theta},$ and
+$\widehat{\phi}\cdot\widehat{z}=0.$
 
 The initial position at launch in normalized coordinates $\left(  \overline
 {x}_{0},\overline{y}_{0},\overline{z}_{0}\right)  $ is given by the relations%
@@ -2595,13 +2546,13 @@ and
 \end{equation}
 
 
-Finally, after the reflexion, $\left(  \rho^{\left(  l\right)  }%
+Finally, after the reflection, $\left(  \rho^{\left(  l\right)  }%
 ,\theta^{\left(  l\right)  },\phi^{\left(  l\right)  }\right)  $ are
 determined using relations \ref{form1},\ref{form2} and \ref{form3}.
 
 \subsubsection{Wave initial conditions}
 
-In the exemple here given, the ray is launched from the position%
+In the example here given, the ray is launched from the position%
 \begin{equation}%
 \begin{array}
 [c]{l}%
@@ -2637,7 +2588,7 @@ excellent.%
 %valid_file "F";  width 5.796in;  height 4.3638in;  depth 0pt;
 %original-width 7.4581in;  original-height 5.6066in;  cropleft "0";
 %croptop "1";  cropright "1";  cropbottom "0";
-%filename '../Examples/RTtest/WAVE/figures/test_RT_straight_RayToroidal.eps';file-properties "NPEU";}%
+%filename '../Examples/RTtest/WAVE/figures/test_RT_straight_RayToroidal.eps';file-properties "XNPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -2660,7 +2611,7 @@ in vacuum.}%
 %valid_file "F";  width 5.796in;  height 4.3638in;  depth 0pt;
 %original-width 7.4581in;  original-height 5.6066in;  cropleft "0";
 %croptop "1";  cropright "1";  cropbottom "0";
-%filename '../Examples/RTtest/WAVE/figures/test_RT_straight_RayPoloidal.eps';file-properties "NPEU";}%
+%filename '../Examples/RTtest/WAVE/figures/test_RT_straight_RayPoloidal.eps';file-properties "XNPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -2694,12 +2645,13 @@ in vacuum.}%
 
 \subsubsection{Equilibrium}
 
-In Reverse Field Pinch, the plasma evolves to a quasi-stationnary magnetic
-equilibrium close to the force free minimum energy states described by Taylor
+In Reverse Field Pinch, the plasma evolves to a quasi-stationary
+magnetic equilibrium close to the force free minimum energy states
+described by Taylor
 \cite{tay74}. The fully relaxed Taylor states are characterized by%
 
 \begin{equation}
-\nabla\times\mathbf{B}=\lambda\mathbf{B}\label{RFPequilibrium}%
+\nabla\times\mathbf{B}=\lambda\mathbf{B} \label{RFPequilibrium}%
 \end{equation}
 with%
 \begin{equation}
@@ -2722,31 +2674,32 @@ I_{p} & 0.3\text{ MA}%
 \end{array}
 \end{equation}
 
+
 From Eq.\ref{RFPequilibrium}, considering a constant $\lambda$ value, and in
 the
 \begin{align}
-\left(  \nabla\times\mathbf{B}\right)  _{r}  & =\frac{1}{rR}\frac{\partial
+\left(  \nabla\times\mathbf{B}\right)  _{r}  &  =\frac{1}{rR}\frac{\partial
 }{\partial\theta}\left(  RB_{\phi}\right)  -\frac{1}{R}\frac{\partial
-}{\partial\phi}\left(  RB_{\theta}\right)  \\
-\left(  \nabla\times\mathbf{B}\right)  _{\theta}  & =-\frac{1}{R}%
-\frac{\partial}{\partial r}\left(  RB_{\phi}\right)  \\
-\left(  \nabla\times\mathbf{B}\right)  _{\phi}  & =\frac{1}{r}\frac{\partial
+}{\partial\phi}\left(  RB_{\theta}\right) \\
+\left(  \nabla\times\mathbf{B}\right)  _{\theta}  &  =-\frac{1}{R}%
+\frac{\partial}{\partial r}\left(  RB_{\phi}\right) \\
+\left(  \nabla\times\mathbf{B}\right)  _{\phi}  &  =\frac{1}{r}\frac{\partial
 }{\partial r}\left(  rB_{\theta}\right)
 \end{align}
 which leads to two coupled equations%
 \begin{align}
--\frac{1}{R}\frac{\partial}{\partial r}\left(  RB_{\phi}\right)    & =\lambda
+-\frac{1}{R}\frac{\partial}{\partial r}\left(  RB_{\phi}\right)   &  =\lambda
 B_{\theta}\label{RFPequiltheta}\\
-\frac{1}{r}\frac{\partial}{\partial r}\left(  rB_{\theta}\right)    & =\lambda
-B_{\phi}\label{RFPequilphi}%
+\frac{1}{r}\frac{\partial}{\partial r}\left(  rB_{\theta}\right)   &  =\lambda
+B_{\phi} \label{RFPequilphi}%
 \end{align}
-Reportaing Eq.\ref{RFPequiltheta} into Eq.\ref{RFPequilphi} in order to
-eliminate $B_{\theta},$ one finds the equation for $B_{\phi}$
+Reporting Eq.\ref{RFPequiltheta} into Eq.\ref{RFPequilphi} in order
+to eliminate $B_{\theta},$ one finds the equation for $B_{\phi}$
 \begin{equation}
 \frac{1}{r}\frac{\partial}{\partial r}\left(  \frac{r}{R}\frac{\partial
 }{\partial r}\left(  RB_{\phi}\right)  \right)  =-\lambda^{2}B_{\phi}%
 \end{equation}
-which can be developped as
+which can be developed as
 \begin{equation}
 \frac{\partial^{2}}{\partial r^{2}}\left(  RB_{\phi}\right)  +\frac{R}{r}%
 \frac{\partial}{\partial r}\left(  \frac{r}{R}\right)  \frac{\partial
@@ -2833,12 +2786,13 @@ N_{\Vert0}=10.0\\
 n_{0}=0
 \end{array}
 \end{equation}
-It is worth noting that since at the plasma edge of a RFP, magnetic field
-lines are almost in the poloidal direction, the toroidal wave number $n_{0}$
-must be zero, instead of $m_{0}$ usually used for tokamaks, where edge
-maegntic field lines are almost aligned toroidaly. Because of the axisymmetry,
-$n$ remains equal to zero along the ray propagation. Nevertheless, rays may
-propagate toroidaly.
+It is worth noting that since at the plasma edge of a RFP, magnetic
+field lines are almost in the poloidal direction, the toroidal wave
+number $n_{0}$ must be zero, instead of $m_{0}$ usually used for
+tokamaks, where edge magnetic field lines are almost aligned
+toroidally. Because of the axisymmetry, $n$ remains equal to zero
+along the ray propagation. Nevertheless, rays may propagate
+toroidally.
 
 \subsubsection{Results}
 
@@ -2846,16 +2800,16 @@ The results are shown in the figures below. A strong poloidal upshift is
 observed as the LH wave propagates, and as found by previous publications, the
 ray does a spiral around the magnetic axis. Even if the magnetic equilibrium
 strongly differs from the usual tokamak one, the dispersion relation is well
-fullfiled along the ray path.%
+fulfilled along the ray path.%
 
 %TCIMACRO{\FRAME{ftbpFU}{5.796in}{4.3638in}{0pt}{\Qcb{Poloidal projection of
-%the ray trajectory in the slow mode (RFP).}}{}%
-%{RFP_LH_ray_1_RayPoloidal.eps}{\special{ language "Scientific Word";
-%type "GRAPHIC";  maintain-aspect-ratio TRUE;  display "USEDEF";
-%valid_file "F";  width 5.796in;  height 4.3638in;  depth 0pt;
-%original-width 7.4581in;  original-height 5.6066in;  cropleft "0";
-%croptop "1";  cropright "1";  cropbottom "0";
-%filename '../Examples/RFP/WAVE/figures/RFP_LH_ray_1_RayPoloidal.eps';file-properties "NPEU";}%
+%the ray trajectory in the slow mode (RFP).}}{}{RFP_LH_ray_1_RayPoloidal.eps}%
+%{\special{ language "Scientific Word";  type "GRAPHIC";
+%maintain-aspect-ratio TRUE;  display "USEDEF";  valid_file "F";
+%width 5.796in;  height 4.3638in;  depth 0pt;  original-width 7.4581in;
+%original-height 5.6066in;  cropleft "0";  croptop "1";  cropright "1";
+%cropbottom "0";
+%filename '../Examples/RFP/WAVE/figures/RFP_LH_ray_1_RayPoloidal.eps';file-properties "XNPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -2870,14 +2824,15 @@ width=5.796in
 \end{center}
 \end{figure}
 %EndExpansion
+%
 
 %TCIMACRO{\FRAME{ftbpFU}{5.796in}{4.3638in}{0pt}{\Qcb{Toroidal projection of
-%the ray trajectory in the slow mode (RFP).}}{}%
-%{RFP_LH_ray_1_RayToloidal.eps}{\special{ language "Scientific Word";
-%type "GRAPHIC";  maintain-aspect-ratio TRUE;  display "USEDEF";
-%valid_file "F";  width 5.796in;  height 4.3638in;  depth 0pt;
-%original-width 7.4581in;  original-height 5.6066in;  cropleft "0";
-%croptop "1";  cropright "1";  cropbottom "0";
+%the ray trajectory in the slow mode (RFP).}}{}{RFP_LH_ray_1_RayToloidal.eps}%
+%{\special{ language "Scientific Word";  type "GRAPHIC";
+%maintain-aspect-ratio TRUE;  display "USEDEF";  valid_file "F";
+%width 5.796in;  height 4.3638in;  depth 0pt;  original-width 7.4581in;
+%original-height 5.6066in;  cropleft "0";  croptop "1";  cropright "1";
+%cropbottom "0";
 %filename '../Examples/RFP/WAVE/figures/RFP_LH_ray_1_RayToloidal.eps';file-properties "NPEU";}%
 %}}%
 %BeginExpansion
@@ -2888,20 +2843,21 @@ width=5.796in
 height=4.3638in,
 width=5.796in
 ]%
-{../Examples/RFP/WAVE/figures/RFP_LH_ray_1_RayToroidal.eps}%
+{../Examples/RFP/WAVE/figures/RFP_LH_ray_1_RayToloidal.eps}%
 \caption{Toroidal projection of the ray trajectory in the slow mode (RFP).}%
 \end{center}
 \end{figure}
 %EndExpansion
+%
 
 %TCIMACRO{\FRAME{ftbpFU}{5.796in}{4.3638in}{0pt}{\Qcb{Parallel refractive index
-% or refraction along the ray trajectory (RFP).}}{}%
-%{RFP_LH_ray_1_Npar.eps}{\special{ language "Scientific Word";
-%type "GRAPHIC";  maintain-aspect-ratio TRUE;  display "USEDEF";
-%valid_file "F";  width 5.796in;  height 4.3638in;  depth 0pt;
-%original-width 7.4581in;  original-height 5.6066in;  cropleft "0";
-%croptop "1";  cropright "1";  cropbottom "0";
-%filename '../Examples/RFP/WAVE/figures/RFP_LH_ray_1_Npar.eps';file-properties "NPEU";}%
+%or refraction along the ray trajectory (RFP).}}{}{RFP_LH_ray_1_Npar.eps}%
+%{\special{ language "Scientific Word";  type "GRAPHIC";
+%maintain-aspect-ratio TRUE;  display "USEDEF";  valid_file "F";
+%width 5.796in;  height 4.3638in;  depth 0pt;  original-width 7.4581in;
+%original-height 5.6066in;  cropleft "0";  croptop "1";  cropright "1";
+%cropbottom "0";
+%filename '../Examples/RFP/WAVE/figures/RFP_LH_ray_1_Npar.eps';file-properties "XNPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
@@ -2912,19 +2868,21 @@ height=4.3638in,
 width=5.796in
 ]%
 {../Examples/RFP/WAVE/figures/RFP_LH_ray_1_Npar.eps}%
-\caption{Parallel refractive index or refraction along the ray trajectory (RFP).}%
+\caption{Parallel refractive index or refraction along the ray trajectory
+(RFP).}%
 \end{center}
 \end{figure}
 %EndExpansion
+%
 
-%TCIMACRO{\FRAME{ftbpFU}{5.796in}{4.3638in}{0pt}{\Qcb{Dispersion relation
-% along the ray trajectory (RFP).}}{}%
-%{RFP_LH_ray_1_Disp.eps}{\special{ language "Scientific Word";
-%type "GRAPHIC";  maintain-aspect-ratio TRUE;  display "USEDEF";
-%valid_file "F";  width 5.796in;  height 4.3638in;  depth 0pt;
-%original-width 7.4581in;  original-height 5.6066in;  cropleft "0";
-%croptop "1";  cropright "1";  cropbottom "0";
-%filename '../Examples/RFP/WAVE/figures/RFP_LH_ray_1_Disp.eps';file-properties "NPEU";}%
+%TCIMACRO{\FRAME{ftbpFU}{5.796in}{4.3638in}{0pt}{\Qcb{Dispersion relation along
+%the ray trajectory (RFP).}}{}{RFP_LH_ray_1_Disp.eps}%
+%{\special{ language "Scientific Word";  type "GRAPHIC";
+%maintain-aspect-ratio TRUE;  display "USEDEF";  valid_file "F";
+%width 5.796in;  height 4.3638in;  depth 0pt;  original-width 7.4581in;
+%original-height 5.6066in;  cropleft "0";  croptop "1";  cropright "1";
+%cropbottom "0";
+%filename '../Examples/RFP/WAVE/figures/RFP_LH_ray_1_Disp.eps';file-properties "XNPEU";}%
 %}}%
 %BeginExpansion
 \begin{figure}
