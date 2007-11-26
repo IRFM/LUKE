@@ -43,8 +43,7 @@ ns = hxrparam.ns;
 xpsin = radialDKE.xpsin_f_dke;
 xpsin_S = radialDKE.xpsin_S_dke;
 %
-mfactor = 3
-[equilHXR] = equilibrium_jd(equil,radialDKE,display,'spline',mfactor),%Magnetic equilibrium for HXR at points of the distribution function
+[equilHXR] = equilibrium_jd(equil,radialDKE,display,'spline',mfactor);%Magnetic equilibrium for HXR at points of the distribution function
 %
 %   This function interpolates the equilibrium data on the radial grid.
 %
@@ -77,7 +76,8 @@ xq = ap*qfactors_dke_yp(dkeparam.equil_mode,Rp,ap,ptR-Rp,ptZ-Zp,ptBR,ptBZ,ptBphi
 r_lcs = sqrt((ptR(length(ppsin),:) - Rp).^2 + (ptZ(length(ppsin),:) - Zp).^2);%Minor radius of the last closed magnetic surface
 %
 smax = 3*(Rp + ap);%maximum chord length = R_hxr+a_hxr
-s = linspace(-smax,+smax,ns)'*ones(1,nchords);%for nchords (s negative by definition)
+%s = linspace(-smax,+smax,ns)'*ones(1,nchords);%for nchords (s negative by definition)
+s = linspace(-smax,0,ns)'*ones(1,nchords);%for nchords (s negative by definition)
 % Poloidal plot
 for ir = 1:length(xpsin_S)
     RR_pol(ir,:) = interp1(ppsin,ptR,xpsin_S(ir),method);
