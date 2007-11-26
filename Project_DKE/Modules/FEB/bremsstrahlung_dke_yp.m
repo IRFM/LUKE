@@ -208,7 +208,7 @@ for i = 1:size(psin_hxr,1),%radial position
 end
 %
 brem_bd_out = zeros(size(vschords,3),length(kphot));
-lchord = zeros(size(vschords,3));
+lchord = zeros(1,size(vschords,3));
 for ic = 1:size(vschords,3),%loop on each chord  
 	s_mask = ~isnan(vschords(7,:,ic));%Location where chord is inside the plasma
     s_length = sum(s_mask);%Number of points along the chord inside the plasma
