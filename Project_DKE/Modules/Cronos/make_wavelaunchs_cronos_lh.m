@@ -29,6 +29,7 @@ if strcmp(config,'TS');%For the Lower Hybrid wave simulations
    launchs{1}.phi0 = [0];%toroidal angle position [1,1]
    launchs{1}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
    launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
+   launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
 % ------- LH antenna #2 (C2) -------
 %
@@ -51,6 +52,7 @@ if strcmp(config,'TS');%For the Lower Hybrid wave simulations
    launchs{2}.phi0 = [0];%toroidal angle position [1,1]
    launchs{2}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
    launchs{2}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]  
+   launchs{2}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
 % -------------------------------- Tore Supra Mixte --------------------------------
 %
@@ -77,6 +79,7 @@ elseif strcmp(config,'MIXTE');%For the Lower Hybrid wave simulations
    launchs{1}.phi0 = [0];%toroidal angle position [1,1]
    launchs{1}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
    launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
+   launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
 % ------- LH antenna #2 (C3) -------
 % 
@@ -99,6 +102,7 @@ elseif strcmp(config,'MIXTE');%For the Lower Hybrid wave simulations
    launchs{2}.phi0 = [0];%toroidal angle position [1,1]
    launchs{2}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
    launchs{2}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]  
+   launchs{2}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
 % -------------------------------- Tore Supra CIEL --------------------------------
 %
@@ -125,6 +129,7 @@ elseif strcmp(config,'CIEL');%For the Lower Hybrid wave simulations
    launchs{1}.phi0 = [0];%toroidal angle position [1,1]
    launchs{1}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
    launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
+   launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
 % ------- LH antenna #2 (C3) -------
 % 
@@ -147,6 +152,7 @@ elseif strcmp(config,'CIEL');%For the Lower Hybrid wave simulations
    launchs{2}.phi0 = [0];%toroidal angle position [1,1]
    launchs{2}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
    launchs{2}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]  
+   launchs{2}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
 % -------------------------------- C-MOD --------------------------------
 %
@@ -173,6 +179,7 @@ elseif strcmp(config,'CMOD');%For the Lower Hybrid wave simulations
    launchs{1}.phi0 = [0];%toroidal angle position [1,1]
    launchs{1}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
    launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
+   launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
 % -------------------------------- JET --------------------------------
 %
@@ -199,6 +206,7 @@ elseif strcmp(config,'JET');%For the Lower Hybrid wave simulations
    launchs{1}.phi0 = [0];%toroidal angle position [1,1]
    launchs{1}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
    launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
+   launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
 % ------- LH antenna #2 -------
 % 
@@ -221,6 +229,7 @@ elseif strcmp(config,'JET');%For the Lower Hybrid wave simulations
    launchs{2}.phi0 = [0];%toroidal angle position [1,1]
    launchs{2}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
    launchs{2}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]  
+   launchs{2}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
 % -------------------------------- ITER@3.7GHz --------------------------------
 %
@@ -247,6 +256,7 @@ elseif strcmp(config,'ITER3.7GHz');%For the Lower Hybrid wave simulations
    launchs{1}.phi0 = [0];%toroidal angle position [1,1]
    launchs{1}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
    launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
+   launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
 % ------- LH antenna #2 -------
 % 
@@ -269,6 +279,7 @@ elseif strcmp(config,'ITER3.7GHz');%For the Lower Hybrid wave simulations
 %   launchs{2}.phi0 = [0];%toroidal angle position [1,1]
 %   launchs{2}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
 %   launchs{2}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]  
+%   launchs{2}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
 % -------------------------------- ITER@5.0GHz --------------------------------
 %
@@ -295,6 +306,7 @@ elseif strcmp(config,'ITER5GHz');%For the Lower Hybrid wave simulations
    launchs{1}.phi0 = [0];%toroidal angle position [1,1]
    launchs{1}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
    launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
+   launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
 % ------- LH antenna #2 -------
 % 
@@ -317,6 +329,7 @@ elseif strcmp(config,'ITER5GHz');%For the Lower Hybrid wave simulations
    launchs{2}.phi0 = [0];%toroidal angle position [1,1]
    launchs{2}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
    launchs{2}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]  
+   launchs{2}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
 % -------------------------------- FT-U --------------------------------
 %
@@ -343,6 +356,7 @@ elseif strcmp(config,'FTU')
    launchs{1}.phi0 = [0];%toroidal angle position [1,1]
    launchs{1}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
    launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
+   launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
 % -------------------------------- SST-1 --------------------------------
 %
@@ -369,6 +383,7 @@ elseif strcmp(config,'SST1')
    launchs{1}.phi0 = [0];%toroidal angle position [1,1]
    launchs{1}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
    launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
+   launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
 % -------------------------------- DEMO@3.7GHz --------------------------------
 %
@@ -395,6 +410,7 @@ elseif strcmp(config,'DEMO3.7GHz')
    launchs{1}.phi0 = [0];%toroidal angle position [1,1]
    launchs{1}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
    launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
+   launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
 % ------- LH antenna #2 -------
 % 
@@ -417,6 +433,7 @@ elseif strcmp(config,'DEMO3.7GHz')
    launchs{2}.phi0 = [0];%toroidal angle position [1,1]
    launchs{2}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
    launchs{2}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]  
+   launchs{2}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
 % -------------------------------- DEMO@5.0GHz --------------------------------
 %
@@ -443,6 +460,7 @@ elseif strcmp(config,'DEMO5.0GHz')
    launchs{1}.phi0 = [0];%toroidal angle position [1,1]
    launchs{1}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
    launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
+   launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
 % ------- LH antenna #2 -------
 % 
@@ -465,6 +483,7 @@ elseif strcmp(config,'DEMO5.0GHz')
    launchs{2}.phi0 = [0];%toroidal angle position [1,1]
    launchs{2}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
    launchs{2}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]  
+   launchs{2}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
 % -------------------------------- COMPASS --------------------------------
 %
@@ -491,6 +510,7 @@ elseif strcmp(config,'COMPASS');%For the Lower Hybrid wave simulations
    launchs{1}.phi0 = [0];%toroidal angle position [1,1]
    launchs{1}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
    launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
+   launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 else
    error('The launch configuration name does not exists')  	
 end
