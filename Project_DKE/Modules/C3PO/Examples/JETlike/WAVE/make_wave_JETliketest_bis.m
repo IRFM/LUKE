@@ -9,7 +9,7 @@ clear all
 close all
 clc
 %
-id_wave = 'JETliketest18';
+id_wave = 'JETliketest1p8';
 %
 % Path parameters
 %
@@ -71,7 +71,7 @@ fitparam.opt_load = 1;%Reload existing vectorial magnetic equilibrium (1) or ove
 rayparam.testmode = 0;
 rayparam.tensortype = waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
 rayparam.t0 = 0;
-rayparam.tfinal = 20000;
+rayparam.tfinal = 10000;
 rayparam.dt0 = 1.e-4;
 rayparam.dS = 1.e-4;
 rayparam.tol = 1e-12;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
@@ -98,7 +98,7 @@ if fitparam.opt_load*exist(['EQUILV_',equil.id,'.mat']),
    info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil.id,' is reloaded.']);
 else
    info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil.id,' is calculated.']);
-   [equil_fit] = fitequil_yp(equil,mode_equil,method,ngridresample,nharm);%Build vectorized magnetic equilibrium structure
+   [equil_fit] = fitequil_yp(equil,fitparam.mode_equil,fitparam.method,fitparam.ngridresample,fitparam.nharm);%Build vectorized magnetic equilibrium structure
    save(['EQUILV_',equil_fit.id,'.mat'],'equil_fit');
    info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil_fit.id,' is saved.']);
    if display_equilibrium,testfitequil_yp(equil,equil_fit);end
