@@ -6,7 +6,7 @@ if strcmp(config,'LH');%For the Lower Hybrid wave simulations
 %
 % Wave parameters
 %
-   waveparam.mmode = -1;%cold plasma mode [1] : (-1) m (1) p, p is the slow mode when kperp > 0 (ex : LH slow wave)
+%   waveparam.mmode = -1;%cold plasma mode [1] : (-1) m (1) p, p is the slow mode when kperp > 0 (ex : LH slow wave)
    waveparam.kmode = 0;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
 %
 %Option parameter for FLR effects and cross-comparison between old FP code: 
@@ -49,7 +49,7 @@ elseif strcmp(config,'EC') | strcmp(config,'EBW');;%For the Electron Cyclotron o
 %
 % Wave parameters
 %
-   waveparam.mmode = 1;%cold plasma mode [1] : (-1) m (1) p, p is the slow mode when kperp > 0 (ex : LH slow wave)
+%   waveparam.mmode = 1;%cold plasma mode [1] : (-1) m (1) p, p is the slow mode when kperp > 0 (ex : LH slow wave)
    waveparam.kmode = 0;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
 %
 %Option parameter for FLR effects and cross-comparison between old FP code: 
@@ -57,8 +57,8 @@ elseif strcmp(config,'EC') | strcmp(config,'EBW');;%For the Electron Cyclotron o
 %	- (1): small FLR effects and 1/vpar dependence
 %	- (2): small FLR effects and no 1/vpar dependence and old grid technique for DQL calculations (Karney, Shoucri) (see rfdiff_dke_jd)
 %
-   waveparam.opt_rf = 0;
-   waveparam.dsmin = 0;
+   waveparam.opt_rf = 1;
+   waveparam.dsmin = 0.01;
    waveparam.cut_fac = 2;
 %
 % Equilibrium parameters for the ray-tracing
