@@ -1115,7 +1115,7 @@ pp_2D_format BPHI_fit;
 pp_2D_format Bx_fit;
 pp_2D_format By_fit;
 pp_1D_format dxstardpsin_fit;
-int *flag;
+double *flag;
 {
 
     register int i,j;
