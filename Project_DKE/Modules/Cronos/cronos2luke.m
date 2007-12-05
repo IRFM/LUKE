@@ -169,9 +169,16 @@ if nargin <= 1
 %	
 	valeur.ray_tfinal = 20000;%Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)
 	type.ray_tfinal = 'float';%Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)
-	borne.ray_tfinal = [1000,40000];%Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)
+	borne.ray_tfinal = [1000,100000];%Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)
 	defaut.ray_tfinal = 20000;%Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)
 	info.ray_tfinal = 'Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)';
+	
+	
+	valeur.oneray   = 'Yes';%Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)
+	type.oneray = 'list';%Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)
+	borne.oneray = {'Yes','No'};%Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)
+	defaut.oneray = 'Yes';%Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)
+	info.oneray = 'If Yes, sends only one ray per antenna';
 %
 %  INPUT FILE PARAMETERS
 %
@@ -183,7 +190,7 @@ if nargin <= 1
 %
 %  RUN PARAMETERS
 %
-	valeur.rho_S = [0.02:0.06:0.97];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+	valeur.rho_S = [0,0.1:0.025:0.4,0.5:0.1:1];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 	type.rho_S = 'float';%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 	borne.rho_S = [0,1];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 	defaut.rho_S = 0;%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
@@ -269,6 +276,12 @@ if nargin <= 1
 	borne.angle_var     = {0,1};
 	defaut.angle_var    = 0;
 	info.angle_var      = 'if set at  1, antena mirrors angles are given as reference in input';
+%
+	valeur.n_ec_max     = 2;% frequence en  Ghz [TS = 118]
+	type.n_ec_max       = 'integer';% type de la donnnee
+	borne.n_ec_max      = [1,10];
+	defaut.n_ec_max     = 2;
+	info.n_ec_max       = 'Maximum harmonic number';
 %	     
 % CRONOS PARAMETERS
 %
@@ -307,14 +320,35 @@ if nargin == 14,% LH case
     gene = varargin{13};
     memoire = varargin{14};
     %
-    if (all(abs(cons)< 2e5) | all(angle(cons)<=1)),% test sur la puissance. Calcul si P > 200 kW seulement
-		sortie = proto;
-		disp('no LH/ECRH injected power')
-		if ~strcmp(par.conf,'Ohmic')
-			return
-		end
-		disp('zstarwars in ohmic mode')		
-	end
+    if isstruct(cons)
+      	nolh  = 1;
+      	nofce = 1;
+      	if (all(abs(cons.lh_cons)< 2e5) | all(angle(cons.lh_cons)<=1)),% test sur la puissance. Calcul si P > 200 kW seulement
+        	disp('no LH')
+			nolh = 0;
+      	end
+      	if (all(abs(cons.ecrh_cons)< 2e5)),% test sur la puissance. Calcul si P > 200 kW seulement
+        	disp('no ECRH')
+			nofce = 0;
+      	end
+      	if nolh+nofce == 0
+			disp('no LH/ECRH injected power')
+        	sortie = proto;
+			if ~strcmp(par.conf,'Ohmic')
+				return
+			end
+			disp('zstarwars in ohmic mode')		
+      	end
+    else
+      	if (all(abs(cons)< 2e5) | all(angle(cons)<=1)),% test sur la puissance. Calcul si P > 200 kW seulement
+			sortie = proto;
+			disp('no LH/ECRH injected power')
+			if ~strcmp(par.conf,'Ohmic')
+				return
+			end
+			disp('zstarwars in ohmic mode')		
+       	end
+    end
 elseif nargin == 13,% FCE case
     par = varargin{1};
     proto = varargin{2};
@@ -403,7 +437,7 @@ dkeparam.nit_rf = par.nit_rf;%Maximum number of iteration in ray-tracing. Works 
 dkeparam.dke_mode = par.dke_mode;%Fokker-Planck equation (0), Drift Kinetic equation (1)
 dkeparam.dtn = par.dtn;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
 dkeparam.invproc = par.invproc;%Iterative matrix inversion method: (1) cgs iterative method, (2) bicg iterative method, (3) qmr iterative method
-dkeparam.n_rf_list = 0:3;
+dkeparam.n_rf_list = [0:par.n_ec_max];
 %
 % PARAMETRES DISPLAY
 %
@@ -465,12 +499,38 @@ for iw = 1:length(launchs),
     wavestructs{iw}.raydisplay = raydisplay;
     %
     wavestructs{iw}.wavesolver = 'C3PO';
+    wavestructs{iw}.waveparam.mmode = launchs{iw}.mmode;% cold mode (+1 for m; -1 for p)
     wavestructs{iw}.waveparam.kmode = par.kmode;%Dielectric tensor (0:cold,1:warm,2:hot;3:weak relativistic,4:full relativistic)
     wavestructs{iw}.rayparam.tensortype = wavestructs{iw}.waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak relativistic,4:full relativistic)
     wavestructs{iw}.rayparam.tfinal = par.ray_tfinal;
+    %
+    if strcmp(par.oneray,'Yes') & strcmp(wavestructs{iw}.launch.type,'LH'),
+    	wavestructs{iw}.launch.ry0 = mean(wavestructs{iw}.launch.ry0);
+    end
+    %
 end
 %
-opt_save = 0;%For debugging or scan only.
+opt_save = 1;%For debugging or scan only.
+%
+% Reload waves if the script has been used at least once
+%
+waves = [];
+iww = 0;
+iw_list = [];
+%
+opt_save=0
+if opt_save == 1,
+    for iw = 1:length(wavestructs),
+        wavestr = ['WAVE/C3PO/WAVE_',equil.id,'_',wavestructs{iw}.id,'.mat'];
+        if exist(wavestr),
+            load(wavestr);
+            iww = iww+1;
+            waves{iww} = wave;
+            iw_list = [iw_list,iw];
+        end
+    end	
+    wavestructs(iw_list) = [];
+end
 %
 %--------------------------- Execution du trace de rayon C3PO et du code cinetique LUKE --------------------------- 
 %
@@ -490,7 +550,7 @@ if sum(abs(ohm.epsi)) ~= 0,%Calculate the Ohmic electric field contribution to t
 end
 %
 while 1,
-   [Znorm_RF,Zcurr_RF,ZP0_RF,dke_out_RF,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = run_lukert('cronos',wavestructs,[],[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[],opt_save);
+   [Znorm_RF,Zcurr_RF,ZP0_RF,dke_out_RF,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = run_lukert('cronos',wavestructs,waves,[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[],opt_save);
    if isempty(dke_warnings),
       break;
    else
