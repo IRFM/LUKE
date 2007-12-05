@@ -14,11 +14,13 @@ end
 if fitparam.opt_load*exist(['EQUILV_',equil.id,'.mat']),
    load(['EQUILV_',equil.id,'.mat'],'equil_fit');
    info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil.id,' is reloaded.']);
-  else
+else
    info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil.id,' is being calculated.']);   
    [equil_fit] = fitequil_yp(equil,fitparam.mode_equil,fitparam.method,fitparam.ngridresample,fitparam.nharm);
-   save(['EQUILV_',equil_fit.id,'.mat'],'equil_fit');
-   info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil_fit.id,' is saved.']);
+   if equil.opt_save > 0,
+        save(['EQUILV_',equil_fit.id,'.mat'],'equil_fit');
+        info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil_fit.id,' is saved.']);
+   end
 end
 %
 if display.equilibrium,
