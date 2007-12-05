@@ -441,7 +441,11 @@ if imag(opt_disp) >= 1,%calculation of the absorption coefficient
 	sbeta = sqrt(sTe/mc2);
     salphaphi_lin = zeros(1,ns);
     for n = n_rf_list,
-        salphaphi_lin = salphaphi_lin + omega_rf/clum*alphaphi_fr_jd(sa,sb,sbeta,sNpar,real(sNperp),sepol_pmz,n,rel_opt);
+        if imag(opt_disp) == 1,
+            salphaphi_lin = salphaphi_lin + omega_rf/clum*alphaphi_fr_jd(sa,sb,sbeta,sNpar,real(sNperp),sepol_pmz,n,rel_opt);
+        else
+            salphaphi_lin = salphaphi_lin + omega_rf/clum*alphaphi_fr_jd(sa,sb,sbeta,sNpar + sign(sNpar).*(sdNpar + (imag(opt_disp) - 1)*ss)/2,real(sNperp),sepol_pmz,n,rel_opt);
+        end
     end
 end
 %
