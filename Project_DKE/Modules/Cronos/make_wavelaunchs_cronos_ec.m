@@ -17,6 +17,8 @@ method = 'cubic';
 %
 dNpar0 = 0.05;%!!!!!! for now. calculation as a function of gaussian beam properties under way.
 %
+iww = 0;
+%
 for iw = 1:nw,
     %
     launch.id = num2str(iw);
@@ -50,9 +52,13 @@ for iw = 1:nw,
     %
     launch.ybeta_L = pi/2 - angle_pol*pi/180;
     %
-    launch.mmode = (par.modpolar(iw) == 1);%(1) for X mode
+    launch.mmode = -1^(par.modpolar(iw) == 2);%(1) for X mode
     launch.dNpar0 = dNpar0;
+    launch.a_sdNpar = 0.0;%NO Spectral broadening for EC WAVES
     %
-    launchs{iw} = launch;
+    if launch.yP_L > 0,
+        iww = iww + 1;
+        launchs{iww} = launch;
+    end
 end
 %
