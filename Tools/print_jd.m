@@ -56,6 +56,19 @@ if opt >= 1,
     else
         eval(['print -djpeg90 -r',num2str(res),' ',savename,'.jpg']); 
     end    
+    %
+    % Patch for EPS file written by MatLab 7.5 under OS X 10.5.1 to be
+    % readable by LyX word TeX processor
+    %
+    if strcmp(computer,'MAC'),
+        eval(['!/Applications/Edition/TeX/macghostview/bin/eps2eps ',savename,'.eps temp_',savename,'.eps'])
+        eval(['!/Applications/Edition/TeX/macghostview/bin/eps2eps temp_',savename,'.eps ',savename,'.eps'])
+        eval(['delete temp_',savename,'.eps']) 
+    end
+    
+    
+    
+    
     cd(wd)
 end
 
