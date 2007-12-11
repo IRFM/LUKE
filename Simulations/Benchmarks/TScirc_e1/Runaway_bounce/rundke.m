@@ -24,13 +24,13 @@ id_equil_cyl = 'TScyl';%For plasma equilibrium
 id_equil = 'TScirc_e1';%For plasma equilibrium
 path_equil = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_dkeparam = 'BOUNCE3D_MUMPS_m201';%For DKE code parameters
+id_dkeparam = 'NONUNIFORM10010020';%For DKE code parameters
 path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_display = 'PARTIAL_VISUAL';%For output code display
 path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_ohm = 'OHM_p008_flat';%For Ohmic electric contribution
+id_ohm = '';%For Ohmic electric contribution
 path_ohm = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 ids_wave = {''};%For RF waves contribution (put all the type of waves needed)
@@ -51,25 +51,28 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 %************************************************************************************************************************************
 %
-%
 if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
-epsi = 0.04;
+dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
+dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
 %
-betath = 0.01;%validated for NR limit
+epsi = 0.04;
+betath = 0.001;%validated for NR limit
 %
 [qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
 %
 equil.pTe = betath^2*mc2*ones(size(equil.pTe));
-equil.pzTi = 1e-10*ones(size(equil.pzTi));
+equil.pzTi = betath^2*mc2*ones(size(equil.pzTi));
+%equil.pzTi = 1e-10*ones(size(equil.pzTi));
 %
 equil_cyl.pTe = betath^2*mc2*ones(size(equil_cyl.pTe));
-equil_cyl.pzTi = 1e-10*ones(size(equil_cyl.pzTi));
+equil_cyl.pzTi = betath^2*mc2*ones(size(equil_cyl.pzTi));
+%equil_cyl.pzTi = 1e-10*ones(size(equil_cyl.pzTi));
 %
 ohm_cyl = ohm_flat(equil_cyl,epsi);
 ohm = ohm_flat(equil,epsi);
 %
-[Znorm_cyl,Zcurr_cyl,ZP0_cyl,dke_out_cyl] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil_cyl,dkeparam,dkedisplay,ohm_cyl,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr,ZP0,dke_out_cyl] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil_cyl,dkeparam,dkedisplay,ohm_cyl,waves,transpfaste,ripple,[],[]);
 %
 dkeparam.bounce_mode = 1;
 [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);

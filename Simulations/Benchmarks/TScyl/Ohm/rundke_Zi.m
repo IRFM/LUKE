@@ -14,8 +14,8 @@ global nfig
 id_simul = 'Ohm_Zi';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-psin_S = [0.001];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
-rho_S = [];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
+rho_S = [0.5];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
 id_path = '';%For all paths used by DKE solver
 path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
@@ -51,22 +51,19 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
+dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
+dkeparam.norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+%
 epsi = 0.001;
 betath = 0.01;%validated for NR limit
-%
-%dkeparam.pnmax_S = 15;
-%dkeparam.np_S = 166;
-%dkeparam.nmhu_S = 221;
-%dkeparam.grid_uniformity = 0;
-%dkeparam.spfac = 20;
-%
-equil.pzTi = 1e-10*ones(size(equil.pzTi));
 %
 Zi_list = [1:20];
 %
 [qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
 %
 equil.pTe = betath^2*mc2*ones(size(equil.pTe));
+equil.pzTi = betath^2*mc2*ones(size(equil.pzTi));
+%equil.pzTi = 1e-10*ones(size(equil.pzTi));
 %
 ohm = ohm_flat(equil,epsi);
 %
@@ -77,17 +74,28 @@ for iZi = 1:length(Zi_list),
     equil.pzni = [0;0;0;1/Zi]*equil.pne;
     %
     dkeparam.coll_mode = 0;% Relativistic Maxwellian background
-    [Znorm,Zcurr0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    if dke_out.residu_f(end) < dkeparam.prec0_f,
+        sigma_0(iZi) = Zcurr.x_0/epsi;
+    else
+        sigma_0(iZi) = NaN;
+    end        
     %
     dkeparam.coll_mode = 1;% High-velocity limit
-    [Znorm,Zcurr1] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    if dke_out.residu_f(end) < dkeparam.prec0_f,
+        sigma_1(iZi) = Zcurr.x_0/epsi;
+    else
+        sigma_1(iZi) = NaN;
+    end        
     %
     dkeparam.coll_mode = 2;% Linearized Belaiev-Budker
-    [Znorm,Zcurr2] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-    %
-    sigma_0(iZi) = Zcurr0.x_0/epsi;
-    sigma_1(iZi) = Zcurr1.x_0/epsi;
-    sigma_2(iZi) = Zcurr2.x_0/epsi;
+    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    if dke_out.residu_f(end) < dkeparam.prec0_f,
+        sigma_2(iZi) = Zcurr.x_0/epsi;
+    else
+        sigma_2(iZi) = NaN;
+    end        
     %
     sigma_Lor(iZi) = sqrt(2/pi)*16./Zi;
     %
@@ -109,15 +117,17 @@ xlim = [0,max(Zi_list)];
 ylim = [0,8];
 xlab = 'Z_i';
 ylab = '\sigma';
-tit = 'Non-relativistic plasma';
-graph1D_jd(Zi_list,sigma_2,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.5);
+tit = '';
+graph1D_jd(Zi_list,sigma_2,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
 graph1D_jd(Zi_list,sigma_1,0,0,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
-graph1D_jd(Zi_list,sigma_0,0,0,'','','',leg,xlim,ylim,'-','none','m',2,20,gca);
-graph1D_jd(Zi_Karney,sigma_Karney_2,0,0,xlab,ylab,tit,NaN,xlim,ylim,'none','+','r',2,20,gca,0.9,0.7,0.5);
+graph1D_jd(Zi_list,sigma_0,0,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
+graph1D_jd(Zi_Karney,sigma_Karney_2,0,0,'','','',NaN,xlim,ylim,'none','+','r',2,20,gca);
 graph1D_jd(Zi_Karney,sigma_Karney_1,0,0,'','','',NaN,xlim,ylim,'none','+','b',2,20,gca);
-graph1D_jd(Zi_Karney,sigma_Karney_0,0,0,'','','',NaN,xlim,ylim,'none','+','m',2,20,gca);
+graph1D_jd(Zi_Karney,sigma_Karney_0,0,0,'','','',NaN,xlim,ylim,'none','+','g',2,20,gca);
 graph1D_jd(Zi_list,sigma_Lor,0,0,'','','',NaN,xlim,ylim,'--','none','k',2,20,gca);
 graph1D_jd(1,sigma_Z1s,0,0,'','','',NaN,xlim,ylim,'none','x','k',2,20,gca);
+set(gca,'ytick',[0:2:10])
+set(gca,'xtick',[0:5:max(Zi_list)])
 %
 print_jd(2,'fig_sigma_Zi','.',1)
 %

@@ -52,8 +52,11 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
+dkeparam.boundary_mode_f = 0;%Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
+dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+%
 dkeparam.coll_mode = 0;%For comparison with theoretical results
-betath = 0.01;%validated for NR limit
+betath = 0.001;%validated for NR limit
 %
 equil.pzTi = 1e-10*ones(size(equil.pzTi));
 %
@@ -96,13 +99,13 @@ figure(1),clf
 %
 leg = {'E/E_D = 0.04','E/E_D = 0.06','E/E_D = 0.08','E/E_D = 0.10'};
 xlim = [0,20];
-ylim = 10.^[-6,-3];
+ylim = 10.^[-8,-2];
 xlab = 'Z_i';
 ylab = '\Gamma_R';
 tit = '';
 graph1D_jd(Zi_list,RR,0,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','',2,20,gca,0.9,0.7,0.7);
 graph1D_jd(Zi_kulsrud,RR_kulsrud,0,1,'','','',leg,xlim,ylim,'none','+','',2,20,gca);
-set(gca,'ytick',[1e-6 1e-5 1e-4 1e-3])
+set(gca,'ytick',[1e-8 1e-7 1e-6 1e-5 1e-4 1e-3 1e-2])
 set(gca,'xtick',[0:2:20])
 set(gca,'YMinorGrid','off')
 set(gca,'YMinorTick','on')

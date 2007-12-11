@@ -51,6 +51,9 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
+dkeparam.boundary_mode_f = 0;%Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
+dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+%
 epsi = 0.04;
 %
 %dkeparam.pnmax_S = 15;
@@ -83,17 +86,15 @@ for ibetath = 1:length(betath_list),
     dkeparam.coll_mode = 2;% Linearized Belaiev-Budker
     [Znorm,Zcurr,ZP0,dke_out_2] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
-    dkeparam.coll_mode = 4;% Maxwellian Background
-    [Znorm,Zcurr,ZP0,dke_out_4] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    %dkeparam.coll_mode = 4;% Maxwellian Background
+    %[Znorm,Zcurr,ZP0,dke_out_4] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     RR_0(ibetath) = dke_out_0.XxRR_fsav(end,:);
     RR_1(ibetath) = dke_out_1.XxRR_fsav(end,:);
     RR_2(ibetath) = dke_out_2.XxRR_fsav(end,:);
-    RR_4(ibetath) = dke_out_4.XxRR_fsav(end,:);
+    %RR_4(ibetath) = dke_out_4.XxRR_fsav(end,:);
     %
 end
-%
-sigma_Z1s = 1/100*sqrt(me*qe/10)/(1.65*mu0*e0^2);%Spitzer conductivity (from 'Tokamaks' by J. Wesson, Oxford Science Publication, 3rd Eds., 2004)
 %
 RR_kulsrud = 1.914*1e-6;%Kulsrud (PRL, 31,11, (1972) 690)
 %
@@ -101,7 +102,8 @@ RR_kulsrud = 1.914*1e-6;%Kulsrud (PRL, 31,11, (1972) 690)
 %
 figure(1),clf
 %
-leg = {'Linearized','High v limit','Maxwellian','Maxwellian NR'};
+%leg = {'Linearized','High v limit','Maxwellian','Maxwellian NR'};
+leg = {'Linearized','High v limit','Maxwellian'};
 xlim = 10.^[-5,0];
 ylim = [0,5e-6];
 xlab = '\beta_T';
@@ -109,10 +111,10 @@ ylab = '\Gamma_R';
 tit = '';
 graph1D_jd(betath_list,RR_2,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
 graph1D_jd(betath_list,RR_1,1,0,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
-graph1D_jd(betath_list,RR_0,1,0,'','','',NaN,xlim,ylim,'-','none','m',2,20,gca);
-graph1D_jd(betath_list,RR_4,1,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
+graph1D_jd(betath_list,RR_0,1,0,'','','',leg,xlim,ylim,'-','none','m',2,20,gca);
+%graph1D_jd(betath_list,RR_4,1,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
 graph1D_jd(xlim,[RR_kulsrud,RR_kulsrud],1,0,'','','',NaN,xlim,ylim,'--','none','k',2,20,gca);
-set(gca,'ytick',[0:2:10])
+set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[1e-05 0.0001 0.001 0.01 0.1 1])
 %set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
 set(gca,'XMinorGrid','off')
