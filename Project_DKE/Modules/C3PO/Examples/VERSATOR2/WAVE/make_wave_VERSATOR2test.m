@@ -79,7 +79,7 @@ if opt_load*exist(['EQUILV_',equil.id,'.mat']),
    info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil.id,' is reloaded.']);
 else
    info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil.id,' is calculated.']);
-   [equil_fit] = fitequil_yp(equil,mode_equil,method,ngridresample,nharm);%Build vectorized magnetic equilibrium structure
+   [equil_fit] = fitequil_yp(equil,fitparam.mode_equil,fitparam.method,fitparam.ngridresample,fitparam.nharm);%Build vectorized magnetic equilibrium structure
    save(['EQUILV_',equil_fit.id,'.mat'],'equil_fit');
    info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil_fit.id,' is saved.']);
    if display_equilibrium,testfitequil_yp(equil,equil_fit);end
