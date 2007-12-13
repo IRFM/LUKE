@@ -36,6 +36,7 @@ end
 addpath([luke_root,'Project_DKE/Modules/FEB/Response']);
 addpath([luke_root,'Project_DKE/Modules/FEB/Pile-up']);
 addpath([luke_root,'Project_DKE/Modules/FEB']);
+addpath([luke_root,'Project_DKE/Modules/ACCOME']);
 addpath([luke_root,'Project_DKE/Modules/Helena']);
 addpath([luke_root,'Project_DKE/Modules/R2D2']);
 addpath([luke_root,'Project_DKE/Modules/EFIT']);
