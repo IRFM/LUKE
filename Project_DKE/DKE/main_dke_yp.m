@@ -4,10 +4,10 @@ function [varargout] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam_
 %  for the RF wave absorption problem in presence of an Ohmic electric field (electron bootstrap current consistent with non-Maxwellian distribution)
 %  Small banana width approximation
 %  Arbitrary axisymmetric plasma equilibrium (linked arbitrary tokamak magnetic equilibrium code, via mexfile)
-%  Plasma current, RF power absorption, runaway rate, magnetic ripple loss and fast electron bremsstrahlung calculations
-%  See dke_1_4yp.m
+%  Plasma current, RF power absorption, runaway rate, magnetic ripple loss
+%  and fast electron bremsstrahlung calculations
 %
-%by Y.Peysson (CEA-DRFC) <yves.peysson@cea.fr> and J. Decker (MIT/RLE) <joan.decker@cea.fr>
+%by Y.Peysson (CEA-DRFC) <yves.peysson@cea.fr> and J. Decker (CEA-DRFC) <joan.decker@cea.fr>
 %
 dke_warnings = '';
 %
