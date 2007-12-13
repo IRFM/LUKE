@@ -11,7 +11,6 @@ end
 me = 1/1860;%Electron rest mass (u.m.a. units)
 v2 = v.*v;
 %
-keyboard
 if coll_mode == 1,%High-velocity limit
 	Fei = sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)')./v2;
 	Aei = sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)'.*xzTi_norm(:,ir)')./v./v2;
