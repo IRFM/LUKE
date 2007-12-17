@@ -596,9 +596,6 @@ else
     %
 end
 %
-residu_f = residu_f(:,it_f);
-prec_residu_f = prec_residu_f(:,it_f);
-%
 if dkeparam.invproc == -2,%MUMPS FORTAN 95 parallel processing package (inversion in MEX file, with LU matrix preconditionning)
    job_MUMPSMEX = -2;MUMPSMEX_dke_yp;%Clear MUMPSMEX memory
 end
