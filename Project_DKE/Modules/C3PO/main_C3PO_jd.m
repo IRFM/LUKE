@@ -70,6 +70,7 @@ end
 waveparam.cut_fac = rayparam.tau_lim/10;
 %
 wave.cut_fac = waveparam.cut_fac;
+wave.kextra = rayparam.kextra;
 %
 for iray = 1:Nrays,
     %
