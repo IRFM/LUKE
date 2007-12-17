@@ -78,6 +78,17 @@ Kxy = sum(ps.^2.*ys./(1 - ys.^2));
 %
 Kxyz = [Kperp,-i*Kxy,0;i*Kxy,Kperp,0;0,0,Kpar];
 %
+A = Kperp;
+B = (Npar^2 - Kperp)*(Kperp + Kpar) + Kxy^2;
+C = Kpar*((Npar^2 - Kperp)^2 - Kxy^2);
+%
+%   Accessibility condition
+%
+if isnan(Npar),
+	Npar = sqrt(Kperp + (sqrt(4*Kperp*Kpar*Kxy^2*(Kxy^2 - (Kperp - Kpar)^2)) - Kxy^2*(Kperp + Kpar))/(Kperp - Kpar)^2);%warning: this solution is valid in the LH frequency range only
+	Nperpp = Npar;%return accessibility condition
+end
+%
 %   Dispersion relation
 %
 if nargin == 8,%Nperp is an input variable
@@ -86,10 +97,6 @@ if nargin == 8,%Nperp is an input variable
     Nperpp = Nperp;
     Nperpm = Nperp;
 elseif nargin == 7,%Nperp is calculated from the cold dispersion relation
-    A = Kperp;
-    B = (Npar^2 - Kperp)*(Kperp + Kpar) + Kxy^2;
-    C = Kpar*((Npar^2 - Kperp)^2 - Kxy^2);
-    %
     Nperpp = sqrt((-B + sqrt(B^2-4*A*C))/(2*A));
     Nperpm = sqrt((-B - sqrt(B^2-4*A*C))/(2*A));
     %
