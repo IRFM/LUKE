@@ -116,6 +116,7 @@ struct rayparam {
     double *nperp;
     double *pperpmax;
     double *tau_lim;
+    double *kextra;
 };
 
 struct equilparam {
@@ -555,8 +556,9 @@ void mexFunction(   int     nlhs,
     double  *tout,*yout,*yproc;
     double  *toutp,*youtp;
     double  *y0,*y1,*y0_in;
+    double  tau_lim = rayparam.tau_lim[0];
 
-    register unsigned int  m,k=0,kk,ii=0;
+    register unsigned int  m,k=-1,kk,ii=0,kmax=rayparam.kmax[0];
 
     double *s0,*s1,*s2,*s3,*s4,*s5,*s6;
     double *tempt,*temp0,*temp1,*temp2,*temp3,*temp4,*temp5,*temp6,*temp7;
@@ -573,7 +575,7 @@ void mexFunction(   int     nlhs,
     double dS,depth=0.0,alpha1=0.0,alpha2,absphi;     
     double clum=CLUM;   
     
-    int flag1;
+    int flag1,iimax=500000;
 
 /*
 Create arguments for calling user function
@@ -659,20 +661,22 @@ Initialization
 The main loop
 */
     
-    while ((t1 < rayparam.tfinal[0]) && (k < rayparam.kmax[0]-1)) {
+    while ((t1 < rayparam.tfinal[0]) && (k < kmax)) {
         ii++; 
 /*        mexPrintf("ii:%d\n",ii);*/
         if ((t1 + h) > rayparam.tfinal[0]) {
             h = rayparam.tfinal[0] - t1;
         }
-        if (ii > rayparam.kmax[0]) {
+        if (ii > iimax) {
             goto Endloop;
-            flag1 = 0;
+            flag1 = 2;
         }
         
         /*mexPrintf("S1:%g\n",S1);*/
         
-        if (k == 0 || fabs(S1 - S_step) >= rayparam.dS[0]) {/*step stored in Matlab memory */
+        if (k == -1 || fabs(S1 - S_step) >= rayparam.dS[0]) {/*step stored in Matlab memory */
+            
+            k++;
             
             tempt[k] = t1;
             temp0[k] = rho1;
@@ -714,17 +718,19 @@ The main loop
 
                 temp_proc[MPROC+2*equilparam.ns[0]][k] = depth;
 
-                if (rayparam.tau_lim[0] > 0 && depth > rayparam.tau_lim[0]) { /* The power is fully absorbed. */
-                    mexPrintf("The wave is fully damped at k = %i\n",k);
-                    k++;
-                    goto Endloop;
+                if (tau_lim > 0 && depth > tau_lim) { /* The power is fully absorbed. */
+                    mexPrintf("The wave is fully linearly damped at k = %i\n",k);
+                         
+                    kmax = fmin(kmax,k + rayparam.kextra[0]);
+                    mexPrintf("----> Calculation stopped at k = %i\n",kmax);
+                    tau_lim = 0;
+                                        
                 }
                 
                 alpha1 = alpha2;
             }
 
             S_step = S1;
-            k++;
         }
 /*
 Compute the slopes
@@ -916,6 +922,9 @@ Update the step size
            if (flag1 == 1) {
                mexPrintf("---> The ray leaves the plasma.\n",delta);
            }
+           if (flag1 == 2) {
+               mexPrintf("WARNING: the code has reached a stationary point. Exit forced at %i steps.\n",iimax);
+           }
            goto Endloop;
         }
         
@@ -929,8 +938,6 @@ Endloop:
 
     
 /* Create final matrix for transferring data to MatLab */
-    
-    k = k--;
     
     T_OUT = mxCreateDoubleMatrix(k,1,mxREAL);
     Y_OUT = mxCreateDoubleMatrix(k,MC,mxREAL);

@@ -59,6 +59,10 @@ if ~isfield(rayparam,'dS'),% !!!! old rayparam, modify calling function
     rayparam = rmfield(rayparam,'drho');
 end
 %
+if ~isfield(rayparam,'kextra'),% !!!! old rayparam, modify calling function
+    rayparam.kextra = 0;
+end
+%
 if ~isfield(rayinit,'yn0'),% !!!! old rayparam, modify calling function
     rayinit.yn0 = NaN*rayinit.ym0;
 end
