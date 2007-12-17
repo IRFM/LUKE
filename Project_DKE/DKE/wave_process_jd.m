@@ -46,7 +46,7 @@ for ib = 1:length(wave.rays),
         ray.sdP_2piRp_ds = salpha_lin.*ray.sP_2piRp;
         %
         ns = length(ray.ss);
-        is_max = min([ns,find(ray.stau > 10*wave.cut_fac)]);
+        is_max = min([ns,wave.kextra+find(ray.stau > 10*wave.cut_fac)]);
         if ray.stau(end) < 10*wave.cut_fac & ~isinf(wave.cut_fac),
             disp('WARNING: The ray might be too short. Increase tfinal')
         end
