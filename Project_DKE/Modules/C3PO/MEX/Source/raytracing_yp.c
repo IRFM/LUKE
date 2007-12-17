@@ -558,7 +558,10 @@ void mexFunction(   int     nlhs,
     double  *y0,*y1,*y0_in;
     double  tau_lim = rayparam.tau_lim[0];
 
-    register unsigned int  m,k=-1,kk,ii=0,kmax=rayparam.kmax[0];
+    register unsigned int  m,kk,ii=0;
+    register int k=-1;
+
+    int flag1,iimax=500000, kmax=(int)rayparam.kmax[0];
 
     double *s0,*s1,*s2,*s3,*s4,*s5,*s6;
     double *tempt,*temp0,*temp1,*temp2,*temp3,*temp4,*temp5,*temp6,*temp7;
@@ -575,7 +578,7 @@ void mexFunction(   int     nlhs,
     double dS,depth=0.0,alpha1=0.0,alpha2,absphi;     
     double clum=CLUM;   
     
-    int flag1,iimax=500000;
+    
 
 /*
 Create arguments for calling user function
@@ -660,7 +663,6 @@ Initialization
 /*
 The main loop
 */
-    
     while ((t1 < rayparam.tfinal[0]) && (k < kmax)) {
         ii++; 
 /*        mexPrintf("ii:%d\n",ii);*/
@@ -720,10 +722,11 @@ The main loop
 
                 if (tau_lim > 0 && depth > tau_lim) { /* The power is fully absorbed. */
                     mexPrintf("The wave is fully linearly damped at k = %i\n",k);
-                         
-                    kmax = fmin(kmax,k + rayparam.kextra[0]);
+     
+                    kmax = (int)fmin((double)kmax,(double)k + rayparam.kextra[0]);
+                    
                     mexPrintf("----> Calculation stopped at k = %i\n",kmax);
-                    tau_lim = 0;
+                    tau_lim = 0.0;
                                         
                 }
                 
