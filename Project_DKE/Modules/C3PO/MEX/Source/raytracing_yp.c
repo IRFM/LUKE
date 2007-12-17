@@ -720,7 +720,7 @@ The main loop
 
                 temp_proc[MPROC+2*equilparam.ns[0]][k] = depth;
 
-                if (tau_lim > 0 && depth > tau_lim) { /* The power is fully absorbed. */
+                if (tau_lim > 0.0 && depth > tau_lim) { /* The power is fully absorbed. */
                     mexPrintf("The wave is fully linearly damped at k = %i\n",k);
      
                     kmax = (int)fmin((double)kmax,(double)k + rayparam.kextra[0]);
@@ -729,7 +729,8 @@ The main loop
                     tau_lim = 0.0;
                                         
                 }
-                
+
+
                 alpha1 = alpha2;
             }
 
