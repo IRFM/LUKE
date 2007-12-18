@@ -7,8 +7,8 @@ function [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons,cons_spec)
 %
 if 1,%length(cons_spec) == 1,%no input power spectrum from coupling code like SWAN
     %
-    Plhtot = abs(cons(:)).*directivity(:);%initial power in the ray (W) (main lobe) [n_antenna,m_lobe]
-    Npar0 = angle(cons(:));%Initial Npar value (main lobe) [n_antenna,m_lobe]
+    Plhtot = abs(cons)*[directivity,1-directivity];%initial power in the ray (W) (main lobe) [n_antenna,m_lobe]
+    Npar0 = [angle(cons),-6.0];%Initial Npar value (main lobe) [n_antenna,m_lobe]
     %
 else
   	
