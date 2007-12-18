@@ -49,6 +49,7 @@ if ~isfield(waveparam,'nchi'),
 end
 %
 if ~isfield(rayparam,'dS'),% !!!! old rayparam, modify calling function
+    warning('Update old rayparam in the script')
     rayparam.dS = rayparam.drho;
     %
     rayparam.rel_opt = 1;%option for (1) relativistic or (0) non-relativistic calculations
