@@ -1,4 +1,4 @@
-function [waveparam,xyprop_dke_rf,xyP0_2piRp_in_rf,yb_rf,xys_rf] = rfwave_dke_jd(dkeparam,display,equil,equilDKE,gridDKE,Zbouncecoef,mksa,waves);
+function [waveparam,xyprop_dke_rf,xyP0_2piRp_in_rf,yb_rf,yP0_2piRp,xys_rf] = rfwave_dke_jd(dkeparam,display,equil,equilDKE,gridDKE,Zbouncecoef,mksa,waves);
 % 
 %	RF input parameters for the Drift Kinetic equation solver (dke_4_1yp.m). 
 %
@@ -203,7 +203,7 @@ end
 %           Discretization of the rays on the flux-surfaces
 % ======================================================================
 %
-[waveparam,xyprop_dke_rf,xys_rf,xyP0_2piRp_in_rf,yb] = propagation_jd(rays,xpsin_S_dke,xpsin_dke,method,display_mode);
+[waveparam,xyprop_dke_rf,xys_rf,xyP0_2piRp_in_rf,yb,yP0_2piRp] = propagation_jd(rays,xpsin_S_dke,xpsin_dke,method,display_mode);
 disp('-------------------------------------------------------------------------------------------------------------------');
 %
 nb_rf = size(yb,2);%number of actual rays

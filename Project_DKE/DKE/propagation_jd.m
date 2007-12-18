@@ -1,4 +1,4 @@
-function [waveparam,xyprop,xys,xyPinc_2piRp_lin,yb] = propagation_jd(rays,xpsin_S,xpsin,method,display_mode);
+function [waveparam,xyprop,xys,xyPinc_2piRp_lin,yb,yP0_2piRp] = propagation_jd(rays,xpsin_S,xpsin,method,display_mode);
 %
 % This function couples the DKE code with a ray-tracing code.
 % RF rays are distributed onto the DKE flux surfaces.
@@ -38,6 +38,7 @@ xyprop = zeros(nr,0); %propagation factor (NaN is ray start, +1 is increasing ps
 xyPinc_2piRp_lin = zeros(nr,0);% power flow in the ray based on linear absorption calculation at center of flux-surface
 xys = zeros(nr,0);% ray path length at center of flux-surface
 yb = []; %list of ray starts
+yP0_2piRp = []; %list of initial powers 
 %
 iy = 0; %counting global number of ray
 %
@@ -95,6 +96,8 @@ for ib = 1:nb
     %is = max([1,min(find(spsin < 1)) - 1]);
     %
     yb = [yb,[iy+1;ib]];%keeps track of new ray indices.
+    yP0_2piRp = [yP0_2piRp,ray.P0_2piRp];
+    %
 %
 % Find ray subdivisions
 %

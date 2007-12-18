@@ -1,4 +1,4 @@
-function [xyP0_2piRp_out,xyP0_2piRp_mod] = rfprop_dke_jd(yb,xyprop_dke,xyP0_2piRp_in,xyPabs_dke,xdV_2piRp_dke,xpsin,xpsin_dke,r_dke,dke_mode);
+function [xyP0_2piRp_out,xyP0_2piRp_mod] = rfprop_dke_jd(yb,yP0_2piRp,xyprop_dke,xyP0_2piRp_in,xyPabs_dke,xdV_2piRp_dke,xpsin,xpsin_dke,r_dke,dke_mode);
 %
 % This function ensures consistency between the power travelling with RF
 % rays and the power absorbed by the plasma. Iterations between
@@ -44,8 +44,9 @@ for iy = 1:ny
     %   
     % check if new ray or only new portion
     %
-    if ~isempty(find(iy == yb)); %new ray
-        bPrf = xyP0_2piRp_in(ir,iy); %initial power in the ray
+    ib = find(iy == yb);
+    if ~isempty(ib); %new ray
+        bPrf = yP0_2piRp(ib); %initial power in the ray
         bPrf_mod = bPrf; %initial power in the ray
     end
     %    
