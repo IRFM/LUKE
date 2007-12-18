@@ -56,6 +56,30 @@ ZXXF_rf.m_ijm =     zeros(npn,nmhu,nr);
 %
 clear ZXYD_rf XYP0_2piRp
 %
+if isfield(dkeparam,'Dparparmax'),
+	Dparparmax = dkeparam.Dparparmax;
+else
+	Dparparmax = Inf;
+end
+%
+XXredfac = ZXXD_rf.parpar_ij/Dparparmax;
+XXredfac(XXredfac < 1) = 1;
+%
+ZXXD_rf.pp_ippj = ZXXD_rf.pp_ippj./XXredfac;
+ZXXD_rf.pp_ipj = ZXXD_rf.pp_ipj./XXredfac;
+ZXXD_rf.pp_ij = ZXXD_rf.pp_ij./XXredfac;
+ZXXD_rf.parpar_ij = ZXXD_rf.parpar_ij./XXredfac;
+ZXXD_rf.pp_imj = ZXXD_rf.pp_imj./XXredfac;
+ZXXD_rf.pp_immj = ZXXD_rf.pp_immj./XXredfac;
+ZXXD_rf.pm_ipj = ZXXD_rf.pm_ipj./XXredfac;
+ZXXD_rf.pm_ij = ZXXD_rf.pm_ij./XXredfac;
+ZXXD_rf.pm_imj = ZXXD_rf.pm_imj./XXredfac;
+ZXXD_rf.mp_ijp = ZXXD_rf.mp_ijp./XXredfac;
+ZXXD_rf.mp_ij = ZXXD_rf.mp_ij./XXredfac;
+ZXXD_rf.mp_ijm =ZXXD_rf.mp_ijm./XXredfac;
+ZXXD_rf.mm_ijp = ZXXD_rf.mm_ijp./XXredfac;
+ZXXD_rf.mm_ijm = ZXXD_rf.mm_ijm./XXredfac;
+%
 if dkeparam.dke_mode == 1,
     %
     XYP0_2piRp_tp = xyP0_2piRp(ixy(gridindex_rf.mask_dke));
