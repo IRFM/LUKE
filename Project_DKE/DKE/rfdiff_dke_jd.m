@@ -284,7 +284,6 @@ bZbfac = bkperprho.*sqrt(bpsib);% momentum-independent factor in XBZb
 % Spectral properties
 %
 bnpar_acc = imag(bnpar_rf);%accessibility condition
-bnpar_acc(bnpar_acc == 0) = Inf;
 bnpar_rf = real(bnpar_rf);%actual npar value
 %
 bnparmin_rf = NaN*ones(1,nb,'single');
@@ -390,7 +389,7 @@ for in = 1:nn_rf,
             Xdeltares_ij = (Xnparres_ij > bnparmin_rf(ib)).*(bnparmax_rf(ib) > Xnparres_ij)./bdnpar_rf(ib);
         end
 		%
-		Xdeltares_ij(abs(Xnparres_ij) > bnpar_acc(ib)) = 0;%accessibility condition
+		%Xdeltares_ij(abs(Xnparres_ij) < bnpar_acc(ib)) = 0;%accessibility condition
         %
         X_index_ij = (Xdeltares_ij >= rf_tol) | (~XXheaviside(:,:,bir_rf(ib)) & fliplr(Xdeltares_ij) >= rf_tol);
         %
