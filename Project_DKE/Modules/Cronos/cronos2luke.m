@@ -279,7 +279,7 @@ if nargin <= 1
 %
 	valeur.n_ec_max     = 2;% frequence en  Ghz [TS = 118]
 	type.n_ec_max       = 'integer';% type de la donnnee
-	borne.n_ec_max      = [1,10];
+	borne.n_ec_max      = [0,10];
 	defaut.n_ec_max     = 2;
 	info.n_ec_max       = 'Maximum harmonic number';
 %	     
@@ -425,7 +425,7 @@ end
 %
 mask = [];
 for iw = 1:length(launchs),
-    if strcmp(launchs{iw}.type,'LH') & launchs{iw}.bPlhtot > 0,
+    if strcmp(launchs{iw}.type,'LH') & sum(launchs{iw}.bPlhtot) > 0,
         mask = [mask,iw];
     elseif strcmp(launchs{iw}.type,'EC') & launchs{iw}.yP_L > 0,
         mask = [mask,iw];
