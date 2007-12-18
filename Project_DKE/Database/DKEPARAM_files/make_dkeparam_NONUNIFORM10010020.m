@@ -12,7 +12,7 @@ dkeparam_id = 'NONUNIFORM10010020';%Set here the name (identifier) of the drift 
 dkeparam.grid_uniformity = 0;%Pitch-angle and momentum grids uniformity: (0) no, (1) yes (-1 for specific test for DKE, transient and pitch-angle grid only)
 dkeparam.grid_method = 1;%Pitch-angle grid calculation technique: (0): old method, (1) new method
 dkeparam.nmhu_S = 101;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
-dkeparam.np_S = 88;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run) WARNING: must be adjusted so that effective momentum point number is larger than thepitch-angle one.
+dkeparam.np_S = 101;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run) WARNING: must be adjusted so that effective momentum point number is larger than thepitch-angle one.
 dkeparam.pnmax_S = 20;%Maximum value of the flux momentum grid (pth_ref)
 %
 %Pitch-angle grid
@@ -21,7 +21,7 @@ dkeparam.sfac0 = 1; % reduction factor for fine grid near mhu = 0
 dkeparam.sfac1 = 1; % reduction factor for fine grid near abs(mhu) = 1
 dkeparam.sfact = 1; % reduction factor for fine grid near abs(mhu) = mhut
 %
-dkeparam.snmhu0 = 6; % number of fine grid points near mhu = 0
+dkeparam.snmhu0 = 1; % number of fine grid points near mhu = 0
 dkeparam.snmhu1 = 1; % number of fine grid points near abs(mhu) = 1
 dkeparam.snmhut = 1; % number of fine grid points near abs(mhu) = mhut
 %
@@ -30,7 +30,7 @@ dkeparam.grid_power = 1.5; % power for mhu grid step varations (grid_power > 1) 
 %Momentum grid 
 %
 dkeparam.np_S_ref = 20;%position in the mpomentum grid where dpn_S is twice the minimum value(must be ajusted with snp parameter)
-dkeparam.snp = 3;%pgridfactor (Uniform grid: pgridfactor = 1, non-uniform grid: pgridfactor > 1) 
+dkeparam.snp = 1;%pgridfactor (Uniform grid: pgridfactor = 1, non-uniform grid: pgridfactor > 1) 
 dkeparam.spfac = 20;%reduction factor for the momentum supergrid used in collision integrals
 %
 %Normalized radii at which the distribution is calculated (DKE or FP)
