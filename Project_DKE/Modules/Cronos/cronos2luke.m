@@ -190,7 +190,7 @@ if nargin <= 1
 %
 %  RUN PARAMETERS
 %
-	valeur.rho_S = [0,0.1:0.025:0.4,0.5:0.1:1];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+	valeur.rho_S = [0:0.05:1];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 	type.rho_S = 'float';%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 	borne.rho_S = [0,1];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 	defaut.rho_S = 0;%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
@@ -200,7 +200,7 @@ if nargin <= 1
 %
     valeur.conf = 'MIXTE';% configuration antennes / machine
     type.conf = 'string';% configuration antennes / machine
-    borne.conf = {'TS','MIXTE','CIEL','CMOD','SST1','COMPASS','JET','FTU','ITER3.7GHz','ITER5GHz','DEMO3.7GHz','DEMO5.0GHz','Ohmic'};% configuration antennes / machine
+    borne.conf = {'TS','MIXTE','CIEL','CMOD','SST1','COMPASS','JET','FTU','ITER3.7GHz','ITER5GHz','DEMO3.7GHz','DEMO5.0GHz','ASDEX','Ohmic'};% configuration antennes / machine
     defaut.conf = 'MIXTE';% configuration antennes / machine
     info.conf = 'Configuration antennas / tokamak';
 %
@@ -411,6 +411,9 @@ switch par.luke_mode
     %
     % EC waves only
     %
+    if isstruct(cons)
+      cons = cons.ecrh_cons;
+    end
     [launchs] = make_wavelaunchs_cronos_ec(equil,par,cons);%for the EC waves    
     par.launchtype = 'EC';
     %
@@ -419,6 +422,16 @@ switch par.luke_mode
     error('luke mode could not be determined')
     %      
 end
+%
+mask = [];
+for iw = 1:length(launchs),
+    if strcmp(launchs{iw}.type,'LH') & launchs{iw}.bPlhtot > 0,
+        mask = [mask,iw];
+    elseif strcmp(launchs{iw}.type,'EC') & launchs{iw}.yP_L > 0,
+        mask = [mask,iw];
+    end
+end
+launchs = launchs(mask);        
 %
 % --------- Load first all parameters that are in files ------------
 %
@@ -609,12 +622,12 @@ equilDKE.xcron = interp1(psipncronos,gene.x,equilDKE.xpsin);
 % preparation des variables de sortie (sortie.j, sortie.el) pour CRONOS sur la bonne grille
 % et avec les bonnes unites
 %
-if sum(abs(ohm.epsi)) > 0,%Only the RF current + the synergistic Ohmic/RF current contribution is kept
+if sum(abs(ohm.epsi)) ~= 0,%Only the RF current + the synergistic Ohmic/RF current contribution is kept
    sortie.j  = interp1(equilDKE.xcron,(Zcurr_RF.x_tot_vfsav - Zcurr.x_tot_vfsav)*mksa.j_ref,gene.x)*1e6;
    sortie.el = interp1(equilDKE.xcron,(ZP0_RF.x_rf_fsav + ZP0_RF.x_e_fsav' - ZP0.x_e_fsav')*mksa.P_ref,gene.x);
 else
-   sortie.j = interp1(equilDKE.xcron,Zcurr.x_tot_vfsav*mksa.j_ref,gene.x)*1e6;
-   sortie.el = interp1(equilDKE.xcron,(ZP0.x_rf_fsav + ZP0.x_e_fsav')*mksa.P_ref,gene.x);
+   sortie.j = interp1(equilDKE.xcron,Zcurr_RF.x_tot_vfsav*mksa.j_ref,gene.x)*1e6;
+   sortie.el = interp1(equilDKE.xcron,(ZP0_RF.x_rf_fsav + ZP0_RF.x_e_fsav')*mksa.P_ref,gene.x);
 end
 %
 % blindage : 0 au bord, au centre on recopie la premiere valeur non nulle
