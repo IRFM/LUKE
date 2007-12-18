@@ -583,31 +583,31 @@ XBdeltares.ijm = zeros(SXB_bloc,'single');
 %
 XBdeltares.ippj(XBmask_square) = (XBnparres.ippj(XBmask_square) > XBnparmin_rf(XBmask_square)).*(XBnparmax_rf(XBmask_square) > XBnparres.ippj(XBmask_square))./XBdnpar_rf(XBmask_square);
 XBdeltares.ippj(XBmask_gauss) = exp(-(XBnparres.ippj(XBmask_gauss) - XBnpar_rf(XBmask_gauss)).^2./XBdnpar_rf(XBmask_gauss).^2)./XBdnpar_rf(XBmask_gauss)/sqrt(pi);
-XBdeltares.ippj(abs(XBnparres.ippj) > XBnpar_acc) = 0;
+XBdeltares.ippj(abs(XBnparres.ippj) < XBnpar_acc) = 0;
 %
 XBdeltares.ipj(XBmask_square) = (XBnparres.ipj(XBmask_square) > XBnparmin_rf(XBmask_square)).*(XBnparmax_rf(XBmask_square) > XBnparres.ipj(XBmask_square))./XBdnpar_rf(XBmask_square);
 XBdeltares.ipj(XBmask_gauss) = exp(-(XBnparres.ipj(XBmask_gauss) - XBnpar_rf(XBmask_gauss)).^2./XBdnpar_rf(XBmask_gauss).^2)./XBdnpar_rf(XBmask_gauss)/sqrt(pi);
-XBdeltares.ipj(abs(XBnparres.ipj) > XBnpar_acc) = 0;
+XBdeltares.ipj(abs(XBnparres.ipj) < XBnpar_acc) = 0;
 %
 XBdeltares.ij(XBmask_square) = (XBnparres.ij(XBmask_square) > XBnparmin_rf(XBmask_square)).*(XBnparmax_rf(XBmask_square) > XBnparres.ij(XBmask_square))./XBdnpar_rf(XBmask_square);
 XBdeltares.ij(XBmask_gauss) = exp(-(XBnparres.ij(XBmask_gauss) - XBnpar_rf(XBmask_gauss)).^2./XBdnpar_rf(XBmask_gauss).^2)./XBdnpar_rf(XBmask_gauss)/sqrt(pi);
-XBdeltares.ij(abs(XBnparres.ij) > XBnpar_acc) = 0;
+XBdeltares.ij(abs(XBnparres.ij) < XBnpar_acc) = 0;
 %
 XBdeltares.imj(XBmask_square) = (XBnparres.imj(XBmask_square) > XBnparmin_rf(XBmask_square)).*(XBnparmax_rf(XBmask_square) > XBnparres.imj(XBmask_square))./XBdnpar_rf(XBmask_square);
 XBdeltares.imj(XBmask_gauss) = exp(-(XBnparres.imj(XBmask_gauss) - XBnpar_rf(XBmask_gauss)).^2./XBdnpar_rf(XBmask_gauss).^2)./XBdnpar_rf(XBmask_gauss)/sqrt(pi);
-XBdeltares.imj(abs(XBnparres.imj) > XBnpar_acc) = 0;
+XBdeltares.imj(abs(XBnparres.imj) < XBnpar_acc) = 0;
 %
 XBdeltares.immj(XBmask_square) = (XBnparres.immj(XBmask_square) > XBnparmin_rf(XBmask_square)).*(XBnparmax_rf(XBmask_square) > XBnparres.immj(XBmask_square))./XBdnpar_rf(XBmask_square);
 XBdeltares.immj(XBmask_gauss) = exp(-(XBnparres.immj(XBmask_gauss) - XBnpar_rf(XBmask_gauss)).^2./XBdnpar_rf(XBmask_gauss).^2)./XBdnpar_rf(XBmask_gauss)/sqrt(pi);
-XBdeltares.immj(abs(XBnparres.immj) > XBnpar_acc) = 0;
+XBdeltares.immj(abs(XBnparres.immj) < XBnpar_acc) = 0;
 %
 XBdeltares.ijp(XBmask_square) = (XBnparres.ijp(XBmask_square) > XBnparmin_rf(XBmask_square)).*(XBnparmax_rf(XBmask_square) > XBnparres.ijp(XBmask_square))./XBdnpar_rf(XBmask_square);
 XBdeltares.ijp(XBmask_gauss) = exp(-(XBnparres.ijp(XBmask_gauss) - XBnpar_rf(XBmask_gauss)).^2./XBdnpar_rf(XBmask_gauss).^2)./XBdnpar_rf(XBmask_gauss)/sqrt(pi);
-XBdeltares.ijp(abs(XBnparres.ijp) > XBnpar_acc) = 0;
+XBdeltares.ijp(abs(XBnparres.ijp) < XBnpar_acc) = 0;
 %
 XBdeltares.ijm(XBmask_square) = (XBnparres.ijm(XBmask_square) > XBnparmin_rf(XBmask_square)).*(XBnparmax_rf(XBmask_square) > XBnparres.ijm(XBmask_square))./XBdnpar_rf(XBmask_square);
 XBdeltares.ijm(XBmask_gauss) = exp(-(XBnparres.ijm(XBmask_gauss) - XBnpar_rf(XBmask_gauss)).^2./XBdnpar_rf(XBmask_gauss).^2)./XBdnpar_rf(XBmask_gauss)/sqrt(pi);
-XBdeltares.ijm(abs(XBnparres.ijm) > XBnpar_acc) = 0;
+XBdeltares.ijm(abs(XBnparres.ijm) < XBnpar_acc) = 0;
 %
 clear XBnparres XBmask_square XBmask_gauss XBnparmin_rf XBnparmax_rf XBnpar_rf XBdnpar_rf XBnpar_acc
 %
