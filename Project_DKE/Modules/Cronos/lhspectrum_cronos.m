@@ -6,8 +6,10 @@ function [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons,cons_spec)
 %by Y.Peysson <yves.peysson@cea.fr> (CEA-DRFC) and J. Decker <joan.decker@cea.fr> (CEA-DRFC)
 %
 if 1,%length(cons_spec) == 1,%no input power spectrum from coupling code like SWAN
-   Plhtot = abs(cons(:)).*directivity(:);%initial power in the ray (W) (main lobe) [n_antenna,m_lobe]
-   Npar0 = -signe.ip*signe.b0*angle(cons(:));%Initial Npar value (main lobe) [n_antenna,m_lobe]
+    %
+    Plhtot = abs(cons(:)).*directivity(:);%initial power in the ray (W) (main lobe) [n_antenna,m_lobe]
+    Npar0 = angle(cons(:));%Initial Npar value (main lobe) [n_antenna,m_lobe]
+    %
 else
   	
   	
@@ -23,4 +25,9 @@ else
 	   Npar0(ia,:) = [Npar_p(find(Plh_p == max(Plh_p))),Npar_m(find(Plh_m == max(Plh_m)))];
    end
 end
+%
+% For CRONOS, N//> 0 means always co-current, whatever the toroidal Bfield or the direction of Ip
+%
+Npar0 = -signe.ip*signe.b0*Npar0;%Initial Npar value (main lobe) [n_antenna,m_lobe]
+%
 

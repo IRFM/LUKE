@@ -549,16 +549,7 @@ end
 %
 ik = 1;
 %
-% For CRONOS, N//> 0 means always co-current, whatever the toroidal Bfield or the direction of Ip
-%
-%for k=1:length(wavestructs)
-%	eval(['wavestructs{',int2str(k),'}.launch.bNpar0 = (-1)*sign(signe.ip)*sign(signe.b0)*wavestructs{',int2str(k),'}.launch.bNpar0;'])
-%end    
-%
 if sum(abs(ohm.epsi)) ~= 0,%Calculate the Ohmic electric field contribution to the plasma current
-%    dkeparam.bounce_mode = 0;
-%    [Znorm0,Zcurr0,ZP00,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp('cronos',[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,'',transpfaste,ripple,[],[]);
-    dkeparam.bounce_mode = 1;
    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp('cronos',[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,'',transpfaste,ripple,[],[]);
 end
 %
