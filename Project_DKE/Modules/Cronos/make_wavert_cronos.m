@@ -28,16 +28,21 @@ if strcmp(config,'LH');%For the Lower Hybrid wave simulations
 %
 % Global parameters for the ray-tracing
 %
-   rayparam.testmode = 0;
-   rayparam.tensortype = waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
-   rayparam.t0 = 0;
-   rayparam.tfinal = 20000;
-   rayparam.dt0 = 1.e-5;
-   rayparam.drho = 1.e-4;
-   rayparam.tol = 1e-12;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
-   rayparam.kmax = 100000;
-   rayparam.ncyclharm = 50;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
-   rayparam.reflection = 1;%1:Enforce wave reflection at plasma boundary, 0: the code calculates itself if the ray must leave of not the plasma
+    rayparam.testmode = 0;
+    rayparam.tensortype = waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
+    rayparam.t0 = 0;
+    rayparam.tfinal = 20000;
+    rayparam.dt0 = 1.e-5;
+    rayparam.dS = 1.e-3;
+    rayparam.rel_opt = 1;%option for (1) relativistic or (0) non-relativistic calculations
+    rayparam.nperp = 1000;%number of points in pperp integration for damping calculations
+    rayparam.pperpmax = 10;%maximum value of pperp in damping calculations
+    rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considered absorbed
+    rayparam.kextra = 200;%number of extra points after linear absorption
+    rayparam.tol = 1e-12;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
+    rayparam.kmax = 100000;
+    rayparam.ncyclharm = 50;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
+    rayparam.reflection = 1;%1:Enforce wave reflection at plasma boundary, 0: the code calculates itself if the ray must leave of not the plasma
 %
 % Ray display mode
 %
@@ -71,16 +76,21 @@ elseif strcmp(config,'EC') | strcmp(config,'EBW');;%For the Electron Cyclotron o
 %
 % Global parameters for the ray-tracing
 %
-   rayparam.testmode = 0;
-   rayparam.tensortype = waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
-   rayparam.t0 = 0;
-   rayparam.tfinal = 2000;
-   rayparam.dt0 = 1.e-5;
-   rayparam.drho = 1.e-4;
-   rayparam.tol = 1e-12;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
-   rayparam.kmax = 100000;
-   rayparam.ncyclharm = 50;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
-   rayparam.reflection = 0;%1:Enforce wave reflection at plasma boundary, 0: the code calculates itself if the ray must leave of not the plasma
+    rayparam.testmode = 0;
+    rayparam.tensortype = waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
+    rayparam.t0 = 0;
+    rayparam.tfinal = 2000;
+    rayparam.dt0 = 1.e-5;
+    rayparam.dS = 1.e-4;
+    rayparam.rel_opt = 1;%option for (1) relativistic or (0) non-relativistic calculations
+    rayparam.nperp = 1000;%number of points in pperp integration for damping calculations
+    rayparam.pperpmax = 10;%maximum value of pperp in damping calculations
+    rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considered absorbed
+    rayparam.kextra = 200;%number of extra points after linear absorption
+    rayparam.tol = 1e-12;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
+    rayparam.kmax = 100000;
+    rayparam.ncyclharm = 50;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
+    rayparam.reflection = 0;%1:Enforce wave reflection at plasma boundary, 0: the code calculates itself if the ray must leave of not the plasma
 %
 % Ray display mode
 %
