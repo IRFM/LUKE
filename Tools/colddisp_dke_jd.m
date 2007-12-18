@@ -87,6 +87,7 @@ C = Kpar*((Npar^2 - Kperp)^2 - Kxy^2);
 if isnan(Npar),
 	Npar = sqrt(Kperp + (sqrt(4*Kperp*Kpar*Kxy^2*(Kxy^2 - (Kperp - Kpar)^2)) - Kxy^2*(Kperp + Kpar))/(Kperp - Kpar)^2);%warning: this solution is valid in the LH frequency range only
 	Nperpp = Npar;%return accessibility condition
+    return
 end
 %
 %   Dispersion relation
