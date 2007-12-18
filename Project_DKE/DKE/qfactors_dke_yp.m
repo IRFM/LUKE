@@ -74,7 +74,7 @@ if equil_mode == 1,
     %qcronos
     %
     XMF = XMB.*XMB.*XMr2./XMrBpcos./XMBmin./ap;
-    xqc = squeeze(sum(XMF.*XMdt))/(2*pi);
+    xqcronos = squeeze(sum(XMF.*XMdt))/(2*pi);
     %
 else
     xrho = xx0/ap; %note: for the sake of bounce-averaged calculations in the
