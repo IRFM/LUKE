@@ -89,7 +89,7 @@ if dkeparam.rt_mode == 1,
 elseif dkeparam.rt_mode == 2,
     for iw = 1:nw,
         for ib = 1:nb(iw),
-            waves{iw}.rays{ib}.sdNpar = waves{iw}.rays{ib}.sNpar*waves{iw}.rays{ib}.sdNpar(1)/waves{iw}.rays{ib}.sNpar(1);
+            waves{iw}.rays{ib}.sdNpar = real(waves{iw}.rays{ib}.sNpar)*waves{iw}.rays{ib}.sdNpar(1)/real(waves{iw}.rays{ib}.sNpar(1));
         end
     end
     %
@@ -166,7 +166,7 @@ elseif dkeparam.rt_mode == 3,%
         for iw = 1:nw,
             for ib = 1:nb(iw),
                 if submode == 1,
-                    waves{iw}.rays{ib}.sdNpar = abs(waves{iw}.rays{ib}.sNpar)*val;
+                    waves{iw}.rays{ib}.sdNpar = abs(real(waves{iw}.rays{ib}.sNpar))*val;
                 elseif submode == 2,
                     waves{iw}.rays{ib}.sdNpar = sdNpar_in{iw}(ib) + waves{iw}.rays{ib}.ss*val;
                 end

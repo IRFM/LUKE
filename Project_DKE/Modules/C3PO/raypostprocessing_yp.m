@@ -72,6 +72,10 @@ if ~isempty(yproc),
         [Nperpp,Nperpm] = colddisp_dke_jd(Npar_ray(ii),omega,ne_ray(ii),zni_ray(ii,:),equil_fit.zZi,equil_fit.zmi,B_ray(ii));
         %
         pmode_ray(ii,1) = abs(Nperpp - Nperp_ray(ii)) <= abs(Nperpm - Nperp_ray(ii)); 
+		%
+		Npar_acc = colddisp_dke_jd(NaN,omega,ne_ray(ii),zni_ray(ii,:),equil_fit.zZi,equil_fit.zmi,B_ray(ii));%accessibility value
+		%
+		Npar_ray(ii) = Npar_ray(ii) + i*real(Npar_acc);
     end
     %
     iabs_out = length(Npar_ray);
@@ -100,7 +104,7 @@ end
 %
 pmode_ray = logical(pmode_ray);
 %
-if rem(abs(1-Npar_ray(1)^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation. Calculate the exact theoretical solution 
+if rem(abs(1-real(Npar_ray(1))^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation. Calculate the exact theoretical solution 
     cnorm = clum/omega_ray(1)/equil_fit.ap;
     Rpn = equil_fit.Rp/equil_fit.ap;%Normlized major radius
     s = linspace(0,10,1001);%Ray length
@@ -196,7 +200,7 @@ if display_mode,
    [ax] = graph1D_jd(R_ray(pmode_ray),Z_ray(pmode_ray),0,0,'R(m)','Z(m)',['Poloidal Ray trajectory',subtitle],NaN,[Rmin,Rmax],[Zmin,Zmax],'none','.','r',2);hold on
    [ax] = graph1D_jd(R_ray(~pmode_ray),Z_ray(~pmode_ray),0,0,'R(m)','Z(m)',['Poloidal Ray trajectory',subtitle],NaN,[Rmin,Rmax],[Zmin,Zmax],'none','.','b',2);hold on
 %
-   if rem(abs(1-Npar_ray(1)^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation.
+   if rem(abs(1-real(Npar_ray(1))^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation.
       [ax] = graph1D_jd(sqrt(X_vac0_c(1,:).^2+X_vac0_c(2,:).^2)*equil_fit.ap,X_vac0_c(3,:)*equil_fit.ap,0,0,'R(m)','Z(m)',['Ray trajectory',subtitle],NaN,[Rmin,Rmax],[Zmin,Zmax],'--','none','r',2);hold on
       legend('Ray-tracing','Analytic');
    else
@@ -218,7 +222,7 @@ if display_mode,
    [ax] = graph1D_jd(X_ray(pmode_ray),Y_ray(pmode_ray),0,0,'X(m)','y(m)',['Toroidal ray trajectory',subtitle],NaN,[-Rmax,Rmax],[-Rmax,Rmax],'none','.','r',2);hold on
    [ax] = graph1D_jd(X_ray(~pmode_ray),Y_ray(~pmode_ray),0,0,'X(m)','y(m)',['Toroidal ray trajectory',subtitle],NaN,[-Rmax,Rmax],[-Rmax,Rmax],'none','.','b',2);hold on
 %
-   if rem(abs(1-Npar_ray(1)^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation.
+   if rem(abs(1-real(Npar_ray(1))^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation.
       [ax] = graph1D_jd(X_vac0_c(1,:)*equil_fit.ap,X_vac0_c(2,:)*equil_fit.ap,0,0,'X(m)','Y(m)',['Toroidal ray trajectory',subtitle],NaN,[-Rmax,Rmax],[-Rmax,Rmax],'--','none','r',2);hold on
       legend('Ray-tracing','Analytic');
    else
@@ -238,19 +242,19 @@ if display_mode,
    print_jd(p_opt,[filename,'_RayToroidal']);  
 %
    figure('Name','Parallel wave refractive index')
-   graph1D_jd(abs(phi_ray/2/pi),Npar_ray,0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index',subtitle],NaN,'',[min(Npar_ray),max(Npar_ray)]','-','none','k',2);drawnow;hold off
-   if rem(abs(1-Npar_ray(1)^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation.
-      [ax] = graph1D_jd(phi_vac/2/pi,Npar_vac,0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index',subtitle],NaN,'',[min(Npar_ray),max(Npar_ray)],'--','none','r',2);hold on
+   graph1D_jd(abs(phi_ray/2/pi),real(Npar_ray),0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index',subtitle],NaN,'',[min(real(Npar_ray)),max(real(Npar_ray))]','-','none','k',2);drawnow;hold off
+   if rem(abs(1-real(Npar_ray(1))^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation.
+      [ax] = graph1D_jd(phi_vac/2/pi,Npar_vac,0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index',subtitle],NaN,'',[min(real(Npar_ray)),max(real(Npar_ray))],'--','none','r',2);hold on
       legend('Ray-tracing','Analytic');
    else
-      graph1D_jd(abs(phi_ray/2/pi),sign(Npar_ray(1))*6.5./sqrt(Te_ray),0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index',subtitle],NaN,'',[min(Npar_ray),max(Npar_ray)],'-','none','b',2);drawnow;hold off
+      graph1D_jd(abs(phi_ray/2/pi),sign(real(Npar_ray(1)))*6.5./sqrt(Te_ray),0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index',subtitle],NaN,'',[min(real(Npar_ray)),max(real(Npar_ray))],'-','none','b',2);drawnow;hold off
       legend('Ray-tracing','Landau damping');
    end
    print_jd(p_opt,[filename,'_Npar']);
 %
    figure('Name','Perpendicular wave refractive index')
    graph1D_jd(abs(phi_ray/2/pi),Nperp_ray,0,0,'abs(\phi)/2\pi','N_{perp}',['Perpendicular wave refractive index',subtitle],NaN,'','','-','none','k',2);drawnow;hold off
-   if rem(abs(1-Npar_ray(1)^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation.
+   if rem(abs(1-real(Npar_ray(1))^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation.
       [ax] = graph1D_jd(phi_vac/2/pi,Nperp_vac,0,0,'abs(\phi)/2\pi','N_{perp}',['Perpendicular wave refractive index',subtitle],NaN,'','','--','none','r',2);hold on
       legend('Ray-tracing','Analytic');
    end
@@ -258,7 +262,7 @@ if display_mode,
 %
    figure('Name','Poloidal mode number')
    graph1D_jd(abs(phi_ray/2/pi),yout(:,5),0,0,'abs(\phi)/2\pi','m',['Poloidal mode number',subtitle],NaN,'','','-','none','k',2);drawnow;hold on
-   if rem(abs(1-Npar_ray(1)^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation.
+   if rem(abs(1-real(Npar_ray(1))^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation.
       [ax] = graph1D_jd(phi_vac/2/pi,m_vac,0,0,'abs(\phi)/2\pi','m',['Poloidal mode number',subtitle],NaN,'','','--','none','r',2);hold on
       legend('Ray-tracing','Analytic');
    end
@@ -266,7 +270,7 @@ if display_mode,
 %
    figure('Name','Toroidal mode number')
    graph1D_jd(abs(phi_ray/2/pi),yout(:,6),0,0,'abs(\phi)/2\pi','n',['Toroidal mode number',subtitle],NaN,'','','-','none','k',2);drawnow;hold on
-   if rem(abs(1-Npar_ray(1)^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation.
+   if rem(abs(1-real(Npar_ray(1))^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation.
       [ax] = graph1D_jd(phi_vac/2/pi,n_vac,0,0,'abs(\phi)/2\pi','n',['Toroidal mode number',subtitle],NaN,'',[0,max(yout(1,6))*1.1],'--','none','r',2);hold on
       legend('Ray-tracing','Analytic');
    end
@@ -275,7 +279,7 @@ if display_mode,
 %
    figure('Name','Poloidal angle')
    graph1D_jd(abs(phi_ray/2/pi),yout(:,2)/2/pi,0,0,'abs(\phi)/2\pi','\theta/2\pi',['Poloidal angle',subtitle],NaN,'','','-','none','k',2);drawnow;hold on
-   if rem(abs(1-Npar_ray(1)^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation.
+   if rem(abs(1-real(Npar_ray(1))^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation.
       [ax] = graph1D_jd(phi_vac/2/pi,theta_vac/2/pi,0,0,'abs(\phi)/2\pi','\theta/2\pi',['Poloidal angle',subtitle],NaN,'','','--','none','r',2);hold on
       legend('Ray-tracing','Analytic');
    end
@@ -283,7 +287,7 @@ if display_mode,
 %
    figure('Name','Radial position')
    graph1D_jd(abs(phi_ray/2/pi),yout(:,1),0,0,'abs(\phi)/2\pi','rho',['Normalized radial position',subtitle],NaN,'','','-','none','k',2);drawnow;hold on
-   if rem(abs(1-Npar_ray(1)^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation.
+   if rem(abs(1-real(Npar_ray(1))^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation.
       [ax] = graph1D_jd(phi_vac/2/pi,rho_vac,0,0,'abs(\phi)/2\pi','rho',['Normalized radial position',subtitle],NaN,'','','--','none','r',2);hold on
       legend('Ray-tracing','Analytic');
    end
@@ -291,7 +295,7 @@ if display_mode,
 %
    figure('Name','Normalized radial wavenumber')
    graph1D_jd(abs(phi_ray/2/pi),yout(:,4),0,0,'abs(\phi)/2\pi','krho*ap',['Normalized radial wavenumber',subtitle],NaN,'','','-','none','k',2);drawnow;hold on
-   if rem(abs(1-Npar_ray(1)^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation.
+   if rem(abs(1-real(Npar_ray(1))^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation.
       [ax] = graph1D_jd(phi_vac/2/pi,krho_vac,0,0,'abs(\phi)/2\pi','krho*ap',['Normalized radial wavenumber',subtitle],NaN,'','','--','none','r',2);hold on
       legend('Ray-tracing','Analytic');
    end
@@ -307,7 +311,7 @@ if display_mode,
    else
        legend({'mode p','mode m'})
    end
-   if rem(abs(1-Npar_ray(1)^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation.
+   if rem(abs(1-real(Npar_ray(1))^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation.
       [ax] = graph1D_jd(phi_vac/2/pi,D_vac,0,0,'abs(\phi)/2\pi','D',['Dispersion relation',subtitle],NaN,'','','--','none','r',2);hold on
       legend('Ray-tracing','Analytic');
    end

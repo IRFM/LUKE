@@ -162,9 +162,9 @@ else
         sy = interp2(theta,ppsin,pty,stheta,sypsin,method);
         if tor_mode == 1,
             if ~isempty(sNpar)
-                ssigmah = sign((sNpar(1:ns-1,:) + sNpar(2:ns,:))/2);
+                ssigmah = sign(real(sNpar(1:ns-1,:) + sNpar(2:ns,:)));
             elseif ~isempty(sn)
-                ssigmah = sign((sn(1:ns-1,:) + sn(2:ns,:))/2);
+                ssigmah = sign(sn(1:ns-1,:) + sn(2:ns,:));
             else
                 error('propagation data is imcomplete')
             end
@@ -175,9 +175,9 @@ else
             sphi(2:ns) = cumsum(dsphi);
         else
             if ~isempty(sNpar)
-                ssigmah = sign((sNpar(1:ns-1,:) + sNpar(2:ns,:))/2);
+                ssigmah = sign(real(sNpar(1:ns-1,:) + sNpar(2:ns,:)));
             elseif ~isempty(skz)
-                ssigmah = sign((skz(1:ns-1,:) + skz(2:ns,:))/2);
+                ssigmah = sign(skz(1:ns-1,:) + skz(2:ns,:));
             else
                 error('propagation data is imcomplete')
             end
@@ -341,7 +341,7 @@ else
             [sNperpp(is),sNperpm(is),sKxyz(1:3,1:3,is),...
                 sep_xyz(1:3,is),sem_xyz(1:3,is),sep_pmz(1:3,is),sem_pmz(1:3,is),sep_pyk(1:3,is),sem_pyk(1:3,is),...
                 sphip_xyz(1:3,is),sphim_xyz(1:3,is),sphip_pmz(1:3,is),sphim_pmz(1:3,is),sphip_pyk(1:3,is),sphim_pyk(1:3,is)]...
-            = colddisp_dke_jd(sNpar(is),omega_rf,sne(is),szni(:,is),zZi,zmi,sB(is));
+            = colddisp_dke_jd(real(sNpar(is)),omega_rf,sne(is),szni(:,is),zZi,zmi,sB(is));
         end
         if length(sNperp) == ns,
             smaskp = (abs(sNperpp - sNperp) <= abs(sNperpm - sNperp));
@@ -358,13 +358,13 @@ else
     elseif real(opt_disp) == 2, % non-relativistic hot plasma dispersion tensor for sepol_pmz, sNperp and phi_xyz (hotdisp_dke_jd)
         for is=1:ns,
             [sNperp(is),e_xyz,sepol_pmz(:,is),e_pyk,D,X,X_s,X_sn,salphaphi_lin(is),sphiT_xyz(:,is),sphiP_xyz(:,is)]...
-                = hotdisp_dke_jd(sNpar(is),omega_rf,sTe(is),sne(is),szTi(:,is),szni(:,is),zZi,zmi,sB(is),sNperp(is),1);
+                = hotdisp_dke_jd(real(sNpar(is)),omega_rf,sTe(is),sne(is),szTi(:,is),szni(:,is),zZi,zmi,sB(is),sNperp(is),1);
         end
         sphi_xyz = real(sphiP_xyz + sphiT_xyz);
         salphaphi_lin = real(salphaphi_lin);
     elseif real(opt_disp) == 3, % non-relativistic hot plasma dispersion tensor for sepol_pmz, sNperp and phi_xyz (R2D2) 
         [smask_ht,sNperp_ht,sepol_pmz_ht,sPflow_ht,sPabs_at] = ...
-            disp_hot_jd(ss,sB,sne,sTe,sNpar,omega_rf,sNperp,0); 
+            disp_hot_jd(ss,sB,sne,sTe,real(sNpar),omega_rf,sNperp,0); 
 %
         ns = length(smask_ht);
         %
@@ -442,9 +442,9 @@ if imag(opt_disp) >= 1,%calculation of the absorption coefficient
     salphaphi_lin = zeros(1,ns);
     for n = n_rf_list,
         if imag(opt_disp) == 1,
-            salphaphi_lin = salphaphi_lin + omega_rf/clum*alphaphi_fr_jd(sa,sb,sbeta,sNpar,real(sNperp),sepol_pmz,n,rel_opt);
+            salphaphi_lin = salphaphi_lin + omega_rf/clum*alphaphi_fr_jd(sa,sb,sbeta,real(sNpar),real(sNperp),sepol_pmz,n,rel_opt);
         else
-            salphaphi_lin = salphaphi_lin + omega_rf/clum*alphaphi_fr_jd(sa,sb,sbeta,sNpar + sign(sNpar).*(sdNpar + (imag(opt_disp) - 1)*ss)/2,real(sNperp),sepol_pmz,n,rel_opt);
+            salphaphi_lin = salphaphi_lin + omega_rf/clum*alphaphi_fr_jd(sa,sb,sbeta,real(sNpar) + sign(real(sNpar)).*(sdNpar + (imag(opt_disp) - 1)*ss)/2,real(sNperp),sepol_pmz,n,rel_opt);
         end
     end
 end
