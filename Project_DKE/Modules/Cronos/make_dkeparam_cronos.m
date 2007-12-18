@@ -98,7 +98,7 @@ if strfind(config,'LH');%For the Lower Hybrid wave simulations
    dkeparam.opt_load = 0;%Load intermediate calculations
    dkeparam.opt_save = 0;%Save intermediate calculations
 %
-elseif strfing(config,'EC') | strfing(config,'EBW');%For the Electron Cyclotron wave simulations
+elseif strfind(config,'EC') | strfind(config,'EBW');%For the Electron Cyclotron wave simulations
 %
 %Mesh size calculation
 %
