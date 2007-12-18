@@ -511,6 +511,54 @@ elseif strcmp(config,'COMPASS');%For the Lower Hybrid wave simulations
    launchs{1}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
    launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
    launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
+   
+elseif strcmp(config,'ASDEX');%For the Lower Hybrid wave simulations 
+%
+% ------- LH antenna #1 -------
+% 
+   launchs{1}.id = 'Antenna_1';
+   launchs{1}.type = 'LH';
+   launchs{1}.omega_rf = [3.7]*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
+%
+   directivity = [0.7];%Antenna directivity [1,1]
+%
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(1),cons_spec);%Power and parallel refractive index [1,n_lobe]
+   launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
+   launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
+ %
+   launchs{1}.bdNpar0 = [0.5]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
+   launchs{1}.a_sdNpar = 0.0;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
+%
+   launchs{1}.ry0 = [-0.35,0,0.35];%vertical launching positions (m) [1,m_pol]
+% 
+   launchs{1}.m0 = [0];%initial poloidal mode number [1,1]
+   launchs{1}.phi0 = [0];%toroidal angle position [1,1]
+   launchs{1}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
+   launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
+   launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
+%
+% ------- LH antenna #2 -------
+% 
+   launchs{2}.id = 'Antenna_2';
+   launchs{2}.type = 'LH';
+   launchs{2}.omega_rf = [3.7]*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
+%
+   directivity = [0.7];%Antenna directivity [1,1]
+%
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(2),cons_spec);%Power and parallel refractive index [1,n_lobe]
+   launchs{2}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
+   launchs{2}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
+ %
+   launchs{2}.bdNpar0 = [0.5]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
+   launchs{2}.a_sdNpar = 0.0;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
+%
+   launchs{2}.ry0 = [-0.35,0,0.35];%vertical launching positions (m) [1,m_pol]
+% 
+   launchs{2}.m0 = [0];%initial poloidal mode number [1,1]
+   launchs{2}.phi0 = [0];%toroidal angle position [1,1]
+   launchs{2}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
+   launchs{2}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
+   launchs{2}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 else
    error('The launch configuration name does not exists')  	
 end
