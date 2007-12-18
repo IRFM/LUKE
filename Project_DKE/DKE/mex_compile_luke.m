@@ -23,7 +23,7 @@ cd(Binpath_DKE);
 eval(['mex ',Sourcepath_DKE,'trapz_dke_yp.c']);
 disp(['The trapz_dke_yp.',mexext,' mexfile has been compiled.'])
 %
-eval(['mex -c -v -I',Sourcepath_DKE,' ',Sourcepath_DKE,'alphaphi_jd.c']);
+eval(['mex -c -I',Sourcepath_DKE,' ',Sourcepath_DKE,'alphaphi_jd.c']);
 %
 eval(['mex ',Sourcepath_DKE,'alphaphimex_jd.c alphaphi_jd.',objext]);
 disp(['The alphaphimex_jd.',mexext,' mexfile has been compiled.'])
