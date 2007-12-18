@@ -77,6 +77,9 @@ if ~isempty(transpfaste),
 %
    for ir = 1:nr,	
       ivpar_r_threshold = find(abs(Xvpar) >= xvparmin_r(ir),1);
+      if isempty(ivpar_r_threshold),% xvparmin_r larger than last grid point
+          ivpar_r_threshold = npn;
+      end
 %
    	  xEc_r_threshold(ir) = mc2*(sqrt(1+pn(ivpar_r_threshold).*pn(ivpar_r_threshold)*betath_ref^2) - 1);%in keV
 %
