@@ -20,7 +20,7 @@ ythetab_lh = wavestruct.ythetab_lh;
 %
 % parameters for makefile
 %
-ns = 1000;%for sufficient radial resolution (even number)
+ns = 1001;%for sufficient radial resolution (even number)
 method = 'spline';
 %
 %==========================================================================
@@ -29,7 +29,7 @@ method = 'spline';
 %
 [equilDKE] = equilibrium_jd(equil);
 %
-srho = 1:-1/ns:1/ns;%radial position along the rays
+srho = linspace(1,0,ns);%radial position along the rays
 %
 Te0 = equilDKE.xTe(1);
 ne0 = equilDKE.xne(1);
@@ -135,21 +135,24 @@ syNperp_lh = syNpar_lh./syepol_z_lh;%Electrostatic limit. Indicative, not releva
 syx = equilDKE.ap*syrho.*cos(sythetab_lh);
 syy = equilDKE.ap*syrho.*sin(sythetab_lh);
 syz = [0]*ones(ns,nb_lh);% so that the calculated finc is 1.
+syphi = [0]*ones(ns,nb_lh);% so that the calculated finc is 1.
 %
 for i_lh = 1:length(ythetab_lh),
     ray.P0_2piRp = yP0_2piRp_lh(i_lh)';% Power launched in the ray (W) [1,1]
         %
     ray.sx = syx(:,i_lh)';% Ray location (major radius) along the propagation [1,ns]
-    ray.sz = syz(:,i_lh)';% Ray location (vertical) along the propagation [1,ns]
     ray.sy = syy(:,i_lh)';% Ray location (toroidal angle) along the propagation [1,ns]
+    ray.sz = syz(:,i_lh)';% Ray location (vertical) along the propagation [1,ns]
+    ray.sphi = syphi(:,i_lh)';% Ray location (vertical) along the propagation [1,ns]
         %
     ray.ss = [];% Ray propagation distance parameter for each ray (put to NaN once the ray is absorbed) [1,ns]
     ray.spsin = [];% Ray location (normalized magnetic flux) along the propagation [1,ns]
     ray.stheta = [];% Ray location (poloidal angle) along the propagation [1,ns]
         %
     ray.skx = [];% Ray wave vector (major radius) along the propagation [1,ns]
-    ray.skz = [];% Ray wave number (toroidal) along the propagation [1,ns]
     ray.sky = [];% Ray wave vector (vertical) along the propagation [1,ns]
+    ray.skz = [];% Ray wave number (toroidal) along the propagation [1,ns]
+    ray.sn = [];% Ray wave number (toroidal) along the propagation [1,ns]
         %
     ray.sNpar = syNpar_lh(:,i_lh)';% Ray parallel wave number [1,ns]
     ray.sNperp = syNperp_lh(:,i_lh)';% Ray perpendicular wave number [1,ns]
