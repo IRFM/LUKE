@@ -14,8 +14,8 @@ global nfig
 id_simul = 'LH_karney_betath';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-psin_S = [0.001];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
-rho_S = [];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
+rho_S = [0.5];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
 id_path = '';%For all paths used by DKE solver
 path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
@@ -49,8 +49,6 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 %************************************************************************************************************************************
 %
-if exist('dmumpsmex');dkeparam.invproc = -2;end
-%
 wavestruct.omega_lh = [4]*2*pi*1e9; %(GHz -> rad/s). Wave frequency [1,1] Indicative, no effect in small FLR limit opt_lh > 0
 %Option parameter for cross-comparison between old LH code: 
 %	- (1): 1/vpar dependence
@@ -82,13 +80,15 @@ wavestruct.ythetab_lh = [0]*pi/180;%(deg -> rad). Poloidal location of LH beam [
 %
 %************************************************************************************************************************************
 %
-dkeparam.pnmax_S = 30;
-dkeparam.np_S = 301;
-dkeparam.nmhu_S = 301;
-%dkeparam.grid_uniformity = 0;
-%dkeparam.spfac = 20;
+if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
-equil.pzTi = 1e-10*ones(size(equil.pzTi));
+dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
+dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+%
+dkeparam.np_S = 201;
+dkeparam.nmhu_S = 201;
+%
+%equil.pzTi = 1e-10*ones(size(equil.pzTi));
 %
 betath_list = [logspace(-5,-2,7),logspace(-1.85,-0.35,11)];
 %
@@ -99,7 +99,7 @@ for ibetath = 1:length(betath_list),
     betath = betath_list(ibetath);
     %
     equil.pTe = betath^2*mc2*ones(size(equil.pTe));
-    %equil.pzTi = betath^2*mc2*ones(size(equil.pzTi));
+    equil.pzTi = betath^2*mc2*ones(size(equil.pzTi));
     %
     waves{1} = make_idealLHwave_jd(equil,wavestruct);
     %
@@ -112,39 +112,40 @@ for ibetath = 1:length(betath_list),
     dkeparam.coll_mode = 2;% Linearized Belaiev-Budker
     [Znorm,Zcurr_2,ZP0_2] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
-    dkeparam.coll_mode = 4;% Linearized Belaiev-Budker
-    [Znorm,Zcurr_4,ZP0_4] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    %dkeparam.coll_mode = 4;% Linearized Belaiev-Budker
+    %[Znorm,Zcurr_4,ZP0_4] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     j_0(ibetath) = Zcurr_0.x_0;
     j_1(ibetath) = Zcurr_1.x_0;
     j_2(ibetath) = Zcurr_2.x_0;
-    j_4(ibetath) = Zcurr_4.x_0;
+    %j_4(ibetath) = Zcurr_4.x_0;
     %
     P_0(ibetath) = ZP0_0.x_rf_fsav;
     P_1(ibetath) = ZP0_1.x_rf_fsav;
     P_2(ibetath) = ZP0_2.x_rf_fsav;
-    P_4(ibetath) = ZP0_4.x_rf_fsav;
+    %P_4(ibetath) = ZP0_4.x_rf_fsav;
     %
 end
 %
 eta_0 = j_0./P_0;
 eta_1 = j_1./P_1;
 eta_2 = j_2./P_2;
-eta_4 = j_4./P_4;
+%eta_4 = j_4./P_4;
 %
 j_0_nr_Karney = 0.05759;
 P_0_nr_Karney = 0.004012;
 eta_0_nr_Karney = 14.35;
 %
 j_2_nr_Karney = 0.07092;
-P_2_nr_Karney = 0.004294
+P_2_nr_Karney = 0.004294;
 eta_2_nr_Karney = 16.52;
 %
 %************************************************************************************************************************************
 %
 figure(1),clf
 %
-leg = {'Linearized','High v limit','Maxwellian','Maxwellian NR'};
+%leg = {'Linearized','High v limit','Maxwellian NR','Maxwellian'};
+leg = {'Linearized','High v limit','Maxwellian'};
 xlim = 10.^[-5,0];
 ylim = [0,0.1];
 xlab = '\beta_T';
@@ -153,8 +154,8 @@ tit = '';
 %
 graph1D_jd(betath_list,j_2,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
 graph1D_jd(betath_list,j_1,1,0,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
-graph1D_jd(betath_list,j_0,1,0,'','','',NaN,xlim,ylim,'-','none','m',2,20,gca);
-graph1D_jd(betath_list,j_4,1,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
+%graph1D_jd(betath_list,j_4,1,0,'','','',NaN,xlim,ylim,'-','none','m',2,20,gca);
+graph1D_jd(betath_list,j_0,1,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
 graph1D_jd(xlim,[j_2_nr_Karney,j_2_nr_Karney],0,0,'','','',NaN,xlim,ylim,'--','none','r',2,20,gca);
 graph1D_jd(xlim,[j_0_nr_Karney,j_0_nr_Karney],0,0,'','','',NaN,xlim,ylim,'--','none','m',2,20,gca);
 set(gca,'ytick',[0:0.2:1]*ylim(2))
@@ -170,8 +171,8 @@ ylab = 'P';
 %
 graph1D_jd(betath_list,P_2,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
 graph1D_jd(betath_list,P_1,1,0,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
-graph1D_jd(betath_list,P_0,1,0,'','','',NaN,xlim,ylim,'-','none','m',2,20,gca);
-graph1D_jd(betath_list,P_4,1,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
+%graph1D_jd(betath_list,P_4,1,0,'','','',NaN,xlim,ylim,'-','none','m',2,20,gca);
+graph1D_jd(betath_list,P_0,1,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
 graph1D_jd(xlim,[P_2_nr_Karney,P_2_nr_Karney],0,0,'','','',NaN,xlim,ylim,'--','none','r',2,20,gca);
 graph1D_jd(xlim,[P_0_nr_Karney,P_0_nr_Karney],0,0,'','','',NaN,xlim,ylim,'--','none','m',2,20,gca);
 set(gca,'ytick',[0:0.2:1]*ylim(2))
@@ -182,13 +183,13 @@ set(gca,'XMinorTick','on')
 %
 figure(3),clf
 %
-ylim = [0,30];
+ylim = [0,20];
 ylab = 'j/P';
 %
 graph1D_jd(betath_list,eta_2,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
 graph1D_jd(betath_list,eta_1,1,0,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
-graph1D_jd(betath_list,eta_0,1,0,'','','',NaN,xlim,ylim,'-','none','m',2,20,gca);
-graph1D_jd(betath_list,eta_4,1,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
+%graph1D_jd(betath_list,eta_4,1,0,'','','',NaN,xlim,ylim,'-','none','m',2,20,gca);
+graph1D_jd(betath_list,eta_0,1,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
 graph1D_jd(xlim,[eta_2_nr_Karney,eta_2_nr_Karney],0,0,'','','',NaN,xlim,ylim,'--','none','r',2,20,gca);
 graph1D_jd(xlim,[eta_0_nr_Karney,eta_0_nr_Karney],0,0,'','','',NaN,xlim,ylim,'--','none','m',2,20,gca);
 set(gca,'ytick',[0:0.2:1]*ylim(2))

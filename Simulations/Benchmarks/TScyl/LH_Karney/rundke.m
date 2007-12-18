@@ -14,8 +14,8 @@ global nfig
 id_simul = 'LH_karney_test';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-psin_S = [0.5];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
-rho_S = [];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
+rho_S = [0.5];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
 id_path = '';%For all paths used by DKE solver
 path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
@@ -49,8 +49,6 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 %************************************************************************************************************************************
 %
-if exist('dmumpsmex');dkeparam.invproc = -2;end
-%
 wavestruct.omega_lh = [4]*2*pi*1e9; %(GHz -> rad/s). Wave frequency [1,1] Indicative, no effect in small FLR limit opt_lh > 0
 %Option parameter for cross-comparison between old LH code: 
 %	- (1): 1/vpar dependence
@@ -79,7 +77,14 @@ wavestruct.ythetab_lh = [0]*pi/180;%(deg -> rad). Poloidal location of LH beam [
 %
 %************************************************************************************************************************************
 %
+if exist('dmumpsmex');dkeparam.invproc = -2;end
+%
+dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
+dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+%
 % RELATIVISTIC CASE
+%
+dkeparam.pnmax_S = 30;
 %
 wavestruct.yvparmin_lh = [4];%LH wave square N// Spectrum: Lower limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
 wavestruct.yvparmax_lh = [7];%LH wave square N// Spectrum: Upper limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
@@ -92,9 +97,9 @@ waves{1} = make_idealLHwave_jd(equil,wavestruct);
 %
 [qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
 %
-betath = 0.01;%validated for NR limit
+betath = 0.001;%validated for NR limit
 equil.pTe = betath^2*mc2*ones(size(equil.pTe));
-equil.pzTi = 1e-10*ones(size(equil.pzTi));
+equil.pzTi = betath^2*mc2*ones(size(equil.pzTi));
 %
 wavestruct.yvparmin_lh = [3];%LH wave square N// Spectrum: Lower limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
 wavestruct.yvparmax_lh = [5];%LH wave square N// Spectrum: Upper limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
@@ -102,6 +107,9 @@ wavestruct.yvparmax_lh = [5];%LH wave square N// Spectrum: Upper limit of the pl
 waves{1} = make_idealLHwave_jd(equil,wavestruct);
 %
 dkeparam.coll_mode = 0;%For comparison with theoretical results
+%
+dkeparam.nmhu_S = 101;
+dkeparam.np_S = 101;
 dkeparam.pnmax_S = 10;
 %
 [Znorm_nr_0_10,Zcurr_0_10,ZP0_0_10] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
@@ -116,14 +124,39 @@ dkeparam.coll_mode = 2;%For comparison with theoretical results
 %
 [Znorm_nr_2_20,Zcurr_2_20,ZP0_2_20] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
+j_r_k = '0.003732';
+p_r_k = '0.0001256';
+eta_r_k = '29.72';
+%
+j_nr_0_10_k = '0.05754';
+p_nr_0_10_k = '0.004011';
+eta_nr_0_10_k = '14.34';
+%
+j_nr_0_20_k = '0.05759';
+p_nr_0_20_k = '0.004012';
+eta_nr_0_20_k = '14.35';
+%
+j_nr_2_20_k = '0.07092';
+p_nr_2_20_k = '0.004294';
+eta_nr_2_20_k = '16.52';
+%
 %************************************************************************************************************************************
 %
 format
 %
-disp(['Relativistic case (4,7,1) : j = ',num2str(Zcurr_rel.x_0),' ; P = ',num2str(ZP0_rel.x_rf_fsav),' ; j/P = ',num2str(Zcurr_rel.x_0./ZP0_rel.x_rf_fsav)]) 
-disp(['Non Relativistic case (3,5,1) pmax = 10, coll_mode = 0 : j = ',num2str(Zcurr_0_10.x_0),' ; P = ',num2str(ZP0_0_10.x_rf_fsav),' ; j/P = ',num2str(Zcurr_0_10.x_0./ZP0_0_10.x_rf_fsav)]) 
-disp(['Non Relativistic case (3,5,1) pmax = 20, coll_mode = 0 : j = ',num2str(Zcurr_0_20.x_0),' ; P = ',num2str(ZP0_0_20.x_rf_fsav),' ; j/P = ',num2str(Zcurr_0_20.x_0./ZP0_0_20.x_rf_fsav)]) 
-disp(['Non Relativistic case (3,5,1) pmax = 20, coll_mode = 2 : j = ',num2str(Zcurr_2_20.x_0),' ; P = ',num2str(ZP0_2_20.x_rf_fsav),' ; j/P = ',num2str(Zcurr_2_20.x_0./ZP0_2_20.x_rf_fsav)]) 
+delete res_karney
+%
+diary res_karney
+%
+disp(['Comparison LUKE/Karney'])
+disp(['----------------------'])
+%
+disp(['Relativistic case (4,7,1) : j = ',num2str(Zcurr_rel.x_0),'/',j_r_k,' ; P = ',num2str(ZP0_rel.x_rf_fsav),'/',p_r_k,' ; j/P = ',num2str(Zcurr_rel.x_0./ZP0_rel.x_rf_fsav),'/',eta_r_k]) 
+disp(['Non Relativistic case (3,5,1) pmax = 10, coll_mode = 0 : j = ',num2str(Zcurr_0_10.x_0),'/',j_nr_0_10_k,' ; P = ',num2str(ZP0_0_10.x_rf_fsav),'/',p_nr_0_10_k,' ; j/P = ',num2str(Zcurr_0_10.x_0./ZP0_0_10.x_rf_fsav),'/',eta_nr_0_10_k]) 
+disp(['Non Relativistic case (3,5,1) pmax = 20, coll_mode = 0 : j = ',num2str(Zcurr_0_20.x_0),'/',j_nr_0_20_k,' ; P = ',num2str(ZP0_0_20.x_rf_fsav),'/',p_nr_0_20_k,' ; j/P = ',num2str(Zcurr_0_20.x_0./ZP0_0_20.x_rf_fsav),'/',eta_nr_0_20_k]) 
+disp(['Non Relativistic case (3,5,1) pmax = 20, coll_mode = 2 : j = ',num2str(Zcurr_2_20.x_0),'/',j_nr_2_20_k,' ; P = ',num2str(ZP0_2_20.x_rf_fsav),'/',p_nr_2_20_k,' ; j/P = ',num2str(Zcurr_2_20.x_0./ZP0_2_20.x_rf_fsav),'/',eta_nr_2_20_k]) 
+%
+diary off
 %
 %************************************************************************************************************************************
 %

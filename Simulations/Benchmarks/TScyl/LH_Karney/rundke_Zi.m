@@ -14,8 +14,8 @@ global nfig
 id_simul = 'LH_Zi';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-psin_S = [0.001];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
-rho_S = [];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
+rho_S = [0.5];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
 id_path = '';%For all paths used by DKE solver
 path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
@@ -49,8 +49,6 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 %************************************************************************************************************************************
 %
-if exist('dmumpsmex');dkeparam.invproc = -2;end
-%
 wavestruct.omega_lh = [4]*2*pi*1e9; %(GHz -> rad/s). Wave frequency [1,1] Indicative, no effect in small FLR limit opt_lh > 0
 %Option parameter for cross-comparison between old LH code: 
 %	- (1): 1/vpar dependence
@@ -82,19 +80,21 @@ wavestruct.ythetab_lh = [0]*pi/180;%(deg -> rad). Poloidal location of LH beam [
 %
 %************************************************************************************************************************************
 %
-betath = 0.01;
+if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
-%dkeparam.pnmax_S = 15;
+dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
+dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+%
 dkeparam.np_S = 201;
 dkeparam.nmhu_S = 201;
-%dkeparam.grid_uniformity = 0;
-%dkeparam.spfac = 20;
+%
+betath = 0.001;
 %
 [qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
 %
 equil.pTe = betath^2*mc2*ones(size(equil.pTe));
-%equil.pzTi = betath^2*mc2*ones(size(equil.pzTi));
-equil.pzTi = 1e-10*ones(size(equil.pzTi));
+equil.pzTi = betath^2*mc2*ones(size(equil.pzTi));
+%equil.pzTi = 1e-10*ones(size(equil.pzTi));
 %
 Zi_list = [1:20];
 %
@@ -143,14 +143,14 @@ j_2_nr_Karney_1 = 0.07092;
 P_2_nr_Karney_1 = 0.004294;
 eta_2_nr_Karney_1 = 16.52;
 %
-eta_0_nr_Karney = eta_0_nr_Karney_1*5./(4 + Zi_list);
-eta_2_nr_Karney = eta_2_nr_Karney_1*5./(4 + Zi_list);
+%eta_0_nr_Karney = eta_0_nr_Karney_1*6./(5 + Zi_list);
+eta_2_nr_Karney = eta_2_nr_Karney_1*6./(5 + Zi_list);
 %
 %************************************************************************************************************************************
 %
 figure(1),clf
 %
-%leg = {'Linearized','High v limit','Maxwellian','Maxwellian NR'};
+%leg = {'Linearized','High v limit','Maxwellian NR','Maxwellian'};
 leg = {'Linearized','High v limit','Maxwellian'};
 xlim = [0,max(Zi_list)];
 ylim = [0,0.1];
@@ -160,10 +160,10 @@ tit = '';
 %
 graph1D_jd(Zi_list,j_2,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
 graph1D_jd(Zi_list,j_1,0,0,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
-graph1D_jd(Zi_list,j_0,0,0,'','','',NaN,xlim,ylim,'-','none','m',2,20,gca);
-%graph1D_jd(Zi_list,j_4,0,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
-graph1D_jd(xlim,[j_2_nr_Karney_1,j_2_nr_Karney_1],0,0,'','','',NaN,xlim,ylim,'--','none','r',2,20,gca);
-graph1D_jd(xlim,[j_0_nr_Karney_1,j_0_nr_Karney_1],0,0,'','','',NaN,xlim,ylim,'--','none','m',2,20,gca);
+%graph1D_jd(Zi_list,j_4,0,0,'','','',NaN,xlim,ylim,'-','none','m',2,20,gca);
+graph1D_jd(Zi_list,j_0,0,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
+%graph1D_jd(xlim,[j_2_nr_Karney_1,j_2_nr_Karney_1],0,0,'','','',NaN,xlim,ylim,'--','none','r',2,20,gca);
+%graph1D_jd(xlim,[j_0_nr_Karney_1,j_0_nr_Karney_1],0,0,'','','',NaN,xlim,ylim,'--','none','m',2,20,gca);
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[0:0.2:1]*xlim(2))
 %
@@ -174,24 +174,24 @@ ylab = 'P';
 %
 graph1D_jd(Zi_list,P_2,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
 graph1D_jd(Zi_list,P_1,0,0,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
-graph1D_jd(Zi_list,P_0,0,0,'','','',NaN,xlim,ylim,'-','none','m',2,20,gca);
-%graph1D_jd(Zi_list,P_4,0,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
-graph1D_jd(xlim,[P_2_nr_Karney_1,P_2_nr_Karney_1],0,0,'','','',NaN,xlim,ylim,'--','none','r',2,20,gca);
-graph1D_jd(xlim,[P_0_nr_Karney_1,P_0_nr_Karney_1],0,0,'','','',NaN,xlim,ylim,'--','none','m',2,20,gca);
+%graph1D_jd(Zi_list,P_4,0,0,'','','',NaN,xlim,ylim,'-','none','m',2,20,gca);
+graph1D_jd(Zi_list,P_0,0,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
+%graph1D_jd(xlim,[P_2_nr_Karney_1,P_2_nr_Karney_1],0,0,'','','',NaN,xlim,ylim,'--','none','r',2,20,gca);
+%graph1D_jd(xlim,[P_0_nr_Karney_1,P_0_nr_Karney_1],0,0,'','','',NaN,xlim,ylim,'--','none','m',2,20,gca);
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[0:0.2:1]*xlim(2))
 %
 figure(3),clf
 %
-ylim = [0,30];
+ylim = [0,20];
 ylab = 'j/P';
 %
 graph1D_jd(Zi_list,eta_2,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
 graph1D_jd(Zi_list,eta_1,0,0,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
-graph1D_jd(Zi_list,eta_0,0,0,'','','',NaN,xlim,ylim,'-','none','m',2,20,gca);
-%graph1D_jd(Zi_list,eta_4,0,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
-graph1D_jd(Zi_list,eta_2_nr_Karney,0,0,'','','',NaN,xlim,ylim,'--','none','r',2,20,gca);
-graph1D_jd(Zi_list,eta_0_nr_Karney,0,0,'','','',NaN,xlim,ylim,'--','none','m',2,20,gca);
+%graph1D_jd(Zi_list,eta_4,0,0,'','','',NaN,xlim,ylim,'-','none','m',2,20,gca);
+graph1D_jd(Zi_list,eta_0,0,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
+graph1D_jd(Zi_list,eta_2_nr_Karney,0,0,'','','',NaN,xlim,ylim,'--','none','k',0.5,20,gca);
+%graph1D_jd(Zi_list,eta_0_nr_Karney,0,0,'','','',NaN,xlim,ylim,'--','none','m',2,20,gca);
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[0:0.2:1]*xlim(2))
 %

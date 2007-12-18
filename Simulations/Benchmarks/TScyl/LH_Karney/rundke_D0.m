@@ -14,8 +14,8 @@ global nfig
 id_simul = 'LH_karney_D0';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-psin_S = [0.001];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
-rho_S = [];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
+rho_S = [0.5];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
 id_path = '';%For all paths used by DKE solver
 path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
@@ -49,8 +49,6 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 %************************************************************************************************************************************
 %
-if exist('dmumpsmex');dkeparam.invproc = -2;end
-%
 wavestruct.omega_lh = [4]*2*pi*1e9; %(GHz -> rad/s). Wave frequency [1,1] Indicative, no effect in small FLR limit opt_lh > 0
 %Option parameter for cross-comparison between old LH code: 
 %	- (1): 1/vpar dependence
@@ -82,19 +80,23 @@ wavestruct.ythetab_lh = [0]*pi/180;%(deg -> rad). Poloidal location of LH beam [
 %
 %************************************************************************************************************************************
 %
-betath = 0.01;
+if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
-%dkeparam.pnmax_S = 15;
-dkeparam.np_S = 201;
-dkeparam.nmhu_S = 201;
-%dkeparam.grid_uniformity = 0;
-%dkeparam.spfac = 20;
+dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
+dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+dkeparam.prec0_f = 1e-15;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+%
+dkeparam.np_S = 401;
+dkeparam.nmhu_S = 401;
+dkeparam.pnmax_S = 10;
+%
+betath = 0.001;
 %
 [qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
 %
 equil.pTe = betath^2*mc2*ones(size(equil.pTe));
-%equil.pzTi = betath^2*mc2*ones(size(equil.pzTi));
-equil.pzTi = 1e-10*ones(size(equil.pzTi));
+equil.pzTi = betath^2*mc2*ones(size(equil.pzTi));
+%equil.pzTi = 1e-10*ones(size(equil.pzTi));
 %
 D0_list = [logspace(-6,-2,9),logspace(-1.75,2,16)];
 %
@@ -137,24 +139,23 @@ eta_1 = j_1./P_1;
 eta_2 = j_2./P_2;
 %eta_4 = j_4./P_4;
 %
-mask = 1:22;
-%
 %************************************************************************************************************************************
 %
 figure(1),clf
 %
-leg = {'Linearized','High v limit','Maxwellian','Maxwellian NR'};
-xlim = 10.^[-6,2];
-xticks = [1e-06 1e-5 0.0001 0.001 0.01 0.1 1 10 100]
+%leg = {'Linearized','High v limit','Maxwellian NR','Maxwellian'};
+leg = {'Linearized','High v limit','Maxwellian'};
+xlim = 10.^[-5,1];
+xticks = [1e-06 1e-5 0.0001 0.001 0.01 0.1 1 10 100];
 ylim = 10.^[-6,-1];
 xlab = 'D_0';
 ylab = 'j';
 tit = '';
 %
-graph1D_jd(D0_list(mask),j_2(mask),1,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(D0_list(mask),j_1(mask),1,1,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
-graph1D_jd(D0_list(mask),j_0(mask),1,1,'','','',NaN,xlim,ylim,'-','none','m',2,20,gca);
-%graph1D_jd(D0_list(mask),j_4(mask),1,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
+graph1D_jd(D0_list,j_2,1,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(D0_list,j_1,1,1,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
+%graph1D_jd(D0_list,j_4,1,0,'','','',NaN,xlim,ylim,'-','none','m',2,20,gca);
+graph1D_jd(D0_list,j_0,1,1,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
 set(gca,'ytick',[1e-06 1e-05 0.0001 0.001 0.01 0.1])
 set(gca,'xtick',xticks)
 %set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
@@ -168,14 +169,14 @@ figure(2),clf
 ylim = 10.^[-7,-2];
 ylab = 'P';
 %
-graph1D_jd(D0_list(mask),P_2(mask),1,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(D0_list(mask),P_1(mask),1,1,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
-graph1D_jd(D0_list(mask),P_0(mask),1,1,'','','',NaN,xlim,ylim,'-','none','m',2,20,gca);
-%graph1D_jd(D0_list(mask),P_4(mask),1,1,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
-graph1D_jd(D0_list(mask),Pc_2(mask),1,1,'','','',NaN,xlim,ylim,'--','none','r',2,20,gca);
-graph1D_jd(D0_list(mask),Pc_1(mask),1,1,'','','',NaN,xlim,ylim,'--','none','b',2,20,gca);
-graph1D_jd(D0_list(mask),Pc_0(mask),1,1,'','','',NaN,xlim,ylim,'--','none','m',2,20,gca);
-%graph1D_jd(D0_list(mask),Pc_4(mask),1,1,'','','',leg,xlim,ylim,'--','none','g',2,20,gca);
+graph1D_jd(D0_list,P_2,1,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(D0_list,P_1,1,1,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
+%graph1D_jd(D0_list,P_4,1,1,'','','',NaN,xlim,ylim,'-','none','m',2,20,gca);
+graph1D_jd(D0_list,P_0,1,1,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
+graph1D_jd(D0_list,Pc_2,1,1,'','','',NaN,xlim,ylim,'--','none','r',2,20,gca);
+graph1D_jd(D0_list,Pc_1,1,1,'','','',NaN,xlim,ylim,'--','none','b',2,20,gca);
+%graph1D_jd(D0_list,Pc_4,1,1,'','','',NaN,xlim,ylim,'--','none','m',2,20,gca);
+graph1D_jd(D0_list,Pc_0,1,1,'','','',leg,xlim,ylim,'--','none','g',2,20,gca);
 set(gca,'ytick',[1e-07 1e-06 1e-05 0.0001 0.001 0.01])
 set(gca,'xtick',xticks)
 %set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
@@ -186,13 +187,13 @@ set(gca,'YMinorTick','on')
 %
 figure(3),clf
 %
-ylim = [0,30];
+ylim = [0,20];
 ylab = 'j/P';
 %
-graph1D_jd(D0_list(mask),eta_2(mask),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(D0_list(mask),eta_1(mask),1,0,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
-graph1D_jd(D0_list(mask),eta_0(mask),1,0,'','','',NaN,xlim,ylim,'-','none','m',2,20,gca);
-%graph1D_jd(D0_list(mask),eta_4(mask),1,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
+graph1D_jd(D0_list,eta_2,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(D0_list,eta_1,1,0,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
+%graph1D_jd(D0_list,eta_4,1,0,'','','',NaN,xlim,ylim,'-','none','m',2,20,gca);
+graph1D_jd(D0_list,eta_0,1,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',xticks)
 %set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
