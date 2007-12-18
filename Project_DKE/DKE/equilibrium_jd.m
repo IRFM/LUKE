@@ -60,6 +60,7 @@ function [equilDKE] = equilibrium_jd(equil,radialDKE,display,method,mfactor,fig_
 %       - xZeff: effective charge [1,nr]
 %       - Rp: major radius on axis [1,1]
 %       - Zp: elevation on axis [1,1]
+%       - Bax: magnetic field on axis [1,1]
 %       - ap: minor radius on LFS midplane [1,1]
 %       - Ip: Toroidal plasma current [1,1]
 %       - Ncoils: Number of toroidal magnetic field coils [1,1]
@@ -109,6 +110,7 @@ end
 %
 Rp = equil.Rp;%Major radius of magnetic Axis
 Zp = equil.Zp;%Elevation of magnetic Axis
+Bax = equil.ptBPHI(1,1);%magnetic field on axis
 %
 if strcmp(equil.id,'LOCAL'),
     %
@@ -171,6 +173,7 @@ if strcmp(equil.id,'LOCAL'),
     equilDKE.xZeff = xZeff;
     equilDKE.Rp = equil.Rp;
     equilDKE.Zp = equil.Zp;
+    equilDKE.Bax = Bax;
     equilDKE.ap = ap;
     equilDKE.xmhu0T2 = xmhu0T2;
     equilDKE.xdV_2piRp_dke = xdV_2piRp_dke;
@@ -418,6 +421,7 @@ equilDKE.zmi = zmi;
 equilDKE.xZeff = xZeff;
 equilDKE.Rp = Rp;
 equilDKE.Zp = Zp;
+equilDKE.Bax = Bax;
 equilDKE.ap = ap;
 equilDKE.xmhu0T2 = xmhu0T2;
 equilDKE.xdV_2piRp_dke = xdV_2piRp_dke;

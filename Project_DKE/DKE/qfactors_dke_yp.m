@@ -1,4 +1,4 @@
-function [xq,xqtilde,xqbar,xqhat] = qfactors_dke_yp(equil_mode,Rp,ap,Xx,Xy,XBx,XBy,XBphi,xx0,xB0,xBT0,xBp0);
+function [xq,xqtilde,xqbar,xqhat,xqcronos] = qfactors_dke_yp(equil_mode,Rp,ap,Xx,Xy,XBx,XBy,XBphi,xx0,xB0,xBT0,xBp0);
 %
 % Calculation of the different q factors needed for solving the bounce averaged drift-kinetic-equation for
 % arbitrary equilibrium (see the notice for explanations concerning notations)
@@ -13,6 +13,7 @@ function [xq,xqtilde,xqbar,xqhat] = qfactors_dke_yp(equil_mode,Rp,ap,Xx,Xy,XBx,X
 %       - xqtilde [1,nr]
 %       - xqbar [1,nr]
 %       - xqhat [1,nr]
+%       - xqcronos [1,nr]
 %
 % by Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC) and Joan Decker <jodecker@alum.mit.edu> (MIT/RLE)  
 %
@@ -70,6 +71,11 @@ if equil_mode == 1,
     XMF = XMBmin.*XMr2./XMrBpcos./ap;
     xqhat = squeeze(sum(XMF.*XMdt))/(2*pi);
     %
+    %qcronos
+    %
+    XMF = XMB.*XMB.*XMr2./XMrBpcos./XMBmin./ap;
+    xqc = squeeze(sum(XMF.*XMdt))/(2*pi);
+    %
 else
     xrho = xx0/ap; %note: for the sake of bounce-averaged calculations in the
                           %      analytical limit of circ. conc.
@@ -82,6 +88,7 @@ else
     xqtilde = xrho.*xB0./xBp0;
     xqbar = xrho.*xB0./xBp0./(1 + xia);
     xqhat = xqbar;
+    xqcronos = xqtilde;
 end
 %
     

@@ -22,7 +22,7 @@ rdke = gridDKE.rdke;
 %
 %Bounce average coefficients
 %
-[xq,xqtilde,xqbar,xqhat,...
+[xq,xqtilde,xqbar,xqhat,xqcronos,...
      XXheaviside,XXheaviside_p,XXheaviside_m,...
      Xxlambda,Xxlambda_p,Xxlambda_m,...
      XXlambda,XXRlambda_m,XXRlambda_p,...
@@ -156,6 +156,7 @@ Zbouncecoef.xq = xq;
 Zbouncecoef.xqtilde = xqtilde;
 Zbouncecoef.xqbar = xqbar;
 Zbouncecoef.xqhat = xqhat;
+Zbouncecoef.xqcronos = xqcronos;
 %
 Zbouncecoef.XXheaviside = XXheaviside;
 Zbouncecoef.XXheaviside_p = XXheaviside_p;

@@ -34,6 +34,7 @@ xqhat =  Zbouncecoef.xqhat;
 %
 if nargout > 1,
     %
+	Bax = equilDKE.Bax;
 	xx0 = equilDKE.xx0;
 	xBT0 = equilDKE.xBT0;
 	xB0 = equilDKE.xB0;
@@ -702,6 +703,7 @@ Zmask_f0_t = Zbouncecoef.Zmask_f0_t;
 ns_f = Zbouncecoef.ns_f; 
 xq = Zbouncecoef.xq;
 xqbar =  Zbouncecoef.xqbar;
+xqcronos =  Zbouncecoef.xqcronos;
 Zmask_g = Zbouncecoef.Zmask_g;
 ns_g = Zbouncecoef.ns_g;
 xftp_norm = mksa.xftp_norm_ref;
@@ -766,14 +768,14 @@ end
 %   Flux surface averaged current (two definitions, fsav is LUKE, vfsav is CRONOS)
 %
 Zcurr.x_0_fsav = 2*pi*(xq(rdke)./xqbar(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0(:,:,rdke).*XXheaviside(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
-Zcurr.x_0_vfsav = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0(:,:,rdke).*XXheaviside(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
+Zcurr.x_0_vfsav = 2*pi*(xB0(rdke).*xqcronos(rdke)./xqhat(rdke)./Bax).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0(:,:,rdke).*XXheaviside(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
 Zcurr.x_tp_fsav = 2*pi*(xqtilde(rdke)./xqbar(rdke))./(1 + xx0(rdke)/Rp).*(xBT0(rdke)./xB0(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_tp(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke).*XXlambda_p2m2p2(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
 %************* to be updated YP 14/06/07 *************
-Zcurr.x_tp_vfsav = 2*pi*(xqtilde(rdke)./xqbar(rdke))./(1 + xx0(rdke)/Rp).*(xBT0(rdke)./xB0(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_tp(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke).*XXlambda_p2m2p2(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
+Zcurr.x_tp_vfsav = 2*pi*(xB0(rdke).*xqcronos(rdke)./xqhat(rdke)./Bax)./(1 + xx0(rdke)/Rp).*(xBT0(rdke)./xB0(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_tp(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke).*XXlambda_p2m2p2(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
 %*************
 Zcurr.x_g_fsav = 2*pi*(xq(rdke)./xqbar(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_g(:,:,rdke).*XXheaviside(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
 %************* to be updated YP 14/06/07 *************
-Zcurr.x_g_vfsav = 2*pi*(xq(rdke)./xqbar(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_g(:,:,rdke).*XXheaviside(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
+Zcurr.x_g_vfsav = 2*pi*(xB0(rdke).*xqcronos(rdke)./xqhat(rdke)./Bax).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_g(:,:,rdke).*XXheaviside(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
 %*************
 Zcurr.x_tot_fsav = Zcurr.x_0_fsav + Zcurr.x_tp_fsav + Zcurr.x_g_fsav;%Total flux surface averaged current density (LUKE definition)
 Zcurr.x_tot_vfsav = Zcurr.x_0_vfsav + Zcurr.x_tp_vfsav + Zcurr.x_g_vfsav;%Total flux surface averaged current density (CRONOS definition)
