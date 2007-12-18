@@ -14,7 +14,7 @@ flag_analytic = 2;
 %
 % Path parameters
 %
-id_dkepath = 'LOCAL';%For all paths used by DKE solver
+id_dkepath = '';%For all paths used by DKE solver
 path_dkepath = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 % Equilibrium parameters
