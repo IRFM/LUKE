@@ -35,7 +35,7 @@ else
    [mksa] = mksacoefbuilder_dke_yp(dkeparam_out,display,equilDKE,radialDKE,momentumDKE,gridDKE);%MKSA quantities calculations
    [Zmomcoef] = momentumcoefbuilder_dke_yp(gridDKE,mksa);%Momentum space coefficients for FP calculations
    [Zbouncecoef] = bouncecoefbuilder_dke_yp(dkepath,dkeparam_out,display,equilDKE,gridDKE);%bounce averaging coefficients
-   [waveparam,xyprop_dke,xyP0_2piRp_mod,yb,xys] = rfwave_dke_jd(dkeparam_out,display,equil,equilDKE,gridDKE,Zbouncecoef,mksa,waves);%RF wave parameters preprocessing calculations
+   [waveparam,xyprop_dke,xyP0_2piRp_mod,yb,yP0_2piRp,xys] = rfwave_dke_jd(dkeparam_out,display,equil,equilDKE,gridDKE,Zbouncecoef,mksa,waves);%RF wave parameters preprocessing calculations
    [XXsinksource] = sinksourcecoeffbuilder_dke_yp(dkeparam_out,display,gridDKE,mksa,Zbouncecoef,XXsinksource_in);%External sink and source contributions (for right-hand side part of the FP equation)
    [Zmripple] = mripplecoefbuilder_dke_yp(dkeparam_out,display,equil,equilDKE,gridDKE,mksa,ripple);%Magnetic ripple matrix coefficients
    [MMXR_f_t,Xmask_r_edge] = rad_dke_yp(dkeparam_out,display,equilDKE,gridDKE,mksa,Zbouncecoef,Zmomcoef,transpfaste);%Radial transport super matrix
@@ -62,7 +62,7 @@ if strcmp(waveparam.model,'RT') & ~isempty(waveparam.bomega_rf),%initialization 
     %
     delta_rt = dkeparam_out.delta_rt;%smoothering parameter of quasilinear iterations
     %
-    zP_0_2piRp = raypath_jd(xyP0_2piRp_mod,xyprop_dke,yb,radialDKE.r_dke);
+    zP_0_2piRp_mod = raypath_jd(xyP0_2piRp_mod,xyprop_dke,yb,radialDKE.r_dke);
     zS = raypath_jd(xys,xyprop_dke,yb,radialDKE.r_dke);
     nit_rf = dkeparam_out.nit_rf;
     if nit_rf > 1 & display.display_mode >= 1,
@@ -122,17 +122,19 @@ for it_rf=1:nit_rf, % convergence in the ray-tracing mode
             %
             % Calculation of the power flow along the rays from DKE calculations
             %
-            zP_0_2piRp_old = zP_0_2piRp;
+            zP_0_2piRp_mod_old = zP_0_2piRp_mod;
             %
-            [xyP0_2piRp_out,xyP0_2piRp_mod] = rfprop_dke_jd(yb,xyprop_dke,xyP0_2piRp_mod_old,xyPabs_rf_dke_fsav_mksa,equilDKE.xdV_2piRp_dke,gridDKE.xpsin,gridDKE.xpsin_dke,gridDKE.rdke,dkeparam_out.dke_mode);
+            [xyP0_2piRp_out,xyP0_2piRp_mod] = rfprop_dke_jd(yb,yP0_2piRp,xyprop_dke,xyP0_2piRp_mod_old,xyPabs_rf_dke_fsav_mksa,equilDKE.xdV_2piRp_dke,gridDKE.xpsin,gridDKE.xpsin_dke,gridDKE.rdke,dkeparam_out.dke_mode);
             %
-            zP_0_2piRp = raypath_jd(xyP0_2piRp_mod,xyprop_dke,yb,radialDKE.r_dke);
+            zP_0_2piRp_mod = raypath_jd(xyP0_2piRp_mod,xyprop_dke,yb,radialDKE.r_dke);
+            zP_0_2piRp_out = raypath_jd(xyP0_2piRp_out,xyprop_dke,yb,radialDKE.r_dke);
             %
             for iray = 1:length(yb),
-                yresidue_rf(iray,it_rf) = max(abs(zP_0_2piRp{iray} - zP_0_2piRp_old{iray})./zP_0_2piRp{iray}(1));
+                yresidue_rf_mod(iray,it_rf) = max(abs(zP_0_2piRp_mod{iray} - zP_0_2piRp_mod_old{iray})./zP_0_2piRp_mod{iray}(1));
+                yresidue_rf_out(iray,it_rf) = max(abs(zP_0_2piRp_mod{iray} - zP_0_2piRp_out{iray})./zP_0_2piRp_mod{iray}(1));
             end
             %
-            residue_rf(it_rf) = max(yresidue_rf(:,it_rf));
+            residue_rf(it_rf) = max([yresidue_rf_mod(:,it_rf);yresidue_rf_out(:,it_rf)]);
             %
             if display.display_mode >= 1,
                 figure(Fig_QLIter),
@@ -142,10 +144,10 @@ for it_rf=1:nit_rf, % convergence in the ray-tracing mode
 %             
                 for iray = 1:length(zS),
                     figure(Fig_Pray + iray - 1);clf
-                    [ax] = graph1D_jd(zS{iray},zP_0_2piRp_old{iray},0,0,'','P_{LH}/2\piR_p (W/m)',['QL convergence, ray #',int2str(iray)],NaN,'','','--','none','r',2);
-                    [ax] = graph1D_jd(zS{iray},zP_0_2piRp{iray},0,0,'','P_{LH}/2\piR_p (W/m)',['QL convergence, ray #',int2str(iray)],NaN,'','','-','none','r',2);
+                    [ax] = graph1D_jd(zS{iray},zP_0_2piRp_mod_old{iray},0,0,'','P_{LH}/2\piR_p (W/m)',['QL convergence, ray #',int2str(iray)],NaN,'','','--','none','r',2);
+                    [ax] = graph1D_jd(zS{iray},zP_0_2piRp_mod{iray},0,0,'','P_{LH}/2\piR_p (W/m)',['QL convergence, ray #',int2str(iray)],NaN,'','','-','none','r',2);
                     legend(['Iteration #',int2str(it_rf-1)],['Iteration #',int2str(it_rf)])
-                    title(['Ray #',num2str(iray),', residue: ',num2str(yresidue_rf(iray,it_rf))])
+                    title(['Ray #',num2str(iray),', residue: ',num2str(yresidue_rf_mod(iray,it_rf))])
                     grid on
                     drawnow;
                 end
@@ -158,11 +160,10 @@ for it_rf=1:nit_rf, % convergence in the ray-tracing mode
             end
 %  
             if (residue_rf(it_rf) <= dkeparam_out.prec_rf & redfac == 1 & it_rf > 1) | it_rf == nit_rf,
-                P_0_2piRp_in = 0;
+                P_0_2piRp_in = sum(yP0_2piRp);
                 P_0_2piRp_out = 0;
                 for iray = 1:length(yb),
-                    P_0_2piRp_in = P_0_2piRp_in + zP_0_2piRp{iray}(1);
-                    P_0_2piRp_out = P_0_2piRp_out + zP_0_2piRp{iray}(end);
+                     P_0_2piRp_out = P_0_2piRp_out + zP_0_2piRp_mod{iray}(end);
                 end
                 %
                 abs_frac = (P_0_2piRp_in - P_0_2piRp_out)/P_0_2piRp_in;
@@ -297,7 +298,14 @@ dke_out.waveparam = waveparam;
 dke_out.xyprop_dke = xyprop_dke;
 dke_out.xyP0_2piRp_mod = xyP0_2piRp_mod_old;
 dke_out.xys = xys;
-dke_out.residue_rf = residue_rf;
+if strcmp(waveparam.model,'RT') & ~isempty(waveparam.bomega_rf),
+    dke_out.yresidue_rf_mod = yresidue_rf_mod;
+    dke_out.yresidue_rf_out = yresidue_rf_out;
+    dke_out.residue_rf = residue_rf;
+    dke_out.zS = zS;
+    dke_out.zP_0_2piRp_mod = zP_0_2piRp_mod;
+    dke_out.zP_0_2piRp_out = zP_0_2piRp_out;
+end
 dke_out.yb = yb;
 dke_out.XXsource = XXsinksource_in;
 dke_out.xRR_fsav = xRR_fsav;
