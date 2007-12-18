@@ -52,7 +52,6 @@ if strfind(config,'LH');%For the Lower Hybrid wave simulations
    dkeparam.delta_rt = 0.5;%smoothering parameter of quasilinear iterations
    dkeparam.abs_lim = 0.95;%minimum required absorption fraction
 %
-%
 % Run mode
 %
    dkeparam.bounce_mode = 1;%Bounce averaging option: (0) no bounce averaging, (1) bounce averaging full implicit method with 15 diagonals
@@ -72,6 +71,8 @@ if strfind(config,'LH');%For the Lower Hybrid wave simulations
    dkeparam.nit_g = 100;%Maximum number of iterations for g
 %
    dkeparam.dtn = 10000;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
+%
+   dkeparam.Dparparmax = 20;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
 %
 % (3) Matlab built-in qmr iterative method (MatLab built-in partial LU factorization used)
 % (2) Matlab built-in bicg iterative method (MatLab built-in partial LU factorization used) 
@@ -166,6 +167,8 @@ elseif strfind(config,'EC') | strfind(config,'EBW');%For the Electron Cyclotron 
    dkeparam.nit_g = 100;%Maximum number of iterations for g
 %
    dkeparam.dtn = 10000;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
+%
+   dkeparam.Dparparmax = 20;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
 %
    dkeparam.invproc = -1;%Iterative matrix inversion methods
 % (3) Matlab built-in qmr iterative method (MatLab built-in partial LU factorization used)
