@@ -88,7 +88,7 @@ else
     xqtilde = xrho.*xB0./xBp0;
     xqbar = xrho.*xB0./xBp0./(1 + xia);
     xqhat = xqbar;
-    xqcronos = xqtilde;
+    xqcronos = xrho.*xB0.*sqrt((1+xia)./(1-xia))./xBp0;
 end
 %
     
