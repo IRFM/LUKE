@@ -10,6 +10,11 @@ close all
 %
 equil.id = 'JETh77';% scenario identification
 %
+id_path = '';%For all paths used by DKE solver
+path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+%
+dkepath = load_structures_yp('dkepath',id_path,path_path);
+%
 % Equilibrium parameters
 %
 ap_guess = 0.9;%  Plasma minor radius on LFS midplane (m)
