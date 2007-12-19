@@ -175,16 +175,17 @@ if exist('flag_wave','var'),
     waves = '';%List of structures for multiple RF waves
     if isempty(ids_wave{1}),
         info_dke_yp(2,['Simulations are performed without RF Waves']);
-    end
-    for iw = 1:length(ids_wave),
-        filename = [paths_wave{iw},'WAVE_',id_equil,'_',ids_wave{iw},'.mat'];
-	    if exist(filename) == 0,
-            info_dke_yp(2,['Warning : Structure ',filename,' could not be loaded']);
-        else
-            load(filename);
-            info_dke_yp(2,['Structure ''wave'': ',filename,' successfully loaded']);
-		    ii = ii + 1;
-		    waves{ii} = wave;
+    else
+        for iw = 1:length(ids_wave),
+            filename = [paths_wave{iw},'WAVE_',id_equil,'_',ids_wave{iw},'.mat'];
+            if exist(filename) == 0,
+                info_dke_yp(2,['Warning : Structure ',filename,' could not be loaded']);
+            else
+                load(filename);
+                info_dke_yp(2,['Structure ''wave'': ',filename,' successfully loaded']);
+                ii = ii + 1;
+                waves{ii} = wave;
+            end
         end
     end
     varargout{flag_wave} = waves;
