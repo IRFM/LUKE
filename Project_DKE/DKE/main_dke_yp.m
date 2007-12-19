@@ -298,7 +298,7 @@ dke_out.waveparam = waveparam;
 dke_out.xyprop_dke = xyprop_dke;
 dke_out.xyP0_2piRp_mod = xyP0_2piRp_mod_old;
 dke_out.xys = xys;
-if strcmp(waveparam.model,'RT') & ~isempty(waveparam.bomega_rf),
+if strcmp(waveparam.model,'RT') & ~isempty(waveparam.bomega_rf) & nit_rf > 1,
     dke_out.yresidue_rf_mod = yresidue_rf_mod;
     dke_out.yresidue_rf_out = yresidue_rf_out;
     dke_out.residue_rf = residue_rf;
