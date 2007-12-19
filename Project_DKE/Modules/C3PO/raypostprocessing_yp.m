@@ -242,13 +242,13 @@ if display_mode,
    print_jd(p_opt,[filename,'_RayToroidal']);  
 %
    figure('Name','Parallel wave refractive index')
-   graph1D_jd(abs(phi_ray/2/pi),real(Npar_ray),0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index',subtitle],NaN,'',[min(real(Npar_ray)),max(real(Npar_ray))]','-','none','k',2);drawnow;hold off
+   graph1D_jd(abs(phi_ray/2/pi),[real(Npar_ray),imag(Npar_ray)*sign(real(Npar_ray(1)))],0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index',subtitle],NaN,'',[min(real(Npar_ray)),max(real(Npar_ray))]','-','none',NaN,2);drawnow;hold off
    if rem(abs(1-real(Npar_ray(1))^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation.
       [ax] = graph1D_jd(phi_vac/2/pi,Npar_vac,0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index',subtitle],NaN,'',[min(real(Npar_ray)),max(real(Npar_ray))],'--','none','r',2);hold on
       legend('Ray-tracing','Analytic');
    else
-      graph1D_jd(abs(phi_ray/2/pi),sign(real(Npar_ray(1)))*6.5./sqrt(Te_ray),0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index',subtitle],NaN,'',[min(real(Npar_ray)),max(real(Npar_ray))],'-','none','b',2);drawnow;hold off
-      legend('Ray-tracing','Landau damping');
+      graph1D_jd(abs(phi_ray/2/pi),sign(real(Npar_ray(1)))*6.5./sqrt(Te_ray),0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index',subtitle],NaN,'',[min(real(Npar_ray)),max(real(Npar_ray))],'-','none','r',2);drawnow;hold off
+      legend('Ray-tracing','Accessibility','Landau damping');
    end
    print_jd(p_opt,[filename,'_Npar']);
 %
