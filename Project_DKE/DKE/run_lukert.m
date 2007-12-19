@@ -87,9 +87,28 @@ if dkeparam.rt_mode == 1,
 % Case with sdNpar proportional to sNpar (in waves structure)
 %
 elseif dkeparam.rt_mode == 2,
+    %
+    [qe,me] = pc_dke_yp;
+    %
     for iw = 1:nw,
         for ib = 1:nb(iw),
-            waves{iw}.rays{ib}.sdNpar = real(waves{iw}.rays{ib}.sNpar)*waves{iw}.rays{ib}.sdNpar(1)/real(waves{iw}.rays{ib}.sNpar(1));
+            %
+            dNpar0 = waves{iw}.rays{ib}.sdNpar(1);
+            Npar0 = real(waves{iw}.rays{ib}.sNpar(1));
+            %
+            npresmin = 5;%minimum number of resonant points for numerical stability
+            vparres = 4;%resonant velocity
+            %
+            dNparmin = abs(Npar0)*npresmin*dkeparam.pnmax_S/dkeparam.np_S/vparres;
+            %
+            omega_ce = qe*equil.ptBPHI(1,1)/me;
+            %
+            if waves{iw}.omega_rf < omega_ce/5 & dNpar0 < dNparmin,
+                info_dke_yp(2,['WARNING: wave #',num2str(iw),' ray #',num2str(ib),': initial dNpar increased to ',num2str(dNparmin),' for numerical stability']);
+                dNpar0 = dNparmin;
+            end
+            %
+            waves{iw}.rays{ib}.sdNpar = real(waves{iw}.rays{ib}.sNpar)*dNpar0/Npar0;
         end
     end
     %
