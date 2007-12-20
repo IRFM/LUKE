@@ -24,10 +24,10 @@ elseif coll_mode == 5,%Ultrarelativistic Moller model
    Aei = zeros(size(v));
    Btei = sum(((zZi'.^2.*xzni_norm(:,ir))*ones(1,length(v))))./v/2;
 else,%Maxwellian background (non-relativistic limit)
-    iu = find(xzTi_norm(:,ir)==0);%To remove singularities when Ti = 0 exactly
+    xzTi_norm(find(xzTi_norm(:,ir)==0),ir) = eps;%To remove singularities when Ti = 0 exactly
 	u = (ones(size(xzTi_norm(:,ir)))*v)./(sqrt(xzTi_norm(:,ir).*(me./zmi'))*ones(1,length(v)))./sqrt(2);
-	u(iu,:) = 0.1;zZi(iu) = 0;
-	Fei = sum(((zZi'.^2.*(me./zmi').*xzni_norm(:,ir))*ones(1,length(v))).*(erf(u)-2*u.*exp(-u.^2)/sqrt(pi)))./v2;
+%
+    Fei = sum(((zZi'.^2.*(me./zmi').*xzni_norm(:,ir))*ones(1,length(v))).*(erf(u)-2*u.*exp(-u.^2)/sqrt(pi)))./v2;
 	Aei = sum(((zZi'.^2.*xzni_norm(:,ir))*ones(1,length(v))).*(erf(u)-2*u.*exp(-u.^2)/sqrt(pi))./u./u)./v/2;	
 	Btei = sum(((zZi'.^2.*xzni_norm(:,ir))*ones(1,length(v))).*((2-1./u./u).*erf(u) + 2*exp(-u.^2)./u/sqrt(pi)))./v/4;
 end
