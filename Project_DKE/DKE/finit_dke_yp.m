@@ -33,15 +33,15 @@ dke_mode = dkeparam.dke_mode;
 %
 XXfinit = zeros(npn,nmhu,nr);%Defined on the distribution function grid (half grid)
 %
-if size(waveparam,2) ~= 1,
-    dkeparam.initguess_f = 0;
-else
-    if isstruct(waveparam) | isnan(waveparam(ir_display,1,5)) == 1 | isnan(waveparam(ir_display,1,6)) == 1,
+if exist('waveparam'),
+    if isreal(waveparam.bdNpar_rf),%General RF power spectrum
          dkeparam.initguess_f = 0;
-    else
-         xvparmin_lh = 1./waveparam(:,1,6)/mksa.betath_ref;
-         xvparmax_lh = 1./waveparam(:,1,5)/mksa.betath_ref;
+    else,%dNpar is made imaginary to identify square power spectrum type (for the Lower Hybrid wave comparison with theoretical models only)
+         xvparmin_lh = 1./(waveparam.bNpar_rf + imag(waveparam.bdNpar_rf)/2)/mksa.betath_ref;
+         xvparmax_lh = 1./(waveparam.bNpar_rf - imag(waveparam.bdNpar_rf)/2)/mksa.betath_ref;
     end
+else
+    dkeparam.initguess_f = 0;%Maxwellian distribition function as initial guess if no RF wave in the plasma
 end
 %
 for ir = 1:nr,	
@@ -59,15 +59,15 @@ for ir = 1:nr,
 %
 		alpha = 2 - 2/(2+zZi(1));%Dominant ion contribution (it is a guess only)
 		beta = 2 - alpha;
-		Tp1nr = (xvparmax_lh(ir)^(alpha+1) - xvparmin_lh(ir)^(alpha+1))*(alpha-1)/(alpha+1) - (alpha-1)*(xvparmax_lh(ir) - xvparmin_lh(ir))*xvparmin_lh(ir)^alpha + xvparmax_lh(ir)^(alpha-1) - xvparmin_lh(ir)^(alpha-1);
-		Tp2nr = 2*(alpha-1)*(xvparmax_lh(ir) - xvparmin_lh(ir))*xvparmin_lh(ir)^(alpha-2) - (xvparmax_lh(ir)^(alpha-1) - xvparmin_lh(ir)^(alpha-1));
+		Tp1nr = (xvparmax_lh^(alpha+1) - xvparmin_lh^(alpha+1))*(alpha-1)/(alpha+1) - (alpha-1)*(xvparmax_lh - xvparmin_lh)*xvparmin_lh^alpha + xvparmax_lh^(alpha-1) - xvparmin_lh^(alpha-1);
+		Tp2nr = 2*(alpha-1)*(xvparmax_lh - xvparmin_lh)*xvparmin_lh^(alpha-2) - (xvparmax_lh^(alpha-1) - xvparmin_lh^(alpha-1));
 		Tpnr = Tp1nr/Tp2nr;
-		Tpr = 1.0*Tpnr;%Relativistic correction (if necessary)
+		Tpr = (1 + 8*mksa.betath_ref/5)*Tpnr;%Relativistic correction
 		Xpperp2 = Xpn.*Xpn.*(1 - Xmhu.*Xmhu);
 		Xppar = Xpn.*Xmhu;
 		Xppar2 = Xppar.*Xppar;
-		Xpparmin = xvparmin_lh(ir)*sqrt((1+Xpperp2*mksa.betath_ref^2)/(1-mksa.betath_ref^2*xvparmin_lh(ir)^2));
-		Xpparmax = xvparmax_lh(ir)*sqrt((1+Xpperp2*mksa.betath_ref^2)/(1-mksa.betath_ref^2*xvparmax_lh(ir)^2));
+		Xpparmin = xvparmin_lh*sqrt((1+Xpperp2*mksa.betath_ref^2)/(1-mksa.betath_ref^2*xvparmin_lh^2));
+		Xpparmax = xvparmax_lh*sqrt((1+Xpperp2*mksa.betath_ref^2)/(1-mksa.betath_ref^2*xvparmax_lh^2));
 		Xmaskplat = (Xppar >= Xpparmin).*(Xppar <= Xpparmax);
 		Xfsth0 = Xmaskplat.*exp(-Xpperp2/2/Tpr)/2/pi/Tpr;
 		Xmaskback = (Xppar <= Xpparmin);
@@ -85,7 +85,7 @@ for ir = 1:nr,
 		Xf0 = XfM + Xfsth*lambda;   
         normf0 = 2*pi*integral_dke_jd(dpn(:),pn2(:).*integral_dke_jd(dmhu,Xf0,2),1);
 		Xf0 = xne_norm(ir)*Xf0/normf0;
-		title_initguess = 'Fuchs et al. LH model';
+		title_initguess = 'V. Fuchs et al., Phys. Fluids, 28 (1985) 3619';
 	else
 		Xf0 = XXf0_in(:,:,ir);
 		title_initguess = 'Initial distribution from input arguments';
@@ -95,7 +95,6 @@ end
 %
 % *************************** Display initial distribution function ***************************
 %
-dbstop 87
 if display_mode == 2,
 	Fig_InitDistr = figure('Name','Initial distribution');	
 	Fig_InitDistrp0 = figure('Name','Initial distribution at pperp=0');
@@ -139,6 +138,12 @@ for ir = 1:nr,
         		curr0_cyl = 2*pi*integral_dke_jd(dpperp_cyl(:),pperp_cyl(:).*integral_dke_jd(dppar_cyl,Xvpar_cyl.*Xf0_cyl,2),1);
 %
 				C = contour(ppar_cyl,pperp_cyl,log(Xf0_cyl),[-20:20/nlevel:0]);axis('equal');
+                
+                
+                
+                
+                
+                
 				faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
 				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['rho = ',num2str(xrho(ir))]);
 				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*10,['Te(norm) = ',num2str(xTe_norm(ir))]);
@@ -187,7 +192,7 @@ for ir = 1:nr,
 		else
 			view = 0;
 			if ir == ir_display,
-				figure(Fig_InitDistr),subplot(132);zoom on
+				figure(Fig_InitDistr),zoom on
 				view = 1;
 			end
 %
@@ -209,13 +214,10 @@ for ir = 1:nr,
         		curr0 = 2*pi*integral_dke_jd(dpn(:),pn2(:).*(pn(:)./gamma(:)).*integral_dke_jd(dmhu,Xmhu.*Xf0,2),1);
         		curr0_cyl = 2*pi*integral_dke_jd(dpperp_cyl(:),pperp_cyl(:).*integral_dke_jd(dppar_cyl,Xvpar_cyl.*Xf0_cyl,2),1);
 %
-				C = contour(ppar_cyl,pperp_cyl,log(Xf0_cyl),[-20:20/nlevel:0]);axis('equal');
+                graph2D_jd(ppar_cyl,pperp_cyl,Xf0_cyl','p_{||}/p_{Te}','p_{\perp}/p_{Te}',title_initguess,[-dkeparam.pnmax_S,dkeparam.pnmax_S],[0,dkeparam.pnmax_S],0,mksa.betath_ref,[0:1:dkeparam.pnmax_S],0,'-','r',2,20,0.9,max(max(Xf0_cyl)));
+                axis('equal');axis([-dkeparam.pnmax_S,dkeparam.pnmax_S,0,dkeparam.pnmax_S]);drawnow;
 				faxis = axis;dfaxis_x = (faxis(2) - faxis(1))/100;dfaxis_y = (faxis(4) - faxis(3))/100; 
-				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*5,['rho = ',num2str(xrho(ir))]);
-				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*10,['Te(norm) = ',num2str(xTe_norm(ir))]);
-				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*15,['ne(norm) = ',num2str(xne_norm(ir))]);
-				xlabel('ppar/pth-ref');ylabel('pperp/pth-ref');title(title_initguess);
-				drawnow;
+				text(faxis(1) + dfaxis_x*5,faxis(4) - dfaxis_y*6,['\rho = ',num2str(xrho(ir))]);
 %
 			end
 %
@@ -225,11 +227,12 @@ for ir = 1:nr,
 				view = 1;
 			end
 %
-			if view == 1,
-				semilogy(-v,XfM(:,1),'g--',v,XfM(:,nmhu),'g--',-v,Xf0(:,1),'c-',v,Xf0(:,nmhu),'c-');%Forward and backward directions only
-				axis([-max(v),max(v),1e-20,10]);grid on;zoom on
-				xlabel('vpar/vth-ref');ylabel('f(pperp = 0)');title(['Norm.(rho=',num2str(xrho(ir)),') = ',num2str(normf0)]);
-				drawnow;
+			if view == 1,         
+                graph1D_jd(-v,XfM(:,1),0,1,'','','',NaN,[-max(v),max(v)],[1e-20,10],'-','none','b',1,20,gca,0.9,0.7,0.7);
+                graph1D_jd(v,XfM(:,nmhu),0,1,'','','',NaN,[-max(v),max(v)],[1e-20,10],'-','none','b',1,20,gca,0.9,0.7,0.7);
+                graph1D_jd(-v,Xf0(:,1),0,1,'','','',NaN,[-max(v),max(v)],[1e-20,10],'-','none','r',2,20,gca,0.9,0.7,0.7);
+                graph1D_jd(v,Xf0(:,nmhu),0,1,'v_{||}/v_{Te}','f(p_{\perp}=0)',['Norm.=',num2str(normf0),', \beta_{Te}=',num2str(mksa.betath_ref),', J_{LH}=',num2str(curr0)],NaN,[-max(v),max(v)],[1e-20,10],'-','none','r',2,20,gca,0.9,0.7,0.7);
+                grid on;zoom on;drawnow;				
 			end
 %           
 			view = 0;
@@ -239,9 +242,9 @@ for ir = 1:nr,
 			end    
 %
 			if view == 1,
-				plot(pn,pn,'r-.',pn,v,'b:');grid on;zoom on
-				xlabel('p/pth-ref');ylabel('v/vth-ref');title(['j = ',num2str(curr0)]);
-				drawnow;
+                graph1D_jd(pn,pn,0,0,'','','',NaN,[0,max(pn)],[0,max(v)],'-','none','b',1,20,gca,0.9,0.7,0.7);
+                graph1D_jd(pn,v,0,0,'p/p_{Te}','v/v_{Te}','',NaN,[0,max(pn)],[0,max(v)],'-','none','r',2,20,gca,0.9,0.7,0.7);
+                grid on;zoom on;drawnow;				
 			end
 %						
         end
