@@ -23,7 +23,12 @@ gamma = Zmomcoef.gamma;
 Xgamma = Zmomcoef.Xgamma;
 v = Zmomcoef.v;
 %
-display_mode = display.display_mode;
+if isfield(display,'display_init'),
+    display_mode = display.display_init;
+else
+    display_mode = 0;
+end
+%
 dp_cyl = display.dp_cyl;
 nlevel = display.nlevel;
 %
@@ -95,14 +100,14 @@ end
 %
 % *************************** Display initial distribution function ***************************
 %
-if display_mode == 2,
+if display_mode ~= 0,
 	Fig_InitDistr = figure('Name','Initial distribution');	
 	Fig_InitDistrp0 = figure('Name','Initial distribution at pperp=0');
 	Fig_ElecVeloc = figure('Name','Electron velocity');
 end
 %
 for ir = 1:nr,
-	if display_mode == 2,
+	if display_mode ~= 0,
 		if dke_mode == 1,
 %
 			view = 0;
