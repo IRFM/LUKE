@@ -68,6 +68,7 @@ for ir = 1:nr,
 		Tp2nr = 2*(alpha-1)*(xvparmax_lh - xvparmin_lh)*xvparmin_lh^(alpha-2) - (xvparmax_lh^(alpha-1) - xvparmin_lh^(alpha-1));
 		Tpnr = Tp1nr/Tp2nr;
 		Tpr = (1 + 8*mksa.betath_ref/5)*Tpnr;%Relativistic correction
+        Tpr = Tpnr;
 		Xpperp2 = Xpn.*Xpn.*(1 - Xmhu.*Xmhu);
 		Xppar = Xpn.*Xmhu;
 		Xppar2 = Xppar.*Xppar;
