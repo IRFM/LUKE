@@ -90,7 +90,7 @@ dkeparam.nmhu_S = 201;
 %
 %equil.pzTi = 1e-10*ones(size(equil.pzTi));
 %
-betath_list = [logspace(-3,-2,7),logspace(-1.85,-0.35,11)];
+betath_list = [logspace(-3,-2,7),logspace(-1.85,-0.35,11)];betath_list = betath_list(1:15);
 %
 [qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
 %
@@ -184,26 +184,24 @@ eta_2_nr_Karney = 16.52;
 %
 %************************************************************************************************************************************
 %
-figure(1),clf
-%
-leg = {'Linearized','High v limit','Maxwellian'};
+leg0 = {'Linearized (f_{M0})','High v limit (f_{M0})','Maxwellian (f_{M0})','Linearized (f_{NM0})','High v limit (f_{NM0})','Maxwellian (f_{NM0})'};
+leg1 = {'Linearized (f_{NM}(end))','High v limit (f_{NM}(end))','Maxwellian (f_{NM}(end))','LH model (f_{NM}(1))'};
 xlim = 10.^[-3,0];
 ylim = [0,0.1];
 xlab = '\beta_T';
 ylab = 'j';
+ylab1 = 'Number of iterations';
 tit = '';
+%
+figure('Name','Final LH current solutions');clf
 %
 graph1D_jd(betath_list,j_M2,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
 graph1D_jd(betath_list,j_M1,1,0,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
-graph1D_jd(betath_list,j_M0,1,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
+graph1D_jd(betath_list,j_M0,1,0,'','','',NaN,xlim,ylim,'-','none','g',2,20,gca);
 %
 graph1D_jd(betath_list,j_NM2,1,0,xlab,ylab,tit,NaN,xlim,ylim,'none','*','r',2,20,gca,0.9,0.7,0.7);
 graph1D_jd(betath_list,j_NM1,1,0,'','','',NaN,xlim,ylim,'none','*','b',2,20,gca);
-graph1D_jd(betath_list,j_NM0,1,0,'','','',leg,xlim,ylim,'none','*','g',2,20,gca);
-%
-graph1D_jd(betath_list,cur_NM2(:,1),1,0,xlab,ylab,tit,NaN,xlim,ylim,'none','o','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(betath_list,cur_NM1(:,1),1,0,'','','',NaN,xlim,ylim,'none','o','b',2,20,gca);
-graph1D_jd(betath_list,cur_NM0(:,1),1,0,'','','',leg,xlim,ylim,'none','o','g',2,20,gca);
+graph1D_jd(betath_list,j_NM0,1,0,'','','',leg0,xlim,ylim,'none','*','g',2,20,gca);
 %
 graph1D_jd(xlim,[j_2_nr_Karney,j_2_nr_Karney],0,0,'','','',NaN,xlim,ylim,'--','none','r',2,20,gca);
 graph1D_jd(xlim,[j_0_nr_Karney,j_0_nr_Karney],0,0,'','','',NaN,xlim,ylim,'--','none','m',2,20,gca);
@@ -212,39 +210,33 @@ set(gca,'xtick',[1e-05 0.0001 0.001 0.01 0.1 1])
 set(gca,'XMinorGrid','off')
 set(gca,'XMinorTick','on')
 %
-figure(2),clf
+figure('Name','Initial & final LH current solutions');clf
 %
-ylim = [0,0.005];
-ylab = 'P';
+graph1D_jd(betath_list,cur_NM2(:,2),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(betath_list,cur_NM1(:,2),1,0,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
+graph1D_jd(betath_list,cur_NM0(:,2),1,0,'','','',NaN,xlim,ylim,'-','none','g',2,20,gca);
 %
-graph1D_jd(betath_list,P_M2,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(betath_list,P_M1,1,0,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
-graph1D_jd(betath_list,P_M0,1,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
-graph1D_jd(xlim,[P_2_nr_Karney,P_2_nr_Karney],0,0,'','','',NaN,xlim,ylim,'--','none','r',2,20,gca);
-graph1D_jd(xlim,[P_0_nr_Karney,P_0_nr_Karney],0,0,'','','',NaN,xlim,ylim,'--','none','m',2,20,gca);
+graph1D_jd(betath_list,cur_NM0(:,1),1,0,'','','',leg1,xlim,ylim,'none','*','r',2,20,gca);
+%
+graph1D_jd(xlim,[j_2_nr_Karney,j_2_nr_Karney],0,0,'','','',NaN,xlim,ylim,'--','none','r',2,20,gca);
+graph1D_jd(xlim,[j_0_nr_Karney,j_0_nr_Karney],0,0,'','','',NaN,xlim,ylim,'--','none','m',2,20,gca);
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[1e-05 0.0001 0.001 0.01 0.1 1])
 set(gca,'XMinorGrid','off')
 set(gca,'XMinorTick','on')
 %
-figure(3),clf
+figure('Name','Convergence rate');clf
 %
-ylim = [0,20];
-ylab = 'j/P';
+graph1D_jd(betath_list,cur_M2(:,3),1,0,xlab,ylab1,tit,NaN,xlim,[0,20],'-','none','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(betath_list,cur_M1(:,3),1,0,'','','',NaN,xlim,[0,20],'-','none','b',2,20,gca);
+graph1D_jd(betath_list,cur_M0(:,3),1,0,'','','',NaN,xlim,[0,20],'-','none','g',2,20,gca);
 %
-graph1D_jd(betath_list,eta_M2,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(betath_list,eta_M1,1,0,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
-graph1D_jd(betath_list,eta_M0,1,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
-graph1D_jd(xlim,[eta_2_nr_Karney,eta_2_nr_Karney],0,0,'','','',NaN,xlim,ylim,'--','none','r',2,20,gca);
-graph1D_jd(xlim,[eta_0_nr_Karney,eta_0_nr_Karney],0,0,'','','',NaN,xlim,ylim,'--','none','m',2,20,gca);
-set(gca,'ytick',[0:0.2:1]*ylim(2))
-set(gca,'xtick',[1e-05 0.0001 0.001 0.01 0.1 1])
+graph1D_jd(betath_list,cur_NM2(:,3),1,0,xlab,ylab1,tit,NaN,xlim,[0,20],'none','*','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(betath_list,cur_NM1(:,3),1,0,'','','',NaN,xlim,[0,20],'none','*','b',2,20,gca);
+graph1D_jd(betath_list,cur_NM0(:,3),1,0,'','','',leg1,xlim,[0,20],'none','*','g',2,20,gca);
+%
 set(gca,'XMinorGrid','off')
 set(gca,'XMinorTick','on')
-%
-print_jd(2,'fig_j_betath','.',1)
-print_jd(2,'fig_P_betath','.',2)
-print_jd(2,'fig_eta_betath','.',3)
 %
 %************************************************************************************************************************************
 %
