@@ -17,6 +17,9 @@ if fitparam.opt_load*exist(['EQUILV_',equil.id,'.mat']),
 else
    info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil.id,' is being calculated.']);   
    [equil_fit] = fitequil_yp(equil,fitparam.mode_equil,fitparam.method,fitparam.ngridresample,fitparam.nharm);
+%   
+   if ~isfield(equil,'opt_save'),equil.opt_save = 1;end
+%   
    if equil.opt_save > 0,
         save(['EQUILV_',equil_fit.id,'.mat'],'equil_fit');
         info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil_fit.id,' is saved.']);
