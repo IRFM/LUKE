@@ -15,7 +15,7 @@ id_simul = 'Ohm_bounce';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
-rho_S = [linspace(0,0.2,11),linspace(0.25,1,16)];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+rho_S = [linspace(0,0.2,11),linspace(0.25,0.9,14),linspace(0.925,1,5)];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
 id_path = '';%For all paths used by DKE solver
 path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
@@ -85,14 +85,13 @@ iar_luke = equilDKE.xrho*equilDKE.ap/equilDKE.Rp;%Circular inverse aspect ratio
 sigman_luke = Zcurr.x_tot_fsav./Zcurr_cyl.x_tot_fsav;
 %
 [iar,sigman_sc] = conductivity_model_yp(equil,1);%Sigmar-Coppi model (low inverse aspect ratio limit)
-%[iar,sigman_cghk] = conductivity_model_yp(equil,2);%Connor et al. model (arbitrary inverse aspect ratio)
+[iar,sigman_cghk] = conductivity_model_yp(equil,2);%Connor et al. model (arbitrary inverse aspect ratio)
 %
 %************************************************************************************************************************************
 %
 figure(1),clf
 %
 leg = {'LUKE','Sigmar-Coppi','Connor et al.','Location','NorthWest'};
-leg = {'LUKE','Sigmar-Coppi','Location','NorthWest'};
 xlim = [0,1];
 ylim = [1,10000];
 xlab = 'r/R_p';
@@ -100,7 +99,7 @@ ylab = '\sigma_{cyl}/\sigma';
 tit = '';
 graph1D_jd(iar_luke,1./sigman_luke,0,1,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20,gca,0.9,0.7,0.7);
 graph1D_jd(iar,1./sigman_sc,0,0,'','','',leg,xlim,ylim,'-','none','b',2,20,gca);
-%graph1D_jd(iar,1./sigman_cghk,0,0,'','','',leg,xlim,ylim,'--','none','g',2,20,gca);
+graph1D_jd(iar,1./sigman_cghk,0,0,'','','',leg,xlim,ylim,'--','none','g',2,20,gca);
 set(gca,'xtick',[0:0.2:1])
 set(gca,'ytick',[1 10 100 1000 10000])
 set(gca,'YMinorGrid','off')
