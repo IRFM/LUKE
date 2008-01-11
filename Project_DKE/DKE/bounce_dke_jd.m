@@ -144,48 +144,58 @@ else,%Ideal equilibrium with circular concentric flux-surfaces.
     ymhu0(find(ymhu0==0)) = eps;%Avoid numerical singularities
     ymhu2 = ymhu0.^2;
 %
-    for ir = 1:nr 
-        YJ = jseries_dke_jd(sqrt(xmhu0T2(ir)),ymhu0,m); 
+    for ir = 1:nr
+        if equilDKE.xmhu0T2(ir) == 0,
+            xylambda_p0p0(ir,:) = zeros(size(ymhu0));
+            xylambda_p2m1(ir,:) = zeros(size(ymhu0));
+            xylambda_p2m2p2(ir,:) = zeros(size(ymhu0));
+            xylambda_b_p1p1(ir,:) = zeros(size(ymhu0));
+            xylambda_b_p1m1(ir,:) = zeros(size(ymhu0));
+            xylambda_b_p1m2(ir,:) = zeros(size(ymhu0));
+            xylambda_b_p3m2(ir,:) = zeros(size(ymhu0));     
+        else
+            YJ = jseries_dke_jd(sqrt(equilDKE.xmhu0T2(ir)),ymhu0,m);
 %   
-        chim = zeros(m+1,1);
-        chim_tp = zeros(m+1,1);
-        mhutrap2m = zeros(m+1,1);
-        chim(1) = 1;
-        chim_tp(1) = 1;
-        mhutrap2m(1) = 1;
-        for i = 1:m,
-        	chim(i+1) = (2*i - 3)/(2*i)*chim(i);
-        	chim_tp(i+1) = (2*i - 1)/(2*i)*chim_tp(i);
-        	mhutrap2m(i+1) = xmhu0T2(ir)*mhutrap2m(i);
-        end
+            chim = zeros(m+1,1);
+            chim_tp = zeros(m+1,1);
+            mhutrap2m = zeros(m+1,1);
+            chim(1) = 1;
+            chim_tp(1) = 1;
+            mhutrap2m(1) = 1;
+            for i = 1:m,
+                chim(i+1) = (2*i - 3)/(2*i)*chim(i);
+                chim_tp(i+1) = (2*i - 1)/(2*i)*chim_tp(i);
+                mhutrap2m(i+1) = equilDKE.xmhu0T2(ir)*mhutrap2m(i);
+            end
 %
-        Ymchim = chim*ones(1,nmhu);
-        Ymchim_tp = chim_tp*ones(1,nmhu);
-        Ymmhutrap2m = mhutrap2m*ones(1,nmhu);
-        Ymmhu2 = ones(m-1,1)*ymhu2;
-        Ymhu2 = ones(m,1)*ymhu2;
-        Ymhu2(Ymhu2==0) = eps;
-        Ymmhu2(Ymmhu2==0) = eps;
+            Ymchim = chim*ones(1,nmhu);
+            Ymchim_tp = chim_tp*ones(1,nmhu);
+            Ymmhutrap2m = mhutrap2m*ones(1,nmhu);
+            Ymmhu2 = ones(m-1,1)*ymhu2;
+            Ymhu2 = ones(m,1)*ymhu2;
+            Ymhu2(Ymhu2==0) = eps;
+            Ymmhu2(Ymmhu2==0) = eps;
 %    
-        ysstar = 1/sqrt(1- xmhu0T2(ir)).*ones(1,nmhu);
-        ylambda = 2/pi*sum(Ymchim(1:m,:).*Ymmhutrap2m(1:m,:).*YJ(1:m,:));
-        ylambda(ylambda==0) = eps;
-        ydeltalambda = 2/pi*sum(Ymchim(1:m,:).*Ymmhutrap2m(2:m+1,:).*YJ(2:m+1,:));
-        ysstar_tp = 2/pi*sum((Ymchim(1:m,:) - Ymchim_tp(1:m,:).*(1-Ymhu2)).*Ymmhutrap2m(1:m,:)./Ymhu2.*YJ(1:m,:));
+            ysstar = 1/sqrt(1- equilDKE.xmhu0T2(ir)).*ones(1,nmhu);
+            ylambda = 2/pi*sum(Ymchim(1:m,:).*Ymmhutrap2m(1:m,:).*YJ(1:m,:));
+            ylambda(ylambda==0) = eps;
+            ydeltalambda = 2/pi*sum(Ymchim(1:m,:).*Ymmhutrap2m(2:m+1,:).*YJ(2:m+1,:));
+            ysstar_tp = 2/pi*sum((Ymchim(1:m,:) - Ymchim_tp(1:m,:).*(1-Ymhu2)).*Ymmhutrap2m(1:m,:)./Ymhu2.*YJ(1:m,:));
 %        
-        if m > 2,
-        	ylambda_tp = 2/pi*(YJ(1,:) + sum((Ymchim(2:m,:) - Ymchim(1:m-1,:)./Ymmhu2).*Ymmhutrap2m(2:m,:).*YJ(2:m,:)) - Ymchim(m,:)./ymhu2.*Ymmhutrap2m(m+1,:).*YJ(m+1,:));
-        elseif m == 2,
-        	ylambda_tp = 2/pi*(YJ(1,:) + (Ymchim(2,:) - Ymchim(1,:)./Ymmhu2).*Ymmhutrap2m(2,:).*YJ(2,:) - Ymchim(2,:)./ymhu2.*Ymmhutrap2m(3,:).*YJ(3,:));
-        end
+            if m > 2,
+                ylambda_tp = 2/pi*(YJ(1,:) + sum((Ymchim(2:m,:) - Ymchim(1:m-1,:)./Ymmhu2).*Ymmhutrap2m(2:m,:).*YJ(2:m,:)) - Ymchim(m,:)./ymhu2.*Ymmhutrap2m(m+1,:).*YJ(m+1,:));
+            elseif m == 2,
+                ylambda_tp = 2/pi*(YJ(1,:) + (Ymchim(2,:) - Ymchim(1,:)./Ymmhu2).*Ymmhutrap2m(2,:).*YJ(2,:) - Ymchim(2,:)./ymhu2.*Ymmhutrap2m(3,:).*YJ(3,:));
+            end
 %
-        xylambda_p0p0(ir,:) = ylambda;
-        xylambda_p2m1(ir,:) = ylambda - ydeltalambda./ymhu2;
-        xylambda_p2m2p2(ir,:) = ysstar_tp;
-        xylambda_b_p1p1(ir,:) = ~xymaskT(ir,:).*ysstar;
-        xylambda_b_p1m1(ir,:) = ~xymaskT(ir,:)/(1 + xia(ir));
-        xylambda_b_p1m2(ir,:) = ~xymaskT(ir,:)*(1 + xia(ir)^2/2)/(1 + xia(ir)).^2;
-        xylambda_b_p3m2(ir,:) = ~xymaskT(ir,:).*(ymhu2 - xia(ir)*(1 - xia(ir)/2)/(1 + xia(ir)))/(1 + xia(ir))./ymhu2; 
+            xylambda_p0p0(ir,:) = ylambda;
+            xylambda_p2m1(ir,:) = ylambda - ydeltalambda./ymhu2;
+            xylambda_p2m2p2(ir,:) = ysstar_tp;
+            xylambda_b_p1p1(ir,:) = ~xymaskT(ir,:).*ysstar;
+            xylambda_b_p1m1(ir,:) = ~xymaskT(ir,:)/(1 + xia(ir));
+            xylambda_b_p1m2(ir,:) = ~xymaskT(ir,:)*(1 + xia(ir)^2/2)/(1 + xia(ir)).^2;
+            xylambda_b_p3m2(ir,:) = ~xymaskT(ir,:).*(ymhu2 - xia(ir)*(1 - xia(ir)/2)/(1 + xia(ir)))/(1 + xia(ir))./ymhu2; 
+        end
     end
     xylambda_b_p2m2p2 = ~xymaskT.*xylambda_p2m2p2;
     xylambda_b_p2 = xylambda_b_p2m2p2;
