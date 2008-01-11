@@ -56,7 +56,7 @@ dkeparam.Dparparmax = Inf;%Upper limit of the quasilinear diffusion coefficient.
 %
 % Run mode
 %
-dkeparam.bounce_mode = 0;%Bounce averaging option: (0) no bounce averaging, (1) bounce averaging full implicit method with 15 diagonals
+dkeparam.bounce_mode = 1;%Bounce averaging option: (0) no bounce averaging, (1) bounce averaging full implicit method with 15 diagonals
 dkeparam.dke_mode = 0;%Fokker-Planck equation (0), Drift Kinetic equation (1)
 dkeparam.equil_mode = 1;%Equilibrium option: (0) circular concentric flux-surfaces, (1) numerical equilibrium
 dkeparam.syn_mode = 0;%Synergy calculation: (0) none, (1) yes: the code runs twice, including once without RF or electric fields. (only if dke_mode = 1)
