@@ -180,6 +180,8 @@ if exist(['helmex77',mexext]) == 3,
 	Ip_helmex = ipout.* max(xrad).*absBt_in/mu0*1e-6*sign(Ip);%For test only (MA)
 %	  
 	BPHI = (Fdia*ones(1,ntheta))./R*sign(Bt_in);%Recover also the correct sign
+    BR(1,:) = 0;%avoid problems at the plasma center. BR must be zero exactly (sometimes spurious values)
+    BZ(1,:) = 0;%avoid problems at the plasma center. BZ must be zero exactly (sometimes spurious values)
 	BR = BR*sign(Ip);%Recover also the correct sign
 	BZ = BR*sign(Ip);%Recover also the correct sign
 	ppsi = ppsi*sign(Ip);%Recover also the correct sign  
