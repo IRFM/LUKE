@@ -73,7 +73,7 @@ xZeff = 0.5;%Radial normalized position at which the derivative is maximum
 % Initial calculations to set up the guess for HELMEX77
 %
 Bpa = (4*pi*1e-7)*Ip*1e6/(2*pi*ap_guess);% Poloidal Field at the edge, Ampere's theorem (circular plasma cross-section for the initial guess)	
-qmax = ap_guess/Rp_guess*Bt/Bpa,%Cylindrical safety factor at the plasma edge
+qmax = ap_guess/Rp_guess*Bt/Bpa;%Cylindrical safety factor at the plasma edge
 %
 prho_guess = linspace(0,1,npsi_guess);%Initial grid
 %
