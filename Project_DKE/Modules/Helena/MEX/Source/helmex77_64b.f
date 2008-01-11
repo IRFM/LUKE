@@ -1,6 +1,3 @@
-#ifdef MATLAB73 
-#include "fintrf.h"
-#endif
       subroutine mexFunction(nlhs,plhs,nrhs,prhs)
 C--------------------------------------------------------------
 C Interface mex-file (matlab 5) pour le code HELENA
@@ -179,7 +176,7 @@ c      integer KKLDA
 C-----------------------------------------------------------------------                               
 C DECLARATION DES VARIABLES
 c pointeurs mex   
-      CRONOSINT plhs(*), prhs(*)
+      integer*8 plhs(*), prhs(*)
       integer nlhs, nrhs
 c variables de sortie
       real*8 VP(NRMMAX),C2(NRMMAX),C3(NRMMAX),R2M(NRMMAX),RHO(NRMMAX)
@@ -201,25 +198,25 @@ c taille des tableaux d'entree fixee a 101 elements
       real*8 PSIPIN(101),PTOT(101),Jin(101),Rext(250),Zext(250)
       real*8 R0, amin, B0, Ip, ecrit,xrsig(2)
 c pointeurs et tailles      
-      CRONOSINT VP_pr,C2_pr,C3_pr,R2M_pr,RHO_pr
-      CRONOSINT FTRA_pr,FDIA_pr,INVB2_pr
-      CRONOSINT DRHOOR_pr,QPSI_pr,B2_pr
-      CRONOSINT SP_pr,Jout_pr,PSIPOUT_pr,PSIT_pr,Pout_pr
-      CRONOSINT RR_pr,ZZ_pr,Rext_pr,Zext_pr,init_pr
-      CRONOSINT PSIPIN_pr,PTOT_pr,Jin_pr,B0_pr, Ip_pr
-      CRONOSINT R0_pr, amin_pr, ELLIP_pr, TRIAH_pr, TRIAB_pr
-      CRONOSINT RAV_pr,OOR_pr,DRHOAV_pr,XRAD_pr,XIAB_pr
-      CRONOSINT XSHIFT_pr,XELL_pr,XTRIAPOS_pr,XTRIANEG_pr,IFAIL_pr
-      CRONOSINT ECRIT_pr,DIMERC_pr,DRMERC_pr,BALCRIT_pr,XRSIG_pr
-      CRONOSINT R2_pr,OOR2_pr,R2TAU2_pr,DRHO2OB2_pr
-      CRONOSINT R3OTAU3_pr,R3OTAU_pr,FR_pr
-      CRONOSINT LSC_pr,BPR_pr,BPZ_pr,b_pr,df2_pr,dpr_pr,kkbig_pr,XLI_pr
-      CRONOSINT NCHI_pr, CPSURF_pr, RADIUS_pr
-      CRONOSINT GEM11_pr, GEM12_pr, GEM33_pr      
-      CRONOSINT RSPOT_pr, ZSPOT_pr, BRSPOT_pr, BZSPOT_pr
+      integer*8 VP_pr,C2_pr,C3_pr,R2M_pr,RHO_pr
+      integer*8 FTRA_pr,FDIA_pr,INVB2_pr
+      integer*8 DRHOOR_pr,QPSI_pr,B2_pr
+      integer*8 SP_pr,Jout_pr,PSIPOUT_pr,PSIT_pr,Pout_pr
+      integer*8 RR_pr,ZZ_pr,Rext_pr,Zext_pr,init_pr
+      integer*8 PSIPIN_pr,PTOT_pr,Jin_pr,B0_pr, Ip_pr
+      integer*8 R0_pr, amin_pr, ELLIP_pr, TRIAH_pr, TRIAB_pr
+      integer*8 RAV_pr,OOR_pr,DRHOAV_pr,XRAD_pr,XIAB_pr
+      integer*8 XSHIFT_pr,XELL_pr,XTRIAPOS_pr,XTRIANEG_pr,IFAIL_pr
+      integer*8 ECRIT_pr,DIMERC_pr,DRMERC_pr,BALCRIT_pr,XRSIG_pr
+      integer*8 R2_pr,OOR2_pr,R2TAU2_pr,DRHO2OB2_pr
+      integer*8 R3OTAU3_pr,R3OTAU_pr,FR_pr
+      integer*8 LSC_pr,BPR_pr,BPZ_pr,b_pr,df2_pr,dpr_pr,kkbig_pr,XLI_pr
+      integer*8 NCHI_pr, CPSURF_pr, RADIUS_pr
+      integer*8 GEM11_pr, GEM12_pr, GEM33_pr      
+      integer*8 RSPOT_pr, ZSPOT_pr, BRSPOT_pr, BZSPOT_pr
       integer   m, n, sizeIN, sizeOUT, mxGetM, mxGetN, mRext, nRext
       integer   sizeR
-      CRONOSINT mxCreateFull, mxGetPr
+      integer*8 mxCreateFull, mxGetPr
       real*8 TINIT(3)
 
 C---------------------------------------------------------------------
@@ -271,7 +268,7 @@ C        triangularite
          TRIAH_pr = mxGetPr(prhs(10))
          call mxCopyPtrToReal8(TRIAH_pr,TRIAH,1)
          TRIAB = TRIAH
-			NBext = -1
+            NBext = -1
       ELSEIF (INT(LSC).EQ.1) THEN
          IAS = 1      
 C        petit rayon (m)
@@ -781,9 +778,9 @@ C-----------------------------------------------------------------------
       XR1  = xrsig(1)
       SIG1 = xrsig(2)
       if (IWRT.GT.1)  then
-      	IWRT = 1
-	AMIX = 0.9
-	NITER = 1000
+        IWRT = 1
+        AMIX = 0.9
+        NITER = 1000
         write(*,*) 'XR1 = ',XR1,' ;SIG1 = ',SIG1
       endif
             
@@ -798,8 +795,8 @@ c      NBEXT = 33
       IF (IWRT.NE.0) then
         DO I=1,NPRFL
           WRITE(*,*) 'I= ',I,' PSI =',PSIN(I)
-	ENDDO
-      ENDIF
+        ENDDO
+       ENDIF
 
 c       write(*,*) 'Iexact dans helena =',IEXACT
 C le mode FR = 0 est pour le couplage avec DINA
@@ -826,12 +823,12 @@ C le mode FR = 0 est pour le couplage avec DINA
       IF (IWRT.NE.0) THEN
          WRITE(*,*) ' IAS   : ',IAS
          WRITE(*,*) ' AMIN  : ',AMIN
-	 WRITE(*,*) ' B0    : ',B0
-	 WRITE(*,*) ' XI    : ',XI
-	 WRITE(*,*) ' PSI(1): ',PSIN(NPRFL)
-	 WRITE(*,*) ' XTRIA(TOP) : ',TRIAH
-	 WRITE(*,*) ' XTRIA(BOT) : ',TRIAB
-	 WRITE(*,*) ' ALFA  : ',ALFA
+         WRITE(*,*) ' B0    : ',B0
+         WRITE(*,*) ' XI    : ',XI
+         WRITE(*,*) ' PSI(1): ',PSIN(NPRFL)
+         WRITE(*,*) ' XTRIA(TOP) : ',TRIAH
+         WRITE(*,*) ' XTRIA(BOT) : ',TRIAB
+         WRITE(*,*) ' ALFA  : ',ALFA
       ENDIF
       IF (INI.EQ.1) WRITE(*,*) ' B(prev) : ',B
       IF (IEXACT.EQ.1) WRITE(*,*) ' B(prev) : ',B
@@ -842,11 +839,11 @@ c------------------------ quadratic extraolation to axis
         dp3 = (pin(4)-pin(3))/(psin(4)-psin(3))
         pin(1)=pin(3)+(psin(1)-psin(3))*dp3
         pin(2)=pin(3)+(psin(2)-psin(3))*dp3
-c        write(*,*) 'avant spline PIN'
+c        write(*,*) 'avant spline'
         CALL SPLINE(NPRFL,PSIN,PIN,0.D0,0.D0,2,S1,S2,S3,S4)
 c        write(*,*) 'apres spline'
 
-	NPTS=101
+        NPTS=101
         PSIB = DABS(PSIN(NPRFL))                                           
         DO I=1,NPTS   
           SS =  dble(I-1)/dble(NPTS-1)                                                   
@@ -898,14 +895,14 @@ C------------------------------------ NORMALIZE PROFILES ---------------
       ZMAXDPR = DPR(1)
       DO I=2,NPTS
         IF (ABS(DPR(I)).GT.ZMAXDPR ) THEN
-	  ZMAXDPR = ABS(DPR(I))
-	ENDIF
+         ZMAXDPR = ABS(DPR(I))
+        ENDIF
       ENDDO
    
       IF ((INI.EQ.0) .AND. (IEXACT .EQ. 0)) THEN
         IF (ZMAXDPR.GT.100.0) THEN
            B = .2/ZMAXDPR    
-	ENDIF                                                     
+        ENDIF                                                     
       ENDIF
                                    
       IF ((INI.EQ.0) .AND. (IEXACT .EQ. 0)) THEN
@@ -947,7 +944,7 @@ C----------------------------------- START OF LOOP OVER CURRENT/BETA---
         WRITE(*,*) '***************************************'
         WRITE(*,21) NMG                                                
         WRITE(*,*) '***************************************'
-	ENDIF        
+      ENDIF        
    21   FORMAT(' * ITERATION CURRENT PROFILE,  NMG=',I3,'  *')          
                                                                         
         NIT=NITER                                                       
@@ -964,7 +961,7 @@ C------------------------------------ INITIALIZE KK AND QQ TO ZERO -----
           IF (INI.EQ.0) THEN
 C------------------------------------ FORM MATRIX, NO CONDITIONS -------
 c          write(*,*) 'avant formkq'
-	  CALL FORMKQ(XX,YY,PSI,NR,NP,QQ,A,B,C,EPS,IGAM,ISOL,NI*NMG,IAS)
+      CALL FORMKQ(XX,YY,PSI,NR,NP,QQ,A,B,C,EPS,IGAM,ISOL,NI*NMG,IAS)
 c          write(*,*) 'apres formkq'
 C------------------------------------ SOLVE SET OF EQUATIONS -----------
           CALL SOLVE2(QQ,NR,NP,PSI,NI*NMG,IAS)
@@ -978,21 +975,21 @@ C------------------------------------ FIND MAGN. AXIS AND PSI AT AXIS --
 c          IF (IWRT.NE.0) WRITE(*,*) 'MAGN. AXIS : ',XAXIS,YAXIS
            A = A / (1.-PSAXIS)   
 C------------------------------------ NORMALIZE FLUX TO ZERO ON AXIS ---
-	  IF (IFAIL.NE.0) THEN
-	    WRITE(*,*) ' AXIS NOT FOUND'
-	    RETURN
-	  ENDIF
-	  CALL NORMAL(PSI,NR,NP,PSAXIS) 
-	  IF (AMIX.NE.0.) THEN
+      IF (IFAIL.NE.0) THEN
+        WRITE(*,*) ' AXIS NOT FOUND'
+        RETURN
+      ENDIF
+      CALL NORMAL(PSI,NR,NP,PSAXIS) 
+      IF (AMIX.NE.0.) THEN
             DO  I=1,4*NR*NP
               PSI(I) = (1.- AMIX)*PSI(I) + AMIX*PSIOLD(I)
             ENDDO
            CALL FINDAXIS(XX,YY,NR,NP,PSAXIS,XAXIS,YAXIS,
      >                   NAX,RAX,SAX,IAS,IFAIL)
-	    IF (IFAIL.NE.0) THEN
-	      WRITE(*,*) ' AXIS NOT FOUND'
-	      RETURN
-	    ENDIF
+        IF (IFAIL.NE.0) THEN
+          WRITE(*,*) ' AXIS NOT FOUND'
+          RETURN
+        ENDIF
             AOLD = A
             A = A / (1.-PSAXIS)
             CALL NORMAL(PSI,NR,NP,PSAXIS)
@@ -1021,12 +1018,12 @@ c        AMIX = 0.
 
 C------------------------------------- CALC. NEW FF' PROFILE
 c        write(*,*) 'avant remesh'
-	CALL REMESH(XX,YY,PSI,A,B,C,EPS,NR,NP,NR,NP,MESHNO,
+         CALL REMESH(XX,YY,PSI,A,B,C,EPS,NR,NP,NR,NP,MESHNO,
      >              CX,CY,XAXIS,YAXIS,NAX,RAX,SAX,IGAM,IAS,
      >              XR1,SIG1,IFAIL)
 c        write(*,*) 'apres remesh'
 
-	IF (IFAIL.NE.0) RETURN
+        IF (IFAIL.NE.0) RETURN
         DO I = 1, NPTS
           DF2OLD(I) = DF2(I)
         ENDDO
@@ -1036,7 +1033,7 @@ C-------------------------------- update FF' based on current profile
 C-------------------------------- use current only when positive
         IF (XIAB.GT.0.) THEN
           CALL CURRENT(XX,YY,PSI,NR,NP,A,B,C,EPS,ALFA,IGAM,ISOL,CUR,IAS)
-	  ALFA = ALFA * CUR / XIAB
+      ALFA = ALFA * CUR / XIAB
           IF (IWRT.NE.0) WRITE(*,*) ' ALFA = ',ALFA
         ENDIF
 
@@ -1057,7 +1054,7 @@ ccc             B =  PAXIS /(BBB * BETAP) * B1
             ELSE
               B =   B1 / PAXIS * BETAP
             ENDIF
-	    IF (IWRT.NE.0) THEN
+        IF (IWRT.NE.0) THEN
               WRITE(*,'(A18,2f10.5,A4,f10.5)') 'first change of B ',
      >                               B1,PAXIS,' >> ',B
             ENDIF
@@ -1095,19 +1092,19 @@ ccc             B =  PAXIS /(BBB * BETAP) * B1
              PSI(4*(I-1)+K) = PSIOLD(4*(I-1)+K)
           ENDDO
         ENDDO
-	if (NMG .ge. (NMESH-1)) then
-	  write(*,*) 'convergence problem, NMG=',NMG
-	endif
+        if (NMG .ge. (NMESH-1)) then
+         write(*,*) 'convergence problem, NMG=',NMG
+        endif
 
         IF (((DIFDF2.LT.ERRCUR).AND.(DABS(PAXIS-BETAP).LT.0.001*PAXIS))
      >          .OR.(NMG.EQ.NMESH-1)) THEN
            IFAIL = 0
-	   if (NMG .ge. (NMESH-1)) then
-	     IFAIL = 9
-	   endif
-	   
-	   GOTO 999
-	ENDIF
+       if (NMG .ge. (NMESH-1)) then
+         IFAIL = 9
+       endif
+       
+       GOTO 999
+       ENDIF
 
         CALL INIGAM
 
@@ -1202,9 +1199,9 @@ c        DPSIDRHO = 2.* RHO(I) * CTSURF / (QPSI(I) * RADIUS**2)
         R2M(I)  = ZJJ7(I) / (ZJJ5(I) * DPSIDRHO**2) * (2.D0*PI*R0*B0)**2
         OOR(I)  = ZJJ8(I)    / ZJJ5(I) / R0
         OOR2(I) = ZJJ4(I) / ZJJ5(I) / R0**2
-	RAV(I)  = ZJJ10(I)   / ZJJ5(I) * R0
-	DRHOAV(I) = ZJJ9(I)  / ZJJ5(I) / DPSIDRHO * (2.D0*PI*R0*B0)
-	DRHOOR(I) = ZJJ12(I) / ZJJ5(I) / DPSIDRHO * (2.D0*PI*B0)
+        RAV(I)  = ZJJ10(I)   / ZJJ5(I) * R0
+        DRHOAV(I) = ZJJ9(I)  / ZJJ5(I) / DPSIDRHO * (2.D0*PI*R0*B0)
+        DRHOOR(I) = ZJJ12(I) / ZJJ5(I) / DPSIDRHO * (2.D0*PI*B0)
         R2(I) = ZJJ13(I) / ZJJ5(I) * R0**2
         DRHO2OB2(I) = ZJJ15(I) / ZJJ5(I) / DPSIDRHO**2 *(2.D0*PI*R0)**2
 
@@ -1218,7 +1215,7 @@ c        R3OTAU(I)   = -ZJJ17(I) / ZJJ5(I) / (DPSIDRHO / B0) * R0
         R3OTAU(I)= -ZJJ17(I)/ZJJ5(I)/(DPSIDRHO / (2.*PI*B0)) * R0**3
 
 
-	FTRA(I) = 1. - FCIRC(I)
+        FTRA(I) = 1. - FCIRC(I)
 
         AVC(I)    = AVC(I) * B0 / (ZMU0 * R0)
         TAU(I)    = - ZJJ11(I) / ZJJ5(I) * DPSIDRHO/(2.*PI) / (B0)
@@ -1254,12 +1251,12 @@ c        R3OTAU(I)   = -ZJJ17(I) / ZJJ5(I) / (DPSIDRHO / B0) * R0
       DO I=2,NRMAP
         DO J=1,NPMAP
           NODE = (NRMAP-I)*NPMAP + J
- 	  XR    = XX(2,NODE)
-	  YR    = YY(2,NODE)
-	  XS    = XX(3,NODE)
-	  YS    = YY(3,NODE)
-	  PSIR  = PSI(4*(NODE-1)+2) 
-	  EJAC  = (XR*YS-XS*YR)
+      XR    = XX(2,NODE)
+      YR    = YY(2,NODE)
+      XS    = XX(3,NODE)
+      YS    = YY(3,NODE)
+      PSIR  = PSI(4*(NODE-1)+2) 
+      EJAC  = (XR*YS-XS*YR)
           PSIX  =   PSIR * YS / EJAC  * (CPSURF/RADIUS) 
           PSIY  = - PSIR * XS / EJAC  * (CPSURF/RADIUS) 
 
@@ -1268,8 +1265,8 @@ c        R3OTAU(I)   = -ZJJ17(I) / ZJJ5(I) / (DPSIDRHO / B0) * R0
 
           IF (IAS.EQ.0) THEN
              JSYM = NPMAP * 2 - J
- 	     BPR(I,JSYM) = - BPR(I,J)
-	     BPZ(I,JSYM) = + BPZ(I,J)
+         BPR(I,JSYM) = - BPR(I,J)
+         BPZ(I,JSYM) = + BPZ(I,J)
           ENDIF
         ENDDO  
       ENDDO                            
@@ -1323,7 +1320,7 @@ c      WRITE(*,*) ' HELENA ENDS OK',TAU(NR)
           z0=z(i)         
           jmax = i
         endif
-	if (r(i).lt. rmin) then
+        if (r(i).lt. rmin) then
           rmin=r(i)
           jmin = i
         endif
@@ -1333,31 +1330,30 @@ c      do i=1,ntht
 c        theta(i) = atan2(z(i)-z0,r(i)-r0)
 c        if (theta(i).lt.0.D0) then
 c          theta(i) = theta(i)+2.*pi
-c	endif
+c   endif
 c
 c       protection en fin de contour, theta pouvant etre nul
 c       V. Basiuk, 30 octobre 2001
-c	
+c   
 c        if (i .eq. ntht .and. theta(i).eq.0.D0) then
 c          theta(i) = theta(i)+2.*pi
-c	     endif
+c        endif
 c      enddo
       do i=1,ntht
         theta(i) = atan2(z(i)-z0,r(i)-r0)
         if (theta(i).lt.0.D0) then
           theta(i) = theta(i)+2.*pi
-	endif	
+        endif
       enddo
 c
 c       protection en fin de contour, theta pouvant etre nul
 c       V. Basiuk, 30 octobre 2001
-c	
+c   
 
       do i=2,ntht
         if (theta(i+1) .lt. theta(i) ) theta(i+1) = theta(i+1) + 2.*PI
       enddo
-      
-C      write(*,*) 'avant spline r'
+
       call spline(ntht,theta,r,0.D0,0.D0,2,ar,br,cr,dr)
       rmin = spwert(ntht,PI,ar,br,cr,dr,theta,dummy)
       r0 = (rmin+rmax)/2.D0
@@ -1366,32 +1362,29 @@ C      write(*,*) 'avant spline r'
       do i=1,ntht
         theta(i) = atan2(z(i)-z0,r(i)-r0)
         if (theta(i).lt.0.D0) then
-          theta(i) = theta(i)+ 2 .* pi
-	endif
+          theta(i) = theta(i)+2.*pi
+      endif
         radius(i) = sqrt((r(i)-r0)**2 + (z(i)-z0)**2) / amin
       enddo
       do i=1,ntht-1
          if (theta(i).gt.theta(i+1)) theta(i+1)=theta(i+1)+2.*pi
-         if (theta(i).eq.theta(i+1)) theta(i+1)=theta(i+1)+1.d-6
-C         write(*,*) 'theta(',i,':',i+1,')=',theta(i),theta(i+1)  
       enddo
       do i=1,ntht
         theta(i+ntht) = theta(i) + 2.*pi
-	radius(i+ntht) = radius(i)
+        radius(i+ntht) = radius(i)
       enddo
       do i=1,ntht
         theta(i+2*ntht)  = theta(i) + 4.*pi
-	radius(i+2*ntht) = radius(i)
+        radius(i+2*ntht) = radius(i)
       enddo
-C      write(*,*) 'avant spline radius'
       call spline(3*ntht,theta,radius,0.D0,0.D0,2,ar,br,cr,dr)
 
       NP=MF
       NTHT3 = 3*NTHT
-      DO i=1,NP
-        angle = 2.D0 * DBLE(i-1)/DBLE(NP) * PI + 2.D0*PI 
-c        angle = 2.D0 * DBLE(i-1)/DBLE(NP) * PI + 2.D0*PI + theta(1)
-        radius(i) = spwert(NTHT3,angle,ar,br,cr,dr,theta,dummy)
+      DO ii=1,NP
+        angle = 2.D0 * DBLE(ii-1)/DBLE(NP) * PI + 2.D0*PI 
+c        angle = 2.D0 * DBLE(ii-1)/DBLE(NP) * PI + 2.D0*PI + theta(1)
+        radius(ii) = spwert(NTHT3,angle,ar,br,cr,dr,theta,dummy)
       ENDDO
       call RFT2(RADIUS,NP,1)
 
@@ -2048,7 +2041,7 @@ C--------------------------- change theta grid to constant arclenght
         CALL MESHAC2(NR,SG,DSG,DDSG,XR1,SIG1)   
         NRDONE = NR
         XR1DONE = XR1
-	SIG1DONE = SIG1                           
+        SIG1DONE = SIG1                           
       ELSE                                                              
         DO I=1,NR                                                       
           SG(I)  = dble(I-1)/dble(NR-1)                               
@@ -2206,25 +2199,25 @@ C-----------------------------------------------------------------------
           INDEX(IJ1) = IJN                                              
           DO J=2,(NP-1)/2+1                                             
             JN = 2*(J-1)                                                
-	    IJ1 = (I-1)*NP     + J                                             
-	    IJN = (I-1)*(NP-1) + JN                                            
-	    INDEX(IJ1) = IJN                                                   
+        IJ1 = (I-1)*NP     + J                                             
+        IJN = (I-1)*(NP-1) + JN                                            
+        INDEX(IJ1) = IJN                                                   
           ENDDO                                                         
-	  DO J=(NP-1)/2+2,NP                                                   
-	    JN = 2*(NP-J)+1                                                    
-	    IJ1 = (I-1)*NP     + J                                             
-	    IJN = (I-1)*(NP-1) + JN                                            
-	    INDEX(IJ1) = IJN                                                   
+      DO J=(NP-1)/2+2,NP                                                   
+        JN = 2*(NP-J)+1                                                    
+        IJ1 = (I-1)*NP     + J                                             
+        IJN = (I-1)*(NP-1) + JN                                            
+        INDEX(IJ1) = IJN                                                   
           ENDDO                                                         
         ENDDO                                                           
       ELSE                                                              
         DO I=1,NR                                                       
-	  DO J=1,NP                                                            
-	    IJ1 = (I-1)*NP + J                                                 
-	    INDEX(IJ1) = IJ1                                                   
-	  ENDDO                                                                
-	ENDDO                                                                  
-      ENDIF	                                                            
+      DO J=1,NP                                                            
+        IJ1 = (I-1)*NP + J                                                 
+        INDEX(IJ1) = IJ1                                                   
+      ENDDO                                                                
+      ENDDO                                                                  
+      ENDIF                                                             
 C------------------------------------- NELM ELEMENTS ------------------ 
       DO 10 I=1,4*NR*NP                                                 
         DO 20 J=1,KKLDA                                                 
@@ -2931,19 +2924,19 @@ C------------------------------INVERSE OF INDEX IN FORMKQ TO RESTORE
           J  = 1                                                        
           JN = 1                                                        
           IJ1 = (I-1)*NP     + J                                        
-	  IJN = (I-1)*(NP-1) + JN                                              
-	  INDEX(IJN) = IJ1                                                     
+      IJN = (I-1)*(NP-1) + JN                                              
+      INDEX(IJN) = IJ1                                                     
           DO J=2,(NP-1)/2+1                                             
             JN = 2*(J-1)                                                
-	    IJ1 = (I-1)*NP     + J                                             
-	    IJN = (I-1)*(NP-1) + JN                                            
-	    INDEX(IJN) = IJ1                                                   
+        IJ1 = (I-1)*NP     + J                                             
+        IJN = (I-1)*(NP-1) + JN                                            
+        INDEX(IJN) = IJ1                                                   
           ENDDO                                                         
-	  DO J=(NP-1)/2+2,NP-1                                                 
-	    JN = 2*(NP-J)+1                                                    
-	    IJ1 = (I-1)*NP     + J                                             
-	    IJN = (I-1)*(NP-1) + JN                                            
-	    INDEX(IJN) = IJ1                                                   
+      DO J=(NP-1)/2+2,NP-1                                                 
+        JN = 2*(NP-J)+1                                                    
+        IJ1 = (I-1)*NP     + J                                             
+        IJN = (I-1)*(NP-1) + JN                                            
+        INDEX(IJN) = IJ1                                                   
           ENDDO                                                         
         ENDDO                                                           
       ENDIF                                                             
@@ -2978,15 +2971,15 @@ c-------------- restore to simple clockwise numbering
         ENDDO                                                           
         DO I=1,NR*(NP-1)                                                
           DO K=1,4                                                      
-	    IK = 4*(I-1)+K                                                     
-	    IKN = 4*(INDEX(I)-1)+K                                             
+        IK = 4*(I-1)+K                                                     
+        IKN = 4*(INDEX(I)-1)+K                                             
             PSI(IKN) = QQ(IK)                                           
           ENDDO                                                         
         ENDDO                                                           
         DO I=1,NR                                                       
           DO K=1,4                                                      
-	    IK  = 4*(I-1)*NP + K                                               
-	    IK2 = 4*(I-1)*NP + 4*(NP-1) + K                                    
+        IK  = 4*(I-1)*NP + K                                               
+        IK2 = 4*(I-1)*NP + 4*(NP-1) + K                                    
             PSI(IK2) = PSI(IK)                                          
           ENDDO                                                         
         ENDDO                                                           
@@ -3083,7 +3076,7 @@ c        endif
             NNAX = NAXIS                                                
             RAX = R                                                     
             SAX = S  
-	    IFAIL2 = 0                                                   
+        IFAIL2 = 0                                                   
           ENDIF     
         ENDIF                                                           
       ENDDO     
@@ -3112,7 +3105,7 @@ C------------------------------------- QUAD. EQ FOR R VALUE AT MINIMUM -
           BB =  ( - PSIMR + PSIPR ) / 2.D0                                
           CC =  ( - 3.D0*PSIM - PSIMR + 3.D0*PSIP - PSIPR) / 4.D0               
           DET = BB*BB - 4.D0*AA*CC   
-	  IF (DET.GE.0.D0) THEN
+      IF (DET.GE.0.D0) THEN
             R  = ROOT(AA,BB,CC,DET,1.D0)                                    
             IF (DABS(R).GT.1.+1.D-8) THEN                                  
               R = ROOT(AA,BB,CC,DET,-1.D0)                                  
@@ -3126,10 +3119,10 @@ C-------- THE DSIGN OF R CHANGES FOR ELEMENTS ON THE LEFT  (SEE REMESH) -
               NAX1 = N1                                                   
               NAX2 = N2                                                   
               RAX = R                                                     
-	      SAX = -1.D0                                                          
+          SAX = -1.D0                                                          
 c            WRITE(*,*) 'LOCAL MINIMUM AT XAXIS = ',XAXIS              
             ENDIF
-	  ENDIF
+      ENDIF
         ENDIF                                                           
       ENDDO                                                             
       DO  N=NP-1, (NR-1)*(NP-1), NP-1                                   
@@ -3145,7 +3138,7 @@ C------------------------------------- QUAD. EQ FOR R VALUE AT MINIMUM -
           BB =  ( - PSIMR + PSIPR ) / 2.D0                                
           CC =  ( - 3.D0*PSIM - PSIMR + 3.D0*PSIP - PSIPR) / 4.D0               
           DET = BB*BB - 4.D0*AA*CC         
-	  IF (DET.GE.0.D0) THEN
+      IF (DET.GE.0.D0) THEN
             R  = ROOT(AA,BB,CC,DET,1.D0)                                    
             IF (DABS(R).GT.1.D0+1.D-8) THEN                                  
               R = ROOT(AA,BB,CC,DET,-1.D0)                                  
@@ -3159,10 +3152,10 @@ C-------- THE DSIGN OF R CHANGES FOR ELEMENTS ON THE LEFT  (SEE REMESH) -
               NAX1 = N1                                                   
               NAX2 = N2                                                   
               RAX = R                                                     
-	      SAX = 1.D0                                                           
+          SAX = 1.D0                                                           
 c             WRITE(*,*) 'LOCAL MINIMUM AT XAXIS = ',XAXIS              
             ENDIF  
-	  ENDIF
+      ENDIF
         ENDIF                                                           
       ENDDO                                                             
       YAXIS = 0.D0   
@@ -3321,17 +3314,17 @@ C      write(*,*) ' SIG1DONE,SIG1 : ',SIG1DONE,SIG1
      >                        .OR.(SIG1DONE.NE.SIG1)) THEN
             CALL MESHAC2(NRNEW,SG,DSG,DDSG,XR1,SIG1)
             NRDONE = NRNEW
-	    XR1DONE = XR1
-	    SIG1DONE = SIG1
+        XR1DONE = XR1
+        SIG1DONE = SIG1
 C             write(*,*) ' (2) xr1=',xr1,sig1,nrnew
-	  ENDIF
+      ENDIF
           DO I=1,NRNEW
             PSIKN(NRNEW-I+1)   = SG(I)**2
 C            write(*,*) 'i=',i,'SG(I)**2=',PSIKN(NRNEW-I+1)
             DPSIKN(NRNEW-I+1)  = 2.D0*SG(I) * DSG(I)
             DDPSIKN(NRNEW-I+1) = 2.D0*SG(I) * DDSG(I) + 2.D0*DSG(I)**2
             RADPSI(NRNEW-I+1)  =  REAL(I-1)/REAL(NRNEW-1)
-	  ENDDO
+      ENDDO
       ELSE 
         DO  I=1,NRNEW
           RPSI =  dble(I-1)/dble(NRNEW-1)                                 
@@ -3340,7 +3333,7 @@ C            write(*,*) 'i=',i,'SG(I)**2=',PSIKN(NRNEW-I+1)
           DPSIKN(NRNEW-I+1)  = 2.D0*RPSI 
           DDPSIKN(NRNEW-I+1) = 2.D0                              
           RADPSI(NRNEW-I+1)  = RPSI   
-	ENDDO
+      ENDDO
       ENDIF
                                                                         
 C      DO 5 I=1,NRNEW                                                    
@@ -3371,21 +3364,21 @@ C------------------------- UPDATE OLD MESH FOR THE FIRST ITERATION ----
       DO I=1,NR
         IF (XAXIS .GT. 0.) THEN
           IELM = NAX - (I-1)*(NP-1) 
-	ELSE
-	  IELM = (I-1) * (NP-1)  + 1
-	ENDIF
-	IF ((IELM .GT. 0). AND. (IELM .LE. (NR-1)*(NP-1))) THEN 
-	  ISEARCH(IS+1) = IELM
-	  IS = IS + 1
-	ENDIF
+        ELSE
+          IELM = (I-1) * (NP-1)  + 1
+        ENDIF
+        IF ((IELM .GT. 0). AND. (IELM .LE. (NR-1)*(NP-1))) THEN 
+          ISEARCH(IS+1) = IELM
+          IS = IS + 1
+        ENDIF
       ENDDO  
       IF (XAXIS .LT. 0.) THEN
         DO I=1,NR
-	  IELM = NAX + (I-1)*(NP-1)
-	  IF ((IELM .GT. 0). AND. (IELM .LE. (NR-1)*(NP-1))) THEN 
-	    ISEARCH(IS+1) = IELM
-	    IS = IS + 1
-	  ENDIF
+      IELM = NAX + (I-1)*(NP-1)
+      IF ((IELM .GT. 0). AND. (IELM .LE. (NR-1)*(NP-1))) THEN 
+        ISEARCH(IS+1) = IELM
+        IS = IS + 1
+      ENDIF
         ENDDO
       ENDIF  
       NSEARCH = IS                                                                            
@@ -3444,7 +3437,7 @@ C------------------------------------- QUAD. EQ FOR R VALUE AT MINIMUM -
      >                   XXOLD(1,N3),XXOLD(1,N4),                       
      >                   RR,SAX,ZX,DXR,DXS)                             
 
-	         IF (ZX.LT.XAXIS) THEN                                       
+             IF (ZX.LT.XAXIS) THEN                                       
 c              WRITE(*,*) ' NODE ON WRONG SIDE : ',ZX,XAXIS,R2             
               RR = R2                                                   
               CALL INTERP2(PSIOLD(4*(N1-1)+1),PSIOLD(4*(N2-1)+1),       
@@ -3464,8 +3457,8 @@ c------------------ special case psi=1.
           ENDIF                                                         
    40   CONTINUE                                                        
 c        WRITE(*,*) ' STARTING VALUE NOT FOUND : ',PSIVAL,RR,PS          
-	IFAIL=1
-	RETURN      
+        IFAIL=1
+        RETURN      
    45   CONTINUE                                                        
 c--------------------------- starting position found ----------------   
         CALL INTERP2(YYOLD(1,N1),YYOLD(1,N2),                           
@@ -3482,13 +3475,13 @@ C----------------------------- trace fluxsurface to find theta values
         THT2 = THT0                                                     
         ITMAX = 5000                                                    
         ITTEST = 0                                                      
-	NOBRACK = .TRUE.                                                       
+        NOBRACK = .TRUE.                                                       
         DO 50 J=1,NPNEW                                                 
-	  If (IAS.EQ.1) THEN                                                   
+      If (IAS.EQ.1) THEN                                                   
             JINDEX = MOD(INT(THT0/(2.D0*PI)*NPNEW) + J,NPNEW)+1           
-	  ELSE                                                                 
-	    JINDEX = J                                                         
-	  ENDIF                                                                
+      ELSE                                                                 
+        JINDEX = J                                                         
+      ENDIF                                                                
           THTVAL = THTKN(JINDEX)                                        
           FOUND = .FALSE.                                               
                                                                         
@@ -3542,7 +3535,7 @@ C                WRITE(*,*) ' NODE ON WRONG SIDE : ',ZX,XAXIS
   145     CONTINUE                                                      
                                                                         
                                                                         
-      	  DO ITN=1,ITMAX                                                 
+          DO ITN=1,ITMAX                                                 
             N1 = NODENO(NN,1)                                           
             N2 = NODENO(NN,2)                                           
             N3 = NODENO(NN,3)                                           
@@ -3560,8 +3553,8 @@ C                WRITE(*,*) ' NODE ON WRONG SIDE : ',ZX,XAXIS
             IF (NOBRACK) THEN                                           
               THT1 = THT2                                               
               THT2 = THT                                                
-	    ELSEIF (FOUND) THEN                                                
-	      THT1 = THT                                                       
+        ELSEIF (FOUND) THEN                                                
+          THT1 = THT                                                       
             ENDIF  
             IF (((DABS(THTVAL-THT).LT.TOLTHT) .OR.                       
      >           (DABS(THTVAL-THT+2.D0*PI) .LT. TOLTHT) .OR.                
@@ -3653,7 +3646,7 @@ C-------------------------------- WATCH MINUS DSIGN FROM R ORIENTATION --
      >                    .AND.(THT1-2.D0*PI.LE.THTVAL+1.D-5)              
      >                    .AND.(THT2.GE.THTVAL-1.D-5)) )  THEN          
                                                                    
-   47         FORMAT(' THETA BRACK : ',3E14.6)	                         
+   47         FORMAT(' THETA BRACK : ',3E14.6)                           
 c                                                                       
 c----------------------------- theta value bracketed ------------       
 c                                                                       
@@ -3739,9 +3732,9 @@ c
             ENDIF                                                       
           ENDDO                                                         
           WRITE(*,43) I,J,PSIVAL,THTVAL 
-	  IFAIL = 1
-	  WRITE(*,*) ' RETURN FROM REMESH IFAIL : ',IFAIL
-	  RETURN     
+      IFAIL = 1
+      WRITE(*,*) ' RETURN FROM REMESH IFAIL : ',IFAIL
+      RETURN     
    50   CONTINUE                                                        
 C        WRITE(*,*) ' MAX NUMBER ITERATIONS : ',ITTEST,DD               
    30 CONTINUE                                                          
@@ -3841,9 +3834,9 @@ ccc      WRITE(*,3) CX,CY
    60 CONTINUE                                                          
       DO 80 I=1,NRNEW*NPNEW                                             
         IF (.NOT. CHAGR(I)) THEN
-	   WRITE(*,*) 'NODE MISSED AT I = ',I         
-	   IFAIL = I
-	ENDIF
+       WRITE(*,*) 'NODE MISSED AT I = ',I         
+       IFAIL = I
+      ENDIF
    80 CONTINUE                                                          
       NR = NRNEW                                                        
       NP = NPNEW                                                        
@@ -4425,31 +4418,31 @@ C------------------------------------- 4 POINT GAUSSIAN INT. IN S -----
                                                                         
           DL = DSQRT(XS**2+YS**2)                                        
           BIGR = (1.D0 + EPS * X)                                         
-	  GRADPS2 = PSR**2 * (XS**2 + YS**2) / XJAC**2                         
+      GRADPS2 = PSR**2 * (XS**2 + YS**2) / XJAC**2                         
           DSSDR = DABS(PSR) / (2.D0*DSQRT(DABS(PS)))                              
-c------------------------------------------------ normalisations	       
-	  GRADPS2 = GRADPS2 * (CPSURF/RADIUS)**2                               
-	  XJAC    = XJAC * RADIUS**2                                           
-	  BIGR    = BIGR                                                       
-	  DL      = RADIUS * DL                                                
-	  PSR     = CPSURF * PSR                                               
+c------------------------------------------------ normalisations           
+      GRADPS2 = GRADPS2 * (CPSURF/RADIUS)**2                               
+      XJAC    = XJAC * RADIUS**2                                           
+      BIGR    = BIGR                                                       
+      DL      = RADIUS * DL                                                
+      PSR     = CPSURF * PSR                                               
           PSRR    = CPSURF * PSRR                                       
-	  XJACR   = XJACR  * RADIUS**2                                         
+      XJACR   = XJACR  * RADIUS**2                                         
 c---------------------------------------------------------------        
                                                                         
-	  ZJDCHI = BIGR * XJAC / DABS(PSR)                                      
-	                                                                       
-	  SUMJ1 = SUMJ1 - WS * ZJDCHI / (GRADPS2 * BIGR**2)                    
-	  SUMJ2 = SUMJ2 - WS * ZJDCHI / (GRADPS2)                              
-	  SUMJ3 = SUMJ3 - WS * ZJDCHI * (BIGR**2 / GRADPS2)                    
-	  SUMJ4 = SUMJ4 - WS * ZJDCHI / BIGR**2                                
-	  SUMJ5 = SUMJ5 - WS * ZJDCHI                                          
-	  SUMJ6 = SUMJ6 - WS * ZJDCHI * GRADPS2 / BIGR**2                      
+      ZJDCHI = BIGR * XJAC / DABS(PSR)                                      
+                                                                           
+      SUMJ1 = SUMJ1 - WS * ZJDCHI / (GRADPS2 * BIGR**2)                    
+      SUMJ2 = SUMJ2 - WS * ZJDCHI / (GRADPS2)                              
+      SUMJ3 = SUMJ3 - WS * ZJDCHI * (BIGR**2 / GRADPS2)                    
+      SUMJ4 = SUMJ4 - WS * ZJDCHI / BIGR**2                                
+      SUMJ5 = SUMJ5 - WS * ZJDCHI                                          
+      SUMJ6 = SUMJ6 - WS * ZJDCHI * GRADPS2 / BIGR**2                      
           SUMJ7 = SUMJ7 - WS * ZJDCHI * GRADPS2                         
           SUMJ8 = SUMJ8 - WS * ZJDCHI / BIGR                            
           SUMJ9 = SUMJ9 - WS * ZJDCHI * SQRT(GRADPS2)
-	  SUMJ10 = SUMJ10 - WS * ZJDCHI * BIGR
-	  SUMJ11 = SUMJ11 - WS * ZJDCHI * XJAC / (DABS(PSR)*DTDS)
+      SUMJ10 = SUMJ10 - WS * ZJDCHI * BIGR
+      SUMJ11 = SUMJ11 - WS * ZJDCHI * XJAC / (DABS(PSR)*DTDS)
           SUMJ12 = SUMJ12 - WS * ZJDCHI * SQRT(GRADPS2)/BIGR
           SUMJ13 = SUMJ13 - WS * ZJDCHI * BIGR**2
           SUMJ14 = SUMJ14 - WS * ZJDCHI * BIGR**2 / 
@@ -4459,16 +4452,16 @@ c---------------------------------------------------------------
           SUMJ17 = SUMJ17 - WS * ZJDCHI * BIGR**3 /
      >                      (XJAC / (DABS(PSR)*DTDS))
 
-	  SUMQ  = SUMQ  - WS * XJAC / ( BIGR * DABS(PSR))                
+      SUMQ  = SUMQ  - WS * XJAC / ( BIGR * DABS(PSR))                
                                                                         
           SUMQR = SUMQR + PSRR * XJAC / ((PSR**2)*BIGR) * WS            
           SUMQR = SUMQR - XJACR / (BIGR*PSR)            * WS            
           SUMQR = SUMQR + XJAC*EPS*XR/((BIGR**2)*PSR)   * WS            
-	                                                                       
-	  SUMJ5R = SUMJ5R + XJAC  * BIGR * PSRR / (PSR**2) * WS                
-	  SUMJ5R = SUMJ5R - XJACR * BIGR / PSR             * WS                
-	  SUMJ5R = SUMJ5R - XJAC  * EPS *XR / PSR          * WS                
-	                                                                       
+                                                                           
+      SUMJ5R = SUMJ5R + XJAC  * BIGR * PSRR / (PSR**2) * WS                
+      SUMJ5R = SUMJ5R - XJACR * BIGR / PSR             * WS                
+      SUMJ5R = SUMJ5R - XJAC  * EPS *XR / PSR          * WS                
+                                                                           
 c-----------------------------------------------------------------      
                                                                         
           B02 = (FF(NR-I+1)/BIGR)**2 + GRADPS2/BIGR**2                  
@@ -4476,7 +4469,7 @@ c-----------------------------------------------------------------
           SUMJ15 = SUMJ15 - WS * ZJDCHI * GRADPS2 / B02
           SUMB0  = SUMB0  - WS * ZJDCHI * B02                           
           SUMBOP = SUMBOP - WS * ZJDCHI * B02 / GRADPS2                 
-	  SUMOR2 = SUMOR2 - WS * ZJDCHI / BIGR**2                              
+      SUMOR2 = SUMOR2 - WS * ZJDCHI / BIGR**2                              
           SUMOB  = SUMOB  - WS * ZJDCHI / B02                           
                                                                         
           XLENGTH = XLENGTH + RADIUS**2 * DSQRT(XS**2 + YS**2)*WS      
@@ -4497,13 +4490,13 @@ c-----------------------------------------------------------------
         ZPS(NI) = PS                                                    
                                                                         
         ZJJ1(NI) = FACTAS * SUMJ1 / (2.D0*PI)                             
-	ZJJ2(NI) = FACTAS * SUMJ2 / (2.D0*PI)                                    
+        ZJJ2(NI) = FACTAS * SUMJ2 / (2.D0*PI)                                    
         ZJJ3(NI) = FACTAS * SUMJ3 / (2.D0*PI)                             
-	ZJJ4(NI) = FACTAS * SUMJ4 / (2.D0*PI)                                    
+        ZJJ4(NI) = FACTAS * SUMJ4 / (2.D0*PI)                                    
         ZJJ5(NI) = FACTAS * SUMJ5 / (2.D0*PI)                             
-	ZJJ6(NI) = FACTAS * SUMJ6 / (2.D0*PI)                                    
-	ZJJ7(NI) = FACTAS * SUMJ7 / (2.D0*PI)                                    
-	ZJJ8(NI) = FACTAS * SUMJ8 / (2.D0*PI)                                    
+        ZJJ6(NI) = FACTAS * SUMJ6 / (2.D0*PI)                                    
+        ZJJ7(NI) = FACTAS * SUMJ7 / (2.D0*PI)                                    
+        ZJJ8(NI) = FACTAS * SUMJ8 / (2.D0*PI)                                    
         ZJJ9(NI) = FACTAS * SUMJ9 / (2.D0*PI)          
         ZJJ10(NI)= FACTAS * SUMJ10 / (2.D0*PI)          
         ZJJ11(NI)= FACTAS * SUMJ11 / (2.D0*PI)          
@@ -4514,30 +4507,30 @@ c-----------------------------------------------------------------
         ZJJ16(NI)= FACTAS * SUMJ16 / (2.D0*PI)
         ZJJ17(NI)= FACTAS * SUMJ17 / (2.D0*PI)
              
-									
-	DJJ5(NI) = FACTAS * SUMJ5R/DSSDR  / (2.D0*PI)                            
-	                                                                       
-	ZQ(NI) = FACTAS * FF(NI) * SUMQ / (2.D0*PI)                              
+                                    
+        DJJ5(NI) = FACTAS * SUMJ5R/DSSDR  / (2.D0*PI)                            
+                                                                           
+        ZQ(NI) = FACTAS * FF(NI) * SUMQ / (2.D0*PI)                              
         DQ(NI) = DF(NI)*SUMQ + FF(NI)*SUMQR/DSSDR                       
-	DQ(NI) = DQ(NI) * FACTAS / (2.D0*PI)                                     
-	                                                                       
-	OR2AV     = FACTAS * SUMOR2 / (2.D0*PI) / ZJJ5(NI)                       
-	B02AV(NI) = FACTAS * SUMB0  / (2.D0*PI) / ZJJ5(NI)                       
-	OB2AV(NI) = FACTAS * SUMOB  / (2.D0*PI) / ZJJ5(NI)                       
+        DQ(NI) = DQ(NI) * FACTAS / (2.D0*PI)                                     
+                                                                           
+        OR2AV     = FACTAS * SUMOR2 / (2.D0*PI) / ZJJ5(NI)                       
+        B02AV(NI) = FACTAS * SUMB0  / (2.D0*PI) / ZJJ5(NI)                       
+        OB2AV(NI) = FACTAS * SUMOB  / (2.D0*PI) / ZJJ5(NI)                       
         GBAR      = FACTAS * SUMBOP / (2.D0*PI)                           
-	                                                                       
+                                                                           
         GEONC(NI) = GBAR / B02AV(NI)                                    
                                                                         
         ZJPAR(NI) = (- DP(NI) * FF(NI) - DF(NI) * B02AV(NI))            
      >            /( 2.D0*CPSURF*DSQRT(DABS(PS)))                                
                                                                         
         BIGG(NI) = FACTAS * SUMBOP / (2.D0*PI)                            
-	                                                                       
-	DIMERC(NI) = (DP(NI)*FF(NI)*ZJJ2(NI)/DQ(NI)-0.5D0)**2                  
+                                                                           
+        DIMERC(NI) = (DP(NI)*FF(NI)*ZJJ2(NI)/DQ(NI)-0.5D0)**2                  
      >     +  DP(NI)/DQ(NI)**2 * (DJJ5(NI) - DP(NI)*ZJJ3(NI))           
      >     * (FF(NI)**2 * ZJJ1(NI) + ZJJ4(NI) )                         
-	                                                                       
-	HH(NI) = FF(NI) * DP(NI)/DQ(NI) * (ZJJ2(NI)                            
+                                                                           
+        HH(NI) = FF(NI) * DP(NI)/DQ(NI) * (ZJJ2(NI)                            
      >    - ZJJ5(NI)*(ZJJ4(NI)+FF(NI)**2 * ZJJ1(NI))                    
      >    / (ZJJ6(NI) + FF(NI)**2 * ZJJ4(NI) ) )                        
                                                                         
@@ -4545,8 +4538,8 @@ c-----------------------------------------------------------------
                                                                         
         SHEAR = DSQRT(DABS(PS)) * DQ(NI) / ZQ(NI)                              
                                                                         
-   40 CONTINUE                                                          
-   41 FORMAT(I3,1P15E11.3)                                              
+   40   CONTINUE                                                          
+   41   FORMAT(I3,1P15E11.3)                                              
 c      AVC(1) = AVC(2) - (AVC(3)-AVC(2))/(ZPS(3)-ZPS(2))*ZPS(2)                                   
       IF ((IGAM.GE.1).AND.(IGAM.LE.4)) THEN                             
          CUR0 = (C+B*XAXIS*(1.D0+EPS*XAXIS/2.D0))/(1.D0+EPS*XAXIS)           
@@ -4561,7 +4554,7 @@ c      WRITE(*,*) '*I,    SS,     D_I,     D_R,     H,'
 c     >          //'       Q,   *'                                       
 c      WRITE(*,21)                                                      
 c      DO I=1,NR                                                         
-c      	WRITE(*,23) I,SQRT(ZPS(I)),-DIMERC(I),-DRMERC(I),               
+c       WRITE(*,23) I,SQRT(ZPS(I)),-DIMERC(I),-DRMERC(I),               
 c     >               HH(I),ZQ(I)                                        
 c      ENDDO                                                             
 c   21 FORMAT(' ',48('*'))                                               
@@ -4689,9 +4682,9 @@ C------------------------------------- QUAD. EQ FOR S VALUE AT MINIMUM -
           XSHIFT(NR+1-I) = XGEO - R0temp
           XELL(NR+1-I) = YTOP/XRAD(NR+1-I)     
           XTRIAPOS(NR+1-I) = -(XTOP-XGEO)
-c	       IF (I.EQ.1) then
-c			   write(*,*) ' YTOP : ',YTOP
-c		    endif
+c          IF (I.EQ.1) then
+c              write(*,*) ' YTOP : ',YTOP
+c           endif
         ENDIF
    70 CONTINUE
       DO 75 J=(NP-1)/2 , NP-1
@@ -4714,11 +4707,11 @@ C------------------------------------- QUAD. EQ FOR S VALUE AT MINIMUM -
           CALL CUB1D(XX(1,N1),XX(3,N1),XX(1,N2),XX(3,N2),S,XBOT,DUMMY)
           CALL CUB1D(YY(1,N1),YY(3,N1),YY(1,N2),YY(3,N2),S,YBOT,DUMMY)
           XTRIANEG(NR+1-I) = -(XBOT-XGEO)
-	       XELL(NR+1-I) = (XELL(NR+1-I) - YBOT/XRAD(NR+1-I))/2.
-c	       IF (I.EQ.1) then
-c			   write(*,*) ' YBOT : ',YBOT
+           XELL(NR+1-I) = (XELL(NR+1-I) - YBOT/XRAD(NR+1-I))/2.
+c          IF (I.EQ.1) then
+c              write(*,*) ' YBOT : ',YBOT
 c          endif        
-		  ENDIF
+          ENDIF
    75 CONTINUE
    80 CONTINUE
       ENDIF
@@ -4754,40 +4747,40 @@ c     >                  R,S,Y)
 c            CALL INTERP1(PSI(4*(N1-1)+1),PSI(4*(N2-1)+1),
 c     >                   PSI(4*(N3-1)+1),PSI(4*(N4-1)+1),R,S,PS)
 c            RRT(4*(J-1)+ NGS) = X 
-c	    ZZT(4*(J-1)+ NGS) = Y
+c       ZZT(4*(J-1)+ NGS) = Y
 c   30     CONTINUE
 c   20   CONTINUE
 c        IF (IAS.EQ.0) THEN
 c          RRT(4*(NP-1)+1) = X
-c	  ZZT(4*(NP-1)+1) = Y
+c     ZZT(4*(NP-1)+1) = Y
 c          DO J=1,4*(NP-1)+1
 c            FRR(J) = RRT(J)
-c	    FZZ(J) = ZZT(J)
+c       FZZ(J) = ZZT(J)
 c          ENDDO       
 c          DO J=1,4*(NP-1)-1
 c            FRR(4*(NP-1)+J+1) =  FRR(4*(NP-1)-J+1)
 c            FZZ(4*(NP-1)+J+1) = -FZZ(4*(NP-1)-J+1)
-c	  ENDDO
+c     ENDDO
 c          NPT = 8*(NP-1)
-c	ELSE
-c	  NPT = 4*(NP-1)
+c   ELSE
+c     NPT = 4*(NP-1)
 c          DO J=1,NPT
 c            FRR(J) = RRT(J)
-c	    FZZ(J) = ZZT(J)
+c       FZZ(J) = ZZT(J)
 c          ENDDO       
-c	ENDIF
+c   ENDIF
 c        CALL RFT2(FRR,NPT,1)
 c        CALL RFT2(FZZ,NPT,1)
 c   41   FORMAT(I3,E16.8)  
 
-c	XSHIFT(NR-I+1) =      FRR(1) / REAL(NPT) 
+c   XSHIFT(NR-I+1) =      FRR(1) / REAL(NPT) 
 c        XRAD(NR-I+1)   = 2. * FRR(3) / REAL(NPT)
 c        XTRIA(NR-I+1)  = 2. * FRR(5) / REAL(NPT)
-c	XR3(NR-I+1)    = 2. * FRR(7) / REAL(NPT) 
-c	XELL(NR-I+1)   = 2. * ABS(FZZ(4)) / REAL(NPT)
+c   XR3(NR-I+1)    = 2. * FRR(7) / REAL(NPT) 
+c   XELL(NR-I+1)   = 2. * ABS(FZZ(4)) / REAL(NPT)
 c     >                 / XRAD(NR-I+1)
-c	
-c	I1 = NR-I+1
+c   
+c   I1 = NR-I+1
 c        WRITE(*,11) I1,SQRT(DABS(PS)),XRAD(I1),XSHIFT(I1),
 c     >              XELL(I1),XTRIA(I1)
 c   10 CONTINUE
@@ -4876,10 +4869,10 @@ C------------------------------------- 4 POINT GAUSSIAN INT. IN S -----
           XJAC =  XR*YS - XS*YR                                         
           DL = DSQRT(XS**2+YS**2)            
           BIGR = (1.D0 + EPS * X)                                         
-	  ZJDCHI = BIGR * XJAC / DABS(PSR)  
+      ZJDCHI = BIGR * XJAC / DABS(PSR)  
           XLENGTH = XLENGTH + DL * WS                                   
           SUMC1 = SUMC1 + 1.D0/(1.D0+EPS*X)**2 * ZJDCHI * WS
-	  SUMC3 = SUMC3 + 1.D0/(1.D0+EPS*X) * ZJDCHI * WS 
+      SUMC3 = SUMC3 + 1.D0/(1.D0+EPS*X) * ZJDCHI * WS 
           IF ((IGAM.GE.1).AND.(IGAM.LE.4)) THEN                         
              SUMC2 = SUMC2 + X*(1.D0+EPS*X/2.)/(1.D0+EPS*X)**2
      >                     * ZJDCHI * WS       
@@ -4990,7 +4983,7 @@ C------------------------------------- 4 POINT GAUSSIAN INT. IN S -----
           ENDIF                                                         
    60     CONTINUE                                                      
    50   CONTINUE                                                        
-	ZPS(NR-I+1) = PS                                                       
+        ZPS(NR-I+1) = PS                                                       
         DF2TMP(NR-I+1) = (CUR0*CURPHI(PS)*XLENGTH-B*SUMC2*DPDPSI(PS))   
      >       / (C*SUMC1)                                                    
    40 CONTINUE                                                          
@@ -5067,7 +5060,7 @@ C------------------------------------- 4 POINT GAUSSIAN INT. IN S -----
           XJAC =  XR*YS - XS*YR                                         
           DL = DSQRT(XS**2+YS**2)                                        
           XLENGTH = XLENGTH + DL * WS                                   
-	  GRADPS2 = PSR**2 * (XS**2 + YS**2) / XJAC**2                         
+      GRADPS2 = PSR**2 * (XS**2 + YS**2) / XJAC**2                         
           SUMC1 = SUMC1 + DSQRT(GRADPS2)/(1.D0+EPS*X) * DL * WS            
    60     CONTINUE                                                      
    50   CONTINUE                                                        
@@ -5156,16 +5149,16 @@ C------------------------------------- 4 POINT GAUSSIAN INT. IN S -----
                                                                         
           XJAC =  XR*YS - XS*YR                                         
           BIGR = (1.D0 + EPS * X)                                         
-	  GRADPS2 = PSR**2 * (XS**2 + YS**2) / XJAC**2                         
-c------------------------------------------------ normalisations	       
-	  GRADPS2 = GRADPS2 * (CPSURF/RADIUS)**2                               
-	  XJAC    = XJAC * RADIUS**2                                           
-	  BIGR    = BIGR                                                       
-	  PSR     = CPSURF * PSR                                               
+      GRADPS2 = PSR**2 * (XS**2 + YS**2) / XJAC**2                         
+c------------------------------------------------ normalisations           
+      GRADPS2 = GRADPS2 * (CPSURF/RADIUS)**2                               
+      XJAC    = XJAC * RADIUS**2                                           
+      BIGR    = BIGR                                                       
+      PSR     = CPSURF * PSR                                               
 c---------------------------------------------------------------        
-	  ZJDCHI = BIGR * XJAC / DABS(PSR)                                      
+      ZJDCHI = BIGR * XJAC / DABS(PSR)                                      
           B02 = (FTMP(NR-I+1)/BIGR)**2 + GRADPS2/BIGR**2                
-	  SUM1  = SUM1 - WS * ZJDCHI                                           
+      SUM1  = SUM1 - WS * ZJDCHI                                           
           SUM2  = SUM2 - WS * ZJDCHI * B02                              
           SUMR  = SUMR - WS * ZJDCHI * BIGR                             
                                                                         
@@ -5174,11 +5167,11 @@ c---------------------------------------------------------------
    50   CONTINUE                                                        
         NI = NR-I+1                                                     
         SUM1 = FACTAS * SUM1 / (2.*PI)                                  
-	SUM2 = FACTAS * SUM2 / (2.*PI)                                         
+        SUM2 = FACTAS * SUM2 / (2.*PI)                                         
         SUMR = FACTAS * SUMR / (2.*PI)                                  
-	B02AV(NI) = SUM2 / SUM1                                                
+        B02AV(NI) = SUM2 / SUM1                                                
         B0MAX(NI) = DSQRT(DABS(B02MAX))                                        
-	RAV(NI)   = SUMR / SUM1                                                
+        RAV(NI)   = SUMR / SUM1                                                
    40 CONTINUE                                                          
    41 FORMAT(I3,1P15E11.3)                                              
                                                                         
@@ -5209,37 +5202,37 @@ C------------------------------------- 4 POINT GAUSSIAN INT. IN S -----
                                                                         
           XJAC =  XR*YS - XS*YR                                         
           BIGR = (1.D0 + EPS * X)                                         
-	  GRADPS2 = PSR**2 * (XS**2 + YS**2) / XJAC**2                         
-c------------------------------------------------ normalisations	       
-	  GRADPS2 = GRADPS2 * (CPSURF/RADIUS)**2                               
-	  XJAC    = XJAC * RADIUS**2                                           
-	  BIGR    = BIGR                                                       
-	  PSR     = CPSURF * PSR                                               
+      GRADPS2 = PSR**2 * (XS**2 + YS**2) / XJAC**2                         
+c------------------------------------------------ normalisations           
+      GRADPS2 = GRADPS2 * (CPSURF/RADIUS)**2                               
+      XJAC    = XJAC * RADIUS**2                                           
+      BIGR    = BIGR                                                       
+      PSR     = CPSURF * PSR                                               
 c---------------------------------------------------------------        
-	  ZJDCHI = BIGR * XJAC / DABS(PSR)                                      
+      ZJDCHI = BIGR * XJAC / DABS(PSR)                                      
           B02 = (FTMP(NR-I+1)/BIGR)**2 + GRADPS2/BIGR**2                
-	  B0 = DSQRT(DABS(B02))                                                       
-	  BM = B0MAX(NR-I+1)                                                   
-	  DO K = 1, NK                                                         
-	    ZLAM = dble(K-1)/dble(NK-1)                                      
-	    SUMK(K) = SUMK(K) - WS*ZJDCHI*DSQRT(DABS(1.-ZLAM*B0/BM))         
-	  ENDDO                                                                
+      B0 = DSQRT(DABS(B02))                                                       
+      BM = B0MAX(NR-I+1)                                                   
+      DO K = 1, NK                                                         
+        ZLAM = dble(K-1)/dble(NK-1)                                      
+        SUMK(K) = SUMK(K) - WS*ZJDCHI*DSQRT(DABS(1.-ZLAM*B0/BM))         
+      ENDDO                                                                
           SUM1  = SUM1 - WS * ZJDCHI                                    
   160     CONTINUE                                                      
   150   CONTINUE                                                        
         NI = NR-I+1                                                     
 c        DO K=1,NK                                                      
-c	  SUMK(K) = SUMK(K) / SUM1                                            
-ccc	  WRITE(*,*) I,K,SUMK(K)                                           
+c     SUMK(K) = SUMK(K) / SUM1                                            
+ccc   WRITE(*,*) I,K,SUMK(K)                                           
 c        ENDDO                                                          
 c------------------------------------------ integrate over lambda       
         SUM = 0.D0                                                        
         DO K=2,NK-1                                                     
-	  ZLAM = dble(K-1)/dble(NK-1)                                        
-	  SUM = SUM + ZLAM * SUM1 / SUMK(K)                                    
-	ENDDO                                                                  
-	FCIRC(NI) = (SUM + 0.5D0 * SUM1/SUMK(NK)) / dble(NK-1)                  
-	FCIRC(NI) = 0.75D0 * FCIRC(NI)  * B02AV(NI) / B0MAX(NI)**2               
+      ZLAM = dble(K-1)/dble(NK-1)                                        
+      SUM = SUM + ZLAM * SUM1 / SUMK(K)                                    
+      ENDDO                                                                  
+      FCIRC(NI) = (SUM + 0.5D0 * SUM1/SUMK(NK)) / dble(NK-1)                  
+      FCIRC(NI) = 0.75D0 * FCIRC(NI)  * B02AV(NI) / B0MAX(NI)**2               
 ccc        WRITE(*,41) I,SQRT(PS),B02AV(NI),B0MAX(NI),FCIRC(NI)        
   140 CONTINUE                                                          
                                                                         
@@ -5764,16 +5757,16 @@ c-----------------------------------------------------------------------
         errf=dabs(fvec(1))+dabs(fvec(2))                                        
         if(errf.le.tolf)return   
 
-	p(1) = -fvec(1)
-	p(2) = -fvec(2)                                       
+        p(1) = -fvec(1)
+        p(2) = -fvec(2)                                       
         temp = p(1)                                                     
         dis = fjac(2,2)*fjac(1,1)-fjac(1,2)*fjac(2,1)                   
         p(1) = (fjac(2,2)*p(1)-fjac(1,2)*p(2))/dis                      
         p(2) = (fjac(1,1)*p(2)-fjac(2,1)*temp)/dis                                                 
-				                        
+                                        
         errx=dabs(p(1))+dabs(p(2))   
-	x(1) = x(1) + p(1)
-	x(2) = X(2) + p(2)                                                                                       
+        x(1) = x(1) + p(1)
+        x(2) = X(2) + p(2)                                                                                       
         if(errx.le.tolx)return                                          
       enddo   
       ifail=1
@@ -6259,7 +6252,7 @@ c------------------------------------- BISECTION TO FIND FACTOR
         SHEAR = CS(IPSI)/QS(IPSI) * DQS(IPSI) 
         ALPHA = - 2.D0*QS(IPSI)**2 * P2(IPSI)/EPS
 
-	SHEAR1 = 2.D0*ZVOL(IPSI)/QS(IPSI) * DQS(IPSI)
+        SHEAR1 = 2.D0*ZVOL(IPSI)/QS(IPSI) * DQS(IPSI)
      >         / (2.D0*CS(IPSI)*ZVOLP(IPSI))
 c-------------------------------------------- Lao's definition
 c        ALPHA1 = -P2(IPSI)/(2.*CS(IPSI)) * ZVOLP(IPSI) / CPSURF**2
@@ -6268,18 +6261,18 @@ c
 c--------------------------------------------- use rho as radius
         RHO = SQRT(ZVOL(IPSI)/ZVOL(NR))
         DRHODS =  CS(IPSI)/ (RHO*ZVOL(NR)) * ZVOLP(IPSI)  
-	ALPHA2 = ALPHA / DRHODS
+        ALPHA2 = ALPHA / DRHODS
 
 c----------------------------------------- Lao corrected? Needs check
 c        ALPHA11 = -P2(IPSI)/(2.*CS(IPSI)) * ZVOLP(IPSI) / CPSURF**2
 c     >          / (PI*PI*EPS) * RHO * ZVOL(NR) *EPS**4
 c----------------------------------------------------------------------
-	
-	FMARG = (FSTAB+FUNST)/2.D0
+    
+        FMARG = (FSTAB+FUNST)/2.D0
 C----------------------------------- temporary fix for negative shear and IAS=1
         IF ((SHEAR.LE.0.D0).AND.(IAS.EQ.1)) THEN   
-	  FMARG = 0.D0
-	  INIBAL =  ' STABLE'
+        FMARG = 0.D0
+        INIBAL =  ' STABLE'
         ENDIF
         BALCRIT(IPSI) = FMARG
 c        WRITE(20,11) IPSI,CS(IPSI)**2,RHO,QS(IPSI),SHEAR,SHEAR1,
@@ -6644,7 +6637,7 @@ c      USE COMMAX ?
       PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
-c parametres MISHKA		              
+c parametres MISHKA                   
       PARAMETER (NCHIMAX=1026)                                                       
       PARAMETER (NVPSIMX=101, NVCHIMX=1026)                             
       PARAMETER (NPSIMAX=NRMMAX)                             
@@ -6735,7 +6728,7 @@ c      USE COMMAX ?
       PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
-c parametres MISHKA		              
+c parametres MISHKA                   
       PARAMETER (NCHIMAX=1026)                                                       
       PARAMETER (NVPSIMX=101, NVCHIMX=1026)                             
       PARAMETER (NPSIMAX=NRMMAX)                             
@@ -6902,7 +6895,7 @@ c        WRITE(20,*) '* PRESSURE PROFILE BEFORE NORM.  :  *'
 c        WRITE(20,*) '*************************************'
 c        WRITE(20,91) (P0(I)*EPS/ALFA**2,I=1,NR)
 c        WRITE(20,*) '*************************************'
-c	WRITE(20,*)
+c   WRITE(20,*)
 c      ENDIF
 c   91 FORMAT(4E16.8)
       PAX = P0(1)*EPS/(ALFA*ALFA)
@@ -7136,7 +7129,7 @@ C------------------------------------ CHECK JACOBIAN -----------------
                 DUM2 = GEM11(NCHI+NOG) * GRCHI2 / (RADIUS**2)                 
                 DUM3 = GEM12(NCHI+NOG)                                        
                 DUM4 = DUM2 - DUM3*DUM3
-		ERRJ = ABS(DUM4-DUM1)
+        ERRJ = ABS(DUM4-DUM1)
                 IF (ERRJ.GT.MAXERR) THEN
                   MAXERR=ERRJ
                   IERR = I
@@ -7168,10 +7161,10 @@ C---------------------------------------------------------------------
      >            -CCHI(3,NOP))/4.D0
      >       - ZCHI
               CALL SOLVP3(A0,A1,A2,A3,S,S2,S3,IFAIL)
-	      IF ((IAS.EQ.0).AND.(J.EQ.NCHI)) THEN
-	        S = 1.D0
-		IFAIL=0
-	      ENDIF	
+          IF ((IAS.EQ.0).AND.(J.EQ.NCHI)) THEN
+            S = 1.D0
+        IFAIL=0
+          ENDIF 
               IF (IFAIL.EQ.0) THEN
                 SCHI((I-1)*NCHI+J) = S
                 IJCHI((I-1)*NCHI+J) = K
@@ -7225,7 +7218,7 @@ C------------------------------------ CHECK JACOBIAN -----------------
                 DUM2 = GEM11(NCHI+NOG) * GRCHI2 / (RADIUS**2)                 
                 DUM3 = GEM12(NCHI+NOG)                                        
                 DUM4 = DUM2 - DUM3*DUM3
-		ERRJ = ABS(DUM4-DUM1)
+        ERRJ = ABS(DUM4-DUM1)
                 IF (ERRJ.GT.MAXERR) THEN
                   MAXERR=ERRJ
                   IERR = I
@@ -7303,9 +7296,9 @@ C---------------------------------------- PLOT PROFILES --------------
 c      DO 65 I=1,NR
 c        IF (IAS.EQ.1) THEN
 c          ILEFT = (I-1)*NP + (NP+1)/2
-c	ELSE 
-c	  ILEFT = (I-1)*NP + NP
-c	ENDIF  
+c   ELSE 
+c     ILEFT = (I-1)*NP + NP
+c   ENDIF  
 c        IRIGHT= (I-1)*NP + 1
 c        XL = XX(1,ILEFT)
 c        XR = XX(1,IRIGHT)
@@ -7325,9 +7318,9 @@ c   65 CONTINUE
 c      DO 100 I=1,NR
 c        IF (IAS.EQ.1) THEN
 c          ILEFT = (I-1)*NP + (NP+1)/2
-c	ELSE 
-c	  ILEFT = (I-1)*NP + NP
-c	ENDIF  
+c   ELSE 
+c     ILEFT = (I-1)*NP + NP
+c   ENDIF  
 c        IRIGHT= (I-1)*NP + 1
 c        XPLOT(I) = XX(1,ILEFT)
 c        XPLOT(2*NR-I) = XX(1,IRIGHT)
