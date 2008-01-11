@@ -1,10 +1,19 @@
 Fortran based mex-files are different for 64 or 32 bits processors. 
 Fortran source files whose names end by _64b are for 64 bits processors. 
-In order to use mex-files with 32 bits processors, you must convert it 
-first. 
 
-In this directory, type
+Therefore, in this directory ~/LUKE/Project_DKE/Modules/Helena/MEX/Source , 
+duplicate the appropriate mexfile regarding the type of processor on which 
+MatLab is installed, and rename it according to the following rules:
 
-./m64t32.sh <input_filename.f> <output_filename.f>
+helmex77_32b.f -> helmex77.f 
+or 
+helmex77_64b.f -> helmex77.f
 
-the ouput file should be compatible with 32 bits processors.
+and
+
+separatrice_32b.f -> separatrice.f
+or
+separatrice_64b.f -> separatrice.f
+
+
+before building the binaries from the directory ~/LUKE/Project_DKE/Modules/Helena/MEX/Bin
