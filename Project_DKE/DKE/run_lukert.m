@@ -267,6 +267,7 @@ elseif dkeparam.rt_mode == 3,%
 end
 %
 dke_out.simul = simul;
+dke_out.waves = waves;
 %
 if dkeparam.rt_mode >= 1,%Variable number of outputs (only if LUKE is running otherwise no output)
 	if nargout >= 1,varargout{1} = Znorm;end
