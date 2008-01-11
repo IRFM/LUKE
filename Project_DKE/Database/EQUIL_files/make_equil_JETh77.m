@@ -35,12 +35,9 @@ ntheta_guess = 201;%Number of poloidal positions for the guessed separatrix
 npsi = 101;%ONLY 101 radial profile grid points for HELMEX77
 ntheta = 65;%ONLY 65 poloidal grid points for HELMEX77
 %
-Ip = 5;%  Plasma current (MA)  
-j0 = 10.4;%  Core toroidal curent density (MA/m2) [1,1]
-ja = 0;%    Edge toroidal curent density (MA/m2) [1,1]
-ej = 3.0;%    Exponent for j profile -> j(psin) = (j0-ja)*(1-(psin)^2)^ej + ja) [1,1]
+Ip = 2;%  Plasma current (MA)  
 %
-qmin = 0.5;%  Safety factor q0 at plasma center
+qmin = 1;%  Safety factor q0 at plasma center
 eq = 3;%  Exponent for q radial profile (q = (qmax - qmin)*(r/a).^eq + qmin, qmax calaculated by the Ampere's theorem at the plasma edge with a circular plasma cross-section)
 qopt = 1;%Option for q profile. (0): constant (default, uniform current, psi=rho^2), (1): from qmin and eq 
 %
@@ -65,7 +62,7 @@ dTia = 0.1;%  Edge ion temperature (keV)
 eTi1 = 2;%  Exponent #1 for Ti profile
 eTi2 = 2;%  Exponent #1 for Ti profile
 %
-Zeff0 = 1.5%  Core effective charge (a.u.)
+Zeff0 = 1.5;%  Core effective charge (a.u.)
 Zeffa = 1.5;%  Edge effective charge (a.u.)
 eZeff = 0;%  Define the slope at the radial point where the derivative is maximum (must be >> 1)
 xZeff = 0.5;%Radial normalized position at which the derivative is maximum
@@ -79,11 +76,15 @@ Bpa = (4*pi*1e-7)*Ip*1e6/(2*pi*ap_guess);% Poloidal Field at the edge, Ampere's 
 qmax = ap_guess/Rp_guess*Bt/Bpa,%Cylindrical safety factor at the plasma edge
 %
 prho_guess = linspace(0,1,npsi_guess);%Initial grid
+%
 if qopt == 1,
 	 pq_guess = (qmax - qmin)*prho_guess.^eq + qmin;% Current profile defined by qmin and eq
+	 pdq_guess = eq*(qmax - qmin)*prho_guess.^(eq-1);
 else 
 	 pq_guess = qmax*ones(1,npsi_guess);% Current profile defined with constant q (uniform current density)
+	 pdq_guess = zeros(1,npsi_guess);
 end
+%
 pBpp_guess = prho_guess*ap_guess/Rp_guess*Bt./pq_guess;
 %
 spBpp_guess = triu(repmat((pBpp_guess(1:npsi_guess-1) + pBpp_guess(2:npsi_guess))'/2,[1,npsi_guess-1]));
@@ -112,9 +113,14 @@ pzni_guess = species_dke_yp(pne_guess,pZeff_guess,zZi,fi);
 [s,dossier,machine,mexext] = comput_dke_yp;
 if exist(['helmex77',mexext]) == 3,
 	ptot_guess = pTe_guess.*pne_guess + sum(pzni_guess.*pzTi_guess);%Total plasma pressure profile
-	pj_guess = (j0 - ja)*(1 - ppsin_guess.^2).^ej + ja;%Current density profile
-    
-    Ip = trapz_dke_yp([ppsin_guess(:),ppsin_guess(:).*pj_guess(:)])*2*pi*0.2*0.2    
+	pj_guess = 2*Bt./pq_guess/(4*pi*1e-7)/Rp_guess - Bt*pdq_guess.*prho_guess./pq_guess.^2/(4*pi*1e-7)/Rp_guess;
+%	
+%	figure(1),plot(prho_guess,pj_guess)
+%	figure(2),plot(prho_guess,pBpp_guess)
+%	figure(3),plot(prho_guess,pq_guess) 
+%	figure(4),plot(prho_guess,ppsin_guess)
+%	 
+    Ip_guess= 2*pi*trapz_dke_yp([prho_guess(:),prho_guess(:).*pj_guess(:)])*ap_guess*ap_guess;  
 %
     lim_top = atan(0.5*xpoint(1)/(1-xpoint(2)))*180/pi;%In order to avoid convergence problem in separatrix MEX file
 	if xpoint(4) > lim_top,xpoint(4) = lim_top - 0.1;end
@@ -161,33 +167,33 @@ if exist(['helmex77',mexext]) == 3,
 %
     init = [0,1e-3,1e-7];%Second argument is the accuracy on the current, the third on the global equilibrium
 %
-	[C2,C3,rho2m,R,Zout,rho,Vp,drhoor,qpsi,ppsi,ftra,Fdia,psiT,B2,invB2,Sp, ...
-			rav,oor,drhoav,xshift,xrad,xell,xtriapos,xtrianeg,jout,iout,pout, ...
-			r2,oor2,r2tau2,drho2ob2,r3otau3,r3otau,BR,BZ,b,df2,kkbig,li, ...
-			dimerc,drmerc,balcrit,ifail]=...
-			helmex77(ppsi_in,ptot_in,pj_in*1e6,Rp_in,Bt_in,Ip*1e6,2,ap_in,0,0,0,R_in,Z_in,init,[],[],[],1);
-%	  
-	BPHI = (Fdia*ones(1,ntheta))./R;
+	absBt_in = abs(Bt_in);%The toroidal magnetic field must be always positive for helmex77
+    absIp = abs(Ip);%The plasma current must be positive for helmex77 so that the current output is correctly normalized
 %
+ 	[C2,C3,rho2m,R,Zout,rho,Vp,drhoor,qpsi,ppsi,ftra,Fdia,psiT,B2,invB2,Sp, ...
+			rav,oor,drhoav,xshift,xrad,xell,xtriapos,xtrianeg,jout,ipout,pout, ...
+			r2,oor2,r2tau2,drho2ob2,r3otau3,r3otau,BR,BZ,b,df2,dpr,kkbig,li, ...
+			dimerc,drmerc,balcrit,frmode,ifail,nchi,cpsurf,radius,gem11,gem12,gem33,rspot,zspot,brspot,bzspot]= ...
+			helmex77(ppsi_in,ptot_in,pj_in*1e6,Rp_in,absBt_in,absIp*1e6,2,ap_in,0,0,0,R_in,Z_in,init,0,0*ppsi_in,[],2);
+%
+	[qe,me,mp,mn,e0,mu0] = pc_dke_yp;
+	Ip_helmex = ipout.* max(xrad).*absBt_in/mu0*1e-6*sign(Ip);%For test only (MA)
+%	  
+	BPHI = (Fdia*ones(1,ntheta))./R*sign(Bt_in);%Recover also the correct sign
+	BR = BR*sign(Ip);%Recover also the correct sign
+	BZ = BR*sign(Ip);%Recover also the correct sign
+	ppsi = ppsi*sign(Ip);%Recover also the correct sign  
+%    
 	ap_helmex = R(npsi,1) - R(1,1);
 	Rp_helmex = R(1,1);
 	Bt_helmex = BPHI(1,1);
-	disp(' ');
-	if ap_helmex ~= ap_in
-	   disp(['Minor radius from ptok (in): ',num2str(ap_in),', from HELMEX77 (kept): ',num2str(ap_helmex)])
-    else 
-       ap_helmex = ap_in;
-	end
-	if Rp_helmex ~= Rp_in
-	   disp(['Major radius from ptok (in): ',num2str(Rp_in),', from HELMEX77 (kept): ',num2str(Rp_helmex)])
-    else
-       Rp_helmex = Rp_in;
-	end
-	if Bt_helmex ~= Bt_in
-	   disp(['Magnetic field on axis from ptok (in): ',num2str(Bt_in),', from HELMEX77 (kept): ',num2str(Bt_helmex)])
-    else
-       Bt_helmex = Bt_in;
-	end
+%
+	disp('------------------------------------------------------');
+	disp(['Minor radius from ptok (in): ',num2str(ap_in),', from HELMEX77 (kept): ',num2str(ap_helmex)])
+	disp(['Major radius from ptok (in): ',num2str(Rp_in),', from HELMEX77 (kept): ',num2str(Rp_helmex)])
+	disp(['Plama current (in): ',num2str(Ip_guess/1e6),', from HELMEX77 (kept): ',num2str(Ip_helmex)])
+	disp(['Magnetic field on axis from ptok (in): ',num2str(Bt_in),', from HELMEX77 (kept): ',num2str(Bt_helmex)])
+	disp('------------------------------------------------------');
 %
 	ppsi = ppsi/2/pi;%In order to match the defintion of ppsi in DKE
 	ppsin = ppsi'/max(ppsi);%Normalized flux grid
