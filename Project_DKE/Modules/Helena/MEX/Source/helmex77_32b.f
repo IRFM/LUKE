@@ -1,7 +1,4 @@
-#ifdef MATLAB73 
-#include "fintrf.h"
-#endif
-      subroutine mexFunction(nlhs,plhs,nrhs,prhs)
+       subroutine mexFunction(nlhs,plhs,nrhs,prhs)
 C--------------------------------------------------------------
 C Interface mex-file (matlab 5) pour le code HELENA
 C F. Imbeaux - Aout 2000
@@ -179,7 +176,7 @@ c      integer KKLDA
 C-----------------------------------------------------------------------                               
 C DECLARATION DES VARIABLES
 c pointeurs mex   
-      CRONOSINT plhs(*), prhs(*)
+      integer plhs(*), prhs(*)
       integer nlhs, nrhs
 c variables de sortie
       real*8 VP(NRMMAX),C2(NRMMAX),C3(NRMMAX),R2M(NRMMAX),RHO(NRMMAX)
@@ -201,25 +198,25 @@ c taille des tableaux d'entree fixee a 101 elements
       real*8 PSIPIN(101),PTOT(101),Jin(101),Rext(250),Zext(250)
       real*8 R0, amin, B0, Ip, ecrit,xrsig(2)
 c pointeurs et tailles      
-      CRONOSINT VP_pr,C2_pr,C3_pr,R2M_pr,RHO_pr
-      CRONOSINT FTRA_pr,FDIA_pr,INVB2_pr
-      CRONOSINT DRHOOR_pr,QPSI_pr,B2_pr
-      CRONOSINT SP_pr,Jout_pr,PSIPOUT_pr,PSIT_pr,Pout_pr
-      CRONOSINT RR_pr,ZZ_pr,Rext_pr,Zext_pr,init_pr
-      CRONOSINT PSIPIN_pr,PTOT_pr,Jin_pr,B0_pr, Ip_pr
-      CRONOSINT R0_pr, amin_pr, ELLIP_pr, TRIAH_pr, TRIAB_pr
-      CRONOSINT RAV_pr,OOR_pr,DRHOAV_pr,XRAD_pr,XIAB_pr
-      CRONOSINT XSHIFT_pr,XELL_pr,XTRIAPOS_pr,XTRIANEG_pr,IFAIL_pr
-      CRONOSINT ECRIT_pr,DIMERC_pr,DRMERC_pr,BALCRIT_pr,XRSIG_pr
-      CRONOSINT R2_pr,OOR2_pr,R2TAU2_pr,DRHO2OB2_pr
-      CRONOSINT R3OTAU3_pr,R3OTAU_pr,FR_pr
-      CRONOSINT LSC_pr,BPR_pr,BPZ_pr,b_pr,df2_pr,dpr_pr,kkbig_pr,XLI_pr
-      CRONOSINT NCHI_pr, CPSURF_pr, RADIUS_pr
-      CRONOSINT GEM11_pr, GEM12_pr, GEM33_pr      
-      CRONOSINT RSPOT_pr, ZSPOT_pr, BRSPOT_pr, BZSPOT_pr
+      integer VP_pr,C2_pr,C3_pr,R2M_pr,RHO_pr
+      integer FTRA_pr,FDIA_pr,INVB2_pr
+      integer DRHOOR_pr,QPSI_pr,B2_pr
+      integer SP_pr,Jout_pr,PSIPOUT_pr,PSIT_pr,Pout_pr
+      integer RR_pr,ZZ_pr,Rext_pr,Zext_pr,init_pr
+      integer PSIPIN_pr,PTOT_pr,Jin_pr,B0_pr, Ip_pr
+      integer R0_pr, amin_pr, ELLIP_pr, TRIAH_pr, TRIAB_pr
+      integer RAV_pr,OOR_pr,DRHOAV_pr,XRAD_pr,XIAB_pr
+      integer XSHIFT_pr,XELL_pr,XTRIAPOS_pr,XTRIANEG_pr,IFAIL_pr
+      integer ECRIT_pr,DIMERC_pr,DRMERC_pr,BALCRIT_pr,XRSIG_pr
+      integer R2_pr,OOR2_pr,R2TAU2_pr,DRHO2OB2_pr
+      integer R3OTAU3_pr,R3OTAU_pr,FR_pr
+      integer LSC_pr,BPR_pr,BPZ_pr,b_pr,df2_pr,dpr_pr,kkbig_pr,XLI_pr
+      integer NCHI_pr, CPSURF_pr, RADIUS_pr
+      integer GEM11_pr, GEM12_pr, GEM33_pr      
+      integer RSPOT_pr, ZSPOT_pr, BRSPOT_pr, BZSPOT_pr
       integer   m, n, sizeIN, sizeOUT, mxGetM, mxGetN, mRext, nRext
       integer   sizeR
-      CRONOSINT mxCreateFull, mxGetPr
+      integer mxCreateFull, mxGetPr
       real*8 TINIT(3)
 
 C---------------------------------------------------------------------
