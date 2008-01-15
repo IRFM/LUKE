@@ -17,10 +17,10 @@ equil.ptBx = squeeze(double(equi.BR));
 equil.ptBy = squeeze(double(equi.BZ));
 equil.ptBPHI = squeeze(double(equi.BPHI));
 %
-equil.ptBPHI = gene.signe.b0*equil.ptBPHI;%Bphi is counter-clockwise in TS (WARNING: in rtluke, Ip > 0 and Bphi > 0 when clockwise from the top view of the tokamak, opposite from CRONOS def)
-equil.ptBx = gene.signe.ip*equil.ptBx;%Ip is counter-clockwise in TS
-equil.ptBy = gene.signe.ip*equil.ptBy;%Ip is counter-clockwise in TS
-equil.psi_apRp = gene.signe.ip*equil.psi_apRp;%Ip is counter-clockwise in TS
+equil.ptBPHI = -gene.signe.b0*equil.ptBPHI;%Bphi is counter-clockwise in TS (WARNING: in rtluke, Ip > 0 and Bphi > 0 when clockwise from the top view of the tokamak, opposite from CRONOS def)
+equil.ptBx = -gene.signe.ip*equil.ptBx;%Ip is counter-clockwise in TS
+equil.ptBy = -gene.signe.ip*equil.ptBy;%Ip is counter-clockwise in TS
+equil.psi_apRp = -gene.signe.ip*equil.psi_apRp;%Ip is counter-clockwise in TS
 %
 equil.pTe = prof.te/1000;%en keV
 equil.pne = prof.ne;
