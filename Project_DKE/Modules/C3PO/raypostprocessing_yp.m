@@ -1,4 +1,4 @@
-function [iabs_out,rho_ray,theta_ray,phi_ray,R_ray,Z_ray,Npar_ray,Nperp_ray,epol_pmz_ray,phi_xyz_ray,pmode_ray,D_ray,s_ray,alphaphi_ray,B_ray,BP_ray,BPHI_ray,Te_ray,ne_ray,zTi_ray,zni_ray,r_ray,salpha_ray,gradrhon_ray,tau_ray] = raypostprocessing_yp(tout,yout,yproc,rayparam,equil_fit,display_mode,p_opt,filename,subtitle)
+function [iabs_out,rho_ray,theta_ray,phi_ray,R_ray,Z_ray,Npar_ray,Nperp_ray,epol_pmz_ray,phi_xyz_ray,pmode_ray,D_ray,s_ray,alphaphi_ray,B_ray,BP_ray,BPHI_ray,Te_ray,ne_ray,zTi_ray,zni_ray,r_ray,salpha_ray,gradrhon_ray,tau_ray] = raypostprocessing_yp(tout,yout,yproc,rayparam,equil_fit,display_text,display_mode,p_opt,filename,subtitle)
 %
 % Post processing of the ray calculation
 %
@@ -17,15 +17,18 @@ if nargin < 5,
     error('Not enough input arguments in raypostprocessing_yp.m');
 end
 if nargin < 6,
-    display_mode = 0;
+    display_text = 0;
 end
 if nargin < 7,
-    p_opt = -1;
+    display_mode = 0;
 end
 if nargin < 8,
-    filename = '';
+    p_opt = -1;
 end
 if nargin < 9,
+    filename = '';
+end
+if nargin < 10,
     subtitle = '';
 end
 %
@@ -209,9 +212,11 @@ if display_mode,
    [ax] = graph1D_jd(R_fit,Z_fit,0,0,'','','',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','b',1);drawnow
    [ax] = graph1D_jd(R_fit',Z_fit',0,0,'R(m)','Z(m)',['Ray trajectory',subtitle],NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','b',1);hold on
 %
-   for ii = 1:length(R_ray)-2,
-      if (ss(ii) ~= ss(ii+1)),
-         text(R_ray(ii),Z_ray(ii),num2str(ii));
+   if display_text,
+      for ii = 1:length(R_ray)-2,
+         if (ss(ii) ~= ss(ii+1)),
+            text(R_ray(ii),Z_ray(ii),num2str(ii));
+         end
       end
    end
 %
@@ -232,9 +237,11 @@ if display_mode,
    [ax] = graph1D_jd(Xmax_fit,Ymax_fit,0,0,'X(m)','Y(m)','',NaN,[-Rmax,Rmax],[-Rmax,Rmax],'-','none','b',1);hold on
    [ax] = graph1D_jd(Xp_fit,Yp_fit,0,0,'X(m)','Y(m)',['Toroidal ray trajectory',subtitle],NaN,[-Rmax,Rmax],[-Rmax,Rmax],'--','none','b',1);hold on
 %
-   for ii = 1:length(X_ray)-2,
-      if (ss(ii) ~= ss(ii+1)),
-         text(X_ray(ii),Y_ray(ii),num2str(ii));
+   if display_text,
+      for ii = 1:length(X_ray)-2,
+         if (ss(ii) ~= ss(ii+1)),
+            text(X_ray(ii),Y_ray(ii),num2str(ii));
+         end
       end
    end
 %
