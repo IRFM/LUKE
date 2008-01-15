@@ -11,20 +11,16 @@ function rayinit = main_rayinit_launch_jd(equil,launch)
 %
 %Specific to LH wave
 %
-%       - bPlhtotp = [0.2]*1e6;%initial power in the ray (W) (main lobe) [1,n_lobe]
-%       - bNpar0p = [-2.6];%Initial Npar value (main lobe) [1,n_lobe]
-%       - bwidthp = [0.2];%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-%       - ry0p = [-0.0535;0.0001;0.0535];%vertical launching positions [m_pol,1]
+%       - bPlhtot: initial power in the ray (W) [1,n_lobe]
+%       - bNpar0: Initial Npar value [1,n_lobe]
+%       - bdNpar0: Initial dNpar value [1,n_lobe]
+%       - ry0: vertical launching positions [m_pol,1]
 %
-%       - bPlhtotm = []*1e6;%initial power in the ray (W) (satellite lobe) [1,n_lobe]
-%       - bNpar0m = [];%Initial Npar value (satellite lobe) [1,n_lobe]
-%       - bwidthm = [];%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-%       - ry0m = [];%vertical launching positions [m_pol,1]
-%
-%       - m0 = 0;%initial poloidal mode number
-%       - phi0 = 0;%toroidal angle position
-%       - i_ref = length(equil.psi_apRp) - 1;%Initial radial position index
-%       - LFS = 1;% (-1) high field side launching, (1) low field side launching
+%       - m0: initial poloidal mode number
+%       - n0: initial toroidal mode number
+%       - phi0: toroidal angle position
+%       - i_ref: Initial radial position index
+%       - LFS: (-1) high field side launching, (1) low field side launching
 %
 %Specific to EC wave
 %
