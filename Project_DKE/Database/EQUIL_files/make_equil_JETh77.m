@@ -183,7 +183,7 @@ if exist(['helmex77',mexext]) == 3,
     BR(1,:) = 0;%avoid problems at the plasma center. BR must be zero exactly (sometimes spurious values)
     BZ(1,:) = 0;%avoid problems at the plasma center. BZ must be zero exactly (sometimes spurious values)
 	BR = BR*sign(Ip);%Recover also the correct sign
-	BZ = BR*sign(Ip);%Recover also the correct sign
+	BZ = BZ*sign(Ip);%Recover also the correct sign
 	ppsi = ppsi*sign(Ip);%Recover also the correct sign  
 %    
 	ap_helmex = R(npsi,1) - R(1,1);
