@@ -57,19 +57,21 @@ else
     disp(['The LUKE path has been written in ',startuppath,'.']);
 end
 %
-% Run startup.m and add paths
+% add paths
 %
-startup;
+addpath([localpath,'Project_DKE/DKE']);
+setpath_luke_jd(localpath,'',1);
+addpath([localpath,'Project_DKE/Database/PATH_files']);
 %
 disp(['The LUKE paths have been installed.']);
 %
 % Build *.mat and *.mex files if possible
 %
-mex_compile_luke(luke_root)
+mex_compile_luke(localpath)
 %
-cd([luke_root,'/Project_DKE/Database']);
-make_all(0);
-cd(luke_root);
+cd([localpath,'/Project_DKE/Database']);
+make_all;
+cd(localpath);
 %
 
 

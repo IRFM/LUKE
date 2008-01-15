@@ -1,8 +1,11 @@
-function setpath_luke_jd(luke_root,dkepath)
+function setpath_luke_jd(luke_root,dkepath,flag)
 %
 % This script sets the path such that the simulations run on the specified LUKE version.
 %
 
+if nargin < 3,
+    flag = 0;
+end
 %
 %remove old DKE and packages path
 %
@@ -21,7 +24,7 @@ while ~isempty(P),
         ilim = length(P);
     end
     pathline = P(1:ilim-1);
-    if ~isempty(strfind(pathline,'LUKE')) & isempty(strfind(pathline,pathstr)),
+    if ~isempty(strfind(pathline,'LUKE')) & (flag | isempty(strfind(pathline,pathstr))),
         rmpath(pathline);
     end
     P(1:ilim) = '';
@@ -56,7 +59,7 @@ addpath([luke_root,'Project_DKE/DKE']);
 %
 % Path for MEX files
 %
-if nargin >= 2, 
+if nargin >= 2 & isstruct(dkepath), 
     if ~isfield(dkepath,'mex')
         addpath([luke_root,'Project_DKE/MEX/Bin']);
         addpath([luke_root,'Project_DKE/Packages/PETSc/MEX/Bin']);
@@ -72,7 +75,7 @@ end
 %
 % Path for external packages
 %
-if nargin >= 2, 
+if nargin >= 2 & isstruct(dkepath), 
     if isfield(dkepath,'MUMPS') & isfield(dkepath.MUMPS,'mex'),
         addpath(dkepath.MUMPS.mex);
     end
