@@ -203,6 +203,12 @@ if nargin <= 1
     borne.conf = {'TS','MIXTE','CIEL','CMOD','SST1','COMPASS','JET','FTU','ITER3.7GHz','ITER5GHz','DEMO3.7GHz','DEMO5.0GHz','ASDEX','Ohmic'};% configuration antennes / machine
     defaut.conf = 'MIXTE';% configuration antennes / machine
     info.conf = 'Configuration antennas / tokamak';
+    
+    valeur.lob = 'No';% configuration antennes / machine
+    type.lob = 'string';% configuration antennes / machine
+    borne.lob = {'Yes','No'};% configuration antennes / machine
+    defaut.lob = 'No';% configuration antennes / machine
+    info.lob = 'if yes, the negative lob is taken into account (n// = -6)';
 %
 % OTHER PARAMETERS (NOT USED)
 %  
@@ -370,9 +376,13 @@ end
 %
 % info machine
 %
-from = evalin('base','param.from');
-machine = from.machine;
-shot    = from.shot.num;
+%from = evalin('base','param.from');
+if isfield(varargin{1},'machine_nom')
+  machine = varargin{1}.machine_nom;
+else
+  machine = varargin{1}.conf;
+end
+shot    = 0;
 sortie = proto;
 sortie.err = 0;% on definit le flag d'erreur a 0 par defaut (pas d'erreur)
 %
@@ -384,13 +394,18 @@ equil = make_equil_cronos(shot,equi,gene,prof,compo,impur);
 %
 % Determines run type
 %
+if isfield(par,'lob')
+  lob = par.lob;
+else
+  lob = 'No';
+end
 switch par.luke_mode
   %    
   case 'mixte'
     %
     % Mixed LH and EC waves case
     %
-    [launchs_lh] = make_wavelaunchs_cronos_lh(equil,gene.signe,par.lh_param.conf,cons.lh_cons,cons_spec);%for the LH waves
+    [launchs_lh] = make_wavelaunchs_cronos_lh(equil,gene.signe,par.conf,cons.lh_cons,cons_spec,lob);%for the LH waves
     [launchs_ec] = make_wavelaunchs_cronos_ec(equil,par.ecrh_param,cons.ecrh_cons);%for the EC waves
     %    
     launchs = [launchs_lh,launchs_ec];
@@ -400,10 +415,16 @@ switch par.luke_mode
     %
     % LH waves only
     %
+    if isstruct(cons)
+
+      disp('mode lh alone forced')
+      cons = cons.lh_cons;
+
+    end
     if strcmp(par.conf,'Ohmic')
-      [launchs] = make_wavelaunchs_cronos_lh(equil,gene.signe,'MIXTE',cons,cons_spec);%for the LH waves
+      [launchs] = make_wavelaunchs_cronos_lh(equil,gene.signe,'MIXTE',cons,cons_spec,lob);%for the LH waves
     else
-      [launchs] = make_wavelaunchs_cronos_lh(equil,gene.signe,par.conf,cons,cons_spec);%for the LH waves
+      [launchs] = make_wavelaunchs_cronos_lh(equil,gene.signe,par.conf,cons,cons_spec,lob);%for the LH waves
     end
     par.launchtype = 'LH';
     %    
@@ -459,7 +480,7 @@ dkedisplay.display_mode = par.display_mode;%Display mode: (0): no, (1): partial,
 %
 % PARAMETRES OHMIC, transformation en flux poloidal puis en coordonnees radials de LUKE
 %
-signe = evalin('base','param.gene.signe');%Toroidal Bfield and plasma current sign (CRONOS convention: > 0 when counter-clockwise from top view)
+signe = varargin{13}.signe;%Toroidal Bfield and plasma current sign (CRONOS convention: > 0 when counter-clockwise from top view)
 %
 % psipncronos    : coordonnee radiale normalisee de CRONOS en flux poloidal
 % psipncronoshel : coordonnee radiale normalisee en flux poloidal associee a HELENA pour BR BZ et BPHI
@@ -571,37 +592,40 @@ while 1,
    end
 end
 %
-if strcmp(dkedisplay.display_mode,'PARTIAL_VISUAL') | strcmp(dkedisplay.display_mode,'VISUAL'),
-   if sum(abs(real(ohm.epsi))) > 0 | sum(abs(imag(ohm.epsi))) > 0,	
-	  I_ohm = sum(Zcurr.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref);
-	  figure('Name','Ohmic current profile'),
-	  graph1D_jd(equilDKE.xrho,Zcurr.x_0_fsav*mksa.j_ref,0,0,'\rho','J_{tot} (MA/m^2)',[par.machine_nom,',I_{tot} = ',num2str(I_ohm*1000),' (kA)'],NaN,'','','-','none','r',2);hold on
-	  graph1D_jd(equilDKE.xrho,Zcurr.x_0_vfsav*mksa.j_ref,0,0,'\rho','J_{tot} (MA/m^2)',[par.machine_nom,',I_{tot} = ',num2str(I_ohm*1000),' (kA)'],NaN,'','','-','none','b',2);hold off,drawnow
-      legend('LUKE flux surface averaging','CRONOS flux surface averaging')
-%	  print_jd(p_opt,[filename,'_Curr']);
+signe_out = -signe.ip;
 %
-	  POHM_ohm = sum(ZP0.x_e_fsav.*equilDKE.xdV_2piRp_dke*mksa.P_ref*2*pi*equilDKE.Rp);
+j_OHM_c = signe_out*Zcurr.x_0_vfsav*mksa.j_ref;
+j_TOT_c = signe_out*Zcurr_RF.x_0_vfsav*mksa.j_ref;
+j_LH_c = j_TOT_c - j_OHM_c;
+%
+I_OHM_c = sum(signe_out*Zcurr.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref);
+I_TOT_c = sum(signe_out*Zcurr_RF.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref);
+I_LH_c = I_TOT_c - I_OHM_c;
+%
+p_OHM_c = ZP0.x_e_fsav*mksa.P_ref;
+p_TOT_c = (ZP0_RF.x_rf_fsav' + ZP0_RF.x_e_fsav)*mksa.P_ref;
+p_LH_c = p_TOT_c - p_OHM_c;
+%
+P_OHM_c = sum(ZP0.x_e_fsav.*equilDKE.xdV_2piRp_dke*mksa.P_ref*2*pi*equilDKE.Rp);
+P_TOT_c = sum((ZP0_RF.x_rf_fsav' + ZP0_RF.x_e_fsav).*equilDKE.xdV_2piRp_dke*mksa.P_ref*2*pi*equilDKE.Rp);
+P_LH_c = P_TOT_c - P_OHM_c;
+%
+if strcmp(dkedisplay.display_mode,'PARTIAL_VISUAL') | strcmp(dkedisplay.display_mode,'VISUAL'),
+   if sum(abs(real(ohm.epsi))) > 0 | sum(abs(imag(ohm.epsi))) > 0,		  
+	  figure('Name','Ohmic current profile'),
+	  graph1D_jd(equilDKE.xrho,j_OHM_c,0,0,'\rho','J_{tot} (MA/m^2)',[par.machine_nom,',I_{tot} = ',num2str(I_OHM_c*1000),' (kA)'],NaN,'','','-','none','b',2);hold off,drawnow
+%
+	  
 	  figure('Name','Ohmic Power'),
-	  graph1D_jd(equilDKE.xrho,ZP0.x_e_fsav*mksa.P_ref,0,0,'\rho','P_{OHM} (MW/m^3)',[par.machine_nom,',P_{OHM} = ',num2str(POHM_ohm*1000),' (kW)'],NaN,'','','-','none','r',2);drawnow
-%	  print_jd(p_opt,[filename,'_Ohm']);
+	  graph1D_jd(equilDKE.xrho,p_OHM_c,0,0,'\rho','P_{OHM} (MW/m^3)',[par.machine_nom,',P_{OHM} = ',num2str(P_OHM_c*1000),' (kW)'],NaN,'','','-','none','r',2);drawnow
    end		
 %
-	I_tot = sum(Zcurr_RF.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref);
-	figure('Name','Current profile'),
-	graph1D_jd(equilDKE.xrho,Zcurr_RF.x_0_fsav*mksa.j_ref,0,0,'\rho','J_{tot} (MA/m^2)',[par.machine_nom,',I_{tot} = ',num2str(I_tot*1000),' (kA)'],NaN,'','','-','none','r',2);hold on
-	graph1D_jd(equilDKE.xrho,Zcurr_RF.x_0_vfsav*mksa.j_ref,0,0,'\rho','J_{tot} (MA/m^2)',[par.machine_nom,',I_{tot} = ',num2str(I_tot*1000),' (kA)'],NaN,'','','-','none','b',2);hold off,drawnow
-    legend('LUKE flux surface averaging','CRONOS flux surface averaging')
-%	print_jd(p_opt,[filename,'_Curr']);
+	figure('Name','LH Current profile (consistent with E-field)'),
+	graph1D_jd(equilDKE.xrho,j_LH_c,0,0,'\rho','J_{LH} (MA/m^2)',[par.machine_nom,',I_{LH} = ',num2str(I_LH_c*1000),' (kA)'],NaN,'','','-','none','b',2);hold off,drawnow
 %
-	PLH_tot = sum(ZP0_RF.x_rf_fsav.*equilDKE.xdV_2piRp_dke(:)*mksa.P_ref*2*pi*equilDKE.Rp);
 	figure('Name','LH Power'),
-	graph1D_jd(equilDKE.xrho,ZP0_RF.x_rf_fsav*mksa.P_ref,0,0,'\rho','P_{LH} (MW/m^3)',[par.machine_nom,',P_{LH} = ',num2str(PLH_tot*1000),' (kW)'],NaN,'','','-','none','r',2);drawnow
-%	print_jd(p_opt,[filename,'_RF_Power']);
+	graph1D_jd(equilDKE.xrho,p_LH_c,0,0,'\rho','P_{LH} (MW/m^3)',[par.machine_nom,',P_{LH} = ',num2str(P_LH_c*1000),' (kW)'],NaN,'','','-','none','r',2);drawnow
 %
-	POHM_tot = sum(ZP0_RF.x_e_fsav.*equilDKE.xdV_2piRp_dke*mksa.P_ref*2*pi*equilDKE.Rp);
-	figure('Name','Ohmic Power'),
-	graph1D_jd(equilDKE.xrho,ZP0_RF.x_e_fsav*mksa.P_ref,0,0,'\rho','P_{OHM} (MW/m^3)',[par.machine_nom,',P_{OHM} = ',num2str(POHM_tot*1000),' (kW)'],NaN,'','','-','none','r',2);drawnow
-%	print_jd(p_opt,[filename,'_Ohm']);
 end
 %
 %--------------------------- REMPLISSAGE DE LA STRUCTURE DE SORTIE POUR CRONOS --------------------------- 
@@ -613,13 +637,8 @@ equilDKE.xcron = interp1(psipncronos,gene.x,equilDKE.xpsin);
 % preparation des variables de sortie (sortie.j, sortie.el) pour CRONOS sur la bonne grille
 % et avec les bonnes unites
 %
-if sum(abs(ohm.epsi)) ~= 0,%Only the RF current + the synergistic Ohmic/RF current contribution is kept
-   sortie.j  = interp1(equilDKE.xcron,(Zcurr_RF.x_tot_vfsav - Zcurr.x_tot_vfsav)*mksa.j_ref,gene.x)*1e6;
-   sortie.el = interp1(equilDKE.xcron,(ZP0_RF.x_rf_fsav + ZP0_RF.x_e_fsav' - ZP0.x_e_fsav')*mksa.P_ref,gene.x);
-else
-   sortie.j = interp1(equilDKE.xcron,Zcurr_RF.x_tot_vfsav*mksa.j_ref,gene.x)*1e6;
-   sortie.el = interp1(equilDKE.xcron,(ZP0_RF.x_rf_fsav + ZP0_RF.x_e_fsav')*mksa.P_ref,gene.x);
-end
+sortie.j  = interp1(equilDKE.xcron,j_LH_c,gene.x)*1e6;
+sortie.el = interp1(equilDKE.xcron,p_LH_c,gene.x);
 %
 % blindage : 0 au bord, au centre on recopie la premiere valeur non nulle
 %
@@ -629,20 +648,6 @@ sortie.j(indnan(gene.x(indnan) > 0.5))=0;
 sortie.j(indnan(gene.x(indnan) < 0.5))=sortie.j(indmax);
 
 %
-if sum(abs(ohm.epsi)) > 0,%Only the RF current + the synergistic Ohmic/RF current contribution is kept
-   sortie.j  = interp1(equilDKE.xcron,(Zcurr_RF.x_tot_vfsav - Zcurr.x_tot_vfsav)*mksa.j_ref,gene.x)*1e6;
-   sortie.el = interp1(equilDKE.xcron,(ZP0_RF.x_rf_fsav + ZP0_RF.x_e_fsav' - ZP0.x_e_fsav')*mksa.P_ref,gene.x)*1e6;
-else
-   sortie.j = interp1(equilDKE.xcron,Zcurr.x_tot_vfsav*mksa.j_ref,gene.x)*1e6;
-   sortie.el = interp1(equilDKE.xcron,(ZP0.x_rf_fsav + ZP0.x_e_fsav')*mksa.P_ref,gene.x)*1e6;
-end
-%
-% blindage : 0 au bord, au centre on recopie la premiere valeur non nulle
-%
-indnan = find(isnan(sortie.j));
-indmax = max(indnan(gene.x(indnan) < 0.5))+1;
-sortie.j(indnan(gene.x(indnan) > 0.5))=0;
-sortie.j(indnan(gene.x(indnan) < 0.5))=sortie.j(indmax);
 sortie.el(indnan(gene.x(indnan) > 0.5))=0;
 sortie.el(indnan(gene.x(indnan) < 0.5))=sortie.el(indmax);
 sortie.el(sortie.el<0)=0;
