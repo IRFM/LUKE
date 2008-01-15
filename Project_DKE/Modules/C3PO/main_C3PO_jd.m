@@ -44,6 +44,10 @@ wave.opt_disp = 0;  % option for solving the wave equation, which gives (ray.sep
 %
 wave.dsmin = waveparam.dsmin;
 %
+if ~isfield(display,'text'),
+    display.text = 1;
+end
+%
 if ~isfield(waveparam,'nd'),
     waveparam.nd = 1;
 end
@@ -89,7 +93,7 @@ for iray = 1:Nrays,
         info_dke_yp(2,['Trajectory of ray #',int2str(iray),' is calculated']);
         %
         filename_in = [id_wave,'_ray_',int2str(iray)];
-        [iabs_out,srho,stheta,sphi,sR,sZ,sNpar,sNperp,sepol_pmz,sphi_xyz,spmode,sD,ss,salphaphi_lin,sB,sBP,sBPHI,sTe,sne,szTi,szni,sr,salpha,sgradrhon,stau] = raypostprocessing_yp(tout,yout,yproc,rayparam,equil_fit,display.ray,display.p_opt,filename_in);
+        [iabs_out,srho,stheta,sphi,sR,sZ,sNpar,sNperp,sepol_pmz,sphi_xyz,spmode,sD,ss,salphaphi_lin,sB,sBP,sBPHI,sTe,sne,szTi,szni,sr,salpha,sgradrhon,stau] = raypostprocessing_yp(tout,yout,yproc,rayparam,equil_fit,display.text,display.ray,display.p_opt,filename_in);
         if display.ray == 1,
             pause(5)
         end
