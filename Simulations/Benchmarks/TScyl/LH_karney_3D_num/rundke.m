@@ -15,7 +15,7 @@ id_simul = 'LH_karney_3D_num';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
-rho_S = [];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+rho_S = [0:0.05:1];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
 id_path = '';%For all paths used by DKE solver
 path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
@@ -26,13 +26,13 @@ path_equil = '';%if nothing is specified, the working directory is first used an
 id_dkeparam = 'UNIFORM10010020';%For DKE code parameters
 path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_display = 'NO_DISPLAY';%For output code display
+id_display = 'PARTIAL_VISUAL';%For output code display
 path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_ohm = '';%For Ohmic electric contribution
 path_ohm = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-ids_wave = {'LH_karney'};%For RF waves contribution (put all the type of waves needed)
+ids_wave = {''};%For RF waves contribution (put all the type of waves needed)
 paths_wave = {''};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_transpfaste = '';%For fast electron radial transport
@@ -49,236 +49,258 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 %************************************************************************************************************************************
 %
-nit = 6;
-dludroptol = logspace(-6,-2,nit);
+wavestruct.omega_lh = [4]*2*pi*1e9; %(GHz -> rad/s). Wave frequency [1,1] Indicative, no effect in small FLR limit opt_lh > 0
+%Option parameter for cross-comparison between old LH code: 
+%	- (1): 1/vpar dependence
+%	- (2): no 1/vpar dependence and old grid technique for Dlh calculations (Karney, Shoucri) (see rfdiff_dke_jd)
+wavestruct.opt_lh = 2; % [1,1]
 %
-dkeparam.invproc = 1;%CGS  
-dkeparam.mlprecinv = 1-4;
-dkeparam.mlmaxitinv = 4;
+% Choose (vparmin_lh,vparmax_lh) or (Nparmin_lh,Nparmax_lh) for square n// LH wave power spectrum,
+% or (Npar_lh,dNpar_lh) for Gaussian shape
 %
-dmesh = 5;
-nmesh = 6;
+wavestruct.norm_ref = 1;%Normalization procedure for the LH quasilinear diffusion coefficient and spectrum boundaries
 %
-for j = 1:nmesh,%Scan radial mesh size
-   rho_S = linspace(0,1,j*dmesh);
-   for i = 1:nit,%droptolerance scan       
-      dkeparam.ludroptol = dludroptol(i);
-      [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-% 
-      memory_f(i,j) = dke_out.memoryLU_f_out;
-      time_f(i,j) = dke_out.time_out;
-      rho_f{i,j} = rho_S;
-      norm_f{i,j} = Znorm.x_0_fsav.*mksa.ne_ref;
-      curr_f{i,j} = Zcurr.x_0_fsav.*mksa.j_ref;
-      Prf_f{i,j} = ZP0.x_rf_fsav.*mksa.P_ref;
-      Pcoll_f{i,j} = ZP0.x_c_fsav.*mksa.P_ref;
+wavestruct.yvparmin_lh = [4];%LH wave square N// Spectrum: Lower limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
+wavestruct.yvparmax_lh = [7];%LH wave square N// Spectrum: Upper limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
 %
-      disp(['Calculation in MatLab with incomplete LU calculation #',int2str(i),' with radial mesh size #',int2str(j*dmesh),'  done'])
-    end
+wavestruct.yNparmin_lh = [NaN];%LH wave square N// Spectrum: Lower limit [1,n_scenario_lh]
+wavestruct.yNparmax_lh = [NaN];%LH wave square N// Spectrum: Upper limit [1,n_scenario_lh]
+wavestruct.yNpar_lh = [NaN];%LH wave Gaussian N// Spectrum: peak [1,n_scenario_lh]
+wavestruct.ydNpar_lh = [NaN];%LH wave Gaussian N// Spectrum: width [1,n_scenario_lh]
+%
+%   Note: this diffusion coefficient is different from the general QL D0. It has a benchmarking purpose only 
+wavestruct.yD0_in_c_lh = [1];%Central LH QL diffusion coefficient (nhuth_ref*pth_ref^2 or nhuth*pth^2) [1,n_scenario_lh]
+%     
+wavestruct.yD0_in_lh_prof = [0];%Quasilinear diffusion coefficient radial profile: (0) uniform, (1) gaussian radial profile [1,n_scenario_lh]
+wavestruct.ypeak_lh = [NaN];%Radial peak position of the LH quasi-linear diffusion coefficient (r/a on midplane) [1,n_scenario_lh]
+wavestruct.ywidth_lh = [NaN];%Radial width of the LH quasi-linear diffusion coefficient (r/a on midplane) [1,n_scenario_lh]
+%
+wavestruct.ythetab_lh = [0]*pi/180;%(deg -> rad). Poloidal location of LH beam [0..2pi] [1,n_scenario_lh]
+%               (0) from local values Te and ne, (1) from central values Te0 and ne0 
+%
+%************************************************************************************************************************************
+%
+dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
+dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+%
+dkeparam.ludroptol = 1e-4;%droptolerance
+%
+waves{1} = make_idealLHwave_jd(equil,wavestruct);
+%
+np_list = 25:25:250;
+nmhu_list = 25:25:250;
+nr_list = [1,5:5:30];
+%
+% Incomplete LU factorization
+%
+dkeparam.invproc  = 1;%Numerical method (CGS, BICG, QMR)
+%
+for inp = 1:length(np_list);
+    %
+    dkeparam.np_S = np_list(inp) + 1;
+    %
+    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    % 
+    memory_LUi_np(inp) = dke_out.memoryLU_f_out;
+    time_LUi_np(inp) = dke_out.time_DKE;
+    %
 end
 %
-if isfield(dkepath,'MUMPS'),
-   dkeparam.invproc = -1;%MUMPS
-   dkeparam.MUMPSparam.nproc = 1;%number of processor used by MUMPS (depends of the computer framework).
+dkeparam.np_S = 101;
 %
-   for j = 1:nmesh,%Scan radial mesh size
-      rho_S = linspace(0,1,j*dmesh);
-      [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-% 
-      time_f_MUMPS(j) = dke_out.time_out;
-      rho_f_MUMPS{j} = rho_S;
-      norm_f_MUMPS{j} = Znorm.x_0_fsav.*mksa.ne_ref;
-      curr_f_MUMPS{j} = Zcurr.x_0_fsav.*mksa.j_ref;
-      Prf_f_MUMPS{j} = ZP0.x_rf_fsav.*mksa.P_ref;
-      Pcoll_f_MUMPS{j} = ZP0.x_c_fsav.*mksa.P_ref;
-%
-      disp(['Calculation with MUMPS done with radial mesh size #',int2str(j*dmesh),'  done'])
-   end
+for inp = 1:length(nmhu_list);
+    %
+    dkeparam.nmhu_S = nmhu_list(inmhu) + 1;
+    %
+    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    % 
+    memory_LUi_nmhu(inmhu) = dke_out.memoryLU_f_out;
+    time_LUi_nmhu(inmhu) = dke_out.time_DKE;
+    %
 end
+%
+dkeparam.nmhu_S = 101;
+%
+for inr = 1:length(nr_list);
+    %
+    rho_S = linspace(0,1,nr_list(inr)+1);
+    %
+    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    % 
+    memory_LUi_nr(inr) = dke_out.memoryLU_f_out;
+    time_LUi_nr(inr) = dke_out.time_DKE;
+    %
+end
+%
+rho_S = 0:0.05:1;
+%
+disp('Incomplete LU calculation done')
+%
+% MUMPSMEX package
 %
 if exist('dmumpsmex'),
-   dkeparam.invproc = -2;%MUMPSMEX
-%
-   for j = 1:nmesh,%Scan radial mesh size
-      rho_S = linspace(0,1,j*dmesh);
-      [Znorm,Zcurr,ZP0,dke_out,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-% 
-      time_f_MUMPSMEX(j) = dke_out.time_out;
-      rho_f_MUMPSMEX{j} = rho_S;
-      norm_f_MUMPSMEX{j} = Znorm.x_0_fsav.*mksa.ne_ref;
-      curr_f_MUMPSMEX{j} = Zcurr.x_0_fsav.*mksa.j_ref;
-      Prf_f_MUMPSMEX{j} = ZP0.x_rf_fsav.*mksa.P_ref;
-      Pcoll_f_MUMPSMEX{j} = ZP0.x_c_fsav.*mksa.P_ref;
-%
-      disp(['Calculation with MUMPSMEX done with radial mesh size #',int2str(j*dmesh),'  done'])
-   end
-end
-%
-if exist('mexlusolve'),
-   dkeparam.invproc = -3;%SUPERLUMEX
-%
-   for j = 1:nmesh,%Scan radial mesh size
-      rho_S = linspace(0,1,j*dmesh);
-      [Znorm,Zcurr,ZP0,dke_out,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-% 
-      time_f_SUPERLU(j) = dke_out.time_out;
-      rho_f_SUPERLU{j} = rho_S;
-      norm_f_SUPERLU{j} = Znorm.x_0_fsav.*mksa.ne_ref;
-      curr_f_SUPERLU{j} = Zcurr.x_0_fsav.*mksa.j_ref;
-      Prf_f_SUPERLU{j} = ZP0.x_rf_fsav.*mksa.P_ref;
-      Pcoll_f_SUPERLU{j} = ZP0.x_c_fsav.*mksa.P_ref;
-%
-      disp(['Calculation with SUPERLU done with radial mesh size #',int2str(j*dmesh),'  done'])
-   end
-end
-%
-if isfield(dkepath,'PETSC'),
-    dkeparam.invproc = -30;%PETSc
-    dkeparam.PETScparam.nproc = 1;%number of processor used by PETSc (depends of the computer framework). Default is 1
-%
-    [flag,message] = unix('uname -n');
-    if strfind(message,'saturne'),%this option runs only on the SATURNE CEA-DRFC cluster
-        dkeparam.PETScparam.matrixtype = '-matload_type superlu_dist';%Matrix type used by PETSc. For SUPERLU use '-matload_type superlu_dist' otherwise ' '. See PETSc documentation
-        dkeparam.PETScparam.kspmethod = '-ksp_type preonly';%KSP method used by PETSc. '-ksp_type preonly': no iteration, direct matrix solve. Otherwise '-ksp_type bicg' or '-ksp_type bcgs'  for example. See PETSc documentation
-        dkeparam.PETScparam.pcmethod = '-pc_type lu';%Preconditioning method used by PETSc. '-pc_type lu' for SUPERLU or '-pc-type hypre' for HYPRE.  See PETSc documentation
-        dkeparam.PETScparam.cloop = 1;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
-%
-        for j = 1:nmesh,%Scan radial mesh size
-            rho_S = linspace(0,1,j*dmesh);
-            [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-% 
-            time_f_PETSc_slu_i(j) = dke_out.time_out;
-            rho_f_PETSc_slu_i{j} = rho_S;
-            norm_f_PETSc_slu_i{j} = Znorm.x_0_fsav.*mksa.ne_ref;
-            curr_f_PETSc_slu_i{j} = Zcurr.x_0_fsav.*mksa.j_ref;
-            Prf_f_PETSc_slu_i{j} = ZP0.x_rf_fsav.*mksa.P_ref;
-            Pcoll_f_PETSc_slu_i{j} = ZP0.x_c_fsav.*mksa.P_ref;
-%
-            disp(['Calculation with PETSc (SUPERLU) done with radial mesh size #',int2str(j*dmesh),' (collision operator loop in C)  done'])
-        end
-%
-        dkeparam.PETScparam.cloop = 0;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
-%
-        for j = 1:nmesh,%Scan radial mesh size
-            rho_S = linspace(0,1,j*dmesh);
-            [Znorm,Zcurr,ZP0,dke_out,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-% 
-            time_f_PETSc_slu_e(j) = dke_out.time_out;
-            rho_f_PETSc_slu_e{j} = rho_S;
-            norm_f_PETSc_slu_e{j} = Znorm.x_0_fsav.*mksa.ne_ref;
-            curr_f_PETSc_slu_e{j} = Zcurr.x_0_fsav.*mksa.j_ref;
-            Prf_f_PETSc_slu_e{j} = ZP0.x_rf_fsav.*mksa.P_ref;
-            Pcoll_f_PETSc_slu_e{j} = ZP0.x_c_fsav.*mksa.P_ref;
-%
-            disp(['Calculation with PETSc (SUPERLU) done with radial mesh size #',int2str(j*dmesh),' (collision operator loop in MatLab)  done'])
-        end
-        flag_PETSC = 1;
-    else
-        flag_PETSC = 0;
+    dkeparam.invproc = -2;
+    %
+    for inp = 1:length(np_list);
+        %
+        dkeparam.np_S = np_list(inp) + 1;
+        %
+        [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+        % 
+        memory_MX_np(inp) = dke_out.memoryLU_f_out;
+        time_MX_np(inp) = dke_out.time_DKE;
+        %
     end
-%
-    dkeparam.PETScparam.matrixtype = '';%Matrix type used by PETSc. For SUPERLU use '-matload_type superlu_dist' otherwise ' '. See PETSc documentation
-    dkeparam.PETScparam.kspmethod = '-ksp_type bcgs';%KSP method used by PETSc. '-ksp_type preonly': no iteration, direct matrix solve. Otherwise '-ksp_type bicg' or '-ksp_type bcgs'  for example. See PETSc documentation
-    dkeparam.PETScparam.pcmethod = '';%Preconditioning method used by PETSc. '-pc_type lu' for SUPERLU or '-pc-type hypre' for HYPRE.  See PETSc documentation
-    dkeparam.PETScparam.cloop = 1;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
-%
-    for j = 1:nmesh,%Scan radial mesh size
-        rho_S = linspace(0,1,j*dmesh);
-        [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-% 
-        time_f_PETSc_bcgs_i(j) = dke_out.time_out;
-        rho_f_PETSc_bcgs_i{j} = rho_S;
-        norm_f_PETSc_bcgs_i{j} = Znorm.x_0_fsav.*mksa.ne_ref;
-        curr_f_PETSc_bcgs_i{j} = Zcurr.x_0_fsav.*mksa.j_ref;
-        Prf_f_PETSc_bcgs_i{j} = ZP0.x_rf_fsav.*mksa.P_ref;
-        Pcoll_f_PETSc_bcgs_i{j} = ZP0.x_c_fsav.*mksa.P_ref;
-%
-        disp(['Calculation with PETSc (SUPERLU) done with radial mesh size #',int2str(j*dmesh),' (collision operator loop in C)  done'])
+    %
+    dkeparam.np_S = 101;
+    %
+    for inp = 1:length(nmhu_list);
+        %
+        dkeparam.nmhu_S = nmhu_list(inmhu) + 1;
+        %
+        [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+        % 
+        memory_MX_nmhu(inmhu) = dke_out.memoryLU_f_out;
+        time_MX_nmhu(inmhu) = dke_out.time_DKE;
+        %
     end
-%
-    dkeparam.PETScparam.cloop = 0;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
-%
-    for j = 1:nmesh,%Scan radial mesh size
-        rho_S = linspace(0,1,j*dmesh);
-        [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-% 
-        time_f_PETSc_bcgs_e(j) = dke_out.time_out;
-        rho_f_PETSc_bcgs_e{j} = rho_S;
-        norm_f_PETSc_bcgs_e{j} = Znorm.x_0_fsav.*mksa.ne_ref;
-        curr_f_PETSc_bcgs_e{j} = Zcurr.x_0_fsav.*mksa.j_ref;
-        Prf_f_PETSc_bcgs_e{j} = ZP0.x_rf_fsav.*mksa.P_ref;
-        Pcoll_f_PETSc_bcgs_e{j} = ZP0.x_c_fsav.*mksa.P_ref;
-%
-        disp(['Calculation with PETSc (SUPERLU) done with radial mesh size #',int2str(j*dmesh),' (collision operator loop in MatLab)  done'])
+    %
+    dkeparam.nmhu_S = 101;
+    %
+    for inr = 1:length(nr_list);
+        %
+        rho_S = linspace(0,1,nr_list(inr)+1);
+        %
+        [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+        % 
+        memory_MX_nr(inr) = dke_out.memoryLU_f_out;
+        time_MX_nr(inr) = dke_out.time_DKE;
+        %
     end
+    %
+    rho_S = 0:0.05:1;
+    %
+    disp(['MUMPSMEX calculation done'])
 end
 %
-vparmin = 1/(waves{1}.rays{1}.sNpar(1)+imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
-vparmax = 1/(waves{1}.rays{1}.sNpar(1)-imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
+%************************************************************************************************************************************
 %
-figure(1),clf,graph1D_jd(dludroptol,time_f(:,1),1,0,'Drop tolerance parameter \delta_{LU}','Full computational time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','-','none','r',2,20,gca,1,0.6,0.6);hold on
-graph1D_jd(dludroptol,time_f(:,2),1,0,'Drop tolerance parameter \delta_{LU}','Full computational time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','--','none','b',2,20,gca,1,0.6,0.6);hold on
-graph1D_jd(dludroptol,time_f(:,3),1,0,'Drop tolerance parameter \delta_{LU}','Full computational time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','-.','none','g',2,20,gca,1,0.6,0.6);
-graph1D_jd(dludroptol,time_f(:,4),1,0,'Drop tolerance parameter \delta_{LU}','Full computational time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','-','none','r',1,20,gca,1,0.6,0.6);
-graph1D_jd(dludroptol,time_f(:,5),1,0,'Drop tolerance parameter \delta_{LU}','Full computational time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','--','none','b',1,20,gca,1,0.6,0.6);
-graph1D_jd(dludroptol,time_f(:,6),1,0,'Drop tolerance parameter \delta_{LU}','Full computational time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','-.','none','g',1,20,gca,1,0.6,0.6);
-legend('n_{\psi} = 4','n_{\psi} = 9','n_{\psi} = 14','n_{\psi} = 19','n_{\psi} = 24','n_{\psi} = 29')
-savefig_dke_yp('timeludroptol')
+figure(1),clf
 %
-figure(2),clf,graph1D_jd(dludroptol,memory_f(:,1),1,0,'Drop tolerance parameter \delta_{LU}','LU matrix size (MBytes)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','-','none','r',2,20,gca,1,0.6,0.6);hold on
-graph1D_jd(dludroptol,memory_f(:,2),1,0,'Drop tolerance parameter \delta_{LU}','LU matrix size (MBytes)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','--','none','b',2,20,gca,1,0.6,0.6);hold on
-graph1D_jd(dludroptol,memory_f(:,3),1,0,'Drop tolerance parameter \delta_{LU}','LU matrix size (MBytes)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','-.','none','g',2,20,gca,1,0.6,0.6);
-graph1D_jd(dludroptol,memory_f(:,4),1,0,'Drop tolerance parameter \delta_{LU}','LU matrix size (MBytes)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','-','none','r',1,20,gca,1,0.6,0.6);
-graph1D_jd(dludroptol,memory_f(:,5),1,0,'Drop tolerance parameter \delta_{LU}','LU matrix size (MBytes)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','--','none','b',1,20,gca,1,0.6,0.6);
-graph1D_jd(dludroptol,memory_f(:,6),1,0,'Drop tolerance parameter \delta_{LU}','LU matrix size (MBytes)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(1), ', D_{\psi\psi} = 0 '],NaN,'','','-.','none','g',1,20,gca,1,0.6,0.6);
-legend('n_{\psi} = 4','n_{\psi} = 9','n_{\psi} = 14','n_{\psi} = 19','n_{\psi} = 24','n_{\psi} = 29')
-savefig_dke_yp('memoryludroptol')
+leg = {'MATLAB LUi','MUMPSMEX'};
+xlim = [0,300];
+ylim = NaN;%[0,10];
+xlab = 'n_p';
+ylab = 'FPE calculation time (s)';
+tit = '';
 %
-diary testmatinv.txt
-disp('-------------------')
-disp('Incomplete LU preconditionning, CGS iterative Krylov algorithm, npsi = 30')
-disp(['droptolerance: ',num2str(dludroptol(end-1)),' - Full CPU time: ',num2str(time_f(end-1,6)),' (s) - LU memory size: ',num2str(memory_f(end-1,6)),' (MBytes)'])
-disp(['ne(0): ',num2str(round(norm_f{end-1,6}(1)/1e+16)/1e3),' (10+19 m-3) - Jlh(0): ',num2str(abs(curr_f{end-1,6}(1))),' (MA/m2) - Plh(0): ',num2str(Prf_f{end-1,6}(1)),' (MW/m3) - Pcoll(0): ',num2str(-Pcoll_f{end-1,6}(1)),' (MW/m3)'])
-disp('-------------------')
-if isfield(dkepath,'MUMPS'),
-    disp('Matrix inversion with MUMPS (1 processors), npsi = 30')
-    disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(time_f_MUMPS(6)),' (s)'])
-    disp(['ne(0): ',num2str(round(norm_f_MUMPS{6}(1)/1e+16)/1e3),' (10+19 m-3) - Jlh(0): ',num2str(abs(curr_f_MUMPS{6}(1))),' (MA/m2) - Plh(0): ',num2str(Prf_f_MUMPS{6}(1)),' (MW/m3) - Pcoll(0): ',num2str(-Pcoll_f_MUMPS{6}(1)),' (MW/m3)'])
-    disp('-------------------')
-end
-if exist('dmumpsmex'),
-    disp('Matrix inversion MUMPSMEX')
-    disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(time_f_MUMPSMEX(6)),' (s)'])
-    disp(['ne(0): ',num2str(round(norm_f_MUMPSMEX{6}(1)/1e+16)/1e3),' (10+19 m-3) - Jlh(0): ',num2str(abs(curr_f_MUMPSMEX{6}(1))),' (MA/m2) - Plh(0): ',num2str(Prf_f_MUMPSMEX{6}(1)),' (MW/m3) - Pcoll(0): ',num2str(-Pcoll_f_MUMPSMEX{6}(1)),' (MW/m3)'])
-    disp('-------------------')
-end
-if exist('mexlusolve'),
-    disp('Matrix inversion SUPERLUMEX')
-    disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(time_f_SUPERLUMEX(6)),' (s)'])
-    disp(['ne(0): ',num2str(round(norm_f_SUPERLUMEX{6}(1)/1e+16)/1e3),' (10+19 m-3) - Jlh(0): ',num2str(abs(curr_f_SUPERLUMEX{6}(1))),' (MA/m2) - Plh(0): ',num2str(Prf_f_SUPERLUMEX{6}(1)),' (MW/m3) - Pcoll(0): ',num2str(-Pcoll_f_SUPERLUMEX{6}(1)),' (MW/m3)'])
-    disp('-------------------')
-end
-if isfield(dkepath,'PETSC'),
-    if flag_PETSC == 1,
-        disp('Matrix inversion with PETSc (SUPERLU, 1 processor) (collision loop in MatLab), npsi = 30')
-        disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(time_f_PETSc_slu_e(6)),' (s)'])
-        disp(['ne(0): ',num2str(round(norm_f_PETSc_slu_e{6}(1)/1e+16)/1e3),' (10+19 m-3) - Jlh(0): ',num2str(abs(curr_f_PETSc_slu_e{6}(1))),' (MA/m2) - Plh(0): ',num2str(Prf_f_PETSc_slu_e{6}(1)),' (MW/m3) - Pcoll(0): ',num2str(-Pcoll_f_PETSc_slu_e{6}(1)),' (MW/m3)'])
-        disp('-------------------')
-        disp('Matrix inversion with PETSc (SUPERLU, 1 processor) (collision loop in C), npsi = 30')
-        disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(time_f_PETSc_slu_i(6)),' (s)'])
-        disp(['ne(0): ',num2str(round(norm_f_PETSc_slu_i{6}(1)/1e+16)/1e3),' (10+19 m-3) - Jlh(0): ',num2str(abs(curr_f_PETSc_slu_i{6}(1))),' (MA/m2) - Plh(0): ',num2str(Prf_f_PETSc_slu_i{6}(1)),' (MW/m3) - Pcoll(0): ',num2str(-Pcoll_f_PETSc_slu_i{6}(1)),' (MW/m3)'])
-        disp('-------------------')
-    end
-    disp('Matrix inversion with PETSc (BCGS, 1 processor) (collision loop in MatLab), npsi = 30')
-    disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(time_f_PETSc_bcgs_e(6)),' (s)'])
-    disp(['ne(0): ',num2str(round(norm_f_PETSc_bcgs_e{6}(1)/1e+16)/1e3),' (10+19 m-3) - Jlh(0): ',num2str(abs(curr_f_PETSc_bcgs_e{6}(1))),' (MA/m2) - Plh(0): ',num2str(Prf_f_PETSc_bcgs_e{6}(1)),' (MW/m3) - Pcoll(0): ',num2str(-Pcoll_f_PETSc_bcgs_e{6}(1)),' (MW/m3)'])
-    disp('-------------------')
-    disp('Matrix inversion with PETSc (BCGS, 1 processor) (collision loop in C), npsi = 30')
-    disp(['droptolerance: ',num2str(0),' - Full CPU time: ',num2str(time_f_PETSc_bcgs_i(6)),' (s)'])
-    disp(['ne(0): ',num2str(round(norm_f_PETSc_bcgs_i{6}(1)/1e+16)/1e3),' (10+19 m-3) - Jlh(0): ',num2str(abs(curr_f_PETSc_bcgs_i{6}(1))),' (MA/m2) - Plh(0): ',num2str(Prf_f_PETSc_bcgs_i{6}(1)),' (MW/m3) - Pcoll(0): ',num2str(-Pcoll_f_PETSc_bcgs_i{6}(1)),' (MW/m3)'])
-end
+graph1D_jd(np_list,time_LUi_np,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(np_list,time_MX_np,0,0,'','','',NaN,xlim,ylim,'-','+','b',2,20,gca);
+%set(gca,'ytick',[0:0.2:1]*ylim(2))
+%set(gca,'xtick',[1e-7,1e-6,1e-5,1e-4,1e-3,1e-2,1e-1])
+set(gca,'xtick',[0:0.2:1]*xlim(2))
+%set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
+%set(gca,'XMinorGrid','off')
+%set(gca,'XMinorTick','on')
 %
-diary off
+figure(2),clf
+%
+leg = {'MATLAB LUi','MUMPSMEX'};
+xlim = [0,300];
+ylim = NaN;%[0,10];
+xlab = 'n_{\xi}';
+ylab = 'FPE calculation time (s)';
+tit = '';
+%
+graph1D_jd(nmhu_list,time_LUi_nmhu,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(nmhu_list,time_MX_nmhu,0,0,'','','',NaN,xlim,ylim,'-','+','b',2,20,gca);
+%set(gca,'ytick',[0:0.2:1]*ylim(2))
+%set(gca,'xtick',[1e-7,1e-6,1e-5,1e-4,1e-3,1e-2,1e-1])
+set(gca,'xtick',[0:0.2:1]*xlim(2))
+%set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
+%set(gca,'XMinorGrid','off')
+%set(gca,'XMinorTick','on')
+%
+figure(3),clf
+%
+leg = {'MATLAB LUi','MUMPSMEX'};
+xlim = [0,300];
+ylim = NaN;%[0,10];
+xlab = 'n_r';
+ylab = 'FPE calculation time (s)';
+tit = '';
+%
+graph1D_jd(nr_list,time_LUi_nr,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(nr_list,time_MX_nr,0,0,'','','',NaN,xlim,ylim,'-','+','b',2,20,gca);
+%set(gca,'ytick',[0:0.2:1]*ylim(2))
+%set(gca,'xtick',[1e-7,1e-6,1e-5,1e-4,1e-3,1e-2,1e-1])
+set(gca,'xtick',[0:0.2:1]*xlim(2))
+%set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
+%set(gca,'XMinorGrid','off')
+%set(gca,'XMinorTick','on')
+%
+%
+figure(4),clf
+%
+leg = {'MATLAB LUi','MUMPSMEX'};
+xlim = [0,300];
+ylim = NaN;%[0,10];
+xlab = 'n_p';
+ylab = 'LU matrix size (MBytes)';
+tit = '';
+%
+graph1D_jd(np_list,memory_LUi_np,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(np_list,memory_MX_np,0,0,'','','',NaN,xlim,ylim,'-','+','b',2,20,gca);
+%set(gca,'ytick',[0:0.2:1]*ylim(2))
+%set(gca,'xtick',[1e-7,1e-6,1e-5,1e-4,1e-3,1e-2,1e-1])
+set(gca,'xtick',[0:0.2:1]*xlim(2))
+%set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
+%set(gca,'XMinorGrid','off')
+%set(gca,'XMinorTick','on')
+%
+figure(5),clf
+%
+leg = {'MATLAB LUi','MUMPSMEX'};
+xlim = [0,300];
+ylim = NaN;%[0,10];
+xlab = 'n_{\xi}';
+ylab = 'LU matrix size (MBytes)';
+tit = '';
+%
+graph1D_jd(nmhu_list,memory_LUi_nmhu,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(nmhu_list,memory_MX_nmhu,0,0,'','','',NaN,xlim,ylim,'-','+','b',2,20,gca);
+%set(gca,'ytick',[0:0.2:1]*ylim(2))
+%set(gca,'xtick',[1e-7,1e-6,1e-5,1e-4,1e-3,1e-2,1e-1])
+set(gca,'xtick',[0:0.2:1]*xlim(2))
+%set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
+%set(gca,'XMinorGrid','off')
+%set(gca,'XMinorTick','on')
+%
+figure(6),clf
+%
+leg = {'MATLAB LUi','MUMPSMEX'};
+xlim = [0,300];
+ylim = NaN;%[0,10];
+xlab = 'n_r';
+ylab = 'LU matrix size (MBytes)';
+tit = '';
+%
+graph1D_jd(nr_list,memory_LUi_nr,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(nr_list,memory_MX_nr,0,0,'','','',NaN,xlim,ylim,'-','+','b',2,20,gca);
+%set(gca,'ytick',[0:0.2:1]*ylim(2))
+%set(gca,'xtick',[1e-7,1e-6,1e-5,1e-4,1e-3,1e-2,1e-1])
+set(gca,'xtick',[0:0.2:1]*xlim(2))
+%set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
+%set(gca,'XMinorGrid','off')
+%set(gca,'XMinorTick','on')
+%
+%
+print_jd(2,'fig_num_3D_np_time','.',1)
+print_jd(2,'fig_num_3D_np_memory','.',2)
+print_jd(2,'fig_num_3D_nmhu_time','.',3)
+print_jd(2,'fig_num_3D_nmhu_memory','.',4)
+print_jd(2,'fig_num_3D_nr_time','.',5)
+print_jd(2,'fig_num_3D_nr_memory','.',6)
 %	    
 %************************************************************************************************************************************
 eval(['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
