@@ -447,3 +447,204 @@ In addition:
 	- Runaway_Zi_nobounce/rundke.m renamed rundke_Zi.m
 	- Runaway_particle_loss/rundke.m renamed rundke_particle_loss.m
 
+
+****************************************************************************************************
+
+LUKE Version 1.4
+
+Main changes include:
+
+- CRONOS coupling (proper outputs, signs management, etc)
+- dNpar evolution (accessibility limit, numerical limit)
+- RHS at first FPE iteration, important for time evolution
+- HELMEX now working
+- Many corrections in preparation for publication
+
+====> LUKE
+
+U install_LUKE.m (update of PATH directory)
+
+====> LUKE/Project_DKE/DKE
+
+U bounce_dke_jd.m (modifs equil_mode = 0)
+U bouncecoefbuilder_dke_yp.m (qcronos calculated)
+U bounceparam_dke_yp.m (")
+U colddisp_dke_jd.m (accessibility condition added)
+U conc_struct_jd.m (treatment of particuliar cases)
+U eicoll_dke_yp.m (treatment of case Ti=0)
+U equilibrium_jd.m (magnetic field on axis added for qcronos calculation)
+U fact_dke_jd.m (matlab function with treatment of singles)
+U finit_dke_yp.m (update with Fuchs model)
+U fmoments_dke_yp.m (correction of cronos bounce averaging using qcronos)
+U graph1D_jd.m (figure fonts and marker properties)
+U load_structures_yp.m (correction when no wave is present)
+U LUKEversion_jd.m (version 1.4)
+U main_dke_yp.m (correction initial power and output of residue)
+U mex_compile_luke.m (display and helmex)
+U print_jd.m (modif Mac OSX)
+A proc_luke_jd.m (LUKE output treatment)
+U propagation_jd.m (correction initial power)
+U qfactors_dke_yp.m (qcronos calculated)
+U rad_dke_yp.m (to avoid error when vparmin > vnmax)
+U rayprocess_jd.m (account for varying dnpar in absorption when rt_mode = 4 and accessibility condition)
+U raysum_rf_jd.m (possibility to cap dparpar)
+U rfdiff_dke_jd.m (resolution by block and accessibility)
+U rfprop_dke_jd.m (initial power in ray)
+U rfwave_dke_jd.m (initial power in ray)
+U run_lukert.m (waves returned in dke_out, dnpar minimum in rt_mode = 2 for grid step, accessibility, 					account for varying dnpar in absorption when rt_mode = 4)
+U setpath_luke_jd.m (path ACCOME)
+U solver_dke_yp.m (correction for RHS at first iteration, loop simplification, residue saved and returned 				at all times)
+U wave_process_jd.m (account for varying dnpar in absorption whe rt_mode = 4, kextra effect)
+
+====> LUKE/Project_DKE/Database/DKEPARAM_files
+
+U make_dkeparam_EC_RT.m (Dparparmax added)
+U make_dkeparam_LH_RT.m (")
+U make_dkeparam_NONUNIFORM10010020.m (Dparparmax added and nonuniformity in mhu only)
+U make_dkeparam_UNIFORM10010020.m (Dparparmax added)
+R make_dkeparam_BOUNCE3D_MUMPS.m is no longer in the repository
+R make_dkeparam_BOUNCE3D_MUMPS_m201.m is no longer in the repository
+R make_dkeparam_BOUNCE3D_boostrap.m is no longer in the repository
+R make_dkeparam_NONUNIFORM100100R.m is no longer in the repository
+R make_dkeparam_UNIFORM10010020_MUMPS.m is no longer in the repository
+R make_dkeparam_UNIFORM10010020_RT.m is no longer in the repository
+R make_dkeparam_UNIFORM10010020_coll0.m is no longer in the repository
+R make_dkeparam_UNIFORM10010020_nit1.m is no longer in the repository
+
+====> LUKE/Project_DKE/Database/EQUIL_files
+
+U make_equil_JETh77.m (path management and other corrections)
+U make_equil_TScirc_e1.m (to avoid interp. problems)
+R make_equil_TScirc_peak.m is no longer in the repository
+R make_equil_TScyl_lowTene.m is no longer in the repository
+
+====> LUKE/Project_DKE/Database/OHM_files
+
+R make_ohm_JETh77_p005_flat.m is no longer in the repository
+R make_ohm_TScirc_e1_p001_flat.m is no longer in the repository
+R make_ohm_TScirc_e1_p005_flat.m is no longer in the repository
+R make_ohm_TScirc_e1_p008_flat.m is no longer in the repository
+R make_ohm_TScirc_p005_flat.m is no longer in the repository
+R make_ohm_TScyl_lowTene_p008_flat.m is no longer in the repository
+R make_ohm_TScyl_p001_flat.m is no longer in the repository
+R make_ohm_TScyl_p005_flat.m is no longer in the repository
+
+====> LUKE/Project_DKE/Database/PATH_files
+
+U make_path_LUKE.m (version 1.4)
+U make_path_LOCAL.m (version 1.4)
+
+====> LUKE/Project_DKE/Database/WAVE_files
+
+A make_idealLHwave_jd.m (makes wave structure based on v1, v2 an D)
+R make_wave_JETh77_LH_karney_offaxis_2.m is no longer in the repository
+R make_wave_TScirc_LH_karney.m is no longer in the repository
+R make_wave_TScirc_LH_karney_g.m is no longer in the repository
+R make_wave_TScirc_LH_karney_offaxis_1.m is no longer in the repository
+R make_wave_TScirc_LH_karney_offaxis_2.m is no longer in the repository
+R make_wave_TScirc_e1_LH_karney.m is no longer in the repository
+R make_wave_TScirc_e1_LH_karney_offaxis_2.m is no longer in the repository
+R make_wave_TScirc_peak_LH_karney_uniform.m is no longer in the repository
+R make_wave_TScirc_unicyl_psirho_LH_karney_offaxis_2.m is no longer in the repository
+R make_wave_TScyl_LH_karney.m is no longer in the repository
+R make_wave_TScyl_LH_karney_g.m is no longer in the repository
+R make_wave_TScyl_LH_karney_offaxis_2.m is no longer in the repository
+R make_wave_TSh77_LH_karney_offaxis_1.m is no longer in the repository
+
+====> LUKE/Project_DKE/Modules/ACCOME
+
+A accome_yp.m (reads ACCOME equilibrium data)
+A equil_magnetic_ACCOME_yp.m (builds accome equilibrium)
+A equil_prof_ACCOME_yp.m (builds accome profiles)
+
+====> LUKE/Project_DKE/Modules/Cronos
+
+U lhspectrum_cronos.m (sign management and possibility to add negative lobe)
+U make_dkeparam_cronos.m (Dparparmax added)
+U make_equil_cronos.m (sign management)
+U make_wavelaunchs_cronos_ec.m (simplifications and polarization)
+U make_wavelaunchs_cronos_lh.m (polarization and possibility to add negative lobe)
+U make_wavert_cronos.m (polarization and ray parameters updated)
+U zstarwars.m (simplifications, sign management and possibility to add negative lobe)
+
+====> LUKE/Project_DKE/Modules/EFIT
+
+U Teneprof_jd.m (EAST tokamak added)
+
+====> LUKE/Project_DKE/Modules/FEB
+
+U bremchord_dke_yp.m (file theta grid and chord length calculation)
+U bremlocaldisplay_dke_yp.m (comments)
+U bremsstrahlung_dke_yp.m (bugs and comments)
+A contourfp_hxr_yp.m (draws the eergetic particle regions of the distribution)
+
+====> LUKE/Project_DKE/Modules/Helena
+
+R equil_helmag_yp.m is no longer in the repository
+R equil_helprof_yp.m is no longer in the repository
+R make_equil_helena.m is no longer in the repository
+R make_helprof_yp.m is no longer in the repository
+R make_helsep_yp.m is no longer in the repository
+R run_helena_yp.m is no longer in the repository
+R Application/hel12b.f is no longer in the repository
+U testsep.txt (used by make_equil_helena)
+U MEX/Source/ReadMe.txt (updated instruction)
+A MEX/Source/helmex77_32b.f (helmex 32 bits)
+U MEX/Source/helmex77_64b.f (corrected)
+A MEX/Source/separatrice_32b.f (separatrix 32 bits)
+R MEX/Source/helmex77.f is no longer in the repository
+R MEX/Source/m64t32.sh is no longer in the repository
+R MEX/Source/separatrice.f is no longer in the repository
+U MEX/Bin/build_helmex77_yp.m (script to compile mex files)
+U MEX/Bin/readme.txt
+
+====> LUKE/Project_DKE/Modules/RT
+
+U main_C3PO_jd.m (additional points can be required)
+U main_rayinit_launch_jd.m (comments)
+U raypostprocessing_yp.m (accessibility condition calculated)
+U Examples/JETlike/WAVE/make_wave_JETliketest.m (bugs corrected)
+U Examples/JETlike/WAVE/make_wave_JETliketest_bis.m (")
+U Examples/VERSATOR2/WAVE/make_wave_VERSATOR2test.m (")
+U MEX/Source/raytracing_load_yp.c (additional points)
+U MEX/Source/raytracing_yp.c (")
+
+====> Simulations/Examples
+
+These files are examples updated for publication
+
+U run_all_examples.m
+U JETh77/LH_karney_transp_bounce/rundke.m
+U TScirc_e1/Ohm_bounce/conductivity_model_yp.m
+U TScirc_e1/Ohm_bounce/hinton_oberman_integral_yp.m
+U TScirc_e1/Ohm_bounce/rundke.m
+U TScirc_e1/Runaway_bounce/rundke.m
+U TScyl/LH_Karney/rundke.m
+U TScyl/LH_Karney/rundke_D0.m
+U TScyl/LH_Karney/rundke_Zi.m
+U TScyl/LH_Karney/rundke_betath.m
+U TScyl/LH_Karney/rundke_conv.m
+U TScyl/LH_Karney/rundke_grid.m
+U TScyl/LH_Karney/rundke_init.m
+U TScyl/LH_karney_3D_num/rundke.m
+U TScyl/LH_karney_num/rundke.m
+U TScyl/LH_karney_transp_nobounce/rundke.m
+U TScyl/Ohm/rundke_Zi.m
+U TScyl/Ohm/rundke_betath.m
+U TScyl/Ohm/rundke_epsi.m
+U TScyl/Runaway/rundke_Zi.m
+U TScyl/Runaway/rundke_betath.m
+U TScyl/Runaway/rundke_dtn.m
+U TScyl/Runaway/rundke_init.m
+U TScyl/Runaway/rundke_norm.m
+U TScyl/Runaway/rundke_norm_ss.m
+U TScyl/Runaway/rundke_time.m
+U TScyl/Thermal/rundke_Ti.m
+U TScyl/Thermal/rundke_dtn.m
+U TScyl/Thermal/rundke_norm.m
+R TScyl/LH_karney_Zi_D0/rundke.m is no longer in the repository
+R TScirc_e1/LH_Karney_bounce/rundke.m is no longer in the repository
+
+
+
+
