@@ -311,9 +311,9 @@ if isempty(find(MMXdiag==0)) == 1,
 %
     time_f = etime(clock,time0);
     if dkeparam.invproc >=1,
-       memoryLU_f = (getfield(whos('MMXL_f_t'),'bytes') + getfield(whos('MMXU_f_t'),'bytes'))/1000000;
+       memoryLU_f = (getfield(whos('MMXL_f_t'),'bytes') + getfield(whos('MMXU_f_t'),'bytes'))/1000000;%MBytes
     elseif dkeparam.invproc == -2,
-       memoryLU_f = id_MUMPSMEX.INFOG(22);%see MUMPS documentation
+       memoryLU_f = (id_MUMPSMEX.INFOG(9)*8 + id_MUMPSMEX.INFOG(10)*4)/1000000,%MBytes, see MUMPS documentation (8 bytes for double precision float, 4 byte for integer)
     end
 else
     error('Fokker-Planck matrix has a null element on the main diagonal');%Matrix must be main diagonal dominant
@@ -332,7 +332,7 @@ if dke_mode == 1,
     if dkeparam.invproc >=1,
        memoryLU_g = (getfield(whos('MMXL_g_t'),'bytes') + getfield(whos('MMXU_g_t'),'bytes'))/1000000;
     elseif dkeparam.invproc == -2,
-       memoryLU_g = id_MUMPSMEX.INFOG(22);%see MUMPS documentation
+       memoryLU_g = (id_MUMPSMEX.INFOG(9)*8 + id_MUMPSMEX.INFOG(10)*4)/1000000;%MBytes, see MUMPS documentation (8 bytes for double precision float, 4 byte for integer)
     end
 end
 %
