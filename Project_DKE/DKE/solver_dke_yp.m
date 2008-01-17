@@ -332,7 +332,7 @@ if dke_mode == 1,
     if dkeparam.invproc >=1,
        memoryLU_g = (getfield(whos('MMXL_g_t'),'bytes') + getfield(whos('MMXU_g_t'),'bytes'))/1000000;
     elseif dkeparam.invproc == -2,
-       memoryLU_f = id_MUMPSMEX.INFOG(22);%see MUMPS documentation
+       memoryLU_g = id_MUMPSMEX.INFOG(22);%see MUMPS documentation
     end
 end
 %
