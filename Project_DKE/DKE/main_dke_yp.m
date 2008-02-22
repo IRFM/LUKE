@@ -134,7 +134,8 @@ for it_rf=1:nit_rf, % convergence in the ray-tracing mode
                 yresidue_rf_out(iray,it_rf) = max(abs(zP_0_2piRp_mod{iray} - zP_0_2piRp_out{iray})./zP_0_2piRp_mod{iray}(1));
             end
             %
-            residue_rf(it_rf) = max([yresidue_rf_mod(:,it_rf);yresidue_rf_out(:,it_rf)]);
+            %residue_rf(it_rf) = max([yresidue_rf_mod(:,it_rf);yresidue_rf_out(:,it_rf)]);
+            residue_rf(it_rf) = max(yresidue_rf_mod(:,it_rf));
             %
             if display.display_mode >= 1,
                 figure(Fig_QLIter),
