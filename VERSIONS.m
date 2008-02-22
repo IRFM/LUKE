@@ -645,6 +645,44 @@ U TScyl/Thermal/rundke_norm.m
 R TScyl/LH_karney_Zi_D0/rundke.m is no longer in the repository
 R TScirc_e1/LH_Karney_bounce/rundke.m is no longer in the repository
 
+----------------------------------------------------------------------------------------------------
 
+LUKE Release 1.4.1
 
+- batch of the version LUKE 1.4
+	- cronos test and modifications
+	- figures for paper submission
+
+====> Project_DKE/DKE
+
+U LUKEversion_jd.m (version 1.4.1)
+U main_dke_yp.m (residue out desactivated)
+U proc_luke_jd.m (pnmax can be specified externally)
+U solver_dke_yp.m (Taille des matrices LU pour MUMPS)
+
+====> Project_DKE/Modules/Cronos
+
+U make_wavelaunchs_cronos_lh.m (Z0 for antenna vertical position and ITER case) 
+U make_wavert_cronos.m (kextra to 1000)
+U zstarwars.m (eco mode, vincenteries removed, cronos tested on ITER ramp up (J.F.A))
+
+====> Project_DKE/Modules/RT
+
+U main_rayinit_launch_jd.m (Z0 for antenna vertical position)
+
+====> Simulations/Examples
+
+U TScyl/LH_karney_3D_num/rundke.m (Final figure modifications for submission)
+U TScyl/LH_karney_num/rundke.m (")
+U TScyl/LH_karney_transp_nobounce/rundke.m (")
+U TScirc_e1/Runaway_bounce/rundke.m (")
+U TScyl/Runaway/rundke_betath.m (")
+U TScyl/LH_Karney/rundke_conv.m (")
+U TScyl/Thermal/rundke_dtn.m (")
+U TScyl/LH_Karney/rundke_grid.m (")
+U TScyl/Thermal/rundke_norm.m (")
+U TScyl/Thermal/rundke_Ti.m (")
+U TScyl/Runaway/rundke_time.m (")
+U TScirc_e1/Ohm_bounce/rundke.m (")
+U TScirc_peak/LH_karney_ripple/rundke.m (")
 
