@@ -8,7 +8,7 @@ close all
 %
 % path
 %
-id_dkepath = 'LUKE';%For all paths used by DKE solver
+id_dkepath = '';%For all paths used by DKE solver
 path_dkepath = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 [dkepath] = load_structures_yp('dkepath',id_dkepath,path_dkepath);

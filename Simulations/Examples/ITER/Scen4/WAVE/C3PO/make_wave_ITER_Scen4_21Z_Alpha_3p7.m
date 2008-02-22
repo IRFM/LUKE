@@ -13,7 +13,7 @@ id_wave = '21Z_Alpha_3p7';
 %
 % Path parameters
 %
-id_dkepath = 'LUKE_DRFC';%For all paths used by DKE solver
+id_dkepath = '';%For all paths used by DKE solver
 path_dkepath = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 % Equilibrium parameters
@@ -67,11 +67,16 @@ rayparam.tensortype = waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak realtivistic,
 rayparam.t0 = 0;
 rayparam.tfinal = 20000;
 rayparam.dt0 = 1.e-4;
-rayparam.drho = 1.e-4;
+rayparam.dS = 1.e-4;
 rayparam.tol = 1e-12;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
 rayparam.kmax = 30000;
 rayparam.ncyclharm = 3;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
 rayparam.reflection = 1;%1:Enforce wave reflection at plasma boundary, 0: the code calculates itself if the ray must leave of not the plasma
+rayparam.rel_opt = 1;%option for (1) relativistic or (0) non-relativistic calculations
+rayparam.nperp = 1000;%number of points in pperp integration for damping calculations
+rayparam.pperpmax = 10;%maximum value of pperp in damping calculations
+rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considered absorbed
+rayparam.kextra = 200;
 %
 % -------------------------------------------------------------------------
 %
