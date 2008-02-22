@@ -155,9 +155,9 @@ if nargin <= 1
 %
 	valeur.Dr_model = 1;%Radial diffusion type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth),
 	type.Dr_model = 'list';%Radial diffusion type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth),
-	borne.Dr_model = {0,1};%Radial diffusion type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth),
+	borne.Dr_model = {0,1,2};%Radial diffusion type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth),
 	defaut.Dr_model = 1;%Radial diffusion type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth),
-	info.Dr_model = 'Radial diffusion type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth)';
+	info.Dr_model = 'Radial diffusion type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth), (2) simple';
 %
 	valeur.Vr_model = 0;%Radial pinch type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth),
 	type.Vr_model = 'list';%Radial pinch type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth),
@@ -173,10 +173,10 @@ if nargin <= 1
 	defaut.kmode = 0;%Dielectric tensor (0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
 	info.kmode = 'Dielectric tensor (0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)';
 %	
-	valeur.ray_tfinal = 20000;%Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)
+	valeur.ray_tfinal = 100000;%Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)
 	type.ray_tfinal = 'float';%Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)
 	borne.ray_tfinal = [1000,100000];%Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)
-	defaut.ray_tfinal = 20000;%Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)
+	defaut.ray_tfinal = 100000;%Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)
 	info.ray_tfinal = 'Normalized time when ray-tracing is stopped (usually, tfinal is less than 10000)';
 	
 	
@@ -427,6 +427,7 @@ switch par.luke_mode
       cons = cons.lh_cons;
 
     end
+    %
     if strcmp(par.conf,'Ohmic')
       [launchs] = make_wavelaunchs_cronos_lh(equil,gene.signe,'MIXTE',cons,cons_spec,lob);%for the LH waves
     else
@@ -529,11 +530,19 @@ ripple.ripple = par.ripple;
 %
 transpfaste.vparmin  = par.vparmin_r;%Lower limit of the parallel velocity dependence of the radial diffusion and pinch (vth_ref or vth)
 transpfaste.norm_ref = par.norm_ref;%Normalization procedure for the lower limit of radial transport parallel velocity dependence: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref
-transpfaste.Dr0      = par.Dr0;%Core radial diffusion coefficient (m^2/s)
+if par.Dr_model == 2
+    transpfaste.Dr0 = 0;
+else
+    transpfaste.Dr0      = par.Dr0;%Core radial diffusion coefficient (m^2/s)
+end
 transpfaste.pDr      = par.pDr;%Coefficient for the Dr radial profile
 transpfaste.Vr0      = par.Vr0;%Core radial pinch coefficient (m/s)
 transpfaste.pVr      = par.pVr;%Coefficient for the Vr radial profile
-transpfaste.Dr_model = par.Dr_model;%Radial diffusion type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth),
+if par.Dr_model == 2
+    transpfaste.Dr_model = 0;%Radial diffusion type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth),
+else
+	transpfaste.Dr_model = par.Dr_model;%Radial diffusion type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth),
+end
 transpfaste.Vr_model = par.Vr_model;%Radial pinch type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth),
 %
 % PARAMETRES WAVE LH + EC (C3PO) 
@@ -557,7 +566,7 @@ for iw = 1:length(launchs),
     wavestructs{iw}.rayparam.tfinal = par.ray_tfinal;
     %
     if strcmp(par.oneray,'Yes') & strcmp(wavestructs{iw}.launch.type,'LH'),
-    	wavestructs{iw}.launch.ry0 = mean(wavestructs{iw}.launch.ry0);
+    	wavestructs{iw}.launch.rZ0 = mean(wavestructs{iw}.launch.rZ0);
     end
     %
 end
@@ -587,28 +596,31 @@ end
 %--------------------------- Execution du trace de rayon C3PO et du code cinetique LUKE --------------------------- 
 %
 ik = 1;
+warning off
 %
 if sum(abs(ohm.epsi)) ~= 0,%Calculate the Ohmic electric field contribution to the plasma current
    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp('cronos',[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,'',transpfaste,ripple,[],[]);
 end
 %
-while 1,
+%while 1,
    [Znorm_RF,Zcurr_RF,ZP0_RF,dke_out_RF,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = run_lukert('cronos',wavestructs,waves,[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[],opt_save);
-   if isempty(dke_warnings),
-      break;
-   else
-      info_dke_yp(2,'The RF power is not absorbed at an acceptable level for the quasilinear solution. The ray-tracing is relaunched with extended ray lengths');
+%   if isempty(dke_warnings),
+%      break;
+%   else
+%      info_dke_yp(2,'The RF power is not absorbed at an acceptable level for the quasilinear solution. The ray-tracing is relaunched with extended ray lengths');
 %
-      for iw = 1:length(launchs),
-         wavestructs{iw}.rayparam.tfinal = wavestructs{iw}.rayparam.tfinal*1.5^ik;
-         wavestructs{iw}.rayparam.kmax = wavestructs{iw}.rayparam.kmax*1.5^ik;
-         ik = ik + 1;
-         if ik > 10;
-            error('The RF power cannot absorbed at an acceptable level for the quasilinear solution even is ray lengths have been extended. Something is going wrong !!!');
-         end
-      end
-   end
-end
+%      for iw = 1:length(launchs),
+%         wavestructs{iw}.rayparam.tfinal = wavestructs{iw}.rayparam.tfinal*1.5^ik;
+%         wavestructs{iw}.rayparam.kmax = wavestructs{iw}.rayparam.kmax*1.5^ik;
+%         ik = ik + 1;
+%         if ik > 10;
+%            error('The RF power cannot absorbed at an acceptable level for the quasilinear solution even is ray lengths have been extended. Something is going wrong !!!');
+%         end
+%      end
+%   end
+%end
+clear raytracing_yp alphaphimex_jd trapz_dke_yp dmumpsmex
+warning on
 %
 signe_out = -signe.ip;
 %
@@ -655,20 +667,40 @@ equilDKE.xcron = interp1(psipncronos,gene.x,equilDKE.xpsin);
 % preparation des variables de sortie (sortie.j, sortie.el) pour CRONOS sur la bonne grille
 % et avec les bonnes unites
 %
-sortie.j  = interp1(equilDKE.xcron,j_LH_c,gene.x)*1e6;
-sortie.el = interp1(equilDKE.xcron,p_LH_c,gene.x);
+sortie.j  = interp1(equilDKE.xcron,j_LH_c,gene.x,'pchip','extrap') * 1e6;
+sortie.el = interp1(equilDKE.xcron,p_LH_c,gene.x,'pchip','extrap') * 1e6;
+if par.Dr_model == 2
+    sortie.j=diffJ(sortie.j,equi.rhomax*gene.x,par.D);  % diffusion phenomenologique du courant
+end
+
 %
 % blindage : 0 au bord, au centre on recopie la premiere valeur non nulle
 %
-indnan = find(isnan(sortie.j));
-indmax = max(indnan(gene.x(indnan) < 0.5))+1;
-sortie.j(indnan(gene.x(indnan) > 0.5))=0;
-sortie.j(indnan(gene.x(indnan) < 0.5))=sortie.j(indmax);
+%  indnan = find(isnan(sortie.j));
+%  indmax = max(indnan(gene.x(indnan) < 0.5))+1;
+%  sortie.j(indnan(gene.x(indnan) > 0.5))=0;
+%  sortie.j(indnan(gene.x(indnan) < 0.5))=sortie.j(indmax);
 
 %
-sortie.el(indnan(gene.x(indnan) > 0.5))=0;
-sortie.el(indnan(gene.x(indnan) < 0.5))=sortie.el(indmax);
-sortie.el(sortie.el<0)=0;
+%  sortie.el(indnan(gene.x(indnan) > 0.5))=0;
+%  sortie.el(indnan(gene.x(indnan) < 0.5))=sortie.el(indmax);
+%  sortie.el(sortie.el<0)=0;
+%
+% renormalisation du courant (VB, 4 février 2008, pour avoir la meme intégrale dans CRONOS et LUKE)
+%
+%  x       = gene.x;
+%  spr     = equi.spr;
+%  rhomax  = equi.rhomax;
+%  Icrotot = trapz(x,sortie.j.*spr)*rhomax;
+%  rap     = Icrotot ./ I_LH_c / 1e6
+%  sortie.j = sortie.j / rap;
+%
+% renormalisation de la puissance
+%
+%  vpr     = equi.vpr;
+%  Pcrotot = trapz(x,sortie.el.*vpr)*rhomax;
+%  rap     = Pcrotot ./ P_LH_c
+%  sortie.el = sortie.el / rap * 1e6;
 %
 % distribution function for use in CRONOS
 %
