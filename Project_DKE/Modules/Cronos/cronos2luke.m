@@ -87,6 +87,12 @@ if nargin <= 1
 	defaut.invproc = 1;%Iterative matrix inversion method: (1) cgs iterative method, (2) bicg iterative method, (3) qmr iterative method
 	info.invproc = 'Iterative matrix inversion method: (-30) PETSc interface (see data structure below) (-3): SUPERLUMEX sequential direct matrix inversion (LU matrix factorization done for each time a matrix inversion is called) (-2): MUMPSMEX sequential fortran 95 inversion using MUMPS LU matrix factorization (-1): MUMPS parallel (or sequential) fortran 95 direct inversion (LU matrix factorization done for each time a matrix inversion is called) (0) Matlab built-in direct inversion without any LU factorization (NOT RECOMMANDED !) (1) cgs iterative method, (2) bicg iterative method, (3) qmr iterative method';
 %
+	valeur.eco   = 'No';
+	type.eco = 'list';
+	borne.eco = {'No','Yes'};
+	defaut.eco = 'No';
+	info.eco = 'economic mode (to gain memory), nmhu=101, pnmax=20, np=121, nrho=15';
+%
 % DISPLAY PARAMETERS
 %
 	valeur.rho_display = 0.3;%Approximate radial position at which results are displayed if type.display_mode >= 1 [1,1]. Not used if NaN
@@ -238,7 +244,7 @@ if nargin <= 1
 % Note : parameters nd and nchi to replace nbcouronne and nbray to be implemented
 %
 	valeur.modpolar     = 2.*ones(1,nbfce);% mode polarisation : 1 -> X, 2 -> O [2]
-	type.modpolar       = 'integer';% type de la donnnee
+	type.modpolar       = 'list';% type de la donnnee
 	borne.modpolar      = {1,2};
 	defaut.modpolar     = 2;
 	info.modpolar       = 'polarisation mode : 1 -> X, 2 -> O [2]';
@@ -457,6 +463,18 @@ launchs = launchs(mask);
 % --------- Load first all parameters that are in files ------------
 %
 dkeparam         = make_dkeparam_cronos(par.launchtype);
+%
+if ~isfield(par,'eco')
+  par.eco='No';
+end
+if strcmp(par.eco,'Yes')
+  disp('memory economic mode on')
+  dkeparam.nmhu_S  = 101;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
+  dkeparam.np_S    = 121;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run) WARNING: must be adjusted so that effective momentum point number is larger than thepitch-angle one.
+  dkeparam.pnmax_S = 20;%Maximum value of the flux momentum grid (pth_ref)
+  par.rho_S = linspace(0,1,15);
+end
+%
 dkedisplay       = make_display_cronos(par.make_display);
 dkepath          = getappdata(0,'DKEPATH');
 dkepath.temppath = [dkepath.temppathroot,filesep,'CRONOS',filesep,timeid_jd(clock)];%Temporary subdirectory in scratch folder
