@@ -120,13 +120,13 @@ figure(1),clf
 leg = {'Free Mode','Fixed point','Normalization'};
 xlim = [0,tnmax];
 ylim = [-8,8]*1e-5;
-xlab = 'time /\tau_c';
+xlab = 't/\tau_c';
 ylab = '\Deltan/n_0';
 tit = '';
 colors = {'r','b','g','m'};
-graph1D_jd(0:dtn:tnmax,normf0_1_0-1,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+',colors{1},2,20,gca,0.9,0.7,0.7);
-graph1D_jd(0:dtn:tnmax,normf0_1_1-1,0,0,'','','',NaN,xlim,ylim,'-','+',colors{2},2,20,gca);
-graph1D_jd(0:dtn:tnmax,normf0_1_2-1,0,0,'','','',leg,xlim,ylim,'-','+',colors{3},2,20,gca);
+graph1D_jd(0:dtn:tnmax,(normf0_1_0-1)*1e3,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none',colors{1},2,20,gca,0.9,0.7,0.7);
+graph1D_jd(0:dtn:tnmax,normf0_1_1-1,0,0,'','','',NaN,xlim,ylim,'-','none',colors{2},2,20,gca);
+graph1D_jd(0:dtn:tnmax,(normf0_1_2-1)*1e3,0,0,'','','',leg,xlim,ylim,'-','none',colors{3},2,20,gca);
 set(gca,'xtick',[0:0.2:1]*tnmax)
 set(gca,'ytick',[-8:4:8]*1e-5)
 %
@@ -135,13 +135,13 @@ figure(2),clf
 leg = {'Free Mode','Fixed point','Normalization'};
 xlim = [0,tnmax];
 ylim = [-4,4]*1e-3;
-xlab = 'time /\tau_c';
+xlab = 't/\tau_c';
 ylab = '\Deltan/n_0';
 tit = '';
 colors = {'r','b','g','m'};
-graph1D_jd(0:dtn:tnmax,normf0_2_0-1,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+',colors{1},2,20,gca,0.9,0.7,0.7);
-graph1D_jd(0:dtn:tnmax,normf0_2_1-1,0,0,'','','',NaN,xlim,ylim,'-','+',colors{2},2,20,gca);
-graph1D_jd(0:dtn:tnmax,normf0_2_2-1,0,0,'','','',leg,xlim,ylim,'-','+',colors{3},2,20,gca);
+graph1D_jd(0:dtn:tnmax,normf0_2_0-1,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none',colors{1},2,20,gca,0.9,0.7,0.7);
+graph1D_jd(0:dtn:tnmax,normf0_2_1-1,0,0,'','','',NaN,xlim,ylim,'-','none',colors{2},2,20,gca);
+graph1D_jd(0:dtn:tnmax,normf0_2_2-1,0,0,'','','',leg,xlim,ylim,'-','none',colors{3},2,20,gca);
 set(gca,'xtick',[0:0.2:1]*tnmax)
 set(gca,'ytick',[-4:2:4]*1e-3)
 %

@@ -89,13 +89,13 @@ RRn = dke_out.XxRR_fsav(end,:)./dke_out_cyl.XxRR_fsav(end,:);
 %
 figure(1),clf
 %
-%leg = {'LUKE'};
+leg = {'LUKE'};
 xlim = [0,1];
 ylim = 10.^[-5,0];
 xlab = 'r/R_p';
 ylab = '\Gamma_R/\Gamma_R^{cyl}';
 tit = '';
-graph1D_jd(iar,RRn,0,1,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(iar,RRn,0,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
 set(gca,'xtick',[0:0.2:1])
 set(gca,'ytick',[1e-5 1e-4 1e-3 1e-2 1e-1 1])
 set(gca,'YMinorGrid','off')

@@ -113,7 +113,9 @@ for iDr0 = 1:length(Dr0_list),
     %
     P(:,iDr0) = ZP0.x_rf_fsav;
     %
-    tCPU_Dr0(iDr0) = dke_out.time_out;
+    tCPU(iDr0) = dke_out.time_out;
+    memory(iDr0) = dke_out.memoryLU_f_out;
+    tDKE(iDr0) = dke_out.time_DKE;
     %
     Itot(iDr0) = sum(Zcurr.x_0.*equilDKE.xdA_dke*mksa.j_ref);
     Ptot_2piRp(iDr0) = sum(ZP0.x_rf_fsav.'.*equilDKE.xdV_2piRp_dke*mksa.P_ref);
@@ -174,7 +176,7 @@ xlab = 'D_{\psi\psi} (m^{2}/s)';
 ylab = 'CPU time (s)';
 tit = '';
 %
-graph1D_jd(Dr0_list(2:end),tCPU_Dr0(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(Dr0_list(2:end),tCPU(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
 %
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[0.01,0.1,1,10,100])
@@ -182,6 +184,36 @@ set(gca,'XMinorGrid','off')
 set(gca,'XMinorTick','on')
 %
 figure(3),clf
+%
+xlim = [0.01,100];
+ylim = [0,200];
+xlab = 'D_{\psi\psi} (m^{2}/s)';
+ylab = 'FPE calculation time (s)';
+tit = '';
+%
+graph1D_jd(Dr0_list(2:end),tDKE(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
+%
+set(gca,'ytick',[0:0.2:1]*ylim(2))
+set(gca,'xtick',[0.01,0.1,1,10,100])
+set(gca,'XMinorGrid','off')
+set(gca,'XMinorTick','on')
+%
+figure(4),clf
+%
+xlim = [0.01,100];
+ylim = NaN;%[0,200];
+xlab = 'D_{\psi\psi} (m^{2}/s)';
+ylab = 'LU matrix size (MBytes)';
+tit = '';
+%
+graph1D_jd(Dr0_list(2:end),memory(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
+%
+%set(gca,'ytick',[0:0.2:1]*ylim(2))
+set(gca,'xtick',[0.01,0.1,1,10,100])
+set(gca,'XMinorGrid','off')
+set(gca,'XMinorTick','on')
+%
+figure(5),clf
 %
 xlim = [0.01,100];
 ylim = [0,0.06];
@@ -196,7 +228,7 @@ set(gca,'xtick',[0.01,0.1,1,10,100])
 set(gca,'XMinorGrid','off')
 set(gca,'XMinorTick','on')
 %
-figure(4),clf
+figure(6),clf
 %
 xlim = [0.01,100];
 ylim = [0,0.004];
@@ -211,7 +243,7 @@ set(gca,'xtick',[0.01,0.1,1,10,100])
 set(gca,'XMinorGrid','off')
 set(gca,'XMinorTick','on')
 %
-figure(5),clf
+figure(7),clf
 %
 xlim = [0.01,100];
 ylim = [0,6];
@@ -228,13 +260,15 @@ set(gca,'XMinorTick','on')
 %
 print_jd(2,'fig_transp_nobounce_j','.',1)
 print_jd(2,'fig_transp_nobounce_cpu','.',2)
-print_jd(2,'fig_transp_nobounce_I','.',3)
-print_jd(2,'fig_transp_nobounce_P','.',4)
-print_jd(2,'fig_transp_nobounce_Eta','.',5)
+print_jd(2,'fig_transp_nobounce_fpe','.',3)
+print_jd(2,'fig_transp_nobounce_memory','.',4)
+print_jd(2,'fig_transp_nobounce_I','.',5)
+print_jd(2,'fig_transp_nobounce_P','.',6)
+print_jd(2,'fig_transp_nobounce_Eta','.',7)
 %
 if opt_proc > 0 & strcmp(computer,'GLNXA64'), 
     %
-    figure(6),clf
+    figure(8),clf
     %
     xlim = [0:10];
     ylim = NaN;%[0,0.1];
@@ -247,7 +281,7 @@ if opt_proc > 0 & strcmp(computer,'GLNXA64'),
     set(gca,'ytick',[0:0.2:1]*ylim(2))
     set(gca,'xtick',[0:0.2:1]*xlim(2))
     %
-    print_jd(2,'fig_transp_nobounce_cpu_proc','.',6)
+    print_jd(2,'fig_transp_nobounce_cpu_proc','.',8)
     %
 end
 %

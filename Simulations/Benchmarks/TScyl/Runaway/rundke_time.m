@@ -134,12 +134,15 @@ set(gca,'YMinorTick','on')
 %
 figure(2),clf
 xlim = 10.^[0,5];
+ylim = 10.^[-8,-4.99];
+%
+mask = xRRv_0 > 0;
 %
 leg = {'Volumic losses','Boundary losses','Runaway rate'};
-graph1D_jd(t,xRRv_0,1,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(t(mask),xRRv_0(mask),1,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
 graph1D_jd(t,xRRs_0,1,1,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
 graph1D_jd(xlim,[RR_kulsrud,RR_kulsrud],1,1,'','','',leg,xlim,ylim,'--','none','k',2,20,gca);
-graph1D_jd(t,-xRRv_0,1,1,xlab,ylab,tit,NaN,xlim,ylim,'--','none','r',2,20,gca);
+graph1D_jd(t(~mask),-xRRv_0(~mask),1,1,xlab,ylab,tit,NaN,xlim,ylim,'--','none','r',2,20,gca);
 set(gca,'ytick',[1e-010 1e-09 1e-08 1e-07 1e-06 1e-05])
 set(gca,'xtick',[1 10 100 1000 10000 100000])
 set(gca,'XMinorGrid','off')

@@ -103,9 +103,9 @@ xlab = 'T_i/T_e';
 ylab = '\Deltan/n_0';
 tit = '';
 colors = {'r','b','g','m'};
-graph1D_jd(Tifac_list,normf0_final_0-1,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+',colors{1},2,20,gca,0.9,0.7,0.7);
-graph1D_jd(Tifac_list,normf0_final_1-1,1,0,'','','',NaN,xlim,ylim,'-','+',colors{2},2,20,gca);
-graph1D_jd(Tifac_list,normf0_final_2-1,1,0,'','','',leg,xlim,ylim,'-','+',colors{3},2,20,gca);
+graph1D_jd(Tifac_list,normf0_final_0-1,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none',colors{1},2,20,gca,0.9,0.7,0.7);
+graph1D_jd(Tifac_list,normf0_final_1-1,1,0,'','','',NaN,xlim,ylim,'-','none',colors{2},2,20,gca);
+graph1D_jd(Tifac_list,normf0_final_2-1,1,0,'','','',leg,xlim,ylim,'-','none',colors{3},2,20,gca);
 set(gca,'xtick',[0.01,0.1,1,10,100])
 set(gca,'XMinorGrid','off')
 set(gca,'XMinorTick','on')
@@ -120,9 +120,9 @@ xlab = 'T_i/T_e';
 ylab = 'convergence parameter';
 tit = '';
 colors = {'r','b','g','m'};
-graph1D_jd(Tifac_list,residue_final_0,1,1,xlab,ylab,tit,NaN,xlim,ylim,'-','+',colors{1},2,20,gca,0.9,0.7,0.7);
-graph1D_jd(Tifac_list,residue_final_1,1,1,'','','',NaN,xlim,ylim,'-','+',colors{2},2,20,gca);
-graph1D_jd(Tifac_list,residue_final_2,1,1,'','','',leg,xlim,ylim,'-','+',colors{3},2,20,gca);
+graph1D_jd(Tifac_list,residue_final_0,1,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none',colors{1},2,20,gca,0.9,0.7,0.7);
+graph1D_jd(Tifac_list,residue_final_1,1,1,'','','',NaN,xlim,ylim,'-','none',colors{2},2,20,gca);
+graph1D_jd(Tifac_list,residue_final_2,1,1,'','','',leg,xlim,ylim,'-','none',colors{3},2,20,gca);
 set(gca,'xtick',[0.01,0.1,1,10,100])
 set(gca,'XMinorGrid','off')
 set(gca,'XMinorTick','on')

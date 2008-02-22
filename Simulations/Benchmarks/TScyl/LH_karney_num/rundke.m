@@ -154,6 +154,7 @@ for imeth = 1:3,%Numerical method (CGS, BICG, QMR)
     end
 end
 %
+eta_LU = curr_LU./Prf_LU;
 eta_LUi = curr_LUi./Prf_LUi;
 %
 % MUMPS package
@@ -188,6 +189,8 @@ if exist('dmumpsmex'),
     Pcoll_MX = ZP0.x_c_fsav;
     %
     disp(['MUMPSMEX calculation done'])
+    %
+    eta_MX = curr_MX./Prf_MX;
 end
 %
 % SUPERLU package
@@ -285,7 +288,7 @@ end
 %
 figure(1),clf
 %
-leg = {'CGS','BICG','QMR'};
+leg = {'CGS','BICG','QMR','MUMPS'};
 xlim = 10.^[-7,-1];
 ylim =[0,10];
 xlab = '\delta_{LU}';
@@ -294,7 +297,8 @@ tit = '';
 %
 graph1D_jd(ludroptol_list,time_LUi(:,1),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20,gca,0.9,0.7,0.7);
 graph1D_jd(ludroptol_list,time_LUi(:,2),1,0,'','','',NaN,xlim,ylim,'-','+','b',2,20,gca);
-graph1D_jd(ludroptol_list,time_LUi(:,3),1,0,'','','',leg,xlim,ylim,'-','+','g',2,20,gca);
+graph1D_jd(ludroptol_list,time_LUi(:,3),1,0,'','','',NaN,xlim,ylim,'-','+','g',2,20,gca);
+graph1D_jd(xlim,[time_MX,time_MX],1,0,'','','',leg,xlim,ylim,'--','none','k',2,20,gca);
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[1e-7,1e-6,1e-5,1e-4,1e-3,1e-2,1e-1])
 %set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
@@ -304,7 +308,7 @@ set(gca,'XMinorTick','on')
 %
 figure(2),clf
 %
-leg = {'CGS','BICG','QMR'};
+leg = {'MATLAB','MUMPS'};
 xlim = 10.^[-7,-1];
 ylim = [0,25];
 xlab = '\delta_{LU}';
@@ -312,8 +316,7 @@ ylab = 'LU matrix size (MBytes)';
 tit = '';
 %
 graph1D_jd(ludroptol_list,memory_LUi(:,1),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(ludroptol_list,memory_LUi(:,2),1,0,'','','',NaN,xlim,ylim,'-','+','b',2,20,gca);
-graph1D_jd(ludroptol_list,memory_LUi(:,3),1,0,'','','',leg,xlim,ylim,'-','+','g',2,20,gca);
+graph1D_jd(xlim,[memory_MX,memory_MX],1,0,'','','',leg,xlim,ylim,'--','none','k',2,20,gca);
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[1e-7,1e-6,1e-5,1e-4,1e-3,1e-2,1e-1])
 %set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
@@ -399,12 +402,39 @@ set(gca,'xtick',[1e-7,1e-6,1e-5,1e-4,1e-3,1e-2,1e-1])
 set(gca,'XMinorGrid','off')
 set(gca,'XMinorTick','on')
 %
+figure(7),clf
+%
+leg = {'CGS','BICG','QMR','MUMPS'};
+xlim = 10.^[-7,-1];
+ylim = 10.^[-12,0.001];
+xlab = '\delta_{LU}';
+ylab = 'Relative Error on \eta';
+tit = '';
+%
+etaerr_LUi = abs(eta_LUi - eta_LU)/eta_LU;
+etaerr_MX = abs(eta_MX - eta_LU)/eta_LU;
+%
+graph1D_jd(ludroptol_list,etaerr_LUi(:,1),1,1,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(ludroptol_list,etaerr_LUi(:,2),1,1,'','','',NaN,xlim,ylim,'-','+','b',2,20,gca);
+graph1D_jd(ludroptol_list,etaerr_LUi(:,3),1,1,'','','',NaN,xlim,ylim,'-','+','g',2,20,gca);
+graph1D_jd(xlim,[etaerr_MX,etaerr_MX],1,0,'','','',leg,xlim,ylim,'--','none','k',2,20,gca);
+%set(gca,'ytick',[0:0.2:1]*ylim(2))
+set(gca,'ytick',[1e-12,1e-10,1e-8,1e-6,1e-4,1e-2,1e-0])
+set(gca,'xtick',[1e-7,1e-6,1e-5,1e-4,1e-3,1e-2,1e-1])
+%set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
+set(gca,'XMinorGrid','off')
+set(gca,'XMinorTick','on')
+set(gca,'YMinorGrid','off')
+set(gca,'YMinorTick','on')
+%
+%
 print_jd(2,'fig_num_time','.',1)
 print_jd(2,'fig_num_memory','.',2)
 print_jd(2,'fig_num_n','.',3)
 print_jd(2,'fig_num_j','.',4)
 print_jd(2,'fig_num_P','.',5)
 print_jd(2,'fig_num_eta','.',6)
+print_jd(2,'fig_num_etarel','.',7)
 %
 %
 iludrop = length(ludroptol_list) - 1;

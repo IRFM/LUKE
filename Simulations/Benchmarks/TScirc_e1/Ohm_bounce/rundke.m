@@ -95,13 +95,13 @@ figure(1),clf
 %
 leg = {'LUKE','Sigmar-Coppi','Connor et al.','Location','NorthWest'};
 xlim = [0,1];
-ylim = [1,10000];
+ylim = [1,1000];
 xlab = 'r/R_p';
 ylab = '\sigma_{cyl}/\sigma';
 tit = '';
-graph1D_jd(iar_luke,1./sigman_luke,0,1,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(iar_luke,1./sigman_luke,0,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
 graph1D_jd(iar,1./sigman_sc,0,0,'','','',leg,xlim,ylim,'-','none','b',2,20,gca);
-graph1D_jd(iar,1./sigman_cghk,0,0,'','','',leg,xlim,ylim,'--','none','g',2,20,gca);
+graph1D_jd(iar,1./sigman_cghk,0,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
 set(gca,'xtick',[0:0.2:1])
 set(gca,'ytick',[1 10 100 1000 10000])
 set(gca,'YMinorGrid','off')

@@ -186,10 +186,10 @@ xlab = 'n_p';
 ylab = 'j';
 tit = '';
 %
-graph1D_jd(np_list,j_rel_50,1,0,xlab,ylab,tit,NaN,xlim,ylim,'none','.','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(np_list,j_rel_100,1,0,'','','',NaN,xlim,ylim,'none','.','b',2,20,gca);
-graph1D_jd(np_list,j_rel_200,1,0,'','','',leg,xlim,ylim,'none','.','g',2,20,gca);
-graph1D_jd(xlim,[j_rel_k,j_rel_k],0,0,'','','',NaN,xlim,ylim,'--','none','b',2,20,gca);
+graph1D_jd(np_list,j_rel_50,1,0,xlab,ylab,tit,NaN,xlim,ylim,'none','+','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(np_list,j_rel_100,1,0,'','','',NaN,xlim,ylim,'none','+','b',2,20,gca);
+graph1D_jd(np_list,j_rel_200,1,0,'','','',leg,xlim,ylim,'none','+','g',2,20,gca);
+graph1D_jd(xlim,[j_rel_k,j_rel_k],0,0,'','','',NaN,xlim,ylim,'--','none','k',2,20,gca);
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[10,100,1000])
 %set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
@@ -201,10 +201,10 @@ figure(2),clf
 ylim = [0,0.0005];
 ylab = 'P';
 %
-graph1D_jd(np_list,p_rel_50,1,0,xlab,ylab,tit,NaN,xlim,ylim,'none','.','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(np_list,p_rel_100,1,0,'','','',NaN,xlim,ylim,'none','.','b',2,20,gca);
-graph1D_jd(np_list,p_rel_200,1,0,'','','',leg,xlim,ylim,'none','.','g',2,20,gca);
-graph1D_jd(xlim,[p_rel_k,p_rel_k],0,0,'','','',NaN,xlim,ylim,'--','none','b',2,20,gca);
+graph1D_jd(np_list,p_rel_50,1,0,xlab,ylab,tit,NaN,xlim,ylim,'none','+','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(np_list,p_rel_100,1,0,'','','',NaN,xlim,ylim,'none','+','b',2,20,gca);
+graph1D_jd(np_list,p_rel_200,1,0,'','','',leg,xlim,ylim,'none','+','g',2,20,gca);
+graph1D_jd(xlim,[p_rel_k,p_rel_k],0,0,'','','',NaN,xlim,ylim,'--','none','k',2,20,gca);
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[10,100,1000])
 %set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
@@ -217,10 +217,10 @@ ylim = [0,50];
 ylab = 'j/P';
 tit = '';
 %
-graph1D_jd(np_list,eta_rel_50,1,0,xlab,ylab,tit,NaN,xlim,ylim,'none','.','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(np_list,eta_rel_100,1,0,'','','',NaN,xlim,ylim,'none','.','b',2,20,gca);
-graph1D_jd(np_list,eta_rel_200,1,0,'','','',leg,xlim,ylim,'none','.','g',2,20,gca);
-graph1D_jd(xlim,[eta_rel_k,eta_rel_k],0,0,'','','',NaN,xlim,ylim,'--','none','b',2,20,gca);
+graph1D_jd(np_list,eta_rel_50,1,0,xlab,ylab,tit,NaN,xlim,ylim,'none','+','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(np_list,eta_rel_100,1,0,'','','',NaN,xlim,ylim,'none','+','b',2,20,gca);
+graph1D_jd(np_list,eta_rel_200,1,0,'','','',leg,xlim,ylim,'none','+','g',2,20,gca);
+graph1D_jd(xlim,[eta_rel_k,eta_rel_k],0,0,'','','',NaN,xlim,ylim,'--','none','k',2,20,gca);
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[10,100,1000])
 %set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
@@ -233,10 +233,10 @@ ylim = [0,0.1];
 ylab = 'j';
 tit = '';
 %
-graph1D_jd(np_list,j_nr_50,1,0,xlab,ylab,tit,NaN,xlim,ylim,'none','.','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(np_list,j_nr_100,1,0,'','','',NaN,xlim,ylim,'none','.','b',2,20,gca);
-graph1D_jd(np_list,j_nr_200,1,0,'','','',leg,xlim,ylim,'none','.','g',2,20,gca);
-graph1D_jd(xlim,[j_nr_k,j_nr_k],0,0,'','','',NaN,xlim,ylim,'--','none','b',2,20,gca);
+graph1D_jd(np_list,j_nr_50,1,0,xlab,ylab,tit,NaN,xlim,ylim,'none','+','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(np_list,j_nr_100,1,0,'','','',NaN,xlim,ylim,'none','+','b',2,20,gca);
+graph1D_jd(np_list,j_nr_200,1,0,'','','',leg,xlim,ylim,'none','+','g',2,20,gca);
+graph1D_jd(xlim,[j_nr_k,j_nr_k],0,0,'','','',NaN,xlim,ylim,'--','none','k',2,20,gca);
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[10,100,1000])
 %set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
@@ -248,10 +248,10 @@ figure(5),clf
 ylim = [0,0.01];
 ylab = 'P';
 %
-graph1D_jd(np_list,p_nr_50,1,0,xlab,ylab,tit,NaN,xlim,ylim,'none','.','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(np_list,p_nr_100,1,0,'','','',NaN,xlim,ylim,'none','.','b',2,20,gca);
-graph1D_jd(np_list,p_nr_200,1,0,'','','',leg,xlim,ylim,'none','.','g',2,20,gca);
-graph1D_jd(xlim,[p_nr_k,p_nr_k],0,0,'','','',NaN,xlim,ylim,'--','none','b',2,20,gca);
+graph1D_jd(np_list,p_nr_50,1,0,xlab,ylab,tit,NaN,xlim,ylim,'none','+','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(np_list,p_nr_100,1,0,'','','',NaN,xlim,ylim,'none','+','b',2,20,gca);
+graph1D_jd(np_list,p_nr_200,1,0,'','','',leg,xlim,ylim,'none','+','g',2,20,gca);
+graph1D_jd(xlim,[p_nr_k,p_nr_k],0,0,'','','',NaN,xlim,ylim,'--','none','k',2,20,gca);
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[10,100,1000])
 %set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
@@ -264,10 +264,10 @@ ylim = [0,30];
 ylab = 'j/P';
 tit = '';
 %
-graph1D_jd(np_list,eta_nr_50,1,0,xlab,ylab,tit,NaN,xlim,ylim,'none','.','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(np_list,eta_nr_100,1,0,'','','',NaN,xlim,ylim,'none','.','b',2,20,gca);
-graph1D_jd(np_list,eta_nr_200,1,0,'','','',leg,xlim,ylim,'none','.','g',2,20,gca);
-graph1D_jd(xlim,[eta_nr_k,eta_nr_k],0,0,'','','',NaN,xlim,ylim,'--','none','b',2,20,gca);
+graph1D_jd(np_list,eta_nr_50,1,0,xlab,ylab,tit,NaN,xlim,ylim,'none','+','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(np_list,eta_nr_100,1,0,'','','',NaN,xlim,ylim,'none','+','b',2,20,gca);
+graph1D_jd(np_list,eta_nr_200,1,0,'','','',leg,xlim,ylim,'none','+','g',2,20,gca);
+graph1D_jd(xlim,[eta_nr_k,eta_nr_k],0,0,'','','',NaN,xlim,ylim,'--','none','k',2,20,gca);
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[10,100,1000])
 %set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})

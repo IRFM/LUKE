@@ -133,9 +133,9 @@ ylab = 'j';
 tit = '';
 %
 graph1D_jd(0:dtn:tnmax,dke_out_2.curr0,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(0:dtn:tnmax,dke_out_0.curr0,0,0,'','','',leg,xlim,ylim,'-','none','b',2,20,gca);
+graph1D_jd(0:dtn:tnmax,dke_out_0.curr0,0,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
 graph1D_jd(xlim,[j_k_2,j_k_2],0,0,'','','',NaN,xlim,ylim,'--','none','r',2,20,gca);
-graph1D_jd(xlim,[j_k_0,j_k_0],0,0,'','','',NaN,xlim,ylim,'--','none','b',2,20,gca);
+graph1D_jd(xlim,[j_k_0,j_k_0],0,0,'','','',NaN,xlim,ylim,'--','none','g',2,20,gca);
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[0:0.2:1]*xlim(2))
 %
@@ -149,7 +149,7 @@ ylab = 'R_f';
 tit = '';
 %
 graph1D_jd(dtn:dtn:tnmax,dke_out_2.residu_f,0,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(dtn:dtn:tnmax,dke_out_0.residu_f,0,1,'','','',leg,xlim,ylim,'-','none','b',2,20,gca);
+graph1D_jd(dtn:dtn:tnmax,dke_out_0.residu_f,0,1,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
 set(gca,'xtick',[0:0.2:1]*xlim(2))
 set(gca,'ytick',[1e-20 1e-15 1e-10 1e-5 1])
 set(gca,'YMinorGrid','off')
@@ -165,7 +165,7 @@ ylab = '(j-j_f)/j_f';
 tit = '';
 %
 graph1D_jd(0:dtn:tnmax,dcurr_2,0,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(0:dtn:tnmax,dcurr_0,0,1,'','','',leg,xlim,ylim,'-','none','b',2,20,gca);
+graph1D_jd(0:dtn:tnmax,dcurr_0,0,1,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
 set(gca,'xtick',[0:0.2:1]*xlim(2))
 set(gca,'ytick',[1e-20 1e-15 1e-10 1e-5 1])
 set(gca,'YMinorGrid','off')
@@ -181,7 +181,7 @@ ylab = '(n-n_f)/n_f';
 tit = '';
 %
 graph1D_jd(0:dtn:tnmax,dnorm_2,0,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(0:dtn:tnmax,dnorm_0,0,1,'','','',leg,xlim,ylim,'-','none','b',2,20,gca);
+graph1D_jd(0:dtn:tnmax,dnorm_0,0,1,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
 set(gca,'xtick',[0:0.2:1]*xlim(2))
 set(gca,'ytick',[1e-20 1e-15 1e-10 1e-5 1])
 set(gca,'YMinorGrid','off')

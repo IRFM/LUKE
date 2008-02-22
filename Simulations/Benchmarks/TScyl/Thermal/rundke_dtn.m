@@ -140,46 +140,51 @@ end
 %
 figure(1),clf
 %
+leg = {'\Deltat/\tau_c = 500','\Deltat/\tau_c = 5000','\Deltat/\tau_c = 50000'};
 xlim = [0,tnmax];
 ylim = [-4,4]*1e-8;
-xlab = 'time /\tau_c';
+xlab = 't/\tau_c';
 ylab = '\Deltan/n_0';
 tit = '';
 colors = {'r','b','g','m'};
-graph1D_jd(0:dtn_list(1):tnmax,normf0_u_1{1}-1,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+',colors{1},2,20,gca,0.9,0.7,0.7);
+graph1D_jd(0:dtn_list(1):tnmax,normf0_u_1{1}-1,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none',colors{1},2,20,gca,0.9,0.7,0.7);
 for idtn = 2:length(dtn_list);
-    graph1D_jd(0:dtn_list(idtn):tnmax,normf0_u_1{idtn}-1,0,0,'','','',NaN,xlim,ylim,'-','+',colors{idtn},2,20,gca);
+    graph1D_jd(0:dtn_list(idtn):tnmax,normf0_u_1{idtn}-1,0,0,'','','',NaN,xlim,ylim,'-','none',colors{idtn},2,20,gca);
 end
+legend(leg)
 set(gca,'xtick',[0:0.2:1]*tnmax)
 set(gca,'ytick',[-4:2:4]*1e-8)
 %
 figure(2),clf
 %
 ylim = [-4,4]*1e-3;
-graph1D_jd(0:dtn_list(1):tnmax,normf0_u_2{1}-1,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+',colors{1},2,20,gca,0.9,0.7,0.7);
+graph1D_jd(0:dtn_list(1):tnmax,normf0_u_2{1}-1,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none',colors{1},2,20,gca,0.9,0.7,0.7);
 for idtn = 2:length(dtn_list);
-    graph1D_jd(0:dtn_list(idtn):tnmax,normf0_u_2{idtn}-1,0,0,'','','',NaN,xlim,ylim,'-','+',colors{idtn},2,20,gca);
+    graph1D_jd(0:dtn_list(idtn):tnmax,normf0_u_2{idtn}-1,0,0,'','','',NaN,xlim,ylim,'-','none',colors{idtn},2,20,gca);
 end
+legend(leg)
 set(gca,'xtick',[0:0.2:1]*tnmax)
 set(gca,'ytick',[-4:2:4]*1e-3)
 %
 figure(3),clf
 %
 ylim = [-5,5]*1e-8;
-graph1D_jd(0:dtn_list(1):tnmax,normf0_nu_1{1}-1,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+',colors{1},2,20,gca,0.9,0.7,0.7);
+graph1D_jd(0:dtn_list(1):tnmax,normf0_nu_1{1}-1,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none',colors{1},2,20,gca,0.9,0.7,0.7);
 for idtn = 2:length(dtn_list);
-    graph1D_jd(0:dtn_list(idtn):tnmax,normf0_nu_1{idtn}-1,0,0,'','','',NaN,xlim,ylim,'-','+',colors{idtn},2,20,gca);
+    graph1D_jd(0:dtn_list(idtn):tnmax,normf0_nu_1{idtn}-1,0,0,'','','',NaN,xlim,ylim,'-','none',colors{idtn},2,20,gca);
 end
+legend(leg)
 set(gca,'xtick',[0:0.2:1]*tnmax)
 set(gca,'ytick',[-4:2:4]*1e-8)
 %
 figure(4),clf
 %
 ylim = [-4,4]*1e-3;
-graph1D_jd(0:dtn_list(1):tnmax,normf0_nu_2{1}-1,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+',colors{1},2,20,gca,0.9,0.7,0.7);
+graph1D_jd(0:dtn_list(1):tnmax,normf0_nu_2{1}-1,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none',colors{1},2,20,gca,0.9,0.7,0.7);
 for idtn = 2:length(dtn_list);
-    graph1D_jd(0:dtn_list(idtn):tnmax,normf0_nu_2{idtn}-1,0,0,'','','',NaN,xlim,ylim,'-','+',colors{idtn},2,20,gca);
+    graph1D_jd(0:dtn_list(idtn):tnmax,normf0_nu_2{idtn}-1,0,0,'','','',NaN,xlim,ylim,'-','none',colors{idtn},2,20,gca);
 end
+legend(leg)
 set(gca,'xtick',[0:0.2:1]*tnmax)
 set(gca,'ytick',[-4:2:4]*1e-3)
 %

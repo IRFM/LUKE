@@ -111,8 +111,8 @@ ylab = '\Gamma_R';
 tit = '';
 graph1D_jd(betath_list,RR_2,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
 graph1D_jd(betath_list,RR_1,1,0,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
-graph1D_jd(betath_list,RR_0,1,0,'','','',leg,xlim,ylim,'-','none','m',2,20,gca);
-%graph1D_jd(betath_list,RR_4,1,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
+graph1D_jd(betath_list,RR_0,1,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
+%graph1D_jd(betath_list,RR_4,1,0,'','','',leg,xlim,ylim,'-','none','m',2,20,gca);
 graph1D_jd(xlim,[RR_kulsrud,RR_kulsrud],1,0,'','','',NaN,xlim,ylim,'--','none','k',2,20,gca);
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[1e-05 0.0001 0.001 0.01 0.1 1])
