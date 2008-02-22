@@ -14,7 +14,7 @@ function rayinit = main_rayinit_launch_jd(equil,launch)
 %       - bPlhtot: initial power in the ray (W) [1,n_lobe]
 %       - bNpar0: Initial Npar value [1,n_lobe]
 %       - bdNpar0: Initial dNpar value [1,n_lobe]
-%       - ry0: vertical launching positions [m_pol,1]
+%       - rZ0: vertical launching positions [m_pol,1]
 %
 %       - m0: initial poloidal mode number
 %       - n0: initial toroidal mode number
@@ -134,7 +134,8 @@ elseif launch.type == 'LH',
    bP0 = launch.bPlhtot;%initial power in the ray (W) [1,n_lobe]
    bNpar0 = launch.bNpar0;%Initial Npar value [1,n_lobe]
    bdNpar0 = launch.bdNpar0;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-   rby0 = [launch.ry0(:)*ones(1,length(bP0))];%[m_pol,n_lobe]
+   ry0 = launch.rZ0 - equil.Zp;
+   rby0 = [ry0(:)*ones(1,length(bP0))];%[m_pol,n_lobe]
 %
 % Ray initial characteristics
 %
