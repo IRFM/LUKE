@@ -1,4 +1,4 @@
-function proc_luke_jd(data,ir_display,p_opt,dp_cyl)
+function proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnmax)
 %
 % This function plots the results from LUKE data structure
 %
@@ -8,6 +8,9 @@ function proc_luke_jd(data,ir_display,p_opt,dp_cyl)
 %
 % by Y.Peysson (CEA-DRFC) <yves.peysson@cea.fr> and J. Decker (CEA-DRFC) <joan.decker@cea.fr>
 %
+if nargin < 5,
+    pnmax = NaN;
+end
 if nargin < 4,
     dp_cyl = 0.1;
 end
@@ -174,7 +177,9 @@ if ir_display > 0 & ir_display <= nr,
     pnmax_S = max(momentumDKE.pn_S);
     pnmax_0 = min(min(Xp_cyl_ref(Xmask)));
     %
-    pnmax = min([pnmax_0,pnmax_S]);
+    if isnan(pnmax),
+        pnmax = min([pnmax_0,pnmax_S]);
+    end
     %
     Xmask = Xp_cyl_ref >= pnmax;    
     %
@@ -219,25 +224,29 @@ if ir_display > 0 & ir_display <= nr,
     legend(leg);
     %
     if equilDKE.Rp ~= Inf,
-        bounce_ripple_jd(1,pnmax,gridDKE.xmhubounce2,ir_display,[]);
+        bounce_ripple_jd(1,pnmax,gridDKE.xmhubounce2,ir_display,Zmripple);
     end
     %
     print_jd(p_opt,['f_2D',tir_display],'.');
     %
-    figure(5),clf
-    %
-    cont = 10;
-    %
-    graph2D_jd(x1,x2,y3','','','',xlim1,xlim2,1,NaN,cont,0,style,NaN,width,siz,1);
-    graph1D_jd(x1,y9,0,0,xlab1,xlab2,'',NaN,xlim1,xlim2,style,marker,color1,width2,siz,gca,red,lspace,bspace);
-    axis('equal');axis([xlim1,xlim2])
-    %
-    if equilDKE.Rp ~= Inf,
-        bounce_ripple_jd(1,pnmax,gridDKE.xmhubounce2,ir_display,[]);
+    if max(max(abs(y3))) > 0,
+        %
+        figure(5),clf
+        %
+        cont = 10;
+        %
+        graph2D_jd(x1,x2,y3','','','',xlim1,xlim2,1,NaN,cont,0,style,NaN,width,siz,1);
+        graph1D_jd(x1,y9,0,0,xlab1,xlab2,'',NaN,xlim1,xlim2,style,marker,color1,width2,siz,gca,red,lspace,bspace);
+        axis('equal');axis([xlim1,xlim2])
+        %
+        if equilDKE.Rp ~= Inf,
+            bounce_ripple_jd(1,pnmax,gridDKE.xmhubounce2,ir_display,[]);
+        end
+        colorbar
+        %
+        print_jd(p_opt,['DQL',tir_display],'.');
+        %
     end
-    colorbar
-    %
-    print_jd(p_opt,['DQL',tir_display],'.');
     %
     % ---------- parallel distribution difference-----------
     %
