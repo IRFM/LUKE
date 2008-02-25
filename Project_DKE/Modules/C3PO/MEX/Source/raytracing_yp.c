@@ -849,7 +849,7 @@ Update the solution only if the error is acceptable
 
 /*           mexPrintf("t1,rho2,theta2,phi2,krho2,m2:%g,%g,%g,%g,%g,%g\n",t1,rho2,theta2,phi2,krho2,m2); */
                
-            if (rho2 < rayparam.dS[0]) {/* Boundary condition at rho = 0  */     
+            if (rho2 < 2*rayparam.dS[0]) {/* Boundary condition at rho = 0  */     
                 rho2 = rho1;
 		        theta2 = theta1 + PI;
                 phi2 = phi1;
@@ -1613,6 +1613,8 @@ pp_1D_format dxstardpsin_fit;
 /*  mexPrintf("delta,krho1,krho2p,krho2m:%g,%g,%g,%g\n",delta,krho1,krho2p,krho2m); */
         mexPrintf("WARNING: Problem for the wave reflection at the plasma edge. Try to modify dt0 or PSHRINK is raytracing_yp.c !\n");
     return(-1);
+    } else {
+    return(0);
     }
 
 }
@@ -2596,8 +2598,8 @@ double sgn(x)
 double x;
 {
    if (x < 0.0) {return(-1.0);} 
-   if (x == 0.0) {return(0.0);}    
-   if (x > 0.0) {return(1.0);}    
+   else if (x == 0.0) {return(0.0);}    
+   else {return(1.0);}    
     
 }
 

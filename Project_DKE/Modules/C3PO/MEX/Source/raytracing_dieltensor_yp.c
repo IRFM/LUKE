@@ -1225,7 +1225,7 @@ double complex Nperp,dNperpdx[];
     N0 = XX*dN0dX;
     dN0dY = coeff4*(dmuF711dY-dN0dX+I*dmuI711dY);
     dN0dTe = coeff4*((dmuF711dTe-dmuF701dTe)+I*(dmuI711dTe-dmuI701dTe));
-    dN0dnpar2 = coeff4*(dmuF711dnpar2-dmuF701dnpar2) + I*(dmuI711dnpar2-dmuI701dnpar2);/*  ligne ˆ tester YP */
+    dN0dnpar2 = coeff4*(dmuF711dnpar2-dmuF701dnpar2) + I*(dmuI711dnpar2-dmuI701dnpar2);/*  ligne ï¿½ tester YP */
 
 
 /* The sign of N1 is not clear */
@@ -1383,7 +1383,7 @@ double *RF5,*RF7,*RF9,*dRF5dz,*dRF7dz,*dRF9dz,*dRF3da,*dRF5da,*dRF7da,*dRF9da,*d
 %% Real part of Shkarovsky functions F_q(z,a)
 %% for q = 1.5 2.5 3.5, along with their partial derivatives
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% P.A. Robinson, J. Math. Phys. vol. 27, N¡5, May 1986
+%% P.A. Robinson, J. Math. Phys. vol. 27, Nï¿½5, May 1986
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 */
 
@@ -1405,7 +1405,7 @@ double *RF5,*RF7,*RF9,*dRF5dz,*dRF7dz,*dRF9dz,*dRF3da,*dRF5da,*dRF7da,*dRF9da,*d
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Asymptotic form
-%% P.A. Robinson, J. Math. Phys. vol. 27, N¡5, May 1986
+%% P.A. Robinson, J. Math. Phys. vol. 27, Nï¿½5, May 1986
 %% formula (35) & (36)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
@@ -1461,7 +1461,7 @@ double *RF5,*RF7,*RF9,*dRF5dz,*dRF7dz,*dRF9dz,*dRF3da,*dRF5da,*dRF7da,*dRF9da,*d
                 oldcoeff = Cqj[0];
     /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% Update coefficients
-    %% P.A. Robinson, J. Math. Phys. vol. 27, N¡5, May 1986
+    %% P.A. Robinson, J. Math. Phys. vol. 27, Nï¿½5, May 1986
     %% formula (36)
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
             for (n = 0;n<nb-compteur;n++) {
@@ -1474,7 +1474,7 @@ double *RF5,*RF7,*RF9,*dRF5dz,*dRF7dz,*dRF9dz,*dRF3da,*dRF5da,*dRF7da,*dRF9da,*d
 
     /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% value for a = 0
-    %% P.A. Robinson, J. Math. Phys. vol. 27, N¡5, May 1986
+    %% P.A. Robinson, J. Math. Phys. vol. 27, Nï¿½5, May 1986
     %% formula (3)
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
@@ -1494,7 +1494,7 @@ double *RF5,*RF7,*RF9,*dRF5dz,*dRF7dz,*dRF9dz,*dRF3da,*dRF5da,*dRF7da,*dRF9da,*d
 
     /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% Series expansion in a
-    %% P.A. Robinson, J. Math. Phys. vol. 27, N¡5, May 1986
+    %% P.A. Robinson, J. Math. Phys. vol. 27, Nï¿½5, May 1986
     %% formula (10)
     %% valid for small a
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -1690,7 +1690,7 @@ double *RF5,*RF7,*RF9,*dRF5dz,*dRF7dz,*dRF9dz,*dRF3da,*dRF5da,*dRF7da,*dRF9da,*d
 
     /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        %% Recursion formula
-       %% P.A. Robinson, J. Math. Phys. vol. 27, N¡5, May 1986
+       %% P.A. Robinson, J. Math. Phys. vol. 27, Nï¿½5, May 1986
        %% formula (10)
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
@@ -1797,7 +1797,7 @@ static double sqrttwoe_6 = 1.414e-6;
 %% Imaginary part of Shkarovsky function F_q+3/2(z,a)
 %% along with its first partial derivatives.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% P.A. Robinson, J. Math. Phys. vol. 27, N¡5, May 1986
+%% P.A. Robinson, J. Math. Phys. vol. 27, Nï¿½5, May 1986
 %% Formula (42) and (43)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
@@ -1817,7 +1817,7 @@ static double sqrttwoe_6 = 1.414e-6;
    } else if ((z<a) & (a<=sqrttwoe_6)) {
    /* a==0 Shkarovski function => Dnestrovski function %% */
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% P.A. Robinson, J. Math. Phys. vol. 27, N¡5, May 1986
+%% P.A. Robinson, J. Math. Phys. vol. 27, Nï¿½5, May 1986
 %% Formula (42)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
       absz = -z;
@@ -1841,7 +1841,7 @@ static double sqrttwoe_6 = 1.414e-6;
       dIS11da = dIS13dz - dIS11dz;
    } else if ((z < a) & (a > sqrttwoe_6)) {
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% P.A. Robinson, J. Math. Phys. vol. 27, N¡5, May 1986
+%% P.A. Robinson, J. Math. Phys. vol. 27, Nï¿½5, May 1986
 %% Formula (43)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
       sqrtone_za = sqrt(1.0-z/a);
@@ -2035,7 +2035,7 @@ double *F,*dFdz;
     if (z<lmt1) {
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Asymptotic approximation for |z+q|>>1
-%% P.A. Robinson, J. Math. Phys. vol. 27, N¡5, May 1986
+%% P.A. Robinson, J. Math. Phys. vol. 27, Nï¿½5, May 1986
 %% Formula (32)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 */
@@ -2054,7 +2054,7 @@ double *F,*dFdz;
     } else if ((z >= lmt1) & (z < lmt2)) {
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Series development (unstable for positive z ?)
-%% P.A. Robinson, J. Math. Phys. vol. 27, N¡5, May 1986
+%% P.A. Robinson, J. Math. Phys. vol. 27, Nï¿½5, May 1986
 %% Formula (30) for z<0
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 */
@@ -2077,13 +2077,13 @@ double *F,*dFdz;
     } else if ((z >= lmt2) & (z < lmt3)) {
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Recurrence relation (unstable for large q and z)
-%% P.A. Robinson, J. Math. Phys. vol. 27, N¡5, May 1986
+%% P.A. Robinson, J. Math. Phys. vol. 27, Nï¿½5, May 1986
 %% Formula (19)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 */   
 /* First compute F_3/2 */
 
-        if (z = 0.0) {
+        if (z == 0.0) {
             ksi = sqrt(z);
             Fr = 2.0-twosqrtpi*ksi*erfc(ksi)*exp(z);
     } else {
@@ -2106,7 +2106,7 @@ double *F,*dFdz;
     } else { /*if (z>=lmt3) */
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Continued fraction (unstable for negative z)
-%% P.A. Robinson, J. Math. Phys. vol. 27, N¡5, May 1986
+%% P.A. Robinson, J. Math. Phys. vol. 27, Nï¿½5, May 1986
 %% Formula (34)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 */
@@ -2146,7 +2146,7 @@ static double twosqrtpi = 3.5449077018110318818;
 % for integer q>=0;
 % along with its first derivative for q>=1.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% P.A. Robinson, J. Math. Phys. vol. 27, N¡5, May 1986
+%% P.A. Robinson, J. Math. Phys. vol. 27, Nï¿½5, May 1986
 %% Formula (42) for z<0 plus recursion
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 */
