@@ -42,7 +42,7 @@ krho_ray = yout(:,4);
 m_ray = yout(:,5); 
 n_ray = yout(:,6);
 omega = yout(1,7);
-s_ray = yout(:,8);
+s_ray = yout(:,8)*equil_fit.ap;
 %
 if ~isempty(yproc),
     D_ray = yproc(:,1);
