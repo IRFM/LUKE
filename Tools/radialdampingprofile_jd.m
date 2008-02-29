@@ -1,9 +1,13 @@
-function ray = radialdampingprofile_jd(equil,ray,nr_dep)
+function ray = radialdampingprofile_jd(ray,nr_dep,display_mode)
 %
 % calculates the radial power deposition profile of a ray for which the
 % damping is already calculated
 %
 % by J. Decker (joan.decker@cea.fr) and Y. Peysson (yves.peysson@cea.fr)
+%
+if nargin < 3,
+    display_mode = 0;
+end
 %
 ns = length(ray.ss);
 %
@@ -50,9 +54,13 @@ if isfield(ray,'sP_2piRp'),
         end     
     end
     %
-    info_dke_yp(2,['ray radial damping calculated']);
+    if display_mode >= 1,
+        info_dke_yp(2,['ray radial damping calculated']);
+    end
 else
-    info_dke_yp(2,['ray radial damping cannot be calculated']);
+    if display_mode >= 1,
+        info_dke_yp(2,['ray radial damping cannot be calculated']);
+    end
 end
 
 
