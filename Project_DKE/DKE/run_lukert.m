@@ -76,6 +76,10 @@ for iw = 1:nw,
     nb(iw) = length(waves{iw}.rays);
 end
 %
+% Determination of the radial grid optmized according to linear damping
+%
+rho_S = optgrid_dke_jd(waves,rho_S,dkedisplay.display_mode);
+%
 % 3-D relativistic bounce averaged quasilinear kinetic calculations (LUKE)
 %
 if dkeparam.rt_mode == 1,

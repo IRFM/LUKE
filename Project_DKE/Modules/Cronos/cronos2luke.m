@@ -196,11 +196,11 @@ if nargin <= 1
 %
 %  RUN PARAMETERS
 %
-	valeur.rho_S = [0:0.05:1];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+	valeur.rho_S = 20;%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 	type.rho_S = 'float';%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
-	borne.rho_S = [0,1];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
-	defaut.rho_S = 0;%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
-	info.rho_S = 'Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)';
+	borne.rho_S = [0,100];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+	defaut.rho_S = 20;%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+	info.rho_S = 'Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one integer value: size of optimized grid calculation, not used if empty)';
 %
 % LH PARAMETERS
 %
