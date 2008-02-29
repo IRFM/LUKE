@@ -17,7 +17,7 @@ else
     clear rho_S
 end
 %
-nr_dep = 50;%number of grid point in radial damping calculations
+nr_dep = 1000;%number of grid point in radial damping calculations
 finefac = 1;%fineness factor
 %
 dP = zeros(1,nr_dep);
@@ -32,7 +32,7 @@ for iw = 1:length(waves);
         %
         ray = radialdampingprofile_jd(waves{iw}.rays{iray},nr_dep,display_mode);
         %
-        if isfield(ray,'sP_2piRp'),
+        if isfield(ray,'sP_2piRp')  & isfield(ray,'srho'),
             dP = dP + ray.dPnormdrho*ray.sP_2piRp(1)*drho_dep;
         end
         %

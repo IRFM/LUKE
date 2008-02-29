@@ -15,7 +15,7 @@ rho_dep_S = linspace(0,1,nr_dep+1);
 ray.rho_dep = (rho_dep_S(1:end-1) + rho_dep_S(2:end))/2;
 drho_dep = diff(rho_dep_S);
 %
-if isfield(ray,'sP_2piRp'),
+if isfield(ray,'sP_2piRp') & isfield(ray,'srho'),
     sP_2piRp_norm = ray.sP_2piRp/ray.sP_2piRp(1);
     %
     ray.dPnormdrho = zeros(1,nr_dep);
