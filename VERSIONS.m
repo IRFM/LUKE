@@ -687,3 +687,21 @@ U TScyl/Runaway/rundke_time.m (")
 U TScirc_e1/Ohm_bounce/rundke.m (")
 U TScirc_peak/LH_karney_ripple/rundke.m (")
 
+----------------------------------------------------------------------------------------------------
+
+LUKE Release 1.4.2
+
+- batch of the version LUKE 1.4
+	- optimized radial grid calculation
+
+====> Project_DKE/DKE
+
+A optgrid_dke_jd.m (new function, calculates the grid)
+A radialdampingprofile_jd.m (transfered from DKE_Tools)
+U run_lukert.m (optimized radial grid calculation)
+
+====> Project_DKE/Modules/Cronos
+
+U zstarwars.m (optimized radial grid calculation)
+
+
