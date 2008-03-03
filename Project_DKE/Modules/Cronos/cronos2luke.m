@@ -196,11 +196,11 @@ if nargin <= 1
 %
 %  RUN PARAMETERS
 %
-	valeur.rho_S = 20;%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
-	type.rho_S = 'float';%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
-	borne.rho_S = [0,100];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
-	defaut.rho_S = 20;%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
-	info.rho_S = 'Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one integer value: size of optimized grid calculation, not used if empty)';
+	valeur.rho_S = '20';%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+	type.rho_S = 'string';%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+	borne.rho_S = '';%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+	defaut.rho_S = '20';%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+	info.rho_S = 'Radial grid: number of grid points (ex: 20) \n or vector for grid points in Matlab format (ex: [0:0.05:1])';
 %
 % LH PARAMETERS
 %
@@ -391,12 +391,15 @@ end
 shot    = 0;
 sortie = proto;
 sortie.err = 0;% on definit le flag d'erreur a 0 par defaut (pas d'erreur)
+eval(['par.rho_S = ',par.rho_S,';'])
 %
 %--------------------------- LIEN AVEC C3PO + LUKE ------------------
 %
 % PARAMETRES EQUILIBRE
 %
 equil = make_equil_cronos(shot,equi,gene,prof,compo,impur);
+%
+% RADIAL GRID
 %
 % Determines run type
 %
@@ -473,7 +476,7 @@ if strcmp(par.eco,'Yes')
   dkeparam.nmhu_S  = 101;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
   dkeparam.np_S    = 121;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run) WARNING: must be adjusted so that effective momentum point number is larger than thepitch-angle one.
   dkeparam.pnmax_S = 20;%Maximum value of the flux momentum grid (pth_ref)
-  par.rho_S = linspace(0,1,15);
+  par.rho_S = 15;
 end
 %
 dkedisplay       = make_display_cronos(par.make_display);
@@ -506,11 +509,11 @@ signe = varargin{13}.signe;%Toroidal Bfield and plasma current sign (CRONOS conv
 % psitncronoshel : coordonnee radiale normalisee en flux toroidal associee a HELENA pour BR BZ et BPHI 
 % psipn_jd       : coordonnee radiale normalisee en flux poloidal associee a LUKE
 %
-ohm.rho        = par.rho_S;
+ohm.rho        = linspace(0,1,101);
 psipncronos    = abs(equi.psi-equi.psi(1))/max(abs(equi.psi-equi.psi(1)));
 psipncronoshel = abs(equi.psiRZ-equi.psiRZ(1))/max(abs(equi.psiRZ-equi.psiRZ(1)));
 psitncronoshel = equi.rhoRZ/equi.rhomax;
-psipn_ohm       = rho2psi_jd(equil,par.rho_S);
+psipn_ohm       = rho2psi_jd(equil,ohm.rho);
 %---------------------------------------------------------
 % calcul du champ // pour LUKE (avec gestion des signes)
 % passage de prof.epar de la grille en x sur la grille HELENA
@@ -579,7 +582,7 @@ waves = [];
 iww = 0;
 iw_list = [];
 %
-opt_save=0
+opt_save=0;
 if opt_save == 1,
     for iw = 1:length(wavestructs),
         wavestr = ['WAVE/C3PO/WAVE_',equil.id,'_',wavestructs{iw}.id,'.mat'];
@@ -599,7 +602,7 @@ ik = 1;
 warning off
 %
 if sum(abs(ohm.epsi)) ~= 0,%Calculate the Ohmic electric field contribution to the plasma current
-   [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp('cronos',[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,'',transpfaste,ripple,[],[]);
+   [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = run_lukert('cronos',[],[],[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[]);
 end
 %
 %while 1,
