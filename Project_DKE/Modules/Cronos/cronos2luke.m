@@ -391,7 +391,9 @@ end
 shot    = 0;
 sortie = proto;
 sortie.err = 0;% on definit le flag d'erreur a 0 par defaut (pas d'erreur)
-eval(['par.rho_S = ',par.rho_S,';'])
+if ischar(par.rho_S)
+    eval(['par.rho_S = ',par.rho_S,';']);
+end
 %
 %--------------------------- LIEN AVEC C3PO + LUKE ------------------
 %
@@ -601,10 +603,6 @@ end
 ik = 1;
 warning off
 %
-if sum(abs(ohm.epsi)) ~= 0,%Calculate the Ohmic electric field contribution to the plasma current
-   [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = run_lukert('cronos',[],[],[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[]);
-end
-%
 %while 1,
    [Znorm_RF,Zcurr_RF,ZP0_RF,dke_out_RF,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = run_lukert('cronos',wavestructs,waves,[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[],opt_save);
 %   if isempty(dke_warnings),
@@ -622,7 +620,13 @@ end
 %      end
 %   end
 %end
+%
 clear raytracing_yp alphaphimex_jd trapz_dke_yp dmumpsmex
+%
+if sum(abs(ohm.epsi)) ~= 0,%Calculate the Ohmic electric field contribution to the plasma current
+   [Znorm,Zcurr,ZP0,dke_out] = run_lukert('cronos',[],[],[],radialDKE.xrho_S_dke,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[]);
+end
+%
 warning on
 %
 signe_out = -signe.ip;
@@ -670,8 +674,8 @@ equilDKE.xcron = interp1(psipncronos,gene.x,equilDKE.xpsin);
 % preparation des variables de sortie (sortie.j, sortie.el) pour CRONOS sur la bonne grille
 % et avec les bonnes unites
 %
-sortie.j  = interp1(equilDKE.xcron,j_LH_c,gene.x,'pchip','extrap') * 1e6;
-sortie.el = interp1(equilDKE.xcron,p_LH_c,gene.x,'pchip','extrap') * 1e6;
+sortie.j  = interp1(equilDKE.xcron,j_LH_c,gene.x,'pchip',0) * 1e6;
+sortie.el = interp1(equilDKE.xcron,p_LH_c,gene.x,'pchip',0) * 1e6;
 if par.Dr_model == 2
     sortie.j=diffJ(sortie.j,equi.rhomax*gene.x,par.D);  % diffusion phenomenologique du courant
 end

@@ -697,7 +697,9 @@ LUKE Release 1.4.2
 ====> Project_DKE/DKE
 
 A optgrid_dke_jd.m (new function, calculates the grid)
+U main_dke_yp.m (rho_S as output)
 A radialdampingprofile_jd.m (transfered from DKE_Tools)
+U radialgrid_dke_jd.m (rho_S as output)
 U run_lukert.m (optimized radial grid calculation)
 
 ====> Project_DKE/Modules/Cronos
