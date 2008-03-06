@@ -41,10 +41,6 @@ for iw = (nw0 + 1):(nw0 + length(wavestructs)),
 	    rayinit = main_rayinit_launch_jd(equil,wavestruct.launch);
 	    wave = main_C3PO_jd(wavestruct.id,equil,rayinit,wavestruct.waveparam,wavestruct.fitequilparam,wavestruct.rayparam,wavestruct.raydisplay);%Ray calculations
         %
-        if isfield(wavestruct.launch,'a_sdNpar') == 1,
-            wave.a_sdNpar = wavestruct.launch.a_sdNpar;
-        end
-        %
         wave = wave_process_jd(equil,wave,dkeparam.n_rf_list);%Wave processing and relativistic linear damping
         %
         if isfield(wavestruct.launch,'b_sdNpar') == 1,
@@ -125,6 +121,11 @@ elseif dkeparam.rt_mode == 2,
 elseif dkeparam.rt_mode == 4,
     %
     for iw = 1:nw,
+        if ~isfield(waves{iw},'a_sdNpar') == 1,
+            warning(['a_sdNpar not specified is set to zero for wave ',int2str(iw)])
+            waves{iw}.a_sdNpar = 0;
+        end
+%
         for ib = 1:nb(iw),
             waves{iw}.rays{ib}.sdNpar = waves{iw}.rays{ib}.sdNpar(1) + waves{iw}.a_sdNpar*waves{iw}.rays{ib}.ss;
         end

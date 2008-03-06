@@ -54,6 +54,9 @@ end
 if ~isfield(waveparam,'nchi'),
     waveparam.nchi = 1;
 end
+if isfield(waveparam,'a_sdNpar'),
+    wave.a_sdNpar = waveparam.a_sdNpar;
+end
 %
 if ~isfield(rayparam,'dS'),% !!!! old rayparam, modify calling function
     warning('Update old rayparam in the script')
