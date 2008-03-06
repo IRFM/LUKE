@@ -567,6 +567,12 @@ for iw = 1:length(launchs),
     wavestructs{iw}.wavesolver = 'C3PO';
     wavestructs{iw}.waveparam.mmode = launchs{iw}.mmode;% cold mode (+1 for m; -1 for p)
     wavestructs{iw}.waveparam.kmode = par.kmode;%Dielectric tensor (0:cold,1:warm,2:hot;3:weak relativistic,4:full relativistic)
+    %
+    if isfield(wavestructs{iw}.launch,'a_sdNpar'),
+        wavestructs{iw}.waveparam.a_sdNpar = wavestructs{iw}.launch;
+        wavestructs{iw}.launch = rmfield(wavestructs{iw}.launch,'a_sdNpar');
+    end
+    %
     wavestructs{iw}.rayparam.tensortype = wavestructs{iw}.waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak relativistic,4:full relativistic)
     wavestructs{iw}.rayparam.tfinal = par.ray_tfinal;
     %
