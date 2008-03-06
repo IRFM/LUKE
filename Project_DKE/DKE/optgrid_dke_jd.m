@@ -4,7 +4,7 @@ function rho_S = optgrid_dke_jd(waves,rho_S,display_mode);
 % the linear damping of waves such that there are more points in regions of
 % large absorption.
 %
-% by J. Decker and Y. Peysson (joan.decker@cea.fr)
+% by J. Decker (joan.decker@cea.fr) (CEA/DSM/IRFM) and Y. Peysson (yves.peysson@cea.fr) (CEA/DSM/IRFM) 
 %
 if nargin < 3,
     display_mode = 0;
@@ -15,6 +15,7 @@ if length(rho_S) ~= 1 | rho_S <= 1,
 else
     nr = rho_S;
     clear rho_S
+    info_dke_yp(2,'Radial grid automaticaly generated for optimizing the RF absorption.');
 end
 %
 nr_dep = 1000;%number of grid point in radial damping calculations
