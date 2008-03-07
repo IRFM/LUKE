@@ -14,21 +14,24 @@ pause(1)
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
-id_simul = 'tr2p0_a0p05';%Simulation ID
+id_simul = 'tr0p0_a0p05_b';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 load ('gigajoule_pouryves_luke.mat','dkeparam','dkedisplay','transpfaste','ohm','ripple');
 %
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
-rho_S = [0.05:0.05:0.6,0.7,0.8,0.9];;%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+%rho_S = [0.05:0.05:0.6,0.7,0.8,0.9];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+rho_S = [0:0.02:0.32,0.35,0.4:0.1:1];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+%rho_S = 20;
 %
-id_path = 'LUKE_DRFC';%For all paths used by DKE solver
-path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+id_path = 'LOCAL';%For all paths used by DKE solver
+path_path = '/luke/LUKE_1_4/Project_DKE/Database/PATH_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_equil = 'CRONOS_32299_k100';%For plasma equilibrium
 path_equil = 'EQUIL/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 ids_wave = {'MIXTE_Coupleur_C2','MIXTE_Coupleur_C3'};%For RF waves contribution (put all the type of waves needed)
 paths_wave = {'WAVE/C3PO/','WAVE/C3PO/'};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+%paths_wave = {'CGC_DATA/WAVE/C3PO/','CGC_DATA/WAVE/C3PO/'};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 [dkepath,equil,waves] = load_structures_yp('dkepath',id_path,path_path,'equil',id_equil,path_equil,'waves',ids_wave,paths_wave);
 %
@@ -38,15 +41,26 @@ paths_wave = {'WAVE/C3PO/','WAVE/C3PO/'};%if nothing is specified, the working d
 waves{1}.a_sdNpar = 0.05;
 waves{2}.a_sdNpar = 0.05;
 %
-transpfaste.Dr0 = 2.0;%Fast electron radial transport
+%transpfaste.Dr0 = 2.0;%Fast electron radial transport
+transpfaste.Dr0 = 0.0;%Fast electron radial transport
 transpfaste.vparmin = 3.5;
 %
 dkeparam.rt_mode = 4;%Quasilinear iteration
-dkeparam.invproc = -1;%MUMPS
+dkeparam.invproc = -2;%MUMPSMEX
+%
+dkedisplay.display_mode = 1;
 %
 p_opt = 2;%Printing or saving option of the figures
 filename = id_simul;
 %	    
+%
+for iw = 1:length(waves),
+    for ir = 1:length(waves{iw}.rays)
+        waves{iw}.rays{ir} = rmfield(waves{iw}.rays{ir},'sP_2piRp');
+    end
+end
+%
+%
 [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert(id_simul,[],waves,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[]);
 %	    
 %************************************************************************************************************************************
