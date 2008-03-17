@@ -5,7 +5,8 @@ function [hxr] = bremTSconvert_dke_yp(day,month,year);
 % Tore Supra use only
 %
 % INPUTS
-%%       - day: calibration day (1-31) [1,1]
+%
+%       - day: calibration day (1-31) [1,1]
 %       - month: calibration month (1-12) [1,1]
 %       - year: calibration year (19** or 20**) [1,1]
 %
