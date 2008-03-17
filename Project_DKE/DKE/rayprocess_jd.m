@@ -195,7 +195,7 @@ if isfield(ray,'salphaphi_lin'),
     salphaphi_lin = ray.salphaphi_lin;
 else
     salphaphi_lin = NaN*ones(1,ns);
-    opt_disp = opt_disp + i;
+    %opt_disp = opt_disp + i;
 end
 % %
 % % remove unwanted ray parts
