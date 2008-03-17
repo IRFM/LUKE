@@ -17,18 +17,34 @@ end
 %
 fid = fopen(filename);
 %
-str_intro = ' ';
-while max(str_intro < 48 | str_intro > 57) | length(str_intro) < 2 | length(str_intro) > 3,
-    str_intro = fscanf(fid,'%s',1);
-end
+% str_intro = ' ';
+% while max(str_intro < 48 | str_intro > 57) | length(str_intro) < 2 | length(str_intro) > 3,
+%     str_intro = fscanf(fid,'%s',1);
+% end
+% %
+% nnx = str2num(str_intro);
+% %nnx = data(1);% number of points in the horizontal direction
+% data = fscanf(fid,'%d',2);
+% nny = data(1);% number of points in the vertical direction
+% nnr = data(2);% number of radial flux surfaces
+% if nnr == 0, 
+%     nnr = nnx;
+% end
 %
-nnx = str2num(str_intro);
-%nnx = data(1);% number of points in the horizontal direction
-data = fscanf(fid,'%d',2);
-nny = data(1);% number of points in the vertical direction
-nnr = data(2);% number of radial flux surfaces
-if nnr == 0, 
-    nnr = nnx;
+str_intro = fgetl(fid);
+ispaces = find(str_intro == ' ');
+nn1 = str2num(str_intro(ispaces(end)+1:end));
+nn2 = str2num(str_intro(ispaces(end-1)+1:ispaces(end)-1));
+nn3 = str2num(str_intro(ispaces(end-2)+1:ispaces(end-1)-1));
+%
+if isempty(nn3) | nn3 < 10,
+    nnx = nn2;
+    nny = nn1;
+    nnr = nn2;
+else
+    nnx = nn3;
+    nny = nn2;
+    nnr = nn1;
 end
 %
 data = fscanf(fid,'%e',5);
