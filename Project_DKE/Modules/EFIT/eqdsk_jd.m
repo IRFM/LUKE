@@ -32,19 +32,33 @@ fid = fopen(filename);
 % end
 %
 str_intro = fgetl(fid);
-ispaces = find(str_intro == ' ');
-nn1 = str2num(str_intro(ispaces(end)+1:end));
-nn2 = str2num(str_intro(ispaces(end-1)+1:ispaces(end)-1));
-nn3 = str2num(str_intro(ispaces(end-2)+1:ispaces(end-1)-1));
+sc = 0;
+nn = [];
+while length(str_intro) > 0 & length(nn) < 3,
+    if str_intro(end) ~= ' ' 
+        if sc == 0,
+            sc = 1;
+            str = str_intro(end);
+        else
+            str = [str_intro(end),str];
+        end
+    else
+        if sc == 1,
+            nn = [nn,str2num(str)];
+            sc = 0;
+        end           
+    end
+    str_intro(end) = '';
+end
 %
-if isempty(nn3) | nn3 < 10,
-    nnx = nn2;
-    nny = nn1;
-    nnr = nn2;
+if nn(3) < 10,
+    nnx = nn(2);
+    nny = nn(1);
+    nnr = nn(2);
 else
-    nnx = nn3;
-    nny = nn2;
-    nnr = nn1;
+    nnx = nn(3);
+    nny = nn(2);
+    nnr = nn(1);
 end
 %
 data = fscanf(fid,'%e',5);
