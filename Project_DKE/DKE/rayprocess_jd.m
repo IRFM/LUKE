@@ -283,6 +283,11 @@ if ns > 1,
         szTi = interp1(ppsin,pzTi',spsin,method)';
     end
     %
+    if isfield(ray,'srho'),
+        srho = ray.srho;
+    else
+        srho = interp1(ppsin,prho,spsin,method);
+    end
 else
     sBx = ptBx;
     sBphi = ptBphi;
@@ -292,6 +297,7 @@ else
     szni = pzni;
     sTe = pTe;
     szTi = pzTi;
+    srho = prho;
 end    
 %
 % Calculates Npar and Nperp from kx,n and kZ if needed.
@@ -413,6 +419,8 @@ else
         sTe = sTe(smask_ht);
         szTi = szTi(:,smask_ht);
         %
+        srho = srho(smask_ht);
+        %
     elseif real(opt_disp) == 4, % relativistic hot plasma dispersion tensor for sepol_pmz, sNperp and phi_xyz (R2D2)
         %%%%%%%%%% to be implemented %%%%%%%%%%
         error('model not yet implemented');
@@ -491,6 +499,8 @@ ray.sne = sne;
 ray.szni = szni;
 ray.sTe = sTe;
 ray.szTi = szTi;
+%
+ray.srho = srho;
 %
 ray.salphaphi_lin = salphaphi_lin;
 %
