@@ -1,4 +1,4 @@
-function equil = imake_equil_jd(basestr)
+function equil = imake_equil_jd(workdir,basestr)
 %
 % This function interactively builds the equilibrium structure
 %
@@ -20,33 +20,74 @@ if e_opt == 0, % EQSDK equilibrium
     %
     % EQSDK file
     %   
-    [eqdsk_file,eqdsk_path] = uigetfile('EQDSK*.*','Please select the EQDSK file');
-    %
-    if eqdsk_file == 0,
+    n_opt = input('Option for EQSDK equilibrium 0 (existing EQSDK file), 1 (build EQSDK) [1] : ');
+    if isempty(n_opt),
+        n_opt = 1;
+    end
+    if ~isnumeric(n_opt) | ~any(n_opt == [0,1]),
+        disp('-----> Invalid option');
         return
     end
     %
-    if strfind(eqdsk_file,'EQDSK.'),
-        it = strfind(eqdsk_file,'t');
-        if ~isempty(it),
-            shotnum = eqdsk_file(7:it-1);
-            shotime = eqdsk_file(it+1:end);
+    if n_opt == 0,% EQSDK from data file
+        %
+        [eqdsk_file,eqdsk_path] = uigetfile('EQDSK*.*','Please select the EQDSK file');
+        %
+        if eqdsk_file == 0,
+            return
         end
-    end
-    %
-    shotnum_new = input(['Please provide the shot number [',shotnum,'] : '],'s');
-    if ~isempty(shotnum_new),
-        shotnum = shotnum_new;
-    elseif isempty(shotnum),
-        shotnum = '0';
-    end
-    %
-    shotime_new = input(['Please provide the shot time [',shotime,'] : '],'s');
-    if ~isempty(shotime_new),
-        shotime = shotime_new;
-    elseif isempty(shotime),
-        shotime = '0';
-    end
+        %
+        if strfind(eqdsk_file,'EQDSK.'),
+            it = strfind(eqdsk_file,'t');
+            if ~isempty(it),
+                shotnum = eqdsk_file(7:it-1);
+                shotime = eqdsk_file(it+1:end);
+            end
+        end
+        %
+        shotnum_new = input(['Please provide the shot number [',shotnum,'] : '],'s');
+        if ~isempty(shotnum_new),
+            shotnum = shotnum_new;
+        elseif isempty(shotnum),
+            shotnum = '0';
+        end
+        %
+        shotime_new = input(['Please provide the shot time [',shotime,'] : '],'s');
+        if ~isempty(shotime_new),
+            shotime = shotime_new;
+        elseif isempty(shotime),
+            shotime = '0';
+        end
+        %
+    elseif n_opt == 1,% build EQSDK
+        %
+        shotnum = input(['Please provide the shot number : '],'s');
+        if isempty(shotnum),
+            return
+        end
+        %
+        shotime = input(['Please provide the shot time : '],'s');
+        if isempty(shotime),
+            return
+        end
+        %
+        strc = '.0000';
+        shotime = [shotime,strc(1:end-length(shotime) + 1)];
+        %
+        l_opt = input('Option for liuqe version? (1,2,3) [1] : ');
+        if isempty(l_opt),
+            l_opt = 1;
+        elseif ~isnumeric(l_opt) | ~any(l_opt == [1:3]),
+            return
+        end
+        %
+        [varargout]=make_eqdsk(str2num(shotnum),str2num(shotime),workdir,basestr,l_opt);
+        %
+        eqdsk_path = [workdir,'/'];
+        %
+        eqdsk_file = ['eqdsk.',shotnum,'t',shotime];
+        %
+    end    
     %
     shotid = [basestr,'_',shotnum,'_',shotime];
     %
@@ -72,8 +113,7 @@ if e_opt == 0, % EQSDK equilibrium
     dispname = '';
     savename = id_equil;
     %
-    load toto.mat equil_magnetic mrho mspsin mspsinT mp_magnetic
-    %[equil_magnetic,mrho,mspsin,mspsinT,mp_magnetic] = equil_magnetic_EFIT_jd([eqdsk_path,eqdsk_file],display_mode,p_opt,dispname,savename);
+    [equil_magnetic,mrho,mspsin,mspsinT,mp_magnetic] = equil_magnetic_EFIT_jd([eqdsk_path,eqdsk_file],display_mode,p_opt,dispname,savename);
     %
 elseif e_opt == 1, % HELENA Equilibrium 
     disp('-----> HELENA magnetic equilibrium not yet operational in LUKE');
@@ -86,7 +126,7 @@ if strcmp(basestr,'TCV'),% TCV profile data
     %
     type = 1;
     %
-    n_opt = input('Option for equilibrium profiles? 0 (data file), 1 (TCV database) [0] : ');
+    n_opt = input('Option for equilibrium profiles? 0 (existing data file), 1 (TCV database) [0] : ');
     if isempty(n_opt),
         n_opt = 0;
     end
@@ -103,13 +143,38 @@ if strcmp(basestr,'TCV'),% TCV profile data
             return
         end
         %
-        data = load([data_path,data_file],'shot','rho','ne','te','ti','zeff','zaxis');
-        %
     elseif n_opt == 1,% profiles from TCV database
         %
-        disp('-----> profiles from TCV database not implemented yet');
-        return
+        t1 = input('Averaging of TCV data, initial time : ');
+        if isempty(t1) | ~isnumeric(t1) ,
+            disp('-----> Invalid time');
+            return
+        end
+        t2 = input('Averaging of TCV data, final time : ');
+        if isempty(t1) | ~isnumeric(t1) ,
+            disp('-----> Invalid time');
+            return
+        end
+        %
+        laun = input('Vector of EC launchers to account for (ex: [1,3]) : ');
+        if isempty(laun) | ~isnumeric(laun) ,
+            disp('-----> Invalid entry');
+            return
+        end
+        %
+        launstr = '';
+        for il = 1:length(laun),
+            launstr = [launstr,'_',num2str(laun(il))];
+        end
+        %
+        data_path = [workdir,'/'];
+        data_file = ['data_',basestr,'_',shotnum,'_',num2str(t1),'_',num2str(t2),launstr,'.mat'];
+        %
+        collect_parameters_for_luke(str2num(shotnum),t1,t2,laun,[data_path,data_file])
+        %
     end
+    %
+    data = load([data_path,data_file],'shot','rho','ne','te','ti','zeff','zaxis');
     %
     ishot = find(data.shot == str2num(shotnum));
     %
@@ -170,8 +235,8 @@ if e_opt == 0,
     equil.info.shotime = shotime;
 end
 if strcmp(basestr,'TCV'),
-    if n_opt == 0,
-        equil.info.prof = [data_path,data_file];
-    end
+    equil.info.data = [data_path,data_file];
+    equil.info.t1 = t1;
+    equil.info.t2 = t2;
 end
 %

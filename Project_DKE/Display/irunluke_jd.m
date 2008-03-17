@@ -4,6 +4,7 @@ function irunluke_jd(basestr)
 % either C3PO, TORAY or ART ray-tracing data.
 %
 quitmsg = '-----> Run aborted';
+warning off
 %
 % WORKING DIRECTORY
 %
@@ -53,7 +54,7 @@ if strcmp(l_opt,'y'),
     end
     %
 else
-    equil = imake_equil_jd(basestr);
+    equil = imake_equil_jd(workdir,basestr);
     %
     if isempty(equil),
         disp(quitmsg)
@@ -438,7 +439,7 @@ s_opt = input('Do you want to save the output data? [y/n] : ','s');
 if strcmp(s_opt,'y'),
     sd = pwd;
     cd(workdir);
-    [save_file,save_path] = uiputfile(['LUKERESULTS_',id_simul,'*.mat'],'Please provide the RESULTS file name',['LUKERESULTS_',id_simul,'.mat']);
+    [save_file,save_path] = uiputfile(['LUKE_RESULTS_',id_simul,'*.mat'],'Please provide the RESULTS file name',['LUKE_RESULTS_',id_simul,'.mat']);
     %
     if save_file == 0,
         disp('-----> No file name specified, output data not saved.')
@@ -447,6 +448,15 @@ if strcmp(s_opt,'y'),
         disp('-----> The output data is saved')
     end
     cd(sd);
+end 
+%
+clear Znorm Zcurr ZP0 dke_out radialDKE equilDKE momentumDKE gridDKE Zmomcoef Zbouncecoef Zmripple mksa XXsinksource
+clear id_simul waves psin_S rho_S dkepath equil dkeparam dkedisplay ohm transpfaste ripple
+%
+s_opt = input('Do you want to calculate the hard X-ray emission? [y/n] : ','s');
+%
+if strcmp(s_opt,'y'),
+    irunhxr_jd(workdir,basestr,[save_path,save_file]);
 end 
 
 

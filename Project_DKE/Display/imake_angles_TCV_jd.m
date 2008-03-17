@@ -32,33 +32,35 @@ if ~strcmp(shotnum,angles_i.id),
     return
 end
 %
-if l_opt == 1,
-    w_opt_g = 1;%bottom launcher is 2nd harmonic by default
-elseif l_opt == 2,
-    w_opt_g = 1;%middle launcher is 2nd harmonic by default
-elseif l_opt == 3,
-    w_opt_g = 2;%top launcher is 3nd harmonic by default
-end
+% if l_opt == 1,
+%     w_opt_g = 1;%bottom launcher is 2nd harmonic by default
+% elseif l_opt == 2,
+%     w_opt_g = 1;%middle launcher is 2nd harmonic by default
+% elseif l_opt == 3,
+%     w_opt_g = 2;%top launcher is 3nd harmonic by default
+% end
 %
-w_opt = input(['Wave Frequency? 1 (82.7 GHz), 2 (118 GHz) [',num2str(w_opt_g),']: ']);
-if isempty(w_opt) 
-    w_opt = w_opt_g;
-end
-if ~isnumeric(w_opt) | ~any(w_opt == [1,2]),
-    disp('-----> Invalid frequency selection');
-    return
-elseif w_opt == 1,
-    freq = 82.7e9;
-    id = 'H2';
-elseif w_opt == 2,
-    freq = 118e9;    
-    id = 'H3';
-end
+% w_opt = input(['Wave Frequency? 1 (82.7 GHz), 2 (118 GHz) [',num2str(w_opt_g),']: ']);
+% if isempty(w_opt) 
+%     w_opt = w_opt_g;
+% end
+% if ~isnumeric(w_opt) | ~any(w_opt == [1,2]),
+%     disp('-----> Invalid frequency selection');
+%     return
+% elseif w_opt == 1,
+%     freq = 82.7e9;
+%     id = 'H2';
+% elseif w_opt == 2,
+%     freq = 118e9;    
+%     id = 'H3';
+% end
+% %
+% if freq ~= angles_i.freq,
+%     disp(['-----> WARNING: frequency has been changed from ',num2str(angles_i.freq/1e9),' GHZ to ',num2str(freq/1e9),' GHZ']);
+%     angles_i.freq = freq;
+% end
 %
-if freq ~= angles_i.freq,
-    disp(['-----> WARNING: frequency has been changed from ',num2str(angles_i.freq/1e9),' GHZ to ',num2str(freq/1e9),' GHZ']);
-    angles_i.freq = freq;
-end
+id = ['L',num2str(l_opt)];
 %
 angles.freq = angles_i.freq;
 angles.P0 = angles_i.P0;

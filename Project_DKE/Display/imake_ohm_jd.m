@@ -34,45 +34,47 @@ if o_opt == 0,% ohm from VLOOP
                 return
             end
             %
-            if isfield(equil.info,'shotime');
-                shotime = equil.info.shotime;
-            else
-                disp('-----> Shot time information missing');
-                return
-            end
+%             if isfield(equil.info,'shotime');
+%                 shotime = equil.info.shotime;
+%             else
+%                 disp('-----> Shot time information missing');
+%                 return
+%             end
+%             %
+%             % VLOOP value
+%             %
+%             n_opt = input('Option for vloop data? 0 (data file), 1 (TCV database) [0] : ');
+%             if isempty(n_opt),
+%                 n_opt = 0;
+%             end
+%             if ~isnumeric(n_opt) | ~any(n_opt == [0,1]),
+%                 disp('-----> Invalid vloop data option');
+%                 return
+%             end
+%             %
+%             if n_opt == 0,% launching data from file
+%                 %
+%                 if isfield(equil.info,'prof');
+%                     proffile = equil.info.prof;
+%                 else
+%                     proffile = '';
+%                 end                
+%                 %
+%                 [data_file,data_path] = uigetfile('*.*',['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],proffile);
+%                 %
+%                 if data_file == 0,
+%                     return
+%                 end
+%                 %
+%                 data = load([data_path,data_file],'shot','vloop');
+%                 %
+%             elseif n_opt == 1,% launching data from TCV database
+%                 %
+%                 disp('-----> launching data from TCV database not implemented yet');
+%                 return
+%             end
             %
-            % VLOOP value
-            %
-            n_opt = input('Option for vloop data? 0 (data file), 1 (TCV database) [0] : ');
-            if isempty(n_opt),
-                n_opt = 0;
-            end
-            if ~isnumeric(n_opt) | ~any(n_opt == [0,1]),
-                disp('-----> Invalid vloop data option');
-                return
-            end
-            %
-            if n_opt == 0,% launching data from file
-                %
-                if isfield(equil.info,'prof');
-                    proffile = equil.info.prof;
-                else
-                    proffile = '';
-                end                
-                %
-                [data_file,data_path] = uigetfile('*.*',['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],proffile);
-                %
-                if data_file == 0,
-                    return
-                end
-                %
-                data = load([data_path,data_file],'shot','vloop');
-                %
-            elseif n_opt == 1,% launching data from TCV database
-                %
-                disp('-----> launching data from TCV database not implemented yet');
-                return
-            end
+            data = load(equil.info.data,'shot','vloop');
             %
             ishot = find(data.shot == str2num(shotnum));
             %

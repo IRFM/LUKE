@@ -37,45 +37,47 @@ if w_opt == 0,% wave from C3PO calculations
                 return
             end
             %
-            if isfield(equil.info,'shotime');
-                shotime = equil.info.shotime;
-            else
-                disp('-----> Shot time information missing');
-                return
-            end
+%             if isfield(equil.info,'shotime');
+%                 shotime = equil.info.shotime;
+%             else
+%                 disp('-----> Shot time information missing');
+%                 return
+%             end
+%             %
+%             % LAUNCHING ANGLES
+%             %
+%             n_opt = input('Option for launching data? 0 (data file), 1 (TCV database) [0] : ');
+%             if isempty(n_opt),
+%                 n_opt = 0;
+%             end
+%             if ~isnumeric(n_opt) | ~any(n_opt == [0,1]),
+%                 disp('-----> Invalid launching data option');
+%                 return
+%             end
+%             %
+%             if n_opt == 0,% launching data from file
+%                 %
+%                 if isfield(equil.info,'prof');
+%                     proffile = equil.info.prof;
+%                 else
+%                     proffile = '';
+%                 end                
+%                 %
+%                 [data_file,data_path] = uigetfile('*.*',['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],proffile);
+%                 %
+%                 if data_file == 0,
+%                     return
+%                 end
+%                 %
+%                 data = load([data_path,data_file],'shot','laun','angles*');
+%                 %
+%             elseif n_opt == 1,% launching data from TCV database
+%                 %
+%                 disp('-----> launching data from TCV database not implemented yet');
+%                 return
+%             end
             %
-            % LAUNCHING ANGLES
-            %
-            n_opt = input('Option for launching data? 0 (data file), 1 (TCV database) [0] : ');
-            if isempty(n_opt),
-                n_opt = 0;
-            end
-            if ~isnumeric(n_opt) | ~any(n_opt == [0,1]),
-                disp('-----> Invalid launching data option');
-                return
-            end
-            %
-            if n_opt == 0,% launching data from file
-                %
-                if isfield(equil.info,'prof');
-                    proffile = equil.info.prof;
-                else
-                    proffile = '';
-                end                
-                %
-                [data_file,data_path] = uigetfile('*.*',['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],proffile);
-                %
-                if data_file == 0,
-                    return
-                end
-                %
-                data = load([data_path,data_file],'shot','laun','angles*');
-                %
-            elseif n_opt == 1,% launching data from TCV database
-                %
-                disp('-----> launching data from TCV database not implemented yet');
-                return
-            end
+            data = load(equil.info.data,'shot','laun','angles*');
             %
             angles = imake_angles_TCV_jd(data,shotnum);
             if isempty(angles),
@@ -277,7 +279,7 @@ if w_opt == 0,% wave from C3PO calculations
     waveparam.nd = nd;
     waveparam.nchi = nchi;
     %
-    n_rf_list = NaN;
+    n_rf_list = [0:3];
     %
     d_opt = input('Do you want to display the rays? [y/n] : ','s');
     if strcmp(d_opt,'y'),
@@ -298,6 +300,7 @@ if w_opt == 0,% wave from C3PO calculations
     %
     sd = pwd;
     cd(workdir);
+    %
     wave = main_C3PO_jd(rayinit.id,equil,rayinit,waveparam,fitparam,rayparam,display);
     cd(sd);
     %
@@ -311,10 +314,8 @@ if w_opt == 0,% wave from C3PO calculations
     if i_opt == 0,
         wave.launch = launch;
         if strcmp(basestr,'TCV')
-            if n_opt == 0,
-                wave.info.launch = [data_path,data_file];
-            end
-            wave.info.angles = angles;
+           % wave.info.launch = [data_path,data_file];
+           % wave.info.angles = angles;
         end
     elseif i_opt == 1,
         wave.info.rayinit = [rayinit_path,rayinit_file];
