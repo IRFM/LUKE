@@ -51,6 +51,7 @@ addpath([luke_root,'Project_DKE/Packages/PETSc']);
 addpath([luke_root,'Project_DKE/Database/DISPLAY_files']);
 addpath([luke_root,'Project_DKE/Database/DKEPARAM_files']);
 addpath([luke_root,'Project_DKE/Database/EQUIL_files']);
+addpath([luke_root,'Project_DKE/Database/HXR_files']);
 addpath([luke_root,'Project_DKE/Database/WAVE_files']);
 addpath([luke_root,'Project_DKE/Database/OHM_files']);
 addpath([luke_root,'Project_DKE/Database/TRANSP_files']);
