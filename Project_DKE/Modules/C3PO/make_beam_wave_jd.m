@@ -106,6 +106,9 @@ for id = 1:nd,
         wave.rays{ir}.sphi_xyz = ray.sphi_xyz;
     end
 end
+%
+wave.opt_disp = wave.opt_disp + i;
+%
 
 
 
