@@ -45,6 +45,24 @@ for ib = 1:length(wave.rays),
         ray.sP_2piRp = ray.P0_2piRp*exp(-ray.stau);
         ray.sdP_2piRp_ds = salpha_lin.*ray.sP_2piRp;
         %
+    elseif isfield(ray,'sP_2piRp'),%power along the ray was calculated
+        %
+        stau = -log(ray.sP_2piRp/ray.sP_2piRp(1));
+        %
+        ss_h = (ray.ss(1:end - 1) + ray.ss(2:end))/2;
+        sdtauds_h = diff(stau)./diff(ray.ss);
+        salpha_lin = interp1(ss_h,sdtauds_h,ray.ss,'linear','extrap');
+        %
+        sphi_norm = sqrt(abs(ray.sphi_xyz(1,:)).^2 + abs(ray.sphi_xyz(2,:)).^2 + abs(ray.sphi_xyz(3,:)).^2);
+        salphaphi_lin = salpha_lin.*sphi_norm;
+        salphaphi_lin(isnan(salphaphi_lin)) = 0;
+        %
+        ray.stau = stau;
+        ray.salphaphi_lin = salphaphi_lin;
+        ray.sdP_2piRp_ds = salpha_lin.*ray.sP_2piRp;
+    end
+    %
+    if isfield(ray,'stau') & isfield(wave,'cut_fac'),
         ns = length(ray.ss);
         is_max = min([ns,wave.kextra+find(ray.stau > 10*wave.cut_fac)]);
         if ray.stau(end) < 10*wave.cut_fac & ~isinf(wave.cut_fac),
@@ -59,6 +77,7 @@ for ib = 1:length(wave.rays),
             end
         end
     end
+    %
     wave.rays{ib} = ray;
     info_dke_yp(2,['Damping of ray #',num2str(ib),' calculated']);    
 end
