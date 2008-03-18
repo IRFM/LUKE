@@ -1,12 +1,41 @@
-% itm_starwars: interface for running C3PO + LUKE in the ITM framework
+function [flag] = itm_starwars(numshot,numrun,numshot_ref,numrun_ref,time,interp_method)
+%
+% itm_starwars: MatLab interface for running C3PO + LUKE in the ITM framework
+%
 %-------------------------------------------------------------------------
 % itm_starwars.m -> source file in directory ~/Project_DKE/Modules/ITM/
+%-------------------------------------------------------------------------
+% 
+% by Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
+% by Yves Buranvand (CEA/DSM/IRFM, yves.buravand@cea.fr) and M. Airaj (CEA/DSM/IRFM, mohamed.airaj@cea.fr) for the Matlab UAL functions
 %
 %--------------------------- READ CPO's' from ITM database ------------------
 %
-% PARAMETRES EQUILIBRE
+import ualmemory.javainterface.*;
+expIdx = openBD('euitm',numshot,numrun);%Open the database
 %
-equil = make_equil_cronos(shot,equi,gene,prof,compo,impur);
+equil_ITM = CPO_get(expIdx, 'equilibrium');%Read magnetic equilibrium
+%
+ 
+ 
+ 
+ 
+ 
+ 
+%
+closeBD(expIdx,'euitm',numshot,numrun);%Close the currently open database
+%
+%--------------------------- Data conversion between ITM CPO's and C3PO/LUKE format ------------------
+%
+%equil = make_equil_itm(equil_ITM);
+
+%
+flag = 0;
+return
+
+
+
+
 %
 % Determines run type
 %
