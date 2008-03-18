@@ -99,7 +99,7 @@ for iw = 1:length(waves),
         rays{iy} = waves{iw}.rays{ib};
         rays{iy}.omega_rf = waves{iw}.omega_rf;
         rays{iy}.color = colors{iw};
-        rays{iy}.srho = psi2rho_jd(equil,rays{iy}.spsin);
+        %rays{iy}.srho = psi2rho_jd(equil,rays{iy}.spsin);
         if iscell(yabs),
             rays{iy}.mask_abs = yabs{iw}(1,ibb):yabs{iw}(2,ibb);
         end
@@ -431,13 +431,15 @@ for iy = 1:ny,
         yNpar_abs(iy) = rays{iy}.sNpar(rays{iy}.is_abs);
         yPtot_abs(iy) = 1 - sP_2piRp_norm(end);
         %
-        rays{iy} = radialdampingprofile_jd(equil,rays{iy},nr_dep);
+        rays{iy} = radialdampingprofile_jd(rays{iy},nr_dep);
         %
         dPdrho = dPdrho + rays{iy}.dPnormdrho*rays{iy}.P0_2piRp*2*pi*equil.Rp;
         %
     else
-        rays{iy}.is_abs_max = ns
+        rays{iy}.is_abs_max = ns;
         rays{iy}.is_abs = NaN;
+        rays{iy}.rho_dep = NaN;
+        rays{iy}.dPnormdrho = NaN;
         yrho_abs(iy) = NaN;
         yNpar_abs(iy) = NaN;
         yPtot_abs(iy) = NaN;
@@ -761,13 +763,13 @@ phi_disp = linspace(0,2*pi,1000);
 [ax] = graph1D_jd((Rp + xmax)*cos(phi_disp),(Rp + xmax)*sin(phi_disp),0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color5,width2,siz,gca,red,lspace,bspace);
 for iy = 1:ny,
     mask_max = 1:rays{iy}.is_abs_max;
-    graph1D_jd((Rp + rays{iy}.sx(mask_max)).*cos(rays{iy}.sphi(mask_max)),(Rp + rays{iy}.sx(mask_max)).*sin(rays{iy}.sphi(mask_max)),0,0,'','','',NaN,xlim,ylim,style,marker,rays{iy}.color,width1,siz);
+    graph1D_jd((Rp + rays{iy}.sx(mask_max)).*cos(rays{iy}.sphi(mask_max)),(Rp + rays{iy}.sx(mask_max)).*sin(-rays{iy}.sphi(mask_max)),0,0,'','','',NaN,xlim,ylim,style,marker,rays{iy}.color,width1,siz);
     if isfield(rays{iy},'mask_abs'),
         mask_abs = rays{iy}.mask_abs;
-        graph1D_jd((Rp + rays{iy}.sx(mask_abs)).*cos(rays{iy}.sphi(mask_abs)),(Rp + rays{iy}.sx(mask_abs)).*sin(rays{iy}.sphi(mask_abs)),0,0,'','','',NaN,xlim,ylim,style,marker,color5,width1,siz);
+        graph1D_jd((Rp + rays{iy}.sx(mask_abs)).*cos(rays{iy}.sphi(mask_abs)),(Rp + rays{iy}.sx(mask_abs)).*sin(-rays{iy}.sphi(mask_abs)),0,0,'','','',NaN,xlim,ylim,style,marker,color5,width1,siz);
     end
     if ~isempty(rays{iy}.init),
-        graph1D_jd((Rp + rays{iy}.init.x0).*cos(rays{iy}.init.phi0),(Rp + rays{iy}.init.x0).*sin(rays{iy}.init.phi0),0,0,'','','',NaN,xlim,ylim,style2,marker3,rays{iy}.color,width2,siz);
+        graph1D_jd((Rp + rays{iy}.init.x0).*cos(rays{iy}.init.phi0),(Rp + rays{iy}.init.x0).*sin(-rays{iy}.init.phi0),0,0,'','','',NaN,xlim,ylim,style2,marker3,rays{iy}.color,width2,siz);
     end        
 end
 % if exist('launch','var') == 1,
