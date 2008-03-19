@@ -54,11 +54,16 @@ end
 %     freq = 118e9;    
 %     id = 'H3';
 % end
-% %
-% if freq ~= angles_i.freq,
-%     disp(['-----> WARNING: frequency has been changed from ',num2str(angles_i.freq/1e9),' GHZ to ',num2str(freq/1e9),' GHZ']);
-%     angles_i.freq = freq;
-% end
+%
+freq = input(['Confirm wave frequency (GHz)? [',num2str(angles_i.freq/1e9),']: '])*1e9;
+if isempty(freq) 
+    freq = angles_i.freq;
+end
+%
+if freq ~= angles_i.freq,
+    disp(['-----> WARNING: frequency has been changed from ',num2str(angles_i.freq/1e9),' GHZ to ',num2str(freq/1e9),' GHZ']);
+    angles_i.freq = freq;
+end
 %
 id = ['L',num2str(l_opt)];
 %
