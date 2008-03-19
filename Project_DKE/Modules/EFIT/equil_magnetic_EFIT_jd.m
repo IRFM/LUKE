@@ -33,7 +33,7 @@ nt = 65;
 %
 % Reads EFIT eqdsk data
 %
-if strcmp(filename(1:5),'eqdsk'),
+if ~isempty(strfind(filename,'eqdsk')) | ~isempty(strfind(filename,'EQDSK')),
 	efitname = filename;
 else
 	efitname = [filename,'.efit'];
