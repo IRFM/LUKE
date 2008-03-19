@@ -204,7 +204,7 @@ end
 % ======================================================================
 %
 [waveparam,xyprop_dke_rf,xys_rf,xyP0_2piRp_in_rf,yb,yP0_2piRp] = propagation_jd(rays,xpsin_S_dke,xpsin_dke,method,display_mode);
-disp('-------------------------------------------------------------------------------------------------------------------');
+%disp('-------------------------------------------------------------------------------------------------------------------');
 %
 nb_rf = size(yb,2);%number of actual rays
 %nbb_rf = size(xyprop_dke_rf,2);%number of ray subdivisions
