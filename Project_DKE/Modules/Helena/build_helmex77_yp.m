@@ -1,4 +1,4 @@
-function [s,mess,messid] = build_helmex77_yp(argmex)
+function [s,mess,messid] = build_helmex77_yp(helmexpath,buildpathhelmex,argmex)
 %
 % Compile separatrice.f or helmex77.f mexfiles with fortran compilers.
 %
@@ -14,7 +14,25 @@ function [s,mess,messid] = build_helmex77_yp(argmex)
 %
 %by Y. Peysson (CEA-DRFC, yves.peysson@cea.fr) and J. Decker (CEA-DRFC,joan.decker@cea.fr)
 %
-if nargin == 0, argmex = '';end
+if nargin == 0,
+    helmexpath = '';
+    buildpathhelmex = '';
+    argmex = '';
+elseif nargin >= 1,
+    argmex = '';
+end
+%
+if strcmp(helmexpath,''),%manual and local compilation
+    helmexsourcepath = '../Source/';
+    helmexbinpath = '';
+else,%dynamic compilation
+    helmexsourcepath = [helmexpath,'Source/'];
+    if strcmp(buildpathhelmex,''),
+        helmexbinpath = [helmexpath,'Bin/'];
+    else
+        helmexbinpath = [buildpathhelmex,'/'];
+    end
+end
 %
 machine = computer;
 %
@@ -23,11 +41,11 @@ warning2 = 'Move to ~/LUKE/Project_DKE/Modules/Helena/MEX/Bin/ directory for bui
 warning3 = 'The compilation of the mexfiles of separatrice.f or helmex77.f failed for an unknown reason !';
 %
 if strcmp(machine,'MAC') | strcmp(machine,'MACI') | strcmp(machine,'GLNX86') | strcmp(machine,'PCWIN'),%32 bits machines
-    [s,mess,messid] = copyfile('../Source/separatrice_32b.f','separatrice.f');
-    [s,mess,messid] = copyfile('../Source/helmex77_32b.f','helmex77.f');
+    [s,mess,messid] = copyfile([helmexsourcepath,'separatrice_32b.f'],[helmexbinpath,'separatrice.f']);
+    [s,mess,messid] = copyfile([helmexsourcepath,'helmex77_32b.f'],[helmexbinpath,'helmex77.f']);
 elseif strcmp(machine,'GLNXA64') | strcmp(machine,'PCWIN64') | strcmp(machine,'SOL64'),%64 bits machines
-    [s,mess,messid] = copyfile('../Source/separatrice_64b.f','separatrice.f');
-    [s,mess,messid] = copyfile('../Source/helmex77_64b.f','helmex77.f');
+    [s,mess,messid] = copyfile([helmexsourcepath,'separatrice_64b.f'],[helmexbinpath,'separatrice.f']);
+    [s,mess,messid] = copyfile([helmexsourcepath,'helmex77_64b.f'],[helmexbinpath,'helmex77.f']);
 else
     s = 0;mess = warning1;messid = '';
     warning(warning1);warning(warning2);

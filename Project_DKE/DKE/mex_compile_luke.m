@@ -38,6 +38,6 @@ eval(['mex ',Sourcepath_C3PO,'raytracing_yp.c raytracing_dieltensor_yp.',objext,
 disp(['The raytracing_yp.',mexext,' mexfile has been compiled.'])
 %
 cd(Binpath_helmex);
-[s_helmex,mess_helmex,messid_helmex] = build_helmex77_yp('');
+[s_helmex,mess_helmex,messid_helmex] = build_helmex77_yp([luke_root,'Project_DKE/Modules/Helena/MEX/'],Binpath_helmex,'');
 %
 cd(initdir);
