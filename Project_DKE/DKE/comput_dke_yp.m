@@ -24,14 +24,18 @@ elseif strcmp(machine,'PC') == 1,
 	mex = '.dll';
 elseif strcmp(machine,'PCWIN') == 1,
 	s = '';
-   dossier = '';
+    dossier = '';
 	mex = '.dll';
 elseif strcmp(machine,'MAC') == 1,
 	s = '/';
-   dossier = '/Users/Yves/CEA/Projets/Project_DKE/';
+    dossier = '/Users/Yves/CEA/Projets/Project_DKE/';
 	mex = '.mexmac';
 elseif strcmp(machine,'GLNXA64') == 1,
 	s = '/';
 	dossier = '/usr/drfc/YP105119';
 	mex = '.mexa64';
+elseif strcmp(machine,'GLNX86') == 1,
+	s = '/';
+	dossier = 'disabled';
+	mex = '.mexglx';
 end
