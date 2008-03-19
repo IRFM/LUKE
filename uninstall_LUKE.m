@@ -7,8 +7,8 @@ function uninstall_LUKE(pathforstartup)
 %
 %
 if nargin == 0,
-    pathforstartup = which('pathdef.m');%The default directory for startup.m is the same as the always existing matlabrc.m file
-    pathforstartup = pathforstartup([1:findstr(pathforstartup,'pathdef.m')-1]);
+    pathforstartup = which('startup.m');%The default directory for startup.m is the same as the always existing matlabrc.m file
+    pathforstartup = pathforstartup([1:findstr(pathforstartup,'startup.m')-1]);
 end
 %
 if strcmp(pathforstartup(end),'/');
