@@ -5,9 +5,6 @@ function [Zlossmripple] = mripplecoefbuilder_dke_yp(dkeparam,display,equil,equil
 %   by Y. Peysson (CEA-DRFC) (yves.peysson@cea.fr) and J. Decker (CEA-DRFC) (joan.decker@cea.fr)
 %
 %
-etime_rip = 0;
-time0 = clock;
-%
 npn = gridDKE.npn;
 nmhu = gridDKE.nmhu;
 nr = gridDKE.nr;
@@ -25,23 +22,26 @@ xthetaloss = zeros(size(xrho));
 xpndetrap = zeros(size(xrho));
 xEseuil = zeros(size(xrho));
 %
-if ~isempty(ripple),
-   bounce_mode = dkeparam.bounce_mode;
-%
-   xne = equilDKE.xne;
-   xBT0 = equilDKE.xBT0;
-   xZeff = equilDKE.xZeff;
-   ap = equilDKE.ap;
-   Rp = equilDKE.Rp;
-%
-   Xpn = gridDKE.Xpn;
-   Xmhu = gridDKE.Xmhu;
-%
-   tokname = equil.id;%Tokamak name
-%
-   xnhuloss = ones(size(xrho))*1000;%Normalized to the reference frequency(forced to very large loss frequency, otherwise no physical meaning)
-%
-   for ir = 1:nr,
+if ~isempty(ripple) & ((isstruct(ripple) & ripple.ripple == 1) | (~isstruct(ripple) & ripple == 1)),
+    etime_rip = 0;
+    time0 = clock;
+    %
+    bounce_mode = dkeparam.bounce_mode;
+    %
+    xne = equilDKE.xne;
+    xBT0 = equilDKE.xBT0;
+    xZeff = equilDKE.xZeff;
+    ap = equilDKE.ap;
+    Rp = equilDKE.Rp;
+    %
+    Xpn = gridDKE.Xpn;
+    Xmhu = gridDKE.Xmhu;
+    %
+    tokname = equil.id;%Tokamak name
+    %
+    xnhuloss = ones(size(xrho))*1000;%Normalized to the reference frequency(forced to very large loss frequency, otherwise no physical meaning)
+    %
+    for ir = 1:nr,
 		if isnan(xnhuloss(ir)) == 0 & bounce_mode == 1 & ~isempty(findstr(tokname,'TS')) == 1,%WARNING: only valid for the TORE SUPRA tokamak with large magnetic ripple
 			if ir == 1, 
 				info_dke_yp(2,'WARNING: Ripple losses calculations only valid for Tore Supra tokamak, see main_dke_1yp.m for BeLi, Ip and Ncoils values');
@@ -71,7 +71,10 @@ if ~isempty(ripple),
 			end	
 		end
 		XXlossripple(:,:,ir) = Xnhuloss;%Magnetic ripple loss term is expressed in a Krook term
-	end
+    end
+    %
+    etime_rip = etime_rip + etime(clock,time0);
+    if display_mode >= 1,info_dke_yp(2,['Magnetic ripple coefficients calculations done in ',num2str(etime_rip),' (s)']);end	
 end
 %
 %if isempty(XXsource),XXsource = zeros(npn,nmhu,nr);end
@@ -86,6 +89,4 @@ Zlossmripple.xthetaloss = xthetaloss;
 Zlossmripple.xpndetrap = xpndetrap;
 Zlossmripple.xEseuil = xEseuil;
 %
- etime_rip = etime_rip + etime(clock,time0);
- if display_mode >= 1,info_dke_yp(2,['Magnetic ripple coefficients calculations done in ',num2str(etime_rip),' (s)']);end	
  
