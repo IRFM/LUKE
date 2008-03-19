@@ -113,7 +113,7 @@ if exist('flag_path','var'),%Paths
     %
     if ~strcmp(dkepath.path_id,'LOCAL'),
         dkepath.mex = [dkepath.temppath,'/MEX'];    
-        mex_compile_luke(dkepath.luke_root,dkepath.mex);
+        mex_compile_luke(dkepath);
     end
     %
     % Set path for Project_DKE

@@ -1,4 +1,7 @@
-function mex_compile_luke(luke_root,mexpath)
+function mex_compile_luke(dkepath)
+%
+luke_root = dkepath.luke_root;
+mexpath = dkepath.mex;
 %
 if nargin < 2,
     Binpath_DKE = [luke_root,'Project_DKE/MEX/Bin'];
@@ -19,6 +22,8 @@ end
 %
 Sourcepath_DKE = [luke_root,'Project_DKE/MEX/Source/'];
 Sourcepath_C3PO = [luke_root,'Project_DKE/Modules/RT/MEX/Source/'];
+Sourcepath_helmex = [luke_root,'Project_DKE/Modules/Helena/MEX/Source/'];
+
 %
 initdir = pwd;
 cd(Binpath_DKE);
@@ -38,6 +43,6 @@ eval(['mex ',Sourcepath_C3PO,'raytracing_yp.c raytracing_dieltensor_yp.',objext,
 disp(['The raytracing_yp.',mexext,' mexfile has been compiled.'])
 %
 cd(Binpath_helmex);
-[s_helmex,mess_helmex,messid_helmex] = build_helmex77_yp([luke_root,'Project_DKE/Modules/Helena/MEX/'],Binpath_helmex,'');
+[s_helmex,mess_helmex,messid_helmex] = build_helmex77_yp(Sourcepath_helmex,Binpath_helmex,dkepath.compiler_opt.helmex);
 %
 cd(initdir);
