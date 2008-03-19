@@ -31,13 +31,13 @@ if e_opt == 0, % EQSDK equilibrium
     %
     if n_opt == 0,% EQSDK from data file
         %
-        [eqdsk_file,eqdsk_path] = uigetfile('EQDSK*.*','Please select the EQDSK file');
+        [eqdsk_file,eqdsk_path] = uigetfile({'eqdsk*.*';'EQDSK*.*'},'Please select the EQDSK file');
         %
         if eqdsk_file == 0,
             return
         end
         %
-        if strfind(eqdsk_file,'EQDSK.'),
+        if ~isempty(strfind(eqdsk_file,'EQDSK.')) | ~isempty(strfind(eqdsk_file,'eqdsk.')),
             it = strfind(eqdsk_file,'t');
             if ~isempty(it),
                 shotnum = eqdsk_file(7:it-1);
@@ -143,6 +143,8 @@ if strcmp(basestr,'TCV'),% TCV profile data
             return
         end
         %
+        load([data_path,data_file],'t1','t2','laun');
+        %
     elseif n_opt == 1,% profiles from TCV database
         %
         t1 = input('Averaging of TCV data, initial time : ');
@@ -238,5 +240,6 @@ if strcmp(basestr,'TCV'),
     equil.info.data = [data_path,data_file];
     equil.info.t1 = t1;
     equil.info.t2 = t2;
+    equil.info.laun = laun;
 end
 %
