@@ -17,7 +17,7 @@ rayparam.tensortype = 0;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativ
 rayparam.t0 = 0;
 rayparam.tfinal = 50000;
 rayparam.dt0 = 1.e-4;
-rayparam.dS = 1.e-4;
+rayparam.dS = 1.e-3;
 rayparam.tol = 1e-12;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
 rayparam.kmax = 50000;
 rayparam.ncyclharm = 3;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
