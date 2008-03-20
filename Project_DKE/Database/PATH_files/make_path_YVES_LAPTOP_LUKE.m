@@ -28,4 +28,6 @@ dkepath.PETSc.mpipath = ['/usr/local/openmpig95/bin/'];%Absolute path to the cor
 %
 dkepath.SUPERLU.mex = [local_root,'Packages/Bin/SUPERLU/SuperLU_3.0-GotoBlasgcc/MATLAB'];%Where SUPERLU matrix solver is stored (MEX function)
 %
+dkepath.compiler_opt.helmex = '';%Compiling options for HELMEX
+%
 eval(['save PATH_',path_id ,'.mat dkepath']);
