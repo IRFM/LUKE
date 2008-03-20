@@ -50,7 +50,7 @@ if opt >= 1,
     wd = pwd;
     cd(savedir)
     eval(['print -depsc -loose -r',num2str(res),' ',savename,'.eps']); 
-    saveas(gcf,savename,'fig')
+    saveas(gcf,[savename,'.fig'],'fig')
     if strcmp(computer,'PCWIN'),
         eval(['print -dmeta -r',num2str(res),' ',savename,'.emf']); 
     else
