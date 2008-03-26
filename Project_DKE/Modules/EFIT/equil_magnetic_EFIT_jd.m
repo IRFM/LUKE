@@ -33,12 +33,7 @@ nt = 65;
 %
 % Reads EFIT eqdsk data
 %
-if ~isempty(strfind(filename,'eqdsk')) | ~isempty(strfind(filename,'EQDSK')),
-	efitname = filename;
-else
-	efitname = [filename,'.efit'];
-end
-[x,y,xypsin,psia,psin,pF,pp,pq,Rp,Zp] = eqdsk_jd(efitname,display_mode,p_opt,dispname,savename);
+[x,y,xypsin,psia,psin,pF,pp,pq,Rp,Zp] = eqdsk_jd(filename,display_mode,p_opt,dispname,savename);
 %
 % Transforms on a (psi,theta) grid
 %

@@ -34,8 +34,7 @@ method = 'spline';%'linear';
 %
 % Reads profile T and n data
 %
-profname = [filename,'.prof'];
-[yrho,yspsin,yspsinT,yTe,yne,yzTi,yzni,zZi,zmi] = Teneprof_jd(profname,type,display_mode,p_opt,Zeff,dispname,savename);
+[yrho,yspsin,yspsinT,yTe,yne,yzTi,yzni,zZi,zmi] = Teneprof_jd(filename,type,display_mode,p_opt,Zeff,dispname,savename);
 %
 if ~isempty(yrho),% profiles given on rho grid
     pTe = interp1(yrho,yTe,prho,method);
