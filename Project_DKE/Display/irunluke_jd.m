@@ -1,7 +1,11 @@
-function irunluke_jd(basestr)
+function irunluke_jd(basestr,signs)
 %
 % This script interactively loads the equilibrium, profiles and launching data, and runs LUKE with
 % either C3PO, TORAY or ART ray-tracing data.
+%
+if nargin < 2,
+    signs = '';
+end
 %
 quitmsg = '-----> Run aborted';
 warning off
@@ -59,6 +63,20 @@ else
     if isempty(equil),
         disp(quitmsg)
         return
+    end
+    %
+    % sign management as most equilibrium codes do not account for these.
+    %
+    if isstruct(signs),
+        if signs.Ip*equil.psi_apRp(end) < 0,
+            equil.psi_apRp = -equil.psi_apRp;
+            equil.ptBx = -equil.ptBx;
+            equil.ptBy = -equil.ptBy;
+        end
+        %
+        if signs.Bt*equil.ptBPHI(1,1) < 0,
+            equil.ptBPHI = -equil.ptBPHI;
+        end
     end
     %
     disp('-----> The equilibrium structure is created')
