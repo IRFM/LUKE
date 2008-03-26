@@ -139,6 +139,10 @@ elseif launch.type == 'LH',
 %
 % Ray initial characteristics
 %
+    if ~isfield(launch,'i_ref'),
+        launch.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
+    end
+%
    tmask = diff(equil.pty(launch.i_ref,:))*launch.LFS > 0;
 %
    rbx0 = interp1(equil.pty(launch.i_ref,tmask),equil.ptx(launch.i_ref,tmask),rby0,'spline');
