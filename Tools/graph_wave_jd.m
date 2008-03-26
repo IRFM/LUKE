@@ -20,6 +20,7 @@ if nargin < 7
     rho_disp = [0:0.1:1];
 end
 %
+styles = {'-','-','-'};
 %clear all
 %load toto
 %
@@ -99,6 +100,7 @@ for iw = 1:length(waves),
         rays{iy} = waves{iw}.rays{ib};
         rays{iy}.omega_rf = waves{iw}.omega_rf;
         rays{iy}.color = colors{iw};
+        rays{iy}.style = styles{iw};
         %rays{iy}.srho = psi2rho_jd(equil,rays{iy}.spsin);
         if iscell(yabs),
             rays{iy}.mask_abs = yabs{iw}(1,ibb):yabs{iw}(2,ibb);
@@ -728,7 +730,7 @@ tit = '';
 [ax] = graph1D_jd(ptx_disp',pty_disp',0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color5,width2,siz,gca,red,lspace,bspace);
 for iy = 1:ny,
     mask_max = 1:rays{iy}.is_abs_max;
-    graph1D_jd(rays{iy}.sx(mask_max),rays{iy}.sy(mask_max),0,0,'','','',NaN,xlim,ylim,style,marker,rays{iy}.color,width1,siz);
+    graph1D_jd(rays{iy}.sx(mask_max),rays{iy}.sy(mask_max),0,0,'','','',NaN,xlim,ylim,rays{iy}.style,marker,rays{iy}.color,width1,siz);
     if isfield(rays{iy},'mask_abs'),
         mask_abs = rays{iy}.mask_abs;
         graph1D_jd(rays{iy}.sx(mask_abs),rays{iy}.sy(mask_abs),0,0,'','','',NaN,xlim,ylim,style,marker,color5,width1,siz);
@@ -891,7 +893,7 @@ tit = '';
 %
 graph1D_jd(1:ny,abs(yNpar_abs),0,0,xlab,ylab,tit,NaN,xlim,ylim,style2,marker1,color2,width1,siz,gca,red,lspace,bspace);
 %
-figure(6),clf
+figure(7),clf
 xlim = [0,1];
 ylim = NaN;
 xlab = '\rho';
