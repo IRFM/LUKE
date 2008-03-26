@@ -21,6 +21,9 @@ if type == 0,%ascii
     [prho,pTe,pne,pTi,pni] = textread(filename,'%n%n%n%n%n');
 elseif type == 0.1,
     [psi,pTe,pne,pZeff] = textread(filename,'%n%n%n%n');    
+    pTi = pTe;
+elseif type == 0.2,
+    [pspsinT,pTe,pTi,pne,pnH,pnalpha,pnimp,pZeff] = textread(filename,'%n%n%n%n%n%n%n%n');    
 elseif type == 1 | type == 1.1 ,%.mat
     eval(['load -mat ',filename,' prho pTe pne pTi Zeff']);
 elseif type == 2,%ascii - 203040
@@ -209,20 +212,50 @@ elseif type == 0.1,
     %
     fi = [0,0.5,0.5];
     %
+    psi = psi.';
     pTe = pTe.';
-    pTi = pTe;
+    pTi = pTi.';
     pne = pne.'*1e19;
     pZeff = pZeff.';
-    psi = psi.';
     %
-    Zimp = zZi(4);
+    Zimp = zZi(end);
     %
-    pnH = pne.*(zZi(4) - pZeff)/(zZi(4) - 1);
-    pnZ = pne.*(pZeff - 1)/zZi(4)/(zZi(4) - 1);
+    pnH = pne.*(Zimp - pZeff)/(Zimp - 1);
+    pnZ = pne.*(pZeff - 1)/Zimp/(Zimp - 1);
     pzni = [fi.'*pnH;pnZ];
     pzTi = ones(nz,1)*pTi;
     %
     pspsin = sqrt(psi);
+    %
+elseif type == 0.2,% note pnH, pnalpha and pnimp not accounted for because impurity species unknown
+    %
+    fi = [0,0.5,0.5];
+%    zZi = [1,1,1,2,4,6];
+%    zmi = [1,2,3,4,9,12];
+    %
+    pspsinT = pspsinT.';
+    pTe = pTe.';
+    pTi = pTi.';
+    pne = pne.'*1e19;
+%    pnH = pnH.'*1e19;
+%    pnalpha = pnalpha.'*1e19;
+%    pnimp = pnimp.'*1e19;
+    clear pnH pnalpha pnimp
+    pZeff = pZeff.';
+    %
+    ZH = zZi(3);
+    Zalpha = zZi(4);
+    Zimp1 = zZi(end-1);
+    Zimp2 = zZi(end);
+    %
+%    pnZimp1 = ((pZeff - Zimp2).*pne - (ZH - Zimp2)*ZH*pnH - (Zalpha - Zimp2)*Zalpha*pnalpha)/Zimp1/(Zimp1 - Zimp2);
+%    pnZimp2 = ((pZeff - Zimp1).*pne - (ZH - Zimp1)*ZH*pnH - (Zalpha - Zimp1)*Zalpha*pnalpha)/Zimp2/(Zimp2 - Zimp1);
+%    pzni = [fi.'*pnH;pnalpha;pnZimp1;pnZimp2];
+    Zimp = zZi(end);
+    pnH = pne.*(Zimp - pZeff)/(Zimp - 1);
+    pnZ = pne.*(pZeff - 1)/Zimp/(Zimp - 1);
+    pzni = [fi.'*pnH;pnZ];
+    pzTi = ones(nz,1)*pTi;
     %
 elseif type == 1,
     %
@@ -242,7 +275,7 @@ if type == 1 |  type == 1.1 | type>= 3 & type ~=5 & type ~=6,
     pnZ = pne*(Zeff - 1)/zZi(4)/(zZi(4) - 1);
     pzni = [fi.'*pnH;pnZ];
     pzTi = ones(nz,1)*pTi;
-else
+elseif type == 0 | type == 2,
     pnH = pne;
     pzni = [fi.'*pnH];
     pzTi = ones(nz,1)*pTi;

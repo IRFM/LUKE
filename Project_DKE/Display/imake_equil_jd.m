@@ -4,6 +4,7 @@ function equil = imake_equil_jd(workdir,basestr)
 %
 equil = '';
 Zaxis = 0;
+Zeff = NaN;
 %
 % MAGNETIC EQUILIBRIUM
 %
@@ -31,18 +32,20 @@ if e_opt == 0, % EQSDK equilibrium
     %
     if n_opt == 0,% EQSDK from data file
         %
-        [eqdsk_file,eqdsk_path] = uigetfile({'eqdsk*.*';'EQDSK*.*'},'Please select the EQDSK file');
+        [eqdsk_file,eqdsk_path] = uigetfile({'eqdsk*.*';'EQDSK*.*';'*.*'},'Please select the EQDSK file');
         %
         if eqdsk_file == 0,
             return
         end
         %
-        if ~isempty(strfind(eqdsk_file,'EQDSK.')) | ~isempty(strfind(eqdsk_file,'eqdsk.')),
-            it = strfind(eqdsk_file,'t');
-            if ~isempty(it),
-                shotnum = eqdsk_file(7:it-1);
-                shotime = eqdsk_file(it+1:end);
-            end
+        it = strfind(eqdsk_file,'t');
+        %
+        if (~isempty(strfind(eqdsk_file,'EQDSK.')) | ~isempty(strfind(eqdsk_file,'eqdsk.'))) & ~isempty(it),
+            shotnum = eqdsk_file(7:it-1);
+            shotime = eqdsk_file(it+1:end);
+        else
+            shotnum = '0';
+            shotime = '0';
         end
         %
         shotnum_new = input(['Please provide the shot number [',shotnum,'] : '],'s');
@@ -207,6 +210,19 @@ if strcmp(basestr,'TCV'),% TCV profile data
     profname = [id_equil,'.prof'];
     save(profname,'prho','pne','pTe','pTi','Zeff','-mat');
     %
+elseif strcmp(basestr,'ITER'),% ITER Astra profile data
+    %
+    profname = [id_equil,'.prof'];
+    type = 0.2;
+    %
+    [data_file,data_path] = uigetfile(profname,['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],eqdsk_path);
+    %
+    profname = [data_path,data_file];
+    %
+    if data_file == 0,
+        return
+    end
+    %
 else
     %
     disp(['-----> profiles data not implemented yet for :',basestr]);
@@ -214,8 +230,8 @@ else
     %
 end
 %
-equil_prof = equil_prof_jd(id_equil,type,mrho,mspsin,mspsinT,display_mode,p_opt,dispname,savename,Zeff);
-delete(profname);
+equil_prof = equil_prof_jd(profname,type,mrho,mspsin,mspsinT,display_mode,p_opt,dispname,savename,Zeff);
+%delete(profname);
 %
 % EQUIL structure
 %
@@ -241,5 +257,7 @@ if strcmp(basestr,'TCV'),
     equil.info.t1 = t1;
     equil.info.t2 = t2;
     equil.info.laun = laun;
+elseif strcmp(basestr,'ITER'),
+    equil.info.data = [data_path,data_file];
 end
 %
