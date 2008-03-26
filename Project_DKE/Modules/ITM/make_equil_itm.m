@@ -4,22 +4,24 @@ function [equil] = make_equil_itm(equil_ITM)
 %
 % by Yves Peysson (yves.peysson@cea.fr) and Joan Decker (joan.decker@cea.fr)
 %
-equil.id = ['CRONOS_',int2str(shot),'_k',int2str(gene.k)];%gene.k is the time slice
-equil.Rp = double(equi.R(1,1,1));
-equil.Zp = double(equi.Z(1,1,1));
-equil.ptx = squeeze(double(equi.R)) - equil.Rp;
-equil.pty = squeeze(double(equi.Z)) - equil.Zp;
+%equil.id = ['CRONOS_',int2str(shot),'_k',int2str(gene.k)];%gene.k is the time slice
+
+equil.Rp = quil_ITM.global_param.mag_axis.position.r;
+equil.Zp = quil_ITM.global_param.mag_axis.position.z;
+equil.ptx =  equil_ITM.eqgeometry.boundary.r - equil.Rp;
+equil.pty =  equil_ITM.eqgeometry.boundary.z - equil.Zp;
 equil.ap = equil.ptx(end,1);
-equil.psi_apRp = (-equi.psi+equi.psi(1))*equil.ap/equil.Rp;%Match already the defintion of ppsi in DKE (psi(helena)/2/pi))
+equil.psi_apRp =  equil_ITM.profiles_1d.psi*equil.ap/equil.Rp;%Match already the defintion of ppsi in DKE (psi(helena)/2/pi))
+
+
+
+
+
 equil.theta = linspace(0,2*pi,size(equi.R,3));
 equil.ptBx = squeeze(double(equi.BR));
 equil.ptBy = squeeze(double(equi.BZ));
 equil.ptBPHI = squeeze(double(equi.BPHI));
 %
-equil.ptBPHI = -gene.signe.b0*equil.ptBPHI;%Bphi is counter-clockwise in TS (WARNING: in rtluke, Ip > 0 and Bphi > 0 when clockwise from the top view of the tokamak, opposite from CRONOS def)
-equil.ptBx = -gene.signe.ip*equil.ptBx;%Ip is counter-clockwise in TS
-equil.ptBy = -gene.signe.ip*equil.ptBy;%Ip is counter-clockwise in TS
-equil.psi_apRp = -gene.signe.ip*equil.psi_apRp;%Ip is counter-clockwise in TS
 %
 equil.pTe = prof.te/1000;%en keV
 equil.pne = prof.ne;

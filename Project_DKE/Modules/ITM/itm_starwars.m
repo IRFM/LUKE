@@ -17,7 +17,7 @@ expIdx = openBD('euitm',numshot,numrun);%Open the database
 equil_ITM = CPO_get(expIdx, 'equilibrium');%Read magnetic equilibrium
 %
  
- 
+ keyboard
  
  
  
@@ -28,7 +28,6 @@ closeBD(expIdx,'euitm',numshot,numrun);%Close the currently open database
 %--------------------------- Data conversion between ITM CPO's and C3PO/LUKE format ------------------
 %
 %equil = make_equil_itm(equil_ITM);
-
 %
 flag = 0;
 return
