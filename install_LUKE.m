@@ -8,8 +8,15 @@ function install_LUKE(pathforstartup)
 if nargin == 0,
     pathforstartup = which('startup.m');%The default directory for startup.m is the same as the always existing startup.m file
     if isempty(pathforstartup),
-        pathforstartup = which('pathdef.m');%The default directory for startup.m is the same as the always existing startup.m file
-        pathforstartup = pathforstartup([1:findstr(pathforstartup,'pathdef.m')-1]);
+		%
+		% home directory is more appropriate for linux and unix platforms because of accessibility rights
+		%
+		if strcmp(computer,'PCWIN'),
+			pathforstartup = which('pathdef.m');%The default directory for startup.m is the same as the always existing startup.m file
+        	pathforstartup = pathforstartup([1:findstr(pathforstartup,'pathdef.m')-1]);
+		else
+			pathforstartup = '~/';%The default directory for startup.m is the same as the always existing startup.m file
+		end
     else
         pathforstartup = pathforstartup([1:findstr(pathforstartup,'startup.m')-1]);
     end
@@ -42,7 +49,7 @@ end
 %
 fid = fopen(startuppath,'a+');%Create or open startup.m file and append LUKE path at the end of the existing startup file
 %
-fprintf(fid,'\n%s\n','%%%%%%%%%%%%%%%%%%%BEGIN-LUKE-PATH%%%%%%%%%%%%%%%%%%%');
+fprintf(fid,'%s\n','%%%%%%%%%%%%%%%%%%%BEGIN-LUKE-PATH%%%%%%%%%%%%%%%%%%%');
 localpath = [pwd,'/'];
 eval(['fprintf(fid,''%s\n'',''luke_root = ''''',localpath,''''';'');']);
 fprintf(fid,'%s\n','addpath([luke_root,''Project_DKE/DKE'']);');
@@ -65,9 +72,13 @@ addpath([localpath,'Project_DKE/Database/PATH_files']);
 %
 disp(['The LUKE paths have been installed.']);
 %
+% Loads or creates the PATH_LOCAL.mat structure 
+%
+dkepath = path_LUKE_LOCAL;
+%
 % Build *.mat and *.mex files if possible
 %
-mex_compile_luke(localpath)
+mex_compile_luke(dkepath)
 %
 cd([localpath,'/Project_DKE/Database']);
 make_all;
