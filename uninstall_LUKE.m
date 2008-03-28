@@ -63,13 +63,13 @@ end
 %
 disp(['The startup.m file has been cleaned from LUKE path']);
 %
-path_LUKE = pwd;
+path_LUKE = [pwd,'/'];
 %
 % Remove *.mat and *.mex files if possible
 %
 mex_clean_luke(path_LUKE)
 %
-cd([path_LUKE,'/Project_DKE/Database']);
+cd([path_LUKE,'Project_DKE/Database']);
 remove_all(0);
 cd(path_LUKE);
 %
