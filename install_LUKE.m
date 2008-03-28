@@ -61,7 +61,7 @@ if exist(startuppath),%startup.m file already exist
     	sf1 = strfind(char(sfile'),'%%%%%%%%%%%%%%%%BEGIN-CALL-OLD-STARTUP%%%%%%%%%%%%%%%');
     	sf2 = strfind(char(sfile'),'%%%%%%%%%%%%%%%%%END-CALL-OLD-STARTUP%%%%%%%%%%%%%%%%');
     	while length(sf1)>0
-        	sfile = sfile([1:max(1,sf1(1)-1),sf2(1)+53:length(sfile)]);
+        	sfile = sfile([1:sf1(1)-1,sf2(1)+53:length(sfile)]);
         	sf1 = strfind(char(sfile'),'%%%%%%%%%%%%%%%%BEGIN-CALL-OLD-STARTUP%%%%%%%%%%%%%%%');
         	sf2 = strfind(char(sfile'),'%%%%%%%%%%%%%%%%%END-CALL-OLD-STARTUP%%%%%%%%%%%%%%%%');
     	end
@@ -69,7 +69,7 @@ if exist(startuppath),%startup.m file already exist
     	sf1 = strfind(char(sfile'),'%%%%%%%%%%%%%%%%%%%BEGIN-LUKE-PATH%%%%%%%%%%%%%%%%%%%');
     	sf2 = strfind(char(sfile'),'%%%%%%%%%%%%%%%%%%%%END-LUKE-PATH%%%%%%%%%%%%%%%%%%%%');
     	while length(sf1)>0
-        	sfile = sfile([1:max(1,sf1(1)-1),sf2(1)+53:length(sfile)]);
+        	sfile = sfile([1:sf1(1)-1,sf2(1)+53:length(sfile)]);
         	sf1 = strfind(char(sfile'),'%%%%%%%%%%%%%%%%%%%BEGIN-LUKE-PATH%%%%%%%%%%%%%%%%%%%');
         	sf2 = strfind(char(sfile'),'%%%%%%%%%%%%%%%%%%%%END-LUKE-PATH%%%%%%%%%%%%%%%%%%%%');
     	end
@@ -90,13 +90,13 @@ if flag == 2,
 	fprintf(fid,'%s\n','initdir = pwd;');
 	fprintf(fid,'%s\n',['cd ',origstartuppath]);
 	fprintf(fid,'%s\n','startup');
-	fprintf(fid,'%s\n','cd initdir');
+	fprintf(fid,'%s\n','cd(initdir)');
 	fprintf(fid,'%s\n','%%%%%%%%%%%%%%%%%END-CALL-OLD-STARTUP%%%%%%%%%%%%%%%%');
 end
 %
 fprintf(fid,'%s\n','%%%%%%%%%%%%%%%%%%%BEGIN-LUKE-PATH%%%%%%%%%%%%%%%%%%%');
 localpath = [pwd,'/'];
-fprintf(fid,'%s\n',['luke_root = ',localpath,';']);
+fprintf(fid,'%s\n',['luke_root = ''',localpath,''';']);
 fprintf(fid,'%s\n','addpath([luke_root,''Project_DKE/DKE'']);');
 fprintf(fid,'%s\n','addpath([luke_root,''Project_DKE/Database/PATH_files'']);');
 fprintf(fid,'%s\n','setpath_luke_jd(luke_root);');
