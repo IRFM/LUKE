@@ -812,7 +812,7 @@ Nmax = 0;
 Spmax = 0;
 for iy = 1:ny,
     smax = max(smax,rays{iy}.ss(end));
-    Nmax = max([Nmax,abs(rays{iy}.sNpar)]);
+    Nmax = max([Nmax,abs(real(rays{iy}.sNpar))]);
     Spmax = max([Spmax,abs(rays{iy}.sphi_xyz(1,:))]);
 end
 %
@@ -826,14 +826,14 @@ tit = '';
 for iy = 1:ny,
     txt = ['ray #',num2str(iy)];
     subplot(nl,nc,iy),
-    graph1D_jd(rays{iy}.ss,abs(rays{iy}.sNpar),0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width1,siz);
+    graph1D_jd(rays{iy}.ss,abs(real(rays{iy}.sNpar)),0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width1,siz);
     %text(0,0,txt)
     if opt.TeNpar == 1,
         graph1D_jd(rays{iy}.ss,6.5./sqrt(rays{iy}.sTe),0,0,'','','',NaN,xlim,ylim,style3,marker,color2,width1,siz);
     end
     if isfield(rays{iy},'mask_abs'),
         mask_abs = rays{iy}.mask_abs;
-        graph1D_jd(rays{iy}.ss(mask_abs),abs(rays{iy}.sNpar(mask_abs)),0,0,'','','',NaN,xlim,ylim,style,marker,color5,width1,siz);
+        graph1D_jd(rays{iy}.ss(mask_abs),abs(real(rays{iy}.sNpar(mask_abs))),0,0,'','','',NaN,xlim,ylim,style,marker,color5,width1,siz);
     end
 end
 %
