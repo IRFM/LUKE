@@ -7,8 +7,34 @@ function uninstall_LUKE(pathforstartup)
 %
 %
 if nargin == 0,
-    pathforstartup = which('startup.m');%The default directory for startup.m is the same as the always existing matlabrc.m file
-    pathforstartup = pathforstartup([1:findstr(pathforstartup,'startup.m')-1]);
+    pathforstartup = which('startup.m');%The default directory for startup.m is the same as the always existing startup.m file
+	%
+	if isempty(pathforstartup),
+		fid = -2;
+	else
+		fid = fopen(pathforstartup,'w');  
+	end
+	%	
+	if fid <= -1,
+		if fid == -2,
+			disp(['No startup.m found in path']);
+		else
+			disp(['Cannot write to startup.m, no permission.']);
+		end
+		disp(['Looking for a startup.m file in home or pathdef.m directory.']);
+		%
+		if strcmp(computer,'PCWIN'),
+			pathforstartup = which('pathdef.m');%The default directory for startup.m is the same as the always existing startup.m file
+			pathforstartup = pathforstartup([1:findstr(pathforstartup,'pathdef.m')-1]);
+		else
+			pathforstartup = '~/';%The default directory for startup.m is the same as the always existing startup.m file
+		end
+		%
+	else
+		pathforstartup = pathforstartup([1:findstr(pathforstartup,'startup.m')-1]);
+		fclose(fid);
+	end	
+	%
 end
 %
 if strcmp(pathforstartup(end),'/');
@@ -17,15 +43,16 @@ else
     startuppath = [pathforstartup,'/startup.m'];
 end
 %
-if exist(startuppath),%startup.m file already exist
+if exist(startuppath),%startup.m file exists
     flag = 0;
     fid = fopen(startuppath,'r');  
     sfile = fread(fid);
+	%
     sf1 = strfind(char(sfile'),'%%%%%%%%%%%%%%%%%%%BEGIN-LUKE-PATH%%%%%%%%%%%%%%%%%%%');
     sf2 = strfind(char(sfile'),'%%%%%%%%%%%%%%%%%%%%END-LUKE-PATH%%%%%%%%%%%%%%%%%%%%');
     while length(sf1)>0
         sfile = sfile([1:max(1,sf1(1)-1),sf2(1)+53:length(sfile)]);
-        sf1 = strfind(char(sfile'),'%%%%%%%%%%%%%%%%%%%%BEGIN-LUKE-PATH%%%%%%%%%%%%%%%%%%%%');
+        sf1 = strfind(char(sfile'),'%%%%%%%%%%%%%%%%%%%BEGIN-LUKE-PATH%%%%%%%%%%%%%%%%%%%');
         sf2 = strfind(char(sfile'),'%%%%%%%%%%%%%%%%%%%%END-LUKE-PATH%%%%%%%%%%%%%%%%%%%%');
     end
     fclose(fid);
@@ -40,29 +67,17 @@ path_LUKE = pwd;
 %
 % Remove *.mat and *.mex files if possible
 %
-cd([path_LUKE,'/Project_DKE/MEX/Bin']);
-if exist(['trapz_dke_yp.',mexext]),
-    delete(['trapz_dke_yp.',mexext])
-    disp(['The trapz_dke_yp.',mexext,' mexfile has been removed.'])
-end
-cd([path_LUKE,'/Project_DKE/Modules/RT/MEX/Bin']);
-if exist(['raytracing_yp.',mexext]),
-    delete(['raytracing_yp.',mexext])
-    delete(['raytracing_dieltensor_yp.o']) 
-    delete(['raytracing_load_yp.o'])
-    delete(['raytracing_interp_yp.o'])
-    disp(['The raytracing_yp.',mexext,' mexfile has been removed.'])
-end
+mex_clean_luke(path_LUKE)
 %
 cd([path_LUKE,'/Project_DKE/Database']);
 remove_all(0);
+cd(path_LUKE);
 %
 % Remove paths
 %
 setpath_luke_jd
 %
 disp(['The LUKE paths have been removed.']);
-cd(path_LUKE);
 
 
 
