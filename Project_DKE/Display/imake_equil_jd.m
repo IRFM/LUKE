@@ -69,13 +69,12 @@ if e_opt == 0, % EQSDK equilibrium
             return
         end
         %
-        shotime = input(['Please provide the shot time : '],'s');
+	shotime = input('Please provide the shot time : ');
         if isempty(shotime),
             return
         end
         %
-        strc = '.0000';
-        shotime = [shotime,strc(1:end-length(shotime) + 1)];
+        shotime = num2str(shotime,'%6.4f');
         %
         l_opt = input('Option for liuqe version? (1,2,3) [1] : ');
         if isempty(l_opt),
