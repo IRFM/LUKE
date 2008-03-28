@@ -54,7 +54,11 @@ if exist(filename),
     return
 end
 %
-disp([path_root,'Project_DKE/Database/PATH_files/PATH_LOCAL.mat was not found.'])
+disp([path_root,'Project_DKE/Database/PATH_files/PATH_LOCAL.mat was not found and is created now.'])
+%
+dkepath.path_id = path_id;
+dkepath.computer = computer;%machine type and supported OS
+dkepath.luke_root = path_root;
 %
 uisetpath_flag = '';
 %
@@ -64,25 +68,39 @@ while ~(ischar(uisetpath_flag) & (strcmp(uisetpath_flag,'y') | strcmp(uisetpath_
     %
 end
 %
-dkepath.path_id = path_id;
-dkepath.computer = computer;%machine type and supported OS
-dkepath.luke_root = path_root;
-dkepath.local_root = path_root;
-%
 if uisetpath_flag == 'n',
     dkepath.temppathroot = '';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+	dkepath.local_root = path_root;
 else
+	%
+	disp('Press cancel to skip any path setting.')
     %
     if exist('/scratch/','dir'),
         initdir = '/scratch/';
-    else
-        initdir = '';
+    elseif exist('/tmp/','dir'),
+        initdir = '/tmp/';
+	else 
+		initdir = '';
     end
-    dkepath.temppathroot = uigetdir(initdir,'Select Temporary Directory');%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
-    dkepath.temppathroot = [dkepath.temppathroot,'/'];
+	%
+    temppathroot = uigetdir(initdir,'Select Temporary Directory');%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+    if temppathroot ~= 0,
+        dkepath.temppathroot = [temppathroot,'/'];
+	else
+		dkepath.temppathroot = '';
+    end
     %
     initdir = [path_root,'Packages/'];
     %
+    local_root = uigetdir(initdir,'Select External Packages Directory');%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+    if local_root ~= 0,
+        dkepath.local_root = [local_root,'/'];
+	else
+		dkepath.local_root = path_root;
+    end
+    %
+	initdir = dkepath.local_root;
+	%
     MUMPS_par = uigetdir(initdir,'Select Parallel MUMPS directory: "dke"');%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
     MUMPS_seq = uigetdir(initdir,'Select Sequential MUMPS directory: "dke"');%Where MUMPS matrix solver is stored (stand-alone application for sequential processing)
     MUMPS_mex = uigetdir(initdir,'Select Mex MUMPS directory: "MATLAB"');%Where MUMPS matrix solver is stored (stand-alone application for MEX processing)
@@ -129,8 +147,15 @@ else
         dkepath.SUPERLU.mex = SUPERLU_mex;
     end
     %
+	uisetpath_flag  = input_dke_yp('Please provide the arguments for the HELMEX compilation : ','');
+	%
+	if ischar(uisetpath_flag) | isempty(uisetpath_flag)
+		dkepath.compiler_opt.helmex = uisetpath_flag;
+	end
+	%
     save([path_root,'Project_DKE/Database/PATH_files/PATH_LOCAL.mat'],'dkepath');
     disp([path_root,'Project_DKE/Database/PATH_files/PATH_LOCAL.mat is created.'])
+    disp('The path file PATH_LOCAL.mat can be interactively rebuilt with the function path_LUKE_LOCAL.')
     %
 end
 %
