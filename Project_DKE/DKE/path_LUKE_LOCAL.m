@@ -20,7 +20,7 @@ ind_LUKE_dir = strfind(curr_dir,lukestr);
 %
 if ~isempty(ind_LUKE_dir),
     %
-    ind_root = min(find(curr_dir(ind_LUKE_dir+1:end) == delim));
+    ind_root = min([find(curr_dir(ind_LUKE_dir+1:end) == delim),5]);
     %
     path_root = curr_dir(1:ind_LUKE_dir + ind_root - 1);
     %
@@ -147,9 +147,9 @@ else
         dkepath.SUPERLU.mex = SUPERLU_mex;
     end
     %
-	uisetpath_flag  = input_dke_yp('Please provide the arguments for the HELMEX compilation : ','');
+	uisetpath_flag  = input('Please provide the arguments for the HELMEX compilation (type n to abandon helmex compilation): ','s');
 	%
-	if ischar(uisetpath_flag) | isempty(uisetpath_flag)
+	if ischar(uisetpath_flag) | ~strcmp(uisetpath_flag,'n'),
 		dkepath.compiler_opt.helmex = uisetpath_flag;
 	end
 	%
