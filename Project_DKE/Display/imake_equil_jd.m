@@ -233,6 +233,23 @@ end
 equil_prof = equil_prof_jd(profname,type,mrho,mspsin,mspsinT,display_mode,p_opt,dispname,savename,Zeff);
 %delete(profname);
 %
+d_opt = input('Do you want to compare the pressure profiles? [y/n] : ','s');
+if strcmp(d_opt,'y'),
+    %
+    % Verify consistency on pressure between profiles and EFIT
+    %
+    qe = pc_dke_yp;
+    %
+    mp_profiles = (equil_prof.pTe.*equil_prof.pne + sum(equil_prof.pzTi.*equil_prof.pzni,1))*qe*1e3;%pressure from Tene data
+    %
+    figure(14),clf
+    %
+    graph1D_jd(mrho,mp_profiles/1e5,0,0,'r/a','p (Bar)','',NaN,[0,1],NaN,'-','none','b',2,20,gca,0.9,0.7,0.7);
+    graph1D_jd(mrho,mp_magnetic/1e5,0,0,'','','',{'T_en_e + T_in_i','Equilibrium code'},[0,1],NaN,'-','none','r',2);
+    set(gca,'XTick',[0:0.2:1]);
+    print_jd(p_opt,[savename,'_p_comp']);
+end
+%
 % EQUIL structure
 %
 %
@@ -245,6 +262,7 @@ end
 equil_magnetic.Zp = equil_magnetic.Zp + Zp_offset;
 %
 equil = conc_struct_jd(equil_magnetic,equil_prof);
+%
 equil.id = id_equil;
 equil.info.gen = 'Built with imake_equil_jd';
 if e_opt == 0,
