@@ -436,9 +436,11 @@ end
 %	    
 % GRAPHIC OUTPUT
 %
-I_tot = sum(Zcurr.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref);
+scocurr = sign(equil.psi_apRp(end))*sign(equil.ptBPHI(1,1));
+%
+I_tot = sum(Zcurr.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref*scocurr);
 figure('Name','Current profile'),
-graph1D_jd(equilDKE.xrho,Zcurr.x_0_fsav*mksa.j_ref,0,0,'\rho','J_{tot} (MA/m^2)',['I_{tot} = ',num2str(I_tot*1000),' (kA)'],NaN,'','','-','none','r',2);drawnow
+graph1D_jd(equilDKE.xrho,Zcurr.x_0_fsav*mksa.j_ref*scocurr,0,0,'\rho','J_{tot} (MA/m^2)',['I_{tot} = ',num2str(I_tot*1000),' (kA)'],NaN,'','','-','none','r',2);drawnow
 print_jd(p_opt,[id_simul,'_Curr']);
 %
 PRF_tot = sum(ZP0.x_rf_fsav.*equilDKE.xdV_2piRp_dke(:)*mksa.P_ref*2*pi*equilDKE.Rp);
