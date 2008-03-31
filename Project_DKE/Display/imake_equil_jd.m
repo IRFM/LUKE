@@ -204,6 +204,15 @@ if strcmp(basestr,'TCV'),% TCV profile data
     end
     %
     Zeff = data.zeff(ishot);
+    %
+    if isnan(Zeff),
+        Zeff = input('No measure of Zeff is available. Please provide an estimated value for Zeff [1] : ');
+        if isempty(Zeff) | ~isnumeric(Zeff) | Zeff < 1 | Zeff > 6,
+            disp('Zeff = 1 enforced');
+            Zeff = 1;
+        end
+    end
+    %
     Zaxis = data.zaxis(ishot);
     %
     profname = [id_equil,'.prof'];
