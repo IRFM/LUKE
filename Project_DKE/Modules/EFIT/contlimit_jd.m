@@ -39,11 +39,13 @@ end
 %
 C = contourc(x1d,x2d,fd,cont);
 %
-cmap = colormap;
-clen = size(colormap,1);
+if nargout > 2,
+    cmap = colormap;
+    clen = size(colormap,1);
+    col = {};
+end
 %
 lnum = 0;
-col = {};
 x1c = {};
 x2c = {};
 while ~isempty(C)
@@ -66,7 +68,9 @@ while ~isempty(C)
     else
         mask = 1:len;
     end
-    col{lnum} = cmap(1+round(((lev-fmin)/(fmax-fmin))*(clen-1)),:);
+    if nargout > 2,
+        col{lnum} = cmap(1+round(((lev-fmin)/(fmax-fmin))*(clen-1)),:);
+    end
     x1c{lnum} = line_1(mask);
     x2c{lnum} = line_2(mask);
     C = C(:,len+2:tlen);

@@ -119,7 +119,7 @@ sxytheta = atan(sxyy./sxyx) + pi*(sxyx < 0) + 2*pi*(sxyx > 0 & sxyy < 0);
 %
 % last closed flux-surface
 %
-[xc,yc,col] = contlimit_jd(sx,sy,sxypsin',[-1,0.999]);
+[xc,yc] = contlimit_jd(sx,sy,sxypsin',[-1,0.999]);
 %
 % selects the plasma among various closed systems   
 %
