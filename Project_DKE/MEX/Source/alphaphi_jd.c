@@ -61,7 +61,7 @@ int n,rel_opt,ns;
             }
             
             absint = integral_fr_jd(pperpmax_ellipse,npar,yn,beta,epolp,epolm,epolz,slperp,n,ns,1); 
-            absint = integral_fr_jd(pperpmax_ellipse,npar,yn,beta,epolp,epolm,epolz,slperp,n,ns,-1); 
+            absint = absint + integral_fr_jd(pperpmax_ellipse,npar,yn,beta,epolp,epolm,epolz,slperp,n,ns,-1); 
         }}}
     } else {/* non-relativistic case - straight line */
         if ((1 - yn)*(1 - yn) < npar2) {
