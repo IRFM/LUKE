@@ -58,25 +58,11 @@ if strcmp(l_opt,'y'),
     end
     %
 else
-    equil = imake_equil_jd(workdir,basestr);
+    equil = imake_equil_jd(workdir,basestr,signs);
     %
     if isempty(equil),
         disp(quitmsg)
         return
-    end
-    %
-    % sign management as most equilibrium codes do not account for these.
-    %
-    if isstruct(signs),
-        if signs.Ip*equil.psi_apRp(end) < 0,
-            equil.psi_apRp = -equil.psi_apRp;
-            equil.ptBx = -equil.ptBx;
-            equil.ptBy = -equil.ptBy;
-        end
-        %
-        if signs.Bt*equil.ptBPHI(1,1) < 0,
-            equil.ptBPHI = -equil.ptBPHI;
-        end
     end
     %
     disp('-----> The equilibrium structure is created')

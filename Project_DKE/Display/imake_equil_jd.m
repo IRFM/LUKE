@@ -1,6 +1,10 @@
-function equil = imake_equil_jd(workdir,basestr)
+function equil = imake_equil_jd(workdir,basestr,signs)
 %
 % This function interactively builds the equilibrium structure
+%
+if nargin < 3,
+	signs = '';
+end
 %
 equil = '';
 Zaxis = 0;
@@ -178,7 +182,7 @@ if strcmp(basestr,'TCV'),% TCV profile data
         %
     end
     %
-    data = load([data_path,data_file],'shot','rho','ne','te','ti','zeff','zaxis');
+    data = load([data_path,data_file],'shot','rho','ne','te','ti','zeff','zaxis','btsign','ipsign');
     %
     ishot = find(data.shot == str2num(shotnum));
     %
@@ -218,6 +222,13 @@ if strcmp(basestr,'TCV'),% TCV profile data
     profname = [id_equil,'.prof'];
     save(profname,'prho','pne','pTe','pTi','Zeff','-mat');
     %
+	% sign management as most equilibrium codes do not account for these.
+	%
+	if ~isstruct(signs) & exist('btsign') & exist('ipsign'),% note that TCV conventions are opposite to LUKE conventions
+		signs.Bt = - btsign;
+		signs.Ip = - ipsign;
+	end
+	%
 elseif strcmp(basestr,'ITER'),% ITER Astra profile data
     %
     profname = [id_equil,'.prof'];
@@ -239,7 +250,7 @@ else
 end
 %
 equil_prof = equil_prof_jd(profname,type,mrho,mspsin,mspsinT,display_mode,p_opt,dispname,savename,Zeff);
-%delete(profname);
+delete(profname);
 %
 d_opt = input('Do you want to compare the pressure profiles? [y/n] : ','s');
 if strcmp(d_opt,'y'),
@@ -268,6 +279,20 @@ if isempty(Zp_offset) | ~isnumeric(Zp_offset),
     Zp_offset = Zaxis;
 end
 equil_magnetic.Zp = equil_magnetic.Zp + Zp_offset;
+%
+% sign management as most equilibrium codes do not account for these.
+%
+if isstruct(signs),
+	if signs.Ip*equil_magnetic.psi_apRp(end) < 0,
+		equil_magnetic.psi_apRp = -equil_magnetic.psi_apRp;
+		equil_magnetic.ptBx = -equil_magnetic.ptBx;
+		equil_magnetic.ptBy = -equil_magnetic.ptBy;
+	end
+	%
+	if signs.Bt*equil_magnetic.ptBPHI(1,1) < 0,
+		equil_magnetic.ptBPHI = -equil_magnetic.ptBPHI;
+	end
+end
 %
 equil = conc_struct_jd(equil_magnetic,equil_prof);
 %
