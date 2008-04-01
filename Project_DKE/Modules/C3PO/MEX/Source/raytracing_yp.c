@@ -848,18 +848,7 @@ Update the solution only if the error is acceptable
                        + Sdot5*gama[4][0] + Sdot6*gama[5][0]);
 
 /*           mexPrintf("t1,rho2,theta2,phi2,krho2,m2:%g,%g,%g,%g,%g,%g\n",t1,rho2,theta2,phi2,krho2,m2); */
-               
-            if (rho2 < 2*rayparam.dS[0]) {/* Boundary condition at rho = 0  */     
-                rho2 = rho1;
-		        theta2 = theta1 + PI;
-                phi2 = phi1;
-		        krho2 = -krho1;
-                m2 = m1;
-                
-                S2 = S1;
-                S_step = S2;
-            }
-            
+                           
            
             if (rho2 > 1.0) {/* Wave reflexion at rho = 1  */ 
                 if (rayparam.reflection[0] >=1.0) {/* The reflection is always enforced */
