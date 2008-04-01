@@ -26,15 +26,13 @@ if isfield(ray,'sP_2piRp') & isfield(ray,'srho'),
         irho_depm = irho_depp;
         srhop = ray.srho(is);
         irho_depp = find(srhop > rho_dep_S(1:end-1) & srhop <= rho_dep_S(2:end));
+		%
         sPm = sP_2piRp_norm(is-1);
         sPp = sP_2piRp_norm(is);
         %
-        if is == 302,
-            is = 302;
-        end
-
-        %
-        if irho_depm == irho_depp,
+        if isempty(irho_depm) | isempty(irho_depp),
+			continue
+		elseif irho_depm == irho_depp,
             ray.dPnormdrho(irho_depm) = ray.dPnormdrho(irho_depm) + ...
                 (sPm - sPp)/drho_dep(irho_depm);
         elseif srhop > srhom,
