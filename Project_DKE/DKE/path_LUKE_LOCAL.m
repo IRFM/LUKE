@@ -4,7 +4,29 @@ function dkepath = path_LUKE_LOCAL
 %
 path_id = 'LOCAL';%Set here the name path parameters (user specific)
 %
-curr_dir = pwd;
+filename = ['PATH_',path_id,'.mat'];
+filepaths = which(filename,'-all');
+nn = length(filepaths);
+if nn > 0,
+    if nn == 1,
+        isel = 1;
+    else
+        disp('----> Please select one of the following :');
+        for in = 1:nn,
+            disp(['(',num2str(in),') : ',filepaths{in}]);
+        end
+        isel = input('? [1] ');
+        if isempty(isel) | ~isnumeric(isel) | isel > nn,
+            isel = 1;
+        end
+    end
+    %
+    filepath = filepaths{isel};
+    %
+    load(filepath,'dkepath'); 
+    disp([filepath,' has been loaded'])
+    return
+end   
 %
 if strfind(computer,'PCWIN'),    
     delim = '\';
@@ -14,47 +36,20 @@ else
     pathdelim = ':';
 end
 %
+curr_dir = [which('path_LUKE_LOCAL.m'),delim];
+%
 lukestr = [delim,'LUKE'];
 %
-ind_LUKE_dir = strfind(curr_dir,lukestr);
+ind_LUKE_dir = max(strfind(curr_dir,lukestr));
 %
-if ~isempty(ind_LUKE_dir),
-    %
-    ind_root = min([find(curr_dir(ind_LUKE_dir+1:end) == delim),5]);
-    %
-    path_root = curr_dir(1:ind_LUKE_dir + ind_root - 1);
-    %
-    disp('LUKE folder in the current directory searched for PATH_LOCAL.mat')
-    %
-else
-    %
-    all_dir = path;
-    %
-    ind_LUKE_dir = min(strfind(all_dir,lukestr));
-    %
-    if isempty(ind_LUKE_dir),
-        error('There is no LUKE folder in the current directory or in the path');
-    end
-    %
-    disp('LUKE folder in the path searched for PATH_LOCAL.mat')
-    %
-    ind_root_beg = max([0,find(all_dir(1:ind_LUKE_dir) == pathdelim)]);
-    ind_root_end = min(find(all_dir(ind_LUKE_dir+1:end) == delim | all_dir(ind_LUKE_dir+1:end) == pathdelim));
-    %
-    path_root = all_dir(ind_root_beg + 1:ind_LUKE_dir + ind_root_end - 1);
-    %
-end
+ind_root = min(find(curr_dir(ind_LUKE_dir+1:end) == delim));
 %
+path_root = curr_dir(1:ind_LUKE_dir + ind_root - 1);
 path_root = [path_root,delim];
 %
-filename = [path_root,'Project_DKE/Database/PATH_files/PATH_LOCAL.mat'];
-if exist(filename),
-    load(filename);
-    disp([path_root,'Project_DKE/Database/PATH_files/PATH_LOCAL.mat has been loaded'])
-    return
-end
+filename = [path_root,'Project_DKE',delim,'Database',delim,'PATH_files',delim,filename];
 %
-disp([path_root,'Project_DKE/Database/PATH_files/PATH_LOCAL.mat was not found and is created now.'])
+disp([filename,' was not found and is created now.'])
 %
 dkepath.path_id = path_id;
 dkepath.computer = computer;%machine type and supported OS
@@ -153,9 +148,9 @@ else
 		dkepath.compiler_opt.helmex = uisetpath_flag;
 	end
 	%
-    save([path_root,'Project_DKE/Database/PATH_files/PATH_LOCAL.mat'],'dkepath');
-    disp([path_root,'Project_DKE/Database/PATH_files/PATH_LOCAL.mat is created.'])
-    disp('The path file PATH_LOCAL.mat can be interactively rebuilt with the function path_LUKE_LOCAL.')
+    save(filename,'dkepath');
+    disp([filename,' is created.'])
+    disp('The path file PATH_LOCAL.mat can be interactively rebuilt with the function path_LUKE_LOCAL.m')
     %
 end
 %
