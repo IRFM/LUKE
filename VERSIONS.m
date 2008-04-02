@@ -706,4 +706,95 @@ U run_lukert.m (optimized radial grid calculation)
 
 U zstarwars.m (optimized radial grid calculation)
 
+****************************************************************************************************
+
+LUKE Version 1.5
+
+Main changes include:
+
+- Interactive LUKE run
+- Large memory gain in rfdiff_dke_jd
+- Simplified install and path management
+- Important correction in alphaphi_jd.c
+
+====> LUKE
+
+U install_LUKE.m (startup location modified and PATH structure created)
+U uninstall_LUKE.m (update of mex cleaning)
+U VERSIONS.txt (this file)
+
+====> LUKE/Project_DKE/Display
+
+A imake_angles_TCV_jd.m (interactively creates ANGLES structure for EC waves in TCV)
+A imake_equil_jd.m (interactively creates an equilibrium)
+A imake_launch_angles_TCV_jd.m (interactively creates the LAUNCh structure in TCV)
+A imake_ohm_jd.m (interactively creates an OHM structure)
+A imake_transp_jd.m (interactively creates a TRANSP structure)
+A imake_wave_jd.m (interactively creates a WAVE structure)
+A imake_wave_TORAY_jd.m (interactively creates a WAVE structure from TORAY output)
+A irunhxr_jd.m (interactively runs the HXR postprocessing)
+A irunluke_jd.m (interactively runs LUKE)
+
+====> LUKE/Project_DKE/DKE
+
+A bounce_ripple_jd.m (function that plots the trapping and ripple boundaries, moved from DKE_tools)
+A mex_clean_luke.m (function that cleans LUKE of compiled mex files)
+U comput_dke_yp.m (case of linux on PC)
+A graph_wave_jd.m (function that plots the wave data, moved from DKE_tools)
+U load_structures_yp.m (mex compile and rayinits)
+U LUKEversion_jd.m (version 1.5)
+U mex_compile_luke.m (use of dkepath, helmex compilation argument)
+U mripplecoefbuilder_dke_yp.m (diaply)
+U optgrid_dke_jd.m (display)
+U path_LUKE_LOCAL.m (local path, temp path and helmex compilation argument)
+U print_jd.m (.fig extension and -tiff removed)
+U radialdampingprofile_jd.m (correction when rho > 1)
+U rayprocess_jd.m (srho treated)
+U rfdiff_dke_jd.m (better memory management)
+U run_lukert.m (a_sdNpar location)
+U rfwave_dke_jd.m (display)
+U setpath_luke_jd.m  (HXR and DISPLAY in path)
+U wave_process_jd.m (power fields calculation from sP_2piRp)
+
+====> LUKE/Project_DKE/Database
+
+U HXR_files/bremTSconvert_dke_yp.m (small correction)
+U PATH_files/make_path_LUKE.m (option for helmex compilation)
+U PATH_files/make_path_LOCAL.m (")
+U WAVE_files/make_C3POparam.m (generates standard fitparam and rayparam structures)
+
+====> LUKE/Project_DKE/MEX/Source
+
+U alphaphi_jd.c (correction in the elliptical case)
+
+====> LUKE/Project_DKE/Modules/Helena/
+
+U build_helmex77_yp.m (compiles HELMEX, moved here from MEX/Bin)
+
+====> LUKE/Project_DKE/Modules/EFIT/
+
+U contlimit_jd.m (unwanted figure case)
+U rz2pt_jd.m (")
+U eqdsk_jd.m (better treatment of first line)
+U equil_magnetic_EFIT_jd.m (file extension)
+U equil_prof_jd.m (file extension)
+U Teneprof_jd.m (ITER case added)
+
+====> LUKE/Project_DKE/Modules/RT/
+
+U make_beam_wave_jd.m (requires the calculation of beamlets damping)
+U main_C3PO_jd.m (a_sdNpar location)
+U main_rayinit_launch_jd.m (i_ref in this function)
+U MEX/Source/raytracing_yp.c (ray treatment at rho = 0 removed)
+
+====> LUKE/Project_DKE/Modules/FEB/
+
+U bremdiagdisplay_dke_yp.m (plots experimental data if applicable)
+
+====> LUKE/Project_DKE/Modules/Cronos/
+
+U zstarwars.m (a_sdNpar location)
+
+
+
 
