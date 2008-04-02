@@ -67,7 +67,7 @@ if xvar == 's',%rho defined as r/a on LFS midplane
     prho = ptx(:,1)/ap;
     plab = 'r/a';
 elseif xvar == 'p',%rho defined as square root of poloidal flux
-    prho = sqrt(ppsin);
+    prho = sqrt(psin);
     plab = '\psi_n^{1/2}';
 elseif xvar == 't',%rho defined as square root of toroidal flux
     %
