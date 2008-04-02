@@ -28,4 +28,6 @@ dkepath.MUMPS.mpipath = [''];%Absolute path to the correct mpirun or mpiexec (ma
 %
 %dkepath.SUPERLU.mex = [local_root,'Packages/Bin/SUPERLU/SuperLU_3.0/MATLAB'];%Where SUPERLU matrix solver is stored (MEX function)
 %
+dkepath.compiler_opt.helmex = '';% Optional argument for helmex compilation 
+%
 eval(['save PATH_',path_id ,'.mat dkepath']);
