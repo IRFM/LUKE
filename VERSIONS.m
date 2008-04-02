@@ -719,6 +719,7 @@ Main changes include:
 
 ====> LUKE
 
+U INSTALL.txt (instructions updated)
 U install_LUKE.m (startup location modified and PATH structure created)
 U uninstall_LUKE.m (update of mex cleaning)
 U VERSIONS.txt (this file)
