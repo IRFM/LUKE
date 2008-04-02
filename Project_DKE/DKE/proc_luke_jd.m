@@ -131,7 +131,7 @@ if nr > 1,
     %
     ylab = '\eta (A.m/W)';
     tit = '';
-    ylim = [0,2*eta_peak];
+    ylim = 2*[min([0,eta_peak]),max([0,eta_peak])];
     %
     graph1D_jd(xrho,eta,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width2,siz,gca,red,lspace,bspace);
     set(gca,'xtick',xtick);
