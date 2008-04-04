@@ -693,7 +693,7 @@ while isel >= 0,
             disp('************** FAST ELECTRON TRANSPORT **************')
             disp(' ');
             %
-            newtransp == 0;
+            newtransp = 0;
             %
             if ~isempty(ohm),
                 t_opt = input('Do you want to clear the existing transp structures (y/n)? [n] : ','s');
@@ -719,7 +719,7 @@ while isel >= 0,
                     load([transp_path,transp_file],'transpfaste');
                     disp(['-----> The transpfaste structure :',transp_path,transp_file,' is loaded'])
                     %
-                    newtransp == 1;
+                    newtransp = 1;
                     %
                 end  
                 %
@@ -735,7 +735,7 @@ while isel >= 0,
                         %
                         disp('-----> The transpfaste structure is created')
                         %
-                        newtransp == 1;
+                        newtransp = 1;
                         %
                         t_opt = input('Do you want to save the transpfaste structure (y/n)? [n] : ','s');
                         if strcmp(t_opt,'y'),
@@ -825,6 +825,8 @@ while isel >= 0,
             %
         elseif isel == 13,
             %
+            % CALCULATE HXR EMISSION
+            %
             if status.data == 0 | status.data == 2;
                 disp('-----> The data must first be saved.');
                 continue
@@ -838,7 +840,7 @@ while isel >= 0,
             s_opt = input('Do you want to calculate the hard X-ray emission (y/n)? [n] : ','s');
             %
             if strcmp(s_opt,'y'),
-                irunhxr_jd(workdir,basestr,filename);
+                irunhxr_jd(workdir,basestr,datafile);
             end  
             %
         elseif isel == 14,

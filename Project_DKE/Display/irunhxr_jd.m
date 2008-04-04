@@ -86,17 +86,17 @@ if strcmp(basestr,'TCV'),% TCV launching data
 %         return
 %     end
 %     %
-    n_opt = input('Option for hxr experimental data? 0 (data file), 1 (TCV database) [1] : ');
+    n_opt = input('Option for hxr experimental data? 0 (no exp. data), 1 (data file), 2 (TCV database) [0] : ');
     if isempty(n_opt),
-        n_opt = 1;
+        n_opt = 0;
     end
-    if ~isnumeric(n_opt) | ~any(n_opt == [0,1]),
+    if ~isnumeric(n_opt) | ~any(n_opt == [0,1,2]),
         disp('-----> Invalid hxr experimental data option');
         disp(quitmsg)
         return
     end
     %
-    if n_opt == 0,% hxr experimental data from file
+    if n_opt == 1,% hxr experimental data from file
         %
         [data_file,data_path] = uigetfile('*.*',['Please select the hxr experimental data file :']);
         %
@@ -109,8 +109,8 @@ if strcmp(basestr,'TCV'),% TCV launching data
         %
         ishot = find(shot == str2num(shotnum));
         %
-        if isempty(ishot),
-            disp(['-----> launching data not found for shot :',shotnum]);
+        if isempty(ishot) | ~exist('hxr','var'),
+            disp(['-----> hxr data not found for shot :',shotnum]);
             disp(quitmsg)
             return
         end
@@ -120,12 +120,19 @@ if strcmp(basestr,'TCV'),% TCV launching data
             ishot = ishot(1);
         end
         %
-    elseif n_opt == 1,% hxr experimental data from TCV database
+    elseif n_opt == 2,% hxr experimental data from TCV database
         %
         shot = str2num(shotnum);
         collect_hxr;
         ishot = 1;
         %
+    else
+        t = {NaN};
+        energy = {NaN};
+        hxr = {NaN};
+        filter_thickness = {NaN};
+        filter_material = {NaN};
+        ishot = 1;
     end
     %
     t = t{ishot};
@@ -140,7 +147,13 @@ if strcmp(basestr,'TCV'),% TCV launching data
     hxrexp = squeeze(sum(hxr(it1:it2,:,:)));
     dt = t(it2) - t(it1);
     %
-    energy = energy.';
+    if isnan(energy),
+        energy = 30:10:110;
+        dt = 1;
+    else
+        energy = energy.';
+    end
+    %
     hxrspec.kphot = energy;
     hxrspec.kdiag_hxr = [energy(1:end-1),(energy(1)+energy(2))/2;energy(2:end),(energy(end)+energy(end-1))/2];
     %

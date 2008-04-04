@@ -31,7 +31,8 @@ hxr.ec_hxr = [0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.
 hxr.tc_hxr = ['Al';'Al';'Al';'Al';'Al';'Al';'Al';'Al';'Al';'Al';'Al';'Al';'Al';'Al';'Al';'Al';'Al';'Al'];%type of material for the detector shield (Al,C ou Be) [1,m]
 hxr.ed_hxr = [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2];%thickness of the detector (mm) [1,m]
 hxr.td_hxr = ['CdTe';'CdTe';'CdTe';'CdTe';'CdTe';'CdTe';'CdTe';'CdTe';'CdTe';'CdTe';'CdTe';'CdTe';'CdTe';'CdTe';'CdTe';'CdTe';'CdTe';'CdTe'];%type of material for the detector (BGO,CsI,NaI,Ge or CdTe) [1,m]
-hxr.kdiag_hxr = [20,40,60,80,100,120,140,160,50;40,60,80,100,120,140,160,180,110];%Measured photon energy spectrum (keV) [kmin1,kmin2,...,kmintphot,kmax1,kmax2,...,kmaxtphot] (here photon temp is calculated between 50 and 110 keV) [1,k]
+hxr.kdiag_hxr = [20,40,60,80 ,100,120,140,160,50  ;...
+                 40,60,80,100,120,140,160,180,110];%Measured photon energy spectrum (keV) [kmin1,kmin2,...,kmintphot,kmax1,kmax2,...,kmaxtphot] (here photon temp is calculated between 50 and 110 keV) [1,k]
 %
 hxr.kphot = [20:10:180];%Photon energy in keV
 %
