@@ -51,7 +51,7 @@ wavestruct.ythetab_lh = [0]*pi/180;%(deg -> rad). Poloidal location of LH beam [
 %
 %************************************************************************************************************************************
 %
-wave = make_idealLHwave_jd(equil,wavestruct)
+wave = make_idealLHwave_jd(equil,wavestruct);
 %
 save_str = ['WAVE_',id_equil,'_',id_wave,'.mat'];
 eval(['save ',save_str,' wave']);
