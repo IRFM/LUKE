@@ -73,7 +73,7 @@ if e_opt == 0, % EQSDK equilibrium
             return
         end
         %
-	shotime = input('Please provide the shot time : ');
+        shotime = input('Please provide the shot time : ');
         if isempty(shotime),
             return
         end
@@ -130,103 +130,139 @@ end
 %
 if strcmp(basestr,'TCV'),% TCV profile data
     %
-    type = 1;
-    %
-    n_opt = input('Option for equilibrium profiles? 0 (existing data file), 1 (TCV database) [0] : ');
+    n_opt = input('Option for equilibrium profiles? 0 (existing data file), 1 (TCV database), 2 (ART profiles), 3 (TORAY profiles) [0] : ');
     if isempty(n_opt),
         n_opt = 0;
     end
-    if ~isnumeric(n_opt) | ~any(n_opt == [0,1]),
+    if ~isnumeric(n_opt) | ~any(n_opt == [0,1,2,3]),
         disp('-----> Invalid profiles option');
         return
     end
     %
-    if n_opt == 0,% profiles from data file
-        %
-        [data_file,data_path] = uigetfile('*.*',['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],eqdsk_path);
-        %
-        if data_file == 0,
-            return
-        end
-        %
-        load([data_path,data_file],'t1','t2','laun');
-        %
-    elseif n_opt == 1,% profiles from TCV database
-        %
-        t1 = input('Averaging of TCV data, initial time : ');
-        if isempty(t1) | ~isnumeric(t1) ,
-            disp('-----> Invalid time');
-            return
-        end
-        t2 = input('Averaging of TCV data, final time : ');
-        if isempty(t1) | ~isnumeric(t1) ,
-            disp('-----> Invalid time');
-            return
-        end
-        %
-        laun = input('Vector of EC launchers to account for (ex: [1,3]) : ');
-        if isempty(laun) | ~isnumeric(laun) ,
-            disp('-----> Invalid entry');
-            return
-        end
-        %
-        launstr = '';
-        for il = 1:length(laun),
-            launstr = [launstr,'_',num2str(laun(il))];
-        end
-        %
-        data_path = [workdir,'/'];
-        data_file = ['data_',basestr,'_',shotnum,'_',num2str(t1),'_',num2str(t2),launstr,'.mat'];
-        %
-        collect_parameters_for_luke(str2num(shotnum),t1,t2,laun,[data_path,data_file])
-        %
-    end
-    %
-    data = load([data_path,data_file],'shot','rho','ne','te','ti','zeff','zaxis','btsign','ipsign');
-    %
-    ishot = find(data.shot == str2num(shotnum));
-    %
-    if isempty(ishot),
-        disp(['-----> Profiles data not found for shot :',shotnum]);
-        return
-    end
-    %
-    if length(ishot) > 1,
-        disp(['-----> WARNING : Several entries are found for shot :',shotnum,', first entry selected']);
-        ishot = ishot(1);
-    end
-    %
-    prho = data.rho(ishot,:);
-    pne = data.ne(ishot,:);
-    pTe = data.te(ishot,:);
-    %
-    if length(data.ti(ishot,:)) == 1,
-        disp(['-----> No ion temperature specified, Ti=Te/6 enforced.']);
-        pTi = pTe/6;
-    else
-        pTi = data.ti(ishot,:);
-    end
-    %
-    Zeff = data.zeff(ishot);
-    %
-    if isnan(Zeff),
-        Zeff = input('No measure of Zeff is available. Please provide an estimated value for Zeff [1] : ');
-        if isempty(Zeff) | ~isnumeric(Zeff) | Zeff < 1 | Zeff > 6,
-            disp('Zeff = 1 enforced');
-            Zeff = 1;
-        end
-    end
-    %
-    Zaxis = data.zaxis(ishot);
-    %
-    profname = [id_equil,'.prof'];
-    save(profname,'prho','pne','pTe','pTi','Zeff','-mat');
-    %
-	% sign management as most equilibrium codes do not account for these.
-	%
-	if ~isstruct(signs) & exist('btsign') & exist('ipsign'),% note that TCV conventions are opposite to LUKE conventions
-		signs.Bt = - btsign;
-		signs.Ip = - ipsign;
+	if n_opt <= 2,
+		%
+		type = 1;
+		%
+		if n_opt == 0,% profiles from data file
+			%
+			[data_file,data_path] = uigetfile('*.*',['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],eqdsk_path);
+			%
+			if data_file == 0,
+				return
+			end
+			%
+			load([data_path,data_file],'t1','t2','laun');
+			%
+			data = load([data_path,data_file],'shot','rho','ne','te','ti','zeff','zaxis','btsign','ipsign');
+			%
+		elseif n_opt == 1,% profiles from TCV database
+			%
+			t1 = input('Averaging of TCV data, initial time : ');
+			if isempty(t1) | ~isnumeric(t1) ,
+				disp('-----> Invalid time');
+				return
+			end
+			t2 = input('Averaging of TCV data, final time : ');
+			if isempty(t1) | ~isnumeric(t1) ,
+				disp('-----> Invalid time');
+				return
+			end
+			%
+			laun = input('Vector of EC launchers to account for (ex: [1,3]) : ');
+			if isempty(laun) | ~isnumeric(laun) ,
+				disp('-----> Invalid entry');
+				return
+			end
+			%
+			launstr = '';
+			for il = 1:length(laun),
+				launstr = [launstr,'_',num2str(laun(il))];
+			end
+			%
+			data_path = [workdir,'/'];
+			data_file = ['data_',basestr,'_',shotnum,'_',num2str(t1),'_',num2str(t2),launstr,'.mat'];
+			%
+			collect_parameters_for_luke(str2num(shotnum),t1,t2,laun,[data_path,data_file])
+			%
+			data = load([data_path,data_file],'shot','rho','ne','te','ti','zeff','zaxis','btsign','ipsign');
+			%
+		elseif n_opt == 2,% profiles from ART output
+			%
+			[data_file,data_path] = uigetfile('*.*',['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],eqdsk_path);
+			%
+			if data_file == 0,
+				return
+			end
+			%
+			load([data_path,data_file],'ARTsimprof');
+			%
+			data.rho = ARTsimprof.rho.data.';
+			data.ne = ARTsimprof.n.data.'*1e20;
+			data.te = ARTsimprof.X.data.';
+			data.ti = NaN;
+			%
+			data.zeff = NaN;
+			data.zaxis = NaN;
+			%
+			data.shot = str2num(data_file(4:8));
+			%
+		end
+		%
+		ishot = find(data.shot == str2num(shotnum));
+		%
+		if isempty(ishot),
+			disp(['-----> Profiles data not found for shot :',shotnum]);
+			return
+		end
+		%
+		if length(ishot) > 1,
+			disp(['-----> WARNING : Several entries are found for shot :',shotnum,', first entry selected']);
+			ishot = ishot(1);
+		end
+		%
+		prho = data.rho(ishot,:);
+		pne = data.ne(ishot,:);
+		pTe = data.te(ishot,:);
+		%
+		if length(data.ti(ishot,:)) == 1,
+			disp(['-----> No ion temperature specified, Ti=Te/6 enforced.']);
+			pTi = pTe/6;
+		else
+			pTi = data.ti(ishot,:);
+		end
+		%
+		Zeff = data.zeff(ishot);
+		%
+		if isnan(Zeff),
+			Zeff = input('No measure of Zeff is available. Please provide an estimated value for Zeff [1] : ');
+			if isempty(Zeff) | ~isnumeric(Zeff) | Zeff < 1 | Zeff > 6,
+				disp('Zeff = 1 enforced');
+				Zeff = 1;
+			end
+		end
+		%
+		Zaxis = data.zaxis(ishot);
+		%
+		profname = [id_equil,'.prof'];
+		save(profname,'prho','pne','pTe','pTi','Zeff','-mat');
+		%
+		% sign management as most equilibrium codes do not account for these.
+		%
+		if ~isstruct(signs) & exist('btsign') & exist('ipsign'),% note that TCV conventions are opposite to LUKE conventions
+			signs.Bt = - btsign;
+			signs.Ip = - ipsign;
+		end
+		%
+	elseif n_opt == 3,
+		%
+		[data_file,data_path] = uigetfile('*.*',['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],eqdsk_path);
+		%
+		if data_file == 0,
+			return
+		end
+		%
+		profname = [data_path,data_file];
+		%
 	end
 	%
 elseif strcmp(basestr,'ITER'),% ITER Astra profile data
@@ -305,9 +341,11 @@ if e_opt == 0,
 end
 if strcmp(basestr,'TCV'),
     equil.info.data = [data_path,data_file];
-    equil.info.t1 = t1;
-    equil.info.t2 = t2;
-    equil.info.laun = laun;
+    if n_opt < 2,
+        equil.info.t1 = t1;
+        equil.info.t2 = t2;
+        equil.info.laun = laun;
+    end
 elseif strcmp(basestr,'ITER'),
     equil.info.data = [data_path,data_file];
 end
