@@ -168,6 +168,7 @@ for i_lh = 1:length(ythetab_lh),
     rays{i_lh} = ray;
 end
 %  
+wave.id = 'ideal';
 wave.omega_rf = omega_lh;
 wave.opt_rf = opt_lh;%option for FLR calculations [1,1]
 wave.opt_disp = 0;  % option for solving the wave equation, which gives (ray.sepol_pmz, ray.sphi, ray.sNperp) 
