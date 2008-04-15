@@ -1,9 +1,12 @@
-function graph_wave_jd(equil,waves,rayinits,n_rf_list,nr_dep,opt,rho_disp,ymask,xvar,yabs,colors)
+function graph_wave_jd(equil,waves,rayinits,launchs,nr_dep,opt,rho_disp,ymask,xvar,yabs,colors,styles)
 %
 % This function plots the characteristics of wave data
 %
 % by J. Decker 02/04/03
 %
+if nargin < 12
+    styles = {'-','-','-','-','-'};
+end
 if nargin < 11
     colors = {'b','r',[0,0.5,0],'m','c'};
 end
@@ -20,9 +23,21 @@ if nargin < 7
     rho_disp = [0:0.1:1];
 end
 %
-styles = {'-','-','-'};
-%clear all
-%load toto
+for iw = 1:length(waves),
+	if length(rayinits) < iw,
+		rayinits{iw} = '';
+	end
+	if ~isempty(rayinits{iw}) & length(rayinits{iw}.yrho0) < length(waves{iw}.rays),
+		rayinits{iw} = '';
+	end
+	%
+	if length(launchs) < iw,
+		launchs{iw} = '';
+	end
+	if ~isempty(launchs{iw}) & length(launchs{iw}.yR_L) < length(waves{iw}.rays),
+		launchs{iw} = '';
+	end
+end
 %
 if ~iscell(ymask),
     ymask = '';
@@ -31,15 +46,8 @@ if ~iscell(ymask),
     end
 end
 %
-if isnumeric(n_rf_list),
-    n_rf_list_gen = n_rf_list;
-    n_rf_list = '';
-    for iw = length(waves),
-        n_rf_list{iw} = n_rf_list_gen;
-    end
-end
-%
 [qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;
+%
 method = 'cubic';
 format
 n_ec = 2;% to be automatized
@@ -88,6 +96,11 @@ PHI_disp = linspace(0,2*pi,361);
 X_disp = [(Rp + xmin)*cos(PHI_disp);(Rp + xmax)*cos(PHI_disp)];
 Y_disp = [(Rp + xmin)*sin(PHI_disp);(Rp + xmax)*sin(PHI_disp)];
 %
+Xmin = min(min(X_disp));
+Xmax = max(max(X_disp));
+Ymin = min(min(Y_disp));
+Ymax = max(max(Y_disp));
+%
 % Wave
 %
 iy = 0;
@@ -98,12 +111,17 @@ for iw = 1:length(waves),
         ibb = ibb + 1;
         iy = iy + 1; 
         rays{iy} = waves{iw}.rays{ib};
+		%
         rays{iy}.omega_rf = waves{iw}.omega_rf;
         rays{iy}.color = colors{iw};
         rays{iy}.style = styles{iw};
-        %rays{iy}.srho = psi2rho_jd(equil,rays{iy}.spsin);
+        rays{iy}.sX = (Rp + rays{iy}.sx).*cos(-rays{iy}.sphi);
+        rays{iy}.sY = (Rp + rays{iy}.sx).*sin(-rays{iy}.sphi);
+		%
         if iscell(yabs),
             rays{iy}.mask_abs = yabs{iw}(1,ibb):yabs{iw}(2,ibb);
+		else
+			rays{iy}.mask_abs = [];
         end
         if isempty(rayinits{iw}),
             rays{iy}.init = '';
@@ -115,294 +133,45 @@ for iw = 1:length(waves),
             rays{iy}.init.Npar0 = rayinits{iw}.yNpar0(ib);
             rays{iy}.init.dNpar0 = rayinits{iw}.ydNpar0(ib);
             rays{iy}.init.P0_2piRp = rayinits{iw}.yP0_2piRp(ib);
+			%
+			rays{iy}.init.psin0 = rho2psi_jd(equil,rays{iy}.init.rho0);
+			rays{iy}.init.x0 = interp2(psin,theta,ptx.',rays{iy}.init.psin0,rays{iy}.init.theta0,method);
+			rays{iy}.init.y0 = interp2(psin,theta,pty.',rays{iy}.init.psin0,rays{iy}.init.theta0,method);
+			rays{iy}.init.R0 = rays{iy}.init.x0 + equil.Rp;
+			rays{iy}.init.Z0 = rays{iy}.init.y0 + equil.Zp;
+			rays{iy}.init.X0 = rays{iy}.init.R0*cos(-rays{iy}.init.phi0);
+			rays{iy}.init.Y0 = rays{iy}.init.R0*sin(-rays{iy}.init.phi0);
         end
+        %    
+        if isempty(launchs{iw}) | ~strcmp(launchs{iw}.type,'EC'),
+            rays{iy}.launch = '';
+        else
+            rays{iy}.launch.R_L = launchs{iw}.yR_L(ib);
+            rays{iy}.launch.Z_L = launchs{iw}.yZ_L(ib);
+            rays{iy}.launch.phi_L = launchs{iw}.yphi_L(ib);
+            rays{iy}.launch.alpha_L = launchs{iw}.yalpha_L(ib);
+            rays{iy}.launch.beta_L = launchs{iw}.ybeta_L(ib);
+            rays{iy}.launch.P_L = launchs{iw}.yP_L(ib);
+			%
+            rays{iy}.launch.x_L = rays{iy}.launch.R_L - equil.Rp;
+            rays{iy}.launch.y_L = rays{iy}.launch.Z_L - equil.Zp;			
+            rays{iy}.launch.X_L = rays{iy}.launch.R_L*cos(-rays{iy}.launch.phi_L);
+            rays{iy}.launch.Y_L = rays{iy}.launch.R_L*sin(-rays{iy}.launch.phi_L);		
+			%
+			xmin = min([xmin,rays{iy}.launch.x_L]);	
+			xmax = max([xmax,rays{iy}.launch.x_L]);	
+			ymin = min([ymin,rays{iy}.launch.y_L]);	
+			ymax = max([ymax,rays{iy}.launch.y_L]);	
+			%
+			Xmin = min([Xmin,rays{iy}.launch.X_L]);	
+			Xmax = max([Xmax,rays{iy}.launch.X_L]);	
+			Ymin = min([Ymin,rays{iy}.launch.Y_L]);	
+			Ymax = max([Ymax,rays{iy}.launch.Y_L]);	
+         end
         %    
     end
 end
 ny = iy;
-      
-
-% omega_rf = wave.omega_rf;
-% nb = length(wave.rays);
-% if isnan(ymask),
-%     ymask = 1:nb;
-% end
-% %
-% ny = length(ymask);
-% %
-% for ib = 1:ny
-%     ray = wave.rays{ymask(ib)};
-%     yP0(ib) = ray.P0;
-%     syR(1:length(ray.sR),ib) = ray.sR';
-%     syphi(1:length(ray.sphi),ib) = ray.sphi';
-%     syZ(1:length(ray.sZ),ib) = ray.sZ';
-%     sys(1:length(ray.ss),ib) = ray.ss';
-%     sypsin(1:length(ray.spsin),ib) = ray.spsin';
-%     sytheta(1:length(ray.stheta),ib) = ray.stheta';
-%     sykR(1:length(ray.skR),ib) = ray.skR';
-%     syn(1:length(ray.sn),ib) = ray.sn';
-%     sykZ(1:length(ray.skZ),ib) = ray.skZ';
-%     syNpar(1:length(ray.sNpar),ib) = ray.sNpar';
-%     syNperp(1:length(ray.sNperp),ib) = ray.sNperp';
-%     sydNpar(1:length(ray.sdNpar),ib) = ray.sdNpar';
-%     syepol_pmz(1:length(ray.sepol_pmz),:,ib) = ray.sepol_pmz';
-%     syphi_pmz(1:length(ray.sphi_pmz),:,ib) = ray.sphi_pmz';
-% end
-% %
-% if ~isempty(syR) & ~isempty(syphi) & ~isempty(syZ),
-%     ns = size(syR,1);
-%     syX = syR.*cos(syphi);
-%     syY = syR.*sin(syphi);
-%     if isempty(sys)
-%         sys(1,:) = 0;
-%         syRh = (syR(1:ns-1,:) + syR(2:ns,:))/2;
-%         dsys = sqrt(diff(syR).^2 + (syRh.*diff(syphi)).^2 + diff(syZ).^2);
-%         sys(2:ns) = cumsum(dsys);
-%     end
-% elseif ~isempty(sypsin) & ~isempty(sytheta) & ~isempty(sys)
-%     ns = size(sypsin,1);
-%     syR = interp2(theta,ppsin,R,sytheta,sypsin,method);
-%     syZ = interp2(theta,ppsin,Z,sytheta,sypsin,method);
-%     if ~isempty(syNpar)
-%         sysigmah = sign((syNpar(1:ns-1,:) + syNpar(2:ns,:))/2);
-%     elseif ~isempty(syn)
-%         sysigmah = sign((syn(1:ns-1,:) + syn(2:ns,:))/2);
-%     else
-%         error('propagation data is imcomplete')
-%     end
-%     syphi(1,:) = 0;
-%     syRh = (syR(1:ns-1,:) + syR(2:ns,:))/2;
-%     dsyphi = sqrt(diff(sys).^2 - diff(syRh).^2 - diff(syZ).^2)./syRh.*sysigmah;
-%     syphi(2:ns) = cumsum(dsyphi);
-%     syX = syR.*cos(syphi);
-%     syY = syR.*sin(syphi);
-% else
-%     error('propagation data is imcomplete')
-% end
-% %
-% smax = max(max(sys));
-% %
-% if isempty(syNpar) | isempty(syNperp),
-%     if isempty(sykR) | isempty(syn) | isempty(sykZ) 
-%         error('Ray-tracing data incomplete')
-%     end
-%     if ~isempty(sytheta) & ~isempty(sypsin)        
-%         syBR = interp2(theta,ppsin,BR,sytheta,sypsin,method);
-%         syBphi = interp2(theta,ppsin,BPHI,sytheta,sypsin,method);
-%         syBZ = interp2(theta,ppsin,BZ,sytheta,sypsin,method);
-%     else
-%       for ib = 1:ny
-%         %
-%         % ray position in (r,theta) coordinates
-%         %
-%         sR = syR(:,ib) + eps*(syR(:,ib) == Rp); %to avoid singularities
-%         sZ = syZ(:,ib) + eps*(syZ(:,ib) == Zp); %to avoid singularities
-%         sr = sqrt((sR - Rp).^2 + (sZ - Zp).^2); %minor radius
-%         stheta = atan((sZ - Zp)./(sR - Rp)) + pi - pi*(sR > Rp).*sign(sZ - Zp); %poloidal angle [0,2*pi]
-%         %
-%         % interpolation for r at ray poloidal locations    
-%         %
-%         psr = interp1(theta,r',stheta,method)';%r(psi,st)
-%         %
-%         % interpolation for psi at ray position (along cst theta lines)
-%         %
-%         %spsin = interp1(pstr,ppsin,sr,method);%psi(s)
-%         method2 = 'linear';
-%         for is = 1:ns 
-%             spsin(is,1) = interp1(psr(:,is),ppsin,sr(is),method2);%psi(s)
-%         end
-%         %
-%         imask_1 = min(find(~isnan(spsin)));
-%         imask_2 = min(find(isnan(spsin(imask_1:ns))));
-%         mask = [1:(imask_1 - 1),(imask_1 + imask_2 - 1):ns];
-%         %
-%         spsin(mask) = 1;%part of ray outside the last flux-surface
-%         %
-%         sBR = interp2(theta,ppsin,BR,stheta,spsin,method);
-%         sBphi = interp2(theta,ppsin,BPHI,stheta,spsin,method);
-%         sBZ = interp2(theta,ppsin,BZ,stheta,spsin,method);
-%         %
-%         %sne = interp1(ppsin,equil.pne,spsin,method);
-%         %szni = interp1(ppsin,equil.pzni',spsin,method)';
-%         %sTe = interp1(ppsin,equil.pTe,spsin,method);
-%         %szTi = interp1(ppsin,equil.pzTi',spsin,method)';
-%         %
-%         sypsin(1:ns,ib) = spsin;
-%         sytheta(1:ns,ib) = stheta;
-%         syBR(:,ib) = sBR;
-%         syBphi(:,ib) = sBphi;
-%         syBZ(:,ib) = sBZ;
-%         %syne(:,ib) = sne;
-%         %syTe(:,ib) = sTe;
-%         %siyzni(:,:,ib) = szni';
-%         %
-%         syR(mask,ib) = NaN;
-%         syphi(mask,ib) = NaN;
-%         syZ(mask,ib) = NaN;
-%         sys(mask,ib) = NaN;
-%         sys(:,ib) = sys(:,ib) - sys(imask_1,ib);
-%         sykR(mask,ib) = NaN;
-%         syn(mask,ib) = NaN;
-%         sykZ(mask,ib) = NaN;
-%         syNperp(mask,ib) = NaN;
-%         sydNpar(mask,ib) = NaN;
-%         syX(mask,ib) = NaN;
-%         syY(mask,ib) = NaN;
-%         syr(mask,ib) = NaN;
-%         sytheta(mask,ib) = NaN;
-%         sypsin(mask,ib) = NaN;
-%         syBR(mask,ib) = NaN;
-%         syBphi(mask,ib) = NaN;
-%         syBZ(mask,ib) = NaN;
-%         %syne(mask,ib) = NaN;
-%         %syTe(mask,ib) = NaN;
-%         %siyzni(mask,:,ib) = NaN;
-%         %    
-%       end
-%     end
-%     %
-%     sykpar = (sykR.*syBR + syn.*syBphi./syR + sykZ.*syBZ)./sqrt(syBR.^2 + syBphi.^2 + syBZ.^2);
-%     sykperp = sqrt(sykR.^2 + (syn./syR).^2 + sykZ.^2 - sykpar.^2);
-%     %
-%     syNpar = sykpar*clum/omega_rf;
-%     %syNperp = sykperp*clum/omega_rf;
-% end  
-% %
-% % Wave with straight ray propagation
-% %
-% if exist('wave_s','var') == 1, 
-%     omega_rf_s = wave_s.omega_rf;
-%     if omega_rf_s ~= omega_rf
-%         error('The wave frequencies do not match')
-%     end
-%     nb_s = length(wave_s.rays);
-%     if nb_s ~= nb
-%         error('The wave number of rays do not match')
-%     end
-%     for ib = 1:ny
-%         ray_s = wave_s.rays{ymask(ib)};
-%         yP0_s(ib) = ray_s.P0;
-%         syR_s(1:length(ray_s.sR),ib) = ray_s.sR';
-%         syphi_s(1:length(ray_s.sphi),ib) = ray_s.sphi';
-%         syZ_s(1:length(ray_s.sZ),ib) = ray_s.sZ';
-%         sys_s(1:length(ray_s.ss),ib) = ray_s.ss';
-%         sykR_s(1:length(ray_s.skR),ib) = ray_s.skR';
-%         syn_s(1:length(ray_s.sn),ib) = ray_s.sn';
-%         sykZ_s(1:length(ray_s.skZ),ib) = ray_s.skZ';
-%         syNperp_s(1:length(ray_s.sNperp),ib) = ray_s.sNperp';
-%         sydNpar_s(1:length(ray_s.sdNpar),ib) = ray_s.sdNpar';
-%     end
-%     %
-%     ns_s= size(syR_s,1);
-%     syX_s = syR_s.*cos(syphi_s);
-%     syY_s = syR_s.*sin(syphi_s);
-%     %
-%     for ib = 1:ny
-%         %
-%         % ray position in (r,theta) coordinates
-%         %
-%         sR_s = syR_s(:,ib) + eps*(syR_s(:,ib) == Rp); %to avoid singularities
-%         sZ_s = syZ_s(:,ib) + eps*(syZ_s(:,ib) == Zp); %to avoid singularities
-%         sr_s = sqrt((sR_s - Rp).^2 + (sZ_s - Zp).^2); %minor radius
-%         stheta_s = atan((sZ_s - Zp)./(sR_s - Rp)) + pi - pi*(sR_s > Rp).*sign(sZ_s - Zp); %poloidal angle [0,2*pi]
-%         %
-%         % interpolation for r at ray poloidal locations    
-%         %
-%         psr_s = interp1(theta,r',stheta_s,method)';%r(psi,st)
-%         %
-%         % interpolation for psi at ray position (along cst theta lines)
-%         %
-%         %spsin = interp1(pstr,ppsin,sr,method);%psi(s)
-%         method2 = 'linear';
-%         for is = 1:ns_s 
-%             spsin_s(is,1) = interp1(psr_s(:,is),ppsin,sr_s(is),method2);%psi(s)
-%         end
-%         %
-%         imask_s_1 = min(find(~isnan(spsin_s)));
-%         imask_s_2 = min(find(isnan(spsin_s(imask_s_1:ns_s))));
-%         mask_s = [1:(imask_s_1 - 1),(imask_s_1 + imask_s_2 - 1):ns_s];
-%         %
-%         spsin_s(mask_s) = 1;%part of ray outside the last flux-surface
-%         %
-%         sBR_s = interp2(theta,ppsin,BR,stheta_s,spsin_s,method);
-%         sBphi_s = interp2(theta,ppsin,BPHI,stheta_s,spsin_s,method);
-%         sBZ_s = interp2(theta,ppsin,BZ,stheta_s,spsin_s,method);
-%         %
-%         sne_s = interp1(ppsin,equil.pne,spsin_s,method);
-%         szni_s = interp1(ppsin,equil.pzni',spsin_s,method)';
-%         sTe_s = interp1(ppsin,equil.pTe,spsin_s,method);
-%         %szTi_s = interp1(ppsin,equil.pzTi',spsin_s,method)';
-%         %
-%         sypsin_s(:,ib) = spsin_s;
-%         sytheta_s(:,ib) = stheta_s;
-%         syBR_s(:,ib) = sBR_s;
-%         syBphi_s(:,ib) = sBphi_s;
-%         syBZ_s(:,ib) = sBZ_s;
-%         syne_s(:,ib) = sne_s;
-%         syTe_s(:,ib) = sTe_s;
-%         siyzni_s(:,:,ib) = szni_s';
-%         %
-%         syR_s(mask_s,ib) = NaN;
-%         syphi_s(mask_s,ib) = NaN;
-%         syZ_s(mask_s,ib) = NaN;
-%         sys_s(mask_s,ib) = NaN;
-%         sys_s(:,ib) = sys_s(:,ib) - sys_s(imask_s_1,ib);
-%         sykR_s(mask_s,ib) = NaN;
-%         syn_s(mask_s,ib) = NaN;
-%         sykZ_s(mask_s,ib) = NaN;
-%         syNperp_s(mask_s,ib) = NaN;
-%         sydNpar_s(mask_s,ib) = NaN;
-%         syX_s(mask_s,ib) = NaN;
-%         syY_s(mask_s,ib) = NaN;
-%         syr_s(mask_s,ib) = NaN;
-%         sytheta_s(mask_s,ib) = NaN;
-%         sypsin_s(mask_s,ib) = NaN;
-%         syBR_s(mask_s,ib) = NaN;
-%         syBphi_s(mask_s,ib) = NaN;
-%         syBZ_s(mask_s,ib) = NaN;
-%         syne_s(mask_s,ib) = NaN;
-%         syTe_s(mask_s,ib) = NaN;
-%         siyzni_s(mask_s,:,ib) = NaN;
-%         %    
-%     end
-%     sykpar_s = (sykR_s.*syBR_s + syn_s.*syBphi_s./syR_s + sykZ_s.*syBZ_s)./sqrt(syBR_s.^2 + syBphi_s.^2 + syBZ_s.^2);
-%     syNpar_s = sykpar_s*clum/omega_rf_s;
-%     %
-%     syB_s = sqrt(syBR_s.^2 + syBphi_s.^2 + syBZ_s.^2);
-%     for ib = 1:ny
-%         %
-%         % cold plasma dispersion tensor for sepol_pmz, sNperp and phi_pmz (colddisp_dke_jd)
-%         %
-%         for is = 1:ns_s
-%             if ~isnan(syNpar_s(is,ib))
-%                 [Nperpp_s,Nperpm_s,sKxyz_s,sep_xyz_s,sem_xyz_s,sep_pmz_s,sem_pmz_s,sep_pyk_s,sem_pyk_s,sphip_xyz_s,sphim_xyz_s,sphip_pmz_s,sphim_pmz_s] = colddisp_dke_jd(syNpar_s(is,ib),omega_rf_s,syne_s(is,ib),siyzni_s(is,:,ib),equil.zZi,equil.zmi,syB_s(is,ib));
-%                 maskp_s = (abs(Nperpp_s - syNperp_s(is,ib)) <= abs(Nperpm_s - syNperp_s(is,ib)));
-%                 syNperp_s(is,ib) = Nperpp_s.*maskp_s + Nperpm_s.*~maskp_s;
-%                 syepol_pmz_s(is,1:3,ib) = sep_pmz_s'.*maskp_s + sem_pmz_s'.*~maskp_s;
-%                 syphi_pmz_s(is,1:3,ib) = sphip_pmz_s'.*maskp_s + sphim_pmz_s'.*~maskp_s;
-%             else
-%                 syNperp_s(is,ib) = NaN;
-%                 syepol_pmz_s(is,1:3,ib) = NaN;
-%                 syphi_pmz_s(is,1:3,ib) = NaN;                
-%             end
-%         end
-%         
-%     end
-% %
-% end
-%
-% Launching
-%
-for iy = 1:ny,
-    init = rays{iy}.init;
-    if ~isempty(init),
-        psin0 = rho2psi_jd(equil,init.rho0);
-        init.x0 = interp2(psin,theta,ptx.',psin0,init.theta0,method);
-        init.y0 = interp2(psin,theta,pty.',psin0,init.theta0,method);
-    end
-    rays{iy}.init = init;
-end
-    
 %
 % Damping
 %
@@ -426,8 +195,7 @@ for iy = 1:ny,
         else
             rays{iy}.is_abs_max = ns;
         end
-        rays{iy}.is_abs = find(sdP_2piRp_ds_norm == max(sdP_2piRp_ds_norm)); 
-        rays{iy}.is_abs = rays{iy}.is_abs(1);
+        rays{iy}.is_abs = min(find(sdP_2piRp_ds_norm == max(sdP_2piRp_ds_norm))); 
         %
         yrho_abs(iy) = rays{iy}.srho(rays{iy}.is_abs);
         yNpar_abs(iy) = rays{iy}.sNpar(rays{iy}.is_abs);
@@ -451,42 +219,7 @@ end
 rho_dep = rays{1}.rho_dep;
 %
 yPtot_abs  
-%     rho0
-%     theta0
-%     phi0
-%     m0
-%     Npar0
-%     dNpar0
-%     P0_2piRp
 % 
-%     yX_L = launch.yX_L(ymask);
-%     yY_L = launch.yY_L(ymask);
-%     yZ_L = launch.yZ_L(ymask);
-%     ybeta_L = launch.ybeta_L(ymask);
-%     yalpha_L = launch.yalpha_L(ymask);
-%     %
-%     yR_L = sqrt(yX_L.^2 + yY_L.^2);
-%     yphi_L = atan(yY_L./yX_L);
-%     %
-%     for ib=1:ny,
-%         yis = min(find(~isnan(sypsin(:,ib))));
-%         if isempty(yis)
-%             yis = 1;
-%         end
-%         ydX_L = syX(yis,:) - yX_L;
-%         ydY_L = syY(yis,:) - yY_L;
-%         ydZ_L = syZ(yis,:) - yZ_L;
-%     end
-%     %
-%     yd_L = sqrt((ydX_L).^2 + (ydY_L).^2 + (ydZ_L).^2);
-%     ydR_L = yd_L.*sin(ybeta_L).*cos(yalpha_L);
-%     ydphi_L = yd_L.*sin(ybeta_L).*sin(yalpha_L);
-%     %
-%     Rmin = min([Rmin,yR_L]);
-%     Rmax = max([Rmax,yR_L]);
-%     Zmin = min([Zmin,yZ_L]);
-%     Zmax = max([Zmax,yZ_L]);
-
 % %
 % % Resonance
 % %
@@ -731,19 +464,17 @@ tit = '';
 for iy = 1:ny,
     mask_max = 1:rays{iy}.is_abs_max;
     graph1D_jd(rays{iy}.sx(mask_max),rays{iy}.sy(mask_max),0,0,'','','',NaN,xlim,ylim,rays{iy}.style,marker,rays{iy}.color,width1,siz);
-    if isfield(rays{iy},'mask_abs'),
-        mask_abs = rays{iy}.mask_abs;
-        graph1D_jd(rays{iy}.sx(mask_abs),rays{iy}.sy(mask_abs),0,0,'','','',NaN,xlim,ylim,style,marker,color5,width1,siz);
-    end
+	mask_abs = rays{iy}.mask_abs;
+    graph1D_jd(rays{iy}.sx(mask_abs),rays{iy}.sy(mask_abs),0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,siz);
     if ~isempty(rays{iy}.init),
         graph1D_jd(rays{iy}.init.x0,rays{iy}.init.y0,0,0,'','','',NaN,xlim,ylim,style2,marker3,rays{iy}.color,width2,siz);
-    end        
-end
-if exist('launch','var') == 1,
-    [ax] = graph1D_jd([yR_L;yR_L + ydR_L],[yZ_L;yZ_L + ydZ_L],0,0,'','','',NaN,xlim,ylim,style,marker,color3,width2,siz);
-end
-if exist('wave_s','var') == 1,
-    [ax] = graph1D_jd(syR_s,syZ_s,0,0,'','','',NaN,xlim,ylim,style,marker,color4,width2,siz);
+    end 
+	if ~isempty(rays{iy}.launch),
+    	graph1D_jd(rays{iy}.launch.x_L,rays{iy}.launch.y_L,0,0,'','','',NaN,xlim,ylim,style2,marker3,rays{iy}.color,width2,siz);
+	end
+	if ~isempty(rays{iy}.init) & ~isempty(rays{iy}.launch),
+    	graph1D_jd([rays{iy}.launch.x_L,rays{iy}.init.x0],[rays{iy}.launch.y_L,rays{iy}.init.y0],0,0,'','','',NaN,xlim,ylim,style3,marker,rays{iy}.color,width2,siz);
+	end
 end
 if 0,opt.res >= 1,
     [ax] = graph2D_jd(R,Z,yres','','','',xlim,ylim,0,NaN,[1:10],0,style,color5,width1,siz);
@@ -754,38 +485,30 @@ axis([xlim,ylim]);
 %
 figure(2),clf
 %
-xlim = [-(Rp + xmax),(Rp + xmax)];
-ylim = [-(Rp + xmax),(Rp + xmax)];
+xlim = [Xmin,Xmax];
+ylim = [Ymin,Ymax];
 xlab = 'X (m)';
 ylab = 'Y (m)';
 tit = '';
 %
-phi_disp = linspace(0,2*pi,1000);
-%
-[ax] = graph1D_jd((Rp + xmax)*cos(phi_disp),(Rp + xmax)*sin(phi_disp),0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color5,width2,siz,gca,red,lspace,bspace);
+[ax] = graph1D_jd(X_disp',Y_disp',0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color5,width2,siz,gca,red,lspace,bspace);
 for iy = 1:ny,
     mask_max = 1:rays{iy}.is_abs_max;
-    graph1D_jd((Rp + rays{iy}.sx(mask_max)).*cos(rays{iy}.sphi(mask_max)),(Rp + rays{iy}.sx(mask_max)).*sin(-rays{iy}.sphi(mask_max)),0,0,'','','',NaN,xlim,ylim,style,marker,rays{iy}.color,width1,siz);
-    if isfield(rays{iy},'mask_abs'),
-        mask_abs = rays{iy}.mask_abs;
-        graph1D_jd((Rp + rays{iy}.sx(mask_abs)).*cos(rays{iy}.sphi(mask_abs)),(Rp + rays{iy}.sx(mask_abs)).*sin(-rays{iy}.sphi(mask_abs)),0,0,'','','',NaN,xlim,ylim,style,marker,color5,width1,siz);
-    end
+    graph1D_jd(rays{iy}.sX(mask_max),rays{iy}.sY(mask_max),0,0,'','','',NaN,xlim,ylim,style,marker,rays{iy}.color,width1,siz);
+	mask_abs = rays{iy}.mask_abs;
+    graph1D_jd(rays{iy}.sX(mask_abs),rays{iy}.sY(mask_abs),0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,siz);
     if ~isempty(rays{iy}.init),
-        graph1D_jd((Rp + rays{iy}.init.x0).*cos(rays{iy}.init.phi0),(Rp + rays{iy}.init.x0).*sin(-rays{iy}.init.phi0),0,0,'','','',NaN,xlim,ylim,style2,marker3,rays{iy}.color,width2,siz);
+        graph1D_jd(rays{iy}.init.X0,rays{iy}.init.Y0,0,0,'','','',NaN,xlim,ylim,style2,marker3,rays{iy}.color,width2,siz);
     end        
+	if ~isempty(rays{iy}.launch),
+    	graph1D_jd(rays{iy}.launch.X_L,rays{iy}.launch.Y_L,0,0,'','','',NaN,xlim,ylim,style2,marker3,rays{iy}.color,width2,siz);
+	end
+	if ~isempty(rays{iy}.init) & ~isempty(rays{iy}.launch),
+    	graph1D_jd([rays{iy}.launch.X_L,rays{iy}.init.X0],[rays{iy}.launch.Y_L,rays{iy}.init.Y0],0,0,'','','',NaN,xlim,ylim,style3,marker,rays{iy}.color,width2,siz);
+	end
 end
-% if exist('launch','var') == 1,
-%     [ax] = graph1D_jd([yR_L;yR_L + ydR_L],[yZ_L;yZ_L + ydZ_L],0,0,'','','',NaN,xlim,ylim,style,marker,color3,width2,siz);
-% end
-% if exist('wave_s','var') == 1,
-%     [ax] = graph1D_jd(syR_s,syZ_s,0,0,'','','',NaN,xlim,ylim,style,marker,color4,width2,siz);
-% end
-% if 0,opt.res >= 1,
-%     [ax] = graph2D_jd(R,Z,yres','','','',xlim,ylim,0,NaN,[1:10],0,style,color5,width1,siz);
-% end
 axis('equal');
 axis([xlim,ylim]);
-%
 %
 % subplot frame
 %
@@ -831,10 +554,8 @@ for iy = 1:ny,
     if opt.TeNpar == 1,
         graph1D_jd(rays{iy}.ss,6.5./sqrt(rays{iy}.sTe),0,0,'','','',NaN,xlim,ylim,style3,marker,color2,width1,siz);
     end
-    if isfield(rays{iy},'mask_abs'),
-        mask_abs = rays{iy}.mask_abs;
-        graph1D_jd(rays{iy}.ss(mask_abs),abs(real(rays{iy}.sNpar(mask_abs))),0,0,'','','',NaN,xlim,ylim,style,marker,color5,width1,siz);
-    end
+    mask_abs = rays{iy}.mask_abs;
+    graph1D_jd(rays{iy}.ss(mask_abs),abs(real(rays{iy}.sNpar(mask_abs))),0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,siz);
 end
 %
 figure(10),clf
@@ -851,10 +572,8 @@ for iy = 1:ny,
     subplot(nl,nc,iy),
     graph1D_jd(rays{iy}.ss,sphi_abs,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width1,siz);
     %text(0,0,txt)
-    if isfield(rays{iy},'mask_abs'),
-        mask_abs = rays{iy}.mask_abs;
-        graph1D_jd(rays{iy}.ss(mask_abs),sphi_abs(mask_abs),0,0,'','','',NaN,xlim,ylim,style,marker,color5,width1,siz);
-    end
+    mask_abs = rays{iy}.mask_abs;
+    graph1D_jd(rays{iy}.ss(mask_abs),sphi_abs(mask_abs),0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,siz);
 end
 %
 set(gcf,'resize','on')
