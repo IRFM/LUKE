@@ -1,30 +1,41 @@
-function irunhxr_jd(workdir,basestr,filename)
+function irunhxr_jd(workdir,basestr,filename,id_simul,equil,dkeparam,dkedisplay,output)
 %
 % This function calculates the hard X-ray emisssion from LUKE results
 %
 if nargin < 1,
     workdir = '.';
 end
-if nargin < 3,
-    filename = workdir;
-end
 if nargin < 2,
     basestr = '';
+end
+if nargin < 3,
+    filename = workdir;
 end
 %
 quitmsg = '-----> HXR calculation aborted';
 warning off
 %
-% load LUKE results
+% load LUKE results if needed
 %
-[luke_file,luke_path] = uigetfile('LUKE_RESULTS_*.mat','Please select the LUKE RESULTS file',filename);
+if nargin < 8,
+    %
+    [luke_file,luke_path] = uigetfile('LUKE_RESULTS_*.mat','Please select the LUKE RESULTS file',filename);
+    %
+    if luke_file == 0,
+        disp('-----> No LUKE RESULTS file specified.')
+        disp(quitmsg)
+        return
+    end  
+    load([luke_path,luke_file],'id_simul','equil','dkeparam','dkedisplay','output');
+    %
+end
 %
-if luke_file == 0,
-    disp('-----> No LUKE RESULTS file specified.')
-    disp(quitmsg)
-    return
-end  
-load([luke_path,luke_file],'id_simul','equil','dkeparam','dkedisplay','Zcurr','dke_out','equilDKE','radialDKE','momentumDKE','mksa');
+Zcurr = output.Zcurr;
+dke_out = output.dke_out;
+equilDKE = output.equilDKE;
+radialDKE = output.radialDKE;
+momentumDKE = output.momentumDKE;
+mksa = output.mksa;
 %
 % load HXR camera spec
 %
@@ -45,8 +56,8 @@ if isempty(p_opt) | ~isnumeric(p_opt) | ~any(p_opt == [0,1,2]),
 end
 %
 d_opt = input('Do you want to plot the chords? [y/n] : ','s');
-    nc = length(hxrspec.beta_hxr);
-    %
+nc = length(hxrspec.beta_hxr);
+%
 if strcmp(d_opt,'y'),
     %
     figure(1),clf
@@ -57,28 +68,20 @@ if strcmp(d_opt,'y'),
     R = zeros(nc,length(L));
     Z = zeros(nc,length(L));
     for chord = 1:nc,
-           R(chord,:) = 1.048 + L*cos(hxrspec.beta_hxr(chord) - pi/2);%chord #11 is at the center of the camera. The camera is tilted by 2 degrees with respect to the vertical axis towards high magnetic field side  
-           Z(chord,:) = -1.137 + L*sin(hxrspec.beta_hxr(chord) - pi/2);
+           R(chord,:) = hxrspec.R_hxr(chord) + L*cos(hxrspec.beta_hxr(chord) - pi/2);
+           Z(chord,:) = hxrspec.Z_hxr(chord) + L*sin(hxrspec.beta_hxr(chord) - pi/2);
     end
     plot(R',Z'),
     plot(R(1),Z(1),'*')
     hold off
     axis('equal')
     xlabel('R(m)');ylabel('Z(m)');title(basestr)
-    print_jd(p_opt,'TCV_HXR',1)
+    print_jd(p_opt,[basestr,'_HXR'],1)
 end 
 %
 % load HXR results
 %
 if strcmp(basestr,'TCV'),% TCV launching data
-    %
-    if isfield(equil.info,'shotnum');
-        shotnum = equil.info.shotnum;
-    else
-        disp('-----> Shot number information missing');
-        return
-    end
-    %
 %     if isfield(equil.info,'shotime');
 %         shotime = equil.info.shotime;
 %     else
@@ -94,6 +97,15 @@ if strcmp(basestr,'TCV'),% TCV launching data
         disp('-----> Invalid hxr experimental data option');
         disp(quitmsg)
         return
+    end
+    %
+    if n_opt > 0,
+        if isfield(equil.info,'shotnum');
+            shotnum = equil.info.shotnum;
+        else
+            disp('-----> Shot number information missing');
+            return
+        end
     end
     %
     if n_opt == 1,% hxr experimental data from file
@@ -143,18 +155,19 @@ if strcmp(basestr,'TCV'),% TCV launching data
     %
     %it = min(find(t > str2num(shotime)));
     it1 = min(find(t > equil.info.t1));
-    it2 = min(find(t > equil.info.t2));
+    it2 = max(find(t < equil.info.t2));
     hxrexp = squeeze(sum(hxr(it1:it2,:,:)));
     dt = t(it2) - t(it1);
     %
     if isnan(energy),
-        energy = 30:10:110;
+        energy = hxrspec.kphot;
+        hxrexp = NaN*ones(length(energy),nc);
         dt = 1;
     else
         energy = energy.';
     end
     %
-    hxrspec.kphot = energy;
+    hxrspec.kphot = sort([energy,(energy(1:end-1) + energy(2:end))/2]);
     hxrspec.kdiag_hxr = [energy(1:end-1),(energy(1)+energy(2))/2;energy(2:end),(energy(end)+energy(end-1))/2];
     %
 else
@@ -166,6 +179,9 @@ else
 end
 %
 [Zbremchord,equilHXR] = bremchord_dke_yp(dkeparam,dkedisplay,equil,radialDKE,Zcurr,hxrspec,hxrparam);
+%
+Zbremchord.mask_hxr(:) = 1;%so that the bremmstrahlung is calculated at all positions, for display purposes
+%
 [Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,dkedisplay,equilHXR,radialDKE,mksa,momentumDKE,dke_out,Zbremchord,hxrspec,hxrparam);
 %
 [Zbremdiag] = bremdiag_dke_yp(Zbremplasma,hxrspec,hxrparam,dt);
@@ -175,34 +191,46 @@ end
 d_opt = input('Do you want to plot the results? [y/n] : ','s');
 if strcmp(d_opt,'y'),
     %
-    c_opt = input('Focus on chord? [] : ');
-    if ~isempty(c_opt) & ~isnumeric(c_opt),
+    c_opt = input(['Focus on chord? (1-',num2str(nc),') [1] : ']);
+    if isempty(c_opt),
+        c_opt = 1;
+    end
+    if ~isnumeric(c_opt) | ~any(c_opt == 1:nc),
         disp('-----> Invalid chord number');
         disp(quitmsg)
         return
     end
     %
-    r_opt = input('Local bremsstrahlung at radial position? (0<rho<1) [] : ');
-    if ~isempty(r_opt) & ~isnumeric(r_opt),
+    r_opt = input('Local bremsstrahlung at radial position? (0<rho<1) [0.5] : ');
+    if isempty(r_opt),
+        r_opt = 0.5;
+    end
+    if ~isnumeric(r_opt) | r_opt < 0 | r_opt > 1,
         disp('-----> Invalid radial position');
         disp(quitmsg)
         return
     end
     %
-    t_opt = input('Local bremsstrahlung at poloidal position? (0<theta<360) [] : ');
-    if ~isempty(t_opt) & ~isnumeric(t_opt),
+    t_opt = input('Local bremsstrahlung at poloidal position? (0<theta<360) [0] : ');
+    if isempty(t_opt),
+        t_opt = eps;
+    end
+    if ~isnumeric(t_opt) | t_opt < 0 | t_opt > 360,
         disp('-----> Invalid poloidal position');
         disp(quitmsg)
         return
     end
     %
-    k_opt = input(['Local bremsstrahlung at energy? (',num2str(energy),') [] : ']);
-    if ~isempty(k_opt) & (~isnumeric(t_opt) | ~any(k_opt == energy)),
+    k_opt = input(['Local bremsstrahlung at energy? (',num2str(Zbremdiag.kfit),') [',num2str(Zbremdiag.kfit(1)),'] : ']);
+    if isempty(k_opt),
+        k_opt = Zbremdiag.kfit(1);
+    end
+    if ~isnumeric(t_opt) | ~any(k_opt == Zbremdiag.kfit),
         disp('-----> Invalid energy');
         disp(quitmsg)
         return
     else
-        ik = find(k_opt == energy);
+        ik = find(k_opt == Zbremdiag.kfit);
     end
     %
     bremchorddisplay_dke_yp(equilHXR,Zbremchord,c_opt,p_opt,equil.id);
