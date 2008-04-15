@@ -33,6 +33,8 @@ ids_wave = '';
 paths_wave = '';
 ids_rayinit = '';
 paths_rayinit = '';
+ids_launch = '';
+paths_launch = '';
 id_transpfaste = '';
 path_transpfaste = '';
 id_transpfaste = '';
@@ -70,6 +72,10 @@ for i=1:3:length(varargin),
        ids_rayinit = varargin{i+1};
        paths_rayinit = varargin{i+2};
        flag_rayinit = j;
+    elseif strcmp(varargin{i},'launchs'),
+       ids_launch = varargin{i+1};
+       paths_launch = varargin{i+2};
+       flag_launch = j;
     elseif strcmp(varargin{i},'transpfaste'),
        id_transpfaste = varargin{i+1};
        path_transpfaste = varargin{i+2};
@@ -210,6 +216,27 @@ if exist('flag_rayinit','var'),
         end
     end
     varargout{flag_rayinit} = rayinits;
+end
+%
+if exist('flag_launch','var'),
+    ii = 0;
+    launchs = '';%List of structures for multiple RF waves
+    if isempty(ids_launch{1}),
+        info_dke_yp(2,['No launching conditions requested']);
+    else
+        for iw = 1:length(ids_launch),
+            filename = [paths_launch{iw},'LAUNCH_',ids_launch{iw},'.mat'];
+            if exist(filename) == 0,
+                info_dke_yp(2,['Warning : Structure ',filename,' could not be loaded']);
+            else
+                load(filename);
+                info_dke_yp(2,['Structure ''launch'': ',filename,' successfully loaded']);
+                ii = ii + 1;
+                launchs{ii} = launch;
+            end
+        end
+    end
+    varargout{flag_launch} = launchs;
 end
 %
 if exist('flag_transpfaste','var'),
