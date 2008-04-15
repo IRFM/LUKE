@@ -16,9 +16,7 @@ P2_Z = angles.P2_Z;
 P2_d = angles.P2_d;
 P3_Z = angles.P3_Z;
 phi = angles.phi;
-phi_eff = angles.phi_eff;
 theta = angles.theta;
-theta_eff = angles.theta_eff;
 %
 P4_theta = (theta - P1_theta)/2;
 %
