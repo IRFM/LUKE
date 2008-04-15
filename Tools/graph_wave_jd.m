@@ -5,10 +5,10 @@ function graph_wave_jd(equil,waves,rayinits,launchs,nr_dep,opt,rho_disp,ymask,xv
 % by J. Decker 02/04/03
 %
 if nargin < 12
-    styles = {'-','-','-','-','-'};
+    styles = {'-','-','-','-','-','-'};
 end
 if nargin < 11
-    colors = {'b','r',[0,0.5,0],'m','c'};
+    colors = {'b','r',[0,0.5,0],'m','c','y'};
 end
 if nargin < 10
     yabs = NaN;
@@ -528,7 +528,8 @@ elseif ny == 25,nl = 5;nc = 5;
 elseif ny <= 28,nl = 4;nc = 7;
 elseif ny <= 30,nl = 5;nc = 6;
 elseif ny <= 32,nl = 4;nc = 8;
-elseif ny <= 35,nl = 5;nc = 7;end
+elseif ny <= 35,nl = 5;nc = 7;
+elseif ny <= 40,nl = 5;nc = 8;end
 %
 smax = 0;
 Nmax = 0;
