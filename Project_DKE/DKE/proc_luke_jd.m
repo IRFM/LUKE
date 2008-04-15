@@ -34,6 +34,8 @@ Zbouncecoef = data.Zbouncecoef;
 Zmripple = data.Zmripple;
 mksa = data.mksa;
 %
+simul_id = dke_out.simul.id;
+%
 style0 = 'none';
 style = '-';
 style2 = '--';
@@ -65,36 +67,49 @@ mhu = momentumDKE.mhu;
 %
 nr = length(xrho);
 %
-J_rf = Zcurr.x_0_fsav*mksa.j_ref;
-P_rf = ZP0.x_rf_fsav.'*mksa.P_ref; 
+J_tot = Zcurr.x_0_fsav*mksa.j_ref;
+P_rf = ZP0.x_rf_fsav.'*mksa.P_ref;
+P_e = ZP0.x_e_fsav*mksa.P_ref;
+P_tot = P_rf + P_e;
 %
-I_rf = sum(J_rf.*equilDKE.xdA_dke);
+I_tot = sum(J_tot.*equilDKE.xdA_dke);
 %
 tir_display = num2str(ir_display);
-diaryname = ['res_',tir_display,'.txt'];
+diaryname = [simul_id,'_res_',tir_display,'.txt'];
 delete(diaryname)
 diary(diaryname)
 %
-if I_rf < 0,
-    disp('Warning : sign of J inverted for positive total current')
-    J_rf = -J_rf;
-    I_rf = -I_rf;
-end
+%if I_tot < 0,
+%    disp('Warning : sign of J inverted for positive total current')
+%    J_tot = -J_tot;
+%    I_tot = -I_tot;
+%end
 %
 p_rf_2piRp = sum(P_rf.*equilDKE.xdV_2piRp_dke);
-EtaRp_rf = I_rf/p_rf_2piRp/(2*pi);    
+p_e_2piRp = sum(P_e.*equilDKE.xdV_2piRp_dke);
+p_tot_2piRp = sum(P_tot.*equilDKE.xdV_2piRp_dke);
+EtaRp = I_tot/(p_tot_2piRp*2*pi);    
 %
-eta = J_rf./P_rf;
+eta = J_tot./P_tot;
 i_peak = find(P_rf == max(P_rf));
 eta_peak = eta(i_peak);
 %
 if nr > 1,
     %
-    disp(['current (I): ',num2str(I_rf),' MA'])
-    disp(['RF power (P/2piRp): ',num2str(p_rf_2piRp),' MW/m'])
-    disp(['CD efficiency (I*Rp/P): ',num2str(EtaRp_rf),' A.m/W'])
+    disp(['Total current (I): ',num2str(I_tot),' MA'])
+	if isinf(equilDKE.Rp),
+    	disp(['RF power (P/2piRp): ',num2str(p_rf_2piRp),' MW/m'])
+    	disp(['Ohmic power (P/2piRp): ',num2str(p_e_2piRp),' MW/m'])
+    	disp(['Total power (P/2piRp): ',num2str(p_tot_2piRp),' MW/m'])
+    	disp(['CD efficiency (I*Rp/P): ',num2str(EtaRp),' A.m/W'])
+	else
+    	disp(['RF power (P): ',num2str(p_rf_2piRp*(2*pi*equilDKE.Rp)),' MW'])
+    	disp(['Ohmic power (P): ',num2str(p_e_2piRp*(2*pi*equilDKE.Rp)),' MW'])
+    	disp(['Total power (P): ',num2str(p_tot_2piRp*(2*pi*equilDKE.Rp)),' MW'])
+    	disp(['CD efficiency (I/P): ',num2str(EtaRp/equilDKE.Rp),' A/W'])
+	end
     %
-    % power profile
+    % power profiles
     %
     figure(1),clf
     %
@@ -109,25 +124,55 @@ if nr > 1,
     graph1D_jd(xrho,P_rf,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width2,siz,gca,red,lspace,bspace);
     set(gca,'xtick',xtick);
     %
-    print_jd(p_opt,'Prf_profile','.');
-    %
-    % current profile
+    print_jd(p_opt,[simul_id,'_Prf_profile'],'.');
     %
     figure(2),clf
     %
+    xlab = 'r/a';
+    ylab = 'P_{OHM} (MW/m^3)';
+    tit = '';
+    %
+    xlim = [0,1];
+    xtick = 0:0.2:1;
+    ylim = NaN;
+    %
+    graph1D_jd(xrho,P_e,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width2,siz,gca,red,lspace,bspace);
+    set(gca,'xtick',xtick);
+    %
+    print_jd(p_opt,[simul_id,'_Pe_profile'],'.');
+    %
+    figure(3),clf
+    %
+    xlab = 'r/a';
+    ylab = 'P_{TOT} (MW/m^3)';
+    tit = '';
+    %
+    xlim = [0,1];
+    xtick = 0:0.2:1;
+    ylim = NaN;
+    %
+    graph1D_jd(xrho,P_tot,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width2,siz,gca,red,lspace,bspace);
+    set(gca,'xtick',xtick);
+    %
+    print_jd(p_opt,[simul_id,'_Ptot_profile'],'.');
+    %
+    % current profile
+    %
+    figure(4),clf
+    %
     ylab = 'J (MA/m^2)';
     tit = '';
-    ylim = 1.2*[min(J_rf),max(J_rf)];
+    ylim = NaN;
     %
-    graph1D_jd(xrho,J_rf,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width2,siz,gca,red,lspace,bspace);
+    graph1D_jd(xrho,J_tot,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width2,siz,gca,red,lspace,bspace);
     set(gca,'xtick',xtick);
     %set(gca,'ylim',[0,max(get(gca,'ylim'))])
     %
-    print_jd(p_opt,'J_profile','.');
+    print_jd(p_opt,[simul_id,'_J_profile'],'.');
     %
     % efficiency profile
     %
-    figure(3),clf
+    figure(5),clf
     %
     ylab = '\eta (A.m/W)';
     tit = '';
@@ -136,13 +181,15 @@ if nr > 1,
     graph1D_jd(xrho,eta,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width2,siz,gca,red,lspace,bspace);
     set(gca,'xtick',xtick);
     %
-    print_jd(p_opt,'eta_profile','.');
+    print_jd(p_opt,[simul_id,'_eta_profile'],'.');
     %
 else
     %
     disp(['normalized current: ',num2str(Zcurr.x_0_fsav)])
     disp(['normalized RF power: ',num2str(ZP0.x_rf_fsav)])
-    disp(['normalized CD efficiency: ',num2str(Zcurr.x_0_fsav./ZP0.x_rf_fsav)])
+    disp(['normalized Ohmic power: ',num2str(ZP0.x_e_fsav)])
+    disp(['normalized Total power: ',num2str(ZP0.x_e_fsav+ZP0.x_rf_fsav)])
+    disp(['normalized CD efficiency: ',num2str(Zcurr.x_0_fsav./(ZP0.x_e_fsav+ZP0.x_rf_fsav))])
     %
 end
 %
@@ -192,7 +239,7 @@ if ir_display > 0 & ir_display <= nr,
     %
     % Figures
     %
-    figure(4),clf
+    figure(6),clf
     %
     x1 = ppar_cyl_ref;
     xlab1 = 'p_{||}/p_{Te}';
@@ -227,11 +274,11 @@ if ir_display > 0 & ir_display <= nr,
         bounce_ripple_jd(1,pnmax,gridDKE.xmhubounce2,ir_display,Zmripple);
     end
     %
-    print_jd(p_opt,['f_2D',tir_display],'.');
+    print_jd(p_opt,[simul_id,'_f_2D',tir_display],'.');
     %
     if max(max(abs(y3))) > 0,
         %
-        figure(5),clf
+        figure(7),clf
         %
         cont = 10;
         %
@@ -244,13 +291,13 @@ if ir_display > 0 & ir_display <= nr,
         end
         colorbar
         %
-        print_jd(p_opt,['DQL',tir_display],'.');
+        print_jd(p_opt,[simul_id,'_DQL',tir_display],'.');
         %
     end
     %
     % ---------- parallel distribution difference-----------
     %
-    figure(6),clf
+    figure(8),clf
     %
     y1 = Fpar0_cyl_ref - Fparinit_cyl_ref;
     ylab = 'F_{||} - F_{||M}';
@@ -258,11 +305,11 @@ if ir_display > 0 & ir_display <= nr,
     %
     graph1D_jd(x1,y1,0,0,xlab1,ylab,'',NaN,xlim1,ylim,style,marker,color2,width2,siz,gca,red,lspace,bspace);
     %
-    print_jd(p_opt,['F0mFM_1D',tir_display],'.');
+    print_jd(p_opt,[simul_id,'_F0mFM_1D',tir_display],'.');
     %
     % ---------- parallel distribution -----------
     %
-    figure(7),clf
+    figure(9),clf
     %
     y1 = Fparinit_cyl_ref;
     y2 = Fpar0_cyl_ref;
@@ -273,7 +320,7 @@ if ir_display > 0 & ir_display <= nr,
     graph1D_jd(x1,y2,0,1,xlab1,ylab,'',leg,xlim1,ylim,style,marker,color2,width2,siz);
     legend(leg);
     %
-    print_jd(p_opt,['F0pFM_1D_',tir_display],'.');
+    print_jd(p_opt,[simul_id,'_F0pFM_1D_',tir_display],'.');
 end
 %
 diary off
