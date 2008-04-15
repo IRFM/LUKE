@@ -176,6 +176,10 @@ end
 %
 theta_hxr = ones(length(xpsin),1)*(theta(1:end-1) + diff(theta)/2);
 psin_hxr = xpsin'*ones(1,length(theta)-1);
+%
+Xr = sqrt(equilHXR.Xx.^2 + equilHXR.Xy.^2);
+r_hxr = interp1(theta,Xr.',theta_hxr(1,:)).';
+%
 B0_hxr = interp1(ppsin,ptB0,xpsin,method);%Bmin
 PSI_hxr = griddata(ppsin(:)*ones(1,length(theta)),ones(length(ppsin),1)*theta,sqrt(ptBR.^2 + ptBZ.^2 + ptBphi.^2),psin_hxr,theta_hxr)./(B0_hxr'*ones(1,length(theta)-1));%B/Bmin
 %
@@ -265,6 +269,7 @@ Zbremchord.xpsin_S = xpsin_S;
 Zbremchord.vschords = vschords;
 Zbremchord.psin_hxr = psin_hxr;
 Zbremchord.theta_hxr = theta_hxr;
+Zbremchord.r_hxr = r_hxr;
 Zbremchord.PSI_hxr = PSI_hxr;
 Zbremchord.mask_hxr = mask_hxr;
 %
