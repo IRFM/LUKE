@@ -30,56 +30,44 @@ if w_opt == 0,% wave from C3PO calculations
         %
         if strcmp(basestr,'TCV'),% TCV launching data
             %
-            if isfield(equil.info,'shotnum');
-                shotnum = equil.info.shotnum;
-            else
-                disp('-----> Shot number information missing');
+            % LAUNCHING ANGLES
+            %
+            n_opt = input('Option for launching data? 0 (specify angles), 1 (TCV database) [1] : ');
+            if isempty(n_opt),
+                n_opt = 1;
+            end
+            if ~isnumeric(n_opt) | ~any(n_opt == [0,1]),
+                disp('-----> Invalid launching data option');
                 return
             end
             %
-%             if isfield(equil.info,'shotime');
-%                 shotime = equil.info.shotime;
-%             else
-%                 disp('-----> Shot time information missing');
-%                 return
-%             end
-%             %
-%             % LAUNCHING ANGLES
-%             %
-%             n_opt = input('Option for launching data? 0 (data file), 1 (TCV database) [0] : ');
-%             if isempty(n_opt),
-%                 n_opt = 0;
-%             end
-%             if ~isnumeric(n_opt) | ~any(n_opt == [0,1]),
-%                 disp('-----> Invalid launching data option');
-%                 return
-%             end
-%             %
-%             if n_opt == 0,% launching data from file
-%                 %
-%                 if isfield(equil.info,'prof');
-%                     proffile = equil.info.prof;
-%                 else
-%                     proffile = '';
-%                 end                
-%                 %
-%                 [data_file,data_path] = uigetfile('*.*',['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],proffile);
-%                 %
-%                 if data_file == 0,
-%                     return
-%                 end
-%                 %
-%                 data = load([data_path,data_file],'shot','laun','angles*');
-%                 %
-%             elseif n_opt == 1,% launching data from TCV database
-%                 %
-%                 disp('-----> launching data from TCV database not implemented yet');
-%                 return
-%             end
-            %
-            data = load(equil.info.data,'shot','laun','angles*');
+            if n_opt == 0,% launching data specified by user
+                %
+                shotnum = '';
+				data = '';
+				%
+            elseif n_opt == 1,% launching data from TCV database
+                %
+            	if isfield(equil.info,'shotnum');
+                	shotnum = equil.info.shotnum;
+            	else
+                	disp('-----> Shot number information missing');
+                	return
+            	end
+            	%
+%             	if isfield(equil.info,'shotime');
+%                 	shotime = equil.info.shotime;
+%             	else
+%                 	disp('-----> Shot time information missing');
+%                 	return
+%             	end
+            	%
+            	data = load(equil.info.data,'shot','laun','angles*');
+				%
+            end
             %
             angles = imake_angles_TCV_jd(data,shotnum);
+			%
             if isempty(angles),
                 disp(['-----> launching data not determined for shot :',shotnum]);
                 return
@@ -337,8 +325,14 @@ elseif w_opt == 1,% wave from TORAY calculations
     %
 elseif w_opt == 2,% wave from ART calculations
     %
-    disp('-----> wave from ART calculations not implemented yet');
-    return
+    wave = imake_wave_ART_jd(workdir,equil);
+    %
+    if isempty(wave),
+        return
+    end
+    %
+    wave = wave_process_jd(equil,wave,NaN);
+    %
 end
         
 
