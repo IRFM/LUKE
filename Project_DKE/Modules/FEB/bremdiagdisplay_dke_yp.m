@@ -25,6 +25,8 @@ end
 nchords = length(hxr.alpha_hxr);
 %
 ikphot_display = max(find(Zbremdiag.kfit <= kphot_display));
+ikphot_display_2 = max(find(hxr.kphot <= kphot_display));
+nkphot = length(hxr.kphot);
 dkphot_display = Zbremdiag.dkfit(1);
 %
 figure('Name','Plasma bremsstrahlung spectrum');
@@ -38,6 +40,35 @@ print_jd(p_opt,[filename,'_PulseSpectrum']);
 figure('Name','Plasma bremsstrahlung profile');
 graph1D_jd([1:length(Zbremdiag.tphot_plasma)],Zbremdiag.brem_bd_plasma(:,ikphot_display),0,0,'Chord number','dN_{phot}/dt [s^{-1}]',['Plasma count rate, k=',num2str(Zbremdiag.kfit(ikphot_display)),'�',num2str(dkphot_display/2),'keV'],NaN,'','','-','non','b',2);
 print_jd(p_opt,[filename,'_PlasmaHXRProfile']);
+%
+if all(Zbremchord.mask_hxr(:)),%bremmstrahlung calculated at all positions
+	for i=1:size(Zbremchord.mask_hxr,1),
+		for j=1:size(Zbremchord.mask_hxr,2),
+			%if ~isempty(Zbremplasma.brem_perp{i,j}),
+				brem_forward(i,j,:) = reshape(Zbremplasma.brem_forward{i,j},[1,1,nkphot]);
+				brem_backward(i,j,:) = reshape(Zbremplasma.brem_backward{i,j},[1,1,nkphot]);
+				brem_perp(i,j,:) = reshape(Zbremplasma.brem_perp{i,j},[1,1,nkphot]);
+				brem_4pi(i,j,:) = reshape(Zbremplasma.brem_4pi{i,j},[1,1,nkphot]);
+			%end
+		end
+	end
+%
+	figure('Name',['Plasma forward bremsstrahlung at energy ',num2str(kphot_display)]);
+	graph2D_jd(Zbremchord.r_hxr.*cos(Zbremchord.theta_hxr),Zbremchord.r_hxr.*sin(Zbremchord.theta_hxr),brem_forward(:,:,ikphot_display_2).','x','y',['Plasma forward bremsstrahlung at energy ',num2str(kphot_display)],NaN,NaN,1);
+	print_jd(p_opt,[filename,'_PlasmaHXRbrem_forward']);axis('equal')
+%
+	figure('Name',['Plasma backward bremsstrahlung at energy ',num2str(kphot_display)]);
+	graph2D_jd(Zbremchord.r_hxr.*cos(Zbremchord.theta_hxr),Zbremchord.r_hxr.*sin(Zbremchord.theta_hxr),brem_backward(:,:,ikphot_display_2).','x','y',['Plasma backward bremsstrahlung at energy ',num2str(kphot_display)],NaN,NaN,1);
+	print_jd(p_opt,[filename,'_PlasmaHXRbrem_backward']);axis('equal')
+%
+	figure('Name',['Plasma perp bremsstrahlung at energy ',num2str(kphot_display)]);
+	graph2D_jd(Zbremchord.r_hxr.*cos(Zbremchord.theta_hxr),Zbremchord.r_hxr.*sin(Zbremchord.theta_hxr),brem_perp(:,:,ikphot_display_2).','x','y',['Plasma perp bremsstrahlung at energy ',num2str(kphot_display)],NaN,NaN,1);
+	print_jd(p_opt,[filename,'_PlasmaHXRbrem_perp']);axis('equal')
+%
+	figure('Name',['Plasma 4pi bremsstrahlung at energy ',num2str(kphot_display)]);
+	graph2D_jd(Zbremchord.r_hxr.*cos(Zbremchord.theta_hxr),Zbremchord.r_hxr.*sin(Zbremchord.theta_hxr),brem_4pi(:,:,ikphot_display_2).','x','y',['Plasma 4pi bremsstrahlung at energy ',num2str(kphot_display)],NaN,NaN,1);
+	print_jd(p_opt,[filename,'_PlasmaHXRbrem_4pi']);axis('equal')
+end
 %
 figure('Name','Pulse bremsstrahlung profile');
 graph1D_jd([1:length(Zbremdiag.tphot_plasma)],Zbremdiag.brem_bd_diag(:,ikphot_display),0,0,'Chord number','dN_{pulse}/dt [s^{-1}]',['Pulse count rate, E=',num2str(Zbremdiag.kfit(ikphot_display)),'�',num2str(dkphot_display/2),'keV'],NaN,'','','-','non','b',2);
