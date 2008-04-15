@@ -304,7 +304,7 @@ end
 %
 if isempty(sNpar),
     if tor_mode == 1,
-        if isempty(skx) | isempty(sn) | isempty(skZ) 
+        if isempty(skx) | isempty(sn) | isempty(sky) 
             error('Ray-tracing data incomplete')
         end
     %    if isempty(sR)
@@ -312,11 +312,11 @@ if isempty(sNpar),
     %    end
         %
         sR = Rp + sx;
-        skpar = (skR.*sBR + sn.*sBphi./sR + skZ.*sBZ)./sqrt(sBR.^2 + sBphi.^2 + sBZ.^2);
+        skpar = (skx.*sBx + sn.*sBphi./sR + sky.*sBy)./sqrt(sBx.^2 + sBphi.^2 + sBy.^2);
         sNpar = skpar*clum/omega_rf;
         %
         if isempty(sNperp), 
-            skperp = sqrt(skR.^2 + (sn./sR).^2 + skZ.^2 - skpar.^2);
+            skperp = sqrt(skx.^2 + (sn./sR).^2 + skx.^2 - skpar.^2);
             sNperp = skperp*clum/omega_rf;
         end
     else
