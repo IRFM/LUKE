@@ -226,19 +226,86 @@ while isel >= 0,
             disp('************** LOAD DATA FILE **************')
             disp('');
             %
-            [data_file,data_path] = uigetfile('LUKE_DATA_*.mat','Please select a LUKE data file');
+            [data_file,data_path] = uigetfile({'LUKE_DATA_*.mat';'LUKE_RESULTS_*.mat'},'Please select a LUKE data file');
             %
             if data_file == 0,
                 disp('-----> No LUKE data file specified.');
             else
-                datafile = [data_path,data_file];
-                load(datafile);
-                disp(['-----> The data file ',datafile,' is loaded.']);
-                %
-                status.data = 1;
-                %
-                workdir = data_path;
-            end  
+				if strfind(data_file,'LUKE_DATA_'),
+					datafile = [data_path,data_file];
+					load(datafile);
+					disp(['-----> The data file ',datafile,' is loaded.']);
+					%
+					status.data = 1;
+					%
+				elseif strfind(data_file,'LUKE_RESULTS_'),
+					datafile = [data_path,data_file];
+					data = load(datafile,'id_simul','dkepath','dkeparam','dkedisplay','equil','waves','ohm','transpfaste',...
+						'Znorm','Zcurr','ZP0','dke_out','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');
+					disp(['-----> The data file ',datafile,' is loaded.']);
+					%
+					id_simul = data.id_simul;
+					%
+					dkepath = data.dkepath;
+					dkepath_path = data_path;
+					dkepath_file = data_file;
+					%
+					dkeparam = data.dkeparam;
+					dkeparam_path = data_path;
+					dkeparam_file = data_file;
+					%
+					dkedisplay = data.dkedisplay;
+					%
+					equil = data.equil;
+					%
+					output.Znorm = data.Znorm;
+					output.Zcurr = data.Zcurr;
+					output.ZP0 = data.ZP0;
+					output.dke_out = data.dke_out;
+					output.radialDKE = data.radialDKE;
+					output.equilDKE = data.equilDKE;
+					output.momentumDKE = data.momentumDKE;
+					output.gridDKE = data.gridDKE;
+					output.Zmomcoef = data.Zmomcoef;
+					output.Zbouncecoef = data.Zbouncecoef;
+					output.Zmripple = data.Zmripple;
+					output.mksa = data.mksa;
+					output.XXsinksource = data.XXsinksource;  
+					%
+					status.dkeparam = 1;
+					status.dkepath = 1;
+					status.equil = 1;
+					status.output = 1;
+					%
+					if isfield(data,'waves'),
+						waves = data.waves;
+						status.waves = 1;
+					end
+					%
+					if isfield(data,'ohm'),
+						ohm = data.ohm;
+						status.ohm = 1;
+					end
+					%
+					if isfield(data,'transpfaste'),
+						transpfaste = data.transpfaste;
+						status.transpfaste = 1;
+					end
+					%
+					status.data = 2;
+					%
+					clear data
+					%
+				else
+					disp('-----> Invalid LUKE data file.');
+					continue
+				end  
+				%
+				workdir = data_path;
+				%
+				setpath_luke_jd(dkepath.luke_root,dkepath);
+				%
+			end
             %
         elseif isel == 2,
             %
@@ -493,19 +560,26 @@ while isel >= 0,
                 %
                 if strcmp(l_opt,'y'),
                     %
+					iw_list = [];
+					%
                     for iw = 1:length(waves),
                         w_opt = input(['Do you want to clear the wave structure ',waves{iw}.id,' (y/n)? [n] : '],'s');
                         %
                         if strcmp(w_opt,'y'),
                             disp(['-----> The wave structure ',waves{iw}.id,' is cleared.'])
                             %
-                            waves(iw) = [];
-                            %
-                            status.output = 0;
-                            status.data = 2;
+                            iw_list = [iw_list,iw];
                         end
                     end
-                    %
+					%
+					if ~isempty(iw_list),
+						%
+						waves(iw_list) = [];
+						%
+						status.output = 0;
+						status.data = 2;
+					end
+					%
                     if isempty(waves)
                         status.waves = 0;
                     end
@@ -695,7 +769,7 @@ while isel >= 0,
             %
             newtransp = 0;
             %
-            if ~isempty(ohm),
+            if ~isempty(transpfaste),
                 t_opt = input('Do you want to clear the existing transp structures (y/n)? [n] : ','s');
                 %
                 if strcmp(t_opt,'y'),
@@ -787,13 +861,8 @@ while isel >= 0,
                 g_opt.TeNpar = 0;
                 g_opt.abs_max = 1;
                 nr_dep = 40;
-                n_rf_list = [0:3];
                 %
-                for iw = 1:length(waves),
-                    rayinits{iw} = '';
-                end
-                %
-                graph_wave_jd(equil,waves,rayinits,n_rf_list,nr_dep,g_opt);
+                graph_wave_jd(equil,waves,'','',nr_dep,g_opt);
             else
                 disp('-----> The equilibrium structure does not exist.');
             end
@@ -804,20 +873,37 @@ while isel >= 0,
             %
             if status.output == 1,
                 %
-                ir_display = input(['Index of flux-surface for distribution (1-',num2str(length(equilDKE.xrho)),', 0 to skip) ? [0] : ']);
+                ir_display = input(['Index of flux-surface for distribution (1-',num2str(length(output.equilDKE.xrho)),', 0 to skip) ? [0] : ']);
+                if isempty(ir_display) | ~isnumeric(ir_display) | ir_display > length(output.equilDKE.xrho),
+                    ir_display = 0;
+                end
                 %
+                pnmax = input(['Maximum value of p/pT for display: (-1) auto, (0) grid, or specify (0-',num2str(dkeparam.pnmax_S),')? [0] : ']);
+                if isempty(pnmax),
+					pnmax = 0;
+				end
+				%
+				if ~isnumeric(pnmax) | (~any(pnmax == [0,-1]) & (pnmax < 0 | pnmax > dkeparam.pnmax_S)),
+                    disp('-----> Invalid choice.');
+					continue
+                end
+                %
+				if pnmax == -1,
+					pnmax = NaN;
+				elseif pnmax == 0,
+					pnmax = dkeparam.pnmax_S;
+				end
+				%
                 p_opt = input('Option for output figures? -1 (nothing), 0 (print), 1 (print and save), 2 (save) [-1] : ');
                 if isempty(p_opt) | ~isnumeric(p_opt) | ~any(p_opt == [0,1,2]),
                     p_opt = -1;
                 end
                 %
-                if isempty(ir_display) | ~isnumeric(ir_display) | ir_display > length(equilDKE.xrho),
-                    ir_display = 0;
-                end
-                %
+				dp_cyl = 0.1;
+				%
                 sd = pwd;
                 cd(workdir)
-                proc_luke_jd(output,ir_display,p_opt);
+                proc_luke_jd(output,ir_display,p_opt,dp_cyl,pnmax);
                 cd(sd);
             else
                 disp('-----> The output structure does not exist.');
@@ -827,21 +913,12 @@ while isel >= 0,
             %
             % CALCULATE HXR EMISSION
             %
-            if status.data == 0 | status.data == 2;
-                disp('-----> The data must first be saved.');
-                continue
-            end
-            %
             if status.output == 0;
                 disp('-----> First run LUKE!');
                 continue
             end
             %
-            s_opt = input('Do you want to calculate the hard X-ray emission (y/n)? [n] : ','s');
-            %
-            if strcmp(s_opt,'y'),
-                irunhxr_jd(workdir,basestr,datafile);
-            end  
+            irunhxr_jd(workdir,basestr,'',id_simul,equil,dkeparam,dkedisplay,output);
             %
         elseif isel == 14,
             %
@@ -923,25 +1000,27 @@ while isel >= 0,
             output.Zbouncecoef = Zbouncecoef;
             output.Zmripple = Zmripple;
             output.mksa = mksa;
-            output.XXsinksource = XXsinksource;        
+            output.XXsinksource = XXsinksource;  
+            %
+            clear Znorm Zcurr ZP0 dke_out radialDKE equilDKE momentumDKE gridDKE Zmomcoef Zbouncecoef Zmripple mksa XXsinksource
             %	    
             % GRAPHIC OUTPUT
             %
             scocurr = sign(equil.psi_apRp(end))*sign(equil.ptBPHI(1,1));
             %
-            I_tot = sum(Zcurr.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref*scocurr);
+            I_tot = sum(output.Zcurr.x_0_fsav.*output.equilDKE.xdA_dke*output.mksa.j_ref*scocurr);
             figure('Name','Current profile'),
-            graph1D_jd(equilDKE.xrho,Zcurr.x_0_fsav*mksa.j_ref*scocurr,0,0,'\rho','J_{tot} (MA/m^2)',['I_{tot} = ',num2str(I_tot*1000),' (kA)'],NaN,'','','-','none','r',2);drawnow
+            graph1D_jd(output.equilDKE.xrho,output.Zcurr.x_0_fsav*output.mksa.j_ref*scocurr,0,0,'\rho','J_{tot} (MA/m^2)',['I_{tot} = ',num2str(I_tot*1000),' (kA)'],NaN,'','','-','none','r',2);drawnow
             print_jd(p_opt,[id_simul,'_Curr']);
             %
-            PRF_tot = sum(ZP0.x_rf_fsav.*equilDKE.xdV_2piRp_dke(:)*mksa.P_ref*2*pi*equilDKE.Rp);
+            PRF_tot = sum(output.ZP0.x_rf_fsav.*output.equilDKE.xdV_2piRp_dke(:)*output.mksa.P_ref*2*pi*output.equilDKE.Rp);
             figure('Name','RF Power'),
-            graph1D_jd(equilDKE.xrho,ZP0.x_rf_fsav*mksa.P_ref,0,0,'\rho','P_{LH} (MW/m^3)',['P_{RF} = ',num2str(PRF_tot*1000),' (kW)'],NaN,'','','-','none','r',2);drawnow
+            graph1D_jd(output.equilDKE.xrho,output.ZP0.x_rf_fsav*output.mksa.P_ref,0,0,'\rho','P_{LH} (MW/m^3)',['P_{RF} = ',num2str(PRF_tot*1000),' (kW)'],NaN,'','','-','none','r',2);drawnow
             print_jd(p_opt,[id_simul,'_RF_Power']);
             %
-            POHM_tot = sum(ZP0.x_e_fsav.*equilDKE.xdV_2piRp_dke*mksa.P_ref*2*pi*equilDKE.Rp);
+            POHM_tot = sum(output.ZP0.x_e_fsav.*output.equilDKE.xdV_2piRp_dke*output.mksa.P_ref*2*pi*output.equilDKE.Rp);
             figure('Name','Ohmic Power'),
-            graph1D_jd(equilDKE.xrho,ZP0.x_e_fsav*mksa.P_ref,0,0,'\rho','P_{OHM} (MW/m^3)',['P_{OHM} = ',num2str(POHM_tot*1000),' (kW)'],NaN,'','','-','none','r',2);drawnow
+            graph1D_jd(output.equilDKE.xrho,output.ZP0.x_e_fsav*output.mksa.P_ref,0,0,'\rho','P_{OHM} (MW/m^3)',['P_{OHM} = ',num2str(POHM_tot*1000),' (kW)'],NaN,'','','-','none','r',2);drawnow
             print_jd(p_opt,[id_simul,'_Ohm']);
             %
             status.output = 1;
