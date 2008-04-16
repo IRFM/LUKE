@@ -9,33 +9,22 @@ end
 equil = '';
 Zaxis = 0;
 Zeff = NaN;
+eqdsk_opt = 0;
 %
 % MAGNETIC EQUILIBRIUM
 %
-e_opt = input('Option for magnetic equilibrium contruction? 0 (eqdsk), 1 (helena) [0] : ');
-if isempty(e_opt),
-    e_opt = 0;
-end
-if ~isnumeric(e_opt) | ~any(e_opt == [0,1]),
-    disp('-----> Invalid equilibrium option');
-    return
-end
+n_opt = input_dke_yp('Load existing (0) or built new (1) magnetic equilibrium : ',1,{0,1},'Invalid selection');
 %
-if e_opt == 0, % EQSDK equilibrium
+%
+if n_opt == 0, % Load existing equilibrium
     %
-    % EQSDK file
-    %   
-    n_opt = input('Option for EQSDK equilibrium 0 (existing EQSDK file), 1 (build EQSDK) [1] : ');
-    if isempty(n_opt),
-        n_opt = 1;
-    end
-    if ~isnumeric(n_opt) | ~any(n_opt == [0,1]),
-        disp('-----> Invalid option');
-        return
-    end
+	e_opt = input_dke_yp('Format of the magnetic equilibrium data, 0 (eqdsk), 1 (itm): ',0,{0,1},'Invalid option');
     %
-    if n_opt == 0,% EQSDK from data file
+    if e_opt == 0,% EQSDK from data file
         %
+        % EQSDK file
+        % 
+        eqdsk_opt = 1;
         [eqdsk_file,eqdsk_path] = uigetfile({'eqdsk*.*';'EQDSK*.*';'*.*'},'Please select the EQDSK file');
         %
         if eqdsk_file == 0,
@@ -66,7 +55,18 @@ if e_opt == 0, % EQSDK equilibrium
             shotime = '0';
         end
         %
-    elseif n_opt == 1,% build EQSDK
+    elseif e_opt == 1,% load ITM
+        %
+        disp('Not yet implemented.')
+        return
+    end
+elseif n_opt == 1,
+%
+	e_opt = input_dke_yp('Select magnetic equilibrium solver, 0 (liuque), 1 (helena): ',0,{0,1},'Invalid option');
+%
+    if e_opt == 0,% LIUQUE
+        %
+        eqdsk_opt = 1;
         %
         shotnum = input(['Please provide the shot number : '],'s');
         if isempty(shotnum),
@@ -87,32 +87,50 @@ if e_opt == 0, % EQSDK equilibrium
             return
         end
         %
-        [varargout]=make_eqdsk(str2num(shotnum),str2num(shotime),workdir,basestr,l_opt);
+        make_eqdsk(str2num(shotnum),str2num(shotime),workdir,basestr,l_opt);%call LIUQUE
         %
         eqdsk_path = [workdir,'/'];
         %
         eqdsk_file = ['eqdsk.',shotnum,'t',shotime];
         %
-    end    
+    elseif e_opt == 1, % HELENA Equilibrium 
+%  
+        shotnum = input(['Please provide the shot number : '],'s');
+        if isempty(shotnum),
+            return
+        end
+        %
+        shotime = input('Please provide the shot time : ');
+        if isempty(shotime),
+            return
+        end
+        %
+        shotime = num2str(shotime,'%6.4f');
     %
-    shotid = [basestr,'_',shotnum,'_',shotime];
-    %
-    id_equil = input(['Please provide a name for the equilibrium file [',shotid,'] : '],'s');
-    if isempty(id_equil),
-        id_equil = shotid;
+        [equil_magnetic,mrho,mspsin,mspsinT,mp_magnetic] = make_helmex77(str2num(shotnum),str2num(shotime),basestr);%call HELENA (helmex77)
     end
-    %
-    d_opt = input('Do you want to display the equilibrium? [y/n] : ','s');
-    if strcmp(d_opt,'y'),
-        display_mode = 2;
-    else
-        display_mode = 1;
-    end
-    %
-    p_opt = input('Option for equilibrium figures? -1 (nothing), 0 (print), 1 (print and save), 2 (save) [-1] : ');
-    if isempty(p_opt) | ~isnumeric(p_opt) | ~any(p_opt == [0,1,2]),
-        p_opt = -1;
-    end
+end
+%
+shotid = [basestr,'_',shotnum,'_',shotime];
+%
+id_equil = input(['Please provide a name for the equilibrium file [',shotid,'] : '],'s');
+if isempty(id_equil),
+    id_equil = shotid;
+end
+%
+d_opt = input('Do you want to display the equilibrium? [y/n] : ','s');
+if strcmp(d_opt,'y'),
+    display_mode = 2;
+else
+    display_mode = 1;
+end
+%
+p_opt = input('Option for equilibrium figures? -1 (nothing), 0 (print), 1 (print and save), 2 (save) [-1] : ');
+if isempty(p_opt) | ~isnumeric(p_opt) | ~any(p_opt == [0,1,2]),
+    p_opt = -1;
+end
+%
+if eqdsk_opt == 1,%(R,Z) to (psi,theta) conversion specific to eqdsk
     %
     % file name
     %
@@ -121,9 +139,6 @@ if e_opt == 0, % EQSDK equilibrium
     %
     [equil_magnetic,mrho,mspsin,mspsinT,mp_magnetic] = equil_magnetic_EFIT_jd([eqdsk_path,eqdsk_file],display_mode,p_opt,dispname,savename);
     %
-elseif e_opt == 1, % HELENA Equilibrium 
-    disp('-----> HELENA magnetic equilibrium not yet operational in LUKE');
-    return
 end
 %
 % PROFILES
@@ -262,6 +277,8 @@ if strcmp(basestr,'TCV'),% TCV profile data
 		end
 		%
 		profname = [data_path,data_file];
+        %
+    elseif n_opt == 4,% profiles from TS database	
 		%
 	end
 	%
@@ -278,12 +295,20 @@ elseif strcmp(basestr,'ITER'),% ITER Astra profile data
         return
     end
     %
+elseif strcmp(basestr,'TS'),% TS profile data
+%
+
+
+
+
 else
     %
     disp(['-----> profiles data not implemented yet for :',basestr]);
     return    
     %
 end
+%
+%
 %
 equil_prof = equil_prof_jd(profname,type,mrho,mspsin,mspsinT,display_mode,p_opt,dispname,savename,Zeff);
 delete(profname);
@@ -348,5 +373,8 @@ if strcmp(basestr,'TCV'),
     end
 elseif strcmp(basestr,'ITER'),
     equil.info.data = [data_path,data_file];
+elseif strcmp(basestr,'TS'),
+    equil.info.shotnum = shotnum;
+    equil.info.shotime = shotime;
 end
 %
