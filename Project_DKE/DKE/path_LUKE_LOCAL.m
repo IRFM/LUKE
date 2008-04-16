@@ -7,6 +7,35 @@ path_id = 'LOCAL';%Set here the name path parameters (user specific)
 filename = ['PATH_',path_id,'.mat'];
 filepaths = which(filename,'-all');
 nn = length(filepaths);
+%
+kk = [];
+if strcmp(computer,'MAC') | strcmp(computer,'MACI') | strcmp(computer,'PCWIN') | strcmp(computer,'PCWIN64'),%Systems which are usually not case sensitive
+    for ii = 1:nn-1,
+        for jj = ii+1:nn
+            if strcmpi(filepaths{ii},filepaths{jj}),%identifu identical strings (not case sensitive)
+            	kk = [kk,jj];
+            end
+        end
+    end
+%
+    if ~isempty(kk),
+        filepaths_new{1} = filepaths{1};%The first path is always kept
+        mm = 2;
+        for ii = 2:nn
+            flag = 0;
+            for jj = 1:length(kk)
+                if ii == kk(jj),flag = 1;end
+            end
+            if flag == 0,
+                filepaths_new{mm} = filepaths{ii};
+                mm = mm + 1;
+            end
+        end
+        filepaths = filepaths_new;
+        nn = length(filepaths);   
+	end
+end
+%
 if nn > 0,
     if nn == 1,
         isel = 1;
