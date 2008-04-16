@@ -18,6 +18,7 @@ function [varargout] = pc_dke_yp
 %   - mc2 : Electron energy rest mass (keV)
 %   - clum : Speed of light (m/s)
 %   - alpha : Fine structure constant
+%   - kB : Boltzmann's constant (J/K-1)
 %
 % by Joan Decker <jodecker@mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 %
