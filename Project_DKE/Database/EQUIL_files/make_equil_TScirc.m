@@ -2,8 +2,7 @@
 %   This script generates the data file of an ideal circular equilibrium based on
 %   equilibrium profile parameters
 %
-%   By J. Decker <jodecker@alum.mit.edu> and Y. Peysson <yves.peysson@cea.fr>
-%   Created Feb. 17, 2004
+%   By J. Decker <DRFC/DSM/IRFM, joan.decker@cea.fr> and Y. Peysson <DRFC/DSM/IRFM, yves.peysson@cea.fr>
 %
 clear all
 %

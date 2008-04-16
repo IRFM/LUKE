@@ -2,12 +2,11 @@
 %   This script generates the data file of an ideal circular equilibrium based on
 %   equilibrium profile parameters
 %
-%   By J. Decker <jodecker@alum.mit.edu> and Y. Peysson <yves.peysson@cea.fr>
-%   Created Feb. 17, 2004
+%   By J. Decker <DRFC/DSM/IRFM, joan.decker@cea.fr> and Y. Peysson <DRFC/DSM/IRFM, yves.peysson@cea.fr>
 %
 clear all
 %
-equil.id = 'TScirc_peak';% scenario identification
+id = 'TScirc_peak';% scenario identification
 %
 [qe,me,mp,mn,e0,mu0,re,mc2,clum] = pc_dke_yp;
 %
@@ -48,61 +47,27 @@ Zeff0 = 1;%  Core effective charge (a.u.)
 Zeffa = 1;%  Edge effective charge (a.u.)
 eZeff = 0;%  Exponent for the effective charge (Zeff(r) = (Zeff0-Zeffa)*(1-(r/a)^2)^eZeff + Zeffa)
 %
-equil.zZi = Zi;%[1,ni]
-equil.zmi = mi;%[1,ni]
-equil.fi = fi;%[1,3]
-%
-prho = linspace(0,1,npsi);%Uniform rho grid
-equil.theta = linspace(0,2*pi,ntheta);% Uniform theta grid
-%
 % Plasma parameters
 %
-equil.pTe = (Te0 - Tea)*(1 - prho.^2).^eTe + Tea;% Electron temperature (keV)
-equil.pne = (ne0 - nea)*(1 - prho.^2).^ene + nea;% Electron density (m-3)
-pTi = (Ti0 - Tia)*(1 - prho.^2).^eTi + Tia;% Ion temperatures (keV)
-%
-pZeff = (Zeff0 - Zeffa)*(1 - prho.^2).^eZeff + Zeffa;% Effective charge (a.u.)
-%
-% Ion parameters
-%
-nz = length(equil.zZi);
-equil.pzTi = repmat(pTi,[nz,1]);% Same temperature for all ion species
-equil.pzni = species_dke_yp(equil.pne,pZeff,equil.zZi,fi);
+[prho,equil_prof.pTe,equil_prof.pne,equil_prof.pzTi,equil_prof.pzni,equil_prof.zZi,equil.zmi,fi,pkin] = idealprof_yp(Zi,mi,fi,Te0,Tea,2,eTe,ne0,nea,2,ene,Ti0,Tia,2,eTi,Zeff0,Zeffa,eZeff,NaN,npsi);%Profiles
 %
 %Magnetic equilibrium
 %
-Bpa = (4*pi*1e-7)*Ip*1e6/(2*pi*ap);% Poloidal Field at the edge, Ampere's theorem (circular plasma cross-section)
+[ppsin,ppsi_apRp,theta,x,y,Bx,By,BPHI,pBpp,pq_Rpap,pj,pmag,Ip_test] = idealequilcyl_yp(ap,Rp,Zp,Bt,Ip,qmin*Rp/ap,eq,qopt,npsi,ntheta);%Cylindrical magnetic equilibrium
 %
-%Note: The following calculations are valid only for a circular concentric equilibrium. 
-%Moreover, in the following expressions, term of order (ap/Rp)^2 or higher are neglected.
+equil_magnetic.theta = theta;
+equil_magnetic.ptx = x;
+equil_magnetic.pty = y;
+equil_magnetic.ptBx = Bx;
+equil_magnetic.ptBy = By;
+equil_magnetic.ptBPHI = BPHI;
 %
-Xrho = repmat(prho',[1,ntheta]);
-Xtheta = repmat(equil.theta,[npsi,1]);
+equil_magnetic.psi_apRp = ppsi_apRp; %poloidal flux profile 
+equil_magnetic.Rp = Rp;
+equil_magnetic.Zp = Zp;
 %
-equil.ptx = ap*Xrho.*cos(Xtheta);
-equil.pty = ap*Xrho.*sin(Xtheta);
-%
-qmax = ap/Rp*abs(Bt/Bpa);%Cylindrical safety factor at the plasma edge
-%
-if qopt == 1,
-    pq = (qmax - qmin)*prho.^eq + qmin;% Current profile defined by qmin and eq
-else 
-    pq = qmax*ones(1,npsi);% Current profile defined with constant q (uniform current density)
-end
-pBpp = sign(Bpa)*prho*ap/Rp*abs(Bt)./pq;
-%
-spBpp = triu(repmat((pBpp(1:npsi-1) + pBpp(2:npsi))'/2,[1,npsi-1]));
-pdprho = diff(prho);
-equil.psi_apRp = [0,ap^2*integral_dke_jd(pdprho,spBpp,1)'];%psi_apRp = psi(toroidal usual)*ap/Rp for the cylindrical limit
-%
-%
-XBpp = repmat(pBpp',[1,ntheta]);
-equil.ptBx = -XBpp.*sin(Xtheta)*Rp./(equil.ptx + Rp);
-equil.ptBy = XBpp.*cos(Xtheta)*Rp./(equil.ptx + Rp);
-equil.ptBPHI = Bt*Rp./(equil.ptx + Rp);
-%
-equil.Rp = Rp;
-equil.Zp = Zp;
+equil = conc_struct_jd(equil_magnetic,equil_prof);
+equil.id = id;
 %
 filename = ['EQUIL_',equil.id,'.mat'];
 %

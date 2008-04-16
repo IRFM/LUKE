@@ -68,7 +68,6 @@ xZeff = 0.5;%Radial normalized position at which the derivative is maximum
 [ppsin,ppsi_apRp,theta,x,y,Bx,By,BPHI,pBpp,pq_Rpap,pj,pmag,Ip_test] = idealequilcyl_yp(ap,Rp,Zp,Bt,Ip,qmin*Rp/ap,eq,qopt,npsi,ntheta);%Cylindrical magnetic equilibrium
 %
 [prho,pTe,pne,pzTi,pzni,zZi,zmi,fi,pkin] = idealprof_yp(Zi,mi,fi,Te0,Tea,eTe1,eTe2,ne0,nea,ene1,ene2,Ti0,Tia,eTi1,eTi2,Zeff0,Zeffa,eZeff,xZeff,npsi);%Profiles
-
 %
 figure('Name','Guess magnetic equilibrium'),
 subplot(2,2,1),plot(prho,pj/1e6),xlabel('\rho');ylabel('j (MA/m^2)');title(['I_p = ',num2str(round(Ip_test)/1e6),' MA'])
