@@ -54,18 +54,16 @@ eZeff = 0;%  Exponent for the effective charge (Zeff(r) = (Zeff0-Zeffa)*(1-(r/a)
 %
 %Magnetic equilibrium
 %
-[ppsi,theta,R,Z,BR,BZ,BPHI,pBp,pq,pj,pmag,Ip_test] = idealequilcyl_yp(ap,Rp,Zp,Bt,Ip,qmin,eq,qopt,npsi,ntheta);%Cylindrical magnetic equilibrium
+[ppsin,ppsi_apRp,theta,x,y,Bx,By,BPHI,pBpp,pq_Rpap,pj,pmag,Ip_test] = idealequilcyl_yp(ap,Rp,Zp,Bt,Ip,qmin*Rp/ap,eq,qopt,npsi,ntheta);%Cylindrical magnetic equilibrium
 %
 equil_magnetic.theta = theta;
-equil_magnetic.ptx = R - Rp;
-equil_magnetic.pty = Z - Zp;
-equil_magnetic.ptBx = BR;
-equil_magnetic.ptBy = BZ;
-equil_magnetic.ptBPHI = Bt./(1 + equil_magnetic.ptx/Rp);
+equil_magnetic.ptx = x;
+equil_magnetic.pty = y;
+equil_magnetic.ptBx = Bx;
+equil_magnetic.ptBy = By;
+equil_magnetic.ptBPHI = BPHI;
 %
-Bpa = ap/Rp*Bt/max(pq);
-psia_apRp = ap*ap*Bpa/2; %poloidal flux at the edge
-equil_magnetic.psi_apRp = prho.^2*psia_apRp; %poloidal flux profile 
+equil_magnetic.psi_apRp = ppsi_apRp; %poloidal flux profile 
 equil_magnetic.Rp = Rp;
 equil_magnetic.Zp = Zp;
 %
