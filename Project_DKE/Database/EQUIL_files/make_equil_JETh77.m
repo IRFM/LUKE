@@ -1,76 +1,100 @@
 %
-%   This script generates the data file of an ideal circular equilibrium based on
-%   equilibrium profile parameters
+%   This script generates the data file of an magnetic equilibrium  created
+%   by the HELENA magnetic equlibrium solver (helmex77 version)
 %
-%   By J. Decker <jodecker@alum.mit.edu> and Y. Peysson <yves.peysson@cea.fr>
-%   Created Feb. 17, 2004
+%   By Y. Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and J. Decker (CEA/DSM/IRFM, joan.decker@cea.fr) 
 %
 clear all
 close all
 %
-helmex77param.id = 'JETh77';% scenario identification
-%
-helmex77param.id_path = '';%For all paths used by DKE solver
-helmex77param.path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+id = 'JETh77';% scenario identification
 %
 % Equilibrium parameters
 %
-helmex77param.ap_guess = 0.9;%  Plasma minor radius on LFS midplane (m)
-helmex77param.Rp_guess = 3.0;%  Plasma major radius on axis (m)
-helmex77param.Zp_guess = 0;%  Global plasma vertical shift (m)
+ap = 0.9;%  Plasma minor radius on LFS midplane (m)
+Rp = 3.0;%  Plasma major radius on axis (m)
+Zp = 0;%  Global plasma vertical shift (m)
 %
-helmex77param.xpoint(1) = 1.687;%Vertical position of the top X point
-helmex77param.xpoint(2) = 0.466;%Horizontal position of the top X point
-helmex77param.xpoint(3) = 0;%Angle between the separatrix and the horizontal plane for the top X point (degree)
-helmex77param.xpoint(4) = 0;%Angle between the separatrix and the horizontal plane for the top X point (degree)
-helmex77param.xpoint(5) = 2.001;%Vertical position of the bottom X point (always positive value)
-helmex77param.xpoint(6) = 0.568;%Horizontal position of the bottom X point
-helmex77param.xpoint(7) = 22.46;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
-helmex77param.xpoint(8) = 67.92;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
+xpoint(1) = 1.687;%Vertical position of the top X point
+xpoint(2) = 0.466;%Horizontal position of the top X point
+xpoint(3) = 0;%Angle between the separatrix and the horizontal plane for the top X point (degree)
+xpoint(4) = 0;%Angle between the separatrix and the horizontal plane for the top X point (degree)
+xpoint(5) = 2.001;%Vertical position of the bottom X point (always positive value)
+xpoint(6) = 0.568;%Horizontal position of the bottom X point
+xpoint(7) = 22.46;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
+xpoint(8) = 67.92;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
 %
-helmex77param.npsi_guess = 201;%For initial profile calculations
-helmex77param.ntheta_guess = 201;%Number of poloidal positions for the guessed separatrix
-helmex77param.npsi = 101;%ONLY 101 radial profile grid points for HELMEX77
-helmex77param.ntheta = 65;%ONLY 65 poloidal grid points for HELMEX77
+npsi = 101;%ONLY 101 radial profile grid points for HELMEX77
+ntheta = 65;%ONLY 65 poloidal grid points for HELMEX77
 %
-helmex77param.Ip = 2;%  Plasma current (MA)  
+Ip = 2;%  Plasma current (MA)  
 %
-helmex77param.qmin = 1;%  Safety factor q0 at plasma center
-helmex77param.eq = 3;%  Exponent for q radial profile (q = (qmax - qmin)*(r/a).^eq + qmin, qmax calaculated by the Ampere's theorem at the plasma edge with a circular plasma cross-section)
-helmex77param.qopt = 1;%Option for q profile. (0): constant (default, uniform current, psi=rho^2), (1): from qmin and eq 
+qmin = 1;%  Safety factor q0 at plasma center
+eq = 3;%  Exponent for q radial profile (q = (qmax - qmin)*(r/a).^eq + qmin, qmax calaculated by the Ampere's theorem at the plasma edge with a circular plasma cross-section)
+qopt = 1;%Option for q profile. (0): constant (default, uniform current, psi=rho^2), (1): from qmin and eq 
 %
-helmex77param.Bt = 3.5;%  Toroidal magnetic field on the magnetic axis (T) 
+Bt = 3.5;%  Toroidal magnetic field on the magnetic axis (T) 
 %
-helmex77param.Zi =  [1,1,1,6];%  Ion types: (1) H/D/T, (2) He, ..., (6) C [1,p] (WARNING: Zi must be [1,1,1,imp1,imp2] for hydrogen plasmas)
-helmex77param.mi =  [1,2,3,12];%  Ion mass (uma) [1,p] (WARNING: Zi must be [1,2,3,mimp1,mimp2] for hydrogen plasmas)
-helmex77param.fi =  [0,1,0];%  Hydrogen isotopic fraction (H/D/T) [1,3] (WARNING: only used when hydrogen plasmas are considered)
+% Kinetic parameters (profiles)
 %
-helmex77param.Te0 = 5;%  Core electron temperature (keV)
-helmex77param.dTea = 0.1;%  Edge electron temperature parameter
-helmex77param.eTe1 = 2;%  Exponent #1 for Te profile 
-helmex77param.eTe2 = 2;%  Exponent #1 for Te profile 
+Zi =  [1,1,1,6];%  Ion types: (1) H/D/T, (2) He, ..., (6) C [1,p] (WARNING: Zi must be [1,1,1,imp1,imp2] for hydrogen plasmas)
+mi =  [1,2,3,12];%  Ion mass (uma) [1,p] (WARNING: Zi must be [1,2,3,mimp1,mimp2] for hydrogen plasmas)
+fi =  [0,1,0];%  Hydrogen isotopic fraction (H/D/T) [1,3] (WARNING: only used when hydrogen plasmas are considered)
 %
-helmex77param.ne0 = 2.0e19;%  Core electron density (m-3)
-helmex77param.dnea = 0.01;%  Edge electron density parameter
-helmex77param.ene1 = 2;%  Exponent #1 for ne profile 
-helmex77param.ene2 = 0.5;%  Exponent #2 for ne profile
+Te0 = 5;%  Core electron temperature (keV)
+Tea = 0.5;%  Edge electron temperature (keV)
+eTe1 = 2;%  Exponent #1 for Te profile 
+eTe2 = 2;%  Exponent #1 for Te profile 
 %
-helmex77param.Ti0 = 2;%  Core ion temperature (keV)
-helmex77param.dTia = 0.1;%  Edge ion temperature (keV)
-helmex77param.eTi1 = 2;%  Exponent #1 for Ti profile
-helmex77param.eTi2 = 2;%  Exponent #1 for Ti profile
+ne0 = 2.0e19;%  Core electron density (m-3)
+nea = 2.0e17;%  Edge electron density (m-3)
+ene1 = 2;%  Exponent #1 for ne profile 
+ene2 = 0.5;%  Exponent #2 for ne profile
 %
-helmex77param.Zeff0 = 1.5;%  Core effective charge (a.u.)
-helmex77param.Zeffa = 1.5;%  Edge effective charge (a.u.)
-helmex77param.eZeff = 0;%  Define the slope at the radial point where the derivative is maximum (must be >> 1)
-helmex77param.xZeff = 0.5;%Radial normalized position at which the derivative is maximum
+Ti0 = 2;%  Core ion temperature (keV)
+Tia = 0.2;%  Edge ion temperature (keV)
+eTi1 = 2;%  Exponent #1 for Ti profile
+eTi2 = 2;%  Exponent #1 for Ti profile
 %
-%**************************************************************************************************
+Zeff0 = 1.5;%  Core effective charge (a.u.)
+Zeffa = 1.5;%  Edge effective charge (a.u.)
+eZeff = 0;%  Define the slope at the radial point where the derivative is maximum (must be >> 1)
+xZeff = 0.5;%Radial normalized position at which the derivative is maximum
 %
+% Initial calculations to set up the guess for HELMEX77 (cylindrical magnetic equilibrium with circular concentric flux surfaces)
 %
-[equil] = make_equil_helmex77_yp(helmex77param,1);
+% Magnetic data
 %
-eval(['save EQUIL_',helmex77param.id,'.mat equil']);
+[ppsi,theta,R,Z,BR,BZ,BPHI,pBp,pq,pj,pmag,Ip_test] = idealequilcyl_yp(ap,Rp,Zp,Bt,Ip,qmin,eq,qopt,npsi,ntheta);%Cylindrical magnetic equilibrium
+[prho,pTe,pne,pzTi,pzni,zZi,zmi,fi,pkin] = idealprof_yp(Zi,mi,fi,Te0,Tea,eTe1,eTe2,ne0,nea,ene1,ene2,Ti0,Tia,eTi1,eTi2,Zeff0,Zeffa,eZeff,xZeff,npsi);%Profiles
+%
+figure('Name','Guess magnetic equilibrium'),
+subplot(2,2,1),plot(prho,pj/1e6),xlabel('\rho');ylabel('j (MA/m^2)');title(['I_p = ',num2str(round(Ip_test)/1e6),' MA'])
+subplot(2,2,2),plot(prho,pBp),xlabel('\rho');ylabel('B_p(T)');title(['B_t ',num2str(Bt),' T'])
+subplot(2,2,3),plot(prho,pq),xlabel('\rho');ylabel('q')
+subplot(2,2,4),plot(prho,ppsi/ppsi(end)),xlabel('\rho');ylabel('\psi_n')
+%
+[equil_magnetic,prho_out,pspsin_out,pspsinT_out,pp_out] = equil_magnetic_helmex77_yp(ap,Rp,Zp,xpoint,Bt,Ip,ppsi,pj,pkin,ntheta,1);
+%
+[qe] = pc_dke_yp;
+figure('Name','Pressure profile'),
+subplot(121),plot(prho,pmag*qe*1000/100000),xlabel('\rho');ylabel('pressure (Bar)');title(['Guess magnetic']),axis('square')
+subplot(122),plot(prho,pkin*qe*1000/100000,'b',prho_out,pp_out*qe*1000/100000,'r--'),xlabel('\rho');ylabel('pressure (Bar)');legend('Guess kinetic','HELENA'),axis('square')
+%
+equil_prof.pTe = pTe;
+equil_prof.pne = pne;
+equil_prof.pzTi = pzTi;
+equil_prof.pzni = pzni;
+equil_prof.zZi = zZi;
+equil_prof.zmi = zmi;
+%
+equil = conc_struct_jd(equil_magnetic,equil_prof);
+equil.id = id;
+%
+eval(['save EQUIL_',id,'.mat equil']);
+
+
+
 
 
 
