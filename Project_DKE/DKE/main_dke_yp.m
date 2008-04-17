@@ -22,6 +22,11 @@ end
 format long e;
 global nfig;
 %
+% set temp path
+%
+dkepath.temppath = [dkepath.temppathroot,timeid_jd(clock)];
+mkdir(dkepath.temppath);%Create calculation directory
+%
 [dkeparam_out] = paramconsistency_dke_yp(dkeparam_in,equil,psin_S,rho_S);%Check consistency between input parameters 
 %
 if dkeparam_in.opt_load*exist(['temp',filesep,'DKE_TEMP_',id_simul,'.mat']),
@@ -374,6 +379,8 @@ gridDKE = selectfields_jd(gridDKE,savefields_gridDKE);
 Zmomcoef = selectfields_jd(Zmomcoef,savefields_Zmomcoef);
 Zbouncecoef = selectfields_jd(Zbouncecoef,savefields_Zbouncecoef);
 Zmripple = selectfields_jd(Zmripple,savefields_Zmripple);
+%
+rmdir(dkepath.temppath);%Remove calculation directory
 %
 if nargout >= 1,varargout{1} = Znorm;end
 if nargout >= 2,varargout{2} = Zcurr;end

@@ -110,11 +110,6 @@ if exist('flag_path','var'),%Paths
         end
     end
     %
-    % set temp path
-    %
-    dkepath.temppath = [dkepath.temppathroot,timeid_jd(clock)];
-	mkdir(dkepath.temppath);%Create calculation directory
-    %
     % dynamic compilation of MEX files
     %
     if ~strcmp(dkepath.path_id,'LOCAL'),
