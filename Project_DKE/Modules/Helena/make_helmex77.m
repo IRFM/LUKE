@@ -1,4 +1,4 @@
-function [equil_magnetic,prho_out,pspsin_out,pspsinT_out,pp_out] = make_helmex77(shotnum,shotime,basestr)
+function [equil_magnetic,prho_out,pspsin_out,pspsinT_out,pp_out] = make_helmex77(shotnum,shotime,t1,t2,basestr,savename)
 %
 %   Create a magnetic equilibrium structure for C3PO/LUKE using HELENA code
 %   (mex file version)
@@ -19,9 +19,7 @@ if strcmp(basestr,'TS'),
     xpoint(7) = 0;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
     xpoint(8) = 0;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
     %
-    [ap,Rp,Zp,Bt,Ip,qmin,eq,qopt,Zi,mi,fi,Te0,Tea,eTe1,eTe2,ne0,nea,ene1,ene2,Ti0,Tia,eTi1,eTi2,Zeff0,Zeffa,eZeff,xZeff] = load_tprof_tsbase_yp(shotnum,shotime);
-    %
-    % For the magnetic equilibrium guess
+    [ap,Rp,Zp,Bt,Ip,qmin,eq,qopt,Zi,mi,fi,Te0,Tea,eTe1,eTe2,ne0,nea,ene1,ene2,Ti0,Tia,eTi1,eTi2,Zeff0,Zeffa,eZeff,xZeff] = load_tprof_tsbase_yp(str2num(shotnum),str2num(shotime),t1,t2);
     %
 else
     disp('The use of HELENA (helmex77) is not yet implemented for this machine.');
@@ -31,6 +29,9 @@ end
 % Create guess magnetic equilibrium
 %
 [prho,pTe,pne,pzTi,pzni,zZi,zmi,fi,pkin] = idealprof_yp(Zi,mi,fi,Te0,Tea,eTe1,eTe2,ne0,nea,ene1,ene2,Ti0,Tia,eTi1,eTi2,Zeff0,Zeffa,eZeff,xZeff,npsi);%Profiles
+%
+save(savename,'prho','pne','pTe','pzTi','pzni','zZi','zmi','fi');
+%
 [ppsin,ppsi_apRp,theta,x,y,Bx,By,BPHI,pBpp,pq_Rpap,pj,pmag,Ip_test] = idealequilcyl_yp(ap,Rp,Zp,Bt,Ip,qmin*Rp/ap,eq,qopt,npsi,ntheta);%Cylindrical magnetic equilibrium
 %
 [equil_magnetic,prho_out,pspsin_out,pspsinT_out,pp_out] = equil_magnetic_helmex77_yp(ap,Rp,Zp,xpoint,Bt,Ip,ppsi_apRp*Rp/ap,pj,pkin,ntheta,0);
