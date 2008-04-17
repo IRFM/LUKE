@@ -17,7 +17,7 @@ l_data = '';
 %
 if ~isempty(data),
     %
-    ishot = find(data.shot == str2int(shotnum));
+    ishot = find(data.shot == str2num(shotnum));
     %
     if isempty(ishot),
         disp(['-----> launching data not found for shot :',shotnum]);

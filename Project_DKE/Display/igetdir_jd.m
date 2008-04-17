@@ -3,6 +3,7 @@ function [selectpath] = igetdir_jd(opt_gui,message,presel);
 if opt_gui == 1,
     %
     selectpath = uigetdir(presel,message);
+    selectpath = [selectpath,'/'];
     %
 else
     %

@@ -13,7 +13,7 @@ end
 %
 if o_opt == 0,% ohm from VLOOP
     %
-    i_opt = input('Option for vloop value : 0 (from launching data), 1 (specify value) [0]');
+    i_opt = input('Option for vloop value : 0 (from data file), 1 (specify value) [0]');
     %
     if isempty(i_opt),
         i_opt = 0;
