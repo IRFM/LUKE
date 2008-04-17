@@ -219,11 +219,13 @@ if w_opt == 0,% wave from C3PO calculations
         return
     end
     %
-    kmode = input('Plasma model for wave propagation : (0:cold, 1:warm, 2:hot, 3:weakly relativistic, 4:fully relativistic) [0] :');
+    %kmode = input('Plasma model for wave propagation : (0:cold, 1:warm, 2:kinetic non rel., 3:weakly rel., 4:fully rel.) [0] :');
+    kmode = input('Plasma model for wave propagation : (0:cold, 1:kinetic) [0] :')*2;
     if isempty(kmode),
         kmode = 0;
     end
-    if ~isnumeric(kmode) | ~any(kmode == [0:4]),
+%    if ~isnumeric(kmode) | ~any(kmode == [0:4]),
+    if ~isnumeric(kmode) | ~any(kmode == [0,2]),
         disp('-----> Invalid plasma model option');
         return
     end
@@ -270,6 +272,8 @@ if w_opt == 0,% wave from C3PO calculations
     waveparam.dsmin = dsmin;
     waveparam.nd = nd;
     waveparam.nchi = nchi;
+    %
+    rayparam.tensortype = kmode;
     %
     n_rf_list = [0:3];
     %
