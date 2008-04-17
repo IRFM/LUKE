@@ -1,7 +1,11 @@
-function irunluke_jd(basestr,signs)
+function irunluke_jd(basestr,signs,opt_gui)
 %
 % This script interactively loads the equilibrium, profiles and launching data, and runs LUKE with
 % either C3PO, TORAY or ART ray-tracing data.
+%
+if nargin < 3,
+    opt_gui = 1;
+end
 %
 if nargin < 2,
     signs = '';
@@ -226,7 +230,7 @@ while isel >= 0,
             disp('************** LOAD DATA FILE **************')
             disp('');
             %
-            [data_file,data_path] = uigetfile({'LUKE_DATA_*.mat';'LUKE_RESULTS_*.mat'},'Please select a LUKE data file');
+            [data_file,data_path] = igetfile_jd(opt_gui,{'LUKE_DATA_*.mat';'LUKE_RESULTS_*.mat'},'Please select a LUKE data file');
             %
             if data_file == 0,
                 disp('-----> No LUKE data file specified.');
@@ -318,7 +322,7 @@ while isel >= 0,
             sd = pwd;
             cd(workdir);
             %
-            [data_file,data_path] = uiputfile('LUKE_DATA_*.mat','Please provide select a LUKE data file name',[workdir,'LUKE_DATA_',id_simul_o,'.mat']);
+            [data_file,data_path] = iputfile_jd(opt_gui,'LUKE_DATA_*.mat','Please provide select a LUKE data file name',[workdir,'LUKE_DATA_',id_simul_o,'.mat']);
             %
             if data_file == 0,
                 disp('-----> No LUKE data file specified.');
@@ -350,12 +354,11 @@ while isel >= 0,
             disp(' ');
             disp('************** WORK DIRECTORY **************')
             disp(' ');
-            newworkdir = uigetdir(workdir,'Please select the work directory'); 
+            newworkdir = igetdir_jd(opt_gui,'Please select the work directory',workdir); 
             %
             if newworkdir == 0,
                 disp('-----> No work directory specified.');
             else
-                newworkdir = [newworkdir,'/'];
                 %
                 if ~strcmp(newworkdir,workdir) 
                     disp(['-----> The working directory is : ',newworkdir]);
@@ -378,16 +381,20 @@ while isel >= 0,
             id_dkepath = 'LOCAL';%For all paths used by DKE solver
             dkepath_file = which('PATH_LOCAL.mat');%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
             %
-            [dkepath_file,dkepath_path] = uigetfile('*.mat','Please select the PATH file containing dkepath',dkepath_file);
+            [dkepath_file,dkepath_path] = igetfile_jd(opt_gui,'PATH_*.mat','Please select the PATH file containing dkepath',dkepath_file);
             if dkepath_file == 0,
-                dkepath_path = '';;
+                disp('-----> No LUKE PATH file specified.')
+            else
+                %
+                id_dkepath = dkepath_file(6:end-4);
+                %
+                dkepath = load_structures_yp('dkepath',id_dkepath,dkepath_path);
+                %
+                status.output = 0;
+                status.dkepath = 1;
+                status.data = 2;
+                %                
             end
-            %
-            dkepath = load_structures_yp('dkepath',id_dkepath,dkepath_path);
-            %
-            status.output = 0;
-            status.dkepath = 1;
-            status.data = 2;
             %
         elseif isel == 5,
             %
@@ -416,7 +423,7 @@ while isel >= 0,
                 dkeparam_file = which(dkeparam_file);    
             end
             %
-            [dkeparam_file,dkeparam_path] = uigetfile('DKEPARAM_*.mat',['Please select the dkeparam default parameters file'],dkeparam_file);
+            [dkeparam_file,dkeparam_path] = igetfile_jd(opt_gui,'DKEPARAM_*.mat',['Please select the dkeparam default parameters file'],dkeparam_file);
             %
             if dkeparam_file == 0,
                 disp('-----> No LUKE parameters structure specified.')
@@ -459,7 +466,7 @@ while isel >= 0,
                     if strcmp(s_opt,'y'),
                         sd = pwd;
                         cd(workdir);
-                        [save_file,save_path] = uiputfile(['DKEPARAM_',param_id,'*.mat'],'Please provide the DKEPARAM file name',['DKEPARAM_',param_id,'.mat']);
+                        [save_file,save_path] = iputfile_jd(opt_gui,['DKEPARAM_',param_id,'*.mat'],'Please provide the DKEPARAM file name',['DKEPARAM_',param_id,'.mat']);
                         %
                         if save_file == 0,
                             disp('-----> No file name specified, dkeparam structure not saved.')
@@ -491,7 +498,7 @@ while isel >= 0,
             %
             l_opt = input('Do you want to load an existing LUKE equilibrium (y/n)? [n] : ','s');
             if strcmp(l_opt,'y'),
-                [equil_file,equil_path] = uigetfile('EQUIL_*.mat','Please select the EQUIL file',workdir);
+                [equil_file,equil_path] = igetfile_jd(opt_gui,'EQUIL_*.mat','Please select the EQUIL file',workdir);
                 %
                 if equil_file == 0,
                     disp('-----> No equilibrium structure specified.')
@@ -505,7 +512,7 @@ while isel >= 0,
                 end  
                 %
             else
-                equil = imake_equil_jd(workdir,basestr,signs);
+                equil = imake_equil_jd(workdir,basestr,signs,opt_gui);
                 %
                 if ~isempty(equil),
                     %
@@ -515,7 +522,7 @@ while isel >= 0,
                     if strcmp(e_opt,'y'),
                         sd = pwd;
                         cd(workdir);
-                        [equil_file,equil_path] = uiputfile('EQUIL_*.mat','Please provide the EQUIL file name',['EQUIL_',equil.id,'.mat']);
+                        [equil_file,equil_path] = iputfile_jd(opt_gui,'EQUIL_*.mat','Please provide the EQUIL file name',['EQUIL_',equil.id,'.mat']);
                         %
                         if equil_file == 0,
                             disp('-----> No file name specified, equilibrium structure not saved.')
@@ -591,7 +598,7 @@ while isel >= 0,
             l_opt = input('Do you want to load existing WAVE structures (y/n)? [n] : ','s');
             if strcmp(l_opt,'y'),
                 %
-                [wave_file,wave_path] = uigetfile(['WAVE_',equil.id,'_*.mat'],'Please select the WAVE files',workdir,'MultiSelect','on');
+                [wave_file,wave_path] = igetfile_jd(opt_gui,['WAVE_',equil.id,'_*.mat'],'Please select the WAVE files',workdir,1);
                 %
                 if ~iscell(wave_file) & wave_file == 0,
                     disp('-----> No wave structure specified.')
@@ -619,7 +626,7 @@ while isel >= 0,
                 %             graph_wave_jd();
                 %         end
                         %
-                        [wave_file,wave_path] = uigetfile(['WAVE_',equil.id,'_*.mat'],'Load additional WAVE files (cancel if finished)',workdir,'MultiSelect','on');
+                        [wave_file,wave_path] = igetfile_jd(opt_gui,['WAVE_',equil.id,'_*.mat'],'Load additional WAVE files (cancel if finished)',workdir,1);
                         %
                     end
                 end
@@ -632,7 +639,7 @@ while isel >= 0,
             %
             while strcmp(l_opt,'y'),
                 %
-                wave = imake_wave_jd(workdir,basestr,equil);
+                wave = imake_wave_jd(workdir,basestr,equil,opt_gui);
                 %
                 if isempty(wave),
                     disp('-----> Current wave structure construction aborted')
@@ -650,7 +657,7 @@ while isel >= 0,
                 if strcmp(w_opt,'y'),
                     sd = pwd;
                     cd(workdir);
-                    [wave_file,wave_path] = uiputfile(['WAVE_',equil.id,'*.mat'],'Please provide the WAVE file name',['WAVE_',equil.id,'_',wave.id,'.mat']);
+                    [wave_file,wave_path] = iputfile_jd(opt_gui,['WAVE_',equil.id,'*.mat'],'Please provide the WAVE file name',['WAVE_',equil.id,'_',wave.id,'.mat']);
                     %
                     if wave_file == 0,
                         disp('-----> No file name specified, wave structure not saved.')
@@ -703,7 +710,7 @@ while isel >= 0,
             %
             if strcmp(o_opt,'y'),
                 %
-                [ohm_file,ohm_path] = uigetfile(['OHM_',equil.id,'_*.mat'],'Please select the OHM file',workdir);
+                [ohm_file,ohm_path] = igetfile_jd(opt_gui,['OHM_',equil.id,'_*.mat'],'Please select the OHM file',workdir);
                 %
                 if ohm_file == 0,
                     disp('-----> No ohm structure specified.')
@@ -733,7 +740,7 @@ while isel >= 0,
                         if strcmp(o_opt,'y'),
                             sd = pwd;
                             cd(workdir);
-                            [ohm_file,ohm_path] = uiputfile(['OHM_',equil.id,'*.mat'],'Please provide the OHM file name',['OHM_',equil.id,'_',ohm.id,'.mat']);
+                            [ohm_file,ohm_path] = iputfile_jd(opt_gui,['OHM_',equil.id,'*.mat'],'Please provide the OHM file name',['OHM_',equil.id,'_',ohm.id,'.mat']);
                             %
                             if ohm_file == 0,
                                 disp('-----> No file name specified, ohm structure not saved.')
@@ -784,7 +791,7 @@ while isel >= 0,
             t_opt = input('Do you want to load an existing TRANSP structures (y/n)? [n] : ','s');
             if strcmp(t_opt,'y'),
                 %
-                [transp_file,transp_path] = uigetfile(['TRANSP_',equil.id,'_*.mat'],'Please select the TRANSP file',workdir);
+                [transp_file,transp_path] = igetfile_jd(opt_gui,['TRANSP_',equil.id,'_*.mat'],'Please select the TRANSP file',workdir);
                 %
                 if transp_file == 0,
                     disp('-----> No transp structure specified.')
@@ -815,7 +822,7 @@ while isel >= 0,
                         if strcmp(t_opt,'y'),
                             sd = pwd;
                             cd(workdir);
-                            [transp_file,transp_path] = uiputfile(['TRANSP_',equil.id,'*.mat'],'Please provide the OHM file name',['TRANSP_',equil.id,'_',transpfaste.id,'.mat']);
+                            [transp_file,transp_path] = iputfile_jd(opt_gui,['TRANSP_',equil.id,'*.mat'],'Please provide the OHM file name',['TRANSP_',equil.id,'_',transpfaste.id,'.mat']);
                             %
                             if transp_file == 0,
                                 disp('-----> No file name specified, transpfaste structure not saved.')

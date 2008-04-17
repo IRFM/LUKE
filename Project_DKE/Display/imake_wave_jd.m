@@ -1,6 +1,10 @@
-function wave = imake_wave_jd(workdir,basestr,equil)
+function wave = imake_wave_jd(workdir,basestr,equil,opt_gui)
 %
 % This function interactively builds the wave structure
+%
+if nargin < 4,
+    opt_gui = 1;
+end
 %
 wave = '';
 %
@@ -114,7 +118,7 @@ if w_opt == 0,% wave from C3PO calculations
         if strcmp(r_opt,'y'),
             sd = pwd;
             cd(workdir);
-            [rayinit_file,rayinit_path] = uiputfile(['RAYINIT_',equil.id,'*.mat'],'Please provide the RAYINIT file name',['RAYINIT_',equil.id,'_',rayinit.id,'.mat']);
+            [rayinit_file,rayinit_path] = iputfile_jd(opt_gui,['RAYINIT_',equil.id,'*.mat'],'Please provide the RAYINIT file name',['RAYINIT_',equil.id,'_',rayinit.id,'.mat']);
             %
             if rayinit_file == 0,
                 disp('-----> No file name specified, rayinit structure not saved.')
@@ -127,7 +131,7 @@ if w_opt == 0,% wave from C3PO calculations
         %
     elseif i_opt == 1,%initial conditions from an existing RAYINIT file 
         %
-        [rayinit_file,rayinit_path] = uigetfile(['RAYINIT_',equil.id,'_*.mat'],'Please select the RAYINIT file ',workdir);
+        [rayinit_file,rayinit_path] = igetfile_jd(opt_gui,['RAYINIT_',equil.id,'_*.mat'],'Please select the RAYINIT file ',workdir);
         %
         if rayinit_file == 0,
             return
@@ -149,7 +153,7 @@ if w_opt == 0,% wave from C3PO calculations
     % RAY, WAVE, AND DISPLAY PARAMETERS
     %
     c3poparam_file = which('C3POPARAM.mat');
-    [c3poparam_file,c3poparam_path] = uigetfile('*.*',['Please select the C3PO default parameters file'],c3poparam_file);
+    [c3poparam_file,c3poparam_path] = igetfile_jd(opt_gui,'*.*',['Please select the C3PO default parameters file'],c3poparam_file);
     if c3poparam_file == 0,
         return
     end

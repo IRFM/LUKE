@@ -1,6 +1,10 @@
-function equil = imake_equil_jd(workdir,basestr,signs)
+function equil = imake_equil_jd(workdir,basestr,signs,opt_gui)
 %
 % This function interactively builds the equilibrium structure
+%
+if nargin < 4,
+	opt_gui = 1;
+end
 %
 if nargin < 3,
 	signs = '';
@@ -15,7 +19,6 @@ eqdsk_opt = 0;
 %
 n_opt = input_dke_yp('Load existing (0) or built new (1) magnetic equilibrium : ',1,{0,1},'Invalid selection');
 %
-%
 if n_opt == 0, % Load existing equilibrium
     %
 	e_opt = input_dke_yp('Format of the magnetic equilibrium data, 0 (eqdsk), 1 (itm): ',0,{0,1},'Invalid option');
@@ -25,7 +28,8 @@ if n_opt == 0, % Load existing equilibrium
         % EQSDK file
         % 
         eqdsk_opt = 1;
-        [eqdsk_file,eqdsk_path] = uigetfile({'eqdsk*.*';'EQDSK*.*';'*.*'},'Please select the EQDSK file');
+		%
+        [eqdsk_file,eqdsk_path] = igetfile_jd(opt_gui,{'eqdsk*.*';'EQDSK*.*';'*.*'},'Please select the EQDSK file',workdir);
         %
         if eqdsk_file == 0,
             return
@@ -57,13 +61,13 @@ if n_opt == 0, % Load existing equilibrium
         %
     elseif e_opt == 1,% load ITM
         %
-        disp('Not yet implemented.')
+        disp('ITM equilibrium loading not yet implemented.')
         return
     end
 elseif n_opt == 1,
-%
+	%
 	e_opt = input_dke_yp('Select magnetic equilibrium solver, 0 (liuque), 1 (helena): ',0,{0,1},'Invalid option');
-%
+	%
     if e_opt == 0,% LIUQUE
         %
         eqdsk_opt = 1;
@@ -94,7 +98,7 @@ elseif n_opt == 1,
         eqdsk_file = ['eqdsk.',shotnum,'t',shotime];
         %
     elseif e_opt == 1, % HELENA Equilibrium 
-%  
+		%  
         shotnum = input(['Please provide the shot number : '],'s');
         if isempty(shotnum),
             return
@@ -106,7 +110,7 @@ elseif n_opt == 1,
         end
         %
         shotime = num2str(shotime,'%6.4f');
-    %
+    	%
         [equil_magnetic,mrho,mspsin,mspsinT,mp_magnetic] = make_helmex77(str2num(shotnum),str2num(shotime),basestr);%call HELENA (helmex77)
     end
 end
@@ -160,7 +164,7 @@ if strcmp(basestr,'TCV'),% TCV profile data
 		%
 		if n_opt == 0,% profiles from data file
 			%
-			[data_file,data_path] = uigetfile('*.*',['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],eqdsk_path);
+			[data_file,data_path] = igetfile_jd(opt_gui,'*.*',['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],eqdsk_path);
 			%
 			if data_file == 0,
 				return
@@ -203,7 +207,7 @@ if strcmp(basestr,'TCV'),% TCV profile data
 			%
 		elseif n_opt == 2,% profiles from ART output
 			%
-			[data_file,data_path] = uigetfile('*.*',['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],eqdsk_path);
+			[data_file,data_path] = igetfile_jd(opt_gui,'*.*',['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],eqdsk_path);
 			%
 			if data_file == 0,
 				return
@@ -270,15 +274,13 @@ if strcmp(basestr,'TCV'),% TCV profile data
 		%
 	elseif n_opt == 3,
 		%
-		[data_file,data_path] = uigetfile('*.*',['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],eqdsk_path);
+		[data_file,data_path] = igetfile_jd(opt_gui,'*.*',['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],eqdsk_path);
 		%
 		if data_file == 0,
 			return
 		end
 		%
 		profname = [data_path,data_file];
-        %
-    elseif n_opt == 4,% profiles from TS database	
 		%
 	end
 	%
@@ -287,7 +289,7 @@ elseif strcmp(basestr,'ITER'),% ITER Astra profile data
     profname = [id_equil,'.prof'];
     type = 0.2;
     %
-    [data_file,data_path] = uigetfile(profname,['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],eqdsk_path);
+    [data_file,data_path] = igetfile_jd(profname,['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],eqdsk_path);
     %
     profname = [data_path,data_file];
     %
@@ -296,19 +298,16 @@ elseif strcmp(basestr,'ITER'),% ITER Astra profile data
     end
     %
 elseif strcmp(basestr,'TS'),% TS profile data
-%
-
-
-
-
+	%
+	disp('profiles from TS database not yet implemented.')
+    return
+	%
 else
     %
     disp(['-----> profiles data not implemented yet for :',basestr]);
     return    
     %
 end
-%
-%
 %
 equil_prof = equil_prof_jd(profname,type,mrho,mspsin,mspsinT,display_mode,p_opt,dispname,savename,Zeff);
 delete(profname);
