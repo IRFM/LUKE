@@ -129,7 +129,7 @@ sigma = -sign(phic_xyz(1));
 %
 % Normalization
 %
-if kmode == 1,
+if kmode == 2,
     sa = sZ.^2.*sxn./sm/e0/xomega^2;
     sy = sZ*xB./sm/xomega;
     sbeta = sqrt(qe*sxT./sm/clum^2);
