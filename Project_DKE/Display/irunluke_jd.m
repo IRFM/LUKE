@@ -288,11 +288,17 @@ while isel >= 0,
 					%
 					if isfield(data,'ohm'),
 						ohm = data.ohm;
+                        if ~isfield(ohm,'id'),
+                            ohm.id = 'OHM';
+                        end
 						status.ohm = 1;
 					end
 					%
 					if isfield(data,'transpfaste'),
 						transpfaste = data.transpfaste;
+                        if ~isfield(transpfaste,'id'),
+                            transpfaste.id = 'TRANSP';
+                        end
 						status.transpfaste = 1;
 					end
 					%
@@ -406,78 +412,99 @@ while isel >= 0,
             %
             newpar = 0;
             %
-            if status.equil == 1;
-                param_id = equil.id;
+            if status.dkeparam == 1,
+                m_opt = input('Do you want to: (0) see/modify LUKE parameters (1) load new parameters [0]: ');
+                %
+                if isempty(m_opt);
+                    m_opt = 0;
+                elseif ~isnumeric(m_opt) | ~any(m_opt == [0,1]),
+                    disp('-----> Invalid option.');
+                    continue
+                end
             else
-                param_id = basestr;
+                m_opt = 1;
             end
             %
-            if exist([workdir,'/DKEPARAM_',param_id,'.mat']),
-                dkeparam_file = [workdir,'/DKEPARAM_',param_id,'.mat'];
-            else
-                if strcmp(basestr,'TCV'),
-                    dkeparam_file = 'DKEPARAM_EC_RT.mat';
+            if m_opt == 1,
+                %
+                if status.equil == 1;
+                    param_id = equil.id;
                 else
-                    dkeparam_file = 'DKEPARAM_LH_RT.mat';
-                end
-                dkeparam_file = which(dkeparam_file);    
-            end
-            %
-            [dkeparam_file,dkeparam_path] = igetfile_jd(opt_gui,'DKEPARAM_*.mat',['Please select the dkeparam default parameters file'],dkeparam_file);
-            %
-            if dkeparam_file == 0,
-                disp('-----> No LUKE parameters structure specified.')
-            else
-                %
-                load([dkeparam_path,dkeparam_file],'dkeparam');
-                disp('-----> The dkeparam structure is loaded')
-                %
-                newpar = 1;
-                %
-                if ~isfield(dkeparam,'rho_S'),
-                    dkeparam.rho_S = 20;
+                    param_id = basestr;
                 end
                 %
-                c_opt = input('Do you want to see/modify the LUKE parameters (y/n)? [n] : ','s');
-                if strcmp(c_opt,'y'),
-                    dkeparam,
+                if exist([workdir,'/DKEPARAM_',param_id,'.mat']),
+                    dkeparam_file = [workdir,'/DKEPARAM_',param_id,'.mat'];
+                else
+                    if strcmp(basestr,'TCV'),
+                        dkeparam_file = 'DKEPARAM_EC_RT.mat';
+                    else
+                        dkeparam_file = 'DKEPARAM_LH_RT.mat';
+                    end
+                    dkeparam_file = which(dkeparam_file);    
+                end
+                %
+                [dkeparam_file,dkeparam_path] = igetfile_jd(opt_gui,'DKEPARAM_*.mat',['Please select the dkeparam default parameters file'],dkeparam_file);
+                %
+                if dkeparam_file == 0,
+                    disp('-----> No LUKE parameters structure specified.')
+                else
                     %
-                    fname = input('Name of dkeparam field to modify (press enter if finished): ','s');
-                    while fname ~= 0,
-                        %
-                        if isfield(dkeparam,fname),
-                            eval(['f_val_o = dkeparam.',fname,';']);
-                            if isnumeric(f_val_o),
-                                f_val_o_s = num2str(f_val_o);
-                            else
-                                f_val_o_s =f_val_o;
-                            end
-                            f_val = input(['Provide value for field ',fname,' [',f_val_o_s,'] : ']);
-                            if isempty(f_val),
-                                f_val = f_val_o;
-                            end
-                            eval(['dkeparam.',fname,' = f_val;']);
-                        end
-                        %
-                        fname = input('Name of dkeparam field to modify (press enter if finished): ','s');
+                    load([dkeparam_path,dkeparam_file],'dkeparam');
+                    disp('-----> The dkeparam structure is loaded')
+                    %
+                    newpar = 1;
+                    %
+                    if ~isfield(dkeparam,'rho_S'),
+                        dkeparam.rho_S = 20;
                     end
                     %
-                    s_opt = input('Do you want to save the dkeparam structure separately (y/n)? [n] : ','s');
-                    if strcmp(s_opt,'y'),
-                        sd = pwd;
-                        cd(workdir);
-                        [save_file,save_path] = iputfile_jd(opt_gui,['DKEPARAM_',param_id,'*.mat'],'Please provide the DKEPARAM file name',['DKEPARAM_',param_id,'.mat']);
-                        %
-                        if save_file == 0,
-                            disp('-----> No file name specified, dkeparam structure not saved.')
-                        else
-                            save([save_path,save_file],'dkeparam');
-                            disp('-----> The dkeparam structure is saved')
-                        end
-                        cd(sd);
-                    end 
+                    c_opt = input('Do you want to see/modify the LUKE parameters (y/n)? [n] : ','s');
                     %
+                    if strcmp(c_opt,'y'),
+                        m_opt = 0;
+                    end
                 end
+            end
+            %
+            if m_opt == 0,
+                dkeparam,
+                %
+                fname = input('Name of dkeparam field to modify (press enter if finished): ','s');
+                while fname ~= 0,
+                    %
+                    if isfield(dkeparam,fname),
+                        eval(['f_val_o = dkeparam.',fname,';']);
+                        if isnumeric(f_val_o),
+                            f_val_o_s = num2str(f_val_o);
+                        else
+                            f_val_o_s =f_val_o;
+                        end
+                        f_val = input(['Provide value for field ',fname,' [',f_val_o_s,'] : ']);
+                        if ~isempty(f_val),
+                            newpar = 1;
+                            eval(['dkeparam.',fname,' = f_val;']);
+                        end
+                    end
+                    %
+                    fname = input('Name of dkeparam field to modify (press enter if finished): ','s');
+                end
+                %
+                s_opt = input('Do you want to save the dkeparam structure separately (y/n)? [n] : ','s');
+                if strcmp(s_opt,'y'),
+                    sd = pwd;
+                    cd(workdir);
+                    [dkeparam_file,dkeparam_path] = iputfile_jd(opt_gui,['DKEPARAM_',param_id,'*.mat'],'Please provide the DKEPARAM file name',['DKEPARAM_',param_id,'.mat']);
+                    %
+                    if dkeparam_file == 0,
+                        disp('-----> No file name specified, dkeparam structure not saved.')
+                    else
+                        save([dkeparam_path,dkeparam_file],'dkeparam');
+                        disp('-----> The dkeparam structure is saved')
+                    end
+                    cd(sd);
+                end 
+                %
             end
             %
             if newpar == 1,
@@ -496,7 +523,7 @@ while isel >= 0,
             %
             neweq = 0;
             %
-            l_opt = input('Do you want to load an existing LUKE equilibrium (y/n)? [n] : ','s');
+            l_opt = input('Do you want to load an existing ''equil'' structure (y/n)? [n] : ','s');
             if strcmp(l_opt,'y'),
                 [equil_file,equil_path] = igetfile_jd(opt_gui,'EQUIL_*.mat','Please select the EQUIL file',workdir);
                 %
