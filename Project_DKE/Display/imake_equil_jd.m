@@ -109,9 +109,24 @@ elseif n_opt == 1,
             return
         end
         %
+        t1 = input('Averaging of profiles data, initial time : ');
+        if isempty(t1) | ~isnumeric(t1) ,
+            disp('-----> Invalid time');
+            return
+        end
+        %
+        t2 = input('Averaging of profiles data, final time : ');
+        if isempty(t1) | ~isnumeric(t1) ,
+            disp('-----> Invalid time');
+            return
+        end
+        %
         shotime = num2str(shotime,'%6.4f');
-    	%
-        [equil_magnetic,mrho,mspsin,mspsinT,mp_magnetic] = make_helmex77(str2num(shotnum),str2num(shotime),basestr);%call HELENA (helmex77)
+        %
+        data_path = [workdir,'/'];
+        data_file = ['data_',basestr,'_',shotnum,'_',num2str(t1),'_',num2str(t2),'.mat'];
+        %
+        [equil_magnetic,mrho,mspsin,mspsinT,mp_magnetic] = make_helmex77(shotnum,shotime,t1,t2,basestr,[data_path,data_file]);%call HELENA (helmex77)
     end
 end
 %
@@ -299,8 +314,7 @@ elseif strcmp(basestr,'ITER'),% ITER Astra profile data
     %
 elseif strcmp(basestr,'TS'),% TS profile data
 	%
-	disp('profiles from TS database not yet implemented.')
-    return
+	profname = [data_path,data_file];
 	%
 else
     %
@@ -310,7 +324,6 @@ else
 end
 %
 equil_prof = equil_prof_jd(profname,type,mrho,mspsin,mspsinT,display_mode,p_opt,dispname,savename,Zeff);
-delete(profname);
 %
 d_opt = input('Do you want to compare the pressure profiles? [y/n] : ','s');
 if strcmp(d_opt,'y'),
@@ -364,6 +377,7 @@ if e_opt == 0,
     equil.info.shotime = shotime;
 end
 if strcmp(basestr,'TCV'),
+    delete(profname);
     equil.info.data = [data_path,data_file];
     if n_opt < 2,
         equil.info.t1 = t1;
@@ -375,5 +389,6 @@ elseif strcmp(basestr,'ITER'),
 elseif strcmp(basestr,'TS'),
     equil.info.shotnum = shotnum;
     equil.info.shotime = shotime;
+    equil.info.data = [data_path,data_file];
 end
 %
