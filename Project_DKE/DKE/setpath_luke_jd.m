@@ -79,7 +79,13 @@ end
 %
 if nargin >= 2 & isstruct(dkepath), 
     if isfield(dkepath,'MUMPS') & isfield(dkepath.MUMPS,'mex'),
-        addpath(dkepath.MUMPS.mex);
+		matver = version;
+		matver = matver([1,3]);
+		if isfield(dkepath.MUMPS,['mex',matver]),
+			eval(['addpath(dkepath.MUMPS.mex',matver,')']);
+		else
+			addpath(dkepath.MUMPS.mex);
+		end
     end
     if isfield(dkepath,'SUPERLU') & isfield(dkepath.SUPERLU,'mex'),
         addpath(dkepath.SUPERLU.mex);
