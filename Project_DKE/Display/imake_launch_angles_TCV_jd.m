@@ -1,4 +1,4 @@
-function launch = make_launch_angles_TCV_jd(angles,P0);
+function launch = imake_launch_angles_TCV_jd(angles,P0);
 %
 % This function creates a launch structure based on the launched angles and
 % posision in TCV.
@@ -53,7 +53,9 @@ launch.yphi_L = yphi_L;
 launch.yalpha_L = yalpha_L;
 launch.ybeta_L = ybeta_L;
 %
-ny = 1;
+if isfield(angles,'freq'),
+    launch.omega_rf = angles.freq*2*pi;
+end
 %
-launch.yP_L = P0/ny*ones(1,ny);
+launch.yP_L = P0;
 %
