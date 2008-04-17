@@ -4,6 +4,8 @@ function  [ap,Rp,Zp,Bt,Ip,qmin,eq,qopt,Zi,mi,fi,Te0,Tea,eTe1,eTe2,ne0,nea,ene1,e
 %
 %   by Y. Peysson (CEA/DSM/IRFM,yves.peysson@cea.fr) and J. Decker (CEA/DSM/IRFM,joan.decker@cea.fr)
 %
+method = 'spline';
+%
 [tprof.ap,tprof.t] = tsbase(shotnum,'SPROFAMIN');%Plasma minor radius (m)
 [tprof.Rp,tprof.t] = tsbase(shotnum,'SPROFRMAJ');%Plasma major radius (m)
 [tprof.Zp,tprof.t] = tsbase(shotnum,'SPROFZPOS');%Plasma vertical position (m)
@@ -28,28 +30,35 @@ if isempty(tprof.Ti),
 end
 [tprof.ni,tprof.t,tprof.rho] = tsbase(shotnum,'GPROFNIFIT');%Ion density profile (m-3)
 %
-ap = interp_tprof_time(tprof,'ap',shotime,method);%Time interpolation
-Rp = interp_tprof_time(tprof,'Rp',shotime,method);%Time interpolation
-Zp = interp_tprof_time(tprof,'Zp',shotime,method);%Time interpolation
-%
-Bt = interp_tprof_time(tprof,'Bt',shotime,method);%Time interpolation
-Ip = interp_tprof_time(tprof,'Ip',shotime,method);%Time interpolation
-qpsi = interp_tprof_time(tprof,'qpsi',shotime,method);%Time interpolation
-%
-vloop = interp_tprof_time(tprof,'vloop',shotime,method);%Time interpolation
-Zeff = interp_tprof_time(tprof,'Zeff',shotime,method);%Time interpolation
-%
-Te = interp_tprof_time(tprof,'Te',shotime,method);%Time interpolation
-ne = interp_tprof_time(tprof,'ne',shotime,method);%Time interpolation
-ni = interp_tprof_time(tprof,'ni',shotime,method);%Time interpolation
-%
-[qmin,eq,qopt,chi2_q] = fit_q_profile_fxdrg(tprof.rho,qpsi,method);%Fit q-profile
-[Te0,Tea,eTe1,eTe2,chi2_Te] = fit_profile_fxdrg(tprof.rho,Te,method);%Fit Te profile
-[ne0,nea,ene1,ene2,chi2_ne] = fit_profile_fxdrg(tprof.rho,ne,method);%Fit ne profile
-[Ti0,Tia,eTi1,eTi2,chi2_Ti] = fit_profile_fxdrg(tprof.rho,Ti,method);%Fit Ti profile
-[ni0,nia,eni1,eni2,chi2_ni] = fit_profile_fxdrg(tprof.rho,ni,method);%Fit ni profile
-%
 % Build data for C3PO/LUKE
+%
+% Time interpolation
+%
+ap = interp_tprof_time_fxdrg(tprof.t,tprof.ap,shotime,method);%Time interpolation
+Rp = interp_tprof_time_fxdrg(tprof.t,tprof.Rp,shotime,method);%Time interpolation
+Zp = interp_tprof_time_fxdrg(tprof.t,tprof.Zp,shotime,method);%Time interpolation
+%
+Bt = interp_tprof_time_fxdrg(tprof.t,tprof.Bt,shotime,method);%Time interpolation
+Ip = interp_tprof_time_fxdrg(tprof.t,tprof.Ip,shotime,method);%Time interpolation
+qpsi = interp_tprof_time_fxdrg(tprof.t,tprof.qpsi,shotime,method);%Time interpolation
+%
+vloop = interp_tprof_time_fxdrg(tprof.t,tprof.vloop,shotime,method);%Time interpolation
+Zeff = interp_tprof_time_fxdrg(tprof.t,tprof.Zeff,shotime,method);%Time interpolation
+%
+Te = interp_tprof_time_fxdrg(tprof.t,tprof.Te,shotime,method);%Time interpolation
+ne = interp_tprof_time_fxdrg(tprof.t,tprof.ne,shotime,method);%Time interpolation
+Ti = interp_tprof_time_fxdrg(tprof.t,tprof.Ti,shotime,method);%Time interpolation
+ni = interp_tprof_time_fxdrg(tprof.t,tprof.ni,shotime,method);%Time interpolation
+%
+% Fit
+%
+[qmin,qmax,eq,qopt,chi2_q] = fit_qprofile_fxdrg(tprof.rho,qpsi);%Fit q-profile
+[Te0,Tea,eTe1,eTe2,chi2_Te] = fit_profile_fxdrg(tprof.rho,Te,1,[2,1]);%Fit Te profile
+[ne0,nea,ene1,ene2,chi2_ne] = fit_profile_fxdrg(tprof.rho,ne,1,[2,1]);%Fit ne profile
+[Ti0,Tia,eTi1,eTi2,chi2_Ti] = fit_profile_fxdrg(tprof.rho,Ti,1,[2,1]);%Fit Ti profile
+[ni0,nia,eni1,eni2,chi2_ni] = fit_profile_fxdrg(tprof.rho,ni,1,[2,1]);%Fit ni profile
+%
+% Atomic data
 %
 [sZmain,iZmain] = sort(tprof.Zmain);%Z ascending order sorting
 [sZimp,iZimp] = sort(tprof.Zimp);%Z ascending order sorting
@@ -59,8 +68,8 @@ sMimp = tprof.Mimp(iZimp);
 %
 isZmain1 = find(sZmain == 1);%Identify Hydrogen isotopes
 isZmain2 = find(sZmain > 1);%Identify other main ions (like Helium)
-[ssZmain1,isZmain1] = sort(sZmain(iZmain1));%ascending order sorting
-[ssZmain2,isZmain2] = sort(sZmain(iZmain2));%ascending order sorting
+[ssZmain1,isZmain1] = sort(sZmain(isZmain1));%ascending order sorting
+[ssZmain2,isZmain2] = sort(sZmain(isZmain2));%ascending order sorting
 %
 % No tritium in Tore Supra
 %
@@ -92,8 +101,6 @@ Zeff0 = Zeff;
 Zeffa = Zeff;
 eZeff = 0;
 xZeff = NaN;
-%
-if sum(fi) > 1,error('Error in main ion concentrations.');end
 %
 
 
