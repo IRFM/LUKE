@@ -37,7 +37,7 @@ Bx = -XBpp.*sin(Xtheta)./(1 + x/Rp);
 By = XBpp.*cos(Xtheta)./(1 + x/Rp);
 BPHI = Bt./(1 + x/Rp);
 %
-pj = 2*Bt./pq_Rpap/mu0/ap - Bt*pdq_Rpap.*prho./pq_Rpap.^2/mu0/ap;%Current density profile (A.m-2)
+pj = (Bt/ap/mu0).*(2./pq_Rpap - pdq_Rpap.*prho./pq_Rpap.^2);%Current density profile (A.m-2)
 %
 for ii = 1:length(prho),
     pIp(ii) = 2*pi*trapz_dke_yp([prho(1:ii)',prho(1:ii)'.*pj(1:ii)'])*ap*ap; 

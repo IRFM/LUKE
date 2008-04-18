@@ -149,12 +149,12 @@ if isempty(p_opt) | ~isnumeric(p_opt) | ~any(p_opt == [0,1,2]),
     p_opt = -1;
 end
 %
+dispname = '';
+savename = id_equil;
+%
 if eqdsk_opt == 1,%(R,Z) to (psi,theta) conversion specific to eqdsk
     %
     % file name
-    %
-    dispname = '';
-    savename = id_equil;
     %
     [equil_magnetic,mrho,mspsin,mspsinT,mp_magnetic] = equil_magnetic_EFIT_jd([eqdsk_path,eqdsk_file],display_mode,p_opt,dispname,savename);
     %
@@ -314,6 +314,7 @@ elseif strcmp(basestr,'ITER'),% ITER Astra profile data
     %
 elseif strcmp(basestr,'TS'),% TS profile data
 	%
+	type = -1;
 	profname = [data_path,data_file];
 	%
 else

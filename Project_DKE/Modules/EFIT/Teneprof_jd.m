@@ -17,7 +17,9 @@ prho = [];
 pspsin = [];
 pspsinT = [];
 %
-if type == 0,%ascii
+if type == -1,
+	eval(['load -mat ',filename,' prho pne pTe pzTi pzni zZi zmi']);
+elseif type == 0,%ascii
     [prho,pTe,pne,pTi,pni] = textread(filename,'%n%n%n%n%n');
 elseif type == 0.1,
     [psi,pTe,pne,pZeff] = textread(filename,'%n%n%n%n');    
@@ -185,7 +187,7 @@ elseif type == 6,%ascii formatted (FTU)
     pTi = pTe/2.0;%As done in RANT3D/AORSA  
 end
 %
-if type < 4,
+if type < 4 & type >= 0,
     %
     zZi = [1,1,1,6];
     zmi = [1,2,3,12];
