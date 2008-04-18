@@ -16,7 +16,7 @@ zmi = mi;%[1,ni]
 %
 % Plasma parameters
 %
-pTe = (Te0 - Tea)*(1 - prho.^eTe1).^eTe2 + Tea;;%Electron temperature (keV)
+pTe = (Te0 - Tea)*(1 - prho.^eTe1).^eTe2 + Tea;%Electron temperature (keV)
 pne = (ne0 - nea)*(1 - prho.^ene1).^ene2 + nea;%Electron density (m-3)
 pTi = (Ti0 - Tia)*(1 - prho.^eTi1).^eTi2 + Tia;%Ion temperatures (keV)
 %
