@@ -57,6 +57,7 @@ addpath([luke_root,'Project_DKE/Database/WAVE_files']);
 addpath([luke_root,'Project_DKE/Database/OHM_files']);
 addpath([luke_root,'Project_DKE/Database/TRANSP_files']);
 addpath([luke_root,'Project_DKE/Database/RIPPLE_files']);
+addpath([luke_root,'Project_DKE/Database/EXTERNAL_files']);
 addpath([luke_root,'Project_DKE/DKE']);
 %
 % Path for MEX files
@@ -87,8 +88,4 @@ if nargin >= 2 & isstruct(dkepath),
 			addpath(dkepath.MUMPS.mex);
 		end
     end
-    if isfield(dkepath,'SUPERLU') & isfield(dkepath.SUPERLU,'mex'),
-        addpath(dkepath.SUPERLU.mex);
-    end
-end
-%
+    if isfield(dkepath,'SUPERLU') & isfield(dkepath.SUPERLU,
