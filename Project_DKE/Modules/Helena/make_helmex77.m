@@ -34,6 +34,8 @@ end
 %
 [equil_magnetic,prho_out,pspsin_out,pspsinT_out,pp_out] = equil_magnetic_helmex77_yp(ap,Rp,Zp,xpoint,Bt,Ip,ppsi_apRp*Rp/ap,pj,pkin,ntheta,0);
 %
+% Data saving for imake_equil_jd and the consistency with other machines
+%
 prho = prho_out;
 save(savename,'prho','pne','pTe','pzTi','pzni','zZi','zmi','fi');
 %
