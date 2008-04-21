@@ -1,4 +1,4 @@
-function [y0,ya,ey1,ey2,chi2] = fit_profile_fxdrg(x,y,model,init)
+function [y0,ya,ey1,ey2,chi2] = fit_profile_fxdrg(x,y,model,init,dispfit)
 %
 % Fit profile for a monotonous function
 %
@@ -6,7 +6,13 @@ function [y0,ya,ey1,ey2,chi2] = fit_profile_fxdrg(x,y,model,init)
 %
 if nargin == 2,
     model = 1;
-    init = [2,1];
+    init = [2,2];
+    dispfit = 0;
+elseif nargin == 3,
+    init = [2,2];
+    dispfit = 0;
+elseif nargin == 4,
+    dispfit = 0;
 end
 %
 y0 = y(1);
@@ -22,6 +28,14 @@ elseif model == 2,
     ey2 = NaN;
 end
 %
-
+if dispfit,
+	if model == 1,
+		yfit = (y0 - ya)*(1 - x.^ey1).^ey2 + ya;
+	elseif model == 2,
+		yfit = (y0 - ya)*(exp(z) - exp(ey1*x.*x))/(exp(ey1)-1) + ya;	
+	end
+	figure('Name','Fit profile'),plot(x,y,'r',x,yfit,'b-');legend('Data','Fit')
+end
+%
 
 
