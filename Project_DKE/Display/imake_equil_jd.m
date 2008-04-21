@@ -338,7 +338,7 @@ if strcmp(d_opt,'y'),
     figure(14),clf
     %
     graph1D_jd(mrho,mp_profiles/1e5,0,0,'r/a','p (Bar)','',NaN,[0,1],NaN,'-','none','b',2,20,gca,0.9,0.7,0.7);
-    graph1D_jd(mrho,mp_magnetic/1e5,0,0,'','','',{'T_en_e + T_in_i','Equilibrium code'},[0,1],NaN,'-','none','r',2);
+    graph1D_jd(mrho,mp_magnetic*qe*1e3/1e5,0,0,'','','',{'T_en_e + T_in_i','Equilibrium code'},[0,1],NaN,'-','none','r',2);
     set(gca,'XTick',[0:0.2:1]);
     print_jd(p_opt,[savename,'_p_comp']);
 end
