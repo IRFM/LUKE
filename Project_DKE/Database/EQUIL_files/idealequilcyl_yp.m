@@ -45,6 +45,6 @@ for ii = 1:length(prho),
 end
 pIp(2) = pIp(1);
 pmag(2) = pmag(1);
-Ip_test = pIp(end);%Plasma current (A)
+Ip_test = pIp(end)/1e6;%Plasma current (MA)
 pmag = (pmag - pmag(end))/qe/1000;%Total pressure consistent with the cylindrical magnetic equilibrium. Pressure is enforced to zero at the plasma edge (special units for helmex77 in keV.m-3)
 %
