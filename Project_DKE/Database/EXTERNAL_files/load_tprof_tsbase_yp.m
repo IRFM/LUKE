@@ -72,10 +72,10 @@ if strcmp(basestr,'TS'),
 	% Fit
 	%
 	[qmin,qmax,eq,qopt,chi2_q] = fit_qprofile_fxdrg(tprof.rho,qpsi);%Fit q-profile
-	[Te0,Tea,eTe1,eTe2,chi2_Te] = fit_profile_fxdrg(tprof.rho,Te,1,[2,1]);%Fit Te profile
-	[ne0,nea,ene1,ene2,chi2_ne] = fit_profile_fxdrg(tprof.rho,ne,1,[2,1]);%Fit ne profile
-	[Ti0,Tia,eTi1,eTi2,chi2_Ti] = fit_profile_fxdrg(tprof.rho,Ti,1,[2,1]);%Fit Ti profile
-	[ni0,nia,eni1,eni2,chi2_ni] = fit_profile_fxdrg(tprof.rho,ni,1,[2,1]);%Fit ni profile
+	[Te0,Tea,eTe1,eTe2,chi2_Te] = fit_profile_fxdrg(tprof.rho,Te,1,[2,2]);%Fit Te profile
+	[ne0,nea,ene1,ene2,chi2_ne] = fit_profile_fxdrg(tprof.rho,ne,1,[2,2]);%Fit ne profile
+	[Ti0,Tia,eTi1,eTi2,chi2_Ti] = fit_profile_fxdrg(tprof.rho,Ti,1,[2,2]);%Fit Ti profile
+	[ni0,nia,eni1,eni2,chi2_ni] = fit_profile_fxdrg(tprof.rho,ni,1,[2,2]);%Fit ni profile
 	%
 	% Atomic data
 	%
