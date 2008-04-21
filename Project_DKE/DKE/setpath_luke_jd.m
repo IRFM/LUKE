@@ -88,4 +88,8 @@ if nargin >= 2 & isstruct(dkepath),
 			addpath(dkepath.MUMPS.mex);
 		end
     end
-    if isfield(dkepath,'SUPERLU') & isfield(dkepath.SUPERLU,
+    if isfield(dkepath,'SUPERLU') & isfield(dkepath.SUPERLU,'mex'),
+        addpath(dkepath.SUPERLU.mex);
+    end
+end
+%
