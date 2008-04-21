@@ -19,7 +19,7 @@ if strcmp(basestr,'TS'),
     xpoint(7) = 0;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
     xpoint(8) = 0;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
     %
-    [ap,Rp,Zp,Bt,Ip,qmin,eq,qopt,Zi,mi,fi,Te0,Tea,eTe1,eTe2,ne0,nea,ene1,ene2,Ti0,Tia,eTi1,eTi2,Zeff0,Zeffa,eZeff,xZeff] = load_tprof_tsbase_yp(str2num(shotnum),str2num(shotime),t1,t2,basestr);
+    [ap,Rp,Zp,Bt,Ip,qmin,eq,qopt,Zi,mi,fi,Te0,Tea,eTe1,eTe2,ne0,nea,ene1,ene2,Ti0,Tia,eTi1,eTi2,Zeff0,Zeffa,eZeff,xZeff,Vloop,LH,EC] = load_tprof_tsbase_yp(str2num(shotnum),str2num(shotime),t1,t2,basestr);
     %
 else
     disp('The use of HELENA (helmex77) is not yet implemented for this machine.');
@@ -39,5 +39,5 @@ if pj_min < 0,pj = pj - pj_min;end,%pj must be non-negative. Only the shape is c
 % Data saving for imake_equil_jd and the consistency with other machines
 %
 prho = prho_out;
-save(savename,'prho','pne','pTe','pzTi','pzni','zZi','zmi','fi');
+save(savename,'prho','pne','pTe','pzTi','pzni','zZi','zmi','fi','Vloop','LH','EC');
 %
