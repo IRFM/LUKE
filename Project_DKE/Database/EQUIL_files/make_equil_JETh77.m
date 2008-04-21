@@ -75,6 +75,8 @@ subplot(2,2,2),plot(prho,pBpp),xlabel('\rho');ylabel('B_p(T)');title(['B_t ',num
 subplot(2,2,3),plot(prho,pq_Rpap*ap/Rp),xlabel('\rho');ylabel('q')
 subplot(2,2,4),plot(prho,ppsin),xlabel('\rho');ylabel('\psi_n')
 %
+pj_min = min(pj); 
+if pj_min < 0,pj = pj - pj_min;end,%pj must be non-negative. Only the shape is considered and Ip for the total plasma current
 [equil_magnetic,prho_out,pspsin_out,pspsinT_out,pp_out] = equil_magnetic_helmex77_yp(ap,Rp,Zp,xpoint,Bt,Ip,ppsi_apRp*Rp/ap,pj,pkin,ntheta,1);
 %
 [qe] = pc_dke_yp;
