@@ -20,19 +20,50 @@ if strcmp(basestr,'TS'),
     xpoint(8) = 0;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
     %
     while 1,
-    	certif = input_dke_yp('Enter a certification: (-1) exit, 0 (no certification), 1, 2, 3, 4',0,{-1,0,1,2,3,4},'Invalid selection');
+    	certif = input_dke_yp('Enter a certification for ''tprof'' data: (-1) exit, 0 (no certification), 1, 2, 3, 4',0,{-1,0,1,2,3,4},'Invalid selection');
     	if certif == -1,
 			return
     	end
 		%
-    	[ap,Rp,Zp,Bt,Ip,qmin,eq,qopt,Zi,mi,fi,Te0,Tea,eTe1,eTe2,ne0,nea,ene1,ene2,Ti0,Tia,eTi1,eTi2,Zeff0,Zeffa,eZeff,xZeff,vloop,LH,EC] = load_tprof_tsbase_yp(shotnum,certif,str2num(shotime),t1,t2,basestr);
+    	[flag,ap,Rp,Zp,Bt,Ip,qmin,eq,qopt,Zi,mi,fi,Te0,Tea,eTe1,eTe2,ne0,nea,ene1,ene2,Ti0,Tia,eTi1,eTi2,Zeff0,Zeffa,eZeff,xZeff,vloop] = load_tprof_tsbase_yp(shotnum,certif,str2num(shotime),t1,t2,basestr);
         if isempty(ap),%tprof data are not documented for this shot and this certification
-			disp(['WARNING: No tprof data do not exist for shot #',shotnum,' and certification ',int2str(certif),'. Please try another certification or exit.']);
+			disp(['WARNING: No ''tprof'' data do not exist for shot #',shotnum,' and certification ',int2str(certif),'. Please try another certification or exit.']);
             disp('WARNING: Contact T. Aniel or the CDIV for creating missing tprof data');
 		else
 			break
 		end
-	end		
+    end
+    %
+    while 1,
+    	certif = input_dke_yp('Enter a certification for ''thyb'' data: (-1) exit, 0 (no certification), 1, 2, 3, 4',0,{-1,0,1,2,3,4},'Invalid selection');
+    	if certif == -1,
+			clear('LH');
+            break
+    	end
+		%
+    	[flag_LH,LH] = load_LH_tsbase_yp(shotnum,certif,str2num(shotime),t1,t2,basestr);
+        if isempty(LH),%thyb data are not documented for this shot and this certification
+			disp(['WARNING: No ''thyb'' data do not exist for shot #',shotnum,' and certification ',int2str(certif),'. Please try another certification or exit.']);
+		else
+			break
+		end
+    end		
+    %
+    while 1,
+    	certif = input_dke_yp('Enter a certification for ''tfce'' data: (-1) exit, 0 (no certification), 1, 2, 3, 4',0,{-1,0,1,2,3,4},'Invalid selection');
+    	if certif == -1,
+			clear('EC');
+            break
+    	end
+		%
+    	[flag_EC,EC] = load_EC_tsbase_yp(shotnum,certif,str2num(shotime),t1,t2,basestr);
+        if isempty(EC),%tfce data are not documented for this shot and this certification
+			disp(['WARNING: No ''tfce'' data do not exist for shot #',shotnum,' and certification ',int2str(certif),'. Please try another certification or exit.']);
+		else
+			break
+		end
+    end		
+    %  
 else
     disp('The use of HELENA (helmex77) is not yet implemented for this machine.');
     return
@@ -51,5 +82,14 @@ if pj_min < 0,pj = pj - pj_min;end,%pj must be non-negative. Only the shape is c
 % Data saving for imake_equil_jd and the consistency with other machines
 %
 prho = prho_out;
-save(savename,'prho','pne','pTe','pzTi','pzni','zZi','zmi','fi','vloop','LH','EC');
+if flag_LH & flag_EC,
+    save(savename,'prho','pne','pTe','pzTi','pzni','zZi','zmi','fi','vloop','LH','EC');
+elseif flag_LH & ~flag_EC,
+    save(savename,'prho','pne','pTe','pzTi','pzni','zZi','zmi','fi','vloop','LH');
+elseif ~flag_LH & flag_EC,
+    save(savename,'prho','pne','pTe','pzTi','pzni','zZi','zmi','fi','vloop','EC');
+else
+    save(savename,'prho','pne','pTe','pzTi','pzni','zZi','zmi','fi','vloop');
+end    
+
 %

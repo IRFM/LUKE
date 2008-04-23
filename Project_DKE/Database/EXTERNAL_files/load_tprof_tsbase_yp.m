@@ -1,10 +1,11 @@
-function  [ap,Rp,Zp,Bt,Ip,qmin,eq,qopt,Zi,mi,fi,Te0,Tea,eTe1,eTe2,ne0,nea,ene1,ene2,Ti0,Tia,eTi1,eTi2,Zeff0,Zeffa,eZeff,xZeff,Vloop,LH_out,EC_out] = load_tprof_tsbase_yp(shotnum,certif,shotime,tmin,tmax,basestr);
+function  [flag,ap,Rp,Zp,Bt,Ip,qmin,eq,qopt,Zi,mi,fi,Te0,Tea,eTe1,eTe2,ne0,nea,ene1,ene2,Ti0,Tia,eTi1,eTi2,Zeff0,Zeffa,eZeff,xZeff,Vloop] = load_tprof_tsbase_yp(shotnum,certif,shotime,tmin,tmax,basestr);
 %
 %   Load processed experimental data (tprof treatment) of the tokamak Tore Supra for building a magnetic equilibrium with HELENA code (mex file version)
 %
 %   by Y. Peysson (CEA/DSM/IRFM,yves.peysson@cea.fr) and J. Decker (CEA/DSM/IRFM,joan.decker@cea.fr)
 %
 method = 'spline';
+flag = 1;
 %
 if strcmp(basestr,'TS'),
 	%
@@ -62,6 +63,7 @@ if strcmp(basestr,'TS'),
 		Vloop = [];
 		LH_out = [];
 		EC_out = [];
+        flag = 0;
 		return
 	end
 	%
@@ -159,121 +161,6 @@ if strcmp(basestr,'TS'),
 	Zeffa = Zeff;
 	eZeff = 0;
 	xZeff = NaN;
-	%
-	% Load LH power and phase
-	%
-	[LH_in.Plh_C2,LH_in.t_Plh_C2] = tsbase(shotnum,'GPHYB%1');%LH power from C2 antenna (MW)
-	[LH_in.Plh_C3,LH_in.t_Plh_C3] = tsbase(shotnum,'GPHYB%2');%LH power from C3 antenna (MW)
-	[LH_in.phaselh_C2,LH_in.t_phaselh_C2] = tsbase(shotnum,'GPHASHYB%1');%LH phasing from C2 antenna (deg)
-	[LH_in.phaselh_C3,LH_in.t_phaselh_C3] = tsbase(shotnum,'GPHASHYB%2');%LH phasing from C2 antenna (deg)
-	%
-	% Time averaging between tmin and tmax
-	%
-	if ~isempty(LH_in.Plh_C2),
-		Plh_C2_tmin = interp_tprof_time_fxdrg(LH_in.t_Plh_C2,LH_in.Plh_C2,tmin,method);%Time interpolation
-		Plh_C2_tmax = interp_tprof_time_fxdrg(LH_in.t_Plh_C2,LH_in.Plh_C2,tmax,method);%Time interpolation
-		dt_Plh_C2 = [tmin;LH_in.t_Plh_C2(find((LH_in.t_Plh_C2 > tmin).*(LH_in.t_Plh_C2 < tmax)));tmax];
-		LH_out.Plh_C2 = mean([Plh_C2_tmin;LH_in.Plh_C2(find((LH_in.t_Plh_C2 > tmin).*(LH_in.t_Plh_C2 < tmax)),:);Plh_C2_tmax]);%Mean value
-	%
-		phaselh_C2_tmin = interp_tprof_time_fxdrg(LH_in.t_phaselh_C2,LH_in.phaselh_C2,tmin,method);%Time interpolation
-		phaselh_C2_tmax = interp_tprof_time_fxdrg(LH_in.t_phaselh_C2,LH_in.phaselh_C2,tmax,method);%Time interpolation
-		dt_phaselh_C2 = [tmin;LH_in.t_phaselh_C2(find((LH_in.t_phaselh_C2 > tmin).*(LH_in.t_phaselh_C2 < tmax)));tmax];
-		LH_out.phaselh_C2 = mean([phaselh_C2_tmin;LH_in.phaselh_C2(find((LH_in.t_phaselh_C2 > tmin).*(LH_in.t_phaselh_C2 < tmax)),:);phaselh_C2_tmax]);%Mean value	
-		LH_out.npar_C2 = 1.83 + LH_out.phaselh_C2/200;%From A. Ekedahl using SWANN output (5/7/2004)
-	else
-		LH_out.Plh_C2 = '';
-		LH_out.phaselh_C2 = '';
-		LH_out.npar_C2 = '';
-	end
-	%
-	if ~isempty(LH_in.Plh_C3),
-		Plh_C3_tmin = interp_tprof_time_fxdrg(LH_in.t_Plh_C3,LH_in.Plh_C3,tmin,method);%Time interpolation
-		Plh_C3_tmax = interp_tprof_time_fxdrg(LH_in.t_Plh_C3,LH_in.Plh_C3,tmax,method);%Time interpolation
-		dt_Plh_C3 = [tmin;LH_in.t_Plh_C3(find((LH_in.t_Plh_C3 > tmin).*(LH_in.t_Plh_C3 < tmax)));tmax];
-		LH_out.Plh_C3 = mean([Plh_C3_tmin;LH_in.t_Plh_C3(find((LH_in.Plh_C3 > tmin).*(LH_in.t_Plh_C3 < tmax)),:);Plh_C3_tmax]);%Mean value
-	%
-		phaselh_C3_tmin = interp_tprof_time_fxdrg(LH_in.t_phaselh_C3,LH_in.phaselh_C3,tmin,method);%Time interpolation
-		phaselh_C3_tmax = interp_tprof_time_fxdrg(LH_in.t_phaselh_C3,LH_in.phaselh_C3,tmax,method);%Time interpolation
-		dt_phaselh_C3 = [tmin;LH_in.t_phaselh_C3(find((LH_in.t_phaselh_C3 > tmin).*(LH_in.t_phaselh_C3 < tmax)));tmax];
-		LH_out.phaselh_C3 = mean([phaselh_C3_tmin;LH_in.phaselh_C3(find((LH_in.t_phaselh_C3 > tmin).*(LH_in.t_phaselh_C3 < tmax)),:);phaselh_C3_tmax]);%Mean value
-	%
-		LH_out.npar_C3 = 2.03 + (LH_out.phaselh_C3 + 90)/310;%From A. Ekedahl using SWANN output (5/7/2004)
-	else
-		LH_out.Plh_C3 = '';
-		LH_out.phaselh_C3 = '';
-		LH_out.npar_C3 = '';
-	end
-	%
-	% Load EC parameters from diagnostic directly (from J. F. Artaud for METIS)
-	%
-    [xika1,tbad] = tsbase(shotnum,'sika1');% gyrotron A1 cathode current
-	[xHAUTTOR,tHAUTTOR] = tsbase(shotnum,'SHAUTTOR');% Toroidal injection angle top mirror (A1) hysteresis corrected
-	if ~isempty(xika1) & ~isempty(xHAUTTOR)
-        [prxA1,tA1] = tsbase(shotnum,'spia1');% gyrotron A1 power (anode current)
-        [prxA2,tA2] = tsbase(shotnum,'spia2');% gyrotron A2 power (anode current)
-        [sonde,tsonde] = tsbase(shotnum,'sonderf');% RF probe on reflectometer
-        [xHAUTPOL,tHAUTPOL] = tsbase(shotnum,'SHAUTPOL');% Poloidal injection angle top mirror (A1) hysteresis corrected
-        [xMILTOR,tMILTOR] = tsbase(shotnum,'SMILTOR');% Toroidal injection angle central mirror (A2) hysteresis corrected
-        [xMILPOL,tMILPOL] = tsbase(shotnum,'SMILPOL');% Poloidal injection angle central mirror (A2) hysteresis corrected
-        %
-        % Powers in kW (from M. Lennholm)
-        %
-        factA1 = 1;% Calibration factor to be applied to A1
-        factA2 = 1;% Calibration factor to be applied to A2
-        PA1 = max(0,1e6*prxA1/factA1);% A1 power in W
-        PA2 = max(0,1e6*prxA2/factA2);% A2 power in W
-        Ptot = PA1 + PA2;% total power (W)
-        %
-        % Mirror positions (m)
-        %
-        EC_out.RA2 = 3.5300;
-        EC_out.RA1 = 3.5300;
-        EC_out.ZA2 = 0;
-        EC_out.ZA1 = 0.2000;
-        %
-        % Time averaging between tmin and tmax
-        %
-        PA1_tmin = interp_tprof_time_fxdrg(tA1,PA1,tmin,method);%Time interpolation
-        PA1_tmax = interp_tprof_time_fxdrg(tA1,PA1,tmax,method);%Time interpolation
-        dt_PA1 = [tmin;tA1(find((tA1 > tmin).*(tA1 < tmax)));tmax];
-        EC_out.PA1 = mean([PA1_tmin;PA1(find((tA1 > tmin).*(tA1 < tmax)),:);PA1_tmax]);%Mean value
-        %	   
-        phiA1_tmin = interp_tprof_time_fxdrg(tHAUTTOR,xHAUTTOR,tmin,method);%Time interpolation
-        phiA1_tmax = interp_tprof_time_fxdrg(tHAUTTOR,xHAUTTOR,tmax,method);%Time interpolation
-        dt_phiA1 = [tmin;tHAUTTOR(find((tHAUTTOR > tmin).*(tHAUTTOR < tmax)));tmax];
-        EC_out.phiA1 = mean([phiA1_tmin;xHAUTTOR(find((tHAUTTOR > tmin).*(tHAUTTOR < tmax)),:);phiA1_tmax]);%Mean value
-        %	   
-        thetaA1_tmin = interp_tprof_time_fxdrg(tHAUTPOL,xHAUTPOL,tmin,method);%Time interpolation
-        thetaA1_tmax = interp_tprof_time_fxdrg(tHAUTPOL,xHAUTPOL,tmax,method);%Time interpolation
-        dt_thetaA1 = [tmin;tHAUTPOL(find((tHAUTPOL > tmin).*(tHAUTPOL < tmax)));tmax];
-        EC_out.thetaA1 = mean([thetaA1_tmin;xHAUTPOL(find((tHAUTPOL > tmin).*(tHAUTPOL < tmax)),:);thetaA1_tmax]);%Mean value
-        %
-        PA2_tmin = interp_tprof_time_fxdrg(tA2,PA2,tmin,method);%Time interpolation
-        PA2_tmax = interp_tprof_time_fxdrg(tA2,PA2,tmax,method);%Time interpolation
-        dt_PA2 = [tmin;tA2(find((tA2 > tmin).*(tA2 < tmax)));tmax];
-        EC_out.PA2 = mean([PA2_tmin;PA2(find((tA2 > tmin).*(tA2 < tmax)),:);PA2_tmax]);%Mean value
-        %	   
-        phiA2_tmin = interp_tprof_time_fxdrg(tMILTOR,xMILTOR,tmin,method);%Time interpolation
-        phiA2_tmax = interp_tprof_time_fxdrg(tMILTOR,xMILTOR,tmax,method);%Time interpolation
-        dt_phiA2 = [tmin;tMILTOR(find((tMILTOR > tmin).*(tMILTOR < tmax)));tmax];
-        EC_out.phiA2 = mean([phiA2_tmin;xMILTOR(find((tMILTOR > tmin).*(tMILTOR < tmax)),:);phiA2_tmax]);%Mean value
-        %	   
-        thetaA2_tmin = interp_tprof_time_fxdrg(tMILPOL,xMILPOL,tmin,method);%Time interpolation
-        thetaA2_tmax = interp_tprof_time_fxdrg(tMILPOL,xMILPOL,tmax,method);%Time interpolation
-        dt_thetaA2 = [tmin;tMILPOL(find((tMILPOL > tmin).*(tMILPOL < tmax)));tmax];
-        EC_out.thetaA2 = mean([thetaA2_tmin;xMILPOL(find((tMILPOL > tmin).*(tMILPOL < tmax)),:);thetaA2_tmax]);%Mean value
-	else
-        EC_out.RA2 = 3.5300;
-        EC_out.RA1 = 3.5300;
-        EC_out.ZA2 = 0;
-        EC_out.ZA1 = 0.2000;
-		EC_out.PA1 = '';
-		EC_out.phiA1 = '';
-		EC_out.thetaA1 = '';
-		EC_out.PA2 = '';
-		EC_out.phiA2 = '';
-		EC_out.thetaA2 = '';
-    end
 else
 	disp('Not yet implemented for this machine.')
 	return
