@@ -4,9 +4,13 @@ function ohm = imake_ohm_jd(basestr,equil)
 %
 ohm = '';
 %
-o_opt = input('Option for ohm calculation? 0 (VLOOP), 1 (E/ED) : ');
+o_opt = input('Option for ohm calculation? 0 (VLOOP), 1 (E/ED) : [0] ');
 %
-if isempty(o_opt)| ~isnumeric(o_opt) | ~any(o_opt == [0,1]),
+if isempty(o_opt),
+    o_opt = 0;
+end
+%
+if ~isnumeric(o_opt) | ~any(o_opt == [0,1]),
     disp('-----> Invalid ohm option');
     return
 end
@@ -25,14 +29,14 @@ if o_opt == 0,% ohm from VLOOP
     %
     if i_opt == 0,%vloop from launching data 
         %
-        if strcmp(basestr,'TCV'),% TCV launching data
-            %
-            if isfield(equil.info,'shotnum');
-                shotnum = equil.info.shotnum;
-            else
-                disp('-----> Shot number information missing');
-                return
-            end
+        if isfield(equil.info,'shotnum');
+            shotnum = equil.info.shotnum;
+        else
+            disp('-----> Shot number information missing');
+            return
+        end
+        %
+        if strcmp(basestr,'TCV') | strcmp(basestr,'TS'),% TCV or TS launching data
             %
 %             if isfield(equil.info,'shotime');
 %                 shotime = equil.info.shotime;
@@ -76,16 +80,22 @@ if o_opt == 0,% ohm from VLOOP
             %
             data = load(equil.info.data,'shot','vloop');
             %
-            ishot = find(data.shot == str2num(shotnum));
-            %
-            if isempty(ishot),
-                disp(['-----> launching data not found for shot :',shotnum]);
-                return
-            end
-            %
-            if length(ishot) > 1,
-                disp(['-----> WARNING : Several entries are found for shot :',shotnum,', first entry selected']);
-                ishot = ishot(1);
+            if exist('shot','var'),
+                %
+                ishot = find(data.shot == str2num(shotnum));
+                %
+                if isempty(ishot),
+                    disp(['-----> launching data not found for shot :',shotnum]);
+                    return
+                end
+                %
+                if length(ishot) > 1,
+                    disp(['-----> WARNING : Several entries are found for shot :',shotnum,', first entry selected']);
+                    ishot = ishot(1);
+                end
+                %
+            else
+                ishot = 1;
             end
             %
             vloop = data.vloop(ishot);
