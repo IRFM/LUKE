@@ -62,7 +62,6 @@ if strcmp(basestr,'TS'),
 		Vloop = [];
 		LH_out = [];
 		EC_out = [];
-		disp(['WARNING: tprof data are not documented for the shot #',int2str(shotnum),'. Contact T. Aniel or the CDIV.']);
 		return
 	end
 	%
@@ -170,28 +169,40 @@ if strcmp(basestr,'TS'),
 	%
 	% Time averaging between tmin and tmax
 	%
-	Plh_C2_tmin = interp_tprof_time_fxdrg(LH_in.t_Plh_C2,LH_in.Plh_C2,tmin,method);%Time interpolation
-	Plh_C2_tmax = interp_tprof_time_fxdrg(LH_in.t_Plh_C2,LH_in.Plh_C2,tmax,method);%Time interpolation
-	dt_Plh_C2 = [tmin;LH_in.t_Plh_C2(find((LH_in.t_Plh_C2 > tmin).*(LH_in.t_Plh_C2 < tmax)));tmax];
-	LH_out.Plh_C2 = mean([Plh_C2_tmin;LH_in.Plh_C2(find((LH_in.t_Plh_C2 > tmin).*(LH_in.t_Plh_C2 < tmax)),:);Plh_C2_tmax]);%Mean value
+	if ~isempty(LH_in.Plh_C2),
+		Plh_C2_tmin = interp_tprof_time_fxdrg(LH_in.t_Plh_C2,LH_in.Plh_C2,tmin,method);%Time interpolation
+		Plh_C2_tmax = interp_tprof_time_fxdrg(LH_in.t_Plh_C2,LH_in.Plh_C2,tmax,method);%Time interpolation
+		dt_Plh_C2 = [tmin;LH_in.t_Plh_C2(find((LH_in.t_Plh_C2 > tmin).*(LH_in.t_Plh_C2 < tmax)));tmax];
+		LH_out.Plh_C2 = mean([Plh_C2_tmin;LH_in.Plh_C2(find((LH_in.t_Plh_C2 > tmin).*(LH_in.t_Plh_C2 < tmax)),:);Plh_C2_tmax]);%Mean value
 	%
-	phaselh_C2_tmin = interp_tprof_time_fxdrg(LH_in.t_phaselh_C2,LH_in.phaselh_C2,tmin,method);%Time interpolation
-	phaselh_C2_tmax = interp_tprof_time_fxdrg(LH_in.t_phaselh_C2,LH_in.phaselh_C2,tmax,method);%Time interpolation
-	dt_phaselh_C2 = [tmin;LH_in.t_phaselh_C2(find((LH_in.t_phaselh_C2 > tmin).*(LH_in.t_phaselh_C2 < tmax)));tmax];
-	LH_out.phaselh_C2 = mean([phaselh_C2_tmin;LH_in.phaselh_C2(find((LH_in.t_phaselh_C2 > tmin).*(LH_in.t_phaselh_C2 < tmax)),:);phaselh_C2_tmax]);%Mean value
+		phaselh_C2_tmin = interp_tprof_time_fxdrg(LH_in.t_phaselh_C2,LH_in.phaselh_C2,tmin,method);%Time interpolation
+		phaselh_C2_tmax = interp_tprof_time_fxdrg(LH_in.t_phaselh_C2,LH_in.phaselh_C2,tmax,method);%Time interpolation
+		dt_phaselh_C2 = [tmin;LH_in.t_phaselh_C2(find((LH_in.t_phaselh_C2 > tmin).*(LH_in.t_phaselh_C2 < tmax)));tmax];
+		LH_out.phaselh_C2 = mean([phaselh_C2_tmin;LH_in.phaselh_C2(find((LH_in.t_phaselh_C2 > tmin).*(LH_in.t_phaselh_C2 < tmax)),:);phaselh_C2_tmax]);%Mean value	
+		LH_out.npar_C2 = 1.83 + LH_out.phaselh_C2/200;%From A. Ekedahl using SWANN output (5/7/2004)
+	else
+		LH_out.Plh_C2 = '';
+		LH_out.phaselh_C2 = '';
+		LH_out.npar_C2 = '';
+	end
 	%
-	Plh_C3_tmin = interp_tprof_time_fxdrg(LH_in.t_Plh_C3,LH_in.Plh_C3,tmin,method);%Time interpolation
-	Plh_C3_tmax = interp_tprof_time_fxdrg(LH_in.t_Plh_C3,LH_in.Plh_C3,tmax,method);%Time interpolation
-	dt_Plh_C3 = [tmin;LH_in.t_Plh_C3(find((LH_in.t_Plh_C3 > tmin).*(LH_in.t_Plh_C3 < tmax)));tmax];
-	LH_out.Plh_C3 = mean([Plh_C3_tmin;LH_in.t_Plh_C3(find((LH_in.Plh_C3 > tmin).*(LH_in.t_Plh_C3 < tmax)),:);Plh_C3_tmax]);%Mean value
+	if ~isempty(LH_in.Plh_C3),
+		Plh_C3_tmin = interp_tprof_time_fxdrg(LH_in.t_Plh_C3,LH_in.Plh_C3,tmin,method);%Time interpolation
+		Plh_C3_tmax = interp_tprof_time_fxdrg(LH_in.t_Plh_C3,LH_in.Plh_C3,tmax,method);%Time interpolation
+		dt_Plh_C3 = [tmin;LH_in.t_Plh_C3(find((LH_in.t_Plh_C3 > tmin).*(LH_in.t_Plh_C3 < tmax)));tmax];
+		LH_out.Plh_C3 = mean([Plh_C3_tmin;LH_in.t_Plh_C3(find((LH_in.Plh_C3 > tmin).*(LH_in.t_Plh_C3 < tmax)),:);Plh_C3_tmax]);%Mean value
 	%
-	phaselh_C3_tmin = interp_tprof_time_fxdrg(LH_in.t_phaselh_C3,LH_in.phaselh_C3,tmin,method);%Time interpolation
-	phaselh_C3_tmax = interp_tprof_time_fxdrg(LH_in.t_phaselh_C3,LH_in.phaselh_C3,tmax,method);%Time interpolation
-	dt_phaselh_C3 = [tmin;LH_in.t_phaselh_C3(find((LH_in.t_phaselh_C3 > tmin).*(LH_in.t_phaselh_C3 < tmax)));tmax];
-	LH_out.phaselh_C3 = mean([phaselh_C3_tmin;LH_in.phaselh_C3(find((LH_in.t_phaselh_C3 > tmin).*(LH_in.t_phaselh_C3 < tmax)),:);phaselh_C3_tmax]);%Mean value
+		phaselh_C3_tmin = interp_tprof_time_fxdrg(LH_in.t_phaselh_C3,LH_in.phaselh_C3,tmin,method);%Time interpolation
+		phaselh_C3_tmax = interp_tprof_time_fxdrg(LH_in.t_phaselh_C3,LH_in.phaselh_C3,tmax,method);%Time interpolation
+		dt_phaselh_C3 = [tmin;LH_in.t_phaselh_C3(find((LH_in.t_phaselh_C3 > tmin).*(LH_in.t_phaselh_C3 < tmax)));tmax];
+		LH_out.phaselh_C3 = mean([phaselh_C3_tmin;LH_in.phaselh_C3(find((LH_in.t_phaselh_C3 > tmin).*(LH_in.t_phaselh_C3 < tmax)),:);phaselh_C3_tmax]);%Mean value
 	%
-	LH_out.npar_C2 = 1.83 + LH_out.phaselh_C2/200;%From A. Ekedahl using SWANN output (5/7/2004)
-	LH_out.npar_C3 = 2.03 + (LH_out.phaselh_C3 + 90)/310;%From A. Ekedahl using SWANN output (5/7/2004)
+		LH_out.npar_C3 = 2.03 + (LH_out.phaselh_C3 + 90)/310;%From A. Ekedahl using SWANN output (5/7/2004)
+	else
+		LH_out.Plh_C3 = '';
+		LH_out.phaselh_C3 = '';
+		LH_out.npar_C3 = '';
+	end
 	%
 	% Load EC parameters from diagnostic directly (from J. F. Artaud for METIS)
 	%
@@ -251,6 +262,17 @@ if strcmp(basestr,'TS'),
         thetaA2_tmax = interp_tprof_time_fxdrg(tMILPOL,xMILPOL,tmax,method);%Time interpolation
         dt_thetaA2 = [tmin;tMILPOL(find((tMILPOL > tmin).*(tMILPOL < tmax)));tmax];
         EC_out.thetaA2 = mean([thetaA2_tmin;xMILPOL(find((tMILPOL > tmin).*(tMILPOL < tmax)),:);thetaA2_tmax]);%Mean value
+	else
+        EC_out.RA2 = 3.5300;
+        EC_out.RA1 = 3.5300;
+        EC_out.ZA2 = 0;
+        EC_out.ZA1 = 0.2000;
+		EC_out.PA1 = '';
+		EC_out.phiA1 = '';
+		EC_out.thetaA1 = '';
+		EC_out.PA2 = '';
+		EC_out.phiA2 = '';
+		EC_out.thetaA2 = '';
     end
 else
 	disp('Not yet implemented for this machine.')
