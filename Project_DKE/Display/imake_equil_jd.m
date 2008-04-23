@@ -127,6 +127,11 @@ elseif n_opt == 1,
         data_file = ['data_',basestr,'_',shotnum,'_',num2str(t1),'_',num2str(t2),'.mat'];
         %
         [equil_magnetic,mrho,mspsin,mspsinT,mp_magnetic] = make_helmex77(shotnum,shotime,t1,t2,basestr,[data_path,data_file]);%call HELENA (helmex77)
+        %
+        if ~exist(equil_magnetic),
+            disp('-----> Equilibrium creation failed');
+            return;
+        end
     end
 end
 %
