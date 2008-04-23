@@ -71,4 +71,4 @@ equil.id = id;
 %
 filename = ['EQUIL_',equil.id,'.mat'];
 %
-eval(['save ',filename,' equ
+eval(['save ',filename,' equil'])
