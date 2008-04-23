@@ -19,8 +19,24 @@ if strcmp(basestr,'TS'),
     xpoint(7) = 0;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
     xpoint(8) = 0;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
     %
-    [ap,Rp,Zp,Bt,Ip,qmin,eq,qopt,Zi,mi,fi,Te0,Tea,eTe1,eTe2,ne0,nea,ene1,ene2,Ti0,Tia,eTi1,eTi2,Zeff0,Zeffa,eZeff,xZeff,vloop,LH,EC] = load_tprof_tsbase_yp(str2num(shotnum),str2num(shotime),t1,t2,basestr);
-    %
+    while 1,
+    	certif = input_dke_yp('Enter a certification: (-1) exit, 0 (no certification), 1, 2, 3, 4',0,{0,1,2,3,4},'Invalid selection');
+    	if certif == -1,
+    		equil_magnetic = [];
+			prho_out = [];
+			pspsin_out = [];
+			pspsinT_out = [];
+			pp_out = [];
+			return
+    	end
+		%
+    	[ap,Rp,Zp,Bt,Ip,qmin,eq,qopt,Zi,mi,fi,Te0,Tea,eTe1,eTe2,ne0,nea,ene1,ene2,Ti0,Tia,eTi1,eTi2,Zeff0,Zeffa,eZeff,xZeff,vloop,LH,EC] = load_tprof_tsbase_yp(shotnum,certif,str2num(shotime),t1,t2,basestr);
+		if isempty(ap),%tprof data are not documented for this shot and this certification
+			disp('WARNING: No tprof data do not exist for shot #',int2str(shotnum),' and certification ',int2str(certif),'. Please try another certification or exit.');
+		else
+			break
+		end
+	end		
 else
     disp('The use of HELENA (helmex77) is not yet implemented for this machine.');
     return
@@ -28,25 +44,9 @@ end
 %    
 % Create guess magnetic equilibrium
 %
-if isempty(ap),%tprof data are not documented for the shot
-	equil_magnetic = [];
-	prho_out = [];
-	pspsin_out = [];
-	pspsinT_out = [];
-	pp_out = [];
-	return
-else
-	[prho,pTe,pne,pzTi,pzni,zZi,zmi,fi,pkin] = idealprof_yp(Zi,mi,fi,Te0,Tea,eTe1,eTe2,ne0,nea,ene1,ene2,Ti0,Tia,eTi1,eTi2,Zeff0,Zeffa,eZeff,xZeff,npsi);%Profiles
-	%
-	[ppsin,ppsi_apRp,theta,x,y,Bx,By,BPHI,pBpp,pq_Rpap,pj,pmag,Ip_test] = idealequilcyl_yp(ap,Rp,Zp,Bt,Ip,qmin*Rp/ap,eq,qopt,npsi,ntheta);%Cylindrical magnetic equilibrium
-	%
-	pj_min = min(pj); 
-	if pj_min < 0,pj = pj - pj_min;end,%pj must be non-negative. Only the shape is considered and Ip for the total plasma current
-	[equil_magnetic,prho_out,pspsin_out,pspsinT_out,pp_out] = equil_magnetic_helmex77_yp(ap,Rp,Zp,xpoint,Bt,Ip,ppsi_apRp*Rp/ap,pj,pkin,ntheta,1);
-	%
-	% Data saving for imake_equil_jd and the consistency with other machines
-	%
-	prho = prho_out;
-	save(savename,'prho','pne','pTe','pzTi','pzni','zZi','zmi','fi','vloop','LH','EC');
+[prho,pTe,pne,pzTi,pzni,zZi,zmi,fi,pkin] = idealprof_yp(Zi,mi,fi,Te0,Tea,eTe1,eTe2,ne0,nea,ene1,ene2,Ti0,Tia,eTi1,eTi2,Zeff0,Zeffa,eZeff,xZeff,npsi);%Profiles
 %
-end
+[ppsin,ppsi_apRp,theta,x,y,Bx,By,BPHI,pBpp,pq_Rpap,pj,pmag,Ip_test] = idealequilcyl_yp(ap,Rp,Zp,Bt,Ip,qmin*Rp/ap,eq,qopt,npsi,ntheta);%Cylindrical magnetic equilibrium
+%
+pj_min = min(pj); 
+if pj_min < 0,pj = pj - pj_min;end,%pj must be non-negative. Only
