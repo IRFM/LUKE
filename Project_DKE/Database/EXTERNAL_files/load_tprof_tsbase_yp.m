@@ -26,10 +26,46 @@ if strcmp(basestr,'TS'),
 	[tprof.Te,tprof.t,tprof.rho] = tsbase(shotnum,'GPROFTEFIT');%ELectron temperature (keV)
 	[tprof.ne,tprof.t,tprof.rho] = tsbase(shotnum,'GPROFNEFIT');%ELectron density profile (m-3)
 	[tprof.Ti,tprof.t,tprof.rho] = tsbase(shotnum,'GPROFTIFIT_');%Ion temperature profile (keV)
+	[tprof.ni,tprof.t,tprof.rho] = tsbase(shotnum,'GPROFNIFIT');%Ion density profile (m-3)
+	%
+	if isempty(tprof.ap) | isempty(tprof.Rp) |isempty(tprof.Zp) |isempty(tprof.Bt) |isempty(tprof.Ip) |isempty(tprof.qpsi) |isempty(tprof.vloop) | isempty(tprof.Zeff) | isempty(tprof.Zmain) | isempty(tprof.Mmain) | isempty(tprof.Cmain) | isempty(tprof.Zimp) | isempty(tprof.Mimp) | isempty(tprof.Te) | isempty(tprof.ne) | isempty(tprof.ni),
+		ap = [];
+		Rp = [];
+		Zp = [];
+		Bt = [];
+		Ip = [];
+		qmin = [];
+		eq = [];
+		qopt = [];
+		Zi = [];
+		mi = [];
+		fi = [];	
+		Te0 = [];
+		Tea = [];
+		eTe1 = [];
+		eTe2 = [];
+		ne0 = [];
+		nea = [];
+		ene1 = [];
+		ene2 = [];
+		Ti0 = [];
+		Tia = [];
+		eTi1 = [];
+		eTi2 = [];
+		Zeff0 = [];
+		Zeffa = [];
+		eZeff = [];
+		xZeff = [];
+		Vloop = [];
+		LH_out = [];
+		EC_out = [];
+		disp(['WARNING: tprof data are not documented for the shot #',int2str(shotnum),'. Contact T. Aniel or the CDIV.']);
+		return
+	end
+	%
 	if isempty(tprof.Ti),
 	    tprof.Ti = tprof.Te/2;%Rather good approximation for Tore SUpra
 	end
-	[tprof.ni,tprof.t,tprof.rho] = tsbase(shotnum,'GPROFNIFIT');%Ion density profile (m-3)
 	%
 	% Build data for C3PO/LUKE
 	%
