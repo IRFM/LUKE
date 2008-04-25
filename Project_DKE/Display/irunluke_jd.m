@@ -10,6 +10,9 @@ end
 if nargin < 2,
     signs = '';
 end
+if nargin < 1,
+    basestr = input_dke_yp('Enter a machine name (like ITER, TCV, TS, JET or any name)',' ');
+end
 %
 clc
 %
