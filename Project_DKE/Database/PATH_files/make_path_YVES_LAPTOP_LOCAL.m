@@ -12,7 +12,7 @@ luke_root = [local_root,'LUKE/'];
 %
 dkepath.path_id = path_id;
 dkepath.computer = computer;%machine type and supported OS
-dkepath.temppathroot = '/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+dkepath.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 dkepath.luke_root = luke_root;
 dkepath.local_root = local_root;
 %
