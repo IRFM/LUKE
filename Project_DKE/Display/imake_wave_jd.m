@@ -490,6 +490,7 @@ if w_opt == 0,% wave from C3PO calculations
     sd = pwd;
     cd(workdir);
     %
+    if ~isfield(rayinit,'id'),rayinit.id = '';end,%backward compatibility
     wave = main_C3PO_jd(rayinit.id,equil,rayinit,waveparam,fitparam,rayparam,display);
     cd(sd);
     %
