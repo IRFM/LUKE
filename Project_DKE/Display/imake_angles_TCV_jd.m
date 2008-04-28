@@ -117,7 +117,7 @@ else
         %
     end
     %
-    if isempty(angles_in),
+    if isempty(angles),
         %
         theta = input('Specify mirror angle theta (degrees)? [0]: ')*pi/180;
         if isempty(theta) 
