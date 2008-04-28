@@ -14,6 +14,7 @@ if length(s) ~= 1,
 end
 %
 fnames = fieldnames(s);
+s = putinfo_yp(s);
 %
 nf = length(fnames);
 %
@@ -75,8 +76,6 @@ while isel ~= 0,
     %
     if isel == -1,
         %
-        s = putinfo_yp(s);
-        %
         for iname = 1:nf,
             %
             fname = fnames{iname};
@@ -92,6 +91,7 @@ while isel ~= 0,
         %
         if stype(isel) <= 2,
             %
+            disp(['Field : ',fname,' : ',getfieldinfo_jd(s,fname)]);
             [fval,mod] = input_dke_yp(['New value for field : ',fname,' '],fval);
             %
             s = setfield(s,fname,fval);
