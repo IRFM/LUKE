@@ -69,7 +69,7 @@ while isel >= 0,
     end
     %
     if status.dkeparam == 1,
-        statstr.dkeparam = [dkeparam_path,dkeparam_file];
+        statstr.dkeparam = dkeparam.info.file;
     else
         if ~isempty(dkeparam),
             disp('The structure ''dkeparam'' is outdated and cleared.');
@@ -243,6 +243,11 @@ while isel >= 0,
 					load(datafile);
 					disp(['-----> The data file ',datafile,' is loaded.']);
 					%
+                    if ~isfield(dkeparam,'info'),%cases that must be updated
+                        dkeparam.info.file = [dkeparam_path,dkeparam_file];
+                        clear dkeparam_path dkeparam_file
+                    end
+                    %
 					status.data = 1;
 					%
 				elseif strfind(data_file,'LUKE_RESULTS_'),
@@ -258,8 +263,7 @@ while isel >= 0,
 					dkepath_file = data_file;
 					%
 					dkeparam = data.dkeparam;
-					dkeparam_path = data_path;
-					dkeparam_file = data_file;
+					dkeparam.info.file = [data_path,data_file];
 					%
 					dkedisplay = data.dkedisplay;
 					%
@@ -414,16 +418,11 @@ while isel >= 0,
             disp(' ');
             %
             newpar = 0;
+            param_id = '';
             %
             if status.dkeparam == 1,
-                m_opt = input('Do you want to: (0) see/modify LUKE parameters (1) load new parameters [0]: ');
+                m_opt = input_dke_yp('Do you want to: (0) see/modify LUKE parameters (1) load new parameters',0,[0,1]);
                 %
-                if isempty(m_opt);
-                    m_opt = 0;
-                elseif ~isnumeric(m_opt) | ~any(m_opt == [0,1]),
-                    disp('-----> Invalid option.');
-                    continue
-                end
             else
                 m_opt = 1;
             end
@@ -436,8 +435,8 @@ while isel >= 0,
                     param_id = basestr;
                 end
                 %
-                if exist([workdir,'/DKEPARAM_',param_id,'.mat']),
-                    dkeparam_file = [workdir,'/DKEPARAM_',param_id,'.mat'];
+                if exist([workdir,'DKEPARAM_',param_id,'.mat'],'file'),
+                    dkeparam_file = [workdir,'DKEPARAM_',param_id,'.mat'];
                 else
                     if strcmp(basestr,'TCV'),
                         dkeparam_file = 'DKEPARAM_EC_RT.mat';
@@ -447,27 +446,26 @@ while isel >= 0,
                     dkeparam_file = which(dkeparam_file);    
                 end
                 %
-                [dkeparam_file,dkeparam_path] = igetfile_jd(opt_gui,'DKEPARAM_*.mat',['Please select the dkeparam default parameters file'],dkeparam_file);
+                dkeparam_new = iload_struct_jd('dkeparam','DKEPARAM',dkeparam_file,opt_gui);
                 %
-                if dkeparam_file == 0,
-                    disp('-----> No LUKE parameters structure specified.')
-                else
+                if ~isempty(dkeparam_new),
                     %
-                    load([dkeparam_path,dkeparam_file],'dkeparam');
-                    disp('-----> The dkeparam structure is loaded')
-                    %
+                    dkeparam = dkeparam_new;
                     newpar = 1;
                     %
                     if ~isfield(dkeparam,'rho_S'),
                         dkeparam.rho_S = 20;
                     end
                     %
-                    c_opt = input('Do you want to see/modify the LUKE parameters (y/n)? [n] : ','s');
+                    c_opt = input_dke_yp('Do you want to see/modify the LUKE parameters (y/n)','n',{'y','n'});
                     %
                     if strcmp(c_opt,'y'),
                         m_opt = 0;
                     end
                 end
+                %
+                clear dkeparam_new
+                %
             end
             %
             if m_opt == 0,
@@ -475,20 +473,12 @@ while isel >= 0,
                 [dkeparam,mod] = imod_struct_jd(dkeparam,'dkeparam',1);
                 %
                 if mod == 1,
-                    s_opt = input('Do you want to save the dkeparam structure separately (y/n)? [n] : ','s');
-                    if strcmp(s_opt,'y'),
-                        sd = pwd;
-                        cd(workdir);
-                        [dkeparam_file,dkeparam_path] = iputfile_jd(opt_gui,['DKEPARAM_',param_id,'*.mat'],'Please provide the DKEPARAM file name',['DKEPARAM_',param_id,'.mat']);
-                        %
-                        if dkeparam_file == 0,
-                            disp('-----> No file name specified, dkeparam structure not saved.')
-                        else
-                            save([dkeparam_path,dkeparam_file],'dkeparam');
-                            disp('-----> The dkeparam structure is saved')
-                        end
-                        cd(sd);
-                    end 
+                    %
+                    param.id = input_dke_yp('Please provide an id for the dkeparam structure',param_id);
+                    %
+                    isave_struct_jd(dkeparam,'dkeparam','DKEPARAM',param.id,workdir,opt_gui)
+                    newpar = 1;
+                    %
                 end
                 %
             end
@@ -509,47 +499,27 @@ while isel >= 0,
             %
             neweq = 0;
             %
-            l_opt = input('Do you want to load an existing ''equil'' structure (y/n)? [n] : ','s');
-            if strcmp(l_opt,'y'),
-                [equil_file,equil_path] = igetfile_jd(opt_gui,'EQUIL_*.mat','Please select the EQUIL file',workdir);
+            equil_new = iload_struct_jd('equil','EQUIL',workdir,opt_gui);
+            %
+            if ~isempty(equil_new),
                 %
-                if equil_file == 0,
-                    disp('-----> No equilibrium structure specified.')
-                else
-                    %
-                    load([equil_path,equil_file],'equil');
-                    disp('-----> The equilibrium structure is loaded')
-                    %
-                    neweq = 1;
-                    %
-                end  
+                equil = equil_new;
+                neweq = 1;
                 %
             else
                 equil = imake_equil_jd(workdir,basestr,signs,opt_gui);
                 %
                 if ~isempty(equil),
                     %
-                    disp('-----> The equilibrium structure is created')
+                    disp('-----> The structure ''equil'' is created')
                     %
-                    e_opt = input('Do you want to save the equilibrium structure separately (y/n)? [n] : ','s');
-                    if strcmp(e_opt,'y'),
-                        sd = pwd;
-                        cd(workdir);
-                        [equil_file,equil_path] = iputfile_jd(opt_gui,'EQUIL_*.mat','Please provide the EQUIL file name',['EQUIL_',equil.id,'.mat']);
-                        %
-                        if equil_file == 0,
-                            disp('-----> No file name specified, equilibrium structure not saved.')
-                        else
-                            save([equil_path,equil_file],'equil');
-                            disp('-----> The equilibrium structure is saved')
-                        end
-                        cd(sd);
-                    end
-                    %
+                    isave_struct_jd(equil,'equil','EQUIL',equil.id,workdir,opt_gui)
                     neweq = 1;
                     %
                 end
             end
+            %
+            clear equil_new
             %
             if neweq == 1,
                 status.equil = 1;
@@ -598,8 +568,8 @@ while isel >= 0,
                                 [waves{iw},mod] = imod_struct_jd(waves{iw},'wave',0);
                                 %
                                 if mod == 1,
-                                    status.output = 0;
-                                    status.data = 2;
+                                    isave_struct_jd(waves{iw},'wave',['WAVE_',equil.id],waves{iw}.id,workdir,opt_gui)
+                                    newwaves = 1;
                                 end   
                             end
                             %
@@ -622,82 +592,40 @@ while isel >= 0,
                 %
             end
             %
-            l_opt = input('Do you want to load existing WAVE structures (y/n)? [n] : ','s');
-            if strcmp(l_opt,'y'),
+            waves_new = iload_struct_jd('wave',['WAVE_',equil.id],workdir,opt_gui,1);
+            %
+            if ~isempty(waves_new),
                 %
-                [wave_file,wave_path] = igetfile_jd(opt_gui,['WAVE_',equil.id,'_*.mat'],'Please select the WAVE files',workdir,1);
-                %
-                if ~iscell(wave_file) & wave_file == 0,
-                    disp('-----> No wave structure specified.')
-                else  
-                    %
-                    newwaves = 1;
-                    %
-                    while iscell(wave_file) | wave_file ~= 0,
-                        %
-                        if iscell(wave_file) == 0,
-                                load([wave_path,wave_file],'wave');
-                                waves = [waves,{wave}];
-                                disp(['-----> The wave structure :',wave_path,wave_file,' is loaded'])
-                        else
-                            %
-                            for iw = 1:length(wave_file),
-                                load([wave_path,wave_file{iw}],'wave');
-                                waves = [waves,{wave}];
-                                disp(['-----> The wave structure :',wave_path,wave_file{iw},' is loaded'])
-                            end
-                        end
-                        %
-                %         w_opt = input('Do you want to plot the wave data (y/n)? [n] : ','s');
-                %         if strcmp(w_opt,'y'),
-                %             graph_wave_jd();
-                %         end
-                        %
-                        [wave_file,wave_path] = igetfile_jd(opt_gui,['WAVE_',equil.id,'_*.mat'],'Load additional WAVE files (cancel if finished)',workdir,1);
-                        %
-                    end
-                end
-                %
-                clear wave wave_file wave_path
+                waves = conc_struct_jd(waves,waves_new);
+                newwaves = 1;
                 %
             end
             %
-            l_opt = input('Do you want to build a new WAVE structures (y/n)? [n] : ','s');
+            clear waves_new
+            %
+            l_opt = input_dke_yp('Do you want to build a new structure ''wave'' (y/n)','n',{'y','n'});
             %
             while strcmp(l_opt,'y'),
                 %
                 wave = imake_wave_jd(workdir,basestr,equil,opt_gui);
                 %
                 if isempty(wave),
-                    disp('-----> Current wave structure construction aborted')
                     %
-                    l_opt = input('Do you want to build a new WAVE structures (y/n)? [n] : ','s');
+                    disp('-----> Current structure ''wave'' construction aborted.')
+                    %
+                    l_opt = input_dke_yp('Do you want to build a new structure ''wave'' (y/n)','n',{'y','n'});
                     %
                     continue
                 end
                 %
-                disp('-----> The wave structure is created')
+                disp('-----> The structure ''wave'' is created.')
                 %
+                isave_struct_jd(wave,'wave',['WAVE_',equil.id],wave.id,workdir,opt_gui)
                 newwaves = 1;
-                %
-                w_opt = input('Do you want to save the wave structure separately (y/n)? [n] : ','s');
-                if strcmp(w_opt,'y'),
-                    sd = pwd;
-                    cd(workdir);
-                    [wave_file,wave_path] = iputfile_jd(opt_gui,['WAVE_',equil.id,'*.mat'],'Please provide the WAVE file name',['WAVE_',equil.id,'_',wave.id,'.mat']);
-                    %
-                    if wave_file == 0,
-                        disp('-----> No file name specified, wave structure not saved.')
-                    else
-                        save([wave_path,wave_file],'wave');
-                        disp('-----> The wave structure is saved')
-                    end
-                    cd(sd);
-                end
                 %
                 waves = [waves,{wave}];
                 %
-                l_opt = input('Do you want to build a new WAVE structures (y/n)? [n] : ','s');
+                l_opt = input_dke_yp('Do you want to build a new structure ''wave'' (y/n)','n',{'y','n'});
             end
             %
             if newwaves == 1,
@@ -711,7 +639,7 @@ while isel >= 0,
             % OHM
             %
             if status.equil == 0;
-                disp('-----> An equilibrium structure must exist to create an ohm structure.');
+                disp('-----> An equilibrium structure must exist to create an ''ohm'' structure.');
                 continue
             end
             %
@@ -722,36 +650,28 @@ while isel >= 0,
             newohm = 0;
             %
             if ~isempty(ohm),
-                o_opt = input('Do you want to clear the existing OHM structures (y/n)? [n] : ','s');
+                o_opt = input_dke_yp('Do you want to clear the existing structure ''ohm'' (y/n)','n',{'y','n'});
                 %
                 if strcmp(o_opt,'y'),
-                    disp('-----> The ohm structure is cleared.')
+                    disp('-----> The structure ''ohm'' is cleared.')
                     status.ohm = 0;
                     status.output = 0;
                     status.data = 2;
+                else
+                    continue
                 end
                 %
             end
             %    
-            o_opt = input('Do you want to load an existing OHM structures (y/n)? [n] : ','s');
+            ohm_new = iload_struct_jd('ohm',['OHM_',equil.id],workdir,opt_gui);
             %
-            if strcmp(o_opt,'y'),
+            if ~isempty(ohm_new),
                 %
-                [ohm_file,ohm_path] = igetfile_jd(opt_gui,['OHM_',equil.id,'_*.mat'],'Please select the OHM file',workdir);
+                ohm = ohm_new;
+                newohm = 1;
                 %
-                if ohm_file == 0,
-                    disp('-----> No ohm structure specified.')
-                else
-                    %
-                    load([ohm_path,ohm_file],'ohm');
-                    disp(['-----> The ohm structure :',ohm_path,ohm_file,' is loaded'])
-                    %
-                    newohm = 1;
-                    %
-                end  
             else
-                %
-                l_opt = input('Do you want to build a OHM structure (y/n)? [n] : ','s');
+                l_opt = input_dke_yp('Do you want to build a structure ''ohm'' (y/n)','n',{'y','n'});
                 %
                 if strcmp(l_opt,'y'),
                     %
@@ -759,28 +679,16 @@ while isel >= 0,
                     %
                     if ~isempty(ohm),
                         %
-                        disp('-----> The ohm structure is created')
+                        disp('-----> The structure ''ohm'' is created')
                         %
+                        isave_struct_jd(ohm,'ohm',['OHM_',equil.id],ohm.id,workdir,opt_gui)
                         newohm = 1;
                         %
-                        o_opt = input('Do you want to save the ohm structure separately (y/n)? [n] : ','s');
-                        if strcmp(o_opt,'y'),
-                            sd = pwd;
-                            cd(workdir);
-                            [ohm_file,ohm_path] = iputfile_jd(opt_gui,['OHM_',equil.id,'*.mat'],'Please provide the OHM file name',['OHM_',equil.id,'_',ohm.id,'.mat']);
-                            %
-                            if ohm_file == 0,
-                                disp('-----> No file name specified, ohm structure not saved.')
-                            else
-                                save([ohm_path,ohm_file],'ohm');
-                                disp('-----> The ohm structure is saved')
-                            end
-                            cd(sd);
-                        end
                     end
-                    %
                 end
             end
+            %
+            clear ohm_new
             %
             if newohm == 1,
                 status.ohm = 1;
@@ -790,10 +698,10 @@ while isel >= 0,
             %
         elseif isel == 9,
             %
-            % TRANSPORT parameters
+            % TRANSPORT
             %
             if status.equil == 0;
-                disp('-----> An equilibrium structure must exist to create a transp structure.');
+                disp('-----> An equilibrium structure must exist to create a ''transpfaste'' structure.');
                 continue
             end
             %
@@ -804,64 +712,64 @@ while isel >= 0,
             newtransp = 0;
             %
             if ~isempty(transpfaste),
-                t_opt = input('Do you want to clear the existing transp structures (y/n)? [n] : ','s');
+                t_opt = input_dke_yp('Do you want to clear the existing structure ''transpfaste'' (y/n)','n',{'y','n'});
                 %
                 if strcmp(t_opt,'y'),
-                    disp('-----> The transp structure is cleared.')
+                    disp('-----> The structure ''transpfaste'' is cleared.')
                     status.transpfaste = 0;
                     status.output = 0;
                     status.data = 2;
+                else
+                    %
+                    m_opt = input_dke_yp(['Do you want to see/modify the structure ''transpfaste'' (y/n)'],'n',{'y','n'});
+                    %
+                    if strcmp(m_opt,'y'),
+                        %
+                        [transpfaste,mod] = imod_struct_jd(transpfaste,'transpfaste',0);
+                        %
+                        if mod == 1,
+                            %
+                            isave_struct_jd(transpfaste,'transpfaste',['TRANSP_',equil.id],transpfaste.id,workdir,opt_gui)
+                            newtransp = 1;
+                            %
+                        end  
+                    else
+                        continue
+                    end
+                    %
                 end
                 %
             end
             %
-            t_opt = input('Do you want to load an existing TRANSP structures (y/n)? [n] : ','s');
-            if strcmp(t_opt,'y'),
+            if newtransp == 0,
                 %
-                [transp_file,transp_path] = igetfile_jd(opt_gui,['TRANSP_',equil.id,'_*.mat'],'Please select the TRANSP file',workdir);
+                transpfaste_new = iload_struct_jd('transpfaste',['TRANSP_',equil.id],workdir,opt_gui);
                 %
-                if transp_file == 0,
-                    disp('-----> No transp structure specified.')
-                else
+                if ~isempty(transpfaste_new),
                     %
-                    load([transp_path,transp_file],'transpfaste');
-                    disp(['-----> The transpfaste structure :',transp_path,transp_file,' is loaded'])
-                    %
+                    transpfaste = transpfaste_new;
                     newtransp = 1;
                     %
-                end  
-                %
-            else
-                %
-                l_opt = input('Do you want to build a TRANSP structure (y/n)? [n] : ','s');
-                %
-                if strcmp(l_opt,'y'),
+                else
+                    l_opt = input_dke_yp('Do you want to build a structure ''transpfaste'' (y/n)','n',{'y','n'});
                     %
-                    transpfaste = imake_transp_jd(basestr,equil);
-                    %
-                    if ~isempty(transpfaste),
+                    if strcmp(l_opt,'y'),
                         %
-                        disp('-----> The transpfaste structure is created')
+                        transpfaste = imake_transp_jd(basestr,equil);
                         %
-                        newtransp = 1;
-                        %
-                        t_opt = input('Do you want to save the transpfaste structure (y/n)? [n] : ','s');
-                        if strcmp(t_opt,'y'),
-                            sd = pwd;
-                            cd(workdir);
-                            [transp_file,transp_path] = iputfile_jd(opt_gui,['TRANSP_',equil.id,'*.mat'],'Please provide the OHM file name',['TRANSP_',equil.id,'_',transpfaste.id,'.mat']);
+                        if ~isempty(transpfaste),
                             %
-                            if transp_file == 0,
-                                disp('-----> No file name specified, transpfaste structure not saved.')
-                            else
-                                save([transp_path,transp_file],'transpfaste');
-                                disp('-----> The transpfaste structure is saved')
-                            end
-                            cd(sd);
+                            disp('-----> The structure ''transpfaste'' is created')
+                            %
+                            isave_struct_jd(transpfaste,'transpfaste',['TRANSP_',equil.id],transpfaste.id,workdir,opt_gui)
+                            newtransp = 1;
+                            %
                         end
-                        %
                     end
                 end
+                %
+                clear transpfaste_new
+                %
             end
             %
             if newtransp == 1,
