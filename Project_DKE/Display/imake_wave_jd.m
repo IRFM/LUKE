@@ -503,9 +503,9 @@ if w_opt == 0,% wave from C3PO calculations
     %
     if i_opt == 0,
         wave.launch = launch;
-        if strcmp(basestr,'TCV')
+        if strcmp(basestr,'TCV'),
+            wave.angles = angles;
            % wave.info.launch = [data_path,data_file];
-           % wave.info.angles = angles;
         end
     elseif i_opt == 1,
         wave.info.rayinit = [rayinit_path,rayinit_file];
