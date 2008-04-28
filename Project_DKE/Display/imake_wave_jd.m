@@ -2,7 +2,7 @@ function wave = imake_wave_jd(workdir,basestr,equil,opt_gui)
 %
 % This function interactively builds the wave structure
 %
-if nargin < 5,
+if nargin < 4,
     opt_gui = 1;
 end
 %
