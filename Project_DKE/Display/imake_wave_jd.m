@@ -340,55 +340,9 @@ if w_opt == 0,% wave from C3PO calculations
     %
     c_opt = input('Do you want to see/modify the C3PO parameters? [y/n] : ','s');
     if strcmp(c_opt,'y'),
-        fitparam,rayparam,
         %
-        f_opt = input('Do you want to modify fitparam? [y/n] : ','s');
-        if strcmp(f_opt,'y'),
-            %
-            fname = input('Name of fitparam field to modify (press enter if finished): ','s');
-            while fname ~= 0,
-                %
-                if isfield(fitparam,fname),
-                    eval(['f_val_o = fitparam.',fname,';']);
-                    if isnumeric(f_val_o),
-                        f_val_o_s = num2str(f_val_o);
-                    else
-                        f_val_o_s =f_val_o;
-                    end
-                    f_val = input(['Provide value for field ',fname,' [',f_val_o_s,'] : ']);
-                    if isempty(f_val),
-                        f_val = f_val_o;
-                    end
-                    eval(['fitparam.',fname,' = f_val;']);
-                end
-                %
-                fname = input('Name of fitparam field to modify (press enter if finished): ','s');
-            end
-        end
-        %
-        f_opt = input('Do you want to modify rayparam? [y/n] : ','s');
-        if strcmp(f_opt,'y'),
-            %
-            fname = input('Name of rayparam field to modify (press enter if finished): ','s');
-            while fname ~= 0,
-                %
-                if isfield(rayparam,fname),
-                    eval(['f_val_o = rayparam.',fname,';']);
-                    if isnumeric(f_val_o),
-                        f_val_o_s = num2str(f_val_o);
-                    else
-                        f_val_o_s =f_val_o;
-                    end
-                    f_val = input(['Provide value for field ',fname,' [',f_val_o_s,'] : ']);
-                    if isempty(f_val),
-                        f_val = f_val_o;
-                    end
-                    eval(['rayparam.',fname,' = f_val;']);
-                end
-                %
-                fname = input('Name of rayparam field to modify (press enter if finished): ','s');
-            end
-        end
+        fitparam = imod_struct_jd(fitparam,'fitparam',1);
+        rayparam = imod_struct_jd(rayparam,'rayparam',1);
         %
     end
     %

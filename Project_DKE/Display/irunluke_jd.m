@@ -471,42 +471,25 @@ while isel >= 0,
             end
             %
             if m_opt == 0,
-                dkeparam,
                 %
-                fname = input('Name of dkeparam field to modify (press enter if finished): ','s');
-                while fname ~= 0,
-                    %
-                    if isfield(dkeparam,fname),
-                        eval(['f_val_o = dkeparam.',fname,';']);
-                        if isnumeric(f_val_o),
-                            f_val_o_s = num2str(f_val_o);
+                [dkeparam,mod] = imod_struct_jd(dkeparam,'dkeparam',1);
+                %
+                if mod == 1,
+                    s_opt = input('Do you want to save the dkeparam structure separately (y/n)? [n] : ','s');
+                    if strcmp(s_opt,'y'),
+                        sd = pwd;
+                        cd(workdir);
+                        [dkeparam_file,dkeparam_path] = iputfile_jd(opt_gui,['DKEPARAM_',param_id,'*.mat'],'Please provide the DKEPARAM file name',['DKEPARAM_',param_id,'.mat']);
+                        %
+                        if dkeparam_file == 0,
+                            disp('-----> No file name specified, dkeparam structure not saved.')
                         else
-                            f_val_o_s =f_val_o;
+                            save([dkeparam_path,dkeparam_file],'dkeparam');
+                            disp('-----> The dkeparam structure is saved')
                         end
-                        f_val = input(['Provide value for field ',fname,' [',f_val_o_s,'] : ']);
-                        if ~isempty(f_val),
-                            newpar = 1;
-                            eval(['dkeparam.',fname,' = f_val;']);
-                        end
-                    end
-                    %
-                    fname = input('Name of dkeparam field to modify (press enter if finished): ','s');
+                        cd(sd);
+                    end 
                 end
-                %
-                s_opt = input('Do you want to save the dkeparam structure separately (y/n)? [n] : ','s');
-                if strcmp(s_opt,'y'),
-                    sd = pwd;
-                    cd(workdir);
-                    [dkeparam_file,dkeparam_path] = iputfile_jd(opt_gui,['DKEPARAM_',param_id,'*.mat'],'Please provide the DKEPARAM file name',['DKEPARAM_',param_id,'.mat']);
-                    %
-                    if dkeparam_file == 0,
-                        disp('-----> No file name specified, dkeparam structure not saved.')
-                    else
-                        save([dkeparam_path,dkeparam_file],'dkeparam');
-                        disp('-----> The dkeparam structure is saved')
-                    end
-                    cd(sd);
-                end 
                 %
             end
             %
@@ -593,19 +576,33 @@ while isel >= 0,
             newwaves = 0;
             %
             if ~isempty(waves),
-                l_opt = input('Do you want to check existing wave structures (y/n)? [n] : ','s');
+                l_opt = input_dke_yp('Do you want to check existing wave structures (y/n)','n',{'y','n'});
                 %
                 if strcmp(l_opt,'y'),
                     %
 					iw_list = [];
 					%
                     for iw = 1:length(waves),
-                        w_opt = input(['Do you want to clear the wave structure ',waves{iw}.id,' (y/n)? [n] : '],'s');
+                        w_opt = input_dke_yp(['Do you want to clear the wave structure ',waves{iw}.id,' (y/n)'],'n',{'y','n'});
                         %
                         if strcmp(w_opt,'y'),
                             disp(['-----> The wave structure ',waves{iw}.id,' is cleared.'])
                             %
                             iw_list = [iw_list,iw];
+                        else
+                            %
+                            m_opt = input_dke_yp(['Do you want to see/modify the wave structure ',waves{iw}.id,' (y/n)'],'n',{'y','n'});
+                            %
+                            if strcmp(m_opt,'y'),
+                                %
+                                [waves{iw},mod] = imod_struct_jd(waves{iw},'wave',0);
+                                %
+                                if mod == 1,
+                                    status.output = 0;
+                                    status.data = 2;
+                                end   
+                            end
+                            %
                         end
                     end
 					%
