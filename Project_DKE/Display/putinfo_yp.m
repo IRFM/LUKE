@@ -5,15 +5,12 @@ function [s] = putinfo_yp(s,struct_name)
 %
 % by Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr> and J. Decker (DRFC/DSM/CEA) <joan.decker@cea.fr> 
 %
-if isfield(s,'info'),s = rmfield(s,'info');end
-if isfield(s,'expert'),s = rmfield(s,'info');end
-%
 fnames = fieldnames(s);
 nfield = length(fnames);
 %
 for ifield = 1:nfield,
     [s.info.(fnames{ifield}),s.expert.(fnames{ifield})] = structinfo_yp(struct_name,fnames{ifield});
-    if isstruct(s.(fnames{ifield})),
+    if isstruct(s.(fnames{ifield})) && ~strcmp(fnames{ifield},'info') && ~strcmp(fnames{ifield},'expert'),
         [s.(fnames{ifield})] = putinfo_yp(s.(fnames{ifield}),fnames{ifield});
     end
 end
