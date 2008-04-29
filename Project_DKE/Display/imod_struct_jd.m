@@ -13,25 +13,43 @@ if length(s) ~= 1,
     error('This function applies only to (1,1) structures')
 end
 %
-fnames = fieldnames(s);
-s = putinfo_yp(s);
+fnames_all = fieldnames(s);
+nf_all = length(fnames_all);
 %
-nf = length(fnames);
+s = putinfo_yp(s,sname);
 %
-lmax = 0;
+expert = zeros(1,nf_all);
+for iname = 1:nf_all,
+    expert(iname) = s.expert.(fnames_all{iname});
+end
 %
-for iname = 1:nf,
-    lmax = max([lmax,length(fnames{iname})]);
-end  
-emptstr = repmat(' ',[1,lmax]);
+fnames_nexp = fnames_all(~expert);
 %
 isel = NaN;
 mod = 0;
-%
-nmax = length(num2str(nf));
-emptnstr = repmat(' ',[1,nmax]);
+expmode = 0;
 %
 while isel ~= 0,
+    %
+    if expmode == 0,
+        fnames = fnames_nexp;
+        switchstr = 'Enter expert mode (more parameters).';
+    else
+        fnames = fnames_all;
+        switchstr = 'Leave expert mode (main parameters).';
+    end
+    %
+    nf = length(fnames);
+    %
+    lmax = 0;
+    %
+    for iname = 1:nf,
+        lmax = max([lmax,length(fnames{iname})]);
+    end  
+    emptstr = repmat(' ',[1,lmax]);
+    %
+    nmax = length(num2str(nf));
+    emptnstr = repmat(' ',[1,nmax]);
     %
     disp(' ');
     disp(['====> Fields of the structure ',sname]);
@@ -41,7 +59,7 @@ while isel ~= 0,
     %
     for iname = 1:nf,
         fname = fnames{iname};
-        fval = getfield(s,fname);
+        fval = s.(fname);
         %
         if ischar(fval),
             stype(iname) = 1;
@@ -67,12 +85,17 @@ while isel ~= 0,
     end
     %
     disp(' ')
+    disp(['[-2]',emptnstr(1:nmax-2),' : ',switchstr])
     disp(['[-1]',emptnstr(1:nmax-2),' : get fields info'])
     disp(['[0]',emptnstr(1:nmax-1),' : return structure'])
     disp(' ')
     %
-    isel = input_dke_yp('',0,-1:nf);
+    isel = input_dke_yp('',0,-2:nf);
     disp(' ');
+    %
+    if isel == -2,
+        expmode = ~expmode;
+    end
     %
     if isel == -1,
         %
@@ -87,21 +110,21 @@ while isel ~= 0,
     if isel > 0,
         %
         fname = fnames{isel};
-        fval = getfield(s,fname);
+        fval = s.(fname);
         %
         if stype(isel) <= 2,
             %
             disp(['Field : ',fname,' : ',getfieldinfo_jd(s,fname)]);
             [fval,mod] = input_dke_yp(['New value for field : ',fname,' '],fval);
             %
-            s = setfield(s,fname,fval);
+            s.(fname) = fval;
             %
         elseif stype(isel) == 3,
             %
             if d_opt == 1
                 %
                 [fval,mod] = imod_struct_jd(fval,fname,1);
-                s = setfield(s,fname,fval);
+                s.(fname) = fval;
                 %
             else
                 %
@@ -114,7 +137,7 @@ while isel ~= 0,
             if d_opt == 1
                 %
                 [fval,mod] = imod_cell_jd(fval,fname,1);
-                s = setfield(s,fname,fval);
+                s.(fname) = fval;
                 %
             else
                 %
