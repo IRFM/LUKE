@@ -1,5 +1,8 @@
-function s = iload_struct_jd(sname,sbase,workdir,opt_gui,opt_multi)
+function s = iload_struct_jd(sname,sbase,workdir,opt_gui,opt_multi,opt_id)
 %
+if nargin < 6,
+    opt_id = 1;
+end
 if nargin < 5,
     opt_multi = 0;
 end
@@ -38,6 +41,7 @@ if strcmp(l_opt,'y'),
             eval(['s = ',sname,';']);
             disp(['-----> The structure ''',sname,''' is loaded from file ',pathname,filename])
             s.info.file = [pathname,filename];
+            s = checkid(s,opt_id);
             %
         else
             %
@@ -49,6 +53,7 @@ if strcmp(l_opt,'y'),
                     eval(['s = [s,{',sname,'}];']);
                     disp(['-----> The structure ''',sname,''' is loaded from file ',pathname,filename])
                     s{end}.info.file = [pathname,filename];
+                    s{end} = checkid(s{end},opt_id);
                     %
                 else
                     %
@@ -58,6 +63,7 @@ if strcmp(l_opt,'y'),
                         eval(['s = [s,{',sname,'}];']);
                         disp(['-----> The structure ''',sname,''' is loaded from file ',pathname,filename{ic}])
                         s{end}.info.file = [pathname,filename];
+                        s{end} = checkid(s{end},opt_id);
                         %
                     end
                 end
@@ -69,3 +75,13 @@ if strcmp(l_opt,'y'),
     end  
 end
 %
+function s = checkid(s,opt_id)
+%
+if opt_id && ~isfield(s,'id'),
+    s.id = input_dke_yp(['Please provide an id for this structure'],'','');
+end
+%
+
+
+
+

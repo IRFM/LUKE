@@ -446,7 +446,7 @@ while isel >= 0,
                     dkeparam_file = which(dkeparam_file);    
                 end
                 %
-                dkeparam_new = iload_struct_jd('dkeparam','DKEPARAM',dkeparam_file,opt_gui);
+                dkeparam_new = iload_struct_jd('dkeparam','DKEPARAM',dkeparam_file,opt_gui,0,0);
                 %
                 if ~isempty(dkeparam_new),
                     %

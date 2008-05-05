@@ -292,13 +292,7 @@ if w_opt == 0,% wave from C3PO calculations
         %
     elseif i_opt == 1,%initial conditions from an existing RAYINIT file 
         %
-        [rayinit_file,rayinit_path] = igetfile_jd(opt_gui,['RAYINIT_',equil.id,'_*.mat'],'Please select the RAYINIT file ',workdir);
-        %
-        if rayinit_file == 0,
-            return
-        end
-        %
-        load([rayinit_path,rayinit_file],'rayinit');
+        rayinit = iload_struct_jd('rayinit','RAYINIT',workdir,opt_gui);
         %
     elseif i_opt == 2,%initial conditions from TORAY 
         %
@@ -464,10 +458,7 @@ if w_opt == 0,% wave from C3PO calculations
         wave.launch = launch;
         if strcmp(basestr,'TCV'),
             wave.angles = angles;
-           % wave.info.launch = [data_path,data_file];
         end
-    elseif i_opt == 1,
-        wave.info.rayinit = [rayinit_path,rayinit_file];
     end
     wave.rayinit = rayinit;
     wave.fitparam = fitparam;
