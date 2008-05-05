@@ -1,6 +1,6 @@
 #include <math.h>
 #include <complex.h>
-#include <bessel_IK_jd.h>
+#include <bessel_IJK_jd.h>
 /*#include "mex.h"*/
 #define PI 3.141592653589793
 
@@ -74,10 +74,10 @@ int n,rel_opt,ns;
         if (beta2 < 0.002) { /* asymptotic expression */
             r = 1 - 15*beta2/8 + 345*beta2*beta2/128;
         } else {
-            r = sqrt(PI/2)*beta/bessk(2,1/beta2)/exp(1/beta2);
+            r = sqrt(PI/2)*beta/besskn(2,1/beta2)/exp(1/beta2);
         }
         
-        /*mexPrintf("bessk(2,1/beta2)) : %g\n",bessk(2,1/beta2));
+        /*mexPrintf("besskn(2,1/beta2)) : %g\n",besskn(2,1/beta2));
         mexPrintf("exp(1/beta2) : %g\n",exp(1/beta2));
         mexPrintf("r : %g\n",r);*/
         
@@ -148,7 +148,7 @@ int n,ns,resopt;
         /* polarization term */
         
         zeta = pperp*slperp;
-        theta = (epolp*jn(n+1,zeta) + epolm*jn(n-1,zeta))/sqrt(2) + epolz*jn(n,zeta)*pparres/pperp;
+        theta = (epolp*bessjn(n+1,zeta) + epolm*bessjn(n-1,zeta))/sqrt(2) + epolz*bessjn(n,zeta)*pparres/pperp;
         theta2 = cabs(theta)*cabs(theta);
         
         /* integrand */
