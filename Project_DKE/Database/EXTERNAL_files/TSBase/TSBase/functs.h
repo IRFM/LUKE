@@ -7,15 +7,15 @@ functs.h:
 
 #define MAXDATAPC	100000L
 #define FAR_PASCAL   PASCAL
-#define HUGE	     huge
+#define HUGE	     huge       
 #define Register
 #define Strcpy	     lstrcpy
 #define Strcat	     lstrcat
 #define Strlen	     lstrlen
 #define Memcpy	     _fmemcpy
 #else
-#define FAR_PASCAL
-#define HUGE
+#define FAR_PASCAL  
+#define HUGE	     
 #define Register     register
 #define Strcpy	     strcpy
 #define Strlen	     strlen

@@ -4,12 +4,11 @@ ALL= tsbase tsmat tsrqt tsdate tsoccur tsdernier_choc \
 #     tsample tstablet tsplinet tswcert bin2 tswfile 
 
 OPTIONS = -DUSE_FUNCTION_PROTOTYPES  -g# -DDEBUG
-INCLUDES = -I$./ -I/Applications/Sciences/MatLab/extern/include
+INCLUDES = -I$./ -I/Applications/Sciences/MatLab_R2007b/extern/include
 COPTS = -c 
 FOPTS = -g -c 
-CMEX = /Applications/Sciences/MatLab/bin/mex -I/usr/include -I./
-LIB =  /Volumes/Ailefroide/CVS/Project_TSBaseOSX/TSLib/libTS.a
-LIBYB =  /usr/agena/devarc/tslib/dev/client2000/libTS.a
+CMEX = /Applications/Sciences/MatLab_R2007b/bin/mex -I/usr/include -I./
+LIB =  /Users/Yves/CEA/Projets/Project_TSBaseOSX/TSLib/libTS.a
 AR = ar
 DLLMEX = 
 
@@ -27,10 +26,6 @@ tsmat:
 	$(CMEX) $(OPTIONS) tsmat.c tsignit.c tsparse.c $(LIB)
 tsbase:
 	$(CMEX) $(OPTIONS) tsbase.c tsignit.c tsparse.c $(LIB)
-tsmatYB:
-	$(CMEX) $(OPTIONS) tsmatYB.c tsignit.c tsparse.c $(LIBYB)
-tsbaseYB:
-	$(CMEX) $(OPTIONS) tsbaseYB.c tsignit.c tsparse.c $(LIBYB)
 tsrqt:
 	$(CMEX) $(OPTIONS) tsrqt.c $(LIB)
 tsoccur:
@@ -113,4 +108,4 @@ print :
 	pr -l87 < tsbamat.h | lpr
 	pr -l87 < tsmat.h | lpr
 clean:
-	rm -f *.o *.BAK *.sav *.old a.out core  *~ *.mexaxp
+	rm -f *.o *.BAK *.sav *.old a.out core  *~ *.mexaxp *.mexmac *mexmaci

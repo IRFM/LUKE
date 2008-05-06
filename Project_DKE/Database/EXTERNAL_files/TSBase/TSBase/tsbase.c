@@ -52,6 +52,7 @@ sig_ctrlc(int signal)
 }
 /* For CTRL C problems */
 
+/*
 #undef toupper
 int 
 toupper (c)
@@ -65,6 +66,7 @@ toupper (c)
 
   return (adel);
 }
+*/
 
 int l_rang ;	  /* lecture rang par defaut */         /** +++  **/
 int nb_extr2; /* nbre mesures quand extract = 2 */  /** +++  **/

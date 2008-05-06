@@ -26,6 +26,7 @@
           TSWfile
           TSRfile
           TSListOccTrait
+	  TSChangeOccur
 ******************************************/
 
 #include <stdio.h> 
@@ -36,14 +37,8 @@
 
 #include "tsdef.h"              /* liste des constantes utilisees */
 #include "tsconf.h"             /* configuration du client        */
-#if (client == INTEL)
 #include <stdarg.h>
-#else
-#include <varargs.h>
-#endif
-#if (client == MAC)
 
-#endif
 #include "tsfonc.h"             /* liste des fonctions appelees   */
 #include "tsmes.h"              /* liste des erreurs              */
 #include "tstype.h"             /* liste des types de donnees     */
@@ -203,7 +198,6 @@ TSLSig (	Longint numchoc,
   char *pts;
   char *ptd;
   char *ListeS;
-
   int i, j;
   char bufparam[taille_short+taille_long+TAILLE_NOM_DIAGNOSTIC];
 
@@ -913,7 +907,6 @@ TSRqt (	char * Requete,
 /************/
 Longint FAR_PASCAL
 TSLgDiag (	Longint numchoc,
-
 		char *nomdiag,
 		Longint *nbmes   )
 {
@@ -1161,7 +1154,6 @@ TSlistObjet (	Longint numchoc,
   if (CR == ok)
     {
 
-
       if ((Resultat = Reception (NumSocket, (char *) nbrep, taille_long, p_entrees))
 	  == erreur_reception)
 	return Resultat;
@@ -1217,17 +1209,11 @@ TSlistObjet (	Longint numchoc,
 
 /************/
 Longint FAR_PASCAL
-TSRqParm ( va_alist )
-#if (client != INTEL)
-va_dcl
-#endif
+TSRqParm (Longint numchoc,char *nomdiag,... )
 {
   va_list arg;
-  Longint numchoc;
-  char *nomdiag;
   char *nomobj;
   char *nomparam;
-
   Longint nbval;
   char **buff;
   Longint *nrep;
@@ -1247,15 +1233,9 @@ va_dcl
 
   /* recuperation des arguments de la fonction */
 
-#if (client != INTEL)
-  va_start(arg);
-#else
-  va_start(arg,nomparam);
-#endif
-  numchoc  = va_arg(arg, Longint);
+  va_start(arg,nomdiag);
   if (numchoc < 0)
     return numero_choc_invalide;
-  nomdiag  = va_arg(arg, char *);
   nomobj   = va_arg(arg, char *);
   nomparam = va_arg(arg, char *);
   nbval    = va_arg(arg, Longint );
@@ -1414,7 +1394,6 @@ va_dcl
                    ts_v_int2 *pt;
                    int i;
 
-
                    pt = (ts_v_int2 *)buffer;
                    for (i = 0 ; i < nb_val; i++) {
                       memcpy(pt_buff, &(pt->integer2), sizeof(short));
@@ -1498,7 +1477,6 @@ va_dcl
                    int i;
 
                    pt = (ts_v_int4_float4 *)buffer;
-
                    for (i = 0 ; i < nb_val; i++) {
                       memcpy(pt_buff, &(pt->integer4), sizeof(int));
                       pt_buff += sizeof(int) ;
@@ -2729,7 +2707,6 @@ TSrqEtat ( char *machine,
            char **pt_val )
 
 {
-
   int NumSocket;                /* descripteur de la socket de communication */
   short int CodeFonc;           /* code de la fonction TSLib appelee */
   Longint lg, Resultat;
@@ -3528,5 +3505,94 @@ TSExist_gen (char *NomDon,
 
  Fin_Communication (NumSocket);
  return CR;
+
+}
+
+
+/*
+ ****
+ ****	Changement des occurrences (JS - 11.2003) 
+ */
+
+Longint FAR_PASCAL
+TSChangeOccur  (char *User, char *NomTrait, Longint num_choc, 
+	Longint occur_source, Longint occur_cible, char *code_operation,
+        char **message)
+{
+
+  int NumSocket;                /* descripteur de la socket de communication */
+
+  short int CodeFonc;           /* code de la fonction TSLib appelee */
+  Longint Resultat, CR = -1;
+
+
+  if (num_choc < 0)
+    return numero_choc_invalide;
+  if (Strlen (NomTrait) == 0)
+    return nom_donnee_invalide;
+  
+  /* debut de communication */
+
+  if ((Resultat = Debut_Communication (&NumSocket, 1)) != ok)
+    return Resultat;
+
+  /* emission du code de la fonction */
+
+  if(compress_on)
+    CodeFonc = fonc_tschangeoccur;
+  else
+    CodeFonc = -(fonc_tschangeoccur - MAX_FUNCT_NUMBER);
+  if ((Resultat = Emission (NumSocket, (char *) &CodeFonc, taille_short, p_codefonc))
+      == erreur_emission)
+    return Resultat;
+
+  /* emission des parametres */
+
+  if ((Resultat = Emission (NumSocket, User, 33, p_codeclient ))
+      == erreur_emission)
+    return Resultat;
+
+  if ((Resultat = Emission (NumSocket, NomTrait, TAILLE_NOM_TRAITEMENT, p_nomtrait ))
+      == erreur_emission)
+    return Resultat;
+
+  if ((Resultat = Emission (NumSocket, (char *) &num_choc, taille_long,
+                                            p_numchoc)) == erreur_emission)
+    return Resultat;
+
+  if ((Resultat = Emission (NumSocket, (char *) &occur_source, taille_long,
+                                            p_occur)) == erreur_emission)
+    return Resultat;
+
+  if ((Resultat = Emission (NumSocket, (char *) &occur_cible, taille_long,
+                                            p_occur)) == erreur_emission)
+    return Resultat;
+
+  if ((Resultat = Emission (NumSocket, code_operation, 2,
+                                            p_extract)) == erreur_emission)
+    return Resultat;
+
+  /* fin d'emission */
+
+#if ((client!=PC) && (client !=MAC))
+  if ((Resultat = Fin_Emission (NumSocket))
+      == erreur_fin_emission)
+    return Resultat;
+#endif
+
+  /* reception des parametres */
+
+  if ((Resultat = Reception (NumSocket, (char *) &CR, taille_long, p_cr))
+      == erreur_reception)
+    return Resultat;
+
+
+      if ((Resultat = Reception_Chaine (NumSocket, message, p_nbmes))
+	  == erreur_reception)
+	return Resultat;
+
+  /* fin de communication */
+  Fin_Communication (NumSocket);
+  return CR;
 
 }
