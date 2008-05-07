@@ -1124,9 +1124,10 @@ double *flag;
     
     double Sdot2;
     double Gcov[3][3];
-    double wcn[equilparam.ns[0]+1],wpn2[equilparam.ns[0]+1],betath[equilparam.ns[0]+1];
+    double wcn[equilparam.ns[0]+1],dwcndY[equilparam.ns[0]+1],wpn2[equilparam.ns[0]+1],betath[equilparam.ns[0]+1];
     
     double Npar,dNpardY[MC];
+    double p1mwcn2a,dp1mwcn2adY[MC];
     double complex Nperp,dNperpdY[MC];
     double complex N6,N2,dN2dY[MC],dN6m1;
 
@@ -1151,10 +1152,10 @@ double *flag;
 
     /* Susceptibility tensor  */
 
-    susceptibility(X,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Nperp,dNperpdY,Y[6]);
+    susceptibility(X,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Nperp,dNperpdY,Y[6],p1mwcn2a,dp1mwcn2adY);
 
     if (*flag < 0) {/* dipersion relation */
-        disprel(&Dtot,X,raymagnetic,Npar,Nperp,N2);
+        disprel(&Dtot,X,equilparam,raymagnetic,Npar,Nperp,N2,wcn);
     }
 
     /* Dispersion relation */
@@ -1360,6 +1361,7 @@ pp_1D_format dxstardpsin_fit;
 double flag;
 {
     double Npar,Npar2,dNpardY[MC];
+    double p1mwcn2a,dp1mwcn2adY[MC];
     double complex Nperp,dNperpdY[MC];
     double complex N2,dN2dY[MC];
     
@@ -1383,10 +1385,10 @@ double flag;
 
     /* Susceptibility tensor  */
 
-    susceptibility(X,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Nperp,dNperpdY,Y[6]);
+    susceptibility(X,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Nperp,dNperpdY,Y[6],p1mwcn2a,dp1mwcn2adY);
 
     /* dipersion relation */
-    disprel(&Dtot,X,raymagnetic,Npar,Nperp,N2);
+    disprel(&Dtot,X,equilparam,raymagnetic,Npar,Nperp,N2,wcn);
 
     /* test mode */
     
@@ -1631,6 +1633,7 @@ pp_1D_format dxstardpsin_fit;
 double flag;
 {
     double Npar,dNpardY[MC];
+    double p1mwcn2a,dp1mwcn2adY[MC];
     double complex Nperp,dNperpdY[MC];
     double complex N2,dN2dY[MC];
 
@@ -1640,7 +1643,7 @@ double flag;
     double D0,D1,D2;
     int maxit;
 
-    double wcn[equilparam.ns[0]+1],wpn2[equilparam.ns[0]+1],betath[equilparam.ns[0]+1];
+    double wcn[equilparam.ns[0]+1],dwcndY[equilparam.ns[0]+1,wpn2[equilparam.ns[0]+1],betath[equilparam.ns[0]+1];
 
     register int j;
     
@@ -1663,19 +1666,19 @@ double flag;
     
     rayindex(1,Y,raymagnetic,equilparam,&Npar,&Nperp,&N2,dNpardY,dNperpdY,dN2dY);
     if (mode > 0) {/* plasma case */
-        susceptibility(X,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Nperp,dNperpdY,Y[6]);
+        susceptibility(X,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Nperp,dNperpdY,Y[6],p1mwcn2a,dp1mwcn2adY);
     }
         
-    disprel(&cD0,X,raymagnetic,Npar,Nperp,N2);
+    disprel(&cD0,X,equilparam,raymagnetic,Npar,Nperp,N2);
     D0 = creal(cD0);/* to be changed if non-hermitian susceptibility tensors are used */
 /*  mexPrintf("krho0,D0:%g,%g\n",krho0,D0); */
     
     Y[3] = krho1;
     rayindex(1,Y,raymagnetic,equilparam,&Npar,&Nperp,&N2,dNpardY,dNperpdY,dN2dY);
     if (mode > 0) {/* plasma case */
-        susceptibility(X,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Nperp,dNperpdY,Y[6]);
+        susceptibility(X,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Nperp,dNperpdY,Y[6],p1mwcn2a,dp1mwcn2adY);
     }
-    disprel(&cD1,X,raymagnetic,Npar,Nperp,N2);
+    disprel(&cD1,X,equilparam,raymagnetic,Npar,Nperp,N2,p1mwcn2a);
     D1 = creal(cD1);/* to be changed if non-hermitian susceptibility tensors are used */
 /*  mexPrintf("krho1,D1:%g,%g\n",krho1,D1); */
 
@@ -1689,9 +1692,9 @@ double flag;
         Y[3] = krho1;
         rayindex(1,Y,raymagnetic,equilparam,&Npar,&Nperp,&N2,dNpardY,dNperpdY,dN2dY);
         if (mode > 0) {/* plasma case */
-            susceptibility(X,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Nperp,dNperpdY,Y[6]);
+            susceptibility(X,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Nperp,dNperpdY,Y[6],p1mwcn2a,dp1mwcn2adY);
         }
-        disprel(&cD1,X,raymagnetic,Npar,Nperp,N2);
+        disprel(&cD1,X,equilparam,raymagnetic,Npar,Nperp,N2,p1mwcn2a);
         D1 = creal(cD1);/* to be changed if non-hermitian susceptibility tensors are used */
 /*      mexPrintf("krho1,D1:%g,%g\n",krho1,D1); */
     }
@@ -1732,9 +1735,9 @@ double flag;
             Y[3] = krho1;
             rayindex(1,Y,raymagnetic,equilparam,&Npar,&Nperp,&N2,dNpardY,dNperpdY,dN2dY);
             if (mode > 0) {/* plasma case */
-                susceptibility(X,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Nperp,dNperpdY,Y[6]);
+                susceptibility(X,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Nperp,dNperpdY,Y[6],p1mwcn2a,dp1mwcn2adY);
             }
-            disprel(&cD1,X,raymagnetic,Npar,Nperp,N2);
+            disprel(&cD1,X,equilparam,raymagnetic,Npar,Nperp,N2,p1mwcn2a);
             D1 = creal(cD1);/* to be changed if non-hermitian susceptibility tensor are used */
 /*          mexPrintf("krho1,D1:%g,%g\n",krho1,D1); */
         }
@@ -1752,11 +1755,12 @@ double flag;
     
 }
 
-void disprel(Dtot,X,raymagnetic,Npar,Nperp,N2)
+void disprel(Dtot,X,equilparam,raymagnetic,Npar,Nperp,N2,p1mwcn2a)
 double complex *Dtot;
 susceptibilitytensor_format X;
 raymagnetic_format raymagnetic;
-double Npar;
+equilparam_format equilparam;
+double Npar,p1mwcn2a;
 double complex Nperp,N2;
 
 {
@@ -1764,6 +1768,7 @@ double complex Nperp,N2;
     double Npar4,Npar3,Npar2,Npar1;
     double complex Xxx,Xxy,Xxz,Xyy,Xyz,Xzz;
     double complex Xxx2,Xxy2,Xxz2,Xyy2,Xyz2,Xzz2;
+
 
     double complex D[43],N6;
     
@@ -1866,12 +1871,13 @@ double complex Nperp,N2;
 
 }
 
-void susceptibility(X,wcn,wpn2,betath,tensortype,ncyclharm,equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Nperp,dNperpdY,omega)
+void susceptibility(X,wcn,wpn2,betath,tensortype,ncyclharm,equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Nperp,dNperpdY,omega,p1mwcn2a,dp1mwcn2adY)
 susceptibilitytensor_format X;
-double wcn[],wpn2[],betath[];
+double wcn[],dwcndY[],wpn2[],betath[];
 double tensortype,omega;
 int ncyclharm;
 double Npar,dNpardY[];
+double p1mwcn2a,dp1mwcn2adY[];
 double complex Nperp,dNperpdY[];
 
 raymagnetic_format raymagnetic;
@@ -1886,6 +1892,7 @@ equilparam_format equilparam;
     double mc2 = 510.998902;/*Electron energy rest mass (keV) */
 
     double dwcndY[equilparam.ns[0]+1][MC],dwpn2dY[equilparam.ns[0]+1][MC],dbetathdY[equilparam.ns[0]+1][MC];
+    double p1mwcn2[equilparam.ns[0]+1];
 
     int i,j,is;
     
@@ -1932,25 +1939,51 @@ equilparam_format equilparam;
             }
         }
         
+        for (is = 0;is < equilparam.ns[0] + 1;is++) {       
+            p1mwcn2[is] = 1.0;
+            for (js = 0;js < equilparam.ns[0] + 1;js++) {
+                if (js != is) {
+                    p1mwcn2[is] = p1mwcn2[is]*(1 - wcn[js]*wcn[js]);
+                } 
+            }    
+        }        
+        
+        p1mwcn2a = p1mwcn2[0]*(1 - wcn[0]*wcn[0]);
+                
+        dp1mwcn2adY[0] = 0.0;
+        dp1mwcn2adY[1] = 0.0;
+        dp1mwcn2adY[6] = 0.0;
+        
+        for (is = 0;is < equilparam.ns[0] + 1;is++) {    
+            dp1mwcn2adY[0] = dp1mwcn2adY[0] - 2.0*wcn[is]*dwcndY[is][0]*p1mwcn2[is];
+            dp1mwcn2adY[1] = dp1mwcn2adY[1] - 2.0*wcn[is]*dwcndY[is][1]*p1mwcn2[is];
+            dp1mwcn2adY[6] = dp1mwcn2adY[6] - 2.0*wcn[is]*dwcndY[is][6]*p1mwcn2[is];
+        }        
+      
+        dp1mwcn2adY[2] = 0.0;        
+        dp1mwcn2adY[3] = 0.0;
+        dp1mwcn2adY[4] = 0.0;
+        dp1mwcn2adY[5] = 0.0;      
+        
         if (tensortype == 0) {
-/*        mexPrintf("Cold dielectric tensor\n"); */
-            coldtensor(X,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY);
+/*          mexPrintf("Cold dielectric tensor\n"); */
+            coldtensor(X,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY,p1mwcn2);
         }
         if (tensortype == 1) {
-/*        mexPrintf("Warm dielectric tensor\n");
+/*          mexPrintf("Warm dielectric tensor\n");
             warmtensor(X,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY); */
         }
         if (tensortype == 2) {
-/*        mexPrintf("Hot dielectric tensor\n");*/
-            hottensor(X,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY); 
+/*          mexPrintf("Hot dielectric tensor\n");*/
+            hottensor(X,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY,p1mwcn2); 
         }
         if (tensortype == 3) {
-        mexPrintf("Weak relativistic dielectric tensor\n");
-            weakrelativistictensor(X,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY);
+            mexPrintf("Weak relativistic dielectric tensor\n");
+            weakrelativistictensor(X,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY,p1mwcn2);
         }       
         if (tensortype == 4) {
-/*        mexPrintf("Full relativistic dielectric tensor\n");
-            fullrelativistictensor(X,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY); */
+/*          mexPrintf("Full relativistic dielectric tensor\n");
+            fullrelativistictensor(X,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY,p1mwcn2); */
         }       
         
     } else {
@@ -2105,10 +2138,10 @@ equilparam_format equilparam;
     
 }
 
-void buildXstruc(X,ns,dNpardY,dNperpdY,dwcndY,dwpn2dY,dbetathdY,Xxx,Xxy,Xxz,Xyy,Xyz,Xzz,dXxxdNperp,dXxydNperp,dXxzdNperp,dXyydNperp,dXyzdNperp,dXzzdNperp,dXxxdNpar,dXxydNpar,dXxzdNpar,dXyydNpar,dXyzdNpar,dXzzdNpar,dXxxdbetath,dXxydbetath,dXxzdbetath,dXyydbetath,dXyzdbetath,dXzzdbetath,dXxxdwcn,dXxydwcn,dXxzdwcn,dXyydwcn,dXyzdwcn,dXzzdwcn,dXxxdwpn2,dXxydwpn2,dXxzdwpn2,dXyydwpn2,dXyzdwpn2,dXzzdwpn2)
+void buildXstruc(X,ns,dNpardY,dNperpdY,dwcndY,dwpn2dY,dbetathdY,Xxx,Xxy,Xxz,Xyy,Xyz,Xzz,dXxxdNperp,dXxydNperp,dXxzdNperp,dXyydNperp,dXyzdNperp,dXzzdNperp,dXxxdNpar,dXxydNpar,dXxzdNpar,dXyydNpar,dXyzdNpar,dXzzdNpar,dXxxdbetath,dXxydbetath,dXxzdbetath,dXyydbetath,dXyzdbetath,dXzzdbetath,dXxxdwcn,dXxydwcn,dXxzdwcn,dXyydwcn,dXyzdwcn,dXzzdwcn,dXxxdwpn2,dXxydwpn2,dXxzdwpn2,dXyydwpn2,dXyzdwpn2,dXzzdwpn2,p1mwcn2)
 susceptibilitytensor_format X;
 int ns;
-double dwcndY[][MC],dwpn2dY[][MC],dbetathdY[][MC],dNpardY[];
+double dwcndY[][MC],dwpn2dY[][MC],dbetathdY[][MC],dNpardY[],p1mwcn2[];
 double complex dNperpdY[];
 double complex Xxx[],Xxy[],Xxz[],Xyy[],Xyz[],Xzz[];
 double complex dXxxdNperp[],dXxydNperp[],dXxzdNperp[],dXyydNperp[],dXyzdNperp[],dXzzdNperp[];
@@ -2118,54 +2151,55 @@ double complex dXxxdwcn[],dXxydwcn[],dXxzdwcn[],dXyydwcn[],dXyzdwcn[],dXzzdwcn[]
 double complex dXxxdwpn2[],dXxydwpn2[],dXxzdwpn2[],dXyydwpn2[],dXyzdwpn2[],dXzzdwpn2[];
 {
     
-    int i,is;
+    int i,is,js; 
     
-    X.Xxx[0] = Xxx[0];
-    X.Xxy[0] = Xxy[0];
-    X.Xxz[0] = Xxz[0];
-    X.Xyy[0] = Xyy[0];
-    X.Xyz[0] = Xyz[0];
-    X.Xzz[0] = Xzz[0];
+    X.Xxx[0] = p1mwcn2[0]*Xxx[0];
+    X.Xxy[0] = p1mwcn2[0]*Xxy[0];
+    X.Xxz[0] = p1mwcn2[0]*Xxz[0];
+    X.Xyy[0] = p1mwcn2[0]*Xyy[0];
+    X.Xyz[0] = p1mwcn2[0]*Xyz[0];
+    X.Xzz[0] = p1mwcn2[0]*Xzz[0];
 
     for (is = 1;is < ns + 1;is++) {
-        X.Xxx[0] = X.Xxx[0] + Xxx[is];
-        X.Xxy[0] = X.Xxy[0] + Xxy[is];
-        X.Xxz[0] = X.Xxz[0] + Xxz[is];
-        X.Xyy[0] = X.Xyy[0] + Xyy[is];
-        X.Xyz[0] = X.Xyz[0] + Xyz[is];
-        X.Xzz[0] = X.Xzz[0] + Xzz[is];           
+               
+        X.Xxx[0] = X.Xxx[0] + p1mwcn2[is]*Xxx[is];
+        X.Xxy[0] = X.Xxy[0] + p1mwcn2[is]*Xxy[is];
+        X.Xxz[0] = X.Xxz[0] + p1mwcn2[is]*Xxz[is];
+        X.Xyy[0] = X.Xyy[0] + p1mwcn2[is]*Xyy[is];
+        X.Xyz[0] = X.Xyz[0] + p1mwcn2[is]*Xyz[is];
+        X.Xzz[0] = X.Xzz[0] + p1mwcn2[is]*Xzz[is];           
     }
 
-    X.dXxxdNperp[0] = dXxxdNperp[0];
-    X.dXxydNperp[0] = dXxydNperp[0];
-    X.dXxzdNperp[0] = dXxzdNperp[0];
-    X.dXyydNperp[0] = dXyydNperp[0];
-    X.dXyzdNperp[0] = dXyzdNperp[0];
-    X.dXzzdNperp[0] = dXzzdNperp[0];
+    X.dXxxdNperp[0] = p1mwcn2[0]*dXxxdNperp[0];
+    X.dXxydNperp[0] = p1mwcn2[0]*dXxydNperp[0];
+    X.dXxzdNperp[0] = p1mwcn2[0]*dXxzdNperp[0];
+    X.dXyydNperp[0] = p1mwcn2[0]*dXyydNperp[0];
+    X.dXyzdNperp[0] = p1mwcn2[0]*dXyzdNperp[0];
+    X.dXzzdNperp[0] = p1mwcn2[0]*dXzzdNperp[0];
 
     for (is = 1;is < ns + 1;is++) {
-        X.dXxxdNperp[0] = X.dXxxdNperp[0] + dXxxdNperp[is];
-        X.dXxydNperp[0] = X.dXxydNperp[0] + dXxydNperp[is];
-        X.dXxzdNperp[0] = X.dXxzdNperp[0] + dXxzdNperp[is];
-        X.dXyydNperp[0] = X.dXyydNperp[0] + dXyydNperp[is];
-        X.dXyzdNperp[0] = X.dXyzdNperp[0] + dXyzdNperp[is];
-        X.dXzzdNperp[0] = X.dXzzdNperp[0] + dXzzdNperp[is];           
+        X.dXxxdNperp[0] = X.dXxxdNperp[0] + p1mwcn2[is]*dXxxdNperp[is];
+        X.dXxydNperp[0] = X.dXxydNperp[0] + p1mwcn2[is]*dXxydNperp[is];
+        X.dXxzdNperp[0] = X.dXxzdNperp[0] + p1mwcn2[is]*dXxzdNperp[is];
+        X.dXyydNperp[0] = X.dXyydNperp[0] + p1mwcn2[is]*dXyydNperp[is];
+        X.dXyzdNperp[0] = X.dXyzdNperp[0] + p1mwcn2[is]*dXyzdNperp[is];
+        X.dXzzdNperp[0] = X.dXzzdNperp[0] + p1mwcn2[is]*dXzzdNperp[is];           
     }
 
-    X.dXxxdNpar[0] = dXxxdNpar[0];
-    X.dXxydNpar[0] = dXxydNpar[0];
-    X.dXxzdNpar[0] = dXxzdNpar[0];
-    X.dXyydNpar[0] = dXyydNpar[0];
-    X.dXyzdNpar[0] = dXyzdNpar[0];
-    X.dXzzdNpar[0] = dXzzdNpar[0];
+    X.dXxxdNpar[0] = p1mwcn2[0]*dXxxdNpar[0];
+    X.dXxydNpar[0] = p1mwcn2[0]*dXxydNpar[0];
+    X.dXxzdNpar[0] = p1mwcn2[0]*dXxzdNpar[0];
+    X.dXyydNpar[0] = p1mwcn2[0]*dXyydNpar[0];
+    X.dXyzdNpar[0] = p1mwcn2[0]*dXyzdNpar[0];
+    X.dXzzdNpar[0] = p1mwcn2[0]*dXzzdNpar[0];
 
     for (is = 1;is < ns + 1;is++) {
-        X.dXxxdNpar[0] = X.dXxxdNpar[0] + dXxxdNpar[is];
-        X.dXxydNpar[0] = X.dXxydNpar[0] + dXxydNpar[is];
-        X.dXxzdNpar[0] = X.dXxzdNpar[0] + dXxzdNpar[is];
-        X.dXyydNpar[0] = X.dXyydNpar[0] + dXyydNpar[is];
-        X.dXyzdNpar[0] = X.dXyzdNpar[0] + dXyzdNpar[is];
-        X.dXzzdNpar[0] = X.dXzzdNpar[0] + dXzzdNpar[is];           
+        X.dXxxdNpar[0] = X.dXxxdNpar[0] + p1mwcn2[is]*dXxxdNpar[is];
+        X.dXxydNpar[0] = X.dXxydNpar[0] + p1mwcn2[is]*dXxydNpar[is];
+        X.dXxzdNpar[0] = X.dXxzdNpar[0] + p1mwcn2[is]*dXxzdNpar[is];
+        X.dXyydNpar[0] = X.dXyydNpar[0] + p1mwcn2[is]*dXyydNpar[is];
+        X.dXyzdNpar[0] = X.dXyzdNpar[0] + p1mwcn2[is]*dXyzdNpar[is];
+        X.dXzzdNpar[0] = X.dXzzdNpar[0] + p1mwcn2[is]*dXzzdNpar[is];           
     }
 
     for (i = 0;i < MC;i++) {/* Initialisation */
@@ -2180,12 +2214,12 @@ double complex dXxxdwpn2[],dXxydwpn2[],dXxzdwpn2[],dXyydwpn2[],dXyzdwpn2[],dXzzd
     
     for (i = 0;i < MC;i++) {
         for (is = 0;is < ns + 1;is++) {
-            X.dXxxdY[i] = X.dXxxdY[i] + dXxxdNperp[is]*dNperpdY[i] + dXxxdNpar[is]*dNpardY[i] + dXxxdbetath[is]*dbetathdY[is][i] + dXxxdwcn[is]*dwcndY[is][i] + dXxxdwpn2[is]*dwpn2dY[is][i];
-            X.dXxydY[i] = X.dXxydY[i] + dXxydNperp[is]*dNperpdY[i] + dXxydNpar[is]*dNpardY[i] + dXxydbetath[is]*dbetathdY[is][i] + dXxydwcn[is]*dwcndY[is][i] + dXxydwpn2[is]*dwpn2dY[is][i];
-            X.dXxzdY[i] = X.dXxzdY[i] + dXxzdNperp[is]*dNperpdY[i] + dXxzdNpar[is]*dNpardY[i] + dXxzdbetath[is]*dbetathdY[is][i] + dXxzdwcn[is]*dwcndY[is][i] + dXxzdwpn2[is]*dwpn2dY[is][i];
-            X.dXyydY[i] = X.dXyydY[i] + dXyydNperp[is]*dNperpdY[i] + dXyydNpar[is]*dNpardY[i] + dXyydbetath[is]*dbetathdY[is][i] + dXyydwcn[is]*dwcndY[is][i] + dXyydwpn2[is]*dwpn2dY[is][i];
-            X.dXyzdY[i] = X.dXyzdY[i] + dXyzdNperp[is]*dNperpdY[i] + dXyzdNpar[is]*dNpardY[i] + dXyzdbetath[is]*dbetathdY[is][i] + dXyzdwcn[is]*dwcndY[is][i] + dXyzdwpn2[is]*dwpn2dY[is][i];
-            X.dXzzdY[i] = X.dXzzdY[i] + dXzzdNperp[is]*dNperpdY[i] + dXzzdNpar[is]*dNpardY[i] + dXzzdbetath[is]*dbetathdY[is][i] + dXzzdwcn[is]*dwcndY[is][i] + dXzzdwpn2[is]*dwpn2dY[is][i];      
+            X.dXxxdY[i] = X.dXxxdY[i] + p1mwcn2[is]*(dXxxdNperp[is]*dNperpdY[i] + dXxxdNpar[is]*dNpardY[i] + dXxxdbetath[is]*dbetathdY[is][i] + dXxxdwcn[is]*dwcndY[is][i] + dXxxdwpn2[is]*dwpn2dY[is][i]);
+            X.dXxydY[i] = X.dXxydY[i] + p1mwcn2[is]*(dXxydNperp[is]*dNperpdY[i] + dXxydNpar[is]*dNpardY[i] + dXxydbetath[is]*dbetathdY[is][i] + dXxydwcn[is]*dwcndY[is][i] + dXxydwpn2[is]*dwpn2dY[is][i]);
+            X.dXxzdY[i] = X.dXxzdY[i] + p1mwcn2[is]*(dXxzdNperp[is]*dNperpdY[i] + dXxzdNpar[is]*dNpardY[i] + dXxzdbetath[is]*dbetathdY[is][i] + dXxzdwcn[is]*dwcndY[is][i] + dXxzdwpn2[is]*dwpn2dY[is][i]);
+            X.dXyydY[i] = X.dXyydY[i] + p1mwcn2[is]*(dXyydNperp[is]*dNperpdY[i] + dXyydNpar[is]*dNpardY[i] + dXyydbetath[is]*dbetathdY[is][i] + dXyydwcn[is]*dwcndY[is][i] + dXyydwpn2[is]*dwpn2dY[is][i]);
+            X.dXyzdY[i] = X.dXyzdY[i] + p1mwcn2[is]*(dXyzdNperp[is]*dNperpdY[i] + dXyzdNpar[is]*dNpardY[i] + dXyzdbetath[is]*dbetathdY[is][i] + dXyzdwcn[is]*dwcndY[is][i] + dXyzdwpn2[is]*dwpn2dY[is][i]);
+            X.dXzzdY[i] = X.dXzzdY[i] + p1mwcn2[is]*(dXzzdNperp[is]*dNperpdY[i] + dXzzdNpar[is]*dNpardY[i] + dXzzdbetath[is]*dbetathdY[is][i] + dXzzdwcn[is]*dwcndY[is][i] + dXzzdwpn2[is]*dwpn2dY[is][i]);      
         }
     }
     
