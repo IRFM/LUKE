@@ -596,7 +596,7 @@ while isel >= 0,
             %
             if ~isempty(waves_new),
                 %
-                waves = conc_struct_jd(waves,waves_new);
+                waves = [waves,waves_new];
                 newwaves = 1;
                 %
             end
