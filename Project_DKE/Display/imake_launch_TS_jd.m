@@ -34,7 +34,7 @@ if ~isempty(data),
         %
         ybeta_L = pi/2 - data.EC.thetaA1*pi/180;
         %
-        yP_L = data.EC.PA1*1e6;
+        yP_L = data.EC.PA1;
         %
     else
         %
@@ -49,7 +49,7 @@ if ~isempty(data),
         end
         ybeta_L = pi/2 - data.EC.thetaA2*pi/180;
         %
-        yP_L = data.EC.PA2*1e6;
+        yP_L = data.EC.PA2;
         %
     end
     %
