@@ -123,7 +123,7 @@ if w_opt == 0,% wave from C3PO calculations
                     %
                     data = '';
                     %
-                elseif n_opt == 1,% launching data from TCV database
+                elseif n_opt == 1,% launching data from TS database
                     %
                     data = load(equil.info.data,'EC');
                     %
