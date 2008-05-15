@@ -2,7 +2,7 @@
                 "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 <head>
-  <title>C3PO/LUKE index</title>
+  <title>LUKE package</title>
   <meta name="keywords" content="{DIRS}">
   <meta name="description" content="{DIRS}">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -12,7 +12,10 @@
 </head>
 <body>
 <a name="_top"></a>
-<h1>C3PO/LUKE index</h1>
+<h1>LUKE package</h1>
+
+<P align=center><A href="{L_DIRS}" target=function>Code description</A></P>
+
 <h2>Matlab Directories</h2>
 <ul style="list-style-image:url({MASTERPATH}matlabicon.gif)">
 <!-- BEGIN rowdir -->
