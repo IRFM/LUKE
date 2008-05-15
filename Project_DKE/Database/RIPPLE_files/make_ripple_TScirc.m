@@ -8,12 +8,13 @@
 clear all
 %
 id_ripple = 'TScirc';
+ripple.id = id_ripple;
 %
 %For the magnetic  ripple losses, the loss frequency must be very large compared to the reference frequency. Therefore it is always enforced in the code to 1000*nhu_ref
 %Consequently, the ripple parameter is just a flag which indicates if magnetic ripple calculations are considered or not. Calculations are only valid for Tore Supra tokamak
 %so the first two letters must be TS to be recognized in the calculations. See main_dke_yp.m
 %
-ripple = 1;%No magnetic ripple if empty
+ripple.mode = 1;%No magnetic ripple if empty
 %
 %
 %*****************************************************************************************************************
