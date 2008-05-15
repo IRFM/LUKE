@@ -13,20 +13,34 @@ color = {'r','b',[0,0.75,0]};
 %
 Nl = length(ids_wave);
 %
+filename = 'res_comp.log';
+delete(filename);
+diary(filename);
+%
+load(['DKE_RESULTS_',ids_equil{1},'_',ids_wave{1}],'dke_out')
+%
+disp(['Simulation id: ',dke_out.simul.id]);
+disp(['Simulation date: ',timeid_jd(dke_out.simul.timeid)]);
+disp(['User id: ',dke_out.simul.userid]);
+disp(['LUKE Version: ',dke_out.simul.LUKEversion]);
+disp(' ');
+%
 for il = 1:Nl,
     if length(ids_equil) == 1,
-        load(['DKE_RESULTS_',ids_equil{1},'_',ids_wave{il}],'Zcurr','ZP0','mksa','gridDKE','equilDKE','Zbouncecoef');
+        load(['DKE_RESULTS_',ids_equil{1},'_',ids_wave{il}],'Zcurr','ZP0','mksa','equilDKE','Zbouncecoef');
+        str = ['EQUIL ',ids_equil{1},'; WAVE ',ids_wave{il},': '];
     else
-        load(['DKE_RESULTS_',ids_equil{il},'_',ids_wave{il}],'Zcurr','ZP0','mksa','gridDKE','equilDKE','Zbouncecoef');
+        load(['DKE_RESULTS_',ids_equil{il},'_',ids_wave{il}],'Zcurr','ZP0','mksa','equilDKE','Zbouncecoef');
+        str = ['EQUIL ',ids_equil{il},'; WAVE ',ids_wave{il},': '];
     end   
     %
     if opt_rho == 0,
-        xrho{il} = gridDKE.xrho;
+        xrho{il} = equilDKE.xrho;
     elseif opt_rho == 1,
-        xrho{il} = sqrt(gridDKE.xpsin);  
+        xrho{il} = sqrt(equilDKE.xpsin);  
     elseif opt_rho == 2,
         xq_h = (Zbouncecoef.xq(1:end-1) + Zbouncecoef.xq(2:end))/2;
-        xdpsin = diff(gridDKE.xpsin);
+        xdpsin = diff(equilDKE.xpsin);
         xpsinT = [0,cumsum(xq_h.*xdpsin)]/sum(xq_h.*xdpsin);
         xrho{il} = sqrt(xpsinT);  
     end
@@ -47,11 +61,13 @@ for il = 1:Nl,
     %
     leg_I(il,:) = ['I_{LH} = ',Itotstr(1:min(4,length(Itotstr))),' MA'];
     %
-    disp(['Wave # ',num2str(il),': I = ',num2str(Itot(il)),' MA;  P = ',num2str(Ptot(il)),' MW'])
+    disp([str,'I = ',num2str(Itot(il)),' MA;  P = ',num2str(Ptot(il)),' MW'])
     %
-end    
+end  
 %
-clear Zcurr ZP0 mksa gridDKE equilDKE
+diary off
+%
+clear Zcurr ZP0 mksa equilDKE
 %
 xlab = '';
 ylab = '';

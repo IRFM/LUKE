@@ -11,25 +11,24 @@ if nargin < 2,
     opt_disp.si = 1;
 end
 %
-load([filename,'.mat'],'equil','waves','dke_out','rho_S','ZP0','Zcurr','mksa','equilDKE','gridDKE')
+load([filename,'.mat'],'equil','waves','dke_out','rho_S','ZP0','Zcurr','mksa','equilDKE','radialDKE','momentumDKE')
 %
-pn = gridDKE.pn;
-mhu = gridDKE.mhu;
-xrho = gridDKE.xrho;
-rdke = gridDKE.rdke;
+pn = momentumDKE.pn;
+mhu = momentumDKE.mhu;
+xrho = equilDKE.xrho;
+rdke = radialDKE.r_dke;
 %
-clear gridDKE
+clear gridDKE radialDKE
 %
 xys = dke_out.xys;
-xyP0_2piRp_in = dke_out.xyP0_2piRp_in;
 xyP0_2piRp_mod = dke_out.xyP0_2piRp_mod;
 xyprop_dke = dke_out.xyprop_dke;
 yb = dke_out.yb;
 waveparam = dke_out.waveparam;
 %
-ZXYD_rf = dke_out.ZXYD_rf;
-ZXYD_rf_tp = dke_out.ZXYD_rf_tp;
-ZXYF_rf_tp = dke_out.ZXYF_rf_tp;
+ZXXD_rf = dke_out.ZXXD_rf;
+ZXXD_rf_tp = dke_out.ZXXD_rf_tp;
+ZXXF_rf_tp = dke_out.ZXXF_rf_tp;
 gridindex_rf = dke_out.gridindex_rf;
 %
 XXfinit = dke_out.XXfinit;
@@ -254,21 +253,21 @@ ir_display = input('radial grid index? ');
 %
 while ~isempty(ir_display),
     %
-    load(filename,'dkeparam','display')
+    load(filename,'dkeparam','dkedisplay')
     %
-    xyD0_rf_mod = waveparam(:,:,4).*xyP0_2piRp_mod./xyP0_2piRp_in;
-    [ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp] = raysum_rf_jd_old(dkeparam,ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyD0_rf_mod,gridindex_rf);
+    %xyD0_rf_mod = waveparam(:,:,4).*xyP0_2piRp_mod./xyP0_2piRp_in;
+    %[ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp] = raysum_rf_jd_old(dkeparam,ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyD0_rf_mod,gridindex_rf);
     %
-    [logXfinit_cyl,ppar_cyl,dppar_cyl,pperp_cyl,dpperp_cyl] = s2c_dke_yp(log(XXfinit(:,:,ir_display)),pn,mhu,display.dp_cyl);%Spherical to cylindrical coordinate transformation
+    [logXfinit_cyl,ppar_cyl,dppar_cyl,pperp_cyl,dpperp_cyl] = s2c_dke_yp(log(XXfinit(:,:,ir_display)),pn,mhu,dkedisplay.dp_cyl);%Spherical to cylindrical coordinate transformation
     Xfinit_cyl = exp(logXfinit_cyl);%For accurate representation in figures 
     %
-    [logXf0_cyl,ppar_cyl,dppar_cyl,pperp_cyl,dpperp_cyl] = s2c_dke_yp(log(XXf0(:,:,ir_display)),pn,mhu,display.dp_cyl);%Spherical to cylindrical coordinate transformation
+    [logXf0_cyl,ppar_cyl,dppar_cyl,pperp_cyl,dpperp_cyl] = s2c_dke_yp(log(XXf0(:,:,ir_display)),pn,mhu,dkedisplay.dp_cyl);%Spherical to cylindrical coordinate transformation
     Xf0_cyl = exp(logXf0_cyl);%For accurate representation in figures 
     %
     %XDrf = ZXXD_rf.parpar_ij(:,:,ir_display);
     XDrf = ZXXD_rf.pp_ij(:,:,ir_display);
     %
-    [XDrf_cyl,ppar_cyl,dppar_cyl,pperp_cyl,dpperp_cyl] = s2c_dke_yp(XDrf,pn,mhu,display.dp_cyl);%Spherical to cylindrical coordinate transformation
+    [XDrf_cyl,ppar_cyl,dppar_cyl,pperp_cyl,dpperp_cyl] = s2c_dke_yp(XDrf,pn,mhu,dkedisplay.dp_cyl);%Spherical to cylindrical coordinate transformation
     %
     Xppar_cyl = ones(length(pperp_cyl),1)*ppar_cyl(:)';%Grid for the distribution functions only
     Xpperp_cyl = pperp_cyl(:)*ones(1,length(ppar_cyl));
