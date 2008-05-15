@@ -568,8 +568,8 @@ for i=1:length(mdir)
 	end
 	if ~isempty(d)
 		tpl = parse(tpl,'subfold','subfolder');
-	end
-	
+    end
+    
 	%- Link to the TODO list if necessary
 	tpl = set(tpl,'var','todolists','');
 	if options.todo
@@ -809,207 +809,210 @@ for i=1:length(mdir)
 			if ~isempty(mexplatforms)
 				tpl = set(tpl,'var','PLATFORMS', mexplatforms(1:end-2));
 				tpl = parse(tpl,'mex','mexfile');
-			end
-			
-			%- Set description template field
-			descr = '';
-			flagsynopcont = 0;
-			flag_seealso  = 0;
-			while 1
-				tline = fgets(fid2);
-				if ~ischar(tline), break, end
-				tline = entity(fliplr(deblank(fliplr(tline))));
-				%- Synopsis line
-				if ~isempty(strmatch('function',tline))
-					if ~isempty(strmatch('...',fliplr(deblank(tline))))
-						flagsynopcont = 1;
-					end
-				%- H1 line and description
-				elseif ~isempty(strmatch('%',tline))
-					%- Hypertext links on the "See also" line
-					ind = findstr(lower(tline),'see also');
-					if ~isempty(ind) | flag_seealso
-						%- "See also" only in files in the same directory
-						indsamedir = find(strcmp(mdirs{j},mdirs));
-						hrefnames = {names{indsamedir}};
-						r = deblank(tline);
-						flag_seealso = 1; %(r(end) == ',');
-						tline = '';
-						while 1
-							[t,r,q] = strtok(r,sprintf(' \t\n\r.,;%%'));
-							tline = [tline q];
-							if isempty(t), break, end;
-							ii = strcmpi(hrefnames,t);
-							if any(ii)
-								jj = find(ii);
-								tline = [tline sprintf(tpl_mfile_code,...
-									[hrefnames{jj(1)} options.extension],...
-									synopsis{indsamedir(jj(1))},t)];
-							else
-								tline = [tline t];
-							end
-						end
-						tline = sprintf('%s\n',tline);
-					end
-					descr = [descr tline(2:end)];
-				elseif isempty(tline)
-					if ~isempty(descr), break, end;
-				else
-					if flagsynopcont
-						if isempty(strmatch('...',fliplr(deblank(tline))))
-							flagsynopcont = 0;
-						end
-					else
-						break;
-					end
-				end
-			end
-			tpl = set(tpl,'var','DESCRIPTION',...
-				horztab(descr,options.tabs));
-			
-			%- Set cross-references template fields:
-			%  Function called
-			ind = find(hrefs(j,:) == 1);
-			tpl = set(tpl,'var','crossrefcalls','');
-			for k=1:length(ind)
-				if strcmp(mdirs{j},mdirs{ind(k)})
-					tpl = set(tpl,'var','L_NAME_CALL', ...
-						[names{ind(k)} options.extension]);
-				else
-					tpl = set(tpl,'var','L_NAME_CALL', ...
-							  fullurl(backtomaster(mdirs{j}), ...
-							  		   mdirs{ind(k)}, ...
-									   [names{ind(k)} options.extension]));
-				end
-				tpl = set(tpl,'var','SYNOP_CALL',   synopsis{ind(k)});
-				tpl = set(tpl,'var','NAME_CALL',   names{ind(k)});
-				tpl = set(tpl,'var','H1LINE_CALL', h1line{ind(k)});
-				tpl = parse(tpl,'crossrefcalls','crossrefcall',1);
-			end
-			%  Callers
-			ind = find(hrefs(:,j) == 1);
-			tpl = set(tpl,'var','crossrefcalleds','');
-			for k=1:length(ind)
-				if strcmp(mdirs{j},mdirs{ind(k)})
-					tpl = set(tpl,'var','L_NAME_CALLED', ...
-						[names{ind(k)} options.extension]);
-				else
-					tpl = set(tpl,'var','L_NAME_CALLED', ...
-						fullurl(backtomaster(mdirs{j}),...
-							mdirs{ind(k)}, ...
-							[names{ind(k)} options.extension]));
-				end
-				tpl = set(tpl,'var','SYNOP_CALLED',   synopsis{ind(k)});
-				tpl = set(tpl,'var','NAME_CALLED',   names{ind(k)});
-				tpl = set(tpl,'var','H1LINE_CALLED', h1line{ind(k)});
-				tpl = parse(tpl,'crossrefcalleds','crossrefcalled',1);
-			end
-			
-			%- Set subfunction template field
-			tpl = set(tpl,'var',{'subf' 'onesubf'},{'' ''});
-			if ~isempty(subroutine{j}) & options.source
-				for k=1:length(subroutine{j})
-					tpl = set(tpl, 'var', 'L_SUB', ['#_sub' num2str(k)]);
-					tpl = set(tpl, 'var', 'SUB',   subroutine{j}{k});
-					tpl = parse(tpl, 'onesubf', 'onesubfunction',1);
-				end
-				tpl = parse(tpl,'subf','subfunction');
-			end
-			subname = extractname(subroutine{j});
-			
-			%- Display source code with cross-references
-			if options.source & ~strcmpi(names{j},'contents')
-				fseek(fid2,0,-1);
-				it = 1;
-				matlabsource = '';
-				nbsubroutine = 1;
-				%- Get href function names of this file
-				indhrefnames = find(hrefs(j,:) == 1);
-				hrefnames = {names{indhrefnames}};
-				%- Loop over lines
-				while 1
-					tline = fgetl(fid2);
-					if ~ischar(tline), break, end
-					myline = '';
-					splitc = splitcode(entity(tline));
-					for k=1:length(splitc)
-						if isempty(splitc{k})
-						elseif ~isempty(strmatch('function',splitc{k}))
-							%- Subfunctions definition
-							myline = [myline ...
-								sprintf(tpl_mfile_aname,...
-									['_sub' num2str(nbsubroutine-1)],splitc{k})];
-							nbsubroutine = nbsubroutine + 1;
-						elseif splitc{k}(1) == ''''
-							myline = [myline ...
-								sprintf(tpl_mfile_string,splitc{k})];
-						elseif splitc{k}(1) == '%'
-							myline = [myline ...
-								sprintf(tpl_mfile_comment,deblank(splitc{k}))];
-						elseif ~isempty(strmatch('...',splitc{k}))
-							myline = [myline sprintf(tpl_mfile_keyword,'...')];
-							if ~isempty(splitc{k}(4:end))
-								myline = [myline ...
-									sprintf(tpl_mfile_comment,splitc{k}(4:end))];
-							end
-						else
-							%- Look for keywords
-							r = splitc{k};
-							while 1
-								[t,r,q] = strtok(r,strtok_delim);
-								myline = [myline q];
-								if isempty(t), break, end;
-								%- Highlight Matlab keywords &
-								%  cross-references on known functions
-								if options.syntaxHighlighting & ...
-										any(strcmp(matlabKeywords,t))
-									if strcmp('end',t)
-										rr = fliplr(deblank(fliplr(r)));
-										icomma = strmatch(',',rr);
-										isemicolon = strmatch(';',rr);
-										if ~(isempty(rr) | ~isempty([icomma isemicolon]))
-											myline = [myline t];
-										else
-											myline = [myline sprintf(tpl_mfile_keyword,t)];
-										end
-									else
-										myline = [myline sprintf(tpl_mfile_keyword,t)];
-									end
-								elseif any(strcmp(hrefnames,t))
-									indt = indhrefnames(logical(strcmp(hrefnames,t)));
-									flink = [t options.extension];
-									ii = ismember({mdirs{indt}},mdirs{j});
-									if ~any(ii)
-										% take the first one...
-										flink = fullurl(backtomaster(mdirs{j}),...
-													 	 mdirs{indt(1)}, flink);
-									else
-										indt = indt(logical(ii));
-									end
-									myline = [myline sprintf(tpl_mfile_code,...
-											  flink, synopsis{indt(1)}, t)];
-								elseif any(strcmp(subname,t))
-									ii = find(strcmp(subname,t));
-									myline = [myline sprintf(tpl_mfile_code,...
-										['#_sub' num2str(ii)],...
-										['sub' subroutine{j}{ii}],t)];
-								else
-									myline = [myline t];
-								end
-							end
-						end
-					end
-					matlabsource = [matlabsource sprintf(tpl_mfile_line,it,myline)];
-					it = it + 1;
-				end
-				tpl = set(tpl,'var','SOURCECODE',...
-						  horztab(matlabsource,options.tabs));
-				tpl = parse(tpl,'thesource','source');
-			else
-				tpl = set(tpl,'var','thesource','');
-			end
-			tpl = parse(tpl,'OUT','TPL_MFILE');
-			fprintf(fid,'%s',get(tpl,'OUT'));
+            end
+            
+            if strcmp(ext,'.m'),%for M-file only
+
+                %- Set description template field
+                descr = '';
+                flagsynopcont = 0;
+                flag_seealso  = 0;
+                while 1
+                    tline = fgets(fid2);
+                    if ~ischar(tline), break, end
+                    tline = entity(fliplr(deblank(fliplr(tline))));
+                    %- Synopsis line
+                    if ~isempty(strmatch('function',tline))
+                        if ~isempty(strmatch('...',fliplr(deblank(tline))))
+                            flagsynopcont = 1;
+                        end
+                    %- H1 line and description
+                    elseif ~isempty(strmatch('%',tline))
+                        %- Hypertext links on the "See also" line
+                        ind = findstr(lower(tline),'see also');
+                        if ~isempty(ind) | flag_seealso
+                            %- "See also" only in files in the same directory
+                            indsamedir = find(strcmp(mdirs{j},mdirs));
+                            hrefnames = {names{indsamedir}};
+                            r = deblank(tline);
+                            flag_seealso = 1; %(r(end) == ',');
+                            tline = '';
+                            while 1
+                                [t,r,q] = strtok(r,sprintf(' \t\n\r.,;%%'));
+                                tline = [tline q];
+                                if isempty(t), break, end;
+                                ii = strcmpi(hrefnames,t);
+                                if any(ii)
+                                    jj = find(ii);
+                                    tline = [tline sprintf(tpl_mfile_code,...
+                                        [hrefnames{jj(1)} options.extension],...
+                                        synopsis{indsamedir(jj(1))},t)];
+                                else
+                                    tline = [tline t];
+                                end
+                            end
+                            tline = sprintf('%s\n',tline);
+                        end
+                        descr = [descr tline(2:end)];
+                    elseif isempty(tline)
+                        if ~isempty(descr), break, end;
+                    else
+                        if flagsynopcont
+                            if isempty(strmatch('...',fliplr(deblank(tline))))
+                                flagsynopcont = 0;
+                            end
+                        else
+                            break;
+                        end
+                    end
+                end
+                tpl = set(tpl,'var','DESCRIPTION',...
+                    horztab(descr,options.tabs));
+
+                %- Set cross-references template fields:
+                %  Function called
+                ind = find(hrefs(j,:) == 1);
+                tpl = set(tpl,'var','crossrefcalls','');
+                for k=1:length(ind)
+                    if strcmp(mdirs{j},mdirs{ind(k)})
+                        tpl = set(tpl,'var','L_NAME_CALL', ...
+                            [names{ind(k)} options.extension]);
+                    else
+                        tpl = set(tpl,'var','L_NAME_CALL', ...
+                                  fullurl(backtomaster(mdirs{j}), ...
+                                           mdirs{ind(k)}, ...
+                                           [names{ind(k)} options.extension]));
+                    end
+                    tpl = set(tpl,'var','SYNOP_CALL',   synopsis{ind(k)});
+                    tpl = set(tpl,'var','NAME_CALL',   names{ind(k)});
+                    tpl = set(tpl,'var','H1LINE_CALL', h1line{ind(k)});
+                    tpl = parse(tpl,'crossrefcalls','crossrefcall',1);
+                end
+                %  Callers
+                ind = find(hrefs(:,j) == 1);
+                tpl = set(tpl,'var','crossrefcalleds','');
+                for k=1:length(ind)
+                    if strcmp(mdirs{j},mdirs{ind(k)})
+                        tpl = set(tpl,'var','L_NAME_CALLED', ...
+                            [names{ind(k)} options.extension]);
+                    else
+                        tpl = set(tpl,'var','L_NAME_CALLED', ...
+                            fullurl(backtomaster(mdirs{j}),...
+                                mdirs{ind(k)}, ...
+                                [names{ind(k)} options.extension]));
+                    end
+                    tpl = set(tpl,'var','SYNOP_CALLED',   synopsis{ind(k)});
+                    tpl = set(tpl,'var','NAME_CALLED',   names{ind(k)});
+                    tpl = set(tpl,'var','H1LINE_CALLED', h1line{ind(k)});
+                    tpl = parse(tpl,'crossrefcalleds','crossrefcalled',1);
+                end
+
+                %- Set subfunction template field
+                tpl = set(tpl,'var',{'subf' 'onesubf'},{'' ''});
+                if ~isempty(subroutine{j}) & options.source
+                    for k=1:length(subroutine{j})
+                        tpl = set(tpl, 'var', 'L_SUB', ['#_sub' num2str(k)]);
+                        tpl = set(tpl, 'var', 'SUB',   subroutine{j}{k});
+                        tpl = parse(tpl, 'onesubf', 'onesubfunction',1);
+                    end
+                    tpl = parse(tpl,'subf','subfunction');
+                end
+                subname = extractname(subroutine{j});
+
+                %- Display source code with cross-references
+                if options.source & ~strcmpi(names{j},'contents')
+                    fseek(fid2,0,-1);
+                    it = 1;
+                    matlabsource = '';
+                    nbsubroutine = 1;
+                    %- Get href function names of this file
+                    indhrefnames = find(hrefs(j,:) == 1);
+                    hrefnames = {names{indhrefnames}};
+                    %- Loop over lines
+                    while 1
+                        tline = fgetl(fid2);
+                        if ~ischar(tline), break, end
+                        myline = '';
+                        splitc = splitcode(entity(tline));
+                        for k=1:length(splitc)
+                            if isempty(splitc{k})
+                            elseif ~isempty(strmatch('function',splitc{k}))
+                                %- Subfunctions definition
+                                myline = [myline ...
+                                    sprintf(tpl_mfile_aname,...
+                                        ['_sub' num2str(nbsubroutine-1)],splitc{k})];
+                                nbsubroutine = nbsubroutine + 1;
+                            elseif splitc{k}(1) == ''''
+                                myline = [myline ...
+                                    sprintf(tpl_mfile_string,splitc{k})];
+                            elseif splitc{k}(1) == '%'
+                                myline = [myline ...
+                                    sprintf(tpl_mfile_comment,deblank(splitc{k}))];
+                            elseif ~isempty(strmatch('...',splitc{k}))
+                                myline = [myline sprintf(tpl_mfile_keyword,'...')];
+                                if ~isempty(splitc{k}(4:end))
+                                    myline = [myline ...
+                                        sprintf(tpl_mfile_comment,splitc{k}(4:end))];
+                                end
+                            else
+                                %- Look for keywords
+                                r = splitc{k};
+                                while 1
+                                    [t,r,q] = strtok(r,strtok_delim);
+                                    myline = [myline q];
+                                    if isempty(t), break, end;
+                                    %- Highlight Matlab keywords &
+                                    %  cross-references on known functions
+                                    if options.syntaxHighlighting & ...
+                                            any(strcmp(matlabKeywords,t))
+                                        if strcmp('end',t)
+                                            rr = fliplr(deblank(fliplr(r)));
+                                            icomma = strmatch(',',rr);
+                                            isemicolon = strmatch(';',rr);
+                                            if ~(isempty(rr) | ~isempty([icomma isemicolon]))
+                                                myline = [myline t];
+                                            else
+                                                myline = [myline sprintf(tpl_mfile_keyword,t)];
+                                            end
+                                        else
+                                            myline = [myline sprintf(tpl_mfile_keyword,t)];
+                                        end
+                                    elseif any(strcmp(hrefnames,t))
+                                        indt = indhrefnames(logical(strcmp(hrefnames,t)));
+                                        flink = [t options.extension];
+                                        ii = ismember({mdirs{indt}},mdirs{j});
+                                        if ~any(ii)
+                                            % take the first one...
+                                            flink = fullurl(backtomaster(mdirs{j}),...
+                                                             mdirs{indt(1)}, flink);
+                                        else
+                                            indt = indt(logical(ii));
+                                        end
+                                        myline = [myline sprintf(tpl_mfile_code,...
+                                                  flink, synopsis{indt(1)}, t)];
+                                    elseif any(strcmp(subname,t))
+                                        ii = find(strcmp(subname,t));
+                                        myline = [myline sprintf(tpl_mfile_code,...
+                                            ['#_sub' num2str(ii)],...
+                                            ['sub' subroutine{j}{ii}],t)];
+                                    else
+                                        myline = [myline t];
+                                    end
+                                end
+                            end
+                        end
+                        matlabsource = [matlabsource sprintf(tpl_mfile_line,it,myline)];
+                        it = it + 1;
+                    end
+                    tpl = set(tpl,'var','SOURCECODE',...
+                              horztab(matlabsource,options.tabs));
+                    tpl = parse(tpl,'thesource','source');
+                else
+                    tpl = set(tpl,'var','thesource','');
+                end
+                tpl = parse(tpl,'OUT','TPL_MFILE');
+                fprintf(fid,'%s',get(tpl,'OUT'));
+            end
 			fclose(fid2);
 			fclose(fid);
 		end
@@ -1021,14 +1024,18 @@ function mfiles = getmfiles(mdirs,mfiles,recursive)
 	%- Extract M-files from a list of directories and/or M-files
 
 	for i=1:length(mdirs)
-		if exist(mdirs{i}) == 2 % M-file
+		if exist(mdirs{i}) == 2
 			mfiles{end+1} = mdirs{i};
 		elseif exist(mdirs{i}) == 7 % Directory
 			w = what(mdirs{i});
 			w = w(1); %- Sometimes an array is returned...
 			for j=1:length(w.m)
-				mfiles{end+1} = fullfile(mdirs{i},w.m{j});
+				mfiles{end+1} = fullfile(mdirs{i},w.m{j});%.m files
+            end
+            for j=1:length(w.mex)
+				mfiles{end+1} = fullfile(mdirs{i},w.mex{j});%.mex files
 			end
+
 			if recursive
 				d = dir(mdirs{i});
 				d = {d([d.isdir]).name};
