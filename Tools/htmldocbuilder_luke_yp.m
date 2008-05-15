@@ -2,7 +2,7 @@ function htmldocbuilder_luke_yp(dkepath)
 %LUKE - HTML documentation builder
 %
 % Create dynamically all the documentation for C3PO/LUKE in html format.
-% Creates also graphes (needs graphviz, www.graphviz.org)
+% Creates also graphes (needs graphviz graph maker which can be downloaded at www.graphviz.org)
 %
 % by Y. PEYSSON (CEA/DSM/IRFM, yves.peysson@cea.fr) and J. DECKER (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
@@ -95,10 +95,25 @@ searchpath = {[lukefolder],...
               [lukefolder,'/Simulations/Benchmarks/TScyl/LH_karney_transp_nobounce'],... 
               [lukefolder,'/Simulations/Benchmarks/TScyl/Ohm'],... 
               [lukefolder,'/Simulations/Benchmarks/TScyl/Runaway'],... 
-              [lukefolder,'/Simulations/Benchmarks/TScyl/Thermal']};   
-          
-searchpath = {[lukefolder],[lukefolder,'/Project_DKE/Database']};         
-%                                                                                      
-m2html('mfiles',searchpath, 'htmldir',dochtmlpath,'recursive','off', 'global','on', 'template','LUKE','index','menu','graph','on');
+              [lukefolder,'/Simulations/Benchmarks/TScyl/Thermal'],...
+              [lukefolder,'/Simulations/Examples/ITER/Scen4'],...              
+              [lukefolder,'/Simulations/Examples/ITER/Scen4/EQUIL'],...
+              [lukefolder,'/Simulations/Examples/ITER/Scen4/WAVE/C3PO'],...               
+              [lukefolder,'/Simulations/Examples/TS/32299'],...                 
+              [lukefolder,'/Simulations/Examples/TS/32299/CGC_DATA/WAVE/C3PO'],...                
+              [lukefolder,'/Simulations/Examples/TS/32299/HXR'],...                
+              };   
+%          
+%searchpath = {[lukefolder],[lukefolder,'/Project_DKE/Database']};         
+%
+try
+    m2html('mfiles',searchpath, 'htmldir',dochtmlpath,'recursive','off', 'global','on', 'template','LUKE','index','menu','graph','on');
+catch
+    m2html('mfiles',searchpath, 'htmldir',dochtmlpath,'recursive','off', 'global','on', 'template','LUKE','index','menu','graph','off');%if graphviz not installed
+    %
+    disp('WARNING: Graphes have not been generated, since the ''graphviz'' maker is not installed on your computer.');
+    disp('WARNING: Download ''graphviz'' maker from www.graphviz.org, and install it first.');
+    disp('WARNING: Execute htmldocbuilder_luke_yp MatLab script do rebuild the documentation.');
+end    
 %
 rmpath([luke_root,'Packages/m2html']);
