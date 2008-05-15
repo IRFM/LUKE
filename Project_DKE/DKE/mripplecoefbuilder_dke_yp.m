@@ -22,7 +22,7 @@ xthetaloss = zeros(size(xrho));
 xpndetrap = zeros(size(xrho));
 xEseuil = zeros(size(xrho));
 %
-if ~isempty(ripple) & ((isstruct(ripple) & ripple.mode == 1),
+if ~isempty(ripple) & (isstruct(ripple) & ripple.mode == 1),
     etime_rip = 0;
     time0 = clock;
     %
