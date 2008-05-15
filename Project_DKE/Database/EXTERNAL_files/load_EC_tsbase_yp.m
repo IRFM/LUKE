@@ -24,7 +24,7 @@ if strcmp(basestr,'TS'),
         [xMILTOR,tMILTOR] = tsbase(shotnum,'SMILTOR');% Toroidal injection angle central mirror (A2) hysteresis corrected
         [xMILPOL,tMILPOL] = tsbase(shotnum,'SMILPOL');% Poloidal injection angle central mirror (A2) hysteresis corrected
         %
-        % Powers in kW (from M. Lennholm)
+        % Powers in W (from M. Lennholm)
         %
         factA1 = 1;% Calibration factor to be applied to A1
         factA2 = 1;% Calibration factor to be applied to A2
