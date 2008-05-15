@@ -138,6 +138,7 @@ while isel >= 0,
         end            
         statstr.transpfaste = ['<',ostr,' The ''transpfaste'' structure is optional >'];
     end
+    %
     if status.ripple == 1,
         statstr.ripple = ripple.id;
     else 
@@ -244,7 +245,7 @@ while isel >= 0,
     %
     clc
     %
-    if isempty(isel) | ~isnumeric(isel) | ~any(isel == [-2:15]),
+    if isempty(isel) | ~isnumeric(isel) | ~any(isel == [-2:16]),
         isel = -1;
     end
     %
