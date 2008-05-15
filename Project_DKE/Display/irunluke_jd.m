@@ -20,6 +20,7 @@ quitmsg = '-----> Run aborted';
 warning off
 %
 isel = 1;
+flagscript = 0;
 %
 status.data = 0;
 status.dkepath = 0;
@@ -187,6 +188,7 @@ while isel >= 0,
     disp(['RF waves               : ',statstr.waves]);
     disp(['Ohmic E-field          : ',statstr.ohm]);
     disp(['Fast electron transport: ',statstr.transpfaste]);
+    disp(['Magnetic ripple losses : ',statstr.transpfaste]);
     disp(' ');
     disp(['LUKE output            : ',statstr.output]);
     disp(' ');
@@ -194,32 +196,41 @@ while isel >= 0,
     disp(' ');
     disp('Please select one of the following options:');
     disp(' ');
-    disp('[1]  Load existing data file');
-    disp('[2]  Save current data in file');
-    disp('[3]  Specify work directory');
-    disp('[4]  Load/create LUKE PATH structure');
-    disp('[5]  Load/modify LUKE parameters');
-    disp('[6]  Load/create LUKE equilibrium structure');
-    disp('[7]  Load/create LUKE wave structures (RF waves)');
-    disp('[8]  Load/create LUKE ohm structure (Ohmic E-field)');
-    disp('[9]  Load/create LUKE transpfaste structure (Fast electron transport)');
+    disp('[1]   Load existing data file');
+    disp('[2]   Save current data in file');
+    disp('[3]   Specify work directory');
+    if ~flagscript,
+        disp('[4]   Activate automatic script generation');
+    else
+        disp('[4]   Desactivate automatic script generation');
+    end
     disp(' ');
-    disp('[10] Display LUKE equilibrium data');
-    disp('[11] Display LUKE RF wave data');
-    disp('[12] Display LUKE results');
-    disp('[13] Calculate HXR emission');
+    disp('[5]   Load/create LUKE ''dkepath'' structure (All paths)');
+    disp('[6]   Load/modify LUKE ''dkeparam'' structure (code parameters)');
+    disp('[7]   Load/create LUKE ''equilibrium'' structure');
+    disp('[8]   Load/create LUKE ''wave'' structures (RF waves)');
+    disp('[9]   Load/create LUKE ''ohm'' structure (Ohmic E-field)');
+    disp('[10]  Load/create LUKE ''transpfaste'' structure (Fast electron transport)');
+    disp('[11]  Load/create LUKE ''ripple'' structure (Magnetic ripple losses)');
     disp(' ');
-    disp('[14] Go to command line')
+    disp('[12]  Display LUKE equilibrium data');
+    disp('[13]  Display LUKE RF wave data');
+    disp('[14]  Display LUKE results');
     disp(' ');
-    disp('[0]  Run LUKE');
-    disp('[-1] Exit LUKE');
+    disp('[15]  Calculate HXR emission');
+    disp(' ');
+    disp('[16]  Go to command line')
+    disp(' ');
+    disp('[0]   Run LUKE');
+    disp('[-1]  Exit LUKE');
+    disp('[-2]  Exit LUKE, close all figures and removes all variables, globals, functions and MEX links');
     disp(' ');
     %
     isel = input('? [-1] :');
     %
     clc
     %
-    if isempty(isel) | ~isnumeric(isel) | ~any(isel == [-1:14]),
+    if isempty(isel) | ~isnumeric(isel) | ~any(isel == [-2:15]),
         isel = -1;
     end
     %
@@ -389,6 +400,51 @@ while isel >= 0,
             %
         elseif isel == 4,
             %
+            % ACTIVATE OR DESACTIVATE SCRIPT GENERATION
+            %
+%            flagscript = ~flagscript;
+            %
+            disp('');
+            disp('************** LOAD DATA FILE **************')
+            disp('');
+            %
+            [script_file,script_path] = igetfile_jd(opt_gui,{'SCRIPT_LUKE_*.mat'},'Please select a LUKE script');
+            %
+            if script_file == 0,
+                disp('-----> No LUKE script specified.');
+            else
+				if strfind(script_file,'SCRIPT_LUKE_'),
+					scriptfile = [script_path,script_file];
+					load(scriptfile);
+					disp(['-----> The data file ',scriptfile,' is loaded.']);
+                    %
+					status.script = 1;
+					%
+				elseif strfind(script_file,'SCRIPT_LUKE_'),
+
+				else
+					disp('-----> Invalid LUKE script file.');
+					continue
+				end  
+				%
+				workdir = data_path;
+				%
+				setpath_luke_jd(dkepath.luke_root,dkepath);
+				%
+			end
+            %
+            
+            
+            
+            
+            
+            
+            
+            if ~exist('RUNLUKE.txt'),save RUNLUKE.txt -ascii,end
+            
+            %
+        elseif isel == 5, 
+            %
             % PATH
             %
             id_dkepath = 'LOCAL';%For all paths used by DKE solver
@@ -409,7 +465,7 @@ while isel >= 0,
                 %                
             end
             %
-        elseif isel == 5,
+        elseif isel == 6,
             %
             % LUKE PARAMETERS
             %
@@ -489,7 +545,7 @@ while isel >= 0,
                 status.data = 2;
             end
             %
-        elseif isel == 6,
+        elseif isel == 7,
             %
             % EQUILIBRIUM 
             %
@@ -530,7 +586,7 @@ while isel >= 0,
                 status.data = 2;
             end
             %
-        elseif isel == 7,
+        elseif isel == 8,
             %
             % WAVES
             %
@@ -634,7 +690,7 @@ while isel >= 0,
                 status.data = 2;
             end
             %
-        elseif isel == 8,
+        elseif isel == 9,
             %
             % OHM
             %
@@ -696,7 +752,7 @@ while isel >= 0,
                 status.data = 2;
             end
             %
-        elseif isel == 9,
+        elseif isel == 10,
             %
             % TRANSPORT
             %
@@ -778,7 +834,93 @@ while isel >= 0,
                 status.data = 2;
             end
             %
-        elseif isel == 10,
+        elseif isel == 11,
+            %
+            % MAGNETIC RIPPLE LOSSES
+            %
+            if status.equil == 0;
+                disp('-----> An equilibrium structure must exist to create a ''ripple'' structure.');
+                continue
+            end
+            if ~strcmp(basestr,'TS');
+                disp('-----> The magnetic ripple calculations is implemented for Tore Supra tokamak only.');
+                continue
+            end
+            %
+            disp(' ');
+            disp('************** MAGNETIC RIPPLE LOSSES **************')
+            disp(' ');
+            %
+            newripple = 0;
+            %
+            if ~isempty(ripple),
+                t_opt = input_dke_yp('Do you want to clear the existing structure ''ripple'' (y/n)','n',{'y','n'});
+                %
+                if strcmp(t_opt,'y'),
+                    disp('-----> The structure ''ripple'' is cleared.')
+                    status.ripple = 0;
+                    status.output = 0;
+                    status.data = 2;
+                else
+                    %
+                    m_opt = input_dke_yp(['Do you want to see/modify the structure ''ripple'' (y/n)'],'n',{'y','n'});
+                    %
+                    if strcmp(m_opt,'y'),
+                        %
+                        [ripple,mod] = imod_struct_jd(ripple,'ripple',0);
+                        %
+                        if mod == 1,
+                            %
+                            isave_struct_jd(ripple,'ripple',['RIPPLE_',equil.id],ripple.id,workdir,opt_gui)
+                            newripple = 1;
+                            %
+                        end  
+                    else
+                        continue
+                    end
+                    %
+                end
+                %
+            end
+            %
+            if newripple == 0,
+                %
+                ripple_new = iload_struct_jd('ripple',['RIPPLE_',equil.id],workdir,opt_gui);
+                %
+                if ~isempty(ripple_new),
+                    %
+                    ripple = ripple_new;
+                    newripple = 1;
+                    %
+                else
+                    l_opt = input_dke_yp('Do you want to build a structure ''ripple'' (y/n)','n',{'y','n'});
+                    %
+                    if strcmp(l_opt,'y'),
+                        %
+                        ripple = imake_ripple_yp(basestr,equil);
+                        %
+                        if ~isempty(ripple),
+                            %
+                            disp('-----> The structure ''ripple'' is created')
+                            %
+                            isave_struct_jd(ripple,'ripple',['RIPPLE_',equil.id],ripple.id,workdir,opt_gui)
+                            newripple = 1;
+                            %
+                        end
+                    end
+                end
+                %
+                clear ripple_new
+                %
+            end
+            %
+            if newripple == 1,
+                status.ripple = 1;
+                status.output = 0;
+                status.data = 2;
+            end
+            %      
+        elseif isel == 12,
             %
             % DISPLAY LUKE EQUILIBRIUM
             %
@@ -788,7 +930,7 @@ while isel >= 0,
                 disp('-----> The equilibrium structure does not exist.');
             end
             %
-        elseif isel == 11,
+        elseif isel == 13,
             %
             % DISPLAY WAVE DATA
             %
@@ -809,7 +951,7 @@ while isel >= 0,
                 disp('-----> The equilibrium structure does not exist.');
             end
             %
-        elseif isel == 12,
+        elseif isel == 14,
             %
             % DISPLAY LUKE RESULTS
             %
@@ -851,7 +993,7 @@ while isel >= 0,
                 disp('-----> The output structure does not exist.');
             end
             %
-        elseif isel == 13,
+        elseif isel == 15,
             %
             % CALCULATE HXR EMISSION
             %
@@ -862,13 +1004,13 @@ while isel >= 0,
             %
             irunhxr_jd(workdir,basestr,'',id_simul,equil,dkeparam,dkedisplay,output);
             %
-        elseif isel == 14,
+        elseif isel == 16,
             %
             disp('-----> Type ''return'' to return to menu');    
             disp('-----> Type ''dbquit'' to abort run and leave workspace.');
             disp(' ');
             keyboard
-            %
+            % 
         elseif isel == 0,
             %
             % RUN LUKE
@@ -957,7 +1099,7 @@ while isel >= 0,
             %
             PRF_tot = sum(output.ZP0.x_rf_fsav.*output.equilDKE.xdV_2piRp_dke(:)*output.mksa.P_ref*2*pi*output.equilDKE.Rp);
             figure('Name','RF Power'),
-            graph1D_jd(output.equilDKE.xrho,output.ZP0.x_rf_fsav*output.mksa.P_ref,0,0,'\rho','P_{LH} (MW/m^3)',['P_{RF} = ',num2str(PRF_tot*1000),' (kW)'],NaN,'','','-','none','r',2);drawnow
+            graph1D_jd(output.equilDKE.xrho,output.ZP0.x_rf_fsav*output.mksa.P_ref,0,0,'\rho','P_{RF} (MW/m^3)',['P_{RF} = ',num2str(PRF_tot*1000),' (kW)'],NaN,'','','-','none','r',2);drawnow
             print_jd(p_opt,[id_simul,'_RF_Power']);
             %
             POHM_tot = sum(output.ZP0.x_e_fsav.*output.equilDKE.xdV_2piRp_dke*output.mksa.P_ref*2*pi*output.equilDKE.Rp);
@@ -981,6 +1123,11 @@ while isel >= 0,
         end
         %
     end
+end
+%
+if isel == -2,
+    close all
+    clear all    
 end
 %
 disp(' ');
