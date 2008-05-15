@@ -29,6 +29,7 @@ status.equil = 0;
 status.waves = 0;
 status.ohm = 0;
 status.transpfaste = 0;
+status.ripple = 0;
 status.output = 0;
 %
 datafile = '';
@@ -38,6 +39,7 @@ equil = '';
 waves = '';
 ohm = '';
 transpfaste = '';
+ripple = '';
 output = '';
 %
 workdir = [pwd,'/'];
@@ -135,6 +137,18 @@ while isel >= 0,
             ostr = '';
         end            
         statstr.transpfaste = ['<',ostr,' The ''transpfaste'' structure is optional >'];
+    end
+    if status.ripple == 1,
+        statstr.ripple = ripple.id;
+    else 
+        if ~isempty(ripple),
+            disp('The structure ''ripple'' is outdated and cleared.')
+            ripple = '';
+            ostr = ' outdated.';
+        else
+            ostr = '';
+        end            
+        statstr.ripple = ['<',ostr,' The ''ripple'' structure is optional >'];
     end
     %
     if status.output == 1,
