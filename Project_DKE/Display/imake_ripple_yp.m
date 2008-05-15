@@ -12,6 +12,7 @@ if mode > 1,mode = 1;end
 %
 ripple.mode = mode;
 %
+id_ripple_i = 'TScylmodel';
 id_ripple = input(['Please specify a name for the ''ripple'' structure : [',id_ripple_i,'] : '],'s');
 if isempty(id_ripple),
     id_ripple = id_ripple_i;

@@ -188,6 +188,9 @@ while isel >= 0,
     if ~isempty(transpfaste),
         id_simul_o = [id_simul_o,'_',transpfaste.id];
     end
+    if ~isempty(ripple),
+        id_simul_o = [id_simul_o,'_',ripple.id];
+    end
     %
     % MAIN MENU
     %
@@ -203,7 +206,7 @@ while isel >= 0,
     disp(['RF waves               : ',statstr.waves]);
     disp(['Ohmic E-field          : ',statstr.ohm]);
     disp(['Fast electron transport: ',statstr.transpfaste]);
-    disp(['Magnetic ripple losses : ',statstr.transpfaste]);
+    disp(['Magnetic ripple losses : ',statstr.ripple]);
     disp(' ');
     disp(['LUKE output            : ',statstr.output]);
     disp(' ');
@@ -278,7 +281,7 @@ while isel >= 0,
 					%
 				elseif strfind(data_file,'LUKE_RESULTS_'),
 					datafile = [data_path,data_file];
-					data = load(datafile,'id_simul','dkepath','dkeparam','dkedisplay','equil','waves','ohm','transpfaste',...
+					data = load(datafile,'id_simul','dkepath','dkeparam','dkedisplay','equil','waves','ohm','transpfaste','ripple',...
 						'Znorm','Zcurr','ZP0','dke_out','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');
 					disp(['-----> The data file ',datafile,' is loaded.']);
 					%
@@ -333,6 +336,13 @@ while isel >= 0,
                             transpfaste.id = 'TRANSP';
                         end
 						status.transpfaste = 1;
+					end
+					if isfield(data,'ripple'),
+						ripple = data.ripple;
+                        if ~isfield(ripple,'id'),
+                            ripple.id = 'RIPPLE';
+                        end
+						status.ripple = 1;
 					end
 					%
 					status.data = 2;
