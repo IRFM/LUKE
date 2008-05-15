@@ -73,6 +73,10 @@ cd([path_LUKE,'Project_DKE/Database']);
 remove_all(0);
 cd(path_LUKE);
 %
+% Remove html documentation
+%
+rmdir('Documentation');
+%
 % Remove paths
 %
 setpath_luke_jd

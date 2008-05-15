@@ -1,9 +1,10 @@
 function install_LUKE(pathforstartup)
+%LUKE - Installation package script
 %
 %Install LUKE path in existing default MatLab startup.m and build all *.mat
 %and *.mex files
 %
-%By Joan Decker (CEA-DRFC, joan.decker@cea.fr) and Yves Peysson (CEA-DRFC, yves.peysson@cea.fr)
+%By Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr) and Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr)
 %
 if nargin == 0,
     pathforstartup = which('startup.m');%The default directory for startup.m is the same as the always existing startup.m file
@@ -128,6 +129,8 @@ mex_compile_luke(dkepath)
 cd([localpath,'/Project_DKE/Database']);
 make_all;
 cd(localpath);
+%
+htmldocbuilder_luke_yp(dkepath);%build html doc
 %
 
 
