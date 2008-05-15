@@ -8,9 +8,9 @@ opt_rho = 1;
 ids_equil = {'ITER_Scen4_IAEA06'};% if same for all runs, just give one 
 %
 select = [1,2,3];
-ids_wave = {'19Z','20Z','21Z'};
+%ids_wave = {'19Z','20Z','21Z'};
 %ids_wave = {'19Z_Alpha_3p7','20Z_Alpha_3p7','21Z_Alpha_3p7'};
-%ids_wave = {'19Z_Alpha_5p0','20Z_Alpha_5p0','21Z_Alpha_5p0'};
+ids_wave = {'19Z_Alpha_5p0','20Z_Alpha_5p0','21Z_Alpha_5p0'};
 leglist = ['N_{||} = 1.9';'N_{||} = 2.0';'N_{||} = 2.1'];
 %
 %select = [1,2];
