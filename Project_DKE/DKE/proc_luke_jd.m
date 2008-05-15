@@ -74,10 +74,20 @@ P_tot = P_rf + P_e;
 %
 I_tot = sum(J_tot.*equilDKE.xdA_dke);
 %
-tir_display = num2str(ir_display);
-diaryname = [simul_id,'_res_',tir_display,'.txt'];
+if ir_display == 0,
+    diaryname = ['res_',simul_id,'.log'];
+else
+    tir_display = num2str(ir_display);
+    diaryname = ['res_',simul_id,'_irho_',tir_display,'.log'];
+end
 delete(diaryname)
 diary(diaryname)
+%
+disp(['Simulation id: ',dke_out.simul.id]);
+disp(['Simulation date: ',timeid_jd(dke_out.simul.timeid)]);
+disp(['User id: ',dke_out.simul.userid]);
+disp(['LUKE Version: ',dke_out.simul.LUKEversion]);
+disp(' ');
 %
 %if I_tot < 0,
 %    disp('Warning : sign of J inverted for positive total current')
