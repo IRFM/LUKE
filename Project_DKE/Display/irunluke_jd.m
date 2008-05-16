@@ -1089,8 +1089,6 @@ while isel >= 0,
                 id_simul = id_simul_o;
             end
             %
-            ripple = '';
-            %
             disp(' ');
             disp('************** RUN LUKE **************')
             disp(' ');
