@@ -235,7 +235,7 @@ if exist('flag_launch','var'),
 end
 %
 if exist('flag_transpfaste','var'),
-    filename = [path_transpfaste,'TRANSP_',id_transpfaste,'.mat'];
+    filename = [path_transpfaste,'TRANSP_',id_equil,'_',id_transpfaste,'.mat'];
 	transpfaste = '';
     if isempty(id_transpfaste),
         info_dke_yp(2,['Simulations are performed without fast electron transport']);
@@ -249,7 +249,7 @@ if exist('flag_transpfaste','var'),
 end
 %
 if exist('flag_ripple','var'),
-    filename = [path_ripple,'RIPPLE_',id_ripple,'.mat'];
+    filename = [path_ripple,'RIPPLE_',id_equil,'_',id_ripple,'.mat'];
 	ripple = '';
     if isempty(id_ripple),
         info_dke_yp(2,['Simulations are performed without magnetic ripple effects']);
