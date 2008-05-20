@@ -151,11 +151,15 @@ else
         disp(' ');
         %
         if isel > 0,
-            isel_new = input(['? [',num2str(isel),'] : ']);
+            isel_new = input(['? [',num2str(isel),'] : '],'s');
         elseif ~isempty(filename),
-            isel_new = input(['? [',filename,'] : ']);
+            isel_new = input(['? [',filename,'] : '],'s');
         else
-            isel_new = input(['? [-1] : ']);
+            isel_new = input(['? [-1] : '],'s');
+        end
+        %
+        if ~isempty(str2num(isel_new)),
+            isel_new = str2num(isel_new);
         end
         %
         if isempty(isel_new),
