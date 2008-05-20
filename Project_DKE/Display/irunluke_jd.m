@@ -11,7 +11,7 @@ if nargin < 2,
     signs = '';
 end
 if nargin < 1,
-    basestr = input_dke_yp('Enter a machine name (like ITER, TCV, TS, JET or any name)',' ');
+    basestr = input_dke_yp('Enter the machine name (such as ''ITER'', ''TCV'', ''TS'', ''JET'', etc',' ');
 end
 %
 clc
@@ -20,7 +20,6 @@ quitmsg = '-----> Run aborted';
 warning off
 %
 isel = 1;
-flagscript = 0;
 %
 status.data = 0;
 status.dkepath = 0;
@@ -32,7 +31,24 @@ status.transpfaste = 0;
 status.ripple = 0;
 status.output = 0;
 %
-datafile = '';
+fileids.data = '';
+fileids.dkepath = '';
+fileids.dkeparam = '';
+fileids.equil = '';
+fileids.waves = '';
+fileids.ohm = '';
+fileids.transpfaste = '';
+fileids.ripple = '';
+%
+paths.data = '';
+paths.dkepath = '';
+paths.dkeparam = '';
+paths.equil = '';
+paths.waves = '';
+paths.ohm = '';
+paths.transpfaste = '';
+paths.ripple = '';
+%
 dkepath = '';
 dkeparam = '';
 equil = '';
@@ -49,9 +65,9 @@ while isel >= 0,
     % CLEAR outdated structures and DEFINE STATUS
     %
     if status.data == 1,
-        statstr.data = datafile;
+        statstr.data = fileids.data;
     elseif status.data == 2,
-        statstr.data = [datafile,' < data modified, consider a save >'];
+        statstr.data = [fileids.data,' < data modified, consider a save >'];
     else 
         statstr.data = '< No data yet >';
     end
@@ -59,7 +75,7 @@ while isel >= 0,
     statstr.workdir = workdir;
     %
     if status.dkepath == 1,
-        statstr.dkepath = [dkepath_path,dkepath_file];
+        statstr.dkepath = dkepath.path_id;
     else
         if ~isempty(dkepath),
             disp('The structure ''dkepath'' is outdated and cleared.');
@@ -68,11 +84,16 @@ while isel >= 0,
         else
             ostr = '';
         end            
-        statstr.dkepath = ['<',ostr,' Must load path structure >'];
+        statstr.dkepath = ['<',ostr,' Must load/create a structure ''path'' >'];
     end
     %
     if status.dkeparam == 1,
-        statstr.dkeparam = dkeparam.info.file;
+%         statstr.dkeparam = dkeparam.id;
+        if isempty(fileids.dkeparam),
+            statstr.dkeparam = ['< dkeparam structure not saved >'];
+        else
+            statstr.dkeparam = fileids.dkeparam;
+        end
     else
         if ~isempty(dkeparam),
             disp('The structure ''dkeparam'' is outdated and cleared.');
@@ -81,7 +102,7 @@ while isel >= 0,
         else
             ostr = '';
         end            
-        statstr.dkeparam = ['<',ostr,' Must load dkeparam structure >'];
+        statstr.dkeparam = ['<',ostr,' Must load/create a structure ''dkeparam'' >'];
     end
     %
     if status.equil == 1,
@@ -94,7 +115,7 @@ while isel >= 0,
         else
             ostr = '';
         end            
-        statstr.equil = ['<',ostr,' Must load/create equilibrium structure >'];
+        statstr.equil = ['<',ostr,' Must load/create a structure ''equil'' >'];
     end
     %
     if status.waves == 1,
@@ -110,7 +131,7 @@ while isel >= 0,
         else
             ostr = '';
         end            
-        statstr.waves = ['<',ostr,' The ''waves'' structure is optional >'];
+        statstr.waves = ['<',ostr,' The ''wave'' structures are optional >'];
     end
     %
     if status.ohm == 1,
@@ -195,12 +216,13 @@ while isel >= 0,
     % MAIN MENU
     %
     disp(' ');
+    disp(' ----------- < LUKE > ----------- ')
     disp(' ');
     disp('************* STATUS *************')
     disp(' ');
     disp(['LUKE data              : ',statstr.data]);
     disp(['Work directory         : ',statstr.workdir]);
-    disp(['LUKE PATH              : ',statstr.dkepath]);
+    disp(['LUKE path              : ',statstr.dkepath]);
     disp(['LUKE parameters        : ',statstr.dkeparam]);
     disp(['Equilibrium            : ',statstr.equil]);
     disp(['RF waves               : ',statstr.waves]);
@@ -217,22 +239,18 @@ while isel >= 0,
     disp('[1]   Load existing data file');
     disp('[2]   Save current data in file');
     disp('[3]   Specify work directory');
-    if ~flagscript,
-        disp('[4]   Activate automatic script generation');
-    else
-        disp('[4]   Desactivate automatic script generation');
-    end
+    disp('[4]   Generate LUKE run script');
     disp(' ');
-    disp('[5]   Load/create LUKE ''dkepath'' structure (All paths)');
-    disp('[6]   Load/modify LUKE ''dkeparam'' structure (code parameters)');
-    disp('[7]   Load/create LUKE ''equilibrium'' structure');
-    disp('[8]   Load/create LUKE ''wave'' structures (RF waves)');
-    disp('[9]   Load/create LUKE ''ohm'' structure (Ohmic E-field)');
-    disp('[10]  Load/create LUKE ''transpfaste'' structure (Fast electron transport)');
-    disp('[11]  Load/create LUKE ''ripple'' structure (Magnetic ripple losses)');
+    disp('[5]   Load/create/modify ''dkepath'' structure (LUKE paths)');
+    disp('[6]   Load/create/modify ''dkeparam'' structure (LUKE parameters)');
+    disp('[7]   Load/create/modify ''equil'' structure (Plasma equilibrium)');
+    disp('[8]   Load/create/modify ''wave'' structures (RF waves)');
+    disp('[9]   Load/create/modify ''ohm'' structure (Ohmic E-field)');
+    disp('[10]  Load/create/modify ''transpfaste'' structure (Fast electron transport)');
+    disp('[11]  Load/create/modify ''ripple'' structure (Magnetic ripple losses)');
     disp(' ');
-    disp('[12]  Display LUKE equilibrium data');
-    disp('[13]  Display LUKE RF wave data');
+    disp('[12]  Display equilibrium data');
+    disp('[13]  Display RF wave data');
     disp('[14]  Display LUKE results');
     disp(' ');
     disp('[15]  Calculate HXR emission');
@@ -267,36 +285,135 @@ while isel >= 0,
             if data_file == 0,
                 disp('-----> No LUKE data file specified.');
             else
+                %
+                fileids.data = data_file;
+                paths.data = data_path;
+                %
 				if strfind(data_file,'LUKE_DATA_'),
-					datafile = [data_path,data_file];
-					load(datafile);
-					disp(['-----> The data file ',datafile,' is loaded.']);
+                    %
+					load([data_path,data_file],'basestr','signs','status','fileids','paths',...
+                        'dkepath','dkeparam','equil','waves','ohm','transpfaste','ripple','output');
+					disp(['-----> The data file ',[data_path,data_file],' is loaded.']);
 					%
-                    if ~isfield(dkeparam,'info'),%cases that must be updated
-                        dkeparam.info.file = [dkeparam_path,dkeparam_file];
-                        clear dkeparam_path dkeparam_file
+                    if ~isempty(fileids.dkepath) && ~exist([paths.dkepath,'PATH_',fileids.dkepath,'.mat'],'file'),
+                        fileids.dkepath = '';
+                        paths.dkepath = '';
+                    end
+                    %
+                    if ~isempty(fileids.dkeparam) && ~exist([paths.dkeparam,'DKEPARAM_',fileids.dkeparam,'.mat'],'file'),
+                        fileids.dkeparam = '';
+                        paths.dkeparam = '';
+                    end
+                    %
+                    if ~isempty(fileids.equil) && ~exist([paths.equil,'EQUIL_',fileids.equil,'.mat'],'file'),
+                        fileids.equil = '';
+                        paths.equil = '';
+                    end
+                    %
+                    for iw = 1:length(waves),
+                        if ~isempty(fileids.waves{iw}) && ~exist([paths.waves{iw},'WAVE_',equil.id,'_',fileids.waves{iw},'.mat'],'file'),
+                            fileids.waves{iw} = '';
+                            paths.waves{iw} = '';
+                        end
+                    end
+                    %
+                    if ~isempty(fileids.ohm) && ~exist([paths.ohm,'OHM_',equil.id,'_',fileids.ohm,'.mat'],'file'),
+                        fileids.ohm = '';
+                        paths.ohm = '';
+                    end
+                    %
+                    if ~isempty(fileids.transpfaste) && ~exist([paths.transpfaste,'TRANSP_',equil.id,'_',fileids.transpfaste,'.mat'],'file'),
+                        fileids.transpfaste = '';
+                        paths.transpfaste = '';
+                    end
+                    %
+                    if ~isempty(fileids.ripple) && ~exist([paths.ripple,'RIPPLE_',equil.id,'_',fileids.ripple,'.mat'],'file'),
+                        fileids.ripple = '';
+                        paths.ripple = '';
+                    end
+                    %
+                    if ~isfield(status,'ripple'),
+                        status.ripple = 0;
                     end
                     %
 					status.data = 1;
 					%
 				elseif strfind(data_file,'LUKE_RESULTS_'),
-					datafile = [data_path,data_file];
-					data = load(datafile,'id_simul','dkepath','dkeparam','dkedisplay','equil','waves','ohm','transpfaste','ripple',...
+                    %
+					data = load(fileids.data,'id_simul','id_dkepath','path_dkepath','id_dkeparam','path_dkeparam',...
+                        'id_equil','path_equil','ids_wave','paths_wave','id_ohm','path_ohm','id_transpfaste','path_transpfaste','id_ripple','path_ripple',...
+                        'dkepath','dkeparam','dkedisplay','equil','waves','ohm','transpfaste','ripple',...
 						'Znorm','Zcurr','ZP0','dke_out','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');
-					disp(['-----> The data file ',datafile,' is loaded.']);
+					disp(['-----> The data file ',fileids.data,' is loaded.']);
 					%
 					id_simul = data.id_simul;
 					%
-					dkepath = data.dkepath;
-					dkepath_path = data_path;
-					dkepath_file = data_file;
+                    if ~isempty(data.id_dkepath) && exist([data.path_dkepath,'PATH_',data.id_dkepath],'file'),
+                        fileids.dkepath = data.id_dkepath;
+                        paths.dkepath = data.path_dkepath;
+                    else
+                        fileids.dkepath = '';
+                        paths.dkepath = '';
+                    end
 					%
+                    if ~isempty(data.id_dkeparam) && exist([data.path_dkeparam,'DKEPARAM_',data.id_dkeparam],'file'),
+                        fileids.dkeparam = data.id_dkeparam;
+                        paths.dkeparam = data.path_dkeparam;
+                    else
+                        fileids.dkeparam = '';
+                        paths.dkeparam = '';
+                    end
+					%
+                    if ~isempty(data.id_equil) && exist([data.path_equil,'EQUIL_',data.id_equil],'file'),
+                        fileids.equil = data.id_equil;
+                        paths.equil = data.path_equil;
+                    else
+                        fileids.equil = '';
+                        paths.equil = '';
+                    end
+                    %
+                    for iw = 1:length(data.waves),
+                        if ~isempty(data.ids_wave{iw}) && exist([data.paths_waves{iw},'WAVE_',data.ids_wave{iw}],'file'),
+                            fileids.waves{iw} = data.ids_wave{iw};
+                            paths.waves{iw} = data.paths_waves{iw};
+                        else
+                            fileids.waves{iw} = '';
+                            paths.waves{iw} = '';
+                        end
+                    end
+					%
+                    if ~isempty(data.id_ohm) && exist([data.path_ohm,'OHM_',data.id_ohm],'file'),
+                        fileids.ohm = data.id_ohm;
+                        paths.ohm = data.path_ohm;
+                    else
+                        fileids.ohm = '';
+                        paths.ohm = '';
+                    end
+					%
+                    if ~isempty(data.id_transpfaste) && exist([data.path_transpfaste,'TRANSP_',data.id_transpfaste],'file'),
+                        fileids.transpfaste = data.id_transpfaste;
+                        paths.transpfaste = data.path_transpfaste;
+                    else
+                        fileids.transpfaste = '';
+                        paths.transpfaste = '';
+                    end
+					%
+                    if ~isempty(data.id_ripple) && exist([data.path_ripple,'RIPPLE_',data.id_ripple],'file'),
+                        fileids.ripple = data.id_ripple;
+                        paths.ripple = data.path_ripple;
+                    else
+                        fileids.ripple = '';
+                        paths.ripple = '';
+                    end
+                    %
+                    dkepath = data.dkepath;
 					dkeparam = data.dkeparam;
-					dkeparam.info.file = [data_path,data_file];
-					%
 					dkedisplay = data.dkedisplay;
-					%
 					equil = data.equil;
+                    waves = data.waves;
+                    ohm = data.ohm;
+                    transpfaste = data.transpfaste;
+                    ripple = data.ripple;
 					%
 					output.Znorm = data.Znorm;
 					output.Zcurr = data.Zcurr;
@@ -317,33 +434,30 @@ while isel >= 0,
 					status.equil = 1;
 					status.output = 1;
 					%
-					if isfield(data,'waves'),
-						waves = data.waves;
-						status.waves = 1;
-					end
+                    if ~isempty(waves),
+                        status.waves = 1;
+                    end                    
 					%
-					if isfield(data,'ohm'),
-						ohm = data.ohm;
+                    if ~isempty(ohm),
+                        status.ohm = 1;
                         if ~isfield(ohm,'id'),
                             ohm.id = 'OHM';
                         end
-						status.ohm = 1;
-					end
+                    end                    
 					%
-					if isfield(data,'transpfaste'),
-						transpfaste = data.transpfaste;
+                    if ~isempty(transpfaste),
+                        status.transpfaste = 1;
                         if ~isfield(transpfaste,'id'),
                             transpfaste.id = 'TRANSP';
                         end
-						status.transpfaste = 1;
-					end
-					if isfield(data,'ripple'),
-						ripple = data.ripple;
+                    end                    
+					%
+                    if ~isempty(ripple),
+                        status.ripple = 1;
                         if ~isfield(ripple,'id'),
                             ripple.id = 'RIPPLE';
                         end
-						status.ripple = 1;
-					end
+                    end                    
 					%
 					status.data = 2;
 					%
@@ -371,24 +485,25 @@ while isel >= 0,
             sd = pwd;
             cd(workdir);
             %
-            [data_file,data_path] = iputfile_jd(opt_gui,'LUKE_DATA_*.mat','Please provide select a LUKE data file name',[workdir,'LUKE_DATA_',id_simul_o,'.mat']);
+            [data_file,data_path] = iputfile_jd(opt_gui,'LUKE_DATA_*.mat','Please provide a LUKE data file name',[workdir,'LUKE_DATA_',id_simul_o,'.mat']);
             %
             if data_file == 0,
                 disp('-----> No LUKE data file specified.');
             else
                 newdatafile = [data_path,data_file];
-                if ~isempty(datafile) & ~strcmp(datafile,newdatafile),
+                if ~isempty(fileids.data) & ~strcmp([paths.data,fileids.data],newdatafile),
                     c_opt = input('The data file name has changed. Do you want to keep old data file (y/n)? [n] : ','s');
                     if ~strcmp(c_opt,'y'),
-                        delete(datafile)
-                        disp(['-----> The file ',datafile,' has been deleted']);
+                        delete([paths.data,fileids.data])
+                        disp(['-----> The file ',[paths.data,fileids.data],' has been deleted']);
                     end
                 end
                 %
-                datafile = newdatafile;
+                fileids.data = data_file;
+                paths.data = data_path;
                 %
-                save(datafile);
-                disp(['-----> The data are saved in file ',datafile,'.']);
+                save(newdatafile);
+                disp(['-----> The data are saved in file ',newdatafile,'.']);
                 %
                 workdir = data_path;
                 status.data = 1;
@@ -403,6 +518,7 @@ while isel >= 0,
             disp(' ');
             disp('************** WORK DIRECTORY **************')
             disp(' ');
+            %
             newworkdir = igetdir_jd(opt_gui,'Please select the work directory',workdir); 
             %
             if newworkdir == 0,
@@ -414,7 +530,7 @@ while isel >= 0,
                     %
                     if status.data >= 1,
                         disp('-----> The working directory has changed, consider saving data.');
-                        datafile = '';
+                        fileids.data = '';
                     end
                     % 
                 end
@@ -425,70 +541,46 @@ while isel >= 0,
             %
         elseif isel == 4,
             %
-            % ACTIVATE OR DESACTIVATE SCRIPT GENERATION
+            % GENERATE LUKE RUN SCRIPT
             %
-%            flagscript = ~flagscript;
-            %
-            disp('');
-            disp('************** LOAD DATA FILE **************')
-            disp('');
-            %
-            [script_file,script_path] = igetfile_jd(opt_gui,{'SCRIPT_LUKE_*.mat'},'Please select a LUKE script');
-            %
-            if script_file == 0,
-                disp('-----> No LUKE script specified.');
-            else
-				if strfind(script_file,'SCRIPT_LUKE_'),
-					scriptfile = [script_path,script_file];
-					load(scriptfile);
-					disp(['-----> The data file ',scriptfile,' is loaded.']);
-                    %
-					status.script = 1;
-					%
-				elseif strfind(script_file,'SCRIPT_LUKE_'),
-
-				else
-					disp('-----> Invalid LUKE script file.');
-					continue
-				end  
-				%
-				workdir = data_path;
-				%
-				setpath_luke_jd(dkepath.luke_root,dkepath);
-				%
-			end
-            %
-            
-            
-            
-            
-            
-            
-            
-            if ~exist('RUNLUKE.txt'),save RUNLUKE.txt -ascii,end
-            
+            imake_rundke_jd(paths,fileids,status,dkeparam.rho_S,workdir,id_simul_o,opt_gui);
             %
         elseif isel == 5, 
             %
             % PATH
             %
-            id_dkepath = 'LOCAL';%For all paths used by DKE solver
-            dkepath_file = which('PATH_LOCAL.mat');%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+            disp(' ');
+            disp('************** LUKE PATH **************')
+            disp(' ');
             %
-            [dkepath_file,dkepath_path] = igetfile_jd(opt_gui,'PATH_*.mat','Please select the PATH file containing dkepath',dkepath_file);
-            if dkepath_file == 0,
-                disp('-----> No LUKE PATH file specified.')
-            else
-                %
-                id_dkepath = dkepath_file(6:end-4);
-                %
-                dkepath = load_structures_yp('dkepath',id_dkepath,dkepath_path);
-                %
+            % determine default DKEPARAM file 
+            %
+            dkepath_default = which('PATH_LOCAL.mat');
+            %
+            % treatment of the dkepath structure
+            %
+            smakecmd = '';
+            %
+            [dkepath,paths.dkepath,fileids.dkepath,newstruct] = ...
+                imake_struct_jd(dkepath,'dkepath',paths.dkepath,fileids.dkepath,equil,basestr,smakecmd,status.dkepath,'PATH',workdir,dkepath_default,opt_gui,0,0,1,0);
+            %
+            % structure interdependences
+            %
+            if newstruct == 1,
+                if ~isempty(dkepath),
+                    %
+                    status.dkepath = 1;
+                    %
+                    dkepath = load_structures_yp('dkepath',fileids.dkepath,paths.dkepath);
+                    %
+                else
+                    status.dkepath = 0;
+                end
                 status.output = 0;
-                status.dkepath = 1;
                 status.data = 2;
-                %                
             end
+            %
+            clear newstruct smakecmd dkepath_default
             %
         elseif isel == 6,
             %
@@ -498,77 +590,45 @@ while isel >= 0,
             disp('************** LUKE PARAMETERS **************')
             disp(' ');
             %
-            newpar = 0;
-            param_id = '';
+            % determine default DKEPARAM file 
             %
-            if status.dkeparam == 1,
-                m_opt = input_dke_yp('Do you want to: (0) see/modify LUKE parameters (1) load new parameters',0,[0,1]);
-                %
+            if status.equil == 1;
+                param_id = equil.id;
             else
-                m_opt = 1;
+                param_id = basestr;
             end
-            %
-            if m_opt == 1,
-                %
-                if status.equil == 1;
-                    param_id = equil.id;
+            dkeparam_file = ['DKEPARAM_',param_id,'.mat'];
+            if exist([workdir,dkeparam_file],'file'),
+                dkeparam_default = [workdir,'DKEPARAM_',param_id,'.mat'];
+            else
+                if strcmp(basestr,'TCV'),
+                    dkeparam_file = 'DKEPARAM_EC_RT.mat';
                 else
-                    param_id = basestr;
+                    dkeparam_file = 'DKEPARAM_LH_RT.mat';
                 end
-                %
-                if exist([workdir,'DKEPARAM_',param_id,'.mat'],'file'),
-                    dkeparam_file = [workdir,'DKEPARAM_',param_id,'.mat'];
-                else
-                    if strcmp(basestr,'TCV'),
-                        dkeparam_file = 'DKEPARAM_EC_RT.mat';
-                    else
-                        dkeparam_file = 'DKEPARAM_LH_RT.mat';
-                    end
-                    dkeparam_file = which(dkeparam_file);    
-                end
-                %
-                dkeparam_new = iload_struct_jd('dkeparam','DKEPARAM',dkeparam_file,opt_gui,0,0);
-                %
-                if ~isempty(dkeparam_new),
-                    %
-                    dkeparam = dkeparam_new;
-                    newpar = 1;
-                    %
-                    if ~isfield(dkeparam,'rho_S'),
-                        dkeparam.rho_S = 20;
-                    end
-                    %
-                    c_opt = input_dke_yp('Do you want to see/modify the LUKE parameters (y/n)','n',{'y','n'});
-                    %
-                    if strcmp(c_opt,'y'),
-                        m_opt = 0;
-                    end
-                end
-                %
-                clear dkeparam_new
-                %
+                dkeparam_default = which(dkeparam_file);    
             end
             %
-            if m_opt == 0,
-                %
-                [dkeparam,mod] = imod_struct_jd(dkeparam,'dkeparam',1);
-                %
-                if mod == 1,
-                    %
-                    param.id = input_dke_yp('Please provide an id for the dkeparam structure',param_id);
-                    %
-                    isave_struct_jd(dkeparam,'dkeparam','DKEPARAM',param.id,workdir,opt_gui)
-                    newpar = 1;
-                    %
-                end
-                %
+            % treatment of the dkeparam structure
+            %
+            smakecmd = '';
+            %
+            [dkeparam,paths.dkeparam,fileids.dkeparam,newstruct] = ...
+                imake_struct_jd(dkeparam,'dkeparam',paths.dkeparam,fileids.dkeparam,equil,basestr,smakecmd,status.dkeparam,'DKEPARAM',workdir,dkeparam_default,opt_gui,0,1,1,0);
+            %
+            if ~isfield(dkeparam,'rho_S'),
+                dkeparam.rho_S = 20;
             end
             %
-            if newpar == 1,
+            % structure interdependences
+            %
+            if newstruct == 1,
                 status.dkeparam = 1;
                 status.output = 0;
                 status.data = 2;
             end
+            %
+            clear newstruct smakecmd dkeparam_default param_id dkeparam_file
             %
         elseif isel == 7,
             %
@@ -578,373 +638,151 @@ while isel >= 0,
             disp('************** EQUILIBRIUM **************')
             disp(' ');
             %
-            neweq = 0;
+            % treatment of the equil structure
             %
-            equil_new = iload_struct_jd('equil','EQUIL',workdir,opt_gui);
+            smakecmd = 'imake_equil_jd';
             %
-            if ~isempty(equil_new),
-                %
-                equil = equil_new;
-                neweq = 1;
-                %
-            else
-                equil = imake_equil_jd(workdir,basestr,signs,opt_gui);
-                %
+            [equil,paths.equil,fileids.equil,newstruct] = ...
+                imake_struct_jd(equil,'equil',paths.equil,fileids.equil,signs,basestr,smakecmd,status.equil,'EQUIL',workdir,'',opt_gui,0,0,1,0);
+            %
+            % structure interdependences
+            %
+            if newstruct == 1,
                 if ~isempty(equil),
-                    %
-                    disp('-----> The structure ''equil'' is created')
-                    %
-                    isave_struct_jd(equil,'equil','EQUIL',equil.id,workdir,opt_gui)
-                    neweq = 1;
-                    %
+                    status.equil = 1;
+                else
+                    status.equil = 0;
                 end
-            end
-            %
-            clear equil_new
-            %
-            if neweq == 1,
-                status.equil = 1;
                 status.waves = 0;
                 status.ohm = 0;
-                status.transp = 0;
+                status.transpfaste = 0;
                 status.output = 0;
                 status.data = 2;
             end
+            %
+            clear newstruct smakecmd
             %
         elseif isel == 8,
             %
             % WAVES
             %
-            if status.equil == 0;
-                disp('-----> An equilibrium structure must exist to create wave structures.');
-                continue
-            end
-            %
             disp(' ');
             disp('************** WAVES **************')
             disp(' ');
             %
-            newwaves = 0;
+            % treatment of the waves structure
             %
-            if ~isempty(waves),
-                l_opt = input_dke_yp('Do you want to check existing wave structures (y/n)','n',{'y','n'});
-                %
-                if strcmp(l_opt,'y'),
-                    %
-					iw_list = [];
-					%
-                    for iw = 1:length(waves),
-                        w_opt = input_dke_yp(['Do you want to clear the wave structure ',waves{iw}.id,' (y/n)'],'n',{'y','n'});
-                        %
-                        if strcmp(w_opt,'y'),
-                            disp(['-----> The wave structure ',waves{iw}.id,' is cleared.'])
-                            %
-                            iw_list = [iw_list,iw];
-                        else
-                            %
-                            m_opt = input_dke_yp(['Do you want to see/modify the wave structure ',waves{iw}.id,' (y/n)'],'n',{'y','n'});
-                            %
-                            if strcmp(m_opt,'y'),
-                                %
-                                [waves{iw},mod] = imod_struct_jd(waves{iw},'wave',0);
-                                %
-                                if mod == 1,
-                                    isave_struct_jd(waves{iw},'wave',['WAVE_',equil.id],waves{iw}.id,workdir,opt_gui)
-                                    newwaves = 1;
-                                end   
-                            end
-                            %
-                        end
-                    end
-					%
-					if ~isempty(iw_list),
-						%
-						waves(iw_list) = [];
-						%
-						status.output = 0;
-						status.data = 2;
-					end
-					%
-                    if isempty(waves)
-                        status.waves = 0;
-                    end
-                    %
+            smakecmd = 'imake_wave_jd';
+            %
+            [waves,paths.waves,fileids.waves,newstruct] = ...
+                imake_struct_jd(waves,'wave',paths.waves,fileids.waves,equil,basestr,smakecmd,status.waves,'WAVE',workdir,'',opt_gui,1,1,0);
+            %
+            % structure interdependences
+            %
+            if newstruct == 1,
+                if ~isempty(waves),
+                    status.waves = 1;
+                else
+                    status.waves = 0;
                 end
-                %
-            end
-            %
-            waves_new = iload_struct_jd('wave',['WAVE_',equil.id],workdir,opt_gui,1);
-            %
-            if ~isempty(waves_new),
-                %
-                waves = [waves,waves_new];
-                newwaves = 1;
-                %
-            end
-            %
-            clear waves_new
-            %
-            l_opt = input_dke_yp('Do you want to build a new structure ''wave'' (y/n)','n',{'y','n'});
-            %
-            while strcmp(l_opt,'y'),
-                %
-                wave = imake_wave_jd(workdir,basestr,equil,opt_gui);
-                %
-                if isempty(wave),
-                    %
-                    disp('-----> Current structure ''wave'' construction aborted.')
-                    %
-                    l_opt = input_dke_yp('Do you want to build a new structure ''wave'' (y/n)','n',{'y','n'});
-                    %
-                    continue
-                end
-                %
-                disp('-----> The structure ''wave'' is created.')
-                %
-                isave_struct_jd(wave,'wave',['WAVE_',equil.id],wave.id,workdir,opt_gui)
-                newwaves = 1;
-                %
-                waves = [waves,{wave}];
-                %
-                l_opt = input_dke_yp('Do you want to build a new structure ''wave'' (y/n)','n',{'y','n'});
-            end
-            %
-            if newwaves == 1,
-                status.waves = 1;
                 status.output = 0;
                 status.data = 2;
             end
+            %
+            clear newstruct smakecmd
             %
         elseif isel == 9,
             %
             % OHM
             %
-            if status.equil == 0;
-                disp('-----> An equilibrium structure must exist to create an ''ohm'' structure.');
-                continue
-            end
-            %
             disp(' ');
             disp('************** OHM **************')
             disp(' ');
             %
-            newohm = 0;
+            % treatment of the ohm structure
             %
-            if ~isempty(ohm),
-                o_opt = input_dke_yp('Do you want to clear the existing structure ''ohm'' (y/n)','n',{'y','n'});
-                %
-                if strcmp(o_opt,'y'),
-                    disp('-----> The structure ''ohm'' is cleared.')
-                    status.ohm = 0;
-                    status.output = 0;
-                    status.data = 2;
+            smakecmd = 'imake_ohm_jd';
+            %
+            [ohm,paths.ohm,fileids.ohm,newstruct] = ...
+                imake_struct_jd(ohm,'ohm',paths.ohm,fileids.ohm,equil,basestr,smakecmd,status.ohm,'OHM',workdir,'',opt_gui,0,1,1);
+            %
+            % structure interdependences
+            %
+            if newstruct == 1,
+                if ~isempty(ohm),
+                    status.ohm = 1;
                 else
-                    continue
+                    status.ohm = 0;
                 end
-                %
-            end
-            %    
-            ohm_new = iload_struct_jd('ohm',['OHM_',equil.id],workdir,opt_gui);
-            %
-            if ~isempty(ohm_new),
-                %
-                ohm = ohm_new;
-                newohm = 1;
-                %
-            else
-                l_opt = input_dke_yp('Do you want to build a structure ''ohm'' (y/n)','n',{'y','n'});
-                %
-                if strcmp(l_opt,'y'),
-                    %
-                    ohm = imake_ohm_jd(basestr,equil);
-                    %
-                    if ~isempty(ohm),
-                        %
-                        disp('-----> The structure ''ohm'' is created')
-                        %
-                        isave_struct_jd(ohm,'ohm',['OHM_',equil.id],ohm.id,workdir,opt_gui)
-                        newohm = 1;
-                        %
-                    end
-                end
-            end
-            %
-            clear ohm_new
-            %
-            if newohm == 1,
-                status.ohm = 1;
                 status.output = 0;
                 status.data = 2;
             end
+            %
+            clear newstruct smakecmd
             %
         elseif isel == 10,
             %
             % TRANSPORT
             %
-            if status.equil == 0;
-                disp('-----> An equilibrium structure must exist to create a ''transpfaste'' structure.');
-                continue
-            end
-            %
             disp(' ');
             disp('************** FAST ELECTRON TRANSPORT **************')
             disp(' ');
             %
-            newtransp = 0;
+            % treatment of the transpfaste structure
             %
-            if ~isempty(transpfaste),
-                t_opt = input_dke_yp('Do you want to clear the existing structure ''transpfaste'' (y/n)','n',{'y','n'});
-                %
-                if strcmp(t_opt,'y'),
-                    disp('-----> The structure ''transpfaste'' is cleared.')
+            smakecmd = 'imake_transp_jd';
+            %
+            [transpfaste,paths.transpfaste,fileids.transpfaste,newstruct] = ...
+                imake_struct_jd(transpfaste,'transpfaste',paths.transpfaste,fileids.transpfaste,equil,basestr,smakecmd,status.transpfaste,'TRANSP',workdir,'',opt_gui,0,1,1);
+            %
+            % structure interdependences
+            %
+            if newstruct == 1,
+                if ~isempty(transpfaste),
+                    status.transpfaste = 1;
+                else
                     status.transpfaste = 0;
-                    status.output = 0;
-                    status.data = 2;
-                else
-                    %
-                    m_opt = input_dke_yp(['Do you want to see/modify the structure ''transpfaste'' (y/n)'],'n',{'y','n'});
-                    %
-                    if strcmp(m_opt,'y'),
-                        %
-                        [transpfaste,mod] = imod_struct_jd(transpfaste,'transpfaste',0);
-                        %
-                        if mod == 1,
-                            %
-                            isave_struct_jd(transpfaste,'transpfaste',['TRANSP_',equil.id],transpfaste.id,workdir,opt_gui)
-                            newtransp = 1;
-                            %
-                        end  
-                    else
-                        continue
-                    end
-                    %
                 end
-                %
-            end
-            %
-            if newtransp == 0,
-                %
-                transpfaste_new = iload_struct_jd('transpfaste',['TRANSP_',equil.id],workdir,opt_gui);
-                %
-                if ~isempty(transpfaste_new),
-                    %
-                    transpfaste = transpfaste_new;
-                    newtransp = 1;
-                    %
-                else
-                    l_opt = input_dke_yp('Do you want to build a structure ''transpfaste'' (y/n)','n',{'y','n'});
-                    %
-                    if strcmp(l_opt,'y'),
-                        %
-                        transpfaste = imake_transp_jd(basestr,equil);
-                        %
-                        if ~isempty(transpfaste),
-                            %
-                            disp('-----> The structure ''transpfaste'' is created')
-                            %
-                            isave_struct_jd(transpfaste,'transpfaste',['TRANSP_',equil.id],transpfaste.id,workdir,opt_gui)
-                            newtransp = 1;
-                            %
-                        end
-                    end
-                end
-                %
-                clear transpfaste_new
-                %
-            end
-            %
-            if newtransp == 1,
-                status.transpfaste = 1;
                 status.output = 0;
                 status.data = 2;
             end
+            %
+            clear newstruct smakecmd
             %
         elseif isel == 11,
             %
             % MAGNETIC RIPPLE LOSSES
             %
-            if status.equil == 0;
-                disp('-----> An equilibrium structure must exist to create a ''ripple'' structure.');
-                continue
-            end
+            disp(' ');
+            disp('************** MAGNETIC RIPPLE LOSSES **************')
+            disp(' ');
+            %
             if ~strcmp(basestr,'TS');
                 disp('-----> The magnetic ripple calculations is implemented for Tore Supra tokamak only.');
                 continue
             end
             %
-            disp(' ');
-            disp('************** MAGNETIC RIPPLE LOSSES **************')
-            disp(' ');
+            % treatment of the ripple structure
             %
-            newripple = 0;
+            smakecmd = 'imake_ripple_yp';
             %
-            if ~isempty(ripple),
-                t_opt = input_dke_yp('Do you want to clear the existing structure ''ripple'' (y/n)','n',{'y','n'});
-                %
-                if strcmp(t_opt,'y'),
-                    disp('-----> The structure ''ripple'' is cleared.')
+            [ripple,paths.ripple,fileids.ripple,newstruct] = ...
+                imake_struct_jd(ripple,'ripple',paths.ripple,fileids.ripple,equil,basestr,smakecmd,status.ripple,'RIPPLE',workdir,'',opt_gui,0,1,1);
+            %
+            % structure interdependences
+            %
+            if newstruct == 1,
+                if ~isempty(ripple),
+                    status.ripple = 1;
+                else
                     status.ripple = 0;
-                    status.output = 0;
-                    status.data = 2;
-                else
-                    %
-                    m_opt = input_dke_yp(['Do you want to see/modify the structure ''ripple'' (y/n)'],'n',{'y','n'});
-                    %
-                    if strcmp(m_opt,'y'),
-                        %
-                        [ripple,mod] = imod_struct_jd(ripple,'ripple',0);
-                        %
-                        if mod == 1,
-                            %
-                            isave_struct_jd(ripple,'ripple',['RIPPLE_',equil.id],ripple.id,workdir,opt_gui)
-                            newripple = 1;
-                            %
-                        end  
-                    else
-                        continue
-                    end
-                    %
                 end
-                %
-            end
-            %
-            if newripple == 0,
-                %
-                ripple_new = iload_struct_jd('ripple',['RIPPLE_',equil.id],workdir,opt_gui);
-                %
-                if ~isempty(ripple_new),
-                    %
-                    ripple = ripple_new;
-                    newripple = 1;
-                    %
-                else
-                    l_opt = input_dke_yp('Do you want to build a structure ''ripple'' (y/n)','n',{'y','n'});
-                    %
-                    if strcmp(l_opt,'y'),
-                        %
-                        ripple = imake_ripple_yp(basestr,equil);
-                        %
-                        if ~isempty(ripple),
-                            %
-                            disp('-----> The structure ''ripple'' is created')
-                            %
-                            isave_struct_jd(ripple,'ripple',['RIPPLE_',equil.id],ripple.id,workdir,opt_gui)
-                            newripple = 1;
-                            %
-                        end
-                    end
-                end
-                %
-                clear ripple_new
-                %
-            end
-            %
-            if newripple == 1,
-                status.ripple = 1;
                 status.output = 0;
                 status.data = 2;
             end
-            %      
+            %
+            clear newstruct smakecmd
+            %
         elseif isel == 12,
             %
             % DISPLAY LUKE EQUILIBRIUM
