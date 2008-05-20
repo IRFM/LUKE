@@ -64,11 +64,11 @@ if opt_multi == 0,
             disp(['The current structure ''',sname,''' is saved in the file: ',spath,sbase_eq,'_',sfileid,'.mat']);
         end
         %
-        m_opt = input_dke_yp(['Do you want to: \n(-1) clear the existing ''',sname,''' structure \n(0) see/modify/save the ''',sname,''' structure \n(1) load an existing ''',sname,''' structure \n(2) build a new ''',sname,''' structure\n(3) return to the main menu\n '],0,[-1,0,1,2,3]);
+        m_opt = input_dke_yp(['Do you want to: \n(-1) clear the existing ''',sname,''' structure \n(0) see/modify/save the ''',sname,''' structure \n(1) load an existing ''',sname,''' structure \n(2) build a new ''',sname,''' structure\n(3) return to the main menu\n'],0,[-1,0,1,2,3]);
         %
     else
         %
-        m_opt = input_dke_yp(['Do you want to: \n(1) load an existing ''',sname,''' structure \n(2) build a new ''',sname,''' structure\n(3) return to the main menu\n '],1,[1,2,3]);
+        m_opt = input_dke_yp(['Do you want to: \n(1) load an existing ''',sname,''' structure \n(2) build a new ''',sname,''' structure\n(3) return to the main menu\n'],1,[1,2,3]);
         %
     end
 %
@@ -86,11 +86,11 @@ else
             end
         end
         %
-        m_opt = input_dke_yp(['Do you want to: \n(-1) clear existing ''',sname,''' structures \n(0) see/modify/save a ''',sname,''' structure \n(1) load existing ''',sname,''' structures \n(2) build a new ''',sname,''' structure\n(3) return to the main menu\n '],0,[-1,0,1,2,3]);
+        m_opt = input_dke_yp(['Do you want to: \n(-1) clear existing ''',sname,''' structures \n(0) see/modify/save a ''',sname,''' structure \n(1) load existing ''',sname,''' structures \n(2) build a new ''',sname,''' structure\n(3) return to the main menu\n'],0,[-1,0,1,2,3]);
         %
     else
         %
-        m_opt = input_dke_yp(['Do you want to: \n(1) load existing ''',sname,''' structures \n(2) build a new ''',sname,''' structure\n(3) return to the main menu\n '],1,[1,2,3]);
+        m_opt = input_dke_yp(['Do you want to: \n(1) load existing ''',sname,''' structures \n(2) build a new ''',sname,''' structure\n(3) return to the main menu\n'],1,[1,2,3]);
         %
     end
 end

@@ -286,48 +286,50 @@ while isel >= 0,
                 disp('-----> No LUKE data file specified.');
             else
                 %
-                fileids.data = data_file;
-                paths.data = data_path;
-                %
 				if strfind(data_file,'LUKE_DATA_'),
                     %
-					load([data_path,data_file],'basestr','signs','status','fileids','paths',...
+                    clear fileids paths
+                    %
+					load([data_path,data_file],'basestr','signs','status','fileids','paths','id_simul',...
                         'dkepath','dkeparam','equil','waves','ohm','transpfaste','ripple','output');
 					disp(['-----> The data file ',[data_path,data_file],' is loaded.']);
-					%
-                    if ~isempty(fileids.dkepath) && ~exist([paths.dkepath,'PATH_',fileids.dkepath,'.mat'],'file'),
+                    %
+                    fileids.data = data_file;
+                    paths.data = data_path;
+                    %
+                    if ~isfield(fileids,'dkepath') || (~isempty(fileids.dkepath) && ~exist([paths.dkepath,'PATH_',fileids.dkepath,'.mat'],'file')),
                         fileids.dkepath = '';
                         paths.dkepath = '';
                     end
                     %
-                    if ~isempty(fileids.dkeparam) && ~exist([paths.dkeparam,'DKEPARAM_',fileids.dkeparam,'.mat'],'file'),
+                    if ~isfield(fileids,'dkeparam') || (~isempty(fileids.dkeparam) && ~exist([paths.dkeparam,'DKEPARAM_',fileids.dkeparam,'.mat'],'file')),
                         fileids.dkeparam = '';
                         paths.dkeparam = '';
                     end
                     %
-                    if ~isempty(fileids.equil) && ~exist([paths.equil,'EQUIL_',fileids.equil,'.mat'],'file'),
+                    if ~isfield(fileids,'equil') || (~isempty(fileids.equil) && ~exist([paths.equil,'EQUIL_',fileids.equil,'.mat'],'file')),
                         fileids.equil = '';
                         paths.equil = '';
                     end
                     %
                     for iw = 1:length(waves),
-                        if ~isempty(fileids.waves{iw}) && ~exist([paths.waves{iw},'WAVE_',equil.id,'_',fileids.waves{iw},'.mat'],'file'),
+                        if ~isfield(fileids,'waves') || (length(fileids.waves) < iw) || (~isempty(fileids.waves{iw}) && ~exist([paths.waves{iw},'WAVE_',equil.id,'_',fileids.waves{iw},'.mat'],'file')),
                             fileids.waves{iw} = '';
                             paths.waves{iw} = '';
                         end
                     end
                     %
-                    if ~isempty(fileids.ohm) && ~exist([paths.ohm,'OHM_',equil.id,'_',fileids.ohm,'.mat'],'file'),
+                    if ~isfield(fileids,'ohm') || (~isempty(fileids.ohm) && ~exist([paths.ohm,'OHM_',equil.id,'_',fileids.ohm,'.mat'],'file')),
                         fileids.ohm = '';
                         paths.ohm = '';
                     end
                     %
-                    if ~isempty(fileids.transpfaste) && ~exist([paths.transpfaste,'TRANSP_',equil.id,'_',fileids.transpfaste,'.mat'],'file'),
+                    if ~isfield(fileids,'transpfaste') || (~isempty(fileids.transpfaste) && ~exist([paths.transpfaste,'TRANSP_',equil.id,'_',fileids.transpfaste,'.mat'],'file')),
                         fileids.transpfaste = '';
                         paths.transpfaste = '';
                     end
                     %
-                    if ~isempty(fileids.ripple) && ~exist([paths.ripple,'RIPPLE_',equil.id,'_',fileids.ripple,'.mat'],'file'),
+                    if ~isfield(fileids,'ripple') || (~isempty(fileids.ripple) && ~exist([paths.ripple,'RIPPLE_',equil.id,'_',fileids.ripple,'.mat'],'file')),
                         fileids.ripple = '';
                         paths.ripple = '';
                     end
@@ -345,6 +347,9 @@ while isel >= 0,
                         'dkepath','dkeparam','dkedisplay','equil','waves','ohm','transpfaste','ripple',...
 						'Znorm','Zcurr','ZP0','dke_out','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');
 					disp(['-----> The data file ',fileids.data,' is loaded.']);
+                    %
+                    fileids.data = data_file;
+                    paths.data = data_path;
 					%
 					id_simul = data.id_simul;
 					%
