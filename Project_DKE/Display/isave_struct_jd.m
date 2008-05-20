@@ -1,4 +1,4 @@
-function isave_struct_jd(s,sname,sbase,sid,workdir,opt_gui)
+function [spath,sfile] = isave_struct_jd(s,sname,sbase,sid,workdir,opt_gui)
 %
 if nargin < 6,
     opt_gui = 1;
@@ -22,16 +22,19 @@ else
     filestr = [sbase,'_*.mat'];
 end
 %
+sfile = '';
+spath = '';
+%
 s_opt = input_dke_yp(['Do you want to save the structure ''',sname,''' separately (y/n)'],'n',{'y','n'});
 if strcmp(s_opt,'y'),
     sd = pwd;
     cd(workdir);
     %
-    if ~isempty(sbase) & ~isempty(sid),
+    if ~isempty(sbase) && ~isempty(sid),
         filename = [sbase,'_',sid,'.mat'];
-    elseif ~isempty(sbase) & isempty(sid),
+    elseif ~isempty(sbase) && isempty(sid),
         filename = [sbase,'.mat'];
-    elseif isempty(sbase) & ~isempty(sid),
+    elseif isempty(sbase) && ~isempty(sid),
         filename = [sid,'.mat'];
     else
         filename = '';
@@ -47,6 +50,8 @@ if strcmp(s_opt,'y'),
         save([pathname,filename],sname);
         disp(['-----> The structure ''',sname,''' is saved in file ',pathname,filename])
         %
+        sfile = filename;
+        spath = pathname;
     end  
     cd(sd);
 end
