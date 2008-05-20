@@ -110,9 +110,10 @@ searchpath = {[lukefolder],...
               [lukefolder,'/Simulations/Examples/TS/32299/HXR'],...                
               };   
 %          
-%searchpath = {[lukefolder],[lukefolder,'/Project_DKE/Modules/Helena'],[lukefolder,'/Project_DKE/Modules/Helena/MEX/Source'],[lukefolder,'/Project_DKE/Modules/Helena/MEX/Bin']};  
+%searchpath = {[lukefolder,'/Project_DKE/Modules/RT'],[lukefolder,'/Project_DKE/Modules/RT/MEX/Source'],[lukefolder,'/Project_DKE/Modules/RT/MEX/Bin']};  
+%searchpath = {[lukefolder,'/Project_DKE/Modules/RT/MEX/Source']};  
 %
-% todo: parse *.c and *.f source files
+% todo: initial description in documentation
 %
 try
     m2html('mfiles',searchpath, 'htmldir',dochtmlpath,'recursive','off', 'global','on', 'template','LUKE','index','menu','graph','on','todo','on');
