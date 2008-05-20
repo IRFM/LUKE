@@ -1,4 +1,4 @@
-function wave = imake_wave_jd(workdir,basestr,equil,opt_gui)
+function wave = imake_wave_jd(basestr,equil,workdir,opt_gui)
 %
 % This function interactively builds the wave structure
 %

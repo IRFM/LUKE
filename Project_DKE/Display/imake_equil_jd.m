@@ -1,4 +1,4 @@
-function equil = imake_equil_jd(workdir,basestr,signs,opt_gui)
+function equil = imake_equil_jd(basestr,signs,workdir,opt_gui)
 %
 % This function interactively builds the equilibrium structure
 %
@@ -7,6 +7,10 @@ if nargin < 4,
 end
 %
 if nargin < 3,
+	workdir = pwd;
+end
+%
+if nargin < 2,
 	signs = '';
 end
 %

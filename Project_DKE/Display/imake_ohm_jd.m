@@ -1,4 +1,4 @@
-function ohm = imake_ohm_jd(basestr,equil)
+function ohm = imake_ohm_jd(basestr,equil,workdir,opt_gui)
 %
 % This function interactively builds the ohm structure
 %

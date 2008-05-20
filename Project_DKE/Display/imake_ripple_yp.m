@@ -1,4 +1,4 @@
-function ripple = imake_ripple_yp(basestr,equil)
+function ripple = imake_ripple_yp(basestr,equil,workdir,opt_gui)
 %
 % This function interactively builds the ripple structure
 %
