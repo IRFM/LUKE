@@ -38,22 +38,42 @@ s = struct('synopsis',   '', ...
 		   'subroutine', {{}}, ...
 		   'hrefs',      sparse(1,length(names)), ...
 		   'todo',       struct('line',[],'comment',{{}}), ...
-		   'ismex',      zeros(size(mexexts)));
+		   'ismex',      zeros(size(mexexts)),...
+		   'isc',        zeros(size(cexts)),...
+		   'isf',        zeros(size(fexts)),...
+		   'ish',        zeros(size(hexts)));
 
+flagm = 1;flagc = 0;flagf = 0;flagh = 0;;%M-file
 
-flagm = 1;%M-file
-
-%- Look for Mex files first
+%- Look for MEX-files
 [pathstr,name] = fileparts(mfile);
 samename = dir(fullfile(pathstr,[name	'.*']));
 samename = {samename.name};
 for i=1:length(samename)
 	[dummy, dummy, ext{i}] = fileparts(samename{i});
 end
-%s.ismex = ismember(mexexts,ext);
+%
 if exist('ext') & sum(ismember(mexexts,ext)),
         s.ismex = ismember(mexexts,ext);
-        flagm = 0;
+        flagm = 0;flagc = 0;flagf = 0;flagh = 0;
+end
+
+%- Look for C-files
+if exist('ext') & sum(ismember(cexts,ext)),
+        s.isc = ismember(cexts,ext);
+        flagm = 0;flagc = 1;flagf = 0;flagh = 0;
+end
+
+%- Look for F-files
+if exist('ext') & sum(ismember(fexts,ext)),
+        s.isf = ismember(fexts,ext);
+        flagm = 0;flagc = 0;flagf = 1;flagh = 0;
+end
+
+%- Look for H-files
+if exist('ext') & sum(ismember(hexts,ext)),
+        s.ish = ismember(hexts,ext);
+        flagm = 0;flagc = 0;flagf = 0;flagh = 1;
 end
 
 if flagm,
@@ -166,5 +186,27 @@ if flagm,
 
     fclose(fid);
 end
+%
+if flagf,
+    %
+    s.synopsis = 'Fortran source';
+    s.h1line = 'Fortran source';
+    %
+end
+%
+if flagc,
+    %
+    s.synopsis = 'C/C++ source';
+    s.h1line = 'C/C++ source';
+    %
+end
+%
+if flagh,
+    %
+    s.synopsis = 'Header source';
+    s.h1line = 'Header source';
+    %
+end
+
 
 

@@ -272,7 +272,6 @@ for i=1:2:length(paramlist)
 			error(['Invalid parameter: ''' pname '''.']);
 	end
 end
-
 %-------------------------------------------------------------------------------
 %- Get template files location
 %-------------------------------------------------------------------------------
@@ -283,7 +282,7 @@ if exist(options.template) ~= 7
 end
 
 %-------------------------------------------------------------------------------
-%- Get list of M-files
+%- Get list of M-files, MEX-files, C-Files, F-Files and H-Files
 %-------------------------------------------------------------------------------
 if ~options.load
 	mfiles = getmfiles(options.mFiles,{},options.recursive);
@@ -347,7 +346,10 @@ if ~options.load
 	hrefs      = sparse(length(mfiles),length(mfiles));
 	todo       = struct('mfile',[],'line',[],'comment',{{}});
 	ismex      = zeros(length(mfiles),length(mexexts));
-
+    isc        = zeros(length(mfiles),length(cexts));
+    isf        = zeros(length(mfiles),length(fexts));
+    ish        = zeros(length(mfiles),length(hexts));  
+    
 	for i=1:length(mfiles)
 		s = mfileparse(mfiles{i}, mdirs, names, options);
 		synopsis{i}   = s.synopsis;
@@ -358,6 +360,9 @@ if ~options.load
 		todo.line     = [todo.line s.todo.line];
 		todo.comment  = {todo.comment{:} s.todo.comment{:}};
 		ismex(i,:)    = s.ismex;
+		isc(i,:)    = s.isc;
+		isf(i,:)    = s.isf;
+		ish(i,:)    = s.ish;        
 	end
 	hrefs = hrefs > 0;
 end
@@ -373,7 +378,7 @@ if options.save
 	end
 	save(fullfile(options.htmlDir,matfilesave), ...
 		'mfiles', 'names', 'mdirs', 'name', 'mdir', 'options', ...
-		'hrefs', 'synopsis', 'h1line', 'subroutine', 'todo', 'ismex');
+		'hrefs', 'synopsis', 'h1line', 'subroutine', 'todo', 'ismex','isc','isf','ish');
 end
 
 %-------------------------------------------------------------------------------
@@ -515,7 +520,6 @@ for i=1:length(mdir)
 		fprintf('Creating HTML file %s...\n',curfile);
 	end
 	fid = openfile(curfile,'w');
-
 	%- Set template fields
 	tpl = set(tpl,'var','INDEX',     [options.indexFile options.extension]);
 	tpl = set(tpl,'var','MASTERPATH',backtomaster(mdir{i}));
@@ -530,17 +534,17 @@ for i=1:length(mdir)
 			tpl = set(tpl,'var','H1LINE', h1line{j});
 			if any(ismex(j,:))
 				tpl = parse(tpl,'mex','mexfile');
-			else
+            else
 				tpl = set(tpl,'var','mex','');
 			end
-			tpl = parse(tpl,'rows-m','row-m',1);
+           tpl = parse(tpl,'rows-m','row-m',1);
 		end
 	end
 	
 	%- Display other Matlab-specific files (.mat,.mdl,.p)
 	tpl = set(tpl,'var','other','');
 	tpl = set(tpl,'var','rows-other','');
-	w = what(mdir{i}); w = w(1);
+	w = what_luke_yp(mdir{i}); w = w(1);
 	w = {w.mat{:} w.mdl{:} w.p{:}};
 	for j=1:length(w)
 		tpl = set(tpl,'var','OTHERFILE',w{j});
@@ -716,8 +720,17 @@ end
 %- List of Matlab keywords (output from iskeyword)
 matlabKeywords = {'break', 'case', 'catch', 'continue', 'elseif', 'else', ...
 				  'end', 'for', 'function', 'global', 'if', 'otherwise', ...
-				  'persistent', 'return', 'switch', 'try', 'while'};
-                  %'keyboard', 'pause', 'eps', 'NaN', 'Inf'
+				  'persistent', 'return', 'switch', 'try', 'while', ...
+                  'keyboard', 'pause','eps','NaN','Inf'};
+cKeywords =      {'include','unsigned','register','const','static','define','void','typedef','char','int','double','struct','elseif', 'else', ...
+				  'end', 'for', 'function',  'if', ...
+				  'return','while'};
+fKeywords =      {'elseif','else','common','real','integer','logical', 'then','call','external'...
+				  'for','function','if','implicit','enddo','do','write','read','format','subroutine','parameter', ...
+				  'return','while','continue','endif','save','close','end','character','double','precision','intrinsic','data'};
+
+strtok_delim = sprintf(' \t\n\r(){}[]<>+-*~!|\\@&/,:;="''%%');%- Delimiters used in strtok: some of them may be useless (% " .), removed '.'
+
 
 tpl_mfile = 'mfile.tpl';
 
@@ -728,27 +741,9 @@ tpl_mfile_string   = '<span class="string">%s</span>';
 tpl_mfile_aname    = '<a name="%s" href="#_subfunctions" class="code">%s</a>';
 tpl_mfile_line     = '%04d %s\n';
 
-%- Delimiters used in strtok: some of them may be useless (% " .), removed '.'
-strtok_delim = sprintf(' \t\n\r(){}[]<>+-*~!|\\@&/,:;="''%%');
-
-%- Create the HTML template
-tpl = template(options.template,'remove');
-tpl = set(tpl,'file','TPL_MFILE',tpl_mfile);
-tpl = set(tpl,'block','TPL_MFILE','pathline','pl');
-tpl = set(tpl,'block','TPL_MFILE','mexfile','mex');
-tpl = set(tpl,'block','TPL_MFILE','script','scriptfile');
-tpl = set(tpl,'block','TPL_MFILE','crossrefcall','crossrefcalls');
-tpl = set(tpl,'block','TPL_MFILE','crossrefcalled','crossrefcalleds');
-tpl = set(tpl,'block','TPL_MFILE','subfunction','subf');
-tpl = set(tpl,'block','subfunction','onesubfunction','onesubf');
-tpl = set(tpl,'block','TPL_MFILE','source','thesource');
-tpl = set(tpl,'var','DATE',[datestr(now,8) ' ' datestr(now,1) ' ' ...
-							datestr(now,13)]);
-
 for i=1:length(mdir)
 	for j=1:length(mdirs)
 		if strcmp(mdirs{j},mdir{i})
-		
 			curfile = fullfile(options.htmlDir,mdir{i},...
 							   [names{j} options.extension]);
 
@@ -757,10 +752,24 @@ for i=1:length(mdir)
 				fprintf('Creating HTML file %s...\n',curfile);
 			end
 			fid = openfile(curfile,'w');
-			
+            			
 			%- Open for reading the M-file
 			fid2 = openfile(mfiles{j},'r');
-			
+            
+            %- Create the HTML template
+            tpl = template(options.template,'remove');
+            tpl = set(tpl,'file','TPL_MFILE',tpl_mfile);
+            tpl = set(tpl,'block','TPL_MFILE','pathline','pl');
+            tpl = set(tpl,'block','TPL_MFILE','mexfile','mex');
+            tpl = set(tpl,'block','TPL_MFILE','script','scriptfile');
+            tpl = set(tpl,'block','TPL_MFILE','crossrefcall','crossrefcalls');
+            tpl = set(tpl,'block','TPL_MFILE','crossrefcalled','crossrefcalleds');
+            tpl = set(tpl,'block','TPL_MFILE','subfunction','subf');
+            tpl = set(tpl,'block','subfunction','onesubfunction','onesubf');
+            tpl = set(tpl,'block','TPL_MFILE','source','thesource');
+            tpl = set(tpl,'var','DATE',[datestr(now,8) ' ' datestr(now,1) ' ' ...
+							datestr(now,13)]);
+  
 			%- Set some template fields
 			tpl = set(tpl,'var','INDEX', [options.indexFile options.extension]);
 			tpl = set(tpl,'var','MASTERPATH',       backtomaster(mdir{i}));
@@ -811,8 +820,7 @@ for i=1:length(mdir)
 				tpl = parse(tpl,'mex','mexfile');
             end
             
-            if strcmp(ext,'.m'),%for M-file only
-
+            if strcmp(ext,'.m'),%for M-file only                 
                 %- Set description template field
                 descr = '';
                 flagsynopcont = 0;
@@ -1013,6 +1021,161 @@ for i=1:length(mdir)
                 tpl = parse(tpl,'OUT','TPL_MFILE');
                 fprintf(fid,'%s',get(tpl,'OUT'));
             end
+%
+            if strcmp(ext,'.f'), %for F-files
+
+                
+               tpl = set(tpl,'var','DESCRIPTION',horztab('Fortran source',options.tabs));
+               tpl = set(tpl,'var','H1LINE_CALLED', ' ');
+               
+               tpl = set(tpl,'var','crossrefcalleds','');
+               tpl = set(tpl,'var','crossrefcalls','');
+               tpl = set(tpl,'var','subf','');
+               tpl = set(tpl,'var','onesubf','');
+               
+               % 
+               %- Display source code with highlight fortran keywords
+               %
+                if options.source & ~strcmpi(names{j},'contents')
+                    fseek(fid2,0,-1);
+                    it = 1;
+                    fsource = '';
+                    %- Loop over lines
+                    while 1
+                        tline = fgetl(fid2);
+                        if ~ischar(tline), break, end
+                        myline = '';
+                        splitc = splitcode(entity(tline));
+                        for k=1:length(splitc)
+                            if isempty(splitc{k})
+                            elseif splitc{k}(1) == ''''
+                                myline = [myline ...
+                                    sprintf(tpl_mfile_string,splitc{k})];                                    
+                            else
+                                %- Look for keywords
+                                r = splitc{k};
+                                while 1
+                                    [t,r,q] = strtok(r,strtok_delim);
+                                    myline = [myline q];
+                                    if isempty(t), break, end;
+                                    %- Highlight fortran keywords
+                                  
+                                    if options.syntaxHighlighting & ~strcmp(' ',tline(1)),%Comment line in fortran 
+                                        myline = [sprintf(tpl_mfile_comment,tline)];break
+                                    else
+                                        if options.syntaxHighlighting & any(strcmp(fKeywords,lower(t)))
+                                            if strcmp('end',t)
+                                                rr = fliplr(deblank(fliplr(r)));
+                                                icomma = strmatch(',',rr);
+                                                isemicolon = strmatch(';',rr);
+                                                if ~(isempty(rr) | ~isempty([icomma isemicolon]))
+                                                    myline = [myline t];
+                                                else
+                                                    myline = [myline sprintf(tpl_mfile_keyword,t)];
+                                                end
+                                            else
+                                                myline = [myline sprintf(tpl_mfile_keyword,t)];
+                                            end
+                                        else
+                                            myline = [myline t];
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                        fsource = [fsource sprintf(tpl_mfile_line,it,myline)];
+                        it = it + 1;
+                    end
+                    tpl = set(tpl,'var','SOURCECODE',...
+                              horztab(fsource,options.tabs));
+                    tpl = parse(tpl,'thesource','source');
+                else
+                    tpl = set(tpl,'var','thesource','');
+                end
+                tpl = parse(tpl,'OUT','TPL_MFILE');
+                fprintf(fid,'%s',get(tpl,'OUT'));
+            end
+%
+            if strcmp(ext,'.c'), %for C-files
+
+                
+               tpl = set(tpl,'var','DESCRIPTION',horztab('C/C++ source',options.tabs));
+               tpl = set(tpl,'var','H1LINE_CALLED', ' ');
+               
+               tpl = set(tpl,'var','crossrefcalleds','');
+               tpl = set(tpl,'var','crossrefcalls','');
+               tpl = set(tpl,'var','subf','');
+               tpl = set(tpl,'var','onesubf','');
+               
+               % 
+               %- Display source code with highlight fortran keywords
+               %
+                if options.source & ~strcmpi(names{j},'contents')
+                    fseek(fid2,0,-1);
+                    it = 1;
+                    fsource = '';
+                    %- Loop over lines
+                    while 1
+                        tline = fgetl(fid2);
+                        if ~ischar(tline), break, end
+                        myline = '';
+                        splitc = splitcode(entity(tline));
+                        for k=1:length(splitc)
+                            if isempty(splitc{k})
+                            elseif splitc{k}(1) == ''''
+                                myline = [myline ...
+                                    sprintf(tpl_mfile_string,splitc{k})];  
+                            elseif splitc{k}(1) == '""'
+                                myline = [myline ...
+                                    sprintf(tpl_mfile_string,splitc{k})];                                
+                            elseif splitc{k}(1) == '//'
+                                myline = [myline ...
+                                    sprintf(tpl_mfile_comment,deblank(splitc{k}))];
+                            else
+                                %- Look for keywords
+                                r = splitc{k};
+                                while 1
+                                    [t,r,q] = strtok(r,strtok_delim);
+                                    myline = [myline q];
+                                    if isempty(t), break, end;
+                                    %- Highlight C/C++ keywords  
+                                    if options.syntaxHighlighting & any(strcmp(cKeywords,lower(t)))
+                                        if strcmp('end',t)
+                                            rr = fliplr(deblank(fliplr(r)));
+                                            icomma = strmatch(',',rr);
+                                            isemicolon = strmatch(';',rr);
+                                            if ~(isempty(rr) | ~isempty([icomma isemicolon]))
+                                                myline = [myline t];
+                                            else
+                                                myline = [myline sprintf(tpl_mfile_keyword,t)];
+                                            end
+                                        else
+                                            myline = [myline sprintf(tpl_mfile_keyword,t)];
+                                        end
+                                    else
+                                        myline = [myline t];
+                                    end
+                                end
+                            end
+                        end
+                        fsource = [fsource sprintf(tpl_mfile_line,it,myline)];
+                        it = it + 1;
+                    end
+                    tpl = set(tpl,'var','SOURCECODE',...
+                              horztab(fsource,options.tabs));
+                    tpl = parse(tpl,'thesource','source');
+                else
+                    tpl = set(tpl,'var','thesource','');
+                end
+                tpl = parse(tpl,'OUT','TPL_MFILE');
+                fprintf(fid,'%s',get(tpl,'OUT'));
+            end
+
+
+
+
+
+            %
 			fclose(fid2);
 			fclose(fid);
 		end
@@ -1021,13 +1184,12 @@ end
 
 %===============================================================================
 function mfiles = getmfiles(mdirs,mfiles,recursive)
-	%- Extract M-files from a list of directories and/or M-files
-
+	%- Extract M-files, MEX-files, C-files, F-files and H-files from a list of directories and/or M-files
 	for i=1:length(mdirs)
 		if exist(mdirs{i}) == 2
 			mfiles{end+1} = mdirs{i};
 		elseif exist(mdirs{i}) == 7 % Directory
-			w = what(mdirs{i});
+			w = what_luke_yp(mdirs{i});
 			w = w(1); %- Sometimes an array is returned...
 			for j=1:length(w.m)
 				mfiles{end+1} = fullfile(mdirs{i},w.m{j});%.m files
@@ -1035,7 +1197,16 @@ function mfiles = getmfiles(mdirs,mfiles,recursive)
             for j=1:length(w.mex)
 				mfiles{end+1} = fullfile(mdirs{i},w.mex{j});%.mex files
 			end
-
+            for j=1:length(w.c)
+				mfiles{end+1} = fullfile(mdirs{i},w.c{j});%.c files
+			end
+            for j=1:length(w.h)
+				mfiles{end+1} = fullfile(mdirs{i},w.h{j});%.h files
+            end
+            for j=1:length(w.f)
+				mfiles{end+1} = fullfile(mdirs{i},w.f{j});%.f files
+            end
+            
 			if recursive
 				d = dir(mdirs{i});
 				d = {d([d.isdir]).name};
