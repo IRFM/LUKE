@@ -10,10 +10,16 @@ function [waveparam,xyprop_dke_rf,xyP0_2piRp_in_rf,yb_rf,yP0_2piRp,xys_rf] = rfw
 %
 %by J.Decker MIT/RLE <jodecker@mit.edu> and Y.Peysson CEA/DRFC <yves.peysson@cea.fr> 04/29/2003
 %
-%[qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;
+[qe,me] = pc_dke_yp;
 %
 %dke_mode = dkeparam.dke_mode;
 n_rf_list = dkeparam.n_rf_list;
+%
+if isfield(dkeparam,'npresmin'),
+    npresmin = dkeparam.npresmin;% minimum number of resonant points for numerical stability.
+else
+    npresmin = 5;
+end
 %
 display_mode = display.display_mode;
 %
@@ -195,7 +201,21 @@ for iw = 1:length(waves),%
         ray.omega_rf = omega_rf;
         ray.opt_rf = opt_rf;
         ray.dsmin = dsmin;%minimum interval for ray fragments
-        rays{ibw} = ray;
+        %
+        % Minimum spectral width for numerical stability. LH only for now
+        %
+        sdNparmin = (real(ray.sNpar).^2 - 1)*mksa.betath_ref*npresmin*dkeparam.pnmax_S/dkeparam.np_S;
+        %
+        omega_ce = qe*ray.sB/me;
+        %
+        smaskmin = imag(ray.sdNpar) == 0 & ray.sdNpar < sdNparmin;
+        %
+        if omega_rf < omega_ce/5 & any(smaskmin),
+            info_dke_yp(2,['WARNING: wave #',num2str(iw),' ray #',num2str(iray),': dNpar increased for ',num2str(sum(smaskmin)),'/',num2str(length(smaskmin)),' data points for numerical stability.']);
+            ray.sdNpar(smaskmin) = sdNparmin(smaskmin);
+        end
+        %
+        rays{ibw} = ray;% minimum number of resonant points for numerical stability.
     end
 end
 %
