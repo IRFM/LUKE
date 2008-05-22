@@ -797,6 +797,103 @@ U bremdiagdisplay_dke_yp.m (plots experimental data if applicable)
 
 U zstarwars.m (a_sdNpar location)
 
+****************************************************************************************************
 
+LUKE Version 1.6
 
+Main changes include:
 
+- Many improvements on the interactive interface (corrections, generalisation, script generation, ...)
+- Dynamically created htlm documentation
+- Bessel functions locally calculated
+
+====> LUKE
+
+U VERSIONS.txt (this file)
+
+====> LUKE/Project_DKE/Display
+
+A getfieldinfo_jd.m (get field info)
+U igetdir_jd.m (non-graphical interactive mode)
+U igetfile_jd.m (non-graphical interactive mode)
+A iload_struct_jd.m (loads structures interactively)
+A isave_struct_jd.m (saves structures interactively)
+U imake_angles_TCV_jd.m (user specified angles and non-interactive mode)
+U imake_equil_jd.m (profiles from ART, TS case)
+U imake_launch_angles_TCV_jd.m (user specified angles)
+U imake_launch_TS_jd.m (makes launch structure for EC in TS)
+U imake_ohm_jd.m (small correction)
+A imake_ripple_yp (cretaes ripple structure)
+A imake_rundke_jd (generates rundke script)
+A imake_struct_jd (general structure management)
+U imake_transp_jd.m (small correction)
+U imake_wave_jd.m (user specified angles)
+A imod_struct_jd.m (interactively modifies the structure)
+U iputfile_jd.m (non-graphical interactive mode)
+U irunhxr_jd.m (poloidal CS view, several improvements)
+U irunluke_jd.m (load LUKE_RESULTS structures, several improvements, dkeparam case)
+A putinfo_yp.m (generates info and expert fields containing field descriptions and expert status)
+A structinfo_yp.m (database of field descriptions and expert status)
+
+====> Project_DKE/DKE
+
+A compres_luke_jd (to compare LUKE results from different files)
+U graph_wave_jd.m (launch data, several improvements)
+A htmldocbuilder_luke_yp (creates html doc)
+U input_dke_yp.m (important update)
+U load_structures_yp.m (launch structures and temppath)
+U mripplecoefbuilder_dke_yp.m (compatible irunluke)
+U LUKEversion_jd.m (version 1.6)
+U main_dke_yp.m (temppath creation and removal)
+U path_LUKE_LOCAL.m (MAC case)
+u pc_dke_yp.m (small correction)
+U proc_luke_jd.m (update)
+A proc_wave_luke_jd (compares linear and QL results)
+U rayprocess_jd.m (corrections)
+U setpath_luke_jd.m (EXTERNAL_files in path)
+U timeid_jd (reverse operation)
+A what_luke_yp (looks for c and fortran files as well)
+
+====> LUKE/Project_DKE/Database
+
+U EQUIL_files/idealequilcyl_yp.m (function for ideal equilibrium)
+U EQUIL_files/idealprof_yp.m (")
+U EQUIL_files/make_equil_JETh77.m (use of above functions)
+U EQUIL_files/make_equil_TScirc.m (") 
+U EQUIL_files/make_equil_TScirc_e1.m (")
+U EQUIL_files/make_equil_TScyl.m (")
+U PATH_files/make_path_LUKE.m (LUKE 1.6)
+U PATH_files/make_path_LOCAL.m (")
+U RIPPLE_files/make_ripple_TScirc.m (compatible irunluke)
+U WAVE_files/make_idealLHwave_jd.m (wave id)
+
+====> LUKE/Project_DKE/MEX/Source
+
+U alphaphi_jd.c (use of bessel_IJK_jd.h)
+U bessel_IJK_jd.h (bessel function J_n(x) added)
+
+====> LUKE/Project_DKE/Modules/EFIT
+
+U Teneprof_jd.m (case of TS database)
+
+====> LUKE/Project_DKE/Modules/FEB
+
+U bremchord_dke_yp.m (poloidal CS view)
+U bremdiagdisplay_dke_yp.m (poloidal CS view)
+
+====> LUKE/Project_DKE/Modules/Helena
+
+U make_helmex77.m (equilibrium function using helmex)
+U equil_magnetic_helmex77_yp.m (magnetic equilibrium function using helmex)
+
+====> LUKE/Project_DKE/Modules/RT
+
+U init_RT_jd.m (small correction)
+
+====> LUKE/Project_DKE/Packages
+
+U MUMPS/MUMPSMEX_dke_yp.m (display of errors)
+
+====> LUKE/Packages/m2html
+
+A all functions for dynamic documentation creation
