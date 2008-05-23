@@ -193,7 +193,7 @@ elseif m_opt == 2,
             %
         else
             %
-            s = [s,s_new];
+            s = [s,{s_new}];
             %
         end
         %

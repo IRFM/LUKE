@@ -477,7 +477,7 @@ elseif w_opt == 1,% wave from TORAY calculations
     %
 elseif w_opt == 2,% wave from ART calculations
     %
-    wave = imake_wave_ART_jd(workdir,equil);
+    wave = imake_wave_ART_jd(workdir,equil,opt_gui);
     %
     if isempty(wave),
         return
