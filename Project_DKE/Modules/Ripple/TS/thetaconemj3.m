@@ -66,6 +66,16 @@ R           = linspace(Rmaxi-1e-6,Rmini+1e-6,1000);
 Z           = sqrt(rhos^2-(R-Rcs).^2);
 nZ          = sqrt(rhos^2-(nRastar-Rcs).^2);
 ind         = find(~imag(nZ));
+if isempty(ind)
+
+  disp(['no intersection between the good confinement area and the fkux surface, rho=',num2str(rhos,4)])
+  mulim           = zeros(size(rhos));
+  thetabanane     = zeros(size(rhos));
+  thetaloss       = zeros(size(rhos));
+  thetaZBC        = zeros(size(rhos));
+  return
+
+end
 dis         = nZ-nZastar;
 dis1        = cat(2,dis(ind),0);
 dis2        = cat(2,0,dis(ind));
