@@ -28,6 +28,10 @@ div.box {
 .string {
 	color: #B20000;
 }
+.include {
+	color: #996600;
+}
+
 .keyword { 
 	color: #0000FF;
 }
