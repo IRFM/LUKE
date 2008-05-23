@@ -134,6 +134,7 @@ publish('LUKE/README.m',opts);
 publish('LUKE/VERSIONS.m',opts);
 publish('LUKE/AUTHORS.m',opts);
 web(['file://',luke_root,'Documentation/index.html'],'-browser');
+disp(['WARNING: weblink to the C3PO/LUKE documentation -> ','file://',luke_root,'Documentation/index.html']);
 %
 cd(dirinit);%back to the initial directory
 %
