@@ -129,10 +129,10 @@ rmpath([luke_root,'Packages/m2html']);
 %
 opts.outputDir = 'LUKE/Documentation';
 opts.evalCode = false;
-publish('LUKE/INSTALL.m',opts);
-publish('LUKE/README.m',opts);
-publish('LUKE/VERSIONS.m',opts);
-publish('LUKE/AUTHORS.m',opts);
+publish([lukefolder,'/INSTALL.m'],opts);
+publish([lukefolder,'/README.m'],opts);
+publish([lukefolder,'/VERSIONS.m'],opts);
+publish([lukefolder,'/AUTHORS.m'],opts);
 web(['file://',luke_root,'Documentation/index.html'],'-browser');
 disp(['WARNING: weblink to the C3PO/LUKE documentation -> ','file://',luke_root,'Documentation/index.html']);
 %
