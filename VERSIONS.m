@@ -809,7 +809,10 @@
 % 
 % ====> LUKE
 % 
-% U VERSIONS.txt (this file)
+% U AUTHORS.m (into m file)
+% U INSTALL.m (into m file)
+% U README.m (into m file)
+% U VERSIONS.m (into m file)
 % 
 % ====> LUKE/Project_DKE/Display
 % 
@@ -845,11 +848,14 @@
 % U mripplecoefbuilder_dke_yp.m (compatible irunluke)
 % U LUKEversion_jd.m (version 1.6)
 % U main_dke_yp.m (temppath creation and removal)
+% U NoticeDKE.pdf (LUKE Documentation)
 % U path_LUKE_LOCAL.m (MAC case)
 % u pc_dke_yp.m (small correction)
 % U proc_luke_jd.m (update)
 % A proc_wave_luke_jd (compares linear and QL results)
 % U rayprocess_jd.m (corrections)
+% U rfdiff_dke_jd.m (normalization of destares)
+% U rfwave_dke_jd.m (minimum dNpar with number of resonant points)
 % U setpath_luke_jd.m (EXTERNAL_files in path)
 % U timeid_jd (reverse operation)
 % A what_luke_yp (looks for c and fortran files as well)
@@ -889,6 +895,10 @@
 % ====> LUKE/Project_DKE/Modules/RT
 % 
 % U init_RT_jd.m (small correction)
+% U hottensor_jd.m (hot plasma dielectric tensor)
+% U Doc/raytracing.pdf (doc for C3PO)
+% U MEX/Source/erfcc_mex_jd.f (mex file for complex error function)
+% U MEX/Source/erfcc.f (fortran file for complex error function)
 % 
 % ====> LUKE/Project_DKE/Packages
 % 
