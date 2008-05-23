@@ -604,14 +604,29 @@ while isel >= 0,
             end
             dkeparam_file = ['DKEPARAM_',param_id,'.mat'];
             if exist([workdir,dkeparam_file],'file'),
-                dkeparam_default = [workdir,'DKEPARAM_',param_id,'.mat'];
+                dkeparam_default = [workdir,dkeparam_file];
             else
-                if strcmp(basestr,'TCV'),
-                    dkeparam_file = 'DKEPARAM_EC_RT.mat';
-                else
-                    dkeparam_file = 'DKEPARAM_LH_RT.mat';
+                %
+                dkeparam_file = '';
+                locfiles = what(workdir);
+                for ifile = 1:length(locfiles),
+                    if strfind(locfiles.mat{ifile},'DKEPARAM_'),
+                        dkeparam_file = locfiles.mat{ifile};
+                        break
+                    end
                 end
-                dkeparam_default = which(dkeparam_file);    
+                %
+                if ~isempty(dkeparam_file),
+                    dkeparam_default = [workdir,dkeparam_file];
+                else
+                    %
+                    if strcmp(basestr,'TCV'),
+                        dkeparam_file = 'DKEPARAM_EC_RT.mat';
+                    else
+                        dkeparam_file = 'DKEPARAM_LH_RT.mat';
+                    end
+                    dkeparam_default = which(dkeparam_file);    
+                end
             end
             %
             % treatment of the dkeparam structure
@@ -633,7 +648,7 @@ while isel >= 0,
                 status.data = 2;
             end
             %
-            clear newstruct smakecmd dkeparam_default param_id dkeparam_file
+            clear newstruct smakecmd dkeparam_default param_id dkeparam_file locfiles ifile
             %
         elseif isel == 7,
             %

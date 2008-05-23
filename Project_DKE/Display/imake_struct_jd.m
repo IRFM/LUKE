@@ -108,13 +108,13 @@ if m_opt == -1,
         %
     else
         %
-        c_list = input_dke_yp(['Provide the vector of structure ''',sname,''' numbers to be cleared '],[],[1;ns]);
+        c_list = input_dke_yp(['Provide the vector of structure ''',sname,''' numbers to be cleared '],[1:ns],[1;ns]);
         %
         s(c_list) = [];
         spath(c_list) = [];
         sfileid(c_list) = [];
         %
-        if length(c_list) > 1,
+        if length(c_list) >= 1,
             newstruct = 1;
             %
             disp(['-----> The structures ''',sname,''' # ',num2str(c_list),' are cleared.'])
