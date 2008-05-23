@@ -204,13 +204,23 @@ for iw = 1:length(waves),%
         %
         % Minimum spectral width for numerical stability. LH only for now
         %
-        sdNparmin = (real(ray.sNpar).^2 - 1)*mksa.betath_ref*npresmin*dkeparam.pnmax_S/dkeparam.np_S;
+        somega_ce = qe*ray.sB/me;
+        sy = somega_ce./omega_rf;
+		sNpar = real(ray.sNpar);
         %
-        omega_ce = qe*ray.sB/me;
+		snres = zeros(1,length(sy));
+		%
+		snres = snres + (abs(sNpar) < 1 ).*ceil(sqrt(1 - sNpar.^2)./sy);
+		snres = snres + (abs(sNpar) >= 1).*round(1./sy);
+		%
+		syn = snres.*sy;
+		%
+        sdNparmindpparmin = abs((syn + sNpar.^2 - 1)./(1 - syn))*mksa.betath_ref;
+        sdNparmin = sdNparmindpparmin*npresmin*dkeparam.pnmax_S/dkeparam.np_S;
         %
         smaskmin = imag(ray.sdNpar) == 0 & ray.sdNpar < sdNparmin;
         %
-        if omega_rf < omega_ce/5 & any(smaskmin),
+        if any(smaskmin),
             info_dke_yp(2,['WARNING: wave #',num2str(iw),' ray #',num2str(iray),': dNpar increased for ',num2str(sum(smaskmin)),'/',num2str(length(smaskmin)),' data points for numerical stability.']);
             ray.sdNpar(smaskmin) = sdNparmin(smaskmin);
         end
