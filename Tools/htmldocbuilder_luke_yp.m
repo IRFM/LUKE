@@ -127,7 +127,7 @@ end
 %
 rmpath([luke_root,'Packages/m2html']);
 %
-opts.outputDir = 'LUKE/Documentation';
+opts.outputDir = [lukefolder,'/Documentation'];
 opts.evalCode = false;
 publish([lukefolder,'/INSTALL.m'],opts);
 publish([lukefolder,'/README.m'],opts);
