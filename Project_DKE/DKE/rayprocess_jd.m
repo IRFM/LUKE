@@ -363,6 +363,7 @@ else
         end
     elseif real(opt_disp) == 2, % non-relativistic hot plasma dispersion tensor for sepol_pmz, sNperp and phi_xyz (hotdisp_dke_jd)
         for is=1:ns,
+            disp(['Hot plasma dispersion relation: ',num2str(is),'/',num2str(ns)])
             [sNperp(is),e_xyz,sepol_pmz(:,is),e_pyk,D,X,X_s,X_sn,salphaphi_lin(is),sphiT_xyz(:,is),sphiP_xyz(:,is)]...
                 = hotdisp_dke_jd(real(sNpar(is)),omega_rf,sTe(is),sne(is),szTi(:,is),szni(:,is),zZi,zmi,sB(is),sNperp(is),1);
         end
