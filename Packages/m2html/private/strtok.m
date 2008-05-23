@@ -1,4 +1,4 @@
-function [token, remainder, quotient] = strtok(string, delimiters)
+function [token, remainder, quotient] = mstrtok(string, delimiters)
 %Modified version of STRTOK to also return the quotient
 %  string = [quotient token remainder]
 %STRTOK Find token in string.

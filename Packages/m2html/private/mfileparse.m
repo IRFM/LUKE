@@ -140,7 +140,7 @@ if flagm,
         tline = deblank(fliplr(deblank(fliplr(tline))));
 
         % Split code into meaningful chunks
-        splitc = splitcode(tline);
+        splitc = splitcodem(tline);
         for j=1:length(splitc)
             if isempty(splitc{j}) | ...
                 splitc{j}(1) == '''' | ...
