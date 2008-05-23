@@ -16,9 +16,9 @@ dirinit = pwd;%initial directory
 %
 s = what(folder);
 %
-s.c = {};
-s.f = {};
-s.h = {};
+s(1).c = {};
+s(1).f = {};
+s(1).h = {};
 %
 cd(folder);
 %
