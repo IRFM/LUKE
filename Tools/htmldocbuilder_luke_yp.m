@@ -127,5 +127,13 @@ end
 %
 rmpath([luke_root,'Packages/m2html']);
 %
+opts.outputDir = 'LUKE/Documentation';
+opts.evalCode = false;
+publish('LUKE/INSTALL.m',opts);
+publish('LUKE/README.m',opts);
+publish('LUKE/VERSIONS.m',opts);
+publish('LUKE/AUTHORS.m',opts);
+web(['file://',luke_root,'Documentation/index.html'],'-browser');
+%
 cd(dirinit);%back to the initial directory
 %
