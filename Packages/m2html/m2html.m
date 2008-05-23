@@ -288,7 +288,28 @@ if ~options.load
 	mfiles = getmfiles(options.mFiles,{},options.recursive);
 	if ~length(mfiles), fprintf('Nothing to be done.\n'); return; end
 	if options.verbose,
-		fprintf('Found %d M-files.\n',length(mfiles));
+        lcfile = 0;
+        lffile = 0;
+        lmfile = 0;
+        lhfile = 0;
+        for i=1:length(mfiles)
+            [dummy, dummmy,ext] = fileparts(mfiles{i});
+            switch ext
+                case {'.c' '.cpp' '.c++' '.cxx' '.C'}
+                    lcfile = lcfile + 1;
+                case {'.for' '.f' '.FOR' '.F'}
+                    lffile = lffile + 1;
+                case {'.h'}
+                    lhfile = lhfile + 1;
+                case {'.m' '.M'}
+                     lmfile = lmfile + 1;
+            end
+        end
+        %
+        fprintf('Found %d M-files.\n',lmfile);
+        fprintf('Found %d C-files.\n',lcfile);
+        fprintf('Found %d F-files.\n',lffile);
+        fprintf('Found %d H-files.\n',lhfile);
 	end
 	mfiles = sort(mfiles); % sort list of M-files in dictionary order
 end
@@ -306,7 +327,7 @@ if ~options.load
 
 	mdir = unique(mdirs);
 	if options.verbose,
-		fprintf('Found %d unique Matlab directories.\n',length(mdir));
+		fprintf('Found %d unique directories.\n',length(mdir));
 	end
 
 	name = names;
@@ -722,14 +743,14 @@ matlabKeywords = {'break', 'case', 'catch', 'continue', 'elseif', 'else', ...
 				  'end', 'for', 'function', 'global', 'if', 'otherwise', ...
 				  'persistent', 'return', 'switch', 'try', 'while', ...
                   'keyboard', 'pause','eps','NaN','Inf'};
-cKeywords =      {'include','unsigned','register','const','static','define','void','typedef','char','int','double','struct','elseif', 'else', ...
+cKeywords =      {'include','unsigned','register','const','static','define','void','typedef','char','int','double','struct','else', ...
 				  'end', 'for', 'function',  'if', ...
-				  'return','while'};
+				  'return','while','complex'};
 fKeywords =      {'elseif','else','common','real','integer','logical', 'then','call','external'...
 				  'for','function','if','implicit','enddo','do','write','read','format','subroutine','parameter', ...
 				  'return','while','continue','endif','save','close','end','character','double','precision','intrinsic','data'};
 
-strtok_delim = sprintf(' \t\n\r(){}[]<>+-*~!|\\@&/,:;="''%%');%- Delimiters used in strtok: some of them may be useless (% " .), removed '.'
+strtok_delim = sprintf(' \t\n\r(){}[]<>+-*~!|\\@&/,:;="''%');%- Delimiters used in strtok: some of them may be useless (% " .), removed '.'
 
 
 tpl_mfile = 'mfile.tpl';
@@ -738,6 +759,7 @@ tpl_mfile_code     = '<a href="%s" class="code" title="%s">%s</a>';
 tpl_mfile_keyword  = '<span class="keyword">%s</span>';
 tpl_mfile_comment  = '<span class="comment">%s</span>';
 tpl_mfile_string   = '<span class="string">%s</span>';
+tpl_mfile_include  = '<span class="include">%s</span>';
 tpl_mfile_aname    = '<a name="%s" href="#_subfunctions" class="code">%s</a>';
 tpl_mfile_line     = '%04d %s\n';
 
@@ -846,7 +868,7 @@ for i=1:length(mdir)
                             flag_seealso = 1; %(r(end) == ',');
                             tline = '';
                             while 1
-                                [t,r,q] = strtok(r,sprintf(' \t\n\r.,;%%'));
+                                [t,r,q] = mstrtok(r,sprintf(' \t\n\r.,;%%'));
                                 tline = [tline q];
                                 if isempty(t), break, end;
                                 ii = strcmpi(hrefnames,t);
@@ -941,7 +963,7 @@ for i=1:length(mdir)
                         tline = fgetl(fid2);
                         if ~ischar(tline), break, end
                         myline = '';
-                        splitc = splitcode(entity(tline));
+                        splitc = splitcodem(entity(tline));
                         for k=1:length(splitc)
                             if isempty(splitc{k})
                             elseif ~isempty(strmatch('function',splitc{k}))
@@ -966,7 +988,7 @@ for i=1:length(mdir)
                                 %- Look for keywords
                                 r = splitc{k};
                                 while 1
-                                    [t,r,q] = strtok(r,strtok_delim);
+                                    [t,r,q] = mstrtok(r,strtok_delim);
                                     myline = [myline q];
                                     if isempty(t), break, end;
                                     %- Highlight Matlab keywords &
@@ -1045,7 +1067,7 @@ for i=1:length(mdir)
                         tline = fgetl(fid2);
                         if ~ischar(tline), break, end
                         myline = '';
-                        splitc = splitcode(entity(tline));
+                        splitc = splitcodef(entity(tline));                       
                         for k=1:length(splitc)
                             if isempty(splitc{k})
                             elseif splitc{k}(1) == ''''
@@ -1055,7 +1077,7 @@ for i=1:length(mdir)
                                 %- Look for keywords
                                 r = splitc{k};
                                 while 1
-                                    [t,r,q] = strtok(r,strtok_delim);
+                                    [t,r,q] = mstrtok(r,strtok_delim);
                                     myline = [myline q];
                                     if isempty(t), break, end;
                                     %- Highlight fortran keywords
@@ -1114,31 +1136,61 @@ for i=1:length(mdir)
                     fseek(fid2,0,-1);
                     it = 1;
                     fsource = '';
-                    %- Loop over lines
+                    flag_comment = 0;                     
+                    %- Loop over lines    
+                    %keyboard
+                    iline = 0;
                     while 1
-                        tline = fgetl(fid2);
+                        tline = fgetl(fid2); 
+                        iline = iline+1;
+                       % if iline == 348,keyboard,end
                         if ~ischar(tline), break, end
                         myline = '';
-                        splitc = splitcode(entity(tline));
+                        splitc = splitcodec(tline);
                         for k=1:length(splitc)
                             if isempty(splitc{k})
+                            elseif splitc{k}(1) == '"'
+                                myline = [myline sprintf(tpl_mfile_string,entity(splitc{k}))];                                                                    
                             elseif splitc{k}(1) == ''''
-                                myline = [myline ...
-                                    sprintf(tpl_mfile_string,splitc{k})];  
-                            elseif splitc{k}(1) == '""'
-                                myline = [myline ...
-                                    sprintf(tpl_mfile_string,splitc{k})];                                
-                            elseif splitc{k}(1) == '//'
-                                myline = [myline ...
-                                    sprintf(tpl_mfile_comment,deblank(splitc{k}))];
-                            else
+                                myline = [myline sprintf(tpl_mfile_string,entity(splitc{k}))];                                                                    
+                             else
                                 %- Look for keywords
                                 r = splitc{k};
-                                while 1
-                                    [t,r,q] = strtok(r,strtok_delim);
+                                rr = splitc{k};
+                                while 1                                       
+                                    if size(rr,2) >= 1,
+                                        if options.syntaxHighlighting & strcmp('#',rr(1)) & ~flag_comment, 
+                                            myline = [myline sprintf(tpl_mfile_include,entity(rr))];%Include part 
+                                            break;
+                                        end
+                                    end
+                                    if size(rr,2) >= 2,
+                                        if options.syntaxHighlighting & strcmp('//',rr(1:2)),
+                                            myline = [myline sprintf(tpl_mfile_comment,entity(rr))];%Include part 
+                                            break;
+                                        end                                      
+                                        if options.syntaxHighlighting & strcmp('/*',rr(1:2)),
+                                            myline = [myline sprintf(tpl_mfile_comment,entity(rr))];%Include part 
+                                            flag_comment = 1;
+                                            break;
+                                        end                                          
+                                        if options.syntaxHighlighting & strcmp('*/',rr(1:2)),
+                                            myline = [myline sprintf(tpl_mfile_comment,entity(rr))];%Include part 
+                                            flag_comment = 0;
+                                            break;
+                                        end
+                                    end
+                                    if options.syntaxHighlighting & flag_comment,
+                                        myline = [myline sprintf(tpl_mfile_comment,entity(rr))];%Include part 
+                                        break;
+                                    end     
+                                    [t,r,q] = mstrtok(r,strtok_delim);
                                     myline = [myline q];
-                                    if isempty(t), break, end;
-                                    %- Highlight C/C++ keywords  
+
+                                    if isempty(t),break,end 
+
+                                    %- Highlight C/C++ keywords 
+                                     
                                     if options.syntaxHighlighting & any(strcmp(cKeywords,lower(t)))
                                         if strcmp('end',t)
                                             rr = fliplr(deblank(fliplr(r)));
@@ -1245,7 +1297,8 @@ function ldir = splitpath(p)
 		ldir{1} = '.'; % should be removed
 	end
 
-%===============================================================================
+%==========================================================================
+%=====
 function name = extractname(synopsis)
 	if ischar(synopsis), synopsis = {synopsis}; end
 	name = cell(size(synopsis));
@@ -1275,6 +1328,7 @@ function str = entity(str)
 	str = strrep(str,'<','&lt;');
 	str = strrep(str,'>','&gt;');
 	str = strrep(str,'"','&quot;');
+%
 	
 %===============================================================================
 function str = horztab(str,n)
