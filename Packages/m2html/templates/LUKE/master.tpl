@@ -12,9 +12,9 @@
 </head>
 <body>
 <a name="_top"></a>
-<h1>LUKE package</h1>
+<h1><A HREF="Imperial_March.html" target=function>LUKE package</A></h1>
 
-<P align=center><A href="{L_DIRS}" target=function>Code description</A></P>
+<P align=center><A href="lukeoverview.html" target=function>Code overview & TeX documentation</A></P>
 
 <h2>Matlab Directories</h2>
 <ul style="list-style-image:url({MASTERPATH}matlabicon.gif)">
