@@ -8,6 +8,7 @@ function [ppsin,ppsi_apRp,theta,x,y,Bx,By,BPHI,pBpp,pq_Rpap,pj,pmag,Ip_test] = i
 %
 Bpa = mu0*Ip*1e6/(2*pi*ap);% Poloidal Field at the edge, Ampere's theorem (circular plasma cross-section). Moreover, in the following expressions, term of order (ap/Rp)^2 or higher are neglected.	
 qmax_Rpap = abs(Bt/Bpa);%Normalized cylindrical safety factor at the plasma edge
+%qmax = qmax_Rpap*ap/Rp;%Cylindrical safety factor at the plasma edge
 %
 %
 prho = linspace(0,1,npsi);%Initial grid
