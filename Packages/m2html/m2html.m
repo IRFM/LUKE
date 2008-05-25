@@ -285,7 +285,8 @@ end
 %- Get list of M-files, MEX-files, C-Files, F-Files and H-Files
 %-------------------------------------------------------------------------------
 if ~options.load
-	mfiles = getmfiles(options.mFiles,{},options.recursive);
+    excludedFiles = {'AUTHORS.m','INSTALL.m','README.m','VERSIONS.m'};
+	mfiles = getmfiles(options.mFiles,{},options.recursive,excludedFiles);
 	if ~length(mfiles), fprintf('Nothing to be done.\n'); return; end
 	if options.verbose,
         lcfile = 0;
@@ -1043,8 +1044,8 @@ for i=1:length(mdir)
                 tpl = parse(tpl,'OUT','TPL_MFILE');
                 fprintf(fid,'%s',get(tpl,'OUT'));
             end
-%
-            if strcmp(ext,'.f'), %for F-files
+            %
+            if strcmp(ext,'.f') | strcmp(ext,'.F') | strcmp(ext,'.for') | strcmp(ext,'.FOR'), %for F-files
 
                 
                tpl = set(tpl,'var','DESCRIPTION',horztab('Fortran source',options.tabs));
@@ -1117,11 +1118,11 @@ for i=1:length(mdir)
                 tpl = parse(tpl,'OUT','TPL_MFILE');
                 fprintf(fid,'%s',get(tpl,'OUT'));
             end
-%
-            if strcmp(ext,'.c'), %for C-files
+            %
+            if strcmp(ext,'.c') | strcmp(ext,'.C') | strcmp(ext,'.c++') | strcmp(ext,'.cpp') | strcmp(ext,'.cxx') | strcmp(ext,'.h') | strcmp(ext,'.H'), %for C-files or H-files
 
-                
-               tpl = set(tpl,'var','DESCRIPTION',horztab('C/C++ source',options.tabs));
+               if strcmp(ext,'.c') | strcmp(ext,'.C') | strcmp(ext,'.c++') | strcmp(ext,'.cpp') | strcmp(ext,'.cxx'), tpl = set(tpl,'var','DESCRIPTION',horztab('C/C++ source',options.tabs));end
+               if strcmp(ext,'.h') | strcmp(ext,'.H'), tpl = set(tpl,'var','DESCRIPTION',horztab('Header source',options.tabs));end
                tpl = set(tpl,'var','H1LINE_CALLED', ' ');
                
                tpl = set(tpl,'var','crossrefcalleds','');
@@ -1151,7 +1152,7 @@ for i=1:length(mdir)
                             if isempty(splitc{k})
                             elseif splitc{k}(1) == '"'
                                 myline = [myline sprintf(tpl_mfile_string,entity(splitc{k}))];                                                                    
-                            elseif splitc{k}(1) == ''''
+                            elseif splitc{k}(1) == ''''  & ~flag_comment
                                 myline = [myline sprintf(tpl_mfile_string,entity(splitc{k}))];                                                                    
                              else
                                 %- Look for keywords
@@ -1235,8 +1236,12 @@ for i=1:length(mdir)
 end
 
 %===============================================================================
-function mfiles = getmfiles(mdirs,mfiles,recursive)
+function mfiles = getmfiles(mdirs,mfiles,recursive,excludedFiles)
 	%- Extract M-files, MEX-files, C-files, F-files and H-files from a list of directories and/or M-files
+    if nargin < 4,
+        excludedFiles = [];
+    end
+    %
 	for i=1:length(mdirs)
 		if exist(mdirs{i}) == 2
 			mfiles{end+1} = mdirs{i};
@@ -1244,7 +1249,15 @@ function mfiles = getmfiles(mdirs,mfiles,recursive)
 			w = what_luke_yp(mdirs{i});
 			w = w(1); %- Sometimes an array is returned...
 			for j=1:length(w.m)
-				mfiles{end+1} = fullfile(mdirs{i},w.m{j});%.m files
+                excludedFile_flag = 0;
+                for k = 1:length(excludedFiles),
+                    if strcmp(w.m{j},excludedFiles{k}),
+                        excludedFile_flag = 1;
+                    end
+                end
+                if ~excludedFile_flag,
+                    mfiles{end+1} = fullfile(mdirs{i},w.m{j});%.m files
+                end
             end
             for j=1:length(w.mex)
 				mfiles{end+1} = fullfile(mdirs{i},w.mex{j});%.mex files
@@ -1265,7 +1278,7 @@ function mfiles = getmfiles(mdirs,mfiles,recursive)
 				d = {d{~ismember(d,{'.' '..'})}};
 				for j=1:length(d)
 					mfiles = getmfiles(cellstr(fullfile(mdirs{i},d{j})),...
-									   mfiles,recursive);
+									   mfiles,recursive,excluded_files);
 				end
 			end
 		else
