@@ -4,4 +4,4 @@ function [ext] = hexts
 %
 % by Y. PEYSSON (CEA/DSM/IRFM, yves.peysson@cea.fr) and J. DECKER (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-ext = {'.h'};
+ext = {'.h' '.H'};
