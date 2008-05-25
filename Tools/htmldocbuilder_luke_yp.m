@@ -1,4 +1,4 @@
-function htmldocbuilder_luke_yp(dkepath)
+function searchpath = htmldocbuilder_luke_yp(dkepath)
 %LUKE - HTML documentation builder
 %
 % Create dynamically all the documentation for C3PO/LUKE in html format.
@@ -127,14 +127,20 @@ end
 %
 rmpath([luke_root,'Packages/m2html']);
 %
-opts.outputDir = [lukefolder,'/Documentation'];
+mkdir([lukefolder,'/Documentation'],'OVERVIEW_files');
+%
+opts.outputDir = [lukefolder,'/Documentation/OVERVIEW_files'];
 opts.evalCode = false;
 publish([lukefolder,'/INSTALL.m'],opts);
 publish([lukefolder,'/README.m'],opts);
 publish([lukefolder,'/VERSIONS.m'],opts);
 publish([lukefolder,'/AUTHORS.m'],opts);
-web(['file://',luke_root,'Documentation/index.html'],'-browser');
-disp(['WARNING: weblink to the C3PO/LUKE documentation -> ','file://',luke_root,'Documentation/index.html']);
+%
+stat = web(['file://',luke_root,'Documentation/index.html'],'-browser');
+if ~stat,
+    web(['file://',luke_root,'Documentation/index.html'],'-helpbrowser');%Open in MatLab help browser    
+end
+info_dke_yp(2,['The weblink to the C3PO/LUKE documentation is ','file://',luke_root,'Documentation/index.html']);
 %
 cd(dirinit);%back to the initial directory
 %
