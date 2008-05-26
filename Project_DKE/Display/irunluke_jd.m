@@ -342,7 +342,7 @@ while isel >= 0,
 					%
 				elseif strfind(data_file,'LUKE_RESULTS_'),
                     %
-					data = load(fileids.data,'id_simul','id_dkepath','path_dkepath','id_dkeparam','path_dkeparam',...
+					data = load([data_path,data_file],'id_simul','id_dkepath','path_dkepath','id_dkeparam','path_dkeparam',...
                         'id_equil','path_equil','ids_wave','paths_wave','id_ohm','path_ohm','id_transpfaste','path_transpfaste','id_ripple','path_ripple',...
                         'dkepath','dkeparam','dkedisplay','equil','waves','ohm','transpfaste','ripple',...
 						'Znorm','Zcurr','ZP0','dke_out','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');
@@ -378,7 +378,7 @@ while isel >= 0,
                     end
                     %
                     for iw = 1:length(data.waves),
-                        if ~isempty(data.ids_wave{iw}) && exist([data.paths_waves{iw},'WAVE_',data.ids_wave{iw}],'file'),
+                        if ~isempty(data.ids_wave{iw}) && exist([data.paths_wave{iw},'WAVE_',data.ids_wave{iw}],'file'),
                             fileids.waves{iw} = data.ids_wave{iw};
                             paths.waves{iw} = data.paths_waves{iw};
                         else

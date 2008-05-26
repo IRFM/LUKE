@@ -165,7 +165,7 @@ s = [s,{'figure(''Name'',''Ohmic Power''),'}];
 s = [s,{'graph1D_jd(equilDKE.xrho,ZP0.x_e_fsav*mksa.P_ref,0,0,''\rho'',''P_{OHM} (MW/m^3)'',[''P_{OHM} = '',num2str(POHM_tot),'' (MW)''],NaN,NaN,NaN,''-'',''none'',''r'',2,20,gca,0.9,0.7,0.7);drawnow'}];
 s = [s,{'print_jd(p_opt,[id_simul,''_Ohm'']);'}];
 s = [s,{'%'}];
-s = [s,{'filename = [path_simul,''DKE_RESULTS_'',id_equil,''_'',id_simul,''.mat''];'}];
+s = [s,{'filename = [path_simul,''LUKE_RESULTS_'',id_equil,''_'',id_simul,''.mat''];'}];
 s = [s,{'save(filename);'}];
 s = [s,{'info_dke_yp(2,[''LUKE Results saved in '',filename]);'}];
 s = [s,{'%'}];
