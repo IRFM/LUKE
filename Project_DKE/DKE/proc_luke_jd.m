@@ -193,6 +193,18 @@ if nr > 1,
     %
     print_jd(p_opt,[simul_id,'_eta_profile'],'.');
     %
+    figure(6),clf
+    %    
+    ylab1 = 'J (MA/m^2)';
+    ylab2 = 'P_{RF} (MW/m^3)';
+    tit = '';
+    ylim1 = NaN;
+    ylim2 = NaN;
+    %
+    graph1D2jd(xrho,J_tot,xrho,P_rf,xlab,ylab1,ylab2,tit,xlim,ylim1,ylim2,...
+    style,marker1,color2,width2,style,marker1,color3,width2,siz,red,lspace2,bspace);
+    %
+    print_jd(p_opt,[simul_id,'_J_Prf_profile'],'.');
 else
     %
     disp(['normalized current: ',num2str(Zcurr.x_0_fsav)])
