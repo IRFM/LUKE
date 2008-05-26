@@ -353,7 +353,7 @@ while isel >= 0,
 					%
 					id_simul = data.id_simul;
 					%
-                    if ~isempty(data.id_dkepath) && exist([data.path_dkepath,'PATH_',data.id_dkepath],'file'),
+                    if ~isempty(data.id_dkepath) && exist([data.path_dkepath,'PATH_',data.id_dkepath,'.mat'],'file'),
                         fileids.dkepath = data.id_dkepath;
                         paths.dkepath = data.path_dkepath;
                     else
@@ -361,7 +361,7 @@ while isel >= 0,
                         paths.dkepath = '';
                     end
 					%
-                    if ~isempty(data.id_dkeparam) && exist([data.path_dkeparam,'DKEPARAM_',data.id_dkeparam],'file'),
+                    if ~isempty(data.id_dkeparam) && exist([data.path_dkeparam,'DKEPARAM_',data.id_dkeparam,'.mat'],'file'),
                         fileids.dkeparam = data.id_dkeparam;
                         paths.dkeparam = data.path_dkeparam;
                     else
@@ -369,7 +369,7 @@ while isel >= 0,
                         paths.dkeparam = '';
                     end
 					%
-                    if ~isempty(data.id_equil) && exist([data.path_equil,'EQUIL_',data.id_equil],'file'),
+                    if ~isempty(data.id_equil) && exist([data.path_equil,'EQUIL_',data.id_equil,'.mat'],'file'),
                         fileids.equil = data.id_equil;
                         paths.equil = data.path_equil;
                     else
@@ -378,7 +378,7 @@ while isel >= 0,
                     end
                     %
                     for iw = 1:length(data.waves),
-                        if ~isempty(data.ids_wave{iw}) && exist([data.paths_wave{iw},'WAVE_',data.ids_wave{iw}],'file'),
+                        if ~isempty(data.ids_wave{iw}) && exist([data.paths_wave{iw},'WAVE_',data.ids_wave{iw},'.mat'],'file'),
                             fileids.waves{iw} = data.ids_wave{iw};
                             paths.waves{iw} = data.paths_waves{iw};
                         else
@@ -387,7 +387,7 @@ while isel >= 0,
                         end
                     end
 					%
-                    if ~isempty(data.id_ohm) && exist([data.path_ohm,'OHM_',data.id_ohm],'file'),
+                    if ~isempty(data.id_ohm) && exist([data.path_ohm,'OHM_',data.id_ohm,'.mat'],'file'),
                         fileids.ohm = data.id_ohm;
                         paths.ohm = data.path_ohm;
                     else
@@ -395,7 +395,7 @@ while isel >= 0,
                         paths.ohm = '';
                     end
 					%
-                    if ~isempty(data.id_transpfaste) && exist([data.path_transpfaste,'TRANSP_',data.id_transpfaste],'file'),
+                    if ~isempty(data.id_transpfaste) && exist([data.path_transpfaste,'TRANSP_',data.id_transpfaste,'.mat'],'file'),
                         fileids.transpfaste = data.id_transpfaste;
                         paths.transpfaste = data.path_transpfaste;
                     else
@@ -403,7 +403,7 @@ while isel >= 0,
                         paths.transpfaste = '';
                     end
 					%
-                    if ~isempty(data.id_ripple) && exist([data.path_ripple,'RIPPLE_',data.id_ripple],'file'),
+                    if ~isempty(data.id_ripple) && exist([data.path_ripple,'RIPPLE_',data.id_ripple,'.mat'],'file'),
                         fileids.ripple = data.id_ripple;
                         paths.ripple = data.path_ripple;
                     else
@@ -636,14 +636,18 @@ while isel >= 0,
             [dkeparam,paths.dkeparam,fileids.dkeparam,newstruct] = ...
                 imake_struct_jd(dkeparam,'dkeparam',paths.dkeparam,fileids.dkeparam,equil,basestr,smakecmd,status.dkeparam,'DKEPARAM',workdir,dkeparam_default,opt_gui,0,1,1,0);
             %
-            if ~isfield(dkeparam,'rho_S'),
+            if ~isempty(dkeparam) && ~isfield(dkeparam,'rho_S'),
                 dkeparam.rho_S = 20;
             end
             %
             % structure interdependences
             %
             if newstruct == 1,
-                status.dkeparam = 1;
+                if ~isempty(dkeparam),
+                    status.dkeparam = 1;
+                else
+                    status.dkeparam = 0;
+                end
                 status.output = 0;
                 status.data = 2;
             end
