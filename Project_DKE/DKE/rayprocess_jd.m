@@ -316,7 +316,7 @@ if isempty(sNpar),
         sNpar = skpar*clum/omega_rf;
         %
         if isempty(sNperp), 
-            skperp = sqrt(skx.^2 + (sn./sR).^2 + skx.^2 - skpar.^2);
+            skperp = sqrt(skx.^2 + (sn./sR).^2 + sky.^2 - skpar.^2);
             sNperp = skperp*clum/omega_rf;
         end
     else
@@ -367,8 +367,58 @@ else
             [sNperp(is),e_xyz,sepol_pmz(:,is),e_pyk,D,X,X_s,X_sn,salphaphi_lin(is),sphiT_xyz(:,is),sphiP_xyz(:,is)]...
                 = hotdisp_dke_jd(real(sNpar(is)),omega_rf,sTe(is),sne(is),szTi(:,is),szni(:,is),zZi,zmi,sB(is),sNperp(is),1);
         end
+        %
+        smask = ~isnan(sNperp);
+        %
+        sNperp = sNperp(smask);
+        sepol_pmz = sepol_pmz(:,smask);
+        salphaphi_lin = salphaphi_lin(smask);
+        sphiT_xyz = sphiT_xyz(:,smask);
+        sphiP_xyz = sphiP_xyz(:,smask);
+        %
         sphi_xyz = real(sphiP_xyz + sphiT_xyz);
         salphaphi_lin = real(salphaphi_lin);
+        %
+        ss = ss(smask);
+        spsin = spsin(smask);
+        stheta = stheta(smask);
+        %
+        sr = sr(smask);
+        sx = sx(smask);
+        sy = sy(smask);
+        %
+        if tor_mode == 1,
+            sphi = sphi(smask);
+            if ~isempty(sn)
+                sn = sn(smask);
+            end               
+        else
+            sz = sz(smask);
+            if ~isempty(skz)
+                skz = skz(smask);
+            end               
+        end
+        %
+        sNpar = sNpar(smask);
+        sdNpar = sdNpar(smask);
+        %
+        if ~isempty(skx) & ~isempty(sky)
+            skx = skx(smask);
+            sky = sky(smask);
+        end        
+        %
+        sB = sB(smask);
+        sBx = sBx(smask);
+        sBy = sBy(smask);
+        sBphi = sBphi(smask);
+        %
+        sne = sne(smask);
+        szni = szni(:,smask);
+        sTe = sTe(smask);
+        szTi = szTi(:,smask);
+        %
+        srho = srho(smask);
+        %
     elseif real(opt_disp) == 3, % non-relativistic hot plasma dispersion tensor for sepol_pmz, sNperp and phi_xyz (R2D2) 
         [smask_ht,sNperp_ht,sepol_pmz_ht,sPflow_ht,sPabs_at] = ...
             disp_hot_jd(ss,sB,sne,sTe,real(sNpar),omega_rf,sNperp,0); 
