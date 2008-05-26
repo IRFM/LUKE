@@ -1,5 +1,5 @@
 function [ax] = graph1D2jd(x1,y1,x2,y2,xlab,ylab1,ylab2,tit,xlim,ylim1,ylim2,...
-    style1,marker1,color1,width1,style2,marker2,color2,width2,red,lspace,bspace);
+    style1,marker1,color1,width1,style2,marker2,color2,width2,siz,red,lspace,bspace);
 
 if nargin < 22
     bspace = NaN;
@@ -17,7 +17,7 @@ line1 = get(ax(1),'children');
 line2 = get(ax(2),'children');
 
 set(line1,'linewidth',width1);
-set(line2,'linewidth',width1);
+set(line2,'linewidth',width2);
 set(line1,'linestyle',style1);
 set(line2,'linestyle',style2);
 set(line1,'marker',marker1);
@@ -35,12 +35,13 @@ if ~isnan(ylim2)
     set(ax(2),'ylim',ylim2);
 end
 
-xl = xlabel(xlab);%set(xl,'fontsize',24);
-
-
-yl1 = get(ax(1),'ylabel');set(yl1,'string',ylab1);%,'fontsize',24
-yl2 = get(ax(2),'ylabel');set(yl2,'string',ylab2);%,'fontsize',24
-tl = title(tit);%set(tl,'fontsize',24);
+xl = xlabel(xlab);set(xl,'fontsize',siz);
+%
+set(ax(1),'fontsize',siz,'fontname','times');
+set(ax(2),'fontsize',siz,'fontname','times');
+yl1 = get(ax(1),'ylabel');set(yl1,'string',ylab1,'fontsize',siz,'fontname','times');
+yl2 = get(ax(2),'ylabel');set(yl2,'string',ylab2,'fontsize',siz,'fontname','times');
+tl = title(tit);set(tl,'fontsize',siz);
 
 if ~isnan(color1)
     set(line1,'color',color1);
