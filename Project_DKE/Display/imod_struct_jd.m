@@ -13,6 +13,8 @@ if length(s) ~= 1,
     error('This function applies only to (1,1) structures')
 end
 %
+numlim = 40;%maximum number of elements for horizontal vectors
+%
 fnames_all = fieldnames(s);
 nf_all = length(fnames_all);
 %
@@ -65,8 +67,25 @@ while isel ~= 0,
             stype(iname) = 1;
             sval = fval;
         elseif isnumeric(fval),
-            stype(iname) = 2;
-            sval = num2str(fval);
+            %
+            valsize = size(fval);
+            stype(iname) = 6;
+            %
+            if length(valsize) > 2 | min(valsize) > 1,
+                sval = ['< ',num2str(length(valsize)),'-D array >'];
+            elseif numel(fval) > numlim
+                sval = ['< ',num2str(numel(fval)),' elements vector>'];  
+            else
+                if valsize(1) > 1,
+                    rev = 1;
+                    fval = fval(:).';
+                else
+                    rev = 0;
+                end
+                stype(iname) = 2;                
+                sval = num2str(fval);
+            end
+            %
         elseif isstruct(fval),
             stype(iname) = 3;
             sval = '< fields structure >';
@@ -117,7 +136,13 @@ while isel ~= 0,
             disp(['Field : ',fname,' : ',getfieldinfo_jd(s,fname)]);
             [fval,mod] = input_dke_yp(['New value for field : ',fname,' '],fval);
             %
-            s.(fname) = fval;
+            if stype(isel) == 1 | rev == 0,
+                %
+                s.(fname) = fval;
+                %
+            else % rev = 1
+                s.(fname) = fval(:);
+            end
             %
         elseif stype(isel) == 3,
             %
@@ -145,9 +170,13 @@ while isel ~= 0,
                 %
             end
             %
-        else
+        elseif stype(isel) == 5,
             %
             disp(['The type of field ',fname,' cannot be identified.'])
+            %
+        elseif stype(isel) == 6,
+            %
+            disp(['Field ',fname,' can be changed on command line only.'])
             %
         end
         %
