@@ -841,6 +841,7 @@
 % ====> Project_DKE/DKE
 % 
 % A compres_luke_jd (to compare LUKE results from different files)
+% A graph1D2jd.m (plots two graphs simultaneously)
 % U graph_wave_jd.m (launch data, several improvements)
 % A htmldocbuilder_luke_yp (creates html doc)
 % U input_dke_yp.m (important update)
@@ -908,3 +909,11 @@
 % 
 % A all functions for dynamic documentation creation
 % 
+% ====> LUKE/Simulations
+% 
+% The benchmark case have been moved from the folder Examples to Benchmarks
+%
+% U Benchmarks/TScirc_peak/LH_karney_ripple/rippleTS (small correction)
+%
+% A new folder Examples contains some realistic test cases for ITER, TS and TCV
+%
