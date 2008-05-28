@@ -4,11 +4,6 @@ function [varargout] = run_lukert(id_simul,wavestructs,waves,psin_S,rho_S,dkepat
 %
 % by 	Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr> and J. Decker (DRFC/DSM/CEA) <joan.decker@cea.fr> 
 %
-simul.id = id_simul;
-simul.timeid = timeid_jd(clock);
-simul.userid = userid_jd;
-simul.LUKEversion = LUKEversion_jd;
-%
 %Ray-tracing calculations
 %
 if nargin < 15,
@@ -271,7 +266,6 @@ elseif dkeparam.rt_mode == 3,%
     % diary off
 end
 %
-dke_out.simul = simul;
 dke_out.waves = waves;
 %
 if dkeparam.rt_mode >= 1,%Variable number of outputs (only if LUKE is running otherwise no output)
@@ -312,3 +306,4 @@ end
 
 
 
+                                                                                                                                             
