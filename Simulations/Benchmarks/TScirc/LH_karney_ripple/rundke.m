@@ -38,7 +38,7 @@ paths_wave = {''};%if nothing is specified, the working directory is first used 
 id_transpfaste = '';%For fast electron radial transport
 path_transpfaste = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_ripple = 'TScirc';%For fast electron magnetic ripple losses
+id_ripple = 'TSspecific';%For fast electron magnetic ripple losses
 path_ripple = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 %************************************************************************************************************************************
