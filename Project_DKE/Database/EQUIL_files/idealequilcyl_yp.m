@@ -29,8 +29,9 @@ else
 end
 pBpp = sign(Bpa)*prho*abs(Bt)./pq_Rpap;
 %
-psia_apRp = ap*ap*Bpa/2; %poloidal flux at the edge
-ppsi_apRp = prho.^2*psia_apRp; %poloidal flux profile 
+spBpp = triu(repmat((pBpp(1:npsi-1) + pBpp(2:npsi))'/2,[1,npsi-1]));
+pdprho = diff(prho);
+ppsi_apRp = [0,ap^2*integral_dke_jd(pdprho,spBpp,1)'];%psi_apRp = psi(poloidal usual)*ap/Rp for the cylindrical limit
 ppsin = ppsi_apRp/max(ppsi_apRp);%Uniform normalized magnetic flux surface grid
 %
 XBpp = repmat(pBpp',[1,ntheta]);
