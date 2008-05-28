@@ -9,6 +9,11 @@ function [varargout] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam_
 %
 %by Y.Peysson (CEA-DRFC) <yves.peysson@cea.fr> and J. Decker (CEA-DRFC) <joan.decker@cea.fr>
 %
+simul.id = id_simul;
+simul.timeid = timeid_jd(clock);
+simul.userid = userid_jd;
+simul.LUKEversion = LUKEversion_jd;
+%
 dke_warnings = '';
 %
 if nargin ~= 13,
@@ -318,6 +323,8 @@ dke_out.XXsource = XXsinksource_in;
 dke_out.xRR_fsav = xRR_fsav;
 dke_out.Zmripple = Zmripple;
 %
+dke_out.simul = simul;
+%
 if dkeparam_out.syn_mode == 1,
     dke_out.XXf0_bc = XXf0_bc;
     dke_out.XXf0_bc_tp = XXf0_bc_tp;
@@ -393,9 +400,4 @@ if nargout >= 8,varargout{8} = gridDKE;end
 if nargout >= 9,varargout{9} = Zmomcoef;end
 if nargout >= 10,varargout{10} = Zbouncecoef;end
 if nargout >= 11,varargout{11} = Zmripple;end
-if nargout >= 12,varargout{12} = mksa;end
-if nargout >= 13,varargout{13} = XXsinksource;end
-if nargout >= 14,varargout{14} = dke_warnings;end   
-
-	
-
+if nar
