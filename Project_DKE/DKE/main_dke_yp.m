@@ -378,7 +378,7 @@ savefields_momentumDKE = {'pn','pnp','pn_S','dpn','mhu','mhu_S','dmhu'};
 savefields_gridDKE = {'X1mmhu2','xmhubounce2'};
 savefields_Zmomcoef = {'gamma','v'};
 savefields_Zbouncecoef = {'xq','xqtilde','xqbar','xqhat','XXheaviside','Xxlambda'};
-savefields_Zmripple = {'XXlossripple','xdeltaripple','xNq','Xnhuloss','xthetabanana','xthetaloss','xpndetrap','xEseuil'};
+savefields_Zmripple = {'XXlossripple','xdeltaripple','xNq','Xnhuloss','xthetabanana','xthetaloss','xpndetrap','xpnth','xEseuil'};
 %
 radialDKE = selectfields_jd(radialDKE,savefields_radialDKE);
 momentumDKE = selectfields_jd(momentumDKE,savefields_momentumDKE);
@@ -403,6 +403,3 @@ if nargout >= 11,varargout{11} = Zmripple;end
 if nargout >= 12,varargout{12} = mksa;end
 if nargout >= 13,varargout{13} = XXsinksource;end
 if nargout >= 14,varargout{14} = dke_warnings;end   
-
-	
-
