@@ -1,19 +1,16 @@
-function [] = make_all(build_mode)
+function [] = remove_all
+%LUKE - Remove all binary files (*.mat) in the ~/LUKE/Project_DKE/Database
 %
-%This script removes all *.mat files in the database
+%This script removes all *.mat files in the database~/LUKE/Project_DKE/Database
 %
-% by  Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC) and Joan Decker <joan.decker@cea.fr> (CEA/DRFC)
+% by  Yves Peysson <yves.peysson@cea.fr> (CEA/DSM/IRFM) and Joan Decker <joan.decker@cea.fr> (CEA/DSM/IRFM)
 %
-if nargin == 0,
-	info_dke_yp(2,'This script removes all *.mat files in the database.')
-	build_mode = input_dke_yp('Build *.mat with mexfiles (1:yes,0:no)',0);
-end
-clearmat(build_mode,'DISPLAY_files')
-clearmat(build_mode,'DKEPARAM_files')
-clearmat(build_mode,'EQUIL_files')
-clearmat(build_mode,'HXR_files')
-clearmat(build_mode,'OHM_files')
-clearmat(build_mode,'RIPPLE_files')
-clearmat(build_mode,'TRANSP_files')
-clearmat(build_mode,'WAVE_files')
+clearmat('DISPLAY_files')
+clearmat('DKEPARAM_files')
+clearmat('EQUIL_files')
+clearmat('HXR_files')
+clearmat('OHM_files')
+clearmat('RIPPLE_files')
+clearmat('TRANSP_files')
+clearmat('WAVE_files')
 %
