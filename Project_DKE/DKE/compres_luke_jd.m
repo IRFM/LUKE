@@ -59,7 +59,7 @@ for il = 1:Nl,
     %
     Itotstr = num2str(si*Itot(il));
     %
-    leg_I(il,:) = ['I_{LH} = ',Itotstr(1:min(4,length(Itotstr))),' MA'];
+    leg_I(il,:) = ['I_{RF} = ',Itotstr(1:min(4,length(Itotstr))),' MA'];
     %
     disp([str,'I = ',num2str(Itot(il)),' MA;  P = ',num2str(Ptot(il)),' MW'])
     %
@@ -86,10 +86,10 @@ bspace = 0.7;
 color1 = 'r';
 color2 = 'b';
 %
-figure(1);clf
+figure('Name','RF power');clf
 %
-xlab = 'r/a';
-ylab = 'S_{LH} (MW/m^3)';
+xlab = '\rho';
+ylab = 'S_{RF} (MW/m^3)';
 xlim = [0,1];
 ylim = NaN;
 %
@@ -100,10 +100,10 @@ graph1D_jd(xrho{Nl},xP{Nl},0,0,xlab,ylab,tit,leg,xlim,ylim,style,marker,color{Nl
 %grid off
 set(gca,'xtick',[0:0.2:1])
 %
-figure(2);clf
+figure('Name','RF current');clf
 %
-xlab = 'r/a';
-ylab = 'J_{LH} (MA/m^2)';
+xlab = '\rho';
+ylab = 'J_{RF} (MA/m^2)';
 xlim = [0,1];
 ylim = NaN;
 %
