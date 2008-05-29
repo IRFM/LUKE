@@ -89,8 +89,6 @@ dkeparam.np_S = 201;
 dkeparam.nmhu_S = 201;
 dkeparam.pnmax_S = 30;
 %
-addpath('rippleTS');
-%
 waves{1} = make_idealLHwave_jd(equil,wavestruct);
 %
 % case with no ripple
