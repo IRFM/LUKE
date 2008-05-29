@@ -11,16 +11,16 @@ global nfig
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
-id_simul = 'LH_karney_ripple';%Simulation ID
+id_simul0 = 'LH_karney';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
-rho_S = [0.25];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+rho_S = [0.05:0.1:0.9];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
 id_path = '';%For all paths used by DKE solver
 path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_equil = 'TScirc';%For plasma equilibrium
+id_equil = 'TScirc_peak';%For plasma equilibrium
 path_equil = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_dkeparam = 'NONUNIFORM10010020';%For DKE code parameters
@@ -72,8 +72,8 @@ wavestruct.ydNpar_lh = [NaN];%LH wave Gaussian N// Spectrum: width [1,n_scenario
 wavestruct.yD0_in_c_lh = [1];%Central LH QL diffusion coefficient (nhuth_ref*pth_ref^2 or nhuth*pth^2) [1,n_scenario_lh]
 %     
 wavestruct.yD0_in_lh_prof = [0];%Quasilinear diffusion coefficient radial profile: (0) uniform, (1) gaussian radial profile [1,n_scenario_lh]
-wavestruct.ypeak_lh = [NaN];%Radial peak position of the LH quasi-linear diffusion coefficient (r/a on midplane) [1,n_scenario_lh]
-wavestruct.ywidth_lh = [NaN];%Radial width of the LH quasi-linear diffusion coefficient (r/a on midplane) [1,n_scenario_lh]
+wavestruct.ypeak_lh = [0.4];%Radial peak position of the LH quasi-linear diffusion coefficient (r/a on midplane) [1,n_scenario_lh]
+wavestruct.ywidth_lh = [0.2];%Radial width of the LH quasi-linear diffusion coefficient (r/a on midplane) [1,n_scenario_lh]
 %
 wavestruct.ythetab_lh = [0]*pi/180;%(deg -> rad). Poloidal location of LH beam [0..2pi] [1,n_scenario_lh]
 %               (0) from local values Te and ne, (1) from central values Te0 and ne0 
@@ -89,43 +89,33 @@ dkeparam.np_S = 201;
 dkeparam.nmhu_S = 201;
 dkeparam.pnmax_S = 30;
 %
-addpath('rippleTS');
-%
 waves{1} = make_idealLHwave_jd(equil,wavestruct);
 %
 % case with no ripple
 %
-[Znorm_0,Zcurr_0,ZP0_0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,[],[],[]);
+id_simul_off = [id_simul0,'_rippleoff'];
+[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul_off,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,[],[],[]);
+str = ['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul_off,'.mat Znorm Zcurr ZP0 dke_out radialDKE equilDKE momentumDKE gridDKE Zmomcoef Zbouncecoef Zmripple mksa'];
+eval(str);
+Znorm_0 = Znorm;
+Zcurr_0 = Zcurr;
+ZP0_0 = ZP0;
 %
-% case withripple
+% case with ripple
 %
-[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-%
-MRRs = dke_out.xMRR_flux;
-MRRt = dke_out.xMRR_tau;
+id_simul_on = [id_simul0,'_rippleon'];
+[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul_on,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+str = ['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul_on,'.mat Znorm Zcurr ZP0 dke_out radialDKE equilDKE momentumDKE gridDKE Zmomcoef Zbouncecoef Zmripple mksa'];
+eval(str);
 %
 %************************************************************************************************************************************
 %
-format
+vparmin = 1/(waves{1}.rays{1}.sNpar(1)+imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
+vparmax = 1/(waves{1}.rays{1}.sNpar(1)-imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.betath_ref;
+subtitle = ['Tore Supra, v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{||LH} = ',num2str(wavestruct.yD0_in_c_lh),', Zi = ',num2str(max(equilDKE.xZeff))];
 %
-delete res_ripple
 %
-diary res_ripple
-%
-disp(['Ripple losses'])
-disp(['----------------------'])
-%
-disp(['Boundary losses : Gamma*tau_c = ',num2str(MRRs)]) 
-disp(['Volumic losses : Gamma*tau_c = ',num2str(MRRt)]) 
-%
-disp(['Case with ripple : j = ',num2str(Zcurr.x_0),' ; P = ',num2str(ZP0.x_rf_fsav),' ; j/P = ',num2str(Zcurr.x_0./ZP0.x_rf_fsav)]) 
-disp(['Case with no ripple : j = ',num2str(Zcurr_0.x_0),' ; P = ',num2str(ZP0_0.x_rf_fsav),' ; j/P = ',num2str(Zcurr_0.x_0./ZP0_0.x_rf_fsav)]) 
-%
-diary off
-%
-str = [path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat'];
-save(str);
-info_dke_yp(2,['Data saved in ',str]);
-%
-proc_luke_jd(load(str),1,2,0.1,20);
+print_opt = 2;
+proc_luke_jd(load(['DKE_RESULTS_',id_equil,'_',id_simul_off]),find(dke_out.xMRR_flux == max(dke_out.xMRR_flux)),print_opt,0.1,20,subtitle);%Display where magnetic ripple losses peak
+proc_luke_jd(load(['DKE_RESULTS_',id_equil,'_',id_simul_on]),find(dke_out.xMRR_flux == max(dke_out.xMRR_flux)),print_opt,0.1,20,subtitle);%Display where magnetic ripple losses peak
 %
