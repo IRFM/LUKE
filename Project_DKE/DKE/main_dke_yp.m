@@ -400,4 +400,9 @@ if nargout >= 8,varargout{8} = gridDKE;end
 if nargout >= 9,varargout{9} = Zmomcoef;end
 if nargout >= 10,varargout{10} = Zbouncecoef;end
 if nargout >= 11,varargout{11} = Zmripple;end
-if nar
+if nargout >= 12,varargout{12} = mksa;end
+if nargout >= 13,varargout{13} = XXsinksource;end
+if nargout >= 14,varargout{14} = dke_warnings;end   
+
+	
+
