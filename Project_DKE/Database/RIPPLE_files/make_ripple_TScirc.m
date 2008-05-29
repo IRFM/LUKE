@@ -21,3 +21,5 @@ ripple.mode = 1;%No magnetic ripple if empty
 %
 %
 %*************************************************************************************************************
+%
+eval(['save RIPPLE_',id_equil,'_',id_ripple,'.mat ripple']);
