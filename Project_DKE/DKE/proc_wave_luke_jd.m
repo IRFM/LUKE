@@ -6,7 +6,7 @@ if nargin < 3,
     nr_dep = 20;
 end
 %
-if nargin < 2,
+if nargin < 2 | isempty(opt_disp),
     opt_disp.equil = 0;
     opt_disp.si = 1;
 end
@@ -17,6 +17,7 @@ pn = momentumDKE.pn;
 mhu = momentumDKE.mhu;
 xrho = equilDKE.xrho;
 rdke = radialDKE.r_dke;
+xdrho = diff(radialDKE.xrho_S_dke);
 %
 clear gridDKE radialDKE
 %
@@ -56,7 +57,6 @@ end
 xydV_2piRp_dke = xdV_2piRp_dke'*ones(1,ny);
 xydPrf_dke = xyPabs_rf_dke_fsav_mksa.*xydV_2piRp_dke*2*pi*equil.Rp;%power absorbed from each ray within each FS
 %
-xdrho = diff(rho_S);
 xdPrf_dke = sum(xydPrf_dke,2).';
 %
 xdPdrho = xdPrf_dke./xdrho;
@@ -80,7 +80,7 @@ for iw = 1:length(waves),
         P0tot_2piRp = P0tot_2piRp + ray.P0_2piRp;
         %
         ray.srho = psi2rho_jd(equil,ray.spsin);
-        ray = radialdampingprofile_jd(equil,ray,nr_dep);
+        ray = radialdampingprofile_jd(ray,nr_dep,0);
         rdPdrho_lin = rdPdrho_lin + ray.dPnormdrho*ray.P0_2piRp*2*pi*equil.Rp;
         %
         ray.zs = zs{ibb};
