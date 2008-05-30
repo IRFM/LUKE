@@ -66,6 +66,10 @@ bspace = 0.7;
 bspace2 = 0.5;
 %
 xrho = equilDKE.xrho; 
+xpsin = equilDKE.xpsin;
+xTe = equilDKE.xTe;
+xne = equilDKE.xne;
+%
 pn = momentumDKE.pn;
 mhu = momentumDKE.mhu;
 %
@@ -110,17 +114,97 @@ eta_peak = eta(i_peak);
 %
 if nr > 1,
     %
+    dep = 1;
+    ip_rf_2piRp = 0;
+    xp_rf_2piRp = P_rf.*equilDKE.xdV_2piRp_dke;
+    xI_tot = J_tot.*equilDKE.xdA_dke;
+    %
+    xp_rf_2piRp(xp_rf_2piRp < 0) = 0;
+    %
+    p_rf_2piRp_peak = 0;
+    I_tot_peak = 0;
+    %
+    peaks.ir = []; 
+    peaks.p_rf_2piRp = [];
+    peaks.I_tot = [];
+    %
+    for ir = 1:nr,
+        if (xp_rf_2piRp(ir) - ip_rf_2piRp)*dep < 0,
+            if dep == 1,% ir-1 is a peak
+                peaks.ir = [peaks.ir,ir-1];
+                dep = -1;
+            else% ir-1 is a low - power and current shared
+                %
+                p_rf_2piRp_peak = p_rf_2piRp_peak - xp_rf_2piRp(ir-1)/2;  
+                I_tot_peak = I_tot_peak - xI_tot(ir-1)/2;
+                %
+                peaks.p_rf_2piRp = [peaks.p_rf_2piRp,p_rf_2piRp_peak];
+                peaks.I_tot = [peaks.I_tot,I_tot_peak];
+                %
+                p_rf_2piRp_peak = xp_rf_2piRp(ir-1)/2;  
+                I_tot_peak = xI_tot(ir-1)/2;
+                %
+                dep = 1;
+            end
+        end
+        %
+        ip_rf_2piRp = xp_rf_2piRp(ir);
+        p_rf_2piRp_peak = p_rf_2piRp_peak + xp_rf_2piRp(ir);  
+        I_tot_peak = I_tot_peak + xI_tot(ir);
+    end  
+    %
+    if dep == 1,%finish with a high
+        peaks.ir = [peaks.ir,nr];
+    end
+    peaks.p_rf_2piRp = [peaks.p_rf_2piRp,p_rf_2piRp_peak];
+    peaks.I_tot = [peaks.I_tot,I_tot_peak];
+    %
+    peaks.rho = xrho(peaks.ir);
+    peaks.spsin = sqrt(xpsin(peaks.ir));
+    peaks.Te = xTe(peaks.ir);
+    peaks.ne = xne(peaks.ir);
+    peaks.EtaRp = peaks.I_tot./(peaks.p_rf_2piRp*2*pi);
+    peaks.ksirf = 32.7*peaks.I_tot.*peaks.ne*1e-20./(peaks.Te*2*pi.*peaks.p_rf_2piRp);
+    %
     disp(['Total current (I): ',num2str(I_tot),' MA'])
 	if isinf(equilDKE.Rp),
     	disp(['RF power (P/2piRp): ',num2str(p_rf_2piRp),' MW/m'])
     	disp(['Ohmic power (P/2piRp): ',num2str(p_e_2piRp),' MW/m'])
     	disp(['Total power (P/2piRp): ',num2str(p_tot_2piRp),' MW/m'])
     	disp(['CD efficiency (I*Rp/P): ',num2str(EtaRp),' A.m/W'])
+        %
+        for ipeak = 1:length(peaks.ir),
+            disp(' ');
+            disp(['RF Peak # ',num2str(ipeak)])
+            disp(['Position rho: ',num2str(peaks.rho(ipeak))])
+            disp(['Position sqrt(xpsin): ',num2str(peaks.spsin(ipeak))])
+            disp(['Temperature Te: ',num2str(peaks.Te(ipeak)),' keV'])
+            disp(['Density ne: ',num2str(peaks.ne(ipeak)/1e20),' *10^20 m^-3'])
+            disp(' ');
+            disp(['RF power (P/2piRp): ',num2str(peaks.p_rf_2piRp(ipeak)),' MW/m'])
+            disp(['Total current (I): ',num2str(peaks.I_tot(ipeak)),' MA'])
+            disp(['CD efficiency (I*Rp/P): ',num2str(peaks.EtaRp(ipeak)),' A.m/W'])
+            disp(['Normalized CD efficiency xi: ',num2str(peaks.ksirf(ipeak))])
+        end
 	else
     	disp(['RF power (P): ',num2str(p_rf_2piRp*(2*pi*equilDKE.Rp)),' MW'])
     	disp(['Ohmic power (P): ',num2str(p_e_2piRp*(2*pi*equilDKE.Rp)),' MW'])
     	disp(['Total power (P): ',num2str(p_tot_2piRp*(2*pi*equilDKE.Rp)),' MW'])
     	disp(['CD efficiency (I/P): ',num2str(EtaRp/equilDKE.Rp),' A/W'])
+        %
+        for ipeak = 1:length(peaks.ir),
+            disp(' ');
+            disp(['RF Peak # ',num2str(ipeak)])
+            disp(['Position rho: ',num2str(peaks.rho(ipeak))])
+            disp(['Position sqrt(xpsin): ',num2str(peaks.spsin(ipeak))])
+            disp(['Temperature Te: ',num2str(peaks.Te(ipeak)),' keV'])
+            disp(['Density ne: ',num2str(peaks.ne(ipeak)/1e20),' *10^20 m^-3'])
+            disp(' ');
+            disp(['RF power (P): ',num2str(peaks.p_rf_2piRp(ipeak)*(2*pi*equilDKE.Rp)),' MW'])
+            disp(['Total current (I): ',num2str(peaks.I_tot(ipeak)),' MA'])
+            disp(['CD efficiency (I/P): ',num2str(peaks.EtaRp(ipeak)/equilDKE.Rp),' A/W'])
+            disp(['Normalized CD efficiency xi: ',num2str(peaks.ksirf(ipeak))])
+        end
 	end
     %
     % power profiles
