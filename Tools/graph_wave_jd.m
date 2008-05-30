@@ -71,8 +71,10 @@ psin = psi_apRp/psi_apRp(end);
 %
 ap =  ptx(end,1);%Plasma minor radius on the LFS midplane 
 %
+prho_g = ptx(:,1)/ap;
+%
 if xvar == 's',%rho defined as r/a on LFS midplane
-    prho = ptx(:,1)/ap;
+    prho = prho_g;
     plab = 'r/a';
 elseif xvar == 'p',%rho defined as square root of poloidal flux
     prho = sqrt(psin);
@@ -214,12 +216,19 @@ for iy = 1:ny,
         yNpar_abs(iy) = NaN;
         yPtot_abs(iy) = NaN;
     end
+    %
+    disp(['Ray # ',num2str(iy),': fraction of power absorbed: ',num2str(yPtot_abs*100),' %'])  
+    % 
 end
 %
-rho_dep = rays{1}.rho_dep;
+rhog_dep = rays{1}.rho_dep;
+rho_dep = interp1(prho_g,prho,rhog_dep);
 %
-yPtot_abs  
-% 
+drhog_dep = diff([0,(rhog_dep(1:end-1) + rhog_dep(2:end))/2,1]);
+drho_dep = diff([0,(rho_dep(1:end-1) + rho_dep(2:end))/2,1]);
+%
+dPdrho = dPdrho.*drhog_dep./drho_dep;
+%
 % %
 % % Resonance
 % %
@@ -616,11 +625,11 @@ graph1D_jd(1:ny,abs(yNpar_abs),0,0,xlab,ylab,tit,NaN,xlim,ylim,style2,marker1,co
 figure(7),clf
 xlim = [0,1];
 ylim = NaN;
-xlab = '\rho';
-ylab = 'dPd\rho';
-tit = 'Total power deposition profile';
+xlab = plab;
+ylab = 'dPd\rho (MW)';
+tit = '';
 %
-graph1D_jd(rho_dep,dPdrho,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width1,siz,gca,red,lspace,bspace);
+graph1D_jd(rho_dep,dPdrho/1e6,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width1,siz,gca,red,lspace,bspace);
 
 return
 %
