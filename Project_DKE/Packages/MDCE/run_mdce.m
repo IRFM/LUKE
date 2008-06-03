@@ -48,7 +48,7 @@ for n=1:N,
     %
     waitForState(job);
     %
-    Zbouncecoef = getAllOutputArguements(job);
+    Zbouncecoef = getAllOutputArguments(job);
     %
     destroy(job)
     %
@@ -64,4 +64,5 @@ leg = ['Single     ';...
 graph1D_jd(1:N,time_sing,0,0,'','','',NaN,[0,N+1],NaN,'none','+','b',2,20);
 graph1D_jd(1:N,time_dist,0,0,'N','time (s)','',leg,[0,N+1],NaN,'none','o','r',2,20,gca,0.9,0.7,0.7);
 %
+print_jd(2,'fig_mcde','.');
 
