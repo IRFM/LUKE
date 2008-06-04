@@ -12,7 +12,7 @@ kk = [];
 if strcmp(computer,'MAC') | strcmp(computer,'MACI') | strcmp(computer,'PCWIN') | strcmp(computer,'PCWIN64'),%Systems which are usually not case sensitive
     for ii = 1:nn-1,
         for jj = ii+1:nn
-            if strcmpi(filepaths{ii},filepaths{jj}),%identifu identical strings (not case sensitive)
+            if strcmpi(filepaths{ii},filepaths{jj}),%identify identical strings (not case sensitive)
             	kk = [kk,jj];
             end
         end
@@ -182,5 +182,4 @@ else
     disp('The path file PATH_LOCAL.mat can be interactively rebuilt with the function path_LUKE_LOCAL.m')
     %
 end
-%
 
