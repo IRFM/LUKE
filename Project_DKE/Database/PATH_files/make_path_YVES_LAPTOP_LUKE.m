@@ -7,12 +7,12 @@
 clear all
 path_id = 'LUKE';%Set here the name path parameters (user specific)
 %
-luke_root = '/Volumes/LUKE_CERTIFIED/LUKE_1_5/';
+luke_root = '/Volumes/LUKE_CERTIFIED/LUKE_1_6/';
 local_root = '/Users/Yves/CEA/Projets/';
 %
 dkepath.path_id = path_id;
 dkepath.computer = computer;%machine type and supported OS
-dkepath.temppathroot = '/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+dkepath.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 dkepath.luke_root = luke_root;
 dkepath.local_root = local_root;
 %
