@@ -1,9 +1,17 @@
+%LUKE - Script for testing the distributed calculations within MatLab (using the distributed MatLab toolbox)
+%
+%Script for testing the distributed calculations within MatLab (using the distributed MatLab toolbox)
+%
+%by Y.Peysson CEA-IRFM <yves.peysson@cea.fr> and Joan Decker CEA-IRFM (joan.decker@cea.fr)
+%
 clear all
 close all
 %
-load('initdata.mat','dkepath','dkeparam_out','display','equilDKE','gridDKE');
-display.display_mode = 0;
-temppath = '/home/sccp/gsem/decker/tmp/';
+load('initdata.mat','dkepath','dkeparam_out','display','equilDKE','gridDKE');%Load data for the MDCE example
+%
+dkepath = path_LUKE_LOCAL;
+%
+display.display_mode = 0;%no display
 %
 N = 10;
 %
@@ -12,57 +20,39 @@ time_dist = NaN*ones(1,N);
 %
 for n=1:N,
     %
-    disp(['====> ',num2str(n),' consecutive calculations'])
+    disp(['- n = ',num2str(n),' consecutive calculations'])
     %
-    % Single job case
+    % Sequential job case
     %
-    tic;
-    for j=1:n,
-        [Zbouncecoef_old] = bouncecoefbuilder_dke_yp(dkepath,dkeparam_out,display,equilDKE,gridDKE);%bounce averaging coefficients
-    end
-    time_sing(n) = toc;
+    arg_range = '';
+    for j = 1:n,arg_range{j} = equilDKE;end
     %
-    disp(['--> time for single calculation : ',num2str(time_sing(n)),' s'])
+    tic;[Zbouncecoef_seq] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkepath,dkeparam_out,display,equilDKE,gridDKE},4,arg_range,N,dkepath,display,0);time_seq(n) = toc;
+    %
+    disp(['   --> time for single calculation : ',num2str(time_seq(n)),' s'])
+    disp('-------------------------------------------------------------------------')
     %
     % Distributed job case
     %
-    tic;
+    arg_range = '';
+    for j = 1:n,arg_range{j} = equilDKE;end
     %
-    jm = findResource('scheduler','type','generic');
+    tic;[Zbouncecoef_dist,flag] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkepath,dkeparam_out,display,equilDKE,gridDKE},4,arg_range,N,dkepath,display,1);time_dist(n) = toc;
     %
-    set(jm,'DataLocation',temppath);
-    % ajout HP
-    set(jm,'HasSharedFileSystem',true);
-    %
-    set(jm,'ClusterMatlabRoot','/usr/local/R2007B/');
-    set(jm,'SubmitFcn',@pbsSubmitFcn)
-    set(jm,'ParallelSubmitFcn',@pbsParallelSubmitFcn)
-    %        
-    job = createJob(jm);
-    %
-    for j=1:n,
-        createTask(job,@bouncecoefbuilder_dke_yp,5,{dkepath,dkeparam_out,display,equilDKE,gridDKE});
+    if flag,
+        disp(['- n = ',num2str(n),' distributed calculations'])
+        disp(['--> time for single calculation : ',num2str(time_sing(n)),' s'])
+        disp('-------------------------------------------------------------------------')
     end
-    %
-    submit(job);
-    %
-    waitForState(job);
-    %
-    Zbouncecoef = getAllOutputArguments(job);
-    %
-    destroy(job)
-    %
-    time_dist(n) = toc;
-    %
-    disp(['--> time for distributed calculation : ',num2str(time_dist(n)),' s'])
-    %
 end
 %
-leg = ['Single     ';...
-       'Distributed'];
+leg = ['Single'];
+graph1D_jd(1:N,time_seq,0,0,'','','',leg,[0,N+1],NaN,'none','+','b',2,20,gca,0.9,0.7,0.7);
 %
-graph1D_jd(1:N,time_sing,0,0,'','','',NaN,[0,N+1],NaN,'none','+','b',2,20);
-graph1D_jd(1:N,time_dist,0,0,'N','time (s)','',leg,[0,N+1],NaN,'none','o','r',2,20,gca,0.9,0.7,0.7);
+if flag,
+    leg = [leg;'Distributed'];
+    graph1D_jd(1:N,time_dist,0,0,'N','time (s)','',leg,[0,N+1],NaN,'none','o','r',2,20,gca,0.9,0.7,0.7);
+end
 %
 print_jd(2,'fig_mcde','.');
 
