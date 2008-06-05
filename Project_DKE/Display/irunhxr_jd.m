@@ -26,16 +26,18 @@ if nargin < 8,
         disp(quitmsg)
         return
     end  
-    load([luke_path,luke_file],'id_simul','equil','dkeparam','dkedisplay','output');
+    load([luke_path,luke_file],'id_simul','equil','dkeparam','dkedisplay','Zcurr','dke_out','equilDKE','radialDKE','momentumDKE','mksa');
+    %
+else
+    %
+    Zcurr = output.Zcurr;
+    dke_out = output.dke_out;
+    equilDKE = output.equilDKE;
+    radialDKE = output.radialDKE;
+    momentumDKE = output.momentumDKE;
+    mksa = output.mksa;
     %
 end
-%
-Zcurr = output.Zcurr;
-dke_out = output.dke_out;
-equilDKE = output.equilDKE;
-radialDKE = output.radialDKE;
-momentumDKE = output.momentumDKE;
-mksa = output.mksa;
 %
 % load HXR camera spec
 %
