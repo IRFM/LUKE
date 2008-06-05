@@ -96,7 +96,6 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C
     if cluster_mode,
         for iray = 1:Nrays,arg_range{iray} = iray;end
         [flag,ray] = mdce_luke(@loop_main_C3PO_jd,{iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay},1,arg_range,8,dkepath,C3POdisplay.ray,1);
-        keyboard
     else
         for iray = 1:Nrays,    
             [ray] = loop_main_C3PO_jd(iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay);
