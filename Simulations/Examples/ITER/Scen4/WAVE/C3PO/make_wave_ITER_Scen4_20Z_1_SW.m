@@ -38,9 +38,9 @@ yP0 = [20]*1e6;
 %
 % Display parameters
 %
-display.ray = 1;
-display.equilibrium = 0;
-display.p_opt = -1;%Printing or saving option of the figures
+C3POdisplay.ray = 1;
+C3POdisplay.equilibrium = 0;
+C3POdisplay.p_opt = -1;%Printing or saving option of the figures
 %
 % Wave parameters
 %
@@ -99,7 +99,7 @@ rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considere
 %
 rayinit.yP0_2piRp = yP0/(2*pi*equil.Rp);
 %
-wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,display);
+wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,dkeparam,dkepath);
 %
 % Wave processing and relativistic linear damping
 %

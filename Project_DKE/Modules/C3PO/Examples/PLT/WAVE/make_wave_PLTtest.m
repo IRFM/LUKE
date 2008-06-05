@@ -23,6 +23,11 @@ id_equil = 'PLTtest';%For plasma equilibrium
 path_equil = '../EQUIL/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 fitparam.mode_equil = 1;%Magnetic equilibrium grid type: (1): (psi-theta), (2): (x-y)
 %
+% Computational parameters
+%
+id_dkeparam = 'LH_RT';%For DKE code parameters
+path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+%
 % initial ray conditions
 %
 omega_rf = [0.8]*2*pi*1e9;
@@ -40,9 +45,9 @@ P0_2piRp = NaN;
 %
 % Display parameters
 %
-display.ray = 1;
-display.equilibrium = 0;
-display.p_opt = 2;%Printing or saving option of the figures
+C3POdisplay.ray = 1;
+C3POdisplay.equilibrium = 0;
+C3POdisplay.p_opt = 2;%Printing or saving option of the figures
 %
 % Wave parameters
 %
@@ -88,7 +93,7 @@ rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considere
 %
 % Load structures
 %
-[equil,dkepath] = load_structures_yp('equil',id_equil,path_equil,'dkepath',id_dkepath,path_dkepath);
+[equil,dkepath,dkeparam] = load_structures_yp('equil',id_equil,path_equil,'dkepath',id_dkepath,path_dkepath,'dkeparam',id_dkeparam,path_dkeparam);
 %
 % =========================================================================
 %
@@ -106,11 +111,11 @@ rayinit.yP0_2piRp = P0_2piRp;%Lineic initial power density initial power in the 
 %
 % -------------------------------------------------------------------------
 %
-wave_numeric = main_C3PO_jd([id_wave,'_numeric'],equil,rayinit,waveparam,fitparam,rayparam,display,0);
+wave_numeric = main_C3PO_jd([id_wave,'_numeric'],equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,dkeparam,dkepath,0);
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium)');
 %
-wave_analytic = main_C3PO_jd([id_wave,'_analytic'],equil,rayinit,waveparam,fitparam,rayparam,display,flag_analytic);
+wave_analytic = main_C3PO_jd([id_wave,'_analytic'],equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,dkeparam,dkepath,flag_analytic);
 %
 info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
 %
@@ -121,30 +126,28 @@ info_dke_yp(2,'Wave parameters saved');
 %
 graph_comp_RT_jd(wave_numeric,wave_analytic);
 %
-
-
-    figure('Name','Normalized radial position comparison')
-    graph1D_jd(abs(yout(:,3)/2/pi),yout(:,1),0,0,'abs(\phi)/2\pi','rho',['Normalized radial position'],NaN,'','','-','none','r',2);drawnow;hold on
-    graph1D_jd(abs(yout_a(:,3)/2/pi),yout_a(:,1),0,0,'abs(\phi)/2\pi','rho',['Normalized radial position'],NaN,'','','-','none','b',2);drawnow;hold on
-    legend('Numeric','Analytic')
-    print_jd(p_opt,[filename,'_RhoComp']);
-    figure('Name','Normalized poloidal position comparison')
-    graph1D_jd(abs(yout(:,3)/2/pi),yout(:,2)/2/pi,0,0,'abs(\phi)/2\pi','\theta/2\pi',['Poloidal angle'],NaN,'','','-','none','r',2);drawnow;hold on
-    graph1D_jd(abs(yout_a(:,3)/2/pi),yout_a(:,2)/2/pi,0,0,'abs(\phi)/2\pi','\theta/2\pi',['Poloidal angle'],NaN,'','','-','none','b',2);drawnow;hold on
-    legend('Numeric','Analytic')
-    print_jd(p_opt,[filename,'_ThetaComp']);
-    figure('Name','Poloidal mode number comparison')
-    graph1D_jd(abs(yout(:,3)/2/pi),yout(:,5),0,0,'abs(\phi)/2\pi','m',['Poloidal mode number'],NaN,'','','-','none','r',2);drawnow;hold on
-    graph1D_jd(abs(yout_a(:,3)/2/pi),yout_a(:,5),0,0,'abs(\phi)/2\pi','m',['Poloidal mode number'],NaN,'','','-','none','b',2);drawnow;hold on
-    legend('Numeric','Analytic')
-    print_jd(p_opt,[filename,'_PoloidalModeComp']);
-    figure('Name','Parallel wave refractive index comparison')
-    graph1D_jd(abs(yout(:,3)/2/pi),sNpar,0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index'],NaN,'','','-','none','r',2);drawnow;hold on
-    graph1D_jd(abs(yout_a(:,3)/2/pi),sNpar_a,0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index'],NaN,'','','-','none','b',2);drawnow;hold on
-    legend('Numeric','Analytic')
-    print_jd(p_opt,[filename,'_NparComp']);
-    figure('Name','Perpendicular wave refractive index comparison')
-    graph1D_jd(abs(yout(:,3)/2/pi),sNperp,0,0,'abs(\phi)/2\pi','N_{perp}',['Perpendicular wave refractive index'],NaN,'','','-','none','r',2);drawnow;hold on
-    graph1D_jd(abs(yout_a(:,3)/2/pi),sNperp_a,0,0,'abs(\phi)/2\pi','N_{perp}',['Perpendicular wave refractive index'],NaN,'','','-','none','b',2);drawnow;hold on
-    legend('Numeric','Analytic')
-    print_jd(p_opt,[filename,'_NperpComp']);
+figure('Name','Normalized radial position comparison')
+graph1D_jd(abs(yout(:,3)/2/pi),yout(:,1),0,0,'abs(\phi)/2\pi','rho',['Normalized radial position'],NaN,'','','-','none','r',2);drawnow;hold on
+graph1D_jd(abs(yout_a(:,3)/2/pi),yout_a(:,1),0,0,'abs(\phi)/2\pi','rho',['Normalized radial position'],NaN,'','','-','none','b',2);drawnow;hold on
+legend('Numeric','Analytic')
+print_jd(p_opt,[filename,'_RhoComp']);
+figure('Name','Normalized poloidal position comparison')
+graph1D_jd(abs(yout(:,3)/2/pi),yout(:,2)/2/pi,0,0,'abs(\phi)/2\pi','\theta/2\pi',['Poloidal angle'],NaN,'','','-','none','r',2);drawnow;hold on
+graph1D_jd(abs(yout_a(:,3)/2/pi),yout_a(:,2)/2/pi,0,0,'abs(\phi)/2\pi','\theta/2\pi',['Poloidal angle'],NaN,'','','-','none','b',2);drawnow;hold on
+legend('Numeric','Analytic')
+print_jd(p_opt,[filename,'_ThetaComp']);
+figure('Name','Poloidal mode number comparison')
+graph1D_jd(abs(yout(:,3)/2/pi),yout(:,5),0,0,'abs(\phi)/2\pi','m',['Poloidal mode number'],NaN,'','','-','none','r',2);drawnow;hold on
+graph1D_jd(abs(yout_a(:,3)/2/pi),yout_a(:,5),0,0,'abs(\phi)/2\pi','m',['Poloidal mode number'],NaN,'','','-','none','b',2);drawnow;hold on
+legend('Numeric','Analytic')
+print_jd(p_opt,[filename,'_PoloidalModeComp']);
+figure('Name','Parallel wave refractive index comparison')
+graph1D_jd(abs(yout(:,3)/2/pi),sNpar,0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index'],NaN,'','','-','none','r',2);drawnow;hold on
+graph1D_jd(abs(yout_a(:,3)/2/pi),sNpar_a,0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index'],NaN,'','','-','none','b',2);drawnow;hold on
+legend('Numeric','Analytic')
+print_jd(p_opt,[filename,'_NparComp']);
+figure('Name','Perpendicular wave refractive index comparison')
+graph1D_jd(abs(yout(:,3)/2/pi),sNperp,0,0,'abs(\phi)/2\pi','N_{perp}',['Perpendicular wave refractive index'],NaN,'','','-','none','r',2);drawnow;hold on
+graph1D_jd(abs(yout_a(:,3)/2/pi),sNperp_a,0,0,'abs(\phi)/2\pi','N_{perp}',['Perpendicular wave refractive index'],NaN,'','','-','none','b',2);drawnow;hold on
+legend('Numeric','Analytic')
+print_jd(p_opt,[filename,'_NperpComp']);

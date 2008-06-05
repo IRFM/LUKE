@@ -420,9 +420,9 @@ if w_opt == 0,% wave from C3PO calculations
     %
     d_opt = input('Do you want to display the rays? [y/n] : ','s');
     if strcmp(d_opt,'y'),
-        display.ray = 2;
+        wavedisplay.ray = 2;
     else
-        display.ray = 0;
+        wavedisplay.ray = 0;
     end
     %
     p_opt = input('Option for equilibrium figures? -1 (nothing), 0 (print), 1 (print and save), 2 (save) [-1] : ');
@@ -430,8 +430,8 @@ if w_opt == 0,% wave from C3PO calculations
         p_opt = -1;
     end
     %
-    display.equilibrium = 0;
-    display.p_opt = p_opt;%Printing or saving option of the figures
+    wavedisplay.equilibrium = 0;
+    wavedisplay.p_opt = p_opt;%Printing or saving option of the figures
     %
     % C3P0 ray tracing
     %
@@ -444,7 +444,7 @@ if w_opt == 0,% wave from C3PO calculations
             if ~isempty(deblank(rayinit.id)),break;end
         end
     end
-    wave = main_C3PO_jd(rayinit.id,equil,rayinit,waveparam,fitparam,rayparam,display);
+    wave = main_C3PO_jd(rayinit.id,equil,rayinit,waveparam,fitparam,rayparam,wavedisplay,dkeparam,dkepath);
     cd(sd);
     %
     % Wave processing and relativistic linear damping
@@ -463,7 +463,7 @@ if w_opt == 0,% wave from C3PO calculations
     wave.rayinit = rayinit;
     wave.fitparam = fitparam;
     wave.rayparam = rayparam;
-    wave.display = display;
+    wave.display = wavedisplay;
     %
 elseif w_opt == 1,% wave from TORAY calculations
     %

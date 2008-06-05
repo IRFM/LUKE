@@ -23,6 +23,11 @@ id_equil = 'JETliketest';%For plasma equilibrium
 path_equil = '../EQUIL/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 fitparam.mode_equil = 1;%Magnetic equilibrium grid type: (1): (psi-theta), (2): (x-y)
 %
+% Computational parameters
+%
+id_dkeparam = 'LH_RT';%For DKE code parameters
+path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+%
 % initial ray conditions
 %
 omega_rf = [3.7]*2*pi*1e9;
@@ -40,9 +45,9 @@ P0_2piRp = NaN;
 %
 % Display parameters
 %
-display.ray = 1;
-display.equilibrium = 0;
-display.p_opt = 2;%Printing or saving option of the figures
+C3POdisplay.ray = 1;
+C3POdisplay.equilibrium = 0;
+C3POdisplay.p_opt = 2;%Printing or saving option of the figures
 %
 % Wave parameters
 %
@@ -72,11 +77,11 @@ fitparam.opt_load = 1;%Reload existing vectorial magnetic equilibrium (1) or ove
 rayparam.testmode = 0;
 rayparam.tensortype = waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
 rayparam.t0 = 0;
-rayparam.tfinal = 10000;
+rayparam.tfinal = 100+0*10000;
 rayparam.dt0 = 1.e-4;
 rayparam.dS = 1.e-4;
 rayparam.tol = 1e-12;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
-rayparam.kmax = 60000;
+rayparam.kmax = 100+0*60000;
 rayparam.ncyclharm = 3;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
 rayparam.reflection = 0;%1:Enforce wave reflection at plasma boundary, 0: the code calculates itself if the ray must leave of not the plasma
 rayparam.rel_opt = 1;%option for (1) relativistic or (0) non-relativistic calculations
@@ -88,7 +93,7 @@ rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considere
 %
 % Load structures
 %
-[equil,dkepath] = load_structures_yp('equil',id_equil,path_equil,'dkepath',id_dkepath,path_dkepath);
+[equil,dkepath,dkeparam] = load_structures_yp('equil',id_equil,path_equil,'dkepath',id_dkepath,path_dkepath,'dkeparam',id_dkeparam,path_dkeparam);
 %
 % =========================================================================
 %
@@ -102,7 +107,7 @@ else
    [equil_fit] = fitequil_yp(equil,fitparam.mode_equil,fitparam.method,fitparam.ngridresample,fitparam.nharm);%Build vectorized magnetic equilibrium structure
    save(['EQUILV_',equil_fit.id,'.mat'],'equil_fit');
    info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil_fit.id,' is saved.']);
-   if display.equilibrium,testfitequil_yp(equil,equil_fit);end
+   if C3POdisplay.equilibrium,testfitequil_yp(equil,equil_fit);end
 end
 %
 % Calculation of Npar0 using Nphi0
@@ -146,11 +151,11 @@ rayinit.yP0_2piRp = P0_2piRp;%Lineic initial power density initial power in the 
 %
 % -------------------------------------------------------------------------
 %
-wave_numeric = main_C3PO_jd([id_wave,'_numeric'],equil,rayinit,waveparam,fitparam,rayparam,display,0);clear mex;clear functions
+wave_numeric = main_C3PO_jd([id_wave,'_numeric'],equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,dkeparam,dkepath,0);clear mex;clear functions
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium)');
 %
-wave_analytic = main_C3PO_jd([id_wave,'_analytic'],equil,rayinit,waveparam,fitparam,rayparam,display,flag_analytic);
+wave_analytic = main_C3PO_jd([id_wave,'_analytic'],equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,dkeparam,dkepath,flag_analytic);
 %
 info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
 %

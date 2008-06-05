@@ -29,9 +29,9 @@ paths_rayinit = {''};
 %
 % Display parameters
 %
-display.ray = 0;
-display.equilibrium = 0;
-display.p_opt = -1;%Printing or saving option of the figures
+C3POdisplay.ray = 0;
+C3POdisplay.equilibrium = 0;
+C3POdisplay.p_opt = -1;%Printing or saving option of the figures
 %
 % Wave parameters
 %
@@ -88,7 +88,7 @@ rayparam.kextra = 200;
 %
 % C3P0 ray tracing
 %
-wave = main_C3PO_jd(id_wave,equil,rayinits{1},waveparam,fitparam,rayparam,display);
+wave = main_C3PO_jd(id_wave,equil,rayinits{1},waveparam,fitparam,rayparam,C3POdisplay,dkeparam,dkepath);
 %
 % Wave processing and relativistic linear damping
 %

@@ -13,17 +13,124 @@ id_wave = 'VERSATOR2test';% scenario identification (see paper IEEE transaction 
 %
 p_opt = 2;%Printing or saving option of the figures
 %
+%
+% Path parameters
+%
+id_dkepath = 'LOCAL';%For all paths used by DKE solver
+path_dkepath = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+%
+% Equilibrium parameters
+%
 id_equil = 'VERSATOR2test';%For plasma equilibrium
 mode_equil = 1;%Magnetic equilibrium grid type: (1): (psi-theta), (2): (x-y)
 path_equil = '../EQUIL/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-if exist([path_equil,'EQUIL_',id_equil,'.mat']) == 0,%Magnetic equilibrium
-	info_dke_yp(2,[path_equil,'EQUIL_',id_equil,'.mat does not exist']);
-	break
-else
-	eval(['load ',path_equil,'EQUIL_',id_equil,'.mat']);
-	info_dke_yp(2,'Structure ''equil'' successfully loaded');
-end
+% Computational parameters
+%
+id_dkeparam = 'LH_RT';%For DKE code parameters
+path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+%
+% initial ray conditions
+%
+omega_rf = [5.3015e-2*10000]*2*pi*1e9;%GHz (clum_norm = 1 for f_rf = 5.3015e-2, but limitation in m values)
+% 
+rho0 = 0.98;
+theta0 = pi/4;
+phi0 = 0.0;
+%
+m0 = -0.3*10000;
+n0 = NaN;
+Npar0 = 0.5;%initial index of refraction
+%
+dNpar0 = NaN;
+P0_2piRp = NaN;
+%
+% Display parameters
+%
+C3POdisplay.ray = 1;
+C3POdisplay.equilibrium = 0;
+C3POdisplay.p_opt = 2;%Printing or saving option of the figures
+%
+% Wave parameters
+%
+waveparam.mmode = -1;%cold plasma mode [1] : (-1) m (1) p, p is the slow mode when kperp > 0 (ex : LH slow wave)
+waveparam.kmode = 0;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
+%
+%Option parameter for FLR effects and cross-comparison between old FP code: 
+%	- (0): all FLR effects
+%	- (1): small FLR effects and 1/vpar dependence
+%	- (2): small FLR effects and no 1/vpar dependence and old grid technique for DQL calculations (Karney, Shoucri) (see rfdiff_dke_jd)
+%
+waveparam.opt_rf = NaN;
+%
+waveparam.dsmin = NaN;%minimum size for ray fragments
+%
+% -------------------------------------------------------------------------
+%
+% Global parameters for the vectorial magnetic equilibrium
+%
+fitparam.method = 'spline';%nearest,spline,pchip,cubic
+fitparam.nharm = 32;%Number of harmonics in the magnetic equilibrium interpolation (less than ntheta_equil/2)
+fitparam.ngridresample = 1001;%Number of grid points for resampling the radial profile of magnetic equilibrium parameters
+fitparam.opt_load = 1;%Reload existing vectorial magnetic equilibrium (1) or overwrite it (0).
+%
+% Global parameters for the ray-tracing
+%
+rayparam.testmode = 0;
+rayparam.tensortype = waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
+rayparam.t0 = 0;
+rayparam.tfinal = 100000;
+rayparam.dt0 = 1.e-4;
+rayparam.dS = 1.e-4;
+rayparam.tol = 1e-12;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
+rayparam.kmax = 60000;
+rayparam.ncyclharm = 3;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
+rayparam.reflection = 0;%1:Enforce wave reflection at plasma boundary, 0: the code calculates itself if the ray must leave of not the plasma
+rayparam.rel_opt = 1;%option for (1) relativistic or (0) non-relativistic calculations
+rayparam.nperp = 1000;%number of points in pperp integration for damping calculations
+rayparam.pperpmax = 10;%maximum value of pperp in damping calculations
+rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considered absorbed
+%
+% -------------------------------------------------------------------------
+%
+% Load structures
+%
+[equil,dkepath,dkeparam] = load_structures_yp('equil',id_equil,path_equil,'dkepath',id_dkepath,path_dkepath,'dkeparam',id_dkeparam,path_dkeparam);
+%
+% =========================================================================
+%
+% C3P0 ray tracing
+%
+rayinit.omega_rf = omega_rf;
+rayinit.yrho0 = rho0;%Initial radial position at launch
+rayinit.ytheta0 = theta0;%Initial poloidal position at launch
+rayinit.yphi0 = phi0;%Initial toroidal position at launch
+rayinit.ym0 = m0;%Initial poloidal mode number
+rayinit.yn0 = n0;%Initial toroidal mode number
+rayinit.yNpar0 = Npar0;%Initial index of refraction
+rayinit.ydNpar0 = dNpar0;%initial Ray spectral width
+rayinit.yP0_2piRp = P0_2piRp;%Lineic initial power density initial power in the ray (W/m)
+%
+% -------------------------------------------------------------------------
+%
+wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,dkeparam,dkepath,0);
+%
+info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium)');
+%
+save_str = ['WAVE_',id_equil,'_',id_wave,'.mat'];
+eval(['save ',save_str,' wave']);
+%
+info_dke_yp(2,'Wave parameters saved');
+%
+
+
+
+
+
+
+
+
+[equil,dkepath,dkeparam] = load_structures_yp('equil',id_equil,path_equil,'dkepath',id_dkepath,path_dkepath,'dkeparam',id_dkeparam,path_dkeparam);
 %
 display_ray = 1;
 display_equilibrium = 1;
@@ -87,62 +194,25 @@ end
 %
 omega_rf = 2*pi*f_rf*1e9;
 %
-y0 = init_RT_jd(equil,equil_fit,rho0,theta0,phi0,omega_rf,Npar0,m0,mmode,kmode)';
+rayinit.omega_rf = omega_rf;
+rayinit.yrho0 = rho0;%Initial radial position at launch
+rayinit.ytheta0 = theta0;%Initial poloidal position at launch
+rayinit.yphi0 = phi0;%Initial toroidal position at launch
+rayinit.ym0 = m0;%Initial poloidal mode number
+rayinit.yn0 = n0;%Initial toroidal mode number
+rayinit.yNpar0 = Npar0;%Initial index of refraction
+rayinit.ydNpar0 = dNpar0;%initial Ray spectral width
+rayinit.yP0_2piRp = P0_2piRp;%Lineic initial power density initial power in the ray (W/m)
 %
-info_dke_yp(2,'Initial conditions calculated');
+% -------------------------------------------------------------------------
 %
-if isreal(y0(4)),
-    %
-    [tout, yout] = raytracing_yp(rayparam,equil_fit,y0);
-    %
-    info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium)');
-    %
-    filename = [id_wave,'_numeric'];
-    [iabs_out,srho,stheta,sphi,sR,sZ,sNpar,sNperp,sepol_pmz,sphi_xyz] = raypostprocessing_yp(tout,yout,rayparam,equil_fit,omega_rf,display_ray,p_opt,filename,' (numeric)');
-    %
-    [tout, yout] = raytracing_yp(rayparam,equil_fit,y0,3);
-    %
-    filename = [id_wave,'_analytic'];
-    info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
-    %
-    [iabs_out,srho,stheta,sphi,sR,sZ,sNpar,sNperp,sepol_pmz,sphi_xyz] = raypostprocessing_yp(tout,yout,rayparam,equil_fit,omega_rf,display_ray,p_opt,filename,' (Analytic)');
-    info_dke_yp(2,'Ray processing done');
-    %
-else
-   error('kpsin has a non nul imaginary part !');
-end
-%
-% building ray for Fp calculations
-%
-ns = length(srho);
-%
-ray.P0_2piRp = P0*1e6/2/pi/equil.Rp;%Initial lineic power density in the ray (W/m) [1,1]
-%
-ray.sx = sR.' - equil_fit.Rp;% Ray location (major radius) along the propagation [1,ns]
-ray.sphi = sphi.';% Ray location (toroidal angle) along the propagation [1,ns]
-ray.sy = sZ.' - equil_fit.Zp;% Ray location (vertical) along the propagation [1,ns]
-%
-ray.ss = [];% Ray propagation distance parameter for each ray (put to NaN once the ray is absorbed) [1,ns]
-ray.spsin = [];% Ray location (normalized magnetic flux) along the propagation [1,ns]
-ray.stheta = [];% Ray location (poloidal angle) along the propagation [1,ns]
-%
-ray.skx = [];% Ray wave vector (major radius) along the propagation [1,ns]
-ray.sn = [];% Ray wave number (toroidal) along the propagation [1,ns]
-ray.sky = [];% Ray wave vector (vertical) along the propagation [1,ns]
-%
-ray.sNpar = sNpar.';% Ray parallel wave number [1,ns]
-ray.sNperp = sNperp.';% Ray perpendicular wave number [1,ns]
-ray.sdNpar = dNpar*ones(1,ns);% Ray spectral width in Npar [1,ns] 
-%       if sdNpar is real -> gaussian spectrum, if sdNpar is imag. ->
-%       square spectrum (centered on sNpar)
-ray.sepol_pmz = sepol_pmz.';% polarization vector [3,ns] complex
-ray.sphi_xyz = sphi_xyz.';% normalized power flow [3,ns]
-%
-wave.omega_rf = omega_rf;
-wave.opt_rf = opt_rf;%option for FLR calculations [1,1]
-wave.opt_disp = 0+i;  % option for solving the wave equation, which gives (ray.sepol_pmz, ray.sphi, ray.sNperp) 
-wave.equil_id = id_equil;
-wave.rays{1} = ray;
+wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,dkeparam,dkepath,0);
+
+
+
+
+
+
 %
 save_str = ['WAVE_',id_equil,'_',id_wave,'.mat'];
 eval(['save ',save_str,' wave']);
