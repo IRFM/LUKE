@@ -312,6 +312,9 @@ while isel >= 0,
                         paths.equil = '';
                     end
                     %
+                    fileids.waves = '';
+                    paths.waves = '';
+                    %
                     for iw = 1:length(waves),
                         if ~isfield(fileids,'waves') || (length(fileids.waves) < iw) || (~isempty(fileids.waves{iw}) && ~exist([paths.waves{iw},'WAVE_',equil.id,'_',fileids.waves{iw},'.mat'],'file')),
                             fileids.waves{iw} = '';
@@ -380,7 +383,7 @@ while isel >= 0,
                     for iw = 1:length(data.waves),
                         if ~isempty(data.ids_wave{iw}) && exist([data.paths_wave{iw},'WAVE_',data.ids_wave{iw},'.mat'],'file'),
                             fileids.waves{iw} = data.ids_wave{iw};
-                            paths.waves{iw} = data.paths_waves{iw};
+                            paths.waves{iw} = data.paths_wave{iw};
                         else
                             fileids.waves{iw} = '';
                             paths.waves{iw} = '';
@@ -477,7 +480,7 @@ while isel >= 0,
 				%
 				setpath_luke_jd(dkepath.luke_root,dkepath);
 				%
-			end
+            end
             %
         elseif isel == 2,
             %
