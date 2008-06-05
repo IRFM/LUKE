@@ -95,12 +95,22 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C
     %
     if cluster_mode,
         for iray = 1:Nrays,arg_range{iray} = iray;end
-        [flag,ray] = mdce_luke(@loop_main_C3PO_jd,{iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay},1,arg_range,8,dkepath,C3POdisplay.ray,1);
+        [flag,rays] = mdce_luke(@loop_main_C3PO_jd,{iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay},1,arg_range,8,dkepath,C3POdisplay.ray,1);
+		%
+		for iray = 1:Nrays,
+			if isempty(rays{iray}),
+                disp(['kpsin has a non nul imaginary part for ray # ',int2str(iray),' !']);  
+                return
+			end
+			%
+            wave.rays{iray} = rays{iray};
+            info_dke_yp(2,['Ray #',int2str(iray),' is processed']);		
+		end
     else
         for iray = 1:Nrays,    
             [ray] = loop_main_C3PO_jd(iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay);
             if isempty(ray),
-                disp('kpsin has a non nul imaginary part !');  
+                disp(['kpsin has a non nul imaginary part for ray # ',int2str(iray),' !']);
                 return
             else
                 kray = kray + 1;
