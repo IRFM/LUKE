@@ -96,6 +96,7 @@ dkeparam.PETScparam.pcmethod = ' ';%Preconditioning method used by PETSc. '-pc_t
 dkeparam.PETScparam.cloop = 0;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
 %
 dkeparam.clustermode.eecoll_dke_yp = 1;%MatLab distributed computing environment enabled (1) or disabled (0) for the function eecoll_dke_yp.m (MDC toolbox must be installed)
+dkeparam.clustermode.main_C3PO_jd = 1;%MatLab distributed computing environment enabled (1) or disabled (0) for the function main_C3PO_jd.m (MDC toolbox must be installed)
 %
 dkeparam.store_mode = 0;%Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight
 dkeparam.opt_load = 0;%Load intermediate calculations
