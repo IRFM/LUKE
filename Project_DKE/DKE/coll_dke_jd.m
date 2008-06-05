@@ -1,11 +1,11 @@
-function [ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor] = coll_dke_jd(dkepath,dkeparam,display,equilDKE,mksa,gridDKE,Zmomcoef,Zbouncecoef);
+function [ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor] = coll_dke_jd(dkepath,dkeparam,dkedisplay,equilDKE,mksa,gridDKE,Zmomcoef,Zbouncecoef);
 %
 coll_mode = dkeparam.coll_mode;
 bounce_mode = dkeparam.bounce_mode;
 dke_mode = dkeparam.dke_mode;
 temppath = dkepath.temppath;
 %
-display_mode = display.display_mode;
+display_mode = dkedisplay.display_mode;
 %
 etime_coll = 0;
 time0 = clock;
@@ -176,9 +176,9 @@ else
 %
 %Fast electron-thermal electron collision term
 %
-    [Fee,Aee,Btee] = eecoll_dke_yp(v,z,gamma,sigma,pn,pn2,dpn,J1,J2,spfac,betath_ref,xne_norm,xTe_norm,ir,coll_mode);
-    [Feem,Aeem] = eecoll_dke_yp(vm,zm,gammam,sigmam,pnm,pn2m,dpnm,J1,J2,spfac,betath_ref,xne_norm,xTe_norm,ir,coll_mode);
-    [Feep,Aeep] = eecoll_dke_yp(vp,zp,gammap,sigmap,pnp,pn2p,dpnp,J1,J2,spfac,betath_ref,xne_norm,xTe_norm,ir,coll_mode);
+    [Fee,Aee,Btee] = eecoll_dke_yp(v,z,gamma,sigma,pn,pn2,dpn,J1,J2,spfac,betath_ref,xne_norm,xTe_norm,ir,coll_mode,dkepath,dkedisplay,dkeparam);
+    [Feem,Aeem] = eecoll_dke_yp(vm,zm,gammam,sigmam,pnm,pn2m,dpnm,J1,J2,spfac,betath_ref,xne_norm,xTe_norm,ir,coll_mode,dkepath,dkedisplay,dkeparam);
+    [Feep,Aeep] = eecoll_dke_yp(vp,zp,gammap,sigmap,pnp,pn2p,dpnp,J1,J2,spfac,betath_ref,xne_norm,xTe_norm,ir,coll_mode,dkepath,dkedisplay,dkeparam);
 %
     Feem(1) = 1;%Avoid singularity at p = 0, but the value is not used
     Feemm = [0,Fee(1:npn-1)];
