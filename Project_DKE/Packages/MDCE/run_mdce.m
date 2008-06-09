@@ -44,7 +44,7 @@ for n=1:N,
     %
     if flag_dist4(n) == 1,
         disp(['- n = ',num2str(n),' distributed calculations'])
-        disp(['--> time for distributed calculation : ',num2str(time_dist4(n)),' s'])
+        disp(['--> time for distributed calculation (4 processors) : ',num2str(time_dist4(n)),' s'])
         disp('-------------------------------------------------------------------------')
     elseif flag_dist4(n) == -1,
         disp(['- n = ',num2str(n),' distributed calculations called but time out is reached. Sequential processing performed.'])
@@ -61,7 +61,7 @@ for n=1:N,
     %
     if flag_dist8(n) == 1,
         disp(['- n = ',num2str(n),' distributed calculations'])
-        disp(['--> time for distributed calculation : ',num2str(time_dist8(n)),' s'])
+        disp(['--> time for distributed calculation (8 processors) : ',num2str(time_dist8(n)),' s'])
         disp('-------------------------------------------------------------------------')
     elseif flag_dist8(n) == -1,
         disp(['- n = ',num2str(n),' distributed calculations called but time out is reached. Sequential processing performed.'])
