@@ -94,8 +94,12 @@ dkeparam.PETScparam.kspmethod = ' ';%KSP method used by PETSc. '-ksp_type preonl
 dkeparam.PETScparam.pcmethod = ' ';%Preconditioning method used by PETSc. '-pc_type lu' for SUPERLU or '-pc-type hypre' for HYPRE.  See PETSc documentation
 dkeparam.PETScparam.cloop = 0;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
 %
-dkeparam.clustermode.eecoll_dke_yp = 1;%MatLab distributed computing environment enabled (1) or disabled (0) for the function eecoll_dke_yp.m (MDC toolbox must be installed)
-dkeparam.clustermode.main_C3PO_jd = 1;%MatLab distributed computing environment enabled (1) or disabled (0) for the function main_C3PO_jd.m (MDC toolbox must be installed)
+dkeparam.clustermode.eecoll_dke_yp.mode = 1;%MatLab distributed computing environment enabled (1) or disabled (0) for the function eecoll_dke_yp.m (MDC toolbox must be installed)
+dkeparam.clustermode.eecoll_dke_yp.timeout = 200;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
+dkeparam.clustermode.eecoll_dke_yp.size = 4;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
+dkeparam.clustermode.main_C3PO_jd.mode = 1;%MatLab distributed computing environment enabled (1) or disabled (0) for the function main_C3PO_jd.m (MDC toolbox must be installed)
+dkeparam.clustermode.main_C3PO_jd.timeout = 200;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
+dkeparam.clustermode.main_C3PO_jd.size = 4;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
 %
 dkeparam.store_mode = 0;%Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight
 dkeparam.opt_save = 0;%Save intermediate calculations
