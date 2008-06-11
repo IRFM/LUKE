@@ -107,7 +107,7 @@ susceptibilitytensor_format X;
 } 
 
 
-void coldtensor(X,ns,ncyclharm,raymagnetic,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY,p1mwcn2)
+void coldtensor(X,ns,ncyclharm,raymagnetic,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY)
 susceptibilitytensor_format X;
 int ns;
 int ncyclharm;
@@ -116,7 +116,6 @@ double wcn[],wpn2[],betath[];
 double dwcndY[][MC],dwpn2dY[][MC],dbetathdY[][MC];
 double Npar,dNpardY[];
 double complex Nperp,dNperpdY[];
-double p1mwcn2[];
 { 
     double complex Xxx[ns+1],Xxy[ns+1],Xxz[ns+1],Xyy[ns+1],Xyz[ns+1],Xzz[ns+1];
     double complex dXxxdNperp[ns+1],dXxydNperp[ns+1],dXxzdNperp[ns+1],dXyydNperp[ns+1],dXyzdNperp[ns+1],dXzzdNperp[ns+1];
@@ -130,14 +129,14 @@ double p1mwcn2[];
         
     for (is = 0;is < ns + 1;is++) {
         
-/* Dielectric tensor (multiplied by (1 - wcn[is]*wcn[is]) to avoid singularity at wcn[is] = 1) */
+/* Dielectric tensor */
         
-        Xxx[is] = - wpn2[is];
-        Xxy[is] = + wpn2[is]*wcn[is]*I;
+        Xxx[is] = - wpn2[is]/(1 - wcn[is]*wcn[is]);
+        Xxy[is] = + wpn2[is]*wcn[is]*I/(1 - wcn[is]*wcn[is]);
         Xxz[is] = 0.0;
-        Xyy[is] = - wpn2[is];
+        Xyy[is] = - wpn2[is]/(1 - wcn[is]*wcn[is]);
         Xyz[is] = 0.0;
-        Xzz[is] = - wpn2[is]*(1 - wcn[is]*wcn[is]);
+        Xzz[is] = - wpn2[is];
 
 /* derivatives of the dielectric tensor */
         
@@ -162,27 +161,27 @@ double p1mwcn2[];
         dXyzdbetath[is] = 0.0;
         dXzzdbetath[is] = 0.0;
 
-        dXxxdwcn[is] = 0;
-        dXxydwcn[is] = wpn2[is]*I;
+        dXxxdwcn[is] = -2.0*wpn2[is]*wcn[is]/(1 - wcn[is]*wcn[is])/(1 - wcn[is]*wcn[is]);
+        dXxydwcn[is] = +(2.0*wpn2[is]*wcn[is]*wcn[is]/(1 - wcn[is]*wcn[is])/(1 - wcn[is]*wcn[is]) + wpn2[is]/(1 - wcn[is]*wcn[is]))*I;
         dXxzdwcn[is] = 0.0;
-        dXyydwcn[is] = 0.0;
+        dXyydwcn[is] = -2.0*wpn2[is]*wcn[is]/(1 - wcn[is]*wcn[is])/(1 - wcn[is]*wcn[is]);
         dXyzdwcn[is] = 0.0;
-        dXzzdwcn[is] = +2.0*wpn2[is]*wcn[is];    
+        dXzzdwcn[is] = 0.0;    
 
-        dXxxdwpn2[is] = -1.0;
-        dXxydwpn2[is] = +wcn[is]*I;
+        dXxxdwpn2[is] = -1.0/(1 - wcn[is]*wcn[is]);
+        dXxydwpn2[is] = +wcn[is]*I/(1 - wcn[is]*wcn[is]);
         dXxzdwpn2[is] = 0.0;
-        dXyydwpn2[is] = -1.0;
+        dXyydwpn2[is] = -1.0/(1 - wcn[is]*wcn[is]);
         dXyzdwpn2[is] = 0.0;
-        dXzzdwpn2[is] = -1.0*(1 - wcn[is]*wcn[is]);    
+        dXzzdwpn2[is] = -1.0;    
         
     }
      
-    buildXstruc(X,ns,dNpardY,dNperpdY,dwcndY,dwpn2dY,dbetathdY,Xxx,Xxy,Xxz,Xyy,Xyz,Xzz,dXxxdNperp,dXxydNperp,dXxzdNperp,dXyydNperp,dXyzdNperp,dXzzdNperp,dXxxdNpar,dXxydNpar,dXxzdNpar,dXyydNpar,dXyzdNpar,dXzzdNpar,dXxxdbetath,dXxydbetath,dXxzdbetath,dXyydbetath,dXyzdbetath,dXzzdbetath,dXxxdwcn,dXxydwcn,dXxzdwcn,dXyydwcn,dXyzdwcn,dXzzdwcn,dXxxdwpn2,dXxydwpn2,dXxzdwpn2,dXyydwpn2,dXyzdwpn2,dXzzdwpn2,p1mwcn2);
+    buildXstruc(X,ns,dNpardY,dNperpdY,dwcndY,dwpn2dY,dbetathdY,Xxx,Xxy,Xxz,Xyy,Xyz,Xzz,dXxxdNperp,dXxydNperp,dXxzdNperp,dXyydNperp,dXyzdNperp,dXzzdNperp,dXxxdNpar,dXxydNpar,dXxzdNpar,dXyydNpar,dXyzdNpar,dXzzdNpar,dXxxdbetath,dXxydbetath,dXxzdbetath,dXyydbetath,dXyzdbetath,dXzzdbetath,dXxxdwcn,dXxydwcn,dXxzdwcn,dXyydwcn,dXyzdwcn,dXzzdwcn,dXxxdwpn2,dXxydwpn2,dXxzdwpn2,dXyydwpn2,dXyzdwpn2,dXzzdwpn2);
 } 
 
 
-void hottensor(X,ns,ncyclharm,raymagnetic,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY,p1mwcn2)
+void hottensor(X,ns,ncyclharm,raymagnetic,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY)
 susceptibilitytensor_format X;
 int ns;
 int ncyclharm;
@@ -191,7 +190,6 @@ double wcn[],wpn2[],betath[];
 double dwcndY[][MC],dwpn2dY[][MC],dbetathdY[][MC];
 double Npar,dNpardY[];
 double complex Nperp,dNperpdY[];
-double p1mwcn2[];
 { 
     double complex Xxx[ns+1],Xxy[ns+1],Xxz[ns+1],Xyy[ns+1],Xyz[ns+1],Xzz[ns+1];
     double complex dXxxdNperp[ns+1],dXxydNperp[ns+1],dXxzdNperp[ns+1],dXyydNperp[ns+1],dXyzdNperp[ns+1],dXzzdNperp[ns+1];
@@ -211,7 +209,7 @@ double p1mwcn2[];
     
     int is,i;
 
-    /*******WARNING: X to be multiplied by (1 - wcn[is]*wcn[is]) for consistency with cold tensor. Not yet implemented YP 7/05/2008 ***************/
+
     calcY(ns,ncyclharm,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY,Yxx,Yxy,Yxz,Yyy,Yyz,Yzz,dYxxdNperp,dYxydNperp,dYxzdNperp,dYyydNperp,dYyzdNperp,dYzzdNperp,dYxxdNpar,dYxydNpar,dYxzdNpar,dYyydNpar,dYyzdNpar,dYzzdNpar,dYxxdbetath,dYxydbetath,dYxzdbetath,dYyydbetath,dYyzdbetath,dYzzdbetath,dYxxdwcn,dYxydwcn,dYxzdwcn,dYyydwcn,dYyzdwcn,dYzzdwcn,dYxxdwpn2,dYxydwpn2,dYxzdwpn2,dYyydwpn2,dYyzdwpn2,dYzzdwpn2);
 
     for (is = 0;is < ns + 1;is++) {/* initialisation */           
@@ -316,7 +314,7 @@ double p1mwcn2[];
         }
     }
      
-    buildXstruc(X,ns,dNpardY,dNperpdY,dwcndY,dwpn2dY,dbetathdY,Xxx,Xxy,Xxz,Xyy,Xyz,Xzz,dXxxdNperp,dXxydNperp,dXxzdNperp,dXyydNperp,dXyzdNperp,dXzzdNperp,dXxxdNpar,dXxydNpar,dXxzdNpar,dXyydNpar,dXyzdNpar,dXzzdNpar,dXxxdbetath,dXxydbetath,dXxzdbetath,dXyydbetath,dXyzdbetath,dXzzdbetath,dXxxdwcn,dXxydwcn,dXxzdwcn,dXyydwcn,dXyzdwcn,dXzzdwcn,dXxxdwpn2,dXxydwpn2,dXxzdwpn2,dXyydwpn2,dXyzdwpn2,dXzzdwpn2,p1mwcn2);
+    buildXstruc(X,ns,dNpardY,dNperpdY,dwcndY,dwpn2dY,dbetathdY,Xxx,Xxy,Xxz,Xyy,Xyz,Xzz,dXxxdNperp,dXxydNperp,dXxzdNperp,dXyydNperp,dXyzdNperp,dXzzdNperp,dXxxdNpar,dXxydNpar,dXxzdNpar,dXyydNpar,dXyzdNpar,dXzzdNpar,dXxxdbetath,dXxydbetath,dXxzdbetath,dXyydbetath,dXyzdbetath,dXzzdbetath,dXxxdwcn,dXxydwcn,dXxzdwcn,dXyydwcn,dXyzdwcn,dXzzdwcn,dXxxdwpn2,dXxydwpn2,dXxzdwpn2,dXyydwpn2,dXyzdwpn2,dXzzdwpn2);
 } 
 
 
@@ -678,7 +676,7 @@ double *dwork;
     dwork[0] *= zeta/(one + two*zeta2);  
 }
 
-void weakrelativistictensor(X,ns,raymagnetic,Npar,dNpardx,Nperp,dNperpdx,wcn,dwcndx,wpn2,dwpn2dx,betath,dbetathdx,p1mwcn2)
+void weakrelativistictensor(X,ns,raymagnetic,Npar,dNpardx,Nperp,dNperpdx,wcn,dwcndx,wpn2,dwpn2dx,betath,dbetathdx)
 susceptibilitytensor_format X;
 int ns;
 raymagnetic_format raymagnetic;
@@ -686,7 +684,6 @@ double wcn[],wpn2[],betath[];
 double dwcndx[][MC],dwpn2dx[][MC],dbetathdx[][MC];
 double Npar,dNpardx[];
 double complex Nperp,dNperpdx[];
-double p1mwcn2[];
 { 
     
     double complex Xxx[ns+1],Xxy[ns+1],Xxz[ns+1],Xyy[ns+1],Xyz[ns+1],Xzz[ns+1];
@@ -770,7 +767,6 @@ double p1mwcn2[];
     double complex S0, S1, S2, S;
     double complex Nperp2;
 
-    /*******WARNING: X to be multiplied by (1 - wcn[is]*wcn[is]) for consistency with cold tensor. Not yet implemented YP 7/05/2008 ***************/
     
 
 /* Hot plasma, both modes FLR approximation up to (kperp*rhoe)^4
@@ -1373,7 +1369,7 @@ double p1mwcn2[];
         dXzzdwpn2[is] = 0.0;    
     }
      
-    buildXstruc(X,ns,dNpardx,dNperpdx,dwcndx,dwpn2dx,dbetathdx,Xxx,Xxy,Xxz,Xyy,Xyz,Xzz,dXxxdNperp,dXxydNperp,dXxzdNperp,dXyydNperp,dXyzdNperp,dXzzdNperp,dXxxdNpar,dXxydNpar,dXxzdNpar,dXyydNpar,dXyzdNpar,dXzzdNpar,dXxxdbetath,dXxydbetath,dXxzdbetath,dXyydbetath,dXyzdbetath,dXzzdbetath,dXxxdwcn,dXxydwcn,dXxzdwcn,dXyydwcn,dXyzdwcn,dXzzdwcn,dXxxdwpn2,dXxydwpn2,dXxzdwpn2,dXyydwpn2,dXyzdwpn2,dXzzdwpn2,p1mwcn2);
+    buildXstruc(X,ns,dNpardx,dNperpdx,dwcndx,dwpn2dx,dbetathdx,Xxx,Xxy,Xxz,Xyy,Xyz,Xzz,dXxxdNperp,dXxydNperp,dXxzdNperp,dXyydNperp,dXyzdNperp,dXzzdNperp,dXxxdNpar,dXxydNpar,dXxzdNpar,dXyydNpar,dXyzdNpar,dXzzdNpar,dXxxdbetath,dXxydbetath,dXxzdbetath,dXyydbetath,dXyzdbetath,dXzzdbetath,dXxxdwcn,dXxydwcn,dXxzdwcn,dXyydwcn,dXyzdwcn,dXzzdwcn,dXxxdwpn2,dXxydwpn2,dXxzdwpn2,dXyydwpn2,dXyzdwpn2,dXzzdwpn2);
 }
 
 
