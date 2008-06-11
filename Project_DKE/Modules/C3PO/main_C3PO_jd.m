@@ -47,6 +47,9 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C
     if ~isfield(C3POdisplay,'text'),
         C3POdisplay.text = 1;
     end
+    if ~isfield(C3POdisplay,'mdce'),
+        C3POdisplay.mdce = 0;
+    end
     %
     if ~isfield(waveparam,'nd'),
         waveparam.nd = 1;
