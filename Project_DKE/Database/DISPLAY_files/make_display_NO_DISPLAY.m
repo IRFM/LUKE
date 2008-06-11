@@ -18,4 +18,6 @@ dkedisplay.time_pause = 1;%Pause delay for figure display (s)
 dkedisplay.diary_mode = 0;%Write in a file the output of the code in the MatLab command window: (0) no save, (1) save
 dkedisplay.auto_mode = 0;%(0): Interactive mode for multiple radius output display, (1): automatic mode for one output display at rho_display
 %
+dkedisplay.mdce = 0;%Display warning when the Distributed Computing Environment is enabled (0 otherwise)
+%
 eval(['save DISPLAY_',display_id,'.mat dkedisplay']);
