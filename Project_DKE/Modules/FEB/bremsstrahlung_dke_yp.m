@@ -1,4 +1,5 @@
-function  [Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,display,equilHXR,radialDKE,mksa,momentumDKE,dke_out,Zbremchord,hxr,hxrparam)
+function  [Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,dkedisplay,equilHXR,radialDKE,mksa,momentumDKE,dke_out,Zbremchord,hxr,hxrparam)
+%R5-X2 - Calculation of  the plasma bremsstrahlung emission
 %
 % Calculates the plasma bremsstrahlung emission. Call first the function bremchord_dke_yp.m
 %
@@ -257,7 +258,7 @@ for ic = 1:size(vschords,3),%loop on each chord
 		lchord(ic) = 0;%Chord length calculation	   	
 	end
 %
-    if display.display_mode >= 1,
+    if dkedisplay.display_mode >= 1,
 	   info_dke_yp(2,['Line integration for chord #',int2str(ic),'/',int2str(size(vschords,3)),' done']);
     end
 end	

@@ -1,6 +1,7 @@
-function [Zbremchord,equilHXR] = bremchord_dke_yp(dkeparam,display,equil,radialDKE,Zcurr,hxr,hxrparam);
+function [Zbremchord,equilHXR] = bremchord_dke_yp(dkeparam,dkedisplay,equil,radialDKE,Zcurr,hxr,hxrparam);
+%R5-X2 - calculation of the  chord characteristics for bremsstrahlung tomography in a torus along unit vector g from LUKE grid structure
 %
-% This function calculates chord positions for bremsstrahlung tomography in a torus along unit vector g from DKE grid structure
+% This function calculates chord positions for bremsstrahlung tomography in a torus along unit vector g from LUKE grid structure
 %
 % INPUTS
 %
@@ -22,7 +23,7 @@ function [Zbremchord,equilHXR] = bremchord_dke_yp(dkeparam,display,equil,radialD
 %       - equilHXR: magnetic equilibrium structure optimized for HR
 %       calculations
 %
-% by Y. Peysson (CEA-DRFC) <yves.peysson@cea.fr> and J. Decker (CEA-DRFC) <joan.decker@cea.fr> 
+% by Y. Peysson (CEA/IRFM) <yves.peysson@cea.fr> and J. Decker (CEA/IRFM) <joan.decker@cea.fr> 
 %
 %WARNING: the definitions used in the DKE code, and here crucial for HXR calculations are the following
 %         1) the toroidal frame (R,Z,phi) is direct (phi is positive clockwise when the tokamak is seen from the top)
@@ -32,8 +33,8 @@ function [Zbremchord,equilHXR] = bremchord_dke_yp(dkeparam,display,equil,radialD
 % With the definitions above, if Ip is positive, psi is turned outward, Btheta is counterclockwise poloidally, and s too. The Ampere theorem is OK !
 % The HXR diagnostic arrangement is taking this frame of reference.
 %
-if nargin < 5,
-   error('Not enough arguments in bremchord_dke_yp')
+if nargin < 7,
+   error('Not enough input arguments in bremchord_dke_yp')
 end
 %	
 mfactor = hxrparam.mfactor;
@@ -43,7 +44,7 @@ ns = hxrparam.ns;
 xpsin = radialDKE.xpsin_f_dke;
 xpsin_S = radialDKE.xpsin_S_dke;
 %
-[equilHXR] = equilibrium_jd(equil,radialDKE,display,'spline',mfactor);%Magnetic equilibrium for HXR at points of the distribution function
+[equilHXR] = equilibrium_jd(equil,radialDKE,dkedisplay,'spline',mfactor);%Magnetic equilibrium for HXR at points of the distribution function
 %
 %   This function interpolates the equilibrium data on the radial grid.
 %
