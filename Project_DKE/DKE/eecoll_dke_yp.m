@@ -89,7 +89,7 @@ function [Fee,Aee,Btee] = eecoll_dke_yp(v,z,gamma,sigma,pn,pn2,dpn,J1,J2,spfac,b
     %
         if cluster_mode,
             for ip = 1:npn,arg_range{ip} = ip;end
-            [flag,F1_1,F1_2,F2_1,B1_1,B1_2,B1_3,B1_4,B1_5,B2_1,B2_2,B2_3] = mdce_luke(@loop_eecoll_dke_yp,{ip,pn,sfM,spn,spn2,sv,sgamma,sgamma2,ssigma,sz,sJ1,sJ2},1,arg_range,cluster_size,dkepath,dkedisplay.display_mode,cluster_mode,cluster_timeout);
+            [flag,F1_1,F1_2,F2_1,B1_1,B1_2,B1_3,B1_4,B1_5,B2_1,B2_2,B2_3] = mdce_luke(@loop_eecoll_dke_yp,{ip,pn,sfM,spn,spn2,sv,sgamma,sgamma2,ssigma,sz,sJ1,sJ2},1,arg_range,cluster_size,dkepath,dkedisplay.mdce,cluster_mode,cluster_timeout);
             F1_1 = cell2mat(F1_1)';F1_2 = cell2mat(F1_2)';
             F2_1 = cell2mat(F2_1)';
             B1_1 = cell2mat(B1_1)';B1_2 = cell2mat(B1_2)';B1_3 = cell2mat(B1_3)';B1_4 = cell2mat(B1_4)';B1_5 = cell2mat(B1_5)';
