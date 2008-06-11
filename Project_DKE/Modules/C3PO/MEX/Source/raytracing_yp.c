@@ -2434,7 +2434,7 @@ double flag;
        mexErrMsgTxt("Only one fully stripped impurity can be used !"); 
     }
    
-    if ((abs(flag) == 1) || (abs(flag) == 2))  {/*Jetlike and RTtest */
+    if ((abs(flag) == 1) || (abs(flag) == 2) || (abs(flag) == 5))  {/*Jetlike, RTtest, TORLH*/
     
        rayprofiles.Te[0] = Tea + (Te0 - Tea)*pow(1 - rho*rho,eTe);
        rayprofiles.dTedY[0] = -2*rho*eTe*(Te0 - Tea)*pow(1 - rho*rho,eTe - 1);  
@@ -2506,7 +2506,7 @@ double flag;
     BPa = 0.2*fabs(Ip)/ap;/* MA */
     qmax = ep*cyl*fabs(BPHI0)/BPa;/* cylindrical limit */
     
-    if ((abs(flag) == 1) || (abs(flag) == 3) ||(abs(flag) == 4))  {/*RTtest, VERSATOR2 and PLT */
+    if ((abs(flag) == 1) || (abs(flag) == 3) ||(abs(flag) == 4) ||(abs(flag) == 5))  {/*RTtest, VERSATOR2, PLT and TORLH */
        q = (qmax - qmin)*pow(Y[0],eq) + qmin;
        dqdrho = eq*(qmax - qmin)*pow(Y[0],eq - 1.0);
        equilparam.psia[0] = ap*ap*fabs(BPHI0)*log(qmax/qmin)/(qmax - qmin)/2;
