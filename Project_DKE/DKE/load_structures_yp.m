@@ -1,10 +1,11 @@
 function [varargout] = load_structures_yp(varargin);
+%LUKE - Load structures for LUKE 
 %
 % Load structures for LUKE 
 %
 % INPUTS: 
 %
-%   - type: 'dkepath','equil','dkeparam','display','ohm','waves','transpfaste' or 'ripple' (order not important)
+%   - type: 'dkepath','equil','dkeparam','display','ohm','waves','transpfaste','ripple' or 'hxr' (order not important)
 %   - id: id of the field type
 %   - path: path of the field type
 %
@@ -41,6 +42,8 @@ id_transpfaste = '';
 path_transpfaste = '';
 id_ripple = '';
 path_ripple = '';
+id_hxr = '';
+path_hxr = '';
 %
 j = 1;
 for i=1:3:length(varargin),
@@ -84,6 +87,12 @@ for i=1:3:length(varargin),
        id_ripple = varargin{i+1};
        path_ripple = varargin{i+2};
        flag_ripple = j;
+    elseif strcmp(varargin{i},'hxr'),
+       id_hxr = varargin{i+1};
+       path_hxr = varargin{i+2};
+       flag_hxr = j;
+       j = j+1;
+       flag_hxrparam = j;
     end
     j = j + 1;
 end
@@ -262,5 +271,18 @@ if exist('flag_ripple','var'),
     varargout{flag_ripple} = ripple;
 end
 %
+if exist('flag_hxr','var'),%HXR
+    filename = [path_hxr,'HXR_',id_hxr,'.mat'];
+	hxr = '';
+    hxrparam = '';
+    if exist(filename) == 0,
+	    info_dke_yp(2,['Warning : Structure ',filename,' could not be loaded']);
+    else
+	    load(filename);
+	    info_dke_yp(2,['Structure ''hxr'': ',filename,' successfully loaded']);
+    end
+    varargout{flag_hxr} = hxr;
+    varargout{flag_hxrparam} = hxrparam;
+end
 
 
