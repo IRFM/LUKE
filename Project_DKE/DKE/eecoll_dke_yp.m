@@ -63,31 +63,7 @@ function [Fee,Aee,Btee] = eecoll_dke_yp(v,z,gamma,sigma,pn,pn2,dpn,J1,J2,spfac,b
         B2_2 = zeros(1,npn);
         B2_3 = zeros(1,npn); 
         %
-        if isfield(dkeparam,'clustermode'),
-            if isfield(dkeparam.clustermode.eecoll_dke_yp,'mode'),
-                cluster_mode = dkeparam.clustermode.eecoll_dke_yp.mode;
-            else
-                cluster_mode = 0;
-            end
-            %
-            if isfield(dkeparam.clustermode.eecoll_dke_yp,'timeout'),
-                cluster_timeout = dkeparam.clustermode.eecoll_dke_yp.timeout;
-            else
-                cluster_timeout = 60*10;%(s)
-            end
-            %
-            if isfield(dkeparam.clustermode.eecoll_dke_yp,'size'),
-                cluster_size = dkeparam.clustermode.eecoll_dke_yp.size;
-            else
-                cluster_size = 1;
-            end            
-        else
-            cluster_mode = 0;
-            cluster_timeout = 0;
-            cluster_size = 0;
-        end
-    %
-        if cluster_mode,
+        if 0,%test distributed computing environment (not usefull for this function)
             for ip = 1:npn,arg_range{ip} = ip;end
             [flag,F1_1,F1_2,F2_1,B1_1,B1_2,B1_3,B1_4,B1_5,B2_1,B2_2,B2_3] = mdce_luke(@loop_eecoll_dke_yp,{ip,pn,sfM,spn,spn2,sv,sgamma,sgamma2,ssigma,sz,sJ1,sJ2},1,arg_range,cluster_size,dkepath,dkedisplay.mdce,cluster_mode,cluster_timeout);
             F1_1 = cell2mat(F1_1)';F1_2 = cell2mat(F1_2)';
@@ -130,7 +106,7 @@ function [F1_1,F1_2,F2_1,B1_1,B1_2,B1_3,B1_4,B1_5,B2_1,B2_2,B2_3] = loop_eecoll_
 %Electron-electron Belaiev-Budker collision operator (loop function
 %for distributed computing environment)
 %
-%by Yves Peysson (CEA-IRFM,yves.peysson@cea.fr) and Joan Decker (CEA-IRFM,joan.decker@cea.fr) and 
+%by Yves Peysson (CEA-IRFM,yves.peysson@cea.fr) and Joan Decker (CEA-IRFM,joan.decker@cea.fr) 
 %
     smasku = spn <= pn(ip);
     smaskl = spn >= pn(ip);
