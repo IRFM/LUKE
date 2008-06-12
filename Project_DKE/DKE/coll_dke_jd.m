@@ -21,6 +21,58 @@ function [ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor] = coll_dke_jd(dkepath,d
 		%
 		% Output files initialization
 		%
+		XXfM = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+		%
+  		ZXXD_c.pp_ippj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+  		ZXXD_c.pp_ipj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+ 		ZXXD_c.pp_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+  		ZXXD_c.pp_imj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+  		ZXXD_c.pp_immj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+ 		ZXXD_c.pm_ipj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+ 		ZXXD_c.pm_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+ 		ZXXD_c.pm_imj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+ 		ZXXD_c.mp_ijp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+ 		ZXXD_c.mp_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+  		ZXXD_c.mp_ijm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+ 		ZXXD_c.mm_ijp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+ 		ZXXD_c.mm_ijm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+		%
+  		ZXXF_c.p_ippj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+  		ZXXF_c.p_ipj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+  		ZXXF_c.p_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+  		ZXXF_c.p_imj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+  		ZXXF_c.p_immj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+  		ZXXF_c.m_ijp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+  		ZXXF_c.m_ijm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);		
+  		%
+    	if dkeparam.dke_mode == 1
+    		%
+    		ZXXD_c_tp.pp_ippj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
+    		ZXXD_c_tp.pp_ipj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
+    		ZXXD_c_tp.pp_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
+    		ZXXD_c_tp.pp_imj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
+    		ZXXD_c_tp.pp_immj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
+    		ZXXD_c_tp.pm_ipj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
+    		ZXXD_c_tp.pm_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
+    		ZXXD_c_tp.pm_imj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
+    		ZXXD_c_tp.mp_ijp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
+    		ZXXD_c_tp.mp_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
+    		ZXXD_c_tp.mp_ijm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
+    		ZXXD_c_tp.mm_ijp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
+    		ZXXD_c_tp.mm_ijm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
+			%
+			ZXXF_c_tp.p_ippj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
+			ZXXF_c_tp.p_ipj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
+			ZXXF_c_tp.p_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
+			ZXXF_c_tp.p_imj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
+			ZXXF_c_tp.p_immj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
+			ZXXF_c_tp.m_ijp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
+			ZXXF_c_tp.m_ijm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
+    	else
+    		ZXXD_c_tp = NaN;
+			ZXXF_c_tp = NaN;		
+		end
+		%
         if isfield(dkeparam,'clustermode'),
             if isfield(dkeparam.clustermode,'coll_dke_jd'),
                 if isfield(dkeparam.clustermode.coll_dke_jd,'mode'),
@@ -50,91 +102,68 @@ function [ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor] = coll_dke_jd(dkepath,d
             cluster_timeout = 0;
             cluster_size = 0;
         end
-%
+		%
+		if ~isfield(dkedisplay,'mdce'),dkedisplay.mdce = 1;end
 		if cluster_mode,
 			for ir = 1:gridDKE.nr,arg_range{ir} = ir;end
-			[flag,XXfM,ZXXD_c.pp_ippj,ZXXD_c.pp_ipj,ZXXD_c.pp_ij,ZXXD_c.pp_imj,ZXXD_c.pp_immj,ZXXD_c.mm_ijp,ZXXD_c.mm_ijm,ZXXF_c.p_ippj,ZXXF_c.p_ipj,ZXXF_c.p_ij,ZXXF_c.p_imj,ZXXF_c.p_immj] = mdce_luke(@loop_coll_dke_jd1,{ir,gridDKE,Zmomcoef,Zbouncecoef,equilDKE,mksa,dkepath,dkedisplay,dkeparam,xTe_norm,xne_norm,xzni_norm,xzTi_norm,xnloss_norm,xbetath,xlnc_e,xnhu,xrnhuth},1,arg_range,cluster_size,dkepath,dkedisplay.mdce,cluster_mode,cluster_timeout);			
+			[flag,XXfM_out,ZXXD_c_pp_ippj,ZXXD_c_pp_ipj,ZXXD_c_pp_ij,ZXXD_c_pp_imj,ZXXD_c_pp_immj,ZXXD_c_mm_ijp,ZXXD_c_mm_ijm,ZXXF_c_p_ippj,ZXXF_c_p_ipj,ZXXF_c_p_ij,ZXXF_c_p_imj,ZXXF_c_p_immj] = mdce_luke(@loop_coll_dke_jd1,{ir,gridDKE,Zmomcoef,Zbouncecoef,equilDKE,mksa,dkepath,dkedisplay,dkeparam,xTe_norm,xne_norm,xzni_norm,xzTi_norm,xnloss_norm,xbetath,xlnc_e,xnhu,xrnhuth},1,arg_range,cluster_size,dkepath,dkedisplay.mdce,cluster_mode,cluster_timeout);			
+			for ir = 1:gridDKE.nr
+				XXfM(:,:,ir) = XXfM_out{ir};
+         		ZXXD_c.pp_ippj(:,:,ir) = ZXXD_c_pp_ippj{ir};
+				ZXXD_c.pp_ippj(:,:,ir) = ZXXD_c_pp_ippj{ir};
+				ZXXD_c.pp_ipj(:,:,ir) = ZXXD_c_pp_ipj{ir};
+				ZXXD_c.pp_ij(:,:,ir) = ZXXD_c_pp_ij{ir};
+				ZXXD_c.pp_imj(:,:,ir) = ZXXD_c_pp_imj{ir};
+				ZXXD_c.pp_immj(:,:,ir) = ZXXD_c_pp_immj{ir};
+				ZXXD_c.mm_ijp(:,:,ir) = ZXXD_c_mm_ijp{ir};
+				ZXXD_c.mm_ijm(:,:,ir) = ZXXD_c_mm_ijm{ir};
+				%				
+				ZXXF_c.p_ippj(:,:,ir) = ZXXF_c_p_ippj{ir};
+				ZXXF_c.p_ipj(:,:,ir) = ZXXF_c_p_ipj{ir};
+				ZXXF_c.p_ij(:,:,ir) = ZXXF_c_p_ij{ir};
+				ZXXF_c.p_imj(:,:,ir) = ZXXF_c_p_imj{ir};
+				ZXXF_c.p_immj(:,:,ir) = ZXXF_c_p_immj{ir};	
+         	end
 			%
     		if dkeparam.dke_mode == 1
     			for ir = 1:gridDKE.nr,arg_range{ir} = ir;end		    	
-    			[flag,ZXXD_c_tp.pp_ippj,ZXXD_c_tp.pp_ipj,ZXXD_c_tp.pp_ij,ZXXD_c_tp.pp_imj,ZXXD_c_tp.pp_immj,ZXXD_c_tp.mm_ijp,ZXXD_c_tp.mm_ijm,ZXXF_c_tp.p_ippj,ZXXF_c_tp.p_ipj,ZXXF_c_tp.p_ij,ZXXF_c_tp.p_im,ZXXF_c_tp.p_immj,ZXXF_c_tp.m_ijp,ZXXF_c_tp.m_ijm] = mdce_luke(@loop_coll_dke_jd2,{ir,gridDKE,Zbouncecoef,ZXXD_c,dkepath,dkeparam},1,arg_range,cluster_size,dkepath,dkedisplay.mdce,cluster_mode,cluster_timeout);
+    			[flag,ZXXD_c_tp_pp_ippj,ZXXD_c_tp_pp_ipj,ZXXD_c_tp_pp_ij,ZXXD_c_tp_pp_imj,ZXXD_c_tp_pp_immj,ZXXD_c_tp_mm_ijp,ZXXD_c_tp_mm_ijm,ZXXF_c_tp_p_ippj,ZXXF_c_tp_p_ipj,ZXXF_c_tp_p_ij,ZXXF_c_tp_p_im,ZXXF_c_tp_p_immj,ZXXF_c_tp_m_ijp,ZXXF_c_tp_m_ijm] = mdce_luke(@loop_coll_dke_jd2,{ir,gridDKE,Zbouncecoef,ZXXD_c,dkepath,dkeparam},1,arg_range,cluster_size,dkepath,dkedisplay.mdce,cluster_mode,cluster_timeout);
    		    	%
-                %%%%%%%%%%% to be fixed YP 12/06/08 %%%%%%%%%%%%%%%
-                %
-   		    	%for ir = 1:gridDKE.nr,
-    		    %	ir_dke = find(ir == gridDKE.rdke);
-        		%	if isempty(ir_dke)
-            	%		continue
-        		%	end
-    		    %
-    		    %end
-    		else
-    			ZXXD_c_tp = NaN;
-				ZXXF_c_tp = NaN;
+   		    	for ir = 1:gridDKE.nr,
+    		    	ir_dke = find(ir == gridDKE.rdke);
+        			if ~isempty(ir_dke)
+        				ZXXD_c_tp.pp_ippj(:,:,ir_dke) = ZXXD_c_tp_pp_ippj{ir};
+        				ZXXD_c_tp.pp_ipj(:,:,ir_dke) = ZXXD_c_tp_pp_ipj{ir};
+        				ZXXD_c_tp.pp_ij(:,:,ir_dke) = ZXXD_c_tp_pp_ij{ir};
+        				ZXXD_c_tp.pp_imj(:,:,ir_dke) = ZXXD_c_tp_pp_imj{ir};
+        				ZXXD_c_tp.pp_immj(:,:,ir_dke) = ZXXD_c_tp_pp_immj{ir};
+        				ZXXD_c_tp.mm_ijp(:,:,ir_dke) = ZXXD_c_tp_mm_ijp{ir};
+        				ZXXD_c_tp.mm_ijm(:,:,ir_dke) = ZXXD_c_tp_mm_ijm{ir};
+        				%
+        				ZXXF_c_tp.p_ippj(:,:,ir_dke) = ZXXF_c_tp_p_ippj{ir};
+        				ZXXF_c_tp.p_ipj(:,:,ir_dke) = ZXXF_c_tp_p_ipj{ir};
+        				ZXXF_c_tp.p_ij(:,:,ir_dke) = ZXXF_c_tp_p_ij{ir};
+        				ZXXF_c_tp.p_im(:,:,ir_dke) = ZXXF_c_tp_p_im{ir};
+        				ZXXF_c_tp.p_immj(:,:,ir_dke) = ZXXF_c_tp_p_immj{ir};
+        				ZXXF_c_tp.m_ijp(:,:,ir_dke) = ZXXF_c_tp_m_ijp{ir};
+        				ZXXF_c_tp.m_ijm(:,:,ir_dke)= ZXXF_c_tp_m_ijm{ir};
+        			end
+    		    end
 			end
 		else
-			XXfM = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
-			%
-  			ZXXD_c.pp_ippj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
-  			ZXXD_c.pp_ipj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
- 			ZXXD_c.pp_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
-  			ZXXD_c.pp_imj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
-  			ZXXD_c.pp_immj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
- 			ZXXD_c.pm_ipj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
- 			ZXXD_c.pm_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
- 			ZXXD_c.pm_imj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
- 			ZXXD_c.mp_ijp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
- 			ZXXD_c.mp_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
-  			ZXXD_c.mp_ijm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
- 			ZXXD_c.mm_ijp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
- 			ZXXD_c.mm_ijm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
-			%
-  			ZXXF_c.p_ippj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
-  			ZXXF_c.p_ipj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
-  			ZXXF_c.p_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
-  			ZXXF_c.p_imj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
-  			ZXXF_c.p_immj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
-  			ZXXF_c.m_ijp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
-  			ZXXF_c.m_ijm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
   			%
     		for ir = 1:gridDKE.nr,
 				[XXfM(:,:,ir),ZXXD_c.pp_ippj(:,:,ir),ZXXD_c.pp_ipj(:,:,ir),ZXXD_c.pp_ij(:,:,ir),ZXXD_c.pp_imj(:,:,ir),ZXXD_c.pp_immj(:,:,ir),ZXXD_c.mm_ijp(:,:,ir),ZXXD_c.mm_ijm(:,:,ir),ZXXF_c.p_ippj(:,:,ir),ZXXF_c.p_ipj(:,:,ir),ZXXF_c.p_ij(:,:,ir),ZXXF_c.p_imj(:,:,ir),ZXXF_c.p_immj(:,:,ir)] = loop_coll_dke_jd1(ir,gridDKE,Zmomcoef,Zbouncecoef,equilDKE,mksa,dkepath,dkedisplay,dkeparam,xTe_norm,xne_norm,xzni_norm,xzTi_norm,xnloss_norm,xbetath,xlnc_e,xnhu,xrnhuth);
     		end
     		%
     		if dkeparam.dke_mode == 1
-    			%
-    			ZXXD_c_tp.pp_ippj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
-    			ZXXD_c_tp.pp_ipj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
-    			ZXXD_c_tp.pp_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
-    			ZXXD_c_tp.pp_imj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
-    			ZXXD_c_tp.pp_immj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
-    			ZXXD_c_tp.pm_ipj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
-    			ZXXD_c_tp.pm_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
-    			ZXXD_c_tp.pm_imj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
-    			ZXXD_c_tp.mp_ijp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
-    			ZXXD_c_tp.mp_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
-    			ZXXD_c_tp.mp_ijm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
-    			ZXXD_c_tp.mm_ijp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
-    			ZXXD_c_tp.mm_ijm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
-				%
-				ZXXF_c_tp.p_ippj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
-				ZXXF_c_tp.p_ipj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
-				ZXXF_c_tp.p_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
-				ZXXF_c_tp.p_imj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
-				ZXXF_c_tp.p_immj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
-				ZXXF_c_tp.m_ijp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
-				ZXXF_c_tp.m_ijm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr_dke);
 				%
     		    for ir = 1:gridDKE.nr,
     		    	ir_dke = find(ir == gridDKE.rdke);
-        			if isempty(ir_dke)
-            			continue
-        			end
-    				[ZXXD_c_tp.pp_ippj(:,:,ir_dke),ZXXD_c_tp.pp_ipj(:,:,ir_dke),ZXXD_c_tp.pp_ij(:,:,ir_dke),ZXXD_c_tp.pp_imj(:,:,ir_dke),ZXXD_c_tp.pp_immj(:,:,ir_dke),ZXXD_c_tp.mm_ijp(:,:,ir_dke),ZXXD_c_tp.mm_ijm(:,:,ir_dke),ZXXF_c_tp.p_ippj(:,:,ir_dke),ZXXF_c_tp.p_ipj(:,:,ir_dke),ZXXF_c_tp.p_ij(:,:,ir_dke),ZXXF_c_tp.p_im(:,:,ir_dke),ZXXF_c_tp.p_immj(:,:,ir_dke),ZXXF_c_tp.m_ijp(:,:,ir_dke),ZXXF_c_tp.m_ijm(:,:,ir_dke)] = loop_coll_dke_jd2(ir,gridDKE,Zbouncecoef,ZXXD_c,dkepath,dkeparam);
+        			if ~isempty(ir_dke)
+    					[ZXXD_c_tp.pp_ippj(:,:,ir_dke),ZXXD_c_tp.pp_ipj(:,:,ir_dke),ZXXD_c_tp.pp_ij(:,:,ir_dke),ZXXD_c_tp.pp_imj(:,:,ir_dke),ZXXD_c_tp.pp_immj(:,:,ir_dke),ZXXD_c_tp.mm_ijp(:,:,ir_dke),ZXXD_c_tp.mm_ijm(:,:,ir_dke),ZXXF_c_tp.p_ippj(:,:,ir_dke),ZXXF_c_tp.p_ipj(:,:,ir_dke),ZXXF_c_tp.p_ij(:,:,ir_dke),ZXXF_c_tp.p_im(:,:,ir_dke),ZXXF_c_tp.p_immj(:,:,ir_dke),ZXXF_c_tp.m_ijp(:,:,ir_dke),ZXXF_c_tp.m_ijm(:,:,ir_dke)] = loop_coll_dke_jd2(ir,gridDKE,Zbouncecoef,ZXXD_c,dkepath,dkeparam);
+					end
 				end    		
-    		else
-    			ZXXD_c_tp = NaN;
-				ZXXF_c_tp = NaN;
     		end
 		end
 		%   
@@ -267,18 +296,16 @@ function [ZXXD_c_tp_pp_ippj,ZXXD_c_tp_pp_ipj,ZXXD_c_tp_pp_ij,ZXXD_c_tp_pp_imj,ZX
     	ZXXD_c_tp_pp_ij = ZXXD_c.pp_ij.*Zbouncecoef.XXRlambda_b_p1m1(:,:,ir);
     	ZXXD_c_tp_pp_imj = ZXXD_c.pp_imj.*Zbouncecoef.XXRlambda_b_p1m1(:,:,ir);
     	ZXXD_c_tp_pp_immj = ZXXD_c.pp_immj.*Zbouncecoef.XXRlambda_b_p1m1(:,:,ir);
-		%
     	ZXXD_c_tp_mm_ijp = ZXXD_c.mm_ijp.*Zbouncecoef.XXRlambda_b_p3m2_p(:,:,ir)./Zbouncecoef.XXRlambda_p2m1_p(:,:,ir);
     	ZXXD_c_tp_mm_ijm = ZXXD_c.mm_ijm.*Zbouncecoef.XXRlambda_b_p3m2_m(:,:,ir)./Zbouncecoef.XXRlambda_p2m1_m(:,:,ir);
 		%
-    	ZXXF_c_tp.p_ippj = ZXXF_c.p_ippj.*Zbouncecoef.XXRlambda_b_p1m1(:,:,ir);
-    	ZXXF_c_tp.p_ipj = ZXXF_c.p_ipj.*Zbouncecoef.XXRlambda_b_p1m1(:,:,ir);
-    	ZXXF_c_tp.p_ij = ZXXF_c.p_ij.*Zbouncecoef.XXRlambda_b_p1m1(:,:,ir);
-    	ZXXF_c_tp.p_im = ZXXF_c.p_imj.*Zbouncecoef.XXRlambda_b_p1m1(:,:,ir);
-    	ZXXF_c_tp.p_immj = ZXXF_c.p_immj.*Zbouncecoef.XXRlambda_b_p1m1(:,:,ir);  
-		%
-    	ZXXF_c_tp.m_ijp = (ZXXD_c.mm_ijp./Zbouncecoef.XXRlambda_p2m1_p(:,:,ir)).*(Zbouncecoef.XXRlambda_b_p1m1_p(:,:,ir) - Zbouncecoef.XXRlambda_b_p1m2_p(:,:,ir)).*sqrt(gridDKE.X1mmhu2p)./gridDKE.Xpn./gridDKE.Xmhu2p./gridDKE.Xmhup;
-    	ZXXF_c_tp.m_ijm = (ZXXD_c.mm_ijm./Zbouncecoef.XXRlambda_p2m1_m(:,:,ir)).*(Zbouncecoef.XXRlambda_b_p1m1_m(:,:,ir) - Zbouncecoef.XXRlambda_b_p1m2_m(:,:,ir)).*sqrt(gridDKE.X1mmhu2m)./gridDKE.Xpn./gridDKE.Xmhu2m./gridDKE.Xmhum;
+    	ZXXF_c_tp_p_ippj = ZXXF_c.p_ippj.*Zbouncecoef.XXRlambda_b_p1m1(:,:,ir);
+    	ZXXF_c_tp_p_ipj = ZXXF_c.p_ipj.*Zbouncecoef.XXRlambda_b_p1m1(:,:,ir);
+    	ZXXF_c_tp_p_ij = ZXXF_c.p_ij.*Zbouncecoef.XXRlambda_b_p1m1(:,:,ir);
+    	ZXXF_c_tp_p_im = ZXXF_c.p_imj.*Zbouncecoef.XXRlambda_b_p1m1(:,:,ir);
+    	ZXXF_c_tp_p_immj = ZXXF_c.p_immj.*Zbouncecoef.XXRlambda_b_p1m1(:,:,ir);  
+    	ZXXF_c_tp_m_ijp = (ZXXD_c.mm_ijp./Zbouncecoef.XXRlambda_p2m1_p(:,:,ir)).*(Zbouncecoef.XXRlambda_b_p1m1_p(:,:,ir) - Zbouncecoef.XXRlambda_b_p1m2_p(:,:,ir)).*sqrt(gridDKE.X1mmhu2p)./gridDKE.Xpn./gridDKE.Xmhu2p./gridDKE.Xmhup;
+    	ZXXF_c_tp_m_ijm = (ZXXD_c.mm_ijm./Zbouncecoef.XXRlambda_p2m1_m(:,:,ir)).*(Zbouncecoef.XXRlambda_b_p1m1_m(:,:,ir) - Zbouncecoef.XXRlambda_b_p1m2_m(:,:,ir)).*sqrt(gridDKE.X1mmhu2m)./gridDKE.Xpn./gridDKE.Xmhu2m./gridDKE.Xmhum;
 		%    
 	end
 end
