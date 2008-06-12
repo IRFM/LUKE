@@ -30,7 +30,7 @@ function  [Zbremdiag] = bremdiag_dke_yp(Zbremplasma,hxr,hxrparam,dt)
 %      
 % by Joan Decker <jodecker@mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 %
-if nargin < 3,
+if nargin < 4,
 	error('Not enough arguments in bremshtrahlung_dke_yp')
 end
 %
