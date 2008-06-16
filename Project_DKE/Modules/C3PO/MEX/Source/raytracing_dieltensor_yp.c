@@ -107,15 +107,16 @@ susceptibilitytensor_format X;
 } 
 
 
-void coldtensor(X,ns,ncyclharm,raymagnetic,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY)
+void coldtensor(X,Nperp,dNperpdY,ns,ncyclharm,raymagnetic,Npar,dNpardY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY)
 susceptibilitytensor_format X;
+double complex Nperp,dNperpdY[];
 int ns;
 int ncyclharm;
 raymagnetic_format raymagnetic;
 double wcn[],wpn2[],betath[];
 double dwcndY[][MC],dwpn2dY[][MC],dbetathdY[][MC];
 double Npar,dNpardY[];
-double complex Nperp,dNperpdY[];
+
 { 
     double complex Xxx[ns+1],Xxy[ns+1],Xxz[ns+1],Xyy[ns+1],Xyz[ns+1],Xzz[ns+1];
     double complex dXxxdNperp[ns+1],dXxydNperp[ns+1],dXxzdNperp[ns+1],dXyydNperp[ns+1],dXyzdNperp[ns+1],dXzzdNperp[ns+1];
@@ -177,19 +178,20 @@ double complex Nperp,dNperpdY[];
         
     }
      
-    buildXstruc(X,ns,dNpardY,dNperpdY,dwcndY,dwpn2dY,dbetathdY,Xxx,Xxy,Xxz,Xyy,Xyz,Xzz,dXxxdNperp,dXxydNperp,dXxzdNperp,dXyydNperp,dXyzdNperp,dXzzdNperp,dXxxdNpar,dXxydNpar,dXxzdNpar,dXyydNpar,dXyzdNpar,dXzzdNpar,dXxxdbetath,dXxydbetath,dXxzdbetath,dXyydbetath,dXyzdbetath,dXzzdbetath,dXxxdwcn,dXxydwcn,dXxzdwcn,dXyydwcn,dXyzdwcn,dXzzdwcn,dXxxdwpn2,dXxydwpn2,dXxzdwpn2,dXyydwpn2,dXyzdwpn2,dXzzdwpn2);
+    buildXstruc(X,dNperpdY,Xxx,Xxy,Xxz,Xyy,Xyz,Xzz,dXxxdNperp,dXxydNperp,dXxzdNperp,dXyydNperp,dXyzdNperp,dXzzdNperp,dXxxdNpar,dXxydNpar,dXxzdNpar,dXyydNpar,dXyzdNpar,dXzzdNpar,dXxxdbetath,dXxydbetath,dXxzdbetath,dXyydbetath,dXyzdbetath,dXzzdbetath,dXxxdwcn,dXxydwcn,dXxzdwcn,dXyydwcn,dXyzdwcn,dXzzdwcn,dXxxdwpn2,dXxydwpn2,dXxzdwpn2,dXyydwpn2,dXyzdwpn2,dXzzdwpn2,ns,dNpardY,dwcndY,dwpn2dY,dbetathdY);
 } 
 
 
-void hottensor(X,ns,ncyclharm,raymagnetic,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY)
+void hottensor(X,Nperp,dNperpdY,ns,ncyclharm,raymagnetic,Npar,dNpardY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY)
 susceptibilitytensor_format X;
+double complex Nperp,dNperpdY[];
 int ns;
 int ncyclharm;
 raymagnetic_format raymagnetic;
 double wcn[],wpn2[],betath[];
 double dwcndY[][MC],dwpn2dY[][MC],dbetathdY[][MC];
 double Npar,dNpardY[];
-double complex Nperp,dNperpdY[];
+
 { 
     double complex Xxx[ns+1],Xxy[ns+1],Xxz[ns+1],Xyy[ns+1],Xyz[ns+1],Xzz[ns+1];
     double complex dXxxdNperp[ns+1],dXxydNperp[ns+1],dXxzdNperp[ns+1],dXyydNperp[ns+1],dXyzdNperp[ns+1],dXzzdNperp[ns+1];
@@ -209,8 +211,7 @@ double complex Nperp,dNperpdY[];
     
     int is,i;
 
-
-    calcY(ns,ncyclharm,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY,Yxx,Yxy,Yxz,Yyy,Yyz,Yzz,dYxxdNperp,dYxydNperp,dYxzdNperp,dYyydNperp,dYyzdNperp,dYzzdNperp,dYxxdNpar,dYxydNpar,dYxzdNpar,dYyydNpar,dYyzdNpar,dYzzdNpar,dYxxdbetath,dYxydbetath,dYxzdbetath,dYyydbetath,dYyzdbetath,dYzzdbetath,dYxxdwcn,dYxydwcn,dYxzdwcn,dYyydwcn,dYyzdwcn,dYzzdwcn,dYxxdwpn2,dYxydwpn2,dYxzdwpn2,dYyydwpn2,dYyzdwpn2,dYzzdwpn2);
+    calcY(Nperp,dNperpdY,Yxx,Yxy,Yxz,Yyy,Yyz,Yzz,dYxxdNperp,dYxydNperp,dYxzdNperp,dYyydNperp,dYyzdNperp,dYzzdNperp,dYxxdNpar,dYxydNpar,dYxzdNpar,dYyydNpar,dYyzdNpar,dYzzdNpar,dYxxdbetath,dYxydbetath,dYxzdbetath,dYyydbetath,dYyzdbetath,dYzzdbetath,dYxxdwcn,dYxydwcn,dYxzdwcn,dYyydwcn,dYyzdwcn,dYzzdwcn,dYxxdwpn2,dYxydwpn2,dYxzdwpn2,dYyydwpn2,dYyzdwpn2,dYzzdwpn2,ns,ncyclharm,Npar,dNpardY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY);
 
     for (is = 0;is < ns + 1;is++) {/* initialisation */           
         Xxx[is] = 0.0;
@@ -313,23 +314,23 @@ double complex Nperp,dNperpdY[];
             dXzzdwpn2[is] = dXzzdwpn2[is] + zeta*Yzz[is][i] + wpn2[is]*dzetadwpn2*Yzz[is][i] + wpn2[is]*zeta*dYzzdwpn2[is][i];    
         }
     }
-     
-    buildXstruc(X,ns,dNpardY,dNperpdY,dwcndY,dwpn2dY,dbetathdY,Xxx,Xxy,Xxz,Xyy,Xyz,Xzz,dXxxdNperp,dXxydNperp,dXxzdNperp,dXyydNperp,dXyzdNperp,dXzzdNperp,dXxxdNpar,dXxydNpar,dXxzdNpar,dXyydNpar,dXyzdNpar,dXzzdNpar,dXxxdbetath,dXxydbetath,dXxzdbetath,dXyydbetath,dXyzdbetath,dXzzdbetath,dXxxdwcn,dXxydwcn,dXxzdwcn,dXyydwcn,dXyzdwcn,dXzzdwcn,dXxxdwpn2,dXxydwpn2,dXxzdwpn2,dXyydwpn2,dXyzdwpn2,dXzzdwpn2);
+    
+    buildXstruc(X,dNperpdY,Xxx,Xxy,Xxz,Xyy,Xyz,Xzz,dXxxdNperp,dXxydNperp,dXxzdNperp,dXyydNperp,dXyzdNperp,dXzzdNperp,dXxxdNpar,dXxydNpar,dXxzdNpar,dXyydNpar,dXyzdNpar,dXzzdNpar,dXxxdbetath,dXxydbetath,dXxzdbetath,dXyydbetath,dXyzdbetath,dXzzdbetath,dXxxdwcn,dXxydwcn,dXxzdwcn,dXyydwcn,dXyzdwcn,dXzzdwcn,dXxxdwpn2,dXxydwpn2,dXxzdwpn2,dXyydwpn2,dXyzdwpn2,dXzzdwpn2,ns,dNpardY,dwcndY,dwpn2dY,dbetathdY);
 } 
 
 
-void calcY(ns,ncyclharm,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY,Yxx,Yxy,Yxz,Yyy,Yyz,Yzz,dYxxdNperp,dYxydNperp,dYxzdNperp,dYyydNperp,dYyzdNperp,dYzzdNperp,dYxxdNpar,dYxydNpar,dYxzdNpar,dYyydNpar,dYyzdNpar,dYzzdNpar,dYxxdbetath,dYxydbetath,dYxzdbetath,dYyydbetath,dYyzdbetath,dYzzdbetath,dYxxdwcn,dYxydwcn,dYxzdwcn,dYyydwcn,dYyzdwcn,dYzzdwcn,dYxxdwpn2,dYxydwpn2,dYxzdwpn2,dYyydwpn2,dYyzdwpn2,dYzzdwpn2)
-int ns;
-int ncyclharm;
-double Npar,dNpardY[MC];
+void calcY(Nperp,dNperpdY,Yxx,Yxy,Yxz,Yyy,Yyz,Yzz,dYxxdNperp,dYxydNperp,dYxzdNperp,dYyydNperp,dYyzdNperp,dYzzdNperp,dYxxdNpar,dYxydNpar,dYxzdNpar,dYyydNpar,dYyzdNpar,dYzzdNpar,dYxxdbetath,dYxydbetath,dYxzdbetath,dYyydbetath,dYyzdbetath,dYzzdbetath,dYxxdwcn,dYxydwcn,dYxzdwcn,dYyydwcn,dYyzdwcn,dYzzdwcn,dYxxdwpn2,dYxydwpn2,dYxzdwpn2,dYyydwpn2,dYyzdwpn2,dYzzdwpn2,ns,ncyclharm,Npar,dNpardY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY)
 double complex Nperp,dNperpdY[MC];
-double wcn[],dwcndY[][MC],wpn2[],dwpn2dY[][MC],betath[],dbetathdY[][MC];
 double complex Yxx[][MAXCYCLHARM],Yxy[][MAXCYCLHARM],Yxz[][MAXCYCLHARM],Yyy[][MAXCYCLHARM],Yyz[][MAXCYCLHARM],Yzz[][MAXCYCLHARM];
 double complex dYxxdNperp[][MAXCYCLHARM],dYxydNperp[][MAXCYCLHARM],dYxzdNperp[][MAXCYCLHARM],dYyydNperp[][MAXCYCLHARM],dYyzdNperp[][MAXCYCLHARM],dYzzdNperp[][MAXCYCLHARM];
 double complex dYxxdNpar[][MAXCYCLHARM],dYxydNpar[][MAXCYCLHARM],dYxzdNpar[][MAXCYCLHARM],dYyydNpar[][MAXCYCLHARM],dYyzdNpar[][MAXCYCLHARM],dYzzdNpar[][MAXCYCLHARM];
 double complex dYxxdbetath[][MAXCYCLHARM],dYxydbetath[][MAXCYCLHARM],dYxzdbetath[][MAXCYCLHARM],dYyydbetath[][MAXCYCLHARM],dYyzdbetath[][MAXCYCLHARM],dYzzdbetath[][MAXCYCLHARM];
 double complex dYxxdwcn[][MAXCYCLHARM],dYxydwcn[][MAXCYCLHARM],dYxzdwcn[][MAXCYCLHARM],dYyydwcn[][MAXCYCLHARM],dYyzdwcn[][MAXCYCLHARM],dYzzdwcn[][MAXCYCLHARM];
 double complex dYxxdwpn2[][MAXCYCLHARM],dYxydwpn2[][MAXCYCLHARM],dYxzdwpn2[][MAXCYCLHARM],dYyydwpn2[][MAXCYCLHARM],dYyzdwpn2[][MAXCYCLHARM],dYzzdwpn2[][MAXCYCLHARM];
+int ns;
+int ncyclharm;
+double Npar,dNpardY[MC];
+double wcn[],dwcndY[][MC],wpn2[],dwpn2dY[][MC],betath[],dbetathdY[][MC];
 { 
     double zeta,dzetadNperp,dzetadNpar,dzetadbetath,dzetadwcn,dzetadwpn2;
     double complex lambda,dlambdadNperp,dlambdadNpar,dlambdadbetath,dlambdadwcn,dlambdadwpn2;
@@ -361,7 +362,7 @@ double complex dYxxdwpn2[][MAXCYCLHARM],dYxydwpn2[][MAXCYCLHARM],dYxzdwpn2[][MAX
             dlambdadwpn2 = 0.0;
             
             Zdisp((double complex)zeta,&Z,&Zp,&Zpp);
-            Gamma((double)i,lambda,&G,&Gp,&Gpp);
+            Gamma(lambda,&G,&Gp,&Gpp,(double)i);
             
 /* Dielectric tensor */
                        
@@ -412,13 +413,13 @@ double complex dYxxdwpn2[][MAXCYCLHARM],dYxydwpn2[][MAXCYCLHARM],dYxzdwpn2[][MAX
     }   
 }
 
-void Gamma(nhu,z,g,gp,gpp)
-int nhu;
+void Gamma(z,g,gp,gpp,nhu)
 double complex z,*g,*gp,*gpp;
+int nhu;
 { 
     double complex mBn,mBnp,mBnpp;
     
-    modBessel(nhu,z,&mBn,&mBnp,&mBnpp);
+    modBessel(z,&mBn,&mBnp,&mBnpp,nhu);
     
     g[0] = cexp(-z)*mBn;
     gp[0] = -g[0] + cexp(-z)*mBnp;
@@ -456,13 +457,13 @@ double complex *Z;
 }
 
 
-void modBessel(nhu,z,mBn,mBnp,mBnpp)
-double nhu;
+void modBessel(z,mBn,mBnp,mBnpp,nhu)
 double complex z,*mBn,*mBnp,*mBnpp;
+double nhu;
 {   
     double complex iBn,iBnp,iBnpp;
     
-    imagBessel(nhu,I*z,&iBn,&iBnp,&iBnpp);
+    imagBessel(I*z,&iBn,&iBnp,&iBnpp,nhu);
 
     mBn[0] = cpow(-I,nhu)*iBn;
     mBnp[0] = -cpow(-I,nhu+1.0)*iBnp;
@@ -474,9 +475,10 @@ double complex z,*mBn,*mBnp,*mBnpp;
 
 
 
-void imagBessel(nhu,z,iBn,iBnp,iBnpp)
-double nhu;
+void imagBessel(z,iBn,iBnp,iBnpp,nhu)
 double complex z,*iBn,*iBnp,*iBnpp;
+double nhu;
+
 {   
     mxArray *rhs[3], *lhs[1];
     
@@ -676,14 +678,15 @@ double *dwork;
     dwork[0] *= zeta/(one + two*zeta2);  
 }
 
-void weakrelativistictensor(X,ns,raymagnetic,Npar,dNpardx,Nperp,dNperpdx,wcn,dwcndx,wpn2,dwpn2dx,betath,dbetathdx)
+void weakrelativistictensor(X,Nperp,dNperpdx,ns,ncyclharm,raymagnetic,Npar,dNpardx,wcn,dwcndx,wpn2,dwpn2dx,betath,dbetathdx)
 susceptibilitytensor_format X;
-int ns;
+double complex Nperp,dNperpdx[];
+int ns,ncyclharm;
 raymagnetic_format raymagnetic;
 double wcn[],wpn2[],betath[];
 double dwcndx[][MC],dwpn2dx[][MC],dbetathdx[][MC];
 double Npar,dNpardx[];
-double complex Nperp,dNperpdx[];
+
 { 
     
     double complex Xxx[ns+1],Xxy[ns+1],Xxz[ns+1],Xyy[ns+1],Xyz[ns+1],Xzz[ns+1];
@@ -1368,8 +1371,7 @@ double complex Nperp,dNperpdx[];
         dXyzdwpn2[is] = 0.0;
         dXzzdwpn2[is] = 0.0;    
     }
-     
-    buildXstruc(X,ns,dNpardx,dNperpdx,dwcndx,dwpn2dx,dbetathdx,Xxx,Xxy,Xxz,Xyy,Xyz,Xzz,dXxxdNperp,dXxydNperp,dXxzdNperp,dXyydNperp,dXyzdNperp,dXzzdNperp,dXxxdNpar,dXxydNpar,dXxzdNpar,dXyydNpar,dXyzdNpar,dXzzdNpar,dXxxdbetath,dXxydbetath,dXxzdbetath,dXyydbetath,dXyzdbetath,dXzzdbetath,dXxxdwcn,dXxydwcn,dXxzdwcn,dXyydwcn,dXyzdwcn,dXzzdwcn,dXxxdwpn2,dXxydwpn2,dXxzdwpn2,dXyydwpn2,dXyzdwpn2,dXzzdwpn2);
+    buildXstruc(X,dNperpdx,Xxx,Xxy,Xxz,Xyy,Xyz,Xzz,dXxxdNperp,dXxydNperp,dXxzdNperp,dXyydNperp,dXyzdNperp,dXzzdNperp,dXxxdNpar,dXxydNpar,dXxzdNpar,dXyydNpar,dXyzdNpar,dXzzdNpar,dXxxdbetath,dXxydbetath,dXxzdbetath,dXyydbetath,dXyzdbetath,dXzzdbetath,dXxxdwcn,dXxydwcn,dXxzdwcn,dXyydwcn,dXyzdwcn,dXzzdwcn,dXxxdwpn2,dXxydwpn2,dXxzdwpn2,dXyydwpn2,dXyzdwpn2,dXzzdwpn2,ns,dNpardx,dwcndx,dwpn2dx,dbetathdx);
 }
 
 

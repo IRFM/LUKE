@@ -754,7 +754,7 @@ Compute the slopes
             y1[m] = s0[m];
         }
         
-        ray(s1,&Sdot1,y1,raymagnetic,rayprofiles,X,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,&flag);          
+        ray(X,s1,&Sdot1,y1,raymagnetic,rayprofiles,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,&flag);          
         /* s2 = feval(F, t+h*alpha(1), y1+h*s1*beta(1,1), param); */
 
         for  (m = 0; m < MC-3; m++) {/* only the first five coordinates are evolving (rho,theta,phi,krho,m) */
@@ -762,14 +762,14 @@ Compute the slopes
         }
          
             
-        ray(s2,&Sdot2,y1,raymagnetic,rayprofiles,X,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,&flag);
+        ray(X,s2,&Sdot2,y1,raymagnetic,rayprofiles,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,&flag);
         /* s3 = feval(F, t+h*alpha(2), y1+h*[s1*beta(2,1)+s2*beta(2,2)], param); */
 
         for  (m = 0; m < MC-3; m++) {
             y1[m] = s0[m]+h*(s1[m]*beta[0][1] + s2[m]*beta[1][1]);
         }
 
-        ray(s3,&Sdot3,y1,raymagnetic,rayprofiles,X,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,&flag);
+        ray(X,s3,&Sdot3,y1,raymagnetic,rayprofiles,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,&flag);
 
         /* s4 = feval(F, t+h*alpha(3), y1+h*[s1*beta(3,1)+s2*beta(3,2)+...], param); */
 
@@ -777,7 +777,7 @@ Compute the slopes
             y1[m] = s0[m]+h*(s1[m]*beta[0][2] + s2[m]*beta[1][2] + s3[m]*beta[2][2]);
         }
  
-        ray(s4,&Sdot4,y1,raymagnetic,rayprofiles,X,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,&flag);
+        ray(X,s4,&Sdot4,y1,raymagnetic,rayprofiles,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,&flag);
 
         /* s5 = feval(F, t+h*alpha(4), y1+h*[s1*beta(4,1)+s2*beta(4,2)+...], param); */
 
@@ -786,7 +786,7 @@ Compute the slopes
         }
 
 
-        ray(s5,&Sdot5,y1,raymagnetic,rayprofiles,X,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,&flag);
+        ray(X,s5,&Sdot5,y1,raymagnetic,rayprofiles,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,&flag);
 
         /* s6 = feval(F, t+h*alpha(5), y1+h*[s1*beta(5,1)+s2*beta(5,2)+...], param); */
 
@@ -794,7 +794,7 @@ Compute the slopes
             y1[m] = s0[m]+h*(s1[m]*beta[0][4] + s2[m]*beta[1][4] + s3[m]*beta[2][4] + s4[m]*beta[3][4] + s5[m]*beta[4][4]);
         }
         
-        ray(s6,&Sdot6,y1,raymagnetic,rayprofiles,X,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,&flag);
+        ray(X,s6,&Sdot6,y1,raymagnetic,rayprofiles,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,&flag);
 
 /*
 Estimate the error and the acceptable error
@@ -1096,13 +1096,12 @@ unsigned int N;
 /* General coordinate time evolution dY/dt with Y=[rho,theta,phi,krho,m,n,omega/c] */
 
 
-void ray(Ydot,Sdot,Y,raymagnetic,rayprofiles,X,param,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag)
-double Y[];
-double Ydot[];
-double *Sdot;
+void ray(X,Ydot,Sdot,Y,raymagnetic,rayprofiles,param,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag)
+
+susceptibilitytensor_format X;
+double Y[],Ydot[],*Sdot;
 raymagnetic_format raymagnetic;
 rayprofiles_format rayprofiles;
-susceptibilitytensor_format X;
 rayparam_format param;
 equilparam_format equilparam;
 pp_1D_format Te_fit;
@@ -1143,7 +1142,7 @@ double *flag;
     }
 
     /* Refractive index calculation */
-    rayindex(1,Y,raymagnetic,equilparam,&Npar,&Nperp,&N2,dNpardY,dNperpdY,dN2dY);
+    rayindex(&Nperp,dNperpdY,&N2,dN2dY,1,Y,raymagnetic,equilparam,&Npar,dNpardY);
     /* 
     mexPrintf("rn,Rn,Zn,Bsn,krho,sina,cosa,B,BPHIn:%g,%g,%g,%g,%g,%g,%g,%g,%g\n",raymagnetic.rn[0],raymagnetic.Rn[0],raymagnetic.Zn[0],raymagnetic.Bsn[0],Y[3],raymagnetic.salpha[0],raymagnetic.calpha[0],raymagnetic.B[0],raymagnetic.BPHIn[0]);
     mexPrintf("Npar,w*dNpardw,Nperpr,Nperpi,w*dNperpdwr,w*dNperpdwi:%g,%g,%g,%g,%g,%g\n",Npar,dNpardY[6],Nperp,dNperpdY[6]);
@@ -1151,10 +1150,10 @@ double *flag;
 
     /* Susceptibility tensor  */
 
-    susceptibility(X,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Nperp,dNperpdY,Y[6]);
+    susceptibility(X,Nperp,dNperpdY,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Y[6]);
 
     if (*flag < 0) {/* dipersion relation */
-        disprel(&Dtot,X,raymagnetic,Npar,Nperp,N2);
+        disprel(&Dtot,X,Nperp,N2,raymagnetic,Npar);
     }
 
     /* Dispersion relation */
@@ -1379,14 +1378,14 @@ double flag;
     }
 
     /* Refractive index calculation */
-    rayindex(1,Y,raymagnetic,equilparam,&Npar,&Nperp,&N2,dNpardY,dNperpdY,dN2dY);
+    rayindex(&Nperp,dNperpdY,&N2,dN2dY,1,Y,raymagnetic,equilparam,&Npar,dNpardY);
 
     /* Susceptibility tensor  */
 
-    susceptibility(X,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Nperp,dNperpdY,Y[6]);
+    susceptibility(X,Nperp,dNperpdY,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Y[6]);
 
     /* dipersion relation */
-    disprel(&Dtot,X,raymagnetic,Npar,Nperp,N2);
+    disprel(&Dtot,X,Nperp,N2,raymagnetic,Npar);
 
     /* test mode */
     
@@ -1518,7 +1517,7 @@ double flag;
     alphaphi = 0.0;
     
     for (n=nmin;n<nmax+1;n++) {
-        alphaphi = alphaphi + alphaphi_jd(wpn2[0],-wcn[0],betath[0],Npar,creal(Nperp),epolp,epolm,epolz,n,(int)param.rel_opt[0],(int)param.nperp[0],pmax);
+        alphaphi = alphaphi + alphaphi_jd(epolp,epolm,epolz,wpn2[0],-wcn[0],betath[0],Npar,creal(Nperp),n,(int)param.rel_opt[0],(int)param.nperp[0],pmax);
     }
     
     rayproc[0] = cabs(Dtot);
@@ -1661,21 +1660,21 @@ double flag;
     krho0 = Y[3];
     krho1 = frac*krho0;
     
-    rayindex(1,Y,raymagnetic,equilparam,&Npar,&Nperp,&N2,dNpardY,dNperpdY,dN2dY);
+    rayindex(&Nperp,dNperpdY,&N2,dN2dY,1,Y,raymagnetic,equilparam,&Npar,dNpardY);
     if (mode > 0) {/* plasma case */
-        susceptibility(X,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Nperp,dNperpdY,Y[6]);
+        susceptibility(X,Nperp,dNperpdY,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Y[6]);
     }
         
-    disprel(&cD0,X,raymagnetic,Npar,Nperp,N2);
+    disprel(&cD0,X,Nperp,N2,raymagnetic,Npar);
     D0 = creal(cD0);/* to be changed if non-hermitian susceptibility tensors are used */
 /*  mexPrintf("krho0,D0:%g,%g\n",krho0,D0); */
     
     Y[3] = krho1;
-    rayindex(1,Y,raymagnetic,equilparam,&Npar,&Nperp,&N2,dNpardY,dNperpdY,dN2dY);
+    rayindex(&Nperp,dNperpdY,&N2,dN2dY,1,Y,raymagnetic,equilparam,&Npar,dNpardY);
     if (mode > 0) {/* plasma case */
-        susceptibility(X,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Nperp,dNperpdY,Y[6]);
+        susceptibility(X,Nperp,dNperpdY,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Y[6]);
     }
-    disprel(&cD1,X,raymagnetic,Npar,Nperp,N2);
+    disprel(&cD1,X,Nperp,N2,raymagnetic,Npar);
     D1 = creal(cD1);/* to be changed if non-hermitian susceptibility tensors are used */
 /*  mexPrintf("krho1,D1:%g,%g\n",krho1,D1); */
 
@@ -1687,11 +1686,11 @@ double flag;
         krho1 = frac*krho0;
        
         Y[3] = krho1;
-        rayindex(1,Y,raymagnetic,equilparam,&Npar,&Nperp,&N2,dNpardY,dNperpdY,dN2dY);
+        rayindex(&Nperp,dNperpdY,&N2,dN2dY,1,Y,raymagnetic,equilparam,&Npar,dNpardY);
         if (mode > 0) {/* plasma case */
-            susceptibility(X,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Nperp,dNperpdY,Y[6]);
+            susceptibility(X,Nperp,dNperpdY,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Y[6]);
         }
-        disprel(&cD1,X,raymagnetic,Npar,Nperp,N2);
+        disprel(&cD1,X,Nperp,N2,raymagnetic,Npar);
         D1 = creal(cD1);/* to be changed if non-hermitian susceptibility tensors are used */
 /*      mexPrintf("krho1,D1:%g,%g\n",krho1,D1); */
     }
@@ -1730,11 +1729,11 @@ double flag;
             krho1 += dkrho;
 
             Y[3] = krho1;
-            rayindex(1,Y,raymagnetic,equilparam,&Npar,&Nperp,&N2,dNpardY,dNperpdY,dN2dY);
+            rayindex(&Nperp,dNperpdY,&N2,dN2dY,1,Y,raymagnetic,equilparam,&Npar,dNpardY);
             if (mode > 0) {/* plasma case */
-                susceptibility(X,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Nperp,dNperpdY,Y[6]);
+                susceptibility(X,Nperp,dNperpdY,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Y[6]);
             }
-            disprel(&cD1,X,raymagnetic,Npar,Nperp,N2);
+            disprel(&cD1,X,Nperp,N2,raymagnetic,Npar);
             D1 = creal(cD1);/* to be changed if non-hermitian susceptibility tensor are used */
 /*          mexPrintf("krho1,D1:%g,%g\n",krho1,D1); */
         }
@@ -1752,13 +1751,12 @@ double flag;
     
 }
 
-void disprel(Dtot,X,raymagnetic,Npar,Nperp,N2)
+void disprel(Dtot,X,Nperp,N2,raymagnetic,Npar)
 double complex *Dtot;
 susceptibilitytensor_format X;
+double complex Nperp,N2;
 raymagnetic_format raymagnetic;
 double Npar;
-double complex Nperp,N2;
-
 {
     double complex Nperp4,Nperp3,Nperp2,Nperp1;
     double Npar4,Npar3,Npar2,Npar1;
@@ -1866,13 +1864,14 @@ double complex Nperp,N2;
 
 }
 
-void susceptibility(X,wcn,wpn2,betath,tensortype,ncyclharm,equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Nperp,dNperpdY,omega)
+void susceptibility(X,Nperp,dNperpdY,wcn,wpn2,betath,tensortype,ncyclharm,equilparam,raymagnetic,rayprofiles,Npar,dNpardY,omega)
 susceptibilitytensor_format X;
+double complex Nperp,dNperpdY[];
 double wcn[],wpn2[],betath[];
 double tensortype,omega;
 int ncyclharm;
 double Npar,dNpardY[];
-double complex Nperp,dNperpdY[];
+
 
 raymagnetic_format raymagnetic;
 rayprofiles_format rayprofiles;
@@ -1934,23 +1933,23 @@ equilparam_format equilparam;
         
         if (tensortype == 0) {
 /*        mexPrintf("Cold dielectric tensor\n"); */
-            coldtensor(X,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY);
+            coldtensor(X,Nperp,dNperpdY,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY);
         }
         if (tensortype == 1) {
 /*        mexPrintf("Warm dielectric tensor\n");
-            warmtensor(X,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY); */
+            warmtensor(X,Nperp,dNperpdY,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY); */
         }
         if (tensortype == 2) {
 /*        mexPrintf("Hot dielectric tensor\n");*/
-            hottensor(X,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY); 
+            hottensor(X,Nperp,dNperpdY,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY); 
         }
         if (tensortype == 3) {
         mexPrintf("Weak relativistic dielectric tensor\n");
-            weakrelativistictensor(X,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY);
+            weakrelativistictensor(X,Nperp,dNperpdY,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY);
         }       
         if (tensortype == 4) {
 /*        mexPrintf("Full relativistic dielectric tensor\n");
-            fullrelativistictensor(X,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardY,Nperp,dNperpdY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY); */
+            fullrelativistictensor(X,Nperp,dNperpdY,equilparam.ns[0],ncyclharm,raymagnetic,Npar,dNpardY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY); */
         }       
         
     } else {
@@ -1960,12 +1959,12 @@ equilparam_format equilparam;
 } 
 
 
-void rayindex(mode,Y,raymagnetic,equilparam,Npar,Nperp,N2,dNpardY,dNperpdY,dN2dY)
+void rayindex(Nperp,dNperpdY,N2,dN2dY,mode,Y,raymagnetic,equilparam,Npar,dNpardY)
+double complex *Nperp,*dNperpdY;
+double complex *N2,*dN2dY;
 int mode;
 double Y[];
 double *Npar,*dNpardY;
-double complex *Nperp,*dNperpdY;
-double complex *N2,*dN2dY;
 raymagnetic_format raymagnetic;
 equilparam_format equilparam;
 { 
@@ -2105,10 +2104,8 @@ equilparam_format equilparam;
     
 }
 
-void buildXstruc(X,ns,dNpardY,dNperpdY,dwcndY,dwpn2dY,dbetathdY,Xxx,Xxy,Xxz,Xyy,Xyz,Xzz,dXxxdNperp,dXxydNperp,dXxzdNperp,dXyydNperp,dXyzdNperp,dXzzdNperp,dXxxdNpar,dXxydNpar,dXxzdNpar,dXyydNpar,dXyzdNpar,dXzzdNpar,dXxxdbetath,dXxydbetath,dXxzdbetath,dXyydbetath,dXyzdbetath,dXzzdbetath,dXxxdwcn,dXxydwcn,dXxzdwcn,dXyydwcn,dXyzdwcn,dXzzdwcn,dXxxdwpn2,dXxydwpn2,dXxzdwpn2,dXyydwpn2,dXyzdwpn2,dXzzdwpn2)
+void buildXstruc(X,dNperpdY,Xxx,Xxy,Xxz,Xyy,Xyz,Xzz,dXxxdNperp,dXxydNperp,dXxzdNperp,dXyydNperp,dXyzdNperp,dXzzdNperp,dXxxdNpar,dXxydNpar,dXxzdNpar,dXyydNpar,dXyzdNpar,dXzzdNpar,dXxxdbetath,dXxydbetath,dXxzdbetath,dXyydbetath,dXyzdbetath,dXzzdbetath,dXxxdwcn,dXxydwcn,dXxzdwcn,dXyydwcn,dXyzdwcn,dXzzdwcn,dXxxdwpn2,dXxydwpn2,dXxzdwpn2,dXyydwpn2,dXyzdwpn2,dXzzdwpn2,ns,dNpardY,dwcndY,dwpn2dY,dbetathdY)
 susceptibilitytensor_format X;
-int ns;
-double dwcndY[][MC],dwpn2dY[][MC],dbetathdY[][MC],dNpardY[];
 double complex dNperpdY[];
 double complex Xxx[],Xxy[],Xxz[],Xyy[],Xyz[],Xzz[];
 double complex dXxxdNperp[],dXxydNperp[],dXxzdNperp[],dXyydNperp[],dXyzdNperp[],dXzzdNperp[];
@@ -2116,6 +2113,8 @@ double complex dXxxdNpar[],dXxydNpar[],dXxzdNpar[],dXyydNpar[],dXyzdNpar[],dXzzd
 double complex dXxxdbetath[],dXxydbetath[],dXxzdbetath[],dXyydbetath[],dXyzdbetath[],dXzzdbetath[];
 double complex dXxxdwcn[],dXxydwcn[],dXxzdwcn[],dXyydwcn[],dXyzdwcn[],dXzzdwcn[];
 double complex dXxxdwpn2[],dXxydwpn2[],dXxzdwpn2[],dXyydwpn2[],dXyzdwpn2[],dXzzdwpn2[];
+int ns;
+double dwcndY[][MC],dwpn2dY[][MC],dbetathdY[][MC],dNpardY[];
 {
     
     int i,is;

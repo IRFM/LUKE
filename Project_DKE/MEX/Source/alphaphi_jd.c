@@ -6,9 +6,9 @@
 
 double integral_fr_jd();
 
-double alphaphi_jd(a,b,beta,npar,nperp,epolp,epolm,epolz,n,rel_opt,ns,pperpmax)
-double a,b,beta,npar,nperp,pperpmax;
+double alphaphi_jd(epolp,epolm,epolz,a,b,beta,npar,nperp,n,rel_opt,ns,pperpmax)
 double complex epolp,epolm,epolz;
+double a,b,beta,npar,nperp,pperpmax;
 int n,rel_opt,ns;
 {   /* Local test */
      
@@ -46,10 +46,10 @@ int n,rel_opt,ns;
     
     if (rel_opt == 1) {/* relativistic case */
         if (npar2 > 1) {/* hyperbola */
-            absint = integral_fr_jd(pperpmax,npar,yn,beta,epolp,epolm,epolz,slperp,n,ns,-1); 
+            absint = integral_fr_jd(epolp,epolm,epolz,pperpmax,npar,yn,beta,slperp,n,ns,-1); 
         } else {        
         if (npar2 == 1 && n > 0) {/* parabola */
-            absint = integral_fr_jd(pperpmax,npar,yn,beta,epolp,epolm,epolz,slperp,n,ns,0); 
+            absint = integral_fr_jd(epolp,epolm,epolz,pperpmax,npar,yn,beta,slperp,n,ns,0); 
         } else {        
         if (npar2 < 1 && n > 0 && yn > sqrt(1 - npar2)) {/* ellipse */
             
@@ -60,12 +60,12 @@ int n,rel_opt,ns;
                 pperpmax_ellipse = pperpmax;
             }
             
-            absint = integral_fr_jd(pperpmax_ellipse,npar,yn,beta,epolp,epolm,epolz,slperp,n,ns,1); 
-            absint = absint + integral_fr_jd(pperpmax_ellipse,npar,yn,beta,epolp,epolm,epolz,slperp,n,ns,-1); 
+            absint = integral_fr_jd(epolp,epolm,epolz,pperpmax_ellipse,npar,yn,beta,slperp,n,ns,1); 
+            absint = absint + integral_fr_jd(epolp,epolm,epolz,pperpmax_ellipse,npar,yn,beta,slperp,n,ns,-1); 
         }}}
     } else {/* non-relativistic case - straight line */
         if ((1 - yn)*(1 - yn) < npar2) {
-            absint = integral_fr_jd(pperpmax,npar,yn,beta,epolp,epolm,epolz,slperp,n,ns,2); 
+            absint = integral_fr_jd(epolp,epolm,epolz,pperpmax,npar,yn,beta,slperp,n,ns,2); 
         }
     }
 
@@ -90,9 +90,9 @@ int n,rel_opt,ns;
     return(sqrt(PI/2)*a*r*absint/beta);
 }
 
-double integral_fr_jd(pperpmax,npar,yn,beta,epolp,epolm,epolz,slperp,n,ns,resopt) 
-double pperpmax,npar,yn,beta,slperp;
+double integral_fr_jd(epolp,epolm,epolz,pperpmax,npar,yn,beta,slperp,n,ns,resopt) 
 double complex epolp,epolm,epolz;
+double pperpmax,npar,yn,beta,slperp;
 int n,ns,resopt;
 {
     /* simple method extracted from MATLAB version */

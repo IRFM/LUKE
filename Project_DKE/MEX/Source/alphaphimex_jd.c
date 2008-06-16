@@ -4,20 +4,20 @@
     the fully relativistic absorption coefficient 
     for arbitrary RF waves interacting with electrons
 
-=> xalphaphi = alphaphimex_jd(xa,xb,xbeta,xNpar,xNperp,xepolp,xepolm,xepolz,n,rel_opt,ns,pperpmax);
+=> xalphaphi = alphaphimex_jd(xepolp,xepolm,xepolz,xa,xb,xbeta,xNpar,xNperp,n,rel_opt,ns,pperpmax);
 
     INPUTS : 
 
         REQUIRED
         
+        - xepolp: polarization vector component in rotating direction p [1,nx]
+        - xepolm: polarization vector component in rotating direction m [1,nx]
+        - xepolz: polarization vector component in parallel direction z [1,nx]
         - xa    : omega_pe^2/omega_rf^2 [1,nx]
         - xb    : omega_ce/omega_rf [1,nx]
         - xbeta : sqrt(kTe/mc2) [1,nx]
         - xnpar : parallel index of refraction [1,nx]
         - xnperp: perpendicular index of refraction [1,nx]
-        - xepolp: polarization vector component in rotating direction p [1,nx]
-        - xepolm: polarization vector component in rotating direction m [1,nx]
-        - xepolz: polarization vector component in parallel direction z [1,nx]
         - n     : harmonic number [1,1] 
         
         OPTIONAL
@@ -45,17 +45,17 @@ double alphaphi_jd();
 
 /* Input Arguments */
 
-#define XA_IN           prhs[0]
-#define XB_IN           prhs[1]
-#define XBETA_IN        prhs[2]
-#define XNPAR_IN        prhs[3]
-#define XNPERP_IN       prhs[4]
-#define XEPOLP_R_IN     prhs[5]
-#define XEPOLP_I_IN     prhs[6]
-#define XEPOLM_R_IN     prhs[7]
-#define XEPOLM_I_IN     prhs[8]
-#define XEPOLZ_R_IN     prhs[9]
-#define XEPOLZ_I_IN     prhs[10]
+#define XEPOLP_R_IN     prhs[0]
+#define XEPOLP_I_IN     prhs[1]
+#define XEPOLM_R_IN     prhs[2]
+#define XEPOLM_I_IN     prhs[3]
+#define XEPOLZ_R_IN     prhs[4]
+#define XEPOLZ_I_IN     prhs[5]
+#define XA_IN           prhs[6]
+#define XB_IN           prhs[7]
+#define XBETA_IN        prhs[8]
+#define XNPAR_IN        prhs[9]
+#define XNPERP_IN       prhs[10]
 #define N_IN            prhs[11]
 #define REL_OPT_IN      prhs[12]
 #define NS_IN           prhs[13]
@@ -157,7 +157,7 @@ void mexFunction( int nlhs, mxArray *plhs[],
         mexPrintf("xepolm : %g + I*%g\n",creal(xepolm),cimag(xepolm));
         mexPrintf("xepolz : %g + I*%g\n",creal(xepolz),cimag(xepolz));*/
     
-        xalphaphi[m] = alphaphi_jd(xa[m],xb[m],xbeta[m],xnpar[m],xnperp[m],xepolp,xepolm,xepolz,n,rel_opt,ns,pperpmax);
+        xalphaphi[m] = alphaphi_jd(xepolp,xepolm,xepolz,xa[m],xb[m],xbeta[m],xnpar[m],xnperp[m],n,rel_opt,ns,pperpmax);
     }
      
 }
