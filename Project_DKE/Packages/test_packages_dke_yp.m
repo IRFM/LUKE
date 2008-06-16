@@ -2,14 +2,18 @@ clc
 clear all
 close all
 %
+dkepath = path_LUKE_LOCAL;
+dirinit = pwd;%initial directory
+cd([dkepath.luke_root,'Project_DKE/Packages']);
+%
 disp('Test performances of matrix inversion routines on your computer')
 disp('---------------------------------------------------------------')
 mode = input_dke_yp('2-D (0) or 3-D (1) input matrix',0);
-npass = input_dke_yp('Number of passes',1);disp(' ');
+npass = input_dke_yp('Number of passes',3);disp(' ');
 if mode ==0,
-   load testLU2D.mat;if exist('testmatinv-2D'),delete testmatinv-2D;end;diary testmatinv-2D;disp(['2-D LUKE matrix inversion performances on ',computer]);disp('----------------------------------------------')
+   load testLU2D.mat;if exist('testmatinv-2D.txt'),delete testmatinv-2D.txt;end;diary testmatinv-2D.txt;disp(['2-D LUKE matrix inversion performances on ',computer]);disp('----------------------------------------------')
 elseif mode == 1
-   load testLU3D.mat;if exist('testmatinv-3D'),delete testmatinv-3D;end;diary testmatinv-3D;disp(['3-D LUKE matrix inversion performances on ',computer]);disp('----------------------------------------------')
+   load testLU3D.mat;if exist('testmatinv-3D.txt'),delete testmatinv-3D.txt;end;diary testmatinv-3D.txt;disp(['3-D LUKE matrix inversion performances on ',computer]);disp('----------------------------------------------')
 end
 %
 dkepath = path_LUKE_LOCAL;
@@ -215,7 +219,7 @@ if npass > 1,
     stdtt = std(tt);%Standard deviation on several runs
 %
     for iisim = 1:isim,
-        figure('Name',Zname{iisim}),graph1D_jd([1:npass],tt(:,iisim),0,0,'Number of passes','Computing time (s)',[strrep(Zname{iisim},'_','-'),' on ',computer],[num2str(meantt(iisim)),'(s) � ',num2str(stdtt(iisim))],[1,npass],[0,2*max(tt(:,iisim))],'-','non','r',2,20,gca,0.85,0.7,0.5);hold on    
+        figure('Name',Zname{iisim}),graph1D_jd([1:npass],tt(:,iisim),0,0,'Number of passes','Computing time (s)',[strrep(Zname{iisim},'_','-'),' on ',computer],[num2str(meantt(iisim)),'(s) +/- ',num2str(stdtt(iisim))],[1,npass],[0,2*max(tt(:,iisim))],'-','non','r',2,20,gca,0.85,0.7,0.5);hold on    
         savefig_dke_yp(Zname{iisim},dirfig);
     end
 end
@@ -228,4 +232,7 @@ for iisim = 1:isim,
 end
 %
 diary off
+%
+cd(dirinit);%back to the initial directory
+%
 
