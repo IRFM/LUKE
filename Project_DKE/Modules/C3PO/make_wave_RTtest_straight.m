@@ -32,7 +32,7 @@ display_equilibrium = 1;
 %
 % ray-tracing parameters
 %
-method = 'spline';%nearest,spline,pchip,cubic
+method = 'pchip';%nearest,spline,pchip,cubic
 nharm = 32;%Number of harmonics in the magnetic equilibrium interpolation (less than ntheta_equil/2)
 f_rf = 5.3015e-2*10000;%GHz (clum_norm = 1 for f_rf = 5.3015e-2, but limitation in m values)
 %

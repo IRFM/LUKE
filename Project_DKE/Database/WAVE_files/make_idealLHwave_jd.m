@@ -21,7 +21,7 @@ ythetab_lh = wavestruct.ythetab_lh;
 % parameters for makefile
 %
 ns = 1001;%for sufficient radial resolution (even number)
-method = 'spline';
+method = 'pchip';
 %
 %==========================================================================
 %

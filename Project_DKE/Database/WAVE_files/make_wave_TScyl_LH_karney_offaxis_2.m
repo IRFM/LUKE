@@ -54,7 +54,7 @@ ythetab_lh = [0]*pi/180;%(deg -> rad). Poloidal location of LH beam [0..2pi] [1,
 % parameters for makefile
 %
 ns = 1000;%for sufficient radial resolution (even number)
-method = 'spline';
+method = 'pchip';
 %
 %==========================================================================
 %

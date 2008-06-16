@@ -1,14 +1,14 @@
 function [Zpp_f] = interpequilpt_yp(method,f,rho,theta,nharm)
 %
 % Build vectorial tokamak magnetic equilibrium from its numerical counterpart
-% 1-D: use interp1 MatLab built-in function (spline, bi-cubic, linear,
+% 1-D: use interp1 MatLab built-in function (Hermite polynomial (pchip) spline, bi-cubic, linear,
 % nearest,...)
 % 2-D: use Fourier series expansion for the poloidal dependence and the
 % interp1 for the Fourier series coefficients (spline, bi-cubic, linear,
 % nearest,...)
 %
 % INPUT
-%    - method: interpolation method (spline, nearest, linear, bicubic, ...) [nchar,1]
+%    - method: interpolation method (Hermite polynomial(pchip), spline, nearest, linear, bicubic, ...) [nchar,1]
 %    - f: 1-D (rho) or 2-D (rho,theta) function to interpolate [nrho,1] or [nrho,mtheta]
 %    - rho: normalized minor radius [nrho,1]
 %    - theta: poloidal flux grid coordinate [1,ntheta]
@@ -34,7 +34,7 @@ if nargin == 3,
       Zpp_f.pp_dfdrho.coefs = [Zpp_f.pp_f.coefs(:,1)];%Partial derivative along rho
    elseif Zpp_f.pp_f.order == 3,
       Zpp_f.pp_dfdrho.coefs = [2*Zpp_f.pp_f.coefs(:,1),Zpp_f.pp_f.coefs(:,2)];%Partial derivative along rho
-   elseif Zpp_f.pp_f.order == 4,%cubic spline
+   elseif Zpp_f.pp_f.order == 4,%cubic spline or Hermite polynomial (pchip option)
       Zpp_f.pp_dfdrho.coefs = [3*Zpp_f.pp_f.coefs(:,1),2*Zpp_f.pp_f.coefs(:,2),Zpp_f.pp_f.coefs(:,3)];%Partial derivative along rho
    end 
 %
@@ -88,7 +88,7 @@ elseif nargin >= 4,
       Zpp_f.pp_da0drho.coefs = [2*Zpp_f.pp_a0.coefs(:,1),Zpp_f.pp_a0.coefs(:,2)];%Partial derivative along rho
       Zpp_f.pp_dandrho.coefs = [2*Zpp_f.pp_an.coefs(:,1),Zpp_f.pp_an.coefs(:,2)];%Partial derivative along rho
       Zpp_f.pp_dbndrho.coefs = [2*Zpp_f.pp_bn.coefs(:,1),Zpp_f.pp_bn.coefs(:,2)];%Partial derivative along rho       
-   elseif Zpp_f.pp_a0.order == 4,%cubic spline
+   elseif Zpp_f.pp_a0.order == 4,%cubic spline or Hermite polynomials (option pchip)
       Zpp_f.pp_da0drho.coefs = [3*Zpp_f.pp_a0.coefs(:,1),2*Zpp_f.pp_a0.coefs(:,2),Zpp_f.pp_a0.coefs(:,3)];%Partial derivative along rho
       Zpp_f.pp_dandrho.coefs = [3*Zpp_f.pp_an.coefs(:,1),2*Zpp_f.pp_an.coefs(:,2),Zpp_f.pp_an.coefs(:,3)];%Partial derivative along rho
       Zpp_f.pp_dbndrho.coefs = [3*Zpp_f.pp_bn.coefs(:,1),2*Zpp_f.pp_bn.coefs(:,2),Zpp_f.pp_bn.coefs(:,3)];%Partial derivative along rho
