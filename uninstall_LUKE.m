@@ -70,12 +70,15 @@ path_LUKE = [pwd,'/'];
 mex_clean_luke(path_LUKE)
 %
 cd([path_LUKE,'Project_DKE/Database']);
-remove_all(0);
+remove_all;
 cd(path_LUKE);
 %
 % Remove html documentation
 %
-rmdir('Documentation');
+if exist('Documentation') == 7,
+    rmdir('Documentation');
+    disp(['The Documentation folder has been removed.']);
+end
 %
 % Remove paths
 %
