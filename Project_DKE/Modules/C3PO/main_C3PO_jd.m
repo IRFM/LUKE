@@ -95,7 +95,7 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C
     %  
     % Backward compatibility
     %
-    [clusterparam] = clustermode_luke(C3POdisplay,C3POparam,'','main_C3PO_jd');
+    [clusterparam] = clustermode_luke(C3POdisplay,C3POparam,cluster_path,'main_C3PO_jd');
     %
     if clusterparam.mode,
         for iray = 1:Nrays,arg_range{iray} = iray;end
