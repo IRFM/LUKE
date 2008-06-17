@@ -492,6 +492,7 @@ for iw = 1:length(launchs),
     wavestructs{iw}.fitequilparam = fitequilparam;
     wavestructs{iw}.rayparam = rayparam;
     wavestructs{iw}.raydisplay = raydisplay;
+    wavestructs{iw}.C3POparam = C3POparam;
     %
     wavestructs{iw}.wavesolver = 'C3PO';
     wavestructs{iw}.waveparam.mmode = launchs{iw}.mmode;% cold mode (+1 for m; -1 for p)
