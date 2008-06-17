@@ -11,6 +11,11 @@ clc
 %
 id_wave = '20Z_1_SW';
 %
+% Path parameters
+%
+id_dkepath = '';%For all paths used by DKE solver
+path_dkepath = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+%
 % Equilibrium parameters
 %
 id_equil = 'ITER_Scen4_IAEA06';%For plasma equilibrium
@@ -93,7 +98,7 @@ rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considere
 % Load structures
 %
 %[equil,rayinits,dkepath] = load_structures_yp('equil',id_equil,path_equil,'rayinits',ids_rayinit,paths_rayinit,'dkepath',id_dkepath,path_dkepath);
-[equil] = load_structures_yp('equil',id_equil,path_equil);
+[equil,dkepath] = load_structures_yp('equil',id_equil,path_equil,'dkepath',id_dkepath,path_dkepath);
 %
 % -------------------------------------------------------------------------
 %

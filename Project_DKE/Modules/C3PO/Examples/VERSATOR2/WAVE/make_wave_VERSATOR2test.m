@@ -9,9 +9,15 @@ clear all
 close all
 clc
 %
-id_wave = 'VERSATOR2test';% scenario identification (see paper IEEE transaction on plasma science, vol. PS-12, Nç2, 1984 - P.Bonoli et al.)
+id_wave = 'VERSATOR2test';% scenario identification (see paper IEEE transaction on plasma science, vol. PS-12, NÔøΩ2, 1984 - P.Bonoli et al.)
 %
 p_opt = 2;%Printing or saving option of the figures
+%
+%
+% Path parameters
+%
+id_dkepath = 'LOCAL';%For all paths used by DKE solver
+path_dkepath = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 % Equilibrium parameters
 %
@@ -91,7 +97,7 @@ rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considere
 %
 % Load structures
 %
-[equil] = load_structures_yp('equil',id_equil,path_equil);
+[equil,dkepath] = load_structures_yp('equil',id_equil,path_equil,'dkepath',id_dkepath,path_dkepath);
 %
 % =========================================================================
 %

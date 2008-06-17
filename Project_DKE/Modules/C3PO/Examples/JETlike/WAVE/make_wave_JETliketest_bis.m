@@ -11,6 +11,11 @@ clc
 %
 id_wave = 'JETliketest1p8';
 %
+% Path parameters
+%
+id_dkepath = 'LOCAL';%For all paths used by DKE solver
+path_dkepath = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+%
 % Equilibrium parameters
 %
 id_equil = 'JETliketest';%For plasma equilibrium
@@ -89,7 +94,7 @@ rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considere
 %
 % Load structures
 %
-[equil] = load_structures_yp('equil',id_equil,path_equil);
+[equil,dkepath] = load_structures_yp('equil',id_equil,path_equil,'dkepath',id_dkepath,path_dkepath);
 %
 % =========================================================================
 %
