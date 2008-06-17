@@ -76,7 +76,7 @@ cd(path_LUKE);
 % Remove html documentation
 %
 if exist('Documentation') == 7,
-    rmdir('Documentation');
+    rmdir('Documentation','s');
     disp(['The Documentation folder has been removed.']);
 end
 %
