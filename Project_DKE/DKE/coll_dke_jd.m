@@ -73,40 +73,11 @@ function [ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor] = coll_dke_jd(dkepath,d
 			ZXXF_c_tp = NaN;		
 		end
 		%
-        if isfield(dkeparam,'clustermode'),
-            if isfield(dkeparam.clustermode,'coll_dke_jd'),
-                if isfield(dkeparam.clustermode.coll_dke_jd,'mode'),
-                    cluster_mode = dkeparam.clustermode.coll_dke_jd.mode;
-                else
-                    cluster_mode = 0;
-                end
-                %
-                if isfield(dkeparam.clustermode.coll_dke_jd,'timeout'),
-                    cluster_timeout = dkeparam.clustermode.coll_dke_jd.timeout;
-                else
-                    cluster_timeout = 60*10;%(s)
-                end
-                %
-                if isfield(dkeparam.clustermode.coll_dke_jd,'size'),
-                    cluster_size = dkeparam.clustermode.coll_dke_jd.size;
-                else
-                    cluster_size = 1;
-                end            
-            else
-                cluster_mode = 0;
-                cluster_timeout = 0;
-                cluster_size = 0;
-            end
-        else
-            cluster_mode = 0;
-            cluster_timeout = 0;
-            cluster_size = 0;
-        end
+        [clusterparam] = clustermode_luke(dkedisplay,dkeparam,dkepath.temppathroot,'coll_dke_jd');       
 		%
-		if ~isfield(dkedisplay,'mdce'),dkedisplay.mdce = 1;end
-		if cluster_mode,
+		if clusterparam.mode,
 			for ir = 1:gridDKE.nr,arg_range{ir} = ir;end
-			[flag,XXfM_out,ZXXD_c_pp_ippj,ZXXD_c_pp_ipj,ZXXD_c_pp_ij,ZXXD_c_pp_imj,ZXXD_c_pp_immj,ZXXD_c_mm_ijp,ZXXD_c_mm_ijm,ZXXF_c_p_ippj,ZXXF_c_p_ipj,ZXXF_c_p_ij,ZXXF_c_p_imj,ZXXF_c_p_immj] = mdce_luke(@loop_coll_dke_jd1,{ir,gridDKE,Zmomcoef,Zbouncecoef,equilDKE,mksa,dkepath,dkedisplay,dkeparam,xTe_norm,xne_norm,xzni_norm,xzTi_norm,xnloss_norm,xbetath,xlnc_e,xnhu,xrnhuth},1,arg_range,cluster_size,dkepath,dkedisplay.mdce,cluster_mode,cluster_timeout);			
+			[flag,XXfM_out,ZXXD_c_pp_ippj,ZXXD_c_pp_ipj,ZXXD_c_pp_ij,ZXXD_c_pp_imj,ZXXD_c_pp_immj,ZXXD_c_mm_ijp,ZXXD_c_mm_ijm,ZXXF_c_p_ippj,ZXXF_c_p_ipj,ZXXF_c_p_ij,ZXXF_c_p_imj,ZXXF_c_p_immj] = mdce_luke(@loop_coll_dke_jd1,{ir,gridDKE,Zmomcoef,Zbouncecoef,equilDKE,mksa,dkepath,dkedisplay,dkeparam,xTe_norm,xne_norm,xzni_norm,xzTi_norm,xnloss_norm,xbetath,xlnc_e,xnhu,xrnhuth},1,arg_range,clusterparam);			
 			for ir = 1:gridDKE.nr
 				XXfM(:,:,ir) = XXfM_out{ir};
          		ZXXD_c.pp_ippj(:,:,ir) = ZXXD_c_pp_ippj{ir};
@@ -127,7 +98,7 @@ function [ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor] = coll_dke_jd(dkepath,d
 			%
     		if dkeparam.dke_mode == 1
     			for ir = 1:gridDKE.nr,arg_range{ir} = ir;end		    	
-    			[flag,ZXXD_c_tp_pp_ippj,ZXXD_c_tp_pp_ipj,ZXXD_c_tp_pp_ij,ZXXD_c_tp_pp_imj,ZXXD_c_tp_pp_immj,ZXXD_c_tp_mm_ijp,ZXXD_c_tp_mm_ijm,ZXXF_c_tp_p_ippj,ZXXF_c_tp_p_ipj,ZXXF_c_tp_p_ij,ZXXF_c_tp_p_im,ZXXF_c_tp_p_immj,ZXXF_c_tp_m_ijp,ZXXF_c_tp_m_ijm] = mdce_luke(@loop_coll_dke_jd2,{ir,gridDKE,Zbouncecoef,ZXXD_c,dkepath,dkeparam},1,arg_range,cluster_size,dkepath,dkedisplay.mdce,cluster_mode,cluster_timeout);
+    			[flag,ZXXD_c_tp_pp_ippj,ZXXD_c_tp_pp_ipj,ZXXD_c_tp_pp_ij,ZXXD_c_tp_pp_imj,ZXXD_c_tp_pp_immj,ZXXD_c_tp_mm_ijp,ZXXD_c_tp_mm_ijm,ZXXF_c_tp_p_ippj,ZXXF_c_tp_p_ipj,ZXXF_c_tp_p_ij,ZXXF_c_tp_p_im,ZXXF_c_tp_p_immj,ZXXF_c_tp_m_ijp,ZXXF_c_tp_m_ijm] = mdce_luke(@loop_coll_dke_jd2,{ir,gridDKE,Zbouncecoef,ZXXD_c,dkepath,dkeparam},1,arg_range,cluster_size,clusterparam);
    		    	%
    		    	for ir = 1:gridDKE.nr,
     		    	ir_dke = find(ir == gridDKE.rdke);

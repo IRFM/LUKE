@@ -1,15 +1,18 @@
-function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,dkeparam,dkepath,flag);
+function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,cluster_path,flag);
 %C3PO - Set ray initial characteristics and launches the C3PO ray-tracing code
 %
 % This function calculates the ray initial characteristics and launches the C3PO ray-tracing code
 %
-% by 	J. Decker (CEA-IRFM) <joan.decker@cea.fr> and   Y. Peysson (CEA-IRFM) <yves.peysson@cea.fr>
+% by J. Decker (CEA-IRFM) <joan.decker@cea.fr> and   Y. Peysson (CEA-IRFM) <yves.peysson@cea.fr>
 %
+    if nargin < 9,
+    	cluster_path = '';%In case distributed computing is used
+        flag = 0;%numerical equilibrium used by default
+    end
+	%
     if nargin < 10,
         flag = 0;%numerical equilibrium used by default
     end
-    %
-    multithreading_luke(dkeparam_out.clustermode.multithread);
     %
     % Build or load vectorized magnetic equilibrium structure
     %
@@ -45,6 +48,8 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C
     wave.opt_disp = 0;  % option for solving the wave equation, which gives (ray.sepol_pmz, ray.sphi, ray.sNperp) 
     %
     wave.dsmin = waveparam.dsmin;
+    %
+    % Backward compatibility
     %
     if ~isfield(C3POdisplay,'text'),
         C3POdisplay.text = 1;
@@ -87,36 +92,14 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C
     %
     wave.cut_fac = waveparam.cut_fac;
     wave.kextra = rayparam.kextra;
-    %    
-    if isfield(dkeparam,'clustermode'),
-        if isfield(dkeparam.clustermode.main_C3PO_jd,'mode'),
-            cluster_mode = dkeparam.clustermode.main_C3PO_jd.mode;
-        else
-            cluster_mode = 0;
-        end
-        %
-        if isfield(dkeparam.clustermode.main_C3PO_jd,'timeout'),
-            cluster_timeout = dkeparam.clustermode.main_C3PO_jd.timeout;
-        else
-            cluster_timeout = 60*10;%(s)
-        end
-        %
-        if isfield(dkeparam.clustermode.main_C3PO_jd,'size'),
-            cluster_size = dkeparam.clustermode.main_C3PO_jd.size;
-        else
-            cluster_size = 1;
-        end            
-    else
-        cluster_mode = 0;
-        cluster_timeout = 0;
-        cluster_size = 0;
-    end   
+    %  
+    % Backward compatibility
     %
-    if ~isfield(C3POdisplay,'mdce'),C3POdisplay.mdce = 1;end
+    [clusterparam] = clustermode_luke(C3POdisplay,C3POparam,'','main_C3PO_jd');
     %
-    if cluster_mode,
+    if clusterparam.mode,
         for iray = 1:Nrays,arg_range{iray} = iray;end
-        [flag,rays] = mdce_luke(@loop_main_C3PO_jd,{iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay},1,arg_range,cluster_size,dkepath,C3POdisplay.mdce,cluster_mode,cluster_timeout);
+        [flag,rays] = mdce_luke(@loop_main_C3PO_jd,{iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay},1,arg_range,clusterparam);
 		%
 		for iray = 1:Nrays,
 			if isempty(rays{iray}),
