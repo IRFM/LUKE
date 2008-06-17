@@ -21,7 +21,6 @@ end
 %
 dkepath = load_structures_yp('dkepath',id_path,path_path);
 %
-[s,dossier,machine,mexext] = comput_dke_yp;
 if exist(['helmex77',mexext]) == 3,
 %
     lim_top = atan(0.5*xpoint(1)/(1-xpoint(2)))*180/pi;%In order to avoid convergence problem in separatrix MEX file

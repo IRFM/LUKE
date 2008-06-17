@@ -1,13 +1,14 @@
-function display_dke_1yp
+function display_hxr_yp
+%R5-X2 - Display HXR results
 %
 % Calculate and display the HXR bremsstrahlung from results of the 
 % Electron Drift Kinetic solver (main_dke_yp.m)
 %
-% by Joan Decker <jodecker@mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
+% by Joan Decker <joan.decker@cea.fr> (CEA/IRFM) and Yves Peysson <yves.peysson@cea.fr> (CEA/IRFM)
 %
 close all
 warning off;
-[s,dossier,machine] = comput_dke_yp;
+%
 if nargin == 0,	
 	dir('RESULTS_*.mat');
 	filename = [];

@@ -104,7 +104,6 @@ pzni_guess = species_dke_yp(pne_guess,pZeff_guess,zZi,fi);
 %
 %Run HELENA magnetic equilibrium code (FORTRAN MEX file). 
 %
-[s,dossier,machine,mexext] = comput_dke_yp;
 if exist(['helmex77',mexext]) == 3,
 	ptot_guess = pTe_guess.*pne_guess + sum(pzni_guess.*pzTi_guess);%Total plasma pressure profile
 	pj_guess = (j0 - ja)*(1 - ppsin_guess.^2).^ej + ja;%Current density profile
