@@ -444,7 +444,7 @@ if w_opt == 0,% wave from C3PO calculations
             if ~isempty(deblank(rayinit.id)),break;end
         end
     end
-    wave = main_C3PO_jd(rayinit.id,equil,rayinit,waveparam,fitparam,rayparam,wavedisplay,dkeparam,dkepath);
+    wave = main_C3PO_jd(rayinit.id,equil,rayinit,waveparam,fitparam,rayparam,wavedisplay,C3POparam);
     cd(sd);
     %
     % Wave processing and relativistic linear damping
@@ -464,6 +464,7 @@ if w_opt == 0,% wave from C3PO calculations
     wave.fitparam = fitparam;
     wave.rayparam = rayparam;
     wave.display = wavedisplay;
+    wave.C3POparam = C3POparam;
     %
 elseif w_opt == 1,% wave from TORAY calculations
     %
