@@ -9,6 +9,8 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C
         flag = 0;%numerical equilibrium used by default
     end
     %
+    multithreading_luke(dkeparam_out.clustermode.multithread);
+    %
     % Build or load vectorized magnetic equilibrium structure
     %
     if fitparam.opt_load*exist(['EQUILV_',equil.id,'.mat']),
