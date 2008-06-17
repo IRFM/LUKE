@@ -312,7 +312,7 @@ if w_opt == 0,% wave from C3PO calculations
     if c3poparam_file == 0,
         return
     end
-    load([c3poparam_path,c3poparam_file],'fitparam','rayparam');
+    load([c3poparam_path,c3poparam_file],'fitparam','rayparam','C3POparam');
     %
     [qe,me] = pc_dke_yp;
     %
@@ -337,6 +337,7 @@ if w_opt == 0,% wave from C3PO calculations
         %
         fitparam = imod_struct_jd(fitparam,'fitparam',1);
         rayparam = imod_struct_jd(rayparam,'rayparam',1);
+		C3POparam = imod_struct_jd(C3POparam,'C3POparam',1);
         %
     end
     %
