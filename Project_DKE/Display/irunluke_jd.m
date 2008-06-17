@@ -312,11 +312,14 @@ while isel >= 0,
                         paths.equil = '';
                     end
                     %
-                    fileids.waves = '';
-                    paths.waves = '';
-                    %
+					if ~isfield(fileids,'waves'),
+						%
+                    	fileids.waves = '';
+                    	paths.waves = '';
+                    	%
+					end
                     for iw = 1:length(waves),
-                        if ~isfield(fileids,'waves') || (length(fileids.waves) < iw) || (~isempty(fileids.waves{iw}) && ~exist([paths.waves{iw},'WAVE_',equil.id,'_',fileids.waves{iw},'.mat'],'file')),
+                        if (length(fileids.waves) < iw) || (~isempty(fileids.waves{iw}) && ~exist([paths.waves{iw},'WAVE_',equil.id,'_',fileids.waves{iw},'.mat'],'file')),
                             fileids.waves{iw} = '';
                             paths.waves{iw} = '';
                         end
