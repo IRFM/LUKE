@@ -483,7 +483,7 @@ transpfaste.Vr_model = par.Vr_model;%Radial pinch type: (0) no vpar dependence, 
 %
 
 for iw = 1:length(launchs),
-    [waveparam,fitequilparam,rayparam,raydisplay] = make_wavert_cronos(launchs{iw}.type);%parameter for ray-tracing are adapted to the selected wave
+    [waveparam,fitequilparam,rayparam,raydisplay,C3POparam] = make_wavert_cronos(launchs{iw}.type);%parameter for ray-tracing are adapted to the selected wave
     %   	
     wavestructs{iw}.id = [par.conf,'_',launchs{iw}.id];
     wavestructs{iw}.equil_id = equil.id;
