@@ -4,8 +4,6 @@
 %
 % by Yves Peysson (CEA/DRFC, yves.peysson@cea.fr) and Joan Decker (CEA-DRFC, joan.decker@cea.fr)
 %
-
-%
 % ---------------------- TScyl Thermal -----------------------
 %
 forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
