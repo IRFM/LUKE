@@ -36,7 +36,7 @@ launch.omega_rf = [5.0]*2*pi*1e9;%wave angular frequency (rad/s) [1,1] (same fre
 launch.bPlhtot = [26.08,3.92]*1e6;%initial power in the ray (W) (main lobe) [1,n_lobe]
 launch.bNpar0 = [2.0,-3.9];%Initial Npar value (main lobe) [1,n_lobe]
 launch.bwidth = [0.1,0.1];%ray spectral width for lobe width calculations [1,n_lobe]
-launch.ry0 = [-0.4,0.1,0.6];%vertical launching positions [1,m_pol]
+launch.rZ0 = [-0.4,0.1,0.6];%vertical launching positions [1,m_pol]
 %
 launch.m0 = 0;%initial poloidal mode number [1,1]
 launch.phi0 = 0;%toroidal angle position [1,1]
