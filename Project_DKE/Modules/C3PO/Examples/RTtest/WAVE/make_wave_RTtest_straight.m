@@ -12,21 +12,11 @@ clc
 id_wave = 'RTtest_straight';
 flag_analytic = 1;
 %
-% Path parameters
-%
-id_dkepath = 'LOCAL';%For all paths used by DKE solver
-path_dkepath = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
-%
 % Equilibrium parameters
 %
 id_equil = 'RTtest_vacuum';%For plasma equilibrium
 path_equil = '../EQUIL/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 fitparam.mode_equil = 1;%Magnetic equilibrium grid type: (1): (psi-theta), (2): (x-y)
-%
-% Computational parameters
-%
-id_dkeparam = 'LH_RT';%For DKE code parameters
-path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 % initial ray conditions
 %
@@ -42,6 +32,13 @@ Npar0 = 0.5;%initial index of refraction
 %
 dNpar0 = NaN;
 P0_2piRp = NaN;
+%
+% C3PO computing parameters
+%
+C3POparam.clustermode.multithreading = 'automatic';%Intrinsic distributed computing with multicore machines (MatLab > R2007a). Can be set to 'automatic', or enforced to any value from 1 to more threads. WARNING: if the number of threads is larger than the number of cores, performances may be reduced.
+C3POparam.clustermode.main_C3PO_jd.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2)for the function main_C3PO_jd.m (MDC toolbox must be installed for option 1)
+C3POparam.clustermode.main_C3PO_jd.timeout = 300;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
+C3POparam.clustermode.main_C3PO_jd.size = 4;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
 %
 % Display parameters
 %
@@ -93,7 +90,7 @@ rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considere
 %
 % Load structures
 %
-[equil,dkepath,dkeparam] = load_structures_yp('equil',id_equil,path_equil,'dkepath',id_dkepath,path_dkepath,'dkeparam',id_dkeparam,path_dkeparam);
+[equil] = load_structures_yp('equil',id_equil,path_equil);
 %
 % =========================================================================
 %
@@ -111,7 +108,7 @@ rayinit.yP0_2piRp = P0_2piRp;%Lineic initial power density initial power in the 
 %
 % -------------------------------------------------------------------------
 %
-wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,dkeparam,dkepath,0);
+wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam);
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium)');
 %
