@@ -912,8 +912,154 @@
 % ====> LUKE/Simulations
 % 
 % The benchmark case have been moved from the folder Examples to Benchmarks
-%
+% 
 % U Benchmarks/TScirc_peak/LH_karney_ripple/rippleTS (small correction)
 %
 % A new folder Examples contains some realistic test cases for ITER, TS and TCV
+% 
+% ----------------------------------------------------------------------------------------------------
+% 
+% LUKE Release 1.6.1
+% 
+% - improvement of graphical output functions
+% - mdce and multithreading compatible
+% 
+% ====> LUKE
+% 
+% A alltests_LUKE.m (launch all tests)
+% U uninstall_LUKE.m (small correction)
+% 
+% ====>  Project_DKE/DKE
+% 
+% A clustermode_luke.m (manages cluster functionality)
+% U coll_dke_jd.m (mdce compatible)
+% U compres_luke_jd.m (small correction)
+% D comput_dke_yp (no longer needed)
+% U eecoll_dke_yp.m (mdce compatible)
+% U htmldocbuilder_luke_yp.m (small correction)
+% U graph_wave_jd.m (better rho type management)
+% U hotdisp_dke_jd.m (use of kineticdisp)
+% U load_structures_yp.m (chargement des données HXR) 
+% LUKEversion_jd.m (LUKE 1.6.1)
+% U main_dke_yp.m (simul structure, ripple field, and multithreading mode as option)
+% A mdce_luke.m (loop function for mdce)
+% U mksacoefbuilder_dke_yp.m (small correction)
+% U mripplecoefbuilder_dke_yp.m (field xpnth added)
+% A multithreading_luke.m (multithreading mode as option)
+% U path_LUKE_LOCAL.m (small correction)
+% U proc_luke_jd.m (Ripple losses data and peak separation)
+% U proc_wave_luke_jd.m (small correction)
+% U run_lukert.m (simul dans main and call to main_C3PO)
+% U setpath_luke_jd.m (Path for ripple TS module)
+% U what_luke_yp.m (case-insentitive systems)
+% 
+% ====> LUKE/Project_DKE/Database
+% 
+% U buildmat.m (small correction)
+% U clearmat.m (")
+% U make_all.m (")
+% U remove_all.m (")
+% U DISPLAY_files/make_display_NO_DISPLAY.m (mdce display)
+% U DISPLAY_files/make_display_PARTIAL_VISUAL.m (")
+% U DISPLAY_files/make_display_VISUAL.m (")
+% U DKEPARAM_files/make_dkeparam_EC_RT.m (clustermode structure)
+% U DKEPARAM_files/make_dkeparam_LH_RT.m (")
+% U DKEPARAM_files/make_dkeparam_NONUNIFORM10010020.m (")
+% U DKEPARAM_files/make_dkeparam_UNIFORM10010020.m (")
+% U RIPPLE_files/make_ripple_TScirc.m (equil_id field)
+% U RIPPLE_files/make_ripple_TScirc_peak.m (")
+% U WAVE_files/make_idealLHwave_jd.m (interpolation method)
+% U WAVE_files/make_wave_C3POparam.m (interpolation method and mdce)
+% 
+% ====> LUKE/Project_DKE/Display
+% 
+% U imake_wave_jd.m (display -> wavedisplay, mdce)
+% U irunhxr_jd.m (small correction)
+% U irunluke_jd.m (mdce)
+% 
+% ====> LUKE/Project_DKE/MEX/Source
+% 
+% U alphaphimex_jd.c (complex arguments called first)
+% U alphaphi_jd.c (")
+% 
+% ====> LUKE/Project_DKE/Modules/Cronos
+% 
+% U make_wavert_cronos.m (interpolation method and mdce)
+% U make_wavelaunchs_cronos_lh.m (")
+% U zstarwars.m (")
+% 
+% ====> LUKE/Project_DKE/Modules/FEB
+% 
+% U bremchord_dke_yp.m (small correction)
+% U bremdiag_dke_yp.m (")
+% U bremlocaldisplay_dke_yp.m (")
+% U bremsstrahlung_dke_yp.m (")
+% U display_hxr_yp.m (comput_dke_yp removed)
+% 
+% ====> LUKE/Project_DKE/Modules/Helena
+% 
+% U equil_magnetic_helmex77_yp.m (comput_dke_yp removed)
+% 
+% ====> LUKE/Project_DKE/Modules/Ripple
+% 
+% U TS/thetaconemj3.m (small correction)
+% 
+% ====> LUKE/Project_DKE/Modules/RT
+% 
+% U fitequil_yp.m (interpolation method)
+% U interpequilpt_yp.m (")
+% U kineticdisp_jd.m (small corrections)
+% D make_equil_RTtest_e.m (in Examples)
+% U main_C3PO_jd.m (mdce compatible)
+% A Examples/run_all.m (run all examples)
+% U Examples/JETlike/WAVE/make_wave_JETliketest.m (interpolation method and mdce compatible)
+% U Examples/JETlike/WAVE/make_wave_JETliketest_bis.m (")
+% U Examples/PLT/WAVE/make_wave_PLTtest.m (")
+% U Examples/RTtest/WAVE/make_wave_RTtest.m (")
+% U Examples/RTtest/WAVE/make_wave_RTtest_straight.m (")
+% U Examples/VERSATOR2/WAVE/make_wave_VERSATOR2test.m (")
+% 
+% ====> LUKE/Project_DKE/Packages
+% 
+% U test_packages_dke_yp.m (small correction)
+% U MCDE/fig_mcde.eps (test case for mdce toolbox)
+% U MCDE/run_mdce.m (")
+% U MCDE/initdata.mat (")
+% U MCDE/figures/mdce_evaluation.eps (")
 %
+% 
+% ====> LUKE/Simulations/Benchmarks/
+% 
+% U run_all_examples.m -> run_all_benchmarks.m
+% U TScirc_peak/LH_karney_ripple/runhxr.m (ripple losses and radial dependence)
+% U TScirc_peak/LH_karney_ripple/rundke.m (")
+% U TScirc/LH_karney_ripple/rundke.m (small correction)
+% 
+% ====> LUKE/Simulations/Examples/
+% 
+% U run_all_examples.m (run all examples)
+% U ITER/Scen4/WAVE/C3PO/make_wave_ITER_Scen4_21Z_Alpha_5p0.m (mdce compatible)
+% U ITER/Scen4/WAVE/C3PO/make_wave_ITER_Scen4_21Z_Alpha_3p7.m (")
+% U ITER/Scen4/WAVE/C3PO/make_wave_ITER_Scen4_21Z.m (")
+% U ITER/Scen4/WAVE/C3PO/make_wave_ITER_Scen4_20Z_Alpha_5p0.m (")
+% U ITER/Scen4/WAVE/C3PO/make_wave_ITER_Scen4_20Z_Alpha_3p7.m (")
+% U ITER/Scen4/WAVE/C3PO/make_wave_ITER_Scen4_20Z_1_SW.m (")
+% U ITER/Scen4/WAVE/C3PO/make_wave_ITER_Scen4_20Z_1_FW.m (")
+% U ITER/Scen4/WAVE/C3PO/make_wave_ITER_Scen4_20Z.m (")
+% U ITER/Scen4/WAVE/C3PO/make_wave_ITER_Scen4_19Z_Alpha_5p0.m (")
+% U ITER/Scen4/WAVE/C3PO/make_wave_ITER_Scen4_19Z_Alpha_3p7.m (")
+% U ITER/Scen4/WAVE/C3PO/make_wave_ITER_Scen4_19Z.m (")
+% U ITER/Scen4/WAVE/C3PO/make_rayinit_ITER_Scen4_19Z.m (y0 -> Z0)
+% U ITER/Scen4/WAVE/C3PO/make_rayinit_ITER_Scen4_19Z_Alpha_3p7.m (")
+% U ITER/Scen4/WAVE/C3PO/make_rayinit_ITER_Scen4_19Z_Alpha_5p0.m (")
+% U ITER/Scen4/WAVE/C3PO/make_rayinit_ITER_Scen4_20Z.m (")
+% U ITER/Scen4/WAVE/C3PO/make_rayinit_ITER_Scen4_20Z_Alpha_3p7.m (")
+% U ITER/Scen4/WAVE/C3PO/make_rayinit_ITER_Scen4_20Z_Alpha_5p0.m (")
+% U ITER/Scen4/WAVE/C3PO/make_rayinit_ITER_Scen4_21Z.m (")
+% U ITER/Scen4/WAVE/C3PO/make_rayinit_ITER_Scen4_21Z_Alpha_3p7.m (")
+% U ITER/Scen4/WAVE/C3PO/make_rayinit_ITER_Scen4_21Z_Alpha_5p0.m (")
+% 
+% Simulations/Benchmarks/TScirc_peak/LH_karney_ripple/rippleTS has been moved to Project_DKE/Modules/Ripple
+% MDCE has been moved from Simulations/Examples to Project_DKE/Packages
+% Generic functions have been moved from Project_DKE/DKE to Tools
+% 
