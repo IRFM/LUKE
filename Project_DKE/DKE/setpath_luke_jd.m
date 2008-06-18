@@ -51,6 +51,7 @@ addpath([luke_root,'Project_DKE/Packages']);
 addpath([luke_root,'Project_DKE/Packages/MUMPS']);
 addpath([luke_root,'Project_DKE/Packages/PETSc']);
 addpath([luke_root,'Project_DKE/Packages/MDCE']);
+addpath([luke_root,'Project_DKE/Packages/MDCE/dcluke']);
 addpath([luke_root,'Project_DKE/Database/DISPLAY_files']);
 addpath([luke_root,'Project_DKE/Database/DKEPARAM_files']);
 addpath([luke_root,'Project_DKE/Database/EQUIL_files']);
