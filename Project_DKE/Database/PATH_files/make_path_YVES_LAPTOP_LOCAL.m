@@ -7,7 +7,7 @@
 clear all
 path_id = 'LOCAL';%Set here the name path parameters (user specific)
 %
-local_root = '/Users/Yves/CEA/Projets/';
+local_root = [getenv('HOME'),'/CEA/Projets/'];
 luke_root = [local_root,'LUKE/'];
 %
 dkepath.path_id = path_id;

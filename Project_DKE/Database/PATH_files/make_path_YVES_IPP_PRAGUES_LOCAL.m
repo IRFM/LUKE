@@ -10,7 +10,7 @@
 clear all
 local_id = 'LOCAL';%Set here the name path parameters (user specific)
 %
-local_root = '/home/cronos/';
+local_root = [getenv('HOME'),'/'];
 luke_root = [local_root,'LUKE/'];
 %
 dkepath.path_id = path_id;

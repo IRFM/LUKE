@@ -10,8 +10,8 @@
 clear all
 local_id = 'LOCAL';%Set here the name path parameters (user specific)
 %
-luke_root = '/home/sccp/gsem/peysson/LUKE/';
-local_root = '/home/sccp/gsem/peysson/';
+local_root = [getenv('HOME'),'/'];
+luke_root = [local_root,'LUKE/'];
 %
 dkepath.path_id = local_id;
 dkepath.computer = 'GLNXA64';%machine type and supported OS
