@@ -458,7 +458,7 @@ ohm.epsi     = complex(interp1(psipncronoshel,ohm.epsi,psipn_ohm));%Imaginary fo
 %
 % PARAMETRES RIPPLE 
 %
-ripple.ripple = par.ripple;
+ripple.mode = par.ripple;
 %
 % PARAMETRES FAST ELECTRON TRANSPORT 
 %
