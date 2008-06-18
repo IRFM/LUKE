@@ -24,8 +24,8 @@ else
     if ~mode, mode = 'automatic';end
 end
 %
-ver = version('-release');
-if str2num(ver(1:4)) >= 2007,
+ver = version;
+if str2num(ver(1:3)) >= 7.4,
     maxNumCompThreads(mode);
     threadnumber = maxNumCompThreads(mode);
 end
