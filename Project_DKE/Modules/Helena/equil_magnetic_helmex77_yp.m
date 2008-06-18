@@ -21,7 +21,7 @@ end
 %
 dkepath = load_structures_yp('dkepath',id_path,path_path);
 %
-if exist(['helmex77',mexext]) == 3,
+if exist(['helmex77.',mexext]) == 3,
 %
     lim_top = atan(0.5*xpoint(1)/(1-xpoint(2)))*180/pi;%In order to avoid convergence problem in separatrix MEX file
 	if xpoint(4) > lim_top,xpoint(4) = lim_top - 0.1;end
@@ -144,7 +144,7 @@ if exist(['helmex77',mexext]) == 3,
     pp = pout;%pressure given by HELENA
 %
 else
-	error(['The mexfile helmex77',mexext,' does not exists ! Compile it for the computer you are using...']);
+	error(['The mexfile helmex77.',mexext,' does not exists ! Compile it for the computer you are using...']);
 end
 
 
