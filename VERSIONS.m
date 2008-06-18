@@ -940,7 +940,7 @@
 % U graph_wave_jd.m (better rho type management)
 % U hotdisp_dke_jd.m (use of kineticdisp)
 % U load_structures_yp.m (chargement des données HXR) 
-% LUKEversion_jd.m (LUKE 1.6.1)
+% U LUKEversion_jd.m (LUKE 1.6.1)
 % U main_dke_yp.m (simul structure, ripple field, and multithreading mode as option)
 % A mdce_luke.m (loop function for mdce)
 % U mksacoefbuilder_dke_yp.m (small correction)
@@ -950,7 +950,7 @@
 % U proc_luke_jd.m (Ripple losses data and peak separation)
 % U proc_wave_luke_jd.m (small correction)
 % U run_lukert.m (simul dans main and call to main_C3PO)
-% U setpath_luke_jd.m (Path for ripple TS module)
+% U setpath_luke_jd.m (Path for ripple TS module, Tools and MDCE)
 % U what_luke_yp.m (case-insentitive systems)
 % 
 % ====> LUKE/Project_DKE/Database
