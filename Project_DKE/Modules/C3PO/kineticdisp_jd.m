@@ -1,6 +1,6 @@
 function [Nperp,e_xyz,e_pmz,e_pyk,D,X,X_s,X_sn,...
           alphaphi_lin,phiT_xyz,phiP_xyz,phiT_pmz,phiP_pmz,phiT_pyk,phiP_pyk]...
-    = kineticdisp_jd(sa,sy,sbeta,Npar,Nperp_in,herm_mode,display,nmax,NZ,tol,method);
+    = kineticdisp_jd(sa,sy,sbeta,Npar,Nperp_in,herm_mode,display_mode,nmax,NZ,tol,method)
 %
 % This function solves the dispersion relation and the wave equation
 % in the linear kinetic plasma model. It calculates the perpendicular index
@@ -19,7 +19,7 @@ function [Nperp,e_xyz,e_pmz,e_pyk,D,X,X_s,X_sn,...
 %       - sa: ratio (wps/w)^2 for each species [Ns,1]
 %       - sy: ratio wcs/w for each species [Ns,1] 
 %           >>> Warning: sy < 0 for negatively charged species
-%       - zbeta: ratio (Ts/mc2)^(1/2) for each species [Ns,1]
+%       - sbeta: ratio (Ts/mc2)^(1/2) for each species [Ns,1]
 %       - Npar: parallel index of refraction [1,1]       
 %       - Nperp_in: perpendicular index of refraction (initial guess) [1,1] 
 %           >>> default: 1    
@@ -28,7 +28,7 @@ function [Nperp,e_xyz,e_pmz,e_pyk,D,X,X_s,X_sn,...
 %           >>> default: 0
 %           >>> In the case herm_mode = 1, the power flow density and
 %               the density of power absorbed are also calculated
-%       - display: (0) no display (1) partial (2) figures  
+%       - display_mode: (0) no display (1) partial (2) figures  
 %           >>> default: 0
 %       - nmax: maximum harmonic number
 %           >>> default: 10
@@ -81,7 +81,7 @@ if nargin < 8,
    nmax = 10;
 end
 if nargin < 7,
-   display = 0;
+   display_mode = 0;
 end
 if nargin < 6,
    herm_mode = 0;
@@ -111,7 +111,7 @@ sbeta = sbeta(:);
 %
 Ns = length(sa);
 %
-if length(sy) ~= Ns | length(sbeta) ~= Ns,
+if length(sy) ~= Ns || length(sbeta) ~= Ns,
     error('Argument size not compatible')
 end
 %
@@ -128,17 +128,18 @@ n0 = nmax+1;
 %
 zeta_sn = (1 - abs(sy)*n)./(sqrt(2)*abs(Npar)*(sbeta*ones(1,Nn)));
 %
-if exist('pdisp') == 3,%fortran file
-    if display >= 1,
+if exist('pdisp','file') == 3,%fortran file
+    if display_mode >= 1,
        wb = waitbar(0,'Plasma dispersion function');
     end
+    Z_sn = NaN*ones(Ns,Nn);
     for is = 1:Ns,
         Z_sn(is,:) = pdispm(zeta_sn(is,:));
-        if display >= 1,
+        if display_mode >= 1,
            waitbar(in/Nn,wb);
         end
     end
-    if display >= 1,
+    if display_mode >= 1,
        close(wb)
     end
     Zp_sn = -2*(1 + zeta_sn.*Z_sn);
@@ -167,10 +168,12 @@ MZp_sn = reshape(Zp_sn,[1,1,Ns,Nn]);
 X_s = zeros(3,3,Ns);
 %
 X = zeros(3,3);
-K = zeros(3,3);
 D = zeros(3,3);
 %
 I = eye(3);
+%
+Drel = NaN*ones(1,2*nit_disp+1);
+Nperp = NaN*ones(1,2*(nit_disp+1));
 %
 Nperp(1) = Nperp_in;
 %
@@ -203,9 +206,7 @@ for it_disp = 1:2*nit_disp+1,
     %
     X = sum(X_s,3);
     %
-    K = I + X;
-    %
-    D = N*N.' - (N.'*N)*I + K;
+    D = N*N.' - (N.'*N)*I + I + X;
     %
     if herm_mode == 1,
         D = (D + D')/2;
@@ -214,7 +215,7 @@ for it_disp = 1:2*nit_disp+1,
     Drel(it_disp) = det(D); 
     %
     if strcmp(method,'newton'),
-        if rem(it_disp,2) == 1 & abs(Drel(it_disp)) <= tol,
+        if rem(it_disp,2) == 1 && abs(Drel(it_disp)) <= tol,
             break
         elseif rem(it_disp,2) == 1,
             if it_disp == 1,
@@ -224,8 +225,8 @@ for it_disp = 1:2*nit_disp+1,
             end
         else
             dDreldNperp = (Drel(it_disp) - Drel(it_disp - 1))/(Nperp(it_disp) - Nperp(it_disp - 1));
-            if dDreldNperp == 0 | isnan(dDreldNperp)
-                warning('The calculation did not converge')
+            if dDreldNperp == 0 || isnan(dDreldNperp)
+                disp('WARNING : The calculation did not converge')
                 Nperp(it_disp + 1) = Nperp(it_disp - 1);
                 tol = Inf;
             else
@@ -237,7 +238,7 @@ for it_disp = 1:2*nit_disp+1,
             break
         end
         if mode == 0,
-            if it_disp > 1 & Drel(it_disp)*Drel(it_disp - 1) < 0,
+            if it_disp > 1 && Drel(it_disp)*Drel(it_disp - 1) < 0,
                 mode = 1;
             elseif rem(it_disp,2) == 1,
                 Nperp(it_disp + 1) = Nperp(1)*exp((it_disp + 1)/2/varfac);
@@ -256,7 +257,7 @@ for it_disp = 1:2*nit_disp+1,
     end
 end
 %
-if display >= 2,
+if display_mode >= 2,
 %
     figure(1),
     plot(1:(it_disp + 1)/2,real(Nperp(1:2:it_disp)),'b+',1:(it_disp + 1)/2,imag(Nperp(1:2:it_disp)),'r+')
@@ -270,7 +271,7 @@ if display >= 2,
 end
 %
 if it_disp == 2*nit_disp+1,    
-    warning('The root was not found');
+    disp('WARNING : The root was not found');
 %    
     Nperp = NaN;
     e_xyz = NaN*ones(3,1);
@@ -299,9 +300,9 @@ Nperp = Nperp(it_disp);
 %
 Eval0 = diag(Eval); %eigenvalues
 %
-iEval = find(abs(Eval0) == min(abs(Eval0))); %select eigenvalue lambda=0 
+iEval = find(abs(Eval0) == min(abs(Eval0)),1,'last'); %select eigenvalue lambda=0 
 %
-Evec0 = Evec(:,max(iEval)); %eigenvector
+Evec0 = Evec(:,iEval); %eigenvector
 %
 %   Polarization vectors
 %
