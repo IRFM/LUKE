@@ -1,6 +1,7 @@
 #!/bin/csh 
 unsetenv DISPLAY
 pwd
+#/usr/local/R2007B/bin/matlab  -nosplash -nodesktop <<@@ > /dev/null 
 matlab  -nosplash -nodesktop <<@@ > /dev/null 
 #matlab -nodesktop <<@@
 dbstop if all error
