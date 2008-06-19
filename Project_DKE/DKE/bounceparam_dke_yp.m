@@ -43,6 +43,10 @@ if bounce_mode == 1,
 	XXlambda = repmat(reshape(xylambda',[1,nmhu,nr]),[npn,1,1]);
 	XXlambda_p = repmat(reshape(xylambda_p',[1,nmhu,nr]),[npn,1,1]);
 	XXlambda_m = repmat(reshape(xylambda_m',[1,nmhu,nr]),[npn,1,1]);
+	XXlambda_m(find(XXlambda_m==0)) = eps;
+ 	XXlambda(find(XXlambda==0)) = eps;
+ 	XXlambda_p(find(XXlambda_p==0)) = eps;
+%
 	XXRlambda_p = XXlambda_p./XXlambda;
 	XXRlambda_m = XXlambda_m./XXlambda;	
     %
