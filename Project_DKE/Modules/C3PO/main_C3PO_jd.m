@@ -18,16 +18,16 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C
     %
     if fitparam.opt_load*exist(['EQUILV_',equil.id,'.mat']),
        load(['EQUILV_',equil.id,'.mat'],'equil_fit');
-       info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil.id,' is reloaded.']);
+       if C3POdisplay.equilibrium,info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil.id,' is reloaded.']);end
     else
-       info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil.id,' is being calculated.']);   
+       if C3POdisplay.equilibrium,info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil.id,' is being calculated.']);end   
        [equil_fit] = fitequil_yp(equil,fitparam.mode_equil,fitparam.method,fitparam.ngridresample,fitparam.nharm);
     %   
        if ~isfield(equil,'opt_save'),equil.opt_save = 1;end
     %   
        if equil.opt_save > 0,
             save(['EQUILV_',equil_fit.id,'.mat'],'equil_fit');
-            info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil_fit.id,' is saved.']);
+            if C3POdisplay.equilibrium,info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil_fit.id,' is saved.']);end
        end
     end
     %
@@ -139,13 +139,13 @@ function [ray] = loop_main_C3PO_jd(iray,equil,equil_fit,id_wave,omega_rf,rayinit
     %
     y0 = init_RT_jd(equil,equil_fit,rayinit.yrho0(iray),rayinit.ytheta0(iray),rayinit.yphi0(iray),omega_rf,rayinit.yNpar0(iray),rayinit.ym0(iray),rayinit.yn0(iray),waveparam.mmode,waveparam.kmode)';
     %
-    info_dke_yp(2,['Initial conditions of ray #',int2str(iray),' are calculated']);
+    if C3POdisplay.ray,info_dke_yp(2,['Initial conditions of ray #',int2str(iray),' are calculated']);end
     %
     if isreal(y0(4)),
         %
         [tout, yout, yproc] = raytracing_yp(rayparam,equil_fit,y0,flag);
         %
-        info_dke_yp(2,['Trajectory of ray #',int2str(iray),' is calculated']);
+        if C3POdisplay.ray,info_dke_yp(2,['Trajectory of ray #',int2str(iray),' is calculated']);end
         %
         filename_in = [id_wave,'_ray_',int2str(iray)];
         [iabs_out,srho,stheta,sphi,sR,sZ,sNpar,sNperp,sepol_pmz,sphi_xyz,spmode,sD,ss,salphaphi_lin,sB,sBP,sBPHI,sTe,sne,szTi,szni,sr,salpha,sgradrhon,stau] = raypostprocessing_yp(tout,yout,yproc,rayparam,equil_fit,C3POdisplay.text,C3POdisplay.ray,C3POdisplay.p_opt,filename_in);
