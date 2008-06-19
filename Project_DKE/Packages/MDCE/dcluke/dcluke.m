@@ -104,6 +104,8 @@ cmd.kill  = [dclukedir,'dcluke_kill.sh'];
 % pas de sortie par defaut
 varargout = {};
 
+dcluke_display = 0;
+
 % le mode depend des entrees
 if nargin == 0
 	% test des etats et attente
@@ -117,7 +119,9 @@ if nargin == 0
 				[s,t] = unix(sprintf('%s %d',cmd.state,ba(k).jobid));
 				if s ~= 0
 					ba(k).etat ='done';	
-					fprintf('dcluke: job %d terminated (%d)\n',k,ba(k).jobid);
+					if dcluke_display,
+						fprintf('dcluke: job %d terminated (%d)\n',k,ba(k).jobid);
+					end
 				else
 					attente = 1;
 					pause(0.1);
