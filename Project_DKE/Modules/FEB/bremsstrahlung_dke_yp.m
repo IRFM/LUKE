@@ -1,4 +1,4 @@
-function  [Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,dkedisplay,equilHXR,radialDKE,mksa,momentumDKE,dke_out,Zbremchord,hxr,hxrparam,fieldside)
+function  [Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,dkedisplay,equilHXR,radialDKE,mksa,momentumDKE,dke_out,Zbremchord,hxr,hxrparam,fieldside,mode)
 %R5-X2 - Calculation of  the plasma bremsstrahlung emission
 %
 % Calculates the plasma bremsstrahlung emission. Call first the function bremchord_dke_yp.m
@@ -32,7 +32,7 @@ if nargin == 10,
     fieldside = NaN;
     mode = NaN;
 end
-if nargin == 10,
+if nargin == 11,
     mode = NaN;
 end
 %	
@@ -250,7 +250,7 @@ for ic = 1:size(vschords,3),%loop on each chord
     end
     %
 	sksid = vschords(10,s_mask,ic);%nothing when taking the exact magnetic topology
-    if mode == 0
+    if mode == 0,
         sksid = sksid*0;%exact perpendicular observation, no heliticity effect
     elseif mode == 1,
         sksid = sksid*0 + 1;%exact forward observation, no heliticity effect
