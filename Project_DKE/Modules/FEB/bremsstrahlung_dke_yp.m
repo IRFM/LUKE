@@ -254,7 +254,7 @@ for ic = 1:size(vschords,3),%loop on each chord
         sksid = sksid*0;%exact perpendicular observation, no heliticity effect
     elseif mode == 1,
         sksid = sksid*0 + 1;%exact forward observation, no heliticity effect
-    elseif mode = -1,
+    elseif mode == -1,
         sksid = sksid*0 - 1;%exact backward observation, no heliticity effect
     end
     %
