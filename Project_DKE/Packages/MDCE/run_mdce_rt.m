@@ -34,7 +34,6 @@ flag_mode2 = 0;
 % initial ray conditions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-load('EQUILV_JETliketest.mat')
 load('EQUIL_JETliketest.mat')
 %
 omega_rf = [3.7]*2*pi*1e9;
@@ -82,6 +81,7 @@ waveparam.dsmin = NaN;%minimum size for ray fragments
 %
 % Global parameters for the vectorial magnetic equilibrium
 %
+fitparam.mode_equil = 1;%Magnetic equilibrium grid type: (1): (psi-theta), (2): (x-y)
 fitparam.method = 'pchip';%nearest,spline,pchip,cubic
 fitparam.nharm = 32;%Number of harmonics in the magnetic equilibrium interpolation (less than ntheta_equil/2)
 fitparam.ngridresample = 1001;%Number of grid points for resampling the radial profile of magnetic equilibrium parameters
@@ -113,6 +113,8 @@ rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considere
 % =========================================================================
 %
 % C3P0 ray tracing
+%
+[equil_fit] = fitequil_yp(equil,fitparam.mode_equil,fitparam.method,fitparam.ngridresample,fitparam.nharm);%Build vectorized magnetic equilibrium structure
 %
 % Calculation of Npar0 using Nphi0
 %
@@ -195,7 +197,7 @@ for n=1:N,
     %
     if C3POparam.clustermode.main_C3PO_jd.mode == 2,
         disp(['- n = ',num2str(n),' distributed calculations'])
-        disp(['--> time for distributed calculation with the LUKE distributed computing toolbox using ',num2str(n),' jobs in batch queing mode: ',num2str(time_ldce(n)),' s'])
+        disp(['--> time for distributed calculation with the LUKE distributed computing toolbox using ',num2str(n),' jobs in batch queueing mode: ',num2str(time_ldce(n)),' s'])
         disp('-------------------------------------------------------------------------')
     end
     %
