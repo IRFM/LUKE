@@ -1,7 +1,14 @@
-function [norm,curr,Tph,Tph_star] = loop_scan_vmin_vmax_Dlh(vmin,vmax,D0,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,hxr,hxrparam)
+function [norm,curr,Tph,Tph_star] = loop_scan_vmin_vmax_Dlh(iD0,vmin,vmax,D0,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,hxr,hxrparam,fieldside,chordview)
 %
 %
 %
+norm = zeros(length(vmin),length(vmax));
+curr = zeros(length(vmin),length(vmax));
+Tph = zeros(length(vmin),length(vmax));
+Tph_star = zeros(length(vmin),length(vmax));
+for ivmin = 1:length(vmin),
+    for ivmax = 1:length(vmax),
+
 wavestruct.omega_lh = [4]*2*pi*1e9; %(GHz -> rad/s). Wave frequency [1,1] Indicative, no effect in small FLR limit opt_lh > 0
 %Option parameter for cross-comparison between old LH code: 
 %	- (1): 1/vpar dependence
@@ -13,8 +20,8 @@ wavestruct.opt_lh = 2; % [1,1]
 %
 wavestruct.norm_ref = 1;%Normalization procedure for the LH quasilinear diffusion coefficient and spectrum boundaries
 %
-wavestruct.yvparmin_lh = [vmin];%LH wave square N// Spectrum: Lower limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
-wavestruct.yvparmax_lh = [vmax];%LH wave square N// Spectrum: Upper limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
+wavestruct.yvparmin_lh = [vmin(ivmin)];%LH wave square N// Spectrum: Lower limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
+wavestruct.yvparmax_lh = [vmax(ivmax)];%LH wave square N// Spectrum: Upper limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
 %
 wavestruct.yNparmin_lh = [NaN];%LH wave square N// Spectrum: Lower limit [1,n_scenario_lh]
 wavestruct.yNparmax_lh = [NaN];%LH wave square N// Spectrum: Upper limit [1,n_scenario_lh]
@@ -22,7 +29,7 @@ wavestruct.yNpar_lh = [NaN];%LH wave Gaussian N// Spectrum: peak [1,n_scenario_l
 wavestruct.ydNpar_lh = [NaN];%LH wave Gaussian N// Spectrum: width [1,n_scenario_lh]
 %
 %   Note: this diffusion coefficient is different from the general QL D0. It has a benchmarking purpose only 
-wavestruct.yD0_in_c_lh = [D0];%Central LH QL diffusion coefficient (nhuth_ref*pth_ref^2 or nhuth*pth^2) [1,n_scenario_lh]
+wavestruct.yD0_in_c_lh = [D0(iD0)];%Central LH QL diffusion coefficient (nhuth_ref*pth_ref^2 or nhuth*pth^2) [1,n_scenario_lh]
 %     
 wavestruct.yD0_in_lh_prof = [0];%Quasilinear diffusion coefficient radial profile: (0) uniform, (1) gaussian radial profile [1,n_scenario_lh]
 wavestruct.ypeak_lh = [0.4];%Radial peak position of the LH quasi-linear diffusion coefficient (r/a on midplane) [1,n_scenario_lh]
@@ -43,12 +50,13 @@ waves{1} = make_idealLHwave_jd(equil,wavestruct);
 dt = 1;%integration time step (s)
 %
 [Zbremchord,equilHXR] = bremchord_dke_yp(dkeparam,dkedisplay,equil,radialDKE,Zcurr,hxr,hxrparam);
-[Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,dkedisplay,equilHXR,radialDKE,mksa,momentumDKE,dke_out,Zbremchord,hxr,hxrparam,NaN,0);%No magnetic field line effect (perp view)
+[Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,dkedisplay,equilHXR,radialDKE,mksa,momentumDKE,dke_out,Zbremchord,hxr,hxrparam,fieldside,chordview);%No magnetic field line effect (perp view)
 [Zbremdiag] = bremdiag_dke_yp(Zbremplasma,hxr,hxrparam,dt);
 %
-norm = Znorm.x_0(1);
-curr = Zcurr.x_0(1);
-Tph = Zbremdiag.tphot_plasma;
-Tph_star = Zbremdiag.tphot_plasma_exp;
+norm(ivmin,ivmax) = Znorm.x_0(1);
+curr(ivmin,ivmax) = Zcurr.x_0(1);
+Tph(ivmin,ivmax) = Zbremdiag.tphot_plasma;
+Tph_star(ivmin,ivmax) = Zbremdiag.tphot_plasma_exp;
+end
 end
 
