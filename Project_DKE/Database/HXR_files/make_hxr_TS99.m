@@ -4,9 +4,11 @@
 % 
 %by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
 %
+clc
 clear all
-hxr_id = 'TS99';%Set here the name (identifier) of the Hard X-ray configuration
+close all
 %
+hxr_id = 'TS99';%Set here the name (identifier) of the Hard X-ray configuration
 %
 %Fast electron bremsstrahlung tomography (if exists)
 %
