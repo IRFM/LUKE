@@ -1,6 +1,7 @@
 function  [Zbremdiag] = bremdiag_dke_yp(Zbremplasma,hxr,hxrparam,dt)
+%R5-X2 - Calculation of the bremsstrahlung emission as measured by the HXR diagnostic taking into account of the detector's response function.
 %
-% Calculates the bremsstrahlung emission as merasured by the HXR diagnostic
+%Calculates the bremsstrahlung emission as measured by the HXR diagnostic
 %taking into account of the detector's response function. 
 %Call first the function bremchord_dke_yp.m for calculating "vschords" used in line integration
 %Then call bremsstrahlung_dke_yp.m for calculating "brem_bd_out" used in the convolution
@@ -28,7 +29,7 @@ function  [Zbremdiag] = bremdiag_dke_yp(Zbremplasma,hxr,hxrparam,dt)
 %          * Zbremdiag.afit_plasma_exp: A*(E=0) [s-1]','E.dN_pulse/dE.dt.eta_E = A.exp(-E/T_phot*)@E=0 [50-110 keV] [1,nchord]
 %          * Zbremdiag.meanabsx: Mean stopping efficiency [1,nchord]
 %      
-% by Joan Decker <jodecker@mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
+% by Joan Decker (CEA/IRFM,joan.decker@cea.fr) and Yves Peysson(CEA/IRFM,yves.peysson@cea.fr)
 %
 if nargin < 4,
 	error('Not enough arguments in bremshtrahlung_dke_yp')
@@ -52,6 +53,10 @@ dkfit = hxr.kdiag_hxr(2,1:end-1) - hxr.kdiag_hxr(1,1:end-1);%Channel width of th
 kinterp = linspace(kphotmin,kphotmax,1000);%Uniform grid only 
 dkinterp = kinterp(2) - kinterp(1);
 brem_bd_interp = interp1(kphot,brem_bd_in',kinterp,method)';
+%
+if size(brem_bd_in,1) == 1,
+    brem_bd_interp = brem_bd_interp';
+end
 %
 for ik = 1:size(hxr.kdiag_hxr,2)-1,
 	brem_bd_plasma(:,ik) = sum(brem_bd_interp(:,min(find(kinterp >= hxr.kdiag_hxr(1,ik))):max(find(kinterp < hxr.kdiag_hxr(2,ik))))')'*dkinterp;%number of photons in energy channel ik per unit time
