@@ -1,4 +1,4 @@
-function  [Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,dkedisplay,equilHXR,radialDKE,mksa,momentumDKE,dke_out,Zbremchord,hxr,hxrparam)
+function  [Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,dkedisplay,equilHXR,radialDKE,mksa,momentumDKE,dke_out,Zbremchord,hxr,hxrparam,fieldside)
 %R5-X2 - Calculation of  the plasma bremsstrahlung emission
 %
 % Calculates the plasma bremsstrahlung emission. Call first the function bremchord_dke_yp.m
@@ -14,6 +14,7 @@ function  [Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,dkedisplay,equilHXR,rad
 %       - mksa: MKSA structure   
 %       - momentumDKE: DKE momentum structure
 %       - dke_out: DKE data output structure (distributions)
+%       - mode: HFS or LFS limit
 %       
 %   OUTPUTS:
 %   
@@ -22,10 +23,17 @@ function  [Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,dkedisplay,equilHXR,rad
 %         * Zbremplasma.brem_bd_out : photon number per unit energy (keV) and time (s) for each chord [nchord,nk]
 %         * Zbremplasma.lchord : chord length (m) [1,nchord]
 %
-% by Joan Decker <jodecker@mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
+% by Joan Decker (CEA/IRFM,joan.decker@cea.fr) and Yves Peysson(CEA/IRFM,yves.peysson@cea.fr)
 %
 if nargin < 10,
    error('Not enough input arguments in bremshtrahlung_dke_yp')
+end
+if nargin == 10,
+    fieldside = NaN;
+    mode = NaN;
+end
+if nargin == 10,
+    mode = NaN;
 end
 %	
 vschords = Zbremchord.vschords;
@@ -160,8 +168,12 @@ for i = 1:size(psin_hxr,1),%radial position
 	for j = 1:size(psin_hxr,2),%poloidal position
 %
 		if mask_hxr(i,j),%A chord is going through the elementary plasma volume. So the distribution function is calculated
-%%%%%%      PSI_hxr(i,j) = max(PSI_hxr(i,:));%high field side only
-%%%%%%		PSI_hxr(i,j) = 1;%low field side only
+            if strcmp(fieldside,'HFS')
+                PSI_hxr(i,j) = max(PSI_hxr(i,:));%high field side only
+            elseif strcmp(fieldside,'LFS')
+                PSI_hxr(i,j) = 1;%low field side only
+            end
+            %
 			mhu_hxr = sign(mhu(:)).*sqrt(1-PSI_hxr(i,j)*(1 - mhu(:).^2));%mhu at a poloidal position that is different from Bmin
 			mhu_hxr = mhu_hxr(1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0);
             Zbremplasma.mhu_hxr{i,j} = mhu_hxr;
@@ -204,7 +216,7 @@ for i = 1:size(psin_hxr,1),%radial position
 			Zbremplasma.brem_4pi{i,j} = permute(reshape(squeeze(ZZIB(i,j,1,:))/2,1,size(IB_c1,2),size(IB_c1,3)),[2,3,1]);%Mean 4pi emission per steradian				
 		end
 %
-		info_dke_yp(2,['Bremsstrahlung integral #',int2str((i-1)*size(psin_hxr,2) + j),'/',int2str(size(psin_hxr,1)*size(psin_hxr,2)),' done']);
+		if dkedisplay.display_mode,info_dke_yp(2,['Bremsstrahlung integral #',int2str((i-1)*size(psin_hxr,2) + j),'/',int2str(size(psin_hxr,1)*size(psin_hxr,2)),' done']);end
 	end
 end
 %
@@ -215,19 +227,19 @@ for ic = 1:size(vschords,3),%loop on each chord
     s_length = sum(s_mask);%Number of points along the chord inside the plasma
 	ir_spsi = vschords(8,s_mask,ic);
 	it_st = vschords(9,s_mask,ic);
-%
+    %
 	IB1 = zeros(size(ZZIB,3),s_length,size(ZZIB,4));
-%
+    %
 	nstep = 199;%In order to avoid use of too large multidimensional tables (limitation of MatLab)
 	jmax = floor(s_length/nstep)+1;
-%
+    %
 	index_test = [(jmax-1)*nstep+1:jmax*nstep];
 	index_test = index_test(index_test<=s_length);
 	if length(index_test) == 1,%In order to avoid this case which generates an error for the line  "IB1(:,index,:) = permute(squeeze(IB(:,1,:,:)),[2,1,3]);"
 	    nstep = nstep - 1;
 		 jmax = floor(s_length/nstep)+1;
-	end
-%	
+    end
+    %	
 	for j = 1:jmax,
 		index = [(j-1)*nstep+1:j*nstep];
 		index = index(index<=s_length);
@@ -235,16 +247,24 @@ for ic = 1:size(vschords,3),%loop on each chord
 			IB = ZZIB(ir_spsi(index),it_st(index),:,:);
 			IB1(:,index,:) = permute(squeeze(IB(:,1,:,:)),[2,1,3]);
 		end
-   end
-%
-	sksid = vschords(10,s_mask,ic);%Zero for exact perpendicular observation or +1 forward, -1 backward, nothing when taking the exact magnetic topology
+    end
+    %
+	sksid = vschords(10,s_mask,ic);%nothing when taking the exact magnetic topology
+    if mode == 0
+        sksid = sksid*0;%exact perpendicular observation, no heliticity effect
+    elseif mode == 1,
+        sksid = sksid*0 + 1;%exact forward observation, no heliticity effect
+    elseif mode = -1,
+        sksid = sksid*0 - 1;%exact backward observation, no heliticity effect
+    end
+    %
 	[Pm_bd] = leg_dke_yp(sksid,n_pol);%Legendre polynomial for the cosine of the angle between magnetic field line and line of sight (negative sign because electrons are flowing in the opposite direction to the plasma current)
 	Pm_bd1 = repmat(Pm_bd,[1,1,length(kphot)]);
-%	
+    %	
 	cL1 = repmat(cL,[1,length(ir_spsi),length(kphot)]);
-%
+    %
 	brem_bd = squeeze(sum(Pm_bd1.*IB1.*cL1,1));%Local bremsstrahlung emission in the direction of the detector
-%	
+    %	
 	s = vschords(1,s_mask,ic);
     if size(s,2) > 0
        s = s - s(1);%s=0 where the chord enter the plasma towards the detector
