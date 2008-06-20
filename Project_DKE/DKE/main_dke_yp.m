@@ -29,7 +29,7 @@ global nfig;
 %
 % set temp path
 %
-dkepath.temppath = [dkepath.temppathroot,timeid_jd(clock)];
+dkepath.temppath = fullfile(dkepath.temppathroot,timeid_jd(clock));
 mkdir(dkepath.temppath);%Create calculation directory
 %
 [dkeparam_out] = paramconsistency_dke_yp(dkeparam_in,equil,psin_S,rho_S);%Check consistency between input parameters 
