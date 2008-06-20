@@ -291,7 +291,7 @@ while isel >= 0,
                     clear fileids paths
                     %
 					load([data_path,data_file],'basestr','signs','status','fileids','paths','id_simul',...
-                        'dkepath','dkeparam','equil','waves','ohm','transpfaste','ripple','output');
+                        'dkepath','dkeparam','dkedisplay','equil','waves','ohm','transpfaste','ripple','output');
 					disp(['-----> The data file ',[data_path,data_file],' is loaded.']);
                     %
                     fileids.data = data_file;
