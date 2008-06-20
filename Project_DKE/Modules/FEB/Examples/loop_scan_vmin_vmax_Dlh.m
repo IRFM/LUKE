@@ -43,7 +43,7 @@ waves{1} = make_idealLHwave_jd(equil,wavestruct);
 dt = 1;%integration time step (s)
 %
 [Zbremchord,equilHXR] = bremchord_dke_yp(dkeparam,dkedisplay,equil,radialDKE,Zcurr,hxr,hxrparam);
-[Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,dkedisplay,equilHXR,radialDKE,mksa,momentumDKE,dke_out,Zbremchord,hxr,hxrparam,NaN,0);%No magnetic field line effect
+[Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,dkedisplay,equilHXR,radialDKE,mksa,momentumDKE,dke_out,Zbremchord,hxr,hxrparam,NaN,0);%No magnetic field line effect (perp view)
 [Zbremdiag] = bremdiag_dke_yp(Zbremplasma,hxr,hxrparam,dt);
 %
 norm = Znorm.x_0(1);
