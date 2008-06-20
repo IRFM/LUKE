@@ -1,4 +1,5 @@
 function [iabs_out,rho_ray,theta_ray,phi_ray,R_ray,Z_ray,Npar_ray,Nperp_ray,epol_pmz_ray,phi_xyz_ray,pmode_ray,D_ray,s_ray,alphaphi_ray,B_ray,BP_ray,BPHI_ray,Te_ray,ne_ray,zTi_ray,zni_ray,r_ray,salpha_ray,gradrhon_ray,tau_ray] = raypostprocessing_yp(tout,yout,yproc,rayparam,equil_fit,display_text,display_mode,p_opt,filename,subtitle)
+%C3PO - Post processing of the ray calculation
 %
 % Post processing of the ray calculation
 %
@@ -11,7 +12,7 @@ function [iabs_out,rho_ray,theta_ray,phi_ray,R_ray,Z_ray,Npar_ray,Nperp_ray,epol
 %
 % OUTPUT : 
 %
-% By Yves Peysson (CEA-DRFC, yves.peysson@cea.fr) and Joan Decker (CEA-DRFC, joan.decker@cea.fr)
+% By Yves Peysson (CEA/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/IRFM, joan.decker@cea.fr)
 %
 if nargin < 5,
     error('Not enough input arguments in raypostprocessing_yp.m');
@@ -224,8 +225,8 @@ if display_mode,
    print_jd(p_opt,[filename,'_RayPoloidal']);
 %
    figure('Name','Toroidal ray trajectory')
-   [ax] = graph1D_jd(X_ray(pmode_ray),Y_ray(pmode_ray),0,0,'X(m)','y(m)',['Toroidal ray trajectory',subtitle],NaN,[-Rmax,Rmax],[-Rmax,Rmax],'none','.','r',2);hold on
-   [ax] = graph1D_jd(X_ray(~pmode_ray),Y_ray(~pmode_ray),0,0,'X(m)','y(m)',['Toroidal ray trajectory',subtitle],NaN,[-Rmax,Rmax],[-Rmax,Rmax],'none','.','b',2);hold on
+   [ax] = graph1D_jd(X_ray(pmode_ray),Y_ray(pmode_ray),0,0,'X(m)','Y(m)',['Toroidal ray trajectory',subtitle],NaN,[-Rmax,Rmax],[-Rmax,Rmax],'none','.','r',2);hold on
+   [ax] = graph1D_jd(X_ray(~pmode_ray),Y_ray(~pmode_ray),0,0,'X(m)','Y(m)',['Toroidal ray trajectory',subtitle],NaN,[-Rmax,Rmax],[-Rmax,Rmax],'none','.','b',2);hold on
 %
    if rem(abs(1-real(Npar_ray(1))^2-Nperp_ray(1)^2),1) <= 100*eps,% Vacuum propagation.
       [ax] = graph1D_jd(X_vac0_c(1,:)*equil_fit.ap,X_vac0_c(2,:)*equil_fit.ap,0,0,'X(m)','Y(m)',['Toroidal ray trajectory',subtitle],NaN,[-Rmax,Rmax],[-Rmax,Rmax],'--','none','r',2);hold on
