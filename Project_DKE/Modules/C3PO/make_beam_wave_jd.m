@@ -1,19 +1,19 @@
-function wave = make_beam_wave_jd(wave,equil,nd,nchi)
+function wave = make_beam_wave_jd(wave,equil,C3POdisplay,nd,nchi)
 %
 % This function generates a beam made of nd x nchi power tubes along a central ray
 %
 % Note : ray.swidth can be a scalar in which case the beam divergence is assumed to be zero.
 %
-if nargin < 3,
+if nargin < 4,
     nchi = 1;
 end
 %
-if nargin < 2,
+if nargin < 3,
     nd = 1;
 end
 %
 if length(wave.rays) > 1,
-    warning('This function only applies to the single ray representation.')
+    if C3POdisplay.ray,warning('This function only applies to the single ray representation.');end
     return
 end
 %
