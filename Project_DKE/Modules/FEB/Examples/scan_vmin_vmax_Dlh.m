@@ -1,5 +1,10 @@
-%Script for running the DKE solver (can be modified by the user for specific simulations)
-%by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
+%R5-X2 - Test script for FEB calculations using the (vmin,vmax,D||) for the LH model
+%
+%Script for testing the dependencies of the Fast Electron Bremsstrahlung
+%as a function of the parameters (vmin,vmax,D||) for modeling the the LH
+%wave model
+%
+%by Y. Peysson (CEA/IRFM) (yves.peysson@cea.fr) and J. Decker (CEA/IRFM) (joan.decker@cea.fr)
 %
 clear all
 clear mex
