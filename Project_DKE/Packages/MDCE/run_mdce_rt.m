@@ -183,7 +183,7 @@ for n=1:N,
     end
     %
     C3POparam.clustermode.main_C3PO_jd.mode = 2;
-	C3POparam.clustermode.main_C3PO_jd.size = NaN;
+	C3POparam.clustermode.main_C3PO_jd.size = 8;
     if ver < 7.4 & C3POparam.clustermode.main_C3PO_jd.mode == 2,
     	tic;wave = main_C3PO_jd('test',equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,'',0);clear mex;clear functions;;time_ldce(n) = toc;
         flag_mode2 = 1;
