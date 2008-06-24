@@ -10,8 +10,8 @@ curr = zeros(length(vmin),length(vmax),length(epsi),length(Te));
 Tph = zeros(length(vmin),length(vmax),length(epsi),length(Te));
 Tph_star = zeros(length(vmin),length(vmax),length(epsi),length(Te));
 %
-for iTe = 1:lengtht(Te),
-	for iepsi = 1:lengtht(epsi),
+for iTe = 1:length(Te),
+	for iepsi = 1:length(epsi),
 		for ivmin = 1:length(vmin),
     		for ivmax = 1:length(vmax),
 				wavestruct.omega_lh = [4]*2*pi*1e9; %(GHz -> rad/s). Wave frequency [1,1] Indicative, no effect in small FLR limit opt_lh > 0

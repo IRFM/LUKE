@@ -9,7 +9,7 @@ if nargin < 2 | (nargin > 2 & nargin < 5),
 	error('Wrong number of input arguments in ohm_profile_yp');
 end
 if nargin == 2,
-	ohm = ohm_flat(equil,epsi);
+	ohm = ohm_flat(equil,epsi0);
 	return
 end
 %
