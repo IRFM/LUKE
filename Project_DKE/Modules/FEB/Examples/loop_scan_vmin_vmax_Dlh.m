@@ -52,7 +52,7 @@ for iTe = 1:length(Te),
 				%
 				ohm = ohm_profile_yp(equil,epsi(iepsi));
 				%
-				[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp('test',[],rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,[],[],[]);
+				[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp('test',[],rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,[],[],[],[]);
 				%
 				dt = 1;%integration time step (s)
 				%
