@@ -1,4 +1,4 @@
-function [norm,curr,Tph,Tph_star] = loop_scan_vmin_vmax_Dlh(iD0,vmin,vmax,D0,epsi,Te,rho_S,dkepath,equil,dkeparam,dkedisplay,transpfaste,ripple,hxr,hxrparam,fieldside,chordview)
+function [norm,curr,Tph,Tph_star] = loop_scan_vmin_vmax_Dlh(iD0,vmin,vmax,D0,epsi,Te,rho_S,dkepath,equil,dkeparam,dkedisplay,hxr,hxrparam,fieldside,chordview)
 %R5-X2 - Loop function for running the LUKE solver in scan mode for Tph parametric dependences with vmin, vmax, Dlh, epsi and Te (flat profiles)
 %
 % Loop function for running the LUKE solver in scan mode for Tph parametric dependences with vmin, vmax, Dlh, epsi and Te (flat profiles)

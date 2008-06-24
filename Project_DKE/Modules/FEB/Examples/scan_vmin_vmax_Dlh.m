@@ -31,12 +31,6 @@ path_dkeparam = '';%if nothing is specified, the working directory is first used
 id_display = 'PARTIAL_VISUAL';%For output code display
 path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_transpfaste = '';%For fast electron radial transport
-path_transpfaste = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
-%
-id_ripple = '';%For fast electron magnetic ripple losses
-path_ripple = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
-%
 id_hxr = 'TScirc';%For HXR diagnostic configuration
 path_hxr = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 
@@ -45,7 +39,7 @@ path_hxr = '';%if nothing is specified, the working directory is first used and 
 %************************************************************************************************************************************
 %************************************************************************************************************************************
 %
-[dkepath,equil,dkeparam,dkedisplay,transpfaste,ripple,hxr,hxrparam] = load_structures_yp('dkepath',id_path,path_path,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'dkedisplay',id_display,path_display,'transpfaste',id_transpfaste,path_transpfaste,'ripple',id_ripple,path_ripple,'hxr',id_hxr,path_hxr);
+[dkepath,equil,dkeparam,dkedisplay,hxr,hxrparam] = load_structures_yp('dkepath',id_path,path_path,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'dkedisplay',id_display,path_display,'hxr',id_hxr,path_hxr);
 %
 %************************************************************************************************************************************
 %
@@ -82,7 +76,7 @@ chordview = 0;%No heliticity enforced: 0 (perp), 1 (forward) or -1 (backward). I
 disp('---------------------------------------------------------------------');
 [clusterparam] = clustermode_luke(dkedisplay,scanparam,'','scanloop');
 for iD0 = 1:length(D0),arg_range{iD0} = iD0;end
-[flag,norm,curr,Tph,Tph_star] = mdce_luke(@loop_scan_vmin_vmax_Dlh,{iD0,vmin,vmax,D0,epsi,Te,rho_S,dkepath,equil,dkeparam,dkedisplay,'',transpfaste,ripple,hxr,hxrparam,fieldside,chordview},1,arg_range,clusterparam);
+[flag,norm,curr,Tph,Tph_star] = mdce_luke(@loop_scan_vmin_vmax_Dlh,{iD0,vmin,vmax,D0,epsi,Te,rho_S,dkepath,equil,dkeparam,dkedisplay,hxr,hxrparam,fieldside,chordview},1,arg_range,clusterparam);
 %
 norm1 = cell2mat(norm);
 curr1 = cell2mat(curr);
