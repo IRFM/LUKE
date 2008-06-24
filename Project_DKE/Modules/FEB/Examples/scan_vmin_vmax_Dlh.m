@@ -31,12 +31,6 @@ path_dkeparam = '';%if nothing is specified, the working directory is first used
 id_display = 'PARTIAL_VISUAL';%For output code display
 path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_ohm = '';%For Ohmic electric contribution
-path_ohm = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
-%
-ids_wave = {''};%For RF waves contribution (put all the type of waves needed)
-paths_wave = {''};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
-%
 id_transpfaste = '';%For fast electron radial transport
 path_transpfaste = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
@@ -51,7 +45,7 @@ path_hxr = '';%if nothing is specified, the working directory is first used and 
 %************************************************************************************************************************************
 %************************************************************************************************************************************
 %
-[dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,hxr,hxrparam] = load_structures_yp('dkepath',id_path,path_path,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'dkedisplay',id_display,path_display,'ohm',id_ohm,path_ohm,'waves',ids_wave,paths_wave,'transpfaste',id_transpfaste,path_transpfaste,'ripple',id_ripple,path_ripple,'hxr',id_hxr,path_hxr);
+[dkepath,equil,dkeparam,dkedisplay,transpfaste,ripple,hxr,hxrparam] = load_structures_yp('dkepath',id_path,path_path,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'dkedisplay',id_display,path_display,'transpfaste',id_transpfaste,path_transpfaste,'ripple',id_ripple,path_ripple,'hxr',id_hxr,path_hxr);
 %
 %************************************************************************************************************************************
 %
@@ -76,12 +70,11 @@ scanparam.clustermode.scanloop.mode = 2;%MatLab distributed computing environmen
 scanparam.clustermode.scanloop.timeout = 500;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
 scanparam.clustermode.scanloop.size = 12;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
 %
-equil.pTe = 6 + 0*equil.pTe;%for reference to the EPS publication (2002)
-equil.pzTi = 6 + 0*equil.pzTi;%for reference to the EPS publication (2002)
-%
 vmin = [3,3.5];
 vmax = [5.5,6.5,7.5];
 D0 = logspace(-3,1,20);
+epsi = [0:0.005:0.02];
+Te = [6];
 %
 fieldside = NaN;%Distribution enforced corresponding to 'HFS' (theta = pi) or 'LFS' (theta = 0). If NaN, exact trapping effects of the magnetic equilibrium are considered.
 chordview = 0;%No heliticity enforced: 0 (perp), 1 (forward) or -1 (backward). If NaN, the exact heliticity of the magnetic equilibrium is considered.
@@ -89,7 +82,7 @@ chordview = 0;%No heliticity enforced: 0 (perp), 1 (forward) or -1 (backward). I
 disp('---------------------------------------------------------------------');
 [clusterparam] = clustermode_luke(dkedisplay,scanparam,'','scanloop');
 for iD0 = 1:length(D0),arg_range{iD0} = iD0;end
-[flag,norm,curr,Tph,Tph_star] = mdce_luke(@loop_scan_vmin_vmax_Dlh,{iD0,vmin,vmax,D0,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,hxr,hxrparam,fieldside,chordview},1,arg_range,clusterparam);
+[flag,norm,curr,Tph,Tph_star] = mdce_luke(@loop_scan_vmin_vmax_Dlh,{iD0,vmin,vmax,D0,epsi,Te,rho_S,dkepath,equil,dkeparam,dkedisplay,'',transpfaste,ripple,hxr,hxrparam,fieldside,chordview},1,arg_range,clusterparam);
 %
 norm1 = cell2mat(norm);
 curr1 = cell2mat(curr);
