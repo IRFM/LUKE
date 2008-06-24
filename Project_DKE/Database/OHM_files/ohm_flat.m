@@ -1,6 +1,10 @@
-function ohm = ohm_flat(equil,epsi),
+function ohm = ohm_flat(equil,epsi)
+%LUKE - Create the OHM structure for a given magnetic equilibrium with a fixed reference Dreicer field value. Flat radial profile only.
 %
-%norm_ref = 1;%Normalization procedure for the ohmic electric field: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref 
+% Create the OHM structure for a given magnetic equilibrium with a fixed reference Dreicer field value. Flat radial profile only.
+% norm_ref = 1;%Normalization procedure for the ohmic electric field: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref 
+%
+%by Y.Peysson CEA/IRFM <yves.peysson@cea.fr> and Joan Decker CEA/IRFM (joan.decker@cea.fr)
 %
 [qe,me,mp,mn,e0,mu0,re,mc2,clum] = pc_dke_yp;%Universal physics constants
 %
