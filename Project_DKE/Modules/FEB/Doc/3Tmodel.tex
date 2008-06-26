@@ -71,10 +71,11 @@ where $K_{2}\left(z\right)$ is the modified Bessel function of order
 $2$. 
 
 For $\Theta\ll1,$ using the large argument asymptotic development
-of $K_{2}\left(\Theta^{-1}\right)\approx\sqrt{\pi/2}\sqrt{\Theta}\exp(-\Theta^{-1})+O\left(\Theta^{-3/2}\right),$
-the usual expression \begin{eqnarray}
+\begin{equation}
+K_{2}\left(\Theta^{-1}\right)\approx\sqrt{\pi/2}\sqrt{\Theta}\exp(-\Theta^{-1})\left(1+15\Theta/8+O\left(\Theta^{-2}\right)\right)\label{eq:asymptotic}\end{equation}
+the usual expression keeping the first in the expansion \begin{eqnarray}
 f_{M}\left(\psi,p,\xi\right) & \simeq & \frac{1}{\left[2\pi\Theta\right]^{3/2}}\exp\left[-\frac{\gamma-1}{\Theta}\right]\\
- & = & \frac{1}{\left[2\pi\Theta\right]^{3/2}}\exp\left[-\frac{p^{2}}{\left(1+\gamma\right)\Theta}\right]\end{eqnarray}
+ & = & \frac{1}{\left[2\pi\Theta\right]^{3/2}}\exp\left[-\frac{p^{2}}{\left(1+\gamma\right)\Theta}\right]\label{eq:approximatef}\end{eqnarray}
 is well recovered and \begin{equation}
 \alpha_{M}\simeq\left[2\pi\Theta\right]^{-3/2}\label{eq:}\end{equation}
 
@@ -113,19 +114,29 @@ one has \begin{eqnarray}
 v_{th}^{\dagger}/c=\beta_{th}^{\dagger}\end{equation}
 
 
-Consequently, the approximate expression of $f_{M}$ is only valid
+Consequently, the non-reltivistic expression of $f_{M}$ is only valid
 when $\gamma\simeq1$, or in an equivalent form \begin{equation}
 \overline{p}^{2}\beta_{th}^{\dagger2}\ll1\label{weakrelativist}\end{equation}
 Since $\overline{p}$ may be as large as $30$ in numerical calculations,
 in order to correctly describe momentum dynamics of the fastest electrons,
 it results that \begin{equation}
-\beta_{th}^{\dagger}=\Theta^{\dagger2}\ll1/30\end{equation}
+\beta_{th}^{\dagger2}=\Theta^{\dagger}\ll1/900\end{equation}
 or \begin{equation}
-T_{e}^{\dagger}\ll511\sqrt{1/30}\approx100keV\end{equation}
+T_{e}^{\dagger}\ll\frac{511}{900}\approx0.57keV\end{equation}
 since $\beta_{th}^{\dagger}=\sqrt{T_{e}^{\dagger}/m_{e}c^{2}}$ and
-$\Theta^{\dagger}=T_{e}^{\dagger}/m_{e}c^{2}$. Usually, this condition
-is always well satisfied even in the core of tokamak plasmas, where
-$T_{e}^{\dagger}$ never exceeds $20keV.$ In normalized units,
+$\Theta^{\dagger}=T_{e}^{\dagger}/m_{e}c^{2}$. Therefore, in a thermonuclear
+plasma, one must always consider the relativistic form of the Maxwellian
+distribution function. In addition, considering the asymptotic limit
+of $K_{2}$ for large arguments (\ref{eq:asymptotic}), the condition
+is \begin{equation}
+\frac{15}{8}\Theta^{\dagger}\ll1\label{eq:}\end{equation}
+or\[
+T_{e}^{\dagger}\ll272keV\]
+which is always satisfied, since $T_{e}^{\dagger}$ never exceeds
+few ten keV in tokamak plasmas. This means that the approximatye formulation
+of $f$ is fully valid. 
+
+In normalized units,
 
 \begin{eqnarray}
 f_{M}\left(\psi,\overline{p},\xi\right) & = & \frac{1}{\left[2\pi\Theta\left(\psi\right)\right]^{3/2}}\exp\left[-\frac{\overline{p}^{2}\beta_{th}^{\dagger2}}{\left(1+\gamma\right)\overline{T}_{e}\left(\psi\right)\beta_{th}^{\dagger2}}\right]\\
@@ -204,9 +215,9 @@ one recovers well the relation\begin{equation}
 
 
 Considering the reference to the thermal value $p_{th}^{\dagger}$
-, defining $\overline{p}_{\parallel}^{2}=\overline{p}_{\parallel}^{}p_{th}^{\dagger}$
-and $\overline{p}_{\bot}^{2}=\overline{p}_{\bot}^{}p_{th}^{\dagger}$,
-as well as for the temperatures, one finds \begin{eqnarray}
+, defining $p_{\parallel}^{}=\overline{p}_{\parallel}^{}p_{th}^{\dagger}$
+and $p_{\bot}^{}=\overline{p}_{\bot}^{}p_{th}^{\dagger}$, as well
+as for the temperatures, one finds \begin{eqnarray}
 f_{3T}\left(\psi,\overline{p},\xi\right) & = & \overline{\alpha}_{3T}H\left(\overline{p}_{max}-\overline{p}\right)H\left(\overline{p}-\overline{p}_{min}\right)\times\label{eq:}\\
  &  & \left\{ \exp\left[-\frac{\overline{p}_{\parallel}^{2}}{2\overline{T}_{\parallel f}\left(\psi\right)}\right]\exp\left[-\frac{\overline{p}_{\perp}^{2}}{2\overline{T}_{\perp}\left(\psi\right)}\right]H\left(\overline{p}_{\parallel}\right)\right.\nonumber \\
  &  & \left.+\exp\left[-\frac{\overline{p}_{\parallel}^{2}}{2\overline{T}_{\parallel b}\left(\psi\right)}\right]\exp\left[-\frac{\overline{p}_{\perp}^{2}}{2\overline{T}_{\perp}\left(\psi\right)}\right]\left(1-H\left(\overline{p}_{\parallel}\right)\right)\right\} \nonumber \end{eqnarray}
