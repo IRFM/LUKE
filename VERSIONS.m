@@ -923,6 +923,7 @@
 % 
 % - improvement of graphical output functions
 % - mdce and multithreading compatible
+% - batch-based distributed calculations
 % 
 % ====> LUKE
 % 
@@ -931,6 +932,7 @@
 % 
 % ====>  Project_DKE/DKE
 % 
+% U bounceparam_dke_yp.m (small correction)
 % A clustermode_luke.m (manages cluster functionality)
 % U coll_dke_jd.m (mdce compatible)
 % U compres_luke_jd.m (small correction)
@@ -940,6 +942,7 @@
 % U graph_wave_jd.m (better rho type management)
 % U hotdisp_dke_jd.m (use of kineticdisp)
 % U load_structures_yp.m (chargement des données HXR) 
+% A loop_coll_dke_jd.m (externalization of loop in coll_dke_jd.m)
 % U LUKEversion_jd.m (LUKE 1.6.1)
 % U main_dke_yp.m (simul structure, ripple field, and multithreading mode as option)
 % A mdce_luke.m (loop function for mdce)
@@ -966,6 +969,9 @@
 % U DKEPARAM_files/make_dkeparam_LH_RT.m (")
 % U DKEPARAM_files/make_dkeparam_NONUNIFORM10010020.m (")
 % U DKEPARAM_files/make_dkeparam_UNIFORM10010020.m (")
+% U HXR_files/make_hxr_TScirc.m (ideal case for tests)
+% U HXR_files/make_hxr_TS99.m (small correction)
+% U OHM_files/ohm_flat.m (")
 % U RIPPLE_files/make_ripple_TScirc.m (equil_id field)
 % U RIPPLE_files/make_ripple_TScirc_peak.m (")
 % U WAVE_files/make_idealLHwave_jd.m (interpolation method)
@@ -974,6 +980,7 @@
 % ====> LUKE/Project_DKE/Display
 % 
 % U imake_wave_jd.m (display -> wavedisplay, mdce)
+% U imake_wave_ART_jd.m (LUKE - ART coupling)
 % U irunhxr_jd.m (small correction)
 % U irunluke_jd.m (mdce)
 % 
@@ -984,9 +991,10 @@
 % 
 % ====> LUKE/Project_DKE/Modules/Cronos
 % 
+% U make_dkeparam_cronos.m (mdce)
 % U make_wavert_cronos.m (interpolation method and mdce)
 % U make_wavelaunchs_cronos_lh.m (")
-% U zstarwars.m (")
+% U zstarwars.m (" + ripple mode)
 % 
 % ====> LUKE/Project_DKE/Modules/FEB
 % 
@@ -995,6 +1003,13 @@
 % U bremlocaldisplay_dke_yp.m (")
 % U bremsstrahlung_dke_yp.m (")
 % U display_hxr_yp.m (comput_dke_yp removed)
+% A Doc/3Tmodel.pdf (documentation)
+% A Doc/3Tmodel.tex (")
+% A Examples/f3tempmodel.m (example with 3 temperatures)
+% A Examples/loop_scan_3Tmodel.m (")
+% A Examples/loop_scan_vmin_vmax_Dlh.m (")
+% A Examples/scan_3Tmodel.m (")
+% A Examples/scan_vmin_vmax_Dlh.m (") 
 % 
 % ====> LUKE/Project_DKE/Modules/Helena
 % 
@@ -1009,24 +1024,38 @@
 % U fitequil_yp.m (interpolation method)
 % U interpequilpt_yp.m (")
 % U kineticdisp_jd.m (small corrections)
+% A loop_main_C3PO_jd.m (externalization of loop in main_C3PO_jd.m)
+% U make_beam_wave_jd.m (small corrections)
 % D make_equil_RTtest_e.m (in Examples)
 % U main_C3PO_jd.m (mdce compatible)
-% A Examples/run_all.m (run all examples)
+% U raypostprocessing_yp.m (small correction)
+% U Examples/run_all.m (run all examples)
 % U Examples/JETlike/WAVE/make_wave_JETliketest.m (interpolation method and mdce compatible)
 % U Examples/JETlike/WAVE/make_wave_JETliketest_bis.m (")
 % U Examples/PLT/WAVE/make_wave_PLTtest.m (")
 % U Examples/RTtest/WAVE/make_wave_RTtest.m (")
 % U Examples/RTtest/WAVE/make_wave_RTtest_straight.m (")
 % U Examples/VERSATOR2/WAVE/make_wave_VERSATOR2test.m (")
+% U MEX/Source/raytracing_yp.c (torLH case and order of complex arguments for PGCC)
+% U MEX/Source/raytracing_dieltensor_yp.c (")
 % 
 % ====> LUKE/Project_DKE/Packages
 % 
 % U test_packages_dke_yp.m (small correction)
 % U MCDE/fig_mcde.eps (test case for mdce toolbox)
 % U MCDE/run_mdce.m (")
+% A MCDE/run_mdce_rt.m (test case with ray tracing) 
 % U MCDE/initdata.mat (")
+% U MCDE/EQUIL_JETliketest.mat (data for test)
 % U MCDE/figures/mdce_evaluation.eps (")
-%
+% A MCDE/dcluke/dcluke.m (calcul distribué par batch externe)
+% A MCDE/dcluke/dcluke.exe (")
+% A MCDE/dcluke/dcluke_batch.sh (")
+% A MCDE/dcluke/dcluke_etat.sh (")
+% A MCDE/dcluke/fundcluke.m (")
+% A MCDE/dcluke/dcluke_kill.sh (")
+% A MCDE/dcluke/testdcluke.m (")
+% 
 % 
 % ====> LUKE/Simulations/Benchmarks/
 % 
