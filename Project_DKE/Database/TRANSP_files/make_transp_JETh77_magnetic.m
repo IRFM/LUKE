@@ -7,6 +7,7 @@
 %
 clear all
 %
+id_equil = 'JETh77';
 id_transpfaste = 'magneticturbulence';
 %
 Dr0 = 2;%Core radial diffusion coefficient (m^2/s)
@@ -22,6 +23,9 @@ norm_ref = 1;%Normalization procedure for the lower limit of the parallel veloci
 %
 %*****************************************************************************************************************
 %
+transpfaste.id = id_transpfaste;
+transpfaste.id_equil = id_equil;
+%
 transpfaste.Dr0 = Dr0;
 transpfaste.pDr = pDr;
 transpfaste.Vr0 = Vr0;
@@ -32,4 +36,4 @@ transpfaste.Vr_model = Vr_model;
 transpfaste.vparmin = vparmin;%Normalized units
 transpfaste.norm_ref = norm_ref;
 %
-eval(['save TRANSP_',id_transpfaste,'.mat transpfaste']);
+eval(['save TRANSP_',id_equil,'_',id_transpfaste,'.mat transpfaste']);
