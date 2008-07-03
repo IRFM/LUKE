@@ -57,6 +57,8 @@ dkeparam.invproc = -2;
 %
 %dkeparam.bounce_mode = 0;
 %
+dkeparam.npresmin = 0;
+%
 [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert(id_simul,[],waves,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[],0);
 %	    
 %************************************************************************************************************************************
