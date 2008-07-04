@@ -1,9 +1,9 @@
 Simulation id: 19Z_Alpha_5p0
-Simulation date: 07/03/2008  16:00:40
+Simulation date: 07/03/2008  16:39:40
 User id: JD211098
 
 LUKE Version: LUKE 1.6.1
  
-EQUIL ITER_Scen4_IAEA06; WAVE 19Z_Alpha_5p0: I = -1.9411 MA;  P = 30 MW
-EQUIL ITER_Scen4_IAEA06; WAVE 20Z_Alpha_5p0: I = -1.5791 MA;  P = 30 MW
-EQUIL ITER_Scen4_IAEA06; WAVE 21Z_Alpha_5p0: I = -1.3847 MA;  P = 30 MW
+EQUIL ITER_Scen4_IAEA06; WAVE 19Z_Alpha_5p0: I = -1.9732 MA;  P = 30 MW
+EQUIL ITER_Scen4_IAEA06; WAVE 20Z_Alpha_5p0: I = -1.5362 MA;  P = 30 MW
+EQUIL ITER_Scen4_IAEA06; WAVE 21Z_Alpha_5p0: I = -1.3409 MA;  P = 30 MW
