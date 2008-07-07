@@ -6,8 +6,8 @@ function [equil] = make_equil_itm(equil_ITM)
 %
 %equil.id = ['CRONOS_',int2str(shot),'_k',int2str(gene.k)];%gene.k is the time slice
 
-equil.Rp = quil_ITM.global_param.mag_axis.position.r;
-equil.Zp = quil_ITM.global_param.mag_axis.position.z;
+equil.Rp = equil_ITM.global_param.mag_axis.position.r;
+equil.Zp = equil_ITM.global_param.mag_axis.position.z;
 equil.ptx =  equil_ITM.eqgeometry.boundary.r - equil.Rp;
 equil.pty =  equil_ITM.eqgeometry.boundary.z - equil.Zp;
 equil.ap = equil.ptx(end,1);
