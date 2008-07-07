@@ -1585,26 +1585,10 @@ pp_1D_format dxstardpsin_fit;
     ppval_2D(BPHI_fit,rayparam.dS[0],rho1,theta1,&BPHI,&dBPHIdrho,&dBPHIdtheta,&dummy1,&dummy2);  
 
     build_raymagnetic(theta1,raymagnetic,equilparam,R,dRdrho,dRdtheta,d2Rdtheta2,d2Rdthetadrho,Z,dZdrho,dZdtheta,d2Zdtheta2,d2Zdthetadrho,BR,dBRdrho,dBRdtheta,BZ,dBZdrho,dBZdtheta,BPHI,dBPHIdrho,dBPHIdtheta,dRstardpsin,ddRstardpsindrho);
-
-    delta = m1*m1*raymagnetic.salpha[0]*raymagnetic.salpha[0]/raymagnetic.rn[0]/raymagnetic.rn[0]
-        - raymagnetic.gradrhon[0]*krho1*(-krho1*raymagnetic.gradrhon[0] + 2*m1*raymagnetic.salpha[0]/raymagnetic.rn[0]);
-    krho2p = (m1*raymagnetic.salpha[0]/raymagnetic.rn[0] + sqrt(delta))/raymagnetic.gradrhon[0];
-    krho2m = (m1*raymagnetic.salpha[0]/raymagnetic.rn[0] - sqrt(delta))/raymagnetic.gradrhon[0];
-        
-    if (sgn(krho2p)*sgn(krho1) < 0) { 
-        krho2[0] = krho2p;
-    } else {
-        krho2[0] = krho2m;
-    }
-
-    if (sgn(krho2p)*sgn(krho2m) >= 0) { 
-/*  mexPrintf("delta,krho1,krho2p,krho2m:%g,%g,%g,%g\n",delta,krho1,krho2p,krho2m); */
-        mexPrintf("WARNING: Problem for the wave reflection at the plasma edge. Try to modify dt0 or PSHRINK is raytracing_yp.c !\n");
-    return(-1);
-    } else {
-    return(0);
-    }
-
+    
+    krho2[0] = 2.0*m1*raymagnetic.salpha[0]/raymagnetic.rn[0]/raymagnetic.gradrhon[0] - krho1;
+    
+    return(0);    
 }
 
 
