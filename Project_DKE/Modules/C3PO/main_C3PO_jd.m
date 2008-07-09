@@ -5,6 +5,12 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C
 %
 % by J. Decker (CEA-IRFM) <joan.decker@cea.fr> and   Y. Peysson (CEA-IRFM) <yves.peysson@cea.fr>
 %
+    if nargin < 8,
+    	C3POparam = [];
+    	cluster_path = '';%In case distributed computing is used
+        flag = 0;%numerical equilibrium used by default
+    end
+	%
     if nargin < 9,
     	cluster_path = '';%In case distributed computing is used
         flag = 0;%numerical equilibrium used by default
