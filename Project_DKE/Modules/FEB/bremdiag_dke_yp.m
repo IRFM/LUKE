@@ -109,8 +109,10 @@ for ic = 1:size(brem_bd_interp,1),
 		Tabsxinterp = repmat(absxinterp(:),[1,size(brem_bd_interp,2)]);
 	else
 		if (kd(ic-1) ~= kd(ic)) | (res(ic-1) ~= res(ic)) | (phf(ic-1) ~= phf(ic))
-			gkEinterp = dresp_dke_yp(res(ic,:),phf(ic,:),kd(ic,:),ic,kinterp);%Recalculated only when detector type has changed concerning the response function
-		end
+			gkEinterp1 = dresp_dke_yp(res(ic,:),phf(ic,:),kd(ic,:),ic,kinterp);%Recalculated only when detector type has changed concerning the response function
+            normgkEinterp1 = trapz(kinterp,gkEinterp1');%To enforce that the norm is unity
+            gkEinterp = (gkEinterp1'./(normgkEinterp1(:)*ones(1,length(kinterp)))')';
+        end
 %
 		if (ef(ic-1) ~= ef(ic)) | (tf(ic-1) ~= tf(ic)) | (ea(ic-1) ~= ea(ic)) | (ta(ic-1) ~= ta(ic)) | (ec(ic-1) ~= ec(ic)) | (tc(ic-1) ~= tc(ic)) | (ed(ic-1) ~= ed(ic)) | (td(ic-1) ~= td(ic))
 			absxinterp = absx_dke_yp(kinterp,0,0,ef(ic),tf(ic,:),ea(ic),ta(ic,:),ec(ic),tc(ic,:),ed(ic),td(ic,:));%Air contribution is neglected (k > 10 keV only)
