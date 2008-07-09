@@ -34,6 +34,7 @@ for iw = (nw0 + 1):(nw0 + length(wavestructs)),
     %
     if strcmp(wavestruct.wavesolver,'C3PO'),% C3P0 ray tracing
 	    rayinit = main_rayinit_launch_jd(equil,wavestruct.launch);
+	    if ~isfield(wavestruct,'C3POparam'),wavestruct.C3POparam = [];end
 	    wave = main_C3PO_jd(wavestruct.id,equil,rayinit,wavestruct.waveparam,wavestruct.fitequilparam,wavestruct.rayparam,wavestruct.raydisplay,wavestruct.C3POparam);%Ray calculations
         %
         wave = wave_process_jd(equil,wave,dkeparam.n_rf_list);%Wave processing and relativistic linear damping
