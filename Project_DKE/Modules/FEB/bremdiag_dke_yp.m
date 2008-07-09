@@ -102,7 +102,8 @@ for ic = 1:size(brem_bd_interp,1),
 		gkEinterp1 = dresp_dke_yp(res(ic,:),phf(ic,:),kd(ic,:),kinterp);		
 		normgkEinterp1 = trapz(kinterp,gkEinterp1');%To enforce that the norm is unity
 		gkEinterp = (gkEinterp1'./(normgkEinterp1(:)*ones(1,length(kinterp)))')';
-%		trapz(kinterp,gkEinterp'),%test of the norm	
+%		plot(kinterp,trapz(kinterp,gkEinterp1') + gkEinterp1(:,1)'*kinterp(1));%test of the norm
+%       plot(kinterp,trapz(kinterp,gkEinterp'));%test of the norm
 %
 		absxinterp = absx_dke_yp(kinterp,0,0,ef(ic),tf(ic,:),ea(ic),ta(ic,:),ec(ic),tc(ic,:),ed(ic),td(ic,:));%Air contribution is neglected (k > 10 keV only)
 		Tabsxinterp = repmat(absxinterp(:),[1,size(brem_bd_interp,2)]);
