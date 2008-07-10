@@ -18,10 +18,10 @@ The three temperatures model has been introduced for simulating an
 anistropic tail in the electron momentum distribution function driven
 by the quasi-electrostatic wave at the Lower Hybrid frequency in tokamak.
 It is a very crude model which was used to characterize the fast electron
-bremsstrahlung during this non-inductive regimes, which extends up
+bremsstrahlung during these non-inductive regimes, which extends up
 to high photon energies corresponding to hard X rays. 
 
-With the emergence of refined model based on the use of Fokker-Planck
+With the emergence of refined models based on the use of Fokker-Planck
 solvers, the three temperatures model is almost obsolete, and its
 application is restricted to benchmark non-thermal bremsstrahlung
 codes designed for analysing corresponding diagnostics.
@@ -32,12 +32,13 @@ $p$ the momentum value and $\xi=p_{\parallel}/p$ the pitch-angle
 relative to the local magnetic field direction. Here, $f$ is considered
 to be homogeneous on a magnetic flux surface, and the trapped electron
 population is neglected. According to the three temperatures model,\begin{equation}
-f\left(\psi,p,\xi\right)=\left(1-\lambda\right)f_{M}\left(\psi,p,\xi\right)+\lambda f_{3T}\left(\psi,p,\xi\right)\label{eq:distribution}\end{equation}
+f\left(\psi,p,\xi\right)=\lambda_{M}f_{M}\left(\psi,p,\xi\right)+\lambda_{3T}f_{3T}\left(\psi,p,\xi\right)\label{eq:distribution}\end{equation}
 where $f_{M}\left(\psi,p,\xi\right)$ is the thermal bulk, and $f_{3T}\left(\psi,p,\xi\right)$
 is the non-thermal part. By definition, both $f_{M}$ and $f_{3T}$
 are normalized to unity, so that $f$ automatically satisfies this
-condition. The relative fraction of fast electrons is given by the
-parameter $\lambda$ which is usually very small of the ordre of $1\times10^{-3}.$
+condition. The relative fraction of fast electrons which is roughly
+given by the ratio $\lambda_{3T}/\lambda_{M}$ is usually very small,
+of the order of $1\times10^{-3}.$
 
 
 \section{The Maxwellian distribution function}
@@ -114,8 +115,8 @@ one has \begin{eqnarray}
 v_{th}^{\dagger}/c=\beta_{th}^{\dagger}\end{equation}
 
 
-Consequently, the non-reltivistic expression of $f_{M}$ is only valid
-when $\gamma\simeq1$, or in an equivalent form \begin{equation}
+Consequently, the non-relativistic expression of $f_{M}$ is only
+valid when $\gamma\simeq1$, or in an equivalent form \begin{equation}
 \overline{p}^{2}\beta_{th}^{\dagger2}\ll1\label{weakrelativist}\end{equation}
 Since $\overline{p}$ may be as large as $30$ in numerical calculations,
 in order to correctly describe momentum dynamics of the fastest electrons,
@@ -133,8 +134,8 @@ is \begin{equation}
 or\[
 T_{e}^{\dagger}\ll272keV\]
 which is always satisfied, since $T_{e}^{\dagger}$ never exceeds
-few ten keV in tokamak plasmas. This means that the approximatye formulation
-of $f$ is fully valid. 
+a few ten keV in tokamak plasmas. This means that the approximate
+formulation of $f$ is fully valid. 
 
 In normalized units,
 
@@ -142,8 +143,7 @@ In normalized units,
 f_{M}\left(\psi,\overline{p},\xi\right) & = & \frac{1}{\left[2\pi\Theta\left(\psi\right)\right]^{3/2}}\exp\left[-\frac{\overline{p}^{2}\beta_{th}^{\dagger2}}{\left(1+\gamma\right)\overline{T}_{e}\left(\psi\right)\beta_{th}^{\dagger2}}\right]\\
  & = & \frac{1}{\left[2\pi\overline{T}_{e}\left(\psi\right)\beta_{th}^{\dagger2}\right]^{3/2}}\exp\left[-\frac{\overline{p}^{2}}{\left(1+\gamma\right)\overline{T}_{e}\left(\psi\right)}\right]\end{eqnarray}
 using the relation $\Theta=\overline{\Theta}\Theta^{\dagger}$, with
-$ $$\overline{\Theta}=\overline{T}_{e}$. Then, it turns out that
-\begin{equation}
+$\overline{\Theta}=\overline{T}_{e}$. Then, it turns out that \begin{equation}
 f_{M}\left(\psi,\overline{p},\xi\right)=\frac{1}{\beta_{th}^{\dagger3}}\overline{f}_{M}\left(\psi,\overline{p},\xi\right)=\frac{1}{p_{th}^{\dagger3}}\overline{f}_{M}\left(\psi,\overline{p},\xi\right)\end{equation}
  since $p_{th}^{\dagger}=\beta_{th}^{\dagger}$, with \begin{equation}
 \overline{f}_{M}\left(\psi,\overline{p},\xi\right)\approx\frac{1}{\left[2\pi\overline{T}_{e}\left(\psi\right)\right]^{3/2}}\exp\left[-\frac{\overline{p}^{2}}{\left(1+\gamma\right)\overline{T}_{e}\left(\psi\right)}\right]\end{equation}
@@ -171,8 +171,6 @@ simple form
 f_{3T}\left(\psi,p,\xi\right) & = & \alpha_{3T}H\left(p_{max}-p\right)H\left(p-p_{min}\right)\times\nonumber \\
  &  & \left\{ \exp\left[-\frac{p_{\parallel}^{2}}{2\Theta_{\parallel f}\left(\psi\right)}\right]\exp\left[-\frac{p_{\perp}^{2}}{2\Theta_{\perp}\left(\psi\right)}\right]H\left(p_{\parallel}\right)\right.\nonumber \\
  &  & +\left.\exp\left[-\frac{p_{\parallel}^{2}}{2\Theta_{\parallel b}\left(\psi\right)}\right]\exp\left[-\frac{p_{\perp}^{2}}{2\Theta_{\perp}\left(\psi\right)}\right]\left(1-H\left(p_{\parallel}\right)\right)\right\} \label{eq:}\end{eqnarray}
-\[
-\]
 where $H\left(x\right)$ is the usual Heaviside function while $\Theta_{\parallel f}$,
 $\Theta_{\parallel b}$ and $\Theta_{\bot}$ are respectively the
 parallel forward, backward and perpendicular pseudo-temperatures normalized
@@ -224,35 +222,29 @@ f_{3T}\left(\psi,\overline{p},\xi\right) & = & \overline{\alpha}_{3T}H\left(\ove
 using the identity for the Heaviside function\begin{equation}
 H\left(ax+b\right)=H\left(x+\frac{b}{a}\right)H\left(a\right)+H\left(-x-\frac{b}{a}\right)H\left(-a\right)\label{eq:}\end{equation}
 and the fact that $p_{th}^{\dagger}>0$. The modified normalized coefficient
-is immediatly\begin{equation}
+is immediately\begin{equation}
 \overline{\alpha}_{3T}=\frac{1}{\sqrt{2\pi^{3}}}\frac{1}{\overline{T}_{\perp}\left(\sqrt{\overline{T}_{\parallel f}}+\sqrt{\overline{T}_{\parallel b}}\right)}\label{eq:}\end{equation}
 
 
 
-\section{Calculation of $\overline{p}_{min}$}
+\section{Calculation the distribution}
 
-For a given value of the coefficient $\lambda$, it is necessary to
-find the intersection $\overline{p}_{min}$ between the Maxwellian
-bulk $\overline{f}_{M}$ and the tail described by $\overline{f}_{3T}$.
-Considering the normalisation of $\overline{f}$ to unity as the constraint,
-it turns out that $\lambda$ and $\overline{p}_{min}$ are linked
-by the relation\begin{equation}
-\left(1-\lambda\right)\left(1+\delta_{M}\left(\overline{p}_{min}\right)\right)+\lambda\left(1-\delta_{3T}\left(\overline{p}_{min}\right)\right)=1\label{eq:normeq}\end{equation}
-which simplifies \[
-\left(1-\lambda\right)\delta_{M}\left(\overline{p}_{min}\right)-\lambda\delta_{3T}\left(\overline{p}_{min}\right)=0\]
-and can be expressed as\[
-\frac{\delta_{3T}\left(\overline{p}_{min}\right)}{\delta_{M}\left(\overline{p}_{min}\right)}=\frac{1}{\lambda}-1\]
-where $\delta_{M}$ and $ $$\delta_{3T}$ are by definition small
-corrections, i.e. $0\leq\delta_{M}\ll1$ and $0\leq\delta_{3T}\ll1$,
-provided $\lambda\ll1$. Indeed, in this case, $\overline{p}_{min}\gg p_{th}^{\dagger}$,
+For a given value of the coefficient $\lambda_{3T}$ which represents
+approximately the fraction of suprathermal electrons above the value
+$\overline{p}_{min}$ the normalisation of the distribution function
+$\overline{f}$ is calculated with the constraint\begin{equation}
+\lambda_{M}\left(1-\delta_{M}\left(\overline{p}_{min}\right)\right)+\lambda_{3T}\left(1-\delta_{3T}\left(\overline{p}_{min}\right)\right)=1\label{eq:normeq}\end{equation}
+so that \[
+\lambda_{M}=\frac{1-\lambda_{3T}\left(1-\delta_{3T}\left(\overline{p}_{min}\right)\right)}{1-\delta_{M}\left(\overline{p}_{min}\right)}\]
+where $\delta_{M}$ and $\delta_{3T}$ are by definition small corrections,
+i.e. $0\leq\delta_{M}\ll1$ and $0\leq\delta_{3T}\ll1$, provided
+$\lambda_{3T}\ll1$. Indeed, in this case, $\overline{p}_{min}\gg p_{th}^{\dagger}$,
 while the contribution of the region $\overline{p}\leq\overline{p}_{min}$
 to the deviation of the normalisation coefficient is almost negligible.
+The choice of $\lambda_{3T}$ and $\overline{p}_{min}$ must be set
+by the condition \[
+\delta_{3T}\left(\overline{p}_{min}\right)\geq1-\frac{1}{\lambda_{3T}}\]
+since $\lambda_{M}\geq0$.
 
-The solution of the Eq.\ref{eq:normeq} can be obtained iteratively,
-using the iterative Newton or Newton-Raphson methods or simply using
-the dichotomy techniques.
-
-\[
-\]
 
 \end{document}
