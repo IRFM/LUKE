@@ -6,7 +6,7 @@ function [nfile] = fig2figs(fileformat,workdir,option,value)
 %
 % Input:
 %
-%   - fileformat: 'eps', 'pdf', 'jpg', 'emf' and 'png'. If '*', all are used [string]
+%   - fileformat: 'eps', 'pdf', 'jpg', 'emf' and 'png'. If '*', all are used. It can be also 'epspdf' or anycombination of the keys words like eps, pdf, ... [string]
 %   - dirnit: working directory [string]
 %   - option: figure option (see matlab documentation)
 %   - value: figure option value (see matlab documentation)
@@ -35,45 +35,37 @@ close all
 %
 filelist = dir('*.fig');
 %
-for ifile = 1:length(filelist)
+if strcmp(fileformat,'*'),fileformat = 'eps pdf jpg emf png';end
+%
+for ifile = 1:length(filelist),
+    %
     open(filelist(ifile).name)
-    if strcmp(fileformat,'*'),
-        if exist('option') == 1 & exist('value') == 1,
-            advexpfig(ifile,strtok(fullfile(workdir,filelist(ifile).name),'.'),'-depsc2',option,value);   
-            advexpfig(ifile,strtok(fullfile(workdir,filelist(ifile).name),'.'),'-dpdf ',option,value);   
-            advexpfig(ifile,strtok(fullfile(workdir,filelist(ifile).name),'.'),'-djpeg ',option,value); 
-            if ~strfind(computer,'WIN'),
-                advexpfig(ifile,strtok(fullfile(workdir,filelist(ifile).name),'.'),'-demf',option,value);
-            end
-            advexpfig(1,strtok(fullfile(workdir,filelist(ifile).name),'.'),'-dpng',option,value);
-        else
-            advexpfig(ifile,strtok(fullfile(workdir,filelist(ifile).name),'.'),'-depsc2');   
-            advexpfig(ifile,strtok(fullfile(workdir,filelist(ifile).name),'.'),'-dpdf ');   
-            advexpfig(ifile,strtok(fullfile(workdir,filelist(ifile).name),'.'),'-djpeg '); 
-            if ~strfind(computer,'WIN'),
-                advexpfig(ifile,strtok(fullfile(workdir,filelist(ifile).name),'.'),'-demf');
-            end
-            advexpfig(ifile,strtok(fullfile(workdir,filelist(ifile).name),'.'),'-dpng');
-        end
-    elseif strcmp(fileformat,'eps'),
+    %
+    if strfind(fileformat,'eps'),
         if exist('option') == 1 & exist('value') == ifile,
-            advexpfig(ifile,strtok(fullfile(workdir,filelist(ifile).name),'.'),'-depsc2',option,value);
+            advexpfig(ifile,strtok(fullfile(workdir,filelist(ifile).name),'.'),'-depsc',option,value);
         else
-            advexpfig(ifile,strtok(fullfile(workdir,filelist(ifile).name),'.'),'-depsc2');
+            advexpfig(ifile,strtok(fullfile(workdir,filelist(ifile).name),'.'),'-depsc');
         end
-    elseif strcmp(fileformat,'pdf'),
+    end
+    %
+    if strfind(fileformat,'pdf'),
         if exist('option') == 1 & exist('value') == 1,
             advexpfig(ifile,strtok(fullfile(workdir,filelist(ifile).name),'.'),'-dpdf ',option,value);   
         else
             advexpfig(ifile,strtok(fullfile(workdir,filelist(ifile).name),'.'),'-dpdf ');   
         end
-    elseif strcmp(fileformat,'jpg'),
+    end
+    %
+    if strfind(fileformat,'jpg'),
         if exist('option') == 1 & exist('value') == 1,
             advexpfig(ifile,strtok(fullfile(workdir,filelist(ifile).name),'.'),'-djpeg ',option,value);   
         else
             advexpfig(ifile,strtok(fullfile(workdir,filelist(ifile).name),'.'),'-djpeg ');   
         end
-    elseif strcmp(fileformat,'emf'),
+    end
+    %
+    if strfind(fileformat,'emf'),
         if exist('option') == 1 & exist('value') == 1,
             if ~strfind(computer,'WIN'),
                 advexpfig(ifile,strtok(fullfile(workdir,filelist(ifile).name),'.'),'-demf',option,value);
@@ -83,7 +75,9 @@ for ifile = 1:length(filelist)
                 advexpfig(ifile,strtok(fullfile(workdir,filelist(ifile).name),'.'),'-demf');
             end
         end
-    elseif strcmp(fileformat,'png'),
+    end
+    %
+    if strfind(fileformat,'png'),
         if exist('option') == 1 & exist('value') == 1,
             advexpfig(ifile,strtok(fullfile(workdir,filelist(ifile).name),'.'),'-dpng',option,value);   
         else
