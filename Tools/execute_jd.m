@@ -1,7 +1,9 @@
-function [s,w] = execute_jd(filename)
+function execute_jd(filename)
 	
 if strcmp(computer,'PCWIN')
-	[s,w] = dos(filename);
-elseif strcmp(computer,'MAC')
+	dos(filename);
+elseif strcmp(computer,'MAC') 
+	eval(['! ',filename]);
+else 
 	eval(['! ',filename]);
 end
