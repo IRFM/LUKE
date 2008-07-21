@@ -25,8 +25,7 @@ int n,rel_opt,ns;
     /*return(a);*/
     
     double absint,pperpmax_ellipse,r;
-    double yn,slperp,npar2,beta2;
-    int ntest;
+    double yn,slperp,npar2,beta2,ntest;
     
     yn = b*n;
     slperp = nperp*beta/b;
@@ -35,9 +34,13 @@ int n,rel_opt,ns;
     
     /* Tests for pperp grid accuracy */
     
+    /* mexPrintf("ns,pperpmax,slperp : %i,%g,%g\n",ns,pperpmax,slperp);*/
     ntest = 2*PI*ns/pperpmax/slperp;
+    
+    /* mexPrintf("ntest : %g\n",ntest);*/
+    
     if (ntest < 50) {
-        mexPrintf("WARNING : Some positions have as little as %i integration steps per Bessel period\n",ntest);
+        mexPrintf("WARNING : Some positions have as little as %g integration steps per Bessel period\n",floor(ntest));
     }
       
     /* Resonance curve type */
