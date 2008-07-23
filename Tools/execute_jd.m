@@ -5,5 +5,5 @@ if strcmp(computer,'PCWIN')
 elseif strcmp(computer,'MAC') 
 	eval(['! ',filename]);
 else 
-	eval(['! ',filename]);
+	eval(['! ./',filename]);
 end
