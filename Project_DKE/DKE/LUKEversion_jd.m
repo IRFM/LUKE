@@ -2,4 +2,4 @@ function version = LUKEversion_jd;
 %
 % This function specifies the tag of the current LUKE version
 %
-version = 'LUKE 1.6.1';
+version = 'LUKE 1.6.2';

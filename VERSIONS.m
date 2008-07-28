@@ -1092,3 +1092,68 @@
 % MDCE has been moved from Simulations/Examples to Project_DKE/Packages
 % Generic functions have been moved from Project_DKE/DKE to Tools
 % 
+% ----------------------------------------------------------------------------------------------------
+% 
+% LUKE Release 1.6.2
+% 
+% - correction on spectular reflection in C3PO
+% - dcluke corrections
+% - R2D2 updated and tested
+% 
+% ====> LUKE/Project_DKE/DKE
+% 
+% U LUKEversion_jd.m (LUKE 1.6.2)
+% U run_lukert.m (small correction)
+%
+% ====> LUKE/Project_DKE/Database
+% 
+% U TRANSP_files/make_transp_JETh77_magnetic.m (equil id in transp structure)
+% U TRANSP_files/make_transp_TScyl_nomagnetic.m (equil id in transp structure)
+% 
+% ====> LUKE/Project_DKE/MEX/Source
+% 
+% U alphaphi_jd.c (small correction)
+% 
+% ====> LUKE/Project_DKE/Modules/FEB
+% 
+% U bremdiag_dke_yp.m (small correction)
+% U dresp_dke_yp.m (ongoing development)
+% U Doc/3Tmodel.tex (")
+% U Examples/f3tempmodel.m (")
+% 
+% ====> LUKE/Project_DKE/Modules/RT
+% 
+% U main_C3PO_jd.m (small correction)
+% U MEX/Source/raytracing_yp.c (corection on specular reflection)
+% 
+% ====> LUKE/Project_DKE/Modules/R2D2
+% 
+% U MEX/Source/R2D2f.f (update for use with Linux and LUKE 1.6)
+% 
+% ====> LUKE/Tools
+% 
+% U disp_hot_jd.m (update for use with Linux and LUKE 1.6)
+% U disp_jd.m (")
+% U execute_jd.m (")
+% U getpath_jd.m (")
+% U clustermode_luke.m (small corrections)
+% A dclukecomputing.m (function calling distributed calculation function dcluke)
+% U mdce_luke.m (several corrections)
+% U multithreading_luke.m (small corrections)
+% A seqcomputing.m (case of sequential calculation)
+% 
+% ====> LUKE/Simulations/Examples/
+% 
+% U TS/32299/res_alpha_0_Dr0_0.log (LUKE 1.6.1)
+% U TS/32299/run_cronos_starwars.m (LUKE 1.6.1)
+% U ITER/Scen4/res_comp.log (npresmin = 1 case)
+% U ITER/Scen4/rundke_ITER_Scen4_IAEA06_19Z.m (")
+% U ITER/Scen4/rundke_ITER_Scen4_IAEA06_19Z_Alpha_3p7.m (")
+% U ITER/Scen4/rundke_ITER_Scen4_IAEA06_19Z_Alpha_5p0.m (")
+% U ITER/Scen4/rundke_ITER_Scen4_IAEA06_20Z.m (")
+% U ITER/Scen4/rundke_ITER_Scen4_IAEA06_20Z_Alpha_3p7.m (")
+% U ITER/Scen4/rundke_ITER_Scen4_IAEA06_20Z_Alpha_5p0.m (")
+% U ITER/Scen4/rundke_ITER_Scen4_IAEA06_21Z.m (")
+% U ITER/Scen4/rundke_ITER_Scen4_IAEA06_21Z_Alpha_3p7.m (")
+% U ITER/Scen4/rundke_ITER_Scen4_IAEA06_21Z_Alpha_5p0.m (")
+%
