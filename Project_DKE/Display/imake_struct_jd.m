@@ -128,9 +128,9 @@ end
 %
 if m_opt == 1,
     %
-    if isempty(sdefault),
-        sdefault = [workdir,sbase_eq,'*.mat'];
-    end
+    %if isempty(sdefault),
+    %    sdefault = [workdir,sbase_eq,'*.mat'];
+    %end
     %
     [s_new,path_new,file_new] = iload_struct_jd(sname,sbase,sdefault,opt_gui,opt_multi,opt_id);
     %
