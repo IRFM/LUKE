@@ -173,6 +173,9 @@ else
     %
 end
 %
+angles.w0 = 0.0188;%half width of the waist
+angles.z_L = 0.2755;%distance from last mirror to waist
+%
 id = ['L',num2str(l_opt)];
 %
 angles.id = id;

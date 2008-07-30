@@ -59,3 +59,6 @@ end
 %
 launch.yP_L = P0;
 %
+launch.w0 = angles.w0;
+launch.z_L = angles.z_L;
+%

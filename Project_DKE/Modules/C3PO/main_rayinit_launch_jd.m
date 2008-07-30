@@ -120,6 +120,8 @@ if launch.type == 'EC',
       Ns0 = (Nx0*Bx0 + Ny0*By0)/Bp0;
       m0 = r0*Ns0*rayinit.omega_rf/clum/cosalpha;
 %
+      s0 = sqrt(sysh(is0,iy).^2 + sysZ(is0,iy).^2);%distance along the ray from mirror to LCFS   
+%
       rayinit.yrho0(iy) = rho0;%Initial radial position at launch
       rayinit.ytheta0(iy) = theta0;%Initial poloidal position at launch
       rayinit.yphi0(iy) = phi0;%Initial toroidal position at launch
@@ -128,6 +130,14 @@ if launch.type == 'EC',
       rayinit.yNpar0(iy) = Npar0;%Initial index of refraction
       rayinit.ydNpar0(iy) = dNpar0;%initial Ray spectral width
       rayinit.yP0_2piRp(iy) = yP0_2piRp(iy);%Lineic initial power density initial power in the ray (W/m)
+%
+      if ny == 1,  
+          rayinit.w0 = launch.w0;
+          rayinit.z0 = launch.z_L - s0;%distance from LCFS to waist
+      else% the Gaussian beam representation is compatible with the one ray description only
+          rayinit.w0 = NaN;
+          rayinit.z0 = NaN;
+      end
 %
    end
 elseif launch.type == 'LH',

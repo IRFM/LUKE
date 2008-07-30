@@ -1,14 +1,22 @@
-function wave = make_beam_wave_jd(wave,equil,C3POdisplay,nd,nchi)
+function wave = make_beam_wave_jd(wave,equil,C3POdisplay,nd,nchi,w0,z0)
 %
 % This function generates a beam made of nd x nchi power tubes along a central ray
 %
 % Note : ray.swidth can be a scalar in which case the beam divergence is assumed to be zero.
 %
-if nargin < 4,
+if nargin < 7,
+    z0 = NaN;
+end
+%
+if nargin < 6,
+    w0 = NaN;
+end
+%
+if nargin < 5,
     nchi = 1;
 end
 %
-if nargin < 3,
+if nargin < 4,
     nd = 1;
 end
 %
@@ -19,14 +27,30 @@ end
 %
 ray = wave.rays{1};
 %
-if ~isfield(ray,'swidth'),
-    %warning('No beam width specified. Beam width determined from dNpar')
-    clum = 3e8;
-    sphi_perp = abs(ray.sphi_xyz(1,:));
-    sphi_norm = sqrt(abs(ray.sphi_xyz(1,:)).^2 + abs(ray.sphi_xyz(2,:)).^2 + abs(ray.sphi_xyz(3,:)).^2);
-    swidth = clum*sphi_perp./ray.sdNpar./sphi_norm/wave.omega_rf;
+ss = ray.ss;
+sphi_perp = abs(ray.sphi_xyz(1,:));
+sphi_norm = sqrt(abs(ray.sphi_xyz(1,:)).^2 + abs(ray.sphi_xyz(2,:)).^2 + abs(ray.sphi_xyz(3,:)).^2);
+omega_rf = wave.omega_rf;
+%
+ns = length(ss);
+%
+clum = 299792458;%Speed of light (m/s)
+%
+if ~isnan(w0),% beam width information given
+    if ~isnan(z0)% gaussian beam representation
+        zr = omega_rf.*w0^2/clum/2;
+        swidthfac = sqrt(1 + (ss - z0).^2/zr^2);
+    else
+        swidthfac = ones(1,ns);
+    end
+    %
+    swidth = w0*swidthfac/sqrt(2);
+    %
+    ray.sdNpar = clum*sphi_perp./swidth./sphi_norm/omega_rf;
+    %
 else
-    swidth = ray.swidth;
+    %warning('No beam width specified. Beam width determined from dNpar')
+    swidth = clum*sphi_perp./ray.sdNpar./sphi_norm/omega_rf;
 end
 %
 if nd == 1 | nchi == 1,
@@ -38,8 +62,6 @@ wave = rmfield(wave,'rays');
 sx = ray.sx;
 sy = ray.sy;
 sphi = ray.sphi;
-%
-ns = length(sx);
 %
 sR = sx + equil.Rp;
 %
