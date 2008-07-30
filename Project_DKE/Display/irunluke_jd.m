@@ -75,7 +75,12 @@ while isel >= 0,
     statstr.workdir = workdir;
     %
     if status.dkepath == 1,
-        statstr.dkepath = dkepath.path_id;
+        if isfield(dkepath,'id'),
+            statstr.dkepath = dkepath.id;
+        else
+            disp('WARNING : the dkepath structure must be updated and the field ''path_id'' chnged to ''id''');
+            statstr.dkepath = dkepath.path_id;
+        end
     else
         if ~isempty(dkepath),
             disp('The structure ''dkepath'' is outdated and cleared.');
@@ -615,7 +620,7 @@ while isel >= 0,
                 %
                 dkeparam_file = '';
                 locfiles = what(workdir);
-                for ifile = 1:length(locfiles),
+                for ifile = 1:length(locfiles.mat),
                     if strfind(locfiles.mat{ifile},'DKEPARAM_'),
                         dkeparam_file = locfiles.mat{ifile};
                         break
