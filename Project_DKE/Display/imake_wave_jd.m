@@ -262,10 +262,6 @@ if w_opt == 0,% wave from C3PO calculations
             disp('-----> Invalid choice');
             return
         end
-        if isnan(dNpar0),
-            disp('-----> Option not yet implemented');
-            return
-        end            
         %
         launch.dNpar0 = dNpar0;
         %
