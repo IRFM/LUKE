@@ -70,7 +70,7 @@ if ~isnan(max)
     Z = sqrt(max^2*lnZ.^2 - 2*lnZ);
 end
 %
-hold on
+%hold on
 if ~isnan(color)
     if fill == 0
         if ~isnan(cont)
@@ -100,7 +100,7 @@ else
         end 
     end
 end    
-hold off
+%hold off
 %
 set(H,'linewidth',width);
 if ~isnan(style)
@@ -108,7 +108,7 @@ if ~isnan(style)
 end
 %
 if lab ~= 0
-    clabel(C,H,'manual');%,'fontsize',14
+    clabel(C,H,'manual','fontsize',20);%,'fontsize',14
 end
 if ~isnan(xlim)
     set(gca,'xlim',xlim);
