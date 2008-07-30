@@ -217,7 +217,7 @@ for iy = 1:ny,
         yPtot_abs(iy) = NaN;
     end
     %
-    disp(['Ray # ',num2str(iy),': fraction of power absorbed: ',num2str(yPtot_abs*100),' %'])  
+    disp(['Ray # ',num2str(iy),': fraction of power absorbed: ',num2str(yPtot_abs(iy)*100),' %'])  
     % 
 end
 %
