@@ -174,7 +174,11 @@ else
         %
         if ischar(isel_new),
             %
-            selectname = isel_new;
+            if strfind(isel_new,'.mat'),
+                selectname = isel_new;
+            else
+                selectname = [isel_new,'.mat'];
+            end
             %
         elseif isel_new == -1,%cancel operation
             %
