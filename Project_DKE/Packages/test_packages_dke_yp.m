@@ -9,7 +9,7 @@ cd([dkepath.luke_root,'Project_DKE/Packages']);
 disp('Test performances of matrix inversion routines on your computer')
 disp('---------------------------------------------------------------')
 mode = input_dke_yp('2-D (0) or 3-D (1) input matrix',0);
-npass = input_dke_yp('Number of passes',3);disp(' ');
+npass = input_dke_yp('Number of passes',10);disp(' ');
 if mode ==0,
    load testLU2D.mat;if exist('testmatinv-2D.txt'),delete testmatinv-2D.txt;end;diary testmatinv-2D.txt;disp(['2-D LUKE matrix inversion performances on ',computer]);disp('----------------------------------------------')
 elseif mode == 1
