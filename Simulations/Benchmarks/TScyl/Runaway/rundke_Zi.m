@@ -95,6 +95,40 @@ RR_kulsrud = 1e-4*[ 0.01914,NaN   ,NaN  ,NaN  ;...%Kulsrud (PRL, 31,11, (1972) 6
 %
 %************************************************************************************************************************************
 %
+format
+%
+delete res_Zi
+%
+diary res_Zi
+%
+disp(['Comparison LUKE/Kulsrud - NR calculations (betath = 0.001)'])
+disp(['----------------------'])
+disp(['--> epsi = 0.04'])
+disp(['Zi =  1 : gamma_R = ',num2str(RR( 1,1)),'/',num2str(RR_kulsrud(1,1))]) 
+disp(['Zi =  2 : gamma_R = ',num2str(RR( 2,1)),'/',num2str(RR_kulsrud(2,1))]) 
+disp(['Zi =  3 : gamma_R = ',num2str(RR( 3,1)),'/',num2str(RR_kulsrud(3,1))]) 
+disp(['Zi = 10 : gamma_R = ',num2str(RR(10,1)),'/',num2str(RR_kulsrud(4,1))]) 
+disp(['----------------------'])
+disp(['--> epsi = 0.06'])
+disp(['Zi =  1 : gamma_R = ',num2str(RR( 1,2)),'/',num2str(RR_kulsrud(1,2))]) 
+disp(['Zi =  2 : gamma_R = ',num2str(RR( 2,2)),'/',num2str(RR_kulsrud(2,2))]) 
+disp(['Zi =  3 : gamma_R = ',num2str(RR( 3,2)),'/',num2str(RR_kulsrud(3,2))]) 
+disp(['Zi = 10 : gamma_R = ',num2str(RR(10,2)),'/',num2str(RR_kulsrud(4,2))]) 
+disp(['----------------------'])
+disp(['--> epsi = 0.08'])
+disp(['Zi =  1 : gamma_R = ',num2str(RR( 1,3)),'/',num2str(RR_kulsrud(1,3))]) 
+disp(['Zi =  2 : gamma_R = ',num2str(RR( 2,3)),'/',num2str(RR_kulsrud(2,3))]) 
+disp(['Zi =  3 : gamma_R = ',num2str(RR( 3,3)),'/',num2str(RR_kulsrud(3,3))]) 
+disp(['Zi = 10 : gamma_R = ',num2str(RR(10,3)),'/',num2str(RR_kulsrud(4,3))]) 
+disp(['----------------------'])
+disp(['--> epsi = 0.10'])
+disp(['Zi =  1 : gamma_R = ',num2str(RR( 1,4)),'/',num2str(RR_kulsrud(1,4))]) 
+disp(['Zi =  2 : gamma_R = ',num2str(RR( 2,4)),'/',num2str(RR_kulsrud(2,4))]) 
+disp(['Zi =  3 : gamma_R = ',num2str(RR( 3,4)),'/',num2str(RR_kulsrud(3,4))]) 
+disp(['Zi = 10 : gamma_R = ',num2str(RR(10,4)),'/',num2str(RR_kulsrud(4,4))]) 
+%
+diary off
+%
 figure(1),clf
 %
 leg = {'E/E_D = 0.04','E/E_D = 0.06','E/E_D = 0.08','E/E_D = 0.10'};
