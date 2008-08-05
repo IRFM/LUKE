@@ -570,9 +570,9 @@ warning on
 %
 signe_out = -signe.ip;
 %
-j_TOT_c = signe_out*Zcurr_RF.x_0_vfsav*mksa.j_ref;
+j_TOT_c = signe_out*Zcurr_RF.x_0_vcfsav*mksa.j_ref;
 if sum(abs(ohm.epsi)) ~= 0
-  j_OHM_c = signe_out*Zcurr.x_0_vfsav*mksa.j_ref;
+  j_OHM_c = signe_out*Zcurr.x_0_vcfsav*mksa.j_ref;
 else
   j_OHM_c = 0*j_TOT_c;
 end
