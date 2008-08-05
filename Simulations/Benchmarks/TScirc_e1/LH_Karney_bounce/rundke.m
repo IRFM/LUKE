@@ -152,7 +152,7 @@ j_rel_cyl = Zcurr_rel_cyl.x_0;
 p_rel_cyl = ZP0_rel_cyl.x_rf_fsav.';
 eta_rel_cyl = j_rel_cyl./p_rel_cyl;
 %
-j_rel = Zcurr_rel.x_0;
+j_rel = Zcurr_rel.x_0_vfsav;
 p_rel = ZP0_rel.x_rf_fsav.';
 eta_rel = j_rel./p_rel;
 %
@@ -160,7 +160,7 @@ j_nr_cyl = Zcurr_nr_cyl.x_0;
 p_nr_cyl = ZP0_nr_cyl.x_rf_fsav.';
 eta_nr_cyl = j_nr_cyl./p_nr_cyl;
 %
-j_nr = Zcurr_nr.x_0;
+j_nr = Zcurr_nr.x_0_vfsav;
 p_nr = ZP0_nr.x_rf_fsav.';
 eta_nr = j_nr./p_nr;
 %
