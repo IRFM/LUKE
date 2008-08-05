@@ -12,7 +12,7 @@ iar = equilDKE.xrho*equilDKE.ap/equilDKE.Rp;
 ymhu0 = linspace(eps,1,1001);%Positive mhu0 value only
 xymhu0 = ones(length(iar),1)*ymhu0;
 dmhu0 = ymhu0(2) - ymhu0(1);
-[xymaskT,xylambda_p0p0,xylambda_p2m1,xylambda_p2m2p2,xylambda_b_p1p1,xylambda_b_p1m1p2,xylambda_b_p1m1,xylambda_b_p1m2,xylambda_b_p2m2p2,xylambda_b_p3m2,xylambda_b_p2,xylambda_b_p1m3p4,xylambda_b_p1m2p2] = bounce_dke_jd(0,ymhu0,equilDKE,0);
+[xymaskT,xylambda_p0p0,xylambda_p2m1] = bounce_dke_jd(0,ymhu0,equilDKE,0);
 %
 x1 = sum(~xymaskT.*(1 - xymhu0.^2).*dmhu0./xylambda_p2m1,2);
 %
