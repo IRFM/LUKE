@@ -84,7 +84,7 @@ dkeparam.nmhu_S = 76;
 %************************************************************************************************************************************
 %
 iar_luke = equilDKE.xrho*equilDKE.ap/equilDKE.Rp;%Circular inverse aspect ratio
-sigman_luke = Zcurr.x_tot_fsav./Zcurr_cyl.x_tot_fsav;
+sigman_luke = Zcurr.x_tot_vfsav./Zcurr_cyl.x_0;
 %
 [iar,sigman_sc] = conductivity_model_yp(equil,1);%Sigmar-Coppi model (low inverse aspect ratio limit)
 [iar,sigman_cghk] = conductivity_model_yp(equil,2);%Connor et al. model (arbitrary inverse aspect ratio)

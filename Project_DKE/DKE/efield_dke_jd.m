@@ -116,7 +116,8 @@ else
         xepsi(ir) = xepsi_fsav(ir);
     elseif bounce_mode == 1,
         if isreal(xepsi_fsav),%flux surface-averaging definition of LUKE using surface densities
-            xepsi(ir) = xepsi_fsav(ir)*(xqbar(ir)/xqtilde(ir))*(xB0(ir)/xBT0(ir))*(1+xx0(ir)/Rp)/XXlambda_b_p1m3p4(1,1,ir);%Value at Bmin for FP or DKE calculations
+            %xepsi(ir) = xepsi_fsav(ir)*(xqbar(ir)/xqtilde(ir))*(xB0(ir)/xBT0(ir))*(1+xx0(ir)/Rp)/XXlambda_b_p1m3p4(1,1,ir);%Value at Bmin for FP or DKE calculations
+            xepsi(ir) = xepsi_fsav(ir)*(xqhat(ir)/xqtilde(ir))/XXlambda_b_p1m2p2(1,1,ir);%Value at Bmin for FP or DKE calculations
         else,%flux surface-averaging definition of CRONOS using volume densities
             xepsi(ir) = imag(xepsi_fsav(ir))*(xqhat(ir)/xqtilde(ir))/XXlambda_b_p1m2p2(1,1,ir);%Value at Bmin for FP or DKE calculations            
         end
