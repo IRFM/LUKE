@@ -75,7 +75,7 @@ for iZi = 1:length(Zi_list),
     %
     dkeparam.coll_mode = 0;% Relativistic Maxwellian background
     [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-    if dke_out.residu_f(end) < dkeparam.prec0_f,
+    if min(dke_out.residu_f) < dkeparam.prec0_f,
         sigma_0(iZi) = Zcurr.x_0/epsi;
     else
         sigma_0(iZi) = NaN;
@@ -83,7 +83,7 @@ for iZi = 1:length(Zi_list),
     %
     dkeparam.coll_mode = 1;% High-velocity limit
     [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-    if dke_out.residu_f(end) < dkeparam.prec0_f,
+    if min(dke_out.residu_f) < dkeparam.prec0_f,
         sigma_1(iZi) = Zcurr.x_0/epsi;
     else
         sigma_1(iZi) = NaN;
@@ -91,7 +91,7 @@ for iZi = 1:length(Zi_list),
     %
     dkeparam.coll_mode = 2;% Linearized Belaiev-Budker
     [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-    if dke_out.residu_f(end) < dkeparam.prec0_f,
+    if min(dke_out.residu_f) < dkeparam.prec0_f,
         sigma_2(iZi) = Zcurr.x_0/epsi;
     else
         sigma_2(iZi) = NaN;
@@ -109,6 +109,36 @@ sigma_Karney_1 = [2.837,2.310,1.489,0.938];
 sigma_Karney_2 = [7.429,4.377,2.078,1.133];
 %
 %************************************************************************************************************************************
+%
+format
+%
+delete res_Zi
+%
+diary res_Zi
+%
+disp(['Comparison LUKE/Karney/Spitzer - NR calculations (betath = 0.01)'])
+disp(['----------------------'])
+disp(['--> Zi = 1'])
+disp(['Linearized operator : sigma = ',num2str(sigma_2(1)),'/',num2str(sigma_Karney_2(1))]) 
+disp(['Maxwellian operator : sigma = ',num2str(sigma_0(1)),'/',num2str(sigma_Karney_0(1))]) 
+disp(['High-Velocity operator : sigma = ',num2str(sigma_1(1)),'/',num2str(sigma_Karney_1(1))]) 
+disp(['----------------------'])
+disp(['--> Zi = 2'])
+disp(['Linearized operator : sigma = ',num2str(sigma_2(2)),'/',num2str(sigma_Karney_2(2))]) 
+disp(['Maxwellian operator : sigma = ',num2str(sigma_0(2)),'/',num2str(sigma_Karney_0(2))]) 
+disp(['High-Velocity operator : sigma = ',num2str(sigma_1(2)),'/',num2str(sigma_Karney_1(2))]) 
+disp(['----------------------'])
+disp(['--> Zi = 5'])
+disp(['Linearized operator : sigma = ',num2str(sigma_2(5)),'/',num2str(sigma_Karney_2(3))]) 
+disp(['Maxwellian operator : sigma = ',num2str(sigma_0(5)),'/',num2str(sigma_Karney_0(3))]) 
+disp(['High-Velocity operator : sigma = ',num2str(sigma_1(5)),'/',num2str(sigma_Karney_1(3))]) 
+disp(['----------------------'])
+disp(['--> Zi = 10'])
+disp(['Linearized operator : sigma = ',num2str(sigma_2(10)),'/',num2str(sigma_Karney_2(4))]) 
+disp(['Maxwellian operator : sigma = ',num2str(sigma_0(10)),'/',num2str(sigma_Karney_0(4))]) 
+disp(['High-Velocity operator : sigma = ',num2str(sigma_1(10)),'/',num2str(sigma_Karney_1(4))]) 
+%
+diary off
 %
 figure(1),clf
 %

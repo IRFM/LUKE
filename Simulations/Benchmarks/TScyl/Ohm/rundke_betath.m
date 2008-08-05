@@ -58,7 +58,15 @@ epsi = 0.001;
 %
 %equil.pzTi = 1e-10*ones(size(equil.pzTi));
 %
-betath_list = [logspace(-5,-2,7),logspace(-1.85,-0.35,11)];
+betath_Karney = sqrt([0.01,0.02,0.05,0.1,0.2]);
+sigma_Karney = [7.291,7.160,6.807,6.317,5.575];
+sigma_Karney_nr_0 = 3.773;
+sigma_Karney_nr_1 = 2.837;
+sigma_Karney_nr_2 = 7.429;
+%sigma_Karney_nr_4 = 3.773;
+%
+%
+betath_list = [logspace(-5,-2,7),0.015,0.02,0.03,0.05,0.07,betath_Karney];
 %
 [qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
 %
@@ -73,7 +81,7 @@ for ibetath = 1:length(betath_list),
     %
     dkeparam.coll_mode = 0;% Relativistic Maxwellian background
     [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-    if dke_out.residu_f(end) < dkeparam.prec0_f,
+    if min(dke_out.residu_f) < dkeparam.prec0_f,
         sigma_0(ibetath) = Zcurr.x_0/epsi;
     else
         sigma_0(ibetath) = NaN;
@@ -81,7 +89,7 @@ for ibetath = 1:length(betath_list),
     %
     dkeparam.coll_mode = 1;% High-velocity limit
     [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-    if dke_out.residu_f(end) < dkeparam.prec0_f,
+    if min(dke_out.residu_f) < dkeparam.prec0_f,
         sigma_1(ibetath) = Zcurr.x_0/epsi;
     else
         sigma_1(ibetath) = NaN;
@@ -89,7 +97,7 @@ for ibetath = 1:length(betath_list),
     %
     dkeparam.coll_mode = 2;% Linearized Belaiev-Budker
     [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-    if dke_out.residu_f(end) < dkeparam.prec0_f,
+    if min(dke_out.residu_f) < dkeparam.prec0_f,
         sigma_2(ibetath) = Zcurr.x_0/epsi;
     else
         sigma_2(ibetath) = NaN;
@@ -99,14 +107,31 @@ end
 %
 sigma_Z1s = 1/100*sqrt(me*qe/10)/(1.65*mu0*e0^2);%Spitzer conductivity (from 'Tokamaks' by J. Wesson, Oxford Science Publication, 3rd Eds., 2004)
 %
-betath_Karney = sqrt([0.01,0.02,0.05,0.1,0.2]);
-sigma_Karney = [7.291,7.160,6.807,6.317,5.575];
-sigma_Karney_nr_0 = 3.773;
-sigma_Karney_nr_1 = 2.837;
-sigma_Karney_nr_2 = 7.429;
-%sigma_Karney_nr_4 = 3.773;
-%
 %************************************************************************************************************************************
+%
+format
+%
+delete res_betath
+%
+diary res_betath
+%
+disp(['Comparison LUKE/Karney/Spitzer - NR calculations (betath = 0.01)'])
+disp(['----------------------'])
+%
+disp(['Linearized operator : sigma = ',num2str(sigma_2(7)),'/',num2str(sigma_Karney_nr_2),'/',num2str(sigma_Z1s)]) 
+disp(['Maxwellian operator : sigma = ',num2str(sigma_0(7)),'/',num2str(sigma_Karney_nr_0)]) 
+disp(['High-Velocity operator : sigma = ',num2str(sigma_1(7)),'/',num2str(sigma_Karney_nr_1)]) 
+%
+disp(' ')
+disp(['Comparison LUKE/Karney - FR calculations'])
+disp(['----------------------'])
+disp(['betath^2 = 0.01 : sigma = ',num2str(sigma_2(13)),'/',num2str(sigma_Karney(1))]) 
+disp(['betath^2 = 0.02 : sigma = ',num2str(sigma_2(14)),'/',num2str(sigma_Karney(2))])
+disp(['betath^2 = 0.05 : sigma = ',num2str(sigma_2(15)),'/',num2str(sigma_Karney(3))])
+disp(['betath^2 = 0.10 : sigma = ',num2str(sigma_2(16)),'/',num2str(sigma_Karney(4))])
+disp(['betath^2 = 0.20 : sigma = ',num2str(sigma_2(17)),'/',num2str(sigma_Karney(5))])
+%
+diary off
 %
 figure(1),clf
 %
