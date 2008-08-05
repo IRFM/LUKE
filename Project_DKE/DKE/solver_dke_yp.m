@@ -276,10 +276,10 @@ curr0 = zeros(nr,nit_f);
 curr1 = zeros(nr,nit_f);
 prec_curr = zeros(nr,nit_f);
 prec_normf = zeros(nr,nit_f);
-residu_f = ones(nr,nit_f);
-prec_residu_f = ones(nr,nit_f);
-residu_g = ones(nr_dke,nit_g);
-prec_residu_g = ones(nr_dke,nit_g);
+residu_f = NaN*ones(nr,nit_f);
+prec_residu_f = NaN*ones(nr,nit_f);
+residu_g = NaN*ones(nr_dke,nit_g);
+prec_residu_g = NaN*ones(nr_dke,nit_g);
 %
 XXI = zeros(npn,nmhu,nr);
 XXI_g = zeros(npn,nmhu,nr);
