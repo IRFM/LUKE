@@ -75,12 +75,14 @@ ohm_cyl = ohm_flat(equil_cyl,epsi);
 ohm = ohm_flat(equil,epsi);
 %
 dkeparam.bounce_mode = 0;
+dkeparam.np_S = 201;
+dkeparam.nmhu_S = 201;
 rho_S = 0.5;
 %
 [Znorm,Zcurr,ZP0,dke_out_cyl] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil_cyl,dkeparam,dkedisplay,ohm_cyl,waves,transpfaste,ripple,[],[]);
 %
 dkeparam.bounce_mode = 1;
-%dkeparam.nmhu_S = 98;
+dkeparam.nmhu_S = 199;
 %
 ap = equil.ptx(end,1);
 rho_list = iar_list*equil.Rp/ap;

@@ -73,11 +73,13 @@ ohm_cyl = ohm_flat(equil_cyl,epsi);
 ohm = ohm_flat(equil,epsi);
 %
 dkeparam.bounce_mode = 0;
+dkeparam.np_S = 201;
+dkeparam.nmhu_S = 201;
 %
 [Znorm,Zcurr,ZP0,dke_out_cyl] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil_cyl,dkeparam,dkedisplay,ohm_cyl,waves,transpfaste,ripple,[],[]);
 %
 dkeparam.bounce_mode = 1;
-dkeparam.nmhu_S = 76;
+dkeparam.nmhu_S = 174;
 [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %	    
 %************************************************************************************************************************************
@@ -91,7 +93,7 @@ figure(1),clf
 %
 leg = {'LUKE'};
 xlim = [0,1];
-ylim = 10.^[-5,0];
+ylim = 10.^[-4,0];
 xlab = 'r/R_p';
 ylab = '\Gamma_R/\Gamma_R^{cyl}';
 tit = '';
