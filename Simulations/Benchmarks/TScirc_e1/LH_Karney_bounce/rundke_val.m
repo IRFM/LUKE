@@ -105,7 +105,7 @@ rho_S = 0.5;
 [Znorm_rel_cyl,Zcurr_rel_cyl,ZP0_rel_cyl] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil_cyl,dkeparam,dkedisplay,ohm,waves_cyl,transpfaste,ripple,[],[]);
 %
 dkeparam.bounce_mode = 1;
-dkeparam.nmhu_S = 174;
+dkeparam.nmhu_S = 199;
 %
 ap = equil.ptx(end,1);
 rho_list = iar_list*equil.Rp/ap;
@@ -150,7 +150,7 @@ dkeparam.bounce_mode = 0;
 [Znorm_nr_cyl,Zcurr_nr_cyl,ZP0_nr_cyl] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil_cyl,dkeparam,dkedisplay,ohm,waves_cyl,transpfaste,ripple,[],[]);
 %
 dkeparam.bounce_mode = 1;
-dkeparam.nmhu_S = 174;
+dkeparam.nmhu_S = 199;
 %
 for irho = 1:length(rho_list),
     %
