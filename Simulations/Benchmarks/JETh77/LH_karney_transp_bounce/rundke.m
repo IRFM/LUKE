@@ -13,7 +13,7 @@ opt_proc = 0;%test for numerical performance test with number of processors
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
-id_simul = 'LH_karney_transp_nobounce';%Simulation ID
+id_simul = 'LH_karney_transp_bounce';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)

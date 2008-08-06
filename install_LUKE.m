@@ -32,7 +32,7 @@ end
 if exist(startuppath),%startup.m file already exist
     flag = 0;
 	%
-	fid = fopen(startuppath,'w');  
+	fid = fopen(startuppath,'r+');  
 	if fid == -1,
 		disp(['Cannot write to startup.m, no permission.']);
 		disp(['A new startup.m file will be created in the home or pathdef directory.']);
