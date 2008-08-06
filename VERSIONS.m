@@ -1157,3 +1157,69 @@
 % U ITER/Scen4/rundke_ITER_Scen4_IAEA06_21Z_Alpha_3p7.m (")
 % U ITER/Scen4/rundke_ITER_Scen4_IAEA06_21Z_Alpha_5p0.m (")
 %
+% ----------------------------------------------------------------------------------------------------
+% 
+% LUKE Release 1.6.3
+% 
+% - EC beam waist
+% - Volumic bounce-averaging
+% - Examples tested
+% 
+% ====> LUKE
+%
+% U alltests_LUKE.m (tested and corrected)
+% U install_LUKE.m (small correction)
+% 
+% 
+% ====> LUKE/Project_DKE/Display
+%
+% U imake_angles_TCV_jd.m (beam waist)
+% U imake_launch_angles_TCV_jd.m (")
+% U imake_struct_jd.m (small correction)
+% U imake_wave_jd.m (beam waist)
+% U iputfile_jd.m (small correction)
+% U irunluke_jd.m (")
+%
+% ====> LUKE/Project_DKE/DKE
+%
+% U LUKEversion_jd.m (LUKE 1.6.3)
+% U efield_dke_jd.m (Volumic bounce-averaging)
+% U solver_dke_yp.m (small correction)
+% U fmoments_dke_yp.m (Volumic bounce-averaging)
+% U load_structures_yp.m (small correction)
+% 
+% ====> LUKE/Project_DKE/Modules/Cronos
+%
+% U zstarwars.m (small corrections)
+% U make_wavert_cronos.m (")
+% 
+% ====> LUKE/Project_DKE/Modules/RT
+%
+% U main_C3PO_jd.m (beam waist)
+% U main_rayinit_launch_jd.m (")
+% U make_beam_wave_jd.m (")
+% 
+% ====> LUKE/Project_DKE/Packages/
+%
+% U test_packages_dke_yp.m (small corrections)
+%
+% ====> LUKE/Tools
+%
+% U graph2D_jd.m (small corrections)
+% U graph_wave_jd.m (")
+
+%
+% ====> LUKE/Simulations/Benchmarks
+%
+% Many updates: 
+% - TScirc_e1 case where the volumic flux-surface averages are used
+% - Numerical values saved in text file for data
+% - test function updated
+%
+% ====> LUKE/Simulations/Examples
+%
+% Examples updated for LUKE 1.6.2
+%
+
+
+
