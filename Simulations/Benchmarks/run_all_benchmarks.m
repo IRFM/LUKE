@@ -250,3 +250,25 @@ else
 end
 cd ../..
 %
+% ---------------------- TScirc -----------------------
+%
+forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
+cd(['TScirc',filesep,'LH_karney_ripple']);
+if exist('DKE_RESULTS_TScirc_LH_karney_ripple.mat') == 0 | forcerun,
+   rundke
+else
+   info_dke_yp(2,['Simulation TScirc',filesep,'LH_karney_ripple skipped because already done !']) 
+end
+cd ../..
+%
+% ---------------------- TScirc_peak -----------------------
+%
+forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
+cd(['TScirc_peak',filesep,'LH_karney_ripple']);
+if exist('DKE_RESULTS_TScirc_peak_LH_karney_rippleon.mat') == 0 | forcerun,
+   rundke
+else
+   info_dke_yp(2,['Simulation TScirc_peak',filesep,'LH_karney_ripple skipped because already done !']) 
+end
+cd ../..
+%
