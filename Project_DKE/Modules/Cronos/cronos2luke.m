@@ -415,6 +415,12 @@ dkepath.temppath = [dkepath.temppathroot,filesep,'CRONOS',filesep,timeid_jd(cloc
 % PARAMETRES LUKE
 %
 dkeparam.rt_mode = par.rt_mode;%RT-DKE power consistency
+if par.rt_mode == 4
+ 
+  disp('This version of LUKE only support rt_mode = 1');
+  dkeparam.rt_mode = 1;
+
+end
 dkeparam.abs_lim = par.abs_lim;%Relative level of RF power absorption that is accpeted for in the quasilinear convergence loop (0: no threshold, 1: full absorption)
 dkeparam.nit_rf = par.nit_rf;%Maximum number of iteration in ray-tracing. Works only if rt_mode = 1 and more than one radial point (default = 1)
 dkeparam.dke_mode = par.dke_mode;%Fokker-Planck equation (0), Drift Kinetic equation (1)
@@ -541,6 +547,10 @@ end
 %
 ik = 1;
 warning off
+%
+% accessibility test
+%
+acces_lh
 %
 %while 1,
    [Znorm_RF,Zcurr_RF,ZP0_RF,dke_out_RF,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = run_lukert('cronos',wavestructs,waves,[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[],opt_save);
