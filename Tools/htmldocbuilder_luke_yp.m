@@ -27,7 +27,11 @@ dirinit = pwd;%initial directory
 cd(luke_root);
 cd ..;
 %
-lukefolder = luke_root(max(find(luke_root(1:end-1) == '/')) + 1:end-1);
+if ~strcmp(computer,'PCWIN'),
+    lukefolder = luke_root(max(find(luke_root(1:end-1) == '/')) + 1:end-1);
+else
+    lukefolder = luke_root(max(find(luke_root(1:end-1) == '\')) + 1:end-1);
+end
 %
 searchpath = {[lukefolder],...
               [lukefolder,'/Project_DKE/Database'],...              
