@@ -33,8 +33,8 @@ for iw = 1:nw,
     if par.angle_var(iw) == 1,
         %
         angle_mul  = angle(cons(iw));
-        angle_pol = fix(abs(angle_mul) .* 1e7) .* 1e-4 - 360;;
-        angle_tor = (abs(angle_mul) .* 1e7 - fix(abs(angle_mul) .* 1e7)) .* 1e3 - 360;
+        angle_tor = fix(abs(angle_mul) .* 1e7) .* 1e-4 - 360;;
+        angle_pol = (abs(angle_mul) .* 1e7 - fix(abs(angle_mul) .* 1e7)) .* 1e3 - 360;
         %        
     else
         %

@@ -1,5 +1,5 @@
-% zstarwars profil de depot hybride + EC calcule par C3PO + LUKE
-%--------------------------------------------------------------
+%  ZSTARWARS profil de depot hybride + EC calcule par C3PO + LUKE
+%-------------------------------------------------------------
 % fichier zstarwars.m -> fichiers source dans repertoire
 % ~/Project_DKE/Modules/Cronos/
 %
@@ -288,7 +288,8 @@ else
 end
 shot    = 0;
 sortie = proto;
-sortie.err = 0;% on definit le flag d'erreur a 0 par defaut (pas d'erreur)
+sortie.err = 0;
+% on definit le flag d'erreur a 0 par defaut (pas d'erreur)
 %
 %--------------------------- LIEN AVEC C3PO + LUKE ------------------
 %
@@ -309,6 +310,18 @@ if ischar(par.rho_S)
 end
 
 equil = make_equil_cronos(shot,equi,gene,prof,compo,impur);
+if sum(equil.ptBy(:,end)-equil.ptBy(:,1)) ~= 0
+    disp('equilibrium warning, By(:,theta=0) ~= By(:,theta=pi)')
+    equil.ptBy(:,end) = equil.ptBy(:,1);
+end
+if sum(equil.ptBx(:,end)-equil.ptBx(:,1)) ~= 0
+    disp('equilibrium warning, Bx(:,theta=0) ~= Bx(:,theta=pi)')
+    equil.ptBx(:,end) = equil.ptBx(:,1);
+end
+if sum(equil.ptBPHI(:,end)-equil.ptBPHI(:,1)) ~= 0
+    disp('equilibrium warning, Bphi(:,theta=0) ~= Bphi(:,theta=pi)')
+    equil.ptBPHI(:,end) = equil.ptBPHI(:,1);
+end
 %
 % Determines run type
 %
@@ -485,9 +498,17 @@ else
 end
 transpfaste.Vr_model = par.Vr_model;%Radial pinch type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth),
 %
+% cas sans transport, strucutre vide
+%
+if transpfaste.Dr0 == 0 & transpfaste.Vr0 == 0
+
+  transpfaste = [];
+
+end
+
+%
 % PARAMETRES WAVE LH + EC (C3PO) 
 %
-
 for iw = 1:length(launchs),
     [waveparam,fitequilparam,rayparam,raydisplay,C3POparam] = make_wavert_cronos(launchs{iw}.type);%parameter for ray-tracing are adapted to the selected wave
     %   	
@@ -623,17 +644,31 @@ end
 %
 % calcul du flux toroidal normalise associé a la grille de LUKE 
 %
+if ~isfield(par,'depip')
+  par.depip = 1;
+end
+normip = 1;
+if par.depip == 0
+  iboot = equi.rhomax * trapz(gene.x,neo.jboot.*equi.spr,2);
+  if I_LH_c*1e6 > equi.ip
+
+    normip = equi.ip / (I_LH_c*1e6+iboot);
+  
+  end
+  
+end
+
 %equilDKE.xcron = interp1(psipncronos,gene.x,equilDKE.xpsin);
 %
 % preparation des variables de sortie (sortie.j, sortie.el) pour CRONOS sur la bonne grille
 % et avec les bonnes unites
 %
-sortie.j  = interp1(equilDKE.xrhoT,j_LH_c,gene.x,'pchip',0) * 1e6;
+sortie.j  = interp1(equilDKE.xrhoT,j_LH_c,gene.x,'pchip',0) * 1e6 * normip;
 sortie.el = interp1(equilDKE.xrhoT,p_LH_c,gene.x,'pchip',0) * 1e6;
 if par.Dr_model == 2
     sortie.j=diffJ(sortie.j,equi.rhomax*gene.x,par.Dr0);  % diffusion phenomenologique du courant
 end
-
+sortie.err = normip;
 %
 % blindage : 0 au bord, au centre on recopie la premiere valeur non nulle
 %
