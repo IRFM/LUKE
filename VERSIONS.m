@@ -1184,14 +1184,16 @@
 %
 % U LUKEversion_jd.m (LUKE 1.6.3)
 % U efield_dke_jd.m (Volumic bounce-averaging)
+% U equilibrium_jd.m (rhoT, rhoV, rhoP and faster function)
 % U solver_dke_yp.m (small correction)
 % U fmoments_dke_yp.m (Volumic bounce-averaging)
 % U load_structures_yp.m (small correction)
 % U proc_luke_jd.m (")
+% U qfactors_dke_yp.m (for equilibrium_jd.m)
 % 
 % ====> LUKE/Project_DKE/Modules/Cronos
 %
-% U zstarwars.m (small corrections)
+% U zstarwars.m (small corrections + rhoT)
 % U make_wavert_cronos.m (")
 % 
 % ====> LUKE/Project_DKE/Modules/RT
@@ -1208,7 +1210,7 @@
 %
 % U graph2D_jd.m (small corrections)
 % U graph_wave_jd.m (")
-
+% U htmldocbuilder_luke_yp.m (windows compatible)
 %
 % ====> LUKE/Simulations/Benchmarks
 %
