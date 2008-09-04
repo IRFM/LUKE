@@ -623,13 +623,13 @@ end
 %
 % calcul du flux toroidal normalise associé a la grille de LUKE 
 %
-equilDKE.xcron = interp1(psipncronos,gene.x,equilDKE.xpsin);
+%equilDKE.xcron = interp1(psipncronos,gene.x,equilDKE.xpsin);
 %
 % preparation des variables de sortie (sortie.j, sortie.el) pour CRONOS sur la bonne grille
 % et avec les bonnes unites
 %
-sortie.j  = interp1(equilDKE.xcron,j_LH_c,gene.x,'pchip',0) * 1e6;
-sortie.el = interp1(equilDKE.xcron,p_LH_c,gene.x,'pchip',0) * 1e6;
+sortie.j  = interp1(equilDKE.xrhoT,j_LH_c,gene.x,'pchip',0) * 1e6;
+sortie.el = interp1(equilDKE.xrhoT,p_LH_c,gene.x,'pchip',0) * 1e6;
 if par.Dr_model == 2
     sortie.j=diffJ(sortie.j,equi.rhomax*gene.x,par.Dr0);  % diffusion phenomenologique du courant
 end
