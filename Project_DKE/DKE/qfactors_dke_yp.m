@@ -1,4 +1,4 @@
-function [xq,xqtilde,xqbar,xqhat,xqcronos] = qfactors_dke_yp(equil_mode,Rp,ap,Xx,Xy,XBx,XBy,XBphi,xx0,xB0,xBT0,xBp0);
+function [xq,xqtilde,xqbar,xqhat,xqcronos,xB0] = qfactors_dke_yp(equil_mode,Rp,ap,Xx,Xy,XBx,XBy,XBphi,xx0,xB0,xBT0,xBp0);
 %
 % Calculation of the different q factors needed for solving the bounce averaged drift-kinetic-equation for
 % arbitrary equilibrium (see the notice for explanations concerning notations)
@@ -39,7 +39,10 @@ if equil_mode == 1,
     XMBy = (XBy(1:nt-1,:) + XBy(2:nt,:))/2;
     XMBphi = (XBphi(1:nt-1,:) + XBphi(2:nt,:))/2;
     XMB = sqrt(XMBx.^2 + XMBy.^2 + XMBphi.^2);
-    XMBmin = ones(nt-1,1)*min(XMB);
+    %
+    xB0 = min(XMB);
+    %
+    XMBmin = ones(nt-1,1)*xB0;
     %
     XMx = (Xx(1:nt-1,:) + Xx(2:nt,:))/2;
     XMy = (Xy(1:nt-1,:) + Xy(2:nt,:))/2;

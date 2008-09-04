@@ -242,8 +242,9 @@ nmtheta = length(mtheta);
 %
 ap =  mx(npsi,1);%Plasma minor radius on the LFS midplane 
 %
-psia_apRp = equil.psi_apRp(npsi);%Poloidal flux at the edge
-psin = equil.psi_apRp/psia_apRp;%Normalized poloidal flux
+psi_apRp = reshape(equil.psi_apRp,[1,npsi]);
+psia_apRp = psi_apRp(npsi);%Poloidal flux at the edge
+psin = psi_apRp/psia_apRp;%Normalized poloidal flux
 %
 pZeff = sum(equil.pzni.*repmat((equil.zZi.^2)',[1,npsi]))./equil.pne;%Effective charge (a.u.)
 %
@@ -264,7 +265,7 @@ XBx = interp1(psin,mBx,xpsin,method);
 XBy = interp1(psin,mBy,xpsin,method);
 XBphi = interp1(psin,mBPHI,xpsin,method);
 %
-xrho = Xx(:,1)'/ap;%Normalized radius on the horizontal LFS midplane                          
+xrho = Xx(:,1)'/ap;%Normalized radius on the horizontal LFS midplane
 %
 xTe = interp1(psin,equil.pTe,xpsin,method);
 xne = interp1(psin,equil.pne,xpsin,method);
@@ -276,7 +277,7 @@ XBT = abs(XBphi);%Toroidal B-field
 XBp = sqrt(XBx.^2 + XBy.^2);%Poloidal B-field
 XB = sqrt(XBphi.^2 + XBx.^2 + XBy.^2);%Total B-field
 %
-%index 0 refers to the minimum of the magnetic field
+% index 0 refers to the minimum of the magnetic field
 %
 [xB0,xiB0] = min(XB'); %Minimum of B on flux surface
 xBmax = max(XB'); %Maximum of B on flux surface
@@ -288,39 +289,48 @@ xBT0 = XBT(xiB0);%Toroidal field at B=Bmin
 xBp0 = XBp(xiB0);%Poroidal field at B=Bmin
 xx0 = Xx(xiB0);%Major radius at B=Bmin
 %
+% volume and surface elements
+%
+% half grids in psi (for trapezoidal integration avoiding singularities)
+%
+hmx = (mx(1:npsi-1,:) + mx(2:npsi,:))/2;
+hmy = (my(1:npsi-1,:) + my(2:npsi,:))/2;
+hmBx = (mBx(1:npsi-1,:) + mBx(2:npsi,:))/2;
+hmBy = (mBy(1:npsi-1,:) + mBy(2:npsi,:))/2;
+hmBPHI = (mBPHI(1:npsi-1,:) + mBPHI(2:npsi,:))/2;
+%
+[hpq,hpqtilde,hpqbar,hpqhat,hpqcronos,hpB0] = qfactors_dke_yp(1,Rp,ap,hmx,hmy,hmBx,hmBy,hmBPHI);
+%
+dpsi_apRp = abs(diff(psi_apRp));
+%
+% FS Volume per 2pi*Rp
+%
+hpdV_2piRp = 2*pi*hpqhat./hpB0;
+pV_2piRp = [0,cumsum(hpdV_2piRp.*dpsi_apRp)];
+%    
+% FS poloidal surface
+%
+hpdA = 2*pi*hpqbar./hpB0;
+pA = [0,cumsum(hpdA.*dpsi_apRp)];
+%
+% Other definitions for rho
+%
+psiT = 2*pi*[0,cumsum(hpq.*dpsi_apRp)];
+xrhoT = interp1(psin,sqrt(psiT/psiT(end)),xpsin);
+xrhoV = interp1(psin,sqrt(pV_2piRp/pV_2piRp(end)),xpsin);
+xrhoP = sqrt(xpsin);
+%
 % FS volume and poloidal surface
 %
 if ~isnan(xpsin_S_dke)
-% half grids in theta and psi (for trapezoidal integration avoiding singularities)
-    hmtheta = (mtheta(1:nmtheta-1) + mtheta(2:nmtheta))/2;
-    hppsin = (psin(1:npsi-1) + psin(2:npsi))/2;
-    hmx = (mx(1:npsi-1,1:nmtheta-1) + mx(2:npsi,1:nmtheta-1) + mx(1:npsi-1,2:nmtheta) + mx(2:npsi,2:nmtheta))/4;
-    hmy = (my(1:npsi-1,1:nmtheta-1) + my(2:npsi,1:nmtheta-1) + my(1:npsi-1,2:nmtheta) + my(2:npsi,2:nmtheta))/4;
-    hmBx = (mBx(1:npsi-1,1:nmtheta-1) + mBx(2:npsi,1:nmtheta-1) + mBx(1:npsi-1,2:nmtheta) + mBx(2:npsi,2:nmtheta))/4;
-    hmBy = (mBy(1:npsi-1,1:nmtheta-1) + mBy(2:npsi,1:nmtheta-1) + mBy(1:npsi-1,2:nmtheta) + mBy(2:npsi,2:nmtheta))/4;
-    hmBPHI = (mBPHI(1:npsi-1,1:nmtheta-1) + mBPHI(2:npsi,1:nmtheta-1) + mBPHI(1:npsi-1,2:nmtheta) + mBPHI(2:npsi,2:nmtheta))/4;
-%
-    dpsi = abs(diff(equil.psi_apRp));
-    dmtheta = diff(mtheta);
-% FS Volume per 2pi*Rp
-    hmFV_2piRp = (hmx.^2 + hmy.^2)./abs(hmBx.*hmy - hmBy.*hmx)/ap;
-%
-    pdV_2piRp = integral_dke_jd(dmtheta,hmFV_2piRp,2);
-    spdV_2piRp = triu(repmat(pdV_2piRp,[1,npsi-1]));
-    pV_2piRp = [0,integral_dke_jd(dpsi,spdV_2piRp,1)'];
-%    
-% FS poloidal surface
-    hmFA = (hmx.^2 + hmy.^2)./abs(hmBx.*hmy - hmBy.*hmx)./(1 + hmx/Rp)/ap;
-%
-    pdA = integral_dke_jd(dmtheta,hmFA,2);
-    spdA = triu(repmat(pdA,[1,npsi-1]));
-    pA = [0,integral_dke_jd(dpsi,spdA,1)'];
 %
 % DKE FS volume and poloidal surface
+%
     xV_2piRp_S_dke = interp1(psin,pV_2piRp,xpsin_S_dke,method);
     xA_S_dke = interp1(psin,pA,xpsin_S_dke,method);
 %
 % DKE FS invremental volume and poloidal surface
+%
     xdV_2piRp_dke = diff(xV_2piRp_S_dke);
     xdA_dke = diff(xA_S_dke);
 else
@@ -412,6 +422,9 @@ equilDKE.xx0 = xx0;
 equilDKE.xBT0 = xBT0;
 equilDKE.xBp0 = xBp0;
 equilDKE.xrho = xrho;
+equilDKE.xrhoP = xrhoP;
+equilDKE.xrhoT = xrhoT;
+equilDKE.xrhoV = xrhoV;
 equilDKE.xTe = xTe;
 equilDKE.xne = xne;
 equilDKE.xzTi = xzTi;
