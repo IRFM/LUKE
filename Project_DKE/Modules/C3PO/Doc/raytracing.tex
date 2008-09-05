@@ -1,4 +1,4 @@
-%% LyX 1.5.4 created this file.  For more info, see http://www.lyx.org/.
+%% LyX 1.5.6 created this file.  For more info, see http://www.lyx.org/.
 %% Do not edit unless you really know what you are doing.
 \documentclass[12pt,english,a4paper]{article}
 \usepackage[T1]{fontenc}
@@ -13,6 +13,24 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
 %% A simple dot to overcome graphicx limitations
 \newcommand{\lyxdot}{.}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+%% LyX 1.5.6 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+
+
+
+
+
+
+
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+%% A simple dot to overcome graphicx limitations
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
@@ -32,6 +50,7 @@
 
 
 \usepackage{amsfonts}
+
 
 %
 \setcounter{MaxMatrixCols}{30}
@@ -61,10 +80,11 @@
 \setlength{\topmargin}{0 true cm}
 \makeatother
 
+\makeatother
 
+\makeatother
 
 \usepackage{babel}
-\makeatother
 
 \begin{document}
 
@@ -506,7 +526,7 @@ The condition for the specular reflection is \begin{equation}
 \mathbf{k}_{2}\cdot\widehat{\mathbf{\phi}}=\mathbf{k}_{1}\cdot\widehat{\mathbf{\phi}}\end{array}\label{spec}\end{equation}
  with the contravariant basis $\mathbf{e}^{j}$ $=\left(\left\Vert \mathbf{\nabla}\rho\right\Vert \widehat{\mathbf{\rho}},\dfrac{\widehat{\mathbf{\theta}}}{r},\dfrac{\widehat{\mathbf{\phi}}}{R}\right)$
 such that\begin{equation}
-\mathbf{k}=k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \widehat{\mathbf{\rho}}+\dfrac{m}{r}\widehat{\mathbf{\theta}}+\dfrac{n}{R}\widehat{\mathbf{\phi}}\end{equation}
+\mathbf{k}=k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \widehat{\mathbf{\rho}}+\dfrac{m}{r}\widehat{\mathbf{\theta}}+\dfrac{n}{R}\widehat{\mathbf{\phi}}\label{eq:wavevector}\end{equation}
  and (\ref{spec}) becomes \begin{equation}
 \begin{array}{l}
 k_{2\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert -\dfrac{m_{2}}{r}\sin\alpha=-k_{1\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert +\dfrac{m_{1}}{r}\sin\alpha\\
@@ -726,19 +746,20 @@ inhomogeneities such as the magnetic ripple \citet{pey96,imb05}.
 %dummy comment inserted by tex2lyx to ensure that this paragraph is not empty
 %dummy comment inserted by tex2lyx to ensure that this paragraph is not empty
 %dummy comment inserted by tex2lyx to ensure that this paragraph is not empty
+%dummy comment inserted by tex2lyx to ensure that this paragraph is not empty
 {}
 
 
 \section{\label{sec:Explicit-expressions}Explicit expressions}
 
 
-\subsection{Dispersion relation}
+\subsection{Dispersion relation\label{sub:disperrelation}}
 
 In a cartesian system $\left(x,y,z\right)$ defined such that the
 background magnetic field is\begin{equation}
 \mathbf{B}_{0}=B_{0}\mathbf{\hat{z}}\end{equation}
  and the wave index of refraction is\begin{equation}
-\mathbf{N}=N_{\Vert}\mathbf{\hat{z}}+N_{\bot}\mathbf{\hat{x}}\end{equation}
+\mathbf{N}=N_{\Vert}\mathbf{\hat{z}}+N_{\bot}\mathbf{\hat{x}}\label{eq:Nprojection}\end{equation}
  the permittivity tensor can be expressed explicitly as\begin{equation}
 \mathbb{K=}\left(\begin{array}{ccc}
 K_{xx} & K_{xy} & K_{xz}\\
@@ -920,7 +941,7 @@ k_{\rho}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[\sin\alpha\d
 \fbox{$\begin{array}{l}
 n=\sigma_{B}\dfrac{R}{T}\left(k_{\Vert}-\sigma_{I}P\cos\alpha\dfrac{m}{r}\right)\\
 m=\sigma_{I}\dfrac{r}{P\cos\alpha}\left(k_{\Vert}-\sigma_{B}T\dfrac{n}{R}\right)\\
-k_{\rho}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[\sin\alpha\dfrac{m}{r}+\sigma_{\rho}\sqrt{k_{\bot}^{2}-\dfrac{1}{T^{2}}\left(\cos\alpha\dfrac{m}{r}-\sigma_{I}Pk_{\Vert}\right)^{2}}\right]\end{array}$}\end{equation}
+k_{\rho}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[\sin\alpha\dfrac{m}{r}+\sigma_{\rho}\sqrt{k_{\bot}^{2}-\dfrac{1}{T^{2}}\left(\cos\alpha\dfrac{m}{r}-\sigma_{I}Pk_{\Vert}\right)^{2}}\right]\end{array}$}\label{eq:nmkrho}\end{equation}
  where $\sigma_{\rho}=\pm1$. We can also express $k_{\rho}$ as \begin{equation}
 \fbox{$k_{\rho}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[\sin\alpha\dfrac{m}{r}+\sigma_{\rho}\sqrt{k^{2}-\cos^{2}\alpha\dfrac{m^{2}}{r^{2}}-\dfrac{n^{2}}{R^{2}}}\right]$}\label{krhoeq}\end{equation}
  The correct solution for $k_{\rho}$ can be determined from (\ref{inwardcond}).
@@ -957,6 +978,91 @@ k_{\bot}=\sqrt{\left[\left(\mathbf{\hat{\rho}}\cdot\mathbf{k}\right)^{2}+\left(\
 \mathbf{\hat{s}}\cdot\mathbf{k}=\sin\alpha k_{r}+\cos\alpha k_{\theta}\\
 \mathbf{\hat{\rho}}\cdot\mathbf{k}=\cos\alpha k_{r}-\sin\alpha k_{\theta}\end{array}\end{equation}
 
+
+
+\subsection{Wave scttering by fluctuations}
+
+The resolution of the wave kinetic equation for describing rf wave
+scattering by magnetic field or density fluctuations may be performed
+with a Monte-Carlo method \citep{bon82,vah92}. The wave vectors $\mathbf{k}$
+and $\mathbf{k}^{\prime}$ before and after the scattering event respectively
+are linked by the following vector relations\begin{equation}
+\mathbf{k}\cdot\mathbf{b}=\mathbf{k}^{\prime}\cdot\mathbf{b}=k_{\Vert}\label{eq:wskparconservation}\end{equation}
+and\begin{equation}
+\mathbf{k}_{\bot}\cdot\mathbf{k}_{\bot}^{\prime}=k_{\bot}k_{\bot}^{\prime}\cos\beta\label{eq:wskperprotation}\end{equation}
+ where $\mathbf{k}_{\bot}=\left(\mathbf{k}\times\mathbf{b}\right)/\left\Vert \mathbf{B}\right\Vert $
+and $\mathbf{b}=\mathbf{B}/\left\Vert \mathbf{B}\right\Vert .$ The
+scattering process consists in a rotation by an angle $\beta$ of
+the component of the wave vector perpendicular to the wave field direction,
+the parallel component of $\mathbf{k}$ being unchanged. Indeed, the
+parallel wave number of the low-frequency fluctuations is considered
+to be negligible as compared to $k_{\Vert}$. The value of $k_{\bot}^{\prime}$
+is deduced from the local dispersion relation. For like transitions,
+the scattered wave remains on the branch of propagation, and therefore,
+$k_{\bot}^{\prime}=k_{\bot}$. Conversely, for unlike transitions,
+the scattering leads to a modification of the conditions of propagation
+and $k_{\bot}^{\prime}\neq k_{\bot}$. In Ref. \citet{bon82}, the
+relation $\mathbf{b}\cdot\left(\mathbf{k}_{\bot}\times\mathbf{k}_{\bot}^{\prime}\right)=k_{\bot}k_{\bot}^{\prime}\sin\beta$
+is added to (\ref{eq:wskparconservation}) and (\ref{eq:wskperprotation}).
+However, it is equivalent to (\ref{eq:wskperprotation}) and can be
+used to check the consistency of the calculation of $k_{\rho}^{\prime}$,
+$m^{\prime}$ and $n^{\prime}$. There are therefore determined by
+the relations (\ref{eq:wskparconservation}) and (\ref{eq:wskperprotation})
+and the additional one (\ref{krhoeq}), \begin{equation}
+k_{\rho}^{\prime}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[\sin\alpha\dfrac{m^{\prime}}{r}+\sigma_{\rho}\sqrt{k^{\prime2}-\cos^{2}\alpha\dfrac{m^{\prime2}}{r^{2}}-\dfrac{n^{\prime2}}{R^{2}}}\right]\label{eq:wskrho}\end{equation}
+with $k^{\prime2}=k_{\Vert}^{2}+k_{\bot}^{\prime2}$. By definition,
+the variation of the poloidal mode number $m$ is made possible by
+the breaking of the toroidal symmetry resulting from the fluctuations,
+so that the toroidal mode number $n$ is no more conserved in the
+scattering process.
+
+{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*} calculs à vérifier. Premier jet{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}
+
+According to (\ref{eq:wavevector}), the scattered wave vector $\mathbf{k}^{\prime}$
+may be expressed as \[
+\mathbf{k}^{\prime}=k_{\rho}^{\prime}\left\Vert \mathbf{\nabla}\rho\right\Vert \widehat{\mathbf{\rho}}+\dfrac{m^{\prime}}{r}\widehat{\mathbf{\theta}}+\dfrac{n^{\prime}}{R}\widehat{\mathbf{\phi}}\]
+and since $\mathbf{b}=\sigma_{B}b_{T}\mathbf{\hat{\phi}}+\sigma_{I}b_{P}\mathbf{\hat{s}}$
+with $b_{T}=B_{T}/B$ and $b_{P}=B_{P}/B$
+
+\begin{equation}
+\mathbf{\mathbf{k}^{\prime}\cdot\mathbf{b}}=k_{\Vert}^{\prime}=k_{\Vert}=\sigma_{B}b_{T}\dfrac{m^{\prime}}{r}+\sigma_{I}b_{P}\dfrac{n^{\prime}}{R}\end{equation}
+or
+
+\begin{equation}
+\sigma b_{T}\dfrac{m^{\prime}}{r}+\sigma_{I}b_{P}\dfrac{n^{\prime}}{R}=\sigma_{B}b_{T}\dfrac{m}{r}+\sigma_{I}b_{P}\dfrac{n}{R}\label{eq:ws1}\end{equation}
+by conservation of $k_{\Vert}$. Let define $\mathbf{k}_{\bot}=\mathbf{k}\times\mathbf{b}$
+and $\mathbf{k}_{\bot}^{\prime}=\mathbf{k}^{\prime}\times\mathbf{b}$.
+By inserting the expressions of $\mathbf{k}_{\bot}$ and $\mathbf{k}_{\bot}^{\prime}$
+into the relation $\mathbf{k}_{\bot}\cdot\mathbf{k}_{\bot}^{\prime}=k_{\bot}k_{\bot}^{\prime}\cos\beta$,
+one obtains\[
+\left(\mathbf{k}\times\mathbf{b}\right)\cdot\left(\mathbf{k}^{\prime}\times\mathbf{b}\right)=\left(\mathbf{k}\cdot\mathbf{k}^{\prime}\right)\left(\mathbf{b}\cdot\mathbf{b}\right)-\left(\mathbf{k}\cdot\mathbf{b}\right)\left(\mathbf{b\cdot}\mathbf{k}^{\prime}\right)=\mathbf{k}\cdot\mathbf{k}^{\prime}-k_{\Vert}^{2}\]
+which leads to the second relation\begin{equation}
+k_{\bot}k_{\bot}^{\prime}\cos\beta=k_{\rho}k_{\rho}^{\prime}\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2}+\dfrac{mm^{\prime}}{r^{2}}+\dfrac{nn^{\prime}}{R^{2}}-\frac{\left\Vert \mathbf{\nabla}\rho\right\Vert \sin\alpha}{r}\left(mk_{\rho}^{\prime}+m^{\prime}k_{\rho}\right)-k_{\Vert}^{2}\label{eq:ws2}\end{equation}
+
+
+Finally, since \begin{multline*}
+\mathbf{b}\cdot\left(\mathbf{k}\times\mathbf{b}\right)\times\left(\mathbf{k}^{\prime}\times\mathbf{b}\right)=\left[\left(\mathbf{k}\times\mathbf{b}\right)\cdot\mathbf{b}\right]\mathbf{k}^{\prime}\cdot\mathbf{b}-\left[\left(\mathbf{k}\times\mathbf{b}\right)\cdot\mathbf{k}^{\prime}\right]\mathbf{b}\cdot\mathbf{b}\\
+=k_{\Vert}\left(\mathbf{k}\times\mathbf{b}\right)\cdot\mathbf{b}-\left(\mathbf{k}\times\mathbf{b}\right)\cdot\mathbf{k}^{\prime}\\
+=-\left(\mathbf{k}\times\mathbf{b}\right)\cdot\mathbf{k}^{\prime}\end{multline*}
+and $\sigma_{B}b_{T}\mathbf{\hat{\phi}}+\sigma_{I}b_{P}\mathbf{\hat{s}}$\begin{multline*}
+\mathbf{k}\times\mathbf{b}=k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \sigma_{B}b_{T}\widehat{\mathbf{\rho}}\times\mathbf{\hat{\phi}}+\dfrac{m}{r}\sigma_{B}b_{T}\widehat{\mathbf{\theta}}\times\mathbf{\hat{\phi}}\\
++k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \sigma_{I}b_{P}\widehat{\mathbf{\rho}}\times\mathbf{\hat{s}}+\dfrac{m}{r}\sigma_{I}b_{P}\widehat{\mathbf{\theta}}\times\mathbf{\hat{s}}+\dfrac{n}{R}\sigma_{I}b_{P}\widehat{\mathbf{\phi}}\times\mathbf{\hat{s}}\end{multline*}
+one finds\begin{multline*}
+-\left(\mathbf{k}\times\mathbf{b}\right)=k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \sigma_{B}b_{T}\mathbf{\hat{s}}-\dfrac{m}{r}\sigma_{B}b_{T}\mathbf{\hat{r}}\\
+-k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \sigma_{I}b_{P}\mathbf{\hat{\phi}}+\dfrac{m}{r}\sigma_{I}b_{P}\sin\alpha\hat{\phi}+\dfrac{n}{R}\sigma_{I}b_{P}\widehat{\mathbf{\rho}}\end{multline*}
+using the vectorial relations\begin{multline*}
+\mathbf{\hat{s}}=\widehat{\mathbf{\phi}}\times\widehat{\mathbf{\rho}}\\
+\mathbf{\hat{\phi}}=\widehat{\mathbf{\rho}}\times\widehat{\mathbf{s}}\\
+-\sin\alpha\hat{\phi}=\widehat{\mathbf{\theta}}\times\mathbf{\hat{s}}\\
+-\widehat{\mathbf{\rho}}=\widehat{\mathbf{\phi}}\times\mathbf{\hat{s}}\\
+\mathbf{\hat{r}}=\widehat{\mathbf{\theta}}\times\mathbf{\hat{\phi}}\end{multline*}
+
+
+Taking the dot product with $\mathbf{k}^{\prime}$, \begin{equation}
+k_{\bot}k_{\bot}^{\prime}\sin\beta=\frac{\sigma_{B}b_{T}\left\Vert \mathbf{\nabla}\rho\right\Vert \cos\alpha}{r}\left(m^{\prime}k_{\rho}-mk_{\rho}^{\prime}\right)-\frac{\sigma_{I}b_{P}\left\Vert \mathbf{\nabla}\rho\right\Vert }{R}\left(n^{\prime}k_{\rho}-nk_{\rho}^{\prime}\right)-\frac{\sigma_{I}b_{P}\sin\alpha}{rR}\left(n^{\prime}m+nm^{\prime}\right)\label{eq:ws3}\end{equation}
+and combining (\ref{eq:ws1}), (\ref{eq:ws2}) and (\ref{eq:ws3}),
+the components of the scattered wave vector $\mathbf{k}^{\prime}$
+are,
 
 
 \subsection{Calculation of $\left\Vert \mathbf{\nabla}\rho\right\Vert $}
@@ -1038,12 +1144,10 @@ function \citet{bra98}.
 
 %
 \begin{figure}[htb]
- 
-
 \begin{centering}
 \includegraphics[clip,width=3.6in]{\lyxdot \lyxdot /Examples/JETlike/WAVE/figures/JETliketest2p0_numeric_ray_1_RayPoloidal}\\
  \includegraphics[clip,width=3.6in]{\lyxdot \lyxdot /Examples/JETlike/WAVE/figures/JETliketest2p0_analytic_ray_1_RayPoloidal}\\
- 
+
 \par\end{centering}
 
 \caption{Poloidal projection of the ray trajectory. The red curve corresponds
@@ -1058,12 +1162,10 @@ $N_{\phi0}=-2.0$}
 
 %
 \begin{figure}[htb]
- 
-
 \begin{centering}
 \includegraphics[clip,width=3.6in]{\lyxdot \lyxdot /Examples/JETlike/WAVE/figures/JETliketest1p8_numeric_ray_1_RayPoloidal}\\
  \includegraphics[clip,width=3.6in]{\lyxdot \lyxdot /Examples/JETlike/WAVE/figures/JETliketest1p8_analytic_ray_1_RayPoloidal}\\
- 
+
 \par\end{centering}
 
 \caption{Poloidal projection of the ray trajectory. The red curve corresponds
@@ -1078,8 +1180,6 @@ $N_{\phi0}=-1.8$}
 
 %
 \begin{figure}[htb]
- 
-
 \begin{centering}
 \includegraphics[clip,width=3.6in]{\lyxdot \lyxdot /Examples/JETlike/WAVE/Paper_Heikkinen_et_al} 
 \par\end{centering}
@@ -1093,8 +1193,6 @@ $N_{\phi0}=-1.8$}
 
 %
 \begin{figure}[htb]
- 
-
 \begin{centering}
 \includegraphics[clip,width=3.6in]{\lyxdot \lyxdot /Examples/JETlike/WAVE/figures/JETliketest2p0_numeric_ray_1_PoloidalMode} 
 \par\end{centering}
@@ -1109,8 +1207,6 @@ $N_{\phi0}=-2.0$.}
 
 %
 \begin{figure}[htb]
- 
-
 \begin{centering}
 \includegraphics[clip,width=3.6in]{\lyxdot \lyxdot /Examples/JETlike/WAVE/figures/JETliketest2p0_numeric_ray_1_Npar} 
 \par\end{centering}
@@ -1125,8 +1221,6 @@ $N_{\phi0}=-2.0$.}
 
 %
 \begin{figure}[htb]
- 
-
 \begin{centering}
 \includegraphics[clip,width=3.6in]{\lyxdot \lyxdot /Examples/JETlike/WAVE/figures/JETliketest2p0_numeric_ray_1_Disp} 
 \par\end{centering}
@@ -1145,7 +1239,7 @@ A circular concentric toroidal plasma is considered such that\begin{equation}
 \rho=\dfrac{r}{a_{p}}\end{equation}
  with the following equilibrium parameters\begin{equation}
 \begin{tabular}{|c|c|}
-\hline $R_{p}$  &  $3.05\text{ m}$\\
+\hline  $R_{p}$  &  $3.05\text{ m}$\\
 \hline $a_{p}$  &  $0.95\text{ m}$\\
 \hline $\hat{B}_{T}$  &  $3.2\text{ T}$\\
 \hline $I_{p}$  &  $3.5\text{ MA}$\\\hline \end{tabular}\end{equation}
@@ -1281,12 +1375,10 @@ simulations, which require several hundred ray trajectories calculations.
 
 %
 \begin{figure}[htb]
- 
-
 \begin{centering}
 \includegraphics[clip,width=3.6in]{\lyxdot \lyxdot /Examples/VERSATOR2/WAVE/figures/VERSATOR2test_numeric_RayPoloidal}\\
  \includegraphics[clip,width=3.6in]{\lyxdot \lyxdot /Examples/VERSATOR2/WAVE/figures/VERSATOR2test_analytic_RayPoloidal}\\
- 
+
 \par\end{centering}
 
 \caption{Poloidal projection of the ray trajectory. The red curve corresponds
@@ -1301,12 +1393,10 @@ VERSATOR II. $N_{\Vert0}=5.0$.}
 
 %
 \begin{figure}[htb]
- 
-
 \begin{centering}
 \includegraphics[clip,width=3.6in]{\lyxdot \lyxdot /Examples/PLT/WAVE/figures/PLTtest_numeric_RayPoloidal}\\
  \includegraphics[clip,width=3.6in]{\lyxdot \lyxdot /Examples/PLT/WAVE/figures/PLTtest_analytic_RayPoloidal}\\
- 
+
 \par\end{centering}
 
 \caption{Poloidal projection of the ray trajectory. The red curve corresponds
@@ -1321,8 +1411,6 @@ PLT, $N_{\Vert0}=1.33$.}
 
 %
 \begin{figure}[htb]
- 
-
 \begin{centering}
 \includegraphics[clip,width=3.6in]{\lyxdot \lyxdot /Examples/PLT/WAVE/figures/PLTtest_analytic_RhoComp} 
 \par\end{centering}
@@ -1337,8 +1425,6 @@ angle (PLT). $N_{\Vert}=1.33$.}
 
 %
 \begin{figure}[htb]
- 
-
 \begin{centering}
 \includegraphics[clip,width=3.6in]{\lyxdot \lyxdot /Examples/PLT/WAVE/figures/PLTtest_analytic_ThetaComp} 
 \par\end{centering}
@@ -1353,8 +1439,6 @@ angle (PLT). $N_{\Vert}=1.33$.}
 
 %
 \begin{figure}[htb]
- 
-
 \begin{centering}
 \includegraphics[clip,width=3.6in]{\lyxdot \lyxdot /Examples/PLT/WAVE/figures/PLTtest_analytic_NparComp} 
 \par\end{centering}
@@ -1369,8 +1453,6 @@ function of the toroidal angle (PLT). $N_{\Vert}=1.33$.}
 
 %
 \begin{figure}[htb]
- 
-
 \begin{centering}
 \includegraphics[clip,width=3.6in]{\lyxdot \lyxdot /Examples/PLT/WAVE/figures/PLTtest_analytic_NperpComp} 
 \par\end{centering}
@@ -1469,8 +1551,6 @@ power and current deposition generally remains negligible.
 
 %
 \begin{figure}[htb]
- 
-
 \begin{centering}
 \includegraphics[clip,width=3.6in]{\lyxdot \lyxdot /Examples/RTtest/WAVE/figures/test_RT_straight_RayToroidal} 
 \par\end{centering}
@@ -1485,8 +1565,6 @@ in vacuum.}
 
 %
 \begin{figure}[htb]
- 
-
 \begin{centering}
 \includegraphics[clip,width=3.6in]{\lyxdot \lyxdot /Examples/RTtest/WAVE/figures/test_RT_straight_RayPoloidal} 
 \par\end{centering}
@@ -1610,8 +1688,6 @@ geometrical optics is excellent.
 
 %
 \begin{figure}[htb]
- 
-
 \begin{centering}
 \includegraphics[clip,width=3.6in]{\lyxdot \lyxdot /Examples/RFP/WAVE/figures/RFP_LH_ray_1_RayPoloidal} 
 \par\end{centering}
@@ -1625,8 +1701,6 @@ geometrical optics is excellent.
 
 %
 \begin{figure}[htb]
- 
-
 \begin{centering}
 \includegraphics[clip,width=3.6in]{\lyxdot \lyxdot /Examples/RFP/WAVE/figures/RFP_LH_ray_1_RayToroidal} 
 \par\end{centering}
@@ -1640,8 +1714,6 @@ geometrical optics is excellent.
 
 %
 \begin{figure}[htb]
- 
-
 \begin{centering}
 \includegraphics[clip,width=3.6in]{\lyxdot \lyxdot /Examples/RFP/WAVE/figures/RFP_LH_ray_1_Npar} 
 \par\end{centering}
@@ -1655,8 +1727,6 @@ geometrical optics is excellent.
 
 %
 \begin{figure}[htb]
- 
-
 \begin{centering}
 \includegraphics[clip,width=3.6in]{\lyxdot \lyxdot /Examples/RFP/WAVE/figures/RFP_LH_ray_1_Disp} 
 \par\end{centering}
@@ -1773,6 +1843,7 @@ the usual tokamak one, the dispersion relation is well fulfilled along
 the ray path.
 
 \newpage{} \bibliographystyle{unsrt} \bibliographystyle{unsrt}
+\bibliographystyle{unsrt}
 \bibliography{biblio}
 
 \end{document}
