@@ -11,7 +11,7 @@
 
 
 
-
+\usepackage{pdfsync}
 
 
 \makeatletter
@@ -2866,7 +2866,7 @@ k_{\bot}=\sqrt{\left[\left(\mathbf{\hat{\rho}}\cdot\mathbf{k}\right)^{2}+\left(\
 \end_layout
 
 \begin_layout Subsection
-Wave scttering by fluctuations
+Wave scattering by fluctuations
 \end_layout
 
 \begin_layout Standard
@@ -2901,7 +2901,7 @@ and
 \end_inset
 
  where 
-\begin_inset Formula $\mathbf{k}_{\bot}=\left(\mathbf{k}\times\mathbf{b}\right)/\left\Vert \mathbf{B}\right\Vert $
+\begin_inset Formula $\mathbf{k}_{\bot}=\mathbf{k}\times\mathbf{b}$
 \end_inset
 
  and 
@@ -2938,8 +2938,8 @@ d to be negligible as compared to
 \end_inset
 
  is deduced from the local dispersion relation.
- For like transitions, the scattered wave remains on the branch of propagation,
- and therefore, 
+ For like transitions, the scattered wave remains on the same branch of
+ propagation, and therefore, 
 \begin_inset Formula $k_{\bot}^{\prime}=k_{\bot}$
 \end_inset
 
@@ -2980,7 +2980,7 @@ reference "eq:wskperprotation"
 
 \end_inset
 
-) and can be used to check the consistency of the calculation of 
+) and can be used to cross-check the consistency of the calculation of 
 \begin_inset Formula $k_{\rho}^{\prime}$
 \end_inset
 
@@ -2993,7 +2993,11 @@ reference "eq:wskperprotation"
 \end_inset
 
 .
- There are therefore determined by the relations (
+ The coordinates of 
+\begin_inset Formula $\mathbf{k}^{\prime}$
+\end_inset
+
+ are therefore determined by relations (
 \begin_inset LatexCommand ref
 reference "eq:wskparconservation"
 
@@ -3005,7 +3009,7 @@ reference "eq:wskperprotation"
 
 \end_inset
 
-) and the additional one (
+) and (
 \begin_inset LatexCommand ref
 reference "krhoeq"
 
@@ -3013,16 +3017,24 @@ reference "krhoeq"
 
 ), 
 \begin_inset Formula \begin{equation}
-k_{\rho}^{\prime}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[\sin\alpha\dfrac{m^{\prime}}{r}+\sigma_{\rho}\sqrt{k^{\prime2}-\cos^{2}\alpha\dfrac{m^{\prime2}}{r^{2}}-\dfrac{n^{\prime2}}{R^{2}}}\right]\label{eq:wskrho}\end{equation}
+k_{\rho}^{\prime}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[\sin\alpha\dfrac{m^{\prime}}{r}+\sigma_{\rho}\sqrt{k_{\Vert}^{2}+k_{\bot}^{\prime2}-\cos^{2}\alpha\dfrac{m^{\prime2}}{r^{2}}-\dfrac{n^{\prime2}}{R^{2}}}\right]\label{eq:wskrho}\end{equation}
 
 \end_inset
 
-with 
-\begin_inset Formula $k^{\prime2}=k_{\Vert}^{2}+k_{\bot}^{\prime2}$
-\end_inset
 
-.
- By definition, the variation of the poloidal mode number 
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+By definition, the variation of the poloidal mode number 
 \begin_inset Formula $m$
 \end_inset
 
@@ -3032,11 +3044,6 @@ with
 \end_inset
 
  is no more conserved in the scattering process.
-\end_layout
-
-\begin_layout Standard
-*********** calculs à vérifier.
- Premier jet*****************
 \end_layout
 
 \begin_layout Standard
@@ -3069,7 +3076,7 @@ and since
 \begin_inset Formula $\mathbf{b}=\sigma_{B}b_{T}\mathbf{\hat{\phi}}+\sigma_{I}b_{P}\mathbf{\hat{s}}$
 \end_inset
 
- with 
+ where 
 \begin_inset Formula $b_{T}=B_{T}/B$
 \end_inset
 
@@ -3082,21 +3089,16 @@ and since
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\mathbf{\mathbf{k}^{\prime}\cdot\mathbf{b}}=k_{\Vert}^{\prime}=k_{\Vert}=\sigma_{B}b_{T}\dfrac{m^{\prime}}{r}+\sigma_{I}b_{P}\dfrac{n^{\prime}}{R}\end{equation}
-
-\end_inset
-
-or
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-\sigma b_{T}\dfrac{m^{\prime}}{r}+\sigma_{I}b_{P}\dfrac{n^{\prime}}{R}=\sigma_{B}b_{T}\dfrac{m}{r}+\sigma_{I}b_{P}\dfrac{n}{R}\label{eq:ws1}\end{equation}
+\mathbf{\mathbf{k}^{\prime}\cdot\mathbf{b}}=k_{\Vert}^{\prime}=k_{\Vert}=\sigma_{I}b_{P}\dfrac{m^{\prime}}{r}\cos\alpha+\sigma_{B}b_{T}\dfrac{n^{\prime}}{R}\label{eq:ws1}\end{equation}
 
 \end_inset
 
 by conservation of 
 \begin_inset Formula $k_{\Vert}$
+\end_inset
+
+, and using the relation 
+\begin_inset Formula $\cos\alpha=\widehat{\mathbf{\theta}}\cdot\mathbf{\hat{s}}$
 \end_inset
 
 .
@@ -3142,83 +3144,77 @@ k_{\bot}k_{\bot}^{\prime}\cos\beta=k_{\rho}k_{\rho}^{\prime}\left\Vert \mathbf{\
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Standard
-Finally, since 
-\begin_inset Formula \begin{multline*}
-\mathbf{b}\cdot\left(\mathbf{k}\times\mathbf{b}\right)\times\left(\mathbf{k}^{\prime}\times\mathbf{b}\right)=\left[\left(\mathbf{k}\times\mathbf{b}\right)\cdot\mathbf{b}\right]\mathbf{k}^{\prime}\cdot\mathbf{b}-\left[\left(\mathbf{k}\times\mathbf{b}\right)\cdot\mathbf{k}^{\prime}\right]\mathbf{b}\cdot\mathbf{b}\\
-=k_{\Vert}\left(\mathbf{k}\times\mathbf{b}\right)\cdot\mathbf{b}-\left(\mathbf{k}\times\mathbf{b}\right)\cdot\mathbf{k}^{\prime}\\
-=-\left(\mathbf{k}\times\mathbf{b}\right)\cdot\mathbf{k}^{\prime}\end{multline*}
-
+using the relation 
+\begin_inset Formula $-\sin\alpha=\widehat{\mathbf{\rho}}\cdot\widehat{\theta}$
 \end_inset
 
-and 
-\begin_inset Formula $\sigma_{B}b_{T}\mathbf{\hat{\phi}}+\sigma_{I}b_{P}\mathbf{\hat{s}}$
+.
+ In the case 
+\begin_inset Formula $\beta=0$
 \end_inset
 
-
-\begin_inset Formula \begin{multline*}
-\mathbf{k}\times\mathbf{b}=k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \sigma_{B}b_{T}\widehat{\mathbf{\rho}}\times\mathbf{\hat{\phi}}+\dfrac{m}{r}\sigma_{B}b_{T}\widehat{\mathbf{\theta}}\times\mathbf{\hat{\phi}}\\
-+k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \sigma_{I}b_{P}\widehat{\mathbf{\rho}}\times\mathbf{\hat{s}}+\dfrac{m}{r}\sigma_{I}b_{P}\widehat{\mathbf{\theta}}\times\mathbf{\hat{s}}+\dfrac{n}{R}\sigma_{I}b_{P}\widehat{\mathbf{\phi}}\times\mathbf{\hat{s}}\end{multline*}
-
-\end_inset
-
-one finds
-\begin_inset Formula \begin{multline*}
--\left(\mathbf{k}\times\mathbf{b}\right)=k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \sigma_{B}b_{T}\mathbf{\hat{s}}-\dfrac{m}{r}\sigma_{B}b_{T}\mathbf{\hat{r}}\\
--k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \sigma_{I}b_{P}\mathbf{\hat{\phi}}+\dfrac{m}{r}\sigma_{I}b_{P}\sin\alpha\hat{\phi}+\dfrac{n}{R}\sigma_{I}b_{P}\widehat{\mathbf{\rho}}\end{multline*}
-
-\end_inset
-
-using the vectorial relations
-\begin_inset Formula \begin{multline*}
-\mathbf{\hat{s}}=\widehat{\mathbf{\phi}}\times\widehat{\mathbf{\rho}}\\
-\mathbf{\hat{\phi}}=\widehat{\mathbf{\rho}}\times\widehat{\mathbf{s}}\\
--\sin\alpha\hat{\phi}=\widehat{\mathbf{\theta}}\times\mathbf{\hat{s}}\\
--\widehat{\mathbf{\rho}}=\widehat{\mathbf{\phi}}\times\mathbf{\hat{s}}\\
-\mathbf{\hat{r}}=\widehat{\mathbf{\theta}}\times\mathbf{\hat{\phi}}\end{multline*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Taking the dot product with 
-\begin_inset Formula $\mathbf{k}^{\prime}$
+ and 
+\begin_inset Formula $k_{\bot}^{\prime}=k_{\bot}$
 \end_inset
 
 , 
-\begin_inset Formula \begin{equation}
-k_{\bot}k_{\bot}^{\prime}\sin\beta=\frac{\sigma_{B}b_{T}\left\Vert \mathbf{\nabla}\rho\right\Vert \cos\alpha}{r}\left(m^{\prime}k_{\rho}-mk_{\rho}^{\prime}\right)-\frac{\sigma_{I}b_{P}\left\Vert \mathbf{\nabla}\rho\right\Vert }{R}\left(n^{\prime}k_{\rho}-nk_{\rho}^{\prime}\right)-\frac{\sigma_{I}b_{P}\sin\alpha}{rR}\left(n^{\prime}m+nm^{\prime}\right)\label{eq:ws3}\end{equation}
-
-\end_inset
-
-and combining (
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+the relation (
 \begin_inset LatexCommand ref
-reference "eq:ws1"
+reference "k2"
 
 \end_inset
 
-), (
+) is well recovered from (
 \begin_inset LatexCommand ref
 reference "eq:ws2"
 
 \end_inset
 
+).
+\end_layout
+
+\begin_layout Standard
+From (
+\begin_inset LatexCommand ref
+reference "eq:wskrho"
+
+\end_inset
+
+), (
+\begin_inset LatexCommand ref
+reference "eq:ws1"
+
+\end_inset
+
 ) and (
 \begin_inset LatexCommand ref
-reference "eq:ws3"
+reference "eq:ws2"
 
 \end_inset
 
-), the components of the scattered wave vector 
-\begin_inset Formula $\mathbf{k}^{\prime}$
+), a second degree polynomial equation in 
+\begin_inset Formula $m^{\prime}$
 \end_inset
 
- are,
+ must be solved, leading to the determination of 
+\begin_inset Formula $n^{\prime}$
+\end_inset
+
+ and 
+\begin_inset Formula $k_{\rho}^{\prime}$
+\end_inset
+
+.
+ Owing to the complexity of the coefficients, it is solved with Maple software.
+ (******problem of two solutions ?******)
 \end_layout
 
 \begin_layout Subsection
