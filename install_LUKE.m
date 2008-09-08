@@ -130,9 +130,18 @@ cd([localpath,'/Project_DKE/Database']);
 make_all;
 cd(localpath);
 %
+disp(['WARNING: automatic generation of the documentation can be a rather long process !']);
+%
 htmldocbuilder_luke_yp(dkepath);%build html doc
 %
-
+% Check that the list of TeX files given below is similar in the html file ~/LUKE/Packages/m2html/templates/LUKE/lukeoverview.html
+%  
+texfilelist = {['Project_DKE/Doc/NoticeDKE.tex'],...      
+            ['Project_DKE/Modules/RT/Doc/raytracing.tex'],...
+            ['Project_DKE/Modules/FEB/Doc/3Tmodel.tex']
+           }; 
+pdfhtlatex_yp(texfilelist,dkepath);%build html and pdf doc from tex files
+%
 
 
 
