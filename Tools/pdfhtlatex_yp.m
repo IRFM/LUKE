@@ -48,7 +48,7 @@ end
 %
 dirinit = pwd;%initial directory
 %
-for i = 1:length(filelist)*0+1,
+for i = 1:length(filelist),
     try
         [pathstr, name, ext, versn] = fileparts(filelist{i});
         texfile = [name,ext];        
