@@ -1,19 +1,37 @@
-function pdfhtlatex_yp(filelist,dkepath)
+function pdfhtlatex_yp(root_path,filelist)
 %LUKE - LATEX to PDF and HTML documentation builder
 %
 % Create dynamically all the documentation for C3PO/LUKE in html format from Latex files
 % (needs standard TeX package with TeX4ht. TeXLive 2007 or above package is strongly recommanded)
 %
+% INPUT:
+%
+
+%   - root_path: path where the documentation directory should be placed (string)
+%       (default: local directory)
+%   - filelist: full path to LaTeX files (celles of string)
+%       (default: local directory)
+%
+% OUTPUT: none
+%
 % by Y. PEYSSON (CEA/DSM/IRFM, yves.peysson@cea.fr) and J. DECKER (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
 flag = 0;
 %
+if nargin == 0,
+    root_path = '';
+    filelist = {};
+end
+if nargin == 1,
+	filelist = {};
+end
+%
 if ~strcmp(computer,'PCWIN'),
-    [status_ht, result_ht] = unix('which htlatex');
-    [status_pdf, result_pdf] = unix('which pdflatex');
+    [status_ht,result_ht] = unix('which htlatex');
+    [status_pdf,result_pdf] = unix('which pdflatex');
 else
-    [status_ht, result_ht] = unix('which htlatex');
-    [status_pdf, result_pdf] = dos('which pdflatex');
+    [status_ht,result_ht] = unix('which htlatex');
+    [status_pdf,result_pdf] = dos('which pdflatex');
 end
 %
 if isempty(result_ht),
@@ -27,41 +45,70 @@ if isempty(result_ht) & isempty(result_pdf)
     return
 end
 %
-if nargin == 0,
-    info_dke_yp(1,'A list of Tex files must be given as input.');    
-    return
-end
-if nargin == 1,
-    dkepath = path_LUKE_LOCAL;
+dirinit = pwd;%initial directory name
+%
+if isempty(root_path),
+	root_path = [pwd,filesep];%Working in the local directories where pdfhtlatex_yp is launched
 end
 %
-luke_root = dkepath.luke_root;
-docpath = luke_root;
-latexdochtmlpath = [luke_root,'Documentation/LateX'];
+if ~strcmp(root_path(end),filesep),
+    root_path = [root_path,filesep];%root_path must be ended by a filesep
+end
 %
-if ~exist(latexdochtmlpath),
-    mkdir(docpath,['Documentation',filesep,'LateX']);
+cd(root_path);
+%
+if isempty(filelist),
+    filelisttex = dir('*.tex');%scan the local directory to find a LaTeX file
+    for ii = 1:length(filelisttex),
+        filelist{ii} = fullfile(root_path,filelisttex(ii).name);
+    end
+    if isempty(filelist),
+        info_dke_yp(1,'A list of Tex files must be given as input of pdfhtlatex_yp.m or the local directory must contain one or more LaTeX files !');    
+        return
+    end
+end
+%
+docpath = root_path;
+if nargin > 1,
+    latexdochtmlpath = fullfile(docpath,'Documentation','LateX');
+end
+%
+if nargin > 1,
+    if ~exist(latexdochtmlpath),
+        mkdir(docpath,fullfile('Documentation','LateX'));
+    else
+        rmdir(latexdochtmlpath,'s');
+        mkdir(docpath,fullfile('Documentation','LateX'));
+    end
 else
-    rmdir(latexdochtmlpath,'s');
-    mkdir(docpath,['Documentation',filesep,'LateX']);
+    latexdochtmlpath = docpath;
 end
-%
-dirinit = pwd;%initial directory
 %
 for i = 1:length(filelist),
     try
+%        keyboard
         [pathstr, name, ext, versn] = fileparts(filelist{i});
-        texfile = [name,ext];        
-        source_dir = [luke_root,pathstr];
-        destination_dir = [latexdochtmlpath,filesep,pathstr];
-        %
-        if ~exist(destination_dir),
-            mkdir(destination_dir);
-        else
-            rmdir(destination_dir,'s');
-            mkdir(destination_dir);
+        if ~strcmp(pathstr(end),filesep),
+            pathstr = [pathstr,filesep];%root_path must be ended by a filesep
         end
-        [status,message,messageid] = copyfile(source_dir,destination_dir,'f');
+        texfile = [name,ext];        
+        source_dir = pathstr;
+        destination_dir = fullfile(latexdochtmlpath,strrep(pathstr,root_path,''));
+        %
+        if nargin > 1,
+            if ~exist(destination_dir),
+                mkdir(destination_dir);
+            else
+                rmdir(destination_dir,'s');
+                mkdir(destination_dir);
+            end
+        end
+        %
+        if ~strcmp(pathstr,root_path),
+            [status,message,messageid] = copyfile(source_dir,destination_dir,'f');
+        else
+            status = 1;
+        end
         %
         if ~status,
             info_dke_yp(1,['The copy from ',source_dir,' to ',destination_dir, ' failed.']);
@@ -91,9 +138,9 @@ for i = 1:length(filelist),
             disp(result);
         end
         %
-        cd(luke_root);%back to the LUKE root directory
+        cd(root_path);%back to the LUKE root directory
     catch
-        cd(luke_root);
+        cd(root_path);
         rmdir(destination_dir,'s');
         info_dke_yp(1,['An error occured during LateX translation of the file ',texfile]);
     end
