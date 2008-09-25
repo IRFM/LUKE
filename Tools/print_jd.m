@@ -54,7 +54,8 @@ if opt >= 1,
     if strcmp(computer,'PCWIN'),
         eval(['print -dmeta -r',num2str(res),' ',savename,'.emf']); 
     else
-        eval(['print -djpeg90 -r',num2str(res),' ',savename,'.jpg']); 
+        eval(['print -dpng -r',num2str(res),' ',savename,'.png']);
+        %eval(['print -djpeg90 -r',num2str(res),' ',savename,'.jpg']); 
     end    
     %
     % Patch for EPS file written by MatLab 7.5 under OS X 10.5.1 to be
@@ -65,10 +66,7 @@ if opt >= 1,
         eval(['!/Applications/Edition/TeX/macghostview/bin/eps2eps temp_',savename,'.eps ',savename,'.eps'])
         eval(['delete temp_',savename,'.eps']) 
     end
-    
-    
-    
-    
+    %
     cd(wd)
 end
 
