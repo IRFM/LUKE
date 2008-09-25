@@ -1195,6 +1195,8 @@
 %
 % U zstarwars.m (small corrections + rhoT)
 % U make_wavert_cronos.m (")
+% U make_wavelaunchs_cronos_ec (error correction)
+% U make_equil_cronos.m (important error corrected)
 % 
 % ====> LUKE/Project_DKE/Modules/RT
 %
@@ -1223,6 +1225,61 @@
 %
 % Examples updated for LUKE 1.6.2
 %
-
-
-
+% ----------------------------------------------------------------------------------------------------
+% 
+% LUKE Release 1.6.4
+% 
+% - LUKE documentation and latex2html
+% - Some functions updated for paper_CPC
+% 
+% ====> LUKE
+%
+% U install_LUKE.m (corrections on documentation and latex2html)
+% U INSTALL.m (")
+%
+% ====> LUKE/Packages/m2html
+%
+% U templates/LUKE/lukeoverview.html (")
+%
+% ====> LUKE/Project_DKE/Database/DKEPARAM_files
+% 
+% U make_dkeparam_UNIFORM10010020.m (better parameters for comparison with MUMPS)
+% U make_dkeparam_UNIFORM10010020.m (")
+%
+% ====> LUKE/Project_DKE/DKE
+% 
+% U LUKEversion_jd.m (LUKE 1.6.4)
+%
+% ====> LUKE/Project_DKE/Doc
+% 
+% A All files in the directory (documentation latex2html)
+%
+% ====> LUKE/Project_DKE/Modules/Cronos
+%
+% U zstarwars.m (extrapolation)
+%
+% ====> LUKE/Project_DKE/Modules/FEB
+%
+% A Doc/3Tmodel.tex (documentation latex2html)
+% 
+% ====> LUKE/Project_DKE/Modules/RT
+%
+% U MEX/Source/raytracing_yp.c (comment)
+% A Doc/ All files in the directory (documentation latex2html)
+%
+%
+% ====> LUKE/Simulations/Benchmarks
+%
+% U TScyl/LH_karney_num/rundke.m (for computers without MUMPS)
+% U TScyl/Thermal/rundke_dtn.m (")
+%
+% ====> LUKE/Simulations/Examples
+%
+% U TS/32299/run_cronos_starwars.m (small correction)
+% U TS/32299/run_cronos_C3PO.m (")
+%
+% ====> LUKE/Tools
+%
+% U print_jd.m (png outputs)
+% U htmldocbuilder_luke_yp.m (corrections on documentation and latex2html)
+% U pdfhtlatex_yp.m (")
