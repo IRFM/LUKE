@@ -717,6 +717,10 @@ The main loop
                 /* Optical depth */
 
                 depth = depth + (alpha1 + alpha2)*dS/2;
+				
+				/*if (fmod(k,200) == 0) {	
+					mexPrintf("t,k,rho,tau:%g,%d,%g,%g\n",t1,k,y0[0],depth);
+				}*/
 
                 temp_proc[MPROC+2*equilparam.ns[0]][k] = depth;
 
