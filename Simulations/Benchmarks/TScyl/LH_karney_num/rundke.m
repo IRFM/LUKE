@@ -87,6 +87,9 @@ waves{1} = make_idealLHwave_jd(equil,wavestruct);
 %
 ludroptol_list = logspace(-6,-2,5);
 %
+dkeparam.mlmaxitinv = 4;%Maximum number of iterations for iterative built-in MatLab matrix inversion method (between 1 and 20 usualy, if empty, mlmaxitinv = min(matrixdim,20). See matlab documentation.
+dkeparam.mlprecinv = 1e-5;%Accuracy for the MatLab build-in matrix inversion.
+%
 % Direct MATLAB inversion
 %
 % dkeparam.invproc = 0;
@@ -191,6 +194,17 @@ if exist('dmumpsmex'),
     disp(['MUMPSMEX calculation done'])
     %
     eta_MX = curr_MX./Prf_MX;
+else
+    memory_MX = NaN;
+    time_MX = NaN;
+    norm_MX = NaN;
+    curr_MX = NaN;
+    Prf_MX = NaN;
+    Pcoll_MX = NaN;
+    %
+    disp(['MUMPSMEX calculation skipped'])
+    %
+    eta_MX = NaN;    
 end
 %
 % SUPERLU package
