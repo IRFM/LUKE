@@ -633,6 +633,7 @@ else
   P_OHM_c = 0*P_TOT_c;
 end
 P_LH_c = P_TOT_c - P_OHM_c;
+
 %
 if strcmp(dkedisplay.display_mode,'PARTIAL_VISUAL') | strcmp(dkedisplay.display_mode,'VISUAL'),
  %
@@ -658,7 +659,10 @@ if par.depip == 0
   
 end
 
-%equilDKE.xcron = interp1(psipncronos,gene.x,equilDKE.xpsin);
+%equilDKE.xcron = interp1(sqrt(psipncronos),gene.x,equilDKE.xpsin);
+
+equilDKE.xcron = interp1(psipncronos,gene.x,equilDKE.xpsin);
+
 %
 % preparation des variables de sortie (sortie.j, sortie.el) pour CRONOS sur la bonne grille
 % et avec les bonnes unites
@@ -667,6 +671,17 @@ sortie.j  = interp1(equilDKE.xrhoT,j_LH_c,gene.x,'pchip',0) * 1e6 * normip;
 sortie.el = interp1(equilDKE.xrhoT,p_LH_c,gene.x,'pchip',0) * 1e6;
 if par.Dr_model == 2
     sortie.j=diffJ(sortie.j,equi.rhomax*gene.x,par.Dr0);  % diffusion phenomenologique du courant
+end
+%
+% pour les valeurs en dehors de la grille LUKE (centre du plasma uniquement), nous
+% reportons la derniere valeur connue
+%
+indj = find(gene.x<equilDKE.xrhoT(1));
+if ~isempty(indj)
+
+  sortie.j(indj)=sortie.j(indj(end)+1);
+  sortie.el(indj)=sortie.el(indj(end)+1);
+ 
 end
 sortie.err = normip;
 %
