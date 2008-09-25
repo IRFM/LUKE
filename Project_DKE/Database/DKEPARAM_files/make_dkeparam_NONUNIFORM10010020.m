@@ -83,9 +83,9 @@ dkeparam.invproc = 1;%Iterative matrix inversion methods
 % (-2): MUMPSMEX sequential fortran 95 inversion using MUMPS LU matrix factorization
 % (-3): SUPERLUMEX sequential direct matrix inversion (LU matrix factorization done for each time a matrix inversion is called)
 % (-30) PETSc interface (see data structure below) 
-dkeparam.ludroptol = 1e-5;%Drop tolerance for the built-in MatLab partial LU decomposition (recipes: droptol = max(1/dtn/nr,param_inv(1)))
-dkeparam.mlmaxitinv = 4;%Maximum number of iterations for iterative built-in MatLab matrix inversion method (between 1 and 20 usualy, if empty, mlmaxitinv = min(matrixdim,20). See matlab documentation.
-dkeparam.mlprecinv = 1e-5;%Accuracy for the MatLab build-in matrix inversion.
+dkeparam.ludroptol = 1e-8;%Drop tolerance for the built-in MatLab partial LU decomposition (recipes: droptol = max(1/dtn/nr,param_inv(1)))
+dkeparam.mlmaxitinv = 20;%Maximum number of iterations for iterative built-in MatLab matrix inversion method (between 1 and 20 usualy, if empty, mlmaxitinv = min(matrixdim,20). See matlab documentation.
+dkeparam.mlprecinv = 1e-8;%Accuracy for the MatLab build-in matrix inversion.
 dkeparam.MUMPSparam.nproc = 1;%number of processor used by MUMPS (depends of the computer framework). Default is 1
 dkeparam.MUMPSparam.thresholdpivoting = '';%Relative threshold for numerical pivoting in the MUMPS partial LU decomposition (default MUMPS = 1e-2: NaN or empty or field not existing). Increasing this parameter will reduce sparcity. Less than 1.
 dkeparam.MUMPSparam.precinv = '';%Accuracy for the MUMPS matrix inversion.(default MUMPS: NaN or empty or field not existing). Only for the solve phase.
