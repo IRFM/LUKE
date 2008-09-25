@@ -16,12 +16,16 @@ dkepath.temppathroot = '/home/jd211098/tmp/';%Absolute root directory path adres
 dkepath.luke_root = luke_root;
 dkepath.local_root = local_root;
 %
-%dkepath.MUMPS.par = [local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_P_mpichgfor/dke'];%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
-%dkepath.MUMPS.seq = [local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_gfor/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
+%dkepath.MUMPS.par = [local_root,'Packages/Bin/MUMPS/MUMPS_4.8.0_P_mpichgfor/dke'];%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
+%dkepath.MUMPS.seq = [local_root,'Packages/Bin/MUMPS/MUMPS_4.8.0_S_gfor/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
 %
 %dkepath.MUMPS.mex = [local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.MUMPS.mex = [local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_gfor/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
-%dkepath.MUMPS.mex = [local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_ifort/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
+%dkepath.MUMPS.mex = [local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_gfor/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.MUMPS.mex = [local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_ifort/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
+%dkepath.MUMPS.mex = [local_root,'Packages/Bin/MUMPS/MUMPS_4.8.0_S_g95/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
+%dkepath.MUMPS.mex = [local_root,'Packages/Bin/MUMPS/MUMPS_4.8.0_S_gfor/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
+%dkepath.MUMPS.mex = [local_root,'Packages/Bin/MUMPS/MUMPS_4.8.0_S_ifort/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
+%dkepath.MUMPS.mex = [local_root,'Packages/Bin/MUMPS/MUMPS_4.8.2_S_g95/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
 %
 dkepath.MUMPS.mpipath = [''];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
 %
