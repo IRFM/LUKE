@@ -11,7 +11,7 @@ clc
 %
 % Equilibrium parameters
 %
-id_equil = 'ITER_Scen4_IAEA06';%For plasma equilibrium
+id_equil = 'ITER_Scen4_IAEA06_mod';%For plasma equilibrium
 path_equil = '../../EQUIL/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 % Wave properties - note that ids_wave,paths_wave,ids_rayinit and paths_rayinit must have the same

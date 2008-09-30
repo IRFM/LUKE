@@ -23,7 +23,7 @@ clc
 %
 % Equilibrium parameters
 %
-id_equil = 'ITER_Scen4_IAEA06';%For plasma equilibrium
+id_equil = 'ITER_Scen4_IAEA06_mod';%For plasma equilibrium
 path_equil = '../../EQUIL/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_rayinit = '19Z_Alpha_3p7';
@@ -34,7 +34,7 @@ launch.omega_rf = [3.7]*2*pi*1e9;%wave angular frequency (rad/s) [1,1] (same fre
 % represents different poloidal locations)
 %
 launch.bPlhtot = [26.08,3.92]*1e6;%initial power in the ray (W) (main lobe) [1,n_lobe]
-launch.bNpar0 = [1.9,-3.9];%Initial Npar value (main lobe) [1,n_lobe]
+launch.bNpar0 = [-1.9,3.9];%Initial Npar value (main lobe) [1,n_lobe]
 launch.bwidth = [0.1,0.1];%ray spectral width for lobe width calculations [1,n_lobe]
 launch.rZ0 = [-0.5,0.0,0.5];%vertical launching positions [1,m_pol]
 %

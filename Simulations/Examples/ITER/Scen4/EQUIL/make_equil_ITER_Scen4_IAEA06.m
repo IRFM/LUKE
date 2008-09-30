@@ -20,4 +20,12 @@ equil.ptBx = - equil.ptBx;
 equil.ptBy = - equil.ptBy;
 equil.ptBPHI = - equil.ptBPHI;
 %
-save EQUIL_ITER_Scen4_IAEA06.mat equil
+%save EQUIL_ITER_Scen4_IAEA06.mat equil
+%
+% according to ITER specifications
+%
+% Here Bphi > 0 and Ip > 0. Co-current has N// < 0
+%
+equil.ptBPHI = - equil.ptBPHI;
+%
+save EQUIL_ITER_Scen4_IAEA06_mod.mat equil

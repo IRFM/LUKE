@@ -1,7 +1,7 @@
 clear all
 close all
 %
-id_equil = 'ITER_Scen4_IAEA06';
+id_equil = 'ITER_Scen4_IAEA06_mod';
 id_simul = '19Z';
 %
 nr_dep = 20;
