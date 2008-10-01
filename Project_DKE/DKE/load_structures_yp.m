@@ -126,7 +126,7 @@ if exist('flag_path','var'),%Paths
         hostname = '';
         for ihost = 1:nhosts,
             [s,lhostname] = unix('hostname');
-            if strfind(lhostname,hostnames{ihost}),
+            if strfind(lhostname,dkepath.hostname.(hostnames{ihost})),
                 hostname = hostnames{ihost};
             end
         end
