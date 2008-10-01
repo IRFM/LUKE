@@ -119,6 +119,39 @@ if exist('flag_path','var'),%Paths
         end
     end
     %
+    if isfield(dkepath,'hostname'),
+        %
+        hostnames = fieldnames(dkepath.hostname);
+        nhosts = length(hostnames);
+        hostname = '';
+        for ihost = 1:nhosts,
+            [s,lhostname] = unix('hostname');
+            if strfind(lhostname,hostnames{ihost}),
+                hostname = hostnames{ihost};
+            end
+        end
+        if isempty(hostname),
+            error('This computer is not recognized')
+        end
+        %
+        dkepath.local_root = dkepath.local_root.(hostname);
+        dkepath.computer = dkepath.computer.(hostname);
+        dkepath.temppathroot = dkepath.temppathroot.(hostname);
+        dkepath.compiler_opt = dkepath.compiler_opt.(hostname);
+        %
+        if isfield(dkepath,'MUMPS'),
+            dkepath.MUMPS = dkepath.MUMPS.(hostname);
+        end
+        %
+        if isfield(dkepath,'PETSc'),
+            dkepath.PETSc = dkepath.PETSc.(hostname);
+        end
+        %
+        if isfield(dkepath,'SUPERLU'),
+            dkepath.SUPERLU = dkepath.SUPERLU.(hostname);
+        end        
+    end
+    %
     % dynamic compilation of MEX files
     %
     if (isfield(dkepath,'id') && ~strcmp(dkepath.id,'LOCAL')) || (isfield(dkepath,'path_id') && ~strcmp(dkepath.path_id,'LOCAL')),

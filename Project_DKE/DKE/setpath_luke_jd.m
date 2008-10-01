@@ -83,12 +83,12 @@ end
 % Path for external packages
 %
 if nargin >= 2 & isstruct(dkepath), 
-    if isfield(dkepath,'MUMPS') & isfield(dkepath.MUMPS,'mex'),
+    if isfield(dkepath,'MUMPS') 
 		matver = version;
 		matver = matver([1,3]);
 		if isfield(dkepath.MUMPS,['mex',matver]),
-			eval(['addpath(dkepath.MUMPS.mex',matver,')']);
-		else
+			addpath(dkepath.MUMPS.(['mex',matver]));
+        elseif isfield(dkepath.MUMPS,'mex'),
 			addpath(dkepath.MUMPS.mex);
 		end
     end
