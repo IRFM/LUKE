@@ -112,10 +112,6 @@ if exist('flag_path','var'),%Paths
             load(filename);
             info_dke_yp(2,['Structure ''path'': ',filename,' successfully loaded']);
             %
-            if ~strcmp(dkepath.computer,computer),
-                error('The path structure is not consistent with the computer !'),
-            end
-            %
         end
     end
     %
@@ -150,6 +146,10 @@ if exist('flag_path','var'),%Paths
         if isfield(dkepath,'SUPERLU'),
             dkepath.SUPERLU = dkepath.SUPERLU.(hostname);
         end        
+    end
+    %
+    if ~strcmp(dkepath.computer,computer),
+        error('The path structure is not consistent with the computer !'),
     end
     %
     % dynamic compilation of MEX files
