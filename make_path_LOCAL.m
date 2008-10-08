@@ -6,67 +6,89 @@
 %by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
 %
 clear all
-path_id = 'LOCAL';%Set here the name path parameters (user specific)
+dkepath.id = 'LOCAL';%Set here the name path parameters (user specific)
 %
 dkepath.hostname.saturne = 'saturne';
 dkepath.hostname.cephee = 'cephee';
 dkepath.hostname.pcluke = 'PC-Luke';
-dkepath.hostname.laptopyves = 'peyson';%WARNING: for laptop, may change with connection status.
+dkepath.hostname.laptopyves = 'peysson';%WARNING: for laptop, may change with connection status.
+dkepath.hostname.laptopjoan = 'PC-DECKER-J';%WARNING: for laptop, may change with connection status.
 %
-luke_root.default = [pwd,'/'];
-luke_root.saturne = '~/LUKE/';
-luke_root.cephee = '~/LUKE/';
-luke_root.pcluke = '~/LUKE/';
-luke_root.laptopyves = [getenv('HOME'),'/CEA/Projets/LUKE/'];
+% default paths for unrecognized profiles
 %
-local_root.default = [pwd,'/'];
-local_root.saturne = '/home/sccp/gsem/decker/saturne/';
-local_root.cephee = '/home/sccp/gsem/decker/cephee/';
-local_root.pcluke = '/home/lukeuser/Work/';
-local_root.laptopyves = [getenv('HOME'),'/CEA/Projets/'];
+default.luke_root = [pwd,'/'];
+default.local_root = [pwd,'/'];
+default.computer = computer;
+default.temppathroot = [pwd,'/'];
 %
-dkepath.id = path_id;
+dkepath.default = default;
 %
-dkepath.computer.default = computer;
-dkepath.computer.saturne = 'GLNXA64';%machine type and supported OS
-dkepath.computer.cephee = 'GLNXA64';%machine type and supported OS
-dkepath.computer.pcluke = 'GLNX86';%machine type and supported OS
-dkepath.computer.laptopyves = 'MAC';%machine type and supported OS
+% paths for runs on IRFM saturne cluster
 %
-dkepath.temppathroot.default = [pwd,'/'];
-dkepath.temppathroot.saturne = '/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
-dkepath.temppathroot.cephee = '/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
-dkepath.temppathroot.pcluke = '/home/lukeuser/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
-dkepath.temppathroot.laptopyves = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+saturne.luke_root = '~/LUKE/';
+saturne.local_root = '/home/sccp/gsem/decker/saturne/';
+saturne.computer = 'GLNXA64';%machine type and supported OS
+saturne.temppathroot = '/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+saturne.MUMPS.mex71 = [saturne.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB71'];%Where MUMPS matrix solver is stored (MEX function)
+saturne.MUMPS.mex75 = [saturne.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB75'];%Where MUMPS matrix solver is stored (MEX function)
+saturne.MUMPS.par = ['/home/sccp/gsem/peysson/Packages/Bin/MUMPS/MUMPS_4.7.2_P_mpichpgf/dke'];%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
+saturne.MUMPS.seq = ['/home/sccp/gsem/peysson/Packages/Bin/MUMPS/MUMPS_4.6.4_S_g95/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
+saturne.MUMPS.mpipath = ['/usr/local/pgi/linux86-64/6.0/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
+saturne.PETSc.par = ['/home/sccp/gsem/peysson/Packages/Bin/PETSC/petsc-2.3.2-p8_P_mpichpgf/DKE'];%Where PETSc matrix solver is stored (stand-alone application for parallel processing)
+saturne.PETSc.mpipath = ['/usr/local/pgi/linux86-64/6.0/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
+saturne.SUPERLU.mex = ['/home/sccp/gsem/peysson/Packages/Bin/SUPERLU/SuperLU_3.0-pgcc/MATLAB'];%Where SUPERLU matrix solver is stored (MEX function)
+saturne.compiler_opt.helmex = '';% Optional argument for helmex compilation 
 %
-dkepath.luke_root = luke_root;
-dkepath.local_root = local_root;
+dkepath.saturne = saturne;
 %
-dkepath.MUMPS.saturne.mex71 = [local_root.saturne,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB71'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.MUMPS.saturne.mex75 = [local_root.saturne,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB75'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.MUMPS.saturne.par = ['/home/sccp/gsem/peysson/Packages/Bin/MUMPS/MUMPS_4.7.2_P_mpichpgf/dke'];%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
-dkepath.MUMPS.saturne.seq = ['/home/sccp/gsem/peysson/Packages/Bin/MUMPS/MUMPS_4.6.4_S_g95/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
-dkepath.MUMPS.saturne.mpipath = ['/usr/local/pgi/linux86-64/6.0/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
-dkepath.MUMPS.cephee.mex75 = [local_root.cephee,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB75'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.MUMPS.pcluke.mex72 = [local_root.pcluke,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB72'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.MUMPS.laptopyves.par = [local_root.laptopyves,'Packages/Bin/MUMPS/MUMPS_4.7.2_P_openmpig95/dke'];%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
-dkepath.MUMPS.laptopyves.seq = [local_root.laptopyves,'Packages/Bin/MUMPS/MUMPS_4.7.2_S_GotoBlasg95/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
-dkepath.MUMPS.laptopyves.mex75 = [local_root.laptopyves,'Packages/Bin/MUMPS/MUMPS_4.8.1_S_GotoBlasg95/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.MUMPS.laptopyves.mpipath = ['/usr/local/openmpig95/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
+% paths for runs on IRFM cephee cluster
 %
-dkepath.PETSc.saturne.par = ['/home/sccp/gsem/peysson/Packages/Bin/PETSC/petsc-2.3.2-p8_P_mpichpgf/DKE'];%Where PETSc matrix solver is stored (stand-alone application for parallel processing)
-dkepath.PETSc.saturne.mpipath = ['/usr/local/pgi/linux86-64/6.0/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
-dkepath.PETSc.laptopyves.par = [local_root.laptopyves,'Packages/Bin/PETSC/petsc-2.3.2-p10_P_openmpig95/DKE'];%Where PETSc matrix solver is stored (stand-alone application for parallel processing)
-dkepath.PETSc.laptopyves.seq = [local_root.laptopyves,'Packages/Bin/PETSC/petsc-2.3.2-p10_S_g95/DKE'];%Where PETSc matrix solver is stored (stand-alone application for sequential processing)
-dkepath.PETSc.laptopyves.mpipath = ['/usr/local/openmpig95/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
+cephee.luke_root = '~/LUKE/';
+cephee.local_root = '/home/sccp/gsem/decker/cephee/';
+cephee.computer = 'GLNXA64';%machine type and supported OS
+cephee.temppathroot = '/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+cephee.MUMPS.mex75 = [cephee.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB75'];%Where MUMPS matrix solver is stored (MEX function)
+cephee.compiler_opt.helmex = '';% Optional argument for helmex compilation 
 %
-dkepath.SUPERLU.saturne.mex = ['/home/sccp/gsem/peysson/Packages/Bin/SUPERLU/SuperLU_3.0-pgcc/MATLAB'];%Where SUPERLU matrix solver is stored (MEX function)
-dkepath.SUPERLU.laptopyves.mex = [local_root.laptopyves,'Packages/Bin/SUPERLU/SuperLU_3.0-GotoBlasgcc/MATLAB'];%Where SUPERLU matrix solver is stored (MEX function)
+dkepath.cephee = cephee;
 %
-dkepath.compiler_opt.default = '';
-dkepath.compiler_opt.saturne.helmex = '';% Optional argument for helmex compilation 
-dkepath.compiler_opt.cephee.helmex = '';% Optional argument for helmex compilation 
-dkepath.compiler_opt.pcluke.helmex = '';% Optional argument for helmex compilation 
-dkepath.compiler_opt.laptopyves.helmex = '';% Optional argument for helmex compilation 
+% paths for runs on IRFM PC-LUKE workstation
 %
-eval(['save PATH_',path_id ,'.mat dkepath']);
+pcluke.luke_root = '~/LUKE/';
+pcluke.local_root = '/home/lukeuser/Work/';
+pcluke.computer = 'GLNX86';%machine type and supported OS
+pcluke.temppathroot = '/home/lukeuser/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+pcluke.MUMPS.mex72 = [pcluke.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB72'];%Where MUMPS matrix solver is stored (MEX function)
+pcluke.compiler_opt.helmex = '';% Optional argument for helmex compilation 
+%
+dkepath.pcluke = pcluke;
+%
+% paths for runs on Yves Peysson's laptop
+%
+laptopyves.luke_root = [getenv('HOME'),'/CEA/Projets/LUKE/'];
+laptopyves.local_root = [getenv('HOME'),'/CEA/Projets/'];
+laptopyves.computer = 'MAC';%machine type and supported OS
+laptopyves.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+laptopyves.MUMPS.par = [laptopyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.2_P_openmpig95/dke'];%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
+laptopyves.MUMPS.seq = [laptopyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.2_S_GotoBlasg95/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
+laptopyves.MUMPS.mex75 = [laptopyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.8.1_S_GotoBlasg95/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
+laptopyves.MUMPS.mpipath = ['/usr/local/openmpig95/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
+laptopyves.PETSc.par = [laptopyves.local_root,'Packages/Bin/PETSC/petsc-2.3.2-p10_P_openmpig95/DKE'];%Where PETSc matrix solver is stored (stand-alone application for parallel processing)
+laptopyves.PETSc.seq = [laptopyves.local_root,'Packages/Bin/PETSC/petsc-2.3.2-p10_S_g95/DKE'];%Where PETSc matrix solver is stored (stand-alone application for sequential processing)
+laptopyves.PETSc.mpipath = ['/usr/local/openmpig95/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
+laptopyves.SUPERLU.mex = [laptopyves.local_root,'Packages/Bin/SUPERLU/SuperLU_3.0-GotoBlasgcc/MATLAB'];%Where SUPERLU matrix solver is stored (MEX function)
+laptopyves.compiler_opt.helmex = '';% Optional argument for helmex compilation 
+%
+dkepath.laptopyves = laptopyves;
+%
+% paths for runs on Joan Decker's laptop
+%
+laptopjoan.luke_root = '/home/jd211098/Work/LUKE/';
+laptopjoan.local_root = '/home/jd211098/Work/LUKE/';
+laptopjoan.computer = 'GLNX86';%machine type and supported OS
+laptopjoan.temppathroot = '/home/jd211098/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+laptopjoan.MUMPS.mex75 = [laptopjoan.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_ifort/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
+%
+dkepath.laptopjoan = laptopjoan;
+%
+eval(['save PATH_',dkepath.id ,'.mat dkepath']);

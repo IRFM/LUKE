@@ -130,23 +130,11 @@ if exist('flag_path','var'),%Paths
             hostname = 'default';
         end
         %
-        dkepath.local_root = dkepath.local_root.(hostname);
-        dkepath.luke_root = dkepath.luke_root.(hostname);
-        dkepath.computer = dkepath.computer.(hostname);
-        dkepath.temppathroot = dkepath.temppathroot.(hostname);
-        dkepath.compiler_opt = dkepath.compiler_opt.(hostname);
+        path_id = dkepath.id;
+        dkepath = dkepath.(hostname);
         %
-        if isfield(dkepath,'MUMPS') & isfield(dkepath.MUMPS,hostname),
-            dkepath.MUMPS = dkepath.MUMPS.(hostname);
-        end
-        %
-        if isfield(dkepath,'PETSc') & isfield(dkepath.PETSc,hostname),
-            dkepath.PETSc = dkepath.PETSc.(hostname);
-        end
-        %
-        if isfield(dkepath,'SUPERLU') & isfield(dkepath.SUPERLU,hostname),
-            dkepath.SUPERLU = dkepath.SUPERLU.(hostname);
-        end        
+        dkepath.hostname = hostname;
+        dkepath.id = path_id;
     end
     %
     if ~strcmp(dkepath.computer,computer),
