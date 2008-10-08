@@ -1,6 +1,37 @@
 % Steps for (un)installing LUKE
 % 
 % ========================================================
+% REQUIREMENTS
+% ========================================================
+% 
+% For the Fokker-Planck code LUKE
+% 
+%	- matlab
+%
+% For the raytracing code C3PO
+%
+%	- a gcc version consistent with the running MatLab version 
+%      (> 4.00 recommanded)
+%
+% For optional external packages like MUMPS, PETSc, SUPERLU
+%
+%	- a gcc version consistent with the running MatLab version 
+%      (> 4.00 recommanded)
+%   - a fortran compiler 
+%		- g95 recommended
+%		- gfortran can be used with latest gcc release
+%		- intel, pgf have been succesfully tested
+%	- an optimized BLAS/LAPACK library (you may want to try GOTOBLAS)
+%
+% For enabling distributed computing, it is necessary to have several MatLab
+% licenses and adjust the script to the environment where LUKE is installed.
+%
+% For complete automatic documentation generation
+%
+%	- the program graphviz for graphs and documentation generation 
+%	- TeX/LaTeX with TeX4ht and pdfLateX capabilities (TeXlive recommanded)
+%
+% ========================================================
 % INSTALL LUKE
 % ========================================================
 % 
@@ -60,24 +91,3 @@
 % 
 % 3) install LUKE.
 % 
-% ========================================================
-% REQUIREMENTS
-% ========================================================
-% 
-% For a quick and easy install of LUKE, there are several requirements:
-%
-%	a) a gcc version consistent with the running MatLab version 
-%      (> 4.00 recommanded)
-%   b) a g95 fortran compiler (gfortran can be used with latest gcc release)
-%	c) the program graphviz for graphs and documentation generation must be 
-%      installed (open-source)
-%	d) a TeX/LaTeX must be available with TeX4ht and pdfLateX capabilities
-%
-% For external packages like MUMPS, PETSc, SUPERLU, it is better to install 
-% and compile them before performing the install of LUKE, though it can always
-% be done later.
-%
-% For enabling distributed computing, it is necessary to have several MatLab
-% licenses and adjust the script to the environment where LUKE is installed.
-%
-
