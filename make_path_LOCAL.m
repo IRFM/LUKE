@@ -91,4 +91,7 @@ laptopjoan.MUMPS.mex75 = [laptopjoan.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_
 %
 dkepath.laptopjoan = laptopjoan;
 %
-eval(['save PATH_',dkepath.id ,'.mat dkepath']);
+%***************************************************************************************************
+%
+save([pwd,'/Project_DKE/Database/PATH_files/PATH_',dkepath.id,'.mat'],'dkepath');
+%

@@ -127,7 +127,11 @@ if exist('flag_path','var'),%Paths
             end
         end
         if isempty(hostname),
-            hostname = 'default';
+            if isfield(dkepath,'default'),
+                hostname = 'default';
+            else
+                error('The computer is not listed in dkepath')
+            end
         end
         %
         path_id = dkepath.id;

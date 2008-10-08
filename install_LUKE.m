@@ -112,8 +112,7 @@ end
 % add paths
 %
 addpath([localpath,'Project_DKE/DKE']);
-setpath_luke_jd(localpath,'',1);
-addpath([localpath,'Project_DKE/Database/PATH_files']);
+setpath_luke_jd(localpath,'');
 %
 disp(['The LUKE paths have been installed.']);
 %
@@ -135,7 +134,9 @@ disp(['WARNING: automatic generation of the documentation can be a rather long p
 %
 opt = input_dke_yp('Do you want to automatically generate the documentation','n',{'y','n'});
 %
-if opt == 'y',install_doc_LUKE;end
+if opt == 'y',
+    install_doc_LUKE;
+end
 %
 opt = input_dke_yp('Do you want to run a simple test case','n',{'y','n'});
 %
