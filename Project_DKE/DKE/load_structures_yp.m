@@ -131,6 +131,7 @@ if exist('flag_path','var'),%Paths
         end
         %
         dkepath.local_root = dkepath.local_root.(hostname);
+        dkepath.luke_root = dkepath.luke_root.(hostname);
         dkepath.computer = dkepath.computer.(hostname);
         dkepath.temppathroot = dkepath.temppathroot.(hostname);
         dkepath.compiler_opt = dkepath.compiler_opt.(hostname);
