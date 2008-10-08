@@ -63,6 +63,7 @@ addpath([luke_root,'Project_DKE/Database/RIPPLE_files']);
 addpath([luke_root,'Project_DKE/Database/EXTERNAL_files']);
 addpath([luke_root,'Project_DKE/DKE']);
 addpath([luke_root,'Tools']);
+addpath([luke_root]);
 %
 % Path for MEX files
 %
