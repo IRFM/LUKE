@@ -8,8 +8,7 @@ function install_doc_LUKE
 %
 dirinit = pwd;
 %
-make_path_LOCAL;
-dkepath = load_structures_yp('dkepath','','');
+dkepath = path_LUKE_LOCAL;
 luke_root = dkepath.luke_root;    
 %
 cd(luke_root);
