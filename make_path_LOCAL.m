@@ -25,7 +25,7 @@ dkepath.default = default;
 %
 % paths for runs on IRFM saturne cluster
 %
-saturne.luke_root = '~/LUKE/';
+saturne.luke_root = [getenv('HOME'),'/LUKE/'];
 saturne.local_root = '/home/sccp/gsem/decker/saturne/';
 saturne.computer = 'GLNXA64';%machine type and supported OS
 saturne.temppathroot = '/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
@@ -43,7 +43,7 @@ dkepath.saturne = saturne;
 %
 % paths for runs on IRFM cephee cluster
 %
-cephee.luke_root = '~/LUKE/';
+cephee.luke_root = [getenv('HOME'),'/LUKE/'];
 cephee.local_root = '/home/sccp/gsem/decker/cephee/';
 cephee.computer = 'GLNXA64';%machine type and supported OS
 cephee.temppathroot = '/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
@@ -54,7 +54,7 @@ dkepath.cephee = cephee;
 %
 % paths for runs on IRFM PC-LUKE workstation
 %
-pcluke.luke_root = '~/LUKE/';
+pcluke.luke_root = [getenv('HOME'),'/LUKE/'];
 pcluke.local_root = '/home/lukeuser/Work/';
 pcluke.computer = 'GLNX86';%machine type and supported OS
 pcluke.temppathroot = '/home/lukeuser/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
