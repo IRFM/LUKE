@@ -76,7 +76,7 @@ ind_root = min(find(curr_dir(ind_LUKE_dir+1:end) == delim));
 path_root = curr_dir(1:ind_LUKE_dir + ind_root - 1);
 path_root = [path_root,delim];
 %
-filename = [path_root,'Project_DKE',delim,'Database',delim,'PATH_files',delim,filename];
+filename = [path_root,filename];
 %
 disp([filename,' was not found and is created now.'])
 %

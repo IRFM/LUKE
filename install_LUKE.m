@@ -1,8 +1,7 @@
 function install_LUKE(pathforstartup)
 %LUKE - Installation package script
 %
-%Install LUKE path in existing default MatLab startup.m and build all *.mat
-%and *.mex files
+%Install LUKE path in existing default MatLab startup.m and build all *.mat and *.mex files
 %
 %By Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr) and Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr)
 %
@@ -120,7 +119,7 @@ disp(['The LUKE paths have been installed.']);
 %
 % Loads or creates the PATH_LOCAL.mat structure 
 %
-dkepath = path_LUKE_LOCAL;
+dkepath = load_structures_yp('dkepath','','');
 %
 % Build *.mat and *.mex files if possible
 %

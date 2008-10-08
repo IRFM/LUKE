@@ -11,13 +11,15 @@ path_id = 'LOCAL';%Set here the name path parameters (user specific)
 dkepath.hostname.saturne = 'saturne';
 dkepath.hostname.cephee = 'cephee';
 dkepath.hostname.pcluke = 'PC-Luke';
-dkepath.hostname.laptopyves = 'peysson';%WARNING: for laptop, may change with connection status.
+dkepath.hostname.laptopyves = 'peyson';%WARNING: for laptop, may change with connection status.
 %
+luke_root.default = [pwd,'/'];
 luke_root.saturne = '~/LUKE/';
 luke_root.cephee = '~/LUKE/';
 luke_root.pcluke = '~/LUKE/';
 luke_root.laptopyves = [getenv('HOME'),'/CEA/Projets/LUKE/'];
 %
+local_root.default = [pwd,'/'];
 local_root.saturne = '/home/sccp/gsem/decker/saturne/';
 local_root.cephee = '/home/sccp/gsem/decker/cephee/';
 local_root.pcluke = '/home/lukeuser/Work/';
@@ -25,11 +27,13 @@ local_root.laptopyves = [getenv('HOME'),'/CEA/Projets/'];
 %
 dkepath.id = path_id;
 %
+dkepath.computer.default = computer;
 dkepath.computer.saturne = 'GLNXA64';%machine type and supported OS
 dkepath.computer.cephee = 'GLNXA64';%machine type and supported OS
 dkepath.computer.pcluke = 'GLNX86';%machine type and supported OS
 dkepath.computer.laptopyves = 'MAC';%machine type and supported OS
 %
+dkepath.temppathroot.default = [pwd,'/'];
 dkepath.temppathroot.saturne = '/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 dkepath.temppathroot.cephee = '/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 dkepath.temppathroot.pcluke = '/home/lukeuser/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
@@ -59,6 +63,7 @@ dkepath.PETSc.laptopyves.mpipath = ['/usr/local/openmpig95/bin/'];%Absolute path
 dkepath.SUPERLU.saturne.mex = ['/home/sccp/gsem/peysson/Packages/Bin/SUPERLU/SuperLU_3.0-pgcc/MATLAB'];%Where SUPERLU matrix solver is stored (MEX function)
 dkepath.SUPERLU.laptopyves.mex = [local_root.laptopyves,'Packages/Bin/SUPERLU/SuperLU_3.0-GotoBlasgcc/MATLAB'];%Where SUPERLU matrix solver is stored (MEX function)
 %
+dkepath.compiler_opt.default = '';
 dkepath.compiler_opt.saturne.helmex = '';% Optional argument for helmex compilation 
 dkepath.compiler_opt.cephee.helmex = '';% Optional argument for helmex compilation 
 dkepath.compiler_opt.pcluke.helmex = '';% Optional argument for helmex compilation 

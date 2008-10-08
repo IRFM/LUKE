@@ -127,7 +127,7 @@ if exist('flag_path','var'),%Paths
             end
         end
         if isempty(hostname),
-            error('This computer is not recognized')
+            hostname = 'default';
         end
         %
         dkepath.local_root = dkepath.local_root.(hostname);
@@ -136,15 +136,15 @@ if exist('flag_path','var'),%Paths
         dkepath.temppathroot = dkepath.temppathroot.(hostname);
         dkepath.compiler_opt = dkepath.compiler_opt.(hostname);
         %
-        if isfield(dkepath,'MUMPS'),
+        if isfield(dkepath,'MUMPS') & isfield(dkepath.MUMPS,hostname),
             dkepath.MUMPS = dkepath.MUMPS.(hostname);
         end
         %
-        if isfield(dkepath,'PETSc'),
+        if isfield(dkepath,'PETSc') & isfield(dkepath.PETSc,hostname),
             dkepath.PETSc = dkepath.PETSc.(hostname);
         end
         %
-        if isfield(dkepath,'SUPERLU'),
+        if isfield(dkepath,'SUPERLU') & isfield(dkepath.SUPERLU,hostname),
             dkepath.SUPERLU = dkepath.SUPERLU.(hostname);
         end        
     end
