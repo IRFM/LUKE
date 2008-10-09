@@ -313,7 +313,7 @@ elseif strcmp(basestr,'ITER'),% ITER Astra profile data
     profname = [id_equil,'.prof'];
     type = 0.2;
     %
-    [data_file,data_path] = igetfile_jd(profname,['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],eqdsk_path);
+    [data_file,data_path] = igetfile_jd(opt_gui,profname,['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],eqdsk_path);
     %
     profname = [data_path,data_file];
     %
