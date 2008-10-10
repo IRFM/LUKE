@@ -13,6 +13,7 @@ dkepath.hostname.cephee = 'cephee';
 dkepath.hostname.pcluke = 'PC-Luke';
 dkepath.hostname.laptopyves = 'peysson';%WARNING: for laptop, may change with connection status.
 dkepath.hostname.laptopjoan = 'PC-DECKER-J';%WARNING: for laptop, may change with connection status.
+dkepath.hostname.sunipp = 'ipp';
 %
 % default paths for unrecognized profiles
 %
@@ -90,6 +91,17 @@ laptopjoan.temppathroot = '/home/jd211098/tmp/';%Absolute root directory path ad
 laptopjoan.MUMPS.mex75 = [laptopjoan.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_ifort/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
 %
 dkepath.laptopjoan = laptopjoan;
+%
+% paths for runs on SUN workstation at IPP-Prag
+%
+sunipp.luke_root = '/home/vader/LUKE/';
+sunipp.local_root = '/home/vader/';
+sunipp.computer = 'GLNXA64';%machine type and supported OS
+sunipp.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+sunipp.MUMPS.seq = [sunipp.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/dke'];
+sunipp.MUMPS.mex75 = [sunipp.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
+%
+dkepath.sunipp = sunipp;
 %
 %***************************************************************************************************
 %
