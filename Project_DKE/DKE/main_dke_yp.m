@@ -174,7 +174,7 @@ for it_rf=1:nit_rf, % convergence in the ray-tracing mode
                 P_0_2piRp_in = sum(yP0_2piRp);
                 P_0_2piRp_out = 0;
                 for iray = 1:length(yb),
-                     P_0_2piRp_out = P_0_2piRp_out + zP_0_2piRp_mod{iray}(end);
+                     P_0_2piRp_out = P_0_2piRp_out + zP_0_2piRp_mod_old{iray}(end);
                 end
                 %
                 abs_frac = (P_0_2piRp_in - P_0_2piRp_out)/P_0_2piRp_in;
@@ -206,7 +206,7 @@ end
 [ZP0,Zcurr,Znorm,ZXXS,XxRR_fsav,xMRR_flux,xMRR_tau,xRR_fsav,xne_norm_out,xTe_norm_out,xft_fsav,xfteff_fsav] = ...
     fmoments_dke_yp(dkepath,dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
     XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
-    ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod,gridindex_rf,...
+    ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod_old,gridindex_rf,...
     ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,XXILor);%Calculate moments of the distribution function
 %   RF wave quasilinear diffusion
 %
@@ -315,8 +315,7 @@ if strcmp(waveparam.model,'RT') & ~isempty(waveparam.bomega_rf) & nit_rf > 1,
     dke_out.yresidue_rf_out = yresidue_rf_out;
     dke_out.residue_rf = residue_rf;
     dke_out.zS = zS;
-    dke_out.zP_0_2piRp_mod = zP_0_2piRp_mod;
-    dke_out.zP_0_2piRp_out = zP_0_2piRp_out;
+    dke_out.zP_0_2piRp_mod = zP_0_2piRp_mod_old;
 end
 dke_out.yb = yb;
 dke_out.XXsource = XXsinksource_in;
