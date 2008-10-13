@@ -89,6 +89,7 @@ laptopjoan.local_root = '/home/jd211098/Work/LUKE/';
 laptopjoan.computer = 'GLNX86';%machine type and supported OS
 laptopjoan.temppathroot = '/home/jd211098/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 laptopjoan.MUMPS.mex75 = [laptopjoan.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_ifort/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
+laptopjoan.compiler_opt.helmex = '-lblas -llapack';% Optional argument for helmex compilation 
 %
 dkepath.laptopjoan = laptopjoan;
 %
