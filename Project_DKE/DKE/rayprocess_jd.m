@@ -555,3 +555,28 @@ ray.srho = srho;
 %
 ray.salphaphi_lin = salphaphi_lin;
 %
+mask = [1,1 + find(diff(ray.ss) > 0)];
+%
+fnames = fieldnames(ray);
+%
+ns = length(ray.ss);
+%
+for iname = 1:length(fnames),
+    %
+    data = ray.(fnames{iname});
+    %
+    sdata = size(data);
+    %
+    for is = 1:length(sdata),
+        %
+        if sdata(is) == ns,
+            data = shiftdim(data,is - 1);
+            data = data(mask,:);
+            data = shiftdim(data,length(sdata) - is + 1);
+        end
+        %
+        ray.(fnames{iname}) = data;
+        %
+    end
+    %
+end
