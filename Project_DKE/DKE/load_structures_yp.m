@@ -147,11 +147,6 @@ if exist('flag_path','var'),%Paths
     %
     % dynamic compilation of MEX files
     %
-    if (isfield(dkepath,'id') && ~strcmp(dkepath.id,'LOCAL')) || (isfield(dkepath,'path_id') && ~strcmp(dkepath.path_id,'LOCAL')),
-        dkepath.mex = [dkepath.temppath,'/MEX'];    
-        mex_compile_luke(dkepath);
-    end
-    %
     % Set path for Project_DKE
     %
     setpath_luke_jd(dkepath.luke_root,dkepath);

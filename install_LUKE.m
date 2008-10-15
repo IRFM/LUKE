@@ -112,19 +112,19 @@ end
 % add paths
 %
 addpath([localpath,'Project_DKE/DKE']);
-setpath_luke_jd(localpath,'');
+setpath_luke_jd(localpath);
 %
 disp(['The LUKE paths have been installed.']);
 %
-% Creates and loads the PATH_LOCAL.mat structure 
+% Creates and loads the PATH_LOCAL.mat structure, build *.mex files  
 %
 make_path_LOCAL;
 dkepath = load_structures_yp('dkepath','','');
 luke_root = dkepath.luke_root;
 %
-% Build *.mat and *.mex files if possible
+% Build *.mat files
 %
-mex_compile_luke(dkepath)
+%mex_compile_luke(dkepath)
 %
 cd([luke_root,'Project_DKE/Database']);
 make_all;

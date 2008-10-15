@@ -55,26 +55,32 @@ addpath([luke_root,'Tools']);
 %
 % Path for MEX files
 %
-if nargin == 2 & isstruct(dkepath), 
-    if ~isfield(dkepath,'mex')
-        addpath([luke_root,'Project_DKE/MEX/Bin']);
-        addpath([luke_root,'Project_DKE/Packages/PETSc/MEX/Bin']);
-        addpath([luke_root,'Project_DKE/Modules/RT/MEX/Bin']);
-        addpath([luke_root,'Project_DKE/Modules/R2D2/MEX/Bin']);
-        addpath([luke_root,'Project_DKE/Modules/Helena/MEX/Bin']);
-        addpath([luke_root,'Project_DKE/Modules/FEB/MEX/Bin']);
-    else
-        addpath(dkepath.mex);
-    end
-end
+matver = version;
+matver = matver([1,3]);
 %
+sourcepath.DKE = [luke_root,'Project_DKE/MEX/Source/'];
+sourcepath.C3PO = [luke_root,'Project_DKE/Modules/RT/MEX/Source/'];
+sourcepath.helmex = [luke_root,'Project_DKE/Modules/Helena/MEX/Source/'];
+%
+if nargin == 2, 
+    %
+	if isfield(dkepath,['mex',matver]),
+        mexpath = dkepath.(['mex',matver]);
+        force_compile = 0;
+    else
+        mexpath = [luke_root,'Project_DKE/MEX/Bin'];
+        force_compile = 1;
+    end
+    mex_compile_luke(sourcepath,mexpath,dkepath.compiler_opt,force_compile)
+    %
+    addpath(mexpath);
+    %
+end
 %
 % Path for external packages
 %
-if nargin == 2 & isstruct(dkepath), 
+if nargin == 2, 
     if isfield(dkepath,'MUMPS') 
-		matver = version;
-		matver = matver([1,3]);
 		if isfield(dkepath.MUMPS,['mex',matver]),
 			addpath(dkepath.MUMPS.(['mex',matver]));
         elseif isfield(dkepath.MUMPS,'mex'),

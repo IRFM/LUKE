@@ -1,18 +1,50 @@
-function mex_compile_luke(dkepath)
+function mex_compile_luke(sourcepath,mexpath,compiler_opt,force_compile)
 %
-luke_root = dkepath.luke_root;
+if nargin < 3,
+    force_compile = 1;%force compilation
+end
 %
-if ~isfield(dkepath,'mex'),
-    Binpath_DKE = [luke_root,'Project_DKE/MEX/Bin'];
-    Binpath_C3PO = [luke_root,'Project_DKE/Modules/RT/MEX/Bin'];
-    Binpath_helmex = [luke_root,'Project_DKE/Modules/Helena/MEX/Bin'];
-else
-	mexpath = dkepath.mex;
+if nargin < 2,
+    compiler_opt = '';%no options
+end
+%
+if ~exist(mexpath,'dir'),
+    %
     mkdir(mexpath);
-	%
-    Binpath_DKE = mexpath;
-    Binpath_C3PO = mexpath;
-    Binpath_helmex = mexpath;
+    force_compile = 1;
+    %
+end
+%
+if force_compile == 0,
+    %
+    filetime.trapz_dke_yp.mex = gettime_jd(['trapz_dke_yp.',mexext],mexpath,0); 
+    filetime.trapz_dke_yp.source = gettime_jd('trapz_dke_yp.c',sourcepath.DKE,1);     
+    %
+    filetime.alphaphimex_jd.mex = gettime_jd(['alphaphimex_jd.',mexext],mexpath,0); 
+    filetime.alphaphimex_jd.source(1) = gettime_jd('alphaphimex_jd.c',sourcepath.DKE,1); 
+    filetime.alphaphimex_jd.source(2) = gettime_jd('alphaphi_jd.c',sourcepath.DKE,1); 
+    filetime.alphaphimex_jd.source(3) = gettime_jd('bessel_IJK_jd.h',sourcepath.DKE,1); 
+    %
+    filetime.raytracing_yp.mex = gettime_jd(['raytracing_yp.',mexext],mexpath,0); 
+    filetime.raytracing_yp.source(1) = gettime_jd('raytracing_yp.c',sourcepath.C3PO,1); 
+    filetime.raytracing_yp.source(2) = gettime_jd('raytracing_interp_yp.c',sourcepath.C3PO,1); 
+    filetime.raytracing_yp.source(3) = gettime_jd('raytracing_load_yp.c',sourcepath.C3PO,1); 
+    filetime.raytracing_yp.source(4) = gettime_jd('raytracing_dieltensor_yp.c',sourcepath.C3PO,1); 
+    filetime.raytracing_yp.source(5) = gettime_jd('alphaphi_jd.c',sourcepath.DKE,1); 
+    filetime.raytracing_yp.source(6) = gettime_jd('bessel_IJK_jd.h',sourcepath.DKE,1); 
+    %
+end 
+%
+if isstruct(compiler_opt) & isfield(compiler_opt,'copts'),% C mex compiling options
+    copts = compiler_opt.copts;
+else
+    copts = '';
+end
+%
+if isstruct(compiler_opt) & isfield(compiler_opt,'fopts'),% Fortran mex compiling option
+    fopts = compiler_opt.fopts;
+else
+    fopts = '';
 end
 %
 if strfind(computer,'PCWIN'),
@@ -21,33 +53,36 @@ else
     objext = 'o';
 end
 %
-Sourcepath_DKE = [luke_root,'Project_DKE/MEX/Source/'];
-Sourcepath_C3PO = [luke_root,'Project_DKE/Modules/RT/MEX/Source/'];
-Sourcepath_helmex = [luke_root,'Project_DKE/Modules/Helena/MEX/Source/'];
-%
 initdir = pwd;
 %
-cd(Binpath_DKE);
+cd(mexpath);
 %
-eval(['mex ',Sourcepath_DKE,'trapz_dke_yp.c']);
-disp(['The trapz_dke_yp.',mexext,' mexfile has been compiled.'])
+if force_compile || any(filetime.trapz_dke_yp.source > filetime.trapz_dke_yp.mex),
+    eval(['mex ',copts,' ',sourcepath.DKE,'trapz_dke_yp.c']);
+    disp(['The trapz_dke_yp.',mexext,' mexfile has been compiled.'])
+end
 %
-eval(['mex -c -I',Sourcepath_DKE,' ',Sourcepath_DKE,'alphaphi_jd.c']);
-eval(['mex ',Sourcepath_DKE,'alphaphimex_jd.c alphaphi_jd.',objext]);
-disp(['The alphaphimex_jd.',mexext,' mexfile has been compiled.'])
+if force_compile || any(filetime.alphaphimex_jd.source > filetime.alphaphimex_jd.mex),
+    eval(['mex -c ',copts,' -I',sourcepath.DKE,' ',sourcepath.DKE,'alphaphi_jd.c']);
+    eval(['mex ',copts,' ',sourcepath.DKE,'alphaphimex_jd.c alphaphi_jd.',objext]);
+    disp(['The alphaphimex_jd.',mexext,' mexfile has been compiled.'])
+end
 %
-cd(Binpath_C3PO);
+if force_compile || any(filetime.alphaphimex_jd.source > filetime.alphaphimex_jd.mex),
+    eval(['mex -c ',copts,' ',sourcepath.C3PO,'raytracing_interp_yp.c']);
+    eval(['mex -c ',copts,' ',sourcepath.C3PO,'raytracing_dieltensor_yp.c']);
+    eval(['mex -c ',copts,' ',sourcepath.C3PO,'raytracing_load_yp.c']);
+    eval(['mex -c ',copts,' -I',sourcepath.DKE,' ',sourcepath.DKE,'alphaphi_jd.c']);
+    eval(['mex ',copts,' ',sourcepath.C3PO,'raytracing_yp.c raytracing_dieltensor_yp.',objext,' raytracing_interp_yp.',objext,' raytracing_load_yp.',objext,' alphaphi_jd.',objext]);
+    disp(['The raytracing_yp.',mexext,' mexfile has been compiled.'])
+end
 %
-eval(['mex -c ',Sourcepath_C3PO,'raytracing_interp_yp.c']);
-eval(['mex -c ',Sourcepath_C3PO,'raytracing_dieltensor_yp.c']);
-eval(['mex -c ',Sourcepath_C3PO,'raytracing_load_yp.c']);
-eval(['mex ',Sourcepath_C3PO,'raytracing_yp.c raytracing_dieltensor_yp.',objext,' raytracing_interp_yp.',objext,' raytracing_load_yp.',objext,' ',Binpath_DKE,'/alphaphi_jd.',objext]);
-disp(['The raytracing_yp.',mexext,' mexfile has been compiled.'])
-%
-cd(Binpath_helmex);
-%
-if isfield(dkepath,'compiler_opt') & isfield(dkepath.compiler_opt,'helmex'),
-	[s_helmex,mess_helmex,messid_helmex] = build_helmex77_yp(Sourcepath_helmex,Binpath_helmex,dkepath.compiler_opt.helmex);
+if isstruct(compiler_opt) && isfield(compiler_opt,'helmex'),
+	build_helmex77_yp(sourcepath.helmex,mexpath,compiler_opt.helmex,fopts,force_compile);
 end
 %
 cd(initdir);
+%
+
+
+
