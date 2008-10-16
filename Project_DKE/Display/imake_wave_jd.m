@@ -8,24 +8,24 @@ end
 %
 wave = '';
 %
-w_opt = input('Option for wave calculation? 0 (C3PO), 1 (TORAY), 2 (ART) [0] : ');
+w_opt = input('Option for wave calculation? 0 (C3PO), 1 (TORAY), 2 (ART), 3 (AMR) [0] : ');
 %
 if isempty(w_opt),
     w_opt = 0;
 end
-if ~isnumeric(w_opt) | ~any(w_opt == [0,1,2]),
+if ~isnumeric(w_opt) | ~any(w_opt == [0,1,2,3]),
     disp('-----> Invalid wave option');
     return
 end
 %
 if w_opt == 0,% wave from C3PO calculations
     %
-    i_opt = input('Option for initial conditions? \n0 (from launching data), \n1 (from an existing RAYINIT file), \n2 (from TORAY data), \n3 (from ART data) \n[0] : ');
+    i_opt = input('Option for initial conditions? \n0 (from launching data), \n1 (from an existing RAYINIT file), \n2 (from TORAY data), \n3 (from ART data), \n4 (from AMR data) \n[0] : ');
     %
     if isempty(i_opt),
         i_opt = 0;
     end
-    if ~isnumeric(i_opt) | ~any(i_opt == [0,1,2,3]),
+    if ~isnumeric(i_opt) | ~any(i_opt == [0,1,2,3,4]),
         disp('-----> Invalid initial conditions option');
         return
     end
@@ -299,6 +299,12 @@ if w_opt == 0,% wave from C3PO calculations
         %
         disp('-----> initial conditions from ART not implemented yet');
         return
+        %
+    elseif i_opt == 43,% wave from ART calculations
+        %
+        disp('-----> initial conditions from AMR not implemented yet');
+        return
+        %
     end
     %
     % RAY, WAVE, AND DISPLAY PARAMETERS
@@ -476,6 +482,16 @@ elseif w_opt == 1,% wave from TORAY calculations
 elseif w_opt == 2,% wave from ART calculations
     %
     wave = imake_wave_ART_jd(workdir,equil,opt_gui);
+    %
+    if isempty(wave),
+        return
+    end
+    %
+    wave = wave_process_jd(equil,wave,NaN);
+    %
+elseif w_opt == 3,% wave from ART calculations
+    %
+    wave = imake_wave_AMR_jd(workdir,equil,opt_gui);
     %
     if isempty(wave),
         return
