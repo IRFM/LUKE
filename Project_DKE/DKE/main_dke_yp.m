@@ -87,11 +87,12 @@ else
 end  
 %
 residue_rf = [];
+conv = 0;
 %
 for it_rf=1:nit_rf, % convergence in the ray-tracing mode
     if strcmp(waveparam.model,'RT') & ~isempty(waveparam.bomega_rf),%in the case of RF waves only
         %
-        if it_rf > 1,%1,
+        if it_rf > 1 & conv == 0,
             xyP0_2piRp_mod = delta_rt*xyP0_2piRp_mod_old + (1 - delta_rt)*xyP0_2piRp_mod;
         end
         %
@@ -170,7 +171,7 @@ for it_rf=1:nit_rf, % convergence in the ray-tracing mode
                 info_dke_yp(2,'---------------------------------------------------------');
             end
 %  
-            if (residue_rf(it_rf) <= dkeparam_out.prec_rf & redfac == 1 & it_rf > 1) | it_rf == nit_rf,
+            if (residue_rf(it_rf) <= dkeparam_out.prec_rf & redfac == 1 & it_rf > 1 & conv == 1) | it_rf == nit_rf,
                 P_0_2piRp_in = sum(yP0_2piRp);
                 P_0_2piRp_out = 0;
                 for iray = 1:length(yb),
@@ -190,7 +191,7 @@ for it_rf=1:nit_rf, % convergence in the ray-tracing mode
                     end
                 end
                 %
-                if residue_rf(it_rf) <= dkeparam_out.prec_rf & redfac == 1 & it_rf > 1,
+                if residue_rf(it_rf) <= dkeparam_out.prec_rf & redfac == 1 & it_rf > 1 & conv == 1,
                     if display.display_mode >=1,info_dke_yp(2,['Successfull convergence achieved for ray-tracing coupling after ',int2str(it_rf),' iterations !']);end
                     break
                 else
@@ -199,6 +200,9 @@ for it_rf=1:nit_rf, % convergence in the ray-tracing mode
             else   	
                 if display.display_mode >=1,info_dke_yp(2,['Iteration ',int2str(it_rf),', residue = ',num2str(residue_rf(it_rf))]);end       
             end
+			if (residue_rf(it_rf) <= dkeparam_out.prec_rf & redfac == 1 & it_rf > 1 & conv == 0),
+				conv = 1;
+			end				
         end     
     end
 end
