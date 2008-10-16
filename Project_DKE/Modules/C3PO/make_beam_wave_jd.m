@@ -46,7 +46,7 @@ if ~isnan(w0),% beam width information given
     %
     swidth = w0*swidthfac/sqrt(2);
     %
-    ray.sdNpar = clum*sphi_perp./swidth./sphi_norm/omega_rf;
+    %ray.sdNpar = clum*sphi_perp./swidth./sphi_norm/omega_rf;
     %
 else
     %warning('No beam width specified. Beam width determined from dNpar')
@@ -54,6 +54,7 @@ else
 end
 %
 if nd == 1 | nchi == 1,
+    wave.rays{1}.swidth = swidth;
     return
 end
 %
@@ -126,6 +127,8 @@ for id = 1:nd,
         wave.rays{ir}.sdNpar = ray.sdNpar;
         wave.rays{ir}.sepol_pmz = ray.sepol_pmz;
         wave.rays{ir}.sphi_xyz = ray.sphi_xyz;
+        %
+        wave.rays{ir}.swidth = swidth;
     end
 end
 %
