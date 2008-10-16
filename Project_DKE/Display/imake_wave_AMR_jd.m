@@ -14,11 +14,15 @@ end
 %
 wavedata = load([AMR_path,AMR_file],'-ascii');
 %
-shotime = wavedata(1);
-antenna.num = wavedata(2);
-antenna.conf = wavedata(3);
-omega_rf = 2*pi*wavedata(4)*1e9;%initially in GHz
-yP0 = wavedata(5:end)*1e3;%intially in kW
+shotime = wavedata(1,1);
+antenna.num = wavedata(1,2);
+antenna.conf = wavedata(1,3);
+omega_rf = 2*pi*wavedata(1,4)*1e9;%initially in GHz
+yP0 = wavedata(:,5)*1e3;%intially in kW
+focalX = wavedata(1,6);
+focalY = wavedata(1,7);
+focalZ = wavedata(1,8);
+w0 = wavedata(1,9);
 %
 if str2num(equil.info.shotime) ~= shotime,
     disp('-----> The shot time is not compatible with equilibrium')
@@ -30,9 +34,9 @@ shotime = equil.info.shotime;
 %
 ny = length(yP0);
 %
-dNpar = input('Spectral width [0.06]:');
+dNpar = input('Spectral width (NaN if calculated from beam size) [NaN]:');
 if isempty(dNpar),
-    dNpar = 0.06;
+    dNpar = NaN;
 end
 if ~isnumeric(dNpar),
     disp('-----> Invalid Spectral width');
@@ -86,16 +90,24 @@ for iy = 1:ny,
     %
     ray.P0_2piRp = yP0(iy)/(2*pi*equil.Rp);% Power launched in the ray (W) [1,1]
     %
-    ray.sx = raydata(:,1).' - equil.Rp;% Ray location (major radius) along the propagation [1,ns]
+    sR = raydata(:,1).';
+    ray.sx = sR - equil.Rp;% Ray location (major radius) along the propagation [1,ns]
     %
     ns = length(ray.sx);
     %
     % warning: - sign comes from opposite phi definition
     %
     ray.sphi = - raydata(:,3).';% Ray location (toroidal angle) along the propagation [1,ns]
-    ray.sy = raydata(:,2).' - equil.Zp;% Ray location (vertical) along the propagation [1,ns]
     %
-    ray.ss = [];% Ray propagation distance parameter for each ray (put to NaN once the ray is absorbed) [1,ns]
+    sZ = raydata(:,2).';
+    ray.sy = sZ - equil.Zp;% Ray location (vertical) along the propagation [1,ns]
+    %
+    ss = zeros(1,ns);
+    sRh = (sR(1:ns-1) + sR(2:ns))/2;
+    ds = sqrt(diff(sR).^2 + (sRh.*diff(ray.sphi)).^2 + diff(sZ).^2);
+    ss(2:ns) = cumsum(ds);
+    %
+    ray.ss = ss;% Ray propagation distance parameter for each ray (put to NaN once the ray is absorbed) [1,ns]
     ray.spsin = [];% Ray location (normalized magnetic flux) along the propagation [1,ns]
     ray.stheta = [];% Ray location (poloidal angle) along the propagation [1,ns]
     %
@@ -110,8 +122,8 @@ for iy = 1:ny,
     ray.sdNpar = dNpar*ones(1,ns);% Ray spectral width in Npar [1,ns] 
     %       if sdNpar is real -> gaussian spectrum, if sdNpar is imag. -> square spectrum (centered on sNpar)
     %
-    ray.sepol_pmz = [];% polarization vector [3,ns] complex
-    ray.sphi_xyz = [];% normalized power flow [3,ns]
+    ray.sepol_pmz = NaN*ones(3,0);% polarization vector [3,ns] complex
+    ray.sphi_xyz = NaN*ones(3,0);;% normalized power flow [3,ns]
     %
     rays{iy} = ray;
     %
@@ -130,4 +142,46 @@ wave.rays = rays;
 wave.info.type = 'RT';
 wave.info.RT = 'AMR';
 wave.info.rays = [AMR_path,AMR_file];
+%
+if ny == 1,
+    %
+    nd_in = 3;
+    nchi_in = 4;
+    %
+    nd = input(['Number of transverse distance positions for beamlets: [',num2str(nd_in),'] :']);
+    if isempty(nd),
+        nd = nd_in;
+    end
+    if ~isnumeric(nd),
+        disp('-----> Invalid choice');
+        return
+    end
+    %
+    nchi = input(['Number of angular positions for beamlets: [',num2str(nchi_in),'] :']);
+    if isempty(nchi),
+        nchi = nchi_in;
+    end
+    if ~isnumeric(nchi),
+        disp('-----> Invalid choice');
+        return
+    end
+    %
+    sfocald = sqrt((focalX - sR.*cos(ray.sphi)).^2 +...
+                   (focalY - sR.*sin(ray.sphi)).^2 +...
+                   (focalZ - sZ).^2);
+    is0 = find(sfocald == min(sfocald),1,'first');
+    if sqrt(focalX.^2 + focalY.^2) > sR(1),
+        z0 = -sfocald(1);
+    else
+        z0 = ray.ss(is0);
+    end
+    %
+else
+    nd = 1;
+    nchi = 1;
+    z0 = NaN;
+end
+%
+raydisplay.ray = 0;
+wave = make_beam_wave_jd(wave,equil,raydisplay,nd,nchi,w0,z0);
 %
