@@ -482,7 +482,7 @@ end
 %
 % Calculates sdNpar if needed.
 %
-if isempty(sdNpar),
+if isempty(sdNpar) || any(isnan(sdNpar)),
     if ~isempty(swidth),
         sphi_norm = sqrt(abs(sphi_xyz(1,:).^2 + sphi_xyz(2,:).^2 + sphi_xyz(3,:).^2));
         sdNpar = clum.*abs(sphi_xyz(1,:))./sphi_norm/omega_rf./swidth;
