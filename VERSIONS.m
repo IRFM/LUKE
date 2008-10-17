@@ -1283,3 +1283,97 @@
 % U print_jd.m (png outputs)
 % U htmldocbuilder_luke_yp.m (corrections on documentation and latex2html)
 % U pdfhtlatex_yp.m (")
+%
+% ----------------------------------------------------------------------------------------------------
+% 
+% LUKE Release 1.6.5
+% 
+% - Convergence criterion for QL iterations
+% - multi-config PATH make file in root directory and simplified dkepath install and management
+% - mex file management with different platforms and matlab versions
+% 
+% ====> LUKE
+%
+% U install_LUKE.m (make PATH file in root directory with multi-config dkepath and default profile for install and new mex folders)
+% U make_path_LOCAL.m (")
+% U make_path_LUKE.m (")
+% A install_doc_LUKE.m (externalized)
+% U INSTALL.m (update on requirements)
+%
+% ====> LUKE/Project_DKE/Database/
+% 
+% U make_all.m (small correction)
+%
+% ====> LUKE/Project_DKE/Database/PATH_files/
+% 
+% A README (to maintain folder)
+%
+% ====> LUKE/Project_DKE/Display
+% 
+% U iload_struct_jd.m (additional structures)
+% U imake_equil_jd.m (add AMR equilibrium)
+% A imake_wave_AMR_jd.m (make AMR waves)
+% U imake_wave_jd.m (add AMR waves)
+% U irunluke_jd.m (sign management, close all)
+%
+% ====> LUKE/Project_DKE/DKE
+% 
+% U load_structures_yp.m (make PATH file in root directory with multi-config dkepath and new mex folders)
+% U path_LUKE_LOCAL.m (")
+% U setpath_luke_jd.m (" + AMR folder)
+% U LUKEversion_jd.m (LUKE 1.6.5)
+% U main_dke_yp.m (Convergence criterion for QL iterations)
+% U mex_clean_luke.m (new mex folders)
+% U mex_compile_luke.m (")
+% U proc_luke_jd.m (current sign)
+% U rayprocess_jd.m (cut duplicate points)
+%
+% ====> LUKE/Project_DKE/Modules/ACCOME
+% 
+% U testequil_ACCOME_LUKE.m (Test magnetic equilibrium consistency)
+%
+% ====> LUKE/Project_DKE/Modules/AMR
+% 
+% A make_equil_AMR_jd.m (make AMR equilibrium)
+% A make_equil_RZ_AMR_jd.m (make equil files for AMR code)
+%
+% ====> LUKE/Project_DKE/Modules/Cronos
+% 
+% U make_wavelaunchs_cronos_lh.m (frequency selection)
+% U zstarwars.m (small corrections)
+%
+% ====> LUKE/Project_DKE/Modules/EFIT
+% 
+% A pt2rz_jd.m (PT to RZ equilibrium transformation)
+%
+% ====> LUKE/Project_DKE/Modules/Helena
+% 
+% U build_helmex77_yp.m (new mex folders)
+%
+% ====> LUKE/Project_DKE/Modules/RT
+% 
+% U kineticdisp_jd.m (use erfcc)
+% U make_beam_wave_jd.m (keep swidth)
+%
+% ====> LUKE/Tools
+% 
+% U pdfhtlatex_yp.m (gestion des dossiers CVS)
+% A gettime_jd.m (get file modification time)
+%
+% ====> LUKE/Simulations/Examples/ITER/Scen4/
+%
+% U make_equil_ITER_IAEA06.m (LUKE 1.6.4 with IAEA 06 modified EQUIL file - OK with ITER spec. + new convergence criterion)
+% U proc_ITER.m (")
+% U proc_ITER_wave_LUKE.m (")
+% U proc_wave_ITER_Scen4_IAEA06_C3PO.m (")
+% U res_comp.log (")
+% U all make_rayinit files (") 
+% U all make_wave files (")
+% U all rundke files (")
+%
+% ====> LUKE/Simulations/Examples/TS/32299/
+%
+% U run_cronos_C3PO.m (LUKE 1.6.4 with new equil, with corrected make_equil_cronos and psi grid + new convergence criterion)
+% U res_alpha_0_Dr0_0.log (")
+% U Alpha_Scan_Curr.eps (")
+%
