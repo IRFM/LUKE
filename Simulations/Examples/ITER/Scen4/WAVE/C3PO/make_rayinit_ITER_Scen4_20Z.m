@@ -21,6 +21,11 @@ clear all
 close all
 clc
 %
+% path
+%
+id_dkepath = '';%For all paths used by DKE solver
+path_dkepath = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+%
 % Equilibrium parameters
 %
 id_equil = 'ITER_Scen4_IAEA06_mod';%For plasma equilibrium
@@ -44,14 +49,9 @@ launch.LFS = 1;% (-1) high field side launching, (1) low field side launching [1
 %
 %==========================================================================
 %
-% Load equilibrium
+% Load structures
 %
-if exist([path_equil,'EQUIL_',id_equil,'.mat']) == 0,%Magnetic equilibrium
-	error([path_equil,'EQUIL_',id_equil,'.mat does not exist']);
-else
-	eval(['load ',path_equil,'EQUIL_',id_equil,'.mat']);
-	info_dke_yp(2,'Structure ''equil'' successfully loaded');
-end
+[dkepath,equil] = load_structures_yp('dkepath',id_dkepath,path_dkepath,'equil',id_equil,path_equil);
 %
 nb = length(launch.bNpar0);
 launch.bdNpar0 = zeros(1,nb);
