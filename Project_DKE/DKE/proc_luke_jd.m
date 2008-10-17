@@ -75,7 +75,9 @@ mhu = momentumDKE.mhu;
 %
 nr = length(xrho);
 %
-J_tot = Zcurr.x_0_fsav*mksa.j_ref;
+scocurr = sign(equilDKE.psia_apRp)*sign(equilDKE.XBphi(1,1));
+%
+J_tot = Zcurr.x_0_fsav*mksa.j_ref*scocurr;
 P_rf = ZP0.x_rf_fsav.'*mksa.P_ref;
 P_e = ZP0.x_e_fsav*mksa.P_ref;
 P_tot = P_rf + P_e;
@@ -166,7 +168,7 @@ if nr > 1,
     peaks.EtaRp = peaks.I_tot./(peaks.p_rf_2piRp*2*pi);
     peaks.ksirf = 32.7*peaks.I_tot.*peaks.ne*1e-20./(peaks.Te*2*pi.*peaks.p_rf_2piRp);
     %
-    disp(['Total current (I): ',num2str(I_tot),' MA'])
+    disp(['Total current (I): ',num2str(I_tot),' MA (positive for co-current)'])
 	if isinf(equilDKE.Rp),
     	disp(['RF power (P/2piRp): ',num2str(p_rf_2piRp),' MW/m'])
     	disp(['Ohmic power (P/2piRp): ',num2str(p_e_2piRp),' MW/m'])
@@ -259,7 +261,7 @@ if nr > 1,
     figure('Name',['Current density profile - ',dke_out.simul.id]),clf
     %
     ylab = 'J (MA/m^2)';
-    tit = '';
+    tit = 'J > 0 for co-current';
     ylim = NaN;
     %
     graph1D_jd(xrho,J_tot,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width2,siz,gca,red,lspace,bspace);
@@ -285,7 +287,7 @@ if nr > 1,
     %    
     ylab1 = 'J (MA/m^2)';
     ylab2 = 'P_{RF} (MW/m^3)';
-    tit = '';
+    tit = 'J > 0 for co-current';
     ylim1 = NaN;
     ylim2 = NaN;
     %
