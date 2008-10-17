@@ -1,6 +1,6 @@
 function equil_RZ = pt2rz_jd(equil,xlim,ylim)
 %
-np = length(equil.psi_apRp);
+[np,nt] = size(equil.ptx);
 %
 equil_RZ.psi_apRp = equil.psi_apRp;
 equil_RZ.ap = equil.ptx(end,1);
@@ -13,28 +13,55 @@ equil_RZ.id = equil.id;
 ptx = equil.ptx;
 pty = equil.pty;
 %
-if nargin < 3,
-    ylim = [min(pty(end,:)),max(pty(end,:))];
+if nargin == 2 && length(xlim) == 1,
+    extfac = xlim;
+    xlim = NaN;
+else
+    %
+    if nargin < 3,
+        ylim = [min(pty(end,:)),max(pty(end,:))];
+    end
+    %
+    if nargin < 2,
+        xlim = [min(ptx(end,:)),max(ptx(end,:))];
+    end
+    %
+    if xlim(1) < -equil.Rp,
+        error('xlim(1) + equil.Rp < 0 is impossible')
+    end
 end
-%
-if nargin < 2,
-    xlim = [min(ptx(end,:)),max(ptx(end,:))];
-end
-%
-if xlim(1) < -equil.Rp,
-    error('xlim(1) + equil.Rp < 0 is impossible')
-end
-%
-equil_RZ.x = linspace(xlim(1),xlim(2),np);
-equil_RZ.y = linspace(ylim(1),ylim(2),np);
 %
 psia_apRp = equil.psi_apRp(end);
 psin = equil.psi_apRp/psia_apRp;
 %
 dpsin = psin(end) - psin(end-1);
+%
+if isnan(xlim),
+    xmin = min(ptx(end,:));
+    xmax = max(ptx(end,:));
+    ymin = min(pty(end,:));
+    ymax = max(pty(end,:));
+    %
+    itxmin = find(ptx(end,:) == xmin,1,'first');
+    itxmax = find(ptx(end,:) == xmax,1,'first');
+    itymin = find(pty(end,:) == ymin,1,'first');
+    itymax = find(pty(end,:) == ymax,1,'first');
+    %
+    dxmin = (ptx(end,itxmin) - ptx(end-1,itxmin))*extfac/dpsin;
+    dxmax = (ptx(end,itxmax) - ptx(end-1,itxmax))*extfac/dpsin;
+    dymin = (pty(end,itymin) - pty(end-1,itymin))*extfac/dpsin;
+    dymax = (pty(end,itymax) - pty(end-1,itymax))*extfac/dpsin;
+    %
+    xlim = [xmin + dxmin,xmax + dxmax];
+    ylim = [ymin + dymin,ymax + dymax];
+end
+%
 dsdpsin_min = min(sqrt((ptx(end,:) - ptx(end-1,:)).^2 + (pty(end,:) - pty(end-1,:)).^2))/dpsin;
 psin_max = 1 + sqrt((xlim(2) - xlim(1)).^2 + (ylim(2) - ylim(1)).^2)/dsdpsin_min;
 psin_ext = [psin,1 + dpsin:dpsin:psin_max];
+%
+equil_RZ.x = linspace(xlim(1),xlim(2),np);
+equil_RZ.y = linspace(ylim(1),ylim(2),np);
 %
 ptx_ext = interp1(psin,ptx,psin_ext,'linear','extrap');
 pty_ext = interp1(psin,pty,psin_ext,'linear','extrap');
@@ -42,7 +69,7 @@ ptBx_ext = interp1(psin,equil.ptBx,psin_ext,'linear','extrap');
 ptBy_ext = interp1(psin,equil.ptBy,psin_ext,'linear','extrap');
 ptBPHI_ext = interp1(psin,equil.ptBPHI,psin_ext,'linear','extrap');
 %
-psi_apRp_ext =  psia_apRp*repmat(psin_ext.',[1,length(equil.theta)]);
+psi_apRp_ext =  psia_apRp*repmat(psin_ext.',[1,nt]);
 %
 warning('off')
 %
