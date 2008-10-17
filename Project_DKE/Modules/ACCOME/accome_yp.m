@@ -1,4 +1,4 @@
-function [x,y,xypsin,psia,rpsin,xyBPHI,Rp,Zp] = accome_yp(filename,display_mode,p_opt,dispname,savename,Ns);
+function [x,y,xypsin,psia,rpsin,xyBPHI,xyBR,xyBZ,Rp,Zp] = accome_yp(filename,display_mode,p_opt,dispname,savename,Ns);
 %
 % This function reads the equilibrium parameters from file created
 % by ACCOME and saved in the formatted text file "filename"
@@ -40,12 +40,23 @@ fscanf(fid,'%s',3);
 xypsi = fscanf(fid,'%f',nx*ny);%Poloidal magnetic flux function
 xypsi = reshape(xypsi,nx,ny);
 %
+fscanf(fid,'%s',1);
+xyBR = fscanf(fid,'%f',nx*ny);%Poroidal magnetic field BR (T)
+xyBR = reshape(xyBR,nx,ny);
+%
+fscanf(fid,'%s',1);
+xyBZ = fscanf(fid,'%f',nx*ny);%Poroidal magnetic field BZ (T)
+xyBZ = reshape(xyBZ,nx,ny);
+%
 fclose(fid);
 %
 %Automatic search of last closed magnetic flux surface and the magnetic
 %flux values
 %
 psic = contourc(x,y,xypsi',Ns);
+%
+%figure(100),contour(x,y,xypsi',Ns);axis('equal');
+%
 psi_offset = 1;
 for ic = 1:Ns
     psi_level(ic) = psic(1,psi_offset);
@@ -67,7 +78,7 @@ else %IPHI is negative, PHI clockwise from top
     sigma = -1;
 end
 %
-xypsi = xypsi - psip;
+xypsi = xypsi - psip;%psi = 0 on the magnetic axis (arbitrary choice)
 psia = (psia - psip);
 %
 xypsin = xypsi/psia;
@@ -75,4 +86,5 @@ rpsin = linspace(0,1,nx);
 %
 % ACCOME sign treatment
 %
+save testACCOME.mat
 
