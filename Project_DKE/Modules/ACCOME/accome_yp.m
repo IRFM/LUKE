@@ -84,7 +84,5 @@ psia = (psia - psip);
 xypsin = xypsi/psia;
 rpsin = linspace(0,1,nx);
 %
-% ACCOME sign treatment
-%
 save testACCOME.mat
 
