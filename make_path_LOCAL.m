@@ -30,7 +30,7 @@ dkepath.default = default;
 %
 % paths for runs on IRFM saturne cluster
 %
-saturne.luke_root = [cd,'/'];
+saturne.luke_root = [pwd,'/'];
 saturne.local_root = '/home/sccp/gsem/decker/saturne/';
 saturne.computer = 'GLNXA64';%machine type and supported OS
 saturne.temppathroot = '/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
@@ -52,7 +52,7 @@ dkepath.saturne = saturne;
 %
 % paths for runs on IRFM cephee cluster
 %
-cephee.luke_root = [cd,'/'];
+cephee.luke_root = [pwd,'/'];
 cephee.local_root = '/home/sccp/gsem/decker/cephee/';
 cephee.computer = 'GLNXA64';%machine type and supported OS
 cephee.temppathroot = '/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
@@ -68,7 +68,7 @@ dkepath.cephee = cephee;
 %
 % paths for runs on IRFM PC-LUKE workstation
 %
-pcluke.luke_root = [cd,'/'];
+pcluke.luke_root = [pwd,'/'];
 pcluke.local_root = '/home/lukeuser/Work/';
 pcluke.computer = 'GLNX86';%machine type and supported OS
 pcluke.temppathroot = '/home/lukeuser/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
@@ -82,7 +82,7 @@ dkepath.pcluke = pcluke;
 %
 % paths for runs on Yves Peysson's laptop
 %
-laptopyves.luke_root = [cd,'/'];
+laptopyves.luke_root = [pwd,'/'];
 laptopyves.local_root = [getenv('HOME'),'/CEA/Projets/'];
 laptopyves.computer = 'MAC';%machine type and supported OS
 laptopyves.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
@@ -103,7 +103,7 @@ dkepath.laptopyves = laptopyves;
 %
 % paths for runs on Joan Decker's laptop
 %
-laptopjoan.luke_root = [cd,'/'];
+laptopjoan.luke_root = [pwd,'/'];
 laptopjoan.local_root = '/home/jd211098/Work/LUKE/';
 laptopjoan.computer = 'GLNX86';%machine type and supported OS
 laptopjoan.temppathroot = '/home/jd211098/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
@@ -117,7 +117,7 @@ dkepath.laptopjoan = laptopjoan;
 %
 % paths for runs on SUN workstation at IPP-Prag
 %
-sunipp.luke_root = [cd,'/'];
+sunipp.luke_root = [pwd,'/'];
 sunipp.local_root = '/home/vader/';
 sunipp.computer = 'GLNXA64';%machine type and supported OS
 sunipp.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
