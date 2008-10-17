@@ -33,6 +33,10 @@ if force_compile == 0,
     filetime.raytracing_yp.source(5) = gettime_jd('alphaphi_jd.c',sourcepath.DKE,1); 
     filetime.raytracing_yp.source(6) = gettime_jd('bessel_IJK_jd.h',sourcepath.DKE,1); 
     %
+    filetime.erfcc.mex = gettime_jd(['erfcc_mex_jd.',mexext],mexpath,0); 
+    filetime.erfcc.source(1) = gettime_jd('erfcc_mex_jd.f',sourcepath.C3PO,1); 
+    filetime.erfcc.source(2) = gettime_jd('erfcc.f',sourcepath.C3PO,1); 
+    %
 end 
 %
 if isstruct(compiler_opt) & isfield(compiler_opt,'copts'),% C mex compiling options
@@ -68,13 +72,19 @@ if force_compile || any(filetime.alphaphimex_jd.source > filetime.alphaphimex_jd
     disp(['The alphaphimex_jd.',mexext,' mexfile has been compiled.'])
 end
 %
-if force_compile || any(filetime.alphaphimex_jd.source > filetime.alphaphimex_jd.mex),
+if force_compile || any(filetime.raytracing_yp.source > filetime.raytracing_yp.mex),
     eval(['mex -c ',copts,' ',sourcepath.C3PO,'raytracing_interp_yp.c']);
     eval(['mex -c ',copts,' ',sourcepath.C3PO,'raytracing_dieltensor_yp.c']);
     eval(['mex -c ',copts,' ',sourcepath.C3PO,'raytracing_load_yp.c']);
     eval(['mex -c ',copts,' -I',sourcepath.DKE,' ',sourcepath.DKE,'alphaphi_jd.c']);
     eval(['mex ',copts,' ',sourcepath.C3PO,'raytracing_yp.c raytracing_dieltensor_yp.',objext,' raytracing_interp_yp.',objext,' raytracing_load_yp.',objext,' alphaphi_jd.',objext]);
     disp(['The raytracing_yp.',mexext,' mexfile has been compiled.'])
+end
+%
+if force_compile || any(filetime.erfcc.source > filetime.erfcc.mex),
+    eval(['mex -c ',fopts,' ',sourcepath.C3PO,'erfcc.f']);
+    eval(['mex ',fopts,' ',sourcepath.C3PO,'erfcc_mex_jd.f erfcc.',objext]);
+    disp(['The erfcc_mex_jd.',mexext,' mexfile has been compiled.'])
 end
 %
 if isstruct(compiler_opt) && isfield(compiler_opt,'helmex'),
