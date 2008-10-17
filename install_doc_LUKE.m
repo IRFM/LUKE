@@ -1,8 +1,14 @@
-function install_doc_LUKE
+function install_doc_LUKE(test)
 %LUKE - Installation script for automatic generation of the on-line documentation 
 %
 %Installation script for automatic generation of the on-line documentation
 %(pdflatex and tex4html required for a complete build of the documentation)
+%
+% INPUT:
+%
+%	- test: dummy argument. If exists, test mode is activated with reduced documentation
+%
+% OUTPUT: none
 %
 %By Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr) and Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr)
 %
@@ -14,7 +20,8 @@ luke_root = dkepath.luke_root;
 cd(luke_root);
 %
 m2htmllib_path = fullfile(luke_root,'Packages','m2html');
-search_path = {fullfile(luke_root,'Project_DKE','Database'),...              
+if nargin == 0,
+	search_path = {fullfile(luke_root,'Project_DKE','Database'),...              
               fullfile(luke_root,'Project_DKE','Database','DISPLAY_files'),...
               fullfile(luke_root,'Project_DKE','Database','DKEPARAM_files'),...
               fullfile(luke_root,'Project_DKE','Database','EQUIL_files'),...
@@ -94,6 +101,18 @@ search_path = {fullfile(luke_root,'Project_DKE','Database'),...
               fullfile(luke_root,'Simulations','Examples','TS','32299','HXR'),...  
               fullfile(luke_root,'Tools'),...
               };   
+else
+	disp('----------------------------------------------')
+	disp('WARNING: Test mode.')
+	disp('----------------------------------------------')
+	%
+	search_path = {fullfile(luke_root,'Project_DKE','DKE'),...     
+              fullfile(luke_root,'Project_DKE','DKE','MEX'),...  
+              fullfile(luke_root,'Project_DKE','MEX'),...               
+              fullfile(luke_root,'Project_DKE','MEX','Source'),...  
+              fullfile(luke_root,'Project_DKE','MEX','Bin'),...
+              };
+end
 %
 overview_scripts(1).path = fullfile(luke_root,'INSTALL.m');overview_scripts(1).format = '';
 overview_scripts(2).path = fullfile(luke_root,'README.m');overview_scripts(2).format = '';
@@ -105,10 +124,19 @@ htmldocbuilder_luke_yp(m2htmllib_path,'off',luke_root,search_path,excludedfolder
 %
 % Check that the list of TeX files given below is similar in the html file ~','LUKE/Packages/m2html/templates/LUKE/lukeoverview.html
 %  
-texfilelist = {fullfile(luke_root,'Project_DKE','Doc','NoticeDKE.tex'),...      
+if nargin == 0,
+	texfilelist = {fullfile(luke_root,'Project_DKE','Doc','NoticeDKE.tex'),...      
             fullfile(luke_root,'Project_DKE','Modules','RT','Doc','raytracing.tex'),...
             fullfile(luke_root,'Project_DKE','Modules','FEB','Doc','3Tmodel.tex'),...
            }; 
+else
+	disp('----------------------------------------------')
+	disp('WARNING: Test mode.')
+	disp('----------------------------------------------')
+	%
+	texfilelist = {fullfile(luke_root,'Project_DKE','Modules','FEB','Doc','3Tmodel.tex'),...
+           }; 
+end
 pdfhtlatex_yp(luke_root,texfilelist);%build html and pdf doc from tex files
 %
 cd(dirinit);
