@@ -128,13 +128,13 @@ n0 = nmax+1;
 %
 zeta_sn = (1 - abs(sy)*n)./(sqrt(2)*abs(Npar)*(sbeta*ones(1,Nn)));
 %
-if exist(['erfcc.',mexext],'file') == 3,%fortran file
+if exist(['erfcc_mex_jd.',mexext],'file') == 3,%fortran file
     Z_sn = zeros(Ns,Nn);
     for is = 1:Ns,
         %
         x = [zeta_sn(is,:),zeros(1,1024 - Nn)];
         %
-        [yr,yi] = erfcc(Nn,real(x),imag(x));
+        [yr,yi] = erfcc_mex_jd(Nn,real(x),imag(x));
         %
         Z_sn(is,:) = sqrt(pi)*(i*yr(1:Nn) - yi(1:Nn));
     end
@@ -144,12 +144,12 @@ if exist(['erfcc.',mexext],'file') == 3,%fortran file
     maskp_sn = abs(zeta_sn) > sqrt(1e-2/(2*eps));
     maskpp_sn = abs(zeta_sn) > sqrt(sqrt(1e-2/(4*eps)));
     %
-    if any(maskp_sn),
+    if display_mode && any(maskp_sn),
         disp(['Warning : there are ',num2str(sum(maskp_sn(:))),'/',num2str(length(maskp_sn(:))),...
             ' points outside the plasma dispersion function first derivative calculation range'])
     end
     %
-    if any(maskpp_sn),
+    if display_mode && any(maskpp_sn),
         disp(['Warning : there are ',num2str(sum(maskpp_sn(:))),'/',num2str(length(maskpp_sn(:))),...
             ' points outside the plasma dispersion function second derivative calculation range'])
     end
