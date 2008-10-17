@@ -261,6 +261,7 @@ while isel >= 0,
     disp('[15]  Calculate HXR emission');
     disp(' ');
     disp('[16]  Go to command line')
+    disp('[17]  Close all figures')
     disp(' ');
     disp('[0]   Run LUKE');
     disp('[-1]  Exit LUKE');
@@ -271,7 +272,7 @@ while isel >= 0,
     %
     clc
     %
-    if isempty(isel) | ~isnumeric(isel) | ~any(isel == [-2:16]),
+    if isempty(isel) | ~isnumeric(isel) | ~any(isel == [-2:17]),
         isel = -1;
     end
     %
@@ -909,6 +910,10 @@ while isel >= 0,
             disp(' ');
             keyboard
             % 
+        elseif isel == 17,
+            %
+            close all;    
+            % 
         elseif isel == 0,
             %
             % RUN LUKE
@@ -997,7 +1002,7 @@ while isel >= 0,
             %
             I_tot = sum(output.Zcurr.x_0_fsav.*output.equilDKE.xdA_dke*output.mksa.j_ref*scocurr);
             figure('Name','Current profile'),
-            graph1D_jd(output.equilDKE.xrho,output.Zcurr.x_0_fsav*output.mksa.j_ref*scocurr,0,0,'\rho','J_{tot} (MA/m^2)',['I_{tot} = ',num2str(I_tot*1000),' (kA)'],NaN,'','','-','none','r',2);drawnow
+            graph1D_jd(output.equilDKE.xrho,output.Zcurr.x_0_fsav*output.mksa.j_ref*scocurr,0,0,'\rho','J_{tot} (MA/m^2)',['I_{tot} = ',num2str(I_tot*1000),' (kA) ; J_{tot} > 0 for co-current'],NaN,'','','-','none','r',2);drawnow
             print_jd(p_opt,[id_simul,'_Curr']);
             %
             PRF_tot = sum(output.ZP0.x_rf_fsav.*output.equilDKE.xdV_2piRp_dke(:)*output.mksa.P_ref*2*pi*output.equilDKE.Rp);
