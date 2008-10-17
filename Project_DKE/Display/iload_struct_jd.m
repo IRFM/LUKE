@@ -83,8 +83,16 @@ if strcmp(l_opt,'y'),
                     end
                 end
                 %
-                [filename,pathname] = igetfile_jd(opt_gui,filestr,['Please select additional ',sbase,' files (cancel if finished)'],sdefault,opt_multi);
+                disp(' ');
+                l_opt = input_dke_yp(['Do you want to load additional structures ''',sname,''' (y/n)'],'n',{'y','n'});
                 %
+                if l_opt == 'y'
+                    %
+                    [filename,pathname] = igetfile_jd(opt_gui,filestr,['Please select additional ',sbase,' files (cancel if finished)'],sdefault,opt_multi);
+                    %
+                else
+                    filename = 0;
+                end
             end
         end
     end  
