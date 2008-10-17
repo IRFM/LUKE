@@ -2,7 +2,7 @@
 clear all
 close all
 %
-si = -1;
+si = 1;
 opt_rho = 1;
 %
 ids_equil = {'ITER_Scen4_IAEA06_mod'};% if same for all runs, just give one 
