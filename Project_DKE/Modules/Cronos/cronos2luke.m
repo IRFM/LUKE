@@ -174,6 +174,13 @@ if length(varargin) <= 1
 %
 %--------------------------- EQUATION DE DERIVE CINETIQUE ------------------
 %
+  app = dbstack;      
+  if length(app) > 1 & strcmp(app(2).name,'zineb1test') 
+         nathyb  = app(1).file;
+         nblh = evalin('caller','param.gene.nbhyb');
+  else 
+         nblh  = evalin('base','param.gene.nbhyb');
+  end
   luke_parameters;
 %	     
 % CRONOS PARAMETERS
@@ -198,6 +205,27 @@ end
 %
 % --------------------------- RUN STARWARS ------------------------
 %
+app = dbstack;
+if  length(app) > 1 & strcmp(app(2).name,'zineb1test') 
+     nathyb  = app(1).file;
+	 try
+       nblh = evalin('caller','param.gene.nbhyb');
+     catch     
+	   nblh = 2;
+	 end
+	 
+else
+     try 
+       nblh  = evalin('base','param.gene.nbhyb');
+     catch
+       if isfield(varargin{1},'freqlh')
+	     nblh = length(varargin{1}.freqlh);
+       else
+         nblh = 1;  
+       end
+	 end
+end
+
 if nargin == 14,% LH case
     par = varargin{1};
     %
@@ -519,6 +547,9 @@ for iw = 1:length(launchs),
     wavestructs{iw}.fitequilparam = fitequilparam;
     wavestructs{iw}.rayparam = rayparam;
     wavestructs{iw}.raydisplay = raydisplay;
+    if isfield(par,'raydisplay')
+        wavestructs{iw}.raydisplay.ray = par.raydisplay.ray;
+    end
     wavestructs{iw}.C3POparam = C3POparam;
     %
     wavestructs{iw}.wavesolver = 'C3PO';
@@ -670,7 +701,10 @@ equilDKE.xcron = interp1(psipncronos,gene.x,equilDKE.xpsin);
 sortie.j  = interp1(equilDKE.xrhoT,j_LH_c,gene.x,'pchip',0) * 1e6 * normip;
 sortie.el = interp1(equilDKE.xrhoT,p_LH_c,gene.x,'pchip',0) * 1e6;
 if par.Dr_model == 2
-    sortie.j=diffJ(sortie.j,equi.rhomax*gene.x,par.Dr0);  % diffusion phenomenologique du courant
+    newj  = diffJ(sortie.j,equi.rhomax*gene.x,par.Dr0);  % diffusion phenomenologique du courant
+    norm1 = trapz(gene.x,sortie.j);
+    norm2 = trapz(gene.x,newj);
+    sortie.j = newj / norm2 * norm1;
 end
 %
 % pour les valeurs en dehors de la grille LUKE (centre du plasma uniquement), nous

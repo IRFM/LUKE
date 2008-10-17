@@ -12,7 +12,7 @@ if strcmp(config,'TS');%For the Lower Hybrid wave simulations
 % 
    launchs{1}.id = 'Coupleur_C1';
    launchs{1}.type = 'LH';
-   launchs{1}.omega_rf = freqlh*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
+   launchs{1}.omega_rf = freqlh(1)*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
@@ -35,7 +35,7 @@ if strcmp(config,'TS');%For the Lower Hybrid wave simulations
 %
    launchs{2}.id = 'Coupleur_C2';
    launchs{2}.type = 'LH';
-   launchs{2}.omega_rf = freqlh*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
+   launchs{2}.omega_rf = freqlh(2)*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
@@ -62,7 +62,7 @@ elseif strcmp(config,'MIXTE') | strcmp(config,'MIXTE (TS)') ;%For the Lower Hybr
 % 
    launchs{1}.id = 'Coupleur_C2';
    launchs{1}.type = 'LH';
-   launchs{1}.omega_rf = freqlh*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
+   launchs{1}.omega_rf = freqlh(1)*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
@@ -85,7 +85,7 @@ elseif strcmp(config,'MIXTE') | strcmp(config,'MIXTE (TS)') ;%For the Lower Hybr
 % 
    launchs{2}.id = 'Coupleur_C3';
    launchs{2}.type = 'LH';
-   launchs{2}.omega_rf = freqlh*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
+   launchs{2}.omega_rf = freqlh(2)*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.6];%Antenna directivity [1,1]
 %
@@ -112,7 +112,7 @@ elseif strcmp(config,'CIEL') | strcmp(config,'CIEL (TS)') ;%For the Lower Hybrid
 % 
    launchs{1}.id = 'Coupleur_C1';
    launchs{1}.type = 'LH';
-   launchs{1}.omega_rf = freqlh*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
+   launchs{1}.omega_rf = freqlh(1)*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.6];%Antenna directivity [1,1]
 %
@@ -135,7 +135,7 @@ elseif strcmp(config,'CIEL') | strcmp(config,'CIEL (TS)') ;%For the Lower Hybrid
 % 
    launchs{2}.id = 'Coupleur_C3';
    launchs{2}.type = 'LH';
-   launchs{2}.omega_rf = freqlh*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
+   launchs{2}.omega_rf = freqlh(2)*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.6];%Antenna directivity [1,1]
 %
@@ -162,7 +162,7 @@ elseif strcmp(config,'CMOD');%For the Lower Hybrid wave simulations
 % 
    launchs{1}.id = 'Antenna_1';
    launchs{1}.type = 'LH';
-   launchs{1}.omega_rf = freqlh*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
+   launchs{1}.omega_rf = freqlh(1)*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [1.0];%Antenna directivity [1,1]
 %
@@ -190,7 +190,7 @@ elseif strcmp(config,'JET');%For the Lower Hybrid wave simulations
 % 
    launchs{1}.id = 'Antenna_1';
    launchs{1}.type = 'LH';
-   launchs{1}.omega_rf = freqlh*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
+   launchs{1}.omega_rf = freqlh(1)*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
@@ -214,7 +214,7 @@ elseif strcmp(config,'JET');%For the Lower Hybrid wave simulations
    if numa > 1 & cons(numa) > 0
      launchs{2}.id = 'Antenna_2';
      launchs{2}.type = 'LH';
-     launchs{2}.omega_rf = freqlh*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
+     launchs{2}.omega_rf = freqlh(2)*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
      directivity = [0.7];%Antenna directivity [1,1]
 %
@@ -242,7 +242,7 @@ elseif strcmp(config,'ITER');%For the Lower Hybrid wave simulations
 % 
    launchs{1}.id = 'Antenna_1';
    launchs{1}.type = 'LH';
-   launchs{1}.omega_rf = freqlh*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
+   launchs{1}.omega_rf = freqlh(1)*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
@@ -294,7 +294,7 @@ elseif strcmp(config,'FTU')
 % 
    launchs{1}.id = 'Antenna_1';
    launchs{1}.type = 'LH';
-   launchs{1}.omega_rf = freqlh*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
+   launchs{1}.omega_rf = freqlh(1)*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.85];%Antenna directivity [1,1]
 %
@@ -321,7 +321,7 @@ elseif strcmp(config,'SST1')
 % 
    launchs{1}.id = 'Antenna_1';
    launchs{1}.type = 'LH';
-   launchs{1}.omega_rf = freqlh*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
+   launchs{1}.omega_rf = freqlh(1)*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.75];%Antenna directivity [1,1]
 %
@@ -348,7 +348,7 @@ elseif strcmp(config,'DEMO')
 % 
    launchs{1}.id = 'Antenna_1';
    launchs{1}.type = 'LH';
-   launchs{1}.omega_rf = freqlh*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
+   launchs{1}.omega_rf = freqlh(1)*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
@@ -371,7 +371,7 @@ elseif strcmp(config,'DEMO')
 % 
    launchs{2}.id = 'Antenna_2';
    launchs{2}.type = 'LH';
-   launchs{2}.omega_rf = freqlh*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
+   launchs{2}.omega_rf = freqlh(2)*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
@@ -398,7 +398,7 @@ elseif strcmp(config,'COMPASS');%For the Lower Hybrid wave simulations
 % 
    launchs{1}.id = 'Antenna_1';
    launchs{1}.type = 'LH';
-   launchs{1}.omega_rf = freqlh*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
+   launchs{1}.omega_rf = freqlh(1)*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
@@ -423,7 +423,7 @@ elseif strcmp(config,'ASDEX');%For the Lower Hybrid wave simulations
 % 
    launchs{1}.id = 'Antenna_1';
    launchs{1}.type = 'LH';
-   launchs{1}.omega_rf = freqlh*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
+   launchs{1}.omega_rf = freqlh(1)*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
@@ -470,7 +470,7 @@ elseif strcmp(config,'EAST');%For the Lower Hybrid wave simulations
 % 
    launchs{1}.id = 'Antenna_1';
    launchs{1}.type = 'LH';
-   launchs{1}.omega_rf = freqlh*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
+   launchs{1}.omega_rf = freqlh(1)*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
