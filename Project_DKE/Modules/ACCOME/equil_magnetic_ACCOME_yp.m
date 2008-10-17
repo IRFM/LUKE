@@ -33,7 +33,7 @@ nt = 65;
 % Reads ACCOME data
 %
 accomename = [filename,'.bfield'];
-[x,y,xypsin,psia,psin,xyBPHI,Rp,Zp] = accome_yp(accomename,display_mode,p_opt,dispname,savename);
+[x,y,xypsin,psia,psin,xyBPHI,xyBR,xyBZ,Rp,Zp] = accome_yp(accomename,display_mode,p_opt,dispname,savename);
 %
 % Transforms on a (psi,theta) grid
 %
@@ -43,13 +43,17 @@ ptBPHI = griddata(x,y,xyBPHI',ptx,pty);
 %
 np = length(psin);
 ap = ptx(np,1);%Plasma minor radius on the LFS midplane
-psi_apRp = psin*psia*ap/Rp;%The poloidal flux coordinate is normalized by the aspect ratio 
+psi_apRp = -psin*psia*ap/Rp;%The poloidal flux coordinate is normalized by the aspect ratio 
 ptR = Rp + ptx;
 %
 % Note that in DKE we have B = F.gradphi + gradphi x gradpsi.
 %
-ptBx = -ptdpsindy*psia./ptR;
-ptBy = ptdpsindx*psia./ptR;
+%WARNING: not very accurate because psi grid provided by ACCOME seems to be noisy in the vicinity of the plasma center
+%
+%ptBx = -ptdpsindy*psia./ptR;
+%ptBy = ptdpsindx*psia./ptR;
+ptBx = -griddata(x,y,xyBR',ptx,pty);
+ptBy = -griddata(x,y,xyBZ',ptx,pty);
 %
 ptBP = sqrt(ptBx.^2 +ptBy.^2);
 ptB = sqrt(ptBP.^2 + ptBPHI.^2);
