@@ -369,6 +369,7 @@ else
         end
         %
         smask = ~isnan(sNperp);
+        ns = sum(smask);
         %
         sNperp = sNperp(smask);
         sepol_pmz = sepol_pmz(:,smask);
@@ -377,7 +378,7 @@ else
         sphiP_xyz = sphiP_xyz(:,smask);
         %
         sphi_xyz = real(sphiP_xyz + sphiT_xyz);
-        salphaphi_lin = real(salphaphi_lin);
+        salphaphi_lin = real(salphaphi_lin)*omega_rf/clum;
         %
         ss = ss(smask);
         spsin = spsin(smask);
@@ -405,6 +406,10 @@ else
         if ~isempty(skx) & ~isempty(sky)
             skx = skx(smask);
             sky = sky(smask);
+        end        
+        %
+        if ~isempty(swidth)
+            swidth = swidth(smask);
         end        
         %
         sB = sB(smask);
