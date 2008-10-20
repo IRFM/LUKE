@@ -8,19 +8,13 @@
 clear all
 dkepath.id = 'LOCAL';%Set here the name path parameters (user specific)
 %
-dkepath.hostname.saturne = 'saturne';
-dkepath.hostname.cephee = 'cephee';
-dkepath.hostname.pcluke = 'PC-Luke';
-dkepath.hostname.laptopyves = 'peysson';%WARNING: for laptop, may change with connection status.
-dkepath.hostname.laptopjoan = 'PC-DECKER-J';%WARNING: for laptop, may change with connection status.
-dkepath.hostname.sunipp = 'ipp';
-%
 % default paths for unrecognized profiles
 %
 default.luke_root = [pwd,'/'];
 default.local_root = [pwd,'/'];
 default.computer = computer;
 default.temppathroot = [pwd,'/'];
+default.compiler_opt = '';% Optional arguments for compilation 
 %
 matver = version;
 matver = matver([1,3]);
@@ -29,6 +23,8 @@ default.(['mex',matver]) = [default.luke_root,'Project_DKE/MEX/Bin/default/MATLA
 dkepath.default = default;
 %
 % paths for runs on IRFM saturne cluster
+%
+dkepath.hostname.saturne = 'saturne';
 %
 saturne.luke_root = [pwd,'/'];
 saturne.local_root = '/home/sccp/gsem/decker/saturne/';
@@ -52,6 +48,8 @@ dkepath.saturne = saturne;
 %
 % paths for runs on IRFM cephee cluster
 %
+dkepath.hostname.cephee = 'cephee';
+%
 cephee.luke_root = [pwd,'/'];
 cephee.local_root = '/home/sccp/gsem/decker/cephee/';
 cephee.computer = 'GLNXA64';%machine type and supported OS
@@ -68,6 +66,8 @@ dkepath.cephee = cephee;
 %
 % paths for runs on IRFM PC-LUKE workstation
 %
+dkepath.hostname.pcluke = 'PC-Luke';
+%
 pcluke.luke_root = [pwd,'/'];
 pcluke.local_root = '/home/lukeuser/Work/';
 pcluke.computer = 'GLNX86';%machine type and supported OS
@@ -81,6 +81,8 @@ pcluke.MUMPS.mex72 = [pcluke.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MA
 dkepath.pcluke = pcluke;
 %
 % paths for runs on Yves Peysson's laptop
+%
+dkepath.hostname.laptopyves = 'peysson';%WARNING: for laptop, may change with connection status.
 %
 laptopyves.luke_root = [pwd,'/'];
 laptopyves.local_root = [getenv('HOME'),'/CEA/Projets/'];
@@ -103,6 +105,8 @@ dkepath.laptopyves = laptopyves;
 %
 % paths for runs on Joan Decker's laptop
 %
+dkepath.hostname.laptopjoan = 'PC-DECKER-J';%WARNING: for laptop, may change with connection status.
+%
 laptopjoan.luke_root = [pwd,'/'];
 laptopjoan.local_root = '/home/jd211098/Work/LUKE/';
 laptopjoan.computer = 'GLNX86';%machine type and supported OS
@@ -117,17 +121,40 @@ dkepath.laptopjoan = laptopjoan;
 %
 % paths for runs on SUN workstation at IPP-Prag
 %
+dkepath.hostname.sunipp = 'ipp';
+%
 sunipp.luke_root = [pwd,'/'];
 sunipp.local_root = '/home/vader/';
 sunipp.computer = 'GLNXA64';%machine type and supported OS
 sunipp.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 sunipp.mex75 = [sunipp.luke_root,'Project_DKE/MEX/Bin/sunipp/MATLAB75'];
+sunipp.compiler_opt = '';% Optional arguments for compilation 
 %
 sunipp.MUMPS.seq = [sunipp.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/dke'];
 sunipp.MUMPS.mex75 = [sunipp.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
 %
-dkepath.sunipp = sunipp;
+% paths for runs on CRPP PC 70
+%
+dkepath.hostname.crpppc70 = 'crpppc70';
+%
+crpppc70.luke_root = [pwd,'/'];
+crpppc70.local_root = '/home/decker/NoTivoli/';
+crpppc70.computer = 'GLNX86';%machine type and supported OS
+crpppc70.temppathroot = '/home/decker/NoTivoli/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+%
+crpppc70.mex76 = [crpppc70.luke_root,'Project_DKE/MEX/Bin/crpppc70/MATLAB76'];
+crpppc70.mex75 = [crpppc70.luke_root,'Project_DKE/MEX/Bin/crpppc70/MATLAB75'];
+crpppc70.mex74 = [crpppc70.luke_root,'Project_DKE/MEX/Bin/crpppc70/MATLAB74'];
+crpppc70.mex73 = [crpppc70.luke_root,'Project_DKE/MEX/Bin/crpppc70/MATLAB73'];
+crpppc70.compiler_opt.helmex = '-lblas -llapack';% Optional argument for helmex compilation
+%
+crpppc70.MUMPS.mex76 = [crpppc70.local_root,'Packages/Bin/MUMPS/MUMPS_4.8.0_S_g95/MATLAB_7.6'];%Where MUMPS matrix solver is stored (MEX function)
+crpppc70.MUMPS.mex75 = [crpppc70.local_root,'Packages/Bin/MUMPS/MUMPS_4.8.0_S_g95/MATLAB_7.5'];%Where MUMPS matrix solver is stored (MEX function)
+crpppc70.MUMPS.mex74 = [crpppc70.local_root,'Packages/Bin/MUMPS/MUMPS_4.8.0_S_g95/MATLAB_7.4'];%Where MUMPS matrix solver is stored (MEX function)
+crpppc70.MUMPS.mex73 = [crpppc70.local_root,'Packages/Bin/MUMPS/MUMPS_4.8.0_S_g95/MATLAB_7.3'];%Where MUMPS matrix solver is stored (MEX function)
+%
+dkepath.crpppc70 = crpppc70;
 %
 %***************************************************************************************************
 %
