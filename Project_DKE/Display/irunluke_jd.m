@@ -974,12 +974,47 @@ while isel >= 0,
                 id_simul = id_simul_o;
             end
             %
+			if strcmp(basestr,'TCV'),
+				c_opt = input('Option for running LUKE? 0 (on local computer), 1 (on pleiades2) [0] : ');
+            	if isempty(c_opt) | ~isnumeric(c_opt) | ~any(c_opt == [0,1]),
+                	c_opt = 0;
+            	end
+				if c_opt == 1,
+					[dummy,logname] = unix('whoami');
+					logname(logname == 10) = [];
+					if strfind(logname,'decker'),
+						logname = 'jdecker';
+					end
+				end
+			else
+				c_opt = 0;
+			end
+			%
             disp(' ');
             disp('************** RUN LUKE **************')
             disp(' ');
-            %
-            [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert(id_simul,[],waves,psin_S,dkeparam.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[],0);
-            %
+ 			%
+			if c_opt == 1,
+				%
+				timeid = timeid_jd(clock);
+				save_id = ['LUKE_RUN_',timeid,'.mat'];
+				load_id = ['LUKE_OUT_',timeid,'.mat'];
+				%
+				save(save_id,'id_simul','waves','psin_S','dkeparam','dkepath','equil','dkedisplay','ohm','transpfaste','ripple');
+				%
+				s = unix(['/home/decker/runluke_pleiades2 ',save_id,' ',load_id,' ',logname]);
+				%
+				load(load_id,'Znorm','Zcurr','ZP0','dke_out','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');			
+				%
+				s = unix(['ssh -l',logname,' pleiades2.epfl.ch rm -f ',load_id]);
+				delete(load_id);
+				%
+			else
+				%
+            	[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert(id_simul,[],waves,psin_S,dkeparam.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[],0);
+            	%
+			end
+			%
             output.Znorm = Znorm;
             output.Zcurr = Zcurr;
             output.ZP0 = ZP0;
