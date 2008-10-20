@@ -1330,7 +1330,9 @@
 %
 % ====> LUKE/Project_DKE/Modules/ACCOME
 % 
-% U testequil_ACCOME_LUKE.m (Test magnetic equilibrium consistency)
+% U testequil_ACCOME_LUKE.m (Test magnetic equilibrium consistency) 
+% U accome_yp.m (sign correction) 
+% U equil_magnetic_ACCOME_yp.m (")
 %
 % ====> LUKE/Project_DKE/Modules/AMR
 % 
@@ -1373,6 +1375,9 @@
 %
 % ====> LUKE/Simulations/Examples/TS/32299/
 %
+% U run_cronos_starwars.m (default path)
+% U run_cronos_starwars_Alpha_scan.m (")
+% U run_cronos_starwars_Dr0_scan.m (")
 % U run_cronos_C3PO.m (LUKE 1.6.4 with new equil, with corrected make_equil_cronos and psi grid + new convergence criterion)
 % U res_alpha_0_Dr0_0.log (")
 % U Alpha_Scan_Curr.eps (")
