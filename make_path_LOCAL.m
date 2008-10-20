@@ -134,6 +134,8 @@ sunipp.compiler_opt = '';% Optional arguments for compilation
 sunipp.MUMPS.seq = [sunipp.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/dke'];
 sunipp.MUMPS.mex75 = [sunipp.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
 %
+dkepath.sunipp = sunipp;
+%
 % paths for runs on CRPP PC 70
 %
 dkepath.hostname.crpppc70 = 'crpppc70';
