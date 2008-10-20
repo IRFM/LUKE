@@ -39,6 +39,9 @@ if job_MUMPSMEX == 1,
 elseif job_MUMPSMEX == 2,
    id_MUMPSMEX.JOB = job_MUMPSMEX;
    id_MUMPSMEX = dmumps(id_MUMPSMEX,A_MUMPSMEX);% Call to mumps
+   if id_MUMPSMEX.INFOG(1) == -13,
+	    error('Error in a Fortran ALLOCATE statement in MUMPS factorization. Try reducing the problem size (grid size)');
+   end
 elseif job_MUMPSMEX == 3 | job_MUMPSMEX == 6,
    id_MUMPSMEX.JOB = job_MUMPSMEX;
    id_MUMPSMEX.RHS = full(B_MUMPSMEX);
