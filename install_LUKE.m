@@ -35,7 +35,7 @@ if exist(startuppath),%startup.m file already exist
 	if fid == -1,
 		disp(['Cannot write to startup.m, no permission.']);
 		disp(['A new startup.m file will be created in the home or pathdef directory.']);
-		disp(['This startup.m file will also call the original statup.m file']);
+		disp(['This startup.m file will also call the original startup.m file']);
 		%
 		origstartuppath = pathforstartup;
 		%
@@ -124,7 +124,7 @@ luke_root = dkepath.luke_root;
 %
 % Build *.mat files
 %
-%mex_compile_luke(dkepath)
+mex_compile_luke(dkepath)
 %
 cd([luke_root,'Project_DKE/Database']);
 make_all;
