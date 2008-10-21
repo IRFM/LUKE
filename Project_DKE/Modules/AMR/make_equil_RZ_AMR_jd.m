@@ -21,7 +21,7 @@ xyR = equil_RZ.x.' + equil_RZ.Rp;
 xyZ = equil_RZ.y.' + equil_RZ.Zp;
 xyPsi = equil_RZ.xypsi_apRp.'*equil_RZ.Rp/equil_RZ.ap;
 
-values = [equil_RZ.Rp,equil_RZ.Zp,Psi(end),ptR(end,(nt+1)/2),ptR(end,1)];
+values = [equil_RZ.Rp;equil_RZ.Zp;Psi(end);ptR(end,(nt+1)/2);ptR(end,1)];
 %
 save(['m_profs_',id,'_R.dat'],'R','-ascii');
 save(['m_profs_',id,'_Te.dat'],'pTe','-ascii');
@@ -35,4 +35,3 @@ save(['m_equil_',id,'_F.dat'],'F','-ascii');
 %
 save(['m_equil_',id,'_values.dat'],'values','-ascii');
 %
-
