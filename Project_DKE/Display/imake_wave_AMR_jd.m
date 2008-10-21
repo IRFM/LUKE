@@ -134,7 +134,7 @@ end
 wave.id = wave_id;
 wave.omega_rf = omega_rf;
 wave.opt_rf = opt_rf;%option for FLR calculations [1,1]
-wave.opt_disp = 1 + kmode;  % option for solving the wave equation, which gives (ray.sepol_pmz, ray.sphi, ray.sNperp)  
+wave.opt_disp = 1 + kmode + i;  % option for solving the wave equation, which gives (ray.sepol_pmz, ray.sphi, ray.sNperp)  
 wave.equil_id = equil.id;
 wave.kextra = 0;
 wave.rays = rays;
