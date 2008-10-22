@@ -497,7 +497,9 @@ elseif w_opt == 3,% wave from ART calculations
         return
     end
     %
-    wave = wave_process_jd(equil,wave,NaN);
+    n_rf_list = 1:3;
+    %
+    wave = wave_process_jd(equil,wave,n_rf_list);
     %
 end
         
