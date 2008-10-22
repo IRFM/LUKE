@@ -124,8 +124,6 @@ luke_root = dkepath.luke_root;
 %
 % Build *.mat files
 %
-mex_compile_luke(dkepath)
-%
 cd([luke_root,'Project_DKE/Database']);
 make_all;
 cd(luke_root);
