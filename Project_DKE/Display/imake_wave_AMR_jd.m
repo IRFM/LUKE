@@ -43,7 +43,7 @@ if ~isnumeric(dNpar),
     return
 end
 %
-kmode = input('Plasma model for wave propagation : (0:cold, 1:kinetic) [1] :');
+kmode = input('Plasma model for wave propagation : (0:cold, 1:kinetic, 2:R2D2 (requires IMSL)) [1] :');
 if isempty(kmode),
     kmode = 1;
 end
@@ -118,7 +118,7 @@ for iy = 1:ny,
     ray.sky = [];% Ray wave vector (vertical) along the propagation [1,ns]
     %
     ray.sNpar = raydata(:,4).';% Ray parallel wave number [1,ns]
-    ray.sNperp = raydata(:,5).';% Ray perpendicular wave number [1,ns]
+    ray.sNperp = NaN;%raydata(:,5).';% Ray perpendicular wave number [1,ns]
     ray.sdNpar = dNpar*ones(1,ns);% Ray spectral width in Npar [1,ns] 
     %       if sdNpar is real -> gaussian spectrum, if sdNpar is imag. -> square spectrum (centered on sNpar)
     %

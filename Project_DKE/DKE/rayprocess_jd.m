@@ -432,9 +432,10 @@ else
         %
         sNperp = sNperp_ht(smask_ht);
         sepol_pmz = sepol_pmz_ht(:,smask_ht);
-        sphi_xyz(1,:) = abs(2*sPflow_ht(1,smask_ht)/e0/clum);
-        sphi_xyz(2,:) = zeros(1,ns);
-        sphi_xyz(3,:) = zeros(1,ns);       
+%         sphi_xyz(1,:) = abs(2*sPflow_ht(1,smask_ht)/e0/clum);
+%         sphi_xyz(2,:) = zeros(1,ns);
+%         sphi_xyz(3,:) = zeros(1,ns);       
+		sphi_xyz = abs(2*sPflow_ht(:,smask_ht)/e0/clum);
         salphaphi_lin = 2*sPabs_at(smask_ht)/e0/clum;
         %
         ss = ss(smask_ht);
@@ -463,6 +464,10 @@ else
         if ~isempty(skx) & ~isempty(sky)
             skx = skx(smask_ht);
             sky = sky(smask_ht);
+        end        
+        %
+        if ~isempty(swidth)
+            swidth = swidth(smask_ht);
         end        
         %
         sB = sB(smask_ht);
@@ -559,6 +564,8 @@ ray.szTi = szTi;
 ray.srho = srho;
 %
 ray.salphaphi_lin = salphaphi_lin;
+%
+ray.swidth = swidth;
 %
 mask = [1,1 + find(diff(ray.ss) > 0)];
 %
