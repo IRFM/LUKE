@@ -8,6 +8,9 @@ if nargin < 2,
     compiler_opt = '';%no options
 end
 %
+matver = version;
+matver = matver([1,3]);
+%
 if ~exist(mexpath,'dir'),
     %
     mkdir(mexpath);
@@ -40,13 +43,29 @@ if force_compile == 0,
 end 
 %
 if isstruct(compiler_opt) & isfield(compiler_opt,'copts'),% C mex compiling options
-    copts = compiler_opt.copts;
+	if isstruct(compiler_opt.copts),
+		if isfield(compiler_opt.copts,['mex',matver]),
+			copts = compiler_opt.copts.(['mex',matver]);
+		else
+			copts = '';
+		end
+	else
+    	copts = compiler_opt.copts;
+	end
 else
     copts = '';
 end
 %
 if isstruct(compiler_opt) & isfield(compiler_opt,'fopts'),% Fortran mex compiling option
-    fopts = compiler_opt.fopts;
+	if isstruct(compiler_opt.fopts),
+		if isfield(compiler_opt.fopts,['mex',matver]),
+			fopts = compiler_opt.fopts.(['mex',matver]);
+		else
+			fopts = '';
+		end
+	else
+    	fopts = compiler_opt.fopts;
+	end
 else
     fopts = '';
 end
