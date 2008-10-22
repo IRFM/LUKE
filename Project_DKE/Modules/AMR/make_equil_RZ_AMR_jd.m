@@ -15,7 +15,7 @@ pTe = equil.pTe.';
 pne = equil.pne.';
 %
 Psi = equil.psi_apRp.'*equil_RZ.Rp/equil_RZ.ap;
-F = equil.ptBPHI(:,1).*R;
+F =  - equil.ptBPHI(:,1).*R;
 %
 xyR = equil_RZ.x.' + equil_RZ.Rp;
 xyZ = equil_RZ.y.' + equil_RZ.Zp;
