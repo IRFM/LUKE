@@ -49,8 +49,8 @@ if isnan(xlim),
     %
     dxmin = (ptx(end,itxmin) - ptx(end-1,itxmin))*extfac/dpsin;
     dxmax = (ptx(end,itxmax) - ptx(end-1,itxmax))*extfac/dpsin;
-    dymin = (pty(end,itymin) - pty(end-1,itymin))*extfac/dpsin;
-    dymax = (pty(end,itymax) - pty(end-1,itymax))*extfac/dpsin;
+    dymin = 0;
+    dymax = 0;
     %
     xlim = [xmin + dxmin,xmax + dxmax];
     ylim = [ymin + dymin,ymax + dymax];
