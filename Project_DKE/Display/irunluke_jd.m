@@ -487,7 +487,18 @@ while isel >= 0,
 				%
 				workdir = data_path;
 				%
-				setpath_luke_jd(dkepath.luke_root,dkepath);
+				if ~isempty(fileids.dkepath) && exist([paths.dkepath,'PATH_',fileids.dkepath,'.mat'],'file'),
+					dkepath = load_structures_yp('dkepath',fileids.dkepath,paths.dkepath);
+				else
+					matver = version;
+					matver = matver([1,3]);
+					%
+					if ~isfield(dkepath,['mex',matver]),
+						dkepath.(['mex',matver]) = workdir;
+						%
+						setpath_luke_jd(dkepath.luke_root,dkepath);
+					end
+				end
 				%
             end
             %
