@@ -336,6 +336,25 @@ end
 if ischar(par.rho_S)
   eval(['par.rho_S = ',par.rho_S,';']);
 end
+%
+% protetcion pour des flux non monotones
+%
+absdpsidx  = abs(pdederive(gene.x,double(equi.psiRZ),0,2,2,1));
+ind        = find(absdpsidx == 0);
+if ~isempty(ind)
+   mindpsidx      = min(absdpsidx(absdpsidx > 0));
+   absdpsidx(ind) = mindpsidx;
+   disp('equi.psiRZ is not  monotonic, -> correction') 
+end
+equi.psiRZ = equi.psiRZ(1) - cumtrapz(gene.x,absdpsidx);
+absdpsidx  = abs(pdederive(gene.x,double(equi.psi),0,2,2,1));
+ind        = find(absdpsidx == 0);
+if ~isempty(ind)
+   mindpsidx      = min(absdpsidx(absdpsidx > 0));
+   absdpsidx(ind) = mindpsidx;
+   disp('equi.psi is not  monotonic -> correction') 
+end
+equi.psi = equi.psi(1) - cumtrapz(gene.x,absdpsidx);
 
 equil = make_equil_cronos(shot,equi,gene,prof,compo,impur);
 if sum(equil.ptBy(:,end)-equil.ptBy(:,1)) ~= 0
@@ -700,8 +719,11 @@ equilDKE.xcron = interp1(psipncronos,gene.x,equilDKE.xpsin);
 %
 sortie.j  = interp1(equilDKE.xrhoT,j_LH_c,gene.x,'pchip',0) * 1e6 * normip;
 sortie.el = interp1(equilDKE.xrhoT,p_LH_c,gene.x,'pchip',0) * 1e6;
-if par.Dr_model == 2
-    newj  = diffJ(sortie.j,equi.rhomax*gene.x,par.Dr0);  % diffusion phenomenologique du courant
+if ~isfield(par,'smooth')
+  par.smooth = 'No';
+end
+if strcmp(par.smooth,'Yes')
+    newj  = smooth_dke_yp(sortie.j',par.width_smooth,par.method_smooth);  % diffusion phenomenologique du courant
     norm1 = trapz(gene.x,sortie.j);
     norm2 = trapz(gene.x,newj);
     sortie.j = newj / norm2 * norm1;
