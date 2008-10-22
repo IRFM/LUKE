@@ -13,22 +13,22 @@ equil_RZ.id = equil.id;
 ptx = equil.ptx;
 pty = equil.pty;
 %
-if nargin == 2 && length(xlim) == 1,
-    extfac = xlim;
+if nargin < 3,
+    ylim = [min(pty(end,:)),max(pty(end,:))];
+end
+%
+if nargin < 2,
+    xlim = [min(ptx(end,:)),max(ptx(end,:))];
+end
+%
+if length(xlim) == 1,
+    extfacx = xlim;
     xlim = NaN;
-else
-    %
-    if nargin < 3,
-        ylim = [min(pty(end,:)),max(pty(end,:))];
-    end
-    %
-    if nargin < 2,
-        xlim = [min(ptx(end,:)),max(ptx(end,:))];
-    end
-    %
-    if xlim(1) < -equil.Rp,
-        error('xlim(1) + equil.Rp < 0 is impossible')
-    end
+end
+%
+if length(ylim) == 1,
+    extfacy = ylim;
+    ylim = NaN;
 end
 %
 psia_apRp = equil.psi_apRp(end);
@@ -39,21 +39,32 @@ dpsin = psin(end) - psin(end-1);
 if isnan(xlim),
     xmin = min(ptx(end,:));
     xmax = max(ptx(end,:));
-    ymin = min(pty(end,:));
-    ymax = max(pty(end,:));
     %
     itxmin = find(ptx(end,:) == xmin,1,'first');
     itxmax = find(ptx(end,:) == xmax,1,'first');
+    %
+    dxmin = (ptx(end,itxmin) - ptx(end-1,itxmin))*extfacx/dpsin;
+    dxmax = (ptx(end,itxmax) - ptx(end-1,itxmax))*extfacx/dpsin;
+    %
+    xlim = [xmin + dxmin,xmax + dxmax];
+end
+%
+if isnan(xlim),
+    ymin = min(pty(end,:));
+    ymax = max(pty(end,:));
+    %
     itymin = find(pty(end,:) == ymin,1,'first');
     itymax = find(pty(end,:) == ymax,1,'first');
     %
-    dxmin = (ptx(end,itxmin) - ptx(end-1,itxmin))*extfac/dpsin;
-    dxmax = (ptx(end,itxmax) - ptx(end-1,itxmax))*extfac/dpsin;
-    dymin = 0;
-    dymax = 0;
+    dymin = (pty(end,itymin) - pty(end-1,itymin))*extfacy/dpsin;
+    dymax = (pty(end,itymax) - pty(end-1,itymax))*extfacy/dpsin;
     %
-    xlim = [xmin + dxmin,xmax + dxmax];
     ylim = [ymin + dymin,ymax + dymax];
+end
+%
+if xlim(1) < -equil.Rp,
+    warning('xlim(1) = -equil.Rp enforced');
+	xlim(1) = -equil.Rp;
 end
 %
 dsdpsin_min = min(sqrt((ptx(end,:) - ptx(end-1,:)).^2 + (pty(end,:) - pty(end-1,:)).^2))/dpsin;
