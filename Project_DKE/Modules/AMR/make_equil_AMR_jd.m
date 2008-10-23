@@ -1,4 +1,4 @@
-function [equil_magnetic,equil_prof] = make_equil_AMR_jd(equil_path,shotnum,shotime,Zeff,display_mode,p_opt,dispname,savename,np,nt,method)%,Ns,nx
+function [equil_magnetic,equil_prof,equil_RZ] = make_equil_AMR_jd(equil_path,shotnum,shotime,Zeff,display_mode,p_opt,dispname,savename,np,nt,method)%,Ns,nx
 %
 %
 % This function reads and returns the magnetic equilibrium parameters from 
@@ -51,6 +51,15 @@ end
 if nargin < 4,
     Zeff = 1;
 end
+%
+% Ion data
+%
+zZi = [1,1,1,6];
+zmi = [1,2,3,12];
+fi = [0,1,0];
+%
+Zimp = zZi(end);
+nz = length(zZi);
 %
 % Reads AMR equil data
 %
@@ -128,6 +137,25 @@ y = Z - Zp;
 xypsi = PsiRZ - psip;
 psia = psia - psip;
 xpsi = xpsi - psip;
+%
+equil_RZ.Rp = Rp;
+equil_RZ.Zp = Zp;
+equil_RZ.zZi = zZi;
+equil_RZ.zmi =zmi;
+%
+equil_RZ.x = x.';
+equil_RZ.y = y.';
+%
+xTi = xTe;
+xnH = xne*(Zimp - Zeff)/(Zimp - 1);
+xnZ = xne*(Zeff - 1)/Zimp/(Zimp - 1);
+xzni = [fi.'*xnH;xnZ];
+xzTi = ones(nz,1)*xTi;
+%
+equil_RZ.pTe = xTe;
+equil_RZ.pne = xne;
+equil_RZ.pzTi = xzTi;
+equil_RZ.pzni = xzni;
 %
 % Determine psia
 %
@@ -247,14 +275,7 @@ ptBPHI(:,65) = ptBPHI(:,1);
 pTe = interp1(xpsin,xTe,psin,method);
 pne = interp1(xpsin,xne,psin,method);
 %
-zZi = [1,1,1,6];
-zmi = [1,2,3,12];
-fi = [0,1,0];
-%
 pTi = pTe;
-%
-Zimp = zZi(end);
-nz = length(zZi);
 %
 pnH = pne*(Zimp - Zeff)/(Zimp - 1);
 pnZ = pne*(Zeff - 1)/Zimp/(Zimp - 1);
@@ -262,6 +283,10 @@ pzni = [fi.'*pnH;pnZ];
 pzTi = ones(nz,1)*pTi;
 %
 % equil structure
+%
+equil_RZ.ap = ap;
+equil_RZ.psi_apRp = xpsi*ap/Rp;
+equil_RZ.xypsi_apRp = xypsi*ap/Rp;
 %
 equil_magnetic.psi_apRp = psi_apRp;
 equil_magnetic.theta = theta;
@@ -279,3 +304,5 @@ equil_prof.pTe = pTe;
 equil_prof.pne = pne;
 equil_prof.pzTi = pzTi;
 equil_prof.pzni = pzni;
+%
+

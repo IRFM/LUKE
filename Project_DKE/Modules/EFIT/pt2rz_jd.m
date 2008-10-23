@@ -1,6 +1,10 @@
-function equil_RZ = pt2rz_jd(equil,xlim,ylim,nprz)
+function equil_RZ = pt2rz_jd(equil,x,y,nprz,method)
 %
 [np,nt] = size(equil.ptx);
+%
+if nargin < 5,
+	method = 'linear';
+end
 %
 if nargin < 4,
 	nprz = np;
@@ -18,21 +22,21 @@ ptx = equil.ptx;
 pty = equil.pty;
 %
 if nargin < 3,
-    ylim = [min(pty(end,:)),max(pty(end,:))];
+    y = [min(pty(end,:)),max(pty(end,:))];
 end
 %
 if nargin < 2,
-    xlim = [min(ptx(end,:)),max(ptx(end,:))];
+    x = [min(ptx(end,:)),max(ptx(end,:))];
 end
 %
-if length(xlim) == 1,
-    extfacx = xlim;
-    xlim = NaN;
+if length(x) == 1,
+    extfacx = x;
+    x = NaN;
 end
 %
-if length(ylim) == 1,
-    extfacy = ylim;
-    ylim = NaN;
+if length(y) == 1,
+    extfacy = y;
+    y = NaN;
 end
 %
 psia_apRp = equil.psi_apRp(end);
@@ -40,7 +44,7 @@ psin = equil.psi_apRp/psia_apRp;
 %
 dpsin = psin(end) - psin(end-1);
 %
-if isnan(xlim),
+if isnan(x),
     xmin = min(ptx(end,:));
     xmax = max(ptx(end,:));
     %
@@ -50,10 +54,10 @@ if isnan(xlim),
     dxmin = (ptx(end,itxmin) - ptx(end-1,itxmin))*extfacx/dpsin;
     dxmax = (ptx(end,itxmax) - ptx(end-1,itxmax))*extfacx/dpsin;
     %
-    xlim = [xmin + dxmin,xmax + dxmax];
+    x = [xmin + dxmin,xmax + dxmax];
 end
 %
-if isnan(ylim),
+if isnan(y),
     ymin = min(pty(end,:));
     ymax = max(pty(end,:));
     %
@@ -63,20 +67,28 @@ if isnan(ylim),
     dymin = (pty(end,itymin) - pty(end-1,itymin))*extfacy/dpsin;
     dymax = (pty(end,itymax) - pty(end-1,itymax))*extfacy/dpsin;
     %
-    ylim = [ymin + dymin,ymax + dymax];
+    y = [ymin + dymin,ymax + dymax];
 end
 %
-if xlim(1) < -equil.Rp,
-    warning('xlim(1) = -equil.Rp enforced');
-	xlim(1) = -equil.Rp;
+if min(x) < -equil.Rp,
+    error('min(x) < -equil.Rp');
 end
 %
 dsdpsin_min = min(sqrt((ptx(end,:) - ptx(end-1,:)).^2 + (pty(end,:) - pty(end-1,:)).^2))/dpsin;
-psin_max = 1 + sqrt((xlim(2) - xlim(1)).^2 + (ylim(2) - ylim(1)).^2)/dsdpsin_min;
+psin_max = 1 + sqrt((max(x) - min(x)).^2 + (max(y) - min(y)).^2)/dsdpsin_min;
 psin_ext = [psin,1 + dpsin:dpsin:psin_max];
 %
-equil_RZ.x = linspace(xlim(1),xlim(2),nprz);
-equil_RZ.y = linspace(ylim(1),ylim(2),nprz);
+if length(x) > 2,
+    equil_RZ.x = x;
+else
+    equil_RZ.x = linspace(x(1),x(2),nprz);
+end
+%
+if length(y) > 2,
+    equil_RZ.y = y;
+else
+    equil_RZ.y = linspace(y(1),y(2),nprz);
+end    
 %
 ptx_ext = interp1(psin,ptx,psin_ext,'linear','extrap');
 pty_ext = interp1(psin,pty,psin_ext,'linear','extrap');
@@ -88,10 +100,10 @@ psi_apRp_ext =  psia_apRp*repmat(psin_ext.',[1,nt]);
 %
 warning('off')
 %
-equil_RZ.xyBx = griddata(ptx_ext,pty_ext,ptBx_ext,equil_RZ.x,equil_RZ.y.').';
-equil_RZ.xyBy = griddata(ptx_ext,pty_ext,ptBy_ext,equil_RZ.x,equil_RZ.y.').';
-equil_RZ.xyBPHI = griddata(ptx_ext,pty_ext,ptBPHI_ext,equil_RZ.x,equil_RZ.y.').';
-equil_RZ.xypsi_apRp = griddata(ptx_ext,pty_ext,psi_apRp_ext,equil_RZ.x,equil_RZ.y.').';
+%equil_RZ.xyBx = griddata(ptx_ext,pty_ext,ptBx_ext,equil_RZ.x,equil_RZ.y.',method).';
+%equil_RZ.xyBy = griddata(ptx_ext,pty_ext,ptBy_ext,equil_RZ.x,equil_RZ.y.',method).';
+%equil_RZ.xyBPHI = griddata(ptx_ext,pty_ext,ptBPHI_ext,equil_RZ.x,equil_RZ.y.',method).';
+equil_RZ.xypsi_apRp = griddata(ptx_ext,pty_ext,psi_apRp_ext,equil_RZ.x,equil_RZ.y.',method).';
 %
 warning('on')
 %
