@@ -42,11 +42,15 @@ xypsi = reshape(xypsi,nx,ny);
 %
 fscanf(fid,'%s',1);
 xyBR = fscanf(fid,'%f',nx*ny);%Poroidal magnetic field BR (T)
-xyBR = reshape(xyBR,nx,ny);
+if ~isempty(xyBR),
+	xyBR = reshape(xyBR,nx,ny);
+end
 %
 fscanf(fid,'%s',1);
 xyBZ = fscanf(fid,'%f',nx*ny);%Poroidal magnetic field BZ (T)
-xyBZ = reshape(xyBZ,nx,ny);
+if ~isempty(xyBZ),
+	xyBZ = reshape(xyBZ,nx,ny);
+end
 %
 fclose(fid);
 %
@@ -84,5 +88,5 @@ psia = (psia - psip);
 xypsin = xypsi/psia;
 rpsin = linspace(0,1,nx);
 %
-save testACCOME.mat
+save test_ACCOME.mat
 
