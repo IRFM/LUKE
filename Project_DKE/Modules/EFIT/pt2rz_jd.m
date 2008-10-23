@@ -1,6 +1,10 @@
-function equil_RZ = pt2rz_jd(equil,xlim,ylim)
+function equil_RZ = pt2rz_jd(equil,xlim,ylim,nprz)
 %
 [np,nt] = size(equil.ptx);
+%
+if nargin < 4,
+	nprz = np;
+end
 %
 equil_RZ.psi_apRp = equil.psi_apRp;
 equil_RZ.ap = equil.ptx(end,1);
@@ -49,7 +53,7 @@ if isnan(xlim),
     xlim = [xmin + dxmin,xmax + dxmax];
 end
 %
-if isnan(xlim),
+if isnan(ylim),
     ymin = min(pty(end,:));
     ymax = max(pty(end,:));
     %
@@ -71,8 +75,8 @@ dsdpsin_min = min(sqrt((ptx(end,:) - ptx(end-1,:)).^2 + (pty(end,:) - pty(end-1,
 psin_max = 1 + sqrt((xlim(2) - xlim(1)).^2 + (ylim(2) - ylim(1)).^2)/dsdpsin_min;
 psin_ext = [psin,1 + dpsin:dpsin:psin_max];
 %
-equil_RZ.x = linspace(xlim(1),xlim(2),np);
-equil_RZ.y = linspace(ylim(1),ylim(2),np);
+equil_RZ.x = linspace(xlim(1),xlim(2),nprz);
+equil_RZ.y = linspace(ylim(1),ylim(2),nprz);
 %
 ptx_ext = interp1(psin,ptx,psin_ext,'linear','extrap');
 pty_ext = interp1(psin,pty,psin_ext,'linear','extrap');

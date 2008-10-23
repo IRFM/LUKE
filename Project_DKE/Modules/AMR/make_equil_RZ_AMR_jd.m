@@ -1,11 +1,21 @@
-function make_equil_RZ_AMR_jd(equil,extfac)
+function make_equil_RZ_AMR_jd(equil,nprz,extfacR,extfacZ)
 %
-% This function calculates and exports RZ equilibrium compatible with ARM
+% This function calculates and exports RZ equilibrium compatible with AMR
 % code
 %
 [np,nt] = size(equil.ptx);
 %
-equil_RZ = pt2rz_jd(equil,extfac);
+if nargin < 2,
+	nprz = np;
+end
+%
+if nargin == 4,
+    equil_RZ = pt2rz_jd(equil,nprz,extfacR,extfacZ);
+elseif nargin == 3,
+    equil_RZ = pt2rz_jd(equil,nprz,extfacR);
+else
+    equil_RZ = pt2rz_jd(equil,nprz);
+end
 %
 id = equil_RZ.id(find(equil_RZ.id == '_',1,'first') + 1:end);
 %
