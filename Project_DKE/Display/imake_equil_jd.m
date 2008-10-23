@@ -216,7 +216,17 @@ end
 %
 if amr_opt == 1,
     %
-    [equil_magnetic,equil_prof] = make_equil_AMR_jd(amr_psi_path,shotnum,shotime,Zeff,display_mode,p_opt,dispname,savename);
+    np = input(['Please provide the number of equilibrium radial points [101] : ']);
+    if isempty(np) || ~isnumeric(np),
+        np = 101;
+    end
+    %
+    nt = input(['Please provide the number of equilibrium poloidal points [65] : ']);
+    if isempty(nt) || ~isnumeric(nt),
+        nt = 65;
+    end
+    %
+    [equil_magnetic,equil_prof] = make_equil_AMR_jd(amr_psi_path,shotnum,shotime,Zeff,display_mode,p_opt,dispname,savename,np,nt);
     %
 end
 %
