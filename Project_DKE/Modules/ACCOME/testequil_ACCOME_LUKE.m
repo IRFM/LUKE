@@ -1,10 +1,11 @@
 close all
-load EQUIL_SNT1.mat
-load testACCOME.mat
+filename_equil = dir('EQUIL_*.mat');
+load(filename_equil.name);
+load test_ACCOME.mat
 %
 disp('*************************************************************************************************************');
 disp('WARNING: for full consistency between ACCOME and LUKE concerning magnetic equilibrium and LH ray propagation,');
-disp('         the sign of the poloidal flux, of BR and BZ of ACCOME must changed before being used by LUKE');
+disp('         the sign of the poloidal flux, of BR and BZ of ACCOME are changed before being used by LUKE');
 disp('*************************************************************************************************************');
 %
 %psi @ Z=Zp
@@ -68,9 +69,13 @@ iZp = min(find(Z>=Zp));iZm = iZp - 1;
 xyBRfit1 = xyBR1(:,iZm) + (xyBR1(:,iZp) - xyBR1(:,iZm))*(Zp - Z(iZm))/(Z(iZp) - Z(iZm));%linear interpolation
 graph1D_jd(R,xyBRfit1,0,0,'R','BR','COMPASS,SNT1 (BR -> -BR)',NaN,'','','none','x','b',2);drawnow
 %
-xyBRfit = xyBR(:,iZm) + (xyBR(:,iZp) - xyBR(:,iZm))*(Zp - Z(iZm))/(Z(iZp) - Z(iZm));%linear interpolation
-graph1D_jd(R,xyBRfit,0,0,'R','BR','COMPASS,SNT1 (BR -> -BR)',NaN,'','','none','.','g',2);drawnow
-legend('LUKE','ACCOME-PSI-FIT','ACCOME');
+if ~isempty(xyBR) & ~isempty(xyBZ),
+	xyBRfit = xyBR(:,iZm) + (xyBR(:,iZp) - xyBR(:,iZm))*(Zp - Z(iZm))/(Z(iZp) - Z(iZm));%linear interpolation
+	graph1D_jd(R,xyBRfit,0,0,'R','BR','COMPASS,SNT1 (BR -> -BR)',NaN,'','','none','.','g',2);drawnow
+	legend('LUKE','ACCOME-PSI-FIT','ACCOME');
+else
+	legend('LUKE','ACCOME-PSI-FIT');
+end
 %
 %BR @ R=Rp
 %
@@ -85,9 +90,13 @@ xyBR1 = -xygradypsi'./(R*ones(1,size(xygradypsi',2)));
 xyBRfit1 = xyBR1(iRm,:) + (xyBR1(iRp,:) - xyBR1(iRm,:))*(Rp - R(iRm))/(R(iRp) - R(iRm));%linear interpolation
 graph1D_jd(Z,xyBRfit1,0,0,'Z','BR','COMPASS,SNT1 (BR -> -BR)',NaN,'','','none','x','b',2);drawnow
 %
-xyBRfit = xyBR(iRm,:) + (xyBR(iRp,:) - xyBR(iRm,:))*(Rp - R(iRm))/(R(iRp) - R(iRm));%linear interpolation
-graph1D_jd(Z,xyBRfit,0,0,'Z','BR','COMPASS,SNT1 (BR -> -BR)',NaN,'','','none','.','g',2);drawnow
-legend('LUKE','ACCOME-PSI-FIT','ACCOME');
+if ~isempty(xyBR) & ~isempty(xyBZ),
+	xyBRfit = xyBR(iRm,:) + (xyBR(iRp,:) - xyBR(iRm,:))*(Rp - R(iRm))/(R(iRp) - R(iRm));%linear interpolation
+	graph1D_jd(Z,xyBRfit,0,0,'Z','BR','COMPASS,SNT1 (BR -> -BR)',NaN,'','','none','.','g',2);drawnow
+	legend('LUKE','ACCOME-PSI-FIT','ACCOME');
+else
+	legend('LUKE','ACCOME-PSI-FIT');
+end
 %
 %BZ @ Z=Zp
 %
@@ -101,9 +110,13 @@ iZp = min(find(Z>=Zp));iZm = iZp - 1;
 xyBZfit1 = xyBZ1(:,iZm) + (xyBZ1(:,iZp) - xyBZ1(:,iZm))*(Zp - Z(iZm))/(Z(iZp) - Z(iZm));%linear interpolation
 graph1D_jd(R,xyBZfit1,0,0,'R','BZ','COMPASS,SNT1 (BZ -> -BZ)',NaN,'','','none','x','b',2);drawnow
 %
-xyBZfit = xyBZ(:,iZm) + (xyBZ(:,iZp) - xyBZ(:,iZm))*(Zp - Z(iZm))/(Z(iZp) - Z(iZm));%linear interpolation
-graph1D_jd(R,xyBZfit,0,0,'R','BZ','COMPASS,SNT1 (BZ -> -BZ)',NaN,'','','none','.','g',2);drawnow
-legend('LUKE','ACCOME-PSI-FIT','ACCOME');
+if ~isempty(xyBR) & ~isempty(xyBZ),
+	xyBZfit = xyBZ(:,iZm) + (xyBZ(:,iZp) - xyBZ(:,iZm))*(Zp - Z(iZm))/(Z(iZp) - Z(iZm));%linear interpolation
+	graph1D_jd(R,xyBZfit,0,0,'R','BZ','COMPASS,SNT1 (BZ -> -BZ)',NaN,'','','none','.','g',2);drawnow
+	legend('LUKE','ACCOME-PSI-FIT','ACCOME');
+else
+	legend('LUKE','ACCOME-PSI-FIT');
+end
 %
 %BZ @ R=Rp
 %
@@ -118,6 +131,10 @@ xyBZ1 = xygradxpsi'./(R*ones(1,size(xygradxpsi',2)));
 xyBZfit1 = xyBZ1(iRm,:) + (xyBZ1(iRp,:) - xyBZ1(iRm,:))*(Rp - R(iRm))/(R(iRp) - R(iRm));%linear interpolation
 graph1D_jd(Z,xyBZfit1,0,0,'Z','BZ','COMPASS,SNT1 (BZ -> -BZ)',NaN,'','','none','x','b',2);drawnow
 %
-xyBZfit = xyBZ(iRm,:) + (xyBZ(iRp,:) - xyBZ(iRm,:))*(Rp - R(iRm))/(R(iRp) - R(iRm));%linear interpolation
-graph1D_jd(Z,xyBZfit,0,0,'Z','BZ','COMPASS,SNT1 (BZ -> -BZ)',NaN,'','','none','.','g',2);drawnow
-legend('LUKE','ACCOME-PSI-FIT','ACCOME');
+if ~isempty(xyBR) & ~isempty(xyBZ),
+	xyBZfit = xyBZ(iRm,:) + (xyBZ(iRp,:) - xyBZ(iRm,:))*(Rp - R(iRm))/(R(iRp) - R(iRm));%linear interpolation
+	graph1D_jd(Z,xyBZfit,0,0,'Z','BZ','COMPASS,SNT1 (BZ -> -BZ)',NaN,'','','none','.','g',2);drawnow
+	legend('LUKE','ACCOME-PSI-FIT','ACCOME');
+else
+	legend('LUKE','ACCOME-PSI-FIT');
+end
