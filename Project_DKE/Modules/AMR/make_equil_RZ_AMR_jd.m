@@ -5,21 +5,25 @@ function make_equil_RZ_AMR_jd(equil,savepath,nprz,extfacR,extfacZ)
 %
 [np,nt] = size(equil.ptx);
 %
+if nargin < 5,
+	extfacZ = 0;
+end
+%
+if nargin < 4,
+	extfacR = 0;
+end
+%
+if nargin < 3,
+	nprz = '';
+end
+%
 if nargin < 2,
 	savepath = [pwd,'/',];
 end
 %
-if nargin < 3,
-	nprz = np;
-end
+method = 'cubic';
 %
-if nargin == 5,
-    equil_RZ = pt2rz_jd(equil,nprz,extfacR,extfacZ);
-elseif nargin == 4,
-    equil_RZ = pt2rz_jd(equil,nprz,extfacR);
-else
-    equil_RZ = pt2rz_jd(equil,nprz);
-end
+equil_RZ = pt2rz_jd(equil,extfacR,extfacZ,nprz,method);
 %
 id = equil_RZ.id(find(equil_RZ.id == '_',1,'first') + 1:end);
 %

@@ -6,7 +6,7 @@ if nargin < 5,
 	method = 'linear';
 end
 %
-if nargin < 4,
+if nargin < 4 || isempty(nprz),
 	nprz = np;
 end
 %
