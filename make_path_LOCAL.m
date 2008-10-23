@@ -8,6 +8,15 @@
 clear all
 dkepath.id = 'LOCAL';%Set here the name path parameters (user specific)
 %
+dkepath.hostname.saturne = 'saturne';
+dkepath.hostname.cephee = 'cephee';
+dkepath.hostname.pcluke = 'PC-Luke';
+dkepath.hostname.laptopyves = 'peysson';%WARNING: for laptop, may change with connection status.
+dkepath.hostname.laptopjoan = 'PC-DECKER-J';%WARNING: for laptop, may change with connection status.
+dkepath.hostname.sunipp = 'ipp';
+dkepath.hostname.ipr = 'matlab2';
+dkepath.hostname.asipp = 'node0';
+%
 % default paths for unrecognized profiles
 %
 default.luke_root = [pwd,'/'];
@@ -128,13 +137,41 @@ sunipp.local_root = '/home/vader/';
 sunipp.computer = 'GLNXA64';%machine type and supported OS
 sunipp.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-sunipp.mex75 = [sunipp.luke_root,'Project_DKE/MEX/Bin/sunipp/MATLAB75'];
+sunipp.mex74 = [sunipp.luke_root,'Project_DKE/MEX/Bin/sunipp/MATLAB74'];
 sunipp.compiler_opt = '';% Optional arguments for compilation 
 %
 sunipp.MUMPS.seq = [sunipp.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/dke'];
-sunipp.MUMPS.mex75 = [sunipp.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
+sunipp.MUMPS.mex74 = [sunipp.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
 %
 dkepath.sunipp = sunipp;
+%
+% paths for runs on workstation at IPR-Gandhinagar
+%
+ipr.luke_root = [pwd,'/'];
+ipr.local_root = '/home/yves/';
+ipr.computer = 'GLNX86';%machine type and supported OS
+ipr.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+%
+ipr.mex76 = [ipr.luke_root,'Project_DKE/MEX/Bin/ipr/MATLAB76'];
+%
+ipr.MUMPS.seq = [ipr.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/dke'];
+ipr.MUMPS.mex76 = [ipr.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
+%
+dkepath.ipr = ipr;
+%
+% paths for runs on workstation at ASIPP-Heifei
+%
+asipp.luke_root = [pwd,'/'];
+asipp.local_root = '/home/bojiangding/';
+asipp.computer = 'GLNXA64';%machine type and supported OS
+asipp.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+%
+asipp.mex71 = [asipp.luke_root,'Project_DKE/MEX/Bin/sunipp/MATLAB71'];
+%
+asipp.MUMPS.seq = [asipp.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/dke'];
+asipp.MUMPS.mex71 = [asipp.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
+%
+dkepath.asipp = asipp;
 %
 % paths for runs on CRPP PC 70
 %
