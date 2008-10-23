@@ -50,10 +50,19 @@ ptR = Rp + ptx;
 %
 %WARNING: not very accurate because psi grid provided by ACCOME seems to be noisy in the vicinity of the plasma center
 %
-%ptBx = -ptdpsindy*psia./ptR;
-%ptBy = ptdpsindx*psia./ptR;
-ptBx = -griddata(x,y,xyBR',ptx,pty);
-ptBy = -griddata(x,y,xyBZ',ptx,pty);
+if isempty(xyBR) | isempty(xyBZ)
+	ptBx = -ptdpsindy*psia./ptR;
+	ptBy = ptdpsindx*psia./ptR;
+	%
+	disp('***********************************************************************************************************');
+	disp('WARNING: The BR and BZ magnetic field components are not given directly by ACCOME (not in the source file).');
+	disp('         The poloidal magnetic field is likely not accurate in the vicinity of the magnetic axis !');
+	disp('         It is recommanded to re-create ACCOME source file for LUKE.
+	disp('***********************************************************************************************************');
+else
+	ptBx = -griddata(x,y,xyBR',ptx,pty);
+	ptBy = -griddata(x,y,xyBZ',ptx,pty);
+end
 %
 ptBP = sqrt(ptBx.^2 +ptBy.^2);
 ptB = sqrt(ptBP.^2 + ptBPHI.^2);
