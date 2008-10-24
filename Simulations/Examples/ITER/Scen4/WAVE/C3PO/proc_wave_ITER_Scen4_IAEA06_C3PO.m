@@ -17,8 +17,8 @@ path_equil = '../../EQUIL/';%if nothing is specified, the working directory is f
 % Wave properties - note that ids_wave,paths_wave,ids_rayinit and paths_rayinit must have the same
 % number of elements
 %
-ids_wave = {'20Z_Alpha_5p0'};%,'19Z_Alpha_5p0','21Z_Alpha_5p0'
-paths_wave = {'','',''};
+ids_wave = {'20Z_Alpha_3p7','20Z_Alpha_5p0'};
+paths_wave = {'',''};
 %
 % Corresponding initial ray conditions - if not available, leave empty
 %
@@ -36,8 +36,8 @@ opt.TeNpar = 0;
 opt.abs_max = 1;
 %
 rho_disp = [0:0.1:1];
-ymask = NaN;%{[2],[2],[2]};
-yabs = NaN;%range of power deposition. If NaN linear theory is used.
+ymask = {[2],[2]};%NaN;
+yabs = {[873;1170],[795;939]};%range of power deposition. If NaN linear theory is used.
 xvar = 's';
 %
 % -------------------------------------------------------------------------
@@ -48,5 +48,5 @@ xvar = 's';
 %
 % -------------------------------------------------------------------------
 %
-graph_wave_jd(equil,waves,rayinits,'',nr_dep,opt,rho_disp,ymask,xvar,yabs);
+graph_wave_jd(equil,waves,rayinits,n_rf_list,nr_dep,opt,rho_disp,ymask,xvar,yabs);
 %
