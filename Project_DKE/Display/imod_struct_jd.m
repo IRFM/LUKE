@@ -63,7 +63,14 @@ while isel ~= 0,
         fname = fnames{iname};
         fval = s.(fname);
         %
-        if ischar(fval),
+        if islogical(fval),
+            stype(iname) = 0;
+			if fval,
+            	sval = 'true';
+			else
+            	sval = 'false';
+			end
+		elseif ischar(fval),
             stype(iname) = 1;
             sval = fval;
         elseif isnumeric(fval),
@@ -136,7 +143,11 @@ while isel ~= 0,
             disp(['Field : ',fname,' : ',getfieldinfo_jd(s,fname)]);
             [fval,mod] = input_dke_yp(['New value for field : ',fname,' '],fval);
             %
-            if stype(isel) == 1 | rev == 0,
+			if stype(isel) == 0,
+                %
+                s.(fname) = logical(fval);
+                %
+            elseif stype(isel) == 1 | rev == 0,
                 %
                 s.(fname) = fval;
                 %

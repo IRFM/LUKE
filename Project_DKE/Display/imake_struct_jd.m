@@ -217,7 +217,7 @@ if real(m_opt) == 0,
             %
         end
         %
-        if isfield(equil,'id'),
+        if e_opt && isfield(equil,'id'),
             id_s = [equil.id,'_',s.id];
         else
             id_s = s.id;
@@ -225,16 +225,15 @@ if real(m_opt) == 0,
         %
         [path_new,file_new] = isave_struct_jd(s,sname,sbase,id_s,workdir,opt_gui);
         %
-        if ~isempty(file_new) || mod == 1,
-            istr = strfind(file_new,sbase_eq);
-            if ~isempty(istr),
-                spath = path_new;
-                sfileid = file_new(length(sbase_eq)+istr+1:end-4);
-            else% no file id specified because the format is not compatible with rundke
-                spath = '';
-                sfileid = '';
-            end
-        end
+		istr = strfind(file_new,sbase_eq);
+		%
+		if ~isempty(istr),
+			spath = path_new;
+			sfileid = file_new(length(sbase_eq)+istr+1:end-4);
+		else% no file id specified because the format is not compatible with rundke
+			spath = '';
+			sfileid = '';
+		end
         %
     else
         %
@@ -253,7 +252,7 @@ if real(m_opt) == 0,
             %
         end
         %
-        if isfield(equil,'id'),
+        if e_opt && isfield(equil,'id'),
             id_s = [equil.id,'_',s{is}.id];
         else
             id_s = s.id;
@@ -261,16 +260,15 @@ if real(m_opt) == 0,
         %
         [path_new,file_new] = isave_struct_jd(s{is},sname,sbase,id_s,workdir,opt_gui);
         %
-        if ~isempty(file_new) || mod == 1,
-            istr = strfind(file_new,sbase_eq);
-            if ~isempty(istr),
-                spath{is} = path_new;
-                sfileid{is} = file_new(length(sbase_eq)+istr+1:end-4);
-            else% no file id specified because the format is not compatible with rundke
-                spath{is} = '';
-                sfileid{is} = '';
-            end
-        end
+		istr = strfind(file_new,sbase_eq);
+		%
+        if ~isempty(istr),
+			spath{is} = path_new;
+			sfileid{is} = file_new(length(sbase_eq)+istr+1:end-4);
+		else% no file id specified because the format is not compatible with rundke
+			spath{is} = '';
+			sfileid{is} = '';
+		end
         %
     end
     %

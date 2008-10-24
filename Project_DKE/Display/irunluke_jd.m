@@ -486,20 +486,18 @@ while isel >= 0,
 				end  
 				%
 				workdir = data_path;
-				%
+				%			
 				if ~isempty(fileids.dkepath) && exist([paths.dkepath,'PATH_',fileids.dkepath,'.mat'],'file'),
-					dkepath = load_structures_yp('dkepath',fileids.dkepath,paths.dkepath);
-				else
-					matver = version;
-					matver = matver([1,3]);
 					%
-					if ~isfield(dkepath,['mex',matver]),
-						dkepath.(['mex',matver]) = workdir;
-						%
-						setpath_luke_jd(dkepath.luke_root,dkepath);
-					end
+					dkepath = load_structures_yp('dkepath',fileids.dkepath,paths.dkepath);
+					%
+				else
+					%
+					status.dkepath = 0;
+					%
+					[dkepath,paths,fileids,status] = imake_dkepath_jd(basestr,workdir,dkepath,paths,fileids,status,opt_gui);
+					%
 				end
-				%
             end
             %
         elseif isel == 2,
@@ -580,35 +578,8 @@ while isel >= 0,
             disp(' ');
             disp('************** LUKE PATH **************')
             disp(' ');
-            %
-            % determine default DKEPARAM file 
-            %
-            dkepath_default = which('PATH_LOCAL.mat');
-            %
-            % treatment of the dkepath structure
-            %
-            smakecmd = '';
-            %
-            [dkepath,paths.dkepath,fileids.dkepath,newstruct] = ...
-                imake_struct_jd(dkepath,'dkepath',paths.dkepath,fileids.dkepath,equil,basestr,smakecmd,status.dkepath,'PATH',workdir,dkepath_default,opt_gui,0,0,1,0);
-            %
-            % structure interdependences
-            %
-            if newstruct == 1,
-                if ~isempty(dkepath),
-                    %
-                    status.dkepath = 1;
-                    %
-                    dkepath = load_structures_yp('dkepath',fileids.dkepath,paths.dkepath);
-                    %
-                else
-                    status.dkepath = 0;
-                end
-                status.output = 0;
-                status.data = 2;
-            end
-            %
-            clear newstruct smakecmd dkepath_default
+			%
+			[dkepath,paths,fileids,status] = imake_dkepath_jd(basestr,workdir,dkepath,paths,fileids,status,opt_gui);
             %
         elseif isel == 6,
             %
@@ -1088,7 +1059,37 @@ disp(' ');
 disp('************** EXIT LUKE **************')
 disp(' ');
 %
-
+function [dkepath,paths,fileids,status] = imake_dkepath_jd(basestr,workdir,dkepath,paths,fileids,status,opt_gui)
+	%
+	% determine default DKEPARAM file 
+	%
+	dkepath_default = which('PATH_LOCAL.mat');
+	%
+	% treatment of the dkepath structure
+	%
+	smakecmd = '';
+	%
+	[dkepath,paths.dkepath,fileids.dkepath,newstruct] = ...
+		imake_struct_jd(dkepath,'dkepath',paths.dkepath,fileids.dkepath,'',basestr,smakecmd,status.dkepath,'PATH',workdir,dkepath_default,opt_gui,0,0,1,0);
+	%
+	% structure interdependences
+	%
+	if newstruct == 1,
+		if ~isempty(dkepath),
+			%
+			status.dkepath = 1;
+			%
+			dkepath = load_structures_yp('dkepath',fileids.dkepath,paths.dkepath);
+			%
+		else
+			status.dkepath = 0;
+		end
+		%status.output = 0;
+		%status.data = 2;
+	end
+	%
+	%clear newstruct smakecmd dkepath_default
+%
 
 
 
