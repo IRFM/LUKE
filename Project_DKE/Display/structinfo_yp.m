@@ -87,6 +87,143 @@ switch struct
             otherwise,
             %
         end
+		%
+    case 'AMRcfg',
+        %
+        switch field 
+            case 'input',expert = 0;info = 'input structure';
+            case 'output',expert = 0;info = 'output structure';
+            case 'cluster',expert = 0;info = 'cluster structure';
+            case 'ray_tracing',expert = 0;info = 'ray_tracing structure';
+            case 'test_profiles',expert = 0;info = 'test_profiles structure';
+            case 'profiles',expert = 0;info = 'profiles structure';
+            case 'integration',expert = 0;info = 'integration structure';
+            otherwise,
+            %
+        end
+		%
+    case 'input',
+        %
+        switch field 
+            case 'experiment',expert = 0;info = 'experiment name';
+            case 'shot_number',expert = 0;info = 'shot number';
+            case 'start_time',expert = 0;info = 'start time of the simulation';
+            case 'end_time',expert = 0;info = 'end time of the simulation';
+            case 'time_samples',expert = 0;info = 'no. of time steps';
+            otherwise,
+            %
+        end
+		%
+    case 'output',
+        %
+        switch field 
+            case 'central_ray_only',expert = 0;info = 'calculate the central rays only';
+            case 'luke',expert = 0;info = 'generate LUKE output';
+            otherwise,
+            %
+        end
+		%
+    case 'cluster',
+        %
+        switch field 
+            case 'master_priority',expert = 0;info = 'priority of the master process, i.e. the program itself if run locally 0 = lowest (nice 19), 1 = medium (nice 10), 2 = standard (nice 0)';
+            otherwise,
+            %
+        end
+		%
+    case 'ray_tracing',
+        %
+        switch field 
+            case 'Zeff',expert = 0;info = 'Zeff (constant)';
+            case 'accuracy',expert = 0;info = 'Runge-Kutta accuracy';
+            case 'power_limit',expert = 0;info = 'stopping power value (1-power_limit damped)';
+            otherwise,
+            %
+        end
+ 		%
+   case 'test_profiles',
+        %
+        switch field 
+            case 'R_min',expert = 0;info = 'R_min';
+            case 'R_max',expert = 0;info = 'R_max';
+            case 'Z_min',expert = 0;info = 'Z_min';
+            case 'Z_max',expert = 0;info = 'Z_max';
+            case 'R_dim',expert = 0;info = 'R_dim';
+            case 'Z_dim',expert = 0;info = 'Z_dim';
+            otherwise,
+            %
+        end
+		%
+    case 'profiles',
+        %
+        switch field 
+            case 'input_type',expert = 0;info = 'equilibriuam and ne,Te profiles input type (matlab for LUKE)';
+            case 'export',expert = 0;info = 'equilibriuam and ne,Te profiles input type (matlab for LUKE)';
+            case 'export_nR',expert = 0;info = 'no. of datapoints in R';
+            case 'export_nZ',expert = 0;info = 'no. of datapoints in Z';
+            case 'export_npsi',expert = 0;info = 'no. of datapoints in psi';
+            case 'extendProfilesDen',expert = 0;info = 'profiles extension behind the last data point';
+            case 'extendProfilesTe',expert = 0;info = 'profiles extension behind the last data point';
+            case 'extDataPoints',expert = 0;info = 'profiles extension behind the last data point';
+            case 'LSOL_den',expert = 0;info = 'profiles extension behind the last data point';
+            case 'LSOL_Te',expert = 0;info = 'profiles extension behind the last data point';
+            case 'LSOL',expert = 0;info = 'SOL width, increase for low frequencies with mode conversion close to or out of LCFS';
+            otherwise,
+            %
+        end
+		%
+    case 'antenna',
+        %
+        switch field 
+            case 'cfg_file',expert = 0;info = 'name of the antenna cfg file';
+            case 'ids',expert = 0;info = 'name of the antenna cfg file';
+            otherwise,
+            %
+        end
+ 		%
+   case 'integration',
+        %
+        switch field 
+            case 'R_min',expert = 0;info = 'min, max in R and r_eff for profiles (deposition, current) integration r_eff = a0*sqrt(psi_normalized)';
+            case 'R_max',expert = 0;info = 'min, max in R and r_eff for profiles (deposition, current) integration r_eff = a0*sqrt(psi_normalized)';
+            case 'r_eff_min',expert = 0;info = 'min, max in R and r_eff for profiles (deposition, current) integration r_eff = a0*sqrt(psi_normalized)';
+            case 'r_eff_max',expert = 0;info = 'min, max in R and r_eff for profiles (deposition, current) integration r_eff = a0*sqrt(psi_normalized)';
+            case 'tabdim',expert = 0;info = 'no. of datapoints';
+            otherwise,
+            %
+        end
+		%
+    case 'antennacfg',
+        %
+        switch field 
+            case 'general',expert = 0;info = 'general';
+            case 'antenna_0',expert = 0;info = 'antenna_0';
+            otherwise,
+            %
+        end
+		%
+    case 'general',
+        %
+        switch field 
+            case 'noOfCircles',expert = 0;info = 'noOfCircles';
+            case 'raysPerCircle',expert = 0;info = 'raysPerCircle';
+            otherwise,
+            %
+        end
+		%
+    case 'general',
+        %
+        switch field 
+            case 'model',expert = 0;info = 'antenna model';
+            case 'power',expert = 0;info = 'power in kW';
+            case 'toroidal_angles',expert = 0;info = 'array of toroidal angles (single value for no angle scan)';
+            case 'poloidal_angles',expert = 0;info = 'array of poloidal angles (single value for no angle scan)';
+            case 'angles_E_equatorial',expert = 0;info = 'array of polarization angles (single value for no angle scan)';
+            case 'popolarizationwer',expert = 0;info = 'select polarization(s) (linear | linear_complementary | circular)';
+            case 'frequencies',expert = 0;info = 'array of frequencies';
+            otherwise,
+            %
+        end
     otherwise,
 end
 %
