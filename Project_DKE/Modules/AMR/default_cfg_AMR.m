@@ -129,3 +129,14 @@ antennacfg.antenna_0.polarization = 'linear';
 antennacfg.antenna_0.frequencies = [33.0];
 antennacfg.antenna_0.IRealTest = 0;
 antennacfg.antenna_0.vacuum_window = false;
+
+antennacfg.antenna_0.x_waist = 0.83;
+antennacfg.antenna_0.y_waist = 0;
+antennacfg.antenna_0.z_waist = 0;
+antennacfg.antenna_0.waist_radius = 0.025;
+antennacfg.antenna_0.fix_divergence = false;
+antennacfg.antenna_0.fixed_divergence = 0;
+antennacfg.antenna_0.gauss_assymetry = 0;
+antennacfg.antenna_0.gauss_radius_enlargement = 1;
+antennacfg.antenna_0.gauss_width = 1;
+
