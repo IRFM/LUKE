@@ -195,7 +195,7 @@ cd ../..
 forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
 cd(['TScyl',filesep,'LH_karney_transp_nobounce']);
 if exist('DKE_RESULTS_TScyl_LH_karney_transp_nobounce.mat') == 0 | forcerun,
-   %rundke
+   rundke
 else
    info_dke_yp(2,['Simulation TScyl',filesep,'LH_karney_transp_nobounce skipped because already done !']) 
 end
@@ -213,7 +213,7 @@ cd ../..
 forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
 cd(['TScyl',filesep,'LH_karney_3D_num']);
 if exist('DKE_RESULTS_TScyl_LH_karney_3D_num.mat') == 0 | forcerun,
-   %rundke
+   rundke
 else
    info_dke_yp(2,['Simulation TScyl',filesep,'LH_karney_3D_num skipped because already done !']) 
 end
@@ -244,7 +244,7 @@ cd ../..
 forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
 cd(['JETh77',filesep,'LH_karney_transp_bounce']);
 if exist('DKE_RESULTS_JETh77_LH_karney_transp_bounce.mat') == 0 | forcerun,
-   %rundke
+   rundke
 else
    info_dke_yp(2,['Simulation JETh77',filesep,'LH_karney_transp_bounce skipped because already done !']) 
 end
