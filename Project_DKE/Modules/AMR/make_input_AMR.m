@@ -1,4 +1,20 @@
-function make_input_AMR()
+function make_input_AMR(basestr,equil,AMR_path)
+%
+experiment = basestr;
+%
+if isfield(equil,'info') && isfield(equil.info,'shotnum'),
+    shotnum = str2num(equil.info.shotnum);
+else
+    shotnum = 0;
+end
+%
+if isfield(equil,'info') && isfield(equil.info,'shotime'),
+    shotime = str2num(equil.info.shotime);
+else
+    shotime = 0;
+end
+%
+Zeff = mean(sum(equil.pzni.*repmat(equil.zZi.',[1,length(equil.pne)]).^2,1)./equil.pne);
 %
 % Create input (config) files for AMR
 %
@@ -6,15 +22,15 @@ function make_input_AMR()
 [AMRcfg,antennacfg] = default_cfg_AMR();
 % == input section ==
 % experiment name
-AMRcfg.input.experiment = 'COMPASS';
+AMRcfg.input.experiment = experiment;
 % shot number
-AMRcfg.input.shot_number = 0;
+AMRcfg.input.shot_number = shotnum;
 % start time of the simulation
-AMRcfg.input.start_time = 0;
+AMRcfg.input.start_time = shotime;
 % end time of the simulation
-AMRcfg.input.end_time = 0;
+AMRcfg.input.end_time = shotime;
 % no. of time steps
-AMRcfg.input.time_samples = 0;
+AMRcfg.input.time_samples = 1;
 %
 % == output section ==
 % calculate the central rays only
@@ -29,7 +45,7 @@ AMRcfg.cluster.master_priority = 0;
 %
 % == ray tracing section ==
 % Zeff (constant)
-AMRcfg.ray_tracing.Zeff = 1.0;
+AMRcfg.ray_tracing.Zeff = Zeff;
 % Runge-Kutta accuracy
 AMRcfg.ray_tracing.accuracy = 1.e-5;
 % stopping power value (1-power_limit damped)
@@ -38,12 +54,12 @@ AMRcfg.ray_tracing.power_limit = 1.e-8;
 % == test profiles section ==
 % equilibrium and profiles are output on a [R_min;R_max] x [Z_min,Z_max]
 % rectangle with R_dim and Z_dim datapoint in R,Z directions
-AMRcfg.test_profiles.R_min = 0.0;
-AMRcfg.test_profiles.R_max = 0.0;
-AMRcfg.test_profiles.Z_min = 0.0;
-AMRcfg.test_profiles.Z_max = 0.0;
-AMRcfg.test_profiles.R_dim = 0;
-AMRcfg.test_profiles.Z_dim = 0;
+AMRcfg.test_profiles.R_min = 0.4;
+AMRcfg.test_profiles.R_max = 0.7;
+AMRcfg.test_profiles.Z_min = -0.2;
+AMRcfg.test_profiles.Z_max = 0.2;
+AMRcfg.test_profiles.R_dim = 101;
+AMRcfg.test_profiles.Z_dim = 101;
 %
 % == profiles section ==
 % equilibriuam and ne,Te profiles input type (matlab for LUKE)
@@ -62,7 +78,7 @@ AMRcfg.profiles.LSOL_den = 0.1;
 AMRcfg.profiles.LSOL_Te = 0.1;
 % SOL width, increase for low frequencies with mode conversion close to or
 % out of LCFS
-AMRcfg.profiles.LSOL = 0.0;
+AMRcfg.profiles.LSOL = 0.00;
 %
 % == antenna section ==
 % name of the antenna cfg file
@@ -92,18 +108,40 @@ antennacfg.antenna_0.model = 'gaussian';
 % power in kW
 antennacfg.antenna_0.power = 1.0;
 % array of toroidal angles (single value for no angle scan)
-antennacfg.antenna_0.toroidal_angles = [0.0];
+antennacfg.antenna_0.toroidal_angles = [35.2692];
 % array of poloidal angles (single value for no angle scan)
-antennacfg.antenna_0.poloidal_angles = [0.0];
+antennacfg.antenna_0.poloidal_angles = [-2.1198];
 % array of polarization angles (single value for no angle scan)
 antennacfg.antenna_0.angles_E_equatorial = [0.0];
 % select polarization(s) (linear | linear_complementary | circular)
 antennacfg.antenna_0.polarization = 'linear';
 % array of frequencies
 antennacfg.antenna_0.frequencies = [33.0];
-
+%
+% === SPECIFIC ANTENNA ELEMENTS ===
+% waist center coordinates
+antennacfg.antenna_0.x_waist = 0.83;
+antennacfg.antenna_0.y_waist = 0;
+antennacfg.antenna_0.z_waist = 0;
+% waist radius [m]
+antennacfg.antenna_0.waist_radius = 0.025;
+% fix the beam divergence
+antennacfg.antenna_0.fix_divergence = false;
+% divergence in degrees
+antennacfg.antenna_0.fixed_divergence = 0;
+% Gaussian beam deformation
+antennacfg.antenna_0.gauss_assymetry = 0;
+antennacfg.antenna_0.gauss_radius_enlargement = 1;
+antennacfg.antenna_0.gauss_width = 1;
+%
+[AMRcfg] = imod_struct_jd(AMRcfg,'AMRcfg');
+[antennacfg] = imod_struct_jd(antennacfg,'antennacfg');
+%
+AMRcfg = rminfo(AMRcfg);
+antennacfg = rminfo(antennacfg);
+%
 sections = fieldnames(AMRcfg);
-fid = fopen('ebe6.cfg','w');
+fid = fopen([AMR_path,'ebe6.cfg'],'w');
 for sec=1:length(sections)
     fprintf(fid,['[',sections{sec},']\n']);
     keys = fieldnames(AMRcfg.(sections{sec}));
@@ -115,7 +153,7 @@ end
 fclose(fid);
 
 sections = fieldnames(antennacfg);
-fid = fopen(AMRcfg.antenna.cfg_file,'w');
+fid = fopen([AMR_path,AMRcfg.antenna.cfg_file],'w');
 for sec=1:length(sections)
     fprintf(fid,['[',sections{sec},']\n']);
     keys = fieldnames(antennacfg.(sections{sec}));
@@ -126,6 +164,8 @@ for sec=1:length(sections)
 end
 fclose(fid);
 
+end
+
 function fprintf_key(fid,key,val)
     if isstr(val)
         keystr = [key,' = ',val,'\n'];
@@ -135,7 +175,7 @@ function fprintf_key(fid,key,val)
         else
             keystr = [key,' = no\n'];
         end
-    elseif isint(val)
+    elseif isinteger(val)
         keystr = [key,' ='];
         for i=1:length(val)
             valstr = sprintf(' %i',val(i));
@@ -151,4 +191,21 @@ function fprintf_key(fid,key,val)
         keystr = [keystr,'\n'];
     end
     fprintf(fid,keystr);
+end
+
+function s = rminfo(s);
+    fnames = fieldnames(s);
+    for iname = 1:length(fnames);
+        if strcmp(fnames{iname},'info') || strcmp(fnames{iname},'expert'),
+            s = rmfield(s,fnames{iname});
+        elseif isstruct(s.(fnames{iname})),
+            s.(fnames{iname}) = rminfo(s.(fnames{iname}));
+        end
+    end
+end
+
+        
+        
+        
+        
     
