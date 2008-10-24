@@ -1291,6 +1291,7 @@
 % - Convergence criterion for QL iterations
 % - multi-config PATH make file in root directory and simplified dkepath install and management
 % - mex file management with different platforms and matlab versions
+% - coupling with AMR code
 % 
 % ====> LUKE
 %
@@ -1315,6 +1316,7 @@
 % A imake_wave_AMR_jd.m (make AMR waves)
 % U imake_wave_jd.m (add AMR waves)
 % U irunluke_jd.m (sign management, close all)
+% U structinfo_yp.m (AMR structures)
 %
 % ====> LUKE/Project_DKE/DKE
 % 
@@ -1338,6 +1340,8 @@
 % 
 % A make_equil_AMR_jd.m (make AMR equilibrium)
 % A make_equil_RZ_AMR_jd.m (make equil files for AMR code)
+% U make_input_AMR.m
+% U default_cfg_AMR.m
 %
 % ====> LUKE/Project_DKE/Modules/Cronos
 % 
@@ -1357,10 +1361,16 @@
 % U kineticdisp_jd.m (use erfcc)
 % U make_beam_wave_jd.m (keep swidth)
 %
+% ====> LUKE/Project_DKE/packages/MUMPS
+% 
+% U MUMPSMEX_dke_yp.m (error management)
+%
 % ====> LUKE/Tools
 % 
 % U pdfhtlatex_yp.m (gestion des dossiers CVS)
 % A gettime_jd.m (get file modification time)
+% U disp_hot_jd.m (R2D2 case updated)
+% U smooth_dke_yp.m (smotthing profiles for cronos)
 %
 % ====> LUKE/Simulations/Examples/ITER/Scen4/
 %
