@@ -491,7 +491,7 @@ elseif w_opt == 2,% wave from ART calculations
     %
 elseif w_opt == 3,% wave from ART calculations
     %
-    wave = imake_wave_AMR_jd(workdir,equil,opt_gui);
+    wave = imake_wave_AMR_jd(basestr,equil,workdir,opt_gui);
     %
     if isempty(wave),
         return
