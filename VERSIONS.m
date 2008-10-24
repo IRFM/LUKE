@@ -1317,6 +1317,7 @@
 % U imake_wave_jd.m (add AMR waves)
 % U irunluke_jd.m (sign management, close all)
 % U structinfo_yp.m (AMR structures)
+% U imod_struct_jd.m (logical fields)
 %
 % ====> LUKE/Project_DKE/DKE
 % 
@@ -1371,7 +1372,8 @@
 % A gettime_jd.m (get file modification time)
 % U disp_hot_jd.m (R2D2 case updated)
 % U smooth_dke_yp.m (smotthing profiles for cronos)
-%
+% U Tools/input_dke_yp.m (logical data)
+% 
 % ====> LUKE/Simulations/Examples/ITER/Scen4/
 %
 % U make_equil_ITER_IAEA06.m (LUKE 1.6.4 with IAEA 06 modified EQUIL file - OK with ITER spec. + new convergence criterion)
