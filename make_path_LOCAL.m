@@ -8,15 +8,6 @@
 clear all
 dkepath.id = 'LOCAL';%Set here the name path parameters (user specific)
 %
-dkepath.hostname.saturne = 'saturne';
-dkepath.hostname.cephee = 'cephee';
-dkepath.hostname.pcluke = 'PC-Luke';
-dkepath.hostname.laptopyves = 'peysson';%WARNING: for laptop, may change with connection status.
-dkepath.hostname.laptopjoan = 'PC-DECKER-J';%WARNING: for laptop, may change with connection status.
-dkepath.hostname.sunipp = 'ipp';
-dkepath.hostname.ipr = 'matlab2';
-dkepath.hostname.asipp = 'node0';
-%
 % default paths for unrecognized profiles
 %
 default.luke_root = [pwd,'/'];
@@ -147,6 +138,8 @@ dkepath.sunipp = sunipp;
 %
 % paths for runs on workstation at IPR-Gandhinagar
 %
+dkepath.hostname.ipr = 'matlab2';
+%
 ipr.luke_root = [pwd,'/'];
 ipr.local_root = '/home/yves/';
 ipr.computer = 'GLNX86';%machine type and supported OS
@@ -160,6 +153,8 @@ ipr.MUMPS.mex76 = [ipr.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB']
 dkepath.ipr = ipr;
 %
 % paths for runs on workstation at ASIPP-Heifei
+%
+dkepath.hostname.asipp = 'node0';
 %
 asipp.luke_root = [pwd,'/'];
 asipp.local_root = '/home/bojiangding/';
