@@ -1,14 +1,44 @@
-function wave = imake_wave_ART_jd(workdir,equil,opt_gui)
+function wave = imake_wave_AMR_jd(basestr,equil,workdir,opt_gui)
 %
 % This function makes the WAVE file from ART ray-tracing output
 %
 wave = '';
 %
-filename_wavedata = 'luke_rays.dat';
+l_opt = input_dke_yp('Do you want to load AMR results (0), run AMR (1), or cancel this operation (2): ',0,{0,1,2},'Invalid option');
 %
-[AMR_file,AMR_path] = igetfile_jd(opt_gui,filename_wavedata,['Please select the AMR ''',filename_wavedata,''' file'],equil.info.datapath);
-%
-if AMR_file == 0,
+if l_opt == 0,
+    %
+    filename_wavedata = 'luke_rays.dat';
+    %
+    [AMR_file,AMR_path] = igetfile_jd(opt_gui,filename_wavedata,['Please select the AMR ''',filename_wavedata,''' file'],equil.info.datapath);
+    %
+    if AMR_file == 0,
+        return
+    end
+    %
+elseif l_opt == 1,
+    %
+    AMR_path = getenv('AMR');
+    if isempty(AMR_path),
+        AMR_path = igetdir_jd(opt_gui,'Please select the AMR code folder',workdir);
+    end
+    %
+    nprz = 101;
+    extfacR = 0.1;
+    extfacZ = 0.02;
+    %
+    make_equil_RZ_AMR_jd(equil,[AMR_path,'input/'],nprz,extfacR,extfacZ);
+    make_input_AMR(basestr,equil,AMR_path);
+    %
+    sd = pwd;
+    cd(AMR_path)
+    unix(['python ebe6.py']);
+    cd(sd);
+    %
+    AMR_path = [AMR_path,'output/luke/'];
+    AMR_file = 'luke_rays.dat';
+else
+    disp('-----> operation aborted.')
     return
 end
 %
@@ -118,7 +148,13 @@ for iy = 1:ny,
     ray.sky = [];% Ray wave vector (vertical) along the propagation [1,ns]
     %
     ray.sNpar = raydata(:,4).';% Ray parallel wave number [1,ns]
-    ray.sNperp = NaN;%raydata(:,5).';% Ray perpendicular wave number [1,ns]
+	%
+	if kmode == 2,
+		ray.sNperp = NaN;
+	else
+    	ray.sNperp = raydata(:,5).';% Ray perpendicular wave number [1,ns]
+	end
+	%
     ray.sdNpar = dNpar*ones(1,ns);% Ray spectral width in Npar [1,ns] 
     %       if sdNpar is real -> gaussian spectrum, if sdNpar is imag. -> square spectrum (centered on sNpar)
     %
