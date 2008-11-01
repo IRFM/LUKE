@@ -1,4 +1,4 @@
-function [ppsin,ppsi_apRp,theta,x,y,Bx,By,BPHI,pBpp,pq_Rpap,pj,pmag,Ip_test] = idealequilcyl_yp(ap,Rp,Zp,Bt,Ip,qmin_Rpap,eq,qopt,npsi,ntheta);
+function [ppsin,ppsi_apRp,theta,x,y,Bx,By,BPHI,pBpp,pq_Rpap,pj,pmag,Ip_test,prho,pspsin,pspsinT] = idealequilcyl_yp(ap,Rp,Zp,Bt,Ip,qmin_Rpap,eq,qopt,npsi,ntheta);
 %
 % Create ideal cylindrical magnetic equilibrium with circular concentric flux surfaces from parametric description
 %
@@ -33,6 +33,13 @@ spBpp = triu(repmat((pBpp(1:npsi-1) + pBpp(2:npsi))'/2,[1,npsi-1]));
 pdprho = diff(prho);
 ppsi_apRp = [0,ap^2*integral_dke_jd(pdprho,spBpp,1)'];%psi_apRp = psi(poloidal usual)*ap/Rp for the cylindrical limit
 ppsin = ppsi_apRp/max(ppsi_apRp);%Uniform normalized magnetic flux surface grid
+pspsin = sqrt(ppsin);
+%
+prho = x(:,1).'/x(end,1);
+%
+ppsiT = pi*Bt*prho.^2;%Toroidal magnetic flux
+ppsinT = ppsiT/ppsiT(end);%Normalized toroidal magnetic flux
+pspsinT = sqrt(ppsinT);
 %
 XBpp = repmat(pBpp',[1,ntheta]);
 Bx = -XBpp.*sin(Xtheta)./(1 + x/Rp);
