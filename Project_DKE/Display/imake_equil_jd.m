@@ -115,10 +115,10 @@ if n_opt == 0, % Load existing equilibrium
     end
 elseif n_opt == 1,
 	%
-	e_opt = input_dke_yp('Select magnetic equilibrium solver, 0 (liuque), 1 (helena): ',0,{0,1},'Invalid option');
+	e_opt = input_dke_yp('Select magnetic equilibrium solver, 0 (liuque), 1 (helena), 2 (ideal): ',2,{0,1,2},'Invalid option');   
 	%
     if e_opt == 0,% LIUQUE
-        %
+       %
         eqdsk_opt = 1;
         %
         shotnum = input(['Please provide the shot number : '],'s');
@@ -147,7 +147,66 @@ elseif n_opt == 1,
         eqdsk_file = ['eqdsk.',shotnum,'t',shotime];
         %
     elseif e_opt == 1, % HELENA Equilibrium 
-		%  
+		%
+        if strcmp(basestr,'TS'),           
+            helena_opt = input_dke_yp('Create an equilibrium from scratch (0) or from TS database (1) ?',0,{0,1},'Invalid option');
+        else
+            helena_opt = 0;
+        end
+        %
+        if helena_opt,
+            shotnum = input(['Please provide the shot number in the Tore Supra database : '],'s');
+            if isempty(shotnum),
+                return
+            end
+            %
+            shotime = input('Please provide the shot time in the Tore Supra database : ');
+            if isempty(shotime),
+                return
+            end
+            %
+            t1 = input('Averaging of profiles data, initial time in the Tore Supra database : ');
+            if isempty(t1) | ~isnumeric(t1) ,
+                disp('-----> Invalid time');
+                return
+            end
+            %
+            t2 = input('Averaging of profiles data, final time : ');
+            if isempty(t1) | ~isnumeric(t1) ,
+                disp('-----> Invalid time');
+                return
+            end
+            %
+            shotime = num2str(shotime,'%6.4f');
+            %
+            data_path = [workdir,'/'];
+            data_file = ['data_',basestr,'_',shotnum,'_',num2str(t1),'_',num2str(t2),'.mat'];
+            %
+            [equil_magnetic,mrho,mspsin,mspsinT,mp_magnetic] = make_helmex77(shotnum,shotime,t1,t2,basestr,[data_path,data_file]);%call HELENA (helmex77) for Tore Supra tokamak. Use TS database
+        else
+            shotnum = input(['Please provide the shot number : '],'s');
+            if isempty(shotnum),
+                return
+            end
+            %
+            shotime = input('Please provide the shot time : ');
+            if isempty(shotime),
+                return
+            end
+            %
+            shotime = num2str(shotime,'%6.4f');
+            %
+            data_path = '';
+            data_file = '';
+            %
+            [equil_prof,equil_magnetic,mrho,mspsin,mspsinT,mp_magnetic] = imake_equil_helena(basestr);%call HELENA (helmex77) to create magnetic equilibrium from scratch
+        end    
+        %
+        if ~exist('equil_magnetic'),
+            disp('-----> Equilibrium creation failed');
+            return;
+        end
+    elseif e_opt == 2, % Ideal Equilibrium 
         shotnum = input(['Please provide the shot number : '],'s');
         if isempty(shotnum),
             return
@@ -158,24 +217,12 @@ elseif n_opt == 1,
             return
         end
         %
-        t1 = input('Averaging of profiles data, initial time : ');
-        if isempty(t1) | ~isnumeric(t1) ,
-            disp('-----> Invalid time');
-            return
-        end
-        %
-        t2 = input('Averaging of profiles data, final time : ');
-        if isempty(t1) | ~isnumeric(t1) ,
-            disp('-----> Invalid time');
-            return
-        end
-        %
         shotime = num2str(shotime,'%6.4f');
         %
-        data_path = [workdir,'/'];
-        data_file = ['data_',basestr,'_',shotnum,'_',num2str(t1),'_',num2str(t2),'.mat'];
+        data_path = '';
+        data_file = '';
         %
-        [equil_magnetic,mrho,mspsin,mspsinT,mp_magnetic] = make_helmex77(shotnum,shotime,t1,t2,basestr,[data_path,data_file]);%call HELENA (helmex77)
+        [equil_prof,equil_magnetic,mrho,mspsin,mspsinT,mp_magnetic] = imake_equil_ideal(basestr);%Create ideal magnetic equilibrium from scratch
         %
         if ~exist('equil_magnetic'),
             disp('-----> Equilibrium creation failed');
@@ -372,30 +419,38 @@ if amr_opt == 0,
         %
     elseif strcmp(basestr,'ITER'),% ITER Astra profile data
         %
-        profname = [id_equil,'.prof'];
-        type = 0.2;
-        %
-        [data_file,data_path] = igetfile_jd(opt_gui,profname,['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],eqdsk_path);
-        %
-        profname = [data_path,data_file];
-        %
-        if data_file == 0,
-            return
+        if ~exist('equil_prof'),
+            profname = [id_equil,'.prof'];
+            type = 0.2;
+            %
+            [data_file,data_path] = igetfile_jd(opt_gui,profname,['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],eqdsk_path);
+            %
+            profname = [data_path,data_file];
+            %
+            if data_file == 0,
+                return
+            end
         end
         %
     elseif strcmp(basestr,'TS'),% TS profile data
         %
-        type = -1;
-        profname = [data_path,data_file];
+        if ~exist('equil_prof'),
+            type = -1;
+            profname = [data_path,data_file];
+        end
         %
     else
         %
-        disp(['-----> profiles data not implemented yet for :',basestr]);
-        return    
+        if ~exist('equil_prof'),
+            disp(['-----> profiles data not implemented yet for :',basestr]);
+            return 
+        end
         %
     end
     %
-    equil_prof = equil_prof_jd(profname,type,mrho,mspsin,mspsinT,display_mode,p_opt,dispname,savename,Zeff);
+    if ~exist('equil_prof'),
+        equil_prof = equil_prof_jd(profname,type,mrho,mspsin,mspsinT,display_mode,p_opt,dispname,savename,Zeff);
+    end
     %
     d_opt = input('Do you want to compare the pressure profiles? [y/n] : ','s');
     if strcmp(d_opt,'y'),
