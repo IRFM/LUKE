@@ -152,8 +152,7 @@ if strcmp(basestr,'TS'),
 	        fi = [tprof.Cmain(isZmain1);0]';%  Hydrogen isotopic fraction (H/D/T) [1,3] (WARNING: only used when hydrogen plasmas are considered)  
 			fi(2) = 1 - fi(1);
 	    end
-	end
-	%
+    end
 	%
 	% Flat Zeff profile for Tore Supra
 	%

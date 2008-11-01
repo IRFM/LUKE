@@ -1,7 +1,8 @@
 function [equil_magnetic,prho_out,pspsin_out,pspsinT_out,pp_out] = make_helmex77(shotnum,shotime,t1,t2,basestr,savename)
+% LUKE - Create a magnetic equilibrium structure for C3PO/LUKE using HELENA code using the Tore Supra database
 %
 %   Create a magnetic equilibrium structure for C3PO/LUKE using HELENA code
-%   (mex file version)
+%   using the Tore Supra database (mex file version)
 %
 %   by Y. Peysson (CEA/DSM/IRFM,yves.peysson@cea.fr) and J. Decker (CEA/DSM/IRFM,joan.decker@cea.fr)
 %
@@ -65,7 +66,7 @@ if strcmp(basestr,'TS'),
     end		
     %  
 else
-    disp('The use of HELENA (helmex77) is not yet implemented for this machine.');
+    disp('The use of HELENA (helmex77) is not yet implemented for this machine experimental database.');
     return
 end
 %    
