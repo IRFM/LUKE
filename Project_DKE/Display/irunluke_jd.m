@@ -4,14 +4,14 @@ function irunluke_jd(basestr,signs,opt_gui)
 % either C3PO, TORAY or ART ray-tracing data.
 %
 if nargin < 3,
-    opt_gui = 1;
+    opt_gui = input_dke_yp('Graphical User Interface mode (yes:1,no:0)',0);
 end
 %
 if nargin < 2,
     signs = '';
 end
 if nargin < 1,
-    basestr = input_dke_yp('Enter the machine name (such as ''ITER'', ''TCV'', ''TS'', ''JET'', etc',' ');
+    basestr = input_dke_yp('Enter the machine name (such as ''ITER'', ''TCV'', ''TS'', ''JET'', ''COMPASS'', ''SST1'', ''EAST'', ...',' ');
 end
 %
 clc
