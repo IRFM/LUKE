@@ -1,4 +1,4 @@
-function [varargout] = pc_dke_yp
+function [varargout] = pc_dke_yp(gauss)
 %
 % Calculates the universal physics constants
 % (see www.tcaep.co.uk/science/constant)
@@ -6,7 +6,7 @@ function [varargout] = pc_dke_yp
 %   INPUTS: None
 %
 %
-%   OUTPUTS:
+%   OUTPUTS: [qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha,kB]
 %   
 %   - qe : Absolute value of the electron charge (C)
 %   - me : Electron rest mass (Kg)
@@ -32,7 +32,21 @@ re = 2.817940285e-15;%Classical electron radius (m)
 mc2 = 510.998902;%Electron energy rest mass (keV)
 clum = 299792458;%Speed of light (m/s)
 alpha = 7.297352533e-3;%Fine structure constant (~1/137)
-kB = 1.3806504e-23;;%Boltzmann's constant (J/K-1)
+kB = 1.3806504e-23;%Boltzmann's constant (J/K-1)
+%
+if nargin > 0,%CGS units
+    qe = qe*clum*1e1;% statcoul
+    me = me*1e3;% g
+    mp = mp*1e3;% g
+    mn = mn*1e3;% g
+    e0 = NaN;% does not exist in CGS units
+    mu0 = NaN;% does not exist in CGS units
+    re = re*1e2;% cm
+    clum = clum*1e2;% cm/s
+    mc2 = mc2*qe*1e11/clum;% erg
+    alpha = alpha;
+    kB = kB*1e7; % erg/K
+end    
 %
 if nargout >= 1, varargout{1} = qe;end
 if nargout >= 2, varargout{2} = me;end
