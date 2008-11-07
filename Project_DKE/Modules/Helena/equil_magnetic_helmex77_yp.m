@@ -97,7 +97,7 @@ if exist(['helmex77.',mexext]) == 3,
     end
 %
 	ppsi = ppsi/2/pi;%In order to match the defintion of ppsi in DKE
-	ppsin = ppsi'/max(ppsi);%Normalized flux grid
+	ppsin = ppsi'/ppsi(end);%Normalized flux grid
 	theta = linspace(0,2*pi,ntheta);% uniform theta grid
 %
     Zp_helmex = Zout(1,1);%Vertical position of the plasma at theta = 0
