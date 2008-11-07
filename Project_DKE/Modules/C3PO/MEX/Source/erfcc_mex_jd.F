@@ -43,7 +43,7 @@ C
       INTEGER i,nx,nin,ninp,xrp,xip,zrp,zip 
 C
       LOGICAL flag  
-      PARAMETER (nx = 1024)   
+      PARAMETER (nx = 65536)   
 C
       real*8 ninr,xr(nx),xi(nx),yr,yi
       real*8 zr(nx),zi(nx)
@@ -68,8 +68,8 @@ C
       nin = INT(ninr);
 C      print *, 'nin = ',nin
 C
-      IF (nin .GT. 1024) THEN
-        CALL MEXERRMSGTXT('nin must be <= 1024')
+      IF (nin .GT. 65536) THEN
+        CALL MEXERRMSGTXT('nin must be <= 65536')
       ENDIF
 C
       IF (MXGETM(PRHS(2)) .NE. 1) THEN
@@ -81,7 +81,7 @@ C
       ENDIF
 C
       IF (MXGETN(PRHS(2)) .NE. nx) THEN
-        CALL MEXERRMSGTXT('Length of Arg. 2 must be 1024')
+        CALL MEXERRMSGTXT('Length of Arg. 2 must be 65536')
       ENDIF
 C
       IF (MXGETN(PRHS(3)) .NE. MXGETN(PRHS(2))) THEN
