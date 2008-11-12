@@ -129,10 +129,12 @@ sunipp.computer = 'GLNXA64';%machine type and supported OS
 sunipp.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 sunipp.mex74 = [sunipp.luke_root,'Project_DKE/MEX/Bin/sunipp/MATLAB74'];
+sunipp.mex75 = [sunipp.luke_root,'Project_DKE/MEX/Bin/sunipp/MATLAB75'];
 sunipp.compiler_opt = '';% Optional arguments for compilation 
 %
 sunipp.MUMPS.seq = [sunipp.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/dke'];
-sunipp.MUMPS.mex74 = [sunipp.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
+sunipp.MUMPS.mex74 = [sunipp.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB74'];%Where MUMPS matrix solver is stored (MEX function)
+sunipp.MUMPS.mex75 = [sunipp.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB75'];%Where MUMPS matrix solver is stored (MEX function)
 %
 dkepath.sunipp = sunipp;
 %
