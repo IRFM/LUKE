@@ -1,13 +1,17 @@
-function equil = imake_equil_jd(basestr,signs,workdir,opt_gui)
+function equil = imake_equil_jd(basestr,signs,external,workdir,opt_gui)
 %
 % This function interactively builds the equilibrium structure
 %
-if nargin < 4,
+if nargin < 5,
 	opt_gui = 1;
 end
 %
-if nargin < 3,
+if nargin < 4,
 	workdir = pwd;
+end
+%
+if nargin < 3,
+	external = '';
 end
 %
 if nargin < 2,
@@ -18,32 +22,72 @@ equil = '';
 Zaxis = 0;
 Zeff = NaN;
 %
-eqdsk_opt = 0;
-amr_opt = 0;
+e_opt = 0;
+type = NaN;
 %
 % MAGNETIC EQUILIBRIUM
 %
-n_opt = input_dke_yp('Load existing (0) or built new (1) magnetic equilibrium : ',1,{0,1},'Invalid selection');
+disp(' ')
+disp('*********** MAGNETIC EQUILIBRIUM ***********')
+disp(' ')
 %
-if n_opt == 0, % Load existing equilibrium
+if isfield(external,'magnetic'),% magnetic equilibrium from external database?
     %
-	e_opt = input_dke_yp('Format of the magnetic equilibrium data, 0 (eqdsk), 1 (itm), (2) (AMR): ',0,{0,1,2},'Invalid option');
+    i_opt = input_dke_yp(['Do you want to :\n',...
+        '(0) use data loaded from the external database \n',...
+        '(1) use data from an existing equilibrium file \n',...
+        '(2) build the magnetic equilibrium data locally \n'],...
+        0,{0,1,2},'Invalid selection');
     %
-    if e_opt == 0,% EQSDK from data file
+else
+    %
+    i_opt = input_dke_yp(['Do you want to :\n',...
+        '(1) use data from an existing equilibrium file \n',...
+        '(2) build the magnetic equilibrium data locally \n'],...
+        1,{1,2},'Invalid selection');
+    %
+end
+% 
+if i_opt == 0, % use data from from external database
+    %
+    shotnum = external.shotnum;
+    shotime = external.shotime;
+    %
+    if strcmp(basestr,'TCV'),
+        %
+        eqdsk_path = external.magnetic.eqdsk_path;
+        eqdsk_file = external.magnetic.eqdsk_file;
+        %
+        e_opt = -1;% eqdsk equilibrium
+        %
+    elseif strcmp(basestr,'TS'),
+        %
+        equil_magnetic_data = external.magnetic;
+        %
+    else
+        %
+        disp('-----> function not yet implemented for this machine.')
+        return
+    end
+    %
+elseif i_opt == 1, % use data from an existing equilibrium file
+    %
+	d_opt = input_dke_yp('Format of the magnetic equilibrium data, 0 (eqdsk), 1 (itm), (2) (AMR): ',0,{0,1,2},'Invalid option');
+    %
+    if d_opt == 0,% EQSDK from data file
         %
         % EQSDK file
-        % 
-        eqdsk_opt = 1;
 		%
         [eqdsk_file,eqdsk_path] = igetfile_jd(opt_gui,{'eqdsk*.*';'EQDSK*.*';'*.*'},'Please select the EQDSK file',workdir);
         %
         if eqdsk_file == 0,
+            disp('-----> No eqdsk file selected.')            
             return
         end
         %
         it = strfind(eqdsk_file,'t');
         %
-        if (~isempty(strfind(eqdsk_file,'EQDSK.')) | ~isempty(strfind(eqdsk_file,'eqdsk.'))) & ~isempty(it),
+        if (~isempty(strfind(eqdsk_file,'EQDSK.')) || ~isempty(strfind(eqdsk_file,'eqdsk.'))) && ~isempty(it),
             shotnum = eqdsk_file(7:it-1);
             shotime = eqdsk_file(it+1:end);
         else
@@ -64,18 +108,22 @@ if n_opt == 0, % Load existing equilibrium
         elseif isempty(shotime),
             shotime = '0';
         end
+        % 
+        e_opt = -1;% eqdsk equilibrium
         %
-    elseif e_opt == 1,% load ITM
+    elseif d_opt == 1,% load ITM
         %
-        disp('ITM equilibrium loading not yet implemented.')
+        disp('-----> loading of ITM equilibrium not yet implemented.')
         return
-    elseif e_opt == 2,% load AMR
+        %
+    elseif d_opt == 2,% load AMR
         %
         % AMR equilibrium psi file
         % 
         [amr_psi_file,amr_psi_path] = igetfile_jd(opt_gui,{'m_profs_*_Psi.dat';'*.*'},'Please select the AMR equilibrium file containing the Psi vector',workdir);
         %
         if amr_psi_file == 0,
+            disp('-----> No AMR equilibrium file selected.')
             return
         end
         %
@@ -85,151 +133,141 @@ if n_opt == 0, % Load existing equilibrium
             it2 = it1(1) + strfind(amr_psi_file(it1+1:end),'_');
             shotime = amr_psi_file(it1(1)+1:it2(1)-1);
         else
+            disp('-----> The AMR equilibrium file selected is not valid.')
             return
-            % shotnum = '0';
-            % shotime = '0';
         end
         %
-%         shotnum_new = input(['Please provide the shot number [',shotnum,'] : '],'s');
-%         if ~isempty(shotnum_new),
-%             shotnum = shotnum_new;
-%         elseif isempty(shotnum),
-%             shotnum = '0';
-%         end
-%         %
-%         shotime_new = input(['Please provide the shot time [',shotime,'] : '],'s');
-%         if ~isempty(shotime_new),
-%             shotime = shotime_new;
-%         elseif isempty(shotime),
-%             shotime = '0';
-%         end
-%
         Zeff = input('No measure of Zeff is available. Please provide an estimated value for Zeff [1] : ');
-        if isempty(Zeff) | ~isnumeric(Zeff) | Zeff < 1 | Zeff > 6,
+        if isempty(Zeff) || ~isnumeric(Zeff) || Zeff < 1 || Zeff > 6,
             disp('Zeff = 1 enforced');
             Zeff = 1;
         end
         %
-        amr_opt = 1;
+        e_opt = -2;% AMR equilibrium
         %
     end
-elseif n_opt == 1,
-	%
-	e_opt = input_dke_yp('Select magnetic equilibrium solver, 0 (liuque), 1 (helena), 2 (ideal): ',2,{0,1,2},'Invalid option');   
-	%
-    if e_opt == 0,% LIUQUE
-       %
-        eqdsk_opt = 1;
-        %
-        shotnum = input(['Please provide the shot number : '],'s');
-        if isempty(shotnum),
-            return
-        end
-        %
-        shotime = input('Please provide the shot time : ');
-        if isempty(shotime),
-            return
-        end
-        %
-        shotime = num2str(shotime,'%6.4f');
-        %
-        l_opt = input('Option for liuqe version? (1,2,3) [1] : ');
-        if isempty(l_opt),
-            l_opt = 1;
-        elseif ~isnumeric(l_opt) | ~any(l_opt == [1:3]),
-            return
-        end
-        %
-        make_eqdsk(str2num(shotnum),str2num(shotime),workdir,basestr,l_opt);%call LIUQUE
-        %
-        eqdsk_path = [workdir,'/'];
-        %
-        eqdsk_file = ['eqdsk.',shotnum,'t',shotime];
-        %
-    elseif e_opt == 1, % HELENA Equilibrium 
-		%
-        if strcmp(basestr,'TS'),           
-            helena_opt = input_dke_yp('Create an equilibrium from scratch (0) or from TS database (1) ?',0,{0,1},'Invalid option');
-        else
-            helena_opt = 0;
-        end
-        %
-        if helena_opt,
-            shotnum = input(['Please provide the shot number in the Tore Supra database : '],'s');
-            if isempty(shotnum),
-                return
-            end
-            %
-            shotime = input('Please provide the shot time in the Tore Supra database : ');
-            if isempty(shotime),
-                return
-            end
-            %
-            t1 = input('Averaging of profiles data, initial time in the Tore Supra database : ');
-            if isempty(t1) | ~isnumeric(t1) ,
-                disp('-----> Invalid time');
-                return
-            end
-            %
-            t2 = input('Averaging of profiles data, final time : ');
-            if isempty(t1) | ~isnumeric(t1) ,
-                disp('-----> Invalid time');
-                return
-            end
-            %
-            shotime = num2str(shotime,'%6.4f');
-            %
-            data_path = [workdir,'/'];
-            data_file = ['data_',basestr,'_',shotnum,'_',num2str(t1),'_',num2str(t2),'.mat'];
-            %
-            [equil_magnetic,mrho,mspsin,mspsinT,mp_magnetic] = make_helmex77(shotnum,shotime,t1,t2,basestr,[data_path,data_file]);%call HELENA (helmex77) for Tore Supra tokamak. Use TS database
-        else
-            shotnum = input(['Please provide the shot number : '],'s');
-            if isempty(shotnum),
-                return
-            end
-            %
-            shotime = input('Please provide the shot time : ');
-            if isempty(shotime),
-                return
-            end
-            %
-            shotime = num2str(shotime,'%6.4f');
-            %
-            data_path = '';
-            data_file = '';
-            %
-            [equil_prof,equil_magnetic,mrho,mspsin,mspsinT,mp_magnetic] = imake_equil_helena(basestr);%call HELENA (helmex77) to create magnetic equilibrium from scratch
-        end    
-        %
-        if ~exist('equil_magnetic'),
-            disp('-----> Equilibrium creation failed');
-            return;
-        end
-    elseif e_opt == 2, % Ideal Equilibrium 
-        shotnum = input(['Please provide the shot number : '],'s');
-        if isempty(shotnum),
-            return
-        end
-        %
-        shotime = input('Please provide the shot time : ');
-        if isempty(shotime),
-            return
-        end
-        %
-        shotime = num2str(shotime,'%6.4f');
-        %
-        data_path = '';
-        data_file = '';
-        %
-        [equil_prof,equil_magnetic,mrho,mspsin,mspsinT,mp_magnetic] = imake_equil_ideal(basestr);%Create ideal magnetic equilibrium from scratch
-        %
-        if ~exist('equil_magnetic'),
-            disp('-----> Equilibrium creation failed');
-            return;
-        end
-    end
+    %
 end
+%
+if e_opt == 0,% equilibrium code to be specified
+    %
+	e_opt = input_dke_yp('Select magnetic equilibrium solver, 0 (analytic circular concentric), 1 (helena) : ',0,{0,1},'Invalid option');   
+    %
+end
+%
+if i_opt == 2, % equilibrium data specified by user
+    %
+    [equil_magnetic_data,shotnum,shotime] = imake_equil_ideal(e_opt);
+    %
+end
+%
+% EQUILIBRIUM PROFILES
+%
+disp(' ')
+disp('*********** EQUILIBRIUM PROFILES ***********')
+disp(' ')
+%
+if isfield(external,'prof'),% magnetic equilibrium from external database?
+    %
+    i_opt = input_dke_yp(['Do you want to :\n',...
+        '(0) use data loaded from the external database \n',...
+        '(1) use data from an existing equilibrium profiles file \n',...
+        '(2) build the equilibrium profiles data locally \n'],...
+        0,{0,1,2},'Invalid selection');
+    %
+else
+    %
+    i_opt = input_dke_yp(['Do you want to :\n',...
+        '(1) use data from an existing equilibrium profiles file \n',...
+        '(2) build the equilibrium profiles data locally \n'],...
+        1,{1,2},'Invalid selection');
+    %
+end
+% 
+if i_opt == 0, % use data from from external database
+    %
+    if strcmp(basestr,'TCV'),
+        %
+        equil_prof_data = external.prof;
+        %
+        type = 1;% TCV data format
+        n_opt = 0;
+        %
+    elseif strcmp(basestr,'TS'),
+        %
+        equil_prof_data = external.prof;
+        %
+        n_opt = -1;% ideal equilibrium profiles
+        %
+    else
+        %
+        disp('-----> function not yet implemented for this machine.')
+        return
+    end
+    %
+elseif i_opt == 1, % use data from an existing equilibrium file
+    %
+    n_opt = input_dke_yp(['Option for equilibrium profiles file : \n',...
+        '0 (existing data file)\n',...
+        '1 (ART profiles)\n',...
+        '2 (TORAY profiles)\n'],...
+        0,{0,1,2},'Invalid selection');
+    %
+    [data_file,data_path] = igetfile_jd(opt_gui,'*.*',['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],eqdsk_path);
+    %
+    if data_file == 0,
+        return
+    end
+    %
+    profname = [data_path,data_file];
+    %
+    if n_opt == 0,
+        %
+        if strcmp(basestr,'TCV'),% TCV profile data file
+            %
+            type = 1;
+            %
+            equil_prof_data = load([data_path,data_file],'shot','rho','ne','te','ti','zeff','zaxis','btsign','ipsign');
+            %
+        elseif strcmp(basestr,'TS'),% TS profile data file
+            %
+            type = -1;
+            %       
+        elseif strcmp(basestr,'ITER'),% ITER Astra profile data
+            %
+            type = 0.2;
+        else
+            disp(['-----> profiles data files not treated yet for :',basestr]);
+            return 
+        end
+        %
+    elseif n_opt == 1,% profiles from ART output
+        %
+        type = 1;
+        %
+        load([data_path,data_file],'ARTsimprof');
+        %
+        equil_prof_data.rho = ARTsimprof.rho.data.';
+        equil_prof_data.ne = ARTsimprof.n.data.'*1e20;
+        equil_prof_data.te = ARTsimprof.X.data.';
+        equil_prof_data.ti = NaN;
+        %
+        equil_prof_data.zeff = NaN;
+        equil_prof_data.zaxis = NaN;
+        %
+        equil_prof_data.shot = str2num(data_file(4:8));
+        %
+    end
+    %
+elseif i_opt == 2, % equilibrium profiles data specified by user
+    %
+    equil_prof_data = imake_equil_ideal;
+    %
+    n_opt = -1;% ideal equilibrium profiles
+    %
+end
+%
+% ************** BUILT EQUILLIBRIUM *****************
 %
 shotid = [basestr,'_',shotnum,'_',shotime];
 %
@@ -238,248 +276,147 @@ if isempty(id_equil),
     id_equil = shotid;
 end
 %
-d_opt = input('Do you want to display the equilibrium? [y/n] : ','s');
+d_opt = input_dke_yp('Do you want to display the equilibrium','n',{'y','n'},'',[1,1]);
 if strcmp(d_opt,'y'),
     display_mode = 2;
 else
     display_mode = 1;
 end
 %
-p_opt = input('Option for equilibrium figures? -1 (nothing), 0 (print), 1 (print and save), 2 (save) [-1] : ');
-if isempty(p_opt) | ~isnumeric(p_opt) | ~any(p_opt == [0,1,2]),
-    p_opt = -1;
-end
+p_opt = input_dke_yp('Option for equilibrium figures? -1 (nothing), 0 (print), 1 (print and save), 2 (save)',-1,-1:2,'',[1,1]);
 %
 dispname = '';
 savename = id_equil;
 %
-if eqdsk_opt == 1,%(R,Z) to (psi,theta) conversion specific to eqdsk
+if type == 1 && n_opt <= 1,
     %
-    % file name
+    ishot = find(equil_prof_data.shot == str2num(shotnum));
     %
-    [equil_magnetic,mrho,mspsin,mspsinT,mp_magnetic] = equil_magnetic_EFIT_jd([eqdsk_path,eqdsk_file],display_mode,p_opt,dispname,savename);
+    if isempty(ishot),
+        disp(['-----> Profiles data not found for shot :',shotnum]);
+        return
+    end
+    %
+    if length(ishot) > 1,
+        disp(['-----> WARNING : Several entries are found for shot :',shotnum,', first entry selected']);
+        ishot = ishot(1);
+    end
+    %
+    prho = equil_prof_data.rho(ishot,:);
+    pne = equil_prof_data.ne(ishot,:);
+    pTe = equil_prof_data.te(ishot,:);
+    %
+    if length(equil_prof_data.ti(ishot,:)) == 1,
+        disp('-----> No ion temperature specified, Ti=Te/6 enforced.');
+        pTi = pTe/6;
+    else
+        pTi = equil_prof_data.ti(ishot,:);
+    end
+    %
+    Zeff = equil_prof_data.zeff(ishot);
+    %
+    if isnan(Zeff),
+        Zeff = input('No measure of Zeff is available. Please provide an estimated value for Zeff [1] : ');
+        if isempty(Zeff) || ~isnumeric(Zeff) || Zeff < 1 || Zeff > 6,
+            disp('Zeff = 1 enforced');
+            Zeff = 1;
+        end
+    end
+    %
+    Zaxis = equil_prof_data.zaxis(ishot);
+    %
+    profname = [id_equil,'.prof'];        
+    %
+    % sign management as most equilibrium codes do not account for these.
+    %
+    if ~isstruct(signs) && exist('btsign','var') && exist('ipsign','var'),% note that TCV conventions are opposite to LUKE conventions
+        signs.Bt = - btsign;
+        signs.Ip = - ipsign;
+    end
+    %
+    save(profname,'prho','pne','pTe','pTi','Zeff','-mat');
     %
 end
 %
-if amr_opt == 1,
+if e_opt >= 0 || e_opt == -2,
     %
-    np = input(['Please provide the number of equilibrium radial points [101] : ']);
-    if isempty(np) || ~isnumeric(np),
-        np = 101;
-    end
+    np = input_dke_yp('Number of equilibrium radial points',101,1:2:1001,'np must be an odd number',[1,1]);
     %
-    nt = input(['Please provide the number of equilibrium poloidal points [65] : ']);
-    if isempty(nt) || ~isnumeric(nt),
-        nt = 65;
+    nt = input_dke_yp('Number of equilibrium poloidal points',65,3:2:1001,'nt must be an odd number',[1,1]);
+    %
+end
+%
+if e_opt >= 0,
+    %
+    % Create ideal magnetic equilibrium
+    %
+    equil_magnetic.Rp = equil_magnetic_data.Rp;
+    equil_magnetic.Zp = equil_magnetic_data.Zp;
+    %
+    [mpsin,equil_magnetic.psi_apRp,equil_magnetic.theta,equil_magnetic.ptx,equil_magnetic.pty,equil_magnetic.ptBx,equil_magnetic.ptBy,equil_magnetic.ptBPHI,mBpp,mq_Rpap,mj,mmag,Ip_test,mrho,mspsin,mspsinT] = ...
+        idealequilcyl_yp(equil_magnetic_data.ap,equil_magnetic_data.Rp,equil_magnetic_data.Zp,equil_magnetic_data.Bt,equil_magnetic_data.Ip,equil_magnetic_data.qmin_Rpap,equil_magnetic_data.eq,equil_magnetic_data.qopt,np,nt);%Cylindrical magnetic equilibrium
+    %
+elseif e_opt == -1,% (R,Z) to (psi,theta) conversion specific to eqdsk    
+    %
+    [equil_magnetic,mrho,mspsin,mspsinT,mp_magnetic] = equil_magnetic_EFIT_jd([eqdsk_path,eqdsk_file],display_mode,p_opt,dispname,savename);
+    [np,nt] = size(equil_magnetic.ptx);
+    %
+    % Correction for the equilibrium offset
+    %
+    Zp_offset = input(['Vertical equilibrium offset (vacuum) [',num2str(Zaxis),'] : ']);
+    if isempty(Zp_offset) || ~isnumeric(Zp_offset),
+        Zp_offset = Zaxis;
     end
+    equil_magnetic.Zp = equil_magnetic.Zp + Zp_offset;
+    %
+elseif e_opt == -2,% AMR equilibrium
     %
     [equil_magnetic,equil_prof] = make_equil_AMR_jd(amr_psi_path,shotnum,shotime,Zeff,display_mode,p_opt,dispname,savename,np,nt);
     %
 end
 %
-% PROFILES
+if n_opt == -1,% Create ideal equilibrium profiles
+    %
+    [equil_prof_data.prho,equil_prof.pTe,equil_prof.pne,equil_prof.pzTi,equil_prof.pzni,equil_prof.zZi,equil_prof.zmi,equil_prof_data.fi,equil_prof_data.pkin] = ...
+        idealprof_yp(equil_prof_data.Zi,equil_prof_data.mi,equil_prof_data.fi,equil_prof_data.Te0,equil_prof_data.Tea,equil_prof_data.eTe1,equil_prof_data.eTe2,equil_prof_data.ne0,equil_prof_data.nea,equil_prof_data.ene1,equil_prof_data.ene2,equil_prof_data.Ti0,equil_prof_data.Tia,equil_prof_data.eTi1,equil_prof_data.eTi2,equil_prof_data.Zeff0,equil_prof_data.Zeffa,equil_prof_data.eZeff,equil_prof_data.xZeff,np);%Profiles
+    %
+end
 %
-if amr_opt == 0,
-    if strcmp(basestr,'TCV'),% TCV profile data
-        %
-        n_opt = input('Option for equilibrium profiles? 0 (existing data file), 1 (TCV database), 2 (ART profiles), 3 (TORAY profiles) [0] : ');
-        if isempty(n_opt),
-            n_opt = 0;
-        end
-        if ~isnumeric(n_opt) | ~any(n_opt == [0,1,2,3]),
-            disp('-----> Invalid profiles option');
-            return
-        end
-        %
-        if n_opt <= 2,
-            %
-            type = 1;
-            %
-            if n_opt == 0,% profiles from data file
-                %
-                [data_file,data_path] = igetfile_jd(opt_gui,'*.*',['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],eqdsk_path);
-                %
-                if data_file == 0,
-                    return
-                end
-                %
-                load([data_path,data_file],'t1','t2','laun');
-                %
-                data = load([data_path,data_file],'shot','rho','ne','te','ti','zeff','zaxis','btsign','ipsign');
-                %
-            elseif n_opt == 1,% profiles from TCV database
-                %
-                t1 = input('Averaging of TCV data, initial time : ');
-                if isempty(t1) | ~isnumeric(t1) ,
-                    disp('-----> Invalid time');
-                    return
-                end
-                t2 = input('Averaging of TCV data, final time : ');
-                if isempty(t1) | ~isnumeric(t1) ,
-                    disp('-----> Invalid time');
-                    return
-                end
-                %
-                laun = input('Vector of EC launchers to account for (ex: [1,3]) : ');
-                if isempty(laun) | ~isnumeric(laun) ,
-                    disp('-----> Invalid entry');
-                    return
-                end
-                %
-                launstr = '';
-                for il = 1:length(laun),
-                    launstr = [launstr,'_',num2str(laun(il))];
-                end
-                %
-                data_path = [workdir,'/'];
-                data_file = ['data_',basestr,'_',shotnum,'_',num2str(t1),'_',num2str(t2),launstr,'.mat'];
-                %
-                collect_parameters_for_luke(str2num(shotnum),t1,t2,laun,[data_path,data_file])
-                %
-                data = load([data_path,data_file],'shot','rho','ne','te','ti','zeff','zaxis','btsign','ipsign');
-                %
-            elseif n_opt == 2,% profiles from ART output
-                %
-                [data_file,data_path] = igetfile_jd(opt_gui,'*.*',['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],eqdsk_path);
-                %
-                if data_file == 0,
-                    return
-                end
-                %
-                load([data_path,data_file],'ARTsimprof');
-                %
-                data.rho = ARTsimprof.rho.data.';
-                data.ne = ARTsimprof.n.data.'*1e20;
-                data.te = ARTsimprof.X.data.';
-                data.ti = NaN;
-                %
-                data.zeff = NaN;
-                data.zaxis = NaN;
-                %
-                data.shot = str2num(data_file(4:8));
-                %
-            end
-            %
-            ishot = find(data.shot == str2num(shotnum));
-            %
-            if isempty(ishot),
-                disp(['-----> Profiles data not found for shot :',shotnum]);
-                return
-            end
-            %
-            if length(ishot) > 1,
-                disp(['-----> WARNING : Several entries are found for shot :',shotnum,', first entry selected']);
-                ishot = ishot(1);
-            end
-            %
-            prho = data.rho(ishot,:);
-            pne = data.ne(ishot,:);
-            pTe = data.te(ishot,:);
-            %
-            if length(data.ti(ishot,:)) == 1,
-                disp(['-----> No ion temperature specified, Ti=Te/6 enforced.']);
-                pTi = pTe/6;
-            else
-                pTi = data.ti(ishot,:);
-            end
-            %
-            Zeff = data.zeff(ishot);
-            %
-            if isnan(Zeff),
-                Zeff = input('No measure of Zeff is available. Please provide an estimated value for Zeff [1] : ');
-                if isempty(Zeff) | ~isnumeric(Zeff) | Zeff < 1 | Zeff > 6,
-                    disp('Zeff = 1 enforced');
-                    Zeff = 1;
-                end
-            end
-            %
-            Zaxis = data.zaxis(ishot);
-            %
-            profname = [id_equil,'.prof'];
-            save(profname,'prho','pne','pTe','pTi','Zeff','-mat');
-            %
-            % sign management as most equilibrium codes do not account for these.
-            %
-            if ~isstruct(signs) & exist('btsign') & exist('ipsign'),% note that TCV conventions are opposite to LUKE conventions
-                signs.Bt = - btsign;
-                signs.Ip = - ipsign;
-            end
-            %
-        elseif n_opt == 3,
-            %
-            [data_file,data_path] = igetfile_jd(opt_gui,'*.*',['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],eqdsk_path);
-            %
-            if data_file == 0,
-                return
-            end
-            %
-            profname = [data_path,data_file];
-            %
-        end
-        %
-    elseif strcmp(basestr,'ITER'),% ITER Astra profile data
-        %
-        if ~exist('equil_prof'),
-            profname = [id_equil,'.prof'];
-            type = 0.2;
-            %
-            [data_file,data_path] = igetfile_jd(opt_gui,profname,['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],eqdsk_path);
-            %
-            profname = [data_path,data_file];
-            %
-            if data_file == 0,
-                return
-            end
-        end
-        %
-    elseif strcmp(basestr,'TS'),% TS profile data
-        %
-        if ~exist('equil_prof'),
-            type = -1;
-            profname = [data_path,data_file];
-        end
-        %
-    else
-        %
-        if ~exist('equil_prof'),
-            disp(['-----> profiles data not implemented yet for :',basestr]);
-            return 
-        end
-        %
+if e_opt == 1,
+    %
+    % Use Helena to create an equilibrium
+    %
+    mj_min = min(mj); 
+    if mj_min < 0,%pj must be non-negative. Only the shape is considered and Ip for the total plasma current
+        mj = mj - mj_min;
     end
     %
-    if ~exist('equil_prof'),
-        equil_prof = equil_prof_jd(profname,type,mrho,mspsin,mspsinT,display_mode,p_opt,dispname,savename,Zeff);
-    end
+    [equil_magnetic,mrho,mspsin,mspsinT,mp_magnetic] = equil_magnetic_helmex77_yp(equil_magnetic_data.ap,equil_magnetic_data.Rp,equil_magnetic_data.Zp,equil_magnetic_data.xpoint,equil_magnetic_data.Bt,equil_magnetic_data.Ip,equil_magnetic.psi_apRp*equil_magnetic_data.Rp/equil_magnetic_data.ap,mj,equil_prof_data.pkin,nt,display_mode);
     %
-    d_opt = input('Do you want to compare the pressure profiles? [y/n] : ','s');
-    if strcmp(d_opt,'y'),
-        %
-        % Verify consistency on pressure between profiles and EFIT
-        %
-        qe = pc_dke_yp;
-        %
-        mp_profiles = (equil_prof.pTe.*equil_prof.pne + sum(equil_prof.pzTi.*equil_prof.pzni,1))*qe*1e3;%pressure from Tene data
-        %
-        figure(14),clf
-        %
-        graph1D_jd(mrho,mp_profiles/1e5,0,0,'r/a','p (Bar)','',NaN,[0,1],NaN,'-','none','b',2,20,gca,0.9,0.7,0.7);
-        graph1D_jd(mrho,mp_magnetic*qe*1e3/1e5,0,0,'','','',{'T_en_e + T_in_i','Equilibrium code'},[0,1],NaN,'-','none','r',2);
-        set(gca,'XTick',[0:0.2:1]);
-        print_jd(p_opt,[savename,'_p_comp']);
-    end
+end
+%
+if n_opt >= 0 &&  e_opt ~= -2,
     %
-    % EQUIL structure
+    equil_prof = equil_prof_jd(profname,type,mrho,mspsin,mspsinT,display_mode,p_opt,dispname,savename,Zeff);
     %
+end
+%
+d_opt = input('Do you want to compare the pressure profiles? [y/n] : ','s');
+%
+if strcmp(d_opt,'y'),
     %
-    % Correction for the equilibrium offset
+    % Verify consistency on pressure between profiles and EFIT
     %
-    Zp_offset = input(['Vertical equilibrium offset (vacuum) [',num2str(Zaxis),'] : ']);
-    if isempty(Zp_offset) | ~isnumeric(Zp_offset),
-        Zp_offset = Zaxis;
-    end
-    equil_magnetic.Zp = equil_magnetic.Zp + Zp_offset;
+    qe = pc_dke_yp;
     %
+    mp_profiles = (equil_prof.pTe.*equil_prof.pne + sum(equil_prof.pzTi.*equil_prof.pzni,1))*qe*1e3;%pressure from Tene data
+    %
+    figure(14),clf
+    %
+    graph1D_jd(mrho,mp_profiles/1e5,0,0,'r/a','p (Bar)','',NaN,[0,1],NaN,'-','none','b',2,20,gca,0.9,0.7,0.7);
+    graph1D_jd(mrho,mp_magnetic*qe*1e3/1e5,0,0,'','','',{'T_en_e + T_in_i','Equilibrium code'},[0,1],NaN,'-','none','r',2);
+    set(gca,'XTick',0:0.2:1);
+    print_jd(p_opt,[savename,'_p_comp']);
 end
 %
 % sign management as most equilibrium codes do not account for these.
@@ -496,32 +433,18 @@ if isstruct(signs),
 	end
 end
 %
+% EQUIL structure
+%
 equil = conc_struct_jd(equil_magnetic,equil_prof);
 %
 equil.id = id_equil;
 equil.info.gen = 'Built with imake_equil_jd';
-if e_opt == 0,
+equil.info.shotnum = shotnum;
+equil.info.shotime = shotime;
+%
+if e_opt == -1,
     equil.info.eqdsk = [eqdsk_path,eqdsk_file];
-    equil.info.shotnum = shotnum;
-    equil.info.shotime = shotime;
-end
-if amr_opt == 1,
+elseif e_opt == -2,
     equil.info.datapath = amr_psi_path;
-    equil.info.shotnum = shotnum;
-    equil.info.shotime = shotime;
-elseif strcmp(basestr,'TCV'),
-    delete(profname);
-    equil.info.data = [data_path,data_file];
-    if n_opt < 2,
-        equil.info.t1 = t1;
-        equil.info.t2 = t2;
-        equil.info.laun = laun;
-    end
-elseif strcmp(basestr,'ITER'),
-    equil.info.data = [data_path,data_file];
-elseif strcmp(basestr,'TS'),
-    equil.info.shotnum = shotnum;
-    equil.info.shotime = shotime;
-    equil.info.data = [data_path,data_file];
 end
 %

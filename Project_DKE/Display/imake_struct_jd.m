@@ -1,37 +1,40 @@
-function [s,spath,sfileid,newstruct] = imake_struct_jd(s,sname,spath,sfileid,equil,basestr,smakecmd,status,sbase,workdir,sdefault,opt_gui,opt_multi,opt_id,d_opt,e_opt)
+function [s,spath,sfileid,newstruct] = imake_struct_jd(s,sname,spath,sfileid,equil,basestr,smakecmd,external,status,sbase,workdir,sdefault,opt_gui,opt_multi,opt_id,d_opt,e_opt)
 %
 % This function is the general interactive function for the structure s.
 %
 %
-if nargin < 16,
+if nargin < 17,
     e_opt = 1;
 end
-if nargin < 15,
+if nargin < 16,
     d_opt = 1;
 end
-if nargin < 14,
+if nargin < 15,
     opt_id = 1;
 end
-if nargin < 13,
+if nargin < 14,
     opt_multi = 0;
 end
-if nargin < 12,
+if nargin < 13,
     opt_gui = 1;
 end
-if nargin < 11,
+if nargin < 12,
     sdefault = '';
 end
-if nargin < 10,
+if nargin < 11,
     workdir = pwd;
 end
-if nargin < 9,
+if nargin < 10,
     sbase = '';
 end
-if nargin < 8,
+if nargin < 9,
     status = 0;
 end
+if nargin < 8,
+    external = '';
+end
 if nargin < 7,
-    smakecmd = 'disp(''No make command is available for this structure'')';
+    smakecmd = '';
 end
 if nargin < 6,
     error('Not enough arguments.');
@@ -108,7 +111,7 @@ if m_opt == -1,
         %
     else
         %
-        c_list = input_dke_yp(['Provide the vector of structure ''',sname,''' numbers to be cleared '],[1:ns],[1;ns]);
+        c_list = input_dke_yp(['Provide the vector of structure ''',sname,''' numbers to be cleared '],1:ns,[1;ns]);
         %
         s(c_list) = [];
         spath(c_list) = [];
@@ -181,7 +184,16 @@ if m_opt == 1,
     %
 elseif m_opt == 2,
     %
-    s_new = feval(smakecmd,basestr,equil,workdir,opt_gui);
+    if isempty(smakecmd)
+        disp('No make command is available for this structure');
+        s_new = '';
+    else
+        if isfield(external,sname),
+            s_new = feval(smakecmd,basestr,equil,external.(sname),workdir,opt_gui);
+        else
+            s_new = feval(smakecmd,basestr,equil,'',workdir,opt_gui);
+        end
+    end
     %
     if ~isempty(s_new),
         %

@@ -1,120 +1,98 @@
-function ohm = imake_ohm_jd(basestr,equil,workdir,opt_gui)
+function ohm = imake_ohm_jd(basestr,equil,external,workdir,opt_gui)
 %
 % This function interactively builds the ohm structure
 %
+if nargin < 5,
+	opt_gui = 1;
+end
+%
+if nargin < 4,
+	workdir = pwd;
+end
+%
+if nargin < 3,
+	external = '';
+end
+%
 ohm = '';
 %
-o_opt = input('Option for ohm calculation? 0 (VLOOP), 1 (E/ED) : [0] ');
-%
-if isempty(o_opt),
-    o_opt = 0;
+if ~isempty(external),
+    %
+    i_opt = input_dke_yp(['Do you want to :\n',...
+        '(0) use data loaded from the external database \n',...
+        '(1) build the ohmic data locally \n'],...
+        0,{0,1},'Invalid selection');
+    %
+else
+    %
+    i_opt = 1;
+    %
 end
 %
-if ~isnumeric(o_opt) | ~any(o_opt == [0,1]),
-    disp('-----> Invalid ohm option');
-    return
-end
-%
-if o_opt == 0,% ohm from VLOOP
+if i_opt == 0,% data loaded from external database
     %
-    i_opt = input('Option for vloop value : 0 (from data file), 1 (specify value) [0]');
-    %
-    if isempty(i_opt),
-        i_opt = 0;
-    end
-    if ~isnumeric(i_opt) | ~any(i_opt == [0,1]),
-        disp('-----> Invalid vloop option');
+    if isfield(equil.info,'shotnum');
+        shotnum = equil.info.shotnum;
+    else
+        disp('-----> Shot number information missing');
         return
     end
     %
-    if i_opt == 0,%vloop from launching data 
+    if isfield(external,'shot'),
         %
-        if isfield(equil.info,'shotnum');
-            shotnum = equil.info.shotnum;
-        else
-            disp('-----> Shot number information missing');
+        ishot = find(external.shot == str2num(shotnum));
+        %
+        if isempty(ishot),
+            disp(['-----> launching data not found for shot :',shotnum]);
             return
         end
         %
-        if strcmp(basestr,'TCV') | strcmp(basestr,'TS'),% TCV or TS launching data
-            %
-%             if isfield(equil.info,'shotime');
-%                 shotime = equil.info.shotime;
-%             else
-%                 disp('-----> Shot time information missing');
-%                 return
-%             end
-%             %
-%             % VLOOP value
-%             %
-%             n_opt = input('Option for vloop data? 0 (data file), 1 (TCV database) [0] : ');
-%             if isempty(n_opt),
-%                 n_opt = 0;
-%             end
-%             if ~isnumeric(n_opt) | ~any(n_opt == [0,1]),
-%                 disp('-----> Invalid vloop data option');
-%                 return
-%             end
-%             %
-%             if n_opt == 0,% launching data from file
-%                 %
-%                 if isfield(equil.info,'prof');
-%                     proffile = equil.info.prof;
-%                 else
-%                     proffile = '';
-%                 end                
-%                 %
-%                 [data_file,data_path] = uigetfile('*.*',['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],proffile);
-%                 %
-%                 if data_file == 0,
-%                     return
-%                 end
-%                 %
-%                 data = load([data_path,data_file],'shot','vloop');
-%                 %
-%             elseif n_opt == 1,% launching data from TCV database
-%                 %
-%                 disp('-----> launching data from TCV database not implemented yet');
-%                 return
-%             end
-            %
-            data = load(equil.info.data,'shot','vloop');
-            %
-            if exist('shot','var'),
-                %
-                ishot = find(data.shot == str2num(shotnum));
-                %
-                if isempty(ishot),
-                    disp(['-----> launching data not found for shot :',shotnum]);
-                    return
-                end
-                %
-                if length(ishot) > 1,
-                    disp(['-----> WARNING : Several entries are found for shot :',shotnum,', first entry selected']);
-                    ishot = ishot(1);
-                end
-                %
-            else
-                ishot = 1;
-            end
-            %
-            vloop = data.vloop(ishot);
-            %
-        else
-            %
-            disp(['-----> vloop data not implemented yet for :',basestr]);
-            return    
-            %
+        if length(ishot) > 1,
+            disp(['-----> WARNING : Several entries are found for shot :',shotnum,', first entry selected']);
+            ishot = ishot(1);
         end
         %
-    elseif i_opt == 1,%vloop specified 
+    else
+        ishot = 1;
+    end
+    %
+    vloop = external.vloop(ishot);
+    %
+    o_opt = 0;
+    %
+elseif i_opt == 1,
+    %
+    o_opt = input('Option for ohm calculation? 0 (VLOOP), 1 (E/ED) : [0] ');
+    %
+    if isempty(o_opt),
+        o_opt = 0;
+    end
+    %
+    if ~isnumeric(o_opt) | ~any(o_opt == [0,1]),
+        disp('-----> Invalid ohm option');
+        return
+    end
+    %
+    if o_opt == 0,% ohm from VLOOP
         %
         vloop = input('Please specify the value for Vloop (V) : ');
-        if isempty(vloop) | ~isnumeric(n_opt),
+        if isempty(vloop) | ~isnumeric(vloop),
             disp('-----> Invalid vloop value');
             return
         end
+        %
+    else
+        %
+        epsi = input('Please specify the value for E/ED (Dreicer field) : ');
+        if isempty(epsi) | ~isnumeric(epsi),
+            disp('-----> Invalid vloop value');
+            return
+        end        
+        %
     end
+end
+%
+if o_opt == 0,% ohm from VLOOP
     %
     sigma = - sign(equil.ptBPHI(1,1)*equil.psi_apRp(end));
     %
@@ -128,13 +106,7 @@ if o_opt == 0,% ohm from VLOOP
     ohm.rho = psi2rho_jd(equil,psin);%Arbitrary normalized minor radius
     ohm.epsi = sigma*vloop*ones(1,length(ohm.rho))/(2*pi*equil.Rp);%(V/m)
     %
-elseif o_opt == 1,% % ohm from E/ED
-    %
-    epsi = input('Please specify the value for E/ED (Dreicer field) : ');
-    if isempty(epsi) | ~isnumeric(epsi),
-        disp('-----> Invalid vloop value');
-        return
-    end
+elseif o_opt == 1,% ohm from E/ED
     %
     ohm = ohm_flat(equil,epsi);
     %

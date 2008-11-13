@@ -11,7 +11,7 @@ if nargin < 2,
     signs = '';
 end
 if nargin < 1,
-    basestr = input_dke_yp('Enter the machine name (such as ''ITER'', ''TCV'', ''TS'', ''JET'', ''COMPASS'', ''SST1'', ''EAST'', ...',' ');
+    basestr = input_dke_yp('Enter the machine name \n(such as ''ITER'', ''TCV'', ''TS'', ''JET'', ''COMPASS'', ''SST1'', ''EAST'', ...)',' ');
 end
 %
 clc
@@ -29,7 +29,9 @@ status.waves = 0;
 status.ohm = 0;
 status.transpfaste = 0;
 status.ripple = 0;
+%
 status.output = 0;
+status.external = 0;
 %
 fileids.data = '';
 fileids.dkepath = '';
@@ -56,7 +58,9 @@ waves = '';
 ohm = '';
 transpfaste = '';
 ripple = '';
+%
 output = '';
+external = '';
 %
 workdir = [pwd,'/'];
 %
@@ -200,6 +204,19 @@ while isel >= 0,
         end
     end
     %
+    if status.external == 1,
+        statstr.external = external.id;
+    else 
+        if ~isempty(external),
+            disp('The structure ''external'' is outdated and cleared.')
+            external = '';
+            ostr = ' outdated.';
+        else
+            ostr = '';
+        end   
+        statstr.external = ['<',ostr,' No data from external database in memory. >'];
+    end
+    %
     if ~isempty(equil),
         id_simul_o = equil.id;
     else
@@ -223,6 +240,8 @@ while isel >= 0,
     disp(' ');
     disp(' ----------- < LUKE > ----------- ')
     disp(' ');
+    disp(['Machine : ',basestr]);
+    disp(' ');
     disp('************* STATUS *************')
     disp(' ');
     disp(['LUKE data              : ',statstr.data]);
@@ -236,6 +255,7 @@ while isel >= 0,
     disp(['Magnetic ripple losses : ',statstr.ripple]);
     disp(' ');
     disp(['LUKE output            : ',statstr.output]);
+    disp(['External database      : ',statstr.external]);
     disp(' ');
     disp('************** MENU **************')
     disp(' ');
@@ -244,7 +264,7 @@ while isel >= 0,
     disp('[1]   Load existing data file');
     disp('[2]   Save current data in file');
     disp('[3]   Specify work directory');
-    disp('[4]   Generate LUKE run script');
+    disp('[4]   Load/clear data from external database');
     disp(' ');
     disp('[5]   Load/create/modify ''dkepath'' structure (LUKE paths)');
     disp('[6]   Load/create/modify ''dkeparam'' structure (LUKE parameters)');
@@ -259,9 +279,10 @@ while isel >= 0,
     disp('[14]  Display LUKE results');
     disp(' ');
     disp('[15]  Calculate HXR emission');
+    disp('[16]  Generate LUKE run script');
     disp(' ');
-    disp('[16]  Go to command line')
-    disp('[17]  Close all figures')
+    disp('[17]  Go to command line')
+    disp('[18]  Close all figures')
     disp(' ');
     disp('[0]   Run LUKE');
     disp('[-1]  Exit LUKE');
@@ -297,7 +318,7 @@ while isel >= 0,
                     clear fileids paths
                     %
 					load([data_path,data_file],'basestr','signs','status','fileids','paths','id_simul',...
-                        'dkepath','dkeparam','dkedisplay','equil','waves','ohm','transpfaste','ripple','output');
+                        'dkepath','dkeparam','dkedisplay','equil','waves','ohm','transpfaste','ripple','output','external');
 					disp(['-----> The data file ',[data_path,data_file],' is loaded.']);
                     %
                     fileids.data = data_file;
@@ -348,6 +369,10 @@ while isel >= 0,
                     %
                     if ~isfield(status,'ripple'),
                         status.ripple = 0;
+                    end
+                    %
+                    if ~isfield(status,'external'),
+                        status.external = 0;
                     end
                     %
 					status.data = 1;
@@ -476,6 +501,7 @@ while isel >= 0,
                         end
                     end                    
 					%
+                    status.external = 0;
 					status.data = 2;
 					%
 					clear data
@@ -567,9 +593,35 @@ while isel >= 0,
             %
         elseif isel == 4,
             %
-            % GENERATE LUKE RUN SCRIPT
+            % LOAD DATA FROM EXTERNAL DATABASE
             %
-            imake_rundke_jd(paths,fileids,status,dkeparam.rho_S,workdir,id_simul_o,opt_gui);
+            if ~isempty(external),
+                %
+                c_opt = input('There is external data in memory. Do you want to clear existing data (y/n)? [n] : ','s');
+                %
+                if strcmp(c_opt,'y'),
+                    external = '';
+                    disp(['-----> The external data has been cleared from memory.']);
+                    %
+                    l_opt = input('Do you want to load external data (y/n)? [n] : ','s');
+                    %
+                end
+                %
+            else
+                %
+                l_opt = 'y';
+                %
+            end
+            %
+            if strcmp(l_opt,'y'),
+                external = iload_externaldata_jd(basestr,workdir);
+            end
+            %
+            if isempty(external),
+                status.external = 0;
+            else
+                status.external = 1;
+            end
             %
         elseif isel == 5, 
             %
@@ -628,7 +680,7 @@ while isel >= 0,
             smakecmd = '';
             %
             [dkeparam,paths.dkeparam,fileids.dkeparam,newstruct] = ...
-                imake_struct_jd(dkeparam,'dkeparam',paths.dkeparam,fileids.dkeparam,equil,basestr,smakecmd,status.dkeparam,'DKEPARAM',workdir,dkeparam_default,opt_gui,0,1,1,0);
+                imake_struct_jd(dkeparam,'dkeparam',paths.dkeparam,fileids.dkeparam,equil,basestr,smakecmd,'',status.dkeparam,'DKEPARAM',workdir,dkeparam_default,opt_gui,0,1,1,0);
             %
             if ~isempty(dkeparam) && ~isfield(dkeparam,'rho_S'),
                 dkeparam.rho_S = 20;
@@ -661,7 +713,7 @@ while isel >= 0,
             smakecmd = 'imake_equil_jd';
             %
             [equil,paths.equil,fileids.equil,newstruct] = ...
-                imake_struct_jd(equil,'equil',paths.equil,fileids.equil,signs,basestr,smakecmd,status.equil,'EQUIL',workdir,'',opt_gui,0,0,1,0);
+                imake_struct_jd(equil,'equil',paths.equil,fileids.equil,signs,basestr,smakecmd,external,status.equil,'EQUIL',workdir,'',opt_gui,0,0,1,0);
             %
             % structure interdependences
             %
@@ -693,7 +745,7 @@ while isel >= 0,
             smakecmd = 'imake_wave_jd';
             %
             [waves,paths.waves,fileids.waves,newstruct] = ...
-                imake_struct_jd(waves,'wave',paths.waves,fileids.waves,equil,basestr,smakecmd,status.waves,'WAVE',workdir,'',opt_gui,1,1,0);
+                imake_struct_jd(waves,'wave',paths.waves,fileids.waves,equil,basestr,smakecmd,external,status.waves,'WAVE',workdir,'',opt_gui,1,1,0);
             %
             % structure interdependences
             %
@@ -722,7 +774,7 @@ while isel >= 0,
             smakecmd = 'imake_ohm_jd';
             %
             [ohm,paths.ohm,fileids.ohm,newstruct] = ...
-                imake_struct_jd(ohm,'ohm',paths.ohm,fileids.ohm,equil,basestr,smakecmd,status.ohm,'OHM',workdir,'',opt_gui,0,1,1);
+                imake_struct_jd(ohm,'ohm',paths.ohm,fileids.ohm,equil,basestr,smakecmd,external,status.ohm,'OHM',workdir,'',opt_gui,0,1,1);
             %
             % structure interdependences
             %
@@ -751,7 +803,7 @@ while isel >= 0,
             smakecmd = 'imake_transp_jd';
             %
             [transpfaste,paths.transpfaste,fileids.transpfaste,newstruct] = ...
-                imake_struct_jd(transpfaste,'transpfaste',paths.transpfaste,fileids.transpfaste,equil,basestr,smakecmd,status.transpfaste,'TRANSP',workdir,'',opt_gui,0,1,1);
+                imake_struct_jd(transpfaste,'transpfaste',paths.transpfaste,fileids.transpfaste,equil,basestr,smakecmd,external,status.transpfaste,'TRANSP',workdir,'',opt_gui,0,1,1);
             %
             % structure interdependences
             %
@@ -785,7 +837,7 @@ while isel >= 0,
             smakecmd = 'imake_ripple_yp';
             %
             [ripple,paths.ripple,fileids.ripple,newstruct] = ...
-                imake_struct_jd(ripple,'ripple',paths.ripple,fileids.ripple,equil,basestr,smakecmd,status.ripple,'RIPPLE',workdir,'',opt_gui,0,1,1);
+                imake_struct_jd(ripple,'ripple',paths.ripple,fileids.ripple,equil,basestr,smakecmd,external,status.ripple,'RIPPLE',workdir,'',opt_gui,0,1,1);
             %
             % structure interdependences
             %
@@ -885,14 +937,44 @@ while isel >= 0,
             %
             irunhxr_jd(workdir,basestr,'',id_simul,equil,dkeparam,dkedisplay,output);
             %
+        elseif isel == 4,
+            %
+            % GENERATE LUKE RUN SCRIPT
+            %
+            imake_rundke_jd(paths,fileids,status,dkeparam.rho_S,workdir,id_simul_o,opt_gui);
+            %
+        elseif isel == 4,
+            %
+            % GENERATE LUKE RUN SCRIPT
+            %
+            imake_rundke_jd(paths,fileids,status,dkeparam.rho_S,workdir,id_simul_o,opt_gui);
+            %
+        elseif isel == 4,
+            %
+            % GENERATE LUKE RUN SCRIPT
+            %
+            imake_rundke_jd(paths,fileids,status,dkeparam.rho_S,workdir,id_simul_o,opt_gui);
+            %
+        elseif isel == 4,
+            %
+            % GENERATE LUKE RUN SCRIPT
+            %
+            imake_rundke_jd(paths,fileids,status,dkeparam.rho_S,workdir,id_simul_o,opt_gui);
+            %
         elseif isel == 16,
+            %
+            % GENERATE LUKE RUN SCRIPT
+            %
+            imake_rundke_jd(paths,fileids,status,dkeparam.rho_S,workdir,id_simul_o,opt_gui);
+            %
+        elseif isel == 17,
             %
             disp('-----> Type ''return'' to return to menu');    
             disp('-----> Type ''dbquit'' to abort run and leave workspace.');
             disp(' ');
             keyboard
             % 
-        elseif isel == 17,
+        elseif isel == 18,
             %
             close all;    
             % 
@@ -1070,7 +1152,7 @@ function [dkepath,paths,fileids,status] = imake_dkepath_jd(basestr,workdir,dkepa
 	smakecmd = '';
 	%
 	[dkepath,paths.dkepath,fileids.dkepath,newstruct] = ...
-		imake_struct_jd(dkepath,'dkepath',paths.dkepath,fileids.dkepath,'',basestr,smakecmd,status.dkepath,'PATH',workdir,dkepath_default,opt_gui,0,0,1,0);
+		imake_struct_jd(dkepath,'dkepath',paths.dkepath,fileids.dkepath,'',basestr,smakecmd,'',status.dkepath,'PATH',workdir,dkepath_default,opt_gui,0,0,1,0);
 	%
 	% structure interdependences
 	%
