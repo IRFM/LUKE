@@ -87,7 +87,7 @@ if exist(['helmex77.',mexext]) == 3,
 	Rp_helmex = R(1,1);
 	Bt_helmex = BPHI(1,1);
 %
-    if display_opt ~= 0,
+    if display_opt >= 1,
         disp('------------------------------------------------------');
         disp(['Minor radius from guess (m) : ',num2str(ap_in),', from HELMEX77 (kept): ',num2str(ap_helmex)])
         disp(['Major radius from guess (m) : ',num2str(Rp_in),', from HELMEX77 (kept): ',num2str(Rp_helmex)])
@@ -105,7 +105,7 @@ if exist(['helmex77.',mexext]) == 3,
 %		
 %		Transfer to the equil_magnetic structure
 %
-    if display_opt ~= 0,
+    if display_opt  >= 2,
         figure('name','JETh77 separatrix'),
         [ax] = graph1D_jd(R_sep0 - Rp,Z_sep0 - Zp,0,0,'R - R_{p} (m)','Z - Z_{p} (m)','JETh77 separatrix',NaN,'','','-','none','b',2);        
         [ax] = graph1D_jd(R(end,:) - Rp_helmex,Y_helmex(end,:),0,0,'R - R_{p} (m)','Z - Z_{p} (m)','JETh77 separatrix',NaN,'','','--','none','r',2);
