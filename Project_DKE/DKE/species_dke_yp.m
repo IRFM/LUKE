@@ -13,7 +13,7 @@ npsi = length(pne);
 pzni = zeros(nz,npsi);
 %
 if sum(zZi>1) > 1%More than one impurity species
-	 % need each species density from impurity transport code
+	 error('need each species density from impurity transport code')
 elseif sum(zZi>1) == 1%One impurity species
 	 Zimp = max(zZi);
 	 pnhyd = pne.*(Zimp - pZeff)/(Zimp - 1);  

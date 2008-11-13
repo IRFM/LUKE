@@ -1,15 +1,21 @@
-function [ppsin,ppsi_apRp,theta,x,y,Bx,By,BPHI,pBpp,pq_Rpap,pj,pmag,Ip_test,prho,pspsin,pspsinT] = idealequilcyl_yp(ap,Rp,Zp,Bt,Ip,qmin_Rpap,eq,qopt,npsi,ntheta);
+function [ppsin,ppsi_apRp,theta,x,y,Bx,By,BPHI,pBpp,pq_Rpap,pj,pmag,Ip_test,prho,pspsin,pspsinT] = idealequilcyl_yp(ap,Rp,Zp,Bt,Ip,qmin_Rpap,eq,qopt,npsi,ntheta)
 %
 % Create ideal cylindrical magnetic equilibrium with circular concentric flux surfaces from parametric description
 %
 % by Y.Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and J. Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-[qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha,kB] = pc_dke_yp;
+if nargin < 10,
+    ntheta = 65;% 65 poloidal grid points by default
+end
+%
+if nargin < 9,
+    npsi = 101;% 101 radial profile grid points by default
+end
+%
+[qe,me,mp,mn,e0,mu0] = pc_dke_yp;
 %
 Bpa = mu0*Ip*1e6/(2*pi*ap);% Poloidal Field at the edge, Ampere's theorem (circular plasma cross-section). Moreover, in the following expressions, term of order (ap/Rp)^2 or higher are neglected.	
 qmax_Rpap = abs(Bt/Bpa);%Normalized cylindrical safety factor at the plasma edge
-%qmax = qmax_Rpap*ap/Rp;%Cylindrical safety factor at the plasma edge
-%
 %
 prho = linspace(0,1,npsi);%Initial grid
 theta = linspace(0,2*pi,ntheta);%Initial grid
@@ -27,17 +33,17 @@ else
 	 pq_Rpap = qmax_Rpap*ones(1,npsi);% Current profile defined with constant q (uniform current density)
 	 pdq_Rpap = zeros(1,npsi);
 end
+%
 pBpp = sign(Bpa)*prho*abs(Bt)./pq_Rpap;
 %
 spBpp = triu(repmat((pBpp(1:npsi-1) + pBpp(2:npsi))'/2,[1,npsi-1]));
 pdprho = diff(prho);
 ppsi_apRp = [0,ap^2*integral_dke_jd(pdprho,spBpp,1)'];%psi_apRp = psi(poloidal usual)*ap/Rp for the cylindrical limit
 ppsin = ppsi_apRp/max(ppsi_apRp);%Uniform normalized magnetic flux surface grid
+%
 pspsin = sqrt(ppsin);
 %
-prho = x(:,1).'/x(end,1);
-%
-ppsiT = pi*Bt*prho.^2;%Toroidal magnetic flux
+ppsiT = pi*Bt*ap^2*prho.^2;%Toroidal magnetic flux
 ppsinT = ppsiT/ppsiT(end);%Normalized toroidal magnetic flux
 pspsinT = sqrt(ppsinT);
 %

@@ -12,6 +12,12 @@ end
 if nargin < 3,
     l_opt = NaN;
 end
+if nargin < 2,
+    shotnum = '';
+end
+if nargin < 1,
+    data = '';
+end
 %
 l_data = '';
 %
