@@ -1,0 +1,173 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=iso-8859-1">	
+	<title>LUKE tutorial</title>
+	
+    <link href="dropdown.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="menututorial.css" media="all" rel="stylesheet" type="text/css" />
+    
+    <style type="text/css">	
+        
+       p.titre2 { color: #000000; font-family: Verdana,Arial; font-size: 18px; text-align: justify;font-weight: bold ;}
+       p.titre3 { color: #000000; font-family: Verdana,Arial; font-size: 14px; text-align: justify;font-weight: bold ;}
+       p.texte { color: #000000; font-family: Verdana,Arial; font-size: 12px; text-align: justify; }
+       p.textei { color: #000000; font-family: Verdana,Arial; font-size: 12px; font-style: italic; text-align: justify; }
+	   p.texter { color: #FF0000; font-family: Verdana,Arial; font-size: 12px; text-align: justify; }
+	   p.textec { color: #0000FF; font-family: Verdana,Arial; font-size: 12px; text-align: justify; font-weight: bold ;}
+	   p.texte_centering { color: #000000; font-family: Verdana,Arial; font-size: 12px; text-align: center; font-weight: bold ;}
+	   
+	   span.texter{ color: #FF0000; font-family: Verdana,Arial; font-size: 12px;}
+	   span.textec{ color: #0000FF; font-family: Verdana,Arial; font-size: 12px;font-weight: bold ;}
+	   
+	   img.centered {display: block;margin-left: auto;margin-right: auto }
+	   
+    </style>
+    
+    <script type="text/javascript"> 
+
+	</script>
+	
+</head>
+<body>
+
+<ul id="nav" class="dropdown dropdown-horizontal">
+	<li><a href="#intro">Introduction</a></li>
+	<li class="dir">Getting started
+		<ul>
+			<li class="dir">Interactive mode
+				<ul>
+				<li><a href="#interactive">Initiate interactive mode</a></li>
+				<li><a href="#changeworkdir">Change working directory</a></li>
+				<li><a href="#savedata">Save current data in file</a></li>
+				<li><a href="#dkepath">Load/create/modify 'dkepath' structure (LUKE paths)</a></li>
+				<li><a href="#dkeparam">Load/create/modify 'dkeparam' structure (LUKE parameters)</a></li>
+				<li><a href="#equil">Load/create/modify 'equil' structure (Plasma equilibrium)</a></li>
+				<li><a href="#wave">Load/create/modify 'wave' structures (RF waves)</a></li>
+				<li><a href="#ohm">Load/create/modify 'ohm' structure (Ohmic E-field)</a></li>
+				<li><a href="#transpfaste">Load/create/modify 'transpfaste' structure (Fast electron transport)</a></li>
+				<li><a href="#ripple">Load/create/modify 'ripple' structure (Magnetic ripple losses)</a></li>
+				</ul>
+			<li><a href="#scripts">Working with scripts</a></li>
+		</ul>
+	</li>
+	<li><a href="#organisation">Code organisation</li>
+</ul>
+<br><br><br>
+
+
+
+<p class="titre2"><a name="intro">Introduction</a></p>
+<p class="texte">LUKE (<b>LU</b> solver for <b>K</b>inetic <b>E</b>quation) solves the linearized 3-D (1-D in configuration space, 2-D in momentum space) relativistic bounce-averaged 
+electron Fokker-Planck equation. It is primarily dedicated to current drive simulations, but can be used for other purposes like some heating problems, 
+runaway physics, fast electron bremsstrahlung or magnetic ripple losses, ...</p>
+
+<p class="texte">It has been interfaced with a set of modules (magnetic equilibrium, ray-tracing, full-wave</p>
+
+
+
+<p class="titre2"><a name="starting">Getting Started</a></p>
+<p class="texte">LUKE can be run interactively or with scripts. Interactive mode is
+the easiest way to start with the code, while scripts allow specific work invoking user defined loops for
+parametric studies, for example. It is possible to generate automatically scripts from the interactive mode, which may be modified later 
+for specific calculations. Both modes are illustrated in this tutorial.</p> 
+
+<p class="titre3">Interactive mode</p>
+
+<p class="texte">Launch a MatLab® session and follow the tutorial step by step.</p>
+
+<p class="texte"><b><a name="interactive">0. Initiate interactive mode</a></b>: From Matlab command window, type: <span class="texter">irunluke_jd</span> and RETURN</p>
+
+<p class="texte">Two questions must be answered:</p>
+
+<p class="textei">Graphical User Interface mode (yes:1,no:0) ? [0] : </p>
+
+<p class="texte">- 0: the program uses the simple command line interface for navigating between the directories and searching files. 
+Efficient, when MatLab is working on a remote server with a slow network connection.</p>
+<p class="texte">- 1: the program uses the system window for navigating between the directories and searching files. 
+Convenient but only when MatLab is working on the local computer or a remote server with a fast network connection.</p>
+
+<p class="textei">Enter the machine name (such as 'ITER', 'TCV', 'TS', 'JET', 'COMPASS', 'SST1', 'EAST', ... ? [ ] : ITER</p>
+
+<p class="texte">Enter a name for the machine you are working on. Here, we are considering the tokamak ITER.</p>
+
+<br><img class="centered" src="irunluke_jd.jpg"><br><br>
+
+<p class="texte">After typing RETURN, the main menu of the interactive mode appears, with a area displaying the status of the simulation. </p>
+
+<br><img class="centered" src="main_menu.jpg"><br><br>
+
+<p class="texte_centering">____________________</p><br>
+
+<p class="texte"><b><a name="changeworkdir">1. Specify work directory</a></b>: Choose main menu option <span class="texter">3</span>.</p>
+
+<p class="texte">It is possible to select directly the work directory whose name is indicated by selecting option <span class="texter">1</span>
+(simple dot unix command), 
+or to create a new one with option <span class="texter">0</span>. In the latter case, the name of the new directory must be entered, and after typing 
+RETURN, it must be confirmed that this new directory is the work one by selecting option <span class="texter">1</span> again. It is 
+always possible to cancel the procedure by selecting option <span class="texter">-1</span> (back to the main menu), 
+change the work directory by selecting option <span class="texter">2</span>,
+(double dot unix command) and navigate in the directory tree, or to create a new work subdirectory in the previously created one. 
+Once confirmed, the main menu is displayed, and the work directory is indicated in the status area.</p>
+
+<br><img class="centered" src="workingdir_menu.jpg"><br><br>
+
+<p class="texte_centering">____________________</p><br>
+
+<p class="texte"><b><a name="savedata">2. Save current data in file</a></b>: Choose main menu option <span class="texter">2</span>.</p>
+
+<p class="texte">Type <span class="textc">RETURN</span> or another name of your choice before RETURN. All data of the simulation 
+are saved in the LUKE_DATA_ITER.mat binary file. </p>
+
+<br><img class="centered" src="save_menu.jpg"><br><br>
+
+<p class="texte_centering">____________________</p><br>
+
+<p class="texte"><b><a name="dkepath">3. Load/create/modify 'dkepath' structure (LUKE paths)</a></b>: Choose main menu option <span class="texter">5</span>.</p>
+
+<br><img class="centered" src="dkepath_menu.jpg"><br><br>
+
+<p class="texte_centering">____________________</p><br>
+
+<p class="texte"><b><a name="dkeparam">4. Load/create/modify 'dkeparam' structure (LUKE parameters)</a></b>: Choose main menu option <span class="texter">6</span>.</p>
+
+<br><img class="centered" src="dkeparam_menu.jpg"><br><br>
+
+<p class="texte_centering">____________________</p><br>
+
+<p class="texte"><b><a name="equil">5. Load/create/modify 'equil' structure (Plasma equilibrium)</a></b>: Choose main menu option <span class="texter">7</span>.</p>
+
+<p class="texte_centering">____________________</p><br>
+
+<p class="texte"><b><a name="wave">6.  Load/create/modify 'wave' structures (RF waves)</a></b>: Choose main menu option <span class="texter">8</span>.</p>
+
+<p class="texte_centering">____________________</p><br>
+
+<p class="texte"><b><a name="ohm">7. Load/create/modify 'ohm' structure (Ohmic E-field)</a></b>: Choose main menu option <span class="texter">9</span>.</p>
+
+<p class="texte_centering">____________________</p><br>
+
+<p class="texte"><b><a name="transpfaste">8. Load/create/modify 'transpfaste' structure (Fast electron transport)</a></b>: Choose main menu option <span class="texter">10</span>.</p>
+
+<p class="texte_centering">____________________</p><br>
+
+<p class="texte"><b><a name="ripple">9. Load/create/modify 'ripple' structure (Magnetic ripple losses)</a></b>: Choose main menu option <span class="texter">11</span>.</p>
+
+<p class="texte_centering">____________________</p><br>
+
+
+
+
+
+<p class="titre3"><a name="scripts">Working with scripts</a></p>
+
+
+<p class="titre2"><a name="organisation">Code organisation</a></p>
+
+
+
+
+
+</body>
+</html>
