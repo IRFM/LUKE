@@ -712,14 +712,19 @@ if options.graph
 % paths in PATH have to be separated by a colon. Her is an example how the final
 % Path should look like:  ...;C:\WINNT\System32;...;C:\GraphViz\bin
 % (Note that this should have been done automatically during GraphViz installation)
+            if strcmp(computer,'MAC'),%for bug on MAC OS X with GTK+ lib
+                render = ':quartz ';
+            else
+                render = ' ';
+            end
 
-			eval(['!' dot_exec ' -Tcmap -Tpng ' mdotfile ...
+			eval(['!' dot_exec ' -Tcmap -Tpng' render mdotfile ...
 				' -o ' fullfile(options.htmlDir,mdir{i},[dotbase '.map']) ... 
 				' -o ' fullfile(options.htmlDir,mdir{i},[dotbase '.png'])])
 			% use '!' rather than 'system' for backward compability
 		catch
 			fprintf('failed.');
-		end
+        end
 		fprintf('\n');
 		fid = openfile(fullfile(options.htmlDir,mdir{i},...
 			[dotbase options.extension]),'w');
