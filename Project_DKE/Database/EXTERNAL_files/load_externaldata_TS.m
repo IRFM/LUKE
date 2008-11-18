@@ -3,6 +3,9 @@ function external = load_externaldata_TS(workdir,shotnum,shotime,t1,t2)
 % This function loads data from TS database
 %
 external = '';
+basestr = 'TS';
+%
+addpath('/usr/local/sources_lib/matlab6');
 %
 if exist('tsbase','file') ~= 3,
     disp('-----> Access to the TS database is not granted.')
@@ -44,9 +47,9 @@ while 1,
     end
     %
     [flag_LH,LH] = load_LH_tsbase_yp(shotnum,certif_thyb,str2num(shotime),t1,t2,basestr);
-    if isempty(LH),%thyb data are not documented for this shot and this certification
+    if isempty(LH) || ~flag_LH,%thyb data are not documented for this shot and this certification
         disp(['WARNING: No ''thyb'' data do not exist for shot #',shotnum,' and certification ',int2str(certif_thyb),'. Please try another certification or exit.']);
-    else
+    else        
         break
     end
 end		
@@ -59,7 +62,7 @@ while 1,
     end
     %
     [flag_EC,EC] = load_EC_tsbase_yp(shotnum,certif_tfce,str2num(shotime),t1,t2,basestr);
-    if isempty(EC),%tfce data are not documented for this shot and this certification
+    if isempty(EC) || ~flag_EC,,%tfce data are not documented for this shot and this certification
         disp(['WARNING: No ''tfce'' data do not exist for shot #',shotnum,' and certification ',int2str(certif_tfce),'. Please try another certification or exit.']);
     else
         break

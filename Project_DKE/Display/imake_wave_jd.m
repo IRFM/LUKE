@@ -125,7 +125,7 @@ if i_opt == 0,% use data from from external database
             %
             if length(a_opts) > 1,
                 %
-                a_opt = inputt_dke_yp(['Please select an antenna : ',a_str],1,1:length(a_opts),'',[1,1]);
+                a_opt = input_dke_yp(['Please select an antenna : ',a_str],1,1:length(a_opts),'',[1,1]);
                 %
             else
                 a_opt = a_opts;
@@ -276,7 +276,7 @@ if w_opt == 0; % C3PO Calculation
         nchi = 1;
         n_rf_list = 0;
         %
-        rayparam.reflection = 1;
+        reflection = 1;
         %
     else
         %        
@@ -298,7 +298,7 @@ if w_opt == 0; % C3PO Calculation
         n_rf_list = max([1,floor(omega_rf/(qe*max(equil.ptBPHI(end,:))/me))]):...
             ceil(omega_rf/(qe*min(equil.ptBPHI(end,:))/me));
         %
-        rayparam.reflection = 0;
+        reflection = 0;
         %
     end
     %
@@ -348,24 +348,6 @@ if w_opt == 0; % C3PO Calculation
         %
     end
     %
-    % RAY, WAVE, AND DISPLAY PARAMETERS
-    %
-    c3poparam_file = which('C3POPARAM.mat');
-    [c3poparam_file,c3poparam_path] = igetfile_jd(opt_gui,'*.*','Please select the C3PO default parameters file',c3poparam_file);
-    if c3poparam_file == 0,
-        return
-    end
-    load([c3poparam_path,c3poparam_file],'fitparam','rayparam','C3POparam');
-    %
-    c_opt = input_dke_yp('Do you want to see/modify the C3PO parameters [y/n]','n',{'y','n'},'',[1,1]);
-    if strcmp(c_opt,'y'),
-        %
-        fitparam = imod_struct_jd(fitparam,'fitparam',1);
-        rayparam = imod_struct_jd(rayparam,'rayparam',1);
-		C3POparam = imod_struct_jd(C3POparam,'C3POparam',1);
-        %
-    end
-    %
     mmode = input_dke_yp('Polarization : (1) m (-1) p, (slow/fast LH wave: -1/+1, O/X mode: -1/+1)',mmode,{-1,1},'',[1,1]);
     %
     %kmode = input_dke_yp('Plasma model for wave propagation : (0:cold, 1:warm, 2:kinetic non rel., 3:weakly rel., 4:fully rel.)',0,0:4,'',[1,1]);
@@ -400,13 +382,32 @@ if w_opt == 0; % C3PO Calculation
     waveparam.nchi = nchi;
     %waveparam.a_sdNpar = a_sdNpar;
     %
-    rayparam.tensortype = kmode;
-    %
     wavedisplay.equilibrium = 0;
     wavedisplay.p_opt = p_opt;%Printing or saving option of the figures
     %
     if ~isfield(rayinit,'id'),
         rayinit.id = input_dke_yp('The existing rayinit structure has no ''id'' field. Please provide an id','');%backward compatibility
+    end
+    %
+    % RAY, WAVE, AND DISPLAY PARAMETERS
+    %
+    c3poparam_file = which('C3POPARAM.mat');
+    [c3poparam_file,c3poparam_path] = igetfile_jd(opt_gui,'*.*','Please select the C3PO default parameters file',c3poparam_file);
+    if c3poparam_file == 0,
+        return
+    end
+    load([c3poparam_path,c3poparam_file],'fitparam','rayparam','C3POparam');
+    %
+    rayparam.tensortype = kmode;
+    rayparam.reflection = reflection;
+    %
+    c_opt = input_dke_yp('Do you want to see/modify the C3PO parameters [y/n]','n',{'y','n'},'',[1,1]);
+    if strcmp(c_opt,'y'),
+        %
+        fitparam = imod_struct_jd(fitparam,'fitparam',1);
+        rayparam = imod_struct_jd(rayparam,'rayparam',1);
+		C3POparam = imod_struct_jd(C3POparam,'C3POparam',1);
+        %
     end
     %
     % C3P0 ray tracing
