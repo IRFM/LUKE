@@ -7,7 +7,7 @@
 fitparam.method = 'pchip';%nearest,spline,pchip,cubic
 fitparam.nharm = 32;%Number of harmonics in the magnetic equilibrium interpolation (less than ntheta_equil/2)
 fitparam.ngridresample = 1001;%Number of grid points for resampling the radial profile of magnetic equilibrium parameters
-fitparam.opt_load = 1;%Reload existing vectorial magnetic equilibrium (1) or overwrite it (0).
+fitparam.opt_load = 0;%Reload existing vectorial magnetic equilibrium (1) or overwrite it (0).
 fitparam.mode_equil = 1;%Magnetic equilibrium grid type: (1): (psi-theta), (2): (x-y)
 %
 % Global parameters for the ray-tracing
