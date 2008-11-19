@@ -11,18 +11,33 @@ id = 'JETh77';% scenario identification
 %
 % Equilibrium parameters
 %
-ap = 0.9;%  Plasma minor radius on LFS midplane (m)
-Rp = 3.0;%  Plasma major radius on axis (m)
-Zp = 0;%  Global plasma vertical shift (m)
+% Here find the definitions for the shape of the separatrix
 %
-xpoint(1) = 1.687;%Vertical position of the top X point
-xpoint(2) = 0.466;%Horizontal position of the top X point
-xpoint(3) = 0;%Angle between the separatrix and the horizontal plane for the top X point (degree)
-xpoint(4) = 0;%Angle between the separatrix and the horizontal plane for the top X point (degree)
-xpoint(5) = 2.001;%Vertical position of the bottom X point (always positive value)
-xpoint(6) = 0.568;%Horizontal position of the bottom X point
-xpoint(7) = 22.46;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
-xpoint(8) = 67.92;%Angle between the separatrix and the horizontal plane for the bottom X point (degree)
+%   - R_sep = (R_sep_max + R_sep_min)/2, for the guess.
+%   - a_sep = (R_sep_max - R_sep_min)/2, for the guess.
+%   - Z_sep = Z(R_sep_max), for the guess.
+%   - elongation_sep = (Z_sep_max - Z_sep_min)/2 (always positive) (xpoint(1) + xpoint(5) is approximately elongation_sep*a_sep)
+%   - upper_triangularity_sep = (R_sep - R(Z_sep_max))/2 (always positive) xpoint(2) = upper_triangularity_sep*a_sep
+%   - lower_triangularity_sep = (R_sep - R(Z_sep_min))/2 (always positive) xpoint(6) = lower_triangularity_sep*a_sep
+%   
+%
+% if no upper X-point exists, xpoint(2) = xpoint(3) = 0. In this case,xpoint(1) is the upper altitude of the separatrix in minor radius unit.
+% if no lower X-point exists, xpoint(7) = xpoint(8) = 0. In this case,xpoint(5) is the lower altitude of the separatrix in minor radius unit (always positive).
+% if an upper X-point exists, xpoint(2) + xpoint(3) close to 90 degrees
+% if an lower X-point exists, xpoint(7) + xpoint(8) close to 90 degrees
+%
+R_sep = 3.0;%  Geometrical major radius of the separatrix (m)
+a_sep = 0.9;%  Geometrical minor radius of the separatrix (m)
+Z_sep = 0.0;%  Geometrical vertical shift of the separatrix (m)
+%
+xpoint(1) = 1.687;%Upper altitude X point in minor radius unit
+xpoint(2) = 0.466;%Upper triangularity in minor radius unit
+xpoint(3) = 0;%Upper separatrix angle (R,X)  (LFS, degrees)
+xpoint(4) = 0;%Upper separatrix angle (-R,X) (HFS, degrees)
+xpoint(5) = 2.001;%Lower altitude X point in minor radius unit (always positive)
+xpoint(6) = 0.568;%Lower triangularity in minor radius unit
+xpoint(7) = 22.46;%Lower separatrix angle (R,X)  (LFS, degrees)
+xpoint(8) = 67.92;%Lower separatrix angle (-R,X)  (HFS, degrees)
 %
 npsi = 101;%ONLY 101 radial profile grid points for HELMEX77
 ntheta = 65;%ONLY 65 poloidal grid points for HELMEX77
@@ -65,19 +80,19 @@ xZeff = 0.5;%Radial normalized position at which the derivative is maximum
 %
 % Magnetic data
 %
-[ppsin,ppsi_apRp,theta,x,y,Bx,By,BPHI,pBpp,pq_Rpap,pj,pmag,Ip_test] = idealequilcyl_yp(ap,Rp,Zp,Bt,Ip,qmin*Rp/ap,eq,qopt,npsi,ntheta);%Cylindrical magnetic equilibrium
+[ppsin,ppsi_apRp,theta,x,y,Bx,By,BPHI,pBpp,pq_Rpap,pj,pmag,Ip_test] = idealequilcyl_yp(a_sep,R_sep,Z_sep,Bt,Ip,qmin*R_sep/a_sep,eq,qopt,npsi,ntheta);%Cylindrical magnetic equilibrium
 %
 [prho,pTe,pne,pzTi,pzni,zZi,zmi,fi,pkin] = idealprof_yp(Zi,mi,fi,Te0,Tea,eTe1,eTe2,ne0,nea,ene1,ene2,Ti0,Tia,eTi1,eTi2,Zeff0,Zeffa,eZeff,xZeff,npsi);%Profiles
 %
 figure('Name','Guess magnetic equilibrium'),
 subplot(2,2,1),plot(prho,pj/1e6),xlabel('\rho');ylabel('j (MA/m^2)');title(['I_p = ',num2str(round(Ip_test)/1e6),' MA'])
 subplot(2,2,2),plot(prho,pBpp),xlabel('\rho');ylabel('B_p(T)');title(['B_t ',num2str(Bt),' T'])
-subplot(2,2,3),plot(prho,pq_Rpap*ap/Rp),xlabel('\rho');ylabel('q')
+subplot(2,2,3),plot(prho,pq_Rpap*a_sep/R_sep),xlabel('\rho');ylabel('q')
 subplot(2,2,4),plot(prho,ppsin),xlabel('\rho');ylabel('\psi_n')
 %
 pj_min = min(pj); 
 if pj_min < 0,pj = pj - pj_min;end,%pj must be non-negative. Only the shape is considered and Ip for the total plasma current
-[equil_magnetic,prho_out,pspsin_out,pspsinT_out,pp_out] = equil_magnetic_helmex77_yp(ap,Rp,Zp,xpoint,Bt,Ip,ppsi_apRp*Rp/ap,pj,pkin,ntheta,1);
+[equil_magnetic,prho_out,pspsin_out,pspsinT_out,pp_out] = equil_magnetic_helmex77_yp(a_sep,R_sep,Z_sep,xpoint,Bt,Ip,ppsi_apRp*R_sep/a_sep,pj,pkin,ntheta,2);
 %
 [qe] = pc_dke_yp;
 figure('Name','Pressure profile'),
@@ -95,6 +110,7 @@ equil = conc_struct_jd(equil_magnetic,equil_prof);
 equil.id = id;
 %
 eval(['save EQUIL_',id,'.mat equil']);
+%
 
 
 
