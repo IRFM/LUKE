@@ -106,17 +106,17 @@ if exist(['helmex77.',mexext]) == 3,
 %		Transfer to the equil_magnetic structure
 %
     if display_opt  >= 2,
-        figure('name','JETh77 separatrix'),
-        [ax] = graph1D_jd(R_sep0 - Rp,Z_sep0 - Zp,0,0,'R - R_{p} (m)','Z - Z_{p} (m)','JETh77 separatrix',NaN,'','','-','none','b',2);        
-        [ax] = graph1D_jd(R(end,:) - Rp_helmex,Y_helmex(end,:),0,0,'R - R_{p} (m)','Z - Z_{p} (m)','JETh77 separatrix',NaN,'','','--','none','r',2);
+        figure('name','HELENA separatrix'),
+        [ax] = graph1D_jd(R_sep0 - Rp,Z_sep0 - Zp,0,0,'R - R_{p} (m)','Z - Z_{p} (m)','HELENA separatrix',NaN,'','','-','none','b',2);        
+        [ax] = graph1D_jd(R(end,:) - Rp_helmex,Y_helmex(end,:),0,0,'R - R_{p} (m)','Z - Z_{p} (m)','HELENA separatrix',NaN,'','','--','none','r',2);
         legend('Guess','HELENA');
-        [ax] = graph1D_jd(R_sep0(1,1) - Rp,Z_sep0(1,1) - Zp,0,0,'R - R_{p} (m)','Z - Z_{p} (m)','JETh77 separatrix',NaN,'','','none','+','b',2);
-        [ax] = graph1D_jd(R(end,1) - Rp_helmex,Y_helmex(end,1),0,0,'R - R_{p} (m)','Z - Z_{p} (m)','JETh77 separatrix',NaN,'','','none','*','r',2);
+        [ax] = graph1D_jd(R_sep0(1,1) - Rp,Z_sep0(1,1) - Zp,0,0,'R - R_{p} (m)','Z - Z_{p} (m)','HELENA separatrix',NaN,'','','none','+','b',2);
+        [ax] = graph1D_jd(R(end,1) - Rp_helmex,Y_helmex(end,1),0,0,'R - R_{p} (m)','Z - Z_{p} (m)','HELENA separatrix',NaN,'','','none','*','r',2);
         axis('equal')
 %
-        figure('name','JETh77 magnetic equilibrium')
-        [ax] = graph1D_jd(R(end,:),Zout(end,:),0,0,'R (m)','Z (m)','JETh77 separatrix',NaN,'','','--','none','r',2);
-        [ax] = graph1D_jd(R(end,1),Zout(end,1),0,0,'R (m)','Z (m)','JETh77 separatrix',NaN,'','','none','*','r',2);
+        figure('name','HELENA magnetic equilibrium')
+        [ax] = graph1D_jd(R(end,:),Zout(end,:),0,0,'R (m)','Z (m)','HELENA separatrix',NaN,'','','--','none','r',2);
+        [ax] = graph1D_jd(R(end,1),Zout(end,1),0,0,'R (m)','Z (m)','HELENA separatrix',NaN,'','','none','*','r',2);
         axis('equal')
     end
 %
