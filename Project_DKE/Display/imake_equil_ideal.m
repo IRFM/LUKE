@@ -25,9 +25,38 @@ if ~isnan(e_opt),% magnetic equilibrium data
     %
     shotime = num2str(shotime,'%6.4f');
     %
-    Rp = input_dke_yp('Plasma major radius on axis (m) (Rp = Inf for the cylindrical limit)',[],[0;Inf],'',[1,1]);
-    Zp = input_dke_yp('Plasma vertical position on axis (m)',0,'','',[1,1]);
-    ap = input_dke_yp('Plasma minor radius on LFS midplane (m)',[],[0;Rp],'',[1,1]);
+    R_sep = input_dke_yp('Geometrical major radius of the separatrix (m) (R_sep = Inf for the cylindrical limit)',[],[0;Inf],'',[1,1]);
+    Z_sep = input_dke_yp('Geometrical vertical shift of the separatrix (m)',0,'','',[1,1]);
+    a_sep = input_dke_yp('Geometrical minor radius of the separatrix (m)',[],[0;R_sep],'',[1,1]);
+    %
+    if e_opt == 1,
+        %
+        info_dke_yp(1,'Parametric description of the separatrix');
+        disp(' - R_sep = (R_sep_max + R_sep_min)/2, for the guess')
+        disp(' - a_sep = (R_sep_max - R_sep_min)/2, for the guess.')
+        disp(' - Z_sep = Z(R_sep_max), for the guess.')
+        disp(' - elongation_sep = (Z_sep_max - Z_sep_min)/2 (always positive) (xpoint(1) + xpoint(5) is approximately elongation_sep*a_sep)')
+        disp(' - upper_triangularity_sep = (R_sep - R(Z_sep_max))/2 (always positive) xpoint(2) = upper_triangularity_sep*a_sep')
+        disp(' - lower_triangularity_sep = (R_sep - R(Z_sep_min))/2 (always positive) xpoint(6) = lower_triangularity_sep*a_sep')
+        disp('------------------')
+        disp(' If no upper X-point exists, xpoint(2) = xpoint(3) = 0. In this case,xpoint(1) is the upper altitude of the separatrix in minor radius unit.')
+        disp(' If no lower X-point exists, xpoint(7) = xpoint(8) = 0. In this case,xpoint(5) is the lower altitude of the separatrix in minor radius unit (always positive).')
+        disp(' If an upper X-point exists, xpoint(2) + xpoint(3) is close to 90 degrees')
+        disp(' If an lower X-point exists, xpoint(7) + xpoint(8) is close to 90 degrees')
+        disp('------------------')
+        info_dke_yp(2,'Default values for xpoint correspond to a plasma with a circular poloidal cross-section.');
+        %
+        xpoint(1) = input_dke_yp('Upper altitude X point in minor radius unit',1,[0;Inf],'',[1,1]);
+        xpoint(2) = input_dke_yp('Upper triangularity in minor radius unit (m)',0,[],'',[1,1]);
+        xpoint(3) = input_dke_yp('Upper separatrix angle (R,X)  (LFS, degrees)',0,[],'',[1,1]);
+        xpoint(4) = input_dke_yp('Upper separatrix angle (-R,X) (HFS, degrees)',0,[],'',[1,1]);
+        xpoint(5) = input_dke_yp('Lower altitude X point in minor radius unit (always positive)',1,[0;Inf],'',[1,1]);
+        xpoint(6) = input_dke_yp('Lower triangularity in minor radius unit',0,[],'',[1,1]);
+        xpoint(7) = input_dke_yp('Lower separatrix angle (R,X)  (LFS, degrees)',0,[],'',[1,1]);
+        xpoint(8) = input_dke_yp('Lower separatrix angle (-R,X)  (HFS, degrees)',0,[],'',[1,1]); 
+        %
+        equil_data.xpoint = xpoint;
+    end    
     %
     Ip = input_dke_yp('Signed value of the plasma current (MA) (positive if clockwise in top view)',[],'','',[1,1]);
     Bt = input_dke_yp('Signed value of the toroidal magnetic field on axis (T) (positive if clockwise in top view)',[],'','',[1,1]);
@@ -39,10 +68,10 @@ if ~isnan(e_opt),% magnetic equilibrium data
     %
     if qopt == 1,
         %
-        if isinf(Rp),
-            qmin_Rpap = input_dke_yp('Safety factor q0 at plasma center, multiplied by Rp/ap',[],[0;Inf],'',[1,1]);
+        if isinf(R_sep),
+            qmin_Rpap = input_dke_yp('Safety factor q0 at plasma center, multiplied by R_sep/a_sep',[],[0;Inf],'',[1,1]);
         else
-            qmin_Rpap = Rp/ap*input_dke_yp('Safety factor q0 at plasma center',[],[0;Inf],'',[1,1]);
+            qmin_Rpap = R_sep/a_sep*input_dke_yp('Safety factor q0 at plasma center',[],[0;Inf],'',[1,1]);
         end
         disp('qe is calculated from Ampere''s law at the plasma edge with a circular plasma cross-section.')
         eq = input_dke_yp('Exponent for q radial profile',[],[],'',[1,1]);
@@ -52,30 +81,14 @@ if ~isnan(e_opt),% magnetic equilibrium data
         eq = NaN;    
     end
     %
-    equil_data.Rp = Rp;
-    equil_data.Zp = Zp;
-    equil_data.ap = ap;
+    equil_data.Rp = R_sep;
+    equil_data.Zp = Z_sep;
+    equil_data.ap = a_sep;
     equil_data.Ip = Ip;
     equil_data.Bt = Bt;
     equil_data.qopt = qopt;
     equil_data.qmin_Rpap = qmin_Rpap;
     equil_data.eq = eq;
-    %
-    if e_opt == 1,
-        %
-        info_dke_yp(1,'Shape of the separatrix');
-        %
-        xpoint(1) = input_dke_yp('Vertical position of the top X point (circular = 1) (m)',1,[0;Inf],'',[1,1]);
-        xpoint(2) = input_dke_yp('Horizontal position of the top X point (circular = 0) (m)',0,[],'',[1,1]);
-        xpoint(3) = input_dke_yp('Angle between the separatrix and the horizontal plane for the top X point (degree) (circular = 0)',0,[],'',[1,1]);
-        xpoint(4) = input_dke_yp('Angle between the separatrix and the horizontal plane for the top X point (degree) (circular = 0)',0,[],'',[1,1]);
-        xpoint(5) = input_dke_yp('Vertical position of the bottom X point (always positive value) (circular = 1) (m)',1,[0;Inf],'',[1,1]);
-        xpoint(6) = input_dke_yp('Horizontal position of the bottom X point (circular = 0) (m)',0,[],'',[1,1]);
-        xpoint(7) = input_dke_yp('Angle between the separatrix and the horizontal plane for the bottom X point (degree) (circular = 0)',0,[],'',[1,1]);
-        xpoint(8) = input_dke_yp('Angle between the separatrix and the horizontal plane for the bottom X point (degree) (circular = 0)',0,[],'',[1,1]); 
-        %
-        equil_data.xpoint = xpoint;
-    end
     %
 else % equilibrium profiles data
     %
