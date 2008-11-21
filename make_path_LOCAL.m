@@ -84,7 +84,7 @@ dkepath.pcluke = pcluke;
 %
 dkepath.hostname.laptopyves = 'peysson';%WARNING: for laptop, may change with connection status.
 %
-laptopyves.luke_root = [pwd,'/'];
+laptopyves.luke_root = [getenv('HOME'),'/CEA/Projets/LUKE/'];
 laptopyves.local_root = [getenv('HOME'),'/CEA/Projets/'];
 laptopyves.computer = 'MAC';%machine type and supported OS
 laptopyves.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
@@ -118,6 +118,22 @@ laptopjoan.compiler_opt.helmex = '-lblas -llapack';% Optional argument for helme
 laptopjoan.MUMPS.mex75 = [laptopjoan.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_ifort/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
 %
 dkepath.laptopjoan = laptopjoan;
+%
+% paths for runs on Pramod Sharma's laptop
+%
+dkepath.hostname.laptoppramod = 'promod';%WARNING: for laptop, may change with connection status.
+%
+laptoppramod.luke_root = [getenv('HOME'),'/LUKE/'];
+laptoppramod.local_root = [getenv('HOME'),'/'];
+laptoppramod.computer = 'GLNX86';%machine type and supported OS
+laptoppramod.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+%
+laptoppramod.mex75 = [laptoppramod.luke_root,'Project_DKE/MEX/Bin/laptoppramod/MATLAB75/'];
+laptoppramod.compiler_opt.helmex = '-lblas -llapack';% Optional argument for helmex compilation 
+%
+laptoppramod.MUMPS.mex75 = [laptoppramod.local_root,'Projet_Cronos/libs/MUMPS_4.7.3/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
+%
+dkepath.laptoppramod = laptoppramod;
 %
 % paths for runs on SUN workstation at IPP-Prag
 %
