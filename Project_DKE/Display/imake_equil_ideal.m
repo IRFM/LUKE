@@ -31,6 +31,7 @@ if ~isnan(e_opt),% magnetic equilibrium data
     %
     if e_opt == 1,
         %
+        disp(' ');
         info_dke_yp(1,'Parametric description of the separatrix');
         disp(' - R_sep = (R_sep_max + R_sep_min)/2, for the guess')
         disp(' - a_sep = (R_sep_max - R_sep_min)/2, for the guess.')
@@ -38,13 +39,15 @@ if ~isnan(e_opt),% magnetic equilibrium data
         disp(' - elongation_sep = (Z_sep_max - Z_sep_min)/2 (always positive) (Upper triangularity + Lower triangularity in minor radius unit (m) is approximately elongation_sep*a_sep)')
         disp(' - upper_triangularity_sep = (R_sep - R(Z_sep_max))/2 (always positive). Upper triangularity in minor radius unit (m) = upper_triangularity_sep*a_sep')
         disp(' - lower_triangularity_sep = (R_sep - R(Z_sep_min))/2 (always positive). Lower triangularity in minor radius unit (m) = lower_triangularity_sep*a_sep')
-        disp('------------------')
+        disp('----------------------------------------------------------------------')
         disp(' If no upper X-point exists, upper separatrix angles at LFS (R,X) and HFS (-R,X) sides have to be set to 0.')
         disp(' If no lower X-point exists, lower separatrix angles at LFS (R,X) and HFS (-R,X) sides have to be set to 0.')
         disp(' If an upper X-point exists, upper separatrix angles at LFS (R,X) + upper separatrix angles at LFS (-R,X) is close to 90 degrees')
         disp(' If an lower X-point exists, lower separatrix angles at LFS (R,X) + lower separatrix angles at LFS (-R,X) is close to 90 degrees')
-        disp('------------------')
+        disp('----------------------------------------------------------------------')
         info_dke_yp(2,'Default values for xpoint correspond to a plasma with a circular poloidal cross-section.');
+        disp('----------------------------------------------------------------------')
+        disp(' ');
         %
         xpoint(1) = input_dke_yp('Upper altitude X point in minor radius unit',1,[0;Inf],'',[1,1]);
         xpoint(2) = input_dke_yp('Upper triangularity in minor radius unit (m)',0,[],'',[1,1]);
