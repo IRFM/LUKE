@@ -293,7 +293,7 @@ while isel >= 0,
     %
     clc
     %
-    if isempty(isel) | ~isnumeric(isel) | ~any(isel == [-2:17]),
+    if isempty(isel) | ~isnumeric(isel) | ~any(isel == [-2:18]),
         isel = -1;
     end
     %
@@ -1048,6 +1048,9 @@ while isel >= 0,
 					logname(logname == 10) = [];
 					if strfind(logname,'decker'),
 						logname = 'jdecker';
+					end
+					if strfind(logname,'curchod'),
+						logname = 'lcurchod';
 					end
 				end
 			else

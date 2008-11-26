@@ -295,8 +295,8 @@ if w_opt == 0; % C3PO Calculation
         dsmin = 0.001;
         nd = 3;
         nchi = 4;
-        n_rf_list = max([1,floor(omega_rf/(qe*max(equil.ptBPHI(end,:))/me))]):...
-            ceil(omega_rf/(qe*min(equil.ptBPHI(end,:))/me));
+        n_rf_list = max([1,floor(omega_rf/(qe*max(abs(equil.ptBPHI(end,:)))/me))]):...
+            ceil(omega_rf/(qe*min(abs(equil.ptBPHI(end,:)))/me));
         %
         reflection = 0;
         %
@@ -313,9 +313,9 @@ if w_opt == 0; % C3PO Calculation
             % SPECTRAL WIDTH
             %
             launch.dNpar0 = input_dke_yp(['Spectral width :',...
-                '\n specify fixed value, or ',...
-                '\n type ''NaN'' if calculated from waist and focal point',...
-                '\n type ''0'' if minimum width within numerical constraints'],dNpar0,[0;Inf],'',[1,1]);
+                '\n - specify fixed value, or ',...
+                '\n - type ''NaN'' if calculated from waist and focal point, or ',...
+                '\n - type ''0'' if minimum width within numerical constraints'],dNpar0,[0;Inf],'',[1,1]);
             %
         end
         %
