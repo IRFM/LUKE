@@ -3,6 +3,7 @@ function external = load_externaldata_TCV(workdir,shotnum,shotime,t1,t2)
 % This function loads data from TCV database
 %
 external = '';
+basestr = 'TCV';
 %
 if ~exist('make_eqdsk.m','file'),
     disp('-----> Access to the TCV database is not granted.');
