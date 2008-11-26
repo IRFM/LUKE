@@ -137,11 +137,7 @@ elseif i_opt == 1, % use data from an existing equilibrium file
             return
         end
         %
-        Zeff = input('No measure of Zeff is available. Please provide an estimated value for Zeff [1] : ');
-        if isempty(Zeff) || ~isnumeric(Zeff) || Zeff < 1 || Zeff > 6,
-            disp('Zeff = 1 enforced');
-            Zeff = 1;
-        end
+        Zeff = input_dke_yp('No measure of Zeff is available. Please provide an estimated value for Zeff',1,[1;6],'',[1,1]);
         %
         e_opt = -2;% AMR equilibrium
         %
@@ -307,8 +303,10 @@ if type == 1 && n_opt <= 1,
     pTe = equil_prof_data.te(ishot,:);
     %
     if length(equil_prof_data.ti(ishot,:)) == 1,
-        disp('-----> No ion temperature specified, Ti=Te/6 enforced.');
-        pTi = pTe/6;
+        %
+        TeTi = input_dke_yp('No data on Ti was found. Please provide an estimated value for Te/Ti',6,'','',[1,1]);
+        %
+        pTi = pTe/TeTi;
     else
         pTi = equil_prof_data.ti(ishot,:);
     end
@@ -316,11 +314,9 @@ if type == 1 && n_opt <= 1,
     Zeff = equil_prof_data.zeff(ishot);
     %
     if isnan(Zeff),
-        Zeff = input('No measure of Zeff is available. Please provide an estimated value for Zeff [1] : ');
-        if isempty(Zeff) || ~isnumeric(Zeff) || Zeff < 1 || Zeff > 6,
-            disp('Zeff = 1 enforced');
-            Zeff = 1;
-        end
+        %
+        Zeff = input_dke_yp('No measure of Zeff is available. Please provide an estimated value for Zeff',3,[1;6],'',[1,1]);
+        %
     end
     %
     Zaxis = equil_prof_data.zaxis(ishot);
@@ -401,22 +397,26 @@ if n_opt >= 0 &&  e_opt ~= -2,
     %
 end
 %
-d_opt = input('Do you want to compare the pressure profiles? [y/n] : ','s');
-%
-if strcmp(d_opt,'y'),
+if exist('mp_magnetic','var'),
     %
-    % Verify consistency on pressure between profiles and EFIT
+    d_opt = input('Do you want to compare the pressure profiles? [y/n] : ','s');
     %
-    qe = pc_dke_yp;
+    if strcmp(d_opt,'y'),
+        %
+        % Verify consistency on pressure between profiles and EFIT
+        %
+        qe = pc_dke_yp;
+        %
+        mp_profiles = (equil_prof.pTe.*equil_prof.pne + sum(equil_prof.pzTi.*equil_prof.pzni,1))*qe*1e3;%pressure from Tene data
+        %
+        figure(14),clf
+        %
+        graph1D_jd(mrho,mp_profiles/1e5,0,0,'r/a','p (Bar)','',NaN,[0,1],NaN,'-','none','b',2,20,gca,0.9,0.7,0.7);
+        graph1D_jd(mrho,mp_magnetic/1e5,0,0,'','','',{'T_en_e + T_in_i','Equilibrium code'},[0,1],NaN,'-','none','r',2);
+        set(gca,'XTick',0:0.2:1);
+        print_jd(p_opt,[savename,'_p_comp']);
+    end
     %
-    mp_profiles = (equil_prof.pTe.*equil_prof.pne + sum(equil_prof.pzTi.*equil_prof.pzni,1))*qe*1e3;%pressure from Tene data
-    %
-    figure(14),clf
-    %
-    graph1D_jd(mrho,mp_profiles/1e5,0,0,'r/a','p (Bar)','',NaN,[0,1],NaN,'-','none','b',2,20,gca,0.9,0.7,0.7);
-    graph1D_jd(mrho,mp_magnetic*qe*1e3/1e5,0,0,'','','',{'T_en_e + T_in_i','Equilibrium code'},[0,1],NaN,'-','none','r',2);
-    set(gca,'XTick',0:0.2:1);
-    print_jd(p_opt,[savename,'_p_comp']);
 end
 %
 % sign management as most equilibrium codes do not account for these.
