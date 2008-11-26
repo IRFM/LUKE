@@ -14,6 +14,7 @@ dkeparam.grid_method = 1;%Pitch-angle grid calculation technique: (0): old metho
 dkeparam.nmhu_S = 91;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
 dkeparam.np_S = 101;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run) WARNING: must be adjusted so that effective momentum point number is larger than thepitch-angle one.
 dkeparam.pnmax_S = 15;%Maximum value of the flux momentum grid (pth_ref)
+dkeparam.rho_S = 20;% number of points for radial grid calculation
 %
 %Pitch-angle grid
 %
@@ -51,8 +52,9 @@ dkeparam.abs_lim = 0.95;%Relative level of RF power absorption that is accpeted 
 dkeparam.nit_rf = 20;%Maximum number of iteration in ray-tracing. Works only if rt_mode = 1 and more than one radial point (default = 1)
 dkeparam.prec_rf = 1e-2;%relative precision in RT-DKE iterations
 dkeparam.n_rf_list = [1,2,3];%List of harmonics in the Dql calculations
-dkeparam.delta_rt = 0.5;%smoothering parameter of quasilinear iterations
+dkeparam.delta_rt = 0.25;%smoothering parameter of quasilinear iterations
 dkeparam.Dparparmax = Inf;%Upper limit of the quasilinear diffusion coefficient. Important for low temperature plasmas et high power level for stability of the code
+dkeparam.npresmin = 1;% minimum number of resonant points for each ray and position
 %
 % Run mode
 %
