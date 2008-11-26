@@ -18,7 +18,7 @@ n_rf_list = dkeparam.n_rf_list;
 if isfield(dkeparam,'npresmin'),
     npresmin = dkeparam.npresmin;% minimum number of resonant points for numerical stability.
 else
-    npresmin = 1;
+    npresmin = 5;
 end
 %
 display_mode = display.display_mode;
