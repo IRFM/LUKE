@@ -18,7 +18,7 @@ n_rf_list = dkeparam.n_rf_list;
 if isfield(dkeparam,'npresmin'),
     npresmin = dkeparam.npresmin;% minimum number of resonant points for numerical stability.
 else
-    npresmin = 5;
+    npresmin = 1;
 end
 %
 display_mode = display.display_mode;
@@ -221,7 +221,7 @@ for iw = 1:length(waves),%
         smaskmin = imag(ray.sdNpar) == 0 & ray.sdNpar < sdNparmin;
         %
         if any(smaskmin),
-            info_dke_yp(2,['WARNING: wave #',num2str(iw),' ray #',num2str(iray),': dNpar increased for ',num2str(sum(smaskmin)),'/',num2str(length(smaskmin)),' data points for numerical stability.']);
+            info_dke_yp(2,['WARNING: wave #',num2str(iw),' ray #',num2str(iray),': dNpar increased for ',num2str(sum(smaskmin)),'/',num2str(length(smaskmin)),' data points for numerical stability. Average increase factor : ',num2str(mean(sdNparmin(smaskmin)./ray.sdNpar(smaskmin)))]);
             ray.sdNpar(smaskmin) = sdNparmin(smaskmin);
         end
         %
