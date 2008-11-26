@@ -437,7 +437,7 @@ end
 %
 if display_mode >1, close(h); end
 %
-mask_0 = 1:iX - 1;
+mask_0 = 1:uint32(iX - 1);
 %
 mask_p = mask_p(mask_0);%mask of indices in the momentum grid
 mask_m = mask_m(mask_0);%mask of indices in the pitch angle grid
