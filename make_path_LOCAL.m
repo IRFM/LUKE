@@ -129,7 +129,7 @@ laptoppramod.computer = 'GLNX86';%machine type and supported OS
 laptoppramod.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 laptoppramod.mex75 = [laptoppramod.luke_root,'Project_DKE/MEX/Bin/laptoppramod/MATLAB75/'];
-laptoppramod.compiler_opt.helmex = '-lblas -llapack';% Optional argument for helmex compilation 
+laptoppramod.compiler_opt.helmex = '-v FC=''ifort'' FLIBS=''-Wl,-rpath-link,/home/promod/matlab75/bin/glnx86 -L/home/promod/matlab75/bin/glnx86 -lmx -lmex -lmat -lm -Wl,-rpath,/opt/intel/mkl/10.0.1.014/lib/32 -L/opt/intel/mkl/10.0.1.014/lib/32 -lmkl_lapack -lmkl -lguide -lpthread''';%
 %
 laptoppramod.MUMPS.mex75 = [laptoppramod.local_root,'Projet_Cronos/libs/MUMPS_4.7.3/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
 %
