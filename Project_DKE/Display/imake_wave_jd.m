@@ -419,6 +419,7 @@ if w_opt == 0; % C3PO Calculation
     %
     wave.info.type = 'RT';
     wave.info.RT = 'C3PO';
+    wave.info.ftype = ftype;
     %
     if d_opt == 0,
         wave.launch = launch;
