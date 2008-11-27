@@ -264,7 +264,7 @@ if nr > 1,
     tit = 'J > 0 for co-current';
     ylim = NaN;
     %
-    graph1D_jd(xrho,J_tot,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width2,siz,gca,red,lspace,bspace);
+    graph1D_jd(xrho,J_tot,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width2,siz,gca,red,lspace,bspace2);
     set(gca,'xtick',xtick);
     %set(gca,'ylim',[0,max(get(gca,'ylim'))])
     %
@@ -292,7 +292,7 @@ if nr > 1,
     ylim2 = NaN;
     %
     graph1D2jd(xrho,J_tot,xrho,P_rf,xlab,ylab1,ylab2,tit,xlim,ylim1,ylim2,...
-    style,marker1,color2,width2,style,marker1,color3,width2,siz,red,lspace2,bspace);
+    style,marker1,color2,width2,style,marker1,color3,width2,siz,red,lspace2,bspace2);
     %
     print_jd(p_opt,[simul_id,'_J_Prf_profile'],'.');
 	%

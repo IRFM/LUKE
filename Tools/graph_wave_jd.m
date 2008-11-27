@@ -20,39 +20,57 @@ if nargin < 8
     ymask = NaN;
 end
 if nargin < 7
-    rho_disp = [0:0.1:1];
+    rho_disp = 0:0.1:1;
 end
 %
-for iw = 1:length(waves),
+nw = length(waves);
+%
+for iw = 1:nw,
 	if length(rayinits) < iw,
 		rayinits{iw} = '';
 	end
-	if ~isempty(rayinits{iw}) & length(rayinits{iw}.yrho0) < length(waves{iw}.rays),
+	if ~isempty(rayinits{iw}) && length(rayinits{iw}.yrho0) < length(waves{iw}.rays),
 		rayinits{iw} = '';
 	end
 	%
 	if length(launchs) < iw,
 		launchs{iw} = '';
 	end
-	if ~isempty(launchs{iw}) & length(launchs{iw}.yR_L) < length(waves{iw}.rays),
+	if ~isempty(launchs{iw}) && length(launchs{iw}.yR_L) < length(waves{iw}.rays),
 		launchs{iw} = '';
 	end
 end
 %
 if ~iscell(ymask),
     ymask = '';
-    for iw = 1:length(waves),
+    for iw = 1:nw,
         ymask{iw} = 1:length(waves{iw}.rays);
     end
 end
 %
-[qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;
+nymask = zeros(1,nw);
+%
+for iw = 1:nw,
+    nymask(iw) = length(ymask{iw});
+    %
+    if opt.TeNpar && isfield(waves{iw},'info') && isfield(waves{iw}.info,'ftype') && strcmp(waves{iw}.info.ftype,'LF'),
+        %
+        waves{iw}.opt_TeNpar = 1;
+        %
+    else
+        %
+        waves{iw}.opt_TeNpar = 0;
+        %
+    end        
+end
+%
+%[qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;
 %
 method = 'cubic';
-format
-n_ec = 2;% to be automatized
-N = 5;
-vparn = 6;
+%format
+%n_ec = 2;% to be automatized
+%N = 5;
+%vparn = 6;
 %
 % Equilibrium
 %
@@ -60,13 +78,13 @@ Rp = equil.Rp;
 Zp = equil.Zp;
 ptx = equil.ptx;
 pty = equil.pty;
-ptBx = equil.ptBx;
-ptBy = equil.ptBy;
-ptBPHI = equil.ptBPHI;
+%ptBx = equil.ptBx;
+%ptBy = equil.ptBy;
+%ptBPHI = equil.ptBPHI;
 theta = equil.theta;
 psi_apRp = equil.psi_apRp;
 %
-[np,nt] = size(ptx);
+%[np,nt] = size(ptx);
 psin = psi_apRp/psi_apRp(end);
 %
 ap =  ptx(end,1);%Plasma minor radius on the LFS midplane 
@@ -83,8 +101,8 @@ elseif xvar == 't',%rho defined as square root of toroidal flux
     %
 end
 %
-ptB = sqrt(ptBx.^2 + ptBy.^2 + ptBPHI.^2);% total magnetic field
-ptr = sqrt(ptx.^2 + pty.^2); %minor radius on the (psi,stheta) grid
+%ptB = sqrt(ptBx.^2 + ptBy.^2 + ptBPHI.^2);% total magnetic field
+%ptr = sqrt(ptx.^2 + pty.^2); %minor radius on the (psi,stheta) grid
 %
 ptx_disp = interp1(prho,ptx,rho_disp,method);  
 pty_disp = interp1(prho,pty,rho_disp,method); 
@@ -107,7 +125,7 @@ Ymax = max(max(Y_disp));
 %
 iy = 0;
 rays = '';
-for iw = 1:length(waves),
+for iw = 1:nw,
     ibb = 0;
     for ib = ymask{iw},
         ibb = ibb + 1;
@@ -139,8 +157,8 @@ for iw = 1:length(waves),
 			rays{iy}.init.psin0 = rho2psi_jd(equil,rays{iy}.init.rho0);
 			rays{iy}.init.x0 = interp2(psin,theta,ptx.',rays{iy}.init.psin0,rays{iy}.init.theta0,method);
 			rays{iy}.init.y0 = interp2(psin,theta,pty.',rays{iy}.init.psin0,rays{iy}.init.theta0,method);
-			rays{iy}.init.R0 = rays{iy}.init.x0 + equil.Rp;
-			rays{iy}.init.Z0 = rays{iy}.init.y0 + equil.Zp;
+			rays{iy}.init.R0 = rays{iy}.init.x0 + Rp;
+			rays{iy}.init.Z0 = rays{iy}.init.y0 + Zp;
 			rays{iy}.init.X0 = rays{iy}.init.R0*cos(-rays{iy}.init.phi0);
 			rays{iy}.init.Y0 = rays{iy}.init.R0*sin(-rays{iy}.init.phi0);
         end
@@ -155,8 +173,8 @@ for iw = 1:length(waves),
             rays{iy}.launch.beta_L = launchs{iw}.ybeta_L(ib);
             rays{iy}.launch.P_L = launchs{iw}.yP_L(ib);
 			%
-            rays{iy}.launch.x_L = rays{iy}.launch.R_L - equil.Rp;
-            rays{iy}.launch.y_L = rays{iy}.launch.Z_L - equil.Zp;			
+            rays{iy}.launch.x_L = rays{iy}.launch.R_L - Rp;
+            rays{iy}.launch.y_L = rays{iy}.launch.Z_L - Zp;			
             rays{iy}.launch.X_L = rays{iy}.launch.R_L*cos(-rays{iy}.launch.phi_L);
             rays{iy}.launch.Y_L = rays{iy}.launch.R_L*sin(-rays{iy}.launch.phi_L);		
 			%
@@ -205,7 +223,7 @@ for iy = 1:ny,
         %
         rays{iy} = radialdampingprofile_jd(rays{iy},nr_dep);
         %
-        dPdrho = dPdrho + rays{iy}.dPnormdrho*rays{iy}.P0_2piRp*2*pi*equil.Rp;
+        dPdrho = dPdrho + rays{iy}.dPnormdrho*rays{iy}.P0_2piRp*2*pi*Rp;
         %
     else
         rays{iy}.is_abs_max = ns;
@@ -461,7 +479,7 @@ red = 0.9;
 lspace = 0.7;
 bspace = 0.7;
 %
-figure(1),clf
+figure(1),clf,set(1,'name','Poloidal trajectories')
 %
 xlim = [xmin,xmax];
 ylim = [ymin,ymax];
@@ -485,14 +503,14 @@ for iy = 1:ny,
     	graph1D_jd([rays{iy}.launch.x_L,rays{iy}.init.x0],[rays{iy}.launch.y_L,rays{iy}.init.y0],0,0,'','','',NaN,xlim,ylim,style3,marker,rays{iy}.color,width2,siz);
 	end
 end
-if 0,opt.res >= 1,
+if 0,%opt.res >= 1,
     [ax] = graph2D_jd(R,Z,yres','','','',xlim,ylim,0,NaN,[1:10],0,style,color5,width1,siz);
 end
 axis('equal');
 axis([xlim,ylim]);
 %
 %
-figure(2),clf
+figure(2),clf,set(2,'name','Toroidal trajectories')
 %
 xlim = [Xmin,Xmax];
 ylim = [Ymin,Ymax];
@@ -519,27 +537,6 @@ end
 axis('equal');
 axis([xlim,ylim]);
 %
-% subplot frame
-%
-if ny == 1,nl = 1;nc = 1;
-elseif ny == 2,nl = 1;nc = 2;
-elseif ny <= 4,nl = 2;nc = 2;
-elseif ny <= 6,nl = 2;nc = 3;
-elseif ny <= 8,nl = 2;nc = 4;
-elseif ny == 9,nl = 3;nc = 3;
-elseif ny <= 12,nl = 3;nc = 4;
-elseif ny <= 15,nl = 3;nc = 5;
-elseif ny == 16,nl = 4;nc = 4;
-elseif ny <= 18,nl = 3;nc = 6;
-elseif ny <= 20,nl = 4;nc = 5;
-elseif ny <= 24,nl = 4;nc = 6;
-elseif ny == 25,nl = 5;nc = 5;
-elseif ny <= 28,nl = 4;nc = 7;
-elseif ny <= 30,nl = 5;nc = 6;
-elseif ny <= 32,nl = 4;nc = 8;
-elseif ny <= 35,nl = 5;nc = 7;
-elseif ny <= 40,nl = 5;nc = 8;end
-%
 smax = 0;
 Nmax = 0;
 Spmax = 0;
@@ -549,62 +546,7 @@ for iy = 1:ny,
     Spmax = max([Spmax,abs(rays{iy}.sphi_xyz(1,:))]);
 end
 %
-figure(3),clf
-xlim = [0,smax];
-ylim = [0,Nmax];
-xlab = 's (m)';
-ylab = '';%'N_{||}';
-tit = '';
-%
-for iy = 1:ny,
-    txt = ['ray #',num2str(iy)];
-    subplot(nl,nc,iy),
-    graph1D_jd(rays{iy}.ss,abs(real(rays{iy}.sNpar)),0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width1,siz);
-    %text(0,0,txt)
-    if opt.TeNpar == 1,
-        graph1D_jd(rays{iy}.ss,6.5./sqrt(rays{iy}.sTe),0,0,'','','',NaN,xlim,ylim,style3,marker,color2,width1,siz);
-    end
-    mask_abs = rays{iy}.mask_abs;
-    graph1D_jd(rays{iy}.ss(mask_abs),abs(real(rays{iy}.sNpar(mask_abs))),0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,siz);
-end
-%
-figure(10),clf
-xlim = [0,smax];
-ylim = [0,Spmax];
-xlab = 's (m)';
-ylab = '';%'S_{\perp}';
-tit = '';
-%
-for iy = 1:ny,
-    txt = ['ray #',num2str(iy)];
-    %sphi_abs = sqrt(abs(rays{iy}.sphi_xyz(1,:)).^2 + abs(rays{iy}.sphi_xyz(2,:)).^2 + abs(rays{iy}.sphi_xyz(3,:)).^2);
-    sphi_abs = abs(rays{iy}.sphi_xyz(1,:));
-    subplot(nl,nc,iy),
-    graph1D_jd(rays{iy}.ss,sphi_abs,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width1,siz);
-    %text(0,0,txt)
-    mask_abs = rays{iy}.mask_abs;
-    graph1D_jd(rays{iy}.ss(mask_abs),sphi_abs(mask_abs),0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,siz);
-end
-%
-set(gcf,'resize','on')
-%
-figure(4),clf
-xlim = [0,1];
-ylim = NaN;
-xlab = '\rho';
-ylab = '';%'dP/d\rho/P_0';
-tit = '';
-%
-for iy = 1:ny,
-    txt = ['ray #',num2str(iy)];
-    subplot(nl,nc,iy),
-    graph1D_jd(rays{iy}.rho_dep,rays{iy}.dPnormdrho,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color2,width1,siz);
-    text(0,0,txt)
-end
-%
-set(gcf,'resize','on')
-%
-figure(5),clf
+figure(3),clf,set(3,'name','Radius of deposition peak')
 xlim = [0,ny+1];
 ylim = [0,1];
 xlab = 'ray #';
@@ -613,7 +555,7 @@ tit = '';
 %
 graph1D_jd(1:ny,yrho_abs,0,0,xlab,ylab,tit,NaN,xlim,ylim,style2,marker1,color2,width1,siz,gca,red,lspace,bspace);
 %
-figure(6),clf
+figure(4),clf,set(4,'name','N// of deposition peak')
 xlim = [0,ny+1];
 ylim = [0,Nmax];
 xlab = 'ray #';
@@ -622,7 +564,7 @@ tit = '';
 %
 graph1D_jd(1:ny,abs(yNpar_abs),0,0,xlab,ylab,tit,NaN,xlim,ylim,style2,marker1,color2,width1,siz,gca,red,lspace,bspace);
 %
-figure(7),clf
+figure(5),clf,set(5,'name','Total deposition profile')
 xlim = [0,1];
 ylim = NaN;
 xlab = plab;
@@ -630,173 +572,360 @@ ylab = 'dPd\rho (MW)';
 tit = '';
 %
 graph1D_jd(rho_dep,dPdrho/1e6,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width1,siz,gca,red,lspace,bspace);
-
-return
 %
-figure(2),clf
+% Ray specific figures
 %
-xlim = [-Rmax,Rmax];
-ylim = [-Rmax,Rmax];
-xlab = 'X (m)';
-ylab = 'Y (m)';
-tit = '';
+disp(' ')
+disp('-----> Display specific ray information')
+disp(' ')
 %
-[ax] = graph1D_jd(syX,syY,0,0,'','','',NaN,xlim,ylim,style,marker,color2,width2,siz);
-if exist('launch','var') == 1,
-    [ax] = graph1D_jd(yX_L,yY_L,0,0,'','','',NaN,xlim,ylim,style2,marker2,color3,width2,siz);
-    [ax] = graph1D_jd([yX_L;yX_L + ydX_L],[yY_L;yY_L + ydY_L],0,0,'','','',NaN,xlim,ylim,style,marker,color3,width2,siz);
-end
-if exist('wave_s','var') == 1,
-    [ax] = graph1D_jd(syX_s,syY_s,0,0,'','','',NaN,xlim,ylim,style,marker,color4,width2,siz);
-end
-if opt(2) >= 1,
-    [ax] = graph1D_jd(syX(is_syres),syY(is_syres),0,0,'','','',NaN,xlim,ylim,style2,marker3,color5,width1,siz);
-end
-[ax] = graph1D_jd(X_disp',Y_disp',0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width1,siz,gca,red,lspace,bspace);
-axis('equal');
-axis([xlim,ylim])
+iw = NaN;
+ibb = NaN;
+ib = 0;
+iwdef = 1;
 %
-% ------------------------
-%
-if xvar == 's',
+while iw ~= 0 && ibb ~= 0
+    %
+    ib = ib + 1;
+    %
+    iw = input_dke_yp('wave index (0 to return)',iwdef,0:nw,'',[1,1]);
+    %
+    if iw == 0,
+        continue
+    end
+    %
+    ibb = input_dke_yp('ray index (0 to return)',1,0:nymask(iw),'',[1,1]);
+    %
+    if ibb == 0,
+        continue
+    end
+    %
+    iwdef = 0;
+    %
+    iy = sum(nymask(1:iw - 1)) + ibb;
+    %
+    ray = rays{iy};
+    %
+    f_opt = input_dke_yp('single figure with subplots (0) or multiple figures (1)',0,0:1,'',[1,1]);
+    %
+    figlab = ['wave #',num2str(iw),'; ray #',num2str(ibb)];
+    %
+    % poloidal ray trajectory
+    %
+    setfig(f_opt,ib,1,figlab)
+    %
+    xlim = [xmin,xmax];
+    ylim = [ymin,ymax];
+    xlab = 'x (m)';
+    ylab = 'y (m)';
+    tit = 'poloidal ray trajectory';
+    %
+    mask_max = 1:ray.is_abs_max;
+    mask_abs = ray.mask_abs;
+    %
+    graph1D_jd(ptx_disp',pty_disp',0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color5,width2,siz);
+    graph1D_jd(ray.sx(mask_max),ray.sy(mask_max),0,0,'','','',NaN,xlim,ylim,style,marker,ray.color,width1,siz);
+    graph1D_jd(ray.sx(mask_abs),ray.sy(mask_abs),0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,siz);
+    if ~isempty(ray.init),
+        graph1D_jd(ray.init.x0,ray.init.y0,0,0,'','','',NaN,xlim,ylim,style2,marker3,ray.color,width2,siz);
+    end 
+    if ~isempty(ray.launch),
+        graph1D_jd(ray.launch.x_L,ray.launch.y_L,0,0,'','','',NaN,xlim,ylim,style2,marker3,ray.color,width2,siz);
+    end
+    if ~isempty(ray.init) && ~isempty(ray.launch),
+        graph1D_jd([ray.launch.x_L,ray.init.x0],[ray.launch.y_L,ray.init.y0],0,0,'','','',NaN,xlim,ylim,style3,marker,ray.color,width2,siz);
+    end
+    %
+    axis('equal');
+    axis([xlim,ylim]);
+    %
+    % toroidal ray trajectory
+    %
+    setfig(f_opt,ib,2,figlab)
+    %
+    xlim = [Xmin,Xmax];
+    ylim = [Ymin,Ymax];
+    xlab = 'X (m)';
+    ylab = 'Y (m)';
+    tit = 'toroidal ray trajectory';
+    %
+    graph1D_jd(X_disp',Y_disp',0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color5,width2,siz);
+    graph1D_jd(ray.sX(mask_max),ray.sY(mask_max),0,0,'','','',NaN,xlim,ylim,style,marker,ray.color,width1,siz);
+    graph1D_jd(ray.sX(mask_abs),ray.sY(mask_abs),0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,siz);
+    if ~isempty(ray.init),
+        graph1D_jd(ray.init.X0,ray.init.Y0,0,0,'','','',NaN,xlim,ylim,style2,marker3,ray.color,width2,siz);
+    end        
+    if ~isempty(ray.launch),
+        graph1D_jd(ray.launch.X_L,ray.launch.Y_L,0,0,'','','',NaN,xlim,ylim,style2,marker3,ray.color,width2,siz);
+    end
+    if ~isempty(ray.init) && ~isempty(ray.launch),
+        graph1D_jd([ray.launch.X_L,ray.init.X0],[ray.launch.Y_L,ray.init.Y0],0,0,'','','',NaN,xlim,ylim,style3,marker,ray.color,width2,siz);
+    end
+    %
+    axis('equal');
+    axis([xlim,ylim]);
+    %
+    % parallel index of refraction
+    %
+    setfig(f_opt,ib,3,figlab)
+    %
+    xlim = [0,max(ray.ss)];
+    ylim = NaN;
     xlab = 's (m)';
-    x_disp = sys;
-    if exist('wave_s','var') == 1,
-        x_disp_s = sys_s;
-    end
-    xlim = [0,smax];
-elseif xvar == 'R',
-    xlab = 'R (m)';
-    x_disp = syR;
-    if exist('wave_s','var') == 1,
-        x_disp_s = syR_s;
-    end
-    xlim = [Rmin,Rmax];
-elseif xvar == 'p',
-    xlab = '(\psi/\psi_a)^{1/2}';
-    x_disp = sqrt(sypsin);
-    if exist('wave_s','var') == 1,
-        x_disp_s = sqrt(sypsin_s);
-    end
-    xlim = [0,1];
-elseif xvar == 'r',
-    xlab = '\rho';
-    x_disp = syrho;
-    if exist('wave_s','var') == 1,
-        x_disp_s = syrho_s;
-    end
-    xlim = [0,1];
-end
-%
-figure(3),clf
-%
-ylim = NaN;
-ylab = 'N_{||}';
-tit = '';
-%
-if opt(1) == 1 & ~isempty(sydNpar)
-    [ax] = graph1D_jd([x_disp,x_disp],[syNpar + sydNpar,syNpar - sydNpar],0,0,'','','',NaN,xlim,ylim,style,marker,color2,width2,siz);
-end
-if exist('wave_s','var') == 1,
-    [ax] = graph1D_jd(x_disp_s,syNpar_s,0,0,'','','',NaN,xlim,ylim,style,marker,color4,width2,siz);
-end
-if opt(2) >= 1,
-    [ax] = graph1D_jd(x_disp(is_syres),syNpar(is_syres),0,0,'','','',NaN,xlim,ylim,style2,marker3,color5,width1,siz);
-end
-[ax] = graph1D_jd(x_disp,syNpar,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width1,siz,gca,red,lspace,bspace);    
-%
-figure(4),clf
-%
-ylim = NaN;
-ylab = 'N_{\perp}';
-tit = '';
-%
-if exist('wave_s','var') == 1,
-    [ax] = graph1D_jd(x_disp_s,syNperp_s,0,0,'','','',NaN,xlim,ylim,style,marker,color4,width2,siz);
-end
-if opt(2) >= 1,
-    [ax] = graph1D_jd(x_disp(is_syres),syNperp(is_syres),0,0,'','','',NaN,xlim,ylim,style2,marker3,color5,width1,siz);
-end
-[ax] = graph1D_jd(x_disp,syNperp,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width1,siz,gca,red,lspace,bspace);
-%
-if exist('launch','var') == 1,
-    figure(5),clf
-%
-    xlim_L = [min([yphi_L,0]),max([yphi_L,0])]*1.1*180/pi;
-    ylim_L = [min([yZ_L,0]),max([yZ_L,0])]*1.1;
-    xlab_L = '\phi_L (deg.)';
-    ylab = 'Z_L (m)';
-    tit = '';
-%
-    [ax] = graph1D_jd(yphi_L*180/pi,yZ_L,0,0,xlab_L,ylab,tit,NaN,xlim_L,ylim_L,style2,marker2,color3,width2,siz,gca,red,lspace,bspace);
-    for iy = 1:ny
-        text(yphi_L(iy)*180/pi,yZ_L(iy),['\alpha_L = ',num2str(round(yalpha_L(iy)*180/pi)),'\newline\beta_L = ',num2str(round(ybeta_L(iy)*180/pi))],'fontsize',10);
-    end
-end
-%
-if opt(3) >= 1,
-    figure(6),clf
-    %
-    ylim = [0,1.1];
-    ylab = 'P^b/P_0^b';
-    tit = '';
-    %
-    if exist('wave_s','var') == 1,
-        [ax] = graph1D_jd(x_disp_s,syPinc_s./(ones(ns_s,1)*yP0_s),0,0,'','','',NaN,xlim,ylim,style,marker,color4,width2,siz);
-    end
-    if opt(2) >= 1,
-        [ax] = graph1D_jd(x_disp(is_syres),syPinc(is_syres)./missing,0,0,'','','',NaN,xlim,ylim,style2,marker3,color5,width1,siz);
-    end
-    [ax] = graph1D_jd(x_disp,syPinc./(ones(ns,1)*yP0),0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width1,siz,gca,red,lspace,bspace);
-    %
-    figure(7),clf
-    %
-    ylim = NaN;
-    ylab = 'dP^b/ds/P_0^b (m^{-1})';
-    tit = '';
-    %
-    if exist('wave_s','var') == 1,
-        [ax] = graph1D_jd(x_disp_s,sydPincds_s./(ones(ns_s,1)*yP0_s),0,0,'','','',NaN,xlim,ylim,style,marker,color4,width2,siz);
-    end
-    if opt(2) >= 1,
-        [ax] = graph1D_jd(x_disp(is_syres),sydPincds(is_syres)./missing,0,0,'','','',NaN,xlim,ylim,style2,marker3,color5,width1,siz);
-    end
-    [ax] = graph1D_jd(x_disp,sydPincds./(ones(ns,1)*yP0),0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width1,siz,gca,red,lspace,bspace);
-    %
-end
-%
-if (opt(2) >=1 | opt(3) >= 1) & ny == 1% only one ray
-    %
-    figure(8),clf
-    %
-    ylim = [0,(ceil(omega_rf_ghz/10) + 1)*10];
-    ylab = '\omega/(2\pi) (GHz)';
-    tit = '';
-    str_vparn = [num2str(vparn),'  '];
-    leg = ['n\omega_{ce}                         ';...
-           'n\omega_{ce} \pm ',str_vparn(1:3),'v_{Te}\cdotk_{//}'];
-    %
-    graph1D_jd(x_disp,Nsomega_ce_ghz(:,1),0,0,'','','',NaN,xlim,ylim,style,marker,color2,width1,siz,gca,red,lspace,bspace);
-    graph1D_jd(x_disp,Nsomega_ce_ghz_m(:,1),0,0,'','','',NaN,xlim,ylim,style,marker,color3,width1);
-    graph1D_jd(x_disp,Nsomega_ce_ghz(:,2:N),0,0,'','','',NaN,xlim,ylim,style,marker,color2,width1);
-    graph1D_jd(x_disp,Nsomega_ce_ghz_m(:,2:N),0,0,'','','',NaN,xlim,ylim,style,marker,color3,width1);
-    graph1D_jd(x_disp,Nsomega_ce_ghz_p,0,0,'','','',NaN,xlim,ylim,style,marker,color3,width1);
-    graph1D_jd(xlim,[omega_rf_ghz,omega_rf_ghz],0,0,xlab,ylab,tit,leg,xlim,ylim,style,marker,color1,width1);
-    %
-end
-%
-if opt(4) >=1
-    %
-    figure(9),clf
-    %
-    ylim = NaN;
     ylab = 'N_{||}';
     tit = '';
-%
-    [ax] = graph1D_jd(x_disp(:,1),syNpar(:,1),0,0,'','','',NaN,xlim,ylim,style,marker,color2,width1,siz);
-    [ax] = graph1D_jd([x_disp(:,1),x_disp(:,1)],[syNpar(:,1)-sdNpar',syNpar(:,1)+sdNpar'],0,0,'','','',NaN,xlim,ylim,style,marker,color3,width1,siz);
-    [ax] = graph1D_jd(x_disp,syNpar,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width2,siz,gca,red,lspace,bspace);    
+    %
+    graph1D_jd(ray.ss,abs(real(ray.sNpar)),0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width1,siz);
+    if waves{iw}.opt_TeNpar == 1,
+        graph1D_jd(ray.ss,6.5./sqrt(ray.sTe),0,0,'','','',NaN,xlim,ylim,style3,marker,color2,width1,siz);
+        leg = {'N_{||}','6.5/Te^{1/2}','N_{||acc}'};
+    else
+        leg = {'N_{||}','N_{||acc}'};
+    end
+    graph1D_jd(ray.ss,abs(imag(ray.sNpar)),0,0,'','','',leg,xlim,ylim,style3,marker,color3,width2,siz);
+    graph1D_jd(ray.ss(mask_abs),abs(real(ray.sNpar(mask_abs))),0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,siz);
+    %
+    % perpendicular index of refraction
+    %
+    setfig(f_opt,ib,4,figlab)
+    %
+    ylab = 'N_{\perp}';
+    %
+    graph1D_jd(ray.ss,real(ray.sNperp),0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width1,siz);
+    graph1D_jd(ray.ss(mask_abs),real(ray.sNperp(mask_abs)),0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,siz);
+    %    
+    % perpendicular normalized energy flow
+    %
+    setfig(f_opt,ib,5,figlab)
+    %
+    ylab = 'S_{\perp}';
+    %
+    %sphi_abs = sqrt(abs(ray.sphi_xyz(1,:)).^2 + abs(ray.sphi_xyz(2,:)).^2 + abs(ray.sphi_xyz(3,:)).^2);
+    sphi_abs = abs(ray.sphi_xyz(1,:));
+    %
+    graph1D_jd(ray.ss,sphi_abs,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width1,siz);
+    graph1D_jd(ray.ss(mask_abs),sphi_abs(mask_abs),0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,siz);
+    %    
+    % power deposition
+    %
+    setfig(f_opt,ib,6,figlab)
+    %
+    xlim = [0,1];
+    xlab = plab;
+    ylab = 'dP/d\rho/P_0';
+    %
+    graph1D_jd(rho_dep,ray.dPnormdrho.*drhog_dep./drho_dep,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color2,width1,siz);
     %
 end
+%
+return
+%
+function setfig(f_opt,ib,ifig,figlab)
+%
+if f_opt == 1,
+    %
+    fignum = 10*(ib - 1) + 9 + ifig;
+    figure(fignum),clf,set(fignum,'name',[figlab,'; fig ',num2str(ifig)])
+    %
+else
+    %
+    fignum = 1000 + ib - 1;
+    figure(fignum)
+    if ifig == 1,
+        clf,
+        set(gcf,'resize','on'),
+        set(gcf,'units','normalized'),
+        set(gcf,'position',[0,0,1,1]),
+        set(fignum,'name',figlab)
+    end    
+    %
+    subplot(2,3,ifig),%cla
+    %
+end
+%
+return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% figure(2),clf
+% %
+% xlim = [-Rmax,Rmax];
+% ylim = [-Rmax,Rmax];
+% xlab = 'X (m)';
+% ylab = 'Y (m)';
+% tit = '';
+% %
+% [ax] = graph1D_jd(syX,syY,0,0,'','','',NaN,xlim,ylim,style,marker,color2,width2,siz);
+% if exist('launch','var') == 1,
+%     [ax] = graph1D_jd(yX_L,yY_L,0,0,'','','',NaN,xlim,ylim,style2,marker2,color3,width2,siz);
+%     [ax] = graph1D_jd([yX_L;yX_L + ydX_L],[yY_L;yY_L + ydY_L],0,0,'','','',NaN,xlim,ylim,style,marker,color3,width2,siz);
+% end
+% if exist('wave_s','var') == 1,
+%     [ax] = graph1D_jd(syX_s,syY_s,0,0,'','','',NaN,xlim,ylim,style,marker,color4,width2,siz);
+% end
+% if opt(2) >= 1,
+%     [ax] = graph1D_jd(syX(is_syres),syY(is_syres),0,0,'','','',NaN,xlim,ylim,style2,marker3,color5,width1,siz);
+% end
+% [ax] = graph1D_jd(X_disp',Y_disp',0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width1,siz,gca,red,lspace,bspace);
+% axis('equal');
+% axis([xlim,ylim])
+% %
+% % ------------------------
+% %
+% if xvar == 's',
+%     xlab = 's (m)';
+%     x_disp = sys;
+%     if exist('wave_s','var') == 1,
+%         x_disp_s = sys_s;
+%     end
+%     xlim = [0,smax];
+% elseif xvar == 'R',
+%     xlab = 'R (m)';
+%     x_disp = syR;
+%     if exist('wave_s','var') == 1,
+%         x_disp_s = syR_s;
+%     end
+%     xlim = [Rmin,Rmax];
+% elseif xvar == 'p',
+%     xlab = '(\psi/\psi_a)^{1/2}';
+%     x_disp = sqrt(sypsin);
+%     if exist('wave_s','var') == 1,
+%         x_disp_s = sqrt(sypsin_s);
+%     end
+%     xlim = [0,1];
+% elseif xvar == 'r',
+%     xlab = '\rho';
+%     x_disp = syrho;
+%     if exist('wave_s','var') == 1,
+%         x_disp_s = syrho_s;
+%     end
+%     xlim = [0,1];
+% end
+% %
+% figure(3),clf
+% %
+% ylim = NaN;
+% ylab = 'N_{||}';
+% tit = '';
+% %
+% if opt(1) == 1 & ~isempty(sydNpar)
+%     [ax] = graph1D_jd([x_disp,x_disp],[syNpar + sydNpar,syNpar - sydNpar],0,0,'','','',NaN,xlim,ylim,style,marker,color2,width2,siz);
+% end
+% if exist('wave_s','var') == 1,
+%     [ax] = graph1D_jd(x_disp_s,syNpar_s,0,0,'','','',NaN,xlim,ylim,style,marker,color4,width2,siz);
+% end
+% if opt(2) >= 1,
+%     [ax] = graph1D_jd(x_disp(is_syres),syNpar(is_syres),0,0,'','','',NaN,xlim,ylim,style2,marker3,color5,width1,siz);
+% end
+% [ax] = graph1D_jd(x_disp,syNpar,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width1,siz,gca,red,lspace,bspace);    
+% %
+% figure(4),clf
+% %
+% ylim = NaN;
+% ylab = 'N_{\perp}';
+% tit = '';
+% %
+% if exist('wave_s','var') == 1,
+%     [ax] = graph1D_jd(x_disp_s,syNperp_s,0,0,'','','',NaN,xlim,ylim,style,marker,color4,width2,siz);
+% end
+% if opt(2) >= 1,
+%     [ax] = graph1D_jd(x_disp(is_syres),syNperp(is_syres),0,0,'','','',NaN,xlim,ylim,style2,marker3,color5,width1,siz);
+% end
+% [ax] = graph1D_jd(x_disp,syNperp,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width1,siz,gca,red,lspace,bspace);
+% %
+% if exist('launch','var') == 1,
+%     figure(5),clf
+% %
+%     xlim_L = [min([yphi_L,0]),max([yphi_L,0])]*1.1*180/pi;
+%     ylim_L = [min([yZ_L,0]),max([yZ_L,0])]*1.1;
+%     xlab_L = '\phi_L (deg.)';
+%     ylab = 'Z_L (m)';
+%     tit = '';
+% %
+%     [ax] = graph1D_jd(yphi_L*180/pi,yZ_L,0,0,xlab_L,ylab,tit,NaN,xlim_L,ylim_L,style2,marker2,color3,width2,siz,gca,red,lspace,bspace);
+%     for iy = 1:ny
+%         text(yphi_L(iy)*180/pi,yZ_L(iy),['\alpha_L = ',num2str(round(yalpha_L(iy)*180/pi)),'\newline\beta_L = ',num2str(round(ybeta_L(iy)*180/pi))],'fontsize',10);
+%     end
+% end
+% %
+% if opt(3) >= 1,
+%     figure(6),clf
+%     %
+%     ylim = [0,1.1];
+%     ylab = 'P^b/P_0^b';
+%     tit = '';
+%     %
+%     if exist('wave_s','var') == 1,
+%         [ax] = graph1D_jd(x_disp_s,syPinc_s./(ones(ns_s,1)*yP0_s),0,0,'','','',NaN,xlim,ylim,style,marker,color4,width2,siz);
+%     end
+%     if opt(2) >= 1,
+%         [ax] = graph1D_jd(x_disp(is_syres),syPinc(is_syres)./missing,0,0,'','','',NaN,xlim,ylim,style2,marker3,color5,width1,siz);
+%     end
+%     [ax] = graph1D_jd(x_disp,syPinc./(ones(ns,1)*yP0),0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width1,siz,gca,red,lspace,bspace);
+%     %
+%     figure(7),clf
+%     %
+%     ylim = NaN;
+%     ylab = 'dP^b/ds/P_0^b (m^{-1})';
+%     tit = '';
+%     %
+%     if exist('wave_s','var') == 1,
+%         [ax] = graph1D_jd(x_disp_s,sydPincds_s./(ones(ns_s,1)*yP0_s),0,0,'','','',NaN,xlim,ylim,style,marker,color4,width2,siz);
+%     end
+%     if opt(2) >= 1,
+%         [ax] = graph1D_jd(x_disp(is_syres),sydPincds(is_syres)./missing,0,0,'','','',NaN,xlim,ylim,style2,marker3,color5,width1,siz);
+%     end
+%     [ax] = graph1D_jd(x_disp,sydPincds./(ones(ns,1)*yP0),0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width1,siz,gca,red,lspace,bspace);
+%     %
+% end
+% %
+% if (opt(2) >=1 | opt(3) >= 1) & ny == 1% only one ray
+%     %
+%     figure(8),clf
+%     %
+%     ylim = [0,(ceil(omega_rf_ghz/10) + 1)*10];
+%     ylab = '\omega/(2\pi) (GHz)';
+%     tit = '';
+%     str_vparn = [num2str(vparn),'  '];
+%     leg = ['n\omega_{ce}                         ';...
+%            'n\omega_{ce} \pm ',str_vparn(1:3),'v_{Te}\cdotk_{//}'];
+%     %
+%     graph1D_jd(x_disp,Nsomega_ce_ghz(:,1),0,0,'','','',NaN,xlim,ylim,style,marker,color2,width1,siz,gca,red,lspace,bspace);
+%     graph1D_jd(x_disp,Nsomega_ce_ghz_m(:,1),0,0,'','','',NaN,xlim,ylim,style,marker,color3,width1);
+%     graph1D_jd(x_disp,Nsomega_ce_ghz(:,2:N),0,0,'','','',NaN,xlim,ylim,style,marker,color2,width1);
+%     graph1D_jd(x_disp,Nsomega_ce_ghz_m(:,2:N),0,0,'','','',NaN,xlim,ylim,style,marker,color3,width1);
+%     graph1D_jd(x_disp,Nsomega_ce_ghz_p,0,0,'','','',NaN,xlim,ylim,style,marker,color3,width1);
+%     graph1D_jd(xlim,[omega_rf_ghz,omega_rf_ghz],0,0,xlab,ylab,tit,leg,xlim,ylim,style,marker,color1,width1);
+%     %
+% end
+% %
+% if opt(4) >=1
+%     %
+%     figure(9),clf
+%     %
+%     ylim = NaN;
+%     ylab = 'N_{||}';
+%     tit = '';
+% %
+%     [ax] = graph1D_jd(x_disp(:,1),syNpar(:,1),0,0,'','','',NaN,xlim,ylim,style,marker,color2,width1,siz);
+%     [ax] = graph1D_jd([x_disp(:,1),x_disp(:,1)],[syNpar(:,1)-sdNpar',syNpar(:,1)+sdNpar'],0,0,'','','',NaN,xlim,ylim,style,marker,color3,width1,siz);
+%     [ax] = graph1D_jd(x_disp,syNpar,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width2,siz,gca,red,lspace,bspace);    
+%     %
+% end
 
 

@@ -869,17 +869,50 @@ while isel >= 0,
             %
             if status.waves == 1,
                 %
-                p_opt = input('Option for output figures? -1 (nothing), 0 (print), 1 (print and save), 2 (save) [-1] : ');
-                if isempty(p_opt) | ~isnumeric(p_opt) | ~any(p_opt == [0,1,2]),
-                    p_opt = -1;
+                nw = length(waves);
+                %
+                for iw = 1:nw
+                    %
+                    if isfield(waves{iw},'rayinit'),
+                        rayinits{iw} = waves{iw}.rayinit;
+                    else
+                        rayinits{iw} = '';
+                    end
+                    %
+                    if isfield(waves{iw},'launch'),
+                        launchs{iw} = waves{iw}.launch;
+                    else
+                        launchs{iw} = '';
+                    end
+                    %
+                end
+                %
+                w_list = input_dke_yp('List of waves to display',1:nw,[1;nw],'');
+                %
+                p_opt = input_dke_yp('Option for output figures : -1 (nothing), 0 (print), 1 (print and save), 2 (save)',-1,-1:2,'',[1,1]);
+                %
+                %xvaropt = input_dke_yp('Option for rho definition : 0 (geometric), 1 (poloidal flux), 2 (toroidal flux)',0,0:2,'',[1,1]);
+                xvaropt = input_dke_yp('Option for rho definition : 0 (geometric), 1 (poloidal flux)',0,0:1,'',[1,1]);
+                %
+                if xvaropt == 0,
+                    xvar = 's';
+                else%if xvaropt == 1,
+                    xvar = 'p';
+                %else
+                    %xvar = 't';
                 end
                 %
                 g_opt.print = p_opt;
-                g_opt.TeNpar = 0;
-                g_opt.abs_max = 1;
+                g_opt.TeNpar = 1;
+                g_opt.abs_max = 0;
                 nr_dep = 40;
+                rho_disp = 0:0.1:1;
+                ymask = NaN;
                 %
-                graph_wave_jd(equil,waves,'','',nr_dep,g_opt);
+                graph_wave_jd(equil,waves(w_list),rayinits(w_list),launchs(w_list),nr_dep,g_opt,rho_disp,ymask,xvar);
+                %
+                clear rayinits nw
+                %
             else
                 disp('-----> The equilibrium structure does not exist.');
             end
