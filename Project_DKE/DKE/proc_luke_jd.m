@@ -72,6 +72,8 @@ xne = equilDKE.xne;
 %
 pn = momentumDKE.pn;
 mhu = momentumDKE.mhu;
+dmhu = momentumDKE.dmhu;
+gamma = Zmomcoef.gamma;
 %
 nr = length(xrho);
 %
@@ -211,7 +213,7 @@ if nr > 1,
     %
     % power profiles
     %
-    figure('Name',['RF power density profile - ',dke_out.simul.id]),clf
+    figure(1),clf,set(1,'Name',['RF power density profile - ',dke_out.simul.id])
     %
     xlab = '\rho';
     ylab = 'P_{RF} (MW/m^3)';
@@ -226,7 +228,7 @@ if nr > 1,
     %
     print_jd(p_opt,[simul_id,'_Prf_profile'],'.');
     %
-    figure('Name',['Ohmic power density profile - ',dke_out.simul.id]),clf
+    figure(2),clf,set(2,'Name',['Ohmic power density profile - ',dke_out.simul.id])
     %
     xlab = '\rho';
     ylab = 'P_{OHM} (MW/m^3)';
@@ -241,7 +243,7 @@ if nr > 1,
     %
     print_jd(p_opt,[simul_id,'_Pe_profile'],'.');
     %
-    figure('Name',['Total power density profile - ',dke_out.simul.id]),clf
+    figure(3),clf,set(3,'Name',['Total power density profile - ',dke_out.simul.id])
     %
     xlab = '\rho';
     ylab = 'P_{TOT} (MW/m^3)';
@@ -258,7 +260,7 @@ if nr > 1,
     %
     % current profile
     %
-    figure('Name',['Current density profile - ',dke_out.simul.id]),clf
+    figure(4),clf,set(4,'Name',['Current density profile - ',dke_out.simul.id])
     %
     ylab = 'J (MA/m^2)';
     tit = 'J > 0 for co-current';
@@ -272,7 +274,7 @@ if nr > 1,
     %
     % efficiency profile
     %
-    figure('Name',['Current efficiency profile - ',dke_out.simul.id]),clf
+    figure(5),clf,set(5,'Name',['Current efficiency profile - ',dke_out.simul.id])
     %
     ylab = '\eta (A.m/W)';
     tit = '';
@@ -283,7 +285,7 @@ if nr > 1,
     %
     print_jd(p_opt,[simul_id,'_eta_profile'],'.');
     %
-    figure('Name',['Current and RF power density profiles - ',dke_out.simul.id]),clf
+    figure(6),clf,set(6,'Name',['Current and RF power density profiles - ',dke_out.simul.id])
     %    
     ylab1 = 'J (MA/m^2)';
     ylab2 = 'P_{RF} (MW/m^3)';
@@ -298,13 +300,13 @@ if nr > 1,
 	%
 	if exist('Zmripple'),
 		if ~isempty(Zmripple) & sum(sum(Zmripple.Xnhuloss)) ~= 0,
-	    	figure('Name',['Magnetic ripple losses - ',dke_out.simul.id])
+	    	figure(7),clf,set(7,'Name',['Magnetic ripple losses - ',dke_out.simul.id])
 			[ax] = graph1D_jd(xrho,dke_out.xMRR_flux,0,0,'\rho','Ripple losses (m-3.s-1)',subtitle,NaN,[0,1],[0,max(max([dke_out.xMRR_flux(:),dke_out.xMRR_tau(:)]))],style,marker1,color2,width2,siz,gca,red,lspace,bspace);hold on
 			[ax] = graph1D_jd(xrho,dke_out.xMRR_tau,0,0,'\rho','Ripple losses (m-3.s-1)',subtitle,NaN,[0,1],[0,max(max([dke_out.xMRR_flux(:),dke_out.xMRR_tau(:)]))],style,marker1,color3,width2,siz,gca,red,lspace,bspace);hold on
 			legend('Boundary losses','Volumic losses');
 			print_jd(p_opt,[simul_id,'_RippleLosses_profile'],'.');
 			%
-			figure('Name',['Cones angles - ',dke_out.simul.id])
+			figure(8),clf,set(8,'Name',['Cones angles - ',dke_out.simul.id])
 			[ax] = graph1D_jd(xrho,Zmripple.xthetabanana,0,0,'\rho','Angle (Deg.)',subtitle,NaN,[0,1],[0,60],style,marker1,color2,width2,siz,gca,red,lspace,bspace);hold on
 			[ax] = graph1D_jd(xrho,Zmripple.xthetaloss,0,0,'\rho','Angle (Deg.)',subtitle,NaN,[0,1],[0,60],style,marker1,color3,width2,siz,gca,red,lspace,bspace);hold on
 			legend('Banana cone angle','Loss cone angle');
@@ -315,7 +317,7 @@ if nr > 1,
     		ytick = [0:2:10];
     		ylim1 = [0,10];
     		ylim2 = [0,40];
-			figure('Name',['Collision detrapping threshold - ',dke_out.simul.id])
+			figure(9),clf,set(9,'Name',['Collision detrapping threshold - ',dke_out.simul.id])
 			[ax] = graph1D_jd(xrho,Zmripple.xpndetrap,0,0,'\rho','',subtitle,NaN,[0,1],'',style,marker1,color2,width2,siz,gca,red,lspace,bspace);hold on
 			[ax] = graph1D_jd(xrho,Zmripple.xpnth,0,0,'\rho','',subtitle,NaN,[0,1],'',style,marker1,color3,width2,siz,gca,red,lspace,bspace);hold on
 			[ax] = graph1D2jd(xrho,Zmripple.xpnth,xrho,Zmripple.xpndetrap./Zmripple.xpnth,xlab,ylab1,ylab2,tit,xlim,ylim1,ylim2,style,marker1,color3,width2,style,marker1,color4,width2,siz,red,lspace2,bspace);
@@ -334,11 +336,19 @@ else
     %
 end
 %
-if ir_display > 0 & ir_display <= nr,
+if ir_display > 0 && ir_display <= nr,
     %
     disp(['normalized radius for distribution plots: ',num2str(xrho(ir_display))])
     %
-    [logXf0_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(log(dke_out.XXf0(:,:,ir_display)),pn,mhu,dp_cyl);%Spherical to cylindrical coordinate transformation
+    Xf0 = dke_out.XXf0(:,:,ir_display);
+    Xmhu = repmat(mhu,[length(pn),1]);
+    %
+    % energy-space density of current deposition
+    %
+    pdj0dp = scocurr*mksa.j_ref*2*pi*pn.*pn.*pn.*integral_dke_jd(dmhu,Xf0.*Xmhu,2).'./gamma;
+    % spherical to cylindrical transformation
+    %
+    [logXf0_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(log(Xf0),pn,mhu,dp_cyl);%Spherical to cylindrical coordinate transformation
     Xf0_cyl_ref = exp(logXf0_cyl_ref);%For accurate representation in figures 
     %
     logXfinit_cyl_ref = s2c_dke_yp(log(dke_out.XXfinit(:,:,ir_display)),pn,mhu,dp_cyl);%Spherical to cylindrical coordinate transformation
@@ -381,7 +391,23 @@ if ir_display > 0 & ir_display <= nr,
     % Figures
     %
     radialloc = ['\rho = ',num2str(xrho(ir_display))];
-    figure('Name',['2-D contour of f - ',dke_out.simul.id]),clf
+    %
+    % ---------- energy-space density of current deposition -----------
+    %
+    figure(10),clf,set(10,'Name',['dj/dp - ',dke_out.simul.id])
+    %
+    xlab = 'p/p_{Te}';
+    ylab = 'dj/dp_n (MA/m^2)';
+    xlim = [0,pnmax];
+    ylim = NaN;
+    %
+    graph1D_jd(pn,pdj0dp,0,0,xlab,ylab,[radialloc,' ; dj/dp positive for co-current'],NaN,xlim,ylim,style,marker,color2,width2,siz,gca,red,lspace,bspace2);
+    %
+    print_jd(p_opt,[simul_id,'_djdp_',tir_display],'.');
+    %
+    % ---------- 2D distribution function -----------
+    %
+    figure(11),clf,set(11,'Name',['2-D contour of f - ',dke_out.simul.id])
     %
     x1 = ppar_cyl_ref;
     xlab1 = 'p_{||}/p_{Te}';
@@ -409,7 +435,7 @@ if ir_display > 0 & ir_display <= nr,
     end
     hold off
     %
-    graph1D_jd(x1,y9,0,0,xlab1,xlab2,radialloc,NaN,xlim1,xlim2,style,marker,color1,width2,siz,gca,red,lspace,bspace);
+    graph1D_jd(x1,y9,0,0,xlab1,xlab2,radialloc,NaN,xlim1,xlim2,style,marker,color1,width2,siz,gca,red,lspace,bspace2);
     %
     axis('equal');axis([xlim1,xlim2]);
     legend(leg);
@@ -422,12 +448,12 @@ if ir_display > 0 & ir_display <= nr,
     %
     if max(max(abs(y3))) > 0,
         %
-        figure('Name',['2-D contour of D|| - ',dke_out.simul.id]),clf
+        figure(12),clf,set(12,'Name',['2-D contour of D|| - ',dke_out.simul.id])
         %
         cont = 10;
         %
         graph2D_jd(x1,x2,y3','','',radialloc,xlim1,xlim2,1,NaN,cont,0,style,NaN,width,siz,1);
-        graph1D_jd(x1,y9,0,0,xlab1,xlab2,radialloc,NaN,xlim1,xlim2,style,marker,color1,width2,siz,gca,red,lspace,bspace);
+        graph1D_jd(x1,y9,0,0,xlab1,xlab2,radialloc,NaN,xlim1,xlim2,style,marker,color1,width2,siz,gca,red,lspace,bspace2);
         axis('equal');axis([xlim1,xlim2])
         %
         if equilDKE.Rp ~= Inf,
@@ -441,26 +467,26 @@ if ir_display > 0 & ir_display <= nr,
     %
     % ---------- parallel distribution difference-----------
     %
-    figure('Name',['F||-F||M - ',dke_out.simul.id]),clf
+    figure(13),clf,set(13,'Name',['F||-F||M - ',dke_out.simul.id])
     %
     y1 = Fpar0_cyl_ref - Fparinit_cyl_ref;
     ylab = 'F_{||} - F_{||M}';
     ylim = NaN;
     %
-    graph1D_jd(x1,y1,0,0,xlab1,ylab,radialloc,NaN,xlim1,ylim,style,marker,color2,width2,siz,gca,red,lspace,bspace);
+    graph1D_jd(x1,y1,0,0,xlab1,ylab,radialloc,NaN,xlim1,ylim,style,marker,color2,width2,siz,gca,red,lspace,bspace2);
     %
     print_jd(p_opt,[simul_id,'_F0mFM_1D',tir_display],'.');
     %
     % ---------- parallel distribution -----------
     %
-    figure('Name',['F|| - ',dke_out.simul.id]),clf
+    figure(14),clf,set(14,'Name',['F|| - ',dke_out.simul.id])
     %
     y1 = Fparinit_cyl_ref;
     y2 = Fpar0_cyl_ref;
     ylab = 'F_{||}';
     ylim = [eps,1];
     %
-    graph1D_jd(x1,y1,0,1,'','',radialloc,NaN,xlim1,ylim,style,marker,color3,width,siz,gca,red,lspace,bspace);
+    graph1D_jd(x1,y1,0,1,'','',radialloc,NaN,xlim1,ylim,style,marker,color3,width,siz,gca,red,lspace,bspace2);
     graph1D_jd(x1,y2,0,1,xlab1,ylab,radialloc,leg,xlim1,ylim,style,marker,color2,width2,siz);
     legend(leg);
     %
