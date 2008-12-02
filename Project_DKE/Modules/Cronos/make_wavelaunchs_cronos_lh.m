@@ -200,55 +200,61 @@ elseif strcmp(config,'CMOD');%For the Lower Hybrid wave simulations
 % -------------------------------- JET --------------------------------
 %
 elseif strcmp(config,'JET');%For the Lower Hybrid wave simulations
+    %
     numa = length(cons);
-%
-% ------- LH antenna #1 -------
-% 
-   launchs{1}.id = 'Antenna_1';
-   launchs{1}.type = 'LH';
-   launchs{1}.omega_rf = freqlh(1)*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
-%
-   directivity = [0.7];%Antenna directivity [1,1]
-%
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(1),cons_spec,lob);%Power and parallel refractive index [1,n_lobe]
-   launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
-   launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
- %
-   launchs{1}.bdNpar0 = 0.2;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-   launchs{1}.a_sdNpar = 0.0;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-%
-   launchs{1}.rZ0 = [0];%vertical launching positions (m) [1,m_pol]
-% 
-   launchs{1}.m0 = [0];%initial poloidal mode number [1,1]
-   launchs{1}.phi0 = [0];%toroidal angle position [1,1]
-   launchs{1}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
-   launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
-   launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
-%
-% ------- LH antenna #2 -------
-% 
-   if numa > 1 & cons(numa) > 0
-     launchs{2}.id = 'Antenna_2';
-     launchs{2}.type = 'LH';
-     launchs{2}.omega_rf = freqlh(2)*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
-%
-     directivity = [0.7];%Antenna directivity [1,1]
-%
-     [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(2),cons_spec,lob);%Power and parallel refractive index [1,n_lobe]
-     launchs{2}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
-     launchs{2}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
- %
-     launchs{2}.bdNpar0 = 0.2;%ray spectral width for Fokker-Planck calculations (main lobe) [1,n_lobe]
-     launchs{2}.a_sdNpar = 0.0;%ray spectral width for Fokker-Planck calculations [1,n_lobe] 
-%
-     launchs{2}.rZ0 = [0];%vertical launching positions (m) [1,m_pol]
-% 
-     launchs{2}.m0 = [0];%initial poloidal mode number [1,1]
-     launchs{2}.phi0 = [0];%toroidal angle position [1,1]
-     launchs{2}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
-     launchs{2}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]  
-     launchs{2}.mmode = -1;% (-1) for slow wave, (1) for fast wave
-   end
+    %
+    % ------- LH antenna #1 -------
+    % 
+    if isnan(freqlh),
+        freqlh = [3.7,3.7];
+    end
+    %
+    launchs{1}.id = 'Antenna_1';
+    launchs{1}.type = 'LH';
+    launchs{1}.omega_rf = freqlh(1)*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
+    %
+    directivity = [0.7];%Antenna directivity [1,1]
+    %
+    [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(1),cons_spec,lob);%Power and parallel refractive index [1,n_lobe]
+    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
+    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
+    %
+    launchs{1}.bdNpar0 = 0.2*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
+    launchs{1}.a_sdNpar = 0.0;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
+    %
+    launchs{1}.rZ0 = [0];%vertical launching positions (m) [1,m_pol]
+    % 
+    launchs{1}.m0 = [0];%initial poloidal mode number [1,1]
+    launchs{1}.phi0 = [0];%toroidal angle position [1,1]
+    launchs{1}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
+    launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
+    launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
+    %
+    % ------- LH antenna #2 -------
+    % 
+    if numa > 1 & cons(numa) > 0
+        launchs{2}.id = 'Antenna_2';
+        launchs{2}.type = 'LH';
+        launchs{2}.omega_rf = freqlh(2)*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
+        %
+        directivity = [0.7];%Antenna directivity [1,1]
+        %
+        [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(2),cons_spec,lob);%Power and parallel refractive index [1,n_lobe]
+        launchs{2}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
+        launchs{2}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
+        %
+        launchs{2}.bdNpar0 = 0.2*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations (main lobe) [1,n_lobe]
+        launchs{2}.a_sdNpar = 0.0;%ray spectral width for Fokker-Planck calculations [1,n_lobe] 
+        %
+        launchs{2}.rZ0 = [0];%vertical launching positions (m) [1,m_pol]
+        % 
+        launchs{2}.m0 = [0];%initial poloidal mode number [1,1]
+        launchs{2}.phi0 = [0];%toroidal angle position [1,1]
+        launchs{2}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
+        launchs{2}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]  
+        launchs{2}.mmode = -1;% (-1) for slow wave, (1) for fast wave
+    end
+    %
 %
 % -------------------------------- ITER@3.7GHz --------------------------------
 %
