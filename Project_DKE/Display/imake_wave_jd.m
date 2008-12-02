@@ -91,47 +91,7 @@ if i_opt == 0,% use data from from external database
         %
         if strcmp(type,'LH'),
             %
-            % !!!! Warning : older antenna configurations not yet operational
-            %
-            if str2num(shotnum) > 0,% !!!! to be specified 
-                %
-                config = 'MIXTE';
-                %
-            end
-            %
-            disp(['-----> The antenna configuration is : ',config]);
-            %
-            cons(1) = external.LH.Plh_C2*1e6*exp(i*external.LH.npar_C2);
-            cons(2) = external.LH.Plh_C3*1e6*exp(i*external.LH.npar_C3);
-            %
-%             l_opt = input_dke_yp('Directivity of the wave',1,[0;1],'',[1,1]);
-            l_opt = input_dke_yp('Do you want to include the negative lobe [y/n]','n',{'y','n'},'',[1,1]);
-            %
-            if strcmp(l_opt,'y'),
-                lob = 'Yes';
-            else 
-                lob = 'No';
-            end
-            %
-            cons_spec = NaN;
-            %
-            signe.ip = sign(equil.psi_apRp(end));
-            signe.b0 = sign(equil.ptBPHI(1,1));
-            %
-            launchs = make_wavelaunchs_cronos_lh(equil,signe,config,cons,cons_spec,lob);
-            %
-            a_str = '(1) C2 antenna, (2) C3 antenna';
-            a_opts = [1,2];                    
-            %
-            if length(a_opts) > 1,
-                %
-                a_opt = input_dke_yp(['Please select an antenna : ',a_str],1,1:length(a_opts),'',[1,1]);
-                %
-            else
-                a_opt = a_opts;
-            end
-            %
-            launch = launchs{a_opt};
+            launch = imake_launch_LH_jd(basestr,equil,external.LH);
             %
         elseif strcmp(type,'EC'),
             %
@@ -188,7 +148,7 @@ elseif i_opt == 2,% build the wave data locally
         %
         if strcmp(type,'LH'),
             %
-            launch = imake_launch_LH_jd;
+            launch = imake_launch_LH_jd(basestr,equil);
             %
         elseif strcmp(type,'EC'),
             % 
