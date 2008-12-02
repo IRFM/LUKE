@@ -222,7 +222,7 @@ elseif strcmp(config,'JET');%For the Lower Hybrid wave simulations
     launchs{1}.bdNpar0 = 0.2*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
     launchs{1}.a_sdNpar = 0.0;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
     %
-    launchs{1}.rZ0 = [0];%vertical launching positions (m) [1,m_pol]
+    launchs{1}.rZ0 = [0.370 0.222 0.074 -0.074 -0.222 -0.370];%vertical launching positions (m) [1,m_pol]
     % 
     launchs{1}.m0 = [0];%initial poloidal mode number [1,1]
     launchs{1}.phi0 = [0];%toroidal angle position [1,1]
@@ -246,7 +246,7 @@ elseif strcmp(config,'JET');%For the Lower Hybrid wave simulations
         launchs{2}.bdNpar0 = 0.2*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations (main lobe) [1,n_lobe]
         launchs{2}.a_sdNpar = 0.0;%ray spectral width for Fokker-Planck calculations [1,n_lobe] 
         %
-        launchs{2}.rZ0 = [0];%vertical launching positions (m) [1,m_pol]
+        launchs{2}.rZ0 = [0.370 0.222 0.074 -0.074 -0.222 -0.370];%vertical launching positions (m) [1,m_pol]
         % 
         launchs{2}.m0 = [0];%initial poloidal mode number [1,1]
         launchs{2}.phi0 = [0];%toroidal angle position [1,1]
