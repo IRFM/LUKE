@@ -5,7 +5,7 @@
 %by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
 %
 clear all
-dkeparam_id = 'EC_RT';%Set here the name (identifier) of the drift kinetic code parameters
+dkeparam.id = 'EC_RT';%Set here the name (identifier) of the drift kinetic code parameters
 %
 %Mesh size calculation
 %
@@ -106,4 +106,4 @@ dkeparam.store_mode = 0;%Temporary storing option for sparse matrices calculatio
 dkeparam.opt_load = 0;%Load intermediate calculations
 dkeparam.opt_save = 0;%Save intermediate calculations
 %
-eval(['save DKEPARAM_',dkeparam_id,'.mat dkeparam']);
+eval(['save DKEPARAM_',dkeparam.id,'.mat dkeparam']);
