@@ -614,7 +614,7 @@ while isel >= 0,
             end
             %
             if strcmp(l_opt,'y'),
-                external = iload_externaldata_jd(basestr,workdir);
+                external = iload_externaldata_jd(basestr,workdir,opt_gui);
             end
             %
             if isempty(external),
