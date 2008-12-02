@@ -23,6 +23,7 @@ Zaxis = 0;
 Zeff = NaN;
 %
 e_opt = 0;
+f_opt = 0;
 type = NaN;
 %
 % MAGNETIC EQUILIBRIUM
@@ -63,6 +64,12 @@ if i_opt == 0, % use data from from external database
     elseif strcmp(basestr,'TS'),
         %
         equil_magnetic_data = external.magnetic;
+        %
+    elseif strcmp(basestr,'JET'),
+        %
+        equil_magnetic_data = external.magnetic;
+        %
+        e_opt = -3;% standard rz -> pt transformation needed
         %
     else
         %
@@ -182,19 +189,30 @@ end
 % 
 if i_opt == 0, % use data from from external database
     %
+    equil_prof_data = external.prof;
+    %
     if strcmp(basestr,'TCV'),
-        %
-        equil_prof_data = external.prof;
         %
         type = 1;% TCV data format
         n_opt = 0;
         %
     elseif strcmp(basestr,'TS'),
         %
-        equil_prof_data = external.prof;
-        %
         n_opt = -1;% ideal equilibrium profiles
         %
+    elseif strcmp(basestr,'JET'),
+        %
+        if isempty(equil_prof_data.pne) || isempty(equil_prof_data.pTe),% fits are necessary
+            %
+            f_opt = 1;% experimental profiles must be fitted
+            n_opt = -1;% ideal equilibrium profiles
+            %
+        else % fits exist, save data for equil_prof_jd
+            %
+            type = 1.2;
+            n_opt = 0;
+            %
+        end
     else
         %
         disp('-----> function not yet implemented for this machine.')
@@ -332,9 +350,24 @@ if type == 1 && n_opt <= 1,
     %
     save(profname,'prho','pne','pTe','pTi','Zeff','-mat');
     %
+elseif type == 1.2 && n_opt == 0,
+    %
+    Zeff = equil_prof_data.Zeff;
+    pspsin = sqrt(equil_prof_data.psin);
+    pne = equil_prof_data.pne;
+    pTe = equil_prof_data.pTe/1e3;% eV-> keV
+    %
+    TeTi = input_dke_yp('No data on Ti was found. Please provide an estimated value for Te/Ti',1,'','',[1,1]);
+    %
+    pTi = pTe/TeTi;
+    %
+    profname = [id_equil,'.prof'];        
+    %
+    save(profname,'pspsin','pne','pTe','pTi','Zeff','-mat');          
+    %    
 end
 %
-if e_opt >= 0 || e_opt == -2,
+if e_opt >= 0 || e_opt <= -2,
     %
     np = input_dke_yp('Number of equilibrium radial points',101,1:2:1001,'np must be an odd number',[1,1]);
     %
@@ -368,6 +401,16 @@ elseif e_opt == -1,% (R,Z) to (psi,theta) conversion specific to eqdsk
 elseif e_opt == -2,% AMR equilibrium
     %
     [equil_magnetic,equil_prof] = make_equil_AMR_jd(amr_psi_path,shotnum,shotime,Zeff,display_mode,p_opt,dispname,savename,np,nt);
+    %
+elseif e_opt == -3,% standard rz -> pt transformation needed
+    %
+    [equil_magnetic,mrho,mspsin,mspsinT] = equil_magnetic_rz2pt_jd(equil_magnetic_data,display_mode,p_opt,dispname,savename,np,nt);
+    %
+end
+%
+if f_opt == 1,% experimental profiles must be fitted
+    %
+    equil_prof_data = fitprof_ideal_jd(equil_prof_data);
     %
 end
 %

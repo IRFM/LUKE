@@ -1,4 +1,4 @@
-function external = load_externaldata_TCV(workdir,shotnum,shotime,t1,t2)
+function external = load_externaldata_TCV(workdir,shotnum,shotime,t1,t2,opt_gui)
 %
 % This function loads data from TCV database
 %
