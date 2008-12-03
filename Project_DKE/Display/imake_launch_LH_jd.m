@@ -19,11 +19,11 @@ if ~isempty(external),
         %
         % !!!! Warning : older antenna configurations not yet operational
         %
-        if str2num(shotnum) > 0,% !!!! to be specified 
+        %if str2num(shotnum) > 0,% !!!! to be specified 
             %
             config = 'MIXTE';
             %
-        end
+        %end
         %
         disp(['-----> The antenna configuration is : ',config]);
         %

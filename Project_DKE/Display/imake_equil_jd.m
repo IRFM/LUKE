@@ -250,6 +250,11 @@ elseif i_opt == 1, % use data from an existing equilibrium file
         elseif strcmp(basestr,'ITER'),% ITER Astra profile data
             %
             type = 0.2;
+            %
+        elseif strcmp(basestr,'EAST'),% EAST ideal profiles from make_profile script
+            %
+            type = 1.1;
+            %
         else
             disp(['-----> profiles data files not treated yet for :',basestr]);
             return 
