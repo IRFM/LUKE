@@ -24,7 +24,8 @@ dkepath.default = default;
 %
 % paths for runs on IRFM saturne cluster
 %
-dkepath.hostname.saturne = 'saturne';
+dkepath.hostname.saturne = 'saturne';%WARNING: if dkepath.traceroute.saturne is not empty, dkepath.hostname.saturne can contain any chain of character. Never leave empty !
+dkepath.traceroute.saturne = '';%Local name of the machine, fixed name whatever the network (usefull for laptop)
 %
 saturne.luke_root = [pwd,'/'];
 saturne.local_root = '/home/sccp/gsem/decker/saturne/';
@@ -48,7 +49,8 @@ dkepath.saturne = saturne;
 %
 % paths for runs on IRFM cephee cluster
 %
-dkepath.hostname.cephee = 'cephee';
+dkepath.hostname.cephee = 'cephee';%WARNING: if dkepath.traceroute.cephee is not empty, dkepath.hostname.cephee can contain any chain of character. Never leave empty !
+dkepath.traceroute.cephee = '';%Local name of the machine, fixed name whatever the network (usefull for laptop)
 %
 cephee.luke_root = [pwd,'/'];
 cephee.local_root = '/home/sccp/gsem/decker/cephee/';
@@ -66,7 +68,8 @@ dkepath.cephee = cephee;
 %
 % paths for runs on IRFM PC-LUKE workstation
 %
-dkepath.hostname.pcluke = 'PC-Luke';
+dkepath.hostname.pcluke = 'PC-Luke';%WARNING: if dkepath.traceroute.pcluke is not empty, dkepath.hostname.pcluke can contain any chain of character. Never leave empty !
+dkepath.traceroute.pcluke = '';%Local name of the machine, fixed name whatever the network (usefull for laptop)
 %
 pcluke.luke_root = [pwd,'/'];
 pcluke.local_root = '/home/lukeuser/Work/';
@@ -82,7 +85,8 @@ dkepath.pcluke = pcluke;
 %
 % paths for runs on Yves Peysson's laptop
 %
-dkepath.hostname.laptopyves = 'peysson';%WARNING: for laptop, may change with connection status.
+dkepath.hostname.laptopyves = 'peysson';%WARNING: if dkepath.traceroute.laptopyves is not empty, dkepath.hostname.laptopyves can contain any chain of character. Never leave empty !
+dkepath.traceroute.laptopyves = 'ypeysson.local';%Local name of the machine, fixed name whatever the network (usefull for laptop)
 %
 laptopyves.luke_root = [getenv('HOME'),'/CEA/Projets/LUKE/'];
 laptopyves.local_root = [getenv('HOME'),'/CEA/Projets/'];
@@ -105,7 +109,8 @@ dkepath.laptopyves = laptopyves;
 %
 % paths for runs on Joan Decker's laptop
 %
-dkepath.hostname.laptopjoan = 'PC-DECKER-J';%WARNING: for laptop, may change with connection status.
+dkepath.hostname.laptopjoan = 'PC-DECKER-J';%WARNING: if dkepath.traceroute.laptopjoan is not empty, dkepath.hostname.laptopjoan can contain any chain of character. Never leave empty !
+dkepath.traceroute.laptopjoan = '';%Local name of the machine, fixed name whatever the network (usefull for laptop)
 %
 laptopjoan.luke_root = [pwd,'/'];
 laptopjoan.local_root = '/home/jd211098/Work/LUKE/';
@@ -121,7 +126,8 @@ dkepath.laptopjoan = laptopjoan;
 %
 % paths for runs on Pramod Sharma's laptop
 %
-dkepath.hostname.laptoppramod = 'promod';%WARNING: for laptop, may change with connection status.
+dkepath.hostname.laptoppramod = 'promod';%WARNING: if dkepath.traceroute.laptoppramod is not empty, dkepath.hostname.laptoppramod can contain any chain of character. Never leave empty !
+dkepath.traceroute.laptoppramod = '';%Local name of the machine, fixed name whatever the network (usefull for laptop)
 %
 laptoppramod.luke_root = [getenv('HOME'),'/LUKE/'];
 laptoppramod.local_root = [getenv('HOME'),'/'];
@@ -137,7 +143,8 @@ dkepath.laptoppramod = laptoppramod;
 %
 % paths for runs on SUN workstation at IPP-Prag
 %
-dkepath.hostname.sunipp = 'ipp';
+dkepath.hostname.sunipp = 'ipp';%WARNING: if dkepath.traceroute.sunipp is not empty, dkepath.hostname.sunipp can contain any chain of character. Never leave empty !
+dkepath.traceroute.sunipp = '';%Local name of the machine, fixed name whatever the network (usefull for laptop)
 %
 sunipp.luke_root = [pwd,'/'];
 sunipp.local_root = '/home/vader/';
@@ -156,7 +163,8 @@ dkepath.sunipp = sunipp;
 %
 % paths for runs on workstation at IPR-Gandhinagar
 %
-dkepath.hostname.ipr = 'matlab2';
+dkepath.hostname.ipr = 'matlab2';%WARNING: if dkepath.traceroute.ipr is not empty, dkepath.hostname.ipr can contain any chain of character. Never leave empty !
+dkepath.traceroute.ipr = '';%Local name of the machine, fixed name whatever the network (usefull for laptop)
 %
 ipr.luke_root = [pwd,'/'];
 ipr.local_root = '/home/yves/';
@@ -172,7 +180,8 @@ dkepath.ipr = ipr;
 %
 % paths for runs on workstation at ASIPP-Heifei
 %
-dkepath.hostname.asipp = 'node0';
+dkepath.hostname.asipp = 'node0';%WARNING: if dkepath.traceroute.asipp is not empty, dkepath.hostname.asipp can contain any chain of character. Never leave empty !
+dkepath.traceroute.asipp = '';%Local name of the machine, fixed name whatever the network (usefull for laptop)
 %
 asipp.luke_root = [pwd,'/'];
 asipp.local_root = '/home/bojiangding/';
@@ -188,7 +197,8 @@ dkepath.asipp = asipp;
 %
 % paths for runs on CRPP PC 70
 %
-dkepath.hostname.crpppc70 = 'crpppc70';
+dkepath.hostname.crpppc70 = 'crpppc70';%WARNING: if dkepath.traceroute.crpppc70 is not empty, dkepath.hostname.crpppc70 can contain any chain of character. Never leave empty !
+dkepath.traceroute.crpppc70 = '';%Local name of the machine, fixed name whatever the network (usefull for laptop)
 %
 crpppc70.luke_root = [pwd,'/'];
 crpppc70.local_root = '/home/decker/NoTivoli/';
