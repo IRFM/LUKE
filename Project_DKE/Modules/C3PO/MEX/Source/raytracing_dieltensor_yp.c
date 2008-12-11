@@ -64,8 +64,9 @@ typedef struct susceptibilitytensor susceptibilitytensor_format;
 #define MAXCYCLHARM 101
 #define PI 3.14159265358979
 
-
+void coldtensor();
 void calcY();
+void calcY1();
 void Zdisp();
 void ZFriedConte();
 void hottensor();
@@ -126,16 +127,17 @@ double Npar,dNpardY[];
     double complex dXxxdwpn2[ns+1],dXxydwpn2[ns+1],dXxzdwpn2[ns+1],dXyydwpn2[ns+1],dXyzdwpn2[ns+1],dXzzdwpn2[ns+1];
     
     int is,i;
+
+    calcY1(Nperp,dNperpdY,ns,ncyclharm,Npar,dNpardY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY);/* For problems on some LINUX systems with gcc */
     
-        
     for (is = 0;is < ns + 1;is++) {
         
 /* Dielectric tensor */
         
-        Xxx[is] = - wpn2[is]/(1 - wcn[is]*wcn[is]);
-        Xxy[is] = + wpn2[is]*wcn[is]*I/(1 - wcn[is]*wcn[is]);
+        Xxx[is] = - wpn2[is]/(1.0 - wcn[is]*wcn[is]);
+        Xxy[is] = I*wpn2[is]*wcn[is]/(1.0 - wcn[is]*wcn[is]);
         Xxz[is] = 0.0;
-        Xyy[is] = - wpn2[is]/(1 - wcn[is]*wcn[is]);
+        Xyy[is] = - wpn2[is]/(1.0 - wcn[is]*wcn[is]);
         Xyz[is] = 0.0;
         Xzz[is] = - wpn2[is];
 
@@ -162,17 +164,17 @@ double Npar,dNpardY[];
         dXyzdbetath[is] = 0.0;
         dXzzdbetath[is] = 0.0;
 
-        dXxxdwcn[is] = -2.0*wpn2[is]*wcn[is]/(1 - wcn[is]*wcn[is])/(1 - wcn[is]*wcn[is]);
-        dXxydwcn[is] = +(2.0*wpn2[is]*wcn[is]*wcn[is]/(1 - wcn[is]*wcn[is])/(1 - wcn[is]*wcn[is]) + wpn2[is]/(1 - wcn[is]*wcn[is]))*I;
+        dXxxdwcn[is] = -2.0*wpn2[is]*wcn[is]/(1.0 - wcn[is]*wcn[is])/(1.0 - wcn[is]*wcn[is]);
+        dXxydwcn[is] = I*(2.0*wpn2[is]*wcn[is]*wcn[is]/(1 - wcn[is]*wcn[is])/(1.0 - wcn[is]*wcn[is]) + wpn2[is]/(1.0 - wcn[is]*wcn[is]));
         dXxzdwcn[is] = 0.0;
-        dXyydwcn[is] = -2.0*wpn2[is]*wcn[is]/(1 - wcn[is]*wcn[is])/(1 - wcn[is]*wcn[is]);
+        dXyydwcn[is] = -2.0*wpn2[is]*wcn[is]/(1.0 - wcn[is]*wcn[is])/(1.0 - wcn[is]*wcn[is]);
         dXyzdwcn[is] = 0.0;
         dXzzdwcn[is] = 0.0;    
 
-        dXxxdwpn2[is] = -1.0/(1 - wcn[is]*wcn[is]);
-        dXxydwpn2[is] = +wcn[is]*I/(1 - wcn[is]*wcn[is]);
+        dXxxdwpn2[is] = -1.0/(1.0 - wcn[is]*wcn[is]);
+        dXxydwpn2[is] = I*wcn[is]/(1.0 - wcn[is]*wcn[is]);
         dXxzdwpn2[is] = 0.0;
-        dXyydwpn2[is] = -1.0/(1 - wcn[is]*wcn[is]);
+        dXyydwpn2[is] = -1.0/(1.0 - wcn[is]*wcn[is]);
         dXyzdwpn2[is] = 0.0;
         dXzzdwpn2[is] = -1.0;    
         
@@ -180,6 +182,16 @@ double Npar,dNpardY[];
      
     buildXstruc(X,dNperpdY,Xxx,Xxy,Xxz,Xyy,Xyz,Xzz,dXxxdNperp,dXxydNperp,dXxzdNperp,dXyydNperp,dXyzdNperp,dXzzdNperp,dXxxdNpar,dXxydNpar,dXxzdNpar,dXyydNpar,dXyzdNpar,dXzzdNpar,dXxxdbetath,dXxydbetath,dXxzdbetath,dXyydbetath,dXyzdbetath,dXzzdbetath,dXxxdwcn,dXxydwcn,dXxzdwcn,dXyydwcn,dXyzdwcn,dXzzdwcn,dXxxdwpn2,dXxydwpn2,dXxzdwpn2,dXyydwpn2,dXyzdwpn2,dXzzdwpn2,ns,dNpardY,dwcndY,dwpn2dY,dbetathdY);
 } 
+
+void calcY1(Nperp,dNperpdY,ns,ncyclharm,Npar,dNpardY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY)
+double complex Nperp,dNperpdY[MC];
+int ns;
+int ncyclharm;
+double Npar,dNpardY[MC];
+double wcn[],dwcndY[][MC],wpn2[],dwpn2dY[][MC],betath[],dbetathdY[][MC];
+{ 
+
+}
 
 
 void hottensor(X,Nperp,dNperpdY,ns,ncyclharm,raymagnetic,Npar,dNpardY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY)
@@ -576,7 +588,7 @@ double complex z, *Z;
     static double nmax3=27; /* nmax for asymptotic expansion */
     static double complex czero = 0.0;
     static double complex cone = 1.0;
-    static double complex isqrtpi = 1.772453850905516*I;
+    static double complex isqrtpi = I*1.772453850905516;
 
     z2 = z*z;
     som = czero;
