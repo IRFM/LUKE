@@ -175,6 +175,7 @@ ipr.mex76 = [ipr.luke_root,'Project_DKE/MEX/Bin/ipr/MATLAB76'];
 %
 ipr.MUMPS.seq = [ipr.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/dke'];
 ipr.MUMPS.mex76 = [ipr.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
+ipr.compiler_opt.helmex = '-L/home/yves/PACKAGES/Bin/lapack-3.2/ -llapack_LINUX -L/home/yves/PACKAGES/Bin/GotoBLAS -lgoto';% Optional arguments for compilation 
 %
 dkepath.ipr = ipr;
 %
