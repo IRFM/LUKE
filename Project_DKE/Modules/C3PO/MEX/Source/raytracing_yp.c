@@ -561,7 +561,7 @@ void mexFunction(   int     nlhs,
     register unsigned int  m,kk,ii=0;
     register int k=-1;
 
-    int flag1,iimax=500000, kmax=(int)rayparam.kmax[0];
+    int flag1,iimax=2000000, kmax=(int)rayparam.kmax[0];
 
     double *s0,*s1,*s2,*s3,*s4,*s5,*s6;
     double *tempt,*temp0,*temp1,*temp2,*temp3,*temp4,*temp5,*temp6,*temp7;
@@ -670,6 +670,7 @@ The main loop
             h = rayparam.tfinal[0] - t1;
         }
         if (ii > iimax) {
+            mexPrintf("iimax is reached");
             goto Endloop;
             flag1 = 2;
         }

@@ -455,6 +455,7 @@ launchs = launchs(mask);
 % --------- Load first all parameters that are in files ------------
 %
 dkeparam         = make_dkeparam_cronos(par.launchtype);
+dkeparam.Dparparmax = par.Dql;
 %
 if strcmp(par.eco,'Yes')
   disp('memory economic mode on')
@@ -612,16 +613,18 @@ if opt_save == 1,
         end
     end	
     wavestructs(iw_list) = [];
+else
+%
+% accessibility test
+%
+  acces_lh
 end
 %
 %--------------------------- Execution du trace de rayon C3PO et du code cinetique LUKE --------------------------- 
 %
 ik = 1;
 warning off
-%
-% accessibility test
-%
-acces_lh
+
 %
 %while 1,
    [Znorm_RF,Zcurr_RF,ZP0_RF,dke_out_RF,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = run_lukert('cronos',wavestructs,waves,[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[],opt_save);
@@ -669,20 +672,22 @@ I_LH_c = I_TOT_c - I_OHM_c;
 
 %
 p_TOT_c = (ZP0_RF.x_rf_fsav' + ZP0_RF.x_e_fsav)*mksa.P_ref;
+p_LH_c = ZP0_RF.x_rf_fsav'*mksa.P_ref;
 if sum(abs(ohm.epsi)) ~= 0
   p_OHM_c = ZP0.x_e_fsav*mksa.P_ref;
 else
   p_OHM_c = 0*p_TOT_c;  
 end
-p_LH_c = p_TOT_c - p_OHM_c;
+p_OHMsyn_c = p_TOT_c - p_OHM_c - p_LH_c;% synergistic power spent on electric field, already accounted for in cronos E.J
 %
 P_TOT_c = sum((ZP0_RF.x_rf_fsav' + ZP0_RF.x_e_fsav).*equilDKE.xdV_2piRp_dke*mksa.P_ref*2*pi*equilDKE.Rp);
+P_LH_c = sum(ZP0_RF.x_rf_fsav'.*equilDKE.xdV_2piRp_dke*mksa.P_ref*2*pi*equilDKE.Rp);
 if sum(abs(ohm.epsi)) ~= 0
   P_OHM_c = sum(ZP0.x_e_fsav.*equilDKE.xdV_2piRp_dke*mksa.P_ref*2*pi*equilDKE.Rp);
 else
   P_OHM_c = 0*P_TOT_c;
 end
-P_LH_c = P_TOT_c - P_OHM_c;
+P_OHMsyn_c = P_TOT_c - P_OHM_c - P_LH_c;% synergistic power spent on electric field, already accounted for in cronos E.J
 
 %
 if strcmp(dkedisplay.display_mode,'PARTIAL_VISUAL') | strcmp(dkedisplay.display_mode,'VISUAL'),
@@ -723,11 +728,16 @@ if ~isfield(par,'smooth')
   par.smooth = 'No';
 end
 if strcmp(par.smooth,'Yes')
-    newj  = smooth_dke_yp(sortie.j',par.width_smooth,par.method_smooth);  % diffusion phenomenologique du courant
-    norm1 = trapz(gene.x,sortie.j);
-    norm2 = trapz(gene.x,newj);
+    newj  = smooth_dke_yp(sortie.j',par.width_smooth,par.method_smooth)';  % diffusion phenomenologique du courant
+    norm1 = trapz(gene.x,sortie.j.*equi.spr);
+    norm2 = trapz(gene.x,newj.*equi.spr);
     sortie.j = newj / norm2 * norm1;
+    newel  = smooth_dke_yp(sortie.el',par.width_smooth,par.method_smooth)';  % diffusion phenomenologique du courant
+    norm1 = trapz(gene.x,sortie.el.*equi.vpr);
+    norm2 = trapz(gene.x,newel.*equi.vpr);
+    sortie.el = newel / norm2 * norm1;
 end
+
 %
 % pour les valeurs en dehors de la grille LUKE (centre du plasma uniquement), nous
 % reportons la derniere valeur connue
