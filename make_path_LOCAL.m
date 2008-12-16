@@ -34,7 +34,8 @@ saturne.temppathroot = '/scratch/';%Absolute root directory path adress where te
 %
 saturne.mex71 = [saturne.luke_root,'Project_DKE/MEX/Bin/saturne/MATLAB71/'];
 saturne.mex75 = [saturne.luke_root,'Project_DKE/MEX/Bin/saturne/MATLAB75/'];
-saturne.compiler_opt.helmex = '';% Optional argument for helmex compilation 
+saturne.compiler_opt.helmex = '';% Optional argument for helmex compilation
+saturne.compiler_opt.fopts.mex75 = 'FC=''/luke/saturne/Packages/Bin/G95/g95-install/bin/x86_64-suse-linux-gnu-g95''';
 %
 saturne.MUMPS.mex71 = [saturne.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB71'];%Where MUMPS matrix solver is stored (MEX function)
 saturne.MUMPS.mex75 = [saturne.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB75'];%Where MUMPS matrix solver is stored (MEX function)
