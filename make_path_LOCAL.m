@@ -174,8 +174,8 @@ ipr.temppathroot = '/tmp/';%Absolute root directory path adress where temporary 
 %
 ipr.mex76 = [ipr.luke_root,'Project_DKE/MEX/Bin/ipr/MATLAB76'];
 %
-ipr.MUMPS.seq = [ipr.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/dke'];
-ipr.MUMPS.mex76 = [ipr.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
+ipr.MUMPS.seq = [ipr.local_root,'PACKAGES/Bin/MUMPS_4.7.3/dke'];
+ipr.MUMPS.mex76 = [ipr.local_root,'PACKAGES/Bin/MUMPS_4.7.3/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
 ipr.compiler_opt.helmex = '-L/home/yves/PACKAGES/Bin/lapack-3.2/ -llapack_LINUX -L/home/yves/PACKAGES/Bin/GotoBLAS -lgoto';% Optional arguments for compilation 
 %
 dkepath.ipr = ipr;
