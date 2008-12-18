@@ -122,7 +122,7 @@ if exist('flag_path','var'),%Paths
         for iroute = 1:nroutes,
             if ~isempty(dkepath.traceroute.(routenames{iroute})),
                 [s,lroutename] = unix(['traceroute ',dkepath.traceroute.(routenames{iroute})]);
-                if strfind(lroutename,dkepath.traceroute.(routenames{iroute})) && ~strfind(lroutename,'unknown'),
+                if strfind(lroutename,dkepath.traceroute.(routenames{iroute})) & ~strfind(lroutename,'unknown'),
                     ihost_ref = iroute;
                     break;
                 end
