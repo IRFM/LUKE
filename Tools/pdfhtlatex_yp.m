@@ -1,5 +1,5 @@
 function pdfhtlatex_yp(root_path,filelist)
-%LUKE - LATEX to PDF and HTML documentation builder
+%LUKE - LaTeX to PDF and HTML documentation builder
 %
 % Create dynamically all the documentation for C3PO/LUKE in html format from Latex files
 % (needs standard TeX package with TeX4ht. TeXLive 2007 or above package is strongly recommanded)
@@ -35,10 +35,10 @@ function pdfhtlatex_yp(root_path,filelist)
     end
     %
     if isempty(result_ht),
-        info_dke_yp(1,'The package TeX4ht is not available. LateX to HTML conversion is not possible. Please set-up the path for MatLab correctly');
+        info_dke_yp(1,'The package TeX4ht is not available. LaTeX to HTML conversion is not possible. Please set-up the path for MatLab correctly');
     end
     if isempty(result_pdf),
-        info_dke_yp(1,'The package pdfLatex is not available. LateX to PDF conversion is not possible. Please set-up the path for MatLab correctly');
+        info_dke_yp(1,'The package pdfLatex is not available. LaTeX to PDF conversion is not possible. Please set-up the path for MatLab correctly');
     end
     %
     if isempty(result_ht) & isempty(result_pdf)
@@ -70,15 +70,15 @@ function pdfhtlatex_yp(root_path,filelist)
     %
     docpath = root_path;
     if nargin > 1,
-        latexdochtmlpath = fullfile(docpath,'Documentation','LateX');
+        latexdochtmlpath = fullfile(docpath,'Documentation','LaTeX');
     end
     %
     if nargin > 1,
         if ~exist(latexdochtmlpath),
-            mkdir(docpath,fullfile('Documentation','LateX'));
+            mkdir(docpath,fullfile('Documentation','LaTeX'));
         else
             rmdir(latexdochtmlpath,'s');
-            mkdir(docpath,fullfile('Documentation','LateX'));
+            mkdir(docpath,fullfile('Documentation','LaTeX'));
         end
     else
         latexdochtmlpath = docpath;
@@ -130,16 +130,16 @@ function pdfhtlatex_yp(root_path,filelist)
             end        
             %
             if status_ht == 0,
-                info_dke_yp(1,['Successfull LateX to HTML conversion of the file ',texfile]);
+                info_dke_yp(1,['Successfull LaTeX to HTML conversion of the file ',texfile]);
             else
-                info_dke_yp(1,['Unsuccessfull LateX to HTML conversion of the file ',texfile]);
+                info_dke_yp(1,['Unsuccessfull LaTeX to HTML conversion of the file ',texfile]);
                 disp(result);
             end
             %
             if status_pdf == 0,
-                info_dke_yp(1,['Successfull LateX to PDF conversion of the file ',texfile]);
+                info_dke_yp(1,['Successfull LaTeX to PDF conversion of the file ',texfile]);
             else
-                info_dke_yp(1,['Unsuccessfull LateX to PDF conversion of the file ',texfile]);
+                info_dke_yp(1,['Unsuccessfull LaTeX to PDF conversion of the file ',texfile]);
                 disp(result);
             end
             %
@@ -147,7 +147,7 @@ function pdfhtlatex_yp(root_path,filelist)
         catch
             cd(root_path);
             rmdir(destination_dir,'s');
-            info_dke_yp(1,['An error occured during LateX translation of the file ',texfile]);
+            info_dke_yp(1,['An error occured during LaTeX translation of the file ',texfile]);
         end
     end
     %
