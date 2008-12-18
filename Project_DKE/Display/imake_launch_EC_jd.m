@@ -2,7 +2,7 @@ function launch = imake_launch_EC_jd
 %
 % This function builts the launch structure for LH waves from user-specified data
 %
-launch.omega_rf = 2*pi*1e9*input_dke_yp('Wave frequency (GHz)',4.6,[0;Inf],'',[1,1]);
+launch.omega_rf = 2*pi*1e9*input_dke_yp('Wave frequency (GHz)',[],[0;Inf],'',[1,1]);
 %
 ny = input_dke_yp('Number of rays',1,1:20,'',[1,1]);  
 %
@@ -17,6 +17,10 @@ if length(launch.yP_L) == 1,
     launch.yP_L = launch.yP_L*ones(1,ny)/ny;
 elseif any(size(launch.yP_L) ~= [1,ny]),
     error('Wrong dimension for power array')
+end
+%
+if ny == 1,
+    launch.w0 = input_dke_yp('Beam width (m)',[],[0;Inf],'',[1,1]);
 end
 %
 launch.id = input_dke_yp('Provide an id for this launching structure','');

@@ -89,29 +89,68 @@ if launch.type == 'EC',
     %
     for iy = 1:ny,    
         %
-        % interpolation for r at ray poloidal locations    
-        %
-        pstr = interp1(equil.theta,ptr.',sytheta(:,iy),method).';%r(psi,st)
-        %
-        % interpolation for psi at ray position (along cst theta lines)
-        %
-        %spsin = interp1(pstr,ppsin,sr,method);%psi(s)
-        for is = 1:ns 
-            spsin(is) = interp1(pstr(:,is),psin,syr(is,iy),method,NaN);%psi(s)
+        if ~isnan(launch.yR_L(iy)),
+            %
+            %
+            % interpolation for r at ray poloidal locations    
+            %
+            pstr = interp1(equil.theta,ptr.',sytheta(:,iy),method).';%r(psi,st)
+            %
+            % interpolation for psi at ray position (along cst theta lines)
+            %
+            %spsin = interp1(pstr,ppsin,sr,method);%psi(s)
+            %
+            spsin = zeros(1,ns);
+            %
+            for is = 1:ns 
+                spsin(is) = interp1(pstr(:,is),psin,syr(is,iy),method,NaN);%psi(s)
+            end
+            %
+            is0 = find(~isnan(spsin),1,'first');
+            %
+            psin0 = spsin(is0);
+            %
+            s0 = sqrt(sysh(is0,iy).^2 + sysZ(is0,iy).^2);%distance along the ray from mirror to LCFS   
+            %
+            x0 = syx(is0,iy);
+            y0 = syy(is0,iy);
+            r0 = syr(is0,iy);
+            theta0 = sytheta(is0,iy);
+            phi0 = syphi(is0,iy);
+            Nx0 = syNx(is0,iy);
+            Ny0 = syNy(is0,iy);
+            Nphi0 = syNphi(is0,iy);
+            %
+            rho0 = psi2rho_jd(equil,psin0);
+            %
+        else
+            %
+            s0 = 0;%distance along the ray from mirror to LCFS   
+            %
+            rho0 = 1;
+            psin0 = 1;
+            %
+            tx = equil.ptx(end,:);
+            ty = equil.pty(end,:);
+            %
+            mask = [find(ty(1:end - 1) < 0 & diff(ty) > 0),1 + [0,find(ty(1:end - 1) >= 0 & diff(ty) > 0)]]; 
+            %
+            y0 = launch.yZ_L(iy) - equil.Zp;
+            x0 = interp1(ty(mask),tx(mask),y0,method,NaN);
+            %
+            if isnan(y0),
+                error('The vertical launching position in beyonf the LCFS');
+            end
+            %
+            r0 = sqrt(x0.^2 + y0.^2);
+            theta0 = atan(y0./x0) + pi*(x0 < 0) + 2*pi*(x0 > 0 & y0 < 0);
+            phi0 = - launch.yphi_L(iy);
+            %
+            Nx0 = sin(launch.ybeta_L(iy)).*cos(launch.yalpha_L(iy));
+            Ny0 = cos(launch.ybeta_L(iy));
+            Nphi0 = sin(launch.ybeta_L(iy)).*sin(launch.yalpha_L(iy));
+            %
         end
-        %
-        is0 = min(find(~isnan(spsin)));
-        %
-        psin0 = spsin(is0);
-        %
-        r0 = syr(is0,iy);
-        theta0 = sytheta(is0,iy);
-        phi0 = syphi(is0,iy);
-        Nx0 = syNx(is0,iy);
-        Ny0 = syNy(is0,iy);
-        Nphi0 = syNphi(is0,iy);
-        %
-        rho0 = psi2rho_jd(equil,psin0);
         %
         Bx0 = interp2(psin,equil.theta,equil.ptBx.',psin0,theta0,method);
         By0 = interp2(psin,equil.theta,equil.ptBy.',psin0,theta0,method);
@@ -120,11 +159,9 @@ if launch.type == 'EC',
         Npar0 = (Nx0*Bx0 + Ny0*By0 + Nphi0*BPHI0)/sqrt(Bx0.^2 + By0.^2 + BPHI0.^2);
         %
         Bp0 = sqrt(Bx0.^2 + By0.^2);
-        cosalpha = (By0*syx(is0,iy) - Bx0*syy(is0,iy))/r0/Bp0;
+        cosalpha0 = (By0*x0 - Bx0*y0)/r0/Bp0;
         Ns0 = (Nx0*Bx0 + Ny0*By0)/Bp0;
-        m0 = r0*Ns0*rayinit.omega_rf/clum/cosalpha;
-        %
-        s0 = sqrt(sysh(is0,iy).^2 + sysZ(is0,iy).^2);%distance along the ray from mirror to LCFS   
+        m0 = r0*Ns0*rayinit.omega_rf/clum/cosalpha0;
         %
         rayinit.yrho0(iy) = rho0;%Initial radial position at launch
         rayinit.ytheta0(iy) = theta0;%Initial poloidal position at launch
@@ -135,9 +172,13 @@ if launch.type == 'EC',
         rayinit.ydNpar0(iy) = dNpar0;%initial Ray spectral width
         rayinit.yP0_2piRp(iy) = yP0_2piRp(iy);%Lineic initial power density initial power in the ray (W/m)
         %
-        if ny == 1,  
+        if ny == 1 && isfield(launch,'w0'),%beam waist  
             rayinit.w0 = launch.w0;
-            rayinit.z0 = launch.z_L - s0;%distance from LCFS to waist
+            if isfield(launch,'z_L'),%for divergence calculation
+                rayinit.z0 = launch.z_L - s0;%distance from LCFS to waist
+            else
+                rayinit.z0 = 0;
+            end
         else% the Gaussian beam representation is compatible with the one ray description only
             rayinit.w0 = NaN;
             rayinit.z0 = NaN;
