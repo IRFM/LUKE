@@ -106,21 +106,25 @@ else
 	disp('WARNING: Test mode.')
 	disp('----------------------------------------------')
 	%
-	search_path = {fullfile(luke_root,'Project_DKE','DKE'),...     
+	if test == 1,
+		search_path = {fullfile(luke_root,'Project_DKE','DKE'),...     
               fullfile(luke_root,'Project_DKE','DKE','MEX'),...  
               fullfile(luke_root,'Project_DKE','MEX'),...               
               fullfile(luke_root,'Project_DKE','MEX','Source'),...  
               fullfile(luke_root,'Project_DKE','MEX','Bin'),...
-              };
+        };
+    end
 end
 %
-overview_scripts(1).path = fullfile(luke_root,'INSTALL.m');overview_scripts(1).format = '';
-overview_scripts(2).path = fullfile(luke_root,'README.m');overview_scripts(2).format = '';
-overview_scripts(3).path = fullfile(luke_root,'VERSIONS.m');overview_scripts(3).format = '';
-overview_scripts(4).path = fullfile(luke_root,'AUTHORS.m');overview_scripts(4).format = '';
-%
-excludedfoldernames = {};
-htmldocbuilder_luke_yp(m2htmllib_path,'off',luke_root,search_path,excludedfoldernames,overview_scripts);%build html doc
+if test == 1,
+	overview_scripts(1).path = fullfile(luke_root,'INSTALL.m');overview_scripts(1).format = '';
+	overview_scripts(2).path = fullfile(luke_root,'README.m');overview_scripts(2).format = '';
+	overview_scripts(3).path = fullfile(luke_root,'VERSIONS.m');overview_scripts(3).format = '';
+	overview_scripts(4).path = fullfile(luke_root,'AUTHORS.m');overview_scripts(4).format = '';
+	%
+	excludedfoldernames = {};
+	htmldocbuilder_luke_yp(m2htmllib_path,'off',luke_root,search_path,excludedfoldernames,overview_scripts);%build html doc
+end
 %
 % Check that the list of TeX files given below is similar in the html file ~','LUKE/Packages/m2html/templates/LUKE/lukeoverview.html
 %  
@@ -134,8 +138,13 @@ else
 	disp('WARNING: Test mode.')
 	disp('----------------------------------------------')
 	%
-	texfilelist = {fullfile(luke_root,'Project_DKE','Modules','FEB','Doc','3Tmodel.tex'),...
-           }; 
+	if test == 1,
+		texfilelist = {fullfile(luke_root,'Project_DKE','Modules','FEB','Doc','3Tmodel.tex'),...
+        }; 
+    elseif test ==2,
+		texfilelist = {fullfile(luke_root,'Project_DKE','Modules','RT','Doc','raytracing.tex'),...
+        };     
+    end
 end
 pdfhtlatex_yp(luke_root,texfilelist);%build html and pdf doc from tex files
 %
