@@ -970,30 +970,6 @@ while isel >= 0,
             %
             irunhxr_jd(workdir,basestr,'',id_simul,equil,dkeparam,dkedisplay,output);
             %
-        elseif isel == 4,
-            %
-            % GENERATE LUKE RUN SCRIPT
-            %
-            imake_rundke_jd(paths,fileids,status,dkeparam.rho_S,workdir,id_simul_o,opt_gui);
-            %
-        elseif isel == 4,
-            %
-            % GENERATE LUKE RUN SCRIPT
-            %
-            imake_rundke_jd(paths,fileids,status,dkeparam.rho_S,workdir,id_simul_o,opt_gui);
-            %
-        elseif isel == 4,
-            %
-            % GENERATE LUKE RUN SCRIPT
-            %
-            imake_rundke_jd(paths,fileids,status,dkeparam.rho_S,workdir,id_simul_o,opt_gui);
-            %
-        elseif isel == 4,
-            %
-            % GENERATE LUKE RUN SCRIPT
-            %
-            imake_rundke_jd(paths,fileids,status,dkeparam.rho_S,workdir,id_simul_o,opt_gui);
-            %
         elseif isel == 16,
             %
             % GENERATE LUKE RUN SCRIPT
@@ -1071,7 +1047,7 @@ while isel >= 0,
                 id_simul = id_simul_o;
             end
             %
-			if strcmp(basestr,'TCV'),
+			if strcmp(dkepath.hostname,'crpppc70'),
 				c_opt = input('Option for running LUKE? 0 (on local computer), 1 (on pleiades2) [0] : ');
             	if isempty(c_opt) | ~isnumeric(c_opt) | ~any(c_opt == [0,1]),
                 	c_opt = 0;
