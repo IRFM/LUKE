@@ -1394,3 +1394,93 @@
 % U res_alpha_0_Dr0_0.log (")
 % U Alpha_Scan_Curr.eps (")
 %
+% ----------------------------------------------------------------------------------------------------
+% 
+% LUKE Release 1.6.6
+% 
+% - Major changes in interactive LUKE with external structure and more coherent fonctionalities
+% - Tutorial for LUKE use
+% 
+% ====> LUKE
+%
+% U make_path_LOCAL.m (several users added)
+% U install_doc_LUKE.m (small corrections)
+%
+% ====> LUKE/Project_DKE/Database/
+% 
+% U EQUIL_files/idealequilcyl_yp.m (small corrections)
+% U EQUIL_files/idealprof_yp.m (")
+% U EQUIL_files/make_equil_JETh77.m (")
+% U WAVE_files/make_wave_C3POparam.m (rebuilt equilv by default)
+% A EXTERNAL_files/load_externaldata_JET.m (external structure from JET database)
+% A EXTERNAL_files/load_externaldata_TCV.m (external structure from TCV database)
+% A EXTERNAL_files/load_externaldata_TS.m (external structure from TS database)
+% U EXTERNAL_files/load_tprof_tsbase_yp.m (small corrections)
+% U DKEPARAM_files/make_dkeparam_LH_RT.m (npresmin and rho_S)
+% U DKEPARAM_files/make_dkeparam_EC_RT.m (npresmin and rho_S)
+%
+% ====> LUKE/Project_DKE/Display/
+% 
+% U iload_externaldata_jd.m (external data loading)
+% A imake_launch_LH_jd.m (dynamic creation of LH wave structure including with use of external data)
+% A imake_launch_EC_jd.m (dynamic creation of EC wave structure)
+% U imake_angles_TCV_jd.m (small corrections)
+% U imake_ripple_yp.m (")
+% U imake_transp_jd.m (")
+% U imake_equil_ideal.m (general function for dynamic equilibrium creation)
+% U imake_equil_jd.m (modifications for external data and dynamic creation)
+% U imake_ohm_jd.m (")
+% U imake_wave_jd.m (" + use of imake_launch_LH_jd generalized)
+% U irunluke_jd.m (")
+% D imake_equil_helena.m (no longer needed)
+% U imake_struct_jd.m (new imakes management)
+%
+% ====> LUKE/Project_DKE/DKE/
+% 
+% U LUKEversion_jd.m (luke 1.6.6)
+% U proc_luke_jd.m (addition of energy space current density)
+% U species_dke_yp.m (error message)
+% U rfdiff_dke_jd.m (integers)
+% U rfwave_dke_jd.m (display increase factor)
+%
+% ====> LUKE/Project_DKE/Modules/Cronos/
+% 
+% U make_wavelaunchs_cronos_lh.m (default frequency, JET case)
+% U zstarwars.m (output power)
+%
+% ====> LUKE/Project_DKE/Modules/EFIT/
+% 
+% U equil_magnetic_EFIT_jd.m (JEt case added)
+% U Teneprof_jd.m (")
+%
+% ====> LUKE/Project_DKE/Modules/Helena/
+% 
+% U equil_magnetic_helmex77_yp.m (small corrections)
+% U make_helmex77.m (")
+%
+% ====> LUKE/Project_DKE/Modules/RT/
+% 
+% U main_rayinit_launch_jd.m (small corrections)
+% U MEX/Source/erfcc_mex_jd.f (vector size increased)
+% U MEX/Source/raytracing_yp.c (iimax increased)
+% U MEX/Source/raytracing_dieltensor_yp.c (fedora patch)
+% 
+% ====> LUKE/Simulations/Examples/ITER/Scen4/
+%
+% U res_comp.log (validation 1.6.6)
+%
+% ====> LUKE/Simulations/Examples/TS/32299/
+%
+% U res_alpha_0_Dr0_0.log (validation 1.6.6)
+%
+% ====> LUKE/Tools/
+% 
+% U graph_wave_jd.m (extensive relooking of the function)
+% U input_dke_yp.m (output size requirements)
+% U pc_dke_yp.m (cgs units added)
+% U pdfhtlatex_yp.m (small corrections)
+% 
+% ====> LUKE/Packages/m2html
+% 
+% many files added for LUKE tutorial
+%
