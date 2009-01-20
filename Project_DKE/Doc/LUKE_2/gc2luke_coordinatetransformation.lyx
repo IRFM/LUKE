@@ -1,0 +1,916 @@
+#LyX 1.6.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\begin_preamble
+
+\usepackage{epstopdf} 
+\usepackage{pdfsync}
+\end_preamble
+\use_default_options false
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Guiding center to LUKE coordinate transformation
+\end_layout
+
+\begin_layout Author
+by Yves Peysson (CEA/IRFM)
+\end_layout
+
+\begin_layout Section
+LUKE coordinates definitions
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:LUKE"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Configuration space
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:LUKEconfig"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The coordinate system 
+\begin_inset Formula $\left(\psi,\theta,z\right)$
+\end_inset
+
+ is defined in section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "confspace"
+
+\end_inset
+
+ for a magnetic equilibrium with nested flux-surfaces and either toroidal
+ axisymmetry or cylindrical symmetry along the coordinate 
+\begin_inset Formula $z$
+\end_inset
+
+.
+ It is illustrated in Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Psisphi"
+
+\end_inset
+
+.
+ The plasma volume is defined by the following coordinate range
+\begin_inset Formula \begin{equation}
+\begin{array}{l}
+0\leq\psi\leq\psi_{a}\text{ or }\psi_{a}\leq\psi\leq0\\
+0\leq\theta\leq2\pi\\
+\left\{ \begin{array}{ll}
+0\leq z\leq2\pi R_{p} & \text{ in toroidal geometry}\\
+-\infty\leq z\leq\infty & \text{ in cylindrical geometry}\end{array}\right.\end{array}\end{equation}
+
+\end_inset
+
+ The position vector is 
+\begin_inset Formula \begin{equation}
+\left\{ \begin{array}{ll}
+\mathbf{x}=R_{p}\mathbf{\hat{x}}+Z_{p}\widehat{\mathbf{y}}+r\left(\psi,\theta\right)\mathbf{\hat{r}} & \text{ in toroidal geometry}\\
+\mathbf{x}=r\left(\psi,\theta\right)\mathbf{\hat{r}+}z\mathbf{\hat{z}} & \text{ in cylindrical geometry}\end{array}\right.\end{equation}
+
+\end_inset
+
+ where 
+\begin_inset Formula $\mathbf{\hat{x}}=\mathbf{\nabla}x$
+\end_inset
+
+, 
+\begin_inset Formula $\widehat{\mathbf{y}}=\mathbf{\nabla}y$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbf{\hat{r}}=\mathbf{\nabla}r$
+\end_inset
+
+ are unit vectors in the direction of 
+\begin_inset Formula $x$
+\end_inset
+
+, 
+\begin_inset Formula $y$
+\end_inset
+
+ and 
+\begin_inset Formula $r$
+\end_inset
+
+, respectively.
+ Note that in general 
+\begin_inset Formula $\mathbf{\hat{\psi}=\nabla}\psi/\left\Vert \mathbf{\nabla}\psi\right\Vert $
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbf{\hat{\theta}=\hat{z}\times\hat{r}}$
+\end_inset
+
+ are not orthogonal such the normalized covariant (or tangent) basis 
+\begin_inset Formula $(\mathbf{\hat{r}},\mathbf{\hat{s}=\hat{z}\times\hat{\psi}},\mathbf{\hat{z})}$
+\end_inset
+
+ and contravariant (or reciprocal) basis 
+\begin_inset Formula $(\mathbf{\hat{\psi}},\mathbf{\hat{\theta}},\mathbf{\hat{z})}$
+\end_inset
+
+ no not coincide and the metric tensor is not diagonal.
+\end_layout
+
+\begin_layout Standard
+The Jacobian of the transformation is 
+\begin_inset Formula \begin{equation}
+J_{\psi}=\frac{\Upsilon}{\left\Vert \mathbf{\nabla}\psi\right\Vert }\frac{r}{\left\vert \mathbf{\hat{\psi}}\cdot\mathbf{\hat{r}}\right\vert }\label{ptzjacobian}\end{equation}
+
+\end_inset
+
+where
+\begin_inset Formula \[
+\Upsilon\left(\psi,\theta\right)=\left\Vert \nabla z\right\Vert ^{-1}=\frac{R}{R_{p}}=1+\frac{x}{R_{p}}\]
+
+\end_inset
+
+is a toroidicity factor, such that 
+\begin_inset Formula $\nabla z=\Upsilon^{-1}\mathbf{\hat{z}}$
+\end_inset
+
+.
+ For circular concentric magnetic flux surfaces, 
+\begin_inset Formula $\left\vert \mathbf{\hat{\psi}}\cdot\mathbf{\hat{r}}\right\vert =1$
+\end_inset
+
+.
+ The differential surface element along the axial (or toroidal) direction
+ is used for flux surface averaging and is given by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+d\mathbf{S}_{z}=\frac{r}{\left\Vert \mathbf{\nabla}\psi\right\Vert \left\vert \mathbf{\hat{\psi}}\cdot\mathbf{\hat{r}}\right\vert }d\psi d\theta\mathbf{\hat{z}}\label{dsz}\end{equation}
+
+\end_inset
+
+ and the differential volume element is
+\begin_inset Formula \begin{equation}
+d^{3}V=J_{\psi}d\psi d\theta dz=\frac{\Upsilon}{\left\Vert \mathbf{\nabla}\psi\right\Vert }\frac{r}{\left\vert \mathbf{\hat{\psi}}\cdot\mathbf{\hat{r}}\right\vert }d\psi d\theta dz\label{dV}\end{equation}
+
+\end_inset
+
+ The gradient operator of a function 
+\begin_inset Formula $f$
+\end_inset
+
+ is
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{\nabla}f=\left\Vert \mathbf{\nabla}\psi\right\Vert \frac{\partial f}{\partial\psi}\mathbf{\hat{\psi}}+\frac{1}{r}\frac{\partial f}{\partial\theta}\mathbf{\hat{\theta}}+\dfrac{1}{\Upsilon}\frac{\partial f}{\partial z}\mathbf{\hat{z}}\label{ptzgrad}\end{equation}
+
+\end_inset
+
+ and the divergence operator of a vector field 
+\begin_inset Formula $\mathbf{A}$
+\end_inset
+
+ is
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray}
+\mathbf{\nabla}\cdot\mathbf{A} & = & \frac{\left\Vert \mathbf{\nabla}\psi\right\Vert \left\vert \mathbf{\hat{\psi}}\cdot\mathbf{\hat{r}}\right\vert }{\Upsilon r}\frac{\partial}{\partial\psi}\left(\frac{\Upsilon r}{\left\vert \mathbf{\hat{\psi}}\cdot\mathbf{\hat{r}}\right\vert }\mathbf{A}\cdot\mathbf{\hat{\psi}}\right)\\
+ &  & +\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert \left\vert \mathbf{\hat{\psi}}\cdot\mathbf{\hat{r}}\right\vert }{\Upsilon r}\frac{\partial}{\partial\theta}\left(\frac{\Upsilon}{\left\Vert \mathbf{\nabla}\psi\right\Vert \left\vert \mathbf{\hat{\psi}}\cdot\mathbf{\hat{r}}\right\vert }\mathbf{A}\cdot\mathbf{\hat{\theta}}\right)\\
+ &  & +\frac{1}{\Upsilon}\frac{\partial}{\partial z}\left(\mathbf{A}\cdot\mathbf{\hat{z}}\right)\label{ptzdiv}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Momentum space
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:LUKEmomentum"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The coordinate system 
+\begin_inset Formula $\left(p,\xi,\varphi\right)$
+\end_inset
+
+ is defined in section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "momspace"
+
+\end_inset
+
+.
+ The momentum space is parametrized by the following coordinate range 
+\begin_inset Formula \begin{equation}
+\begin{array}{l}
+0\leq p<\infty\\
+-1\leq\xi<1\\
+0\leq\varphi<2\pi\end{array}\end{equation}
+
+\end_inset
+
+ The position vector is 
+\begin_inset Formula \begin{equation}
+\mathbf{p}=p\mathbf{\hat{p}}\end{equation}
+
+\end_inset
+
+ on the local orthonormal basis 
+\begin_inset Formula $(\mathbf{\hat{p}},\mathbf{\hat{\xi}},\mathbf{\hat{\varphi}})$
+\end_inset
+
+ with
+\begin_inset Formula \begin{equation}
+\begin{array}{l}
+\mathbf{\hat{p}}=\mathbf{\nabla}p\\
+\mathbf{\hat{\xi}}=\mathbf{\hat{\varphi}}\times\mathbf{\hat{p}}\\
+\mathbf{\hat{\varphi}}=p\sqrt{1-\xi^{2}}\mathbf{\nabla}\varphi\end{array}\end{equation}
+
+\end_inset
+
+ The differential surface elements are given by
+\begin_inset Formula \begin{equation}
+\begin{array}{l}
+d\mathbf{S}_{p}=p^{2}d\xi d\varphi\,\mathbf{\hat{p}}\\
+d\mathbf{S}_{\xi}=-p\sqrt{1-\xi^{2}}dpd\varphi\,\mathbf{\hat{\xi}}\\
+d\mathbf{S}_{\varphi}=\dfrac{p}{\sqrt{1-\xi^{2}}}dpd\xi\,\mathbf{\hat{\varphi}}\end{array}\label{diffmomentum}\end{equation}
+
+\end_inset
+
+and the Jacobian is simply
+\begin_inset Formula \begin{equation}
+J_{p}=p^{2}\label{eq:jacobianmomentum}\end{equation}
+
+\end_inset
+
+The gradient operator of a function 
+\begin_inset Formula $f$
+\end_inset
+
+ is
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\nabla_{\mathbf{p}}f=\frac{\partial f}{\partial p}\widehat{p}-\frac{\sqrt{1-\xi^{2}}}{p}\frac{\partial f}{\partial\xi}\widehat{\xi}+\frac{1}{p\sqrt{1-\xi^{2}}}\frac{\partial f}{\partial\varphi}\widehat{\varphi}\label{pxigrad}\end{equation}
+
+\end_inset
+
+and the divergence operator of a vector field 
+\begin_inset Formula $\mathbf{A}$
+\end_inset
+
+ is
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\nabla_{\mathbf{p}}\cdot\mathbf{A}=\frac{1}{p^{2}}\frac{\partial}{\partial p}\left(p^{2}\mathbf{A}\cdot\widehat{p}\right)-\frac{1}{p}\frac{\partial}{\partial\xi}\left(\sqrt{1-\xi^{2}}\mathbf{A}\cdot\widehat{\xi}\right)+\frac{1}{p\sqrt{1-\xi^{2}}}\frac{\partial}{\partial\varphi}\left(\mathbf{A}\cdot\widehat{\varphi}\right)\label{pxidiv}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Coordinate transformation
+\end_layout
+
+\begin_layout Standard
+Using the generalized coordinate system 
+\begin_inset Formula $\left(\psi,\theta,z,p,\xi,\varphi\right)$
+\end_inset
+
+ from real and momentum subspaces introduced in Sec.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:LUKE"
+
+\end_inset
+
+, the generalized Jacobian is
+\begin_inset Formula \begin{equation}
+J=J_{\psi}J_{p}=\frac{\Upsilon}{\left\Vert \mathbf{\nabla}\psi\right\Vert }\frac{r}{\left\vert \mathbf{\hat{\psi}}\cdot\mathbf{\hat{r}}\right\vert }p^{2}\label{eq:generalizedjacobian}\end{equation}
+
+\end_inset
+
+and the divergence operator of a vector field 
+\begin_inset Formula $\mathbf{A}$
+\end_inset
+
+ is
+\begin_inset Formula \begin{eqnarray}
+\mathbf{\nabla}\cdot\mathbf{A} & = & \frac{\left\Vert \mathbf{\nabla}\psi\right\Vert \left\vert \mathbf{\hat{\psi}}\cdot\mathbf{\hat{r}}\right\vert }{\Upsilon r}\frac{\partial}{\partial\psi}\left(\frac{\Upsilon r}{\left\vert \mathbf{\hat{\psi}}\cdot\mathbf{\hat{r}}\right\vert }\mathbf{A}\cdot\mathbf{\hat{\psi}}\right)\\
+ &  & +\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert \left\vert \mathbf{\hat{\psi}}\cdot\mathbf{\hat{r}}\right\vert }{\Upsilon r}\frac{\partial}{\partial\theta}\left(\frac{\Upsilon}{\left\Vert \mathbf{\nabla}\psi\right\Vert \left\vert \mathbf{\hat{\psi}}\cdot\mathbf{\hat{r}}\right\vert }\mathbf{A}\cdot\mathbf{\hat{\theta}}\right)\\
+ &  & +\frac{1}{\Upsilon}\frac{\partial}{\partial z}\left(\mathbf{A}\cdot\mathbf{\hat{z}}\right)\\
+ &  & +\frac{1}{p^{2}}\frac{\partial}{\partial p}\left(p^{2}\mathbf{A}\cdot\widehat{p}\right)\\
+ &  & -\frac{1}{p}\frac{\partial}{\partial\xi}\left(\sqrt{1-\xi^{2}}\mathbf{A}\cdot\widehat{\xi}\right)\\
+ &  & +\frac{1}{p\sqrt{1-\xi^{2}}}\frac{\partial}{\partial\varphi}\left(\mathbf{A}\cdot\widehat{\varphi}\right)\label{eq:generalizeddiv}\end{eqnarray}
+
+\end_inset
+
+while the gradient operator of a function 
+\begin_inset Formula $f$
+\end_inset
+
+ is 
+\begin_inset Formula \begin{equation}
+\nabla f=\left\Vert \mathbf{\nabla}\psi\right\Vert \frac{\partial f}{\partial\psi}\mathbf{\hat{\psi}}+\frac{1}{r}\frac{\partial f}{\partial\theta}\mathbf{\hat{\theta}}+\dfrac{1}{\Upsilon}\frac{\partial f}{\partial z}\mathbf{\hat{z}}+\frac{\partial f}{\partial p}\widehat{p}-\frac{\sqrt{1-\xi^{2}}}{p}\frac{\partial f}{\partial\xi}\widehat{\xi}+\frac{1}{p\sqrt{1-\xi^{2}}}\frac{\partial f}{\partial\varphi}\widehat{\varphi}\label{eq:generalizedgradient}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If the vector field 
+\begin_inset Formula $\mathbf{A}$
+\end_inset
+
+ is is expressed as 
+\begin_inset Formula $\mathbf{A}=\mathbf{F}f-\mathbb{D}\cdot\nabla f$
+\end_inset
+
+ , the coordinates of the drag vector are
+\begin_inset Formula \begin{equation}
+\mathbf{F}=\left(\begin{array}{c}
+F_{\psi}\\
+F_{\theta}\\
+F_{z}\\
+F_{p}\\
+F_{\xi}\\
+F_{\varphi}\end{array}\right)\label{eq:dragvector}\end{equation}
+
+\end_inset
+
+and those for the diffusion tensor are
+\begin_inset Formula \begin{equation}
+\mathbb{D}=\left(\begin{array}{cccccc}
+D_{\psi\psi} & D_{\psi\theta} & D_{\psi z} & D_{\psi p} & D_{\psi\xi} & D_{\psi\varphi}\\
+D_{\theta\psi} & D_{\theta\theta} & D_{\theta z} & D_{\theta p} & D_{\theta\xi} & D_{\theta\varphi}\\
+D_{z\psi} & D_{z\theta} & D_{zz} & D_{zp} & D_{z\xi} & D_{z\varphi}\\
+D_{p\psi} & D_{p\theta} & D_{pz} & D_{pp} & D_{p\xi} & D_{p\varphi}\\
+D_{\xi\psi} & D_{\xi\theta} & D_{\xi z} & D_{\xi p} & D_{\xi\xi} & D_{\xi\varphi}\\
+D_{\varphi\psi} & D_{\varphi\theta} & D_{\varphi z} & D_{\varphi p} & D_{\varphi\xi} & D_{\varphi\varphi}\end{array}\right)\label{eq:diffusiontensor}\end{equation}
+
+\end_inset
+
+so that
+\begin_inset Formula \begin{equation}
+\mathbf{\nabla}\cdot\mathbf{A}=\left|\mathbf{\nabla}\cdot\mathbf{A}\right|_{\psi}+\left|\mathbf{\nabla}\cdot\mathbf{A}\right|_{\theta}+\left|\mathbf{\nabla}\cdot\mathbf{A}\right|_{z}+\left|\mathbf{\nabla}\cdot\mathbf{A}\right|_{p}+\left|\mathbf{\nabla}\cdot\mathbf{A}\right|_{\xi}+\left|\mathbf{\nabla}\cdot\mathbf{A}\right|_{\varphi}\label{eq:}\end{equation}
+
+\end_inset
+
+where
+\begin_inset Formula \begin{multline}
+\left|\mathbf{\nabla}\cdot\mathbf{A}\right|_{\psi}=\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert \left\vert \mathbf{\hat{\psi}}\cdot\mathbf{\hat{r}}\right\vert }{\Upsilon r}\frac{\partial}{\partial\psi}\left(\frac{\Upsilon r}{\left\vert \mathbf{\hat{\psi}}\cdot\mathbf{\hat{r}}\right\vert }\left[F_{\psi}f-D_{\psi\psi}\left\Vert \mathbf{\nabla}\psi\right\Vert \frac{\partial f}{\partial\psi}-D_{\psi\theta}\frac{1}{r}\frac{\partial f}{\partial\theta}\right.\right.\\
+\left.\left.-D_{\psi z}\dfrac{1}{\Upsilon}\frac{\partial f}{\partial z}-D_{\psi p}\frac{\partial f}{\partial p}+D_{\psi\xi}\frac{\sqrt{1-\xi^{2}}}{p}\frac{\partial f}{\partial\xi}-D_{\psi\varphi}\frac{1}{p\sqrt{1-\xi^{2}}}\frac{\partial f}{\partial\varphi}\right]\right)\label{eq:div_psi}\end{multline}
+
+\end_inset
+
+
+\begin_inset Formula \begin{multline}
+\left|\mathbf{\nabla}\cdot\mathbf{A}\right|_{\theta}=\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert \left\vert \mathbf{\hat{\psi}}\cdot\mathbf{\hat{r}}\right\vert }{\Upsilon r}\frac{\partial}{\partial\theta}\left(\frac{\Upsilon}{\left\Vert \mathbf{\nabla}\psi\right\Vert \left\vert \mathbf{\hat{\psi}}\cdot\mathbf{\hat{r}}\right\vert }\left[F_{\theta}f-D_{\theta\psi}\left\Vert \mathbf{\nabla}\psi\right\Vert \frac{\partial f}{\partial\psi}-D_{\theta\theta}\frac{1}{r}\frac{\partial f}{\partial\theta}\right.\right.\\
+\left.\left.-D_{\theta z}\dfrac{1}{\Upsilon}\frac{\partial f}{\partial z}-D_{\theta p}\frac{\partial f}{\partial p}+D_{\theta\xi}\frac{\sqrt{1-\xi^{2}}}{p}\frac{\partial f}{\partial\xi}-D_{\theta\varphi}\frac{1}{p\sqrt{1-\xi^{2}}}\frac{\partial f}{\partial\varphi}\right]\right)\label{eq:div_theta}\end{multline}
+
+\end_inset
+
+
+\begin_inset Formula \begin{multline}
+\left|\mathbf{\nabla}\cdot\mathbf{A}\right|_{z}=\frac{1}{\Upsilon}\frac{\partial}{\partial z}\left(\left[F_{z}f-D_{z\psi}\left\Vert \mathbf{\nabla}\psi\right\Vert \frac{\partial f}{\partial\psi}-D_{z\theta}\frac{1}{r}\frac{\partial f}{\partial\theta}\right.\right.\\
+\left.\left.-D_{zz}\dfrac{1}{\Upsilon}\frac{\partial f}{\partial z}-D_{zp}\frac{\partial f}{\partial p}+D_{z\xi}\frac{\sqrt{1-\xi^{2}}}{p}\frac{\partial f}{\partial\xi}-D_{z\varphi}\frac{1}{p\sqrt{1-\xi^{2}}}\frac{\partial f}{\partial\varphi}\right]\right)\label{eq:div_z}\end{multline}
+
+\end_inset
+
+
+\begin_inset Formula \begin{multline}
+\left|\mathbf{\nabla}\cdot\mathbf{A}\right|_{p}=\frac{1}{p^{2}}\frac{\partial}{\partial p}\left(p^{2}\left[F_{p}f-D_{p\psi}\left\Vert \mathbf{\nabla}\psi\right\Vert \frac{\partial f}{\partial\psi}-D_{p\theta}\frac{1}{r}\frac{\partial f}{\partial\theta}\right.\right.\\
+\left.\left.-D_{pz}\dfrac{1}{\Upsilon}\frac{\partial f}{\partial z}-D_{pp}\frac{\partial f}{\partial p}+D_{p\xi}\frac{\sqrt{1-\xi^{2}}}{p}\frac{\partial f}{\partial\xi}-D_{p\varphi}\frac{1}{p\sqrt{1-\xi^{2}}}\frac{\partial f}{\partial\varphi}\right]\right)\label{eq:div_p}\end{multline}
+
+\end_inset
+
+
+\begin_inset Formula \begin{multline}
+\left|\mathbf{\nabla}\cdot\mathbf{A}\right|_{\xi}=-\frac{1}{p}\frac{\partial}{\partial\xi}\left(\sqrt{1-\xi^{2}}\left[F_{\xi}f-D_{\xi\psi}\left\Vert \mathbf{\nabla}\psi\right\Vert \frac{\partial f}{\partial\psi}-D_{\xi\theta}\frac{1}{r}\frac{\partial f}{\partial\theta}\right.\right.\\
+\left.\left.-D_{\xi z}\dfrac{1}{\Upsilon}\frac{\partial f}{\partial z}-D_{\xi p}\frac{\partial f}{\partial p}+D_{\xi\xi}\frac{\sqrt{1-\xi^{2}}}{p}\frac{\partial f}{\partial\xi}-D_{\xi\varphi}\frac{1}{p\sqrt{1-\xi^{2}}}\frac{\partial f}{\partial\varphi}\right]\right)\label{eq:div_ksi}\end{multline}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline}
+\left|\mathbf{\nabla}\cdot\mathbf{A}\right|_{\varphi}=\frac{1}{p\sqrt{1-\xi^{2}}}\frac{\partial}{\partial\varphi}\left(\left[F_{\varphi}f-D_{\varphi\psi}\left\Vert \mathbf{\nabla}\psi\right\Vert \frac{\partial f}{\partial\psi}-D_{\varphi\theta}\frac{1}{r}\frac{\partial f}{\partial\theta}\right.\right.\\
+\left.\left.-D_{\varphi z}\dfrac{1}{\Upsilon}\frac{\partial f}{\partial z}-D_{\varphi p}\frac{\partial f}{\partial p}+D_{\varphi\xi}\frac{\sqrt{1-\xi^{2}}}{p}\frac{\partial f}{\partial\xi}-D_{\varphi\varphi}\frac{1}{p\sqrt{1-\xi^{2}}}\frac{\partial f}{\partial\varphi}\right]\right)\label{eq:div_phi}\end{multline}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the definition of the divergence in Ref.
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bri04"
+
+\end_inset
+
+, 
+\begin_inset Formula \begin{equation}
+\mathbf{\nabla}\cdot\mathbf{A}=\frac{1}{\mathcal{JV}}\frac{\partial}{\partial Z^{\alpha}}\left[\mathcal{JV}\left(\mathcal{K}^{\alpha}f-\mathcal{D}^{\alpha\beta}\frac{\partial f}{\partial Z^{\beta}}\right)\right]\label{eq:divbri}\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\mathcal{J}$
+\end_inset
+
+ is the Jacobian in momentum space, and 
+\begin_inset Formula $\mathcal{V}$
+\end_inset
+
+ the Jacobian in real space, it is possible to identify the relationships
+ between 
+\begin_inset Formula $\mathcal{K}^{\alpha}\left[\mathcal{D}^{\alpha\beta}\right]$
+\end_inset
+
+ and 
+\begin_inset Formula $F_{\alpha}\left[D_{\alpha\beta}\right]$
+\end_inset
+
+.
+ It is important to recall that 
+\begin_inset Formula $\mathcal{J}=J_{p}=p^{2}B_{\Vert}^{*}/B$
+\end_inset
+
+ , where 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{B_{\Vert}^{*}}{B}=1+\frac{v_{\Vert}}{\Omega}\widehat{b}\cdot\nabla\times\widehat{b}\label{eq:bparstar}\end{equation}
+
+\end_inset
+
+according to the transformation to the guiding center coordinates (
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bri04"
+
+\end_inset
+
+), with 
+\begin_inset Formula $B$
+\end_inset
+
+ the total magnetic field and 
+\begin_inset Formula $\Omega$
+\end_inset
+
+ the electron gyrofrequency.
+ 
+\end_layout
+
+\begin_layout Standard
+In the case 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $B_{\Vert}^{*}/B=1$
+\end_inset
+
+,
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+
+\begin_inset Formula \[
+\mathcal{K}^{\psi}=\left\Vert \mathbf{\nabla}\psi\right\Vert K_{\psi}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathcal{K}^{\theta}=\frac{1}{r}K_{\theta}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathcal{K}^{z}=\frac{1}{\Upsilon}K_{z}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathcal{K}^{p}=K_{p}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathcal{K}^{\xi}=-\frac{\sqrt{1-\xi^{2}}}{p}K_{\xi}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathcal{K}^{\varphi}=\frac{1}{p\sqrt{1-\xi^{2}}}K_{\varphi}\]
+
+\end_inset
+
+and
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathcal{D}^{\psi\psi}=\left\Vert \mathbf{\nabla}\psi\right\Vert ^{2}D_{\psi\psi}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathcal{D}^{\psi\theta}=\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert }{r}D_{\psi\theta}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathcal{D}^{\psi z}=\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert }{\Upsilon}D_{\psi z}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathcal{D}^{\psi p}=\left\Vert \mathbf{\nabla}\psi\right\Vert D_{\psi p}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathcal{D}^{\psi\xi}=-\left\Vert \mathbf{\nabla}\psi\right\Vert \frac{\sqrt{1-\xi^{2}}}{p}D_{\psi\xi}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathcal{D}^{\psi\varphi}=\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert }{p\sqrt{1-\xi^{2}}}D_{\psi\varphi}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathcal{D}^{\theta\psi}=\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert }{r}D_{\theta\psi}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathcal{D}^{\theta\theta}=\frac{1}{r^{2}}D_{\theta\theta}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathcal{D}^{\theta z}=\frac{1}{\Upsilon r}D_{\theta z}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathcal{D}^{\theta p}=\frac{1}{r}D_{\theta p}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathcal{D}^{\theta\xi}=-\frac{\sqrt{1-\xi^{2}}}{pr}D_{\theta\xi}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathcal{D}^{\theta\varphi}=\frac{1}{rp\sqrt{1-\xi^{2}}}D_{\theta\varphi}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathcal{D}^{z\psi}=\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert }{\Upsilon}D_{z\psi}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathcal{D}^{z\theta}=\frac{1}{r\Upsilon}D_{z\theta}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathcal{D}^{zz}=\frac{1}{\Upsilon^{2}}D_{zz}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathcal{D}^{zp}=\frac{1}{\Upsilon}D_{zp}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathcal{D}^{z\xi}=-\frac{\sqrt{1-\xi^{2}}}{p\Upsilon}D_{z\xi}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathcal{D}^{z\varphi}=\frac{1}{\Upsilon p\sqrt{1-\xi^{2}}}D_{z\varphi}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+\begin_inset Formula \[
+\mathcal{D}^{p\psi}=\left\Vert \mathbf{\nabla}\psi\right\Vert D_{p\psi}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathcal{D}^{p\theta}=\frac{1}{r}D_{p\theta}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathcal{D}^{pz}=\frac{1}{\Upsilon}D_{pz}\]
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\mathcal{D}^{pp}=D_{pp}\label{eq:-2}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\mathcal{D}^{p\xi}=-\frac{\sqrt{1-\xi^{2}}}{p}D_{p\xi}\label{eq:-1}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+\begin_inset Formula \[
+\mathcal{D}^{p\varphi}=\frac{1}{p\sqrt{1-\xi^{2}}}D_{p\varphi}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+\begin_inset Formula \[
+\mathcal{D}^{\xi\psi}=-\left\Vert \mathbf{\nabla}\psi\right\Vert \frac{\sqrt{1-\xi^{2}}}{p}D_{\xi\psi}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathcal{D}^{\xi\theta}=-\frac{\sqrt{1-\xi^{2}}}{pr}D_{\xi\theta}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathcal{D}^{\xi z}=-\frac{\sqrt{1-\xi^{2}}}{p\Upsilon}D_{\xi z}\]
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\mathcal{D}^{\xi p}=-\frac{\sqrt{1-\xi^{2}}}{p}D_{\xi p}\label{eq:-2-1}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\mathcal{D}^{\xi\xi}=\frac{1-\xi^{2}}{p^{2}}D_{\xi\xi}\label{eq:-1-1}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+\begin_inset Formula \[
+\mathcal{D}^{\xi\varphi}=-\frac{1}{p^{2}}D_{\xi\varphi}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+\begin_inset Formula \[
+\mathcal{D}^{\varphi\psi}=\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert }{p\sqrt{1-\xi^{2}}}D_{\varphi\psi}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathcal{D}^{\varphi\theta}=\frac{1}{rp\sqrt{1-\xi^{2}}}D_{\varphi\theta}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathcal{D}^{\varphi z}=\frac{1}{\Upsilon p\sqrt{1-\xi^{2}}}D_{\varphi z}\]
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\mathcal{D}^{\varphi p}=\frac{1}{p\sqrt{1-\xi^{2}}}D_{\varphi p}\label{eq:-2-2}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\mathcal{D}^{\varphi\xi}=-\frac{1}{p^{2}}D_{\varphi\xi}\label{eq:-1-2}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+\begin_inset Formula \[
+\mathcal{D}^{\varphi\varphi}=\frac{1}{p^{2}\left(1-\xi^{2}\right)}D_{\varphi\varphi}\]
+
+\end_inset
+
+and as expected, 
+\begin_inset Formula $\mathcal{D}^{\alpha\beta}=\mathcal{D}^{\beta\alpha}$
+\end_inset
+
+ if 
+\begin_inset Formula $D_{\alpha\beta}=D_{\beta\alpha}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "biblio"
+options "plain"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

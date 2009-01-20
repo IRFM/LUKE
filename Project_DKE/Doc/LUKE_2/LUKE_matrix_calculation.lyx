@@ -1,0 +1,1841 @@
+#LyX 1.6.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass elsarticle
+\begin_preamble
+
+\end_preamble
+\use_default_options false
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 2
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Calculation of matrix coefficients for LUKE
+\end_layout
+
+\begin_layout Author
+Y.
+ Peysson (CEA/IRFM)
+\end_layout
+
+\begin_layout Subsection
+Grid definitions
+\end_layout
+
+\begin_layout Standard
+The phase-space flux is discretized as 
+\begin_inset Formula $\mathbf{S}\left(t_{k},\psi_{l},p_{i},\xi_{j}\right)\equiv S_{l,i,j}^{(k)}$
+\end_inset
+
+ with the following non-uniform monotonic grids 
+\begin_inset Formula \begin{equation}
+\left\{ \begin{array}{lll}
+t_{k}=t_{0},\cdots,t_{n_{t}} & t_{0}=0\\
+\psi_{l}=\psi_{0},\cdots,\psi_{n_{\psi}} & \psi_{0}=0 & \psi_{n_{\psi}}=\psi_{a}\\
+p_{i}=p_{0},\cdots,p_{n_{p}} & p_{0}=0 & p_{n_{p}}=p_{\max}\\
+\xi_{j}=\xi_{0},\cdots,\xi_{n_{\xi}} & \xi_{0}=-1 & \xi_{n_{\xi}}=1\end{array}\right.\end{equation}
+
+\end_inset
+
+ which delimit elementary phase-space cells.
+\end_layout
+
+\begin_layout Standard
+The distribution function 
+\begin_inset Formula $f$
+\end_inset
+
+ is discretized at the center of these cells, as shown in Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "griddefmom"
+
+\end_inset
+
+ for the momentum space.
+ In order to simplify expressions, the following notation rules are used
+ for each grid and index
+\begin_inset Formula \begin{equation}
+\begin{array}{l}
+x_{m+3/2}=x_{m+++}\\
+x_{m+1}=x_{m++}\\
+x_{m+1/2}=x_{m+}\\
+x_{m-1/2}=x_{m-}\\
+x_{m-1}=x_{m--}\end{array}\end{equation}
+
+\end_inset
+
+ A half-grid characterizes the center of each cell
+\begin_inset Formula \begin{equation}
+\left\{ \begin{array}{ll}
+\psi_{l+}=\dfrac{\psi_{l++}+\psi_{l}}{2} & l=0,\cdots,n_{\psi}-1\\
+p_{i+}=\dfrac{p_{i++}+p_{i}}{2} & i=0,\cdots,n_{p}-1\\
+\xi_{j+}=\dfrac{\xi_{j++}+\xi_{j}}{2} & j=0,\cdots,n_{\xi}-1\end{array}\right.\end{equation}
+
+\end_inset
+
+ such that the distribution function is discretized as 
+\begin_inset Formula $f(t_{k},\psi_{+},p_{i+},\xi_{j+})\equiv f_{l+,i+,j+}^{(k)}$
+\end_inset
+
+.
+ The cells are also characterized by their width in each direction
+\begin_inset Formula \begin{equation}
+\left\{ \begin{array}{ll}
+\Delta\psi_{l+}=\psi_{l++}-\psi_{l} & l=0,\cdots,n_{\psi}-1\\
+\Delta p_{i+}=p_{i++}-p_{i} & i=0,\cdots,n_{p}-1\\
+\Delta\xi_{j+}=\xi_{j++}-\xi_{j} & j=0,\cdots,n_{\xi}-1\end{array}\right.\end{equation}
+
+\end_inset
+
+ Finally, the grid intervals between two consecutive cell centers are also
+ defined
+\begin_inset Formula \begin{equation}
+\left\{ \begin{array}{ll}
+\Delta\psi_{l}=\psi_{l+}-\psi_{l-} & l=1,\cdots,n_{\psi}-1\\
+\Delta p_{i}=p_{i+}-p_{i-} & i=1,\cdots,n_{p}-1\\
+\Delta\xi_{j}=\xi_{j+}-\xi_{j-} & j=1,\cdots,n_{\xi}-1\end{array}\right.\end{equation}
+
+\end_inset
+
+and
+\begin_inset Formula \begin{equation}
+\left\{ \begin{array}{ll}
+\Delta\psi_{l++}=\psi_{l+++}-\psi_{l+} & l=0,\cdots,n_{\psi}-2\\
+\Delta p_{i++}=p_{i+++}-p_{i+} & i=0,\cdots,n_{p}-2\\
+\Delta\xi_{j++}=\xi_{j+++}-\xi_{j+} & j=0,\cdots,n_{\xi}-2\end{array}\right.\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+By convention the intervals are extended to the volume boundary points as
+\begin_inset Formula \begin{equation}
+\left\{ \begin{array}{ll}
+\Delta\psi_{0}=2\left(\psi_{0+}-\psi_{0}\right) & \Delta\psi_{n_{\psi}}=2\left(\psi_{n_{\psi}}-\psi_{n_{\psi}-}\right)\\
+\Delta p_{0}=2\left(p_{0+}-p_{0}\right) & \Delta p_{n_{p}}=2\left(p_{n_{p}}-p_{n_{p}-}\right)\\
+\Delta\xi_{0}=2\left(\xi_{0+}-\xi_{0}\right) & \Delta\xi_{n_{\xi}}=2\left(\xi_{n_{\xi}}-\xi_{n_{\xi}-}\right)\end{array}\right.\label{conventions}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The symmetrization of 
+\begin_inset Formula $f$
+\end_inset
+
+ in the trapped region is enforced implicitly by considering only one half
+ of the trapped region.
+ This method requires a specific treatment of the fluxes at the trapped/passing
+ boundary 
+\begin_inset Formula $\xi_{0}=\xi_{0T}\left(\psi\right)$
+\end_inset
+
+.
+ Therefore, the trapped/passing boundary positions corresponding to each
+ flux surface 
+\begin_inset Formula $\xi_{Tl+}=\xi_{0T}\left(\psi_{l+}\right)$
+\end_inset
+
+ must correspond to a pitch-angle flux point 
+\begin_inset Formula $\xi_{j}$
+\end_inset
+
+.
+ This effectively links the pitch-angle and radial grids and requires at
+ least one of those grids to be non-uniform.
+\end_layout
+
+\begin_layout Standard
+In addition, the symmetrization of 
+\begin_inset Formula $f$
+\end_inset
+
+ in the trapped region and the internal boundary conditions on 
+\begin_inset Formula $p$
+\end_inset
+
+ require to use a symmetric 
+\begin_inset Formula $\xi_{j}$
+\end_inset
+
+ grid, meaning that 
+\begin_inset Formula $n_{\xi}$
+\end_inset
+
+ is an even number and 
+\begin_inset Formula \begin{equation}
+\xi_{n_{\xi}/2-j}=-\xi_{n_{\xi}/2+j}\quad\text{for }j=0,\cdots,n_{\xi}/2\end{equation}
+
+\end_inset
+
+ In particular, 
+\begin_inset Formula $\xi_{n_{\xi}/2}=0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The possibility to use of non-uniform grids may also be useful through the
+ application of fine grids in particular region of phase space.
+ This may concern regions of steep radial gradients or strong wave absorption
+ for the radial grid, and the vicinity of internal boundaries 
+\begin_inset Formula $p=0$
+\end_inset
+
+, 
+\begin_inset Formula $\xi_{0}=\pm1$
+\end_inset
+
+ and 
+\begin_inset Formula $\xi_{0}=\pm\xi_{0T}\ $
+\end_inset
+
+in momentum space.
+ The numerical accuracy may then be improved while limiting the increase
+ in computational costs.
+ The time grid 
+\begin_inset Formula $t_{k}=k\Delta t$
+\end_inset
+
+ is generally chosen to be uniform.
+\end_layout
+
+\begin_layout Subsection
+Discretization procedure 
+\begin_inset CommandInset label
+LatexCommand label
+name "discretization"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In order to avoid numerical singularities at 
+\begin_inset Formula $p=0$
+\end_inset
+
+, all terms of the Fokker-Planck equation are multiplied by the partial
+ Jacobian 
+\begin_inset Formula $J_{p}=p^{2}$
+\end_inset
+
+.
+ This equation is discretized on the half-grid according to an implicit
+ time scheme 
+\begin_inset Formula \begin{gather}
+p_{i+}^{2}\frac{f_{l+,i+,j+}^{(k++)}-f_{l+,i+,j+}^{(k)}}{\Delta t}+\left[p^{2}\nabla\cdot\mathbf{S}\right]_{l+,i+,j+}^{(k++)}\\
+=p_{i+}^{2}\left[C\left(f_{M},f\right)\right]_{l+,i+,j+}^{(k)}+s_{+,l+,i+,j+}^{(k)}-s_{-,l+,i+,j+}^{(k)}\label{discreteFP}\end{gather}
+
+\end_inset
+
+ The first term on the right hand side represents the first order correction
+ of the collision operator for momentum conservation.
+ All right hand side terms are treated explicitly regarding the time evolution.
+ If these terms represent only a small correction to the evolution of 
+\begin_inset Formula $f$
+\end_inset
+
+ - this is usually the case for 
+\begin_inset Formula $C\left(f_{M},f\right)$
+\end_inset
+
+ -, their explicit treatment does not restrict the use of large 
+\begin_inset Formula $\Delta t$
+\end_inset
+
+ value allowed by the implicit treatment of the flux terms for a fast and
+ stable convergence to steady-state.
+\end_layout
+
+\begin_layout Subsubsection
+Differential term
+\end_layout
+
+\begin_layout Standard
+The phase-space divergence term is discretized according to (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "divergencep"
+
+\end_inset
+
+)
+\begin_inset Formula \begin{align}
+\left[p^{2}\nabla\cdot\mathbf{S}\right]_{l+,i+,j+}^{(k)}= & \left[\frac{\partial\left(p^{2}S_{p}\right)}{\partial p}\right]_{l+,i+,j+}^{(k)}-\frac{p_{i+}}{\lambda^{l+,j+}}\left[\frac{\partial}{\partial\xi}\left(\sqrt{1-\xi^{2}}\lambda S_{\xi}\right)\right]_{l+,i+,j+}^{(k)}\label{phasediv}\\
+ & +\frac{p_{i+}^{2}}{\lambda^{l+,j+}}\frac{B_{l+}}{\tilde{q}_{l+}}\left[\frac{\partial}{\partial\psi}\left(\left\Vert \mathbf{\nabla}\psi\right\Vert \frac{\tilde{q}\lambda}{B}S_{\psi}\right)\right]_{l+,i+,j+}^{(k)}\nonumber \end{align}
+
+\end_inset
+
+ where 
+\begin_inset Formula $\lambda^{l+,j+}\equiv\lambda(\psi_{l+},\xi_{j+})$
+\end_inset
+
+, 
+\begin_inset Formula $B_{l}\equiv$
+\end_inset
+
+ 
+\begin_inset Formula $B\left(\psi_{l}\right)$
+\end_inset
+
+, 
+\begin_inset Formula $\tilde{q}_{l}\equiv\tilde{q}\left(\psi_{l}\right)$
+\end_inset
+
+, and
+\begin_inset Formula \begin{align}
+ & \left[\dfrac{\partial\left(p^{2}S_{p}\right)}{\partial p}\right]_{l+,i+,j+}^{(k)}=\dfrac{p_{i++}^{2}S_{p,l+,i++,j+}^{(k)}-p_{i}^{2}S_{p,l+,i,j+}^{(k)}}{\Delta p_{i+}}\nonumber \\
+ & \left[\dfrac{\partial}{\partial\xi}\left(\sqrt{1-\xi^{2}}\lambda S_{\xi}\right)\right]_{l+,i+,j+}^{(k)}=\dfrac{\sqrt{1-\xi_{j++}^{2}}\lambda^{l+,j++}S_{\xi,l+,i+,j++}-\sqrt{1-\xi_{j}^{2}}\lambda^{l+,j}S_{\xi,l+,i+,j}}{\Delta\xi_{j+}}\label{phasediv2}\\
+ & \left[\frac{\partial}{\partial\psi}\left(\left\Vert \nabla\psi\right\Vert \frac{\tilde{q}\lambda}{B}S_{\psi}^{\left(0\right)}\right)\right]_{l+,i+,j+}^{(k)}=\frac{\alpha_{l++,j+}S_{\psi,l++,i+,j+}^{(k)}-\alpha_{l,j+}S_{\psi,l,i+,j+}^{(k)}}{\Delta\psi_{l+}}\nonumber \end{align}
+
+\end_inset
+
+ with the definitions
+\begin_inset Formula \begin{equation}
+\alpha_{l,j+}\equiv\left\Vert \mathbf{\nabla}\psi\right\Vert _{l}\frac{\tilde{q}_{l}\lambda^{l,j+}}{B_{l}}\end{equation}
+
+\end_inset
+
+ and 
+\begin_inset Formula $\left\Vert \mathbf{\nabla}\psi\right\Vert _{l}=\Upsilon_{l}B_{Pl}$
+\end_inset
+
+ where 
+\begin_inset Formula $\Upsilon_{l}\equiv$
+\end_inset
+
+ 
+\begin_inset Formula $\Upsilon\left(\psi_{l}\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $B_{Pl}\equiv B_{P}\left(\psi_{l}\right)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Then, the phase-space flux 
+\begin_inset Formula $\mathbf{S}_{\mathbf{p}}$
+\end_inset
+
+ can be discretized as
+\begin_inset Formula \begin{align}
+S_{p,l+,i,j+}^{(k)}= & F_{p,l+,i,j+}f_{l+,i,j+}^{(k)}-D_{pp,l+,i,j+}\left[\dfrac{\partial f}{\partial p}\right]_{l+,i,j+}^{(k)}\label{eq:fluxdis}\\
+ & +\dfrac{\sqrt{1-\xi_{j+}^{2}}}{p_{i}}D_{p\xi,l+,i,j+}\left[\dfrac{\partial f}{\partial\xi}\right]_{l+,i,j+}^{(k)}-\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}D_{p\psi,l+,i,j+}\left[\dfrac{\partial f}{\partial\psi}\right]_{l+,i,j+}^{(k)}\nonumber \end{align}
+
+\end_inset
+
+ 
+\begin_inset Formula \begin{align}
+S_{\xi,l+,i+,j}= & F_{\xi,l+,i+,j}f_{l+,i+,j}^{(k)}-D_{\xi p,l+,i+,j}\left[\dfrac{\partial f}{\partial p}\right]_{l+,i+,j}^{(k)}\\
+ & +\dfrac{\sqrt{1-\xi_{j}^{2}}}{p_{i+}}D_{\xi\xi,l+,i+,j}\left[\dfrac{\partial f}{\partial\xi}\right]_{l+,i+,j}^{(k)}-\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}D_{\xi\psi,l+,i+,j}\left[\dfrac{\partial f}{\partial\psi}\right]_{l+,i+,j}^{(k)}\nonumber \end{align}
+
+\end_inset
+
+ 
+\begin_inset Formula \begin{align}
+S_{\psi,l,i+,j+}^{(k)}= & F_{\psi,l,i+,j+}f_{l,i+,j+}^{(k)}-D_{\psi p,l,i+,j+}\left[\dfrac{\partial f}{\partial p}\right]_{l,i+,j+}^{(k)}\\
+ & +\dfrac{\sqrt{1-\xi_{j+}^{2}}}{p_{i+}}D_{\psi\xi,l,i+,j+}\left[\dfrac{\partial f}{\partial\xi}\right]_{l,i+,j+}^{(k)}-D_{\psi\psi,l,i+,j+}\left\Vert \mathbf{\nabla}\psi\right\Vert _{l}\left[\frac{\partial f}{\partial\psi}\right]_{l,i+,j+}^{(k)}\nonumber \end{align}
+
+\end_inset
+
+and
+\begin_inset Formula \begin{align}
+S_{p,l+,i++,j+}^{(k)}= & F_{p,l+,i++,j+}f_{l+,i++,j+}^{(k)}-D_{pp,l+,i++,j+}\left[\dfrac{\partial f}{\partial p}\right]_{l+,i++,j+}^{(k)}\label{eq:fluxdis_plus}\\
+ & +\dfrac{\sqrt{1-\xi_{j+}^{2}}}{p_{i++}}D_{p\xi,l+,i++,j+}\left[\dfrac{\partial f}{\partial\xi}\right]_{l+,i++,j+}^{(k)}-\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}D_{p\psi,l+,i++,j+}\left[\dfrac{\partial f}{\partial\psi}\right]_{l+,i++,j+}^{(k)}\nonumber \end{align}
+
+\end_inset
+
+ 
+\begin_inset Formula \begin{align}
+S_{\xi,l+,i+,j++}= & F_{\xi,l+,i+,j++}f_{l+,i+,j++}^{(k)}-D_{\xi p,l+,i+,j++}\left[\dfrac{\partial f}{\partial p}\right]_{l+,i+,j++}^{(k)}\\
+ & +\dfrac{\sqrt{1-\xi_{j++}^{2}}}{p_{i+}}D_{\xi\xi,l+,i+,j++}\left[\dfrac{\partial f}{\partial\xi}\right]_{l+,i+,j++}^{(k)}-\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}D_{\xi\psi,l+,i+,j++}\left[\dfrac{\partial f}{\partial\psi}\right]_{l+,i+,j++}^{(k)}\nonumber \end{align}
+
+\end_inset
+
+ 
+\begin_inset Formula \begin{align}
+S_{\psi,l++,i+,j+}^{(k)}= & F_{\psi,l++,i+,j+}f_{l++,i+,j+}^{(k)}-D_{\psi p,l++,i+,j+}\left[\dfrac{\partial f}{\partial p}\right]_{l++,i+,j+}^{(k)}\\
+ & +\dfrac{\sqrt{1-\xi_{j+}^{2}}}{p_{i+}}D_{\psi\xi,l++,i+,j+}\left[\dfrac{\partial f}{\partial\xi}\right]_{l++,i+,j+}^{(k)}-D_{\psi\psi,l++,i+,j+}\left\Vert \mathbf{\nabla}\psi\right\Vert _{l++}\left[\frac{\partial f}{\partial\psi}\right]_{l++,i+,j+}^{(k)}\nonumber \end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The discretization of the second derivatives associated with 
+\begin_inset Formula $D_{pp}$
+\end_inset
+
+, 
+\begin_inset Formula $D_{\xi\xi}$
+\end_inset
+
+ and 
+\begin_inset Formula $D_{\psi\psi}$
+\end_inset
+
+ is straightforward regarding the grids definitions
+\begin_inset Formula \begin{equation}
+\begin{array}{c}
+\left[\dfrac{\partial f}{\partial p}\right]_{l+,i,j+}^{(k)}=\dfrac{f_{l+,i+,j+}^{(k)}-f_{l+,i-,j+}^{(k)}}{\Delta p_{i}}\\
+\left[\dfrac{\partial f}{\partial\xi}\right]_{l+,i+,j}^{(k)}=\dfrac{f_{l+,i+,j+}^{(k)}-f_{l+,i+,j-}^{(k)}}{\Delta\xi_{j}}\\
+\left[\dfrac{\partial f}{\partial\psi}\right]_{l,i+,j+}^{(k)}=\dfrac{f_{l+,i+,j+}^{(k)}-f_{l-,i+,j+}^{(k)}}{\Delta\psi_{l}}\end{array}\label{dfdp_imj}\end{equation}
+
+\end_inset
+
+and
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\begin{array}{c}
+\left[\dfrac{\partial f}{\partial p}\right]_{l+,i++,j+}^{(k)}=\dfrac{f_{l+,i+++,j+}^{(k)}-f_{l+,i+,j+}^{(k)}}{\Delta p_{i++}}\\
+\left[\dfrac{\partial f}{\partial\xi}\right]_{l+,i+,j++}^{(k)}=\dfrac{f_{l+,i+,j+++}^{(k)}-f_{l+,i+,j+}^{(k)}}{\Delta\xi_{j++}}\\
+\left[\dfrac{\partial f}{\partial\psi}\right]_{l++,i+,j+}^{(k)}=\dfrac{f_{l+++,i+,j+}^{(k)}-f_{l+,i+,j+}^{(k)}}{\Delta\psi_{l++}}\end{array}\label{dfdp_imj}\end{equation}
+
+\end_inset
+
+However, the discretization of the cross derivatives associated with 
+\begin_inset Formula $D_{p\xi}$
+\end_inset
+
+, 
+\begin_inset Formula $D_{\xi p}$
+\end_inset
+
+, 
+\begin_inset Formula $D_{p\psi}$
+\end_inset
+
+, 
+\begin_inset Formula $D_{\psi p}$
+\end_inset
+
+, 
+\begin_inset Formula $D_{\xi\psi}$
+\end_inset
+
+, and 
+\begin_inset Formula $D_{\psi\xi}$
+\end_inset
+
+ is more complicated and requires to choose between several different schemes.
+ The method developed here is favored because it avoids instability-prone
+ double interpolations and allows internal boundary conditions to be fulfilled
+ implicitly.
+\begin_inset Formula \begin{eqnarray}
+\left[\dfrac{\partial f}{\partial\xi}\right]_{l+,i,j+}^{(k)}=\dfrac{f_{l+,i,j+++}^{(k)}-f_{l+,i,j-}^{(k)}}{\Delta\xi_{j}+\Delta\xi_{j++}} & \;;\qquad & \left[\dfrac{\partial f}{\partial\psi}\right]_{l+,i,j+}^{(k)}=\dfrac{f_{l+++,i,j+}^{(k)}-f_{l-,i,j+}^{(k)}}{\Delta\psi_{l}+\Delta\psi_{l++}}\nonumber \\
+\left[\dfrac{\partial f}{\partial p}\right]_{l+,i+,j}^{(k)}=\dfrac{f_{l+,i+++,j}^{(k)}-f_{l+,i-,j}^{(k)}}{\Delta p_{i}+\Delta p_{i++}} & \;;\qquad & \left[\dfrac{\partial f}{\partial\psi}\right]_{l+,i+,j}^{(k)}=\dfrac{f_{l+++,i+,j}^{(k)}-f_{l-,i+,j}^{(k)}}{\Delta\psi_{l}+\Delta\psi_{l++}}\\
+\left[\dfrac{\partial f}{\partial p}\right]_{l,i+,j+}^{(k)}=\dfrac{f_{l,i+++,j+}^{(k)}-f_{l,i-,j+}^{(k)}}{\Delta p_{i}+\Delta p_{i++}} & \;;\qquad & \left[\dfrac{\partial f}{\partial\xi}\right]_{l,i+,j+}^{(k)}=\dfrac{f_{l,i+,j+++}^{(k)}-f_{l,i+,j-}^{(k)}}{\Delta\xi_{j}+\Delta\xi_{j++}}\nonumber \end{eqnarray}
+
+\end_inset
+
+and
+\begin_inset Formula \begin{eqnarray}
+\left[\dfrac{\partial f}{\partial\xi}\right]_{l+,i++,j+}^{(k)}=\dfrac{f_{l+,i++,j+++}^{(k)}-f_{l+,i++,j-}^{(k)}}{\Delta\xi_{j}+\Delta\xi_{j++}} & \;;\qquad & \left[\dfrac{\partial f}{\partial\psi}\right]_{l+,i++,j+}^{(k)}=\dfrac{f_{l+++,i++,j+}^{(k)}-f_{l-,i++,j+}^{(k)}}{\Delta\psi_{l}+\Delta\psi_{l++}}\nonumber \\
+\left[\dfrac{\partial f}{\partial p}\right]_{l+,i+,j++}^{(k)}=\dfrac{f_{l+,i+++,j++}^{(k)}-f_{l+,i-,j++}^{(k)}}{\Delta p_{i}+\Delta p_{i++}} & \;;\qquad & \left[\dfrac{\partial f}{\partial\psi}\right]_{l+,i+,j++}^{(k)}=\dfrac{f_{l+++,i+,j++}^{(k)}-f_{l-,i+,j++}^{(k)}}{\Delta\psi_{l}+\Delta\psi_{l++}}\\
+\left[\dfrac{\partial f}{\partial p}\right]_{l++,i+,j+}^{(k)}=\dfrac{f_{l++,i+++,j+}^{(k)}-f_{l++,i-,j+}^{(k)}}{\Delta p_{i}+\Delta p_{i++}} & \;;\qquad & \left[\dfrac{\partial f}{\partial\xi}\right]_{l,i+,j+}^{(k)}=\dfrac{f_{l++,i+,j+++}^{(k)}-f_{l++,i+,j-}^{(k)}}{\Delta\xi_{j}+\Delta\xi_{j++}}\nonumber \end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Interpolation of the distribution function 
+\begin_inset CommandInset label
+LatexCommand label
+name "interpolation"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The discretization of the Fokker-Planck equation requires values of the
+ distribution function on the flux grid, which is obtained by interpolation.
+ The following interpolation coefficients 
+\begin_inset Formula $\delta_{\psi,l,i+,j+}\left[\delta_{\psi,l++,i+,j+}\right]$
+\end_inset
+
+, 
+\begin_inset Formula $\delta_{p,l+,i,j+}\left[\delta_{p,l+,i++,j+}\right]$
+\end_inset
+
+ and 
+\begin_inset Formula $\delta_{\xi,l+,i+,j}\left[\delta_{\xi,l+,i+,j++}\right]$
+\end_inset
+
+ are thus defined such that
+\begin_inset Formula \begin{equation}
+\begin{array}{l}
+f_{l,i+,j+}^{(k)}=\left(1-\delta_{\psi,l,i+,j+}\right)f_{l+,i+,j+}^{(k)}+\delta_{\psi,l,i+,j+}f_{l-,i+,j+}^{(k)}\\
+f_{l+,i,j+}^{(k)}=\left(1-\delta_{p,l+,i,j+}\right)f_{l+,i+,j+}^{(k)}+\delta_{p,l+,i,j+}f_{l+,i-,j+}^{(k)}\\
+f_{l+,i+,j}^{(k)}=\left(1-\delta_{\xi,l+,i+,j}\right)f_{l+,i+,j+}^{(k)}+\delta_{\xi,l+,i+,j}f_{l+,i+,j-}^{(k)}\end{array}\label{finterp}\end{equation}
+
+\end_inset
+
+and
+\begin_inset Formula \begin{equation}
+\begin{array}{l}
+f_{l++,i+,j+}^{(k)}=\left(1-\delta_{\psi,l++,i+,j+}\right)f_{l+++,i+,j+}^{(k)}+\delta_{\psi,l++,i+,j+}f_{l+,i+,j+}^{(k)}\\
+f_{l+,i++,j+}^{(k)}=\left(1-\delta_{p,l+,i++,j+}\right)f_{l+,i+++,j+}^{(k)}+\delta_{p,l+,i++,j+}f_{l+,i+,j+}^{(k)}\\
+f_{l+,i+,j++}^{(k)}=\left(1-\delta_{\xi,l+,i+,j++}\right)f_{l+,i+,j+++}^{(k)}+\delta_{\xi,l+,i+,j++}f_{l+,i+,j+}^{(k)}\end{array}\label{finterp_plus}\end{equation}
+
+\end_inset
+
+but also
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\begin{array}{l}
+f_{l+,i,j+++}^{(k)}=\left(1-\delta_{p,l+,i,j+++}\right)f_{l+,i+,j+++}^{(k)}+\delta_{p,l+,i,j}f_{l+,i-,j+++}^{(k)}\\
+f_{l+,i+++,j}^{(k)}=\left(1-\delta_{\xi,l+,i+++,j}\right)f_{l+,i+++,j+}^{(k)}+\delta_{\xi,l+,i,j}f_{l+,i+++,j-}^{(k)}\\
+f_{l,i+++,j+}^{(k)}=\left(1-\delta_{\psi,l,i+++,j+}\right)f_{l+,i+++,j+}^{(k)}+\delta_{\psi,l,i+++,j+}f_{l-,i+++,j+}^{(k)}\\
+f_{l+++,i,j+}^{(k)}=\left(1-\delta_{p,l+++,i,j+}\right)f_{l+++,i+,j+}^{(k)}+\delta_{p,l+++,i,j+}f_{l+++,i-,j+}^{(k)}\\
+f_{l+++,i+,j}^{(k)}=\left(1-\delta_{\xi,l+++,i+,j}\right)f_{l+++,i+,j+}^{(k)}+\delta_{\xi,l+++,i+,j}f_{l+++,i+,j-}^{(k)}\\
+f_{l,i+,j+++}^{(k)}=\left(1-\delta_{\psi,l,i+,j+++}\right)f_{l+,i+,j+++}^{(k)}+\delta_{\psi,l,i+,j+++}f_{l-,i+,j+++}^{(k)}\end{array}\label{finterp_plusplus}\end{equation}
+
+\end_inset
+
+and
+\begin_inset Formula \begin{equation}
+\begin{array}{l}
+f_{l+,i,j-}^{(k)}=\left(1-\delta_{p,l+,i,j-}\right)f_{l+,i+,j-}^{(k)}+\delta_{p,l+,i,j}f_{l+,i-,j-}^{(k)}\\
+f_{l+,i-,j}^{(k)}=\left(1-\delta_{\xi,l+,i-,j}\right)f_{l+,i-,j+}^{(k)}+\delta_{\xi,l+,i,j}f_{l+,i-,j-}^{(k)}\\
+f_{l,i-,j+}^{(k)}=\left(1-\delta_{\psi,l,i-,j+}\right)f_{l+,i-,j+}^{(k)}+\delta_{\psi,l,i-,j+}f_{l-,i-,j+}^{(k)}\\
+f_{l-,i,j+}^{(k)}=\left(1-\delta_{p,l-,i,j+}\right)f_{l-,i+,j+}^{(k)}+\delta_{p,l-,i,j+}f_{l-,i-,j+}^{(k)}\\
+f_{l-,i+,j}^{(k)}=\left(1-\delta_{\xi,l-,i+,j}\right)f_{l-,i+,j+}^{(k)}+\delta_{\xi,l-,i+,j}f_{l-,i+,j-}^{(k)}\\
+f_{l,i+,j-}^{(k)}=\left(1-\delta_{\psi,l,i+,j-}\right)f_{l+,i+,j-}^{(k)}+\delta_{\psi,l,i+,j-}f_{l-,i+,j-}^{(k)}\end{array}\label{finterp_moins}\end{equation}
+
+\end_inset
+
+where coefficients 
+\begin_inset Formula $\delta_{p,l+,i,j-}\left[\delta_{p,l+,i,j+++}\right]$
+\end_inset
+
+, 
+\begin_inset Formula $\delta_{\xi,l+,i-,j}\left[\delta_{\xi,l+,i+++,j}\right]$
+\end_inset
+
+, 
+\begin_inset Formula $\delta_{\psi,l,i-,j+}\left[\delta_{\psi,l,i+++,j+}\right]$
+\end_inset
+
+, 
+\begin_inset Formula $\delta_{p,l-,i,j+}\left[\delta_{p,l+++,i,j+}\right]$
+\end_inset
+
+, 
+\begin_inset Formula $\delta_{\xi,l-,i+,j}\left[\delta_{\xi,l+++,i+,j}\right]$
+\end_inset
+
+ and 
+\begin_inset Formula $\delta_{\psi,l,i+,j-}\left[\delta_{\psi,l,i+,j+++}\right]$
+\end_inset
+
+ arise from cross-derivatives.
+\end_layout
+
+\begin_layout Standard
+For numerical stability these coefficients must lie between 
+\begin_inset Formula $0$
+\end_inset
+
+ and 
+\begin_inset Formula $1$
+\end_inset
+
+.
+ Linear interpolations are chosen in the radial and pitch-angle directions.
+ 
+\begin_inset Formula \begin{equation}
+\begin{array}{l}
+\delta_{\psi,l,i+,j+}=\dfrac{\Delta\psi_{l+}}{\Delta\psi_{l-}+\Delta\psi_{l+}}\\
+\delta_{\xi,l+,i+,j}=\dfrac{\Delta\xi_{j+}}{\Delta\xi_{j-}+\Delta\xi_{j+}}\end{array}\end{equation}
+
+\end_inset
+
+and
+\begin_inset Formula \begin{equation}
+\begin{array}{l}
+\delta_{\psi,l++,i+,j+}=\dfrac{\Delta\psi_{l+++}}{\Delta\psi_{l+}+\Delta\psi_{l+++}}\\
+\delta_{\xi,l+,i+,j++}=\dfrac{\Delta\xi_{j+++}}{\Delta\xi_{j+}+\Delta\xi_{j+++}}\end{array}\end{equation}
+
+\end_inset
+
+ The variations of the distribution function in these directions are generally
+ smooth and these variations vanish in the case of a uniform Maxwellian
+ distribution.
+ In the case of uniform grid, the corresponding interpolation coefficients
+ are equal to 
+\begin_inset Formula $1/2$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Applying the same scheme to the momentum grid generally leads to slow convergenc
+e rates and numerical instabilities because the 
+\begin_inset Formula $p$
+\end_inset
+
+ variations in the Maxwellian distribution are strongly non-linear.
+ The interpolation coefficients are calculated such that the interpolation
+ is exact in the case of a relativistic Maxwellian distribution 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cha70"
+
+\end_inset
+
+ extended to non-uniform grids, 
+\begin_inset Formula \begin{equation}
+\delta_{p,l+,i,j+}=g_{\text{CC}}\left(\Delta p_{i}\frac{F_{p,l+,i,j+}^{(0)}}{D_{pp,l+,i,j+}^{(0)}}\right)\label{deltap}\end{equation}
+
+\end_inset
+
+and 
+\begin_inset Formula \begin{equation}
+\delta_{p,l+,i++,j+}=g_{\text{CC}}\left(\Delta p_{i++}\frac{F_{p,l+,i++,j+}^{(0)}}{D_{pp,l+,i++,j+}^{(0)}}\right)\label{deltap_plus}\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $g_{\text{CC}}$
+\end_inset
+
+ is the Chang & Cooper function 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cha70"
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+g_{\text{CC}}\left(x\right)\equiv\frac{1}{x}-\frac{1}{e^{x}-1}\end{equation}
+
+\end_inset
+
+ The interpolation coefficient (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "deltap_plus"
+
+\end_inset
+
+) is the generalization of the Chang & Cooper rule 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cha70"
+
+\end_inset
+
+ to the case of a relativistic distribution function and a non-uniform grid.
+\end_layout
+
+\begin_layout Subsection
+Differential operators
+\end_layout
+
+\begin_layout Standard
+The discrete form of the differential operators in momentum space and configurat
+ion space (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "phasediv"
+
+\end_inset
+
+) resulting from the procedure described in Sec.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "discretization"
+
+\end_inset
+
+ with interpolation rules from Sec.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "interpolation"
+
+\end_inset
+
+ is expressed as 
+\begin_inset Formula \begin{equation}
+\left[p^{2}\mathbf{\nabla}\cdot\mathbf{S}\right]_{l+,i+,j+}^{(k)}=\sum\limits _{l^{\prime}=l-1}^{l^{\prime}=l+1}\sum\limits _{i^{\prime}=i-1}^{i^{\prime}=i+1}\sum\limits _{j^{\prime}=j-1}^{j^{\prime}=j+1}M_{l+,i+,j+}^{l^{\prime}+,i^{\prime}+,j^{\prime}+}f_{l^{\prime}+,i^{\prime}+,j^{\prime}+}^{(k)}\label{diffscheme}\end{equation}
+
+\end_inset
+
+where matrix coefficients are
+\begin_inset Formula \[
+M_{l+,i+,j+}^{l+,i+,j+}=\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The discretization of 
+\begin_inset Formula $\left[p^{2}\mathbf{\nabla}\cdot\mathbf{S}\right]_{l+,i+,j+}^{(k)}$
+\end_inset
+
+ at the point 
+\begin_inset Formula $(l+,i+,j+)$
+\end_inset
+
+ involves the value of the distribution function 
+\begin_inset Formula $f^{(k)}$
+\end_inset
+
+ at the center of this cell and at the center of the 26 neighboring cells
+ in (cubic) phase space.
+\end_layout
+
+\begin_layout Subsection
+Boundary conditions
+\end_layout
+
+\begin_layout Standard
+The differential scheme (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "diffscheme"
+
+\end_inset
+
+) requires the value of 
+\begin_inset Formula $f$
+\end_inset
+
+ beyond internal boundaries, which are located at 
+\begin_inset Formula $p=0$
+\end_inset
+
+, 
+\begin_inset Formula $\xi=\pm1$
+\end_inset
+
+, and 
+\begin_inset Formula $\psi=0$
+\end_inset
+
+, and also beyond external boundaries, which are located at 
+\begin_inset Formula $p=p_{\max}$
+\end_inset
+
+ and 
+\begin_inset Formula $\psi=\psi_{a}$
+\end_inset
+
+.
+ The conventions (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "conventions"
+
+\end_inset
+
+) define the location of points beyond these boundaries.
+ According to the discretization scheme of Sec.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "discretization"
+
+\end_inset
+
+ and Sec.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "interpolation"
+
+\end_inset
+
+, boundary conditions must therefore be used to specify the values of 
+\begin_inset Formula $f$
+\end_inset
+
+ at the following locations
+\begin_inset Formula \begin{equation}
+\begin{array}{ccc}
+f(-\psi_{0+},p,\xi) & \qquad & f(\psi_{a}+\left[\psi_{a}-\psi_{n_{\psi}-}\right],p,\xi)\\
+f(\psi,-p_{0+},\xi) & \qquad & f(\psi,p_{\max}+\left[p_{\max}-p_{n_{p}-}\right],\xi)\\
+f(\psi,p,-1-\left[1-\xi_{0+}\right]) & \qquad & f(\psi,p,1+\left[1-\xi_{n_{\xi}-}\right])\end{array}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Internal boundaries
+\end_layout
+
+\begin_layout Standard
+The symmetry of the spherical 
+\begin_inset Formula $\left(\psi,p,\xi\right)$
+\end_inset
+
+ phase space specifies the internal boundary conditions
+\begin_inset Formula \begin{equation}
+\begin{array}{l}
+f(-\psi_{0+},p,\xi)=f(\psi_{0+},p,\xi)\\
+f(\psi,-p_{0+},\xi)=f(\psi,p_{0+},-\xi)\\
+f(\psi,p,-1-\left[1-\xi_{0+}\right])=f(\psi,p,\xi_{0+})\\
+f(\psi,p,1+\left[1-\xi_{n_{\xi}-}\right])=f(\psi,p,\xi_{n_{\xi}-})\end{array}\end{equation}
+
+\end_inset
+
+ However, the conservative structure of the operators 
+\begin_inset Formula $\left[p^{2}\mathbf{\nabla}_{\mathbf{p}}\cdot\mathbf{S}_{\mathbf{p}}\right]_{l+,i+,j+}^{(k)}$
+\end_inset
+
+ and 
+\begin_inset Formula $\left[p^{2}\mathbf{\nabla}_{\psi}\cdot\mathbf{S}_{\psi}\right]_{l+,i+,j+}^{(k)}$
+\end_inset
+
+ and our choice of discretization schemes (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "phasediv2"
+
+\end_inset
+
+) means that some internal boundary conditions are intrinsically satisfied.
+ Indeed, the evaluation of 
+\begin_inset Formula $S_{p,l+,0,j+}^{(k)}$
+\end_inset
+
+, 
+\begin_inset Formula $S_{\xi,l+,i+,0}$
+\end_inset
+
+, 
+\begin_inset Formula $S_{\xi,l+,i+,n_{\xi}}$
+\end_inset
+
+, and 
+\begin_inset Formula $S_{\psi,0,i+,j+}^{(k)}$
+\end_inset
+
+ is not necessary because of the vanishing factors in front of these terms,
+ which are 
+\begin_inset Formula $p_{0}=0$
+\end_inset
+
+, 
+\begin_inset Formula $\sqrt{1-\xi_{0}^{2}}=0$
+\end_inset
+
+, 
+\begin_inset Formula $\sqrt{1-\xi_{n_{\xi}}^{2}}=0$
+\end_inset
+
+, and 
+\begin_inset Formula $\alpha_{0,j+}=0$
+\end_inset
+
+, respectively.
+ However, boundary conditions must be enforced in the discretization of
+ cross-terms when evaluating 
+\begin_inset Formula $S_{\xi,l+,0+,j}^{(k)}$
+\end_inset
+
+, 
+\begin_inset Formula $S_{p,l+,i,0+}^{(k)}$
+\end_inset
+
+, and 
+\begin_inset Formula $S_{p,l+,i,n_{\xi}-}^{(k)}$
+\end_inset
+
+, which requires the following operations
+\begin_inset Formula \begin{equation}
+\begin{array}{ll}
+M_{\mathbf{p},l+,0+,j+}^{l+,0+,(n_{\xi}-j^{\prime}-1)+}\rightarrow M_{\mathbf{p},l+,0+,j+}^{l+,0-,j^{\prime}+} & ;\qquad M_{\mathbf{p},l+,0+,j+}^{l+,0-,j^{\prime}+}\rightarrow0\\
+M_{\mathbf{p},l+,i+,0+}^{l+,i^{\prime}+,0+}\rightarrow M_{\mathbf{p},l+,i+,0+}^{l+,i^{\prime}+,0+}+M_{\mathbf{p},l+,i+,0+}^{l+,i^{\prime}+,0-} & ;\qquad M_{\mathbf{p},l+,i+,0+}^{l+,i^{\prime}+,0-}\rightarrow0\\
+M_{\mathbf{p},l+,i+,n_{\xi}-}^{l+,i^{\prime}+,n_{\xi}-}\rightarrow M_{\mathbf{p},l+,i+,n_{\xi}-}^{l+,i^{\prime}+,n_{\xi}-}+M_{\mathbf{p},l+,i+,n_{\xi}-}^{l+,i^{\prime}+,n_{\xi}+} & ;\qquad M_{\mathbf{p},l+,i+,n_{\xi}-}^{l+,i^{\prime}+,n_{\xi}+}\rightarrow0\end{array}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Symmetrization of 
+\begin_inset Formula $f$
+\end_inset
+
+ in the trapped region
+\end_layout
+
+\begin_layout Standard
+The symmetrization of 
+\begin_inset Formula $f$
+\end_inset
+
+ in the trapped region is enforced implicitly in the Fokker-Planck equation,
+ which allows the use of large time scales as compared to explicit symmetrizatio
+n methods 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "kil86"
+
+\end_inset
+
+.
+ This symmetrization is performed by solving the kinetic equation only on
+ one half of the trapped region: 
+\begin_inset Formula $0\leq\xi\leq\xi_{0T}\left(\psi\right)$
+\end_inset
+
+.
+ The other half of the distribution is recovered using 
+\begin_inset Formula $f\left(\psi,p,\xi\right)=$
+\end_inset
+
+ 
+\begin_inset Formula $f\left(\psi,p,-\xi\right)$
+\end_inset
+
+ for 
+\begin_inset Formula $-\xi_{0T}\left(\psi\right)\leq\xi\leq0$
+\end_inset
+
+.
+ This operation creates new internal boundary conditions at the trapped/passing
+ boundary 
+\begin_inset Formula $\xi=\pm\xi_{0T}\left(\psi\right)$
+\end_inset
+
+ and at 
+\begin_inset Formula $\xi=0$
+\end_inset
+
+.
+ We denote 
+\begin_inset Formula $j_{T1}\left(\psi\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $j_{T2}\left(\psi\right)$
+\end_inset
+
+ the indices corresponding to the grid points at the trapped/passing boundary
+ so that 
+\begin_inset Formula $\xi_{j_{T1}\left(\psi\right)}=-\xi_{0T}\left(\psi\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $\xi_{j_{T2}\left(\psi\right)}=\xi_{0T}\left(\psi\right)$
+\end_inset
+
+.
+ For 
+\begin_inset Formula $j_{T1}\left(\psi\right)<j+<n_{\xi}/2$
+\end_inset
+
+ the symmetry of 
+\begin_inset Formula $f$
+\end_inset
+
+ means
+\begin_inset Formula \begin{equation}
+f_{l+,i+,j+}^{(k)}=f_{l+,i+,(n_{\xi}-j-1)+}^{(k)}\end{equation}
+
+\end_inset
+
+ and the relations 
+\begin_inset Formula \begin{equation}
+\begin{array}{l}
+f(\psi,p,\xi_{j_{T1}+})=f(\psi,p,\xi_{j_{T2}-})\\
+f(\psi,p,\xi_{n_{\xi}/2-})=f(\psi,p,\xi_{n_{\xi}/2+})\end{array}\label{BCtrap}\end{equation}
+
+\end_inset
+
+ are used to evaluate the discretized fluxes at the internal boundaries.
+ This operation creates a new set of coefficients 
+\begin_inset Formula $M_{\mathbf{p},l+,i+,j+}$
+\end_inset
+
+ for each 
+\begin_inset Formula $i^{\prime}=i-1,i,i+1$
+\end_inset
+
+ and 
+\begin_inset Formula $j^{\prime}=j-1,j,j+1$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Itemize
+The discretization of 
+\begin_inset Formula $p^{2}\mathbf{\nabla}_{\mathbf{p}}\cdot\mathbf{S}_{\mathbf{p}}$
+\end_inset
+
+ at the point 
+\begin_inset Formula $(l+,i+,j_{T1}-)$
+\end_inset
+
+ requires the value of the distribution 
+\begin_inset Formula $f$
+\end_inset
+
+ at the points 
+\begin_inset Formula $(l+,i^{\prime}+,j_{T1}+)$
+\end_inset
+
+ which is removed from the calculation.
+ Using the conditions (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "BCtrap"
+
+\end_inset
+
+), a relation is created between the point 
+\begin_inset Formula $(l+,i+,j_{T1}-)$
+\end_inset
+
+ and the points 
+\begin_inset Formula $(l+,i^{\prime}+,j_{T2}-)$
+\end_inset
+
+ 
+\begin_inset Formula \begin{equation}
+\begin{array}{ll}
+M_{\mathbf{p},l+,i+,j_{T1}-}^{l+,i^{\prime}+,j_{T2}-}\rightarrow M_{\mathbf{p},l+,i+,j_{T1}-}^{l+,i^{\prime}+,j_{T1}+} & ;\qquad M_{\mathbf{p},l+,i+,j_{T1}-}^{l+,i^{\prime}+,j_{T1}+}\rightarrow0\end{array}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Conversely, the point 
+\begin_inset Formula $(l+,i+,j_{T2}-)$
+\end_inset
+
+ is related to both 
+\begin_inset Formula $(l+,i^{\prime}+,j_{T1}-)$
+\end_inset
+
+ and 
+\begin_inset Formula $(l+,i+,j_{T2}+)$
+\end_inset
+
+.
+ Because the corresponding particle passes half the time in one direction
+ 
+\begin_inset Formula $(l+,i+,j_{T2}-)$
+\end_inset
+
+ and half the time in the other direction 
+\begin_inset Formula $(l+,i^{\prime}+,j_{T1}+)$
+\end_inset
+
+, the evolution rates must be shared between both co-passing and counter-passing
+ regions
+\begin_inset Formula \begin{equation}
+\begin{array}{ll}
+M_{\mathbf{p},l+,i+,j_{T2}-}^{l+,i^{\prime}+,j_{T1}-}\rightarrow\dfrac{M_{\mathbf{p},l+,i+,j_{T2}-}^{l+,i^{\prime}+,j_{T2}+}}{2} & ;\qquad M_{\mathbf{p},l+,i+,j_{T2}-}^{l+,i^{\prime}+,j_{T2}+}\rightarrow\dfrac{M_{\mathbf{p},l+,i+,j_{T2}-}^{l+,i^{\prime}+,j_{T2}+}}{2}\end{array}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Since 
+\begin_inset Formula $\xi_{n_{\xi}/2}=0$
+\end_inset
+
+ is an axis of symmetry, the following rule is applied at the point 
+\begin_inset Formula $(l+,i+,j_{n_{\xi}/2}+)$
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\begin{array}{ll}
+M_{\mathbf{p},l+,i+,j_{n_{\xi}/2}+}^{l+,i^{\prime}+,j_{n_{\xi}/2}+}\rightarrow M_{\mathbf{p},l+,i+,j_{n_{\xi}/2}+}^{l+,i^{\prime}+,j_{n_{\xi}/2}+}+M_{\mathbf{p},l+,i+,j_{n_{\xi}/2}+}^{l+,i^{\prime}+,j_{n_{\xi}/2}-} & ;\qquad M_{\mathbf{p},l+,i+,j_{n_{\xi}/2}+}^{l+,i^{\prime}+,j_{n_{\xi}/2}-}\rightarrow0\end{array}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The symmetrization of 
+\begin_inset Formula $f$
+\end_inset
+
+ in the trapped region requires operations on the transport rates 
+\begin_inset Formula $M_{\psi,l+,i+,j+}$
+\end_inset
+
+ also because the trapped/passing boundaries 
+\begin_inset Formula $\xi_{0T}\left(\psi\right)$
+\end_inset
+
+ are different for each flux-surface.
+ The corresponding indices noted as 
+\begin_inset Formula $j_{T1}^{l+}=j_{T1}(\psi_{l+})$
+\end_inset
+
+ and 
+\begin_inset Formula $j_{T2}^{l+}=j_{T2}(\psi_{l+})$
+\end_inset
+
+ satisfy the inequalities 
+\begin_inset Formula $j_{T1}^{l++}<j_{T1}^{l+}<j_{T1}^{l-}$
+\end_inset
+
+ and 
+\begin_inset Formula $j_{T2}^{l-}<j_{T2}^{l+}<j_{T2}^{l++}$
+\end_inset
+
+.
+ The conservation of magnetic moment - or equivalently of 
+\begin_inset Formula $\xi_{0}$
+\end_inset
+
+ - during radial transport implies that particle may be trapped or detrapped
+ due to radial transport.
+ Because different regions 
+\begin_inset Formula $-\xi_{0T}\left(\psi\right)\leq\xi\leq0$
+\end_inset
+
+ are removed from the calculation for each flux-surface, the coefficients
+ 
+\begin_inset Formula $M_{\psi,l+,i+,j+}$
+\end_inset
+
+ must be modified accordingly :
+\end_layout
+
+\begin_layout Itemize
+Passing particles on the surface 
+\begin_inset Formula $l+$
+\end_inset
+
+ and characterized by an index 
+\begin_inset Formula $j_{T1}^{l++}<j+<j_{T1}^{l+}$
+\end_inset
+
+ are trapped if they are transported to the surface 
+\begin_inset Formula $l++$
+\end_inset
+
+.
+ Because the corresponding region is removed from the calculation, the following
+ operations are required on the points 
+\begin_inset Formula $(l+,i+,j_{T1}^{l++}<j+<j_{T1}^{l+})$
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\begin{array}{ll}
+M_{\psi,l+,i+,j+}^{(l+1)+,i+,(n_{\xi}-j-1)+}\rightarrow M_{\psi,l+,i+,j+}^{(l+1)+,i+,j+} & ;\qquad M_{\psi,l+,i+,j+}^{(l+1)+,i+,j+}\rightarrow0\end{array}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Trapped particles on the surface 
+\begin_inset Formula $l+$
+\end_inset
+
+ and characterized by an index 
+\begin_inset Formula $j_{T2}^{l-}<j+<j_{T2}^{l+}$
+\end_inset
+
+ are detrapped if they are transported to the surface 
+\begin_inset Formula $l-$
+\end_inset
+
+.
+ Because the particle passes half the time in one direction 
+\begin_inset Formula $(l+,i+,j+)$
+\end_inset
+
+ and half the time in the other direction 
+\begin_inset Formula $(l+,i^{\prime}+,(n_{\xi}-j-1)+)$
+\end_inset
+
+, the evolution rates must be shared between both co-passing and counter-passing
+ regions on the surface 
+\begin_inset Formula $l-$
+\end_inset
+
+, and the following operations are required on the points 
+\begin_inset Formula $(l+,i+,j_{T2}^{l-}<j+<j_{T2}^{l+})$
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\begin{array}{ll}
+M_{\psi,l+,i+,j+}^{(l-1)+,i+,(n_{\xi}-j-1)+}\rightarrow\dfrac{M_{\psi,l+,i+,j+}^{(l-1)+,i+,j+}}{2} & ;\qquad M_{\psi,l+,i+,j+}^{(l-1)+,i+,j+}\rightarrow\dfrac{M_{\psi,l+,i+,j+}^{(l-1)+,i+,j+}}{2}\end{array}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This set of operations effectively disconnects the domain of calculation
+ from the domain 
+\begin_inset Formula $-\xi_{0T}\left(\psi\right)<\xi<0$
+\end_inset
+
+ which is to be removed from the calculation, and ensures the global flux
+ conservation at the trapped passing boundary and across flux-surfaces.
+\end_layout
+
+\begin_layout Subsubsection
+External boundaries
+\end_layout
+
+\begin_layout Standard
+Condition at 
+\begin_inset Formula $p=p_{\max}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The external boundary 
+\begin_inset Formula $p=p_{\max}$
+\end_inset
+
+ is purely numerical as 
+\begin_inset Formula $p\rightarrow\infty$
+\end_inset
+
+ in the physical space.
+ The limit 
+\begin_inset Formula $p_{\max}$
+\end_inset
+
+ must be chosen such that the physical mechanisms of interest are mostly
+ contained in the subspace 
+\begin_inset Formula $0\leq p\leq p_{\max}$
+\end_inset
+
+.
+ An appropriate description of collisions, Landau damping, and ohmic heating
+ requires, respectively, 
+\begin_inset Formula $p_{\max}\gg p_{T}$
+\end_inset
+
+, 
+\begin_inset Formula $p_{\max}\gg\gamma\left(\omega/k\right)_{\max}$
+\end_inset
+
+
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+If the problem under interest is to calculate runaway electron losses, then
+ a boundary 
+\begin_inset Formula $p_{\max}\gg p_{c}$
+\end_inset
+
+ must be chosen, where 
+\begin_inset Formula $p_{c}$
+\end_inset
+
+ is the momentum threshold above which electrons run away.
+ In this case, the flux through the boundary 
+\begin_inset Formula $p=p_{\max}$
+\end_inset
+
+ is physical and not numerical, and corresponds to runaway losses.
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+With these conditions fulfilled the only physical mechanism at play near
+ 
+\begin_inset Formula $p=p_{\max}$
+\end_inset
+
+ is collisions.
+ Using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "FDcoll"
+
+\end_inset
+
+) at 
+\begin_inset Formula $p=p_{\max}$
+\end_inset
+
+ shows that the diffusive part of the flux is negligible compared to the
+ convective part
+\begin_inset Formula \begin{equation}
+\left.\dfrac{\left\vert D_{pp}^{\text{C}}\right\vert /p}{\left\vert F_{p}^{\text{C}}\right\vert }\right\vert _{p=p_{\max}}=\gamma_{\max}\left(\dfrac{p_{T}}{p_{\max}}\right)^{2}\ll1\label{FDcoll2}\end{equation}
+
+\end_inset
+
+ such that the Fokker-Planck equation is of quasi-hyperbolic nature in this
+ region 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "kar86"
+
+\end_inset
+
+.
+ In this case no boundary condition need to be specified.
+ Keeping free boundary conditions under the condition (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "FDcoll2"
+
+\end_inset
+
+) ensures that the numerical particle losses through the boundary 
+\begin_inset Formula $p=p_{\max}$
+\end_inset
+
+ are minimal.
+\end_layout
+
+\begin_layout Standard
+Condition at 
+\begin_inset Formula $\psi=\psi_{a}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The external boundary 
+\begin_inset Formula $\psi=\psi_{a}$
+\end_inset
+
+ has a physical meaning and fluxes through the last closed flux surface
+ must be accounted for.
+ The general prescription is to assume a Maxwellian distribution on the
+ last closed flux-surface
+\begin_inset Formula \begin{equation}
+f(\psi_{a},p,\xi)=f_{M}(\psi_{a},p)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For the spatial dynamics, the external boundary at 
+\begin_inset Formula $\psi=\psi_{a}$
+\end_inset
+
+ has a true physical meaning.
+ The usual choice corresponds to 
+\begin_inset Formula $f\left(t,\psi_{a},p,\xi\right)=f_{M}\left(t,\psi_{a},p,\xi\right)$
+\end_inset
+
+, which means that fast particles escape definitively the plasma when they
+ cross the last closed magnetic flux surface.
+\end_layout
+
+\begin_layout Standard
+Particle conservation
+\end_layout
+
+\begin_layout Standard
+When particles leave the domain of integration - either for numerical or
+ physical reasons - the code cannot converge towards a steady-state solution.
+ However, particle conservation can be restored by introducing a compensating
+ source term 
+\begin_inset Formula $s_{+}^{(0)}\left(t,\psi,p,\xi\right)$
+\end_inset
+
+.
+ Particles are generally injected at 
+\begin_inset Formula $p=0$
+\end_inset
+
+, which corresponds somewhat to cold gas injection.
+ The radial profile of 
+\begin_inset Formula $s_{+}^{(0)}$
+\end_inset
+
+ is determined so that the particle density profile 
+\begin_inset Formula $n_{e}\left(\psi\right)$
+\end_inset
+
+ is constant.
+\end_layout
+
+\begin_layout Standard
+The integration over momentum space uses an operator derived in (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "neV"
+
+\end_inset
+
+) and defined for any quantity 
+\begin_inset Formula $\mathcal{A}\left(p,\xi\right)$
+\end_inset
+
+ as
+\begin_inset Formula \begin{equation}
+\bar{\mathcal{A}}\equiv2\pi\dfrac{\tilde{q}}{\tilde{q}_{-1,0}}\int_{0}^{\infty}p^{2}dp\int_{-1}^{+1}d\xi\;\lambda\mathcal{A}\left(p,\xi\right)\label{intop}\end{equation}
+
+\end_inset
+
+ With this definition, the flux-surface-averaged particle density (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "neV"
+
+\end_inset
+
+) and the density of power absorbed (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "pabs"
+
+\end_inset
+
+) associated with the operator 
+\begin_inset Formula $\mathcal{O}$
+\end_inset
+
+ are given by 
+\begin_inset Formula $\left\langle n_{e}\right\rangle _{V}=\overline{f}$
+\end_inset
+
+ and 
+\begin_inset Formula $\left\langle P_{\text{abs}}^{\mathcal{O}}\right\rangle _{V}=\overline{vS_{p}^{\mathcal{O}}}$
+\end_inset
+
+, respectively.
+ The Fokker-Planck equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "FP0"
+
+\end_inset
+
+) is integrated over momentum space using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "intop"
+
+\end_inset
+
+) 
+\begin_inset Formula \begin{equation}
+\frac{\partial}{\partial t}\left\langle n_{e}\right\rangle _{V}+\frac{B}{\tilde{q}_{-1,0}}\frac{\partial}{\partial\psi}\frac{\tilde{q}_{-1,0}}{B}\left\Vert \mathbf{\nabla}\psi\right\Vert \bar{S}_{\psi}=\bar{s}_{+}-\bar{s}_{-}\end{equation}
+
+\end_inset
+
+ The compensating source term can thus be calculated explicitly as
+\begin_inset Formula \begin{equation}
+s_{+,l+,0+,j+}^{(k++)}=\dfrac{3}{4\pi}\dfrac{1}{\Delta p_{0+}^{3}}\left(\bar{s}_{-,l+}^{(k)}+\frac{\left\langle n_{e}\right\rangle _{V,l+}^{(k++)}-\left\langle n_{e}\right\rangle _{V,l+}^{(k)}}{\Delta t}+\left[\frac{B}{\tilde{q}_{-1,0}}\frac{\partial}{\partial\psi}\frac{\tilde{q}_{-1,0}}{B}\left\Vert \mathbf{\nabla}\psi\right\Vert \bar{S}_{\psi}\right]_{l+}^{(k++)}\right)\end{equation}
+
+\end_inset
+
+ where
+\begin_inset Formula \begin{equation}
+\left[\frac{B}{\hat{q}}\frac{\partial}{\partial\psi}\frac{\hat{q}}{B}\left\Vert \mathbf{\nabla}\psi\right\Vert \bar{S}_{\psi}\right]_{l+}^{(k++)}=\frac{B_{l+}}{\tilde{q}_{-1,0}^{l+}}\dfrac{\tilde{q}_{-1,0}^{l++}\left\Vert \mathbf{\nabla}\psi\right\Vert _{l++}\bar{S}_{\psi,l++}^{(k++)}/B_{l++}-\tilde{q}_{-1,0}^{l}\left\Vert \mathbf{\nabla}\psi\right\Vert _{l}\bar{S}_{\psi,l}^{(k++)}/B_{l}}{\Delta\psi_{l+}}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+With this method, particle conservation is implemented explicitly in equation
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "FP0"
+
+\end_inset
+
+), which can sometimes lead to numerical instabilities.
+ Instead, the particle loss can be compensated implicitly by normalizing
+ the distribution function 
+\begin_inset Formula $f$
+\end_inset
+
+ at each time step, or by imposing the Maxwellian distribution over a small
+ domain around 
+\begin_inset Formula $p=0$
+\end_inset
+
+ .
+ Even though these two methods are not justified physically, they are usually
+ preferred since they can be easily implemented in the code and provide
+ a unconditionally stable alternative to ensure particle conservation.
+\end_layout
+
+\begin_layout Standard
+When particle losses remain a small fraction of the whole particle population,
+ all three methods lead to a fast convergence and the steady-state solutions
+ are nearly identical.
+\end_layout
+
+\begin_layout Subsection
+Matrix representation
+\begin_inset CommandInset label
+LatexCommand label
+name "algorithm"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The discretized 3-D Fokker-Planck equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "discreteFP"
+
+\end_inset
+
+) can be expressed in a matrix form
+\begin_inset Formula \begin{equation}
+\left(\frac{\mathbb{P}}{\Delta t}+\mathbb{M}\right)\cdot\mathbf{F}^{(k+1)}=\frac{\mathbb{P}}{\Delta t}\cdot\mathbf{F}^{(k)}+\mathbf{I}\left(f_{M},\mathbf{F}^{(k)}\right)+\mathbf{S}_{+}^{(k)}-\mathbf{S}_{-}^{(k)}\label{Matrixeq}\end{equation}
+
+\end_inset
+
+ with 
+\begin_inset Formula $\mathbb{M}=\mathbb{M}_{\mathbf{p}}+\mathbb{M}_{\psi}$
+\end_inset
+
+ where 
+\begin_inset Formula $\mathbb{M}_{\mathbf{p}}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbb{M}_{\psi}$
+\end_inset
+
+ represent the coefficients 
+\begin_inset Formula $M_{\mathbf{p},l+,i+,j+}$
+\end_inset
+
+ and 
+\begin_inset Formula $M_{\psi,l+,i+,j+}$
+\end_inset
+
+ in matrix form, respectively.
+ The vector 
+\begin_inset Formula $\mathbf{I}$
+\end_inset
+
+ represents the integral part of the collision operator, and 
+\begin_inset Formula $\mathbf{S}_{+}^{(k)}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbf{S}_{-}^{(k)}$
+\end_inset
+
+ are the source and sink terms.
+ The components of the vector 
+\begin_inset Formula $\mathbf{F}^{(k)}$
+\end_inset
+
+ are the values of the discretized distribution function 
+\begin_inset Formula $f_{l+,i+,j+}^{(k)}$
+\end_inset
+
+ at the time step 
+\begin_inset Formula $k$
+\end_inset
+
+ organized as follows 
+\begin_inset Formula \begin{equation}
+\mathbf{F}^{(k)}\rightarrow\left\{ \begin{array}{l}
+l=0\\
+\cdots\\
+l\rightarrow\left\{ \begin{array}{l}
+i=0\\
+\cdots\\
+i\rightarrow\left\{ \begin{array}{l}
+j=0\\
+\cdots\\
+j\\
+\cdots\\
+j=n_{\xi}-n_{\xi_{T}}^{l}-1\end{array}\right.\\
+\cdots\\
+i=n_{p}-1\end{array}\right.\\
+\cdots\\
+l=n_{\psi}-1\end{array}\right.\end{equation}
+
+\end_inset
+
+ In accordance with the implicit symmetrization scheme in the trapped region
+ on the flux surface 
+\begin_inset Formula $\psi_{l+}$
+\end_inset
+
+, the 
+\begin_inset Formula $n_{\xi_{T}}^{l}$
+\end_inset
+
+ points characterized by indices 
+\begin_inset Formula $j_{T1}\left(\psi\right)<j+<n_{\xi}/2$
+\end_inset
+
+ and corresponding to the domain 
+\begin_inset Formula $-\xi_{0T}\left(\psi\right)<\xi<0$
+\end_inset
+
+ have been removed from the vector 
+\begin_inset Formula $\mathbf{F}^{(k)}$
+\end_inset
+
+ and from all other vector elements in (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Matrixeq"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+With this Victoria representation of the distribution 
+\begin_inset Formula $f_{l+,i+,j+}^{(k)}$
+\end_inset
+
+, the matrix 
+\begin_inset Formula $\mathbb{M}$
+\end_inset
+
+ is sparse with a multiple bands structure.
+ The matrix 
+\begin_inset Formula $\mathbb{P}$
+\end_inset
+
+ is a diagonal matrix representing the momentum-space Jacobian 
+\begin_inset Formula $p_{i+}^{2}$
+\end_inset
+
+.
+ In the absence of radial transport, 
+\begin_inset Formula $\mathbb{M}$
+\end_inset
+
+ is a block-diagonal matrix where the blocks 
+\begin_inset Formula $l$
+\end_inset
+
+ describing the momentum dynamics at location 
+\begin_inset Formula $\psi_{l+}$
+\end_inset
+
+ are square matrices of different (decreasing) size 
+\begin_inset Formula $n_{p}(n_{\xi}-n_{\xi_{T}}^{l})$
+\end_inset
+
+, each containing 
+\begin_inset Formula $15$
+\end_inset
+
+ non-zero diagonals as shown in Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fpmatrix"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+With the choice of spherical coordinates, 
+\begin_inset Formula $\mathbb{M}$
+\end_inset
+
+ is a main diagonal dominant matrix if Coulomb collisions are the dominant
+ physical process.
+ The matrix 
+\begin_inset Formula $\mathbb{A}\equiv\mathbb{P}/\Delta t+\mathbb{M}$
+\end_inset
+
+ is thus well conditioned even for large time step 
+\begin_inset Formula $\Delta t$
+\end_inset
+
+ allowing a stable, fast convergence to steady state.
+ In some cases where other physical processes, such as strong RF quasilinear
+ diffusion, dominate over collisions, 
+\begin_inset Formula $\mathbb{M}$
+\end_inset
+
+ can become marginally ill-conditioned.
+ In that case, 
+\begin_inset Formula $\Delta t$
+\end_inset
+
+ may be used as a regularization parameter, since decreasing 
+\begin_inset Formula $\Delta t$
+\end_inset
+
+ improves the conditioning of 
+\begin_inset Formula $\mathbb{A}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The introduction of radial dynamics adds several non-zero diagonals that
+ connect neighboring blocks corresponding to different radial positions.
+ In any case, the matrix 
+\begin_inset Formula $\mathbb{A}$
+\end_inset
+
+ is highly sparse, a property that is used to reduce the memory necessary
+ to store the matrix.
+ Indeed, the extended size of 
+\begin_inset Formula $\mathbb{A}$
+\end_inset
+
+ is 
+\begin_inset Formula \begin{equation}
+\text{size}\left(\mathbb{A}\right)=\left[n_{p}\sum_{l=0}^{l=n_{\psi}-1}\left(n_{\xi}-n_{\xi_{T}}^{l}\right)\right]^{2}\lesssim n_{\psi}^{2}n_{p}^{2}n_{\xi}^{2}\end{equation}
+
+\end_inset
+
+ For a cylindrical plasma where magnetic trapping is absent and thus 
+\begin_inset Formula $n_{\xi_{T}}^{l}=0$
+\end_inset
+
+, and with a typical grid 
+\begin_inset Formula $(n_{\psi}=20,n_{p}=200,n_{\xi}=200)$
+\end_inset
+
+, the total number of matrix coefficients is 
+\begin_inset Formula $640$
+\end_inset
+
+ billions corresponding to a full-matrix memory requirement of 
+\begin_inset Formula $5.12$
+\end_inset
+
+ Terabytes
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+On the basis of double precision where the storage of a real number requires
+ 
+\begin_inset Formula $8$
+\end_inset
+
+ Bytes.
+\end_layout
+
+\end_inset
+
+.
+ However, the 
+\begin_inset Formula $11$
+\end_inset
+
+ non-zero diagonals amount to less than 
+\begin_inset Formula $9$
+\end_inset
+
+ million coefficients corresponding to a sparse-matrix memory requirement
+ of only 
+\begin_inset Formula $70.4$
+\end_inset
+
+ Megabytes
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+The memory requirement of a sparse matrix is actually slightly larger as
+ the index values of all non-zero coefficients must also be stored.
+ Yet, the order of magnitude is not modified.
+\end_layout
+
+\end_inset
+
+, which can be stored in the physical memory of most computers these days.
+\end_layout
+
+\end_body
+\end_document
