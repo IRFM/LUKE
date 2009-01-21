@@ -1,0 +1,468 @@
+#LyX 1.6.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\begin_preamble
+
+\usepackage{epstopdf} 
+\usepackage{pdfsync}
+\end_preamble
+\use_default_options false
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Collision operator in guiding center coordinates
+\end_layout
+
+\begin_layout Author
+by Yves Peysson (CEA/IRFM)
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+p
+\end_layout
+
+\begin_layout Section
+Collision operator in guiding center coordinates
+\end_layout
+
+\begin_layout Subsection
+Transformation to 
+\begin_inset Formula $\left(X,p,\xi,\varphi\right)$
+\end_inset
+
+ coordinates
+\end_layout
+
+\begin_layout Standard
+According to Ref.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bri04"
+
+\end_inset
+
+, if F and G are functions of the guiding center coordinates 
+\begin_inset Formula $\left(X,\mathcal{E},\mu,\theta\right)$
+\end_inset
+
+, the Poisson bracket of F and G for a non-uniform magnetic field may be
+ expressed as
+\begin_inset Formula \begin{multline}
+\left\{ F,G\right\} _{gc}=\frac{\Omega}{B}\left[\frac{\partial F}{\partial\theta}\left(\frac{\partial G}{\partial\mu}+B\frac{\partial G}{\partial\mathcal{E}}\right)-\left(\frac{\partial F}{\partial\mu}+B\frac{\partial F}{\partial\mathcal{E}}\right)\frac{\partial G}{\partial\theta}\right]\\
++\mathbf{v}_{gc}\cdot\left(\nabla^{*}F\frac{\partial G}{\partial\mathcal{E}}-\frac{\partial F}{\partial\mathcal{E}}\nabla^{*}G\right)\\
+-\frac{c\widehat{b}}{eB_{\Vert}^{*}}\cdot\nabla^{*}F\times\nabla^{*}G\label{eq:PoissonbracketEmhu}\end{multline}
+
+\end_inset
+
+where the modified gradient operator 
+\begin_inset Formula $\nabla^{*}$
+\end_inset
+
+is defined as 
+\begin_inset Formula \begin{equation}
+\nabla^{*}\equiv\nabla+\left[\mathbf{R}+\frac{1}{2}\left(\widehat{b}\cdot\nabla\times\widehat{b}\right)\widehat{b}\right]\frac{\partial}{\partial\theta}\label{eq:nablastar}\end{equation}
+
+\end_inset
+
+and the gyro-averaged guiding-center velocity is
+\begin_inset Formula \begin{equation}
+\mathbf{v}_{gc}=v_{\parallel}\widehat{b}+\frac{\widehat{b}}{m\Omega_{\Vert}^{*}}\times\left(\mu\nabla B+mv_{\Vert}^{2}\widehat{b}\cdot\nabla\widehat{b}\right)\label{eq:guidingcentervelocity}\end{equation}
+
+\end_inset
+
+with 
+\begin_inset Formula \begin{equation}
+\Omega_{\Vert}^{*}=\frac{eB{}_{\Vert}^{*}}{mc}=\Omega+v_{\Vert}\widehat{b}\cdot\nabla\times\widehat{b}\label{eq:Omegastar}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\mathbf{B}{}^{*}=\mathbf{B}+\epsilon\frac{cp_{\Vert}}{e}\nabla\times\widehat{b}\label{eq:Bstar}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+B{}_{\Vert}^{*}\left(\mathbf{X},\mathcal{E},\mu\right)=B{}_{\Vert}^{*}\cdot\widehat{b}\label{eq:Bstarpar}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\left|v_{\parallel}\right|=\left|\frac{p_{\parallel}}{m}\right|=\sqrt{\frac{\mathcal{E}-\mu B}{2m}}\label{eq:vpar}\end{equation}
+
+\end_inset
+
+using the definition 
+\begin_inset Formula $\widehat{b}=\mathbf{B}/\left\Vert \mathbf{B}\right\Vert $
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Here, 
+\begin_inset Formula $\theta$
+\end_inset
+
+ is the gyro-angle, 
+\begin_inset Formula $\mu$
+\end_inset
+
+ the guiding-center magnetic moment, 
+\begin_inset Formula $\mathcal{E}$
+\end_inset
+
+ the guiding-center kinetic energy and 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+ is a small parameter for the perturbative expansion as defined in (
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bri04"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+In order to express the collisional operator in the spherical momentum coordinat
+es 
+\begin_inset Formula $\left(\mathbf{X},p,\xi,\varphi\right)$
+\end_inset
+
+ used in LUKE, where 
+\begin_inset Formula \begin{equation}
+\xi=p_{\parallel}/p\label{eq:guidingcenterpitchanglecosine}\end{equation}
+
+\end_inset
+
+we have 
+\begin_inset Formula \begin{equation}
+\mathcal{E}=\frac{p^{2}}{2m}=\frac{p_{\Vert}^{2}+p_{\bot}^{2}}{2m}\label{eq:guidingcenterkineticenergy}\end{equation}
+
+\end_inset
+
+and
+\begin_inset Formula \begin{equation}
+\mu=\frac{p_{\bot}^{2}}{2mB}=\frac{p^{2}\left(1-\xi^{2}\right)}{2mB}\label{eq:guidingcentermagneticmoment}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Then, using the chain rule for several variables, the transformation 
+\begin_inset Formula $\left(\mathbf{X},p,\xi,\varphi\right)\rightarrow\left(X,\mathcal{E},\mu,\theta\right)$
+\end_inset
+
+ is expressed in the matrix form
+\begin_inset Formula \begin{equation}
+\left(\begin{array}{c}
+\partial/\partial p\\
+\partial/\partial\xi\end{array}\right)=\frac{\partial\left(\mathcal{E},\mu\right)}{\partial\left(p,\xi\right)}\left(\begin{array}{c}
+\partial/\partial\mathcal{E}\\
+\partial/\partial\mu\end{array}\right)\label{eq:}\end{equation}
+
+\end_inset
+
+so that
+\begin_inset Formula \begin{equation}
+\left(\begin{array}{c}
+\partial/\partial\mathcal{E}\\
+\partial/\partial\mu\end{array}\right)=\frac{\partial\left(p,\xi\right)}{\partial\left(\mathcal{E},\mu\right)}\left(\begin{array}{c}
+\partial/\partial p\\
+\partial/\partial\xi\end{array}\right)\label{eq:-1}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the definitions (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:guidingcenterkineticenergy"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:guidingcentermagneticmoment"
+
+\end_inset
+
+), 
+\begin_inset Formula \begin{equation}
+\frac{\partial\left(\mathcal{E},\mu\right)}{\partial\left(p,\xi\right)}=\left(\begin{array}{cc}
+p/m & \left(1-\xi^{2}\right)p/\left(mB\right)\\
+0 & -\xi p^{2}/\left(mB\right)\end{array}\right)\label{eq:L}\end{equation}
+
+\end_inset
+
+and
+\begin_inset Formula \begin{equation}
+\frac{\partial\left(p,\xi\right)}{\partial\left(\mathcal{E},\mu\right)}=\frac{1}{\det\left(\partial\left(\mathcal{E},\mu\right)/\partial\left(p,\xi\right)\right)}\left(\begin{array}{cc}
+-\xi p^{2}/\left(mB\right) & -\left(1-\xi^{2}\right)p/\left(mB\right)\\
+0 & p/m\end{array}\right)\label{eq:invL}\end{equation}
+
+\end_inset
+
+where
+\begin_inset Formula \begin{equation}
+\det\left(\partial\left(\mathcal{E},\mu\right)/\partial\left(p,\xi\right)\right)=-\frac{\xi p^{3}}{m^{2}B}=-\frac{v_{\Vert}}{mB}p^{2}\label{eq:detL}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:detL"
+
+\end_inset
+
+), (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:invL"
+
+\end_inset
+
+) becomes
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula \begin{equation}
+\frac{\partial\left(p,\xi\right)}{\partial\left(\mathcal{E},\mu\right)}=\frac{m}{p^{2}\xi}\left(\begin{array}{cc}
+p\xi & 1-\xi^{2}\\
+0 & -B\end{array}\right)\label{eq:invLbis}\end{equation}
+
+\end_inset
+
+
+p
+where the Jacobian of 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+the coordinate transformation 
+\begin_inset Formula $\left(X,\mathcal{E},\mu,\theta\right)\rightarrow\left(\mathbf{X},p,\xi,\varphi\right)$
+\end_inset
+
+ is
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula \begin{equation}
+J_{p\xi}=\left|\det\frac{\partial\left(\mathcal{E},\mu\right)}{\partial\left(p,\xi\right)}\right|=\frac{\left|v_{\Vert}\right|}{mB}p^{2}\label{eq:Jacobian}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the Jacobian 
+\begin_inset Formula $\mathcal{J}$
+\end_inset
+
+ of the coordinate transformation 
+\begin_inset Formula $\left(\mathbf{x},\mathbf{p}\right)\rightarrow\left(\mathbf{X},\mathcal{E},\mu,\theta\right)$
+\end_inset
+
+ in (
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bri04"
+
+\end_inset
+
+),
+\begin_inset Formula \begin{equation}
+\mathcal{J}=\frac{mB{}_{\Vert}^{*}}{\left|v_{\Vert}\right|}\label{eq:JacobianEmhu}\end{equation}
+
+\end_inset
+
+the global Jacobian of coordinate transformation 
+\begin_inset Formula $\left(\mathbf{x},\mathbf{p}\right)\rightarrow\left(\mathbf{X},p,\xi,\varphi\right)$
+\end_inset
+
+is simply
+\begin_inset Formula \begin{equation}
+\mathcal{J}_{p\xi}=\frac{mB{}_{\Vert}^{*}}{\left|v_{\Vert}\right|}\frac{\left|v_{\Vert}\right|}{mB}p^{2}=p^{2}\frac{B{}_{\Vert}^{*}}{B}\label{eq:Jacobianpxi}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From the coordinate transformation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:invLbis"
+
+\end_inset
+
+) of an operator 
+\begin_inset Formula $A$
+\end_inset
+
+, 
+\begin_inset Formula \begin{align}
+\frac{\partial A}{\partial\mathcal{E}} & =\frac{m}{p^{2}\xi}\left(p\xi\frac{\partial A}{\partial p}+\left(1-\xi^{2}\right)\frac{\partial A}{\partial\xi}\right)\label{eq:dE}\\
+\frac{\partial A}{\partial\mu} & =-\frac{m}{p^{2}\xi}\left(B\frac{\partial A}{\partial\xi}\right)\label{eq:dmu}\end{align}
+
+\end_inset
+
+the Poisson bracket (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Poissonpxi"
+
+\end_inset
+
+) becomes
+\begin_inset Formula \begin{multline}
+\left\{ F,G\right\} _{gc}=\frac{eB}{cp^{2}}\left[\frac{\partial F}{\partial\varphi}\left(p\frac{\partial G}{\partial p}-\xi\frac{\partial G}{\partial\mathcal{\xi}}\right)-\left(p\frac{\partial F}{\partial p}-\xi\frac{\partial F}{\partial\mathcal{\xi}}\right)\frac{\partial G}{\partial\varphi}\right]\\
++\frac{m}{p^{2}\xi}\mathbf{v}_{gc}\cdot\left(\nabla^{*}F\left(p\xi\frac{\partial G}{\partial p}+\left(1-\xi^{2}\right)\frac{\partial G}{\partial\xi}\right)-\left(p\xi\frac{\partial F}{\partial p}+\left(1-\xi^{2}\right)\frac{\partial F}{\partial\xi}\right)\nabla^{*}G\right)\\
+-\frac{c\widehat{b}}{eB_{\Vert}^{*}}\cdot\nabla^{*}F\times\nabla^{*}G\label{eq:Poissonbracketpxi}\end{multline}
+
+\end_inset
+
+with
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\nabla^{*}\equiv\nabla+\left[\mathbf{R}+\frac{1}{2}\left(\widehat{b}\cdot\nabla\times\widehat{b}\right)\widehat{b}\right]\frac{\partial}{\partial\varphi}\label{eq:nablastarphi}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Equations of motion
+\end_layout
+
+\begin_layout Standard
+The guiding-center Hamiltonian being 
+\begin_inset Formula \begin{equation}
+H=\frac{p^{2}}{2m}\label{eq:Hamiltonian}\end{equation}
+
+\end_inset
+
+so that, using to (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Poissonbracketpxi"
+
+\end_inset
+
+)
+\begin_inset Formula \begin{align*}
+\left\{ \mathbf{X},H\right\} _{gc} & =\mathbf{\dot{X}}=\mathbf{v}_{gc}=\frac{p^{2}\xi}{m}\left[\frac{\widehat{b}}{p}+\frac{c\widehat{b}}{eB_{\Vert}^{*}}\times\left(\frac{1-\xi^{2}}{2\xi}\frac{\nabla B}{B}+\xi\widehat{b}\cdot\nabla\widehat{b}\right)\right]\\
+\left\{ p,H\right\} _{gc} & =\dot{p}=0\\
+\left\{ \xi,H\right\} _{gc} & =\dot{\xi}=0\\
+\left\{ \varphi,H\right\} _{gc} & =\dot{\varphi}=\Omega+\mathbf{v}_{gc}\cdot\mathbf{R}^{*}\end{align*}
+
+\end_inset
+
+where
+\begin_inset Formula \begin{equation}
+\mathbf{R}^{*}=\mathbf{R}+\left(\frac{\widehat{b}}{2}\cdot\nabla\times\widehat{b}\right)\widehat{b}\label{eq:Rstar}\end{equation}
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "biblio"
+options "plain"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
