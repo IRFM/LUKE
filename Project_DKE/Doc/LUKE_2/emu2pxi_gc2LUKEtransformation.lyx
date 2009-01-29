@@ -1,0 +1,1194 @@
+#LyX 1.6.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\leftmargin 2cm
+\topmargin 2cm
+\rightmargin 2cm
+\bottommargin 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Calculation of guiding-center coefficients for LUKE
+\end_layout
+
+\begin_layout Author
+François-Xavier DUTHOIT
+\end_layout
+
+\begin_layout Section
+Expression for the 
+\begin_inset Formula $\left(\mathbf{X},\mathcal{E},\mu,\theta\right)\rightarrow\left(\mathbf{R},p,\xi,\varphi\right)$
+\end_inset
+
+ coordinate transformation
+\end_layout
+
+\begin_layout Standard
+The coordinate transformation 
+\begin_inset Formula $\left(\mathbf{X},\mathcal{E},\mu,\theta\right)\rightarrow\left(\mathbf{R},p,\xi,\varphi\right)$
+\end_inset
+
+ where 
+\begin_inset Formula $\mathbf{X}=\mathbf{R}$
+\end_inset
+
+ is the guiding-center position, 
+\begin_inset Formula $\mathcal{E}=\mathbf{p}^{2}/2m$
+\end_inset
+
+ the particle kinetic energy, 
+\begin_inset Formula $\mu=\mathbf{p}_{\perp}^{2}/2mB$
+\end_inset
+
+ the particle magnetic moment, 
+\begin_inset Formula $p=\left|\mathbf{p}\right|$
+\end_inset
+
+ the momentum amplitude, 
+\begin_inset Formula $\xi=p_{\parallel}/p$
+\end_inset
+
+ the pitch-angle cosine and 
+\begin_inset Formula $\theta=\varphi$
+\end_inset
+
+ the gyro-angle introduces the following relations between coordinates :
+\begin_inset Formula \begin{eqnarray*}
+\mathbf{R} & = & \mathbf{X}\\
+p^{2} & = & 2m\mathcal{E}\\
+\xi^{2} & = & 1-\frac{\mu B}{\mathcal{E}}\\
+\varphi & = & \theta\end{eqnarray*}
+
+\end_inset
+
+We can therefore express the differentials for the new coordinates :
+\begin_inset Formula \begin{eqnarray*}
+d\mathbf{R} & = & d\mathbf{X}\\
+2pdp & = & 2md\mathcal{E}\\
+2\xi d\xi & = & \frac{\mu B}{\mathcal{E}^{2}}d\mathcal{E}-\frac{B}{\mathcal{E}}d\mu-\frac{\mu}{\mathcal{E}}\nabla B\cdot d\mathbf{X}\\
+d\varphi & = & d\theta\end{eqnarray*}
+
+\end_inset
+
+We then deduce the following derivatives :
+\begin_inset Formula \begin{eqnarray*}
+\nabla\mathbf{R} & = & \mathbb{I}\\
+\frac{dp}{d\mathcal{E}} & = & \frac{m}{p}\\
+\nabla\xi & = & -\frac{\mu}{2\mathcal{E}\xi}\nabla B\\
+\frac{\partial\xi}{\partial\mathcal{E}} & = & \frac{\mu B}{2\mathcal{E}^{2}\xi}\\
+\frac{\partial\xi}{\partial\mu} & = & -\frac{B}{2\mathcal{E}\xi}\\
+\frac{d\varphi}{d\theta} & = & 1\end{eqnarray*}
+
+\end_inset
+
+All other derivatives of 
+\begin_inset Formula $\left(\mathbf{R},p,\xi,\varphi\right)$
+\end_inset
+
+ coordinates with respect to 
+\begin_inset Formula $\left(\mathbf{X},\mathcal{E},\mu,\theta\right)$
+\end_inset
+
+ coordinates are zero.
+\end_layout
+
+\begin_layout Section
+Calculation of collision coefficients in 
+\begin_inset Formula $\left(\mathbf{R},p,\xi,\varphi\right)$
+\end_inset
+
+ coordinates
+\end_layout
+
+\begin_layout Standard
+The expression for the guiding-center collision coefficients in 
+\begin_inset Formula $\left(\alpha',\beta'\right)$
+\end_inset
+
+ coordinates with respect to their counterpart in 
+\begin_inset Formula $\left(\alpha,\beta\right)$
+\end_inset
+
+ coordinates reads :
+\end_layout
+
+\begin_layout Itemize
+For guiding-center drag coefficients :
+\begin_inset Formula \[
+K_{gc}^{\alpha'}=K_{gc}^{\alpha}\cdot\frac{\partial z^{\alpha'}}{\partial z^{\alpha}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+For guiding-center diffusion coefficients :
+\begin_inset Formula \[
+D_{gc}^{\alpha'\beta'}=\frac{\partial z^{\alpha'}}{\partial z^{\alpha}}\cdot D_{gc}^{\alpha\beta}\cdot\frac{\partial z^{\beta'}}{\partial z^{\beta}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In an isotropic field particle distribution, the drag vector and diffusion
+ tensor are expressed as follows :
+\begin_inset Formula \begin{eqnarray*}
+\mathbf{K} & = & -\nu\mathbf{p}\\
+\mathbb{D} & = & \mathcal{D}_{l}\hat{\mathbf{p}}\hat{\mathbf{p}}+\mathcal{D}_{t}\left(\mathbb{I}-\hat{\mathbf{p}}\hat{\mathbf{p}}\right)\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Guiding-center drag coefficients
+\end_layout
+
+\begin_layout Standard
+The guiding-center drag coefficients in 
+\begin_inset Formula $\left(\mathbf{X},\mathcal{E},\mu,\theta\right)$
+\end_inset
+
+ coordinates read :
+\begin_inset Formula \begin{eqnarray*}
+\mathbf{K}_{gc}^{\mathbf{X}} & = & -\frac{\nu}{m\Omega\Omega_{\parallel}^{*}}\left(\mu\nabla_{\perp}B+\frac{p^{2}\xi^{2}}{m}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\right)=\nu\frac{B}{B_{\parallel}^{*}}\bar{\boldsymbol{\rho}}_{gc}\\
+K_{gc}^{\mathcal{E}} & = & -\nu2\mathcal{E}\\
+K_{gc}^{\mu} & = & -\nu\left[2-\frac{p\xi}{m\Omega}\hat{\mathbf{b}}\cdot\left(\nabla\times\hat{\mathbf{b}}\right)\right]\mu=-\nu\left(2-\lambda_{gc}\right)\mu\end{eqnarray*}
+
+\end_inset
+
+where 
+\begin_inset Formula $\bar{\boldsymbol{\rho}}_{gc}\equiv\frac{1}{\Omega}\hat{\mathbf{b}}\times\mathbf{v}_{gc}=\frac{1}{\Omega}\hat{\mathbf{b}}\times\left(v_{\parallel}\hat{\mathbf{b}}+\frac{1}{m\Omega_{\parallel}^{*}}\hat{\mathbf{b}}\times\left(\mu\nabla B+mv_{\parallel}^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\right)\right)$
+\end_inset
+
+.
+ Since 
+\begin_inset Formula $\bar{\boldsymbol{\rho}}_{gc}$
+\end_inset
+
+ is of order one in 
+\begin_inset Formula $\epsilon_{B}$
+\end_inset
+
+ and 
+\begin_inset Formula $B_{\parallel}^{*}=B\left(1+\lambda_{gc}\right)$
+\end_inset
+
+ where 
+\begin_inset Formula $\lambda_{gc}$
+\end_inset
+
+ is also of order one in 
+\begin_inset Formula $\epsilon_{B}$
+\end_inset
+
+, we will do the first-order approximation 
+\begin_inset Formula $\frac{B}{B_{\parallel}^{*}}\bar{\boldsymbol{\rho}}_{gc}\simeq\bar{\boldsymbol{\rho}}_{gc}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\mathbf{K}_{gc}^{\mathbf{R}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $\mathbf{K}_{gc}^{\mathbf{R}}$
+\end_inset
+
+ reads :
+\begin_inset Formula \[
+\mathbf{K}_{gc}^{\mathbf{R}}=\mathbf{K}_{gc}^{\mathbf{X}}\]
+
+\end_inset
+
+We therefore immediately have :
+\begin_inset Formula \begin{equation}
+\boxed{\mathbf{K}_{gc}^{\mathbf{R}}\simeq\nu\bar{\boldsymbol{\rho}}_{gc}}\label{eq:}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $K_{gc}^{p}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $K_{gc}^{p}$
+\end_inset
+
+ reads :
+\begin_inset Formula \[
+K_{gc}^{p}=K_{gc}^{\mathcal{E}}\frac{dp}{d\mathcal{E}}\]
+
+\end_inset
+
+We therefore have :
+\begin_inset Formula \[
+K_{gc}^{p}=-\nu2\mathcal{E}\frac{m}{p}\]
+
+\end_inset
+
+The final expression for 
+\begin_inset Formula $K_{gc}^{p}$
+\end_inset
+
+ reads :
+\begin_inset Formula \begin{equation}
+\boxed{K_{gc}^{p}=-\nu p}\label{eq:-1}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $K_{gc}^{\xi}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $K_{gc}^{\xi}$
+\end_inset
+
+ reads :
+\begin_inset Formula \[
+K_{gc}^{\xi}=\mathbf{K}_{gc}^{\mathbf{X}}\cdot\nabla\xi+K_{gc}^{\mathcal{E}}\frac{\partial\xi}{\partial\mathcal{E}}+K_{gc}^{\mu}\frac{\partial\xi}{\partial\mu}\]
+
+\end_inset
+
+Using the expressions for the derivatives and noting that 
+\begin_inset Formula $\mathbf{K}_{gc}^{\mathbf{X}}\cdot\nabla\xi\sim\left(\nabla B\right)^{2}$
+\end_inset
+
+ is of second order in 
+\begin_inset Formula $\epsilon_{B}$
+\end_inset
+
+, we obtain at first order :
+\begin_inset Formula \[
+K_{gc}^{\xi}=-\frac{\nu\mu B}{2\mathcal{E}\xi}\left[\frac{2\mathcal{E}}{\mathcal{E}}-\left(2-\lambda_{gc}\right)\right]\]
+
+\end_inset
+
+The 
+\begin_inset Formula $1^{st}$
+\end_inset
+
+-order expression for 
+\begin_inset Formula $K_{gc}^{\xi}$
+\end_inset
+
+ becomes, using 
+\begin_inset Formula $\mu B/\mathcal{E}=1-\xi^{2}$
+\end_inset
+
+ :
+\begin_inset Formula \begin{equation}
+\boxed{K_{gc}^{\xi}\simeq-\nu\frac{1-\xi^{2}}{2\xi}\lambda_{gc}}\label{eq:-2}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Guiding-center diffusion coefficients
+\end_layout
+
+\begin_layout Standard
+The guiding-center diffusion coefficients in 
+\begin_inset Formula $\left(\mathbf{X},\mathcal{E},\mu,\theta\right)$
+\end_inset
+
+ coordinates read :
+\begin_inset Formula \begin{eqnarray*}
+\mathbb{D}_{gc}^{\mathbf{XX}} & = & \mathcal{D}_{gc}^{\mathbf{X}}\mathbb{I}_{\perp}\equiv\frac{\mathbb{I}_{\perp}}{m\Omega^{2}}\left[\mathcal{D}_{gc}^{\mathcal{E}}+\left(1-\frac{2\mathcal{E}}{\mu B}\right)\mathcal{D}_{gc}^{\mu}B\right]\\
+D_{gc}^{\mathcal{EE}} & = & 2\mathcal{E}\mathcal{D}_{gc}^{\mathcal{E}}\\
+D_{gc}^{\mu\mu} & = & \left(1-\lambda_{gc}\right)2\mu\left[2\left(1-\frac{\mathcal{E}}{\mu B}\right)\mathcal{D}_{gc}^{\mu}+\frac{\mathcal{D}_{gc}^{\mathcal{E}}}{B}\right]\\
+\mathbf{D}_{gc}^{\mathbf{X}\mathcal{E}} & = & \frac{B}{B_{\parallel}^{*}}\bar{\boldsymbol{\rho}}_{gc}\mathcal{D}_{gc}^{\mathcal{E}}\\
+\mathbf{D}_{gc}^{\mathbf{X}\mu} & = & \frac{B}{B_{\parallel}^{*}}\bar{\boldsymbol{\rho}}_{gc}\mathcal{D}_{gc}^{\mu}\\
+D_{gc}^{\mathcal{E}\mu} & = & \left(2-\lambda_{gc}\right)\mu\mathcal{D}_{gc}^{\mathcal{E}}\end{eqnarray*}
+
+\end_inset
+
+with 
+\begin_inset Formula $\mathcal{D}_{gc}^{\mathcal{E}}=\mathcal{D}_{t}/m$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathcal{D}_{gc}^{\mu}=\mu\left(\mathcal{D}_{l}-\mathcal{D}_{t}\right)/p^{2}=\left(1-\xi^{2}\right)\left(\mathcal{D}_{l}-\mathcal{D}_{t}\right)/2mB$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbb{I}_{\perp}=\mathbb{I}-\hat{\mathbf{b}}\hat{\mathbf{b}}$
+\end_inset
+
+.
+ Here, we also do the first-order approximation 
+\begin_inset Formula $\frac{B}{B_{\parallel}^{*}}\bar{\boldsymbol{\rho}}_{gc}\simeq\bar{\boldsymbol{\rho}}_{gc}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\mathbb{D}_{gc}^{\mathbf{RR}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $\mathbb{D}_{gc}^{\mathbf{RR}}$
+\end_inset
+
+ reads :
+\begin_inset Formula \begin{eqnarray*}
+\mathbb{D}_{gc}^{\mathbf{RR}} & = & \mathbb{D}_{gc}^{\mathbf{XX}}\\
+ & = & \frac{\mathbb{I}_{\perp}}{m\Omega^{2}}\left[\mathcal{D}_{gc}^{\mathcal{E}}+\left(1-\frac{2\mathcal{E}}{\mu B}\right)\mathcal{D}_{gc}^{\mu}B\right]\end{eqnarray*}
+
+\end_inset
+
+Using 
+\begin_inset Formula $\mu B/\mathcal{E}=1-\xi^{2}$
+\end_inset
+
+ and inserting the expressions for 
+\begin_inset Formula $\mathcal{D}_{gc}^{\mathcal{E}}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathcal{D}_{gc}^{\mu}$
+\end_inset
+
+, we have :
+\begin_inset Formula \[
+\mathbb{D}_{gc}^{\mathbf{RR}}=\frac{\mathbb{I}_{\perp}}{m^{2}\Omega^{2}}\left[\mathcal{D}_{l}+\frac{1}{2}\left(1-\frac{2}{1-\xi^{2}}\right)\left(1-\xi^{2}\right)\left(\mathcal{D}_{l}-\mathcal{D}_{t}\right)\right]\]
+
+\end_inset
+
+The final expression for 
+\begin_inset Formula $\mathbb{D}_{gc}^{\mathbf{RR}}$
+\end_inset
+
+ therefore reads :
+\begin_inset Formula \begin{equation}
+\boxed{\mathbb{D}_{gc}^{\mathbf{RR}}=\frac{\mathbb{I}_{\perp}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\left(1+\xi^{2}\right)\mathcal{D}_{t}\right]}\label{eq:-3}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $D_{gc}^{pp}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $D_{gc}^{pp}$
+\end_inset
+
+ reads :
+\begin_inset Formula \begin{eqnarray*}
+D_{gc}^{pp} & = & \frac{dp}{d\mathcal{E}}D_{gc}^{\mathcal{EE}}\frac{dp}{d\mathcal{E}}\\
+ & = & \frac{m^{2}}{p^{2}}2\mathcal{E}\mathcal{D}_{gc}^{\mathcal{E}}\end{eqnarray*}
+
+\end_inset
+
+Inserting the expression for 
+\begin_inset Formula $\mathcal{D}_{gc}^{\mathcal{E}}$
+\end_inset
+
+, we get :
+\begin_inset Formula \begin{equation}
+\boxed{D_{gc}^{pp}=\mathcal{D}_{l}}\label{eq:-4}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $D_{gc}^{\xi\xi}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $D_{gc}^{\xi\xi}$
+\end_inset
+
+ reads, using the symmetry property of the diffusion matrix :
+\begin_inset Formula \[
+D_{gc}^{\xi\xi}=\nabla\xi\cdot\mathbb{D}_{gc}^{\mathbf{XX}}\cdot\nabla\xi+\frac{\partial\xi}{\partial\mathcal{E}}D_{gc}^{\mathcal{EE}}\frac{\partial\xi}{\partial\mathcal{E}}+\frac{\partial\xi}{\partial\mu}D_{gc}^{\mu\mu}\frac{\partial\xi}{\partial\mu}+2\nabla\xi\cdot\mathbf{D}_{gc}^{\mathbf{X}\mathcal{E}}\frac{\partial\xi}{\partial\mathcal{E}}+2\nabla\xi\cdot\mathbf{D}_{gc}^{\mathbf{X}\mu}\frac{\partial\xi}{\partial\mu}+2\frac{\partial\xi}{\partial\mathcal{E}}D_{gc}^{\mathcal{E}\mu}\frac{\partial\xi}{\partial\mu}\]
+
+\end_inset
+
+We note here that 
+\begin_inset Formula $\nabla\xi\cdot\mathbb{D}_{gc}^{\mathbf{XX}}\cdot\nabla\xi$
+\end_inset
+
+, 
+\begin_inset Formula $\nabla\xi\cdot\mathbf{D}_{gc}^{\mathbf{X}\mathcal{E}}\frac{\partial\xi}{\partial\mathcal{E}}$
+\end_inset
+
+ and 
+\begin_inset Formula $\nabla\xi\cdot\mathbf{D}_{gc}^{\mathbf{X}\mu}\frac{\partial\xi}{\partial\mu}$
+\end_inset
+
+ are of second order in 
+\begin_inset Formula $\epsilon_{B}$
+\end_inset
+
+.
+ The first order expression for 
+\begin_inset Formula $D_{gc}^{\xi\xi}$
+\end_inset
+
+ therefore becomes :
+\begin_inset Formula \begin{eqnarray*}
+D_{gc}^{\xi\xi} & \simeq & \frac{\mu B^{2}}{4\mathcal{E}^{2}\xi^{2}}\left[\frac{\mu}{\mathcal{E}^{2}}2\mathcal{E}\mathcal{D}_{gc}^{\mathcal{E}}+2\left(1-\lambda_{gc}\right)\left[2\left(1-\frac{\mathcal{E}}{\mu B}\right)\mathcal{D}_{gc}^{\mu}+\frac{\mathcal{D}_{gc}^{\mathcal{E}}}{B}\right]-2\frac{\mu}{\mathcal{E}}\left(2-\lambda_{gc}\right)\mathcal{D}_{gc}^{\mathcal{E}}\right]\\
+ & \simeq & \left(1-\lambda_{gc}\right)\frac{\mu B}{2\mathcal{E}^{2}\xi^{2}}\left[2B\left(1-\frac{\mathcal{E}}{\mu B}\right)\mathcal{D}_{gc}^{\mu}+\left(1-\frac{\mu B}{\mathcal{E}}\right)\mathcal{D}_{gc}^{\mathcal{E}}\right]\end{eqnarray*}
+
+\end_inset
+
+Using 
+\begin_inset Formula $\mu B/\mathcal{E}=1-\xi^{2}$
+\end_inset
+
+, we have :
+\begin_inset Formula \[
+D_{gc}^{\xi\xi}\simeq\left(1-\lambda_{gc}\right)\frac{m\left(1-\xi^{2}\right)}{p^{2}\xi^{2}}\left[-\frac{\xi^{2}}{1-\xi^{2}}2B\mathcal{D}_{gc}^{\mu}+\xi^{2}\mathcal{D}_{gc}^{\mathcal{E}}\right]\]
+
+\end_inset
+
+Inserting the expressions for 
+\begin_inset Formula $\mathcal{D}_{gc}^{\mathcal{E}}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathcal{D}_{gc}^{\mu}$
+\end_inset
+
+, we have :
+\begin_inset Formula \[
+D_{gc}^{\xi\xi}\simeq\left(1-\lambda_{gc}\right)\frac{1-\xi^{2}}{p^{2}\xi^{2}}\left[-\xi^{2}\left(\mathcal{D}_{l}-\mathcal{D}_{t}\right)+\xi^{2}\mathcal{D}_{l}\right]\]
+
+\end_inset
+
+The final expression for 
+\begin_inset Formula $D_{gc}^{\xi\xi}$
+\end_inset
+
+ becomes :
+\begin_inset Formula \begin{equation}
+\boxed{D_{gc}^{\xi\xi}\simeq\left(1-\lambda_{gc}\right)\frac{1-\xi^{2}}{p^{2}}\mathcal{D}_{t}}\label{eq:-5}\end{equation}
+
+\end_inset
+
+We see that the coefficient is constant at zero order and depends linearly
+ from 
+\begin_inset Formula $p$
+\end_inset
+
+ and 
+\begin_inset Formula $\xi$
+\end_inset
+
+ at first order.
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\mathbf{D}_{gc}^{\mathbf{R}p}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $\mathbf{D}_{gc}^{\mathbf{R}p}$
+\end_inset
+
+ reads :
+\begin_inset Formula \begin{eqnarray*}
+\mathbf{D}_{gc}^{\mathbf{R}p} & = & \mathbf{D}_{gc}^{\mathbf{X}\mathcal{E}}\frac{dp}{d\mathcal{E}}\\
+ & \simeq & \frac{m}{p}\mathcal{D}_{gc}^{\mathcal{E}}\bar{\boldsymbol{\rho}}_{gc}\end{eqnarray*}
+
+\end_inset
+
+Inserting the expression for 
+\begin_inset Formula $\mathcal{D}_{gc}^{\mathcal{E}}$
+\end_inset
+
+, we get :
+\begin_inset Formula \begin{equation}
+\boxed{\mathbf{D}_{gc}^{\mathbf{R}p}\simeq\frac{\mathcal{D}_{l}}{p}\bar{\boldsymbol{\rho}}_{gc}}\label{eq:-6}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\mathbf{D}_{gc}^{\mathbf{R}\xi}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $\mathbf{D}_{gc}^{\mathbf{R}\xi}$
+\end_inset
+
+ reads, using the symmetry property of the diffusion matrix :
+\begin_inset Formula \begin{eqnarray*}
+\mathbf{D}_{gc}^{\mathbf{R}\xi} & = & \mathbb{D}_{gc}^{\mathbf{XX}}\cdot\nabla\xi+\mathbf{D}_{gc}^{\mathbf{X}\mathcal{E}}\frac{\partial\xi}{\partial\mathcal{E}}+\mathbf{D}_{gc}^{\mathbf{X}\mu}\frac{\partial\xi}{\partial\mu}\\
+ & \simeq & \frac{\mu B}{2\mathcal{E}\xi}\left[-\frac{\nabla_{\perp}\ln B}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\left(1+\xi^{2}\right)\mathcal{D}_{t}\right]+\frac{\mathcal{D}_{gc}^{\mathcal{E}}}{\mathcal{E}}\bar{\boldsymbol{\rho}}_{gc}-\frac{\mathcal{D}_{gc}^{\mu}}{\mu}\bar{\boldsymbol{\rho}}_{gc}\right]\end{eqnarray*}
+
+\end_inset
+
+Inserting the expressions for 
+\begin_inset Formula $\mathcal{D}_{gc}^{\mathcal{E}}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathcal{D}_{gc}^{\mu}$
+\end_inset
+
+, we get :
+\begin_inset Formula \[
+\mathbf{D}_{gc}^{\mathbf{R}\xi}\simeq\frac{\mu B}{2\mathcal{E}\xi}\left[-\frac{\nabla_{\perp}\ln B}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\left(1+\xi^{2}\right)\mathcal{D}_{t}\right]+\frac{1}{p^{2}}\left(2\mathcal{D}_{l}-\mathcal{D}_{l}+\mathcal{D}_{t}\right)\bar{\boldsymbol{\rho}}_{gc}\right]\]
+
+\end_inset
+
+The final expression for 
+\begin_inset Formula $\mathbf{D}_{gc}^{\mathbf{R}\xi}$
+\end_inset
+
+ reads, using 
+\begin_inset Formula $\mu B/\mathcal{E}=1-\xi^{2}$
+\end_inset
+
+ :
+\begin_inset Formula \[
+\mathbf{D}_{gc}^{\mathbf{R}\xi}\simeq\frac{1-\xi^{2}}{2\xi}\left[-\frac{\nabla_{\perp}\ln B}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\left(1+\xi^{2}\right)\mathcal{D}_{t}\right]+\frac{1}{p^{2}}\left(\mathcal{D}_{l}+\mathcal{D}_{t}\right)\bar{\boldsymbol{\rho}}_{gc}\right]\]
+
+\end_inset
+
+The expression for 
+\begin_inset Formula $\bar{\boldsymbol{\rho}}_{gc}$
+\end_inset
+
+ reads :
+\begin_inset Formula \begin{eqnarray*}
+\bar{\boldsymbol{\rho}}_{gc} & = & -\frac{1}{m\Omega^{2}}\left(\mu\nabla_{\perp}B+\frac{p_{\parallel}^{2}}{m}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\right)\\
+ & = & -\frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla_{\perp}\ln B+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\right]\end{eqnarray*}
+
+\end_inset
+
+We can therefore deduce :
+\begin_inset Formula \begin{equation}
+\boxed{\mathbf{D}_{gc}^{\mathbf{R}\xi}\simeq-\frac{1-\xi^{2}}{\xi}\frac{1}{2m^{2}\Omega^{2}}\left[\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\mathcal{D}_{t}\right]\nabla_{\perp}\ln B+\xi^{2}\left(\mathcal{D}_{l}+\mathcal{D}_{t}\right)\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\right]}\label{eq:-7}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $D_{gc}^{p\xi}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $D_{gc}^{p\xi}$
+\end_inset
+
+ reads :
+\begin_inset Formula \[
+D_{gc}^{p\xi}=\frac{dp}{d\mathcal{E}}\mathbf{D}_{gc}^{\mathcal{E}\mathbf{X}}\cdot\nabla\xi+\frac{dp}{d\mathcal{E}}D_{gc}^{\mathcal{EE}}\frac{\partial\xi}{\partial\mathcal{E}}+\frac{dp}{d\mathcal{E}}D_{gc}^{\mathcal{E}\mu}\frac{\partial\xi}{\partial\mu}\]
+
+\end_inset
+
+We note here that 
+\begin_inset Formula $\frac{dp}{d\mathcal{E}}\mathbf{D}_{gc}^{\mathcal{E}\mathbf{X}}\cdot\nabla\xi$
+\end_inset
+
+ is of second order in 
+\begin_inset Formula $\epsilon_{B}$
+\end_inset
+
+.
+ The first order expression for 
+\begin_inset Formula $D_{gc}^{p\xi}$
+\end_inset
+
+ therefore becomes :
+\begin_inset Formula \[
+D_{gc}^{p\xi}=\frac{m}{p}\frac{\mu B}{2\mathcal{E}\xi}\left(\frac{2\mathcal{E}}{\mathcal{E}}-\left(2-\lambda_{gc}\right)\right)\mathcal{D}_{gc}^{\mathcal{E}}\]
+
+\end_inset
+
+Using 
+\begin_inset Formula $\mu B/\mathcal{E}=1-\xi^{2}$
+\end_inset
+
+ and inserting the expression for 
+\begin_inset Formula $\mathcal{D}_{gc}^{\mathcal{E}}$
+\end_inset
+
+, we get :
+\begin_inset Formula \begin{equation}
+\boxed{D_{gc}^{p\xi}=\lambda_{gc}\frac{1-\xi^{2}}{2p\xi}\mathcal{D}_{l}}\label{eq:-8}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Spatial 
+\begin_inset Formula $\left(\psi,s,z\right)$
+\end_inset
+
+ components of 
+\begin_inset Formula $\mathbb{I}_{\perp}=\mathbb{I}-\hat{\mathbf{b}}\hat{\mathbf{b}}$
+\end_inset
+
+ and 
+\begin_inset Formula $\bar{\boldsymbol{\rho}}_{gc}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Henceforward, we work in
+\begin_inset Formula $\left(\psi,s,z\right)$
+\end_inset
+
+ coordinates where 
+\begin_inset Formula $\psi$
+\end_inset
+
+ is the magnetic flux coordinate, 
+\begin_inset Formula $s$
+\end_inset
+
+ the coordinate along the field line projection on the poloidal plane and
+ 
+\begin_inset Formula $z$
+\end_inset
+
+ the azimuthal coordinate (in toroidal 
+\begin_inset Formula $\left(r,\theta,\phi\right)$
+\end_inset
+
+ coordinates, we have 
+\begin_inset Formula $z=R_{p}\phi$
+\end_inset
+
+).
+ We define the following unitary vectors, with 
+\begin_inset Formula $\Upsilon=\left|\nabla z\right|^{-1}$
+\end_inset
+
+ : 
+\begin_inset Formula \begin{eqnarray*}
+\hat{\boldsymbol{\psi}} & = & \frac{\nabla\psi}{\left|\nabla\psi\right|}\\
+\hat{\mathbf{s}} & = & \frac{\nabla s}{\left|\nabla s\right|}=\hat{\mathbf{z}}\times\hat{\boldsymbol{\psi}}\\
+\hat{\mathbf{z}} & = & \Upsilon\nabla z\end{eqnarray*}
+
+\end_inset
+
+with 
+\begin_inset Formula $\hat{\mathbf{b}}=b_{s}\hat{\mathbf{s}}+b_{z}\hat{\mathbf{z}}$
+\end_inset
+
+.
+ We therefore have :
+\begin_inset Formula \begin{eqnarray*}
+\hat{\boldsymbol{\psi}}\cdot\mathbb{I}_{\perp}\cdot\hat{\boldsymbol{\psi}} & = & 1\\
+\hat{\mathbf{s}}\cdot\mathbb{I}_{\perp}\cdot\hat{\mathbf{s}} & = & 1-b_{s}^{2}=b_{z}^{2}\\
+\hat{\mathbf{z}}\cdot\mathbb{I}_{\perp}\cdot\hat{\mathbf{z}} & = & 1-b_{z}^{2}=b_{s}^{2}\\
+\hat{\mathbf{s}}\cdot\mathbb{I}_{\perp}\cdot\hat{\boldsymbol{\psi}}=\hat{\boldsymbol{\psi}}\cdot\mathbb{I}_{\perp}\cdot\hat{\mathbf{s}} & = & 0\\
+\hat{\mathbf{z}}\cdot\mathbb{I}_{\perp}\cdot\hat{\boldsymbol{\psi}}=\hat{\boldsymbol{\psi}}\cdot\mathbb{I}_{\perp}\cdot\hat{\mathbf{z}} & = & 0\\
+\hat{\mathbf{z}}\cdot\mathbb{I}_{\perp}\cdot\hat{\mathbf{s}}=\hat{\mathbf{s}}\cdot\mathbb{I}_{\perp}\cdot\hat{\mathbf{z}} & = & -b_{s}b_{z}\end{eqnarray*}
+
+\end_inset
+
+The first-order expression for 
+\begin_inset Formula $\bar{\boldsymbol{\rho}}_{gc}$
+\end_inset
+
+ reads :
+\begin_inset Formula \begin{eqnarray*}
+\bar{\boldsymbol{\rho}}_{gc} & = & -\frac{1}{m\Omega^{2}}\left(\mu\nabla_{\perp}B+\frac{p_{\parallel}^{2}}{m}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\right)\\
+ & = & -\frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla_{\perp}\ln B+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\right]\\
+ & = & -\frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\hat{\mathbf{b}}\times\left(\nabla\ln B\times\hat{\mathbf{b}}\right)+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\right]\end{eqnarray*}
+
+\end_inset
+
+We ca therefore deduce, for a given vector 
+\begin_inset Formula $\mathbf{a}$
+\end_inset
+
+ :
+\begin_inset Formula \begin{eqnarray*}
+\bar{\boldsymbol{\rho}}_{gc}\cdot\mathbf{a} & = & -\frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\hat{\mathbf{b}}\times\left(\nabla\ln B\times\hat{\mathbf{b}}\right)\cdot\mathbf{a}+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\mathbf{a}\right]\\
+ & = & -\frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\left(\nabla\ln B\times\hat{\mathbf{b}}\right)\cdot\left(\mathbf{a}\times\hat{\mathbf{b}}\right)+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\mathbf{a}\right]\\
+ & = & -\frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\left(\mathbf{a}-\left(\mathbf{a}\cdot\hat{\mathbf{b}}\right)\hat{\mathbf{b}}\right)+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\mathbf{a}\right]\end{eqnarray*}
+
+\end_inset
+
+We therefore get, since 
+\begin_inset Formula $\hat{\mathbf{b}}\cdot\hat{\boldsymbol{\psi}}=0$
+\end_inset
+
+ :
+\begin_inset Formula \begin{eqnarray*}
+\bar{\boldsymbol{\rho}}_{gc}\cdot\hat{\boldsymbol{\psi}} & = & -\frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\hat{\boldsymbol{\psi}}+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\boldsymbol{\psi}}\right]\\
+\bar{\boldsymbol{\rho}}_{gc}\cdot\hat{\mathbf{s}} & = & -\frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\left(\hat{\mathbf{s}}-b_{s}\hat{\mathbf{b}}\right)+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\mathbf{s}}\right]\\
+\bar{\boldsymbol{\rho}}_{gc}\cdot\hat{\mathbf{z}} & = & -\frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\left(\hat{\mathbf{z}}-b_{z}\hat{\mathbf{b}}\right)+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right]\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+LUKE coefficients
+\end_layout
+
+\begin_layout Subsection
+Guiding-center drag coefficients
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\mathbf{K}_{gc}^{\mathbf{R}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $\mathbf{K}_{gc}^{\mathbf{R}}$
+\end_inset
+
+ reads :
+\begin_inset Formula \[
+\mathbf{K}_{gc}^{\mathbf{R}}\simeq\nu\bar{\boldsymbol{\rho}}_{gc}\]
+
+\end_inset
+
+In LUKE 
+\begin_inset Formula $\left(\psi,s,z,p,\xi,\varphi\right)$
+\end_inset
+
+ coordinates, the expression becomes, with 
+\begin_inset Formula $K_{gc}^{i}=\mathbf{K}^{\mathbf{R}}\cdot\nabla x^{i}$
+\end_inset
+
+ :
+\begin_inset Formula \begin{eqnarray*}
+K_{L}^{\psi} & = & \frac{\mathbf{K}_{gc}^{\mathbf{R}}\cdot\nabla\psi}{\left|\nabla\psi\right|}=\nu\bar{\boldsymbol{\rho}}_{gc}\cdot\hat{\boldsymbol{\psi}}\\
+K_{L}^{s} & = & \frac{\mathbf{K}_{gc}^{\mathbf{R}}\cdot\nabla s}{\left|\nabla s\right|}=\nu\bar{\boldsymbol{\rho}}_{gc}\cdot\hat{\mathbf{s}}\\
+K_{L}^{z} & = & \Upsilon\mathbf{K}_{gc}^{\mathbf{R}}\cdot\nabla z=\nu\bar{\boldsymbol{\rho}}_{gc}\cdot\hat{\mathbf{z}}\end{eqnarray*}
+
+\end_inset
+
+We therefore have :
+\begin_inset Formula \begin{eqnarray}
+K_{L}^{\psi} & = & \frac{\mathbf{K}_{gc}^{\mathbf{R}}\cdot\nabla\psi}{\left|\nabla\psi\right|}=\boxed{-\nu\frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\hat{\boldsymbol{\psi}}+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\boldsymbol{\psi}}\right]}\\
+K_{L}^{s} & = & \frac{\mathbf{K}_{gc}^{\mathbf{R}}\cdot\nabla s}{\left|\nabla s\right|}=\boxed{-\nu\frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\left(\hat{\mathbf{s}}-b_{s}\hat{\mathbf{b}}\right)+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\mathbf{s}}\right]}\\
+K_{L}^{z} & = & \Upsilon\mathbf{K}_{gc}^{\mathbf{R}}\cdot\nabla z=\boxed{-\nu\frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\left(\hat{\mathbf{z}}-b_{z}\hat{\mathbf{b}}\right)+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right]}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $K_{gc}^{p}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $K_{gc}^{p}$
+\end_inset
+
+ reads :
+\begin_inset Formula \[
+K_{gc}^{p}=-\nu p\]
+
+\end_inset
+
+In LUKE 
+\begin_inset Formula $\left(\psi,s,z,p,\xi,\varphi\right)$
+\end_inset
+
+ coordinates, the expression becomes :
+\begin_inset Formula \begin{equation}
+K_{L}^{p}=K_{gc}^{p}=\boxed{-\nu p}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $K_{gc}^{\xi}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $K_{gc}^{\xi}$
+\end_inset
+
+ reads :
+\begin_inset Formula \[
+K_{gc}^{\xi}\simeq-\nu\frac{1-\xi^{2}}{2\xi}\lambda_{gc}\]
+
+\end_inset
+
+In LUKE 
+\begin_inset Formula $\left(\psi,s,z,p,\xi,\varphi\right)$
+\end_inset
+
+ coordinates, the expression becomes, inserting the expression for 
+\begin_inset Formula $\lambda_{gc}$
+\end_inset
+
+ :
+\begin_inset Formula \begin{equation}
+K_{L}^{\xi}=-\frac{p}{\sqrt{1-\xi^{2}}}K_{gc}^{\xi}=\boxed{\nu\frac{\sqrt{1-\xi^{2}}}{2\Omega}\hat{\mathbf{b}}\cdot\nabla\times\hat{\mathbf{b}}}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Guiding-center diffusion coefficients
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\mathbb{D}_{gc}^{\mathbf{RR}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $\mathbb{D}_{gc}^{\mathbf{RR}}$
+\end_inset
+
+ reads :
+\begin_inset Formula \[
+\mathbb{D}_{gc}^{\mathbf{RR}}=\frac{\mathbb{I}_{\perp}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\left(1+\xi^{2}\right)\mathcal{D}_{t}\right]\]
+
+\end_inset
+
+In LUKE 
+\begin_inset Formula $\left(\psi,s,z,p,\xi,\varphi\right)$
+\end_inset
+
+ coordinates, the expression becomes, with 
+\begin_inset Formula $D_{gc}^{ij}=\nabla x^{i}\cdot\mathbb{D}^{\mathbf{RR}}\cdot\nabla x^{j}$
+\end_inset
+
+ :
+\begin_inset Formula \begin{eqnarray}
+D_{L}^{\psi\psi} & = & \frac{\nabla\psi\cdot\mathbb{D}_{gc}^{\mathbf{RR}}\cdot\nabla\psi}{\left|\nabla\psi\right|^{2}}=\boxed{\frac{1}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\left(1+\xi^{2}\right)\mathcal{D}_{t}\right]}\\
+D_{L}^{ss} & = & \frac{\nabla s\cdot\mathbb{D}_{gc}^{\mathbf{RR}}\cdot\nabla s}{\left|\nabla s\right|^{2}}=\boxed{\frac{b_{z}^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\left(1+\xi^{2}\right)\mathcal{D}_{t}\right]}\\
+D_{L}^{zz} & = & \Upsilon^{2}\nabla z\cdot\mathbb{D}_{gc}^{\mathbf{RR}}\cdot\nabla z=\boxed{\frac{b_{s}^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\left(1+\xi^{2}\right)\mathcal{D}_{t}\right]}\\
+D_{L}^{\psi s} & = & \frac{\nabla\psi\cdot\mathbb{D}_{gc}^{\mathbf{RR}}\cdot\nabla s}{\left|\nabla\psi\right|\left|\nabla s\right|}=\boxed{0}\\
+D_{L}^{\psi z} & = & \frac{\Upsilon}{\left|\nabla\psi\right|}\nabla\psi\cdot\mathbb{D}_{gc}^{\mathbf{RR}}\cdot\nabla z=\boxed{0}\\
+D_{L}^{sz} & = & \frac{\Upsilon}{\left|\nabla s\right|}\nabla s\cdot\mathbb{D}_{gc}^{\mathbf{RR}}\cdot\nabla z=\boxed{-\frac{b_{s}b_{z}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\left(1+\xi^{2}\right)\mathcal{D}_{t}\right]}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $D_{gc}^{pp}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $D_{gc}^{pp}$
+\end_inset
+
+ reads :
+\begin_inset Formula \[
+D_{gc}^{pp}=\mathcal{D}_{l}\]
+
+\end_inset
+
+In LUKE 
+\begin_inset Formula $\left(\psi,s,z,p,\xi,\varphi\right)$
+\end_inset
+
+ coordinates, the expression becomes :
+\begin_inset Formula \begin{equation}
+D_{L}^{pp}=D_{gc}^{pp}=\boxed{\mathcal{D}_{l}}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $D_{gc}^{\xi\xi}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $D_{gc}^{\xi\xi}$
+\end_inset
+
+ reads :
+\begin_inset Formula \[
+D_{gc}^{\xi\xi}\simeq\left(1-\lambda_{gc}\right)\frac{1-\xi^{2}}{p^{2}}\mathcal{D}_{t}\]
+
+\end_inset
+
+In LUKE 
+\begin_inset Formula $\left(\psi,s,z,p,\xi,\varphi\right)$
+\end_inset
+
+ coordinates, the expression becomes, inserting the expression for 
+\begin_inset Formula $\lambda_{gc}$
+\end_inset
+
+ :
+\begin_inset Formula \[
+D_{L}^{\xi\xi}=\frac{p^{2}}{1-\xi^{2}}D_{gc}^{\xi\xi}=\boxed{\left(1-\frac{p\xi}{\Omega}\hat{\mathbf{b}}\cdot\nabla\times\hat{\mathbf{b}}\right)\mathcal{D}_{t}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\mathbf{D}_{gc}^{\mathbf{R}p}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $\mathbf{D}_{gc}^{\mathbf{R}p}$
+\end_inset
+
+ reads :
+\begin_inset Formula \[
+\mathbf{D}_{gc}^{\mathbf{R}p}\simeq\frac{\mathcal{D}_{l}}{p}\bar{\boldsymbol{\rho}}_{gc}\]
+
+\end_inset
+
+In LUKE 
+\begin_inset Formula $\left(\psi,s,z,p,\xi,\varphi\right)$
+\end_inset
+
+ coordinates, the expression becomes, with 
+\begin_inset Formula $D_{gc}^{ip}=\nabla x^{i}\cdot\mathbf{D}^{\mathbf{R}p}$
+\end_inset
+
+ :
+\begin_inset Formula \begin{eqnarray*}
+D_{L}^{\psi p} & = & \frac{D_{gc}^{\psi p}}{\left|\nabla\psi\right|}=\frac{\mathcal{D}_{l}}{p}\bar{\boldsymbol{\rho}}_{gc}\cdot\hat{\boldsymbol{\psi}}\\
+D_{L}^{sp} & = & \frac{D_{gc}^{sp}}{\left|\nabla s\right|}=\frac{\mathcal{D}_{l}}{p}\bar{\boldsymbol{\rho}}_{gc}\cdot\hat{\mathbf{s}}\\
+D_{L}^{zp} & = & \Upsilon D_{gc}^{zp}=\frac{\mathcal{D}_{l}}{p}\bar{\boldsymbol{\rho}}_{gc}\cdot\hat{\mathbf{z}}\end{eqnarray*}
+
+\end_inset
+
+We therefore have :
+\begin_inset Formula \begin{eqnarray}
+D_{L}^{\psi p} & = & \frac{D_{gc}^{\psi p}}{\left|\nabla\psi\right|}=\boxed{-\frac{p\mathcal{D}_{l}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\hat{\boldsymbol{\psi}}+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\boldsymbol{\psi}}\right]}\\
+D_{L}^{sp} & = & \frac{D_{gc}^{sp}}{\left|\nabla s\right|}=\boxed{-\frac{p\mathcal{D}_{l}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\left(\hat{\mathbf{s}}-b_{s}\hat{\mathbf{b}}\right)+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\mathbf{s}}\right]}\\
+D_{L}^{zp} & = & \Upsilon D_{gc}^{zp}=\boxed{-\frac{p\mathcal{D}_{l}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\left(\hat{\mathbf{z}}-b_{z}\hat{\mathbf{b}}\right)+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right]}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\mathbf{D}_{gc}^{\mathbf{R}\xi}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $\mathbf{D}_{gc}^{\mathbf{R}\xi}$
+\end_inset
+
+ reads :
+\begin_inset Formula \[
+\mathbf{D}_{gc}^{\mathbf{R}\xi}\simeq-\frac{1-\xi^{2}}{\xi}\frac{1}{2m^{2}\Omega^{2}}\left[\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\mathcal{D}_{t}\right]\nabla_{\perp}\ln B+\xi^{2}\left(\mathcal{D}_{l}+\mathcal{D}_{t}\right)\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\right]\]
+
+\end_inset
+
+In LUKE 
+\begin_inset Formula $\left(\psi,s,z,p,\xi,\varphi\right)$
+\end_inset
+
+ coordinates, the expression becomes, with 
+\begin_inset Formula $D_{gc}^{i\xi}=\nabla x^{i}\cdot\mathbf{D}^{\mathbf{R}\xi}$
+\end_inset
+
+ :
+\begin_inset Formula \begin{eqnarray}
+D_{L}^{\psi\xi} & = & -\frac{p}{\sqrt{1-\xi^{2}}}\frac{\nabla\psi\cdot\mathbf{D}^{\mathbf{R}\xi}}{\left|\nabla\psi\right|}=\boxed{\frac{p\sqrt{1-\xi^{2}}}{\xi}\frac{1}{2m^{2}\Omega^{2}}\left[\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\mathcal{D}_{t}\right]\nabla\ln B\cdot\hat{\boldsymbol{\psi}}+\xi^{2}\left(\mathcal{D}_{l}+\mathcal{D}_{t}\right)\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\boldsymbol{\psi}}\right]}\\
+D_{L}^{s\xi} & = & -\frac{p}{\sqrt{1-\xi^{2}}}\frac{\nabla s\cdot\mathbf{D}^{\mathbf{R}\xi}}{\left|\nabla s\right|}=\boxed{\frac{p\sqrt{1-\xi^{2}}}{\xi}\frac{1}{2m^{2}\Omega^{2}}\left[\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\mathcal{D}_{t}\right]\nabla\ln B\cdot\left(\hat{\mathbf{s}}-b_{s}\hat{\mathbf{b}}\right)+\xi^{2}\left(\mathcal{D}_{l}+\mathcal{D}_{t}\right)\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\mathbf{s}}\right]}\\
+D_{L}^{z\xi} & = & -\frac{p}{\sqrt{1-\xi^{2}}}\Upsilon\nabla z\cdot\mathbf{D}^{\mathbf{R}\xi}=\boxed{\frac{p\sqrt{1-\xi^{2}}}{\xi}\frac{1}{2m^{2}\Omega^{2}}\left[\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\mathcal{D}_{t}\right]\nabla\ln B\cdot\left(\hat{\mathbf{z}}-b_{z}\hat{\mathbf{b}}\right)+\xi^{2}\left(\mathcal{D}_{l}+\mathcal{D}_{t}\right)\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right]}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $D_{gc}^{p\xi}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $D_{gc}^{p\xi}$
+\end_inset
+
+ reads :
+\begin_inset Formula \[
+D_{gc}^{p\xi}=\lambda_{gc}\frac{1-\xi^{2}}{2p\xi}\mathcal{D}_{l}\]
+
+\end_inset
+
+In LUKE 
+\begin_inset Formula $\left(\psi,s,z,p,\xi,\varphi\right)$
+\end_inset
+
+ coordinates, the expression becomes, inserting the expression for 
+\begin_inset Formula $\lambda_{gc}$
+\end_inset
+
+ :
+\begin_inset Formula \begin{equation}
+D_{L}^{p\xi}=-\frac{p}{\sqrt{1-\xi^{2}}}D_{gc}^{p\xi}=\boxed{-\frac{p\sqrt{1-\xi^{2}}}{2}\mathcal{D}_{l}\hat{\mathbf{b}}\cdot\nabla\times\hat{\mathbf{b}}}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
