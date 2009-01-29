@@ -950,7 +950,7 @@ In LUKE
 
  :
 \begin_inset Formula \begin{equation}
-K_{L}^{\xi}=-\frac{p}{\sqrt{1-\xi^{2}}}K_{gc}^{\xi}=\boxed{\nu\frac{\sqrt{1-\xi^{2}}}{2\Omega}\hat{\mathbf{b}}\cdot\nabla\times\hat{\mathbf{b}}}\end{equation}
+K_{L}^{\xi}=-\frac{p}{\sqrt{1-\xi^{2}}}K_{gc}^{\xi}=\boxed{\nu\frac{p^{2}\sqrt{1-\xi^{2}}}{2m\Omega}\hat{\mathbf{b}}\cdot\nabla\times\hat{\mathbf{b}}}\end{equation}
 
 \end_inset
 
@@ -1063,7 +1063,7 @@ In LUKE
 
  :
 \begin_inset Formula \[
-D_{L}^{\xi\xi}=\frac{p^{2}}{1-\xi^{2}}D_{gc}^{\xi\xi}=\boxed{\left(1-\frac{p\xi}{\Omega}\hat{\mathbf{b}}\cdot\nabla\times\hat{\mathbf{b}}\right)\mathcal{D}_{t}}\]
+D_{L}^{\xi\xi}=\frac{p^{2}}{1-\xi^{2}}D_{gc}^{\xi\xi}=\boxed{\left(1-\frac{p\xi}{m\Omega}\hat{\mathbf{b}}\cdot\nabla\times\hat{\mathbf{b}}\right)\mathcal{D}_{t}}\]
 
 \end_inset
 
@@ -1196,7 +1196,7 @@ In LUKE
 
  :
 \begin_inset Formula \begin{equation}
-D_{L}^{p\xi}=-\frac{p}{\sqrt{1-\xi^{2}}}D_{gc}^{p\xi}=\boxed{-\frac{p\sqrt{1-\xi^{2}}}{2}\mathcal{D}_{l}\hat{\mathbf{b}}\cdot\nabla\times\hat{\mathbf{b}}}\end{equation}
+D_{L}^{p\xi}=-\frac{p}{\sqrt{1-\xi^{2}}}D_{gc}^{p\xi}=\boxed{-\frac{p\sqrt{1-\xi^{2}}}{2m\Omega}\mathcal{D}_{l}\hat{\mathbf{b}}\cdot\nabla\times\hat{\mathbf{b}}}\end{equation}
 
 \end_inset
 
