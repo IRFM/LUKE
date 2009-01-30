@@ -48,20 +48,11 @@
 \begin_body
 
 \begin_layout Title
-Collision operator in guiding center coordinates
+Collision operator in LUKE guiding center coordinates
 \end_layout
 
 \begin_layout Author
 by Yves Peysson (CEA/IRFM)
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\noun off
-\color none
-p
 \end_layout
 
 \begin_layout Section
@@ -69,11 +60,40 @@ Collision operator in guiding center coordinates
 \end_layout
 
 \begin_layout Subsection
-Transformation to 
-\begin_inset Formula $\left(X,p,\xi,\varphi\right)$
+Calculation of the guiding-center Poisson bracket
+\end_layout
+
+\begin_layout Standard
+In order to calculate coefficients in LUKE code, it is necessary to move
+ from the guiding center coordinate system 
+\begin_inset Formula $\left(\mathbf{X},\mathcal{E},\mu,\theta\right)$
 \end_inset
 
- coordinates
+ defined in Ref.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bri04"
+
+\end_inset
+
+ to the new guiding center coordinate system 
+\begin_inset Formula $\left(\mathbf{X},p,\xi,\varphi\right)$
+\end_inset
+
+, and evaluate accordingly all expressions of the guiding-center dynamics.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Definitions
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Definitions"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -85,16 +105,30 @@ key "bri04"
 
 \end_inset
 
-, if F and G are functions of the guiding center coordinates 
-\begin_inset Formula $\left(X,\mathcal{E},\mu,\theta\right)$
+, if 
+\begin_inset Formula $F$
 \end_inset
 
-, the Poisson bracket of F and G for a non-uniform magnetic field may be
- expressed as
-\begin_inset Formula \begin{multline}
-\left\{ F,G\right\} _{gc}=\frac{\Omega}{B}\left[\frac{\partial F}{\partial\theta}\left(\frac{\partial G}{\partial\mu}+B\frac{\partial G}{\partial\mathcal{E}}\right)-\left(\frac{\partial F}{\partial\mu}+B\frac{\partial F}{\partial\mathcal{E}}\right)\frac{\partial G}{\partial\theta}\right]\\
-+\mathbf{v}_{gc}\cdot\left(\nabla^{*}F\frac{\partial G}{\partial\mathcal{E}}-\frac{\partial F}{\partial\mathcal{E}}\nabla^{*}G\right)\\
--\frac{c\widehat{b}}{eB_{\Vert}^{*}}\cdot\nabla^{*}F\times\nabla^{*}G\label{eq:PoissonbracketEmhu}\end{multline}
+ and 
+\begin_inset Formula $G$
+\end_inset
+
+ are functions of the guiding center coordinates 
+\begin_inset Formula $\left(\mathbf{X},\mathcal{E},\mu,\theta\right)$
+\end_inset
+
+, the Poisson bracket of 
+\begin_inset Formula $F$
+\end_inset
+
+ and 
+\begin_inset Formula $G$
+\end_inset
+
+ for a non-uniform magnetic field may be expressed as
+\begin_inset Formula \begin{align}
+\left\{ F,G\right\} _{gc} & =\frac{\Omega}{B}\left[\frac{\partial F}{\partial\theta}\left(\frac{\partial G}{\partial\mu}+B\frac{\partial G}{\partial\mathcal{E}}\right)-\left(\frac{\partial F}{\partial\mu}+B\frac{\partial F}{\partial\mathcal{E}}\right)\frac{\partial G}{\partial\theta}\right]\nonumber \\
+ & +\mathbf{v}_{gc}\cdot\left(\nabla^{*}F\frac{\partial G}{\partial\mathcal{E}}-\frac{\partial F}{\partial\mathcal{E}}\nabla^{*}G\right)-\frac{c\widehat{b}}{eB_{\Vert}^{*}}\cdot\nabla^{*}F\times\nabla^{*}G\label{eq:PoissonbracketEmhu}\end{align}
 
 \end_inset
 
@@ -102,13 +136,69 @@ where the modified gradient operator
 \begin_inset Formula $\nabla^{*}$
 \end_inset
 
-is defined as 
+ is defined as 
 \begin_inset Formula \begin{equation}
-\nabla^{*}\equiv\nabla+\left[\mathbf{R}+\frac{1}{2}\left(\widehat{b}\cdot\nabla\times\widehat{b}\right)\widehat{b}\right]\frac{\partial}{\partial\theta}\label{eq:nablastar}\end{equation}
+\nabla^{*}\equiv\nabla+\left[\mathbf{R}+\frac{\widehat{b}}{2}\left(\widehat{b}\cdot\nabla\times\widehat{b}\right)\right]\frac{\partial}{\partial\theta}=\nabla+\mathbf{R}^{*}\frac{\partial}{\partial\theta}\label{eq:nablastar}\end{equation}
 
 \end_inset
 
-and the gyro-averaged guiding-center velocity is
+with
+\begin_inset Formula \begin{equation}
+\mathbf{R}^{*}=\left[\mathbf{R}+\frac{\widehat{b}}{2}\left(\widehat{b}\cdot\nabla\times\widehat{b}\right)\right]\frac{\partial}{\partial\theta}\label{eq:Rstar}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here, 
+\begin_inset Formula \begin{equation}
+\mathbf{R}=\nabla\widehat{1}\cdot\widehat{2}\label{eq:Rgauge}\end{equation}
+
+\end_inset
+
+denotes the gyro-gauge vector field used to define the gradient operator
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:nablastar"
+
+\end_inset
+
+), where the rotating unit vectors 
+\begin_inset Formula $\left(\widehat{b},\widehat{\bot},\widehat{\rho}\right)$
+\end_inset
+
+ are defined in terms of the fixed local unit vectors 
+\begin_inset Formula $\left(\widehat{1},\widehat{2},\widehat{b}\right)$
+\end_inset
+
+ with 
+\begin_inset Formula $\widehat{b}=\widehat{1}\times\widehat{2}$
+\end_inset
+
+, 
+\begin_inset Formula $\widehat{\boldsymbol{\rho}}=\widehat{b}\times\widehat{\bot}=\widehat{1}\cos\theta-\widehat{2}\sin\theta$
+\end_inset
+
+ and 
+\begin_inset Formula $\theta$
+\end_inset
+
+ is the gyro-angle according to 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bri04"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+The gyro-averaged guiding-center velocity is
 \begin_inset Formula \begin{equation}
 \mathbf{v}_{gc}=v_{\parallel}\widehat{b}+\frac{\widehat{b}}{m\Omega_{\Vert}^{*}}\times\left(\mu\nabla B+mv_{\Vert}^{2}\widehat{b}\cdot\nabla\widehat{b}\right)\label{eq:guidingcentervelocity}\end{equation}
 
@@ -122,7 +212,7 @@ with
 
 
 \begin_inset Formula \begin{equation}
-\mathbf{B}{}^{*}=\mathbf{B}+\epsilon\frac{cp_{\Vert}}{e}\nabla\times\widehat{b}\label{eq:Bstar}\end{equation}
+\mathbf{B}{}^{*}=\mathbf{B}+\frac{cp_{\Vert}}{e}\nabla\times\widehat{b}\label{eq:Bstar}\end{equation}
 
 \end_inset
 
@@ -131,81 +221,126 @@ with
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-B{}_{\Vert}^{*}\left(\mathbf{X},\mathcal{E},\mu\right)=B{}_{\Vert}^{*}\cdot\widehat{b}\label{eq:Bstarpar}\end{equation}
+B{}_{\Vert}^{*}=B{}^{*}\cdot\widehat{b}\label{eq:Bstarpar}\end{equation}
 
 \end_inset
 
 
 \begin_inset Formula \begin{equation}
-\left|v_{\parallel}\right|=\left|\frac{p_{\parallel}}{m}\right|=\sqrt{\frac{\mathcal{E}-\mu B}{2m}}\label{eq:vpar}\end{equation}
+\left|v_{\parallel}\right|=\left|\frac{p_{\parallel}}{m}\right|=\sqrt{2\frac{\mathcal{E}-\mu B}{m}}\label{eq:vpar}\end{equation}
 
 \end_inset
 
-using the definition 
+where 
 \begin_inset Formula $\widehat{b}=\mathbf{B}/\left\Vert \mathbf{B}\right\Vert $
 \end_inset
 
-.
- 
-\end_layout
+, 
+\begin_inset Formula \begin{equation}
+\mu=\frac{p_{\bot}^{2}}{2mB}\label{eq:guidingcentermagneticmoment-1}\end{equation}
 
-\begin_layout Standard
-Here, 
-\begin_inset Formula $\theta$
 \end_inset
 
- is the gyro-angle, 
-\begin_inset Formula $\mu$
+ is the guiding-center magnetic moment, and 
+\begin_inset Formula \begin{equation}
+\mathcal{E}=\frac{p^{2}}{2m}=\frac{p_{\Vert}^{2}+p_{\bot}^{2}}{2m}\label{eq:guidingcenterkineticenergy}\end{equation}
+
 \end_inset
 
- the guiding-center magnetic moment, 
-\begin_inset Formula $\mathcal{E}$
-\end_inset
-
- the guiding-center kinetic energy and 
-\begin_inset Formula $\epsilon$
-\end_inset
-
- is a small parameter for the perturbative expansion as defined in (
+is the guiding-center kinetic energy 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "bri04"
 
 \end_inset
 
-).
+
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Following the reference (
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bri04"
+
+\end_inset
+
+), the CGS system of units is used for the calculations.
+\end_layout
+
+\end_inset
+
+.
+ Here, 
+\begin_inset Formula $\mathbf{p}=p\widehat{p}$
+\end_inset
+
+ is the guiding center momentum where 
+\begin_inset Formula $\widehat{p}$
+\end_inset
+
+ is function of the spatial position 
+\begin_inset Formula $\mathbf{X}$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
-In order to express the collisional operator in the spherical momentum coordinat
-es 
-\begin_inset Formula $\left(\mathbf{X},p,\xi,\varphi\right)$
+The cosine of the guiding center pitch-angle in momentum space 
+\begin_inset Formula $\xi$
 \end_inset
 
- used in LUKE, where 
+ is defined as 
 \begin_inset Formula \begin{equation}
-\xi=p_{\parallel}/p\label{eq:guidingcenterpitchanglecosine}\end{equation}
-
-\end_inset
-
-we have 
-\begin_inset Formula \begin{equation}
-\mathcal{E}=\frac{p^{2}}{2m}=\frac{p_{\Vert}^{2}+p_{\bot}^{2}}{2m}\label{eq:guidingcenterkineticenergy}\end{equation}
+\xi=p_{\parallel}/p=\sqrt{1-\frac{\mu B}{\mathcal{E}}}\label{eq:guidingcenterpitchanglecosine}\end{equation}
 
 \end_inset
 
-and
+from (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:vpar"
+
+\end_inset
+
+), and consequently, it is an implicit function of the position 
+\begin_inset Formula $\mathbf{X}$
+\end_inset
+
+ since 
+\begin_inset Formula $B$
+\end_inset
+
+ varies with the spatial position.
+ In terms of 
+\begin_inset Formula $\left(p,\xi\right)$
+\end_inset
+
+, 
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula \begin{equation}
-\mu=\frac{p_{\bot}^{2}}{2mB}=\frac{p^{2}\left(1-\xi^{2}\right)}{2mB}\label{eq:guidingcentermagneticmoment}\end{equation}
+\mu=\frac{p^{2}\left(1-\xi^{2}\right)}{2mB}\label{eq:guidingcentermagneticmoment}\end{equation}
 
 \end_inset
 
 
 \end_layout
 
+\begin_layout Subsubsection
+Jacobian of the transformation 
+\begin_inset Formula $\left(\mathbf{x},\mathbf{p}\right)\rightarrow\left(\mathbf{X},p,\xi,\varphi\right)$
+\end_inset
+
+ 
+\end_layout
+
 \begin_layout Standard
-Then, using the chain rule for several variables, the transformation 
-\begin_inset Formula $\left(\mathbf{X},p,\xi,\varphi\right)\rightarrow\left(X,\mathcal{E},\mu,\theta\right)$
+Using the chain rule for several variables, the transformation 
+\begin_inset Formula $\left(p,\xi\right)\rightarrow\left(\mathcal{E},\mu\right)$
 \end_inset
 
  is expressed in the matrix form
@@ -232,21 +367,15 @@ so that
 \end_layout
 
 \begin_layout Standard
-Using the definitions (
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:guidingcenterkineticenergy"
-
+Using the definitions of 
+\begin_inset Formula $\mathcal{E}$
 \end_inset
 
-) and (
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:guidingcentermagneticmoment"
-
+ and 
+\begin_inset Formula $\mu$
 \end_inset
 
-), 
+, 
 \begin_inset Formula \begin{equation}
 \frac{\partial\left(\mathcal{E},\mu\right)}{\partial\left(p,\xi\right)}=\left(\begin{array}{cc}
 p/m & \left(1-\xi^{2}\right)p/\left(mB\right)\\
@@ -303,8 +432,6 @@ p\xi & 1-\xi^{2}\\
 
 \end_inset
 
-
-p
 where the Jacobian of 
 \family default
 \series default
@@ -345,14 +472,14 @@ Using the Jacobian
 \begin_inset Formula $\left(\mathbf{x},\mathbf{p}\right)\rightarrow\left(\mathbf{X},\mathcal{E},\mu,\theta\right)$
 \end_inset
 
- in (
+ in 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "bri04"
 
 \end_inset
 
-),
+,
 \begin_inset Formula \begin{equation}
 \mathcal{J}=\frac{mB{}_{\Vert}^{*}}{\left|v_{\Vert}\right|}\label{eq:JacobianEmhu}\end{equation}
 
@@ -369,6 +496,14 @@ is simply
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsubsection
+Transformation 
+\begin_inset Formula $\left(\mathbf{X},\mathcal{E},\mu,\theta\right)\rightarrow\left(\mathbf{X},p,\xi,\varphi\right)$
+\end_inset
+
+ of the Poisson bracket
 \end_layout
 
 \begin_layout Standard
@@ -390,27 +525,190 @@ reference "eq:invLbis"
 
 \end_inset
 
-the Poisson bracket (
+and replacing 
+\begin_inset Formula $\theta$
+\end_inset
+
+ by 
+\begin_inset Formula $\varphi$
+\end_inset
+
+, the Poisson bracket (
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "eq:Poissonpxi"
+reference "eq:PoissonbracketEmhu"
 
 \end_inset
 
 ) becomes
-\begin_inset Formula \begin{multline}
-\left\{ F,G\right\} _{gc}=\frac{eB}{cp^{2}}\left[\frac{\partial F}{\partial\varphi}\left(p\frac{\partial G}{\partial p}-\xi\frac{\partial G}{\partial\mathcal{\xi}}\right)-\left(p\frac{\partial F}{\partial p}-\xi\frac{\partial F}{\partial\mathcal{\xi}}\right)\frac{\partial G}{\partial\varphi}\right]\\
-+\frac{m}{p^{2}\xi}\mathbf{v}_{gc}\cdot\left(\nabla^{*}F\left(p\xi\frac{\partial G}{\partial p}+\left(1-\xi^{2}\right)\frac{\partial G}{\partial\xi}\right)-\left(p\xi\frac{\partial F}{\partial p}+\left(1-\xi^{2}\right)\frac{\partial F}{\partial\xi}\right)\nabla^{*}G\right)\\
--\frac{c\widehat{b}}{eB_{\Vert}^{*}}\cdot\nabla^{*}F\times\nabla^{*}G\label{eq:Poissonbracketpxi}\end{multline}
+\begin_inset Formula \begin{align}
+\left\{ F,G\right\} _{gc} & =\frac{eB}{cp^{2}}\left[\frac{\partial F}{\partial\varphi}\left(p\frac{\partial G}{\partial p}-\xi\frac{\partial G}{\partial\mathcal{\xi}}\right)-\left(p\frac{\partial F}{\partial p}-\xi\frac{\partial F}{\partial\mathcal{\xi}}\right)\frac{\partial G}{\partial\varphi}\right]\nonumber \\
+ & +\frac{m}{p^{2}\xi}\mathbf{v}_{gc}\cdot\left(\nabla^{*}F\left(p\xi\frac{\partial G}{\partial p}+\left(1-\xi^{2}\right)\frac{\partial G}{\partial\xi}\right)-\left(p\xi\frac{\partial F}{\partial p}+\left(1-\xi^{2}\right)\frac{\partial F}{\partial\xi}\right)\nabla^{*}G\right)\nonumber \\
+ & -\frac{c\widehat{b}}{eB_{\Vert}^{*}}\cdot\nabla^{**}F\times\nabla^{*}G\label{eq:Poissonbracketpxi}\end{align}
+
+\end_inset
+
+where 
+\begin_inset Formula \begin{align}
+\nabla^{*} & =\left.\nabla\right|_{\mathcal{E},\mu,\varphi}+\mathbf{R}^{*}\frac{\partial}{\partial\varphi}\nonumber \\
+ & =\nabla^{**}+\left.\nabla p\right|_{\mathcal{E},\mu,\varphi}\frac{\partial}{\partial p}+\left.\nabla\xi\right|_{\mathcal{E},\mu,\varphi}\frac{\partial}{\partial\xi}\label{eq:-6}\end{align}
 
 \end_inset
 
 with
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula \begin{equation}
+\nabla^{**}=\left.\nabla\right|_{p,\xi,\varphi}+\mathbf{R}^{*}\frac{\partial}{\partial\varphi}\label{eq:nabladoublestar}\end{equation}
+
+\end_inset
+
+since 
+\begin_inset Formula \begin{equation}
+\left.\nabla\right|_{\mathcal{E},\mu,\varphi}=\left.\nabla\right|_{p,\xi,\varphi}+\left.\nabla p\right|_{\mathcal{E},\mu,\varphi}\frac{\partial}{\partial p}+\left.\nabla\xi\right|_{\mathcal{E},\mu,\varphi}\frac{\partial}{\partial\xi}\label{eq:-16}\end{equation}
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
+It is worth noting that 
+\begin_inset Formula $\mathbf{R}^{*}$
+\end_inset
+
+ defined by relation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Rstar"
+
+\end_inset
+
+) remains unaffected by the coordinate transformation, since 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\partial\widehat{b}/\partial p=\partial\widehat{b}/\partial\xi=0$
+\end_inset
+
+.
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+ Considering (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:guidingcenterpitchanglecosine"
+
+\end_inset
+
+), one deduces that
+\begin_inset Formula \begin{align}
+\left.\nabla\xi\right|_{\mathcal{E},\mu,\varphi} & =-\frac{\mu\nabla B}{2\mathcal{E}\xi}\nonumber \\
+ & =-\frac{p^{2}}{2m\mathcal{E}}\left(\frac{1-\xi^{2}}{\xi}\right)\left(\frac{1}{2}\frac{\nabla B}{B}\right)\nonumber \\
+ & =-\frac{\left(1-\xi^{2}\right)}{2\xi}\nabla\ln B\label{eq:gradxi}\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Much in the same way 
 \begin_inset Formula \begin{equation}
-\nabla^{*}\equiv\nabla+\left[\mathbf{R}+\frac{1}{2}\left(\widehat{b}\cdot\nabla\times\widehat{b}\right)\widehat{b}\right]\frac{\partial}{\partial\varphi}\label{eq:nablastarphi}\end{equation}
+\left.\nabla p\right|_{\mathcal{E},\mu,\varphi}=0\label{eq:gradp}\end{equation}
+
+\end_inset
+
+since 
+\begin_inset Formula $\left\Vert \mathbf{p}\right\Vert ^{2}=p^{2}=2m\mathcal{E}$
+\end_inset
+
+ and 
+\begin_inset Formula \begin{equation}
+\nabla^{*}=\nabla^{**}-\frac{\left(1-\xi^{2}\right)}{2\xi}\nabla\ln B\frac{\partial}{\partial\xi}\label{eq:nabladoublestarmod}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The Poisson bracket (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Poissonbracketpxi"
+
+\end_inset
+
+) becomes therefore
+\begin_inset Formula \begin{align}
+\left\{ F,G\right\} _{gc} & =\frac{eB}{cp^{2}}\left[\frac{\partial F}{\partial\varphi}\left(p\frac{\partial G}{\partial p}-\xi\frac{\partial G}{\partial\mathcal{\xi}}\right)-\left(p\frac{\partial F}{\partial p}-\xi\frac{\partial F}{\partial\mathcal{\xi}}\right)\frac{\partial G}{\partial\varphi}\right]\nonumber \\
+ & +\frac{m}{p^{2}\xi}\mathbf{v}_{gc}\cdot\left(\nabla^{**}F\left(p\xi\frac{\partial G}{\partial p}+\left(1-\xi^{2}\right)\frac{\partial G}{\partial\xi}\right)-\left(p\xi\frac{\partial F}{\partial p}+\left(1-\xi^{2}\right)\frac{\partial F}{\partial\xi}\right)\nabla^{**}G\right)\nonumber \\
+ & -\frac{c\widehat{b}}{eB_{\Vert}^{*}}\cdot\nabla^{**}F\times\nabla^{**}G\nonumber \\
+ & -\left[\frac{m}{p}\frac{\left(1-\xi^{2}\right)}{2\xi}\right]\left(\mathbf{v}_{gc}\cdot\nabla\ln B\right)\left(\frac{\partial F}{\partial\xi}\frac{\partial G}{\partial p}-\frac{\partial F}{\partial p}\frac{\partial G}{\partial\xi}\right)\nonumber \\
+ & +\frac{\left(1-\xi^{2}\right)}{2\xi}\frac{c\widehat{b}}{eB_{\Vert}^{*}}\cdot\left[\frac{\partial G}{\partial\xi}\left(\nabla^{**}F\times\nabla\ln B\right)-\left(\nabla^{**}G\times\nabla\ln B\right)\frac{\partial F}{\partial\xi}\right]\label{eq:Poissonbracketpxi1}\end{align}
+
+\end_inset
+
+and in the limit of a constant, uniform magnetic field, 
+\begin_inset Formula $\mathbf{v}_{gc}=v_{\parallel}\widehat{b}$
+\end_inset
+
+, 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\nabla^{**}=\nabla$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbf{v}_{gc}\cdot\mathbf{R}^{*}=\mathbf{v}_{gc}\cdot\mathbf{R}=0$
+\end_inset
+
+ since 
+\begin_inset Formula $\mathbf{R}=0$
+\end_inset
+
+, it simplifies to
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+
+\begin_inset Formula \begin{align}
+\left\{ F,G\right\} _{gc} & =\frac{eB}{cp^{2}}\left[\frac{\partial F}{\partial\varphi}\left(p\frac{\partial G}{\partial p}-\xi\frac{\partial G}{\partial\mathcal{\xi}}\right)-\left(p\frac{\partial F}{\partial p}-\xi\frac{\partial F}{\partial\mathcal{\xi}}\right)\frac{\partial G}{\partial\varphi}\right]\nonumber \\
+ & +\frac{\widehat{b}}{p}\cdot\left(\nabla F\left(p\xi\frac{\partial G}{\partial p}+\left(1-\xi^{2}\right)\frac{\partial G}{\partial\xi}\right)-\left(p\xi\frac{\partial F}{\partial p}+\left(1-\xi^{2}\right)\frac{\partial F}{\partial\xi}\right)\nabla G\right)\nonumber \\
+ & -\frac{c\widehat{b}}{eB}\cdot\nabla F\times\nabla G\label{eq:PoissonbracketpxiuniformB}\end{align}
 
 \end_inset
 
@@ -428,36 +726,1852 @@ H=\frac{p^{2}}{2m}\label{eq:Hamiltonian}\end{equation}
 
 \end_inset
 
-so that, using to (
+the Poisson bracket 
+\begin_inset Formula $\left\{ F,H\right\} _{gc}$
+\end_inset
+
+ takes the general form
+\begin_inset Formula \begin{equation}
+\left\{ F,H\right\} _{gc}=\Omega\frac{\partial F}{\partial\varphi}+\mathbf{v}_{gc}\cdot\nabla^{**}F-\frac{\left(1-\xi^{2}\right)}{2\xi}\left(\mathbf{v}_{gc}\cdot\nabla\ln B\right)\frac{\partial F}{\partial\xi}\label{eq:Hamiltonianpoissonbracket}\end{equation}
+
+\end_inset
+
+so that
+\begin_inset Formula \begin{align}
+\left\{ \mathbf{X},H\right\} _{gc} & =\mathbf{\dot{X}}=\mathbf{v}_{gc}\label{eq:Xpoint}\\
+\left\{ p,H\right\} _{gc} & =\dot{p}=0\label{eq:ppoint}\\
+\left\{ \xi,H\right\} _{gc} & =\dot{\xi}=\mathbf{v}_{gc}\cdot\nabla\xi-\frac{\left(1-\xi^{2}\right)}{2\xi}\left(\mathbf{v}_{gc}\cdot\nabla\ln B\right)=\mathbf{v}_{gc}\cdot\left[\nabla\xi-\frac{\left(1-\xi^{2}\right)}{2\xi}\nabla\ln B\right]\label{eq:xipoint}\\
+\left\{ \varphi,H\right\} _{gc} & =\dot{\varphi}=\Omega+\mathbf{v}_{gc}\cdot\mathbf{R}^{*}\label{eq:phipoint}\end{align}
+
+\end_inset
+
+since 
+\begin_inset Formula $\nabla^{**}\mathbf{X}=\mathbb{I}$
+\end_inset
+
+ is the identity matrix and 
+\begin_inset Formula $\partial\xi/\partial\varphi=0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Using the definitions (
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "eq:Poissonbracketpxi"
+reference "eq:Xpoint"
+
+\end_inset
+
+-
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:phipoint"
+
+\end_inset
+
+), the guiding-center part (or Vlasov part) of the Fokker-Planck equation
+ may be expressed as
+\begin_inset Formula \begin{align}
+\frac{df}{dt} & =\frac{\partial f}{\partial t}+\mathbf{\dot{X}}\cdot\nabla f+\dot{p}\frac{\partial f}{\partial p}+\dot{\xi}\frac{\partial f}{\partial\xi}+\dot{\varphi}\frac{\partial f}{\partial\varphi}\nonumber \\
+ & =\frac{\partial f}{\partial t}+\mathbf{v}_{gc}\cdot\nabla f+\left(\Omega+\mathbf{v}_{gc}\cdot\mathbf{R}^{*}\right)\frac{\partial f}{\partial\varphi}+\mathbf{v}_{gc}\cdot\left[\nabla\xi-\frac{\left(1-\xi^{2}\right)}{2\xi}\nabla\ln B\right]\frac{\partial f}{\partial\xi}\label{eq:guidingcentervlasov}\end{align}
+
+\end_inset
+
+where 
+\begin_inset Formula $f$
+\end_inset
+
+ is by definition the guiding-center distribution function.
+ 
+\end_layout
+
+\begin_layout Standard
+In the limit of a constant, uniform magnetic field, 
+\begin_inset Formula $\mathbf{v}_{gc}=v_{\parallel}\widehat{b}$
+\end_inset
+
+, 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\nabla\xi=0$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbf{v}_{gc}\cdot\mathbf{R}^{*}=\mathbf{v}_{gc}\cdot\mathbf{R}=0$
+\end_inset
+
+ since 
+\begin_inset Formula $\mathbf{R}=0$
+\end_inset
+
+, the Vlasov terme becomes
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+ 
+\begin_inset Formula \begin{equation}
+\frac{df}{dt}=\frac{\partial f}{\partial t}+v_{\parallel}\widehat{b}\cdot\nabla f+\Omega\frac{\partial f}{\partial\varphi}\label{eq:guidingcentervlasovuniformB}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Guiding-center collision operator
+\end_layout
+
+\begin_layout Standard
+The general guiding-center Fokker-Planck collision operator may be expressed
+ as
+\begin_inset Formula \begin{equation}
+\mathcal{C}_{FP}\left[f\right]=-\mathrm{Tr}\left\{ \mathbf{X}+\mathbf{\boldsymbol{\rho}},\mathbf{S}\left(f\right)\right\} _{gc}\label{eq:guidingcentercollop}\end{equation}
+
+\end_inset
+
+where the guiding-center collisional flux has the usual form 
+\begin_inset Formula \begin{equation}
+\mathbf{S}\left(f\right)=\mathbf{K}f-\mathbb{D}\cdot\left\{ \mathbf{X}+\mathbf{\boldsymbol{\rho}},f\right\} _{gc}\label{eq:guidingcentercollflux}\end{equation}
+
+\end_inset
+
+with 
+\begin_inset Formula $\mathbf{K}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbb{D}$
+\end_inset
+
+ the guiding-center collisional friction and diffusion respectively.
+ The particle position is 
+\begin_inset Formula $\mathbf{x}=\mathbf{X}+\mathbf{\boldsymbol{\rho}}$
+\end_inset
+
+ in terms of the guiding-center position 
+\begin_inset Formula $\mathbf{X}$
+\end_inset
+
+ and the gyroradius vector 
+\begin_inset Formula $\mathbf{\boldsymbol{\rho}}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Calculations of the Poisson bracket involves to calculate following quantities
+\begin_inset Formula \[
+\frac{\partial\left(\mathbf{X}+\mathbf{\boldsymbol{\rho}}\right)}{\partial p}=\frac{\partial\mathbf{\boldsymbol{\rho}}}{\partial p}=\frac{\partial\mathbf{\boldsymbol{\rho}}_{0}}{\partial p}+\frac{\partial\mathbf{\boldsymbol{\rho}}_{1}}{\partial p}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{\partial\left(\mathbf{X}+\mathbf{\boldsymbol{\rho}}\right)}{\partial\xi}=\frac{\partial\mathbf{\boldsymbol{\rho}}}{\partial\xi}=\frac{\partial\mathbf{\boldsymbol{\rho}}_{0}}{\partial\xi}+\frac{\partial\mathbf{\boldsymbol{\rho}}_{1}}{\partial\xi}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\frac{\partial\left(\mathbf{X}+\mathbf{\boldsymbol{\rho}}\right)}{\partial\varphi}=\frac{\partial\mathbf{\boldsymbol{\rho}}}{\partial\varphi}=\frac{\partial\mathbf{\boldsymbol{\rho}}_{0}}{\partial\varphi}+\frac{\partial\mathbf{\boldsymbol{\rho}}_{1}}{\partial\varphi}\]
+
+\end_inset
+
+and 
+\begin_inset Formula \begin{align*}
+\nabla^{**}\left(\mathbf{X}+\mathbf{\boldsymbol{\rho}}\right) & =\mathbb{I}+\nabla^{**}\mathbf{\boldsymbol{\rho}}=\mathbb{I}+\nabla^{**}\mathbf{\boldsymbol{\rho}}_{0}+\nabla^{**}\mathbf{\boldsymbol{\rho}}_{1}\end{align*}
+
+\end_inset
+
+where the gyroradius vector may be expanded as 
+\begin_inset Formula $\mathbf{\boldsymbol{\rho}}=\mathbf{\boldsymbol{\rho}}_{0}+\mathbf{\boldsymbol{\rho}}_{1}$
+\end_inset
+
+ defined in Ref.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bri04"
+
+\end_inset
+
+.
+ As calculated in Appendix (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:calcdrho0dp"
+
+\end_inset
+
+)(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:calcdrho0dxi"
+
+\end_inset
+
+)(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:calcdrho0dphi"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:calcgradrho0"
+
+\end_inset
+
+),
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial\mathbf{\boldsymbol{\rho}}_{0}}{\partial p}=\frac{\mathbf{\boldsymbol{\rho}}_{0}}{p}\label{eq:drho0dp-1}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial\mathbf{\boldsymbol{\rho}}_{0}}{\partial\xi}=-\frac{\xi}{1-\xi^{2}}\mathbf{\boldsymbol{\rho}}_{0}\label{eq:drho0dxi-1}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial\mathbf{\boldsymbol{\rho}}_{0}}{\partial\varphi}=\rho_{0}\widehat{\bot}\label{eq:drho0dphi-1}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{align}
+\nabla^{**}\mathbf{\boldsymbol{\rho}}_{0} & =-\nabla\ln B\boldsymbol{\rho}_{0}-\left(\nabla\widehat{b}\cdot\boldsymbol{\rho}_{0}\right)\widehat{b}+\frac{\widehat{b}}{2}\left(\widehat{b}\cdot\nabla\times\widehat{b}\right)\frac{\partial\boldsymbol{\rho}_{0}}{\partial\varphi}\label{eq:graddoublestarrho0}\end{align}
+
+\end_inset
+
+and 
+\begin_inset Formula \begin{equation}
+\frac{\partial\mathbf{\boldsymbol{\rho}}_{1}}{\partial p}=-\frac{2}{p}\alpha\mathbf{\boldsymbol{\rho}}_{0}\times\widehat{b}-\frac{2}{p}\beta\mathbf{\boldsymbol{\rho}}_{0}-\frac{2}{p}\gamma\widehat{b}\label{eq:drho1dp-2}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial\mathbf{\boldsymbol{\rho}}_{1}}{\partial\xi}=-\left(\frac{\partial\alpha}{\partial\xi}-\frac{\xi}{1-\xi^{2}}\alpha\right)\mathbf{\boldsymbol{\rho}}_{0}\times\widehat{b}-\left(\frac{\partial\beta}{\partial\xi}-\frac{\xi}{1-\xi^{2}}\beta\right)\mathbf{\boldsymbol{\rho}}_{0}-\frac{\partial\gamma}{\partial\xi}\widehat{b}\label{eq:drho1dxi-1}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{align}
+\frac{\partial\mathbf{\boldsymbol{\rho}}_{1}}{\partial\varphi} & =-\left(\frac{\partial\alpha}{\partial\varphi}+\beta\right)\mathbf{\boldsymbol{\rho}}_{0}\times\widehat{b}+\left(\alpha-\frac{\partial\beta}{\partial\varphi}\right)\mathbf{\boldsymbol{\rho}}_{0}-\frac{\partial\gamma}{\partial\varphi}\widehat{b}\label{eq:drho1dphi}\end{align}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\nabla^{**}\mathbf{\boldsymbol{\rho}}_{1}=0\label{eq:graddoublestarrho1}\end{equation}
+
+\end_inset
+
+where the relations between 
+\begin_inset Formula $\left(\widehat{p},\widehat{\xi}\right)$
+\end_inset
+
+ and 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\left(\widehat{b},\widehat{\bot}\right)$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+ 
+\begin_inset Formula \begin{equation}
+\widehat{p}=\xi\widehat{b}+\sqrt{1-\xi^{2}}\widehat{\bot}=\mathbf{p}/p\label{eq:pchapeau}\end{equation}
+
+\end_inset
+
+ 
+\begin_inset Formula \begin{equation}
+\widehat{\xi}=\widehat{\varphi}\times\widehat{p}=-\sqrt{1-\xi^{2}}\widehat{b}+\xi\widehat{\bot}\label{eq:xichapeau}\end{equation}
+
+\end_inset
+
+have been used.
+ 
+\end_layout
+
+\begin_layout Standard
+Finally, 
+\begin_inset Formula \begin{equation}
+\frac{\partial\mathbf{S}}{\partial p}=\left(\xi\frac{\partial S_{p}}{\partial p}-\sqrt{1-\xi^{2}}\frac{\partial S_{\xi}}{\partial p}\right)\widehat{b}+\left(\sqrt{1-\xi^{2}}\frac{\partial S_{p}}{\partial p}+\xi\frac{\partial S_{\xi}}{\partial p}\right)\widehat{\bot}+\frac{\partial S_{\varphi}}{\partial p}\widehat{\varphi}\label{eq:dSdp}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial\mathbf{S}}{\partial\xi}=\left(\xi\frac{\partial S_{p}}{\partial\xi}-\sqrt{1-\xi^{2}}\frac{\partial S_{\xi}}{\partial\xi}+S_{p}+\frac{\xi S_{\xi}}{\sqrt{1-\xi^{2}}}\right)\widehat{b}+\left(\sqrt{1-\xi^{2}}\frac{\partial S_{p}}{\partial\xi}+\xi\frac{\partial S_{\xi}}{\partial\xi}-\frac{\xi S_{p}}{\sqrt{1-\xi^{2}}}+S_{\xi}\right)\widehat{\bot}+\frac{\partial S_{\varphi}}{\partial\varphi}\widehat{\varphi}\label{eq:dSdxi}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial\mathbf{S}}{\partial\varphi}=\left(\xi\frac{\partial S_{p}}{\partial\varphi}-\sqrt{1-\xi^{2}}\frac{\partial S_{\xi}}{\partial\varphi}\right)\widehat{b}+\left(\sqrt{1-\xi^{2}}\frac{\partial S_{p}}{\partial\varphi}+\xi\frac{\partial S_{\xi}}{\partial\varphi}\right)\widehat{\bot}+\frac{\partial S_{\varphi}}{\partial\varphi}\widehat{\varphi}\label{eq:dSdphi}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{align}
+\nabla^{**}\mathbf{S} & =\label{eq:graddoublestarS}\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Poissonbracketpxi1"
 
 \end_inset
 
 )
+\begin_inset Formula \[
+\mathrm{Tr}\left\{ \mathbf{X}+\mathbf{\boldsymbol{\rho}},\mathbf{S}\right\} _{gc}=\mathrm{Tr}\left\{ \mathbf{X},\mathbf{S}\right\} _{gc}+\mathrm{Tr}\left\{ \mathbf{\boldsymbol{\rho}}_{0},\mathbf{S}\right\} _{gc}+\mathrm{Tr}\left\{ \mathbf{\boldsymbol{\rho}}_{1},\mathbf{S}\right\} _{gc}\]
+
+\end_inset
+
+where
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula \begin{align*}
-\left\{ \mathbf{X},H\right\} _{gc} & =\mathbf{\dot{X}}=\mathbf{v}_{gc}=\frac{p^{2}\xi}{m}\left[\frac{\widehat{b}}{p}+\frac{c\widehat{b}}{eB_{\Vert}^{*}}\times\left(\frac{1-\xi^{2}}{2\xi}\frac{\nabla B}{B}+\xi\widehat{b}\cdot\nabla\widehat{b}\right)\right]\\
-\left\{ p,H\right\} _{gc} & =\dot{p}=0\\
-\left\{ \xi,H\right\} _{gc} & =\dot{\xi}=0\\
-\left\{ \varphi,H\right\} _{gc} & =\dot{\varphi}=\Omega+\mathbf{v}_{gc}\cdot\mathbf{R}^{*}\end{align*}
+\left\{ \mathbf{X},\mathbf{S}\right\} _{gc} & =+\frac{m}{p^{2}\xi}\mathbf{v}_{gc}\cdot\left[\left(p\xi\frac{\partial\mathbf{S}}{\partial p}+\left(1-\xi^{2}\right)\frac{\partial\mathbf{S}}{\partial\xi}\right)\right]-\frac{c\widehat{b}}{eB_{\Vert}^{*}}\cdot\left[\mathbb{I}\times\nabla^{**}\mathbf{S}\right]+\frac{\left(1-\xi^{2}\right)}{2\xi}\frac{c\widehat{b}}{eB_{\Vert}^{*}}\cdot\left[\frac{\partial\mathbf{S}}{\partial\xi}\left(\mathbb{I}\times\nabla\ln B\right)\right]\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{align*}
+\left\{ \mathbf{\boldsymbol{\rho}}_{0},\mathbf{S}\right\} _{gc} & =\frac{eB}{cp^{2}}\left[\rho_{0}\widehat{\bot}\left(p\frac{\partial\mathbf{S}}{\partial p}-\xi\frac{\partial\mathbf{S}}{\partial\mathcal{\xi}}\right)\right]\\
+ & +\frac{m}{p^{2}\xi}\mathbf{v}_{gc}\cdot\left(\left(\nabla^{**}\mathbf{\boldsymbol{\rho}}_{0}\right)\left(p\xi\frac{\partial\mathbf{S}}{\partial p}+\left(1-\xi^{2}\right)\frac{\partial\mathbf{S}}{\partial\xi}\right)\right)\\
+ & -\frac{c\widehat{b}}{eB_{\Vert}^{*}}\cdot\nabla^{**}\mathbf{\boldsymbol{\rho}}_{0}\times\nabla^{**}\mathbf{S}\\
+ & -\left[\frac{m}{p}\frac{\left(1-\xi^{2}\right)}{2\xi}\right]\left(\mathbf{v}_{gc}\cdot\nabla\ln B\right)\left(-\frac{\xi}{1-\xi^{2}}\mathbf{\boldsymbol{\rho}}_{0}\frac{\partial\mathbf{S}}{\partial p}-\frac{\mathbf{\boldsymbol{\rho}}_{0}}{p}\frac{\partial\mathbf{S}}{\partial\xi}\right)\\
+ & +\frac{\left(1-\xi^{2}\right)}{2\xi}\frac{c\widehat{b}}{eB_{\Vert}^{*}}\cdot\left[\frac{\partial\mathbf{S}}{\partial\xi}\left(\left(\nabla^{**}\mathbf{\boldsymbol{\rho}}_{0}\right)\times\nabla\ln B\right)+\left(\nabla^{**}\mathbf{S}\times\nabla\ln B\right)\frac{\xi}{1-\xi^{2}}\mathbf{\boldsymbol{\rho}}_{0}\right]\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula \begin{align*}
+\left\{ \mathbf{\boldsymbol{\rho}}_{1},\mathbf{S}\right\} _{gc} & =\frac{eB}{cp^{2}}\left[\frac{\partial\mathbf{\boldsymbol{\rho}}_{1}}{\partial\varphi}\left(p\frac{\partial\mathbf{S}}{\partial p}-\xi\frac{\partial\mathbf{S}}{\partial\mathcal{\xi}}\right)-\left(p\frac{\partial\mathbf{\boldsymbol{\rho}}_{1}}{\partial p}-\xi\frac{\partial\mathbf{\boldsymbol{\rho}}_{1}}{\partial\mathcal{\xi}}\right)\frac{\partial\mathbf{S}}{\partial\varphi}\right]\\
+ & -\frac{m}{p^{2}\xi}\mathbf{v}_{gc}\cdot\left(\left(p\xi\frac{\partial\mathbf{\boldsymbol{\rho}}_{1}}{\partial p}+\left(1-\xi^{2}\right)\frac{\partial\mathbf{\boldsymbol{\rho}}_{1}}{\partial\xi}\right)\nabla^{**}\mathbf{S}\right)\\
+ & -\left[\frac{m}{p}\frac{\left(1-\xi^{2}\right)}{2\xi}\right]\left(\mathbf{v}_{gc}\cdot\nabla\ln B\right)\left(\frac{\partial\mathbf{\boldsymbol{\rho}}_{1}}{\partial\xi}\frac{\partial\mathbf{S}}{\partial p}-\frac{\partial\mathbf{\boldsymbol{\rho}}_{1}}{\partial p}\frac{\partial\mathbf{S}}{\partial\xi}\right)\\
+ & -\frac{\left(1-\xi^{2}\right)}{2\xi}\frac{c\widehat{b}}{eB_{\Vert}^{*}}\cdot\left[\left(\nabla^{**}\mathbf{S}\times\nabla\ln B\right)\frac{\partial\mathbf{\boldsymbol{\rho}}_{0}}{\partial\xi}\right]\end{align*}
+
+\end_inset
+
+
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "biblio"
+options "plain"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+\start_of_appendix
+Derivatives of 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\mathbf{\boldsymbol{\rho}}_{0}$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:derivativesrho0"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\begin_inset Formula $\partial\mathbf{\boldsymbol{\rho}}_{0}/\partial p$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:calcdrho0dp"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From the definition of the zero-order Larmor radius
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{\boldsymbol{\rho}}_{0}=\frac{mc}{e}\sqrt{\frac{2\mu}{mB}}\widehat{\mathbf{\boldsymbol{\rho}}}=\rho_{0}\widehat{\mathbf{\boldsymbol{\rho}}}\label{eq:zeroordergyroradius}\end{equation}
+
+\end_inset
+
+and from (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:guidingcentermagneticmoment"
+
+\end_inset
+
+) using the relation
+\begin_inset Formula \begin{equation}
+\frac{\partial\mu}{\partial p}=\frac{2}{p}\mu\label{eq:dmhudp}\end{equation}
+
+\end_inset
+
+one obtains 
+\begin_inset Formula \begin{align}
+\frac{\partial\mathbf{\boldsymbol{\rho}}_{0}}{\partial p} & =\frac{\partial\mu}{\partial p}\frac{\partial\rho_{0}}{\partial\mu}\widehat{\mathbf{\boldsymbol{\rho}}}\nonumber \\
+ & =\frac{\rho_{0}}{p}\widehat{\mathbf{\boldsymbol{\rho}}}\nonumber \\
+ & =\frac{\mathbf{\boldsymbol{\rho}}_{0}}{p}\label{eq:drho0dp}\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\begin_inset Formula $\partial\mathbf{\boldsymbol{\rho}}_{0}/\partial\xi$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:calcdrho0dxi"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:guidingcentermagneticmoment"
+
+\end_inset
+
+)
+\begin_inset Formula \begin{equation}
+\frac{\partial\mu}{\partial\xi}=-\frac{2\xi}{1-\xi^{2}}\mu\label{eq:dmhudxi}\end{equation}
+
+\end_inset
+
+and 
+\begin_inset Formula \begin{align}
+\frac{\partial\mathbf{\boldsymbol{\rho}}_{0}}{\partial\xi} & =\frac{\partial\mu}{\partial\xi}\frac{\partial\rho_{0}}{\partial\mu}\widehat{\mathbf{\boldsymbol{\rho}}}\nonumber \\
+ & =-\frac{\xi}{1-\xi^{2}}\rho_{0}\widehat{\mathbf{\boldsymbol{\rho}}}\nonumber \\
+ & =-\frac{\xi}{1-\xi^{2}}\mathbf{\boldsymbol{\rho}}_{0}\label{eq:drho0dxi}\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\begin_inset Formula $\partial\mathbf{\boldsymbol{\rho}}_{0}/\partial\varphi$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:calcdrho0dphi"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:zeroordergyroradius"
+
+\end_inset
+
+),
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial\mathbf{\boldsymbol{\rho}}_{0}}{\partial\varphi}=\rho_{0}\frac{\partial\widehat{\mathbf{\boldsymbol{\rho}}}}{\partial\varphi}=\rho_{0}\widehat{\bot}\label{eq:drho0dphi}\end{equation}
+
+\end_inset
+
+since 
+\begin_inset Formula $\partial\mu/\partial\varphi=0$
+\end_inset
+
+, and
+\begin_inset Formula \begin{equation}
+\frac{\partial^{2}\mathbf{\boldsymbol{\rho}}_{0}}{\partial\varphi^{2}}=\rho_{0}\frac{\partial\widehat{\bot}}{\partial\varphi}=-\rho_{0}\widehat{\mathbf{\boldsymbol{\rho}}}=-\mathbf{\boldsymbol{\rho}}_{0}\label{eq:d2rho0dphi2}\end{equation}
+
+\end_inset
+
+using the definitions of 
+\begin_inset Formula $\widehat{\mathbf{\boldsymbol{\rho}}}$
+\end_inset
+
+ and 
+\begin_inset Formula $\widehat{\bot}$
+\end_inset
+
+ given in Sec.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Definitions"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\begin_inset Formula $\nabla^{**}\mathbf{\boldsymbol{\rho}}_{0}$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:calcgradrho0"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The radial gradient of 
+\begin_inset Formula $\mathbf{\boldsymbol{\rho}}_{0}$
+\end_inset
+
+ may be expressed as
+\begin_inset Formula \begin{align}
+\nabla\mathbf{\boldsymbol{\rho}}_{0} & =\nabla\rho_{0}\widehat{\mathbf{\boldsymbol{\rho}}}\nonumber \\
+ & =\nabla\rho_{0}\widehat{\mathbf{\boldsymbol{\rho}}}+\rho_{0}\nabla\widehat{\mathbf{\boldsymbol{\rho}}}\label{eq:gradrho0_0}\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the definition of the Larmor radius in 
+\begin_inset Formula $\left(p,\xi\right)$
+\end_inset
+
+ coordinates 
+\begin_inset Formula \begin{equation}
+\rho_{0}=\frac{cp}{eB}\sqrt{1-\xi^{2}}\label{eq:Larmorradius0}\end{equation}
+
+\end_inset
+
+one deduces
+\begin_inset Formula \begin{equation}
+\nabla\rho_{0}=-\rho_{0}\nabla\ln B\label{eq:-15}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For calculating
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\nabla\widehat{\mathbf{\boldsymbol{\rho}}}$
+\end_inset
+
+ in (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:gradrho0_0"
+
+\end_inset
+
+), it is expressed in the form
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+\begin_inset Formula \begin{align}
+\nabla\widehat{\mathbf{\boldsymbol{\rho}}} & =\nabla\widehat{\mathbf{\boldsymbol{\rho}}}\cdot\mathbb{I}\nonumber \\
+ & =\nabla\widehat{\mathbf{\boldsymbol{\rho}}}\cdot\left(\widehat{b}\widehat{b}+\widehat{\bot}\widehat{\bot}+\widehat{\mathbf{\boldsymbol{\rho}}}\widehat{\mathbf{\boldsymbol{\rho}}}\right)\nonumber \\
+ & =-\left(\nabla\widehat{b}\cdot\widehat{\mathbf{\boldsymbol{\rho}}}\right)\widehat{b}-\mathbf{R}\widehat{\bot}\label{eq:-13}\end{align}
+
+\end_inset
+
+where
+\begin_inset Formula \begin{align}
+\nabla\widehat{\mathbf{\boldsymbol{\rho}}}\cdot\widehat{b}\widehat{b} & =\left(\nabla\widehat{\mathbf{\boldsymbol{\rho}}}\cdot\widehat{b}\right)\widehat{b}\nonumber \\
+ & =-\left(\nabla\widehat{b}\cdot\widehat{\mathbf{\boldsymbol{\rho}}}\right)\widehat{b}\label{eq:-12}\end{align}
+
+\end_inset
+
+as 
+\begin_inset Formula $\nabla\left(\widehat{b}\cdot\widehat{\mathbf{\boldsymbol{\rho}}}\right)=\nabla\widehat{\mathbf{\boldsymbol{\rho}}}\cdot\widehat{b}+\nabla\widehat{b}\cdot\widehat{\mathbf{\boldsymbol{\rho}}}=0$
+\end_inset
+
+,
+\begin_inset Formula \begin{align}
+\nabla\widehat{\mathbf{\boldsymbol{\rho}}}\cdot\widehat{\bot}\widehat{\bot} & =\left(\nabla\widehat{\mathbf{\boldsymbol{\rho}}}\cdot\widehat{\bot}\right)\widehat{\bot}\nonumber \\
+ & =-\left(\nabla\widehat{\bot}\cdot\widehat{\mathbf{\boldsymbol{\rho}}}\right)\widehat{\bot}\nonumber \\
+ & =-\mathbf{R}\widehat{\bot}\label{eq:-11}\end{align}
+
+\end_inset
+
+as 
+\begin_inset Formula $\nabla\left(\widehat{\bot}\cdot\widehat{\mathbf{\boldsymbol{\rho}}}\right)=\nabla\widehat{\mathbf{\boldsymbol{\rho}}}\cdot\widehat{\bot}+\nabla\widehat{\bot}\cdot\widehat{\mathbf{\boldsymbol{\rho}}}=0$
+\end_inset
+
+ and
+\begin_inset Formula \begin{equation}
+\nabla\widehat{\bot}\cdot\widehat{\mathbf{\boldsymbol{\rho}}}=\sin^{2}\varphi\nabla\widehat{1}\cdot\widehat{2}-\cos^{2}\varphi\nabla\widehat{2}\cdot\widehat{1}=\nabla\widehat{1}\cdot\widehat{2}=\mathbf{R}\label{eq:Rgauge0}\end{equation}
+
+\end_inset
+
+using the relation 
+\begin_inset Formula $\nabla\left(\widehat{1}\cdot\widehat{2}\right)=\nabla\widehat{1}\cdot\widehat{2}+\nabla\widehat{2}\cdot\widehat{1}=0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+Finally, since the third term is zero
+\begin_inset Formula \begin{align}
+\nabla\widehat{\mathbf{\boldsymbol{\rho}}}\cdot\widehat{\mathbf{\boldsymbol{\rho}}}\widehat{\mathbf{\boldsymbol{\rho}}} & =\left(\nabla\widehat{\mathbf{\boldsymbol{\rho}}}\cdot\widehat{\mathbf{\boldsymbol{\rho}}}\right)\widehat{\mathbf{\boldsymbol{\rho}}}\nonumber \\
+ & =\left(\frac{1}{2}\nabla\left(\widehat{\mathbf{\boldsymbol{\rho}}}\cdot\widehat{\mathbf{\boldsymbol{\rho}}}\right)\right)\widehat{\mathbf{\boldsymbol{\rho}}}\nonumber \\
+ & =\left(\frac{1}{2}\nabla1\right)\widehat{\mathbf{\boldsymbol{\rho}}}\nonumber \\
+ & =0\label{eq:-5}\end{align}
+
+\end_inset
+
+
+\begin_inset Formula $\nabla\mathbf{\boldsymbol{\rho}}_{0}$
+\end_inset
+
+ may be expressed in the compact form
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\nabla\mathbf{\boldsymbol{\rho}}_{0}=-\nabla\ln B\boldsymbol{\rho}_{0}-\left(\nabla\widehat{b}\cdot\boldsymbol{\rho}_{0}\right)\widehat{b}-\rho_{0}\mathbf{R}\widehat{\bot}\label{eq:gradrho0}\end{equation}
+
+\end_inset
+
+and
+\begin_inset Formula \begin{align}
+\nabla^{**}\mathbf{\boldsymbol{\rho}}_{0} & =\nabla\mathbf{\boldsymbol{\rho}}_{0}+\mathbf{R}^{*}\frac{\partial\mathbf{\boldsymbol{\rho}}_{0}}{\partial\varphi}\nonumber \\
+ & =\nabla\mathbf{\boldsymbol{\rho}}_{0}+\rho_{0}\mathbf{R}^{*}\widehat{\bot}\nonumber \\
+ & =-\nabla\ln B\boldsymbol{\rho}_{0}-\left(\nabla\widehat{b}\cdot\boldsymbol{\rho}_{0}\right)\widehat{b}+\frac{\widehat{b}}{2}\left(\widehat{b}\cdot\nabla\times\widehat{b}\right)\frac{\partial\boldsymbol{\rho}_{0}}{\partial\varphi}\label{eq:graddoublestarrho0-1}\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Derivatives of 
+\begin_inset Formula $\mathbf{\boldsymbol{\rho}}_{1}$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:derivativesrho1"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The first-order correction of the Larmor radius is given by the relation
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{\boldsymbol{\rho}}_{1}=-\alpha\mathbf{\boldsymbol{\rho}}_{0}\times\widehat{b}-\beta\mathbf{\boldsymbol{\rho}}_{0}-\gamma\widehat{b}\label{eq:firstordergyroradius}\end{equation}
 
 \end_inset
 
 where
 \begin_inset Formula \begin{equation}
-\mathbf{R}^{*}=\mathbf{R}+\left(\frac{\widehat{b}}{2}\cdot\nabla\times\widehat{b}\right)\widehat{b}\label{eq:Rstar}\end{equation}
+\alpha=\frac{v_{\Vert}}{\Omega}\mathbf{a}_{2}:\nabla\widehat{b}+\frac{\partial\mathbf{\boldsymbol{\rho}}_{0}}{\partial\varphi}\cdot\left(\nabla\ln B+\frac{mv_{\Vert}^{2}}{2\mu B}\widehat{b}\cdot\nabla\widehat{b}\right)\label{eq:alpha}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{align}
+\beta & =\mathbf{\boldsymbol{\rho}}_{0}\cdot\left(\frac{1}{2}\nabla\ln B+\frac{mv_{\Vert}^{2}}{2\mu B}\widehat{b}\cdot\nabla\widehat{b}\right)\nonumber \\
+ & +\frac{v_{\Vert}}{2\Omega}\left(\widehat{b}\cdot\nabla\times\widehat{b}-\mathbf{a}_{1}:\nabla\widehat{b}\right)\label{eq:beta}\end{align}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\gamma=2\frac{\partial\mathbf{\boldsymbol{\rho}}_{0}}{\partial\varphi}\cdot\left(\frac{v_{\Vert}}{\Omega}\widehat{b}\cdot\nabla\widehat{b}\right)-\frac{\mu B}{m\Omega^{2}}\left(\frac{1}{2}\widehat{b}\cdot\nabla\ln B+\mathbf{a}_{2}:\nabla\widehat{b}\right)\label{eq:gamma}\end{equation}
+
+\end_inset
+
+and
+\begin_inset Formula \begin{align}
+\mathbf{a}_{1} & =-\frac{1}{2}\left(\widehat{\mathbf{\boldsymbol{\rho}}}\widehat{\bot}+\widehat{\bot}\widehat{\mathbf{\boldsymbol{\rho}}}\right)\label{eq:dyadicmatrices_a1}\end{align}
+
+\end_inset
+
+is the gyroangle-dependent dyadic matrices.
+ From (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:dyadicmatrices_a1"
+
+\end_inset
+
+), 
+\begin_inset Formula \begin{align}
+\frac{\partial\mathbf{a}_{1}}{\partial\varphi} & =-\frac{1}{2}\left(\frac{\partial\widehat{\mathbf{\boldsymbol{\rho}}}}{\partial\varphi}\widehat{\bot}+\widehat{\mathbf{\boldsymbol{\rho}}}\frac{\partial\widehat{\bot}}{\partial\varphi}+\frac{\partial\widehat{\bot}}{\partial\varphi}\widehat{\mathbf{\boldsymbol{\rho}}}+\widehat{\bot}\frac{\partial\widehat{\mathbf{\boldsymbol{\rho}}}}{\partial\varphi}\right)\nonumber \\
+ & =-\left(\widehat{\bot}\widehat{\bot}-\widehat{\mathbf{\boldsymbol{\rho}}}\widehat{\mathbf{\boldsymbol{\rho}}}\right)\nonumber \\
+ & =-4\mathbf{a}_{2}\label{eq:da1dphi}\end{align}
+
+\end_inset
+
+so that
+\begin_inset Formula \begin{equation}
+\mathbf{a}_{2}=\frac{1}{4}\left(\widehat{\bot}\widehat{\bot}-\widehat{\mathbf{\boldsymbol{\rho}}}\widehat{\mathbf{\boldsymbol{\rho}}}\right)\label{eq:dyadicmatrices_a2}\end{equation}
+
+\end_inset
+
+and 
+\begin_inset Formula \begin{align}
+\frac{\partial\mathbf{a}_{2}}{\partial\varphi} & =\frac{1}{4}\left(\frac{\partial\widehat{\bot}}{\partial\varphi}\widehat{\bot}+\widehat{\bot}\frac{\partial\widehat{\bot}}{\partial\varphi}-\frac{\partial\widehat{\mathbf{\boldsymbol{\rho}}}}{\partial\varphi}\widehat{\mathbf{\boldsymbol{\rho}}}-\widehat{\mathbf{\boldsymbol{\rho}}}\frac{\partial\widehat{\mathbf{\boldsymbol{\rho}}}}{\partial\varphi}\right)\nonumber \\
+ & =\frac{1}{4}\left(-\widehat{\mathbf{\boldsymbol{\rho}}}\widehat{\bot}-\widehat{\bot}\widehat{\mathbf{\boldsymbol{\rho}}}-\widehat{\bot}\widehat{\mathbf{\boldsymbol{\rho}}}-\widehat{\mathbf{\boldsymbol{\rho}}}\widehat{\bot}\right)\nonumber \\
+ & =-\frac{1}{2}\left(\widehat{\mathbf{\boldsymbol{\rho}}}\widehat{\bot}+\widehat{\bot}\widehat{\mathbf{\boldsymbol{\rho}}}\right)\nonumber \\
+ & =\mathbf{a}_{1}\label{eq:da2dphi}\end{align}
+
+\end_inset
+
+since 
+\begin_inset Formula $\partial\widehat{\mathbf{\boldsymbol{\rho}}}/\partial\varphi=\widehat{\bot}$
+\end_inset
+
+ and 
+\begin_inset Formula $\partial\widehat{\mathbf{\bot}}/\partial\varphi=-\widehat{\mathbf{\boldsymbol{\rho}}}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsection
+Derivatives of 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\alpha$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:derivativesalpha"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\partial\alpha/\partial p$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:calcdalphadp"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From the definition (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:alpha"
+
+\end_inset
+
+) of 
+\begin_inset Formula $\alpha$
+\end_inset
+
+, 
+\begin_inset Formula \begin{equation}
+\frac{\partial\alpha}{\partial p}=\frac{\partial v_{\Vert}}{\partial p}\frac{\partial\alpha}{\partial v_{\Vert}}+\frac{\partial\rho_{0}}{\partial p}\frac{\partial\alpha}{\partial\rho_{0}}+\frac{\partial\mu}{\partial p}\frac{\partial\alpha}{\partial\mu}\label{eq:-2}\end{equation}
+
+\end_inset
+
+with
+\begin_inset Formula \begin{align}
+\frac{\partial\alpha}{\partial v_{\Vert}} & =\frac{1}{\Omega}\mathbf{a}_{2}:\nabla\widehat{b}+\frac{mv_{\Vert}}{\mu B}\rho_{0}\widehat{\bot}\cdot\left(\widehat{b}\cdot\nabla\widehat{b}\right)\label{eq:dalphadvpar}\\
+\frac{\partial\alpha}{\partial\rho_{0}} & =\widehat{\bot}\cdot\left(\nabla\ln B+\frac{mv_{\Vert}^{2}}{2\mu B}\left(\widehat{b}\cdot\nabla\widehat{b}\right)\right)\label{eq:dalphadrho0}\\
+\frac{\partial\alpha}{\partial\mu} & =-\frac{mv_{\Vert}^{2}}{2\mu^{2}B}\rho_{0}\widehat{\bot}\cdot\left(\widehat{b}\cdot\nabla\widehat{b}\right)\label{eq:dalphadmhu}\end{align}
+
+\end_inset
+
+using 
+\begin_inset Formula $\partial\widehat{\mathbf{\boldsymbol{\rho}}}/\partial\varphi=\widehat{\bot}$
+\end_inset
+
+ , and inserting 
+\begin_inset Formula \begin{align}
+\frac{\partial v_{\Vert}}{\partial p} & =\frac{\xi}{m}\label{eq:dvpardp}\end{align}
+
+\end_inset
+
+with (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:dmhudp"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:drho0dp"
+
+\end_inset
+
+), one obtains
+\begin_inset Formula \begin{align}
+\frac{\partial\alpha}{\partial p} & =\frac{\xi}{m}\frac{\partial\alpha}{\partial v_{\Vert}}+\frac{\rho_{0}}{p}\frac{\partial\alpha}{\partial\rho_{0}}+\frac{2\mu}{p}\frac{\partial\alpha}{\partial\mu}\nonumber \\
+ & =\frac{\alpha}{p}\label{eq:dalphadp-1}\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\partial\alpha/\partial\xi$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:calcdalphadxi"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial\alpha}{\partial\xi}=\frac{\partial v_{\Vert}}{\partial\xi}\frac{\partial\alpha}{\partial v_{\Vert}}+\frac{\partial\rho_{0}}{\partial\xi}\frac{\partial\alpha}{\partial\rho_{0}}+\frac{\partial\mu}{\partial\xi}\frac{\partial\alpha}{\partial\mu}\end{equation}
+
+\end_inset
+
+with
+\begin_inset Formula \begin{align}
+\frac{\partial v_{\Vert}}{\partial\xi} & =\frac{p}{m}=v\label{eq:dvpardxi}\end{align}
+
+\end_inset
+
+and using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:dmhudxi"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:drho0dxi"
+
+\end_inset
+
+), one obtains
+\begin_inset Formula \begin{align}
+\frac{\partial\alpha}{\partial\xi} & =\frac{p}{m}\frac{\partial\alpha}{\partial v_{\Vert}}-\frac{\xi}{1-\xi^{2}}\rho_{0}\frac{\partial\alpha}{\partial\rho_{0}}-\frac{2\xi}{1-\xi^{2}}\mu\frac{\partial\alpha}{\partial\mu}\nonumber \\
+ & =v\left[\frac{1}{\Omega}\mathbf{a}_{2}:\nabla\widehat{b}+\frac{mv_{\Vert}}{\mu B}\rho_{0}\widehat{\bot}\cdot\left(\widehat{b}\cdot\nabla\widehat{b}\right)\right]\nonumber \\
+ & -\frac{\xi}{1-\xi^{2}}\rho_{0}\widehat{\bot}\cdot\left(\nabla\ln B+\frac{mv_{\Vert}^{2}}{2\mu B}\left(\widehat{b}\cdot\nabla\widehat{b}\right)\right)\nonumber \\
+ & +\frac{\xi}{1-\xi^{2}}\frac{mv_{\Vert}^{2}}{\mu B}\rho_{0}\widehat{\bot}\cdot\left(\widehat{b}\cdot\nabla\widehat{b}\right)\nonumber \\
+ & =\frac{1}{\xi}\left[\frac{v_{\Vert}}{\Omega}\mathbf{a}_{2}:\nabla\widehat{b}+\frac{mv_{\Vert}^{2}}{\mu B}\rho_{0}\widehat{\bot}\cdot\left(\widehat{b}\cdot\nabla\widehat{b}\right)\right]\nonumber \\
+ & -\frac{\xi}{1-\xi^{2}}\rho_{0}\widehat{\bot}\cdot\left(\nabla\ln B+\frac{mv_{\Vert}^{2}}{2\mu B}\left(\widehat{b}\cdot\nabla\widehat{b}\right)\right)\label{eq:dalphadxi}\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\partial\alpha/\partial\varphi$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:calcdalphadphi"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using relations (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:drho0dphi"
+
+\end_inset
+
+), (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:d2rho0dphi2"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:da2dphi"
+
+\end_inset
+
+), 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{align}
+\frac{\partial\alpha}{\partial\varphi} & =\frac{v_{\Vert}}{\Omega}\mathbf{a}_{1}:\nabla\widehat{b}-\mathbf{\boldsymbol{\rho}}_{0}\cdot\left(\nabla\ln B+\frac{mv_{\Vert}^{2}}{2\mu B}\widehat{b}\cdot\nabla\widehat{b}\right)\label{eq:dalphadphi}\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation 
+\begin_inset Formula $\nabla^{**}\alpha$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:calcgraddoublestaralpha"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Since all terms in 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ are function of 
+\begin_inset Formula $\nabla$
+\end_inset
+
+, 
+\begin_inset Formula $\nabla\alpha$
+\end_inset
+
+ which is second order may dropped and 
+\begin_inset Formula \begin{align*}
+\nabla^{**}\alpha & =\mathbf{R}^{*}\frac{\partial\alpha}{\partial\varphi}=\left[\mathbf{R}+\frac{\widehat{b}}{2}\left(\widehat{b}\cdot\nabla\times\widehat{b}\right)\right]\left(\frac{\partial\alpha}{\partial\varphi}\right)^{2}\end{align*}
+
+\end_inset
+
+which is second order too, so that 
+\begin_inset Formula $\nabla^{**}\alpha=0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Derivatives of 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\beta$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:derivativesbeta"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\partial\beta/\partial p$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:calcdbetadp"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From the definition (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:beta"
+
+\end_inset
+
+) of 
+\begin_inset Formula $\beta$
+\end_inset
+
+, 
+\begin_inset Formula \begin{equation}
+\frac{\partial\beta}{\partial p}=\frac{\partial v_{\Vert}}{\partial p}\frac{\partial\beta}{\partial v_{\Vert}}+\frac{\partial\rho_{0}}{\partial p}\frac{\partial\beta}{\partial\rho_{0}}+\frac{\partial\mu}{\partial p}\frac{\partial\beta}{\partial\mu}\label{eq:-2}\end{equation}
+
+\end_inset
+
+with
+\begin_inset Formula \begin{align}
+\frac{\partial\beta}{\partial v_{\Vert}} & =\mathbf{\boldsymbol{\rho}}_{0}\cdot\frac{mv_{\Vert}}{\mu B}\widehat{b}\cdot\nabla\widehat{b}+\frac{1}{2\Omega}\left(\widehat{b}\cdot\nabla\times\widehat{b}-\mathbf{a}_{1}:\nabla\widehat{b}\right)\label{eq:dbetadvpar}\\
+\frac{\partial\beta}{\partial\rho_{0}} & =\widehat{\boldsymbol{\rho}}\cdot\left(\frac{1}{2}\nabla\ln B+\frac{mv_{\Vert}^{2}}{2\mu B}\widehat{b}\cdot\nabla\widehat{b}\right)\label{eq:dbetadrho0}\\
+\frac{\partial\beta}{\partial\mu} & =-\mathbf{\boldsymbol{\rho}}_{0}\cdot\frac{mv_{\Vert}^{2}}{2\mu^{2}B}\widehat{b}\cdot\nabla\widehat{b}\label{eq:dbetadmhu}\end{align}
+
+\end_inset
+
+and using the expressions (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:dvpardp"
+
+\end_inset
+
+), (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:drho0dp"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:dmhudp"
+
+\end_inset
+
+), 
+\begin_inset Formula \begin{align}
+\frac{\partial\beta}{\partial p} & =\frac{\xi}{m}\frac{\partial\beta}{\partial v_{\Vert}}+\frac{\rho_{0}}{p}\frac{\partial\beta}{\partial\rho_{0}}+\frac{2\mu}{p}\frac{\partial\beta}{\partial\mu}\nonumber \\
+ & =\frac{\xi}{m}\left[\mathbf{\boldsymbol{\rho}}_{0}\cdot\frac{mv_{\Vert}}{\mu B}\widehat{b}\cdot\nabla\widehat{b}+\frac{1}{2\Omega}\left(\widehat{b}\cdot\nabla\times\widehat{b}-\mathbf{a}_{1}:\nabla\widehat{b}\right)\right]\nonumber \\
+ & +\frac{\rho_{0}}{p}\left[\widehat{\boldsymbol{\rho}}\cdot\left(\frac{1}{2}\nabla\ln B+\frac{mv_{\Vert}^{2}}{2\mu B}\widehat{b}\cdot\nabla\widehat{b}\right)\right]\nonumber \\
+ & -\frac{1}{p}\mathbf{\boldsymbol{\rho}}_{0}\cdot\frac{mv_{\Vert}^{2}}{\mu B}\widehat{b}\cdot\nabla\widehat{b}\nonumber \\
+ & =\frac{1}{p}\mathbf{\boldsymbol{\rho}}_{0}\cdot\left[\frac{1}{2}\nabla\ln B+\frac{mv_{\Vert}^{2}}{2\mu B}\widehat{b}\cdot\nabla\widehat{b}\right]\nonumber \\
+ & +\frac{1}{p}\left[\frac{v_{\Vert}}{2\Omega}\left(\widehat{b}\cdot\nabla\times\widehat{b}-\mathbf{a}_{1}:\nabla\widehat{b}\right)\right]\nonumber \\
+ & =\frac{\beta}{p}\label{eq:dbetadp-1}\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\partial\beta/\partial\xi$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:calcdbetadxi"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial\beta}{\partial\xi}=\frac{\partial v_{\Vert}}{\partial\xi}\frac{\partial\beta}{\partial v_{\Vert}}+\frac{\partial\rho_{0}}{\partial\xi}\frac{\partial\beta}{\partial\rho_{0}}+\frac{\partial\mu}{\partial\xi}\frac{\partial\beta}{\partial\mu}\end{equation}
+
+\end_inset
+
+and using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:dmhudxi"
+
+\end_inset
+
+), (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:dvpardxi"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:drho0dxi"
+
+\end_inset
+
+), one obtains
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{align}
+\frac{\partial\beta}{\partial\xi} & =\frac{p}{m}\frac{\partial\beta}{\partial v_{\Vert}}-\frac{\xi}{1-\xi^{2}}\rho_{0}\frac{\partial\beta}{\partial\rho_{0}}-\frac{2\xi}{1-\xi^{2}}\mu\frac{\partial\beta}{\partial\mu}\nonumber \\
+ & =\frac{1}{\xi}\left[\mathbf{\boldsymbol{\rho}}_{0}\cdot\frac{mv_{\Vert}^{2}}{\mu B}\widehat{b}\cdot\nabla\widehat{b}+\frac{v_{\Vert}}{2\Omega}\left(\widehat{b}\cdot\nabla\times\widehat{b}-\mathbf{a}_{1}:\nabla\widehat{b}\right)\right]\nonumber \\
+ & -\frac{\xi}{1-\xi^{2}}\mathbf{\boldsymbol{\rho}}_{0}\cdot\left(\frac{1}{2}\nabla\ln B-\frac{mv_{\Vert}^{2}}{2\mu B}\widehat{b}\cdot\nabla\widehat{b}\right)\label{eq:dbetadxi}\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\partial\beta/\partial\varphi$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:calcdbetadphi"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using relations (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:drho0dphi"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:da1dphi"
+
+\end_inset
+
+), 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{align}
+\frac{\partial\beta}{\partial\varphi} & =\rho_{0}\widehat{\bot}\cdot\left(\frac{1}{2}\nabla\ln B+\frac{mv_{\Vert}^{2}}{2\mu B}\widehat{b}\cdot\nabla\widehat{b}\right)-\frac{v_{\Vert}}{2\Omega}\frac{\partial\mathbf{a}_{1}}{\partial\varphi}:\nabla\widehat{b}\nonumber \\
+ & =\rho_{0}\widehat{\bot}\cdot\left(\frac{1}{2}\nabla\ln B+\frac{mv_{\Vert}^{2}}{2\mu B}\widehat{b}\cdot\nabla\widehat{b}\right)+\frac{2v_{\Vert}}{\Omega}\mathbf{a}_{2}:\nabla\widehat{b}\nonumber \\
+ & =\alpha+\frac{v_{\Vert}}{\Omega}\mathbf{a}_{2}:\nabla\widehat{b}-\frac{\rho_{0}}{2}\widehat{\bot}\cdot\nabla\ln B\label{eq:dbetadphi}\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\nabla^{**}\beta$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:calcgraddoublestarbeta"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Calculations done for 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ in (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:calcgraddoublestaralpha"
+
+\end_inset
+
+) are also valid for 
+\begin_inset Formula $\beta$
+\end_inset
+
+ so that 
+\begin_inset Formula $\nabla^{**}\beta=0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Derivatives of 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\gamma$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:derivativesgamma"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\partial\gamma/\partial p$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:calcdgammadp"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From the definition (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:gamma"
+
+\end_inset
+
+) of 
+\begin_inset Formula $\gamma$
+\end_inset
+
+, 
+\begin_inset Formula \begin{equation}
+\frac{\partial\gamma}{\partial p}=\frac{\partial v_{\Vert}}{\partial p}\frac{\partial\gamma}{\partial v_{\Vert}}+\frac{\partial\rho_{0}}{\partial p}\frac{\partial\gamma}{\partial\rho_{0}}+\frac{\partial\mu}{\partial p}\frac{\partial\gamma}{\partial\mu}\label{eq:-2}\end{equation}
+
+\end_inset
+
+with
+\begin_inset Formula \begin{align}
+\frac{\partial\gamma}{\partial v_{\Vert}} & =2\frac{\partial\mathbf{\boldsymbol{\rho}}_{0}}{\partial\varphi}\cdot\left(\frac{1}{\Omega}\widehat{b}\cdot\nabla\widehat{b}\right)\label{eq:dgammadvpar}\\
+\frac{\partial\gamma}{\partial\rho_{0}} & =2\widehat{\bot}\cdot\left(\frac{v_{\Vert}}{\Omega}\widehat{b}\cdot\nabla\widehat{b}\right)\label{eq:dgammadrho0}\\
+\frac{\partial\gamma}{\partial\mu} & =-\frac{B}{m\Omega^{2}}\left(\frac{1}{2}\widehat{b}\cdot\nabla\ln B+\mathbf{a}_{2}:\nabla\widehat{b}\right)\label{eq:dgammadmhu}\end{align}
+
+\end_inset
+
+and using the expressions (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:dvpardp"
+
+\end_inset
+
+), (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:drho0dp"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:dmhudp"
+
+\end_inset
+
+), 
+\begin_inset Formula \begin{align}
+\frac{\partial\gamma}{\partial p} & =\frac{\xi}{m}\frac{\partial\gamma}{\partial v_{\Vert}}+\frac{\rho_{0}}{p}\frac{\partial\gamma}{\partial\rho_{0}}+\frac{2\mu}{p}\frac{\partial\gamma}{\partial\mu}\nonumber \\
+ & =\frac{\xi}{m}\left[2\frac{\partial\mathbf{\boldsymbol{\rho}}_{0}}{\partial\varphi}\cdot\left(\frac{1}{\Omega}\widehat{b}\cdot\nabla\widehat{b}\right)\right]\nonumber \\
+ & +\frac{\rho_{0}}{p}\left[2\widehat{\bot}\cdot\left(\frac{v_{\Vert}}{\Omega}\widehat{b}\cdot\nabla\widehat{b}\right)\right]\nonumber \\
+ & -\frac{2}{p}\frac{\mu B}{m\Omega^{2}}\left(\frac{1}{2}\widehat{b}\cdot\nabla\ln B+\mathbf{a}_{2}:\nabla\widehat{b}\right)\nonumber \\
+ & =\frac{1}{p}\left[2\frac{\partial\mathbf{\boldsymbol{\rho}}_{0}}{\partial\varphi}\cdot\left(\frac{v_{\Vert}}{\Omega}\widehat{b}\cdot\nabla\widehat{b}\right)\right]\nonumber \\
+ & +\frac{1}{p}\left[2\rho_{0}\widehat{\bot}\cdot\left(\frac{v_{\Vert}}{\Omega}\widehat{b}\cdot\nabla\widehat{b}\right)\right]\nonumber \\
+ & -\frac{2}{p}\frac{\mu B}{m\Omega^{2}}\left(\frac{1}{2}\widehat{b}\cdot\nabla\ln B+\mathbf{a}_{2}:\nabla\widehat{b}\right)\nonumber \\
+ & =2\frac{\gamma}{p}\label{eq:dgammadp-1}\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\partial\gamma/\partial\xi$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:calcdgammadxi"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial\gamma}{\partial\xi}=\frac{\partial v_{\Vert}}{\partial\xi}\frac{\partial\gamma}{\partial v_{\Vert}}+\frac{\partial\rho_{0}}{\partial\xi}\frac{\partial\gamma}{\partial\rho_{0}}+\frac{\partial\mu}{\partial\xi}\frac{\partial\gamma}{\partial\mu}\end{equation}
+
+\end_inset
+
+and using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:dmhudxi"
+
+\end_inset
+
+), (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:dvpardxi"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:drho0dxi"
+
+\end_inset
+
+), one obtains
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{align}
+\frac{\partial\gamma}{\partial\xi} & =\frac{p}{m}\frac{\partial\gamma}{\partial v_{\Vert}}-\frac{\xi}{1-\xi^{2}}\rho_{0}\frac{\partial\gamma}{\partial\rho_{0}}-\frac{2\xi}{1-\xi^{2}}\mu\frac{\partial\gamma}{\partial\mu}\nonumber \\
+ & =\frac{p}{m}\left[2\frac{\partial\mathbf{\boldsymbol{\rho}}_{0}}{\partial\varphi}\cdot\left(\frac{1}{\Omega}\widehat{b}\cdot\nabla\widehat{b}\right)\right]\nonumber \\
+ & -\frac{\xi}{1-\xi^{2}}\rho_{0}2\widehat{\bot}\cdot\left(\frac{v_{\Vert}}{\Omega}\widehat{b}\cdot\nabla\widehat{b}\right)\nonumber \\
+ & +\frac{2\xi}{1-\xi^{2}}\frac{\mu B}{m\Omega^{2}}\left(\frac{1}{2}\widehat{b}\cdot\nabla\ln B+\mathbf{a}_{2}:\nabla\widehat{b}\right)\nonumber \\
+ & =\frac{2}{\xi}\frac{\partial\mathbf{\boldsymbol{\rho}}_{0}}{\partial\varphi}\cdot\left(\frac{v_{\Vert}}{\Omega}\widehat{b}\cdot\nabla\widehat{b}\right)\nonumber \\
+ & -\frac{\xi}{1-\xi^{2}}\left(2\gamma-\rho_{0}2\widehat{\bot}\cdot\left(\frac{v_{\Vert}}{\Omega}\widehat{b}\cdot\nabla\widehat{b}\right)\right)\nonumber \\
+ & =-\frac{2\xi}{1-\xi^{2}}\gamma+\frac{2}{\left(1-\xi^{2}\right)\xi}\rho_{0}\widehat{\bot}\cdot\left(\frac{v_{\Vert}}{\Omega}\widehat{b}\cdot\nabla\widehat{b}\right)\label{eq:dgammadxi}\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\partial\gamma/\partial\varphi$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:calcdgammadphi"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using relations (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:da2dphi"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:d2rho0dphi2"
+
+\end_inset
+
+), 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial\gamma}{\partial\varphi}=-2\mathbf{\boldsymbol{\rho}}_{0}\cdot\left(\frac{v_{\Vert}}{\Omega}\widehat{b}\cdot\nabla\widehat{b}\right)-\frac{\mu B}{m\Omega^{2}}\mathbf{a}_{1}:\nabla\widehat{b}\label{eq:dgammadphi}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\nabla^{**}\gamma$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:calcgraddoublestargamma"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Calculations done for 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ in (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:calcgraddoublestaralpha"
+
+\end_inset
+
+) are also valid for 
+\begin_inset Formula $\gamma$
+\end_inset
+
+ so that 
+\begin_inset Formula $\nabla^{**}\gamma=0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\begin_inset Formula $\partial\mathbf{\boldsymbol{\rho}}_{1}/\partial p$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:calcdrho1dp"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{align}
+\frac{\partial\mathbf{\boldsymbol{\rho}}_{1}}{\partial p} & =-\frac{\partial\alpha}{\partial p}\mathbf{\boldsymbol{\rho}}_{0}\times\widehat{b}-\frac{\partial\beta}{\partial p}\mathbf{\boldsymbol{\rho}}_{0}-\frac{\partial\gamma}{\partial p}\widehat{b}-\alpha\frac{\partial\mathbf{\boldsymbol{\rho}}_{0}}{\partial p}\times\widehat{b}-\beta\frac{\partial\mathbf{\boldsymbol{\rho}}_{0}}{\partial p}\nonumber \\
+ & =-\left(\frac{\partial\alpha}{\partial p}+\frac{\alpha}{\rho_{0}}\frac{\partial\rho_{0}}{\partial p}\right)\mathbf{\boldsymbol{\rho}}_{0}\times\widehat{b}-\left(\frac{\partial\beta}{\partial p}+\frac{\beta}{\rho_{0}}\frac{\partial\rho_{0}}{\partial p}\right)\mathbf{\boldsymbol{\rho}}_{0}-\frac{\partial\gamma}{\partial p}\widehat{b}\nonumber \\
+ & =-2\frac{\alpha}{p}\mathbf{\boldsymbol{\rho}}_{0}\times\widehat{b}-2\frac{\beta}{p}\mathbf{\boldsymbol{\rho}}_{0}-\frac{2\gamma}{p}\widehat{b}\nonumber \\
+ & =\frac{2}{p}\mathbf{\boldsymbol{\rho}}_{1}\label{eq:drho1dp-1}\end{align}
+
+\end_inset
+
+using the relation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:drho0dp"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\begin_inset Formula $\partial\mathbf{\boldsymbol{\rho}}_{1}/\partial\xi$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:calcdrho1dxi"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{align}
+\frac{\partial\mathbf{\boldsymbol{\rho}}_{1}}{\partial\xi} & =-\frac{\partial\alpha}{\partial\xi}\mathbf{\boldsymbol{\rho}}_{0}\times\widehat{b}-\frac{\partial\beta}{\partial\xi}\mathbf{\boldsymbol{\rho}}_{0}-\frac{\partial\gamma}{\partial\xi}\widehat{b}-\alpha\frac{\partial\mathbf{\boldsymbol{\rho}}_{0}}{\partial\xi}\times\widehat{b}-\beta\frac{\partial\mathbf{\boldsymbol{\rho}}_{0}}{\partial\xi}\nonumber \\
+ & =-\left(\frac{\partial\alpha}{\partial\xi}+\frac{\alpha}{\rho_{0}}\frac{\partial\rho_{0}}{\partial\xi}\right)\mathbf{\boldsymbol{\rho}}_{0}\times\widehat{b}-\left(\frac{\partial\beta}{\partial\xi}+\frac{\beta}{\rho_{0}}\frac{\partial\rho_{0}}{\partial\xi}\right)\mathbf{\boldsymbol{\rho}}_{0}-\frac{\partial\gamma}{\partial\xi}\widehat{b}\nonumber \\
+ & =-\left(\frac{\partial\alpha}{\partial\xi}-\frac{\xi}{1-\xi^{2}}\alpha\right)\mathbf{\boldsymbol{\rho}}_{0}\times\widehat{b}-\left(\frac{\partial\beta}{\partial\xi}-\frac{\xi}{1-\xi^{2}}\beta\right)\mathbf{\boldsymbol{\rho}}_{0}-\frac{\partial\gamma}{\partial\xi}\widehat{b}\label{eq:drho1dxi}\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\begin_inset Formula $\partial\mathbf{\boldsymbol{\rho}}_{1}/\partial\varphi$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:calcdrho1dphi-1"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{align}
+\frac{\partial\mathbf{\boldsymbol{\rho}}_{1}}{\partial\varphi} & =-\frac{\partial\alpha}{\partial\varphi}\mathbf{\boldsymbol{\rho}}_{0}\times\widehat{b}-\frac{\partial\beta}{\partial\varphi}\mathbf{\boldsymbol{\rho}}_{0}-\frac{\partial\gamma}{\partial\varphi}\widehat{b}-\alpha\frac{\partial\mathbf{\boldsymbol{\rho}}_{0}}{\partial\varphi}\times\widehat{b}-\beta\frac{\partial\mathbf{\boldsymbol{\rho}}_{0}}{\partial\varphi}\nonumber \\
+ & =-\frac{\partial\alpha}{\partial\varphi}\rho_{0}\widehat{\boldsymbol{\rho}}\times\widehat{b}-\frac{\partial\beta}{\partial\varphi}\mathbf{\boldsymbol{\rho}}_{0}-\frac{\partial\gamma}{\partial\varphi}\widehat{b}-\alpha\rho_{0}\widehat{\bot}\times\widehat{b}-\beta\rho_{0}\widehat{\bot}\nonumber \\
+ & =-\frac{\partial\alpha}{\partial\varphi}\rho_{0}\widehat{\bot}-\frac{\partial\beta}{\partial\varphi}\mathbf{\boldsymbol{\rho}}_{0}-\frac{\partial\gamma}{\partial\varphi}\widehat{b}+\alpha\mathbf{\boldsymbol{\rho}}_{0}-\beta\rho_{0}\widehat{\bot}\nonumber \\
+ & =-\left(\frac{\partial\alpha}{\partial\varphi}+\beta\right)\mathbf{\boldsymbol{\rho}}_{0}\times\widehat{b}+\left(\alpha-\frac{\partial\beta}{\partial\varphi}\right)\mathbf{\boldsymbol{\rho}}_{0}-\frac{\partial\gamma}{\partial\varphi}\widehat{b}\label{eq:drho1dphi-2}\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\begin_inset Formula $\nabla^{**}\mathbf{\boldsymbol{\rho}}_{1}$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:calcgraddoublestarrho1"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the expressions of 
+\begin_inset Formula $\nabla^{**}\alpha$
+\end_inset
+
+, 
+\begin_inset Formula $\nabla^{**}\beta$
+\end_inset
+
+, 
+\begin_inset Formula $\nabla^{**}\gamma$
+\end_inset
+
+ and keeping only first order terms in 
+\begin_inset Formula $\nabla$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{align}
+\nabla^{**} & \mathbf{\boldsymbol{\rho}}_{1}=-\nabla^{**}\alpha\mathbf{\boldsymbol{\rho}}_{0}\times\widehat{b}-\nabla^{**}\beta\mathbf{\boldsymbol{\rho}}_{0}-\nabla^{**}\gamma\widehat{b}-\alpha\nabla^{**}\mathbf{\boldsymbol{\rho}}_{0}\times\widehat{b}\nonumber \\
+ & -\alpha\mathbf{\boldsymbol{\rho}}_{0}\times\nabla^{**}\widehat{b}-\beta\nabla^{**}\mathbf{\boldsymbol{\rho}}_{0}-\gamma\nabla^{**}\widehat{b}\nonumber \\
+ & =0\label{eq:gradientdoublestarrho1}\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Derivatives of 
+\begin_inset Formula $\mathbf{S}$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:derivativesS"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{S}=S_{p}\widehat{p}+S_{\xi}\widehat{\xi}+S_{\varphi}\widehat{\varphi}\label{eq:-10}\end{equation}
+
+\end_inset
+
+where
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\begin_inset Formula $\partial\mathbf{S}/\partial p$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:calcdSdp"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{align}
+\frac{\partial\mathbf{S}}{\partial p} & =\frac{\partial S_{p}}{\partial p}\widehat{p}+\frac{\partial S_{\xi}}{\partial p}\widehat{\xi}+\frac{\partial S_{\varphi}}{\partial p}\widehat{\varphi}\nonumber \\
+ & =\left(\xi\frac{\partial S_{p}}{\partial p}-\sqrt{1-\xi^{2}}\frac{\partial S_{\xi}}{\partial p}\right)\widehat{b}+\left(\sqrt{1-\xi^{2}}\frac{\partial S_{p}}{\partial p}+\xi\frac{\partial S_{\xi}}{\partial p}\right)\widehat{\bot}+\frac{\partial S_{\varphi}}{\partial p}\widehat{\varphi}\label{eq:dSdp-1}\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\begin_inset Formula $\partial\mathbf{S}/\partial\xi$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:calcdSdxi"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{align}
+\frac{\partial\mathbf{S}}{\partial\xi} & =\frac{\partial S_{p}}{\partial\xi}\widehat{p}+S_{p}\frac{\partial\widehat{p}}{\partial\xi}+\frac{\partial S_{\xi}}{\partial\xi}\widehat{\xi}+S_{\xi}\frac{\partial\widehat{\xi}}{\partial\xi}+\frac{\partial S_{\varphi}}{\partial\xi}\widehat{\varphi}\nonumber \\
+ & =\frac{\partial S_{p}}{\partial\xi}\widehat{p}+S_{p}\left(\widehat{b}-\frac{\xi}{\sqrt{1-\xi^{2}}}\widehat{\bot}\right)+\frac{\partial S_{\xi}}{\partial\xi}\widehat{\xi}+S_{\xi}\left(\frac{\xi}{\sqrt{1-\xi^{2}}}\widehat{b}+\widehat{\bot}\right)+\frac{\partial S_{\varphi}}{\partial\xi}\widehat{\varphi}\nonumber \\
+ & =\left(\xi\frac{\partial S_{p}}{\partial\xi}-\sqrt{1-\xi^{2}}\frac{\partial S_{\xi}}{\partial\xi}+S_{p}+\frac{\xi S_{\xi}}{\sqrt{1-\xi^{2}}}\right)\widehat{b}\nonumber \\
+ & +\left(\sqrt{1-\xi^{2}}\frac{\partial S_{p}}{\partial\xi}+\xi\frac{\partial S_{\xi}}{\partial\xi}-\frac{\xi S_{p}}{\sqrt{1-\xi^{2}}}+S_{\xi}\right)\widehat{\bot}+\frac{\partial S_{\varphi}}{\partial\varphi}\widehat{\varphi}\label{eq:dSdxi-1}\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\begin_inset Formula $\partial\mathbf{S}/\partial\varphi$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:calcdSdphi"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{align}
+\frac{\partial\mathbf{S}}{\partial\varphi} & =\frac{\partial S_{p}}{\partial\varphi}\widehat{p}+\frac{\partial S_{\xi}}{\partial\varphi}\widehat{\xi}+\frac{\partial S_{\varphi}}{\partial\varphi}\widehat{\varphi}\nonumber \\
+ & =\left(\xi\frac{\partial S_{p}}{\partial\varphi}-\sqrt{1-\xi^{2}}\frac{\partial S_{\xi}}{\partial\varphi}\right)\widehat{b}+\left(\sqrt{1-\xi^{2}}\frac{\partial S_{p}}{\partial\varphi}+\xi\frac{\partial S_{\xi}}{\partial\varphi}\right)\widehat{\bot}\nonumber \\
+ & +\frac{\partial S_{\varphi}}{\partial\varphi}\widehat{\varphi}\label{eq:dSdphi-1}\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\begin_inset Formula $\nabla^{**}\mathbf{S}$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:calcgraddoublestarS"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\widehat{p}=\xi\widehat{b}+\sqrt{1-\xi^{2}}\widehat{\bot}=\mathbf{p}/p\label{eq:pchapeau}\end{equation}
 
 \end_inset
 
  
+\begin_inset Formula \begin{equation}
+\widehat{\xi}=\widehat{\varphi}\times\widehat{p}=-\sqrt{1-\xi^{2}}\widehat{b}+\xi\widehat{\bot}\label{eq:xichapeau}\end{equation}
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-\begin_inset CommandInset bibtex
-LatexCommand bibtex
-bibfiles "biblio"
-options "plain"
+\begin_inset Formula \begin{align*}
+\nabla^{**}\mathbf{S} & =\nabla^{**}\left(S_{p}\widehat{p}\right)+\nabla^{**}\left(S_{\xi}\widehat{\xi}\right)+\nabla^{**}\left(S_{\varphi}\widehat{\varphi}\right)\\
+ & =\nabla^{**}S_{p}\widehat{p}+\nabla^{**}S_{\xi}\widehat{\xi}+\nabla^{**}S_{\varphi}\widehat{\varphi}\\
+ & +S_{p}\nabla^{**}\widehat{p}+S_{\xi}\nabla^{**}\widehat{\xi}+S_{\varphi}\nabla^{**}\widehat{\varphi}\\
+ & =\nabla^{**}S_{p}\widehat{p}+\nabla^{**}S_{\xi}\widehat{\xi}+\nabla^{**}S_{\varphi}\widehat{\varphi}\\
+\\\end{align*}
 
 \end_inset
 
