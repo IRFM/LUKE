@@ -788,11 +788,11 @@ with
  We therefore have :
 \begin_inset Formula \begin{eqnarray*}
 \hat{\boldsymbol{\psi}}\cdot\mathbb{I}_{\perp}\cdot\hat{\boldsymbol{\psi}} & = & 1\\
-\hat{\mathbf{s}}\cdot\mathbb{I}_{\perp}\cdot\hat{\mathbf{s}} & = & 1-b_{s}^{2}=b_{z}^{2}\\
-\hat{\mathbf{z}}\cdot\mathbb{I}_{\perp}\cdot\hat{\mathbf{z}} & = & 1-b_{z}^{2}=b_{s}^{2}\\
-\hat{\mathbf{s}}\cdot\mathbb{I}_{\perp}\cdot\hat{\boldsymbol{\psi}}=\hat{\boldsymbol{\psi}}\cdot\mathbb{I}_{\perp}\cdot\hat{\mathbf{s}} & = & 0\\
+\hat{\mathbf{s}}\cdot\mathbb{I}_{\perp}\cdot\hat{\mathbf{s}} & = & 1-\left(\hat{\mathbf{b}}\cdot\hat{\mathbf{s}}\right)^{2}\\
+\hat{\mathbf{z}}\cdot\mathbb{I}_{\perp}\cdot\hat{\mathbf{z}} & = & 1-\left(\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right)^{2}\\
+\hat{\mathbf{s}}\cdot\mathbb{I}_{\perp}\cdot\hat{\boldsymbol{\psi}}=\hat{\boldsymbol{\psi}}\cdot\mathbb{I}_{\perp}\cdot\hat{\mathbf{s}} & = & \hat{\boldsymbol{\psi}}\cdot\hat{\mathbf{s}}\\
 \hat{\mathbf{z}}\cdot\mathbb{I}_{\perp}\cdot\hat{\boldsymbol{\psi}}=\hat{\boldsymbol{\psi}}\cdot\mathbb{I}_{\perp}\cdot\hat{\mathbf{z}} & = & 0\\
-\hat{\mathbf{z}}\cdot\mathbb{I}_{\perp}\cdot\hat{\mathbf{s}}=\hat{\mathbf{s}}\cdot\mathbb{I}_{\perp}\cdot\hat{\mathbf{z}} & = & -b_{s}b_{z}\end{eqnarray*}
+\hat{\mathbf{z}}\cdot\mathbb{I}_{\perp}\cdot\hat{\mathbf{s}}=\hat{\mathbf{s}}\cdot\mathbb{I}_{\perp}\cdot\hat{\mathbf{z}} & = & -\left(\hat{\mathbf{b}}\cdot\hat{\mathbf{s}}\right)\left(\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right)\end{eqnarray*}
 
 \end_inset
 
@@ -827,8 +827,8 @@ We therefore get, since
  :
 \begin_inset Formula \begin{eqnarray*}
 \bar{\boldsymbol{\rho}}_{gc}\cdot\hat{\boldsymbol{\psi}} & = & -\frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\hat{\boldsymbol{\psi}}+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\boldsymbol{\psi}}\right]\\
-\bar{\boldsymbol{\rho}}_{gc}\cdot\hat{\mathbf{s}} & = & -\frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\left(\hat{\mathbf{s}}-b_{s}\hat{\mathbf{b}}\right)+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\mathbf{s}}\right]\\
-\bar{\boldsymbol{\rho}}_{gc}\cdot\hat{\mathbf{z}} & = & -\frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\left(\hat{\mathbf{z}}-b_{z}\hat{\mathbf{b}}\right)+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right]\end{eqnarray*}
+\bar{\boldsymbol{\rho}}_{gc}\cdot\hat{\mathbf{s}} & = & -\frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\left(\hat{\mathbf{s}}-\left(\hat{\mathbf{b}}\cdot\hat{\mathbf{s}}\right)\hat{\mathbf{b}}\right)+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\mathbf{s}}\right]\\
+\bar{\boldsymbol{\rho}}_{gc}\cdot\hat{\mathbf{z}} & = & -\frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\left(\hat{\mathbf{z}}-\left(\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right)\hat{\mathbf{b}}\right)+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right]\end{eqnarray*}
 
 \end_inset
 
@@ -881,8 +881,8 @@ K_{L}^{z} & = & \Upsilon\mathbf{K}_{gc}^{\mathbf{R}}\cdot\nabla z=\nu\bar{\bolds
 We therefore have :
 \begin_inset Formula \begin{eqnarray}
 K_{L}^{\psi} & = & \frac{\mathbf{K}_{gc}^{\mathbf{R}}\cdot\nabla\psi}{\left|\nabla\psi\right|}=\boxed{-\nu\frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\hat{\boldsymbol{\psi}}+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\boldsymbol{\psi}}\right]}\\
-K_{L}^{s} & = & \frac{\mathbf{K}_{gc}^{\mathbf{R}}\cdot\nabla s}{\left|\nabla s\right|}=\boxed{-\nu\frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\left(\hat{\mathbf{s}}-b_{s}\hat{\mathbf{b}}\right)+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\mathbf{s}}\right]}\\
-K_{L}^{z} & = & \Upsilon\mathbf{K}_{gc}^{\mathbf{R}}\cdot\nabla z=\boxed{-\nu\frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\left(\hat{\mathbf{z}}-b_{z}\hat{\mathbf{b}}\right)+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right]}\end{eqnarray}
+K_{L}^{s} & = & \frac{\mathbf{K}_{gc}^{\mathbf{R}}\cdot\nabla s}{\left|\nabla s\right|}=\boxed{-\nu\frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\left(\hat{\mathbf{s}}-\left(\hat{\mathbf{b}}\cdot\hat{\mathbf{s}}\right)\hat{\mathbf{b}}\right)+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\mathbf{s}}\right]}\\
+K_{L}^{z} & = & \Upsilon\mathbf{K}_{gc}^{\mathbf{R}}\cdot\nabla z=\boxed{-\nu\frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\left(\hat{\mathbf{z}}-\left(\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right)\hat{\mathbf{b}}\right)+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right]}\end{eqnarray}
 
 \end_inset
 
@@ -991,11 +991,11 @@ In LUKE
  :
 \begin_inset Formula \begin{eqnarray}
 D_{L}^{\psi\psi} & = & \frac{\nabla\psi\cdot\mathbb{D}_{gc}^{\mathbf{RR}}\cdot\nabla\psi}{\left|\nabla\psi\right|^{2}}=\boxed{\frac{1}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\left(1+\xi^{2}\right)\mathcal{D}_{t}\right]}\\
-D_{L}^{ss} & = & \frac{\nabla s\cdot\mathbb{D}_{gc}^{\mathbf{RR}}\cdot\nabla s}{\left|\nabla s\right|^{2}}=\boxed{\frac{b_{z}^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\left(1+\xi^{2}\right)\mathcal{D}_{t}\right]}\\
-D_{L}^{zz} & = & \Upsilon^{2}\nabla z\cdot\mathbb{D}_{gc}^{\mathbf{RR}}\cdot\nabla z=\boxed{\frac{b_{s}^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\left(1+\xi^{2}\right)\mathcal{D}_{t}\right]}\\
-D_{L}^{\psi s} & = & \frac{\nabla\psi\cdot\mathbb{D}_{gc}^{\mathbf{RR}}\cdot\nabla s}{\left|\nabla\psi\right|\left|\nabla s\right|}=\boxed{0}\\
+D_{L}^{ss} & = & \frac{\nabla s\cdot\mathbb{D}_{gc}^{\mathbf{RR}}\cdot\nabla s}{\left|\nabla s\right|^{2}}=\boxed{\frac{1-\left(\hat{\mathbf{b}}\cdot\hat{\mathbf{s}}\right)^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\left(1+\xi^{2}\right)\mathcal{D}_{t}\right]}\\
+D_{L}^{zz} & = & \Upsilon^{2}\nabla z\cdot\mathbb{D}_{gc}^{\mathbf{RR}}\cdot\nabla z=\boxed{\frac{1-\left(\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right)^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\left(1+\xi^{2}\right)\mathcal{D}_{t}\right]}\\
+D_{L}^{\psi s} & = & \frac{\nabla\psi\cdot\mathbb{D}_{gc}^{\mathbf{RR}}\cdot\nabla s}{\left|\nabla\psi\right|\left|\nabla s\right|}=\boxed{\frac{\hat{\boldsymbol{\psi}}\cdot\hat{\mathbf{s}}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\left(1+\xi^{2}\right)\mathcal{D}_{t}\right]}\\
 D_{L}^{\psi z} & = & \frac{\Upsilon}{\left|\nabla\psi\right|}\nabla\psi\cdot\mathbb{D}_{gc}^{\mathbf{RR}}\cdot\nabla z=\boxed{0}\\
-D_{L}^{sz} & = & \frac{\Upsilon}{\left|\nabla s\right|}\nabla s\cdot\mathbb{D}_{gc}^{\mathbf{RR}}\cdot\nabla z=\boxed{-\frac{b_{s}b_{z}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\left(1+\xi^{2}\right)\mathcal{D}_{t}\right]}\end{eqnarray}
+D_{L}^{sz} & = & \frac{\Upsilon}{\left|\nabla s\right|}\nabla s\cdot\mathbb{D}_{gc}^{\mathbf{RR}}\cdot\nabla z=\boxed{-\frac{\left(\hat{\mathbf{b}}\cdot\hat{\mathbf{s}}\right)\left(\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right)}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\left(1+\xi^{2}\right)\mathcal{D}_{t}\right]}\end{eqnarray}
 
 \end_inset
 
@@ -1108,8 +1108,8 @@ D_{L}^{zp} & = & \Upsilon D_{gc}^{zp}=\frac{\mathcal{D}_{l}}{p}\bar{\boldsymbol{
 We therefore have :
 \begin_inset Formula \begin{eqnarray}
 D_{L}^{\psi p} & = & \frac{D_{gc}^{\psi p}}{\left|\nabla\psi\right|}=\boxed{-\frac{p\mathcal{D}_{l}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\hat{\boldsymbol{\psi}}+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\boldsymbol{\psi}}\right]}\\
-D_{L}^{sp} & = & \frac{D_{gc}^{sp}}{\left|\nabla s\right|}=\boxed{-\frac{p\mathcal{D}_{l}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\left(\hat{\mathbf{s}}-b_{s}\hat{\mathbf{b}}\right)+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\mathbf{s}}\right]}\\
-D_{L}^{zp} & = & \Upsilon D_{gc}^{zp}=\boxed{-\frac{p\mathcal{D}_{l}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\left(\hat{\mathbf{z}}-b_{z}\hat{\mathbf{b}}\right)+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right]}\end{eqnarray}
+D_{L}^{sp} & = & \frac{D_{gc}^{sp}}{\left|\nabla s\right|}=\boxed{-\frac{p\mathcal{D}_{l}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\left(\hat{\mathbf{s}}-\left(\hat{\mathbf{b}}\cdot\hat{\mathbf{s}}\right)\hat{\mathbf{b}}\right)+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\mathbf{s}}\right]}\\
+D_{L}^{zp} & = & \Upsilon D_{gc}^{zp}=\boxed{-\frac{p\mathcal{D}_{l}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\left(\hat{\mathbf{z}}-\left(\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right)\hat{\mathbf{b}}\right)+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right]}\end{eqnarray}
 
 \end_inset
 
@@ -1153,14 +1153,14 @@ D_{L}^{\psi\xi} & = & -\frac{p}{\sqrt{1-\xi^{2}}}\frac{\nabla\psi\cdot\mathbf{D}
 
 \begin_inset Formula \begin{eqnarray}
 D_{L}^{s\xi} & = & -\frac{p}{\sqrt{1-\xi^{2}}}\frac{\nabla s\cdot\mathbf{D}^{\mathbf{R}\xi}}{\left|\nabla s\right|}\nonumber \\
- & = & \boxed{\frac{p\sqrt{1-\xi^{2}}}{2m^{2}\Omega^{2}\xi}\left[\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\mathcal{D}_{t}\right]\nabla\ln B\cdot\left(\hat{\mathbf{s}}-b_{s}\hat{\mathbf{b}}\right)+\xi^{2}\left(\mathcal{D}_{l}+\mathcal{D}_{t}\right)\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\mathbf{s}}\right]}\label{eq:-10}\end{eqnarray}
+ & = & \boxed{\frac{p\sqrt{1-\xi^{2}}}{2m^{2}\Omega^{2}\xi}\left[\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\mathcal{D}_{t}\right]\nabla\ln B\cdot\left(\hat{\mathbf{s}}-\left(\hat{\mathbf{b}}\cdot\hat{\mathbf{s}}\right)\hat{\mathbf{b}}\right)+\xi^{2}\left(\mathcal{D}_{l}+\mathcal{D}_{t}\right)\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\mathbf{s}}\right]}\label{eq:-10}\end{eqnarray}
 
 \end_inset
 
 
 \begin_inset Formula \begin{eqnarray}
 D_{L}^{z\xi} & = & -\frac{p}{\sqrt{1-\xi^{2}}}\Upsilon\nabla z\cdot\mathbf{D}^{\mathbf{R}\xi}\nonumber \\
- & = & \boxed{\frac{p\sqrt{1-\xi^{2}}}{2m^{2}\Omega^{2}\xi}\left[\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\mathcal{D}_{t}\right]\nabla\ln B\cdot\left(\hat{\mathbf{z}}-b_{z}\hat{\mathbf{b}}\right)+\xi^{2}\left(\mathcal{D}_{l}+\mathcal{D}_{t}\right)\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right]}\label{eq:-11}\end{eqnarray}
+ & = & \boxed{\frac{p\sqrt{1-\xi^{2}}}{2m^{2}\Omega^{2}\xi}\left[\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\mathcal{D}_{t}\right]\nabla\ln B\cdot\left(\hat{\mathbf{z}}-\left(\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right)\hat{\mathbf{b}}\right)+\xi^{2}\left(\mathcal{D}_{l}+\mathcal{D}_{t}\right)\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right]}\label{eq:-11}\end{eqnarray}
 
 \end_inset
 
