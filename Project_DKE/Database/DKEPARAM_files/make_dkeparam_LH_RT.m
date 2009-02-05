@@ -75,6 +75,7 @@ dkeparam.prec0_g = 1e-10;%Convergence level of the residu (if NaN, iterations st
 dkeparam.nit_g = 100;%Maximum number of iterations for g
 %
 dkeparam.dtn = 10000;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
+dkeparam.opsplit = 0;%Operator splitting between momentum and radial dynamics (for tests only) (opsplit = 0: no operator splitting , opsplit = 1: operator splitting). If this field does not exist, it is equivalent to dkeparam.opsplit = 0.
 %
 dkeparam.invproc = -2;%Iterative matrix inversion methods
 % (3) Matlab built-in qmr iterative method (MatLab built-in partial LU factorization used)
@@ -84,7 +85,7 @@ dkeparam.invproc = -2;%Iterative matrix inversion methods
 % (-1): MUMPS parallel (or sequential) fortran 95 direct inversion (LU matrix factorization done for each time a matrix inversion is called)
 % (-2): MUMPSMEX sequential fortran 95 inversion using MUMPS LU matrix factorization
 % (-3): SUPERLUMEX sequential direct matrix inversion (LU matrix factorization done for each time a matrix inversion is called)
-% (-30) PETSc interface (see data structure below) 
+% (-4) PETSc interface (see data structure below) 
 dkeparam.ludroptol = 1e-5;%Drop tolerance for the built-in MatLab partial LU decomposition (recipes: droptol = max(1/dtn/nr,param_inv(1)))
 dkeparam.mlmaxitinv = 4;%Maximum number of iterations for iterative built-in MatLab matrix inversion method (between 1 and 20 usualy, if empty, mlmaxitinv = min(matrixdim,20). See matlab documentation.
 dkeparam.mlprecinv = 1e-5;%Accuracy for the MatLab build-in matrix inversion.
