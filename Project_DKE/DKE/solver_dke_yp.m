@@ -108,6 +108,8 @@ timeCPU0 = cputime;
 memoryLU_f = 0;
 memoryLU_g = 0;
 %
+splitparam = 1;%for operator splitting only
+%
 boundary_mode_f = dkeparam.boundary_mode_f;
 boundary_mode_g = dkeparam.boundary_mode_g;
 dke_mode = dkeparam.dke_mode;
@@ -226,10 +228,14 @@ if display_mode >=1,
 %Numerical transient operation
     if (store_mode == 0), disp('   - Matrices storage in RAM (fast mode)');
     else                  disp('   - Matrices storage in disk file (slow mode)');end
-%Matrix facorization tecnhique
+%Matrix facorization technique
     if (dkeparam.invproc > 0),        disp('   - MatLab incomplete LU matrix factorization');
     elseif (dkeparam.invproc ==- 2),  disp('   - MUMPSMEX incomplete LU matrix factorization');        
     elseif (dkeparam.invproc < -1 & dkeparam.invproc ~=- 2),  disp('   - Direct matrix inversion by external solvers');end
+%Operator splitting
+    if ~isfield(dkeparam,'opsplit'),dkeparam.opsplit = 0;end
+    if (dkeparam.opsplit == 1),       disp('   - Operator splitting between momentum and radial dynamics.');
+    elseif (dkeparam.opsplit == 0),       disp('   - No operator splitting between momentum and radial dynamics.');end
 %Numerical matrix inversion procedure
     if (dkeparam.invproc == 1),  disp('   - MatLab CGS iterative matrix inversion method');
     elseif (dkeparam.invproc == 2),  disp('   - MatLab BICG iterative matrix inversion method');
@@ -237,7 +243,7 @@ if display_mode >=1,
     elseif (dkeparam.invproc == -1),  disp('   - MUMPS matrix inversion - FORTRAN 95 parallel processing');
     elseif (dkeparam.invproc == -2),  disp('   - MUMPSMEX matrix inversion - FORTRAN 95 sequential processing.');
     elseif (dkeparam.invproc == -3),  disp('   - SUPERLUMEX matrix inversion - C sequential processing.');
-    elseif (dkeparam.invproc == -30),  disp('   - PETSc matrix inversion. Several solvers may be used in this package.');end
+    elseif (dkeparam.invproc == -4),  disp('   - PETSc matrix inversion. Several solvers may be used in this package.');end
 %Boundary and normalization conditions
     if (dkeparam.norm_mode_f == 1),    disp('   - Normalization of f0 at each iteration and radius');
     elseif (dkeparam.norm_mode_f == 0),disp('   - No normalization of f0 at each iteration and radius: fully natural conservative mode');end
@@ -297,64 +303,106 @@ end
 %
 time0 = clock;
 %
-MMXdiag = diag(MMXP_f_t/time_scheme + MMXR_f_t/time_scheme + MMXT_f_t);
-if isempty(find(MMXdiag==0)) == 1, 
-    MMXPDI_f_t = inv(diag(MMXdiag));
-    MMXPC_f_t = MMXPDI_f_t*(MMXP_f_t/time_scheme + MMXR_f_t/time_scheme + MMXT_f_t);%Main diagonal matrix preconditionning
+if ~dkeparam.opsplit,
+    MMXdiag = diag(MMXP_f_t/time_scheme + MMXR_f_t/time_scheme + MMXT_f_t);
 %
-    if dkeparam.invproc >=1,%MatLab build-in matrix incomplete factorization only
-       [MMXL_f_t,MMXU_f_t] = luinc(MMXPC_f_t,dkeparam.ludroptol);
-    elseif dkeparam.invproc == -2,%MUMPSMEX case only (single processor). See MUMPS documentation
-        job_MUMPSMEX = 1;MUMPSMEX_dke_yp;
-        job_MUMPSMEX = 2;MUMPSMEX_dke_yp;
-    end
+    if isempty(find(MMXdiag==0)) == 1, 
+        MMXPDI_f_t = inv(diag(MMXdiag));
+        MMXPC_f_t = MMXPDI_f_t*(MMXP_f_t/time_scheme + MMXR_f_t/time_scheme + MMXT_f_t);%Main diagonal matrix preconditionning
 %
-    time_f = etime(clock,time0);
-    if dkeparam.invproc >=1,
-       memoryLU_f = (getfield(whos('MMXL_f_t'),'bytes') + getfield(whos('MMXU_f_t'),'bytes'))/1000000;%MBytes
-    elseif dkeparam.invproc == -2,
-       memoryLU_f = (id_MUMPSMEX.INFOG(9)*8 + id_MUMPSMEX.INFOG(10)*4)/1000000;%MBytes, see MUMPS documentation (8 bytes for double precision float, 4 byte for integer)
-    end
-else
-    error('Fokker-Planck matrix has a null element on the main diagonal');%Matrix must be main diagonal dominant
-end
+        if dkeparam.invproc >=1,%MatLab build-in matrix incomplete factorization only
+            [MMXL_f_t,MMXU_f_t] = luinc(MMXPC_f_t,dkeparam.ludroptol);
+        elseif dkeparam.invproc == -2,%MUMPSMEX case only (single processor). See MUMPS documentation
+            job_MUMPSMEX = 1;MUMPSMEX_dke_yp;
+            job_MUMPSMEX = 2;MUMPSMEX_dke_yp;
+        end
 %
-if dke_mode == 1,
-    time0 = clock;  
-    MMXPDI_g_t = inv(diag(diag(MMXP_g_t)));
-    MMXPC_g_t = MMXPDI_g_t*MMXP_g_t;%Main diagonal matrix preconditionning
-%
-    if dkeparam.invproc >=1,%MatLab build-in matrix incomplete factorization only
-       [MMXL_g_t,MMXU_g_t] = luinc(MMXPC_g_t,dkeparam.ludroptol); 
-    end
-%
-    time_g = etime(clock,time0);
-    if dkeparam.invproc >=1,
-       memoryLU_g = (getfield(whos('MMXL_g_t'),'bytes') + getfield(whos('MMXU_g_t'),'bytes'))/1000000;
-    elseif dkeparam.invproc == -2,
-       memoryLU_g = (id_MUMPSMEX.INFOG(9)*8 + id_MUMPSMEX.INFOG(10)*4)/1000000;%MBytes, see MUMPS documentation (8 bytes for double precision float, 4 byte for integer)
-    end
-end
-%
-if display_mode >= 1,   
-    if dkeparam.invproc >=1,
-        info_dke_yp(2,['Size of the MatLab LU matrices for f: ',num2str(memoryLU_f),' MBytes']);
-        info_dke_yp(2,['Full elapsed time of MatLab LU matrix factorization for f: ',num2str(time_f),' (s)']);
-    elseif dkeparam.invproc == -2,
-        info_dke_yp(2,'LU matrix factorization within MUMPSMEX');
-    elseif ~dkeparam.invproc == -2,
-        info_dke_yp(2,'Direct matrix inversion, no LU matrix factorization');
-    end
-    if dke_mode == 1,
+        time_f = etime(clock,time0);
         if dkeparam.invproc >=1,
-            info_dke_yp(2,['Size of the MatLab LU matrices for g: ',num2str(memoryLU_g),' MBytes']);
-            info_dke_yp(2,['Full elapsed time of MatLab LU matrix factorization for g: ',num2str(time_g),' (s)']);
+            memoryLU_f = (getfield(whos('MMXL_f_t'),'bytes') + getfield(whos('MMXU_f_t'),'bytes'))/1000000;%MBytes
+        elseif dkeparam.invproc == -2,
+            memoryLU_f = (id_MUMPSMEX.INFOG(9)*8 + id_MUMPSMEX.INFOG(10)*4)/1000000;%MBytes, see MUMPS documentation (8 bytes for double precision float, 4 byte for integer)
+        end
+    else
+        error('Fokker-Planck matrix has a null element on the main diagonal');%Matrix must be main diagonal dominant
+    end
+%
+    if dke_mode == 1,
+        time0 = clock;  
+        MMXPDI_g_t = inv(diag(diag(MMXP_g_t)));
+        MMXPC_g_t = MMXPDI_g_t*MMXP_g_t;%Main diagonal matrix preconditionning
+    %
+        if dkeparam.invproc >=1,%MatLab build-in matrix incomplete factorization only
+           [MMXL_g_t,MMXU_g_t] = luinc(MMXPC_g_t,dkeparam.ludroptol); 
+        end
+    %
+        time_g = etime(clock,time0);
+        if dkeparam.invproc >=1,
+           memoryLU_g = (getfield(whos('MMXL_g_t'),'bytes') + getfield(whos('MMXU_g_t'),'bytes'))/1000000;
+        elseif dkeparam.invproc == -2,
+           memoryLU_g = (id_MUMPSMEX.INFOG(9)*8 + id_MUMPSMEX.INFOG(10)*4)/1000000;%MBytes, see MUMPS documentation (8 bytes for double precision float, 4 byte for integer)
+        end
+    end
+    %
+    if display_mode >= 1,   
+        if dkeparam.invproc >=1,
+            info_dke_yp(2,['Size of the MatLab LU matrices for f: ',num2str(memoryLU_f),' MBytes']);
+            info_dke_yp(2,['Full elapsed time of MatLab LU matrix factorization for f: ',num2str(time_f),' (s)']);
         elseif dkeparam.invproc == -2,
             info_dke_yp(2,'LU matrix factorization within MUMPSMEX');
         elseif ~dkeparam.invproc == -2,
             info_dke_yp(2,'Direct matrix inversion, no LU matrix factorization');
         end
+        if dke_mode == 1,
+            if dkeparam.invproc >=1,
+                info_dke_yp(2,['Size of the MatLab LU matrices for g: ',num2str(memoryLU_g),' MBytes']);
+                info_dke_yp(2,['Full elapsed time of MatLab LU matrix factorization for g: ',num2str(time_g),' (s)']);
+            elseif dkeparam.invproc == -2,
+                info_dke_yp(2,'LU matrix factorization within MUMPSMEX');
+            elseif ~dkeparam.invproc == -2,
+                info_dke_yp(2,'Direct matrix inversion, no LU matrix factorization');
+            end
+        end
     end
+else
+	MMXPdiag = diag(MMXP_f_t/time_scheme + MMXT_f_t/2);
+    MMXRdiag = diag(MMXR_f_t/time_scheme + MMXT_f_t/2);
+    %
+    if isempty(find(MMXPdiag==0)) == 1 | isempty(find(MMXRdiag==0)) == 1, 
+        MMXPDI_P_f_t = inv(diag(MMXPdiag));
+        MMXPDI_R_f_t = inv(diag(MMXRdiag));
+        %
+        MMXPC_P_f_t = MMXPDI_P_f_t*(MMXP_f_t/time_scheme + MMXT_f_t/2);%Main diagonal matrix preconditionning
+        MMXPC_R_f_t = MMXPDI_R_f_t*(MMXR_f_t/time_scheme + MMXT_f_t/2);%Main diagonal matrix preconditionning
+%
+        if dkeparam.invproc >=1,%MatLab build-in matrix incomplete factorization only
+            [MMXL_P_f_t,MMXU_P_f_t] = luinc(MMXPC_P_f_t,dkeparam.ludroptol);
+            [MMXL_R_f_t,MMXU_R_f_t] = luinc(MMXPC_R_f_t,dkeparam.ludroptol);
+        elseif dkeparam.invproc == -2,%MUMPSMEX case only (single processor). See MUMPS documentation
+            job_MUMPSMEX = 1;mode_MUMPSMEX=1;MUMPSMEX_dke_yp;%P matrix
+            job_MUMPSMEX = 2;mode_MUMPSMEX=1;MUMPSMEX_dke_yp;%P matrix
+            %
+            if dkeparam.invproc >=1,
+                memoryLU_P_f = (getfield(whos('MMXL_P_f_t'),'bytes') + getfield(whos('MMXU_P_f_t'),'bytes'))/1000000;%MBytes
+            elseif dkeparam.invproc == -2,
+                memoryLU_P_f = (id_MUMPSMEX_P.INFOG(9)*8 + id_MUMPSMEX_P.INFOG(10)*4)/1000000;%MBytes, see MUMPS documentation (8 bytes for double precision float, 4 byte for integer)
+            end
+            %
+            job_MUMPSMEX = 1;mode_MUMPSMEX=0;MUMPSMEX_dke_yp;%R matrix
+            job_MUMPSMEX = 2;mode_MUMPSMEX=0;MUMPSMEX_dke_yp;%R matrix
+            %
+            if dkeparam.invproc >=1,
+                memoryLU_R_f = (getfield(whos('MMXL_R_f_t'),'bytes') + getfield(whos('MMXU_R_f_t'),'bytes'))/1000000;%MBytes
+            elseif dkeparam.invproc == -2,
+                memoryLU_R_f = (id_MUMPSMEX_R.INFOG(9)*8 + id_MUMPSMEX_R.INFOG(10)*4)/1000000;%MBytes, see MUMPS documentation (8 bytes for double precision float, 4 byte for integer)
+            end
+        end
+%
+        time_f = etime(clock,time0);
+    else
+        error('One of the Fokker-Planck two matrices has a null element on the main diagonal');%Matrix must be main diagonal dominant
+    end
+    
 end
 %
 if display_mode == 2,
@@ -385,7 +433,7 @@ end
 time0 = clock;
 XXf0 = XXfinit;%Initial guess (normalized to xne_norm)
 %
-if dkeparam.PETScparam.cloop & dkeparam.invproc == -30,
+if dkeparam.PETScparam.cloop & dkeparam.invproc == -4,
     %
 	writeCloopinput_dke_ft(nit_f,boundary_mode_f,bounce_mode,dkeparam.coll_mode,dkeparam.norm_mode_f,prec0_f,display_mode,betath_ref,xTe_norm,xne_norm,dtn,mhu,nmhu,npn,ns_f,nr,sm_f,...
         masku,maskl,dpn,dmhu,xpn,xpn2,xpn3,xsigma,xgamma,xz,xz2,pn,pn2,pn3,...
@@ -464,36 +512,93 @@ else
             MMXIpn2_t = [MMXIpn2_t;reshape((XI_t.*Zpn2_t{nr})',(nmhu - ns_f(nr))*npn,1)];%Zpn2_t is here as part of the partial Jacobian used to avoid singularities at p = 0 and psi = 0, and for pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2          
         end
         %
-        MMXq_t = MMXsource_t + MMXIpn2_t + (MMXT_f_t - (time_scheme - 1)*(MMXP_f_t + MMXR_f_t)/time_scheme)*MMXf0_t;%Right handside term of the Fokker-Planck equation          
-        MMXR_t = sparse(MMXPDI_f_t*MMXq_t - MMXPC_f_t*MMXf0_t);%Residu calculation for matrix inversion, force sparse type for the RHS, optimized for Matlab 
-        %
-        %          save testLU3D.mat MMXPC_f_t MMXR_t dkeparam  MMXL_f_t MMXU_f_t dkepath display_mode    
-        %
-        if dkeparam.invproc == 0,%Matlab direct inversion
-            MMXS_t = MMXR_t\MMXPC_f_t;
-        elseif dkeparam.invproc == 1,%Matlab cgs iterative inversion method
-            [MMXS_t,flaginv_f] = cgs(MMXPC_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_f_t,MMXU_f_t);
-        elseif dkeparam.invproc == 2,%Matlab bicg iterative inversion method      
-            [MMXS_t,flaginv_f] = bicg(MMXPC_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_f_t,MMXU_f_t); 
-        elseif dkeparam.invproc == 3,%Matlab qmr iterative inversion method
-            [MMXS_t,flaginv_f] = qmr(MMXPC_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_f_t,MMXU_f_t);
-        elseif dkeparam.invproc == -1,%MUMPS FORTAN 95 parallel or sequential processing package (direct inversion)
-            [MMXS_t,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),display_mode,dkepath);
-        elseif dkeparam.invproc == -2,%MUMPS FORTAN 95 parallel processing package (inversion in MEX file, with LU matrix preconditionning)
-            job_MUMPSMEX = 3;MUMPSMEX_dke_yp;
-            MMXS_t = id_MUMPSMEX.SOL; 
-            flaginv_f = flag_MUMPSMEX; 
-        elseif dkeparam.invproc == -3,%SUPERLU 3.0 sequential MEX file (direct inversion)
-            [MMXS_t] = lusolve(MMXPC_f_t,MMXR_t);flaginv_f = 0;
-        elseif dkeparam.invproc == -30,%Solving with PETSc
-            [MMXS_t,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),display_mode,dkepath);
+        if ~dkeparam.opsplit,
+            MMXq_t = MMXsource_t + MMXIpn2_t + (MMXT_f_t - (time_scheme - 1)*(MMXP_f_t + MMXR_f_t)/time_scheme)*MMXf0_t;%Right handside term of the Fokker-Planck equation          
+            MMXR_t = sparse(MMXPDI_f_t*MMXq_t - MMXPC_f_t*MMXf0_t);%Residu calculation for matrix inversion, force sparse type for the RHS, optimized for Matlab 
+            %
+            %          save testLU3D.mat MMXPC_f_t MMXR_t dkeparam  MMXL_f_t MMXU_f_t dkepath display_mode    
+            %
+            if dkeparam.invproc == 0,%Matlab direct inversion
+                MMXS_t = MMXR_t\MMXPC_f_t;
+            elseif dkeparam.invproc == 1,%Matlab cgs iterative inversion method
+                [MMXS_t,flaginv_f] = cgs(MMXPC_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_f_t,MMXU_f_t);
+            elseif dkeparam.invproc == 2,%Matlab bicg iterative inversion method      
+                [MMXS_t,flaginv_f] = bicg(MMXPC_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_f_t,MMXU_f_t); 
+            elseif dkeparam.invproc == 3,%Matlab qmr iterative inversion method
+                [MMXS_t,flaginv_f] = qmr(MMXPC_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_f_t,MMXU_f_t);
+            elseif dkeparam.invproc == -1,%MUMPS FORTAN 95 parallel or sequential processing package (direct inversion)
+                [MMXS_t,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),display_mode,dkepath);
+            elseif dkeparam.invproc == -2,%MUMPS FORTAN 95 parallel processing package (inversion in MEX file, with LU matrix preconditionning)
+                job_MUMPSMEX = 3;MUMPSMEX_dke_yp;
+                MMXS_t = id_MUMPSMEX.SOL; 
+                flaginv_f = flag_MUMPSMEX; 
+            elseif dkeparam.invproc == -3,%SUPERLU 3.0 sequential MEX file (direct inversion)
+                [MMXS_t] = lusolve(MMXPC_f_t,MMXR_t);flaginv_f = 0;
+            elseif dkeparam.invproc == -4,%Solving with PETSc
+                [MMXS_t,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),display_mode,dkepath);
+            end
+        else
+            if splitparam,
+                MMXq_t = MMXsource_t + MMXIpn2_t + (MMXT_f_t/2 - (time_scheme - 1)*MMXP_f_t/time_scheme)*MMXf0_t;%Right handside term of the Fokker-Planck equation          
+                MMXR_t = sparse(MMXPDI_P_f_t*MMXq_t - MMXPC_P_f_t*MMXf0_t);%Residu calculation for matrix inversion, force sparse type for the RHS, optimized for Matlab 
+                %
+                %          save testLU3D.mat MMXPC_f_t MMXR_t dkeparam  MMXL_f_t MMXU_f_t dkepath display_mode    
+                %
+                if dkeparam.invproc == 0,%Matlab direct inversion
+                    MMXS_t = MMXR_t\MMXPC_P_f_t;
+                elseif dkeparam.invproc == 1,%Matlab cgs iterative inversion method
+                    [MMXS_t,flaginv_f] = cgs(MMXPC_P_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_P_f_t,MMXU_P_f_t);
+                elseif dkeparam.invproc == 2,%Matlab bicg iterative inversion method      
+                    [MMXS_t,flaginv_f] = bicg(MMXPC_P_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_P_f_t,MMXU_P_f_t); 
+                elseif dkeparam.invproc == 3,%Matlab qmr iterative inversion method
+                    [MMXS_t,flaginv_f] = qmr(MMXPC_P_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_P_f_t,MMXU_P_f_t);
+                elseif dkeparam.invproc == -1,%MUMPS FORTAN 95 parallel or sequential processing package (direct inversion)
+                    [MMXS_t,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_P_f_t,full(MMXR_t),display_mode,dkepath);
+                elseif dkeparam.invproc == -2,%MUMPS FORTAN 95 parallel processing package (inversion in MEX file, with LU matrix preconditionning)
+                    job_MUMPSMEX = 3;mode_MUMPSMEX=1;MUMPSMEX_dke_yp;
+                    MMXS_t = id_MUMPSMEX_P.SOL; 
+                    flaginv_f = flag_MUMPSMEX; 
+                elseif dkeparam.invproc == -3,%SUPERLU 3.0 sequential MEX file (direct inversion)
+                    [MMXS_t] = lusolve(MMXPC_P_f_t,MMXR_t);flaginv_f = 0;
+                elseif dkeparam.invproc == -4,%Solving with PETSc
+                    [MMXS_t,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_P_f_t,full(MMXR_t),display_mode,dkepath);
+                end
+                %
+            else
+                MMXq_t = MMXsource_t + (MMXT_f_t/2 - (time_scheme - 1)*MMXR_f_t/time_scheme)*MMXf0_t;%Right handside term of the Fokker-Planck equation          
+                MMXR_t = sparse(MMXPDI_R_f_t*MMXq_t - MMXPC_R_f_t*MMXf0_t);%Residu calculation for matrix inversion, force sparse type for the RHS, optimized for Matlab 
+                %
+                %          save testLU3D.mat MMXPC_f_t MMXR_t dkeparam  MMXL_f_t MMXU_f_t dkepath display_mode    
+                %
+                if dkeparam.invproc == 0,%Matlab direct inversion
+                    MMXS_t = MMXR_t\MMXPC_R_f_t;
+                elseif dkeparam.invproc == 1,%Matlab cgs iterative inversion method
+                    [MMXS_t,flaginv_f] = cgs(MMXPC_R_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_P_f_t,MMXU_R_f_t);
+                elseif dkeparam.invproc == 2,%Matlab bicg iterative inversion method      
+                    [MMXS_t,flaginv_f] = bicg(MMXPC_R_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_P_f_t,MMXU_R_f_t); 
+                elseif dkeparam.invproc == 3,%Matlab qmr iterative inversion method
+                    [MMXS_t,flaginv_f] = qmr(MMXPC_R_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_P_f_t,MMXU_R_f_t);
+                elseif dkeparam.invproc == -1,%MUMPS FORTAN 95 parallel or sequential processing package (direct inversion)
+                    [MMXS_t,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_R_P_f_t,full(MMXR_t),display_mode,dkepath);
+                elseif dkeparam.invproc == -2,%MUMPS FORTAN 95 parallel processing package (inversion in MEX file, with LU matrix preconditionning)
+                    job_MUMPSMEX = 3;mode_MUMPSMEX=0;MUMPSMEX_dke_yp;
+                    MMXS_t = id_MUMPSMEX_R.SOL; 
+                    flaginv_f = flag_MUMPSMEX; 
+                elseif dkeparam.invproc == -3,%SUPERLU 3.0 sequential MEX file (direct inversion)
+                    [MMXS_t] = lusolve(MMXPC_R_f_t,MMXR_t);flaginv_f = 0;
+                elseif dkeparam.invproc == -4,%Solving with PETSc
+                    [MMXS_t,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_R_f_t,full(MMXR_t),display_mode,dkepath);
+                end   
+            end
+            %
+            splitparam = ~splitparam;
         end
         %
         if flaginv_f == 2 & dkeparam.invproc > 1,
             error('WARNING: Matrix ill-conditionned. No inversion possible for the zero order Fokker-Planck equation. Try to reduce drop tolerance parameter for LU factorization...!');
         elseif flaginv_f ~= 0 & dkeparam.invproc == -1,
             error(['WARNING: Error ',int2str(flaginv_f),' in MUMPS matrix inversion for the zero order Fokker-Planck equation. See MUMPS documentation !']);
-        elseif flaginv_f ~= 0 & dkeparam.invproc == -30,
+        elseif flaginv_f ~= 0 & dkeparam.invproc == -4,
             error(['WARNING: Error ',int2str(flaginv_f),' in PETSc matrix inversion for the zero order Fokker-Planck equation. See PETSc documentation !']);
         end
         %
@@ -728,7 +833,7 @@ if dke_mode == 1,
                [MMXS_t,flaginv_g] = qmr(MMXPC_g_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_g_t,MMXU_g_t);
             elseif dkeparam.invproc == -1,%MUMPS FORTAN 95 parallel processing package (direct inversion)
                [MMXS_t,flaginv_g] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_g_t,full(MMXR_t),display_mode,dkepath);
-            elseif dkeparam.invproc == -30,%Solving with PETSc
+            elseif dkeparam.invproc == -4,%Solving with PETSc
                [MMXS_t,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),display_mode,dkepath);
             end
 %
@@ -736,7 +841,7 @@ if dke_mode == 1,
                error('WARNING: Matrix ill-conditionned. No inversion possible for the first order Fokker-Planck equation. Try to reduce drop tolerance parameter for LU factorization...!');
             elseif flaginv_g ~= 0 & dkeparam.invproc == -1,
                error(['WARNING: Error ',int2str(flaginv_g),' in MUMPS matrix inversion for the first order Fokker-Planck equation. See MUMPS documentation !']);
-            elseif flaginv_g ~= 0 & dkeparam.invproc == -30,
+            elseif flaginv_g ~= 0 & dkeparam.invproc == -4,
                error(['WARNING: Error ',int2str(flaginv_g),' in PETSc matrix inversion for the first order Fokker-Planck equation. See PETSc documentation !']);
             end
 %
