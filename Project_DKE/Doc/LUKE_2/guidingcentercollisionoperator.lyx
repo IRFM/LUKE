@@ -692,7 +692,10 @@ reference "eq:Poissonbracketpxi"
 
 \end_inset
 
-and in the limit of a uniform magnetic field,
+and the limit of a uniform magnetic field
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula \begin{align}
 \left\{ F,G\right\} _{gc} & =\frac{eB}{cp^{2}}\left[\frac{\partial F}{\partial\varphi}\left(p\frac{\partial G}{\partial p}-\xi\frac{\partial G}{\partial\mathcal{\xi}}\right)-\left(p\frac{\partial F}{\partial p}-\xi\frac{\partial F}{\partial\mathcal{\xi}}\right)\frac{\partial G}{\partial\varphi}\right]\nonumber \\
  & +\frac{\widehat{b}}{p}\cdot\left(\nabla F\left(p\xi\frac{\partial G}{\partial p}+\left(1-\xi^{2}\right)\frac{\partial G}{\partial\xi}\right)-\left(p\xi\frac{\partial F}{\partial p}+\left(1-\xi^{2}\right)\frac{\partial F}{\partial\xi}\right)\nabla G\right)\nonumber \\
@@ -802,6 +805,30 @@ where
 
 \begin_layout Standard
 In the limit of a constant, uniform magnetic field, 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+the Vlasov term becomes
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+ 
+\begin_inset Formula \begin{equation}
+\frac{df}{dt}=\frac{\partial f}{\partial t}+v_{\parallel}\widehat{b}\cdot\nabla f+\Omega\frac{\partial f}{\partial\varphi}\label{eq:guidingcentervlasovuniformB}\end{equation}
+
+\end_inset
+
+since 
 \begin_inset Formula $\mathbf{v}_{gc}=v_{\parallel}\widehat{b}$
 \end_inset
 
@@ -822,26 +849,12 @@ In the limit of a constant, uniform magnetic field,
 \begin_inset Formula $\mathbf{v}_{gc}\cdot\mathbf{R}^{*}=\mathbf{v}_{gc}\cdot\mathbf{R}=0$
 \end_inset
 
- since 
+, using 
 \begin_inset Formula $\mathbf{R}=0$
 \end_inset
 
-, the Vlasov terme becomes
-\family default
-\series default
-\shape default
-\size default
-\emph default
-\bar default
-\noun default
-\color inherit
+.
  
-\begin_inset Formula \begin{equation}
-\frac{df}{dt}=\frac{\partial f}{\partial t}+v_{\parallel}\widehat{b}\cdot\nabla f+\Omega\frac{\partial f}{\partial\varphi}\label{eq:guidingcentervlasovuniformB}\end{equation}
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Subsection
@@ -1335,11 +1348,30 @@ Uniform magnetic field terms
 
 \begin_inset Formula \begin{align}
 \left\{ \mathbf{X}+\mathbf{\boldsymbol{\rho}},\mathbf{S}\right\} _{gc}^{U} & =\frac{1}{p^{2}}\frac{\partial}{\partial p}\left(p^{2}S_{p}\right)-\frac{1}{p}\frac{\partial}{\partial\xi}\left(\sqrt{1-\xi^{2}}S_{\xi}\right)-\frac{1}{p\sqrt{1-\xi^{2}}}\frac{\partial S_{\varphi}}{\partial\varphi}\nonumber \\
- & -\frac{c\widehat{b}}{eB_{\Vert}^{*}}\cdot\mathbb{I}\times\nabla\mathbf{S}\label{eq:BuniformPoissonbracket1}\end{align}
+ & -\frac{c\widehat{b}}{eB_{\Vert}^{*}}\cdot\mathbb{I}\times\nabla\mathbf{S}\nonumber \\
+ & \frac{1}{p^{2}}\frac{\partial}{\partial p}\left(p^{2}S_{p}\right)-\frac{1}{p}\frac{\partial}{\partial\xi}\left(\sqrt{1-\xi^{2}}S_{\xi}\right)-\frac{1}{p\sqrt{1-\xi^{2}}}\frac{\partial S_{\varphi}}{\partial\varphi}\nonumber \\
+ & +\nabla\cdot\left(\frac{c\widehat{b}}{eB}\times\mathbf{S}\right)\label{eq:BuniformPoissonbracket1}\end{align}
 
 \end_inset
 
-which has the usual divergence form in momentum space.
+since
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{align}
+\widehat{b}\cdot\mathbb{I}\times\nabla\mathbf{S} & =\widehat{b}\cdot\left(\widehat{b}\widehat{b}+\widehat{\bot}\widehat{\bot}+\widehat{\rho}\widehat{\rho}\right)\times\nabla\mathbf{S}\nonumber \\
+ & =\left(\widehat{b}\cdot\widehat{b}\right)\widehat{b}\times\nabla\mathbf{S}\nonumber \\
+ & =\widehat{b}\times\nabla\mathbf{S}\label{eq:-16}\end{align}
+
+\end_inset
+
+and
+\begin_inset Formula \begin{equation}
+\nabla\cdot\left(\mathbf{S}\times\widehat{b}\right)=\widehat{b}\times\nabla\mathbf{S}-\mathbf{S}\cdot\nabla\widehat{b}=\widehat{b}\times\nabla\mathbf{S}\label{eq:-17}\end{equation}
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Paragraph
