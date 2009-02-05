@@ -34,7 +34,7 @@ saturne.temppathroot = '/scratch/';%Absolute root directory path adress where te
 %
 saturne.mex71 = [saturne.luke_root,'Project_DKE/MEX/Bin/saturne/MATLAB71/'];
 saturne.mex75 = [saturne.luke_root,'Project_DKE/MEX/Bin/saturne/MATLAB75/'];
-saturne.compiler_opt.helmex = '';% Optional argument for helmex compilation
+saturne.compiler_opt.helmex = '-L/luke/saturne/Packages/Bin/G95/g95-install/lib/gcc-lib/x86_64-suse-linux-gnu/4.0.3 -lf95 -lgcc -L/luke/saturne/Packages/Bin/LAPACK/lapack-3.1.1/ -llapack_g95 -lblas_g95 -ltmglib_g95';% Optional argument for helmex compilation
 saturne.compiler_opt.fopts.mex75 = 'FC=''/luke/saturne/Packages/Bin/G95/g95-install/bin/x86_64-suse-linux-gnu-g95''';
 %
 saturne.MUMPS.mex71 = [saturne.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB71'];%Where MUMPS matrix solver is stored (MEX function)
@@ -60,8 +60,8 @@ cephee.temppathroot = '/scratch/';%Absolute root directory path adress where tem
 %
 cephee.mex75 = [cephee.luke_root,'Project_DKE/MEX/Bin/cephee/MATLAB75/'];
 cephee.compiler_opt.copts = 'CC=''gcc'' CLIBS=''-Wl,-rpath-link,/applications/matlab_2007b/bin/glnxa64 -L/applications/matlab_2007b/bin/glnxa64 -lmx -lmex -lmat -lm''';
-%cephee.compiler_opt.fopts = 'FC=''/luke/cephee/Packages/Bin/G95/g95-install/bin/x86_64-suse-linux-gnu-g95''';
-%cephee.compiler_opt.helmex = '-L/luke/cephee/Packages/Bin/G95/g95-install/lib/gcc-lib/x86_64-suse-linux-gnu/4.0.3 -lf95 -lgcc -L/luke/cephee/Packages/Bin/LAPACK/lapack-3.1.1/ -lblas_g95 -llapack_g95 -ltmglib_g95';% Optional argument for helmex compilation 
+cephee.compiler_opt.fopts = 'FC=''/luke/cephee/Packages/Bin/G95/g95-install/bin/x86_64-suse-linux-gnu-g95''';
+cephee.compiler_opt.helmex = '-L/luke/cephee/Packages/Bin/G95/g95-install/lib/gcc-lib/x86_64-suse-linux-gnu/4.0.3 -lf95 -lgcc -L/luke/cephee/Packages/Bin/LAPACK/lapack-3.1.1/ -llapack_g95 -lblas_g95 -ltmglib_g95';% Optional argument for helmex compilation 
 %
 cephee.MUMPS.mex75 = [cephee.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB75'];%Where MUMPS matrix solver is stored (MEX function)
 %
