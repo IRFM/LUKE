@@ -101,13 +101,12 @@ waves{1} = make_idealLHwave_jd(equil,wavestruct);
 %
 % Dpsipsi scan (0 -> 100 m2/s)
 %
-%Dr0_list = [0,0.001,0.01,0.1,0.3,1,3,10,30,100];
-%Dr0_mask = ones(size(Dr0_list));
-%dtn_list = [1,2,5,10,20,50,100,200,500,1000,2000,5000,10000];
-%dtn_mask = ones(size(dtn_list));
-dkeparam.dtn = 10;
-Dr0_list = [10.0];
-Dr0_mask = [1];
+dkeparam.opsplit = 1;
+%
+Dr0_list = [0,0.001,0.01,0.1,0.3,1,3,10,30,100];
+Dr0_mask = ones(size(Dr0_list));
+dtn_list = [1,2,5,10,20,50,100,200,500,1000,2000,5000,10000];
+dtn_mask = ones(size(dtn_list));
 %
 for iDr0 = 1:length(Dr0_list),
     %
@@ -122,6 +121,7 @@ for iDr0 = 1:length(Dr0_list),
         j(:,iDr0,jdtn) = Zcurr.x_0;
         %
         P(:,iDr0,jdtn) = ZP0.x_rf_fsav;
+        
         %
         tCPU(iDr0,jdtn) = dke_out.time_out;
         memory(iDr0,jdtn) = dke_out.memoryLU_f_out;
