@@ -61,7 +61,7 @@ for n=1:N,
     end
     cluster.mode = 2;
     cluster.size = n;
-    if ver < 7.4 & cluster.mode == 2,
+    if cluster.mode == 2,%All matlab may be used with this technique based on an external batch-queuing
     	tic;[flag_ldce(n),Zbouncecoef_ldce] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkepath,dkeparam_out,display,equilDKE,gridDKE},4,arg_range,cluster);time_ldce(n) = toc;
         flag_mode2 = 1;
     end
