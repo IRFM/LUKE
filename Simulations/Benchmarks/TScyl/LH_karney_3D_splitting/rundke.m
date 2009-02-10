@@ -13,13 +13,12 @@ opt_proc = 0;%test for numerical performance test with number of processors
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
-id_simul = 'LH_karney_transp_nobounce';%Simulation ID
+id_simul = 'LH_karney_3D_splitting';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
 %rho_S = [0,0.05:0.02:0.2,0.22:0.03:0.6,0.62:0.05:0.95,1];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 rho_S = [0:0.025:0.65,0.7:0.1:1];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
-rho_S = [0:0.05:0.65,0.7:0.2:1];
 %
 id_path = '';%For all paths used by DKE solver
 path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
@@ -101,63 +100,125 @@ waves{1} = make_idealLHwave_jd(equil,wavestruct);
 %
 % Dpsipsi scan (0 -> 100 m2/s)
 %
-dkeparam.opsplit = 1;
+dkeparam.coll_mode = 1;
+dkedisplay.display_mode = -1;%Only the radius at which the residu is the largest is displayed
 %
 Dr0_list = [0,0.001,0.01,0.1,0.3,1,3,10,30,100];
+Dr0_list = [0,1,100];
 Dr0_mask = ones(size(Dr0_list));
 dtn_list = [1,2,5,10,20,50,100,200,500,1000,2000,5000,10000];
+dtn_list = [100,10000];
 dtn_mask = ones(size(dtn_list));
 %
 for iDr0 = 1:length(Dr0_list),
     %
     transpfaste.Dr0 = Dr0_list(iDr0);
+    flag_splitting_nostable = 0;
     %
     for jdtn = 1:length(dtn_list),
         %
         dkeparam.dtn = dtn_list(jdtn);
         %
+        dkeparam.opsplit = 0;%No operator splitting
+        dkeparam.nit_f = dtn_list(end)./dtn_list(jdtn) + 1;%Maximum number of iterations for f (> 1)
         [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+		%
+		disp('******************************')
+		disp(['Without operator splitting (dtn = ',num2str(dtn_list(jdtn)),', Dr0 = ',num2str(Dr0_list(iDr0)),'): convergence achieved in ',int2str(dke_out.it_f),' iterations.'])
+        disp('******************************')
         %
-        j(:,iDr0,jdtn) = Zcurr.x_0;
+        j_nosplit(:,iDr0,jdtn) = Zcurr.x_0;
+        P_nosplit(:,iDr0,jdtn) = ZP0.x_rf_fsav;        
         %
-        P(:,iDr0,jdtn) = ZP0.x_rf_fsav;
-        
+        tCPU_nosplit(iDr0,jdtn) = dke_out.time_out;
+        memory_nosplit(iDr0,jdtn) = dke_out.memoryLU_f_out;
+        tDKE_nosplit(iDr0,jdtn) = dke_out.time_DKE;
+        nit_nosplit(iDr0,jdtn) = dke_out.it_f;
         %
-        tCPU(iDr0,jdtn) = dke_out.time_out;
-        memory(iDr0,jdtn) = dke_out.memoryLU_f_out;
-        tDKE(iDr0,jdtn) = dke_out.time_DKE;
+        Itot_nosplit(iDr0,jdtn) = sum(Zcurr.x_0.*equilDKE.xdA_dke*mksa.j_ref);
+        Ptot_2piRp_nosplit(iDr0,jdtn) = sum(ZP0.x_rf_fsav.'.*equilDKE.xdV_2piRp_dke*mksa.P_ref);
         %
-        Itot(iDr0,jdtn) = sum(Zcurr.x_0.*equilDKE.xdA_dke*mksa.j_ref);
-        Ptot_2piRp(iDr0,jdtn) = sum(ZP0.x_rf_fsav.'.*equilDKE.xdV_2piRp_dke*mksa.P_ref);
-        %
-    end
-end
-%
-eta = j./P;
-Eta = equilDKE.xne(1)*Itot./Ptot_2piRp/(2*pi)/1e19;
-%
-% Nprocessor scan for Dpsipsi = 10 m2/s (1-> 10) (on the cluster only)
-%
-if opt_proc > 0 & strcmp(computer,'GLNXA64'),
-    %
-    transpfaste.Dr0 = 10;
-    dkeparam.invproc = -1;
-    %    
-    nproc_list = [1:10];
-    %
-    for inproc = 1:length(nproc_list),
-        %
-        dkeparam.MUMPSparam.nproc = nproc_list(inproc);
-        %
-        [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-        %
-        tCPU_nproc(inproc) = dke_out.time_out;
-        %
+		try
+			if ~flag_splitting_nostable;
+        		dkeparam.opsplit = 1;%With operator splitting
+        		dkeparam.nit_f = dtn_list(end)./dtn_list(jdtn) + 1;%Maximum number of iterations for f (> 1)
+        		[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+				%
+				if 1, 
+					disp('******************************')
+					disp(['With operator splitting (dtn = ',num2str(dtn_list(jdtn)),', Dr0 = ',num2str(Dr0_list(iDr0)),'): convergence achieved in ',int2str(dke_out.it_f),' iterations.'])
+        			disp('******************************')
+
+					j_split(:,iDr0,jdtn) = Zcurr.x_0;
+        			P_split(:,iDr0,jdtn) = ZP0.x_rf_fsav;        
+        			%
+        			tCPU_split(iDr0,jdtn) = dke_out.time_out;
+        			memory_split(iDr0,jdtn) = dke_out.memoryLU_f_out;
+        			tDKE_split(iDr0,jdtn) = dke_out.time_DKE;
+        			nit_split(iDr0,jdtn) = dke_out.it_f;
+        			%
+        			Itot_split(iDr0,jdtn) = sum(Zcurr.x_0.*equilDKE.xdA_dke*mksa.j_ref);
+        			Ptot_2piRp_split(iDr0,jdtn) = sum(ZP0.x_rf_fsav.'.*equilDKE.xdV_2piRp_dke*mksa.P_ref);
+				else
+					flag_splitting_nostable = 1;
+					%
+					disp('******************************')
+					disp(['With operator splitting (dtn = ',num2str(dtn_list(jdtn)),', Dr0 = ',num2str(Dr0_list(iDr0)),'): no convergence.'])
+        			disp('******************************')
+        			%
+        			j_split(:,iDr0,jdtn) = j_nosplit(:,iDr0,jdtn)*NaN;
+        			P_split(:,iDr0,jdtn) = P_nosplit(:,iDr0,jdtn)*NaN;        
+        			%
+        			tCPU_split(iDr0,jdtn) = tCPU_nosplit(iDr0,jdtn)*NaN;
+        			memory_split(iDr0,jdtn) = memory_nosplit(iDr0,jdtn)*NaN;
+        			tDKE_split(iDr0,jdtn) = tDKE_nosplit(iDr0,jdtn)*NaN;
+        			nit_split(iDr0,jdtn) = nit_nosplit(iDr0,jdtn)*NaN;
+        			%
+        			Itot_split(iDr0,jdtn) = Itot_nosplit(iDr0,jdtn)*NaN;
+        			Ptot_2piRp_split(iDr0,jdtn) = Ptot_2piRp_nosplit(iDr0,jdtn)*NaN;				
+        		end
+			else
+        		%
+        		disp('******************************')
+				disp(['With operator splitting (dtn = ',num2str(dtn_list(jdtn)),', Dr0 = ',num2str(Dr0_list(iDr0)),'): no convergence.'])
+        		disp('******************************')
+				%
+        		j_split(:,iDr0,jdtn) = j_nosplit(:,iDr0,jdtn)*NaN;
+        		P_split(:,iDr0,jdtn) = P_nosplit(:,iDr0,jdtn)*NaN;        
+        		%
+        		tCPU_split(iDr0,jdtn) = tCPU_nosplit(iDr0,jdtn)*NaN;
+        		memory_split(iDr0,jdtn) = memory_nosplit(iDr0,jdtn)*NaN;
+        		tDKE_split(iDr0,jdtn) = tDKE_nosplit(iDr0,jdtn)*NaN;
+        		nit_split(iDr0,jdtn) = nit_nosplit(iDr0,jdtn)*NaN;
+        		%
+        		Itot_split(iDr0,jdtn) = Itot_nosplit(iDr0,jdtn)*NaN;
+        		Ptot_2piRp_split(iDr0,jdtn) = Ptot_2piRp_nosplit(iDr0,jdtn)*NaN;
+        	end
+		catch
+			flag_splitting_nostable = 1;
+        	%
+        	disp('******************************')
+			disp(['With operator splitting (dtn = ',num2str(dtn_list(jdtn)),', Dr0 = ',num2str(Dr0_list(iDr0)),'): no convergence.'])
+        	disp('******************************')
+        	%
+        	j_split(:,iDr0,jdtn) = j_nosplit(:,iDr0,jdtn)*NaN;
+        	P_split(:,iDr0,jdtn) = P_nosplit(:,iDr0,jdtn)*NaN;        
+        	%
+        	tCPU_split(iDr0,jdtn) = tCPU_nosplit(iDr0,jdtn)*NaN;
+        	memory_split(iDr0,jdtn) = memory_nosplit(iDr0,jdtn)*NaN;
+        	tDKE_split(iDr0,jdtn) = tDKE_nosplit(iDr0,jdtn)*NaN;
+        	nit_split(iDr0,jdtn) = nit_nosplit(iDr0,jdtn)*NaN;
+        	%
+        	Itot_split(iDr0,jdtn) = Itot_nosplit(iDr0,jdtn)*NaN;
+        	Ptot_2piRp_split(iDr0,jdtn) = Ptot_2piRp_nosplit(iDr0,jdtn)*NaN;
+        end   
     end
 end
 %
 %************************************************************************************************************************************
 %
+return
+
 for iDr0 = 1:length(Dr0_mask),
     leg{iDr0} = ['D_{\psi\psi} = ',num2str(Dr0_list(Dr0_mask(iDr0))),' m^{2}/s'];
 end

@@ -1,4 +1,4 @@
-function [XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,radial_mode,memoryLU_f,memoryLU_g,time_DKE,normf0,curr0,residu_f] = solver_dke_yp(dkepath,dkeparam,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,Xmask_r_edge,XXsinksource,XXfM,XXfinit)
+function [XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,radial_mode,memoryLU_f,memoryLU_g,time_DKE,normf0,curr0,residu_f,it_f] = solver_dke_yp(dkepath,dkeparam,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,Xmask_r_edge,XXsinksource,XXfM,XXfinit)
 %
 %
 %   Self-consistent 3-D relativistic solver of the drift kinetic equation in momentum space with Beliaev-Budker collision integrals 
@@ -642,7 +642,7 @@ else
                 disp(['                - Density [t-1]: ',num2str(normf0(ir,it_f)),' - [t]: ',num2str(normf0(ir,it_f+1)),' / Absolute variation [t-t0]: ',num2str(prec_normf0(ir,it_f)),' / Relative variation [dt]: ',num2str(prec_normf(ir,it_f))]);               
                 disp(['                - Current [t-1]: ',num2str(curr0(ir,it_f)),' - [t]: ',num2str(curr0(ir,it_f+1)),' / Current relative accuracy [dt]: ',num2str(prec_curr(ir,it_f))]);
             end
-            %
+            %            %
             if display_mode == 2,
                 if dke_mode == 1,
                     if ir == ir_display-1,
@@ -692,9 +692,19 @@ else
             end
         end
         %
+        if display_mode == -1,
+			[ir_max] =  find(residu_f(:,it_f) == max(residu_f(:,it_f)));
+            disp(' ');           	 
+            info_dke_yp(2,['Quasilinear iteration : ',int2str(it_rf),', Fokker-Planck iteration : ',int2str(it_f),' / ',int2str(nit_f),', Residu max.= ',num2str(residu_f(ir_max,it_f)),' / ',num2str(prec0_f)]);
+            info_dke_yp(2,['   Normalized poloidal magnetic flux: ',num2str(xpsin(ir_max))]);
+            info_dke_yp(2,['   Normalized radius on LFS midplane: ',num2str(xrho(ir_max)),' / Radius index number: ',int2str(ir_max)]);
+            disp(['                - Density [t-1]: ',num2str(normf0(ir_max,it_f)),' - [t]: ',num2str(normf0(ir_max,it_f+1)),' / Absolute variation [t-t0]: ',num2str(prec_normf0(ir_max,it_f)),' / Relative variation [dt]: ',num2str(prec_normf(ir_max,it_f))]);               
+            disp(['                - Current [t-1]: ',num2str(curr0(ir_max,it_f)),' - [t]: ',num2str(curr0(ir_max,it_f+1)),' / Current relative accuracy [dt]: ',num2str(prec_curr(ir_max,it_f))]);
+        end
+        %
         if all(residu_f(:,it_f) <= prec0_f),
             if sum(prec_residu_f(:,it_f)) < prec0_f,info_dke_yp(2,['WARNING: stationnary residu but convergence not achieved for f0 after ',int2str(it_f),' iterations. Time step likely too large !']);end
-            if display_mode > 0,
+            if abs(display_mode) > 0,
                 info_dke_yp(2,['Successfull convergence achieved for f0 after ',int2str(it_f),' iterations !']);
             end
             break;
@@ -708,8 +718,8 @@ end
 if dkeparam.invproc == -2,%MUMPS FORTAN 95 parallel processing package (inversion in MEX file, with LU matrix preconditionning)
    job_MUMPSMEX = -2;MUMPSMEX_dke_yp;%Clear MUMPSMEX memory
 end
-if display_mode >= 1,info_dke_yp(2,['Convergence achieved for zero order Fokker-Planck calculations in ',num2str(etime(clock,time0)),' (s)']);end
-if dkeparam.invproc == -1 & display_mode >= 1,info_dke_yp(2,['Number of processors used for MUMPS matrix inversion : ',int2str(dkeparam.MUMPSparam.nproc)]);end%MUMPS FORTAN 95 parallel processing package
+if abs(display_mode) > 0,info_dke_yp(2,['Convergence achieved for zero order Fokker-Planck calculations in ',num2str(etime(clock,time0)),' (s)']);end
+if dkeparam.invproc == -1 & abs(display_mode) > 0,info_dke_yp(2,['Number of processors used for MUMPS matrix inversion : ',int2str(dkeparam.MUMPSparam.nproc)]);end%MUMPS FORTAN 95 parallel processing package
 %
 clear ir fM XfM MMXPC_f_t MMXPDI_f_t Xmask_f0 MMXL_f_t MMXU_f_t
 clear Xf0 Xf0_t Xq Xq_t Xf1 Xf1_t Xf1_tp Xf1_tm Xf1_ts XR_t XS_t XY_t
