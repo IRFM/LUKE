@@ -1,4 +1,4 @@
-function [XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,radial_mode,memoryLU_f,memoryLU_g,time_DKE,normf0,curr0,residu_f,it_f] = solver_dke_yp(dkepath,dkeparam,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,Xmask_r_edge,XXsinksource,XXfM,XXfinit)
+function [XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,radial_mode,memoryLU_f,memoryLU_g,time_DKE,normf0,curr0,residu_f] = solver_dke_yp(dkepath,dkeparam,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,Xmask_r_edge,XXsinksource,XXfM,XXfinit)
 %
 %
 %   Self-consistent 3-D relativistic solver of the drift kinetic equation in momentum space with Beliaev-Budker collision integrals 
@@ -108,7 +108,7 @@ timeCPU0 = cputime;
 memoryLU_f = 0;
 memoryLU_g = 0;
 %
-splitparam = 1;%for operator splitting only
+splitparam = 0;%for operator splitting only
 %
 boundary_mode_f = dkeparam.boundary_mode_f;
 boundary_mode_g = dkeparam.boundary_mode_g;
@@ -538,60 +538,53 @@ else
                 [MMXS_t,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),display_mode,dkepath);
             end
         else
-            if splitparam,
-                MMXq_t = MMXsource_t + MMXIpn2_t + (MMXT_f_t/2 - (time_scheme - 1)*MMXP_f_t/time_scheme)*MMXf0_t;%Right handside term of the Fokker-Planck equation          
-                MMXR_t = sparse(MMXPDI_P_f_t*MMXq_t - MMXPC_P_f_t*MMXf0_t);%Residu calculation for matrix inversion, force sparse type for the RHS, optimized for Matlab 
-                %
-                %          save testLU3D.mat MMXPC_f_t MMXR_t dkeparam  MMXL_f_t MMXU_f_t dkepath display_mode    
-                %
-                if dkeparam.invproc == 0,%Matlab direct inversion
-                    MMXS_t = MMXR_t\MMXPC_P_f_t;
-                elseif dkeparam.invproc == 1,%Matlab cgs iterative inversion method
-                    [MMXS_t,flaginv_f] = cgs(MMXPC_P_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_P_f_t,MMXU_P_f_t);
-                elseif dkeparam.invproc == 2,%Matlab bicg iterative inversion method      
-                    [MMXS_t,flaginv_f] = bicg(MMXPC_P_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_P_f_t,MMXU_P_f_t); 
-                elseif dkeparam.invproc == 3,%Matlab qmr iterative inversion method
-                    [MMXS_t,flaginv_f] = qmr(MMXPC_P_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_P_f_t,MMXU_P_f_t);
-                elseif dkeparam.invproc == -1,%MUMPS FORTAN 95 parallel or sequential processing package (direct inversion)
-                    [MMXS_t,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_P_f_t,full(MMXR_t),display_mode,dkepath);
-                elseif dkeparam.invproc == -2,%MUMPS FORTAN 95 parallel processing package (inversion in MEX file, with LU matrix preconditionning)
-                    job_MUMPSMEX = 3;mode_MUMPSMEX=1;MUMPSMEX_dke_yp;
-                    MMXS_t = id_MUMPSMEX_P.SOL; 
-                    flaginv_f = flag_MUMPSMEX; 
-                elseif dkeparam.invproc == -3,%SUPERLU 3.0 sequential MEX file (direct inversion)
-                    [MMXS_t] = lusolve(MMXPC_P_f_t,MMXR_t);flaginv_f = 0;
-                elseif dkeparam.invproc == -4,%Solving with PETSc
-                    [MMXS_t,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_P_f_t,full(MMXR_t),display_mode,dkepath);
-                end
-                %
-            else
-                MMXq_t = MMXsource_t + (MMXT_f_t/2 - (time_scheme - 1)*MMXR_f_t/time_scheme)*MMXf0_t;%Right handside term of the Fokker-Planck equation          
-                MMXR_t = sparse(MMXPDI_R_f_t*MMXq_t - MMXPC_R_f_t*MMXf0_t);%Residu calculation for matrix inversion, force sparse type for the RHS, optimized for Matlab 
-                %
-                %          save testLU3D.mat MMXPC_f_t MMXR_t dkeparam  MMXL_f_t MMXU_f_t dkepath display_mode    
-                %
-                if dkeparam.invproc == 0,%Matlab direct inversion
-                    MMXS_t = MMXR_t\MMXPC_R_f_t;
-                elseif dkeparam.invproc == 1,%Matlab cgs iterative inversion method
-                    [MMXS_t,flaginv_f] = cgs(MMXPC_R_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_P_f_t,MMXU_R_f_t);
-                elseif dkeparam.invproc == 2,%Matlab bicg iterative inversion method      
-                    [MMXS_t,flaginv_f] = bicg(MMXPC_R_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_P_f_t,MMXU_R_f_t); 
-                elseif dkeparam.invproc == 3,%Matlab qmr iterative inversion method
-                    [MMXS_t,flaginv_f] = qmr(MMXPC_R_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_P_f_t,MMXU_R_f_t);
-                elseif dkeparam.invproc == -1,%MUMPS FORTAN 95 parallel or sequential processing package (direct inversion)
-                    [MMXS_t,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_R_P_f_t,full(MMXR_t),display_mode,dkepath);
-                elseif dkeparam.invproc == -2,%MUMPS FORTAN 95 parallel processing package (inversion in MEX file, with LU matrix preconditionning)
-                    job_MUMPSMEX = 3;mode_MUMPSMEX=0;MUMPSMEX_dke_yp;
-                    MMXS_t = id_MUMPSMEX_R.SOL; 
-                    flaginv_f = flag_MUMPSMEX; 
-                elseif dkeparam.invproc == -3,%SUPERLU 3.0 sequential MEX file (direct inversion)
-                    [MMXS_t] = lusolve(MMXPC_R_f_t,MMXR_t);flaginv_f = 0;
-                elseif dkeparam.invproc == -4,%Solving with PETSc
-                    [MMXS_t,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_R_f_t,full(MMXR_t),display_mode,dkepath);
-                end   
+            MMXq_t = MMXsource_t + MMXIpn2_t + (MMXT_f_t/2 - (time_scheme - 1)*MMXP_f_t/time_scheme)*MMXf0_t;%Right handside term of the Fokker-Planck equation          
+            MMXR_t = sparse(MMXPDI_P_f_t*MMXq_t - MMXPC_P_f_t*MMXf0_t);%Residu calculation for matrix inversion, force sparse type for the RHS, optimized for Matlab 
+            %
+            if dkeparam.invproc == 0,%Matlab direct inversion
+                MMXS_t = MMXR_t\MMXPC_P_f_t;
+            elseif dkeparam.invproc == 1,%Matlab cgs iterative inversion method
+                [MMXS_t,flaginv_f] = cgs(MMXPC_P_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_P_f_t,MMXU_P_f_t);
+            elseif dkeparam.invproc == 2,%Matlab bicg iterative inversion method      
+                [MMXS_t,flaginv_f] = bicg(MMXPC_P_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_P_f_t,MMXU_P_f_t); 
+            elseif dkeparam.invproc == 3,%Matlab qmr iterative inversion method
+                [MMXS_t,flaginv_f] = qmr(MMXPC_P_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_P_f_t,MMXU_P_f_t);
+            elseif dkeparam.invproc == -1,%MUMPS FORTAN 95 parallel or sequential processing package (direct inversion)
+                [MMXS_t,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_P_f_t,full(MMXR_t),display_mode,dkepath);
+            elseif dkeparam.invproc == -2,%MUMPS FORTAN 95 parallel processing package (inversion in MEX file, with LU matrix preconditionning)
+                job_MUMPSMEX = 3;mode_MUMPSMEX=1;MUMPSMEX_dke_yp;
+                MMXS_t = id_MUMPSMEX_P.SOL; 
+                flaginv_f = flag_MUMPSMEX; 
+            elseif dkeparam.invproc == -3,%SUPERLU 3.0 sequential MEX file (direct inversion)
+                [MMXS_t] = lusolve(MMXPC_P_f_t,MMXR_t);flaginv_f = 0;
+            elseif dkeparam.invproc == -4,%Solving with PETSc
+                [MMXS_t,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_P_f_t,full(MMXR_t),display_mode,dkepath);
             end
             %
-            splitparam = ~splitparam;
+            MMXf0_t = MMXf0_t + MMXS_t;
+			%
+            MMXq_t = MMXsource_t + (MMXT_f_t/2 - (time_scheme - 1)*MMXR_f_t/time_scheme)*MMXf0_t;%Right handside term of the Fokker-Planck equation          
+            MMXR_t = sparse(MMXPDI_R_f_t*MMXq_t - MMXPC_R_f_t*MMXf0_t);%Residu calculation for matrix inversion, force sparse type for the RHS, optimized for Matlab 
+            %
+            if dkeparam.invproc == 0,%Matlab direct inversion
+                MMXS_t = MMXR_t\MMXPC_R_f_t;
+            elseif dkeparam.invproc == 1,%Matlab cgs iterative inversion method
+                [MMXS_t,flaginv_f] = cgs(MMXPC_R_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_P_f_t,MMXU_R_f_t);
+            elseif dkeparam.invproc == 2,%Matlab bicg iterative inversion method      
+                [MMXS_t,flaginv_f] = bicg(MMXPC_R_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_P_f_t,MMXU_R_f_t); 
+            elseif dkeparam.invproc == 3,%Matlab qmr iterative inversion method
+                [MMXS_t,flaginv_f] = qmr(MMXPC_R_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_P_f_t,MMXU_R_f_t);
+            elseif dkeparam.invproc == -1,%MUMPS FORTAN 95 parallel or sequential processing package (direct inversion)
+                [MMXS_t,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_R_P_f_t,full(MMXR_t),display_mode,dkepath);
+            elseif dkeparam.invproc == -2,%MUMPS FORTAN 95 parallel processing package (inversion in MEX file, with LU matrix preconditionning)
+                job_MUMPSMEX = 3;mode_MUMPSMEX=0;MUMPSMEX_dke_yp;
+                MMXS_t = id_MUMPSMEX_R.SOL; 
+                flaginv_f = flag_MUMPSMEX; 
+            elseif dkeparam.invproc == -3,%SUPERLU 3.0 sequential MEX file (direct inversion)
+                [MMXS_t] = lusolve(MMXPC_R_f_t,MMXR_t);flaginv_f = 0;
+            elseif dkeparam.invproc == -4,%Solving with PETSc
+                [MMXS_t,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_R_f_t,full(MMXR_t),display_mode,dkepath);
+            end   
         end
         %
         if flaginv_f == 2 & dkeparam.invproc > 1,
@@ -709,6 +702,7 @@ else
             end
             break;
         end
+		%
     end
     %
     if it_f == nit_f,info_dke_yp(2,['WARNING: convergence not achieved for f0 after ',int2str(nit_f),' iterations. Time step too small !']);end

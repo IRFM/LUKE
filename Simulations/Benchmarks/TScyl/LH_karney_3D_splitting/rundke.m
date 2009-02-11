@@ -19,6 +19,8 @@ path_simul = '';%if nothing is specified, the working directory is first used an
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
 %rho_S = [0,0.05:0.02:0.2,0.22:0.03:0.6,0.62:0.05:0.95,1];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 rho_S = [0:0.025:0.65,0.7:0.1:1];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+rho_S = [0:0.1:0.65,0.7:0.1:1];
+
 %
 id_path = '';%For all paths used by DKE solver
 path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
@@ -104,10 +106,10 @@ dkeparam.coll_mode = 1;
 dkedisplay.display_mode = -1;%Only the radius at which the residu is the largest is displayed
 %
 Dr0_list = [0,0.001,0.01,0.1,0.3,1,3,10,30,100];
-Dr0_list = [0,1,100];
+Dr0_list = [0,1,10];
 Dr0_mask = ones(size(Dr0_list));
 dtn_list = [1,2,5,10,20,50,100,200,500,1000,2000,5000,10000];
-dtn_list = [100,10000];
+dtn_list = [1,100,10000];
 dtn_mask = ones(size(dtn_list));
 %
 for iDr0 = 1:length(Dr0_list),
@@ -120,11 +122,11 @@ for iDr0 = 1:length(Dr0_list),
         dkeparam.dtn = dtn_list(jdtn);
         %
         dkeparam.opsplit = 0;%No operator splitting
-        dkeparam.nit_f = dtn_list(end)./dtn_list(jdtn) + 1;%Maximum number of iterations for f (> 1)
+        dkeparam.nit_f = dtn_list(end)./dtn_list(jdtn) + 100;%Maximum number of iterations for f (> 1)
         [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 		%
 		disp('******************************')
-		disp(['Without operator splitting (dtn = ',num2str(dtn_list(jdtn)),', Dr0 = ',num2str(Dr0_list(iDr0)),'): convergence achieved in ',int2str(dke_out.it_f),' iterations.'])
+		disp(['Without operator splitting (dtn = ',num2str(dtn_list(jdtn)),', Dr0 = ',num2str(Dr0_list(iDr0)),',nitmax = ',int2str(dkeparam.nit_f),'): convergence achieved in ',int2str(length(dke_out.residu_f(1,~isnan(dke_out.residu_f(1,:))))),' iterations.'])
         disp('******************************')
         %
         j_nosplit(:,iDr0,jdtn) = Zcurr.x_0;
@@ -133,7 +135,7 @@ for iDr0 = 1:length(Dr0_list),
         tCPU_nosplit(iDr0,jdtn) = dke_out.time_out;
         memory_nosplit(iDr0,jdtn) = dke_out.memoryLU_f_out;
         tDKE_nosplit(iDr0,jdtn) = dke_out.time_DKE;
-        nit_nosplit(iDr0,jdtn) = dke_out.it_f;
+        nit_nosplit(iDr0,jdtn) = length(dke_out.residu_f(1,~isnan(dke_out.residu_f(1,:))));
         %
         Itot_nosplit(iDr0,jdtn) = sum(Zcurr.x_0.*equilDKE.xdA_dke*mksa.j_ref);
         Ptot_2piRp_nosplit(iDr0,jdtn) = sum(ZP0.x_rf_fsav.'.*equilDKE.xdV_2piRp_dke*mksa.P_ref);
@@ -141,12 +143,12 @@ for iDr0 = 1:length(Dr0_list),
 		try
 			if ~flag_splitting_nostable;
         		dkeparam.opsplit = 1;%With operator splitting
-        		dkeparam.nit_f = dtn_list(end)./dtn_list(jdtn) + 1;%Maximum number of iterations for f (> 1)
+        		dkeparam.nit_f = dtn_list(end)./dtn_list(jdtn) + 100;%Maximum number of iterations for f (> 1)
         		[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 				%
-				if 1, 
+				if length(dke_out.residu_f) < dkeparam.nit_f, 
 					disp('******************************')
-					disp(['With operator splitting (dtn = ',num2str(dtn_list(jdtn)),', Dr0 = ',num2str(Dr0_list(iDr0)),'): convergence achieved in ',int2str(dke_out.it_f),' iterations.'])
+					disp(['With operator splitting (dtn = ',num2str(dtn_list(jdtn)),', Dr0 = ',num2str(Dr0_list(iDr0)),',nitmax = ',int2str(dkeparam.nit_f),'): convergence achieved in ',int2str(length(dke_out.residu_f(1,~isnan(dke_out.residu_f(1,:))))),' iterations.'])
         			disp('******************************')
 
 					j_split(:,iDr0,jdtn) = Zcurr.x_0;
@@ -155,7 +157,7 @@ for iDr0 = 1:length(Dr0_list),
         			tCPU_split(iDr0,jdtn) = dke_out.time_out;
         			memory_split(iDr0,jdtn) = dke_out.memoryLU_f_out;
         			tDKE_split(iDr0,jdtn) = dke_out.time_DKE;
-        			nit_split(iDr0,jdtn) = dke_out.it_f;
+        			nit_split(iDr0,jdtn) = length(dke_out.residu_f(1,~isnan(dke_out.residu_f(1,:))));
         			%
         			Itot_split(iDr0,jdtn) = sum(Zcurr.x_0.*equilDKE.xdA_dke*mksa.j_ref);
         			Ptot_2piRp_split(iDr0,jdtn) = sum(ZP0.x_rf_fsav.'.*equilDKE.xdV_2piRp_dke*mksa.P_ref);
@@ -163,7 +165,7 @@ for iDr0 = 1:length(Dr0_list),
 					flag_splitting_nostable = 1;
 					%
 					disp('******************************')
-					disp(['With operator splitting (dtn = ',num2str(dtn_list(jdtn)),', Dr0 = ',num2str(Dr0_list(iDr0)),'): no convergence.'])
+					disp(['With operator splitting (dtn = ',num2str(dtn_list(jdtn)),', Dr0 = ',num2str(Dr0_list(iDr0)),',nitmax = ',int2str(dkeparam.nit_f),'): no convergence.'])
         			disp('******************************')
         			%
         			j_split(:,iDr0,jdtn) = j_nosplit(:,iDr0,jdtn)*NaN;
@@ -180,7 +182,7 @@ for iDr0 = 1:length(Dr0_list),
 			else
         		%
         		disp('******************************')
-				disp(['With operator splitting (dtn = ',num2str(dtn_list(jdtn)),', Dr0 = ',num2str(Dr0_list(iDr0)),'): no convergence.'])
+				disp(['With operator splitting (dtn = ',num2str(dtn_list(jdtn)),', Dr0 = ',num2str(Dr0_list(iDr0)),',nitmax = ',int2str(dkeparam.nit_f),'): no convergence.'])
         		disp('******************************')
 				%
         		j_split(:,iDr0,jdtn) = j_nosplit(:,iDr0,jdtn)*NaN;
@@ -198,7 +200,7 @@ for iDr0 = 1:length(Dr0_list),
 			flag_splitting_nostable = 1;
         	%
         	disp('******************************')
-			disp(['With operator splitting (dtn = ',num2str(dtn_list(jdtn)),', Dr0 = ',num2str(Dr0_list(iDr0)),'): no convergence.'])
+			disp(['With operator splitting (dtn = ',num2str(dtn_list(jdtn)),', Dr0 = ',num2str(Dr0_list(iDr0)),',nitmax = ',int2str(dkeparam.nit_f),'): no convergence.'])
         	disp('******************************')
         	%
         	j_split(:,iDr0,jdtn) = j_nosplit(:,iDr0,jdtn)*NaN;
