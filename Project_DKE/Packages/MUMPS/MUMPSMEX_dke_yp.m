@@ -18,7 +18,7 @@
 %By Joan Decker (CEA-DRFC, joan.decker@cea.fr) and Yves Peysson (CEA-DRFC, yves.peysson@cea.fr)
 %
 %
-if ~dkeparam.opsplit,
+if dkeparam.opsplit == 0,
     A_MUMPSMEX = MMXPC_f_t;
     B_MUMPSMEX = MMXR_t;
     %
@@ -57,7 +57,7 @@ if ~dkeparam.opsplit,
        id_MUMPSMEX.JOB = job_MUMPSMEX;
        id_MUMPSMEX = dmumps(id_MUMPSMEX);% destroy mumps instance
     end
-else
+elseif dkeparam.opsplit >= 1,
     if mode_MUMPSMEX,
         A_MUMPSMEX = MMXPC_P_f_t;
         B_MUMPSMEX = MMXR_t;
