@@ -103,6 +103,8 @@ if nargin < 9,
     error('Wrong number of input arguments in solver_dke_yp')
 end
 %
+numdivergence = 0;
+%
 time00 = clock;
 timeCPU0 = cputime;
 memoryLU_f = 0;
@@ -301,7 +303,7 @@ end
 %
 time0 = clock;
 %
-if ~dkeparam.opsplit,
+if dkeparam.opsplit == 0,
     MMXdiag = diag(MMXP_f_t/time_scheme + MMXR_f_t/time_scheme + MMXT_f_t);
 %
     if isempty(find(MMXdiag==0)) == 1, 
@@ -362,7 +364,7 @@ if ~dkeparam.opsplit,
             end
         end
     end
-else
+elseif dkeparam.opsplit == 1,
 	MMXPdiag = diag(MMXP_f_t/time_scheme + 2*MMXT_f_t);
     MMXRdiag = diag(MMXR_f_t/time_scheme + 2*MMXT_f_t);
     %
@@ -400,7 +402,32 @@ else
     else
         error('One of the Fokker-Planck two matrices has a null element on the main diagonal');%Matrix must be main diagonal dominant
     end
-    
+elseif dkeparam.opsplit == 2,    
+	MMXPdiag = diag(MMXP_f_t/time_scheme + MMXT_f_t);
+    %
+    if isempty(find(MMXPdiag==0)) == 1, 
+        MMXPDI_P_f_t = inv(diag(MMXPdiag));
+        %
+        MMXPC_P_f_t = MMXPDI_P_f_t*(MMXP_f_t/time_scheme + MMXT_f_t);%Main diagonal matrix preconditionning
+%
+        if dkeparam.invproc >=1,%MatLab build-in matrix incomplete factorization only
+            [MMXL_P_f_t,MMXU_P_f_t] = luinc(MMXPC_P_f_t,dkeparam.ludroptol);
+        elseif dkeparam.invproc == -2,%MUMPSMEX case only (single processor). See MUMPS documentation            
+            job_MUMPSMEX = 1;mode_MUMPSMEX=1;MUMPSMEX_dke_yp;%P matrix
+            job_MUMPSMEX = 2;mode_MUMPSMEX=1;MUMPSMEX_dke_yp;%P matrix
+            %
+            if dkeparam.invproc >=1,
+                memoryLU_P_f = (getfield(whos('MMXL_P_f_t'),'bytes') + getfield(whos('MMXU_P_f_t'),'bytes'))/1000000;%MBytes
+            elseif dkeparam.invproc == -2,
+                memoryLU_P_f = (id_MUMPSMEX_P.INFOG(9)*8 + id_MUMPSMEX_P.INFOG(10)*4)/1000000;%MBytes, see MUMPS documentation (8 bytes for double precision float, 4 byte for integer)
+            end
+            %
+        end
+%
+        time_f = etime(clock,time0);
+    else
+        error('One of the Fokker-Planck two matrices has a null element on the main diagonal');%Matrix must be main diagonal dominant
+    end
 end
 %
 if display_mode == 2,
@@ -480,7 +507,7 @@ else
             load([fullfile(temppath,'MXP_'),save_id,'.mat'],'Zmask_f0_t');
         end 
         %
-        for ir = 1:nr-1,
+        for ir = 1:nr,
             XI_t = XXI(:,Zmask_f0_t{ir},ir);
             %
             if boundary_mode_f > 0,
@@ -489,28 +516,15 @@ else
             %
             MMXf0_t = [MMXf0_t;reshape(XXf0(:,Zmask_f0_t{ir},ir)',(nmhu - ns_f(ir))*npn,1)];
             MMXsource_t = [MMXsource_t;reshape(XXsinksource(:,Zmask_f0_t{ir},ir)',(nmhu - ns_f(ir))*npn,1)];
-            MMXIpn2_t = [MMXIpn2_t;reshape((XI_t.*Zpn2_t{ir})',(nmhu - ns_f(ir))*npn,1)];%Zpn2_t is here as part of the partial Jacobian used to avoid singularities at p = 0 and psi = 0, and for pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2
+			%
+            if ir == nr & ~isempty(Xmask_r_edge),%Edge radial boundary condition: XI_t = 0 if radial transport operates  
+            	XI_t = XI_t*0;%************ TO BE JUSTIFIED *************
+        	end
+        	%
+        	MMXIpn2_t = [MMXIpn2_t;reshape((XI_t.*Zpn2_t{ir})',(nmhu - ns_f(ir))*npn,1)];%Zpn2_t is here as part of the partial Jacobian used to avoid singularities at p = 0 and psi = 0, and for pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2
         end 
-        %
-        if 1,%isempty(Xmask_r_edge),%No anomalous radial transport
-            XI_t = XXI(:,Zmask_f0_t{nr},nr);
-            if boundary_mode_f > 0,
-                XI_t(1:boundary_mode_f,:) = 0;
-            end
-            %          
-            MMXf0_t = [MMXf0_t;reshape(XXf0(:,Zmask_f0_t{nr},nr)',(nmhu - ns_f(nr))*npn,1)];
-            MMXsource_t = [MMXsource_t;reshape(XXsinksource(:,Zmask_f0_t{nr},nr)',(nmhu - ns_f(nr))*npn,1)];
-            MMXIpn2_t = [MMXIpn2_t;reshape((XI_t.*Zpn2_t{nr})',(nmhu - ns_f(nr))*npn,1)];%Zpn2_t is here as part of the partial Jacobian used to avoid singularities at p = 0 and psi = 0, and for pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2
-            %
-        else,%Edge radial boundary condition: f(r/a = 1) = fM(r/a) where transport operates
-            MMXf0_t = [MMXf0_t;reshape(XXf0(:,Zmask_f0_t{nr},nr)',(nmhu - ns_f(nr))*npn,1)];
-            %       MMXq_t(nMMXP_f_t-npn*(nmhu - ns_f(nr))+1:nMMXP_f_t) = xrho(nr)*time_scheme*reshape((Xf0_t'.*~Xmask_r_edge_t' + XfM_t'.*Xmask_r_edge_t').*Xpn2_t',(nmhu - ns(nr))*npn,1)/dtn;
-            Xmask_r_edge_t = Xmask_r_edge(:,Zmask_f0_t{nr});  
-            MMXsource_t = [MMXsource_t;reshape(XXsinksource(:,Zmask_f0_t{nr},nr)',(nmhu - ns_f(nr))*npn,1)];
-            MMXIpn2_t = [MMXIpn2_t;reshape((XI_t.*Zpn2_t{nr})',(nmhu - ns_f(nr))*npn,1)];%Zpn2_t is here as part of the partial Jacobian used to avoid singularities at p = 0 and psi = 0, and for pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2          
-        end
-        %
-        if ~dkeparam.opsplit,
+		%	
+        if dkeparam.opsplit == 0,
             MMXq_t = MMXsource_t + MMXIpn2_t + (MMXT_f_t - (time_scheme - 1)*(MMXP_f_t + MMXR_f_t)/time_scheme)*MMXf0_t;%Right handside term of the Fokker-Planck equation          
             MMXR_t = sparse(MMXPDI_f_t*MMXq_t - MMXPC_f_t*MMXf0_t);%Residu calculation for matrix inversion, force sparse type for the RHS, optimized for Matlab 
             %
@@ -535,7 +549,7 @@ else
             elseif dkeparam.invproc == -4,%Solving with PETSc
                 [MMXS_t,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),display_mode,dkepath);
             end
-        else        
+        elseif dkeparam.opsplit == 1,        
             MMXq_t = MMXsource_t + MMXIpn2_t + (2*MMXT_f_t - MMXR_f_t/time_scheme - (time_scheme - 1)*MMXP_f_t/time_scheme)*MMXf0_t;%Right handside term of the Fokker-Planck equation          
             MMXR_t = sparse(MMXPDI_P_f_t*MMXq_t - MMXPC_P_f_t*MMXf0_t);%Residu calculation for matrix inversion, force sparse type for the RHS, optimized for Matlab 
             %
@@ -582,7 +596,30 @@ else
                 [MMXS_t] = lusolve(MMXPC_R_f_t,MMXR_t);flaginv_f = 0;
             elseif dkeparam.invproc == -4,%Solving with PETSc
                 [MMXS_t,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_R_f_t,full(MMXR_t),display_mode,dkepath);
-            end            
+            end   
+        elseif dkeparam.opsplit == 2, 
+            MMXq_t = MMXsource_t + MMXIpn2_t + (MMXT_f_t - MMXR_f_t/time_scheme - (time_scheme - 1)*MMXP_f_t/time_scheme)*MMXf0_t;%Right handside term of the Fokker-Planck equation          
+            MMXR_t = sparse(MMXPDI_P_f_t*MMXq_t - MMXPC_P_f_t*MMXf0_t);%Residu calculation for matrix inversion, force sparse type for the RHS, optimized for Matlab 
+            %
+            if dkeparam.invproc == 0,%Matlab direct inversion
+                MMXS_t = MMXR_t\MMXPC_P_f_t;
+            elseif dkeparam.invproc == 1,%Matlab cgs iterative inversion method
+                [MMXS_t,flaginv_f] = cgs(MMXPC_P_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_P_f_t,MMXU_P_f_t);
+            elseif dkeparam.invproc == 2,%Matlab bicg iterative inversion method      
+                [MMXS_t,flaginv_f] = bicg(MMXPC_P_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_P_f_t,MMXU_P_f_t); 
+            elseif dkeparam.invproc == 3,%Matlab qmr iterative inversion method
+                [MMXS_t,flaginv_f] = qmr(MMXPC_P_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_P_f_t,MMXU_P_f_t);
+            elseif dkeparam.invproc == -1,%MUMPS FORTAN 95 parallel or sequential processing package (direct inversion)
+                [MMXS_t,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_P_f_t,full(MMXR_t),display_mode,dkepath);
+            elseif dkeparam.invproc == -2,%MUMPS FORTAN 95 parallel processing package (inversion in MEX file, with LU matrix preconditionning)
+                job_MUMPSMEX = 3;mode_MUMPSMEX=1;MUMPSMEX_dke_yp;
+                MMXS_t = id_MUMPSMEX_P.SOL; 
+                flaginv_f = flag_MUMPSMEX; 
+            elseif dkeparam.invproc == -3,%SUPERLU 3.0 sequential MEX file (direct inversion)
+                [MMXS_t] = lusolve(MMXPC_P_f_t,MMXR_t);flaginv_f = 0;
+            elseif dkeparam.invproc == -4,%Solving with PETSc
+                [MMXS_t,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_P_f_t,full(MMXR_t),display_mode,dkepath);
+            end
         end
         %
         if flaginv_f == 2 & dkeparam.invproc > 1,
@@ -683,15 +720,24 @@ else
             end
         end
         %
-        figure(1),plot(xrho,curr0(:,it_f+1));hold on
-        if display_mode == -1,
-			[ir_max] =  find(residu_f(:,it_f) == max(residu_f(:,it_f)));
+        %
+        if display_mode == -1,	
+        	%
+            figure(1),plot(xrho,curr0(:,it_f+1));hold on
+        	figure(2),semilogy(it_f+1,max(residu_f(:,it_f)),'r+');hold on
+			%
+        	[ir_max] =  find(residu_f(:,it_f) == max(residu_f(:,it_f)));
             disp(' ');           	 
             info_dke_yp(2,['Quasilinear iteration : ',int2str(it_rf),', Fokker-Planck iteration : ',int2str(it_f),' / ',int2str(nit_f),', Residu max.= ',num2str(residu_f(ir_max,it_f)),' / ',num2str(prec0_f)]);
             info_dke_yp(2,['   Normalized poloidal magnetic flux: ',num2str(xpsin(ir_max))]);
             info_dke_yp(2,['   Normalized radius on LFS midplane: ',num2str(xrho(ir_max)),' / Radius index number: ',int2str(ir_max)]);
             disp(['                - Density [t-1]: ',num2str(normf0(ir_max,it_f)),' - [t]: ',num2str(normf0(ir_max,it_f+1)),' / Absolute variation [t-t0]: ',num2str(prec_normf0(ir_max,it_f)),' / Relative variation [dt]: ',num2str(prec_normf(ir_max,it_f))]);               
             disp(['                - Current [t-1]: ',num2str(curr0(ir_max,it_f)),' - [t]: ',num2str(curr0(ir_max,it_f+1)),' / Current relative accuracy [dt]: ',num2str(prec_curr(ir_max,it_f))]);
+        end
+        %
+        if abs(max(residu_f(:,it_f))) > 1e-6,
+        	numdivergence = 1;
+        	break;
         end
         %
         if all(residu_f(:,it_f) <= prec0_f),
@@ -711,7 +757,11 @@ end
 if dkeparam.invproc == -2,%MUMPS FORTAN 95 parallel processing package (inversion in MEX file, with LU matrix preconditionning)
    job_MUMPSMEX = -2;MUMPSMEX_dke_yp;%Clear MUMPSMEX memory
 end
-if abs(display_mode) > 0,info_dke_yp(2,['Convergence achieved for zero order Fokker-Planck calculations in ',num2str(etime(clock,time0)),' (s)']);end
+if abs(display_mode) > 0 & ~numdivergence,
+	info_dke_yp(2,['Convergence achieved for zero order Fokker-Planck calculations in ',num2str(etime(clock,time0)),' (s)']);
+elseif abs(display_mode) > 0 & numdivergence,
+    info_dke_yp(2,['Divergence of the numerical scheme ',int2str(it_f),' iterations !']);
+end
 if dkeparam.invproc == -1 & abs(display_mode) > 0,info_dke_yp(2,['Number of processors used for MUMPS matrix inversion : ',int2str(dkeparam.MUMPSparam.nproc)]);end%MUMPS FORTAN 95 parallel processing package
 %
 clear ir fM XfM MMXPC_f_t MMXPDI_f_t Xmask_f0 MMXL_f_t MMXU_f_t
