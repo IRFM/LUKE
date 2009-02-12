@@ -19,7 +19,7 @@ path_simul = '';%if nothing is specified, the working directory is first used an
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
 %rho_S = [0,0.05:0.02:0.2,0.22:0.03:0.6,0.62:0.05:0.95,1];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 rho_S = [0:0.025:0.65,0.7:0.1:1];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
-rho_S = [0:0.1:0.65,0.7:0.1:1];
+%rho_S = [0:0.1:0.65,0.7:0.1:1];
 
 %
 id_path = '';%For all paths used by DKE solver
@@ -102,119 +102,106 @@ waves{1} = make_idealLHwave_jd(equil,wavestruct);
 %
 % Dpsipsi scan (0 -> 100 m2/s)
 %
-dkeparam.coll_mode = 1;
+dkeparam.coll_mode = 2;
+dkeparam.prec0_f = eps;
 dkedisplay.display_mode = -1;%Only the radius at which the residu is the largest is displayed
+nit_f_min = 100;
 %
 Dr0_list = [0,0.001,0.01,0.1,0.3,1,3,10,30,100];
-Dr0_list = [0,1,10];
+Dr0_list = [10];
 Dr0_mask = ones(size(Dr0_list));
 dtn_list = [1,2,5,10,20,50,100,200,500,1000,2000,5000,10000];
-dtn_list = [1,100,10000];
+dtn_list = [10];
 dtn_mask = ones(size(dtn_list));
 %
-for iDr0 = 1:length(Dr0_list),
-    %
-    transpfaste.Dr0 = Dr0_list(iDr0);
-    flag_splitting_nostable = 0;
-    %
-    for jdtn = 1:length(dtn_list),
-        %
-        dkeparam.dtn = dtn_list(jdtn);
-        %
-        dkeparam.opsplit = 0;%No operator splitting
-        dkeparam.nit_f = dtn_list(end)./dtn_list(jdtn) + 100;%Maximum number of iterations for f (> 1)
-        [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-		%
-		disp('******************************')
-		disp(['Without operator splitting (dtn = ',num2str(dtn_list(jdtn)),', Dr0 = ',num2str(Dr0_list(iDr0)),',nitmax = ',int2str(dkeparam.nit_f),'): convergence achieved in ',int2str(length(dke_out.residu_f(1,~isnan(dke_out.residu_f(1,:))))),' iterations.'])
-        disp('******************************')
-        %
-        j_nosplit(:,iDr0,jdtn) = Zcurr.x_0;
-        P_nosplit(:,iDr0,jdtn) = ZP0.x_rf_fsav;        
-        %
-        tCPU_nosplit(iDr0,jdtn) = dke_out.time_out;
-        memory_nosplit(iDr0,jdtn) = dke_out.memoryLU_f_out;
-        tDKE_nosplit(iDr0,jdtn) = dke_out.time_DKE;
-        nit_nosplit(iDr0,jdtn) = length(dke_out.residu_f(1,~isnan(dke_out.residu_f(1,:))));
-        %
-        Itot_nosplit(iDr0,jdtn) = sum(Zcurr.x_0.*equilDKE.xdA_dke*mksa.j_ref);
-        Ptot_2piRp_nosplit(iDr0,jdtn) = sum(ZP0.x_rf_fsav.'.*equilDKE.xdV_2piRp_dke*mksa.P_ref);
-        %
-		try
-			if ~flag_splitting_nostable;
-        		dkeparam.opsplit = 1;%With operator splitting
-        		dkeparam.nit_f = dtn_list(end)./dtn_list(jdtn) + 100;%Maximum number of iterations for f (> 1)
+divergence = NaN(2,length(Dr0_list),length(dtn_list));
+convergence = NaN(2,length(Dr0_list),length(dtn_list));
+%
+j = NaN(2,length(rho_S)-1,length(Dr0_list),length(dtn_list));
+P = NaN(2,length(rho_S)-1,length(Dr0_list),length(dtn_list));
+%
+tCPU = NaN(2,length(Dr0_list),length(dtn_list));
+memory = NaN(2,length(Dr0_list),length(dtn_list));
+tDKE = NaN(2,length(Dr0_list),length(dtn_list));
+%
+Itot = NaN(2,length(Dr0_list),length(dtn_list));
+Ptot_2piRp = NaN(2,length(Dr0_list),length(dtn_list));
+%
+for optsplit = 1,
+	numdivergence = 0;
+	numconvergence = NaN;
+	%
+	for iDr0 = 1:length(Dr0_list),
+    	%
+    	transpfaste.Dr0 = Dr0_list(iDr0);
+    	%
+    	for jdtn = 1:length(dtn_list),
+        	%
+        	dkeparam.dtn = dtn_list(jdtn);
+        	%
+        	if ~numdivergence,
+        		dkeparam.opsplit = optsplit - 1;
+        		
+        		
+        		
+        		dkeparam.nit_f = (dtn_list(end)./dtn_list(jdtn)) + nit_f_min;%Maximum number of iterations for f (> 1)
+        		
+        		
+        		
+        		
         		[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 				%
-				if length(dke_out.residu_f) < dkeparam.nit_f, 
-					disp('******************************')
-					disp(['With operator splitting (dtn = ',num2str(dtn_list(jdtn)),', Dr0 = ',num2str(Dr0_list(iDr0)),',nitmax = ',int2str(dkeparam.nit_f),'): convergence achieved in ',int2str(length(dke_out.residu_f(1,~isnan(dke_out.residu_f(1,:))))),' iterations.'])
-        			disp('******************************')
-
-					j_split(:,iDr0,jdtn) = Zcurr.x_0;
-        			P_split(:,iDr0,jdtn) = ZP0.x_rf_fsav;        
-        			%
-        			tCPU_split(iDr0,jdtn) = dke_out.time_out;
-        			memory_split(iDr0,jdtn) = dke_out.memoryLU_f_out;
-        			tDKE_split(iDr0,jdtn) = dke_out.time_DKE;
-        			nit_split(iDr0,jdtn) = length(dke_out.residu_f(1,~isnan(dke_out.residu_f(1,:))));
-        			%
-        			Itot_split(iDr0,jdtn) = sum(Zcurr.x_0.*equilDKE.xdA_dke*mksa.j_ref);
-        			Ptot_2piRp_split(iDr0,jdtn) = sum(ZP0.x_rf_fsav.'.*equilDKE.xdV_2piRp_dke*mksa.P_ref);
-				else
-					flag_splitting_nostable = 1;
-					%
-					disp('******************************')
-					disp(['With operator splitting (dtn = ',num2str(dtn_list(jdtn)),', Dr0 = ',num2str(Dr0_list(iDr0)),',nitmax = ',int2str(dkeparam.nit_f),'): no convergence.'])
-        			disp('******************************')
-        			%
-        			j_split(:,iDr0,jdtn) = j_nosplit(:,iDr0,jdtn)*NaN;
-        			P_split(:,iDr0,jdtn) = P_nosplit(:,iDr0,jdtn)*NaN;        
-        			%
-        			tCPU_split(iDr0,jdtn) = tCPU_nosplit(iDr0,jdtn)*NaN;
-        			memory_split(iDr0,jdtn) = memory_nosplit(iDr0,jdtn)*NaN;
-        			tDKE_split(iDr0,jdtn) = tDKE_nosplit(iDr0,jdtn)*NaN;
-        			nit_split(iDr0,jdtn) = nit_nosplit(iDr0,jdtn)*NaN;
-        			%
-        			Itot_split(iDr0,jdtn) = Itot_nosplit(iDr0,jdtn)*NaN;
-        			Ptot_2piRp_split(iDr0,jdtn) = Ptot_2piRp_nosplit(iDr0,jdtn)*NaN;				
+				nit_f = length(dke_out.residu_f(1,~isnan(dke_out.residu_f(1,:))));
+  				if abs(max(dke_out.residu_f(:,nit_f))) > 1e-6,
+  					numdivergence = 1;
+        		else
+        			numdivergence = 0;
         		end
-			else
         		%
-        		disp('******************************')
-				disp(['With operator splitting (dtn = ',num2str(dtn_list(jdtn)),', Dr0 = ',num2str(Dr0_list(iDr0)),',nitmax = ',int2str(dkeparam.nit_f),'): no convergence.'])
-        		disp('******************************')
+				if nit_f == length(dke_out.residu_f(1,:)) & ~numdivergence,
+					numconvergence = 0;
+				else
+					numconvergence = 1;
+				end
 				%
-        		j_split(:,iDr0,jdtn) = j_nosplit(:,iDr0,jdtn)*NaN;
-        		P_split(:,iDr0,jdtn) = P_nosplit(:,iDr0,jdtn)*NaN;        
+				if optsplit == 1,
+					cc = 'Without operator splitting';
+				elseif optsplit == 2,
+					cc = 'With operator splitting';
+				elseif optsplit == 3,
+					cc = 'With radial transport explicit';
+				end
+				%
+				disp('******************************************************************************************')
+				if numdivergence,
+					disp([cc,' (dtn = ',num2str(dtn_list(jdtn)),', Dr0 = ',num2str(Dr0_list(iDr0)),',nitmax = ',int2str(dkeparam.nit_f),'): Divergence of the numerical scheme after ',int2str(length(dke_out.residu_f(1,~isnan(dke_out.residu_f(1,:))))),' iterations.']);
+				elseif ~numconvergence,
+					disp([cc,' (dtn = ',num2str(dtn_list(jdtn)),', Dr0 = ',num2str(Dr0_list(iDr0)),',nitmax = ',int2str(dkeparam.nit_f),'): no convergence achieved.'])		
+				else
+					disp([cc,' (dtn = ',num2str(dtn_list(jdtn)),', Dr0 = ',num2str(Dr0_list(iDr0)),',nitmax = ',int2str(dkeparam.nit_f),'): convergence achieved in ',int2str(nit_f),' iterations.'])
+        		end
+        		disp('******************************************************************************************')
         		%
-        		tCPU_split(iDr0,jdtn) = tCPU_nosplit(iDr0,jdtn)*NaN;
-        		memory_split(iDr0,jdtn) = memory_nosplit(iDr0,jdtn)*NaN;
-        		tDKE_split(iDr0,jdtn) = tDKE_nosplit(iDr0,jdtn)*NaN;
-        		nit_split(iDr0,jdtn) = nit_nosplit(iDr0,jdtn)*NaN;
+            	divergence(optsplit,iDr0,jdtn) = numdivergence;
+        		convergence(optsplit,iDr0,jdtn) = numconvergence;
         		%
-        		Itot_split(iDr0,jdtn) = Itot_nosplit(iDr0,jdtn)*NaN;
-        		Ptot_2piRp_split(iDr0,jdtn) = Ptot_2piRp_nosplit(iDr0,jdtn)*NaN;
-        	end
-		catch
-			flag_splitting_nostable = 1;
-        	%
-        	disp('******************************')
-			disp(['With operator splitting (dtn = ',num2str(dtn_list(jdtn)),', Dr0 = ',num2str(Dr0_list(iDr0)),',nitmax = ',int2str(dkeparam.nit_f),'): no convergence.'])
-        	disp('******************************')
-        	%
-        	j_split(:,iDr0,jdtn) = j_nosplit(:,iDr0,jdtn)*NaN;
-        	P_split(:,iDr0,jdtn) = P_nosplit(:,iDr0,jdtn)*NaN;        
-        	%
-        	tCPU_split(iDr0,jdtn) = tCPU_nosplit(iDr0,jdtn)*NaN;
-        	memory_split(iDr0,jdtn) = memory_nosplit(iDr0,jdtn)*NaN;
-        	tDKE_split(iDr0,jdtn) = tDKE_nosplit(iDr0,jdtn)*NaN;
-        	nit_split(iDr0,jdtn) = nit_nosplit(iDr0,jdtn)*NaN;
-        	%
-        	Itot_split(iDr0,jdtn) = Itot_nosplit(iDr0,jdtn)*NaN;
-        	Ptot_2piRp_split(iDr0,jdtn) = Ptot_2piRp_nosplit(iDr0,jdtn)*NaN;
-        end   
-    end
+				if ~numdivergence,
+        			j(optsplit,:,iDr0,jdtn) = Zcurr.x_0;
+        			P(optsplit,:,iDr0,jdtn) = ZP0.x_rf_fsav;        
+        			%
+        			tCPU(optsplit,iDr0,jdtn) = dke_out.time_out;
+        			memory(optsplit,iDr0,jdtn) = dke_out.memoryLU_f_out;
+        			tDKE(optsplit,iDr0,jdtn) = dke_out.time_DKE;
+        			%
+        			Itot(optsplit,iDr0,jdtn) = sum(Zcurr.x_0.*equilDKE.xdA_dke*mksa.j_ref);
+        			Ptot_2piRp(optsplit,iDr0,jdtn) = sum(ZP0.x_rf_fsav.'.*equilDKE.xdV_2piRp_dke*mksa.P_ref);
+        			%
+        		end
+        	else
+            	divergence(optsplit,iDr0,jdtn) = numdivergence;
+           	end
+        end
+	end
 end
 %
 %************************************************************************************************************************************
