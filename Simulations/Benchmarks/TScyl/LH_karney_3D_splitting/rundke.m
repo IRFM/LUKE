@@ -104,14 +104,14 @@ waves{1} = make_idealLHwave_jd(equil,wavestruct);
 %
 dkeparam.coll_mode = 2;
 dkeparam.prec0_f = eps;
-dkedisplay.display_mode = -1;%Only the radius at which the residu is the largest is displayed
+dkedisplay.display_mode = 0;%Only the radius at which the residu is the largest is displayed
 nit_f_min = 100;
 %
 Dr0_list = [0,0.001,0.01,0.1,0.3,1,3,10,30,100];
-Dr0_list = [10];
+Dr0_list = [1,10];
 Dr0_mask = ones(size(Dr0_list));
 dtn_list = [1,2,5,10,20,50,100,200,500,1000,2000,5000,10000];
-dtn_list = [10];
+dtn_list = [10,1000];
 dtn_mask = ones(size(dtn_list));
 %
 divergence = NaN(2,length(Dr0_list),length(dtn_list));
@@ -127,7 +127,7 @@ tDKE = NaN(2,length(Dr0_list),length(dtn_list));
 Itot = NaN(2,length(Dr0_list),length(dtn_list));
 Ptot_2piRp = NaN(2,length(Dr0_list),length(dtn_list));
 %
-for optsplit = 1,
+for optsplit = 1:2,
 	numdivergence = 0;
 	numconvergence = NaN;
 	%
@@ -141,14 +141,7 @@ for optsplit = 1,
         	%
         	if ~numdivergence,
         		dkeparam.opsplit = optsplit - 1;
-        		
-        		
-        		
-        		dkeparam.nit_f = (dtn_list(end)./dtn_list(jdtn)) + nit_f_min;%Maximum number of iterations for f (> 1)
-        		
-        		
-        		
-        		
+        		dkeparam.nit_f = (dtn_list(end)./dtn_list(jdtn))*(Dr0_list(iDr0)./Dr0_list(end)) + nit_f_min;%Maximum number of iterations for f (> 1)		
         		[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 				%
 				nit_f = length(dke_out.residu_f(1,~isnan(dke_out.residu_f(1,:))));
