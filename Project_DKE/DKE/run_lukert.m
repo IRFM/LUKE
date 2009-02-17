@@ -70,7 +70,13 @@ end
 %
 % Determination of the radial grid optmized according to linear damping
 %
-rho_S = optgrid_dke_jd(waves,rho_S,dkedisplay.display_mode);
+if ~isfield(dkeparam,'w_mask'),
+    w_mask = NaN;
+else
+    w_mask = dkeparam.w_mask;%list of waves to account for in the radial grid determination
+end
+%
+rho_S = optgrid_dke_jd(waves,rho_S,w_mask,dkedisplay.display_mode);
 %
 % 3-D relativistic bounce averaged quasilinear kinetic calculations (LUKE)
 %
