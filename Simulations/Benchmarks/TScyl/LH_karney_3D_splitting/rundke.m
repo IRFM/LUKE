@@ -18,8 +18,8 @@ path_simul = '';%if nothing is specified, the working directory is first used an
 %
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
 %rho_S = [0,0.05:0.02:0.2,0.22:0.03:0.6,0.62:0.05:0.95,1];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
-rho_S = [0:0.025:0.65,0.7:0.1:1];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
-%rho_S = [0:0.1:0.65,0.7:0.1:1];
+%rho_S = [0:0.025:0.65,0.7:0.1:1];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+rho_S = [0:0.1:0.65,0.7:0.1:1];
 
 %
 id_path = '';%For all paths used by DKE solver
@@ -105,13 +105,13 @@ waves{1} = make_idealLHwave_jd(equil,wavestruct);
 dkeparam.coll_mode = 2;
 dkeparam.prec0_f = eps;
 dkedisplay.display_mode = 0;%Only the radius at which the residu is the largest is displayed
-nit_f_min = 100;
+dkeparam.nit_f = 6000;%Maximum number of iterations for f (> 1)
 %
 Dr0_list = [0,0.001,0.01,0.1,0.3,1,3,10,30,100];
 Dr0_list = [1,10];
 Dr0_mask = ones(size(Dr0_list));
 dtn_list = [1,2,5,10,20,50,100,200,500,1000,2000,5000,10000];
-dtn_list = [10,1000];
+dtn_list = [10,100,1000];
 dtn_mask = ones(size(dtn_list));
 %
 divergence = NaN(2,length(Dr0_list),length(dtn_list));
@@ -128,72 +128,74 @@ Itot = NaN(2,length(Dr0_list),length(dtn_list));
 Ptot_2piRp = NaN(2,length(Dr0_list),length(dtn_list));
 %
 for optsplit = 1:2,
+	%
 	numdivergence = 0;
 	numconvergence = NaN;
+	if optsplit == 1,
+		cc = 'Without operator splitting';
+	elseif optsplit == 2,
+		cc = 'With operator splitting';
+	elseif optsplit == 3,
+		cc = 'With radial transport explicit';
+	end
 	%
 	for iDr0 = 1:length(Dr0_list),
-    	%
-    	transpfaste.Dr0 = Dr0_list(iDr0);
-    	%
-    	for jdtn = 1:length(dtn_list),
-        	%
-        	dkeparam.dtn = dtn_list(jdtn);
-        	%
-        	if ~numdivergence,
-        		dkeparam.opsplit = optsplit - 1;
-        		dkeparam.nit_f = (dtn_list(end)./dtn_list(jdtn))*(Dr0_list(iDr0)./Dr0_list(end)) + nit_f_min;%Maximum number of iterations for f (> 1)		
-        		[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    		%
+    		transpfaste.Dr0 = Dr0_list(iDr0);
+    		%
+    		for jdtn = 1:length(dtn_list),
+        		%
+        		dkeparam.dtn = dtn_list(jdtn);
+        		%
+        		if numdivergence == 0,
+        			dkeparam.opsplit = optsplit - 1;%operator splitting method				%		
+        			[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 				%
 				nit_f = length(dke_out.residu_f(1,~isnan(dke_out.residu_f(1,:))));
-  				if abs(max(dke_out.residu_f(:,nit_f))) > 1e-6,
+  				%
+				if abs(max(dke_out.residu_f(:,nit_f))) > 1e-6,
   					numdivergence = 1;
-        		else
-        			numdivergence = 0;
-        		end
-        		%
+        			end
+        			%
 				if nit_f == length(dke_out.residu_f(1,:)) & ~numdivergence,
 					numconvergence = 0;
 				else
 					numconvergence = 1;
 				end
 				%
-				if optsplit == 1,
-					cc = 'Without operator splitting';
-				elseif optsplit == 2,
-					cc = 'With operator splitting';
-				elseif optsplit == 3,
-					cc = 'With radial transport explicit';
-				end
-				%
 				disp('******************************************************************************************')
-				if numdivergence,
+				if numdivergence == 1,
 					disp([cc,' (dtn = ',num2str(dtn_list(jdtn)),', Dr0 = ',num2str(Dr0_list(iDr0)),',nitmax = ',int2str(dkeparam.nit_f),'): Divergence of the numerical scheme after ',int2str(length(dke_out.residu_f(1,~isnan(dke_out.residu_f(1,:))))),' iterations.']);
-				elseif ~numconvergence,
-					disp([cc,' (dtn = ',num2str(dtn_list(jdtn)),', Dr0 = ',num2str(Dr0_list(iDr0)),',nitmax = ',int2str(dkeparam.nit_f),'): no convergence achieved.'])		
-				else
+				elseif numdivergence == 0 & numconvergence == 0,
+					disp([cc,' (dtn = ',num2str(dtn_list(jdtn)),', Dr0 = ',num2str(Dr0_list(iDr0)),',nitmax = ',int2str(dkeparam.nit_f),'): no convergence achieved.'])
+				elseif numdivergence == 0 & numconvergence == 1,
 					disp([cc,' (dtn = ',num2str(dtn_list(jdtn)),', Dr0 = ',num2str(Dr0_list(iDr0)),',nitmax = ',int2str(dkeparam.nit_f),'): convergence achieved in ',int2str(nit_f),' iterations.'])
-        		end
-        		disp('******************************************************************************************')
-        		%
-            	divergence(optsplit,iDr0,jdtn) = numdivergence;
-        		convergence(optsplit,iDr0,jdtn) = numconvergence;
-        		%
-				if ~numdivergence,
-        			j(optsplit,:,iDr0,jdtn) = Zcurr.x_0;
-        			P(optsplit,:,iDr0,jdtn) = ZP0.x_rf_fsav;        
+        			end
+				%
+        			disp('******************************************************************************************')
         			%
-        			tCPU(optsplit,iDr0,jdtn) = dke_out.time_out;
-        			memory(optsplit,iDr0,jdtn) = dke_out.memoryLU_f_out;
-        			tDKE(optsplit,iDr0,jdtn) = dke_out.time_DKE;
-        			%
-        			Itot(optsplit,iDr0,jdtn) = sum(Zcurr.x_0.*equilDKE.xdA_dke*mksa.j_ref);
-        			Ptot_2piRp(optsplit,iDr0,jdtn) = sum(ZP0.x_rf_fsav.'.*equilDKE.xdV_2piRp_dke*mksa.P_ref);
-        			%
-        		end
-        	else
-            	divergence(optsplit,iDr0,jdtn) = numdivergence;
+				if numdivergence == 0,
+        				convergence(optsplit,iDr0,jdtn) = numconvergence;
+					%
+        				j(optsplit,:,iDr0,jdtn) = Zcurr.x_0;
+        				P(optsplit,:,iDr0,jdtn) = ZP0.x_rf_fsav;        
+        				%
+        				tCPU(optsplit,iDr0,jdtn) = dke_out.time_out;
+        				memory(optsplit,iDr0,jdtn) = dke_out.memoryLU_f_out;
+        				tDKE(optsplit,iDr0,jdtn) = dke_out.time_DKE;
+        				%
+        				Itot(optsplit,iDr0,jdtn) = sum(Zcurr.x_0.*equilDKE.xdA_dke*mksa.j_ref);
+        				Ptot_2piRp(optsplit,iDr0,jdtn) = sum(ZP0.x_rf_fsav.'.*equilDKE.xdV_2piRp_dke*mksa.P_ref);
+        				%
+        			end
+        		else
+				disp('******************************************************************************************')
+				disp([cc,' (dtn = ',num2str(dtn_list(jdtn)),', Dr0 = ',num2str(Dr0_list(iDr0)),',nitmax = ',int2str(dkeparam.nit_f),'): Divergence of the numerical scheme. No calculations.']);
+				disp('******************************************************************************************')
            	end
-        end
+			%
+            	divergence(optsplit,iDr0,jdtn) = numdivergence;
+        	end
 	end
 end
 %
