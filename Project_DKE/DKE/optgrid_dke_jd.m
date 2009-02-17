@@ -10,7 +10,7 @@ if nargin < 4,
     display_mode = 0;
 end
 %
-if nargin < 3 || isnan(w_mask),
+if nargin < 3 || any(isnan(w_mask)),
     w_mask = 1:length(waves);
 end
 %
