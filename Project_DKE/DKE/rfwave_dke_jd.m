@@ -216,6 +216,9 @@ for iw = 1:length(waves),%
 		syn = snres.*sy;
 		%
         sdNparmindpparmin = abs((syn + sNpar.^2 - 1)./(1 - syn))*mksa.betath_ref;
+        %
+        sdNparmindpparmin = min([sdNparmindpparmin;abs(sNpar)]);
+        %
         sdNparmin = sdNparmindpparmin*npresmin*dkeparam.pnmax_S/dkeparam.np_S;
         %
         smaskmin = imag(ray.sdNpar) == 0 & ray.sdNpar < sdNparmin;
