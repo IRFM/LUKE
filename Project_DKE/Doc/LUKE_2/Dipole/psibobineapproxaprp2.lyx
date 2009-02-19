@@ -1,0 +1,566 @@
+#LyX 1.6.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\leftmargin 1.5cm
+\topmargin 1.5cm
+\rightmargin 1.5cm
+\bottommargin 1.5cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Calculation of the magnetic flux ccordinate of a current-driven toric surface
+\end_layout
+
+\begin_layout Author
+François-Xavier DUTHOIT
+\end_layout
+
+\begin_layout Standard
+Here, we express the total magnetic vector potential of a current-driven
+ toric surface as the sum of thin magnetic coils and using toroidal coordinates
+ 
+\begin_inset Formula $\left(r,\tilde{\theta},\varphi\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\begin{array}{ccc}
+\tilde{R_{p}} & = & R_{c}+a_{c}\cos\tilde{\theta}\\
+\tilde{Z_{p}} & = & Z_{c}+a_{c}\sin\tilde{\theta}\end{array}}\label{eq:}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using 
+\begin_inset Formula $\epsilon=\frac{a_{c}}{R_{c}}$
+\end_inset
+
+ as a small parameter, we get :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\begin{array}{ccc}
+\tilde{R_{p}} & = & R_{c}\left(1+\epsilon\cos\tilde{\theta}\right)\\
+\tilde{Z_{p}} & = & Z_{c}\left(1+\epsilon\frac{R_{c}}{Z_{c}}\sin\tilde{\theta}\right)\end{array}}\label{eq:-1}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression of the total magnetic vector potential reads :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\begin{array}{ccc}
+A_{R} & = & \int_{0}^{2\pi}\tilde{A_{R}}a_{c}d\tilde{\theta}=R_{c}\epsilon\int_{0}^{2\pi}\tilde{A_{R}}d\tilde{\theta}\\
+A_{\varphi} & = & \int_{0}^{2\pi}\tilde{A_{\varphi}}a_{c}d\tilde{\theta}=R_{c}\epsilon\int_{0}^{2\pi}\tilde{A_{\varphi}}d\tilde{\theta}\end{array}\label{eq:-3}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the expressions previously calculated for the magnetic vector potential
+ produced by a thin wire driven by a current of 
+\begin_inset Formula $\frac{I}{2\pi a_{c}}=\frac{I}{2\pi R_{c}\epsilon}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\begin{array}{ccc}
+\tilde{A_{R}} & = & \frac{\mu_{0}\tilde{R_{p}}}{4\pi}\frac{I}{2\pi R_{c}\epsilon}\int_{-\pi}^{\pi}\frac{\sin\left(\varphi-\phi\right)}{\tilde{D}}d\phi\\
+\tilde{A_{\varphi}} & = & \frac{\mu_{0}\tilde{R_{p}}}{4\pi}\frac{I}{2\pi R_{c}\epsilon}\int_{-\pi}^{\pi}\frac{\cos\left(\varphi-\phi\right)}{\tilde{D}}d\phi\end{array}\label{eq:-4}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\tilde{D}^{-1}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline*}
+\tilde{D}^{-1}=\left(R^{2}+\left(Z-\tilde{Z_{p}}\right)^{2}+\tilde{R_{p}}^{2}-2R\tilde{R_{p}}\cos\left(\varphi-\phi\right)\right)^{-\frac{1}{2}}\\
+=\left(D^{2}-2\epsilon R_{c}\left(\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)\cos\tilde{\theta}+\left(Z-Z_{c}\right)\sin\tilde{\theta}\right)+\epsilon^{2}R_{c}^{2}\right)^{-\frac{1}{2}}\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline}
+\tilde{D}^{-1}=D^{-1}\left(1+\epsilon\frac{R_{c}}{D^{2}}\left(\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)\cos\tilde{\theta}+\left(Z-Z_{c}\right)\sin\tilde{\theta}\right)\right.\\
+\left.+\epsilon^{2}\frac{R_{c}^{2}}{D^{2}}\left(\frac{3}{8}\frac{\left(\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)\cos\tilde{\theta}+\left(Z-Z_{c}\right)\sin\tilde{\theta}\right)^{2}}{D^{2}}-\frac{1}{2}\right)\right)\label{eq:-5-2}\end{multline}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\tilde{R_{p}}\tilde{D}^{-1}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline*}
+\tilde{R_{p}}\tilde{D}^{-1}=\frac{R_{c}}{D}\left(1+\epsilon\left(\cos\tilde{\theta}+\frac{R_{c}}{D^{2}}\left(\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)\cos\tilde{\theta}+\left(Z-Z_{c}\right)\sin\tilde{\theta}\right)\right)\right.\\
++\epsilon^{2}\left(\cos\tilde{\theta}\frac{R_{c}}{D^{2}}\left(\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)\cos\tilde{\theta}+\left(Z-Z_{c}\right)\sin\tilde{\theta}\right)\right.\\
+\left.\left.+\frac{R_{c}^{2}}{D^{2}}\left(\frac{3}{8}\frac{\left(\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)\cos\tilde{\theta}+\left(Z-Z_{c}\right)\sin\tilde{\theta}\right)^{2}}{D^{2}}-\frac{1}{2}\right)\right)\right)\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Eliminating non quadratic terms, the expression becomes :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline*}
+\tilde{R_{p}}\tilde{D}^{-1}=\frac{R_{c}}{D}\left(1+\epsilon^{2}\left(\frac{R_{c}}{D^{2}}\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)\cos^{2}\tilde{\theta}\right.\right.\\
+\left.\left.+\frac{R_{c}^{2}}{D^{2}}\left(\frac{3}{8}\frac{\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)^{2}\cos^{2}\tilde{\theta}+\left(Z-Z_{c}\right)^{2}\sin^{2}\tilde{\theta}}{D^{2}}-\frac{1}{2}\right)\right)\right)\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline*}
+R_{c}\int_{0}^{2\pi}\tilde{R_{p}}\tilde{D}^{-1}\epsilon d\tilde{\theta}=R_{c}\epsilon\left(2\pi\frac{R_{c}}{D}+\frac{\epsilon^{2}}{2}\left(\pi\frac{R_{c}^{2}}{D^{3}}\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)\right.\right.\\
+\left.\left.+\frac{R_{c}^{3}}{D^{3}}\left(\frac{3\pi}{8}\frac{\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)^{2}+\left(Z-Z_{c}\right)^{2}}{D^{2}}-2\pi\right)\right)\right)\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline}
+R_{c}\int_{0}^{2\pi}\tilde{R_{p}}\tilde{D}^{-1}\epsilon d\tilde{\theta}=R_{c}\epsilon\left(2\pi\frac{R_{c}}{D}+\frac{\epsilon^{2}}{2}\left(\pi R_{c}^{2}\left(\frac{R\cos\left(\varphi-\phi\right)-3R_{c}}{D^{3}}\right)\right.\right.\\
+\left.\left.+R_{c}^{3}\frac{3\pi}{8}\frac{R^{2}\cos^{2}\left(\varphi-\phi\right)-RR_{c}\cos\left(\varphi-\phi\right)+R_{c}^{2}+\left(Z-Z_{c}\right)^{2}}{D^{5}}\right)\right)\label{eq:-6-1}\end{multline}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression of 
+\begin_inset Formula $\mathbf{A}$
+\end_inset
+
+ therefore becomes :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline*}
+A_{R}=\frac{\mu_{0}IR_{c}}{4\pi}\int_{-\pi}^{\pi}\sin\left(\varphi-\phi\right)\left(\frac{1}{D}+\frac{\epsilon^{2}}{4}\left(R_{c}\left(\frac{R\cos\left(\varphi-\phi\right)-3R_{c}}{D^{3}}\right)\right.\right.\\
+\left.\left.+R_{c}^{2}\frac{3}{8}\frac{R^{2}\cos^{2}\left(\varphi-\phi\right)-RR_{c}\cos\left(\varphi-\phi\right)+R_{c}^{2}+\left(Z-Z_{c}\right)^{2}}{D^{5}}\right)\right)d\phi\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline*}
+A_{\varphi}=\frac{\mu_{0}IR_{c}}{4\pi}\int_{-\pi}^{\pi}\cos\left(\varphi-\phi\right)\left(\frac{1}{D}+\frac{\epsilon^{2}}{4}\left(R_{c}\left(\frac{R\cos\left(\varphi-\phi\right)-3R_{c}}{D^{3}}\right)\right.\right.\\
+\left.\left.+R_{c}^{2}\frac{3}{8}\frac{R^{2}\cos^{2}\left(\varphi-\phi\right)-RR_{c}\cos\left(\varphi-\phi\right)+R_{c}^{2}+\left(Z-Z_{c}\right)^{2}}{D^{5}}\right)\right)d\phi\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Elliptic integral calculations
+\end_layout
+
+\begin_layout Standard
+The integrals, applying the same transformation 
+\begin_inset Formula $\varphi-\phi=2\tilde{\phi}-\pi$
+\end_inset
+
+, 
+\begin_inset Formula $\tilde{R}^{2}=\left(R+R_{c}\right)^{2}+\left(Z-Z_{c}\right)^{2}$
+\end_inset
+
+ and 
+\begin_inset Formula $k^{2}=\frac{4RR_{c}}{\tilde{R}^{2}}$
+\end_inset
+
+ are all functions of the complete elliptic integrals of the first and second
+ kind.
+ We define 
+\begin_inset Formula $C=\sqrt{1-k^{2}\sin^{2}\tilde{\phi}}=\frac{D}{\tilde{R}}$
+\end_inset
+
+.
+ We start from the expressions :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+C_{0-1}=\int_{0}^{\frac{\pi}{2}}Cd\tilde{\phi}=E\left(k^{2}\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+C_{01}=\int_{0}^{\frac{\pi}{2}}\frac{d\tilde{\phi}}{C}=K\left(k^{2}\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+C_{03}=\int_{0}^{\frac{\pi}{2}}\frac{d\tilde{\phi}}{C^{3}}=-\frac{1}{k^{2}-1}E\left(k^{2}\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+C_{05}=\int_{0}^{\frac{\pi}{2}}\frac{d\tilde{\phi}}{C^{5}}=\frac{1}{3}\left(\frac{1}{k^{2}-1}K\left(k^{2}\right)+\frac{k^{2}-2}{\left(k^{2}-1\right)^{2}}E\left(k^{2}\right)\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+Calculation of 
+\begin_inset Formula $C_{11}=\int_{0}^{\frac{\pi}{2}}\frac{\cos2\tilde{\phi}}{C}d\tilde{\phi}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+C_{11}=\int_{0}^{\frac{\pi}{2}}\frac{\cos2\tilde{\phi}}{C}d\tilde{\phi}=\int_{0}^{\frac{\pi}{2}}\left(\frac{k^{2}-2}{k^{2}C}+2\frac{C}{k^{2}}\right)d\tilde{\phi}=\frac{1}{k^{2}}\left(\left(k^{2}-2\right)C_{01}+2C_{0-1}\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+Calculation of 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+
+\begin_inset Formula $C_{13}=\int_{0}^{\frac{\pi}{2}}\frac{\cos2\tilde{\phi}}{C^{3}}d\tilde{\phi}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+C_{13}=\int_{0}^{\frac{\pi}{2}}\frac{\cos2\tilde{\phi}}{C^{3}}d\tilde{\phi}=\int_{0}^{\frac{\pi}{2}}\left(\frac{k^{2}-2}{k^{2}C^{3}}+\frac{2}{k^{2}C}\right)d\tilde{\phi}=\frac{1}{k^{2}}\left(\left(k^{2}-2\right)C_{03}+2C_{01}\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+Calculation of 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+
+\begin_inset Formula $C_{23}=\int_{0}^{\frac{\pi}{2}}\frac{\cos^{2}2\tilde{\phi}}{C^{3}}d\tilde{\phi}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline*}
+C_{23}=\int_{0}^{\frac{\pi}{2}}\frac{\cos^{2}2\tilde{\phi}}{C^{3}}d\tilde{\phi}=\int_{0}^{\frac{\pi}{2}}\left(\frac{\left(k^{2}-2\right)^{2}}{k^{4}C^{3}}+4\frac{k^{2}-2}{k^{4}C}+4\frac{C}{k^{4}}\right)d\tilde{\phi}\\
+=\frac{1}{k^{4}}\left(\left(k^{2}-2\right)^{2}C_{03}+4\left(k^{2}-2\right)C_{01}+4C_{0-1}\right)\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+Calculation of 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+
+\begin_inset Formula $C_{15}=\int_{0}^{\frac{\pi}{2}}\frac{\cos2\tilde{\phi}}{C^{5}}d\tilde{\phi}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline*}
+C_{15}=\int_{0}^{\frac{\pi}{2}}\frac{\cos2\tilde{\phi}}{C^{5}}d\tilde{\phi}=\int_{0}^{\frac{\pi}{2}}\left(\frac{k^{2}-2}{k^{2}C^{5}}+\frac{2}{k^{2}C^{3}}\right)d\tilde{\phi}\\
+=\frac{1}{k^{2}}\left(\left(k^{2}-2\right)C_{05}+2C_{03}\right)\\
+=\left(\frac{1}{3}\frac{k^{2}-2}{k^{2}\left(k^{2}-1\right)}K\left(k^{2}\right)+\frac{k^{4}-10k^{2}+10}{3k^{2}\left(k^{2}-1\right)^{2}}E\left(k^{2}\right)\right)\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+Calculation of 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+
+\begin_inset Formula $C_{25}=\int_{0}^{\frac{\pi}{2}}\frac{\cos^{2}2\tilde{\phi}}{C^{5}}d\tilde{\phi}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline*}
+C_{25}=\int_{0}^{\frac{\pi}{2}}\frac{\cos^{2}2\tilde{\phi}}{C^{5}}d\tilde{\phi}=\int_{0}^{\frac{\pi}{2}}\left(\frac{\left(k^{2}-2\right)^{2}}{k^{4}C^{5}}+4\frac{k^{2}-2}{k^{4}C^{3}}+4\frac{1}{k^{4}C}\right)d\tilde{\phi}\\
+=\frac{1}{k^{4}}\left(\left(k^{2}-2\right)^{2}C_{05}+4\left(k^{2}-2\right)C_{03}+4C_{01}\right)\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+Calculation of 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+
+\begin_inset Formula $C_{35}=\int_{0}^{\frac{\pi}{2}}\frac{\cos^{3}2\tilde{\phi}}{C^{5}}d\tilde{\phi}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline*}
+C_{35}=\int_{0}^{\frac{\pi}{2}}\frac{\cos^{3}2\tilde{\phi}}{C^{5}}d\tilde{\phi}=\int_{0}^{\frac{\pi}{2}}\left(\frac{\left(k^{2}-2\right)^{3}}{k^{6}C^{5}}+6\frac{\left(k^{2}-2\right)^{2}}{k^{6}C^{3}}+12\frac{k^{2}-2}{k^{6}C}+8\frac{C}{k^{6}}\right)d\tilde{\phi}\\
+=\frac{1}{k^{6}}\left(\left(k^{2}-2\right)^{3}C_{05}+6\left(k^{2}-2\right)^{2}C_{03}+12\left(k^{2}-2\right)C_{01}+8C_{0-1}\right)\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We therefore obtain a form of the total magnetic vector potential which
+ depends only on 
+\begin_inset Formula $R,Z,\epsilon,R_{c},Z_{c},I$
+\end_inset
+
+.
+ The expression of the flux coordinate becomes :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\psi=RA_{\varphi}=\frac{\mu_{0}IRR_{c}}{\pi}\left(-\frac{C_{11}}{\tilde{R}}+\frac{\epsilon^{2}}{4}\left(\frac{R_{c}}{\tilde{R}^{3}}\left(RC_{23}+3R_{c}C_{13}\right)+\frac{3R_{c}^{2}}{8\tilde{R}^{5}}\left(-R^{2}C_{35}-RR_{c}C_{25}-\left(R_{c}^{2}+\left(Z-Z_{c}\right)^{2}\right)C_{15}\right)\right)\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+\begin_inset Formula \begin{equation}
+\boxed{\psi=\frac{\mu_{0}Ik^{2}}{4\pi}\left(-C_{11}\tilde{R}+\frac{\epsilon^{2}}{4\tilde{R}}\left(R_{c}\left(RC_{23}+3R_{c}C_{13}\right)-\frac{3R_{c}^{2}}{8\tilde{R}^{2}}\left(R^{2}C_{35}+RR_{c}C_{25}+\left(R_{c}^{2}+\left(Z-Z_{c}\right)^{2}\right)C_{15}\right)\right)\right)}\label{eq:psifinal}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

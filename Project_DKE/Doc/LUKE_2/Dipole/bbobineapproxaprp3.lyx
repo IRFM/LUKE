@@ -1,0 +1,672 @@
+#LyX 1.6.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\use_default_options false
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\leftmargin 1cm
+\topmargin 1cm
+\rightmargin 1cm
+\bottommargin 1cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Calculation of the magnetic field of a current-driven toric surface
+\end_layout
+
+\begin_layout Author
+François-Xavier DUTHOIT
+\end_layout
+
+\begin_layout Standard
+Here, we express the total magnetic field of a current-driven toric surface
+ as the sum of thin magnetic coils and using toroidal coordinates 
+\begin_inset Formula $\left(r,\tilde{\theta},\varphi\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\begin{array}{ccc}
+\tilde{R_{p}} & = & R_{c}+a_{c}\cos\tilde{\theta}\\
+\tilde{Z_{p}} & = & Z_{c}+a_{c}\sin\tilde{\theta}\end{array}}\label{eq:}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using 
+\begin_inset Formula $\epsilon=\frac{a_{c}}{R_{c}}$
+\end_inset
+
+ as a small parameter, we get :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\begin{array}{ccc}
+\tilde{R_{p}} & = & R_{c}\left(1+\epsilon\cos\tilde{\theta}\right)\\
+\tilde{Z_{p}} & = & Z_{c}\left(1+\epsilon\frac{R_{c}}{Z_{c}}\sin\tilde{\theta}\right)\end{array}}\label{eq:-1}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\begin{array}{ccc}
+\tilde{R_{p}}^{2} & = & R_{p}^{2}\left(1+2\epsilon\cos\tilde{\theta}+\epsilon^{2}\cos^{2}\tilde{\theta}\right)\\
+\tilde{Z_{p}}^{2} & = & Z_{c}^{2}\left(1+2\epsilon\frac{R_{c}}{Z_{c}}\sin\tilde{\theta}+\epsilon^{2}\frac{R_{c}^{2}}{Z_{c}^{2}}\sin^{2}\tilde{\theta}\right)\\
+\tilde{R_{p}}\left(Z-\tilde{Z_{p}}\right) & = & R_{c}\left(Z-Z_{c}\right)\left(1+\epsilon\left(\cos\tilde{\theta}-\frac{R_{c}}{Z-Z_{c}}\sin\tilde{\theta}\right)-\epsilon^{2}\frac{R_{c}}{Z-Z_{c}}\cos\tilde{\theta}\sin\tilde{\theta}\right)\end{array}\label{eq:-2}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression of the total magnetic field reads :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\begin{array}{ccc}
+B_{R} & = & \int_{0}^{2\pi}\tilde{B_{R}}a_{c}d\tilde{\theta}=R_{c}\epsilon\int_{0}^{2\pi}\tilde{B_{R}}d\tilde{\theta}\\
+B_{Z} & = & \int_{0}^{2\pi}\tilde{B_{Z}}a_{c}d\tilde{\theta}=R_{c}\epsilon\int_{0}^{2\pi}\tilde{B_{Z}}d\tilde{\theta}\end{array}\label{eq:-3}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the expressions previously calculated for the magnetic field produced
+ by a thin wire driven by a current of 
+\begin_inset Formula $\frac{I}{2\pi a_{c}}=\frac{I}{2\pi R_{c}\epsilon}$
+\end_inset
+
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\begin{array}{ccc}
+\tilde{B_{R}} & = & \frac{\mu_{0}\tilde{R_{p}}}{4\pi}\frac{I}{2\pi R_{c}\epsilon}\int_{-\pi}^{\pi}\frac{\left(Z-\tilde{Z_{p}}\right)\cos\left(\varphi-\phi\right)}{\tilde{D}^{3}}d\phi\\
+\tilde{B_{Z}} & = & \frac{\mu_{0}\tilde{R_{p}}}{4\pi}\frac{I}{2\pi R_{c}\epsilon}\int_{-\pi}^{\pi}\frac{\tilde{R_{p}}-R\cos\left(\varphi-\phi\right)}{\tilde{D}^{3}}d\phi\end{array}\label{eq:-4}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\tilde{D}^{-3}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\tilde{D}^{-3}=\left(R^{2}+\left(Z-\tilde{Z_{p}}\right)^{2}+\tilde{R_{p}}^{2}-2R\tilde{R_{p}}\cos\left(\varphi-\phi\right)\right)^{-\frac{3}{2}}=\left(D^{2}-2\epsilon R_{c}\left(\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)\cos\tilde{\theta}+\left(Z-Z_{c}\right)\sin\tilde{\theta}\right)+\epsilon^{2}R_{c}^{2}\right)^{-\frac{3}{2}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline}
+\tilde{D}^{-3}=D^{-3}\left(1+3\epsilon\frac{R_{c}}{D^{2}}\left(\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)\cos\tilde{\theta}+\left(Z-Z_{c}\right)\sin\tilde{\theta}\right)\right.\\
+\left.+\epsilon^{2}\frac{R_{c}^{2}}{D^{2}}\left(\frac{15}{8}\frac{\left(\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)\cos\tilde{\theta}+\left(Z-Z_{c}\right)\sin\tilde{\theta}\right)^{2}}{D^{2}}-\frac{3}{2}\right)\right)\label{eq:-5-1}\end{multline}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\tilde{R_{p}}\tilde{D}^{-3}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline*}
+\tilde{R_{p}}\tilde{D}^{-3}=\frac{R_{c}}{D^{3}}\left(1+\epsilon\left(\cos\tilde{\theta}+3\frac{R_{c}}{D^{2}}\left(\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)\cos\tilde{\theta}+\left(Z-Z_{c}\right)\sin\tilde{\theta}\right)\right)\right.\\
++\epsilon^{2}\left(\cos\tilde{\theta}3\frac{R_{c}}{D^{2}}\left(\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)\cos\tilde{\theta}+\left(Z-Z_{c}\right)\sin\tilde{\theta}\right)\right.\\
+\left.\left.+\frac{R_{c}^{2}}{D^{2}}\left(\frac{15}{8}\frac{\left(\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)\cos\tilde{\theta}+\left(Z-Z_{c}\right)\sin\tilde{\theta}\right)^{2}}{D^{2}}-\frac{3}{2}\right)\right)\right)\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Eliminating non quadratic terms, the expression becomes :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline*}
+\tilde{R_{p}}\tilde{D}^{-3}=\frac{R_{c}}{D^{3}}\left(1+\epsilon^{2}\left(3\frac{R_{c}}{D^{2}}\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)\cos^{2}\tilde{\theta}\right.\right.\\
+\left.\left.+\frac{R_{c}^{2}}{D^{2}}\left(\frac{15}{8}\frac{\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)^{2}\cos^{2}\tilde{\theta}+\left(Z-Z_{c}\right)^{2}\sin^{2}\tilde{\theta}}{D^{2}}-\frac{3}{2}\right)\right)\right)\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline*}
+R_{c}\int_{0}^{2\pi}\tilde{R_{p}}\tilde{D}^{-3}\epsilon d\tilde{\theta}=R_{c}\epsilon\left(2\pi\frac{R_{c}}{D^{3}}+\frac{\epsilon^{2}}{2}\left(3\pi\frac{R_{c}^{2}}{D^{5}}\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)\right.\right.\\
+\left.\left.+\frac{R_{c}^{3}}{D^{5}}\left(\frac{15\pi}{8}\frac{\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)^{2}+\left(Z-Z_{c}\right)^{2}}{D^{2}}-6\pi\right)\right)\right)\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline}
+R_{c}\int_{0}^{2\pi}\tilde{R_{p}}\tilde{D}^{-3}\epsilon d\tilde{\theta}=R_{c}\epsilon\left(2\pi\frac{R_{c}}{D^{3}}+\frac{\epsilon^{2}}{2}\left(3\pi R_{c}^{2}\left(\frac{R\cos\left(\varphi-\phi\right)-3R_{c}}{D^{5}}\right)\right.\right.\\
+\left.\left.+R_{c}^{3}\frac{15\pi}{8}\frac{R^{2}\cos^{2}\left(\varphi-\phi\right)-RR_{c}\cos\left(\varphi-\phi\right)+R_{c}^{2}+\left(Z-Z_{c}\right)^{2}}{D^{7}}\right)\right)\label{eq:-6-1}\end{multline}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\tilde{R_{p}}^{2}\tilde{D}^{-3}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline*}
+\tilde{R_{p}}^{2}\tilde{D}^{-3}=\frac{R_{c}}{D^{3}}\left(1+\epsilon\left(2\cos\tilde{\theta}+3\frac{R_{c}}{D^{2}}\left(\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)\cos\tilde{\theta}+\left(Z-Z_{c}\right)\sin\tilde{\theta}\right)\right)\right.\\
++\epsilon^{2}\left(R_{c}^{2}\cos^{2}\tilde{\theta}+6\cos\tilde{\theta}\frac{R_{c}}{D^{2}}\left(\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)\cos\tilde{\theta}+\left(Z-Z_{c}\right)\sin\tilde{\theta}\right)\right.\\
+\left.\left.+\frac{R_{c}^{2}}{D^{2}}\left(\frac{15}{8}\frac{\left(\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)\cos\tilde{\theta}+\left(Z-Z_{c}\right)\sin\tilde{\theta}\right)^{2}}{D^{2}}-\frac{3}{2}\right)\right)\right)\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Eliminating non quadratic terms, the expression becomes :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline*}
+\tilde{R_{p}}^{2}\tilde{D}^{-3}=\frac{R_{c}^{2}}{D^{3}}\left(1+\epsilon^{2}\left(\frac{R_{c}^{2}}{D^{2}}\cos^{2}\tilde{\theta}+3\frac{R_{c}}{D^{2}}\left(4R\cos\left(\varphi-\phi\right)-5R_{c}\right)\cos^{2}\tilde{\theta}\right.\right.\\
+\left.\left.+\frac{R_{c}^{2}}{D^{2}}\left(\frac{15}{8}\frac{\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)^{2}\cos^{2}\tilde{\theta}+\left(Z-Z_{c}\right)^{2}\sin^{2}\tilde{\theta}}{D^{2}}-\frac{3}{2}\right)\right)\right)\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline*}
+R_{c}\int_{0}^{2\pi}\tilde{R_{p}}^{2}\tilde{D}^{-3}\epsilon d\tilde{\theta}=R_{c}\epsilon\left(2\pi\frac{R_{c}^{2}}{D^{3}}+\frac{\epsilon^{2}}{2}\left(\pi\frac{R_{c}^{4}}{D^{5}}+3\pi\frac{R_{c}^{3}}{D^{5}}\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)\right.\right.\\
+\left.\left.+\frac{R_{c}^{4}}{D^{5}}\left(\frac{15\pi}{8}\frac{\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)^{2}+\left(Z-Z_{c}\right)^{2}}{D^{2}}-6\pi\right)\right)\right)\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline}
+R_{c}\int_{0}^{2\pi}\tilde{R_{p}}^{2}\tilde{D}^{-3}\epsilon d\tilde{\theta}=R_{c}\epsilon\left(2\pi\frac{R_{c}^{2}}{D^{3}}+\frac{\epsilon^{2}}{2}\left(\pi R_{c}^{3}\left(\frac{3R\cos\left(\varphi-\phi\right)-8R_{c}}{D^{5}}\right)\right.\right.\\
+\left.\left.+R_{c}^{4}\frac{15\pi}{8}\frac{R^{2}\cos^{2}\left(\varphi-\phi\right)-RR_{c}\cos\left(\varphi-\phi\right)+R_{c}^{2}+\left(Z-Z_{c}\right)^{2}}{D^{7}}\right)\right)\label{eq:-7-1}\end{multline}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\tilde{R_{p}}\left(Z-\tilde{Z_{p}}\right)\tilde{D}^{-3}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline*}
+\tilde{R_{p}}\left(Z-\tilde{Z_{p}}\right)\tilde{D}^{-3}=\frac{R_{c}}{D^{3}}\left(\vphantom{\frac{\left(\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)\cos\tilde{\theta}+\left(Z-Z_{c}\right)\sin\tilde{\theta}\right)^{2}}{D^{2}}}1+\epsilon\left(\cos\tilde{\theta}-\frac{R_{c}}{Z-Z_{c}}\sin\tilde{\theta}+3\frac{R_{c}}{D^{2}}\left(\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)\cos\tilde{\theta}+\left(Z-Z_{c}\right)\sin\tilde{\theta}\right)\right)\right.\\
++\epsilon^{2}\left(\vphantom{\frac{\left(\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)\cos\tilde{\theta}+\left(Z-Z_{c}\right)\sin\tilde{\theta}\right)^{2}}{D^{2}}}R_{c}^{2}\cos^{2}\tilde{\theta}+6\cos\tilde{\theta}\frac{R_{c}}{D^{2}}\left(\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)\cos\tilde{\theta}+\left(Z-Z_{c}\right)\sin\tilde{\theta}\right)\right.\\
+\left.\left.+\frac{R_{c}^{2}}{D^{2}}\left(\frac{15}{8}\frac{\left(\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)\cos\tilde{\theta}+\left(Z-Z_{c}\right)\sin\tilde{\theta}\right)^{2}}{D^{2}}-\frac{3}{2}\right)\right)\right)\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Eliminating non quadratic terms, the expression becomes :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline*}
+\tilde{R_{p}}\left(Z-\tilde{Z_{p}}\right)\tilde{D}^{-3}=\frac{R_{c}\left(Z-Z_{c}\right)}{D^{3}}\left(1+\epsilon^{2}\left(\frac{R_{c}^{2}}{D^{2}}\cos^{2}\tilde{\theta}+6\frac{R_{c}}{D^{2}}\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)\cos^{2}\tilde{\theta}\right.\right.\\
+\left.\left.+\frac{R_{c}^{2}}{D^{2}}\left(\frac{15}{8}\frac{\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)^{2}\cos^{2}\tilde{\theta}+\left(Z-Z_{c}\right)^{2}\sin^{2}\tilde{\theta}}{D^{2}}-\frac{3}{2}\right)\right)\right)\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline*}
+R_{c}\int_{0}^{2\pi}\tilde{R_{p}}\left(Z-\tilde{Z_{p}}\right)\tilde{D}^{-3}\epsilon d\tilde{\theta}=R_{c}\epsilon\left(2\pi\frac{R_{c}\left(Z-Z_{c}\right)}{D^{3}}+\frac{\epsilon^{2}}{2}\left(\pi\frac{R_{c}^{3}\left(Z-Z_{c}\right)}{D^{5}}+6\pi\frac{R_{c}^{2}\left(Z-Z_{c}\right)}{D^{5}}\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)\right.\right.\\
+\left.\left.+\frac{R_{c}^{3}\left(Z-Z_{c}\right)}{D^{5}}\left(\frac{15\pi}{8}\frac{\left(R\cos\left(\varphi-\phi\right)-R_{c}\right)^{2}+\left(Z-Z_{c}\right)^{2}}{D^{2}}-6\pi\right)\right)\right)\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline}
+R_{c}\int_{0}^{2\pi}\tilde{R_{p}}\left(Z-\tilde{Z_{p}}\right)\tilde{D}^{-3}\epsilon d\tilde{\theta}=R_{c}\epsilon\left(2\pi\frac{R_{c}\left(Z-Z_{c}\right)}{D^{3}}+\frac{\epsilon^{2}}{2}\left(\pi R_{c}^{2}\left(Z-Z_{c}\right)\left(\frac{6R\cos\left(\varphi-\phi\right)-11R_{c}}{D^{5}}\right)\right.\right.\\
+\left.\left.+R_{c}^{3}\left(Z-Z_{c}\right)\frac{15\pi}{8}\frac{R^{2}\cos^{2}\left(\varphi-\phi\right)-RR_{c}\cos\left(\varphi-\phi\right)+R_{c}^{2}+\left(Z-Z_{c}\right)^{2}}{D^{7}}\right)\right)\label{eq:-8-1}\end{multline}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Elliptic integral calculations
+\end_layout
+
+\begin_layout Standard
+The integrals, applying the same transformation 
+\begin_inset Formula $\varphi-\phi=2\tilde{\phi}-\pi$
+\end_inset
+
+, 
+\begin_inset Formula $\tilde{R}^{2}=\left(R+R_{c}\right)^{2}+\left(Z-Z_{c}\right)^{2}$
+\end_inset
+
+ and 
+\begin_inset Formula $k^{2}=\frac{4RR_{c}}{\tilde{R}^{2}}$
+\end_inset
+
+ are all functions of the complete elliptic integrals of the first and second
+ kind.
+ We define 
+\begin_inset Formula $C=\sqrt{1-k^{2}\sin^{2}\tilde{\phi}}=\frac{D}{\tilde{R}}$
+\end_inset
+
+ and 
+\begin_inset Formula $C_{pq}=\int_{0}^{\frac{\pi}{2}}\frac{\cos^{p}\tilde{\phi}}{C^{q}}d\tilde{\phi}$
+\end_inset
+
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+C_{01}=\int_{0}^{\frac{\pi}{2}}\frac{d\tilde{\phi}}{C}=K\left(k^{2}\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+C_{03}=\int_{0}^{\frac{\pi}{2}}\frac{d\tilde{\phi}}{C^{3}}=-\frac{1}{k^{2}-1}E\left(k^{2}\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+C_{05}=\int_{0}^{\frac{\pi}{2}}\frac{d\tilde{\phi}}{C^{5}}=\frac{1}{3}\left(\frac{1}{k^{2}-1}K\left(k^{2}\right)+\frac{k^{2}-2}{\left(k^{2}-1\right)^{2}}E\left(k^{2}\right)\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+C_{07}=\int_{0}^{\frac{\pi}{2}}\frac{d\tilde{\phi}}{C^{7}}=\frac{1}{15}\left(4\frac{k^{2}-2}{\left(k^{2}-1\right)^{2}}K\left(k^{2}\right)-\frac{8k^{4}-23k^{2}+23}{\left(k^{2}-1\right)^{3}}E\left(k^{2}\right)\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+Calculation of 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+
+\begin_inset Formula $C_{13}=\int_{0}^{\frac{\pi}{2}}\frac{\cos2\tilde{\phi}}{C^{3}}d\tilde{\phi}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline*}
+C_{13}=\int_{0}^{\frac{\pi}{2}}\frac{\cos2\tilde{\phi}}{C^{3}}d\tilde{\phi}=\int_{0}^{\frac{\pi}{2}}\left(\frac{k^{2}-2}{k^{2}C^{3}}+\frac{2}{k^{2}C}\right)d\tilde{\phi}=\frac{1}{k^{2}}\left(\left(k^{2}-2\right)C_{03}+2C_{01}\right)\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+Calculation of 
+\begin_inset Formula $C_{15}=\int_{0}^{\frac{\pi}{2}}\frac{\cos2\tilde{\phi}}{C^{5}}d\tilde{\phi}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline*}
+C_{15}=\int_{0}^{\frac{\pi}{2}}\frac{\cos2\tilde{\phi}}{C^{5}}d\tilde{\phi}=\int_{0}^{\frac{\pi}{2}}\left(\frac{k^{2}-2}{k^{2}C^{5}}+\frac{2}{k^{2}C^{3}}\right)=\frac{1}{k^{2}}\left(\left(k^{2}-2\right)C_{05}+2C_{03}\right)\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+Calculation of 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+
+\begin_inset Formula $C_{25}=\int_{0}^{\frac{\pi}{2}}\frac{\cos^{2}2\tilde{\phi}}{C^{5}}d\tilde{\phi}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline*}
+C_{25}=\int_{0}^{\frac{\pi}{2}}\frac{\cos^{2}2\tilde{\phi}}{C^{5}}d\tilde{\phi}=\int_{0}^{\frac{\pi}{2}}\left(\frac{\left(k^{2}-2\right)^{2}}{k^{4}C^{5}}+4\frac{k^{2}-2}{k^{4}C^{3}}+4\frac{1}{k^{4}C}\right)d\tilde{\phi}\\
+=\frac{1}{k^{4}}\left(\left(k^{2}-2\right)^{2}C_{05}+4\left(k^{2}-2\right)C_{03}+4C_{01}\right)\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+Calculation of 
+\begin_inset Formula $C_{17}=\int_{0}^{\frac{\pi}{2}}\frac{\cos2\tilde{\phi}}{C^{7}}d\tilde{\phi}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline*}
+C_{17}=\int_{0}^{\frac{\pi}{2}}\frac{\cos2\tilde{\phi}}{C^{7}}d\tilde{\phi}=\int_{0}^{\frac{\pi}{2}}\left(\frac{k^{2}-2}{k^{2}C^{7}}+\frac{2}{k^{2}C^{5}}\right)=\frac{1}{k^{2}}\left(\left(k^{2}-2\right)C_{07}+2C_{05}\right)\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+Calculation of 
+\begin_inset Formula $C_{27}=\int_{0}^{\frac{\pi}{2}}\frac{\cos^{2}2\tilde{\phi}}{C^{7}}d\tilde{\phi}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline}
+C_{27}=\int_{0}^{\frac{\pi}{2}}\frac{\cos^{2}2\tilde{\phi}}{C^{7}}d\tilde{\phi}=\int_{0}^{\frac{\pi}{2}}\left(\frac{\left(k^{2}-2\right)^{2}}{k^{4}C^{7}}+4\frac{k^{2}-2}{k^{4}C^{5}}+4\frac{1}{k^{4}C^{3}}\right)d\tilde{\phi}\\
+=\frac{1}{k^{4}}\left(\left(k^{2}-2\right)^{2}C_{07}+4\left(k^{2}-2\right)C_{05}+4C_{03}\right)\end{multline}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+Calculation of 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+
+\begin_inset Formula $C_{37}=\int_{0}^{\frac{\pi}{2}}\frac{\cos^{3}2\tilde{\phi}}{C^{7}}d\tilde{\phi}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline*}
+C_{37}=\int_{0}^{\frac{\pi}{2}}\frac{\cos^{3}2\tilde{\phi}}{C^{7}}d\tilde{\phi}=\int_{0}^{\frac{\pi}{2}}\left(\frac{\left(k^{2}-2\right)^{3}}{k^{6}C^{7}}+6\frac{\left(k^{2}-2\right)^{2}}{k^{6}C^{5}}+12\frac{k^{2}-2}{k^{6}C^{3}}+\frac{8}{k^{6}C}\right)d\tilde{\phi}\\
+=\frac{1}{k^{6}}\left(\left(k^{2}-2\right)^{3}C_{07}+6\left(k^{2}-2\right)^{2}C_{05}+12\left(k^{2}-2\right)C_{03}+8C_{01}\right)\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We therefore obtain a form of the total magnetic field which depends only
+ on 
+\begin_inset Formula $R,Z,\epsilon,R_{c},Z_{c},I$
+\end_inset
+
+.The expression of the total magnetic field becomes :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+B_{R}=\frac{\mu_{0}IR_{c}^{2}\left(Z-Z_{c}\right)}{2\pi}\left(-C_{13}+\frac{\epsilon^{2}}{4}\left(\frac{R_{c}}{\tilde{R}^{5}}\left(6RC_{25}+11R_{c}C_{15}\right)-\frac{15}{8}\frac{R_{c}^{2}}{\tilde{R}^{7}}\left(R^{2}C_{37}+RR_{c}C_{27}+\left(R_{c}^{2}+\left(Z-Z_{c}\right)^{2}\right)C_{17}\right)\right)\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline*}
+B_{Z}=\frac{\mu_{0}IR_{c}^{2}}{2\pi}\left(R_{c}\left(C_{03}+\frac{\epsilon^{2}}{4}\left(-\frac{R_{c}}{\tilde{R}^{5}}\left(3RC_{15}+8R_{c}C_{05}\right)+\frac{15}{8}\frac{R_{c}^{2}}{\tilde{R}^{7}}\left(R^{2}C_{27}+RR_{c}C_{17}+\left(R_{c}^{2}+\left(Z-Z_{c}\right)^{2}\right)C_{07}\right)\right)\right)\right.\\
+\left.-R\left(-C_{13}+\frac{\epsilon^{2}}{4}\left(3\frac{R_{c}}{\tilde{R}^{5}}\left(RC_{25}+3R_{c}C_{15}\right)-\frac{15}{8}\frac{R_{c}^{2}}{\tilde{R}^{7}}\left(R^{2}C_{37}+RR_{c}C_{27}+\left(R_{c}^{2}+\left(Z-Z_{c}\right)^{2}\right)C_{17}\right)\right)\right)\right)\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We then have the final expression :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\begin{array}{ccc}
+B_{R} & = & \frac{\mu_{0}IR_{c}^{2}\left(Z-Z_{c}\right)}{2\pi}\left(-C_{13}+\frac{\epsilon^{2}}{4\tilde{R}^{5}}\left(\vphantom{\frac{R_{c}^{2}}{\tilde{R}^{2}}}R_{c}\left(6RC_{25}+11R_{c}C_{15}\right)\right.\right.\\
+ &  & \left.\left.-\frac{15}{8}\frac{R_{c}^{2}}{\tilde{R}^{2}}\left(R^{2}C_{37}+RR_{c}C_{27}+\left(R_{c}^{2}+\left(Z-Z_{c}\right)^{2}\right)C_{17}\right)\right)\right)\end{array}}\label{eq:BR}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\begin{array}{ccc}
+B_{Z} & = & \frac{\mu_{0}IR_{c}^{2}}{2\pi}\left(R_{c}C_{03}+RC_{13}+\frac{\epsilon^{2}}{4\tilde{R}^{5}}\left(\vphantom{\frac{R_{c}^{2}}{\tilde{R}^{2}}}-R_{c}\left(8R_{c}^{2}C_{05}+12RR_{c}C_{15}+3R^{2}C_{25}\right)\right.\right.\\
+ &  & \left.\left.+\frac{15}{8}\frac{R_{c}^{2}}{\tilde{R}^{2}}\left(R^{3}C_{37}+2R^{2}R_{c}C_{27}+R\left(2R_{c}^{2}+\left(Z-Z_{c}\right)^{2}\right)C_{17}+R_{c}\left(R_{c}^{2}+\left(Z-Z_{c}\right)^{2}\right)C_{07}\right)\right)\right)\end{array}}\label{eq:BZ}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

@@ -1,0 +1,3946 @@
+#LyX 1.6.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\use_default_options false
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\topmargin 1.5cm
+\bottommargin 1.5cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Magnetic dipole dynamics
+\end_layout
+
+\begin_layout Author
+François-Xavier DUTHOIT
+\end_layout
+
+\begin_layout Section*
+Foreword : Coordinate systems
+\end_layout
+
+\begin_layout Standard
+The coordinate systems used in this document are the spherical 
+\begin_inset Formula $\left(\rho,\vartheta,\varphi\right)$
+\end_inset
+
+, cylindrical 
+\begin_inset Formula $\left(R,\varphi,Z\right)$
+\end_inset
+
+ and toroidal 
+\begin_inset Formula $\left(r,\theta,\varphi\right)$
+\end_inset
+
+ coordinates.
+ Definition of these coordinates are shown in figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Coordinate-systems-used"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Spherical coordinates
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename coordsph.ps
+	width 60line%
+	BoundingBox 60bp 80bp 420bp 460bp
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Cylindrical coordinates
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename coordcyl.ps
+	width 60line%
+	BoundingBox 60bp 80bp 420bp 460bp
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Toroidal coordinates
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename coordtor.ps
+	width 60line%
+	BoundingBox 60bp 80bp 440bp 460bp
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Coordinate systems used in this document.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Coordinate-systems-used"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Magnetic field produced by a magnetic dipole
+\end_layout
+
+\begin_layout Subsection
+Expression of the magnetic field
+\end_layout
+
+\begin_layout Standard
+The expression of the vector potential for a magnetic dipole 
+\begin_inset Formula $\mathbf{M}$
+\end_inset
+
+ reads :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{A}\left(\mathbf{r}\right)=\frac{\mu_{0}}{4\pi}\frac{\mathbf{M}\times\mathbf{r}}{r^{3}}=-\frac{\mu_{0}}{4\pi}\mathbf{M}\times\nabla\frac{1}{r}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This expression is derived from the approximation of the vector potential
+ produced by a coil of radius 
+\begin_inset Formula $a$
+\end_inset
+
+, with 
+\begin_inset Formula $r\gg a$
+\end_inset
+
+.
+ Since 
+\begin_inset Formula $\nabla\times\frac{\mathbf{M}}{r}=\nabla\frac{1}{r}\times\mathbf{M}$
+\end_inset
+
+, we have :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{A\left(r\right)}=\frac{\mu_{0}}{4\pi}\nabla\times\frac{\mathbf{M}}{r}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To calculate the magnetic field, we take the curl of the above expression.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{B}\left(\mathbf{r}\right)=\nabla\times\mathbf{A}\left(\mathbf{r}\right)=\frac{\mu_{0}}{4\pi}\nabla\times\left(\nabla\times\frac{\mathbf{M}}{r}\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{B\left(r\right)}=\frac{\mu_{0}}{4\pi}\left(\nabla\left(\nabla\cdot\frac{\mathbf{M}}{r}\right)-\mathbf{M}\Delta\frac{1}{r}\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The Laplacian in spherical coordinates reads :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\Delta f=\nabla^{2}f=\nabla\cdot\left(\nabla f\right)=\frac{1}{r^{2}}\frac{\partial}{\partial r}\left(r^{2}\frac{\partial f}{\partial r}\right)+\frac{1}{r^{2}\sin\vartheta}\frac{\partial}{\partial\vartheta}\left(\sin\vartheta\frac{\partial f}{\partial\vartheta}\right)+\frac{1}{r^{2}\sin^{2}\vartheta}\frac{\partial^{2}f}{\partial\varphi^{2}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We therefore deduce that 
+\begin_inset Formula $\Delta\frac{1}{r}=\frac{1}{r^{2}}\frac{d}{dr}\left(r^{2}\frac{d}{dr}\frac{1}{r}\right)=0$
+\end_inset
+
+.
+ Therefore the magnetic field derives from a scalar potential :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{B\left(r\right)}=-\nabla\Phi_{m}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\Phi_{m}=-\frac{\mu_{0}}{4\pi}\nabla\cdot\frac{\mathbf{M}}{r}=-\frac{\mu_{0}}{4\pi}\left(\mathbf{M}\cdot\nabla\frac{1}{r}\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\Phi_{m}=\frac{\mu_{0}}{4\pi}\frac{\mathbf{M\cdot r}}{r^{3}}}\label{eq:}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This ensures we can do a formal analogy with the electric field produced
+ by an electric dipole.
+ The Magnetic field reads :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\mathbf{B}\left(\mathbf{r}\right)=\frac{\mu_{0}}{4\pi}\frac{3\left(\mathbf{M}\cdot\mathbf{r}\right)\mathbf{r}-r^{2}\mathbf{M}}{r^{5}}}\label{eq:bdipolevector}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the spherical 
+\begin_inset Formula $\left(\rho,\vartheta,\varphi\right)$
+\end_inset
+
+ coordinates, the magnetic field has the following expression :
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\begin{array}{ccc}
+B_{\rho} & = & \frac{\mu_{0}M}{4\pi}\frac{2\cos\vartheta}{\rho^{3}}\\
+B_{\vartheta} & = & \frac{\mu_{0}M}{4\pi}\frac{\sin\vartheta}{\rho^{3}}\\
+B_{\varphi} & = & 0\end{array}}\label{eq:bdipolesph}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The field amplitude can be deduced from this expression :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{B\left(\rho,\vartheta\right)=\frac{\mu_{0}M}{4\pi\rho^{3}}\sqrt{1+3\cos^{2}\vartheta}}\label{eq:bdipoleampl}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Magnetic field gradient
+\end_layout
+
+\begin_layout Standard
+The magnetic field gradient in spherical coordinates reads :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\nabla B=\frac{\partial B}{\partial\rho}\hat{\rho}+\frac{1}{\rho}\frac{\partial B}{\partial\vartheta}\hat{\vartheta}+\frac{1}{\rho\sin\vartheta}\frac{\partial B}{\partial\varphi}\hat{\varphi}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The magnetic dipole gradient therefore has the following expression :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\begin{array}{ccc}
+\left(\nabla B\right)_{\rho} & = & -3\frac{\mu_{0}M}{4\pi\rho^{4}}\sqrt{1+3\cos^{2}\vartheta}\\
+\left(\nabla B\right)_{\vartheta} & = & -3\frac{\mu_{0}M}{4\pi\rho^{4}}\frac{\sin\vartheta\cos\vartheta}{\sqrt{1+3\cos^{2}\vartheta}}\\
+\left(\nabla B\right)_{\varphi} & = & 0\end{array}}\label{eq:bdipolegrad}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Magnetic field line equations
+\end_layout
+
+\begin_layout Standard
+The magnetic field lines are locally tangent to the magnetic field.
+ They are therefore given by the relation :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{B}\times d\mathbf{s}=\left(B_{\rho}\hat{\rho}+B_{\vartheta}\hat{\vartheta}\right)\times\left(d\rho\hat{\rho}+\rho d\vartheta\hat{\vartheta}\right)=0\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\left(B_{\rho}\rho d\vartheta-B_{\vartheta}d\rho\right)\hat{\varphi}=0\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{\mu_{0}M}{4\pi}\frac{\sin\vartheta}{\rho^{3}}d\rho=\frac{\mu_{0}M}{4\pi}\frac{2\cos\vartheta}{\rho^{3}}\rho d\vartheta\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{d\rho}{\rho}=\frac{2\cos\vartheta d\vartheta}{\sin\vartheta}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The integration reference is taken at 
+\begin_inset Formula $\rho=\rho_{0}$
+\end_inset
+
+ and 
+\begin_inset Formula $\vartheta=\frac{\pi}{2}$
+\end_inset
+
+.
+ Furthermore, 
+\begin_inset Formula $\vartheta\in\left]0,\pi\right[$
+\end_inset
+
+ so 
+\begin_inset Formula $\sin\vartheta$
+\end_inset
+
+ is always positive.
+ Integration of the equation gives :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\ln\frac{\rho}{\rho_{0}}=2\ln\sin\vartheta\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The field line equation can therefore be written as :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\rho=\rho_{0}\sin^{2}\vartheta}\label{eq:bdipolefieldline}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The field lines are represented on figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Magnetic-dipole-field"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename bdipole.eps
+	width 100line%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Magnetic dipole field lines in a cylindrical 
+\begin_inset Formula $\left(R,Z\right)$
+\end_inset
+
+ plane.
+ The blue circle corresponds to the radius of the Earth in the case of Earth's
+ magnetic field.
+ Flux ccordinate values are normalized to the absolute value at 
+\begin_inset Formula $Z=0$
+\end_inset
+
+ and 
+\begin_inset Formula $R=R_{T}$
+\end_inset
+
+, i.e.
+ 
+\begin_inset Formula $\psi^{*}=\frac{\mu_{0}M}{4\pi R_{T}}$
+\end_inset
+
+.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Magnetic-dipole-field"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Flux coordinate
+\end_layout
+
+\begin_layout Standard
+Here we want to express the magnetic field as :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{B}=\nabla\psi\times\nabla\varphi\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $\psi$
+\end_inset
+
+ is the poloidal flux coordinate and 
+\begin_inset Formula $\varphi$
+\end_inset
+
+ the normal azimuth angle for spherical 
+\begin_inset Formula $\left(\rho,\vartheta,\varphi\right)$
+\end_inset
+
+ or toroidal 
+\begin_inset Formula $\left(r,\theta,\varphi\right)$
+\end_inset
+
+ coordinates.
+ We know the expression for 
+\begin_inset Formula $\mathbf{B}$
+\end_inset
+
+, so the equation reads :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{\mu_{0}M}{4\pi}\frac{2\cos\vartheta}{\rho^{3}}\hat{\rho}+\frac{\mu_{0}M}{4\pi}\frac{\sin\vartheta}{\rho^{3}}\hat{\vartheta}=\nabla\psi\times\frac{1}{\rho\sin\vartheta}\hat{\varphi}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{1}{\rho}\frac{\partial\psi}{\partial\vartheta}\hat{\rho}-\frac{\partial\psi}{\partial\rho}\hat{\vartheta}=\frac{\mu_{0}M}{4\pi}\left(\frac{2\cos\vartheta\sin\vartheta}{\rho^{2}}\hat{\rho}+\frac{\sin^{2}\vartheta}{\rho^{2}}\hat{\vartheta}\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We can therefore deduce the expression of the flux coordinate with the integrati
+on constant arbitrarily chosen at 
+\begin_inset Formula $\left(R_{p},\frac{\pi}{2},0\right)$
+\end_inset
+
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\psi\left(\rho,\vartheta\right)=\frac{\mu_{0}M}{4\pi}\frac{\sin^{2}\vartheta}{\rho}}\label{eq:psidipolesph}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We see that 
+\begin_inset Formula $\psi$
+\end_inset
+
+ is constant along the magnetic field lines 
+\begin_inset Formula $\rho=\rho_{0}\sin^{2}\vartheta$
+\end_inset
+
+, which is consistent with the magnetic equilibrium.
+ There, the expression of 
+\begin_inset Formula $\psi$
+\end_inset
+
+ reads :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\psi\left(\rho_{0}\right)=\frac{\mu_{0}M}{4\pi\rho_{0}}}\label{eq:psidipolesphrho0}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Representation of a magnetic flux surface is shown on figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Magnetic-dipole-flux"
+
+\end_inset
+
+.
+ The expression of the magnetic flux can also be calculated using the flux
+ of the magnetic dipole field through the cone 
+\begin_inset Formula $\left(\left[0,\rho\right],\vartheta,\left[0,2\pi\right]\right)$
+\end_inset
+
+.
+ We can then write :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+2\pi\psi=\int_{0}^{\rho}\int_{0}^{2\pi}\left(-B_{\vartheta}\right)\rho\sin\vartheta d\varphi d\rho=2\pi\frac{\mu_{0}M}{4\pi}\frac{\sin^{2}\vartheta}{\rho}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We obtain the same expression as 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:psidipolesph"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename psidipolesurf.eps
+	width 100line%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Magnetic dipole flux surface for 
+\begin_inset Formula $\psi=1$
+\end_inset
+
+.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Magnetic-dipole-flux"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Magnetic dipole and single coil magnetic fields in LUKE coordinates
+\end_layout
+
+\begin_layout Subsection
+Single coil field
+\end_layout
+
+\begin_layout Standard
+The aim here is to calculate the field produced by a single magnetic coil,
+ subject to a current 
+\begin_inset Formula $I$
+\end_inset
+
+, with the following equation 
+\begin_inset Formula $\Gamma_{0}$
+\end_inset
+
+ in cylindrical 
+\begin_inset Formula $\left(R,\varphi,Z\right)$
+\end_inset
+
+ coordinates (
+\begin_inset Formula $\phi\in\left[-\pi,\pi\right]$
+\end_inset
+
+ and 
+\begin_inset Formula $R_{p}\geq0$
+\end_inset
+
+) :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{L}=R_{p}\cos\left(\varphi-\phi\right)\hat{R}-R_{p}\sin\left(\varphi-\phi\right)\hat{\varphi}+Z_{p}\hat{Z}\label{eq:coilvectorcyl}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We therefore have :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{d\mathbf{L}=R_{p}\sin\left(\varphi-\phi\right)d\phi\hat{R}+R_{p}\cos\left(\varphi-\phi\right)d\phi\hat{\varphi}}\label{eq:coilelemvectorcyl}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the cylindrical position vector 
+\begin_inset Formula $\mathbf{r}=R\hat{R}+Z\hat{Z}$
+\end_inset
+
+, we get :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\boxed{D^{2}=\left|\mathbf{r}-\mathbf{L}\right|^{2}=\left|\mathbf{r}\right|^{2}+\left|\mathbf{L}\right|^{2}-2\mathbf{r}\cdot\mathbf{L}=R^{2}+\left(Z-Z_{p}\right)^{2}+R_{p}^{2}-2RR_{p}\cos\left(\varphi-\phi\right)}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We will also need the derivatives of 
+\begin_inset Formula $\frac{1}{D}$
+\end_inset
+
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{\partial}{\partial R}\frac{1}{D}=\frac{R_{p}\cos\left(\varphi-\phi\right)-R}{D^{3}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{\partial}{\partial Z}\frac{1}{D}=-\frac{Z-Z_{p}}{D^{3}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{\partial}{\partial\varphi}\frac{1}{D}=-\frac{RR_{p}\sin\left(\varphi-\phi\right)}{D^{3}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The vector potential becomes :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\mathbf{A}\left(M\right)=\frac{\mu_{0}}{4\pi}\int_{\Gamma_{0}}\frac{Id\mathbf{L}}{\left|\mathbf{r}-\mathbf{L}\right|}=\frac{\mu_{0}IR_{p}}{4\pi}\left(\int_{-\pi}^{\pi}\frac{\sin\left(\varphi-\phi\right)}{D}d\phi\hat{R}+\int_{-\pi}^{\pi}\frac{\cos\left(\varphi-\phi\right)}{D}d\phi\hat{\varphi}\right)}\label{eq:vectorpotdipolecyl}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It is important to note that although 
+\begin_inset Formula $\varphi$
+\end_inset
+
+ appears in the integrand, the vector potential and magnetic field do not
+ depend on this coordinate.
+ This is due to the fact that the integrand is summated over a period.
+ We can therefore deduce the magnetic field, using the curl in cylindrical
+ coordinates :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{B}=\nabla\times\mathbf{A}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+B_{R}=-\frac{\partial A_{\varphi}}{\partial Z}=\frac{\mu_{0}IR_{p}}{4\pi}\int_{-\pi}^{\pi}\frac{\left(Z-Z_{p}\right)\cos\left(\varphi-\phi\right)}{D^{3}}d\phi\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+B_{\varphi}=\frac{\partial A_{R}}{\partial Z}=-\frac{\mu_{0}IR_{p}}{4\pi}\int_{-\pi}^{\pi}\frac{\left(Z-Z_{p}\right)\sin\left(\varphi-\phi\right)}{D^{3}}d\phi\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\begin{array}{ccc}
+B_{Z} & = & \frac{1}{R}\left(\frac{\partial}{\partial R}\left(RA_{\varphi}\right)-\frac{\partial A_{R}}{\partial\varphi}\right)\\
+ & = & \frac{\mu_{0}IR_{p}}{4\pi R}\int_{-\pi}^{\pi}\left(\frac{\cos\left(\varphi-\phi\right)}{D}+\frac{R\left(R_{p}\cos\left(\varphi-\phi\right)-R\right)\cos\left(\varphi-\phi\right)}{D^{3}}-\frac{\cos\left(\varphi-\phi\right)}{D}+\frac{RR_{p}\sin^{2}\left(\varphi-\phi\right)}{D^{3}}\right)d\phi\\
+ & = & \frac{\mu_{0}IR_{p}}{4\pi}\int_{-\pi}^{\pi}\frac{R_{p}-R\cos\left(\varphi-\phi\right)}{D^{3}}d\phi\end{array}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The parity in 
+\begin_inset Formula $\varphi-\phi$
+\end_inset
+
+ of the integrals gives 
+\begin_inset Formula $B_{\varphi}=0$
+\end_inset
+
+.
+ The expression of the magnetic field then reads :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\begin{array}{ccc}
+B_{R} & = & \frac{\mu_{0}IR_{p}}{4\pi}\int_{-\pi}^{\pi}\frac{\left(Z-Z_{p}\right)\cos\left(\varphi-\phi\right)}{D^{3}}d\phi\\
+B_{\varphi} & = & 0\\
+B_{Z} & = & \frac{\mu_{0}IR_{p}}{4\pi}\int_{-\pi}^{\pi}\frac{R_{p}-R\cos\left(\varphi-\phi\right)}{D^{3}}d\phi\end{array}}\label{eq:bcoilcyl}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In order to express the single coil magnetic field with respect to the complete
+ elliptic integrals, we introduce 
+\begin_inset Formula $\tilde{R}^{2}=\left(R+R_{p}\right)^{2}+\left(Z-Z_{p}\right)^{2}$
+\end_inset
+
+, 
+\begin_inset Formula $\varphi-\phi=2\tilde{\phi}-\pi$
+\end_inset
+
+ and 
+\begin_inset Formula $k^{2}=\frac{4RR_{p}}{\tilde{R}^{2}}$
+\end_inset
+
+.
+ The expression of 
+\begin_inset Formula $D$
+\end_inset
+
+ becomes :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\boxed{D=\sqrt{\tilde{R}^{2}-2RR_{p}\left(1+\cos\left(2\tilde{\phi}-\pi\right)\right)}=\tilde{R}\sqrt{1-k^{2}\cos^{2}\left(\tilde{\phi}-\frac{\pi}{2}\right)}=\tilde{R}\sqrt{1-k^{2}\sin^{2}\tilde{\phi}}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We apply the transformation to 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:bcoilcyl"
+
+\end_inset
+
+, and the use of periodicity and parity gives :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\begin{array}{ccc}
+B_{R} & = & \frac{\mu_{0}IR_{p}\left(Z-Z_{p}\right)}{2\pi\tilde{R}^{3}}\int_{\frac{\varphi}{2}}^{\frac{\varphi}{2}+\pi}\frac{\cos\left(2\tilde{\phi}-\pi\right)}{\left(1-k^{2}\sin^{2}\tilde{\phi}\right)^{\frac{3}{2}}}d\tilde{\phi}=-\frac{\mu_{0}IR_{T}\left(Z-Z_{p}\right)}{\pi\tilde{R}^{3}}\int_{0}^{\frac{\pi}{2}}\frac{\cos2\tilde{\phi}}{\left(1-k^{2}\sin^{2}\tilde{\phi}\right)^{\frac{3}{2}}}d\tilde{\phi}\\
+B_{\varphi} & = & 0\\
+B_{Z} & = & \frac{\mu_{0}IR_{p}}{2\pi\tilde{R}^{3}}\int_{\frac{\varphi}{2}}^{\frac{\varphi}{2}+\pi}\frac{R_{p}-R\cos\left(2\tilde{\phi}-\pi\right)}{\left(1-k^{2}\sin^{2}\tilde{\phi}\right)^{\frac{3}{2}}}d\tilde{\phi}=\frac{\mu_{0}IR_{p}}{\pi\tilde{R}^{3}}\int_{0}^{\frac{\pi}{2}}\frac{R_{p}+R\cos2\tilde{\phi}}{\left(1-k^{2}\sin^{2}\tilde{\phi}\right)^{\frac{3}{2}}}d\tilde{\phi}\end{array}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We must now calculate the integrals 
+\begin_inset Formula $F\left(k^{2}\right)=\int_{0}^{\frac{\pi}{2}}\frac{1}{\left(1-k^{2}\sin^{2}\tilde{\phi}\right)^{\frac{3}{2}}}d\tilde{\phi}$
+\end_inset
+
+ and 
+\begin_inset Formula $G\left(k^{2}\right)=\int_{0}^{\frac{\pi}{2}}\frac{\cos2\tilde{\phi}}{\left(1-k^{2}\sin^{2}\tilde{\phi}\right)^{\frac{3}{2}}}d\tilde{\phi}$
+\end_inset
+
+.
+ First, we start from the derivation of the following expression :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\begin{array}{ccc}
+\frac{d}{d\tilde{\phi}}\left(\frac{k^{2}\sin\tilde{\phi}\cos\tilde{\phi}}{\sqrt{1-k^{2}\sin^{2}\tilde{\phi}}}\right) & = & \frac{k^{2}\cos^{2}\tilde{\phi}-k^{2}\sin^{2}\tilde{\phi}}{\sqrt{1-k^{2}\sin^{2}\tilde{\phi}}}+\frac{k^{4}\sin^{2}\tilde{\phi}\cos^{2}\tilde{\phi}}{\left(1-k^{2}\sin^{2}\tilde{\phi}\right)^{\frac{3}{2}}}\\
+ & = & \frac{k^{2}\cos^{2}\tilde{\phi}-k^{2}\sin^{2}\tilde{\phi}+k^{4}\sin^{4}\tilde{\phi}}{\left(1-k^{2}\sin^{2}\tilde{\phi}\right)^{\frac{3}{2}}}\\
+ & = & \sqrt{1-k^{2}\sin^{2}\tilde{\phi}}+\frac{k^{2}-1}{\left(1-k^{2}\sin^{2}\tilde{\phi}\right)^{\frac{3}{2}}}\end{array}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Since 
+\begin_inset Formula $\left[\frac{k^{2}\sin\tilde{\phi}\cos\tilde{\phi}}{\sqrt{1-k^{2}\sin^{2}\tilde{\phi}}}\right]_{0}^{\frac{\pi}{2}}=0$
+\end_inset
+
+, we therefore have :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+F\left(k^{2}\right)=\int_{0}^{\frac{\pi}{2}}\frac{1}{\left(1-k^{2}\sin^{2}\tilde{\phi}\right)^{\frac{3}{2}}}d\tilde{\phi}=\frac{1}{1-k^{2}}\int_{0}^{\frac{\pi}{2}}\sqrt{1-k^{2}\sin^{2}\tilde{\phi}}d\tilde{\phi}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+F\left(k^{2}\right)=\frac{E\left(k^{2}\right)}{1-k^{2}}\label{eq:-8}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Introducing 
+\begin_inset Formula $K$
+\end_inset
+
+ and 
+\begin_inset Formula $E$
+\end_inset
+
+, the complete elliptic integrals of the first and second kind respectively.
+ Their expression is as follows :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+K\left(k^{2}\right)=\int_{0}^{\frac{\pi}{2}}\frac{1}{\sqrt{1-k^{2}\sin^{2}t}}dt\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+E\left(k^{2}\right)=\int_{0}^{\frac{\pi}{2}}\sqrt{1-k^{2}\sin^{2}t}dt\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression of 
+\begin_inset Formula $G$
+\end_inset
+
+ becomes :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+G\left(k^{2}\right)=\int_{0}^{\frac{\pi}{2}}\frac{1-2\sin^{2}\tilde{\phi}}{\left(1-k^{2}\sin^{2}\tilde{\phi}\right)^{\frac{3}{2}}}=\frac{1}{k^{2}}\int_{0}^{\frac{\pi}{2}}\left(\frac{k^{2}-2}{\left(1-k^{2}\sin^{2}\tilde{\phi}\right)^{\frac{3}{2}}}+\frac{2}{\sqrt{1-k^{2}\sin^{2}\tilde{\phi}}}\right)d\tilde{\phi}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+G\left(k^{2}\right)=\frac{\left(k^{2}-2\right)F\left(k^{2}\right)+2K\left(k^{2}\right)}{k^{2}}=\frac{1}{k^{2}}\left(\frac{k^{2}-2}{1-k^{2}}E\left(k^{2}\right)+2K\left(k^{2}\right)\right)\label{eq:-9}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expressions of the magnetic field become :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+B_{R}=-\frac{\mu_{0}IR_{p}\left(Z-Z_{p}\right)}{\pi\tilde{R}^{3}}G\left(k^{2}\right)=-\frac{2\mu_{0}IR_{p}\left(Z-Z_{p}\right)}{\pi\tilde{R}^{3}k^{2}}\left(\frac{1}{2}\frac{k^{2}-2}{1-k^{2}}E\left(k^{2}\right)+K\left(k^{2}\right)\right)\label{eq:-10}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+B_{Z}=\frac{\mu_{0}IR_{p}}{\pi\tilde{R}^{3}}\left(R_{p}F\left(k^{2}\right)+RG\left(k^{2}\right)\right)=\frac{2\mu_{0}IRR_{p}}{\pi\tilde{R}^{3}k^{2}}\left(\left(\frac{R_{p}}{2R}\frac{k^{2}}{1-k^{2}}+\frac{1}{2}\frac{k^{2}-2}{1-k^{2}}\right)E\left(k^{2}\right)+K\left(k^{2}\right)\right)\label{eq:-11}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the expression of 
+\begin_inset Formula $k^{2}$
+\end_inset
+
+, we can deduce the following relations :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\tilde{R}^{3}k^{2}=4RR_{p}\tilde{R}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{1}{2}\frac{k^{2}-2}{1-k^{2}}=\frac{2RR_{p}-\tilde{R}^{2}}{\tilde{R}^{2}-4RR_{p}}=-\frac{R_{p}^{2}+R^{2}+\left(Z-Z_{p}\right)^{2}}{\left(R_{p}-R\right)^{2}+\left(Z-Z_{p}\right)^{2}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{R_{p}}{2R}\frac{k^{2}}{1-k^{2}}+\frac{1}{2}\frac{k^{2}-2}{1-k^{2}}=\frac{2R_{p}^{2}}{\left(R_{p}-R\right)^{2}+Z^{2}}-\frac{R_{p}^{2}+R^{2}+\left(Z-Z_{p}\right)^{2}}{\left(R_{p}-R\right)^{2}+\left(Z-Z_{p}\right)^{2}}=\frac{R_{p}^{2}-R^{2}-\left(Z-Z_{p}\right)^{2}}{\left(R_{p}-R\right)^{2}+\left(Z-Z_{p}\right)^{2}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We can therefore write :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\begin{array}{ccc}
+B_{R} & = & \frac{\mu_{0}I}{2\pi}\frac{1}{\sqrt{\left(R_{p}+R\right)^{2}+\left(Z-Z_{p}\right)^{2}}}\frac{Z-Z_{p}}{R}\left(\frac{R_{p}^{2}+R^{2}+\left(Z-Z_{p}\right)^{2}}{\left(R_{p}-R\right)^{2}+Z^{2}}E\left(k^{2}\right)-K\left(k^{2}\right)\right)\\
+B_{\varphi} & = & 0\\
+B_{Z} & = & \frac{\mu_{0}I}{2\pi}\frac{1}{\sqrt{\left(R_{p}+R\right)^{2}+\left(Z-Z_{p}\right)^{2}}}\left(\frac{R_{p}^{2}-R^{2}-\left(Z-Z_{p}\right)^{2}}{\left(R_{p}-R\right)^{2}+\left(Z-Z_{p}\right)^{2}}E\left(k^{2}\right)+K\left(k^{2}\right)\right)\end{array}}\label{eq:bcoilellipticcyl}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $\boxed{k^{2}=\frac{4RR_{p}}{\left(R_{p}+R\right)^{2}+\left(Z-Z_{p}\right)^{2}}}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Single coil flux coordinate
+\end_layout
+
+\begin_layout Standard
+Similarly to the dipole field flux coordinate, we want to find 
+\begin_inset Formula $\psi$
+\end_inset
+
+ so that :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{B}=\nabla\times\mathbf{A}=\nabla\psi\times\nabla\varphi\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here, we work in cylindrical 
+\begin_inset Formula $\left(R,\varphi,Z\right)$
+\end_inset
+
+ coordinates, therefore 
+\begin_inset Formula $\nabla\varphi=\frac{1}{R}\hat{\varphi}$
+\end_inset
+
+.
+ Using the cylindrical expressions of the gradient and curl and taking into
+ account that 
+\begin_inset Formula $\frac{\partial A_{R}}{\partial\varphi}=\frac{\partial A_{\varphi}}{\partial\varphi}=A_{Z}=0$
+\end_inset
+
+ , we get :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\begin{array}{ccc}
+B_{R}=-\frac{\partial A_{\varphi}}{\partial Z} & = & -\frac{1}{R}\frac{\partial\psi}{\partial Z}\\
+B_{\varphi}=\frac{\partial A_{R}}{\partial Z} & = & 0\\
+B_{Z}=\frac{1}{R}\frac{\partial RA_{\varphi}}{\partial R} & = & \frac{1}{R}\frac{\partial\psi}{\partial R}\end{array}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From the expression of 
+\begin_inset Formula $B_{R}$
+\end_inset
+
+, we can deduce :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\psi=RA_{\varphi}+F\left(R\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $F$
+\end_inset
+
+ is an unknown function of 
+\begin_inset Formula $R$
+\end_inset
+
+.
+ Replacing 
+\begin_inset Formula $\psi$
+\end_inset
+
+ in the expression of 
+\begin_inset Formula $B_{Z}$
+\end_inset
+
+, we have :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{\partial RA_{\varphi}}{\partial R}=\frac{\partial RA_{\varphi}}{\partial R}+\frac{dF}{dR}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{dF}{dR}=0\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We can deduce :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\psi\left(R,Z\right)=RA_{\varphi}}\label{eq:psiaphicyl}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\psi\left(R,Z\right)=R\frac{\mu_{0}IR_{p}}{4\pi\tilde{R}}\int_{-\pi}^{\pi}\frac{\cos\left(\varphi-\phi\right)}{D}d\phi}\label{eq:psicoilcyl}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression of 
+\begin_inset Formula $\psi$
+\end_inset
+
+ therefore becomes, using the same transformation 
+\begin_inset Formula $\tilde{R}^{2}=\left(R_{p}+R\right)^{2}+\left(Z-Z_{p}\right)^{2}$
+\end_inset
+
+, 
+\begin_inset Formula $k^{2}=\frac{4RR_{p}}{\tilde{R}^{2}}$
+\end_inset
+
+ and 
+\begin_inset Formula $\varphi-\phi=2\tilde{\phi}-\pi$
+\end_inset
+
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\psi\left(R,Z\right)=-R\frac{\mu_{0}IR_{p}}{\pi\tilde{R}}\int_{0}^{\frac{\pi}{2}}\frac{\cos2\tilde{\phi}}{\sqrt{1-k^{2}\sin^{2}\tilde{\phi}}}d\tilde{\phi}=-R\frac{\mu_{0}IR_{p}}{\pi\tilde{R}}\left(\frac{k^{2}-2}{\sqrt{1-k^{2}\sin^{2}\tilde{\phi}}}+2\sqrt{1-k^{2}\sin^{2}\tilde{\phi}}\right)d\tilde{\phi}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We therefore have :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\psi\left(R,Z\right)=-\frac{\mu_{0}IRR_{p}}{2\pi\tilde{R}}\frac{\left(k^{2}-2\right)K\left(k^{2}\right)+2E\left(k^{2}\right)}{k^{2}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\psi\left(R,Z\right)=-\frac{\mu_{0}I}{4\pi}\sqrt{\left(R_{p}+R\right)^{2}+\left(Z-Z_{p}\right)^{2}}\left(\left(k^{2}-2\right)K\left(k^{2}\right)+2E\left(k^{2}\right)\right)}\label{eq:psicoilellipticcyl}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $\boxed{k^{2}=\frac{4RR_{p}}{\left(R_{p}+R\right)^{2}+\left(Z-Z_{p}\right)^{2}}}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsection
+Magnetic dipole field
+\end_layout
+
+\begin_layout Standard
+The magnetic dipole field is the approximation of a single coil field with
+ 
+\begin_inset Formula $R_{p}\ll1$
+\end_inset
+
+ and 
+\begin_inset Formula $Z_{p}=0$
+\end_inset
+
+.
+ The final expression of the dipole magnetic field then reads, with 
+\begin_inset Formula $M=IR_{p}^{2}$
+\end_inset
+
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\begin{array}{ccc}
+B_{R} & = & \frac{\mu_{0}M}{4\pi}\frac{3RZ}{\left(R^{2}+Z^{2}\right)^{\frac{5}{2}}}\\
+B_{\varphi} & = & 0\\
+B_{Z} & = & \frac{\mu_{0}M}{4\pi}\frac{2Z^{2}-R^{2}}{\left(R^{2}+Z^{2}\right)^{\frac{5}{2}}}\end{array}}\label{eq:bdipolecyl}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This expression can be derived either from 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:bcoilcyl"
+
+\end_inset
+
+ or from 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:bcoilellipticcyl"
+
+\end_inset
+
+.
+ The calculations are given in the appendix.
+ The expression for the flux coordinate reads, using 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:psidipolesph"
+
+\end_inset
+
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\psi\left(R,Z\right)=\frac{\mu_{0}M}{4\pi}\frac{R^{2}}{\left(R^{2}+\left(Z-Z_{p}\right)^{2}\right)^{\frac{3}{2}}}}\label{eq:psidipolecyl}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+LUKE coordinates for the magnetic equilibrium
+\end_layout
+
+\begin_layout Standard
+The LUKE coordinates are the standard toroidal 
+\begin_inset Formula $\left(r,\theta,\varphi\right)$
+\end_inset
+
+ coordinates with cartesian 
+\begin_inset Formula $\left(x=r\cos\theta,y=r\sin\theta\right)$
+\end_inset
+
+ coordinates in the poloidal plane.
+ We name the torus axis radius coordinates 
+\begin_inset Formula $\left(R_{p},Z_{p}\right)$
+\end_inset
+
+.
+ We can therefore see that :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\boxed{\begin{array}{c}
+R=x+R_{p}\\
+Z=y+Z_{p}\end{array}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For a dipole magnetic field, 
+\begin_inset Formula $R_{p}$
+\end_inset
+
+ is arbitrarily chosen.
+\end_layout
+
+\begin_layout Subsubsection
+Single coil magnetic field
+\end_layout
+
+\begin_layout Standard
+Using LUKE coordinates, the expressions become :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\begin{array}{ccc}
+B_{x} & = & \frac{\mu_{0}I}{2\pi}\frac{1}{\sqrt{\left(x+2R_{p}\right)^{2}+y^{2}}}\frac{y}{x+R_{p}}\left(\frac{R_{p}^{2}+\left(x+R_{p}\right)^{2}+y^{2}}{x^{2}+y^{2}}E\left(k^{2}\right)-K\left(k^{2}\right)\right)\\
+B_{y} & = & \frac{\mu_{0}I}{2\pi}\frac{1}{\sqrt{\left(x+2R_{p}\right)^{2}+y^{2}}}\left(\frac{R_{p}^{2}-\left(x+R_{p}\right)^{2}-y^{2}}{x^{2}+y^{2}}E\left(k^{2}\right)+K\left(k^{2}\right)\right)\end{array}}\label{eq:bcoilluke}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression of the flux coordinate becomes :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\psi\left(x,y\right)=-\frac{\mu_{0}I}{4\pi}\sqrt{\left(x+2R_{p}\right)^{2}+y^{2}}\left(\left(k^{2}-2\right)K\left(k^{2}\right)+2E\left(k^{2}\right)\right)}\label{eq:psicoilluke}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $\boxed{k^{2}=\frac{4R_{p}\left(x+R_{p}\right)}{\left(x+2R_{p}\right)^{2}+y^{2}}}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Magnetic dipole field
+\end_layout
+
+\begin_layout Standard
+Here the expression is a direct transformation of 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:bdipolecyl"
+
+\end_inset
+
+, with 
+\begin_inset Formula $Z_{p}=0$
+\end_inset
+
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\begin{array}{ccc}
+B_{x} & = & \frac{\mu_{0}M}{4\pi}\frac{3\left(x+R_{p}\right)y}{\left(\left(x+R_{p}\right)^{2}+y^{2}\right)^{\frac{5}{2}}}\\
+B_{y} & = & \frac{\mu_{0}M}{4\pi}\frac{2y^{2}-\left(x+R_{p}\right)^{2}}{\left(\left(x+R_{p}\right)^{2}+y^{2}\right)^{\frac{5}{2}}}\end{array}}\label{eq:bdipoleluke}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The flux coordinate is determined similarly with 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:psidipolecyl"
+
+\end_inset
+
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\psi=\frac{\mu_{0}M}{4\pi}\frac{\left(x+R_{p}\right)^{2}}{\left(\left(x+R_{p}\right)^{2}+y^{2}\right)^{\frac{3}{2}}}}\label{eq:psidipoleluke}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Collisionless motion in a dipole magnetic field
+\end_layout
+
+\begin_layout Subsection
+\begin_inset Formula $\xi_{0}$
+\end_inset
+
+ dependance of the magnetic bounce angle
+\end_layout
+
+\begin_layout Standard
+We define 
+\begin_inset Formula $\xi=\frac{p_{\parallel}}{p}$
+\end_inset
+
+ as the pitch-angle cosine of the particle in motion along the field line.
+ In a collisionless motion, the energy 
+\begin_inset Formula $\varepsilon=\frac{p^{2}}{2m}$
+\end_inset
+
+ of the particle remains constant, therefore so does the kinetic momentum
+ amplitude 
+\begin_inset Formula $p$
+\end_inset
+
+.
+ Conservation of the magnetic moment gives :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mu=\frac{p_{\perp}^{2}}{2mB}=\frac{p^{2}\left(1-\xi^{2}\right)}{2mB}=\mu_{0}=\frac{p^{2}\left(1-\xi_{0}^{2}\right)}{2mB_{0}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\xi_{0}$
+\end_inset
+
+ and 
+\begin_inset Formula $B_{0}$
+\end_inset
+
+ are respectively the minimum field in the field line and the pitch-angle
+ at that point.
+ We can deduce the following relation :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\xi\left(\vartheta,\xi_{0}\right)=\sqrt{1-\frac{B\left(\vartheta\right)}{B_{0}}\left(1-\xi_{0}^{2}\right)}}\label{eq:xi}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We have a reversal of the particle motion (bounce) at 
+\begin_inset Formula $\xi=0$
+\end_inset
+
+ ; the magnetic field at that point reads :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+B\left(\vartheta_{b}\right)=B_{0}\frac{1}{1-\xi_{0}^{2}}\label{eq:bdipolethetab}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Along a field line distant of 
+\begin_inset Formula $\rho_{0}$
+\end_inset
+
+ at the field equator, we have 
+\begin_inset Formula $\rho=\rho_{0}\sin^{2}\vartheta$
+\end_inset
+
+.
+ The amplitude of the magnetic field reads :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+B\left(\vartheta\right)=\frac{\mu_{0}M}{4\pi}\frac{\sqrt{1+3\cos^{2}\vartheta}}{\left(\rho_{0}\sin^{2}\vartheta\right)^{3}}=\frac{\mu_{0}M}{4\pi\rho_{0}^{3}}\frac{\sqrt{1+3\cos^{2}\vartheta}}{\sin^{6}\vartheta}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This expression is defined for 
+\begin_inset Formula $\vartheta\in\left]0,\pi\right[$
+\end_inset
+
+.
+ 
+\begin_inset Formula $\cos^{2}\vartheta$
+\end_inset
+
+ is minimum and 
+\begin_inset Formula $\sin^{6}\vartheta$
+\end_inset
+
+ is maximum at 
+\begin_inset Formula $\vartheta=\frac{\pi}{2}$
+\end_inset
+
+, therefore the minimum magnetic field reads :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+B_{0}=\frac{\mu_{0}M}{4\pi\rho_{0}^{3}}\label{eq:bdipolemax}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We can deduce the magnetic field amplitude along the field line :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{B=B_{0}\frac{\sqrt{1+3\cos^{2}\vartheta}}{\sin^{6}\vartheta}}\label{eq:bdipoleamplfieldline}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The bounce angle boundaries 
+\begin_inset Formula $\vartheta_{b}$
+\end_inset
+
+ and 
+\begin_inset Formula $\pi-\vartheta_{b}$
+\end_inset
+
+ are therefore solely dependent on 
+\begin_inset Formula $\xi_{0}$
+\end_inset
+
+.
+ They are solutions of the equation :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\xi_{0}^{2}=1-\frac{\sin^{6}\vartheta_{b}}{\sqrt{1+3\cos^{2}\vartheta_{b}}}}\label{eq:xi0-varthetab}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\sin\vartheta_{b}$
+\end_inset
+
+ and 
+\begin_inset Formula $\cos\vartheta_{b}$
+\end_inset
+
+ are monotonous and positive on the interval 
+\begin_inset Formula $\vartheta_{b}\in\left[0,\frac{\pi}{2}\right]$
+\end_inset
+
+, therefore the expression of 
+\begin_inset Formula $\xi_{0}$
+\end_inset
+
+ is also monotonous with 
+\begin_inset Formula $\xi_{0}\left(0\right)=1$
+\end_inset
+
+ and 
+\begin_inset Formula $\xi_{0}\left(\frac{\pi}{2}\right)=0$
+\end_inset
+
+.
+ The expression is therefore bijective between the intervals 
+\begin_inset Formula $\vartheta_{b}\in\left[0,\frac{\pi}{2}\right]$
+\end_inset
+
+ and 
+\begin_inset Formula $\xi_{0}\in\left[0,1\right]$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\left(1-\xi_{0}^{2}\right)^{2}=\frac{\left(1-\cos^{2}\vartheta_{b}\right)^{6}}{1+3\cos^{2}\vartheta_{b}}=\frac{\left(1-\cos^{2}\vartheta_{b}\right)^{6}}{4-3\left(1-\cos^{2}\vartheta_{b}\right)}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In order to reverse the expression, we must find the unique root on the
+ interval 
+\begin_inset Formula $\left[0,1\right]$
+\end_inset
+
+ (guaranteed by the bijectivity) of the polynomial :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+P\left(x\right)=x^{6}+3yx-4y\label{eq:-14}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+With 
+\begin_inset Formula $y\in\left[0,1\right]$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The taylor expansion of 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:xi0-varthetab"
+
+\end_inset
+
+ for strongly trapped particles 
+\begin_inset Formula $\left(\varepsilon=\vartheta_{b}-\frac{\pi}{2}\ll1\right)$
+\end_inset
+
+ is :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+1-\xi_{0}^{2}=\left(1-\frac{\varepsilon^{2}}{2}\right)\left(1+3\varepsilon^{2}\right)^{-\frac{1}{2}}=1-\frac{9\varepsilon^{2}}{2}+\mathcal{O}\left(\varepsilon^{4}\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We therefore have at this limit :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\vartheta_{b}=\left\{ \begin{array}{c}
+\frac{\pi}{2}-\frac{\sqrt{2}}{3}\xi_{0}+\mathcal{O}\left(\xi_{0}^{2}\right),\vartheta_{b}<\frac{\pi}{2}\\
+\frac{\pi}{2}+\frac{\sqrt{2}}{3}\xi_{0}+\mathcal{O}\left(\xi_{0}^{2}\right),\vartheta_{b}>\frac{\pi}{2}\end{array}\right.}\label{eq:-15}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The evolution of 
+\begin_inset Formula $\vartheta_{b}$
+\end_inset
+
+ with respect to 
+\begin_inset Formula $\xi_{0}$
+\end_inset
+
+ is fairly consistent : at 
+\begin_inset Formula $\xi_{0}=0$
+\end_inset
+
+, the particle never leaves the equator (
+\begin_inset Formula $\vartheta_{b}=\pi-\vartheta_{b}=\frac{\pi}{2}$
+\end_inset
+
+) and at 
+\begin_inset Formula $\xi_{0}\rightarrow1$
+\end_inset
+
+, the particle has such a small magnetic moment that it reaches the origin
+ of the magnetic field (
+\begin_inset Formula $\vartheta_{b}\rightarrow0$
+\end_inset
+
+ and 
+\begin_inset Formula $\pi-\vartheta_{b}\rightarrow\pi$
+\end_inset
+
+).
+ Since there is a symmetry at 
+\begin_inset Formula $\vartheta_{b}=\frac{\pi}{2}$
+\end_inset
+
+, we will henceforth work on the interval 
+\begin_inset Formula $\vartheta_{b}\in\left]0,\frac{\pi}{2}\right]$
+\end_inset
+
+.
+ The evolution is shown on figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Evolution-of-xi"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename thetabxi0.eps
+	width 100text%
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Evolution of 
+\begin_inset Formula $\xi$
+\end_inset
+
+ with respect to 
+\begin_inset Formula $\frac{\vartheta_{b}}{\pi}$
+\end_inset
+
+.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Evolution-of-xi"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Influence of Earth's radius on particle motion
+\end_layout
+
+\begin_layout Standard
+We have considered until now a magnetic dipole without any interference
+ whatsoever.
+ However, particles that enter contact with Earth's lower atmosphere dissipate
+ their energy into it and can be considered lost, since no longer trapped
+ in the magnetic field.
+ Let us call 
+\begin_inset Formula $R_{T}$
+\end_inset
+
+ this minimum distance and 
+\begin_inset Formula $a=\frac{r_{0}}{R_{T}}$
+\end_inset
+
+ the ratio of the particle's equatorial distance to the center of the Earth
+ compared to this minimum distance.
+ For the particle to remain trapped, it will need to observe the following
+ equation :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+r_{0}\sin^{2}\vartheta_{b}-R_{T}>0\Leftrightarrow a\sin^{2}\vartheta_{b}-1>0\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Since 
+\begin_inset Formula $\vartheta_{b}$
+\end_inset
+
+ depends only on 
+\begin_inset Formula $\xi_{0}$
+\end_inset
+
+, we can therefore determine the values 
+\begin_inset Formula $\left(\xi_{0},a\right)$
+\end_inset
+
+ for which the particles remain trapped.
+ We can already see that if 
+\begin_inset Formula $a<1$
+\end_inset
+
+, the particles are always lost, which is physically consistent.
+ The limit equation can be expressed as :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\sin^{2}\vartheta_{b}=\frac{1}{a}\Leftrightarrow\cos^{2}\vartheta_{b}=1-\frac{1}{a}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We can therefore deduce the evolution of 
+\begin_inset Formula $\xi_{0max}$
+\end_inset
+
+ with respect to 
+\begin_inset Formula $a$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\xi_{0max}=\sqrt{1-\frac{1}{a^{3}\sqrt{4-\frac{3}{a}}}}}\label{eq:xi0max}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The trends are shown on figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Earth-radius-limit"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename xi0aearth.eps
+	width 100line%
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Earth radius limit 
+\begin_inset Formula $\xi_{0max}$
+\end_inset
+
+ with respect to 
+\begin_inset Formula $a$
+\end_inset
+
+.
+ Any particles with 
+\begin_inset Formula $\xi_{0}>\xi_{0max}$
+\end_inset
+
+ are lost.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Earth-radius-limit"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Bounce time scale in a dipole magnetic field
+\end_layout
+
+\begin_layout Standard
+In spherical 
+\begin_inset Formula $\left(\rho,\vartheta,\varphi\right)$
+\end_inset
+
+ coordinates the equation of a dipole magnetic field line is :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\rho\left(\theta\right)=\rho_{0}\sin^{2}\vartheta\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\rho_{0}$
+\end_inset
+
+ is the distance from the magnetic dipole at the equator, i.e.
+ at 
+\begin_inset Formula $\vartheta=\frac{\pi}{2}$
+\end_inset
+
+.
+ To calculate the length of a field line, we start from the expression of
+ the infinitesimal field line coordinate step :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+ds^{2}=d\rho^{2}+\left(\rho d\vartheta\right)^{2}=\left(\rho'^{2}+\rho^{2}\right)d\vartheta^{2}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+ds^{2}=\rho_{0}^{2}\sin^{2}\vartheta\left(4\cos^{2}\vartheta+\sin^{2}\vartheta\right)d\vartheta^{2}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+ds=\rho_{0}\sin\vartheta\sqrt{1+3\cos^{2}\vartheta}d\vartheta\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We can therefore deduce the bounce period expression, the velocity along
+ the field line being 
+\begin_inset Formula $v_{\parallel}=v\xi$
+\end_inset
+
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\tau_{b}=\frac{2}{v}\int_{L}\frac{ds}{\xi}=2\frac{\rho_{0}}{v}\int_{\vartheta_{b}}^{\pi-\vartheta_{b}}\frac{\sin\vartheta\sqrt{1+3\cos^{2}\vartheta}}{\xi\left(\vartheta\right)}d\vartheta=4\frac{\rho_{0}}{v}\int_{\vartheta_{b}}^{\frac{\pi}{2}}\frac{\sin\vartheta\sqrt{1+3\cos^{2}\vartheta}}{\xi\left(\vartheta\right)}d\vartheta\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The last expression comes from the symmetry of the problem with respect
+ to the equatorial plane (
+\begin_inset Formula $\vartheta=\frac{\pi}{2}$
+\end_inset
+
+).
+ Using 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:xi"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:bdipoleamplfieldline"
+
+\end_inset
+
+, the formal expression for the bounce time scale becomes :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\tau_{b}=4\frac{\rho_{0}}{v}\int_{\vartheta_{b}}^{\frac{\pi}{2}}\frac{\sin\vartheta\sqrt{1+3\cos^{2}\vartheta}}{\sqrt{1-\frac{\sqrt{1+3\cos^{2}\vartheta}}{\sin^{6}\vartheta}\left(1-\xi_{0}^{2}\right)}}d\vartheta\label{eq:taub}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\tau_{b}=4\frac{\rho_{0}}{v}f\left(\xi_{0}\right)}\label{eq:taubf}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+since we have seen that 
+\begin_inset Formula $\vartheta_{b}$
+\end_inset
+
+ depends only from 
+\begin_inset Formula $\xi_{0}$
+\end_inset
+
+.
+ The 
+\begin_inset Formula $f$
+\end_inset
+
+ trend is shown in figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:bounce-time-scale"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename taubxi0.eps
+	width 100line%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Bounce time scale function 
+\begin_inset Formula $f$
+\end_inset
+
+ with respect to 
+\begin_inset Formula $\xi_{0}$
+\end_inset
+
+.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:bounce-time-scale"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We can therefore normalize the bounce time scale as follows :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\tau_{bn}=\frac{\tau_{b}}{\tau_{b}^{*}}=\frac{\tau_{b}}{4\frac{\rho_{0}}{v}f\left(0\right)}=\frac{f\left(\xi_{0}\right)}{f\left(0\right)}\label{eq:taubn}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The Earth's ionosphere spans from 
+\begin_inset Formula $150km$
+\end_inset
+
+ to 
+\begin_inset Formula $\rho_{i}=800km$
+\end_inset
+
+ in altitude.
+ The planet's average radius is 
+\begin_inset Formula $\rho_{T}=6370km$
+\end_inset
+
+.
+ A particle entering the ionosphere with 
+\begin_inset Formula $\xi_{0}=1$
+\end_inset
+
+ and moving at a tenth of the speed of light will have a maximum bounce
+ period between North and South poles of :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\tau_{b}\simeq\frac{4\times1.38\left(6370\times10^{3}+800\times10^{3}\right)}{0.3\times10^{8}}=1.32s\label{eq:taubmax}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is not taking into account the 
+\begin_inset Formula $\vartheta_{b}$
+\end_inset
+
+ limit due to the Earth radius, so the bounce time scale will in practise
+ be a little smaller, but still remain in the same ordering.
+ We can also note here that this calculation is done regardless of the particle
+ mass or charge, and also regardless of the magnetic dipole strength.
+\end_layout
+
+\begin_layout Subsection
+Drift time scale in a dipole magnetic field
+\end_layout
+
+\begin_layout Standard
+In a magnetic field, the drift velocity due to the field gradient and the
+ field line curvature has the following expression :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{v}_{d}=\frac{mv^{2}}{2qB}\left(1+\xi^{2}\right)\frac{\mathbf{B}\times\nabla B}{B^{2}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To calculate this velocity, we fist need to evaluate 
+\begin_inset Formula $\frac{\mathbf{B}\times\nabla B}{B^{3}}$
+\end_inset
+
+ in spherical 
+\begin_inset Formula $\left(\rho,\vartheta,\varphi\right)$
+\end_inset
+
+ coordinates, with the expressions of the magnetic field and field gradient
+ previously calculated.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{B}\times\nabla B=3\left(\frac{\mu_{0}M}{4\pi}\right)^{2}\frac{1}{\rho^{7}}\left(-\frac{2\cos^{2}\vartheta\sin\vartheta}{\sqrt{3\cos^{2}\vartheta+1}}+\sin\vartheta\sqrt{3\cos^{2}\vartheta+1}\right)\hat{\varphi}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{B}\times\nabla B=3\left(\frac{\mu_{0}M}{4\pi}\right)^{2}\frac{1}{\rho^{7}}\frac{\left(1-\cos^{2}\vartheta\right)\sin\vartheta}{\sqrt{3\cos^{2}\vartheta+1}}\hat{\varphi}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\mathbf{B}\times\nabla B}{B^{3}}=\frac{4\pi\rho^{2}}{\mu_{0}M}\frac{3\sin^{3}\vartheta}{\left(3\cos^{2}\vartheta+1\right)^{2}}\hat{\varphi}\label{eq:bgradbdipole}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here we take into account that the particle in collisionless motion will
+ remain on its magnetic surface, therefore 
+\begin_inset Formula $\rho=\rho_{0}\sin^{2}\vartheta$
+\end_inset
+
+, with 
+\begin_inset Formula $\rho_{0}$
+\end_inset
+
+ being the equatorial radius of the particle position at 
+\begin_inset Formula $\vartheta=\frac{\pi}{2}$
+\end_inset
+
+.
+ The expression becomes :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{\mathbf{B}\times\nabla B}{B^{3}}=\frac{4\pi\rho_{0}^{2}}{\mu_{0}M}\frac{3\sin^{7}\vartheta}{\left(3\cos^{2}\vartheta+1\right)^{2}}\hat{\varphi}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{v}_{d}=\frac{mv^{2}}{q}\frac{6\pi\rho_{0}^{2}}{\mu_{0}M}\left(1+\xi^{2}\right)\frac{\sin^{7}\vartheta}{\left(3\cos^{2}\vartheta+1\right)^{2}}\hat{\varphi}\label{eq:-22}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the expression of 
+\begin_inset Formula $\xi$
+\end_inset
+
+ given by 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:xi"
+
+\end_inset
+
+, we can write :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+v_{d}=\frac{mv^{2}}{q}\frac{6\pi\rho_{0}^{2}}{\mu_{0}M}\left(2-\frac{\sqrt{1+3\cos^{2}\vartheta}}{\sin^{6}\vartheta}\left(1-\xi_{0}^{2}\right)\right)\frac{\sin^{7}\vartheta}{\left(3\cos^{2}\vartheta+1\right)^{2}}\label{eq:-23}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The equatorial distance travelled over a bounce period has the following
+ expression :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\rho_{0}\delta\varphi=\tau_{b}\left\langle v_{d}\right\rangle _{\vartheta}=\frac{\tau_{b}}{\pi-2\vartheta_{b}}\int_{\vartheta_{b}}^{\pi-\vartheta_{b}}v_{d}\left(\vartheta,\xi_{0}\right)d\vartheta\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We can deduce the expression of the drift time scale, using the expression
+ of 
+\begin_inset Formula $v_{d}$
+\end_inset
+
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\tau_{d}=\frac{2\pi}{\delta\varphi}\tau_{b}=\frac{\mu_{0}M}{3\rho_{0}}\frac{q}{mv^{2}}\left(\frac{1}{\pi-2\vartheta_{b}}\int_{\vartheta_{b}}^{\pi-\vartheta_{b}}\left(2-\frac{\sqrt{1+3\cos^{2}\vartheta}}{\sin^{6}\vartheta}\left(1-\xi_{0}^{2}\right)\right)\frac{\sin^{7}\vartheta}{\left(3\cos^{2}\vartheta+1\right)^{2}}d\vartheta\right)^{-1}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\tau_{d}=\frac{2\pi}{\delta\varphi}\tau_{b}=\frac{\mu_{0}M}{3\rho_{0}}\frac{q}{mv^{2}}\left(\frac{2}{\pi-2\vartheta_{b}}\int_{\vartheta_{b}}^{\frac{\pi}{2}}\left(2-\frac{\sqrt{1+3\cos^{2}\vartheta}}{\sin^{6}\vartheta}\left(1-\xi_{0}^{2}\right)\right)\frac{\sin^{7}\vartheta}{\left(3\cos^{2}\vartheta+1\right)^{2}}d\vartheta\right)^{-1}\label{eq:taud}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\tau_{d}=\frac{\mu_{0}M}{3\rho_{0}}\frac{q}{mv^{2}}g\left(\xi_{0}\right)}\label{eq:taudg}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Formula $g$
+\end_inset
+
+ trend is shown in figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Drift-time-scale"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename taudxi0.eps
+	width 100line%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Drift time scale function 
+\begin_inset Formula $g$
+\end_inset
+
+ with respect to 
+\begin_inset Formula $\xi_{0}$
+\end_inset
+
+.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Drift-time-scale"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Like with the bounce time scale, we normalize the drift time scale with
+ respect to its value at 
+\begin_inset Formula $\xi_{0}=0$
+\end_inset
+
+.
+ This gives :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\tau_{dn}=\frac{\tau_{d}}{\tau_{d}^{*}}=\frac{\tau_{d}}{\frac{\mu_{0}M}{3\rho_{0}}\frac{q}{mv^{2}}g\left(0\right)}=\frac{g\left(\xi_{0}\right)}{g\left(0\right)}\label{eq:taudn}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Bounce time scale and drift time scale comparison
+\end_layout
+
+\begin_layout Standard
+In order to say that the bounce and drift time scales are on a different
+ ordering level, the ratio 
+\begin_inset Formula $\frac{\tau_{b}^{*}}{\tau_{d}^{*}}$
+\end_inset
+
+ has to remain arbitrarily small.
+ The expression of the ratio reads, using 
+\begin_inset Formula $f\left(0\right)=\frac{\pi\sqrt{2}}{6}$
+\end_inset
+
+ and 
+\begin_inset Formula $g\left(0\right)=1$
+\end_inset
+
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\frac{\tau_{b}^{*}}{\tau_{d}^{*}}=2\pi\sqrt{2}\frac{m}{q\mu_{0}M}\rho_{0}^{2}v=\frac{4\pi}{\mu_{0}M}\frac{m}{q\sqrt{2}}\rho_{0}^{2}v}\label{eq:taubstartaudstar}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the values 
+\begin_inset Formula $\frac{\mu_{0}M}{4\pi}=8.3\times10^{15}Tm^{3}$
+\end_inset
+
+ for Earth's magnetic field, 
+\begin_inset Formula $m_{p}=1832m_{e}=1.67\times10^{-27}kg$
+\end_inset
+
+ the mass of a proton and 
+\begin_inset Formula $q=1.6\times10^{-19}C$
+\end_inset
+
+ the elementary charge, the leading coefficient has the following value
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{4\pi}{\mu_{0}M}\frac{m}{q\sqrt{2}}=\frac{1.67\times10^{-27}}{8.3\times10^{15}\times1.6\times10^{-19}\sqrt{2}}=8.89\times10^{-25}sm^{-3}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Evolution of the ratio with respect to the particle distance and speed is
+ shown on figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:taubtaud"
+
+\end_inset
+
+.
+ We can see that for 
+\begin_inset Formula $\rho_{0}\lesssim2R_{T}$
+\end_inset
+
+, 
+\begin_inset Formula $\frac{\tau_{b}^{*}}{\tau_{d}^{*}}<10$
+\end_inset
+
+ for all velocities (the particle obviously can't travel faster than the
+ speed of light).
+ This ensures that the separation of the time scales is consistent for all
+ velocities within a radius of 
+\begin_inset Formula $\rho_{0p}\simeq2R_{T}\simeq10^{4}km$
+\end_inset
+
+ from the center of the Earth.
+ Beyond this threshold, particles with enough velocity will have comparable
+ bounce and drift time scale and the assumption will not hold.
+ It is to note that the calculation is done for a proton.
+ Since the ratio depends linearly on the particle mass, the electron ordering
+ threshold is 1832 times higher, i.e.
+ 
+\begin_inset Formula $\rho_{0e}\simeq4\times10^{3}R_{T}\simeq2\times10^{7}km$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename taubstartaudstar.eps
+	width 100line%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{\tau_{b}^{*}}{\tau_{d}^{*}}$
+\end_inset
+
+ for a proton in Earth's magnetic field with respect to 
+\begin_inset Formula $\rho_{0}$
+\end_inset
+
+ and 
+\begin_inset Formula $v$
+\end_inset
+
+.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:taubtaud"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+\start_of_appendix
+Appendix
+\end_layout
+
+\begin_layout Subsection*
+Calculation of the dipole magnetic field from the approximation of the single
+ coil magnetic field
+\end_layout
+
+\begin_layout Standard
+In order to calculate the dipole field approximation, we can start either
+ from 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:bcoilcyl"
+
+\end_inset
+
+ or 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:bcoilellipticcyl"
+
+\end_inset
+
+, using the approximation 
+\begin_inset Formula $R_{p}\ll1$
+\end_inset
+
+ and 
+\begin_inset Formula $Z_{p}=0$
+\end_inset
+
+.
+ If we start from 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:bcoilcyl"
+
+\end_inset
+
+, we use the Taylor development of 
+\begin_inset Formula $D^{-3}$
+\end_inset
+
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{1}{\left(R^{2}+Z^{2}+R_{p}^{2}-2RR_{p}\cos\left(\varphi-\phi\right)\right)^{\frac{3}{2}}}=\frac{1}{\left(R^{2}+Z^{2}\right)^{\frac{3}{2}}}+\frac{3R\cos\left(\varphi-\phi\right)}{\left(R^{2}+Z^{2}\right)^{\frac{5}{2}}}R_{p}+\mathcal{O}\left(R_{p}^{2}\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Since 
+\begin_inset Formula $\int_{-\pi}^{\pi}\cos\left(\varphi-\phi\right)d\phi=0$
+\end_inset
+
+ and 
+\begin_inset Formula $\int_{-\pi}^{\pi}\cos^{2}\left(\varphi-\phi\right)d\phi=\pi$
+\end_inset
+
+, the approximated magnetic field given in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:bcoilcyl"
+
+\end_inset
+
+ becomes :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\boxed{B_{R}\simeq\frac{\mu_{0}IR_{p}^{2}}{4\pi}\frac{3\pi RZ}{\left(R^{2}+Z^{2}\right)^{\frac{5}{2}}}=\frac{\mu_{0}IR_{p}^{2}}{4}\frac{3RZ}{\left(R^{2}+Z^{2}\right)^{\frac{5}{2}}}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\boxed{B_{Z}\simeq\frac{\mu_{0}IR_{p}^{2}}{4\pi}\left(\frac{2\pi}{\left(R^{2}+Z^{2}\right)^{\frac{3}{2}}}-\frac{3\pi R^{2}}{\left(R^{2}+Z^{2}\right)^{\frac{5}{2}}}\right)=\frac{\mu_{0}IR_{p}^{2}}{4}\frac{2Z^{2}-R^{2}}{\left(R^{2}+Z^{2}\right)^{\frac{5}{2}}}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If we start from 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:bcoilellipticcyl"
+
+\end_inset
+
+ and take into account the taylor expansions of 
+\begin_inset Formula $K$
+\end_inset
+
+ and 
+\begin_inset Formula $E$
+\end_inset
+
+ at zero :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+K\left(k^{2}\right)=\int_{0}^{\frac{\pi}{2}}\left(1+k^{2}\frac{\sin^{2}t}{2}+k^{4}\frac{3\sin^{4}t}{4}+\mathcal{O}\left(k^{6}\right)\right)dt=\frac{\pi}{2}\left(1+\frac{k^{2}}{4}+\frac{9k^{4}}{64}\right)+\mathcal{O}\left(k^{6}\right)\label{eq:taylorKk2}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+E\left(k^{2}\right)=\int_{0}^{\frac{\pi}{2}}\left(1-k^{2}\frac{\sin^{2}t}{2}-k^{4}\frac{\sin^{4}t}{4}+\mathcal{O}\left(k^{6}\right)\right)dt=\frac{\pi}{2}\left(1-\frac{k^{2}}{4}-\frac{3k^{4}}{64}\right)+\mathcal{O}\left(k^{6}\right)\label{eq:taylorEk2}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We then use the taylor expansion of 
+\begin_inset Formula $k^{2}$
+\end_inset
+
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+k^{2}=\frac{4RR_{p}}{R^{2}+Z^{2}}\left(1-\frac{2RR_{p}}{R^{2}+Z^{2}}\right)+\mathcal{O}\left(R_{p}^{3}\right)\label{eq:taylork2}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Inserting 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:taylork2"
+
+\end_inset
+
+ into 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:taylorKk2"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:taylorEk2"
+
+\end_inset
+
+, we obtain :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{2}{\pi}K\left(k^{2}\right)=1+\frac{RR_{p}}{R^{2}+Z^{2}}\left(1-\frac{2RR_{p}}{R^{2}+Z^{2}}\right)+\frac{9}{4}\frac{R^{2}R_{p}^{2}}{\left(R^{2}+Z^{2}\right)^{2}}=1+\frac{RR_{p}}{R^{2}+Z^{2}}+\frac{1}{4}\frac{R^{2}R_{p}^{2}}{\left(R^{2}+Z^{2}\right)^{2}}+\mathcal{O}\left(R_{p}^{3}\right)\label{eq:taylorK}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{2}{\pi}E\left(k^{2}\right)=1-\frac{RR_{p}}{R^{2}+Z^{2}}\left(1-\frac{2RR_{p}}{R^{2}+Z^{2}}\right)-\frac{3}{4}\frac{R^{2}R_{p}^{2}}{\left(R^{2}+Z^{2}\right)^{2}}=1-\frac{RR_{p}}{R^{2}+Z^{2}}+\frac{5}{4}\frac{R^{2}R_{p}^{2}}{\left(R^{2}+Z^{2}\right)^{2}}+\mathcal{O}\left(R_{p}^{3}\right)\label{eq:taylorE}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We then calculate the taylor expansions of the following expressions :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\begin{array}{ccc}
+\frac{1}{\sqrt{\left(R_{p}+R\right)^{2}+Z^{2}}} & = & \frac{1}{\sqrt{R^{2}+Z^{2}}}\left(1-\frac{RR_{p}}{R^{2}+Z^{2}}+\left(\frac{3}{2}\frac{R^{2}}{R^{2}+Z^{2}}-\frac{1}{2}\right)\frac{R_{p}^{2}}{R^{2}+Z^{2}}\right)+\mathcal{O}\left(R_{p}^{3}\right)\\
+ & = & \frac{1}{\sqrt{R^{2}+Z^{2}}}\left(1-\frac{R}{R^{2}+Z^{2}}R_{p}+\frac{1}{2}\frac{2R^{2}-Z^{2}}{\left(R^{2}+Z^{2}\right)^{2}}R_{p}^{2}\right)+\mathcal{O}\left(R_{p}^{3}\right)\end{array}\label{eq:taylorsqrt-1}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\begin{array}{ccc}
+\frac{R_{p}^{2}+R^{2}+Z^{2}}{\left(R_{p}-R\right)^{2}+Z^{2}} & = & 1+\frac{2RR_{p}}{R^{2}+Z^{2}}+\left(1-1+\frac{4R^{2}}{R^{2}+Z^{2}}\right)\frac{R_{p}^{2}}{R^{2}+Z^{2}}+\mathcal{O}\left(R_{p}^{3}\right)\\
+ & = & 1+\frac{2RR_{p}}{R^{2}+Z^{2}}+\frac{4R^{2}R_{p}^{2}}{\left(R^{2}+Z^{2}\right)^{2}}+\mathcal{O}\left(R_{p}^{3}\right)\end{array}\label{eq:taylorEcoeffBR}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\begin{array}{ccc}
+\frac{R_{p}^{2}-R^{2}-Z^{2}}{\left(R_{p}-R\right)^{2}+Z^{2}} & = & -1-\frac{2RR_{p}}{R^{2}+Z^{2}}+\left(1+1-\frac{4R^{2}}{R^{2}+Z^{2}}\right)\frac{R_{p}^{2}}{R^{2}+Z^{2}}+\mathcal{O}\left(R_{p}^{3}\right)\\
+ & = & -1-\frac{2RR_{p}}{R^{2}+Z^{2}}+2\frac{\left(Z^{2}-R^{2}\right)R_{p}^{2}}{\left(R^{2}+Z^{2}\right)^{2}}+\mathcal{O}\left(R_{p}^{3}\right)\end{array}\label{eq:taylorEcoeffBZ}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We finally insert 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:taylorK"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:taylorE"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:taylorsqrt-1"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:taylorEcoeffBR"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:taylorEcoeffBZ"
+
+\end_inset
+
+ into the expression of the magnetic field found in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:bcoilellipticcyl"
+
+\end_inset
+
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline*}
+B_{R}\simeq\frac{\mu_{0}I}{2\pi}\frac{Z}{R}\frac{1}{\sqrt{R^{2}+Z^{2}}}\frac{\pi}{2}\left(1-\frac{RR_{p}}{R^{2}+Z^{2}}+\frac{1}{2}\frac{\left(2R^{2}-Z^{2}\right)R_{p}^{2}}{\left(R^{2}+Z^{2}\right)^{2}}\right)\left(\vphantom{\left(1+\frac{2RR_{p}}{R^{2}+Z^{2}}+\frac{4R^{2}R_{p}^{2}}{\left(R^{2}+Z^{2}\right)^{2}}\right)}\right.\\
+\left.\left(1+\frac{2RR_{p}}{R^{2}+Z^{2}}+\frac{4R^{2}R_{p}^{2}}{\left(R^{2}+Z^{2}\right)^{2}}\right)\left(1-\frac{RR_{p}}{R^{2}+Z^{2}}+\frac{5}{4}\frac{R^{2}R_{p}^{2}}{\left(R^{2}+Z^{2}\right)^{2}}\right)-1-\frac{RR_{p}}{R^{2}+Z^{2}}-\frac{1}{4}\frac{R^{2}R_{p}^{2}}{\left(R^{2}+Z^{2}\right)^{2}}\right)\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{B_{R}\simeq\frac{\mu_{0}I}{4}\frac{1}{\sqrt{R^{2}+Z^{2}}}\frac{Z}{R}\left(\frac{3R^{2}R_{p}^{2}}{\left(R^{2}+Z^{2}\right)^{2}}\right)=\frac{\mu_{0}IR_{p}^{2}}{4}\frac{3RZ}{\left(R^{2}+Z^{2}\right)^{\frac{5}{2}}}}\label{eq:-28}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline*}
+B_{Z}\simeq\frac{\mu_{0}I}{2\pi}\frac{1}{\sqrt{R^{2}+Z^{2}}}\frac{\pi}{2}\left(1-\frac{RR_{p}}{R^{2}+Z^{2}}+\frac{1}{2}\frac{\left(2R^{2}-Z^{2}\right)R_{p}^{2}}{\left(R^{2}+Z^{2}\right)^{2}}\right)\left(\vphantom{\left(-1-\frac{2RR_{p}}{R^{2}+Z^{2}}+2\frac{\left(Z^{2}-R^{2}\right)R_{p}^{2}}{\left(R^{2}+Z^{2}\right)^{2}}\right)}\right.\\
+\left.\left(-1-\frac{2RR_{p}}{R^{2}+Z^{2}}+2\frac{\left(Z^{2}-R^{2}\right)R_{p}^{2}}{\left(R^{2}+Z^{2}\right)^{2}}\right)\left(1-\frac{RR_{p}}{R^{2}+Z^{2}}+\frac{5}{4}\frac{R^{2}R_{p}^{2}}{\left(R^{2}+Z^{2}\right)^{2}}\right)+1+\frac{RR_{p}}{R^{2}+Z^{2}}+\frac{1}{4}\frac{R^{2}R_{p}^{2}}{\left(R^{2}+Z^{2}\right)^{2}}\right)\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{B_{Z}\simeq\frac{\mu_{0}I}{4}\frac{1}{\sqrt{R^{2}+Z^{2}}}\left(-\frac{R^{2}R_{p}^{2}}{\left(R^{2}+Z^{2}\right)^{2}}+\frac{2Z^{2}R_{p}^{2}}{\left(R^{2}+Z^{2}\right)^{2}}\right)=\frac{\mu_{0}IR_{p}^{2}}{4}\frac{2Z^{2}-R^{2}}{\left(R^{2}+Z^{2}\right)^{\frac{5}{2}}}}\label{eq:-29}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We therefore in both cases obtain the same expressions than 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:bdipolecyl"
+
+\end_inset
+
+, using 
+\begin_inset Formula $M=I\pi R_{p}^{2}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection*
+Calculation of the dipole flux coordinate from the approximation of the
+ single coil flux coordinate
+\end_layout
+
+\begin_layout Standard
+In order to calculate the dipole flux coordinate approximation, we can start
+ either from 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:psicoilcyl"
+
+\end_inset
+
+ or 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:psicoilellipticcyl"
+
+\end_inset
+
+, using the approximation 
+\begin_inset Formula $R_{p}\ll1$
+\end_inset
+
+ and 
+\begin_inset Formula $Z_{p}=0$
+\end_inset
+
+.
+ If we start from 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:psicoilcyl"
+
+\end_inset
+
+, we use the Taylor development of 
+\begin_inset Formula $D^{-1}$
+\end_inset
+
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{1}{\sqrt{R^{2}+Z^{2}+R_{p}^{2}-2RR_{p}\cos\left(\varphi-\phi\right)}}=\frac{1}{\sqrt{R^{2}+Z^{2}}}+\frac{R\cos\left(\varphi-\phi\right)}{\left(R^{2}+Z^{2}\right)^{\frac{3}{2}}}R_{p}+\mathcal{O}\left(R_{p}^{2}\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Since 
+\begin_inset Formula $\int_{-\pi}^{\pi}\cos\left(\varphi-\phi\right)d\phi=0$
+\end_inset
+
+ and 
+\begin_inset Formula $\int_{-\pi}^{\pi}\cos^{2}\left(\varphi-\phi\right)d\phi=\pi$
+\end_inset
+
+, the approximated flux coordinate given in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:psicoilcyl"
+
+\end_inset
+
+ becomes :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\boxed{\psi\simeq\frac{\mu_{0}IR_{p}^{2}}{4\pi}\frac{\pi R^{2}}{\left(R^{2}+Z^{2}\right)^{\frac{3}{2}}}=\frac{\mu_{0}IR_{p}^{2}}{4}\frac{R^{2}}{\left(R^{2}+Z^{2}\right)^{\frac{3}{2}}}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If we start from 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:psicoilellipticcyl"
+
+\end_inset
+
+, we calculate the taylor expansions of the following expressions :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\begin{array}{ccc}
+\sqrt{\left(R_{p}+R\right)^{2}+Z^{2}} & = & \sqrt{R^{2}+Z^{2}}\left(1+\frac{RR_{p}}{R^{2}+Z^{2}}+\left(-\frac{1}{2}\frac{R^{2}}{R^{2}+Z^{2}}-\frac{1}{2}\right)\frac{R_{p}^{2}}{R^{2}+Z^{2}}\right)+\mathcal{O}\left(R_{p}^{3}\right)\\
+ & = & \sqrt{R^{2}+Z^{2}}\left(1+\frac{R}{R^{2}+Z^{2}}R_{p}-\frac{1}{2}\frac{2R^{2}+Z^{2}}{\left(R^{2}+Z^{2}\right)^{2}}R_{p}^{2}\right)+\mathcal{O}\left(R_{p}^{3}\right)\end{array}\label{eq:taylorsqrt}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We then insert 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:taylorK"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:taylorE"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:taylorsqrt"
+
+\end_inset
+
+ into the expression of the flux coordinate found in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:psicoilellipticcyl"
+
+\end_inset
+
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{multline*}
+\psi\simeq-\frac{\mu_{0}I}{4\pi}\frac{\pi}{2}\left(1+\frac{RR_{p}}{R^{2}+Z^{2}}-\frac{1}{2}\frac{\left(2R^{2}+Z^{2}\right)R_{p}^{2}}{\left(R^{2}+Z^{2}\right)^{2}}\right)\left(\vphantom{\left(1+\frac{2RR_{p}}{R^{2}+Z^{2}}+\frac{4R^{2}R_{p}^{2}}{\left(R^{2}+Z^{2}\right)^{2}}\right)}\right.\\
+\left.\left(\frac{4RR_{p}}{R^{2}+Z^{2}}-\frac{8R^{2}R_{p}^{2}}{\left(R^{2}+Z^{2}\right)^{2}}-2\right)\left(1+\frac{RR_{p}}{R^{2}+Z^{2}}+\frac{1}{4}\frac{R^{2}R_{p}^{2}}{\left(R^{2}+Z^{2}\right)^{2}}\right)+2\left(1-\frac{RR_{p}}{R^{2}+Z^{2}}+\frac{5}{4}\frac{R^{2}R_{p}^{2}}{\left(R^{2}+Z^{2}\right)^{2}}\right)\right)\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\psi\simeq\frac{\mu_{0}I}{8}\sqrt{R^{2}+Z^{2}}\left(\frac{2R^{2}R_{p}^{2}}{\left(R^{2}+Z^{2}\right)^{2}}\right)=\frac{\mu_{0}IR_{p}^{2}}{4}\frac{R^{2}}{\left(R^{2}+Z^{2}\right)^{\frac{3}{2}}}}\label{eq:-3}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We therefore in both cases obtain the same expressions than 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:bdipolecyl"
+
+\end_inset
+
+, using 
+\begin_inset Formula $M=I\pi R_{p}^{2}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection*
+Link between cylindrical and spherical expressions of the dipole magnetic
+ field
+\end_layout
+
+\begin_layout Standard
+Here, we want to prove that the conversion of 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:bdipolecyl"
+
+\end_inset
+
+ to spherical 
+\begin_inset Formula $\left(\rho,\vartheta,\varphi\right)$
+\end_inset
+
+ coordinates gives the expression previously calculated at 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:bdipolesph"
+
+\end_inset
+
+.
+ Discarding the 
+\begin_inset Formula $\varphi$
+\end_inset
+
+ coordinate since 
+\begin_inset Formula $B_{\varphi}=0$
+\end_inset
+
+ and none of the expressions depend on 
+\begin_inset Formula $\varphi$
+\end_inset
+
+, we start from the relations :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\begin{array}{c}
+\rho=\sqrt{R^{2}+Z^{2}}\\
+\vartheta=\arctan\frac{Z}{R}\end{array}\Leftrightarrow\begin{array}{c}
+R=\rho\sin\vartheta\\
+Z=\rho\cos\vartheta\end{array}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\hat{\rho}=\sin\vartheta\hat{R}+\cos\vartheta\hat{Z}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\hat{\vartheta}=\cos\vartheta\hat{R}-\sin\vartheta\hat{Z}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We therefore have :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+B_{R}=\frac{\mu_{0}M}{4\pi}\frac{3RZ}{\left(R^{2}+Z^{2}\right)^{\frac{5}{2}}}=\frac{\mu_{0}M}{4\pi\rho^{3}}3\sin\vartheta\cos\vartheta\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+B_{Z}=\frac{\mu_{0}M}{4\pi}\frac{2Z^{2}-R^{2}}{\left(R^{2}+Z^{2}\right)^{\frac{5}{2}}}=\frac{\mu_{0}M}{4\pi\rho^{3}}\left(2\cos^{2}\vartheta-\sin^{2}\vartheta\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We can therefore deduce :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{B_{\rho}=B_{R}\sin\vartheta+B_{Z}\cos\vartheta=\frac{\mu_{0}M}{4\pi\rho^{3}}\left(3\sin^{2}\vartheta\cos\vartheta+2\cos^{3}\vartheta-\sin^{2}\vartheta\cos\vartheta\right)=\frac{\mu_{0}M}{4\pi\rho^{3}}2\cos\vartheta}\label{eq:-1}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{B_{\vartheta}=B_{R}\cos\vartheta-B_{Z}\sin\vartheta=\frac{\mu_{0}M}{4\pi\rho^{3}}\left(3\sin\vartheta\cos^{2}\vartheta-2\cos^{2}\vartheta\sin\vartheta+\sin^{3}\vartheta\right)=\frac{\mu_{0}M}{4\pi\rho^{3}}\sin\vartheta}\label{eq:-2}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We therefore obtain the same expression as 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:bdipolesph"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection*
+A vector derivation of the combined gradient and curvature drift
+\end_layout
+
+\begin_layout Standard
+We start here with a particle moving in a magnetic field 
+\begin_inset Formula $\mathbf{B}=B\mathbf{b}$
+\end_inset
+
+ with velocity 
+\begin_inset Formula $\mathbf{v}=v_{\parallel}\mathbf{b}+\mathbf{v}_{\perp}$
+\end_inset
+
+.
+ The equation of motion of the particle reads :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+m\frac{d\mathbf{v}}{dt}=-\mu\nabla B+q\mathbf{v}_{\perp}\times\mathbf{B}\label{eq:eqmotion}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We express 
+\begin_inset Formula $\mathbf{v}_{\perp}$
+\end_inset
+
+ as a gyrokinetic component and a drift velocity :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{v}_{\perp}=\mathbf{v}_{\perp0}+\mathbf{v}_{d}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We assume that the variation of 
+\begin_inset Formula $\mathbf{v}_{d}$
+\end_inset
+
+ is small compared to 
+\begin_inset Formula $v_{\parallel}$
+\end_inset
+
+, i.e.
+ 
+\begin_inset Formula $\left|\frac{d\mathbf{v}_{d}}{dt}\right|\ll\left|\frac{dv_{\parallel}}{dt}\right|$
+\end_inset
+
+.
+ The gyrokinetic component is solution to the equation :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+m\frac{d\mathbf{v}_{\perp0}}{dt}=q\mathbf{v}_{\perp0}\times\mathbf{B}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:eqmotion"
+
+\end_inset
+
+ therefore becomes :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+m\frac{d\mathbf{v}_{\parallel}}{dt}=-\mu\nabla B+q\mathbf{v}_{d}\times\mathbf{B}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The cross product of 
+\begin_inset Formula $\mathbf{b}$
+\end_inset
+
+ with the equation gives :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+m\mathbf{b}\times\frac{d\mathbf{v}_{\parallel}}{dt}=-\mu\mathbf{b}\times\nabla B+q\mathbf{b}\times\left(\mathbf{v}_{d}\times\mathbf{B}\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the formula for a double cross product 
+\begin_inset Formula $\mathbf{b}\times\left(\mathbf{v}_{d}\times\mathbf{B}\right)=\left(\mathbf{v}_{d}\cdot\mathbf{b}\right)\mathbf{B}-\left(\mathbf{b\cdot B}\right)\mathbf{v}_{d}=B\mathbf{v}_{d}$
+\end_inset
+
+, the equation becomes :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{v}_{d}=\frac{m}{qB}\mathbf{b}\times\frac{d\mathbf{v}_{\parallel}}{dt}+\frac{\mu}{qB}\mathbf{b}\times\nabla B\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\frac{d\mathbf{v}_{\parallel}}{dt}=\frac{dv_{\parallel}}{dt}\mathbf{b}+\frac{v_{\parallel}^{2}}{R}\mathbf{n}$
+\end_inset
+
+ where 
+\begin_inset Formula $\mathbf{n}=\frac{\mathbf{R}}{R}$
+\end_inset
+
+ is the curve radius of the magnetic field.
+ The equation becomes :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{v}_{d}=\frac{mv_{\parallel}^{2}}{qB}\frac{\mathbf{b}\times\mathbf{n}}{R}+\frac{\mu}{qB}\mathbf{b}\times\nabla B\label{eq:vdcurveradius}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The Ampere theorem for a magnetic field structure without current is 
+\begin_inset Formula $\nabla\times\mathbf{B}=0$
+\end_inset
+
+, so we can write :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\nabla\times\mathbf{B}=B\nabla\times\mathbf{b}-\mathbf{b}\times\nabla B=0\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\nabla\times\mathbf{b}=\frac{1}{R}\mathbf{b}\times\mathbf{n}$
+\end_inset
+
+ is the 
+\begin_inset Quotes eld
+\end_inset
+
+vorticity
+\begin_inset Quotes erd
+\end_inset
+
+ of the magnetic field.
+ We can therefore see that :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{1}{R}\mathbf{b}\times\mathbf{n}=\frac{\mathbf{b}\times\nabla B}{B}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We can therefore write 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:vdcurveradius"
+
+\end_inset
+
+ as :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{v}_{d}=\frac{\frac{1}{2}mv_{\perp}^{2}+mv_{\parallel}^{2}}{qB}\frac{\mathbf{B}\times\nabla B}{B^{2}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+using 
+\begin_inset Formula $\xi=\frac{p_{\parallel}}{p}=\frac{v_{\parallel}}{v}$
+\end_inset
+
+, the expression becomes :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\mathbf{v}_{d}=\frac{mv^{2}}{2qB}\left(1+\xi^{2}\right)\frac{\mathbf{B}\times\nabla B}{B^{2}}}\label{eq:vdvector}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We note that in the general case, both gradient and curvature drifts contribute
+ to the particle motion.
+ We can see that 
+\begin_inset Formula $\left|\frac{d\mathbf{v}_{d}}{dt}\right|$
+\end_inset
+
+ is of a higher order in 
+\begin_inset Formula $\xi$
+\end_inset
+
+ than 
+\begin_inset Formula $\left|\frac{dv_{\parallel}}{dt}\right|=v\left|\frac{d\xi}{dt}\right|$
+\end_inset
+
+.
+ The assumption 
+\begin_inset Formula $\left|\frac{d\mathbf{v}_{d}}{dt}\right|\ll\left|\frac{dv_{\parallel}}{dt}\right|$
+\end_inset
+
+ we made earlier is therefore consistent.
+\end_layout
+
+\begin_layout Subsection*
+Calculation of 
+\begin_inset Formula $f\left(0\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The goal here is to perform the Taylor expansion of the bounce time scale
+ function at 
+\begin_inset Formula $\xi_{0}=0\Leftrightarrow\vartheta_{b}=\frac{\pi}{2}$
+\end_inset
+
+.
+ Let us introduce the small parameter 
+\begin_inset Formula $\varepsilon=\frac{\pi}{2}-\vartheta_{b}$
+\end_inset
+
+.
+ The expression of 
+\begin_inset Formula $f$
+\end_inset
+
+ becomes :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+f\left(\varepsilon\right)=\int_{\frac{\pi}{2}-\varepsilon}^{\frac{\pi}{2}}\frac{\sin\vartheta\sqrt{1+3\cos^{2}\vartheta}}{\sqrt{1-\frac{\sqrt{1+3\cos^{2}\vartheta}}{\sin^{6}\vartheta}\frac{\cos^{6}\varepsilon}{\sqrt{1+3\sin^{2}\varepsilon}}}}d\vartheta\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In order to have a finite boundary integral, we do the following variable
+ change :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\vartheta=\varepsilon\left(t-1\right)+\frac{\pi}{2}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+d\vartheta=\varepsilon dt\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression then reads :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+f\left(\varepsilon\right)=\varepsilon\int_{0}^{1}\frac{\cos\left(\varepsilon\left(t-1\right)\right)\sqrt{1+3\sin^{2}\left(\varepsilon\left(t-1\right)\right)}}{\sqrt{1-\frac{\sqrt{1+3\sin^{2}\left(\varepsilon\left(t-1\right)\right)}}{\cos^{6}\left(\varepsilon\left(t-1\right)\right)}\frac{\cos^{6}\varepsilon}{\sqrt{1+3\sin^{2}\varepsilon}}}}dt\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We then use the following Taylor expansions at second order :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\cos\left(\varepsilon\left(t-1\right)\right)\sqrt{1+3\sin^{2}\left(\varepsilon\left(t-1\right)\right)}=\left(1-\frac{\varepsilon^{2}\left(t-1\right)^{2}}{2}\right)\left(1+\frac{3\varepsilon^{2}\left(t-1\right)^{2}}{2}\right)=1+\varepsilon^{2}\left(t-1\right)^{2}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{\sqrt{1+3\sin^{2}\left(\varepsilon\left(t-1\right)\right)}}{\cos^{6}\left(\varepsilon\left(t-1\right)\right)}=\left(1+\frac{3\varepsilon^{2}\left(t-1\right)^{2}}{2}\right)\left(1+3\varepsilon^{2}\left(t-1\right)^{2}\right)=1+\frac{9\varepsilon^{2}\left(t-1\right)^{2}}{2}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{\cos^{6}\varepsilon}{\sqrt{1+3\sin^{2}\varepsilon}}=\left(1-3\varepsilon^{2}\right)\left(1-\frac{3\varepsilon^{2}}{2}\right)=1-\frac{9\varepsilon^{2}}{2}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We can therefore deduce :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+f\left(\varepsilon\right)=\varepsilon\int_{0}^{1}\frac{1+\varepsilon^{2}\left(t-1\right)^{2}}{\sqrt{1-\left(1-\frac{9\varepsilon^{2}}{2}\left(1-\left(t-1\right)^{2}\right)\right)}}dt\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+f\left(\varepsilon\right)=\frac{\sqrt{2}}{3}\left(\int_{0}^{1}\frac{dt}{\sqrt{1-\left(t-1\right)^{2}}}+\varepsilon^{2}\int_{0}^{1}\frac{\left(t-1\right)^{2}}{\sqrt{1-\left(t-1\right)^{2}}}dt\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+f\left(\varepsilon\right)=\frac{\sqrt{2}}{3}\left[\arcsin\left(t-1\right)\right]_{0}^{1}+\frac{\sqrt{2}\varepsilon^{2}}{6}\left[\arcsin\left(t-1\right)-\left(t-1\right)\sqrt{1-\left(t-1\right)^{2}}\right]_{0}^{1}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{f\left(\varepsilon\right)=\frac{\pi\sqrt{2}}{6}+\frac{\pi\sqrt{2}}{12}\varepsilon^{2}+\mathcal{O}\left(\varepsilon^{2}\right)}\label{eq:f0}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We can therefore see that 
+\begin_inset Formula $f\left(0\right)=\frac{\pi\sqrt{2}}{6}\simeq0.74$
+\end_inset
+
+ and that there is a local minimum in 
+\begin_inset Formula $\xi_{0}=0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection*
+Calculation of 
+\begin_inset Formula $f\left(1\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The evaluation of 
+\begin_inset Formula $f$
+\end_inset
+
+ at 
+\begin_inset Formula $\xi_{0}=1$
+\end_inset
+
+ has the following expression :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+f\left(1\right)=\int_{0}^{\frac{\pi}{2}}\sin\vartheta\sqrt{1+3\cos^{2}\vartheta}d\vartheta\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here, we use the following variable change :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+x=\cos\vartheta\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+dx=-\sin\vartheta d\vartheta\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+f\left(1\right)=\int_{0}^{1}\sqrt{1+3x^{2}}dx\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We then use the following antiderivative :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\int\sqrt{a^{2}+x^{2}}dx=\frac{x}{2}\sqrt{a^{2}+x^{2}}+\frac{a^{2}}{2}\ln\left|x+\sqrt{a^{2}+x^{2}}\right|\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression becomes :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+f\left(1\right)=\sqrt{3}\left[\frac{x}{2}\sqrt{\frac{1}{3}+x^{2}}+\frac{1}{6}\ln\left|x+\sqrt{\frac{1}{3}+x^{2}}\right|\right]_{0}^{1}=1+\frac{\sqrt{3}}{6}\ln\left(1+\frac{2}{\sqrt{3}}\right)-\frac{\sqrt{3}}{6}\ln\left(\frac{1}{\sqrt{3}}\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{f\left(1\right)=1+\frac{\sqrt{3}}{6}\ln\left(2+\sqrt{3}\right)\simeq1.38}\label{eq:f1}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
