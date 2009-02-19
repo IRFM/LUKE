@@ -1,5 +1,5 @@
 function 	 [Xa,Xb,Xc,Xd,Xe,Xf,Xg,Xh,Xi] = ...
-    	        fpengine_dke_yp(ftp_mode,...
+    	        fpengine_dke_yp(dkeparam,ftp_mode,...
     	        Xdeltap_imj,Xdeltap_ipj,Xdeltam_ijm,Xdeltam_ijp,...
                 Xdeltap_imjmm,Xdeltap_imjpp,Xdeltap_ipjmm,Xdeltap_ipjpp,...
                 Xdeltam_immjm,Xdeltam_ippjm,Xdeltam_immjp,Xdeltam_ippjp,...
@@ -34,11 +34,13 @@ function 	 [Xa,Xb,Xc,Xd,Xe,Xf,Xg,Xh,Xi] = ...
 %
 %By Joan Decker (MIT-RLE, jodecker@mit.edu) and Yves Peysson (CEA-DRFC, yves.peysson@cea.fr)
 %
-if nargin < 46,
+if nargin < 47,
 	error('Wrong number of input arguments in fpengine_dke_yp')
 end
 %		
 if ftp_mode >= 1, ftp_mode = 1;end%Force ftp_mode to be 0 (FP) or 1 (DKE)
+%
+if ~isfield(dkeparam,'oldcross_mode'),dkeparam.oldcross_mode = 0;end
 %
 %Center cross-derivatives 
 %
@@ -47,8 +49,7 @@ if ftp_mode >= 1, ftp_mode = 1;end%Force ftp_mode to be 0 (FP) or 1 (DKE)
 %unstable solution when D// > 1). It is therefore only given for a link
 %with the past ! WARNING: IT MUST BE NEVER USED EXCEPT TESTS
 %
-mode_karney = 0;%0 must be always used
-if mode_karney,
+if dkeparam.oldcross_mode == 1,%************ Must never be used **************
    Xa = - Xpnp.*XDpm_ipj.*sqrt(X1mmhu2)./(Xdmhum + Xdmhup)./Xdpn;%grid point (i+1/2,j-1/2)
    Xa = Xa + Xpnm.*XDpm_imj.*sqrt(X1mmhu2)./(Xdmhum + Xdmhup)./Xdpn;
    Xa = Xa - XDmm_ijm.*X1mmhu2m.*XRlambdam./Xdmhu./Xdmhum;
@@ -87,7 +88,7 @@ if mode_karney,
    Xh = Xh - XDmp_ij.*Xpn.*sqrt(X1mmhu2)./(Xdmhum + Xdmhup)./(Xdpnm + Xdpnp);	
 %
    Xi = Xh;%grid point (i+3/2,j-1/2)
-else
+elseif dkeparam.oldcross_mode == 0,%************ Must be always used **************
 %
 %Cross derivatives with exact boundary conditions (WARNING: MUST BE ALWAYS USED)
 %

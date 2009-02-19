@@ -107,37 +107,55 @@ for iD0 = 1:length(D0_list),
     waves{1} = make_idealLHwave_jd(equil,wavestruct);
     %
     dkeparam.coll_mode = 0;% Relativistic Maxwellian background
+    dkeparam.oldcross_mode = 0;%Cross-derivatives as given in paper Peysson-Shoucri CPC 98
     [Znorm,Zcurr_0,ZP0_0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    dkeparam.oldcross_mode = 1;%Cross-derivatives as given in paper Peysson-Shoucri CPC 98
+    [Znorm,Zcurr_0a,ZP0_0a] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     dkeparam.coll_mode = 1;% High-velocity limit
+    dkeparam.oldcross_mode = 0;%Cross-derivatives as given in paper Peysson-Shoucri CPC 98
     [Znorm,Zcurr_1,ZP0_1] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    dkeparam.oldcross_mode = 1;%Cross-derivatives as given in paper Peysson-Shoucri CPC 98
+    [Znorm,Zcurr_1a,ZP0_1a] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     dkeparam.coll_mode = 2;% Linearized Belaiev-Budker
+    dkeparam.oldcross_mode = 0;%Cross-derivatives as given in paper Peysson-Shoucri CPC 98
     [Znorm,Zcurr_2,ZP0_2] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-    %
-    %dkeparam.coll_mode = 4;% Linearized Belaiev-Budker
-    %[Znorm,Zcurr_4,ZP0_4] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    dkeparam.oldcross_mode = 1;%Cross-derivatives as given in paper Peysson-Shoucri CPC 98
+    [Znorm,Zcurr_2a,ZP0_2a] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     j_0(iD0) = Zcurr_0.x_0;
     j_1(iD0) = Zcurr_1.x_0;
     j_2(iD0) = Zcurr_2.x_0;
-    %j_4(iD0) = Zcurr_4.x_0;
+    %
+    j_0a(iD0) = Zcurr_0a.x_0;
+    j_1a(iD0) = Zcurr_1a.x_0;
+    j_2a(iD0) = Zcurr_2a.x_0;
     %
     P_0(iD0) = ZP0_0.x_rf_fsav;
     P_1(iD0) = ZP0_1.x_rf_fsav;
     P_2(iD0) = ZP0_2.x_rf_fsav;
-    %P_4(iD0) = ZP0_4.x_rf_fsav;
+	%
+	P_0a(iD0) = ZP0_0a.x_rf_fsav;
+    P_1a(iD0) = ZP0_1a.x_rf_fsav;
+    P_2a(iD0) = ZP0_2a.x_rf_fsav;
     %
     Pc_0(iD0) = -ZP0_0.x_c_fsav;
     Pc_1(iD0) = -ZP0_1.x_c_fsav;
     Pc_2(iD0) = -ZP0_2.x_c_fsav;
-    %Pc_4(iD0) = -ZP0_4.x_c_fsav;    
+    %
+    Pc_0a(iD0) = -ZP0_0a.x_c_fsav;
+    Pc_1a(iD0) = -ZP0_1a.x_c_fsav;
+    Pc_2a(iD0) = -ZP0_2a.x_c_fsav; 
 end
 %
 eta_0 = j_0./P_0;
 eta_1 = j_1./P_1;
 eta_2 = j_2./P_2;
-%eta_4 = j_4./P_4;
+%
+eta_0a = j_0a./P_0a;
+eta_1a = j_1a./P_1a;
+eta_2a = j_2a./P_2a;
 %
 %************************************************************************************************************************************
 %
@@ -154,7 +172,6 @@ tit = '';
 %
 graph1D_jd(D0_list,j_2,1,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
 graph1D_jd(D0_list,j_1,1,1,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
-%graph1D_jd(D0_list,j_4,1,0,'','','',NaN,xlim,ylim,'-','none','m',2,20,gca);
 graph1D_jd(D0_list,j_0,1,1,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
 set(gca,'ytick',[1e-06 1e-05 0.0001 0.001 0.01 0.1])
 set(gca,'xtick',xticks)
@@ -171,11 +188,9 @@ ylab = 'P';
 %
 graph1D_jd(D0_list,P_2,1,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
 graph1D_jd(D0_list,P_1,1,1,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
-%graph1D_jd(D0_list,P_4,1,1,'','','',NaN,xlim,ylim,'-','none','m',2,20,gca);
 graph1D_jd(D0_list,P_0,1,1,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
 graph1D_jd(D0_list,Pc_2,1,1,'','','',NaN,xlim,ylim,'--','none','r',2,20,gca);
 graph1D_jd(D0_list,Pc_1,1,1,'','','',NaN,xlim,ylim,'--','none','b',2,20,gca);
-%graph1D_jd(D0_list,Pc_4,1,1,'','','',NaN,xlim,ylim,'--','none','m',2,20,gca);
 graph1D_jd(D0_list,Pc_0,1,1,'','','',leg,xlim,ylim,'--','none','g',2,20,gca);
 set(gca,'ytick',[1e-07 1e-06 1e-05 0.0001 0.001 0.01])
 set(gca,'xtick',xticks)
@@ -192,8 +207,62 @@ ylab = 'j/P';
 %
 graph1D_jd(D0_list,eta_2,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
 graph1D_jd(D0_list,eta_1,1,0,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
-%graph1D_jd(D0_list,eta_4,1,0,'','','',NaN,xlim,ylim,'-','none','m',2,20,gca);
 graph1D_jd(D0_list,eta_0,1,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
+set(gca,'ytick',[0:0.2:1]*ylim(2))
+set(gca,'xtick',xticks)
+%set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
+set(gca,'XMinorGrid','off')
+set(gca,'XMinorTick','on')
+%
+figure(4),clf
+%
+%leg = {'Linearized','High v limit','Maxwellian NR','Maxwellian'};
+leg = {'Linearized','High v limit','Maxwellian'};
+xlim = 10.^[-5,1];
+xticks = [1e-06 1e-5 0.0001 0.001 0.01 0.1 1 10 100];
+ylim = 10.^[-6,-1];
+xlab = 'D_0';
+ylab = 'j';
+tit = '';
+%
+graph1D_jd(D0_list,j_2a,1,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(D0_list,j_1a,1,1,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
+graph1D_jd(D0_list,j_0a,1,1,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
+set(gca,'ytick',[1e-06 1e-05 0.0001 0.001 0.01 0.1])
+set(gca,'xtick',xticks)
+%set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
+set(gca,'XMinorGrid','off')
+set(gca,'XMinorTick','on')
+set(gca,'YMinorGrid','off')
+set(gca,'YMinorTick','on')
+%
+figure(5),clf
+%
+ylim = 10.^[-7,-2];
+ylab = 'P';
+%
+graph1D_jd(D0_list,P_2a,1,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(D0_list,P_1a,1,1,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
+graph1D_jd(D0_list,P_0a,1,1,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
+graph1D_jd(D0_list,Pc_2a,1,1,'','','',NaN,xlim,ylim,'--','none','r',2,20,gca);
+graph1D_jd(D0_list,Pc_1a,1,1,'','','',NaN,xlim,ylim,'--','none','b',2,20,gca);
+graph1D_jd(D0_list,Pc_0a,1,1,'','','',leg,xlim,ylim,'--','none','g',2,20,gca);
+set(gca,'ytick',[1e-07 1e-06 1e-05 0.0001 0.001 0.01])
+set(gca,'xtick',xticks)
+%set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
+set(gca,'XMinorGrid','off')
+set(gca,'XMinorTick','on')
+set(gca,'YMinorGrid','off')
+set(gca,'YMinorTick','on')
+%
+figure(6),clf
+%
+ylim = [0,20];
+ylab = 'j/P';
+%
+graph1D_jd(D0_list,eta_2a,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(D0_list,eta_1a,1,0,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
+graph1D_jd(D0_list,eta_0a,1,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',xticks)
 %set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
@@ -203,6 +272,11 @@ set(gca,'XMinorTick','on')
 print_jd(2,'fig_j_D0','.',1)
 print_jd(2,'fig_P_D0','.',2)
 print_jd(2,'fig_eta_D0','.',3)
+%
+print_jd(2,'fig_j_D0','.',4)
+print_jd(2,'fig_P_D0','.',5)
+print_jd(2,'fig_eta_D0','.',6)
+
 %
 %************************************************************************************************************************************
 %

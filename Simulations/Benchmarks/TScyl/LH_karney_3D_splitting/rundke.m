@@ -108,81 +108,128 @@ dkedisplay.display_mode = 0;%If -1, only the radius at which the residu is the l
 %
 dtn_list = [1,10,100,1000];
 %
-normf0_0 = NaN(2,length(rho_S)-1,dtn_list(end)+10,length(dtn_list));
-curr0_0 = NaN(2,length(rho_S)-1,dtn_list(end)+10,length(dtn_list));
-residu_0 = NaN(2,length(rho_S)-1,dtn_list(end)+10,length(dtn_list));
-normf0_10 = NaN(2,length(rho_S)-1,dtn_list(end)+10,length(dtn_list));
-curr0_10 = NaN(2,length(rho_S)-1,dtn_list(end)+10,length(dtn_list));
-residu_10 = NaN(2,length(rho_S)-1,dtn_list(end)+10,length(dtn_list));
+normf0_0 = NaN(2,3,length(rho_S)-1,dtn_list(end) + 100,length(dtn_list));
+curr0_0 = NaN(2,3,length(rho_S)-1,dtn_list(end) + 100,length(dtn_list));
+residu_0 = NaN(2,3,length(rho_S)-1,dtn_list(end) + 100,length(dtn_list));
+normf0_10 = NaN(2,3,length(rho_S)-1,dtn_list(end) + 100,length(dtn_list));
+curr0_10 = NaN(2,3,length(rho_S)-1,dtn_list(end) + 100,length(dtn_list));
+residu_10 = NaN(2,3,length(rho_S)-1,dtn_list(end) + 100,length(dtn_list));
 %
-for optsplit = 1:2,
-    for jdtn = 1:length(dtn_list),
-        %
-        dkeparam.opsplit = optsplit - 1;
-        dkeparam.nit_f= dtn_list(end)/dtn_list(jdtn);
-        dkeparam.dtn = dtn_list(jdtn);
-        %
-        transpfaste.Dr0 = [0];
-        [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-        %
-        normf0_0(optsplit,1:size(dke_out.normf0,1),1:size(dke_out.normf0,2),jdtn) = dke_out.normf0;
-        curr0_0(optsplit,1:size(dke_out.curr0,1),1:size(dke_out.curr0,2),jdtn) = dke_out.curr0;
-        residu_0(optsplit,1:size(dke_out.residu_f,1),1:size(dke_out.residu_f,2),jdtn) = dke_out.residu_f;
-        %
-        transpfaste.Dr0 = [10];
-        [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-        %
-        normf0_10(optsplit,1:size(dke_out.normf0,1),1:size(dke_out.normf0,2),jdtn) = dke_out.normf0;
-        curr0_10(optsplit,1:size(dke_out.curr0,1),1:size(dke_out.curr0,2),jdtn) = dke_out.curr0;
-        residu_10(optsplit,1:size(dke_out.residu_f,1),1:size(dke_out.residu_f,2),jdtn) = dke_out.residu_f;
-      	%
-        disp(['- opsplit: ',int2str(dkeparam.opsplit),',dtn: ',int2str(dtn_list(jdtn)),' done.'])
-    end
+for coll_mode = [1,3],
+	for optsplit = 1:2,
+    	for jdtn = 1:length(dtn_list),
+    		%
+    		dkeparam.coll_mode = coll_mode-1;
+        	dkeparam.opsplit = optsplit - 1;
+        	dkeparam.nit_f= dtn_list(end)/dtn_list(jdtn) + 100;
+        	dkeparam.dtn = dtn_list(jdtn);
+        	%
+        	transpfaste.Dr0 = [0];
+        	[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+        	%
+        	normf0_0(optsplit,coll_mode,1:size(dke_out.normf0,1),1:size(dke_out.normf0,2),jdtn) = dke_out.normf0;
+        	curr0_0(optsplit,coll_mode,1:size(dke_out.curr0,1),1:size(dke_out.curr0,2),jdtn) = dke_out.curr0;
+        	residu_0(optsplit,coll_mode,1:size(dke_out.residu_f,1),1:size(dke_out.residu_f,2),jdtn) = dke_out.residu_f;
+        	%
+        	transpfaste.Dr0 = [10];
+        	[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+        	%
+        	normf0_10(optsplit,coll_mode,1:size(dke_out.normf0,1),1:size(dke_out.normf0,2),jdtn) = dke_out.normf0;
+        	curr0_10(optsplit,coll_mode,1:size(dke_out.curr0,1),1:size(dke_out.curr0,2),jdtn) = dke_out.curr0;
+        	residu_10(optsplit,coll_mode,1:size(dke_out.residu_f,1),1:size(dke_out.residu_f,2),jdtn) = dke_out.residu_f;
+      		%
+        	disp(['- opsplit: ',int2str(dkeparam.opsplit),',dtn: ',int2str(dtn_list(jdtn)),' done.'])
+    	end
+	end
 end
+%
+save test_operator_splitting.mat
 %
 %************************************************************************************************************************************
 %
-figure(1),semilogy([1:1000]*1,squeeze(normf0_0(1,10,1:1000,1)),'r'),hold on
-figure(1),semilogy([1:100]*10,squeeze(normf0_0(1,10,1:100,2)),'r-.')
-figure(1),semilogy([1:10]*100,squeeze(normf0_0(1,10,1:10,3)),'r:')
-figure(1),semilogy([1:1]*1000,squeeze(normf0_0(1,10,2:2,4)),'r*')
+% coll_mode = 0
 %
-figure(2),semilogy([1:1000]*1,squeeze(normf0_0(2,10,1:1000,1)),'r'),hold on
-figure(2),semilogy([1:100]*10,squeeze(normf0_0(2,10,1:100,2)),'r-.')
-figure(2),semilogy([1:10]*100,squeeze(normf0_0(2,10,1:10,3)),'r:')
-figure(2),semilogy([1:1]*1000,squeeze(normf0_0(2,10,2:2,4)),'r*')
+figure(1),semilogy([1:1100]*1,squeeze(normf0_0(1,1,10,1:1100,1)),'r'),hold on
+figure(1),semilogy([1:200]*10,squeeze(normf0_0(1,1,10,1:200,2)),'r-.')
+figure(1),semilogy([1:110]*100,squeeze(normf0_0(1,1,10,1:110,3)),'r:')
+figure(1),semilogy([1:100]*1000,squeeze(normf0_0(1,1,10,1:100,4)),'r*')
 %
-figure(3),semilogy([1:1000]*1,squeeze(curr0_0(1,10,1:1000,1)),'b'),hold on
-figure(3),semilogy([1:100]*10,squeeze(curr0_0(1,10,1:100,2)),'b-.')
-figure(3),semilogy([1:10]*100,squeeze(curr0_0(1,10,1:10,3)),'b:')
-figure(3),semilogy([1:1]*1000,squeeze(curr0_0(1,10,2:2,4)),'b*')
+figure(2),semilogy([1:1100]*1,squeeze(normf0_0(2,1,10,1:1100,1)),'r'),hold on
+figure(2),semilogy([1:200]*10,squeeze(normf0_0(2,1,10,1:200,2)),'r-.')
+figure(2),semilogy([1:110]*100,squeeze(normf0_0(2,1,10,1:110,3)),'r:')
+figure(2),semilogy([1:100]*1000,squeeze(normf0_0(2,1,10,2:100,4)),'r*')
 %
-figure(4),semilogy([1:1000]*1,squeeze(curr0_0(2,10,1:1000,1)),'b'),hold on
-figure(4),semilogy([1:100]*10,squeeze(curr0_0(2,10,1:100,2)),'b-.')
-figure(4),semilogy([1:10]*100,squeeze(curr0_0(2,10,1:10,3)),'b:')
-figure(4),semilogy([1:1]*1000,squeeze(curr0_0(2,10,2:2,4)),'b*')
+figure(3),semilogy([1:1100]*1,squeeze(curr0_0(1,1,10,1:1100,1)),'b'),hold on
+figure(3),semilogy([1:200]*10,squeeze(curr0_0(1,1,10,1:200,2)),'b-.')
+figure(3),semilogy([1:110]*100,squeeze(curr0_0(1,1,10,1:110,3)),'b:')
+figure(3),semilogy([1:100]*1000,squeeze(curr0_0(1,1,10,2:100,4)),'b*')
 %
-figure(5),semilogy([1:1000]*1,squeeze(normf0_10(1,10,1:1000,1)),'r'),hold on
-figure(5),semilogy([1:100]*10,squeeze(normf0_10(1,10,1:100,2)),'r-.')
-figure(5),semilogy([1:10]*100,squeeze(normf0_10(1,10,1:10,3)),'r:')
-figure(5),semilogy([1:1]*1000,squeeze(normf0_10(1,10,2:2,4)),'r*')
+figure(4),semilogy([1:1100]*1,squeeze(curr0_0(2,1,10,1:1100,1)),'b'),hold on
+figure(4),semilogy([1:200]*10,squeeze(curr0_0(2,1,10,1:200,2)),'b-.')
+figure(4),semilogy([1:110]*100,squeeze(curr0_0(2,1,10,1:110,3)),'b:')
+figure(4),semilogy([1:100]*1000,squeeze(curr0_0(2,1,10,2:100,4)),'b*')
 %
-figure(6),semilogy([1:1000]*1,squeeze(normf0_10(2,10,1:1000,1)),'r'),hold on
-figure(6),semilogy([1:100]*10,squeeze(normf0_10(2,10,1:100,2)),'r-.')
-figure(6),semilogy([1:10]*100,squeeze(normf0_10(2,10,1:10,3)),'r:')
-figure(6),semilogy([1:1]*1000,squeeze(normf0_10(2,10,2:2,4)),'r*')
+figure(5),semilogy([1:1100]*1,squeeze(normf0_10(1,1,10,1:1100,1)),'r'),hold on
+figure(5),semilogy([1:200]*10,squeeze(normf0_10(1,1,10,1:200,2)),'r-.')
+figure(5),semilogy([1:110]*100,squeeze(normf0_10(1,1,10,1:110,3)),'r:')
+figure(5),semilogy([1:100]*1000,squeeze(normf0_10(1,1,10,2:100,4)),'r*')
 %
-figure(7),semilogy([1:1000]*1,squeeze(curr0_10(1,10,1:1000,1)),'b'),hold on
-figure(7),semilogy([1:100]*10,squeeze(curr0_10(1,10,1:100,2)),'b-.')
-figure(7),semilogy([1:10]*100,squeeze(curr0_10(1,10,1:10,3)),'b:')
-figure(7),semilogy([1:1]*1000,squeeze(curr0_10(1,10,2:2,4)),'b*')
+figure(6),semilogy([1:1100]*1,squeeze(normf0_10(2,1,10,1:1100,1)),'r'),hold on
+figure(6),semilogy([1:200]*10,squeeze(normf0_10(2,1,10,1:200,2)),'r-.')
+figure(6),semilogy([1:110]*100,squeeze(normf0_10(2,1,10,1:110,3)),'r:')
+figure(6),semilogy([1:100]*1000,squeeze(normf0_10(2,1,10,2:100,4)),'r*')
 %
-figure(8),semilogy([1:1000]*1,squeeze(curr0_10(2,10,1:1000,1)),'b'),hold on
-figure(8),semilogy([1:100]*10,squeeze(curr0_10(2,10,1:100,2)),'b-.')
-figure(8),semilogy([1:10]*100,squeeze(curr0_10(2,10,1:10,3)),'b:')
-figure(8),semilogy([1:1]*1000,squeeze(curr0_10(2,10,2:2,4)),'b*')
-
-save Dr0-Dr10_BB.mat
+figure(7),semilogy([1:1100]*1,squeeze(curr0_10(1,1,10,1:1100,1)),'b'),hold on
+figure(7),semilogy([1:200]*10,squeeze(curr0_10(1,1,10,1:200,2)),'b-.')
+figure(7),semilogy([1:110]*100,squeeze(curr0_10(1,1,10,1:110,3)),'b:')
+figure(7),semilogy([1:100]*1000,squeeze(curr0_10(1,1,10,2:100,4)),'b*')
+%
+figure(8),semilogy([1:1100]*1,squeeze(curr0_10(2,1,10,1:1100,1)),'b'),hold on
+figure(8),semilogy([1:200]*10,squeeze(curr0_10(2,1,10,1:200,2)),'b-.')
+figure(8),semilogy([1:110]*100,squeeze(curr0_10(2,1,10,1:110,3)),'b:')
+figure(8),semilogy([1:100]*1000,squeeze(curr0_10(2,1,10,2:100,4)),'b*')
+%
+% coll_mode = 2
+%
+figure(9),semilogy([1:1100]*1,squeeze(normf0_0(1,3,10,1:1100,1)),'r'),hold on
+figure(9),semilogy([1:200]*10,squeeze(normf0_0(1,3,10,1:200,2)),'r-.')
+figure(9),semilogy([1:110]*100,squeeze(normf0_0(1,3,10,1:110,3)),'r:')
+figure(9),semilogy([1:100]*1000,squeeze(normf0_0(1,3,10,1:100,4)),'r*')
+%
+figure(10),semilogy([1:1100]*1,squeeze(normf0_0(2,3,10,1:1100,1)),'r'),hold on
+figure(10),semilogy([1:200]*10,squeeze(normf0_0(2,3,10,1:200,2)),'r-.')
+figure(10),semilogy([1:110]*100,squeeze(normf0_0(2,3,10,1:110,3)),'r:')
+figure(10),semilogy([1:100]*1000,squeeze(normf0_0(2,3,10,2:100,4)),'r*')
+%
+figure(11),semilogy([1:1100]*1,squeeze(curr0_0(1,3,10,1:1100,1)),'b'),hold on
+figure(11),semilogy([1:200]*10,squeeze(curr0_0(1,3,10,1:200,2)),'b-.')
+figure(11),semilogy([1:110]*100,squeeze(curr0_0(1,3,10,1:110,3)),'b:')
+figure(11),semilogy([1:100]*1000,squeeze(curr0_0(1,3,10,2:100,4)),'b*')
+%
+figure(12),semilogy([1:1100]*1,squeeze(curr0_0(2,3,10,1:1100,1)),'b'),hold on
+figure(12),semilogy([1:200]*10,squeeze(curr0_0(2,3,10,1:200,2)),'b-.')
+figure(12),semilogy([1:110]*100,squeeze(curr0_0(2,3,10,1:110,3)),'b:')
+figure(12),semilogy([1:100]*1000,squeeze(curr0_0(2,3,10,2:100,4)),'b*')
+%
+figure(13),semilogy([1:1100]*1,squeeze(normf0_10(1,3,10,1:1100,1)),'r'),hold on
+figure(13),semilogy([1:200]*10,squeeze(normf0_10(1,3,10,1:200,2)),'r-.')
+figure(13),semilogy([1:110]*100,squeeze(normf0_10(1,3,10,1:110,3)),'r:')
+figure(13),semilogy([1:100]*1000,squeeze(normf0_10(1,3,10,2:100,4)),'r*')
+%
+figure(14),semilogy([1:1100]*1,squeeze(normf0_10(2,3,10,1:1100,1)),'r'),hold on
+figure(14),semilogy([1:200]*10,squeeze(normf0_10(2,3,10,1:200,2)),'r-.')
+figure(14),semilogy([1:110]*100,squeeze(normf0_10(2,3,10,1:110,3)),'r:')
+figure(14),semilogy([1:100]*1000,squeeze(normf0_10(2,3,10,2:100,4)),'r*')
+%
+figure(15),semilogy([1:1100]*1,squeeze(curr0_10(1,3,10,1:1100,1)),'b'),hold on
+figure(15),semilogy([1:200]*10,squeeze(curr0_10(1,3,10,1:200,2)),'b-.')
+figure(15),semilogy([1:110]*100,squeeze(curr0_10(1,3,10,1:110,3)),'b:')
+figure(15),semilogy([1:100]*1000,squeeze(curr0_10(1,3,10,2:100,4)),'b*')
+%
+figure(16),semilogy([1:1100]*1,squeeze(curr0_10(2,3,10,1:1100,1)),'b'),hold on
+figure(16),semilogy([1:200]*10,squeeze(curr0_10(2,3,10,1:200,2)),'b-.')
+figure(16),semilogy([1:110]*100,squeeze(curr0_10(2,3,10,1:110,3)),'b:')
+figure(16),semilogy([1:100]*1000,squeeze(curr0_10(2,3,10,2:100,4)),'b*')
 %
 
 

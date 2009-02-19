@@ -760,10 +760,8 @@ end
 if dkeparam.invproc == -2,%MUMPS FORTAN 95 parallel processing package (inversion in MEX file, with LU matrix preconditionning)
    job_MUMPSMEX = -2;MUMPSMEX_dke_yp;%Clear MUMPSMEX memory
 end
-if abs(display_mode) > 0 & ~numdivergence,
+if abs(display_mode) > 0,
 	info_dke_yp(2,['Convergence achieved for zero order Fokker-Planck calculations in ',num2str(etime(clock,time0)),' (s)']);
-elseif abs(display_mode) > 0 & numdivergence,
-    info_dke_yp(2,['Divergence of the numerical scheme ',int2str(it_f),' iterations !']);
 end
 if dkeparam.invproc == -1 & abs(display_mode) > 0,info_dke_yp(2,['Number of processors used for MUMPS matrix inversion : ',int2str(dkeparam.MUMPSparam.nproc)]);end%MUMPS FORTAN 95 parallel processing package
 %
