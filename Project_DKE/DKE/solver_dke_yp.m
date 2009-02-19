@@ -103,12 +103,6 @@ if nargin < 9,
     error('Wrong number of input arguments in solver_dke_yp')
 end
 %
-numdivergence = 0;
-%
-if isfield(dkeparam,'convtest'),
-    load distriref.mat XXf0_ref
-end
-%
 time00 = clock;
 timeCPU0 = cputime;
 memoryLU_f = 0;
@@ -521,8 +515,9 @@ else
             MMXf0_t = [MMXf0_t;reshape(XXf0(:,Zmask_f0_t{ir},ir)',(nmhu - ns_f(ir))*npn,1)];
             MMXsource_t = [MMXsource_t;reshape(XXsinksource(:,Zmask_f0_t{ir},ir)',(nmhu - ns_f(ir))*npn,1)];
 			%
-            if ir == nr & ~isempty(Xmask_r_edge),%Edge radial boundary condition: XI_t = 0 if radial transport operates  
-            	XI_t = XI_t*0;%************ TO BE JUSTIFIED *************
+            if ir == nr & ~isempty(Xmask_r_edge),%Edge radial boundary condition: XI_t = 0 if radial transport operates
+            	%TODO: justifiying edge conditions for the Legendre integral
+            	XI_t = XI_t*0;
         	end
         	%
         	MMXIpn2_t = [MMXIpn2_t;reshape((XI_t.*Zpn2_t{ir})',(nmhu - ns_f(ir))*npn,1)];%Zpn2_t is here as part of the partial Jacobian used to avoid singularities at p = 0 and psi = 0, and for pitch-angle derivative df/dmhu = 0 enforced by symmetry at mhu == pi/2
@@ -744,10 +739,10 @@ else
             disp(['                - Current [t-1]: ',num2str(curr0(ir_max,it_f)),' - [t]: ',num2str(curr0(ir_max,it_f+1)),' / Current relative accuracy [dt]: ',num2str(prec_curr(ir_max,it_f))]);
         end
         %
-        if abs(max(residu_f(:,it_f))) > 1e-6,
-        	numdivergence = 1;
-        	break;
-        end
+     %   if abs(max(residu_f(:,it_f))) > 1e-6,
+     %   	info_dke_yp(2,['WARNING: Divergence in the calculation of f0 after ',int2str(it_f),' iterations. Time step likely too large !']);
+     %   	break;
+     %   end
         %
         if all(residu_f(:,it_f) <= prec0_f),
             if sum(prec_residu_f(:,it_f)) < prec0_f,info_dke_yp(2,['WARNING: stationnary residu but convergence not achieved for f0 after ',int2str(it_f),' iterations. Time step likely too large !']);end
@@ -756,7 +751,6 @@ else
             end
             break;
         end
-		%
     end
     %
     if it_f == nit_f,info_dke_yp(2,['WARNING: convergence not achieved for f0 after ',int2str(nit_f),' iterations. Time step too small !']);end
