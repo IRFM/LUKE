@@ -63,7 +63,7 @@ dkeparam.syn_mode = 0;%Synergy calculation: (0) none, (1) yes: the code runs twi
 %
 dkeparam.norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
 dkeparam.boundary_mode_f = 1;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
-dkeparam.prec0_f = 1e-11;%Convergence level of the residu
+dkeparam.prec0_f = 1e-11;%Convergence level of the residu. If NaN, dkeparam.nit_f calculations are performed, whatever the level of the residu.
 dkeparam.nit_f = 50;%Maximum number of iterations for f (> 1)
 dkeparam.initguess_f = 0;%Initial guess for the distribution function: (0) Maxwellian, (1) Fuchs model with Tperp for LH current drive only, (2) from a file
 dkeparam.initfile_f = '';%If initguess_f = 2. The file must be in the directory Project_DKE, and created by dke_4_1yp.m 
