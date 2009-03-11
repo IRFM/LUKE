@@ -1,0 +1,820 @@
+#LyX 1.6.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\use_default_options false
+\language english
+\inputencoding latin9
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 2
+\paperpagestyle headings
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Guiding center Fokker-Planck equation
+\begin_inset Newline newline
+\end_inset
+
+in the zero-banana width approximation
+\end_layout
+
+\begin_layout Author
+J.
+ Decker, Y.
+ Peysson and A.
+ Brizard
+\end_layout
+
+\begin_layout Date
+05.02.2009
+\end_layout
+
+\begin_layout Standard
+The objective is to derive the reduced 3-D Fokker-Planck equation neglecting
+ all particle drifts, meaning that the particle is assumed to remain on
+ a given flux-surface.
+ This operation can be conducted starting from the reduced 4-D guiding center
+ Fokker-Planck equation
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bri04"
+
+\end_inset
+
+ and taking the limit where terms of order 
+\begin_inset Formula $\epsilon_{B}=\rho/L_{B}$
+\end_inset
+
+ are neglected but terms of order 
+\begin_inset Formula $\rho/L_{n,T}$
+\end_inset
+
+ are kept, where 
+\begin_inset Formula $\rho$
+\end_inset
+
+ is the Larmor radius, 
+\begin_inset Formula $L_{B}$
+\end_inset
+
+ is the magnetic gradients scale length and 
+\begin_inset Formula $L_{n,T}$
+\end_inset
+
+ is the temperature and density gradients scale length.
+ Thus, classical radial transport terms will be kept, thus allowing a proper
+ 3D conservative formulation 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "pey08a"
+
+\end_inset
+
+ and setting the ground for the inclusion of anomalous radial transport
+ in LUKE
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dec08"
+
+\end_inset
+
+.
+ However, consistent derivation of neoclassical effects such as the bootstrap
+ current will be lost.
+ The same equation could be derived from other approaches [Bernstein & Molvig,
+ Zaitsev] but the formalism of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bri04"
+
+\end_inset
+
+ is purposedly followed to prepare the ground for LUKE 2 where drift effects
+ will be included.
+\end_layout
+
+\begin_layout Section
+Transformed Fokker-Planck equation
+\end_layout
+
+\begin_layout Standard
+The transformed Fokker-Planck equation for the 4-D guiding center distribution
+ function 
+\begin_inset Formula $\left\langle F\right\rangle $
+\end_inset
+
+ is
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bri04"
+
+\end_inset
+
+-(17) 
+\begin_inset Formula \begin{equation}
+\frac{d_{R}}{dt}\left\langle F\right\rangle \left(Z_{R},t;J\right)=C_{R}\left[\left\langle F\right\rangle \right]\left(Z_{R},t;J\right)\label{redFP}\end{equation}
+
+\end_inset
+
+ where 
+\begin_inset Formula $Z_{R}$
+\end_inset
+
+ is the reduced coordinate system and 
+\begin_inset Formula $J$
+\end_inset
+
+ is the gyro-action.
+ 
+\begin_inset Formula $C_{R}\left[\left\langle F\right\rangle \right]$
+\end_inset
+
+ is the reduced collision operator.
+ 
+\end_layout
+
+\begin_layout Section
+Poisson bracket in reduced coordinate system
+\end_layout
+
+\begin_layout Standard
+If 
+\begin_inset Formula $F$
+\end_inset
+
+ and 
+\begin_inset Formula $G$
+\end_inset
+
+ are functions of the guiding center coordinates 
+\begin_inset Formula $(\mathbf{X},\varepsilon,\mu,\varphi)$
+\end_inset
+
+, the Poisson bracket of F and Gis given by 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bri04"
+
+\end_inset
+
+-(39)
+\begin_inset Formula \begin{equation}
+\begin{aligned}\left\{ F,G\right\} _{\text{gc}} & =\frac{\Omega}{B}\left[\frac{\partial F}{\partial\varphi}\left(\frac{\partial G}{\partial\mu}+B\frac{\partial G}{\partial\varepsilon}\right)-\left(\frac{\partial F}{\partial\mu}+B\frac{\partial F}{\partial\varepsilon}\right)\frac{\partial G}{\partial\varphi}\right]\\
+ & +\mathbf{v}_{gc}\mathbf{\cdot}\left(\mathbf{\nabla}^{\star}F\frac{\partial G}{\partial\varepsilon}-\frac{\partial F}{\partial\varepsilon}\mathbf{\nabla}^{\star}G\right)-\frac{\hat{\mathbf{b}}}{qB_{\Vert}^{\star}}\cdot\mathbf{\nabla}^{\star}F\times\mathbf{\nabla}^{\star}G\end{aligned}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula \[
+\mathbf{\nabla}^{\star}=\nabla+\left[\mathbf{R}+\left(\frac{\hat{\mathbf{b}}}{2}\cdot\nabla\times\hat{\mathbf{b}}\right)\hat{\mathbf{b}}\right]\frac{\partial}{\partial\varphi}\]
+
+\end_inset
+
+and the definitions of 
+\begin_inset Formula $B_{\Vert}^{\star}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbf{v}_{gc}$
+\end_inset
+
+ are found in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bri04"
+
+\end_inset
+
+.
+ In the limit 
+\begin_inset Formula $\epsilon_{B}=\rho/L_{B}\rightarrow0$
+\end_inset
+
+ we have the following simplifications
+\begin_inset Formula \begin{equation}
+\begin{aligned}B_{\Vert}^{\star} & \rightarrow & B\\
+\mathbf{v}_{gc} & \rightarrow & v_{\Vert}\hat{\mathbf{b}}\end{aligned}
+\label{limit}\end{equation}
+
+\end_inset
+
+with 
+\begin_inset Formula $\left|v_{\Vert}\right|=\sqrt{(2/m)(\varepsilon-\mu B)}$
+\end_inset
+
+ and the Jacobian of the transformation 
+\begin_inset Formula $(\mathbf{x},\mathbf{p})\longrightarrow(\mathbf{X},\varepsilon,\mu,\varphi)$
+\end_inset
+
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bri04"
+
+\end_inset
+
+ becomes 
+\begin_inset Formula \begin{equation}
+\mathcal{J=}\frac{mB}{\left|v_{\Vert}\right|}\end{equation}
+
+\end_inset
+
+In this limit, we also obtain simplified expressions for the gyroradius
+ vector abd GC momentum
+\begin_inset Formula \begin{equation}
+\begin{aligned}\mathbf{\rho}_{\epsilon} & \rightarrow & \mathbf{\rho}_{0}=\frac{v_{\bot}}{\Omega}=\frac{1}{q}\sqrt{2\mu m/B}\mathbf{\hat{\rho}}\\
+\mathbf{p}_{\epsilon} & \rightarrow & m\left(v_{\Vert}\hat{\mathbf{b}}+\Omega\frac{\partial\mathbf{\rho}_{0}}{\partial\varphi}\right)=m\left(v_{\Vert}\hat{\mathbf{b}}+\sqrt{2\mu B/m}\mathbf{\hat{\bot}}\right)\end{aligned}
+\label{gcvec}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Equations of Motion
+\end_layout
+
+\begin_layout Standard
+Recalling the Hamiltonian 
+\begin_inset Formula \begin{equation}
+H=\varepsilon\end{equation}
+
+\end_inset
+
+We have then
+\begin_inset Formula \begin{equation}
+\left\{ F,H\right\} _{\text{gc}}=\Omega\frac{\partial F}{\partial\varphi}+\mathbf{v}_{gc}\mathbf{\cdot}\mathbf{\nabla}^{\star}F\end{equation}
+
+\end_inset
+
+and thus, defining 
+\begin_inset Formula $\hat{\mathbf{b}}\mathbf{\cdot}\mathbf{\hat{s}}\equiv\sin\varsigma$
+\end_inset
+
+ and 
+\begin_inset Formula $\hat{\mathbf{b}}\mathbf{\cdot}\mathbf{\hat{z}}\equiv\cos\varsigma$
+\end_inset
+
+ (note that here any value 
+\begin_inset Formula $0\leq\alpha<2\pi$
+\end_inset
+
+ is possible) 
+\begin_inset Formula \begin{eqnarray}
+\overset{\cdot}{\mathbf{X}} & = & \left\{ \mathbf{X},H\right\} _{\text{gc}}=v_{\Vert}\hat{\mathbf{b}}\\
+\overset{\cdot}{\psi} & = & \left\{ \psi,H\right\} _{\text{gc}}=0\\
+\overset{\cdot}{s} & = & \left\{ \theta,H\right\} _{\text{gc}}=\sin\varsigma v_{\Vert}\\
+\overset{\cdot}{z} & = & \left\{ z,H\right\} _{\text{gc}}=\frac{1}{\Upsilon}\cos\varsigma v_{\Vert}\\
+\overset{\cdot}{\varepsilon} & = & \left\{ \varepsilon,H\right\} _{\text{gc}}=0\\
+\overset{\cdot}{\mu} & = & \left\{ \mu,H\right\} _{\text{gc}}=0\\
+\overset{\cdot}{\varphi} & = & \left\{ \varphi,H\right\} _{\text{gc}}=\Omega+v_{\Vert}\hat{\mathbf{b}}\cdot\left[\mathbf{R}+\left(\frac{\hat{\mathbf{b}}}{2}\cdot\nabla\times\hat{\mathbf{b}}\right)\hat{\mathbf{b}}\right]\simeq\Omega\end{eqnarray}
+
+\end_inset
+
+which gives the following Vlasov part of the guiding center kinetic equation
+ 
+\begin_inset Formula \begin{equation}
+\frac{d_{R}}{dt}\left\langle F\right\rangle =\frac{\partial\left\langle F\right\rangle }{\partial t}+v_{\Vert}\hat{\mathbf{b}}\cdot\mathbf{\nabla}\left\langle F\right\rangle \end{equation}
+
+\end_inset
+
+or equivelently, with 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\left\langle F\right\rangle =\left\langle F\right\rangle \left(t,\psi,s,z,\varepsilon,\mu\right)$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+ 
+\begin_inset Formula \begin{equation}
+\frac{d_{R}}{dt}\left\langle F\right\rangle =\frac{\partial\left\langle F\right\rangle }{\partial t}+\sin\varsigma v_{\Vert}\frac{\partial\left\langle F\right\rangle }{\partial s}+\frac{1}{\Upsilon}\cos\varsigma v_{\Vert}\frac{\partial\left\langle F\right\rangle }{\partial z}\end{equation}
+
+\end_inset
+
+Using axisymmetry 
+\begin_inset Formula \begin{equation}
+\frac{d_{R}}{dt}\left\langle F\right\rangle =\frac{\partial\left\langle F\right\rangle }{\partial t}+\sin\varsigma v_{\Vert}\frac{\partial\left\langle F\right\rangle }{\partial s}\end{equation}
+
+\end_inset
+
+We see that 
+\begin_inset Formula $(\psi,\varepsilon,\mu)$
+\end_inset
+
+ are invariants in the limit 
+\begin_inset Formula $\epsilon_{B}\rightarrow0$
+\end_inset
+
+ .
+\end_layout
+
+\begin_layout Section
+Guiding center Fokker-Planck collision operator
+\end_layout
+
+\begin_layout Standard
+The guiding center Fokker-Planck collision operator is given by
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bri04"
+
+\end_inset
+
+-(17) 
+\begin_inset Formula \begin{equation}
+\mathcal{C}_{\text{gcFP}}\left[\left\langle F\right\rangle \right]=-\frac{1}{\mathcal{J}}\frac{\partial}{\partial Z^{\alpha}}\left[\mathcal{J}\left(\left\langle K_{\textrm{gc}}^{\alpha}\right\rangle \left\langle F\right\rangle -\left\langle D_{\textrm{gc}}^{\alpha\beta}\right\rangle \frac{\partial\left\langle F\right\rangle }{\partial Z^{\beta}}\right)\right]\label{Cfp}\end{equation}
+
+\end_inset
+
+where the gyroangle-averaged drag and diffusion phase-space components are
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "gcvec"
+
+\end_inset
+
+) 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bri04"
+
+\end_inset
+
+-(48-56) 
+\begin_inset Formula \[
+\begin{aligned}\left\langle K_{\textrm{gc}}^{\mathbf{X}}\right\rangle  & =\left\langle \mathbf{K}_{\epsilon}\right\rangle \times\frac{\hat{\mathbf{b}}}{m\Omega}\\
+\left\langle K_{\textrm{gc}}^{\varepsilon}\right\rangle  & =\left\langle \mathbf{K}_{\epsilon}\cdot\left(v_{\Vert}\hat{\mathbf{b}}+\sqrt{2\mu B/m}\mathbf{\hat{\bot}}\right)\right\rangle \\
+\left\langle K_{\textrm{gc}}^{\mu}\right\rangle  & =\left\langle \sqrt{2\mu/(mB)}\mathbf{K}_{\epsilon}\cdot\mathbf{\hat{\bot}}\right\rangle \end{aligned}
+\]
+
+\end_inset
+
+and
+\begin_inset Formula \[
+\begin{aligned}\left\langle D_{\textrm{gc}}^{\mathbf{XX}}\right\rangle  & =-\frac{\hat{\mathbf{b}}}{m\Omega}\times\left\langle \mathbb{D}_{\epsilon}\right\rangle \times\frac{\hat{\mathbf{b}}}{m\Omega}\\
+\left\langle D_{\textrm{gc}}^{\varepsilon\varepsilon}\right\rangle  & =\left\langle \left(v_{\Vert}\hat{\mathbf{b}}+\sqrt{2\mu B/m}\mathbf{\hat{\bot}}\right)\cdot\mathbb{D}_{\epsilon}\cdot\left(v_{\Vert}\hat{\mathbf{b}}+\sqrt{2\mu B/m}\mathbf{\hat{\bot}}\right)\right\rangle \\
+\left\langle D_{\textrm{gc}}^{\mu\varepsilon}\right\rangle  & =\left\langle \sqrt{2\mu/(mB)}\mathbf{\hat{\bot}}\cdot\mathbb{D}_{\epsilon}\cdot\left(v_{\Vert}\hat{\mathbf{b}}+\sqrt{2\mu B/m}\mathbf{\hat{\bot}}\right)\right\rangle \\
+\left\langle D_{\textrm{gc}}^{\mu\mu}\right\rangle  & =\left\langle \frac{2\mu}{mB}\mathbf{\hat{\bot}}\cdot\mathbb{D}_{\epsilon}\cdot\mathbf{\hat{\bot}}\right\rangle \\
+\left\langle D_{\textrm{gc}}^{\mathbf{X}\varepsilon}\right\rangle  & =\frac{\hat{\mathbf{b}}}{m\Omega}\times\left\langle \mathbb{D}_{\epsilon}\cdot\left(v_{\Vert}\hat{\mathbf{b}}+\sqrt{2\mu B/m}\mathbf{\hat{\bot}}\right)\right\rangle \\
+\left\langle D_{\textrm{gc}}^{\mathbf{X}\mu}\right\rangle  & =\frac{\hat{\mathbf{b}}}{m\Omega}\times\left\langle \sqrt{2\mu B/m}\mathbb{D}_{\epsilon}\cdot\mathbf{\hat{\bot}}\right\rangle \end{aligned}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Isotropic field-particle model
+\end_layout
+
+\begin_layout Standard
+In the case of isotropic field-particle distributions these components reduce
+ in the limit 
+\begin_inset Formula $\epsilon_{B}\rightarrow0$
+\end_inset
+
+ to
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bri04"
+
+\end_inset
+
+-(48-56) 
+\begin_inset Formula \begin{equation}
+\begin{aligned}\left\langle \mathbf{K}_{\textrm{gc}}^{\mathbf{X}}\right\rangle  & =0\\
+\left\langle K_{\textrm{gc}}^{\varepsilon}\right\rangle  & =-2\nu_{\epsilon}\varepsilon\\
+\left\langle K_{\textrm{gc}}^{\mu}\right\rangle  & =-2\nu_{\epsilon}\mu\end{aligned}
+\label{Kiso}\end{equation}
+
+\end_inset
+
+and
+\begin_inset Formula \begin{equation}
+\begin{aligned}\left\langle \mathbb{D}_{\textrm{gc}}^{\mathbf{XX}}\right\rangle  & =\frac{B}{m\Omega^{2}}\left(\mathcal{D}_{\mu}+\frac{D_{\bot\epsilon}}{mB}\right)\mathbb{I}_{\bot}\\
+\left\langle D_{\textrm{gc}}^{\varepsilon\varepsilon}\right\rangle  & =2\mathcal{D}_{\varepsilon}\varepsilon\\
+\left\langle D_{\textrm{gc}}^{\mu\varepsilon}\right\rangle  & =2\mathcal{D}_{\varepsilon}\mu\\
+\left\langle D_{\textrm{gc}}^{\mu\mu}\right\rangle  & =2\mu\left(2\mathcal{D}_{\mu}+\frac{D_{\bot\epsilon}}{mB}\right)\\
+\left\langle \mathbf{D}_{\textrm{gc}}^{\mathbf{X}\varepsilon}\right\rangle  & =0\\
+\left\langle \mathbf{D}_{\textrm{gc}}^{\mathbf{X}\mu}\right\rangle  & =0\end{aligned}
+\label{Diso}\end{equation}
+
+\end_inset
+
+where
+\begin_inset Formula \[
+\begin{aligned}\mathcal{D}_{\varepsilon} & =\frac{D_{\Vert\epsilon}}{m}\\
+\mathcal{D}_{\mu} & =\mu\frac{\left(D_{\Vert\epsilon}-D_{\bot\epsilon}\right)}{2m\varepsilon}\end{aligned}
+\]
+
+\end_inset
+
+and the following expressions for the drag and diffusion coefficients were
+ used 
+\begin_inset Formula \[
+\begin{aligned}\mathbf{K} & =-\nu\mathbf{p}\\
+\mathbb{D} & =D_{\Vert\epsilon}\frac{\mathbf{\mathbf{p}p}}{p^{2}}+D_{\bot\epsilon}\left(\mathbb{I}-\frac{\mathbf{\mathbf{p}p}}{p^{2}}\right)\end{aligned}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Inserting (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Kiso"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Diso"
+
+\end_inset
+
+) in (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Cfp"
+
+\end_inset
+
+) yields
+\begin_inset Formula \[
+\mathcal{C}_{\text{gcFP}}\left[\left\langle F\right\rangle \right]=\mathcal{C}_{\mathbf{p}}\left[\left\langle F\right\rangle \right]+\mathcal{C}_{\mathbf{X}}\left[\left\langle F\right\rangle \right]\]
+
+\end_inset
+
+with
+\begin_inset Formula \begin{equation}
+\begin{aligned}\mathcal{C}_{\mathbf{p}}\left[\left\langle F\right\rangle \right]= & 2\left|v_{\Vert}\right|\frac{\partial}{\partial\varepsilon}\left[\frac{1}{\left|v_{\Vert}\right|}\left(\nu_{\epsilon}\varepsilon\left\langle F\right\rangle +\frac{D_{\Vert\epsilon}}{m}\left[\varepsilon\frac{\partial\left\langle F\right\rangle }{\partial\varepsilon}+\mu\frac{\partial\left\langle F\right\rangle }{\partial\mu}\right]\right)\right]\\
+ & +2\left|v_{\Vert}\right|\frac{\partial}{\partial\mu}\left[\frac{\mu}{\left|v_{\Vert}\right|}\left(\nu_{\epsilon}\left\langle F\right\rangle +\frac{D_{\Vert\epsilon}}{m}\left(\frac{\partial\left\langle F\right\rangle }{\partial\varepsilon}+\frac{\mu}{\varepsilon}\frac{\partial\left\langle F\right\rangle }{\partial\mu}\right)+\frac{D_{\bot\epsilon}}{mB}\left(1-\frac{\mu B}{\varepsilon}\right)\frac{\partial\left\langle F\right\rangle }{\partial\mu}\right)\right]\end{aligned}
+\label{Cfpisop}\end{equation}
+
+\end_inset
+
+and
+\begin_inset Formula \begin{equation}
+\mathcal{C}_{\mathbf{X}}\left[\left\langle F\right\rangle \right]=\frac{\left|v_{\Vert}\right|}{q\Omega}\nabla\cdot\left[\frac{1}{\left|v_{\Vert}\right|}\left(\frac{\mu D_{\Vert\epsilon}}{2m\varepsilon}+\frac{D_{\bot\epsilon}}{mB}\left(1-\frac{\mu B}{2\varepsilon}\right)\right)\mathbb{I}_{\bot}\cdot\nabla\left\langle F\right\rangle \right]\label{Cfpisox}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Collision operator in 
+\begin_inset Formula $(\mathbf{X},p,\xi_{0})$
+\end_inset
+
+ coordinates
+\end_layout
+
+\begin_layout Subsubsection
+Momentum space dynamics
+\end_layout
+
+\begin_layout Standard
+Defining
+\begin_inset Formula \begin{eqnarray}
+\varepsilon & = & \frac{p^{2}}{2m}\\
+\mu & = & \frac{p^{2}\left(1-\xi_{0}^{2}\right)}{2mB_{0}}\end{eqnarray}
+
+\end_inset
+
+ which is inverted as 
+\begin_inset Formula \begin{eqnarray}
+p & = & \sqrt{p_{\Vert}^{2}+p_{\bot}^{2}}=\sqrt{2m\varepsilon}\\
+\xi_{0} & = & \frac{p_{\Vert0}}{p}=\sqrt{1-\frac{\mu B_{0}}{\varepsilon}}\end{eqnarray}
+
+\end_inset
+
+We see that 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $(p,\xi_{0},\psi)$
+\end_inset
+
+ are also invariants.
+\end_layout
+
+\begin_layout Standard
+Then, the transformation 
+\begin_inset Formula $(\varepsilon,\mu)\longrightarrow(p,\xi_{0})$
+\end_inset
+
+ is defined by 
+\begin_inset Formula \begin{equation}
+\left(\begin{array}{c}
+\partial/\partial\varepsilon\\
+\partial/\partial\mu\end{array}\right)=\left(\begin{array}{cc}
+\partial p/\partial\varepsilon & \partial\xi_{0}/\partial\varepsilon\\
+\partial p/\partial\mu & \partial\xi_{0}/\partial\mu\end{array}\right)\left(\begin{array}{c}
+\partial/\partial p\\
+\partial/\partial\xi_{0}\end{array}\right)=\mathbb{L}^{-1}\mathbb{\cdot}\left(\begin{array}{c}
+\partial/\partial p\\
+\partial/\partial\xi_{0}\end{array}\right)\end{equation}
+
+\end_inset
+
+ with the transformation matrix 
+\begin_inset Formula \begin{equation}
+\mathbb{L}^{-1}\equiv\left(\begin{array}{cc}
+\partial p/\partial\varepsilon & \partial\xi_{0}/\partial\varepsilon\\
+\partial p/\partial\mu & \partial\xi_{0}/\partial\mu\end{array}\right)=\frac{m}{p^{2}\xi_{0}}\left(\begin{array}{cc}
+p\xi_{0} & 1-\xi_{0}^{2}\\
+0 & -B_{0}\end{array}\right)\end{equation}
+
+\end_inset
+
+Defining 
+\begin_inset Formula $\Psi=B/B_{0}$
+\end_inset
+
+ and using 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $v_{\Vert}=p\xi/m$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+ where 
+\begin_inset Formula \[
+\xi=\sigma\sqrt{1-\Psi\left(1-\xi_{0}^{2}\right)}\]
+
+\end_inset
+
+the following expression is obtained (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Cfpisop"
+
+\end_inset
+
+)
+\begin_inset Formula \begin{equation}
+\begin{aligned}\mathcal{C}_{\mathbf{p}}\left[\left\langle F\right\rangle \right]= & \frac{1}{p^{2}}\frac{\partial}{\partial p}\left[p^{3}\left(\nu_{\epsilon}\left\langle F\right\rangle +\frac{D_{\Vert\epsilon}}{m}\left[\frac{\partial\left\langle F\right\rangle }{\partial\varepsilon}+\frac{\left(1-\xi_{0}^{2}\right)}{B_{0}}\frac{\partial\left\langle F\right\rangle }{\partial\mu}\right]\right)\right]\\
+ & -\frac{\xi}{\xi_{0}}\frac{\partial}{\partial\xi_{0}}\left[\left(1-\xi_{0}^{2}\right)\frac{\xi D_{\bot\epsilon}}{mB}\frac{\partial\left\langle F\right\rangle }{\partial\mu}\right]\end{aligned}
+\end{equation}
+
+\end_inset
+
+which transforms into 
+\begin_inset Formula \begin{equation}
+\mathcal{C}_{\mathbf{p}}\left[\left\langle F\right\rangle \right]=\frac{1}{p^{2}}\frac{\partial}{\partial p}\left[p^{2}\left(p\nu_{\epsilon}\left\langle F\right\rangle +D_{\Vert\epsilon}\frac{\partial\left\langle F\right\rangle }{\partial p}\right)\right]+\frac{1}{\Psi p^{2}}\frac{\xi}{\xi_{0}}\frac{\partial}{\partial\xi_{0}}\left[\frac{\xi}{\xi_{0}}\left(1-\xi_{0}^{2}\right)D_{\bot\epsilon}\frac{\partial\left\langle F\right\rangle }{\partial\xi_{0}}\right]\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Configuration space dynamics
+\end_layout
+
+\begin_layout Standard
+The operator (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Cfpisox"
+
+\end_inset
+
+) transforms into 
+\begin_inset Formula \begin{equation}
+\mathcal{C}_{\mathbf{X}}\left[\left\langle F\right\rangle \right]=\frac{\xi}{B}\nabla\cdot\left[\frac{B_{0}}{\xi}D_{X\epsilon}\mathbb{I}_{\bot}\cdot\nabla\left\langle F\right\rangle \right]\label{Cfpisox2}\end{equation}
+
+\end_inset
+
+where we define
+\begin_inset Formula \[
+D_{X\epsilon}=\frac{1}{2m^{2}\Omega_{0}^{2}}\left(\left(1-\xi_{0}^{2}\right)D_{\Vert\epsilon}+\left[\frac{2}{\Psi}-\left(1-\xi_{0}^{2}\right)\right]D_{\bot\epsilon}\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Collision operator in 
+\begin_inset Formula $(p,\xi_{0},\psi,s,z)$
+\end_inset
+
+ coordinates
+\end_layout
+
+\begin_layout Standard
+Using axisymmetry, the operator (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Cfpisox3"
+
+\end_inset
+
+) becomes
+\begin_inset Formula \begin{equation}
+\begin{aligned}\mathcal{C}_{\mathbf{X}}\left[\left\langle F\right\rangle \right]= & \frac{\xi}{B}\frac{\left\Vert \nabla\psi\right\Vert }{\Upsilon}\frac{\partial}{\partial\psi}\left[\frac{\Upsilon B_{0}}{\xi}D_{X\epsilon}\hat{\mathbf{\psi}}\cdot\mathbb{I}_{\bot}\cdot\left(\nabla\psi\frac{\partial\left\langle F\right\rangle }{\partial\psi}+\mathbf{\hat{s}}\frac{\partial\left\langle F\right\rangle }{\partial s}\right)\right]\\
+ & +\frac{\xi}{B}\frac{\left\Vert \nabla\psi\right\Vert }{\Upsilon}\frac{\partial}{\partial s}\left[\frac{\Upsilon B_{0}}{\left\Vert \nabla\psi\right\Vert \xi}D_{X\epsilon}\mathbb{I}_{\bot}\cdot\left(\nabla\psi\frac{\partial\left\langle F\right\rangle }{\partial\psi}+\mathbf{\hat{s}}\frac{\partial\left\langle F\right\rangle }{\partial s}\right)\right]\end{aligned}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Bounce-averaged guiding center Fokker Planck equation
+\end_layout
+
+\begin_layout Standard
+The guiding center Fokker-Planck equation for 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\left\langle F\right\rangle (p,\xi_{0},\psi,s)$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+ is now
+\begin_inset Formula \begin{equation}
+\frac{\partial\left\langle F\right\rangle }{\partial t}+\sin\varsigma\frac{p\xi}{m}\frac{\partial\left\langle F\right\rangle }{\partial s}=\mathcal{C}_{\mathbf{X}}\left[\left\langle F\right\rangle \right]+\mathcal{C}_{\mathbf{p}}\left[\left\langle F\right\rangle \right]\end{equation}
+
+\end_inset
+
+In the low collisionality regime, this equation gives 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\partial\left\langle F\right\rangle /\partial s$
+\end_inset
+
+ such that 
+\begin_inset Formula $\left\langle F\right\rangle $
+\end_inset
+
+ is constant along a field line and symmetric in the trapped region.
+ We define then the bounce-averaging operation
+\begin_inset Formula \[
+\left\{ \mathcal{A}\right\} =\frac{1}{\lambda}\oint\frac{ds}{\sin\varsigma}\frac{\xi_{0}}{\xi}\mathcal{A}\]
+
+\end_inset
+
+where
+\begin_inset Formula \[
+\lambda=\oint\frac{ds}{\sin\varsigma}\frac{\xi_{0}}{\xi}\]
+
+\end_inset
+
+and apply it to () 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+
+\begin_inset Formula \begin{equation}
+\frac{\partial\left\{ \left\langle F\right\rangle \right\} }{\partial t}=\left\{ \mathcal{C}_{\mathbf{X}}\left[\left\langle F\right\rangle \right]\right\} +\left\{ \mathcal{C}_{\mathbf{p}}\left[\left\langle F\right\rangle \right]\right\} \end{equation}
+
+\end_inset
+
+with
+\begin_inset Formula \begin{equation}
+\left\{ \mathcal{C}_{\mathbf{p}}\left[\left\langle F\right\rangle \right]\right\} =\frac{1}{p^{2}}\frac{\partial}{\partial p}\left[p^{2}\left(p\nu_{\epsilon}\left\{ \left\langle F\right\rangle \right\} +D_{\Vert\epsilon}\frac{\partial\left\{ \left\langle F\right\rangle \right\} }{\partial p}\right)\right]+\frac{1}{\lambda}\frac{1}{p^{2}}\frac{\partial}{\partial\xi_{0}}\left[\lambda_{2,-1,0}\left(1-\xi_{0}^{2}\right)D_{\bot\epsilon}\frac{\partial\left\langle F\right\rangle }{\partial\xi_{0}}\right]\end{equation}
+
+\end_inset
+
+and
+\begin_inset Formula \begin{equation}
+\begin{aligned}\left\{ \mathcal{C}_{\mathbf{X}}\left[\left\langle F\right\rangle \right]\right\} = & \frac{1}{\lambda}\frac{\partial}{\partial\psi}\left[\lambda D_{\psi\epsilon}\frac{\partial\left\langle F\right\rangle }{\partial\psi}\right]\end{aligned}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula \[
+D_{\psi\epsilon}=B_{0}\frac{1}{\lambda}\oint ds\frac{\xi_{0}\Upsilon}{\xi}\left\Vert \nabla\psi\right\Vert D_{X\epsilon}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+D_{\psi\epsilon}=\frac{1}{2q^{2}}\left[\left\{ \frac{\Upsilon^{2}B_{P}^{2}}{\Psi B_{0}^{2}}\right\} \left(1-\xi_{0}^{2}\right)\left(D_{\Vert\epsilon}-D_{\bot\epsilon}\right)+2\left\{ \frac{\Upsilon^{2}B_{P}^{2}}{\Psi^{2}B_{0}^{2}}\right\} D_{\bot\epsilon}\right]\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "biblio"
+options "unsrt"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
