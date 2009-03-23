@@ -115,42 +115,23 @@ if exist('flag_path','var'),%Paths
         end
     end
     %
-    ihost_ref = [];
-    if isfield(dkepath,'traceroute'),%For laptop which can have different hostnames depending upon the network (or no network)
-        routenames = fieldnames(dkepath.traceroute);
-        nroutes = length(routenames);
-        for iroute = 1:nroutes,
-            if ~isempty(dkepath.traceroute.(routenames{iroute})),
-                [s,lroutename] = unix(['traceroute ',dkepath.traceroute.(routenames{iroute})]);
-                if strfind(lroutename,dkepath.traceroute.(routenames{iroute})) & ~strfind(lroutename,'unknown'),
-                    ihost_ref = iroute;
-                    break;
-                end
-            end
-        end     
-    end
-    %
     if isfield(dkepath,'hostname'),
         %
         hostnames = fieldnames(dkepath.hostname);
         nhosts = length(hostnames);
         hostname = '';
-        if isempty(ihost_ref),
-            for ihost = 1:nhosts,
-                [s,lhostname] = unix('hostname');
-                if strfind(lhostname,dkepath.hostname.(hostnames{ihost})),
-                    hostname = hostnames{ihost};
-                end
+        for ihost = 1:nhosts,
+            [s,lhostname] = unix('hostname');
+            if strfind(lhostname,dkepath.hostname.(hostnames{ihost})),
+                hostname = hostnames{ihost};
             end
-            if isempty(hostname),
-                if isfield(dkepath,'default'),
-                    hostname = 'default';
-                else
-                    error('The computer is not listed in dkepath. Please modify the file ~/LUKE/make_path_LOCAL.m')
-                end
+        end
+        if isempty(hostname),
+            if isfield(dkepath,'default'),
+                hostname = 'default';
+            else
+                error('The computer is not listed in dkepath')
             end
-        else
-            hostname = hostnames{ihost_ref};%For laptop which can have different hostnames depending upon the network (or no network)
         end
         %
         path_id = dkepath.id;
