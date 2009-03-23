@@ -1,8 +1,12 @@
-function wave = make_beam_wave_jd(wave,equil,C3POdisplay,nd,nchi,w0,z0)
+function wave = make_beam_wave_jd(wave,equil,C3POdisplay,nd,nchi,w0,z0,nsm)
 %
 % This function generates a beam made of nd x nchi power tubes along a central ray
 %
 % Note : ray.swidth can be a scalar in which case the beam divergence is assumed to be zero.
+%
+if nargin < 7,
+    nsm = 1;%smoothing parameter
+end
 %
 if nargin < 7,
     z0 = NaN;
@@ -21,7 +25,7 @@ if nargin < 4,
 end
 %
 if length(wave.rays) > 1,
-    if C3POdisplay.ray,warning('This function only applies to the single ray representation.');end
+    if C3POdisplay.ray,disp('WARNING : This function only applies to the single ray representation.');end
     return
 end
 %
@@ -53,16 +57,19 @@ else
     swidth = clum*sphi_perp./ray.sdNpar./sphi_norm/omega_rf;
 end
 %
-if nd == 1 | nchi == 1,
+if nd == 1 || nchi == 1,
     wave.rays{1}.swidth = swidth;
     return
 end
 %
 wave = rmfield(wave,'rays');
 %
-sx = ray.sx;
-sy = ray.sy;
-sphi = ray.sphi;
+sx = smooth(ss,ray.sx,nsm).';
+sy = smooth(ss,ray.sy,nsm).';
+sphi = smooth(ss,ray.sphi,nsm).';
+%
+sNpar = smooth(ss,ray.sNpar,nsm).';
+sNperp = smooth(ss,ray.sNperp,nsm).';
 %
 sR = sx + equil.Rp;
 %
@@ -122,8 +129,8 @@ for id = 1:nd,
         wave.rays{ir}.skx = ray.skx;
         wave.rays{ir}.sn = ray.sn;
         wave.rays{ir}.sky = ray.sky;
-        wave.rays{ir}.sNpar = ray.sNpar;
-        wave.rays{ir}.sNperp= ray.sNperp;
+        wave.rays{ir}.sNpar = sNpar;
+        wave.rays{ir}.sNperp= sNperp;
         wave.rays{ir}.sdNpar = ray.sdNpar;
         wave.rays{ir}.sepol_pmz = ray.sepol_pmz;
         wave.rays{ir}.sphi_xyz = ray.sphi_xyz;

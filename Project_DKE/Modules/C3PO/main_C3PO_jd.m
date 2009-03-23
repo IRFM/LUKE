@@ -1,4 +1,4 @@
-function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,cluster_path,flag);
+function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,cluster_path,flag)
 %C3PO - Set ray initial characteristics and launches the C3PO ray-tracing code
 %
 % This function calculates the ray initial characteristics and launches the C3PO ray-tracing code
@@ -22,7 +22,7 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C
     %
     % Build or load vectorized magnetic equilibrium structure
     %
-    if fitparam.opt_load*exist(['EQUILV_',equil.id,'.mat']),
+    if fitparam.opt_load && exist(['EQUILV_',equil.id,'.mat'],'file'),
        load(['EQUILV_',equil.id,'.mat'],'equil_fit');
        if C3POdisplay.equilibrium,info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil.id,' is reloaded.']);end
     else
@@ -70,12 +70,15 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C
     if ~isfield(waveparam,'nchi'),
         waveparam.nchi = 1;
     end
+    if ~isfield(waveparam,'ns'),
+        waveparam.ns = 1;
+    end
     if isfield(waveparam,'a_sdNpar'),
         wave.a_sdNpar = waveparam.a_sdNpar;
     end
     %
     if ~isfield(rayparam,'dS'),% !!!! old rayparam, modify calling function
-        warning('Update old rayparam in the script')
+        disp('You should update old rayparam')
         rayparam.dS = rayparam.drho;
         %
         rayparam.rel_opt = 1;%option for (1) relativistic or (0) non-relativistic calculations
@@ -111,7 +114,10 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C
     [clusterparam] = clustermode_luke(C3POdisplay,C3POparam,cluster_path,'main_C3PO_jd');
     %
     if clusterparam.mode,
-        for iray = 1:Nrays,arg_range{iray} = iray;end
+        arg_range = cell(1,Nrays);
+        for iray = 1:Nrays,
+            arg_range{iray} = iray;
+        end
         [flag,rays] = mdce_luke(@loop_main_C3PO_jd,{iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay},1,arg_range,clusterparam);
 		%
 		for iray = 1:Nrays,
@@ -137,7 +143,7 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C
         end
     end
     %
-    wave = make_beam_wave_jd(wave,equil,C3POdisplay,waveparam.nd,waveparam.nchi,rayinit.w0,rayinit.z0);
+    wave = make_beam_wave_jd(wave,equil,C3POdisplay,waveparam.nd,waveparam.nchi,rayinit.w0,rayinit.z0,waveparam.ns);
     %
 end
 
