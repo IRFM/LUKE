@@ -140,9 +140,11 @@ end
 Rp = sR(isR);
 Zp = sZ(isZ);
 %
-disp(['Old value of psip: ',num2str(psip_old),', new value: ',num2str(psip)])
-disp(['Old value of Rp: ',num2str(Rp_old),', new value: ',num2str(Rp)])
-disp(['Old value of Zp: ',num2str(Zp_old),', new value: ',num2str(Zp)])
+if display_mode >= 1,
+    disp(['Old value of psip: ',num2str(psip_old),', new value: ',num2str(psip)])
+    disp(['Old value of Rp: ',num2str(Rp_old),', new value: ',num2str(Rp)])
+    disp(['Old value of Zp: ',num2str(Zp_old),', new value: ',num2str(Zp)])
+end
 %
 % iRp = find(abs(R - Rp) == min(abs(R - Rp)));
 % if abs(R(iRp) - Rp)/Rp < 1/(100*nnr) %one R point is very close to Rp 
