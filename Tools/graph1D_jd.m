@@ -71,12 +71,13 @@ elseif logx == 1 & logy == 1
     set(ax,'yscale','log');
     gcl = loglog(x,y,'parent',ax);
 else
-    if nargin >= 20,
-     gcl = errorbar(x,y,eym,eyp,'parent',ax);
-    else
+    if nargin == 21,
+        gcl = errorbar(x,y,eym,eyp,'parent',ax);
+    elseif nargin == 20,
+        gcl = errorbar(x,y,eym,eym,'parent',ax);
+    elseif nargin < 20,        
         gcl = plot(x,y,'parent',ax);
     end
-
 end
 hold off
 %
