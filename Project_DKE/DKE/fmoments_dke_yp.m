@@ -12,6 +12,7 @@ function [ZP0,Zcurr,Znorm,ZXXS,XxRR_fsav,xMRR_flux,xMRR_tau,xRR_fsav,xne_norm_ou
 %
 time0 = clock;
 dke_mode = dkeparam.dke_mode;
+ZP0.n_rf_list = dkeparam.n_rf_list;
 %
 Xpnm = gridDKE.Xpnm;
 Xpnp = gridDKE.Xpnp;
