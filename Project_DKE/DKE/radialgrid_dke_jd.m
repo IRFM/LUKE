@@ -144,7 +144,7 @@ end
 %
 ir_display_out = r_dke(ir_dke_display_out);
 %
-radialDKE.xrho_S_dke = xrho_S_dke;
+radialDKE.xrho_S_dke = psi2rho_jd(equil,xpsin_S_dke);
 radialDKE.xpsin_f = xpsin_f;
 radialDKE.xpsin_f_dke = xpsin_f_dke;
 radialDKE.xdpsin_f_dke = xdpsin_f_dke;
