@@ -307,7 +307,7 @@ while isel >= 0,
             disp('************** LOAD DATA FILE **************')
             disp('');
             %
-            [data_file,data_path] = igetfile_jd(opt_gui,{'LUKE_DATA_*.mat';'LUKE_RESULTS_*.mat'},'Please select a LUKE data file');
+            [data_file,data_path] = igetfile_jd(opt_gui,{'LUKE_DATA_*.mat';'LUKE_RESULTS_*.mat','last_luke@'},'Please select a LUKE data file');
             %
             if data_file == 0,
                 disp('-----> No LUKE data file specified.');
@@ -379,7 +379,7 @@ while isel >= 0,
 					%
 				elseif strfind(data_file,'LUKE_RESULTS_'),
                     %
-					data = load([data_path,data_file],'id_simul','id_dkepath','path_dkepath','id_dkeparam','path_dkeparam',...
+					data = load([data_path,data_file],'id_simul','rho_S','id_dkepath','path_dkepath','id_dkeparam','path_dkeparam',...
                         'id_equil','path_equil','ids_wave','paths_wave','id_ohm','path_ohm','id_transpfaste','path_transpfaste','id_ripple','path_ripple',...
                         'dkepath','dkeparam','dkedisplay','equil','waves','ohm','transpfaste','ripple',...
 						'Znorm','Zcurr','ZP0','dke_out','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');
@@ -476,6 +476,10 @@ while isel >= 0,
 					status.equil = 1;
 					status.output = 1;
 					%
+                    if ~isfield(dkeparam,'rho_S') && isfield(data,'rho_S'),
+                        dkeparam.rho_S = data.rho_S;
+                    end
+                    %
                     if ~isempty(waves),
                         status.waves = 1;
                     end                    
@@ -506,7 +510,102 @@ while isel >= 0,
 					%
 					clear data
 					%
-				else
+				elseif strfind(data_file,'last_luke@'),
+                    %
+                    clear fileids paths
+                    %
+					data = load([data_path,data_file],'par','dkepath','dkeparam','dkedisplay','equil','ohm','transpfaste','ripple',...
+						'Znorm_RF','Zcurr_RF','ZP0_RF','dke_out_RF','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');
+					disp(['-----> The data file ',fileids.data,' is loaded.']);
+                    %
+                    fileids.data = data_file;
+                    paths.data = data_path;
+					%
+					output.Znorm = data.Znorm_RF;
+					output.Zcurr = data.Zcurr_RF;
+					output.ZP0 = data.ZP0_RF;
+					output.dke_out = data.dke_out_RF;
+					output.radialDKE = data.radialDKE;
+					output.equilDKE = data.equilDKE;
+					output.momentumDKE = data.momentumDKE;
+					output.gridDKE = data.gridDKE;
+					output.Zmomcoef = data.Zmomcoef;
+					output.Zbouncecoef = data.Zbouncecoef;
+					output.Zmripple = data.Zmripple;
+					output.mksa = data.mksa;
+					output.XXsinksource = data.XXsinksource;  
+					%
+					status.dkeparam = 1;
+					status.dkepath = 1;
+					status.equil = 1;
+					status.output = 1;
+                    %
+                    dkepath = data.dkepath;
+					dkeparam = data.dkeparam;
+					dkedisplay = data.dkedisplay;
+					equil = data.equil;
+                    ohm = data.ohm;
+                    transpfaste = data.transpfaste;
+                    ripple = data.ripple;
+                    %
+                    waves = output.dke_out.waves;
+                    %
+                    if ~isfield(dkeparam,'rho_S') && isfield(data.par,'rho_S'),
+                        dkeparam.rho_S = data.par.rho_S;
+                    end
+					%
+                    fileids.dkepath = '';
+                    fileids.dkeparam = '';
+                    fileids.equil = '';
+                    fileids.ohm = '';
+                    fileids.transpfaste = '';
+                    fileids.ripple = '';
+                    %
+                    paths.dkepath = '';
+                    paths.dkeparam = '';
+                    paths.equil = '';
+                    paths.ohm = '';
+                    paths.transpfaste = '';
+                    paths.ripple = '';
+                    %
+                    for iw = 1:length(waves),
+                        fileids.waves{iw} = '';
+                        paths.waves{iw} = '';
+                    end
+					%
+					id_simul = output.dke_out.simul.id;
+					%
+                    if ~isempty(waves),
+                        status.waves = 1;
+                    end                    
+					%
+                    if ~isempty(ohm),
+                        status.ohm = 1;
+                        if ~isfield(ohm,'id'),
+                            ohm.id = 'OHM';
+                        end
+                    end                    
+					%
+                    if ~isempty(transpfaste),
+                        status.transpfaste = 1;
+                        if ~isfield(transpfaste,'id'),
+                            transpfaste.id = 'TRANSP';
+                        end
+                    end                    
+					%
+                    if ~isempty(ripple),
+                        status.ripple = 1;
+                        if ~isfield(ripple,'id'),
+                            ripple.id = 'RIPPLE';
+                        end
+                    end                    
+					%
+                    status.external = 0;
+					status.data = 2;
+					%
+					clear data
+					%
+                else
 					disp('-----> Invalid LUKE data file.');
 					continue
 				end  
