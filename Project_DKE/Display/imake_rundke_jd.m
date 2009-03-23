@@ -19,7 +19,10 @@ if isempty(id_simul),
     id_simul = id_simul_o;
 end
 %
-[data_file,data_path] = iputfile_jd(opt_gui,'rundke*.m','Please provide a fileids name for the LUKE run script',[workdir,'rundke.m']);
+filestr = [workdir,'rundke_',id_simul];
+filestr(filestr == '.') = 'p';
+%
+[data_file,data_path] = iputfile_jd(opt_gui,'rundke*.m','Please provide a fileids name for the LUKE run script',[filestr,'.m']);
 %
 if data_file == 0,
     disp('-----> No LUKE run script name specified.');
