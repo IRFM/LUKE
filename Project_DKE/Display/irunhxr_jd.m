@@ -102,8 +102,11 @@ if strcmp(basestr,'TCV'),% TCV launching data
     end
     %
     if n_opt > 0,
-        if isfield(equil.info,'shotnum');
+        if isfield(equil,'info') && isfield(equil.info,'shotnum'),
             shotnum = equil.info.shotnum;
+        elseif isfield(equil,'id'),
+            idsep = find(equil.id == '_');
+            shotnum = equil.id(idsep(1)+1:idsep(2)-1); 
         else
             disp('-----> Shot number information missing');
             return
@@ -156,10 +159,31 @@ if strcmp(basestr,'TCV'),% TCV launching data
     filter_material = filter_material{ishot};
     %
     %it = min(find(t > str2num(shotime)));
-    it1 = min(find(t > equil.info.t1));
-    it2 = max(find(t < equil.info.t2));
+    %
+    %TCV_19269_0.9000_0.79_1.01_L_1_3'
+    if isfield(equil,'info') && isfield(equil.info,'t1') && isfield(equil.info,'t2'),
+        t1 = equil.info.t1;
+        t2 = equil.info.t2;
+    elseif isfield(equil,'external'),
+        idsep = find(equil.external.id == '_');
+        t1 = str2num(equil.external.id(idsep(3)+1:idsep(4)-1));
+        t2 = str2num(equil.external.id(idsep(4)+1:idsep(5)-1));
+    else
+        t1 = NaN;
+        t2 = NaN;
+    end
+    %
+    if n_opt > 0,
+        t1 = input_dke_yp('Initial time for TCV HXR data averaging',t1,[0;Inf],'',[1,1]);
+        t2 = input_dke_yp('Final time for TCV HXR data averaging',t2,[0;Inf],'',[1,1]);
+    end
+    %
+    it1 = find(t > t1,1,'first');
+    it2 = find(t < t2,1,'last');
     hxrexp = squeeze(sum(hxr(it1:it2,:,:)));
+    hxrexp = hxrexp - [hxrexp(2:end,:);zeros(1,size(hxrexp,2))];% raw data is all hits above given energy
     dt = t(it2) - t(it1);
+    hxrexp = hxrexp/dt;%taux de comptage
     %
     if isnan(energy),
         energy = hxrspec.kphot;
@@ -241,7 +265,7 @@ if strcmp(d_opt,'y'),
         bremlocaldisplay_dke_yp(dkeparam,dkedisplay,equilDKE,momentumDKE,radialDKE,dke_out,mksa,Zbremchord,Zbremplasma,r_opt,t_opt,k_opt,p_opt,equil.id)
     end
     %
-    bremdiagdisplay_dke_yp(hxrspec,Zbremchord,Zbremplasma,Zbremdiag,c_opt,k_opt,p_opt,equil.id,hxrexp(ik,1:nc)/dt)
+    bremdiagdisplay_dke_yp(hxrspec,Zbremchord,Zbremplasma,Zbremdiag,c_opt,k_opt,p_opt,equil.id,hxrexp(ik,1:nc))
 end
 %
 s_opt = input('Do you want to save the HXR output data? [y/n] : ','s');
@@ -253,7 +277,7 @@ if strcmp(s_opt,'y'),
     if save_file == 0,
         disp('-----> No file name specified, HXR output data not saved.')
     else
-        save([save_path,save_file],'Zbremchord','Zbremplasma','Zbremdiag','equilHXR');
+        save([save_path,save_file],'Zbremchord','Zbremplasma','Zbremdiag','equilHXR','hxrexp');
         disp('-----> The output data is saved')
     end
     cd(sd);
