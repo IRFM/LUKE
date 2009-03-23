@@ -36,6 +36,8 @@ ids_rayinit = '';
 paths_rayinit = '';
 ids_launch = '';
 paths_launch = '';
+ids_angles = '';
+paths_angles = '';
 id_transpfaste = '';
 path_transpfaste = '';
 id_transpfaste = '';
@@ -44,6 +46,8 @@ id_ripple = '';
 path_ripple = '';
 id_hxr = '';
 path_hxr = '';
+id_external = '';
+path_external = '';
 %
 j = 1;
 for i=1:3:length(varargin),
@@ -79,6 +83,10 @@ for i=1:3:length(varargin),
        ids_launch = varargin{i+1};
        paths_launch = varargin{i+2};
        flag_launch = j;
+    elseif strcmp(varargin{i},'angles'),
+       ids_angles = varargin{i+1};
+       paths_angles = varargin{i+2};
+       flag_angles = j;
     elseif strcmp(varargin{i},'transpfaste'),
        id_transpfaste = varargin{i+1};
        path_transpfaste = varargin{i+2};
@@ -93,6 +101,10 @@ for i=1:3:length(varargin),
        flag_hxr = j;
        j = j+1;
        flag_hxrparam = j;
+    elseif strcmp(varargin{i},'external'),
+       id_external = varargin{i+1};
+       path_external = varargin{i+2};
+       flag_external = j;
     end
     j = j + 1;
 end
@@ -264,6 +276,27 @@ if exist('flag_launch','var'),
     varargout{flag_launch} = launchs;
 end
 %
+if exist('flag_angles','var'),
+    ii = 0;
+    angless = '';%List of structures for multiple RF waves
+    if isempty(ids_angles{1}),
+        info_dke_yp(2,['No angles conditions requested']);
+    else
+        for iw = 1:length(ids_angles),
+            filename = [paths_angles{iw},'ANGLES_',ids_angles{iw},'.mat'];
+            if exist(filename) == 0,
+                info_dke_yp(2,['Warning : Structure ',filename,' could not be loaded']);
+            else
+                load(filename);
+                info_dke_yp(2,['Structure ''angles'': ',filename,' successfully loaded']);
+                ii = ii + 1;
+                angless{ii} = angles;
+            end
+        end
+    end
+    varargout{flag_angles} = angless;
+end
+%
 if exist('flag_transpfaste','var'),
     filename = [path_transpfaste,'TRANSP_',id_equil,'_',id_transpfaste,'.mat'];
 	transpfaste = '';
@@ -304,6 +337,17 @@ if exist('flag_hxr','var'),%HXR
     end
     varargout{flag_hxr} = hxr;
     varargout{flag_hxrparam} = hxrparam;
+end
+%
+if exist('flag_external','var'),%DKE external parameters
+    filename = [path_external,'EXTERNAL_',id_external,'.mat'];
+    if exist(filename) == 0,
+	    error([filename,' does not exist']);
+    else
+	    load(filename);
+	    info_dke_yp(2,['Structure ''external'': ',filename,' successfully loaded']);
+    end
+    varargout{flag_external} = external;
 end
 
 
