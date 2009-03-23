@@ -453,7 +453,7 @@ clear mask_index mask_0 N_index N iX imat
 %
 Nmax = 2000000;
 %
-SXB = size(mask_p);
+%SXB = size(mask_p);
 nXB = length(mask_p);
 %
 XYDrf.ippj = spalloc(nr*ny,npn*nmhu*nn_rf,0);
@@ -532,8 +532,6 @@ for ibloc = 1:ceil(nXB/Nmax),
     XBmhub = XBmaskb.*XBsigma.*sqrt(1 - XBpsib.*XB1mmhu2);
     XBmhubm = XBmaskb.*XBsigmam.*sqrt(1 - XBpsib.*XB1mmhu2m);
     %
-    clear XBmaskb
-    %
     if dke_mode == 0,
         %
         clear XBsigmap XBsigma XBsigmam
@@ -590,8 +588,8 @@ for ibloc = 1:ceil(nXB/Nmax),
     XBdeltares.ijp = zeros(SXB_bloc,'single');
     XBdeltares.ijm = zeros(SXB_bloc,'single');
     %
-    XBnpar_acc(XBn_rf > 0) == -Inf;%Accessibility Condition Only for Landau Damping
-    XBnpar_acc(XBnpar_acc == 0) == -Inf;%Accessibility Condition not given
+    XBnpar_acc(XBn_rf > 0) = -Inf;%Accessibility Condition Only for Landau Damping
+    XBnpar_acc(XBnpar_acc == 0) = -Inf;%Accessibility Condition not given
     %
     XBnorm = erfc((XBnpar_acc - abs(XBnpar_rf))./XBdnpar_rf)/2;
     XBnorm(XBnorm == 0) = rf_tol;
@@ -679,15 +677,15 @@ for ibloc = 1:ceil(nXB/Nmax),
     %
     clear XBZb XBn_rf XBepolp_rf XBepolm_rf XBepolz_rf XBlre XBmhuratiop XBmhuratio XBmhuratiom 
     %
-    XBrespol.ippj = XBdeltares.ippj.*abs(XBpolb.ippj).^2;
-    XBrespol.ipj = XBdeltares.ipj.*abs(XBpolb.ipj).^2;
-    XBrespol.ij = XBdeltares.ij.*abs(XBpolb.ij).^2;
-    XBrespol.imj = XBdeltares.imj.*abs(XBpolb.imj).^2;
-    XBrespol.immj = XBdeltares.immj.*abs(XBpolb.immj).^2;
-    XBrespol.ijp = XBdeltares.ijp.*abs(XBpolb.ijp).^2;
-    XBrespol.ijm = XBdeltares.ijm.*abs(XBpolb.ijm).^2;
+    XBrespol.ippj = XBmaskb.*XBdeltares.ippj.*abs(XBpolb.ippj).^2;
+    XBrespol.ipj = XBmaskb.*XBdeltares.ipj.*abs(XBpolb.ipj).^2;
+    XBrespol.ij = XBmaskb.*XBdeltares.ij.*abs(XBpolb.ij).^2;
+    XBrespol.imj = XBmaskb.*XBdeltares.imj.*abs(XBpolb.imj).^2;
+    XBrespol.immj = XBmaskb.*XBdeltares.immj.*abs(XBpolb.immj).^2;
+    XBrespol.ijp = XBmaskb.*XBdeltares.ijp.*abs(XBpolb.ijp).^2;
+    XBrespol.ijm = XBmaskb.*XBdeltares.ijm.*abs(XBpolb.ijm).^2;
     %
-    clear XBdeltares XBpolb
+    clear XBdeltares XBpolb XBmaskb
     %
     %Sum over sigma for trapped particles - case FP
     %
