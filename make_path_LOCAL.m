@@ -193,25 +193,35 @@ dkepath.asipp = asipp;
 %
 % paths for runs on CRPP PC 70
 %
-dkepath.hostname.crpppc70 = 'crpppc70';
+dkepath.hostname.crpppc70 = 'lac2';
 %
 crpppc70.luke_root = [pwd,'/'];
 crpppc70.local_root = '/home/decker/NoTivoli/';
-crpppc70.computer = 'GLNX86';%machine type and supported OS
+crpppc70.computer = 'GLNXA64';%machine type and supported OS
 crpppc70.temppathroot = '/home/decker/NoTivoli/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 crpppc70.mex76 = [crpppc70.luke_root,'Project_DKE/MEX/Bin/crpppc70/MATLAB76'];
-crpppc70.mex75 = [crpppc70.luke_root,'Project_DKE/MEX/Bin/crpppc70/MATLAB75'];
-crpppc70.mex74 = [crpppc70.luke_root,'Project_DKE/MEX/Bin/crpppc70/MATLAB74'];
-crpppc70.mex73 = [crpppc70.luke_root,'Project_DKE/MEX/Bin/crpppc70/MATLAB73'];
-crpppc70.compiler_opt.helmex = '-lblas -llapack';% Optional argument for helmex compilation
+crpppc70.compiler_opt.helmex = '-v -L/home/decker/NoTivoli/Packages/Bin/lapack-3.2 -llapack -lblas LDFLAGS="-fPIC -shared" -largeArrayDims';%  -ltmglib Optional argument for helmex compilation
 %
-crpppc70.MUMPS.mex76 = [crpppc70.local_root,'Packages/Bin/MUMPS/MUMPS_4.8.0_S_g95/MATLAB_7.6'];%Where MUMPS matrix solver is stored (MEX function)
-crpppc70.MUMPS.mex75 = [crpppc70.local_root,'Packages/Bin/MUMPS/MUMPS_4.8.0_S_g95/MATLAB_7.5'];%Where MUMPS matrix solver is stored (MEX function)
-crpppc70.MUMPS.mex74 = [crpppc70.local_root,'Packages/Bin/MUMPS/MUMPS_4.8.0_S_g95/MATLAB_7.4'];%Where MUMPS matrix solver is stored (MEX function)
-crpppc70.MUMPS.mex73 = [crpppc70.local_root,'Packages/Bin/MUMPS/MUMPS_4.8.0_S_g95/MATLAB_7.3'];%Where MUMPS matrix solver is stored (MEX function)
+crpppc70.MUMPS.mex76 = [crpppc70.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB_7.6'];%Where MUMPS matrix solver is stored (MEX function)
 %
 dkepath.crpppc70 = crpppc70;
+%
+% paths for runs on CRPP PC 51
+%
+dkepath.hostname.crpppc51 = 'lac3';
+%
+crpppc51.luke_root = [pwd,'/'];
+crpppc51.local_root = '/home/decker/NoTivoli/';
+crpppc51.computer = 'GLNXA64';%machine type and supported OS
+crpppc51.temppathroot = '/home/decker/NoTivoli/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+%
+crpppc51.mex76 = [crpppc51.luke_root,'Project_DKE/MEX/Bin/crpppc51/MATLAB76'];
+crpppc51.compiler_opt.helmex = '-v -L/home/decker/NoTivoli/Packages/Bin/lapack-3.2 -llapack -lblas LDFLAGS="-fPIC -shared" -largeArrayDims';%  -ltmglib Optional argument for helmex compilation
+%
+crpppc51.MUMPS.mex76 = [crpppc51.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB_7.6'];%Where MUMPS matrix solver is stored (MEX function)
+%
+dkepath.crpppc51 = crpppc51;
 %
 %***************************************************************************************************
 %
