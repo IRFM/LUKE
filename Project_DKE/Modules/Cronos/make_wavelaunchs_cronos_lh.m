@@ -29,7 +29,7 @@ if strcmp(config,'TS');%For the Lower Hybrid wave simulations
     launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
     %
     launchs{1}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-    launchs{1}.a_sdNpar = 0.05;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
+    launchs{1}.a_sdNpar = 0.0;%artificial upshift, 0.05 for TS
     %
     launchs{1}.rZ0 = [-0.155,-0.075,0.075,0.155];%vertical launching positions (m) [1,m_pol]
     % 
@@ -51,8 +51,8 @@ if strcmp(config,'TS');%For the Lower Hybrid wave simulations
     launchs{2}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
     launchs{2}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
     %
-    launchs{2}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-    launchs{2}.a_sdNpar = 0.05;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
+    launchs{2}.bdNpar0  = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
+    launchs{2}.a_sdNpar = 0.0;%artificial upshift, 0.05 for TS
     %
     launchs{2}.rZ0 = [-0.244,-0.162,-0.080,0.080,0.162,0.244];%vertical launching positions (m) [1,m_pol]
     %
@@ -83,7 +83,7 @@ elseif strcmp(config,'MIXTE') || strcmp(config,'MIXTE (TS)') ;%For the Lower Hyb
     launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
     %
     launchs{1}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-    launchs{1}.a_sdNpar = 0.05;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
+    launchs{1}.a_sdNpar = 0.0;%artificial upshift, 0.05 for TS
     %
     launchs{1}.rZ0 = [-0.155,-0.075,0.075,0.155];%vertical launching positions (m) [1,m_pol]
     % 
@@ -106,7 +106,7 @@ elseif strcmp(config,'MIXTE') || strcmp(config,'MIXTE (TS)') ;%For the Lower Hyb
     launchs{2}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
     %
     launchs{2}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations (main lobe) [1,n_lobe]
-    launchs{2}.a_sdNpar = 0.05;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
+    launchs{2}.a_sdNpar = 0.0;%artificial upshift, 0.05 for TS
     %
     launchs{2}.rZ0 = [-0.244,-0.162,-0.080,0.080,0.162,0.244];%vertical launching positions (m) [1,m_pol]
     % 
@@ -137,7 +137,7 @@ elseif strcmp(config,'CIEL') | strcmp(config,'CIEL (TS)') ;%For the Lower Hybrid
     launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
     %
     launchs{1}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-    launchs{1}.a_sdNpar = 0.05;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
+    launchs{1}.a_sdNpar = 0.0;%artificial upshift, 0.05 for TS
     %
     launchs{1}.rZ0 = [-0.155,-0.075,0.075,0.155];%vertical launching positions (m) [1,m_pol]
     % 
@@ -160,7 +160,7 @@ elseif strcmp(config,'CIEL') | strcmp(config,'CIEL (TS)') ;%For the Lower Hybrid
     launchs{2}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
     %
     launchs{2}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations (main lobe) [1,n_lobe]
-    launchs{2}.a_sdNpar = 0.05;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
+    launchs{2}.a_sdNpar = 0.0;%artificial upshift, 0.05 for TS
     %
     launchs{2}.rZ0 = [-0.244,-0.162,-0.080,0.080,0.162,0.244];%vertical launching positions (m) [1,m_pol]
     % 
@@ -272,7 +272,7 @@ elseif strcmp(config,'ITER');%For the Lower Hybrid wave simulations
    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
-   launchs{1}.bdNpar0 = [0.2,1.8]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
+   launchs{1}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
    launchs{1}.a_sdNpar = 0.0;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
 %
    launchs{1}.rZ0 = [0.15,1.15];%vertical launching positions (m) [1,m_pol]
@@ -325,7 +325,7 @@ elseif strcmp(config,'FTU')
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
    launchs{1}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-   launchs{1}.a_sdNpar = 0.05;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
+   launchs{1}.a_sdNpar = 0.0;%artificial upshift, 0.05 for TS and FTU
 %
    launchs{1}.rZ0 = [0];%vertical launching positions (m) [1,m_pol]
 % 
@@ -501,7 +501,7 @@ elseif strcmp(config,'EAST');%For the Lower Hybrid wave simulations
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
    launchs{1}.bdNpar0 = [0.5]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-   launchs{1}.a_sdNpar = 0.05;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
+   launchs{1}.a_sdNpar = 0.0;%artificial upshift, 0.05 for TS and FTU and EAST
 %
    launchs{1}.rZ0 = [0];%[-0.35,0,0.35];%vertical launching positions (m) [1,m_pol]
 % 

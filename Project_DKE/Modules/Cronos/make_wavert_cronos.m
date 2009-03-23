@@ -87,7 +87,7 @@ elseif strcmp(config,'EC') | strcmp(config,'EBW');;%For the Electron Cyclotron o
     rayparam.pperpmax = 10;%maximum value of pperp in damping calculations
     rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considered absorbed
     rayparam.kextra = 200;%number of extra points after linear absorption
-    rayparam.tol = 1e-9;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
+    rayparam.tol = 1e-6;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
     rayparam.kmax = 100000;
     rayparam.ncyclharm = 50;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
     rayparam.reflection = 0;%1:Enforce wave reflection at plasma boundary, 0: the code calculates itself if the ray must leave of not the plasma

@@ -51,6 +51,8 @@ if strfind(config,'LH');%For the Lower Hybrid wave simulations
    dkeparam.n_rf_list = [0:3];%List of harmonics in the Dql calculations
    dkeparam.delta_rt = 0.5;%smoothering parameter of quasilinear iterations
    dkeparam.abs_lim = 0.95;%minimum required absorption fraction
+   dkeparam.npresmin = 1;%minimum number of resonant point per ray
+%
 %
 % Run mode
 %
@@ -72,7 +74,7 @@ if strfind(config,'LH');%For the Lower Hybrid wave simulations
 %
    dkeparam.dtn = 10000;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
 %
-   dkeparam.Dparparmax = 20;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
+   dkeparam.Dparparmax = 5;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
 %
 % (3) Matlab built-in qmr iterative method (MatLab built-in partial LU factorization used)
 % (2) Matlab built-in bicg iterative method (MatLab built-in partial LU factorization used) 
@@ -146,6 +148,7 @@ elseif strfind(config,'EC') | strfind(config,'EBW');%For the Electron Cyclotron 
    dkeparam.n_rf_list = [0:3];%List of harmonics in the Dql calculations
    dkeparam.delta_rt = 0.5;%smoothering parameter of quasilinear iterations
    dkeparam.abs_lim = 0.95;%minimum required absorption fraction
+   dkeparam.npresmin = 1;%minimum number of resonant point per ray
 %
 %
 % Run mode

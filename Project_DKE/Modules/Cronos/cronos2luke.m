@@ -266,7 +266,11 @@ if nargin == 14,% LH case
       	if  sum(pec) < 2e5,% test sur la puissance. Calcul si P > 200 kW seulement
         	disp('no ECRH')
 			nofce = 0;
-      	end
+        end
+        if nofce == 0 & nolh == 1 & ~strcmp(par.luke_mode,'lh')
+            disp('mode LH alone is imposed, no ECRH')
+            par.luke_mode='lh';
+        end
       	if nolh+nofce == 0
 			disp('no LH')
         	sortie = proto;
@@ -334,7 +338,13 @@ if ~isfield(par,'rho_S')
    par.rho_S = '20';   
 end
 if ischar(par.rho_S)
-  eval(['par.rho_S = ',par.rho_S,';']);
+  if strcmp(par.lob,'No')
+      eval(['par.rho_S = ',par.rho_S,';']);
+  else
+      eval(['par.rho_S = ',par.rho_S,';']); 
+      par.rho_S=min(30,par.rho_S+5);
+      disp(['increases the number of radial point due to the LH negatif lob : ',int2str(par.rho_S)])
+  end
 end
 %
 % protetcion pour des flux non monotones
@@ -412,6 +422,8 @@ switch par.luke_mode
     %
     % LH waves only
     %
+    nolh         = 1;
+    nofce        = 0;
     if isstruct(cons)
 
       disp('mode lh alone forced')
@@ -430,6 +442,8 @@ switch par.luke_mode
     %
     % EC waves only
     %
+    nofce = 1;
+    nolh  = 0;
     if isstruct(cons)
       cons = cons.ecrh_cons;
     end
@@ -444,9 +458,9 @@ end
 %
 mask = [];
 for iw = 1:length(launchs),
-    if strcmp(launchs{iw}.type,'LH') & sum(launchs{iw}.bPlhtot) > 0,
+    if strcmp(launchs{iw}.type,'LH') & sum(launchs{iw}.bPlhtot) > 1,
         mask = [mask,iw];
-    elseif strcmp(launchs{iw}.type,'EC') & launchs{iw}.yP_L > 0,
+    elseif strcmp(launchs{iw}.type,'EC') & launchs{iw}.yP_L > 1,
         mask = [mask,iw];
     end
 end
@@ -476,12 +490,6 @@ dkepath.temppath = [dkepath.temppathroot,filesep,'CRONOS',filesep,timeid_jd(cloc
 % PARAMETRES LUKE
 %
 dkeparam.rt_mode = par.rt_mode;%RT-DKE power consistency
-if par.rt_mode == 4
- 
-  disp('This version of LUKE only support rt_mode = 1');
-  dkeparam.rt_mode = 1;
-
-end
 dkeparam.abs_lim = par.abs_lim;%Relative level of RF power absorption that is accpeted for in the quasilinear convergence loop (0: no threshold, 1: full absorption)
 dkeparam.nit_rf = par.nit_rf;%Maximum number of iteration in ray-tracing. Works only if rt_mode = 1 and more than one radial point (default = 1)
 dkeparam.dke_mode = par.dke_mode;%Fokker-Planck equation (0), Drift Kinetic equation (1)
@@ -553,16 +561,23 @@ if transpfaste.Dr0 == 0 & transpfaste.Vr0 == 0
   transpfaste = [];
 
 end
-
+dkeparam.w_mask = [];
 %
 % PARAMETRES WAVE LH + EC (C3PO) 
 %
+isdnpar = 0;
 for iw = 1:length(launchs),
     [waveparam,fitequilparam,rayparam,raydisplay,C3POparam] = make_wavert_cronos(launchs{iw}.type);%parameter for ray-tracing are adapted to the selected wave
     %   	
     wavestructs{iw}.id = [par.conf,'_',launchs{iw}.id];
     wavestructs{iw}.equil_id = equil.id;
     wavestructs{iw}.launch = launchs{iw};
+    if ~isfield(launchs{iw},'w0')
+      wavestructs{iw}.launch.w0 = NaN;
+    end
+    if ~isfield(launchs{iw},'z_L')
+      wavestructs{iw}.launch.z_L = NaN;
+    end
     wavestructs{iw}.waveparam = waveparam;
     wavestructs{iw}.fitequilparam = fitequilparam;
     wavestructs{iw}.rayparam = rayparam;
@@ -577,9 +592,28 @@ for iw = 1:length(launchs),
     wavestructs{iw}.waveparam.kmode = par.kmode;%Dielectric tensor (0:cold,1:warm,2:hot;3:weak relativistic,4:full relativistic)
     %
     if isfield(wavestructs{iw}.launch,'a_sdNpar'),
-        wavestructs{iw}.waveparam.a_sdNpar = wavestructs{iw}.launch.a_sdNpar;
+        if ~isfield(par,'a_sdNpar')
+          par.a_sdNpar = 0;
+        end
+        wavestructs{iw}.waveparam.a_sdNpar = par.a_sdNpar;
         wavestructs{iw}.launch = rmfield(wavestructs{iw}.launch,'a_sdNpar');
+        if wavestructs{iw}.waveparam.a_sdNpar > 0
+           
+            disp(['artificial upshift, a_sdNpar =',num2str(wavestructs{iw}.waveparam.a_sdNpar)])
+            disp('version of LUKE with rt_mode forced to 4');
+            dkeparam.rt_mode = 4;
+            isdnpar = 1;
+        end
     end
+    %
+    % augmentation de Npar initial si Te0 faible pour TS
+    %
+    %if prof.te(1)/1e3 < 2 &  abs(launchs{iw}.bNpar0(1)) < 2
+        
+    %   disp('artificial correction to insure a good absorption of this ray')
+    %   wavestructs{iw}.launch.bNpar0(1)= wavestructs{iw}.launch.bNpar0(1)+0.4*sign(wavestructs{iw}.launch.bNpar0(1));
+        
+    %end
     %
     wavestructs{iw}.rayparam.tensortype = wavestructs{iw}.waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak relativistic,4:full relativistic)
     wavestructs{iw}.rayparam.tfinal = par.ray_tfinal;
@@ -587,8 +621,24 @@ for iw = 1:length(launchs),
     if strcmp(par.oneray,'Yes') & strcmp(wavestructs{iw}.launch.type,'LH'),
     	wavestructs{iw}.launch.rZ0 = mean(wavestructs{iw}.launch.rZ0);
     end
+
+    if strcmp(launchs{iw}.type,'EC')
+
+      dkeparam.w_mask = [dkeparam.w_mask iw];
+
+    end
     %
 end
+if isempty(dkeparam.w_mask)
+    dkeparam.w_mask = 1:length(launchs);
+end
+if isdnpar == 0 & par.rt_mode ~= 1
+ 
+  disp('forced to rt_mode = 1');
+  dkeparam.rt_mode = 1;
+
+end
+
 %
 if isfield(par,'save')
   opt_save = par.save;%For debugging or scan only.
@@ -711,6 +761,8 @@ if par.depip == 0
     normip = equi.ip / (I_LH_c*1e6+iboot);
   
   end
+  normip = min(0.9,normip);
+  disp(['case TS, normip=',num2str(normip,3)])
   
 end
 
@@ -722,8 +774,29 @@ equilDKE.xcron = interp1(psipncronos,gene.x,equilDKE.xpsin);
 % preparation des variables de sortie (sortie.j, sortie.el) pour CRONOS sur la bonne grille
 % et avec les bonnes unites
 %
-sortie.j  = interp1(equilDKE.xrhoT,j_LH_c,gene.x,'pchip',0) * 1e6 * normip;
-sortie.el = interp1(equilDKE.xrhoT,p_LH_c,gene.x,'pchip',0) * 1e6;
+if strcmp(par.lob,'Yes')
+    method = 'linear';
+else
+    method = 'pchip';
+end
+sortie.j  = interp1(equilDKE.xrhoT,j_LH_c,gene.x,method,0) * 1e6 * normip;
+sortie.el = interp1(equilDKE.xrhoT,p_LH_c,gene.x,method,0) * 1e6;
+    
+Pverif    = trapz(gene.x,sortie.el.*equi.vpr)*equi.rhomax;
+if Pverif > 1.1*P_LH_c * 1e6;
+    disp(['Plh inside Cronos greater than Plh inside LUKE : ',num2str(Pverif/(P_TOT_c * 1e6),3)])
+    if strcmp(par.lob,'Yes')
+         intpl = cumsum(ZP0_RF.x_rf_fsav'.*equilDKE.xdV_2piRp_dke*mksa.P_ref*2*pi*equilDKE.Rp);
+         intpc = interp1(equilDKE.xrhoT,intpl,gene.x,'pchip','extrap');
+         xrhoTluke = equilDKE.xrhoT;
+         xrhoTluke(end+1)=1;
+         intpl(end+1)=intpl(end);
+         elc = gradient(intpc)./gradient(gene.x)./equi.vpr / equi.rhomax;
+         elc(isnan(elc)) = 0;
+         elc(elc<0)      = 0;
+         sortie.el       = elc * 1e6;
+    end
+end
 if ~isfield(par,'smooth')
   par.smooth = 'No';
 end
@@ -785,11 +858,13 @@ memoire.data.edistribution.f0 = dke_out_RF.XXf0;
 memoire.data.edistribution.p = momentumDKE.pn*mksa.betath_ref;
 memoire.data.edistribution.mhu0 = momentumDKE.mhu;
 memoire.data.edistribution.psin = equilDKE.xpsin;
-%
-%if par.save,
-%   [chemin,void] = fileparts(gene.rapsauve);
-%   save(fullfile(chemin,sprintf('last_luke@%s',int2str(fix(gene.t*1000)))));
-%end
+
+if par.save,
+   [chemin,void] = fileparts(gene.rapsauve);
+   save(fullfile(chemin,sprintf('last_luke@%s',int2str(fix(gene.t*1000)))));
+%   shot=evalin('base','param.from.shot.num')
+%   save(fullfile(chemin,'last_luke'));
+end
 %
 
 
