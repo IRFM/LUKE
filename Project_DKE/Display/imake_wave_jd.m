@@ -61,6 +61,8 @@ if i_opt == 0,% use data from from external database
         %
         launch = imake_launch_angles_TCV_jd(angles);
         %
+        launch.angles = angles;
+        %
     elseif strcmp(basestr,'TS'),
         %
         % WAVE TYPE
@@ -163,6 +165,8 @@ elseif i_opt == 2,% build the wave data locally
                 %
                 launch = imake_launch_angles_TCV_jd(angles);
                 %
+                launch.angles = angles;
+                %
             elseif strcmp(basestr,'TS')
                 %
                 launch = imake_launch_TS_jd('');
@@ -238,6 +242,8 @@ if w_opt == 0; % C3PO Calculation
         %
         reflection = 1;
         %
+		method = 'pchip';
+		%
     else
         %        
         if exist('launch','var') && isfield(launch,'omega_rf'),
@@ -259,6 +265,8 @@ if w_opt == 0; % C3PO Calculation
             ceil(omega_rf/(qe*min(abs(equil.ptBPHI(end,:)))/me));
         %
         reflection = 0;
+        %
+		method = 'spline';
         %
     end
     %
@@ -298,6 +306,8 @@ if w_opt == 0; % C3PO Calculation
         %
         rayinit.id = ['C3PO_',launch.id];
         rayinit.type = launch.type;
+        %
+        rayinit.launch = launch;
         %
         r_opt = input_dke_yp('Do you want to save the rayinit structure [y/n]','n',{'y','n'},'',[1,1]);
         if strcmp(r_opt,'y'),
@@ -368,6 +378,7 @@ if w_opt == 0; % C3PO Calculation
     %
     rayparam.tensortype = kmode;
     rayparam.reflection = reflection;
+	fitparam.method = method;
     %
     c_opt = input_dke_yp('Do you want to see/modify the C3PO parameters [y/n]','n',{'y','n'},'',[1,1]);
     if strcmp(c_opt,'y'),
@@ -389,17 +400,23 @@ if w_opt == 0; % C3PO Calculation
     wave.info.RT = 'C3PO';
     wave.info.ftype = ftype;
     %
-    if d_opt == 0,
-        wave.launch = launch;
-        if strcmp(basestr,'TCV'),
-            wave.angles = angles;
-        end
-    end
     wave.rayinit = rayinit;
     wave.fitparam = fitparam;
     wave.rayparam = rayparam;
     wave.display = wavedisplay;
-    wave.C3POparam = C3POparam;    
+    wave.C3POparam = C3POparam;
+    %
+    waveparam.n_rf_list = n_rf_list;
+    %
+    wave.waveparam = waveparam;
+    %
+    s_opt = input_dke_yp('Do you want to generate an equivalent make_wave script? [y/n]','n',{'y','n'},'',[1,1]);
+    %
+    if s_opt == 'y',
+        % 
+        imake_makewave_jd(workdir,wave,opt_gui);
+        %
+    end
     %
 elseif w_opt == 1,% wave from TORAY calculations
     %
@@ -429,4 +446,4 @@ end
 %
 wave = wave_process_jd(equil,wave,n_rf_list);
 %
-      
+    
