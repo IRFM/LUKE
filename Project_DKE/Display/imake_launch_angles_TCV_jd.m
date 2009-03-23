@@ -3,7 +3,7 @@ function launch = imake_launch_angles_TCV_jd(angles,P0);
 % This function creates a launch structure based on the launched angles and
 % posision in TCV.
 %
-if nargin < 2,
+if nargin < 2 || isnan(P0),
     P0 = angles.P0;
 end
 %

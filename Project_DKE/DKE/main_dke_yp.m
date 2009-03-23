@@ -90,9 +90,9 @@ residue_rf = [];
 conv = 0;
 %
 for it_rf=1:nit_rf, % convergence in the ray-tracing mode
-    if strcmp(waveparam.model,'RT') & ~isempty(waveparam.bomega_rf),%in the case of RF waves only
+    if strcmp(waveparam.model,'RT') && ~isempty(waveparam.bomega_rf),%in the case of RF waves only
         %
-        if it_rf > 1 & conv == 0,
+        if it_rf > 1 && conv == 0,
             xyP0_2piRp_mod = delta_rt*xyP0_2piRp_mod_old + (1 - delta_rt)*xyP0_2piRp_mod;
         end
         %
