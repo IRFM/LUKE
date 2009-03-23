@@ -1,4 +1,4 @@
-function proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnmax,subtitle)
+function data_proc = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnmax,subtitle,opt)
 %LUKE -  Function which plots the results from LUKE data structures
 %
 % This function plots the results from LUKE data structures
@@ -9,6 +9,11 @@ function proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnmax,subtitle)
 %
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr> and J. Decker (CEA/DSM/IRFM) <joan.decker@cea.fr>
 %
+if nargin < 7,
+    opt.nr_dep = '';
+    opt.peak = '';
+    opt.wave = '';
+end
 if nargin < 6,
     subtitle = '';
 end
@@ -39,6 +44,7 @@ Zmripple = data.Zmripple;
 mksa = data.mksa;
 %
 simul_id = dke_out.simul.id;
+waves = dke_out.waves;
 %
 style0 = 'none';
 style = '-';
@@ -81,25 +87,62 @@ scocurr = sign(equilDKE.psia_apRp)*sign(equilDKE.XBphi(1,1));
 %
 J_tot = Zcurr.x_0_fsav*mksa.j_ref*scocurr;
 P_rf = ZP0.x_rf_fsav.'*mksa.P_ref;
+yP_rf = ZP0.xy_rf_fsav.'*mksa.P_ref;
+ynP_rf = ZP0.xyn_rf_fsav*mksa.P_ref;
 P_e = ZP0.x_e_fsav*mksa.P_ref;
 P_tot = P_rf + P_e;
 %
+ny = size(yP_rf,1);
+nn_rf = size(ynP_rf,3);
+%
+if isfield(ZP0,'n_rf_list'),
+    n_rf_list = ZP0.n_rf_list;
+elseif isfield(data,'dkeparam'),
+    n_rf_list = data.dkeparam.n_rf_list;
+else
+    n_rf_list = 1:nn_rf;
+    disp(['WARNING : n_rf_list = ',num2str(n_rf_list),' enforced.'])
+end
+%
 I_tot = sum(J_tot.*equilDKE.xdA_dke);
 %
-if ir_display == 0,
-    diaryname = ['res_',simul_id,'.log'];
+if isempty(opt.nr_dep),
+    nr_dep = input_dke_yp('Comparison with linear deposition : (-1) none, (0) on LUKE grid, or indicate the number of fine grid points',0,0:100,'',[1,1]);
 else
-    tir_display = num2str(ir_display);
-    diaryname = ['res_',simul_id,'_irho_',tir_display,'.log'];
+    nr_dep = opt.nr_dep;
 end
-delete(diaryname)
-diary(diaryname)
 %
-disp(['Simulation id: ',dke_out.simul.id]);
-disp(['Simulation date: ',timeid_jd(dke_out.simul.timeid)]);
-disp(['User id: ',dke_out.simul.userid]);
-disp(['LUKE Version: ',dke_out.simul.LUKEversion]);
-disp(' ');
+if isempty(opt.peak),
+    opt_peak = input_dke_yp('Do you want to display specific information for each absorption peak? (y/n)','n',{'n','y'},'',[1,1]);
+else
+    opt_peak = opt.peak;
+end
+%
+if isempty(opt.wave),
+    opt_wave = input_dke_yp('Do you want to display specific information for each wave? (y/n)','n',{'n','y'},'',[1,1]);
+else
+    opt_wave = opt.wave;
+end
+%
+if ir_display >= 0,
+    %
+    if ir_display == 0,
+        diaryname = ['res_',simul_id,'.log'];
+    else
+        tir_display = num2str(ir_display);
+        diaryname = ['res_',simul_id,'_irho_',tir_display,'.log'];
+    end
+    %
+    delete(diaryname)
+    diary(diaryname)
+    %
+    disp(['Simulation id: ',dke_out.simul.id]);
+    disp(['Simulation date: ',timeid_jd(dke_out.simul.timeid)]);
+    disp(['User id: ',dke_out.simul.userid]);
+    disp(['LUKE Version: ',dke_out.simul.LUKEversion]);
+    disp(' ');
+    %
+end
 %
 %if I_tot < 0,
 %    disp('Warning : sign of J inverted for positive total current')
@@ -107,10 +150,20 @@ disp(' ');
 %    I_tot = -I_tot;
 %end
 %
-p_rf_2piRp = sum(P_rf.*equilDKE.xdV_2piRp_dke);
+xp_rf_2piRp = P_rf.*equilDKE.xdV_2piRp_dke;
+yxp_rf_2piRp = yP_rf.*repmat(equilDKE.xdV_2piRp_dke,[ny,1]);
+yxnp_rf_2piRp = ynP_rf.*repmat(equilDKE.xdV_2piRp_dke.',[1,ny,nn_rf]);
+%
+p_rf_2piRp = sum(xp_rf_2piRp);
+np_rf_2piRp = sum(reshape(sum(yxnp_rf_2piRp,2),[nr,nn_rf]),1);
+%
 p_e_2piRp = sum(P_e.*equilDKE.xdV_2piRp_dke);
 p_tot_2piRp = sum(P_tot.*equilDKE.xdV_2piRp_dke);
 EtaRp = I_tot/(p_tot_2piRp*2*pi);    
+%
+xdrho_dke = diff(radialDKE.xrho_S_dke);
+xdPdrho_rf_2piRp = xp_rf_2piRp./xdrho_dke;
+yxdPdrho_rf_2piRp = yxp_rf_2piRp./repmat(xdrho_dke,[ny,1]);
 %
 eta = J_tot./P_tot;
 i_peak = find(P_rf == max(P_rf));
@@ -118,221 +171,540 @@ eta_peak = eta(i_peak);
 %
 if nr > 1,
     %
-    dep = 1;
-    ip_rf_2piRp = 0;
-    xp_rf_2piRp = P_rf.*equilDKE.xdV_2piRp_dke;
-    xI_tot = J_tot.*equilDKE.xdA_dke;
+    nw = length(waves);
     %
-    xp_rf_2piRp(xp_rf_2piRp < 0) = 0;
+    nb = NaN(1,nw);
     %
-    p_rf_2piRp_peak = 0;
-    I_tot_peak = 0;
+    wp0_rf_2piRp = zeros(1,nw);
     %
-    peaks.ir = []; 
-    peaks.p_rf_2piRp = [];
-    peaks.I_tot = [];
+    for iw = 1:nw,
+        nb(iw) = length(waves{iw}.rays);
+        for iray = 1:nb(iw),
+            %
+            wp0_rf_2piRp(iw) = wp0_rf_2piRp(iw) + waves{iw}.rays{iray}.P0_2piRp*1e-6;
+            %
+        end
+    end
     %
-    for ir = 1:nr,
-        if (xp_rf_2piRp(ir) - ip_rf_2piRp)*dep < 0,
-            if dep == 1,% ir-1 is a peak
-                peaks.ir = [peaks.ir,ir-1];
-                dep = -1;
-            else% ir-1 is a low - power and current shared
+    nbtot = sum(nb);
+    %
+    p0_rf_2piRp = sum(wp0_rf_2piRp);
+    %
+    if nr_dep >= 0,
+        %
+        if nr_dep >= 1,
+            %
+            rho_dep_S = optgrid_dke_jd(waves,nr_dep,NaN,0);
+            %
+        else
+            %
+            rho_dep_S = radialDKE.xrho_S_dke;
+            %
+        end
+        %
+        drho_dep = diff(rho_dep_S);
+        rho_dep = (rho_dep_S(1:end-1) + rho_dep_S(2:end))/2;
+        %
+        dPdrho_rf_2piRp_lin = zeros(nw,length(rho_dep_S)-1);
+        %
+        wp_rf_2piRp_lin = zeros(1,nw);
+        %
+        for iw = 1:nw;
+            %
+            for iray = 1:nb(iw),
                 %
-                p_rf_2piRp_peak = p_rf_2piRp_peak - xp_rf_2piRp(ir-1)/2;  
-                I_tot_peak = I_tot_peak - xI_tot(ir-1)/2;
+                ray = radialdampingprofile_jd(waves{iw}.rays{iray},rho_dep_S,0);
                 %
-                peaks.p_rf_2piRp = [peaks.p_rf_2piRp,p_rf_2piRp_peak];
-                peaks.I_tot = [peaks.I_tot,I_tot_peak];
+                if isfield(ray,'sP_2piRp')  && isfield(ray,'srho'),
+                    dPdrho_rf_2piRp_lin(iw,:) = dPdrho_rf_2piRp_lin(iw,:) + ray.dPnormdrho*ray.sP_2piRp(1)*1e-6;
+                else
+                    dPdrho_rf_2piRp_lin(iw,:) = NaN;% if some rays are not accounted for, the comparison is misleading and thus stopped
+                end
                 %
-                p_rf_2piRp_peak = xp_rf_2piRp(ir-1)/2;  
-                I_tot_peak = xI_tot(ir-1)/2;
+            end
+            %
+            wp_rf_2piRp_lin(iw) = sum(dPdrho_rf_2piRp_lin(iw,:).*drho_dep);
+            %
+        end
+        %
+        xdPdrho_rf_2piRp_lin = sum(dPdrho_rf_2piRp_lin,1);
+        p_rf_2piRp_lin = sum(wp_rf_2piRp_lin);
+        %
+    else
+        %
+        rho_dep = '';
+        dPdrho_rf_2piRp_lin = '';
+        wp_rf_2piRp_lin = '';
+        p_rf_2piRp_lin = '';
+        %
+    end
+    %
+    if opt_wave == 'y',
+        %
+        yb = dke_out.yb;
+        %
+        wxp_rf_2piRp = zeros(nw,nr);
+        wnp_rf_2piRp = zeros(nw,nn_rf);
+        wxdPdrho_rf_2piRp = zeros(nw,nr);
+        wi_peak = zeros(1,nw);
+        %
+            %
+            % bxdPdrho_rf_2piRp = zeros(nbtot,nx);
+            %
+        for iw = 1:nw,
+            %
+            % keep this in case we move on to ray analysis
+            %
+            % for ibb = 1:nb(iw),
+            %     %
+            %     ib = sum(nb(1:iw-1)) + ibb;
+            %     %
+            %     if ib < nbtot,
+            %         ymask = yb(ib):(yb(ib+1) - 1);
+            %     else
+            %         ymask = yb(ib):ny;
+            %     end
+            %     %
+            %     bxdPdrho_rf_2piRp(ib,:) = sum(yxdPdrho_rf_2piRp(ymask,:),1);
+            %     %
+            % end
+            %
+            ibmin = sum(nb(1:iw-1)) + 1;
+            ibmax = sum(nb(1:iw)) + 1;
+            %
+            if iw < nw
+                ymask = yb(ibmin):(yb(ibmax) - 1);
+            else
+                ymask = yb(ibmin):ny;
+            end            
+            %
+            wxp_rf_2piRp(iw,:) = sum(yxp_rf_2piRp(ymask,:),1);
+            wnp_rf_2piRp(iw,:) = reshape(sum(sum(yxnp_rf_2piRp(:,ymask,:),2),1),[1,nn_rf]);
+            wxdPdrho_rf_2piRp(iw,:) = sum(yxdPdrho_rf_2piRp(ymask,:),1);
+            %    
+            wi_peak(iw) = find(wxdPdrho_rf_2piRp(iw,:) == max(wxdPdrho_rf_2piRp(iw,:)));
+            %
+        end
+        %
+        wp_rf_2piRp = sum(wxp_rf_2piRp,2);
+        %
+        wrho = xrho(wi_peak);
+        wspsin = sqrt(xpsin(wi_peak));
+        wTe = xTe(wi_peak);
+        wne = xne(wi_peak);
+        %
+    else
+        %
+        wxdPdrho_rf_2piRp = '';
+        wxp_rf_2piRp = '';
+        wnp_rf_2piRp = '';
+        wp_rf_2piRp = '';
+        wrho = '';
+        wspsin = '';        
+        wTe = '';        
+        wne = '';        
+        %
+    end
+    %
+    if opt_peak == 'y',
+        %
+        dep = 1;
+        ip_rf_2piRp = 0;
+        xI_tot = J_tot.*equilDKE.xdA_dke;
+        %
+        xdPdrho_rf_2piRp(xdPdrho_rf_2piRp < 0) = 0;
+        %
+        p_rf_2piRp_peak = 0;
+        I_tot_peak = 0;
+        %
+        peaks.ir = []; 
+        peaks.p_rf_2piRp = [];
+        peaks.I_tot = [];
+        %
+        for ir = 1:nr,
+            if (xdPdrho_rf_2piRp(ir) - ip_rf_2piRp)*dep < 0,
+                if dep == 1,% ir-1 is a peak
+                    peaks.ir = [peaks.ir,ir-1];
+                    dep = -1;
+                else% ir-1 is a low - power and current shared
+                    %
+                    p_rf_2piRp_peak = p_rf_2piRp_peak - xp_rf_2piRp(ir-1)/2;  
+                    I_tot_peak = I_tot_peak - xI_tot(ir-1)/2;
+                    %
+                    peaks.p_rf_2piRp = [peaks.p_rf_2piRp,p_rf_2piRp_peak];
+                    peaks.I_tot = [peaks.I_tot,I_tot_peak];
+                    %
+                    p_rf_2piRp_peak = xp_rf_2piRp(ir-1)/2;  
+                    I_tot_peak = xI_tot(ir-1)/2;
+                    %
+                    dep = 1;
+                end
+            end
+            %
+            ip_rf_2piRp = xdPdrho_rf_2piRp(ir);
+            p_rf_2piRp_peak = p_rf_2piRp_peak + xp_rf_2piRp(ir);  
+            I_tot_peak = I_tot_peak + xI_tot(ir);
+        end  
+        %
+        if dep == 1,%finish with a high
+            peaks.ir = [peaks.ir,nr];
+        end
+        peaks.p_rf_2piRp = [peaks.p_rf_2piRp,p_rf_2piRp_peak];
+        peaks.I_tot = [peaks.I_tot,I_tot_peak];
+        %
+        peaks.rho = xrho(peaks.ir);
+        peaks.spsin = sqrt(xpsin(peaks.ir));
+        peaks.Te = xTe(peaks.ir);
+        peaks.ne = xne(peaks.ir);
+        peaks.EtaRp = peaks.I_tot./(peaks.p_rf_2piRp*2*pi);
+        peaks.ksirf = 32.7*peaks.I_tot.*peaks.ne*1e-20./(peaks.Te*2*pi.*peaks.p_rf_2piRp);
+        %
+        %
+    else
+        peaks = '';
+    end
+    %
+    data_proc.scalar.p_tot_2piRp = p_tot_2piRp;
+    data_proc.scalar.p0_rf_2piRp = p0_rf_2piRp;
+    data_proc.scalar.p_rf_2piRp = p_rf_2piRp;
+    data_proc.scalar.p_rf_2piRp_lin = p_rf_2piRp_lin;
+    data_proc.scalar.p_e_2piRp = p_e_2piRp;
+    data_proc.scalar.I_tot = I_tot;
+    data_proc.scalar.EtaRp = EtaRp;
+    %
+    data_proc.radial.xrho = xrho;
+    data_proc.radial.J_tot = J_tot;
+    data_proc.radial.P_tot = P_tot;
+    data_proc.radial.eta = eta;
+    data_proc.radial.P_rf = P_rf;
+    data_proc.radial.P_e = P_e;
+    data_proc.radial.xp_rf_2piRp = xp_rf_2piRp;
+    data_proc.radial.xdPdrho_rf_2piRp = xdPdrho_rf_2piRp;
+    %
+    data_proc.wave.wp0_rf_2piRp = wp0_rf_2piRp;
+    data_proc.wave.wp_rf_2piRp = wp_rf_2piRp;
+    data_proc.wave.wp_rf_2piRp_lin = wp_rf_2piRp_lin;
+    data_proc.wave.wxp_rf_2piRp = wxp_rf_2piRp;
+    data_proc.wave.wxdPdrho_rf_2piRp = wxdPdrho_rf_2piRp;
+    data_proc.wave.dPdrho_rf_2piRp_lin = dPdrho_rf_2piRp_lin;
+    data_proc.wave.rho_dep = rho_dep;
+    data_proc.wave.wrho = wrho;
+    data_proc.wave.wspsin = wspsin;
+    data_proc.wave.wTe = wTe;
+    data_proc.wave.wne = wne;
+    %
+    data_proc.peaks = peaks;
+    %
+    if ir_display >= 0,
+        %
+        disp(['Total current (I): ',num2str(I_tot),' MA (positive for co-current)'])
+        if isinf(equilDKE.Rp),
+            disp(['Launched RF power (P/2piRp): ',num2str(p0_rf_2piRp),' MW/m'])
+            disp(['RF power (P/2piRp): ',num2str(p_rf_2piRp),' MW/m ---> ',num2str(100*p_rf_2piRp/p0_rf_2piRp),' %.'])
+            for in_rf = 1:nn_rf,
+                disp(['RF power on harm. ',num2str(n_rf_list(in_rf)),' (P/2piRp): ',num2str(np_rf_2piRp(in_rf)),' MW/m ---> ',num2str(100*np_rf_2piRp(in_rf)/p0_rf_2piRp),' %.'])
+            end
+            if nr_dep >= 0,
+                disp(['Linear RF power (P/2piRp): ',num2str(p_rf_2piRp_lin),' MW/m ---> ',num2str(100*p_rf_2piRp_lin/p0_rf_2piRp),' %.'])
+            end
+            disp(['Ohmic power (P/2piRp): ',num2str(p_e_2piRp),' MW/m'])
+            disp(['Total power (P/2piRp): ',num2str(p_tot_2piRp),' MW/m'])
+            disp(['CD efficiency (I*Rp/P): ',num2str(EtaRp),' A.m/W'])
+            %
+            if opt_peak == 'y',
                 %
-                dep = 1;
+                for ipeak = 1:length(peaks.ir),
+                    disp(' ');
+                    disp('----------------------------------------');
+                    disp(' ');
+                    disp(['RF Peak # ',num2str(ipeak)])
+                    disp(['Position rho: ',num2str(peaks.rho(ipeak))])
+                    disp(['Position sqrt(xpsin): ',num2str(peaks.spsin(ipeak))])
+                    disp(['Temperature Te: ',num2str(peaks.Te(ipeak)),' keV'])
+                    disp(['Density ne: ',num2str(peaks.ne(ipeak)/1e20),' *10^20 m^-3'])
+                    disp(' ');
+                    disp(['RF power (P/2piRp): ',num2str(peaks.p_rf_2piRp(ipeak)),' MW/m'])
+                    disp(['Total current (I): ',num2str(peaks.I_tot(ipeak)),' MA'])
+                    disp(['CD efficiency (I*Rp/P): ',num2str(peaks.EtaRp(ipeak)),' A.m/W'])
+                    disp(['Normalized CD efficiency xi: ',num2str(peaks.ksirf(ipeak))])
+                end
+            end
+            %
+            if opt_wave == 'y',
+                %
+                for iw = 1:nw,
+                    disp(' ');
+                    disp('----------------------------------------');
+                    disp(' ');
+                    disp(['RF Wave # ',num2str(iw)])
+                    disp(['Position rho: ',num2str(wrho(iw))])
+                    disp(['Position sqrt(xpsin): ',num2str(wspsin(iw))])
+                    disp(['Temperature Te: ',num2str(wTe(iw)),' keV'])
+                    disp(['Density ne: ',num2str(wne(iw)/1e20),' *10^20 m^-3'])
+                    disp(' ');
+                    disp(['RF power (P/2piRp): ',num2str(wp_rf_2piRp(iw)),' MW/m ---> ',num2str(100*wp_rf_2piRp(iw)/wp0_rf_2piRp(iw)),' %.'])
+                    for in_rf = 1:nn_rf,
+                        disp(['RF power on harm. ',num2str(n_rf_list(in_rf)),' (P/2piRp): ',num2str(wnp_rf_2piRp(iw,in_rf)),' MW/m ---> ',num2str(100*wnp_rf_2piRp(iw,in_rf)/wp0_rf_2piRp(iw)),' %.'])
+                    end
+                    if nr_dep >= 0,
+                        disp(['Linear RF power (P/2piRp): ',num2str(wp_rf_2piRp_lin(iw)),' MW/m ---> ',num2str(100*wp_rf_2piRp_lin(iw)/wp0_rf_2piRp(iw)),' %.'])
+                    end
+                end
+            end
+            %
+        else
+            disp(['Launched RF power (P): ',num2str(p0_rf_2piRp*(2*pi*equilDKE.Rp)),' MW'])
+            disp(['RF power (P): ',num2str(p_rf_2piRp*(2*pi*equilDKE.Rp)),' MW ---> ',num2str(100*p_rf_2piRp/p0_rf_2piRp),' %.'])
+            for in_rf = 1:nn_rf,
+                disp(['RF power on harm. ',num2str(n_rf_list(in_rf)),' (P): ',num2str(np_rf_2piRp(in_rf)*(2*pi*equilDKE.Rp)),' MW ---> ',num2str(100*np_rf_2piRp(in_rf)/p0_rf_2piRp),' %.'])
+            end
+            if nr_dep >= 0,
+                disp(['Linear RF power (P): ',num2str(p_rf_2piRp_lin*(2*pi*equilDKE.Rp)),' MW ---> ',num2str(100*p_rf_2piRp_lin/p0_rf_2piRp),' %.'])
+            end
+            disp(['Ohmic power (P): ',num2str(p_e_2piRp*(2*pi*equilDKE.Rp)),' MW'])
+            disp(['Total power (P): ',num2str(p_tot_2piRp*(2*pi*equilDKE.Rp)),' MW'])
+            disp(['CD efficiency (I/P): ',num2str(EtaRp/equilDKE.Rp),' A/W'])
+            %
+            if opt_peak == 'y',
+                %
+                for ipeak = 1:length(peaks.ir),
+                    disp(' ');
+                    disp('----------------------------------------');
+                    disp(' ');
+                    disp(['RF Peak # ',num2str(ipeak)])
+                    disp(['Position rho: ',num2str(peaks.rho(ipeak))])
+                    disp(['Position sqrt(xpsin): ',num2str(peaks.spsin(ipeak))])
+                    disp(['Temperature Te: ',num2str(peaks.Te(ipeak)),' keV'])
+                    disp(['Density ne: ',num2str(peaks.ne(ipeak)/1e20),' *10^20 m^-3'])
+                    disp(' ');
+                    disp(['RF power (P): ',num2str(peaks.p_rf_2piRp(ipeak)*(2*pi*equilDKE.Rp)),' MW'])
+                    disp(['Total current (I): ',num2str(peaks.I_tot(ipeak)),' MA'])
+                    disp(['CD efficiency (I/P): ',num2str(peaks.EtaRp(ipeak)/equilDKE.Rp),' A/W'])
+                    disp(['Normalized CD efficiency xi: ',num2str(peaks.ksirf(ipeak))])
+                end
+            end
+            %
+            if opt_wave == 'y',
+                %
+                for iw = 1:nw,
+                    disp(' ');
+                    disp('----------------------------------------');
+                    disp(' ');
+                    disp(['RF Wave # ',num2str(iw)])
+                    disp(['Position rho: ',num2str(wrho(iw))])
+                    disp(['Position sqrt(xpsin): ',num2str(wspsin(iw))])
+                    disp(['Temperature Te: ',num2str(wTe(iw)),' keV'])
+                    disp(['Density ne: ',num2str(wne(iw)/1e20),' *10^20 m^-3'])
+                    disp(' ');
+                    disp(['RF power (P): ',num2str(wp_rf_2piRp(iw)*(2*pi*equilDKE.Rp)),' MW ---> ',num2str(100*wp_rf_2piRp(iw)/wp0_rf_2piRp(iw)),' %.'])
+                    for in_rf = 1:nn_rf,
+                        disp(['RF power on harm. ',num2str(n_rf_list(in_rf)),' (P): ',num2str(wnp_rf_2piRp(iw,in_rf)*(2*pi*equilDKE.Rp)),' MW ---> ',num2str(100*wnp_rf_2piRp(iw,in_rf)/wp0_rf_2piRp(iw)),' %.'])
+                    end
+                    if nr_dep >= 0,
+                        disp(['Linear RF power (P): ',num2str(wp_rf_2piRp_lin(iw)*(2*pi*equilDKE.Rp)),' MW ---> ',num2str(100*wp_rf_2piRp_lin(iw)/wp0_rf_2piRp(iw)),' %.'])
+                    end
+                end
             end
         end
         %
-        ip_rf_2piRp = xp_rf_2piRp(ir);
-        p_rf_2piRp_peak = p_rf_2piRp_peak + xp_rf_2piRp(ir);  
-        I_tot_peak = I_tot_peak + xI_tot(ir);
-    end  
-    %
-    if dep == 1,%finish with a high
-        peaks.ir = [peaks.ir,nr];
+        diary off
+        %
+        % power profiles
+        %
+        figure(1),clf,set(1,'Name',['RF power deposition profile - ',dke_out.simul.id])
+        %
+        xlab = '\rho';
+        ylab = 'dP_{RF}/d\rho/(2\piR_p) (MW/m)';
+        tit = '';
+        %
+        xlim = [0,1];
+        xtick = 0:0.2:1;
+        ylim = NaN;
+        %
+        graph1D_jd(xrho,xdPdrho_rf_2piRp,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width2,siz,gca,red,lspace,bspace);
+        %
+        if ~isnan(p_rf_2piRp_lin),
+            %
+            leg = {'LUKE','linear'};
+            %
+            graph1D_jd(rho_dep,xdPdrho_rf_2piRp_lin,0,0,'','','',leg,xlim,ylim,style,marker,color3,width,siz);
+            %
+        end
+        %
+        set(gca,'xtick',xtick);
+        %
+        print_jd(p_opt,[simul_id,'_Prf_profile'],'.');
+        %
+        figure(2),clf,set(2,'Name',['Ohmic power density profile - ',dke_out.simul.id])
+        %
+        xlab = '\rho';
+        ylab = 'P_{OHM} (MW/m^3)';
+        tit = '';
+        %
+        xlim = [0,1];
+        xtick = 0:0.2:1;
+        ylim = NaN;
+        %
+        graph1D_jd(xrho,P_e,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width2,siz,gca,red,lspace,bspace);
+        set(gca,'xtick',xtick);
+        %
+        print_jd(p_opt,[simul_id,'_Pe_profile'],'.');
+        %
+        figure(3),clf,set(3,'Name',['Total power density profile - ',dke_out.simul.id])
+        %
+        xlab = '\rho';
+        ylab = 'P_{TOT} (MW/m^3)';
+        tit = '';
+        %
+        xlim = [0,1];
+        xtick = 0:0.2:1;
+        ylim = NaN;
+        %
+        graph1D_jd(xrho,P_tot,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width2,siz,gca,red,lspace,bspace);
+        set(gca,'xtick',xtick);
+        %
+        print_jd(p_opt,[simul_id,'_Ptot_profile'],'.');
+        %
+        % current profile
+        %
+        figure(4),clf,set(4,'Name',['Current density profile - ',dke_out.simul.id])
+        %
+        ylab = 'J (MA/m^2)';
+        tit = 'J > 0 for co-current';
+        ylim = NaN;
+        %
+        graph1D_jd(xrho,J_tot,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width2,siz,gca,red,lspace,bspace2);
+        set(gca,'xtick',xtick);
+        %set(gca,'ylim',[0,max(get(gca,'ylim'))])
+        %
+        print_jd(p_opt,[simul_id,'_J_profile'],'.');
+        %
+        % efficiency profile
+        %
+        figure(5),clf,set(5,'Name',['Current efficiency profile - ',dke_out.simul.id])
+        %
+        ylab = '\eta (A.m/W)';
+        tit = '';
+        ylim = 2*[min([0,eta_peak]),max([0,eta_peak])];
+        %
+        graph1D_jd(xrho,eta,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width2,siz,gca,red,lspace,bspace);
+        set(gca,'xtick',xtick);
+        %
+        print_jd(p_opt,[simul_id,'_eta_profile'],'.');
+        %
+        figure(6),clf,set(6,'Name',['Current and RF power density profiles - ',dke_out.simul.id])
+        %    
+        ylab1 = 'J (MA/m^2)';
+        ylab2 = 'P_{RF} (MW/m^3)';
+        tit = 'J > 0 for co-current';
+        ylim1 = NaN;
+        ylim2 = NaN;
+        %
+        graph1D2jd(xrho,J_tot,xrho,P_rf,xlab,ylab1,ylab2,tit,xlim,ylim1,ylim2,...
+        style,marker1,color2,width2,style,marker1,color3,width2,siz,red,lspace2,bspace2);
+        %
+        print_jd(p_opt,[simul_id,'_J_Prf_profile'],'.');
+        %
+        if exist('Zmripple'),
+            if ~isempty(Zmripple) & sum(sum(Zmripple.Xnhuloss)) ~= 0,
+                figure(7),clf,set(7,'Name',['Magnetic ripple losses - ',dke_out.simul.id])
+                [ax] = graph1D_jd(xrho,dke_out.xMRR_flux,0,0,'\rho','Ripple losses (m-3.s-1)',subtitle,NaN,[0,1],[0,max(max([dke_out.xMRR_flux(:),dke_out.xMRR_tau(:)]))],style,marker1,color2,width2,siz,gca,red,lspace,bspace);hold on
+                [ax] = graph1D_jd(xrho,dke_out.xMRR_tau,0,0,'\rho','Ripple losses (m-3.s-1)',subtitle,NaN,[0,1],[0,max(max([dke_out.xMRR_flux(:),dke_out.xMRR_tau(:)]))],style,marker1,color3,width2,siz,gca,red,lspace,bspace);hold on
+                legend('Boundary losses','Volumic losses');
+                print_jd(p_opt,[simul_id,'_RippleLosses_profile'],'.');
+                %
+                figure(8),clf,set(8,'Name',['Cones angles - ',dke_out.simul.id])
+                [ax] = graph1D_jd(xrho,Zmripple.xthetabanana,0,0,'\rho','Angle (Deg.)',subtitle,NaN,[0,1],[0,60],style,marker1,color2,width2,siz,gca,red,lspace,bspace);hold on
+                [ax] = graph1D_jd(xrho,Zmripple.xthetaloss,0,0,'\rho','Angle (Deg.)',subtitle,NaN,[0,1],[0,60],style,marker1,color3,width2,siz,gca,red,lspace,bspace);hold on
+                legend('Banana cone angle','Loss cone angle');
+                print_jd(p_opt,[simul_id,'_RippleConeAngles_profile'],'.');
+                %
+                ylab1 = 'p/p_{Te}';
+                ylab2 = 'p/p_{Te(loc.)}';
+                ytick = [0:2:10];
+                ylim1 = [0,10];
+                ylim2 = [0,40];
+                figure(9),clf,set(9,'Name',['Collision detrapping threshold - ',dke_out.simul.id])
+                [ax] = graph1D_jd(xrho,Zmripple.xpndetrap,0,0,'\rho','',subtitle,NaN,[0,1],'',style,marker1,color2,width2,siz,gca,red,lspace,bspace);hold on
+                [ax] = graph1D_jd(xrho,Zmripple.xpnth,0,0,'\rho','',subtitle,NaN,[0,1],'',style,marker1,color3,width2,siz,gca,red,lspace,bspace);hold on
+                [ax] = graph1D2jd(xrho,Zmripple.xpnth,xrho,Zmripple.xpndetrap./Zmripple.xpnth,xlab,ylab1,ylab2,tit,xlim,ylim1,ylim2,style,marker1,color3,width2,style,marker1,color4,width2,siz,red,lspace2,bspace);
+                set(gca,'ytick',ytick);
+                legend('p_{c}/p_{Te}','p_{Te(loc.)}/p_{Te}','p_{c}/p_{Te(loc.)}');
+                print_jd(p_opt,[simul_id,'_RippleDetrapping_profile'],'.');
+            end  
+        end
+        %
+        zS = dke_out.zS;
+        zP_0_2piRp_mod = dke_out.zP_0_2piRp_mod;
+        %
+        disp('******** power absorption along specific rays ********');
+        %
+        iw = NaN;
+        ibb = NaN;
+        ib = 0;
+        iwdef = 1;
+        %
+        while iw ~= 0 && ibb ~= 0
+            %
+            ib = ib + 1;
+            %
+            iw = input_dke_yp('wave index (0 to return)',iwdef,0:nw,'',[1,1]);
+            %
+            if iw == 0,
+                continue
+            end
+            %
+            ibb = input_dke_yp('ray index (0 to return)',1,0:nb(iw),'',[1,1]);
+            %
+            if ibb == 0,
+                continue
+            end
+            %
+            iwdef = 0;
+            %
+            iy = sum(nb(1:iw - 1)) + ibb;
+            %
+            ray = waves{iw}.rays{ibb};
+            %
+            sS_c3po = ray.ss;
+            sP_c3po = ray.sP_2piRp*2*pi*equilDKE.Rp;
+            %
+            sS_luke = zS{iy};
+            sP_luke = zP_0_2piRp_mod{iy}*2*pi*equilDKE.Rp;
+            %
+            leg = {'Ray-Tracing','Fokker-Planck'};
+            %    
+            % power deposition
+            %
+            figlab = ['wave #',num2str(iw),'; ray #',num2str(ibb)];
+            %
+            figure(14+iy),clf;set(gcf,'name',figlab);
+            %
+            xlim = [0,max([sS_c3po,sS_luke])];
+            ylim = [0,1.2*max([sP_c3po,sP_luke])/1e3];
+            xlab = 's (m)';
+            ylab = 'P (kW)';
+            %
+            graph1D_jd(sS_c3po,sP_c3po/1e3,0,0,xlab,ylab,figlab,NaN,xlim,ylim,style2,marker,color3,width2,siz,gca,red,lspace,bspace2);
+            graph1D_jd(sS_luke,sP_luke/1e3,0,0,'','','',leg,xlim,ylim,style,marker2,color2,width2,siz);
+            %
+        end
+        %
     end
-    peaks.p_rf_2piRp = [peaks.p_rf_2piRp,p_rf_2piRp_peak];
-    peaks.I_tot = [peaks.I_tot,I_tot_peak];
     %
-    peaks.rho = xrho(peaks.ir);
-    peaks.spsin = sqrt(xpsin(peaks.ir));
-    peaks.Te = xTe(peaks.ir);
-    peaks.ne = xne(peaks.ir);
-    peaks.EtaRp = peaks.I_tot./(peaks.p_rf_2piRp*2*pi);
-    peaks.ksirf = 32.7*peaks.I_tot.*peaks.ne*1e-20./(peaks.Te*2*pi.*peaks.p_rf_2piRp);
-    %
-    disp(['Total current (I): ',num2str(I_tot),' MA (positive for co-current)'])
-	if isinf(equilDKE.Rp),
-    	disp(['RF power (P/2piRp): ',num2str(p_rf_2piRp),' MW/m'])
-    	disp(['Ohmic power (P/2piRp): ',num2str(p_e_2piRp),' MW/m'])
-    	disp(['Total power (P/2piRp): ',num2str(p_tot_2piRp),' MW/m'])
-    	disp(['CD efficiency (I*Rp/P): ',num2str(EtaRp),' A.m/W'])
-        %
-        for ipeak = 1:length(peaks.ir),
-            disp(' ');
-            disp(['RF Peak # ',num2str(ipeak)])
-            disp(['Position rho: ',num2str(peaks.rho(ipeak))])
-            disp(['Position sqrt(xpsin): ',num2str(peaks.spsin(ipeak))])
-            disp(['Temperature Te: ',num2str(peaks.Te(ipeak)),' keV'])
-            disp(['Density ne: ',num2str(peaks.ne(ipeak)/1e20),' *10^20 m^-3'])
-            disp(' ');
-            disp(['RF power (P/2piRp): ',num2str(peaks.p_rf_2piRp(ipeak)),' MW/m'])
-            disp(['Total current (I): ',num2str(peaks.I_tot(ipeak)),' MA'])
-            disp(['CD efficiency (I*Rp/P): ',num2str(peaks.EtaRp(ipeak)),' A.m/W'])
-            disp(['Normalized CD efficiency xi: ',num2str(peaks.ksirf(ipeak))])
-        end
-	else
-    	disp(['RF power (P): ',num2str(p_rf_2piRp*(2*pi*equilDKE.Rp)),' MW'])
-    	disp(['Ohmic power (P): ',num2str(p_e_2piRp*(2*pi*equilDKE.Rp)),' MW'])
-    	disp(['Total power (P): ',num2str(p_tot_2piRp*(2*pi*equilDKE.Rp)),' MW'])
-    	disp(['CD efficiency (I/P): ',num2str(EtaRp/equilDKE.Rp),' A/W'])
-        %
-        for ipeak = 1:length(peaks.ir),
-            disp(' ');
-            disp(['RF Peak # ',num2str(ipeak)])
-            disp(['Position rho: ',num2str(peaks.rho(ipeak))])
-            disp(['Position sqrt(xpsin): ',num2str(peaks.spsin(ipeak))])
-            disp(['Temperature Te: ',num2str(peaks.Te(ipeak)),' keV'])
-            disp(['Density ne: ',num2str(peaks.ne(ipeak)/1e20),' *10^20 m^-3'])
-            disp(' ');
-            disp(['RF power (P): ',num2str(peaks.p_rf_2piRp(ipeak)*(2*pi*equilDKE.Rp)),' MW'])
-            disp(['Total current (I): ',num2str(peaks.I_tot(ipeak)),' MA'])
-            disp(['CD efficiency (I/P): ',num2str(peaks.EtaRp(ipeak)/equilDKE.Rp),' A/W'])
-            disp(['Normalized CD efficiency xi: ',num2str(peaks.ksirf(ipeak))])
-        end
-	end
-    %
-    % power profiles
-    %
-    figure(1),clf,set(1,'Name',['RF power density profile - ',dke_out.simul.id])
-    %
-    xlab = '\rho';
-    ylab = 'P_{RF} (MW/m^3)';
-    tit = '';
-    %
-    xlim = [0,1];
-    xtick = 0:0.2:1;
-    ylim = NaN;
-    %
-    graph1D_jd(xrho,P_rf,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width2,siz,gca,red,lspace,bspace);
-    set(gca,'xtick',xtick);
-    %
-    print_jd(p_opt,[simul_id,'_Prf_profile'],'.');
-    %
-    figure(2),clf,set(2,'Name',['Ohmic power density profile - ',dke_out.simul.id])
-    %
-    xlab = '\rho';
-    ylab = 'P_{OHM} (MW/m^3)';
-    tit = '';
-    %
-    xlim = [0,1];
-    xtick = 0:0.2:1;
-    ylim = NaN;
-    %
-    graph1D_jd(xrho,P_e,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width2,siz,gca,red,lspace,bspace);
-    set(gca,'xtick',xtick);
-    %
-    print_jd(p_opt,[simul_id,'_Pe_profile'],'.');
-    %
-    figure(3),clf,set(3,'Name',['Total power density profile - ',dke_out.simul.id])
-    %
-    xlab = '\rho';
-    ylab = 'P_{TOT} (MW/m^3)';
-    tit = '';
-    %
-    xlim = [0,1];
-    xtick = 0:0.2:1;
-    ylim = NaN;
-    %
-    graph1D_jd(xrho,P_tot,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width2,siz,gca,red,lspace,bspace);
-    set(gca,'xtick',xtick);
-    %
-    print_jd(p_opt,[simul_id,'_Ptot_profile'],'.');
-    %
-    % current profile
-    %
-    figure(4),clf,set(4,'Name',['Current density profile - ',dke_out.simul.id])
-    %
-    ylab = 'J (MA/m^2)';
-    tit = 'J > 0 for co-current';
-    ylim = NaN;
-    %
-    graph1D_jd(xrho,J_tot,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width2,siz,gca,red,lspace,bspace2);
-    set(gca,'xtick',xtick);
-    %set(gca,'ylim',[0,max(get(gca,'ylim'))])
-    %
-    print_jd(p_opt,[simul_id,'_J_profile'],'.');
-    %
-    % efficiency profile
-    %
-    figure(5),clf,set(5,'Name',['Current efficiency profile - ',dke_out.simul.id])
-    %
-    ylab = '\eta (A.m/W)';
-    tit = '';
-    ylim = 2*[min([0,eta_peak]),max([0,eta_peak])];
-    %
-    graph1D_jd(xrho,eta,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width2,siz,gca,red,lspace,bspace);
-    set(gca,'xtick',xtick);
-    %
-    print_jd(p_opt,[simul_id,'_eta_profile'],'.');
-    %
-    figure(6),clf,set(6,'Name',['Current and RF power density profiles - ',dke_out.simul.id])
-    %    
-    ylab1 = 'J (MA/m^2)';
-    ylab2 = 'P_{RF} (MW/m^3)';
-    tit = 'J > 0 for co-current';
-    ylim1 = NaN;
-    ylim2 = NaN;
-    %
-    graph1D2jd(xrho,J_tot,xrho,P_rf,xlab,ylab1,ylab2,tit,xlim,ylim1,ylim2,...
-    style,marker1,color2,width2,style,marker1,color3,width2,siz,red,lspace2,bspace2);
-    %
-    print_jd(p_opt,[simul_id,'_J_Prf_profile'],'.');
-	%
-	if exist('Zmripple'),
-		if ~isempty(Zmripple) & sum(sum(Zmripple.Xnhuloss)) ~= 0,
-	    	figure(7),clf,set(7,'Name',['Magnetic ripple losses - ',dke_out.simul.id])
-			[ax] = graph1D_jd(xrho,dke_out.xMRR_flux,0,0,'\rho','Ripple losses (m-3.s-1)',subtitle,NaN,[0,1],[0,max(max([dke_out.xMRR_flux(:),dke_out.xMRR_tau(:)]))],style,marker1,color2,width2,siz,gca,red,lspace,bspace);hold on
-			[ax] = graph1D_jd(xrho,dke_out.xMRR_tau,0,0,'\rho','Ripple losses (m-3.s-1)',subtitle,NaN,[0,1],[0,max(max([dke_out.xMRR_flux(:),dke_out.xMRR_tau(:)]))],style,marker1,color3,width2,siz,gca,red,lspace,bspace);hold on
-			legend('Boundary losses','Volumic losses');
-			print_jd(p_opt,[simul_id,'_RippleLosses_profile'],'.');
-			%
-			figure(8),clf,set(8,'Name',['Cones angles - ',dke_out.simul.id])
-			[ax] = graph1D_jd(xrho,Zmripple.xthetabanana,0,0,'\rho','Angle (Deg.)',subtitle,NaN,[0,1],[0,60],style,marker1,color2,width2,siz,gca,red,lspace,bspace);hold on
-			[ax] = graph1D_jd(xrho,Zmripple.xthetaloss,0,0,'\rho','Angle (Deg.)',subtitle,NaN,[0,1],[0,60],style,marker1,color3,width2,siz,gca,red,lspace,bspace);hold on
-			legend('Banana cone angle','Loss cone angle');
-			print_jd(p_opt,[simul_id,'_RippleConeAngles_profile'],'.');
-			%
-			ylab1 = 'p/p_{Te}';
-    		ylab2 = 'p/p_{Te(loc.)}';
-    		ytick = [0:2:10];
-    		ylim1 = [0,10];
-    		ylim2 = [0,40];
-			figure(9),clf,set(9,'Name',['Collision detrapping threshold - ',dke_out.simul.id])
-			[ax] = graph1D_jd(xrho,Zmripple.xpndetrap,0,0,'\rho','',subtitle,NaN,[0,1],'',style,marker1,color2,width2,siz,gca,red,lspace,bspace);hold on
-			[ax] = graph1D_jd(xrho,Zmripple.xpnth,0,0,'\rho','',subtitle,NaN,[0,1],'',style,marker1,color3,width2,siz,gca,red,lspace,bspace);hold on
-			[ax] = graph1D2jd(xrho,Zmripple.xpnth,xrho,Zmripple.xpndetrap./Zmripple.xpnth,xlab,ylab1,ylab2,tit,xlim,ylim1,ylim2,style,marker1,color3,width2,style,marker1,color4,width2,siz,red,lspace2,bspace);
-  			set(gca,'ytick',ytick);
-			legend('p_{c}/p_{Te}','p_{Te(loc.)}/p_{Te}','p_{c}/p_{Te(loc.)}');
-			print_jd(p_opt,[simul_id,'_RippleDetrapping_profile'],'.');
-		end  
-	end
 else
     %
-    disp(['normalized current: ',num2str(Zcurr.x_0_fsav)])
-    disp(['normalized RF power: ',num2str(ZP0.x_rf_fsav)])
-    disp(['normalized Ohmic power: ',num2str(ZP0.x_e_fsav)])
-    disp(['normalized Total power: ',num2str(ZP0.x_e_fsav+ZP0.x_rf_fsav)])
-    disp(['normalized CD efficiency: ',num2str(Zcurr.x_0_fsav./(ZP0.x_e_fsav+ZP0.x_rf_fsav))])
+    if ir_display >= 0,
+        %
+        disp(['normalized current: ',num2str(Zcurr.x_0_fsav)])
+        disp(['normalized RF power: ',num2str(ZP0.x_rf_fsav)])
+        disp(['normalized Ohmic power: ',num2str(ZP0.x_e_fsav)])
+        disp(['normalized Total power: ',num2str(ZP0.x_e_fsav+ZP0.x_rf_fsav)])
+        disp(['normalized CD efficiency: ',num2str(Zcurr.x_0_fsav./(ZP0.x_e_fsav+ZP0.x_rf_fsav))])
+        %
+        diary off
+        %
+    end
     %
 end
 %
@@ -492,8 +864,6 @@ if ir_display > 0 && ir_display <= nr,
     %
     print_jd(p_opt,[simul_id,'_F0pFM_1D_',tir_display],'.');
 end
-%
-diary off
 %
 
 
