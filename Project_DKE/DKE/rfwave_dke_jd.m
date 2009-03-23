@@ -10,7 +10,7 @@ function [waveparam,xyprop_dke_rf,xyP0_2piRp_in_rf,yb_rf,yP0_2piRp,xys_rf] = rfw
 %
 %by J.Decker MIT/RLE <jodecker@mit.edu> and Y.Peysson CEA/DRFC <yves.peysson@cea.fr> 04/29/2003
 %
-[qe,me] = pc_dke_yp;
+[qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;
 %
 %dke_mode = dkeparam.dke_mode;
 n_rf_list = dkeparam.n_rf_list;
@@ -207,6 +207,7 @@ for iw = 1:length(waves),%
         somega_ce = qe*ray.sB/me;
         sy = somega_ce./omega_rf;
 		sNpar = real(ray.sNpar);
+        sbetath = sqrt(ray.sTe/mc2);
         %
 		snres = zeros(1,length(sy));
 		%
@@ -215,16 +216,36 @@ for iw = 1:length(waves),%
 		%
 		syn = snres.*sy;
 		%
-        sdNparmindpparmin = abs((syn + sNpar.^2 - 1)./(1 - syn))*mksa.betath_ref;
+        spparmin = abs((abs(sNpar).*syn - sqrt(syn.^2 + sNpar.^2 - 1))./(1 - sNpar.^2))./sbetath;
+        spparmin1 = abs(1 - syn.^2)./(2*sbetath.*syn);
+        spparmin(sNpar == 1) = spparmin1(sNpar == 1);
         %
-        sdNparmindpparmin = min([sdNparmindpparmin;abs(sNpar)]);
+        spparmax = (abs(sNpar).*syn + sqrt(syn.^2 + sNpar.^2 - 1))./(1 - sNpar.^2)./sbetath;
+        spparmax(sNpar >= 1) = Inf;
+        %
+        spparmax(spparmax > spparmin + 1) = spparmin(spparmax > spparmin + 1) + 1;
+        %
+        sgammamin = sqrt(1 + sbetath.^2.*spparmin.^2);
+        sgammamax = sqrt(1 + sbetath.^2.*spparmax.^2);
+        %
+        sdNpardpparmin = sbetath.*abs(sNpar).*sqrt(2.*sgammamin.*syn - 1 - sgammamin.^2.*(1 - sNpar.^2))./sgammamin./abs(sgammamin - syn);
+        sdNpardpparmax = sbetath.*abs(sNpar).*sqrt(2.*sgammamax.*syn - 1 - sgammamax.^2.*(1 - sNpar.^2))./sgammamax./abs(sgammamax - syn);
+        %
+        if any(imag([sdNpardpparmin,sdNpardpparmax]) ~= 0),
+            info_dke_yp(2,['WARNING: imaginary dnparmin found']);
+        end
+        %    
+        sdNparmindpparmin = min([sdNpardpparmin;sdNpardpparmax]);
         %
         sdNparmin = sdNparmindpparmin*npresmin*dkeparam.pnmax_S/dkeparam.np_S;
+        %
+        sdNparmin = min([sdNparmin;abs(sNpar)]);
         %
         smaskmin = imag(ray.sdNpar) == 0 & ray.sdNpar < sdNparmin;
         %
         if any(smaskmin),
-            info_dke_yp(2,['WARNING: wave #',num2str(iw),' ray #',num2str(iray),': dNpar increased for ',num2str(sum(smaskmin)),'/',num2str(length(smaskmin)),' data points for numerical stability. Average increase factor : ',num2str(mean(sdNparmin(smaskmin)./ray.sdNpar(smaskmin)))]);
+            info_dke_yp(2,['WARNING: wave #',num2str(iw),' ray #',num2str(iray),' dNpar increased for ',num2str(sum(smaskmin)),'/',num2str(length(smaskmin)),' data points for numerical stability.']);
+            info_dke_yp(4,['Average increase factor : ',num2str(mean(sdNparmin(smaskmin)./ray.sdNpar(smaskmin))),'; Max dNpar value, old : ',num2str(max(ray.sdNpar)),' , new : ',num2str(max(sdNparmin(smaskmin)))]);
             ray.sdNpar(smaskmin) = sdNparmin(smaskmin);
         end
         %
