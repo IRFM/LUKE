@@ -307,7 +307,7 @@ while isel >= 0,
             disp('************** LOAD DATA FILE **************')
             disp('');
             %
-            [data_file,data_path] = igetfile_jd(opt_gui,{'LUKE_DATA_*.mat';'LUKE_RESULTS_*.mat','last_luke@'},'Please select a LUKE data file');
+            [data_file,data_path] = igetfile_jd(opt_gui,{'LUKE_DATA_*.mat';'LUKE_RESULTS_*.mat';'last_luke@'},'Please select a LUKE data file');
             %
             if data_file == 0,
                 disp('-----> No LUKE data file specified.');
