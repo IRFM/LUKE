@@ -753,7 +753,7 @@ else
         end
     end
     %
-    if it_f == nit_f,info_dke_yp(2,['WARNING: convergence not achieved for f0 after ',int2str(nit_f),' iterations. Time step too small !']);end
+    if it_f == nit_f && prec0_f > 0,info_dke_yp(2,['WARNING: convergence not achieved for f0 after ',int2str(nit_f),' iterations. Time step too small !']);end
     %
 end
 %
