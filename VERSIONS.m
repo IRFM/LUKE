@@ -1484,3 +1484,99 @@
 % 
 % many files added for LUKE tutorial
 %
+% ----------------------------------------------------------------------------------------------------
+% 
+% LUKE Release 1.7
+% 
+% Main changes include:
+% 
+% - operator splitting option
+% - minimum dnpar calculation improved
+% - display of results extended
+% - script generation
+% 
+% ====> LUKE
+%
+% U install_doc_LUKE.m (confirmation des parties développement)
+% U make_path_LOCAL.m (diverses mises à jour)
+%
+% ====> LUKE/Project_DKE/Database/
+%
+% U DKEPARAM_files/make_dkeparam_UNIFORM10010020.m (operator splitting)
+% U DKEPARAM_files/make_dkeparam_LH_RT.m (")
+% U DKEPARAM_files/make_dkeparam_EC_RT.m (")
+% U DKEPARAM_files/make_dkeparam_NONUNIFORM10010020.m (")
+% U EXTERNAL_files/load_externaldata_TCV.m (data from file and script generation)
+% A HXR_files/make_hxr_TCV.m (added for example)
+% A HXR_files/make_pileup_TCV.m (")
+%
+% ====> LUKE/Project_DKE/Display/
+%
+% A imake_makeequil_EFIT_jd.m (script generation)
+% A imake_makeexternal_TCV_jd.m (")
+% A imake_makewave_jd.m (")
+% U irunluke_jd.m (read cronos data)
+% U imake_wave_jd.m (interpolation method and script generation)
+% U imake_launch_angles_TCV_jd.m (small correction)
+% U irunhxr_jd.m (experimental data correction)
+% U imake_rundke_jd.m (script name)
+% U iputfile_jd.m (.m case)
+% U iload_externaldata_jd.m (OK for JET)
+%
+% ====> LUKE/Project_DKE/DKE/
+%
+% U load_structures_yp.m (external and angle structures)
+% U proc_luke_jd.m (extensive improvements, wave specific data)
+% U solver_dke_yp.m (operator-splitting option)
+% U fpengine_dke_yp.m (")
+% U matrixcalc_dke_yp.m (cross derivatives test)
+% U optgrid_dke_jd.m (wave choice in grid calculation)
+% U run_lukert.m (")
+% U main_dke_yp.m (small correction)
+% U rfwave_dke_jd.m (minimum dnpar calculation)
+% U rfdiff_dke_jd.m (correction on accessibility limit and trapped particles mask)
+% U fmoments_dke_yp.m (small correction)
+% U radialgrid_dke_jd.m (rho grid from psi grid)
+% U LUKEversion_jd.m (luke 1.7)
+%
+% ====> LUKE/Project_DKE/Modules/Cronos/
+% 
+% U Project_DKE/Modules/Cronos/make_dkeparam_cronos.m (for fce calculations)
+% U Project_DKE/Modules/Cronos/make_wavert_cronos.m (")
+% U Project_DKE/Modules/Cronos/zstarwars.m (")
+% U Project_DKE/Modules/Cronos/make_wavelaunchs_cronos_lh.m (as_dnpar as cronos parameter)
+%
+% ====> LUKE/Project_DKE/Modules/EFIT/
+%
+% U eqdsk_jd.m (display mode)
+%
+% ====> LUKE/Project_DKE/Modules/Helena/
+%
+% U MEX/Source/separatrice_32b.f (retrait nag)
+% U MEX/Source/separatrice_64b.f (")
+%
+% ====> LUKE/Project_DKE/Modules/RT/
+%
+% U main_C3PO_jd.m (smoothing for rays near center)
+% U make_beam_wave_jd.m (")
+% % 
+% ====> LUKE/Project_DKE/Packages/MUMPS
+%
+% U MUMPSMEX_dke_yp.m (operator-splitting option)
+%
+% ====> LUKE/Project_DKE/Packages/MDCE
+%
+% U run_mdce.m (small correction)
+%
+% ====> LUKE/Tools
+%
+% U graph1D_jd.m (error bars)
+% U input_dke_yp.m (small correction)
+% U radialdampingprofile_jd.m (input grid)
+% 
+% ====> LUKE/Simulations/Benchmarks
+%
+% U run_all_benchmarks.m (add operator splitting)
+% U TScyl/LH_Karney/rundke_D0.m (cross derivatives test)
+% A TScyl/LH_karney_3D_splitting/rundke.m (operator splitting test)
+%
