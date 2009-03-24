@@ -9,18 +9,17 @@ warning off
 global nfig
 %
 opt_proc = 0;%test for numerical performance test with number of processors 
+Dr0 = 1;
 %
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
-id_simul = 'LH_karney_3D_splitting';%Simulation ID
+id_simul = ['LH_karney_3D_splitting_',num2str(Dr0)];%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
 %rho_S = [0,0.05:0.02:0.2,0.22:0.03:0.6,0.62:0.05:0.95,1];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 rho_S = [0:0.025:0.65,0.7:0.1:1];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
-%rho_S = [0:0.1:0.65,0.7:0.1:1];
-
 %
 id_path = '';%For all paths used by DKE solver
 path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
@@ -100,291 +99,60 @@ dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, t
 %
 waves{1} = make_idealLHwave_jd(equil,wavestruct);
 %
-% Dpsipsi scan (0 -> 100 m2/s)
-%
-dkeparam.coll_mode = 2;%Pb with option 1 (high velicity limit)
-dkeparam.prec0_f = NaN;
+dkeparam.prec0_f = -1;
 dkedisplay.display_mode = 0;%If -1, only the radius at which the residu is the largest is displayed
 %
+tfinal = 5000;
 dtn_list = [1,10,100,1000];
+nit_f = tfinal./dtn_list;
+coll_mode_list = 0;%[0,2];
+optsplit_list = [0,1];
 %
-normf0_0 = NaN(2,3,length(rho_S)-1,dtn_list(end) + 100,length(dtn_list));
-curr0_0 = NaN(2,3,length(rho_S)-1,dtn_list(end) + 100,length(dtn_list));
-residu_0 = NaN(2,3,length(rho_S)-1,dtn_list(end) + 100,length(dtn_list));
-normf0_10 = NaN(2,3,length(rho_S)-1,dtn_list(end) + 100,length(dtn_list));
-curr0_10 = NaN(2,3,length(rho_S)-1,dtn_list(end) + 100,length(dtn_list));
-residu_10 = NaN(2,3,length(rho_S)-1,dtn_list(end) + 100,length(dtn_list));
+ncoll = length(coll_mode_list);
+nopt = length(optsplit_list);
+ndtn = length(dtn_list);
+nit_max = max(nit_f);
+nr = length(rho_S) - 1;
 %
-for coll_mode = [1,3],
-	for optsplit = 1:2,
-    	for jdtn = 1:length(dtn_list),
+normf0_0 = NaN(nr,nit_max + 1,ndtn,nopt,ncoll);
+curr0_0 = NaN(nr,nit_max + 1,ndtn,nopt,ncoll);
+residu_0 = NaN(nr,nit_max,ndtn,nopt,ncoll);
+%
+normf0_Dr0 = NaN(nr,nit_max + 1,ndtn,nopt,ncoll);
+curr0_Dr0 = NaN(nr,nit_max + 1,ndtn,nopt,ncoll);
+residu_Dr0 = NaN(nr,nit_max,ndtn,nopt,ncoll);
+%
+for icoll = 1:ncoll,
+	for iopt = 1:nopt,
+    	for idtn = ndtn:-1:1,
     		%
-    		dkeparam.coll_mode = coll_mode-1;
-        	dkeparam.opsplit = optsplit - 1;
-        	dkeparam.nit_f= dtn_list(end)/dtn_list(jdtn) + 100;
-        	dkeparam.dtn = dtn_list(jdtn);
+    		dkeparam.coll_mode = coll_mode_list(icoll);
+        	dkeparam.opsplit = optsplit_list(iopt);
+        	dkeparam.nit_f = nit_f(idtn);
+        	dkeparam.dtn = dtn_list(idtn);
         	%
-        	transpfaste.Dr0 = [0];
+        	%transpfaste.Dr0 = 0;
+        	%[Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+        	%
+        	%normf0_0(:,1:nit_f(idtn) + 1,idtn,iopt,icoll) = dke_out.normf0;
+        	%curr0_0(:,1:nit_f(idtn) + 1,idtn,iopt,icoll) = dke_out.curr0;
+        	%residu_0(:,1:nit_f(idtn),idtn,iopt,icoll) = dke_out.residu_f;
+        	%
+        	transpfaste.Dr0 = Dr0;
         	[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
         	%
-        	normf0_0(optsplit,coll_mode,1:size(dke_out.normf0,1),1:size(dke_out.normf0,2),jdtn) = dke_out.normf0;
-        	curr0_0(optsplit,coll_mode,1:size(dke_out.curr0,1),1:size(dke_out.curr0,2),jdtn) = dke_out.curr0;
-        	residu_0(optsplit,coll_mode,1:size(dke_out.residu_f,1),1:size(dke_out.residu_f,2),jdtn) = dke_out.residu_f;
-        	%
-        	transpfaste.Dr0 = [10];
-        	[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-        	%
-        	normf0_10(optsplit,coll_mode,1:size(dke_out.normf0,1),1:size(dke_out.normf0,2),jdtn) = dke_out.normf0;
-        	curr0_10(optsplit,coll_mode,1:size(dke_out.curr0,1),1:size(dke_out.curr0,2),jdtn) = dke_out.curr0;
-        	residu_10(optsplit,coll_mode,1:size(dke_out.residu_f,1),1:size(dke_out.residu_f,2),jdtn) = dke_out.residu_f;
+        	normf0_Dr0(:,1:nit_f(idtn) + 1,idtn,iopt,icoll) = dke_out.normf0;
+        	curr0_Dr0(:,1:nit_f(idtn) + 1,idtn,iopt,icoll) = dke_out.curr0;
+        	residu_Dr0(:,1:nit_f(idtn),idtn,iopt,icoll) = dke_out.residu_f;
       		%
-        	disp(['- opsplit: ',int2str(dkeparam.opsplit),',dtn: ',int2str(dtn_list(jdtn)),' done.'])
+        	disp(['- collmode: ',int2str(dkeparam.coll_mode),',- opsplit: ',int2str(dkeparam.opsplit),',dtn: ',int2str(dtn_list(idtn)),' done.'])
     	end
 	end
 end
 %
-save test_operator_splitting.mat
-%
 %************************************************************************************************************************************
 %
-% coll_mode = 0
-%
-figure(1),semilogy([1:1100]*1,squeeze(normf0_0(1,1,10,1:1100,1)),'r'),hold on
-figure(1),semilogy([1:200]*10,squeeze(normf0_0(1,1,10,1:200,2)),'r-.')
-figure(1),semilogy([1:110]*100,squeeze(normf0_0(1,1,10,1:110,3)),'r:')
-figure(1),semilogy([1:100]*1000,squeeze(normf0_0(1,1,10,1:100,4)),'r*')
-%
-figure(2),semilogy([1:1100]*1,squeeze(normf0_0(2,1,10,1:1100,1)),'r'),hold on
-figure(2),semilogy([1:200]*10,squeeze(normf0_0(2,1,10,1:200,2)),'r-.')
-figure(2),semilogy([1:110]*100,squeeze(normf0_0(2,1,10,1:110,3)),'r:')
-figure(2),semilogy([1:100]*1000,squeeze(normf0_0(2,1,10,2:100,4)),'r*')
-%
-figure(3),semilogy([1:1100]*1,squeeze(curr0_0(1,1,10,1:1100,1)),'b'),hold on
-figure(3),semilogy([1:200]*10,squeeze(curr0_0(1,1,10,1:200,2)),'b-.')
-figure(3),semilogy([1:110]*100,squeeze(curr0_0(1,1,10,1:110,3)),'b:')
-figure(3),semilogy([1:100]*1000,squeeze(curr0_0(1,1,10,2:100,4)),'b*')
-%
-figure(4),semilogy([1:1100]*1,squeeze(curr0_0(2,1,10,1:1100,1)),'b'),hold on
-figure(4),semilogy([1:200]*10,squeeze(curr0_0(2,1,10,1:200,2)),'b-.')
-figure(4),semilogy([1:110]*100,squeeze(curr0_0(2,1,10,1:110,3)),'b:')
-figure(4),semilogy([1:100]*1000,squeeze(curr0_0(2,1,10,2:100,4)),'b*')
-%
-figure(5),semilogy([1:1100]*1,squeeze(normf0_10(1,1,10,1:1100,1)),'r'),hold on
-figure(5),semilogy([1:200]*10,squeeze(normf0_10(1,1,10,1:200,2)),'r-.')
-figure(5),semilogy([1:110]*100,squeeze(normf0_10(1,1,10,1:110,3)),'r:')
-figure(5),semilogy([1:100]*1000,squeeze(normf0_10(1,1,10,2:100,4)),'r*')
-%
-figure(6),semilogy([1:1100]*1,squeeze(normf0_10(2,1,10,1:1100,1)),'r'),hold on
-figure(6),semilogy([1:200]*10,squeeze(normf0_10(2,1,10,1:200,2)),'r-.')
-figure(6),semilogy([1:110]*100,squeeze(normf0_10(2,1,10,1:110,3)),'r:')
-figure(6),semilogy([1:100]*1000,squeeze(normf0_10(2,1,10,2:100,4)),'r*')
-%
-figure(7),semilogy([1:1100]*1,squeeze(curr0_10(1,1,10,1:1100,1)),'b'),hold on
-figure(7),semilogy([1:200]*10,squeeze(curr0_10(1,1,10,1:200,2)),'b-.')
-figure(7),semilogy([1:110]*100,squeeze(curr0_10(1,1,10,1:110,3)),'b:')
-figure(7),semilogy([1:100]*1000,squeeze(curr0_10(1,1,10,2:100,4)),'b*')
-%
-figure(8),semilogy([1:1100]*1,squeeze(curr0_10(2,1,10,1:1100,1)),'b'),hold on
-figure(8),semilogy([1:200]*10,squeeze(curr0_10(2,1,10,1:200,2)),'b-.')
-figure(8),semilogy([1:110]*100,squeeze(curr0_10(2,1,10,1:110,3)),'b:')
-figure(8),semilogy([1:100]*1000,squeeze(curr0_10(2,1,10,2:100,4)),'b*')
-%
-% coll_mode = 2
-%
-figure(9),semilogy([1:1100]*1,squeeze(normf0_0(1,3,10,1:1100,1)),'r'),hold on
-figure(9),semilogy([1:200]*10,squeeze(normf0_0(1,3,10,1:200,2)),'r-.')
-figure(9),semilogy([1:110]*100,squeeze(normf0_0(1,3,10,1:110,3)),'r:')
-figure(9),semilogy([1:100]*1000,squeeze(normf0_0(1,3,10,1:100,4)),'r*')
-%
-figure(10),semilogy([1:1100]*1,squeeze(normf0_0(2,3,10,1:1100,1)),'r'),hold on
-figure(10),semilogy([1:200]*10,squeeze(normf0_0(2,3,10,1:200,2)),'r-.')
-figure(10),semilogy([1:110]*100,squeeze(normf0_0(2,3,10,1:110,3)),'r:')
-figure(10),semilogy([1:100]*1000,squeeze(normf0_0(2,3,10,2:100,4)),'r*')
-%
-figure(11),semilogy([1:1100]*1,squeeze(curr0_0(1,3,10,1:1100,1)),'b'),hold on
-figure(11),semilogy([1:200]*10,squeeze(curr0_0(1,3,10,1:200,2)),'b-.')
-figure(11),semilogy([1:110]*100,squeeze(curr0_0(1,3,10,1:110,3)),'b:')
-figure(11),semilogy([1:100]*1000,squeeze(curr0_0(1,3,10,2:100,4)),'b*')
-%
-figure(12),semilogy([1:1100]*1,squeeze(curr0_0(2,3,10,1:1100,1)),'b'),hold on
-figure(12),semilogy([1:200]*10,squeeze(curr0_0(2,3,10,1:200,2)),'b-.')
-figure(12),semilogy([1:110]*100,squeeze(curr0_0(2,3,10,1:110,3)),'b:')
-figure(12),semilogy([1:100]*1000,squeeze(curr0_0(2,3,10,2:100,4)),'b*')
-%
-figure(13),semilogy([1:1100]*1,squeeze(normf0_10(1,3,10,1:1100,1)),'r'),hold on
-figure(13),semilogy([1:200]*10,squeeze(normf0_10(1,3,10,1:200,2)),'r-.')
-figure(13),semilogy([1:110]*100,squeeze(normf0_10(1,3,10,1:110,3)),'r:')
-figure(13),semilogy([1:100]*1000,squeeze(normf0_10(1,3,10,2:100,4)),'r*')
-%
-figure(14),semilogy([1:1100]*1,squeeze(normf0_10(2,3,10,1:1100,1)),'r'),hold on
-figure(14),semilogy([1:200]*10,squeeze(normf0_10(2,3,10,1:200,2)),'r-.')
-figure(14),semilogy([1:110]*100,squeeze(normf0_10(2,3,10,1:110,3)),'r:')
-figure(14),semilogy([1:100]*1000,squeeze(normf0_10(2,3,10,2:100,4)),'r*')
-%
-figure(15),semilogy([1:1100]*1,squeeze(curr0_10(1,3,10,1:1100,1)),'b'),hold on
-figure(15),semilogy([1:200]*10,squeeze(curr0_10(1,3,10,1:200,2)),'b-.')
-figure(15),semilogy([1:110]*100,squeeze(curr0_10(1,3,10,1:110,3)),'b:')
-figure(15),semilogy([1:100]*1000,squeeze(curr0_10(1,3,10,2:100,4)),'b*')
-%
-figure(16),semilogy([1:1100]*1,squeeze(curr0_10(2,3,10,1:1100,1)),'b'),hold on
-figure(16),semilogy([1:200]*10,squeeze(curr0_10(2,3,10,1:200,2)),'b-.')
-figure(16),semilogy([1:110]*100,squeeze(curr0_10(2,3,10,1:110,3)),'b:')
-figure(16),semilogy([1:100]*1000,squeeze(curr0_10(2,3,10,2:100,4)),'b*')
-%
-
-
-
-
-
-
-
-
-
-
-
-return
-
-for iDr0 = 1:length(Dr0_mask),
-    leg{iDr0} = ['D_{\psi\psi} = ',num2str(Dr0_list(Dr0_mask(iDr0))),' m^{2}/s'];
-end
-%
-figure(1),clf
-%
-xlim = [0,1];
-ylim = [0,0.004];
-xlab = 'r/a_p';
-ylab = 'j';
-tit = '';
-%
-%for iDr0 = 1:length(Dr0_list) - 1, 
-%    graph1D_jd(equilDKE.xrho,j(:,iDr0),i,0,0,'','','',NaN,xlim,ylim,'-','none',NaN,2,20,gca);
-%end
-graph1D_jd(equilDKE.xrho,j(:,Dr0_mask),0,0,xlab,ylab,tit,leg,xlim,ylim,'-','none',NaN,2,20,gca,0.9,0.7,0.7);
-graph1D_jd(equilDKE.xrho,besselj(0,2.4*equilDKE.xrho)*j(1,Dr0_mask(end)),0,0,'','','',NaN,xlim,ylim,'--','none','k',2,20);
-%
-set(gca,'ytick',[0:0.25:1]*ylim(2))
-set(gca,'xtick',[0:0.2:1]*xlim(2))
-
-return
-
-%
-figure(2),clf
-%
-xlim = [0.01,100];
-ylim = [0,200];
-xlab = 'D_{\psi\psi} (m^{2}/s)';
-ylab = 'CPU time (s)';
-tit = '';
-%
-graph1D_jd(Dr0_list(2:end),tCPU(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-%
-set(gca,'ytick',[0:0.2:1]*ylim(2))
-set(gca,'xtick',[0.01,0.1,1,10,100])
-set(gca,'XMinorGrid','off')
-set(gca,'XMinorTick','on')
-%
-figure(3),clf
-%
-xlim = [0.01,100];
-ylim = [0,200];
-xlab = 'D_{\psi\psi} (m^{2}/s)';
-ylab = 'FPE calculation time (s)';
-tit = '';
-%
-graph1D_jd(Dr0_list(2:end),tDKE(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-%
-set(gca,'ytick',[0:0.2:1]*ylim(2))
-set(gca,'xtick',[0.01,0.1,1,10,100])
-set(gca,'XMinorGrid','off')
-set(gca,'XMinorTick','on')
-%
-figure(4),clf
-%
-xlim = [0.01,100];
-ylim = NaN;%[0,200];
-xlab = 'D_{\psi\psi} (m^{2}/s)';
-ylab = 'LU matrix size (MBytes)';
-tit = '';
-%
-graph1D_jd(Dr0_list(2:end),memory(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-%
-%set(gca,'ytick',[0:0.2:1]*ylim(2))
-set(gca,'xtick',[0.01,0.1,1,10,100])
-set(gca,'XMinorGrid','off')
-set(gca,'XMinorTick','on')
-%
-figure(5),clf
-%
-xlim = [0.01,100];
-ylim = [0,0.06];
-xlab = 'D_{\psi\psi} (m^{2}/s)';
-ylab = 'I (MA)';
-tit = '';
-%
-graph1D_jd(Dr0_list(2:end),-Itot(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-%
-set(gca,'ytick',[0:0.25:1]*ylim(2))
-set(gca,'xtick',[0.01,0.1,1,10,100])
-set(gca,'XMinorGrid','off')
-set(gca,'XMinorTick','on')
-%
-figure(6),clf
-%
-xlim = [0.01,100];
-ylim = [0,0.004];
-xlab = 'D_{\psi\psi} (m^{2}/s)';
-ylab = 'P/(2\piR_p) (MW/m)';
-tit = '';
-%
-graph1D_jd(Dr0_list(2:end),Ptot_2piRp(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-%
-set(gca,'ytick',[0:0.25:1]*ylim(2))
-set(gca,'xtick',[0.01,0.1,1,10,100])
-set(gca,'XMinorGrid','off')
-set(gca,'XMinorTick','on')
-%
-figure(7),clf
-%
-xlim = [0.01,100];
-ylim = [0,6];
-xlab = 'D_{\psi\psi} (m^{2}/s)';
-ylab = 'n_{19}IR_p/P';
-tit = '';
-%
-graph1D_jd(Dr0_list(2:end),-Eta(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-%
-set(gca,'ytick',[0:0.25:1]*ylim(2))
-set(gca,'xtick',[0.01,0.1,1,10,100])
-set(gca,'XMinorGrid','off')
-set(gca,'XMinorTick','on')
-%
-print_jd(2,'fig_transp_nobounce_j','.',1)
-print_jd(2,'fig_transp_nobounce_cpu','.',2)
-print_jd(2,'fig_transp_nobounce_fpe','.',3)
-print_jd(2,'fig_transp_nobounce_memory','.',4)
-print_jd(2,'fig_transp_nobounce_I','.',5)
-print_jd(2,'fig_transp_nobounce_P','.',6)
-print_jd(2,'fig_transp_nobounce_Eta','.',7)
-%
-if opt_proc > 0 & strcmp(computer,'GLNXA64'), 
-    %
-    figure(8),clf
-    %
-    xlim = [0:10];
-    ylim = NaN;%[0,0.1];
-    xlab = 'D_{\psi\psi} (m^{2}/s)';
-    ylab = 'Number of processors';
-    tit = '';
-    %
-    graph1D_jd(nproc_list,tCPU_nproc,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-    %
-    set(gca,'ytick',[0:0.2:1]*ylim(2))
-    set(gca,'xtick',[0:0.2:1]*xlim(2))
-    %
-    print_jd(2,'fig_transp_nobounce_cpu_proc','.',8)
-    %
-end
-%
-%************************************************************************************************************************************
 eval(['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
 info_dke_yp(2,['Data saved in ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
+%
+proc_rundke_splitting
