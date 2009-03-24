@@ -1559,7 +1559,12 @@
 %
 % U main_C3PO_jd.m (smoothing for rays near center)
 % U make_beam_wave_jd.m (")
-% % 
+%
+%
+% ====> LUKE/Project_DKE/Modules/R2D2/MEX/Source
+% 
+% U R2D2f.f (to avoid compilation problems)
+%
 % ====> LUKE/Project_DKE/Packages/MUMPS
 %
 % U MUMPSMEX_dke_yp.m (operator-splitting option)
@@ -1579,4 +1584,5 @@
 % U run_all_benchmarks.m (add operator splitting)
 % U TScyl/LH_Karney/rundke_D0.m (cross derivatives test)
 % A TScyl/LH_karney_3D_splitting/rundke.m (operator splitting test)
+% A TScyl/LH_karney_3D_splitting/proc_rundke_splitting.m (")
 %
