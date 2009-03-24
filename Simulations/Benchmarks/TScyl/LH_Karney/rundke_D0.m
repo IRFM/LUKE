@@ -273,9 +273,9 @@ print_jd(2,'fig_j_D0','.',1)
 print_jd(2,'fig_P_D0','.',2)
 print_jd(2,'fig_eta_D0','.',3)
 %
-print_jd(2,'fig_j_D0','.',4)
-print_jd(2,'fig_P_D0','.',5)
-print_jd(2,'fig_eta_D0','.',6)
+print_jd(2,'fig_j_D0_oldcross','.',4)
+print_jd(2,'fig_P_D0_oldcross','.',5)
+print_jd(2,'fig_eta_D0_oldcross','.',6)
 
 %
 %************************************************************************************************************************************
