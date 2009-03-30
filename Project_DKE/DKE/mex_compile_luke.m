@@ -37,7 +37,7 @@ if force_compile == 0,
     filetime.raytracing_yp.source(6) = gettime_jd('bessel_IJK_jd.h',sourcepath.DKE,1); 
     %
     filetime.erfcc.mex = gettime_jd(['erfcc_mex_jd.',mexext],mexpath,0); 
-    filetime.erfcc.source(1) = gettime_jd('erfcc_mex_jd.f',sourcepath.C3PO,1); 
+    filetime.erfcc.source(1) = gettime_jd('erfcc_mex_jd.F',sourcepath.C3PO,1); 
     filetime.erfcc.source(2) = gettime_jd('erfcc.f',sourcepath.C3PO,1); 
     %
 end 
@@ -102,7 +102,7 @@ end
 %
 if force_compile || any(filetime.erfcc.source > filetime.erfcc.mex),
     eval(['mex -c ',fopts,' ',sourcepath.C3PO,'erfcc.f']);
-    eval(['mex ',fopts,' ',sourcepath.C3PO,'erfcc_mex_jd.f erfcc.',objext]);
+    eval(['mex ',fopts,' ',sourcepath.C3PO,'erfcc_mex_jd.F erfcc.',objext]);
     disp(['The erfcc_mex_jd.',mexext,' mexfile has been compiled.'])
 end
 %
