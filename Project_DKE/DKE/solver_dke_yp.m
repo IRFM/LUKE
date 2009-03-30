@@ -212,6 +212,7 @@ elseif dkeparam.dtn < 0,
 end 
 %
 if isempty(MMXR_f_t) == 0, radial_mode = 1;else radial_mode = 0;end
+if ~isfield(dkeparam,'opsplit'),dkeparam.opsplit = 0;end
 %
 spparms('default');%Set parameters for sparse matrix ordering algorithms and direct linear equation solver MatLab build-in functions only
 spparms('supernd',4);%Set parameters for sparse matrix ordering algorithms and direct linear equation solver MatLab build-in functions only
@@ -231,7 +232,6 @@ if display_mode >=1,
     elseif (dkeparam.invproc ==- 2),  disp('   - MUMPSMEX incomplete LU matrix factorization');        
     elseif (dkeparam.invproc < -1 & dkeparam.invproc ~=- 2),  disp('   - Direct matrix inversion by external solvers');end
 %Operator splitting
-    if ~isfield(dkeparam,'opsplit'),dkeparam.opsplit = 0;end
     if (dkeparam.opsplit == 1),       disp('   - Operator splitting between momentum and radial dynamics.');
     elseif (dkeparam.opsplit == 0),       disp('   - No operator splitting between momentum and radial dynamics.');end
 %Numerical matrix inversion procedure
