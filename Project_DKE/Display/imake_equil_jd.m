@@ -144,8 +144,6 @@ elseif i_opt == 1, % use data from an existing equilibrium file
             return
         end
         %
-        Zeff = input_dke_yp('No measure of Zeff is available. Please provide an estimated value for Zeff',1,[1;6],'',[1,1]);
-        %
         e_opt = -2;% AMR equilibrium
         n_opt = 0;
         %
@@ -408,7 +406,7 @@ elseif e_opt == -1,% (R,Z) to (psi,theta) conversion specific to eqdsk
     %
 elseif e_opt == -2,% AMR equilibrium
     %
-    [equil_magnetic,equil_prof] = make_equil_AMR_jd(amr_psi_path,shotnum,shotime,Zeff,display_mode,p_opt,dispname,savename,np,nt);
+    [equil_magnetic,equil_prof] = make_equil_AMR_jd(amr_psi_path,shotnum,shotime,display_mode,p_opt,dispname,savename,np,nt);
     %
 elseif e_opt == -3,% standard rz -> pt transformation needed
     %

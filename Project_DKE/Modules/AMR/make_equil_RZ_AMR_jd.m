@@ -31,6 +31,7 @@ ptR = equil.ptx + equil_RZ.Rp;
 R = ptR(:,1);
 pTe = equil.pTe.';
 pne = equil.pne.';
+pZeff = sum(equil.pzni.*repmat(equil.zZi.',[1,length(pne)]).^2,1)./pne;
 %
 Psi = equil.psi_apRp.'*equil_RZ.Rp/equil_RZ.ap;
 F =  - equil.ptBPHI(:,1).*R;
@@ -44,6 +45,7 @@ values = [equil_RZ.Rp;equil_RZ.Zp;Psi(end);ptR(end,(nt+1)/2);ptR(end,1)];
 save([savepath,'m_profs_',id,'_R.dat'],'R','-ascii');
 save([savepath,'m_profs_',id,'_Te.dat'],'pTe','-ascii');
 save([savepath,'m_profs_',id,'_ne.dat'],'pne','-ascii');
+save([savepath,'m_profs_',id,'_Zeff.dat'],'pZeff','-ascii');
 %
 save([savepath,'m_equil_',id,'_R.dat'],'xyR','-ascii');
 save([savepath,'m_equil_',id,'_Z.dat'],'xyZ','-ascii');

@@ -1,4 +1,4 @@
-function [equil_magnetic,equil_prof,equil_RZ] = make_equil_AMR_jd(equil_path,shotnum,shotime,Zeff,display_mode,p_opt,dispname,savename,np,nt,method)%,Ns,nx
+function [equil_magnetic,equil_prof,equil_RZ] = make_equil_AMR_jd(equil_path,shotnum,shotime,display_mode,p_opt,dispname,savename,np,nt,method)%,Ns,nx
 %
 %
 % This function reads and returns the magnetic equilibrium parameters from 
@@ -74,6 +74,7 @@ filename_values = ['m_equil_',shotnum,'_',shotime,'_values.dat'];
 filename_psi = ['m_profs_',shotnum,'_',shotime,'_Psi.dat'];
 filename_Te = ['m_profs_',shotnum,'_',shotime,'_Te.dat'];
 filename_ne = ['m_profs_',shotnum,'_',shotime,'_ne.dat'];
+filename_Zeff = ['m_profs_',shotnum,'_',shotime,'_Zeff.dat'];
 %
 R = load([equil_path,filename_R],'-ascii');
 Z = load([equil_path,filename_Z],'-ascii');
@@ -86,6 +87,7 @@ values = load([equil_path,filename_values],'-ascii');
 xpsi = load([equil_path,filename_psi],'-ascii').';
 xTe = load([equil_path,filename_Te],'-ascii').';
 xne = load([equil_path,filename_ne],'-ascii').';
+xZeff = load([equil_path,filename_Zeff],'-ascii').';
 %
 psip = xpsi(1);
 %
@@ -126,10 +128,12 @@ Rp = values(1);
 Zp = values(2);
 psia = values(3);
 %
+disp(' ')
 disp(['psip: ',num2str(psip)])
 disp(['psia: ',num2str(psia)])
 disp(['Rp: ',num2str(Rp)])
 disp(['Zp: ',num2str(Zp)])
+disp(' ')
 %
 x = R - Rp;
 y = Z - Zp;
@@ -146,9 +150,13 @@ equil_RZ.zmi =zmi;
 equil_RZ.x = x.';
 equil_RZ.y = y.';
 %
+if length(xZeff) == 1,
+    xZeff = xZeff*ones(size(xne));
+end
+%
 xTi = xTe;
-xnH = xne*(Zimp - Zeff)/(Zimp - 1);
-xnZ = xne*(Zeff - 1)/Zimp/(Zimp - 1);
+xnH = xne.*(Zimp - xZeff)/(Zimp - 1);
+xnZ = xne.*(xZeff - 1)/Zimp/(Zimp - 1);
 xzni = [fi.'*xnH;xnZ];
 xzTi = ones(nz,1)*xTi;
 %
@@ -274,11 +282,12 @@ ptBPHI(:,65) = ptBPHI(:,1);
 %
 pTe = interp1(xpsin,xTe,psin,method);
 pne = interp1(xpsin,xne,psin,method);
+pZeff = interp1(xpsin,xZeff,psin,method);
 %
 pTi = pTe;
 %
-pnH = pne*(Zimp - Zeff)/(Zimp - 1);
-pnZ = pne*(Zeff - 1)/Zimp/(Zimp - 1);
+pnH = pne.*(Zimp - pZeff)/(Zimp - 1);
+pnZ = pne.*(pZeff - 1)/Zimp/(Zimp - 1);
 pzni = [fi.'*pnH;pnZ];
 pzTi = ones(nz,1)*pTi;
 %
