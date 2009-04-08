@@ -28,7 +28,7 @@ if ~isnumeric(freq),
 end
 %
 dNpar = input('Spectral width [0.2]:');
-if isempty(freq),
+if isempty(dNpar),
     dNpar = 0.2;
 end
 if ~isnumeric(dNpar),
@@ -68,7 +68,8 @@ smask = [1;1+find((diff(ARTsimdat.R.data) ~= 0) | (diff(ARTsimdat.Phi.data) ~= 0
 ray.P0_2piRp = 1e3*P0/(2*pi*equil.Rp);% Power launched in the ray (W) [1,1]
 %
 ray.sx = ARTsimdat.R.data(smask).'*1e-2 - equil.Rp;% Ray location (major radius) along the propagation [1,ns]
-ray.sphi = - ARTsimdat.Phi.data(smask).'*pi/180;% Ray location (toroidal angle) along the propagation [1,ns]
+%ray.sphi = - ARTsimdat.Phi.data(smask).'*pi/180;% Ray location (toroidal angle) along the propagation [1,ns]
+ray.sphi = ARTsimdat.Phi.data(smask).'*pi/180;% Ray location (toroidal angle) along the propagation [1,ns]
 ray.sy = ARTsimdat.z.data(smask).'*1e-2;% Ray location (vertical) along the propagation [1,ns]
 %
 ray.ss = [];% Ray propagation distance parameter for each ray (put to NaN once the ray is absorbed) [1,ns]
@@ -77,9 +78,16 @@ ray.stheta = [];% Ray location (poloidal angle) along the propagation [1,ns]
 %
 %- sign necessary to match Npars. Check in ART
 %
-ray.skx = - ARTsimdat.NR.data(smask).'*omega_rf/clum;% Ray wave vector (major radius) along the propagation [1,ns]
-ray.sn = - ARTsimdat.Nphi.data(smask).'.*ARTsimdat.R.data(smask).'*1e-2*omega_rf/clum;% Ray wave number (toroidal) along the propagation [1,ns]
-ray.sky = - ARTsimdat.Nz.data(smask).'*omega_rf/clum;% Ray wave vector (vertical) along the propagation [1,ns]
+%ray.skx = - ARTsimdat.NR.data(smask).'*omega_rf/clum;% Ray wave vector (major radius) along the propagation [1,ns]
+%ray.sn = - ARTsimdat.Nphi.data(smask).'.*ARTsimdat.R.data(smask).'*1e-2*omega_rf/clum;% Ray wave number (toroidal) along the propagation [1,ns]
+%ray.sky = - ARTsimdat.Nz.data(smask).'*omega_rf/clum;% Ray wave vector (vertical) along the propagation [1,ns]
+%
+% - sign not necessary any more
+%
+disp('Sign changed in imake_wave_ART_jd.m ter');
+ray.skx = ARTsimdat.NR.data(smask).'*omega_rf/clum;% Ray wave vector (major radius) along the propagation [1,ns]
+ray.sn = ARTsimdat.Nphi.data(smask).'.*ARTsimdat.R.data(smask).'*1e-2*omega_rf/clum;% Ray wave number (toroidal) along the propagation [1,ns]
+ray.sky = ARTsimdat.Nz.data(smask).'*omega_rf/clum;% Ray wave vector (vertical) along the propagation [1,ns]
 %
 ray.sNpar_comp = ARTsimdat.Npar.data(smask).';% Ray parallel wave number [1,ns]
 ray.sNpar = [];% Ray parallel wave number [1,ns]
