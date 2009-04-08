@@ -516,11 +516,12 @@ while isel >= 0,
                     %
 					data = load([data_path,data_file],'par','dkepath','dkeparam','dkedisplay','equil','ohm','transpfaste','ripple',...
 						'Znorm_RF','Zcurr_RF','ZP0_RF','dke_out_RF','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');
-					disp(['-----> The data file ',fileids.data,' is loaded.']);
                     %
                     fileids.data = data_file;
                     paths.data = data_path;
 					%
+					disp(['-----> The data file ',fileids.data,' is loaded.']);
+                    %
 					output.Znorm = data.Znorm_RF;
 					output.Zcurr = data.Zcurr_RF;
 					output.ZP0 = data.ZP0_RF;
