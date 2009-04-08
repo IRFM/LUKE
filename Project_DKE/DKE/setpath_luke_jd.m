@@ -31,6 +31,7 @@ addpath([luke_root,'Project_DKE/Modules/AMR']);
 addpath([luke_root,'Project_DKE/Modules/ACCOME']);
 addpath([luke_root,'Project_DKE/Modules/Helena']);
 addpath([luke_root,'Project_DKE/Modules/R2D2']);
+addpath([luke_root,'Project_DKE/Modules/R2D2/MEX/Bin']);
 addpath([luke_root,'Project_DKE/Modules/EFIT']);
 addpath([luke_root,'Project_DKE/Modules/RT']);
 addpath([luke_root,'Project_DKE/Modules/Ripple/TS']);
