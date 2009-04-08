@@ -23,27 +23,49 @@ function [ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor] = coll_dke_jd(dkepath,d
 		%
 		XXfM = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
 		%
-  		ZXXD_c.pp_ippj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
-  		ZXXD_c.pp_ipj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
- 		ZXXD_c.pp_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
-  		ZXXD_c.pp_imj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
-  		ZXXD_c.pp_immj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
- 		ZXXD_c.pm_ipj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
- 		ZXXD_c.pm_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
- 		ZXXD_c.pm_imj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
- 		ZXXD_c.mp_ijp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
- 		ZXXD_c.mp_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
-  		ZXXD_c.mp_ijm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
- 		ZXXD_c.mm_ijp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
- 		ZXXD_c.mm_ijm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+        % Terms from Sp at l+1/2 (Notations: _imj -> (i,j+1+2);_ipj -> (i+1,j+1/2)
+        %
+  		ZXXD_c.pp_ipj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%momentum dynamics only
+  		ZXXD_c.pp_imj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%momentum dynamics only
+ 		ZXXD_c.pm_ipj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%momentum dynamics only
+ 		ZXXD_c.pm_imj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%momentum dynamics only
+ 		ZXXD_c.pr_ipj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+ 		ZXXD_c.pr_imj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+        %   
+  		ZXXF_c.p_ipj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%momentum dynamics only
+  		ZXXF_c.p_imj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%momentum dynamics only
 		%
-  		ZXXF_c.p_ippj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
-  		ZXXF_c.p_ipj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+        % Terms from Sksi at l+1/2 (Notations: _ijp -> (i+1/2,j+1);_ijm -> (i+1/2,j)
+        %
+ 		ZXXD_c.mm_ijp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%momentum dynamics only
+ 		ZXXD_c.mm_ijm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%momentum dynamics only
+ 		ZXXD_c.mp_ijp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%momentum dynamics only
+  		ZXXD_c.mp_ijm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%momentum dynamics only
+ 		ZXXD_c.mr_ijp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+  		ZXXD_c.mr_ijm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+        %
+  		ZXXF_c.m_ijp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%momentum dynamics only
+  		ZXXF_c.m_ijm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%momentum dynamics only
+		%
+        % Terms from Spsi at (i+1/2,j+1/2) (Notations: _lm -> (l);_lp -> (l+1);
+        %
+ 		ZXXD_c.rr_lm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%radial dynamics only
+ 		ZXXD_c.rr_lp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%radial dynamics only
+ 		ZXXD_c.rp_lm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+  		ZXXD_c.rp_lp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+ 		ZXXD_c.rm_lm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+  		ZXXD_c.rm_lp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+        %
+  		ZXXF_c.r_lm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%radial dynamics only
+  		ZXXF_c.r_lp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%radial dynamics only
+        %
+        % Terms used by the old scheme only for momentum cross-derivatives (M.
+        % Shoucri and I. Shkarofsky,Comp. Phys. Comm., 82 (1994) 287)
+        %
+        ZXXD_c.pp_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+ 		ZXXD_c.pm_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+ 		ZXXD_c.mp_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
   		ZXXF_c.p_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
-  		ZXXF_c.p_imj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
-  		ZXXF_c.p_immj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
-  		ZXXF_c.m_ijp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
-  		ZXXF_c.m_ijm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);		
   		%
     	if dkeparam.dke_mode == 1
     		%
@@ -77,23 +99,18 @@ function [ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor] = coll_dke_jd(dkepath,d
 		%
 		if clusterparam.mode,
 			for ir = 1:gridDKE.nr,arg_range{ir} = ir;end
-			[flag,XXfM_out,ZXXD_c_pp_ippj,ZXXD_c_pp_ipj,ZXXD_c_pp_ij,ZXXD_c_pp_imj,ZXXD_c_pp_immj,ZXXD_c_mm_ijp,ZXXD_c_mm_ijm,ZXXF_c_p_ippj,ZXXF_c_p_ipj,ZXXF_c_p_ij,ZXXF_c_p_imj,ZXXF_c_p_immj] = mdce_luke(@loop_coll_dke_jd1,{ir,gridDKE,Zmomcoef,Zbouncecoef,equilDKE,mksa,dkepath,dkedisplay,dkeparam,xTe_norm,xne_norm,xzni_norm,xzTi_norm,xnloss_norm,xbetath,xlnc_e,xnhu,xrnhuth},1,arg_range,clusterparam);			
+			[flag,XXfM_out,ZXXD_c_pp_ipj,ZXXD_c_pp_ij,ZXXD_c_pp_imj,ZXXD_c_mm_ijp,ZXXD_c_mm_ijm,ZXXF_c_p_ipj,ZXXF_c_p_ij,ZXXF_c_p_imj] = mdce_luke(@loop_coll_dke_jd1,{ir,gridDKE,Zmomcoef,Zbouncecoef,equilDKE,mksa,dkepath,dkedisplay,dkeparam,xTe_norm,xne_norm,xzni_norm,xzTi_norm,xnloss_norm,xbetath,xlnc_e,xnhu,xrnhuth},1,arg_range,clusterparam);			
 			for ir = 1:gridDKE.nr
 				XXfM(:,:,ir) = XXfM_out{ir};
-         		ZXXD_c.pp_ippj(:,:,ir) = ZXXD_c_pp_ippj{ir};
-				ZXXD_c.pp_ippj(:,:,ir) = ZXXD_c_pp_ippj{ir};
 				ZXXD_c.pp_ipj(:,:,ir) = ZXXD_c_pp_ipj{ir};
 				ZXXD_c.pp_ij(:,:,ir) = ZXXD_c_pp_ij{ir};
 				ZXXD_c.pp_imj(:,:,ir) = ZXXD_c_pp_imj{ir};
-				ZXXD_c.pp_immj(:,:,ir) = ZXXD_c_pp_immj{ir};
 				ZXXD_c.mm_ijp(:,:,ir) = ZXXD_c_mm_ijp{ir};
 				ZXXD_c.mm_ijm(:,:,ir) = ZXXD_c_mm_ijm{ir};
 				%				
-				ZXXF_c.p_ippj(:,:,ir) = ZXXF_c_p_ippj{ir};
 				ZXXF_c.p_ipj(:,:,ir) = ZXXF_c_p_ipj{ir};
 				ZXXF_c.p_ij(:,:,ir) = ZXXF_c_p_ij{ir};
 				ZXXF_c.p_imj(:,:,ir) = ZXXF_c_p_imj{ir};
-				ZXXF_c.p_immj(:,:,ir) = ZXXF_c_p_immj{ir};	
          	end
 			%
     		if dkeparam.dke_mode == 1
@@ -124,7 +141,7 @@ function [ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor] = coll_dke_jd(dkepath,d
 		else
   			%
     		for ir = 1:gridDKE.nr,
-				[XXfM(:,:,ir),ZXXD_c.pp_ippj(:,:,ir),ZXXD_c.pp_ipj(:,:,ir),ZXXD_c.pp_ij(:,:,ir),ZXXD_c.pp_imj(:,:,ir),ZXXD_c.pp_immj(:,:,ir),ZXXD_c.mm_ijp(:,:,ir),ZXXD_c.mm_ijm(:,:,ir),ZXXF_c.p_ippj(:,:,ir),ZXXF_c.p_ipj(:,:,ir),ZXXF_c.p_ij(:,:,ir),ZXXF_c.p_imj(:,:,ir),ZXXF_c.p_immj(:,:,ir)] = loop_coll_dke_jd1(ir,gridDKE,Zmomcoef,Zbouncecoef,equilDKE,mksa,dkepath,dkedisplay,dkeparam,xTe_norm,xne_norm,xzni_norm,xzTi_norm,xnloss_norm,xbetath,xlnc_e,xnhu,xrnhuth);
+				[XXfM(:,:,ir),ZXXD_c.pp_ipj(:,:,ir),ZXXD_c.pp_ij(:,:,ir),ZXXD_c.pp_imj(:,:,ir),ZXXD_c.mm_ijp(:,:,ir),ZXXD_c.mm_ijm(:,:,ir),ZXXF_c.p_ipj(:,:,ir),ZXXF_c.p_ij(:,:,ir),ZXXF_c.p_imj(:,:,ir)] = loop_coll_dke_jd1(ir,gridDKE,Zmomcoef,Zbouncecoef,equilDKE,mksa,dkepath,dkedisplay,dkeparam,xTe_norm,xne_norm,xzni_norm,xzTi_norm,xnloss_norm,xbetath,xlnc_e,xnhu,xrnhuth);
     		end
     		%
     		if dkeparam.dke_mode == 1
@@ -161,7 +178,7 @@ function [ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor] = coll_dke_jd(dkepath,d
 	end
 end
 
-function [XXfM,ZXXD_c_pp_ippj,ZXXD_c_pp_ipj,ZXXD_c_pp_ij,ZXXD_c_pp_imj,ZXXD_c_pp_immj,ZXXD_c_mm_ijp,ZXXD_c_mm_ijm,ZXXF_c_p_ippj,ZXXF_c_p_ipj,ZXXF_c_p_ij,ZXXF_c_p_imj,ZXXF_c_p_immj] = loop_coll_dke_jd1(ir,gridDKE,Zmomcoef,Zbouncecoef,equilDKE,mksa,dkepath,dkedisplay,dkeparam,xTe_norm,xne_norm,xzni_norm,xzTi_norm,xnloss_norm,xbetath,xlnc_e,xnhu,xrnhuth)
+function [XXfM,ZXXD_c_pp_ipj,ZXXD_c_pp_ij,ZXXD_c_pp_imj,ZXXD_c_mm_ijp,ZXXD_c_mm_ijm,ZXXF_c_p_ipj,ZXXF_c_p_ij,ZXXF_c_p_imj] = loop_coll_dke_jd1(ir,gridDKE,Zmomcoef,Zbouncecoef,equilDKE,mksa,dkepath,dkedisplay,dkeparam,xTe_norm,xne_norm,xzni_norm,xzTi_norm,xnloss_norm,xbetath,xlnc_e,xnhu,xrnhuth)
 %LUKE - Collision operator (loop function for distributed computing environment)
 %
 %Collision operator (loop function for distributed computing environment)
@@ -181,24 +198,16 @@ function [XXfM,ZXXD_c_pp_ippj,ZXXD_c_pp_ipj,ZXXD_c_pp_ij,ZXXD_c_pp_imj,ZXXD_c_pp
     [Feip,Aeip] = eicoll_dke_yp(Zmomcoef.vp,equilDKE.zZi,equilDKE.zmi,xzni_norm,xzTi_norm,ir,dkeparam.coll_mode);
 	%   
     Feim(1) = 1;%Avoid singularity at p = 0, but the value is not used  
-    Feimm = [0,Fei(1:gridDKE.npn-1)];
-    Feipp = [Fei(2:gridDKE.npn),0];
 	%       
-    XFeimm = Feimm'*ones(1,gridDKE.nmhu);
     XFeim = Feim'*ones(1,gridDKE.nmhu);
     XFei = Fei'*ones(1,gridDKE.nmhu);
     XFeip = Feip'*ones(1,gridDKE.nmhu);
-    XFeipp = Feipp'*ones(1,gridDKE.nmhu);
 	%
     Aeim(1) = 1;%Avoid singularity at p = 0, but the value is not used
-    Aeimm = [eps,Aei(1:gridDKE.npn-1)];
-    Aeipp = [Aei(2:gridDKE.npn),eps];
 	%
-    XAeimm = Aeimm'*ones(1,gridDKE.nmhu);
     XAeim = Aeim'*ones(1,gridDKE.nmhu); 
     XAei = Aei'*ones(1,gridDKE.nmhu);
     XAeip = Aeip'*ones(1,gridDKE.nmhu);
-    XAeipp = Aeipp'*ones(1,gridDKE.nmhu);
 	%
     XBtei = Btei'*ones(1,gridDKE.nmhu);     
 	%
@@ -209,42 +218,30 @@ function [XXfM,ZXXD_c_pp_ippj,ZXXD_c_pp_ipj,ZXXD_c_pp_ij,ZXXD_c_pp_imj,ZXXD_c_pp
     [Feep,Aeep] = eecoll_dke_yp(Zmomcoef.vp,Zmomcoef.zp,Zmomcoef.gammap,Zmomcoef.sigmap,gridDKE.pnp,gridDKE.pn2p,gridDKE.dpnp,Zmomcoef.J1,Zmomcoef.J2,dkeparam.spfac,mksa.betath_ref,xne_norm,xTe_norm,ir,dkeparam.coll_mode,dkepath,dkedisplay,dkeparam);
 	%
     Feem(1) = 1;%Avoid singularity at p = 0, but the value is not used
-    Feemm = [0,Fee(1:gridDKE.npn-1)];
-    Feepp = [Fee(2:gridDKE.npn),0];
 	%       
-    XFeemm = Feemm'*ones(1,gridDKE.nmhu);
     XFeem = Feem'*ones(1,gridDKE.nmhu);
     XFee = Fee'*ones(1,gridDKE.nmhu);
     XFeep = Feep'*ones(1,gridDKE.nmhu);
-    XFeepp = Feepp'*ones(1,gridDKE.nmhu);
 	%
     Aeem(1) = 1;%Avoid singularity at p = 0, but the value is not used
-    Aeemm = [eps,Aee(1:gridDKE.npn-1)];
-    Aeepp = [Aee(2:gridDKE.npn),eps];
 	%
-    XAeemm = Aeemm'*ones(1,gridDKE.nmhu);
     XAeem = Aeem'*ones(1,gridDKE.nmhu); 
     XAee = Aee'*ones(1,gridDKE.nmhu);
     XAeep = Aeep'*ones(1,gridDKE.nmhu);
-    XAeepp = Aeepp'*ones(1,gridDKE.nmhu);
 	%
     XBtee = Btee'*ones(1,gridDKE.nmhu);    
 	%   
 	% Collisions flux coefficients calculations for f0 and g
 	%
-    ZXXD_c_pp_ippj = XAeepp + XAeipp;
     ZXXD_c_pp_ipj = XAeep + XAeip;
     ZXXD_c_pp_ij = XAee + XAei;
     ZXXD_c_pp_imj = XAeem + XAeim;
-    ZXXD_c_pp_immj = XAeemm + XAeimm;
 	%
     ZXXD_c_mm_ijp = (XBtee + XBtei).*Zbouncecoef.XXRlambda_p2m1_p(:,:,ir);
     ZXXD_c_mm_ijm = (XBtee + XBtei).*Zbouncecoef.XXRlambda_p2m1_m(:,:,ir);
 	%
-    ZXXF_c_p_ippj = -XFeepp - XFeipp;
     ZXXF_c_p_ipj = -XFeep - XFeip;
     ZXXF_c_p_ij = -XFee - XFei;
     ZXXF_c_p_imj = -XFeem - XFeim;
-    ZXXF_c_p_immj = -XFeemm - XFeimm;       
 end
 
