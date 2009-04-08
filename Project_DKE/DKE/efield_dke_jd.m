@@ -24,12 +24,26 @@ if exist('xepsi') == 1, %The bounce averaging coefficients were calculated befor
   %
 else
 %
+  xrho = equilDKE.xrho;
+  xrhoT = equilDKE.xrhoT;
+  xrhoP = equilDKE.xrhoP;
+  xrhoV = equilDKE.xrhoV;
+%
   xepsi_fsav = zeros(size(equilDKE.xrho));
   if ~isempty(ohm),
-      xepsi_fsav = interp1(ohm.rho,ohm.epsi,equilDKE.xrho,'spline')/mksa.Edreicer_ref;%Normalized to the Dreicer value
+      if ~isfield(ohm,'rhotype') || strcmp(ohm.rhotype,'g'),%geometric rho
+          xepsi_fsav = interp1(ohm.rho,ohm.epsi,xrho,'spline')/mksa.Edreicer_ref;%Normalized to the Dreicer value
+      elseif strcmp(ohm.rhotype,'p'),
+          xepsi_fsav = interp1(ohm.rho,ohm.epsi,xrhoP,'spline')/mksa.Edreicer_ref;%Normalized to the Dreicer value
+      elseif strcmp(ohm.rhotype,'t'),
+          xepsi_fsav = interp1(ohm.rho,ohm.epsi,xrhoT,'spline')/mksa.Edreicer_ref;%Normalized to the Dreicer value
+      elseif strcmp(ohm.rhotype,'v'),
+          xepsi_fsav = interp1(ohm.rho,ohm.epsi,xrhoV,'spline')/mksa.Edreicer_ref;%Normalized to the Dreicer value
+      else
+          error('unknown rho type in ohm structure')
+      end
   end
-%
-  xrho = equilDKE.xrho;
+  %
   xB0 = equilDKE.xB0;
   xBT0 = equilDKE.xBT0;
   xx0 = equilDKE.xx0;
