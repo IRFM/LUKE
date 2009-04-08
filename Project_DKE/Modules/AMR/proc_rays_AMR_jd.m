@@ -5,9 +5,6 @@ function wave = proc_rays_AMR_jd(wavedata,waveparam,equil)
 wave = '';
 ny = size(wavedata,1);
 %
-shotnum = equil.info.shotnum;
-shotime = equil.info.shotime;
-%
 antenna.num = wavedata(1,2);
 antenna.conf = wavedata(1,3);
 omega_rf = 2*pi*wavedata(1,4)*1e9;%initially in GHz
@@ -20,17 +17,11 @@ w0 = wavedata(1,9);
 rays = cell(1,ny);
 %
 for iy = 1:ny,
-    %
-    antnumbase = num2str(antenna.num);
-    antnum = ['0'*ones(1,2-length(antnumbase)),antnumbase];
-    %
-    antconfbase = num2str(antenna.conf);
-    antconf = ['0'*ones(1,4-length(antconfbase)),antconfbase];
     %    
     raynumbase = num2str(iy);
     raynum = ['0'*ones(1,2-length(raynumbase)),raynumbase];
     %
-    filename_ray = ['LUKERT_',antnum,'_',antconf,'_',shotnum,'_',shotime,'_',raynum,'.dat'];
+    filename_ray = ['LUKERT_',waveparam.filestr,'_',raynum,'.dat'];
     %
     if ~exist([waveparam.AMR_path,filename_ray],'file'),
         disp(['-----> Ray # ',num2str(iy),' not found. Aborted.'])

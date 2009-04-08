@@ -4,19 +4,12 @@ function wave = imake_wave_AMR_jd(basestr,equil,workdir,opt_gui)
 %
 wave = '';
 %
+shotnum = equil.info.shotnum;
+shotime = equil.info.shotime;
+%
 l_opt = input_dke_yp('Do you want to load AMR results (0), run AMR (1), or cancel this operation (2): ',0,{0,1,2},'Invalid option');
 %
-if l_opt == 0,
-    %
-    filename_wavedata = 'luke_rays.dat';
-    %
-    [AMR_file,AMR_path] = igetfile_jd(opt_gui,filename_wavedata,['Please select the AMR ''',filename_wavedata,''' file'],equil.info.datapath);
-    %
-    if AMR_file == 0,
-        return
-    end
-    %
-elseif l_opt == 1,
+if l_opt == 1,
     %
     AMR_path = getenv('AMR');
     if isempty(AMR_path),
@@ -35,14 +28,31 @@ elseif l_opt == 1,
     unix('python ebe6.py');
     cd(sd);
     %
-    AMR_path = [AMR_path,'output/luke/'];
-    AMR_file = 'luke_rays.dat';
-else
+elseif l_opt == 2,
     disp('-----> operation aborted.')
     return
 end
 %
+filename_wavedata = ['luke_rays_*_',shotnum,'_',shotime,'.dat'];
+%
+[AMR_file,AMR_path] = igetfile_jd(opt_gui,filename_wavedata,['Please select the AMR ''',filename_wavedata,''' file'],equil.info.datapath);
+%
+if AMR_file == 0,
+    return
+end
+%
 wavedata = load([AMR_path,AMR_file],'-ascii');
+%
+antenna.num = wavedata(1,2);
+antenna.conf = wavedata(1,3);
+%
+antnumbase = num2str(antenna.num);
+antnum = ['0'*ones(1,2-length(antnumbase)),antnumbase];
+%
+antconfbase = num2str(antenna.conf);
+antconf = ['0'*ones(1,4-length(antconfbase)),antconfbase];
+%
+waveparam.filestr = [antnum,'_',antconf,'_',shotnum,'_',shotime];
 %
 shotime = wavedata(1,1);
 ny = size(wavedata,1);
@@ -107,7 +117,7 @@ else
     nchi = 1;
 end
 %
-wave_id_o = 'AMR';
+wave_id_o = ['AMR_',antnum,'_',antconf];
 %
 wave_id = input(['Please provide an id for the wave [',wave_id_o,'] : '],'s');
 if isempty(wave_id),

@@ -2,9 +2,11 @@ function wave = make_wave_AMR_jd(wavestruct,equil)
 %
 % This function makes the WAVE file from AMR ray-tracing output
 %
-AMR_path = wavestruct.AMR_path;;
+AMR_path = wavestruct.AMR_path;
 %
-wavedatafile = [AMR_path,'luke_rays.dat'];
+shotime = equil.info.shotime;
+%
+wavedatafile = [AMR_path,'luke_rays_',wavestruct.filestr,'.dat'];
 %
 if ~exist(wavedatafile,'file'),
     error('AMR output files not found, aborted');
@@ -12,10 +14,9 @@ else
     wavedata = load(wavedatafile,'-ascii');
 end
 %
-shotime = wavedata(1,1);
 ny = size(wavedata,1);
 %
-if str2double(equil.info.shotime) ~= shotime,
+if str2double(shotime) ~= wavedata(1,1),
     error('The shot time is not compatible with equilibrium')
 end
 %
@@ -33,6 +34,7 @@ else
     nchi = 1;
 end
 %
+waveparam.filestr = wavestruct.filestr;
 waveparam.id = wavestruct.id;
 waveparam.AMR_path = AMR_path;
 %
