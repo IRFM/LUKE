@@ -4,7 +4,7 @@ function wave = make_beam_wave_jd(wave,equil,C3POdisplay,nd,nchi,w0,z0,nsm)
 %
 % Note : ray.swidth can be a scalar in which case the beam divergence is assumed to be zero.
 %
-if nargin < 7,
+if nargin < 8,
     nsm = 1;%smoothing parameter
 end
 %
@@ -68,8 +68,15 @@ sx = smooth(ss,ray.sx,nsm).';
 sy = smooth(ss,ray.sy,nsm).';
 sphi = smooth(ss,ray.sphi,nsm).';
 %
-sNpar = smooth(ss,ray.sNpar,nsm).';
-sNperp = smooth(ss,ray.sNperp,nsm).';
+sNpar = ray.sNpar; 
+sNperp = ray.sNperp;
+%
+if length(sNpar) == ns,
+	sNpar = smooth(ss,sNpar,nsm).';
+end
+if length(sNperp) == ns,
+	sNperp = smooth(ss,sNperp,nsm).';
+end
 %
 sR = sx + equil.Rp;
 %
