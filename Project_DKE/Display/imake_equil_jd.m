@@ -147,6 +147,7 @@ elseif i_opt == 1, % use data from an existing equilibrium file
         Zeff = input_dke_yp('No measure of Zeff is available. Please provide an estimated value for Zeff',1,[1;6],'',[1,1]);
         %
         e_opt = -2;% AMR equilibrium
+        n_opt = 0;
         %
     end
     %
@@ -170,120 +171,122 @@ disp(' ')
 disp('*********** EQUILIBRIUM PROFILES ***********')
 disp(' ')
 %
-if isfield(external,'prof'),% magnetic equilibrium from external database?
-    %
-    i_opt = input_dke_yp(['Do you want to :\n',...
-        '(0) use data loaded from the external database \n',...
-        '(1) use data from an existing equilibrium profiles file \n',...
-        '(2) build the equilibrium profiles data locally \n'],...
-        0,{0,1,2},'Invalid selection');
-    %
-else
-    %
-    i_opt = input_dke_yp(['Do you want to :\n',...
-        '(1) use data from an existing equilibrium profiles file \n',...
-        '(2) build the equilibrium profiles data locally \n'],...
-        1,{1,2},'Invalid selection');
-    %
-end
-% 
-if i_opt == 0, % use data from from external database
-    %
-    equil_prof_data = external.prof;
-    %
-    if strcmp(basestr,'TCV'),
+if e_opt ~= -2,
+    if isfield(external,'prof'),% magnetic equilibrium from external database?
         %
-        type = 1;% TCV data format
-        n_opt = 0;
+        i_opt = input_dke_yp(['Do you want to :\n',...
+            '(0) use data loaded from the external database \n',...
+            '(1) use data from an existing equilibrium profiles file \n',...
+            '(2) build the equilibrium profiles data locally \n'],...
+            0,{0,1,2},'Invalid selection');
         %
-    elseif strcmp(basestr,'TS'),
-        %
-        n_opt = -1;% ideal equilibrium profiles
-        %
-    elseif strcmp(basestr,'JET'),
-        %
-        if isempty(equil_prof_data.pne) || isempty(equil_prof_data.pTe),% fits are necessary
-            %
-            f_opt = 1;% experimental profiles must be fitted
-            n_opt = -1;% ideal equilibrium profiles
-            %
-        else % fits exist, save data for equil_prof_jd
-            %
-            type = 1.2;
-            n_opt = 0;
-            %
-        end
     else
         %
-        disp('-----> function not yet implemented for this machine.')
-        return
-    end
-    %
-elseif i_opt == 1, % use data from an existing equilibrium file
-    %
-    n_opt = input_dke_yp(['Option for equilibrium profiles file : \n',...
-        '0 (existing data file)\n',...
-        '1 (ART profiles)\n',...
-        '2 (TORAY profiles)\n'],...
-        0,{0,1,2},'Invalid selection');
-    %
-    [data_file,data_path] = igetfile_jd(opt_gui,'*.*',['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],eqdsk_path);
-    %
-    if data_file == 0,
-        return
-    end
-    %
-    profname = [data_path,data_file];
-    %
-    if n_opt == 0,
+        i_opt = input_dke_yp(['Do you want to :\n',...
+            '(1) use data from an existing equilibrium profiles file \n',...
+            '(2) build the equilibrium profiles data locally \n'],...
+            1,{1,2},'Invalid selection');
         %
-        if strcmp(basestr,'TCV'),% TCV profile data file
+    end
+    % 
+    if i_opt == 0, % use data from from external database
+        %
+        equil_prof_data = external.prof;
+        %
+        if strcmp(basestr,'TCV'),
+            %
+            type = 1;% TCV data format
+            n_opt = 0;
+            %
+        elseif strcmp(basestr,'TS'),
+            %
+            n_opt = -1;% ideal equilibrium profiles
+            %
+        elseif strcmp(basestr,'JET'),
+            %
+            if isempty(equil_prof_data.pne) || isempty(equil_prof_data.pTe),% fits are necessary
+                %
+                f_opt = 1;% experimental profiles must be fitted
+                n_opt = -1;% ideal equilibrium profiles
+                %
+            else % fits exist, save data for equil_prof_jd
+                %
+                type = 1.2;
+                n_opt = 0;
+                %
+            end
+        else
+            %
+            disp('-----> function not yet implemented for this machine.')
+            return
+        end
+        %
+    elseif i_opt == 1, % use data from an existing equilibrium file
+        %
+        n_opt = input_dke_yp(['Option for equilibrium profiles file : \n',...
+            '0 (existing data file)\n',...
+            '1 (ART profiles)\n',...
+            '2 (TORAY profiles)\n'],...
+            0,{0,1,2},'Invalid selection');
+        %
+        [data_file,data_path] = igetfile_jd(opt_gui,'*.*',['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],eqdsk_path);
+        %
+        if data_file == 0,
+            return
+        end
+        %
+        profname = [data_path,data_file];
+        %
+        if n_opt == 0,
+            %
+            if strcmp(basestr,'TCV'),% TCV profile data file
+                %
+                type = 1;
+                %
+                equil_prof_data = load([data_path,data_file],'shot','rho','ne','te','ti','zeff','zaxis','btsign','ipsign');
+                %
+            elseif strcmp(basestr,'TS'),% TS profile data file
+                %
+                type = -1;
+                %       
+            elseif strcmp(basestr,'ITER'),% ITER Astra profile data
+                %
+                type = 0.2;
+                %
+            elseif strcmp(basestr,'EAST'),% EAST ideal profiles from make_profile script
+                %
+                type = 1.1;
+                %
+            else
+                disp(['-----> profiles data files not treated yet for :',basestr]);
+                return 
+            end
+            %
+        elseif n_opt == 1,% profiles from ART output
             %
             type = 1;
             %
-            equil_prof_data = load([data_path,data_file],'shot','rho','ne','te','ti','zeff','zaxis','btsign','ipsign');
+            load([data_path,data_file],'ARTsimprof');
             %
-        elseif strcmp(basestr,'TS'),% TS profile data file
+            equil_prof_data.rho = ARTsimprof.rho.data.';
+            equil_prof_data.ne = ARTsimprof.n.data.'*1e20;
+            equil_prof_data.te = ARTsimprof.X.data.';
+            equil_prof_data.ti = NaN;
             %
-            type = -1;
-            %       
-        elseif strcmp(basestr,'ITER'),% ITER Astra profile data
+            equil_prof_data.zeff = NaN;
+            equil_prof_data.zaxis = NaN;
             %
-            type = 0.2;
+            equil_prof_data.shot = str2num(data_file(4:8));
             %
-        elseif strcmp(basestr,'EAST'),% EAST ideal profiles from make_profile script
-            %
-            type = 1.1;
-            %
-        else
-            disp(['-----> profiles data files not treated yet for :',basestr]);
-            return 
         end
         %
-    elseif n_opt == 1,% profiles from ART output
+    elseif i_opt == 2, % equilibrium profiles data specified by user
         %
-        type = 1;
+        equil_prof_data = imake_equil_ideal;
         %
-        load([data_path,data_file],'ARTsimprof');
-        %
-        equil_prof_data.rho = ARTsimprof.rho.data.';
-        equil_prof_data.ne = ARTsimprof.n.data.'*1e20;
-        equil_prof_data.te = ARTsimprof.X.data.';
-        equil_prof_data.ti = NaN;
-        %
-        equil_prof_data.zeff = NaN;
-        equil_prof_data.zaxis = NaN;
-        %
-        equil_prof_data.shot = str2num(data_file(4:8));
+        n_opt = -1;% ideal equilibrium profiles
         %
     end
-    %
-elseif i_opt == 2, % equilibrium profiles data specified by user
-    %
-    equil_prof_data = imake_equil_ideal;
-    %
-    n_opt = -1;% ideal equilibrium profiles
-    %
 end
 %
 % ************** BUILT EQUILLIBRIUM *****************
