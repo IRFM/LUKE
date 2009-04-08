@@ -990,6 +990,7 @@ while isel >= 0,
                 w_list = input_dke_yp('List of waves to display',1:nw,[1;nw],'');
                 %
                 p_opt = input_dke_yp('Option for output figures : -1 (nothing), 0 (print), 1 (print and save), 2 (save)',-1,-1:2,'',[1,1]);
+                g_opt.abs_max = input_dke_yp('Option for ray trajectories : 0 (full trajectory), 1 (cut when damped)',0,0:1,'',[1,1]);
                 %
                 %xvaropt = input_dke_yp('Option for rho definition : 0 (geometric), 1 (poloidal flux), 2 (toroidal flux)',0,0:2,'',[1,1]);
                 xvaropt = input_dke_yp('Option for rho definition : 0 (geometric), 1 (poloidal flux)',0,0:1,'',[1,1]);
@@ -1004,7 +1005,6 @@ while isel >= 0,
                 %
                 g_opt.print = p_opt;
                 g_opt.TeNpar = 1;
-                g_opt.abs_max = 0;
                 nr_dep = 40;
                 rho_disp = 0:0.1:1;
                 ymask = NaN;
