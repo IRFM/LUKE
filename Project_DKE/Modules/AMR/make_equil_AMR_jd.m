@@ -200,7 +200,7 @@ psin = linspace(0,1,np);
 % Warning : this - sign comes from an inconsistency in the source files
 %   B field is assumed correct
 %
-psia = - psia;
+% psia = - psia;
 %
 ap = ptx(np,1);%Plasma minor radius on the LFS midplane
 psi_apRp = psin*psia*ap/Rp;%The poloidal flux coordinate is normalized by the aspect ratio 
