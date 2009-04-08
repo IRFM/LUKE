@@ -18,7 +18,7 @@ for iw = 1:length(waves),
     end
 end
 %
-if opt_save == 1 & exist(['EQUIL/EQUIL_',equil.id,'.mat']) == 0,
+if opt_save == 1 && ~exist(['EQUIL/EQUIL_',equil.id,'.mat'],'file'),
     mkdir('EQUIL')
     savestr = ['EQUIL/EQUIL_',equil.id,'.mat'];
     save(savestr,'equil');
@@ -55,7 +55,26 @@ for iw = (nw0 + 1):(nw0 + length(wavestructs)),
             save(savestr,'wave');
         end
         %
-        waves{iw} = wave;    
+        waves{iw} = wave;  
+        %
+    elseif strcmp(wavestruct.wavesolver,'AMR'),% AMR ray tracing
+        %
+	    wave = make_wave_AMR_jd(wavestruct,equil);%Ray calculations
+        %
+        wave = wave_process_jd(equil,wave,dkeparam.n_rf_list);%Wave processing and relativistic linear damping
+        %
+        if opt_save == 1,
+            mkdir('WAVE')
+            cd WAVE
+            mkdir('AMR')
+            cd ..
+            %
+            savestr = ['WAVE/AMR/WAVE_',equil.id,'_',wavestruct.id,'.mat'];
+            save(savestr,'wave');
+        end
+        %
+        waves{iw} = wave;  
+        %
     else
 	    error('This ray-tracing is not yet linked to LUKE !')
     end
@@ -64,6 +83,7 @@ end
 clear wavestruct rayinit wave 
 %
 nw = length(waves);
+nb = zeros(1,nw);
 for iw = 1:nw,
     nb(iw) = length(waves{iw}.rays);
 end
@@ -105,7 +125,7 @@ elseif dkeparam.rt_mode == 2,
             %
             omega_ce = qe*equil.ptBPHI(1,1)/me;
             %
-            if waves{iw}.omega_rf < omega_ce/5 & dNpar0 < dNparmin,
+            if waves{iw}.omega_rf < omega_ce/5 && dNpar0 < dNparmin,
                 info_dke_yp(2,['WARNING: wave #',num2str(iw),' ray #',num2str(ib),': initial dNpar increased to ',num2str(dNparmin),' for numerical stability']);
                 dNpar0 = dNparmin;
             end
@@ -124,7 +144,7 @@ elseif dkeparam.rt_mode == 4,
     %
     for iw = 1:nw,
         if ~isfield(waves{iw},'a_sdNpar') == 1,
-            warning(['a_sdNpar not specified is set to zero for wave ',int2str(iw)])
+            disp(['a_sdNpar not specified is set to zero for wave ',int2str(iw)])
             waves{iw}.a_sdNpar = 0;
         end
 %
@@ -169,7 +189,9 @@ elseif dkeparam.rt_mode == 3,%
             val = dkeparam.seekparam.a_sdNpar_in;%This is in dkeparam because it is the same for all waves
             step = dkeparam.seekparam.a_step;
             %
+            sdNpar_in = cell(1,nw);
             for iw = 1:nw,
+                sdNpar_in{iw} = zeros(1,nb(iw));
                 for ib = 1:nb(iw),
                     sdNpar_in{iw}(ib) = waves{iw}.rays{ib}.sdNpar(1);
                 end
@@ -206,7 +228,7 @@ elseif dkeparam.rt_mode == 3,%
         %
         % eval(['diary ',path_simul,'DKE_DIARY_',equil.id,'_',id_simul,'_',dNstr,'.txt']);
         %
-        [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
+        [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
         %
         % CD efficiency (A/W)
         %
@@ -247,7 +269,7 @@ elseif dkeparam.rt_mode == 3,%
             %
         end
         %
-        if opt_loop == 0 & val < -1000*eps,
+        if opt_loop == 0 && val < -1000*eps,
             %
             opt_loop = 1;
             %
