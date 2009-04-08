@@ -9,28 +9,29 @@ C  MEX file.
 C
 C J. Decker 10/26/05
 C
+#include "fintrf.h"
       SUBROUTINE MEXFUNCTION(NLHS, PLHS, NRHS, PRHS)
 C
 C-----------------------------------------------------------------------
 C     (pointer) Replace integer by integer*8 on the DEC Alpha
 C     64-bit platform
 C
-      INTEGER PLHS(*), PRHS(*)
+      mwPointer PLHS(*), PRHS(*)
 C
 C-----------------------------------------------------------------------
 C
-      INTEGER NLHS, NRHS
+      integer NLHS, NRHS
 C
 C-----------------------------------------------------------------------
 C     (pointer) Replace integer by integer*8 on the DEC Alpha
 C     64-bit platform
 C
-      INTEGER MXCREATEDOUBLEMATRIX, MXGETPR
+      mwPointer MXCREATEDOUBLEMATRIX, MXGETPR
 C
 C-----------------------------------------------------------------------
 C
 C
-      INTEGER MXGETM, MXGETN
+      mwSize MXGETM, MXGETN
 C
 C KEEP THE ABOVE SUBROUTINE, ARGUMENT, AND FUNCTION DECLARATIONS FOR USE
 C IN ALL YOUR FORTRAN MEX FILES.
@@ -40,7 +41,10 @@ C-----------------------------------------------------------------------
 C     (pointer) Replace integer by integer*8 on the DEC Alpha
 C     64-bit platform
 C
-      INTEGER i,nx,nin,ninp,xrp,xip,zrp,zip 
+      integer i,nx,nin
+      mwPointer xrp,xip,zrp,zip,ninp 
+      mwSize matone
+      parameter (matone=1)
 C
       LOGICAL flag  
       PARAMETER (nx = 65536)   
@@ -64,7 +68,7 @@ C
       ENDIF
 C
       ninp = MXGETPR(PRHS(1))
-      CALL MXCOPYPTRTOREAL8(ninp, ninr, 1)
+      CALL MXCOPYPTRTOREAL8(ninp, ninr, matone)
       nin = INT(ninr);
 C      print *, 'nin = ',nin
 C
@@ -90,8 +94,8 @@ C
 C
 C CREATE A MATRIX FOR RETURN ARGUMENT
 C
-      PLHS(1) = MXCREATEDOUBLEMATRIX(1,nx,0)
-      PLHS(2) = MXCREATEDOUBLEMATRIX(1,nx,0)
+      PLHS(1) = MXCREATEDOUBLEMATRIX(matone,nx,0)
+      PLHS(2) = MXCREATEDOUBLEMATRIX(matone,nx,0)
 C
 C ASSIGN POINTERS TO THE VARIOUS PARAMETERS
 C
