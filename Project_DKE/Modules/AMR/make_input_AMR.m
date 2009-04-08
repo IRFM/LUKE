@@ -108,7 +108,7 @@ antennacfg.antenna_0.model = 'gaussian';
 % power in kW
 antennacfg.antenna_0.power = 1.0;
 % array of toroidal angles (single value for no angle scan)
-antennacfg.antenna_0.toroidal_angles = [35.2692];
+antennacfg.antenna_0.toroidal_angles = [-35.2692];
 % array of poloidal angles (single value for no angle scan)
 antennacfg.antenna_0.poloidal_angles = [-2.1198];
 % array of polarization angles (single value for no angle scan)
