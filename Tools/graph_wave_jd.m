@@ -53,7 +53,7 @@ nymask = zeros(1,nw);
 for iw = 1:nw,
     nymask(iw) = length(ymask{iw});
     %
-    if opt.TeNpar && isfield(waves{iw},'info') && isfield(waves{iw}.info,'ftype') && strcmp(waves{iw}.info.ftype,'LF'),
+    if opt.TeNpar && waves{iw}.omega_rf/(2*pi*1e9) < 10,%isfield(waves{iw},'info') && isfield(waves{iw}.info,'ftype') && strcmp(waves{iw}.info.ftype,'LF'),
         %
         waves{iw}.opt_TeNpar = 1;
         %
@@ -218,7 +218,7 @@ for iy = 1:ny,
         rays{iy}.is_abs = min(find(sdP_2piRp_ds_norm == max(sdP_2piRp_ds_norm))); 
         %
         yrho_abs(iy) = rays{iy}.srho(rays{iy}.is_abs);
-        yNpar_abs(iy) = rays{iy}.sNpar(rays{iy}.is_abs);
+        yNpar_abs(iy) = real(rays{iy}.sNpar(rays{iy}.is_abs));
         yPtot_abs(iy) = 1 - sP_2piRp_norm(end);
         %
         rays{iy} = radialdampingprofile_jd(rays{iy},nr_dep);
