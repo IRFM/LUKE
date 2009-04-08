@@ -132,7 +132,7 @@ if exist(['erfcc_mex_jd.',mexext],'file') == 3,%fortran file
     Z_sn = zeros(Ns,Nn);
     for is = 1:Ns,
         %
-        x = [zeta_sn(is,:),zeros(1,1024 - Nn)];
+        x = [zeta_sn(is,:),zeros(1,65536 - Nn)];
         %
         [yr,yi] = erfcc_mex_jd(Nn,real(x),imag(x));
         %
