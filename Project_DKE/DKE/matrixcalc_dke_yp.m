@@ -1,12 +1,12 @@
-function [Zdelta,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,Zpn2_t,sm_f,sm_g,sm_tp] = matrixcalc_dke_yp(dkeparam,display,gridDKE,equilDKE,Zbouncecoef,mksa,...
-                                                                       Zmripple,...
+function [Zdelta,MMXT_f_t,MMXP_f_t,MMXR_f_t,Xmask_r_edge,MMXP_tp,MMXP_g_t,MMH_tp,Zpn2_t,sm_f,sm_g,sm_tp] = matrixcalc_dke_yp(dkeparam,display,gridDKE,equilDKE,Zbouncecoef,mksa,Zmripple,Zmomcoef,transpfaste,...
                                                                        ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXILor,...
                                                                        ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,...
-                                                                       ZYXXD_rf,ZYXXF_rf,ZYXXD_rf_tp,ZYXXF_rf_tp,Xmask_r_edge)
+                                                                       ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp,...
+                                                                       ZXXD_a,ZXXF_a)
 %
 %   Calculate the super matrix for the 3D electron relativistic drift kinetic solver.
 %
-%   by Y. Peysson (CEA-DRFC) (yves.peysson@cea.fr) and J. Decker (CEA-DRFC) (joan.decker@cea.fr)
+%   by Y. Peysson (CEA-IRFM) (yves.peysson@cea.fr) and J. Decker (CEA-IRFM) (joan.decker@cea.fr)
 %
 time0 = clock;
 etime_fp = 0;
@@ -37,11 +37,13 @@ Xdpnpp = gridDKE.Xdpnpp;
 Xmhumm = gridDKE.Xmhumm;
 Xmhum = gridDKE.Xmhum;
 Xmhu = gridDKE.Xmhu;
+Xmhu2 = gridDKE.Xmhu2;
 Xmhup = gridDKE.Xmhup;
 Xmhupp = gridDKE.Xmhupp;
 X1mmhu2m = gridDKE.X1mmhu2m;
 X1mmhu2 = gridDKE.X1mmhu2;
 X1mmhu2p = gridDKE.X1mmhu2p;
+pn = gridDKE.pn;
 Xpnmm = gridDKE.Xpnmm;
 Xpnm = gridDKE.Xpnm;
 Xpn = gridDKE.Xpn;
@@ -50,9 +52,17 @@ Xpnpp = gridDKE.Xpnpp;
 Xpn2m = gridDKE.Xpn2m;
 Xpn2 = gridDKE.Xpn2;
 Xpn2p = gridDKE.Xpn2p;
+XXpn2 = gridDKE.XXpn2;
 xpsin = gridDKE.xpsin;
+xdpsin = gridDKE.xdpsin_dke;
+xdpsinm = gridDKE.xdpsinm_dke;
+xdpsinp = gridDKE.xdpsinp_dke;
+xmhubounce2 = gridDKE.xmhubounce2;
 rdke = gridDKE.rdke;
 xrho = gridDKE.xrho;
+%
+gamma = Zmomcoef.gamma;
+Xvpar = Zmomcoef.Xvpar;
 %
 djmhut = Zbouncecoef.djmhut;
 Zmask_f0_P = Zbouncecoef.Zmask_f0_P;
@@ -64,29 +74,48 @@ jmhut_max = Zbouncecoef.jmhut_max;
 Zmask_f0_t = Zbouncecoef.Zmask_f0_t;
 Zmask_f0_t_P = Zbouncecoef.Zmask_f0_t_P;
 Zmask_f0_t_Tp = Zbouncecoef.Zmask_f0_t_Tp;
-ns_f = Zbouncecoef.ns_f;     
+ns_f = Zbouncecoef.ns_f;    
+XXlambda = Zbouncecoef.XXlambda;
 XXRlambda_m = Zbouncecoef.XXRlambda_m;
 XXRlambda_p = Zbouncecoef.XXRlambda_p;
 sm_f = Zbouncecoef.sm_f;
 sm_T_f = Zbouncecoef.sm_T_f;
 blocksize_f_t = Zbouncecoef.blocksize_f_t;
 blocksize_T_f_t = Zbouncecoef.blocksize_T_f_t;
+xqtilde = Zbouncecoef.xqtilde;
+%
+xx0 = equilDKE.xx0;
+xBp0 = equilDKE.xBp0;
+xB0 = equilDKE.xB0;
+ap = equilDKE.ap;
+Rp = equilDKE.Rp;
+psia_apRp = equilDKE.psia_apRp;
+%
+betath_ref = mksa.betath_ref;
+nhu_ref = mksa.nhu_ref;
+%
+bounce_mode = dkeparam.bounce_mode;    
+%
 %if dke_mode == 1,
-   Zmask_g = Zbouncecoef.Zmask_g;
-   ns_g = Zbouncecoef.ns_g;
-   xftp_norm = mksa.xftp_norm_ref;
-   boundary_mode_g = dkeparam.boundary_mode_g;
-   sm_tp = Zbouncecoef.sm_tp;
-   sm_g = Zbouncecoef.sm_g;
-   blocksize_tp = Zbouncecoef.blocksize_tp;    
-   blocksize_g_t = Zbouncecoef.blocksize_g_t;
+%Zmask_g = Zbouncecoef.Zmask_g;
+%ns_g = Zbouncecoef.ns_g;
+%xftp_norm = mksa.xftp_norm_ref;
+%boundary_mode_g = dkeparam.boundary_mode_g;
+sm_tp = Zbouncecoef.sm_tp;
+sm_g = Zbouncecoef.sm_g;
+%blocksize_tp = Zbouncecoef.blocksize_tp;    
+%blocksize_g_t = Zbouncecoef.blocksize_g_t;
 %
 %end
 %
-xB0 = equilDKE.xB0;
-%
-MMXP_f_t = [];
 MMXT_f_t = [];
+MMXP_f_t = [];
+MMXR_f_t = [];
+%
+Xmask_r_edge = [];
+%
+nMMXP_f_t = max(cumsum(Zbouncecoef.blocksize_f_t));
+%
 MMXP_tp = [];
 MMXP_g_t = [];
 MMH_tp = [];
@@ -95,45 +124,46 @@ spparms('default');%Set parameters for sparse matrix ordering algorithms and dir
 spparms('supernd',4);%Set parameters for sparse matrix ordering algorithms and direct linear equation solver MatLab build-in functions only
 spparms('rreduce',4);%Set parameters for sparse matrix ordering algorithms and direct linear equation solver MatLab build-in functions onlyXXdpsin
 %
+%TODO: remove transpfaste dependence when collisional transport is set
+%
+if ~isempty(transpfaste),%boundary conditions
+    Xmask_r_edge = (ZXXD_a.rr_lp(:,:,nr) > 0);
+end
+%
+% Build momentum supermatrix MMXP_f_t
+%
 for ir = 1:nr,
+    %
+    XDpp_ipj = ZXXD_c.pp_ipj(:,:,ir) + ZXXD_e.pp_ipj(:,:,ir) + ZXXD_rf.pp_ipj(:,:,ir) + ZXXD_a.pp_ipj(:,:,ir);
+    XDpp_imj = ZXXD_c.pp_imj(:,:,ir) + ZXXD_e.pp_imj(:,:,ir) + ZXXD_rf.pp_imj(:,:,ir) + ZXXD_a.pp_imj(:,:,ir);
+    XDpm_ipj = ZXXD_c.pm_ipj(:,:,ir) + ZXXD_e.pm_ipj(:,:,ir) + ZXXD_rf.pm_ipj(:,:,ir) + ZXXD_a.pm_ipj(:,:,ir);
+    XDpm_imj = ZXXD_c.pm_imj(:,:,ir) + ZXXD_e.pm_imj(:,:,ir) + ZXXD_rf.pm_imj(:,:,ir) + ZXXD_a.pm_imj(:,:,ir);
+    XFp_ipj = ZXXF_c.p_ipj(:,:,ir) + ZXXF_e.p_ipj(:,:,ir) + ZXXF_rf.p_ipj(:,:,ir) + ZXXF_a.p_ipj(:,:,ir);
+    XFp_imj = ZXXF_c.p_imj(:,:,ir) + ZXXF_e.p_imj(:,:,ir) + ZXXF_rf.p_imj(:,:,ir) + ZXXF_a.p_imj(:,:,ir);
+    %
+    XDmm_ijp = ZXXD_c.mm_ijp(:,:,ir) + ZXXD_e.mm_ijp(:,:,ir) + ZXXD_rf.mm_ijp(:,:,ir) + ZXXD_a.mm_ijp(:,:,ir);
+    XDmm_ijm = ZXXD_c.mm_ijm(:,:,ir) + ZXXD_e.mm_ijm(:,:,ir) + ZXXD_rf.mm_ijm(:,:,ir) + ZXXD_a.mm_ijm(:,:,ir);
+    XDmp_ijp = ZXXD_c.mp_ijp(:,:,ir) + ZXXD_e.mp_ijp(:,:,ir) + ZXXD_rf.mp_ijp(:,:,ir) + ZXXD_a.mp_ijp(:,:,ir);
+    XDmp_ijm = ZXXD_c.mp_ijm(:,:,ir) + ZXXD_e.mp_ijm(:,:,ir) + ZXXD_rf.mp_ijm(:,:,ir) + ZXXD_a.mp_ijm(:,:,ir);
+    XFm_ijp = ZXXF_c.m_ijp(:,:,ir) + ZXXF_e.m_ijp(:,:,ir) + ZXXF_rf.m_ijp(:,:,ir) + ZXXF_a.m_ijp(:,:,ir);
+    XFm_ijm = ZXXF_c.m_ijm(:,:,ir) + ZXXF_e.m_ijm(:,:,ir) + ZXXF_rf.m_ijm(:,:,ir) + ZXXF_a.m_ijm(:,:,ir);
+    %
+    XDpp_ij = ZXXD_c.pp_ij(:,:,ir) + ZXXD_e.pp_ij(:,:,ir) + ZXXD_rf.pp_ij(:,:,ir) + ZXXD_a.pp_ij(:,:,ir);
+    XDpm_ij = ZXXD_c.pm_ij(:,:,ir) + ZXXD_e.pm_ij(:,:,ir) + ZXXD_rf.pm_ij(:,:,ir) + ZXXD_a.pm_ij(:,:,ir);
+    XDmp_ij = ZXXD_c.mp_ij(:,:,ir) + ZXXD_e.mp_ij(:,:,ir) + ZXXD_rf.mp_ij(:,:,ir) + ZXXD_a.mp_ij(:,:,ir);
+    XFp_ij = ZXXF_c.p_ij(:,:,ir) + ZXXF_e.p_ij(:,:,ir) + ZXXF_rf.p_ij(:,:,ir) + ZXXF_a.p_ij(:,:,ir);
 %
-    XDpp_ippj = ZXXD_c.pp_ippj(:,:,ir) + ZXXD_e.pp_ippj(:,:,ir) + ZYXXD_rf.pp_ippj(:,:,ir);
-    XDpp_ipj = ZXXD_c.pp_ipj(:,:,ir) + ZXXD_e.pp_ipj(:,:,ir) + ZYXXD_rf.pp_ipj(:,:,ir);
-    XDpp_ij = ZXXD_c.pp_ij(:,:,ir) + ZXXD_e.pp_ij(:,:,ir) + ZYXXD_rf.pp_ij(:,:,ir);
-    XDpp_imj = ZXXD_c.pp_imj(:,:,ir) + ZXXD_e.pp_imj(:,:,ir) + ZYXXD_rf.pp_imj(:,:,ir);
-    XDpp_immj = ZXXD_c.pp_immj(:,:,ir) + ZXXD_e.pp_immj(:,:,ir) + ZYXXD_rf.pp_immj(:,:,ir);
-%
-    XDpm_ipj = ZXXD_c.pm_ipj(:,:,ir) + ZXXD_e.pm_ipj(:,:,ir) + ZYXXD_rf.pm_ipj(:,:,ir);
-    XDpm_ij = ZXXD_c.pm_ij(:,:,ir) + ZXXD_e.pm_ij(:,:,ir) + ZYXXD_rf.pm_ij(:,:,ir);
-    XDpm_imj = ZXXD_c.pm_imj(:,:,ir) + ZXXD_e.pm_imj(:,:,ir) + ZYXXD_rf.pm_imj(:,:,ir);
-%
-    XDmp_ijp = ZXXD_c.mp_ijp(:,:,ir) + ZXXD_e.mp_ijp(:,:,ir) + ZYXXD_rf.mp_ijp(:,:,ir);
-    XDmp_ij = ZXXD_c.mp_ij(:,:,ir) + ZXXD_e.mp_ij(:,:,ir) + ZYXXD_rf.mp_ij(:,:,ir);
-    XDmp_ijm = ZXXD_c.mp_ijm(:,:,ir) + ZXXD_e.mp_ijm(:,:,ir) + ZYXXD_rf.mp_ijm(:,:,ir);
-%
-    XDmm_ijp = ZXXD_c.mm_ijp(:,:,ir) + ZXXD_e.mm_ijp(:,:,ir) + ZYXXD_rf.mm_ijp(:,:,ir);
-    XDmm_ijm = ZXXD_c.mm_ijm(:,:,ir) + ZXXD_e.mm_ijm(:,:,ir) + ZYXXD_rf.mm_ijm(:,:,ir);
-%
-    XFp_ippj = ZXXF_c.p_ippj(:,:,ir) + ZXXF_e.p_ippj(:,:,ir) + ZYXXF_rf.p_ippj(:,:,ir);
-    XFp_ipj = ZXXF_c.p_ipj(:,:,ir) + ZXXF_e.p_ipj(:,:,ir) + ZYXXF_rf.p_ipj(:,:,ir);
-    XFp_ij = ZXXF_c.p_ij(:,:,ir) + ZXXF_e.p_ij(:,:,ir) + ZYXXF_rf.p_ij(:,:,ir);
-    XFp_imj = ZXXF_c.p_imj(:,:,ir) + ZXXF_e.p_imj(:,:,ir) + ZYXXF_rf.p_imj(:,:,ir);
-    XFp_immj = ZXXF_c.p_immj(:,:,ir) + ZXXF_e.p_immj(:,:,ir) + ZYXXF_rf.p_immj(:,:,ir);
-%
-    XFm_ijp = ZXXF_c.m_ijp(:,:,ir) + ZXXF_e.m_ijp(:,:,ir) + ZYXXF_rf.m_ijp(:,:,ir);
-    XFm_ijm = ZXXF_c.m_ijm(:,:,ir) + ZXXF_e.m_ijm(:,:,ir) + ZYXXF_rf.m_ijm(:,:,ir);
-%
-%Momentum weights calculations (for f0 and ftp also)
+%Grid weights calculations (for f0 and ftp also)
 %
     [Xdeltap_imj,Xdeltap_ipj,...
          Xdeltam_ijm,Xdeltam_ijp,...
          Xdeltap_imjmm,Xdeltap_imjpp,Xdeltap_ipjmm,Xdeltap_ipjpp,...
          Xdeltam_immjm,Xdeltam_ippjm,Xdeltam_immjp,Xdeltam_ippjp,...
          xdeltap_npj,xdeltap_npjmm,xdeltap_npjpp] = ...
-            fppgridweights_dke_yp(Xdpnmm,Xdpnm,Xdpn,Xdpnp,Xdpnpp,...
-         Xdmhumm,Xdmhum,Xdmhu,Xdmhup,Xdmhupp,...
-         XDpp_ippj,XDpp_ipj,XDpp_ij,XDpp_imj,XDpp_immj,...
-         XFp_ippj,XFp_ipj,XFp_ij,XFp_imj,XFp_immj);
+         fppgridweights_dke_yp(Xdpnmm,Xdpnm,Xdpn,Xdpnp,Xdpnpp,...
+         Xdmhumm,Xdmhum,Xdmhu,Xdmhup,Xdmhupp,...     
+         XDpp_ipj,XDpp_imj,XFp_ipj,XFp_imj,...
+         XDpp_ij,XFp_ij);
 %
     XXdeltap_imj(:,:,ir) = Xdeltap_imj; 
     XXdeltap_ipj(:,:,ir) = Xdeltap_ipj;
@@ -158,12 +188,9 @@ for ir = 1:nr,
     XXRlambda_m(:,:,ir),XXRlambda_p(:,:,ir),...
     Xpnmm,Xpnm,Xpn,Xpnp,Xpnpp,Xpn2m,Xpn2p,Xdpnmm,Xdpnm,Xdpn,Xdpnp,Xdpnpp,...
     Xmhumm,Xmhum,Xmhu,Xmhup,Xmhupp,X1mmhu2,X1mmhu2m,X1mmhu2p,Xdmhumm,Xdmhum,Xdmhu,Xdmhup,Xdmhupp,...
-    XDpp_ippj,XDpp_ipj,XDpp_ij,XDpp_imj,XDpp_immj,...
-    XDpm_ipj,XDpm_ij,XDpm_imj,...
-    XDmp_ijp,XDmp_ij,XDmp_ijm,...
-    XDmm_ijp,XDmm_ijm,...
-    XFp_ippj,XFp_ipj,XFp_ij,XFp_imj,XFp_immj,...
-    XFm_ijp,XFm_ijm);
+    XDpp_ipj,XDpp_imj,XDpm_ipj,XDpm_imj,XFp_ipj,XFp_imj,...
+    XDmm_ijp,XDmm_ijm,XDmp_ijp,XDmp_ijm,XFm_ijp,XFm_ijm,...
+    XDpp_ij,XDpm_ij,XDmp_ij,XFp_ij);
 % 
 %Sink and source coefficients like magnetic ripple losses,described by a Krook term
 %
@@ -194,19 +221,6 @@ for ir = 1:nr,
     XXb(1,:,ir) = 0;%Because of cross-derivatives
     XXh(1,:,ir) = 0;%Because of cross-derivatives
     XXf(1,:,ir) = 0;%Because of cross-derivatives
-%
-%    XXc(npn,:,ir) = XXc(npn,:,ir) + XXd(npn,:,ir)./(1 - xdeltap_npj);%Because of cross-derivatives
-%    XXa(npn,:,ir) = XXa(npn,:,ir) + XXi(npn,:,ir)./(1 - xdeltap_npjmm);%Because of cross-derivatives
-%    XXe(npn,:,ir) = XXe(npn,:,ir) + XXg(npn,:,ir)./(1 - xdeltap_npjpp);%Because of cross-derivatives
-%
-%    XXb(npn,:,ir) = XXb(npn,:,ir) - XXd(npn,:,ir).*xdeltap_npj./(1 - xdeltap_npj);%Because of cross-derivatives
-%    XXf(npn,:,ir) = XXf(npn,:,ir) - XXi(npn,:,ir).*xdeltap_npjmm./(1 - xdeltap_npjmm);%Because of cross-derivatives
-%    XXh(npn,:,ir) = XXh(npn,:,ir) - XXg(npn,:,ir).*xdeltap_npjpp./(1 - xdeltap_npjpp);%Because of cross-derivatives
-%
-%    XXd(npn,:,ir) = 0;%Because of cross-derivatives
-%    XXg(npn,:,ir) = 0;%Because of cross-derivatives
-%    XXi(npn,:,ir) = 0;%Because of cross-derivatives
-
 %
 %Edge boundary conditions for radial transport (Maxwellian solution enforced where radial transport is non-zero)
 %
@@ -312,9 +326,9 @@ for ir = 1:nr,
             error(['WARNING: Not enough pitch-angle grid points in the bounce region for accurate bounce-averaged calculations (increasing nmhu may solve the problem) !'])
         end
     end
-%
-%Local boundary conditions at p = p(1/2): not necessary but help for the density conservation (Dirichlet boundary condition)
-%
+    %
+    %Local boundary conditions at p = p(1/2): not necessary but help for the density conservation (Dirichlet boundary condition)
+    %
     if boundary_mode_f > 0,
         Xa_t(1:boundary_mode_f,:) = 0;
         Xb_t(1:boundary_mode_f,:) = 0;
@@ -403,9 +417,371 @@ for ir = 1:nr,
     [i1_f,j1_f,s1_f] = find(MXP_f_t);
     [m1_f,n1_f] = size(MXP_f_t);
     MMXP_f_t = sparse(i0_f,j0_f,s0_f,m0_f+m1_f,m0_f+m1_f) + sparse(m0_f+i1_f,m0_f+j1_f,s1_f,m0_f+m1_f,m0_f+m1_f);
+end
 %
-%Time diagonal matrix calculation
+% Radial supermatrix calculation MMXR_f_t
 %   
+if ~isempty(transpfaste),%boundary conditions
+	%
+    % Interpolation coefficients
+    %
+    xdpsinmm = [0,xdpsin(1:nr-1)];
+    xdpsinpp = [xdpsin(2:nr),0];
+    %
+    XXdpsin = reshape(repmat(xdpsin,npn*nmhu,1),[npn,nmhu,nr]);   
+    XXdpsinm = reshape(repmat(xdpsinm,npn*nmhu,1),[npn,nmhu,nr]); 
+    XXdpsinp = reshape(repmat(xdpsinp,npn*nmhu,1),[npn,nmhu,nr]); 
+    XXdpsinmm = reshape(repmat(xdpsinmm,npn*nmhu,1),[npn,nmhu,nr]);   
+    XXdpsinpp = reshape(repmat(xdpsinpp,npn*nmhu,1),[npn,nmhu,nr]);
+    %
+    XXdeltalp = XXdpsinpp./(XXdpsinpp + XXdpsin);%Grid interpolation coefficients
+    XXdeltalm = XXdpsin./(XXdpsinmm + XXdpsin);%Grid interpolation coefficients
+	%
+    % Diagonal calculations
+    %
+    XXDpr_ipj = ZXXD_c.pr_ipj + ZXXD_e.pr_ipj + ZXXD_rf.pr_ipj + ZXXD_a.pr_ipj;
+    XXDpr_imj = ZXXD_c.pr_imj + ZXXD_e.pr_imj + ZXXD_rf.pr_imj + ZXXD_a.pr_imj;
+    %
+    XXDmr_ijp = ZXXD_c.mr_ijp + ZXXD_e.mr_ijp + ZXXD_rf.mr_ijp + ZXXD_a.mr_ijp;
+    XXDmr_ijm = ZXXD_c.mr_ijm + ZXXD_e.mr_ijm + ZXXD_rf.mr_ijm + ZXXD_a.mr_ijm;
+    %
+    XXDrr_lp = ZXXD_c.rr_lp + ZXXD_e.rr_lp + ZXXD_rf.rr_lp + ZXXD_a.rr_lp;
+    XXDrr_lm = ZXXD_c.rr_lm + ZXXD_e.rr_lm + ZXXD_rf.rr_lm + ZXXD_a.rr_lm;
+    XXDrp_lp = ZXXD_c.rp_lp + ZXXD_e.rp_lp + ZXXD_rf.rp_lp + ZXXD_a.rp_lp;
+    XXDrp_lm = ZXXD_c.rp_lm + ZXXD_e.rp_lm + ZXXD_rf.rp_lm + ZXXD_a.rp_lm;
+    XXDrm_lp = ZXXD_c.rm_lp + ZXXD_e.rm_lp + ZXXD_rf.rm_lp + ZXXD_a.rm_lp;
+    XXDrm_lm = ZXXD_c.rm_lm + ZXXD_e.rm_lm + ZXXD_rf.rm_lm + ZXXD_a.rm_lm;
+    XXFr_lp = ZXXF_c.r_lp + ZXXF_e.r_lp + ZXXF_rf.r_lp + ZXXF_a.r_lp;
+    XXFr_lm = ZXXF_c.r_lm + ZXXF_e.r_lm + ZXXF_rf.r_lm + ZXXF_a.r_lm;
+    %
+    XXx0 = repmat(reshape(xx0',[1,1,nr]),[npn,nmhu,1]);
+    XXx0mm = zeros(npn,nmhu,nr);
+    XXx0mm(:,:,2:nr) = XXx0(:,:,1:nr-1);
+    XXx0pp = zeros(npn,nmhu,nr);
+    XXx0pp(:,:,1:nr-1) = XXx0(:,:,2:nr);
+    %
+    XXx0p = (1 - XXdeltalp).*XXx0pp + XXdeltalp.*XXx0;%Evaluation on the flux grid (linear interpolation)
+    XXx0m = (1 - XXdeltalm).*XXx0 + XXdeltalm.*XXx0mm;%Evaluation on the flux grid (linear interpolation)
+    %      
+    XXqtilde = repmat(reshape(xqtilde',[1,1,nr]),[npn,nmhu,1]);
+    XXqtildemm = zeros(npn,nmhu,nr);
+    XXqtildemm(:,:,2:nr) = XXqtilde(:,:,1:nr-1);
+    XXqtildepp = zeros(npn,nmhu,nr);
+    XXqtildepp(:,:,1:nr-1) = XXqtilde(:,:,2:nr);
+    %
+    XXqtildep = (1 - XXdeltalp).*XXqtildepp + XXdeltalp.*XXqtilde;%Evaluation on the flux grid (linear interpolation)
+    XXqtildem = (1 - XXdeltalm).*XXqtilde + XXdeltalm.*XXqtildemm;%Evaluation on the flux grid (linear interpolation)
+    %   
+    XXBp0 = repmat(reshape(xBp0',[1,1,nr]),[npn,nmhu,1]);
+    XXBp0mm = zeros(npn,nmhu,nr);
+    XXBp0mm(:,:,2:nr) = XXBp0(:,:,1:nr-1);
+    XXBp0pp = zeros(npn,nmhu,nr);
+    XXBp0pp(:,:,1:nr-1) = XXBp0(:,:,2:nr);
+    %
+    XXBp0p = (1 - XXdeltalp).*XXBp0pp + XXdeltalp.*XXBp0;%Evaluation on the flux grid (linear interpolation)
+    XXBp0m = (1 - XXdeltalm).*XXBp0 + XXdeltalm.*XXBp0mm;%Evaluation on the flux grid (linear interpolation)
+    %
+    XXB0 = repmat(reshape(xB0',[1,1,nr]),[npn,nmhu,1]);
+    XXB0mm = zeros(npn,nmhu,nr);
+    XXB0mm(:,:,2:nr) = XXB0(:,:,1:nr-1);
+    XXB0pp = zeros(npn,nmhu,nr);
+    XXB0pp(:,:,1:nr-1) = XXB0(:,:,2:nr);
+    %
+    XXB0p = (1 - XXdeltalp).*XXB0pp + XXdeltalp.*XXB0;%Evaluation on the flux grid (linear interpolation)
+    XXB0m = (1 - XXdeltalm).*XXB0 + XXdeltalm.*XXB0mm;%Evaluation on the flux grid (linear interpolation)
+    %
+    XXlambdamm = zeros(npn,nmhu,nr);
+    XXlambdamm(:,:,2:nr) = XXlambda(:,:,1:nr-1);
+    XXlambdapp = zeros(npn,nmhu,nr);
+    XXlambdapp(:,:,1:nr-1) = XXlambda(:,:,2:nr);
+    %
+    XXlambdap = (1 - XXdeltalp).*XXlambdapp + XXdeltalp.*XXlambda;%Evaluation on the flux grid (linear interpolation)
+    XXlambdam = (1 - XXdeltalm).*XXlambda + XXdeltalm.*XXlambdamm;%Evaluation on the flux grid (linear interpolation)
+    %   
+    XXgradpsinp = (1.0 + XXx0p/Rp).*XXBp0p*ap^2/psia_apRp;
+    XXgradpsinm = (1.0 + XXx0m/Rp).*XXBp0m*ap^2/psia_apRp;
+    %
+    XXalpharp = XXqtildep.*XXgradpsinp.*XXlambdap./XXB0p;%Evaluation on the flux grid (linear interpolation)
+    XXalpharm = XXqtildem.*XXgradpsinm.*XXlambdam./XXB0m;%Evaluation on the flux grid (linear interpolation)
+    XXalpharm(:,:,1) = 0;%Force zero at the plasma center, which is the natural analytical limit (In cylindrical geometry, r=0)
+    XXalpharp(:,:,nr) = 0;%Avoid NaN
+    %      
+    MMXR_f_t = sparse(nMMXP_f_t,nMMXP_f_t);%Create supermatrix
+    %  
+    XXMrm = -(XXalpharm.*XXgradpsinm./XXdpsinm./XXdpsin).*XXDrr_lm - (XXalpharm./XXdpsin).*XXFr_lm.*XXdeltalm;
+    XXMr = (XXalpharp.*XXgradpsinp./XXdpsinp./XXdpsin).*XXDrr_lp + (XXalpharp./XXdpsin).*XXFr_lp.*XXdeltalp + (XXalpharm.*XXgradpsinm./XXdpsinm./XXdpsin).*XXDrr_lm - (XXalpharm./XXdpsin).*XXFr_lm.*(1 - XXdeltalm);                    
+    XXMrp = -(XXalpharp.*XXgradpsinp./XXdpsinp./XXdpsin).*XXDrr_lp + (XXalpharp./XXdpsin).*XXFr_lp.*(1 - XXdeltalp);
+    %
+    XXMrm = (XXB0./XXqtilde).*XXMrm.*XXpn2./XXlambda;%Jacobian multiplication
+    XXMr = (XXB0./XXqtilde).*XXMr.*XXpn2./XXlambda;%Jacobian multiplication
+    XXMrp = (XXB0./XXqtilde).*XXMrp.*XXpn2./XXlambda;%Jacobian multiplication   
+    %
+    XXMrm(:,:,nr) = 0;%Edge boundary condition (Maxwellian solution)
+    XXMr(:,:,nr) = 0;%Edge boundary condition (Maxwellian solution)
+%
+% Radial off-diagonal terms for fast electron transport
+%
+    if bounce_mode == 0,
+        XXMrm = permute(XXMrm,[2,1,3]);
+        MMrm_t = reshape(XXMrm,npn*nmhu*nr,1,1);
+        XXMr = permute(XXMr,[2,1,3]);
+        MMr_t = reshape(XXMr,npn*nmhu*nr,1,1);
+        XXMrp = permute(XXMrp,[2,1,3]);
+        MMrp_t = reshape(XXMrp,npn*nmhu*nr,1,1);
+        %
+        MMXR_f_t = MMXR_f_t + sparse(1+nmhu*npn:nMMXP_f_t,1:nMMXP_f_t-nmhu*npn,MMrm_t(1+npn*nmhu:nMMXP_f_t),nMMXP_f_t,nMMXP_f_t);
+        MMXR_f_t = MMXR_f_t + sparse(1:nMMXP_f_t,1:nMMXP_f_t,MMr_t,nMMXP_f_t,nMMXP_f_t);    
+        MMXR_f_t = MMXR_f_t + sparse(1:nMMXP_f_t-nmhu*npn,1+npn*nmhu:nMMXP_f_t,MMrp_t(1:nMMXP_f_t-nmhu*npn),nMMXP_f_t,nMMXP_f_t);
+        %
+        if display_mode >= 1,info_dke_yp(2,['Zero order configuration space matrix calculations done in ',num2str(etime(clock,time0)),' (s)']);end
+    elseif bounce_mode == 1,
+        %
+        % First magnetic flux surface
+        %
+        ir = 1;
+        ib0 = 0;
+        ibp = max(cumsum(blocksize_f_t(1:ir)));
+        %
+        Xmask_f0 = (Xmhu2 < xmhubounce2(ir)) & (Xmhu < 0);%Only the half-bounce region is removed
+        Xmask_f0 = nonzeros(~(Xmask_f0(2,:)==1).*cumsum(ones(1,nmhu)))';
+        Xmask_f0p = (Xmhu2 < xmhubounce2(ir+1)) & (Xmhu < 0);%Only the half-bounce region is removed
+        Xmask_f0p = nonzeros(~(Xmask_f0p(2,:)==1).*cumsum(ones(1,nmhu)))';
+        %   
+        imhu0 = sum((Xmhu(1,Xmask_f0) < 0).*(Xmhu2(1,Xmask_f0) > xmhubounce2(ir))); 
+        imhup = sum((Xmhu(1,Xmask_f0p) < 0).*(Xmhu2(1,Xmask_f0p) > xmhubounce2(ir+1)));
+        %
+        XMr = XXMr(:,:,ir);
+        XMr_t = XMr(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
+        MMr_t = reshape(XMr_t',npn*(nmhu-ns_f(ir)),1,1);
+        %        
+        MMXR_f_t_i = zeros(nMMXP_f_t*11*nr,1);%Create oversized sparse matrix to avoid reallocation
+        MMXR_f_t_j = zeros(nMMXP_f_t*11*nr,1);
+        MMXR_f_t_v = zeros(nMMXP_f_t*11*nr,1);
+        %
+        i = 1+ib0:ibp;
+        j = 1+ib0:ibp;
+        ia = 1;ib = ia+length(i);                 
+        MMXR_f_t_i(ia:ib-1) = i;
+        MMXR_f_t_j(ia:ib-1) = j;
+        MMXR_f_t_v(ia:ib-1) = MMr_t;
+        %           
+        % Notations: bc: backward + circulating, t: trapped (half positive part only), fc: forward + circulating
+        %           
+        XMrp = XXMrp(:,:,ir);
+        XMrp_t = XMrp(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
+        XMrp1_t = XMrp_t.*(Xmhu(:,Xmask_f0) < 0).*(Xmhu2(:,Xmask_f0) > xmhubounce2(ir+1));%bc -> bc
+        XMrp2_t = XMrp_t.*(Xmhu(:,Xmask_f0) < 0).*(Xmhu2(:,Xmask_f0) < xmhubounce2(ir+1)).*(Xmhu2(:,Xmask_f0) > xmhubounce2(ir));%bc -> t
+        XMrp3_t = XMrp_t.*(Xmhu(:,Xmask_f0) > 0);%fc + t -> fc + t
+        %   
+        for ip = 1:npn, 
+            i = ib0+(nmhu-ns_f(ir))*(ip-1)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhup;
+            j = ibp+(nmhu-ns_f(ir+1))*(ip-1)+1:ibp+(nmhu-ns_f(ir+1))*(ip-1)+imhup;
+            ia = ib;ib = ia+length(i);
+            MMXR_f_t_i(ia:ib-1) = i;
+            MMXR_f_t_j(ia:ib-1) = j;
+            MMXR_f_t_v(ia:ib-1) = XMrp1_t(ip,1:imhup)';%bc -> bc
+            %
+            i = ib0+(nmhu-ns_f(ir))*(ip-1)+imhup+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0;
+            j = ibp+(nmhu-ns_f(ir+1))*(ip-1)+((nmhu-ns_f(ir+1))-imhup):-1:ibp+(nmhu-ns_f(ir+1))*(ip-1)+((nmhu-ns_f(ir+1))-imhu0)+1;
+            ia = ib;ib = ia+length(i);
+            MMXR_f_t_i(ia:ib-1) = i;
+            MMXR_f_t_j(ia:ib-1) = j;
+            MMXR_f_t_v(ia:ib-1) = XMrp2_t(ip,imhup+1:imhu0)';%bc -> t
+            %
+            i = ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*ip;
+            j = ibp+(nmhu-ns_f(ir+1))*(ip-1)+imhup+1:ibp+(nmhu-ns_f(ir+1))*ip;
+            ia = ib;ib = ia+length(i);
+            MMXR_f_t_i(ia:ib-1) = i;
+            MMXR_f_t_j(ia:ib-1) = j;
+            MMXR_f_t_v(ia:ib-1) = XMrp3_t(ip,imhu0+1:nmhu-ns_f(ir))';%fc + t -> fc + t 
+        end 
+        %
+        % All magnetic flux surface except the first and the last ones
+        %
+        for ir = 2:nr-1,
+            if ir == 2,
+                ibm = 0;
+            else
+                ibm = max(cumsum(blocksize_f_t(1:ir-2)));%Block index reference
+            end
+            %
+            ib0 = max(cumsum(blocksize_f_t(1:ir-1)));%Block index reference
+            ibp = max(cumsum(blocksize_f_t(1:ir)));
+            %
+            Xmask_f0m = (Xmhu2 < xmhubounce2(ir-1)) & (Xmhu < 0);%Only the half-bounce region is removed
+            Xmask_f0m = nonzeros(~(Xmask_f0m(2,:)==1).*cumsum(ones(1,nmhu)))';
+            Xmask_f0 = (Xmhu2 < xmhubounce2(ir)) & (Xmhu < 0);%Only the half-bounce region is removed
+            Xmask_f0 = nonzeros(~(Xmask_f0(2,:)==1).*cumsum(ones(1,nmhu)))';
+            Xmask_f0p = (Xmhu2 < xmhubounce2(ir+1)) & (Xmhu < 0);%Only the half-bounce region is removed
+            Xmask_f0p = nonzeros(~(Xmask_f0p(2,:)==1).*cumsum(ones(1,nmhu)))';
+            %   
+            imhum = sum((Xmhu(1,Xmask_f0m) < 0).*(Xmhu2(1,Xmask_f0m) > xmhubounce2(ir-1)));
+            imhu0 = sum((Xmhu(1,Xmask_f0) < 0).*(Xmhu2(1,Xmask_f0) > xmhubounce2(ir))); 
+            imhup = sum((Xmhu(1,Xmask_f0p) < 0).*(Xmhu2(1,Xmask_f0p) > xmhubounce2(ir+1)));
+            %
+            XMr = XXMr(:,:,ir);
+            XMr_t = XMr(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
+            MMr_t = reshape(XMr_t',npn*(nmhu-ns_f(ir)),1,1);
+            %           
+            i = 1+ib0:ibp;
+            j = 1+ib0:ibp;
+            ia = ib;ib = ia+length(i); 
+            MMXR_f_t_i(ia:ib-1) = i;
+            MMXR_f_t_j(ia:ib-1) = j;
+            MMXR_f_t_v(ia:ib-1) = MMr_t;
+            %           
+            % Notations: bc: backward + circulating, t: trapped (half positive part only), fc: forward + circulating
+            %
+            XMrp = XXMrp(:,:,ir);
+            XMrp_t = XMrp(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
+            XMrp1_t = XMrp_t.*(Xmhu(:,Xmask_f0) < 0).*(Xmhu2(:,Xmask_f0) > xmhubounce2(ir+1));%bc -> bc
+            XMrp2_t = XMrp_t.*(Xmhu(:,Xmask_f0) < 0).*(Xmhu2(:,Xmask_f0) < xmhubounce2(ir+1)).*(Xmhu2(:,Xmask_f0) > xmhubounce2(ir));%bc -> t
+            XMrp3_t = XMrp_t.*(Xmhu(:,Xmask_f0) > 0);%t+fc -> t+fc     
+            %           
+            XMrm = XXMrm(:,:,ir);
+            XMrm_t = XMrm(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
+            XMrm1_t = XMrm_t.*(Xmhu(:,Xmask_f0) < 0).*(Xmhu2(:,Xmask_f0) > xmhubounce2(ir));%bc -> bc
+            XMrm2_t = XMrm_t.*(Xmhu(:,Xmask_f0) > 0).*(Xmhu2(:,Xmask_f0) < xmhubounce2(ir-1));%t -> t
+            XMrm3_t = XMrm_t.*(Xmhu(:,Xmask_f0) > 0).*(Xmhu2(:,Xmask_f0) > xmhubounce2(ir-1)).*(Xmhu2(:,Xmask_f0) < xmhubounce2(ir));%t -> fc
+            XMrm4_t = XMrm_t.*(Xmhu(:,Xmask_f0) > 0).*(Xmhu2(:,Xmask_f0) > xmhubounce2(ir));%fc -> fc
+            %            
+            for ip = 1:npn, 
+                i = ib0+(nmhu-ns_f(ir))*(ip-1)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhup;
+                j = ibp+(nmhu-ns_f(ir+1))*(ip-1)+1:ibp+(nmhu-ns_f(ir+1))*(ip-1)+imhup;
+                ia = ib;ib = ia+length(i);     
+                MMXR_f_t_i(ia:ib-1) = i;
+                MMXR_f_t_j(ia:ib-1) = j;
+                MMXR_f_t_v(ia:ib-1) = XMrp1_t(ip,1:imhup)';%bc -> bc
+                %               
+                i = ib0+(nmhu-ns_f(ir))*(ip-1)+imhup+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0;
+                j = ibp+(nmhu-ns_f(ir+1))*(ip-1)+((nmhu-ns_f(ir+1))-imhup):-1:ibp+(nmhu-ns_f(ir+1))*(ip-1)+((nmhu-ns_f(ir+1))-imhu0)+1;
+                ia = ib;ib = ia+length(i);
+                MMXR_f_t_i(ia:ib-1) = i;
+                MMXR_f_t_j(ia:ib-1) = j;
+                MMXR_f_t_v(ia:ib-1) = XMrp2_t(ip,imhup+1:imhu0)';  
+                %               
+                i = ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*ip;
+                j = ibp+(nmhu-ns_f(ir+1))*(ip-1)+imhup+1:ibp+(nmhu-ns_f(ir+1))*ip;
+                ia = ib;ib = ia+length(i);
+                MMXR_f_t_i(ia:ib-1) = i;
+                MMXR_f_t_j(ia:ib-1) = j;
+                MMXR_f_t_v(ia:ib-1) = XMrp3_t(ip,imhu0+1:nmhu-ns_f(ir))'; 
+                % 
+                i = ib0+(nmhu-ns_f(ir))*(ip-1)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0;
+                j = ibm+(nmhu-ns_f(ir-1))*(ip-1)+1:ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhu0;
+                ia = ib;ib = ia+length(i);
+                MMXR_f_t_i(ia:ib-1) = i;
+                MMXR_f_t_j(ia:ib-1) = j;
+                MMXR_f_t_v(ia:ib-1) = XMrm1_t(ip,1:imhu0)'; 
+                %
+                i = ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*(ip-1)+((nmhu-ns_f(ir))-imhum);
+                j = ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhum+1:ibm+(nmhu-ns_f(ir-1))*(ip-1)+((nmhu-ns_f(ir-1))-imhum);
+                ia = ib;ib = ia+length(i);
+                MMXR_f_t_i(ia:ib-1) = i;
+                MMXR_f_t_j(ia:ib-1) = j;
+                MMXR_f_t_v(ia:ib-1) = XMrm2_t(ip,imhu0+1:((nmhu-ns_f(ir))-imhum))'; 
+                %
+                i = ib0+(nmhu-ns_f(ir))*(ip-1)+((nmhu-ns_f(ir))-imhum)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+((nmhu-ns_f(ir))-imhu0);
+                j = ibm+(nmhu-ns_f(ir-1))*(ip-1)+((nmhu-ns_f(ir-1))-imhum)+1:ibm+(nmhu-ns_f(ir-1))*(ip-1)+((nmhu-ns_f(ir-1))-imhu0);               
+                ia = ib;ib = ia+length(i);
+                MMXR_f_t_i(ia:ib-1) = i;
+                MMXR_f_t_j(ia:ib-1) = j;
+                MMXR_f_t_v(ia:ib-1) = XMrm3_t(ip,((nmhu-ns_f(ir))-imhum)+1:((nmhu-ns_f(ir))-imhu0))'/2; 
+                j = ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhum:-1:ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhu0+1;
+                ia = ib;ib = ia+length(i);
+                MMXR_f_t_i(ia:ib-1) = i;
+                MMXR_f_t_j(ia:ib-1) = j;
+                MMXR_f_t_v(ia:ib-1) = XMrm3_t(ip,((nmhu-ns_f(ir))-imhum)+1:((nmhu-ns_f(ir))-imhu0))'/2; 
+                %       
+                i = ib0+(nmhu-ns_f(ir))*(ip-1)+(nmhu-ns_f(ir))-imhu0+1:ib0+(nmhu-ns_f(ir))*ip;
+                j = ibm+(nmhu-ns_f(ir-1))*(ip-1)+(nmhu-ns_f(ir-1))-imhu0+1:ibm+(nmhu-ns_f(ir-1))*ip;
+                ia = ib;ib = ia+length(i);
+                MMXR_f_t_i(ia:ib-1) = i;
+                MMXR_f_t_j(ia:ib-1) = j;
+                MMXR_f_t_v(ia:ib-1) = XMrm4_t(ip,(nmhu-ns_f(ir))-imhu0+1:nmhu-ns_f(ir))';
+            end 
+        end
+        %
+        % Last magnetic flux surface
+        %
+        ir = nr;
+        ibm = max(cumsum(blocksize_f_t(1:ir-2)));%Block index reference
+        ib0 = max(cumsum(blocksize_f_t(1:ir-1)));%Block index reference
+        ibp = max(cumsum(blocksize_f_t(1:ir)));
+        %
+        Xmask_f0m = (Xmhu2 < xmhubounce2(ir-1)) & (Xmhu < 0);%Only the half-bounce region is removed
+        Xmask_f0m = nonzeros(~(Xmask_f0m(2,:)==1).*cumsum(ones(1,nmhu)))';
+        Xmask_f0 = (Xmhu2 < xmhubounce2(ir)) & (Xmhu < 0);%Only the half-bounce region is removed
+        Xmask_f0 = nonzeros(~(Xmask_f0(2,:)==1).*cumsum(ones(1,nmhu)))';
+        %   
+        imhum = sum((Xmhu(1,Xmask_f0m) < 0).*(Xmhu2(1,Xmask_f0m) > xmhubounce2(ir-1)));
+        imhu0 = sum((Xmhu(1,Xmask_f0) < 0).*(Xmhu2(1,Xmask_f0) > xmhubounce2(ir))); 
+        %
+        XMr = XXMr(:,:,ir);
+        XMr_t = XMr(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
+        MMr_t = reshape(XMr_t',npn*(nmhu-ns_f(ir)),1,1);
+        %        
+        i = 1+ib0:ibp;
+        j = 1+ib0:ibp;
+        ia = ib;ib = ia+length(i);
+        MMXR_f_t_i(ia:ib-1) = i;
+        MMXR_f_t_j(ia:ib-1) = j;
+        MMXR_f_t_v(ia:ib-1) = MMr_t;
+        %           
+        XMrm = XXMrm(:,:,ir);
+        XMrm_t = XMrm(:,Xmask_f0);%Matrix reduction along the angular direction (half-bounce region is removed)
+        XMrm1_t = XMrm_t.*(Xmhu(:,Xmask_f0) < 0).*(Xmhu2(:,Xmask_f0) > xmhubounce2(ir));
+        %         XMrm2_t = XMrm_t.*(Xmhu(:,Xmask_f0) > 0);
+        XMrm2_t = XMrm_t.*(Xmhu(:,Xmask_f0) > 0).*(Xmhu2(:,Xmask_f0) < xmhubounce2(ir-1));%t -> t
+        XMrm3_t = XMrm_t.*(Xmhu(:,Xmask_f0) > 0).*(Xmhu2(:,Xmask_f0) > xmhubounce2(ir-1)).*(Xmhu2(:,Xmask_f0) < xmhubounce2(ir));%t -> fc
+        XMrm4_t = XMrm_t.*(Xmhu(:,Xmask_f0) > 0).*(Xmhu2(:,Xmask_f0) > xmhubounce2(ir));%fc -> fc
+%   
+        for ip = 1:npn, 
+            i = ib0+(nmhu-ns_f(ir))*(ip-1)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0;
+            j = ibm+(nmhu-ns_f(ir-1))*(ip-1)+1:ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhu0;
+            ia = ib;ib = ia+length(i);
+            MMXR_f_t_i(ia:ib-1) = i;
+            MMXR_f_t_j(ia:ib-1) = j;
+            MMXR_f_t_v(ia:ib-1) = XMrm1_t(ip,1:imhu0)'; 
+            %
+            i = ib0+(nmhu-ns_f(ir))*(ip-1)+imhu0+1:ib0+(nmhu-ns_f(ir))*(ip-1)+((nmhu-ns_f(ir))-imhum);
+            j = ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhum+1:ibm+(nmhu-ns_f(ir-1))*(ip-1)+((nmhu-ns_f(ir-1))-imhum);
+            ia = ib;ib = ia+length(i);
+            MMXR_f_t_i(ia:ib-1) = i;
+            MMXR_f_t_j(ia:ib-1) = j;
+            MMXR_f_t_v(ia:ib-1) = XMrm2_t(ip,imhu0+1:((nmhu-ns_f(ir))-imhum))'; 
+            %
+            i = ib0+(nmhu-ns_f(ir))*(ip-1)+((nmhu-ns_f(ir))-imhum)+1:ib0+(nmhu-ns_f(ir))*(ip-1)+((nmhu-ns_f(ir))-imhu0);
+            j = ibm+(nmhu-ns_f(ir-1))*(ip-1)+((nmhu-ns_f(ir-1))-imhum)+1:ibm+(nmhu-ns_f(ir-1))*(ip-1)+((nmhu-ns_f(ir-1))-imhu0);
+            ia = ib;ib = ia+length(i);
+            MMXR_f_t_i(ia:ib-1) = i;
+            MMXR_f_t_j(ia:ib-1) = j;
+            MMXR_f_t_v(ia:ib-1) = XMrm3_t(ip,((nmhu-ns_f(ir))-imhum)+1:((nmhu-ns_f(ir))-imhu0))'/2;
+            j = ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhum:-1:ibm+(nmhu-ns_f(ir-1))*(ip-1)+imhu0+1;
+            ia = ib;ib = ia+length(i);
+            MMXR_f_t_i(ia:ib-1) = i;
+            MMXR_f_t_j(ia:ib-1) = j;
+            MMXR_f_t_v(ia:ib-1) = XMrm3_t(ip,((nmhu-ns_f(ir))-imhum)+1:((nmhu-ns_f(ir))-imhu0))'/2; 
+            %       
+            i = ib0+(nmhu-ns_f(ir))*(ip-1)+(nmhu-ns_f(ir))-imhu0+1:ib0+(nmhu-ns_f(ir))*ip;
+            j = ibm+(nmhu-ns_f(ir-1))*(ip-1)+(nmhu-ns_f(ir-1))-imhu0+1:ibm+(nmhu-ns_f(ir-1))*ip;
+            ia = ib;ib = ia+length(i);
+            MMXR_f_t_i(ia:ib-1) = i;
+            MMXR_f_t_j(ia:ib-1) = j;
+            MMXR_f_t_v(ia:ib-1) = XMrm4_t(ip,(nmhu-ns_f(ir))-imhu0+1:nmhu-ns_f(ir))';
+        end
+        %
+        MMXR_f_t = sparse(MMXR_f_t_i(1:ib-1),MMXR_f_t_j(1:ib-1),MMXR_f_t_v(1:ib-1),nMMXP_f_t,nMMXP_f_t);%Create sparse radial transport matrix
+        %
+        if display_mode >= 1,info_dke_yp(2,['Zero order configuration space matrix calculations done in ',num2str(etime(clock,time0)),' (s)']);end
+    end     
+else
+	MMXR_f_t = sparse(nMMXP_f_t,nMMXP_f_t);%Create empty supermatrix
+end
+%
+% Time diagonal supermatrix calculation MMXT_f_t
+%
+for ir = 1:nr,
     MXT = reshape(Zpn2_t{ir}',(nmhu-ns_f(ir))*npn,1)/dtn;%Partial momentum Jacobian 
     MXT_f_t = sparse([1:(nmhu-ns_f(ir))*npn],[1:(nmhu-ns_f(ir))*npn],MXT,(nmhu-ns_f(ir))*npn,(nmhu-ns_f(ir))*npn);%Resizing for 3D calculations + multiplication by the remaining Jacobian
 %
@@ -449,31 +825,31 @@ if dke_mode == 1,
 %   
 % D and F tensors
 % 
-        XDpp_tp_ippj = ZXXD_c_tp.pp_ippj(:,:,ir_dke) + ZXXD_e_tp.pp_ippj(:,:,ir_dke) + ZYXXD_rf_tp.pp_ippj(:,:,ir_dke);
-        XDpp_tp_ipj = ZXXD_c_tp.pp_ipj(:,:,ir_dke) + ZXXD_e_tp.pp_ipj(:,:,ir_dke) + ZYXXD_rf_tp.pp_ipj(:,:,ir_dke);
-        XDpp_tp_ij = ZXXD_c_tp.pp_ij(:,:,ir_dke) + ZXXD_e_tp.pp_ij(:,:,ir_dke) + ZYXXD_rf_tp.pp_ij(:,:,ir_dke);
-        XDpp_tp_imj = ZXXD_c_tp.pp_imj(:,:,ir_dke) + ZXXD_e_tp.pp_imj(:,:,ir_dke) + ZYXXD_rf_tp.pp_imj(:,:,ir_dke);
-        XDpp_tp_immj = ZXXD_c_tp.pp_immj(:,:,ir_dke) + ZXXD_e_tp.pp_immj(:,:,ir_dke) + ZYXXD_rf_tp.pp_immj(:,:,ir_dke);
+        XDpp_tp_ippj = ZXXD_c_tp.pp_ippj(:,:,ir_dke) + ZXXD_e_tp.pp_ippj(:,:,ir_dke) + ZXXD_rf_tp.pp_ippj(:,:,ir_dke);
+        XDpp_tp_ipj = ZXXD_c_tp.pp_ipj(:,:,ir_dke) + ZXXD_e_tp.pp_ipj(:,:,ir_dke) + ZXXD_rf_tp.pp_ipj(:,:,ir_dke);
+        XDpp_tp_ij = ZXXD_c_tp.pp_ij(:,:,ir_dke) + ZXXD_e_tp.pp_ij(:,:,ir_dke) + ZXXD_rf_tp.pp_ij(:,:,ir_dke);
+        XDpp_tp_imj = ZXXD_c_tp.pp_imj(:,:,ir_dke) + ZXXD_e_tp.pp_imj(:,:,ir_dke) + ZXXD_rf_tp.pp_imj(:,:,ir_dke);
+        XDpp_tp_immj = ZXXD_c_tp.pp_immj(:,:,ir_dke) + ZXXD_e_tp.pp_immj(:,:,ir_dke) + ZXXD_rf_tp.pp_immj(:,:,ir_dke);
 %
-        XDpm_tp_ipj = ZXXD_c_tp.pm_ipj(:,:,ir_dke) + ZXXD_e_tp.pm_ipj(:,:,ir_dke) + ZYXXD_rf_tp.pm_ipj(:,:,ir_dke);
-        XDpm_tp_ij = ZXXD_c_tp.pm_ij(:,:,ir_dke) + ZXXD_e_tp.pm_ij(:,:,ir_dke) + ZYXXD_rf_tp.pm_ij(:,:,ir_dke);
-        XDpm_tp_imj = ZXXD_c_tp.pm_imj(:,:,ir_dke) + ZXXD_e_tp.pm_imj(:,:,ir_dke) + ZYXXD_rf_tp.pm_imj(:,:,ir_dke);
+        XDpm_tp_ipj = ZXXD_c_tp.pm_ipj(:,:,ir_dke) + ZXXD_e_tp.pm_ipj(:,:,ir_dke) + ZXXD_rf_tp.pm_ipj(:,:,ir_dke);
+        XDpm_tp_ij = ZXXD_c_tp.pm_ij(:,:,ir_dke) + ZXXD_e_tp.pm_ij(:,:,ir_dke) + ZXXD_rf_tp.pm_ij(:,:,ir_dke);
+        XDpm_tp_imj = ZXXD_c_tp.pm_imj(:,:,ir_dke) + ZXXD_e_tp.pm_imj(:,:,ir_dke) + ZXXD_rf_tp.pm_imj(:,:,ir_dke);
 %
-        XDmp_tp_ijp = ZXXD_c_tp.mp_ijp(:,:,ir_dke) + ZXXD_e_tp.mp_ijp(:,:,ir_dke) + ZYXXD_rf_tp.mp_ijp(:,:,ir_dke);
-        XDmp_tp_ij = ZXXD_c_tp.mp_ij(:,:,ir_dke) + ZXXD_e_tp.mp_ij(:,:,ir_dke) + ZYXXD_rf_tp.mp_ij(:,:,ir_dke);
-        XDmp_tp_ijm = ZXXD_c_tp.mp_ijm(:,:,ir_dke) + ZXXD_e_tp.mp_ijm(:,:,ir_dke) + ZYXXD_rf_tp.mp_ijm(:,:,ir_dke);
+        XDmp_tp_ijp = ZXXD_c_tp.mp_ijp(:,:,ir_dke) + ZXXD_e_tp.mp_ijp(:,:,ir_dke) + ZXXD_rf_tp.mp_ijp(:,:,ir_dke);
+        XDmp_tp_ij = ZXXD_c_tp.mp_ij(:,:,ir_dke) + ZXXD_e_tp.mp_ij(:,:,ir_dke) + ZXXD_rf_tp.mp_ij(:,:,ir_dke);
+        XDmp_tp_ijm = ZXXD_c_tp.mp_ijm(:,:,ir_dke) + ZXXD_e_tp.mp_ijm(:,:,ir_dke) + ZXXD_rf_tp.mp_ijm(:,:,ir_dke);
 %
-        XDmm_tp_ijp = ZXXD_c_tp.mm_ijp(:,:,ir_dke) + ZXXD_e_tp.mm_ijp(:,:,ir_dke) + ZYXXD_rf_tp.mm_ijp(:,:,ir_dke);
-        XDmm_tp_ijm = ZXXD_c_tp.mm_ijm(:,:,ir_dke) + ZXXD_e_tp.mm_ijm(:,:,ir_dke) + ZYXXD_rf_tp.mm_ijm(:,:,ir_dke);
+        XDmm_tp_ijp = ZXXD_c_tp.mm_ijp(:,:,ir_dke) + ZXXD_e_tp.mm_ijp(:,:,ir_dke) + ZXXD_rf_tp.mm_ijp(:,:,ir_dke);
+        XDmm_tp_ijm = ZXXD_c_tp.mm_ijm(:,:,ir_dke) + ZXXD_e_tp.mm_ijm(:,:,ir_dke) + ZXXD_rf_tp.mm_ijm(:,:,ir_dke);
 %
-        XFp_tp_ippj = ZXXF_c_tp.p_ippj(:,:,ir_dke) + ZXXF_e_tp.p_ippj(:,:,ir_dke) + ZYXXF_rf_tp.p_ippj(:,:,ir_dke);
-        XFp_tp_ipj = ZXXF_c_tp.p_ipj(:,:,ir_dke) + ZXXF_e_tp.p_ipj(:,:,ir_dke) + ZYXXF_rf_tp.p_ipj(:,:,ir_dke);
-        XFp_tp_ij = ZXXF_c_tp.p_ij(:,:,ir_dke) + ZXXF_e_tp.p_ij(:,:,ir_dke) + ZYXXF_rf_tp.p_ij(:,:,ir_dke);
-        XFp_tp_imj = ZXXF_c_tp.p_imj(:,:,ir_dke) + ZXXF_e_tp.p_imj(:,:,ir_dke) + ZYXXF_rf_tp.p_imj(:,:,ir_dke);
-        XFp_tp_immj = ZXXF_c_tp.p_immj(:,:,ir_dke) + ZXXF_e_tp.p_immj(:,:,ir_dke) + ZYXXF_rf_tp.p_immj(:,:,ir_dke);
+        XFp_tp_ippj = ZXXF_c_tp.p_ippj(:,:,ir_dke) + ZXXF_e_tp.p_ippj(:,:,ir_dke) + ZXXF_rf_tp.p_ippj(:,:,ir_dke);
+        XFp_tp_ipj = ZXXF_c_tp.p_ipj(:,:,ir_dke) + ZXXF_e_tp.p_ipj(:,:,ir_dke) + ZXXF_rf_tp.p_ipj(:,:,ir_dke);
+        XFp_tp_ij = ZXXF_c_tp.p_ij(:,:,ir_dke) + ZXXF_e_tp.p_ij(:,:,ir_dke) + ZXXF_rf_tp.p_ij(:,:,ir_dke);
+        XFp_tp_imj = ZXXF_c_tp.p_imj(:,:,ir_dke) + ZXXF_e_tp.p_imj(:,:,ir_dke) + ZXXF_rf_tp.p_imj(:,:,ir_dke);
+        XFp_tp_immj = ZXXF_c_tp.p_immj(:,:,ir_dke) + ZXXF_e_tp.p_immj(:,:,ir_dke) + ZXXF_rf_tp.p_immj(:,:,ir_dke);
 %
-        XFm_tp_ijp = ZXXF_c_tp.m_ijp(:,:,ir_dke) + ZXXF_e_tp.m_ijp(:,:,ir_dke) + ZYXXF_rf_tp.m_ijp(:,:,ir_dke);
-        XFm_tp_ijm = ZXXF_c_tp.m_ijm(:,:,ir_dke) + ZXXF_e_tp.m_ijm(:,:,ir_dke) + ZYXXF_rf_tp.m_ijm(:,:,ir_dke);
+        XFm_tp_ijp = ZXXF_c_tp.m_ijp(:,:,ir_dke) + ZXXF_e_tp.m_ijp(:,:,ir_dke) + ZXXF_rf_tp.m_ijp(:,:,ir_dke);
+        XFm_tp_ijm = ZXXF_c_tp.m_ijm(:,:,ir_dke) + ZXXF_e_tp.m_ijm(:,:,ir_dke) + ZXXF_rf_tp.m_ijm(:,:,ir_dke);
 %
         [Xa_tp,Xb_tp,Xc_tp,Xd_tp,Xe_tp,Xf_tp,Xg_tp,Xh_tp,Xi_tp] = ...
             fpengine_dke_yp(dkeparam,1,...

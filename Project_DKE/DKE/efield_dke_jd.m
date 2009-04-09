@@ -17,12 +17,91 @@ time0 = clock;
 %load([fullfile(temppath,'temp_DKE.mat'],'xepsi');
 %
 if exist('xepsi') == 1, %The bounce averaging coefficients were calculated before.
-  %
-%  load([fullfile(temppath,'temp_DKE.mat'],'ZXXD_e','ZXXF_e','ZXXD_e_tp','ZXXF_e_tp','xepsi','xEfield_validity')
-  %
-  if display_mode >= 1,info_dke_yp(2,['Electric field flux coefficients retrieved.']);end	
-  %
+    %
+  	%load([fullfile(temppath,'temp_DKE.mat'],'ZXXD_e','ZXXF_e','ZXXD_e_tp','ZXXF_e_tp','xepsi','xEfield_validity')
+    %
+    if display_mode >= 1,info_dke_yp(2,['Electric field flux coefficients retrieved.']);end	
+    %
 else
+    %
+    xepsi_fsav = zeros(size(equilDKE.xrho));
+    if ~isempty(ohm),
+        xepsi_fsav = interp1(ohm.rho,ohm.epsi,equilDKE.xrho,'spline')/mksa.Edreicer_ref;%Normalized to the Dreicer value
+    end
+    %
+    xrho = equilDKE.xrho;
+    xB0 = equilDKE.xB0;
+    xBT0 = equilDKE.xBT0;
+    xx0 = equilDKE.xx0;
+    Rp = equilDKE.Rp;
+    Xmhu = gridDKE.Xmhu;
+    X1mmhu2p = gridDKE.X1mmhu2p;
+    X1mmhu2m = gridDKE.X1mmhu2m;
+    ip_th_ref = gridDKE.ip_th_ref; 
+    rdke =gridDKE.rdke;
+    npn = gridDKE.npn;%Size of the momentum grids for the distribution function (half grid)
+    nmhu = gridDKE.nmhu;
+    nr = gridDKE.nr;%Size of the radial grid for the distribution function (half grid)
+    nr_dke =gridDKE.nr_dke;%Size of the effective radial grid for the drift kinetic equation (nr_dke = nr for FPE equation only)
+    %
+    XXlambda_b_p1m3p4  = Zbouncecoef.XXlambda_b_p1m3p4;
+    XXlambda_b_p1m2p2  = Zbouncecoef.XXlambda_b_p1m2p2;
+    XXRlambda_b_p1m1p2 = Zbouncecoef.XXRlambda_b_p1m1p2;
+    XXRlambda_b_p1m1p2_p = Zbouncecoef.XXRlambda_b_p1m1p2_p;
+    XXRlambda_b_p1m1p2_m = Zbouncecoef.XXRlambda_b_p1m1p2_m;
+    XXRlambda_b_p2m2p2  = Zbouncecoef.XXRlambda_b_p2m2p2;
+    XXRlambda_b_p2m2p2_p = Zbouncecoef.XXRlambda_b_p2m2p2_p;
+    XXRlambda_b_p2m2p2_m = Zbouncecoef.XXRlambda_b_p2m2p2_m;
+    xqbar = Zbouncecoef.xqbar;
+    xqtilde = Zbouncecoef.xqtilde;
+    xqhat = Zbouncecoef.xqhat;
+    %
+    % Output files initialization
+    %
+    %
+    % Terms from Sp at l+1/2 (Notations: _imj -> (i,j+1+2);_ipj -> (i+1,j+1/2)
+    %
+    ZXXD_e.pp_ipj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%momentum dynamics only
+    ZXXD_e.pp_imj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%momentum dynamics only
+    ZXXD_e.pm_ipj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%momentum dynamics only
+    ZXXD_e.pm_imj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%momentum dynamics only
+    ZXXD_e.pr_ipj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+    ZXXD_e.pr_imj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+    %   
+    ZXXF_e.p_ipj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%momentum dynamics only
+    ZXXF_e.p_imj = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%momentum dynamics only
+    %
+    % Terms from Sksi at l+1/2 (Notations: _ijp -> (i+1/2,j+1);_ijm -> (i+1/2,j)
+    %
+    ZXXD_e.mm_ijp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%momentum dynamics only
+    ZXXD_e.mm_ijm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%momentum dynamics only
+    ZXXD_e.mp_ijp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%momentum dynamics only
+    ZXXD_e.mp_ijm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%momentum dynamics only
+    ZXXD_e.mr_ijp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+    ZXXD_e.mr_ijm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+    %
+    ZXXF_e.m_ijp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%momentum dynamics only
+    ZXXF_e.m_ijm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%momentum dynamics only
+    %
+    % Terms from Spsi at (i+1/2,j+1/2) (Notations: _lm -> (l);_lp -> (l+1);
+    %
+    ZXXD_e.rr_lm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%radial dynamics only
+    ZXXD_e.rr_lp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%radial dynamics only
+    ZXXD_e.rp_lm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+    ZXXD_e.rp_lp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+    ZXXD_e.rm_lm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+    ZXXD_e.rm_lp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+    %
+    ZXXF_e.r_lm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%radial dynamics only
+    ZXXF_e.r_lp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%radial dynamics only
+    %
+    % Terms used by the old scheme only for momentum cross-derivatives (M.
+    % Shoucri and I. Shkarofsky,Comp. Phys. Comm., 82 (1994) 287)
+    %
+    ZXXD_e.pp_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+    ZXXD_e.pm_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+    ZXXD_e.mp_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+    ZXXF_e.p_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr)
 %
   xrho = equilDKE.xrho;
   xrhoT = equilDKE.xrhoT;
@@ -142,12 +221,9 @@ else
 %   
 % Electric field flux coefficients calculations for f0 and g
 %   
-    ZXXF_e.p_ippj(:,:,ir) = +Xmhu.*XXRlambda_b_p1m1p2(:,:,ir)*xepsi(ir);
     ZXXF_e.p_ipj(:,:,ir) = +Xmhu.*XXRlambda_b_p1m1p2(:,:,ir)*xepsi(ir);
     ZXXF_e.p_ij(:,:,ir) = +Xmhu.*XXRlambda_b_p1m1p2(:,:,ir)*xepsi(ir); 
     ZXXF_e.p_imj(:,:,ir) = +Xmhu.*XXRlambda_b_p1m1p2(:,:,ir)*xepsi(ir);
-    ZXXF_e.p_immj(:,:,ir) = +Xmhu.*XXRlambda_b_p1m1p2(:,:,ir)*xepsi(ir);   
-%
     ZXXF_e.m_ijp(:,:,ir) = -sqrt(X1mmhu2p).*XXRlambda_b_p1m1p2_p(:,:,ir)*xepsi(ir);
     ZXXF_e.m_ijm(:,:,ir) = -sqrt(X1mmhu2m).*XXRlambda_b_p1m1p2_m(:,:,ir)*xepsi(ir);    
 %
