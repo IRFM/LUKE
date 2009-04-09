@@ -1,0 +1,540 @@
+\documentclass[aps,showpacs]{revtex4}
+%\documentclass[aps,showpacs,twocolumn]{revtex4}
+
+\usepackage{graphics}
+\usepackage{epsfig}
+
+\input setbmp
+
+\def\baselinestretch{1}
+
+\def\ov#1{\overline{#1}}
+\def\un#1{\underline{#1}}
+\def\wt#1{\widetilde{#1}}
+\def\vb#1{\mbox{\boldmath$#1$}}
+\def\pd#1#2{\frac{\partial #1}{\partial #2}}
+\def\fd#1#2{\frac{\delta #1}{\delta #2}}
+\def\wh#1{\widehat{#1}}
+\def\bdot{\,\vb{\cdot}\,}
+\def\btimes{\,\vb{\times}\,}
+\def\bu{$\bullet\;\;$}
+\def\ci{$\circ\;\;$}
+\def\bhat{\wh{{\sf b}}}
+\def\cal#1{\mathcal{#1}}
+\def\mbf#1{\mathbf{#1}}
+\def\exd{{\sf d}}
+
+\newcommand{\bc}{\begin{center}}
+\newcommand{\ec}{\end{center}}
+\newcommand{\bt}{\begin{tabbing}}
+\newcommand{\et}{\end{tabbing}} 
+\newcommand{\be}{\begin{eqnarray*}}
+\newcommand{\ee}{\end{eqnarray*}}
+\newcommand{\bs}{\begin{slide}}
+\newcommand{\es}{\end{slide}}
+\newcommand{\nl}{\newline}
+\newcommand{\no}{\noindent}
+
+\begin{document}
+
+\title{Bounce-averaged Guiding-center Fokker-Planck Operator}
+
+\author{A.~J.~Brizard$^{1}$, Y.~Peysson$^{2}$, J.~Decker$^{2}$, and F.-X.~Duthoit$^{2}$}
+\affiliation{$^{1}$Department of Chemistry and Physics, Saint Michael's College, Colchester, VT 05439, USA \\ $^{2}$CEA, IRFM, F-13108, Saint-Paul-lez-Durance, France}
+
+\begin{abstract}
+A general bounce-averaged guiding-center Fokker-Planck operator suitable for applications in transport analysis of axisymmetric magnetized plasmas is presented. The bounce-averaged guiding-center operator describes transport processes in three dimensions: the bounce-averaged drift-surface magnetic flux $\psi$, the minimum-B equatorial pitch-angle coordinate $\xi_{0}$, and the momentum magnitude $p$.
+\end{abstract}
+
+\begin{flushright}
+April 8, 2009 \\
+\end{flushright}
+
+\pacs{52.25.Fi, 52.65.Ff} 
+\maketitle
+
+\section{Introduction}
+
+Transport processes play a dominant role in the long-time behavior of strongly-magnetized plasmas. In the absence of turbulent transport, the long-time magnetic confinement of plasmas is based on the small dimensionless parameters $\epsilon_{B} \equiv \rho/L_{B} \ll 1$ (the ratio of the characteristic gyroradius $\rho$ and the magnetic nonuniformity length scale $L_{B}$) and $\epsilon_{\nu} \equiv \nu/\Omega \ll 1$ (the ratio of the characteristic collision frequency $\nu$ and the gyrofrequency $\Omega$). For such plasmas, there exist additional small dimensionless parameters that can be used to describe different classes of collisional transport processes. For example, the dimensionless ratio $L_{B}/\lambda_{\nu} \equiv \epsilon_{\nu}/
+\epsilon_{B}$ of the magnetic nonuniformity length scale $L_{B}$ and the mean-free-path $\lambda_{\nu}$ can be used to characterize classical transport \cite{Braginskii} $(\lambda_{\nu} \ll L_{B})$ and neoclassical transport \cite{HH_76} $(\lambda_{\nu} \gg L_{B})$. The quasilinear transport processes associated with rf-induced heating and current drive, on the other hand, cause a slow time evolution of the background plasma distribution (as a result of one or more wave-particle resonances) on a time-scale ordering that is quadratic in a small parameter $\epsilon_{w}$ associated with the rf-wave amplitude \cite{Kaufman_72,Brizard_rql_04}. 
+
+Because the long-time behavior of the plasma distribution function for each particle species depends on competing collisional and quasilinear transport processes, and an accurate treatment of both transport processes in realistic magnetic geometry is a crucial element in determining the equilibrium and behavior of fusion plasmas. For this purpose, the use of dynamical-reduction methods (e.g., guiding-center transformation) can yield reduced transport operators (in phase space) that possess attractive numerical properties in addition to accurately representing collisional and/or quasilinear transport processes of interest.
+
+The remainder of the paper is organized as follows. In Sec.~\ref{sec:gc_axi}, we discuss the guiding-center Hamiltonian dynamics of charged particles in unperturbed axisymmetric magnetic geometry and, in Sec.~\ref{sec:bounce_average}, we introduce the bounce-averaging operation in the zero-banana-width (ZBW) limit. In Sec.~\ref{sec:gcFP}, we introduce the guiding-center Fokker-Planck operator, previously derived for general magnetic geometry 
+\cite{Brizard_2004}, and discuss its implementation in arbitrary axisymmetric magnetic geometry. In Sec.~\ref{sec:bgcFP}, we present the bounce-averaged guiding-center Fokker-Planck operator and discuss its properties as well as its connection to the bounce-center Fokker-Planck operator (with finite-banana-width effects) obtained by performing the bounce-center phase-space transformation \cite{Brizard_2000,Brizard_2007,Cary_Brizard} on the guiding-center Fokker-Planck operator. Lastly, we discuss the numerical implementation of the bounce-center Fokker-Planck operator (in the ZBW limit) in Sec.~\ref{sec:LUKE}, we summarize our work and discuss its applications in Sec.~\ref{sec:sum}, and we present a special form of the bounce-center Fokker-Planck collision operator in Appendix \ref{sec:ISO} when the field-particle distribution is isotropic.
+
+\section{\label{sec:gc_axi}Guiding-center Dynamics in Axisymmetric Magnetic Geometry}
+
+The existence of the small parameter $\epsilon \equiv \epsilon_{B} \ll 1$ in magnetically-confined plasmas forms the basis of the unperturbed guiding-center dynamical reduction \cite{Cary_Brizard}, in which the fast gyromotion time scale associated with the gyroangle $\varphi$ (with $\dot{\varphi} \equiv \epsilon^{-1}\Omega$), with the gyroaction $J \equiv \mu\,B/\Omega$ acting as its canonically-conjugate (adiabatic) invariant, is asymptotically decoupled from the parallel and cross-field motions of a guiding-center particle. The unperturbed guiding-center dynamics is expressed in terms of the guiding-center position ${\bf X}$ and the parallel velocity $v_{\|}$, where the guiding-center velocity 
+\begin{equation}
+\dot{{\bf X}} \;=\; v_{\|}\;\bhat \;+\; \frac{\bhat}{m\Omega}\btimes\left( \mu\;\nabla B \;+\; mv_{\|}^{2}\;\bhat\bdot\nabla\bhat \right) \;\equiv\; 
+v_{\|}\,\bhat \;+\; \epsilon\;{\bf v}_{\rm B} 
+\label{eq:Xdot_gc}
+\end{equation}
+is decomposed in terms of a parallel velocity $v_{\|} \equiv \bhat\bdot\dot{{\bf X}}$ along a field line and a slower cross-field velocity ${\bf v}_{\rm B}$ due to weak magnetic-field nonuniformity. The guiding-center parallel acceleration
+\begin{equation}
+\dot{v}_{\|} \;=\; -\;\frac{\mu}{m}\;\left(\bhat \;+\; \epsilon\;\frac{{\bf v}_{\rm B}}{v_{\|}} \right)\bdot\nabla B
+\label{eq:vpardot_gc}
+\end{equation}
+guarantees that the guiding-center kinetic energy ${\cal E} = mv_{\|}^{2}/2 + \mu\,B$ is a constant of motion (for a time-independent magnetic field). 
+
+Guiding-center dynamics in general axisymmetric magnetic geometry is also characterized, according to Noether's theorem, by a third constant of the motion: the toroidal canonical momentum
+\begin{equation}
+P_{\phi} \;\equiv\; -\,\frac{e}{c}\;\psi^{*} \;\equiv\; -\,\frac{e}{c} \left( \psi \;-\frac{}{} \rho_{\|}\;B_{\phi} \right),
+\label{eq:psi_drift}
+\end{equation}
+where $\rho_{\|} \equiv v_{\|}/\Omega$ denotes the parallel gyroradius, $B_{\phi} \equiv {\bf B}\bdot\partial{\bf X}/\partial\phi$ denotes the covariant component of the axisymmetric magnetic field, and $\psi^{*}(\psi,\theta; {\cal E},\mu)$ is called the drift-surface label \cite{HH_76}. The constant value of the drift-surface label $\psi^{*} = \psi_{\rm b}$ for each trapped-particle orbit (see Fig.~\ref{fig:trapped_particle}) can be found at its turning points $(\psi,\theta) = (\psi_{\rm b},\theta_{\rm b}^{\pm})$ on the poloidal plane (where $\rho_{\|} = 0$). On the drift surface $\psi^{*} = 
+\psi_{\rm b}$, the poloidal magnetic flux becomes a function of the poloidal angle:
+\begin{equation}
+\psi(\theta) \;=\; \psi_{\rm b} \;+\; \Delta\psi(\theta),
+\label{eq:psi_theta}
+\end{equation}
+where the additional dependence on the invariants $({\cal E},\mu)$ is not shown. We also label the point on the trapped-particle orbit where the magnetic-field magnitude $B$ is minimum as $(\psi_{0},\theta_{0})$: $B_{0} \equiv B(\psi_{0},\theta_{0}) < B(\psi(\theta),\theta)$ and a measure of the width of the trapped-particle orbit can be given as $\psi_{0} - \psi_{\rm b} = \Delta\psi(\theta_{0})$. In Fig.~\ref{fig:trapped_particle}, we also show the zero-banana-width (ZBW) approximation (projection), where we replace $\psi_{0}$ by $\psi_{\rm b}$ in certain integrals defined on a trapped-particle orbit.
+
+\begin{figure}
+%\epsfysize=3in
+%\epsfbox{trapped_orbit.eps}
+\centerbmp{5in}{3in}{trapped_orbit.bmp}
+\caption{Drift-surface label $\psi^{*} = \psi_{\rm b}$ for a trapped-particle orbit in the poloidal plane, where $\psi_{\rm b}$ is the poloidal magnetic-flux surface on which the bounce points $\theta = \theta_{\rm b}^{\pm}$ are located. The minimum-B location on the poloidal plane is denoted 
+$(\psi_{0},\theta_{0})$ and the zero-banana-width (ZBW) projection $\psi_{0} \rightarrow \psi_{\rm b}$ is discussed in the text.}
+\label{fig:trapped_particle}
+\end{figure}
+
+The general axisymmetric magnetic field considered in the present paper is expressed as \cite{White_2008}
+\begin{equation}
+{\bf B} \;=\; \nabla\phi\btimes\nabla\psi \;+\; q(\psi)\;\nabla\psi\btimes\nabla\theta \;=\; 
+B_{\phi}\,\nabla\phi \;+\; B_{\theta}\,\nabla\theta \;+\; B_{\psi}\,\nabla\psi,
+\label{eq:B_axisym}
+\end{equation}
+where $\psi$ denotes the (poloidal) magnetic flux, which satisfies the condition ${\bf B}\bdot\nabla\psi = 0$ (i.e., magnetic field lines lie entirely on a constant-$\psi$ surface), while $\theta$ and $\phi$ are the poloidal and toroidal angles. The spatial Jacobian associated with these coordinates is
+\begin{equation}
+{\cal V} \;\equiv\; (\nabla\psi\btimes\nabla\theta\bdot\nabla\phi)^{-1} \;=\; (B^{\theta})^{-1},
+\label{eq:Jac_space}
+\end{equation}
+where $B^{\theta} \equiv {\bf B}\bdot\nabla\theta$ denotes the contravariant component of the magnetic field (\ref{eq:B_axisym}). We note that the safety factor $q(\psi) \equiv {\bf B}\bdot\nabla\phi/{\bf B}\bdot\nabla\theta = B^{\phi}/B^{\theta}$ in Eq.~(\ref{eq:B_axisym}) is equal to zero for an axisymmetric dipole magnetic field (since $B_{\phi} \equiv 0$) and the drift-surface label is $\psi^{*} \equiv \psi$ (i.e., all the guiding-center orbits located on a single constant-$\psi$ surface are labeled by their values of ${\cal E}$ and $\mu$). Lastly, we note that, because of the condition ${\bf B}\bdot\nabla\psi = 0$, the covariant component $B_{\psi} \equiv -\,B_{\theta}\,\nabla\theta\bdot\nabla\psi/|\nabla\psi|^{2}$ in Eq.~(\ref{eq:B_axisym}) vanishes only if the coordinates $\psi$ and $\theta$ are orthogonal.
+
+\section{\label{sec:bounce_average}Bounce-Averaging Operator in Axisymmetric Magnetic Geometry}
+
+When the coordinates $({\bf X}, {\cal E}, \mu, \varphi)$ are used in describing guiding-center dynamics, the ordering of the guiding-center Vlasov evolution operator
+\begin{equation}
+\frac{d_{\rm gc}}{dt} \;\equiv\; \epsilon\;\pd{}{\tau} \;+\; \left( v_{\|}\,\bhat \;+\frac{}{} \epsilon\;{\bf v}_{\rm B}\right)\bdot\nabla \;+\; 
+\epsilon^{-1}\Omega\;\pd{}{\varphi}
+\label{eq:dgc_dt}
+\end{equation}
+implies that, on the drift-ordering time scale $(\partial/\partial\tau \sim {\bf v}_{\rm B}\bdot\nabla)$, the guiding-center Vlasov distribution $F$ is independent of the gyroangle $\varphi$ on the fastest time scale (i.e., $\partial F/\partial\varphi \equiv 0$). On the intermediate time scale, however, the lowest-order guiding-center Vlasov equation $d_{\rm gc}F/dt = 0$ becomes $v_{\|}\,\bhat\bdot\nabla F \equiv 0$ (e.g., in the regime of low collisionality $\lambda_{\nu} < L_{B}$). In general axisymmetric magnetic geometry (\ref{eq:B_axisym}), the operator $\bhat\bdot\nabla$ is written as
+\begin{equation}
+\bhat\bdot\nabla \;\equiv\; \left( \bhat\bdot\nabla\psi \right)\;\pd{}{\psi} \;+\; \left( \bhat\bdot\nabla\theta \right)\;\pd{}{\theta} \;+\;
+\left( \bhat\bdot\nabla\phi \right)\;\pd{}{\phi} \;=\; \frac{B^{\theta}}{B}\;\pd{}{\theta},
+\label{eq:b_grad}
+\end{equation}
+where the contravariant component $B^{\theta} \equiv {\bf B}\bdot\nabla\theta = \nabla\phi\btimes\nabla\psi\bdot\nabla\theta$ is assumed to be positive, and we used $\bhat\bdot\nabla\psi = 0$ (by definition of the magnetic flux $\psi$) and $\partial/\partial\phi = 0$ (by definition of axisymmetry). In the low-collisionality regime in axisymmetric magnetic geometry, the lowest-order solution $F \equiv \ov{F}(\psi,{\cal E},\mu; \tau)$ of the guiding-center Vlasov equation is therefore independent of the poloidal angle $\theta$ (which also holds in the presence of collisional and quasilinear transport processes provided these processes are slow on the bounce time scale).
+
+\subsection{Bounce Period}
+
+Guiding-center orbits in the poloidal plane $(\psi,\theta)$ of an axisymmetric magnetic field are labeled by the invariants $(\psi^{*}, {\cal E}, \mu)$. The topology of these orbits can be rather complicated \cite{Rome_Peng,Egedal,CCO}, so our discussion will remain as general as possible concerning the nature of the axisymmetric magnetic geometry. Whether a guiding-center orbit corresponds to a trapped orbit (where the parallel velocity vanishes at turning points) or a passing orbit (where the parallel velocity does not vanishes), however, the motion is periodic in the poloidal plane $(\psi,\theta)$.
+
+The definition of the {\it bounce} period for a trapped-particle orbit in the poloidal plane is given in terms of a closed integral involving the poloidal angle $\theta$ (at constant invariants $\psi^{*} = \psi_{\rm b}$, ${\cal E}$, and $\mu$):
+\begin{equation}
+\tau_{\sf b}(\psi_{\rm b},{\cal E},\mu) \;=\; \oint\;\frac{d\theta}{2\pi\,v_{\|}}\;\frac{B}{B^{\theta}} \;=\; \frac{2}{v}\;
+\int_{\theta_{\rm b}^{-}}^{\theta_{\rm b}^{+}}\;\frac{d\theta}{2\pi\,|\xi|}\;\frac{B}{B^{\theta}},
+\label{eq:taub_def}
+\end{equation}
+where $(0 \leq \theta_{\rm b}^{-} \leq \theta_{\rm b}^{+} \leq 2\pi)$ are the turning points where the parallel velocity $v_{\|}$ vanishes [as a result of magnetic-field nonuniformity; see Eq.~(\ref{eq:vpardot_gc}) and Fig.~\ref{fig:trapped_particle}]. In Eq.~(\ref{eq:taub_def}), we introduced the pitch-angle coordinate
+\begin{equation}
+\xi(\mu,{\cal E}, \sigma; \psi,\theta) \;\equiv\; v_{\|}/v \;=\; \sigma\;\sqrt{1 \;-\; \mu B(\psi,\theta)/{\cal E}}, 
+\label{eq:xi_def}
+\end{equation}
+where $\sigma = \pm\,1$ denotes the sign of $v_{\|}$. The turning points $\theta_{\rm b}^{\pm}$ in Eq.~(\ref{eq:taub_def}) are points where 
+${\cal E} \equiv \mu\,B(\psi_{\rm b},\theta_{\rm b}^{\pm})$. We note that there is no implied up-down symmetry in our work (e.g., $\theta_{\rm b}^{-}
+\neq -\,\theta_{\rm b}^{+}$).
+
+For a passing particle, we have $(\theta_{\rm b}^{-}, \theta_{\rm b}^{+}) \equiv (0, 2\pi)$ in the last integral in Eq.~(\ref{eq:taub_def}) and $|\xi|$ does not vanish. The {\it transit} period of a passing particle is thus defined as
+\begin{equation}
+\tau_{\sf t} \;=\; \frac{1}{v}\;\int_{0}^{2\pi}\;\frac{d\theta}{2\pi\,|\xi|}\;\frac{B}{B^{\theta}}.
+\label{eq:taut_def}
+\end{equation}
+Note that both the bounce period (\ref{eq:taub_def}) and the transit period (\ref{eq:taut_def}) become infinite on the boundary that separates trapped-particle orbits and passing-particle orbits. While the low-collisionality approximation $(\partial F/\partial\theta = 0)$ does not hold near this trapped-passing boundary, $\rightarrow$ (Joan)
+
+\bc
+MORE TO FOLLOW
+\ec
+
+In the expression for the bounce period (\ref{eq:taub_def}), we extract the magnetic-geometric factor (with dimension of length)
+\begin{equation}
+\Lambda(\psi_{\rm b}) \;\equiv\; \int_{0}^{2\pi}\; \frac{d\theta}{2\pi}\;\frac{B(\psi_{\rm b},\theta)}{B^{\theta}(\psi_{\rm b},\theta)},
+\label{eq:Lambda_def}
+\end{equation}
+which defines the length of the magnetic-field line (projected onto the poloidal plane) on the constant magnetic-flux surface $\psi = \psi_{\rm b}$. Next, we define the normalized bounce period
+\begin{equation}
+\lambda(\psi_{\rm b}, \xi_{0}) \;\equiv\; \frac{1}{\Lambda}\;\int_{\theta_{\rm b}^{-}}^{\theta_{\rm b}^{+}}\;\frac{d\theta}{2\pi}\;
+\frac{B\,\xi_{0}}{B^{\theta}\,|\xi|},
+\label{eq:lambda_def}
+\end{equation}
+where 
+\begin{equation}
+\xi_{0} \;\equiv\; \sqrt{1 - \mu B_{0}/{\cal E}} \;>\; 0 
+\label{eq:xi0_def}
+\end{equation}
+defines the pitch-angle coordinate at the minimum-B location $(\psi,\theta) = (\psi_{0},\theta_{0})$ of the trapped orbit (see 
+Fig.~\ref{fig:trapped_particle}): $B_{0}(\psi_{0}) \equiv B(\psi_{0},\theta_{0})$. In the ZBW approximation \cite{footnote}, we replace $\psi_{0}$ with $\psi_{\rm b}$ in Eq.~(\ref{eq:xi0_def}). The general pitch-angle coordinate $\xi$ is thus replaced with the minimum-B equatorial pitch-angle coordinate $\xi_{0}(\psi_{\rm b},{\cal E},\mu)$ through the conservation of magnetic moment:
+\begin{equation}
+1 \;-\; \xi^{2} \;=\; \Psi\;\left( 1 - \xi_{0}^{2}\right),
+\label{eq:Psi_def}
+\end{equation}
+where $\Psi(\psi_{\rm b},\theta) \equiv B(\psi_{\rm b},\theta)/B_{0}(\psi_{\rm b}) \geq 1$. 
+
+The bounce period (\ref{eq:taub_def}) is therefore expressed as
+\begin{equation}
+\tau_{\sf b}(\psi_{\rm b}, p, \xi_{0}) \;=\; \frac{2\,\Lambda\lambda}{v\,\xi_{0}},
+\label{eq:tau_b}
+\end{equation}
+when we combine the geometric factor (\ref{eq:Lambda_def}) and the normalized bounce period (\ref{eq:lambda_def}). We note that, for a passing particle $(\xi_{0{\sf t}} < \xi_{0} \leq 1)$, we have the definition $\lambda(\psi, \xi_{0} = 1) \equiv 1$ for completely-passing particles (i.e., $\mu 
+= 0$ and $v_{\|} = v$ is a constant of motion) and thus $\tau_{\rm t}(\xi_{0} = 1) = \Lambda/v$. 
+
+For future convenience, we now express the bounce period (\ref{eq:tau_b}) in terms of the total Jacobian for the transformation to the guiding-center  coordinates $(\psi_{\rm b},\theta,\phi,p,\xi_{0},\varphi)$. First, the guiding-center Jacobian in coordinates $({\bf X}, p, \xi, \varphi)$ is 
+${\cal J}_{\rm gc} \equiv p^{2}$, while in terms of the coordinates $({\bf X}, p, \xi_{0}, \varphi)$, it is ${\cal J}_{{\rm gc}0} \equiv p^{2}\,|\partial\xi/\partial\xi_{0}|$. Using Eq.~(\ref{eq:Psi_def}), we find
+\begin{equation}
+{\cal J}_{{\rm gc}0} \;\equiv\; p^{2}\;\Psi\,\frac{\xi_{0}}{|\xi|}.
+\label{eq:J_gc0}
+\end{equation}
+Next, the spatial Jacobian in coordinates ${\bf X} \equiv (\psi_{\rm b}, \theta, \phi)$ is ${\cal V} = [B^{\theta}(\psi_{\rm b},\theta)]^{-1}$, so that the total guiding-center Jacobian in coordinates $(\psi_{\rm b}, \theta, \phi;\, p, \xi_{0}, \varphi)$ is
+\begin{equation}
+{\cal J} \;\equiv\; {\cal V}\;{\cal J}_{{\rm gc}0} \;=\; p^{2}\;\frac{\Psi}{B^{\theta}}\,\frac{\xi_{0}}{|\xi|} \;=\; \frac{p^{2}}{B_{0}}\;
+\left( \frac{B\,\xi_{0}}{B^{\theta}\,|\xi|} \right).
+\label{eq:Jac_def}
+\end{equation}
+Using the Jacobian (\ref{eq:Jac_def}), the normalized bounce period (\ref{eq:lambda_def}) is now expressed as
+\begin{equation}
+\lambda(\psi_{\rm b}, \xi_{0}) \;=\; \frac{B_{0}}{\Lambda p^{2}}\;\int_{\theta_{\rm b}^{-}}^{\theta_{\rm b}^{+}}\;\frac{d\theta}{2\pi}\;{\cal J} \;\equiv\; 
+\frac{B_{0}\,\ov{{\cal J}}}{\Lambda p^{2}},
+\label{eq:lambda_Jac}
+\end{equation}
+and the bounce period (\ref{eq:tau_b}) can finally be expressed as
+\begin{equation}
+\tau_{\sf b}(\psi, p, \xi_{0}) \;=\; \frac{2\,B_{0}\ov{{\cal J}}}{vp^{2}\,\xi_{0}}.
+\label{eq:tau_Jac}
+\end{equation}
+The transit period for a passing particle, on the other hand, is $\tau_{\rm t} = B_{0}\ov{{\cal J}}/(vp^{2}\,\xi_{0})$, with $\ov{{\cal J}}$ now calculated with the boundaries $(0, 2\pi)$.
+
+\subsection{Bounce Averaging}
+
+The bounce-averaging operation of an arbitrary function $A \equiv A(\theta; \cdots)$ is defined as
+\begin{equation}
+\{A\}_{\sf b} \;\equiv\; \frac{1}{\tau_{\rm b}}\;\sum_{\sigma}\;\int_{\theta_{\rm b}^{-}}^{\theta_{\rm b}^{+}}\;
+\frac{d\theta}{2\pi\,v|\xi|}\;\frac{B}{B^{\theta}}\;A \;=\; \frac{1}{\ov{{\cal J}}}\;\left[\frac{1}{2}\,\sum_{\sigma}\right]\;
+\int_{\theta_{\rm b}^{-}}^{\theta_{\rm b}^{+}}\;\frac{d\theta}{2\pi}\;{\cal J}\,A.
+\label{eq:A_bounce}
+\end{equation}
+Here, the summation is over the sign $\sigma$ of $\xi$ and, therefore, the symbol $\frac{1}{2}\,\sum_{\sigma}$ takes the average between $A(\theta, \xi 
+> 0)$ and $A(\theta, \xi < 0)$ for trapped particles. For passing particles $(\{\cdots\} \equiv \{\cdots\}_{\sf t})$, on the other hand, we must use 
+$\frac{1}{2}\,\sum_{\sigma} \equiv 1$ and thus the transit-averaging operation is defined as
+\begin{equation}
+\{A\}_{\sf t} \;\equiv\; \frac{1}{\ov{{\cal J}}}\;\int_{0}^{2\pi}\;\frac{d\theta}{2\pi}\;{\cal J}\,A.
+\label{eq:A_transit}
+\end{equation}
+We will henceforth generically refer to the averaging procedure $\{\cdots\}$ as a bounce-averaging operation.
+
+\section{\label{sec:gcFP}General Guiding-center Fokker-Planck Operator}
+
+The Fokker-Planck equation \cite{HH_76,Kaufman_72,FP_review} forms a paradigm for the investigation of classical, neoclassical, and  quasilinear (turbulent) transport processes in plasmas. When written in terms of the test-particle phase-space coordinates $({\bf x}, {\bf p})$, the general Fokker-Planck operator used in plasma physics is expressed as a local partial-differential operator in momentum space \cite{HH_76}:
+\begin{equation}
+{\cal C}[f] \;=\; -\;\pd{}{{\bf p}} \bdot\left( {\bf K}\;f \;-\; {\sf D}\bdot\pd{f}{{\bf p}} \right),
+\label{eq:FP_def}
+\end{equation}
+where the Fokker-Planck momentum-friction vector ${\bf K}$ and the momentum-diffusion tensor ${\sf D}$ are functions of $({\bf x}, {\bf p})$. When representing collisional transport processes, for example, these Fokker-Planck coefficients ${\bf K} \equiv \sum^{\prime}\,{\bf K}[f^{\prime}]$ and 
+${\sf D} \equiv \sum^{\prime}\,{\sf D}[f^{\prime}]$ are expressed as integral operators acting on the field-particle distribution $f^{\prime}$ (where the field-particle species may coincide with the test-particle species). Hence, the Fokker-Planck operator (\ref{eq:FP_def}) may either be a linear, bilinear, or nonlinear operator acting $f$, depending on the type of transport problem one wishes to investigate.
+
+While collisions and wave-particle interactions take place locally in particle phase space, the transformation to reduced phase-space coordinates (e.g., guiding-center coordinates) will generically introduce transport coefficients in the full reduced phase space. This implies that the Fokker-Planck coefficients ${\bf K}$ and ${\sf D}$ in three-dimensional particle momentum space are replaced with six-dimensional reduced phase-space Fokker-Planck coefficients. In a weakly-nonuniform plasma with a strong axisymmetric magnetic field, for example, the reduced guiding-center Fokker-Planck equation describes transport processes in a four-dimensional space: the radial and poloidal coordinates $(\psi, \theta)$ in physical space, and the energy and magnetic moment coordinates $({\cal E}, \mu)$, which are invariants for the guiding-center motion. Here, the reduction from six to four dimensions is due to the assumption that the guiding-center plasma distribution is independent of the gyroangle $\varphi$ (by definition) and the toroidal angle $\phi$ (by axisymmetry), so that transport along these ignorable angles is irrelevant.
+
+\subsection{Guiding-center Fokker-Planck Operator}
+
+The general guiding-center Fokker-Planck operator was derived by Brizard \cite{Brizard_2004} as a result of the guiding-center dynamical reduction of the Fokker-Planck operator (\ref{eq:FP_def}):
+\begin{equation}
+{\cal C}_{\rm gc}[F] \;\equiv\; \left\langle {\sf T}_{\rm gc}^{-1}{\cal C}\left[{\sf T}_{\rm gc}\frac{}{}F\right]\right\rangle,
+\label{eq:gcFP_operator}
+\end{equation}
+where ${\sf T}_{\rm gc}$ and ${\sf T}_{\rm gc}^{-1}$ denote the pull-back and push-forward (Lie-transform) operators associated with the guiding-center transformation for a nonuniform magnetic field.
+
+When the guiding-center Lie-transform operators are applied on the Fokker-Planck operator (\ref{eq:FP_def}), we obtain a guiding-center Fokker-Planck operator that has a general divergence form
+\begin{equation}
+{\cal C}_{\rm gc}[\ov{F}] \;\equiv\; -\;\frac{1}{{\cal J}} \pd{}{Z^{\alpha}} \left[\; {\cal J} \left( {\cal K}_{\rm gc}^{\alpha}\;\ov{F} \;-\;
+{\cal D}_{\rm gc}^{\alpha\beta}\;\pd{\ov{F}}{Z^{\beta}} \right) \;\right] \;-\; \frac{1}{{\cal J}}\;\pd{}{\theta}\;\left( {\cal J}\frac{}{}\;
+{\cal S}^{\theta}_{\rm gc} \right),
+\label{eq:gcFP_def}
+\end{equation}
+where ${\cal J}$ is the total Jacobian (\ref{eq:Jac_def}), ${\cal S}^{\theta}_{\rm gc}$ is a component that represents transport processes in the poloidal direction (soon to be annihilated by bounce-averaging), and the guiding-center function $F \equiv \ov{F}$ is independent of the angle coordinates 
+$(\theta, \phi, \varphi)$, in the limit of weak collisionality, axisymmetry, and gyroangle invariance. Hence, only derivatives with respect to 
+$Z^{\alpha} \equiv (\psi, p, \xi_{0})$ remain in Eq.~(\ref{eq:gcFP_def}) (in the ZBW limit discussed in Sec.~\ref{sec:gc_axi} and we henceforth use 
+$\psi$ to denote the magnetic-flux surface on which a trapped-particle orbit has its turning points). The guiding-center Fokker-Planck friction components 
+\begin{equation}
+{\cal K}_{\rm gc}^{\alpha} \;\equiv\; \left\langle {\sf T}_{\rm gc}^{-1}{\bf K}\bdot\vb{\Delta}^{\alpha}\right\rangle 
+\;=\; ({\cal K}_{\rm gc}^{p}, {\cal K}_{\rm gc}^{\xi_{0}}, {\cal K}_{\rm gc}^{\psi}) 
+\label{eq:Kgc}
+\end{equation}
+and the guiding-center Fokker-Planck diffusion components 
+\begin{equation}
+{\cal D}_{\rm gc}^{\alpha\beta} \;\equiv\; \left\langle \vb{\Delta}^{\alpha}\bdot{\sf T}_{\rm gc}^{-1}{\sf D}\bdot
+\vb{\Delta}^{\beta}\right\rangle \;=\; \left( \begin{array}{ccc}
+{\cal D}_{\rm gc}^{pp} & {\cal D}_{\rm gc}^{p\xi_{0}} & {\cal D}_{\rm gc}^{p\psi} \\
+ && \\
+{\cal D}_{\rm gc}^{\xi_{0}p} & {\cal D}_{\rm gc}^{\xi_{0}\xi_{0}} & {\cal D}_{\rm gc}^{\xi_{0}\psi} \\
+ && \\
+{\cal D}_{\rm gc}^{\psi p} & {\cal D}_{\rm gc}^{\psi\xi_{0}} & {\cal D}_{\rm gc}^{\psi\psi}
+\end{array} \right),
+\label{eq:Dgc} 
+\end{equation}  
+are expressed in terms of the guiding-center push-forwards ${\sf T}_{\rm gc}^{-1}{\bf K}$ and ${\sf T}_{\rm gc}^{-1}{\sf D}$ of the particle momentum-space Fokker-Planck friction vector ${\bf K}$ and diffusion tensor ${\sf D}$, and the vector-valued {\it projection} coefficients
+\begin{equation}
+\vb{\Delta}^{\alpha} \;\equiv\; \vb{\Delta}^{{\bf X}}\bdot\nabla Z^{\alpha} \;+\; \vb{\Delta}^{{\cal E}}\;\pd{Z^{\alpha}}{{\cal E}} \;+\;
+\vb{\Delta}^{\mu}\;\pd{Z^{\alpha}}{\mu}.
+\label{eq:Delta_alpha}
+\end{equation}
+Here, the guiding-center vector-valued projection coefficients in $({\bf X},{\cal E},\mu)$ space \cite{Brizard_2004}
+\begin{equation}
+\left. \begin{array}{rcl}
+\vb{\Delta}^{{\bf X}}  & = & (\bhat/m\Omega)\btimes{\bf I} \;=\; -\;\vb{\Delta}^{{\bf X}\top} \\
+\vb{\Delta}^{{\cal E}} & = & {\bf p}_{\epsilon}/m \\
+\vb{\Delta}^{\mu}      & = & (\Omega/B)\;\partial\vb{\rho}_{\epsilon}/\partial\varphi
+\end{array} \right\}
+\label{eq:Delta_gc}
+\end{equation} 
+are constructed from the guiding-center Poisson-bracket expressions involving the guiding-center push-forward of the particle position 
+${\sf T}_{\rm gc}^{-1}{\bf x} \equiv {\bf X} + \vb{\rho}_{\epsilon}$, where the generalized gyroradius $\vb{\rho}_{\epsilon} \equiv {\sf T}_{\rm gc}^{-1}\vb{\rho}$ and the generalized guiding-center momentum ${\bf p}_{\epsilon} \equiv {\sf T}_{\rm gc}^{-1}{\bf p} = m\,(d_{\rm gc}{\bf X}/dt \,+\, 
+d_{\rm gc}\vb{\rho}_{\epsilon}/dt)$ and contain first-order corrections associated with the guiding-center transformation. Note, while the projection coefficients $\vb{\Delta}^{{\cal E}}$ and $\vb{\Delta}^{\mu}$ in Eq.~(\ref{eq:Delta_gc}) retain first-order corrections in magnetic-field nonuniformity, that we have omitted first-order corrections in $\vb{\Delta}^{{\bf X}}$ since they yield second-order contributions in the final expressions.
+
+Explicit expressions for the guiding-center Fokker-Planck components (\ref{eq:Kgc}) and (\ref{eq:Dgc}) in $({\bf X},{\cal E},\mu)$-space are also given by Brizard \cite{Brizard_2004} for the case of an isotropic field-particle distribution (see Appendix A). We note, however, that the expressions 
+(\ref{eq:Kgc}) and (\ref{eq:Dgc}) are completely general and apply to linear operators (e.g., quasilinear), bilinear operators (for unlike-particle collisions) and nonlinear operators (for like-particle collisions).
+
+
+\subsection{Guiding-center Projection Vectors}
+
+Using the definitions $p \equiv \sqrt{2m\,{\cal E}} = |{\bf p}_{\epsilon}|$ and $\xi_{0} \equiv \sqrt{1 - \mu\,B_{0}/{\cal E}}$, the guiding-center vector-valued projection coefficients $\vb{\Delta}^{\alpha} = (\vb{\Delta}^{p}, \vb{\Delta}^{\xi_{0}}, \vb{\Delta}^{\psi})$ are expressed as
+\cite{Brizard_2004}
+\begin{eqnarray}
+\vb{\Delta}^{\psi}    & \equiv & \vb{\Delta}^{{\bf X}}\bdot\nabla\psi \;=\; \frac{\bhat}{m\Omega}\btimes\nabla\psi, 
+\label{eq:Delta_psi} \\
+\vb{\Delta}^{p}       & \equiv & \vb{\Delta}^{{\cal E}}\;\pd{p}{{\cal E}} \;=\; \frac{{\bf p}_{\epsilon}}{|{\bf p}_{\epsilon}|}, 
+\label{eq:Delta_p} \\
+\vb{\Delta}^{\xi_{0}} & \equiv & \vb{\Delta}^{{\bf X}}\bdot\nabla \xi_{0} \;+\; \vb{\Delta}^{{\cal E}}\;\pd{\xi_{0}}{{\cal E}} \;+\;
+\vb{\Delta}^{\mu}\;\pd{\xi_{0}}{\mu} \;=\;\left( \frac{1 - \xi_{0}^{2}}{2\;\xi_{0}} 
+\right) \left[ \left( \frac{{\bf p}_{\epsilon}}{m\,{\cal E}} \;-\; \frac{\Omega}{\mu B}\,\pd{\vb{\rho}_{\epsilon}}{\varphi} \right) \;-\; \vb{\Delta}^{\psi}\;\frac{d\ln B_{0}}{d\psi} \right].
+\label{eq:Delta_xi0}
+\end{eqnarray} 
+We now discuss the nature of the projection vectors (\ref{eq:Delta_psi})-(\ref{eq:Delta_xi0}).
+
+\subsubsection{Guiding-center Radial Projection}
+
+The guiding-center radial projection vector (\ref{eq:Delta_psi}) projects transport processes in momentum space onto a magnetic-flux surface (and perpendicular to $\bhat$). Using the magnetic representation (\ref{eq:B_axisym}), the guiding-center radial projection vector (\ref{eq:Delta_psi}) becomes
+\begin{equation}
+\vb{\Delta}^{\psi} \;=\; \frac{\bhat}{m\Omega}\btimes\nabla\psi \;=\; -\;\frac{c}{e}\,\frac{|\nabla\psi|^{2}}{B^{2}} \left[ \nabla\phi \;-\; q\;\left(\wh{\psi}\btimes\nabla\theta\right)\btimes
+\wh{\psi} \right] \;\equiv\; -\;\frac{c}{e}\,\frac{|\nabla\psi|^{2}}{B^{2}}\;\nabla_{\psi}\zeta
+\label{eq:Deltapsi_exp}
+\end{equation}
+where we introduced the angle-like coordinate $\zeta \equiv \phi \,-\, q(\psi)\,\theta$, such that the axisymmetric magnetic field (\ref{eq:B_axisym}) becomes ${\bf B} \equiv \nabla\zeta\btimes\nabla\psi$. Here, $\wh{\psi} \equiv \nabla\psi/|\nabla\psi|$ and $\nabla_{\psi}\zeta \equiv \wh{\psi}\btimes
+(\nabla\zeta\btimes\wh{\psi}) = \nabla\phi - q\,\nabla_{\psi}\theta$ denotes the projection of the gradient of $\zeta$ that is perpendicular to 
+$\nabla\psi$. In axisymmetric magnetic dipole geometry, for example, the guiding-center radial projection vector $\vb{\Delta}^{\psi} = -(c/e)\,R^{2}\nabla\phi$ is in the toroidal direction, where the toroidal angle $\phi$ is canonically conjugate to the toroidal drift invariant $J_{\rm d} = -\,(e/c)\,\psi$ (i.e., the toroidal canonical momentum).
+
+The guiding-center radial projection vector $\vb{\Delta}^{\psi}$, whose magnitude is $|\vb{\Delta}^{\psi}| \equiv |\nabla\psi|/m\Omega$, therefore generates the local projection of the guiding-center push-forwards of the momentum-space Fokker-Planck friction
+\begin{equation}
+{\cal K}_{\rm gc}^{\psi} \;=\; \left\langle {\sf T}_{\rm gc}^{-1}{\bf K}\right\rangle\bdot \frac{\bhat}{m\Omega}\btimes\nabla\psi, 
+\label{eq:Kgc_psi}
+\end{equation}
+and the momentum-space Fokker-Planck diffusion
+\begin{eqnarray}
+{\cal D}_{\rm gc}^{\alpha\psi} & = & \left\langle \vb{\Delta}^{\alpha}\bdot{\sf T}_{\rm gc}^{-1}{\sf D}\right\rangle\bdot \frac{\bhat}{m\Omega}\btimes\nabla\psi, \label{eq:Dgc_alpha_psi} \\
+{\cal D}_{\rm gc}^{\psi\psi} & = & \frac{\bhat}{m\Omega}\btimes\nabla\psi\bdot\left\langle {\sf T}_{\rm gc}^{-1}{\sf D}\right\rangle\bdot 
+\frac{\bhat}{m\Omega}\btimes\nabla\psi, \label{eq:Dgc_psipsi}
+\end{eqnarray}
+where $\alpha \neq \psi$ in Eq.~(\ref{eq:Dgc_alpha_psi}). These projections only take into account transport processes occuring within a magnetic-flux surface. The connection between radial transport and toroidal and/or poloidal rotation is therefore naturally contained within this projection.
+
+\subsubsection{Guiding-center Energy Projection}
+
+The guiding-center energy projection vector (\ref{eq:Delta_p}) is expressed as
+\begin{equation}
+\vb{\Delta}^{p} \;\equiv\; \frac{{\bf p}_{\epsilon}}{|{\bf p}_{\epsilon}|} \;=\; \wh{{\sf p}} \;+\; \epsilon\;\vb{\Delta}_{1}^{p} \;+\; \cdots,
+\label{eq:Deltap_exp}
+\end{equation}
+where $\vb{\Delta}_{1}^{p}$ denotes the first-order correction of $\vb{\Delta}^{p}$. It can be explicitly expressed in terms of 
+$\ov{\vb{\rho}}_{\rm gc} \equiv (\bhat/\Omega)\btimes{\bf v}_{\rm B}$ and $\vb{\rho}_{\epsilon} \equiv \vb{\rho}_{0} + \epsilon\;\vb{\rho}_{1}$ 
+as \cite{Brizard_2004}
+\begin{equation}
+\vb{\Delta}_{1}^{p} \;=\; \frac{1}{\rho}\;\left( \ov{\vb{\rho}}_{\rm gc}\btimes\bhat \;+\; \pd{\vb{\rho}_{1}}{\varphi} \right) \;+\; 
+\xi\;\bhat\bdot\nabla^{*}\vb{\rho}_{0} \;\equiv\; \Delta_{\xi}^{p}\;\pd{\wh{{\sf p}}}{\xi} \;+\; \Delta_{\varphi}^{p}\;\pd{\wh{{\sf p}}}{\varphi}.
+\label{eq:Deltap_1}
+\end{equation}
+where $\rho \equiv p/(m\Omega)$ and 
+\[ \frac{1}{\rho}\;\ov{\vb{\rho}}_{\rm gc}\btimes\bhat \;=\; \rho\;\bhat\btimes\left[ \frac{1}{2}\,\left(1 - \xi^{2}\right)\;\nabla\ln B \;+\; \xi^{2}\;
+\bhat\bdot\nabla\bhat \right]. \]
+It can be shown explicitly, however, that $\vb{\Delta}_{1}^{p}$ does not have any component directed along the zeroth-order unit vector $\wh{{\sf p}}$ (because the guiding-center kinetic energy is identical to the particle kinetic energy). Hence, the magnitude of the guiding-center energy projection vector (\ref{eq:Delta_p}) is $|\vb{\Delta}^{p}| \equiv 1$ up to second order in magnetic-field nonuniformity.
+
+\subsubsection{Guiding-center Pitch-angle Projection}
+
+The guiding-center pitch-angle projection vector (\ref{eq:Delta_xi0}) is expressed as
+\begin{eqnarray}
+\vb{\Delta}^{\xi_{0}} & = & \frac{\sqrt{1 - \xi_{0}^{2}}}{p\;\xi_{0}} \left[ \frac{\xi}{\sqrt{\Psi}}\;\wh{\xi} \;+\; \epsilon\;\sqrt{1 - \xi_{0}^{2}}
+\left( \vb{\Delta}_{1}^{p} \;-\; \frac{(\partial\vb{\rho}_{1}/\partial\varphi)}{\rho_{0}\;(1 - \xi_{0}^{2})} \;-\; \frac{\rho}{2}\;
+\bhat\btimes\nabla\ln B_{0} \right) \right] \nonumber \\
+ & \equiv & \frac{\sqrt{1 - \xi_{0}^{2}}}{p\;\xi_{0}}\;\frac{\xi\;\wh{\xi}}{\sqrt{\Psi}} \;+\; \epsilon\;\vb{\Delta}_{1}^{\xi_{0}},
+\label{eq:Deltaxi_exp}
+\end{eqnarray}
+where $\vb{\Delta}_{1}^{\xi_{0}}$ denotes the first-order correction of $\vb{\Delta}^{\xi_{0}}$.
+ 
+\section{\label{sec:bgcFP}Bounce-averaged Guiding-center Fokker-Planck Operator}
+
+Since the coefficients $({\cal K}_{\rm gc}^{\alpha}, {\cal D}_{\rm gc}^{\alpha\beta})$ and the Jacobian ${\cal J}$ in the guiding-center Fokker-Planck operator (\ref{eq:gcFP_def}) still depend on the poloidal angle $\theta$, while the lowest-order guiding-center Vlasov distribution $\ov{F}$ does not, we need to average the guiding-center operator (\ref{eq:gcFP_def}) according to the averaging procedure (\ref{eq:A_bounce}). The bounce-averaged guiding-center Fokker-Planck operator is expressed as
+\begin{eqnarray}
+\left\{{\cal C}_{\rm gc}[\ov{F}]\right\} & = & \frac{1}{2\,\ov{{\cal J}}}\;\sum_{\sigma}\;\int_{\theta_{\rm b}^{-}}^{\theta_{\rm b}^{+}}\;
+\frac{d\theta}{2\pi}\;{\cal J}\,{\cal C}_{\rm gc}[\ov{F}] \nonumber \\
+ & = & -\;\frac{1}{\ov{{\cal J}}}\;\pd{}{Z^{\alpha}} \left[\;\frac{1}{2}\,\sum_{\sigma}\; \int_{\theta_{\rm b}^{-}}^{\theta_{\rm b}^{+}} \frac{d\theta}{2\pi}\;{\cal J}\, 
+\left( {\cal K}_{\rm gc}^{\alpha}\;\ov{F} \;-\; {\cal D}_{\rm gc}^{\alpha\beta}\;\pd{\ov{F}}{Z^{\beta}} \right) \;\right] \nonumber \\
+ & \equiv & -\;\frac{1}{\ov{{\cal J}}}\;\pd{}{Z^{\alpha}} \left[\; \ov{{\cal J}} \left( \left\{{\cal K}_{\rm gc}^{\alpha}\right\}\;\ov{F} \;-\; 
+\left\{{\cal D}_{\rm gc}^{\alpha\beta}\right\}\;\pd{\ov{F}}{Z^{\beta}} \right) \;\right],
+\label{eq:gcFP_bounce}
+\end{eqnarray}
+where the averaged Jacobian $\ov{{\cal J}}$ now becomes the Jacobian for the bounce-averaged guiding-center operator. Bounce-averaged guiding-center Fokker-Planck operator that treat friction and diffusion in three-dimensional space have been derived previously \cite{ZOC_93,OCGZ_95}. While these previous operators retained only the lowest-order terms in magnetic-field nonuniformity, the bounce-averaged guiding-center Fokker-Planck operator 
+(\ref{eq:gcFP_bounce}) retains first-order corrections.
+
+The next step in the derivation of a reduced Fokker-Planck operator is to proceed with the construction of a {\it bounce-center} Fokker-Planck operator
+\begin{equation}
+{\cal C}_{\rm bc}[\wh{F}] \;\equiv\; \left\langle {\sf T}_{\rm bc}^{-1}{\cal C}_{\rm gc}\left[{\sf T}_{\rm bc}\frac{}{}\wh{F}\right] 
+\right\rangle_{\rm b},
+\label{eq:C_bc_def}
+\end{equation}
+where ${\sf T}_{\rm bc}^{-1}$ and ${\sf T}_{\rm bc}$ are the push-forward and pull-back operators associated with the bounce-center phase-space transformation \cite{Cary_Brizard} (and references therein), $\wh{F}$ denotes the bounce-center distribution, and $\langle\;\rangle_{\rm b}$ denotes averaging with respect to the bounce {\it angle} $\zeta_{\rm b}$. In the bounce-center Fokker-Planck operator (\ref{eq:C_bc_def}), finite-orbit effects will explicitly be taken into account. To see how these finite-orbit effects might arise, we first express the bounce-center push-forward and pull-back operators as ${\sf T}_{\rm bc}^{\pm} \equiv \exp(\pm\,\epsilon\,G_{1}^{a}\,\partial_{a})$, where $G_{1}^{a}$ denotes the components of the first-order generating vector field for the bounce-center transformation and $\epsilon$ denotes its ordering parameter. Next, we expand the transformed operator
+\begin{equation} 
+\wh{{\cal J}} \left( e^{-\,\epsilon G_{1}^{a}\partial_{a}}\;{\cal C}_{\rm gc}\left[ e^{\epsilon G_{1}^{b}\partial_{b}}\;\wh{F}\right]\right)
+\label{eq:G_bgc_exact}
+\end{equation}
+in powers of $\epsilon$, where the bounce-center Jacobian $\wh{{\cal J}}$ is defined in terms of the guiding-center Jacobian ${\cal J}$ as $\wh{{\cal J}}
+\equiv {\cal J} - \epsilon\;\partial_{a}(G_{1}^{a}\,{\cal J}) + \cdots$. By keeping terms up to second order in $\epsilon$, and rearranging terms, we obtain
+\begin{equation}
+\left( \wh{{\cal J}} \;+\; \epsilon\;\partial_{a}(G_{1}^{a}\wh{{\cal J}}) \;+\frac{}{} \cdots\right) {\cal C}_{\rm gc}\left[\wh{F} \;+\; \epsilon\;
+G_{1}^{b}\,\wh{F} + \cdots\frac{}{} \right] \;-\; \epsilon\;\partial_{a}\left( \wh{{\cal J}}\,G_{1}^{a}\; {\cal C}_{\rm gc}\left[\wh{F} \;+\; 
+\epsilon\;G_{1}^{b}\,\partial_{b}\wh{F} + \cdots\frac{}{} \right]\right) \;+\; \cdots,
+\label{eq:C_bgc_quad}
+\end{equation}
+where the first term is simply the original guiding-center Fokker-Planck operator multiplied by the guiding-center Jacobian ${\cal J} \equiv
+\wh{{\cal J}} + \epsilon\;\partial_{a}(G_{1}^{a}\wh{{\cal J}}) + \cdots$ (i.e., the first term is an exact divergence), while the second term is also an exact divergence in bounce-center phase space. The total bounce-center Fokker-Planck operator is therefore guaranteed to retain its phase-space divergence form. In future work, it will be our purpose to show that finite-orbit effects will appear in the bounce-center Fokker-Planck operator
+(\ref{eq:C_bc_def}) in the form of the second-order term
+\[ \frac{\epsilon^{2}}{\wh{{\cal J}}}\;\pd{}{\wh{\psi}} \left\langle \wh{{\cal J}}\,G_{1}^{\wh{\psi}}\; {\cal C}_{\rm gc}\left[G_{1}^{\wh{\psi}}\,
+\pd{\wh{F}}{\wh{\psi}}\right] \right\rangle_{\rm b}, \]
+where $\wh{\psi}$ denotes the bounce-center position and $G_{1}^{\wh{\psi}}$ denotes the corresponding component of the bounce-radius.
+
+
+\bc
+MORE TO FOLLOW
+\ec
+
+\section{\label{sec:LUKE}Bounce-averaged guiding-center Fokker-Planck Code {\sf LUKE}}
+
+The code {\sf LUKE} \cite{PD_09a,PD_09b} written in MatLab, solves the bounce-averaged guiding-center Fokker-Planck equation (\ref{eq:gcFP_bounce}) using a finite-difference method to discretize the reduced phase-space $(\psi,p,\xi_{0})$. Since Eq.~(\ref{eq:gcFP_bounce}) is a flux-conservative equation,
+the non-uniform flux grid on which it is projected plays a central role. The distribution function $\ov{F}$ is simply defined on an half-grid
+deduced from the flux grid. Conditions of interpolation between the two grids are necessary for evaluating distribution function on the flux grid because of convective terms. While a linear interpolation is appropriate for the radial and pitch-angle grids, the usual Chang-Cooper \cite{Chang_Cooper} coefficients are still the most adapted for a non-uniform momentum grid. The discrete cross-derivatives must be evaluated consistently with all internal boundary conditions, leading to a stable numerical scheme even off-diagonal terms becomes important with respect to the main diagonal. 
+
+When first-order momentum correction terms of the collision operator are considered, the Fokker-Planck equation acquires an integro-differential
+form. It must be solved by an iterative process using an implicit-time scheme for the differential part and an explicit-time scheme for the
+integral part. Since the explicit term is a small correction, it is still possible to use large time steps $\Delta t$ for a fast convergence
+seeking the steady-state solution with respect to largest time scale of the equation. The Fokker-Planck equation becomes a large sparse
+linear system of equations without specific symmetry. It is solved using the usual incomplete $LU$ factorization, such that lower ${\sf L}$
+and upper ${\sf U}$ triangle matrices remain also highly sparse \cite{Peysson_98}. Since the number of non-zero diagonals may be arbitrarily
+large for the $3-D$ bounce-averaged Fokker-Planck  equation in presence of a radial transport, a generalized approach of the incomplete $LU$ factorization
+is considered, using a drop tolerance parameter below which matrix coefficients of ${\sf L}$ and ${\sf U}$ are enforced to zero
+\cite{Peysson_03}. 
+
+There is a broad range of applications of the kinetic code {\sf LUKE} from detailed plasma physics studies, from fast-electron bremsstrahlung, runaway avalanches during disruption, and wave-induced radial transport, to global tokamak modeling using the {\sf CRONOS} simulation package
+\cite{Cronos}. Indeed, even if {\sf LUKE} is primarily designed for heating and current drive calculations, the determination of the electron distribution function allows to calculate easily various of its moments which can be later valuably compared to experimental results. {\sf LUKE} is therefore a powerful tool for validating interpretations of the observations besides its capabilities for tokamak modeling for machine design purposes \cite{Peysson_08}. 
+
+\section{\label{sec:sum}Summary}
+
+The present work discussed the theoretical foundations of the bounce-averaged guiding-center Fokker-Planck equation (\ref{eq:gcFP_bounce}) based on a guiding-center transformation that allows first-order corrections in magnetic-field nonuniformity to be retained. 
+
+\acknowledgements
+
+One of us (AJB) would like to thank the Institut de la Recherche sur la Fusion Magn\'{e}tique at CEA Cadarache for their kind hospitality.
+
+\appendix
+
+\section{\label{sec:ISO}Isotropic Field-particle Distribution in Axisymmetric Magnetic-dipole Geometry}
+
+When we use the approximation of an isotropic field-particle distribution \cite{Brizard_2004} in axisymmetric magnetic-dipole geometry, we obtain the guiding-center Fokker-Planck friction components 
+\begin{equation}
+{\cal K}_{\rm gc}^{\alpha} \;=\; \left( {\cal K}_{{\rm gc}0}^{p},\; 0,\; {\cal K}_{{\rm gc}1}^{\psi}\right),
+\label{eq:Kgc_iso}
+\end{equation}
+where ${\cal K}_{{\rm gc}0}^{p}$ denotes the fact that this component contains zeroth-order contributions that are independent of the magnetic-field nonuniformity, ${\cal K}_{{\rm gc}1}^{\psi}$ denotes the fact that it contains first-order contributions (proportional to $\vb{\Delta}^{\psi}\bdot
+{\bf v}_{\rm B}$) in magnetic-field nonuniformity, and ${\cal K}_{{\rm gc}}^{\xi_{0}} \equiv 0$ in axisymmetric magnetic-dipole geometry (where $\bhat\bdot
+\nabla\btimes\bhat \equiv 0$). The guiding-center Fokker-Planck diffusion components
+\begin{equation}
+{\cal D}_{\rm gc}^{\alpha\beta} \;=\; \left( \begin{array}{ccc}
+{\cal D}_{{\rm gc}0}^{pp}    & 0                                     & {\cal D}_{{\rm gc}1}^{p\psi} \\
+ && \\
+0                            & {\cal D}_{{\rm gc}0}^{\xi_{0}\xi_{0}} & {\cal D}_{{\rm gc}1}^{\xi_{0}\psi} \\
+ && \\
+{\cal D}_{{\rm gc}1}^{p\psi} & {\cal D}_{{\rm gc}1}^{\xi_{0}\psi}    & {\cal D}_{{\rm gc}0}^{\psi\psi}
+\end{array} \right),
+\label{eq:Dgc_iso} 
+\end{equation} 
+where diagonal elements only contain zeroth-order contributions, while the off-diagonal elements contain first-order contributions. Once again the
+component ${\cal D}_{\rm gc}^{p\xi_{0}} \equiv 0$ in axisymmetric magnetic-dipole geometry.
+
+\bc
+MORE TO FOLLOW
+\ec
+
+\begin{thebibliography}{99}
+
+\bibitem{Braginskii} S.~I.~Braginskii, {\it Transport processes in a plasma}, in Reviews of Plasma Physics (Consultants Bureau, New York NY, 1965), 
+Vol.~1, p.~205.
+
+\bibitem{HH_76} F.~L.~Hinton and R.~D.~Hazeltine, Rev.~Mod.~Phys.~{\bf 48}, 239 (1976).
+
+\bibitem{Kaufman_72} A.~N.~Kaufman, Phys.~Fluids {\bf 15}, 1063 (1972).
+
+\bibitem{Brizard_rql_04} A.~J.~Brizard, Phys.~Plasmas {\bf 11}, 4220 (2004).
+
+\bibitem{Brizard_2004} A.~J.~Brizard, Phys.~Plasmas {\bf 11}, 4429 (2004).
+
+\bibitem{Brizard_2000} A.~J.~Brizard, Phys.~Plasmas {\bf 7}, 3238 (2000).
+
+\bibitem{Brizard_2007} X.~Tao, A.~A.~Chan, and A.~J.~Brizard, Phys.~Plasmas {\bf 14}, 092107 (2007).
+
+\bibitem{Cary_Brizard} For a recent review of Hamiltonian guiding-center theory, see J.~R.~Cary and A.~J.~Brizard, to appear in Rev.~Mod.~Phys.~(2009).
+
+\bibitem{White_2008} R.~B.~White, {\it Turbulent Transport in Fusion Plasmas, First ITER International Summer School}, AIP Conf.~Proc.~1013 (AIP, Melville, NY), pp.~59 and 127.
+
+\bibitem{Rome_Peng} J.~A.~Rome and Y.-K.~M.~Peng, Nucl.~Fusion {\bf 19}, 1193 (1979).
+
+\bibitem{Egedal} J.~Egedal, Nucl.~Fusion {\bf 40}, 1597 (2000).
+
+\bibitem{CCO} S.~C.~Chiu, V.~S.~Chan, and Y.~A.~Omelchenko, Phys.~Plasmas {\bf 9}, 877 (2002).
+
+\bibitem{footnote} This approximation is exact in the case of an axisymmetric dipole magnetic field since $B_{\phi} \equiv 0$
+
+\bibitem{FP_review} A brief review of the Fokker-Planck equation is presented by A.~G.~Peeters and D.~Strintzi, Ann.~Phys.~(Berlin), {\bf 17}, 142 
+(2008).
+
+\bibitem{ZOC_93} F.~S.~Zaitsev, M.~R.~O'Brien, and M.~Cox, Phys.~Fluids B {\bf 5}, 509 (1993).
+
+\bibitem{OCGZ_95} M.~R.~O'Brien, M.~Cox, C.~A.~Gardner, and F.~S.~Zaitsev, Nucl.~Fusion {\bf 35}, 1537 (1995).
+
+\bibitem{PD_09a} Y.~Peysson and J.~Decker, {\it Fully implicit formulation of the 3-D linearized relativistic bounce-averaged Fokker-Planck equation in a magnetized plasma}, submitted for publication (2009).
+
+\bibitem{PD_09b} J.~Decker and Y.~Peysson, {\sf LUKE:} {\it a fast numerical solver for the 3-D relativistic linearized bounce-averaged electron Fokker-Planck equation}, submitted for publication (2009).
+
+\bibitem{Chang_Cooper} J.~S.~Chang and G.~Cooper, J.~Comp.~Phys.~{\bf 6}, 1 (1970).
+
+\bibitem{Peysson_98} Y.~Peysson and M.~Shoucri, Comp.~Phys.~Comm.~{\bf 109}, 55 (1998).
+
+\bibitem{Peysson_03} Y.~Peysson, V.~Basiuk, C.~Fourment, G.~Huysmans, X.~Litaudon, D.~Mazon, and F.~Rimini, in {\it Advances in Plasma Physics Research},
+vol.~4 (Nova Science Publisher, New York, 2003).
+
+\bibitem{Cronos} V.~Basiuk, J.~Artaud, F.~Imbeaux, X.~Litaudon, A.~Becoulet, L.~Eriksson, G.~Hoang, G.~Huysmans, D.~Mazou, D.~Moreau, and Y.~Peysson,
+Nucl.~Fusion {\bf 43}, 822 (2003).
+
+\bibitem{Peysson_08} Y.~Peysson and J.~Decker, Joint Varenna-Lausanne International Workshop on the Theory of Fusion Plasmas (2008).
+
+\end{thebibliography}
+
+
+
+\end{document}

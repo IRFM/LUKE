@@ -48,25 +48,21 @@
 \begin_body
 
 \begin_layout Title
-Collision operator in LUKE guiding center coordinates
+Operator in LUKE guiding center coordinates
 \end_layout
 
 \begin_layout Author
-by Yves Peysson (CEA/IRFM)
+by Yves Peysson, Joan Decker and Alain Brizard
 \end_layout
 
 \begin_layout Section
-Collision operator in guiding center coordinates
-\end_layout
-
-\begin_layout Subsection
-Calculation of the guiding-center Poisson bracket
+Introduction
 \end_layout
 
 \begin_layout Standard
-In order to calculate coefficients in LUKE code, it is necessary to move
- from the guiding center coordinate system 
-\begin_inset Formula $\left(\mathbf{X},\mathcal{E},\mu,\theta\right)$
+In order to calculate matrix coefficients in LUKE code, it is necessary
+ to move from the guiding center coordinate system 
+\begin_inset Formula $\left(\mathbf{X},\mathcal{E},\mu,\varphi\right)$
 \end_inset
 
  defined in Ref.
@@ -77,15 +73,29 @@ key "bri04"
 
 \end_inset
 
- to the new guiding center coordinate system 
+ where the kinetic energy 
+\begin_inset Formula $\mathcal{E}$
+\end_inset
+
+ is an exact invariant, and the magnetic moment 
+\begin_inset Formula $\mu$
+\end_inset
+
+ is an adiabatic invariant, to the new guiding center coordinate system
+ 
 \begin_inset Formula $\left(\mathbf{X},p,\xi,\varphi\right)$
 \end_inset
 
-, and evaluate accordingly all expressions of the guiding-center dynamics.
+ and then to the reduced guiding center coordinate system 
+\begin_inset Formula $\left(\mathbf{X},p,\xi_{0}\right)$
+\end_inset
+
+ in the limit of low plasma collision.
+ All expressions of the guiding-center dynamics must be modified accordingly.
  
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Section
 Definitions
 \begin_inset CommandInset label
 LatexCommand label
@@ -127,7 +137,7 @@ key "bri04"
 
  for a non-uniform magnetic field may be expressed as
 \begin_inset Formula \begin{align}
-\left\{ F,G\right\} _{gc} & =\frac{\Omega}{B}\left[\frac{\partial F}{\partial\theta}\left(\frac{\partial G}{\partial\mu}+B\frac{\partial G}{\partial\mathcal{E}}\right)-\left(\frac{\partial F}{\partial\mu}+B\frac{\partial F}{\partial\mathcal{E}}\right)\frac{\partial G}{\partial\theta}\right]\nonumber \\
+\left\{ F,G\right\} _{gc} & =\frac{\Omega}{B}\left[\frac{\partial F}{\partial\varphi}\left(\frac{\partial G}{\partial\mu}+B\frac{\partial G}{\partial\mathcal{E}}\right)-\left(\frac{\partial F}{\partial\mu}+B\frac{\partial F}{\partial\mathcal{E}}\right)\frac{\partial G}{\partial\varphi}\right]\nonumber \\
  & +\mathbf{v}_{gc}\cdot\left(\nabla^{*}F\frac{\partial G}{\partial\mathcal{E}}-\frac{\partial F}{\partial\mathcal{E}}\nabla^{*}G\right)-\frac{c\widehat{b}}{eB_{\Vert}^{*}}\cdot\nabla^{*}F\times\nabla^{*}G\label{eq:PoissonbracketEmhu}\end{align}
 
 \end_inset
@@ -138,13 +148,13 @@ where the modified gradient operator
 
  is defined as 
 \begin_inset Formula \begin{equation}
-\nabla^{*}\equiv\nabla+\left[\mathbf{R}+\frac{\widehat{b}}{2}\left(\widehat{b}\cdot\nabla\times\widehat{b}\right)\right]\frac{\partial}{\partial\theta}=\nabla+\mathbf{R}^{*}\frac{\partial}{\partial\theta}\label{eq:nablastar}\end{equation}
+\nabla^{*}\equiv\nabla+\left[\mathbf{R}+\frac{\widehat{b}}{2}\left(\widehat{b}\cdot\nabla\times\widehat{b}\right)\right]\frac{\partial}{\partial\varphi}=\nabla+\mathbf{R}^{*}\frac{\partial}{\partial\theta}\label{eq:nablastar}\end{equation}
 
 \end_inset
 
 with
 \begin_inset Formula \begin{equation}
-\mathbf{R}^{*}=\left[\mathbf{R}+\frac{\widehat{b}}{2}\left(\widehat{b}\cdot\nabla\times\widehat{b}\right)\right]\frac{\partial}{\partial\theta}\label{eq:Rstar}\end{equation}
+\mathbf{R}^{*}=\left[\mathbf{R}+\frac{\widehat{b}}{2}\left(\widehat{b}\cdot\nabla\times\widehat{b}\right)\right]\frac{\partial}{\partial\varphi}\label{eq:Rstar}\end{equation}
 
 \end_inset
 
@@ -179,21 +189,14 @@ reference "eq:nablastar"
 \end_inset
 
 , 
-\begin_inset Formula $\widehat{\rho}=\widehat{b}\times\widehat{\bot}=\widehat{1}\cos\theta-\widehat{2}\sin\theta$
+\begin_inset Formula $\widehat{\rho}=\widehat{b}\times\widehat{\bot}=\widehat{1}\cos\varphi-\widehat{2}\sin\varphi$
 \end_inset
 
  and 
-\begin_inset Formula $\theta$
+\begin_inset Formula $\varphi$
 \end_inset
 
- is the gyro-angle according to 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "bri04"
-
-\end_inset
-
-.
+ is the gyro-angle.
  All gradients are here taken at constant 
 \begin_inset Formula $\mu,\mathcal{E}$
 \end_inset
@@ -343,8 +346,12 @@ In terms of
 
 \end_layout
 
+\begin_layout Section
+Jacobians of the coordinate transformations
+\end_layout
+
 \begin_layout Subsubsection
-Jacobian of the transformation 
+Transformation
 \begin_inset Formula $\left(\mathbf{x},\mathbf{p}\right)\rightarrow\left(\mathbf{X},p,\xi,\varphi\right)$
 \end_inset
 
@@ -455,7 +462,7 @@ where the Jacobian of
 \noun default
 \color inherit
 the coordinate transformation 
-\begin_inset Formula $\left(X,\mathcal{E},\mu,\theta\right)\rightarrow\left(\mathbf{X},p,\xi,\varphi\right)$
+\begin_inset Formula $\left(X,\mathcal{E},\mu,\varphi\right)\rightarrow\left(\mathbf{X},p,\xi,\varphi\right)$
 \end_inset
 
  is
@@ -512,8 +519,130 @@ is simply
 \end_layout
 
 \begin_layout Subsubsection
+Transformation
+\begin_inset Formula $\left(\mathbf{X},p,\xi,\varphi\right)\rightarrow\left(\mathbf{X},p,\xi_{0},\varphi\right)$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+In the thin banana approximation, particles remain confined on a magnetic
+ flux surface.
+ Owing to the conservation of the kinetic energy 
+\begin_inset Formula $\mathcal{E}$
+\end_inset
+
+ and the magnetic moment 
+\begin_inset Formula $\mu$
+\end_inset
+
+, 
+\begin_inset Formula \begin{equation}
+1-\xi^{2}=\Psi\left(\theta,\psi\right)\left(1-\xi_{0}^{2}\right)\label{eq:xi0def}\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\Psi\left(\theta,\psi\right)=B\left(\theta,\psi\right)/B_{0}\left(\psi\right)$
+\end_inset
+
+ where 
+\begin_inset Formula $B_{0}\left(\psi\right)=B\left(\theta=0,\psi\right)$
+\end_inset
+
+ is the minimum of the magnetic field on the flux surface.
+ Here, 
+\begin_inset Formula $\theta$
+\end_inset
+
+ is the poloidal angle and 
+\begin_inset Formula $\psi$
+\end_inset
+
+ the poloidal magnetic flux used as a label of the surface on which particle
+ is confined.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\xi_{0}$
+\end_inset
+
+ is chosen positive for trapped particles corresponding to the condition
+ 
+\begin_inset Formula $ $
+\end_inset
+
+, while it may have an arbitrary sign for circulating particles.
+ This convention is consistent with an exact descripti
+\end_layout
+
+\begin_layout Standard
+From (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:xi0def"
+
+\end_inset
+
+),
+\begin_inset Formula \[
+\frac{\partial}{\partial\xi_{0}}=\frac{d\xi}{d\xi_{0}}\frac{\partial}{\partial\xi}=\Psi\frac{\xi_{0}}{\xi}\frac{\partial}{\partial\xi}\]
+
+\end_inset
+
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+where the Jacobian of 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+the coordinate transformation 
+\begin_inset Formula $\left(\xi\right)\rightarrow\left(\xi_{0}\right)$
+\end_inset
+
+ is
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula \begin{equation}
+J_{\xi_{0}}=\left|\frac{\partial\xi}{\partial\xi_{0}}\right|=\frac{\left|v_{\Vert}\right|}{mB}p^{2}\label{eq:Jacobian}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Jacobian of the transformation 
+\begin_inset Formula $\left(\mathbf{X},p,\xi,\varphi\right)\rightarrow\left(\mathbf{X},p,\xi_{0}\right)$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Subsubsection
 Transformation 
-\begin_inset Formula $\left(\mathbf{X},\mathcal{E},\mu,\theta\right)\rightarrow\left(\mathbf{X},p,\xi,\varphi\right)$
+\begin_inset Formula $\left(\mathbf{X},\mathcal{E},\mu,\varphi\right)\rightarrow\left(\mathbf{X},p,\xi,\varphi\right)$
 \end_inset
 
  of the Poisson bracket
