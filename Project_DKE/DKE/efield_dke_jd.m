@@ -101,7 +101,7 @@ else
     ZXXD_e.pp_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
     ZXXD_e.pm_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
     ZXXD_e.mp_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
-    ZXXF_e.p_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr)
+    ZXXF_e.p_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
 %
   xrho = equilDKE.xrho;
   xrhoT = equilDKE.xrhoT;
