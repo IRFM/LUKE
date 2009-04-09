@@ -89,6 +89,8 @@ if ~isnumeric(opt_rf) || ~any(opt_rf == 0:1),
     return
 end
 %
+dsmin = input_dke_yp('Minimum length of ray fragments:',0,[0;Inf],'',[1,1]);
+%
 if ny == 1,
     %
     nd_in = 1;
@@ -128,6 +130,7 @@ waveparam.id = wave_id;
 waveparam.AMR_path = AMR_path;
 %
 waveparam.dNpar = dNpar;
+waveparam.dsmin = dsmin;
 waveparam.kmode = kmode;
 waveparam.opt_rf = opt_rf;
 %

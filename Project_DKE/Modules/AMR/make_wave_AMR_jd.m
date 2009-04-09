@@ -20,10 +20,6 @@ if str2double(shotime) ~= wavedata(1,1),
     error('The shot time is not compatible with equilibrium')
 end
 %
-dNpar = wavestruct.dNpar;
-kmode = wavestruct.kmode;
-opt_rf =  wavestruct.opt_rf;
-%
 if ny == 1,
     %
     nd = wavestruct.nd;
@@ -38,9 +34,10 @@ waveparam.filestr = wavestruct.filestr;
 waveparam.id = wavestruct.id;
 waveparam.AMR_path = AMR_path;
 %
-waveparam.dNpar = dNpar;
-waveparam.kmode = kmode;
-waveparam.opt_rf = opt_rf;
+waveparam.dNpar = wavestruct.dNpar;
+waveparam.dsmin = wavestruct.dsmin;
+waveparam.kmode = wavestruct.kmode;
+waveparam.opt_rf = wavestruct.opt_rf;
 %
 waveparam.nd = nd;
 waveparam.nchi = nchi;

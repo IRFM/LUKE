@@ -29,6 +29,7 @@ AMR_path = [getenv('AMR'),'/output/luke/'];
 wave_id = '';% Specific wave id
 %
 wavestruct.dNpar = NaN;% Spectral width (NaN if calculated from beam size)
+wavestruct.dsmin = 0;% Spectral width (NaN if calculated from beam size)
 wavestruct.kmode = 2;% Plasma model for wave propagation : 0:cold, 1:kinetic, 2:R2D2 (requires IMSL)
 wavestruct.opt_rf = 0;% FLR effects : 0:all, 1:small
 %
@@ -136,5 +137,6 @@ if output_display == 1,
     %
 end
 %
+exit
 
 
