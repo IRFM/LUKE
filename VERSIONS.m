@@ -1586,3 +1586,60 @@
 % A TScyl/LH_karney_3D_splitting/rundke.m (operator splitting test)
 % A TScyl/LH_karney_3D_splitting/proc_rundke_splitting.m (")
 %
+% ----------------------------------------------------------------------------------------------------
+% 
+% LUKE Release 1.7.1
+% 
+% - Coupling with AMR (interactive, script modes)
+% - many improvements with interactive LUKE
+%
+% ====> LUKE
+%
+% U make_path_LOCAL.m (erfcc compilation)
+% 
+% ====> LUKE/Project_DKE/Database/
+%
+% U WAVE_files/make_wave_AMR_jd.m (antenna id and config)
+%
+% ====> LUKE/Project_DKE/Display/
+%
+% U imake_wave_ART_jd.m (sign correction)
+% U imake_equil_jd.m (Zeff for AMR)
+% U imake_ohm_jd.m (ohm from file)
+% U imake_wave_AMR_jd.m (antenna id and config)
+% U iputfile_jd.m (correction with .m)
+% U irunluke_jd.m (corrections and ray display)
+%
+% ====> LUKE/Project_DKE/DKE/
+%
+% U efield_dke_jd.m (rho grid)
+% U mex_compile_luke.m (erfcc compatible 64 bits)
+% U proc_luke_jd.m (peak mode and ray list)
+% U run_lukert.m (AMR wave built)
+% U setpath_luke_jd.m (R2D2)
+% U solver_dke_yp.m (small correction)
+% U LUKEversion_jd.m (luke 1.7.1)
+%
+% ====> LUKE/Project_DKE/Modules/AMR/
+%
+% U make_equil_AMR_jd.m (Zeff)
+% U make_input_AMR.m (correction)
+% U make_equil_RZ_AMR_jd.m (Zeff)
+% A proc_rays_AMR_jd.m (make wave from AMR)
+% A rundke_AMR.m (script for AMR)
+%
+% ====> LUKE/Project_DKE/Modules/EFIT/
+%
+% U Teneprof_jd.m (iter correction)
+%
+% ====> LUKE/Project_DKE/Modules/RT/
+%
+% U make_beam_wave_jd.m (smoothing correction)
+% U kineticdisp_jd.m (erfcc modification)
+% U MEX/Source/erfcc_mex_jd.F (compatible 64 bits)
+%
+% ====> LUKE/Tools
+%
+% A comp_struct_jd.m (improved and moved here)
+% U graph_wave_jd.m (LH characterization)
+%
