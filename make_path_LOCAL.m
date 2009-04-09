@@ -91,7 +91,8 @@ laptopyves.computer = 'MAC';%machine type and supported OS
 laptopyves.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 laptopyves.mex75 = [laptopyves.luke_root,'Project_DKE/MEX/Bin/laptopyves/MATLAB75/'];
-laptopyves.compiler_opt.helmex = '';% Optional argument for helmex compilation 
+laptopyves.compiler_opt.helmex = 'FFLAGS="-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132"';% Optional argument for helmex compilation 
+laptopyves.compiler_opt.fopts = 'FFLAGS="-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132"';
 %
 laptopyves.MUMPS.par = [laptopyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.2_P_openmpig95/dke'];%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
 laptopyves.MUMPS.seq = [laptopyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.2_S_GotoBlasg95/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
@@ -177,22 +178,39 @@ ipr.compiler_opt.helmex = '-L/home/yves/PACKAGES/Bin/lapack-3.2/ -llapack_LINUX 
 %
 dkepath.ipr = ipr;
 %
-% paths for runs on workstation at ASIPP-Heifei
+% paths for runs on workstation at ASIPP-Heifei - node 0
 %
-dkepath.hostname.asipp = 'node0';
+dkepath.hostname.asipp0 = 'node0';
 %
-asipp.luke_root = [pwd,'/'];
-asipp.local_root = '/home/bojiangding/';
-asipp.computer = 'GLNXA64';%machine type and supported OS
-asipp.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+asipp0.luke_root = [pwd,'/'];
+asipp0.local_root = '/home/bojiangding/';
+asipp0.computer = 'GLNXA64';%machine type and supported OS
+asipp0.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-asipp.mex71 = [asipp.luke_root,'Project_DKE/MEX/Bin/asipp/MATLAB71'];
+asipp0.mex71 = [asipp0.luke_root,'Project_DKE/MEX/Bin/asipp/MATLAB71'];
 %
-asipp.MUMPS.seq = [asipp.local_root,'PACKAGES/Bin/MUMPS/MUMPS_4.7.3_S_PGF90/dke'];
-asipp.MUMPS.mex71 = [asipp.local_root,'PACKAGES/Bin/MUMPS/MUMPS_4.7.3_S_PGF90/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
-asipp.compiler_opt.helmex = '-L/home/bojiangding/PACKAGES/Bin/GotoBLAS -lgoto';% Optional arguments for compilation 
+asipp0.MUMPS.seq = [asipp0.local_root,'PACKAGES/Bin/MUMPS/MUMPS_4.7.3_S_PGF90/dke'];
+asipp0.MUMPS.mex71 = [asipp0.local_root,'PACKAGES/Bin/MUMPS/MUMPS_4.7.3_S_PGF90/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
+asipp0.compiler_opt.helmex = '-L/home/bojiangding/PACKAGES/Bin/GotoBLAS -lgoto';% Optional arguments for compilation 
 %
-dkepath.asipp = asipp;
+dkepath.asipp0 = asipp0;
+%
+% paths for runs on workstation at ASIPP-Heifei - node 1
+%
+dkepath.hostname.asipp1 = 'node1';
+%
+asipp1.luke_root = [pwd,'/'];
+asipp1.local_root = '/home/bojiangding/';
+asipp1.computer = 'GLNXA64';%machine type and supported OS
+asipp1.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+%
+asipp1.mex71 = [asipp1.luke_root,'Project_DKE/MEX/Bin/asipp/MATLAB71'];
+%
+asipp1.MUMPS.seq = [asipp1.local_root,'PACKAGES/Bin/MUMPS/MUMPS_4.7.3_S_PGF90/dke'];
+asipp1.MUMPS.mex71 = [asipp1.local_root,'PACKAGES/Bin/MUMPS/MUMPS_4.7.3_S_PGF90/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
+asipp1.compiler_opt.helmex = '-L/home/bojiangding/PACKAGES/Bin/GotoBLAS -lgoto';% Optional arguments for compilation 
+%
+dkepath.asipp1 = asipp1;
 %
 % paths for runs on CRPP PC 70
 %
