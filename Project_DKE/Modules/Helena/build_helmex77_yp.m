@@ -36,31 +36,18 @@ end
 %
 machine = computer;
 %
-warning1 = 'Computer not recognized: the mexfiles of separatrice.f and helmex77.f are not built !';
-warning2 = 'Move to ~/LUKE/Project_DKE/Modules/Helena/MEX/Bin/ directory to build manually the mexfiles of separatrice.f and helmex77.f';
-%
-if strcmp(machine,'MAC') | strcmp(machine,'MACI') | strcmp(machine,'GLNX86') | strcmp(machine,'PCWIN'),%32 bits machines
-    arch = '32b';
-elseif strcmp(machine,'GLNXA64') | strcmp(machine,'PCWIN64') | strcmp(machine,'SOL64'),%64 bits machines
-    arch = '64b';
-else
-    s = 0;mess = warning1;messid = '';
-    warning(warning1);warning(warning2);
-    return
-end
-%
 if force_compile == 0,
     %
-    filetime.separatrice.mex = gettime_jd(['separatrice.',mexext],binpath,0); 
-    filetime.separatrice.source = gettime_jd(['separatrice_',arch,'.f'],sourcepath,1);
+    filetime.separatrice.mex = gettime_jd(['separatrice.F'],binpath,0); 
+    filetime.separatrice.source = gettime_jd(['separatrice.F'],sourcepath,1);
     %
-    filetime.helmex77.mex = gettime_jd(['helmex77.',mexext],binpath,0); 
-    filetime.helmex77.source = gettime_jd(['helmex77_',arch,'.f'],sourcepath,1); 
+    filetime.helmex77.mex = gettime_jd(['helmex77.F'],binpath,0); 
+    filetime.helmex77.source = gettime_jd(['helmex77.F'],sourcepath,1); 
 end
 %
 if force_compile || any(filetime.separatrice.source > filetime.separatrice.mex), 
     %
-    [s,mess,messid] = copyfile([sourcepath,'separatrice_',arch,'.f'],[binpath,'/separatrice.f']);
+    [s,mess,messid] = copyfile([sourcepath,'separatrice.F'],[binpath,'/separatrice.F']);
     %
     if s == 1,
         %
@@ -69,26 +56,23 @@ if force_compile || any(filetime.separatrice.source > filetime.separatrice.mex),
         %
         try
             %
-            eval(['mex ',fopts,' separatrice.f ',argmex]);
-            disp(['The separatrice.',mexext,' mexfile has been compiled.']);
-            s = 1;mess = '';messid = '';
+            eval(['mex ',fopts,' separatrice.F ',argmex]);
+            disp(['The separatrice.F mexfile has been compiled.']);
         catch
-            disp(['The complation of separatrice.',mexext,' mexfile has failed.']);
-            s = 0;mess = warning3;messid = '';
-            warning(warning2);
+            disp(['The compilation of separatrice.F mexfile has failed.']);
         end
         % 
-        delete('separatrice.f');
+        delete('separatrice.F');        
         %
         cd(initpath);
     else
-        warning(warning1);warning(warning2);  
+        warning(mess);warning(messid);  
     end
 end
 %
 if force_compile || any(filetime.helmex77.source > filetime.helmex77.mex), 
     %
-    [s,mess,messid] = copyfile([sourcepath,'helmex77_',arch,'.f'],[binpath,'/helmex77.f']);
+    [s,mess,messid] = copyfile([sourcepath,'helmex77.F'],[binpath,'/helmex77.F']);
     %
     if s == 1,
         %
@@ -97,20 +81,17 @@ if force_compile || any(filetime.helmex77.source > filetime.helmex77.mex),
         %
         try
             %
-            eval(['mex ',fopts,' helmex77.f ',argmex]);
-            disp(['The helmex77.',mexext,' mexfile has been compiled.']);
-            s = 1;mess = '';messid = '';
+            eval(['mex ',fopts,' helmex77.F ',argmex]);
+            disp(['The helmex77.F mexfile has been compiled.']);
         catch
-            disp(['The complation of separatrice.',mexext,' mexfile has failed.']);
-            s = 0;mess = warning3;messid = '';
-            warning(warning2);
+            disp(['The compilation of helmex77.F mexfile has failed.']);
         end
         % 
-        delete('helmex77.f');
+        delete('helmex77.F');
         %
         cd(initpath);
     else
-        warning(warning1);warning(warning2);  
+        warning(mess);warning(messid);  
     end
 end
 %
