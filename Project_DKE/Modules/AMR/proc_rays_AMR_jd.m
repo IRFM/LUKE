@@ -9,10 +9,12 @@ antenna.num = wavedata(1,2);
 antenna.conf = wavedata(1,3);
 omega_rf = 2*pi*wavedata(1,4)*1e9;%initially in GHz
 yP0 = wavedata(:,5)*1e3;%intially in kW
-focalX = wavedata(1,6);
-focalY = wavedata(1,7);
-focalZ = wavedata(1,8);
-w0 = wavedata(1,9);
+conv_eff = wavedata(1,6);
+trans_coeff = wavedata(1,7);
+focalX = wavedata(1,8);
+focalY = wavedata(1,9);
+focalZ = wavedata(1,10);
+w0 = wavedata(1,11);
 %
 rays = cell(1,ny);
 %
@@ -30,7 +32,7 @@ for iy = 1:ny,
     %
     raydata = load([waveparam.AMR_path,filename_ray],'-ascii');
     %
-    ray.P0_2piRp = yP0(iy)/(2*pi*equil.Rp);% Power launched in the ray (W) [1,1]
+    ray.P0_2piRp = conv_eff*trans_coeff*yP0(iy)/(2*pi*equil.Rp);% Power launched in the ray (W) [1,1]
     %
     sR = raydata(:,1).';
     ray.sx = sR - equil.Rp;% Ray location (major radius) along the propagation [1,ns]
@@ -84,6 +86,7 @@ wave.omega_rf = omega_rf;
 wave.opt_rf = waveparam.opt_rf;%option for FLR calculations [1,1]
 wave.opt_disp = 1 + waveparam.kmode + 1i;  % option for solving the wave equation, which gives (ray.sepol_pmz, ray.sphi, ray.sNperp)  
 wave.equil_id = equil.id;
+wave.dsmin = waveparam.dsmin;
 wave.kextra = 0;
 wave.rays = rays;
 %
