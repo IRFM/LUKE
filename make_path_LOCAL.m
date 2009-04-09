@@ -116,6 +116,8 @@ laptopjoan.temppathroot = '/home/jd211098/tmp/';%Absolute root directory path ad
 laptopjoan.mex75 = [laptopjoan.luke_root,'Project_DKE/MEX/Bin/laptopjoan/MATLAB75'];
 laptopjoan.mex77 = [laptopjoan.luke_root,'Project_DKE/MEX/Bin/laptopjoan/MATLAB77'];
 laptopjoan.compiler_opt.helmex = '-lblas -llapack';% Optional argument for helmex compilation 
+%laptopjoan.compiler_opt.fopts = 'FC="gfortran" FFLAGS="-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-0"';
+laptopjoan.compiler_opt.fopts = 'FC="gfortran" FFLAGS="-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-0"';
 %
 laptopjoan.MUMPS.mex75 = [laptopjoan.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_ifort/MATLAB75'];%Where MUMPS matrix solver is stored (MEX function)
 laptopjoan.MUMPS.mex77 = [laptopjoan.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_ifort/MATLAB77'];%Where MUMPS matrix solver is stored (MEX function)
