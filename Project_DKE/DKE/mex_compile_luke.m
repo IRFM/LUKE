@@ -75,18 +75,18 @@ else
     fopts = '';
 end
 %
-if isstruct(compiler_opt) && isfield(compiler_opt,'argmex'),% Fortran mex compiling option
-	if isstruct(compiler_opt.argmex),
-		if isfield(compiler_opt.argmex,['mex',matver]),
-			argmex = compiler_opt.argmex.(['mex',matver]);
+if isstruct(compiler_opt) && isfield(compiler_opt,'helmex'),% Fortran mex compiling option
+	if isstruct(compiler_opt.helmex),
+		if isfield(compiler_opt.helmex,['mex',matver]),
+			helmex = compiler_opt.helmex.(['mex',matver]);
 		else
-			argmex = '';
+			helmex = '';
 		end
 	else
-    	argmex = compiler_opt.argmex;
+    	helmex = compiler_opt.helmex;
 	end
 else
-    argmex = '';
+    helmex = '';
 end
 %
 if strfind(computer,'PCWIN'),
@@ -125,13 +125,13 @@ if force_compile || any(filetime.erfcc.source > filetime.erfcc.mex),
     disp(['The erfcc_mex_jd.',mexext,' mexfile has been compiled.'])
 end
 %
-if force_compile || any(filetime.separatrice.source > filetime.separatrice.mex),
-    eval(['mex ',fopts,' ',sourcepath.helmex,'separatrice.F ',argmex]);
+if ~any(isnan(helmex)) && (force_compile || any(filetime.separatrice.source > filetime.separatrice.mex)),
+    eval(['mex ',fopts,' ',sourcepath.helmex,'separatrice.F ',helmex]);
     disp(['The separatrice.',mexext,' mexfile has been compiled.'])
 end
 %
-if force_compile || any(filetime.helmex77.source > filetime.helmex77.mex),
-    eval(['mex ',fopts,' ',sourcepath.helmex,'helmex77.F ',argmex]);
+if ~any(isnan(helmex)) && (force_compile || any(filetime.helmex77.source > filetime.helmex77.mex)),
+    eval(['mex ',fopts,' ',sourcepath.helmex,'helmex77.F ',helmex]);
     disp(['The helmex77.',mexext,' mexfile has been compiled.'])
 end
 %
