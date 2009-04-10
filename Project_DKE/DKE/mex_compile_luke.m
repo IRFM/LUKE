@@ -40,9 +40,14 @@ if force_compile == 0,
     filetime.erfcc.source(1) = gettime_jd('erfcc_mex_jd.F',sourcepath.C3PO,1); 
     filetime.erfcc.source(2) = gettime_jd('erfcc.f',sourcepath.C3PO,1); 
     %
+    filetime.separatrice.mex = gettime_jd(['separatrice.',mexext],mexpath,0); 
+    filetime.separatrice.source = gettime_jd('separatrice.F',sourcepath.helmex,1);     
+    %
+    filetime.helmex77.mex = gettime_jd(['helmex77.',mexext],mexpath,0); 
+    filetime.helmex77.source = gettime_jd('helmex77.F',sourcepath.helmex,1);     
 end 
 %
-if isstruct(compiler_opt) & isfield(compiler_opt,'copts'),% C mex compiling options
+if isstruct(compiler_opt) && isfield(compiler_opt,'copts'),% C mex compiling options
 	if isstruct(compiler_opt.copts),
 		if isfield(compiler_opt.copts,['mex',matver]),
 			copts = compiler_opt.copts.(['mex',matver]);
@@ -56,7 +61,7 @@ else
     copts = '';
 end
 %
-if isstruct(compiler_opt) & isfield(compiler_opt,'fopts'),% Fortran mex compiling option
+if isstruct(compiler_opt) && isfield(compiler_opt,'fopts'),% Fortran mex compiling option
 	if isstruct(compiler_opt.fopts),
 		if isfield(compiler_opt.fopts,['mex',matver]),
 			fopts = compiler_opt.fopts.(['mex',matver]);
@@ -68,6 +73,20 @@ if isstruct(compiler_opt) & isfield(compiler_opt,'fopts'),% Fortran mex compilin
 	end
 else
     fopts = '';
+end
+%
+if isstruct(compiler_opt) && isfield(compiler_opt,'argmex'),% Fortran mex compiling option
+	if isstruct(compiler_opt.argmex),
+		if isfield(compiler_opt.argmex,['mex',matver]),
+			argmex = compiler_opt.argmex.(['mex',matver]);
+		else
+			argmex = '';
+		end
+	else
+    	argmex = compiler_opt.argmex;
+	end
+else
+    argmex = '';
 end
 %
 if strfind(computer,'PCWIN'),
@@ -106,8 +125,14 @@ if force_compile || any(filetime.erfcc.source > filetime.erfcc.mex),
     disp(['The erfcc_mex_jd.',mexext,' mexfile has been compiled.'])
 end
 %
-if isstruct(compiler_opt) && isfield(compiler_opt,'helmex'),
-	build_helmex77_yp(sourcepath.helmex,mexpath,compiler_opt.helmex,fopts,force_compile);
+if force_compile || any(filetime.separatrice.source > filetime.separatrice.mex),
+    eval(['mex ',fopts,' ',sourcepath.helmex,'separatrice.F ',argmex]);
+    disp(['The separatrice.',mexext,' mexfile has been compiled.'])
+end
+%
+if force_compile || any(filetime.helmex77.source > filetime.helmex77.mex),
+    eval(['mex ',fopts,' ',sourcepath.helmex,'helmex77.F ',argmex]);
+    disp(['The helmex77.',mexext,' mexfile has been compiled.'])
 end
 %
 cd(initdir);
