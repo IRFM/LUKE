@@ -5,6 +5,8 @@
 % 
 %by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
 %
+% warning : matlab versions before 7.5 are no longer supported
+%
 clear all
 dkepath.id = 'LOCAL';%Set here the name path parameters (user specific)
 %
@@ -27,17 +29,16 @@ dkepath.default = default;
 dkepath.hostname.saturne = 'saturne';
 %
 saturne.luke_root = [pwd,'/'];
-saturne.local_root = '/home/sccp/gsem/decker/saturne/';
+saturne.local_root = '/home/sccp/gsem/decker/';
 saturne.computer = 'GLNXA64';%machine type and supported OS
 saturne.temppathroot = '/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-saturne.mex71 = [saturne.luke_root,'Project_DKE/MEX/Bin/saturne/MATLAB71/'];
 saturne.mex75 = [saturne.luke_root,'Project_DKE/MEX/Bin/saturne/MATLAB75/'];
-saturne.compiler_opt.helmex = '-L/luke/saturne/Packages/Bin/G95/g95-install/lib/gcc-lib/x86_64-suse-linux-gnu/4.0.3 -lf95 -lgcc -L/luke/saturne/Packages/Bin/LAPACK/lapack-3.1.1/ -llapack_g95 -lblas_g95 -ltmglib_g95';% Optional argument for helmex compilation
-saturne.compiler_opt.fopts.mex75 = 'FC=''/luke/saturne/Packages/Bin/G95/g95-install/bin/x86_64-suse-linux-gnu-g95'' FFLAGS=''-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132''';
+saturne.compiler_opt.copts = '';
+saturne.compiler_opt.fopts.mex75 = ['FC=''',saturne.local_root,'bin/saturne/g95'' FFLAGS=''-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132'''];
+saturne.compiler_opt.helmex.mex75 = ['-L',saturne.local_root,'lib/saturne/g95 -lf95 -lgcc -L',saturne.local_root,'Packages/saturne/lapack-3.1.1/ -llapack_g95 -lblas_g95 -ltmglib_g95'];% Optional argument for helmex compilation
 %
-saturne.MUMPS.mex71 = [saturne.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB71'];%Where MUMPS matrix solver is stored (MEX function)
-saturne.MUMPS.mex75 = [saturne.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB75'];%Where MUMPS matrix solver is stored (MEX function)
+saturne.MUMPS.mex75 = [saturne.local_root,'Packages/saturne/MUMPS_4.7.3_S_g95/MATLAB75'];%Where MUMPS matrix solver is stored (MEX function)
 saturne.MUMPS.par = ['/home/sccp/gsem/peysson/Packages/Bin/MUMPS/MUMPS_4.7.2_P_mpichpgf/dke'];%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
 saturne.MUMPS.seq = ['/home/sccp/gsem/peysson/Packages/Bin/MUMPS/MUMPS_4.6.4_S_g95/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
 saturne.MUMPS.mpipath = ['/usr/local/pgi/linux86-64/6.0/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
@@ -52,16 +53,17 @@ dkepath.saturne = saturne;
 dkepath.hostname.cephee = 'cephee';
 %
 cephee.luke_root = [pwd,'/'];
-cephee.local_root = '/home/sccp/gsem/decker/cephee/';
+cephee.local_root = '/home/sccp/gsem/decker/';
 cephee.computer = 'GLNXA64';%machine type and supported OS
 cephee.temppathroot = '/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 cephee.mex75 = [cephee.luke_root,'Project_DKE/MEX/Bin/cephee/MATLAB75/'];
-cephee.compiler_opt.copts = 'CC=''gcc'' CLIBS=''-Wl,-rpath-link,/applications/matlab_2007b/bin/glnxa64 -L/applications/matlab_2007b/bin/glnxa64 -lmx -lmex -lmat -lm''';
-cephee.compiler_opt.fopts = 'FC=''/luke/cephee/Packages/Bin/G95/g95-install/bin/x86_64-suse-linux-gnu-g95''';
-cephee.compiler_opt.helmex = '-L/luke/cephee/Packages/Bin/G95/g95-install/lib/gcc-lib/x86_64-suse-linux-gnu/4.0.3 -lf95 -lgcc -L/luke/cephee/Packages/Bin/LAPACK/lapack-3.1.1/ -llapack_g95 -lblas_g95 -ltmglib_g95';% Optional argument for helmex compilation 
+%cephee.compiler_opt.copts = 'CC=''gcc'' CLIBS=''-Wl,-rpath-link,/applications/matlab_2007b/bin/glnxa64 -L/applications/matlab_2007b/bin/glnxa64 -lmx -lmex -lmat -lm''';
+cephee.compiler_opt.copts = '-f /home/sccp/gsem/decker/Packages/cephee/MUMPS_4.7.3_S_g95/MATLAB75/gccopts.sh';
+cephee.compiler_opt.fopts.mex75 = ['-f /home/sccp/gsem/decker/Packages/cephee/MUMPS_4.7.3_S_g95/MATLAB75/gccopts.sh FC=''',cephee.local_root,'bin/cephee/g95'' FFLAGS=''-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132'''];
+cephee.compiler_opt.helmex.mex75 = ['-L',cephee.local_root,'lib/cephee/g95 -lf95 -lgcc -L',cephee.local_root,'Packages/cephee/lapack-3.1.1/ -llapack_g95 -lblas_g95 -ltmglib_g95'];% Optional argument for helmex compilation
 %
-cephee.MUMPS.mex75 = [cephee.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB75'];%Where MUMPS matrix solver is stored (MEX function)
+cephee.MUMPS.mex75 = [cephee.local_root,'Packages/cephee/MUMPS_4.7.3_S_g95/MATLAB75'];%Where MUMPS matrix solver is stored (MEX function)
 %
 dkepath.cephee = cephee;
 %
@@ -117,8 +119,8 @@ laptopjoan.temppathroot = '/home/jd211098/tmp/';%Absolute root directory path ad
 laptopjoan.mex75 = [laptopjoan.luke_root,'Project_DKE/MEX/Bin/laptopjoan/MATLAB75'];
 laptopjoan.mex77 = [laptopjoan.luke_root,'Project_DKE/MEX/Bin/laptopjoan/MATLAB77'];
 laptopjoan.compiler_opt.helmex = '-lblas -llapack';% Optional argument for helmex compilation 
-%laptopjoan.compiler_opt.fopts = 'FC="gfortran" FFLAGS="-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-0"';
-laptopjoan.compiler_opt.fopts = 'FC="gfortran" FFLAGS="-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-0"';
+laptopjoan.compiler_opt.fopts = 'FFLAGS="-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132"';
+laptopjoan.compiler_opt.copts = '';
 %
 laptopjoan.MUMPS.mex75 = [laptopjoan.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_ifort/MATLAB75'];%Where MUMPS matrix solver is stored (MEX function)
 laptopjoan.MUMPS.mex77 = [laptopjoan.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_ifort/MATLAB77'];%Where MUMPS matrix solver is stored (MEX function)
