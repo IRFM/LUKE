@@ -70,7 +70,7 @@ for n=1:N,
         disp(['- n = ',num2str(n),' distributed calculations'])
         disp(['--> time for distributed calculation with the MatLab distributed computing toolbox (1 processor) : ',num2str(time_mdce1(n)),' s'])
         disp('-------------------------------------------------------------------------')
-    elseif flag_mdce1(n) == -1 & ver >= 7.4 & cluster.mode == 1,
+    elseif flag_mdce1(n) <= -1 & ver >= 7.4 & cluster.mode == 1,
         disp(['- n = ',num2str(n),' distributed calculations with the MatLab toolbox is called but time out is reached. Sequential processing performed.'])
         disp(['--> time for sequential calculation : ',num2str(time_mdce1(n)),' s'])
         disp('-------------------------------------------------------------------------')
@@ -80,7 +80,7 @@ for n=1:N,
         disp(['- n = ',num2str(n),' distributed calculations'])
         disp(['--> time for distributed calculation with the LUKE distributed computing toolbox using ',num2str(n),' jobs in batch queing mode: ',num2str(time_ldce(n)),' s'])
         disp('-------------------------------------------------------------------------')
-    elseif flag_ldce(n) == -2 & cluster.mode == 2,
+    elseif flag_ldce(n) <= -2 & cluster.mode == 2,
         disp(['- n = ',num2str(n),' distributed calculations with the LUKE toolbox is called but time out is reached. Sequential processing performed.'])
         disp(['--> time for sequential calculation : ',num2str(time_ldce(n)),' s'])
         disp('-------------------------------------------------------------------------')
@@ -98,7 +98,7 @@ for n=1:N,
         disp(['- n = ',num2str(n),' distributed calculations'])
         disp(['--> time for distributed calculation with the MatLab distributed computing toolbox (4 processors) : ',num2str(time_mdce4(n)),' s'])
         disp('-------------------------------------------------------------------------')
-    elseif flag_mdce4(n) == -1 & ver >= 7.4 & cluster.mode == 1,
+    elseif flag_mdce4(n) <= -1 & ver >= 7.4 & cluster.mode == 1,
         disp(['- n = ',num2str(n),' distributed calculations with the MatLab toolbox is called but time out is reached. Sequential processing performed.'])
         disp(['--> time for sequential calculation : ',num2str(time_mdce4(n)),' s'])
         disp('-------------------------------------------------------------------------')
@@ -116,7 +116,7 @@ for n=1:N,
         disp(['- n = ',num2str(n),' distributed calculations'])
         disp(['--> time for distributed calculation with the MatLab distributed computing toolbox (8 processors) : ',num2str(time_mdce8(n)),' s'])
         disp('-------------------------------------------------------------------------')
-    elseif flag_mdce8(n) == -1 & ver >= 7.4 & cluster.mode == 1,
+    elseif flag_mdce8(n) <= -1 & ver >= 7.4 & cluster.mode == 1,
         disp(['- n = ',num2str(n),' distributed calculations with the MatLab toolbox is called but time out is reached. Sequential processing performed.'])
         disp(['--> time for sequential calculation : ',num2str(time_mdce8(n)),' s'])
         disp('-------------------------------------------------------------------------')

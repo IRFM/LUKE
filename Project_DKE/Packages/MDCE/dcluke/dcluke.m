@@ -78,13 +78,45 @@ function varargout = dcluke(entree1,varargin)
 %-------------------------------------------------------------------------------  
 %  
 %
-% recuperation variable environement
-dclukedir = [getenv('HOME'),'/LUKE/Project_DKE/Packages/MDCE/dcluke/'];
+% recuperation variable environnement
+dkepath = path_LUKE_LOCAL;
+%
+if isfield(dkepath,'hostname'),
+    %
+    hostnames = fieldnames(dkepath.hostname);
+    nhosts = length(hostnames);
+    hostname = '';
+    for ihost = 1:nhosts,
+        [s,lhostname] = unix('hostname');
+        if strfind(lhostname,dkepath.hostname.(hostnames{ihost})),
+            hostname = hostnames{ihost};
+        end
+    end
+    if isempty(hostname),
+        if isfield(dkepath,'default'),
+            hostname = 'default';
+        else
+            error('The computer is not listed in dkepath')
+        end
+    end
+    %
+    path_id = dkepath.id;
+    dkepath = dkepath.(hostname);
+    %
+    dkepath.hostname = hostname;
+    dkepath.id = path_id;
+end
+%
+dclukedir = [getenv('HOME'),'/LUKE/Project_DKE/Packages/MDCE/dcluke/',dkepath.hostname,'/'];
+if ~exist(dclukedir),
+	varargout{1:1} = 1;%LUKE distributed computing not set-up for this machine !
+	return
+end
+%
 workdir  = fullfile(getenv('HOME'),'tmp');
 if ~exist(workdir),
 	mkdir(getenv('HOME'),'tmp');
 end
-
 % donnees
 if isappdata(0,'BATCH_DISTRIBUE_LUKE')
 	ba = getappdata(0','BATCH_DISTRIBUE_LUKE');
@@ -100,12 +132,9 @@ end
 cmd.run   = [dclukedir,'dcluke_batch.sh'];
 cmd.state = [dclukedir,'dcluke_etat.sh'];
 cmd.kill  = [dclukedir,'dcluke_kill.sh'];
-
 % pas de sortie par defaut
 varargout = {};
-
 dcluke_display = 0;
-
 % le mode depend des entrees
 if nargin == 0
 	% test des etats et attente
@@ -337,6 +366,7 @@ else
 			varargout{1} =	ba(entree1)		
 		end	
 	case 'RESET'
+        varargout{1:1} = 0;%LUKE distributed computing not set-up for this machine !  
 		dcluke(0,'KILL')
 		ba = struct([]);
 	end
