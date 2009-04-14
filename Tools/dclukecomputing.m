@@ -1,4 +1,4 @@
-function [flag,results] = dclukecomputing(fun,args_in,arg_index,arg_range,nargout_in)
+function [flag,results] = dclukecomputing(fun,args_in,arg_index,arg_range,nargout_in,cluster)
 %LUKE - LUKE distributed computing environment
 %
 %   Distributed computing using the LUKE distributed computing environment
@@ -19,15 +19,14 @@ function [flag,results] = dclukecomputing(fun,args_in,arg_index,arg_range,nargou
 %   by Y. Peysson (CEA/DSM/IRFM) (yves.peysson@cea.fr) and J. Decker (CEA/DSM/IRFM) (joan.decker@cea.fr)
 %
     try,
-    	dirini = pwd;
-		if exist(fullfile(getenv('HOME'),'tmp'))
-			cd(fullfile(getenv('HOME'),'tmp'));
-			filelist = ls;
-			if isempty(filelist),
-				delete('*');
-			end
-		end
 		cd(dirini);
+        dirini = pwd;
+        cd(cluster.temppath);
+        filelist = ls;
+        if isempty(filelist),
+            delete('*');
+        end
+        cd(dirini);
 		%
 		dcluke(0,'RESET');
 		%

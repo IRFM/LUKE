@@ -45,7 +45,7 @@ else
    [gridDKE] = matrix3Dgridbuilder_dke_yp(dkeparam_out,display,equilDKE,radialDKE,momentumDKE);%General grid structure for the DKE solver
    [mksa] = mksacoefbuilder_dke_yp(dkeparam_out,display,equilDKE,radialDKE,momentumDKE,gridDKE);%MKSA quantities calculations
    [Zmomcoef] = momentumcoefbuilder_dke_yp(gridDKE,mksa);%Momentum space coefficients for FP calculations
-   [Zbouncecoef] = bouncecoefbuilder_dke_yp(dkepath,dkeparam_out,display,equilDKE,gridDKE);%bounce averaging coefficients
+   [Zbouncecoef] = bouncecoefbuilder_dke_yp(dkeparam_out,display,equilDKE,gridDKE);%bounce averaging coefficients
    [waveparam,xyprop_dke,xyP0_2piRp_mod,yb,yP0_2piRp,xys] = rfwave_dke_jd(dkeparam_out,display,equil,equilDKE,gridDKE,Zbouncecoef,mksa,waves);%RF wave parameters preprocessing calculations
    [XXsinksource] = sinksourcecoeffbuilder_dke_yp(dkeparam_out,display,gridDKE,mksa,Zbouncecoef,XXsinksource_in);%External sink and source contributions (for right-hand side part of the FP equation)
    [Zmripple] = mripplecoefbuilder_dke_yp(dkeparam_out,display,equil,equilDKE,gridDKE,mksa,ripple);%Magnetic ripple matrix coefficients

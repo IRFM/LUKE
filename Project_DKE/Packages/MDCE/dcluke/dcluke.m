@@ -79,44 +79,17 @@ function varargout = dcluke(entree1,varargin)
 %  
 %
 % recuperation variable environnement
-dkepath = path_LUKE_LOCAL;
+[dkepath] = load_structures_yp('dkepath','','');
+[cluster] = clustermode_luke(0,0,dkepath,'');%All cluster paramters and paths
 %
-if isfield(dkepath,'hostname'),
-    %
-    hostnames = fieldnames(dkepath.hostname);
-    nhosts = length(hostnames);
-    hostname = '';
-    for ihost = 1:nhosts,
-        [s,lhostname] = unix('hostname');
-        if strfind(lhostname,dkepath.hostname.(hostnames{ihost})),
-            hostname = hostnames{ihost};
-        end
-    end
-    if isempty(hostname),
-        if isfield(dkepath,'default'),
-            hostname = 'default';
-        else
-            error('The computer is not listed in dkepath')
-        end
-    end
-    %
-    path_id = dkepath.id;
-    dkepath = dkepath.(hostname);
-    %
-    dkepath.hostname = hostname;
-    dkepath.id = path_id;
-end
-%
-dclukedir = [getenv('HOME'),'/LUKE/Project_DKE/Packages/MDCE/dcluke/',dkepath.hostname,'/'];
-if ~exist(dclukedir),
+if ~isfield(cluster,'scriptspath'),
 	varargout{1:1} = 1;%LUKE distributed computing not set-up for this machine !
 	return
+else
+   dclukedir = cluster.scriptspath;
 end
 %
-workdir  = fullfile(getenv('HOME'),'tmp');
-if ~exist(workdir),
-	mkdir(getenv('HOME'),'tmp');
-end
+workdir  = cluster.temppath;
 % donnees
 if isappdata(0,'BATCH_DISTRIBUE_LUKE')
 	ba = getappdata(0','BATCH_DISTRIBUE_LUKE');

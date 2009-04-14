@@ -3,23 +3,24 @@
 clear functions
 clear mex
 %
+[dkepath] = load_structures_yp('dkepath','','');
+[cluster] = clustermode_luke(0,0,dkepath,'');%All cluster paramters and paths
+%
 if exist(fullfile(getenv('HOME'),'.dcluke.mat'),'file')
 	delete(fullfile(getenv('HOME'),'.dcluke.mat'));
 end
 dirini = pwd;
-if exist(fullfile(getenv('HOME'),'tmp'))
-	cd(fullfile(getenv('HOME'),'tmp'));
-	filelist = ls;
-	if isempty(filelist),
-		delete('*');
-	end
+cd(cluster.temppath);
+filelist = ls;
+if isempty(filelist),
+    delete('*');
 end
 cd(dirini);
 %
 flag = dcluke(0,'RESET');
 %
 if flag,
-    disp('Please, check first that LUKE distributed computing environnement is set-up for this machine !');
+    disp('Please, check first if LUKE distributed computing environnement is set-up for this machine !');
     disp('LUKE distributed computing not done.');
 else
     id = dcluke('fundcluke',pi/3); 
