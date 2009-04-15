@@ -1,4 +1,4 @@
-function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,cluster_path,flag)
+function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,flag)
 %C3PO - Set ray initial characteristics and launches the C3PO ray-tracing code
 %
 % This function calculates the ray initial characteristics and launches the C3PO ray-tracing code
@@ -7,16 +7,10 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C
 %
     if nargin < 8,
     	C3POparam = [];
-    	cluster_path = '';%In case distributed computing is used
         flag = 0;%numerical equilibrium used by default
     end
 	%
     if nargin < 9,
-    	cluster_path = '';%In case distributed computing is used
-        flag = 0;%numerical equilibrium used by default
-    end
-	%
-    if nargin < 10,
         flag = 0;%numerical equilibrium used by default
     end
     %
@@ -108,17 +102,15 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C
     %
     wave.cut_fac = waveparam.cut_fac;
     wave.kextra = rayparam.kextra;
-    %  
-    % Backward compatibility
     %
-    [clusterparam] = clustermode_luke(C3POdisplay,C3POparam,cluster_path,'main_C3PO_jd');
-    %
-    if clusterparam.mode,
+    if C3POparam.clustermode.main_C3PO_jd.mode,
         arg_range = cell(1,Nrays);
         for iray = 1:Nrays,
             arg_range{iray} = iray;
         end
-        [flag,rays] = mdce_luke(@loop_main_C3PO_jd,{iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay},1,arg_range,clusterparam);
+        [cluster] = clustermode_luke(C3POparam.clustermode,'main_C3PO_jd',C3POdisplay);
+        [flag,rays] = mdce_luke(@loop_main_C3PO_jd,{iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay},1,arg_range,cluster);
+		rmdir(cluster.temppath,'s');
 		%
 		for iray = 1:Nrays,
 			if isempty(rays{iray}),

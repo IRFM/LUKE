@@ -19,23 +19,15 @@ function [flag,results] = dclukecomputing(fun,args_in,arg_index,arg_range,nargou
 %   by Y. Peysson (CEA/DSM/IRFM) (yves.peysson@cea.fr) and J. Decker (CEA/DSM/IRFM) (joan.decker@cea.fr)
 %
     try,
-		cd(dirini);
-        dirini = pwd;
-        cd(cluster.temppath);
-        filelist = ls;
-        if isempty(filelist),
-            delete('*');
-        end
-        cd(dirini);
 		%
-		dcluke(0,'RESET');
+		dcluke(cluster,0,'RESET');
 		%
     	for j_range = 1:length(arg_range),
         	args_in{arg_index} = arg_range{j_range};
-        	id(j_range) =  dcluke(func2str(fun),args_in{:});      
+        	id(j_range) =  dcluke(cluster,func2str(fun),args_in{:});      
     	end
     	%
-    	dcluke;
+    	dcluke(cluster);
     	%
     	for j_range = 1:length(arg_range),
         	cmd = ['[arg_out{1,',int2str(j_range),'}'];
@@ -44,7 +36,7 @@ function [flag,results] = dclukecomputing(fun,args_in,arg_index,arg_range,nargou
                 	cmd = [cmd,',arg_out{',int2str(j_nargout),',',int2str(j_range),'}'];
             	end
         	end
-        	cmd = [cmd,'] = dcluke(',int2str(id(j_range)),');'];      
+        	cmd = [cmd,'] = dcluke(cluster,',int2str(id(j_range)),');'];      
         	eval(cmd);
     	end
     	%

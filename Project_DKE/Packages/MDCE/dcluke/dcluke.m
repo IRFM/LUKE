@@ -1,4 +1,4 @@
-function varargout = dcluke(entree1,varargin)
+function varargout = dcluke(cluster,entree1,varargin)
 % LUKE - LUKE distributed computing environment
 %
 % dcluke fonction feval distribuee
@@ -16,7 +16,7 @@ function varargout = dcluke(entree1,varargin)
 %
 %  appel d'une fonction distribue
 %   
-%    id = dcluke('nom_fonction',entree1, ...,entreen);
+%    id = dcluke(cluster,'nom_fonction',entree1, ...,entreen);
 %
 %  attente de la fin des jobs :
 %   
@@ -24,30 +24,31 @@ function varargout = dcluke(entree1,varargin)
 %
 %  lecture resultat :
 %
-%   [sortie1,...,sortien] = dcluke(id);
+%   [sortie1,...,sortien] = dcluke(cluster,id);
 %
 %  arreter un job :
 %
-%    dcluke(id,'KILL')
+%    dcluke(cluster,id,'KILL')
 % 
 %  arreter tous les jobs :
 %    
-%    dcluke(0,'KILL')
+%    dcluke(cluster,0,'KILL')
 %
 %  information sur un job :
 %
-%   info =  dcluke(id,'INFO')
+%   info =  dcluke(cluster,id,'INFO')
 %
 %  information sur tous les jobs :
 %
-%   info =  dcluke(0,'INFO')
+%   info =  dcluke(cluster,0,'INFO')
 %
 %  fin de tous les jobs et reset du systeme :
 %
-%   dcluke(0,'RESET')
+%   dcluke(cluster,0,'RESET')
 % 
 % input : 
 %
+%		cluster       : cluster parameters
 %      'nom_fonction' :      nom de la fonction 
 %      entree1..entreen :    variables d'entrees de la fonction
 %      id  :                 numero d'identification du job
@@ -58,7 +59,7 @@ function varargout = dcluke(entree1,varargin)
 %      sortie1..sortien :    sorties de la fonction
 %      info :                structure d'informations du job
 %
-% fichiers a configurer sous architecture :
+% fichiers a configurer sous architecture:
 %
 %  dcluke_etat.sh  -> retourne l'etat d'un job 
 %  dcluke_kill.sh  -> arrete un job 
@@ -68,48 +69,40 @@ function varargout = dcluke(entree1,varargin)
 % autres fonctions utiles :
 %  testdcluke.m      -> fonction de test
 %  
-% remarque : la session courante est sauve dans $HOME/.dcluke.
-% ce mecanisme ne permet uniquement a une seule session pour un meme user
-% de redemarrer apres etre sortie de matlab.
+% remarque : la session courante est sauve dans un dossier dossier cr?? dans pcluke.temppathroot (voir make_path_LOCAL.m suivant la machine)
+% ce mecanisme ne permet uniquement a une seule session pour un meme user de redemarrer apres etre sortie de matlab.
 %  
 % function initially writen by J-F Artaud, tel 62-15  and modified by Y. Peysson for LUKE
-% version  3.3  du  13/04/2007
-% CVS version  
+%  
 %-------------------------------------------------------------------------------  
 %  
-%
 % recuperation variable environnement
-[dkepath] = load_structures_yp('dkepath','','');
-[cluster] = clustermode_luke(0,0,dkepath,'');%All cluster paramters and paths
 %
-if ~isfield(cluster,'scriptspath'),
-	varargout{1:1} = 1;%LUKE distributed computing not set-up for this machine !
-	return
-else
-   dclukedir = cluster.scriptspath;
-end
-%
+dcluke_display = cluster.display;
 workdir  = cluster.temppath;
+%
 % donnees
+%
 if isappdata(0,'BATCH_DISTRIBUE_LUKE')
 	ba = getappdata(0','BATCH_DISTRIBUE_LUKE');
-elseif exist(fullfile(getenv('HOME'),'.dcluke.mat'),'file');
+elseif exist([workdir,'.dcluke.mat'],'file');
 	ba =struct([]);
 	warning off
-		load(fullfile(getenv('HOME'),'.dcluke.mat'));
+	load([workdir,'.dcluke.mat']);
 	warning on
 else
-	ba =struct([]);
+	ba = struct([]);
 end
 % commande de lancement et de controle des jobs
-cmd.run   = [dclukedir,'dcluke_batch.sh'];
-cmd.state = [dclukedir,'dcluke_etat.sh'];
-cmd.kill  = [dclukedir,'dcluke_kill.sh'];
+cmd.run   = 'dcluke_batch.sh';
+cmd.state = 'dcluke_etat.sh';
+cmd.kill  = 'dcluke_kill.sh';
 % pas de sortie par defaut
 varargout = {};
-dcluke_display = 0;
+%
 % le mode depend des entrees
-if nargin == 0
+%
+if nargin == 1,
 	% test des etats et attente
 	attente = 1;
 	while	(attente == 1)
@@ -131,8 +124,7 @@ if nargin == 0
 			end
 		end
 	end
-
-elseif isstr(entree1)
+elseif nargin > 1 & isstr(entree1),
 	% id du job
 	current = length(ba) +1;	
 	% rempplissage de la structure
@@ -175,22 +167,20 @@ elseif isstr(entree1)
 	data.resultat           = {};
 	save(ba(current).inputdata,'data');
 	% lancement du job
-	script = [dclukedir,'dcluke.exe'];
-	txt =   sprintf('%s %s zd%d %s %s %s %s', ...
-	        cmd.run,workdir,current,getenv('USER'),script,ba(current).inputdata,ba(current).batchfile);
+	script = 'dcluke.exe';
+	txt =   sprintf('%s %s zd%d %s %s %s %s', cmd.run,workdir,current,getenv('USER'),script,ba(current).inputdata,ba(current).batchfile);
 	[s,t] = unix(txt);
 	if s~= 0
-	  	error(sprintf('dcluke : error launching job %d in batch :\n %s',entree1,t));				
+			error(sprintf('dcluke : error launching job %d in batch :\n %s',entree1,t));				
 	else
 		[v,r] = strtok(t);
 		[v,r] = strtok(r);
 		[v,r] = strtok(r);
 		ba(current).jobid = str2num(v);	
 		ba(current).etat  = 'running';
-
 	end
 	varargout{1} = current;
-elseif nargin == 1
+elseif nargin == 2,
 	% lecture du resultat pour la reference donnees
 	if length(ba) >= entree1
 		switch ba(entree1).etat 
@@ -216,10 +206,8 @@ elseif nargin == 1
 			%ba(entree1).resultat = data.resultat;
 			ba(entree1).etat_sortie = data.etat_sortie;
 			ba(entree1).error = data.etat_error;
-			
 			if ba(entree1).etat_sortie == 1
-				error(sprintf('dcluke : error in "%s" :\n %s',  ...
-				      ba(entree1).commande,ba(entree1).error));
+				error(sprintf('dcluke : error in "%s" :\n %s',ba(entree1).commande,ba(entree1).error));
 			end
 			varargout = data.resultat;
 			% destruction du resultat
@@ -339,12 +327,11 @@ else
 			varargout{1} =	ba(entree1)		
 		end	
 	case 'RESET'
-        varargout{1:1} = 0;%LUKE distributed computing not set-up for this machine !  
-		dcluke(0,'KILL')
+		dcluke(cluster,0,'KILL')
 		ba = struct([]);
 	end
 	
 end
 
 setappdata(0,'BATCH_DISTRIBUE_LUKE',ba);	
-save(fullfile(getenv('HOME'),'.dcluke.mat'),'ba');
+save([workdir,'.dcluke.mat'],'ba');

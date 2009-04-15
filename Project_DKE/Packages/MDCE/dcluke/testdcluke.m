@@ -1,39 +1,31 @@
 %LUKE - Test function for LUKE distributed computing environment
 %
-clear functions
-clear mex
+% by J. Decker (CEA-IRFM) <joan.decker@cea.fr> and   Y. Peysson (CEA-IRFM) <yves.peysson@cea.fr>
 %
-[dkepath] = load_structures_yp('dkepath','','');
-[cluster] = clustermode_luke(0,0,dkepath,'');%All cluster paramters and paths
 %
-if exist(fullfile(getenv('HOME'),'.dcluke.mat'),'file')
-	delete(fullfile(getenv('HOME'),'.dcluke.mat'));
-end
-dirini = pwd;
-cd(cluster.temppath);
-filelist = ls;
-if isempty(filelist),
-    delete('*');
-end
-cd(dirini);
+clear all
 %
-flag = dcluke(0,'RESET');
+dkepath = load_structures_yp('dkepath','','');
+[cluster] = clustermode_luke(2,'',1);%Cluster parameters, paths and warnings. Must be called once before distributed computing
 %
-if flag,
-    disp('Please, check first if LUKE distributed computing environnement is set-up for this machine !');
-    disp('LUKE distributed computing not done.');
+if cluster.mode == 2,
+	dcluke(cluster,0,'RESET');
+    id = dcluke(cluster,'fundcluke',pi/3); 
+    dcluke(cluster);
+    tic,[e1_d,e2_d,e3_d] = dcluke(cluster,id);toc
+    rmdir(cluster.temppath,'s');%Must always be done after distributed computing call
+    disp('Calculations in the distributed computing mode done.');
 else
-    id = dcluke('fundcluke',pi/3); 
-    dcluke;
-    tic,[e1_d,e2_d,e3_d] = dcluke(id);toc 
-    disp('LUKE distributed computing done.');
+	disp(cluster.info);
 end
 %
 tic,[e1,e2,e3] = fundcluke(pi/3);toc
-disp('LUKE sequential computing done.');
+disp('Calculations in the sequential computing mode done.');
 %
-disp('results: (sequential,distributed)');
-if ~flag,
+disp('---------------------------------');
+disp('Results: (sequential,distributed)');
+disp('---------------------------------');
+if cluster.mode == 2,
     [[e1,e1_d];[e2,e2_d];[e3,e3_d]]
 else
     [[e1,NaN];[e2,NaN];[e3,NaN]]
