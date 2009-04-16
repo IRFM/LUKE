@@ -1,7 +1,9 @@
 function setpath_luke_jd(luke_root,dkepath)
+%LUKE - This function sets the path such that the simulations run on the specified LUKE version.
 %
-% This script sets the path such that the simulations run on the specified LUKE version.
+% This function sets the path such that the simulations run on the specified LUKE version.
 %
+%by Joan Decker CEA-IRFM (joan.decker@cea.fr) and Y.Peysson CEA-IRFM <yves.peysson@cea.fr>
 %
 %remove old DKE and packages path
 %
@@ -57,8 +59,7 @@ addpath([luke_root,'Tools']);
 %
 % Path for MEX files
 %
-matver = version;
-matver = matver([1,3]);
+[lukeversion,matver] = LUKEversion_jd;
 %
 sourcepath.DKE = [luke_root,'Project_DKE/MEX/Source/'];
 sourcepath.C3PO = [luke_root,'Project_DKE/Modules/RT/MEX/Source/'];
