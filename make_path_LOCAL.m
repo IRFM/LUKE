@@ -9,6 +9,8 @@
 %
 clear all
 dkepath.id = 'LOCAL';%Set here the name path parameters (user specific)
+[lukeversion,matver] = LUKEversion_jd;
+disp(['--------- The version ',lukeversion,' is installed ---------])
 %
 % default paths for unrecognized profiles
 %
@@ -18,8 +20,6 @@ default.computer = computer;
 default.temppathroot = [pwd,'/'];
 default.compiler_opt = '';% Optional arguments for compilation 
 %
-matver = version;
-matver = matver([1,3]);
 default.(['mex',matver]) = [default.luke_root,'Project_DKE/MEX/Bin/default/MATLAB',matver,'/'];%where compiled mex files are stored for this version of matlab
 %
 dkepath.default = default;
