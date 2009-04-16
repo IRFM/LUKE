@@ -33,7 +33,7 @@ dkepath.temppath = fullfile(dkepath.temppathroot,timeid_jd(clock));
 mkdir(dkepath.temppath);%Create calculation directory
 %
 [dkeparam_out] = paramconsistency_dke_yp(dkeparam_in,equil,psin_S,rho_S);%Check consistency between input parameters 
-multithreading_luke(dkeparam_out.clustermode.multithreading);
+multithreading_luke(dkepath);
 %
 if dkeparam_in.opt_load*exist(['temp',filesep,'DKE_TEMP_',id_simul,'.mat']),
    load(['temp',filesep,'DKE_TEMP_',id_simul,'.mat']);
