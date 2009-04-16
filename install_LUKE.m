@@ -141,7 +141,16 @@ opt = input_dke_yp('Do you want to run a simple test case','n',{'y','n'});
 if opt == 'y',
     %
     cd([luke_root,'Simulations/Benchmarks/TScyl/LH_Karney']);
+    disp('---------------------------------------------------------------------------')
+    disp('---------------------------SEQUENTIAL COMPUTING----------------------------')
+    disp('---------------------------------------------------------------------------')
     rundke;
+    if isfield(dkepath,'maxcompthreads'),
+    	disp('---------------------------------------------------------------------------')
+    	disp('---------------------------DISTRIBUTED COMPUTING---------------------------')
+    	disp('---------------------------------------------------------------------------')
+    	rundke_cluster;     
+    end
     cd(dkepath.luke_root);
 end
 
