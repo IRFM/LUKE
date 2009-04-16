@@ -94,9 +94,9 @@ else
 	ba = struct([]);
 end
 % commande de lancement et de controle des jobs
-cmd.run   = 'dcluke_batch.sh';
-cmd.state = 'dcluke_etat.sh';
-cmd.kill  = 'dcluke_kill.sh';
+cmd.run   = which('dcluke_batch.sh');
+cmd.state = which('dcluke_etat.sh');
+cmd.kill  = which('dcluke_kill.sh');
 % pas de sortie par defaut
 varargout = {};
 %
@@ -124,6 +124,8 @@ if nargin == 1,
 			end
 		end
 	end
+	pause(5);
+	%TODO: Probleme lié au montage NFS lent de CEPHEE. A enlever plus tard...
 elseif nargin > 1 & isstr(entree1),
 	% id du job
 	current = length(ba) +1;	
@@ -167,7 +169,7 @@ elseif nargin > 1 & isstr(entree1),
 	data.resultat           = {};
 	save(ba(current).inputdata,'data');
 	% lancement du job
-	script = 'dcluke.exe';
+	script = which('dcluke.exe');
 	txt =   sprintf('%s %s zd%d %s %s %s %s', cmd.run,workdir,current,getenv('USER'),script,ba(current).inputdata,ba(current).batchfile);
 	[s,t] = unix(txt);
 	if s~= 0
