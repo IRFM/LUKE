@@ -32,6 +32,7 @@ saturne.luke_root = [pwd,'/'];
 saturne.local_root = '/home/sccp/gsem/decker/';
 saturne.computer = 'GLNXA64';%machine type and supported OS
 saturne.temppathroot = '/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+saturne.maxcompthreads = 'automatic';%For MatLab multithreading
 %
 saturne.mex75 = [saturne.luke_root,'Project_DKE/MEX/Bin/saturne/MATLAB75/'];
 saturne.compiler_opt.copts = '';
@@ -56,6 +57,7 @@ cephee.luke_root = [pwd,'/'];
 cephee.local_root = '/home/sccp/gsem/decker/';
 cephee.computer = 'GLNXA64';%machine type and supported OS
 cephee.temppathroot = '/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+cephee.maxcompthreads = 2;%For MatLab multithreading
 %
 cephee.mex75 = [cephee.luke_root,'Project_DKE/MEX/Bin/cephee/MATLAB75/'];
 %cephee.compiler_opt.copts = 'CC=''gcc'' CLIBS=''-Wl,-rpath-link,/applications/matlab_2007b/bin/glnxa64 -L/applications/matlab_2007b/bin/glnxa64 -lmx -lmex -lmat -lm''';
