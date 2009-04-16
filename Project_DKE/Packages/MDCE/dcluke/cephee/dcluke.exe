@@ -1,8 +1,9 @@
 #!/bin/csh 
 unsetenv DISPLAY
 pwd
-matlab  -nosplash -nodesktop <<@@ > /dev/null 
+#/usr/local/R2007B/bin/matlab  -nosplash -nodesktop <<@@ > /dev/null 
 #matlab -nodesktop <<@@
+matlab  -nosplash -nodesktop <<@@ > /dev/null 
 dbstop if all error
 % chargement des donnees
 warning off
