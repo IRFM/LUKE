@@ -19,7 +19,6 @@ else
 	mode = dkepath.maxcompthreads;
 end
 %
-keyboard
 if ischar(mode),
     if ~strcmp(mode,'automatic'),
     	mode = str2num(mode);
