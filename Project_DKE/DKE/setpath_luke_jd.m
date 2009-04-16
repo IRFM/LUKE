@@ -102,7 +102,6 @@ if nargin == 2,
 	if exist(clusterscriptsdir,'dir'),
 		if exist([clusterscriptsdir,'/dcluke_batch.sh']) & exist([clusterscriptsdir,'/dcluke_etat.sh']) & exist([clusterscriptsdir,'/dcluke_kill.sh']) & exist([clusterscriptsdir,'/dcluke_kill.sh']) & exist([clusterscriptsdir,'/dcluke.exe']),
 			addpath(clusterscriptsdir);
-			setenv('PATH',[clusterscriptsdir,':',getenv('PATH')]); 
 		else
 			error('Scripts for LUKE distributed computing not found')
 		end
