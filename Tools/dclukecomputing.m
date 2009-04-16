@@ -1,4 +1,4 @@
-function [flag,results] = dclukecomputing(fun,args_in,arg_index,arg_range,nargout_in,cluster)
+function [flag,results] = dclukecomputing(fun,args_in,arg_index,arg_range,nargout_in,dkecluster)
 %LUKE - LUKE distributed computing environment
 %
 %   Distributed computing using the LUKE distributed computing environment
@@ -20,14 +20,14 @@ function [flag,results] = dclukecomputing(fun,args_in,arg_index,arg_range,nargou
 %
     try,
 		%
-		dcluke(cluster,0,'RESET');
+		dcluke(dkecluster,0,'RESET');
 		%
     	for j_range = 1:length(arg_range),
         	args_in{arg_index} = arg_range{j_range};
-        	id(j_range) =  dcluke(cluster,func2str(fun),args_in{:});      
+        	id(j_range) =  dcluke(dkecluster,func2str(fun),args_in{:});      
     	end
     	%
-    	dcluke(cluster);
+    	dcluke(dkecluster);
     	%
     	for j_range = 1:length(arg_range),
         	cmd = ['[arg_out{1,',int2str(j_range),'}'];
@@ -36,7 +36,7 @@ function [flag,results] = dclukecomputing(fun,args_in,arg_index,arg_range,nargou
                 	cmd = [cmd,',arg_out{',int2str(j_nargout),',',int2str(j_range),'}'];
             	end
         	end
-        	cmd = [cmd,'] = dcluke(cluster,',int2str(id(j_range)),');'];      
+        	cmd = [cmd,'] = dcluke(dkecluster,',int2str(id(j_range)),');'];      
         	eval(cmd);
     	end
     	%
