@@ -87,11 +87,11 @@ fitparam.opt_load = 1;%Reload existing vectorial magnetic equilibrium (1) or ove
 rayparam.testmode = 0;
 rayparam.tensortype = waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
 rayparam.t0 = 0;
-rayparam.tfinal = 10000;
+rayparam.tfinal = 10000/100;
 rayparam.dt0 = 1.e-4;
 rayparam.dS = 1.e-4;
 rayparam.tol = 1e-12;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
-rayparam.kmax = 60000;
+rayparam.kmax = 60000/100;
 rayparam.ncyclharm = 3;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
 rayparam.reflection = 0;%1:Enforce wave reflection at plasma boundary, 0: the code calculates itself if the ray must leave of not the plasma
 rayparam.rel_opt = 1;%option for (1) relativistic or (0) non-relativistic calculations
@@ -160,7 +160,7 @@ for n=1:N,
 	end
     %
   
-     C3POparam.clustermode.main_C3PO_jd.mode = 2;
+    C3POparam.clustermode.main_C3PO_jd.mode = 2;
 	C3POparam.clustermode.main_C3PO_jd.size = n;
     if C3POparam.clustermode.main_C3PO_jd.mode == 2,
     	tic;wave = main_C3PO_jd('test',equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);clear mex;clear functions;time_ldce(n) = toc;
