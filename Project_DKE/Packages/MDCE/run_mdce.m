@@ -11,9 +11,6 @@ load('initdata.mat','dkeparam_out','display','equilDKE','gridDKE');%Load data fo
 %
 display.display_mode = 0;%no display
 %
-ver = version;
-ver = str2num(ver(1:3));
-%
 N = 2;%number of jobs
 nprocmax1 = 1;%maximum number of processors involved
 nprocmax4 = 4;%maximum number of processors involved
@@ -51,7 +48,7 @@ for n=1:N,
     %
     [cluster] = clustermode_luke(1,'',0);%All cluster paramters and paths
     cluster.size = nprocmax1;
-    if ver >= 7.4 & cluster.mode == 1,%(MDCE only with 1 processor called)
+    if cluster.mode == 1,%(MDCE only with 1 processor called)
     	tic;[flag_mdce1(n),Zbouncecoef_mdce] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},4,arg_range,cluster);time_mdce1(n) = toc;
 		rmdir(cluster.temppath,'s');
 		flag_mode1 = 1;
@@ -64,11 +61,11 @@ for n=1:N,
         flag_mode2 = 1;
     end
     %
-    if flag_mdce1(n) == 1 & ver >= 7.4 & cluster.mode == 1,
+    if flag_mdce1(n) == 1 & cluster.mode == 1,
         disp(['- n = ',num2str(n),' distributed calculations'])
         disp(['--> time for distributed calculation with the MatLab distributed computing toolbox (1 processor) : ',num2str(time_mdce1(n)),' s'])
         disp('-------------------------------------------------------------------------')
-    elseif flag_mdce1(n) <= -1 & ver >= 7.4 & cluster.mode == 1,
+    elseif flag_mdce1(n) <= -1 & & cluster.mode == 1,
         disp(['- n = ',num2str(n),' distributed calculations with the MatLab toolbox is called but time out is reached. Sequential processing performed.'])
         disp(['--> time for sequential calculation : ',num2str(time_mdce1(n)),' s'])
         disp('-------------------------------------------------------------------------')
@@ -88,16 +85,16 @@ for n=1:N,
     %
     [cluster] = clustermode_luke(1,'',0);%All cluster paramters and paths
     cluster.size = nprocmax4;
-    if ver >= 7.4 & cluster.mode == 1,
+    if cluster.mode == 1,
     	tic;[flag_mdce4(n),Zbouncecoef_mdce] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},4,arg_range,cluster);time_mdce4(n) = toc;
     	rmdir(cluster.temppath,'s');
     end
     %
-    if flag_mdce4(n) == 1 & ver >= 7.4 & cluster.mode == 1,
+    if flag_mdce4(n) == 1 & cluster.mode == 1,
         disp(['- n = ',num2str(n),' distributed calculations'])
         disp(['--> time for distributed calculation with the MatLab distributed computing toolbox (4 processors) : ',num2str(time_mdce4(n)),' s'])
         disp('-------------------------------------------------------------------------')
-    elseif flag_mdce4(n) <= -1 & ver >= 7.4 & cluster.mode == 1,
+    elseif flag_mdce4(n) <= -1 & cluster.mode == 1,
         disp(['- n = ',num2str(n),' distributed calculations with the MatLab toolbox is called but time out is reached. Sequential processing performed.'])
         disp(['--> time for sequential calculation : ',num2str(time_mdce4(n)),' s'])
         disp('-------------------------------------------------------------------------')
@@ -107,16 +104,16 @@ for n=1:N,
     %
     [cluster] = clustermode_luke(1,'',0);%All cluster paramters and paths
     cluster.size = nprocmax8;
-    if ver >= 7.4 & cluster.mode == 1,
+    if cluster.mode == 1,
         tic;[flag_mdce8(n),Zbouncecoef_mdce] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},4,arg_range,cluster);time_mdce8(n) = toc;
         rmdir(cluster.temppath,'s');
     end
     %
-    if flag_mdce8(n) == 1 & ver >= 7.4 & cluster.mode == 1,
+    if flag_mdce8(n) == 1 & cluster.mode == 1,
         disp(['- n = ',num2str(n),' distributed calculations'])
         disp(['--> time for distributed calculation with the MatLab distributed computing toolbox (8 processors) : ',num2str(time_mdce8(n)),' s'])
         disp('-------------------------------------------------------------------------')
-    elseif flag_mdce8(n) <= -1 & ver >= 7.4 & cluster.mode == 1,
+    elseif flag_mdce8(n) <= -1 & cluster.mode == 1,
         disp(['- n = ',num2str(n),' distributed calculations with the MatLab toolbox is called but time out is reached. Sequential processing performed.'])
         disp(['--> time for sequential calculation : ',num2str(time_mdce8(n)),' s'])
         disp('-------------------------------------------------------------------------')

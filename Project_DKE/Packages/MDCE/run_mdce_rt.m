@@ -9,9 +9,6 @@ close all
 %
 display.display_mode = 0;%no display
 %
-ver = version;
-ver = str2num(ver(1:3));
-%
 N = 2;%number of jobs
 nprocmax1 = 1;%maximum number of processors involved
 nprocmax4 = 4;%maximum number of processors involved
@@ -162,6 +159,20 @@ for n=1:N,
 		rayinit.yP0_2piRp = repmat(P0_2piRp,1,n);%Lineic initial power density initial power in the ray (W/m)
 	end
     %
+  
+     C3POparam.clustermode.main_C3PO_jd.mode = 2;
+	C3POparam.clustermode.main_C3PO_jd.size = n;
+    if C3POparam.clustermode.main_C3PO_jd.mode == 2,
+    	tic;wave = main_C3PO_jd('test',equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);clear mex;clear functions;time_ldce(n) = toc;
+        flag_mode2 = 1;
+    end
+   
+ pause 
+    
+    
+    
+    
+    
 	C3POparam.clustermode.main_C3PO_jd.mode = 0;
 	C3POparam.clustermode.main_C3PO_jd.size = nprocmax1;
     tic;wave = main_C3PO_jd('test',equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);clear mex;clear functions;time_seq(n) = toc;
@@ -173,19 +184,19 @@ for n=1:N,
     %
 	C3POparam.clustermode.main_C3PO_jd.mode = 1;
 	C3POparam.clustermode.main_C3PO_jd.size = nprocmax1;
-    if ver >= 7.4 & C3POparam.clustermode.main_C3PO_jd.mode == 1,%(MDCE only with 1 processor called)
+    if C3POparam.clustermode.main_C3PO_jd.mode == 1,%(MDCE only with 1 processor called)
     	tic;wave = main_C3PO_jd('test',equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);clear mex;clear functions;time_mdce1(n) = toc;
 		flag_mode1 = 1;
     end
     %
     C3POparam.clustermode.main_C3PO_jd.mode = 2;
 	C3POparam.clustermode.main_C3PO_jd.size = n;
-    if ver < 7.4 & C3POparam.clustermode.main_C3PO_jd.mode == 2,
+    if C3POparam.clustermode.main_C3PO_jd.mode == 2,
     	tic;wave = main_C3PO_jd('test',equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);clear mex;clear functions;time_ldce(n) = toc;
         flag_mode2 = 1;
     end
     %
-    if ver >= 7.4 & C3POparam.clustermode.main_C3PO_jd.mode == 1,
+    if C3POparam.clustermode.main_C3PO_jd.mode == 1,
         disp(['- n = ',num2str(n),' distributed calculations'])
         disp(['--> time for distributed calculation with the MatLab distributed computing toolbox (1 processor) : ',num2str(time_mdce1(n)),' s'])
         disp('-------------------------------------------------------------------------')
@@ -201,11 +212,11 @@ for n=1:N,
     %
 	C3POparam.clustermode.main_C3PO_jd.mode = 1;
 	C3POparam.clustermode.main_C3PO_jd.size = nprocmax4;
-    if ver >= 7.4 & C3POparam.clustermode.main_C3PO_jd.mode == 1,
+    if C3POparam.clustermode.main_C3PO_jd.mode == 1,
     	tic;wave = main_C3PO_jd('test',equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);clear mex;clear functions;time_mdce4(n) = toc;
     end
     %
-    if ver >= 7.4 & C3POparam.clustermode.main_C3PO_jd.mode == 1,
+    if C3POparam.clustermode.main_C3PO_jd.mode == 1,
         disp(['- n = ',num2str(n),' distributed calculations'])
         disp(['--> time for distributed calculation with the MatLab distributed computing toolbox (4 processors) : ',num2str(time_mdce4(n)),' s'])
         disp('-------------------------------------------------------------------------')
@@ -215,11 +226,11 @@ for n=1:N,
     %
 	C3POparam.clustermode.main_C3PO_jd.mode = 1;
 	C3POparam.clustermode.main_C3PO_jd.size = nprocmax8;
-    if ver >= 7.4 & C3POparam.clustermode.main_C3PO_jd.mode == 1,
+    if C3POparam.clustermode.main_C3PO_jd.mode == 1,
         tic;wave = main_C3PO_jd('test',equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);clear mex;clear functions;time_mdce8(n) = toc;
     end
     %
-    if ver >= 7.4 & C3POparam.clustermode.main_C3PO_jd.mode == 1,
+    if C3POparam.clustermode.main_C3PO_jd.mode == 1,
         disp(['- n = ',num2str(n),' distributed calculations'])
         disp(['--> time for distributed calculation with the MatLab distributed computing toolbox (8 processors) : ',num2str(time_mdce8(n)),' s'])
         disp('-------------------------------------------------------------------------')
