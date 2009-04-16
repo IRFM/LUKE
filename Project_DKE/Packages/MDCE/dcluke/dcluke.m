@@ -1,4 +1,4 @@
-function varargout = dcluke(cluster,entree1,varargin)
+function varargout = dcluke(dkecluster,entree1,varargin)
 % LUKE - LUKE distributed computing environment
 %
 % dcluke fonction feval distribuee
@@ -16,7 +16,7 @@ function varargout = dcluke(cluster,entree1,varargin)
 %
 %  appel d'une fonction distribue
 %   
-%    id = dcluke(cluster,'nom_fonction',entree1, ...,entreen);
+%    id = dcluke(dkecluster,'nom_fonction',entree1, ...,entreen);
 %
 %  attente de la fin des jobs :
 %   
@@ -24,31 +24,31 @@ function varargout = dcluke(cluster,entree1,varargin)
 %
 %  lecture resultat :
 %
-%   [sortie1,...,sortien] = dcluke(cluster,id);
+%   [sortie1,...,sortien] = dcluke(dkecluster,id);
 %
 %  arreter un job :
 %
-%    dcluke(cluster,id,'KILL')
+%    dcluke(dkecluster,id,'KILL')
 % 
 %  arreter tous les jobs :
 %    
-%    dcluke(cluster,0,'KILL')
+%    dcluke(dkecluster,0,'KILL')
 %
 %  information sur un job :
 %
-%   info =  dcluke(cluster,id,'INFO')
+%   info =  dcluke(dkecluster,id,'INFO')
 %
 %  information sur tous les jobs :
 %
-%   info =  dcluke(cluster,0,'INFO')
+%   info =  dcluke(dkecluster,0,'INFO')
 %
 %  fin de tous les jobs et reset du systeme :
 %
-%   dcluke(cluster,0,'RESET')
+%   dcluke(dkecluster,0,'RESET')
 % 
 % input : 
 %
-%		cluster       : cluster parameters
+%		dkecluster       : cluster parameters
 %      'nom_fonction' :      nom de la fonction 
 %      entree1..entreen :    variables d'entrees de la fonction
 %      id  :                 numero d'identification du job
@@ -78,8 +78,8 @@ function varargout = dcluke(cluster,entree1,varargin)
 %  
 % recuperation variable environnement
 %
-dcluke_display = cluster.display;
-workdir  = cluster.temppath;
+dcluke_display = dkecluster.display;
+workdir  = dkecluster.temppath;
 %
 % donnees
 %
@@ -329,7 +329,7 @@ else
 			varargout{1} =	ba(entree1)		
 		end	
 	case 'RESET'
-		dcluke(cluster,0,'KILL')
+		dcluke(dkecluster,0,'KILL')
 		ba = struct([]);
 	end
 	

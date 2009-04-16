@@ -36,46 +36,46 @@ for n=1:N,
     arg_range = '';
     for j = 1:n,arg_range{j} = equilDKE;end
     %
-    [cluster] = clustermode_luke(0,'',0);%All cluster paramters and paths
-    cluster.size = nprocmax1;
-    tic;[flag_seq(n),Zbouncecoef_seq] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},4,arg_range,cluster);time_seq(n) = toc;
-    rmdir(cluster.temppath,'s');
+    [dkecluster] = clustermode_luke(0,'',0);%All cluster paramters and paths
+    dkecluster.size = nprocmax1;
+    tic;[flag_seq(n),Zbouncecoef_seq] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},4,arg_range,dkecluster);time_seq(n) = toc;
+    rmdir(dkecluster.temppath,'s');
     %
     disp(['   --> time for consecutive calculations (1 proc.) : ',num2str(time_seq(n)),' s'])
     disp('-------------------------------------------------------------------------')
     %
     % Distributed job case (1 processor)
     %
-    [cluster] = clustermode_luke(1,'',0);%All cluster paramters and paths
-    cluster.size = nprocmax1;
-    if cluster.mode == 1,%(MDCE only with 1 processor called)
-    	tic;[flag_mdce1(n),Zbouncecoef_mdce] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},4,arg_range,cluster);time_mdce1(n) = toc;
-		rmdir(cluster.temppath,'s');
+    [dkecluster] = clustermode_luke(1,'',0);%All cluster paramters and paths
+    dkecluster.size = nprocmax1;
+    if dkecluster.mode == 1,%(MDCE only with 1 processor called)
+    	tic;[flag_mdce1(n),Zbouncecoef_mdce] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},4,arg_range,dkecluster);time_mdce1(n) = toc;
+		rmdir(dkecluster.temppath,'s');
 		flag_mode1 = 1;
     end
-    [cluster] = clustermode_luke(2,'',0);%All cluster paramters and paths
-    cluster.size = n;
-    if cluster.mode == 2,%All matlab may be used with this technique based on an external batch-queuing
-    	tic;[flag_ldce(n),Zbouncecoef_ldce] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},4,arg_range,cluster);time_ldce(n) = toc;
-        rmdir(cluster.temppath,'s');
+    [dkecluster] = clustermode_luke(2,'',0);%All cluster paramters and paths
+    dkecluster.size = n;
+    if dkecluster.mode == 2,%All matlab may be used with this technique based on an external batch-queuing
+    	tic;[flag_ldce(n),Zbouncecoef_ldce] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},4,arg_range,dkecluster);time_ldce(n) = toc;
+        rmdir(dkecluster.temppath,'s');
         flag_mode2 = 1;
     end
     %
-    if flag_mdce1(n) == 1 & cluster.mode == 1,
+    if flag_mdce1(n) == 1 & dkecluster.mode == 1,
         disp(['- n = ',num2str(n),' distributed calculations'])
         disp(['--> time for distributed calculation with the MatLab distributed computing toolbox (1 processor) : ',num2str(time_mdce1(n)),' s'])
         disp('-------------------------------------------------------------------------')
-    elseif flag_mdce1(n) <= -1 & & cluster.mode == 1,
+    elseif flag_mdce1(n) <= -1 & & dkecluster.mode == 1,
         disp(['- n = ',num2str(n),' distributed calculations with the MatLab toolbox is called but time out is reached. Sequential processing performed.'])
         disp(['--> time for sequential calculation : ',num2str(time_mdce1(n)),' s'])
         disp('-------------------------------------------------------------------------')
     end
     %
-    if flag_ldce(n) == 2 & cluster.mode == 2,
+    if flag_ldce(n) == 2 & dkecluster.mode == 2,
         disp(['- n = ',num2str(n),' distributed calculations'])
         disp(['--> time for distributed calculation with the LUKE distributed computing toolbox using ',num2str(n),' jobs in batch queing mode: ',num2str(time_ldce(n)),' s'])
         disp('-------------------------------------------------------------------------')
-    elseif flag_ldce(n) <= -2 & cluster.mode == 2,
+    elseif flag_ldce(n) <= -2 & dkecluster.mode == 2,
         disp(['- n = ',num2str(n),' distributed calculations with the LUKE toolbox is called but time out is reached. Sequential processing performed.'])
         disp(['--> time for sequential calculation : ',num2str(time_ldce(n)),' s'])
         disp('-------------------------------------------------------------------------')
@@ -83,18 +83,18 @@ for n=1:N,
     %
     % Distributed job case (MDCE only with 4 processors called)
     %
-    [cluster] = clustermode_luke(1,'',0);%All cluster paramters and paths
-    cluster.size = nprocmax4;
-    if cluster.mode == 1,
-    	tic;[flag_mdce4(n),Zbouncecoef_mdce] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},4,arg_range,cluster);time_mdce4(n) = toc;
-    	rmdir(cluster.temppath,'s');
+    [dkecluster] = clustermode_luke(1,'',0);%All cluster paramters and paths
+    dkecluster.size = nprocmax4;
+    if dkecluster.mode == 1,
+    	tic;[flag_mdce4(n),Zbouncecoef_mdce] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},4,arg_range,dkecluster);time_mdce4(n) = toc;
+    	rmdir(dkecluster.temppath,'s');
     end
     %
-    if flag_mdce4(n) == 1 & cluster.mode == 1,
+    if flag_mdce4(n) == 1 & dkecluster.mode == 1,
         disp(['- n = ',num2str(n),' distributed calculations'])
         disp(['--> time for distributed calculation with the MatLab distributed computing toolbox (4 processors) : ',num2str(time_mdce4(n)),' s'])
         disp('-------------------------------------------------------------------------')
-    elseif flag_mdce4(n) <= -1 & cluster.mode == 1,
+    elseif flag_mdce4(n) <= -1 & dkecluster.mode == 1,
         disp(['- n = ',num2str(n),' distributed calculations with the MatLab toolbox is called but time out is reached. Sequential processing performed.'])
         disp(['--> time for sequential calculation : ',num2str(time_mdce4(n)),' s'])
         disp('-------------------------------------------------------------------------')
@@ -102,18 +102,18 @@ for n=1:N,
     %
     % Distributed job case (MDCE only with 8 processors called)
     %
-    [cluster] = clustermode_luke(1,'',0);%All cluster paramters and paths
-    cluster.size = nprocmax8;
-    if cluster.mode == 1,
-        tic;[flag_mdce8(n),Zbouncecoef_mdce] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},4,arg_range,cluster);time_mdce8(n) = toc;
-        rmdir(cluster.temppath,'s');
+    [dkecluster] = clustermode_luke(1,'',0);%All cluster paramters and paths
+    dkecluster.size = nprocmax8;
+    if dkecluster.mode == 1,
+        tic;[flag_mdce8(n),Zbouncecoef_mdce] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},4,arg_range,dkecluster);time_mdce8(n) = toc;
+        rmdir(dkecluster.temppath,'s');
     end
     %
-    if flag_mdce8(n) == 1 & cluster.mode == 1,
+    if flag_mdce8(n) == 1 & dkecluster.mode == 1,
         disp(['- n = ',num2str(n),' distributed calculations'])
         disp(['--> time for distributed calculation with the MatLab distributed computing toolbox (8 processors) : ',num2str(time_mdce8(n)),' s'])
         disp('-------------------------------------------------------------------------')
-    elseif flag_mdce8(n) <= -1 & cluster.mode == 1,
+    elseif flag_mdce8(n) <= -1 & dkecluster.mode == 1,
         disp(['- n = ',num2str(n),' distributed calculations with the MatLab toolbox is called but time out is reached. Sequential processing performed.'])
         disp(['--> time for sequential calculation : ',num2str(time_mdce8(n)),' s'])
         disp('-------------------------------------------------------------------------')
@@ -170,7 +170,7 @@ if flag_mode2,
 end
 %
 leg = [leg;'Time out level                                '];
-graph1D_jd(0:N,cluster.timeout*ones(N+1,1),0,0,'N','time (s)','',leg,[0,N],NaN,'--','none','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(0:N,dkecluster.timeout*ones(N+1,1),0,0,'N','time (s)','',leg,[0,N],NaN,'--','none','r',2,20,gca,0.9,0.7,0.7);
 %
 if flag_mode1 & flag_mode2,
 	print_jd(2,'fig_mcde_lcde','.');

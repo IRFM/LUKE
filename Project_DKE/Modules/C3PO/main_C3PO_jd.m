@@ -108,9 +108,9 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C
         for iray = 1:Nrays,
             arg_range{iray} = iray;
         end
-        [cluster] = clustermode_luke(C3POparam.clustermode,'main_C3PO_jd',C3POdisplay);
-        [flag,rays] = mdce_luke(@loop_main_C3PO_jd,{iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay},1,arg_range,cluster);
-		rmdir(cluster.temppath,'s');
+        [dkecluster] = clustermode_luke(C3POparam.clustermode,'main_C3PO_jd',C3POdisplay);
+        [flag,rays] = mdce_luke(@loop_main_C3PO_jd,{iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay},1,arg_range,dkecluster);
+		rmdir(dkecluster.temppath,'s');
 		%
 		for iray = 1:Nrays,
 			if isempty(rays{iray}),
