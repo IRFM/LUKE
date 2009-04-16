@@ -59,7 +59,6 @@ dkedisplay.display_mode = 0;
 %
 % C3PO computing parameters
 %
-scanparam.clustermode.multithreading = 'automatic';%Intrinsic distributed computing with multicore machines (MatLab > R2007a). Can be set to 'automatic', or enforced to any value from 1 to more threads. WARNING: if the number of threads is larger than the number of cores, performances may be reduced.
 scanparam.clustermode.scanloop.mode = 2;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2)for the function main_C3PO_jd.m (MDC toolbox must be installed for option 1)
 scanparam.clustermode.scanloop.timeout = 500;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
 scanparam.clustermode.scanloop.size = 12;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
