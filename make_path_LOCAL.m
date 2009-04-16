@@ -10,7 +10,7 @@
 clear all
 dkepath.id = 'LOCAL';%Set here the name path parameters (user specific)
 [lukeversion,matver] = LUKEversion_jd;
-disp(['--------- The version ',lukeversion,' is installed ---------])
+disp(['--------- The version ',lukeversion,' is installed ---------'])
 %
 % default paths for unrecognized profiles
 %
