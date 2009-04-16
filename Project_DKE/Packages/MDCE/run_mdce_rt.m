@@ -7,9 +7,11 @@
 clear all
 close all
 %
+dkepath = load_structures_yp('dkepath','','');
+%
 display.display_mode = 0;%no display
 %
-N = 2;%number of jobs
+N = 10;%number of jobs
 nprocmax1 = 1;%maximum number of processors involved
 nprocmax4 = 4;%maximum number of processors involved
 nprocmax8 = 8;%maximum number of processors involved
@@ -86,11 +88,11 @@ fitparam.opt_load = 1;%Reload existing vectorial magnetic equilibrium (1) or ove
 rayparam.testmode = 0;
 rayparam.tensortype = waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
 rayparam.t0 = 0;
-rayparam.tfinal = 10000/100;
+rayparam.tfinal = 2000;
 rayparam.dt0 = 1.e-4;
 rayparam.dS = 1.e-4;
 rayparam.tol = 1e-12;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
-rayparam.kmax = 60000/100;
+rayparam.kmax = 60000;
 rayparam.ncyclharm = 3;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
 rayparam.reflection = 0;%1:Enforce wave reflection at plasma boundary, 0: the code calculates itself if the ray must leave of not the plasma
 rayparam.rel_opt = 1;%option for (1) relativistic or (0) non-relativistic calculations
@@ -157,49 +159,48 @@ for n=1:N,
 		rayinit.ydNpar0 = repmat(dNpar0,1,n);%initial Ray spectral width
 		rayinit.yP0_2piRp = repmat(P0_2piRp,1,n);%Lineic initial power density initial power in the ray (W/m)
 	end
-    %
-  
-    C3POparam.clustermode.main_C3PO_jd.mode = 2;
-	C3POparam.clustermode.main_C3PO_jd.size = n;
-    if C3POparam.clustermode.main_C3PO_jd.mode == 2,
-    	tic;wave = main_C3PO_jd('test',equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);clear mex;clear functions;time_ldce(n) = toc;
-        flag_mode2 = 1;
-    end
-   
- pause 
-    
-    
-    
-    
-    
+    %   
 	C3POparam.clustermode.main_C3PO_jd.mode = 0;
 	C3POparam.clustermode.main_C3PO_jd.size = nprocmax1;
     tic;wave = main_C3PO_jd('test',equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);clear mex;clear functions;time_seq(n) = toc;
+    figure;
+    for j = 1:n,
+        graph1D_jd(wave.rays{j}.ss,wave.rays{j}.srho,0,0,'Ray length','\rho',['Sequential computing - ',int2str(n),' cycles, dt = ',num2str(time_seq(n)),' (s)'],'',[0,max(wave.rays{1}.ss)],NaN,'-','none','r',2,20,gca,0.9,0.7,0.7);
+	end   
     %
     disp(['   --> time for consecutive calculations (1 proc.) : ',num2str(time_seq(n)),' s'])
     disp('-------------------------------------------------------------------------')
     %
     % Distributed job case (1 processor)
     %
-	C3POparam.clustermode.main_C3PO_jd.mode = 1;
-	C3POparam.clustermode.main_C3PO_jd.size = nprocmax1;
-    if C3POparam.clustermode.main_C3PO_jd.mode == 1,%(MDCE only with 1 processor called)
-    	tic;wave = main_C3PO_jd('test',equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);clear mex;clear functions;time_mdce1(n) = toc;
-		flag_mode1 = 1;
-    end
-    %
+%	C3POparam.clustermode.main_C3PO_jd.mode = 1;
+%	C3POparam.clustermode.main_C3PO_jd.size = nprocmax1;
+%    if C3POparam.clustermode.main_C3PO_jd.mode == 1,%(MDCE only with 1 processor called)
+%    	tic;wave = main_C3PO_jd('test',equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);clear mex;clear functions;time_mdce1(n) = toc;
+%		flag_mode1 = 1;
+%    end
+%	 figure;
+%    for j = 1:n,
+%    	graph1D_jd(wave.rays{j}.ss,wave.rays{j}.srho,0,0,'Ray length','\rho','MatLab distributed computing - ',int2str(n),' proc., dt = ',num2str(time_mdce1(n)),' (s)'],'',[0,max(wave.rays{j}.ss)],NaN,'-','none','r',2,20,gca,0.9,0.7,0.7);
+%	 end 
+
+%    %
     C3POparam.clustermode.main_C3PO_jd.mode = 2;
 	C3POparam.clustermode.main_C3PO_jd.size = n;
     if C3POparam.clustermode.main_C3PO_jd.mode == 2,
     	tic;wave = main_C3PO_jd('test',equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);clear mex;clear functions;time_ldce(n) = toc;
         flag_mode2 = 1;
     end
+    figure;
+    for j = 1:n,
+        graph1D_jd(wave.rays{j}.ss,wave.rays{j}.srho,0,0,'Ray length','\rho',['LUKE distributed computing - ',int2str(n),' proc., dt = ',num2str(time_ldce(n)),' (s)'],'',[0,max(wave.rays{j}.ss)],NaN,'-','none','r',2,20,gca,0.9,0.7,0.7);
+	end 
     %
-    if C3POparam.clustermode.main_C3PO_jd.mode == 1,
-        disp(['- n = ',num2str(n),' distributed calculations'])
-        disp(['--> time for distributed calculation with the MatLab distributed computing toolbox (1 processor) : ',num2str(time_mdce1(n)),' s'])
-        disp('-------------------------------------------------------------------------')
-    end
+%    if C3POparam.clustermode.main_C3PO_jd.mode == 1,
+%        disp(['- n = ',num2str(n),' distributed calculations'])
+%        disp(['--> time for distributed calculation with the MatLab distributed computing toolbox (1 processor) : ',num2str(time_mdce1(n)),' s'])
+%        disp('-------------------------------------------------------------------------')
+%    end
     %
     if C3POparam.clustermode.main_C3PO_jd.mode == 2,
         disp(['- n = ',num2str(n),' distributed calculations'])
@@ -209,31 +210,31 @@ for n=1:N,
     %
     % Distributed job case (MDCE only with 4 processors called)
     %
-	C3POparam.clustermode.main_C3PO_jd.mode = 1;
-	C3POparam.clustermode.main_C3PO_jd.size = nprocmax4;
-    if C3POparam.clustermode.main_C3PO_jd.mode == 1,
-    	tic;wave = main_C3PO_jd('test',equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);clear mex;clear functions;time_mdce4(n) = toc;
-    end
-    %
-    if C3POparam.clustermode.main_C3PO_jd.mode == 1,
-        disp(['- n = ',num2str(n),' distributed calculations'])
-        disp(['--> time for distributed calculation with the MatLab distributed computing toolbox (4 processors) : ',num2str(time_mdce4(n)),' s'])
-        disp('-------------------------------------------------------------------------')
-    end
+%	C3POparam.clustermode.main_C3PO_jd.mode = 1;
+%	C3POparam.clustermode.main_C3PO_jd.size = nprocmax4;
+%    if C3POparam.clustermode.main_C3PO_jd.mode == 1,
+%    	tic;wave = main_C3PO_jd('test',equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);clear mex;clear functions;time_mdce4(n) = toc;
+%    end
+%    %
+%    if C3POparam.clustermode.main_C3PO_jd.mode == 1,
+%        disp(['- n = ',num2str(n),' distributed calculations'])
+%        disp(['--> time for distributed calculation with the MatLab distributed computing toolbox (4 processors) : ',num2str(time_mdce4(n)),' s'])
+%        disp('-------------------------------------------------------------------------')
+%    end
     %
     % Distributed job case (MDCE only with 8 processors called)
     %
-	C3POparam.clustermode.main_C3PO_jd.mode = 1;
-	C3POparam.clustermode.main_C3PO_jd.size = nprocmax8;
-    if C3POparam.clustermode.main_C3PO_jd.mode == 1,
-        tic;wave = main_C3PO_jd('test',equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);clear mex;clear functions;time_mdce8(n) = toc;
-    end
+%	C3POparam.clustermode.main_C3PO_jd.mode = 1;
+%	C3POparam.clustermode.main_C3PO_jd.size = nprocmax8;
+%    if C3POparam.clustermode.main_C3PO_jd.mode == 1,
+%        tic;wave = main_C3PO_jd('test',equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);clear mex;clear functions;time_mdce8(n) = toc;
+%    end
     %
-    if C3POparam.clustermode.main_C3PO_jd.mode == 1,
-        disp(['- n = ',num2str(n),' distributed calculations'])
-        disp(['--> time for distributed calculation with the MatLab distributed computing toolbox (8 processors) : ',num2str(time_mdce8(n)),' s'])
-        disp('-------------------------------------------------------------------------')
-    end
+%    if C3POparam.clustermode.main_C3PO_jd.mode == 1,
+%        disp(['- n = ',num2str(n),' distributed calculations'])
+%       disp(['--> time for distributed calculation with the MatLab distributed computing toolbox (8 processors) : ',num2str(time_mdce8(n)),' s'])
+%        disp('-------------------------------------------------------------------------')
+%    end
 end
 %
 leg = ['Single                                        '];
