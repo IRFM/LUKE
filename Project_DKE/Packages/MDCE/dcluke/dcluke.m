@@ -124,8 +124,13 @@ if nargin == 1,
 			end
 		end
 	end
-	pause(5);
-	%TODO: Probleme lié au montage NFS lent de CEPHEE. A enlever plus tard...
+%
+%TODO: Probleme lié au montage NFS tres lent de CEPHEE. A enlever plus tard...
+%
+	[hostname] = unix('hostname');
+	if strfind(hostname,'cephee'),
+		pause(10);
+	end
 elseif nargin > 1 & isstr(entree1),
 	% id du job
 	current = length(ba) +1;	
