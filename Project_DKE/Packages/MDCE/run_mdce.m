@@ -13,7 +13,7 @@ load('initdata.mat','dkeparam_out','display','equilDKE','gridDKE');%Load data fo
 %
 display.display_mode = 0;%no display
 %
-N = 2;%number of jobs
+N = 10;%number of jobs
 nprocmax1 = 1;%maximum number of processors involved
 nprocmax4 = 4;%maximum number of processors involved
 nprocmax8 = 8;%maximum number of processors involved
@@ -39,9 +39,9 @@ for n=1:N,
     for j = 1:n,arg_range{j} = equilDKE;end
     %
     [dkecluster] = clustermode_luke(0,'',0);%All cluster paramters and paths
-    dkecluster.size = nprocmax1;
-    tic;[flag_seq(n),Zbouncecoef_seq] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},4,arg_range,dkecluster);time_seq(n) = toc;
-    rmdir(dkecluster.temppath,'s');
+    dkecluster.size = n;
+    tic;[flag_seq(n),Zbouncecoef_seq] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},3,arg_range,dkecluster);time_seq(n) = toc;
+    rmdir(dkecluster.temppath,'s');   
     %
     disp(['   --> time for consecutive calculations (1 proc.) : ',num2str(time_seq(n)),' s'])
     disp('-------------------------------------------------------------------------')
@@ -51,14 +51,14 @@ for n=1:N,
 %    [dkecluster] = clustermode_luke(1,'',0);%All cluster paramters and paths
 %    dkecluster.size = nprocmax1;
 %    if dkecluster.mode == 1,%(MDCE only with 1 processor called)
-%    	tic;[flag_mdce1(n),Zbouncecoef_mdce] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},4,arg_range,dkecluster);time_mdce1(n) = toc;
+%    	tic;[flag_mdce1(n),Zbouncecoef_mdce] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},3,arg_range,dkecluster);time_mdce1(n) = toc;
 %		rmdir(dkecluster.temppath,'s');
 %		flag_mode1 = 1;
 %    end
     [dkecluster] = clustermode_luke(2,'',0);%All cluster paramters and paths
     dkecluster.size = n;
     if dkecluster.mode == 2,%All matlab may be used with this technique based on an external batch-queuing
-    	tic;[flag_ldce(n),Zbouncecoef_ldce] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},4,arg_range,dkecluster);time_ldce(n) = toc;
+    	tic;[flag_ldce(n),Zbouncecoef_ldce] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},3,arg_range,dkecluster);time_ldce(n) = toc;
         rmdir(dkecluster.temppath,'s');
         flag_mode2 = 1;
     end
@@ -88,7 +88,7 @@ for n=1:N,
 %    [dkecluster] = clustermode_luke(1,'',0);%All cluster paramters and paths
 %    dkecluster.size = nprocmax4;
 %    if dkecluster.mode == 1,
-%    	tic;[flag_mdce4(n),Zbouncecoef_mdce] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},4,arg_range,dkecluster);time_mdce4(n) = toc;
+%    	tic;[flag_mdce4(n),Zbouncecoef_mdce] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},3,arg_range,dkecluster);time_mdce4(n) = toc;
 %    	rmdir(dkecluster.temppath,'s');
 %    end
     %
@@ -107,7 +107,7 @@ for n=1:N,
 %    [dkecluster] = clustermode_luke(1,'',0);%All cluster paramters and paths
 %    dkecluster.size = nprocmax8;
 %    if dkecluster.mode == 1,
-%        tic;[flag_mdce8(n),Zbouncecoef_mdce] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},4,arg_range,dkecluster);time_mdce8(n) = toc;
+%        tic;[flag_mdce8(n),Zbouncecoef_mdce] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},3,arg_range,dkecluster);time_mdce8(n) = toc;
 %        rmdir(dkecluster.temppath,'s');
 %    end
     %
