@@ -18,38 +18,57 @@ function [flag,results] = dclukecomputing(fun,args_in,arg_index,arg_range,nargou
 %
 %   by Y. Peysson (CEA/DSM/IRFM) (yves.peysson@cea.fr) and J. Decker (CEA/DSM/IRFM) (joan.decker@cea.fr)
 %
-    try,
-		%
-		dcluke(dkecluster,0,'RESET');
-		%
-    	for j_range = 1:length(arg_range),
-        	args_in{arg_index} = arg_range{j_range};
-        	id(j_range) =  dcluke(dkecluster,func2str(fun),args_in{:});      
-    	end
-    	%
-    	dcluke(dkecluster);
-    	%
-    	for j_range = 1:length(arg_range),
-        	cmd = ['[arg_out{1,',int2str(j_range),'}'];
-        	if nargout_in-1 > 1,
-            	for j_nargout = 2:nargout_in-1,
-                	cmd = [cmd,',arg_out{',int2str(j_nargout),',',int2str(j_range),'}'];
-            	end
-        	end
-        	cmd = [cmd,'] = dcluke(dkecluster,',int2str(id(j_range)),');'];      
-        	eval(cmd);
-    	end
-    	%
-    	for j_nargout = 1:nargout_in-1,
-        	results{j_nargout} = reshape(arg_out(j_nargout,:),length(arg_range),1);
-    	end
-    	%
-    	flag = 2;
-    catch
-        for j_nargout = 1:nargout_in-1,
-        	results{j_nargout} = '';
-    	end
-    	flag = -2;
+results = cell(1,nargout_in);
+narg_range = length(arg_range);
+%
+try
+    %
+    dcluke(dkecluster,0,'RESET');
+    %
+    id = NaN(1,narg_range);
+    arg_out = cell(nargout_in,narg_range);
+    %
+    for j_range = 1:narg_range,
+        args_in{arg_index} = arg_range{j_range};
+        id(j_range) = dcluke(dkecluster,func2str(fun),args_in{:});      
     end
     %
+    dcluke(dkecluster);
+    %
+    for j_range = 1:narg_range,
+        %
+        outcmd = '';
+        %
+        for j_nargout = 1:nargout_in,
+            %
+            if j_nargout == 1,
+                outcmd = '[,';
+            end
+            %
+            outcmd = [outcmd,'arg_out{',int2str(j_nargout),',',int2str(j_range),'}'];
+            %
+            if j_nargout == nargout_in,
+                outcmd = [outcmd,'] = '];
+            else
+                outcmd = [outcmd,','];
+            end
+        end
+        %
+        cmd = [outcmd,'dcluke(dkecluster,',int2str(id(j_range)),');'];      
+        %
+        eval(cmd);
+        %
+    end
+    %
+    for j_nargout = 1:nargout_in,
+        results{j_nargout} = reshape(arg_out(j_nargout,:),narg_range,1);
+    end
+    %
+    flag = 2;
+catch
+    for j_nargout = 1:nargout_in,
+        results{j_nargout} = '';
+    end
+    flag = -2;
 end
+%
