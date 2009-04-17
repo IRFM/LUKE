@@ -103,7 +103,7 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C
     wave.cut_fac = waveparam.cut_fac;
     wave.kextra = rayparam.kextra;
     %
-    if C3POparam.clustermode.main_C3PO_jd.mode,
+    if ~isempty(C3POparam) && C3POparam.clustermode.main_C3PO_jd.mode,
         arg_range = cell(1,Nrays);
         for iray = 1:Nrays,
             arg_range{iray} = iray;

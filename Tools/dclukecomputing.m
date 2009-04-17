@@ -42,7 +42,7 @@ try
         for j_nargout = 1:nargout_in,
             %
             if j_nargout == 1,
-                outcmd = '[,';
+                outcmd = '[';
             end
             %
             outcmd = [outcmd,'arg_out{',int2str(j_nargout),',',int2str(j_range),'}'];
