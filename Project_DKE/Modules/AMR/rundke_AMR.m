@@ -16,6 +16,12 @@ end
 %
 warning off
 %
+%%%%%%%%%%%%%%%%%%%BEGIN-LUKE-PATH%%%%%%%%%%%%%%%%%%%
+luke_root = [getenv('LUKE'),'/'];
+addpath([luke_root,'Project_DKE/DKE']);
+setpath_luke_jd(luke_root);
+%%%%%%%%%%%%%%%%%%%%END-LUKE-PATH%%%%%%%%%%%%%%%%%%%%
+%
 shotnum = num2str(shotnum,'%6d');
 shotnum = [repmat('0',[1,6-length(shotnum)]),shotnum];
 shotime = num2str(shotime,'%6.3f');
