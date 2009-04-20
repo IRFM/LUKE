@@ -159,7 +159,8 @@ if nb == 0,
     gridindex_rf.mask_n = zeros(0,0,'uint32');%mask of indices in the harmonic number list
     gridindex_rf.mask_dke = zeros(0,0,'uint32');%mask of indices in the DKE grid list
     %
-    %
+    ZXYD_rf.parpar_ij = [];
+%
     % Terms from Sp at l+1/2 (Notations: _imj -> (i,j+1+2);_ipj -> (i+1,j+1/2)
     %
     ZXYD_rf.pp_ipj = [];%momentum dynamics only
