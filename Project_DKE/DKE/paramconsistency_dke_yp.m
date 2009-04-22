@@ -27,3 +27,6 @@ if strcmp(equil.id,'LOCAL'),%local calculations, assume flux surface is circular
     dkeparam.equil_mode = 0;
 end
 %
+if ~isfield(dkeparam,'clustermode'),
+	dkeparam.clustermode = '';
+end
