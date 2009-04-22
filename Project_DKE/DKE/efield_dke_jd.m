@@ -23,38 +23,52 @@ if exist('xepsi') == 1, %The bounce averaging coefficients were calculated befor
     if display_mode >= 1,info_dke_yp(2,['Electric field flux coefficients retrieved.']);end	
     %
 else
-    %
-    xepsi_fsav = zeros(size(equilDKE.xrho));
-    if ~isempty(ohm),
-        xepsi_fsav = interp1(ohm.rho,ohm.epsi,equilDKE.xrho,'spline')/mksa.Edreicer_ref;%Normalized to the Dreicer value
-    end
-    %
-    xrho = equilDKE.xrho;
-    xB0 = equilDKE.xB0;
-    xBT0 = equilDKE.xBT0;
-    xx0 = equilDKE.xx0;
-    Rp = equilDKE.Rp;
-    Xmhu = gridDKE.Xmhu;
-    X1mmhu2p = gridDKE.X1mmhu2p;
-    X1mmhu2m = gridDKE.X1mmhu2m;
-    ip_th_ref = gridDKE.ip_th_ref; 
-    rdke =gridDKE.rdke;
-    npn = gridDKE.npn;%Size of the momentum grids for the distribution function (half grid)
-    nmhu = gridDKE.nmhu;
-    nr = gridDKE.nr;%Size of the radial grid for the distribution function (half grid)
-    nr_dke =gridDKE.nr_dke;%Size of the effective radial grid for the drift kinetic equation (nr_dke = nr for FPE equation only)
-    %
-    XXlambda_b_p1m3p4  = Zbouncecoef.XXlambda_b_p1m3p4;
-    XXlambda_b_p1m2p2  = Zbouncecoef.XXlambda_b_p1m2p2;
-    XXRlambda_b_p1m1p2 = Zbouncecoef.XXRlambda_b_p1m1p2;
-    XXRlambda_b_p1m1p2_p = Zbouncecoef.XXRlambda_b_p1m1p2_p;
-    XXRlambda_b_p1m1p2_m = Zbouncecoef.XXRlambda_b_p1m1p2_m;
-    XXRlambda_b_p2m2p2  = Zbouncecoef.XXRlambda_b_p2m2p2;
-    XXRlambda_b_p2m2p2_p = Zbouncecoef.XXRlambda_b_p2m2p2_p;
-    XXRlambda_b_p2m2p2_m = Zbouncecoef.XXRlambda_b_p2m2p2_m;
-    xqbar = Zbouncecoef.xqbar;
-    xqtilde = Zbouncecoef.xqtilde;
-    xqhat = Zbouncecoef.xqhat;
+%
+  xrho = equilDKE.xrho;
+  xrhoT = equilDKE.xrhoT;
+  xrhoP = equilDKE.xrhoP;
+  xrhoV = equilDKE.xrhoV;
+%
+  xepsi_fsav = zeros(size(equilDKE.xrho));
+  if ~isempty(ohm),
+      if ~isfield(ohm,'rhotype') || strcmp(ohm.rhotype,'g'),%geometric rho
+          xepsi_fsav = interp1(ohm.rho,ohm.epsi,xrho,'spline')/mksa.Edreicer_ref;%Normalized to the Dreicer value
+      elseif strcmp(ohm.rhotype,'p'),
+          xepsi_fsav = interp1(ohm.rho,ohm.epsi,xrhoP,'spline')/mksa.Edreicer_ref;%Normalized to the Dreicer value
+      elseif strcmp(ohm.rhotype,'t'),
+          xepsi_fsav = interp1(ohm.rho,ohm.epsi,xrhoT,'spline')/mksa.Edreicer_ref;%Normalized to the Dreicer value
+      elseif strcmp(ohm.rhotype,'v'),
+          xepsi_fsav = interp1(ohm.rho,ohm.epsi,xrhoV,'spline')/mksa.Edreicer_ref;%Normalized to the Dreicer value
+      else
+          error('unknown rho type in ohm structure')
+      end
+  end
+  %
+  xB0 = equilDKE.xB0;
+  xBT0 = equilDKE.xBT0;
+  xx0 = equilDKE.xx0;
+  Rp = equilDKE.Rp;
+  Xmhu = gridDKE.Xmhu;
+  X1mmhu2p = gridDKE.X1mmhu2p;
+  X1mmhu2m = gridDKE.X1mmhu2m;
+  ip_th_ref = gridDKE.ip_th_ref; 
+  rdke =gridDKE.rdke;
+  npn = gridDKE.npn;%Size of the momentum grids for the distribution function (half grid)
+  nmhu = gridDKE.nmhu;
+  nr = gridDKE.nr;%Size of the radial grid for the distribution function (half grid)
+  nr_dke =gridDKE.nr_dke;%Size of the effective radial grid for the drift kinetic equation (nr_dke = nr for FPE equation only)
+%
+  XXlambda_b_p1m3p4  = Zbouncecoef.XXlambda_b_p1m3p4;
+  XXlambda_b_p1m2p2  = Zbouncecoef.XXlambda_b_p1m2p2;
+  XXRlambda_b_p1m1p2 = Zbouncecoef.XXRlambda_b_p1m1p2;
+  XXRlambda_b_p1m1p2_p = Zbouncecoef.XXRlambda_b_p1m1p2_p;
+  XXRlambda_b_p1m1p2_m = Zbouncecoef.XXRlambda_b_p1m1p2_m;
+  XXRlambda_b_p2m2p2  = Zbouncecoef.XXRlambda_b_p2m2p2;
+  XXRlambda_b_p2m2p2_p = Zbouncecoef.XXRlambda_b_p2m2p2_p;
+  XXRlambda_b_p2m2p2_m = Zbouncecoef.XXRlambda_b_p2m2p2_m;
+  xqbar = Zbouncecoef.xqbar;
+  xqtilde = Zbouncecoef.xqtilde;
+  xqhat = Zbouncecoef.xqhat;
     %
     % Output files initialization
     %
@@ -102,76 +116,6 @@ else
     ZXXD_e.pm_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
     ZXXD_e.mp_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
     ZXXF_e.p_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
-%
-  xrho = equilDKE.xrho;
-  xrhoT = equilDKE.xrhoT;
-  xrhoP = equilDKE.xrhoP;
-  xrhoV = equilDKE.xrhoV;
-%
-  xepsi_fsav = zeros(size(equilDKE.xrho));
-  if ~isempty(ohm),
-      if ~isfield(ohm,'rhotype') || strcmp(ohm.rhotype,'g'),%geometric rho
-          xepsi_fsav = interp1(ohm.rho,ohm.epsi,xrho,'spline')/mksa.Edreicer_ref;%Normalized to the Dreicer value
-      elseif strcmp(ohm.rhotype,'p'),
-          xepsi_fsav = interp1(ohm.rho,ohm.epsi,xrhoP,'spline')/mksa.Edreicer_ref;%Normalized to the Dreicer value
-      elseif strcmp(ohm.rhotype,'t'),
-          xepsi_fsav = interp1(ohm.rho,ohm.epsi,xrhoT,'spline')/mksa.Edreicer_ref;%Normalized to the Dreicer value
-      elseif strcmp(ohm.rhotype,'v'),
-          xepsi_fsav = interp1(ohm.rho,ohm.epsi,xrhoV,'spline')/mksa.Edreicer_ref;%Normalized to the Dreicer value
-      else
-          error('unknown rho type in ohm structure')
-      end
-  end
-  %
-  xB0 = equilDKE.xB0;
-  xBT0 = equilDKE.xBT0;
-  xx0 = equilDKE.xx0;
-  Rp = equilDKE.Rp;
-  Xmhu = gridDKE.Xmhu;
-  X1mmhu2p = gridDKE.X1mmhu2p;
-  X1mmhu2m = gridDKE.X1mmhu2m;
-  ip_th_ref = gridDKE.ip_th_ref; 
-  rdke =gridDKE.rdke;
-  npn = gridDKE.npn;%Size of the momentum grids for the distribution function (half grid)
-  nmhu = gridDKE.nmhu;
-  nr = gridDKE.nr;%Size of the radial grid for the distribution function (half grid)
-  nr_dke =gridDKE.nr_dke;%Size of the effective radial grid for the drift kinetic equation (nr_dke = nr for FPE equation only)
-%
-  XXlambda_b_p1m3p4  = Zbouncecoef.XXlambda_b_p1m3p4;
-  XXlambda_b_p1m2p2  = Zbouncecoef.XXlambda_b_p1m2p2;
-  XXRlambda_b_p1m1p2 = Zbouncecoef.XXRlambda_b_p1m1p2;
-  XXRlambda_b_p1m1p2_p = Zbouncecoef.XXRlambda_b_p1m1p2_p;
-  XXRlambda_b_p1m1p2_m = Zbouncecoef.XXRlambda_b_p1m1p2_m;
-  XXRlambda_b_p2m2p2  = Zbouncecoef.XXRlambda_b_p2m2p2;
-  XXRlambda_b_p2m2p2_p = Zbouncecoef.XXRlambda_b_p2m2p2_p;
-  XXRlambda_b_p2m2p2_m = Zbouncecoef.XXRlambda_b_p2m2p2_m;
-  xqbar = Zbouncecoef.xqbar;
-  xqtilde = Zbouncecoef.xqtilde;
-  xqhat = Zbouncecoef.xqhat;
-%
-% Output files initialization
-%
-  ZXXD_e.pp_ippj = zeros(npn,nmhu,nr);
-  ZXXD_e.pp_ipj = zeros(npn,nmhu,nr);
-  ZXXD_e.pp_ij = zeros(npn,nmhu,nr);
-  ZXXD_e.pp_imj = zeros(npn,nmhu,nr);
-  ZXXD_e.pp_immj = zeros(npn,nmhu,nr);
-  ZXXD_e.pm_ipj = zeros(npn,nmhu,nr);
-  ZXXD_e.pm_ij = zeros(npn,nmhu,nr);
-  ZXXD_e.pm_imj = zeros(npn,nmhu,nr);
-  ZXXD_e.mp_ijp = zeros(npn,nmhu,nr);
-  ZXXD_e.mp_ij = zeros(npn,nmhu,nr);
-  ZXXD_e.mp_ijm = zeros(npn,nmhu,nr);
-  ZXXD_e.mm_ijp = zeros(npn,nmhu,nr);
-  ZXXD_e.mm_ijm = zeros(npn,nmhu,nr);
-%
-  ZXXF_e.p_ippj = zeros(npn,nmhu,nr);
-  ZXXF_e.p_ipj = zeros(npn,nmhu,nr);
-  ZXXF_e.p_ij = zeros(npn,nmhu,nr);
-  ZXXF_e.p_imj = zeros(npn,nmhu,nr);
-  ZXXF_e.p_immj = zeros(npn,nmhu,nr);
-  ZXXF_e.m_ijp = zeros(npn,nmhu,nr);
-  ZXXF_e.m_ijm = zeros(npn,nmhu,nr);
 %
   if dke_mode == 1
 %
