@@ -2,11 +2,27 @@
 %
 % runs all IAEA06 rayinit scripts
 %
-make_rayinit_ITER_Scen4_19Z_Alpha_3p7
-make_rayinit_ITER_Scen4_19Z_Alpha_5p0
-make_rayinit_ITER_Scen4_20Z_Alpha_3p7
-make_rayinit_ITER_Scen4_20Z_Alpha_5p0
-make_rayinit_ITER_Scen4_21Z_Alpha_3p7
-make_rayinit_ITER_Scen4_21Z_Alpha_5p0
-
+clear all
+close all
+warning off
+%
+mdce_mode = 2;
+%
+script_list = {...
+'make_rayinit_ITER_Scen4_19Z_Alpha_3p7',...
+'make_rayinit_ITER_Scen4_19Z_Alpha_5p0',...
+'make_rayinit_ITER_Scen4_20Z_Alpha_3p7',...
+'make_rayinit_ITER_Scen4_20Z_Alpha_5p0',...
+'make_rayinit_ITER_Scen4_21Z_Alpha_3p7',...
+'make_rayinit_ITER_Scen4_21Z_Alpha_5p0'};
+%
+nruns = length(script_list);
+%
+dkecluster = clustermode_luke(mdce_mode,'',0);
+dkecluster.size = nruns;
+%
+flag = mdce_luke(@loop_script_jd,{''},1,script_list,dkecluster);
+%
+rmdir(dkecluster.temppath,'s');
+%
 disp('******** Rayinits completed **********')
