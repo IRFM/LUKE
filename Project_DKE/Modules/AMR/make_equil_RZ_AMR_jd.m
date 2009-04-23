@@ -31,7 +31,7 @@ ptR = equil.ptx + equil_RZ.Rp;
 R = ptR(:,1);
 pTe = equil.pTe.';
 pne = equil.pne.';
-pZeff = sum(equil.pzni.*repmat(equil.zZi.',[1,length(pne)]).^2,1)./pne;
+pZeff = sum(equil.pzni.*repmat(equil.zZi.',[1,length(pne)]).^2,1).'./pne;
 %
 Psi = equil.psi_apRp.'*equil_RZ.Rp/equil_RZ.ap;
 F =  - equil.ptBPHI(:,1).*R;
