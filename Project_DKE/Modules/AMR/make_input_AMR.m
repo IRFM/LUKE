@@ -15,8 +15,8 @@ else
 end
 %
 Zeff = mean(sum(equil.pzni.*repmat(equil.zZi.',[1,length(equil.pne)]).^2,1)./equil.pne);
-dlognedrm1 = (equil.pne(end) + equil.pne(end-1))/2/(equil.pne(end) - equil.pne(end-1))*(equil.ptx(end,1) - equil.ptx(end-1,1));
-dlogTedrm1 = (equil.pTe(end) + equil.pTe(end-1))/2/(equil.pTe(end) - equil.pTe(end-1))*(equil.ptx(end,1) - equil.ptx(end-1,1));
+dlognedrm1 = -(equil.pne(end) + equil.pne(end-1))/2/(equil.pne(end) - equil.pne(end-1))*(equil.ptx(end,1) - equil.ptx(end-1,1));
+dlogTedrm1 = -(equil.pTe(end) + equil.pTe(end-1))/2/(equil.pTe(end) - equil.pTe(end-1))*(equil.ptx(end,1) - equil.ptx(end-1,1));
 %
 % Create input (config) files for AMR
 %
@@ -58,6 +58,8 @@ AMRcfg.input.time_samples = 1;
 AMRcfg.output.central_ray_only = true;
 % generate LUKE output
 AMRcfg.output.luke = true;
+% run LUKE from AMR
+AMRcfg.output.run_luke = false;
 %
 % == cluster section ==
 % priority of the master process, i.e. the program itself if run locally
@@ -100,6 +102,9 @@ AMRcfg.profiles.LSOL_Te = dlogTedrm1;
 % SOL width, increase for low frequencies with mode conversion close to or
 % out of LCFS
 AMRcfg.profiles.LSOL = 0.00;
+%
+AMRcfg.figures.create = false;
+
 %
 % == antenna section ==
 % name of the antenna cfg file
@@ -160,6 +165,18 @@ AMRcfg.antenna.ids = 'antenna_0';
 %
 AMRcfg = rminfo(AMRcfg);
 antennacfg = rminfo(antennacfg);
+%
+antenna_ids = fieldnames(rmfield(antennacfg,'general'));
+%
+AMRcfg.antenna = rmfield(AMRcfg.antenna,'ids');
+AMRcfg.antenna.ids = '';
+%
+for ifield = 1:length(antenna_ids),
+    keep = input_dke_yp(['Do you want to inluclude the antenna ',antenna_ids{ifield}],'n',{'y','n'});
+    if keep == 'y',
+        AMRcfg.antenna.ids = [AMRcfg.antenna.ids,' ',antenna_ids{ifield}];
+    end
+end
 %
 % default save name
 AMRcfg_file = 'ebe6_LUKE.cfg';

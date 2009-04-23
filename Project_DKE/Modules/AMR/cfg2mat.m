@@ -14,6 +14,8 @@ while isempty(tline) || tline(1) ~= -1
         eval(['val = str2double(matstruct.',sub,'.',tline(1:k-1),');']);
         if ~isnan(val),% converts str to doubles if applicable
             eval(['matstruct.',sub,'.',tline(1:k-1),' = val;'])
+        else% removes white spaces
+            eval(['matstruct.',sub,'.',tline(1:k-1),' = strtrim(matstruct.',sub,'.',tline(1:k-1),');'])
         end
     end
     tline = fgetl(fin);
