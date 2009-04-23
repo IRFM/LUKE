@@ -4,10 +4,10 @@ function matstruct = cfg2mat(cfgfile,matstruct)
 %
 fin = fopen(cfgfile,'r');
 tline = fgetl(fin);
-while tline ~= -1
-    if tline(1) == '['% new substructure
+while isempty(tline) || tline(1) ~= -1
+    if ~isempty(tline) && tline(1) == '['% new substructure
         sub = tline(2:end-1);
-    elseif tline(1) ~= ';' && tline(1) ~= '#',% exclude comments lines
+    elseif ~isempty(tline) && tline(1) ~= ';' && tline(1) ~= '#',% exclude comments lines
         k = findstr('=', tline);
         it = ['matstruct.',sub,'.',tline(1:k),'''',tline(k+1:end),''';'];
         eval(it);
