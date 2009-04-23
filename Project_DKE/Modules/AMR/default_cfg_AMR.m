@@ -1,8 +1,8 @@
-function [AMRcfg,antennacfg] = default_cfg_AMR()
+function [AMRcfg,antennacfg] = default_cfg_AMR(AMR_path)
 %
 % Creates a structure containing all cfg entries with their default values
 %
-fin = fopen('ebe6_defaults.txt','r');
+fin = fopen([AMR_path,'output/luke/ebe6_defaults.txt'],'r');
 tline = fgetl(fin);
 while tline ~= -1
     if tline(1) == '['

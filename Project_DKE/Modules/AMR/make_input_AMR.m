@@ -19,7 +19,7 @@ Zeff = mean(sum(equil.pzni.*repmat(equil.zZi.',[1,length(equil.pne)]).^2,1)./equ
 % Create input (config) files for AMR
 %
 % default values
-[AMRcfg,antennacfg] = default_cfg_AMR();
+[AMRcfg,antennacfg] = default_cfg_AMR(AMR_path);
 % == input section ==
 % experiment name
 AMRcfg.input.experiment = experiment;
