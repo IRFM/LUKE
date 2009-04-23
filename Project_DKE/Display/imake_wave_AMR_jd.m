@@ -21,11 +21,11 @@ if l_opt == 1,
     extfacZ = 0.02;
     %
     make_equil_RZ_AMR_jd(equil,[AMR_path,'input/'],nprz,extfacR,extfacZ);
-    make_input_AMR(basestr,equil,AMR_path);
+    AMRcfg_file = make_input_AMR(basestr,equil,AMR_path,opt_gui);
     %
     sd = pwd;
     cd(AMR_path)
-    unix('python ebe6.py');
+    unix(['python ebe6.py ',AMRcfg_file]);
     cd(sd);
     %
 elseif l_opt == 2,
