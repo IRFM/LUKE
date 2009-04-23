@@ -14,6 +14,8 @@ if l_opt == 1,
     AMR_path = getenv('AMR');
     if isempty(AMR_path),
         AMR_path = igetdir_jd(opt_gui,'Please select the AMR code folder',workdir);
+    else
+        AMR_path = input_dke_yp('Specify AMR code folder',AMR_path,'');
     end
     %
     nprz = 101;
