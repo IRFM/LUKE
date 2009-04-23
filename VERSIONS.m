@@ -1643,3 +1643,114 @@
 % A comp_struct_jd.m (improved and moved here)
 % U graph_wave_jd.m (LH characterization)
 %
+% ----------------------------------------------------------------------------------------------------
+% 
+% LUKE Release 1.7.2
+% 
+% - mex files made 32/64 bits compatible
+% - reflushing of matrix coefficients for 3D compatibility
+% - distributed computing updated and tested
+% 
+% ====> LUKE
+%
+% U install_LUKE.m (tests distributed computing)
+% U make_path_LOCAL.m (multithreading option and mex files)
+% U make_path_LUKE.m (")
+% 
+% ====> LUKE/Project_DKE/Database/
+%
+% U DKEPARAM_files/make_dkeparam_EC_RT.m (clustermode on, multithreading off)
+% U DKEPARAM_files/make_dkeparam_LH_RT.m (")
+% U DKEPARAM_files/make_dkeparam_NONUNIFORM10010020.m (")
+% U DKEPARAM_files/make_dkeparam_UNIFORM10010020.m (")
+% U WAVE_files/make_wave_C3POparam.m (")
+% 
+% ====> LUKE/Project_DKE/Display/
+%
+% U imake_makeequil_EFIT_jd.m (clustermode on, multithreading off)
+% U irunluke_jd.m (")
+% U imake_wave_AMR_jd.m (AMR config file)
+% U imake_makewave_jd.m (")
+% 
+% ====> LUKE/Project_DKE/DKE/
+%
+% U bouncecoefbuilder_dke_yp.m (small corrections)
+% U coll_dke_jd.m (distributed computing and 3D matrix coefficients)
+% U eecoll_dke_yp.m (distributed computing)
+% U efield_dke_jd.m (3D matrix coefficients)
+% U fpengine_dke_yp.m (useless input removed)
+% U fppgridweights_dke_yp.m (")
+% U loop_coll_dke_jd1.m (distributed computing)
+% U loop_eecoll_dke_yp.m (distributed computing)
+% U LUKEversion_jd.m (LUKE 1.7.2 and matlab version test)
+% U main_dke_yp.m (3D matrix coefficients)
+% U matrixcalc_dke_yp.m (") 
+% U Project_DKE/DKE/paramconsistency_dke_yp.m (distributed computing)
+% U rad_dke_yp.m (3D matrix coefficients) 
+% U raysum_rf_jd.m (") 
+% U rfdiff_dke_fw_jd.m (") 
+% U rfdiff_dke_jd.m (") 
+% U setpath_luke_jd.m (distributed computing)
+% 
+% ====> LUKE/Project_DKE/Modules/AMR/
+%
+% R default_cfg_AMR.m (dynamic loading of default parameters - no longer needed)
+% U make_equil_RZ_AMR_jd.m (Zeff correction)
+% U make_input_AMR.m (updated for config files)
+% U rundke_AMR.m (")
+%
+% ====> LUKE/Project_DKE/Modules/Cronos/
+%
+% U make_dkeparam_cronos.m (clustermode on, multithreading off)
+% U make_wavert_cronos.m (")
+% 
+% ====> LUKE/Project_DKE/Modules/FEB/Examples/
+%
+% U scan_vmin_vmax_Dlh.m (clustermode on, multithreading off)
+% U scan_3Tmodel.m (")
+% 
+% ====> LUKE/Project_DKE/Modules/Helena/MEX/Source/
+%
+% U separatrice.F (modified for 32/64 bits capability)
+% U helmex77.F (")
+% 
+% ====> LUKE/Project_DKE/Modules/RT/
+%
+% U main_C3PO_jd.m (distributed computing)
+% U Examples/RTtest/WAVE/make_wave_RTtest.m (clustermode on, multithreading off)
+% U Examples/RTtest/WAVE/make_wave_RTtest_straight.m (")
+% U Examples/PLT/WAVE/make_wave_PLTtest.m (")
+% U Examples/JETlike/WAVE/make_wave_JETliketest.m (")
+% U Examples/JETlike/WAVE/make_wave_JETliketest_bis.m (")
+% U Examples/VERSATOR2/WAVE/make_wave_VERSATOR2test.m (")
+% 
+% ====> LUKE/Project_DKE/Packages/MDCE/
+%
+% U run_mdce.m (distributed computing updated)
+% U run_mdce_rt.m (")
+% A dcluke/cephee/dcluke_etat.sh (")
+% A dcluke/cephee/dcluke.exe (")
+% A dcluke/cephee/dcluke_kill.sh (")
+% A dcluke/cephee/dcluke_batch.sh (")
+% U dcluke/dcluke.m (")
+% U dcluke/testdcluke.m (")
+% U dcluke/saturne/dcluke.exe (")
+%
+% ====> LUKE/Tools
+%
+% U clustermode_luke.m (update distributed computing)
+% U conc_struct_jd.m (deals with doublons)
+% U dclukecomputing.m (")
+% U mdce_luke.m (")
+% U multithreading_luke.m (managed by dkepath)
+% U seqcomputing.m (update distributed computing)
+%
+% ====> Simulations/Benchmarks/TScyl/LH_Karney
+%
+% U rundke_cluster.m (tests for distributed computing)
+%
+
+
+
+
+
