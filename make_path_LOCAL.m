@@ -159,31 +159,13 @@ sunipp.mex75 = [sunipp.luke_root,'Project_DKE/MEX/Bin/sunipp/MATLAB75'];
 sunipp.mex76 = [sunipp.luke_root,'Project_DKE/MEX/Bin/sunipp/MATLAB76'];
 sunipp.mex77 = [sunipp.luke_root,'Project_DKE/MEX/Bin/sunipp/MATLAB77'];
 sunipp.compiler_opt.copts = 'CC="gcc4"';
-sunipp.compiler_opt.fopts = 'FC="gfortran"';
-%sunipp.compiler_opt.helmex = '-v -largeArrayDims FC=''ifort'' FLIBS=''-Wl,-rpath-link,/opt/matlab/r2008b/bin/glnxa64 -L/opt/matlab/r2008b/bin/glnxa64 -lmx -lmex -lmat -lm -Wl,-rpath,/opt/ifort10/fce/10.0.026/lib -L/opt/ifort10/fce/10.0.026/lib -Wl,-rpath,/opt/acml/4.0.1_ifort/ifort64/lib -L/opt/acml/4.0.1_ifort/ifort64/lib -lacml -lguide -lsvml -lpthread'' FFLAGS="-mp -nodps -fpic -r8 -i8 -w -save -zero -132 -Vaxlib" LDFLAGS="-shared -fPIC"';%
-sunipp.compiler_opt.helmex = '-v -largeArrayDims FC=''gfortran'' FLIBS=''-Wl,-rpath-link,/opt/matlab/r2007b/bin/glnxa64 -L/opt/matlab/r2007b/bin/glnxa64 -lmx -lmex -lmat -lm -llapack -lblas -lguide -lpthread'' FFLAGS=''-fPIC'' LDFLAGS="-shared -fPIC" LD="gfortran"';%
-%
-%sunipp.compiler_opt.helmex = '-v CC="gcc4" FC="ifort" CFLAGS="integer*8 -ansi -D_GNU_SOURCE -fexceptions -fPIC -fno-omit-frame-pointer -pthread" CLIBS="-Wl,-rpath-link,/opt/matlab/r2007b/bin/glnxa64 -L/opt/matlab/r2007b/bin/glnxa64 -lmx -lmex -lmat -lm" FFLAGS="-mp -nodps -fpic -r8 -w -save -zero -132 -Vaxlib" FLIBS="-Wl,-rpath-link,/opt/matlab/r2007b/bin/glnxa64 /opt/ifort10/fce/10.0.026/lib/libsvml.a -Wl,-zmuldefs -Wl,-rpath-link,/home/vader/acml/ifort64/lib -L/home/vader/acml/ifort64/lib -lacml -L/opt/matlab/r2007b/bin/glnxa64 -lmx -lmex -lmat" LDFLAGS="-shared -fPIC"';
-
-
-
-%sunipp.compiler_opt.helmex = '-v CC="gcc4" FC="ifort" CFLAGS="integer*8 -ansi -D_GNU_SOURCE -fexceptions -fPIC -fno-omit-frame-pointer -pthread" CLIBS="-Wl,-rpath-link,/opt/matlab/r2007b/bin/glnxa64 -L/opt/matlab/r2007b/bin/glnxa64 -lmx -lmex -lmat -lm" FFLAGS="-mp -nodps -fpic -r8 -w -save -zero -132 -Vaxlib" FLIBS="-Wl,-rpath-link,/opt/matlab/r2007b/bin/glnxa64 /opt/ifort10/fce/10.0.026/lib/libsvml.a -Wl,-zmuldefs -Wl,-rpath-link,/home/vader/acml/ifort64/lib -L/home/vader/acml/ifort64/lib -lacml -L/opt/matlab/r2007b/bin/glnxa64 -lmx -lmex -lmat" LDFLAGS="-shared -fPIC"';
-
-%FFLAGS="-fpic -cpp integer*8 -r8 -w -save -zero -132 -mp"
-
-%sunipp.compiler_opt.helmex = '-lblas -llapack';% Optional argument for helmex compilation 
-%sunipp.compiler_opt.helmex = '-L/opt/lapack -llapack_g95 -lblas_g95';% Optional argument for helmex compilation 
-%sunipp.compiler_opt.helmex = '-v FC=''ifort'' FLIBS=''-Wl,-rpath-link,/opt/matlab/r2007b/bin/glnx86 -L/opt/matlab/r2007b/bin/glnx86 -lmx -lmex -lmat -lm -Wl,-rpath,/opt/ifort10/fce/10.0.026/lib/32 -L/opt/ifort10/fce/10.0.026/lib/32  -lmkl_lapack -lmkl -lguide -lpthread''';%
-%suggestions by jakub
-%sunipp.compiler_opt.helmex = '-v FC=''ifort'' FLIBS=''-Wl,-rpath-link,/opt/matlab/r2007b/bin/glnxa64 -L/opt/matlab/r2007b/bin/glnxa64 -lmx -lmex -lmat -lm -Wl,-rpath,/opt/ifort10/fce/10.0.026/lib -L/opt/ifort10/fce/10.0.026/lib -Wl,-rpath,/opt/acml/4.0.1_ifort/ifort64/lib -L/opt/acml/4.0.1_ifort/ifort64/lib -lacml -lguide -lsvml -lpthread''';%
-%sunipp.compiler_opt.helmex = '-v FC=''gfortran'' FLIBS=''-Wl,-rpath-link,/opt/matlab/r2007b/bin/glnxa64 -L/opt/matlab/r2007b/bin/glnxa64 -lmx -lmex -lmat -lm -llapack -lblas -lguide -lpthread''';%
-%sunipp.compiler_opt.helmex = '-v FC=''g95'' FLIBS=''-Wl,-rpath-link,/opt/matlab/r2007b/bin/glnxa64 -L/opt/matlab/r2007b/bin/glnxa64 -Wl,-rpath,/home/vader/g95-install/lib/gcc-lib/x86_64-suse-linux-gnu/4.0.3 -L/home/vader/g95-install/lib/gcc-lib/x86_64-suse-linux-gnu/4.0.3 -lmx -lmex -lmat -lm -llapack -lblas -lguide -lpthread''';%
-sunipp.mex76 = [sunipp.luke_root,'Project_DKE/MEX/Bin/sunipp/MATLAB76'];
-sunipp.compiler_opt.copts = 'CC="gcc4"';
-sunipp.compiler_opt.fopts = 'FC="gfortran" FFLAGS="-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-0"';
+%sunipp.compiler_opt.fopts = 'FC="gfortran" FFLAGS="-v -largeArrayDims -fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132"';
+sunipp.compiler_opt.fopts = 'FC="/opt/g95/0.91_x86_64_32DI/bin/g95" FFLAGS="-v -largeArrayDims -fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132"';
+sunipp.compiler_opt.helmex = 'FLIBS=''-Wl,-rpath-link,/opt/matlab/r2008b/bin/glnxa64 -L/opt/matlab/r2008b/bin/glnxa64 -lmx -lmex -lmat -lm  -llapack -lblas -lguide -lpthread''';
 %
 sunipp.MUMPS.mex75 = [sunipp.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_gfort/MATLAB75'];%Where MUMPS matrix solver is stored (MEX function)
 sunipp.MUMPS.mex76 = [sunipp.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_gfort/MATLAB76'];%Where MUMPS matrix solver is stored (MEX function)
+sunipp.MUMPS.mex77 = [sunipp.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_gfort/MATLAB77'];%Where MUMPS matrix solver is stored (MEX function)
 %
 dkepath.sunipp = sunipp;
 %
