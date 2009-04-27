@@ -26,6 +26,9 @@ else
     selectpath = '';
     %
     while isempty(selectpath);
+        disp(' ');
+        %
+        disp(message);
         %
         files = dir(pathname);
         %

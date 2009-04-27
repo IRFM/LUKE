@@ -106,6 +106,9 @@ else
     selectname = '';
     %
     while isempty(selectname);
+        disp(' ');
+        %
+        disp(message);
         %
         files = dir(pathname);
         %
