@@ -28,7 +28,7 @@ shotime = num2str(shotime,'%6.3f');
 %
 % ****************** SIMULATION PARAMETERS ********************************
 %
-AMR_path = [getenv('AMR'),'/output/luke/'];
+AMR_output_path = [pwd,'/output/luke/'];
 %
 % *********************** WAVE PARAMETERS *********************************
 %
@@ -74,7 +74,7 @@ antconf = ['0'*ones(1,4-length(antconfbase)),antconfbase];
 wavestruct.wavesolver = 'AMR';
 wavestruct.id = [wavestruct.wavesolver,'_',antnum,'_',antconf,wave_id];
 %
-wavestruct.AMR_path = AMR_path;
+wavestruct.AMR_output_path = AMR_output_path;
 wavestruct.filestr = [antnum,'_',antconf,'_',shotnum,'_',shotime];
 %
 wavestruct.iAnt = iAnt;
@@ -88,7 +88,7 @@ id_simul = [wavestruct.id,id_simul];
 %
 %**************************************************************************
 %
-amr_psi_files = dir(AMR_path);
+amr_psi_files = dir(AMR_output_path);
 %
 for ifile = 1:length(amr_psi_files),
     %
@@ -115,7 +115,7 @@ id_equil = [basestr,'_',shotnum,'_',shotime];
 dispname = '';
 savename = id_equil;
 %
-[equil_magnetic,equil_prof] = make_equil_AMR_jd(AMR_path,shotnum,shotime,dkedisplay.display_mode,p_opt,dispname,savename,np,nt);
+[equil_magnetic,equil_prof] = make_equil_AMR_jd(AMR_output_path,shotnum,shotime,dkedisplay.display_mode,p_opt,dispname,savename,np,nt);
 equil = conc_struct_jd(equil_magnetic,equil_prof);
 %
 equil.id = id_equil;
@@ -123,7 +123,7 @@ equil.info.gen = 'Built from AMR rundke';
 equil.info.shotnum = shotnum;
 equil.info.shotime = shotime;
 %
-equil.info.datapath = AMR_path;
+equil.info.datapath = AMR_output_path;
 %
 disp('Equilibrium converted to LUKE format')
 %

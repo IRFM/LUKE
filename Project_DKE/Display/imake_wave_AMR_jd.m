@@ -9,27 +9,40 @@ shotime = equil.info.shotime;
 %
 l_opt = input_dke_yp('Do you want to load AMR results (0), run AMR (1), or cancel this operation (2): ',0,{0,1,2},'Invalid option');
 %
-if l_opt == 1,
+if l_opt == 0,
+	%
+	AMR_output_path = equil.info.datapath;
+	%
+elseif l_opt == 1,
     %
-    AMR_path = getenv('AMR');
-    if isempty(AMR_path),
-        AMR_path = igetdir_jd(opt_gui,'Please select the AMR code folder',workdir);
-    else
-        AMR_path = input_dke_yp('Specify AMR code folder',AMR_path,'');
+    AMR_script_path = getenv('AMR');
+    if isempty(AMR_script_path),
+        AMR_script_path = workdir;
     end
+	%
+	AMR_script_path = igetdir_jd(opt_gui,'Please select the AMR code folder',AMR_script_path);
+	AMR_simul_path = igetdir_jd(opt_gui,'Please select the AMR simulation folder',workdir);
     %
     nprz = 101;
     extfacR = 0.1;
     extfacZ = 0.02;
     %
-    make_equil_RZ_AMR_jd(equil,[AMR_path,'input/'],nprz,extfacR,extfacZ);
-    AMRcfg_file = make_input_AMR(basestr,equil,AMR_path,opt_gui);
+	AMR_input_path = [AMR_simul_path,'input/'];
+	%
+	if ~exist(AMR_input_path,'dir'),
+		mkdir(AMR_input_path)
+	end
+	%
+	make_equil_RZ_AMR_jd(equil,[AMR_simul_path,'input/'],nprz,extfacR,extfacZ);
+    AMRcfg_file = make_input_AMR(basestr,equil,AMR_script_path,AMR_simul_path,opt_gui);
     %
     sd = pwd;
-    cd(AMR_path)
-    unix(['python ebe6.py ',AMRcfg_file]);
+    cd(AMR_simul_path)
+    unix(['python ',AMR_script_path,'ebe6.py ',AMRcfg_file]);
     cd(sd);
     %
+	AMR_output_path = [AMR_simul_path,'output/luke/'];
+	%
 elseif l_opt == 2,
     disp('-----> operation aborted.')
     return
@@ -37,13 +50,13 @@ end
 %
 filename_wavedata = ['luke_rays_*_',shotnum,'_',shotime,'.dat'];
 %
-[AMR_file,AMR_path] = igetfile_jd(opt_gui,filename_wavedata,['Please select the AMR ''',filename_wavedata,''' file'],equil.info.datapath);
+[AMR_output_file,AMR_output_path] = igetfile_jd(opt_gui,filename_wavedata,['Please select the AMR output ''',filename_wavedata,''' file'],AMR_output_path);
 %
-if AMR_file == 0,
+if AMR_output_file == 0,
     return
 end
 %
-wavedata = load([AMR_path,AMR_file],'-ascii');
+wavedata = load([AMR_output_path,AMR_output_file],'-ascii');
 %
 antenna.num = wavedata(1,2);
 antenna.conf = wavedata(1,3);
@@ -129,7 +142,7 @@ if isempty(wave_id),
 end
 %
 waveparam.id = wave_id;
-waveparam.AMR_path = AMR_path;
+waveparam.AMR_output_path = AMR_output_path;
 %
 waveparam.dNpar = dNpar;
 waveparam.dsmin = dsmin;

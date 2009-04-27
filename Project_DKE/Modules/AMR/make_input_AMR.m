@@ -1,4 +1,4 @@
-function AMRcfg_file = make_input_AMR(basestr,equil,AMR_path,opt_gui)
+function AMRcfg_file = make_input_AMR(basestr,equil,AMR_script_path,AMR_simul_path,opt_gui)
 %
 experiment = basestr;
 %
@@ -23,21 +23,21 @@ dlogTedrm1 = -(equil.pTe(end) + equil.pTe(end-1))/2/(equil.pTe(end) - equil.pTe(
 %
 % Creates a structure containing all cfg entries with their default values
 %
-AMRcfg = cfg2mat([AMR_path,'ebe6_defaults.cfg']);
-antennacfg = cfg2mat([AMR_path,'antenna_template.cfg']);
+AMRcfg = cfg2mat([AMR_script_path,'ebe6_defaults.cfg']);
+antennacfg = cfg2mat([AMR_script_path,'antenna_template.cfg']);
 %
 % optional read of existing config and antenna files
 %
 filename_AMRcfg = 'ebe6*.cfg';
 filename_antennacfg = 'antenna*.cfg';
 %
-[AMRcfg_file,AMRcfg_path] = igetfile_jd(opt_gui,filename_AMRcfg,'You may overwrite defaults with an existing AMRcfg file (cancel to skip)',AMR_path);
+[AMRcfg_file,AMRcfg_path] = igetfile_jd(opt_gui,filename_AMRcfg,'You may overwrite defaults with an existing AMRcfg file (cancel to skip)',AMR_simul_path);
 %
 if AMRcfg_file ~= 0,
     AMRcfg = cfg2mat([AMRcfg_path,AMRcfg_file],AMRcfg);
 end
 %
-[antennacfg_file,antennacfg_path] = igetfile_jd(opt_gui,filename_antennacfg,'You may overwrite defaults with an existing antennacfgcfg file (cancel to skip)',AMR_path);
+[antennacfg_file,antennacfg_path] = igetfile_jd(opt_gui,filename_antennacfg,'You may overwrite defaults with an existing antennacfgcfg file (cancel to skip)',AMR_simul_path);
 %
 if antennacfg_file ~= 0,
     antennacfg = cfg2mat([antennacfg_path,antennacfg_file],antennacfg);
@@ -184,7 +184,7 @@ AMRcfg_file = 'ebe6_LUKE.cfg';
 AMRcfg_file = input_dke_yp('Configuration file name',AMRcfg_file,'');
 %
 sections = fieldnames(AMRcfg);
-fid = fopen([AMR_path,AMRcfg_file],'w');
+fid = fopen([AMR_simul_path,AMRcfg_file],'w');
 for sec=1:length(sections)
     fprintf(fid,['[',sections{sec},']\n']);
     keys = fieldnames(AMRcfg.(sections{sec}));
@@ -196,7 +196,7 @@ end
 fclose(fid);
 
 sections = fieldnames(antennacfg);
-fid = fopen([AMR_path,AMRcfg.antenna.cfg_file],'w');
+fid = fopen([AMR_simul_path,AMRcfg.antenna.cfg_file],'w');
 for sec=1:length(sections)
     fprintf(fid,['[',sections{sec},']\n']);
     keys = fieldnames(antennacfg.(sections{sec}));

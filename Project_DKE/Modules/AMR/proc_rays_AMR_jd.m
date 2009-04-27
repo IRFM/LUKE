@@ -25,12 +25,12 @@ for iy = 1:ny,
     %
     filename_ray = ['LUKERT_',waveparam.filestr,'_',raynum,'.dat'];
     %
-    if ~exist([waveparam.AMR_path,filename_ray],'file'),
+    if ~exist([waveparam.AMR_output_path,filename_ray],'file'),
         disp(['-----> Ray # ',num2str(iy),' not found. Aborted.'])
         return
     end
     %
-    raydata = load([waveparam.AMR_path,filename_ray],'-ascii');
+    raydata = load([waveparam.AMR_output_path,filename_ray],'-ascii');
     %
     ray.P0_2piRp = conv_eff*trans_coeff*yP0(iy)/(2*pi*equil.Rp);% Power launched in the ray (W) [1,1]
     %
@@ -92,7 +92,7 @@ wave.rays = rays;
 %
 wave.info.type = 'RT';
 wave.info.RT = 'AMR';
-wave.info.rayspath = waveparam.AMR_path;
+wave.info.rayspath = waveparam.AMR_output_path;
 %
 if ny == 1,
     %
