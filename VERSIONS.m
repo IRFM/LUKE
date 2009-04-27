@@ -1667,6 +1667,8 @@
 % 
 % ====> LUKE/Project_DKE/Display/
 %
+% U igetdir_jd.m (display message when opt_gui = 0)
+% U igetfile_jd.m (")
 % U imake_makeequil_EFIT_jd.m (clustermode on, multithreading off)
 % U irunluke_jd.m (")
 % U imake_wave_AMR_jd.m (AMR config file)
@@ -1697,6 +1699,8 @@
 % R default_cfg_AMR.m (dynamic loading of default parameters - no longer needed)
 % U make_equil_RZ_AMR_jd.m (Zeff correction)
 % U make_input_AMR.m (updated for config files)
+% U make_wave_AMR_jd.m (externalized AMR folder)
+% U proc_rays_AMR_jd.m (")
 % U rundke_AMR.m (")
 %
 % ====> LUKE/Project_DKE/Modules/Cronos/
@@ -1749,8 +1753,3 @@
 %
 % U rundke_cluster.m (tests for distributed computing)
 %
-
-
-
-
-
