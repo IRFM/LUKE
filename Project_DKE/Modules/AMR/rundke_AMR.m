@@ -1,7 +1,10 @@
-function rundke_AMR(basestr,id_simul,shotnum,shotime,iAnt,iConf,np,nt,opt_save)
+function rundke_AMR(basestr,id_simul,shotnum,shotime,iAnt,iConf,np,nt,dsmin,opt_save)
 %
-if nargin < 9,
+if nargin < 10,
     opt_save = 0;% save equil and wave structures separately
+end
+if nargin < 9,
+    dsmin = 0;% save equil and wave structures separately
 end
 if nargin < 8,
     nt = 65;% Number of equilibrium poloidal points
@@ -35,7 +38,7 @@ AMR_output_path = [pwd,'/output/luke/'];
 wave_id = '';% Specific wave id
 %
 wavestruct.dNpar = NaN;% Spectral width (NaN if calculated from beam size)
-wavestruct.dsmin = 0;% Spectral width (NaN if calculated from beam size)
+wavestruct.dsmin = dsmin;% Spectral width (NaN if calculated from beam size)
 wavestruct.kmode = 2;% Plasma model for wave propagation : 0:cold, 1:kinetic, 2:R2D2 (requires IMSL)
 wavestruct.opt_rf = 0;% FLR effects : 0:all, 1:small
 %
