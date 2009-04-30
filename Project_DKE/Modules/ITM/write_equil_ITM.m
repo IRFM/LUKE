@@ -1,44 +1,30 @@
-function [status,result] = write_equil_ITM(dkepath,user,machine,ver,numshot,numrun)
+function [status,result] = write_equil_ITM(equil,numshot,numrun)
 %LUKE - Function that writes a LUKE magnetic equilibrium structure into ITM MDS+ database using the CPO format
 %
 %Function that writes a LUKE magnetic equilibrium structure into ITM MDS+ database using the CPO format
 %
 %by Y.Peysson CEA-IRFM <yves.peysson@cea.fr> and Joan Decker CEA-IRFM (joan.decker@cea.fr)
 %
-if nargin < 6,error('Not enough input arguments in write_equil_ITM.m');end
-%
-if ~strcmp(dkepath.hostname,'efdaitm'),
-	status = -2;
-	result = ['Remote access to the ITM MDS+ database from ',dkepath.hostname,' not yet implemented !'];
-	equil_LUKE = [];
-	return;
-end
-%
-[ustatus,uresult] = unix([dkepath.local_root,'scripts/set_itm_data_env ',user,' ',machine,' ',ver]);
-if ustatus,
-	status = -1;
-	result = ['Unsuccessful connexion to the ITM MDS+ database for the machine: ',machine,', user: ',user,'and version:',ver];
-	equil_LUKE = [];
-	return;
-end
+if nargin < 3,error('Not enough input arguments in write_equil_ITM.m');end
 %
 status = 0;
 result = '';
 %
 import ualmemory.javainterface.*;
 %
-nb = 1;
+nb = 2;
 expIdx = UALAccess.create('euitm',numshot,numrun,numshot,0);
-equil = CPO_create('equilibrium',nb);
+equilCPO = CPO_create('equilibrium',nb);
 val1D = [1:10];
 val2D = [1:10; 11:20];
+time = 1;
 for i = 1: nb
-	equil(i).datainfo.dataprovider = 'YB, FI';
-	equil(i).codeparam.codename='test_equilibrium_put matlab';
-	equil(i).global_param.li= 1.0 + i ;
-	equil(i)=allocate_equilibrium(equil(i),'profiles_1d.pprime',val1D.*i);
-	equil(i)=allocate_equilibrium(equil(i),'profiles_2d.psi_grid',val2D.*i);
-	equil(i).time = time + i;
+	equilCPO(i).datainfo.dataprovider = 'YB, FI';
+	equilCPO(i).codeparam.codename='test_equilibrium_put matlab';
+	equilCPO(i).global_param.li= 1.0 + i ;
+	equilCPO(i)=allocate_equilibrium(equilCPO(i),'profiles_1d.pprime',val1D.*i);
+	equilCPO(i)=allocate_equilibrium(equilCPO(i),'profiles_2d.psi_grid',val2D.*i);
+	equilCPO(i).time = time + i;
 end
-CPO_put(expIdx, equil);
+CPO_put(expIdx,equilCPO);
 closeBD(expIdx,'euitm',numshot,numrun);
