@@ -207,7 +207,7 @@ c pointeurs et tailles
       mwPointer GEM11_pr, GEM12_pr, GEM33_pr      
       mwPointer RSPOT_pr, ZSPOT_pr, BRSPOT_pr, BZSPOT_pr
 C
-      mwSize   m, n, sizeIN, sizeOUT, mxGetM, mxGetN, mRext, nRext
+      mwSize   m,n,sizeIN,sizeOUT,mxGetM,mxGetN,mRext,nRext
       mwSize   sizeR,NBFR,MBMAX,N_GEM,KKLDA,MAXNODE,NRMMAX,NPMMAX
       mwSize mat1,mat2,mat3,mat4,mat101
       parameter (mat1=1)

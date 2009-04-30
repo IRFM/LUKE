@@ -63,7 +63,7 @@ C
 C
 C CHECK THE DIMENSIONS OF INPUTS.
 C
-      IF ((MXGETM(PRHS(1)) .NE. 1) .OR. (MXGETN(PRHS(1)) .NE. 1)) THEN
+      IF ((MXGETM(PRHS(1)) .NE. 1).OR.(MXGETN(PRHS(1)).NE.1)) THEN
         CALL MEXERRMSGTXT('Argument 1 must be a scalar')
       ENDIF
 C
