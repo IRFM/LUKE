@@ -35,11 +35,13 @@ try
 	closeBD(expIdx,'euitm',numshot,numrun);%Close the currently open database
 catch
 	status = -1;
-	result = 'Error for reading the database. Data may not exist !';
+	result = 'Error for reading the ITM-MDS+ database. Data may not exist !';
 end
 %
 %--------------------------- Data conversion between ITM CPO's and C3PO/LUKE format ------------------
 %
 %TODO: Data conversion between ITM CPO's and C3PO/LUKE format
 %
-equil_LUKE = equil;
+equil_LUKE = '';
+equil
+coreprof
