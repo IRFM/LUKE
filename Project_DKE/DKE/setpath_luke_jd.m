@@ -24,7 +24,7 @@ if nargin == 0,
     return
 end
 %
-% Path for DKE
+% Path for LUKE and Modules
 %
 addpath([luke_root,'Project_DKE/Modules/FEB/Response']);
 addpath([luke_root,'Project_DKE/Modules/FEB/Pile-up']);
@@ -38,6 +38,7 @@ addpath([luke_root,'Project_DKE/Modules/EFIT']);
 addpath([luke_root,'Project_DKE/Modules/RT']);
 addpath([luke_root,'Project_DKE/Modules/Ripple/TS']);
 addpath([luke_root,'Project_DKE/Modules/Cronos']);
+addpath([luke_root,'Project_DKE/Modules/ITM']);
 addpath([luke_root,'Project_DKE/Display']);
 addpath([luke_root,'Project_DKE/Packages']);
 addpath([luke_root,'Project_DKE/Packages/MUMPS']);
@@ -57,6 +58,17 @@ addpath([luke_root,'Project_DKE/Database/PATH_files']);
 addpath([luke_root,'Project_DKE/DKE']);
 addpath([luke_root,'Tools']);
 %
+% Path for machine specific libraries
+%
+if nargin == 2,
+	if isfield(dkepath,'speclibpath'),
+		speclibpathfields = fieldnames(dkepath.speclibpath);
+		for ifield = 1:length(speclibpathfields)
+			addpath(getfield(dkepath.speclibpath,speclibpathfields{ifield}));
+		end
+	end 
+end
+%
 % Path for MEX files
 %
 [lukeversion,matver] = LUKEversion_jd;
@@ -74,7 +86,7 @@ if nargin == 2,
         mexpath = [luke_root,'Project_DKE/MEX/Bin'];
         force_compile = 1;
     end
-    mex_compile_luke(sourcepath,mexpath,dkepath.compiler_opt,force_compile)
+   % mex_compile_luke(sourcepath,mexpath,dkepath.compiler_opt,force_compile)
     %
     addpath(mexpath);
     %
@@ -107,4 +119,4 @@ if nargin == 2,
 		end
 	end
 end
-
+%
