@@ -118,7 +118,9 @@ efdaitm.local_root = ['/afs/efda-itm.eu/project/switm/'];
 efdaitm.computer = 'GLNXA64';%machine type and supported OS
 efdaitm.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-efdaitm.speclibpath.ual = [efdaitm.local_root,'ual/matlabinterface'];%Other machine specific libraries
+%efdaitm.speclibpath.ual = [efdaitm.local_root,'ual/matlabinterface'];%Other machine specific libraries
+%TODO: bug dans certaines fonctions de l'adresse précédente. Adresse temporaire donc... Voir Frédéric Imbeaux pour le changement
+efdaitm.speclibpath.ual = ['/afs/.efda-itm.eu/project/switm/ual/matlabinterface'];%Other machine specific libraries 
 %
 efdaitm.mex76 = [efdaitm.luke_root,'Project_DKE/MEX/Bin/efdaitm/MATLAB76/'];
 efdaitm.compiler_opt.copts = '';
