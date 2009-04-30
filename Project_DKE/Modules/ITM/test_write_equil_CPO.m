@@ -16,7 +16,7 @@ numrun = input_dke_yp('Run number',1);
 if isempty(machine) | isempty(user) | isempty(ver),
 	disp(['WARNING: Unsuccessful connexion to ITM MDS+ database, user: ',user,', database version: ',ver,', machine: ',machine]);
 else
-	disp(['Successful connexion to ITM MDS+ database, user: ',user,', database version',ver,', machine: ',machine]);
+	disp(['Successful connexion to ITM MDS+ database, user: ',user,', database version: ',ver,', machine: ',machine]);
 	[status,result] = write_equil_ITM(equil,numshot,numrun);
 	%
 	if ~status,

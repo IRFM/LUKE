@@ -42,6 +42,5 @@ end
 %
 %TODO: Data conversion between ITM CPO's and C3PO/LUKE format
 %
-equil_LUKE = '';
 equil
 coreprof

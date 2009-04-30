@@ -16,7 +16,7 @@ method = input_dke_yp('Time interpolation (1:linear,2:****, 3:nearest neighbor)'
 if isempty(machine) | isempty(user) | isempty(ver),
 	disp(['WARNING: Unsuccessful connexion to ITM MDS+ database, user: ',user,', database version: ',ver,', machine: ',machine]);
 else
-	disp(['Successful connexion to ITM MDS+ database, user: ',user,', database version',ver,', machine: ',machine]);
+	disp(['Successful connexion to ITM MDS+ database, user: ',user,', database version: ',ver,', machine: ',machine]);
 	[equil,status,result] = read_equil_ITM(numshot,numrun,time,method);
 	%
 	if ~status,
