@@ -132,9 +132,9 @@ if opt_disp == 0,
     [XZ,XZp] = Zlasmadisp_jd(Xzeta);
     %
     xdYdNperp = xdlperpdNperp.*xa.*xq.^2./(xlperp + xlpar).*...
-        sum((XdGammadlperp - XGamma./(Xlperp + Xlpar)).*(1 + Xn./Xq + Xq.*XZ./sqrt(2*Xlpar)),1);
+        sum((XdGammadlperp - XGamma./(Xlperp + Xlpar)).*(1 + Xn./Xq + Xq.*real(XZ)./sqrt(2*Xlpar)),1);
     xdYdNpar = - xdlpardNpar.*xa.*xq.^2./(xlperp + xlpar).*...
-        sum(XGamma./(Xlperp + Xlpar).*(1 + Xn./Xq + Xq.*XZ./sqrt(2*Xlpar)) + XGamma.*Xq.*(XZ + Xzeta.*XZp)./(2*Xlpar).^(3/2),1);
+        sum(XGamma./(Xlperp + Xlpar).*(1 + Xn./Xq + Xq.*real(XZ)./sqrt(2*Xlpar)) + XGamma.*Xq.*(real(XZ) + Xzeta.*real(XZp))./(2*Xlpar).^(3/2),1);
 elseif opt_disp == 1,
     %
     xdYdNperp = xdlperpdNperp.*xa./(xlperp + xlpar).*...
