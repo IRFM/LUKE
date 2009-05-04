@@ -86,9 +86,9 @@ if ~isnumeric(dNpar),
     return
 end
 %
-kmode = input('Plasma model for wave propagation : (0:cold, 1:kinetic, 2:R2D2 (requires IMSL)) [2] :');
+kmode = input('Plasma model for wave propagation :\n (0:cold, 1:kinetic, 2:R2D2 (requires IMSL), 4:electrostatic) [4] :');
 if isempty(kmode),
-    kmode = 2;
+    kmode = 4;
 end
 if ~isnumeric(kmode) || ~any(kmode == 0:4),
     disp('-----> Invalid plasma model option');
