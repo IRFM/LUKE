@@ -158,6 +158,9 @@ xphi_xyz(3,mask) = - xdYdNpar/2;
 %
 % ----------- Absorption Coefficient -------------
 %
-[xalphaphi_lin_nr(mask),xalphaphi_lin_wr(mask),xalphaphi_lin_fr(mask)] = alphaphi_ebw_jd(xa,xq,xbeta,xNpar,xNperp,opt_disp,nmax);
-%
+if nargout > 4,
+	%
+	[xalphaphi_lin_nr(mask),xalphaphi_lin_wr(mask),xalphaphi_lin_fr(mask)] = alphaphi_ebw_jd(xa,xq,xbeta,xNpar,xNperp,opt_disp,nmax);
+	%
+end
 

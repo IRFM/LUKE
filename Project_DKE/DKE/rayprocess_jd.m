@@ -487,18 +487,18 @@ else
         error('model not yet implemented');
     elseif real(opt_disp) == 5, % electrostatic approximation for EBW calculations
         %
-        [sNperp,sepol_pmz,sphi_xyz,salphaphi_lin_nr,salphaphi_lin_wr,salphaphi_lin_fr]...
+        [sNperp,sepol_pmz,sphi_xyz]...%,salphaphi_lin_nr,salphaphi_lin_wr,salphaphi_lin_fr
         = ES_ebw_disp_jd(real(sNpar),omega_rf,sTe,sne,sB,sNperp);%,0,imag(opt_disp)
         %
-        salphaphi_lin = real(salphaphi_lin_fr)*omega_rf/clum;
-        opt_disp = real(opt_disp);
+        %salphaphi_lin = real(salphaphi_lin_fr)*omega_rf/clum;
+        %opt_disp = real(opt_disp);
         %
         smask = ~isnan(sNperp);
         ns = sum(smask);
         %
         sNperp = sNperp(smask);
         sepol_pmz = sepol_pmz(:,smask);
-        salphaphi_lin = salphaphi_lin(smask);
+        %salphaphi_lin = salphaphi_lin(smask);
         sphi_xyz = sphi_xyz(:,smask);
         %
         ss = ss(smask);
