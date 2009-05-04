@@ -46,7 +46,7 @@ try,
 %		equilCPO(it).eqgeometry.boundary = '';
 %		equilCPO(it).eqgeometry.geometry_axis.r = equil.Rp;
 %		equilCPO(it).eqgeometry.geometry_axis.z = equil.Zp;
-%		equilCPO(it).eqgeometry.a_minor = equil.ptx(1,end);
+%		equilCPO(it).eqgeometry.a_minor = equil.ptx(end,1);
 %		equilCPO(it).eqgeometry.elongation = '';
 %		equilCPO(it).eqgeometry.tria_upper = '';
 %		equilCPO(it).eqgeometry.tria_lower = '';
@@ -76,7 +76,7 @@ try,
 		if isinf(equil.Rp),
 			equilCPO(it).global_param.psi_bound = equil.psi_apRp(end);%Cylindrical case
 		else
-			equilCPO(it).global_param.psi_bound = equil.psi_apRp(end)*equil.Rp/equil.ptx(1,end);,%Toroidal case		
+			equilCPO(it).global_param.psi_bound = equil.psi_apRp(end)*equil.Rp/equil.ptx(end,1);,%Toroidal case		
 		end
 		equilCPO(it).global_param.mag_axis.position.r = equil.Rp;
 		equilCPO(it).global_param.mag_axis.position.z = equil.Zp;
@@ -90,7 +90,7 @@ try,
 		if isinf(equil.Rp),
 			equilCPO(it) = allocate_equilibrium(equilCPO(it),'profiles_1d.psi',equil.psi_apRp);%Cylindrical case
 		else
-			equilCPO(it) = allocate_equilibrium(equilCPO(it),'profiles_1d.psi',equil.psi_apRp*equil.Rp/equil.ptx(1,end));%Toroidal case	
+			equilCPO(it) = allocate_equilibrium(equilCPO(it),'profiles_1d.psi',equil.psi_apRp*equil.Rp/equil.ptx(end,1));%Toroidal case	
 		end
 		equilCPO(it) = allocate_equilibrium(equilCPO(it),'profiles_1d.phi','');
 		equilCPO(it) = allocate_equilibrium(equilCPO(it),'profiles_1d.pressure','');
@@ -128,14 +128,14 @@ try,
 		if isinf(equil.Rp),
 			equilCPO(it) = allocate_equilibrium(equilCPO(it),'profiles_2d.grid.dim1',equil.psi_apRp);%Cylindrical case
 		else
-			equilCPO(it) = allocate_equilibrium(equilCPO(it),'profiles_2d.grid.dim1',equil.psi_apRp*equil.Rp/equil.ptx(1,end));%Toroidal case	
+			equilCPO(it) = allocate_equilibrium(equilCPO(it),'profiles_2d.grid.dim1',equil.psi_apRp*equil.Rp/equil.ptx(end,1));%Toroidal case	
 		end
 		equilCPO(it) = allocate_equilibrium(equilCPO(it),'profiles_2d.grid.dim2',equil.theta);
 		equilCPO(it) = allocate_equilibrium(equilCPO(it),'profiles_2d.grid.connect','');
 		if isinf(equil.Rp),
 			equilCPO(it) = allocate_equilibrium(equilCPO(it),'profiles_2d.psi_grid',equil.psi_apRp(:)*ones(size(equil.theta)));%Cylindrical case
 		else
-			equilCPO(it) = allocate_equilibrium(equilCPO(it),'profiles_2d.psi_grid',(equil.psi_apRp(:)*ones(size(equil.theta)))*equil.Rp/equil.ptx(1,end));%Toroidal case	
+			equilCPO(it) = allocate_equilibrium(equilCPO(it),'profiles_2d.psi_grid',(equil.psi_apRp(:)*ones(size(equil.theta)))*equil.Rp/equil.ptx(end,1));%Toroidal case	
 		end
 		equilCPO(it) = allocate_equilibrium(equilCPO(it),'profiles_2d.jphi_grid','');
 		equilCPO(it) = allocate_equilibrium(equilCPO(it),'profiles_2d.jpar_grid','');
@@ -149,7 +149,7 @@ try,
 		if isinf(equil.Rp),
 			equilCPO(it) = allocate_equilibrium(equilCPO(it),'coord_sys.grid.dim1',equil.psi_apRp(:));%Cylindrical case
 		else
-			equilCPO(it) = allocate_equilibrium(equilCPO(it),'coord_sys.grid.dim1',equil.psi_apRp(:)*equil.Rp/equil.ptx(1,end));%Toroidal case	
+			equilCPO(it) = allocate_equilibrium(equilCPO(it),'coord_sys.grid.dim1',equil.psi_apRp(:)*equil.Rp/equil.ptx(end,1));%Toroidal case	
 		end
 		equilCPO(it) = allocate_equilibrium(equilCPO(it),'coord_sys.grid.dim2',equil.theta);
 		equilCPO(it) = allocate_equilibrium(equilCPO(it),'coord_sys.jacobian','');
@@ -216,7 +216,7 @@ try,
 		if isinf(equil.Rp),
 			coreprofCPO(it) = allocate_coreprof(coreprofCPO(it),'psi.value',equil.psi_apRp);%Cylindrical case
 		else
-			coreprofCPO(it) = allocate_coreprof(coreprofCPO(it),'psi.value',equil.psi_apRp*equil.Rp/equil.ptx(1,end));%Toroidal case	
+			coreprofCPO(it) = allocate_coreprof(coreprofCPO(it),'psi.value',equil.psi_apRp*equil.Rp/equil.ptx(end,1));%Toroidal case	
 		end
 		coreprofCPO(it) = allocate_coreprof(coreprofCPO(it),'psi.source','LUKE code');
 		coreprofCPO(it) = allocate_coreprof(coreprofCPO(it),'psi.flag',3);
@@ -232,7 +232,7 @@ try,
 		%
 		% te element
 		%
-		coreprofCPO(it) = allocate_coreprof(coreprofCPO(it),'te.value',equil.pTe(:));
+		coreprofCPO(it) = allocate_coreprof(coreprofCPO(it),'te.value',equil.pTe);
 		coreprofCPO(it) = allocate_coreprof(coreprofCPO(it),'te.source','LUKE code');	
 		coreprofCPO(it) = allocate_coreprof(coreprofCPO(it),'te.flag',3);
 %		coreprofCPO(it) = allocate_coreprof(coreprofCPO(it),'te.boundary.value','');
@@ -270,7 +270,7 @@ try,
 		%
 		% ne element
 		%
-		coreprofCPO(it) = allocate_coreprof(coreprofCPO(it),'ne.value',equil.pne(:));
+		coreprofCPO(it) = allocate_coreprof(coreprofCPO(it),'ne.value',equil.pne);
 		coreprofCPO(it) = allocate_coreprof(coreprofCPO(it),'ne.source','LUKE code');	
 		coreprofCPO(it) = allocate_coreprof(coreprofCPO(it),'ne.flag',3);
 %		coreprofCPO(it) = allocate_coreprof(coreprofCPO(it),'ne.boundary.value','');
