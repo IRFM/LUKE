@@ -86,7 +86,7 @@ if nargin == 2,
         mexpath = [luke_root,'Project_DKE/MEX/Bin'];
         force_compile = 1;
     end
-   % mex_compile_luke(sourcepath,mexpath,dkepath.compiler_opt,force_compile)
+    mex_compile_luke(sourcepath,mexpath,dkepath.compiler_opt,force_compile)
     %
     addpath(mexpath);
     %
