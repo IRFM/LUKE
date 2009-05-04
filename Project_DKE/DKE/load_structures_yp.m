@@ -55,10 +55,6 @@ for i=1:3:length(varargin),
        id_path = varargin{i+1};
        path_path = varargin{i+2};
        flag_path = j;
-    elseif strcmp(varargin{i},'equil'),
-       id_equil = varargin{i+1};
-       path_equil = varargin{i+2};
-       flag_equil = j;
     elseif strcmp(varargin{i},'dkeparam'),
        id_dkeparam = varargin{i+1};
        path_dkeparam = varargin{i+2};
@@ -67,6 +63,10 @@ for i=1:3:length(varargin),
        id_display = varargin{i+1};
        path_display = varargin{i+2};
        flag_display = j;
+    elseif strcmp(varargin{i},'equil'),
+       id_equil = varargin{i+1};
+       path_equil = varargin{i+2};
+       flag_equil = j;
     elseif strcmp(varargin{i},'ohm'),
        id_ohm = varargin{i+1};
        path_ohm = varargin{i+2};
@@ -167,14 +167,40 @@ if exist('flag_path','var'),%Paths
 end
 %
 if exist('flag_equil','var'),%Magnetic equilibrium
-    filename = [path_equil,'EQUIL_',id_equil,'.mat'];
-    if exist(filename) == 0,
-	    error([filename,' does not exist']);
-    else
-	    load(filename);
-	    info_dke_yp(2,['Structure ''equil'': ',filename,' successfully loaded']);
+	if ~strfind(path_equil,'database')
+    	filename = [path_equil,'EQUIL_',id_equil,'.mat'];
+    	if exist(filename) == 0,
+	    	error([filename,' does not exist']);
+    	else
+	    	load(filename);
+	    	info_dke_yp(2,['Structure ''equil'': ',filename,' successfully loaded']);
+    	end
+    	varargout{flag_equil} = equil;
+    else	
+		if strfind(path_equil,'ITM'),
+			[machine,user,ver] = which_MDSdatabase(dkepath);%Check access to database (Environment variable must be set-up before launching MatLab)
+			if isempty(machine) | isempty(user) | isempty(ver),
+				error(['WARNING: Unsuccessful connexion to ITM MDS+ database, user: ',user,', database version: ',ver,', machine: ',machine]);
+			else
+				disp(['Successful connexion to ITM MDS+ database, user: ',user,', database version: ',ver,', machine: ',machine]);
+				if ischar(id_equil),
+					[numshot,path_equil] = LUKE2ITM(dkepath,'equil',id_equil);%Conversion for accessing to the ITM MDS+ reference shot number
+				else
+					numshot = id_equil;%Direct access to the ITM MDS+ reference shot number
+				end
+				%
+				[equil,status,result] = read_equil_ITM(numshot,1,NaN,1);
+				if ~status,
+					disp(['LUKE magnetic equilibrium ',id_equil,' successfully read from the ITM-MDS+ database']);
+					varargout{flag_equil} = equil;
+				else
+					error(result);
+				end
+			end
+		else	
+			error(['The database ',path_equil,' is not recognized']);
+		end
     end
-    varargout{flag_equil} = equil;
 end
 %
 if exist('flag_dkeparam','var'),%DKE simulation parameters 
