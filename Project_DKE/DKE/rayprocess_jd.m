@@ -485,6 +485,66 @@ else
     elseif real(opt_disp) == 4, % relativistic hot plasma dispersion tensor for sepol_pmz, sNperp and phi_xyz (R2D2)
         %%%%%%%%%% to be implemented %%%%%%%%%%
         error('model not yet implemented');
+    elseif real(opt_disp) == 5, % electrostatic approximation for EBW calculations
+        %
+        [sNperp,sepol_pmz,sphi_xyz,salphaphi_lin_nr,salphaphi_lin_wr,salphaphi_lin_fr]...
+        = ES_ebw_disp_jd(real(sNpar),omega_rf,sTe,sne,sB,sNperp);%,0,imag(opt_disp)
+        %
+        salphaphi_lin = real(salphaphi_lin_fr)*omega_rf/clum;
+        opt_disp = real(opt_disp);
+        %
+        smask = ~isnan(sNperp);
+        ns = sum(smask);
+        %
+        sNperp = sNperp(smask);
+        sepol_pmz = sepol_pmz(:,smask);
+        salphaphi_lin = salphaphi_lin(smask);
+        sphi_xyz = sphi_xyz(:,smask);
+        %
+        ss = ss(smask);
+        spsin = spsin(smask);
+        stheta = stheta(smask);
+        %
+        sr = sr(smask);
+        sx = sx(smask);
+        sy = sy(smask);
+        %
+        if tor_mode == 1,
+            sphi = sphi(smask);
+            if ~isempty(sn)
+                sn = sn(smask);
+            end               
+        else
+            sz = sz(smask);
+            if ~isempty(skz)
+                skz = skz(smask);
+            end               
+        end
+        %
+        sNpar = sNpar(smask);
+        sdNpar = sdNpar(smask);
+        %
+        if ~isempty(skx) & ~isempty(sky)
+            skx = skx(smask);
+            sky = sky(smask);
+        end        
+        %
+        if ~isempty(swidth)
+            swidth = swidth(smask);
+        end        
+        %
+        sB = sB(smask);
+        sBx = sBx(smask);
+        sBy = sBy(smask);
+        sBphi = sBphi(smask);
+        %
+        sne = sne(smask);
+        szni = szni(:,smask);
+        sTe = sTe(smask);
+        szTi = szTi(:,smask);
+        %
+        srho = srho(smask);
+        %
     else
         error('invalid disp option');
     end
