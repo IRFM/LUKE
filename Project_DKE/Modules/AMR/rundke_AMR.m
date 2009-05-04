@@ -25,6 +25,7 @@ warning off
 %%%%%%%%%%%%%%%%%%%BEGIN-LUKE-PATH%%%%%%%%%%%%%%%%%%%
 luke_root = [getenv('LUKE'),'/'];
 addpath([luke_root,'Project_DKE/DKE']);
+addpath(['/home/luke/Tools/DISP/EBW']);
 setpath_luke_jd(luke_root);
 %%%%%%%%%%%%%%%%%%%%END-LUKE-PATH%%%%%%%%%%%%%%%%%%%%
 %
