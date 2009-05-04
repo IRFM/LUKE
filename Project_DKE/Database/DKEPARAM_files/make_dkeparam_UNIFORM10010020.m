@@ -103,8 +103,6 @@ dkeparam.clustermode.eecoll_dke_yp.mode = 0;%MatLab distributed computing enviro
 dkeparam.clustermode.eecoll_dke_yp.timeout = 200;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
 dkeparam.clustermode.eecoll_dke_yp.size = 4;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
 %
-dkeparam.database.itm = 0;%Read data from ITM MDS+ database
-%
 dkeparam.store_mode = 0;%Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight
 dkeparam.opt_save = 0;%Save intermediate calculations
 dkeparam.opt_load = 0;%Load intermediate calculations
