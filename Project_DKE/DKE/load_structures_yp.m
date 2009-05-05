@@ -242,6 +242,10 @@ end
 if exist('flag_wave','var'),
     ii = 0;
     waves = '';%List of structures for multiple RF waves
+    %
+    if ~iscell(ids_wave),ids_wave={ids_wave};end
+    if ~iscell(paths_wave),paths_wave={paths_wave};end
+    %
     if isempty(ids_wave{1}),
         info_dke_yp(2,['Simulations are performed without RF Waves']);
     else
