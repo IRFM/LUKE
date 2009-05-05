@@ -125,8 +125,8 @@ efdaitm.speclibpath.ual = ['/afs/.efda-itm.eu/project/switm/ual/matlabinterface'
 efdaitm.mex76 = [efdaitm.luke_root,'Project_DKE/MEX/Bin/efdaitm/MATLAB76/'];
 efdaitm.compiler_opt.copts = '';
 efdaitm.compiler_opt.fopts.mex76 = ['-v FFLAGS=''-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132'''];
-%efdaitm.compiler_opt.helmex.mex76 = ['-L/usr/bin/g95 -lf95 -lgcc ',efdaitm.local_root,'lapack/amd64_pgi/lib/liblapack.so ',efdaitm.local_root,'blas/amd64_pgi/lib/libblas.so ',efdaitm.local_root,'lapack/amd64_pgi/lib/libtmglib.so '];% Optional argument for helmex compilation
-efdaitm.compiler_opt.helmex.mex76 = 'FLIBS=''-L/usr/bin/g95 -lf95 -lgcc -Wl,-rpath-link,/afs/efda-itm.eu/project/switm/matlab/bin/glnxa64 -L/afs/efda-itm.eu/project/switm/matlab/bin/glnxa64 -lmx -lmex -lmat -lm -L/afs/efda-itm.eu/project/switm/lapack/amd64_pgi/lib/ -llapack -ltmglib -L/afs/efda-itm.eu/project/switm/blas/amd64_pgi/lib/ -lblas -lguide -lpthread''';
+efdaitm.compiler_opt.helmex.mex76 = ['-L/usr/bin/g95 -lf95 -lgcc ',efdaitm.local_root,'lapack/amd64_g95/lib/liblapack.so ',efdaitm.local_root,'blas/amd64_g95/lib/libblas.so ',efdaitm.local_root,'lapack/amd64_g95/lib/libtmglib.so '];% Optional argument for helmex compilation
+%efdaitm.compiler_opt.helmex.mex76 = 'FLIBS=''-L/usr/bin/g95 -lf95 -lgcc -Wl,-rpath-link,/afs/efda-itm.eu/project/switm/matlab/bin/glnxa64 -L/afs/efda-itm.eu/project/switm/matlab/bin/glnxa64 -lmx -lmex -lmat -lm -L/afs/efda-itm.eu/project/switm/lapack/amd64_g95/lib/ -llapack -ltmglib -L/afs/efda-itm.eu/project/switm/blas/amd64_g95/lib/ -lblas -lguide -lpthread''';
 %
 efdaitm.MUMPS.mex76 = [efdaitm.local_root,'mumps/MUMPS_4.7.3_SEQ/MATLAB/'];%Where MUMPS matrix solver is stored (MEX function)
 %
