@@ -30,8 +30,8 @@ try,
 		%
 		equilCPO(it).datainfo.dataprovider = 'Yves Peysson & Joan Decker, CEA/DSM/IRFM';
 		equilCPO(it).datainfo.putdate = date;
-		equilCPO(it).datainfo.source = equil.id;
-		equilCPO(it).datainfo.comment = 'From LUKE database for validation use';
+		equilCPO(it).datainfo.source = 'LUKE package';
+		equilCPO(it).datainfo.comment = 'For validation use';
 		equilCPO(it).datainfo.isref = 0;
 		equilCPO(it).datainfo.whatref.user = 'LUKE code';
 		equilCPO(it).datainfo.whatref.machine = equil.id;
@@ -41,12 +41,13 @@ try,
 		%
 		% eqgeometry element
 		%		
-%		equilCPO(it).eqgeometry.source = '';
-%		equilCPO(it).eqgeometry.boundarytype = '';
-%		equilCPO(it).eqgeometry.boundary = '';
-%		equilCPO(it).eqgeometry.geometry_axis.r = equil.Rp;
-%		equilCPO(it).eqgeometry.geometry_axis.z = equil.Zp;
-%		equilCPO(it).eqgeometry.a_minor = equil.ptx(end,1);
+		equilCPO(it).eqgeometry.source = '';
+		equilCPO(it).eqgeometry.boundarytype = '';
+		equilCPO(it).eqgeometry.boundary.r = '';
+		equilCPO(it).eqgeometry.boundary.z = '';
+		equilCPO(it).eqgeometry.geom_axis.r = equil.Rp;
+		equilCPO(it).eqgeometry.geom_axis.z = equil.Zp;
+		equilCPO(it).eqgeometry.a_minor = equil.ptx(end,1);
 %		equilCPO(it).eqgeometry.elongation = '';
 %		equilCPO(it).eqgeometry.tria_upper = '';
 %		equilCPO(it).eqgeometry.tria_lower = '';
@@ -72,7 +73,7 @@ try,
 %		equilCPO(it).global_param.li = '';
 %		equilCPO(it).global_param.volume = '';
 %		equilCPO(it).global_param.area = '';
-		equilCPO(it).global_param.psi_ax = equil.psi_apRp(1);
+%		equilCPO(it).global_param.psi_ax = equil.psi_apRp(1);
 		if isinf(equil.Rp),
 			equilCPO(it).global_param.psi_bound = equil.psi_apRp(end);%Cylindrical case
 		else
@@ -184,8 +185,8 @@ try,
 		%
 		coreprofCPO(it).datainfo.dataprovider = 'Yves Peysson & Joan Decker, CEA/DSM/IRFM';
 		coreprofCPO(it).datainfo.putdate = date;
-		coreprofCPO(it).datainfo.source = equil.id;
-		coreprofCPO(it).datainfo.comment = 'From LUKE database for validation use';
+		coreprofCPO(it).datainfo.source = 'LUKE package';
+		coreprofCPO(it).datainfo.comment = 'For validation use';
 		coreprofCPO(it).datainfo.isref = 0;
 		coreprofCPO(it).datainfo.whatref.user = 'LUKE code';
 		coreprofCPO(it).datainfo.whatref.machine = equil.id;

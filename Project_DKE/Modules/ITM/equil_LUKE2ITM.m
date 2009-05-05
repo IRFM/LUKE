@@ -1,6 +1,7 @@
 %LUKE - Script for writing all magnetic equilibrium used by LUKE into the ITM MDS+ database
 %
-%Script for writing all magnetic equilibrium used by LUKE into the ITM MDS+ database
+%Script for writing all magnetic equilibrium used by LUKE into the ITM MDS+ database. LUKE scenarios
+% are numbered from the magnetic equilibrium list given in the MatLab function LUKEITM.m
 %
 %by Y.Peysson CEA-IRFM <yves.peysson@cea.fr> and Joan Decker CEA-IRFM (joan.decker@cea.fr)
 %
@@ -37,7 +38,7 @@ else
 		if ~isempty(equil_LUKE{numshot}),
 			[status,result] = write_equil_ITM(equil_LUKE{numshot},numshot,numrun);
 			if ~status,
-				disp(['LUKE magnetic equilibrium ',equil_name{numshot},' successfully writen in the ITM-MDS+ database']);
+				disp(['LUKE magnetic equilibrium ''',equil_name{numshot},''' successfully written in the ITM-MDS+ database for scenario ',int2str(numshot),'.']);
 			else
 				disp(result);
 			end
