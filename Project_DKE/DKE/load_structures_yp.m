@@ -167,16 +167,7 @@ if exist('flag_path','var'),%Paths
 end
 %
 if exist('flag_equil','var'),%Magnetic equilibrium
-	if ~strfind(path_equil,'database')
-    	filename = [path_equil,'EQUIL_',id_equil,'.mat'];
-    	if exist(filename) == 0,
-	    	error([filename,' does not exist']);
-    	else
-	    	load(filename);
-	    	info_dke_yp(2,['Structure ''equil'': ',filename,' successfully loaded']);
-    	end
-    	varargout{flag_equil} = equil;
-    else	
+    if strfind(path_equil,'database')
 		if strfind(path_equil,'ITM'),
 			[machine,user,ver] = which_MDSdatabase(dkepath);%Check access to database (Environment variable must be set-up before launching MatLab)
 			if isempty(machine) | isempty(user) | isempty(ver),
@@ -200,6 +191,15 @@ if exist('flag_equil','var'),%Magnetic equilibrium
 		else	
 			error(['The database ',path_equil,' is not recognized']);
 		end
+	else
+    	filename = [path_equil,'EQUIL_',id_equil,'.mat'];
+    	if exist(filename) == 0,
+	    	error([filename,' does not exist']);
+    	else
+	    	load(filename);
+	    	info_dke_yp(2,['Structure ''equil'': ',filename,' successfully loaded']);
+    	end
+    	varargout{flag_equil} = equil;	
     end
 end
 %
