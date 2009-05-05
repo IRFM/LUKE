@@ -1,4 +1,4 @@
-% script make_equil_ITER_IAEA06
+% script make_equil_ITER_Scen4_IAEA06
 %
 %
 clear all
@@ -28,4 +28,4 @@ equil.ptBPHI = - equil.ptBPHI;
 %
 equil.ptBPHI = - equil.ptBPHI;
 %
-save EQUIL_ITER_Scen4_IAEA06_mod.mat equil
+save EQUIL_ITER_Scen4_IAEA06.mat equil

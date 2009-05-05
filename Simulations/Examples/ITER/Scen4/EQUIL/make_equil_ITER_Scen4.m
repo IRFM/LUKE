@@ -1,4 +1,4 @@
-%script make_equil_CMOD
+%script make_equil_ITER_Scen4
 %
 % This script creates the equil strucure for CMOD to be used by DKE
 %   based on the eqdsk file and some profile data
