@@ -10,19 +10,21 @@ close all
 %
 [dkepath] = load_structures_yp('dkepath','','');
 %
-% LUKE magnetic equilibrium list in ITM MDS+ database (
+% List of LUKE scenarios in the ITM MDS+ database.
 %
 disp('---------------------------------------------------------------------------------------------------------')
-disp('List of LUKE scenarios in the ITM MDS+ database. See MatLab function LUKEITM.m for adding a new scenario.')
+disp('List of LUKE magnetic equilibrium. See MatLab function LUKEITM.m for adding a new equilibrium.')
 for iequil = 1:LUKE2ITM(dkepath,'equil'),
 	[equil_name{iequil},path_equil{iequil}] = ITM2LUKE(dkepath,'equil',iequil);
-	disp([' - ', int2str(iequil),': ',equil_name{iequil}])
+	disp([' - ',equil_name{iequil}])
 end
 disp('---------------------------------------------------------------------------------------------------------')
 %
-numshot = input_dke_yp('Shot number',[1:length(equil_name)]);
-if length(numshot) > 1, numshot = numshot(1);end
-numrun = input_dke_yp('Run number',1);
+numshot = '';
+while isempty(numshot),
+	numshot = LUKE2ITM(dkepath,'equil',input_dke_yp('Equilibrium name',equil_name{1}));
+end
+numrun = 1;%Default value for LUKE tests
 %
 [machine,user,ver] = which_MDSdatabase(dkepath);%Check access to database (Environment variable must be set-up before launching MatLab)
 if isempty(machine) | isempty(user) | isempty(ver),

@@ -25,9 +25,11 @@ if strcmp(name,'equil'),
 	%
 	struct_name = equil_name;
 	struct_path = path_equil;
-elseif strcmp(name,'launch'),
+elseif strcmp(name,'wave'),
 	%
-	struct_name = launch_name;
-	struct_path = path_launch;
+    wave_name{1} = 'WAVE_ITER_Scen4_IAEA06_20Z';path_wave{1} = [dkepath.luke_root,'Simulations/Examples/ITER/Scen4/WAVE/C3PO/'];% Magnetic equilibrium from ~/LUKE/Simulations/
+	%
+	struct_name = wave_name;
+	struct_path = path_wave;
 end
 %
