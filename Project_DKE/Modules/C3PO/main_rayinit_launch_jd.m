@@ -233,3 +233,6 @@ elseif launch.type == 'LH',
         end
     end
 end
+%
+rayinit.launch = launch;
+%

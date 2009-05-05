@@ -307,8 +307,6 @@ if w_opt == 0; % C3PO Calculation
         rayinit.id = ['C3PO_',launch.id];
         rayinit.type = launch.type;
         %
-        rayinit.launch = launch;
-        %
         r_opt = input_dke_yp('Do you want to save the rayinit structure [y/n]','n',{'y','n'},'',[1,1]);
         if strcmp(r_opt,'y'),
             sd = pwd;
@@ -391,6 +389,8 @@ if w_opt == 0; % C3PO Calculation
     %
     % C3P0 ray tracing
     %
+    waveparam.n_rf_list = n_rf_list;
+    %
     sd = pwd;
     cd(workdir);
     wave = main_C3PO_jd(rayinit.id,equil,rayinit,waveparam,fitparam,rayparam,wavedisplay,C3POparam);
@@ -399,16 +399,6 @@ if w_opt == 0; % C3PO Calculation
     wave.info.type = 'RT';
     wave.info.RT = 'C3PO';
     wave.info.ftype = ftype;
-    %
-    wave.rayinit = rayinit;
-    wave.fitparam = fitparam;
-    wave.rayparam = rayparam;
-    wave.display = wavedisplay;
-    wave.C3POparam = C3POparam;
-    %
-    waveparam.n_rf_list = n_rf_list;
-    %
-    wave.waveparam = waveparam;
     %
     s_opt = input_dke_yp('Do you want to generate an equivalent make_wave script? [y/n]','n',{'y','n'},'',[1,1]);
     %

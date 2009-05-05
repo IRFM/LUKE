@@ -137,5 +137,11 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C
     %
     wave = make_beam_wave_jd(wave,equil,C3POdisplay,waveparam.nd,waveparam.nchi,rayinit.w0,rayinit.z0,waveparam.ns);
     %
+    wave.rayinit = rayinit;
+    wave.waveparam = waveparam;
+    wave.fitparam = fitparam;
+    wave.rayparam = rayparam;
+    wave.C3POparam = C3POparam;
+    %
 end
 
