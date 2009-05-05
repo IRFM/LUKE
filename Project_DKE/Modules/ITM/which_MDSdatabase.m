@@ -1,4 +1,4 @@
-function [machine,user,ver] = which_MDSdatabase(dkepath)
+function [machine,user,ver] = which_MDSdatabase(dkepath,mute)
 %LUKE - Function that check which ITM MDS+ database is connected
 %
 %Function that check which ITM MDS+ database is connected
@@ -6,9 +6,12 @@ function [machine,user,ver] = which_MDSdatabase(dkepath)
 %by Y.Peysson CEA-IRFM <yves.peysson@cea.fr> and Joan Decker CEA-IRFM (joan.decker@cea.fr)
 %
 if nargin < 1,error('Not enough input arguments in which_MDSdatabase.m');end
+if nargin == 1,
+	mute = 0;
+end
 %
 if ~strcmp(dkepath.hostname,'efdaitm'),
-	warning(['Remote access to the ITM MDS+ database from ',dkepath.hostname,' not yet implemented !']);
+	if ~mute,warning(['Remote access to the ITM MDS+ database from ',dkepath.hostname,' not yet implemented !']);end
 	machine = '';
 	user = '';
 	ver = '';
@@ -19,7 +22,7 @@ hdf5base = getenv('HDF5_BASE');
 mdstreebase = getenv('MDSPLUS_TREE_BASE_0');
 %
 if isempty(hdf5base) | isempty(mdstreebase),
-	warning('Environment variables for ITM MDS+/HDF5 database are not set-up.')
+	if ~mute,warning('Environment variables for ITM MDS+/HDF5 database are not set-up.');end
 	machine = '';
 	user = '';
 	ver = '';
