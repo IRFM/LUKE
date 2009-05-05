@@ -1,6 +1,7 @@
-%LUKE - Script for writing an ITM-CPOs (read/write) from Matlab
+%LUKE - Script for writing a LUKE magnetic equilibrium structure in the ITM MDS+ database
 %
-%Script for for writing an ITM-CPOs (read/write) from Matlab
+%Script for writing a LUKE magnetic equilibrium structure in the ITM MDS+ database. LUKE scenarios
+% are numbered from the magnetic equilibrium list given in the MatLab function LUKEITM.m
 %
 %by Y.Peysson CEA-IRFM <yves.peysson@cea.fr> and Joan Decker CEA-IRFM (joan.decker@cea.fr)
 %
@@ -9,15 +10,15 @@ close all
 %
 [dkepath] = load_structures_yp('dkepath','','');
 %
-% LUKE magnetic equilibrium list in ITM MDS+ database
+% LUKE magnetic equilibrium list in ITM MDS+ database (
 %
-disp('---------------------------------------------------')
-disp('LUKE magnetic equilibrium list in ITM MDS+ database')
+disp('---------------------------------------------------------------------------------------------------------')
+disp('List of LUKE scenarios in the ITM MDS+ database. See MatLab function LUKEITM.m for adding a new scenario.')
 for iequil = 1:LUKE2ITM(dkepath,'equil'),
 	[equil_name{iequil},path_equil{iequil}] = ITM2LUKE(dkepath,'equil',iequil);
 	disp([' - ', int2str(iequil),': ',equil_name{iequil}])
 end
-disp('---------------------------------------------------')
+disp('---------------------------------------------------------------------------------------------------------')
 %
 numshot = input_dke_yp('Shot number',[1:length(equil_name)]);
 if length(numshot) > 1, numshot = numshot(1);end
@@ -32,7 +33,7 @@ else
 	[status,result] = write_equil_ITM(equil,numshot,numrun);
 	%
 	if ~status,
-		disp(['LUKE magnetic equilibrium ',equil_name{numshot},' successfully writen in the ITM-MDS+ database']);
+		disp(['LUKE magnetic equilibrium ''',equil_name{numshot},''' successfully written in the ITM-MDS+ database for scenario ',int2str(numshot),'.']);
 	else
 		disp(result);
 	end

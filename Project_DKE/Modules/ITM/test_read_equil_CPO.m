@@ -1,6 +1,7 @@
-%LUKE - Script for reading ITM-CPOs (read/write) from Matlab
+%LUKE - Script for reading a LUKE magnetic equilibrium structure from the ITM MDS+ database
 %
-%Script for reading to ITM-CPOs (read/write) from Matlab
+%Script for reading a LUKE magnetic equilibrium structure from the ITM MDS+ database. LUKE scenarios
+% are numbered from the magnetic equilibrium list given in the MatLab function LUKEITM.m
 %
 %by Y.Peysson CEA-IRFM <yves.peysson@cea.fr> and Joan Decker CEA-IRFM (joan.decker@cea.fr)
 %
@@ -11,20 +12,20 @@ close all
 %
 % LUKE magnetic equilibrium list in ITM MDS+ database
 %
-disp('---------------------------------------------------')
-disp('LUKE magnetic equilibrium list in ITM MDS+ database')
+disp('---------------------------------------------------------------------------------------------------------')
+disp('List of LUKE scenarios in the ITM MDS+ database. See MatLab function LUKEITM.m for adding a new scenario.')
 for iequil = 1:LUKE2ITM(dkepath,'equil'),
 	[equil_name{iequil},path_equil{iequil}] = ITM2LUKE(dkepath,'equil',iequil);
 	disp([' - ', int2str(iequil),': ',equil_name{iequil}])
 end
-disp('---------------------------------------------------')
+disp('---------------------------------------------------------------------------------------------------------')
 %
 numshot = input_dke_yp('Shot number',[1:length(equil_name)]);
 if length(numshot) > 1, numshot = numshot(1);end
 numrun = input_dke_yp('Run number',1);
 %
 time = input_dke_yp('Time value (s)',NaN);%Get all times if NaN
-method = input_dke_yp('Time interpolation (1:linear,2:****, 3:nearest neighbor)',[1:3]);%Time interpolation (1:linear,2:****,3:nearest neighbor)
+method = input_dke_yp('Time interpolation (1:closest sample,2:previous sample 3:linear)',[1:3]);%Time interpolation (1:closest sample,2:previous sample 3:linear)
 %
 [machine,user,ver] = which_MDSdatabase(dkepath);%Check access to database (Environment variable must be set-up before launching MatLab)
 if isempty(machine) | isempty(user) | isempty(ver),
@@ -34,7 +35,7 @@ else
 	[equil_CPO,status,result] = read_equil_ITM(numshot,numrun,time,method);
 	%
 	if ~status,
-		disp(['LUKE magnetic equilibrium ',equil_name{numshot},' successfully read from the ITM-MDS+ database']);
+		disp(['LUKE magnetic equilibrium ''',equil_name{numshot},''' successfully read for the ITM-MDS+ database for scenario ',int2str(numshot),'.']);
 	else
 		disp(result);
 	end
