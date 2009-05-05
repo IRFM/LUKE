@@ -145,14 +145,32 @@ if opt == 'y',
     disp('---------------------------SEQUENTIAL COMPUTING----------------------------')
     disp('---------------------------------------------------------------------------')
     rundke;
+    %
     if isfield(dkepath,'maxcompthreads'),
     	disp('---------------------------------------------------------------------------')
     	disp('---------------------------DISTRIBUTED COMPUTING---------------------------')
     	disp('---------------------------------------------------------------------------')
     	rundke_cluster;     
     end
+	%    
+    [machine,user,ver] = which_MDSdatabase(dkepath,1);%Check access to database (Environment variable must be set-up before launching MatLab)
+	if ~isempty(machine) & ~isempty(user) & ~isempty(ver),
+    	disp('---------------------------------------------------------------------------')
+    	disp('--------------------------ACCESS FROM ITM DATABASE-------------------------')
+    	disp('---------------------------------------------------------------------------')
+   		rundke_ITM;  
+    end
     cd(dkepath.luke_root);
 end
+%
+opt = input_dke_yp('Do you want to run all tests and examples (long process, several hours)','n',{'y','n'});
+if opt == 'y',
+	alltests_LUKE
+end
+%
+
+
+
 
 
 
