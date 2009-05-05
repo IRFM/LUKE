@@ -22,7 +22,7 @@ rho_S = [0,0.6:0.02:1];%Normalized radial flux grid where calculations are perfo
 id_dkepath = '';%For all paths used by DKE solver
 path_dkepath = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_equil = 'ITER_Scen4_IAEA06_mod';%For plasma equilibrium
+id_equil = 'ITER_Scen4_IAEA06';%For plasma equilibrium
 path_equil = 'EQUIL/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_dkeparam = 'LH_RT';%For DKE code parameters
