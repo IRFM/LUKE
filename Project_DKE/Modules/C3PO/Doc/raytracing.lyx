@@ -1,5 +1,5 @@
-#LyX file created by tex2lyx 1.5.6
-\lyxformat 247
+#LyX 1.6.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
 \begin_document
 \begin_header
 \textclass article
@@ -44,13 +44,10 @@
 \makeatother
 
 \makeatother
-
-
-
-
 \end_preamble
 \options a4paper
-\language babel
+\use_default_options false
+\language english
 \inputencoding latin1
 \font_roman default
 \font_sans default
@@ -60,12 +57,15 @@
 \font_osf false
 \font_sf_scale 100
 \font_tt_scale 100
+
 \graphics default
 \paperfontsize 12
 \spacing single
+\use_hyperref false
 \papersize default
 \use_geometry false
 \use_amsmath 1
+\use_esint 0
 \cite_engine natbib_authoryear
 \use_bibtopic false
 \paperorientation portrait
@@ -73,35 +73,33 @@
 \tocdepth 3
 \paragraph_separation indent
 \defskip medskip
-\quotes_language babel
+\quotes_language english
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
 \tracking_changes false
 \output_changes false
+\author "" 
+\author "" 
 \end_header
 
 \begin_body
 
 \begin_layout Title
-
 C3PO, a ray-tracing code for arbitrary axisymmetric magnetic equilibrium
 \end_layout
 
 \begin_layout Author
-
 Yves Peysson and Joan Decker 
 \end_layout
 
 \begin_layout Date
-
 09/01/2008
 \end_layout
 
 \begin_layout Standard
-
-
-\begin_inset LatexCommand \tableofcontents
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
 
 \end_inset
 
@@ -109,14 +107,21 @@ Yves Peysson and Joan Decker
 \end_layout
 
 \begin_layout Section
-
 Introduction
 \end_layout
 
 \begin_layout Standard
-
-In order to calculate power and current deposition from RF waves in plasmas, it is necessary to determine the wave characteristics inside the plasma. In a quasi-stationary plasma where the equilibrium varies on a scale that is much larger than the wavelength, it is possible to calculate the wave propagation from antenna or mirror conditions and equilibrium properties using the ray-tracing techniques. This method has been used extensively for calculating lower-hybrid and electron cyclotron wave propagation 
-\begin_inset LatexCommand \citet{bon84,biz93,pey96,imb05}
+In order to calculate power and current deposition from RF waves in plasmas,
+ it is necessary to determine the wave characteristics inside the plasma.
+ In a quasi-stationary plasma where the equilibrium varies on a scale that
+ is much larger than the wavelength, it is possible to calculate the wave
+ propagation from antenna or mirror conditions and equilibrium properties
+ using the ray-tracing techniques.
+ This method has been used extensively for calculating lower-hybrid and
+ electron cyclotron wave propagation 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "bon84,biz93,pey96,imb05"
 
 \end_inset
 
@@ -124,21 +129,29 @@ In order to calculate power and current deposition from RF waves in plasmas, it 
 \end_layout
 
 \begin_layout Standard
-
-Many ray tracing codes in axisymmetric toroidal plasmas use the toroidal coordinates 
+Many ray tracing codes in axisymmetric toroidal plasmas use the toroidal
+ coordinates 
 \begin_inset Formula $(R,Z,\phi)$
 \end_inset
 
- which are attractive because of the simplicity of implementing the equations in this system 
-\begin_inset LatexCommand \citet{mat89,smi95,smi03,imb05}
+ which are attractive because of the simplicity of implementing the equations
+ in this system 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "mat89,smi95,smi03,imb05"
 
 \end_inset
 
-. In this work we use the flux coordinates 
+.
+ In this work we use the flux coordinates 
 \begin_inset Formula $(\rho,\theta,\phi)$
 \end_inset
 
- instead. While the equations in this system require somewhat more complicated metric coefficients, there are several advantages to this choice: first, any equilibrium property that is a flux function, such as the density and temperature - or more generally the distribution function -, depends upon 
+ instead.
+ While the equations in this system require somewhat more complicated metric
+ coefficients, there are several advantages to this choice: first, any equilibri
+um property that is a flux function, such as the density and temperature
+ - or more generally the distribution function -, depends upon 
 \begin_inset Formula $\rho$
 \end_inset
 
@@ -146,42 +159,59 @@ Many ray tracing codes in axisymmetric toroidal plasmas use the toroidal coordin
 \begin_inset Formula $\theta$
 \end_inset
 
- allows the use of Fourier series that are particularly useful for accurate interpolation and the calculation of derivatives up to second order; third, this system is used by a variety of codes that are coupled to the ray-tracing solver, such as equilibrium codes (HELENA) and Fokker-Planck solvers (LUKE) 
-\begin_inset LatexCommand \citet{huy91,dec04a}
+ allows the use of Fourier series that are particularly useful for accurate
+ interpolation and the calculation of derivatives up to second order; third,
+ this system is used by a variety of codes that are coupled to the ray-tracing
+ solver, such as equilibrium codes (HELENA) and Fokker-Planck solvers (LUKE)
+ 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "huy91,dec04a"
 
 \end_inset
 
-. Using the same system in the ray-tracing code saves any coordinates conversions and grid interpolations which introduce numerical errors.
+.
+ Using the same system in the ray-tracing code saves any coordinates conversions
+ and grid interpolations which introduce numerical errors.
 \end_layout
 
 \begin_layout Standard
-
-The new ray-tracing code developed here is designed for arbitrary wave frequencies (including the lower hybrid and electron cyclotron frequency ranges), provided the WKB approximation is valid. The structure of the code allows to choose from several dielectric tensor types: cold plasma, "warm" plasma 
-\begin_inset LatexCommand \citet{bon86}
+The new ray-tracing code developed here is designed for arbitrary wave frequenci
+es (including the lower hybrid and electron cyclotron frequency ranges),
+ provided the WKB approximation is valid.
+ The structure of the code allows to choose from several dielectric tensor
+ types: cold plasma, "warm" plasma 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "bon86"
 
 \end_inset
 
-, and kinetic plasma in the non-, weakly-, or fully relativistic regime. In addition to ray trajectories, the code calculates waves properties of interest for heating and current drive calculations such as the polarization, energy flow and linear absorption.
+, and kinetic plasma in the non-, weakly-, or fully relativistic regime.
+ In addition to ray trajectories, the code calculates waves properties of
+ interest for heating and current drive calculations such as the polarization,
+ energy flow and linear absorption.
 \end_layout
 
 \begin_layout Standard
-
 Based on a standard 
 \begin_inset Formula $6^{th}$
 \end_inset
 
  order Runge-Kutta differential scheme 
-\begin_inset LatexCommand \citet{pre92}
+\begin_inset CommandInset citation
+LatexCommand citet
+key "pre92"
 
 \end_inset
 
-, the ray-tracing code uses a spline-Fourier expansion for equilibrium interpolation, which results in fast yet accurate calculations. The code is distributed as a mexfile
+, the ray-tracing code uses a spline-Fourier expansion for equilibrium interpola
+tion, which results in fast yet accurate calculations.
+ The code is distributed as a mexfile
 \begin_inset Foot
 status collapsed
 
-
-\begin_layout Standard
-
+\begin_layout Plain Layout
 The code runs in the MatLab 7 programming environment.
 \end_layout
 
@@ -191,53 +221,83 @@ The code runs in the MatLab 7 programming environment.
 \begin_inset Formula $C$
 \end_inset
 
- language. It is benchmarked extensively for various types of waves against both existing codes and analytical models. In Sec.
-\begin_inset LatexCommand \ref{sec:Linear-wave-theory}
+ language.
+ It is benchmarked extensively for various types of waves against both existing
+ codes and analytical models.
+ In Sec.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Linear-wave-theory"
 
 \end_inset
 
-, the linear wave theory in an infinite uniform medium is presented. Ray-tracing in slowly varying plasma is derived in Sec.
-\begin_inset LatexCommand \ref{sec:Ray-tracing-in}
+, the linear wave theory in an infinite uniform medium is presented.
+ Ray-tracing in slowly varying plasma is derived in Sec.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Ray-tracing-in"
 
 \end_inset
 
-. The curvilinear canonical flux coordinates in an axisymmetric toroidal plasma are introduced in Sec.
-\begin_inset LatexCommand \ref{sec:Canonical-coordinates-in}
+.
+ The curvilinear canonical flux coordinates in an axisymmetric toroidal
+ plasma are introduced in Sec.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Canonical-coordinates-in"
 
 \end_inset
 
-. In Sec.
-\begin_inset LatexCommand \ref{sec:Numerical-algorithms}
+.
+ In Sec.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Numerical-algorithms"
 
 \end_inset
 
- numerical methods are presented. A conclusion is given in Sec.
-\begin_inset LatexCommand \ref{sec:Conclusion}
+ numerical methods are presented.
+ A conclusion is given in Sec.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Conclusion"
 
 \end_inset
 
-. The Appendix includes some properties of the coordinate system (
-\begin_inset LatexCommand \ref{sec:Explicit-expressions}
+.
+ The Appendix includes some properties of the coordinate system (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Explicit-expressions"
 
 \end_inset
 
-), explicit expressions for the dispersion relations and some derivatives (
-\begin_inset LatexCommand \ref{sec:Various-properties-of}
+), explicit expressions for the dispersion relations and some derivatives
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Various-properties-of"
 
 \end_inset
 
 ), the cold and hot plasma dielectric tensors (
-\begin_inset LatexCommand \ref{sec:Susceptibility-tensor-and}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Susceptibility-tensor-and"
 
 \end_inset
 
 ,
-\begin_inset LatexCommand \ref{sec:Kinetic-plasma-model}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Kinetic-plasma-model"
 
 \end_inset
 
 ), and the benchmarking results (
-\begin_inset LatexCommand \ref{sec:Benchmarking-of-C3PO}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Benchmarking-of-C3PO"
 
 \end_inset
 
@@ -245,9 +305,9 @@ The code runs in the MatLab 7 programming environment.
 \end_layout
 
 \begin_layout Section
-
-
-\begin_inset LatexCommand \label{sec:Linear-wave-theory}
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Linear-wave-theory"
 
 \end_inset
 
@@ -255,19 +315,19 @@ Linear wave theory in an infinite uniform plasma
 \end_layout
 
 \begin_layout Subsection
-
 Maxwell's equations
 \end_layout
 
 \begin_layout Standard
-
-Electromagnetic fields are generated by charge and current densities according to Maxwell's equations
+Electromagnetic fields are generated by charge and current densities according
+ to Maxwell's equations
 \begin_inset Formula \begin{equation}
 \begin{array}{l}
 \mathbf{\nabla}\cdot\mathbf{E}=\dfrac{\rho}{\varepsilon_{0}}\\
 \mathbf{\nabla}\cdot\mathbf{B}=0\\
 \mathbf{\nabla}\times\mathbf{E}=-\dfrac{\partial\mathbf{B}}{\partial t}\\
 \mathbf{\nabla}\times\mathbf{B}=\mu_{0}\mathbf{J}+\varepsilon_{0}\mu_{0}\dfrac{\partial\mathbf{E}}{\partial t}\end{array}\label{maxwell}\end{equation}
+
 \end_inset
 
  where 
@@ -286,7 +346,8 @@ Electromagnetic fields are generated by charge and current densities according t
 \begin_inset Formula $\mathbf{J}\left(\mathbf{X},t\right)$
 \end_inset
 
- are the charge and current densities. Here, 
+ are the charge and current densities.
+ Here, 
 \begin_inset Formula $\mathbf{X}$
 \end_inset
 
@@ -294,7 +355,9 @@ Electromagnetic fields are generated by charge and current densities according t
 \begin_inset Formula $t$
 \end_inset
 
- is the time. The continuity equation - or charge conservation - relating the charge density 
+ is the time.
+ The continuity equation - or charge conservation - relating the charge
+ density 
 \begin_inset Formula $\rho\left(\mathbf{X},t\right)$
 \end_inset
 
@@ -303,31 +366,35 @@ Electromagnetic fields are generated by charge and current densities according t
 \end_inset
 
  is obtained from (
-\begin_inset LatexCommand \ref{maxwell}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "maxwell"
 
 \end_inset
 
 ) 
 \begin_inset Formula \begin{equation}
 \frac{\partial\rho}{\partial t}+\mathbf{\nabla}\cdot\mathbf{J}=0\label{continuity}\end{equation}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Subsection
-
 Constitutive relation
 \end_layout
 
 \begin_layout Standard
-
 Maxwell equations (
-\begin_inset LatexCommand \ref{maxwell}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "maxwell"
 
 \end_inset
 
-) are a closed system only if the charge and the current densities are known. In a plasma 
+) are a closed system only if the charge and the current densities are known.
+ In a plasma 
 \begin_inset Formula $\rho\left(\mathbf{X},t\right)$
 \end_inset
 
@@ -343,7 +410,8 @@ Maxwell equations (
 \begin_inset Formula $\mathbf{B}\left(\mathbf{X},t\right)$
 \end_inset
 
-. The expression of 
+.
+ The expression of 
 \begin_inset Formula $\mathbf{J}\left(\mathbf{X},t\right)$
 \end_inset
 
@@ -351,9 +419,11 @@ Maxwell equations (
 \begin_inset Formula $\mathbf{E}\left(\mathbf{X},t\right)$
 \end_inset
 
- is called the constitutive relation. For linearized fields, this relation can be expressed in general as
+ is called the constitutive relation.
+ For linearized fields, this relation can be expressed in general as
 \begin_inset Formula \begin{equation}
-\mathbf{J}\left(\mathbf{X},t\right)={\iiint}d^{3}\mathbf{X}^{\prime}\int dt^{\prime}\;\mathbb{S}\left(\mathbf{X},\mathbf{X}^{\prime},t,t^{\prime}\right)\cdot\mathbf{E}\left(\mathbf{X}^{\prime},t^{\prime}\right)\label{constitutive}\end{equation}
+\mathbf{J}\left(\mathbf{X},t\right)=\iiint d^{3}\mathbf{X}^{\prime}\int dt^{\prime}\;\mathbb{S}\left(\mathbf{X},\mathbf{X}^{\prime},t,t^{\prime}\right)\cdot\mathbf{E}\left(\mathbf{X}^{\prime},t^{\prime}\right)\label{constitutive}\end{equation}
+
 \end_inset
 
  where 
@@ -364,20 +434,24 @@ Maxwell equations (
 \end_layout
 
 \begin_layout Subsection
-
 Fourier transform
 \end_layout
 
 \begin_layout Standard
-
-In a infinite plasma with an homogeneous constant equilibrium that is invariant by translation in space and time, the conductivity tensor is only a function of the relative distance in space and time, and Eq. 
-\begin_inset LatexCommand \ref{constitutive}
+In a infinite plasma with an homogeneous constant equilibrium that is invariant
+ by translation in space and time, the conductivity tensor is only a function
+ of the relative distance in space and time, and Eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "constitutive"
 
 \end_inset
 
  may be rewritten as a convolution
 \begin_inset Formula \begin{equation}
-\mathbf{J}\left(\mathbf{X},t\right)={\iiint}d^{3}\mathbf{X}^{\prime}\int dt^{\prime}\;\mathbb{S}\left(\mathbf{X}-\mathbf{X}^{\prime},t-t^{\prime}\right)\cdot\mathbf{E}\left(\mathbf{X}^{\prime},t^{\prime}\right)\label{constitutive2}\end{equation}
+\mathbf{J}\left(\mathbf{X},t\right)=\iiint d^{3}\mathbf{X}^{\prime}\int dt^{\prime}\;\mathbb{S}\left(\mathbf{X}-\mathbf{X}^{\prime},t-t^{\prime}\right)\cdot\mathbf{E}\left(\mathbf{X}^{\prime},t^{\prime}\right)\label{constitutive2}\end{equation}
+
 \end_inset
 
  Applying the Fourier transform to the fields yields
@@ -385,6 +459,7 @@ In a infinite plasma with an homogeneous constant equilibrium that is invariant 
 \begin{array}{l}
 \mathbf{E}\left(\mathbf{X},t\right)={\displaystyle \int}d\omega{\displaystyle \iiint}d^{3}\mathbf{k\; E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)e^{i\left(\mathbf{k}\cdot\mathbf{X}-\omega t\right)}\\
 \mathbf{J}\left(\mathbf{X},t\right)={\displaystyle \int}d\omega{\displaystyle \iiint}d^{3}\mathbf{k\; J}_{\mathbf{k}}\left(\mathbf{k},\omega\right)e^{i\left(\mathbf{k}\cdot\mathbf{X}-\omega t\right)}\end{array}\end{equation}
+
 \end_inset
 
  with the reverse relations
@@ -392,16 +467,20 @@ In a infinite plasma with an homogeneous constant equilibrium that is invariant 
 \begin{array}{l}
 \mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)=\dfrac{1}{\left(2\pi\right)^{4}}{\displaystyle \iiint}d^{3}\mathbf{X}{\displaystyle \int}dt\;\mathbf{E}\left(\mathbf{X},t\right)e^{-i\left(\mathbf{k}\cdot\mathbf{X}-\omega t\right)}\\
 \mathbf{J}_{\mathbf{k}}\left(\mathbf{k},\omega\right)=\dfrac{1}{\left(2\pi\right)^{4}}{\displaystyle \iiint}d^{3}\mathbf{X}{\displaystyle \int}dt\;\mathbf{J}\left(\mathbf{X},t\right)e^{-i\left(\mathbf{k}\cdot\mathbf{X}-\omega t\right)}\end{array}\end{equation}
+
 \end_inset
 
  such that (
-\begin_inset LatexCommand \ref{constitutive2}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "constitutive2"
 
 \end_inset
 
 ) becomes 
 \begin_inset Formula \begin{equation}
 \mathbf{J}_{\mathbf{k}}\left(\mathbf{k},\omega\right)=\mathbb{S}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\label{constitutivefourier}\end{equation}
+
 \end_inset
 
  Similarly, applying the Fourier transform to the Maxwell's equations gives
@@ -411,41 +490,47 @@ i\mathbf{k}\cdot\mathbf{E}_{\mathbf{k}}=\dfrac{\rho_{\mathbf{k}}}{\varepsilon_{0
 i\mathbf{k}\cdot\mathbf{B}_{\mathbf{k}}=0\\
 i\mathbf{k}\times\mathbf{E}_{\mathbf{k}}=i\omega\mathbf{B}_{\mathbf{k}}\\
 i\mathbf{k}\times\mathbf{B}_{\mathbf{k}}=\mu_{0}\mathbf{J}_{\mathbf{k}}-\varepsilon_{0}\mu_{0}i\omega\mathbf{E}_{\mathbf{k}}\end{array}\label{maxwell2}\end{equation}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Subsection
-
 Linear wave equation
 \end_layout
 
 \begin_layout Standard
-
 Combining the last two equations in (
-\begin_inset LatexCommand \ref{maxwell2}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "maxwell2"
 
 \end_inset
 
 ) with (
-\begin_inset LatexCommand \ref{constitutivefourier}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "constitutivefourier"
 
 \end_inset
 
 ) leads to the linear wave equation
 \begin_inset Formula \begin{equation}
 \mathbf{k}\times\mathbf{k}\times\mathbf{E}_{\mathbf{k}}+\frac{\omega^{2}}{c^{2}}\mathbb{K}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}=0\end{equation}
+
 \end_inset
 
  where 
 \begin_inset Formula \begin{equation}
 \mathbb{K}\left(\mathbf{k},\omega\right)=\mathbb{I}+\mathbb{X}\left(\mathbf{k},\omega\right)\label{permittivity}\end{equation}
+
 \end_inset
 
  is the permittivity tensor, 
 \begin_inset Formula \begin{equation}
 \mathbb{X}\left(\mathbf{k},\omega\right)=\frac{i}{\varepsilon_{0}\omega}\mathbb{S}\left(\mathbf{k},\omega\right)\label{susceptibility}\end{equation}
+
 \end_inset
 
  is the susceptibility tensor and 
@@ -456,20 +541,22 @@ Combining the last two equations in (
 \end_layout
 
 \begin_layout Standard
-
 Introducing the index of refraction
 \begin_inset Formula \begin{equation}
 \mathbf{N}\equiv\frac{c}{\omega}\mathbf{k}\label{indexrefraction}\end{equation}
+
 \end_inset
 
  the wave equation becomes
 \begin_inset Formula \begin{equation}
 \mathbf{N}\times\mathbf{N}\times\mathbf{E}_{\mathbf{k}}+\mathbb{K}\left(\mathbf{N},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}=0\end{equation}
+
 \end_inset
 
  or equivalently
 \begin_inset Formula \begin{equation}
 \mathbb{D}\cdot\mathbf{E}_{\mathbf{k}}=0\label{maxwellwaveeq1}\end{equation}
+
 \end_inset
 
  where 
@@ -479,15 +566,18 @@ Introducing the index of refraction
  
 \begin_inset Formula \begin{equation}
 \mathbb{D}=\mathbf{NN}-N^{2}\mathbb{I}+\mathbb{K}\left(\mathbf{N},\omega\right)\label{Maxwelltensor}\end{equation}
+
 \end_inset
 
- is the dispersion tensor. The susceptibility 
+ is the dispersion tensor.
+ The susceptibility 
 \begin_inset Formula $\mathbb{X}$
 \end_inset
 
  is the sum of contributions from all species
 \begin_inset Formula \begin{equation}
 \mathbb{X}=\sum_{s}\mathbb{X}^{s}\end{equation}
+
 \end_inset
 
  In the case where the distribution function of the species 
@@ -498,7 +588,8 @@ Introducing the index of refraction
 \begin_inset Formula $\mathbb{X}^{s}$
 \end_inset
 
- depends upon the following non-dimensional parameters : the refractive index 
+ depends upon the following non-dimensional parameters : the refractive
+ index 
 \begin_inset Formula $\mathbf{N}$
 \end_inset
 
@@ -530,32 +621,39 @@ Introducing the index of refraction
 \begin_inset Formula $\omega$
 \end_inset
 
-. Therefore the dispersion tensor may be expressed in the general form
+.
+ Therefore the dispersion tensor may be expressed in the general form
 \begin_inset Formula \begin{equation}
 \mathbb{D=}\mathbf{NN-N}^{2}\mathbb{I}+\mathbb{K}\left(\mathbf{N},\beta_{Ts},\overline{\omega}_{ps},\overline{\omega}_{cs}\right)\end{equation}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Subsection
-
 Dispersion relation
 \end_layout
 
 \begin_layout Standard
-
-In order to obtain non-trivial solutions to the Eq. 
-\begin_inset LatexCommand \ref{maxwellwaveeq1}
+In order to obtain non-trivial solutions to the Eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "maxwellwaveeq1"
 
 \end_inset
 
 , the determinant of the dispersion tensor must be zero, 
 \begin_inset Formula \begin{equation}
 \mathcal{D}\left(\mathbf{N},\beta_{Ts},\overline{\omega}_{ps},\overline{\omega}_{cs}\right)\equiv\det\mathbb{D}\left(\mathbf{N},\beta_{Ts},\overline{\omega}_{ps},\overline{\omega}_{cs}\right)=0\label{disprel}\end{equation}
+
 \end_inset
 
- which defines the dispersion relation. This relation gives the local electromagnetic eigenmodes that can be excited independently in the homogenous plasma. By cylindrical symmetry about the direction of the magnetic field 
+ which defines the dispersion relation.
+ This relation gives the local electromagnetic eigenmodes that can be excited
+ independently in the homogenous plasma.
+ By cylindrical symmetry about the direction of the magnetic field 
 \begin_inset Formula $\mathbf{\hat{b}}=\mathbf{B}_{0}/B_{0}$
 \end_inset
 
@@ -567,7 +665,8 @@ In order to obtain non-trivial solutions to the Eq.
 \begin_inset Formula $\mathbf{N}$
 \end_inset
 
- parallel and perpendicular to the magnetic field, defined respectively as 
+ parallel and perpendicular to the magnetic field, defined respectively
+ as 
 \begin_inset Formula $N_{\Vert}=\mathbf{N}\cdot\mathbf{\hat{b}}$
 \end_inset
 
@@ -575,8 +674,11 @@ In order to obtain non-trivial solutions to the Eq.
 \begin_inset Formula $N_{\bot}=\left\Vert \mathbf{N}\times\mathbf{\hat{b}}\right\Vert $
 \end_inset
 
-. Thus, the dispersion relation (
-\begin_inset LatexCommand \ref{disprel}
+.
+ Thus, the dispersion relation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "disprel"
 
 \end_inset
 
@@ -592,13 +694,18 @@ In order to obtain non-trivial solutions to the Eq.
 \begin_inset Formula $N_{\bot}\left(\omega,N_{\Vert}\right)$
 \end_inset
 
-. The polarization of any eigenmode resulting from equation (
-\begin_inset LatexCommand \ref{disprel}
+.
+ The polarization of any eigenmode resulting from equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "disprel"
 
 \end_inset
 
 ) is determined by the corresponding eigenvector of the wave equation (
-\begin_inset LatexCommand \ref{maxwellwaveeq1}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "maxwellwaveeq1"
 
 \end_inset
 
@@ -606,17 +713,14 @@ In order to obtain non-trivial solutions to the Eq.
 \end_layout
 
 \begin_layout Standard
-
 Explicit expressions of the dispersion relation are given in Appendix A1.
 \end_layout
 
 \begin_layout Subsection
-
 Weak damping approximation
 \end_layout
 
 \begin_layout Standard
-
 Assuming that 
 \begin_inset Formula $\omega$
 \end_inset
@@ -626,7 +730,9 @@ Assuming that
 \end_inset
 
  are given real quantities, (
-\begin_inset LatexCommand \ref{disprel}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "disprel"
 
 \end_inset
 
@@ -634,7 +740,8 @@ Assuming that
 \begin_inset Formula $N_{\bot}=N_{\bot r}+iN_{\bot i}$
 \end_inset
 
-. Meanwhile, the dispersion tensor 
+.
+ Meanwhile, the dispersion tensor 
 \begin_inset Formula $\mathbb{D}$
 \end_inset
 
@@ -654,14 +761,20 @@ Assuming that
 \begin_inset Formula $\mathbb{D}$
 \end_inset
 
-, respectively. In this work, the weak damping approximation is considered, which is valid if 
+, respectively.
+ In this work, the weak damping approximation is considered, which is valid
+ if 
 \begin_inset Formula $|D_{ij}^{\text{A}}|\ll|D_{ij}^{\text{H}}|$
 \end_inset
 
 .
-\begin_inset InsetSpace \space{}
+\begin_inset space \space{}
+\end_inset
+
 In that case, it can be shown 
-\begin_inset LatexCommand \citet{dec06}
+\begin_inset CommandInset citation
+LatexCommand citet
+key "dec06"
 
 \end_inset
 
@@ -676,11 +789,13 @@ In that case, it can be shown
  can be determined from solving the approximate wave equation
 \begin_inset Formula \begin{equation}
 \mathbb{D}^{\text{H}}\left(N_{\bot r}\right)\cdot\mathbf{E}_{\mathbf{k}}=0\label{maxwellwaveeq2}\end{equation}
+
 \end_inset
 
  with dispersion relation
 \begin_inset Formula \begin{equation}
 \mathcal{D}^{\text{H}}\left(N_{\Vert},N_{\bot r},\beta_{Ts},\overline{\omega}_{ps},\overline{\omega}_{cs}\right)\equiv\det\mathbb{D}^{\text{H}}\left(N_{\Vert},N_{\bot r},\beta_{Ts},\overline{\omega}_{ps},\overline{\omega}_{cs}\right)=0\label{disprel3}\end{equation}
+
 \end_inset
 
  In this approximation, the time-averaged densities of energy flow 
@@ -696,14 +811,17 @@ In that case, it can be shown
 \begin{array}{l}
 \mathbf{S}=-\dfrac{\varepsilon_{0}c}{4}\dfrac{\partial}{\partial\mathbf{N}}\left(\mathbf{E}_{\mathbf{k}}^{\ast}\cdot\mathbb{D}^{\text{H}}\cdot\mathbf{E}_{\mathbf{k}}\right)\\
 \\P=\dfrac{\varepsilon_{0}\omega}{2}\mathbf{E}_{\mathbf{k}}^{\ast}\cdot\mathbb{D}^{\text{A}}\cdot\mathbf{E}_{\mathbf{k}}\end{array}\end{equation}
+
 \end_inset
 
  Note that the imaginary part of the wave vector can be calculated using
 \begin_inset Formula \begin{equation}
 N_{\bot i}=\dfrac{c}{2\omega}\dfrac{P}{S_{\bot}}\end{equation}
+
 \end_inset
 
- which yields the ray damping. From here on in this paper, 
+ which yields the ray damping.
+ From here on in this paper, 
 \begin_inset Formula $\mathbf{k}$
 \end_inset
 
@@ -712,7 +830,9 @@ N_{\bot i}=\dfrac{c}{2\omega}\dfrac{P}{S_{\bot}}\end{equation}
 \end_inset
 
  will refer to the zero-order, real solution of (
-\begin_inset LatexCommand \ref{disprel3}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "disprel3"
 
 \end_inset
 
@@ -728,9 +848,9 @@ N_{\bot i}=\dfrac{c}{2\omega}\dfrac{P}{S_{\bot}}\end{equation}
 \end_layout
 
 \begin_layout Section
-
-
-\begin_inset LatexCommand \label{sec:Ray-tracing-in}
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Ray-tracing-in"
 
 \end_inset
 
@@ -738,33 +858,38 @@ Ray tracing in a slowly varying plasma
 \end_layout
 
 \begin_layout Subsection
-
 WKB Approximation
 \end_layout
 
 \begin_layout Standard
-
 In a slightly nonuniform plasma where 
 \begin_inset Formula \begin{equation}
 \left\Vert \mathbf{k}\right\Vert \gg\dfrac{\left\Vert \mathbf{\nabla}\beta_{Ts}\right\Vert }{\beta_{Ts}},\dfrac{\left\Vert \mathbf{\nabla}\overline{\omega}_{ps}\right\Vert }{\overline{\omega}_{ps}},\dfrac{\left\Vert \mathbf{\nabla}\overline{\omega}_{cs}\right\Vert }{\left\vert \overline{\omega}_{cs}\right\vert }\end{equation}
+
 \end_inset
 
  and the wave characteristics also vary slowly 
 \begin_inset Formula \begin{equation}
 \left\Vert \mathbf{k}\right\Vert ^{2}\gg\left\Vert \mathbf{\nabla}k\right\Vert \end{equation}
+
 \end_inset
 
  the wave equation (
-\begin_inset LatexCommand \ref{maxwellwaveeq2}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "maxwellwaveeq2"
 
 \end_inset
 
 ) and dispersion relation (
-\begin_inset LatexCommand \ref{disprel3}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "disprel3"
 
 \end_inset
 
-) are still be satisfied locally, under the WKB approximation. The wave vector 
+) are still be satisfied locally, under the WKB approximation.
+ The wave vector 
 \begin_inset Formula $\mathbf{k}$
 \end_inset
 
@@ -776,14 +901,15 @@ In a slightly nonuniform plasma where
 \end_layout
 
 \begin_layout Subsection
-
 Ray equations
 \end_layout
 
 \begin_layout Standard
-
-Ray equations in a plasma slowly varying in space and time are defined by the condition (
-\begin_inset LatexCommand \ref{disprel3}
+Ray equations in a plasma slowly varying in space and time are defined by
+ the condition (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "disprel3"
 
 \end_inset
 
@@ -791,23 +917,30 @@ Ray equations in a plasma slowly varying in space and time are defined by the co
 \begin_inset Formula $\mathcal{D}\left(\mathbf{X},t,\mathbf{k,}\omega\right)=0$
 \end_inset
 
- along the ray trajectory. Therefore, at all points along the ray trajectory, the condition 
+ along the ray trajectory.
+ Therefore, at all points along the ray trajectory, the condition 
 \begin_inset Formula \begin{equation}
 \delta\mathcal{D}=\frac{\partial\mathcal{D}}{\partial\mathbf{X}}\cdot\delta\mathbf{X}+\frac{\partial\mathcal{D}}{\partial t}\delta t+\frac{\partial\mathcal{D}}{\partial\mathbf{k}}\cdot\delta\mathbf{k+}\frac{\partial\mathcal{D}}{\partial\omega}\delta\omega=0\label{deltaD}\end{equation}
+
 \end_inset
 
- must be satisfied. Let define 
+ must be satisfied.
+ Let define 
 \begin_inset Formula $\tau$
 \end_inset
 
- a dimensionless parameter, which is a measure of distance along the trajectory. Then (
-\begin_inset LatexCommand \ref{deltaD}
+ a dimensionless parameter, which is a measure of distance along the trajectory.
+ Then (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "deltaD"
 
 \end_inset
 
 ) can be rewritten as 
 \begin_inset Formula \begin{equation}
 \delta\mathcal{D}=\frac{\partial\mathcal{D}}{\partial\mathbf{X}}\cdot\mathbf{\dot{X}}\delta\tau+\frac{\partial\mathcal{D}}{\partial t}\dot{t}\delta\tau\mathbf{+}\frac{\partial\mathcal{D}}{\partial\mathbf{k}}\cdot\mathbf{\dot{k}}\delta\tau\mathbf{+}\frac{\partial\mathcal{D}}{\partial\omega}\dot{\omega}\delta\tau=0\label{deltaD2}\end{equation}
+
 \end_inset
 
  where 
@@ -830,13 +963,15 @@ Ray equations in a plasma slowly varying in space and time are defined by the co
 \begin_inset Formula $\mathbf{k}$
 \end_inset
 
- is expressed in coordinates that are canonically conjugate to those of the position vector 
+ is expressed in coordinates that are canonically conjugate to those of
+ the position vector 
 \begin_inset Formula $\mathbf{X}$
 \end_inset
 
 
 \begin_inset Formula \begin{equation}
 \left\{ X_{i},k_{j}\right\} =\delta_{ij}\end{equation}
+
 \end_inset
 
  where 
@@ -863,7 +998,8 @@ Ray equations in a plasma slowly varying in space and time are defined by the co
 \begin_inset Formula $\mathbf{k}$
 \end_inset
 
- respectively. The frequency 
+ respectively.
+ The frequency 
 \begin_inset Formula $\omega$
 \end_inset
 
@@ -878,20 +1014,27 @@ Ray equations in a plasma slowly varying in space and time are defined by the co
 \\\dfrac{d\mathbf{k}}{d\tau}=-\dfrac{\partial\mathcal{D}}{\partial\mathbf{X}}\\
 \\\dfrac{dt}{d\tau}=-\dfrac{\partial\mathcal{D}}{\partial\omega}\\
 \\\dfrac{d\omega}{d\tau}=\dfrac{\partial\mathcal{D}}{\partial t}\end{array}\end{equation}
+
 \end_inset
 
  result from the Hamiltonian nature of 
 \begin_inset Formula $\mathcal{D}$
 \end_inset
 
-, and Eq. 
-\begin_inset LatexCommand \ref{deltaD2}
+, and Eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "deltaD2"
 
 \end_inset
 
- is automatically satisfied. These four equations are therefore the ray equations. From the first and the third equations, 
+ is automatically satisfied.
+ These four equations are therefore the ray equations.
+ From the first and the third equations, 
 \begin_inset Formula \begin{equation}
 \frac{d\mathbf{X}}{dt}=\frac{\partial\mathcal{D}}{\partial\mathbf{k}}/\frac{\partial\mathcal{D}}{\partial\omega}=\frac{\partial\omega}{\partial\mathbf{k}}=\mathbf{v}_{g}\end{equation}
+
 \end_inset
 
  meaning that the ray is directed along the group velocity 
@@ -903,11 +1046,14 @@ Ray equations in a plasma slowly varying in space and time are defined by the co
 \end_inset
 
  
-\begin_inset LatexCommand \citet{bra98}
+\begin_inset CommandInset citation
+LatexCommand citet
+key "bra98"
 
 \end_inset
 
-. In a constant plasma 
+.
+ In a constant plasma 
 \begin_inset Formula $\partial\mathcal{D}/\partial t=0$
 \end_inset
 
@@ -915,33 +1061,38 @@ Ray equations in a plasma slowly varying in space and time are defined by the co
 \begin_inset Formula $\omega$
 \end_inset
 
- is a constant of the ray dynamics. The time 
+ is a constant of the ray dynamics.
+ The time 
 \begin_inset Formula $t$
 \end_inset
 
- is considered as the evolution parameter of the ray and the two remaining equations are 
+ is considered as the evolution parameter of the ray and the two remaining
+ equations are 
 \begin_inset Formula \begin{equation}
 \begin{array}{l}
 \dfrac{d\mathbf{X}}{dt}=-\dfrac{\partial\mathcal{D}}{\partial\mathbf{k}}/\dfrac{\partial\mathcal{D}}{\partial\omega}\\
 \\\dfrac{d\mathbf{k}}{dt}=\dfrac{\partial\mathcal{D}}{\partial\mathbf{X}}/\dfrac{\partial\mathcal{D}}{\partial\omega}\end{array}\label{rayeq1}\end{equation}
+
 \end_inset
 
- which are the usual forms found in the literature. However, one may also keep the simple form
+ which are the usual forms found in the literature.
+ However, one may also keep the simple form
 \begin_inset Formula \begin{equation}
 \begin{array}{l}
 \dfrac{d\mathbf{X}}{d\tau}=\dfrac{\partial\mathcal{D}}{\partial\mathbf{k}}\\
 \\\dfrac{d\mathbf{k}}{d\tau}=-\dfrac{\partial\mathcal{D}}{\partial\mathbf{X}}\end{array}\label{rayeq2}\end{equation}
+
 \end_inset
 
  if the determination of the group velocity from 
 \begin_inset Formula $\partial\mathcal{D}/\partial\omega$
 \end_inset
 
- is not required. This reduces the number of derivative to calculate.
+ is not required.
+ This reduces the number of derivative to calculate.
 \end_layout
 
 \begin_layout Standard
-
 We define 
 \begin_inset Formula $\mathbf{Y}$
 \end_inset
@@ -953,20 +1104,27 @@ We define
 \mathbf{k}\\
 t\\
 \omega\end{array}\right)\end{equation}
+
 \end_inset
 
  The ray equations (
-\begin_inset LatexCommand \ref{rayeq1}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "rayeq1"
 
 \end_inset
 
 -
-\begin_inset LatexCommand \ref{rayeq2}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "rayeq2"
 
 \end_inset
 
 ) require to evaluate the derivatives of the dispersion relation (
-\begin_inset LatexCommand \ref{disprel3}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "disprel3"
 
 \end_inset
 
@@ -977,6 +1135,7 @@ t\\
 , explicitly
 \begin_inset Formula \begin{equation}
 \frac{\partial N_{\Vert}}{\partial\mathbf{Y}};\quad\frac{\partial N_{\bot}}{\partial\mathbf{Y}};\quad\frac{\partial X_{ij}^{s}}{\partial\mathbf{Y}}\end{equation}
+
 \end_inset
 
  Since 
@@ -987,9 +1146,12 @@ t\\
 \begin_inset Formula \begin{align}
 \frac{\partial X_{ij}^{s}}{\partial\mathbf{Y}} & =\frac{\partial X_{ij}^{s}}{\partial N_{\bot}}\frac{\partial N_{\bot}}{\partial\mathbf{Y}}+\frac{\partial X_{ij}^{s}}{\partial N_{\Vert}}\frac{\partial N_{\Vert}}{\partial\mathbf{Y}}\nonumber \\
  & +\frac{\partial X_{ij}^{s}}{\partial\beta_{Ts}}\frac{\partial\beta_{Ts}}{\partial\mathbf{Y}}+\frac{\partial X_{ij}^{s}}{\partial\overline{\omega}_{ps}}\frac{\partial\overline{\omega}_{ps}}{\partial\mathbf{Y}}+\frac{\partial X_{ij}^{s}}{\partial\overline{\omega}_{cs}}\frac{\partial\overline{\omega}_{cs}}{\partial\mathbf{Y}}\label{derivatives}\end{align}
+
 \end_inset
 
- In this equation the derivatives of the susceptibility tensor depend upon the plasma dispersion model (i.e. cold, kinetic, etc) while the derivatives with respect to 
+ In this equation the derivatives of the susceptibility tensor depend upon
+ the plasma dispersion model (i.e.
+ cold, kinetic, etc) while the derivatives with respect to 
 \begin_inset Formula $\mathbf{Y}$
 \end_inset
 
@@ -997,9 +1159,9 @@ t\\
 \end_layout
 
 \begin_layout Section
-
-
-\begin_inset LatexCommand \label{sec:Canonical-coordinates-in}
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Canonical-coordinates-in"
 
 \end_inset
 
@@ -1007,12 +1169,10 @@ Canonical coordinates in an axisymmetric toroidal plasma
 \end_layout
 
 \begin_layout Subsection
-
 Flux coordinate system
 \end_layout
 
 \begin_layout Standard
-
 In an axisymmetric toroidal plasma we define the coordinate system 
 \begin_inset Formula $\left(\rho,\theta,\phi\right)$
 \end_inset
@@ -1021,7 +1181,8 @@ In an axisymmetric toroidal plasma we define the coordinate system
 \begin_inset Formula $\theta$
 \end_inset
 
- is the poloidal angle measured counterclockwise from the horizontal outboard midplane, 
+ is the poloidal angle measured counterclockwise from the horizontal outboard
+ midplane, 
 \begin_inset Formula $\phi$
 \end_inset
 
@@ -1037,27 +1198,33 @@ In an axisymmetric toroidal plasma we define the coordinate system
 \begin_inset Formula $1$
 \end_inset
 
- at the plasma edge. The coordinate 
+ at the plasma edge.
+ The coordinate 
 \begin_inset Formula $\rho=\rho\left(\psi\right)$
 \end_inset
 
- must be a flux function, i.e. a monotonic function of the poloidal magnetic flux coordinate 
+ must be a flux function, i.e.
+ a monotonic function of the poloidal magnetic flux coordinate 
 \begin_inset Formula $\psi$
 \end_inset
 
  defined by the following expression of the magnetic field 
-\begin_inset LatexCommand \citet{dec04a}
+\begin_inset CommandInset citation
+LatexCommand citet
+key "dec04a"
 
 \end_inset
 
  
 \begin_inset Formula \begin{equation}
 \mathbf{B}=I\left(\psi\right)\mathbf{\nabla}\phi+\mathbf{\nabla}\phi\times\mathbf{\nabla}\psi\end{equation}
+
 \end_inset
 
  which can be rewritten as
 \begin_inset Formula \begin{equation}
-\mathbf{B}=\sigma_{B}B_{T}\mathbf{\hat{\phi}}+\sigma_{I}B_{P}\mathbf{\hat{s}}\end{equation}
+\mathbf{B}=\sigma_{B}B_{T}\mathbf{\hat{\phi}}+\sigma_{I}B_{P}\mathbf{\hat{s}}\label{eq:Bfield}\end{equation}
+
 \end_inset
 
  where 
@@ -1076,7 +1243,8 @@ In an axisymmetric toroidal plasma we define the coordinate system
 \begin_inset Formula $I_{\phi}$
 \end_inset
 
-. 
+.
+ 
 \begin_inset Formula $B_{T}=\left\vert I\left(\psi\right)\right\vert /R$
 \end_inset
 
@@ -1100,7 +1268,6 @@ In an axisymmetric toroidal plasma we define the coordinate system
 \end_layout
 
 \begin_layout Standard
-
 In the 
 \begin_inset Formula $\left(\rho,\theta,\phi\right)$
 \end_inset
@@ -1112,6 +1279,7 @@ In the
  are
 \begin_inset Formula \begin{equation}
 k_{i}=\left(k_{\rho},m,n\right)\end{equation}
+
 \end_inset
 
  The Poisson matrix of canonically conjugate 
@@ -1125,18 +1293,17 @@ k_{i}=\left(k_{\rho},m,n\right)\end{equation}
  is 
 \begin_inset Formula \begin{equation}
 \left\{ \mathbf{X},\mathbf{k}\right\} =\dfrac{\partial\mathbf{X}}{\partial\mathbf{X}}\cdot\dfrac{\partial\mathbf{k}}{\partial\mathbf{k}}-\dfrac{\partial\mathbf{X}}{\partial\mathbf{k}}\cdot\dfrac{\partial\mathbf{k}}{\partial\mathbf{X}}=\mathbb{I}\end{equation}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Subsection
-
 Ray equations
 \end_layout
 
 \begin_layout Standard
-
 In the canonically conjugate systems 
 \begin_inset Formula $\left(\rho,\theta,\phi\right)$
 \end_inset
@@ -1151,6 +1318,7 @@ In the canonically conjugate systems
 \dfrac{d\rho}{dt}=\dfrac{\partial\mathcal{D}}{\partial k_{\rho}}/\dfrac{\partial\mathcal{D}}{\partial\omega}\\
 \\\dfrac{d\theta}{dt}=\dfrac{\partial\mathcal{D}}{\partial m}/\dfrac{\partial\mathcal{D}}{\partial\omega}\\
 \\\dfrac{d\phi}{dt}=\dfrac{\partial\mathcal{D}}{\partial n}/\dfrac{\partial\mathcal{D}}{\partial\omega}\end{array}\label{h1}\end{equation}
+
 \end_inset
 
  and 
@@ -1159,13 +1327,13 @@ In the canonically conjugate systems
 \dfrac{dk_{\rho}}{dt}=-\dfrac{\partial\mathcal{D}}{\partial\rho}/\dfrac{\partial\mathcal{D}}{\partial\omega}\\
 \\\dfrac{dm}{dt}=-\dfrac{\partial\mathcal{D}}{\partial\theta}/\dfrac{\partial\mathcal{D}}{\partial\omega}\\
 \\\dfrac{dn}{dt}=-\dfrac{\partial\mathcal{D}}{\partial\phi}/\dfrac{\partial\mathcal{D}}{\partial\omega}\end{array}\label{h4}\end{equation}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-
 For an axisymmetric magnetic configuration, 
 \begin_inset Formula $\partial\mathcal{D}/\partial\phi=0$
 \end_inset
@@ -1174,7 +1342,9 @@ For an axisymmetric magnetic configuration,
 \begin_inset Formula $n$
 \end_inset
 
- is an invariant. Therefore, only the first five equations need to be solved. The value of 
+ is an invariant.
+ Therefore, only the first five equations need to be solved.
+ The value of 
 \begin_inset Formula $n$
 \end_inset
 
@@ -1182,15 +1352,14 @@ For an axisymmetric magnetic configuration,
 \end_layout
 
 \begin_layout Subsection
-
 Parallel index of refraction
 \end_layout
 
 \begin_layout Standard
-
 The parallel index of refraction is defined as
 \begin_inset Formula \begin{equation}
 k_{\Vert}=\dfrac{1}{B}\mathbf{k}\cdot\mathbf{B}=\dfrac{1}{B}k_{i}B^{j}\label{kparcalc}\end{equation}
+
 \end_inset
 
  Here 
@@ -1204,11 +1373,13 @@ k_{\Vert}=\dfrac{1}{B}\mathbf{k}\cdot\mathbf{B}=\dfrac{1}{B}k_{i}B^{j}\label{kpa
 , given by
 \begin_inset Formula \begin{equation}
 B^{j}=\mathbf{B}\cdot\mathbf{e}^{j}\end{equation}
+
 \end_inset
 
  where 
 \begin_inset Formula \begin{equation}
 \mathbf{e}^{j}=\left(\left\Vert \mathbf{\nabla}\rho\right\Vert \mathbf{\hat{\rho}},\dfrac{\mathbf{\hat{\theta}}}{r},\dfrac{\mathbf{\hat{\phi}}}{R}\right)\end{equation}
+
 \end_inset
 
  such that the contravariant coordinates of 
@@ -1218,6 +1389,7 @@ B^{j}=\mathbf{B}\cdot\mathbf{e}^{j}\end{equation}
  are 
 \begin_inset Formula \begin{equation}
 B^{j}=\left(0,\dfrac{\sigma_{I}B_{P}}{r}\cos\alpha,\dfrac{\sigma_{B}B_{T}}{R}\right)\end{equation}
+
 \end_inset
 
  where 
@@ -1239,6 +1411,7 @@ B^{j}=\left(0,\dfrac{\sigma_{I}B_{P}}{r}\cos\alpha,\dfrac{\sigma_{B}B_{T}}{R}\ri
 \mathbf{\hat{\rho}}\cdot\mathbf{\hat{\theta}}=-\sin\alpha\\
 \mathbf{\hat{s}}\cdot\mathbf{\hat{r}}=\sin\alpha\\
 \mathbf{\hat{s}}\cdot\mathbf{\hat{\theta}}=\cos\alpha\end{array}\end{equation}
+
 \end_inset
 
  Because 
@@ -1249,26 +1422,37 @@ B^{j}=\left(0,\dfrac{\sigma_{I}B_{P}}{r}\cos\alpha,\dfrac{\sigma_{B}B_{T}}{R}\ri
 \begin_inset Formula $-\pi/2<\alpha<\pi/2$
 \end_inset
 
-. Then (
-\begin_inset LatexCommand \ref{kparcalc}
+.
+ Then (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "kparcalc"
 
 \end_inset
 
 ) yields 
 \begin_inset Formula \begin{equation}
-\fbox{$k_{\Vert}=\sigma_{I}\cos\alpha\dfrac{B_{P}}{B}\dfrac{m}{r}+\sigma_{B}\dfrac{B_{T}}{B}\dfrac{n}{R}$}\label{kpar}\end{equation}
+\fbox{$k_{\Vert}=\sigma_{I}\cos\alpha P\dfrac{m}{r}+\sigma_{B}T\dfrac{n}{R}$}\label{kpar}\end{equation}
+
 \end_inset
 
+where 
+\begin_inset Formula $P=\dfrac{B_{P}}{B}$
+\end_inset
 
+ and 
+\begin_inset Formula $T=\dfrac{B_{T}}{B}$
+\end_inset
+
+.
+ 
 \end_layout
 
 \begin_layout Subsection
-
 Perpendicular index of refraction
 \end_layout
 
 \begin_layout Standard
-
 The squared norm of 
 \begin_inset Formula $\mathbf{k}$
 \end_inset
@@ -1276,11 +1460,13 @@ The squared norm of
  is given by
 \begin_inset Formula \begin{equation}
 k^{2}=g^{ij}k_{i}k_{j}\end{equation}
+
 \end_inset
 
  which is explicitly
 \begin_inset Formula \begin{equation}
 \fbox{$k^{2}=k_{\rho}^{2}\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2}-2k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \dfrac{m\sin\alpha}{r}+\dfrac{m^{2}}{r^{2}}+\dfrac{n^{2}}{R^{2}}$}\label{k2}\end{equation}
+
 \end_inset
 
  From 
@@ -1294,44 +1480,53 @@ k^{2}=g^{ij}k_{i}k_{j}\end{equation}
  the perpendicular wave vector is derived 
 \begin_inset Formula \begin{equation}
 k_{\bot}^{2}=k^{2}-k_{\Vert}^{2}\end{equation}
+
 \end_inset
 
  Rearranging terms yields
 \begin_inset Formula \begin{equation}
-k_{\bot}^{2}=\left(k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert -\sin\alpha\dfrac{m}{r}\right)^{2}+\left(\sigma_{B}\cos\alpha\dfrac{B_{T}}{B}\dfrac{m}{r}-\sigma_{I}\dfrac{B_{P}}{B}\dfrac{n}{R}\right)^{2}\label{kperp2}\end{equation}
+k_{\bot}^{2}=\left(k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert -\sin\alpha\dfrac{m}{r}\right)^{2}+\left(\sigma_{B}\cos\alpha T\dfrac{m}{r}-\sigma_{I}P\dfrac{n}{R}\right)^{2}\label{kperp2}\end{equation}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Subsection
-
 Derivatives
 \end_layout
 
 \begin_layout Standard
-
-Since the coordinate system is defined we can derive the expressions for the derivatives in (
-\begin_inset LatexCommand \ref{derivatives}
+Since the coordinate system is defined we can derive the expressions for
+ the derivatives in (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "derivatives"
 
 \end_inset
 
 )
 \begin_inset Formula \[
 \frac{\partial N_{\Vert}}{\partial\mathbf{Y}};\frac{\partial N_{\bot}}{\partial\mathbf{Y}};\frac{\partial\beta_{Ts}}{\partial\mathbf{Y}};\frac{\partial\overline{\omega}_{ps}}{\partial\mathbf{Y}};\frac{\partial\overline{\omega}_{cs}}{\partial\mathbf{Y}}\]
+
 \end_inset
 
  where 
 \begin_inset Formula $\mathbf{Y}=\left(\rho,\theta,\phi,k_{\rho},m,n,t,\omega\right)$
 \end_inset
 
-. The derivatives of the index of refraction are computed using (
-\begin_inset LatexCommand \ref{kpar}
+.
+ The derivatives of the index of refraction are computed using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "kpar"
 
 \end_inset
 
 ) and (
-\begin_inset LatexCommand \ref{k2}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "k2"
 
 \end_inset
 
@@ -1342,15 +1537,18 @@ Since the coordinate system is defined we can derive the expressions for the der
  and
 \begin_inset Formula \begin{equation}
 \frac{\partial N_{\bot}}{\partial\mathbf{Y}}=\dfrac{1}{2N_{\bot}}\left(\frac{\partial N^{2}}{\partial\mathbf{Y}}-2N_{\Vert}\frac{\partial N_{\Vert}}{\partial\mathbf{Y}}\right)\end{equation}
+
 \end_inset
 
- . The equilibrium properties are by definition function of 
+ .
+ The equilibrium properties are by definition function of 
 \begin_inset Formula $\left(\mathbf{X},t\right)$
 \end_inset
 
  only such that 
 \begin_inset Formula \begin{equation}
 \frac{\partial\beta_{Ts}}{\partial\mathbf{k}}=\frac{\partial\overline{\omega}_{ps}}{\partial\mathbf{k}}=\frac{\partial\overline{\omega}_{cs}}{\partial\mathbf{k}}=0\end{equation}
+
 \end_inset
 
  and since 
@@ -1364,40 +1562,44 @@ Since the coordinate system is defined we can derive the expressions for the der
 
 \begin_inset Formula \begin{equation}
 \frac{\partial\beta_{Ts}}{\partial\omega}=0\end{equation}
+
 \end_inset
 
  Since we consider a constant axisymmetric equilibrium
 \begin_inset Formula \begin{align}
 \frac{\partial\beta_{Ts}}{\partial t} & =\frac{\partial\overline{\omega}_{ps}}{\partial t}=\frac{\partial\overline{\omega}_{cs}}{\partial t}=0\\
 \frac{\partial\beta_{Ts}}{\partial\phi} & =\frac{\partial\overline{\omega}_{ps}}{\partial\phi}=\frac{\partial\overline{\omega}_{cs}}{\partial\phi}=0\end{align}
+
 \end_inset
 
  The the temperature and density are flux coordinates such that
 \begin_inset Formula \begin{equation}
 \frac{\partial\beta_{Ts}}{\partial\theta}=\frac{\partial\overline{\omega}_{ps}}{\partial\theta}=0\end{equation}
+
 \end_inset
 
  and we are left with calculating numerically
 \begin_inset Formula \begin{equation}
 \frac{\partial\beta_{Ts}}{\partial\rho};\frac{\partial\overline{\omega}_{ps}}{\partial\rho};\frac{\partial\overline{\omega}_{cs}}{\partial\rho};\frac{\partial\overline{\omega}_{cs}}{\partial\theta};\frac{\partial\overline{\omega}_{ps}}{\partial\omega};\frac{\partial\overline{\omega}_{cs}}{\partial\omega}\end{equation}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-
 Explicit expressions for these derivatives are found in Appendix 1.2.
 \end_layout
 
 \begin_layout Subsection
-
 Specular reflection at the plasma edge
 \end_layout
 
 \begin_layout Standard
-
-Sometimes a wave is to be reflected within the scrape-off layer, which is outside the domain of application of the code. In this case, a specular reflection is enforced just before the last closed flux-surface at the location 
+Sometimes a wave is to be reflected within the scrape-off layer, which is
+ outside the domain of application of the code.
+ In this case, a specular reflection is enforced just before the last closed
+ flux-surface at the location 
 \begin_inset Formula $\left(\rho_{1},\theta_{1},\phi_{1}\right)$
 \end_inset
 
@@ -1405,12 +1607,14 @@ Sometimes a wave is to be reflected within the scrape-off layer, which is outsid
 \begin_inset Formula $\left(k_{\rho1},m_{1},n_{1}\right)$
 \end_inset
 
-. The condition for the specular reflection is 
+.
+ The condition for the specular reflection is 
 \begin_inset Formula \begin{equation}
 \begin{array}{l}
 \mathbf{k}_{2}\cdot\widehat{\mathbf{\rho}}=-\mathbf{k}_{1}\cdot\widehat{\mathbf{\rho}}\\
 \mathbf{k}_{2}\cdot\widehat{\mathbf{s}}=\mathbf{k}_{1}\cdot\widehat{\mathbf{s}}\\
 \mathbf{k}_{2}\cdot\widehat{\mathbf{\phi}}=\mathbf{k}_{1}\cdot\widehat{\mathbf{\phi}}\end{array}\label{spec}\end{equation}
+
 \end_inset
 
  with the contravariant basis 
@@ -1424,10 +1628,13 @@ Sometimes a wave is to be reflected within the scrape-off layer, which is outsid
  such that
 \begin_inset Formula \begin{equation}
 \mathbf{k}=k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \widehat{\mathbf{\rho}}+\dfrac{m}{r}\widehat{\mathbf{\theta}}+\dfrac{n}{R}\widehat{\mathbf{\phi}}\label{eq:wavevector}\end{equation}
+
 \end_inset
 
  and (
-\begin_inset LatexCommand \ref{spec}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "spec"
 
 \end_inset
 
@@ -1437,6 +1644,7 @@ Sometimes a wave is to be reflected within the scrape-off layer, which is outsid
 k_{2\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert -\dfrac{m_{2}}{r}\sin\alpha=-k_{1\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert +\dfrac{m_{1}}{r}\sin\alpha\\
 \\\dfrac{m_{2}}{r}\cos\alpha=\dfrac{m_{1}}{r}\cos\alpha\\
 \\\dfrac{n_{2}}{R}=\dfrac{n_{1}}{R}\end{array}\end{equation}
+
 \end_inset
 
  such that 
@@ -1450,15 +1658,22 @@ k_{2\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert -\dfrac{m_{2}}{r}\sin\alpha=-
  are conserved through the reflection and
 \begin_inset Formula \begin{equation}
 k_{2\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert =2\dfrac{m}{r}\sin\alpha-k_{1\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \end{equation}
+
 \end_inset
 
- We should verify that the dispersion relation is satisfied for the outgoing wave. We have (
-\begin_inset LatexCommand \ref{kpar}
+ We should verify that the dispersion relation is satisfied for the outgoing
+ wave.
+ We have (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "kpar"
 
 \end_inset
 
 ), (
-\begin_inset LatexCommand \ref{kperp2}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "kperp2"
 
 \end_inset
 
@@ -1467,6 +1682,7 @@ k_{2\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert =2\dfrac{m}{r}\sin\alpha-k_{1
 \begin{array}{l}
 k_{\Vert}=\sigma_{I}P\cos\alpha\dfrac{m}{r}+\sigma_{B}T\dfrac{n}{R}\\
 \\k_{\bot}=\sqrt{\left(k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert -\sin\alpha\dfrac{m}{r}\right)^{2}+\left(\sigma_{B}T\cos\alpha\dfrac{m}{r}-\sigma_{I}P\dfrac{n}{R}\right)^{2}}\end{array}\end{equation}
+
 \end_inset
 
  such that
@@ -1474,20 +1690,21 @@ k_{\Vert}=\sigma_{I}P\cos\alpha\dfrac{m}{r}+\sigma_{B}T\dfrac{n}{R}\\
 \begin{array}{l}
 k_{\Vert2}=k_{\Vert1}\\
 \\k_{\bot2}=\sqrt{\left(\dfrac{m}{r}\sin\alpha-k_{1\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \right)^{2}+\left(\sigma_{B}T\cos\alpha\dfrac{m}{r}-\sigma_{I}P\dfrac{n}{R}\right)^{2}}=k_{\bot1}\end{array}\end{equation}
+
 \end_inset
 
  and the dispersion relation is satisfied.
 \end_layout
 
 \begin_layout Subsection
-
 Inward propagating ray
 \end_layout
 
 \begin_layout Standard
-
 The equation (
-\begin_inset LatexCommand \ref{krhoeq}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "krhoeq"
 
 \end_inset
 
@@ -1495,19 +1712,24 @@ The equation (
 \begin_inset Formula $k_{\rho}$
 \end_inset
 
- has two solutions corresponding to inward and outward propagating waves. The solution is chosen such that the ray initially propagates inward, meaning 
+ has two solutions corresponding to inward and outward propagating waves.
+ The solution is chosen such that the ray initially propagates inward, meaning
+ 
 \begin_inset Formula \begin{equation}
 \frac{d\rho}{dt}<0\label{inward}\end{equation}
+
 \end_inset
 
  We have
 \begin_inset Formula \begin{equation}
 \frac{d\rho}{dt}=\frac{\partial\mathcal{D}}{\partial k_{\rho}}/\frac{\partial\mathcal{D}}{\partial\omega}\end{equation}
+
 \end_inset
 
  where
 \begin_inset Formula \begin{equation}
 \frac{\partial\mathcal{D}}{\partial k_{\rho}}=\frac{\partial N_{\bot}}{\partial k_{\rho}}\frac{\partial\mathcal{D}}{\partial N_{\bot}}\end{equation}
+
 \end_inset
 
  since 
@@ -1518,28 +1740,35 @@ The equation (
 \begin_inset Formula $k_{\rho}$
 \end_inset
 
-. For positive energy waves with 
+.
+ For positive energy waves with 
 \begin_inset Formula $\partial\mathcal{D}/\partial\omega>0$
 \end_inset
 
  the condition (
-\begin_inset LatexCommand \ref{inward}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "inward"
 
 \end_inset
 
 ) thus becomes,
 \begin_inset Formula \begin{equation}
 \frac{\partial N_{\bot}}{\partial k_{\rho}}\frac{\partial\mathcal{D}}{\partial N_{\bot}}<0\label{inward2}\end{equation}
+
 \end_inset
 
  We have (
-\begin_inset LatexCommand \ref{kperp2}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "kperp2"
 
 \end_inset
 
 )
 \begin_inset Formula \begin{equation}
 \frac{\partial N_{\bot}}{\partial k_{\rho}}=\dfrac{c\left\Vert \mathbf{\nabla}\rho\right\Vert }{\omega k_{\bot}}\left(k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert -\sin\alpha\dfrac{m}{r}\right)\end{equation}
+
 \end_inset
 
  In general 
@@ -1547,18 +1776,22 @@ The equation (
 \end_inset
 
  such that (
-\begin_inset LatexCommand \ref{inward2}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "inward2"
 
 \end_inset
 
 ) reduces to
 \begin_inset Formula \begin{equation}
 k_{\rho}\frac{\partial\mathcal{D}}{\partial N_{\bot}}<0\end{equation}
+
 \end_inset
 
  or equivalently
 \begin_inset Formula \begin{equation}
 \fbox{$k_{\rho}S_{\bot}<0$}\label{inwardcond}\end{equation}
+
 \end_inset
 
  where 
@@ -1569,9 +1802,9 @@ k_{\rho}\frac{\partial\mathcal{D}}{\partial N_{\bot}}<0\end{equation}
 \end_layout
 
 \begin_layout Section
-
-
-\begin_inset LatexCommand \label{sec:Numerical-algorithms}
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Numerical-algorithms"
 
 \end_inset
 
@@ -1579,44 +1812,56 @@ Numerical algorithms
 \end_layout
 
 \begin_layout Subsection
-
 Magnetic equilibrium interpolation
 \end_layout
 
 \begin_layout Standard
-
-Since magnetic equilibrium codes give field components on a discrete two dimensional grid mesh 
+Since magnetic equilibrium codes give field components on a discrete two
+ dimensional grid mesh 
 \begin_inset Formula $\left(\psi,\theta\right)$
 \end_inset
 
-, it is necessary to perform a numerical interpolation at the ray location. This procedure must be fast and very accurate an including first and second derivatives upon which the ray-tracing is very sensitive. Indeed, coarse interpolation may lead to large cumulative errors along the ray path and, ultimately, a wrong trajectory.
+, it is necessary to perform a numerical interpolation at the ray location.
+ This procedure must be fast and very accurate an including first and second
+ derivatives upon which the ray-tracing is very sensitive.
+ Indeed, coarse interpolation may lead to large cumulative errors along
+ the ray path and, ultimately, a wrong trajectory.
 \end_layout
 
 \begin_layout Standard
-
 Among several methods
 \begin_inset Foot
 status collapsed
 
-
-\begin_layout Standard
-
-Note that this method is universal, and may be used from any numerical data provided from a Grad Shafranov equation solver. However, for some codes that use finite elements techniques, it may be useful to use those directly instead of performing an additional interpolation procedure based on a spline-Fourier expansion. Indeed, finite elements contain all data needed for calculating magnetic field values at any radial and poloidal position including and first and second derivatives with an excellent accuracy. The choice to use the spline-Fourier expansion is here justified by the need to have a ray-tracing solver as general as possible.
+\begin_layout Plain Layout
+Note that this method is universal, and may be used from any numerical data
+ provided from a Grad Shafranov equation solver.
+ However, for some codes that use finite elements techniques, it may be
+ useful to use those directly instead of performing an additional interpolation
+ procedure based on a spline-Fourier expansion.
+ Indeed, finite elements contain all data needed for calculating magnetic
+ field values at any radial and poloidal position including and first and
+ second derivatives with an excellent accuracy.
+ The choice to use the spline-Fourier expansion is here justified by the
+ need to have a ray-tracing solver as general as possible.
 \end_layout
 
 \end_inset
 
-, the combination of Fourier expansion and spline interpolation is chosen, taking into account of the periodic nature of the poloidal angle 
+, the combination of Fourier expansion and spline interpolation is chosen,
+ taking into account of the periodic nature of the poloidal angle 
 \begin_inset Formula $\theta$
 \end_inset
 
-. Any function 
+.
+ Any function 
 \begin_inset Formula $g\left(\psi,\theta\right)$
 \end_inset
 
  is expressed as a Fourier sum
 \begin_inset Formula \begin{equation}
 g\left(\psi,\theta\right)=a_{0}\left(\psi\right)+\sum_{n=1}^{n=N}a_{n}^{c}\left(\psi\right)\cos\left(n\theta\right)+a_{n}^{s}\left(\psi\right)\sin\left(n\theta\right)\label{Fourier}\end{equation}
+
 \end_inset
 
  where 
@@ -1627,7 +1872,8 @@ g\left(\psi,\theta\right)=a_{0}\left(\psi\right)+\sum_{n=1}^{n=N}a_{n}^{c}\left(
 \begin_inset Formula $N_{\theta}$
 \end_inset
 
- is the number of discrete poloidal values. The Fourier 
+ is the number of discrete poloidal values.
+ The Fourier 
 \begin_inset Formula $a_{n}^{(c,s)}\left(\psi_{i}\right)$
 \end_inset
 
@@ -1638,6 +1884,7 @@ g\left(\psi,\theta\right)=a_{0}\left(\psi\right)+\sum_{n=1}^{n=N}a_{n}^{c}\left(
  in order to satisfy 
 \begin_inset Formula \begin{equation}
 g\left(\psi_{i},\theta_{j}\right)=a_{0,i}+\sum_{n=1}^{n=N}a_{n,i}^{c}\cos\left(n\theta_{j}\right)+a_{n,i}^{s}\sin\left(n\theta_{j}\right)\end{equation}
+
 \end_inset
 
  then the coefficients 
@@ -1651,6 +1898,7 @@ g\left(\psi_{i},\theta_{j}\right)=a_{0,i}+\sum_{n=1}^{n=N}a_{n,i}^{c}\cos\left(n
  are obtained using a usual cubic spline interpolation
 \begin_inset Formula \begin{equation}
 a_{n}^{(c,s)}\left(\psi\right)=\alpha_{n,i}^{(c,s)}\psi^{3}+\beta_{n,i}^{(c,s)}\psi^{2}+\gamma_{n,i}^{(c,s)}\psi+\delta_{n,i}^{(c,s)}\label{cubicspline}\end{equation}
+
 \end_inset
 
  the 3
@@ -1669,7 +1917,6 @@ a_{n}^{(c,s)}\left(\psi\right)=\alpha_{n,i}^{(c,s)}\psi^{3}+\beta_{n,i}^{(c,s)}\
 \end_layout
 
 \begin_layout Standard
-
 Then the derivatives at any 
 \begin_inset Formula $\left(\psi,\theta\right)$
 \end_inset
@@ -1682,6 +1929,7 @@ Then the derivatives at any
 \\\dfrac{\partial g\left(\psi,\theta\right)}{\partial\psi}=\dfrac{da_{0}^{c}\left(\psi\right)}{d\psi}+{\displaystyle \sum\limits _{n=1}^{n=N}}\dfrac{da_{n}^{c}\left(\psi\right)}{d\psi}\cos\left(n\theta\right)+\dfrac{da_{n}^{s}\left(\psi\right)}{d\psi}\sin\left(n\theta\right)\\
 \\\dfrac{\partial^{2}g\left(\psi,\theta\right)}{\partial\psi^{2}}=\dfrac{d^{2}a_{0}^{c}\left(\psi\right)}{d\psi^{2}}+{\displaystyle \sum\limits _{n=1}^{n=N}}\dfrac{d^{2}a_{n}^{c}\left(\psi\right)}{d\psi^{2}}\cos\left(n\theta\right)+\dfrac{d^{2}a_{n}^{s}\left(\psi\right)}{d\psi^{2}}\sin\left(n\theta\right)\\
 \\\dfrac{\partial^{2}g\left(\psi,\theta\right)}{\partial\psi\partial\theta}=\dfrac{da_{0}^{c}\left(\psi\right)}{d\psi}+{\displaystyle \sum\limits _{n=1}^{n=N}}n\left[-\dfrac{da_{n}^{c}\left(\psi\right)}{d\psi}\sin\left(n\theta\right)+\dfrac{da_{n}^{s}\left(\psi\right)}{d\psi}\cos\left(n\theta\right)\right]\end{array}\label{derivee1_theta}\end{equation}
+
 \end_inset
 
  where
@@ -1689,18 +1937,20 @@ Then the derivatives at any
 \begin{array}{l}
 \dfrac{da_{n}^{(c,s)}\left(\psi\right)}{d\psi}=3\alpha_{n,i}^{(c,s)}\psi^{2}+2\beta_{n,i}^{(c,s)}\psi+\gamma_{n,i}^{(c,s)}\\
 \\\dfrac{d^{2}a_{n}^{(c,s)}\left(\psi\right)}{d\psi^{2}}=6\alpha_{n,i}^{(c,s)}\psi+2\beta_{n,i}^{(c,s)}\end{array}\label{derivepsi1}\end{equation}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-
-Note that for density and temperature profiles only a cubic spline interpolation is performed, since these parameters are function of 
+Note that for density and temperature profiles only a cubic spline interpolation
+ is performed, since these parameters are function of 
 \begin_inset Formula $\psi$
 \end_inset
 
- only. With typically 
+ only.
+ With typically 
 \begin_inset Formula $65$
 \end_inset
 
@@ -1708,31 +1958,42 @@ Note that for density and temperature profiles only a cubic spline interpolation
 \begin_inset Formula $101$
 \end_inset
 
- radial discrete positions, the relative accuracy of the magnetic equilibrium is of the order of 
+ radial discrete positions, the relative accuracy of the magnetic equilibrium
+ is of the order of 
 \begin_inset Formula $10^{-4}$
 \end_inset
 
- approximately. Larger numerical errors may occur near a X-point, where the local curvature radius of all magnetic flux surfaces becomes very small. In that case and if a more detailed interpolated magnetic reconstruction is required, more poloidal points must be used in this region of the plasma, keeping the same total number of poloidal values on a non-uniform grid. When some smoothing is needed, it is always possible to use less coefficients in the Fourier expansion series.
+ approximately.
+ Larger numerical errors may occur near a X-point, where the local curvature
+ radius of all magnetic flux surfaces becomes very small.
+ In that case and if a more detailed interpolated magnetic reconstruction
+ is required, more poloidal points must be used in this region of the plasma,
+ keeping the same total number of poloidal values on a non-uniform grid.
+ When some smoothing is needed, it is always possible to use less coefficients
+ in the Fourier expansion series.
 \end_layout
 
 \begin_layout Subsection
-
 Runge-Kutta differential equation solver
 \end_layout
 
 \begin_layout Standard
-
 Relations (
-\begin_inset LatexCommand \ref{h1}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "h1"
 
 \end_inset
 
 -
-\begin_inset LatexCommand \ref{h4}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "h4"
 
 \end_inset
 
-) form a system of first order coupled differential equations. Knowing the initial wave characteristics 
+) form a system of first order coupled differential equations.
+ Knowing the initial wave characteristics 
 \begin_inset Formula $\left(k_{\psi0},m_{0},n_{0}\right)$
 \end_inset
 
@@ -1756,26 +2017,30 @@ Relations (
 \end_layout
 
 \begin_layout Standard
-
-There are several algorithms for solving this initial value problem, minimizing propagation of the numerical error. One of the most popular is the Runge-Kutta algorithm which belongs to the Euler-Cauchy algorithm family
+There are several algorithms for solving this initial value problem, minimizing
+ propagation of the numerical error.
+ One of the most popular is the Runge-Kutta algorithm which belongs to the
+ Euler-Cauchy algorithm family
 \begin_inset Foot
 status collapsed
 
-
-\begin_layout Standard
-
-There exists other methods used also for ray-tracing named "predictor-corrector" which belong to the general Adams algorithm family.
+\begin_layout Plain Layout
+There exists other methods used also for ray-tracing named "predictor-corrector"
+ which belong to the general Adams algorithm family.
 \end_layout
 
 \end_inset
 
-. The procedure consists in solving the differential equations of the type 
+.
+ The procedure consists in solving the differential equations of the type
+ 
 \begin_inset Formula $y^{\prime}\left(x\right)=f\left(x,y\left(x\right)\right)$
 \end_inset
 
  by an iterative method, with the recurrence rule 
 \begin_inset Formula \begin{equation}
 y_{n+1}=y_{n}+h\varphi\left(x_{n},y_{n},h\right)\end{equation}
+
 \end_inset
 
  and the initial condition 
@@ -1786,13 +2051,14 @@ y_{n+1}=y_{n}+h\varphi\left(x_{n},y_{n},h\right)\end{equation}
 \end_layout
 
 \begin_layout Standard
-
 A solution of the following form is seeked 
 \begin_inset Formula \begin{equation}
 \varphi\left(x,y,h\right)=\alpha_{1}f\left(x,y\left(x\right)\right)+\alpha_{2}f\left(x+\alpha h,y+\beta hf\left(x,y\right)\right)\label{phiRK}\end{equation}
+
 \end_inset
 
- so that no numerical derivatives need to be calculated. From a Taylor series expansion of 
+ so that no numerical derivatives need to be calculated.
+ From a Taylor series expansion of 
 \begin_inset Formula $y\left(x\right)$
 \end_inset
 
@@ -1800,21 +2066,23 @@ A solution of the following form is seeked
 \begin_inset Formula \begin{align}
 \frac{y\left(x+h\right)-y\left(x\right)}{h} & =y^{\prime}\left(x\right)+\frac{h}{2}y^{\prime\prime}\left(x\right)+O\left(h^{2}\right)\\
  & =f\left(x,y\right)+\frac{h}{2}f^{(1)}\left(x,y\right)+O\left(h^{2}\right)\end{align}
+
 \end_inset
 
  where
 \begin_inset Formula \begin{equation}
 f^{(1)}\left(x,y\right)=\frac{\partial f}{\partial x}+f\frac{\partial f}{\partial y}\end{equation}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-
 A similar expansion gives
 \begin_inset Formula \begin{equation}
 f\left(x+\alpha h,y+\beta hf\left(x,y\right)\right)=f+\alpha h\frac{\partial f}{\partial x}+\beta hf\frac{\partial f}{\partial y}+O\left(h^{2}\right)\end{equation}
+
 \end_inset
 
  Thus, up to the 
@@ -1828,6 +2096,7 @@ order,
  becomes
 \begin_inset Formula \begin{equation}
 \varphi\left(x,y,h\right)=\left(\alpha_{1}+\alpha_{2}\right)f\left(x,y\right)+h\left[\alpha\alpha_{2}\frac{\partial f}{\partial x}+\beta\alpha_{2}f\frac{\partial f}{\partial y}\right]+O\left(h^{2}\right)\end{equation}
+
 \end_inset
 
  so that
@@ -1835,19 +2104,21 @@ order,
 \frac{y\left(x+h\right)-y\left(x\right)}{h}-\varphi\left(x,y,h\right) & =\left(1-\alpha_{1}-\alpha_{2}\right)\nonumber \\
  & +h\left(\frac{1}{2}-\alpha\alpha_{2}\right)\frac{\partial f}{\partial x}\nonumber \\
  & +h\left(\frac{1}{2}-\beta\alpha_{2}\right)\frac{\partial f}{\partial y}+O\left(h^{2}\right)\end{align}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-
-In order to obtain a second order accurate calculation, the coefficients must satisfy the relations
+In order to obtain a second order accurate calculation, the coefficients
+ must satisfy the relations
 \begin_inset Formula \begin{equation}
 \begin{array}{l}
 \alpha_{1}+\alpha_{2}=1\\
 \alpha\alpha_{2}=1/2\\
 \beta\alpha_{2}=1/2\end{array}\end{equation}
+
 \end_inset
 
  which implies
@@ -1855,16 +2126,17 @@ In order to obtain a second order accurate calculation, the coefficients must sa
 \begin{array}{l}
 \alpha=\beta=\dfrac{1}{2\alpha_{2}}\\
 \alpha_{1}=1-\alpha_{2}\end{array}\end{equation}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-
 The solution is finally 
 \begin_inset Formula \begin{equation}
 \varphi\left(x,y,h\right)=\left(1-\alpha\right)f\left(x,y\right)+\alpha f\left(x+\frac{h}{2\alpha},y+\frac{h}{2\alpha}f\left(x,y\right)\right)\end{equation}
+
 \end_inset
 
  where the case 
@@ -1879,21 +2151,21 @@ The solution is finally
 \end_layout
 
 \begin_layout Standard
-
-A second order Runge-Kutta algorithm then corresponds to the following procedure,
+A second order Runge-Kutta algorithm then corresponds to the following procedure
+,
 \begin_inset Formula \begin{equation}
 \begin{array}{c}
 y_{n+1}=y_{n}+h\varphi\left(x_{n},y_{n},h\right)\\
 \varphi\left(x_{n},y_{n},h\right)=\left(1-\alpha\right)k_{1}+\alpha k_{2}\\
 k_{1}=f\left(x,y\right)\\
 k_{2}=f\left(x+\dfrac{h}{2\alpha},y+\dfrac{h}{2\alpha}k_{1}\right)\end{array}\end{equation}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-
 The parameter 
 \begin_inset Formula $\alpha$
 \end_inset
@@ -1902,17 +2174,22 @@ The parameter
 \begin_inset Formula $h,$
 \end_inset
 
- which must be small, may be adjusted at each iteration step, as function of the local curvature of the ray path. This is the adaptative Runge-Kutta method, widely used for solving this type of problem.
+ which must be small, may be adjusted at each iteration step, as function
+ of the local curvature of the ray path.
+ This is the adaptative Runge-Kutta method, widely used for solving this
+ type of problem.
 \end_layout
 
 \begin_layout Standard
-
 This procedure, which has been highlighted for order 
 \begin_inset Formula $2,$
 \end_inset
 
- may be expanded in a similar manner to higher orders. Detailed calculations can be found in the literature 
-\begin_inset LatexCommand \citet{pre92}
+ may be expanded in a similar manner to higher orders.
+ Detailed calculations can be found in the literature 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "pre92"
 
 \end_inset
 
@@ -1920,8 +2197,10 @@ This procedure, which has been highlighted for order
 \end_layout
 
 \begin_layout Standard
-
-In the ray-tracing code, a sixth order adaptative Runge-Kutta integration method is used. The numerical accuracy obtained with this method is very satisfactory, and the condition 
+In the ray-tracing code, a sixth order adaptative Runge-Kutta integration
+ method is used.
+ The numerical accuracy obtained with this method is very satisfactory,
+ and the condition 
 \begin_inset Formula $\left\vert \mathcal{D}\right\vert \leq10^{-10}$
 \end_inset
 
@@ -1933,9 +2212,9 @@ In the ray-tracing code, a sixth order adaptative Runge-Kutta integration method
 \end_layout
 
 \begin_layout Section
-
-
-\begin_inset LatexCommand \label{sec:Conclusion}
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Conclusion"
 
 \end_inset
 
@@ -1943,26 +2222,35 @@ Conclusion
 \end_layout
 
 \begin_layout Standard
-
 The code 
 \shape italic
 C3PO
 \shape default
- has been designed for fast and accurate calculations of the ray trajectories in inhomogeneous and anisotropic plasmas with arbitrary axisymmetric magnetic equilibrium and nested flux surfaces. It is part of the 
+ has been designed for fast and accurate calculations of the ray trajectories
+ in inhomogeneous and anisotropic plasmas with arbitrary axisymmetric magnetic
+ equilibrium and nested flux surfaces.
+ It is part of the 
 \shape italic
 C3PO/LUKE/R5-X2
 \shape default
- codes package designed for calculating RF current drive in tokamaks or reverse field pinches. A modular structure makes the code evolutive. In particular, additional dielectric response models can be implemented.
+ codes package designed for calculating RF current drive in tokamaks or
+ reverse field pinches.
+ A modular structure makes the code evolutive.
+ In particular, additional dielectric response models can be implemented.
 \end_layout
 
 \begin_layout Standard
-
 Among possible future improvements, 
 \shape italic
 C3PO
 \shape default
- could be developed into a beam tracing code to include diffraction effects and calculate the beam size. It could also be extended to account for toroidal equilibrium inhomogeneities such as the magnetic ripple 
-\begin_inset LatexCommand \citet{pey96,imb05}
+ could be developed into a beam tracing code to include diffraction effects
+ and calculate the beam size.
+ It could also be extended to account for toroidal equilibrium inhomogeneities
+ such as the magnetic ripple 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "pey96,imb05"
 
 \end_inset
 
@@ -1971,18 +2259,16 @@ C3PO
 
 \begin_layout Standard
 \start_of_appendix
-
-
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
-%dummy comment inserted by tex2lyx to ensure that this paragraph is not empty
+%dummy comment inserted by tex2lyx to ensure that this paragraph is not
+ empty
 \end_layout
 
-\begin_layout Standard
-
+\begin_layout Plain Layout
 
 \end_layout
 
@@ -1992,29 +2278,13 @@ status collapsed
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
-%dummy comment inserted by tex2lyx to ensure that this paragraph is not empty
+%dummy comment inserted by tex2lyx to ensure that this paragraph is not
+ empty
 \end_layout
 
-\begin_layout Standard
-
-
-\end_layout
-
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-%dummy comment inserted by tex2lyx to ensure that this paragraph is not empty
-\end_layout
-
-\begin_layout Standard
-
+\begin_layout Plain Layout
 
 \end_layout
 
@@ -2024,29 +2294,13 @@ status collapsed
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
-%dummy comment inserted by tex2lyx to ensure that this paragraph is not empty
+%dummy comment inserted by tex2lyx to ensure that this paragraph is not
+ empty
 \end_layout
 
-\begin_layout Standard
-
-
-\end_layout
-
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-%dummy comment inserted by tex2lyx to ensure that this paragraph is not empty
-\end_layout
-
-\begin_layout Standard
-
+\begin_layout Plain Layout
 
 \end_layout
 
@@ -2056,7 +2310,39 @@ status collapsed
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
+
+%dummy comment inserted by tex2lyx to ensure that this paragraph is not
+ empty
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%dummy comment inserted by tex2lyx to ensure that this paragraph is not
+ empty
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
 
 {}
 \end_layout
@@ -2067,9 +2353,9 @@ status collapsed
 \end_layout
 
 \begin_layout Section
-
-
-\begin_inset LatexCommand \label{sec:Explicit-expressions}
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Explicit-expressions"
 
 \end_inset
 
@@ -2077,9 +2363,10 @@ Explicit expressions
 \end_layout
 
 \begin_layout Subsection
-
 Dispersion relation
-\begin_inset LatexCommand \label{sub:disperrelation}
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:disperrelation"
 
 \end_inset
 
@@ -2087,7 +2374,6 @@ Dispersion relation
 \end_layout
 
 \begin_layout Standard
-
 In a cartesian system 
 \begin_inset Formula $\left(x,y,z\right)$
 \end_inset
@@ -2095,11 +2381,13 @@ In a cartesian system
  defined such that the background magnetic field is
 \begin_inset Formula \begin{equation}
 \mathbf{B}_{0}=B_{0}\mathbf{\hat{z}}\end{equation}
+
 \end_inset
 
  and the wave index of refraction is
 \begin_inset Formula \begin{equation}
 \mathbf{N}=N_{\Vert}\mathbf{\hat{z}}+N_{\bot}\mathbf{\hat{x}}\label{eq:Nprojection}\end{equation}
+
 \end_inset
 
  the permittivity tensor can be expressed explicitly as
@@ -2108,6 +2396,7 @@ In a cartesian system
 K_{xx} & K_{xy} & K_{xz}\\
 -K_{xy} & K_{yy} & K_{yz}\\
 K_{xz} & -K_{yz} & K_{zz}\end{array}\right)\end{equation}
+
 \end_inset
 
  such that the dispersion tensor is 
@@ -2116,6 +2405,7 @@ K_{xz} & -K_{yz} & K_{zz}\end{array}\right)\end{equation}
 K_{xx}-N_{\Vert}^{2} & K_{xy} & K_{xz}+N_{\bot}N_{\Vert}\\
 -K_{xy} & K_{yy}-N^{2} & K_{yz}\\
 K_{xz}+N_{\bot}N_{\Vert} & -K_{yz} & K_{zz}-N_{\bot}^{2}\end{array}\right)\end{equation}
+
 \end_inset
 
  and the dispersion relation becomes
@@ -2124,14 +2414,13 @@ K_{xz}+N_{\bot}N_{\Vert} & -K_{yz} & K_{zz}-N_{\bot}^{2}\end{array}\right)\end{e
  & +2K_{xy}K_{yz}\left(K_{xz}+N_{\bot}N_{\Vert}\right)\nonumber \\
  & -\left(K_{yy}-N^{2}\right)\left(K_{xz}+N_{\bot}N_{\Vert}\right)^{2}\nonumber \\
  & +K_{yz}^{2}\left(K_{xx}-N_{\Vert}^{2}\right)+K_{xy}^{2}\left(K_{zz}-N_{\bot}^{2}\right)\nonumber \end{align}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-
-
 \begin_inset Formula $\mathcal{D}\left(\mathbf{k},\omega\right)$
 \end_inset
 
@@ -2142,6 +2431,7 @@ K_{xz}+N_{\bot}N_{\Vert} & -K_{yz} & K_{zz}-N_{\bot}^{2}\end{array}\right)\end{e
  as
 \begin_inset Formula \begin{equation}
 \mathcal{D}\left(\mathbf{k},\omega\right)=P_{4}N_{\bot}^{4}+P_{3}N_{\bot}^{3}+P_{2}N_{\bot}^{2}+P_{1}N_{\bot}+P_{0}\label{disprel2}\end{equation}
+
 \end_inset
 
  with 
@@ -2153,10 +2443,13 @@ P_{2}=\left(K_{xx}+K_{zz}\right)N_{\Vert}^{2}-\left(K_{yy}+K_{zz}\right)K_{xx}+K
 P_{1}=2N_{\Vert}\left(K_{xz}N_{\Vert}^{2}+K_{xy}K_{yz}-K_{yy}K_{xz}\right)\\
 P_{0}=N_{\Vert}^{4}K_{zz}+\left(K_{xz}^{2}-K_{yz}^{2}-\left[K_{xx}+K_{yy}\right]K_{zz}\right)N_{\Vert}^{2}+K_{yy}K_{xx}K_{zz}\\
 \qquad+2K_{xy}K_{yz}K_{xz}+K_{yz}^{2}K_{xx}-K_{yy}K_{xz}^{2}+K_{xy}^{2}K_{zz}\end{array}\label{dispexp}\end{equation}
+
 \end_inset
 
  The dispersion relation (
-\begin_inset LatexCommand \ref{disprel2}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "disprel2"
 
 \end_inset
 
@@ -2173,16 +2466,18 @@ P_{0}=N_{\Vert}^{4}K_{zz}+\left(K_{xz}^{2}-K_{yz}^{2}-\left[K_{xx}+K_{yy}\right]
  & +X_{xx}X_{yz}^{2}+X_{yz}^{2}+X_{xx}+X_{xy}^{2}+X_{xy}^{2}X_{zz}-X_{xz}^{2}\nonumber \\
  & -X_{yy}X_{xz}^{2}+X_{yy}+X_{zz}\nonumber \\
  & +X_{xx}X_{yy}X_{zz}+2X_{xy}X_{yz}X_{xz}\label{D}\end{align}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-
-In preparation for calculating the derivatives, it is useful to split the dispersion relation in a sum of products
+In preparation for calculating the derivatives, it is useful to split the
+ dispersion relation in a sum of products
 \begin_inset Formula \begin{equation}
 \mathcal{D}=\sum_{k=1}^{k=43}\mathcal{D}^{\left(k\right)}\label{dispexp2}\end{equation}
+
 \end_inset
 
  where
@@ -2198,6 +2493,7 @@ In preparation for calculating the derivatives, it is useful to split the disper
 \mathcal{D}^{\left(8\right)}=-X_{yy}N_{\bot}^{2}\\
 \mathcal{D}^{\left(9\right)}=-X_{zz}N_{\bot}^{2}\\
 \mathcal{D}^{\left(10\right)}=-X_{xx}X_{zz}N_{\bot}^{2}\end{array}\end{equation}
+
 \end_inset
 
  
@@ -2213,6 +2509,7 @@ In preparation for calculating the derivatives, it is useful to split the disper
 \mathcal{D}^{\left(18\right)}=2N_{\Vert}^{3}X_{xz}N_{\bot}\\
 \mathcal{D}^{\left(19\right)}=1\\
 \mathcal{D}^{\left(20\right)}=N_{\Vert}^{4}X_{zz}\end{array}\end{equation}
+
 \end_inset
 
  
@@ -2228,6 +2525,7 @@ In preparation for calculating the derivatives, it is useful to split the disper
 \mathcal{D}^{\left(28\right)}=-N_{\Vert}^{2}X_{xx}\\
 \mathcal{D}^{\left(29\right)}=-2N_{\Vert}^{2}\\
 \mathcal{D}^{\left(30\right)}=X_{yy}X_{zz}\end{array}\end{equation}
+
 \end_inset
 
  
@@ -2243,6 +2541,7 @@ In preparation for calculating the derivatives, it is useful to split the disper
 \mathcal{D}^{\left(38\right)}=-X_{xz}^{2}\\
 \mathcal{D}^{\left(39\right)}=-X_{yy}X_{xz}^{2}\\
 \mathcal{D}^{\left(40\right)}=X_{yy}\end{array}\end{equation}
+
 \end_inset
 
  
@@ -2251,18 +2550,17 @@ In preparation for calculating the derivatives, it is useful to split the disper
 \mathcal{D}^{\left(41\right)}=X_{zz}\\
 \mathcal{D}^{\left(42\right)}=X_{xx}X_{yy}X_{zz}\\
 \mathcal{D}^{\left(43\right)}=2X_{xy}X_{yz}X_{xz}\end{array}\end{equation}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Subsection
-
 Derivatives of the equilibrium
 \end_layout
 
 \begin_layout Standard
-
 Explicitly expression for derivatives of the equilibrium are 
 \begin_inset Formula \begin{align}
 \frac{\partial\beta_{Ts}}{\partial\rho} & =\frac{\partial}{\partial\rho}\left(\sqrt{\frac{\kappa T_{s}}{m_{s}c^{2}}}\right)=\dfrac{\beta_{Ts}}{2T_{s}}\frac{\partial T_{s}}{\partial\rho}\\
@@ -2271,15 +2569,16 @@ Explicitly expression for derivatives of the equilibrium are
 \frac{\partial\overline{\omega}_{cs}}{\partial\theta} & =\frac{\partial}{\partial\theta}\left(\frac{q_{s}B_{0}}{m_{s}\omega}\right)=\dfrac{\overline{\omega}_{cs}}{B_{0}}\frac{\partial B_{0}}{\partial\theta}\\
 \frac{\partial\overline{\omega}_{ps}}{\partial\omega} & =\frac{\partial}{\partial\omega}\left(\dfrac{1}{\omega}\sqrt{\frac{q_{s}^{2}n_{s}}{\varepsilon_{0}m_{s}}}\right)=-\dfrac{\overline{\omega}_{ps}}{\omega}\\
 \frac{\partial\overline{\omega}_{cs}}{\partial\omega} & =\frac{\partial}{\partial\omega}\left(\frac{q_{s}B_{0}}{m_{s}\omega}\right)=-\dfrac{\overline{\omega}_{cs}}{\omega}\end{align}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Section
-
-
-\begin_inset LatexCommand \label{sec:Various-properties-of}
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Various-properties-of"
 
 \end_inset
 
@@ -2287,16 +2586,15 @@ Various properties of the coordinates system
 \end_layout
 
 \begin_layout Subsection
-
 Alternative calculation of the parallel index of refraction
 \end_layout
 
 \begin_layout Standard
-
 The following expression is considered 
 \begin_inset Formula \begin{align}
 k_{\Vert} & =\dfrac{1}{B}\mathbf{k}\cdot\mathbf{B}\\
  & =\dfrac{1}{B}g^{ij}k_{i}B_{j}\end{align}
+
 \end_inset
 
  with the metric coefficients
@@ -2305,16 +2603,19 @@ g^{ij}=\mathbf{e}^{i}\cdot\mathbf{e}^{j}=\left(\begin{array}{ccc}
 \left\Vert \mathbf{\nabla}\rho\right\Vert ^{2} & -\dfrac{\left\Vert \mathbf{\nabla}\rho\right\Vert \sin\alpha}{r} & 0\\
 -\dfrac{\left\Vert \mathbf{\nabla}\rho\right\Vert \sin\alpha}{r} & \dfrac{1}{r^{2}} & 0\\
 0 & 0 & \dfrac{1}{R^{2}}\end{array}\right)\end{equation}
+
 \end_inset
 
  The magnetic field in the covariant basis 
 \begin_inset Formula \begin{equation}
 \mathbf{e}_{i}=\left(\dfrac{\widehat{\mathbf{r}}}{\left\Vert \mathbf{\nabla}\rho\right\Vert \cos\alpha},\dfrac{r\widehat{\mathbf{s}}}{\cos\alpha},R\widehat{\mathbf{\phi}}\right)\end{equation}
+
 \end_inset
 
  has the following coordinates 
 \begin_inset Formula \begin{equation}
 B_{j}=\left(\sigma_{I}\dfrac{\sin\alpha B_{P}}{\left\Vert \mathbf{\nabla}\rho\right\Vert \cos\alpha},\sigma_{I}\dfrac{rB_{P}}{\cos\alpha},\sigma_{B}RB_{T}\right)\end{equation}
+
 \end_inset
 
  such that 
@@ -2326,23 +2627,25 @@ k_{\Vert}=\dfrac{1}{B}\left(k_{\psi},m,n\right)\left(\begin{array}{ccc}
 \sigma_{I}\dfrac{\sin\alpha B_{P}}{\left\Vert \mathbf{\nabla}\rho\right\Vert \cos\alpha}\\
 \sigma_{I}\dfrac{rB_{P}}{\cos\alpha}\\
 \sigma_{B}RB_{T}\end{array}\right)\end{equation}
+
 \end_inset
 
  which gives
 \begin_inset Formula \begin{equation}
 k_{\Vert}=\dfrac{1}{B}\left[\left(k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2}-\dfrac{m\left\Vert \mathbf{\nabla}\rho\right\Vert \sin\alpha}{r}\right)\sigma_{I}\dfrac{\sin\alpha B_{P}}{\left\Vert \mathbf{\nabla}\rho\right\Vert \cos\alpha}+\left(-\dfrac{\left\Vert \mathbf{\nabla}\rho\right\Vert \sin\alpha}{r}k_{\rho}+\dfrac{m}{r^{2}}\right)\sigma_{I}\dfrac{rB_{P}}{\cos\alpha}+\dfrac{n\sigma_{B}}{R^{2}}RB_{T}\right]\end{equation}
+
 \end_inset
 
  and simplifies to
 \begin_inset Formula \begin{equation}
-k_{\Vert}=\left[\sigma_{I}\cos\alpha\dfrac{B_{P}}{B}\dfrac{m}{r}+\sigma_{B}\dfrac{B_{T}}{B}\dfrac{n}{R}\right]\end{equation}
+k_{\Vert}=\left[\sigma_{I}\cos\alpha P\dfrac{m}{r}+\sigma_{B}T\dfrac{n}{R}\right]\end{equation}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Subsection
-
 Calculation of 
 \begin_inset Formula $k_{\rho}$
 \end_inset
@@ -2367,7 +2670,6 @@ Calculation of
 \end_layout
 
 \begin_layout Standard
-
 Generally, the initial conditions determine 
 \begin_inset Formula $m$
 \end_inset
@@ -2376,11 +2678,13 @@ Generally, the initial conditions determine
 \begin_inset Formula $k_{\Vert}$
 \end_inset
 
-. Then 
+.
+ Then 
 \begin_inset Formula $k_{\bot}$
 \end_inset
 
- is calculated from the dispersion relation. We need to express 
+ is calculated from the dispersion relation.
+ We need to express 
 \begin_inset Formula $k_{\rho}$
 \end_inset
 
@@ -2400,41 +2704,44 @@ Generally, the initial conditions determine
 \begin_inset Formula $k_{\bot}$
 \end_inset
 
-. We have
+.
+ We have
 \begin_inset Formula \begin{equation}
 k_{\bot}^{2}=k_{\rho}^{2}\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2}-2k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \dfrac{m\sin\alpha}{r}+\dfrac{m^{2}}{r^{2}}+\dfrac{n^{2}}{R^{2}}-k_{\Vert}^{2}\label{kperp}\end{equation}
+
 \end_inset
 
  and
 \begin_inset Formula \begin{equation}
 k_{\Vert}=\sigma_{I}P\cos\alpha\dfrac{m}{r}+\sigma_{B}T\dfrac{n}{R}\end{equation}
+
 \end_inset
 
- where 
-\begin_inset Formula $P=\dfrac{B_{P}}{B}$
-\end_inset
+ 
+\end_layout
 
- and 
-\begin_inset Formula $T=\dfrac{B_{T}}{B}$
-\end_inset
-
-. We get an expression for 
+\begin_layout Standard
+We get an expression for 
 \begin_inset Formula $n$
 \end_inset
 
 
 \begin_inset Formula \begin{equation}
 n=\sigma_{B}\dfrac{R}{T}\left(k_{\Vert}-\sigma_{I}P\cos\alpha\dfrac{m}{r}\right)\label{toroidalwavenumberdef}\end{equation}
+
 \end_inset
 
  which is inserted back in (
-\begin_inset LatexCommand \ref{kperp}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "kperp"
 
 \end_inset
 
 ) to get
 \begin_inset Formula \begin{equation}
 k_{\bot}^{2}=k_{\rho}^{2}\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2}-2\sin\alpha\dfrac{m}{r}k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert +\dfrac{m^{2}}{r^{2}}+\dfrac{1}{T^{2}}\left(k_{\Vert}-\sigma_{I}P\cos\alpha\dfrac{m}{r}\right)^{2}-k_{\Vert}^{2}\label{kperp2def}\end{equation}
+
 \end_inset
 
  and 
@@ -2444,37 +2751,42 @@ k_{\bot}^{2}=k_{\rho}^{2}\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2}-2\sin\al
  is solution of the equation
 \begin_inset Formula \begin{equation}
 k_{\rho}^{2}\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2}-2\sin\alpha\dfrac{m}{r}k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert +\left(1+\dfrac{P^{2}}{T^{2}}\cos^{2}\alpha\right)\dfrac{m^{2}}{r^{2}}+\dfrac{P^{2}}{T^{2}}k_{\Vert}^{2}-2\sigma_{I}\dfrac{P}{T^{2}}\cos\alpha\dfrac{m}{r}k_{\Vert}-k_{\bot}^{2}=0\end{equation}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-
 Defining
 \begin_inset Formula \begin{equation}
 X=k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \end{equation}
+
 \end_inset
 
  and
 \begin_inset Formula \begin{align}
 B & =\sin\alpha\dfrac{m}{r}\\
 C & =\left(1+\dfrac{P^{2}}{T^{2}}\cos^{2}\alpha\right)\dfrac{m^{2}}{r^{2}}+\dfrac{P^{2}}{T^{2}}k_{\Vert}^{2}-2\sigma_{I}\dfrac{P}{T^{2}}\dfrac{m}{r}k_{\Vert}\cos\alpha-k_{\bot}^{2}\end{align}
+
 \end_inset
 
  we have
 \begin_inset Formula \begin{equation}
 X^{2}-2BX+C=0\end{equation}
+
 \end_inset
 
  such that
 \begin_inset Formula \begin{equation}
 X=B\pm\sqrt{B^{2}-C}\end{equation}
+
 \end_inset
 
  which gives
 \begin_inset Formula \begin{equation}
 k_{\rho}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[\sin\alpha\dfrac{m}{r}\pm\sqrt{k_{\bot}^{2}-\dfrac{1}{T^{2}}\left(\cos\alpha\dfrac{m}{r}-\sigma_{I}Pk_{\Vert}\right)^{2}}\right]\end{equation}
+
 \end_inset
 
  To sum up
@@ -2483,19 +2795,22 @@ k_{\rho}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[\sin\alpha\d
 n=\sigma_{B}\dfrac{R}{T}\left(k_{\Vert}-\sigma_{I}P\cos\alpha\dfrac{m}{r}\right)\\
 m=\sigma_{I}\dfrac{r}{P\cos\alpha}\left(k_{\Vert}-\sigma_{B}T\dfrac{n}{R}\right)\\
 k_{\rho}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[\sin\alpha\dfrac{m}{r}+\sigma_{\rho}\sqrt{k_{\bot}^{2}-\dfrac{1}{T^{2}}\left(\cos\alpha\dfrac{m}{r}-\sigma_{I}Pk_{\Vert}\right)^{2}}\right]\end{array}$}\label{eq:nmkrho}\end{equation}
+
 \end_inset
 
  where 
 \begin_inset Formula $\sigma_{\rho}=\pm1$
 \end_inset
 
-. We can also express 
+.
+ We can also express 
 \begin_inset Formula $k_{\rho}$
 \end_inset
 
  as 
 \begin_inset Formula \begin{equation}
 \fbox{$k_{\rho}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[\sin\alpha\dfrac{m}{r}+\sigma_{\rho}\sqrt{k^{2}-\cos^{2}\alpha\dfrac{m^{2}}{r^{2}}-\dfrac{n^{2}}{R^{2}}}\right]$}\label{krhoeq}\end{equation}
+
 \end_inset
 
  The correct solution for 
@@ -2503,7 +2818,9 @@ k_{\rho}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[\sin\alpha\d
 \end_inset
 
  can be determined from (
-\begin_inset LatexCommand \ref{inwardcond}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "inwardcond"
 
 \end_inset
 
@@ -2511,7 +2828,6 @@ k_{\rho}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[\sin\alpha\d
 \end_layout
 
 \begin_layout Subsection
-
 Calculation of 
 \begin_inset Formula $k_{\rho}$
 \end_inset
@@ -2540,7 +2856,6 @@ Calculation of
 \end_layout
 
 \begin_layout Standard
-
 The vector 
 \begin_inset Formula $\mathbf{k}$
 \end_inset
@@ -2548,6 +2863,7 @@ The vector
  is projected onto the covariant basis 
 \begin_inset Formula \begin{equation}
 \mathbf{e}_{i}=\left(\dfrac{\mathbf{\hat{r}}}{\left\Vert \mathbf{\nabla}\rho\right\Vert \cos\alpha},\dfrac{r\mathbf{\hat{s}}}{\cos\alpha},R\mathbf{\hat{\phi}}\right)\end{equation}
+
 \end_inset
 
  such that 
@@ -2556,6 +2872,7 @@ The vector
 k_{\rho}=\dfrac{\mathbf{\hat{r}}\cdot\mathbf{k}}{\left\Vert \mathbf{\nabla}\rho\right\Vert \cos\alpha}\\
 m=\dfrac{r\mathbf{\hat{s}}\cdot\mathbf{k}}{\cos\alpha}\\
 n=R\mathbf{\hat{\phi}}\cdot\mathbf{k}\end{array}\end{equation}
+
 \end_inset
 
  If 
@@ -2584,6 +2901,7 @@ n=R\mathbf{\hat{\phi}}\cdot\mathbf{k}\end{array}\end{equation}
 k_{\rho}=\dfrac{k_{r}}{\left\Vert \mathbf{\nabla}\rho\right\Vert \cos\alpha}\\
 m=r\left(k_{\theta}+k_{r}\tan\alpha\right)\\
 n=Rk_{\phi}\end{array}\label{projection}\end{equation}
+
 \end_inset
 
  where
@@ -2591,6 +2909,7 @@ n=Rk_{\phi}\end{array}\label{projection}\end{equation}
 \begin{array}{l}
 k_{r}=k_{R}\cos\theta+k_{Z}\sin\theta\\
 k_{\theta}=-k_{R}\sin\theta+k_{Z}\cos\theta\end{array}\end{equation}
+
 \end_inset
 
  Note that we retrieve
@@ -2598,6 +2917,7 @@ k_{\theta}=-k_{R}\sin\theta+k_{Z}\cos\theta\end{array}\end{equation}
 \begin{array}{l}
 k_{\Vert}=\sigma_{I}P\left(\mathbf{\hat{s}}\cdot\mathbf{k}\right)+\sigma_{B}T\left(\mathbf{\hat{\phi}}\cdot\mathbf{k}\right)=\dfrac{\mathbf{B}\cdot\mathbf{k}}{\left\Vert \mathbf{B}\right\Vert }\\
 k_{\bot}=\sqrt{\left[\left(\mathbf{\hat{\rho}}\cdot\mathbf{k}\right)^{2}+\left(\mathbf{\hat{s}}\cdot\mathbf{k}\right)^{2}+\left(\mathbf{\hat{\phi}}\cdot\mathbf{k}\right)^{2}-k_{\Vert}^{2}\right]}=\sqrt{k^{2}-k_{\Vert}^{2}}\end{array}\end{equation}
+
 \end_inset
 
  since
@@ -2605,75 +2925,415 @@ k_{\bot}=\sqrt{\left[\left(\mathbf{\hat{\rho}}\cdot\mathbf{k}\right)^{2}+\left(\
 \begin{array}{l}
 \mathbf{\hat{s}}\cdot\mathbf{k}=\sin\alpha k_{r}+\cos\alpha k_{\theta}\\
 \mathbf{\hat{\rho}}\cdot\mathbf{k}=\cos\alpha k_{r}-\sin\alpha k_{\theta}\end{array}\end{equation}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Subsection
-
 Wave scattering by fluctuations
 \end_layout
 
 \begin_layout Standard
-
-The resolution of the wave kinetic equation for describing rf wave scattering by magnetic field or density fluctuations may be performed with a Monte-Carlo method 
-\begin_inset LatexCommand \citep{bon82,vah92}
+Low frequency fluctuations of the electron density or the magnetic field
+ can strongly affect the propagation of rf waves in a magnetized plasma.
+ This effect has been extensively investigated for the Lower Hybrid wave
+ by solving a wave kinetic equation in the weak turbulence approximation.
+ 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "bon82,vah92"
 
 \end_inset
 
-. The wave vectors 
+.
+ In this approach, the flow of rf energy is described by a usual ray-tracing
+ between random scattering events where the initial wave vector 
 \begin_inset Formula $\mathbf{k}$
 \end_inset
 
+ can be modified both in amplitude and direction with the constraint to
+ remain solution of the local dispersion relation.
+ This physical mechanism is a good candidate for explaining a possible strong
+ upshift of the power spectrum as the Lower Hybrid wave propagates in the
+ plasma, even if the toroidal mode coupling for bridging the spectral gap
+ is very weak.
+ Though primarily dedicated to the Lower Hybrid wave, the concept of wave
+ scattering by low frequency density or magnetic field fluctuations can
+ be easily extended to other types of rf waves provided that 
+\begin_inset Formula $\widetilde{k}_{\Vert}\ll k_{\Vert}$
+\end_inset
+
  and 
+\begin_inset Formula $\widetilde{\omega}\ll\omega$
+\end_inset
+
+, where 
+\begin_inset Formula $k_{\Vert}=\mathbf{k}\cdot\mathbf{b}$
+\end_inset
+
+ and 
+\begin_inset Formula $\widetilde{k}_{\Vert}=\mathbf{\widetilde{k}}\cdot\mathbf{b}$
+\end_inset
+
+ are the projections of the rf and fluctuation wave vectors respectively
+ along the direction of the local magnetic field 
+\begin_inset Formula $\mathbf{b}=\mathbf{B}/\left\Vert \mathbf{B}\right\Vert $
+\end_inset
+
+, while 
+\begin_inset Formula $\omega$
+\end_inset
+
+ and 
+\begin_inset Formula $\widetilde{\omega}$
+\end_inset
+
+ are the rf and fluctuation frequencies respectively.
+ Consequently, the scattering process becomes a two dimensional problem
+ in the plane perpendicular to the local magnetic field direction, a reasonable
+ assumption regarding the large difference between the long wave length
+ of the low frequency fluctuations and the short length of the rf waves
+ along 
+\begin_inset Formula $\mathbf{b}$
+\end_inset
+
+.
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+The parallel wave length 
+\begin_inset Formula $\lambda_{\Vert}$
+\end_inset
+
+ is related to the parallel refractive index 
+\begin_inset Formula $N_{\Vert}$
+\end_inset
+
+ of the rf wave by the simple relation 
+\begin_inset Formula $\lambda_{\Vert}=c/fN_{\Vert},$
+\end_inset
+
+where 
+\begin_inset Formula $f=\omega/2\pi$
+\end_inset
+
+.
+ For the Lower Hybrid wave at 
+\begin_inset Formula $f_{LH}=3.7GHz$
+\end_inset
+
+ and 
+\begin_inset Formula $N_{\Vert LH}$
+\end_inset
+
+
+\begin_inset Formula $\simeq2$
+\end_inset
+
+, 
+\begin_inset Formula $\lambda_{\Vert LH}$
+\end_inset
+
+
+\begin_inset Formula $\simeq2cm$
+\end_inset
+
+.
+ From turwhich is much less than the wave length 
+\begin_inset Formula $\widetilde{\lambda}_{\Vert}\simeq***cm$
+\end_inset
+
+ of density fluctuation along the parallel direction.
+ For the Electron Cyclotron wave, 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $f_{EC}=110GHz$
+\end_inset
+
+ and 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+
+\begin_inset Formula $N_{\Vert EC}$
+\end_inset
+
+
+\begin_inset Formula $\simeq0.2$
+\end_inset
+
+, so that 
+\begin_inset Formula $\lambda_{\Vert EC}$
+\end_inset
+
+
+\begin_inset Formula $\simeq2cm$
+\end_inset
+
+ is even smaller than 
+\begin_inset Formula $\lambda_{\Vert LH}$
+\end_inset
+
+
+\begin_inset Formula $\simeq2cm$
+\end_inset
+
+ as compared to 
+\begin_inset Formula $\widetilde{\lambda}_{\Vert}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Calculations are organized in three steps.
+ In the first section, the components of the scattered rf wave vector are
+ calculated, according to the curvilinear coordinate system chosen for describin
+g the magnetic equilibrium in C3PO.
+ The wave kinetic equation corresponding to the wave-wave interaction is
+ then derived from first principles in the second section.
+ Finally, in the third section, the wave kinetic equation is solved using
+ a Monte-Carlo method and the procedure for the numerical implementation
+ in the code is explicited.
+\end_layout
+
+\begin_layout Standard
+Before entering into the details of the calculations, it is possible to
+ estimate the impact of a simple transfer from the toroidal mode number
+ 
+\begin_inset Formula $n$
+\end_inset
+
+ to the poloidal one 
+\begin_inset Formula $m$
+\end_inset
+
+ at fixed 
+\begin_inset Formula $k_{\Vert0}$
+\end_inset
+
+ on the ray properties, by changing the initial conditions.
+ The benchmark case presented in Sec.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:JET-like-plasma"
+
+\end_inset
+
+ is considered using 
+\begin_inset Formula $N_{\phi0}=-1.8$
+\end_inset
+
+.
+ From a scan of 
+\begin_inset Formula $m$
+\end_inset
+
+
+\begin_inset Formula $\in\left\{ -300,300\right\} $
+\end_inset
+
+ with steps 
+\begin_inset Formula $\Delta m=50$
+\end_inset
+
+, it is possible to show that a variation of 
+\begin_inset Formula $m$
+\end_inset
+
+ and 
+\begin_inset Formula $n$
+\end_inset
+
+ strongly affect the ray propagation, even if 
+\begin_inset Formula $k_{\Vert0}$
+\end_inset
+
+ remains unchanged.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of the scattered wave vector
+\end_layout
+
+\begin_layout Standard
+When the rf wave vector 
+\begin_inset Formula $\mathbf{k}$
+\end_inset
+
+ is scattered by low density fluctuations, it may change both in module
+ and direction, with the conditions
+\begin_inset Formula \begin{equation}
+\mathbf{k}\cdot\mathbf{b}=\mathbf{k}^{\prime}\cdot\mathbf{b}=k_{\Vert}\label{eq:kparconservation}\end{equation}
+
+\end_inset
+
+where 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
 \begin_inset Formula $\mathbf{k}^{\prime}$
 \end_inset
 
- before and after the scattering event respectively are linked by the following vector relations
-\begin_inset Formula \begin{equation}
-\mathbf{k}\cdot\mathbf{b}=\mathbf{k}^{\prime}\cdot\mathbf{b}=k_{\Vert}\label{eq:wskparconservation}\end{equation}
+ is the scattered wave vector.
+ Its perpendicular component 
+\begin_inset Formula $k_{\bot}^{\prime}=\left\Vert \mathbf{k}_{\bot}^{\prime}\right\Vert $
 \end_inset
 
- and
-\begin_inset Formula \begin{equation}
-\mathbf{k}_{\bot}\cdot\mathbf{k}_{\bot}^{\prime}=k_{\bot}k_{\bot}^{\prime}\cos\beta\label{eq:wskperprotation}\end{equation}
+, where 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+
+\begin_inset Formula $\mathbf{k}_{\bot}^{\prime}=\mathbf{k^{\prime}}\times\mathbf{b}$
 \end_inset
 
- where 
-\begin_inset Formula $\mathbf{k}_{\bot}=\mathbf{k}\times\mathbf{b}$
+,
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+ is determined by solving the local dispersion relation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "disprel"
+
 \end_inset
 
- and 
-\begin_inset Formula $\mathbf{b}=\mathbf{B}/\left\Vert \mathbf{B}\right\Vert .$
-\end_inset
-
- The scattering process consists in a rotation by an angle 
-\begin_inset Formula $\beta$
-\end_inset
-
- of the component of the wave vector perpendicular to the wave field direction, the parallel component of 
-\begin_inset Formula $\mathbf{k}$
-\end_inset
-
- being unchanged. Indeed, the parallel wave number of the low-frequency fluctuations is considered to be negligible as compared to 
+) at fixed 
 \begin_inset Formula $k_{\Vert}$
 \end_inset
 
-. The value of 
-\begin_inset Formula $k_{\bot}^{\prime}$
+, and its direction results from a rotation 
+\begin_inset Formula $\mathcal{R}_{\beta}$
 \end_inset
 
- is deduced from the local dispersion relation. For like transitions, the scattered wave remains on the same branch of propagation, and therefore, 
-\begin_inset Formula $k_{\bot}^{\prime}=k_{\bot}$
+ of an angle 
+\begin_inset Formula $\beta$
 \end_inset
 
-. Conversely, for unlike transitions, the scattering leads to a modification of the conditions of propagation and 
+ around the magnetic field direction 
+\begin_inset Formula $\mathbf{b}$
+\end_inset
+
+ so that
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+
+\begin_inset Formula \begin{equation}
+\mathbf{k}_{\bot}\cdot\mathbf{k}_{\bot}^{\prime}=k_{\bot}k_{\bot}^{\prime}\cos\beta\label{eq:wskperprotation}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For unlike transitions, the scattered wave moves to a different branch of
+ propagation and 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
 \begin_inset Formula $k_{\bot}^{\prime}\neq k_{\bot}$
 \end_inset
 
-. In Ref. 
-\begin_inset LatexCommand \citet{bon82}
+, otherwise 
+\begin_inset Formula $k_{\bot}^{\prime}=k_{\bot}$
+\end_inset
+
+ for like transitions.
+ From the relations (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "disprel"
+
+\end_inset
+
+), (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:kparconservation"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:wskperprotation"
+
+\end_inset
+
+), all the components 
+\begin_inset Formula $\left(k_{\rho}^{\prime},m^{\prime},n^{\prime}\right)$
+\end_inset
+
+ of 
+\begin_inset Formula $\mathbf{k}^{\prime}$
+\end_inset
+
+ can be deduced from those of 
+\begin_inset Formula $\mathbf{k}$
+\end_inset
+
+.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+In Ref.
+ 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "bon82"
 
 \end_inset
 
@@ -2681,168 +3341,349 @@ The resolution of the wave kinetic equation for describing rf wave scattering by
 \begin_inset Formula $\mathbf{b}\cdot\left(\mathbf{k}_{\bot}\times\mathbf{k}_{\bot}^{\prime}\right)=k_{\bot}k_{\bot}^{\prime}\sin\beta$
 \end_inset
 
- is added to (
-\begin_inset LatexCommand \ref{eq:wskparconservation}
+ is also introduced in addition to (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:kparconservation"
 
 \end_inset
 
 ) and (
-\begin_inset LatexCommand \ref{eq:wskperprotation}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:wskperprotation"
 
 \end_inset
 
-). However, it is equivalent to (
-\begin_inset LatexCommand \ref{eq:wskperprotation}
+).
+ However, it is fully equivalent to (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:wskperprotation"
 
 \end_inset
 
-) and can be used to cross-check the consistency of the calculation of 
-\begin_inset Formula $k_{\rho}^{\prime}$
+) and does not provide any additional information.
+ 
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+The wave scattering may be therefore described as a two steps process, and
+ the mode conversion 
+\begin_inset Formula $\mathcal{M}$
+\end_inset
+
+ and the rotation 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\mathcal{R}_{\beta}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Derivation of the wave kinetic equation
+\end_layout
+
+\begin_layout Subsubsection
+Solution of the wave kinetic equation
+\end_layout
+
+\begin_layout Standard
+Using the Rodrigues general formula for the rotation 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\mathcal{R}_{\beta}$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+ of a vector 
+\begin_inset Formula $\mathbf{k}$
 \end_inset
 
 , 
-\begin_inset Formula $m^{\prime}$
-\end_inset
-
- and 
-\begin_inset Formula $n^{\prime}$
-\end_inset
-
-. The coordinates of 
-\begin_inset Formula $\mathbf{k}^{\prime}$
-\end_inset
-
- are therefore determined by relations (
-\begin_inset LatexCommand \ref{eq:wskparconservation}
-
-\end_inset
-
-) and (
-\begin_inset LatexCommand \ref{eq:wskperprotation}
-
-\end_inset
-
-) and (
-\begin_inset LatexCommand \ref{krhoeq}
-
-\end_inset
-
-), 
 \begin_inset Formula \begin{equation}
-k_{\rho}^{\prime}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[\sin\alpha\dfrac{m^{\prime}}{r}+\sigma_{\rho}\sqrt{k_{\Vert}^{2}+k_{\bot}^{\prime2}-\cos^{2}\alpha\dfrac{m^{\prime2}}{r^{2}}-\dfrac{n^{\prime2}}{R^{2}}}\right]\label{eq:wskrho}\end{equation}
+\mathbf{\widetilde{k}}=\mathcal{R}_{\beta}\left(\mathbf{k}\right)=\cos\beta\mathbf{k}+\left(1-\cos\beta\right)\left(\mathbf{k}\cdot\mathbf{b}\right)\mathbf{b}+\sin\beta\left(\mathbf{b}\times\mathbf{k}\right)\label{eq:rodrigues}\end{equation}
+
+\end_inset
+
+it turns out that each components of 
+\begin_inset Formula $\mathbf{\widetilde{k}}$
+\end_inset
+
+ is given by the relations 
+\begin_inset Formula \begin{multline*}
+\mathbf{\widetilde{k}}\cdot\widehat{\rho}=\cos\beta\mathbf{k\cdot\widehat{\rho}}+\left(1-\cos\beta\right)\left(\mathbf{k}\cdot\mathbf{b}\right)\mathbf{b}\cdot\widehat{\rho}+\sin\beta\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\rho}\\
+\mathbf{\widetilde{k}}\cdot\widehat{\theta}=\cos\beta\mathbf{k\cdot\widehat{\theta}}+\left(1-\cos\beta\right)\left(\mathbf{k}\cdot\mathbf{b}\right)\mathbf{b}\cdot\widehat{\theta}+\sin\beta\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\theta}\\
+\mathbf{\widetilde{k}}\cdot\widehat{\phi}=\cos\beta\mathbf{k\cdot\widehat{\phi}}+\left(1-\cos\beta\right)\left(\mathbf{k}\cdot\mathbf{b}\right)\mathbf{b}\cdot\widehat{\phi}+\sin\beta\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\phi}\end{multline*}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
+Using the vectorial relations 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
 
-By definition, the variation of the poloidal mode number 
-\begin_inset Formula $m$
-\end_inset
-
- is made possible by the breaking of the toroidal symmetry resulting from the fluctuations, so that the toroidal mode number 
-\begin_inset Formula $n$
-\end_inset
-
- is no more conserved in the scattering process.
-\end_layout
-
-\begin_layout Standard
-
-According to (
-\begin_inset LatexCommand \ref{eq:wavevector}
+\begin_inset Formula \begin{multline*}
+\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\rho}=\left(\widehat{\rho}\times\mathbf{b}\right)\cdot\mathbf{k}\\
+\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\theta}=\left(\widehat{\theta}\times\mathbf{b}\right)\cdot\mathbf{k}\\
+\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\phi}=\left(\widehat{\phi}\times\mathbf{b}\right)\cdot\mathbf{k}\end{multline*}
 
 \end_inset
 
-), the scattered wave vector 
-\begin_inset Formula $\mathbf{k}^{\prime}$
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+and the expression on the magnetic field 
+\begin_inset Formula $\mathbf{b}=\sigma_{B}T\mathbf{\widehat{\phi}}+\sigma_{I}P\mathbf{\hat{s}}$
 \end_inset
 
- may be expressed as 
-\begin_inset Formula \[
-\mathbf{k}^{\prime}=k_{\rho}^{\prime}\left\Vert \mathbf{\nabla}\rho\right\Vert \widehat{\mathbf{\rho}}+\dfrac{m^{\prime}}{r}\widehat{\mathbf{\theta}}+\dfrac{n^{\prime}}{R}\widehat{\mathbf{\phi}}\]
+ according to the relation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Bfield"
+
 \end_inset
 
- and since 
-\begin_inset Formula $\mathbf{b}=\sigma_{B}b_{T}\mathbf{\hat{\phi}}+\sigma_{I}b_{P}\mathbf{\hat{s}}$
-\end_inset
-
- where 
-\begin_inset Formula $b_{T}=B_{T}/B$
-\end_inset
-
- and 
-\begin_inset Formula $b_{P}=B_{P}/B$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-
-
-\begin_inset Formula \begin{equation}
-\mathbf{\mathbf{k}^{\prime}\cdot\mathbf{b}}=k_{\Vert}^{\prime}=k_{\Vert}=\sigma_{I}b_{P}\dfrac{m^{\prime}}{r}\cos\alpha+\sigma_{B}b_{T}\dfrac{n^{\prime}}{R}\label{eq:ws1}\end{equation}
-\end_inset
-
- by conservation of 
-\begin_inset Formula $k_{\Vert}$
-\end_inset
-
-, and using the relation 
-\begin_inset Formula $\cos\alpha=\widehat{\mathbf{\theta}}\cdot\mathbf{\hat{s}}$
-\end_inset
-
-. Let define 
-\begin_inset Formula $\mathbf{k}_{\bot}=\mathbf{k}\times\mathbf{b}$
+), recalling that 
+\begin_inset Formula $T=B_{T}/B$
 \end_inset
 
  and 
-\begin_inset Formula $\mathbf{k}_{\bot}^{\prime}=\mathbf{k}^{\prime}\times\mathbf{b}$
-\end_inset
-
-. By inserting the expressions of 
-\begin_inset Formula $\mathbf{k}_{\bot}$
-\end_inset
-
- and 
-\begin_inset Formula $\mathbf{k}_{\bot}^{\prime}$
-\end_inset
-
- into the relation 
-\begin_inset Formula $\mathbf{k}_{\bot}\cdot\mathbf{k}_{\bot}^{\prime}=k_{\bot}k_{\bot}^{\prime}\cos\beta$
+\begin_inset Formula $P=B_{P}/B$
 \end_inset
 
 , one obtains
-\begin_inset Formula \[
-\left(\mathbf{k}\times\mathbf{b}\right)\cdot\left(\mathbf{k}^{\prime}\times\mathbf{b}\right)=\left(\mathbf{k}\cdot\mathbf{k}^{\prime}\right)\left(\mathbf{b}\cdot\mathbf{b}\right)-\left(\mathbf{k}\cdot\mathbf{b}\right)\left(\mathbf{b\cdot}\mathbf{k}^{\prime}\right)=\mathbf{k}\cdot\mathbf{k}^{\prime}-k_{\Vert}^{2}\]
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula \begin{multline*}
+\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\rho}=\sigma_{B}T\left(\mathbf{\widehat{\rho}\times\widehat{\phi}}\right)\cdot\mathbf{k}+\sigma_{I}P\left(\mathbf{\widehat{\rho}\times\hat{s}}\right)\cdot\mathbf{k}\\
+\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\theta}=\sigma_{B}T\left(\mathbf{\widehat{\theta}\times\widehat{\phi}}\right)\cdot\mathbf{k}+\sigma_{I}P\left(\mathbf{\widehat{\theta}\times\hat{s}}\right)\cdot\mathbf{k}\\
+\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\phi}=\sigma_{B}T\left(\mathbf{\widehat{\phi}\times\widehat{\phi}}\right)\cdot\mathbf{k}+\sigma_{I}P\left(\mathbf{\widehat{\phi}\times\hat{s}}\right)\cdot\mathbf{k}\end{multline*}
+
 \end_inset
 
- which leads to the second relation
-\begin_inset Formula \begin{equation}
-k_{\bot}k_{\bot}^{\prime}\cos\beta=k_{\rho}k_{\rho}^{\prime}\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2}+\dfrac{mm^{\prime}}{r^{2}}+\dfrac{nn^{\prime}}{R^{2}}-\frac{\left\Vert \mathbf{\nabla}\rho\right\Vert \sin\alpha}{r}\left(mk_{\rho}^{\prime}+m^{\prime}k_{\rho}\right)-k_{\Vert}^{2}\label{eq:ws2}\end{equation}
+which simplifies to
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula \begin{multline*}
+\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\rho}=-\sigma_{B}T\hat{\mathbf{s}}\cdot\mathbf{k}+\sigma_{I}P\widehat{\phi}\cdot\mathbf{k}\\
+\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\theta}=\sigma_{B}T\widehat{\mathbf{r}}\cdot\mathbf{k}-\sigma_{I}P\sin\alpha\widehat{\phi}\cdot\mathbf{k}\\
+\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\phi}=-\sigma_{I}P\widehat{\rho}\cdot\mathbf{k}\end{multline*}
+
 \end_inset
 
- using the relation 
-\begin_inset Formula $-\sin\alpha=\widehat{\mathbf{\rho}}\cdot\widehat{\theta}$
+since
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+ 
+\begin_inset Formula \begin{multline*}
+\widehat{\rho}\times\widehat{\phi}=-\widehat{\mathbf{s}}\\
+\mathbf{\widehat{\theta}\times\widehat{\phi}}=\widehat{\mathbf{r}}\end{multline*}
+
 \end_inset
 
-. In the case 
-\begin_inset Formula $\beta=0$
+and 
+\begin_inset Formula \begin{multline*}
+\mathbf{\widehat{\rho}\times\hat{s}}=\widehat{\phi}\\
+\mathbf{\widehat{\theta}\times\hat{s}}=-\sin\alpha\widehat{\phi}\\
+\mathbf{\widehat{\phi}\times\hat{s}}=-\widehat{\rho}\end{multline*}
+
+\end_inset
+
+using the relations 
+\begin_inset Formula $\hat{\mathbf{s}}=\sin\alpha\widehat{\mathbf{r}}+\cos\alpha\widehat{\theta}$
 \end_inset
 
  and 
-\begin_inset Formula $k_{\bot}^{\prime}=k_{\bot}$
+\begin_inset Formula $\widehat{\theta}=\mathbf{\widehat{\phi}\times\hat{r}}$
 \end_inset
 
-, the relation (
-\begin_inset LatexCommand \ref{k2}
+.
+ Using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:wavevector"
 
 \end_inset
 
-) is well recovered from (
-\begin_inset LatexCommand \ref{eq:ws2}
+),
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula \begin{multline*}
+\hat{\mathbf{s}}\cdot\mathbf{k=}\dfrac{m}{r}\cos\alpha\\
+\widehat{\phi}\cdot\mathbf{k}=\frac{n}{R}\\
+\widehat{\mathbf{r}}\cdot\mathbf{k}=k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \cos\alpha\\
+\widehat{\rho}\cdot\mathbf{k}=k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert -\sin\alpha\dfrac{m}{r}\\
+\widehat{\theta}\cdot\mathbf{k}=-\sin\alpha k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert +\dfrac{m}{r}\end{multline*}
+
+\end_inset
+
+and
+\begin_inset Formula \begin{multline*}
+\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\rho}=-\sigma_{B}T\dfrac{m}{r}\cos\alpha+\sigma_{I}P\frac{n}{R}\\
+\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\theta}=\sigma_{B}Tk_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \cos\alpha-\sigma_{I}P\sin\alpha\frac{n}{R}\\
+\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\phi}=-\sigma_{I}P\left(k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert -\sin\alpha\dfrac{m}{r}\right)\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Finally, since
+\begin_inset Formula \begin{multline*}
+\mathbf{b}\cdot\widehat{\rho}=0\\
+\mathbf{b}\cdot\widehat{\theta}=\sigma_{I}P\cos\alpha\\
+\mathbf{b}\cdot\widehat{\phi}=\sigma_{B}T\end{multline*}
+
+\end_inset
+
+one obtains 
+\begin_inset Formula \begin{multline*}
+\widetilde{k}_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert -\sin\alpha\dfrac{\widetilde{m}}{r}=\cos\beta\left(k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert -\sin\alpha\dfrac{m}{r}\right)+\sin\beta\left(-\sigma_{B}T\dfrac{m}{r}\cos\alpha+\sigma_{I}P\frac{n}{R}\right)\\
+-\sin\alpha\widetilde{k}_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert +\dfrac{\widetilde{m}}{r}=\cos\beta\left(-\sin\alpha k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert +\dfrac{m}{r}\right)+\left(1-\cos\beta\right)k_{\Vert}\sigma_{I}P\cos\alpha+\sin\beta\left(\sigma_{B}Tk_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \cos\alpha-\sigma_{I}P\sin\alpha\frac{n}{R}\right)\\
+\frac{\widetilde{n}}{R}=\cos\beta\frac{n}{R}+\left(1-\cos\beta\right)k_{\Vert}\sigma_{B}T-\sin\beta\sigma_{I}P\left(k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert -\sin\alpha\dfrac{m}{r}\right)\end{multline*}
+
+\end_inset
+
+or
+\begin_inset Formula \begin{multline}
+\widetilde{k}_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert =\cos\beta k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert +\left(1-\cos\beta\right)k_{\Vert}\sigma_{I}P\tan\alpha+\sin\beta\left(\frac{\sigma_{B}T}{\cos\alpha}\left(k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \sin\alpha-\frac{m}{r}\right)+\sigma_{I}P\frac{n}{R}\right)\\
+\dfrac{\widetilde{m}}{r}=\cos\beta\dfrac{m}{r}+\left(1-\cos\beta\right)k_{\Vert}\frac{\sigma_{I}P}{\cos\alpha}+\sin\beta\frac{\sigma_{B}T}{\cos\alpha}\left(k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert -\frac{m}{r}\sin\alpha\right)\\
+\frac{\widetilde{n}}{R}=\cos\beta\frac{n}{R}+\left(1-\cos\beta\right)k_{\Vert}\sigma_{B}T+\sin\beta\sigma_{I}P\left(-k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert +\sin\alpha\dfrac{m}{r}\right)\label{eq:kscattered}\end{multline}
+
+\end_inset
+
+where 
+\begin_inset Formula $\mathbf{k}\cdot\mathbf{b}=k_{\Vert}$
+\end_inset
+
+ and the scattered wave vector is 
+\begin_inset Formula \begin{equation}
+\widetilde{\mathbf{k}}=\widetilde{k}_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \widehat{\mathbf{\rho}}+\dfrac{\widetilde{m}}{r}\widehat{\mathbf{\theta}}+\dfrac{\widetilde{n}}{R}\widehat{\mathbf{\phi}}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If 
+\begin_inset Formula $\beta=0,$
+\end_inset
+
+ it is straightforward to demonstrate that 
+\begin_inset Formula $\widetilde{\mathbf{k}}=\mathbf{k}$
+\end_inset
+
+.
+ In addition, the relation 
+\begin_inset Formula $\mathbf{\widetilde{\mathbf{k}}\cdot\mathbf{b}}=\mathbf{\mathbf{k}\cdot\mathbf{b}}$
+\end_inset
+
+ or
+\begin_inset Formula \begin{equation}
+\sigma_{I}b_{P}\dfrac{\widetilde{m}}{r}\cos\alpha+\sigma_{B}b_{T}\dfrac{\widetilde{n}}{R}=\sigma_{I}b_{P}\dfrac{m}{r}\cos\alpha+\sigma_{B}b_{T}\dfrac{n}{R}\label{eq:ws1}\end{equation}
+
+\end_inset
+
+is also well satisfied whatever 
+\begin_inset Formula $\beta$
+\end_inset
+
+, as expected from the initial assumption on the invariance of 
+\begin_inset Formula $k_{\Vert}$
+\end_inset
+
+ with the rotation of angle 
+\begin_inset Formula $\beta$
+\end_inset
+
+, which is intrinsically considered in the Rodrigues formula (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:rodrigues"
 
 \end_inset
 
@@ -2850,39 +3691,152 @@ k_{\bot}k_{\bot}^{\prime}\cos\beta=k_{\rho}k_{\rho}^{\prime}\left\Vert \mathbf{\
 \end_layout
 
 \begin_layout Standard
+In the cold limit approximation, the plasma has bi-refringent optical properties
+ which means that for a given 
+\begin_inset Formula $k_{\Vert}$
+\end_inset
 
-From (
-\begin_inset LatexCommand \ref{eq:wskrho}
+, the dispersion relation cannot have more than two different roots in 
+\begin_inset Formula $k_{\bot}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+From the definitions 
+\begin_inset Formula $\mathbf{k}_{\bot}=\mathbf{k}\times\mathbf{b}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbf{k}_{\bot}^{\prime}=\mathbf{k}^{\prime}\times\mathbf{b}$
+\end_inset
+
+, the relation 
+\begin_inset Formula $\mathbf{k}_{\bot}\cdot\mathbf{k}_{\bot}^{\prime}=k_{\bot}k_{\bot}^{\prime}\cos\beta$
+\end_inset
+
+ becomes
+\begin_inset Formula \[
+\left(\mathbf{k}\times\mathbf{b}\right)\cdot\left(\mathbf{k}^{\prime}\times\mathbf{b}\right)=\left(\mathbf{k}\cdot\mathbf{k}^{\prime}\right)\left(\mathbf{b}\cdot\mathbf{b}\right)-\left(\mathbf{k}\cdot\mathbf{b}\right)\left(\mathbf{b\cdot}\mathbf{k}^{\prime}\right)=\mathbf{k}\cdot\mathbf{k}^{\prime}-k_{\Vert}^{2}\]
 
 \end_inset
 
-), (
-\begin_inset LatexCommand \ref{eq:ws1}
+and 
+\begin_inset Formula \begin{equation}
+k_{\bot}k_{\bot}^{\prime}\cos\beta=k_{\rho}k_{\rho}^{\prime}\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2}+\dfrac{mm^{\prime}}{r^{2}}+\dfrac{nn^{\prime}}{R^{2}}-\frac{\left\Vert \mathbf{\nabla}\rho\right\Vert \sin\alpha}{r}\left(mk_{\rho}^{\prime}+m^{\prime}k_{\rho}\right)-k_{\Vert}^{2}\label{eq:ws2}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For like mode scattering, 
+\begin_inset Formula $k_{\bot}^{\prime}=k_{\bot}$
+\end_inset
+
+ and 
+\begin_inset Formula \begin{equation}
+k_{\bot}^{2}\cos\beta=k_{\rho}k_{\rho}^{\prime}\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2}+\dfrac{mm^{\prime}}{r^{2}}+\dfrac{nn^{\prime}}{R^{2}}-\frac{\left\Vert \mathbf{\nabla}\rho\right\Vert \sin\alpha}{r}\left(mk_{\rho}^{\prime}+m^{\prime}k_{\rho}\right)-k_{\Vert}^{2}\label{eq:ws2like}\end{equation}
+
+\end_inset
+
+a relation which can be well verified by replacing 
+\begin_inset Formula $\left(k_{\rho}^{\prime}\left\Vert \mathbf{\nabla}\rho\right\Vert ,\dfrac{m^{\prime}}{r},\dfrac{n^{\prime}}{R}\right)$
+\end_inset
+
+ from (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:kscattered"
+
+\end_inset
+
+) into (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:ws2like"
+
+\end_inset
+
+).
+ Therefore, for like mode scattering, 
+\begin_inset Formula $\left(k_{\rho}^{\prime},m^{\prime},n^{\prime}\right)$
+\end_inset
+
+ have just to be deduced from (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:kscattered"
+
+\end_inset
+
+) knowing 
+\begin_inset Formula $\left(k_{\rho},m,n\right)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+For unlike mode scattering, 
+\begin_inset Formula $k_{\bot}^{\prime}\neq k_{\bot}$
+\end_inset
+
+, 
+\end_layout
+
+\begin_layout Standard
+Therefore, The coordinates of 
+\begin_inset Formula $\mathbf{k}^{\prime}$
+\end_inset
+
+ are therefore determined by relations (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:wskparconservation"
 
 \end_inset
 
 ) and (
-\begin_inset LatexCommand \ref{eq:ws2}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:wskperprotation"
 
 \end_inset
 
-), a second degree polynomial equation in 
-\begin_inset Formula $m^{\prime}$
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "krhoeq"
+
 \end_inset
 
- must be solved, leading to the determination of 
-\begin_inset Formula $n^{\prime}$
+), 
+\begin_inset Formula \begin{equation}
+k_{\rho}^{\prime}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[\sin\alpha\dfrac{m^{\prime}}{r}+\sigma_{\rho}\sqrt{k_{\Vert}^{2}+k_{\bot}^{\prime2}-\cos^{2}\alpha\dfrac{m^{\prime2}}{r^{2}}-\dfrac{n^{\prime2}}{R^{2}}}\right]\label{eq:wskrho}\end{equation}
+
 \end_inset
 
- and 
-\begin_inset Formula $k_{\rho}^{\prime}$
+
+\end_layout
+
+\begin_layout Standard
+By definition, the variation of the poloidal mode number 
+\begin_inset Formula $m$
 \end_inset
 
-. Owing to the complexity of the coefficients, it is solved with Maple software. (******problem of two solutions ?******)
+ is made possible by the breaking of the toroidal symmetry resulting from
+ the fluctuations, so that the toroidal mode number 
+\begin_inset Formula $n$
+\end_inset
+
+ is no more conserved in the scattering process.
 \end_layout
 
 \begin_layout Subsection
-
 Calculation of 
 \begin_inset Formula $\left\Vert \mathbf{\nabla}\rho\right\Vert $
 \end_inset
@@ -2891,7 +3845,6 @@ Calculation of
 \end_layout
 
 \begin_layout Standard
-
 So far the only restriction over the radial coordinate 
 \begin_inset Formula $\rho$
 \end_inset
@@ -2904,7 +3857,8 @@ So far the only restriction over the radial coordinate
 \begin_inset Formula $1$
 \end_inset
 
- at the edge. In the code we take 
+ at the edge.
+ In the code we take 
 \begin_inset Formula $\rho\left(\psi\right)=r\left(\psi,0\right)/a_{p}$
 \end_inset
 
@@ -2920,23 +3874,26 @@ So far the only restriction over the radial coordinate
 \begin_inset Formula $a_{p}=r\left(\psi_{a},0\right)$
 \end_inset
 
-. Using 
+.
+ Using 
 \begin_inset Formula \begin{equation}
 \mathbf{\nabla}\rho=\dfrac{d\rho}{d\psi}\left\Vert \mathbf{\nabla}\psi\right\Vert \mathbf{\hat{\psi}}\end{equation}
+
 \end_inset
 
  we find
 \begin_inset Formula \begin{equation}
 \fbox{$\left\Vert \mathbf{\nabla}\rho\right\Vert =\left.\dfrac{\partial r}{\partial\psi}\right\vert _{\theta=0}\dfrac{RB_{P}}{a_{p}}$}\end{equation}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Section
-
-
-\begin_inset LatexCommand \label{sec:Susceptibility-tensor-and}
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Susceptibility-tensor-and"
 
 \end_inset
 
@@ -2944,12 +3901,10 @@ Susceptibility tensor and dispersion relation
 \end_layout
 
 \begin_layout Subsection
-
 Cold plasma model
 \end_layout
 
 \begin_layout Standard
-
 In the cold plasma model 
 \begin_inset Formula $\mathbb{X}^{s\text{C}}$
 \end_inset
@@ -2961,6 +3916,7 @@ In the cold plasma model
 
 \series bold
 .
+
 \series default
  Also, 
 \begin_inset Formula $X_{xz}^{s\text{C}}=X_{yz}^{s\text{C}}=0$
@@ -2970,12 +3926,14 @@ In the cold plasma model
 \begin_inset Formula $X_{xx}^{s\text{C}}=X_{yy}^{s\text{C}}$
 \end_inset
 
-. 
+.
+ 
 \begin_inset Formula \begin{equation}
 \begin{array}{l}
 X_{\bot}^{s\text{C}}\equiv X_{xx}^{s\text{C}}=X_{yy}^{s\text{C}}=-\dfrac{\overline{\omega}_{ps}^{2}}{1-\overline{\omega}_{cs}^{2}}\\
 X_{\Vert}^{s\text{C}}\equiv X_{zz}^{s\text{C}}=-\overline{\omega}_{ps}^{2}\\
 X_{\times}^{s\text{C}}\equiv iX_{xy}^{s\text{C}}=\dfrac{\overline{\omega}_{ps}^{2}\overline{\omega}_{cs}}{1-\overline{\omega}_{cs}^{2}}\end{array}\end{equation}
+
 \end_inset
 
  Therefore, 
@@ -2985,6 +3943,7 @@ X_{\times}^{s\text{C}}\equiv iX_{xy}^{s\text{C}}=\dfrac{\overline{\omega}_{ps}^{
  so that 
 \begin_inset Formula \[
 \mathcal{D}^{\text{C}}\left(\mathbf{k},\omega\right)=P_{4}^{\text{C}}N_{\bot}^{4}+P_{2}^{\text{C}}N_{\bot}^{2}+P_{0}^{\text{C}}\]
+
 \end_inset
 
  with
@@ -2993,6 +3952,7 @@ X_{\times}^{s\text{C}}\equiv iX_{xy}^{s\text{C}}=\dfrac{\overline{\omega}_{ps}^{
 P_{4}^{\text{C}}=K_{\bot}^{\text{C}}\\
 P_{2}^{\text{C}}=\left(N_{\Vert}^{2}-K_{\bot}^{\text{C}}\right)\left(K_{\bot}^{\text{C}}+K_{\Vert}^{\text{C}}\right)+\left(K_{\times}^{\text{C}}\right)^{2}\\
 P_{0}^{\text{C}}=K_{\Vert}^{\text{C}}\left[\left(N_{\Vert}^{2}-K_{\bot}^{\text{C}}\right)^{2}-\left(K_{\times}^{\text{C}}\right)^{2}\right]\end{array}\end{equation}
+
 \end_inset
 
  where 
@@ -3011,9 +3971,9 @@ P_{0}^{\text{C}}=K_{\Vert}^{\text{C}}\left[\left(N_{\Vert}^{2}-K_{\bot}^{\text{C
 \end_layout
 
 \begin_layout Section
-
-
-\begin_inset LatexCommand \label{sec:Kinetic-plasma-model}
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Kinetic-plasma-model"
 
 \end_inset
 
@@ -3021,7 +3981,6 @@ Kinetic plasma model
 \end_layout
 
 \begin_layout Standard
-
 The kinetic plasma susceptibility tensor 
 \begin_inset Formula $\mathbb{X}_{\text{M}}$
 \end_inset
@@ -3029,6 +3988,7 @@ The kinetic plasma susceptibility tensor
  for a non-relativistic is the sum over contributions from all species 
 \begin_inset Formula \begin{equation}
 \mathbb{X}_{\text{M}}=\sum_{s}\mathbb{X}_{\text{M}}^{s}\end{equation}
+
 \end_inset
 
  
@@ -3042,6 +4002,7 @@ The kinetic plasma susceptibility tensor
 
 \begin_inset Formula \begin{equation}
 \mathbb{X}_{\text{M}}^{s}=\overline{\omega}_{ps}^{2}\zeta_{0s}\sum_{n=-\infty}^{n=+\infty}\mathbb{Y}_{\text{M}}^{s,n}\end{equation}
+
 \end_inset
 
  where
@@ -3056,6 +4017,7 @@ Y_{\text{M},xz}^{s,n}=-\sigma_{\Vert}\dfrac{n}{\sqrt{2\lambda_{s}}}\Gamma_{ns}Z_
 Y_{\text{M},xz}^{s,n}=Y_{\text{M},zx}^{s,n}\\
 Y_{\text{M},yz}^{s,n}=i\sigma_{s}\sigma_{\Vert}\sqrt{\dfrac{\lambda_{s}}{2}}\Gamma_{ns}^{\prime}Z_{ns}^{\prime}\\
 Y_{\text{M},zy}^{s,n}=-Y_{\text{M},yz}^{s,n}\end{array}\label{a}\end{equation}
+
 \end_inset
 
  with
@@ -3066,6 +4028,7 @@ Z_{ns} & =Z\left(\zeta_{ns}\right)\\
 \zeta_{ns} & =\frac{1-n\overline{\omega}_{cs}}{\sqrt{2}\left\vert N_{\Vert}\right\vert \beta_{Ts}}\\
 \sigma_{s} & =\text{sign}\left(q_{s}\right)\\
 \sigma_{\Vert} & =\text{sign}\left(N_{\Vert}\right)\end{align*}
+
 \end_inset
 
  where 
@@ -3077,7 +4040,9 @@ Z_{ns} & =Z\left(\zeta_{ns}\right)\\
 \end_inset
 
  is the plasma dispersion function 
-\begin_inset LatexCommand \citet{bra98}
+\begin_inset CommandInset citation
+LatexCommand citet
+key "bra98"
 
 \end_inset
 
@@ -3085,9 +4050,9 @@ Z_{ns} & =Z\left(\zeta_{ns}\right)\\
 \end_layout
 
 \begin_layout Section
-
-
-\begin_inset LatexCommand \label{sec:Benchmarking-of-C3PO}
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Benchmarking-of-C3PO"
 
 \end_inset
 
@@ -3095,35 +4060,34 @@ Benchmarking of C3PO
 \end_layout
 
 \begin_layout Subsection
-
 JET-like plasma
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:JET-like-plasma"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
-
 Equilibrium
 \end_layout
 
 \begin_layout Standard
-
-
 \begin_inset Float figure
 placement htb
 wide false
 sideways false
-status open
+status collapsed
 
-
-\begin_layout Standard
-
+\begin_layout Plain Layout
  
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \align center
-
-
-\begin_inset Graphics 
+\begin_inset Graphics
 	filename figs/JETliketest2p0_numeric_ray_1_RayPoloidal.eps
 	width 3.6in
 	clip
@@ -3131,9 +4095,11 @@ status open
 \end_inset
 
 
-\newline
+\begin_inset Newline newline
+\end_inset
+
  
-\begin_inset Graphics 
+\begin_inset Graphics
 	filename figs/JETliketest2p0_analytic_ray_1_RayPoloidal.eps
 	width 3.6in
 	clip
@@ -3141,23 +4107,36 @@ status open
 \end_inset
 
 
-\newline
+\begin_inset Newline newline
+\end_inset
+
 
 \end_layout
 
-\begin_layout Caption
+\begin_layout Plain Layout
+\begin_inset Caption
 
-Poloidal projection of the ray trajectory. The red curve corresponds to the slow mode and the blue curve corresponds to the fast mode. Numeric (upper plot) and analytic (lower plot) magnetic equilibrium. 
+\begin_layout Plain Layout
+Poloidal projection of the ray trajectory.
+ The red curve corresponds to the slow mode and the blue curve corresponds
+ to the fast mode.
+ Numeric (upper plot) and analytic (lower plot) magnetic equilibrium.
+ 
 \begin_inset Formula $N_{\phi0}=-2.0$
 \end_inset
 
 
 \end_layout
 
-\begin_layout Standard
+\end_inset
 
 
-\begin_inset LatexCommand \label{Jet20}
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "Jet20"
 
 \end_inset
 
@@ -3170,25 +4149,15 @@ Poloidal projection of the ray trajectory. The red curve corresponds to the slow
 \end_layout
 
 \begin_layout Standard
-
-
 \begin_inset Float figure
 placement htb
 wide false
 sideways false
 status open
 
-
-\begin_layout Standard
-
- 
-\end_layout
-
-\begin_layout Standard
+\begin_layout Plain Layout
 \align center
-
-
-\begin_inset Graphics 
+\begin_inset Graphics
 	filename figs/JETliketest1p8_numeric_ray_1_RayPoloidal.eps
 	width 3.6in
 	clip
@@ -3196,9 +4165,11 @@ status open
 \end_inset
 
 
-\newline
+\begin_inset Newline newline
+\end_inset
+
  
-\begin_inset Graphics 
+\begin_inset Graphics
 	filename figs/JETliketest1p8_analytic_ray_1_RayPoloidal.eps
 	width 3.6in
 	clip
@@ -3206,23 +4177,36 @@ status open
 \end_inset
 
 
-\newline
+\begin_inset Newline newline
+\end_inset
+
 
 \end_layout
 
-\begin_layout Caption
+\begin_layout Plain Layout
+\begin_inset Caption
 
-Poloidal projection of the ray trajectory. The red curve corresponds to the slow mode and the blue curve corresponds to the fast mode. Numeric (upper plot) and analytic (lower plot) magnetic equilibrium. 
+\begin_layout Plain Layout
+Poloidal projection of the ray trajectory.
+ The red curve corresponds to the slow mode and the blue curve corresponds
+ to the fast mode.
+ Numeric (upper plot) and analytic (lower plot) magnetic equilibrium.
+ 
 \begin_inset Formula $N_{\phi0}=-1.8$
 \end_inset
 
 
 \end_layout
 
-\begin_layout Standard
+\end_inset
 
 
-\begin_inset LatexCommand \label{Jet18}
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "Jet18"
 
 \end_inset
 
@@ -3235,25 +4219,19 @@ Poloidal projection of the ray trajectory. The red curve corresponds to the slow
 \end_layout
 
 \begin_layout Standard
-
-
 \begin_inset Float figure
 placement htb
 wide false
 sideways false
 status open
 
-
-\begin_layout Standard
-
+\begin_layout Plain Layout
  
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \align center
-
-
-\begin_inset Graphics 
+\begin_inset Graphics
 	filename figs/Paper_Heikkinen_et_al.eps
 	width 3.6in
 	clip
@@ -3263,20 +4241,29 @@ status open
  
 \end_layout
 
-\begin_layout Caption
+\begin_layout Plain Layout
+\begin_inset Caption
 
+\begin_layout Plain Layout
 Poloidal projection of the ray trajectory from Ref.
-\begin_inset LatexCommand \citet{hei99}
+\begin_inset CommandInset citation
+LatexCommand citet
+key "hei99"
 
 \end_inset
 
 
 \end_layout
 
-\begin_layout Standard
+\end_inset
 
 
-\begin_inset LatexCommand \label{FigHei}
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "FigHei"
 
 \end_inset
 
@@ -3289,25 +4276,19 @@ Poloidal projection of the ray trajectory from Ref.
 \end_layout
 
 \begin_layout Standard
-
-
 \begin_inset Float figure
 placement htb
 wide false
 sideways false
 status open
 
-
-\begin_layout Standard
-
+\begin_layout Plain Layout
  
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \align center
-
-
-\begin_inset Graphics 
+\begin_inset Graphics
 	filename figs/JETliketest2p0_numeric_ray_1_PoloidalMode.eps
 	width 3.6in
 	clip
@@ -3317,19 +4298,28 @@ status open
  
 \end_layout
 
-\begin_layout Caption
+\begin_layout Plain Layout
+\begin_inset Caption
 
-Poloidal mode number along the ray trajectory. (Numeric magnetic equilibrium). 
+\begin_layout Plain Layout
+Poloidal mode number along the ray trajectory.
+ (Numeric magnetic equilibrium).
+ 
 \begin_inset Formula $N_{\phi0}=-2.0$
 \end_inset
 
 .
 \end_layout
 
-\begin_layout Standard
+\end_inset
 
 
-\begin_inset LatexCommand \label{Jet20m}
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "Jet20m"
 
 \end_inset
 
@@ -3342,25 +4332,19 @@ Poloidal mode number along the ray trajectory. (Numeric magnetic equilibrium).
 \end_layout
 
 \begin_layout Standard
-
-
 \begin_inset Float figure
 placement htb
 wide false
 sideways false
 status open
 
-
-\begin_layout Standard
-
+\begin_layout Plain Layout
  
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \align center
-
-
-\begin_inset Graphics 
+\begin_inset Graphics
 	filename figs/JETliketest2p0_numeric_ray_1_Npar.eps
 	width 3.6in
 	clip
@@ -3370,19 +4354,28 @@ status open
  
 \end_layout
 
-\begin_layout Caption
+\begin_layout Plain Layout
+\begin_inset Caption
 
-Parallel refractive index or refraction along the ray trajectory. (Numeric magnetic equilibrium). 
+\begin_layout Plain Layout
+Parallel refractive index or refraction along the ray trajectory.
+ (Numeric magnetic equilibrium).
+ 
 \begin_inset Formula $N_{\phi0}=-2.0$
 \end_inset
 
 .
 \end_layout
 
-\begin_layout Standard
+\end_inset
 
 
-\begin_inset LatexCommand \label{Jet20n}
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "Jet20n"
 
 \end_inset
 
@@ -3395,25 +4388,19 @@ Parallel refractive index or refraction along the ray trajectory. (Numeric magne
 \end_layout
 
 \begin_layout Standard
-
-
 \begin_inset Float figure
 placement htb
 wide false
 sideways false
 status open
 
-
-\begin_layout Standard
-
+\begin_layout Plain Layout
  
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \align center
-
-
-\begin_inset Graphics 
+\begin_inset Graphics
 	filename figs/JETliketest2p0_numeric_ray_1_Disp.eps
 	width 3.6in
 	clip
@@ -3423,19 +4410,28 @@ status open
  
 \end_layout
 
-\begin_layout Caption
+\begin_layout Plain Layout
+\begin_inset Caption
 
-Dispersion relation along the ray trajectory. (Numeric magnetic equilibrium). 
+\begin_layout Plain Layout
+Dispersion relation along the ray trajectory.
+ (Numeric magnetic equilibrium).
+ 
 \begin_inset Formula $N_{\phi0}=-2.0$
 \end_inset
 
 .
 \end_layout
 
-\begin_layout Standard
+\end_inset
 
 
-\begin_inset LatexCommand \label{Jet20d}
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "Jet20d"
 
 \end_inset
 
@@ -3448,15 +4444,18 @@ Dispersion relation along the ray trajectory. (Numeric magnetic equilibrium).
 \end_layout
 
 \begin_layout Standard
-
 A JET-like equilibrium was used in Ref.
-\begin_inset LatexCommand \citet{hei99}
+\begin_inset CommandInset citation
+LatexCommand citet
+key "hei99"
 
 \end_inset
 
- where results from a ray-tracing code using the cold plasma model is presented. A circular concentric toroidal plasma is considered such that
+ where results from a ray-tracing code using the cold plasma model is presented.
+ A circular concentric toroidal plasma is considered such that
 \begin_inset Formula \begin{equation}
 \rho=\dfrac{r}{a_{p}}\end{equation}
+
 \end_inset
 
  with the following equilibrium parameters
@@ -3466,6 +4465,7 @@ A JET-like equilibrium was used in Ref.
 \hline $a_{p}$  &  $0.95\text{ m}$\\
 \hline $\hat{B}_{T}$  &  $3.2\text{ T}$\\
 \hline $I_{p}$  &  $3.5\text{ MA}$\\\hline \end{tabular}\end{equation}
+
 \end_inset
 
  and the following profiles
@@ -3473,6 +4473,7 @@ A JET-like equilibrium was used in Ref.
 \begin{array}{l}
 n_{e}\left(\rho\right)=\left(n_{e0}-n_{ea}\right)\left(1-\rho^{2}\right)+n_{ea}\\
 J_{z}\left(\rho\right)=J_{0}\left(1-\rho^{2}\right)^{\alpha}\end{array}\end{equation}
+
 \end_inset
 
  with
@@ -3480,16 +4481,19 @@ J_{z}\left(\rho\right)=J_{0}\left(1-\rho^{2}\right)^{\alpha}\end{array}\end{equa
 \begin{array}{l}
 n_{e0}=5\times10^{19}\text{ m}^{-3}\\
 n_{ea}=0.01\times10^{19}\text{ m}^{-3}\end{array}\end{equation}
+
 \end_inset
 
  The total current is then
 \begin_inset Formula \begin{equation}
 I_{P}=2\pi\int_{0}^{a_{p}}J_{z}rdr=\pi J_{0}\dfrac{a_{p}^{2}}{\left(\alpha+1\right)}\end{equation}
+
 \end_inset
 
  such that 
 \begin_inset Formula \begin{equation}
 J_{0}=\dfrac{\left(\alpha+1\right)I_{P}}{\pi a_{p}^{2}}\end{equation}
+
 \end_inset
 
  The magnetic field profile is 
@@ -3497,28 +4501,32 @@ J_{0}=\dfrac{\left(\alpha+1\right)I_{P}}{\pi a_{p}^{2}}\end{equation}
 \begin{array}{l}
 B_{T}=\hat{B}_{T}\dfrac{R_{p}}{R}\\
 B_{P}=\hat{B}_{P}\dfrac{R_{p}}{R}\end{array}\end{equation}
+
 \end_inset
 
- Ampere's law gives in the small aspect ratio limit (consistent with concentric flux surfaces) 
+ Ampere's law gives in the small aspect ratio limit (consistent with concentric
+ flux surfaces) 
 \begin_inset Formula \begin{equation}
 \dfrac{1}{r}\dfrac{d}{dr}\left(r\hat{B}_{P}\right)=\mu_{0}J_{z}\end{equation}
+
 \end_inset
 
  we get
 \begin_inset Formula \begin{equation}
 \hat{B}_{P}=\dfrac{1}{r}\mu_{0}J_{0}\int_{0}^{r}r\left(1-\dfrac{r^{2}}{a_{p}^{2}}\right)^{\alpha}dr=\dfrac{\hat{B}_{Pa}}{\rho}\left[1-\left(1-\rho^{2}\right)^{\alpha+1}\right]\end{equation}
+
 \end_inset
 
  with
 \begin_inset Formula \begin{equation}
 \hat{B}_{Pa}=\dfrac{\mu_{0}I_{P}}{2\pi a_{p}}\end{equation}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-
 The poloidal flux coordinate 
 \begin_inset Formula $\psi=R_{p}\int_{0}^{r}B_{P}dr$
 \end_inset
@@ -3526,6 +4534,7 @@ The poloidal flux coordinate
  is then
 \begin_inset Formula \begin{equation}
 \psi=R_{p}\dfrac{\mu_{0}I_{P}}{2\pi}\int_{0}^{\rho}\dfrac{1}{\rho}\left[1-\left(1-\rho^{2}\right)^{\alpha+1}\right]d\rho\end{equation}
+
 \end_inset
 
  In the case 
@@ -3535,13 +4544,13 @@ The poloidal flux coordinate
  it gives
 \begin_inset Formula \begin{equation}
 \psi=R_{p}\dfrac{\mu_{0}I_{P}}{2\pi}\int_{0}^{\rho}\dfrac{1}{\rho}\left[1-\left(1-\rho^{2}\right)^{2}\right]d\rho\end{equation}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-
 Defining 
 \begin_inset Formula $\rho=\sin\theta$
 \end_inset
@@ -3551,12 +4560,14 @@ Defining
 \begin{array}{c}
 1-\rho^{2}=\cos^{2}\theta\\
 d\rho=\cos\theta d\theta\end{array}\]
+
 \end_inset
 
  yields
 \begin_inset Formula \begin{align}
 \psi & =R_{p}\dfrac{\mu_{0}I_{P}}{2\pi}\int_{0}^{\theta}\sin\theta\left[1+\cos^{2}\theta\right]\cos\theta d\theta\nonumber \\
  & =R_{p}\dfrac{\mu_{0}I_{P}}{2\pi}\rho^{2}\left[1-\dfrac{1}{4}\rho^{2}\right]\end{align}
+
 \end_inset
 
  and finally for 
@@ -3569,6 +4580,7 @@ d\rho=\cos\theta d\theta\end{array}\]
 J_{z}=\dfrac{2I_{P}}{\pi a_{p}^{2}}\left(1-\rho^{2}\right)\\
 \hat{B}_{P}=\dfrac{\mu_{0}I_{P}}{2\pi a_{p}}\dfrac{1}{\rho}\left[1-\left(1-\rho^{2}\right)^{2}\right]\\
 \psi=R_{p}\dfrac{\mu_{0}I_{P}}{2\pi}\rho^{2}\left[1-\dfrac{1}{4}\rho^{2}\right]\end{array}$}\]
+
 \end_inset
 
  Note that the 
@@ -3582,11 +4594,13 @@ J_{z}=\dfrac{2I_{P}}{\pi a_{p}^{2}}\left(1-\rho^{2}\right)\\
 )
 \begin_inset Formula \begin{equation}
 q\simeq\dfrac{r}{R_{p}}\dfrac{B_{T}}{B_{P}}\simeq\dfrac{r}{R}\dfrac{\hat{B}_{T}}{B_{P}}\end{equation}
+
 \end_inset
 
  which gives
 \begin_inset Formula \begin{equation}
 q\simeq q_{\max}\dfrac{\rho^{2}}{1-\left(1-\rho^{2}\right)^{\alpha+1}}\end{equation}
+
 \end_inset
 
  and for 
@@ -3596,11 +4610,13 @@ q\simeq q_{\max}\dfrac{\rho^{2}}{1-\left(1-\rho^{2}\right)^{\alpha+1}}\end{equat
 
 \begin_inset Formula \begin{equation}
 \fbox{$q\simeq q_{\max}\dfrac{\rho^{2}}{1-\left(1-\rho^{2}\right)^{2}}$}\end{equation}
+
 \end_inset
 
  where 
 \begin_inset Formula \begin{equation}
 q_{\max}=\dfrac{\hat{B}_{T}}{\hat{B}_{Pa}}\dfrac{a_{p}}{R_{p}}\end{equation}
+
 \end_inset
 
  Note that 
@@ -3615,18 +4631,17 @@ q_{\max}=\dfrac{\hat{B}_{T}}{\hat{B}_{Pa}}\dfrac{a_{p}}{R_{p}}\end{equation}
 \end_layout
 
 \begin_layout Subsubsection
-
 Wave initial conditions
 \end_layout
 
 \begin_layout Standard
-
 The ray is launched in the slow mode from the position
 \begin_inset Formula \begin{equation}
 \begin{array}{l}
 \rho_{0}=0.968\\
 \theta_{0}=0\\
 \phi_{0}=0\end{array}\end{equation}
+
 \end_inset
 
  with the spectral properties
@@ -3635,10 +4650,13 @@ The ray is launched in the slow mode from the position
 \omega/\left(2\pi\right)=3.7\text{ GHz}\\
 N_{\phi0}=2.0\\
 m_{0}=0\end{array}\end{equation}
+
 \end_inset
 
  From (
-\begin_inset LatexCommand \ref{projection}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "projection"
 
 \end_inset
 
@@ -3649,65 +4667,79 @@ m_{0}=0\end{array}\end{equation}
  can be determined
 \begin_inset Formula \begin{equation}
 n_{0}=\dfrac{\omega R_{0}}{c}N_{\phi0}\end{equation}
+
 \end_inset
 
  and then the parallel index of refraction is 
 \begin_inset Formula \begin{equation}
 N_{\Vert0}=\sigma_{B}\dfrac{B_{T}}{B}N_{\phi0}\end{equation}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Subsubsection
-
 Results
 \end_layout
 
 \begin_layout Standard
-
 The results are plotted in figures 
-\begin_inset LatexCommand \ref{Jet20}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Jet20"
 
 \end_inset
 
 -
-\begin_inset LatexCommand \ref{Jet20d}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Jet20d"
 
 \end_inset
 
-. The wave is mode-converted between the slow to the fast mode several times. The results agree remarkably well with those from Ref.
-\begin_inset LatexCommand \citet{hei99}
+.
+ The wave is mode-converted between the slow to the fast mode several times.
+ The results agree remarkably well with those from Ref.
+\begin_inset CommandInset citation
+LatexCommand citet
+key "hei99"
 
 \end_inset
 
-. A small difference in the ray path between the analytical and the interpolated magnetic equilibria is observed in the case 
+.
+ A small difference in the ray path between the analytical and the interpolated
+ magnetic equilibria is observed in the case 
 \begin_inset Formula $N_{\phi0}=-1.8$
 \end_inset
 
-. The deviation is certainly due to the ray passing near the center of the plasma where the numerical interpolation is intrinsically less accurate.
+.
+ The deviation is certainly due to the ray passing near the center of the
+ plasma where the numerical interpolation is intrinsically less accurate.
 \end_layout
 
 \begin_layout Subsubsection
-
 Numerical performances
 \end_layout
 
 \begin_layout Standard
-
 The magnetic equilibrium is defined on a numerical grid of size 
 \begin_inset Formula $\left(101\times65\right)$
 \end_inset
 
- along the radial and poloidal direction respectively. It is vectorized using a Fourier series expansion with 
+ along the radial and poloidal direction respectively.
+ It is vectorized using a Fourier series expansion with 
 \begin_inset Formula $32$
 \end_inset
 
- harmonics and the Matlab built-in cubic spline interpolation for the Fourier coefficients. The vectorization procedure takes typically 
+ harmonics and the Matlab built-in cubic spline interpolation for the Fourier
+ coefficients.
+ The vectorization procedure takes typically 
 \begin_inset Formula $8.3$
 \end_inset
 
- seconds on computer equipped with a 64 bits biprocessor AMD opteron clocked at 
+ seconds on computer equipped with a 64 bits biprocessor AMD opteron clocked
+ at 
 \begin_inset Formula $2.4$
 \end_inset
 
@@ -3719,8 +4751,10 @@ The magnetic equilibrium is defined on a numerical grid of size
 \end_layout
 
 \begin_layout Standard
-
-Ray calculation parameters for the example presented here are typical of tokamak current drive simulation. Ray parameters are stored in the memory each time the radial increment 
+Ray calculation parameters for the example presented here are typical of
+ tokamak current drive simulation.
+ Ray parameters are stored in the memory each time the radial increment
+ 
 \begin_inset Formula $\Delta\rho$
 \end_inset
 
@@ -3728,11 +4762,13 @@ Ray calculation parameters for the example presented here are typical of tokamak
 \begin_inset Formula $10^{-4}$
 \end_inset
 
-. 
+.
+ 
 \begin_inset Formula $\Delta\rho$
 \end_inset
 
- may be adapted depending upon the problem. In the 
+ may be adapted depending upon the problem.
+ In the 
 \begin_inset Formula $6^{th}$
 \end_inset
 
@@ -3744,9 +4780,7 @@ Ray calculation parameters for the example presented here are typical of tokamak
 \begin_inset Foot
 status collapsed
 
-
-\begin_layout Standard
-
+\begin_layout Plain Layout
 The infinite norm 
 \begin_inset Formula $\left\Vert \mathbf{X}\right\Vert _{\infty}=\max_{i\in\left[1,N\right]}\left(\left\vert X_{i}\right\vert \right)$
 \end_inset
@@ -3764,11 +4798,15 @@ The infinite norm
 
 \end_inset
 
- of the variation along the six directions of extrapolation never exceeds the tolerance level which is set to 
+ of the variation along the six directions of extrapolation never exceeds
+ the tolerance level which is set to 
 \begin_inset Formula $10^{-12}$
 \end_inset
 
-. The tolerance level is arbitrarily chosen so that the ray trajectory as well as all wave parameters are independent of its value. Below 
+.
+ The tolerance level is arbitrarily chosen so that the ray trajectory as
+ well as all wave parameters are independent of its value.
+ Below 
 \begin_inset Formula $10^{-12}$
 \end_inset
 
@@ -3776,7 +4814,6 @@ The infinite norm
 \end_layout
 
 \begin_layout Standard
-
 The initial time increment is set to 
 \begin_inset Formula $h_{0}=10^{-4}$
 \end_inset
@@ -3789,15 +4826,18 @@ The initial time increment is set to
 \begin_inset Formula $60000$
 \end_inset
 
- values stored in the memory. Since the time step 
+ values stored in the memory.
+ Since the time step 
 \begin_inset Formula $h$
 \end_inset
 
- evolves along the ray trajectory depending upon the ray curvature, the effective number of steps is typically much less that 
+ evolves along the ray trajectory depending upon the ray curvature, the
+ effective number of steps is typically much less that 
 \begin_inset Formula $t_{\text{end}}/h_{0}$
 \end_inset
 
-. For the current example 
+.
+ For the current example 
 \begin_inset Formula $t_{\text{end}}$
 \end_inset
 
@@ -3809,7 +4849,6 @@ The initial time increment is set to
 \end_layout
 
 \begin_layout Standard
-
 Using the numerical equilibrium, the ray trajectory is calculated in 
 \begin_inset Formula $35.15$
 \end_inset
@@ -3818,39 +4857,35 @@ Using the numerical equilibrium, the ray trajectory is calculated in
 \begin_inset Formula $1.21$
 \end_inset
 
- seconds with the analytic equilibrium. Although the numerical equilibrium is more time consuming by at least an order of magnitude, typical calculation times remain at an acceptable low level for realistic time-dependent tokamak simulations, which require several hundred ray trajectories calculations.
+ seconds with the analytic equilibrium.
+ Although the numerical equilibrium is more time consuming by at least an
+ order of magnitude, typical calculation times remain at an acceptable low
+ level for realistic time-dependent tokamak simulations, which require several
+ hundred ray trajectories calculations.
 \end_layout
 
 \begin_layout Subsection
-
 VERSATOR II and PLT plasmas
 \end_layout
 
 \begin_layout Subsubsection
-
 Equilibrium
 \end_layout
 
 \begin_layout Standard
-
-
 \begin_inset Float figure
 placement htb
 wide false
 sideways false
 status open
 
-
-\begin_layout Standard
-
+\begin_layout Plain Layout
  
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \align center
-
-
-\begin_inset Graphics 
+\begin_inset Graphics
 	filename figs/VERSATOR2test_numeric_RayPoloidal.eps
 	width 3.6in
 	clip
@@ -3858,9 +4893,11 @@ status open
 \end_inset
 
 
-\newline
+\begin_inset Newline newline
+\end_inset
+
  
-\begin_inset Graphics 
+\begin_inset Graphics
 	filename figs/VERSATOR2test_analytic_RayPoloidal.eps
 	width 3.6in
 	clip
@@ -3868,23 +4905,37 @@ status open
 \end_inset
 
 
-\newline
+\begin_inset Newline newline
+\end_inset
+
 
 \end_layout
 
-\begin_layout Caption
+\begin_layout Plain Layout
+\begin_inset Caption
 
-Poloidal projection of the ray trajectory. The red curve corresponds to the slow mode and the blue curve corresponds to the fast mode. Numeric (upper plot) and analytic (lower plot) magnetic equilibrium. VERSATOR II. 
+\begin_layout Plain Layout
+Poloidal projection of the ray trajectory.
+ The red curve corresponds to the slow mode and the blue curve corresponds
+ to the fast mode.
+ Numeric (upper plot) and analytic (lower plot) magnetic equilibrium.
+ VERSATOR II.
+ 
 \begin_inset Formula $N_{\Vert0}=5.0$
 \end_inset
 
 .
 \end_layout
 
-\begin_layout Standard
+\end_inset
 
 
-\begin_inset LatexCommand \label{FigVer}
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "FigVer"
 
 \end_inset
 
@@ -3897,25 +4948,19 @@ Poloidal projection of the ray trajectory. The red curve corresponds to the slow
 \end_layout
 
 \begin_layout Standard
-
-
 \begin_inset Float figure
 placement htb
 wide false
 sideways false
 status open
 
-
-\begin_layout Standard
-
+\begin_layout Plain Layout
  
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \align center
-
-
-\begin_inset Graphics 
+\begin_inset Graphics
 	filename figs/PLTtest_numeric_RayPoloidal.eps
 	width 3.6in
 	clip
@@ -3923,9 +4968,11 @@ status open
 \end_inset
 
 
-\newline
+\begin_inset Newline newline
+\end_inset
+
  
-\begin_inset Graphics 
+\begin_inset Graphics
 	filename figs/PLTtest_analytic_RayPoloidal.eps
 	width 3.6in
 	clip
@@ -3933,23 +4980,36 @@ status open
 \end_inset
 
 
-\newline
+\begin_inset Newline newline
+\end_inset
+
 
 \end_layout
 
-\begin_layout Caption
+\begin_layout Plain Layout
+\begin_inset Caption
 
-Poloidal projection of the ray trajectory. The red curve corresponds to the slow mode and the blue curve corresponds to the fast mode. Numeric (upper plot) and analytic (lower plot) magnetic equilibrium. PLT, 
+\begin_layout Plain Layout
+Poloidal projection of the ray trajectory.
+ The red curve corresponds to the slow mode and the blue curve corresponds
+ to the fast mode.
+ Numeric (upper plot) and analytic (lower plot) magnetic equilibrium.
+ PLT, 
 \begin_inset Formula $N_{\Vert0}=1.33$
 \end_inset
 
 .
 \end_layout
 
-\begin_layout Standard
+\end_inset
 
 
-\begin_inset LatexCommand \label{FigPLT}
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "FigPLT"
 
 \end_inset
 
@@ -3962,25 +5022,19 @@ Poloidal projection of the ray trajectory. The red curve corresponds to the slow
 \end_layout
 
 \begin_layout Standard
-
-
 \begin_inset Float figure
 placement htb
 wide false
 sideways false
 status open
 
-
-\begin_layout Standard
-
+\begin_layout Plain Layout
  
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \align center
-
-
-\begin_inset Graphics 
+\begin_inset Graphics
 	filename figs/PLTtest_analytic_RhoComp.eps
 	width 3.6in
 	clip
@@ -3990,19 +5044,28 @@ status open
  
 \end_layout
 
-\begin_layout Caption
+\begin_layout Plain Layout
+\begin_inset Caption
 
-Radial position of the ray trajectory as function of the toroidal angle (PLT). 
+\begin_layout Plain Layout
+Radial position of the ray trajectory as function of the toroidal angle
+ (PLT).
+ 
 \begin_inset Formula $N_{\Vert}=1.33$
 \end_inset
 
 .
 \end_layout
 
-\begin_layout Standard
+\end_inset
 
 
-\begin_inset LatexCommand \label{FigPLTr}
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "FigPLTr"
 
 \end_inset
 
@@ -4015,25 +5078,19 @@ Radial position of the ray trajectory as function of the toroidal angle (PLT).
 \end_layout
 
 \begin_layout Standard
-
-
 \begin_inset Float figure
 placement htb
 wide false
 sideways false
 status open
 
-
-\begin_layout Standard
-
+\begin_layout Plain Layout
  
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \align center
-
-
-\begin_inset Graphics 
+\begin_inset Graphics
 	filename figs/PLTtest_analytic_ThetaComp.eps
 	width 3.6in
 	clip
@@ -4043,19 +5100,28 @@ status open
  
 \end_layout
 
-\begin_layout Caption
+\begin_layout Plain Layout
+\begin_inset Caption
 
-Poloidal position of the ray trajectory as function of the toroidal angle (PLT). 
+\begin_layout Plain Layout
+Poloidal position of the ray trajectory as function of the toroidal angle
+ (PLT).
+ 
 \begin_inset Formula $N_{\Vert}=1.33$
 \end_inset
 
 .
 \end_layout
 
-\begin_layout Standard
+\end_inset
 
 
-\begin_inset LatexCommand \label{FigPLTt}
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "FigPLTt"
 
 \end_inset
 
@@ -4068,25 +5134,19 @@ Poloidal position of the ray trajectory as function of the toroidal angle (PLT).
 \end_layout
 
 \begin_layout Standard
-
-
 \begin_inset Float figure
 placement htb
 wide false
 sideways false
 status open
 
-
-\begin_layout Standard
-
+\begin_layout Plain Layout
  
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \align center
-
-
-\begin_inset Graphics 
+\begin_inset Graphics
 	filename figs/PLTtest_analytic_NparComp.eps
 	width 3.6in
 	clip
@@ -4096,19 +5156,28 @@ status open
  
 \end_layout
 
-\begin_layout Caption
+\begin_layout Plain Layout
+\begin_inset Caption
 
-Parallel refractive index or refraction along the ray trajectory as function of the toroidal angle (PLT). 
+\begin_layout Plain Layout
+Parallel refractive index or refraction along the ray trajectory as function
+ of the toroidal angle (PLT).
+ 
 \begin_inset Formula $N_{\Vert}=1.33$
 \end_inset
 
 .
 \end_layout
 
-\begin_layout Standard
+\end_inset
 
 
-\begin_inset LatexCommand \label{FigPLTna}
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "FigPLTna"
 
 \end_inset
 
@@ -4121,25 +5190,19 @@ Parallel refractive index or refraction along the ray trajectory as function of 
 \end_layout
 
 \begin_layout Standard
-
-
 \begin_inset Float figure
 placement htb
 wide false
 sideways false
 status open
 
-
-\begin_layout Standard
-
+\begin_layout Plain Layout
  
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \align center
-
-
-\begin_inset Graphics 
+\begin_inset Graphics
 	filename figs/PLTtest_analytic_NperpComp.eps
 	width 3.6in
 	clip
@@ -4149,19 +5212,28 @@ status open
  
 \end_layout
 
-\begin_layout Caption
+\begin_layout Plain Layout
+\begin_inset Caption
 
-Perpendicular refractive index or refraction along the ray trajectory as function of the toroidal angle (PLT). 
+\begin_layout Plain Layout
+Perpendicular refractive index or refraction along the ray trajectory as
+ function of the toroidal angle (PLT).
+ 
 \begin_inset Formula $N_{\Vert}=1.33$
 \end_inset
 
 .
 \end_layout
 
-\begin_layout Standard
+\end_inset
 
 
-\begin_inset LatexCommand \label{FigPLTne}
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "FigPLTne"
 
 \end_inset
 
@@ -4174,13 +5246,19 @@ Perpendicular refractive index or refraction along the ray trajectory as functio
 \end_layout
 
 \begin_layout Standard
-
-Lower Hybrid heating and current drive simulations have been performed for the VERSATOR II and PLT tokamaks, which both have almost circular concentric magnetic flux surfaces 
-\begin_inset LatexCommand \citet{bon84,bon86}
+Lower Hybrid heating and current drive simulations have been performed for
+ the VERSATOR II and PLT tokamaks, which both have almost circular concentric
+ magnetic flux surfaces 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "bon84,bon86"
 
 \end_inset
 
-. For the sake of benchmarking, the Shafranov shift is neglected, and a plasma with exact circular concentric magnetic flux surfaces is considered with the following magnetic equilibrium parameters 
+.
+ For the sake of benchmarking, the Shafranov shift is neglected, and a plasma
+ with exact circular concentric magnetic flux surfaces is considered with
+ the following magnetic equilibrium parameters 
 \begin_inset Formula \begin{equation}
 \begin{tabular}{|c|c|c|}
 \hline   &  VERSATOR$\text{ II}$  &  PLT\\
@@ -4188,11 +5266,13 @@ Lower Hybrid heating and current drive simulations have been performed for the V
 \hline $a_{p}$  &  $0.13\text{ m}$  &  $0.4\text{ m}$\\
 \hline $\hat{B}_{T}$  &  $1.4\text{ T}$  &  $3.1\text{ T}$\\
 \hline $I_{p}$  &  $0.05\text{ MA}$  &  $0.2\text{ MA}$\\\hline \end{tabular}\end{equation}
+
 \end_inset
 
  and the following profiles 
 \begin_inset Formula \begin{equation}
 n_{e}\left(\rho\right)=\left(n_{e0}-n_{ea}\right)\frac{e^{\alpha_{n}}-e^{\alpha_{n}\rho^{2}}}{e^{\alpha_{n}}-1}+n_{ea}\end{equation}
+
 \end_inset
 
  with
@@ -4202,18 +5282,19 @@ n_{e}\left(\rho\right)=\left(n_{e0}-n_{ea}\right)\frac{e^{\alpha_{n}}-e^{\alpha_
 \hline $n_{e0}$  &  $2.0\times10^{19}\text{ m}^{-3}$  &  $0.5625\times10^{19}\text{ m}^{-3}$\\
 \hline $n_{ea}$  &  $2.0\times10^{18}\text{ m}^{-3}$  &  $0.5625\times10^{18}\text{ m}^{-3}$\\
 \hline $\alpha_{n}$  &  $0.1$  &  $-0.571$\\\hline \end{tabular}\end{equation}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-
-In the calculations, the scrape-off layer is not considered, since the specular reflection is enforced if needed on the last closed magnetic surface for the Lower Hybrid wave.
+In the calculations, the scrape-off layer is not considered, since the specular
+ reflection is enforced if needed on the last closed magnetic surface for
+ the Lower Hybrid wave.
 \end_layout
 
 \begin_layout Standard
-
 For both tokamaks, 
 \begin_inset Formula $Z_{\text{eff}}$
 \end_inset
@@ -4226,7 +5307,11 @@ For both tokamaks,
 \begin_inset Formula $Z_{\text{eff}}=2$
 \end_inset
 
- for PLT. The plasma is made of hydrogen ions for VERSATOR II and deuterium ions for PLT. For both machines, a fully stripped single impurity species is considered, using carbon ions with 
+ for PLT.
+ The plasma is made of hydrogen ions for VERSATOR II and deuterium ions
+ for PLT.
+ For both machines, a fully stripped single impurity species is considered,
+ using carbon ions with 
 \begin_inset Formula $m_{c}=12,$
 \end_inset
 
@@ -4238,10 +5323,10 @@ For both tokamaks,
 \end_layout
 
 \begin_layout Standard
-
 The magnetic equilibrium is characterized by a parabolic safety factor profile
 \begin_inset Formula \begin{equation}
 q\left(\rho\right)=q_{\min}+\left(q_{\max}-q_{\min}\right)\rho^{2}\end{equation}
+
 \end_inset
 
  The poloidal flux coordinate 
@@ -4251,18 +5336,19 @@ q\left(\rho\right)=q_{\min}+\left(q_{\max}-q_{\min}\right)\rho^{2}\end{equation}
  is then 
 \begin_inset Formula \begin{equation}
 \psi=\frac{1}{2}\frac{\hat{B}_{T}a_{p}^{2}}{q_{\max}-q_{\min}}\ln\left[\frac{q\left(\rho\right)}{q_{\min}}\right]\end{equation}
+
 \end_inset
 
  which leads to
 \begin_inset Formula \begin{equation}
 \psi_{a}=\frac{1}{2}\frac{\hat{B}_{T}a_{p}^{2}}{q_{\max}-q_{\min}}\ln\left[\frac{q_{\max}}{q_{\min}}\right]\end{equation}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-
 In the simulations, 
 \begin_inset Formula $q_{\min}=1$
 \end_inset
@@ -4271,22 +5357,21 @@ In the simulations,
 \begin_inset Formula $q_{\max}$
 \end_inset
 
- is obtained from Ampère's law.
+ is obtained from AmpÃ¨re's law.
 \end_layout
 
 \begin_layout Subsubsection
-
 Wave initial conditions
 \end_layout
 
 \begin_layout Standard
-
 For both tokamaks, the ray is launched in the slow mode from the position
 \begin_inset Formula \begin{equation}
 \begin{array}{l}
 \rho_{0}=0.99\\
 \theta_{0}=0\\
 \phi_{0}=0\end{array}\end{equation}
+
 \end_inset
 
  with the spectral properties
@@ -4296,24 +5381,28 @@ For both tokamaks, the ray is launched in the slow mode from the position
 \hline $\omega/\left(2\pi\right)$  &  $0.8\text{ GHz}$  &  $0.8\text{ GHz}$\\
 \hline $N_{\Vert0}$  &  $5.0$  &  $1.33$\\
 \hline $m_{0}$  &  $-25$  &  $+20$\\\hline \end{tabular}\end{equation}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-
 The non-zero 
 \begin_inset Formula $m_{0}$
 \end_inset
 
  arises from the fact that simulations in references 
-\begin_inset LatexCommand \citet{bon84}
+\begin_inset CommandInset citation
+LatexCommand citet
+key "bon84"
 
 \end_inset
 
  
-\begin_inset LatexCommand \citet{bon86}
+\begin_inset CommandInset citation
+LatexCommand citet
+key "bon86"
 
 \end_inset
 
@@ -4329,70 +5418,74 @@ The non-zero
 \end_layout
 
 \begin_layout Subsubsection
-
 Results
 \end_layout
 
 \begin_layout Standard
-
 The results are plotted in figures 
-\begin_inset LatexCommand \ref{FigVer}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "FigVer"
 
 \end_inset
 
 -
-\begin_inset LatexCommand \ref{FigPLTne}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "FigPLTne"
 
 \end_inset
 
-. A good agreement is found with references 
-\begin_inset LatexCommand \citet{bon84}
+.
+ A good agreement is found with references 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "bon84"
 
 \end_inset
 
  and 
-\begin_inset LatexCommand \citet{bon86}
+\begin_inset CommandInset citation
+LatexCommand citet
+key "bon86"
 
 \end_inset
 
- despite differences in the magnetic equilibrium. An excellent agreement is found between numerical and analytical magnetic equilibrium for the case of VERSATOR II where the ray never approaches the plasma center.
+ despite differences in the magnetic equilibrium.
+ An excellent agreement is found between numerical and analytical magnetic
+ equilibrium for the case of VERSATOR II where the ray never approaches
+ the plasma center.
 \end_layout
 
 \begin_layout Standard
-
-The difference arises from a cumulative error that becomes more important when the ray approaches the plasma center. Yet the effect on the wave power and current deposition generally remains negligible.
+The difference arises from a cumulative error that becomes more important
+ when the ray approaches the plasma center.
+ Yet the effect on the wave power and current deposition generally remains
+ negligible.
 \end_layout
 
 \begin_layout Subsection
-
 Propagation in toroidal vacuum device
 \end_layout
 
 \begin_layout Subsubsection
-
 Magnetic configuration
 \end_layout
 
 \begin_layout Standard
-
-
 \begin_inset Float figure
 placement htb
 wide false
 sideways false
 status open
 
-
-\begin_layout Standard
-
+\begin_layout Plain Layout
  
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \align center
-
-
-\begin_inset Graphics 
+\begin_inset Graphics
 	filename figs/test_RT_straight_RayToroidal.eps
 	width 3.6in
 	clip
@@ -4402,15 +5495,23 @@ status open
  
 \end_layout
 
-\begin_layout Caption
+\begin_layout Plain Layout
+\begin_inset Caption
 
-Toroidal projection of the ray trajectory of an electromagnetic wave in vacuum.
+\begin_layout Plain Layout
+Toroidal projection of the ray trajectory of an electromagnetic wave in
+ vacuum.
 \end_layout
 
-\begin_layout Standard
+\end_inset
 
 
-\begin_inset LatexCommand \label{FigVact}
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "FigVact"
 
 \end_inset
 
@@ -4423,25 +5524,19 @@ Toroidal projection of the ray trajectory of an electromagnetic wave in vacuum.
 \end_layout
 
 \begin_layout Standard
-
-
 \begin_inset Float figure
 placement htb
 wide false
 sideways false
 status open
 
-
-\begin_layout Standard
-
+\begin_layout Plain Layout
  
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \align center
-
-
-\begin_inset Graphics 
+\begin_inset Graphics
 	filename figs/test_RT_straight_RayPoloidal.eps
 	width 3.6in
 	clip
@@ -4451,15 +5546,23 @@ status open
  
 \end_layout
 
-\begin_layout Caption
+\begin_layout Plain Layout
+\begin_inset Caption
 
-Poloidal projection of the ray trajectory of an electromagnetic wave in vacuum.
+\begin_layout Plain Layout
+Poloidal projection of the ray trajectory of an electromagnetic wave in
+ vacuum.
 \end_layout
 
-\begin_layout Standard
+\end_inset
 
 
-\begin_inset LatexCommand \label{FigVacp}
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "FigVacp"
 
 \end_inset
 
@@ -4472,24 +5575,30 @@ Poloidal projection of the ray trajectory of an electromagnetic wave in vacuum.
 \end_layout
 
 \begin_layout Standard
-
-In vacuum, electromagnetic waves trajectories are straight lines, which offers an interesting benchmarking case for the curvilinear coordinate system used with 
+In vacuum, electromagnetic waves trajectories are straight lines, which
+ offers an interesting benchmarking case for the curvilinear coordinate
+ system used with 
 \begin_inset Formula $C3PO$
 \end_inset
 
- ray-tracing. It is enforced that at 
+ ray-tracing.
+ It is enforced that at 
 \begin_inset Formula $\psi=\psi_{a}$
 \end_inset
 
- the wave is reflected like in a mirror, so that the ray remains confined in the machine. Circular concentric poloidal magnetic flux surfaces are considered with
+ the wave is reflected like in a mirror, so that the ray remains confined
+ in the machine.
+ Circular concentric poloidal magnetic flux surfaces are considered with
 \begin_inset Formula \begin{equation}
 \begin{tabular}{|c|c|}
 \hline  $R_{p}$  &  $3.0\text{ m}$\\
 \hline $a_{p}$  &  $0.9\text{ m}$\\
 \hline $\hat{B}_{T}$  &  $3.0\text{ T}$\\\hline \end{tabular}\end{equation}
+
 \end_inset
 
- and the poloidal magnetic field is considered to be created by a virtual toroidal current 
+ and the poloidal magnetic field is considered to be created by a virtual
+ toroidal current 
 \begin_inset Formula $I_{p}$
 \end_inset
 
@@ -4500,6 +5609,7 @@ In vacuum, electromagnetic waves trajectories are straight lines, which offers a
  MA and a parabolic safety factor profile of the form
 \begin_inset Formula \begin{equation}
 q\left(\rho\right)=q_{\min}+\left(q_{\max}-q_{\min}\right)\rho^{2}\end{equation}
+
 \end_inset
 
  with 
@@ -4510,12 +5620,13 @@ q\left(\rho\right)=q_{\min}+\left(q_{\max}-q_{\min}\right)\rho^{2}\end{equation}
 \begin_inset Formula $q_{\max}$
 \end_inset
 
- obtained from Ampère's law.
+ obtained from AmpÃ¨re's law.
 \end_layout
 
 \begin_layout Standard
-
-Since rays are straight lines, it is possible to calculate the exact rays trajectories from geometrical arguments. Since 
+Since rays are straight lines, it is possible to calculate the exact rays
+ trajectories from geometrical arguments.
+ Since 
 \begin_inset Formula $\left\Vert \nabla\rho\right\Vert =1$
 \end_inset
 
@@ -4531,7 +5642,8 @@ Since rays are straight lines, it is possible to calculate the exact rays trajec
 \begin_inset Formula $k_{\phi}=n_{0}a_{p}/R_{0}$
 \end_inset
 
-. 
+.
+ 
 \begin_inset Formula $\mathbf{k}_{0}$
 \end_inset
 
@@ -4545,6 +5657,7 @@ Since rays are straight lines, it is possible to calculate the exact rays trajec
 \cos\theta\cos\phi & -\sin\theta\cos\phi & -\sin\phi\\
 \cos\theta\sin\phi & -\sin\theta\sin\phi & \cos\phi\\
 \sin\theta & \cos\theta & 0\end{array}\right)\end{equation}
+
 \end_inset
 
  The initial position at launch in the cartesian coordinates 
@@ -4561,18 +5674,22 @@ Since rays are straight lines, it is possible to calculate the exact rays trajec
 \overline{x}_{0}=\left(\dfrac{R_{p}}{a_{p}}+\rho_{0}\cos\theta_{0}\right)\cos\phi_{0}\\
 \overline{y}_{0}=\left(\dfrac{R_{p}}{a_{p}}+\rho_{0}\cos\theta_{0}\right)\sin\phi_{0}\\
 \overline{z}_{0}=\rho_{0}\sin\theta_{0}\end{array}\label{xyz}\end{equation}
+
 \end_inset
 
  where 
 \begin_inset Formula $\left(\rho_{0},\theta_{0},\phi_{0}\right)$
 \end_inset
 
- are initial curvilinear coordinates. Since the ray is a straight line, its position is given by the parametric equation
+ are initial curvilinear coordinates.
+ Since the ray is a straight line, its position is given by the parametric
+ equation
 \begin_inset Formula \begin{equation}
 \begin{array}{l}
 \overline{x}^{\left(l\right)}=\overline{x}_{0}+k_{x0}s\left(l\right)/k_{0}\\
 \overline{y}^{\left(l\right)}=\overline{y}_{0}+k_{y0}s\left(l\right)/k_{0}\\
 \overline{z}^{\left(l\right)}=\overline{z}_{0}+k_{z0}s\left(l\right)/k_{0}\end{array}\end{equation}
+
 \end_inset
 
  where 
@@ -4596,11 +5713,14 @@ Once
 \end_inset
 
  by inverting (
-\begin_inset LatexCommand \ref{xyz}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "xyz"
 
 \end_inset
 
-). From the determination of 
+).
+ From the determination of 
 \begin_inset Formula $\left(\rho,\theta,\phi\right),$
 \end_inset
 
@@ -4615,6 +5735,7 @@ at all positions, using
  and
 \begin_inset Formula \begin{equation}
 \mathbf{k}_{l}^{curvilinear}=\mathbb{M}_{cc}^{-1}\left(\theta,\phi\right)\cdot\mathbf{k}_{0}^{cartesian}\end{equation}
+
 \end_inset
 
  Then 
@@ -4629,8 +5750,8 @@ at all positions, using
 \end_layout
 
 \begin_layout Standard
-
-In order to keep the ray inside the toroidal chamber, a specular reflection is enforced at 
+In order to keep the ray inside the toroidal chamber, a specular reflection
+ is enforced at 
 \begin_inset Formula $\psi_{a}.$
 \end_inset
 
@@ -4655,6 +5776,7 @@ If the condition
 \mathbf{k}_{0\left(i+1\right)}^{cartesian}\cdot\widehat{\rho}^{\left(l-1\right)} & =-\mathbf{k}_{0\left(i\right)}^{cartesian}\cdot\widehat{\rho}^{\left(l-1\right)}\\
 \mathbf{k}_{0\left(i+1\right)}^{cartesian}\cdot\widehat{\theta}^{\left(l-1\right)} & =\mathbf{k}_{0\left(i\right)}^{cartesian}\cdot\widehat{\theta}^{\left(l-1\right)}\\
 \mathbf{k}_{0\left(i+1\right)}^{cartesian}\cdot\widehat{\phi}^{\left(l-1\right)} & =\mathbf{k}_{0\left(i\right)}^{cartesian}\cdot\widehat{\phi}^{\left(l-1\right)}\end{align}
+
 \end_inset
 
  where 
@@ -4668,6 +5790,7 @@ If the condition
  It corresponds to the relation
 \begin_inset Formula \begin{equation}
 \mathbf{k}_{0\left(i+1\right)}^{cartesian}=\left[\mathbb{M}_{cc1}^{-1}\left(\theta^{\left(l-1\right)},\phi^{\left(l-1\right)}\right)\cdot\mathbb{M}_{cc2}\left(\theta^{\left(l-1\right)},\phi^{\left(l-1\right)}\right)\right]\cdot\mathbf{k}_{0\left(i\right)}^{cartesian}\end{equation}
+
 \end_inset
 
  with
@@ -4676,37 +5799,36 @@ If the condition
 \cos\theta\cos\phi & \cos\theta\sin\phi & \sin\theta\\
 -\sin\theta\cos\phi & -\sin\theta\sin\phi & \cos\theta\\
 \sin\phi & -\cos\phi & 0\end{array}\right)\end{equation}
+
 \end_inset
 
  and
 \end_layout
 
 \begin_layout Standard
-
-
 \begin_inset Formula \begin{equation}
 \mathbb{M}_{cc2}\left(\theta,\phi\right)=\left(\begin{array}{ccc}
 -\cos\theta\cos\phi & -\cos\theta\sin\phi & -\sin\theta\\
 -\sin\theta\cos\phi & -\sin\theta\sin\phi & \cos\theta\\
 \sin\phi & -\cos\phi & 0\end{array}\right)\end{equation}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Subsubsection
-
 Wave initial conditions
 \end_layout
 
 \begin_layout Standard
-
 In the example here given, the ray is launched from the position
 \begin_inset Formula \begin{equation}
 \begin{array}{l}
 \rho_{0}=0.98\\
 \theta_{0}=\pi/4\\
 \phi_{0}=0\end{array}\end{equation}
+
 \end_inset
 
  with spectral properties
@@ -4715,61 +5837,62 @@ In the example here given, the ray is launched from the position
 \hline  $\omega/\left(2\pi\right)$  &  $530.15\text{ GHz}$\\
 \hline $N_{\Vert0}$  &  $0.5$\\
 \hline $m_{0}$  &  $-3000$\\\hline \end{tabular}\end{equation}
+
 \end_inset
 
  so that the wave can propagate into vacuum region.
 \end_layout
 
 \begin_layout Subsubsection
-
 Results
 \end_layout
 
 \begin_layout Standard
-
-As expected, ray trajectory is made of pieces of straight lines, which can be easily shown from the toroidal projection in Fig 
-\begin_inset LatexCommand \ref{FigVact}
-
-\end_inset
-
-. Because of the toroidal topology, the poloidal projection in Fig. 
-\begin_inset LatexCommand \ref{FigVacp}
+As expected, ray trajectory is made of pieces of straight lines, which can
+ be easily shown from the toroidal projection in Fig 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "FigVact"
 
 \end_inset
 
- does not give straight lines. This result highlights the fact that it is very difficult to have a correct picture of the ray path from this type of representation. Comparison with simple geometrical optics is excellent.
+.
+ Because of the toroidal topology, the poloidal projection in Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "FigVacp"
+
+\end_inset
+
+ does not give straight lines.
+ This result highlights the fact that it is very difficult to have a correct
+ picture of the ray path from this type of representation.
+ Comparison with simple geometrical optics is excellent.
 \end_layout
 
 \begin_layout Subsection
-
 Reverse field pinch plasma
 \end_layout
 
 \begin_layout Subsubsection
-
 Equilibrium
 \end_layout
 
 \begin_layout Standard
-
-
 \begin_inset Float figure
 placement htb
 wide false
 sideways false
 status open
 
-
-\begin_layout Standard
-
+\begin_layout Plain Layout
  
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \align center
-
-
-\begin_inset Graphics 
+\begin_inset Graphics
 	filename figs/RFP_LH_ray_1_RayPoloidal.eps
 	width 3.6in
 	clip
@@ -4779,15 +5902,22 @@ status open
  
 \end_layout
 
-\begin_layout Caption
+\begin_layout Plain Layout
+\begin_inset Caption
 
+\begin_layout Plain Layout
 Poloidal projection of the ray trajectory in the slow mode (RFP).
 \end_layout
 
-\begin_layout Standard
+\end_inset
 
 
-\begin_inset LatexCommand \label{FigRFPp}
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "FigRFPp"
 
 \end_inset
 
@@ -4800,25 +5930,19 @@ Poloidal projection of the ray trajectory in the slow mode (RFP).
 \end_layout
 
 \begin_layout Standard
-
-
 \begin_inset Float figure
 placement htb
 wide false
 sideways false
 status open
 
-
-\begin_layout Standard
-
+\begin_layout Plain Layout
  
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \align center
-
-
-\begin_inset Graphics 
+\begin_inset Graphics
 	filename figs/RFP_LH_ray_1_RayToroidal.eps
 	width 3.6in
 	clip
@@ -4828,15 +5952,22 @@ status open
  
 \end_layout
 
-\begin_layout Caption
+\begin_layout Plain Layout
+\begin_inset Caption
 
+\begin_layout Plain Layout
 Toroidal projection of the ray trajectory in the slow mode (RFP).
 \end_layout
 
-\begin_layout Standard
+\end_inset
 
 
-\begin_inset LatexCommand \label{FigRFPt}
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "FigRFPt"
 
 \end_inset
 
@@ -4849,25 +5980,19 @@ Toroidal projection of the ray trajectory in the slow mode (RFP).
 \end_layout
 
 \begin_layout Standard
-
-
 \begin_inset Float figure
 placement htb
 wide false
 sideways false
 status open
 
-
-\begin_layout Standard
-
+\begin_layout Plain Layout
  
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \align center
-
-
-\begin_inset Graphics 
+\begin_inset Graphics
 	filename figs/RFP_LH_ray_1_Npar.eps
 	width 3.6in
 	clip
@@ -4877,15 +6002,22 @@ status open
  
 \end_layout
 
-\begin_layout Caption
+\begin_layout Plain Layout
+\begin_inset Caption
 
+\begin_layout Plain Layout
 Parallel refractive index or refraction along the ray trajectory (RFP).
 \end_layout
 
-\begin_layout Standard
+\end_inset
 
 
-\begin_inset LatexCommand \label{FigRFPn}
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "FigRFPn"
 
 \end_inset
 
@@ -4898,25 +6030,19 @@ Parallel refractive index or refraction along the ray trajectory (RFP).
 \end_layout
 
 \begin_layout Standard
-
-
 \begin_inset Float figure
 placement htb
 wide false
 sideways false
 status open
 
-
-\begin_layout Standard
-
+\begin_layout Plain Layout
  
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \align center
-
-
-\begin_inset Graphics 
+\begin_inset Graphics
 	filename figs/RFP_LH_ray_1_Disp.eps
 	width 3.6in
 	clip
@@ -4926,15 +6052,22 @@ status open
  
 \end_layout
 
-\begin_layout Caption
+\begin_layout Plain Layout
+\begin_inset Caption
 
+\begin_layout Plain Layout
 Dispersion relation along the ray trajectory (RFP).
 \end_layout
 
-\begin_layout Standard
+\end_inset
 
 
-\begin_inset LatexCommand \label{FigRFPd}
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "FigRFPd"
 
 \end_inset
 
@@ -4947,35 +6080,43 @@ Dispersion relation along the ray trajectory (RFP).
 \end_layout
 
 \begin_layout Standard
-
-In Reverse Field Pinch, the plasma evolves to a quasi-stationary magnetic equilibrium close to the force free minimum energy states described by Taylor 
-\begin_inset LatexCommand \citet{tay74}
+In Reverse Field Pinch, the plasma evolves to a quasi-stationary magnetic
+ equilibrium close to the force free minimum energy states described by
+ Taylor 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "tay74"
 
 \end_inset
 
-. The fully relaxed Taylor states are characterized by
+.
+ The fully relaxed Taylor states are characterized by
 \begin_inset Formula \begin{equation}
 \nabla\times\mathbf{B}=\lambda\mathbf{B}\label{RFPequilibrium}\end{equation}
+
 \end_inset
 
  with
 \begin_inset Formula \begin{equation}
 \lambda=\mu\mathbf{J}\cdot\mathbf{B}/B^{2}\end{equation}
+
 \end_inset
 
- constant throughout the plasma. A usual simplified approach is to consider a circular concentric toroidal plasma such that
+ constant throughout the plasma.
+ A usual simplified approach is to consider a circular concentric toroidal
+ plasma such that
 \begin_inset Formula \begin{equation}
 \rho=\dfrac{r}{a_{p}}\end{equation}
+
 \end_inset
 
  with the following equilibrium parameters
 \begin_inset Foot
 status collapsed
 
-
-\begin_layout Standard
-
-Parameters are corresponding to the large RFP machine of Madison University (USA)
+\begin_layout Plain Layout
+Parameters are corresponding to the large RFP machine of Madison University
+ (USA)
 \end_layout
 
 \end_inset
@@ -4987,15 +6128,18 @@ Parameters are corresponding to the large RFP machine of Madison University (USA
 \hline $a_{p}$  &  $0.5\text{ m}$\\
 \hline $\hat{B}_{T}$  &  $0.2\text{ T}$\\
 \hline $I_{p}$  &  $0.3\text{ MA}$\\\hline \end{tabular}\end{equation}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-
-From Eq. 
-\begin_inset LatexCommand \ref{RFPequilibrium}
+From Eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "RFPequilibrium"
 
 \end_inset
 
@@ -5008,21 +6152,27 @@ From Eq.
 \left(\nabla\times\mathbf{B}\right)_{r} & =\frac{1}{rR}\frac{\partial}{\partial\theta}\left(RB_{\phi}\right)-\frac{1}{R}\frac{\partial}{\partial\phi}\left(RB_{\theta}\right)\\
 \left(\nabla\times\mathbf{B}\right)_{\theta} & =-\frac{1}{R}\frac{\partial}{\partial r}\left(RB_{\phi}\right)\\
 \left(\nabla\times\mathbf{B}\right)_{\phi} & =\frac{1}{r}\frac{\partial}{\partial r}\left(rB_{\theta}\right)\end{align}
+
 \end_inset
 
  which leads to two coupled equations
 \begin_inset Formula \begin{align}
 -\frac{1}{R}\frac{\partial}{\partial r}\left(RB_{\phi}\right) & =\lambda B_{\theta}\label{RFPequiltheta}\\
 \frac{1}{r}\frac{\partial}{\partial r}\left(rB_{\theta}\right) & =\lambda B_{\phi}\label{RFPequilphi}\end{align}
+
 \end_inset
 
  Inserting Eq.
-\begin_inset LatexCommand \ref{RFPequiltheta}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "RFPequiltheta"
 
 \end_inset
 
  into Eq.
-\begin_inset LatexCommand \ref{RFPequilphi}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "RFPequilphi"
 
 \end_inset
 
@@ -5037,44 +6187,50 @@ From Eq.
  
 \begin_inset Formula \begin{equation}
 \frac{1}{r}\frac{\partial}{\partial r}\left(\frac{r}{R}\frac{\partial}{\partial r}\left(RB_{\phi}\right)\right)=-\lambda^{2}B_{\phi}\end{equation}
+
 \end_inset
 
  which can be developed as 
 \begin_inset Formula \begin{equation}
 \frac{\partial^{2}}{\partial r^{2}}\left(RB_{\phi}\right)+\frac{R}{r}\frac{\partial}{\partial r}\left(\frac{r}{R}\right)\frac{\partial}{\partial r}\left(RB_{\phi}\right)+\lambda^{2}RB_{\phi}=0\end{equation}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-
-Assuming a low inverse aspect ratio limit, and neglecting all terms higher than 
+Assuming a low inverse aspect ratio limit, and neglecting all terms higher
+ than 
 \begin_inset Formula $(a_{p}/R_{p})^{2},$
 \end_inset
 
 
 \begin_inset Formula \begin{equation}
 \frac{\partial}{\partial r}\left(\frac{r}{R}\right)\simeq\frac{1}{R}\end{equation}
+
 \end_inset
 
  and 
 \begin_inset Formula \begin{equation}
 \frac{\partial^{2}}{\partial r^{2}}\left(RB_{\phi}\right)+\frac{1}{r}\frac{\partial}{\partial r}\left(RB_{\phi}\right)+\lambda^{2}RB_{\phi}=0\end{equation}
+
 \end_inset
 
  which is a Bessel equation whose solution is 
 \begin_inset Formula \begin{equation}
 RB_{\phi}=J_{0}\left(\lambda r\right)\end{equation}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-
 Reporting this equation in Eq.
-\begin_inset LatexCommand \ref{RFPequiltheta}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "RFPequiltheta"
 
 \end_inset
 
@@ -5085,18 +6241,19 @@ Reporting this equation in Eq.
  
 \begin_inset Formula \begin{equation}
 \frac{d}{dx}\left(x^{m}J_{m}\left(x\right)\right)=x^{m}J_{m-1}\left(x\right)\end{equation}
+
 \end_inset
 
  one finds
 \begin_inset Formula \begin{equation}
 RB_{\theta}=-J_{-1}\left(\lambda r\right)=J_{+1}\left(\lambda r\right)\end{equation}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-
 From the determination of 
 \begin_inset Formula $B_{\phi}$
 \end_inset
@@ -5110,7 +6267,9 @@ From the determination of
 \end_inset
 
 , and therefore Eq.
-\begin_inset LatexCommand \ref{RFPequilibrium}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "RFPequilibrium"
 
 \end_inset
 
@@ -5118,24 +6277,25 @@ From the determination of
 \end_layout
 
 \begin_layout Standard
-
-For the ray-tracing calculations, the magnetic equilibrium is chosen so that 
+For the ray-tracing calculations, the magnetic equilibrium is chosen so
+ that 
 \begin_inset Formula $\lambda a_{p}=\widetilde{\lambda}=2.2.$
 \end_inset
 
  From these definition, up to the same order, the safety factor is
 \begin_inset Formula \begin{equation}
 \fbox{$q\simeq\dfrac{a_{p}}{R_{p}}\rho\dfrac{J_{0}\left(\widetilde{\lambda}\rho\right)}{J_{1}\left(\widetilde{\lambda}\rho\right)}$}\end{equation}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-
 For the cold plasma model, the electron density profile is 
 \begin_inset Formula \begin{equation}
 n_{e}\left(\rho\right)=\left(n_{e0}-n_{ea}\right)\left(1-\rho^{2}\right)^{\alpha_{n_{e}}}+n_{ea}\end{equation}
+
 \end_inset
 
  with
@@ -5144,9 +6304,11 @@ n_{e}\left(\rho\right)=\left(n_{e0}-n_{ea}\right)\left(1-\rho^{2}\right)^{\alpha
 n_{e0}=1.4\times10^{19}\text{ m}^{-3}\\
 n_{ea}=0.24\times n_{e0}\\
 \alpha_{n_{e}}=1.3\end{array}\end{equation}
+
 \end_inset
 
- while the main plasma gas is Deuterium. Calculations are performed with a uniform effective charge 
+ while the main plasma gas is Deuterium.
+ Calculations are performed with a uniform effective charge 
 \begin_inset Formula $Z_{eff}=2$
 \end_inset
 
@@ -5154,18 +6316,17 @@ n_{ea}=0.24\times n_{e0}\\
 \end_layout
 
 \begin_layout Subsubsection
-
 Wave initial conditions
 \end_layout
 
 \begin_layout Standard
-
 The ray is launched in the slow mode from the position
 \begin_inset Formula \begin{equation}
 \begin{array}{l}
 \rho_{0}=0.968\\
 \theta_{0}=3\pi/4\\
 \phi_{0}=0\end{array}\end{equation}
+
 \end_inset
 
  with the spectral properties
@@ -5174,9 +6335,11 @@ The ray is launched in the slow mode from the position
 \omega/\left(2\pi\right)=0.8\text{ GHz}\\
 N_{\Vert0}=10.0\\
 n_{0}=0\end{array}\end{equation}
+
 \end_inset
 
- It is worth noting that since at the plasma edge of a RFP, magnetic field lines are almost in the poloidal direction, the toroidal wave number 
+ It is worth noting that since at the plasma edge of a RFP, magnetic field
+ lines are almost in the poloidal direction, the toroidal wave number 
 \begin_inset Formula $n_{0}$
 \end_inset
 
@@ -5184,42 +6347,52 @@ n_{0}=0\end{array}\end{equation}
 \begin_inset Formula $m_{0}$
 \end_inset
 
- usually used for tokamaks, where edge magnetic field lines are almost aligned toroidally. Because of the axisymmetry, 
+ usually used for tokamaks, where edge magnetic field lines are almost aligned
+ toroidally.
+ Because of the axisymmetry, 
 \begin_inset Formula $n$
 \end_inset
 
- remains equal to zero along the ray propagation. Nevertheless, rays may propagate toroidally.
+ remains equal to zero along the ray propagation.
+ Nevertheless, rays may propagate toroidally.
 \end_layout
 
 \begin_layout Subsubsection
-
 Results
 \end_layout
 
 \begin_layout Standard
-
 The results are shown in figures 
-\begin_inset LatexCommand \ref{FigRFPp}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "FigRFPp"
 
 \end_inset
 
 -
-\begin_inset LatexCommand \ref{FigRFPd}
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "FigRFPd"
 
 \end_inset
 
-. A strong poloidal upshift is observed as the LH wave propagates, and as found by previous publications, the ray does a spiral around the magnetic axis. Even if the magnetic equilibrium strongly differs from the usual tokamak one, the dispersion relation is well fulfilled along the ray path.
+.
+ A strong poloidal upshift is observed as the LH wave propagates, and as
+ found by previous publications, the ray does a spiral around the magnetic
+ axis.
+ Even if the magnetic equilibrium strongly differs from the usual tokamak
+ one, the dispersion relation is well fulfilled along the ray path.
 \end_layout
 
 \begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
 
-
-\newpage
  
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 
 \backslash
@@ -5232,7 +6405,7 @@ bibliographystyle{unsrt}
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 
 \backslash
@@ -5245,7 +6418,7 @@ bibliographystyle{unsrt}
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 
 \backslash
@@ -5255,7 +6428,10 @@ bibliographystyle{unsrt}
 \end_inset
 
  
-\begin_inset LatexCommand \bibtex[unsrt]{biblio}
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "biblio"
+options "unsrt"
 
 \end_inset
 
