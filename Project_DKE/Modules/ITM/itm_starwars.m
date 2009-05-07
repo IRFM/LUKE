@@ -9,7 +9,7 @@ function [coreprof] = itm_starwars(equilibrium,coreprof,launchs)
 %
 %--------------------------- CPO to LUKE structure conversion ------------------
 %
-magnetic_LUKE = CPO2LUKEstruct_yp('equilibrium',equil);% Data conversion between ITM CPO's and C3PO/LUKE format
+magnetic_LUKE = CPO2LUKEstruct_yp('equilibrium',equilibrium);% Data conversion between ITM CPO's and C3PO/LUKE format
 coreprof_LUKE = CPO2LUKEstruct_yp('coreprof',coreprof);% Data conversion between ITM CPO's and C3PO/LUKE format
 equil = conc_struct_jd(magnetic_LUKE,coreprof_LUKE);
 
