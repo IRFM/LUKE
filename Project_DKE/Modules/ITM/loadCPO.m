@@ -18,7 +18,7 @@ expIdx = openBD('euitm',numshot,numrun);%Open the database
 if isnan(time),%All data are get
 	CPO = CPO_get(expIdx,struct_name);%Read CPO
 else
-	CPO = CPO_get(expIdx,struct_name,time,method);%Read magnetic equilibrium
+	CPO = CPO_get(expIdx,struct_name,time,method);%Read CPO
 end
 %
 closeBD(expIdx,'euitm',numshot,numrun);
