@@ -1,40 +1,21 @@
-function [flag] = itm_starwars(numshot,numrun,numshot_ref,numrun_ref,time,interp_method)
+function [coreprof] = itm_starwars(equilibrium,coreprof,launchs)
+%LUKE -  Interface for running C3PO/LUKE as a Kepler actor
 %
-% itm_starwars: MatLab interface for running C3PO + LUKE in the ITM framework
-%
-%-------------------------------------------------------------------------
-% itm_starwars.m -> source file in directory ~/Project_DKE/Modules/ITM/
-%-------------------------------------------------------------------------
+% Interface for running C3PO/LUKE as a Kepler actor. Arguments of itm_starwars.m are MatLab structures 
+% which are mirror copies of the corresponding CPO's in the ITM MDS+ database. Read/write from/to the MDS+ database is
+% supported by the wrapper outside this function.
 % 
 % by Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
-% by Yves Buranvand (CEA/DSM/IRFM, yves.buravand@cea.fr) and M. Airaj (CEA/DSM/IRFM, mohamed.airaj@cea.fr) for the Matlab UAL functions
 %
-%--------------------------- READ CPO's' from ITM database ------------------
+%--------------------------- CPO to LUKE structure conversion ------------------
 %
-import ualmemory.javainterface.*;
-expIdx = openBD('euitm',numshot,numrun);%Open the database
-%
-equil_ITM = CPO_get(expIdx, 'equilibrium');%Read magnetic equilibrium
-%
- 
- keyboard
- 
- 
- 
- 
-%
-closeBD(expIdx,'euitm',numshot,numrun);%Close the currently open database
-%
-%--------------------------- Data conversion between ITM CPO's and C3PO/LUKE format ------------------
-%
-%equil = make_equil_itm(equil_ITM);
-%
-flag = 0;
+magnetic_LUKE = CPO2LUKEstruct_yp('equilibrium',equil);% Data conversion between ITM CPO's and C3PO/LUKE format
+coreprof_LUKE = CPO2LUKEstruct_yp('coreprof',coreprof);% Data conversion between ITM CPO's and C3PO/LUKE format
+equil = conc_struct_jd(magnetic_LUKE,coreprof_LUKE);
+
+
+
 return
-
-
-
-
 %
 % Determines run type
 %
