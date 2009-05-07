@@ -1,4 +1,4 @@
-function [coreprof] = itm_starwars(equilibrium,coreprof,launchs)
+function [equil] = itm_starwars(varargin)
 %LUKE -  Interface for running C3PO/LUKE as a Kepler actor
 %
 % Interface for running C3PO/LUKE as a Kepler actor. Arguments of itm_starwars.m are MatLab structures 
@@ -9,8 +9,13 @@ function [coreprof] = itm_starwars(equilibrium,coreprof,launchs)
 %
 %--------------------------- CPO to LUKE structure conversion ------------------
 %
-magnetic_LUKE = CPO2LUKEstruct_yp('equilibrium',equilibrium);% Data conversion between ITM CPO's and C3PO/LUKE format
-coreprof_LUKE = CPO2LUKEstruct_yp('coreprof',coreprof);% Data conversion between ITM CPO's and C3PO/LUKE format
+if length(varargin{1}) >= 1,
+	magnetic_LUKE = CPO2LUKEstruct_yp('equilibrium',varargin{1}{1});% Data conversion between ITM CPO's and C3PO/LUKE format
+end
+if length(varargin{1}) >= 2,
+	coreprof_LUKE = CPO2LUKEstruct_yp('coreprof',varargin{1}{2});% Data conversion between ITM CPO's and C3PO/LUKE format
+end
+%
 equil = conc_struct_jd(magnetic_LUKE,coreprof_LUKE);
 
 
