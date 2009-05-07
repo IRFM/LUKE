@@ -1,4 +1,4 @@
-function [launch_LUKE,status,result] = read_launchs_ITM(numshot,numrun,time,method)
+function [launchs_LUKE,status,result] = read_launchs_ITM(numshot,numrun,time,method)
 %LUKE - Function that build a LUKE compliant launch structure from ITM MDS+ database
 %
 %Function that build a LUKE compliant launch structure from ITM MDS+ database
@@ -18,28 +18,21 @@ end
 %
 status = 0;
 result = '';
-equil_LUKE = '';
+launchs_LUKE = '';
 %
 try
 	import ualmemory.javainterface.*;
 	expIdx = openBD('euitm',numshot,numrun);%Open the database
 	%
 	if isnan(time),%All data are get
-		launchs = CPO_get(expIdx,'launchs');%Read magnetic equilibrium
+		launchs = CPO_get(expIdx,'launchs');%Read launchs CPO
 	else
-		launchs = CPO_get(expIdx,'launchs',time,method);%Read magnetic equilibrium
+		launchs = CPO_get(expIdx,'launchs',time,method);%Read launchs CPO
 	end
 	%
 	closeBD(expIdx,'euitm',numshot,numrun);%Close the currently open database
 	%
-	%--------------------------- Data conversion between ITM CPO's and C3PO/LUKE format ------------------
-	%
-
-
-
-
-
-
+	launchs_LUKE = CPO2LUKEstruct_yp('launchs',launchs);% Data conversion between ITM CPO's and C3PO/LUKE format
 catch
 	status = -1;
 	result = 'Error while reading the ITM-MDS+ database. Data may not exist !';
