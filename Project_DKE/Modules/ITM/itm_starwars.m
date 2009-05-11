@@ -31,11 +31,6 @@ else
 	if isempty(coreprof_LUKE),error('Kinetic data (''coreprof'') not loaded for LUKE.');end
 end
 %
-
-%%%%%%%%%%%% implement LUKE %%%%%%%%%%
-
-
-
 % Determines run type
 %
 switch par.luke_mode
@@ -44,31 +39,31 @@ switch par.luke_mode
     %
     % Mixed LH and EC waves case
     %
-    [launchs_lh] = make_wavelaunchs_cronos_lh(equil,gene.signe,par.lh_param.conf,cons.lh_cons,cons_spec);%for the LH waves
-    [launchs_ec] = make_wavelaunchs_cronos_ec(equil,par.ecrh_param,cons.ecrh_cons);%for the EC waves
+    [launchs_lh] = make_wavelaunchs_ITM_lh(equil,gene.signe,par.lh_param.conf,cons.lh_cons,cons_spec);%for the LH waves
+    [launchs_ec] = make_wavelaunchs_ITM_ec(equil,par.ecrh_param,cons.ecrh_cons);%for the EC waves
     %    
     launchs = [launchs_lh,launchs_ec];
     par.launchtype = 'LH';
     %
-  case 'lh'
+  case 'lh only'
     %
     % LH waves only
     %
     if strcmp(par.conf,'Ohmic')
-      [launchs] = make_wavelaunchs_cronos_lh(equil,gene.signe,'MIXTE',cons,cons_spec);%for the LH waves
+      [launchs] = make_wavelaunchs_ITM_lh(equil,gene.signe,'MIXTE',cons,cons_spec);%for the LH waves
     else
-      [launchs] = make_wavelaunchs_cronos_lh(equil,gene.signe,par.conf,cons,cons_spec);%for the LH waves
+      [launchs] = make_wavelaunchs_ITM_lh(equil,gene.signe,par.conf,cons,cons_spec);%for the LH waves
     end
     par.launchtype = 'LH';
     %    
-  case 'ecrh'
+  case 'ecrh only'
     %
     % EC waves only
     %
     if isstruct(cons)
       cons = cons.ecrh_cons;
     end
-    [launchs] = make_wavelaunchs_cronos_ec(equil,par,cons);%for the EC waves    
+    [launchs] = make_wavelaunchs_ITM_ec(equil,par,cons);%for the EC waves    
     par.launchtype = 'EC';
     %
   otherwise
@@ -85,12 +80,13 @@ for iw = 1:length(launchs),
         mask = [mask,iw];
     end
 end
-launchs = launchs(mask);        
+launchs = launchs(mask);   
+
 %
 % --------- Load first all parameters that are in files ------------
 %
-dkeparam         = make_dkeparam_cronos(par.launchtype);
-dkedisplay       = make_display_cronos(par.make_display);
+dkeparam         = make_dkeparam_ITM(par.launchtype);
+dkedisplay       = make_display_ITM(par.make_display);
 dkepath          = getappdata(0,'DKEPATH');
 dkepath.temppath = [dkepath.temppathroot,filesep,'CRONOS',filesep,timeid_jd(clock)];%Temporary subdirectory in scratch folder
 %
@@ -155,7 +151,7 @@ transpfaste.Vr_model = par.Vr_model;%Radial pinch type: (0) no vpar dependence, 
 %
 
 for iw = 1:length(launchs),
-    [waveparam,fitequilparam,rayparam,raydisplay] = make_wavert_cronos(launchs{iw}.type);%parameter for ray-tracing are adapted to the selected wave
+    [waveparam,fitequilparam,rayparam,raydisplay] = make_wavert_ITM(launchs{iw}.type);%parameter for ray-tracing are adapted to the selected wave
     %   	
     wavestructs{iw}.id = [par.conf,'_',launchs{iw}.id];
     wavestructs{iw}.equil_id = equil.id;
@@ -203,9 +199,9 @@ end
 %
 ik = 1;
 %
-if sum(abs(ohm.epsi)) ~= 0,%Calculate the Ohmic electric field contribution to the plasma current
-   [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp('cronos',[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,'',transpfaste,ripple,[],[]);
-end
+%if sum(abs(ohm.epsi)) ~= 0,%Calculate the Ohmic electric field contribution to the plasma current
+%   [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp('cronos',[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,'',transpfaste,ripple,[],[]);
+%end
 %
 while 1,
    [Znorm_RF,Zcurr_RF,ZP0_RF,dke_out_RF,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = run_lukert('cronos',wavestructs,waves,[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[],opt_save);
