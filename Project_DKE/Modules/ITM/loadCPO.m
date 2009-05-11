@@ -1,4 +1,4 @@
-function [varargout] = loadCPO(varargin)
+function [CPO] = loadCPO(varargin)
 %LUKE - Function that load CPOs from ITM MDS+ database
 %
 %Function that load CPOs from ITM MDS+ database
@@ -20,25 +20,23 @@ elseif ischar(varargin{5}),%Simulation is identified by the shot and run numbers
 	i_struct_ref = 5;
 end
 %
-[dkepath] = load_structures_yp('dkepath','','');
-%
 import ualmemory.javainterface.*;
 %
 if i_struct_ref > 4,
 	expIdx = openBD('euitm',numshot,numrun);%Open the database by the shot and run numbers
 end
 %
-struct_out = {};
-for i_struct = i_struct_ref:length(varargin),
-	if isnan(time),%All data are get
-		struct_out{i_struct-i_struct_ref+1} = CPO_get(expIdx,varargin{i_struct});%Read CPO
-	else
-		struct_out{i_struct-i_struct_ref+1} = CPO_get(expIdx,varargin{i_struct},time,method);%Read CPO
-	end
+i_out = 1;
+for i_struct = i_struct_ref:2:length(varargin),
+	if isnan(time),%All data are loaded
+		CPO{i_out} = CPO_get(expIdx,varargin{i_struct});%Read CPO
+    else,%Only data at a given time are loaded
+		CPO{i_out} = CPO_get(expIdx,varargin{i_struct},time,method);%Read CPO
+    end
+    i_out = i_out + 1;
 end
 %
 closeBD(expIdx,'euitm',numshot,numrun);
 %
-varargout = {struct_out};
 
 
