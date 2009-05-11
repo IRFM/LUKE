@@ -26,14 +26,12 @@ if i_struct_ref > 4,
 	expIdx = openBD('euitm',numshot,numrun);%Open the database by the shot and run numbers
 end
 %
-i_out = 1;
-for i_struct = i_struct_ref:2:length(varargin),
+for i_struct = i_struct_ref:length(varargin),
 	if isnan(time),%All data are loaded
-		CPO{i_out} = CPO_get(expIdx,varargin{i_struct});%Read CPO
+		CPO{i_struct - i_struct_ref + 1} = CPO_get(expIdx,varargin{i_struct});%Read CPO
     else,%Only data at a given time are loaded
-		CPO{i_out} = CPO_get(expIdx,varargin{i_struct},time,method);%Read CPO
+		CPO{i_struct - i_struct_ref + 1} = CPO_get(expIdx,varargin{i_struct},time,method);%Read CPO
     end
-    i_out = i_out + 1;
 end
 %
 closeBD(expIdx,'euitm',numshot,numrun);
