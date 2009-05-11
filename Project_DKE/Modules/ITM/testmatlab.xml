@@ -51,13 +51,13 @@
         <property name="_location" class="ptolemy.kernel.util.Location" value="{235, 65}">
         </property>
     </property>
-    <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={57, 0, 1119, 793}, maximized=false}">
+    <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={148, 14, 1024, 793}, maximized=false}">
     </property>
-    <property name="_vergilSize" class="ptolemy.actor.gui.SizeAttribute" value="[844, 659]">
+    <property name="_vergilSize" class="ptolemy.actor.gui.SizeAttribute" value="[749, 659]">
     </property>
-    <property name="_vergilZoomFactor" class="ptolemy.data.expr.ExpertParameter" value="1.0678513731826">
+    <property name="_vergilZoomFactor" class="ptolemy.data.expr.ExpertParameter" value="0.9739921976593">
     </property>
-    <property name="_vergilCenter" class="ptolemy.data.expr.ExpertParameter" value="{448.1860816943986, 362.5635400907714}">
+    <property name="_vergilCenter" class="ptolemy.data.expr.ExpertParameter" value="{447.5000000000002, 392.2983978638184}">
     </property>
     <entity name="ualinit" class="eu.itm.ualinit.ualInit">
         <property name="enableMemCache" class="ptolemy.data.expr.Parameter" value="true">
@@ -203,7 +203,7 @@
         </property>
     </entity>
     <entity name="Display" class="ptolemy.actor.lib.gui.Display">
-        <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={102, 351, 420, 203}, maximized=false}">
+        <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={-6, 197, 420, 203}, maximized=false}">
         </property>
         <property name="_paneSize" class="ptolemy.actor.gui.SizeAttribute" value="[408, 146]">
         </property>
@@ -381,7 +381,7 @@
         </port>
     </entity>
     <entity name="MatlabExpression" class="ptolemy.matlab.Expression">
-<display name="C3PO/LUKE"/>        <property name="expression" class="ptolemy.data.expr.StringParameter" value="load /afs/efda-itm.eu/imp5/user/peysson/LUKE/Project_DKE/Database/PATH_files/PATH_LOCAL.mat&#10;[dkepath] = load_structures_yp('dkepath','','');&#10;output = writeCPO(shot,run,NaN,1,itm_starwars(loadCPO(shot,run,NaN,1,'equilibrium','coreprof')));&#10;">
+<display name="C3PO/LUKE"/>        <property name="expression" class="ptolemy.data.expr.StringParameter" value="load /afs/efda-itm.eu/imp5/user/peysson/LUKE/Project_DKE/Database/PATH_files/PATH_LOCAL.mat&#10;[dkepath] = load_structures_yp('dkepath','','');&#10;output = writeCPO(shot,run,NaN,1,itm_starwars(loadCPO(shot,run,NaN,1,cpo1,cpo2)));&#10;">
             <property name="Matlab expression" class="ptolemy.actor.gui.style.TextStyle">
                 <property name="height" class="ptolemy.data.expr.Parameter" value="10">
                 </property>
@@ -444,7 +444,7 @@
         </port>
     </entity>
     <entity name="Display2" class="ptolemy.actor.lib.gui.Display">
-        <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={0, 30, 420, 203}, maximized=false}">
+        <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={-6, -6, 420, 203}, maximized=false}">
         </property>
         <property name="_paneSize" class="ptolemy.actor.gui.SizeAttribute" value="[408, 146]">
         </property>
