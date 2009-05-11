@@ -2,38 +2,51 @@ function [varargout] = itm_starwars(CPOs)
 %LUKE -  Interface for running C3PO/LUKE as a Kepler actor
 %
 % Interface for running C3PO/LUKE as a Kepler actor. Arguments of itm_starwars.m are MatLab structures 
-% which are mirror copies of the corresponding CPO's in the ITM MDS+ database. Read/write from/to the MDS+ database is
-% supported by the wrapper outside this function.
+% which are mirror copies of the corresponding CPO's in the ITM MDS+ database. Read/write from/to the MDS+ 
+% database is supported by the wrapper outside this function.
 % 
 % by Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
 %--------------------------- CPO to LUKE structure conversion ------------------
 %
-if ~nargin,error('Not enough input arguments in itm_starwars.m');end
-for ii = 1:length(CPOs),
-	if isfield(CPOs{ii},'eqgeometry'),
-		magnetic_LUKE = CPO2LUKEstruct_yp('equilibrium',CPOs{ii});% Data conversion between ITM CPO's and C3PO/LUKE format
-	end
-	%
-	if isfield(CPOs{ii},'composition') & isfield(CPOs{ii},'te'),
-		coreprof_LUKE = CPO2LUKEstruct_yp('coreprof',CPOs{ii});% Data conversion between ITM CPO's and C3PO/LUKE format
-	end
-end
+[dkepath] = load_structures_yp('dkepath','','');
 %
-if ~isempty(magnetic_LUKE) & ~isempty(coreprof_LUKE)
-	equil = conc_struct_jd(magnetic_LUKE,coreprof_LUKE);
+if ~nargin,%local test mode only (ITER/Scen4 + LH_20Z) case
+	id_equil = 'ITER_Scen4_IAEA06';%For plasma equilibrium
+	path_equil = [dkepath.luke_root,'Simulations/Examples/ITER/Scen4/EQUIL/'];%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 	%
-	varargout{1} = 'coreprof';
-	varargout{2} = coreprof_LUKE;
-	return
-else
-	if isempty(magnetic_LUKE),error('Magnetic equilibrium data (''equilibrium'') not loaded for LUKE.');end
-	if isempty(coreprof_LUKE),error('Kinetic data (''coreprof'') not loaded for LUKE.');end
+	ids_wave = {'20Z'};%For RF waves contribution (put all the type of waves needed)
+	paths_wave = {[dkepath.luke_root,'Simulations/Examples/ITER/Scen4/WAVE/C3PO/']};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+	luke_mode = 'lh';
+	%
+	[equil,waves] = load_structures_yp('equil',id_equil,path_equil,'waves',ids_wave,paths_wave);
+	disp('Warning: local mode calculation. No access to the ITM MDS+ database !');
+else,%connexion to the MDS+ database
+	for ii = 1:length(CPOs),
+		if isfield(CPOs{ii},'eqgeometry'),
+			magnetic_LUKE = CPO2LUKEstruct_yp('equilibrium',CPOs{ii});% Data conversion between ITM CPO's and C3PO/LUKE format
+		end
+		%
+		if isfield(CPOs{ii},'composition') & isfield(CPOs{ii},'te'),
+			coreprof_LUKE = CPO2LUKEstruct_yp('coreprof',CPOs{ii});% Data conversion between ITM CPO's and C3PO/LUKE format
+		end
+	end
+	%
+	if ~isempty(magnetic_LUKE) & ~isempty(coreprof_LUKE)
+		equil = conc_struct_jd(magnetic_LUKE,coreprof_LUKE);
+		%
+		varargout{1} = 'coreprof';
+		varargout{2} = coreprof_LUKE;
+		return
+	else
+		if isempty(magnetic_LUKE),error('Magnetic equilibrium data (''equilibrium'') not loaded for LUKE.');end
+		if isempty(coreprof_LUKE),error('Kinetic data (''coreprof'') not loaded for LUKE.');end
+	end
 end
 %
 % Determines run type
 %
-switch par.luke_mode
+switch luke_mode
   %    
   case 'mixte'
     %
@@ -43,9 +56,9 @@ switch par.luke_mode
     [launchs_ec] = make_wavelaunchs_ITM_ec(equil,par.ecrh_param,cons.ecrh_cons);%for the EC waves
     %    
     launchs = [launchs_lh,launchs_ec];
-    par.launchtype = 'LH';
+    launchtype = 'LH';
     %
-  case 'lh only'
+  case 'lh'
     %
     % LH waves only
     %
@@ -54,21 +67,18 @@ switch par.luke_mode
     else
       [launchs] = make_wavelaunchs_ITM_lh(equil,gene.signe,par.conf,cons,cons_spec);%for the LH waves
     end
-    par.launchtype = 'LH';
+    launchtype = 'LH';
     %    
-  case 'ecrh only'
+  case 'ecrh'
     %
     % EC waves only
     %
-    if isstruct(cons)
-      cons = cons.ecrh_cons;
-    end
     [launchs] = make_wavelaunchs_ITM_ec(equil,par,cons);%for the EC waves    
-    par.launchtype = 'EC';
+    launchtype = 'EC';
     %
   otherwise
     %
-    error('luke mode could not be determined')
+    error('luke mode could not be determined: must be lh, ec or mixed')
     %      
 end
 %
@@ -81,75 +91,15 @@ for iw = 1:length(launchs),
     end
 end
 launchs = launchs(mask);   
-
 %
 % --------- Load first all parameters that are in files ------------
 %
-dkeparam         = make_dkeparam_ITM(par.launchtype);
-dkedisplay       = make_display_ITM(par.make_display);
-dkepath          = getappdata(0,'DKEPATH');
-dkepath.temppath = [dkepath.temppathroot,filesep,'CRONOS',filesep,timeid_jd(clock)];%Temporary subdirectory in scratch folder
-%
-% --------- Override parameters that are in files ------------
-%
-% PARAMETRES LUKE
-%
-dkeparam.rt_mode = par.rt_mode;%RT-DKE power consistency
-dkeparam.abs_lim = par.abs_lim;%Relative level of RF power absorption that is accpeted for in the quasilinear convergence loop (0: no threshold, 1: full absorption)
-dkeparam.nit_rf = par.nit_rf;%Maximum number of iteration in ray-tracing. Works only if rt_mode = 1 and more than one radial point (default = 1)
-dkeparam.dke_mode = par.dke_mode;%Fokker-Planck equation (0), Drift Kinetic equation (1)
-dkeparam.dtn = par.dtn;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
-dkeparam.invproc = par.invproc;%Iterative matrix inversion method: (1) cgs iterative method, (2) bicg iterative method, (3) qmr iterative method
-dkeparam.n_rf_list = [0:par.n_ec_max];
-%
-% PARAMETRES DISPLAY
-%
-dkedisplay.rho_display  = par.rho_display;%Approximate radial position at which results are displayed if display.display_mode >= 1 [1,1]. Not used if NaN
-dkedisplay.display_mode = par.display_mode;%Display mode: (0): no, (1): partial, (2): full
-%
-% PARAMETRES OHMIC, transformation en flux poloidal puis en coordonnees radials de LUKE
-%
-signe = evalin('base','param.gene.signe');%Toroidal Bfield and plasma current sign (CRONOS convention: > 0 when counter-clockwise from top view)
-%
-% psipncronos    : coordonnee radiale normalisee de CRONOS en flux poloidal
-% psipncronoshel : coordonnee radiale normalisee en flux poloidal associee a HELENA pour BR BZ et BPHI
-% psitncronoshel : coordonnee radiale normalisee en flux toroidal associee a HELENA pour BR BZ et BPHI 
-% psipn_jd       : coordonnee radiale normalisee en flux poloidal associee a LUKE
-%
-ohm.rho        = par.rho_S;
-psipncronos    = abs(equi.psi-equi.psi(1))/max(abs(equi.psi-equi.psi(1)));
-psipncronoshel = abs(equi.psiRZ-equi.psiRZ(1))/max(abs(equi.psiRZ-equi.psiRZ(1)));
-psitncronoshel = equi.rhoRZ/equi.rhomax;
-psipn_ohm       = rho2psi_jd(equil,par.rho_S);
-%---------------------------------------------------------
-% calcul du champ // pour LUKE (avec gestion des signes)
-% passage de prof.epar de la grille en x sur la grille HELENA
-% puis passage sur la grille LUKE en faisant correspondre rhohel et psihel
-% puis multiplication par le facteur geometrique (pour s'assurer que l'integrale redonne le courant)
-% ohm.epsi : V/m
-% Here Efield sign is always co-current by definition, in order to retrieve both amplitude and sign of Ip without any RF wave
-%----------------------------------------------------------
-ohm.epsi     = -sign(signe.ip)*sign(signe.b0)*abs(interp1(gene.x,prof.epar,psitncronoshel));
-ohm.epsi     = complex(interp1(psipncronoshel,ohm.epsi,psipn_ohm));%Imaginary for considering the definition of the flux surface averaging of CRONOS in LUKE
-%
-% PARAMETRES RIPPLE 
-%
-ripple.ripple = par.ripple;
-%
-% PARAMETRES FAST ELECTRON TRANSPORT 
-%
-transpfaste.vparmin  = par.vparmin_r;%Lower limit of the parallel velocity dependence of the radial diffusion and pinch (vth_ref or vth)
-transpfaste.norm_ref = par.norm_ref;%Normalization procedure for the lower limit of radial transport parallel velocity dependence: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref
-transpfaste.Dr0      = par.Dr0;%Core radial diffusion coefficient (m^2/s)
-transpfaste.pDr      = par.pDr;%Coefficient for the Dr radial profile
-transpfaste.Vr0      = par.Vr0;%Core radial pinch coefficient (m/s)
-transpfaste.pVr      = par.pVr;%Coefficient for the Vr radial profile
-transpfaste.Dr_model = par.Dr_model;%Radial diffusion type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth),
-transpfaste.Vr_model = par.Vr_model;%Radial pinch type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth),
+dkeparam         = make_dkeparam_ITM(launchtype);
+dkedisplay       = make_display_ITM(make_display);
+dkepath.temppath = [dkepath.temppathroot,filesep,'LUKE',filesep,timeid_jd(clock)];%Temporary subdirectory in scratch folder
 %
 % PARAMETRES WAVE LH + EC (C3PO) 
 %
-
 for iw = 1:length(launchs),
     [waveparam,fitequilparam,rayparam,raydisplay] = make_wavert_ITM(launchs{iw}.type);%parameter for ray-tracing are adapted to the selected wave
     %   	
