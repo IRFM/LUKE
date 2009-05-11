@@ -1,4 +1,4 @@
-function [equil] = itm_starwars(varargin)
+function [varargout] = itm_starwars(CPOs)
 %LUKE -  Interface for running C3PO/LUKE as a Kepler actor
 %
 % Interface for running C3PO/LUKE as a Kepler actor. Arguments of itm_starwars.m are MatLab structures 
@@ -9,19 +9,33 @@ function [equil] = itm_starwars(varargin)
 %
 %--------------------------- CPO to LUKE structure conversion ------------------
 %
-if length(varargin{1}) >= 1,
-	magnetic_LUKE = CPO2LUKEstruct_yp('equilibrium',varargin{1}{1});% Data conversion between ITM CPO's and C3PO/LUKE format
-end
-if length(varargin{1}) >= 2,
-	coreprof_LUKE = CPO2LUKEstruct_yp('coreprof',varargin{1}{2});% Data conversion between ITM CPO's and C3PO/LUKE format
+if ~nargin,error('Not enough input arguments in itm_starwars.m');end
+for ii = 1:length(CPOs),
+	if isfield(CPOs{ii},'eqgeometry'),
+		magnetic_LUKE = CPO2LUKEstruct_yp('equilibrium',CPOs{ii});% Data conversion between ITM CPO's and C3PO/LUKE format
+	end
+	%
+	if isfield(CPOs{ii},'composition') & isfield(CPOs{ii},'te'),
+		coreprof_LUKE = CPO2LUKEstruct_yp('coreprof',CPOs{ii});% Data conversion between ITM CPO's and C3PO/LUKE format
+	end
 end
 %
-equil = conc_struct_jd(magnetic_LUKE,coreprof_LUKE);
-
-
-
-return
+if ~isempty(magnetic_LUKE) & ~isempty(coreprof_LUKE)
+	equil = conc_struct_jd(magnetic_LUKE,coreprof_LUKE);
+	%
+	varargout{1} = 'coreprof';
+	varargout{2} = coreprof_LUKE;
+	return
+else
+	if isempty(magnetic_LUKE),error('Magnetic equilibrium data (''equilibrium'') not loaded for LUKE.');end
+	if isempty(coreprof_LUKE),error('Kinetic data (''coreprof'') not loaded for LUKE.');end
+end
 %
+
+%%%%%%%%%%%% implement LUKE %%%%%%%%%%
+
+
+
 % Determines run type
 %
 switch par.luke_mode
