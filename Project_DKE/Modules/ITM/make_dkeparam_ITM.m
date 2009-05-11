@@ -10,7 +10,7 @@ if strfind(config,'LH');%For the Lower Hybrid wave simulations
 %
    dkeparam.grid_uniformity = 0;%Pitch-angle and momentum grids uniformity: (0) no, (1) yes (-1 for specific test for DKE, transient and pitch-angle grid only)
    dkeparam.grid_method = 1;%Pitch-angle grid calculation technique: (0): old method, (1) new method
-   dkeparam.nmhu_S = 121;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
+   dkeparam.nmhu_S = 101;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
    dkeparam.np_S = 151;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run) WARNING: must be adjusted so that effective momentum point number is larger than thepitch-angle one.
    dkeparam.pnmax_S = 30;%Maximum value of the flux momentum grid (pth_ref)
 %
@@ -48,7 +48,7 @@ if strfind(config,'LH');%For the Lower Hybrid wave simulations
    dkeparam.rt_mode = 1;%RT-DKE power consistency method
    dkeparam.nit_rf = 20;%Maximum number of iteration in ray-tracing. Works only if rt_mode = 1 and more than one radial point (default = 1)
    dkeparam.prec_rf = 1e-2;%relative precision in RT-DKE iterations
-   dkeparam.n_rf_list = [0:3];%List of harmonics in the Dql calculations
+   dkeparam.n_rf_list = [0];%List of harmonics in the Dql calculations
    dkeparam.delta_rt = 0.5;%smoothering parameter of quasilinear iterations
    dkeparam.abs_lim = 0.95;%minimum required absorption fraction
    dkeparam.npresmin = 1;%minimum number of resonant point per ray
