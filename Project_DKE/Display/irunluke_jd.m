@@ -390,7 +390,7 @@ while isel >= 0,
 					%
 					id_simul = data.id_simul;
 					%
-                    if ~isempty(data.id_dkepath) && exist([data.path_dkepath,'PATH_',data.id_dkepath,'.mat'],'file'),
+                    if isfield(data,'id_dkepath') && ~isempty(data.id_dkepath) && exist([data.path_dkepath,'PATH_',data.id_dkepath,'.mat'],'file'),
                         fileids.dkepath = data.id_dkepath;
                         paths.dkepath = data.path_dkepath;
                     else
@@ -398,7 +398,7 @@ while isel >= 0,
                         paths.dkepath = '';
                     end
 					%
-                    if ~isempty(data.id_dkeparam) && exist([data.path_dkeparam,'DKEPARAM_',data.id_dkeparam,'.mat'],'file'),
+                    if isfield(data,'id_dkeparam') && ~isempty(data.id_dkeparam) && exist([data.path_dkeparam,'DKEPARAM_',data.id_dkeparam,'.mat'],'file'),
                         fileids.dkeparam = data.id_dkeparam;
                         paths.dkeparam = data.path_dkeparam;
                     else
@@ -406,7 +406,7 @@ while isel >= 0,
                         paths.dkeparam = '';
                     end
 					%
-                    if ~isempty(data.id_equil) && exist([data.path_equil,'EQUIL_',data.id_equil,'.mat'],'file'),
+                    if isfield(data,'id_equil') && ~isempty(data.id_equil) && exist([data.path_equil,'EQUIL_',data.id_equil,'.mat'],'file'),
                         fileids.equil = data.id_equil;
                         paths.equil = data.path_equil;
                     else
@@ -415,7 +415,7 @@ while isel >= 0,
                     end
                     %
                     for iw = 1:length(data.waves),
-                        if ~isempty(data.ids_wave{iw}) && exist([data.paths_wave{iw},'WAVE_',data.ids_wave{iw},'.mat'],'file'),
+                        if isfield(data,'ids_wave') && ~isempty(data.ids_wave{iw}) && exist([data.paths_wave{iw},'WAVE_',data.ids_wave{iw},'.mat'],'file'),
                             fileids.waves{iw} = data.ids_wave{iw};
                             paths.waves{iw} = data.paths_wave{iw};
                         else
@@ -424,7 +424,7 @@ while isel >= 0,
                         end
                     end
 					%
-                    if ~isempty(data.id_ohm) && exist([data.path_ohm,'OHM_',data.id_ohm,'.mat'],'file'),
+                    if isfield(data,'id_ohm') && ~isempty(data.id_ohm) && exist([data.path_ohm,'OHM_',data.id_ohm,'.mat'],'file'),
                         fileids.ohm = data.id_ohm;
                         paths.ohm = data.path_ohm;
                     else
@@ -432,7 +432,7 @@ while isel >= 0,
                         paths.ohm = '';
                     end
 					%
-                    if ~isempty(data.id_transpfaste) && exist([data.path_transpfaste,'TRANSP_',data.id_transpfaste,'.mat'],'file'),
+                    if isfield(data,'id_transpfaste') && ~isempty(data.id_transpfaste) && exist([data.path_transpfaste,'TRANSP_',data.id_transpfaste,'.mat'],'file'),
                         fileids.transpfaste = data.id_transpfaste;
                         paths.transpfaste = data.path_transpfaste;
                     else
@@ -440,7 +440,7 @@ while isel >= 0,
                         paths.transpfaste = '';
                     end
 					%
-                    if ~isempty(data.id_ripple) && exist([data.path_ripple,'RIPPLE_',data.id_ripple,'.mat'],'file'),
+                    if isfield(data,'id_ripple') && ~isempty(data.id_ripple) && exist([data.path_ripple,'RIPPLE_',data.id_ripple,'.mat'],'file'),
                         fileids.ripple = data.id_ripple;
                         paths.ripple = data.path_ripple;
                     else
