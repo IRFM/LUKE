@@ -40,7 +40,7 @@ if dkeparam_in.opt_load*exist(['temp',filesep,'DKE_TEMP_',id_simul,'.mat']),
    info_dke_yp(2,['File temp',filesep,'DKE_TEMP_',id_simul,'.mat reloaded.']);
 else
    [radialDKE] = radialgrid_dke_jd(equil,dkeparam_out,display,psin_S,rho_S);%Radial grid for DKE
-   [equilDKE] = equilibrium_jd(equil,radialDKE,display,'spline',10);%Magnetic equilibrium for DKE
+   [equilDKE] = equilibrium_jd(equil,radialDKE,display,'spline',dkeparam_out.mfactor);%Magnetic equilibrium for DKE
    [momentumDKE] = momentumgrid_dke_jd(dkeparam_out,equilDKE,radialDKE);%Momentum space 2D grid for DKE
    [gridDKE] = matrix3Dgridbuilder_dke_yp(dkeparam_out,display,equilDKE,radialDKE,momentumDKE);%General grid structure for the DKE solver
    [mksa] = mksacoefbuilder_dke_yp(dkeparam_out,display,equilDKE,radialDKE,momentumDKE,gridDKE);%MKSA quantities calculations

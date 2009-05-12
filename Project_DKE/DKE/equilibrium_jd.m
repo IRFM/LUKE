@@ -91,7 +91,7 @@ elseif ~isstruct(display)
 else
     display_mode = display.display_mode;
 end
-if nargin < 2 | ~isstruct(radialDKE),
+if nargin < 2 || ~isstruct(radialDKE),
     xpsin_S_dke = NaN;%no incremental volume or surface calculations
     xpsin = NaN;%the radial grid is the equilibrium grid
 else
@@ -101,8 +101,6 @@ end
 if nargin < 1,
     error('Not enough input arguments in equilibrium_jd.m');
 end
-%
-[qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;
 %
 % CASE OF LOCAL CALCULATION INDEPENDENT OF ANY ACTUAL TOKAMAK GENOMETRY
 %
@@ -116,7 +114,7 @@ if strcmp(equil.id,'LOCAL'),
     %
     % Note that circular flux-surfaces are assumed in this case
     %
-    if npsi ~= 1 | ntheta ~= 1,
+    if npsi ~= 1 || ntheta ~= 1,
         error('LOCAL is reserved for equilibria with one (psi,theta) position only')
     end
     if isnan(xpsin)
@@ -184,20 +182,34 @@ end
 %
 % FFT interpolation on R,Z, BR, BZ, BPHI as a function of theta (very precise, works for uniform theta grids only)
 %
-mtheta = 0:2*pi/((ntheta-1)*mfactor):2*pi*((ntheta-1)*mfactor-1)/((ntheta-1)*mfactor); %super theta grid
-%
-mx = interpft(equil.ptx(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
-my = interpft(equil.pty(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
-mBx = interpft(equil.ptBx(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
-mBy = interpft(equil.ptBy(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
-mBPHI = interpft(equil.ptBPHI(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
+if mfactor > 1,
+    %
+    mtheta = 0:2*pi/((ntheta-1)*mfactor):2*pi*((ntheta-1)*mfactor-1)/((ntheta-1)*mfactor); %super theta grid
+    %
+    mx = interpft(equil.ptx(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
+    my = interpft(equil.pty(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
+    mBx = interpft(equil.ptBx(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
+    mBy = interpft(equil.ptBy(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
+    mBPHI = interpft(equil.ptBPHI(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
+    %
+else
+    %
+    mtheta = equil.theta(1:end-1); %super theta grid
+    %
+    mx = equil.ptx(:,1:end-1); %FFT interpolation
+    my = equil.pty(:,1:end-1); %FFT interpolation
+    mBx = equil.ptBx(:,1:end-1); %FFT interpolation
+    mBy = equil.ptBy(:,1:end-1); %FFT interpolation
+    mBPHI = equil.ptBPHI(:,1:end-1); %FFT interpolation
+    %
+end
 %
 % Remove Fourier components if secondary exprema exist
 %
 nc = (ntheta-1)*mfactor/2 + 1;%central fft point
 t = 1;
 %
-while Rp < Inf & t <= (ntheta-1)/2,
+while Rp < Inf && t <= (ntheta-1)/2 && Bax ~= 0,
     %
     mB = sqrt(mBx.^2 + mBy.^2 + mBPHI.^2);% total magnetic field
     %
@@ -238,8 +250,6 @@ mBx = [mBx,mBx(:,1)]; %2*pi point retrieved
 mBy = [mBy,mBy(:,1)]; %2*pi point retrieved
 mBPHI = [mBPHI,mBPHI(:,1)]; %2*pi point retrieved
 %
-nmtheta = length(mtheta);
-%
 ap =  mx(npsi,1);%Plasma minor radius on the LFS midplane 
 %
 psi_apRp = reshape(equil.psi_apRp,[1,npsi]);
@@ -265,6 +275,10 @@ XBx = interp1(psin,mBx,xpsin,method);
 XBy = interp1(psin,mBy,xpsin,method);
 XBphi = interp1(psin,mBPHI,xpsin,method);
 %
+XBx(isnan(XBx)) = Inf;
+XBy(isnan(XBy)) = Inf;
+XBphi(isnan(XBphi)) = Inf;
+%
 xrho = Xx(:,1)'/ap;%Normalized radius on the horizontal LFS midplane
 %
 xTe = interp1(psin,equil.pTe,xpsin,method);
@@ -279,8 +293,8 @@ XB = sqrt(XBphi.^2 + XBx.^2 + XBy.^2);%Total B-field
 %
 % index 0 refers to the minimum of the magnetic field
 %
-[xB0,xiB0] = min(XB'); %Minimum of B on flux surface
-xBmax = max(XB'); %Maximum of B on flux surface
+[xB0,xiB0] = min(XB.'); %Minimum of B on flux surface
+xBmax = max(XB.'); %Maximum of B on flux surface
 %
 xmhu0T2 = 1 - xB0./xBmax; %Pitch-angle (squared) at the trapped-passing boundary
 %

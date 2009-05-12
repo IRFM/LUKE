@@ -30,3 +30,7 @@ end
 if ~isfield(dkeparam,'clustermode'),
 	dkeparam.clustermode = '';
 end
+%
+if ~isfield(dkeparam,'mfactor'),
+    dkeparam.mfactor = 10;
+end

@@ -1,4 +1,4 @@
-function [xq,xqtilde,xqbar,xqhat,xqcronos,xB0] = qfactors_dke_yp(equil_mode,Rp,ap,Xx,Xy,XBx,XBy,XBphi,xx0,xB0,xBT0,xBp0);
+function [xq,xqtilde,xqbar,xqhat,xqcronos,xB0] = qfactors_dke_yp(equil_mode,Rp,ap,Xx,Xy,XBx,XBy,XBphi,xx0,xB0,xBT0,xBp0)
 %
 % Calculation of the different q factors needed for solving the bounce averaged drift-kinetic-equation for
 % arbitrary equilibrium (see the notice for explanations concerning notations)
@@ -18,11 +18,11 @@ function [xq,xqtilde,xqbar,xqhat,xqcronos,xB0] = qfactors_dke_yp(equil_mode,Rp,a
 % by Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC) and Joan Decker <jodecker@alum.mit.edu> (MIT/RLE)  
 %
 if equil_mode == 1,
-    Xx = Xx';
-    Xy = Xy';
-    XBx = XBx';
-    XBy = XBy';
-    XBphi = XBphi';
+    Xx = Xx.';
+    Xy = Xy.';
+    XBx = XBx.';
+    XBy = XBy.';
+    XBphi = XBphi.';
     %
     [nt,np] = size(Xx);
     %
@@ -35,21 +35,35 @@ if equil_mode == 1,
     %
     % Half grid in theta for integration
     %
-    XMBx = (XBx(1:nt-1,:) + XBx(2:nt,:))/2;
-    XMBy = (XBy(1:nt-1,:) + XBy(2:nt,:))/2;
-    XMBphi = (XBphi(1:nt-1,:) + XBphi(2:nt,:))/2;
-    XMB = sqrt(XMBx.^2 + XMBy.^2 + XMBphi.^2);
-    %
-    xB0 = min(XMB);
-    %
-    XMBmin = ones(nt-1,1)*xB0;
-    %
-    XMx = (Xx(1:nt-1,:) + Xx(2:nt,:))/2;
-    XMy = (Xy(1:nt-1,:) + Xy(2:nt,:))/2;
-    %
-    nm = nt - 1;
-    %
-    XMdt = diff(Xtheta);
+    if any(isinf(XB(:))),% in case of inf, the half grid is taken as every other point
+        XMBx = XBx(2:2:nt-1,:);
+        XMBy = XBy(2:2:nt-1,:);
+        XMBphi = XBphi(2:2:nt-1,:);
+        XMB = XB(2:2:nt-1,:);
+        %
+        xB0 = min(XMB);
+        %
+        XMBmin = ones((nt-1)/2,1)*xB0;
+        %
+        XMx = Xx(2:2:nt-1,:);
+        XMy = Xy(2:2:nt-1,:);
+        %
+        XMdt = diff(Xtheta(1:2:end,:));
+    else
+        XMBx = (XBx(1:nt-1,:) + XBx(2:nt,:))/2;
+        XMBy = (XBy(1:nt-1,:) + XBy(2:nt,:))/2;
+        XMBphi = (XBphi(1:nt-1,:) + XBphi(2:nt,:))/2;
+        XMB = sqrt(XMBx.^2 + XMBy.^2 + XMBphi.^2);
+        %
+        xB0 = min(XMB);
+        %
+        XMBmin = ones(nt-1,1)*xB0;
+        %
+        XMx = (Xx(1:nt-1,:) + Xx(2:nt,:))/2;
+        XMy = (Xy(1:nt-1,:) + Xy(2:nt,:))/2;
+        %
+        XMdt = diff(Xtheta);
+    end
     %
     XMr2 = XMx.^2 + XMy.^2;
     XMrBpcos = abs(XMBx.*XMy - XMBy.*XMx);
