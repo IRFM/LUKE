@@ -39,12 +39,12 @@ end
 %
 if ~isnan(xymaskT_in),%for correct grid mask position 
 	xymaskT = xymaskT_in;
-	for ir = 1:size(xymaskT_in,1),
+	for ir = 1:nr,
 		xjmhut_min(ir) = min(find(xymaskT_in(ir,:) == 1));
 		xjmhut_max(ir) = max(find(xymaskT_in(ir,:) == 1));
 	end
-	if sign == 1,xymaskT(:,xjmhut_min-1) = xymaskT_in(:,xjmhut_min);end
-	if sign == -1,xymaskT(:,xjmhut_max+1) = xymaskT_in(:,xjmhut_max);end
+	if sign == 1, xymaskT(:,max([xjmhut_min-1;ones(1,nr)])) = xymaskT_in(:,xjmhut_min);end
+	if sign == -1,xymaskT(:,min([xjmhut_max+1;nmhu*ones(1,nr)])) = xymaskT_in(:,xjmhut_max);end
 end
 %
 if equil_mode == 1
@@ -66,6 +66,7 @@ if equil_mode == 1
 	YMR0YMR4 = YMR0YMR2.*YMR0YMR2;
 %
     YMmaskYMdtYMF = YMmask.*YMdt.*YMF;
+    YMmaskYMdtYMF(YMmask == 0) = 0;%to deal with cases where YMF is NaN
 	not_xymaskT = ~xymaskT;
 %
     Yweight_p0p0 = ones(size(YMYM01));%(YMmhu./YMmhu0).^(0).*YMPSIB.^(0);
@@ -107,7 +108,7 @@ if equil_mode == 1
     xylambda_b_p1m2 = not_xymaskT.*xylambda_p1m2;%In old notation: 1-delta/mhu0^2
 %
     Yweight_p2m2p2 = YMYM02.*YMPSIBM2.*YMR0YMR2;    
-    xylambda_p2m2p2 = reshape(sum(YMmaskYMdtYMF.*Yweight_p2m2p2)/(2*pi),[nr,nmhu])./xyqtilde;%************probl?me sur le courant en mode numŽrique (grille uniforme ou non)
+    xylambda_p2m2p2 = reshape(sum(YMmaskYMdtYMF.*Yweight_p2m2p2)/(2*pi),[nr,nmhu])./xyqtilde;%************probl?me sur le courant en mode numï¿½rique (grille uniforme ou non)
     xylambda_b_p2m2p2 = not_xymaskT.*xylambda_p2m2p2;
 %
     Yweight_p3m2 = YMYM03.*YMPSIBM2;
