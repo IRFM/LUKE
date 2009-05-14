@@ -34,7 +34,9 @@ for i_struct = i_struct_ref:length(varargin),
     end
 end
 %
-closeBD(expIdx,'euitm',numshot,numrun);
+if i_struct_ref > 4,
+	closeBD(expIdx,'euitm',numshot,numrun);
+end
 %
 
 
