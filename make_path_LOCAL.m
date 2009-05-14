@@ -117,10 +117,12 @@ efdaitm.luke_root = [getenv('HOME'),'/LUKE/'];
 efdaitm.local_root = ['/afs/efda-itm.eu/project/switm/'];
 efdaitm.computer = 'GLNXA64';%machine type and supported OS
 efdaitm.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+efdaitm.maxcompthreads = 'automatic';%For MatLab multithreading
 %
-%efdaitm.speclibpath.ual = [efdaitm.local_root,'ual/matlabinterface'];%Other machine specific libraries
-%TODO: bug dans certaines fonctions de l'adresse précédente. Adresse temporaire donc... Voir Frédéric Imbeaux pour le changement
-efdaitm.speclibpath.ual = ['/afs/.efda-itm.eu/project/switm/ual/matlabinterface'];%Other machine specific libraries 
+efdaitm.speclibpath.xml_io_tools = [efdaitm.luke_root,'Project_DKE/Modules/ITM/xml_io_tools/'];%Other machine specific libraries (XML I/O)
+%efdaitm.speclibpath.ual = [efdaitm.local_root,'ual/matlabinterface'];%Other machine specific libraries (UAL)
+efdaitm.speclibpath.ual = ['/afs/efda-itm.eu/isip/user/buravand/public/matlab/v4.06d'];%Other machine specific libraries (UAL)
+%TODO: Adresse temporairede Yves Buravand
 %
 efdaitm.mex76 = [efdaitm.luke_root,'Project_DKE/MEX/Bin/efdaitm/MATLAB76/'];
 efdaitm.compiler_opt.copts = '';
@@ -128,6 +130,7 @@ efdaitm.compiler_opt.fopts.mex76 = ['-v FFLAGS=''-fexceptions -fPIC -fno-omit-fr
 %efdaitm.compiler_opt.helmex.mex76 = 'FLIBS=''-L/afs/efda-itm.eu/project/switm/lapack/amd64_g95/lib/ -llapack -ltmglib -L/afs/efda-itm.eu/project/switm/blas/amd64_g95/lib/ -lblas''';
 efdaitm.compiler_opt.helmex.mex76 = ['-L/usr/bin/g95 -lf95 -lgcc ',efdaitm.local_root,'lapack/amd64_g95/lib/liblapack.so ',efdaitm.local_root,'blas/amd64_g95/lib/libblas.so ',efdaitm.local_root,'lapack/amd64_g95/lib/libtmglib.so '];% Optional argument for helmex compilation
 efdaitm.compiler_opt.helmex.mex76 = 'FLIBS=''-L/usr/bin/g95 -lf95 -lgcc -Wl,-rpath-link,/afs/efda-itm.eu/project/switm/matlab/bin/glnxa64 -L/afs/efda-itm.eu/project/switm/matlab/bin/glnxa64 -lmx -lmex -lmat -lm -L/afs/efda-itm.eu/project/switm/lapack/amd64_g95/lib/ -llapack -ltmglib -L/afs/efda-itm.eu/project/switm/blas/amd64_g95/lib/ -lblas -lguide -lpthread''';
+efdaitm.compiler_opt.helmex.mex75 = NaN;
 %
 efdaitm.MUMPS.mex76 = [efdaitm.local_root,'mumps/MUMPS_4.7.3_SEQ/MATLAB/'];%Where MUMPS matrix solver is stored (MEX function)
 %
@@ -274,9 +277,4 @@ crpppc51.compiler_opt.helmex = '-v -L/home/decker/NoTivoli/Packages/Bin/lapack-3
 %
 crpppc51.MUMPS.mex76 = [crpppc51.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB_7.6'];%Where MUMPS matrix solver is stored (MEX function)
 %
-dkepath.crpppc51 = crpppc51;
-%
-%***************************************************************************************************
-%
-save([pwd,'/Project_DKE/Database/PATH_files/PATH_',dkepath.id,'.mat'],'dkepath');
-%
+dk
