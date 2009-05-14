@@ -9,7 +9,16 @@ shot = 13;
 run= 1;
 time = NaN;
 method = 1;
+mode = [];
+%
+mode = input_dke_yp('Database access by ID (1) or shot and run numbers (2)',1,{1,2},mode);
 %
 dkepath = load_structures_yp('dkepath','','');
 %
-flag = writeCPO(shot,run,NaN,1,itm_starwars(loadCPO(shot,run,NaN,1,'equilibrium','coreprof')));
+if mode,
+	expIdx = openBD('euitm',shot,run);%Equivalent to UALinit in KEPLER
+	flag = writeCPO(expIdx,NaN,1,itm_starwars(loadCPO(expIdx,NaN,1,'equilibrium','coreprof')));
+	closeBD(expIdx,'euitm',shot,run);
+else
+	flag = writeCPO(shot,run,NaN,1,itm_starwars(loadCPO(shot,run,NaN,1,'equilibrium','coreprof')));
+end
