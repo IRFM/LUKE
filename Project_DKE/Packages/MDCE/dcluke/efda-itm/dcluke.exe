@@ -1,0 +1,38 @@
+#!/bin/csh 
+unsetenv DISPLAY
+pwd
+#/usr/local/R2007B/bin/matlab  -nosplash -nodesktop <<@@ > /dev/null 
+#matlab -nodesktop <<@@
+matlab  -nosplash -nodesktop <<@@ > /dev/null 
+dbstop if all error
+% chargement des donnees
+warning off
+load $1
+% restauration du path
+path(data.path)
+warning on
+% restauration des parametres d''application
+noms = fieldnames(data.appdata);
+for  k = 1:length(noms)
+	setappdata(0,noms{k},data.appdata.(noms{k}));
+end
+% repertoire de lancement
+cd(data.dir)
+% diary
+diary(data.diaryfile)
+% appel de la commande
+clear resultat
+try
+	[resultat{1:nargout(data.commande)}] =  feval(data.commande,data.entrees{:});
+	etat_sortie = 0;
+catch
+	etat_sortie = 1;
+end
+etat_error = lasterr;
+% sauvegarde du resultat
+save(data.outputdata,'resultat','etat_sortie','etat_error');
+% fin de matlab
+diary off
+exit
+@@
+exit
