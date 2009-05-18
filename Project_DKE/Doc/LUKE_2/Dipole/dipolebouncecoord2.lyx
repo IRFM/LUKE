@@ -1,0 +1,1294 @@
+#LyX 1.6.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\leftmargin 1.5cm
+\topmargin 1.5cm
+\rightmargin 1.5cm
+\bottommargin 1.5cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Generalized coordinates in dipole magnetic geometry
+\end_layout
+
+\begin_layout Author
+François-Xavier DUTHOIT
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\bhat}{\widehat{\mathsf{b}}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\extd}{\mathsf{d}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\cont}[1]{\iota_{#1}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Dipole geometry and 
+\begin_inset Formula $\left(\psi,s\right)$
+\end_inset
+
+ representation
+\end_layout
+
+\begin_layout Standard
+Here, we will be working in spherical 
+\begin_inset Formula $\left(\rho,\vartheta,\phi\right)$
+\end_inset
+
+ coordinates.
+ 
+\begin_inset Formula $\widehat{\rho},\widehat{\vartheta},\widehat{\phi}$
+\end_inset
+
+ are unitary vectors associated with these coordinates.
+ The coordinate 
+\begin_inset Formula $s$
+\end_inset
+
+ measures distance along a magnetic field line and 
+\begin_inset Formula $\psi$
+\end_inset
+
+ is the flux coordinate associated with a magnetic surface.
+ The expression for a dipole magnetic field reads, with 
+\begin_inset Formula $\mathcal{M}$
+\end_inset
+
+ a constant proportional to the dipole magnetic moment
+\begin_inset Formula \begin{equation}
+\mathbf{B}=\frac{\mathcal{M}}{\rho^{3}}\left(2\cos\vartheta\widehat{\rho}+\sin\vartheta\widehat{\vartheta}\right)\end{equation}
+
+\end_inset
+
+We can also write the magnetic field in flux coordinate reprenentation.
+ It reads
+\begin_inset Formula \begin{equation}
+\mathbf{B}=\nabla\psi\times\nabla\phi\end{equation}
+
+\end_inset
+
+One can easily deduce the expression for 
+\begin_inset Formula $\psi$
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\psi\left(\rho,\vartheta\right)=\frac{\mathcal{M}}{\rho}\sin^{2}\vartheta\end{equation}
+
+\end_inset
+
+Previous work has shown that the magnetic field line equations read 
+\begin_inset Formula $\rho=\rho_{0}\sin^{2}\vartheta$
+\end_inset
+
+, with 
+\begin_inset Formula $\rho_{0}$
+\end_inset
+
+ the field line equatorial radius.
+ We can therefore deduce
+\begin_inset Formula \begin{equation}
+\boxed{\psi\left(\rho_{0}\right)=\frac{\mathcal{M}}{\rho_{0}}}\end{equation}
+
+\end_inset
+
+We can also evaluate the elementary step along a magnetic field line
+\begin_inset Formula \begin{equation}
+ds=\sqrt{d\rho^{2}+\rho^{2}d\vartheta^{2}}=\rho_{0}\sqrt{1+3\cos^{2}\vartheta}\sin\vartheta d\vartheta\end{equation}
+
+\end_inset
+
+Setting the convention 
+\begin_inset Formula $s=0$
+\end_inset
+
+ at 
+\begin_inset Formula $\vartheta=\pi/2$
+\end_inset
+
+ and 
+\begin_inset Formula $s>0$
+\end_inset
+
+ if 
+\begin_inset Formula $\vartheta>\pi/2$
+\end_inset
+
+, we have :
+\begin_inset Formula \begin{equation}
+s\left(\rho_{0},\vartheta\right)=\rho_{0}\int_{\frac{\pi}{2}}^{\vartheta}\sqrt{1+3\cos^{2}\vartheta}\sin\vartheta d\vartheta\end{equation}
+
+\end_inset
+
+We then introduce the variable change 
+\begin_inset Formula $\sinh x=-\sqrt{3}\cos\vartheta$
+\end_inset
+
+.
+ We then have 
+\begin_inset Formula $\cosh xdx=\sqrt{3}\sin\vartheta d\vartheta$
+\end_inset
+
+ and the integral becomes
+\begin_inset Formula \begin{eqnarray*}
+s\left(\rho_{0},\vartheta\right) & = & \frac{\rho_{0}}{\sqrt{3}}\int_{0}^{x}\sqrt{1+\sinh^{2}x}\cosh xdx\\
+ & = & \frac{\rho_{0}}{\sqrt{3}}\int_{0}^{x}\cosh^{2}xdx\\
+ & = & \frac{\rho_{0}}{2\sqrt{3}}\left(x+\frac{1}{2}\sinh2x\right)\\
+ & = & \frac{\rho_{0}}{2\sqrt{3}}\left(x+\cosh x\sinh x\right)\\
+ & = & \frac{\rho_{0}}{2\sqrt{3}}\left(x+\sqrt{1+\sinh^{2}x}\sinh x\right)\end{eqnarray*}
+
+\end_inset
+
+Since 
+\begin_inset Formula $\sinh^{-1}a=\ln\left(a+\sqrt{1+a^{2}}\right)$
+\end_inset
+
+, we can deduce, inserting the expression for 
+\begin_inset Formula $x$
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\boxed{s\left(\rho_{0},\vartheta\right)=\frac{\rho_{0}}{2\sqrt{3}}\left[\ln\left(\sqrt{1+3\cos^{2}\vartheta}-\sqrt{3}\cos\vartheta\right)-\sqrt{3}\cos\vartheta\sqrt{1+3\cos^{2}\vartheta}\right]}\label{eq:}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Bounce action and angle coordinates in the deeply trapped approximation
+\end_layout
+
+\begin_layout Subsection
+Lowest-order calculations
+\end_layout
+
+\begin_layout Standard
+In this section, we introduce the small parameters 
+\begin_inset Formula $\epsilon\equiv\vartheta-\pi/2$
+\end_inset
+
+ and 
+\begin_inset Formula $\epsilon_{b}\equiv\vartheta_{b}-\pi/2$
+\end_inset
+
+.
+ Since 
+\begin_inset Formula $\vartheta\in\left[\vartheta_{b},\pi-\vartheta_{b}\right]$
+\end_inset
+
+, we have 
+\begin_inset Formula $\left|\epsilon\right|\leq\left|\epsilon_{b}\right|$
+\end_inset
+
+.
+ Due to the magnetic momentum conservation, the relation between the pitch-angle
+ cosine and its value at the equator reads
+\begin_inset Formula \begin{equation}
+\frac{1-\xi^{2}}{B}=\frac{1-\xi_{0}^{2}}{B_{0}}\end{equation}
+
+\end_inset
+
+We can then deduce, at the turning point 
+\begin_inset Formula $\vartheta=\vartheta_{b}$
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray}
+1-\xi_{0}^{2}=\frac{B_{0}}{B\left(\vartheta_{b}\right)}=\frac{\sin^{6}\vartheta_{b}}{\sqrt{1+3\cos^{2}\vartheta_{b}}} & = & \frac{\cos^{6}\epsilon_{b}}{\sqrt{1+3\sin^{2}\epsilon_{b}}}\nonumber \\
+ & = & \frac{\left(1-\frac{1}{2}\epsilon_{b}^{2}\right)^{6}}{\sqrt{1+3\epsilon_{b}^{2}}}+\mathcal{O}\left(\epsilon_{b}^{4}\right)\nonumber \\
+ & = & \left(1-3\epsilon_{b}^{2}\right)\left(1-\frac{3}{2}\epsilon_{b}^{2}\right)+\mathcal{O}\left(\epsilon_{b}^{4}\right)\nonumber \\
+ & = & 1-\frac{9}{2}\epsilon_{b}^{2}+\mathcal{O}\left(\epsilon_{b}^{4}\right)\label{eq:-1}\end{eqnarray}
+
+\end_inset
+
+Performing an analogy with 
+\begin_inset Formula $\vartheta$
+\end_inset
+
+, we have
+\begin_inset Formula \begin{equation}
+\frac{B\left(\vartheta\right)}{B_{0}}=\frac{\sqrt{1+3\cos^{2}\vartheta}}{\sin^{6}\vartheta}=1+\frac{9}{2}\epsilon^{2}+\mathcal{O}\left(\epsilon^{4}\right)\end{equation}
+
+\end_inset
+
+We can therefore deduce
+\begin_inset Formula \begin{equation}
+\left|\xi\right|=\sqrt{1-\frac{B}{B_{0}}\left(1-\xi_{0}^{2}\right)}=\frac{3}{\sqrt{2}}\sqrt{\epsilon_{b}^{2}-\epsilon^{2}}+\mathcal{O}\left(\epsilon_{b}^{2}\right)\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+p_{\parallel}=\textrm{sgn}\left(p_{\parallel}\right)p\left|\xi\right|=\textrm{sgn}\left(p_{\parallel}\right)\frac{3p}{\sqrt{2}}\sqrt{\epsilon_{b}^{2}-\epsilon^{2}}+\mathcal{O}\left(\epsilon_{b}^{2}\right)\end{equation}
+
+\end_inset
+
+The field line coordinate reads, using the expression from (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-11"
+
+\end_inset
+
+)
+\begin_inset Formula \begin{eqnarray}
+s & = & \frac{\rho_{0}}{2\sqrt{3}}\left[\ln\left(\sqrt{1+3\cos^{2}\vartheta}-\sqrt{3}\cos\vartheta\right)-\sqrt{3}\cos\vartheta\sqrt{1+3\cos^{2}\vartheta}\right]\nonumber \\
+ & = & \frac{\rho_{0}}{2\sqrt{3}}\left[\ln\left(\sqrt{1+3\sin^{2}\epsilon}+\sqrt{3}\sin\epsilon\right)+\sqrt{3}\sin\epsilon\sqrt{1+3\sin^{2}\epsilon}\right]\nonumber \\
+ & = & \frac{\rho_{0}}{2\sqrt{3}}\left[\ln\left(\sqrt{1+3\epsilon^{2}}+\sqrt{3}\epsilon\right)+\sqrt{3}\epsilon\sqrt{1+3\epsilon^{2}}\right]+\mathcal{O}\left(\epsilon^{2}\right)\nonumber \\
+ & = & \frac{\rho_{0}}{2\sqrt{3}}\left[\ln\left(1+\sqrt{3}\epsilon\right)+\sqrt{3}\epsilon\right]+\mathcal{O}\left(\epsilon^{2}\right)\nonumber \\
+ & = & \rho_{0}\epsilon+\mathcal{O}\left(\epsilon^{2}\right)\label{eq:-2}\end{eqnarray}
+
+\end_inset
+
+We therefore have 
+\begin_inset Formula $ds=\rho_{0}d\epsilon$
+\end_inset
+
+ at lowest order.
+ The expression for the bounce action 
+\begin_inset Formula $J$
+\end_inset
+
+ reads
+\begin_inset Formula \begin{equation}
+J\equiv\frac{1}{2\pi}\oint p_{\parallel}ds=\frac{p}{\pi}\int_{s_{-}}^{s_{+}}\left|\xi\right|ds=\frac{3\rho_{0}p}{\pi\sqrt{2}}\int_{-\epsilon_{b}}^{\epsilon_{b}}\sqrt{\epsilon_{b}^{2}-\epsilon^{2}}d\epsilon+\mathcal{O}\left(\epsilon_{b}^{3}\right)\end{equation}
+
+\end_inset
+
+Performing the variable change 
+\begin_inset Formula $u=\epsilon/\epsilon_{b}$
+\end_inset
+
+, we have
+\begin_inset Formula \begin{equation}
+J=\frac{3\rho_{0}p\epsilon_{b}^{2}}{\pi\sqrt{2}}\int_{-1}^{1}\sqrt{1-u^{2}}du+\mathcal{O}\left(\epsilon_{b}^{3}\right)\end{equation}
+
+\end_inset
+
+Since 
+\begin_inset Formula $\int_{-1}^{1}\sqrt{1-u^{2}}du=\pi/2$
+\end_inset
+
+, we finally have
+\begin_inset Formula \begin{equation}
+\boxed{J=\frac{3\rho_{0}p}{2\sqrt{2}}\epsilon_{b}^{2}+\mathcal{O}\left(\epsilon_{b}^{3}\right)}\label{eq:-3}\end{equation}
+
+\end_inset
+
+The expression for the bounce angle 
+\begin_inset Formula $\zeta$
+\end_inset
+
+ reads, defining 
+\begin_inset Formula $\omega_{b}=2\pi/\tau_{b}$
+\end_inset
+
+ as the bounce frequency, 
+\begin_inset Formula $\tau_{b}$
+\end_inset
+
+ being the particle bounce period
+\begin_inset Formula \begin{equation}
+\zeta\equiv\pi+\textrm{sgn}\left(p_{\parallel}\right)\omega_{b}\int_{s_{-}}^{s}\frac{mds'}{p\left|\xi\right|}=\pi+\textrm{sgn}\left(p_{\parallel}\right)\pi\frac{\int_{s_{-}}^{s}\frac{ds'}{\left|\xi\right|}}{\int_{s_{-}}^{s_{+}}\frac{ds'}{\left|\xi\right|}}\end{equation}
+
+\end_inset
+
+The bounce angle will therefore be zero at 
+\begin_inset Formula $s=s_{+}$
+\end_inset
+
+, increase to 
+\begin_inset Formula $\pi$
+\end_inset
+
+ at the half-period 
+\begin_inset Formula $s=s_{-}$
+\end_inset
+
+ and to 
+\begin_inset Formula $2\pi$
+\end_inset
+
+ at the full period, returning to 
+\begin_inset Formula $s=s_{+}$
+\end_inset
+
+.
+ Performing the same variable change as before, we have
+\begin_inset Formula \begin{eqnarray*}
+\int_{s_{-}}^{s}\frac{ds'}{\left|\xi\right|} & = & \frac{\rho_{0}\sqrt{2}}{3}\int_{-\epsilon_{b}}^{\epsilon}\frac{d\epsilon'}{\sqrt{\epsilon_{b}^{2}-\epsilon'^{2}}}+\mathcal{O}\left(\epsilon_{b}^{2}\right)\\
+ & = & \frac{\rho_{0}\sqrt{2}}{3}\int_{-1}^{u}\frac{du'}{\sqrt{1-u'^{2}}}+\mathcal{O}\left(\epsilon_{b}^{2}\right)\\
+ & = & \frac{\rho_{0}\sqrt{2}}{3}\left(\pi-\arccos\frac{\epsilon}{\epsilon_{b}}\right)+\mathcal{O}\left(\epsilon_{b}^{2}\right)\end{eqnarray*}
+
+\end_inset
+
+We can therefore deduce 
+\begin_inset Formula $\int_{s_{-}}^{s_{+}}\frac{ds'}{\left|\xi\right|}=\frac{\rho_{0}\sqrt{2}}{3}\int_{-\epsilon_{b}}^{\epsilon_{b}}\frac{d\epsilon'}{\left|\xi\right|}=\rho_{0}\pi\sqrt{2}/3$
+\end_inset
+
+.
+ The bounce angle reads
+\begin_inset Formula \begin{equation}
+\boxed{\zeta=\pi+\textrm{sgn}\left(p_{\parallel}\right)\left(\pi-\arccos\frac{\epsilon}{\epsilon_{b}}\right)+\mathcal{O}\left(\epsilon_{b}^{2}\right)}\label{eq:-4}\end{equation}
+
+\end_inset
+
+We then calculate
+\begin_inset Formula \begin{equation}
+\sin\zeta=-\textrm{sgn}\left(p_{\parallel}\right)\sqrt{1-\frac{\epsilon^{2}}{\epsilon_{b}^{2}}}+\mathcal{O}\left(\epsilon_{b}^{2}\right)\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\cos\zeta=\frac{\epsilon}{\epsilon_{b}}+\mathcal{O}\left(\epsilon_{b}^{2}\right)\end{equation}
+
+\end_inset
+
+The parallel momentum and field line coordinate therefore read :
+\begin_inset Formula \begin{equation}
+p_{\parallel}=-\sqrt{\frac{6pJ}{\sqrt{2}\rho_{0}}}\sin\zeta+\mathcal{O}\left(\epsilon_{b}^{2}\right)\label{eq:-6}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+s=\sqrt{\frac{2\sqrt{2}\rho_{0}J}{3p}}\cos\zeta+\mathcal{O}\left(\epsilon_{b}^{2}\right)\label{eq:-7}\end{equation}
+
+\end_inset
+
+We can see that there is a formal analogy with the standard harmonic oscillator
+ in this case.
+ We can also calculate
+\begin_inset Formula \[
+\boxed{\left\{ s,p_{\parallel}\right\} \equiv\frac{\partial s}{\partial\zeta}\frac{\partial p_{\parallel}}{\partial J}-\frac{\partial s}{\partial J}\frac{\partial p_{\parallel}}{\partial\zeta}=\cos^{2}\zeta+\sin^{2}\zeta=1}\]
+
+\end_inset
+
+This ensures that the coordinate transformation 
+\begin_inset Formula $\left(p_{\parallel},s\right)\rightarrow\left(J,\zeta\right)$
+\end_inset
+
+ is canonical.
+ Finally, we make sure that the energy derivative of the bounce action gives
+ the bounce frequency.
+ Since 
+\begin_inset Formula $\xi_{0}^{2}=1-\mu B_{0}/\mathcal{E}$
+\end_inset
+
+, we have
+\begin_inset Formula \begin{equation}
+\frac{\partial\xi_{0}^{2}}{\partial\mathcal{E}}=\frac{\mu B_{0}}{\mathcal{E}^{2}}=\frac{2m}{p^{2}}\left(1-\xi_{0}^{2}\right)\end{equation}
+
+\end_inset
+
+We can therefore deduce, using 
+\begin_inset Formula $\partial p/\partial\mathcal{E}=m/p$
+\end_inset
+
+ and 
+\begin_inset Formula $\epsilon_{b}=\xi_{0}\sqrt{2}/3+\mathcal{O}\left(\xi_{0}^{2}\right)$
+\end_inset
+
+ :
+\begin_inset Formula \begin{equation}
+\frac{\partial J}{\partial\mathcal{E}}=\frac{\partial}{\partial\mathcal{E}}\left(\frac{\rho_{0}p}{3\sqrt{2}}\xi_{0}^{2}\right)+\mathcal{O}\left(\xi_{0}^{3}\right)=\frac{\rho_{0}m}{3\sqrt{2}p}\left(2-\xi_{0}^{2}\right)+\mathcal{O}\left(\xi_{0}^{3}\right)\end{equation}
+
+\end_inset
+
+Since 
+\begin_inset Formula $\omega_{b}=2\pi/\tau_{b}=2\pi\left(m\rho_{0}2\pi\sqrt{2}/3p\right)^{-1}=3p/m\rho_{0}\sqrt{2}$
+\end_inset
+
+, we see that at lowest order in 
+\begin_inset Formula $\xi_{0}$
+\end_inset
+
+ we have the relation
+\begin_inset Formula \begin{equation}
+\boxed{\frac{\partial J}{\partial\mathcal{E}}=\omega_{b}^{-1}}\end{equation}
+
+\end_inset
+
+We can also rewrite (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-6"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-7"
+
+\end_inset
+
+) using the expression for 
+\begin_inset Formula $\omega_{b}$
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\boxed{p_{\parallel}=-\sqrt{2m\omega_{b}J}\sin\zeta+\mathcal{O}\left(\epsilon_{b}^{2}\right)}\label{eq:-8}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\boxed{s=\sqrt{\frac{2J}{m\omega_{b}}}\cos\zeta+\mathcal{O}\left(\epsilon_{b}^{2}\right)}\label{eq:-9}\end{equation}
+
+\end_inset
+
+The similarity with an harmonic oscillator at lowest order is therefore
+ obvious.
+ The lowest-order hamiltonian reads
+\begin_inset Formula \begin{equation}
+H=\frac{p_{\parallel}^{2}}{2m}+\frac{1}{2}m\omega_{b}^{2}s^{2}+\mu B_{0}=\omega_{b}J+\mu B_{0}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Higher-order corrections
+\end_layout
+
+\begin_layout Standard
+Here, we perform the calculations at the next order in 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+ and 
+\begin_inset Formula $\epsilon_{b}$
+\end_inset
+
+.
+ Therefore, at the turning point 
+\begin_inset Formula $\vartheta=\vartheta_{b}$
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray}
+1-\xi_{0}^{2}=\frac{B_{0}}{B\left(\vartheta_{b}\right)}=\frac{\sin^{6}\vartheta_{b}}{\sqrt{1+3\cos^{2}\vartheta_{b}}} & = & \frac{\cos^{6}\epsilon_{b}}{\sqrt{1+3\sin^{2}\epsilon_{b}}}\nonumber \\
+ & = & \frac{\left(1-\frac{1}{2}\epsilon_{b}^{2}+\frac{1}{24}\epsilon_{b}^{4}\right)^{6}}{\sqrt{1+3\left(\epsilon_{b}-\frac{1}{6}\epsilon_{b}^{3}\right)^{2}}}+\mathcal{O}\left(\epsilon_{b}^{6}\right)\nonumber \\
+ & = & \frac{1-3\epsilon_{b}^{2}+4\epsilon_{b}^{4}}{\sqrt{1+3\epsilon_{b}^{2}-\epsilon_{b}^{4}}}+\mathcal{O}\left(\epsilon_{b}^{6}\right)\nonumber \\
+ & = & \left(1-3\epsilon_{b}^{2}+4\epsilon_{b}^{4}\right)\left(1-\frac{3}{2}\epsilon_{b}^{2}+\frac{31}{8}\epsilon_{b}^{4}\right)+\mathcal{O}\left(\epsilon_{b}^{6}\right)\nonumber \\
+ & = & 1-\frac{9}{2}\epsilon_{b}^{2}+\frac{99}{8}\epsilon_{b}^{4}+\mathcal{O}\left(\epsilon_{b}^{6}\right)\label{eq:-5}\end{eqnarray}
+
+\end_inset
+
+Performing an analogy with 
+\begin_inset Formula $\vartheta$
+\end_inset
+
+, we have
+\begin_inset Formula \begin{equation}
+\frac{B\left(\vartheta\right)}{B_{0}}=\frac{\sqrt{1+3\cos^{2}\vartheta}}{\sin^{6}\vartheta}=1+\frac{9}{2}\epsilon^{2}+\frac{63}{8}\epsilon^{4}+\mathcal{O}\left(\epsilon^{6}\right)\label{eq:-12}\end{equation}
+
+\end_inset
+
+The field line coordinate reads, using the expression from (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-11"
+
+\end_inset
+
+)
+\begin_inset Formula \begin{eqnarray}
+s & = & \frac{\rho_{0}}{2\sqrt{3}}\left[\ln\left(\sqrt{1+3\cos^{2}\vartheta}-\sqrt{3}\cos\vartheta\right)-\sqrt{3}\cos\vartheta\sqrt{1+3\cos^{2}\vartheta}\right]\nonumber \\
+ & = & \frac{\rho_{0}}{2\sqrt{3}}\left[\ln\left(\sqrt{1+3\sin^{2}\epsilon}+\sqrt{3}\sin\epsilon\right)+\sqrt{3}\sin\epsilon\sqrt{1+3\sin^{2}\epsilon}\right]\nonumber \\
+ & = & \frac{\rho_{0}}{2\sqrt{3}}\left[\ln\left(1+\sqrt{3}\sin\epsilon+\frac{3}{2}\sin^{2}\epsilon-\frac{3}{8}\sin^{4}\epsilon\right)+\sqrt{3}\sin\epsilon\left(1+\frac{3}{2}\sin^{2}\epsilon\right)\right]+\mathcal{O}\left(\sin^{5}\epsilon\right)\nonumber \\
+ & = & \frac{\rho_{0}}{2\sqrt{3}}\left[\sqrt{3}\sin\epsilon+\frac{3}{2}\sin^{2}\epsilon-\frac{3}{8}\sin^{4}\epsilon-\frac{1}{2}\left(3\sin^{2}\epsilon+3\sqrt{3}\sin^{3}\epsilon-\frac{3}{4}\sin^{4}\epsilon\right)\right.\nonumber \\
+ &  & \left.+\frac{\sqrt{3}}{3}\sin^{3}\epsilon+\sqrt{3}\sin\epsilon+\frac{3\sqrt{3}}{2}\sin^{3}\epsilon\right]+\mathcal{O}\left(\sin^{5}\epsilon\right)\nonumber \\
+ & = & \rho_{0}\left(\sin\epsilon+\frac{1}{6}\sin^{3}\epsilon\right)+\mathcal{O}\left(\sin^{5}\epsilon\right)\nonumber \\
+ & = & \rho_{0}\left[\epsilon-\frac{1}{6}\epsilon^{3}+\frac{1}{6}\left(\epsilon-\frac{1}{6}\epsilon^{3}\right)^{3}\right]+\mathcal{O}\left(\epsilon^{5}\right)\nonumber \\
+ & = & \rho_{0}\left(\epsilon+\frac{1}{3}\epsilon^{3}\right)+\mathcal{O}\left(\epsilon^{5}\right)\label{eq:-13}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Deeply trapped Hamiltonian dynamics
+\end_layout
+
+\begin_layout Standard
+In this section, we will obtain the expressions for the bounce coordinates
+ through the Lie transform method.
+ Using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-13"
+
+\end_inset
+
+), we can invert the expansion and deduce
+\begin_inset Formula \begin{equation}
+\epsilon=\frac{s}{\rho_{0}}-\frac{1}{3}\left(\frac{s}{\rho_{0}}\right)^{3}+\mathcal{O}\left(\left(\frac{s}{\rho_{0}}\right)^{5}\right)\end{equation}
+
+\end_inset
+
+The Hamiltonian will have a lowest-order expression and a higher-order correctio
+n which will break the bounce action invariance.
+ Using Lie transforms, we will perform the transformation to new bounce
+ coordinates 
+\begin_inset Formula $\left(\widehat{J},\widehat{\zeta}\right)$
+\end_inset
+
+ in order to restore the action invariance.
+ The expression of the Hamiltonian reads
+\begin_inset Formula \begin{equation}
+H\equiv\frac{p_{\parallel}^{2}}{2m}+\mu B\equiv H_{0}+\delta H\left(J,\zeta\right)\end{equation}
+
+\end_inset
+
+Using the expansion for 
+\begin_inset Formula $B/B_{0}$
+\end_inset
+
+ in (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-12"
+
+\end_inset
+
+), we find
+\begin_inset Formula \begin{equation}
+\mu B=\frac{p^{2}\left(1-\xi_{0}^{2}\right)}{2m}\frac{B}{B_{0}}=\mu B_{0}\left(1+\frac{9}{2}\epsilon^{2}+\frac{63}{8}\epsilon^{4}\right)+\mathcal{O}\left(\epsilon^{6}\right)\end{equation}
+
+\end_inset
+
+Inserting the expression for 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+ gives
+\begin_inset Formula \begin{eqnarray}
+\mu B & = & \mu B_{0}\left[1+\frac{9}{2}\left(\frac{s}{\rho_{0}}\right)^{2}\left(1-\frac{2}{3}\left(\frac{s}{\rho_{0}}\right)^{2}\right)+\frac{63}{8}\left(\frac{s}{\rho_{0}}\right)^{4}\right]+\mathcal{O}\left(\left(\frac{s}{\rho_{0}}\right)^{6}\right)\nonumber \\
+ & = & \mu B_{0}\left[1+\frac{9}{2}\left(\frac{s}{\rho_{0}}\right)^{2}+\frac{39}{8}\left(\frac{s}{\rho_{0}}\right)^{4}\right]+\mathcal{O}\left(\left(\frac{s}{\rho_{0}}\right)^{6}\right)\label{eq:-18}\end{eqnarray}
+
+\end_inset
+
+Using the expression for the lowest-order bounce frequency 
+\begin_inset Formula $\omega_{b}=3p/m\rho_{0}\sqrt{2}$
+\end_inset
+
+ and remembering that 
+\begin_inset Formula $\epsilon\sim s/\rho_{0}=\mathcal{O}\left(\epsilon_{b}\right)$
+\end_inset
+
+, the expression becomes
+\begin_inset Formula \begin{eqnarray}
+\mu B & = & \mu B_{0}+\frac{1}{2}m\omega_{b}^{2}s^{2}\left[1-\xi_{0}^{2}+\frac{13}{12}\left(\frac{s}{\rho_{0}}\right)^{2}\right]+\mathcal{O}\left(\epsilon_{b}^{6}\right)\nonumber \\
+ & = & \mu B_{0}+\frac{1}{2}m\omega_{b}^{2}s^{2}\left[1-\frac{9}{2}\epsilon_{b}^{2}+\frac{13}{12}\left(\frac{s}{\rho_{0}}\right)^{2}\right]+\mathcal{O}\left(\epsilon_{b}^{6}\right)\label{eq:-17}\end{eqnarray}
+
+\end_inset
+
+We therefore have the following expression for the Hamiltonian perturbation
+\begin_inset Formula \begin{eqnarray}
+\delta H & = & \frac{1}{2}m\omega_{b}^{2}s^{2}\left[-\frac{9}{2}\epsilon_{b}^{2}+\frac{13}{12}\left(\frac{s}{\rho_{0}}\right)^{2}\right]+\mathcal{O}\left(\epsilon_{b}^{6}\right)\nonumber \\
+ & = & \omega_{b}J\cos^{2}\zeta\left[-\frac{3\sqrt{2}}{\rho_{0}p}J+\frac{13J}{6m\omega_{b}\rho_{0}^{2}}\cos^{2}\zeta\right]+\mathcal{O}\left(\epsilon_{b}^{6}\right)\nonumber \\
+ & = & \frac{J^{2}}{m\rho_{0}^{2}}\left[-9\cos^{2}\zeta+\frac{13}{6}\cos^{4}\zeta\right]+\mathcal{O}\left(\epsilon_{b}^{6}\right)\label{eq:-16}\end{eqnarray}
+
+\end_inset
+
+We then use the following cosine expansions
+\begin_inset Formula \begin{equation}
+\cos^{2}\zeta=\frac{1}{2}+\frac{1}{2}\cos2\zeta\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\cos^{4}\zeta=\frac{3}{8}+\frac{1}{2}\cos2\zeta+\frac{1}{8}\cos4\zeta\end{equation}
+
+\end_inset
+
+The Hamiltonian perturbation becomes
+\begin_inset Formula \begin{equation}
+\delta H=\frac{J^{2}}{m\rho_{0}^{2}}\left(-\frac{59}{16}-\frac{41}{12}\cos2\zeta+\frac{13}{48}\cos4\zeta\right)+\mathcal{O}\left(\epsilon_{b}^{6}\right)\end{equation}
+
+\end_inset
+
+This perturbation will be considered small if the following ratio is small
+\begin_inset Formula \begin{equation}
+\frac{J^{2}/m\rho_{0}^{2}}{J\omega_{b}}=\frac{J\omega_{b}}{m\omega_{b}^{2}\rho_{0}^{2}}=\frac{1}{2}\frac{s_{+}^{2}}{\rho_{0}^{2}}\end{equation}
+
+\end_inset
+
+Since 
+\begin_inset Formula $s_{+}$
+\end_inset
+
+ is small compared to the field line equatorial radius, due to the deeply
+ trapped approximation, the Hamiltonian perturbation 
+\begin_inset Formula $\delta H\equiv H_{1}$
+\end_inset
+
+ is therefore small.
+ Using the Lie transform formalism, we build a new bounce-angle independant
+ Hamiltonian.
+ Its expression reads, using 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+ to indicate first-order terms
+\begin_inset Formula \begin{equation}
+\widehat{H}\equiv\widehat{H}_{0}+\epsilon\widehat{H}_{1}+\mathcal{O}\left(\epsilon^{2}\right)=\mathsf{T}_{\epsilon}^{-1}H=H_{0}+\epsilon H_{1}-\epsilon\left\{ \widehat{S}_{1},H_{0}\right\} +\mathcal{O}\left(\epsilon^{2}\right)\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\widehat{S}_{1}\left(J,\zeta\right)$
+\end_inset
+
+ is a gauge function designed to restore the bounce-angle independance.
+ The Poisson bracket reads
+\begin_inset Formula \begin{equation}
+\left\{ \widehat{S}_{1},H_{0}\right\} =\frac{\partial\widehat{S}_{1}}{\partial\zeta}\frac{\partial H_{0}}{\partial J}-\frac{\partial\widehat{S}_{1}}{\partial J}\frac{\partial H_{0}}{\partial\zeta}=\omega_{b}\frac{\partial\widehat{S}_{1}}{\partial\zeta}\end{equation}
+
+\end_inset
+
+We therefore have the following identities
+\begin_inset Formula \begin{equation}
+\widehat{H}_{0}=H_{0}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\widehat{H}_{1}=H_{1}-\omega_{b}\frac{\partial\widehat{S}_{1}}{\partial\zeta}\end{equation}
+
+\end_inset
+
+Since 
+\begin_inset Formula $\widehat{H}_{1}$
+\end_inset
+
+ must be bounce-angle independant, if we denote 
+\begin_inset Formula $\left\langle H_{1}\right\rangle $
+\end_inset
+
+ the bounce-averaged component of the first-order perturbation and 
+\begin_inset Formula $\widetilde{H}_{1}$
+\end_inset
+
+ the explicitly bounce-angle dependant component, we have
+\begin_inset Formula \begin{equation}
+\widehat{H}_{1}-\left\langle H_{1}\right\rangle =\widetilde{H}_{1}-\omega_{b}\frac{\partial\widehat{S}_{1}}{\partial\zeta}\end{equation}
+
+\end_inset
+
+Since the left side of the relation is independant of 
+\begin_inset Formula $\zeta$
+\end_inset
+
+ and the right side is explicitly dependent on 
+\begin_inset Formula $\zeta$
+\end_inset
+
+, we can deduce
+\begin_inset Formula \begin{equation}
+\widehat{H}_{1}=\left\langle H_{1}\right\rangle =-\frac{59}{16}\frac{J^{2}}{m\rho_{0}^{2}}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\widehat{S}_{1}=\frac{1}{\omega_{b}}\int\widetilde{H}_{1}d\zeta=\frac{J^{2}}{24m\omega_{b}\rho_{0}^{2}}\left(-41\sin2\zeta+\frac{13}{8}\sin4\zeta\right)\end{equation}
+
+\end_inset
+
+From the expression for 
+\begin_inset Formula $S_{1}$
+\end_inset
+
+, we can deduce the new expressions for the bounce action and angle, at
+ first order in the hamiltonian perturbation
+\begin_inset Formula \begin{eqnarray}
+\widehat{J} & = & J+\epsilon\left\{ \widehat{S}_{1},J\right\} +\mathcal{O}\left(\epsilon^{2}\right)\nonumber \\
+ & = & J+\epsilon\frac{\partial\widehat{S}_{1}}{\partial\zeta}+\mathcal{O}\left(\epsilon^{2}\right)\nonumber \\
+ & = & J+\epsilon\frac{J^{2}}{12m\omega_{b}\rho_{0}^{2}}\left(-41\cos2\zeta+\frac{13}{4}\cos4\zeta\right)+\mathcal{O}\left(\epsilon^{2}\right)\label{eq:-14}\end{eqnarray}
+
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray}
+\widehat{\zeta} & = & \zeta+\epsilon\left\{ \widehat{S}_{1},\zeta\right\} +\mathcal{O}\left(\epsilon^{2}\right)\nonumber \\
+ & = & \zeta-\epsilon\frac{\partial\widehat{S}_{1}}{\partial J}+\mathcal{O}\left(\epsilon^{2}\right)\nonumber \\
+ & = & \zeta-\epsilon\frac{J}{12m\omega_{b}\rho_{0}^{2}}\left(-41\sin2\zeta+\frac{13}{8}\sin4\zeta\right)+\mathcal{O}\left(\epsilon^{2}\right)\label{eq:-15}\end{eqnarray}
+
+\end_inset
+
+The new Hamiltonian reads, at first order in the perturbation
+\begin_inset Formula \begin{equation}
+\boxed{\widehat{H}=\widehat{H}_{0}+\epsilon\widehat{H}_{1}=\widehat{J}\omega_{b}+\mu B_{0}-\epsilon\frac{59}{8}\frac{\widehat{J}^{2}}{m\rho_{0}^{2}}+\mathcal{O}\left(\epsilon^{2}\right)}\end{equation}
+
+\end_inset
+
+We can define the bounce-action dependant bounce frequency
+\begin_inset Formula \begin{equation}
+\widehat{\omega_{b}}\equiv\frac{\partial\widehat{H}}{\partial\widehat{J}}=\omega_{b}-\epsilon\frac{59}{4}\frac{\widehat{J}}{m\rho_{0}^{2}}\end{equation}
+
+\end_inset
+
+We can also deduce first-order expressions for the parallel momentum 
+\begin_inset Formula $p_{\parallel}$
+\end_inset
+
+ and the field line coordinate 
+\begin_inset Formula $s$
+\end_inset
+
+ using their harmonic oscillator expressions
+\begin_inset Formula \begin{equation}
+p_{\parallel0}=-\sqrt{2Jm\omega_{b}}\sin\zeta\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+s_{0}=\sqrt{\frac{2J}{m\omega_{b}}}\cos\zeta\end{equation}
+
+\end_inset
+
+We can deduce
+\begin_inset Formula \begin{eqnarray}
+\widehat{p_{\parallel}} & = & p_{\parallel0}+\epsilon\left\{ \widehat{S}_{1},p_{\parallel0}\right\} +\mathcal{O}\left(\epsilon^{2}\right)\nonumber \\
+ & = & p_{\parallel0}+\epsilon\left(\frac{\partial\widehat{S}_{1}}{\partial\zeta}\frac{\partial p_{\parallel0}}{\partial J}-\frac{\partial\widehat{S}_{1}}{\partial J}\frac{p_{\parallel0}}{\partial\zeta}\right)+\mathcal{O}\left(\epsilon^{2}\right)\nonumber \\
+ & = & p_{\parallel0}\left[1+\epsilon\frac{J}{12m\omega_{b}\rho_{0}^{2}}\left(\frac{1}{2}\left[-41\cos2\zeta+\frac{13}{4}\cos4\zeta\right]-\left[-41\sin2\zeta+\frac{13}{8}\sin4\zeta\right]\cot\zeta\right)\right]+\mathcal{O}\left(\epsilon^{2}\right)\label{eq:-10}\end{eqnarray}
+
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray}
+\widehat{s} & = & s_{0}+\epsilon\left\{ \widehat{S}_{1},s_{0}\right\} +\mathcal{O}\left(\epsilon^{2}\right)\nonumber \\
+ & = & s_{0}+\epsilon\left(\frac{\partial\widehat{S}_{1}}{\partial\zeta}\frac{\partial s_{0}}{\partial J}-\frac{\partial\widehat{S}_{1}}{\partial J}\frac{s_{0}}{\partial\zeta}\right)+\mathcal{O}\left(\epsilon^{2}\right)\nonumber \\
+ & = & s_{0}\left[1+\epsilon\frac{J}{12m\omega_{b}\rho_{0}^{2}}\left(\frac{1}{2}\left[-41\cos2\zeta+\frac{13}{4}\cos4\zeta\right]+\left[-41\sin2\zeta+\frac{13}{8}\sin4\zeta\right]\tan\zeta\right)\right]+\mathcal{O}\left(\epsilon^{2}\right)\label{eq:-11}\end{eqnarray}
+
+\end_inset
+
+Henceforth, in order to simplify the expressions, we define the following
+ quantities
+\begin_inset Formula \begin{equation}
+K=\frac{J}{12m\omega_{b}\rho_{0}^{2}}\left(-41\cos2\zeta+\frac{13}{4}\cos4\zeta\right)\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+L=\frac{J}{12m\omega_{b}\rho_{0}^{2}}\left(-41\sin2\zeta+\frac{13}{8}\sin4\zeta\right)\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+M=\frac{J}{12m\omega_{b}\rho_{0}^{2}}\left(-41\sin2\zeta+\frac{13}{2}\sin4\zeta\right)\end{equation}
+
+\end_inset
+
+We therefore have
+\begin_inset Formula \begin{eqnarray}
+\widehat{J} & = & J+\epsilon JK+\mathcal{O}\left(\epsilon^{2}\right)\\
+\widehat{\zeta} & = & \zeta-\epsilon L+\mathcal{O}\left(\epsilon^{2}\right)\\
+\widehat{p_{\parallel}} & = & p_{\parallel0}\left[1+\epsilon\left(\frac{1}{2}K-L\cot\zeta\right)\right]+\mathcal{O}\left(\epsilon^{2}\right)\\
+\widehat{s} & = & s_{0}\left[1+\epsilon\left(\frac{1}{2}K+L\tan\zeta\right)\right]+\mathcal{O}\left(\epsilon^{2}\right)\end{eqnarray}
+
+\end_inset
+
+Useful derivatives read
+\begin_inset Formula \begin{eqnarray}
+\frac{\partial K}{\partial J} & = & \frac{K}{J}\\
+\frac{\partial L}{\partial J} & = & \frac{L}{J}\\
+\frac{\partial K}{\partial\zeta} & = & -2M\\
+\frac{\partial L}{\partial\zeta} & = & 2K\\
+\frac{\partial s_{0}}{\partial J} & = & \frac{s_{0}}{2J}\\
+\frac{\partial s_{0}}{\partial\zeta} & = & -s_{0}\tan\zeta\end{eqnarray}
+
+\end_inset
+
+The bounce action needs to be an adiabatic invariant at first order in the
+ Hamiltonian perturbation.
+ To prove this, we calculate 
+\begin_inset Formula $\dot{\widehat{J}}$
+\end_inset
+
+ using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-14"
+
+\end_inset
+
+).
+ We then have
+\begin_inset Formula \begin{equation}
+\dot{\widehat{J}}=\dot{J}+\epsilon\frac{J}{6m\omega_{b}\rho_{0}^{2}}\left[\dot{J}\left(-41\cos2\zeta+\frac{13}{4}\cos4\zeta\right)-2J\dot{\zeta}\left(-41\sin2\zeta+\frac{13}{2}\sin4\zeta\right)\right]+\mathcal{O}\left(\epsilon^{2}\right)\label{eq:-19}\end{equation}
+
+\end_inset
+
+The derivatives 
+\begin_inset Formula $\dot{J}$
+\end_inset
+
+ and 
+\begin_inset Formula $\dot{\zeta}$
+\end_inset
+
+ are taken from Hamilton's equations.
+ They read
+\begin_inset Formula \begin{equation}
+\dot{J}=-\frac{\partial H}{\partial\zeta}=\epsilon\frac{J^{2}}{6m\rho_{0}^{2}}\left(-41\sin2\zeta+\frac{13}{2}\sin4\zeta\right)+\mathcal{O}\left(\epsilon^{2}\right)\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\dot{\zeta}=\frac{\partial H}{\partial J}=\omega_{b}-\epsilon\frac{59}{8}\frac{J}{m\rho_{0}^{2}}+\mathcal{O}\left(\epsilon^{2}\right)\end{equation}
+
+\end_inset
+
+Inserting these expressions into (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-19"
+
+\end_inset
+
+) gives, at first order
+\begin_inset Formula \begin{equation}
+\boxed{\dot{\widehat{J}}=\mathcal{O}\left(\epsilon^{2}\right)}\end{equation}
+
+\end_inset
+
+We also need to verify that the transformation 
+\begin_inset Formula $\left(\widehat{s},\widehat{p_{\parallel}}\right)\rightarrow\left(\widehat{J},\widehat{\zeta}\right)$
+\end_inset
+
+ is canonical at first order in the Hamiltonian perturbation.
+ We therefore calculate
+\begin_inset Formula \begin{eqnarray}
+\left\{ \widehat{s},\widehat{p_{\parallel}}\right\}  & = & \frac{\partial\widehat{s}}{\partial\zeta}\frac{\partial\widehat{p_{\parallel}}}{\partial J}-\frac{\partial\widehat{s}}{\partial J}\frac{\partial\widehat{p_{\parallel}}}{\partial\zeta}\nonumber \\
+ & = & -\frac{p_{\parallel0}s_{0}\tan\zeta}{2J}\left[1+\epsilon\left(\frac{K}{2}+L\tan\zeta\right)-\epsilon\cot\zeta\left(-M+2K\tan\zeta+L\left[1+\tan^{2}\zeta\right]\right)\right]\times\nonumber \\
+ &  & \left[1+\epsilon\left(\frac{K}{2}-L\cot\zeta\right)+\epsilon\left(K-2L\cot\zeta\right)\right]\nonumber \\
+ &  & -\frac{p_{\parallel0}s_{0}\cot\zeta}{2J}\left[1+\epsilon\left(\frac{K}{2}+L\tan\zeta\right)+\epsilon\left(K+2L\tan\zeta\right)\right]\times\nonumber \\
+ &  & \left[1+\epsilon\left(\frac{K}{2}-L\cot\zeta\right)-\epsilon\tan\zeta\left(-M-2K\cot\zeta+L\left[1+\cot^{2}\zeta\right]\right)\right]+\mathcal{O}\left(\epsilon^{2}\right)\nonumber \\
+ & = & -\frac{p_{\parallel0}s_{0}\tan\zeta}{2J}\left[1+\epsilon\left(-\frac{3K}{2}+\left[M-L\right]\cot\zeta\right)\right]\left[1+\epsilon\left(\frac{3K}{2}-3L\cot\zeta\right)\right]\nonumber \\
+ &  & -\frac{p_{\parallel0}s_{0}\cot\zeta}{2J}\left[1+\epsilon\left(\frac{3K}{2}+3L\tan\zeta\right)\right]\left[1+\epsilon\left(-\frac{3K}{2}+\left[L-M\right]\tan\zeta\right)\right]+\mathcal{O}\left(\epsilon^{2}\right)\nonumber \\
+ & = & -\frac{p_{\parallel0}s_{0}\tan\zeta}{2J}\left[1+\epsilon\left(M-4L\right)\cot\zeta\right]-\frac{p_{\parallel0}s_{0}\cot\zeta}{2J}\left[1+\epsilon\left(4L-M\right)\tan\zeta\right]+\mathcal{O}\left(\epsilon^{2}\right)\nonumber \\
+ & = & \sin^{2}\zeta+\cos^{2}\zeta+\mathcal{O}\left(\epsilon^{2}\right)\nonumber \\
+ & = & \boxed{1+\mathcal{O}\left(\epsilon^{2}\right)}\label{eq:-25}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Bounce-center transformation
+\end_layout
+
+\begin_layout Standard
+The particle Lagrangian reads, using 
+\begin_inset Formula $\epsilon_{d}$
+\end_inset
+
+ to indicate the order of terms and defining 
+\begin_inset Formula $\extd$
+\end_inset
+
+ as the exterior derivative
+\begin_inset Formula \begin{equation}
+\Gamma=\frac{e}{c\epsilon_{d}}\mathbf{A}\cdot\extd\mathbf{x}+\widehat{p_{\parallel}}\bhat\cdot\extd\mathbf{x}-\widehat{H}\extd t\end{equation}
+
+\end_inset
+
+The unitary dipole magnetic vector is expressed as
+\begin_inset Formula \begin{equation}
+\bhat=\nabla\widehat{s}+\alpha\nabla\psi\end{equation}
+
+\end_inset
+
+The magnetic vector potential can be written as follows, to the gradient
+ of a gauge function 
+\begin_inset Formula $\beta$
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\mathbf{A}=\psi\nabla\phi+\nabla\beta\end{equation}
+
+\end_inset
+
+Since the Lagrangian is defined up to an exact derivative, the gauge function
+ does not play a role in the following discussion.
+ The expression for the lagrangian therefore becomes
+\begin_inset Formula \begin{equation}
+\Gamma=\frac{e}{c\epsilon_{d}}\psi\extd\phi+\alpha\widehat{p_{\parallel}}\extd\psi+\widehat{p_{\parallel}}\extd\widehat{s}-\widehat{H}\extd t\equiv\frac{1}{\epsilon_{d}}\Gamma_{0}+\Gamma_{1}\end{equation}
+
+\end_inset
+
+Since by definition 
+\begin_inset Formula $s$
+\end_inset
+
+ is independant of 
+\begin_inset Formula $\psi$
+\end_inset
+
+ and 
+\begin_inset Formula $\phi$
+\end_inset
+
+, we can write 
+\begin_inset Formula \begin{equation}
+\extd\widehat{s}=\frac{\partial\widehat{s}}{\partial\widehat{J}}\extd\widehat{J}+\frac{\partial\widehat{s}}{\partial\widehat{\zeta}}\extd\widehat{\zeta}\end{equation}
+
+\end_inset
+
+We then perform the following transformation on the coordinates
+\begin_inset Formula \begin{eqnarray}
+\overline{\psi} & \equiv & \psi+\epsilon_{d}\mathsf{G}_{1}^{\psi}+\mathcal{O}\left(\epsilon_{d}^{2}\right)\\
+\overline{\phi} & \equiv & \phi+\epsilon_{d}\mathsf{G}_{1}^{\phi}+\mathcal{O}\left(\epsilon_{d}^{2}\right)\\
+\overline{J} & \equiv & \widehat{J}+\epsilon_{d}\mathsf{G}_{1}^{J}+\mathcal{O}\left(\epsilon_{d}^{2}\right)\\
+\overline{\zeta} & \equiv & \widehat{\zeta}+\epsilon_{d}\mathsf{G}_{1}^{\zeta}+\mathcal{O}\left(\epsilon_{d}^{2}\right)\end{eqnarray}
+
+\end_inset
+
+Because of the bounce-action dependance on 
+\begin_inset Formula $\psi$
+\end_inset
+
+, the bounce-action is not conserved at order 
+\begin_inset Formula $\epsilon_{d}$
+\end_inset
+
+.
+ The goal of the bounce-center transformation is to ensure that the resulting
+ bounce-action 
+\begin_inset Formula $\overline{J}=J+\sum_{k=1}^{n}\epsilon_{d}^{k}\mathsf{G}_{k}^{J}$
+\end_inset
+
+ is conserved at 
+\begin_inset Formula $n^{th}$
+\end_inset
+
+ order, i.e.
+ 
+\begin_inset Formula $\frac{dJ}{dt}=\mathcal{O}\left(\epsilon_{d}^{n+1}\right)$
+\end_inset
+
+.
+ In this discussion, we will consider only the first-order corrections.
+ Defining 
+\begin_inset Formula $\cont 1$
+\end_inset
+
+ as the inner product with the generating first-order vector 
+\begin_inset Formula $\mathsf{G}_{1}$
+\end_inset
+
+, the corresponding Lie transform reads
+\begin_inset Formula \begin{equation}
+\mathcal{L}_{1}A=\extd\left(\cont 1\cdot A\right)+\cont 1\cdot\extd A\end{equation}
+
+\end_inset
+
+The first-order push-forward operator is therefore defined as 
+\begin_inset Formula $\mathsf{T}_{\epsilon_{d}}^{-1}\equiv\exp\left(-\epsilon_{d}\mathcal{L}_{1}\right)$
+\end_inset
+
+.
+ The bounce-center Lagrangian therefore reads
+\begin_inset Formula \begin{equation}
+\overline{\Gamma}\equiv\frac{1}{\epsilon_{d}}\overline{\Gamma}_{0}+\overline{\Gamma}_{1}\equiv\mathsf{T}_{\epsilon_{d}}^{-1}\Gamma\end{equation}
+
+\end_inset
+
+We therefore have the following relations
+\begin_inset Formula \begin{equation}
+\overline{\Gamma}_{0}=\Gamma_{0}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\overline{\Gamma}_{1}=\Gamma_{1}-\mathcal{L}_{1}\Gamma_{0}+\extd\sigma_{1}=\Gamma_{1}-\cont 1\cdot\extd\Gamma_{0}+\extd S_{1}\end{equation}
+
+\end_inset
+
+where we have rolled all exact derivatives into the gauge function 
+\begin_inset Formula $S_{1}$
+\end_inset
+
+.
+ It is interesting to note that due to the axisymmetry of the problem, 
+\begin_inset Formula $S_{1}$
+\end_inset
+
+ does not depend on the azimuthal angle 
+\begin_inset Formula $\phi$
+\end_inset
+
+.
+ We then calculate
+\begin_inset Formula \begin{equation}
+\extd\Gamma_{0}=\frac{e}{c}\extd\psi\wedge\extd\phi\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\wedge$
+\end_inset
+
+ is the exterior, or wedge product.
+ We can deduce
+\begin_inset Formula \begin{equation}
+\cont 1\cdot\extd\Gamma_{0}=\frac{e}{c}\left(\mathsf{G}_{1}^{\psi}\extd\phi-\mathsf{G}_{1}^{\phi}\extd\psi\right)\end{equation}
+
+\end_inset
+
+We can then write the expression for the first-order term of the bounce-center
+ Lagrangian
+\begin_inset Formula \begin{equation}
+\overline{\Gamma}_{1}=\left(\frac{e}{c}\mathsf{G}_{1}^{\phi}+\alpha\widehat{p_{\parallel}}\right)\extd\psi-\frac{e}{c}\mathsf{G}_{1}^{\psi}\extd\phi+\widehat{p_{\parallel}}\left(\frac{\partial\widehat{s}}{\partial\widehat{J}}\extd\widehat{J}+\frac{\partial\widehat{s}}{\partial\widehat{\zeta}}\extd\widehat{\zeta}\right)+\extd S_{1}-\widehat{H}\extd t\end{equation}
+
+\end_inset
+
+In order to remove the bounce-angle dependance of the Lagrangian, we therefore
+ need to have the following relations, remembering that 
+\begin_inset Formula $\extd S_{1}=\frac{\partial S_{1}}{\partial\psi}\extd\psi+\frac{\partial S_{1}}{\partial\widehat{J}}\extd\widehat{J}+\frac{\partial S_{1}}{\partial\widehat{\zeta}}\extd\widehat{\zeta}$
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray}
+\mathsf{G}_{1}^{\psi} & = & 0\\
+\mathsf{G}_{1}^{\phi} & = & -\frac{c}{e}\left(\frac{\partial S_{1}}{\partial\psi}+\alpha\widehat{p_{\parallel}}\right)\end{eqnarray}
+
+\end_inset
+
+with the following defining relations for 
+\begin_inset Formula $S_{1}$
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray}
+\frac{\partial S_{1}}{\partial J} & = & -\widehat{p_{\parallel}}\frac{\partial\widehat{s}}{\partial J}\label{eq:-20}\\
+\frac{\partial S_{1}}{\partial\zeta} & = & J-\widehat{p_{\parallel}}\frac{\partial\widehat{s}}{\partial\zeta}\label{eq:-21}\end{eqnarray}
+
+\end_inset
+
+The bounce-center Lagrangian will therefore have the following first-order
+ expression
+\begin_inset Formula \begin{equation}
+\overline{\Gamma}=\frac{e}{c\epsilon_{d}}\overline{\psi}\extd\overline{\phi}+\overline{J}\extd\overline{\zeta}-\overline{H}\extd t\end{equation}
+
+\end_inset
+
+with 
+\begin_inset Formula $\frac{e}{c}\overline{\psi}$
+\end_inset
+
+ and 
+\begin_inset Formula $\overline{J}$
+\end_inset
+
+ as adiabatic invariants.
+ In order to calculate 
+\begin_inset Formula $S_{1}$
+\end_inset
+
+, we need to use the deeply trapped expressions found in the previous section.
+ The relation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-20"
+
+\end_inset
+
+) becomes
+\begin_inset Formula \begin{eqnarray}
+\frac{\partial S_{1}}{\partial J} & = & -\widehat{p_{\parallel}}\frac{\partial\widehat{s}}{\partial J}+\mathcal{O}\left(\epsilon^{2}\right)\nonumber \\
+ & = & -\frac{p_{\parallel0}s_{0}}{2J}\left[1+\epsilon\left(\frac{1}{2}K-L\cot\zeta\right)\right]\left[1+\epsilon\left(\frac{1}{2}K+L\tan\zeta\right)+\epsilon\left(K+2L\tan\zeta\right)\right]+\mathcal{O}\left(\epsilon^{2}\right)\nonumber \\
+ & = & \boxed{-\frac{p_{\parallel0}s_{0}}{2J}\left[1+\epsilon\left(2K+L\left[3\tan\zeta-\cot\zeta\right]\right)\right]+\mathcal{O}\left(\epsilon^{2}\right)}\label{eq:-22}\end{eqnarray}
+
+\end_inset
+
+Likewise, we have for (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-21"
+
+\end_inset
+
+)
+\begin_inset Formula \begin{eqnarray}
+\frac{\partial S_{1}}{\partial\zeta} & = & J-\widehat{p_{\parallel}}\frac{\partial\widehat{s}}{\partial\zeta}+\mathcal{O}\left(\epsilon^{2}\right)\nonumber \\
+ & = & J+p_{\parallel0}s_{0}\tan\zeta\left[1+\epsilon\left(\frac{1}{2}K-L\cot\zeta\right)\right]\times\nonumber \\
+ &  & \left[1+\epsilon\left(\frac{1}{2}K+L\tan\zeta\right)-\epsilon\cot\zeta\left(-M+2K\tan\zeta+L\left[1+\tan^{2}\zeta\right]\right)\right]+\mathcal{O}\left(\epsilon^{2}\right)\nonumber \\
+ & = & J+p_{\parallel0}s_{0}\tan\zeta\left[1+\epsilon\left(\frac{1}{2}K-L\cot\zeta\right)\right]\times\nonumber \\
+ &  & \left[1+\epsilon\left(-\frac{3}{2}K+M\cot\zeta-L\cot\zeta\right)\right]+\mathcal{O}\left(\epsilon^{2}\right)\nonumber \\
+ & = & J+p_{\parallel0}s_{0}\tan\zeta\left[1+\epsilon\left(M\cot\zeta-K-2L\cot\zeta\right)\right]+\mathcal{O}\left(\epsilon^{2}\right)\nonumber \\
+ & = & \boxed{J+p_{\parallel0}s_{0}\tan\zeta+\epsilon\left[-Kp_{\parallel0}s_{0}\tan\zeta+p_{\parallel0}s_{0}\left(M-2L\right)\right]+\mathcal{O}\left(\epsilon^{2}\right)}\label{eq:-23}\end{eqnarray}
+
+\end_inset
+
+Since 
+\begin_inset Formula $p_{\parallel0}s_{0}=-2J\sin\zeta\cos\zeta$
+\end_inset
+
+, we see that at lowest order in 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray}
+\frac{\partial S_{10}}{\partial J} & = & \sin\zeta\cos\zeta\\
+\frac{\partial S_{10}}{\partial\zeta} & = & J\left(1-2\sin^{2}\zeta\right)=J\cos2\zeta\end{eqnarray}
+
+\end_inset
+
+We can therefore deduce the lowest-order expression for 
+\begin_inset Formula $S_{1}$
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\boxed{S_{10}=\frac{J}{2}\sin2\zeta}\end{equation}
+
+\end_inset
+
+The first-order expression is obtained by performing the integration over
+ 
+\begin_inset Formula $J$
+\end_inset
+
+ of the expression found in (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-22"
+
+\end_inset
+
+).
+ We therefore have
+\begin_inset Formula \begin{eqnarray}
+S_{11} & = & \frac{J}{2}\sin\zeta\cos\zeta\left[2K+L\left(3\tan\zeta-\cot\zeta\right)\right]\label{eq:-24}\\
+ & = & \boxed{\frac{J^{2}}{24m\omega_{b}\rho_{0}^{2}}\sin\zeta\cos\zeta\left[2\left(-41\cos2\zeta+\frac{13}{4}\cos4\zeta\right)+\left(-41\sin2\zeta+\frac{13}{8}\sin4\zeta\right)\left(3\tan\zeta-\cot\zeta\right)\right]}\end{eqnarray}
+
+\end_inset
+
+It is interesting to note that while the zero-order generating function
+ is independant of 
+\begin_inset Formula $\psi$
+\end_inset
+
+, the first-order correction is linear in 
+\begin_inset Formula $\psi$
+\end_inset
+
+ via 
+\begin_inset Formula $\rho_{0}\equiv\mathcal{M}/\psi$
+\end_inset
+
+ and 
+\begin_inset Formula $\omega_{b}\equiv3p/m\rho_{0}\sqrt{2}\equiv3p\psi/m\mathcal{M}\sqrt{2}$
+\end_inset
+
+.
+ Using the fact that 
+\begin_inset Formula $\frac{\partial S_{11}}{\partial\psi}=S_{11}/\psi$
+\end_inset
+
+, we can therefore calculate, using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-24"
+
+\end_inset
+
+) 
+\begin_inset Formula \begin{eqnarray}
+\mathsf{G}_{1}^{\phi} & = & -\frac{c}{e}\left(\frac{\partial S_{1}}{\partial\psi}+\alpha\widehat{p_{\parallel}}\right)\nonumber \\
+ & = & -\frac{c}{e}\alpha p_{\parallel0}+\epsilon\frac{c}{e}\frac{p_{\parallel0}s_{0}}{4\psi}\left[2K+L\left(3\tan\zeta-\cot\zeta\right)\right]-\epsilon\frac{c}{e}\alpha p_{\parallel0}\left[\frac{K}{2}-L\cot\zeta\right]+\mathcal{O}\left(\epsilon^{2}\right)\nonumber \\
+ & = & \boxed{-\frac{c}{e}\alpha p_{\parallel0}+\epsilon\frac{c}{e}p_{\parallel0}\left[\frac{s_{0}}{4\psi}\left(2K+L\left[3\tan\zeta-\cot\zeta\right]\right)-\alpha\left(\frac{K}{2}-L\cot\zeta\right)\right]+\mathcal{O}\left(\epsilon^{2}\right)}\label{eq:-26}\end{eqnarray}
+
+\end_inset
+
+We can define a bounce-angle dependant bounce radius
+\begin_inset Formula \begin{eqnarray}
+\Lambda_{b}^{\psi} & \equiv & \psi-\overline{\psi}=0\\
+\Lambda_{b}^{\phi} & \equiv & \phi-\overline{\phi}=-\epsilon_{d}\mathsf{G}_{1}^{\phi}\end{eqnarray}
+
+\end_inset
+
+The bounce radius therefore corresponds to the toroidal angle span of a
+ particle bounce orbit with respect to its bounce-averaged position.
+ At lowest order in the deeply-trapped approximation, we have
+\begin_inset Formula \begin{equation}
+\boxed{\Lambda_{b}^{\phi}=\frac{c}{e}\alpha p_{\parallel0}}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

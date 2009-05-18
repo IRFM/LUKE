@@ -1,0 +1,751 @@
+#LyX 1.6.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Lorentz model for the Fokker-Planck collision operator
+\end_layout
+
+\begin_layout Author
+François-Xavier DUTHOIT
+\end_layout
+
+\begin_layout Section
+Boltzmann equation, continuity equation and momentum balance equation
+\end_layout
+
+\begin_layout Standard
+The starting point for evaluating transport is the standard Boltzmann equation
+ for a test-particle 
+\begin_inset Formula $j$
+\end_inset
+
+ in field particles 
+\begin_inset Formula $j'$
+\end_inset
+
+ in a magnetic field 
+\begin_inset Formula $\mathbf{B}=B\hat{\mathbf{z}}$
+\end_inset
+
+ (for simplicity, the electric field has been set to zero) :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\left[\frac{\partial}{\partial t}+\mathbf{v}\cdot\nabla+\Omega_{j}\left(\mathbf{v}\times\hat{\mathbf{z}}\right)\cdot\frac{\partial}{\partial\mathbf{v}}\right]f_{j}=\left.\frac{\partial f_{j}}{\partial t}\right|_{coll}=C_{jj}+C_{jj'}\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\Omega j$
+\end_inset
+
+ is the test particle gyrofrequency, 
+\begin_inset Formula $C_{jj}$
+\end_inset
+
+ and 
+\begin_inset Formula $C_{jj'}$
+\end_inset
+
+ are respectively the collision operators for like- and unlike- particle
+ collisions.
+ We can take the 
+\begin_inset Formula $0^{th}$
+\end_inset
+
+ and 
+\begin_inset Formula $1^{st}$
+\end_inset
+
+ moments of this equation and integrate over velocity space to obtain the
+ continuity and steady-state momentum balance equations, which read :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial n_{j}}{\partial t}+\nabla\cdot\left(n_{j}\mathbf{V}_{j}\right)=0\label{eq:}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\nabla P_{j}=\frac{1}{c}e_{j}n_{j}\left(\mathbf{V}_{j}\times\mathbf{B}\right)+\mathbf{R}_{jj'}\label{eq:-1}\end{equation}
+
+\end_inset
+
+Where 
+\begin_inset Formula $n_{j}$
+\end_inset
+
+ and 
+\begin_inset Formula $n_{j}\mathbf{V}_{j}$
+\end_inset
+
+ are the 
+\begin_inset Formula $0^{th}$
+\end_inset
+
+ and 
+\begin_inset Formula $1^{st}$
+\end_inset
+
+ moments of the test-particle equilibrium distribution function 
+\begin_inset Formula $F_{j}$
+\end_inset
+
+ .
+ 
+\begin_inset Formula $\mathbf{V}_{j}$
+\end_inset
+
+ is the test-particle macroscopic flow (or fluid) velocity, 
+\begin_inset Formula $e_{j}$
+\end_inset
+
+ the test-particle charge, 
+\begin_inset Formula $P_{j}\equiv n_{j}T_{j}$
+\end_inset
+
+ the particle pressure and 
+\begin_inset Formula $\mathbf{R}_{jj'}\equiv\int d^{3}\mathbf{v}m_{j}\mathbf{v}C_{jj'}$
+\end_inset
+
+ the friction (or drag) force associated with unlike-particle collisions.
+ The expressions of the equilibrium distribution function moments are as
+ follows :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+n_{j}=\int d^{3}\mathbf{v}F_{j}\label{eq:-2}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+n_{j}\mathbf{V}_{j}=\int d^{3}\mathbf{v}\left(\mathbf{v}F_{j}\right)\label{eq:-3}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Collision operator and Lorentz approximations
+\end_layout
+
+\begin_layout Standard
+The Lorentz model for the Fokker-Planck collision operator is introduced
+ in the case of a large discrepancy between unlike particle masses, like
+ the electron and ion masses one finds in a tokamak plasma.
+ The general expression of the Fokker-Planck operator using Rosenbluth potential
+s reads :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+C_{ei}=\hat{\Gamma}_{e}\left[-\frac{\partial}{\partial v_{\alpha}}\left(f_{e}\frac{\partial h_{e}}{\partial v_{\alpha}}\right)+\frac{1}{2}\frac{\partial^{2}}{\partial v_{\alpha}\partial v_{\beta}}\left(f_{e}\frac{\partial^{2}g_{e}}{\partial v_{\alpha}\partial v_{\beta}}\right)\right]\label{eq:-4}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula $f_{e}$
+\end_inset
+
+and 
+\begin_inset Formula $f_{i}$
+\end_inset
+
+ are the respective electron and ion distribution functions and 
+\begin_inset Formula $\hat{\Gamma}_{e}=\left(4\pi n_{e}e^{4}/m_{e}^{2}\right)\ln\Lambda$
+\end_inset
+
+.
+ The Rosenbluth potentials have the following expression :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray*}
+h_{e}\left(\mathbf{v}\right) & = & \frac{m_{e}+m_{i}}{m_{i}}\int d^{3}\mathbf{v'}\frac{f_{i}\left(\mathbf{v'}\right)}{\left|\mathbf{v}-\mathbf{v'}\right|}\\
+g_{e}\left(\mathbf{v}\right) & = & \int d^{3}\mathbf{v'}\left|\mathbf{v}-\mathbf{v'}\right|f_{i}\left(\mathbf{v'}\right)\end{eqnarray*}
+
+\end_inset
+
+In an electron-ion collisional process, 
+\begin_inset Formula $m_{e}\ll m_{i}$
+\end_inset
+
+ so the ion velocity can be assimilated to its fluid velocity with respect
+ to the collisional process ; therefore the ion distribution function component
+ of the Rosenbluth potentials can be reduced to 
+\begin_inset Formula $f_{i}\sim\delta\left(\mathbf{v'}-\mathbf{V}_{i}\right)$
+\end_inset
+
+ where 
+\begin_inset Formula $\mathbf{V}_{i}$
+\end_inset
+
+ is the fluid velocity for ions.
+ The Rosenbluth potentials in this approximation become :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray*}
+h_{e} & \simeq & \frac{1}{\left|\mathbf{v}-\mathbf{V}_{i}\right|}\\
+g_{e} & \simeq & \left|\mathbf{v}-\mathbf{V}_{i}\right|\end{eqnarray*}
+
+\end_inset
+
+Defining 
+\begin_inset Formula $\mathbf{w}=\left|\mathbf{v}-\mathbf{V}_{i}\right|$
+\end_inset
+
+ and 
+\begin_inset Formula $w=\left|\mathbf{w}\right|$
+\end_inset
+
+, the collision operator becomes :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+Cei=\nu_{ei}2^{\frac{3}{2}}v_{the}^{3}\frac{\partial}{\partial w_{\alpha}}\left[-f_{e}\frac{\partial}{\partial w_{\alpha}}\frac{1}{w}+\frac{1}{2}\frac{\partial}{\partial w_{\beta}}\left(f_{e}\frac{\partial^{2}}{\partial w_{\alpha}\partial w_{\beta}}w\right)\right]\label{eq:-5}\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\nu_{ei}=\frac{\hat{\Gamma}_{e}}{2^{\frac{3}{2}}v_{the}^{3}}$
+\end_inset
+
+ is the 
+\begin_inset Formula $90°$
+\end_inset
+
+ electron-ion collision frequency and 
+\begin_inset Formula $v_{the}=\sqrt{\frac{k_{B}T_{e}}{m_{e}}}$
+\end_inset
+
+ is the electron thermal velocity.
+ We the use the following derivative properties :
+\begin_inset Formula \begin{eqnarray*}
+\frac{\partial}{\partial w_{\alpha}}\frac{1}{w} & = & -\frac{w_{\alpha}}{w^{3}}\\
+\frac{\partial}{\partial w_{\alpha}}w_{\alpha} & = & 3\\
+\frac{\partial}{\partial w_{\alpha}}w_{\beta} & = & \delta_{\alpha\beta}\\
+\frac{\partial^{2}}{\partial w_{\alpha}\partial w_{\beta}}w & = & \frac{\delta_{\alpha\beta}}{w}-\frac{w_{\alpha}w_{\beta}}{w^{3}}\end{eqnarray*}
+
+\end_inset
+
+We then get the following expression :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray*}
+C_{ei} & = & \nu_{ei}2^{\frac{3}{2}}v_{the}^{3}\frac{\partial}{\partial w_{\alpha}}\left[f_{e}\frac{w_{\alpha}}{w^{3}}+\frac{1}{2}\frac{\partial}{\partial w_{\beta}}\left(f_{e}\left(\frac{\delta_{\alpha\beta}}{w}-\frac{w_{\alpha}w_{\beta}}{w^{3}}\right)\right)\right]\\
+ & = & \nu_{ei}2^{\frac{3}{2}}v_{the}^{3}\frac{\partial}{\partial w_{\alpha}}\left[f_{e}\frac{w_{\alpha}}{w^{3}}+\frac{1}{2}\frac{\partial f_{e}}{\partial w_{\beta}}\left(\frac{\delta_{\alpha\beta}}{w}-\frac{w_{\alpha}w_{\beta}}{w^{3}}\right)+\frac{1}{2}f_{e}\left(-\frac{w_{\beta}\delta_{\alpha\beta}}{w^{3}}-3\frac{w_{\alpha}}{w^{3}}-\frac{w_{\beta}\delta_{\alpha\beta}}{w^{3}}+3\frac{w_{\alpha}w_{\beta}w_{\beta}}{w^{5}}\right)\right]\\
+ & = & \nu_{ei}2^{\frac{3}{2}}v_{the}^{3}\frac{\partial}{\partial w_{\alpha}}\left[f_{e}\frac{w_{\alpha}}{w^{3}}+\frac{1}{2}\frac{\partial f_{e}}{\partial w_{\beta}}\left(\frac{\delta_{\alpha\beta}}{w}-\frac{w_{\alpha}w_{\beta}}{w^{3}}\right)+\frac{1}{2}f_{e}\left(-2\frac{w_{\alpha}}{w^{3}}-3\frac{w_{\alpha}}{w^{3}}+3\frac{w_{\alpha}}{w^{3}}\right)\right]\end{eqnarray*}
+
+\end_inset
+
+The final expression of the electron-ion collision operator in the Lorentz
+ approximation therefore reads :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{C_{ei}=\frac{\nu_{ei}}{2}2^{\frac{3}{2}}v_{the}^{3}\frac{\partial}{\partial w_{\alpha}}\left[\left(\frac{\delta_{\alpha\beta}}{w}-\frac{w_{\alpha}w_{\beta}}{w^{3}}\right)\frac{\partial f_{e}}{\partial w_{\beta}}\right]}\label{eq:-6}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Case of a maxwellian distribution
+\end_layout
+
+\begin_layout Standard
+Here, we assume that 
+\begin_inset Formula $\mathbf{V}_{e}=\mathbf{V}_{i}=0$
+\end_inset
+
+, i.e.
+ that the electrons and ions are in a static macroscopic equilibrium.
+ We therefore have 
+\begin_inset Formula $\mathbf{w}=\mathbf{v}$
+\end_inset
+
+.
+ We also assume that the electron distribution is maxwellian, i.e.
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+f_{e}=F_{Me}=\frac{n_{e}}{\left(2\pi\right)^{\frac{3}{2}}v_{the}^{3}}\exp\left(\frac{v^{2}}{2v_{the}^{2}}\right)\label{eq:-7}\end{equation}
+
+\end_inset
+
+The collision operator expression in 6 becomes :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray*}
+C_{ei} & = & \frac{\nu_{ei}}{2\pi^{\frac{3}{2}}}\frac{\partial}{\partial v_{\alpha}}\left[-\left(\frac{\delta_{\alpha\beta}}{v}-\frac{v_{\alpha}v_{\beta}}{v^{3}}\right)\frac{v_{\beta}}{v_{the}^{2}}f_{e}\right]\\
+ & = & \frac{\nu_{ei}}{2\pi^{\frac{3}{2}}v_{the}^{2}}\frac{\partial}{\partial v_{\alpha}}\left[\left(\frac{v_{\alpha}}{v}-\frac{v_{\alpha}}{v}\right)f_{e}\right]\\
+ & = & 0\end{eqnarray*}
+
+\end_inset
+
+The collision operator therefore cancels out with an isotropic electron
+ distribution, which is consistent with a thermal equilibrium.
+\end_layout
+
+\begin_layout Section
+Case of a shifted maxwellian distribution
+\end_layout
+
+\begin_layout Standard
+We assume a shifted maxwellian form for the electron distribution, defining
+ 
+\begin_inset Formula $\mathbf{V}_{e}$
+\end_inset
+
+ as the fluid velocity for electrons :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+f_{e}=\frac{n_{e}}{\left(2\pi\right)^{\frac{3}{2}}v_{the}^{3}}\exp\left(-\frac{\left(\mathbf{v}-\mathbf{V}_{e}\right)^{2}}{2v_{the}^{2}}\right)\label{eq:-8}\end{equation}
+
+\end_inset
+
+We assume here that the electron macroscopic flow is small compared to the
+ electron thermal velocity, i.e.
+ 
+\begin_inset Formula $\left|\frac{\mathbf{V}_{e}}{v_{the}}\right|\ll1$
+\end_inset
+
+ .
+ This also ensures 
+\begin_inset Formula $\left|\frac{\mathbf{V}_{i}}{v_{the}}\right|\ll1$
+\end_inset
+
+ since due to the mass discrepancy, 
+\begin_inset Formula $\left|\mathbf{V}_{i}\right|\ll\left|\mathbf{V}_{e}\right|$
+\end_inset
+
+.
+ Expressing 
+\begin_inset Formula $f_{e}$
+\end_inset
+
+ in terms of 
+\begin_inset Formula $\mathbf{w}=\mathbf{v}-\mathbf{V}_{i}$
+\end_inset
+
+ and 
+\begin_inset Formula $\Delta_{V}=\mathbf{V}_{e}-\mathbf{V}_{i}$
+\end_inset
+
+, we have :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray*}
+f_{e} & = & \frac{n_{e}}{\left(2\pi\right)^{\frac{3}{2}}v_{the}^{3}}\exp\left(-\frac{\left(\mathbf{w}-\Delta_{V}\right)^{2}}{2v_{the}^{2}}\right)\\
+ & = & \frac{n_{e}}{\left(2\pi\right)^{\frac{3}{2}}v_{the}^{3}}\exp\left(-\frac{w^{2}}{2v_{the}^{2}}\right)\exp\left(\frac{\mathbf{w}\cdot\Delta_{V}}{v_{the}^{2}}-\frac{\Delta_{V}^{2}}{2v_{the}^{2}}\right)\end{eqnarray*}
+
+\end_inset
+
+The 
+\begin_inset Formula $1^{st}$
+\end_inset
+
+-order taylor expansion of 
+\begin_inset Formula $f_{e}$
+\end_inset
+
+ with respect to 
+\begin_inset Formula $\frac{\Delta_{V}}{v_{the}}$
+\end_inset
+
+ then reads :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+f_{e}=\frac{n_{e}}{\left(2\pi\right)^{\frac{3}{2}}v_{the}^{3}}\exp\left(-\frac{w^{2}}{2v_{the}^{2}}\right)\left(1+\frac{\mathbf{w}\cdot\Delta_{V}}{v_{the}^{2}}\right)\]
+
+\end_inset
+
+The friction force has the following expression, using 
+\begin_inset Formula $\mathbf{w}$
+\end_inset
+
+ and seeing that 
+\begin_inset Formula $d^{3}\mathbf{w}=d^{3}\mathbf{v}$
+\end_inset
+
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{R}_{ei}=\int d^{3}\mathbf{v}m_{e}\mathbf{v}C_{ei}=m_{e}\int d^{3}\mathbf{w}\left(\mathbf{w}C_{ei}\right)+m_{e}\mathbf{V}_{i}\int d^{3}\mathbf{v}C_{ei}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The last term is equal to zero due to the particle conservation property
+ of the collision operator.
+ Inserting the expression of 
+\begin_inset Formula $C_{ei}$
+\end_inset
+
+ and defining 
+\begin_inset Formula $\mathbb{Q}\left(\mathbf{w}\right)=\frac{\mathbb{I}}{w}-\frac{\mathbf{w}\otimes\mathbf{w}}{w^{3}}=\frac{1}{w}\left(\mathbb{I}-\hat{\mathbf{w}}\otimes\hat{\mathbf{w}}\right)$
+\end_inset
+
+ with 
+\begin_inset Formula $\mathbf{w}=w\hat{\mathbf{w}}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbb{I}$
+\end_inset
+
+ the identity matrix, we have :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{R}_{ei}=m_{e}\frac{\nu_{ei}}{2}2^{\frac{3}{2}}v_{the}^{3}\int d^{3}\mathbf{w}\left[\mathbf{w}\left(\frac{\partial}{\partial\mathbf{w}}\cdot\mathbb{Q}\left(\mathbf{w}\right)\cdot\frac{\partial f_{e}}{\partial\mathbf{w}}\right)\right]\]
+
+\end_inset
+
+Integrating by parts, the expression becomes :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray*}
+\mathbf{R}_{ei} & = & -m_{e}\frac{\nu_{ei}}{2}2^{\frac{3}{2}}v_{the}^{3}\int d^{3}\mathbf{w}\mathbb{Q}\left(\mathbf{w}\right)\cdot\frac{\partial f_{e}}{\partial\mathbf{w}}\\
+ & = & \frac{m_{e}n_{e}\nu_{ei}}{2\pi^{\frac{3}{2}}}\int d^{3}\mathbf{w}\mathbb{Q}\left(\mathbf{w}\right)\cdot\left(\frac{\mathbf{w}}{v_{the}^{2}}\left(1+\frac{\mathbf{w}\cdot\Delta_{V}}{v_{the}^{2}}\right)-\frac{\Delta_{V}}{v_{the}^{2}}\right)\exp\left(-\frac{w^{2}}{2v_{the}^{2}}\right)\end{eqnarray*}
+
+\end_inset
+
+We have the relation 
+\begin_inset Formula $\mathbb{Q}\cdot\mathbf{w}=\hat{\mathbf{w}}-\hat{\mathbf{w}}=0$
+\end_inset
+
+, therefore the friction force reads :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{R}_{ei}=-\frac{m_{e}n_{e}\nu_{ei}}{2\pi^{\frac{3}{2}}v_{the}^{2}}\int d^{3}\mathbf{w}\mathbb{Q}\left(\mathbf{w}\right)\cdot\Delta_{V}\exp\left(-\frac{w^{2}}{2v_{the}^{2}}\right)\]
+
+\end_inset
+
+We then perform the variable change 
+\begin_inset Formula $\mathbf{w}=v_{the}\mathbf{u}$
+\end_inset
+
+.
+ We therefore have 
+\begin_inset Formula $d^{3}\mathbf{w}=v_{the}^{3}d^{3}\mathbf{u}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbb{Q}\left(\mathbf{w}\right)=\frac{\mathbb{Q}\left(\mathbf{u}\right)}{v_{the}}$
+\end_inset
+
+.
+ The expression for the friction force becomes :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{R}_{ei}=-\frac{m_{e}n_{e}\nu_{ei}}{2\pi^{\frac{3}{2}}}\int d^{3}\mathbf{u}\left[\mathbb{Q}\left(\mathbf{u}\right)\exp\left(-\frac{u^{2}}{2}\right)\right]\cdot\Delta_{V}\]
+
+\end_inset
+
+The decomposition of 
+\begin_inset Formula $u$
+\end_inset
+
+ in spherical 
+\begin_inset Formula $\left(\rho,\vartheta,\varphi\right)$
+\end_inset
+
+ coordinates gives :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{u}=u\left(\sin\vartheta\cos\varphi\hat{\mathbf{x}}+\sin\vartheta\sin\varphi\hat{\mathbf{y}}+\cos\vartheta\hat{\mathbf{z}}\right)\]
+
+\end_inset
+
+We can deduce :
+\begin_inset Formula \[
+\hat{\mathbf{u}}\otimes\hat{\mathbf{u}}=\left(\begin{array}{ccc}
+\sin^{2}\vartheta\cos^{2}\varphi & \sin^{2}\vartheta\sin\varphi\cos\varphi & \sin\vartheta\cos\vartheta\cos\varphi\\
+\sin^{2}\vartheta\sin\varphi\cos\varphi & \sin^{2}\vartheta\sin^{2}\varphi & \sin\vartheta\cos\vartheta\sin\varphi\\
+\sin\vartheta\cos\vartheta\cos\varphi & \sin\vartheta\cos\vartheta\sin\varphi & \cos^{2}\vartheta\end{array}\right)\]
+
+\end_inset
+
+Integration over 
+\begin_inset Formula $\vartheta$
+\end_inset
+
+ and 
+\begin_inset Formula $\varphi$
+\end_inset
+
+ gives :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray*}
+\int_{0}^{π}\sin\vartheta d\vartheta\int_{0}^{2π}d\varphi\hat{\mathbf{u}}\otimes\hat{\mathbf{u}} & = & π\int_{0}^{π}\sin\vartheta d\vartheta\left[\sin^{2}\vartheta\left(\hat{\mathbf{x}}\otimes\hat{\mathbf{x}}+\hat{\mathbf{y}}\otimes\hat{\mathbf{y}}\right)+2\cos^{2}\vartheta\hat{\mathbf{z}}\otimes\hat{\mathbf{z}}\right]\\
+ & = & \frac{4π}{3}\mathbb{I}\end{eqnarray*}
+
+\end_inset
+
+The integral therefore becomes :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray*}
+\int d^{3}\mathbf{u}\left[\mathbb{Q}\left(\mathbf{u}\right)\exp\left(-\frac{u^{2}}{2}\right)\right] & = & \int_{0}^{\infty}u^{2}du\int_{0}^{π}\sin\vartheta d\vartheta\int_{0}^{2π}d\varphi\frac{1}{u}\left(\mathbb{I}-\hat{\mathbf{u}}\otimes\hat{\mathbf{u}}\right)\exp\left(-\frac{u^{2}}{2}\right)\\
+ & = & \int_{0}^{\infty}u\exp\left(-\frac{u^{2}}{2}\right)du\left(4\pi\mathbb{I}-\int_{0}^{π}\sin\vartheta d\vartheta\int_{0}^{2π}d\varphi\hat{\mathbf{u}}\otimes\hat{\mathbf{u}}\right)\\
+ & = & \frac{8\pi}{3}\mathbb{I}\end{eqnarray*}
+
+\end_inset
+
+The friction force then reads :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{R}_{ei}=-\frac{4m_{e}n_{e}\nu_{ei}}{3\sqrt{\pi}}\Delta_{V}\]
+
+\end_inset
+
+Defining 
+\begin_inset Formula $\nu_{ei}^{Brag}=\frac{4}{3\sqrt{\pi}}\nu_{ei}^{Spitzer}=\frac{4}{3\sqrt{\pi}}\nu_{ei}$
+\end_inset
+
+, we finally have :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\mathbf{R}_{ei}=-m_{e}n_{e}\nu_{ei}^{Brag}\left(\mathbf{V}_{e}-\mathbf{V}_{i}\right)}\label{eq:-9}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Radial flow and classical diffusion coefficient
+\end_layout
+
+\begin_layout Standard
+In this section, we are working in cylindrical 
+\begin_inset Formula $\left(R,\varphi,Z\right)$
+\end_inset
+
+ coordinates where 
+\begin_inset Formula $\mathbf{B}=B\hat{\mathbf{Z}}$
+\end_inset
+
+.
+ In the classical limit, the collision frequency is considered large compared
+ to the electron gyrofrequency, so that the particle sees a quasi uniform
+ field in between collisions.
+ In order to obtain the expression for the radial particle transport given
+ by the radial mass flow 
+\begin_inset Formula $\Gamma_{e}=n_{e}V_{e}^{R}$
+\end_inset
+
+ , we operate on the momentum balance equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-1"
+
+\end_inset
+
+) with 
+\begin_inset Formula $-\frac{c}{eB}\hat{\mathbf{Z}}\times$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+n_{e}\mathbf{V}_{e\perp}=\frac{c}{eB}\nabla P_{e}\times\hat{\mathbf{Z}}+\frac{c}{eB}\hat{\mathbf{Z}}\times\mathbf{R}_{ei}\label{eq:-10}\end{equation}
+
+\end_inset
+
+Since we consider particle transport only, we assume that the temperature
+ gradient 
+\begin_inset Formula $\nabla T_{e}$
+\end_inset
+
+ is equal to zero.
+ Our interest is the radial transport, so we assume that the electron pressure
+ 
+\begin_inset Formula $P_{e}\equiv n_{e}T_{e}$
+\end_inset
+
+ only depends on 
+\begin_inset Formula $R$
+\end_inset
+
+.
+ We also assume 
+\begin_inset Formula $\mathbf{V}_{i}=0$
+\end_inset
+
+.
+ The friction force becomes :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{R}_{ei}=-m_{e}n_{e}\nu_{ei}^{Brag}\mathbf{V}_{e}\]
+
+\end_inset
+
+Projecting (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-10"
+
+\end_inset
+
+) to 
+\begin_inset Formula $R$
+\end_inset
+
+ and 
+\begin_inset Formula $\varphi$
+\end_inset
+
+ coordinates gives :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray*}
+\Gamma_{e}=n_{e}V_{e}^{R} & = & \frac{cm_{e}\nu_{ei}^{Brag}}{eB}n_{e}V_{e}^{\varphi}\\
+n_{e}V_{e}^{\varphi} & = & \frac{cT_{e}}{eB}\frac{dn_{e}}{dr}-\frac{cm_{e}\nu_{ei}^{Brag}}{eB}n_{e}V_{e}^{R}\end{eqnarray*}
+
+\end_inset
+
+Using the electron gyrofrequency
+\begin_inset Formula $\Omega_{e}=\frac{eB}{m_{e}c}$
+\end_inset
+
+ and the relation 
+\begin_inset Formula $T_{e}=\frac{1}{2}m_{e}v_{the}^{2}$
+\end_inset
+
+ and inserting the expression of 
+\begin_inset Formula $n_{e}V_{e}^{\varphi}$
+\end_inset
+
+ into the expression of 
+\begin_inset Formula $\Gamma_{e}$
+\end_inset
+
+, we get :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray}
+\Gamma_{e} & = & -\nu_{ei}^{Brag}\Omega_{e}\left(\frac{1}{2}v_{the}^{2}\Omega_{e}\frac{dn_{e}}{dr}-\nu_{ei}^{Brag}\Omega_{e}\Gamma_{e}\right)\nonumber \\
+ & = & \frac{1}{2}D_{class}\frac{dn_{e}}{dr}\label{eq:-11}\end{eqnarray}
+
+\end_inset
+
+where the classical diffusion coefficient reads, taking into account that
+ 
+\begin_inset Formula $\Omega_{e}\ll\nu_{ei}^{Brag}$
+\end_inset
+
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray*}
+Dclass & = & \nu_{ei}^{Brag}\frac{\left(\frac{v_{the}}{\Omega_{e}}\right)^{2}}{1-\left(\frac{\nu_{ei}^{Brag}}{\Omega_{e}}\right)^{2}}\\
+ & \simeq & \nu_{ei}^{Brag}\left(\frac{v_{the}}{\Omega_{e}}\right)^{2}\end{eqnarray*}
+
+\end_inset
+
+We therefore have the following expression for the classical diffusion coecient
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+D_{class}=\rho_{Le}^{2}\nu_{ei}^{Brag}\label{eq:-12}\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\rho_{Le}=\frac{v_{the}}{\Omega_{e}}$
+\end_inset
+
+ is the electron Larmor radius.
+\end_layout
+
+\end_body
+\end_document

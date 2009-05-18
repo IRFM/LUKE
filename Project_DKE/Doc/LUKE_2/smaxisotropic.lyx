@@ -1,0 +1,506 @@
+#LyX 1.6.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\leftmargin 1.5cm
+\topmargin 1.5cm
+\rightmargin 1.5cm
+\bottommargin 1.5cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Lowest-order bounce-averaged flux functions in an isotropic field particle
+ distribution
+\end_layout
+
+\begin_layout Author
+François-Xavier DUTHOIT
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\bhat}{\widehat{\mathsf{b}}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Bounce-averaged flux functions
+\end_layout
+
+\begin_layout Standard
+The bounce-averaged flux functions read :
+\begin_inset Formula \begin{eqnarray}
+S_{\psi}^{\left(0\right)} & = & F_{\psi}^{\left(0\right)}f^{\left(0\right)}-\left|\nabla\psi\right|_{0}D_{\psi\psi}^{\left(0\right)}\frac{\partial f^{\left(0\right)}}{\partial\psi}-D_{\psi p}^{\left(0\right)}\frac{\partial f^{\left(0\right)}}{\partial p}+\frac{\sqrt{1-\xi_{0}^{2}}}{p}D_{\psi\xi}^{\left(0\right)}\frac{\partial f^{\left(0\right)}}{\partial\xi_{0}}\\
+S_{p}^{\left(0\right)} & = & F_{p}^{\left(0\right)}f^{\left(0\right)}-\left|\nabla\psi\right|_{0}D_{p\psi}^{\left(0\right)}\frac{\partial f^{\left(0\right)}}{\partial\psi}-D_{pp}^{\left(0\right)}\frac{\partial f^{\left(0\right)}}{\partial p}+\frac{\sqrt{1-\xi_{0}^{2}}}{p}D_{p\xi}^{\left(0\right)}\frac{\partial f^{\left(0\right)}}{\partial\xi_{0}}\\
+S_{\xi}^{\left(0\right)} & = & F_{\xi}^{\left(0\right)}f^{\left(0\right)}-\left|\nabla\psi\right|_{0}D_{\xi\psi}^{\left(0\right)}\frac{\partial f^{\left(0\right)}}{\partial\psi}-D_{\xi p}^{\left(0\right)}\frac{\partial f^{\left(0\right)}}{\partial p}+\frac{\sqrt{1-\xi_{0}^{2}}}{p}D_{\xi\xi}^{\left(0\right)}\frac{\partial f^{\left(0\right)}}{\partial\xi_{0}}\end{eqnarray}
+
+\end_inset
+
+With the following expressions for the drag and diffusion coefficients :
+\begin_inset Formula \begin{eqnarray}
+F_{\psi}^{\left(0\right)} & = & \frac{1}{\left|\nabla\psi\right|_{0}}\left\{ \nabla\psi\cdot\mathcal{K}_{gc}^{\mathbf{X}}\right\} \\
+F_{p}^{\left(0\right)} & = & \left\{ \mathcal{K}_{gc}^{p}\right\} \\
+F_{\xi}^{\left(0\right)} & = & -\frac{p}{\sqrt{1-\xi_{0}^{2}}}\left[\frac{1-\xi_{0}^{2}}{2\xi_{0}}\left\{ \frac{1}{\Psi}\nabla\ln\Psi\cdot\mathcal{K}_{gc}^{\mathbf{X}}\right\} +\left\{ \frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{K}_{gc}^{\xi}\right\} \right]\end{eqnarray}
+
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray}
+D_{\psi\psi}^{\left(0\right)} & = & \frac{1}{\left|\nabla\psi\right|_{0}^{2}}\left\{ \nabla\psi\cdot\mathcal{D}_{gc}^{\mathbf{XX}}\cdot\nabla\psi\right\} \\
+D_{\psi p}^{\left(0\right)} & = & \frac{1}{\left|\nabla\psi\right|_{0}}\left\{ \nabla\psi\cdot\mathcal{D}_{gc}^{\mathbf{X}p}\right\} \\
+D_{\psi\xi}^{\left(0\right)} & = & -\frac{p}{\sqrt{1-\xi_{0}^{2}}}\frac{1}{\left|\nabla\psi\right|_{0}}\left[\frac{1-\xi_{0}^{2}}{2\xi_{0}}\left\{ \frac{1}{\Psi}\nabla\psi\cdot\mathcal{D}_{gc}^{\mathbf{XX}}\cdot\nabla\ln\Psi\right\} +\left\{ \frac{1}{\Psi}\frac{\xi}{\xi_{0}}\nabla\psi\cdot\mathcal{D}_{gc}^{\mathbf{X}\xi}\right\} \right]\\
+D_{pp}^{\left(0\right)} & = & \left\{ \mathcal{D}_{gc}^{pp}\right\} \\
+D_{p\xi}^{\left(0\right)} & = & -\frac{p}{\sqrt{1-\xi_{0}^{2}}}\left[\left\{ \frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{p\xi}\right\} +\frac{1-\xi_{0}^{2}}{2\xi_{0}}\left\{ \frac{1}{\Psi}\mathcal{D}_{gc}^{p\mathbf{X}}\cdot\nabla\ln\Psi\right\} \right]\\
+D_{\xi\xi}^{\left(0\right)} & = & \frac{p^{2}}{1-\xi_{0}^{2}}\left[\left\{ \frac{1}{\Psi^{2}}\frac{\xi^{2}}{\xi_{0}^{2}}\mathcal{D}_{gc}^{\xi\xi}\right\} +\frac{1-\xi_{0}^{2}}{\xi_{0}}\left\{ \frac{1}{\Psi^{2}}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\xi\mathbf{X}}\cdot\nabla\ln\Psi\right\} \right]\end{eqnarray}
+
+\end_inset
+
+At lowest order in 
+\begin_inset Formula $\epsilon_{B}$
+\end_inset
+
+, the guiding-center coefficients read, with 
+\begin_inset Formula $\mathbb{I}_{\perp}=\mathbb{I}-\bhat\bhat$
+\end_inset
+
+ :
+\begin_inset Formula \begin{eqnarray}
+\mathcal{K}_{gc}^{\mathbf{X}} & = & 0\\
+\mathcal{K}_{gc}^{p} & = & -\nu p\\
+\mathcal{K}_{gc}^{\xi} & = & 0\end{eqnarray}
+
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray}
+\mathcal{D}_{gc}^{\mathbf{XX}} & = & \mathcal{D}^{X}\mathbb{I}_{\perp}\\
+\mathcal{D}_{gc}^{\mathbf{X}p} & = & 0\\
+\mathcal{D}_{gc}^{\mathbf{X}\xi} & = & 0\\
+\mathcal{D}_{gc}^{pp} & = & \mathcal{D}_{\ell}\\
+\mathcal{D}_{gc}^{p\xi} & = & 0\\
+\mathcal{D}_{gc}^{\xi\xi} & = & \Psi\frac{1-\xi_{0}^{2}}{p^{2}}\mathcal{D}_{t}\end{eqnarray}
+
+\end_inset
+
+The drag and diffusion coefficients therefore read, at lowest order in 
+\begin_inset Formula $\epsilon_{B}$
+\end_inset
+
+ :
+\begin_inset Formula \begin{eqnarray}
+F_{\psi}^{\left(0\right)} & = & 0\\
+F_{p}^{\left(0\right)} & = & -\nu p\\
+F_{\xi}^{\left(0\right)} & = & 0\end{eqnarray}
+
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray}
+D_{\psi\psi}^{\left(0\right)} & = & \frac{1}{\left|\nabla\psi\right|_{0}^{2}}\left\{ \left|\nabla\psi\right|^{2}\mathcal{D}^{X}\right\} \\
+D_{\psi p}^{\left(0\right)} & = & 0\\
+D_{\psi\xi}^{\left(0\right)} & = & 0\\
+D_{pp}^{\left(0\right)} & = & \mathcal{D}_{\ell}\\
+D_{p\xi}^{\left(0\right)} & = & 0\\
+D_{\xi\xi}^{\left(0\right)} & = & \left\{ \frac{1}{\Psi}\frac{\xi^{2}}{\xi_{0}^{2}}\right\} \mathcal{D}_{t}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Case of a maxwellian distribution function
+\end_layout
+
+\begin_layout Standard
+Here, we examine the case of a maxwellian distribution function dependant
+ on energy only (i.e.
+ we neglect density and temperature gradients).
+ We therefore have 
+\begin_inset Formula $\frac{\partial f_{M}}{\partial p}=-\frac{p}{p_{tha}^{2}}f_{M}$
+\end_inset
+
+ and 
+\begin_inset Formula $\frac{\partial f_{M}}{\partial\psi}=\frac{\partial f_{M}}{\partial\xi_{0}}=0$
+\end_inset
+
+, where 
+\begin_inset Formula $p_{tha}=m_{a}v_{tha}=\sqrt{m_{a}kT_{a}}$
+\end_inset
+
+ is the so-called particle thermal momentum.
+ Henceforth, we will use the indices 
+\begin_inset Formula $a$
+\end_inset
+
+ and 
+\begin_inset Formula $b$
+\end_inset
+
+ respectively for the test and field particles.
+ The flux functions therefore read :
+\begin_inset Formula \begin{eqnarray}
+S_{\psi}^{\left(0\right)} & = & 0\\
+S_{p}^{\left(0\right)} & = & p\left(-\nu+\frac{\mathcal{D}_{\ell}}{p_{tha}^{2}}\right)f_{M}\\
+S_{\xi}^{\left(0\right)} & = & 0\end{eqnarray}
+
+\end_inset
+
+In order to evaluate 
+\begin_inset Formula $-\nu+\frac{\mathcal{D}_{\ell}}{p_{tha}^{2}}$
+\end_inset
+
+, we make use of the following relation :
+\begin_inset Formula \begin{equation}
+\mathbf{K}_{ab}=\frac{m_{a}}{m_{b}}\frac{\partial}{\partial\mathbf{p}}\cdot\mathbb{D}_{ab}\end{equation}
+
+\end_inset
+
+Where 
+\begin_inset Formula $\mathbf{K}_{ab}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbb{D}_{ab}$
+\end_inset
+
+ are the respective drag vector and diffusion tensor for an isotropic field-part
+icle distribution.
+ Their expression read, using the Rosenbluth potentials 
+\begin_inset Formula $H_{b}$
+\end_inset
+
+ and 
+\begin_inset Formula $G_{b}$
+\end_inset
+
+ and the normalized coordinate 
+\begin_inset Formula $\eta=p/m_{a}v_{thb}=v/v_{thb}$
+\end_inset
+
+ :
+\begin_inset Formula \begin{equation}
+\mathbf{K}_{ab}=\frac{m_{a}}{m_{b}}\frac{\Gamma_{ab}}{p^{2}}\eta\frac{dH_{b}}{d\eta}\mathbf{p}\equiv-\nu\mathbf{p}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\mathbb{D}_{ab}=\frac{m_{a}^{2}}{2}\frac{\Gamma_{ab}}{p^{2}}\left[\eta^{2}\frac{d^{2}G_{b}}{d\eta^{2}}\frac{\mathbf{pp}}{p^{2}}+\eta\frac{dG_{b}}{d\eta}\left(\mathbb{I}-\frac{\mathbf{pp}}{p^{2}}\right)\right]\equiv\mathcal{D}_{\ell}\frac{\mathbf{pp}}{p^{2}}+\mathcal{D}_{t}\left(\mathbb{I}-\frac{\mathbf{pp}}{p^{2}}\right)\end{equation}
+
+\end_inset
+
+We can therefore deduce, using the formula 
+\begin_inset Formula $\frac{\partial}{\partial\mathbf{p}}\cdot\frac{\mathbf{pp}}{p^{2}}=\frac{\partial}{\partial p_{\alpha}}\frac{p_{\alpha}p_{\beta}}{p^{2}}=3\frac{p_{\beta}}{p^{2}}+\frac{\delta_{\alpha\beta}p_{\alpha}}{p^{2}}-\frac{2p_{\alpha}p_{\alpha}p_{\beta}}{p^{4}}=2\frac{\mathbf{p}}{p^{2}}$
+\end_inset
+
+ :
+\begin_inset Formula \begin{equation}
+\frac{\partial}{\partial\mathbf{p}}\cdot\mathbb{D}_{ab}=\left[\frac{2}{p^{2}}\left(\mathcal{D}_{\ell}-\mathcal{D}_{t}\right)+\frac{1}{p}\frac{d\mathcal{D}_{\ell}}{dp}\right]\mathbf{p}\end{equation}
+
+\end_inset
+
+We therefore have :
+\begin_inset Formula \begin{equation}
+\boxed{\nu=\frac{m_{a}}{m_{b}}\left[\frac{2}{p^{2}}\left(\mathcal{D}_{\ell}-\mathcal{D}_{t}\right)+\frac{1}{p}\frac{d\mathcal{D}_{\ell}}{dp}\right]}\label{eq:nudldt}\end{equation}
+
+\end_inset
+
+In order to calculate the Rosenbluth potential expressions, we use the following
+ decomposition in terms of Legendre polynomials, using the velocity-space
+ volume element 
+\begin_inset Formula $d^{3}\mathbf{v'}=v'^{2}\sin\Xi'dv'd\Xi'd\varphi'$
+\end_inset
+
+ and 
+\begin_inset Formula $\Theta$
+\end_inset
+
+ the angle between 
+\begin_inset Formula $\mathbf{v}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbf{v'}$
+\end_inset
+
+ :
+\begin_inset Formula \begin{equation}
+\frac{1}{\left|\mathbf{v'}-\mathbf{v}\right|}=\frac{1}{\sqrt{v^{2}+v'^{2}-2vv'\cos\Theta}}=\sum_{l=0}^{\infty}\frac{v_{<}^{l}}{v_{>}^{l+1}}P_{l}\left(\cos\left(\Theta\right)\right)\equiv\sum_{l=0}^{\infty}\frac{v_{<}^{l}}{v_{>}^{l+1}}\sum_{m=-l}^{l}P_{l}^{m}\left(\cos\left(\Xi\right)\right)P_{l}^{m}\left(\cos\left(\Xi'\right)\right)\exp\left[im\left(\varphi'-\varphi\right)\right]\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $v_{>}=\max\left(v,v'\right)$
+\end_inset
+
+ and 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $v_{<}=\min\left(v,v'\right)$
+\end_inset
+
+.
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+ If the distribution function is isotropic, the gyroangle independance gives
+ 
+\begin_inset Formula $\int_{0}^{2\pi}d\varphi'P_{l}\left(\cos\left(\Theta\right)\right)=2\pi P_{l}\left(\cos\left(\Xi'\right)\right)P_{l}\left(\cos\Xi\right)$
+\end_inset
+
+.
+ The Legendre polynomial orthogonality gives : 
+\begin_inset Formula \begin{equation}
+\int_{0}^{\pi}\sin\Xi'd\Xi'P_{l}\left(\cos\left(\Xi'\right)\right)P_{l}\left(\cos\Xi\right)=2\delta_{l0}P_{0}\left(\cos\Xi\right)=2\delta_{l0}\end{equation}
+
+\end_inset
+
+We therefore have :
+\begin_inset Formula \begin{equation}
+\int_{0}^{\pi}\sin\Xi'd\Xi'\int_{0}^{2\pi}d\varphi'\frac{1}{\left|\mathbf{v'}-\mathbf{v}\right|}=\frac{4\pi}{v_{>}}=\left\{ \begin{array}{ccc}
+\frac{4\pi}{v} & , & v'<v\\
+\frac{4\pi}{v'} & , & v'>v\end{array}\right.\end{equation}
+
+\end_inset
+
+We can therefore deduce the expression for the Rosenbluth potential 
+\begin_inset Formula $H_{b}$
+\end_inset
+
+, taking a maxwellian field-particle distribution :
+\begin_inset Formula \begin{equation}
+H_{b}=\int d^{3}\mathbf{v'}\frac{f_{b}\left(v'\right)}{\left|\mathbf{v'}-\mathbf{v}\right|}=4\pi\left[\frac{1}{v}\int_{0}^{v}v'^{2}f_{b}\left(v'\right)dv'+\int_{v}^{\infty}v'f_{b}\left(v'\right)dv'\right]\end{equation}
+
+\end_inset
+
+We can then calculate 
+\begin_inset Formula $\frac{dH_{b}}{d\eta}$
+\end_inset
+
+ :
+\begin_inset Formula \begin{equation}
+\frac{dH_{b}}{d\eta}=4\pi v_{thb}\left[-\frac{1}{v^{2}}\int_{0}^{v}v'^{2}f_{b}\left(v'\right)dv'+vf_{b}\left(v\right)-vf_{b}\left(v\right)\right]\end{equation}
+
+\end_inset
+
+We therefore have :
+\begin_inset Formula \begin{equation}
+\boxed{\frac{dH_{b}}{d\eta}=4\pi\frac{v_{thb}^{2}}{\eta}f_{b}\left(v\right)-4\pi\frac{v_{thb}}{\eta^{2}}\int_{0}^{v}f_{b}\left(v'\right)dv'}\end{equation}
+
+\end_inset
+
+Using the expression 
+\begin_inset Formula $G_{b}=\int d^{3}\mathbf{v'}\left|\mathbf{v'}-\mathbf{v}\right|f_{b}\left(v'\right)$
+\end_inset
+
+, we can write :
+\begin_inset Formula \begin{equation}
+\frac{dG_{b}}{d\eta}=\frac{dv}{d\eta}\frac{dG_{b}}{dv}=v_{thb}\int d^{3}\mathbf{v'}\frac{f_{b}\left(v'\right)\left(\mathbf{v}-\mathbf{v'}\right)}{\left|\mathbf{v'}-\mathbf{v}\right|}\cdot\frac{\mathbf{v}}{v}=v_{thb}\int d^{3}\mathbf{v'}\frac{\left(v-v'\cos\Theta\right)}{\left|\mathbf{v'}-\mathbf{v}\right|}f_{b}\left(v'\right)\end{equation}
+
+\end_inset
+
+Since 
+\begin_inset Formula $\cos\Theta=P_{1}\left(\cos\Theta\right)=\sum_{m'=-1}^{1}P_{1}^{m'}\left(\cos\Xi\right)P_{1}^{m'}\left(\cos\Xi'\right)\exp\left(im'\left(\varphi'-\varphi\right)\right)$
+\end_inset
+
+, we have :
+\begin_inset Formula \begin{eqnarray}
+\int_{0}^{\pi}\sin\Xi'd\Xi'\int_{0}^{2\pi}d\varphi'\frac{\cos\Theta}{\left|\mathbf{v'}-\mathbf{v}\right|} & = & \sum_{l=0}^{\infty}\frac{v_{<}^{l}}{v_{>}^{l+1}}\sum_{m=-l}^{l}\sum_{m'=-1}^{1}\int_{0}^{\pi}\sin\Xi'd\Xi'\int_{0}^{2\pi}d\varphi'\times\nonumber \\
+ &  & P_{1}^{m'}\left(\cos\Xi\right)P_{1}^{m'}\left(\cos\Xi'\right)P_{l}^{m}\left(\cos\Xi\right)P_{l}^{m}\left(\cos\Xi'\right)\exp\left(i\left(m+m'\right)\left(\varphi'-\varphi\right)\right)\label{eq:-2}\end{eqnarray}
+
+\end_inset
+
+The 
+\begin_inset Formula $\varphi'$
+\end_inset
+
+ integral is nonzero if 
+\begin_inset Formula $m'=-m$
+\end_inset
+
+.
+ We therefore have :
+\begin_inset Formula \begin{eqnarray}
+\int_{0}^{\pi}\sin\Xi'd\Xi'\int_{0}^{2\pi}d\varphi'\frac{\cos\Theta}{\left|\mathbf{v'}-\mathbf{v}\right|} & = & 2\pi\sum_{l=0}^{\infty}\frac{v_{<}^{l}}{v_{>}^{l+1}}\sum_{m=-1}^{1}P_{1}^{-m}\left(\cos\Xi\right)P_{l}^{m}\left(\cos\Xi\right)\times\nonumber \\
+ &  & \int_{0}^{\pi}\sin\Xi'd\Xi'P_{1}^{-m}\left(\cos\Xi'\right)P_{l}^{m}\left(\cos\Xi'\right)\label{eq:-1}\end{eqnarray}
+
+\end_inset
+
+We have 
+\begin_inset Formula $P_{1}^{-m}=\left(-1\right)^{m}\frac{\left(1-m\right)!}{\left(1+m\right)!}P_{1}^{m}$
+\end_inset
+
+.
+ We can deduce :
+\begin_inset Formula \begin{eqnarray}
+\int_{0}^{\pi}\sin\Xi'd\Xi'P_{1}^{-m}\left(\cos\Xi'\right)P_{l}^{m}\left(\cos\Xi'\right) & = & \left(-1\right)^{m}\frac{\left(1-m\right)!}{\left(1+m\right)!}\int_{0}^{\pi}\sin\Xi'd\Xi'P_{1}^{m}\left(\cos\Xi'\right)P_{l}^{m}\left(\cos\Xi'\right)\nonumber \\
+ & = & \left(-1\right)^{m}\frac{2}{3}\delta_{1l}\label{eq:}\end{eqnarray}
+
+\end_inset
+
+The integral becomes :
+\begin_inset Formula \begin{equation}
+\int_{0}^{\pi}\sin\Xi'd\Xi'\int_{0}^{2\pi}d\varphi'\frac{\cos\Theta}{\left|\mathbf{v'}-\mathbf{v}\right|}=\frac{4\pi}{3}\frac{v_{<}}{v_{>}^{2}}\left(\left[P_{1}^{0}\left(\cos\Xi\right)\right]^{2}+2\frac{1}{2}\left[P_{1}^{1}\left(\cos\Xi\right)\right]^{2}\right)\end{equation}
+
+\end_inset
+
+Since 
+\begin_inset Formula $P_{1}^{0}\left(\cos\Xi\right)=\cos\Xi$
+\end_inset
+
+ and 
+\begin_inset Formula $P_{1}^{1}\left(\cos\Xi\right)=-\sin\Xi$
+\end_inset
+
+, we finally have :
+\begin_inset Formula \begin{equation}
+\int_{0}^{\pi}\sin\Xi'd\Xi'\int_{0}^{2\pi}d\varphi'\frac{\cos\Theta}{\left|\mathbf{v'}-\mathbf{v}\right|}=\frac{4\pi}{3}\frac{v_{<}}{v_{>}^{2}}=\left\{ \begin{array}{ccc}
+\frac{4\pi v'}{3v^{2}} & , & v'<v\\
+\frac{4\pi v}{3v'^{2}} & , & v'>v\end{array}\right.\end{equation}
+
+\end_inset
+
+The expression for 
+\begin_inset Formula $\frac{dG_{b}}{d\eta}$
+\end_inset
+
+ becomes :
+\begin_inset Formula \begin{equation}
+\frac{dG_{b}}{d\eta}=4\pi v_{thb}\left[\int_{0}^{v}v'^{2}f_{b}\left(v'\right)dv'-\frac{1}{3v^{2}}\int_{0}^{v}v'^{4}f_{b}\left(v'\right)dv'+v\int_{v}^{\infty}v'f_{b}\left(v'\right)dv'-\frac{v}{3}\int_{v}^{\infty}v'f_{b}\left(v'\right)dv'\right]\end{equation}
+
+\end_inset
+
+We therefore have :
+\begin_inset Formula \begin{eqnarray}
+\frac{dG_{b}}{d\eta} & = & 4\pi v_{thb}\left[-v_{thb}^{2}vf_{b}\left(v\right)+v_{thb}^{2}\int_{0}^{v}f_{b}\left(v'\right)dv'+\frac{1}{3}v_{thb}^{2}vf_{b}\left(v\right)\right.\nonumber \\
+ &  & \left.-\frac{v_{thb}^{2}}{v^{2}}\left(-v_{thb}^{2}vf_{b}\left(v\right)+v_{thb}^{2}\int_{0}^{v}f_{b}\left(v'\right)dv'\right)+\frac{2}{3}v_{thb}^{2}vf_{b}\left(v\right)\right]\label{eq:-3}\end{eqnarray}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\boxed{\frac{dG_{b}}{d\eta}=4\pi v_{thb}^{3}\left(1-\frac{1}{\eta^{2}}\right)\int_{0}^{v}f_{b}\left(v'\right)dv'+4\pi\frac{v_{thb}^{4}}{\eta}f_{b}\left(v\right)}\end{equation}
+
+\end_inset
+
+We can deduce :
+\begin_inset Formula \begin{equation}
+\frac{d^{2}G_{b}}{d\eta^{2}}=8\pi\frac{v_{thb}^{3}}{\eta^{3}}\int_{0}^{v}f_{b}\left(v'\right)dv'+4\pi v_{thb}^{4}\left(1-\frac{1}{\eta^{2}}\right)f_{b}\left(v\right)-4\pi\frac{v_{thb}^{4}}{\eta^{2}}f_{b}\left(v\right)-4\pi v_{thb}^{4}f_{b}\left(v\right)\end{equation}
+
+\end_inset
+
+ 
+\begin_inset Formula \begin{equation}
+\boxed{\frac{d^{2}G_{b}}{d\eta^{2}}=8\pi\frac{v_{thb}^{3}}{\eta^{3}}\int_{0}^{v}f_{b}\left(v'\right)dv'-8\pi\frac{v_{thb}^{4}}{\eta^{2}}f_{b}\left(v\right)}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \[
+\frac{d^{3}G_{b}}{d\eta^{3}}=-24\pi\frac{v_{thb}^{3}}{\eta^{4}}\int_{0}^{v}f_{b}\left(v'\right)dv'+8\pi\frac{v_{thb}^{4}}{\eta^{3}}f_{b}\left(v\right)+16\pi\frac{v_{thb}^{4}}{\eta^{3}}f_{b}\left(v\right)+8\pi\frac{v_{thb}^{4}}{\eta}f_{b}\left(v\right)\]
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\boxed{\frac{d^{3}G_{b}}{d\eta^{3}}=-24\pi\frac{v_{thb}^{3}}{\eta^{4}}\int_{0}^{v}f_{b}\left(v'\right)dv'+24\pi\frac{v_{thb}^{4}}{\eta^{3}}f_{b}\left(v\right)+8\pi\frac{v_{thb}^{4}}{\eta}f_{b}\left(v\right)}\end{equation}
+
+\end_inset
+
+Inserting these expressions into (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:nudldt"
+
+\end_inset
+
+), we have :
+\begin_inset Formula \begin{eqnarray*}
+\nu & = & -\frac{m_{a}}{m_{b}}\Gamma_{ab}\frac{m_{a}^{2}}{2}\left[\frac{2}{\eta^{2}m_{a}^{2}v_{thb}^{2}p^{2}}\left(\eta^{2}\frac{d^{2}G_{b}}{d\eta^{2}}-\eta\frac{dG_{b}}{d\eta}\right)+\frac{1}{\eta m_{a}^{2}v_{thb}^{2}}\frac{d}{d\eta}\left(\frac{\eta^{2}}{p^{2}}\frac{d^{2}G_{b}}{d\eta^{2}}\right)\right]\\
+ & = & -\frac{m_{a}}{m_{b}}\frac{\Gamma_{ab}}{p^{2}}\frac{1}{v_{thb}^{2}}\left[\frac{d^{2}G_{b}}{d\eta^{2}}-\frac{1}{\eta}\frac{dG_{b}}{d\eta}+\frac{\eta}{2}\frac{d^{3}G_{b}}{d\eta^{3}}\right]\\
+ & = & -\frac{m_{a}}{m_{b}}\frac{\Gamma_{ab}}{p^{2}}\frac{4\pi}{v_{thb}^{2}}\left[2\frac{v_{thb}^{3}}{\eta^{3}}\int_{0}^{v}f_{b}\left(v'\right)dv'-2\frac{v_{thb}^{4}}{\eta^{2}}f_{b}\left(v\right)-v_{thb}^{3}\left(\frac{1}{\eta}-\frac{1}{\eta^{3}}\right)\int_{0}^{v}f_{b}\left(v'\right)dv'-\frac{v_{thb}^{4}}{\eta^{2}}f_{b}\left(v\right)\right.\\
+ &  & \left.-3\frac{v_{thb}^{3}}{\eta^{3}}\int_{0}^{v}f_{b}\left(v'\right)dv'+3\frac{v_{thb}^{4}}{\eta^{2}}f_{b}\left(v\right)+v_{thb}^{4}f_{b}\left(v\right)\right]\\
+ & = & -\frac{m_{a}}{m_{b}}\frac{\Gamma_{ab}}{p^{2}}\frac{4\pi}{v_{thb}^{2}}\left[v_{thb}^{4}f_{b}\left(v\right)-\frac{v_{thb}^{3}}{\eta}\int_{0}^{v}f_{b}\left(v'\right)dv'\right]\\
+ & = & -\frac{m_{a}}{m_{b}}\frac{\Gamma_{ab}}{p^{2}}\left[-\frac{\eta^{2}}{2}\frac{d^{2}G_{b}}{d\eta^{2}}\right]\\
+ & = & \frac{1}{m_{a}m_{b}v_{thb}^{2}}\mathcal{D}_{\ell}\end{eqnarray*}
+
+\end_inset
+
+We therefore have :
+\begin_inset Formula \begin{equation}
+\boxed{\nu=\frac{1}{m_{a}m_{b}v_{thb}^{2}}\mathcal{D}_{\ell}}\end{equation}
+
+\end_inset
+
+We therefore have 
+\begin_inset Formula $S_{p}^{\left(0\right)}=0$
+\end_inset
+
+ if 
+\begin_inset Formula $m_{a}v_{tha}^{2}=m_{b}v_{thb}^{2}$
+\end_inset
+
+, i.e.
+ if 
+\begin_inset Formula $T_{a}=T_{b}$
+\end_inset
+
+.
+\end_layout
+
+\end_body
+\end_document

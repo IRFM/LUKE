@@ -1,0 +1,493 @@
+#LyX 1.6.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\leftmargin 1.5cm
+\topmargin 1.5cm
+\rightmargin 1.5cm
+\bottommargin 1.5cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+LUKE conversion of guiding-center coefficients
+\end_layout
+
+\begin_layout Author
+François-Xavier DUTHOIT
+\end_layout
+
+\begin_layout Section
+Spatial components of 
+\begin_inset Formula $\mathbb{I}_{\perp}=\mathbb{I}-\hat{\mathbf{b}}\otimes\hat{\mathbf{b}}$
+\end_inset
+
+ and 
+\begin_inset Formula $\bar{\boldsymbol{\rho}}_{gc}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The LUKE spatial base is 
+\begin_inset Formula $\left(\hat{\boldsymbol{\psi}}=\frac{\nabla\psi}{\left|\nabla\psi\right|},\hat{\boldsymbol{\theta}}=r\nabla\theta,\hat{\mathbf{z}}=\Upsilon\nabla z\right)$
+\end_inset
+
+ with 
+\begin_inset Formula $\hat{\boldsymbol{\psi}}\cdot\hat{\mathbf{z}}=\hat{\boldsymbol{\theta}}\cdot\hat{\mathbf{z}}=0$
+\end_inset
+
+ and 
+\begin_inset Formula $\hat{\boldsymbol{\psi}}\cdot\hat{\mathbf{b}}=0$
+\end_inset
+
+.
+ We therefore have :
+\begin_inset Formula \begin{eqnarray*}
+\hat{\boldsymbol{\psi}}\cdot\mathbb{I}_{\perp}\cdot\hat{\boldsymbol{\psi}} & = & 1\\
+\hat{\boldsymbol{\theta}}\cdot\mathbb{I}_{\perp}\cdot\hat{\boldsymbol{\theta}} & = & 1-\left(\hat{\mathbf{b}}\cdot\hat{\boldsymbol{\theta}}\right)^{2}\\
+\hat{\mathbf{z}}\cdot\mathbb{I}_{\perp}\cdot\hat{\mathbf{z}} & = & 1-\left(\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right)^{2}\\
+\hat{\boldsymbol{\theta}}\cdot\mathbb{I}_{\perp}\cdot\hat{\boldsymbol{\psi}}=\hat{\boldsymbol{\psi}}\cdot\mathbb{I}_{\perp}\cdot\hat{\boldsymbol{\theta}} & = & \hat{\boldsymbol{\psi}}\cdot\hat{\boldsymbol{\theta}}\\
+\hat{\mathbf{z}}\cdot\mathbb{I}_{\perp}\cdot\hat{\boldsymbol{\psi}}=\hat{\boldsymbol{\psi}}\cdot\mathbb{I}_{\perp}\cdot\hat{\mathbf{z}} & = & 0\\
+\hat{\mathbf{z}}\cdot\mathbb{I}_{\perp}\cdot\hat{\boldsymbol{\theta}}=\hat{\boldsymbol{\theta}}\cdot\mathbb{I}_{\perp}\cdot\hat{\mathbf{z}} & = & -\left(\hat{\mathbf{b}}\cdot\hat{\boldsymbol{\theta}}\right)\left(\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right)\end{eqnarray*}
+
+\end_inset
+
+The first-order expression for 
+\begin_inset Formula $\bar{\boldsymbol{\rho}}_{gc}$
+\end_inset
+
+ reads :
+\begin_inset Formula \begin{eqnarray*}
+\bar{\boldsymbol{\rho}}_{gc} & = & \frac{1}{m\Omega^{2}}\left(\mu\nabla_{\perp}B+\frac{p_{\parallel}^{2}}{m}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\right)\\
+ & = & \frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla_{\perp}\ln B+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\right]\\
+ &  & \frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\hat{\mathbf{b}}\times\left(\nabla\ln B\times\hat{\mathbf{b}}\right)+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\right]\end{eqnarray*}
+
+\end_inset
+
+We ca therefore deduce, for a given vector 
+\begin_inset Formula $\mathbf{a}$
+\end_inset
+
+ :
+\begin_inset Formula \begin{eqnarray*}
+\bar{\boldsymbol{\rho}}_{gc}\cdot\mathbf{a} & = & \frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\hat{\mathbf{b}}\times\left(\nabla\ln B\times\hat{\mathbf{b}}\right)\cdot\mathbf{a}+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\cdot\mathbf{a}\right]\\
+ & = & \frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\left(\nabla\ln B\times\hat{\mathbf{b}}\right)\cdot\left(\mathbf{a}\times\hat{\mathbf{b}}\right)+2\xi^{2}\left(\hat{\mathbf{b}}\cdot\nabla\left(\hat{\mathbf{b}}\cdot\mathbf{a}\right)-\hat{\mathbf{b}}\cdot\nabla\mathbf{a}\cdot\hat{\mathbf{b}}\right)\right]\\
+ & = & \frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\left(\mathbf{a}-\left(\mathbf{a}\cdot\hat{\mathbf{b}}\right)\hat{\mathbf{b}}\right)+2\xi^{2}\left(\hat{\mathbf{b}}\cdot\nabla\left(\hat{\mathbf{b}}\cdot\mathbf{a}\right)-\hat{\mathbf{b}}\cdot\nabla\mathbf{a}\cdot\hat{\mathbf{b}}\right)\right]\end{eqnarray*}
+
+\end_inset
+
+Since 
+\begin_inset Formula $\nabla\hat{\boldsymbol{\psi}}=\nabla\hat{\boldsymbol{\theta}}=\nabla\hat{\mathbf{z}}=0$
+\end_inset
+
+ and 
+\begin_inset Formula $\hat{\boldsymbol{\psi}}\cdot\hat{\mathbf{b}}=0$
+\end_inset
+
+, we get :
+\begin_inset Formula \begin{eqnarray*}
+\bar{\boldsymbol{\rho}}_{gc}\cdot\hat{\boldsymbol{\psi}} & = & \frac{p^{2}}{2m^{2}\Omega^{2}}\left(1-\xi^{2}\right)\nabla\ln B\cdot\hat{\boldsymbol{\psi}}\\
+\bar{\boldsymbol{\rho}}_{gc}\cdot\hat{\boldsymbol{\theta}} & = & \frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\left(\hat{\boldsymbol{\theta}}-\left(\hat{\mathbf{b}}\cdot\hat{\boldsymbol{\theta}}\right)\hat{\mathbf{b}}\right)+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\left(\hat{\mathbf{b}}\cdot\hat{\boldsymbol{\theta}}\right)\right]\\
+\bar{\boldsymbol{\rho}}_{gc}\cdot\hat{\mathbf{z}} & = & \frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\left(\hat{\mathbf{z}}-\left(\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right)\hat{\mathbf{b}}\right)+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\left(\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right)\right]\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+LUKE coefficients
+\end_layout
+
+\begin_layout Subsection
+Guiding-center drag coefficients
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\mathbf{K}_{gc}^{\mathbf{R}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $\mathbf{K}_{gc}^{\mathbf{R}}$
+\end_inset
+
+ reads :
+\begin_inset Formula \begin{equation}
+\mathbf{K}_{gc}^{\mathbf{R}}\simeq\nu\bar{\boldsymbol{\rho}}_{gc}\label{eq:}\end{equation}
+
+\end_inset
+
+In LUKE 
+\begin_inset Formula $\left(\psi,\theta,z,p,\xi,\varphi\right)$
+\end_inset
+
+ coordinates, the expression becomes, with 
+\begin_inset Formula $K_{gc}^{i}=\mathbf{K}^{\mathbf{R}}\cdot\nabla x^{i}$
+\end_inset
+
+ :
+\begin_inset Formula \begin{eqnarray*}
+K_{L}^{\psi} & = & \frac{\mathbf{K}_{gc}^{\mathbf{R}}\cdot\nabla\psi}{\left|\nabla\psi\right|}=\nu\bar{\boldsymbol{\rho}}_{gc}\cdot\hat{\boldsymbol{\psi}}\\
+K_{L}^{\theta} & = & r\mathbf{K}_{gc}^{\mathbf{R}}\cdot\nabla\theta=\nu\bar{\boldsymbol{\rho}}_{gc}\cdot\hat{\boldsymbol{\theta}}\\
+K_{L}^{z} & = & \Upsilon\mathbf{K}_{gc}^{\mathbf{R}}\cdot\nabla z=\nu\bar{\boldsymbol{\rho}}_{gc}\cdot\hat{\mathbf{z}}\end{eqnarray*}
+
+\end_inset
+
+We therefore have :
+\begin_inset Formula \begin{eqnarray}
+K_{L}^{\psi} & = & \frac{\mathbf{K}_{gc}^{\mathbf{R}}\cdot\nabla\psi}{\left|\nabla\psi\right|}=\boxed{\nu\frac{p^{2}}{2m^{2}\Omega^{2}}\left(1-\xi^{2}\right)\nabla\ln B\cdot\hat{\boldsymbol{\psi}}}\\
+K_{L}^{\theta} & = & r\mathbf{K}_{gc}^{\mathbf{R}}\cdot\nabla\theta=\boxed{\nu\frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\left(\hat{\boldsymbol{\theta}}-\left(\hat{\mathbf{b}}\cdot\hat{\boldsymbol{\theta}}\right)\hat{\mathbf{b}}\right)+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\left(\hat{\mathbf{b}}\cdot\hat{\boldsymbol{\theta}}\right)\right]}\\
+K_{L}^{z} & = & \Upsilon\mathbf{K}_{gc}^{\mathbf{R}}\cdot\nabla z=\boxed{\nu\frac{p^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\left(\hat{\mathbf{z}}-\left(\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right)\hat{\mathbf{b}}\right)+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\left(\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right)\right]}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $K_{gc}^{p}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $K_{gc}^{p}$
+\end_inset
+
+ reads :
+\begin_inset Formula \begin{equation}
+K_{gc}^{p}=-\nu p\label{eq:-1}\end{equation}
+
+\end_inset
+
+In LUKE 
+\begin_inset Formula $\left(\psi,\theta,z,p,\xi,\varphi\right)$
+\end_inset
+
+ coordinates, the expression becomes :
+\begin_inset Formula \begin{equation}
+K_{L}^{p}=K_{gc}^{p}=\boxed{-\nu p}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $K_{gc}^{\xi}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $K_{gc}^{\xi}$
+\end_inset
+
+ reads :
+\begin_inset Formula \begin{equation}
+K_{gc}^{\xi}\simeq-\nu\frac{1-\xi^{2}}{2\xi}\lambda_{gc}\label{eq:-2}\end{equation}
+
+\end_inset
+
+In LUKE 
+\begin_inset Formula $\left(\psi,\theta,z,p,\xi,\varphi\right)$
+\end_inset
+
+ coordinates, the expression becomes, inserting the expression for 
+\begin_inset Formula $\lambda_{gc}$
+\end_inset
+
+ :
+\begin_inset Formula \begin{equation}
+K_{L}^{\xi}=-\frac{p}{\sqrt{1-\xi^{2}}}K_{gc}^{\xi}=\boxed{\nu\frac{\sqrt{1-\xi^{2}}}{2\Omega}\hat{\mathbf{b}}\cdot\nabla\times\hat{\mathbf{b}}}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Guiding-center diffusion coefficients
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\mathbb{D}_{gc}^{\mathbf{RR}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $\mathbb{D}_{gc}^{\mathbf{RR}}$
+\end_inset
+
+ reads :
+\begin_inset Formula \begin{equation}
+\mathbb{D}_{gc}^{\mathbf{RR}}=\frac{\mathbb{I}_{\perp}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\left(1+\xi^{2}\right)\mathcal{D}_{t}\right]\label{eq:-3}\end{equation}
+
+\end_inset
+
+In LUKE 
+\begin_inset Formula $\left(\psi,\theta,z,p,\xi,\varphi\right)$
+\end_inset
+
+ coordinates, the expression becomes, with 
+\begin_inset Formula $D_{gc}^{ij}=\nabla x^{i}\cdot\mathbb{D}^{\mathbf{RR}}\cdot\nabla x^{j}$
+\end_inset
+
+ :
+\begin_inset Formula \begin{eqnarray}
+D_{L}^{\psi\psi} & = & \frac{\nabla\psi\cdot\mathbb{D}_{gc}^{\mathbf{RR}}\cdot\nabla\psi}{\left|\nabla\psi\right|^{2}}=\boxed{\frac{1}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\left(1+\xi^{2}\right)\mathcal{D}_{t}\right]}\\
+D_{L}^{\theta\theta} & = & r^{2}\nabla\theta\cdot\mathbb{D}_{gc}^{\mathbf{RR}}\cdot\nabla\theta=\boxed{\frac{1-\left(\hat{\mathbf{b}}\cdot\hat{\boldsymbol{\theta}}\right)^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\left(1+\xi^{2}\right)\mathcal{D}_{t}\right]}\\
+D_{L}^{zz} & = & \Upsilon^{2}\nabla z\cdot\mathbb{D}_{gc}^{\mathbf{RR}}\cdot\nabla z=\boxed{\frac{1-\left(\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right)^{2}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\left(1+\xi^{2}\right)\mathcal{D}_{t}\right]}\\
+D_{L}^{\psi\theta} & = & \frac{r}{\left|\nabla\psi\right|}\nabla\psi\cdot\mathbb{D}_{gc}^{\mathbf{RR}}\cdot\nabla\theta=\boxed{\frac{\hat{\boldsymbol{\psi}}\cdot\hat{\boldsymbol{\theta}}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\left(1+\xi^{2}\right)\mathcal{D}_{t}\right]}\\
+D_{L}^{\psi z} & = & \frac{\Upsilon}{\left|\nabla\psi\right|}\nabla\psi\cdot\mathbb{D}_{gc}^{\mathbf{RR}}\cdot\nabla z=\boxed{0}\\
+D_{L}^{\theta z} & = & r\Upsilon\nabla\theta\cdot\mathbb{D}_{gc}^{\mathbf{RR}}\cdot\nabla z=\boxed{-\frac{\left(\hat{\mathbf{b}}\cdot\hat{\boldsymbol{\theta}}\right)\left(\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right)}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\left(1+\xi^{2}\right)\mathcal{D}_{t}\right]}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $D_{gc}^{pp}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $D_{gc}^{pp}$
+\end_inset
+
+ reads :
+\begin_inset Formula \begin{equation}
+D_{gc}^{pp}=\mathcal{D}_{l}\label{eq:-4}\end{equation}
+
+\end_inset
+
+In LUKE 
+\begin_inset Formula $\left(\psi,\theta,z,p,\xi,\varphi\right)$
+\end_inset
+
+ coordinates, the expression becomes :
+\begin_inset Formula \begin{equation}
+D_{L}^{pp}=D_{gc}^{pp}=\boxed{\mathcal{D}_{l}}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $D_{gc}^{\xi\xi}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $D_{gc}^{\xi\xi}$
+\end_inset
+
+ reads :
+\begin_inset Formula \begin{equation}
+D_{gc}^{\xi\xi}\simeq\left(1-\lambda_{gc}\right)\frac{1-\xi^{2}}{p^{2}}\mathcal{D}_{t}\label{eq:-5}\end{equation}
+
+\end_inset
+
+In LUKE 
+\begin_inset Formula $\left(\psi,\theta,z,p,\xi,\varphi\right)$
+\end_inset
+
+ coordinates, the expression becomes, inserting the expression for 
+\begin_inset Formula $\lambda_{gc}$
+\end_inset
+
+ :
+\begin_inset Formula \[
+D_{L}^{\xi\xi}=\frac{p^{2}}{1-\xi^{2}}D_{gc}^{\xi\xi}=\boxed{\left(1-\frac{p\xi}{\Omega}\hat{\mathbf{b}}\cdot\nabla\times\hat{\mathbf{b}}\right)\mathcal{D}_{t}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\mathbf{D}_{gc}^{\mathbf{R}p}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $\mathbf{D}_{gc}^{\mathbf{R}p}$
+\end_inset
+
+ reads :
+\begin_inset Formula \begin{equation}
+\mathbf{D}_{gc}^{\mathbf{R}p}\simeq\frac{\mathcal{D}_{l}}{p}\bar{\boldsymbol{\rho}}_{gc}\label{eq:-6}\end{equation}
+
+\end_inset
+
+In LUKE 
+\begin_inset Formula $\left(\psi,\theta,z,p,\xi,\varphi\right)$
+\end_inset
+
+ coordinates, the expression becomes, with 
+\begin_inset Formula $D_{gc}^{ip}=\nabla x^{i}\cdot\mathbf{D}^{\mathbf{R}p}$
+\end_inset
+
+ :
+\begin_inset Formula \begin{eqnarray*}
+D_{L}^{\psi p} & = & \frac{D_{gc}^{\psi p}}{\left|\nabla\psi\right|}=\frac{\mathcal{D}_{l}}{p}\bar{\boldsymbol{\rho}}_{gc}\cdot\hat{\boldsymbol{\psi}}\\
+D_{L}^{\theta p} & = & rD_{gc}^{\theta p}=\frac{\mathcal{D}_{l}}{p}\bar{\boldsymbol{\rho}}_{gc}\cdot\hat{\boldsymbol{\theta}}\\
+D_{L}^{zp} & = & \Upsilon D_{gc}^{zp}=\frac{\mathcal{D}_{l}}{p}\bar{\boldsymbol{\rho}}_{gc}\cdot\hat{\mathbf{z}}\end{eqnarray*}
+
+\end_inset
+
+We therefore have :
+\begin_inset Formula \begin{eqnarray}
+D_{L}^{\psi p} & = & \frac{D_{gc}^{\psi p}}{\left|\nabla\psi\right|}=\boxed{\frac{p\mathcal{D}_{l}}{2m^{2}\Omega^{2}}\left(1-\xi^{2}\right)\nabla\ln B\cdot\hat{\boldsymbol{\psi}}}\\
+D_{L}^{\theta p} & = & rD_{gc}^{\theta p}=\boxed{\frac{p\mathcal{D}_{l}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\left(\hat{\boldsymbol{\theta}}-\left(\hat{\mathbf{b}}\cdot\hat{\boldsymbol{\theta}}\right)\hat{\mathbf{b}}\right)+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\left(\hat{\mathbf{b}}\cdot\hat{\boldsymbol{\theta}}\right)\right]}\\
+D_{L}^{zp} & = & \Upsilon D_{gc}^{zp}=\boxed{\frac{p\mathcal{D}_{l}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\nabla\ln B\cdot\left(\hat{\mathbf{z}}-\left(\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right)\hat{\mathbf{b}}\right)+2\xi^{2}\hat{\mathbf{b}}\cdot\nabla\left(\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right)\right]}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\mathbf{D}_{gc}^{\mathbf{R}\xi}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $\mathbf{D}_{gc}^{\mathbf{R}\xi}$
+\end_inset
+
+ reads :
+\begin_inset Formula \begin{equation}
+\mathbf{D}_{gc}^{\mathbf{R}\xi}\simeq\frac{\xi\left(1-\xi^{2}\right)}{p^{2}}\left[-\frac{p^{2}\mathcal{D}_{t}}{2m^{2}\Omega^{2}}\nabla_{\perp}\ln B+\left(\mathcal{D}_{l}+\mathcal{D}_{t}\right)\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\right]\label{eq:-7}\end{equation}
+
+\end_inset
+
+In LUKE 
+\begin_inset Formula $\left(\psi,\theta,z,p,\xi,\varphi\right)$
+\end_inset
+
+ coordinates, the expression becomes, with 
+\begin_inset Formula $D_{gc}^{i\xi}=\nabla x^{i}\cdot\mathbf{D}^{\mathbf{R}\xi}$
+\end_inset
+
+ :
+\begin_inset Formula \begin{eqnarray}
+D_{L}^{\psi\xi} & = & -\frac{p}{\sqrt{1-\xi^{2}}}\frac{\nabla\psi\cdot\mathbf{D}^{\mathbf{R}\xi}}{\left|\nabla\psi\right|}=\boxed{p\xi\sqrt{1-\xi^{2}}\frac{\mathcal{D}_{t}}{2m^{2}\Omega^{2}}\nabla\ln B\cdot\hat{\boldsymbol{\psi}}}\\
+D_{L}^{\theta\xi} & = & -\frac{p}{\sqrt{1-\xi^{2}}}r\nabla\theta\cdot\mathbf{D}^{\mathbf{R}\xi}=\boxed{\frac{\xi\sqrt{1-\xi^{2}}}{p}\left[\frac{p^{2}\mathcal{D}_{t}}{2m^{2}\Omega^{2}}\nabla\ln B\cdot\left(\hat{\boldsymbol{\theta}}-\left(\hat{\mathbf{b}}\cdot\hat{\boldsymbol{\theta}}\right)\hat{\mathbf{b}}\right)-\left(\mathcal{D}_{l}+\mathcal{D}_{t}\right)\hat{\mathbf{b}}\cdot\nabla\left(\hat{\mathbf{b}}\cdot\hat{\boldsymbol{\theta}}\right)\right]}\\
+D_{L}^{z\xi} & = & -\frac{p}{\sqrt{1-\xi^{2}}}\Upsilon\nabla z\cdot\mathbf{D}^{\mathbf{R}\xi}=\boxed{\frac{\xi\sqrt{1-\xi^{2}}}{p}\left[\frac{p^{2}\mathcal{D}_{t}}{2m^{2}\Omega^{2}}\nabla\ln B\cdot\left(\hat{\mathbf{z}}-\left(\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right)\hat{\mathbf{b}}\right)-\left(\mathcal{D}_{l}+\mathcal{D}_{t}\right)\hat{\mathbf{b}}\cdot\nabla\left(\hat{\mathbf{b}}\cdot\hat{\mathbf{z}}\right)\right]}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $D_{gc}^{p\xi}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $D_{gc}^{p\xi}$
+\end_inset
+
+ reads :
+\begin_inset Formula \begin{equation}
+D_{gc}^{p\xi}=\lambda_{gc}\frac{1-\xi^{2}}{2p\xi}\mathcal{D}_{l}\label{eq:-8}\end{equation}
+
+\end_inset
+
+In LUKE 
+\begin_inset Formula $\left(\psi,\theta,z,p,\xi,\varphi\right)$
+\end_inset
+
+ coordinates, the expression becomes, inserting the expression for 
+\begin_inset Formula $\lambda_{gc}$
+\end_inset
+
+ :
+\begin_inset Formula \begin{equation}
+D_{L}^{p\xi}=-\frac{p}{\sqrt{1-\xi^{2}}}D_{gc}^{p\xi}=\boxed{-\frac{p\sqrt{1-\xi^{2}}}{2}\mathcal{D}_{l}\hat{\mathbf{b}}\cdot\nabla\times\hat{\mathbf{b}}}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

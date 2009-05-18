@@ -1,0 +1,527 @@
+#LyX 1.6.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\leftmargin 1.5cm
+\topmargin 1.5cm
+\rightmargin 1.5cm
+\bottommargin 1.5cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Guiding-center operator in the Lorentz approximation
+\end_layout
+
+\begin_layout Author
+François-Xavier DUTHOIT
+\end_layout
+
+\begin_layout Section
+Guiding-center collision operator and particle transport
+\end_layout
+
+\begin_layout Standard
+We place ourselves here in the Lorentz approximation 
+\begin_inset Formula $m_{e}\ll m_{i}$
+\end_inset
+
+.
+ The magnetic field is considered uniform, with expression 
+\begin_inset Formula $\mathbf{B}=B\hat{\mathbf{b}}$
+\end_inset
+
+.
+ The Fokker-Planck collision operator in the Lorentz approximation has the
+ following expression, assuming zero fluid velocities for electrons and
+ ions :
+\begin_inset Formula \begin{equation}
+C\left[f_{e}\right]=\frac{\nu_{ei}}{2}2^{\frac{3}{2}}v_{the}^{3}\boldsymbol{\partial}\cdot\left(\mathbb{Q}\cdot\boldsymbol{\partial}f_{e}\right)\label{eq:}\end{equation}
+
+\end_inset
+
+Where 
+\begin_inset Formula $\boldsymbol{\partial}=\hat{\mathbf{v}}_{\alpha}\frac{\partial}{\partial v_{\alpha}}$
+\end_inset
+
+ is the velocity-space del operator and 
+\begin_inset Formula $\mathbb{Q}\left(v\right)=\frac{\mathbb{I}}{v}-\frac{\mathbf{v}\otimes\mathbf{v}}{v^{3}}=\frac{\delta_{\alpha\beta}}{v}-\frac{v_{\alpha}v_{\beta}}{v^{3}}$
+\end_inset
+
+ , 
+\begin_inset Formula $\mathbb{I}$
+\end_inset
+
+ being the identity matrix.
+ The guiding-center collision operator reads : 
+\begin_inset Formula \begin{equation}
+C_{gc}\left[f_{e}\right]=\left\langle e^{\boldsymbol{\rho}\cdot\nabla}C\left[e^{-\boldsymbol{\rho}\cdot\nabla}f_{e}\right]\right\rangle \label{eq:-1}\end{equation}
+
+\end_inset
+
+Where 
+\begin_inset Formula $\left\langle \,\right\rangle $
+\end_inset
+
+ denotes the gyroangle averaging, 
+\begin_inset Formula $\boldsymbol{\rho}=\frac{1}{\Omega_{e}}\hat{\mathbf{b}}\times\mathbf{v}$
+\end_inset
+
+ is the gyro-radius and 
+\begin_inset Formula $e^{\boldsymbol{\rho}\cdot\nabla}$
+\end_inset
+
+  the guiding-center transformation.
+ Here, we use a maxwellian as the distribution function.
+ Its expression reads :
+\begin_inset Formula \begin{equation}
+f_{Me}=\frac{n_{e}}{\left(2\pi\right)^{\frac{3}{2}}v_{the}^{3}}\exp\left(-\frac{v^{2}}{2v_{the}^{2}}\right)\label{eq:-2}\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $n_{e}$
+\end_inset
+
+ is the electron density and 
+\begin_inset Formula $v_{the}=\sqrt{\frac{T_{e}}{m_{e}}}$
+\end_inset
+
+ the electron thermal velocity with the electron temperature 
+\begin_inset Formula $T_{e}$
+\end_inset
+
+ in eV.
+ Applying the guiding-center transformation to this maxwellian gives, at
+ first order and assuming that the temperature gradient is zero (we only
+ look at particle transport) : 
+\begin_inset Formula \[
+e^{-\boldsymbol{\rho}\cdot\nabla}f_{Me}=\left(1-\boldsymbol{\rho}\cdot\frac{\nabla n_{e}}{n_{e}}\right)f_{Me}\]
+
+\end_inset
+
+We can therefore deduce :
+\begin_inset Formula \begin{eqnarray*}
+\mathbb{Q}\cdot\boldsymbol{\partial}\left(e^{-\boldsymbol{\rho}\cdot\nabla}f_{Me}\right) & = & \mathbb{Q}\cdot\left[\boldsymbol{\partial}f_{Me}-\boldsymbol{\partial}\left(\boldsymbol{\rho}\cdot\frac{\nabla n_{e}}{n_{e}}f_{Me}\right)\right]\\
+ & = & \mathbb{Q}\cdot\mathbf{v}\frac{1}{v_{the}^{2}}f_{Me}-\mathbb{Q}\cdot\boldsymbol{\partial}\left(\boldsymbol{\rho}\cdot\frac{\nabla n_{e}}{n_{e}}f_{Me}\right)\\
+ & = & -\mathbb{Q}\cdot\boldsymbol{\partial}\left(\boldsymbol{\rho}\cdot\frac{\nabla n_{e}}{n_{e}}f_{Me}\right)\end{eqnarray*}
+
+\end_inset
+
+The last expression comes from the fact that 
+\begin_inset Formula $\mathbb{Q}\cdot\mathbf{v}=\frac{\mathbf{v}}{v}-\frac{\mathbf{v}}{v}=0$
+\end_inset
+
+.
+ The expression of the guiding-center collision operator reads, defining
+ 
+\begin_inset Formula $K\equiv\frac{\nu_{ei}}{2}2^{\frac{3}{2}}v_{the}^{3}$
+\end_inset
+
+ : 
+\begin_inset Formula \begin{equation}
+C_{gc}\left[f_{Me}\right]=-K\left\langle \left(1+\boldsymbol{\rho}\cdot\nabla\right)\boldsymbol{\partial}\cdot\left[\mathbb{Q}\cdot\boldsymbol{\partial}\left(\boldsymbol{\rho}\cdot\frac{\nabla n_{e}}{n_{e}}f_{Me}\right)\right]\right\rangle \label{eq:-3}\end{equation}
+
+\end_inset
+
+We now integrate this expression over velocity phase-space.
+ We therefore have, defining 
+\begin_inset Formula $\int=\int d^{3}\mathbf{v}$
+\end_inset
+
+ :
+\begin_inset Formula \[
+\int C_{gc}\left[f_{Me}\right]=-K\int\left\langle \left(1+\boldsymbol{\rho}\cdot\nabla\right)\boldsymbol{\partial}\cdot\left[\mathbb{Q}\cdot\boldsymbol{\partial}\left(\boldsymbol{\rho}\cdot\frac{\nabla n_{e}}{n_{e}}f_{Me}\right)\right]\right\rangle \]
+
+\end_inset
+
+Integrating by parts, the expression becomes :
+\begin_inset Formula \begin{eqnarray*}
+\int C_{gc}\left[f_{Me}\right] & = & K\int\left\langle \boldsymbol{\partial}\left(\boldsymbol{\rho}\cdot\nabla\right)\cdot\mathbb{Q}\cdot\boldsymbol{\partial}\left(\boldsymbol{\rho}\cdot\frac{\nabla n_{e}}{n_{e}}f_{Me}\right)\right\rangle \\
+ & = & K\nabla\cdot\int\left\langle \left(\boldsymbol{\partial}\otimes\boldsymbol{\rho}\right)^{T}\cdot\mathbb{Q}\cdot\boldsymbol{\partial}\left(\boldsymbol{\rho}\cdot\frac{\nabla n_{e}}{n_{e}}f_{Me}\right)\right\rangle \end{eqnarray*}
+
+\end_inset
+
+Since 
+\begin_inset Formula $\boldsymbol{\rho}$
+\end_inset
+
+ is linear in 
+\begin_inset Formula $\mathbf{v}$
+\end_inset
+
+, 
+\begin_inset Formula $\boldsymbol{\partial}\otimes\boldsymbol{\rho}$
+\end_inset
+
+ doesn't depend on 
+\begin_inset Formula $\mathbf{v}$
+\end_inset
+
+.
+ We can therefore take it out of the integral and integrate by parts one
+ more time :
+\begin_inset Formula \begin{eqnarray}
+\int C_{gc}\left[f_{Me}\right] & = & -K\nabla\cdot\left\langle \left(\boldsymbol{\partial}\otimes\boldsymbol{\rho}\right)^{T}\cdot\int\left(\boldsymbol{\partial}\cdot\mathbb{Q}\right)\left(\boldsymbol{\rho}\cdot\frac{\nabla n_{e}}{n_{e}}f_{Me}\right)\right\rangle \nonumber \\
+ & = & -K\nabla\cdot\left\langle \int\left[\left(\boldsymbol{\partial}\cdot\mathbb{Q}\right)\cdot\left(\boldsymbol{\partial}\otimes\boldsymbol{\rho}\right)\right]\left(\boldsymbol{\rho}\cdot\frac{\nabla n_{e}}{n_{e}}f_{Me}\right)\right\rangle \label{eq:-4}\end{eqnarray}
+
+\end_inset
+
+We then calculate 
+\begin_inset Formula $\boldsymbol{\partial}\cdot\mathbb{Q}$
+\end_inset
+
+.
+ Using the coordinate expression of 
+\begin_inset Formula $\mathbb{Q}$
+\end_inset
+
+, we get :
+\begin_inset Formula \begin{eqnarray}
+\boldsymbol{\partial}\cdot\mathbb{Q} & = & \frac{\partial}{\partial v_{\alpha}}\left(\frac{\delta_{\alpha\beta}}{v}-\frac{v_{\alpha}v_{\beta}}{v^{3}}\right)\nonumber \\
+ & = & -\frac{\delta_{\alpha\beta}v_{\alpha}}{v^{3}}-3\frac{v_{\beta}}{v}-\frac{\delta_{\alpha\beta}v_{\alpha}}{v^{3}}+3\frac{v_{\alpha}v_{\alpha}v_{\beta}}{v^{5}}\nonumber \\
+ & = & -2\frac{\mathbf{v}}{v^{3}}\label{eq:-5}\end{eqnarray}
+
+\end_inset
+
+Inserting this expression into (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-4"
+
+\end_inset
+
+) and using the property 
+\begin_inset Formula $\left(\mathbf{a}\cdot\mathbb{B}\right)\left(\mathbf{c}\cdot\mathbf{d}\right)=a_{\alpha}B_{\alpha\beta}c_{\gamma}d_{\gamma}=\mathbf{a}\cdot\left(B\otimes\mathbf{c}\right)\cdot\mathbf{d}$
+\end_inset
+
+, we have :
+\begin_inset Formula \begin{equation}
+\int C_{gc}\left[f_{Me}\right]=2K\nabla\cdot\int\frac{\mathbf{v}}{v^{3}}\cdot\left\langle \left(\boldsymbol{\partial}\otimes\boldsymbol{\rho}\right)\otimes\boldsymbol{\rho}\right\rangle \cdot\frac{\nabla n_{e}}{n_{e}}f_{Me}\label{eq:-6}\end{equation}
+
+\end_inset
+
+Since the dyadic product is associative, we have 
+\begin_inset Formula $\left\langle \left(\boldsymbol{\partial}\otimes\boldsymbol{\rho}\right)\otimes\boldsymbol{\rho}\right\rangle =\left\langle \boldsymbol{\partial}\otimes\left(\boldsymbol{\rho}\otimes\boldsymbol{\rho}\right)\right\rangle =\boldsymbol{\partial}\otimes\left\langle \boldsymbol{\rho}\otimes\boldsymbol{\rho}\right\rangle $
+\end_inset
+
+.
+ We then use the expression of the gyro-radius using the following definition
+ of the velocity :
+\begin_inset Formula \[
+\mathbf{v}=\mathbf{v}_{\perp}+v_{\parallel}\hat{\mathbf{b}}=v\sin\Xi(-\sin\zeta\hat{\mathbf{x}}+\cos\zeta\hat{\mathbf{y}})+v\cos\Xi\hat{\mathbf{b}}\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\Xi$
+\end_inset
+
+ is the pitch-angle, 
+\begin_inset Formula $\zeta$
+\end_inset
+
+ the gyro-angle and 
+\begin_inset Formula $\left(\hat{\mathbf{x}},\hat{\mathbf{y}},\hat{\mathbf{b}}\right)$
+\end_inset
+
+ an orthonormal base.
+ The gyro-radius reads :
+\begin_inset Formula \begin{equation}
+\boldsymbol{\rho}=\frac{\hat{\mathbf{b}}\times\mathbf{v}}{\Omega_{e}}=\frac{v\sin\Xi}{\Omega_{e}}\left(\cos\zeta\hat{\mathbf{x}}+\sin\zeta\hat{\mathbf{y}}\right)\label{eq:-7}\end{equation}
+
+\end_inset
+
+We therefore have : 
+\begin_inset Formula \begin{equation}
+\boldsymbol{\rho}\otimes\boldsymbol{\rho}=\frac{v^{2}\sin^{2}\Xi}{\Omega_{e}^{2}}\left(\begin{array}{ccc}
+\cos^{2}\zeta & \sin\zeta\cos\zeta & 0\\
+\sin\zeta\cos\zeta & \sin^{2}\zeta & 0\\
+0 & 0 & 0\end{array}\right)\label{eq:-8}\end{equation}
+
+\end_inset
+
+We then deduce :
+\begin_inset Formula \begin{equation}
+\left\langle \boldsymbol{\rho}\otimes\boldsymbol{\rho}\right\rangle =\frac{v^{2}\sin^{2}\Xi}{2\Omega_{e}^{2}}\left(\mathbb{I}-\hat{\mathbf{b}}\otimes\hat{\mathbf{b}}\right)\label{eq:-9}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\boldsymbol{\partial}\otimes\left\langle \boldsymbol{\rho}\otimes\boldsymbol{\rho}\right\rangle =\frac{\sin^{2}\Xi}{2\Omega_{e}^{2}}\mathbf{v}\otimes\left(\mathbb{I}-\hat{\mathbf{b}}\otimes\hat{\mathbf{b}}\right)\label{eq:-10}\end{equation}
+
+\end_inset
+
+Inserting (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-10"
+
+\end_inset
+
+) into (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-6"
+
+\end_inset
+
+), we have :
+\begin_inset Formula \begin{eqnarray*}
+\int C_{gc}\left[f_{Me}\right] & = & \frac{K}{\Omega_{e}^{2}}\nabla\cdot\int\frac{\sin^{2}\Xi}{v}\left(\mathbb{I}-\hat{\mathbf{b}}\otimes\hat{\mathbf{b}}\right)\cdot\frac{\nabla n_{e}}{n_{e}}f_{Me}\\
+ & = & \frac{K}{\Omega_{e}^{2}}\nabla\cdot\left(\mathbb{I}-\hat{\mathbf{b}}\otimes\hat{\mathbf{b}}\right)\cdot\nabla n_{e}\int\frac{\sin^{2}\Xi}{v}\frac{f_{Me}}{n_{e}}\end{eqnarray*}
+
+\end_inset
+
+Inserting (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-2"
+
+\end_inset
+
+) and integrating over the pitch-angle velocity coordinates 
+\begin_inset Formula $\left(v,\Xi,\varphi\right)$
+\end_inset
+
+, we have :
+\begin_inset Formula \begin{eqnarray*}
+\int C_{gc}\left[f_{Me}\right] & = & \frac{\nu_{ei}}{2\pi^{\frac{3}{2}}\Omega_{e}^{2}}\nabla\cdot\left(\mathbb{I}-\hat{\mathbf{b}}\otimes\hat{\mathbf{b}}\right)\cdot\int_{0}^{\infty}v^{2}dv\int_{0}^{\pi}sin\Xi d\Xi\int_{0}^{2\pi}d\varphi\frac{\sin^{2}\Xi}{v}\exp\left(-\frac{v^{2}}{2v_{the}^{2}}\right)\nabla n_{e}\\
+ & = & \frac{\nu_{ei}}{\sqrt{\pi}\Omega_{e}^{2}}\nabla\cdot\left(\mathbb{I}-\hat{\mathbf{b}}\otimes\hat{\mathbf{b}}\right)\cdot\nabla n_{e}\int_{0}^{\infty}v\exp\left(-\frac{v^{2}}{2v_{the}^{2}}\right)dv\int_{0}^{\pi}\sin^{3}\Xi d\Xi\\
+ & = & \frac{4\nu_{ei}v_{the}^{2}}{3\sqrt{\pi}\Omega_{e}^{2}}\nabla\cdot\left(\mathbb{I}-\hat{\mathbf{b}}\otimes\hat{\mathbf{b}}\right)\cdot\nabla n_{e}\end{eqnarray*}
+
+\end_inset
+
+Using the expression of the Braginsky collision frequency 
+\begin_inset Formula $\nu_{ei}^{Brag}=\frac{4}{3\sqrt{\pi}}\nu_{ei}$
+\end_inset
+
+, the electron Larmor radius 
+\begin_inset Formula $\rho_{Le}=v_{the}/\Omega_{e}$
+\end_inset
+
+ and defining 
+\begin_inset Formula $\Delta_{\perp}$
+\end_inset
+
+ as the laplacian on the radial plane, we nally have :
+\begin_inset Formula \begin{equation}
+\boxed{\int C_{gc}\left[f_{Me}\right]=\rho_{Le}^{2}\nu_{ei}^{Brag}\Delta_{\perp}n_{e}=D_{class}\Delta_{\perp}n_{e}}\label{eq:-11}\end{equation}
+
+\end_inset
+
+We note here that the 
+\begin_inset Formula $0^{th}$
+\end_inset
+
+ moment of the guiding-center collision operator isn't zero like the normal
+ collision operator, and that it is related to classical transport.
+\end_layout
+
+\begin_layout Section
+Guiding-center collision operator and energy transport
+\end_layout
+
+\begin_layout Standard
+To study energy transport, we have to take into account both the density
+ and temperature gradients while operating the guiding-center transformation.
+ Using the expression of  
+\begin_inset Formula $f_{Me}$
+\end_inset
+
+ and since only the electron thermal velocity depends on the electron temperatur
+e, we can deduce : 
+\begin_inset Formula \begin{eqnarray*}
+e^{-\boldsymbol{\rho}\cdot\nabla}f_{Me} & = & \left(1-\boldsymbol{\rho}\cdot\left[\frac{\nabla n_{e}}{n_{e}}+\frac{\nabla v_{the}}{v_{the}}\left(\frac{v^{2}}{v_{the}^{2}}-3\right)\right]\right)f_{Me}\\
+ & = & \left(1-\boldsymbol{\rho}\cdot\mathbf{L}\right)f_{Me}\end{eqnarray*}
+
+\end_inset
+
+Defining 
+\begin_inset Formula $\mathbf{L}\equiv\frac{\nabla n_{e}}{n_{e}}+\frac{\nabla v_{the}}{v_{the}}\left(\frac{v^{2}}{v_{the}^{2}}-3\right)$
+\end_inset
+
+.
+ Using the same reasoning and term definition as (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-3"
+
+\end_inset
+
+), we have :
+\begin_inset Formula \[
+C_{gc}\left[f_{Me}\right]=-K\left\langle \left(1+\boldsymbol{\rho}\cdot\nabla\right)\boldsymbol{\partial}\cdot\left[\mathbb{Q}\cdot\boldsymbol{\partial}\left(\boldsymbol{\rho}\cdot\mathbf{L}f_{Me}\right)\right]\right\rangle \]
+
+\end_inset
+
+We can then deduce the expression of the collisional heating :
+\begin_inset Formula \[
+\int m_{e}v^{2}C_{gc}\left[f_{Me}\right]=-m_{e}K\left\langle \int v^{2}\left(1+\boldsymbol{\rho}\cdot\nabla\right)\boldsymbol{\partial}\cdot\left[\mathbb{Q}\cdot\boldsymbol{\partial}\left(\boldsymbol{\rho}\cdot\mathbf{L}f_{Me}\right)\right]\right\rangle \]
+
+\end_inset
+
+Integrating by parts gives :
+\begin_inset Formula \begin{eqnarray*}
+\int m_{e}v^{2}C_{gc}\left[f_{Me}\right] & = & m_{e}K\left\langle \int\boldsymbol{\partial}\left[v^{2}\left(1+\boldsymbol{\rho}\cdot\nabla\right)\right]\cdot\mathbb{Q}\cdot\boldsymbol{\partial}\left(\boldsymbol{\rho}\cdot\mathbf{L}f_{Me}\right)\right\rangle \\
+ & = & m_{e}K\left\langle \int\left[2\mathbf{v}\left(1+\boldsymbol{\rho}\cdot\nabla\right)+v^{2}\nabla\cdot\left(\boldsymbol{\partial}\otimes\boldsymbol{\rho}\right)^{T}\right]\cdot\mathbb{Q}\cdot\boldsymbol{\partial}\left(\boldsymbol{\rho}\cdot\mathbf{L}f_{Me}\right)\right\rangle \\
+ & = & m_{e}K\nabla\cdot\left\langle \int v^{2}\left(\boldsymbol{\partial}\otimes\boldsymbol{\rho}\right)^{T}\cdot\mathbb{Q}\cdot\boldsymbol{\partial}\left(\boldsymbol{\rho}\cdot\mathbf{L}f_{Me}\right)\right\rangle \end{eqnarray*}
+
+\end_inset
+
+The last expression comes from the fact that 
+\begin_inset Formula $\mathbf{v}\cdot\mathbb{Q}=0$
+\end_inset
+
+.
+ We have seen that 
+\begin_inset Formula $\left(\boldsymbol{\partial}\otimes\boldsymbol{\rho}\right)^{T}$
+\end_inset
+
+ doesn't depend on v, therefore we can take it out of the integral and integrate
+ by parts.
+ We then have, using the same method as above :
+\begin_inset Formula \begin{eqnarray*}
+\int m_{e}v^{2}C_{gc}\left[f_{Me}\right] & = & -m_{e}K\nabla\cdot\left\langle \left(\boldsymbol{\partial}\otimes\boldsymbol{\rho}\right)^{T}\cdot\int\boldsymbol{\partial}\cdot-v^{2}\mathbb{Q}\cdot\left(\boldsymbol{\rho}\cdot\mathbf{L}f_{Me}\right)\right\rangle \\
+ & = & -m_{e}K\nabla\cdot\left\langle \left(\boldsymbol{\partial}\otimes\boldsymbol{\rho}\right)^{T}\cdot\int-2\mathbf{v}\cdot\mathbb{Q}+v^{2}\boldsymbol{\partial}\cdot\mathbb{Q}\cdot\left(\boldsymbol{\rho}\cdot\mathbf{L}f_{Me}\right)\right\rangle \\
+ & = & -m_{e}K\nabla\cdot\left\langle \left(\boldsymbol{\partial}\otimes\boldsymbol{\rho}\right)^{T}\cdot\int v^{2}\boldsymbol{\partial}\cdot\mathbb{Q}\left(\boldsymbol{\rho}\cdot\mathbf{L}f_{Me}\right)\right\rangle \\
+ & = & -m_{e}K\nabla\cdot\left\langle \int v^{2}\left(\boldsymbol{\partial}\cdot\mathbb{Q}\right)\cdot\left(\boldsymbol{\partial}\otimes\boldsymbol{\rho}\right)\left(\boldsymbol{\rho}\cdot\mathbf{L}f_{Me}\right)\right\rangle \\
+ & = & -m_{e}K\nabla\cdot\int v^{2}\left(\boldsymbol{\partial}\cdot\mathbb{Q}\right)\cdot\left(\boldsymbol{\partial}\otimes\left\langle \boldsymbol{\rho}\otimes\boldsymbol{\rho}\right\rangle \right)\cdot\mathbf{L}f_{Me}\end{eqnarray*}
+
+\end_inset
+
+Using the expressions previously found at (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-5"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-10"
+
+\end_inset
+
+), the expression reads :
+\begin_inset Formula \begin{eqnarray*}
+\int m_{e}v^{2}C_{gc}\left[f_{Me}\right] & = & 2m_{e}K\nabla\cdot\int\frac{\mathbf{v}}{v}\cdot\frac{\sin^{2}\Xi}{2\Omega_{e}^{2}}\left[\mathbf{v}\otimes\left(\mathbb{I}-\hat{\mathbf{b}}\otimes\hat{\mathbf{b}}\right)\right]\cdot\mathbf{L}f_{Me}\\
+ & = & m_{e}K\Omega_{e}^{2}\nabla\cdot\left(\mathbb{I}-\hat{\mathbf{b}}\otimes\hat{\mathbf{b}}\right)\cdot\int v\sin^{2}\Xi\mathbf{L}f_{Me}\end{eqnarray*}
+
+\end_inset
+
+Inserting (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-2"
+
+\end_inset
+
+) and integrating over the pitch-angle velocity coordinates 
+\begin_inset Formula $\left(v,\Xi,\varphi\right)$
+\end_inset
+
+, we have :
+\begin_inset Formula \begin{eqnarray*}
+\int m_{e}v^{2}C_{gc}\left[f_{Me}\right] & = & \frac{m_{e}\nu_{ei}v_{the}^{3}}{2\pi^{\frac{3}{2}}\Omega_{e}^{2}}\nabla\cdot\left(\mathbb{I}-\hat{\mathbf{b}}\otimes\hat{\mathbf{b}}\right)\cdot\int_{0}^{\infty}v^{2}dv\int_{0}^{\pi}sin\Xi d\Xi\int_{0}^{2\pi}d\varphi v\sin^{2}\Xi\mathbf{L}n_{e}v_{the}^{3}\exp\left(-\frac{v^{2}}{2v_{the}^{2}}\right)\nabla n_{e}\\
+ & = & \frac{m_{e}\nu_{ei}v_{the}^{3}}{\sqrt{\pi}\Omega_{e}^{2}}\nabla\cdot\left(\mathbb{I}-\hat{\mathbf{b}}\otimes\hat{\mathbf{b}}\right)\cdot\int_{0}^{\infty}v^{3}\left(\frac{\nabla n_{e}}{v_{the}^{3}}-3\frac{n_{e}\nabla v_{the}}{v_{the}^{4}}+v^{2}\frac{n_{e}\nabla v_{the}}{v_{the}^{6}}\right)\exp\left(-\frac{v^{2}}{2v_{the}^{2}}\right)dv\int_{0}^{\pi}\sin^{3}\Xi d\Xi\\
+ & = & \frac{4m_{e}\nu_{ei}v_{the}^{3}}{3\sqrt{\pi}\Omega_{e}^{2}}\nabla\cdot\left(\mathbb{I}-\hat{\mathbf{b}}\otimes\hat{\mathbf{b}}\right)\cdot\left(2v_{the}\nabla n_{e}-6n_{e}\nabla v_{the}+8n_{e}\nabla v_{the}\right)\end{eqnarray*}
+
+\end_inset
+
+The last expression comes from the integration by parts recurrence 
+\begin_inset Formula $\int v^{n}\exp\left(-\frac{v^{2}}{2v_{the}^{2}}\right)dv=v_{the}^{2}\left(n-1\right)\int v^{n-2}\exp\left(-\frac{v^{2}}{2v_{the}^{2}}\right)dv$
+\end_inset
+
+ for 
+\begin_inset Formula $n>1$
+\end_inset
+
+, with 
+\begin_inset Formula $\int v\exp\left(-\frac{v^{2}}{2v_{the}^{2}}\right)=v_{the}^{2}$
+\end_inset
+
+.
+ The expression becomes :
+\begin_inset Formula \[
+\int m_{e}v^{2}C_{gc}\left[f_{Me}\right]=2\frac{4m_{e}\nu_{ei}v_{the}^{3}}{3\sqrt{\pi}\Omega_{e}^{2}}\nabla\cdot\left(\mathbb{I}-\hat{\mathbf{b}}\otimes\hat{\mathbf{b}}\right)\cdot\left(v_{the}\nabla n_{e}+n_{e}\nabla v_{the}\right)\]
+
+\end_inset
+
+Using the expression of the electron thermal velocity, we have 
+\begin_inset Formula $\nabla v_{the}=\frac{1}{2}\sqrt{\frac{1}{m_{e}T_{e}}}\nabla T_{e}=\frac{1}{2}\frac{\nabla T_{e}}{m_{e}v_{the}}$
+\end_inset
+
+ .
+ Using the electron Larmor radius and the Braginsky collision frequency,
+ the expression reads :
+\begin_inset Formula \begin{eqnarray*}
+\int m_{e}v^{2}C_{gc}\left[f_{Me}\right] & = & \frac{1}{2}\rho_{Le}^{2}\nu_{ei}^{Brag}v_{the}\nabla\cdot\left(\mathbb{I}-\hat{\mathbf{b}}\otimes\hat{\mathbf{b}}\right)\cdot\frac{1}{v_{the}}\left(2T_{e}\nabla n_{e}+n_{e}\nabla T_{e}\right)\\
+ & = & \frac{1}{2}\rho_{Le}^{2}\nu_{ei}^{Brag}v_{the}\nabla\cdot\left(\mathbb{I}-\hat{\mathbf{b}}\otimes\hat{\mathbf{b}}\right)\cdot\frac{1}{v_{the}}\left[T_{e}\nabla n_{e}+\nabla\left(n_{e}T_{e}\right)\right]\end{eqnarray*}
+
+\end_inset
+
+Defining the electron pressure 
+\begin_inset Formula $Pe\equiv n_{e}T_{e}$
+\end_inset
+
+ and the classical diffusion coefficient 
+\begin_inset Formula $D_{class}\equiv\rho_{Le}^{2}\nu_{ei}^{Brag}$
+\end_inset
+
+ , the final expression reads :
+\begin_inset Formula \begin{equation}
+\boxed{\int m_{e}v^{2}C_{gc}\left[f_{Me}\right]=\frac{1}{2}D_{class}v_{the}\nabla_{\perp}\cdot\frac{1}{v_{the}}\left(T_{e}\nabla_{\perp}n_{e}+\nabla_{\perp}Pe\right)}\label{eq:-12}\end{equation}
+
+\end_inset
+
+We can see that with a constant temperature, the expression becomes :
+\begin_inset Formula \[
+\int m_{e}v^{2}C_{gc}\left[f_{Me}\right]=D_{class}T_{e}\Delta_{\perp}n_{e}\]
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

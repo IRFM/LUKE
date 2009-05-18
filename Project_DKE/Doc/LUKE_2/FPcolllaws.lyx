@@ -1,0 +1,611 @@
+#LyX 1.6.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Conservation laws for the FP collision operator
+\end_layout
+
+\begin_layout Author
+François-Xavier DUTHOIT
+\end_layout
+
+\begin_layout Section
+Expression of the collision operator
+\end_layout
+
+\begin_layout Standard
+The Fokker-Planck collision operator for a test particle 
+\begin_inset Formula $a$
+\end_inset
+
+ moving in field particles 
+\begin_inset Formula $b$
+\end_inset
+
+ with distribution functions respectively 
+\begin_inset Formula $f_{a}$
+\end_inset
+
+ and 
+\begin_inset Formula $f_{b}$
+\end_inset
+
+ in velocity phase spaces 
+\begin_inset Formula $V$
+\end_inset
+
+ and 
+\begin_inset Formula $V'$
+\end_inset
+
+ has the following expression :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+C_{a}=\sum_{b}C_{ab}\label{eq:}\end{equation}
+
+\end_inset
+
+Where :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+C_{ab}=-2\pi e_{a}^{2}e_{b}^{2}m_{a}\ln\Lambda\frac{\partial}{\partial v_{\alpha}}\int_{V'}d^{3}\mathbf{v'}\left[\frac{f_{a}\left(v\right)}{m_{b}}\frac{\partial f_{b}\left(v'\right)}{\partial v'_{\beta}}-\frac{f_{b}\left(v'\right)}{m_{a}}\frac{\partial f_{a}\left(v\right)}{\partial v_{\beta}}\right]Q_{\alpha\beta}\left(\mathbf{v}-\mathbf{v'}\right)\label{eq:-1}\end{equation}
+
+\end_inset
+
+A sum of repeated cartesian indices 
+\begin_inset Formula $\left(\alpha,\beta\right)$
+\end_inset
+
+ is implied.
+ The expression of 
+\begin_inset Formula $Q_{\alpha\beta}$
+\end_inset
+
+ is, noting 
+\begin_inset Formula $x=\left|\mathbf{x}\right|$
+\end_inset
+
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+Q_{\alpha\beta}\left(\mathbf{x}\right)\equiv x^{-3}\left(x^{2}\delta_{\alpha\beta}-x_{\alpha}x_{\beta}\right)\label{eq:-2}\end{equation}
+
+\end_inset
+
+We can note that the collision operator is in divergence form :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{C_{ab}=-\frac{\Gamma_{ab}}{2m_{a}}\boldsymbol{\partial}\cdot\boldsymbol{\Lambda}_{ab}}\label{eq:-3}\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\Gamma_{ab}=\Gamma_{ba}\equiv4\pi e_{a}^{2}e_{b}^{2}\ln\Lambda$
+\end_inset
+
+ and 
+\begin_inset Formula $\boldsymbol{\Lambda}_{ab}\equiv\int\mathbb{Q}\left(\mathbf{v}-\mathbf{v'}\right)\cdot\left(\frac{f_{a}}{m_{b}}\boldsymbol{\partial'}f_{b}-\frac{f_{b}}{m_{a}}\boldsymbol{\partial}f_{a}\right)$
+\end_inset
+
+.
+ Here, 
+\begin_inset Formula $\boldsymbol{\partial}=\hat{\mathbf{v}}_{\alpha}\frac{\partial}{\partial v_{\alpha}}$
+\end_inset
+
+ and 
+\begin_inset Formula $\boldsymbol{\partial'}=\hat{\mathbf{v'}}_{\alpha}\frac{\partial}{\partial v'_{\alpha}}$
+\end_inset
+
+ are the del operators for test particle and field particle velocity phase
+ space and 
+\begin_inset Formula $\mathbb{Q}$
+\end_inset
+
+ is the tensor associated with 
+\begin_inset Formula $Q_{\alpha\beta}$
+\end_inset
+
+.
+ We also note 
+\begin_inset Formula $\int=\int_{V}d^{3}\mathbf{v}$
+\end_inset
+
+ and 
+\begin_inset Formula $\int'=\int_{V'}d^{3}\mathbf{v'}$
+\end_inset
+
+.
+ It is important to note that another expression for 
+\begin_inset Formula $\mathbb{Q}$
+\end_inset
+
+ is 
+\begin_inset Formula $\mathbb{Q}\left(\mathbf{x}\right)=x^{-3}\left(x^{2}\mathbb{I}-\mathbf{x}\otimes\mathbf{x}\right)$
+\end_inset
+
+ where 
+\begin_inset Formula $\mathbb{I}$
+\end_inset
+
+ is the identity matrix.
+ Therefore, we have the two properties 
+\begin_inset Formula $\mathbb{Q}\left(-\mathbf{x}\right)=\mathbb{Q}\left(\mathbf{x}\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbf{x}\cdot\mathbb{Q}\left(\mathbf{x}\right)=\mathbb{Q}\left(\mathbf{x}\right)\cdot\mathbf{x}=0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Conservation laws
+\end_layout
+
+\begin_layout Subsection
+Particle conservation law
+\end_layout
+
+\begin_layout Standard
+The particle conservation law is expressed as :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\int C_{ab}=0}\label{eq:-4}\end{equation}
+
+\end_inset
+
+The integral can be expressed as :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\int C_{ab}=-\frac{\Gamma_{ab}}{2m_{a}}\int\boldsymbol{\partial}\cdot\boldsymbol{\Lambda}_{ab}=-\frac{\Gamma_{ab}}{2m_{a}}\oiint_{\partial V}d^{2}v\boldsymbol{\Lambda}_{ab}\cdot\mathbf{n}\]
+
+\end_inset
+
+This last integral has a value of zero since 
+\begin_inset Formula $\boldsymbol{\Lambda}_{ab}$
+\end_inset
+
+ is physically required to have a zero limit at the phase space boundaries.
+\end_layout
+
+\begin_layout Subsection
+Momentum conservation law
+\end_layout
+
+\begin_layout Standard
+The momentum conservation law is expressed as :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\int\left(m_{a}\mathbf{v}C_{ab}+m_{b}\mathbf{v}C_{ba}\right)=0}\label{eq:-5}\end{equation}
+
+\end_inset
+
+We define the following term :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{P}_{ab}\equiv\int m_{a}\mathbf{v}C_{ab}=-\frac{\Gamma_{ab}}{2}\int\mathbf{v}\left(\boldsymbol{\partial}\cdot\boldsymbol{\Lambda}_{ab}\right)\]
+
+\end_inset
+
+We notice that 
+\begin_inset Formula $\mathbf{v}\left(\boldsymbol{\partial}\cdot\boldsymbol{\Lambda}_{ab}\right)=\boldsymbol{\partial}\cdot\left(\mathbf{v}\otimes\boldsymbol{\Lambda}_{ab}\right)-\left(\boldsymbol{\partial}\otimes\mathbf{v}\right)\cdot\boldsymbol{\Lambda}_{ab}=\boldsymbol{\partial}\cdot\left(\mathbf{v}\otimes\boldsymbol{\Lambda}_{ab}\right)-\boldsymbol{\Lambda}_{ab}$
+\end_inset
+
+ since 
+\begin_inset Formula $\left(\boldsymbol{\partial}\otimes\mathbf{v}\right)=\mathbb{I}$
+\end_inset
+
+ is the identity matrix.
+ Using the zero-limit argument for 
+\begin_inset Formula $\boldsymbol{\partial}\cdot\left(\mathbf{v}\otimes\boldsymbol{\Lambda}_{ab}\right)$
+\end_inset
+
+, we deduce that 
+\begin_inset Formula $\int\boldsymbol{\partial}\cdot\left(\mathbf{v}\otimes\boldsymbol{\Lambda}_{ab}\right)=0$
+\end_inset
+
+.
+ We therefore have :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{P}_{ab}=\frac{\Gamma_{ab}}{2}\int\boldsymbol{\Lambda}_{ab}\]
+
+\end_inset
+
+Since 
+\begin_inset Formula $\Gamma_{ba}=\Gamma_{ab}$
+\end_inset
+
+, proving that 
+\begin_inset Formula $\mathbf{P}_{ba}=-\mathbf{P}_{ab}$
+\end_inset
+
+ is equivalent to proving that 
+\begin_inset Formula $\int\boldsymbol{\Lambda}_{ba}=-\int\boldsymbol{\Lambda}_{ab}$
+\end_inset
+
+.
+ We start from the expression :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\int\boldsymbol{\Lambda}_{ba}=\int\int'\mathbb{Q}\left(\mathbf{v}-\mathbf{v'}\right)\cdot\left(\frac{f_{a}}{m_{b}}\boldsymbol{\partial'}f_{b}-\frac{f_{b}}{m_{a}}\boldsymbol{\partial}f_{a}\right)\]
+
+\end_inset
+
+Using the fact that 
+\begin_inset Formula $\mathbb{Q}\left(\mathbf{v'}-\mathbf{v}\right)=\mathbb{Q}\left(\mathbf{v}-\mathbf{v'}\right)$
+\end_inset
+
+, we permute field and test particles 
+\begin_inset Formula $a\leftrightarrow b$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbf{v}\leftrightarrow\mathbf{v'}$
+\end_inset
+
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\int\boldsymbol{\Lambda}_{ba}=\int\int'\mathbb{Q}\left(\mathbf{v}-\mathbf{v'}\right)\cdot\left(\frac{f_{b}}{m_{a}}\boldsymbol{\partial}f_{a}-\frac{f_{a}}{m_{b}}\boldsymbol{\partial'}f_{b}\right)\]
+
+\end_inset
+
+We immediately have the relation :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\int\boldsymbol{\Lambda}_{ba}=-\int\boldsymbol{\Lambda}_{ab}\]
+
+\end_inset
+
+The collision operator therefore obeys the momentum conservation law.
+\end_layout
+
+\begin_layout Subsection
+Energy conservation law
+\end_layout
+
+\begin_layout Standard
+The energy conservation law is expressed as :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\boxed{\int\left(m_{a}v^{2}C_{ab}+m_{b}v^{2}C_{ba}\right)=0}\label{eq:-6}\end{equation}
+
+\end_inset
+
+We define the following term :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+E_{ab}\equiv\int m_{a}v^{2}C_{ab}=-\frac{\Gamma_{ab}}{2}\int\left(v^{2}\boldsymbol{\partial}\cdot\boldsymbol{\Lambda}_{ab}\right)\]
+
+\end_inset
+
+We notice that 
+\begin_inset Formula $v^{2}\left(\boldsymbol{\partial}\cdot\boldsymbol{\Lambda}_{ab}\right)=\boldsymbol{\partial}\cdot\left(v^{2}\boldsymbol{\Lambda}_{ab}\right)-\boldsymbol{\partial}v^{2}\cdot\boldsymbol{\Lambda}_{ab}=\boldsymbol{\partial}\cdot\left(v^{2}\boldsymbol{\Lambda}_{ab}\right)-2\mathbf{v}\cdot\boldsymbol{\Lambda}_{ab}$
+\end_inset
+
+.
+ Using the zero-limit argument for 
+\begin_inset Formula $\boldsymbol{\partial}\cdot\left(v^{2}\boldsymbol{\Lambda}_{ab}\right)$
+\end_inset
+
+, we deduce that 
+\begin_inset Formula $\int\boldsymbol{\partial}·\left(v^{2}\boldsymbol{\Lambda}_{ab}\right)=0$
+\end_inset
+
+.
+ We therefore have :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+E_{ab}=\Gamma_{ab}\int\mathbf{v}\cdot\boldsymbol{\Lambda}_{ab}\]
+
+\end_inset
+
+Since 
+\begin_inset Formula $\Gamma_{ba}=\Gamma_{ab}$
+\end_inset
+
+, proving that 
+\begin_inset Formula $E_{ba}=E_{ab}$
+\end_inset
+
+ is equivalent to proving that 
+\begin_inset Formula $\int\mathbf{v}·\boldsymbol{\Lambda}_{ba}=-\int\mathbf{v}·\boldsymbol{\Lambda}_{ab}$
+\end_inset
+
+.
+ First, we note that :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{v'}\cdot\mathbb{Q}\left(\mathbf{v'}-\mathbf{v}\right)=\left(\mathbf{v'}-\mathbf{v}\right)\cdot\mathbb{Q}\left(\mathbf{v'}-\mathbf{v}\right)+\mathbf{v}\cdot\mathbb{Q}\left(\mathbf{v'}-\mathbf{v}\right)=\mathbf{v}\cdot\mathbb{Q}\left(\mathbf{v}-\mathbf{v'}\right)\]
+
+\end_inset
+
+Since 
+\begin_inset Formula $\mathbb{Q}\left(\mathbf{v'}-\mathbf{v}\right)=\mathbb{Q}\left(\mathbf{v}-\mathbf{v'}\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $\left(\mathbf{v'}-\mathbf{v}\right)\cdot\mathbb{Q}\left(\mathbf{v'}-\mathbf{v}\right)=0$
+\end_inset
+
+.
+ Starting from the expression :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\int\mathbf{v}\cdot\boldsymbol{\Lambda}_{ba}=\int\int'\mathbf{v}\cdot\mathbb{Q}\left(\mathbf{v}-\mathbf{v'}\right)\cdot\left(\frac{f_{a}}{m_{b}}\boldsymbol{\partial'}f_{b}-\frac{f_{b}}{m_{a}}\boldsymbol{\partial}f_{a}\right)\]
+
+\end_inset
+
+Permuting field and test particles 
+\begin_inset Formula $a\leftrightarrow b$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbf{v}\leftrightarrow\mathbf{v'}$
+\end_inset
+
+, we therefore get :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\int\mathbf{v}\cdot\boldsymbol{\Lambda}_{ba}=\int\int'\mathbf{v}\cdot\mathbb{Q}\left(\mathbf{v}-\mathbf{v'}\right)\cdot\left(\frac{f_{b}}{m_{a}}\boldsymbol{\partial}f_{a}-\frac{f_{a}}{m_{b}}\boldsymbol{\partial'}f_{b}\right)\]
+
+\end_inset
+
+We immediately have the relation :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\int\mathbf{v}·\boldsymbol{\Lambda}_{ba}=-\int\mathbf{v}·\boldsymbol{\Lambda}_{ab}\]
+
+\end_inset
+
+The collision operator therefore obeys the energy conservation law.
+\end_layout
+
+\begin_layout Section
+Collision operator with maxwellian test particle and field distributions
+\end_layout
+
+\begin_layout Standard
+In this section, we assume the test and eld particles have a maxwellian
+ distribution with respective expressions :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray*}
+f_{a}\left(\mathbf{v}\right) & = & n_{a}\left(\frac{m_{a}}{2\pi k_{B}T_{a}}\right)^{\frac{3}{2}}\exp\left(-\frac{m_{a}}{2k_{B}T_{a}}v^{2}\right)\\
+f_{b}\left(\mathbf{v'}\right) & = & n_{b}\left(\frac{m_{b}}{2\pi k_{B}T_{b}}\right)^{\frac{3}{2}}\exp\left(-\frac{m_{b}}{2k_{B}T_{b}}v^{2}\right)\end{eqnarray*}
+
+\end_inset
+
+Where 
+\begin_inset Formula $T_{a}$
+\end_inset
+
+ and 
+\begin_inset Formula $T_{b}$
+\end_inset
+
+ are the respective temperatures and 
+\begin_inset Formula $k_{B}$
+\end_inset
+
+ is the Boltzmann constant.
+ We can therefore deduce :
+\begin_inset Formula \begin{eqnarray*}
+\boldsymbol{\partial}f_{a} & = & -\frac{m_{a}}{2k_{B}T_{a}}f_{a}\mathbf{v}\\
+\boldsymbol{\partial'}f_{b} & = & -\frac{m_{b}}{2k_{B}T_{b}}f_{b}\mathbf{v'}\end{eqnarray*}
+
+\end_inset
+
+Inserting these expressions into 
+\begin_inset Formula $C_{ab}$
+\end_inset
+
+, we get :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+C_{ab}=-\frac{\Gamma_{ab}}{2k_{B}m_{a}}\boldsymbol{\partial}·\int'\mathbb{Q}\left(\mathbf{v}-\mathbf{v'}\right)\cdot\left(\mathbf{v}T_{b}-\mathbf{v'}T_{a}\right)f_{a}\left(\mathbf{v}\right)f_{b}\left(\mathbf{v'}\right)\]
+
+\end_inset
+
+We can therefore see that if 
+\begin_inset Formula $T_{a}=T_{b}$
+\end_inset
+
+, the collision operator is zero, since 
+\begin_inset Formula $\mathbb{Q}\left(\mathbf{v'}-\mathbf{v}\right)\cdot\left(\mathbf{v'}-\mathbf{v}\right)=0$
+\end_inset
+
+.
+ This is consistent with the thermal equilibrium between test particles
+ and field particles in this case, in which no transport is present.
+\end_layout
+
+\begin_layout Section
+H-theorem for the collision operator
+\end_layout
+
+\begin_layout Standard
+In this section, we want to prove the H-theorem for the Fokker-Planck collision
+ operator, i.e.
+ that the entropy derivative is always positive with respect to collisions.
+ We consider the time derivative of the expression of the entropy integral
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray*}
+\frac{dS}{dt} & = & -\sum_{a}\frac{d}{dt}\int f_{a}\ln f_{a}\\
+ & = & -\sum_{a,b}\int\left(\ln f_{a}+1\right)C_{ab}\\
+ & = & -\sum_{a,b}\int\ln f_{a}C_{ab}\end{eqnarray*}
+
+\end_inset
+
+Cab corresponds to the time derivative of the distribution function due
+ to collisions, as described by the Vlasov equation.
+ The last expression comes with the fact that 
+\begin_inset Formula $\int C_{ab}=0$
+\end_inset
+
+, due to the particle conservation property.
+ Using the expression of the collision operator, we have :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{dS_{ab}}{dt}\equiv-\int\ln f_{a}C_{ab}=\frac{\Gamma_{ab}}{2m_{a}}\int\int'\ln f_{a}\boldsymbol{\partial}\cdot\left[\mathbb{Q}\left(\mathbf{v}-\mathbf{v'}\right)\cdot\left(\frac{f_{b}}{m_{a}}\boldsymbol{\partial}f_{a}-\frac{f_{a}}{m_{b}}\boldsymbol{\partial'}f_{b}\right)\right]\]
+
+\end_inset
+
+Integrating the expression by parts, it becomes :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{dS_{ab}}{dt}\equiv-\int\ln f_{a}C_{ab}=\frac{\Gamma_{ab}}{2m_{a}}\int\int'\left(\boldsymbol{\partial}\ln f_{a}\right)\cdot\mathbb{Q}\left(\mathbf{v}-\mathbf{v'}\right)\cdot\left(\frac{f_{b}}{m_{a}}\boldsymbol{\partial}f_{a}-\frac{f_{a}}{m_{b}}\boldsymbol{\partial'}f_{b}\right)\]
+
+\end_inset
+
+Doing the permutation 
+\begin_inset Formula $a\leftrightarrow b$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbf{v}\leftrightarrow\mathbf{v'}$
+\end_inset
+
+, we get :
+\begin_inset Formula \begin{eqnarray*}
+\frac{dS_{ba}}{dt}\equiv-\int\ln f_{b}C_{ba} & = & \frac{\Gamma_{ba}}{2m_{b}}\int\int'\left(\boldsymbol{\partial}\ln f_{b}\right)\cdot\mathbb{Q}\left(\mathbf{v'}-\mathbf{v}\right)\cdot\left(\frac{f_{a}}{m_{b}}\boldsymbol{\partial'}f_{b}-\frac{f_{b}}{m_{a}}\boldsymbol{\partial}f_{a}\right)\\
+ & = & -\frac{\Gamma_{ab}}{2m_{b}}\int\int'\left(\boldsymbol{\partial}\ln f_{b}\right)\cdot\mathbb{Q}\left(\mathbf{v}-\mathbf{v'}\right)\cdot\left(\frac{f_{b}}{m_{a}}\boldsymbol{\partial}f_{a}-\frac{f_{a}}{m_{b}}\boldsymbol{\partial'}f_{b}\right)\end{eqnarray*}
+
+\end_inset
+
+The total entropy derivative is the sum of those two contributions :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{dS}{dt}=\frac{1}{2}\sum_{a,b}\left(\frac{dS_{ab}}{dt}+\frac{dS_{ba}}{dt}\right)\]
+
+\end_inset
+
+We therefore have, using the relations 
+\begin_inset Formula $\boldsymbol{\partial}f_{a}=f_{a}\boldsymbol{\partial}\ln f_{a}$
+\end_inset
+
+ and 
+\begin_inset Formula $\boldsymbol{\partial'}f_{b}=f_{b}\boldsymbol{\partial'}\ln f_{b}$
+\end_inset
+
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray*}
+\frac{dS}{dt} & = & \frac{\Gamma_{ab}}{4}\int\int'\left(\frac{\boldsymbol{\partial'}\ln f_{b}}{m_{b}}-\frac{\boldsymbol{\partial}\ln f_{a}}{m_{a}}\right)\cdot\mathbb{Q}\left(\mathbf{v}-\mathbf{v'}\right)\cdot\left(\frac{\boldsymbol{\partial'}\ln f_{b}}{m_{b}}-\frac{\boldsymbol{\partial}\ln f_{a}}{m_{a}}\right)f_{a}f_{b}\\
+ & = & \frac{\Gamma_{ab}}{4}\int\int'\left[\mathbf{X}\cdot\mathbb{Q}\left(\mathbf{v}-\mathbf{v'}\right)\cdot\mathbf{X}\right]f_{a}f_{b}\end{eqnarray*}
+
+\end_inset
+
+Where 
+\begin_inset Formula $\mathbf{X}=\frac{\boldsymbol{\partial'}\ln f_{b}}{m_{b}}-\frac{\boldsymbol{\partial}\ln f_{a}}{m_{a}}$
+\end_inset
+
+ .
+ From the analogy with the inner product, we have 
+\begin_inset Formula $\mathbf{X}\cdot\mathbb{Q}\cdot\mathbf{X}\geq0$
+\end_inset
+
+.
+ We therefore immediately deduce 
+\begin_inset Formula $\boxed{\frac{dS}{dt}\geq0}$
+\end_inset
+
+ ; therefore the H-theorem is proven for the Fokker-Planck collision operator.
+\end_layout
+
+\end_body
+\end_document

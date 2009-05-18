@@ -1,0 +1,1040 @@
+#LyX 1.6.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\leftmargin 1.5cm
+\topmargin 1.5cm
+\rightmargin 1.5cm
+\bottommargin 1.5cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Phase-space Lagrangian and Lie transform in 
+\begin_inset Formula $\left(\mathbf{x},p,\xi,\theta\right)$
+\end_inset
+
+ coordinates
+\end_layout
+
+\begin_layout Author
+François-Xavier DUTHOIT
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\bhat}{\widehat{\mathsf{b}}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\extd}{\mathsf{d}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\cont}[1]{\iota_{#1}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Local phase-space coordinates and Lagrangian
+\end_layout
+
+\begin_layout Standard
+Here, we consider a charged particle of mass 
+\begin_inset Formula $m$
+\end_inset
+
+ and charge 
+\begin_inset Formula $e$
+\end_inset
+
+ moving in a magnetic field 
+\begin_inset Formula $\mathbf{B}=\nabla\times\mathbf{A}=B\bhat$
+\end_inset
+
+.
+ We use the following noncanonical local particle coordinates 
+\begin_inset Formula $z^{\alpha}=\left(\mathbf{x},p,\xi,\theta\right)$
+\end_inset
+
+ where 
+\begin_inset Formula $p=\left|\mathbf{p}\right|$
+\end_inset
+
+ is the momentum amplitude, 
+\begin_inset Formula $\xi=\mathbf{p}\cdot\bhat/p$
+\end_inset
+
+ is the pitch-angle cosine and 
+\begin_inset Formula $\theta$
+\end_inset
+
+ the gyro-angle.
+ We define 
+\begin_inset Formula $\mathbf{p}_{\perp}=p_{\perp}\left(\mathbf{x},p,\xi\right)\widehat{\perp}\left(\mathbf{x},\theta\right)$
+\end_inset
+
+ the local perpendicular momentum, where 
+\begin_inset Formula $p_{\perp}\equiv p\sqrt{1-\xi^{2}}$
+\end_inset
+
+.
+ The phase-space Lagrangian reads :
+\begin_inset Formula \begin{equation}
+\Gamma=\left[\frac{e}{c}\mathbf{A}+p\xi\bhat+\mathbf{p}_{\perp}\right]\cdot\extd\mathbf{x}-\frac{p^{2}}{2m}\extd t\equiv\epsilon^{-1}\Gamma_{0}+\Gamma_{1}\end{equation}
+
+\end_inset
+
+The inverse charge 
+\begin_inset Formula $e^{-1}\sim\epsilon$
+\end_inset
+
+ can be associated with the small parameter 
+\begin_inset Formula $\epsilon\equiv\rho/L\ll1$
+\end_inset
+
+ where 
+\begin_inset Formula $\rho$
+\end_inset
+
+ is the particle gyroradius and 
+\begin_inset Formula $L$
+\end_inset
+
+ the magnetic field nonuniformity scale length.
+ In what follows, we will use the right-handed orthogonal unit vectors 
+\begin_inset Formula $\left(\widehat{\rho},\widehat{\perp},\bhat\right)$
+\end_inset
+
+, where 
+\begin_inset Formula $\widehat{\perp}\equiv\widehat{\rho}\times\bhat=\frac{\partial\widehat{\rho}}{\partial\theta}$
+\end_inset
+
+.
+ We also define the gyrogauge vector 
+\begin_inset Formula \begin{equation}
+\mathbf{R}=\nabla\widehat{\perp}\cdot\widehat{\rho}\end{equation}
+
+\end_inset
+
+We note that the hamiltonian part 
+\begin_inset Formula $H=p^{2}/2m$
+\end_inset
+
+ of the Lagrangian is gyroangle-independant, contrary to the symplectic
+ part which contains the term 
+\begin_inset Formula $\mathbf{p}_{\perp}\cdot\extd\mathbf{x}$
+\end_inset
+
+.
+ In order to obtain a guiding-center Lagrangian 
+\begin_inset Formula $\overline{\Gamma}=\overline{\Gamma}_{\alpha}\extd\overline{z}^{\alpha}-\overline{H}\extd t$
+\end_inset
+
+ where both symplectic and hamiltonian parts are independant of the guiding-cent
+er gyro-angle 
+\begin_inset Formula $\overline{\theta}$
+\end_inset
+
+, we seek a phase-space transformation 
+\begin_inset Formula $z^{\alpha}=\left(\mathbf{x},p,\xi,\theta\right)\rightarrow\overline{z}^{\alpha}=\left(\overline{\mathbf{x}},\overline{p},\overline{\xi},\overline{\theta}\right)$
+\end_inset
+
+, where :
+\begin_inset Formula \begin{equation}
+\overline{z}^{\alpha}=z^{\alpha}+\epsilon G_{1}^{\alpha}+\epsilon^{2}\left(G_{2}^{\alpha}+\frac{1}{2}G_{1}^{\beta}\frac{\partial G_{1}^{\alpha}}{\partial z^{\beta}}\right)+\ldots\end{equation}
+
+\end_inset
+
+where the vector fields 
+\begin_inset Formula $\mathsf{G}_{n}\equiv G_{n}^{\alpha}\partial/\partial z^{\alpha}$
+\end_inset
+
+ carry out the transformation at order 
+\begin_inset Formula $n$
+\end_inset
+
+.
+ We note that if 
+\begin_inset Formula $\overline{\Gamma}_{\theta}\neq0$
+\end_inset
+
+, in order to maintain gyroangle independance the guiding-center Lagrangian
+ must contain the gyrogauge-invariant term :
+\begin_inset Formula \begin{equation}
+\overline{\Gamma}_{\theta}\left(\extd\overline{\theta}-\mathbf{R}\cdot\extd\overline{\mathbf{x}}\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Guiding-center phase-space Lagrangian
+\end_layout
+
+\begin_layout Standard
+Thenceforward, we will use greek indices for phase-space 
+\begin_inset Formula $z^{\alpha}$
+\end_inset
+
+ coordinates and latin indices for spatial 
+\begin_inset Formula $x^{i}$
+\end_inset
+
+ coordinates.
+ The guiding-center Lagrangian has the following expression :
+\begin_inset Formula \begin{equation}
+\overline{\Gamma}=\mathsf{T}_{\epsilon}^{-1}\Gamma+\extd S\equiv\epsilon^{-1}\overline{\Gamma}_{0}+\overline{\Gamma}_{1}+\epsilon\overline{\Gamma}_{2}+\epsilon^{2}\overline{\Gamma}_{3}+\ldots\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\overline{\Gamma}_{n}\equiv\overline{\Gamma}_{n\alpha}\extd z^{\alpha}-\overline{H}_{n}\extd t$
+\end_inset
+
+ is expressed in terms of symplectic and hamiltonian componets.
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+push-forward
+\begin_inset Quotes erd
+\end_inset
+
+ operator 
+\begin_inset Formula $\mathsf{T}_{\epsilon}^{-1}$
+\end_inset
+
+ is defined in terms of the product of Lie-transforms 
+\begin_inset Formula $\exp\left(-\epsilon^{n}\mathcal{L}_{n}\right)$
+\end_inset
+
+ where the 
+\begin_inset Formula $n^{th}$
+\end_inset
+
+-order Lie derivative 
+\begin_inset Formula $\mathcal{L}_{n}$
+\end_inset
+
+ is generated by the 
+\begin_inset Formula $n^{th}$
+\end_inset
+
+-order vector field 
+\begin_inset Formula $\mathsf{G}_{n}$
+\end_inset
+
+.
+ Using the expression for the guiding-center two-form 
+\begin_inset Formula $\omega\equiv\extd\Gamma$
+\end_inset
+
+, we have :
+\begin_inset Formula \begin{equation}
+\mathcal{L}_{G}\Gamma\equiv\cont G\cdot\extd\Gamma+\extd\left(\cont G\cdot\Gamma\right)=G^{\alpha}\omega_{\alpha\beta}\extd z^{\beta}+\extd\left(G^{\alpha}\Gamma_{\alpha}\right)\end{equation}
+
+\end_inset
+
+We note that the Lie and exterior derivative commute.
+ Since 
+\begin_inset Formula $\extd^{2}=0$
+\end_inset
+
+, the guiding-center two-form is unaffected by the addition of an exact
+ exterior derivative 
+\begin_inset Formula $\extd S$
+\end_inset
+
+ to the push-forward.
+ This will serve as a phase-space gauge function 
+\begin_inset Formula $S\equiv S_{1}+\epsilon S_{2}+\epsilon^{2}S_{3}+\ldots$
+\end_inset
+
+.
+ The first four terms of the guiding-center Lagrangian are :
+\begin_inset Formula \begin{equation}
+\overline{\Gamma}_{0}=\boxed{\Gamma_{0}}\label{eq:}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray}
+\overline{\Gamma}_{1} & = & \Gamma_{1}-\mathcal{L}_{1}\Gamma_{0}+\extd S_{1}\nonumber \\
+ & \equiv & \boxed{\Gamma_{1}-\cont 1\cdot\omega_{0}+\extd\sigma_{1}}\label{eq:-1}\end{eqnarray}
+
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray}
+\overline{\Gamma}_{2} & = & \Gamma_{2}-\mathcal{L}_{2}\Gamma_{0}-\mathcal{L}_{1}\Gamma_{1}+\frac{1}{2}\mathcal{L}_{1}^{2}\Gamma_{0}+\extd S_{2}\nonumber \\
+ & \equiv & \boxed{-\cont 2\cdot\omega_{0}-\frac{1}{2}\cont 1\cdot\left(\omega_{1}+\overline{\omega}_{1}\right)+\extd\sigma_{2}}\label{eq:-2}\end{eqnarray}
+
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray}
+\overline{\Gamma}_{3} & = & \Gamma_{3}-\mathcal{L}_{3}\Gamma_{0}-\mathcal{L}_{2}\Gamma_{1}-\mathcal{L}_{1}\Gamma_{2}+\frac{1}{2}\mathcal{L}_{1}^{2}\Gamma_{1}-\mathcal{L}_{2}\mathcal{L}_{1}\Gamma_{0}-\frac{1}{6}\mathcal{L}_{1}^{3}\Gamma_{0}+\extd S_{3}\nonumber \\
+ & \equiv & \boxed{-\cont 3\cdot\omega_{0}-\cont 2\cdot\overline{\omega}_{1}+\frac{1}{3}\cont 1\cdot\extd\left(\cont 1\cdot\omega_{1}+\frac{1}{2}\cont 1\cdot\overline{\omega}_{1}\right)+\extd\sigma_{3}}\label{eq:-3}\end{eqnarray}
+
+\end_inset
+
+where 
+\begin_inset Formula $\cont n\cdot\omega_{k}=G_{n}^{\alpha}\omega_{k\alpha\beta}\extd z^{\beta}-\left(\mathsf{G}_{n}\cdot\extd H_{k}\right)\extd t$
+\end_inset
+
+ and the phase-space gauge functions are redefined 
+\begin_inset Formula $S_{n}\rightarrow\sigma_{n}$
+\end_inset
+
+ so as to absorb all exact exterior derivatives.
+ The results obtained at lower order are used to simplify the higher-order
+ expressions.
+ Since 
+\begin_inset Formula $\Gamma_{0}=\frac{e}{c}\mathbf{A}$
+\end_inset
+
+, we have :
+\begin_inset Formula \begin{equation}
+\omega_{0}=\extd\Gamma_{0}=\frac{e}{c}\frac{\partial A_{j}}{\partial x^{i}}\extd x^{i}\wedge\extd x^{j}\equiv\frac{1}{2!}\omega_{0ij}\extd x^{i}\wedge\extd x^{j}\end{equation}
+
+\end_inset
+
+where the components 
+\begin_inset Formula $\omega_{0ij}\equiv\frac{e}{c}\varepsilon_{ijk}B^{k}$
+\end_inset
+
+ are expressed in terms of the Levi-Civita symbol and the magnetic field.
+ We therefore have :
+\begin_inset Formula \begin{equation}
+\cont n\omega_{0}\equiv G_{n}^{\alpha}\omega_{0\alpha\beta}\extd z^{\beta}=\frac{e}{c}G_{n}^{i}\varepsilon_{ijk}B^{k}\extd x^{j}=\boxed{\frac{e}{c}\mathbf{B}\times G_{n}^{\mathbf{x}}\cdot\extd\mathbf{x}}\end{equation}
+
+\end_inset
+
+Where 
+\begin_inset Formula $G_{n}^{\mathbf{x}}$
+\end_inset
+
+ denotes the spatial component of the 
+\begin_inset Formula $n^{th}$
+\end_inset
+
+-order generating vector field.
+ The expression for 
+\begin_inset Formula $\omega_{1}$
+\end_inset
+
+ reads :
+\begin_inset Formula \begin{equation}
+\omega_{1}=\extd\Gamma_{1}=\left[\left(p\xi\frac{\partial\bhat}{\partial x^{i}}+\frac{\partial\mathbf{p}_{\perp}}{\partial x^{i}}\right)\extd x^{i}+\left(\xi\bhat+\frac{\partial\mathbf{p}_{\perp}}{\partial p}\right)\extd p+\left(p\bhat+\frac{\partial\mathbf{p}_{\perp}}{\partial\xi}\right)\extd\xi+\frac{\partial\mathbf{p}_{\perp}}{\partial\theta}\extd\theta\right]\wedge\extd x^{j}-\frac{p}{m}\extd p\wedge\extd t\end{equation}
+
+\end_inset
+
+We can therefore deduce :
+\begin_inset Formula \begin{equation}
+\boxed{\cont n\omega_{1}\equiv K_{n\alpha}\extd z^{\alpha}-\left(\mathsf{G}_{n}\cdot\extd H_{1}\right)\extd t}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula $K_{n\mathbf{x}}$
+\end_inset
+
+ reads, using the analogy with respect to zero-order term 
+\begin_inset Formula $\frac{e}{c}\mathbf{A}$
+\end_inset
+
+ for the first term :
+\begin_inset Formula \begin{equation}
+K_{n\mathbf{x}}=p\xi\left(\nabla\times\bhat\right)\times G_{n}^{\mathbf{x}}+\left(\nabla\times\mathbf{p}_{\perp}\right)\times G_{n}^{\mathbf{x}}+\left(\xi\bhat+\frac{\partial\mathbf{p}_{\perp}}{\partial p}\right)G_{n}^{p}+\left(p\bhat+\frac{\partial\mathbf{p}_{\perp}}{\partial\xi}\right)G_{n}^{\xi}+\frac{\partial\mathbf{p}_{\perp}}{\partial\theta}G_{n}^{\theta}\end{equation}
+
+\end_inset
+
+The velocity components read :
+\begin_inset Formula \begin{equation}
+\left(\begin{array}{c}
+K_{n}^{p}\\
+K_{n}^{\xi}\\
+K_{n}^{\theta}\end{array}\right)=-G_{n}^{\mathbf{x}}\cdot\left(\begin{array}{c}
+\xi\bhat+\frac{\partial\mathbf{p}_{\perp}}{\partial p}\\
+p\bhat+\frac{\partial\mathbf{p}_{\perp}}{\partial\xi}\\
+\frac{\partial\mathbf{p}_{\perp}}{\partial\theta}\end{array}\right)\end{equation}
+
+\end_inset
+
+The Hamiltonian component is :
+\begin_inset Formula \begin{equation}
+\mathsf{G}_{n}\cdot\extd H_{1}=\frac{p}{m}G_{n}^{p}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+First-order perturbation analysis
+\end_layout
+
+\begin_layout Standard
+Using the formulas above, we can express the first-order guiding-center
+ Lagrangian :
+\begin_inset Formula \begin{eqnarray}
+\overline{\Gamma}_{1} & = & \left(p\xi\bhat+\mathbf{p}_{\perp}\right)\cdot\extd\mathbf{x}-\frac{p^{2}}{2m}\extd t-\frac{e}{c}\mathbf{B}\times G_{1}^{\mathbf{x}}\cdot\extd\mathbf{x}+\extd\sigma_{1}\nonumber \\
+ & = & \left(p\xi\bhat\cdot\extd\mathbf{x}-\frac{p^{2}}{2m}\extd t\right)+\left(\mathbf{p}_{\perp}-m\Omega\bhat\times G_{1}^{\mathbf{x}}\right)\cdot\extd\mathbf{x}+\extd\sigma_{1}\label{eq:-15}\end{eqnarray}
+
+\end_inset
+
+The terms on the left are gyroangle-independant and those on the right depend
+ on 
+\begin_inset Formula $\theta$
+\end_inset
+
+.
+ 
+\begin_inset Formula $\sigma_{1}$
+\end_inset
+
+ is not needed to remove the gyroangle dependance of the right-hand term,
+ so we set 
+\begin_inset Formula $\sigma_{1}\equiv0$
+\end_inset
+
+.
+ The gyroangle-independance of the guiding-center Lagrangian gives the following
+ condition :
+\begin_inset Formula \begin{equation}
+\mathbf{p}_{\perp}-m\Omega\bhat\times G_{1}^{\mathbf{x}}\equiv0\end{equation}
+
+\end_inset
+
+This gives the expression for 
+\begin_inset Formula $G_{1}^{\mathbf{x}}$
+\end_inset
+
+ :
+\begin_inset Formula \begin{equation}
+G_{1}^{\mathbf{x}}=\left(G_{1}^{\mathbf{x}}\cdot\bhat\right)\bhat-\frac{\bhat\times\mathbf{p}_{\perp}}{m\Omega}\equiv G_{1\parallel}\bhat-\boldsymbol{\rho}_{0}\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\boldsymbol{\rho}_{0}=\left(p\sqrt{1-\xi^{2}}/m\Omega\right)\widehat{\rho}$
+\end_inset
+
+ is the zero-order gyroradius vector.
+ The gradient of 
+\begin_inset Formula $\boldsymbol{\rho}_{0}$
+\end_inset
+
+ reads :
+\begin_inset Formula \begin{eqnarray}
+\nabla\boldsymbol{\rho}_{0} & = & -\nabla\ln B\boldsymbol{\rho}_{0}+\frac{p\sqrt{1-\xi^{2}}}{m\Omega}\nabla\widehat{\rho}\nonumber \\
+ & = & -\nabla\ln B\boldsymbol{\rho}_{0}+\frac{p\sqrt{1-\xi^{2}}}{m\Omega}\left[\left(\nabla\widehat{\rho}\cdot\bhat\right)\bhat+\left(\nabla\widehat{\rho}\cdot\widehat{\perp}\right)\widehat{\perp}\right]\nonumber \\
+ & = & -\nabla\ln B\boldsymbol{\rho}_{0}-\left(\nabla\bhat\cdot\boldsymbol{\rho}_{0}\right)\bhat-\mathbf{R}\frac{\partial\boldsymbol{\rho}_{0}}{\partial\theta}\label{eq:-14}\end{eqnarray}
+
+\end_inset
+
+Using the expression for 
+\begin_inset Formula $\overline{\Gamma}_{1}=p\xi\bhat\cdot\extd\mathbf{x}-\frac{p^{2}}{2m}\extd t$
+\end_inset
+
+, we can therefore calculate 
+\begin_inset Formula $\overline{\omega}_{1}$
+\end_inset
+
+ :
+\begin_inset Formula \begin{equation}
+\overline{\omega}_{1}=\extd\overline{\Gamma}_{1}=\left[p\xi\frac{\partial\bhat}{\partial x^{i}}\extd x^{i}+\left(\xi\extd p+p\extd\xi\right)\bhat\right]\wedge\extd x^{j}-\frac{p}{m}\extd p\wedge\extd t\end{equation}
+
+\end_inset
+
+We can therefore deduce :
+\begin_inset Formula \begin{equation}
+\boxed{\cont n\overline{\omega}_{1}\equiv\overline{K}_{n\mathbf{x}}\cdot\extd\mathbf{x}-G_{n\parallel}\left(\xi\extd p+p\extd\xi\right)-\left(\mathsf{G}_{n}\cdot\extd\overline{H}_{1}\right)\extd t}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula $\overline{K}_{n\mathbf{x}}$
+\end_inset
+
+ reads, using the analogy with respect to zero-order term 
+\begin_inset Formula $\frac{e}{c}\mathbf{A}$
+\end_inset
+
+ for the first term :
+\begin_inset Formula \begin{equation}
+\overline{K}_{n\mathbf{x}}=p\xi\left(\nabla\times\bhat\right)\times G_{n}^{\mathbf{x}}+\left(\xi G_{n}^{p}+pG_{n}^{\xi}\right)\bhat\end{equation}
+
+\end_inset
+
+The Hamiltonian component is :
+\begin_inset Formula \begin{equation}
+\mathsf{G}_{n}\cdot\extd\overline{H}_{1}\equiv\mathsf{G}_{n}\cdot\extd H_{1}=\frac{p}{m}G_{n}^{p}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Second-order perturbation analysis
+\end_layout
+
+\begin_layout Standard
+In order to calculate the parallel component of 
+\begin_inset Formula $G_{1}^{\mathbf{x}}$
+\end_inset
+
+ and the velocity components of 
+\begin_inset Formula $\mathsf{G}_{1}$
+\end_inset
+
+, we need to proceed with the analysis at higher order.
+ The second-order guiding-center Lagrangian therefore reads, using previous
+ results :
+\begin_inset Formula \begin{eqnarray}
+\overline{\Gamma}_{2} & = & -\left[\frac{e}{c}\mathbf{B}\times G_{2}^{\mathbf{x}}+\frac{1}{2}\left(K_{1\mathbf{x}}+\overline{K}_{1\mathbf{x}}\right)\right]\cdot\extd\mathbf{x}+G_{1\parallel}\left(\xi\extd p+p\extd\xi\right)+\frac{1}{2}G_{1}^{\mathbf{x}}\cdot\left(\frac{\partial\mathbf{p}_{\perp}}{\partial p}\extd p+\frac{\partial\mathbf{p}_{\perp}}{\partial\xi}\extd\xi+\frac{\partial\mathbf{p}_{\perp}}{\partial\theta}\extd\theta\right)\nonumber \\
+ &  & -\left(\mathsf{G}_{n}\cdot\extd H_{1}\right)\extd t+\extd\sigma_{2}\label{eq:-4}\end{eqnarray}
+
+\end_inset
+
+Using 
+\begin_inset Formula $G_{1}^{\mathbf{x}}\cdot\frac{\partial\mathbf{p}_{\perp}}{\partial p}=G_{1}^{\mathbf{x}}\cdot\frac{\partial\mathbf{p}_{\perp}}{\partial\xi}=0$
+\end_inset
+
+ and 
+\begin_inset Formula $G_{1}^{\mathbf{x}}\cdot\frac{\partial\mathbf{p}_{\perp}}{\partial\theta}=\frac{p^{2}\left(1-\xi^{2}\right)}{m\Omega}$
+\end_inset
+
+, we see that the velocity components of the second-order Lagrangian are
+ :
+\begin_inset Formula \begin{equation}
+\left(\begin{array}{c}
+\overline{\Gamma}_{2p}\\
+\overline{\Gamma}_{2\xi}\\
+\overline{\Gamma}_{2\theta}\end{array}\right)=\left(\begin{array}{c}
+\xi G_{1\parallel}+\frac{\partial\sigma_{2}}{\partial p}\\
+pG_{1\parallel}+\frac{\partial\sigma_{2}}{\partial\xi}\\
+\frac{p^{2}\left(1-\xi^{2}\right)}{2m\Omega}+\frac{\partial\sigma_{2}}{\partial\theta}\end{array}\right)\end{equation}
+
+\end_inset
+
+The gyroangle-independance of 
+\begin_inset Formula $\overline{\Gamma}_{2\theta}$
+\end_inset
+
+ is satisfied by the gyro-gauge choice 
+\begin_inset Formula $\sigma_{2}\equiv0$
+\end_inset
+
+.
+ The simplest form for 
+\begin_inset Formula $\overline{\Gamma}_{2p}$
+\end_inset
+
+ is 
+\begin_inset Formula $\overline{\Gamma}_{2p}\equiv0$
+\end_inset
+
+, which therefore implies 
+\begin_inset Formula $G_{1\parallel}=0$
+\end_inset
+
+ and 
+\begin_inset Formula $\overline{\Gamma}_{2\xi}=0$
+\end_inset
+
+.
+ The spatial component of 
+\begin_inset Formula $\mathsf{G}_{1}$
+\end_inset
+
+ therefore reads :
+\begin_inset Formula \begin{equation}
+\boxed{G_{1\mathbf{x}}=-\boldsymbol{\rho}_{0}}\end{equation}
+
+\end_inset
+
+Since we require the guiding-center Hamiltonian to be, at all orders in
+ 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+ :
+\begin_inset Formula \begin{equation}
+\overline{H}=\frac{\overline{p}^{2}}{2m}\end{equation}
+
+\end_inset
+
+we can deduce 
+\begin_inset Formula $\boxed{\mathsf{G}_{n}\cdot\extd H_{1}=\frac{m}{p}G_{n}^{p}\equiv0}$
+\end_inset
+
+, and in particular :
+\begin_inset Formula \begin{equation}
+\boxed{G_{1}^{p}=0}\end{equation}
+
+\end_inset
+
+Using the previous choices, the second-order guiding-center Lagrangian becomes
+ :
+\begin_inset Formula \begin{equation}
+\overline{\Gamma}_{2}=-\left[\frac{e}{c}\mathbf{B}\times G_{2}^{\mathbf{x}}+\frac{1}{2}\left(K_{1\mathbf{x}}+\overline{K}_{1\mathbf{x}}\right)\right]\cdot\extd\mathbf{x}+\frac{p^{2}\left(1-\xi^{2}\right)}{2m\Omega}\extd\theta\label{eq:-5}\end{equation}
+
+\end_inset
+
+In order to be gyroangle-independant, the Lagrangian needs to be able to
+ take the form :
+\begin_inset Formula \begin{equation}
+\overline{\Gamma}_{2}\equiv\frac{\overline{p}^{2}\left(1-\overline{\xi}^{2}\right)}{2m\Omega}\left(\extd\overline{\theta}-\mathbf{R}^{*}\cdot\extd\overline{\mathbf{x}}\right)\label{eq:-6}\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\mathbf{R}^{*}$
+\end_inset
+
+ is defined as :
+\begin_inset Formula \begin{equation}
+\mathbf{R}^{*}=\mathbf{R}+\frac{1}{2}\left(\bhat\cdot\nabla\times\bhat\right)\bhat\end{equation}
+
+\end_inset
+
+where the second term ensures the solvability of 
+\begin_inset Formula $\sigma_{3}$
+\end_inset
+
+ at next order.
+ Inserting (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-5"
+
+\end_inset
+
+) into (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-6"
+
+\end_inset
+
+) and using the expressions for 
+\begin_inset Formula $G_{1}^{\mathbf{x}}$
+\end_inset
+
+ and 
+\begin_inset Formula $G_{1}^{p}$
+\end_inset
+
+, we get :
+\begin_inset Formula \begin{equation}
+\frac{p^{2}\left(1-\xi^{2}\right)}{2m\Omega}\mathbf{R}^{*}\equiv\frac{e}{c}\mathbf{B}\times G_{2}^{\mathbf{x}}+pG_{1}^{\xi}\bhat-p\xi\left(\nabla\times\bhat\right)\times\boldsymbol{\rho}_{0}+\frac{1}{2}\left[\frac{\partial\mathbf{p}_{\perp}}{\partial\xi}G_{1}^{\xi}+\frac{\partial\mathbf{p}_{\perp}}{\partial\theta}G_{1}^{\theta}-\left(\nabla\times\mathbf{p}_{\perp}\right)\times\boldsymbol{\rho}_{0}\right]\label{eq:-7}\end{equation}
+
+\end_inset
+
+We now use the following formulas :
+\begin_inset Formula \begin{eqnarray*}
+-p\xi\left(\nabla\times\bhat\right)\times\boldsymbol{\rho}_{0} & = & -p\xi\left[\left(\widehat{\rho}\cdot\nabla\times\bhat\right)\widehat{\rho}\times\boldsymbol{\rho}_{0}+\left(\widehat{\perp}\cdot\nabla\times\bhat\right)\widehat{\perp}\times\boldsymbol{\rho}_{0}+\left(\bhat\cdot\nabla\times\bhat\right)\bhat\times\boldsymbol{\rho}_{0}\right]\\
+ & = & -p\xi\left[\left(\rho_{0}\left(\widehat{\rho}\times\bhat\right)\cdot\nabla\times\bhat\right)\bhat+\left(\bhat\cdot\nabla\times\bhat\right)\bhat\times\boldsymbol{\rho}_{0}\right]\\
+ & = & p\xi\left[\left(\bhat\cdot\nabla\bhat\cdot\boldsymbol{\rho}_{0}\right)\bhat-\left(\bhat\cdot\nabla\times\bhat\right)\bhat\times\boldsymbol{\rho}_{0}\right]\end{eqnarray*}
+
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray*}
+-\frac{1}{2}\left(\nabla\times\mathbf{p}_{\perp}\right)\times\boldsymbol{\rho}_{0} & = & -\frac{p\sqrt{1-\xi^{2}}}{2}\left(\nabla\times\widehat{\perp}\right)\times\boldsymbol{\rho}_{0}\\
+ & = & \frac{p^{2}\left(1-\xi^{2}\right)}{2m\Omega}\left(\nabla\widehat{\perp}\cdot\widehat{\rho}-\widehat{\rho}\cdot\nabla\widehat{\perp}\right)\\
+ & = & \frac{p^{2}\left(1-\xi^{2}\right)}{2m\Omega}\left[\mathbf{R}-\left(\widehat{\rho}\cdot\mathbf{R}\right)\widehat{\rho}-\left(\widehat{\rho}\cdot\nabla\widehat{\perp}\cdot\bhat\right)\bhat\right]\\
+ & = & \frac{p^{2}\left(1-\xi^{2}\right)}{2m\Omega}\left[\mathbf{R}-\left(\widehat{\rho}\cdot\mathbf{R}\right)\widehat{\rho}+\frac{1}{2}\left(\left(\widehat{\perp}\widehat{\rho}-\widehat{\rho}\widehat{\perp}\right):\nabla\bhat+\left(\widehat{\perp}\widehat{\rho}+\widehat{\rho}\widehat{\perp}\right):\nabla\bhat\right)\bhat\right]\\
+ & = & \frac{p^{2}\left(1-\xi^{2}\right)}{2m\Omega}\left[\mathbf{R}-\left(\widehat{\rho}\cdot\mathbf{R}\right)\widehat{\rho}+\left(\frac{1}{2}\left(\widehat{\rho}\times\widehat{\perp}\right)\cdot\nabla\times\bhat-\mathsf{a}_{1}:\nabla\bhat\right)\bhat\right]\\
+ & = & \frac{p^{2}\left(1-\xi^{2}\right)}{2m\Omega}\left[\mathbf{R}^{*}-\left(\widehat{\rho}\cdot\mathbf{R}\right)\widehat{\rho}-\left(\bhat\cdot\nabla\times\bhat+\mathsf{a}_{1}:\nabla\bhat\right)\bhat\right]\end{eqnarray*}
+
+\end_inset
+
+where 
+\begin_inset Formula $\mathsf{a}_{1}=-\frac{1}{2}\left(\widehat{\rho}\widehat{\perp}+\widehat{\perp}\widehat{\rho}\right)$
+\end_inset
+
+ is a dyadic tensor which depends explicitly on twice the gyrophase.
+ The parallel component of (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-7"
+
+\end_inset
+
+) gives :
+\begin_inset Formula \begin{equation}
+\boxed{G_{1}^{\xi}=-\xi\left(\bhat\cdot\nabla\bhat\cdot\boldsymbol{\rho}_{0}\right)+\frac{p\left(1-\xi^{2}\right)}{2m\Omega}\left(\bhat\cdot\nabla\times\bhat+\mathsf{a}_{1}:\nabla\bhat\right)}\end{equation}
+
+\end_inset
+
+The perpendicular component gives, using 
+\begin_inset Formula $\widehat{\rho}=-\widehat{\perp}\times\bhat=-\frac{\partial\widehat{\rho}}{\partial\theta}\times\bhat$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbf{p}_{\perp}=m\Omega\boldsymbol{\rho}_{0}\times\bhat$
+\end_inset
+
+ :
+\begin_inset Formula \begin{equation}
+0=\bhat\times\left[G_{2}^{\mathbf{x}}-\frac{p\xi}{m\Omega}\left(\bhat\cdot\nabla\times\bhat\right)\boldsymbol{\rho}_{0}\right]+\frac{1}{2}\left[G_{1}^{\xi}\frac{\partial\boldsymbol{\rho}_{0}}{\partial\xi}+\left(G_{1}^{\theta}+\boldsymbol{\rho}_{0}\cdot\mathbf{R}\right)\frac{\partial\boldsymbol{\rho}_{0}}{\partial\theta}\right]\times\bhat\end{equation}
+
+\end_inset
+
+We can therefore express 
+\begin_inset Formula $G_{2}^{\mathbf{x}}$
+\end_inset
+
+ as :
+\begin_inset Formula \begin{equation}
+G_{2}^{\mathbf{x}}=G_{2\parallel}\bhat+\frac{p\xi}{m\Omega}\left(\bhat\cdot\nabla\times\bhat\right)\boldsymbol{\rho}_{0}+\frac{1}{2}G_{1}^{\xi}\frac{\partial\boldsymbol{\rho}_{0}}{\partial\xi}+\frac{1}{2}\left(G_{1}^{\theta}+\boldsymbol{\rho}_{0}\cdot\mathbf{R}\right)\frac{\partial\boldsymbol{\rho}_{0}}{\partial\theta}\end{equation}
+
+\end_inset
+
+Since 
+\begin_inset Formula $\boldsymbol{\rho}_{0}$
+\end_inset
+
+ is of order zero in the magnetic nonuniformity, we need to keep the spatial
+ component of 
+\begin_inset Formula $\mathsf{G}_{2}$
+\end_inset
+
+.
+ The expressions for 
+\begin_inset Formula $G_{2\parallel}$
+\end_inset
+
+ and 
+\begin_inset Formula $G_{1}^{\theta}$
+\end_inset
+
+ are obtained at higher order in 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Third-order perturbation analysis
+\end_layout
+
+\begin_layout Standard
+The third-order guiding-center Lagrangian reads, using the previous formulas
+ and 
+\begin_inset Formula $\mathsf{G}_{2}\cdot\extd H_{1}\equiv0$
+\end_inset
+
+ :
+\begin_inset Formula \begin{eqnarray*}
+\overline{\Gamma}_{3} & = & -\frac{e}{c}\mathbf{B}\times G_{3}^{\mathbf{x}}\cdot\extd\mathbf{x}-\overline{K}_{2\mathbf{x}}\cdot\extd\mathbf{x}+G_{2\parallel}\left(\xi\extd p+p\extd\xi\right)+\frac{1}{3}\cont 1\cdot\extd\left(K_{1\alpha}\extd z^{\alpha}+\frac{1}{2}\overline{K}_{1\mathbf{x}}\cdot\extd\mathbf{x}\right)+\extd\sigma_{3}\\
+ & = & -\frac{e}{c}\mathbf{B}\times G_{3}^{\mathbf{x}}\cdot\extd\mathbf{x}-\overline{K}_{2\mathbf{x}}\cdot\extd\mathbf{x}+G_{2\parallel}\left(\xi\extd p+p\extd\xi\right)\\
+ &  & +\frac{1}{3}\cont 1\cdot\left(\extd K_{1\mathbf{x}}\wedge\extd\mathbf{x}+\frac{1}{2}\extd\overline{K}_{1\mathbf{x}}\wedge\extd\mathbf{x}+\frac{2p}{m\Omega}\left[-\frac{p\left(1-\xi^{2}\right)}{2}\nabla\ln B\cdot\extd\mathbf{x}+\left(1-\xi^{2}\right)\extd p-p\xi\extd\xi\right]\wedge\extd\theta\right)+\extd\sigma_{3}\\
+ & = & \left[\frac{1}{3}\mathsf{G}_{1}\cdot\left(\extd K_{1\mathbf{x}}+\frac{1}{2}\extd\overline{K}_{1\mathbf{x}}\right)-\frac{e}{c}\mathbf{B}\times G_{3}^{\mathbf{x}}-\overline{K}_{2\mathbf{x}}-G_{1}^{\theta}\frac{p^{2}\left(1-\xi^{2}\right)}{3m\Omega}\nabla\ln B\right]\cdot\extd\mathbf{x}+G_{2\parallel}\left(\xi\extd p+p\extd\xi\right)\\
+ &  & +\frac{1}{3}\boldsymbol{\rho}_{0}\cdot\left(\extd K_{1\mathbf{x}}+\frac{1}{2}\extd\overline{K}_{1\mathbf{x}}\right)+\frac{2p}{3m\Omega}\left(\left[\left(1-\xi^{2}\right)\extd p-p\xi\extd\xi\right]G_{1}^{\theta}+\left[-\frac{p\left(1-\xi^{2}\right)}{2}\nabla\ln B\cdot\boldsymbol{\rho}_{0}+p\xi G_{1}^{\xi}\right]\extd\theta\right)+\extd\sigma_{3}\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The term 
+\begin_inset Formula $\frac{1}{3}\boldsymbol{\rho}_{0}\cdot\extd K_{1\mathbf{x}}$
+\end_inset
+
+ gives :
+\begin_inset Formula \begin{eqnarray}
+\frac{1}{3}\boldsymbol{\rho}_{0}\cdot\extd K_{1\mathbf{x}} & = & \frac{1}{3}\boldsymbol{\rho}_{0}\cdot\extd\left[-\left(\nabla\times\mathbf{p}\right)\times\boldsymbol{\rho}_{0}+\left(p\bhat+\frac{\partial\mathbf{p}_{\perp}}{\partial\xi}\right)G_{1}^{\xi}+\frac{\partial\mathbf{p}_{\perp}}{\partial\theta}G_{1}^{\theta}\right]\nonumber \\
+ & = & \frac{1}{3}\left[-\extd\mathbf{x}\cdot\nabla\left[\left(\nabla\times\mathbf{p}\right)\times\boldsymbol{\rho}_{0}\right]\cdot\boldsymbol{\rho}_{0}-\extd p\boldsymbol{\rho}_{0}\cdot\left(\nabla\times\mathbf{p}\right)\times\frac{\partial\boldsymbol{\rho}_{0}}{\partial p}-\extd\xi\boldsymbol{\rho}_{0}\cdot\left(\nabla\times\mathbf{p}\right)\times\frac{\partial\boldsymbol{\rho}_{0}}{\partial\xi}\right.\nonumber \\
+ &  & -\extd\theta\boldsymbol{\rho}_{0}\cdot\left(\nabla\times\mathbf{p}\right)\times\frac{\partial\boldsymbol{\rho}_{0}}{\partial\theta}-\extd p\boldsymbol{\rho}_{0}\cdot\left(\nabla\times\frac{\partial\mathbf{p}}{\partial p}\right)\times\boldsymbol{\rho}_{0}-\extd\xi\boldsymbol{\rho}_{0}\cdot\left(\nabla\times\frac{\partial\mathbf{p}}{\partial\xi}\right)\times\boldsymbol{\rho}_{0}\nonumber \\
+ &  & -\extd\theta\boldsymbol{\rho}_{0}\cdot\left(\nabla\times\frac{\partial\mathbf{p}}{\partial\theta}\right)\times\boldsymbol{\rho}_{0}+\left(G_{1}^{\xi}\extd p+\extd G_{1}^{\xi}\right)\boldsymbol{\rho}_{0}\cdot\bhat+pG_{1}^{\xi}\extd\mathbf{x}\cdot\nabla\bhat\cdot\boldsymbol{\rho}_{0}\nonumber \\
+ &  & +\boldsymbol{\rho}_{0}\cdot\left[\frac{\partial\mathbf{p}_{\perp}}{\partial\xi}\extd G_{1}^{\xi}+\left(\extd\mathbf{x}\cdot\nabla\frac{\partial\mathbf{p}_{\perp}}{\partial\xi}+\extd p\frac{\partial^{2}\mathbf{p}_{\perp}}{\partial\xi\partial p}+\extd\xi\frac{\partial^{2}\mathbf{p}_{\perp}}{\partial\xi^{2}}+\extd\theta\frac{\partial^{2}\mathbf{p}_{\perp}}{\partial\xi\partial\theta}\right)G_{1}^{\xi}\right]\nonumber \\
+ &  & \left.+\boldsymbol{\rho}_{0}\cdot\left[\frac{\partial\mathbf{p}_{\perp}}{\partial\theta}\extd G_{1}^{\theta}+\left(\extd\mathbf{x}\cdot\nabla\frac{\partial\mathbf{p}_{\perp}}{\partial\theta}+\extd p\frac{\partial^{2}\mathbf{p}_{\perp}}{\partial\theta\partial p}+\extd\xi\frac{\partial^{2}\mathbf{p}_{\perp}}{\partial\theta\partial\xi}+\extd\theta\frac{\partial^{2}\mathbf{p}_{\perp}}{\partial\theta^{2}}\right)G_{1}^{\theta}\right]\right]\nonumber \\
+ & = & \frac{1}{3}pG_{1}^{\xi}\extd\mathbf{x}\cdot\nabla\bhat\cdot\boldsymbol{\rho}_{0}+\frac{m\Omega}{3}G_{1}^{\xi}\extd\mathbf{x}\cdot\nabla\boldsymbol{\rho}_{0}\cdot\boldsymbol{\rho}_{0}-\frac{p^{2}\left(1-\xi^{2}\right)}{3m\Omega}\extd G_{1}^{\theta}-\frac{pG_{1}^{\theta}}{3m\Omega}\left[\left(1-\xi^{2}\right)\extd p-p\xi\extd\xi\right]\nonumber \\
+ &  & +\frac{p}{3m\Omega}\left[p\xi G_{1}^{\xi}-\frac{p\left(1-\xi^{2}\right)}{m\Omega}\bhat\cdot\nabla\times\mathbf{p}\right]\extd\theta\label{eq:-8}\end{eqnarray}
+
+\end_inset
+
+The term 
+\begin_inset Formula $\frac{1}{6}\boldsymbol{\rho}_{0}\cdot\extd\overline{K}_{1\mathbf{x}}$
+\end_inset
+
+ gives :
+\begin_inset Formula \begin{eqnarray}
+\frac{1}{6}\boldsymbol{\rho}_{0}\cdot\extd\overline{K}_{1\mathbf{x}} & = & \frac{1}{6}\boldsymbol{\rho}_{0}\cdot\extd\left[-p\xi\left(\nabla\times\bhat\right)\times\boldsymbol{\rho}_{0}+p\bhat G_{1}^{\xi}\right]\nonumber \\
+ & = & \frac{1}{6}\left[-\left(\xi\extd p+p\extd\xi\right)\boldsymbol{\rho}_{0}\cdot\left(\nabla\times\bhat\right)\times\boldsymbol{\rho}_{0}-p\xi\extd\mathbf{x}\cdot\nabla\left[\left(\nabla\times\bhat\right)\times\boldsymbol{\rho}_{0}\right]\cdot\boldsymbol{\rho}_{0}-p\xi\extd p\boldsymbol{\rho}_{0}\cdot\left(\nabla\times\bhat\right)\times\frac{\partial\boldsymbol{\rho}_{0}}{\partial p}\right.\nonumber \\
+ &  & \left.-p\xi\extd\xi\boldsymbol{\rho}_{0}\cdot\left(\nabla\times\bhat\right)\times\frac{\partial\boldsymbol{\rho}_{0}}{\partial\xi}-p\xi\extd\theta\boldsymbol{\rho}_{0}\cdot\left(\nabla\times\bhat\right)\times\frac{\partial\boldsymbol{\rho}_{0}}{\partial\theta}+\left(G_{1}^{\xi}\extd p+\extd G_{1}^{\xi}\right)\boldsymbol{\rho}_{0}\cdot\bhat+pG_{1}^{\xi}\extd\mathbf{x}\cdot\nabla\bhat\cdot\boldsymbol{\rho}_{0}\right]\nonumber \\
+ & = & \frac{1}{6}\left[-p\xi\left(\nabla\times\bhat\right)\cdot\left(\boldsymbol{\rho}_{0}\times\bhat\right)\times\boldsymbol{\rho}_{0}+pG_{1}^{\xi}\extd\mathbf{x}\cdot\nabla\bhat\cdot\boldsymbol{\rho}_{0}\right]\nonumber \\
+ & = & \frac{1}{6}pG_{1}^{\xi}\extd\mathbf{x}\cdot\nabla\bhat\cdot\boldsymbol{\rho}_{0}-\frac{p^{2}\left(1-\xi^{2}\right)}{6m\Omega}\left(\frac{p\xi}{m\Omega}\bhat\cdot\nabla\times\bhat\right)\extd\theta\label{eq:-9}\end{eqnarray}
+
+\end_inset
+
+We then use the following property :
+\begin_inset Formula \begin{equation}
+-\frac{p^{2}\left(1-\xi^{2}\right)}{3m\Omega}\extd G_{1}^{\theta}=-\extd\left[\frac{p^{2}\left(1-\xi^{2}\right)}{3m\Omega}G_{1}^{\theta}\right]+\frac{2pG_{1}^{\theta}}{3m\Omega}\left(-\frac{p^{2}\left(1-\xi^{2}\right)}{2}\nabla\ln B\cdot\extd\mathbf{x}+\left(1-\xi^{2}\right)\extd p-p\xi\extd\xi\right)\end{equation}
+
+\end_inset
+
+Rolling the exact derivative into 
+\begin_inset Formula $\extd\sigma_{3}$
+\end_inset
+
+, the third-order guiding-center Lagrangian becomes :
+\begin_inset Formula \begin{eqnarray}
+\overline{\Gamma}_{3} & = & \overline{\Gamma}_{3\mathbf{x}}\cdot\extd\mathbf{x}+G_{2\parallel}\left(\xi\extd p+p\extd\xi\right)+\frac{pG_{1}^{\theta}}{m\Omega}\left(\left(1-\xi^{2}\right)\extd p-p\xi\extd\xi\right)\nonumber \\
+ &  & +\left[\frac{p^{2}\xi}{m\Omega}G_{1}^{\xi}-\frac{p^{2}\left(1-\xi^{2}\right)}{3m^{2}\Omega^{2}}\bhat\cdot\nabla\times\mathbf{p}-\frac{p^{2}\left(1-\xi^{2}\right)}{3m\Omega}\nabla\ln B-\frac{p^{2}\left(1-\xi^{2}\right)}{6m\Omega}\left(\frac{p\xi}{m\Omega}\bhat\cdot\nabla\times\bhat\right)\right]\extd\theta+\extd\overline{\sigma}_{3}\label{eq:-10}\end{eqnarray}
+
+\end_inset
+
+with 
+\begin_inset Formula $\overline{\sigma}_{3}=\sigma_{3}-\frac{p^{2}\left(1-\xi^{2}\right)}{3m\Omega}G_{1}^{\theta}$
+\end_inset
+
+.
+ The symplectic part 
+\begin_inset Formula $\overline{\Gamma}_{3\mathbf{x}}\equiv0$
+\end_inset
+
+ of the Lagrangian is used to determine the higher-order components of 
+\begin_inset Formula $\mathsf{G}_{2}$
+\end_inset
+
+ and 
+\begin_inset Formula $G_{3}^{\mathbf{x}}$
+\end_inset
+
+, which aren't needed since they are of second order in the magnetic nonuniformi
+ty.
+ The Lagrangian therefore reads :
+\begin_inset Formula \begin{eqnarray}
+\overline{\Gamma}_{3} & = & \left[\xi G_{2\parallel}+\frac{p\left(1-\xi^{2}\right)}{m\Omega}G_{1}^{\theta}+\frac{\partial\overline{\sigma}_{3}}{\partial p}\right]\extd p+\left[pG_{2\parallel}-\frac{p^{2}\xi}{m\Omega}G_{1}^{\theta}+\frac{\partial\overline{\sigma}_{3}}{\partial\xi}\right]\extd\xi\nonumber \\
+ &  & +\left[\frac{p^{2}\xi}{m\Omega}G_{1}^{\xi}-\frac{p^{2}\left(1-\xi^{2}\right)}{3m\Omega}\nabla\ln B\cdot\boldsymbol{\rho}_{0}-\frac{p^{2}\left(1-\xi^{2}\right)}{2m\Omega}\left(\frac{p\xi}{m\Omega}\bhat\cdot\nabla\times\bhat\right)-\frac{p^{2}\left(1-\xi^{2}\right)}{3m^{2}\Omega^{2}}\bhat\cdot\nabla\times\mathbf{p}_{\perp}+\frac{\partial\overline{\sigma}_{3}}{\partial\theta}\right]\extd\theta\label{eq:-11}\end{eqnarray}
+
+\end_inset
+
+Since the guiding-center Lagrangian contains the canonical symplectic term
+ 
+\begin_inset Formula $\left[\overline{p}^{2}\left(1-\overline{\xi}^{2}\right)/m\Omega\right]\extd\overline{\theta}\equiv\left(\overline{\mu}B/\Omega\right)\extd\overline{\theta}$
+\end_inset
+
+ where 
+\begin_inset Formula $\overline{\mu}$
+\end_inset
+
+ is an exact invariant of the guiding-center Hamiltonian dynamics, the Noether
+ theorem implies that the components 
+\begin_inset Formula $\overline{\Gamma}_{n\theta}$
+\end_inset
+
+ must vanish for 
+\begin_inset Formula $n\geq3$
+\end_inset
+
+.
+ We therefore deduce the expression for 
+\begin_inset Formula $\overline{\sigma}_{3}$
+\end_inset
+
+ :
+\begin_inset Formula \begin{equation}
+\frac{\partial\overline{\sigma}_{3}}{\partial\theta}\equiv-\frac{p^{2}\xi}{m\Omega}G_{1}^{\xi}+\frac{p^{2}\left(1-\xi^{2}\right)}{3m\Omega}\nabla\ln B\cdot\boldsymbol{\rho}_{0}+\frac{p^{2}\left(1-\xi^{2}\right)}{2m\Omega}\left(\frac{p\xi}{m\Omega}\bhat\cdot\nabla\times\bhat\right)+\frac{p^{2}\left(1-\xi^{2}\right)}{3m^{2}\Omega^{2}}\bhat\cdot\nabla\times\mathbf{p}_{\perp}\end{equation}
+
+\end_inset
+
+This solution is consistent because of the choice for 
+\begin_inset Formula $\mathbf{R}^{*}$
+\end_inset
+
+, which determines 
+\begin_inset Formula $G_{1}^{\xi}$
+\end_inset
+
+ and ensures it possesses an integrability condition for 
+\begin_inset Formula $\overline{\sigma}_{3}$
+\end_inset
+
+.
+ We then use the following formula, with the expression for 
+\begin_inset Formula $\nabla\boldsymbol{\rho}_{0}$
+\end_inset
+
+ taken from (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-14"
+
+\end_inset
+
+) :
+\begin_inset Formula \begin{eqnarray*}
+\frac{p^{2}\left(1-\xi^{2}\right)}{3m^{2}\Omega^{2}}\bhat\cdot\nabla\times\mathbf{p}_{\perp} & = & \frac{p^{3}\left(1-\xi^{2}\right)^{\frac{3}{2}}}{3m^{2}\Omega^{2}}\bhat\cdot\nabla\times\widehat{\perp}\\
+ & = & \frac{p^{3}\left(1-\xi^{2}\right)^{\frac{3}{2}}}{3m^{2}\Omega^{2}}\bhat\cdot\nabla\times\left(\bhat\times\widehat{\rho}\right)\\
+ & = & \frac{p^{3}\left(1-\xi^{2}\right)^{\frac{3}{2}}}{3m^{2}\Omega^{2}}\bhat\cdot\left[\bhat\left(\nabla\cdot\widehat{\rho}\right)-\widehat{\rho}\left(\nabla\cdot\bhat\right)+\widehat{\rho}\cdot\nabla\bhat-\bhat\cdot\nabla\widehat{\rho}\right]\\
+ & = & \frac{p^{3}\left(1-\xi^{2}\right)^{\frac{3}{2}}}{3m^{2}\Omega^{2}}\left[\bhat\cdot\nabla\widehat{\rho}\cdot\bhat+\widehat{\perp}\cdot\nabla\widehat{\rho}\cdot\widehat{\perp}-\bhat\cdot\nabla\widehat{\rho}\cdot\bhat\right]\\
+ & = & -\frac{p^{2}\left(1-\xi^{2}\right)}{3m\Omega}\frac{\partial\boldsymbol{\rho}_{0}}{\partial\theta}\cdot\mathbf{R}\end{eqnarray*}
+
+\end_inset
+
+Inserting the expressions for 
+\begin_inset Formula $G_{1}^{\xi}$
+\end_inset
+
+ and noticing that 
+\begin_inset Formula $\frac{\partial^{2}}{\partial\theta^{2}}\boldsymbol{\rho}_{0}=-\boldsymbol{\rho}_{0}$
+\end_inset
+
+, we have :
+\begin_inset Formula \begin{eqnarray*}
+\overline{\sigma}_{3} & \equiv & -\frac{p^{2}\xi}{m\Omega}\left[\xi\left(\bhat\cdot\nabla\bhat\cdot\frac{\partial\boldsymbol{\rho}_{0}}{\partial\theta}\right)+\frac{p\left(1-\xi^{2}\right)}{2m\Omega}\mathsf{a}_{2}:\nabla\bhat\right]-\frac{p^{2}\left(1-\xi^{2}\right)}{3m\Omega}\nabla\ln B\cdot\frac{\partial\boldsymbol{\rho}_{0}}{\partial\theta}-\frac{p^{2}\left(1-\xi^{2}\right)}{3m\Omega}\boldsymbol{\rho}_{0}\cdot\mathbf{R}\\
+ & = & -\frac{p^{2}}{m\Omega}\left[\frac{1}{3}\left(1-\xi^{2}\right)\nabla\ln B+\xi^{2}\bhat\cdot\nabla\bhat\right]\cdot\frac{\partial\boldsymbol{\rho}_{0}}{\partial\theta}-\frac{p^{2}\left(1-\xi^{2}\right)}{2m\Omega}\left(\frac{p\xi}{m\Omega}\mathsf{a}_{2}:\nabla\bhat\right)-\frac{p^{2}\left(1-\xi^{2}\right)}{3m\Omega}\boldsymbol{\rho}_{0}\cdot\mathbf{R}\end{eqnarray*}
+
+\end_inset
+
+Where 
+\begin_inset Formula $\mathsf{a}_{2}\equiv\frac{1}{4}\left(\widehat{\rho}\widehat{\rho}-\widehat{\perp}\widehat{\perp}\right)$
+\end_inset
+
+ satisfies the property 
+\begin_inset Formula $\mathsf{a}_{1}=\frac{\partial\mathsf{a}_{2}}{\partial\theta}$
+\end_inset
+
+.
+ Using the expression for 
+\begin_inset Formula $\overline{\sigma}_{3}$
+\end_inset
+
+, we then use 
+\begin_inset Formula $\overline{\Gamma}_{3p}\equiv0$
+\end_inset
+
+ and 
+\begin_inset Formula $\overline{\Gamma}_{3\xi}\equiv0$
+\end_inset
+
+ to determine 
+\begin_inset Formula $G_{1}^{\theta}$
+\end_inset
+
+ and 
+\begin_inset Formula $G_{2\parallel}$
+\end_inset
+
+.
+ Using 
+\begin_inset Formula $\frac{\partial\boldsymbol{\rho}_{0}}{\partial p}=\frac{\boldsymbol{\rho}_{0}}{p}$
+\end_inset
+
+ and 
+\begin_inset Formula $\frac{\partial\boldsymbol{\rho}_{0}}{\partial\xi}=-\frac{\xi}{1-\xi^{2}}\boldsymbol{\rho}_{0}$
+\end_inset
+
+, this gives :
+\begin_inset Formula \begin{eqnarray}
+-\xi G_{2\parallel}-\frac{p\left(1-\xi^{2}\right)}{m\Omega}G_{1}^{\theta} & = & -\frac{2p}{m\Omega}\left[\frac{1}{3}\left(1-\xi^{2}\right)\nabla\ln B+\xi^{2}\bhat\cdot\nabla\bhat\right]\cdot\frac{\partial\boldsymbol{\rho}_{0}}{\partial\theta}-\frac{p}{m\Omega}\left[\frac{1}{3}\left(1-\xi^{2}\right)\nabla\ln B+\xi^{2}\bhat\cdot\nabla\bhat\right]\cdot\frac{\partial\boldsymbol{\rho}_{0}}{\partial\theta}\nonumber \\
+ &  & -\frac{3p\left(1-\xi^{2}\right)}{2m\Omega}\left(\frac{p\xi}{m\Omega}\mathsf{a}_{2}:\nabla\bhat\right)+\frac{2p\left(1-\xi^{2}\right)}{3m\Omega}\boldsymbol{\rho}_{0}\cdot\mathbf{R}+\frac{p\left(1-\xi^{2}\right)}{3m\Omega}\boldsymbol{\rho}_{0}\cdot\mathbf{R}\nonumber \\
+ & = & -\frac{p}{m\Omega}\left[\left(1-\xi^{2}\right)\nabla\ln B+3\xi^{2}\bhat\cdot\nabla\bhat\right]\cdot\frac{\partial\boldsymbol{\rho}_{0}}{\partial\theta}\nonumber \\
+ &  & -\frac{3p\left(1-\xi^{2}\right)}{2m\Omega}\left(\frac{p\xi}{m\Omega}\mathsf{a}_{2}:\nabla\bhat\right)+\frac{p\left(1-\xi^{2}\right)}{m\Omega}\boldsymbol{\rho}_{0}\cdot\mathbf{R}\label{eq:-12}\\
+-pG_{2\parallel}+\frac{p^{2}\xi}{m\Omega}G_{1}^{\theta} & = & -\frac{2p^{2}\xi}{m\Omega}\left[-\frac{1}{3}\nabla\ln B+\bhat\cdot\nabla\bhat\right]\cdot\frac{\partial\boldsymbol{\rho}_{0}}{\partial\theta}+\frac{p^{2}\xi}{m\Omega}\left[\frac{1}{3}\nabla\ln B+\frac{\xi^{2}}{1-\xi^{2}}\bhat\cdot\nabla\bhat\right]\cdot\frac{\partial\boldsymbol{\rho}_{0}}{\partial\theta}\nonumber \\
+ &  & -\frac{p^{2}\left(1-3\xi^{2}\right)}{2m\Omega}\left(\frac{p}{m\Omega}\mathsf{a}_{2}:\nabla\bhat\right)-\frac{2p^{2}\xi}{3m\Omega}\boldsymbol{\rho}_{0}\cdot\mathbf{R}-\frac{p^{2}\xi}{3m\Omega}\boldsymbol{\rho}_{0}\cdot\mathbf{R}\nonumber \\
+ & = & \frac{p^{2}\xi}{m\Omega}\left[\nabla\ln B+\frac{3\xi^{2}-2}{1-\xi^{2}}\bhat\cdot\nabla\bhat\right]\cdot\frac{\partial\boldsymbol{\rho}_{0}}{\partial\theta}-\frac{p^{2}\left(1-3\xi^{2}\right)}{2m\Omega}\left(\frac{p}{m\Omega}\mathsf{a}_{2}:\nabla\bhat\right)-\frac{p^{2}\xi}{m\Omega}\boldsymbol{\rho}_{0}\cdot\mathbf{R}\nonumber \end{eqnarray}
+
+\end_inset
+
+Performing the operations 
+\begin_inset Formula $\frac{m\Omega}{p^{2}}\left[p\left(\ref{eq:-12}\right)-\xi\left(\ref{eq:-13}\right)\right]$
+\end_inset
+
+ and 
+\begin_inset Formula $\xi\left(\ref{eq:-12}\right)+\frac{1}{p}\left(1-\xi^{2}\right)\left(\ref{eq:-13}\right)$
+\end_inset
+
+, we get :
+\begin_inset Formula \begin{eqnarray}
+G_{1}^{\theta} & = & -\boldsymbol{\rho}_{0}\cdot\mathbf{R}-\frac{p\xi}{m\Omega}\mathsf{a}_{2}:\nabla\bhat+\left(\nabla\ln B+\frac{\xi^{2}}{1-\xi^{2}}\bhat\cdot\nabla\bhat\right)\cdot\frac{\partial\boldsymbol{\rho}_{0}}{\partial\theta}\\
+G_{2\parallel} & = & \frac{2p\xi}{m\Omega}\bhat\cdot\nabla\bhat\cdot\frac{\partial\boldsymbol{\rho}_{0}}{\partial\theta}+\frac{p^{2}\left(1-\xi^{2}\right)}{2m^{2}\Omega^{2}}\mathsf{a}_{2}:\nabla\bhat\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Coordinate transformation
+\end_layout
+
+\begin_layout Standard
+Since we now know the components of 
+\begin_inset Formula $\mathsf{G}_{1}$
+\end_inset
+
+ and the spatial components of 
+\begin_inset Formula $\mathsf{G}_{2}$
+\end_inset
+
+, we can then deduce the following expressions for the guiding-center coordinate
+s, at first order in 
+\begin_inset Formula $\epsilon_{B}$
+\end_inset
+
+ :
+\begin_inset Formula \begin{eqnarray}
+\overline{\mathbf{x}} & = & \mathbf{x}-\boldsymbol{\rho}_{0}+\left(G_{2}^{\mathbf{x}}-\frac{1}{2}\mathsf{G}_{1}\cdot\extd\boldsymbol{\rho}_{0}\right)+\dots\\
+\overline{p} & = & p\\
+\overline{\xi} & = & \xi\left[1-\bhat\cdot\nabla\bhat\cdot\boldsymbol{\rho}_{0}\right]+\frac{p\left(1-\xi^{2}\right)}{2m\Omega}\left(\bhat\cdot\nabla\times\bhat+\mathsf{a}_{1}:\nabla\bhat\right)+\dots\\
+\overline{\theta} & = & \theta-\boldsymbol{\rho}_{0}\cdot\mathbf{R}-\frac{p\xi}{m\Omega}\mathsf{a}_{2}:\nabla\bhat+\left(\nabla\ln B+\frac{\xi^{2}}{1-\xi^{2}}\bhat\cdot\nabla\bhat\right)\cdot\frac{\partial\boldsymbol{\rho}_{0}}{\partial\theta}+\dots\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

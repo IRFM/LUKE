@@ -1,0 +1,3083 @@
+#LyX 1.6.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\leftmargin 1.5cm
+\topmargin 1.5cm
+\rightmargin 1.5cm
+\bottommargin 1.5cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Lecture notes - neoclassical theory
+\end_layout
+
+\begin_layout Author
+François-Xavier DUTHOIT
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part*
+Foreword
+\end_layout
+
+\begin_layout Standard
+The aim here is to show that properties of the toroidal confining geometry
+ (in this case) can substantially alter the picture of classical transport.
+ Three main regimes are considered in this light :
+\end_layout
+
+\begin_layout Itemize
+Highly collisional (fluid) regime which leads to Pfirsch-Schlüter diffusion
+\end_layout
+
+\begin_layout Itemize
+Low collisionality (collisionless or banana) regime which leads to banana
+ diffusion
+\end_layout
+
+\begin_layout Itemize
+Transition regime between the two previous regimes which leads to plateau
+ diffusion
+\end_layout
+
+\begin_layout Section
+Pfirsch-Schlüter diffusion coefficient
+\end_layout
+
+\begin_layout Subsection
+Starting fluid equations
+\end_layout
+
+\begin_layout Standard
+The starting fluid equations are as follows :
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+Pressure balance
+\begin_inset Quotes erd
+\end_inset
+
+ equation, with 
+\begin_inset Formula $P=\sum_{j}n_{j}T_{j}$
+\end_inset
+
+ the plasma pressure and 
+\begin_inset Formula $\mathbf{J}=\sum_{j}e_{j}n_{j}\mathbf{V}_{j}=n_{0}\left|e\right|\left(\mathbf{V}_{i}-\mathbf{V}_{e}\right)$
+\end_inset
+
+ the plasma current density : 
+\begin_inset Formula \begin{equation}
+\boxed{\nabla P=\frac{1}{c}\mathbf{J}\times\mathbf{B}}\label{eq:}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+Ohm's law
+\begin_inset Quotes erd
+\end_inset
+
+, with 
+\begin_inset Formula $\mathbf{V}=\sum_{j}n_{j}m_{j}\mathbf{V}_{j}/\sum_{j}n_{j}m_{j}$
+\end_inset
+
+ the center of mass flow velocity and 
+\begin_inset Formula $\eta=\sigma^{-1}=m_{e}\nu_{ei}/n_{0}e^{2}$
+\end_inset
+
+ the plasma resistivity : 
+\begin_inset Formula \begin{equation}
+\boxed{\mathbf{E}+\frac{1}{c}\mathbf{V}\times\mathbf{B}=\eta\mathbf{J}}\label{eq:-1}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Steady-state Ampere's law : 
+\begin_inset Formula \begin{equation}
+\nabla\times\mathbf{B}=\frac{4\pi}{c}\mathbf{J}\Rightarrow\boxed{\nabla\cdot\mathbf{J}=0}\label{eq:-2}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For classical transport, the field will be considered uniform : 
+\begin_inset Formula $\mathbf{B}=B_{0}\hat{\mathbf{Z}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Straight cylindrical geometry
+\end_layout
+
+\begin_layout Standard
+In this section, we will work in cylindrical 
+\begin_inset Formula $\left(r,\theta,z\right)$
+\end_inset
+
+ coordinates.
+ The pressure here only has a radial dependance due to symmetry, therefore
+ the pressure balance equation becomes :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray}
+J_{r} & = & 0\nonumber \\
+J_{\theta} & = & \frac{c}{B}\frac{dP}{dr}\label{eq:-3}\\
+J_{z} & = & 0\nonumber \end{eqnarray}
+
+\end_inset
+
+Inserting these expressions into Ohm's law, we get : 
+\begin_inset Formula \begin{eqnarray*}
+E_{r}+\frac{1}{c}V_{\theta}B & = & 0\\
+E_{\theta}-\frac{1}{c}V_{r}B & = & \eta J_{\theta}\end{eqnarray*}
+
+\end_inset
+
+We can therefore deduce : 
+\begin_inset Formula \begin{equation}
+\boxed{V_{r}=\frac{cE_{\theta}}{B}B-\eta\frac{c^{2}}{B^{2}}\frac{dP}{dr}}\label{eq:-4}\end{equation}
+
+\end_inset
+
+The radial particle flux reads : 
+\begin_inset Formula \[
+\Gamma=n_{0}\left\langle V_{r}\right\rangle _{\theta}=\frac{1}{2\pi}\oint d\theta V_{r}\]
+
+\end_inset
+
+with 
+\begin_inset Formula $\left\langle V_{r}\right\rangle _{\theta}$
+\end_inset
+
+ the radial flow average over a cylindrical flux surface.
+ Since 
+\begin_inset Formula $E_{\theta}=-\frac{1}{r}\frac{d\Phi}{d\theta}$
+\end_inset
+
+ and the potential 
+\begin_inset Formula $\Phi$
+\end_inset
+
+ must be single-valued, we have 
+\begin_inset Formula $\left\langle E_{\theta}\right\rangle _{\theta}=0$
+\end_inset
+
+.
+ We therefore have : 
+\begin_inset Formula \[
+\left\langle V_{r}\right\rangle _{\theta}=-\eta\frac{c^{2}}{B^{2}}\frac{dP}{dr}\]
+
+\end_inset
+
+Taking a zero temperature gradient and 
+\begin_inset Formula $T_{e}=T_{i}$
+\end_inset
+
+, we have 
+\begin_inset Formula $\frac{dP}{dr}=2T_{e}\frac{dn_{0}}{dr}$
+\end_inset
+
+ .
+ We can therefore write : 
+\begin_inset Formula \begin{equation}
+\boxed{\Gamma=-2\eta n_{0}\frac{c^{2}}{B^{2}}\frac{dn_{0}}{dr}=-D_{class}\frac{dn_{0}}{dr}}\label{eq:-5}\end{equation}
+
+\end_inset
+
+where the classical diffusion coefficient reads : 
+\begin_inset Formula \[
+D_{class}\equiv\rho_{Le}^{2}\nu_{ei}=\eta n_{0}\frac{c^{2}}{B^{2}}T_{e}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Toroidal geometry
+\end_layout
+
+\begin_layout Subsubsection
+Metric and flux-surface averaging
+\end_layout
+
+\begin_layout Standard
+Here, we will work in toroidal 
+\begin_inset Formula $\left(r,\theta,\varphi\right)$
+\end_inset
+
+ coordinates, the toroidal axis radius being 
+\begin_inset Formula $R_{0}$
+\end_inset
+
+.
+ Introducing the scale factor 
+\begin_inset Formula $h=1+\epsilon\cos\theta$
+\end_inset
+
+ with 
+\begin_inset Formula $\epsilon=r/R_{0}$
+\end_inset
+
+ a small parameter, we express the magnetic field as 
+\begin_inset Formula $\mathbf{B}=B_{\theta}\hat{\boldsymbol{\theta}}+B_{\varphi}\hat{\boldsymbol{\varphi}}$
+\end_inset
+
+ with the following expression for 
+\begin_inset Formula $B_{\theta}$
+\end_inset
+
+ and 
+\begin_inset Formula $B_{\varphi}$
+\end_inset
+
+: 
+\begin_inset Formula \begin{eqnarray*}
+B_{\theta} & = & \frac{B_{p}\left(r\right)}{h}\\
+B_{\varphi} & = & \frac{B_{T}\left(r\right)}{h}\end{eqnarray*}
+
+\end_inset
+
+The metric in toroidal geometry reads, with 
+\begin_inset Formula $R=R_{0}h$
+\end_inset
+
+ : 
+\begin_inset Formula \[
+d\mathbf{r}^{2}=dr^{2}+r^{2}d\theta^{2}+R^{2}d\varphi^{2}\]
+
+\end_inset
+
+We can therefore deduce the expression for the divergence : 
+\begin_inset Formula \begin{equation}
+\boxed{\nabla\cdot\mathbf{A}=\frac{1}{rh}\left[\frac{\partial}{\partial r}\left(rhA_{r}\right)+\frac{\partial}{\partial\theta}\left(hA_{\theta}\right)+\frac{r}{R_{0}}\frac{\partial}{\partial\varphi}A_{\varphi}\right]}\label{eq:-6}\end{equation}
+
+\end_inset
+
+The flux-surface averaging reads, using the elementary surface step 
+\begin_inset Formula $dS=2πRrd\theta$
+\end_inset
+
+ : 
+\begin_inset Formula \[
+\left\langle \hat{A}\right\rangle _{\theta}=\frac{\int\hat{A}dS}{\int dS}\]
+
+\end_inset
+
+We can therefore deduce : 
+\begin_inset Formula \begin{equation}
+\boxed{\left\langle \hat{A}\right\rangle _{\theta}=\frac{1}{2\pi}\int_{0}^{2\pi}d\theta h\left(\theta\right)\hat{A}}\label{eq:-7}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of the radial flow
+\end_layout
+
+\begin_layout Standard
+Ohm's law by components gives, separating parallel and perpendicular resistiviti
+es (here, 
+\begin_inset Formula $\eta_{\parallel}=\eta_{\perp}=\eta$
+\end_inset
+
+) and assuming 
+\begin_inset Formula $E_{\varphi}=0$
+\end_inset
+
+ : 
+\begin_inset Formula \begin{eqnarray}
+\frac{1}{c}\left(V_{\theta}B_{\varphi}-V_{\varphi}B_{\theta}\right) & = & \eta_{\perp}J_{r}+\frac{\partial\Phi}{\partial r}\label{eq:-8}\\
+-\frac{1}{c}V_{r}B_{\varphi} & = & \eta_{\perp}J_{\theta}+\frac{1}{r}\frac{\partial\Phi}{\partial\theta}\label{eq:-9}\\
+\frac{1}{c}V_{r}B_{\theta} & = & \eta_{\parallel}J_{\varphi}\label{eq:-10}\end{eqnarray}
+
+\end_inset
+
+Combination of (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-9"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-10"
+
+\end_inset
+
+) gives : 
+\begin_inset Formula \begin{equation}
+\boxed{V_{r}=\frac{c}{B_{\theta}}\eta_{\parallel}J_{\varphi}=-\frac{c}{B_{\varphi}}\left(\eta_{\perp}J_{\theta}+\frac{1}{r}\frac{\partial\Phi}{\partial\theta}\right)}\label{eq:-11}\end{equation}
+
+\end_inset
+
+The pressure balance by components gives : 
+\begin_inset Formula \begin{eqnarray}
+J_{\theta}B_{\varphi}-J_{\varphi}B_{\theta} & = & c\frac{dP}{dr}\label{eq:-12}\\
+-J_{r}B_{\varphi} & = & 0\label{eq:-13}\\
+J_{r}B_{\theta} & = & 0\label{eq:-14}\end{eqnarray}
+
+\end_inset
+
+(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-13"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-14"
+
+\end_inset
+
+) ensure 
+\begin_inset Formula $J_{r}=0$
+\end_inset
+
+.
+ Using the zero divergence property of the current density, we get : 
+\begin_inset Formula \[
+\frac{\partial}{\partial\theta}\left(hJ_{\theta}\right)=0\]
+
+\end_inset
+
+
+\begin_inset Formula $J_{\theta}$
+\end_inset
+
+ therefore has the following expression, 
+\begin_inset Formula $f$
+\end_inset
+
+ being an unknown function of 
+\begin_inset Formula $r$
+\end_inset
+
+ : 
+\begin_inset Formula \begin{equation}
+\boxed{J_{\theta}=\frac{f\left(r\right)}{h}}\label{eq:-15}\end{equation}
+
+\end_inset
+
+Inserting this expression into (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-12"
+
+\end_inset
+
+), we get : 
+\begin_inset Formula \begin{equation}
+J_{\varphi}=\frac{1}{B_{\theta}}\left[-c\frac{dP}{dr}+B_{\varphi}\frac{f\left(r\right)}{h}\right]\label{eq:-16}\end{equation}
+
+\end_inset
+
+In order to calculate the averaged radial flow, we must determine 
+\begin_inset Formula $f\left(r\right)$
+\end_inset
+
+.
+ Averaging (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-11"
+
+\end_inset
+
+) over 
+\begin_inset Formula $\theta$
+\end_inset
+
+ and remembering that 
+\begin_inset Formula $\Phi$
+\end_inset
+
+ must be single-valued gives : 
+\begin_inset Formula \[
+\frac{1}{2\pi}\int_{0}^{2\pi}d\theta\left(\eta_{\perp}J_{\varphi}\frac{B_{\varphi}}{B_{\theta}}+\eta_{\perp}J_{\theta}\right)=0\]
+
+\end_inset
+
+We then insert (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-15"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-16"
+
+\end_inset
+
+) into the equation.
+ We therefore have : 
+\begin_inset Formula \[
+\frac{1}{2\pi}\int_{0}^{2\pi}d\theta\left[\eta_{\parallel}\frac{B_{\varphi}}{B_{\theta}^{2}}\left(-c\frac{dP}{dr}\right)+\frac{f\left(r\right)}{h}\left(\eta_{\parallel}\frac{B_{\varphi}^{2}}{B_{\theta}^{2}}+\eta_{\perp}\right)\right]=0\]
+
+\end_inset
+
+Using the relations 
+\begin_inset Formula $B_{\varphi}/B_{\theta}^{2}=hB_{T}/B_{p}^{2}$
+\end_inset
+
+, 
+\begin_inset Formula $B_{\varphi}^{2}/B_{\theta}^{2}=B_{T}^{2}/B_{p}^{2}$
+\end_inset
+
+, 
+\begin_inset Formula $\frac{1}{2\pi}\int_{0}^{2\pi}d\theta h=1$
+\end_inset
+
+ and 
+\begin_inset Formula $\frac{1}{2\pi}\int_{0}^{2\pi}\frac{d\theta}{h}=\left(1-\epsilon^{2}\right)^{-\frac{1}{2}}$
+\end_inset
+
+ (the latter calculated in the appendix), the expression becomes : 
+\begin_inset Formula \[
+\eta_{\parallel}\frac{B_{T}}{B_{p}^{2}}\left(-c\frac{dP}{dr}\right)+\frac{f\left(r\right)}{\sqrt{1-\epsilon^{2}}}\left(\eta_{\parallel}\frac{B_{T}^{2}}{B_{p}^{2}}+\eta_{\perp}\right)=0\]
+
+\end_inset
+
+We can therefore deduce the expression of 
+\begin_inset Formula $f\left(r\right)$
+\end_inset
+
+ : 
+\begin_inset Formula \[
+f\left(r\right)=\frac{c}{B_{T}}\frac{dP}{dr}\frac{\sqrt{1-\epsilon^{2}}}{1+\frac{\eta_{\perp}}{\eta_{\parallel}}\frac{B_{p}^{2}}{B_{T}^{2}}}\]
+
+\end_inset
+
+Since 
+\begin_inset Formula $B_{p}^{2}/B_{T}^{2}=\epsilon^{2}/q^{2}$
+\end_inset
+
+ (where 
+\begin_inset Formula $q$
+\end_inset
+
+ is the safety factor) is a small parameter, we can write : 
+\begin_inset Formula \begin{equation}
+f\left(r\right)\simeq\frac{c}{B_{T}}\frac{dP}{dr}\sqrt{1-\epsilon^{2}}\left(1-\frac{\eta_{\perp}}{\eta_{\parallel}}\frac{\epsilon^{2}}{q^{2}}\right)\label{eq:-17}\end{equation}
+
+\end_inset
+
+Inserting this expression into (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-16"
+
+\end_inset
+
+), we have : 
+\begin_inset Formula \begin{eqnarray*}
+J_{\varphi} & = & -\frac{c}{B_{p}}\frac{dP}{dr}h+\frac{B_{T}}{B_{p}}\frac{1}{h}\frac{c}{B_{T}}\frac{dP}{dr}\sqrt{1-\epsilon^{2}}\left(1-\frac{\eta_{\perp}}{\eta_{\parallel}}\frac{\epsilon^{2}}{q^{2}}\right)\\
+ & = & -\frac{c}{B_{p}}\frac{dP}{dr}\left[h-\frac{1}{h}\sqrt{1-\epsilon^{2}}\left(1-\frac{\eta_{\perp}}{\eta_{\parallel}}\frac{\epsilon^{2}}{q^{2}}\right)\right]\end{eqnarray*}
+
+\end_inset
+
+The expression for the radial flow therefore becomes : 
+\begin_inset Formula \[
+V_{r}=-\frac{c}{B_{p}^{2}}\eta_{\parallel}\frac{dP}{dr}\left[h^{2}-\sqrt{1-\epsilon^{2}}\left(1-\frac{\eta_{\perp}}{\eta_{\parallel}}\frac{\epsilon^{2}}{q^{2}}\right)\right]\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Radial particle flux
+\end_layout
+
+\begin_layout Standard
+Averaging the radial flow over a flux surface gives : 
+\begin_inset Formula \[
+\left\langle V_{r}\right\rangle _{\theta}=-\frac{c}{B_{p}^{2}}\eta_{\parallel}\frac{dP}{dr}\left[\left\langle h^{2}\right\rangle _{\theta}-\sqrt{1-\epsilon^{2}}\left(1-\frac{\eta_{\perp}}{\eta_{\parallel}}\frac{\epsilon^{2}}{q^{2}}\right)\right]\]
+
+\end_inset
+
+The expression of 
+\begin_inset Formula $\left\langle h^{2}\right\rangle _{\theta}$
+\end_inset
+
+ is as follows : 
+\begin_inset Formula \begin{eqnarray*}
+\left\langle h^{2}\right\rangle _{\theta} & = & \frac{1}{2\pi}\int_{0}^{2\pi}d\theta\left(1+3\epsilon\cos\theta+3\epsilon^{2}\cos^{2}\theta+\epsilon^{3}\cos^{3}\theta\right)\\
+ & = & 1+\frac{3}{2}\epsilon^{2}\end{eqnarray*}
+
+\end_inset
+
+Using the Taylor expansion 
+\begin_inset Formula $\sqrt{1-\epsilon^{2}}=1-\frac{1}{2}\epsilon^{2}$
+\end_inset
+
+, the expression for the averaged radial flow becomes : 
+\begin_inset Formula \[
+\left\langle V_{r}\right\rangle _{\theta}\simeq-\frac{c}{B_{p}^{2}}\eta_{\parallel}\frac{dP}{dr}\left(1+\frac{3}{2}\epsilon^{2}-1+\frac{1}{2}\epsilon^{2}+\frac{\eta_{\perp}}{\eta_{\parallel}}\frac{\epsilon^{2}}{q^{2}}\right)\]
+
+\end_inset
+
+The final expression reads, using 
+\begin_inset Formula $P=2n_{0}T$
+\end_inset
+
+, 
+\begin_inset Formula $\epsilon^{2}/B_{p}^{2}=q^{2}/B_{T}^{2}$
+\end_inset
+
+ and neglecting the temperature gradient : 
+\begin_inset Formula \[
+\left\langle V_{r}\right\rangle _{\theta}\simeq-\left(4\eta_{\parallel}\frac{c}{B_{T}^{2}}Tq^{2}+2\eta_{\perp}\frac{c}{B_{T}^{2}}T\right)\frac{dn_{0}}{dr}\]
+
+\end_inset
+
+Since 
+\begin_inset Formula $\eta=n_{e}\nu_{ei}/n_{0}e^{2}=\eta_{\perp}=\eta_{\parallel}$
+\end_inset
+
+, the expression of the radial particle flux becomes : 
+\begin_inset Formula \begin{equation}
+\boxed{\Gamma=n_{0}\left\langle V_{r}\right\rangle _{\theta}=-\left(D_{P-S}+D_{class}\right)\frac{dn_{0}}{dr}}\label{eq:-18}\end{equation}
+
+\end_inset
+
+with 
+\begin_inset Formula $D_{class}=\rho_{Le}^{2}\nu_{ei}$
+\end_inset
+
+ the classical diffusion coefficient and 
+\begin_inset Formula $D_{P-S}=2\rho_{Le}^{2}\nu_{ei}q^{2}$
+\end_inset
+
+ the neoclassical (Pfirsch-Schlüter) coefficient.
+ 
+\begin_inset Formula $2q^{2}$
+\end_inset
+
+ is called the Pfirsch-Schlüter factor.
+ It is important to note that while 
+\begin_inset Formula $D_{class}$
+\end_inset
+
+ comes from perpendicular resistivity, 
+\begin_inset Formula $D_{P-S}$
+\end_inset
+
+ comes from the parallel resistivity.
+ In addition, using the expression of 
+\begin_inset Formula $E_{\theta}$
+\end_inset
+
+ found in (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-11"
+
+\end_inset
+
+) : 
+\begin_inset Formula \[
+E_{\theta}=-\eta_{\perp}J_{\theta}-\eta_{\parallel}\frac{B_{\varphi}}{B_{\theta}}J_{\varphi}\]
+
+\end_inset
+
+ We find that contrary to the straight cylinder case, 
+\begin_inset Formula $\left\langle E_{\theta}\right\rangle _{\theta}\neq0$
+\end_inset
+
+.
+ This will acount for parallel forces leading to neoclassical transport.
+\end_layout
+
+\begin_layout Section
+Trapped particles - Banana diffusion
+\end_layout
+
+\begin_layout Standard
+In this section, we consider the toroidal model with the following magnetic
+ field : 
+\begin_inset Formula \[
+\mathbf{B}=\frac{1}{h}\left(B_{T}\hat{\boldsymbol{\varphi}}+B_{p}\hat{\boldsymbol{\theta}}\right)\]
+
+\end_inset
+
+with 
+\begin_inset Formula $h=1+\epsilon\cos\theta$
+\end_inset
+
+, 
+\begin_inset Formula $\epsilon=r/R_{0}\ll1$
+\end_inset
+
+ and 
+\begin_inset Formula $\left|B_{p}/B_{T}\right|\ll1$
+\end_inset
+
+.
+ The magnetic field amplitude can therefore be approximated as : 
+\begin_inset Formula \[
+\boxed{B\simeq B_{0}(1-\epsilon\cos\theta)}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Condition for particle trapping
+\end_layout
+
+\begin_layout Standard
+In order to determine the condition for particle trapping, we look at the
+ conservation of energy, defining 
+\begin_inset Formula $\mathcal{E}=\frac{1}{2}v_{the}^{2}$
+\end_inset
+
+ the particle kinetic energy per unit mass and 
+\begin_inset Formula $u=v_{\perp}^{2}/2B$
+\end_inset
+
+ the particle magnetic moment per unit mass : 
+\begin_inset Formula \begin{equation}
+\boxed{\frac{1}{2}v_{\parallel}^{2}+uB=E=const.}\label{eq:-19}\end{equation}
+
+\end_inset
+
+The particle reflection occurs for 
+\begin_inset Formula $v_{\parallel}=0$
+\end_inset
+
+.
+ The value of the magnetic field therefore reads : 
+\begin_inset Formula \begin{equation}
+B_{reflect}=\frac{\mathcal{E}}{u}\label{eq:-20}\end{equation}
+
+\end_inset
+
+Naming 
+\begin_inset Formula $B_{min}=B\left(\theta=0\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $B_{max}=B\left(\theta=\pi\right)$
+\end_inset
+
+ the respective minimum and maximum values of the magnetic field, we have
+ the following property for trapped particles : 
+\begin_inset Formula \begin{equation}
+\boxed{B_{min}\leq\frac{\mathcal{E}}{u}\leq B_{max}}\label{eq:-21}\end{equation}
+
+\end_inset
+
+The relation at 
+\begin_inset Formula $B=B_{min}$
+\end_inset
+
+ becomes : 
+\begin_inset Formula \[
+\frac{1}{2}\left.v_{\parallel}^{2}\right|_{B_{min}}+\frac{1}{2}\left.v_{\perp}^{2}\right|_{B_{min}}\leq\frac{1}{2}\left.v_{\perp}^{2}\right|_{B_{min}}\frac{B_{max}}{B_{min}}\]
+
+\end_inset
+
+We can therefore deduce : 
+\begin_inset Formula \[
+\left.\frac{v_{\parallel}^{2}}{v_{\perp}^{2}}\right|_{B_{min}}\leq\frac{B_{max}}{B_{min}}-1\]
+
+\end_inset
+
+Since 
+\begin_inset Formula $B_{max}/B_{min}-1\simeq(1+\epsilon)/(1-\epsilon)-1\simeq2\epsilon$
+\end_inset
+
+, we can write the condition for particle trapping : 
+\begin_inset Formula \begin{equation}
+\left|\frac{v_{\parallel}}{v_{\perp}}\right|\leq\sqrt{2\epsilon}\label{eq:-22}\end{equation}
+
+\end_inset
+
+For untrapped particles, we have the following property : 
+\begin_inset Formula \begin{equation}
+\boxed{\frac{\mathcal{E}}{u}\geq B_{max}}\label{eq:-23}\end{equation}
+
+\end_inset
+
+Defining 
+\begin_inset Formula $\lambda\equiv uB_{0}/\mathcal{E}$
+\end_inset
+
+, we have for trapped particles : 
+\begin_inset Formula \begin{equation}
+\boxed{1-\epsilon\leq\lambda\leq1+\epsilon}\label{eq:-24}\end{equation}
+
+\end_inset
+
+and for untrapped particles : 
+\begin_inset Formula \begin{equation}
+\boxed{0\leq\lambda\leq1-\epsilon}\label{eq:-25}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Fraction of trapped particles
+\end_layout
+
+\begin_layout Standard
+Starting from (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-21"
+
+\end_inset
+
+), we can deduce the relation : 
+\begin_inset Formula \[
+\frac{v_{\parallel}^{2}}{v_{\perp}^{2}}\leq\frac{B_{max}}{B}-1\]
+
+\end_inset
+
+Since in velocity phase space 
+\begin_inset Formula $v_{\parallel}/v_{\perp}=\tan\Xi\simeq\Xi$
+\end_inset
+
+, the trapped particles occupy a volume of pitch-angle 
+\begin_inset Formula $\Xi=\sqrt{\frac{B_{max}}{B}-1}$
+\end_inset
+
+ from the perpendicular velocity axis in velocity phase-space.
+ For particles in a sphere of volume 
+\begin_inset Formula $\frac{4}{3}\pi V^{3}$
+\end_inset
+
+, the trapped particle volume will be 
+\begin_inset Formula $\frac{4}{3}\pi V^{3}\sin\Xi$
+\end_inset
+
+.
+ The expression for the fraction of trapped particles therefore becomes
+ : 
+\begin_inset Formula \[
+f_{T}=\sin\Xi\simeq\Xi\simeq\sqrt{\frac{B_{max}}{B}-1}\]
+
+\end_inset
+
+Averaging the fraction over a flux surface gives : 
+\begin_inset Formula \begin{eqnarray*}
+\left\langle f_{T}\right\rangle _{\theta} & = & \frac{1}{2\pi}\int_{0}^{2\pi}d\theta\left(1+\epsilon\cos\theta\right)\sqrt{\frac{1+\epsilon}{1-\epsilon\cos\theta}-1}\\
+ & \simeq & \frac{1}{2\pi}\int_{0}^{2\pi}d\theta\sqrt{\epsilon}(\left(1+\cos\theta\right))\\
+ & \simeq & \frac{1}{\pi}\sqrt{2\epsilon}\int_{0}^{2\pi}\cos\theta2d\theta\\
+ & \simeq & \frac{4}{\pi}\sqrt{\frac{\epsilon}{2}}\end{eqnarray*}
+
+\end_inset
+
+ We therefore have 
+\begin_inset Formula $\left\langle f_{T}\right\rangle _{\theta}\sim\sqrt{\epsilon}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Bounce frequency
+\end_layout
+
+\begin_layout Standard
+We start from the expression for the bounce period, where 
+\begin_inset Formula $\left\{ -\theta_{b},\theta_{b}\right\} $
+\end_inset
+
+ are the bounce angles : 
+\begin_inset Formula \[
+\tau_{b}=2\pi\omega_{b}=2\int_{-\theta_{b}}^{\theta_{b}}d\theta\frac{R_{0}q}{\left|v_{\parallel}\left(\theta\right)\right|}\]
+
+\end_inset
+
+ where 
+\begin_inset Formula $v_{\parallel}(\theta)=\sqrt{2\mathcal{E}\left[1-\lambda\left(1-\epsilon\cos\theta\right)\right]}$
+\end_inset
+
+ is the particle parallel velocity.
+ We note that 
+\begin_inset Formula $v_{\parallel}\left(\pm\theta_{b}\right)=0$
+\end_inset
+
+.
+ In order to calculate the integral, we introduce the following variable
+ change : 
+\begin_inset Formula \[
+A\equiv\frac{\frac{\lambda}{B_{0}}-\frac{1}{B_{max}}}{\frac{1}{B_{min}}-\frac{1}{B_{max}}}\simeq\frac{\lambda-1+\epsilon}{2\epsilon}\]
+
+\end_inset
+
+The expression for 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ therefore becomes : 
+\begin_inset Formula \[
+\lambda\simeq1+2\epsilon A-\epsilon\]
+
+\end_inset
+
+ Using the relation 
+\begin_inset Formula $\sqrt{1-\lambda\left(1-\epsilon\cos\theta\right)}\simeq\sqrt{2\epsilon}\sqrt{\cos^{2}\frac{\theta}{2}-A}$
+\end_inset
+
+, we therefore have : 
+\begin_inset Formula \begin{eqnarray*}
+\omega_{b} & = & 2\pi\sqrt{2\mathcal{E}}\sqrt{2\epsilon}\left[4qR_{0}\int_{-\theta_{b}}^{\theta_{b}}\frac{d\theta}{\sqrt{\sin^{2}\frac{\theta+\pi}{2}-A}}\right]^{-1}\\
+ & = & \pi\sqrt{2\mathcal{E}}\sqrt{2\epsilon}\left[4qR_{0}K\left(\sqrt{1-A}\right)\right]^{-1}\end{eqnarray*}
+
+\end_inset
+
+where 
+\begin_inset Formula $K\left(k\right)=\int_{0}^{\frac{\pi}{2}}d\theta\left(1-k^{2}\sin^{2}\theta\right)^{-\frac{1}{2}}$
+\end_inset
+
+ is the complete elliptic integral of the first kind.
+ For deeply trapped particles, we have 
+\begin_inset Formula $\mathcal{E}/u\sim B_{min}$
+\end_inset
+
+.
+ We can therefore deduce 
+\begin_inset Formula $\lambda\sim B_{min}/B_{0}$
+\end_inset
+
+ and 
+\begin_inset Formula $A\sim1$
+\end_inset
+
+.
+ The expression for the elliptic integral becomes : 
+\begin_inset Formula $K\left(\sqrt{1-A}\right)\simeq\frac{\pi}{2}$
+\end_inset
+
+ Inserting the expression into the bounce frequency, we get : 
+\begin_inset Formula \[
+\omega_{b}\simeq\sqrt{\mathcal{E}}\sqrt{\frac{\epsilon}{2}}\frac{1}{qR_{0}}\]
+
+\end_inset
+
+ The bounce frequency 
+\begin_inset Formula $\omega_{b}$
+\end_inset
+
+ for particle 
+\begin_inset Formula $j$
+\end_inset
+
+ therefore has the following dependance, 
+\begin_inset Formula $v_{thj}$
+\end_inset
+
+ being the particle thermal velocity : 
+\begin_inset Formula \begin{equation}
+\boxed{\omega_{bj}\sim\sqrt{\epsilon}\frac{v_{thj}}{qR_{0}}}\label{eq:-26}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Banana orbit and excursion
+\end_layout
+
+\begin_layout Standard
+The guiding-center equations of motion read : 
+\begin_inset Formula \begin{eqnarray*}
+\mathbf{x} & = & \mathbf{r}+\frac{1}{\Omega}\mathbf{v}\times\hat{\mathbf{b}}\\
+\frac{d\mathbf{x}}{dt} & = & v_{\parallel}\hat{\mathbf{b}}+\mathbf{v}_{D}\end{eqnarray*}
+
+\end_inset
+
+ with 
+\begin_inset Formula $\mathbf{v}_{D}=\frac{c}{B^{2}}\mathbf{E}_{0}\times\mathbf{B}+\frac{1}{\Omega}\hat{\mathbf{b}}\times\left(u\nabla B+v_{\parallel}^{2}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\right)$
+\end_inset
+
+.
+ In a tokamak geometry, 
+\begin_inset Formula $\mathbf{v}_{Dj}$
+\end_inset
+
+ for particle 
+\begin_inset Formula $j$
+\end_inset
+
+ becomes : 
+\begin_inset Formula $\mathbf{v}_{Dj}=\frac{u_{j}B+v_{j\parallel}^{2}}{\Omega_{j}B}\hat{\mathbf{b}}\times\nabla B$
+\end_inset
+
+ with 
+\begin_inset Formula $\left(\hat{\mathbf{b}}\times\nabla B\right)\cdot\hat{\mathbf{r}}=-\frac{1}{r}\frac{dB}{d\theta}=-B_{0}\sin\theta/R_{0}$
+\end_inset
+
+.
+ We therefore have : 
+\begin_inset Formula \begin{equation}
+\boxed{\left|v_{Djr}\right|\sim\frac{v_{j}^{2}}{\Omega_{j}R_{0}}=\frac{\rho_{Lj}v_{j}}{R_{0}}}\label{eq:-27}\end{equation}
+
+\end_inset
+
+Using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-26"
+
+\end_inset
+
+), we can deduce the banana excursion (i.e.
+ the banana half-width) : 
+\begin_inset Formula \begin{eqnarray*}
+\Lambda_{j} & \simeq & \frac{v_{Djr}}{\omega_{bj}}\\
+ & \simeq & \frac{\rho_{Lj}v_{j}}{R_{0}}\frac{qR_{0}}{v_{j}\sqrt{\epsilon}}\end{eqnarray*}
+
+\end_inset
+
+The final expression of the banana excursion then reads : 
+\begin_inset Formula \begin{equation}
+\boxed{\Lambda_{j}\simeq\frac{\rho_{Lj}q}{\sqrt{\epsilon}}}\label{eq:-28}\end{equation}
+
+\end_inset
+
+Another method to obtain this result comes with the use of the conservation
+ of canonical angular momentum due to the axisymmetry : 
+\begin_inset Formula \[
+\boxed{p_{j\varphi}=m_{j}Rv_{j\varphi}-\frac{e_{j}}{c}RA_{\varphi}=const.}\]
+
+\end_inset
+
+The relation 
+\begin_inset Formula $\mathbf{B}=\nabla\times\mathbf{A}$
+\end_inset
+
+ gives 
+\begin_inset Formula $B_{p}=-\frac{\partial}{\partial r}A_{\varphi}$
+\end_inset
+
+.
+ We therefore have : 
+\begin_inset Formula $p_{j\varphi}=m_{j}Rv_{j\varphi}+\frac{e_{j}}{c}R\int_{0}^{r}dr'B_{p}\left(r'\right)$
+\end_inset
+
+ Expanding around the mean radius of the orbit 
+\begin_inset Formula $r_{0}$
+\end_inset
+
+ (on the magnetic surface), we have : 
+\begin_inset Formula \[
+\int_{0}^{r}dr'B_{p}\left(r'\right)\simeq\int_{0}^{r_{0}}dr'B_{p}\left(r'\right)+\left(r-r_{0}\right)B_{p}\left(r_{0}\right)\]
+
+\end_inset
+
+Naming 
+\begin_inset Formula $\Lambda_{j}=r-r_{0}$
+\end_inset
+
+, the canonical angular momentum becomes : 
+\begin_inset Formula \[
+p_{j\varphi}=R\left(m_{j}v_{j\varphi}+\frac{e_{j}}{c}\int_{0}^{r}dr'B_{p}\left(r'\right)+\frac{e_{j}}{c}\Lambda_{j}B_{p}\left(r_{0}\right)\right)\]
+
+\end_inset
+
+We can choose 
+\begin_inset Formula $r_{0}$
+\end_inset
+
+ so that 
+\begin_inset Formula $p_{j\varphi}=R\frac{e}{c}\int_{0}^{r_{0}}dr'B_{p}(r')$
+\end_inset
+
+.
+ Using the conservation of 
+\begin_inset Formula $p_{j\varphi}$
+\end_inset
+
+, we can therefore determine the value of 
+\begin_inset Formula $\Lambda_{j}$
+\end_inset
+
+ : 
+\begin_inset Formula \[
+\Lambda_{j}=-\frac{m_{j}c}{e_{j}}v_{j\varphi}\]
+
+\end_inset
+
+Taking 
+\begin_inset Formula $v_{j\varphi}\sim v_{\parallel}\sim\pm\sqrt{\epsilon}v_{j}$
+\end_inset
+
+, we finally get : 
+\begin_inset Formula \[
+\Lambda_{j}\simeq\frac{\rho_{Lj}q}{\sqrt{\epsilon}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Effective collision frequency
+\end_layout
+
+\begin_layout Standard
+The effective collision frequency is the probability (per unit time) for
+ scattering throuch the velocity-space pitch-angle 
+\begin_inset Formula $\Delta\Xi\sim\sqrt{\epsilon}$
+\end_inset
+
+.
+ Using a random walk type argument in velocity space, we have : 
+\begin_inset Formula \[
+\nu_{eff}=\frac{\nu_{ei}}{\left(\Delta\Xi\right)^{2}}\]
+
+\end_inset
+
+ where 
+\begin_inset Formula $\nu_{ei}$
+\end_inset
+
+ is the collision frequency for 
+\begin_inset Formula $90°$
+\end_inset
+
+ Coulomb scattering.
+ The final expression reads : 
+\begin_inset Formula \begin{equation}
+\boxed{\nu_{eff}\sim\frac{\nu_{ei}}{\epsilon}}\label{eq:-29}\end{equation}
+
+\end_inset
+
+Another way to obtain this expression is to start from the expression for
+ the Lorentz collision operator : 
+\begin_inset Formula \[
+C_{ei}=\frac{\nu_{ei}}{2}2^{\frac{3}{2}}v_{the}^{3}\boldsymbol{\partial}\cdot\mathbb{Q}\cdot\boldsymbol{\partial}f_{e}\]
+
+\end_inset
+
+ Using the spherical 
+\begin_inset Formula $\left(v,\Xi,\zeta\right)$
+\end_inset
+
+ coordinate system, 
+\begin_inset Formula $\boldsymbol{\partial}=\hat{\mathbf{v}}\frac{\partial}{\partial v}+\hat{\boldsymbol{\Xi}}\frac{1}{v}\frac{\partial}{\partial\Xi}+\hat{\boldsymbol{\zeta}}\frac{1}{v\sin\Xi}\frac{\partial}{\partial\zeta}$
+\end_inset
+
+ .
+ The divergence reads : 
+\begin_inset Formula \[
+\partial\cdot A=\frac{1}{v^{2}}\frac{\partial}{\partial v}\left(v^{2}A_{r}\right)+\frac{1}{v\sin\Xi}\frac{\partial}{\partial\Xi}(\sin\Xi A_{\Xi})+\frac{1}{v\sin\Xi}\frac{\partial A_{\zeta}}{\partial\zeta}\]
+
+\end_inset
+
+
+\begin_inset Formula $\mathbb{Q}=\frac{1}{v}(\mathbb{I}-\hat{\mathbf{v}}\otimes\hat{\mathbf{v}})$
+\end_inset
+
+, so we can deduce 
+\begin_inset Formula $\mathbb{Q}\cdot\hat{\mathbf{v}}=0$
+\end_inset
+
+, 
+\begin_inset Formula $\mathbb{Q}\cdot\hat{\boldsymbol{\Xi}}=\frac{1}{v}\hat{\boldsymbol{\Xi}}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbb{Q}\cdot\hat{\boldsymbol{\zeta}}=\frac{1}{v}\hat{\boldsymbol{\zeta}}$
+\end_inset
+
+.
+ The Lorentz collision operator becomes : 
+\begin_inset Formula \[
+C_{ei}=\frac{\nu_{ei}}{2}2^{\frac{3}{2}}\left(\frac{v_{the}}{v}\right)^{3}\left[\frac{1}{\sin\Xi}\frac{\partial}{\partial\Xi}\left(\sin\Xi\frac{\partial f_{e}}{\partial\Xi}\right)+\frac{1}{\sin^{2}\Xi}\frac{\partial^{2}f_{e}}{\partial\zeta^{2}}\right]\]
+
+\end_inset
+
+We then use the symmetry about the magnetic field property to determine
+ 
+\begin_inset Formula $\frac{\partial f_{e}}{\partial\zeta}=0$
+\end_inset
+
+.
+ Using 
+\begin_inset Formula $v_{\parallel}=v\cos\Xi$
+\end_inset
+
+ and 
+\begin_inset Formula $v_{\perp}=v\sin\Xi$
+\end_inset
+
+ and using the relations 
+\begin_inset Formula $u=v^{2}\sin^{2}\Xi/2B$
+\end_inset
+
+, 
+\begin_inset Formula $\frac{\partial}{\partial\Xi}=\frac{\partial u}{\partial\Xi}\frac{\partial}{\partial u}=\frac{v^{2}\sin\Xi\cos\Xi}{B}\frac{\partial}{\partial u}$
+\end_inset
+
+ , we get : 
+\begin_inset Formula \[
+C_{ei}=\nu_{ei}\left(v\right)\frac{1}{B}v_{\parallel}\frac{\partial}{\partial u}\left(v_{\parallel}u\frac{\partial f_{e}}{\partial u}\right)\]
+
+\end_inset
+
+ where 
+\begin_inset Formula $\nu_{ei}(v)=\nu_{ei}2^{\frac{3}{2}}\left(v_{the}/v\right)^{3}$
+\end_inset
+
+.
+ Using the relations 
+\begin_inset Formula $v_{\parallel}=v\sqrt{1-\frac{\lambda}{h}}=v\xi$
+\end_inset
+
+ and 
+\begin_inset Formula $\frac{\partial}{\partial u}=\frac{\partial\lambda}{\partial u}\frac{\partial}{\partial\lambda}=\frac{B_{0}}{\mathcal{E}}\frac{\partial}{\partial\lambda}$
+\end_inset
+
+, we can write : 
+\begin_inset Formula \begin{eqnarray}
+C_{ei} & = & \nu_{ei}\left(v\right)\frac{h}{B_{0}}v_{\parallel}\frac{B_{0}}{\mathcal{E}}\frac{\partial}{\partial\lambda}\left(v_{\parallel}\frac{uB_{0}}{\mathcal{E}}\frac{\partial f_{e}}{\partial\lambda}\right)\nonumber \\
+ & = & 2\nu_{ei}\left(v\right)h\frac{v_{\parallel}}{v^{2}}\frac{\partial}{\partial\lambda}\left(v\xi\lambda\frac{\partial f_{e}}{\partial\lambda}\right)\nonumber \\
+ & = & 2\nu_{ei}2^{\frac{3}{2}}\left(\frac{v_{the}}{v}\right)^{3}h\xi\frac{\partial}{\partial\lambda}\left(\xi\lambda\frac{\partial f_{e}}{\partial\lambda}\right)\label{eq:-30}\end{eqnarray}
+
+\end_inset
+
+We then use (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-24"
+
+\end_inset
+
+) to determine the following dependances : 
+\begin_inset Formula \begin{eqnarray*}
+\Delta\lambda & \sim & \epsilon\\
+\lambda & \sim & 1\\
+h & \sim & 1\\
+\xi=\sqrt{1-\frac{\lambda}{h}} & \sim & \sqrt{\epsilon}\end{eqnarray*}
+
+\end_inset
+
+Taking 
+\begin_inset Formula $v\sim v_{the}$
+\end_inset
+
+, the collision operator becomes : 
+\begin_inset Formula \[
+C_{ei}=\nu_{eff}f_{e}\sim\nu_{ei}\sqrt{\epsilon}\sqrt{\epsilon}\epsilon^{2}f_{e}\]
+
+\end_inset
+
+ We can therefore deduce the dependance for the effective collision frequency
+ : 
+\begin_inset Formula \[
+\nu_{eff}\sim\frac{\nu_{ei}}{\epsilon}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+\begin_inset Quotes eld
+\end_inset
+
+Heuristic
+\begin_inset Quotes erd
+\end_inset
+
+ estimates of 
+\begin_inset Formula $D_{Banana}$
+\end_inset
+
+ and 
+\begin_inset Formula $D_{Plateau}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Knowing the expressions for the fraction of trapped particles 
+\begin_inset Formula $f_{T}$
+\end_inset
+
+ , the effective collision frequency 
+\begin_inset Formula $\nu_{eff}$
+\end_inset
+
+ and the banana excursion 
+\begin_inset Formula $\Lambda_{j}$
+\end_inset
+
+ , we can make an estimate for the banana diffusion coefficient with a random
+ walk argument.
+ We therefore have : 
+\begin_inset Formula \[
+D_{Banana}\sim f_{T}\frac{\left(\Delta x\right)^{2}}{\Delta t}\]
+
+\end_inset
+
+ with 
+\begin_inset Formula $f_{T}\sim\sqrt{\epsilon}$
+\end_inset
+
+, 
+\begin_inset Formula $\Delta x=\Lambda_{j}\sim\rho_{Lj}q/\sqrt{\epsilon}$
+\end_inset
+
+ and 
+\begin_inset Formula $\Delta t=\nu_{effj}^{-1}\sim\epsilon/\nu_{jj'}$
+\end_inset
+
+ .
+ The diffusion coefficient reads : 
+\begin_inset Formula \begin{equation}
+\boxed{D_{Banana}\sim\frac{\nu_{ei}\rho_{Le}^{2}q^{2}}{\epsilon^{\frac{3}{2}}}}=\frac{\nu_{ie}\rho_{Li}^{2}q^{2}}{\epsilon^{\frac{3}{2}}}\label{eq:-31}\end{equation}
+
+\end_inset
+
+For this coefficient to be applicable, the trapped particles must perform
+ a bounce orbit before being scattered.
+ This gives a criterion on collisionality : 
+\begin_inset Formula \begin{equation}
+\boxed{\nu_{j}^{*}\equiv\frac{\nu_{effj}}{\omega_{bj}}\sim\frac{\nu_{jj'}qR_{0}}{\epsilon^{\frac{3}{2}}v_{thj}}<1}\label{eq:-32}\end{equation}
+
+\end_inset
+
+We can compare the banana diffusion coefficient to the classical and Pfirsch-Sch
+lüter coefficients : 
+\begin_inset Formula \begin{eqnarray*}
+\frac{D_{Banana}}{D_{class}} & \sim & \frac{\nu_{ei}\rho_{Le}^{2}q^{2}}{\epsilon^{\frac{3}{2}}\nu_{ei}\rho_{Le}^{2}}\sim\frac{q^{2}}{\epsilon^{\frac{3}{2}}}\gg1\\
+\frac{D_{Banana}}{D_{P-S}} & \sim & \frac{\nu_{ei}\rho_{Le}^{2}q^{2}}{\epsilon^{\frac{3}{2}}\nu_{ei}\rho_{Le}^{2}q^{2}}\sim\frac{1}{\epsilon^{\frac{3}{2}}}\gg1\end{eqnarray*}
+
+\end_inset
+
+In the very collisionnal Pfirsch-Schlüter regime, the collisions are frequent
+ enough to scatter trapped particles before completing their bounce orbit,
+ therefore 
+\begin_inset Formula $\nu_{j}^{*}>1$
+\end_inset
+
+.
+ Moreover, they are also frequent enough to scatter untrapped (circulating)
+ particles before completing their transit orbit along a field line.
+ This reads : 
+\begin_inset Formula \[
+\nu_{jj'}>\frac{v_{thj}}{qR}\]
+
+\end_inset
+
+The condition for the Pfirsch-Schlüter diffusion regime therefore reads
+ : 
+\begin_inset Formula \begin{equation}
+\boxed{\nu_{j}^{*}>\epsilon^{-\frac{3}{2}}}\label{eq:-33}\end{equation}
+
+\end_inset
+
+The intermediate (or Plateau) regime occurs when : 
+\begin_inset Formula \begin{equation}
+\boxed{1<\nu_{j}^{*}<\epsilon^{-\frac{3}{2}}}\label{eq:-34}\end{equation}
+
+\end_inset
+
+There, the circulating particles can complete a transit orbit before being
+ scattered, while trapped particles still cannot.
+ We can estimate the diffusion coefficient 
+\begin_inset Quotes eld
+\end_inset
+
+heuristically
+\begin_inset Quotes erd
+\end_inset
+
+.
+ We have : 
+\begin_inset Formula \[
+D_{Plateau}\sim\frac{\left(\Delta x\right)^{2}}{\Delta t}\sim\left(v_{Dr}\right)^{2}\Delta t\]
+
+\end_inset
+
+Using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-27"
+
+\end_inset
+
+) and 
+\begin_inset Formula $\Delta t\sim qR/v_{th}$
+\end_inset
+
+ for the effective parallel diffusion time, the coefficient reads : 
+\begin_inset Formula \begin{equation}
+\boxed{D_{Plateau}\sim\frac{q^{2}\rho_{Le}^{2}v_{the}}{qR}}\label{eq:-35}\end{equation}
+
+\end_inset
+
+We now know 
+\begin_inset Formula $D_{Banana}$
+\end_inset
+
+, 
+\begin_inset Formula $D_{P-S}$
+\end_inset
+
+ and their collisionality domains of application.
+ Therefore, in banana regime, since 
+\begin_inset Formula $\nu_{max}^{*}=1$
+\end_inset
+
+ : 
+\begin_inset Formula \[
+\nu_{max}=\epsilon^{\frac{3}{2}}\frac{v_{the}}{qR}\]
+
+\end_inset
+
+We can deduce : 
+\begin_inset Formula \[
+\left.D_{Banana}\right|_{\nu=\nu_{max}}\sim\frac{q^{2}\rho_{Le}^{2}v_{the}}{qR}\equiv D_{Plateau}\]
+
+\end_inset
+
+Likewise, in the Pfirsch-Schlüter regime, since 
+\begin_inset Formula $\nu_{min}^{*}=\epsilon^{-\frac{3}{2}}$
+\end_inset
+
+ : 
+\begin_inset Formula \[
+\nu_{min}=\frac{v_{the}}{qR}\]
+
+\end_inset
+
+We can deduce : 
+\begin_inset Formula \[
+\left.D_{P-S}\right|_{\nu=\nu_{max}}\sim\frac{q^{2}\rho_{Le}^{2}v_{the}}{qR}\equiv D_{Plateau}\]
+
+\end_inset
+
+We therefore have the two dependencies : 
+\begin_inset Formula \begin{eqnarray}
+D_{Banana} & \sim & \nu_{e}^{*}D_{Plateau}\label{eq:-36}\\
+D_{P-S} & \sim & \epsilon^{\frac{3}{2}}\nu_{e}^{*}D_{Plateau}\label{eq:-37}\end{eqnarray}
+
+\end_inset
+
+It is important to note that in practice the actual Plateau regime (where
+ 
+\begin_inset Formula $D$
+\end_inset
+
+ is independant of 
+\begin_inset Formula $\nu$
+\end_inset
+
+) is very small, except when 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+ is very small.
+\end_layout
+
+\begin_layout Section
+Influence of parallel electric field
+\end_layout
+
+\begin_layout Subsection
+Ware-pinch effect
+\end_layout
+
+\begin_layout Standard
+For ordinary tokamak operation, a parallel eletric field 
+\begin_inset Formula $E_{\varphi}$
+\end_inset
+
+ is induced by a transformer to :
+\end_layout
+
+\begin_layout Itemize
+Produce the conning poloidal field 
+\begin_inset Formula $B_{p}$
+\end_inset
+
+ necessary for proper equilibrium
+\end_layout
+
+\begin_layout Itemize
+Drive the ohmic heating current
+\end_layout
+
+\begin_layout Standard
+Typically, 
+\begin_inset Formula $E_{\varphi}$
+\end_inset
+
+ will be relatively small in magnitude (a few volts 
+\begin_inset Formula $/2\pi R$
+\end_inset
+
+).
+ Due to axisymmetry, the electric field 
+\begin_inset Formula $E_{\varphi}$
+\end_inset
+
+ is not periodic, but constant in the 
+\begin_inset Formula $\varphi$
+\end_inset
+
+ direction.
+ This can cause acceleration of particles along the magnetic field.
+ This acceleration is approximately 
+\begin_inset Formula $\sim\Delta v_{\parallel}/\Delta t\sim eE_{\parallel}/m$
+\end_inset
+
+.
+ Since 
+\begin_inset Formula $E_{\varphi}\sim E_{\parallel}$
+\end_inset
+
+ and
+\begin_inset Formula $\Delta t\sim\omega_{b}^{-1}$
+\end_inset
+
+ in the banana regime, we have : 
+\begin_inset Formula \[
+\Delta v_{\parallel}\sim\frac{eE_{\varphi}}{m\omega_{b}}\]
+
+\end_inset
+
+The parallel velocity 
+\begin_inset Formula $v_{\parallel}=\sqrt{2\left(\mathcal{E}-uB\pm e\Phi_{0}\right)}$
+\end_inset
+
+ with 
+\begin_inset Formula $\Phi_{0}=-\int dsE_{\parallel}$
+\end_inset
+
+ is therefore no longer symmetric about the minimum magnetic field 
+\begin_inset Formula $B_{min}$
+\end_inset
+
+.
+ This leads to an inward drift of the trapped particles.
+ The net inward drift is 
+\begin_inset Formula $v_{Dware}\sim-\left|v_{Dr}\right|\Delta\theta=-v_{th}\rho_{L}\Delta\theta/R$
+\end_inset
+
+ where 
+\begin_inset Formula $\Delta\theta$
+\end_inset
+
+ is the shift in turning point of the banana orbit.
+ Its expression is 
+\begin_inset Formula $\Delta\theta\sim\Delta v_{\parallel}/v_{\parallel trapped}$
+\end_inset
+
+.
+ Since 
+\begin_inset Formula $v_{\parallel trapped}\sim\sqrt{\epsilon}v_{th}$
+\end_inset
+
+ and 
+\begin_inset Formula $\omega_{b}\sim\sqrt{\epsilon}v_{th}/qR$
+\end_inset
+
+, we have : 
+\begin_inset Formula \[
+\Delta\theta\sim\frac{eE_{\varphi}qR}{m\epsilon v_{th}^{2}}\]
+
+\end_inset
+
+Hence, we can write : 
+\begin_inset Formula \[
+\left|v_{Dware}\right|\sim\frac{v_{th}^{2}}{\frac{eB}{mc}R}\frac{eE_{\varphi}qR}{m\epsilon v_{th}^{2}}\sim\frac{cE_{\varphi}}{B_{p}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Calculation of the bounce-averaged radial drift velocity
+\end_layout
+
+\begin_layout Standard
+The expression for the drift velocity reads : 
+\begin_inset Formula $\mathbf{v}_{D}=c\frac{\mathbf{E}\times\mathbf{B}}{B^{2}}+\frac{uB+v_{\parallel}^{2}}{\Omega B}\hat{\mathbf{b}}\times\nabla B$
+\end_inset
+
+ where 
+\begin_inset Formula $\mathbf{E}=E_{\varphi}\hat{\boldsymbol{\varphi}}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbf{B}=\frac{B_{0}}{h}\hat{\mathbf{b}}=\frac{1}{h}\left(B_{T}\hat{\boldsymbol{\theta}}+B_{p}\hat{\boldsymbol{\varphi}}\right)$
+\end_inset
+
+.
+ Using the orderings 
+\begin_inset Formula $\left|E_{\varphi}/B_{p}\right|\ll1$
+\end_inset
+
+ and 
+\begin_inset Formula $\left|B_{p}/B_{T}\right|\ll1$
+\end_inset
+
+ and defining 
+\begin_inset Formula $\Omega_{0}=eB_{0}/mc=h\Omega$
+\end_inset
+
+, we get : 
+\begin_inset Formula \[
+v_{Dr}=-\left(\frac{v_{\parallel}^{2}h^{2}}{\Omega_{0}B_{0}}+\frac{uh}{\Omega_{0}}\right)\frac{B_{0}}{R_{0}h^{2}}\sin\theta-c\frac{E_{\varphi}}{B_{p}}\frac{B_{p}^{2}}{B_{T}^{2}}\]
+
+\end_inset
+
+The last term is negligible.
+ Using 
+\begin_inset Formula $\frac{B_{T}}{B_{p}}\hat{\mathbf{b}}\cdot\nabla\simeq\frac{1}{r}\frac{\partial}{\partial\theta}$
+\end_inset
+
+ , we look at the following expression : 
+\begin_inset Formula \begin{eqnarray*}
+\frac{B_{T}}{B_{p}}\frac{v_{\parallel}}{\Omega_{0}}\hat{\mathbf{b}}\cdot\nabla\left(hv_{\parallel}\right)-\frac{cE_{\varphi}}{B_{p}} & \simeq & -\frac{v_{\parallel}^{2}\sin\theta}{\Omega_{0}R_{0}}+\frac{h}{\Omega_{0}r}\frac{\partial}{\partial\theta}\frac{v_{\parallel}^{2}}{2}-\frac{cE_{\varphi}}{B_{p}}\\
+ & \simeq & -\frac{v_{\parallel}^{2}\sin\theta}{\Omega_{0}R_{0}}+\frac{h}{\Omega_{0}r}\frac{\partial}{\partial\theta}\left(\mathcal{E}-uB+\frac{e}{m}\int E_{\parallel}qR_{0}d\theta\right)-\frac{cE_{\varphi}}{B_{p}}\\
+ & \simeq & -\left(\frac{v_{\parallel}^{2}h^{2}}{\Omega_{0}B_{0}}+\frac{uh}{\Omega_{0}}\right)\frac{B_{0}}{R_{0}h^{2}}\sin\theta+\frac{h}{\Omega_{0}r}qR_{0}\frac{e}{m}E_{\parallel}-\frac{cE_{\varphi}}{B_{p}}\end{eqnarray*}
+
+\end_inset
+
+We have the following relation : 
+\begin_inset Formula \[
+\frac{h}{\Omega_{0}r}qR_{0}\frac{e}{m}E_{\parallel}=\frac{ch}{\frac{e}{m}}\frac{qR_{0}}{rB_{T}}\frac{e}{m}E_{\parallel}=\frac{chE_{\parallel}}{B_{p}}\sim\frac{cE_{\varphi}}{B_{p}}\]
+
+\end_inset
+
+Therefore, we can deduce : 
+\begin_inset Formula \[
+v_{Dr}=\frac{B_{T}}{B_{p}}\frac{v_{\parallel}}{\Omega_{0}}\hat{\mathbf{b}}\cdot\nabla\left(hv_{\parallel}\right)-\frac{cE_{\varphi}}{B_{p}}\]
+
+\end_inset
+
+The bounce-averaged radial component of 
+\begin_inset Formula $\mathbf{v}_{D}$
+\end_inset
+
+ is therefore : 
+\begin_inset Formula \[
+\overline{v_{Dr}}=\frac{\oint_{T}\frac{ds}{v_{\parallel}}v_{Dr}}{\oint_{T}\frac{ds}{v_{\parallel}}}=\frac{B_{T}}{\Omega_{0}B_{p}\oint_{T}\frac{ds}{v_{\parallel}}}\oint_{T}\frac{ds}{v_{\parallel}}\hat{\mathbf{b}}\cdot\nabla\left(hv_{\parallel}\right)-\frac{cE_{\varphi}}{B_{p}}\]
+
+\end_inset
+
+Using 
+\begin_inset Formula $ds\sim qR_{0}d\theta$
+\end_inset
+
+, we have : 
+\begin_inset Formula \begin{eqnarray*}
+\oint_{T}\frac{ds}{v_{\parallel}}\hat{\mathbf{b}}\cdot\nabla\left(hv_{\parallel}\right) & \simeq & 2\int_{-\theta_{b}}^{\theta_{b}}qR_{0}d\theta\frac{1}{r}\frac{\partial}{\partial\theta}\left(hv_{\parallel}\right)\\
+ & = & \frac{2qR_{0}}{r}\left[hv_{\parallel}\right]_{-\theta_{b}}^{\theta_{b}}\\
+ & = & 0\end{eqnarray*}
+
+\end_inset
+
+We therefore have : 
+\begin_inset Formula \begin{equation}
+\boxed{\overline{v_{Dr}}=-\frac{cE_{\varphi}}{B_{p}}}\label{eq:-38}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Expression of the radial particle flow
+\end_layout
+
+\begin_layout Standard
+In the more collisional regimes, the acceleration force (along the field
+ line) produced by 
+\begin_inset Formula $E_{\parallel}$
+\end_inset
+
+ will be largely cancelled by the drag forces 
+\begin_inset Formula $R_{ei\parallel}$
+\end_inset
+
+.
+ The radial flow calculation is changed by adding 
+\begin_inset Formula $E_{\varphi}$
+\end_inset
+
+ to (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-10"
+
+\end_inset
+
+).
+ This reads : 
+\begin_inset Formula \[
+\frac{1}{c}V_{r}B_{\theta}=\eta_{\parallel}J_{\varphi}-E_{\varphi}\]
+
+\end_inset
+
+Hence, (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-11"
+
+\end_inset
+
+) becomes : 
+\begin_inset Formula \begin{equation}
+\boxed{V_{r}=\frac{c}{B_{\theta}}\left(\eta_{\parallel}J_{\varphi}-E_{\varphi}\right)=-\frac{c}{B_{\varphi}}\left(\eta_{\perp}J_{\theta}+\frac{1}{r}\frac{\partial\Phi}{\partial\theta}\right)}\label{eq:-39}\end{equation}
+
+\end_inset
+
+Further calculation leads to : 
+\begin_inset Formula \[
+\Gamma=n_{0}\left\langle V_{r}\right\rangle _{\theta}=-\left(D_{P-S}+D_{class}\right)\frac{dn_{0}}{dr}-n_{0}\frac{cE_{\varphi}}{B_{p}}\epsilon^{2}\]
+
+\end_inset
+
+For tokamaks, the 
+\begin_inset Formula $E_{\varphi}$
+\end_inset
+
+ contribution is negligible.
+ In general, by taking the 
+\begin_inset Formula $\varphi$
+\end_inset
+
+-component of the momentum balance equation, we get : 
+\begin_inset Formula \[
+\left\langle n_{j}e_{j}\left[E_{\varphi}+\frac{1}{c}\hat{\boldsymbol{\varphi}}\cdot\left(\mathbf{V}_{j}\times\mathbf{B}\right)\right]+R_{jj'}^{\varphi}\right\rangle _{\theta}=0\]
+
+\end_inset
+
+ Since 
+\begin_inset Formula $\hat{\boldsymbol{\varphi}}\cdot\left(\mathbf{V}_{j}\times\mathbf{B}\right)=V_{jr}B_{\theta}=V_{jr}B_{p}/h$
+\end_inset
+
+, we can write : 
+\begin_inset Formula \[
+\Gamma_{j}=\left\langle n_{j}V_{jr}\right\rangle _{\theta}=-\frac{c}{e_{j}B_{p}}\left\langle R_{jj'}^{\varphi}+n_{j}e_{j}E_{\varphi}\right\rangle _{\theta}\]
+
+\end_inset
+
+The friction term 
+\begin_inset Formula $R_{jj'}^{\varphi}$
+\end_inset
+
+ has the following expression :
+\begin_inset Formula \begin{eqnarray*}
+R_{jj'}^{\varphi}=\mathbf{R}_{jj'}\cdot\hat{\boldsymbol{\varphi}} & = & \left(\hat{\mathbf{b}}R_{jj'\parallel}+\mathbf{R}_{jj'\perp}\right)\cdot\hat{\boldsymbol{\varphi}}\\
+ & = & \frac{B_{\varphi}}{B}R_{jj'\parallel}+R_{jj'\perp}^{\varphi}\end{eqnarray*}
+
+\end_inset
+
+Taking 
+\begin_inset Formula $E_{\varphi}\simeq E_{\parallel}$
+\end_inset
+
+ gives : 
+\begin_inset Formula \begin{equation}
+\boxed{\Gamma_{j}=-\frac{c}{e_{j}B_{p}}\left\langle \frac{B_{\varphi}}{B}\left[R_{jj'\parallel}+n_{j}e_{j}E_{\parallel}\right]+R_{jj'\perp}^{\varphi}\right\rangle _{\theta}}\label{eq:-40}\end{equation}
+
+\end_inset
+
+The first term corresponds to neoclassical diffusion (associated with parallel
+ forces).
+ The second corresponds to classical diffusion (associated with perpendicular
+ forces).
+ In particular, in the collisional regime (Pfirsch-Schlüter), we have shown
+ that :
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $E_{\parallel}$
+\end_inset
+
+-effects are nearly balanced by 
+\begin_inset Formula $R_{ei\parallel}$
+\end_inset
+
+ (leaving only 
+\begin_inset Formula $-\epsilon^{2}cE_{\varphi}/B_{p}$
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $D_{P-S}\sim\eta_{\parallel}\sim R_{ei\parallel}$
+\end_inset
+
+is associated with parallel forces and 
+\begin_inset Formula $D_{class}\sim\eta_{\perp}\sim R_{ei\perp}$
+\end_inset
+
+ is associated with perpendicular forces.
+ When dealing with the more collisionless (banana) regimes, the parallel
+ field effects on the trapped-particle population lead to the 
+\begin_inset Quotes eld
+\end_inset
+
+Ware-pinch
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Kinetic analysis in the banana regime
+\end_layout
+
+\begin_layout Subsection
+Steady-state drift-kinetic equation and ordering
+\end_layout
+
+\begin_layout Standard
+The steady-state drift-kinetic equation is determined by the Vlasov equation
+ : 
+\begin_inset Formula \[
+\frac{\partial f}{\partial t}+\mathbf{v}\cdot\nabla f+\frac{e}{m}\left(E+\frac{1}{c}\mathbf{v}\times\mathbf{B}\right)\cdot\boldsymbol{\partial}f=\left.\frac{\partial f}{\partial t}\right|_{coll}\]
+
+\end_inset
+
+Ordering with respect to 
+\begin_inset Formula $\rho_{L}/\ell$
+\end_inset
+
+ where 
+\begin_inset Formula $\ell$
+\end_inset
+
+ is the field scale length, the particle velocity is divided into a 
+\begin_inset Formula $0^{th}$
+\end_inset
+
+-order parallel velocity 
+\begin_inset Formula $v_{\parallel}\hat{\mathbf{b}}$
+\end_inset
+
+ and a 
+\begin_inset Formula $1^{st}$
+\end_inset
+
+-order drift velocity 
+\begin_inset Formula $\mathbf{v}_{D}$
+\end_inset
+
+.
+ Applying steady-state gives, where 
+\begin_inset Formula $C\left[f\right]$
+\end_inset
+
+ is the linearized Lorentz operator : 
+\begin_inset Formula \begin{equation}
+\boxed{\left(v_{\parallel}\hat{\mathbf{b}}+\mathbf{v}_{D}\right)\cdot\nabla f+\frac{e}{m}v_{\parallel}E_{\parallel}\frac{\partial f}{\partial\mathcal{E}}=C\left[f\right]}\label{eq:-41}\end{equation}
+
+\end_inset
+
+We now consider the basic ordering 
+\begin_inset Formula $\omega\ll\Omega_{j}$
+\end_inset
+
+ , i.e.
+ that the frequencies studied are small compared to the particle gyrofrequencies.
+ This leads to a small-gyroradius expansion of the distribution : 
+\begin_inset Formula \[
+f=f_{0}+f_{1}+\ldots\]
+
+\end_inset
+
+We can note, the 
+\begin_inset Formula $0^{th}$
+\end_inset
+
+-order electric potential expression being 
+\begin_inset Formula $\Phi_{0}\equiv-\int E_{\parallel}dS$
+\end_inset
+
+, that 
+\begin_inset Formula $\left|\frac{e}{m}\Phi_{0}/\mathcal{E}\right|\ll1$
+\end_inset
+
+.
+ This means that we can take the 
+\begin_inset Formula $E_{\parallel}$
+\end_inset
+
+ term to be 
+\begin_inset Formula $1^{st}$
+\end_inset
+
+-order in the gyroradius ordering.
+ To lowest order, we have : 
+\begin_inset Formula \begin{equation}
+\boxed{v_{\parallel}=\sqrt{2\left(\mathcal{E}-uB\right)}}\label{eq:-42}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\boxed{\hat{\mathbf{b}}\cdot\nabla f_{0}=0}\label{eq:-43}\end{equation}
+
+\end_inset
+
+The expression for 
+\begin_inset Formula $v_{\parallel}$
+\end_inset
+
+ will be the one used in the 
+\begin_inset Formula $1^{st}$
+\end_inset
+
+-order equations.
+ Since the effects due to 
+\begin_inset Formula $E_{\parallel}$
+\end_inset
+
+ are taken into account in 
+\begin_inset Formula $f_{1}$
+\end_inset
+
+, (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-41"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-43"
+
+\end_inset
+
+) give us : 
+\begin_inset Formula \begin{equation}
+C\left[f_{0}\right]=0\label{eq:-44}\end{equation}
+
+\end_inset
+
+For the Lorentz operator, we know that this is satised for a maxwellian,
+ i.e.
+ : 
+\begin_inset Formula \begin{equation}
+\boxed{f_{0}=f_{M}}\label{eq:-45}\end{equation}
+
+\end_inset
+
+This ensures that we have to solve the equation for f_{1} to be able to
+ evaluate essential transport terms such as Rei.
+ To first order, we have, using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-45"
+
+\end_inset
+
+) :
+\begin_inset Formula \begin{equation}
+\boxed{v_{\parallel}\hat{\mathbf{b}}\cdot\nabla f_{1}-C\left[f_{1}\right]=-\mathbf{v}_{D}\cdot\nabla f_{M}+\frac{e}{T}v_{\parallel}E_{\parallel}f_{M}}\label{eq:-46}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Spitzer conductivity
+\end_layout
+
+\begin_layout Standard
+In order to separate out the contribution accounting for classical (Spitzer)
+ conductivity, we let : 
+\begin_inset Formula \begin{equation}
+\boxed{f_{1}=\hat{f}+f_{S}}\label{eq:-47}\end{equation}
+
+\end_inset
+
+With the following expression for the Lorentz operator for the Spitzer contribut
+ion : 
+\begin_inset Formula \begin{equation}
+\boxed{C\left[f_{S}\right]=-\frac{e}{T}v_{\parallel}E_{\parallel}f_{M}}\label{eq:-48}\end{equation}
+
+\end_inset
+
+The 
+\begin_inset Formula $0^{th}$
+\end_inset
+
+-order maxwellian reads, with 
+\begin_inset Formula $v_{th}^{2}=T_{0}/m$
+\end_inset
+
+ : 
+\begin_inset Formula \[
+f_{M}=\frac{n_{0}}{\left(2\pi\right)^{\frac{3}{2}}v_{th}^{3}}\exp\left(-\frac{v^{2}}{2v_{th}^{2}}\right)\]
+
+\end_inset
+
+The 
+\begin_inset Formula $1^{st}$
+\end_inset
+
+-order equation therefore becomes : 
+\begin_inset Formula \begin{equation}
+\boxed{v_{\parallel}\hat{\mathbf{b}}\cdot\nabla\hat{f}-C\left[\hat{f}\right]=-v_{Dr}\left[\frac{d\ln n_{0}}{dr}+\frac{1}{2}\left(\frac{v^{2}}{v_{th}^{2}}-3\right)\frac{d\ln T_{0}}{dr}\right]f_{M}-v_{\parallel}\hat{\mathbf{b}}\cdot\nabla f_{S}}\label{eq:-49}\end{equation}
+
+\end_inset
+
+Following Spitzer, we let : 
+\begin_inset Formula \begin{equation}
+\boxed{f_{S}=v_{\parallel}E_{\parallel}g_{S}}\label{eq:-50}\end{equation}
+
+\end_inset
+
+with 
+\begin_inset Formula $g_{S}$
+\end_inset
+
+ a constant with respect to 
+\begin_inset Formula $\lambda\equiv uB_{0}/\mathcal{E}$
+\end_inset
+
+ .
+ Using this expression and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-30"
+
+\end_inset
+
+) in the 
+\begin_inset Formula $1^{st}$
+\end_inset
+
+-order equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-48"
+
+\end_inset
+
+), we get : 
+\begin_inset Formula \[
+2\nu_{ei}\left(v\right)h\xi vE_{\parallel}g_{S}\frac{\partial}{\partial\lambda}\left(\xi\lambda\frac{\partial\xi}{\partial\lambda}\right)=\frac{\left|e\right|}{T_{e}}v\xi E_{\parallel}\]
+
+\end_inset
+
+Noting that 
+\begin_inset Formula $h\frac{\partial}{\partial\lambda}\left(\xi\lambda\frac{\partial}{\partial\lambda}\xi\right)=-\frac{1}{2}$
+\end_inset
+
+ , we can then write the expression for 
+\begin_inset Formula $g_{S}$
+\end_inset
+
+ : 
+\begin_inset Formula \begin{equation}
+\boxed{g_{S}=-\frac{\left|e\right|}{T_{e}}f_{Me}\nu_{ei}\left(v\right)}\label{eq:-51}\end{equation}
+
+\end_inset
+
+Knowing 
+\begin_inset Formula $g_{S}$
+\end_inset
+
+ and hence 
+\begin_inset Formula $f_{S}$
+\end_inset
+
+, we can then deduce the classical (Spitzer) conductivity : 
+\begin_inset Formula \[
+j_{S}=-\left|e\right|\int d^{3}\mathbf{v}v_{\parallel}f_{S}=\sigma_{\parallel}E_{\parallel}\]
+
+\end_inset
+
+Solving for 
+\begin_inset Formula $\sigma_{\parallel}$
+\end_inset
+
+ gives, using 
+\begin_inset Formula $v=\sqrt{2}v_{th}\bar{v}$
+\end_inset
+
+ and 
+\begin_inset Formula $\int d^{3}\mathbf{v}=\int d\mathcal{E}dud\phi\frac{B}{v_{\parallel}}=\frac{4\pi}{h}v_{th}^{4}\int_{0}^{\infty}\bar{v}^{3}d\bar{v}\int_{0}^{h}\frac{d\lambda}{v_{\parallel}}$
+\end_inset
+
+ : 
+\begin_inset Formula \[
+\sigma_{\parallel}=\frac{4e^{2}n_{0}v_{th}^{2}}{\sqrt{\pi}h\nu_{ei}T_{e}}\int_{0}^{\infty}d\bar{v}\bar{v}^{7}\exp\left(-\bar{v}^{2}\right)\int_{0}^{h}d\lambda\sqrt{1-\frac{\lambda}{h}}\]
+
+\end_inset
+
+ We have 
+\begin_inset Formula $\int_{0}^{\infty}d\bar{v}\bar{v}^{7}\exp\left(-\bar{v}^{2}\right)=3$
+\end_inset
+
+ and 
+\begin_inset Formula $\int_{0}^{h}d\lambda\sqrt{1-\frac{\lambda}{h}}=\frac{2}{3}h$
+\end_inset
+
+, therefore : 
+\begin_inset Formula \begin{equation}
+\sigma_{\parallel}=\frac{8}{\sqrt{\pi}}\frac{n_{0}e^{2}}{m_{e}\nu_{ei}}\label{eq:-52}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\sigma_{\parallel}=\frac{32}{3\pi}\frac{n_{0}e^{2}}{m_{e}\nu_{ei}^{Brag}}\label{eq:-53}\end{equation}
+
+\end_inset
+
+Noting 
+\begin_inset Formula $f_{e}=f_{Me}+\hat{f}_{e}+f_{S}$
+\end_inset
+
+, the total parallel current density reads : 
+\begin_inset Formula \begin{equation}
+\boxed{j_{\parallel}=-\left|e\right|\int d^{3}\mathbf{v}v_{\parallel}f_{e}=\sigma_{\parallel}E_{\parallel}-\left|e\right|\int d^{3}\mathbf{v}v_{\parallel}\hat{f}_{e}}\label{eq:-54}\end{equation}
+
+\end_inset
+
+The first term in the expression corresponds to the classic parallel current
+ density (ohmic heating current) and the second to the neoclassical parallel
+ current density (bootstrap current and conductivity reduction).
+\end_layout
+
+\begin_layout Subsection
+Neoclassical radial particle flux and parallel current distribution
+\end_layout
+
+\begin_layout Subsubsection
+Expression of 
+\begin_inset Formula $\Gamma_{neo}$
+\end_inset
+
+, 
+\begin_inset Formula $\left\langle j_{\parallel}-j_{S}\right\rangle _{\theta}$
+\end_inset
+
+ and reduced 
+\begin_inset Formula $1^{st}$
+\end_inset
+
+-order equation
+\end_layout
+
+\begin_layout Standard
+The radial neoclassical particle flux is given by the following expression
+ : 
+\begin_inset Formula \[
+\Gamma_{neo}\simeq\frac{c}{\left|e\right|B_{p}}\left\langle R_{ei\parallel}-n_{0}je_{j}E_{\parallel}\right\rangle _{\theta}\]
+
+\end_inset
+
+ with the parallel friction force 
+\begin_inset Formula $R_{ei\parallel}=\int d^{3}\mathbf{v}m_{e}v_{\parallel}C_{ei}\left[f_{e}\right]$
+\end_inset
+
+.
+ The second term is cancelled out by classical friction forces, using the
+ linearity of the collision operator and the expressions for 
+\begin_inset Formula $C_{ei}\left[f_{Me}\right]$
+\end_inset
+
+ and 
+\begin_inset Formula $C_{ei}\left[f_{S}\right]$
+\end_inset
+
+.
+ We therefore have : 
+\begin_inset Formula \begin{equation}
+\boxed{\Gamma_{neo}\simeq\frac{c}{\left|e\right|B_{p}}\left\langle \int d^{3}\mathbf{v}m_{e}v_{\parallel}C_{ei}\left[\hat{f}_{e}\right]\right\rangle _{\theta}}\label{eq:-55}\end{equation}
+
+\end_inset
+
+The neoclassical parallel current distribution reads : 
+\begin_inset Formula \begin{equation}
+\boxed{\left\langle j_{\parallel}-j_{S}\right\rangle _{\theta}=-\left|e\right|\left\langle \int d^{3}\mathbf{v}v_{\parallel}\hat{f}_{e}\right\rangle _{\theta}}\label{eq:-56}\end{equation}
+
+\end_inset
+
+Both the neoclassical particle flux and the neoclassical parallel current
+ distribution are therefore determined by 
+\begin_inset Formula $\hat{f}_{e}$
+\end_inset
+
+.
+ To solve for 
+\begin_inset Formula $\hat{f}_{e}$
+\end_inset
+
+, we return to (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-49"
+
+\end_inset
+
+) and introduce the following form for 
+\begin_inset Formula $v_{Dr}$
+\end_inset
+
+ : 
+\begin_inset Formula \[
+v_{Dr}=\frac{v_{\parallel}}{\Omega_{p}}\hat{\mathbf{b}}\cdot\nabla\left(hv_{\parallel}\right)\]
+
+\end_inset
+
+with 
+\begin_inset Formula $\Omega_{pe}=\Omega B_{p}/B=eB_{p}/mc$
+\end_inset
+
+.
+ The equation becomes (making the approximation 
+\begin_inset Formula $\hat{\mathbf{b}}\cdot\nabla\left(hv_{\parallel}\right)\simeq\hat{\mathbf{b}}\cdot\nabla v_{\parallel}$
+\end_inset
+
+, with is valid for 
+\begin_inset Formula $\epsilon\ll1$
+\end_inset
+
+) : 
+\begin_inset Formula \[
+v_{\parallel}\hat{\mathbf{b}}\cdot\nabla\hat{f}_{e}-C\left[\hat{f}_{e}\right]=\left(\frac{v}{\left|\Omega_{pe}\right|}\left[\frac{d\ln n_{0}}{dr}+\frac{1}{2}\left(\frac{v^{2}}{v_{th}^{2}}-3\right)\frac{d\ln T_{0}}{dr}\right]f_{Me}-vE_{\parallel}g_{S}\right)v_{\parallel}\hat{\mathbf{b}}\cdot\nabla\left(h\xi\right)\]
+
+\end_inset
+
+ Now, we define : 
+\begin_inset Formula \begin{equation}
+\hat{\mathcal{F}}_{e}\equiv\hat{f}_{e}µ\left(\frac{v}{\left|\Omega_{pe}\right|}\left[\frac{d\ln n_{0}}{dr}+\frac{1}{2}\left(\frac{v^{2}}{v_{th}^{2}}-3\right)\frac{d\ln T_{0}}{dr}\right]f_{Me}-vE_{\parallel}g_{S}\right)^{-1}\label{eq:-57}\end{equation}
+
+\end_inset
+
+We note that 
+\begin_inset Formula $\hat{\mathbf{b}}\cdot\nabla\left[\frac{d\ln n_{0}}{dr}+\frac{1}{2}\left(\frac{v^{2}}{v_{th}^{2}}-3\right)\frac{d\ln T_{0}}{dr}\right]f_{Me}=0$
+\end_inset
+
+ and 
+\begin_inset Formula $C\left[\left(\frac{d\ln n_{0}}{dr}+\frac{1}{2}\left(\frac{v^{2}}{v_{th}^{2}}-3\right)\frac{d\ln T_{0}}{dr}\right)f_{Me}\right]=0$
+\end_inset
+
+.
+ Hence, the equation reduces to : 
+\begin_inset Formula \begin{equation}
+\boxed{v_{\parallel}\hat{\mathbf{b}}\cdot\nabla\hat{\mathcal{F}}_{e}-C\left[\hat{\mathcal{F}}_{e}\right]=v_{\parallel}\hat{\mathbf{b}}\cdot\nabla\left(h\xi\right)}\label{eq:-58}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+\begin_inset Formula $\delta$
+\end_inset
+
+ ordering and 
+\begin_inset Formula $0^{th}$
+\end_inset
+
+-order solution
+\end_layout
+
+\begin_layout Standard
+Since we want to solve this in the banana (collisionless) regime, it is
+ appropriate to consider a subsidiary ordering involving the collision frequency
+ 
+\begin_inset Formula $\nu_{ei}$
+\end_inset
+
+ and the transit frequency 
+\begin_inset Formula $\omega_{te}\sim v_{the}/qR$
+\end_inset
+
+, i.e.
+ : 
+\begin_inset Formula \[
+\left|\frac{\nu_{ei}}{\omega_{te}}\right|\sim\delta\ll1\]
+
+\end_inset
+
+Using the expansion 
+\begin_inset Formula $\hat{\mathcal{F}}_{e}=\hat{\mathcal{F}}_{e}^{0}+\hat{\mathcal{F}}_{e}^{1}+\ldots$
+\end_inset
+
+ , we have, to lowest order in 
+\begin_inset Formula $\delta$
+\end_inset
+
+ : 
+\begin_inset Formula \[
+v_{\parallel}\hat{\mathbf{b}}\cdot\nabla\left(\hat{\mathcal{F}}_{e}^{0}-h\xi\right)=0\]
+
+\end_inset
+
+We therefore have : 
+\begin_inset Formula \begin{equation}
+\boxed{\hat{\mathcal{F}}_{e}^{0}=h\xi+\bar{f}_{e}}\label{eq:-59}\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\bar{f}_{e}$
+\end_inset
+
+ is a constant with respect to the poloidal angle 
+\begin_inset Formula $\theta$
+\end_inset
+
+ determined by the next order in 
+\begin_inset Formula $\delta$
+\end_inset
+
+.
+ To first order in 
+\begin_inset Formula $\delta$
+\end_inset
+
+, we have : 
+\begin_inset Formula \[
+v_{\parallel}\hat{\mathbf{b}}\cdot\nabla\hat{\mathcal{F}}_{e}^{1}-C\left[\hat{\mathcal{F}}_{e}^{0}\right]=0\]
+
+\end_inset
+
+Integration over the orbit along a field line gives : 
+\begin_inset Formula \[
+\oint\frac{d\theta}{v_{\parallel}}C\left[\hat{\mathcal{F}}_{e}^{0}\right]=0\]
+
+\end_inset
+
+The integration over a particle orbit means we must distinguish between
+ trapped (
+\begin_inset Formula $1-\epsilon\leq\lambda\leq1+\epsilon$
+\end_inset
+
+, 
+\begin_inset Formula $\oint_{T}d\theta=\int_{-\theta_{b}}^{\theta_{b}}d\theta+\int_{-\theta_{b}}^{\theta_{b}}d\theta$
+\end_inset
+
+) and circulating (
+\begin_inset Formula $0\leq\lambda\leq1-\epsilon$
+\end_inset
+
+, 
+\begin_inset Formula $\oint_{C}d\theta=\int_{-\pi}^{\pi}d\theta$
+\end_inset
+
+) particles.
+ Therefore, the first order constraint or solubility condition reads, inserting
+ the expression for 
+\begin_inset Formula $\hat{\mathcal{F}}_{e}^{0}$
+\end_inset
+
+ :
+\end_layout
+
+\begin_layout Itemize
+For trapped particles : 
+\begin_inset Formula \[
+\oint_{T}\frac{d\theta}{v_{\parallel}}C_{ei}\left[h\xi+\bar{f}_{e}\right]=0\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+For circulating particles : 
+\begin_inset Formula \[
+\oint_{C}\frac{d\theta}{v_{\parallel}}C_{ei}\left[h\xi+\bar{f}_{e}\right]=0\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The Lorentz operator for the first term gives, with 
+\begin_inset Formula $\frac{\partial\xi}{\partial\lambda}=\frac{\partial}{\partial\lambda}\sqrt{1-\frac{\lambda}{h}}=-\left(2h\xi\right)^{-1}$
+\end_inset
+
+ : 
+\begin_inset Formula \[
+C_{ei}\left[h\xi\right]=2\nu_{ei}(v)h\xi\frac{\partial}{\partial\lambda}\left(\lambda\xi\frac{\partial}{\partial\lambda}\left(h\xi\right)\right)=-\nu_{ei}\left(v\right)h\xi\]
+
+\end_inset
+
+Since 
+\begin_inset Formula $\oint\frac{d\theta}{v_{\parallel}}h\xi=\frac{1}{v}\oint d\theta h$
+\end_inset
+
+, 
+\begin_inset Formula $\oint_{T}d\theta h=\int_{-\theta_{b}}^{\theta_{b}}d\theta h+\int_{-\theta_{b}}^{\theta_{b}}d\theta h=0$
+\end_inset
+
+ and 
+\begin_inset Formula $\oint_{C}d\theta h=\int_{-\pi}^{\pi}d\theta h=2\pi$
+\end_inset
+
+.
+ We therefore have for the first term :
+\end_layout
+
+\begin_layout Itemize
+For trapped particles : 
+\begin_inset Formula \[
+\oint\frac{d\theta}{v_{\parallel}}C_{ei}\left[h\xi\right]=0\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+For circulating particles : 
+\begin_inset Formula \[
+\oint\frac{d\theta}{v_{\parallel}}C_{ei}\left[h\xi\right]=2\pi\]
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+For the second term, we have : 
+\begin_inset Formula \[
+\oint\frac{d\theta}{v_{\parallel}}C_{ei}\left[\bar{f}_{e}\right]=2\frac{\nu_{ei}\left(v\right)}{v}\oint d\theta h\frac{\partial}{\partial\lambda}\left(\lambda\xi\frac{\partial\bar{f}_{e}}{\partial\lambda}\right)\]
+
+\end_inset
+
+Since 
+\begin_inset Formula $\bar{f}_{e}$
+\end_inset
+
+ is independant of 
+\begin_inset Formula $\theta$
+\end_inset
+
+, we can deduce the solvability condition :
+\end_layout
+
+\begin_layout Itemize
+For trapped particles : 
+\begin_inset Formula \[
+\oint_{T}\frac{d\theta}{v_{\parallel}}C_{ei}\left[h\xi+\bar{f}_{e}\right]=2\frac{\nu_{ei}\left(v\right)}{v}\frac{\partial}{\partial\lambda}\left(\lambda\frac{\partial\bar{f}_{e}}{\partial\lambda}\oint_{T}d\theta h\xi\right)=0\]
+
+\end_inset
+
+ 
+\begin_inset Formula \begin{equation}
+\boxed{\frac{\partial\bar{f}_{e}}{\partial\lambda}=0}\label{eq:-60}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+For circulating particles : 
+\begin_inset Formula \[
+\oint_{C}\frac{d\theta}{v_{\parallel}}C_{ei}\left[h\xi+\bar{f}_{e}\right]=2\frac{\nu_{ei}\left(v\right)}{v}\frac{\partial}{\partial\lambda}\left[\lambda\left(-\pi+\frac{\partial\bar{f}_{e}}{\partial\lambda}\oint_{C}d\theta h\xi\right)\right]=0\]
+
+\end_inset
+
+ 
+\begin_inset Formula \begin{equation}
+\boxed{\frac{\partial\bar{f}_{e}}{\partial\lambda}=\frac{1}{2\left\langle \xi\right\rangle _{\theta}}}\label{eq:-61}\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\left\langle \xi\right\rangle _{\theta}=\frac{1}{2\pi}\oint hd\theta\xi$
+\end_inset
+
+ is the flux-surface averaged pitch-angle cosine.
+\end_layout
+
+\begin_layout Standard
+We therefore have, condidering that 
+\begin_inset Formula $h_{min}<\lambda<h_{max}$
+\end_inset
+
+ for trapped particles and 
+\begin_inset Formula $\lambda<h_{min}$
+\end_inset
+
+ for untrapped particles : 
+\begin_inset Formula \begin{equation}
+\boxed{\frac{\partial\bar{f}_{e}}{\partial\lambda}=\frac{1}{2\left\langle \xi\right\rangle _{\theta}}H\left(h_{min}-\lambda\right)}\label{eq:-62}\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $H$
+\end_inset
+
+ is the Heaviside function defined as follows : 
+\begin_inset Formula \begin{equation}
+H(x)=\left\{ \begin{array}{ccc}
+1 & , & x>0\\
+0 & , & x<0\end{array}\right.\label{eq:-63}\end{equation}
+
+\end_inset
+
+This step-function treatment of the boundary between trapped and untrapped
+ particles is of course approximate, see Hinton and Hazeltine for actual
+ boundary layer calculation.
+ Nevertheless, this approximate model yields basic qualitative features
+ of interest for banana diffusion.
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of the neoclassical radial particle flux
+\end_layout
+
+\begin_layout Standard
+Knowing 
+\begin_inset Formula $\frac{\partial\bar{f}_{e}}{\partial\lambda}$
+\end_inset
+
+ , we can write : 
+\begin_inset Formula \[
+\frac{\partial\hat{\mathcal{F}}_{e}^{0}}{\partial\lambda}=\frac{\partial}{\partial\lambda}\left(h\xi+\bar{f}_{e}\right)=-\frac{1}{2\xi}+\frac{H\left(h_{min}-\lambda\right)}{2\left\langle \xi\right\rangle _{\theta}}\]
+
+\end_inset
+
+We therefore have the information needed in 
+\begin_inset Formula $C\left[\hat{\mathcal{F}}_{e}^{0}\right]=2\nu_{ei}\left(v\right)h\xi\frac{\partial}{\partial\lambda}\left(\lambda\xi\frac{\partial\hat{\mathcal{F}}_{e}^{0}}{\partial\lambda}\right)$
+\end_inset
+
+.
+ We can therefore deduce 
+\begin_inset Formula $\hat{f}_{e}$
+\end_inset
+
+ using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-57"
+
+\end_inset
+
+) and calculate 
+\begin_inset Formula $\Gamma_{neo}$
+\end_inset
+
+.
+ Using 
+\begin_inset Formula $\int d^{3}\mathbf{v}=\frac{2\pi}{h}\int_{0}^{\infty}v^{3}dv\int_{0}^{h}\frac{d\lambda}{v_{\parallel}}$
+\end_inset
+
+ and defining the following integral : 
+\begin_inset Formula \begin{equation}
+I\equiv\left\langle \int_{0}^{h}d\lambda\xi\frac{\partial}{\partial\lambda}\left[\lambda\xi\left(\frac{1}{\xi}-\frac{H\left(h_{min}-\lambda\right)}{\left\langle \xi\right\rangle _{\theta}}\right)\right]\right\rangle _{\theta}\label{eq:-64}\end{equation}
+
+\end_inset
+
+We therefore have : 
+\begin_inset Formula \[
+\Gamma_{neo}=-\frac{2\pi\nu_{ei}}{\Omega_{pe}^{2}}I\int_{0}^{\infty}dvv^{4}2^{\frac{3}{2}}\left(\frac{v_{the}}{v}\right)^{3}f_{Me}\left[\frac{d\ln n_{0}}{dr}+\frac{1}{2}\left(\frac{v^{2}}{v_{th}^{2}}-3\right)\frac{d\ln T_{0}}{dr}+2cE_{\parallel}B_{p}\Omega_{pe}^{2}1v_{the}^{2}\nu_{ei}2^{\frac{3}{2}}\left(\frac{v}{v_{the}}\right)^{3}\right]\]
+
+\end_inset
+
+Using 
+\begin_inset Formula $v_{the}^{2}/\Omega_{pe}^{2}=\rho_{Le}^{2}q^{2}/\epsilon^{2}$
+\end_inset
+
+ and 
+\begin_inset Formula $v=\sqrt{2}v_{the}\bar{v}$
+\end_inset
+
+, we get : 
+\begin_inset Formula \[
+\Gamma_{neo}=-\frac{2\nu_{ei}}{\sqrt{\pi}}\rho_{Le}^{2}\frac{q^{2}}{\epsilon^{2}}n_{0}I\int_{0}^{\infty}d\bar{v}\bar{v}\exp\left(-\bar{v}^{2}\right)\left[\frac{d\ln n_{0}}{dr}+\left(\bar{v}^{2}-\frac{3}{2}\right)\frac{d\ln T_{0}}{dr}\right]-\frac{4}{\sqrt{\pi}}n_{0}I\frac{cE_{\parallel}}{B_{p}}\int_{0}^{\infty}d\bar{v}\bar{v}^{4}\exp\left(-\bar{v}^{2}\right)\]
+
+\end_inset
+
+The expression for 
+\begin_inset Formula $\Gamma_{neo}$
+\end_inset
+
+ then reads, using 
+\begin_inset Formula $\int d\bar{v}\bar{v}^{n}\exp\left(-\bar{v}^{2}\right)=\frac{1}{2}\Gamma\left(n+\frac{1}{2}\right)$
+\end_inset
+
+ where 
+\begin_inset Formula $\Gamma$
+\end_inset
+
+ is the gamma function : 
+\begin_inset Formula \[
+\Gamma_{neo}=-\frac{1}{\sqrt{\pi}}\nu_{ei}\rho_{Le}^{2}\frac{q^{2}}{\epsilon^{2}}I\left(\frac{dn_{0}}{dr}-\frac{n_{0}}{2}\frac{d\ln T_{0}}{dr}\right)-\frac{3}{2}n_{0}I\frac{cE_{\parallel}}{B_{p}}\]
+
+\end_inset
+
+To estimate 
+\begin_inset Formula $I$
+\end_inset
+
+, we integrate by parts over 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ and we get, noting 
+\begin_inset Formula $d\xi=-\frac{1}{2h\xi}d\lambda$
+\end_inset
+
+ : 
+\begin_inset Formula \[
+I=\left\langle \left[\xi\lambda\left(1-\frac{\xi H}{\left\langle \xi\right\rangle _{\theta}}\right)\right]_{0}^{h}+\frac{1}{2h}\int_{0}^{h}d\lambda\lambda\left[\frac{1}{\xi}-\frac{H}{\left\langle \xi\right\rangle _{\theta}}\right]\right\rangle _{\theta}\]
+
+\end_inset
+
+The first term is equal to zero.
+ Because of the heaviside function, we separate the integration domain into
+ 
+\begin_inset Formula $\left[0,h_{min}\right]$
+\end_inset
+
+ and 
+\begin_inset Formula $\left[h_{min},h\right]$
+\end_inset
+
+.
+ The integral becomes : 
+\begin_inset Formula \[
+I=\left\langle \frac{1}{2h}\int_{h_{min}}^{h}\frac{d\lambda\lambda}{\sqrt{1-\frac{\lambda}{h}}}\right\rangle _{\theta}+\left\langle \frac{1}{2h}\int_{0}^{h_{min}}d\lambda\lambda\left[1\xi-1\left\langle \xi\right\rangle _{\theta}\right]\right\rangle _{\theta}\]
+
+\end_inset
+
+The second term is of order 
+\begin_inset Formula $\epsilon^{\frac{3}{2}}$
+\end_inset
+
+.
+ The first term reads : 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula \begin{eqnarray*}
+\frac{1}{2}\int_{h_{min}}^{h}\frac{d\lambda\lambda}{\sqrt{1-\frac{\lambda}{h}}} & = & -h\left(\left[\lambda\sqrt{1-\frac{\lambda}{h}}\right]_{h_{min}}^{h}-\int_{h_{min}}^{h}d\lambda\sqrt{1-\frac{\lambda}{h}}\right)\\
+ & = & h\left[h_{min}\sqrt{1-\frac{\lambda}{h}}+\frac{2}{3}h\left(1-\frac{\lambda}{h}\right)^{\frac{3}{2}}\right]\end{eqnarray*}
+
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+The first term of this expression is of order 
+\begin_inset Formula $\sqrt{\epsilon}$
+\end_inset
+
+ and the second of order 
+\begin_inset Formula $\epsilon^{\frac{3}{2}}$
+\end_inset
+
+.
+ We therefore have : 
+\begin_inset Formula \[
+I\sim\sqrt{\epsilon}\]
+
+\end_inset
+
+The neoclassical radial particle flux therefore reads : 
+\begin_inset Formula \begin{equation}
+\boxed{\Gamma_{neo}\simeq-D_{Banana}\left(\frac{dn_{0}}{dr}-\frac{n_{0}}{2}\frac{d\ln T_{0}}{dr}\right)-n_{0}\sqrt{\epsilon}\frac{cE_{\parallel}}{B_{p}}}\label{eq:-65}\end{equation}
+
+\end_inset
+
+This expression shows density and temperature gradient effects and a Ware-pinch
+ effect.
+ The banana diffusion coefficient reads : 
+\begin_inset Formula \[
+D_{Banana}\sim\frac{\nu_{ei}\rho_{Le}^{2}q^{2}}{\epsilon^{\frac{3}{2}}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Parallel current distribution and Bootstrap current
+\end_layout
+
+\begin_layout Standard
+Using the expression for 
+\begin_inset Formula $\hat{f}_{e}$
+\end_inset
+
+ obtained from (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-57"
+
+\end_inset
+
+) : 
+\begin_inset Formula \begin{eqnarray*}
+\hat{f}_{e} & \simeq & \hat{\mathcal{F}}_{e}^{0}\left(\frac{v}{\left|\Omega_{pe}\right|}\left[\frac{d\ln n_{0}}{dr}+\frac{1}{2}\left(\frac{v^{2}}{v_{th}^{2}}-3\right)\frac{d\ln T}{dr}\right]f_{Me}-vE_{\parallel}g_{S}\right)\\
+ & \simeq & \hat{\mathcal{F}}_{e}^{0}\left(\frac{v}{\left|\Omega_{pe}\right|}\left[\frac{d\ln n_{0}}{dr}+\frac{1}{2}\left(\frac{v^{2}}{v_{th}^{2}}-3\right)\frac{d\ln T}{dr}\right]-\frac{\left|e\right|E_{\parallel}}{T\nu_{ei}2^{\frac{3}{2}}}\frac{v^{4}}{v_{the}^{3}}\right)f_{Me}\end{eqnarray*}
+
+\end_inset
+
+ With 
+\begin_inset Formula $v=\sqrt{2}v_{the}\bar{v}$
+\end_inset
+
+ and
+\begin_inset Formula $\rho_{pe}=\sqrt{2}v_{the}/\left|\Omega_{pe}\right|$
+\end_inset
+
+, and inserting the expression for the maxwellian, we get :
+\begin_inset Formula \[
+\hat{f}_{e}\simeq\frac{n_{0}}{\left(2\pi\right)^{\frac{3}{2}}v_{the}^{3}}\hat{\mathcal{F}}_{e}^{0}\left(\bar{v}\rho_{pe}\left[\frac{d\ln n_{0}}{dr}+\left(\bar{v}^{2}-\frac{3}{2}\right)\frac{d\ln T}{dr}\right]-\frac{\sqrt{2}\left|e\right|E_{\parallel}}{m\nu_{ei}v_{the}}\bar{v}^{4}\right)\exp\left(-\bar{v}^{2}\right)\]
+
+\end_inset
+
+We then insert 
+\begin_inset Formula $\hat{f}_{e}$
+\end_inset
+
+ into (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-56"
+
+\end_inset
+
+).
+ This gives :
+\begin_inset Formula \begin{eqnarray*}
+\left\langle j_{\parallel}-j_{S}\right\rangle _{\theta} & = & -\frac{\left|e\right|}{2\pi}\oint hd\theta\int d^{3}\mathbf{v}v_{\parallel}\hat{f}_{e}\\
+ & = & -\left|e\right|\oint d\theta\int d\lambda\hat{\mathcal{F}}_{e}^{0}\times\\
+ &  & \frac{\sqrt{2}v_{the}n_{0}}{\pi^{\frac{3}{2}}}\int_{0}^{\infty}d\bar{v}\bar{v}^{3}\exp\left(-\bar{v}^{2}\right)\left[\bar{v}\rho_{pe}\frac{d\ln n_{0}}{dr}+\rho_{pe}\left(\bar{v}^{3}-\frac{3}{2}\bar{v}\right)\frac{d\ln T}{dr}-\frac{\sqrt{2}\left|e\right|E_{\parallel}}{m\nu_{ei}v_{the}}\bar{v}^{4}\right]\end{eqnarray*}
+
+\end_inset
+
+The expression becomes : 
+\begin_inset Formula \[
+\left\langle j_{\parallel}-j_{S}\right\rangle _{\theta}=-\frac{\left|e\right|\sqrt{2}v_{the}n_{0}}{\pi^{\frac{3}{2}}}\oint d\theta\int d\lambda\hat{\mathcal{F}}_{e}^{0}\left[\frac{3\sqrt{\pi}}{8}\frac{\rho_{pe}}{n_{0}}\frac{dn_{0}}{dr}+\frac{3\sqrt{\pi}}{8}\frac{\rho_{pe}}{T}\frac{dT}{dr}+\frac{3\sqrt{2}\left|e\right|E_{\parallel}}{m\nu_{ei}v_{the}}\right]\]
+
+\end_inset
+
+Since 
+\begin_inset Formula $\left|e\right|\sqrt{2}v_{the}\rho_{pe}=2Tc/B_{p}$
+\end_inset
+
+, we then have, defining 
+\begin_inset Formula $Pe\equiv n_{0}T$
+\end_inset
+
+ and using the expression for 
+\begin_inset Formula $\sigma_{\parallel}$
+\end_inset
+
+ given by (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-52"
+
+\end_inset
+
+) :
+\begin_inset Formula \[
+\left\langle j_{\parallel}-j_{S}\right\rangle _{\theta}=-\frac{3}{4\pi}\oint d\theta\int d\lambda\hat{\mathcal{F}}_{e}^{0}\left(\frac{c}{B_{p}}\frac{dP_{e}}{dr}+\sigma_{\parallel}E_{\parallel}\right)\]
+
+\end_inset
+
+Starting from (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:-64"
+
+\end_inset
+
+) and integrating by parts, we have : 
+\begin_inset Formula \begin{eqnarray*}
+I & = & \frac{1}{2\pi}\oint hd\theta\int_{0}^{h}d\lambda\xi\frac{\partial}{\partial\lambda}\left(\lambda\xi\frac{\partial\hat{\mathcal{F}}_{e}^{0}}{\partial\lambda}\right)\\
+ & = & \frac{1}{2\pi}\oint hd\theta\left(\left[\lambda\xi^{2}\frac{\partial\hat{\mathcal{F}}_{e}^{0}}{\partial\lambda}\right]_{0}^{h}-2\int_{0}^{h}d\lambda\frac{\partial\xi}{\partial\lambda}\lambda\xi\frac{\partial\hat{\mathcal{F}}_{e}^{0}}{\partial\lambda}\right)\end{eqnarray*}
+
+\end_inset
+
+Using 
+\begin_inset Formula $\left.\frac{\partial\hat{\mathcal{F}}_{e}^{0}}{\partial\lambda}\right|_{\lambda=h}=0$
+\end_inset
+
+ and 
+\begin_inset Formula $\frac{\partial\xi}{\partial\lambda}=\left(2h\xi\right)^{-1}$
+\end_inset
+
+, we then integrate by parts a second time (we take 
+\begin_inset Formula $\hat{\mathcal{F}}_{e}^{0}=0$
+\end_inset
+
+ for 
+\begin_inset Formula $\lambda=h$
+\end_inset
+
+) :
+\begin_inset Formula \begin{eqnarray*}
+I & = & -\frac{1}{2\pi}\oint d\theta\int_{0}^{h}d\lambda\lambda\frac{\partial\hat{\mathcal{F}}_{e}^{0}}{\partial\lambda}\\
+ & = & -\frac{1}{2\pi}\oint d\theta\left(\left[h\lambda\hat{\mathcal{F}}_{e}^{0}\right]_{0}^{h}-\int_{0}^{h}d\lambda\hat{\mathcal{F}}_{e}^{0}\right)\\
+ & = & \frac{1}{2\pi}\oint d\theta\int_{0}^{h}d\lambda\hat{\mathcal{F}}_{e}^{0}\end{eqnarray*}
+
+\end_inset
+
+We therefore have :
+\begin_inset Formula \[
+\left\langle j_{\parallel}-j_{S}\right\rangle _{\theta}=-\frac{3}{2}I\left(\frac{c}{B_{p}}\frac{dP_{e}}{dr}+\sigma_{\parallel}E_{\parallel}\right)\]
+
+\end_inset
+
+Numerical integration gives 
+\begin_inset Formula $I\sim2\sqrt{2}\left(0.69\right)\sqrt{\epsilon}$
+\end_inset
+
+.
+ We can therefore write :
+\begin_inset Formula \begin{equation}
+\boxed{\left\langle j_{\parallel}-j_{S}\right\rangle _{\theta}\sim-\sqrt{\epsilon}\left(\frac{c}{B_{p}}\frac{dP_{e}}{dr}+\sigma_{\parallel}E_{\parallel}\right)}\label{eq:-66}\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $Pe\equiv n_{0}T_{0}$
+\end_inset
+
+.
+ The first term is the so-called 
+\begin_inset Quotes eld
+\end_inset
+
+bootstrap current
+\begin_inset Quotes erd
+\end_inset
+
+, i.e.
+ a current occuring in banana regime, driven by pressure gradients which
+ can take the place of ohmic currents in producing the necessary poloidal
+ field.
+ The second term is the neoclassical reduction of classical conductivity
+ (since the trapped particles carry no current).
+ It is possible to have a 
+\begin_inset Quotes eld
+\end_inset
+
+bootstrap tokamak
+\begin_inset Quotes erd
+\end_inset
+
+ operating in steady-state with 
+\begin_inset Formula $E_{\varphi}=-\frac{\partial}{\partial t}A_{\varphi}=0$
+\end_inset
+
+ (needs initial 
+\begin_inset Formula $E_{\varphi}$
+\end_inset
+
+ and 
+\begin_inset Formula $\beta\sim\epsilon/q^{2}$
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Subsection
+Thermal flux
+\end_layout
+
+\begin_layout Standard
+The thermal flux is determined by the second moment of the Boltzmann equation.
+ It is evaluated using methods similar to the ones used to calculate the
+ radial particle flux.
+ The analysis however is complicated by non-negligible contributions from
+ like-particle collisions which need to be taken into account in solving
+ for the distribution function.
+ Its expression reads :
+\begin_inset Formula \[
+Q_{neo}=\frac{c}{\left|e\right|B_{p}}\left\langle h\int d^{3}\mathbf{v}\left(\frac{m_{e}v^{2}}{2}-\frac{5T_{e}}{2}\right)m_{e}v_{\parallel}\left(C_{ee}+C_{ei}\right)\left[\hat{f}_{e}\right]\right\rangle _{\theta}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Neoclassical Onsager matrix
+\end_layout
+
+\begin_layout Standard
+This matrix shows the relationship between neoclassical fluxes 
+\begin_inset Formula $\left[\Gamma,Q,\left\langle j_{\parallel}-j_{S}\right\rangle _{\theta}\right]$
+\end_inset
+
+ and the generalized forces 
+\begin_inset Formula $\left[\frac{dP_{e}}{dr},\frac{dT_{e}}{dr},E_{\parallel}\right]$
+\end_inset
+
+ in the banana regime.
+ This reads : 
+\begin_inset Formula \[
+\left(\begin{array}{c}
+\Gamma_{e}\\
+Qe\\
+\left\langle j_{\parallel}-j_{S}\right\rangle _{\theta e}\end{array}\right)=\left(\begin{array}{ccc}
+\frac{1}{T_{e}}D_{e} & A12 & “Ware-pinch\, coeff”\\
+A21 & \chi_{e} & A23\\
+”Bootstrap\, current\, coeff” & A32 & \frac{1}{n_{0}}\sigma_{\parallel}\sqrt{\epsilon}\end{array}\right)\left(\begin{array}{c}
+\frac{dP_{e}}{dr}-\frac{5}{2}n_{0}\frac{dT_{e}}{dr}\\
+n_{0}\frac{dT_{e}}{dr}\\
+-n_{0}E_{\parallel}\end{array}\right)\]
+
+\end_inset
+
+ The Onsager symmetry states : 
+\begin_inset Formula \[
+A_{jj'}=A_{j'j}\]
+
+\end_inset
+
+The coefficients 
+\begin_inset Formula $D_{e}$
+\end_inset
+
+ and 
+\begin_inset Formula $\chi_{e}$
+\end_inset
+
+ read : 
+\begin_inset Formula \begin{eqnarray*}
+D_{e} & \sim & \nu_{ei}\rho_{Le}^{2}q^{2}\epsilon^{\frac{3}{2}}\\
+\chi_{e} & \sim & D_{e}\end{eqnarray*}
+
+\end_inset
+
+Using 
+\begin_inset Formula $\nu_{ii}\sim\nu_{ei}\sqrt{\frac{m_{e}}{m_{i}}}$
+\end_inset
+
+ , 
+\begin_inset Formula $\nu_{ie}\sim\nu_{ei}\frac{m_{e}}{m_{i}}$
+\end_inset
+
+ and 
+\begin_inset Formula $\nu_{ee}\lesssim\nu_{ei}$
+\end_inset
+
+, we can make several comments :
+\end_layout
+
+\begin_layout Itemize
+We note that 
+\begin_inset Formula $Q_{i}$
+\end_inset
+
+ depends on 
+\begin_inset Formula $C_{ii}$
+\end_inset
+
+.
+ Since 
+\begin_inset Formula $\chi_{i}\propto\rho_{Li}^{2}\left(\nu_{ii}+\nu_{ie}\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $\chi_{e}\propto\rho_{Le}^{2}\left(\nu_{ee}+\nu_{ei}\right)$
+\end_inset
+
+, we have : 
+\begin_inset Formula \[
+\frac{\chi_{i}}{\chi_{e}}\sim\sqrt{\frac{m_{i}}{m_{e}}}\sim10^{2}\]
+
+\end_inset
+
+Hence, we have 
+\begin_inset Formula $\chi_{e}^{neo}\sim D_{e}^{neo}$
+\end_inset
+
+ but 
+\begin_inset Formula $\chi_{i}^{neo}\sim10^{2}\chi_{e}^{neo}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Tokamak experiments indicate that 
+\begin_inset Formula $\chi_{e}^{exp}/\chi_{e}^{neo}\in\left[10^{2},10^{3}\right]$
+\end_inset
+
+ (over most of plasma cross-section).
+ This is possibly caused by anomalous transport due to microinstabilities.
+ We need 
+\begin_inset Formula $\chi_{e}^{anom}\sim10^{2}\chi_{e}^{neo}$
+\end_inset
+
+, but since typically 
+\begin_inset Formula $\chi_{i}^{anom}\sim\chi_{e}^{anom}$
+\end_inset
+
+, we need for the ions 
+\begin_inset Formula $\chi_{i}^{anom}\sim\chi_{i}^{neo}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section*
+\start_of_appendix
+Appendix
+\end_layout
+
+\begin_layout Standard
+In order to calculate the integral 
+\begin_inset Formula $\mathcal{I}\left(\epsilon\right)=\frac{1}{2\pi}\int_{0}^{2\pi}d\theta h$
+\end_inset
+
+, we express the integrand in terms of 
+\begin_inset Formula $z=e^{i\theta}$
+\end_inset
+
+.
+ We therefore have 
+\begin_inset Formula $dz=izd\theta$
+\end_inset
+
+.
+ The integral becomes : 
+\begin_inset Formula \begin{eqnarray*}
+\mathcal{I}\left(\epsilon\right) & = & \frac{1}{2\pi}i\oint_{\left|z\right|=1}\frac{dz}{z\left[1+\frac{\epsilon}{2}\left(z+\frac{1}{z}\right)\right]}\\
+ & = & \frac{1}{\pi i}\oint_{\left|z\right|=1}\frac{dz}{\epsilon z^{2}+2z+\epsilon}\\
+ & = & \frac{1}{\pi i}\oint_{\left|z\right|=1}\frac{dz}{\epsilon\left(z-z_{-}\right)\left(z-z_{+}\right)}\end{eqnarray*}
+
+\end_inset
+
+where 
+\begin_inset Formula $z_{-}=-\frac{1}{\epsilon}-\sqrt{\frac{1}{\epsilon^{2}}-1}$
+\end_inset
+
+ and 
+\begin_inset Formula $z_{+}=-\frac{1}{\epsilon}+\sqrt{\frac{1}{\epsilon^{2}}-1}$
+\end_inset
+
+ are the roots of the denominator.
+ 
+\begin_inset Formula $z_{+}$
+\end_inset
+
+ is the root inside the integral contour.
+ The residue theorem gives : 
+\begin_inset Formula \[
+\mathcal{I}\left(\epsilon\right)=\frac{1}{\pi i}2\pi iRes_{z_{+}}=\frac{2}{\epsilon\left(z_{+}-z_{-}\right)}\]
+
+\end_inset
+
+ We can therefore deduce :
+\begin_inset Formula \[
+\mathcal{I}\left(\epsilon\right)=\frac{1}{2\pi}\int_{0}^{2\pi}d\theta h=\frac{1}{\sqrt{1-\epsilon^{2}}}\]
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
