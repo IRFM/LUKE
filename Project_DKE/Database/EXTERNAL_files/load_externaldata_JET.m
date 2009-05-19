@@ -95,7 +95,7 @@ Z2 = linspace(min(zbnd(kf,:))*1.1,max(zbnd(kf,:))*1.1,nz);
 xypsi = psi.';
 %xyBr = Br.';
 %xyBz = Bz.';
-xBt = Bt;
+xBt = -Bt;% negative sign for phi orientation
 %
 R = R(1,:);
 Z = Z(:,1).';
