@@ -72,6 +72,47 @@ p_{i+}=\dfrac{p_{i++}+p_{i}}{2} & i=0,\cdots,n_{p}-1\\
 
 \end_inset
 
+The cells are also characterized by their width in each direction
+\begin_inset Formula \begin{equation}
+\left\{ \begin{array}{ll}
+\Delta\psi_{l+}=\psi_{l++}-\psi_{l} & l=0,\cdots,n_{\psi}-1\\
+\Delta p_{i+}=p_{i++}-p_{i} & i=0,\cdots,n_{p}-1\\
+\Delta\xi_{j+}=\xi_{j++}-\xi_{j} & j=0,\cdots,n_{\xi}-1\end{array}\right.\end{equation}
+
+\end_inset
+
+ Finally, the grid intervals between two consecutive cell centers are also
+ defined
+\begin_inset Formula \begin{equation}
+\left\{ \begin{array}{ll}
+\Delta\psi_{l}=\psi_{l+}-\psi_{l-} & l=1,\cdots,n_{\psi}-1\\
+\Delta p_{i}=p_{i+}-p_{i-} & i=1,\cdots,n_{p}-1\\
+\Delta\xi_{j}=\xi_{j+}-\xi_{j-} & j=1,\cdots,n_{\xi}-1\end{array}\right.\end{equation}
+
+\end_inset
+
+and
+\begin_inset Formula \begin{equation}
+\left\{ \begin{array}{ll}
+\Delta\psi_{l++}=\psi_{l+++}-\psi_{l+} & l=0,\cdots,n_{\psi}-2\\
+\Delta p_{i++}=p_{i+++}-p_{i+} & i=0,\cdots,n_{p}-2\\
+\Delta\xi_{j++}=\xi_{j+++}-\xi_{j+} & j=0,\cdots,n_{\xi}-2\end{array}\right.\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+By convention the intervals are extended to the volume boundary points as
+\begin_inset Formula \begin{equation}
+\left\{ \begin{array}{ll}
+\Delta\psi_{0}=2\left(\psi_{0+}-\psi_{0}\right) & \Delta\psi_{n_{\psi}}=2\left(\psi_{n_{\psi}}-\psi_{n_{\psi}-}\right)\\
+\Delta p_{0}=2\left(p_{0+}-p_{0}\right) & \Delta p_{n_{p}}=2\left(p_{n_{p}}-p_{n_{p}-}\right)\\
+\Delta\xi_{0}=2\left(\xi_{0+}-\xi_{0}\right) & \Delta\xi_{n_{\xi}}=2\left(\xi_{n_{\xi}}-\xi_{n_{\xi}-}\right)\end{array}\right.\label{conventions}\end{equation}
+
+\end_inset
+
 
 \end_layout
 
@@ -471,8 +512,8 @@ The non-zero elements are
 
 \begin_layout Standard
 \begin_inset Formula \begin{multline}
-M_{l+,i+,j+}^{l-,i+,j-}=\frac{p_{i+}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j}^{2}}\lambda^{l+,j}}{\Delta\xi_{j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l}+\Delta\psi_{l++}}D_{\xi\psi,l+,i+,j}\delta_{\xi,l-,i+,j}\\
-+\frac{p_{i+}}{\lambda^{l+,j+}}\frac{B_{l+}}{\tilde{q}_{l+}}\frac{\alpha_{l,j+}}{\Delta\psi_{l+}}\frac{\sqrt{1-\xi_{j+}^{2}}}{\Delta\xi_{j}+\Delta\xi_{j++}}D_{\psi\xi,l+,i+,j+}\delta_{\psi,l,i+,j-}\end{multline}
+M_{l+,i+,j+}^{l-,i+,j-}=p_{i+}\frac{\lambda^{l+,j}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j}^{2}}}{\Delta\xi_{j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l}+\Delta\psi_{l++}}D_{\xi\psi,l+,i+,j}\delta_{\xi,l-,i+,j}\\
++p_{i+}\frac{\alpha_{l,j+}}{\alpha_{l+,j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l+}}\frac{\sqrt{1-\xi_{j+}^{2}}}{\Delta\xi_{j}+\Delta\xi_{j++}}D_{\psi\xi,l+,i+,j+}\delta_{\psi,l,i+,j-}\end{multline}
 
 \end_inset
 
@@ -481,8 +522,10 @@ M_{l+,i+,j+}^{l-,i+,j-}=\frac{p_{i+}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j}^{2}}
 
 \begin_layout Standard
 \begin_inset Formula \begin{multline}
-M_{l+,i+,j+}^{l-,i+,j+}=\frac{p_{i+}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j}^{2}}\lambda^{l+,j}}{\Delta\xi_{j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l}+\Delta\psi_{l++}}D_{\xi\psi,l+,i+,j}\left(1-\delta_{\xi,l-,i+,j}\right)\\
--\frac{p_{i+}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j++}^{2}}\lambda^{l+,j++}}{\Delta\xi_{j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l}+\Delta\psi_{l++}}D_{\xi\psi,l+,i+,j++}\delta_{\xi,l-,i+,j++}\\
+M_{l+,i+,j+}^{l-,i+,j+}=-p_{i+}^{2}\frac{\alpha_{l,j+}}{\alpha_{l+,j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l+}}K_{\psi,l,i+,j+}\delta_{\psi,l,i+,j+}\\
+-p_{i+}^{2}\frac{\alpha_{l,j+}}{\alpha_{l+,j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l}}{\Delta\psi_{l}}D_{\psi\psi,l,i+,j+}\\
++p_{i+}\frac{\lambda^{l+,j}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j}^{2}}}{\Delta\xi_{j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l}+\Delta\psi_{l++}}D_{\xi\psi,l+,i+,j}\left(1-\delta_{\xi,l-,i+,j}\right)\\
+-p_{i+}\frac{\lambda^{l+,j++}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j++}^{2}}}{\Delta\xi_{j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l}+\Delta\psi_{l++}}D_{\xi\psi,l+,i+,j++}\delta_{\xi,l-,i+,j++}\\
 -\frac{p_{i}^{2}}{\Delta p_{i+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l}+\Delta\psi_{l++}}D_{p\psi,l+,i,j+}\left(1-\delta_{p,l-,i,j+}\right)\\
 +\frac{p_{i++}^{2}}{\Delta p_{i+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l}+\Delta\psi_{l++}}D_{p\psi,l+,i++,j+}\delta_{p,l-,i++,j+}\end{multline}
 
@@ -493,8 +536,8 @@ M_{l+,i+,j+}^{l-,i+,j+}=\frac{p_{i+}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j}^{2}}
 
 \begin_layout Standard
 \begin_inset Formula \begin{multline}
-M_{l+,i+,j+}^{l+++,i+,j-}=-\frac{p_{i+}}{\lambda^{l+,j+}}\frac{B_{l+}}{\tilde{q}_{l+}}\frac{\alpha_{l++,j+}}{\Delta\psi_{l+}}\frac{\sqrt{1-\xi_{j+}^{2}}}{\Delta\xi_{j}+\Delta\xi_{j++}}D_{\psi\xi,l+++,i+,j+}\left(1-\delta_{\psi,l++,i+,j-}\right)\\
--\frac{p_{i+}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j+}^{2}}\lambda^{l+,j+}}{\Delta\xi_{j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l}+\Delta\psi_{l++}}D_{\xi\psi,l+,i+,j}\delta_{\xi,l++,i+,j-}\end{multline}
+M_{l+,i+,j+}^{l+++,i+,j-}=-p_{i+}\frac{\alpha_{l++,j+}}{\alpha_{l+,j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l+}}\frac{\sqrt{1-\xi_{j+}^{2}}}{\Delta\xi_{j}+\Delta\xi_{j++}}D_{\psi\xi,l+++,i+,j+}\left(1-\delta_{\psi,l++,i+,j-}\right)\\
+-p_{i+}\frac{\lambda^{l+,j}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j}^{2}}}{\Delta\xi_{j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l}+\Delta\psi_{l++}}D_{\xi\psi,l+,i+,j}\delta_{\xi,l+++,i+,j-}\end{multline}
 
 \end_inset
 
@@ -503,12 +546,12 @@ M_{l+,i+,j+}^{l+++,i+,j-}=-\frac{p_{i+}}{\lambda^{l+,j+}}\frac{B_{l+}}{\tilde{q}
 
 \begin_layout Standard
 \begin_inset Formula \begin{multline}
-M_{l+,i+,j+}^{l+++,i+,j+}=\frac{p_{i+}^{2}}{\lambda^{l+,j+}}\frac{B_{l+}}{\tilde{q}_{l+}}\frac{\alpha_{l++,j+}}{\Delta\psi_{l+}}K_{\psi,l++,i+,j+}\left(1-\delta_{\psi,l++,i+,j+}\right)\\
--\frac{p_{i+}^{2}}{\lambda^{l+,j+}}\frac{B_{l+}}{\tilde{q}_{l+}}\frac{\alpha_{l++,j+}}{\Delta\psi_{l+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l++}}{\Delta\psi_{l++}}D_{\psi\psi,l++,i+,j+}\\
+M_{l+,i+,j+}^{l+++,i+,j+}=p_{i+}^{2}\frac{\alpha_{l++,j+}}{\alpha_{l+,j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l+}}K_{\psi,l++,i+,j+}\left(1-\delta_{\psi,l++,i+,j+}\right)\\
+-p_{i+}^{2}\frac{\alpha_{l++,j+}}{\alpha_{l+,j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l++}}{\Delta\psi_{l++}}D_{\psi\psi,l++,i+,j+}\\
 -\frac{p_{i++}^{2}}{\Delta p_{i++}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l}+\Delta\psi_{l++}}D_{p\psi,l+,i++,j+}\delta_{p,l+++,i++,j+}\\
 +\frac{p_{i}^{2}}{\Delta p_{i+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l}+\Delta\psi_{l++}}D_{p\psi,l+,i,j+}\left(1-\delta_{p,l+++,i,j+}\right)\\
-+\frac{p_{i+}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j++}^{2}}\lambda^{l+,j++}}{\Delta\xi_{j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l}+\Delta\psi_{l++}}D_{\xi\psi,l+,i+,j++}\delta_{\xi,l+++,i+,j++}\\
--\frac{p_{i+}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j}^{2}}\lambda^{l+,j}}{\Delta\xi_{j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l}+\Delta\psi_{l++}}D_{\xi\psi,l+,i+,j}\left(1-\delta_{\xi,l+++,i+,j}\right)\end{multline}
++p_{i+}\frac{\lambda^{l+,j++}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j++}^{2}}}{\Delta\xi_{j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l}+\Delta\psi_{l++}}D_{\xi\psi,l+,i+,j++}\delta_{\xi,l+++,i+,j++}\\
+-p_{i+}\frac{\lambda^{l+,j}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j}^{2}}}{\Delta\xi_{j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l}+\Delta\psi_{l++}}D_{\xi\psi,l+,i+,j}\left(1-\delta_{\xi,l+++,i+,j}\right)\end{multline}
 
 \end_inset
 
@@ -517,11 +560,11 @@ M_{l+,i+,j+}^{l+++,i+,j+}=\frac{p_{i+}^{2}}{\lambda^{l+,j+}}\frac{B_{l+}}{\tilde
 
 \begin_layout Standard
 \begin_inset Formula \begin{multline}
-M_{l+,i+,j+}^{l+,i+,j-}=-\frac{p_{i+}}{\lambda^{l+,j+}}\frac{B_{l+}}{\tilde{q}_{l+}}\frac{\alpha_{l++,j+}}{\Delta\psi_{l+}}\frac{\sqrt{1-\xi_{j+}^{2}}}{\Delta\xi_{j}+\Delta\xi_{j++}}D_{\psi\xi,l+++,i+,j+}\delta_{\psi,l++,i+,j-}\\
-+\frac{p_{i+}}{\lambda^{l+,j+}}\frac{B_{l+}}{\tilde{q}_{l+}}\frac{\alpha_{l,j+}}{\Delta\psi_{l+}}\frac{\sqrt{1-\xi_{j+}^{2}}}{\Delta\xi_{j}+\Delta\xi_{j++}}D_{\psi\xi,l+,i+,j+}\left(1-\delta_{\psi,l,i+,j-}\right)\\
+M_{l+,i+,j+}^{l+,i+,j-}=-p_{i+}\frac{\alpha_{l++,j+}}{\alpha_{l+,j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l+}}\frac{\sqrt{1-\xi_{j+}^{2}}}{\Delta\xi_{j}+\Delta\xi_{j++}}D_{\psi\xi,l+++,i+,j+}\delta_{\psi,l++,i+,j-}\\
++p_{i+}\frac{\alpha_{l,j+}}{\alpha_{l+,j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l+}}\frac{\sqrt{1-\xi_{j+}^{2}}}{\Delta\xi_{j}+\Delta\xi_{j++}}D_{\psi\xi,l+,i+,j+}\left(1-\delta_{\psi,l,i+,j-}\right)\\
 -\frac{p_{i++}}{\Delta p_{i+}}\frac{\sqrt{1-\xi_{j+}^{2}}}{\Delta\xi_{j}+\Delta\xi_{j++}}D_{p\xi,l+,i++,j+}\delta_{p,l+,i++,j-}\\
 +\frac{p_{i}}{\Delta p_{i+}}\frac{\sqrt{1-\xi_{j+}^{2}}}{\Delta\xi_{j}+\Delta\xi_{j++}}D_{p\xi,l+,i,j+}\left(1-\delta_{p,l+,i,j-}\right)\\
-+\frac{p_{i+}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j}^{2}}\lambda^{l+,j}}{\Delta\xi_{j+}}K_{\xi,l+,i+,j}\delta_{\xi,l+,i+,j}\\
++p_{i+}\frac{\lambda^{l+,j}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j}^{2}}}{\Delta\xi_{j+}}K_{\xi,l+,i+,j}\delta_{\xi,l+,i+,j}\\
 -\frac{\lambda^{l+,j}}{\lambda^{l+,j+}}\frac{1-\xi_{j}^{2}}{\Delta\xi_{j+}\Delta\xi_{j}}D_{\xi\xi,l+,i+,j}\end{multline}
 
 \end_inset
@@ -530,8 +573,9 @@ M_{l+,i+,j+}^{l+,i+,j-}=-\frac{p_{i+}}{\lambda^{l+,j+}}\frac{B_{l+}}{\tilde{q}_{
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula \begin{equation}
-M_{l+,i+,j+}^{l+,i+,j+}=\end{equation}
+\begin_inset Formula \begin{multline}
+M_{l+,i+,j+}^{l+,i-,j-}=\frac{p_{i}}{\Delta p_{i+}p_{i++}}\frac{\sqrt{1-\xi_{j+}^{2}}}{\left(\Delta\xi_{j}+\Delta\xi_{j++}\right)}D_{p\xi,l+,i,j+}\delta_{p,l+,i,j-}\\
++\frac{\lambda^{l+,j}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j}^{2}}}{\Delta\xi_{j+}}\frac{p_{i+}}{\Delta p_{i}+\Delta p_{i++}}D_{\xi p,l+,i+,j}\delta_{\xi,l+,i-,j}\end{multline}
 
 \end_inset
 
@@ -540,40 +584,30 @@ M_{l+,i+,j+}^{l+,i+,j+}=\end{equation}
 
 \begin_layout Standard
 \begin_inset Formula \begin{multline}
-M_{l+,i+,j+}^{l+,i-,j-}=\frac{p_{i}}{\Delta p_{i+}}\frac{\sqrt{1-\xi_{j+}^{2}}}{p_{i++}\left(\Delta\xi_{j}+\Delta\xi_{j++}\right)}D_{p\xi,l+,i,j+}\delta_{p,l+,i,j-}\\
-+\frac{p_{i+}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j}^{2}}\lambda^{l+,j}}{\Delta\xi_{j+}}\frac{1}{\Delta p_{i}+\Delta p_{i++}}D_{\xi p,l+,i+,j}\delta_{\xi,l+,i-,j}\end{multline}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{multline}
-M_{l+,i+,j+}^{l+,i-,j+}=\frac{p_{i+}^{2}}{\lambda^{l+,j+}}\frac{B_{l+}}{\tilde{q}_{l+}}\frac{\alpha_{l++,j+}}{\Delta\psi_{l+}}\frac{1}{\Delta p_{i}+\Delta p_{i++}}D_{\psi p,l++,i+,j+}\delta_{\psi,l++,i-,j+}\\
--\frac{p_{i+}^{2}}{\lambda^{l+,j+}}\frac{B_{l+}}{\tilde{q}_{l+}}\frac{\alpha_{l,j+}}{\Delta\psi_{l+}}\frac{1}{\Delta p_{i}+\Delta p_{i++}}D_{\psi p,l,i+,j+}\left(1-\delta_{\psi,l,i-,j+}\right)\\
+M_{l+,i+,j+}^{l+,i-,j+}=\frac{\alpha_{l++,j+}}{\alpha_{l+,j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l+}}\frac{p_{i+}^{2}}{\Delta p_{i}+\Delta p_{i++}}D_{\psi p,l++,i+,j+}\delta_{\psi,l++,i-,j+}\\
+-\frac{\alpha_{l,j+}}{\alpha_{l+,j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l+}}\frac{p_{i+}^{2}}{\Delta p_{i}+\Delta p_{i++}}D_{\psi p,l,i+,j+}\left(1-\delta_{\psi,l,i-,j+}\right)\\
 -\frac{p_{i}^{2}}{\Delta p_{i+}}K_{p,l+,i,j+}\delta_{p,l+,i,j+}\\
 -\frac{p_{i}^{2}}{\Delta p_{i+}\Delta p_{i}}D_{pp,l+,i,j+}\\
--\frac{p_{i+}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j++}^{2}}\lambda^{l+,j++}}{\Delta\xi_{j+}}\frac{1}{\Delta p_{i}+\Delta p_{i++}}D_{\xi p,l+,i+,j++}\delta_{\xi,l+,i-,j++}\\
-+\frac{p_{i+}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j}^{2}}\lambda^{l+,j}}{\Delta\xi_{j+}}\frac{1}{\Delta p_{i}+\Delta p_{i++}}D_{\xi p,l+,i+,j}\left(1-\delta_{\xi,l+,i-,j}\right)\end{multline}
+-\frac{\lambda^{l+,j++}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j++}^{2}}}{\Delta\xi_{j+}}\frac{p_{i+}}{\Delta p_{i}+\Delta p_{i++}}D_{\xi p,l+,i+,j++}\delta_{\xi,l+,i-,j++}\\
++\frac{\lambda^{l+,j}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j}^{2}}}{\Delta\xi_{j+}}\frac{p_{i+}}{\Delta p_{i}+\Delta p_{i++}}D_{\xi p,l+,i+,j}\left(1-\delta_{\xi,l+,i-,j}\right)\end{multline}
 
 \end_inset
 
 
 \begin_inset Formula \begin{multline}
 M_{l+,i+,j+}^{l+,i+++,j-}=-\frac{p_{i++}}{\Delta p_{i+}}\frac{\sqrt{1-\xi_{j+}^{2}}}{\Delta\xi_{j}+\Delta\xi_{j++}}D_{p\xi,l+,i++,j+}\left(1-\delta_{p,l+,i++,j-}\right)\\
--\frac{p_{i+}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j}^{2}}\lambda^{l+,j}}{\Delta\xi_{j+}}\frac{1}{\Delta p_{i}+\Delta p_{i++}}D_{\xi p,l+,i+,j}\delta_{\xi,l+,i+++,j}\end{multline}
+-\frac{\lambda^{l+,j}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j}^{2}}}{\Delta\xi_{j+}}\frac{p_{i+}}{\Delta p_{i}+\Delta p_{i++}}D_{\xi p,l+,i+,j}\delta_{\xi,l+,i+++,j}\end{multline}
 
 \end_inset
 
 
 \begin_inset Formula \begin{multline}
-M_{l+,i+,j+}^{l+,i+++,j+}=-\frac{p_{i+}^{2}}{\lambda^{l+,j+}}\frac{B_{l+}}{\tilde{q}_{l+}}\frac{\alpha_{l++,j+}}{\Delta\psi_{l+}}\frac{1}{\Delta p_{i}+\Delta p_{i++}}D_{\psi p,l++,i+,j+}\delta_{\psi,l++,i+++,j+}\\
-+\frac{p_{i+}^{2}}{\lambda^{l+,j+}}\frac{B_{l+}}{\tilde{q}_{l+}}\frac{\alpha_{l,j+}}{\Delta\psi_{l+}}\frac{1}{\Delta p_{i}+\Delta p_{i++}}D_{\psi p,l,i+,j+}\left(1-\delta_{\psi,l,i+++,j+}\right)\\
+M_{l+,i+,j+}^{l+,i+++,j+}=-\frac{\alpha_{l++,j+}}{\alpha_{l+,j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l+}}\frac{p_{i+}^{2}}{\Delta p_{i}+\Delta p_{i++}}D_{\psi p,l++,i+,j+}\delta_{\psi,l++,i+++,j+}\\
++\frac{\alpha_{l,j+}}{\alpha_{l+,j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l+}}\frac{p_{i+}^{2}}{\Delta p_{i}+\Delta p_{i++}}D_{\psi p,l,i+,j+}\left(1-\delta_{\psi,l,i+++,j+}\right)\\
 +\frac{p_{i++}^{2}}{\Delta p_{i+}}K_{p,l+,i++,j+}\left(1-\delta_{p,l+,i++,j+}\right)\\
 -\frac{p_{i++}^{2}}{\Delta p_{i+}\Delta p_{i++}}D_{pp,l+,i++,j+}\\
-+\frac{p_{i+}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j++}^{2}}\lambda^{l+,j++}}{\Delta\xi_{j+}}\frac{1}{\Delta p_{i}+\Delta p_{i++}}D_{\xi p,l+,i+,j++}\delta_{\xi,l+,i+++,j++}\\
--\frac{p_{i+}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j}^{2}}\lambda^{l+,j}}{\Delta\xi_{j+}}\frac{1}{\Delta p_{i}+\Delta p_{i++}}D_{\xi p,l+,i+,j}\left(1-\delta_{\xi,l+,i+++,j}\right)\end{multline}
++\frac{\lambda^{l+,j++}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j++}^{2}}}{\Delta\xi_{j+}}\frac{p_{i+}}{\Delta p_{i}+\Delta p_{i++}}D_{\xi p,l+,i+,j++}\delta_{\xi,l+,i+++,j++}\\
+-\frac{\lambda^{l+,j}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j}^{2}}}{\Delta\xi_{j+}}\frac{p_{i+}}{\Delta p_{i}+\Delta p_{i++}}D_{\xi p,l+,i+,j}\left(1-\delta_{\xi,l+,i+++,j}\right)\end{multline}
 
 \end_inset
 
@@ -582,8 +616,8 @@ M_{l+,i+,j+}^{l+,i+++,j+}=-\frac{p_{i+}^{2}}{\lambda^{l+,j+}}\frac{B_{l+}}{\tild
 
 \begin_layout Standard
 \begin_inset Formula \begin{multline}
-M_{l+,i+,j+}^{l-,i+,j+++}=-\frac{p_{i+}}{\lambda^{l+,j+}}\frac{B_{l+}}{\tilde{q}_{l+}}\frac{\alpha_{l,j+}}{\Delta\psi_{l+}}\frac{\sqrt{1-\xi_{j+}^{2}}}{\Delta\xi_{j}+\Delta\xi_{j++}}D_{\psi\xi,l+,i+,j+}\delta_{\psi,l,i+,j+++}\\
--\frac{p_{i+}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j++}^{2}}\lambda^{l+,j++}}{\Delta\xi_{j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l}+\Delta\psi_{l++}}D_{\xi\psi,l+,i+,j++}\left(1-\delta_{\xi,l-,i+,j++}\right)\end{multline}
+M_{l+,i+,j+}^{l-,i+,j+++}=-p_{i+}\frac{\alpha_{l,j+}}{\alpha_{l+,j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l+}}\frac{\sqrt{1-\xi_{j+}^{2}}}{\Delta\xi_{j}+\Delta\xi_{j++}}D_{\psi\xi,l+,i+,j+}\delta_{\psi,l,i+,j+++}\\
+-p_{i+}\frac{\lambda^{l+,j++}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j++}^{2}}}{\Delta\xi_{j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l}+\Delta\psi_{l++}}D_{\xi\psi,l+,i+,j++}\left(1-\delta_{\xi,l-,i+,j++}\right)\end{multline}
 
 \end_inset
 
@@ -592,8 +626,8 @@ M_{l+,i+,j+}^{l-,i+,j+++}=-\frac{p_{i+}}{\lambda^{l+,j+}}\frac{B_{l+}}{\tilde{q}
 
 \begin_layout Standard
 \begin_inset Formula \begin{multline}
-M_{l+,i+,j+}^{l+++,i+,j+++}=\frac{p_{i+}}{\lambda^{l+,j+}}\frac{B_{l+}}{\tilde{q}_{l+}}\frac{\alpha_{l++,j+}}{\Delta\psi_{l+}}\frac{\sqrt{1-\xi_{j+}^{2}}}{\Delta\xi_{j}+\Delta\xi_{j++}}D_{\psi\xi,l+++,i+,j+}\left(1-\delta_{\psi,l++,i+,j+++}\right)\\
-+\frac{p_{i+}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j++}^{2}}\lambda^{l+,j++}}{\Delta\xi_{j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l}+\Delta\psi_{l++}}D_{\xi\psi,l+,i+,j++}\left(1-\delta_{\xi,l+++,i+,j++}\right)\end{multline}
+M_{l+,i+,j+}^{l+++,i+,j+++}=p_{i+}\frac{\alpha_{l++,j+}}{\alpha_{l+,j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l+}}\frac{\sqrt{1-\xi_{j+}^{2}}}{\Delta\xi_{j}+\Delta\xi_{j++}}D_{\psi\xi,l+++,i+,j+}\left(1-\delta_{\psi,l++,i+,j+++}\right)\\
++p_{i+}\frac{\lambda^{l+,j++}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j++}^{2}}}{\Delta\xi_{j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l}+\Delta\psi_{l++}}D_{\xi\psi,l+,i+,j++}\left(1-\delta_{\xi,l+++,i+,j++}\right)\end{multline}
 
 \end_inset
 
@@ -602,11 +636,11 @@ M_{l+,i+,j+}^{l+++,i+,j+++}=\frac{p_{i+}}{\lambda^{l+,j+}}\frac{B_{l+}}{\tilde{q
 
 \begin_layout Standard
 \begin_inset Formula \begin{multline}
-M_{l+,i+,j+}^{l+,i+,j+++}=\frac{p_{i+}}{\lambda^{l+,j+}}\frac{B_{l+}}{\tilde{q}_{l+}}\frac{\alpha_{l++,j+}}{\Delta\psi_{l+}}\frac{\sqrt{1-\xi_{j+}^{2}}}{\Delta\xi_{j}+\Delta\xi_{j++}}D_{\psi\xi,l+++,i+,j+}\delta_{\psi,l++,i+,j+++}\\
--\frac{p_{i+}}{\lambda^{l+,j+}}\frac{B_{l+}}{\tilde{q}_{l+}}\frac{\alpha_{l,j+}}{\Delta\psi_{l+}}\frac{\sqrt{1-\xi_{j+}^{2}}}{\Delta\xi_{j}+\Delta\xi_{j++}}D_{\psi\xi,l+,i+,j+}\left(1-\delta_{\psi,l,i+,j+++}\right)\\
+M_{l+,i+,j+}^{l+,i+,j+++}=p_{i+}\frac{\alpha_{l++,j+}}{\alpha_{l+,j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l+}}\frac{\sqrt{1-\xi_{j+}^{2}}}{\Delta\xi_{j}+\Delta\xi_{j++}}D_{\psi\xi,l+++,i+,j+}\delta_{\psi,l++,i+,j+++}\\
+-p_{i+}\frac{\alpha_{l,j+}}{\alpha_{l+,j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l+}}\frac{\sqrt{1-\xi_{j+}^{2}}}{\Delta\xi_{j}+\Delta\xi_{j++}}D_{\psi\xi,l+,i+,j+}\left(1-\delta_{\psi,l,i+,j+++}\right)\\
 +\frac{p_{i++}}{\Delta p_{i+}}\frac{\sqrt{1-\xi_{j+}^{2}}}{\Delta\xi_{j}+\Delta\xi_{j++}}D_{p\xi,l+,i++,j+}\delta_{p,l+,i++,j+++}\\
 -\frac{p_{i}}{\Delta p_{i+}}\frac{\sqrt{1-\xi_{j+}^{2}}}{\Delta\xi_{j}+\Delta\xi_{j++}}D_{p\xi,l+,i,j+}\left(1-\delta_{p,l+,i,j+++}\right)\\
--\frac{p_{i+}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j++}^{2}}\lambda^{l+,j++}}{\Delta\xi_{j+}}K_{\xi,l+,i+,j++}\left(1-\delta_{\xi,l+,i+,j++}\right)\\
+-p_{i+}\frac{\lambda^{l+,j++}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j++}^{2}}}{\Delta\xi_{j+}}K_{\xi,l+,i+,j++}\left(1-\delta_{\xi,l+,i+,j++}\right)\\
 -\frac{\lambda^{l+,j++}}{\lambda^{l+,j+}}\frac{1-\xi_{j++}^{2}}{\Delta\xi_{j+}\Delta\xi_{j++}}D_{\xi\xi,l+,i+,j++}\end{multline}
 
 \end_inset
@@ -617,7 +651,7 @@ M_{l+,i+,j+}^{l+,i+,j+++}=\frac{p_{i+}}{\lambda^{l+,j+}}\frac{B_{l+}}{\tilde{q}_
 \begin_layout Standard
 \begin_inset Formula \begin{multline}
 M_{l+,i+,j+}^{l+,i-,j+++}=-\frac{p_{i}}{\Delta p_{i+}}\frac{\sqrt{1-\xi_{j+}^{2}}}{\Delta\xi_{j}+\Delta\xi_{j++}}D_{p\xi,l+,i,j+}\delta_{p,l+,i,j+++}\\
--\frac{p_{i+}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j++}^{2}}\lambda^{l+,j++}}{\Delta\xi_{j+}}\frac{1}{\Delta p_{i}+\Delta p_{i++}}D_{\xi p,l+,i+,j++}\left(1-\delta_{\xi,l+,i-,j++}\right)\end{multline}
+-\frac{\lambda^{l+,j++}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j++}^{2}}}{\Delta\xi_{j+}}\frac{p_{i+}}{\Delta p_{i}+\Delta p_{i++}}D_{\xi p,l+,i+,j++}\left(1-\delta_{\xi,l+,i-,j++}\right)\end{multline}
 
 \end_inset
 
@@ -627,7 +661,7 @@ M_{l+,i+,j+}^{l+,i-,j+++}=-\frac{p_{i}}{\Delta p_{i+}}\frac{\sqrt{1-\xi_{j+}^{2}
 \begin_layout Standard
 \begin_inset Formula \begin{multline}
 M_{l+,i+,j+}^{l+,i+++,j+++}=\frac{p_{i++}}{\Delta p_{i+}}\frac{\sqrt{1-\xi_{j+}^{2}}}{\Delta\xi_{j}+\Delta\xi_{j++}}D_{p\xi,l+,i++,j+}\left(1-\delta_{p,l+,i++,j+++}\right)\\
-+\frac{p_{i+}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j++}^{2}}\lambda^{l+,j++}}{\Delta\xi_{j+}}\frac{1}{\Delta p_{i}+\Delta p_{i++}}D_{\xi p,l+,i+,j++}\left(1-\delta_{\xi,l+,i+++,j++}\right)\end{multline}
++\frac{\lambda^{l+,j++}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j++}^{2}}}{\Delta\xi_{j+}}\frac{p_{i+}}{\Delta p_{i}+\Delta p_{i++}}D_{\xi p,l+,i+,j++}\left(1-\delta_{\xi,l+,i+++,j++}\right)\end{multline}
 
 \end_inset
 
@@ -636,7 +670,7 @@ M_{l+,i+,j+}^{l+,i+++,j+++}=\frac{p_{i++}}{\Delta p_{i+}}\frac{\sqrt{1-\xi_{j+}^
 
 \begin_layout Standard
 \begin_inset Formula \begin{multline}
-M_{l+,i+,j+}^{l-,i-,j+}=-\frac{p_{i+}^{2}}{\lambda^{l+,j+}}\frac{B_{l+}}{\tilde{q}_{l+}}\frac{\alpha_{l,j+}}{\Delta\psi_{l+}}\frac{1}{\Delta p_{i}+\Delta p_{i++}}D_{\psi p,l,i+,j+}\delta_{\psi,l,i-,j+}\\
+M_{l+,i+,j+}^{l-,i-,j+}=-\frac{\alpha_{l,j+}}{\alpha_{l+,j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l+}}\frac{p_{i+}^{2}}{\Delta p_{i}+\Delta p_{i++}}D_{\psi p,l,i+,j+}\delta_{\psi,l,i-,j+}\\
 -\frac{p_{i}^{2}}{\Delta p_{i+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l}+\Delta\psi_{l++}}D_{p\psi,l+,i,j+}\delta_{p,l-,i,j+}\end{multline}
 
 \end_inset
@@ -646,22 +680,25 @@ M_{l+,i+,j+}^{l-,i-,j+}=-\frac{p_{i+}^{2}}{\lambda^{l+,j+}}\frac{B_{l+}}{\tilde{
 
 \begin_layout Standard
 \begin_inset Formula \begin{multline}
-M_{l+,i+,j+}^{l-,i+++,j+}=\frac{p_{i+}^{2}}{\lambda^{l+,j+}}\frac{B_{l+}}{\tilde{q}_{l+}}\frac{\alpha_{l,j+}}{\Delta\psi_{l+}}\frac{1}{\Delta p_{i}+\Delta p_{i++}}D_{\psi p,l,i+,j+}\delta_{\psi,l,i+++,j+}\\
+M_{l+,i+,j+}^{l-,i+++,j+}=\frac{\alpha_{l,j+}}{\alpha_{l+,j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l+}}\frac{p_{i+}^{2}}{\Delta p_{i}+\Delta p_{i++}}D_{\psi p,l,i+,j+}\delta_{\psi,l,i+++,j+}\\
 +\frac{p_{i++}^{2}}{\Delta p_{i+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l}+\Delta\psi_{l++}}D_{p\psi,l+,i++,j+}\left(1-\delta_{p,l-,i++,j+}\right)\end{multline}
 
 \end_inset
 
 
 \begin_inset Formula \begin{multline}
-M_{l+,i+,j+}^{l+++,i+++,j+}=-\frac{p_{i+}^{2}}{\lambda^{l+,j+}}\frac{B_{l+}}{\tilde{q}_{l+}}\frac{\alpha_{l++,j+}}{\Delta\psi_{l+}}\frac{1}{\Delta p_{i}+\Delta p_{i++}}D_{\psi p,l++,i+,j+}\left(1-\delta_{\psi,l++,i+++,j+}\right)\\
+M_{l+,i+,j+}^{l+++,i+++,j+}=-\frac{\alpha_{l++,j+}}{\alpha_{l+,j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l+}}\frac{p_{i+}^{2}}{\Delta p_{i}+\Delta p_{i++}}D_{\psi p,l++,i+,j+}\left(1-\delta_{\psi,l++,i+++,j+}\right)\\
 -\frac{p_{i++}^{2}}{\Delta p_{i+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l}+\Delta\psi_{l++}}D_{p\psi,l+,i++,j+}\left(1-\delta_{p,l+++,i++,j+}\right)\end{multline}
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula \begin{multline}
-M_{l+,i+,j+}^{l-,i+,j+}=-\frac{p_{i+}^{2}}{\lambda^{l+,j+}}\frac{B_{l+}}{\tilde{q}_{l+}}\frac{\alpha_{l,j+}}{\Delta\psi_{l+}}K_{\psi,l,i+,j+}\delta_{\psi,l,i+,j+}\\
--\frac{p_{i+}^{2}}{\lambda^{l+,j+}}\frac{B_{l+}}{\tilde{q}_{l+}}\frac{\alpha_{l,j+}}{\Delta\psi_{l+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l}}{\Delta\psi_{l}}D_{\psi\psi,l,i+,j+}\end{multline}
+M_{l+,i+,j+}^{l+++,i-,j+}=\frac{\alpha_{l++,j+}}{\alpha_{l+,j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l+}}\frac{p_{i+}^{2}}{\Delta p_{i}+\Delta p_{i++}}D_{\psi p,l++,i+,j+}\left(1-\delta_{\psi,l++,i-,j+}\right)\\
++\frac{p_{i}^{2}}{\Delta p_{i+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l}+\Delta\psi_{l++}}D_{p\psi,l+,i,j+}\delta_{p,l+++,i,j+}\end{multline}
 
 \end_inset
 
@@ -669,17 +706,19 @@ M_{l+,i+,j+}^{l-,i+,j+}=-\frac{p_{i+}^{2}}{\lambda^{l+,j+}}\frac{B_{l+}}{\tilde{
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula \begin{equation}
-M_{l+,i+,j+}^{l++,i+,j}=\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-M_{l+,i+,j+}^{l++,i++,j}=\end{equation}
+\begin_inset Formula \begin{multline}
+M_{l+,i+,j+}^{l+,i+,j+}=p_{i+}^{2}\frac{\alpha_{l++,j+}}{\alpha_{l+,j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l+}}K_{\psi,l++,i+,j+}\delta_{\psi,l++,i+,j+}\\
++p_{i+}^{2}\frac{\alpha_{l++,j+}}{\alpha_{l+,j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l++}}{\Delta\psi_{l++}}D_{\psi\psi,l++,i+,j+}\\
+-p_{i+}^{2}\frac{\alpha_{l,j+}}{\alpha_{l+,j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l+}}K_{\psi,l,i+,j+}\left(1-\delta_{\psi,l,i+,j+}\right)\\
++p_{i+}^{2}\frac{\alpha_{l,j+}}{\alpha_{l+,j+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l+}}{\Delta\psi_{l+}}\frac{\left\Vert \mathbf{\nabla}\psi\right\Vert _{l}}{\Delta\psi_{l}}D_{\psi\psi,l,i+,j+}\\
++\frac{p_{i++}^{2}}{\Delta p_{i+}}K_{p,l+,i++,j+}\delta_{p,l+,i++,j+}\\
++\frac{p_{i++}^{2}}{\Delta p_{i+}\Delta p_{i++}}D_{pp,l+,i++,j+}\\
+-\frac{p_{i}^{2}}{\Delta p_{i+}}K_{p,l+,i,j+}\left(1-\delta_{p,l+,i,j+}\right)\\
++\frac{p_{i}^{2}}{\Delta p_{i+}\Delta p_{i}}D_{pp,l+,i,j+}\\
+-p_{i+}\frac{\lambda^{l+,j++}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j++}^{2}}}{\Delta\xi_{j+}}K_{\xi,l+,i+,j++}\delta_{\xi,l+,i+,j++}\\
++\frac{\lambda^{l+,j++}}{\lambda^{l+,j+}}\frac{1-\xi_{j++}^{2}}{\Delta\xi_{j+}\Delta\xi_{j++}}D_{\xi\xi,l+,i+,j++}\\
++p_{i+}\frac{\lambda^{l+,j}}{\lambda^{l+,j+}}\frac{\sqrt{1-\xi_{j}^{2}}}{\Delta\xi_{j+}}K_{\xi,l+,i+,j}\left(1-\delta_{\xi,l+,i+,j}\right)\\
++\frac{\lambda^{l+,j}}{\lambda^{l+,j+}}\frac{1-\xi_{j}^{2}}{\Delta\xi_{j+}\Delta\xi_{j}}D_{\xi\xi,l+,i+,j}\end{multline}
 
 \end_inset
 
