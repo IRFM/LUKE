@@ -30,7 +30,13 @@ dkepath = load_structures_yp('dkepath','','');
 flag = 0;
 %
 dirini = pwd;
+if isempty(dkepath.temppathroot) | strcmp(dkepath.temppathroot,pwd),
+	disp('WARNING: you cannot delete automatically working directories if your local directory !');
+	return;
+end
+%
 cd(dkepath.temppathroot);
+%
 dirlist = dir;
 for idir = 1:length(dirlist),
 	list = ls('-al');
