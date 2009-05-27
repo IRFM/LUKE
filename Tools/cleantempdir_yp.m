@@ -6,6 +6,7 @@ function [flag] = cleantempdir_yp(owner,year,month,day)
 % INPUT
 %
 %	- owner: name in the system (string) [1,n]
+%		default: USER environment variable
 %	- year: year number [1,1]
 %		default: this year
 %	- month: month number [1,1]
@@ -19,8 +20,9 @@ function [flag] = cleantempdir_yp(owner,year,month,day)
 %
 % by J. Decker (CEA-IRFM) <joan.decker@cea.fr> and   Y. Peysson (CEA-IRFM) <yves.peysson@cea.fr>
 %
-if nargin < 1 | nargin > 4,error('Wrong number of input arguments in cleantempdir_yp.m');end
-if nargin == 1,datenum_ref = now;end
+if nargin > 4,error('Wrong number of input arguments in cleantempdir_yp.m');end
+if nargin == 0,owner = getenv('USER');end
+if nargin <= 1,datenum_ref = now;end
 if nargin == 2,month = 1;day = 1;datenum_ref = datenum(year,month,day);end
 if nargin == 3,day = 1;datenum_ref = datenum(year,month,day);end
 if nargin == 4,datenum_ref = datenum(year,month,day);end
@@ -31,7 +33,12 @@ flag = 0;
 %
 dirini = pwd;
 if isempty(dkepath.temppathroot) | strcmp(dkepath.temppathroot,pwd),
-	disp('WARNING: you cannot delete automatically working directories if your local directory !');
+	disp('WARNING: you cannot delete automatically working directories if the parent directory is your local directory !');
+	return;
+end
+%
+if isempty(strfind(dkepath.temppathroot,'scratch')) | isempty(strfind(dkepath.temppathroot,'tmp')),
+	disp('WARNING: you cannot delete automatically working directories if the parent directory is not named ''scratch'' or ''tmp'' !');
 	return;
 end
 %
@@ -48,6 +55,8 @@ for idir = 1:length(dirlist),
 		end
 	end
 end
+%
+if nargout,disp(['---> ',int2str(flag),' directories have been deleted in ',dkepath.temppathroot]);end
 %
 cd(dirini);
 
