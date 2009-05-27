@@ -37,7 +37,7 @@ if isempty(dkepath.temppathroot) | strcmp(dkepath.temppathroot,pwd),
 	return;
 end
 %
-if isempty(strfind(dkepath.temppathroot,'scratch')) | isempty(strfind(dkepath.temppathroot,'tmp')),
+if isempty(strfind(dkepath.temppathroot,'scratch')) & isempty(strfind(dkepath.temppathroot,'tmp')),
 	disp('WARNING: you cannot delete automatically working directories if the parent directory is not named ''scratch'' or ''tmp'' !');
 	return;
 end
@@ -56,7 +56,7 @@ for idir = 1:length(dirlist),
 	end
 end
 %
-if nargout,disp(['---> ',int2str(flag),' directories have been deleted in ',dkepath.temppathroot]);end
+if ~nargout,disp(['---> ',int2str(flag),' directories have been deleted in ',dkepath.temppathroot]);end
 %
 cd(dirini);
 
