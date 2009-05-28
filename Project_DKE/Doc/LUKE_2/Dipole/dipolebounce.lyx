@@ -22,7 +22,7 @@
 \use_hyperref false
 \papersize default
 \use_geometry false
-\use_amsmath 0
+\use_amsmath 1
 \use_esint 0
 \cite_engine basic
 \use_bibtopic false
@@ -49,97 +49,51 @@
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
 \begin_inset FormulaMacro
 \newcommand{\un}[1]{\underline{#1}}
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
 \begin_inset FormulaMacro
 \newcommand{\wt}[1]{\widetilde{#1}}
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
 \begin_inset FormulaMacro
 \newcommand{\wh}[1]{\widehat{#1}}
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
 \begin_inset FormulaMacro
 \newcommand{\vb}[1]{\boldsymbol{#1}}
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-\begin_inset FormulaMacro
-\newcommand{\cal}[1]{\mathcal{#1}}
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset FormulaMacro
-\newcommand{\bb}[1]{\mathbb{#1}}
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 \begin_inset FormulaMacro
 \newcommand{\pd}[2]{\frac{\partial#1}{\partial#2}}
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
 \begin_inset FormulaMacro
 \newcommand{\fd}[2]{\frac{\delta#1}{\delta#2}}
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
 \begin_inset FormulaMacro
 \newcommand{\btimes}{\boldsymbol{\times}}
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
 \begin_inset FormulaMacro
 \newcommand{\bdot}{\boldsymbol{\cdot}}
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
 \begin_inset FormulaMacro
 \newcommand{\bhat}{\widehat{\mathsf{b}}}
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
 \begin_inset FormulaMacro
 \newcommand{\exd}{\mathsf{d}}
 \end_inset
@@ -218,11 +172,11 @@ The bounce action-angle coordinates for charged particles trapped in an
  action-angle corrections.
  Lastly, we obtain explicit expressions for the bounce-center coordinates
  based on the existence of explicit expressions 
-\begin_inset Formula $s(J,\zeta)$
+\begin_inset Formula $s\left(J,\zeta\right)$
 \end_inset
 
  and 
-\begin_inset Formula $p_{\|}(J,\zeta)$
+\begin_inset Formula $p_{\|}\left(J,\zeta\right)$
 \end_inset
 
  for the lowest-order parallel dynamics.
@@ -298,7 +252,7 @@ The dynamics of magnetically-confined charged particles exhibits three orbital
 \end_inset
 
 , the gyromotion is nearly circular and the action coordinate 
-\begin_inset Formula $mv_{\bot}^{2}/2\Omega\equiv(mc/q)\,\mu$
+\begin_inset Formula $mv_{\bot}^{2}/2\Omega\equiv\left(mc/q\right)\,\mu$
 \end_inset
 
  associated with gyromotion is an adiabatic invariant (here 
@@ -325,33 +279,33 @@ The slower bounce and drift motions of a guiding-center are described by
  plays the role of a spatial potential in which the guiding-center moves.
  The guiding-center equations of motion are 
 \begin_inset Formula \begin{eqnarray}
-\dot{\mathbf{X}} & = & \frac{p_{\|}}{m}\;\frac{{\bf B}^{*}}{B_{\|}^{*}}\;+\;\epsilon\;\frac{c\,\bhat}{qB_{\|}^{*}}\btimes\mu\;\nabla B,\label{eq:xdot_gc}\\
-\dot{p}_{\|} & = & -\;\frac{{\bf B}^{*}}{B_{\|}^{*}}\bdot\mu\;\nabla B,\label{ppardot_gc}\end{eqnarray}
+\dot{\mathbf{X}} & = & \frac{p_{\|}}{m}\;\frac{\mathbf{B}^{*}}{B_{\|}^{*}}\;+\;\epsilon\;\frac{c\,\bhat}{qB_{\|}^{*}}\btimes\mu\;\nabla B,\label{eq:xdot_gc}\\
+\dot{p}_{\|} & = & -\;\frac{\mathbf{B}^{*}}{B_{\|}^{*}}\bdot\mu\;\nabla B,\label{eq:ppardot_gc}\end{eqnarray}
 
 \end_inset
 
- where the modified magnetic fields 
-\begin_inset Formula ${\bf B}^{*}$
+where the modified magnetic fields 
+\begin_inset Formula $\mathbf{B}^{*}$
 \end_inset
 
  and 
-\begin_inset Formula $B_{\|}^{*}\equiv\bhat\bdot{\bf B}^{*}$
+\begin_inset Formula $B_{\|}^{*}\equiv\bhat\bdot\mathbf{B}^{*}$
 \end_inset
 
  are 
 \begin_inset Formula \begin{equation}
-{\bf B}^{*}\;\equiv\;{\bf B}\;+\;\epsilon\;(p_{\|}c/q)\;\nabla\btimes\bhat\;=\; B_{\|}^{*}\;\bhat\;+\;\epsilon\;(p_{\|}c/q)\;\bhat\btimes\left(\bhat\bdot\nabla\bhat\right).\label{eq:Bstar}\end{equation}
+\mathbf{B}^{*}\;\equiv\;\mathbf{B}\;+\;\epsilon\;\left(p_{\|}c/q\right)\;\nabla\btimes\bhat\;=\; B_{\|}^{*}\;\bhat\;+\;\epsilon\;\left(p_{\|}c/q\right)\;\bhat\btimes\left(\bhat\bdot\nabla\bhat\right).\label{eq:Bstar}\end{equation}
 
 \end_inset
 
- The first term in the guiding-center velocity (
+The first term in the guiding-center velocity 
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand eqref
 reference "eq:xdot_gc"
 
 \end_inset
 
-) includes the parallel velocity and the curvature drift velocity, while
+ includes the parallel velocity and the curvature drift velocity, while
  the second term represents the grad-B drift velocity.
  Both first-order drift velocities are, of course, involved in the slow
  drift motion of a guiding-center across magnetic-field lines.
@@ -359,21 +313,21 @@ reference "eq:xdot_gc"
 \begin_inset space ~
 \end_inset
 
-(
+
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand eqref
 reference "eq:xdot_gc"
 
 \end_inset
 
-)-(
+-
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand eqref
 reference "eq:Bstar"
 
 \end_inset
 
-), the small ordering parameter 
+, the small ordering parameter 
 \begin_inset Formula $\epsilon\equiv\rho/L_{B}$
 \end_inset
 
@@ -393,14 +347,14 @@ The bounce (or transit) motion of the guiding-center along a magnetic-field
  line is determined by the parallel spatial nonuniformity along the magnetic-fie
 ld line.
  Indeed, to lowest order in magnetic-field nonuniformity, the guiding-center
- parallel-force equation (
+ parallel-force equation 
 \begin_inset CommandInset ref
-LatexCommand ref
-reference "ppardot_gc"
+LatexCommand eqref
+reference "eq:ppardot_gc"
 
 \end_inset
 
-) is expressed as 
+ is expressed as 
 \begin_inset Formula $\dot{p}_{\|}=-\,\mu\,\partial B/\partial s$
 \end_inset
 
@@ -419,12 +373,12 @@ reference "ppardot_gc"
 \end_inset
 
 , we also have 
-\begin_inset Formula $p_{\|}\equiv m\,\dot{s}+{\cal O}(\epsilon)$
+\begin_inset Formula $p_{\|}\equiv m\,\dot{s}+\mathcal{O}\left(\epsilon\right)$
 \end_inset
 
 .
  By conservation of energy 
-\begin_inset Formula ${\cal E}=p^{2}/2m$
+\begin_inset Formula $\mathcal{E}=p^{2}/2m$
 \end_inset
 
  and magnetic moment 
@@ -482,8 +436,8 @@ We begin with the expression for a pure-dipole magnetic field
 
 \end_inset
 
- where spherical coordinates 
-\begin_inset Formula $(r,\theta,\phi)$
+where spherical coordinates 
+\begin_inset Formula $\left(r,\theta,\phi\right)$
 \end_inset
 
  are used and the constant 
@@ -503,14 +457,14 @@ We begin with the expression for a pure-dipole magnetic field
 \end_inset
 
 ).
- We can also write the magnetic field (
+ We can also write the magnetic field 
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand eqref
 reference "eq:Bdip_def"
 
 \end_inset
 
-) in flux-coordinate representation 
+ in flux-coordinate representation 
 \begin_inset Formula ${\bf B}=\nabla\psi\btimes\nabla\phi$
 \end_inset
 
@@ -520,11 +474,11 @@ reference "eq:Bdip_def"
 
  is 
 \begin_inset Formula \begin{equation}
-\psi(r,\theta)\;=\;\frac{{\cal M}}{r}\;\sin^{2}\theta.\label{eq:psi_def}\end{equation}
+\psi\left(r,\theta\right)\;=\;\frac{{\cal M}}{r}\;\sin^{2}\theta.\label{eq:psi_def}\end{equation}
 
 \end_inset
 
- Since a magnetic field line lies on a constant-
+Since a magnetic field line lies on a constant-
 \begin_inset Formula $\psi$
 \end_inset
 
@@ -534,11 +488,11 @@ reference "eq:Bdip_def"
 
 ), we find that 
 \begin_inset Formula \begin{equation}
-r(\theta)\;=\; r_{\mathrm{e}}\;\sin^{2}\theta\label{eq:r_theta}\end{equation}
+r\left(\theta\right)\;=\; r_{\mathrm{e}}\;\sin^{2}\theta\label{eq:r_theta}\end{equation}
 
 \end_inset
 
- on a single magnetic field line (with 
+on a single magnetic field line (with 
 \begin_inset Formula ${\cal M}\equiv\psi_{\mathrm{e}}\, r_{\mathrm{e}}$
 \end_inset
 
@@ -554,25 +508,25 @@ r(\theta)\;=\; r_{\mathrm{e}}\;\sin^{2}\theta\label{eq:r_theta}\end{equation}
 \end_layout
 
 \begin_layout Standard
-The relation (
+The relation 
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand eqref
 reference "eq:r_theta"
 
 \end_inset
 
-) allows us to introduce the distance along a magnetic field line (labeled
+ allows us to introduce the distance along a magnetic field line (labeled
  by 
 \begin_inset Formula $r_{\mathrm{e}}$
 \end_inset
 
 ) 
 \begin_inset Formula \begin{equation}
-s(r_{\mathrm{e}},\theta)\;\equiv\; r_{\mathrm{e}}\;\int_{\frac{\pi}{2}}^{\theta}\;\left(1+3\cos^{2}\theta^{\prime}\right)^{1/2}\;\sin\theta^{\prime}\; d\theta^{\prime},\label{eq:s_def}\end{equation}
+s\left(r_{\mathrm{e}},\theta\right)\;\equiv\; r_{\mathrm{e}}\;\int_{\frac{\pi}{2}}^{\theta}\;\sqrt{1+3\cos^{2}\theta^{\prime}}\;\sin\theta^{\prime}\; d\theta^{\prime},\label{eq:s_def}\end{equation}
 
 \end_inset
 
- which is defined to be zero positive for 
+which is defined to be zero positive for 
 \begin_inset Formula $\theta>\pi/2$
 \end_inset
 
@@ -581,7 +535,7 @@ s(r_{\mathrm{e}},\theta)\;\equiv\; r_{\mathrm{e}}\;\int_{\frac{\pi}{2}}^{\theta}
 \end_inset
 
  (above the equator), and zero at the equator 
-\begin_inset Formula $(\theta=\pi/2)$
+\begin_inset Formula $\left(\theta=\pi/2\right)$
 \end_inset
 
 .
@@ -589,28 +543,28 @@ s(r_{\mathrm{e}},\theta)\;\equiv\; r_{\mathrm{e}}\;\int_{\frac{\pi}{2}}^{\theta}
 \begin_inset space ~
 \end_inset
 
-(
+
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand eqref
 reference "eq:s_def"
 
 \end_inset
 
-) can be evaluated explicitly, and we find 
+ can be evaluated explicitly, and we find 
 \begin_inset Formula \begin{equation}
-s(r_{\mathrm{e}},\theta)\;=\;\frac{r_{\mathrm{e}}}{2\sqrt{3}}\;\left[\;\ln\left(\sqrt{1+3\cos^{2}\theta}\;-\;\sqrt{3}\cos\theta\right)\;-\;\sqrt{3}\cos\theta\;\sqrt{1+3\cos^{2}\theta}\;\right].\label{eq:s_dipole}\end{equation}
+s\left(r_{\mathrm{e}},\theta\right)\;=\;\frac{r_{\mathrm{e}}}{2\sqrt{3}}\;\left[\;\ln\left(\sqrt{1+3\cos^{2}\theta}\;-\;\sqrt{3}\cos\theta\right)\;-\;\sqrt{3}\cos\theta\;\sqrt{1+3\cos^{2}\theta}\;\right].\label{eq:s_dipole}\end{equation}
 
 \end_inset
 
- The magnetic-field strength on a single line, on the other hand, is given
+The magnetic-field strength on a single line, on the other hand, is given
  as 
 \begin_inset Formula \begin{equation}
-B(\theta)\;\equiv\; B_{\mathrm{e}}\;(1+3\,\cos^{2}\theta)^{1/2}/\sin^{6}\theta,\label{eq:B_dipole}\end{equation}
+B\left(\theta\right)\;\equiv\; B_{\mathrm{e}}\;\sqrt{1+3\,\cos^{2}\theta}/\sin^{6}\theta,\label{eq:B_dipole}\end{equation}
 
 \end_inset
 
- which clearly shows that, in this pure-dipole model, all particles are
- trapped (since 
+which clearly shows that, in this pure-dipole model, all particles are trapped
+ (since 
 \begin_inset Formula $B$
 \end_inset
 
@@ -627,22 +581,22 @@ B(\theta)\;\equiv\; B_{\mathrm{e}}\;(1+3\,\cos^{2}\theta)^{1/2}/\sin^{6}\theta,\
 \begin_inset space ~
 \end_inset
 
-(
+
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand eqref
 reference "eq:s_dipole"
 
 \end_inset
 
-)-(
+-
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand eqref
 reference "eq:B_dipole"
 
 \end_inset
 
-), the magnitude of the magnetic field 
-\begin_inset Formula $B(s)$
+, the magnitude of the magnetic field 
+\begin_inset Formula $B\left(s\right)$
 \end_inset
 
  can be represented parametrically as a function of the parallel spatial
@@ -659,11 +613,11 @@ Guiding-center Motion in Axisymmetric Dipole Geometry
 
 \begin_layout Standard
 When the magnetic coordinates 
-\begin_inset Formula $(\psi,s,\phi)$
+\begin_inset Formula $\left(\psi,s,\phi\right)$
 \end_inset
 
  are used, the spatial Jacobian is 
-\begin_inset Formula ${\cal J}=(\nabla\psi\btimes\nabla s\bdot\nabla\phi)^{-1}=B^{-1}$
+\begin_inset Formula ${\cal J}=\left(\nabla\psi\btimes\nabla s\bdot\nabla\phi\right)^{-1}=B^{-1}$
 \end_inset
 
 .
@@ -672,17 +626,17 @@ When the magnetic coordinates
 \end_inset
 
  is expressed in terms of the coordinates 
-\begin_inset Formula $(\psi,s,\phi)$
+\begin_inset Formula $\left(\psi,s,\phi\right)$
 \end_inset
 
  as 
 \begin_inset Formula \begin{equation}
-\bhat\;=\;\nabla s\;+\; a(\psi,s)\;\nabla\psi,\label{eq:bhat_psis}\end{equation}
+\bhat\;=\;\nabla s\;+\; a\left(\psi,s\right)\;\nabla\psi,\label{eq:bhat_psis}\end{equation}
 
 \end_inset
 
- where 
-\begin_inset Formula $a(\psi,s)\equiv\bhat\bdot\partial\mathbf{X}/\partial\psi$
+where 
+\begin_inset Formula $a\left(\psi,s\right)\equiv\bhat\bdot\partial\mathbf{X}/\partial\psi$
 \end_inset
 
 .
@@ -696,20 +650,20 @@ When the magnetic coordinates
 
 \end_inset
 
- and the magnetic curvature of a dipole field is 
+and the magnetic curvature of a dipole field is 
 \begin_inset Formula \begin{equation}
 \bhat\bdot\nabla\bhat\;=\;\pd as\;\nabla\psi.\label{eq:curv_dipole}\end{equation}
 
 \end_inset
 
- The magnetic-field gradient can be expressed as 
+The magnetic-field gradient can be expressed as 
 \begin_inset Formula \begin{equation}
-\nabla B(\psi,s)\;=\;\pd B{\psi}\;\nabla\psi\;+\;\pd Bs\;\nabla s\;\equiv\;\left(\pd B{\psi}\;-\; a\;\pd Bs\right)\nabla\psi\;+\;\pd Bs\;\bhat,\label{eq:gradB_dipole}\end{equation}
+\nabla B\left(\psi,s\right)\;=\;\pd B{\psi}\;\nabla\psi\;+\;\pd Bs\;\nabla s\;\equiv\;\left(\pd B{\psi}\;-\; a\;\pd Bs\right)\nabla\psi\;+\;\pd Bs\;\bhat,\label{eq:gradB_dipole}\end{equation}
 
 \end_inset
 
- in terms its perpendicular components 
-\begin_inset Formula $(\partial B/\partial\psi-a\;\partial B/\partial s)\,\nabla\psi$
+in terms of its perpendicular components 
+\begin_inset Formula $\left(\partial B/\partial\psi-a\;\partial B/\partial s\right)\,\nabla\psi$
 \end_inset
 
  and its parallel component 
@@ -725,50 +679,50 @@ When the magnetic coordinates
 \end_layout
 
 \begin_layout Standard
-Next, the modified magnetic field (
+Next, the modified magnetic field 
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand eqref
 reference "eq:Bstar"
 
 \end_inset
 
-) is expressed as 
+ is expressed as 
 \begin_inset Formula \begin{equation}
 {\bf B}^{*}\;=\;\left(\nabla\phi\;+\;\rho_{\|}\,\pd as\;{\bf B}\right)\btimes\nabla\psi,\label{eq:Bstar_dip}\end{equation}
 
 \end_inset
 
- so that 
+so that 
 \begin_inset Formula $B_{\|}^{*}\equiv B$
 \end_inset
 
-, and the guiding-center velocity (
+, and the guiding-center velocity 
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand eqref
 reference "eq:xdot_gc"
 
 \end_inset
 
-) becomes 
+ becomes 
 \begin_inset Formula \begin{equation}
-\dot{\mathbf{x}}\;=\;\frac{v_{\|}}{B}\left(\nabla\phi\;+\;\rho_{\|}\,\pd as\;{\bf B}\right)\btimes\nabla\psi\;-\;\frac{c\mu}{qB}\;(\nabla\psi\bdot\nabla\ln B)\;\nabla\phi,\label{eq:xdotgc_dip}\end{equation}
+\dot{\mathbf{x}}\;=\;\frac{v_{\|}}{B}\left(\nabla\phi\;+\;\rho_{\|}\,\pd as\;{\bf B}\right)\btimes\nabla\psi\;-\;\frac{c\mu}{qB}\;\left(\nabla\psi\bdot\nabla\ln B\right)\;\nabla\phi,\label{eq:xdotgc_dip}\end{equation}
 
 \end_inset
 
- where 
+where 
 \begin_inset Formula \[
 \nabla\psi\bdot\nabla\ln B\;=\;|\nabla\psi|^{2}\left(\pd{\ln B}{\psi}\;-\; a\;\pd{\ln B}s\right).\]
 
 \end_inset
 
- The components of the guiding-center velocity (
+The components of the guiding-center velocity 
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand eqref
 reference "eq:xdotgc_dip"
 
 \end_inset
 
-) are therefore 
+ are therefore 
 \begin_inset Formula \begin{equation}
 \left(\begin{array}{c}
 \dot{\psi}\\
@@ -783,34 +737,34 @@ v_{\|}\\
 
 \end_inset
 
- where the guiding-center toroidal drift frequency is defined as 
+where the guiding-center toroidal drift frequency is defined as 
 \begin_inset Formula \begin{equation}
 \omega_{\mathrm{d}}\;\equiv\;\frac{c}{q}\left[\mu\left(\pd B{\psi}\;-\; a\;\pd Bs\right)\;+\; m\, v_{\|}^{2}\;\pd as\right].\label{eq:omega_phi}\end{equation}
 
 \end_inset
 
- When the energy coordinate 
-\begin_inset Formula ${\cal E}$
+When the energy coordinate 
+\begin_inset Formula $\mathcal{E}$
 \end_inset
 
  is used instead of 
 \begin_inset Formula $p_{\|}$
 \end_inset
 
-, the drift frequency (
+, the drift frequency 
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand eqref
 reference "eq:omega_phi"
 
 \end_inset
 
-) may be rewritten as 
+ may be rewritten as 
 \begin_inset Formula \begin{equation}
 \dot{\phi}\;=\;\frac{c\mu}{q}\;\pd B{\psi}\;+\; v_{\|}\;\pd{}s\left(a\;\frac{cp_{\|}}{q}\right).\label{eq:phi_dot}\end{equation}
 
 \end_inset
 
- The guiding-center parallel acceleration, on the other hand, is 
+The guiding-center parallel acceleration, on the other hand, is 
 \begin_inset Formula \begin{equation}
 \dot{v}_{\|}\;=\;-\;\frac{\mu}{m}\;{\bf B}^{*}\bdot\nabla\ln B\;=\;-\;\frac{\mu}{m}\;\pd Bs.\label{eq:vdot_dip}\end{equation}
 
@@ -845,7 +799,7 @@ Bounce action-angle coordinates for deeply-trapped particles
 \begin_layout Standard
 In the present Section, we will investigate trapped-particle guiding-center
  motion in the vicinity of the equator 
-\begin_inset Formula $(\theta\simeq\pi/2)$
+\begin_inset Formula $\left(\theta\simeq\pi/2\right)$
 \end_inset
 
 .
@@ -861,45 +815,45 @@ latitude
 \begin_inset Formula $|\sigma|\ll\pi/2$
 \end_inset
 
-), so that the distance along a field line (
+), so that the distance along a field line 
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand eqref
 reference "eq:s_dipole"
 
 \end_inset
 
-) becomes 
+ becomes 
 \begin_inset Formula \begin{eqnarray}
 s & = & \frac{r_{\mathrm{e}}}{2\sqrt{3}}\;\left[\;\ln\left(\sqrt{1+3\sin^{2}\sigma}\;+\;\sqrt{3}\sin\sigma\right)\;+\;\sqrt{3}\sin\sigma\;\sqrt{1+3\sin^{2}\sigma}\;\right]\nonumber \\
  & = & r_{\mathrm{e}}\;\left(\sin\sigma\;+\;\frac{1}{2}\,\sin^{3}\sigma\;+\;\cdots\right)\;=\; r_{\mathrm{e}}\;\left(\sigma\;+\;\frac{1}{3}\,\sigma^{3}\;+\;\cdots\right),\label{eq:s_sigma}\end{eqnarray}
 
 \end_inset
 
- i.e., in the vicinity of the equator, 
+i.e., in the vicinity of the equator, 
 \begin_inset Formula $|\sigma|=|s|/r_{\mathrm{e}}\ll1$
 \end_inset
 
  represents a normalized parallel distance.
- In this approximation, the magnetic-field strength (
+ In this approximation, the magnetic-field strength 
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand eqref
 reference "eq:B_dipole"
 
 \end_inset
 
-) yields the expression 
+ yields the expression 
 \begin_inset Formula \begin{equation}
-\frac{B(\theta)}{B_{\mathrm{e}}}\;=\;\frac{(1+3\sin^{2}\sigma)^{1/2}}{\cos^{6}\sigma}\;=\;1\;+\;\frac{9}{2}\;\sin^{2}\sigma\;+\;\frac{75}{8}\;\sin^{4}\sigma\;+\;\cdots\;=\;1\;+\;\frac{9}{2}\;\sigma^{2}\;+\;\frac{63}{8}\;\sigma^{4}\;+\;\cdots.\label{eq:B_sigma}\end{equation}
+\frac{B\left(\theta\right)}{B_{\mathrm{e}}}\;=\;\frac{\sqrt{1+3\sin^{2}\sigma}}{\cos^{6}\sigma}\;=\;1\;+\;\frac{9}{2}\;\sin^{2}\sigma\;+\;\frac{75}{8}\;\sin^{4}\sigma\;+\;\cdots\;=\;1\;+\;\frac{9}{2}\;\sigma^{2}\;+\;\frac{63}{8}\;\sigma^{4}\;+\;\cdots.\label{eq:B_sigma}\end{equation}
 
 \end_inset
 
- Hence, in the vicinity of the equator, the guiding-center moves in the
- potential 
+Hence, in the vicinity of the equator, the guiding-center moves in the potential
+ 
 \begin_inset Formula $\frac{1}{2}\,(9\,\mu B_{\mathrm{e}})\;\sigma^{2}$
 \end_inset
 
  of a harmonic oscillator with energy 
-\begin_inset Formula ${\cal E}-\mu\, B_{\mathrm{e}}$
+\begin_inset Formula $\mathcal{E}-\mu\, B_{\mathrm{e}}$
 \end_inset
 
 .
@@ -919,11 +873,11 @@ A deeply-trapped particle orbit is characterized by a pitch-angle coordinate
  as the equatorial pitch-angle coordinate, then conservation of magnetic
  moment yields the relation 
 \begin_inset Formula \begin{equation}
-\frac{1-\xi^{2}(\theta)}{B(\theta)}\;=\;\frac{1-\xi_{\mathrm{e}}^{2}}{B_{\mathrm{e}}}.\label{eq:xi_theta}\end{equation}
+\frac{1-\xi^{2}\left(\theta\right)}{B\left(\theta\right)}\;=\;\frac{1-\xi_{\mathrm{e}}^{2}}{B_{\mathrm{e}}}.\label{eq:xi_theta}\end{equation}
 
 \end_inset
 
- Hence, for a fixed value 
+Hence, for a fixed value 
 \begin_inset Formula $\xi_{\mathrm{e}}$
 \end_inset
 
@@ -932,7 +886,7 @@ A deeply-trapped particle orbit is characterized by a pitch-angle coordinate
 \end_inset
 
  is a solution of the relation 
-\begin_inset Formula $B(\theta_{\mathrm{b}})/B_{\mathrm{e}}\equiv1/(1-\xi_{\mathrm{e}}^{2})$
+\begin_inset Formula $B\left(\theta_{\mathrm{b}}\right)/B_{\mathrm{e}}\equiv1/\left(1-\xi_{\mathrm{e}}^{2}\right)$
 \end_inset
 
 .
@@ -951,7 +905,7 @@ A deeply-trapped particle orbit is characterized by a pitch-angle coordinate
 
 \end_inset
 
- Figure 
+Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:eq_pitch"
@@ -967,7 +921,7 @@ reference "fig:eq_pitch"
 \end_inset
 
 , where we clearly see that, for deeply-trapped particles 
-\begin_inset Formula $(\sigma_{\mathrm{b}}\ll\pi/2)$
+\begin_inset Formula $\left(\sigma_{\mathrm{b}}\ll\pi/2\right)$
 \end_inset
 
 , the equatorial pitch-angle 
@@ -1040,27 +994,27 @@ name "fig:eq_pitch"
 \begin_layout Standard
 A trapped particle orbit can be represented in terms of the canonical action-ang
 le coordinates 
-\begin_inset Formula $(J,\zeta)$
+\begin_inset Formula $\left(J,\zeta\right)$
 \end_inset
 
 , where the bounce action coordinate 
 \begin_inset Formula \begin{equation}
-J\;\equiv\;\frac{1}{2\pi}\;\oint\; p_{\|}\, ds\;=\;\frac{r_{\mathrm{e}}p}{\pi}\;\int_{\theta_{\mathrm{b}}^{-}}^{\theta_{\mathrm{b}}^{+}}\;|\xi|(\theta,\xi_{\mathrm{e}})\;\sqrt{1+3\,\cos^{2}\theta}\;\sin\theta\; d\theta\label{eq:J_def}\end{equation}
+J\;\equiv\;\frac{1}{2\pi}\;\oint\; p_{\|}\, ds\;=\;\frac{r_{\mathrm{e}}p}{\pi}\;\int_{\theta_{\mathrm{b}}^{-}}^{\theta_{\mathrm{b}}^{+}}\;|\xi|\left(\theta,\xi_{\mathrm{e}}\right)\;\sqrt{1+3\,\cos^{2}\theta}\;\sin\theta\; d\theta\label{eq:J_def}\end{equation}
 
 \end_inset
 
- is a function of 
+is a function of 
 \begin_inset Formula $(r_{\mathrm{e}},p,\xi_{\mathrm{e}})$
 \end_inset
 
 .
  The conjugate bounce angle 
 \begin_inset Formula \begin{equation}
-\zeta\;\equiv\;\pi\;+\;{\rm sgn}(p_{\|})\;\frac{r_{\mathrm{e}}\omega_{\mathrm{b}}}{p/m}\;\int_{\theta_{\mathrm{b}}^{-}}^{\theta}\;\frac{\sqrt{1+3\,\cos^{2}\theta^{\prime}}\;\sin\theta^{\prime}}{|\xi|(\theta^{\prime},\xi_{\mathrm{e}})}\; d\theta^{\prime}\label{eq:zeta_def}\end{equation}
+\zeta\;\equiv\;\pi\;+\;{\rm sgn}(p_{\|})\;\frac{r_{\mathrm{e}}\omega_{\mathrm{b}}}{p/m}\;\int_{\theta_{\mathrm{b}}^{-}}^{\theta}\;\frac{\sqrt{1+3\,\cos^{2}\theta^{\prime}}\;\sin\theta^{\prime}}{|\xi|\left(\theta^{\prime},\xi_{\mathrm{e}}\right)}\; d\theta^{\prime}\label{eq:zeta_def}\end{equation}
 
 \end_inset
 
- on the other hand, is defined to be 
+on the other hand, is defined to be 
 \begin_inset Formula $\zeta\equiv\pi$
 \end_inset
 
@@ -1074,33 +1028,33 @@ J\;\equiv\;\frac{1}{2\pi}\;\oint\; p_{\|}\, ds\;=\;\frac{r_{\mathrm{e}}p}{\pi}\;
 
  is defined from the relation 
 \begin_inset Formula \begin{equation}
-\omega_{\mathrm{b}}^{-1}\;\equiv\;\pd J{{\cal E}}\;=\;\frac{1}{2\pi}\;\oint\;\frac{m\, ds}{p_{\|}}\;=\;\frac{mr_{\mathrm{e}}}{\pi\, p}\;\int_{\theta_{\mathrm{b}}^{-}}^{\theta_{\mathrm{b}}^{+}}\;\frac{\sqrt{1+3\,\cos^{2}\theta}\;\sin\theta}{|\xi|(\theta,\xi_{\mathrm{e}})}\; d\theta.\label{eq:omega_b}\end{equation}
+\omega_{\mathrm{b}}^{-1}\;\equiv\;\pd J{\mathcal{E}}\;=\;\frac{1}{2\pi}\;\oint\;\frac{m\, ds}{p_{\|}}\;=\;\frac{mr_{\mathrm{e}}}{\pi\, p}\;\int_{\theta_{\mathrm{b}}^{-}}^{\theta_{\mathrm{b}}^{+}}\;\frac{\sqrt{1+3\,\cos^{2}\theta}\;\sin\theta}{|\xi|\left(\theta,\xi_{\mathrm{e}}\right)}\; d\theta.\label{eq:omega_b}\end{equation}
 
 \end_inset
 
- When the integral in Eq.
+When the integral in Eq.
 \begin_inset space ~
 \end_inset
 
-(
+
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand eqref
 reference "eq:omega_b"
 
 \end_inset
 
-) is computed numerically as a function of 
+ is computed numerically as a function of 
 \begin_inset Formula $\xi_{\mathrm{e}}$
 \end_inset
 
 , we obtain the following expression for the bounce period 
 \begin_inset Formula \begin{equation}
-\tau_{\mathrm{b}}\;\equiv\;\frac{2\pi}{\omega_{\mathrm{b}}}\;=\;\left(2\,\pi\;\frac{\sqrt{2}}{3}\right)\frac{r_{\mathrm{e}}}{v}\; f(\xi_{\mathrm{e}}),\label{eq:tau_b_xi}\end{equation}
+\tau_{\mathrm{b}}\;\equiv\;\frac{2\pi}{\omega_{\mathrm{b}}}\;=\;\left(2\,\pi\;\frac{\sqrt{2}}{3}\right)\frac{r_{\mathrm{e}}}{v}\; f\left(\xi_{\mathrm{e}}\right),\label{eq:tau_b_xi}\end{equation}
 
 \end_inset
 
- where the normalized function 
-\begin_inset Formula $f(\xi_{\mathrm{e}})$
+where the normalized function 
+\begin_inset Formula $f\left(\xi_{\mathrm{e}}\right)$
 \end_inset
 
  is shown in Fig.
@@ -1120,21 +1074,21 @@ reference "fig:f_xi"
 \end_inset
 
 , the function 
-\begin_inset Formula $f(\xi_{\mathrm{e}})$
+\begin_inset Formula $f\left(\xi_{\mathrm{e}}\right)$
 \end_inset
 
  is replaced by unity in Eq.
 \begin_inset space ~
 \end_inset
 
-(
+
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand eqref
 reference "eq:tau_b_xi"
 
 \end_inset
 
-), and the bounce period becomes independent of the equatorial pitch-angle
+, and the bounce period becomes independent of the equatorial pitch-angle
  coordinate: 
 \begin_inset Formula $\tau_{\mathrm{b}}\propto r_{\mathrm{e}}/v$
 \end_inset
@@ -1163,7 +1117,7 @@ status open
 
 \begin_layout Plain Layout
 Plot of the normalized function 
-\begin_inset Formula $f(\xi_{\mathrm{e}})$
+\begin_inset Formula $f\left(\xi_{\mathrm{e}}\right)$
 \end_inset
 
  as a function of the equatorial pitch-angle coordinate 
@@ -1172,21 +1126,21 @@ Plot of the normalized function
 
  (solid line).
  In the deeply-trapped approximation (dashed line), 
-\begin_inset Formula $f(\xi_{\mathrm{e}})$
+\begin_inset Formula $f\left(\xi_{\mathrm{e}}\right)$
 \end_inset
 
  is replaced by unity in Eq.
 \begin_inset space ~
 \end_inset
 
-(
+
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand eqref
 reference "eq:tau_b_xi"
 
 \end_inset
 
-).
+.
 \end_layout
 
 \end_inset
@@ -1230,7 +1184,7 @@ status open
 
 \begin_layout Plain Layout
 Plot of the normalized function 
-\begin_inset Formula $g(\xi_{\mathrm{e}})$
+\begin_inset Formula $g\left(\xi_{\mathrm{e}}\right)$
 \end_inset
 
  as a function of the equatorial pitch-angle coordinate 
@@ -1239,21 +1193,21 @@ Plot of the normalized function
 
  (solid line).
  In the deeply-trapped approximation (dashed line), 
-\begin_inset Formula $g(\xi_{\mathrm{e}})$
+\begin_inset Formula $g\left(\xi_{\mathrm{e}}\right)$
 \end_inset
 
  is replaced by unity in Eq.
 \begin_inset space ~
 \end_inset
 
-(
+
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand eqref
 reference "eq:tau_d_xi"
 
 \end_inset
 
-).
+.
 \end_layout
 
 \end_inset
@@ -1277,25 +1231,29 @@ name "fig:g_xi"
 \end_layout
 
 \begin_layout Standard
-Lastly, it is worth pointing out that when the bounce period (
+Lastly, it is worth pointing out that when the bounce period 
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand eqref
 reference "eq:tau_b_xi"
 
 \end_inset
 
-) is compared with the equatorial gyration period 
-\begin_inset Formula $\tau_{\mathrm{g}}\equiv(pc/qB_{\mathrm{e}})\;\sqrt{1-\xi_{\mathrm{e}}^{2}}$
+ is compared with the equatorial gyration period 
+\begin_inset Formula $\tau_{\mathrm{g}}\;\equiv\; mc/qB_{\mathrm{e}}$
 \end_inset
 
  and the equatorial bounce-averaged drift period 
 \begin_inset Formula \begin{equation}
-\tau_{\mathrm{d}}\;\equiv\;\left(\frac{4\pi}{3}\right)\frac{r_{\mathrm{e}}^{2}}{\rho_{\mathrm{e}}v}\; g(\xi_{\mathrm{e}}),\label{eq:tau_d_xi}\end{equation}
+\tau_{\mathrm{d}}\;\equiv\;\left(\frac{4\pi}{3}\right)\frac{r_{\mathrm{e}}^{2}}{\rho_{\mathrm{e}}v}\;\sqrt{1-\xi_{\mathrm{e}}^{2}}\; g\left(\xi_{\mathrm{e}}\right),\label{eq:tau_d_xi}\end{equation}
 
 \end_inset
 
- where the normalized function 
-\begin_inset Formula $g(\xi_{\mathrm{e}})$
+where 
+\begin_inset Formula $\rho_{\mathrm{e}}\;\equiv\; v\,\tau_{g}\,\sqrt{1-\xi_{\mathrm{e}}}$
+\end_inset
+
+ denotes the equatorial Larmor radius and the normalized function 
+\begin_inset Formula $g\left(\xi_{\mathrm{e}}\right)$
 \end_inset
 
  is shown in Fig.
@@ -1326,14 +1284,14 @@ reference "fig:g_xi"
 \begin_inset space ~
 \end_inset
 
-(
+
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand eqref
 reference "eq:phi_dot"
 
 \end_inset
 
-), the bounce-averaged drift frequency 
+, the bounce-averaged drift frequency 
 \begin_inset Formula $\langle\dot{\phi}\rangle_{\mathrm{b}}$
 \end_inset
 
@@ -1343,18 +1301,18 @@ reference "eq:phi_dot"
 
 \end_inset
 
- where the bounce average of the second term in Eq.
+where the bounce average of the second term in Eq.
 \begin_inset space ~
 \end_inset
 
-(
+
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand eqref
 reference "eq:phi_dot"
 
 \end_inset
 
-) vanishes identically.
+ vanishes identically.
  For deeply-trapped particles 
 \begin_inset Formula $(\xi_{\mathrm{e}}\ll1)$
 \end_inset
@@ -1365,18 +1323,18 @@ reference "eq:phi_dot"
 
 \end_inset
 
- from which we obtain Eq.
+from which we obtain Eq.
 \begin_inset space ~
 \end_inset
 
-(
+
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand eqref
 reference "eq:tau_d_xi"
 
 \end_inset
 
-) in the deeply-trapped limit (where 
+ in the deeply-trapped limit (where 
 \begin_inset Formula $g\rightarrow1$
 \end_inset
 
@@ -1388,81 +1346,28 @@ Lowest-order calculations
 \end_layout
 
 \begin_layout Standard
-\align center
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-framebox{
-\end_layout
-
-\end_inset
-
-
-\begin_inset Box Frameless
-position "c"
-hor_pos "c"
-has_inner_box 1
-inner_pos "c"
-use_parbox 1
-width "3in"
-special "none"
-height "1in"
-height_special "totalheight"
-status open
-
-\begin_layout Plain Layout
-\align center
-\begin_inset VSpace 0.1in*
-\end_inset
-
- A TON TOUR FRANCOIS-XAVIER 
-\begin_inset VSpace 0.1in*
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-In the vicinity of the equator, we find 
+We will now calculate explicit expressions for the bounce angle-action coordinat
+es in the deeply-trapped approximation.
+ In the vicinity of the equator, we find 
 \begin_inset Formula \begin{equation}
-\left|\xi\right|(\theta,\xi_{\mathrm{e}})\;\equiv\;\sqrt{1\;-\;\frac{B(\theta)}{B_{\mathrm{e}}}\;\left(1-\xi_{\mathrm{e}}^{2}\right)}\;=\;\frac{3}{\sqrt{2}}\;\sqrt{\sigma_{\mathrm{b}}^{2}\;-\;\sigma^{2}}\;+\;{\cal O}\left(\sigma_{\mathrm{b}}^{2}\right),\label{eq:xi_deep}\end{equation}
+\left|\xi\right|\left(\theta,\xi_{\mathrm{e}}\right)\;\equiv\;\sqrt{1\;-\;\frac{B\left(\theta\right)}{B_{\mathrm{e}}}\;\left(1-\xi_{\mathrm{e}}^{2}\right)}\;=\;\frac{3}{\sqrt{2}}\;\sqrt{\sigma_{\mathrm{b}}^{2}\;-\;\sigma^{2}}\;+\;\mathcal{O}\left(\sigma_{\mathrm{b}}^{2}\right),\label{eq:xi_deep}\end{equation}
 
 \end_inset
 
- so that the bounce action (
+so that the bounce action 
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand eqref
 reference "eq:J_def"
 
 \end_inset
 
-) becomes 
+ becomes 
 \begin_inset Formula \begin{equation}
-J\;=\;\frac{3r_{\mathrm{e}}p}{\pi\sqrt{2}}\;\int_{-\sigma_{\mathrm{b}}}^{\sigma_{\mathrm{b}}}\;\sqrt{\sigma_{b}^{2}-\sigma^{2}}\; d\sigma\;+\;{\cal O}\left(\sigma_{\mathrm{b}}^{3}\right).\label{eq:J_deep_def}\end{equation}
+J\;=\;\frac{3r_{\mathrm{e}}p}{\pi\sqrt{2}}\;\int_{-\sigma_{\mathrm{b}}}^{\sigma_{\mathrm{b}}}\;\sqrt{\sigma_{b}^{2}-\sigma^{2}}\; d\sigma\;+\;\mathcal{O}\left(\sigma_{\mathrm{b}}^{3}\right).\label{eq:J_deep_def}\end{equation}
 
 \end_inset
 
- The integration is easily carried out and we obtain (to lowest order in
+The integration is easily carried out and we obtain (to lowest order in
  
 \begin_inset Formula $\xi_{\mathrm{e}}$
 \end_inset
@@ -1473,37 +1378,40 @@ J\;=\;\frac{3r_{\mathrm{e}}p}{2\sqrt{2}}\;\sigma_{\mathrm{b}}^{2}\;=\;\frac{r_{\
 
 \end_inset
 
- From this expression, we use Eq.
+From this expression, we use Eq.
 \begin_inset space ~
 \end_inset
 
-(
+
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand eqref
 reference "eq:omega_b"
 
 \end_inset
 
-) to compute the bounce frequency 
+ to compute the bounce frequency 
 \begin_inset Formula \begin{equation}
-\omega_{\mathrm{b}}\;=\;\left(\pd J{{\cal E}}\right)^{-1}\;=\;\frac{3\, p}{\sqrt{2}\, mr_{\mathrm{e}}}\;+\;{\cal O}\left(\xi_{\mathrm{e}}^{2}\right),\label{eq:omegab_deep}\end{equation}
+\omega_{\mathrm{b}}\;=\;\left(\pd J{\mathcal{E}}\right)^{-1}\;=\;\frac{3\, p}{\sqrt{2}\, mr_{\mathrm{e}}}\;+\;\mathcal{O}\left(\xi_{\mathrm{e}}^{2}\right),\label{eq:omegab_deep}\end{equation}
 
 \end_inset
 
- where we used 
-\begin_inset Formula $\partial(p\,\xi_{\mathrm{e}}^{2})/\partial{\cal E}=m\,(2-\xi_{\mathrm{e}}^{2})/p$
+where we used 
+\begin_inset Formula $\partial\left(p\,\xi_{\mathrm{e}}^{2}\right)/\partial\mathcal{E}=m\,\left(2-\xi_{\mathrm{e}}^{2}\right)/p$
 \end_inset
 
 .
  When we combine these two expressions, we find that harmonic bounce oscillator
  energy 
 \begin_inset Formula \begin{equation}
-J\,\omega_{\mathrm{b}}\;=\;\frac{p^{2}}{2m}\;\xi_{\mathrm{e}}^{2}\;\equiv\;{\cal E}\;-\;\mu\, B_{\mathrm{e}}\label{eq:JOmega}\end{equation}
+J\,\omega_{\mathrm{b}}\;=\;\frac{p^{2}}{2m}\;\xi_{\mathrm{e}}^{2}\;\equiv\;\mathcal{E}\;-\;\mu\, B_{\mathrm{e}}\label{eq:JOmega}\end{equation}
 
 \end_inset
 
- is simply the relative energy as measured from the minimum-B potential
- 
+ is simply the relative energy as measured from the minimum-
+\begin_inset Formula $B$
+\end_inset
+
+ potential 
 \begin_inset Formula $\mu\, B_{\mathrm{e}}$
 \end_inset
 
@@ -1519,36 +1427,36 @@ Next, we compute the lowest-order expression for the bounce angle
 \begin_inset space ~
 \end_inset
 
-(
+
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand eqref
 reference "eq:zeta_def"
 
 \end_inset
 
-).
+.
  First, using Eq.
 \begin_inset space ~
 \end_inset
 
-(
+
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand eqref
 reference "eq:xi_deep"
 
 \end_inset
 
-), we compute 
+, we compute 
 \begin_inset Formula \[
-\int_{\theta_{\mathrm{b}}^{-}}^{\theta}\;\frac{\sqrt{1+3\,\cos^{2}\theta^{\prime}}\;\sin\theta^{\prime}}{|\xi|(\theta^{\prime},\xi_{\mathrm{e}})}\; d\theta^{\prime}\;=\;\frac{\sqrt{2}}{3}\;\int_{-\,\sigma_{\mathrm{b}}}^{\sigma}\;\frac{d\sigma^{\prime}}{\sqrt{\sigma_{\mathrm{b}}^{2}-\sigma^{\prime2}}}\;=\;\frac{\sqrt{2}}{3}\left[\;\pi\;-\;\arccos\left(\frac{\sigma}{\sigma_{\mathrm{b}}}\right)\;\right],\]
+\int_{\theta_{\mathrm{b}}^{-}}^{\theta}\;\frac{\sqrt{1+3\,\cos^{2}\theta^{\prime}}\;\sin\theta^{\prime}}{|\xi|\left(\theta^{\prime},\xi_{\mathrm{e}}\right)}\; d\theta^{\prime}\;=\;\frac{\sqrt{2}}{3}\;\int_{-\,\sigma_{\mathrm{b}}}^{\sigma}\;\frac{d\sigma^{\prime}}{\sqrt{\sigma_{\mathrm{b}}^{2}-\sigma^{\prime2}}}\;=\;\frac{\sqrt{2}}{3}\left[\;\pi\;-\;\arccos\left(\frac{\sigma}{\sigma_{\mathrm{b}}}\right)\;\right],\]
 
 \end_inset
 
- and thus we find 
+and thus we find 
 \begin_inset Formula \begin{equation}
-\zeta\;=\;\left\{ \begin{array}{lr}
-2\pi\;-\;\arccos\left(\sigma/\sigma_{\mathrm{b}}\right)\hspace{1in} & (p_{\|}>0)\\
-\\\arccos\left(\sigma/\sigma_{\mathrm{b}}\right) & (p_{\|}<0)\end{array}\right.\label{eq:zeta_deep}\end{equation}
+\zeta\;=\;\begin{cases}
+2\pi\;-\;\arccos\left(\sigma/\sigma_{\mathrm{b}}\right) & \left(p_{\|}>0\right)\\
+\arccos\left(\sigma/\sigma_{\mathrm{b}}\right) & \left(p_{\|}<0\right)\end{cases}\label{eq:zeta_deep}\end{equation}
 
 \end_inset
 
@@ -1569,7 +1477,7 @@ Lastly, the parallel momentum
 \end_inset
 
 ) in terms of the action-angle coordinates 
-\begin_inset Formula $(J,\zeta)$
+\begin_inset Formula $\left(J,\zeta\right)$
 \end_inset
 
  as 
@@ -1578,26 +1486,26 @@ p_{\|}\;=\;-\;\sqrt{\frac{6pJ}{\sqrt{2}r_{\mathrm{e}}}}\;\sin\zeta\;\equiv\;-\;\
 
 \end_inset
 
- and 
+and 
 \begin_inset Formula \begin{equation}
 s\;=\;\sqrt{\frac{2\sqrt{2}r_{\mathrm{e}}J}{3p}}\;\cos\zeta\;\equiv\;\sqrt{\frac{2J}{m\omega_{\mathrm{b}}}}\;\cos\zeta\label{eq:s_deep}\end{equation}
 
 \end_inset
 
- where we have used the bounce frequency (
+where we have used the bounce frequency 
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand eqref
 reference "eq:omegab_deep"
 
 \end_inset
 
-) for deeply-trapped particles.
+ for deeply-trapped particles.
  We note that the transformation from 
-\begin_inset Formula $(p_{\|},s)$
+\begin_inset Formula $\left(p_{\|},s\right)$
 \end_inset
 
  to 
-\begin_inset Formula $(J,\zeta)$
+\begin_inset Formula $\left(J,\zeta\right)$
 \end_inset
 
  is a canonical transformation since 
@@ -1616,24 +1524,24 @@ Anharmonic Corrections
 \begin_layout Standard
 In this section, we will obtain the expressions for the bounce coordinates
  through the Lie transform method.
- Using (
+ Using 
 \begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:-13"
+LatexCommand eqref
+reference "eq:s_sigma"
 
 \end_inset
 
-), we can invert the expansion and deduce :
+, we can invert the expansion and deduce :
 \begin_inset Formula \begin{equation}
-\sigma\;=\;\frac{s}{r_{\mathrm{e}}}\;-\;\frac{1}{3}\left(\frac{s}{r_{\mathrm{e}}}\right)^{3}\;+\;{\cal O}\left(\left(\frac{s}{r_{\mathrm{e}}}\right)^{5}\right)\end{equation}
+\sigma\;=\;\frac{s}{r_{\mathrm{e}}}\;-\;\frac{1}{3}\left(\frac{s}{r_{\mathrm{e}}}\right)^{3}\;+\;\mathcal{O}\left(\left(\frac{s}{r_{\mathrm{e}}}\right)^{5}\right)\end{equation}
 
 \end_inset
 
- The Hamiltonian will have a lowest-order expression and a higher-order
- correction which will break the bounce action invariance.
+The Hamiltonian will have a lowest-order expression and a higher-order correctio
+n which will break the bounce action invariance.
  Using Lie transforms, we will perform the transformation to new bounce
  coordinates 
-\begin_inset Formula $\left(\ov J,\ov{\zeta}\right)$
+\begin_inset Formula $\left(\wh J,\wh{\zeta}\right)$
 \end_inset
 
  in order to restore the action invariance.
@@ -1643,84 +1551,69 @@ H\;\equiv\;\frac{p_{\parallel}^{2}}{2m}\;+\;\mu B\;\equiv\; H_{0}\;+\;\delta H\l
 
 \end_inset
 
- Using the expansion for 
+Using the expansion for 
 \begin_inset Formula $B/B_{\mathrm{e}}$
 \end_inset
 
- in (
+ in 
 \begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:-12"
+LatexCommand eqref
+reference "eq:B_sigma"
 
 \end_inset
 
-), we find :
-\begin_inset Formula \begin{equation}
-\mu B\;=\;\frac{p^{2}\left(1-\xi_{\mathrm{e}}^{2}\right)}{2m}\,\frac{B}{B_{\mathrm{e}}}\;=\;\mu B_{\mathrm{e}}\left(1\;+\;\frac{9}{2}\sigma^{2}\;+\;\frac{63}{8}\sigma^{4}\right)\;+\;{\cal O}\left(\sigma^{6}\right)\end{equation}
-
-\end_inset
-
- Inserting the expression for 
+ and inserting the expression for 
 \begin_inset Formula $\sigma$
 \end_inset
 
- gives :
-\begin_inset Formula \begin{eqnarray}
-\mu B & = & \mu B_{\mathrm{e}}\left[1\;+\;\frac{9}{2}\left(\frac{s}{r_{\mathrm{e}}}\right)^{2}\left(1\;-\;\frac{2}{3}\left(\frac{s}{r_{\mathrm{e}}}\right)^{2}\right)\;+\;\frac{63}{8}\left(\frac{s}{r_{\mathrm{e}}}\right)^{4}\right]\;+\;{\cal O}\left(\left(\frac{s}{r_{\mathrm{e}}}\right)^{6}\right)\nonumber \\
- & = & \mu B_{\mathrm{e}}\left[1\;+\;\frac{9}{2}\left(\frac{s}{r_{\mathrm{e}}}\right)^{2}\;+\;\frac{39}{8}\left(\frac{s}{r_{\mathrm{e}}}\right)^{4}\right]\;+\;{\cal O}\left(\left(\frac{s}{r_{\mathrm{e}}}\right)^{6}\right)\label{eq:-18}\end{eqnarray}
+, we find
+\begin_inset Formula \begin{equation}
+\mu B\;\equiv\;\frac{p^{2}\left(1-\xi_{\mathrm{e}}^{2}\right)}{2m}\,\frac{B}{B_{\mathrm{e}}}\;=\;\mu B_{\mathrm{e}}\left[1\;+\;\frac{9}{2}\left(\frac{s}{r_{\mathrm{e}}}\right)^{2}\;+\;\frac{39}{8}\left(\frac{s}{r_{\mathrm{e}}}\right)^{4}\right]\;+\;\mathcal{O}\left(\left(\frac{s}{r_{\mathrm{e}}}\right)^{6}\right).\label{eq:muBs}\end{equation}
 
 \end_inset
 
- Using the expression for the lowest-order bounce frequency 
+Using the expression for the lowest-order bounce frequency 
 \begin_inset Formula $\omega_{\mathrm{b}}=3p/mr_{\mathrm{e}}\sqrt{2}$
 \end_inset
 
  and remembering that 
-\begin_inset Formula $\sigma\sim s/r_{\mathrm{e}}={\cal O}\left(\sigma_{\mathrm{b}}\right)$
+\begin_inset Formula $\sigma\sim s/r_{\mathrm{e}}=\mathcal{O}\left(\sigma_{\mathrm{b}}\right)$
 \end_inset
 
-, the expression becomes :
-\begin_inset Formula \begin{eqnarray}
-\mu B & = & \mu B_{\mathrm{e}}\;+\;\frac{1}{2}m\omega_{\mathrm{b}}^{2}s^{2}\left[1\;-\;\xi_{\mathrm{e}}^{2}\;+\;\frac{13}{12}\left(\frac{s}{\rho_{\mathrm{e}}}\right)^{2}\right]+{\cal O}\left(\sigma_{\mathrm{b}}^{6}\right)\nonumber \\
- & = & \mu B_{\mathrm{e}}\;+\;\frac{1}{2}m\omega_{\mathrm{b}}^{2}s^{2}\left[1\;-\;\frac{9}{2}\sigma_{\mathrm{b}}^{2}\;+\;\frac{13}{12}\left(\frac{s}{\rho_{\mathrm{e}}}\right)^{2}\right]+{\cal O}\left(\sigma_{\mathrm{b}}^{6}\right)\label{eq:-17}\end{eqnarray}
-
-\end_inset
-
- We therefore have the following expression for the Hamiltonian perturbation
- :
-\begin_inset Formula \begin{eqnarray}
-\delta H & = & \frac{1}{2}m\omega_{\mathrm{b}}^{2}s^{2}\left[-\frac{9}{2}\sigma_{\mathrm{b}}^{2}\;+\;\frac{13}{12}\left(\frac{s}{r_{\mathrm{e}}}\right)^{2}\right]+{\cal O}\left(\sigma_{\mathrm{b}}^{6}\right)\nonumber \\
- & = & \omega_{\mathrm{b}}J\cos^{2}\zeta\left[-\frac{3\sqrt{2}}{r_{\mathrm{e}}p}J\;+\;\frac{13J}{6m\omega_{\mathrm{b}}r_{\mathrm{e}}^{2}}\cos^{2}\zeta\right]+{\cal O}\left(\sigma_{\mathrm{b}}^{6}\right)\nonumber \\
- & = & \frac{J^{2}}{mr_{\mathrm{e}}^{2}}\left[-9\cos^{2}\zeta\;+\;\frac{13}{6}\cos^{4}\zeta\right]+{\cal O}\left(\sigma_{\mathrm{b}}^{6}\right)\label{eq:-16}\end{eqnarray}
+, the expression becomes
+\begin_inset Formula \[
+\mu B=\mu B_{\mathrm{e}}\;+\;\frac{1}{2}m\omega_{\mathrm{b}}^{2}s^{2}\left[1\;-\;\xi_{\mathrm{e}}^{2}\;+\;\frac{13}{12}\left(\frac{s}{\rho_{\mathrm{e}}}\right)^{2}\right]+\mathcal{O}\left(\sigma_{\mathrm{b}}^{6}\right).\]
 
 \end_inset
 
- We then use the following cosine expansions :
+We therefore have the following expression for the Hamiltonian perturbation,
+\begin_inset Formula \[
+\delta H=\frac{1}{2}m\omega_{\mathrm{b}}^{2}s^{2}\left[-\xi_{\mathrm{e}}^{2}\;+\;\frac{13}{12}\left(\frac{s}{r_{\mathrm{e}}}\right)^{2}\right]+\mathcal{O}\left(\sigma_{\mathrm{b}}^{6}\right).\]
+
+\end_inset
+
+Inserting the expressions for 
+\begin_inset Formula $s\left(J,\zeta\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $\xi_{\mathrm{e}}\left(J\right)$
+\end_inset
+
+ and expanding the trigonometric functions gives
 \begin_inset Formula \begin{equation}
-\cos^{2}\zeta=\frac{1}{2}+\frac{1}{2}\cos2\zeta\end{equation}
+\delta H=\frac{J^{2}}{mr_{\mathrm{e}}^{2}}\left(-\frac{59}{16}\;-\;\frac{41}{12}\,\cos2\zeta\;+\;\frac{13}{48}\,\cos4\zeta\right)+\mathcal{O}\left(\sigma_{\mathrm{b}}^{6}\right).\label{eq:deltaH}\end{equation}
 
 \end_inset
 
- 
-\begin_inset Formula \begin{equation}
-\cos^{4}\zeta=\frac{3}{8}+\frac{1}{2}\cos2\zeta+\frac{1}{8}\cos4\zeta\end{equation}
-
-\end_inset
-
- The Hamiltonian perturbation becomes :
-\begin_inset Formula \begin{equation}
-\delta H=\frac{J^{2}}{mr_{\mathrm{e}}^{2}}\left(-\frac{59}{16}\;-\;\frac{41}{12}\,\cos2\zeta\;+\;\frac{13}{48}\,\cos4\zeta\right)+{\cal O}\left(\sigma_{\mathrm{b}}^{6}\right)\end{equation}
-
-\end_inset
-
- This perturbation will be considered small if the following ratio is small
+This perturbation will be considered small if the following ratio is small
  :
 \begin_inset Formula \begin{equation}
 \frac{J^{2}/mr_{\mathrm{e}}^{2}}{J\omega_{\mathrm{b}}}\;=\;\frac{J\omega_{\mathrm{b}}}{m\omega_{\mathrm{b}}^{2}r_{\mathrm{e}}^{2}}\;=\;\frac{1}{2}\frac{s_{+}^{2}}{r_{\mathrm{e}}^{2}}\end{equation}
 
 \end_inset
 
- Since 
+Since 
 \begin_inset Formula $s_{+}$
 \end_inset
 
@@ -1738,35 +1631,35 @@ reference "eq:-12"
 
  to indicate first-order terms :
 \begin_inset Formula \begin{equation}
-\ov H\;\equiv\;\ov H_{0}\;+\;\epsilon\ov H_{1}\;+\;{\cal O}\left(\epsilon^{2}\right)\;=\;\mathsf{T}_{\epsilon}^{-1}H\;=\; H_{0}\;+\;\epsilon H_{1}\;-\;\epsilon\left\{ S_{1},H_{0}\right\} \;+\;{\cal O}\left(\epsilon^{2}\right)\end{equation}
+\wh H\;\equiv\;\wh H_{0}\;+\;\epsilon\wh H_{1}\;+\;\mathcal{O}\left(\epsilon^{2}\right)\;=\;\mathsf{T}_{\epsilon}^{-1}H\;=\; H_{0}\;+\;\epsilon H_{1}\;-\;\epsilon\left\{ \wh S_{1},H_{0}\right\} \;+\;\mathcal{O}\left(\epsilon^{2}\right)\end{equation}
 
 \end_inset
 
- where 
-\begin_inset Formula $S_{1}\left(J,\zeta\right)$
+where 
+\begin_inset Formula $\wh S_{1}\left(J,\zeta\right)$
 \end_inset
 
  is a gauge function designed to restore the bounce-angle independence.
  The Poisson bracket reads :
 \begin_inset Formula \begin{equation}
-\left\{ S_{1},H_{0}\right\} \;=\;\pd{S_{1}}{\zeta}\,\pd{H_{0}}J\;-\;\pd{S_{1}}J\,\pd{H_{0}}{\zeta}\;=\;\omega_{\mathrm{b}}\pd{S_{1}}{\zeta}\end{equation}
+\left\{ \wh S_{1},H_{0}\right\} \;=\;\pd{\wh S_{1}}{\zeta}\,\pd{H_{0}}J\;-\;\pd{\wh S_{1}}J\,\pd{H_{0}}{\zeta}\;=\;\omega_{\mathrm{b}}\pd{\wh S_{1}}{\zeta}\end{equation}
 
 \end_inset
 
- We therefore have the following identities :
+We therefore have the following identities,
 \begin_inset Formula \begin{equation}
-\ov H_{0}\;=\; H_{0}\end{equation}
+\wh H_{0}\;=\; H_{0},\end{equation}
 
 \end_inset
 
- 
+ and
 \begin_inset Formula \begin{equation}
-\ov H_{1}\;=\; H_{1}\;-\;\omega_{\mathrm{b}}\pd{S_{1}}{\zeta}\end{equation}
+\wh H_{1}\;=\; H_{1}\;-\;\omega_{\mathrm{b}}\pd{\wh S_{1}}{\zeta}.\end{equation}
 
 \end_inset
 
- Since 
-\begin_inset Formula $\ov H_{1}$
+Since 
+\begin_inset Formula $\wh H_{1}$
 \end_inset
 
  must be bounce-angle independent, if we denote 
@@ -1777,79 +1670,63 @@ reference "eq:-12"
 \begin_inset Formula $\wt H_{1}$
 \end_inset
 
- the explicitly bounce-angle dependent component, we have :
+ the explicitly bounce-angle dependent component, we have
 \begin_inset Formula \begin{equation}
-\ov H_{1}\;=\;\left\langle H_{1}\right\rangle \;=\;-\frac{59}{16}\,\frac{J^{2}}{mr_{\mathrm{e}}^{2}}\;+\;{\cal O}\left(\sigma_{\mathrm{b}}^{6}\right)\end{equation}
+\wh H_{1}\;=\;\left\langle H_{1}\right\rangle \;=\;-\frac{59}{16}\,\frac{J^{2}}{mr_{\mathrm{e}}^{2}}\;+\;\mathcal{O}\left(\sigma_{\mathrm{b}}^{6}\right),\end{equation}
 
 \end_inset
 
- 
+ and
 \begin_inset Formula \begin{equation}
-S_{1}\;=\;\frac{1}{\omega_{\mathrm{b}}}\int\;\wt H_{1}d\zeta=\frac{J^{2}}{24m\omega_{\mathrm{b}}r_{\mathrm{e}}^{2}}\left(-41\,\sin2\zeta\;+\;\frac{13}{8}\,\sin4\zeta\right)+{\cal O}\left(\sigma_{\mathrm{b}}^{6}\right)\end{equation}
+\wh S_{1}\;=\;\frac{1}{\omega_{\mathrm{b}}}\int\;\wt H_{1}d\zeta\;=\;\frac{J^{2}}{24m\omega_{\mathrm{b}}r_{\mathrm{e}}^{2}}\left(-41\,\sin2\zeta\;+\;\frac{13}{8}\,\sin4\zeta\right)+\mathcal{O}\left(\sigma_{\mathrm{b}}^{6}\right).\end{equation}
 
 \end_inset
 
- From the expression for 
-\begin_inset Formula $S_{1}$
+From the expression for 
+\begin_inset Formula $\wh S_{1}$
 \end_inset
 
 , we can deduce the new expressions for the bounce action and angle, at
- first order in the Hamiltonian perturbation :
-\begin_inset Formula \begin{eqnarray}
-\ov J\;=\; J\;+\;\epsilon\left\{ S_{1},J\right\} \;+\;{\cal O}\left(\epsilon^{2}\right) & = & J\;+\;\epsilon\pd{S_{1}}{\zeta}\;+\;{\cal O}\left(\epsilon^{2}\right)\nonumber \\
- & = & J\;+\;\epsilon\frac{J^{2}}{12m\omega_{\mathrm{b}}r_{\mathrm{e}}^{2}}\left(-41\,\cos2\zeta\;+\;\frac{13}{4}\,\cos4\zeta\right)\;+\;{\cal O}\left(\epsilon^{2}\right)\label{eq:-14}\end{eqnarray}
+ first order in the Hamiltonian perturbation.
+ These read
+\begin_inset Formula \begin{align}
+\wh J\;=\; J\;+\;\epsilon\left\{ \wh S_{1},J\right\} \;+\;\mathcal{O}\left(\epsilon^{2}\right)\; & =\; J\;+\;\epsilon\pd{\wh S_{1}}{\zeta}\;+\;\mathcal{O}\left(\epsilon^{2}\right)\nonumber \\
+ & =\; J\;+\;\epsilon\frac{J^{2}}{12m\omega_{\mathrm{b}}r_{\mathrm{e}}^{2}}\left(-41\,\cos2\zeta\;+\;\frac{13}{4}\,\cos4\zeta\right)\;+\;\mathcal{O}\left(\epsilon^{2}\right),\label{eq:Jhat}\end{align}
 
 \end_inset
 
- 
-\begin_inset Formula \begin{eqnarray}
-\ov{\zeta}=\zeta\;+\;\epsilon\left\{ S_{1},\zeta\right\} \;+\;{\cal O}\left(\epsilon^{2}\right) & = & \zeta\;-\;\epsilon\pd{S_{1}}J\;+\;{\cal O}\left(\epsilon^{2}\right)\nonumber \\
- & = & \zeta\;+\;\epsilon\frac{J}{12m\omega_{\mathrm{b}}r_{\mathrm{e}}^{2}}\left(41\,\sin2\zeta\;-\;\frac{13}{8}\,\sin4\zeta\right)\;+\;{\cal O}\left(\epsilon^{2}\right)\label{eq:-15}\end{eqnarray}
+ and
+\begin_inset Formula \begin{align}
+\wh{\zeta}=\zeta\;+\;\epsilon\left\{ \wh S_{1},\zeta\right\} \;+\;\mathcal{O}\left(\epsilon^{2}\right)\; & =\;\zeta\;-\;\epsilon\pd{\wh S_{1}}J\;+\;\mathcal{O}\left(\epsilon^{2}\right)\nonumber \\
+ & =\;\zeta\;+\;\epsilon\frac{J}{12m\omega_{\mathrm{b}}r_{\mathrm{e}}^{2}}\left(41\,\sin2\zeta\;-\;\frac{13}{8}\,\sin4\zeta\right)\;+\;\mathcal{O}\left(\epsilon^{2}\right).\label{eq:zetahat}\end{align}
 
 \end_inset
 
- The new Hamiltonian reads, at first order in the perturbation :
+The new Hamiltonian reads, at first order in the perturbation :
 \begin_inset Formula \begin{equation}
-\ov H\;=\; J\omega_{\mathrm{b}}\;+\;\mu B_{\mathrm{e}}\;-\;\epsilon\frac{59}{8}\,\frac{J}{mr_{\mathrm{e}}^{2}}\;+\;{\cal O}\left(\epsilon^{2}\right)\end{equation}
+\wh H\;=\; J\omega_{\mathrm{b}}\;+\;\mu B_{\mathrm{e}}\;-\;\epsilon\frac{59}{8}\,\frac{J}{mr_{\mathrm{e}}^{2}}\;+\;\mathcal{O}\left(\epsilon^{2}\right)\label{eq:Hhat}\end{equation}
 
 \end_inset
 
- We therefore have 
-\begin_inset Formula $\partial\ov H/\partial\zeta\;=\;{\cal O}\left(\epsilon^{2}\right)$
+In order to prove that the bounce action is an adiabatic invariant at first
+ order in the Hamiltonian perturbation, we calculate 
+\begin_inset Formula $\dot{\wh J}$
 \end_inset
 
-.
- We can then deduce 
-\begin_inset Formula $\partial\ov H/\partial\ov{\zeta}\;=\;{\cal O}\left(\epsilon^{2}\right)$
-\end_inset
-
- and hence :
-\begin_inset Formula \begin{equation}
-\dot{\ov J}\;\equiv\;-\pd{\ov H}{\ov{\zeta}}\;=\;{\cal O}\left(\epsilon^{2}\right)\end{equation}
-
-\end_inset
-
- The bounce action is therefore an adiabatic invariant at first order in
- the Hamiltonian perturbation.
- Another way to see this is to calculate 
-\begin_inset Formula $\dot{\ov J}$
-\end_inset
-
- using (
+ using 
 \begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:-14"
+LatexCommand eqref
+reference "eq:Jhat"
 
 \end_inset
 
-).
- We then have :
+:
 \begin_inset Formula \begin{equation}
-\dot{\ov J}\;=\;\dot{J}\;+\;\epsilon\frac{J}{6m\omega_{\mathrm{b}}r_{\mathrm{e}}^{2}}\left[\dot{J}\left(-41\,\cos2\zeta+\frac{13}{4}\,\cos4\zeta\right)\;-\;\dot{\zeta}\left(-41\,\sin2\zeta+\frac{13}{2}\,\sin4\zeta\right)\right]\;+\;{\cal O}\left(\epsilon^{2}\right)\label{eq:-19}\end{equation}
+\dot{\wh J}\;=\;\dot{J}\;+\;\epsilon\frac{J}{6m\omega_{\mathrm{b}}r_{\mathrm{e}}^{2}}\left[\dot{J}\left(-41\,\cos2\zeta+\frac{13}{4}\,\cos4\zeta\right)\;-\;\dot{\zeta}\left(-41\,\sin2\zeta+\frac{13}{2}\,\sin4\zeta\right)\right]\;+\;\mathcal{O}\left(\epsilon^{2}\right)\label{eq:dotJhat}\end{equation}
 
 \end_inset
 
- The derivatives 
+The derivatives 
 \begin_inset Formula $\dot{J}$
 \end_inset
 
@@ -1857,29 +1734,57 @@ reference "eq:-14"
 \begin_inset Formula $\dot{\zeta}$
 \end_inset
 
- are taken from Hamilton's equations.
- They read :
+ are taken from Hamilton's equations:
 \begin_inset Formula \begin{equation}
-\dot{J}\;=\;-\pd H{\zeta}\;=\;\epsilon\frac{J^{2}}{6mr_{\mathrm{e}}^{2}}\left(-41\,\sin2\zeta+\frac{13}{2}\,\sin4\zeta\right)\;+\;{\cal O}\left(\epsilon^{2}\right)\end{equation}
+\dot{J}\;=\;-\pd H{\zeta}\;=\;\epsilon\frac{J^{2}}{6mr_{\mathrm{e}}^{2}}\left(-41\,\sin2\zeta+\frac{13}{2}\,\sin4\zeta\right)\;+\;\mathcal{O}\left(\epsilon^{2}\right)\end{equation}
 
 \end_inset
 
  
 \begin_inset Formula \begin{equation}
-\dot{\zeta}\;=\;\pd HJ=\;\omega_{\mathrm{b}}\;-\;\epsilon\frac{59}{8}\frac{J}{mr_{\mathrm{e}}^{2}}\;+\;{\cal O}\left(\epsilon^{2}\right)\end{equation}
+\dot{\zeta}\;=\;\pd HJ=\;\omega_{\mathrm{b}}\;-\;\epsilon\frac{59}{8}\frac{J}{mr_{\mathrm{e}}^{2}}\;+\;\mathcal{O}\left(\epsilon^{2}\right)\end{equation}
 
 \end_inset
 
- Inserting these expressions into (
+Inserting these expressions into 
 \begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:-19"
+LatexCommand eqref
+reference "eq:dotJhat"
 
 \end_inset
 
-) gives, at first order :
+ gives
 \begin_inset Formula \begin{equation}
-\dot{\ov J}\;=\;{\cal O}\left(\epsilon^{2}\right)\end{equation}
+\dot{\wh J}\;=\;\mathcal{O}\left(\epsilon^{2}\right).\end{equation}
+
+\end_inset
+
+Parallel coordinates are also given first-order corrections:
+\begin_inset Formula \begin{align*}
+\wh{p_{\|}}\; & =\; p_{\|}+\epsilon\left\{ \wh S_{1},p_{\|}\right\} +\mathcal{O}\left(\epsilon^{2}\right)\\
+ & =\; p_{\|}\,\left[1\;+\;\epsilon\frac{J}{12m\omega_{\mathrm{b}}r_{\mathrm{e}}^{2}}\left(\frac{1}{2}\left[-41\,\cos2\zeta\;+\;\frac{13}{4}\,\cos4\zeta\right]\;-\;\left[-41\,\sin2\zeta+\frac{13}{8}\,\sin4\zeta\right]\,\cot\zeta\right)\right]\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula \begin{align*}
+\widehat{s}\; & =\; s+\epsilon\left\{ \wh S_{1},s\right\} +\mathcal{O}\left(\epsilon^{2}\right)\\
+ & =\; s\,\left[1\;+\;\epsilon\frac{J}{12m\omega_{\mathrm{b}}r_{\mathrm{e}}^{2}}\left(\frac{1}{2}\left[-41\,\cos2\zeta\;+\;\frac{13}{4}\,\cos4\zeta\right]\;+\;\left[-41\,\sin2\zeta+\frac{13}{8}\,\sin4\zeta\right]\,\tan\zeta\right)\right]\end{align*}
+
+\end_inset
+
+We can verify that 
+\begin_inset Formula $\left(\wh s,\wh{p_{\|}}\right)\to\left(\wh J,\wh{\zeta}\right)$
+\end_inset
+
+ is a canonical transformation at first order in 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+, writing
+\begin_inset Formula \begin{align*}
+\left\{ \wh s,\wh{p_{\|}}\right\} \; & =\;\pd{\wh s}{\zeta}\,\pd{\wh{p_{\|}}}J\;-\;\pd{\wh s}J\,\pd{\wh{p_{\|}}}{\zeta}\\
+ & =\;\sin^{2}\zeta\;+\;\cos^{2}\zeta\;=\;1\;+\;\mathcal{O}\left(\epsilon^{2}\right).\end{align*}
 
 \end_inset
 
