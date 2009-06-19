@@ -33,7 +33,7 @@ for iw = 1:nw,
     if par.angle_var(iw) == 1,
         %
         angle_mul  = angle(cons(iw));
-        angle_tor = fix(abs(angle_mul) .* 1e7) .* 1e-4 - 360;;
+        angle_tor = fix(abs(angle_mul) .* 1e7) .* 1e-4 - 360;
         angle_pol = (abs(angle_mul) .* 1e7 - fix(abs(angle_mul) .* 1e7)) .* 1e3 - 360;
         %        
     else
@@ -43,12 +43,15 @@ for iw = 1:nw,
         %
     end
     %
-    launch.yalpha_L = pi - si*angle_tor*pi/180;% angle_tor>0 for co-current
+    angle_tor_t = atand(tand(angle_tor)/cosd(angle_pol)) + 180*sign(angle_tor)*(abs(angle_pol) > 90);
+    angle_pol_t = asind(cosd(angle_tor)*sind(angle_pol));
+    %
+    launch.yalpha_L = pi - si*angle_tor_t*pi/180;% angle_tor>0 for co-current
     if launch.yalpha_L > pi,
         launch.yalpha_L = launch.yalpha_L -2*pi;
     end
     %
-    launch.ybeta_L = pi/2 - angle_pol*pi/180;
+    launch.ybeta_L = pi/2 - angle_pol_t*pi/180;
     %
     launch.mmode = -1^(par.modpolar(iw) == 2);%(1) for X mode
     launch.dNpar0 = dNpar0;
