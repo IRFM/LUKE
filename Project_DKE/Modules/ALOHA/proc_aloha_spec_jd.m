@@ -7,6 +7,9 @@ if nargin < 5,
     param = 2;
 end
 %
+zdP = zdP(:)';
+zdN = zdN(:)';
+%
 if min(zdP) < 0,
     disp('warning: min(zdP) < 0, correcting')
     zdP = zdP - min(zdP);
