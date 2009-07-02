@@ -1,9 +1,9 @@
-function [yN,ydN,yP,zyfac] = proc_aloha_spec_jd(zN,zdN,zdP,param,display_mode)
+function [yN,ydN,yP,zyfac] = proc_aloha_spec_jd(zN,zdN,zdP,zredfac,param,display_mode)
 %
-if nargin < 5,
+if nargin < 6,
     display_mode = 0;
 end
-if nargin < 4,
+if nargin < 5,
     param = 2;
 end
 %
@@ -169,6 +169,8 @@ while ny > nlobesmax || min(yP)/Ptot < Pfacmin,
     ny = ny - 1;    
     %
 end
+%
+yP = yP*zredfac;
 %
 if display_mode >= 2,
     %
