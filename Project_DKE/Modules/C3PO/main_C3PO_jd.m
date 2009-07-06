@@ -112,30 +112,44 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C
         [flag,rays] = mdce_luke(@loop_main_C3PO_jd,{iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay},1,arg_range,dkecluster);
 		rmdir(dkecluster.temppath,'s');
 		%
-		for iray = 1:Nrays,
+		iray_wave = 1;
+		for iray = 1:Nrays*0+3,
 			if isempty(rays{iray}),
                 disp(['kpsin has a non nul imaginary part for ray # ',int2str(iray),' !']);  
-                return
-			end
-			%
-            wave.rays{iray} = rays{iray};
-            info_dke_yp(2,['Ray #',int2str(iray),' is processed']);		
+                info_dke_yp(2,['WARNING: Ray #',int2str(iray),' is not put in the wave structure.']);
+            else
+                wave.rays{iray_wave} = rays{iray};
+                iray_wave = iray_wave + 1;
+                info_dke_yp(2,['Ray #',int2str(iray),' is processed']);	
+            end
 		end
     else
-        for iray = 1:Nrays,    
+    	iray_wave = 1;
+        for iray = 1:Nrays*0+3,    
             [ray] = loop_main_C3PO_jd(iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay);
             if isempty(ray),
                 disp(['kpsin has a non nul imaginary part for ray # ',int2str(iray),' !']);
-                return
+                info_dke_yp(2,['WARNING: Ray #',int2str(iray),' is not put in the wave structure.']);
             else
-                kray = kray + 1;
-                wave.rays{kray} = ray;
+                wave.rays{iray_wave} = ray;
+                iray_wave = iray_wave + 1;
                 info_dke_yp(2,['Ray #',int2str(iray),' is processed']);
             end
         end
     end
     %
     wave = make_beam_wave_jd(wave,equil,C3POdisplay,waveparam.nd,waveparam.nchi,rayinit.w0,rayinit.z0,waveparam.ns);
+    %
+    if length(rayinit.yP0_2piRp) > length(wave.rays),
+        ptot_coupled = 0;
+        %
+        for ii = 1:length(wave.rays)
+            ptot_coupled = ptot_coupled + wave.rays{ii}.P0_2piRp*2*pi*equil.Rp;
+        end
+        %
+        disp('WARNING: Some rays have been removed since they do not penetrate the plasma (kpsin has a non nul imaginary part)');
+        disp(['WARNING: The launched rf power is : ',num2str(sum(rayinit.yP0_2piRp)*2*pi*equil.Rp/1e6),' (MW), while the rf power coupled to the plasma is : ',num2str(ptot_coupled/1e6),' (MW).']);
+    end
     %
     wave.rayinit = rayinit;
     wave.waveparam = waveparam;
