@@ -42,7 +42,7 @@ dkeparam.ref_mode = 0;%Reference values: (0) from core Te and ne, (1) from Te an
 %
 % Dql and collision operator
 %
-dkeparam.coll_mode = 2;%Relativistic collision operator: (0) Relativistic Maxwellian background, (1) High-velocity limit, (2) Linearized Belaiev-Budker (3) Non-relativistic Lorentz model, (4) Non-relativistic Maxwellian background
+dkeparam.coll_mode = 2;%No collision operator (space plasmas): (-1), Relativistic collision operator: (0), Relativistic Maxwellian background, (1) High-velocity limit, (2) Linearized Belaiev-Budker (3) Non-relativistic Lorentz model, (4) Non-relativistic Maxwellian background
 %
 % Ray-tracing and RF waves
 %
