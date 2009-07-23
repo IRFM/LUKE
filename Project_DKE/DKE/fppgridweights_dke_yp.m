@@ -1,72 +1,121 @@
-function 	 [Xdeltap_imj,Xdeltap_ipj,...
-              Xdeltam_ijm,Xdeltam_ijp,...
-              Xdeltap_imjmm,Xdeltap_imjpp,Xdeltap_ipjmm,Xdeltap_ipjpp,...
-              Xdeltam_immjm,Xdeltam_ippjm,Xdeltam_immjp,Xdeltam_ippjp,...
-              xdeltap_npj,xdeltap_npjmm,xdeltap_npjpp] = ...
-				  fppgridweights_dke_yp(Xdpnmm,Xdpnm,Xdpn,Xdpnp,Xdpnpp,...
-				  Xdmhumm,Xdmhum,Xdmhu,Xdmhup,Xdmhupp,...
-				  XDpp_ipj,XDpp_imj,XFp_ipj,XFp_imj,...
-                  XDpp_ij,XFp_ij);
+function [Zdelta] = fppgridweights_dke_yp(gridDKE,Zcoeffs)           
+%LUKE - Interpolation coefficients for calculating values of the distribution function on the flux grid
 %
-%Extended Chang & Cooper weights: link between full grid (flux mesh) and half grid (distribution mesh) in the momentum direction
-%Linear weighting in pitch-angle direction
+%Interpolation coefficients for calculating values of the distribution function on the flux grid:
+% 1) Xdeltar: Linear weighting in radial direction (psi)
+% 2) Xdeltap: Generalized Chang & Cooper weights in momentum direction (p)
+% 3) Xdeltam: Linear weighting in pitch-angle direction (mhu)
 %
-%	- Xdeltap: Extended Chang & Cooper coefficients for momentum grid that are reused for fluxes calculations at the end of the code
-%	- Xdeltam: Extended Chang & Cooper coefficients for pitch-angle grid that are reused for fluxes calculations at the end of the code
-%	  (Notations: _imjp -> (i,j+1);_imjm -> (i,j);_ijp -> (i+1/2,j+1);_ijm -> (i+1/2,j);_immjp -> (i-1/2,j+1);_immjm -> (i-1/2,j)
+% Notation of indexes, k = {l:radial, p: momentum, j: pitch-angle}
+% WARNING: km (LUKE) -> k (Publications), k (LUKE) -> k+ or k+1/2 (Publications), kp (LUKE) -> k++ or k+1 (Publications)
 %
-%	Input:
+% Xdeltar coefficients
 %
-%	Output:
+%   _lmippj    -> (l,i+3/2,j+1/2) or (l,i+++,j+)              (LUKE 2)
+%   _lmimmj    -> (l,i-1/2,j+1/2) or (l,i-,j+)                (LUKE 2)
+%   _lmijpp    -> (l,i+1/2,j+3/2) or (l,i+,j+++)              (LUKE 2)
+%   _lmijmm    -> (l,i+1/2,j-1/2) or (l,i+,j-)                (LUKE 2)
+%   _lmij      -> (l,i+1/2,j+1/2) or (l,i+,j+)                (LUKE 2)
 %
-%  - Xdeltap_imj
-%  - Xdeltap_ipj
-%  - Xdeltam_ijm
-%  - Xdeltam_ijp
+%   _lpippj    -> (l+1,i+3/2,j+1/2) or (l++,i+++,j+)          (LUKE 2)
+%   _lpimmj    -> (l+1,i-1/2,j+1/2) or (l++,i-,j+)            (LUKE 2)
+%   _lpijpp    -> (l+1,i+1/2,j+3/2) or (l++,i+,j+++)          (LUKE 2)
+%   _lpijmm    -> (l+1,i+1/2,j-1/2) or (l++,i+,j-)            (LUKE 2)
+%   _lpij      -> (l+1,i+1/2,j+1/2) or (l++,i+,j+)            (LUKE 2)
 %
-%By Joan Decker (MIT-RLE) and Yves Peysson (CEA-DRFC,yves.peysson@cea.fr)
+% Xdeltap coefficients
+%
+%   _lppimj    -> (l+3/2,i,j+1/2) or (l+++,i,j+)              (LUKE 2)
+%   _lmmimj    -> (l-1/2,i,j+1/2) or (l-,i,j+)                (LUKE 2)
+%   _limjpp    -> (l+1/2,i,j+3/2) or (l+,i,j+++)              (LUKE 1+2)
+%   _limjmm    -> (l+1/2,i,j-1/2) or (l+,i,j-)                (LUKE 1+2)
+%   _limj      -> (l+1/2,i,j+1/2) or (l+,i,j+)                (LUKE 1+2)
+%
+%   _lppipj    -> (l+3/2,i+1,j+1/2) or (l+++,i++,j+)          (LUKE 2)
+%   _lmmipj    -> (l-1/2,i+1,j+1/2) or (l-,i++,j+)            (LUKE 2)
+%   _lipjpp    -> (l+1/2,i+1,j+3/2) or (l+,i++,j+++)          (LUKE 1+2)
+%   _lipjmm    -> (l+1/2,i+1,j-1/2) or (l+,i++,j-)            (LUKE 1+2)
+%   _lipj      -> (l+1/2,i+1,j+1/2) or (l+,i++,j+)            (LUKE 1+2)
+%
+% Xdeltam coefficients
+%
+%   _lppijm    -> (l+3/2,i+1/2,j) or (l+++,i+,j)              (LUKE 2)
+%   _lmmijm    -> (l-1/2,i+1/2,j) or (l-,i+,j)                (LUKE 2)
+%   _lippjm    -> (l+1/2,i+3/2,j) or (l+,i+++,j)              (LUKE 1+2)
+%   _limmjm    -> (l+1/2,i-1/2,j) or (l+,i-,j)                (LUKE 1+2)
+%   _lijm      -> (l+1/2,i+1/2,j) or (l+,i+,j)                (LUKE 1+2)
+%
+%   _lppijp    -> (l+3/2,i+1/2,j+1) or (l+++,i+,j++)          (LUKE 2)
+%   _lmmijp    -> (l-1/2,i+1/2,j+1) or (l-,i+,j++)            (LUKE 2)
+%   _lippjp    -> (l+1/2,i+3/2,j+1) or (l+,i+++,j++)          (LUKE 1+2)
+%   _limmjp    -> (l+1/2,i-1/2,j+1) or (l+,i-,j++)            (LUKE 1+2)
+%   _lijp      -> (l+1/2,i+1/2,j+1) or (l+,i+,j++)            (LUKE 1+2)
+%
+%by Yves Peysson (CEA-IRFM,yves.peysson@cea.fr) and Joan Decker (CEA-IRFM,joan.decker@cea.fr)
 %	
-if nargin < 16,
+if nargin < 2,
 	error('Wrong number of input arguments in fppgridweights_dke_yp')
 end
 %
-[np,nmhu] = size(Xdpnmm);
+[np,nmhu,nr] = size(gridDKE.XXdpnmm);
+%
+% Radial grid interpolation
+%
+Zdelta.XXdeltar_lmij = gridDKE.XXdpsin_dke./(gridDKE.XXdpsinmm_dke + gridDKE.XXdpsin_dke);
+Zdelta.XXdeltar_lpij = gridDKE.XXdpsinpp_dke./(gridDKE.XXdpsinpp_dke + gridDKE.XXdpsin_dke);
+%
+Zdelta.XXdeltar_lmippj = Zdelta.XXdeltar_lmij;
+Zdelta.XXdeltar_lmimmj = Zdelta.XXdeltar_lmij;
+Zdelta.XXdeltar_lmijpp = Zdelta.XXdeltar_lmij;
+Zdelta.XXdeltar_lmijmm = Zdelta.XXdeltar_lmij;
+%
+Zdelta.XXdeltar_lpippj = Zdelta.XXdeltar_lpij;
+Zdelta.XXdeltar_lpimmj = Zdelta.XXdeltar_lpij;
+Zdelta.XXdeltar_lpijpp = Zdelta.XXdeltar_lpij;
+Zdelta.XXdeltar_lpijmm = Zdelta.XXdeltar_lpij;
 %
 %Momentum grid interpolation
 %
-Xdeltap_ipj = g_dke_yp(-Xdpnp.*XFp_ipj./XDpp_ipj); 		
-Xdeltap_imj = g_dke_yp(-Xdpnm.*XFp_imj./XDpp_imj);	
+Zdelta.XXdeltap_limj = g_dke_yp(-gridDKE.XXdpnm.*Zcoeffs.XXFp_imj./Zcoeffs.XXDpp_imj);	
+Zdelta.XXdeltap_lipj = g_dke_yp(-gridDKE.XXdpnp.*Zcoeffs.XXFp_ipj./Zcoeffs.XXDpp_ipj); 		
 %
-Xdeltap_imjmm = zeros(np,nmhu);Xdeltap_imjmm(:,2:nmhu) = Xdeltap_imj(:,1:nmhu-1);
-Xdeltap_imjmm(:,1) = Xdeltap_imj(:,1);%Symmetry around the pperp = 0 axis
-Xdeltap_imjpp = zeros(np,nmhu);Xdeltap_imjpp(:,1:nmhu-1) = Xdeltap_imj(:,2:nmhu);
-Xdeltap_imjpp(:,nmhu) = Xdeltap_imj(:,nmhu);%Symmetry around the pperp = 0 axis
+Zdelta.XXdeltap_lppimj = zeros(np,nmhu,nr);Zdelta.XXdeltap_lppimj(:,:,1:nr-1) = Zdelta.XXdeltap_limj(:,:,2:nr);
+Zdelta.XXdeltap_lppimj(:,:,nr) = Zdelta.XXdeltap_limj(:,:,nr);%Symmetry around psi = 0
+Zdelta.XXdeltap_lmmimj = zeros(np,nmhu,nr);Zdelta.XXdeltap_lppimj(:,:,2:nr) = Zdelta.XXdeltap_limj(:,:,1:nr-1);
+Zdelta.XXdeltap_lmmimj(:,:,1) = Zdelta.XXdeltap_limj(:,:,1);%Symmetry around psi = 0
+Zdelta.XXdeltap_limjpp = zeros(np,nmhu,nr);Zdelta.XXdeltap_imjpp(:,1:nmhu-1,:) = Zdelta.XXdeltap_limj(:,2:nmhu,:);
+Zdelta.XXdeltap_limjpp(:,nmhu,:) = Zdelta.XXdeltap_limj(:,nmhu,:);%Symmetry around the pperp = 0 axis
+Zdelta.XXdeltap_limjmm = zeros(np,nmhu,nr);Zdelta.XXdeltap_imjmm(:,2:nmhu,:) = Zdelta.XXdeltap_limj(:,1:nmhu-1,:);
+Zdelta.XXdeltap_limjmm(:,1,:) = Zdelta.XXdeltap_limj(:,1,:);%Symmetry around the pperp = 0 axis
 %
-Xdeltap_ipjmm = zeros(np,nmhu);Xdeltap_ipjmm(:,2:nmhu) = Xdeltap_ipj(:,1:nmhu-1);
-Xdeltap_ipjmm(:,1) = Xdeltap_ipj(:,1);%Symmetry around the pperp = 0 axis
-Xdeltap_ipjpp = zeros(np,nmhu);Xdeltap_ipjpp(:,1:nmhu-1) = Xdeltap_ipj(:,2:nmhu);
-Xdeltap_ipjpp(:,nmhu) = Xdeltap_ipj(:,nmhu);%Symmetry around the pperp = 0 axis
+Zdelta.XXdeltap_lppipj = zeros(np,nmhu,nr);XXdeltap_lppipj(:,:,1:nr-1) = Zdelta.XXdeltap_lipj(:,:,2:nr);
+Zdelta.XXdeltap_lppipj(:,:,nr) = Zdelta.XXdeltap_lipj(:,:,nr);%Symmetry around psi = 0
+Zdelta.XXdeltap_lmmipj = zeros(np,nmhu,nr);XXdeltap_lppipj(:,:,2:nr) = Zdelta.XXdeltap_lipj(:,:,1:nr-1);
+Zdelta.XXdeltap_lmmipj(:,:,1) = Zdelta.XXdeltap_lipj(:,:,1);%Symmetry around psi = 0
+Zdelta.XXdeltap_lipjpp = zeros(np,nmhu,nr);Zdelta.XXdeltap_ipjpp(:,1:nmhu-1,:) = Zdelta.XXdeltap_lipj(:,2:nmhu,:);
+Zdelta.XXdeltap_lipjpp(:,nmhu,:) = Zdelta.XXdeltap_lipj(:,nmhu,:);%Symmetry around the pperp = 0 axis
+Zdelta.XXdeltap_lipjmm = zeros(np,nmhu,nr);Zdelta.XXdeltap_ipjmm(:,2:nmhu,:) = Zdelta.XXdeltap_lipj(:,1:nmhu-1,:);
+Zdelta.XXdeltap_lipjmm(:,1,:) = Zdelta.XXdeltap_lipj(:,1,:);%Symmetry around the pperp = 0 axis
 %
-%Momentum grid interpolation in p=pmax
+% Pitch-angle grid interpolation
 %
-xdeltap_npj = g_dke_yp(-(Xdpnm(np,:) + Xdpnp(np,:)).*XFp_ij(np,:)./XDpp_ij(np,:)); 	
-xdeltap_npjmm = zeros(1,nmhu);xdeltap_npjmm(2:nmhu) = xdeltap_npj(1:nmhu-1);
-xdeltap_npjmm(1) = xdeltap_npj(1);%Symmetry around the pperp = 0 axis
-xdeltap_npjpp = zeros(1,nmhu);xdeltap_npjpp(1:nmhu-1) = xdeltap_npj(2:nmhu);
-xdeltap_npjpp(nmhu) = xdeltap_npj(nmhu);%Symmetry around the pperp = 0 axis
+Zdelta.XXdeltam_lijm = gridDKE.XXdmhu./(gridDKE.XXdmhu + gridDKE.XXdmhumm);
+Zdelta.XXdeltam_lijp = gridDKE.XXdmhupp./(gridDKE.XXdmhu + gridDKE.XXdmhupp);
 %
-%Pitch-angle grid interpolation
+Zdelta.XXdeltam_lppijm = Zdelta.XXdeltam_lijm;
+Zdelta.XXdeltam_lmmijm = Zdelta.XXdeltam_lijm;
+Zdelta.XXdeltam_lippjm = zeros(np,nmhu,nr);Zdelta.XXdeltam_lippjm(1:np-1,:,:) = Zdelta.XXdeltam_lijm(2:np,:,:);
+Zdelta.XXdeltam_lippjm(np,:,:) = Zdelta.XXdeltam_lijm(np,:,:);%Symmetry p -> -p at p =0
+Zdelta.XXdeltam_limmjm = zeros(np,nmhu,nr);Zdelta.XXdeltam_limmjm(2:np,:,:) = Zdelta.XXdeltam_lijm(1:np-1,:,:);
+Zdelta.XXdeltam_limmjm(1,:,:) = Zdelta.XXdeltam_lijm(1,:,:);%Symmetry p -> -p at p =0
 %
-Xdeltam_ijp = Xdmhupp./(Xdmhu + Xdmhupp);
-Xdeltam_ijm = Xdmhu./(Xdmhu + Xdmhumm);
-%
-Xdeltam_immjm = zeros(np,nmhu);Xdeltam_immjm(2:np,:) = Xdeltam_ijm(1:np-1,:);
-Xdeltam_immjm(1,:) = Xdeltam_ijm(1,:);%Symmetry p -> -p at p =0
-Xdeltam_ippjm = zeros(np,nmhu);Xdeltam_ippjm(1:np-1,:) = Xdeltam_ijm(2:np,:);
-Xdeltam_ippjm(np,:) = Xdeltam_ijm(np,:);%Symmetry p -> -p at p =0
-%
-Xdeltam_immjp = zeros(np,nmhu);Xdeltam_immjp(2:np,:) = Xdeltam_ijp(1:np-1,:);
-Xdeltam_immjp(1,:) = Xdeltam_ijp(1,:);%Symmetry p -> -p at p =0
-Xdeltam_ippjp = zeros(np,nmhu);Xdeltam_ippjp(1:np-1,:) = Xdeltam_ijp(2:np,:);
-Xdeltam_ippjp(np,:) = Xdeltam_ijp(np,:);%Symmetry p -> -p at p =0
-%
+Zdelta.XXdeltam_lppijp = Zdelta.XXdeltam_lijp;
+Zdelta.XXdeltam_lmmijp = Zdelta.XXdeltam_lijp;
+Zdelta.XXdeltam_lippjp = zeros(np,nmhu,nr);Zdelta.XXdeltam_lippjp(1:np-1,:,:) = Zdelta.XXdeltam_lijp(2:np,:,:);
+Zdelta.XXdeltam_lippjp(np,:,:) = Zdelta.XXdeltam_lijp(np,:,:);%Symmetry p -> -p at p =0
+Zdelta.XXdeltam_limmjp = zeros(np,nmhu,nr);Zdelta.XXdeltam_limmjp(2:np,:) = Zdelta.XXdeltam_lijp(1:np-1,:);
+Zdelta.XXdeltam_limmjp(1,:,:) = Zdelta.XXdeltam_lijp(1,:,:);%Symmetry p -> -p at p =0
+
+
+
+

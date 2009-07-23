@@ -36,33 +36,34 @@ mkdir(dkepath.temppath);%Create calculation directory
 multithreading_luke(dkepath);
 %
 if dkeparam_in.opt_load*exist(['temp',filesep,'DKE_TEMP_',id_simul,'.mat']),
-   load(['temp',filesep,'DKE_TEMP_',id_simul,'.mat']);
-   info_dke_yp(2,['File temp',filesep,'DKE_TEMP_',id_simul,'.mat reloaded.']);
+    load(['temp',filesep,'DKE_TEMP_',id_simul,'.mat']);
+    info_dke_yp(2,['File temp',filesep,'DKE_TEMP_',id_simul,'.mat reloaded.']);
 else
-   [radialDKE] = radialgrid_dke_jd(equil,dkeparam_out,display,psin_S,rho_S);%Radial grid for DKE
-   [equilDKE] = equilibrium_jd(equil,radialDKE,display,'spline',dkeparam_out.mfactor);%Magnetic equilibrium for DKE
-   [momentumDKE] = momentumgrid_dke_jd(dkeparam_out,equilDKE,radialDKE);%Momentum space 2D grid for DKE
-   [gridDKE] = matrix3Dgridbuilder_dke_yp(dkeparam_out,display,equilDKE,radialDKE,momentumDKE);%General grid structure for the DKE solver
-   [mksa] = mksacoefbuilder_dke_yp(dkeparam_out,display,equilDKE,radialDKE,momentumDKE,gridDKE);%MKSA quantities calculations
-   [Zmomcoef] = momentumcoefbuilder_dke_yp(gridDKE,mksa);%Momentum space coefficients for FP calculations
-   [Zbouncecoef] = bouncecoefbuilder_dke_yp(dkeparam_out,display,equilDKE,gridDKE);%bounce averaging coefficients
-   [waveparam,xyprop_dke,xyP0_2piRp_mod,yb,yP0_2piRp,xys] = rfwave_dke_jd(dkeparam_out,display,equil,equilDKE,gridDKE,Zbouncecoef,mksa,waves);%RF wave parameters preprocessing calculations
-   [XXsinksource] = sinksourcecoeffbuilder_dke_yp(dkeparam_out,display,gridDKE,mksa,Zbouncecoef,XXsinksource_in);%External sink and source contributions (for right-hand side part of the FP equation)
-   [Zmripple] = mripplecoefbuilder_dke_yp(dkeparam_out,display,equil,equilDKE,gridDKE,mksa,ripple);%Magnetic ripple matrix coefficients
-   [ZXXD_a,ZXXF_a] = rad_dke_yp(dkeparam_out,display,equilDKE,gridDKE,mksa,Zbouncecoef,Zmomcoef,transpfaste);%Anomalous radial transport super matrix
-   [ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor] = coll_dke_jd(dkepath,dkeparam_out,display,equilDKE,mksa,gridDKE,Zmomcoef,Zbouncecoef);%Collisions flux coefficients 
-   [ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,xepsi,xEfield_validity] = efield_dke_jd(dkepath,dkeparam_out,display,equilDKE,mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,ZXXF_c);%Electric field flux coefficients
-%
-   if strcmp(waveparam.model,'RT'),% ray tracing simulation
-      [ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf] = rfdiff_dke_jd(dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,radialDKE,waveparam);%RF waves flux coefficients
-   elseif strcmp(waveparam.model,'FW_BIL')%full wave model by R. Bilato
-      [ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf] = rfdiff_dke_fw_jd(dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,radialDKE,waves);%RF waves flux coefficients
-   else
-      error('Wave model not implemented')
-   end
-%
-   [XXfinit] = finit_dke_yp(dkeparam_out,display,equilDKE,gridDKE,mksa,Zmomcoef,waveparam,XXf0_in);%Initial distribution function
-   if dkeparam_in.opt_save,save(['temp',filesep,'DKE_TEMP_',id_simul]);end
+    [radialDKE] = radialgrid_dke_jd(equil,dkeparam_out,display,psin_S,rho_S);%Radial grid for DKE
+    [equilDKE] = equilibrium_jd(equil,radialDKE,display,'spline',dkeparam_out.mfactor);%Magnetic equilibrium for DKE
+    [momentumDKE] = momentumgrid_dke_jd(dkeparam_out,equilDKE,radialDKE);%Momentum space 2D grid for DKE
+    [gridDKE] = matrix3Dgridbuilder_dke_yp(dkeparam_out,display,equilDKE,radialDKE,momentumDKE);%General grid structure for the DKE solver  
+    [mksa] = mksacoefbuilder_dke_yp(dkeparam_out,display,equilDKE,radialDKE,momentumDKE,gridDKE);%MKSA quantities calculations
+    [Zmomcoef] = momentumcoefbuilder_dke_yp(gridDKE,mksa);%Momentum space coefficients for FP calculations
+    [Zbouncecoef] = bouncecoefbuilder_dke_yp(dkeparam_out,display,equilDKE,gridDKE);%bounce averaging coefficients
+    [waveparam,xyprop_dke,xyP0_2piRp_mod,yb,yP0_2piRp,xys] = rfwave_dke_jd(dkeparam_out,display,equil,equilDKE,gridDKE,Zbouncecoef,mksa,waves);%RF wave parameters preprocessing calculations
+    [XXsinksource] = sinksourcecoeffbuilder_dke_yp(dkeparam_out,display,gridDKE,mksa,Zbouncecoef,XXsinksource_in);%External sink and source contributions (for right-hand side part of the FP equation)
+    [Zmripple] = mripplecoefbuilder_dke_yp(dkeparam_out,display,equil,equilDKE,gridDKE,mksa,ripple);%Magnetic ripple matrix coefficients
+    [ZXXD_a,ZXXF_a] = rad_dke_yp(dkeparam_out,display,equilDKE,gridDKE,mksa,Zbouncecoef,Zmomcoef,transpfaste);%Anomalous radial transport super matrix
+    [ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor] = coll_dke_jd(dkepath,dkeparam_out,display,equilDKE,mksa,gridDKE,Zmomcoef,Zbouncecoef);%Collisions flux coefficients 
+    [ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,xepsi,xEfield_validity] = efield_dke_jd(dkepath,dkeparam_out,display,equilDKE,mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,ZXXF_c);%Electric field flux coefficients
+    [ZXXD_g,ZXXF_g] = generic_dke_yp(gridDKE);%Load generic diffusion and convection coefficients calculated by other codes. Must be consistent with magnetic configuration
+    %
+    if strcmp(waveparam.model,'RT'),% ray tracing simulation
+        [ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf] = rfdiff_dke_jd(dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,radialDKE,waveparam);%RF waves flux coefficients
+    elseif strcmp(waveparam.model,'FW_BIL')%full wave model by R. Bilato
+        [ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf] = rfdiff_dke_fw_jd(dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,radialDKE,waves);%RF waves flux coefficients
+    else
+        error('Wave model not implemented')
+    end
+    %
+    [XXfinit] = finit_dke_yp(dkeparam_out,display,equilDKE,gridDKE,mksa,Zmomcoef,waveparam,XXf0_in);%Initial distribution function
+    if dkeparam_in.opt_save,save(['temp',filesep,'DKE_TEMP_',id_simul]);end
 end
 %
 % --------------------------------- Solve the electron drift kinetic --------------------------------
@@ -70,8 +71,8 @@ end
 time0 = clock;
 %
 if strcmp(waveparam.model,'RT') & ~isempty(waveparam.bomega_rf),%initialization of wave parameters  
-    %
-    delta_rt = dkeparam_out.delta_rt;%smoothering parameter of quasilinear iterations
+	%
+	delta_rt = dkeparam_out.delta_rt;%smoothering parameter of quasilinear iterations
     %
     zP_0_2piRp_mod = raypath_jd(xyP0_2piRp_mod,xyprop_dke,yb,radialDKE.r_dke);
     zS = raypath_jd(xys,xyprop_dke,yb,radialDKE.r_dke);
@@ -112,7 +113,8 @@ for it_rf=1:nit_rf, % convergence in the ray-tracing mode
     end
     %
     [ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp] = raysum_rf_jd(dkeparam_out,ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod/redfac,gridindex_rf);
-    [Zdelta,MMXT_f_t,MMXP_f_t,MMXR_f_t,Xmask_r_edge,MMXP_tp,MMXP_g_t,MMH_tp,Zpn2_t,sm_f,sm_g,sm_tp] = matrixcalc_dke_yp(dkeparam_out,display,gridDKE,equilDKE,Zbouncecoef,mksa,Zmripple,Zmomcoef,transpfaste,ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXILor,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp,ZXXD_a,ZXXF_a);%Build the 3D DKE matrix
+    save toto.mat
+    [Zdelta,MMXT_f_t,MMXP_f_t,MMXR_f_t,Xmask_r_edge,MMXP_tp,MMXP_g_t,MMH_tp,Zpn2_t,sm_f,sm_g,sm_tp] = matrixcalc_dke_yp(dkeparam_out,display,gridDKE,equilDKE,Zbouncecoef,mksa,Zmripple,Zmomcoef,transpfaste,ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXILor,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp,ZXXD_a,ZXXF_a,ZXXD_g,ZXXF_g);%Build the 3D DKE matrix
     [XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,radial_mode,memoryLU_f,memoryLU_g,time_DKE,normf0,curr0,residu_f] = solver_dke_yp(dkepath,dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,Xmask_r_edge,XXsinksource,XXfM,XXfinit);% Solve the DKE equation
     %
     xyP0_2piRp_mod_old = xyP0_2piRp_mod;

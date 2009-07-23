@@ -1,8 +1,9 @@
-function [Zdelta,MMXT_f_t,MMXP_f_t,MMXR_f_t,Xmask_r_edge,MMXP_tp,MMXP_g_t,MMH_tp,Zpn2_t,sm_f,sm_g,sm_tp] = matrixcalc_dke_yp(dkeparam,display,gridDKE,equilDKE,Zbouncecoef,mksa,Zmripple,Zmomcoef,transpfaste,...
-                                                                       ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXILor,...
-                                                                       ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,...
-                                                                       ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp,...
-                                                                       ZXXD_a,ZXXF_a)
+function [Zdelta,MMXT_f_t,MMXP_f_t,MMXR_f_t,Xmask_r_edge,MMXP_tp,MMXP_g_t,MMH_tp,Zpn2_t,sm_f,sm_g,sm_tp] =...
+            matrixcalc_dke_yp(dkeparam,display,gridDKE,equilDKE,Zbouncecoef,mksa,Zmripple,Zmomcoef,transpfaste,...
+                              ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXILor,...
+                        	  ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,...
+                              ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp,...
+                              ZXXD_a,ZXXF_a,ZXXD_g,ZXXF_g)
 %
 %   Calculate the super matrix for the 3D electron relativistic drift kinetic solver.
 %
@@ -11,193 +12,75 @@ function [Zdelta,MMXT_f_t,MMXP_f_t,MMXR_f_t,Xmask_r_edge,MMXP_tp,MMXP_g_t,MMH_tp
 time0 = clock;
 etime_fp = 0;
 %
-boundary_mode_f = dkeparam.boundary_mode_f;
-dke_mode = dkeparam.dke_mode;
-bounce_mode = dkeparam.bounce_mode;
-store_mode = dkeparam.store_mode;
-dtn = dkeparam.dtn;
-%
-display_mode = display.display_mode;
-%
-nr = gridDKE.nr;
-npn = gridDKE.npn;
-nmhu = gridDKE.nmhu;
-nr_dke = gridDKE.nr_dke;
-mhu = gridDKE.mhu;
-Xdmhumm = gridDKE.Xdmhumm;
-Xdmhum = gridDKE.Xdmhum;
-Xdmhu = gridDKE.Xdmhu;
-Xdmhup = gridDKE.Xdmhup;
-Xdmhupp = gridDKE.Xdmhupp;
-Xdpnmm = gridDKE.Xdpnmm;
-Xdpnm = gridDKE.Xdpnm;
-Xdpn = gridDKE.Xdpn;
-Xdpnp = gridDKE.Xdpnp;
-Xdpnpp = gridDKE.Xdpnpp;
-Xmhumm = gridDKE.Xmhumm;
-Xmhum = gridDKE.Xmhum;
-Xmhu = gridDKE.Xmhu;
-Xmhu2 = gridDKE.Xmhu2;
-Xmhup = gridDKE.Xmhup;
-Xmhupp = gridDKE.Xmhupp;
-X1mmhu2m = gridDKE.X1mmhu2m;
-X1mmhu2 = gridDKE.X1mmhu2;
-X1mmhu2p = gridDKE.X1mmhu2p;
-pn = gridDKE.pn;
-Xpnmm = gridDKE.Xpnmm;
-Xpnm = gridDKE.Xpnm;
-Xpn = gridDKE.Xpn;
-Xpnp = gridDKE.Xpnp;
-Xpnpp = gridDKE.Xpnpp;
-Xpn2m = gridDKE.Xpn2m;
-Xpn2 = gridDKE.Xpn2;
-Xpn2p = gridDKE.Xpn2p;
-XXpn2 = gridDKE.XXpn2;
-xpsin = gridDKE.xpsin;
-xdpsin = gridDKE.xdpsin_dke;
-xdpsinm = gridDKE.xdpsinm_dke;
-xdpsinp = gridDKE.xdpsinp_dke;
-xmhubounce2 = gridDKE.xmhubounce2;
-rdke = gridDKE.rdke;
-xrho = gridDKE.xrho;
-%
-gamma = Zmomcoef.gamma;
-Xvpar = Zmomcoef.Xvpar;
-%
-djmhut = Zbouncecoef.djmhut;
-Zmask_f0_P = Zbouncecoef.Zmask_f0_P;
-Zbouncecoef.Zmask_f0_P = Zmask_f0_P;
-Zmask_f0_Tm = Zbouncecoef.Zmask_f0_Tm;
-Zmask_f0_Tp = Zbouncecoef.Zmask_f0_Tp;
-jmhut_min = Zbouncecoef.jmhut_min;
-jmhut_max = Zbouncecoef.jmhut_max;
-Zmask_f0_t = Zbouncecoef.Zmask_f0_t;
-Zmask_f0_t_P = Zbouncecoef.Zmask_f0_t_P;
-Zmask_f0_t_Tp = Zbouncecoef.Zmask_f0_t_Tp;
-ns_f = Zbouncecoef.ns_f;    
-XXlambda = Zbouncecoef.XXlambda;
-XXRlambda_m = Zbouncecoef.XXRlambda_m;
-XXRlambda_p = Zbouncecoef.XXRlambda_p;
-sm_f = Zbouncecoef.sm_f;
-sm_T_f = Zbouncecoef.sm_T_f;
-blocksize_f_t = Zbouncecoef.blocksize_f_t;
-blocksize_T_f_t = Zbouncecoef.blocksize_T_f_t;
-xqtilde = Zbouncecoef.xqtilde;
-%
-xx0 = equilDKE.xx0;
-xBp0 = equilDKE.xBp0;
-xB0 = equilDKE.xB0;
-ap = equilDKE.ap;
-Rp = equilDKE.Rp;
-psia_apRp = equilDKE.psia_apRp;
-%
-betath_ref = mksa.betath_ref;
-nhu_ref = mksa.nhu_ref;
-%
-bounce_mode = dkeparam.bounce_mode;    
-%
-%if dke_mode == 1,
-%Zmask_g = Zbouncecoef.Zmask_g;
-%ns_g = Zbouncecoef.ns_g;
-%xftp_norm = mksa.xftp_norm_ref;
-%boundary_mode_g = dkeparam.boundary_mode_g;
-sm_tp = Zbouncecoef.sm_tp;
-sm_g = Zbouncecoef.sm_g;
-%blocksize_tp = Zbouncecoef.blocksize_tp;    
-%blocksize_g_t = Zbouncecoef.blocksize_g_t;
-%
-%end
-%
-MMXT_f_t = [];
-MMXP_f_t = [];
-MMXR_f_t = [];
-%
-Xmask_r_edge = [];
-%
-nMMXP_f_t = max(cumsum(Zbouncecoef.blocksize_f_t));
-%
-MMXP_tp = [];
-MMXP_g_t = [];
-MMH_tp = [];
-%
 spparms('default');%Set parameters for sparse matrix ordering algorithms and direct linear equation solver MatLab build-in functions only
 spparms('supernd',4);%Set parameters for sparse matrix ordering algorithms and direct linear equation solver MatLab build-in functions only
 spparms('rreduce',4);%Set parameters for sparse matrix ordering algorithms and direct linear equation solver MatLab build-in functions onlyXXdpsin
 %
-%TODO: remove transpfaste dependence when collisional transport is set
+% Diffusion and convection coefficients (sum of all contributions)
 %
-if ~isempty(transpfaste),%boundary conditions
-    Xmask_r_edge = (ZXXD_a.rr_lp(:,:,nr) > 0);
-end
+Zcoeffs.XXDpp_ipj = ZXXD_c.pp_ipj + ZXXD_e.pp_ipj + ZXXD_rf.pp_ipj + ZXXD_a.pp_ipj + ZXXD_g.pp_ipj;
+Zcoeffs.XXDpp_imj = ZXXD_c.pp_imj + ZXXD_e.pp_imj + ZXXD_rf.pp_imj + ZXXD_a.pp_imj + ZXXD_g.pp_imj;
+Zcoeffs.XXDpm_ipj = ZXXD_c.pm_ipj + ZXXD_e.pm_ipj + ZXXD_rf.pm_ipj + ZXXD_a.pm_ipj + ZXXD_g.pm_ipj;
+Zcoeffs.XXDpm_imj = ZXXD_c.pm_imj + ZXXD_e.pm_imj + ZXXD_rf.pm_imj + ZXXD_a.pm_imj + ZXXD_g.pm_imj;
+Zcoeffs.XXDpr_ipj = ZXXD_c.pr_ipj + ZXXD_e.pr_ipj + ZXXD_rf.pr_ipj + ZXXD_a.pr_ipj + ZXXD_g.pr_ipj;
+Zcoeffs.XXDpr_imj = ZXXD_c.pr_imj + ZXXD_e.pr_imj + ZXXD_rf.pr_imj + ZXXD_a.pr_imj + ZXXD_g.pr_imj;
 %
-% Build momentum supermatrix MMXP_f_t
+Zcoeffs.XXFp_ipj  = ZXXF_c.p_ipj  + ZXXF_e.p_ipj  + ZXXF_rf.p_ipj  + ZXXF_a.p_ipj  + ZXXF_g.p_ipj;
+Zcoeffs.XXFp_imj  = ZXXF_c.p_imj  + ZXXF_e.p_imj  + ZXXF_rf.p_imj  + ZXXF_a.p_imj  + ZXXF_g.p_imj;
 %
-for ir = 1:nr,
-    %
-    XDpp_ipj = ZXXD_c.pp_ipj(:,:,ir) + ZXXD_e.pp_ipj(:,:,ir) + ZXXD_rf.pp_ipj(:,:,ir) + ZXXD_a.pp_ipj(:,:,ir);
-    XDpp_imj = ZXXD_c.pp_imj(:,:,ir) + ZXXD_e.pp_imj(:,:,ir) + ZXXD_rf.pp_imj(:,:,ir) + ZXXD_a.pp_imj(:,:,ir);
-    XDpm_ipj = ZXXD_c.pm_ipj(:,:,ir) + ZXXD_e.pm_ipj(:,:,ir) + ZXXD_rf.pm_ipj(:,:,ir) + ZXXD_a.pm_ipj(:,:,ir);
-    XDpm_imj = ZXXD_c.pm_imj(:,:,ir) + ZXXD_e.pm_imj(:,:,ir) + ZXXD_rf.pm_imj(:,:,ir) + ZXXD_a.pm_imj(:,:,ir);
-    XFp_ipj = ZXXF_c.p_ipj(:,:,ir) + ZXXF_e.p_ipj(:,:,ir) + ZXXF_rf.p_ipj(:,:,ir) + ZXXF_a.p_ipj(:,:,ir);
-    XFp_imj = ZXXF_c.p_imj(:,:,ir) + ZXXF_e.p_imj(:,:,ir) + ZXXF_rf.p_imj(:,:,ir) + ZXXF_a.p_imj(:,:,ir);
-    %
-    XDmm_ijp = ZXXD_c.mm_ijp(:,:,ir) + ZXXD_e.mm_ijp(:,:,ir) + ZXXD_rf.mm_ijp(:,:,ir) + ZXXD_a.mm_ijp(:,:,ir);
-    XDmm_ijm = ZXXD_c.mm_ijm(:,:,ir) + ZXXD_e.mm_ijm(:,:,ir) + ZXXD_rf.mm_ijm(:,:,ir) + ZXXD_a.mm_ijm(:,:,ir);
-    XDmp_ijp = ZXXD_c.mp_ijp(:,:,ir) + ZXXD_e.mp_ijp(:,:,ir) + ZXXD_rf.mp_ijp(:,:,ir) + ZXXD_a.mp_ijp(:,:,ir);
-    XDmp_ijm = ZXXD_c.mp_ijm(:,:,ir) + ZXXD_e.mp_ijm(:,:,ir) + ZXXD_rf.mp_ijm(:,:,ir) + ZXXD_a.mp_ijm(:,:,ir);
-    XFm_ijp = ZXXF_c.m_ijp(:,:,ir) + ZXXF_e.m_ijp(:,:,ir) + ZXXF_rf.m_ijp(:,:,ir) + ZXXF_a.m_ijp(:,:,ir);
-    XFm_ijm = ZXXF_c.m_ijm(:,:,ir) + ZXXF_e.m_ijm(:,:,ir) + ZXXF_rf.m_ijm(:,:,ir) + ZXXF_a.m_ijm(:,:,ir);
-    %
-    XDpp_ij = ZXXD_c.pp_ij(:,:,ir) + ZXXD_e.pp_ij(:,:,ir) + ZXXD_rf.pp_ij(:,:,ir) + ZXXD_a.pp_ij(:,:,ir);
-    XDpm_ij = ZXXD_c.pm_ij(:,:,ir) + ZXXD_e.pm_ij(:,:,ir) + ZXXD_rf.pm_ij(:,:,ir) + ZXXD_a.pm_ij(:,:,ir);
-    XDmp_ij = ZXXD_c.mp_ij(:,:,ir) + ZXXD_e.mp_ij(:,:,ir) + ZXXD_rf.mp_ij(:,:,ir) + ZXXD_a.mp_ij(:,:,ir);
-    XFp_ij = ZXXF_c.p_ij(:,:,ir) + ZXXF_e.p_ij(:,:,ir) + ZXXF_rf.p_ij(:,:,ir) + ZXXF_a.p_ij(:,:,ir);
+Zcoeffs.XXDmm_ijp = ZXXD_c.mm_ijp + ZXXD_e.mm_ijp + ZXXD_rf.mm_ijp + ZXXD_a.mm_ijp + ZXXD_g.mm_ijp;
+Zcoeffs.XXDmm_ijm = ZXXD_c.mm_ijm + ZXXD_e.mm_ijm + ZXXD_rf.mm_ijm + ZXXD_a.mm_ijm + ZXXD_g.mm_ijm;
+Zcoeffs.XXDmp_ijp = ZXXD_c.mp_ijp + ZXXD_e.mp_ijp + ZXXD_rf.mp_ijp + ZXXD_a.mp_ijp + ZXXD_g.mp_ijp;
+Zcoeffs.XXDmp_ijm = ZXXD_c.mp_ijm + ZXXD_e.mp_ijm + ZXXD_rf.mp_ijm + ZXXD_a.mp_ijm + ZXXD_g.mp_ijm;
+Zcoeffs.XXDmr_ijp = ZXXD_c.mr_ijp + ZXXD_e.mr_ijp + ZXXD_rf.mr_ijp + ZXXD_a.mr_ijp + ZXXD_g.mr_ijp;
+Zcoeffs.XXDmr_ijm = ZXXD_c.mr_ijm + ZXXD_e.mr_ijm + ZXXD_rf.mr_ijm + ZXXD_a.mr_ijm + ZXXD_g.mr_ijm;
 %
-%Grid weights calculations (for f0 and ftp also)
+Zcoeffs.XXFm_ijp  = ZXXF_c.m_ijp  + ZXXF_e.m_ijp  + ZXXF_rf.m_ijp  + ZXXF_a.m_ijp  + ZXXF_g.m_ijp;
+Zcoeffs.XXFm_ijm  = ZXXF_c.m_ijm  + ZXXF_e.m_ijm  + ZXXF_rf.m_ijm  + ZXXF_a.m_ijm  + ZXXF_g.m_ijm;
 %
-    [Xdeltap_imj,Xdeltap_ipj,...
-         Xdeltam_ijm,Xdeltam_ijp,...
-         Xdeltap_imjmm,Xdeltap_imjpp,Xdeltap_ipjmm,Xdeltap_ipjpp,...
-         Xdeltam_immjm,Xdeltam_ippjm,Xdeltam_immjp,Xdeltam_ippjp,...
-         xdeltap_npj,xdeltap_npjmm,xdeltap_npjpp] = ...
-         fppgridweights_dke_yp(Xdpnmm,Xdpnm,Xdpn,Xdpnp,Xdpnpp,...
-         Xdmhumm,Xdmhum,Xdmhu,Xdmhup,Xdmhupp,...     
-         XDpp_ipj,XDpp_imj,XFp_ipj,XFp_imj,...
-         XDpp_ij,XFp_ij);
+Zcoeffs.XXDrr_lp  = ZXXD_c.rr_lp  + ZXXD_e.rr_lp  + ZXXD_rf.rr_lp  + ZXXD_a.rr_lp  + ZXXD_g.rr_lp; 
+Zcoeffs.XXDrr_lm  = ZXXD_c.rr_lm  + ZXXD_e.rr_lm  + ZXXD_rf.rr_lm  + ZXXD_a.rr_lm  + ZXXD_g.rr_lm; 
+Zcoeffs.XXDrp_lp  = ZXXD_c.rp_lp  + ZXXD_e.rp_lp  + ZXXD_rf.rp_lp  + ZXXD_a.rp_lp  + ZXXD_g.rp_lp; 
+Zcoeffs.XXDrp_lm  = ZXXD_c.rp_lm  + ZXXD_e.rp_lm  + ZXXD_rf.rp_lm  + ZXXD_a.rp_lm  + ZXXD_g.rp_lm; 
+Zcoeffs.XXDrm_lp  = ZXXD_c.rm_lp  + ZXXD_e.rm_lp  + ZXXD_rf.rm_lp  + ZXXD_a.rm_lp  + ZXXD_g.rm_lp; 
+Zcoeffs.XXDrm_lm  = ZXXD_c.rm_lm  + ZXXD_e.rm_lm  + ZXXD_rf.rm_lm  + ZXXD_a.rm_lm  + ZXXD_g.rm_lm; 
 %
-    XXdeltap_imj(:,:,ir) = Xdeltap_imj; 
-    XXdeltap_ipj(:,:,ir) = Xdeltap_ipj;
-    XXdeltam_ijp(:,:,ir) = Xdeltam_ijp;
-    XXdeltam_ijm(:,:,ir) = Xdeltam_ijm;   
-    XXdeltap_imjmm(:,:,ir) = Xdeltap_imjmm;
-    XXdeltap_imjpp(:,:,ir) = Xdeltap_imjpp;
-    XXdeltap_ipjmm(:,:,ir) = Xdeltap_ipjmm;
-    XXdeltap_ipjpp(:,:,ir) = Xdeltap_ipjpp;
-    XXdeltam_immjm(:,:,ir) = Xdeltam_immjm;
-    XXdeltam_ippjm(:,:,ir) = Xdeltam_ippjm;
-    XXdeltam_immjp(:,:,ir) = Xdeltam_immjp;
-    XXdeltam_ippjp(:,:,ir) = Xdeltam_ippjp;
+Zcoeffs.XXFr_lp   = ZXXF_c.r_lp   + ZXXF_e.r_lp   + ZXXF_rf.r_lp   + ZXXF_a.r_lp   + ZXXF_g.r_lp;
+Zcoeffs.XXFr_lm   = ZXXF_c.r_lm   + ZXXF_e.r_lm   + ZXXF_rf.r_lm   + ZXXF_a.r_lm   + ZXXF_g.r_lm;
+%
+% Terms used by the old scheme only for momentum cross-derivatives (M. Shoucri and I. Shkarofsky,Comp. Phys. Comm., 82 (1994) 287)
+%
+Zcoeffs.XXDpp_ij  = ZXXD_c.pp_ij  + ZXXD_e.pp_ij  + ZXXD_rf.pp_ij  + ZXXD_a.pp_ij  + ZXXD_g.pp_ij;
+Zcoeffs.XXDpm_ij  = ZXXD_c.pm_ij  + ZXXD_e.pm_ij  + ZXXD_rf.pm_ij  + ZXXD_a.pm_ij  + ZXXD_g.pm_ij;
+Zcoeffs.XXDmp_ij  = ZXXD_c.mp_ij  + ZXXD_e.mp_ij  + ZXXD_rf.mp_ij  + ZXXD_a.mp_ij  + ZXXD_g.mp_ij;
+Zcoeffs.XXFp_ij   = ZXXF_c.p_ij   + ZXXF_e.p_ij   + ZXXF_rf.p_ij   + ZXXF_a.p_ij   + ZXXF_g.p_ij;
+%
+%Grid weights calculations
+%
+[Zdelta] = fppgridweights_dke_yp(gridDKE,Zcoeffs);          
+%
+% Calculates supermatrix coefficients
+%
+
+[ZMX,ZMT] = fpengine_dke_yp(0,dkeparam,gridDKE,equilDKE,Zdelta,Zbouncecoef,Zcoeffs,Zmripple);
+%
+% Build sparse matrices
+%
+[MMX,MMT] = fpmatrix_dke_yp(ZMX,ZMT);
+%
+% Set-up boundary conditions 
+%
+[MMXb,MMTb] = fpboundaries_dke_yp(MMX,MMT);
+
+
+%
+for ir = 1:nr,   
 %
 %Momentum dynamics matrix coefficients calculations
 %   
-    [XXa(:,:,ir),XXb(:,:,ir),XXc(:,:,ir),XXd(:,:,ir),XXe(:,:,ir),XXf(:,:,ir),XXg(:,:,ir),XXh(:,:,ir),XXi(:,:,ir)] = ...
-    fpengine_dke_yp(dkeparam,0,...
-    XXdeltap_imj(:,:,ir),XXdeltap_ipj(:,:,ir),XXdeltam_ijm(:,:,ir),XXdeltam_ijp(:,:,ir),...    	       
-    XXdeltap_imjmm(:,:,ir),XXdeltap_imjpp(:,:,ir),XXdeltap_ipjmm(:,:,ir),XXdeltap_ipjpp(:,:,ir),...
-    XXdeltam_immjm(:,:,ir),XXdeltam_ippjm(:,:,ir),XXdeltam_immjp(:,:,ir),XXdeltam_ippjp(:,:,ir),...
-    XXRlambda_m(:,:,ir),XXRlambda_p(:,:,ir),...
-    Xpnmm,Xpnm,Xpn,Xpnp,Xpnpp,Xpn2m,Xpn2p,Xdpnmm,Xdpnm,Xdpn,Xdpnp,Xdpnpp,...
-    Xmhumm,Xmhum,Xmhu,Xmhup,Xmhupp,X1mmhu2,X1mmhu2m,X1mmhu2p,Xdmhumm,Xdmhum,Xdmhu,Xdmhup,Xdmhupp,...
-    XDpp_ipj,XDpp_imj,XDpm_ipj,XDpm_imj,XFp_ipj,XFp_imj,...
-    XDmm_ijp,XDmm_ijm,XDmp_ijp,XDmp_ijm,XFm_ijp,XFm_ijm,...
-    XDpp_ij,XDpm_ij,XDmp_ij,XFp_ij);
-% 
-%Sink and source coefficients like magnetic ripple losses,described by a Krook term
-%
-    XXc(:,:,ir) = XXc(:,:,ir) +  Zmripple.XXlossripple(:,:,ir).*Xpn2;
 %
 %Boundaries of the bounce domain for f0
-%   
+%  
     XXc(:,1,ir) = XXc(:,1,ir) + XXa(:,1,ir);%Because of cross-derivatives
     XXd(:,1,ir) = XXd(:,1,ir) + XXi(:,1,ir);%Because of cross-derivatives
     XXb(:,1,ir) = XXb(:,1,ir) + XXf(:,1,ir);%Because of cross-derivatives
@@ -796,22 +679,127 @@ for ir = 1:nr,
     time0 = clock;
 end
 %
-Zdelta.XXdeltap_imj = XXdeltap_imj; 
-Zdelta.XXdeltap_ipj = XXdeltap_ipj;
-Zdelta.XXdeltam_ijp = XXdeltam_ijp;
-Zdelta.XXdeltam_ijm = XXdeltam_ijm;   
-Zdelta.XXdeltap_imjmm = XXdeltap_imjmm;
-Zdelta.XXdeltap_imjpp = XXdeltap_imjpp;
-Zdelta.XXdeltap_ipjmm = XXdeltap_ipjmm;
-Zdelta.XXdeltap_ipjpp = XXdeltap_ipjpp;
-Zdelta.XXdeltam_immjm = XXdeltam_immjm;
-Zdelta.XXdeltam_ippjm = XXdeltam_ippjm;
-Zdelta.XXdeltam_immjp = XXdeltam_immjp;
-Zdelta.XXdeltam_ippjp = XXdeltam_ippjp;
+Zdelta.XXdeltap_limj = XXdeltap_limj; 
+Zdelta.XXdeltap_lipj = XXdeltap_lipj;
+Zdelta.XXdeltam_lijp = XXdeltam_lijp;
+Zdelta.XXdeltam_lijm = XXdeltam_lijm;   
+Zdelta.XXdeltap_limjmm = XXdeltap_limjmm;
+Zdelta.XXdeltap_limjpp = XXdeltap_limjpp;
+Zdelta.XXdeltap_lipjmm = XXdeltap_lipjmm;
+Zdelta.XXdeltap_lipjpp = XXdeltap_lipjpp;
+Zdelta.XXdeltam_limmjm = XXdeltam_limmjm;
+Zdelta.XXdeltam_lippjm = XXdeltam_lippjm;
+Zdelta.XXdeltam_limmjp = XXdeltam_limmjp;
+Zdelta.XXdeltam_lippjp = XXdeltam_lippjp;
 %
 if display_mode >= 1,info_dke_yp(2,['Zero order momentum space matrix calculations done in ',num2str(etime_fp),' (s)']);end
 %
 % DKE (first order) matrix calculation
+%
+%boundary_mode_f = dkeparam.boundary_mode_f;
+%dke_mode = dkeparam.dke_mode;
+%bounce_mode = dkeparam.bounce_mode;
+%store_mode = dkeparam.store_mode;
+%dtn = dkeparam.dtn;
+%
+%display_mode = display.display_mode;
+%
+%nr = gridDKE.nr;
+%npn = gridDKE.npn;
+%nmhu = gridDKE.nmhu;
+%nr_dke = gridDKE.nr_dke;
+%mhu = gridDKE.mhu;
+%Xdmhumm = gridDKE.Xdmhumm;
+%Xdmhum = gridDKE.Xdmhum;
+%Xdmhu = gridDKE.Xdmhu;
+%Xdmhup = gridDKE.Xdmhup;
+%Xdmhupp = gridDKE.Xdmhupp;
+%Xdpnmm = gridDKE.Xdpnmm;
+%Xdpnm = gridDKE.Xdpnm;
+%Xdpn = gridDKE.Xdpn;
+%Xdpnp = gridDKE.Xdpnp;
+%Xdpnpp = gridDKE.Xdpnpp;
+%Xmhumm = gridDKE.Xmhumm;
+%Xmhum = gridDKE.Xmhum;
+%Xmhu = gridDKE.Xmhu;
+%Xmhu2 = gridDKE.Xmhu2;
+%Xmhup = gridDKE.Xmhup;
+%Xmhupp = gridDKE.Xmhupp;
+%X1mmhu2m = gridDKE.X1mmhu2m;
+%X1mmhu2 = gridDKE.X1mmhu2;
+%X1mmhu2p = gridDKE.X1mmhu2p;
+%pn = gridDKE.pn;
+%Xpnmm = gridDKE.Xpnmm;
+%Xpnm = gridDKE.Xpnm;
+%Xpn = gridDKE.Xpn;
+%Xpnp = gridDKE.Xpnp;
+%Xpnpp = gridDKE.Xpnpp;
+%Xpn2m = gridDKE.Xpn2m;
+%Xpn2 = gridDKE.Xpn2;
+%Xpn2p = gridDKE.Xpn2p;
+%XXpn2 = gridDKE.XXpn2;
+%
+%xpsin = gridDKE.xpsin;
+%xdpsin = gridDKE.xdpsin_dke;
+%xdpsinm = gridDKE.xdpsinm_dke;
+%xdpsinp = gridDKE.xdpsinp_dke;
+%xmhubounce2 = gridDKE.xmhubounce2;
+%rdke = gridDKE.rdke;
+%xrho = gridDKE.xrho;
+%
+%gamma = Zmomcoef.gamma;
+%Xvpar = Zmomcoef.Xvpar;
+%
+%djmhut = Zbouncecoef.djmhut;
+%Zmask_f0_P = Zbouncecoef.Zmask_f0_P;
+%Zbouncecoef.Zmask_f0_P = Zmask_f0_P;
+%Zmask_f0_Tm = Zbouncecoef.Zmask_f0_Tm;
+%Zmask_f0_Tp = Zbouncecoef.Zmask_f0_Tp;
+%jmhut_min = Zbouncecoef.jmhut_min;
+%jmhut_max = Zbouncecoef.jmhut_max;
+%Zmask_f0_t = Zbouncecoef.Zmask_f0_t;
+%Zmask_f0_t_P = Zbouncecoef.Zmask_f0_t_P;
+%Zmask_f0_t_Tp = Zbouncecoef.Zmask_f0_t_Tp;
+%ns_f = Zbouncecoef.ns_f;    
+%XXlambda = Zbouncecoef.XXlambda;
+%XXRlambda_m = Zbouncecoef.XXRlambda_m;
+%XXRlambda_p = Zbouncecoef.XXRlambda_p;
+%sm_f = Zbouncecoef.sm_f;
+%sm_T_f = Zbouncecoef.sm_T_f;
+%blocksize_f_t = Zbouncecoef.blocksize_f_t;
+%blocksize_T_f_t = Zbouncecoef.blocksize_T_f_t;
+%xqtilde = Zbouncecoef.xqtilde;
+%
+%xx0 = equilDKE.xx0;
+%xBp0 = equilDKE.xBp0;
+%xB0 = equilDKE.xB0;
+%ap = equilDKE.ap;
+%Rp = equilDKE.Rp;
+%psia_apRp = equilDKE.psia_apRp;
+%
+%betath_ref = mksa.betath_ref;
+%nhu_ref = mksa.nhu_ref;
+%
+%bounce_mode = dkeparam.bounce_mode;    
+%
+%if dke_mode == 1,
+%Zmask_g = Zbouncecoef.Zmask_g;
+%ns_g = Zbouncecoef.ns_g;
+%xftp_norm = mksa.xftp_norm_ref;
+%boundary_mode_g = dkeparam.boundary_mode_g;
+%sm_tp = Zbouncecoef.sm_tp;
+%sm_g = Zbouncecoef.sm_g;
+%blocksize_tp = Zbouncecoef.blocksize_tp;    
+%blocksize_g_t = Zbouncecoef.blocksize_g_t;
+%
+%end
+%
+%
+%nMMXP_f_t = max(cumsum(Zbouncecoef.blocksize_f_t));
+%
+%MMXP_tp = [];
+%MMXP_g_t = [];
+%MMH_tp = [];
 %
 etime_dke = 0;
 time0 = clock;
@@ -853,9 +841,9 @@ if dke_mode == 1,
 %
         [Xa_tp,Xb_tp,Xc_tp,Xd_tp,Xe_tp,Xf_tp,Xg_tp,Xh_tp,Xi_tp] = ...
             fpengine_dke_yp(dkeparam,1,...
-            XXdeltap_imj(:,:,jr2),XXdeltap_ipj(:,:,jr2),XXdeltam_ijm(:,:,jr2),XXdeltam_ijp(:,:,jr2),...
-            XXdeltap_imjmm(:,:,jr2),XXdeltap_imjpp(:,:,jr2),XXdeltap_ipjmm(:,:,jr2),XXdeltap_ipjpp(:,:,jr2),...
-            XXdeltam_immjm(:,:,jr2),XXdeltam_ippjm(:,:,jr2),XXdeltam_immjp(:,:,jr2),XXdeltam_ippjp(:,:,jr2),...
+            XXdeltap_limj(:,:,jr2),XXdeltap_lipj(:,:,jr2),XXdeltam_lijm(:,:,jr2),XXdeltam_lijp(:,:,jr2),...
+            XXdeltap_limjmm(:,:,jr2),XXdeltap_limjpp(:,:,jr2),XXdeltap_lipjmm(:,:,jr2),XXdeltap_lipjpp(:,:,jr2),...
+            XXdeltam_limmjm(:,:,jr2),XXdeltam_lippjm(:,:,jr2),XXdeltam_limmjp(:,:,jr2),XXdeltam_lippjp(:,:,jr2),...
             XXRlambda_m(:,:,jr2),XXRlambda_p(:,:,jr2),...
             Xpnmm,Xpnm,Xpn,Xpnp,Xpnpp,Xpn2m,Xpn2p,Xdpnmm,Xdpnm,Xdpn,Xdpnp,Xdpnpp,...
             Xmhumm,Xmhum,Xmhu,Xmhup,Xmhupp,X1mmhu2,X1mmhu2m,X1mmhu2p,Xdmhumm,Xdmhum,Xdmhu,Xdmhup,Xdmhupp,...
@@ -898,12 +886,12 @@ if dke_mode == 1,
         dpsi = (xpsin(jr3) - xpsin(jr1));%Radial step for parabolic gradient calculations (dke)
         dpsip = (xpsin(jr3) - xpsin(jr2));%Radial step for parabolic gradient calculations (dke)      
 %                           
-        XXH_tp_mm(:,:,jr1) = (xftp_norm(jr2)*dpsip/dpsi/dpsim)*(XXdeltap_imj(:,:,jr2) - XXdeltap_imj(:,:,jr1)).*XFp_tp_imj.*Xmhu.*Xpn2m.*Xpnm./Xdpn;
-        XXH_tp_mp(:,:,jr1) = (xftp_norm(jr2)*dpsip/dpsi/dpsim)*(XXdeltap_ipj(:,:,jr2) - XXdeltap_ipj(:,:,jr1)).*XFp_tp_ipj.*Xmhu.*Xpn2p.*Xpnp./Xdpn;
+        XXH_tp_mm(:,:,jr1) = (xftp_norm(jr2)*dpsip/dpsi/dpsim)*(XXdeltap_limj(:,:,jr2) - XXdeltap_limj(:,:,jr1)).*XFp_tp_imj.*Xmhu.*Xpn2m.*Xpnm./Xdpn;
+        XXH_tp_mp(:,:,jr1) = (xftp_norm(jr2)*dpsip/dpsi/dpsim)*(XXdeltap_lipj(:,:,jr2) - XXdeltap_lipj(:,:,jr1)).*XFp_tp_ipj.*Xmhu.*Xpn2p.*Xpnp./Xdpn;
         XXH_tp_m(:,:,jr1) = -XXH_tp_mm(:,:,jr1) - XXH_tp_mp(:,:,jr1);
 %
-        XXH_tp_pm(:,:,jr3) = -(xftp_norm(jr2)*dpsim/dpsi/dpsip)*(XXdeltap_imj(:,:,jr2) - XXdeltap_imj(:,:,jr3)).*XFp_tp_imj.*Xmhu.*Xpn2m.*Xpnm./Xdpn;
-        XXH_tp_pp(:,:,jr3) = -(xftp_norm(jr2)*dpsim/dpsi/dpsip)*(XXdeltap_ipj(:,:,jr2) - XXdeltap_ipj(:,:,jr3)).*XFp_tp_ipj.*Xmhu.*Xpn2p.*Xpnp./Xdpn;       
+        XXH_tp_pm(:,:,jr3) = -(xftp_norm(jr2)*dpsim/dpsi/dpsip)*(XXdeltap_limj(:,:,jr2) - XXdeltap_limj(:,:,jr3)).*XFp_tp_imj.*Xmhu.*Xpn2m.*Xpnm./Xdpn;
+        XXH_tp_pp(:,:,jr3) = -(xftp_norm(jr2)*dpsim/dpsi/dpsip)*(XXdeltap_lipj(:,:,jr2) - XXdeltap_lipj(:,:,jr3)).*XFp_tp_ipj.*Xmhu.*Xpn2p.*Xpnp./Xdpn;       
         XXH_tp_p(:,:,jr3) = -XXH_tp_pm(:,:,jr3) - XXH_tp_pp(:,:,jr3);
 %
 %Matrix coefficients calculations for g
