@@ -91,14 +91,20 @@ ap =  ptx(end,1);%Plasma minor radius on the LFS midplane
 %
 prho_g = ptx(:,1)/ap;
 %
-if xvar == 's',%rho defined as r/a on LFS midplane
+equilDKE = equilibrium_jd(equil);
+%
+if xvar == 'g',%rho defined as r/a on LFS midplane
     prho = prho_g;
     plab = 'r/a';
 elseif xvar == 'p',%rho defined as square root of poloidal flux
     prho = sqrt(psin);
     plab = '\psi_n^{1/2}';
 elseif xvar == 't',%rho defined as square root of toroidal flux
-    %
+    prho = equilDKE.xrhoT;
+    plab = '\psi_t^{1/2}';
+elseif xvar == 'v',%rho defined as square root of toroidal flux
+    prho = equilDKE.xrhoV;
+    plab = '\rho_V';
 end
 %
 %ptB = sqrt(ptBx.^2 + ptBy.^2 + ptBPHI.^2);% total magnetic field
