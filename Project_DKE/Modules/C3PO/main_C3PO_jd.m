@@ -113,7 +113,7 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C
 		rmdir(dkecluster.temppath,'s');
 		%
 		iray_wave = 1;
-		for iray = 1:Nrays*0+3,
+		for iray = 1:Nrays,
 			if isempty(rays{iray}),
                 disp(['kpsin has a non nul imaginary part for ray # ',int2str(iray),' !']);  
                 info_dke_yp(2,['WARNING: Ray #',int2str(iray),' is not put in the wave structure.']);
@@ -125,7 +125,7 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C
 		end
     else
     	iray_wave = 1;
-        for iray = 1:Nrays*0+3,    
+        for iray = 1:Nrays,    
             [ray] = loop_main_C3PO_jd(iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay);
             if isempty(ray),
                 disp(['kpsin has a non nul imaginary part for ray # ',int2str(iray),' !']);
