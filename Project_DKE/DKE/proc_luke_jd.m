@@ -14,6 +14,7 @@ if nargin < 7,
     opt.peak = '';
     opt.wave = '';
     opt.peakmode = 0;
+    opt.rho = '';
 end
 if nargin < 6,
     subtitle = '';
@@ -33,6 +34,10 @@ end
 %
 if ~isfield(opt,'peakmode'),
     opt.peakmode = 0;
+end
+%
+if ~isfield(opt,'rho') || isempty(opt.rho),
+    opt.rho = input_dke_yp('Option for rho definition : ''g'' (geometric), ''p'' (poloidal flux), ''t'' (toroidal flux), ''v'' (volumic rho)','g',{'g','p','t','v'},'',[1,1]);
 end
 %
 Znorm = data.Znorm;
@@ -76,8 +81,28 @@ lspace2 = 0.5;
 bspace = 0.7;
 bspace2 = 0.5;
 %
-xrho = equilDKE.xrho; 
-xpsin = equilDKE.xpsin;
+xrhoG = equilDKE.xrho; 
+xrhoP = equilDKE.xrhoP; 
+xrhoT = equilDKE.xrhoT; 
+xrhoV = equilDKE.xrhoV; 
+%
+xrhoG_S = radialDKE.xrho_S_dke;
+%
+if opt.rho == 'g',
+    xrho = xrhoG;
+    xrho_S = xrhoG_S;
+elseif  opt.rho == 'p',
+    xrho = xrhoP;
+    xrho_S = sqrt(radialDKE.xpsin_S_dke);
+elseif  opt.rho == 't',
+    xrho = xrhoT;
+    xrho_S = [0,interp1(xrhoG,xrhoT,radialDKE.xrho_S_dke(2:end-1),'spline'),1];
+elseif  opt.rho == 'v',
+    xrho = xrhoV;
+    xrho_S = [0,interp1(xrhoG,xrhoV,radialDKE.xrho_S_dke(2:end-1),'spline'),1];
+end
+xdrho = diff(xrho_S);
+%
 xTe = equilDKE.xTe;
 xne = equilDKE.xne;
 %
@@ -86,7 +111,7 @@ mhu = momentumDKE.mhu;
 dmhu = momentumDKE.dmhu;
 gamma = Zmomcoef.gamma;
 %
-nr = length(xrho);
+nr = length(xrhoG);
 %
 scocurr = sign(equilDKE.psia_apRp)*sign(equilDKE.XBphi(1,1));
 %
@@ -96,6 +121,14 @@ yP_rf = ZP0.xy_rf_fsav.'*mksa.P_ref;
 ynP_rf = ZP0.xyn_rf_fsav*mksa.P_ref;
 P_e = ZP0.x_e_fsav*mksa.P_ref;
 P_tot = P_rf + P_e;
+%
+if isfield(dke_out,'zS'),
+    zS = dke_out.zS;
+    zP_0_2piRp_mod = dke_out.zP_0_2piRp_mod;
+else
+    zS = '';
+    zP_0_2piRp_mod = '';
+end
 %
 ny = size(yP_rf,1);
 nn_rf = size(ynP_rf,3);
@@ -166,9 +199,8 @@ p_e_2piRp = sum(P_e.*equilDKE.xdV_2piRp_dke);
 p_tot_2piRp = sum(P_tot.*equilDKE.xdV_2piRp_dke);
 EtaRp = I_tot/(p_tot_2piRp*2*pi);    
 %
-xdrho_dke = diff(radialDKE.xrho_S_dke);
-xdPdrho_rf_2piRp = xp_rf_2piRp./xdrho_dke;
-yxdPdrho_rf_2piRp = yxp_rf_2piRp./repmat(xdrho_dke,[ny,1]);
+xdPdrho_rf_2piRp = xp_rf_2piRp./xdrho;
+yxdPdrho_rf_2piRp = yxp_rf_2piRp./repmat(xdrho,[ny,1]);
 %
 eta = J_tot./P_tot;
 i_peak = find(P_rf == max(P_rf));
@@ -214,18 +246,25 @@ if nr > 1,
         %
         if nr_dep >= 1,
             %
-            rho_dep_S = optgrid_dke_jd(waves,nr_dep,NaN,0);
+            rhoG_dep_S = optgrid_dke_jd(waves,nr_dep,NaN,0);
+            %
+            rho_dep_S = interp1(xrhoG_S,xrho_S,rhoG_dep_S,'spline');
             %
         else
             %
-            rho_dep_S = radialDKE.xrho_S_dke;
+            rhoG_dep_S = xrhoG_S;
+            rho_dep_S = xrho_S;
             %
         end
         %
         drho_dep = diff(rho_dep_S);
+        drhoG_dep = diff(rhoG_dep_S);
         rho_dep = (rho_dep_S(1:end-1) + rho_dep_S(2:end))/2;
+        rhoG_dep = (rhoG_dep_S(1:end-1) + rhoG_dep_S(2:end))/2;
         %
         wxdPdrho_rf_2piRp_lin = zeros(nw,length(rho_dep_S)-1);
+        wxdPdrhoG_rf_2piRp_lin = zeros(nw,length(rho_dep_S)-1);
+        %
         wxp_rf_2piRp_lin = zeros(nw,length(rho_dep_S)-1);
         %
         wi_peak_lin = zeros(1,nw);
@@ -234,15 +273,17 @@ if nr > 1,
             %
             for iray = 1:nb(iw),
                 %
-                ray = radialdampingprofile_jd(waves{iw}.rays{iray},rho_dep_S,0);
+                ray = radialdampingprofile_jd(waves{iw}.rays{iray},rhoG_dep_S,0);
                 %
                 if isfield(ray,'sP_2piRp')  && isfield(ray,'srho'),
-                    wxdPdrho_rf_2piRp_lin(iw,:) = wxdPdrho_rf_2piRp_lin(iw,:) + ray.dPnormdrho*ray.sP_2piRp(1)*1e-6;
+                    wxdPdrhoG_rf_2piRp_lin(iw,:) = wxdPdrhoG_rf_2piRp_lin(iw,:) + ray.dPnormdrho*ray.sP_2piRp(1)*1e-6;
                 else
-                    wxdPdrho_rf_2piRp_lin(iw,:) = NaN;% if some rays are not accounted for, the comparison is misleading and thus stopped
+                    wxdPdrhoG_rf_2piRp_lin(iw,:) = NaN;% if some rays are not accounted for, the comparison is misleading and thus stopped
                 end
                 %
             end
+            %
+            wxdPdrho_rf_2piRp_lin(iw,:) = wxdPdrhoG_rf_2piRp_lin(iw,:).*drhoG_dep./drho_dep;
             %    
             wi_peak_lin(iw) = find(wxdPdrho_rf_2piRp_lin(iw,:) == max(wxdPdrho_rf_2piRp_lin(iw,:)));
             %
@@ -255,10 +296,12 @@ if nr > 1,
         xdPdrho_rf_2piRp_lin = sum(wxdPdrho_rf_2piRp_lin,1);
         p_rf_2piRp_lin = sum(wp_rf_2piRp_lin);
         %
-        wrho_lin = rho_dep(wi_peak_lin);
-        wspsin_lin = interp1(xrho,sqrt(xpsin),wrho_lin);
-        wTe_lin = interp1(xrho,xTe,wrho_lin);
-        wne_lin = interp1(xrho,xne,wrho_lin);
+        wrhoG_lin = rhoG_dep(wi_peak_lin);
+        wrhoP_lin = interp1(xrhoG,xrhoP,wrhoG_lin);
+        wrhoT_lin = interp1(xrhoG,xrhoT,wrhoG_lin);
+        wrhoV_lin = interp1(xrhoG,xrhoV,wrhoG_lin);
+        wTe_lin = interp1(xrhoG,xTe,wrhoG_lin);
+        wne_lin = interp1(xrhoG,xne,wrhoG_lin);
         %
     else
         %
@@ -270,14 +313,16 @@ if nr > 1,
         wxp_rf_2piRp_lin = '';
         p_rf_2piRp_lin = '';
         %
-        wrho_lin ='';
-        wspsin_lin = '';
+        wrhoG_lin ='';
+        wrhoP_lin = '';
+        wrhoT_lin = '';
+        wrhoV_lin = '';
         wTe_lin = '';
         wne_lin = '';
         %
     end
     %
-    if opt_wave == 'y',
+    if nw > 0 && opt_wave == 'y',
         %
         yb = dke_out.yb;
         %
@@ -285,10 +330,15 @@ if nr > 1,
         wnp_rf_2piRp = zeros(nw,nn_rf);
         wxdPdrho_rf_2piRp = zeros(nw,nr);
         %
-        wrho = zeros(1,nw);
-        wspsin = zeros(1,nw);
+        wrhoG = zeros(1,nw);
+        wrhoP = zeros(1,nw);
+        wrhoT = zeros(1,nw);
+        wrhoV = zeros(1,nw);
         wTe = zeros(1,nw);
         wne = zeros(1,nw);
+        %
+        wNpar = zeros(1,nw);
+        wtheta = zeros(1,nw);
         %
             %
             % bxdPdrho_rf_2piRp = zeros(nbtot,nx);
@@ -327,17 +377,43 @@ if nr > 1,
             wi_peak = find(wxdPdrho_rf_2piRp(iw,:) == max(wxdPdrho_rf_2piRp(iw,:)));
             %
             if opt.peakmode == 0,
-                wrho(iw) = xrho(wi_peak);
-                wspsin(iw) = sqrt(xpsin(wi_peak));
+                wrhoG(iw) = xrhoG(wi_peak);
+                wrhoP(iw) = xrhoP(wi_peak);
+                wrhoT(iw) = xrhoT(wi_peak);
+                wrhoV(iw) = xrhoV(wi_peak);
                 wTe(iw) = xTe(wi_peak);
                 wne(iw) = xne(wi_peak);
             else
-                wrho(iw) = sum(wxp_rf_2piRp(iw,:).*xrho)/sum(wxp_rf_2piRp(iw,:));
-                wspsin(iw) = interp1(xrho,sqrt(xpsin),wrho(iw));
-                wTe(iw) = interp1(xrho,xTe,wrho(iw));
-                wne(iw) = interp1(xrho,xne,wrho(iw));
+                wrhoG(iw) = sum(wxp_rf_2piRp(iw,:).*xrhoG)/sum(wxp_rf_2piRp(iw,:));
+                wrhoP(iw) = interp1(xrhoG,xrhoP,wrhoG(iw));
+                wrhoT(iw) = interp1(xrhoG,xrhoT,wrhoG(iw));
+                wrhoV(iw) = interp1(xrhoG,xrhoV,wrhoG(iw));
+                wTe(iw) = interp1(xrhoG,xTe,wrhoG(iw));
+                wne(iw) = interp1(xrhoG,xne,wrhoG(iw));
             end
-        %
+            %
+            Npar_peak = NaN(1,nb(iw));
+            theta_peak = NaN(1,nb(iw));
+            %
+            for iray = 1:nb(iw),
+                %
+                ibb = iray + sum(nb(1:iw-1));
+                ray = waves{iw}.rays{iray};
+                %
+                vS = zS{ibb};
+                vP_0_2piRp_mod = zP_0_2piRp_mod{ibb};
+                %
+                [dPds_peak,iv_peak] = max(-diff(vP_0_2piRp_mod)./diff(vS));
+                s_peak = vS(iv_peak);
+                %
+                Npar_peak(iray) = interp1(ray.ss,ray.sNpar,s_peak);
+                theta_peak(iray) = interp1(ray.ss,ray.stheta,s_peak);
+                %
+            end
+            %
+            wNpar(iw) = mean(Npar_peak);
+            wtheta(iw) = mean(theta_peak);
+            %
         end
         %
         wp_rf_2piRp = sum(wxp_rf_2piRp,2);
@@ -348,10 +424,14 @@ if nr > 1,
         wxp_rf_2piRp = '';
         wnp_rf_2piRp = '';
         wp_rf_2piRp = '';
-        wrho = '';
-        wspsin = '';        
+        wrhoG = '';
+        wrhoP = '';
+        wrhoT = '';
+        wrhoV = '';
         wTe = '';        
-        wne = '';        
+        wne = '';     
+        wNpar = '';
+        wtheta = '';
         %
     end
     %
@@ -401,8 +481,10 @@ if nr > 1,
         peaks.p_rf_2piRp = [peaks.p_rf_2piRp,p_rf_2piRp_peak];
         peaks.I_tot = [peaks.I_tot,I_tot_peak];
         %
-        peaks.rho = xrho(peaks.ir);
-        peaks.spsin = sqrt(xpsin(peaks.ir));
+        peaks.rhoG = xrhoG(peaks.ir);
+        peaks.rhoP = xrhoP(peaks.ir);
+        peaks.rhoT = xrhoT(peaks.ir);
+        peaks.rhoV = xrhoV(peaks.ir);
         peaks.Te = xTe(peaks.ir);
         peaks.ne = xne(peaks.ir);
         peaks.EtaRp = peaks.I_tot./(peaks.p_rf_2piRp*2*pi);
@@ -437,8 +519,10 @@ if nr > 1,
     data_proc.wave.wp_rf_2piRp_lin = wp_rf_2piRp_lin;
     data_proc.wave.wxp_rf_2piRp_lin = wxp_rf_2piRp_lin;
     data_proc.wave.wxdPdrho_rf_2piRp_lin = wxdPdrho_rf_2piRp_lin;
-    data_proc.wave.wrho_lin = wrho_lin;
-    data_proc.wave.wspsin_lin = wspsin_lin;
+    data_proc.wave.wrhoG_lin = wrhoG_lin;
+    data_proc.wave.wrhoP_lin = wrhoP_lin;
+    data_proc.wave.wrhoT_lin = wrhoT_lin;
+    data_proc.wave.wrhoV_lin = wrhoV_lin;
     data_proc.wave.wTe_lin = wTe_lin;
     data_proc.wave.wne_lin = wne_lin;
     %
@@ -447,12 +531,19 @@ if nr > 1,
     data_proc.wave.wxp_rf_2piRp = wxp_rf_2piRp;
     data_proc.wave.wxdPdrho_rf_2piRp = wxdPdrho_rf_2piRp;
     data_proc.wave.rho_dep = rho_dep;
-    data_proc.wave.wrho = wrho;
-    data_proc.wave.wspsin = wspsin;
+    data_proc.wave.wrhoG = wrhoG;
+    data_proc.wave.wrhoP = wrhoP;
+    data_proc.wave.wrhoT = wrhoT;
+    data_proc.wave.wrhoV = wrhoV;
     data_proc.wave.wTe = wTe;
     data_proc.wave.wne = wne;
     %
+    data_proc.wave.wNpar = wNpar;
+    data_proc.wave.wtheta = wtheta;
+    %
     data_proc.peaks = peaks;
+    %
+    data_proc.opt = opt;
     %
     if ir_display >= 0,
         %
@@ -477,8 +568,10 @@ if nr > 1,
                     disp('----------------------------------------');
                     disp(' ');
                     disp(['RF Peak # ',num2str(ipeak)])
-                    disp(['Position rho: ',num2str(peaks.rho(ipeak))])
-                    disp(['Position sqrt(xpsin): ',num2str(peaks.spsin(ipeak))])
+                    disp(['Position rho G: ',num2str(peaks.rhoG(ipeak))])
+                    disp(['Position rho P: ',num2str(peaks.rhoP(ipeak))])
+                    disp(['Position rho T: ',num2str(peaks.rhoT(ipeak))])
+                    disp(['Position rho V: ',num2str(peaks.rhoV(ipeak))])
                     disp(['Temperature Te: ',num2str(peaks.Te(ipeak)),' keV'])
                     disp(['Density ne: ',num2str(peaks.ne(ipeak)/1e20),' *10^20 m^-3'])
                     disp(' ');
@@ -496,8 +589,10 @@ if nr > 1,
                     disp('----------------------------------------');
                     disp(' ');
                     disp(['RF Wave # ',num2str(iw)])
-                    disp(['Position rho: ',num2str(wrho(iw))])
-                    disp(['Position sqrt(xpsin): ',num2str(wspsin(iw))])
+                    disp(['Position rho G: ',num2str(wrhoG(iw))])
+                    disp(['Position rho P: ',num2str(wrhoP(iw))])
+                    disp(['Position rho T: ',num2str(wrhoT(iw))])
+                    disp(['Position rho V: ',num2str(wrhoV(iw))])
                     disp(['Temperature Te: ',num2str(wTe(iw)),' keV'])
                     disp(['Density ne: ',num2str(wne(iw)/1e20),' *10^20 m^-3'])
                     disp(' ');
@@ -531,8 +626,10 @@ if nr > 1,
                     disp('----------------------------------------');
                     disp(' ');
                     disp(['RF Peak # ',num2str(ipeak)])
-                    disp(['Position rho: ',num2str(peaks.rho(ipeak))])
-                    disp(['Position sqrt(xpsin): ',num2str(peaks.spsin(ipeak))])
+                    disp(['Position rho G: ',num2str(peaks.rhoG(ipeak))])
+                    disp(['Position rho P: ',num2str(peaks.rhoP(ipeak))])
+                    disp(['Position rho T: ',num2str(peaks.rhoT(ipeak))])
+                    disp(['Position rho V: ',num2str(peaks.rhoV(ipeak))])
                     disp(['Temperature Te: ',num2str(peaks.Te(ipeak)),' keV'])
                     disp(['Density ne: ',num2str(peaks.ne(ipeak)/1e20),' *10^20 m^-3'])
                     disp(' ');
@@ -550,8 +647,10 @@ if nr > 1,
                     disp('----------------------------------------');
                     disp(' ');
                     disp(['RF Wave # ',num2str(iw)])
-                    disp(['Position rho: ',num2str(wrho(iw))])
-                    disp(['Position sqrt(xpsin): ',num2str(wspsin(iw))])
+                    disp(['Position rho G: ',num2str(wrhoG(iw))])
+                    disp(['Position rho P: ',num2str(wrhoP(iw))])
+                    disp(['Position rho T: ',num2str(wrhoT(iw))])
+                    disp(['Position rho V: ',num2str(wrhoV(iw))])
                     disp(['Temperature Te: ',num2str(wTe(iw)),' keV'])
                     disp(['Density ne: ',num2str(wne(iw)/1e20),' *10^20 m^-3'])
                     disp(' ');
@@ -692,9 +791,6 @@ if nr > 1,
                 print_jd(p_opt,[simul_id,'_RippleDetrapping_profile'],'.');
             end  
         end
-        %
-        zS = dke_out.zS;
-        zP_0_2piRp_mod = dke_out.zP_0_2piRp_mod;
         %
         disp('******** power absorption along specific rays ********');
         %
