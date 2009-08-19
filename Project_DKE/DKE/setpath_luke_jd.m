@@ -26,6 +26,7 @@ end
 %
 % Path for LUKE and Modules
 %
+addpath([luke_root,'Project_DKE/Modules/MHDK']);
 addpath([luke_root,'Project_DKE/Modules/FEB/Response']);
 addpath([luke_root,'Project_DKE/Modules/FEB/Pile-up']);
 addpath([luke_root,'Project_DKE/Modules/FEB']);
