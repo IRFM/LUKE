@@ -277,4 +277,9 @@ crpppc51.compiler_opt.helmex = '-v -L/home/decker/NoTivoli/Packages/Bin/lapack-3
 %
 crpppc51.MUMPS.mex76 = [crpppc51.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB_7.6'];%Where MUMPS matrix solver is stored (MEX function)
 %
-dk
+dkepath.crpppc51 = crpppc51;
+%
+%***************************************************************************************************
+%
+save([pwd,'/Project_DKE/Database/PATH_files/PATH_',dkepath.id,'.mat'],'dkepath');
+%
