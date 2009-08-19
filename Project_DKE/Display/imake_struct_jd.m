@@ -224,6 +224,10 @@ if real(m_opt) == 0,
         %
         if mod == 1,
             %
+            if ~isfield(s,'id'),
+                s.id = '';
+            end
+            %
             s.id = input_dke_yp(['Please provide a new id for the ''',sname,''' structure'],s.id);
             newstruct = 1;
             %
