@@ -403,7 +403,7 @@ if display_mode >= 2,
     figure('Name','Magnetic equilibrium flux surface contour'),clf
 %    
     [ax] = graph1D_jd(sx',sy',0,0,'','','',NaN,[xmin,xmax],[ymin,ymax],'-','none','r',2);drawnow
-    [ax] = graph1D_jd(stx,sty,0,0,'x(m)','y(m)','Flux-surfaces labeled by \rho=0,0.1,0.2...1',NaN,[xmin,xmax],[ymin,ymax],'-','none','b',0.5);
+    [ax] = graph1D_jd(stx,sty,0,0,'x(m)','y(m)','Flux-surfaces labeled by \rho=0,0.05,0.1...1',NaN,[xmin,xmax],[ymin,ymax],'-','none','b',0.5,20,gca,0.9,0.7,0.5);
     axis('equal');drawnow  
 end
 %
