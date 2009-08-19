@@ -993,15 +993,7 @@ while isel >= 0,
                 g_opt.abs_max = input_dke_yp('Option for ray trajectories : 0 (full trajectory), 1 (cut when damped)',0,0:1,'',[1,1]);
                 %
                 %xvaropt = input_dke_yp('Option for rho definition : 0 (geometric), 1 (poloidal flux), 2 (toroidal flux)',0,0:2,'',[1,1]);
-                xvaropt = input_dke_yp('Option for rho definition : 0 (geometric), 1 (poloidal flux)',0,0:1,'',[1,1]);
-                %
-                if xvaropt == 0,
-                    xvar = 's';
-                else%if xvaropt == 1,
-                    xvar = 'p';
-                %else
-                    %xvar = 't';
-                end
+                xvar = input_dke_yp('Option for rho definition : ''g'' (geometric), ''p'' (poloidal flux), ''t'' (toroidal flux), ''v'' (volumic rho)','g',{'g','p','t','v'},'',[1,1]);
                 %
                 g_opt.print = p_opt;
                 g_opt.TeNpar = 1;
@@ -1053,7 +1045,24 @@ while isel >= 0,
 				%
                 sd = pwd;
                 cd(workdir)
-                proc_luke_jd(output,ir_display,p_opt,dp_cyl,pnmax);
+                data_proc = proc_luke_jd(output,ir_display,p_opt,dp_cyl,pnmax);
+                %
+                opt.procsave = input_dke_yp('Do you want to save the processed data','y',{'y','n'},'',[1,1]);
+                %
+                if opt.procsave == 'y',
+                    %
+                    [proc_file,proc_path] = iputfile_jd(opt_gui,'PROC_LUKE_DATA_*.mat','Please provide a LUKE PROC data file name',[workdir,'PROC_LUKE_DATA_',id_simul_o,'.mat']);
+                    %
+                    if proc_file == 0,
+                        disp('-----> No PROC_LUKE data file specified.');
+                    else
+                        %
+                        save([proc_path,proc_file],'data_proc');
+                        disp(['-----> The proc data are saved in file ',proc_path,proc_file,'.']);
+                        %
+                    end                      
+                end
+                %
                 cd(sd);
             else
                 disp('-----> The output structure does not exist.');
