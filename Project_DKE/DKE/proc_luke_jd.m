@@ -882,6 +882,7 @@ if ir_display > 0 && ir_display <= nr,
     Xfinit_cyl_ref = exp(logXfinit_cyl_ref);%For accurate representation in figures 
     %
     XDparpar_cyl_ref = s2c_dke_yp(dke_out.ZXXD_rf.parpar_ij(:,:,ir_display),pn,mhu,dp_cyl);%Spherical to cylindrical coordinate transformation
+    XDpp_cyl_ref = s2c_dke_yp(dke_out.ZXXD_rf.pp_ij(:,:,ir_display),pn,mhu,dp_cyl);%Spherical to cylindrical coordinate transformation    
     %
     Xppar_cyl_ref = ones(length(pperp_cyl_ref),1)*ppar_cyl_ref(:)';%Grid for the distribution functions only
     Xpperp_cyl_ref = pperp_cyl_ref(:)*ones(1,length(ppar_cyl_ref));
@@ -911,6 +912,7 @@ if ir_display > 0 && ir_display <= nr,
     Xf0_cyl_ref(Xmask) = 0;
     Xfinit_cyl_ref(Xmask) = 0;
     XDparpar_cyl_ref(Xmask) = 0;
+    XDpp_cyl_ref(Xmask) = 0;
     %
     Fpar0_cyl_ref = 2*pi*integral_dke_jd(dpperp_cyl_ref,Xpperp_cyl_ref.*Xf0_cyl_ref,1);
     Fparinit_cyl_ref = 2*pi*integral_dke_jd(dpperp_cyl_ref,Xpperp_cyl_ref.*Xfinit_cyl_ref,1);		
@@ -948,7 +950,14 @@ if ir_display > 0 && ir_display <= nr,
     %
     y1 = Xfinit_cyl_ref;
     y2 = Xf0_cyl_ref;
-    y3 = XDparpar_cyl_ref;
+    %
+    if max(max(XDparpar_cyl_ref)) > max(max(XDpp_cyl_ref)),
+        y3 = XDparpar_cyl_ref;
+        y3lab = 'D||';
+    else
+        y3 = XDpp_cyl_ref;
+        y3lab = 'Dpp';
+    end
     y3max = max(max(y3));
     %
     y9 = sqrt(pnmax^2 - x1.^2);
@@ -975,7 +984,7 @@ if ir_display > 0 && ir_display <= nr,
     %
     if max(max(abs(y3))) > 0,
         %
-        figure(12),clf,set(12,'Name',['2-D contour of D|| - ',dke_out.simul.id])
+        figure(12),clf,set(12,'Name',['2-D contour of ',y3lab,' - ',dke_out.simul.id])
         %
         cont = 10;
         %
