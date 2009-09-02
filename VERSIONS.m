@@ -1753,3 +1753,132 @@
 %
 % U rundke_cluster.m (tests for distributed computing)
 %
+% ----------------------------------------------------------------------------------------------------
+% 
+% LUKE Release 1.7.3
+% 
+% - addition of ALOHA code and ITM coupling functions
+% - important correction for ECCD calculations in cronos
+% - sign correction fro JET simulations
+% - EARTH equilibrium and DKE functions made compatible
+% 
+% ====> LUKE
+%
+% U make_path_LOCAL.m (ITM case)
+% U install_LUKE.m (")
+% 
+% ====> LUKE/Project_DKE/DKE/
+%
+% U proc_luke_jd.m (choice of rho, LUKE ray absorption, Dpp for ECCD)
+% U setpath_luke_jd.m (ITM MHD ALOHA andd specfific libraries)
+% U equilibrium_jd.m (compatible with dipole equilibrium)
+% U main_dke_yp.m (")
+% U qfactors_dke_yp.m (")
+% U bounce_dke_jd.m (")
+% U paramconsistency_dke_yp.m (")
+% U load_structures_yp.m (ITM equil)
+% U rayprocess_jd.m (ES disp)
+% 
+% ====> LUKE/Project_DKE/Database/
+%
+% U DKEPARAM_files/make_dkeparam_LH_RT.m (collmode = -1 if no collisions)
+% U DKEPARAM_files/make_dkeparam_NONUNIFORM10010020.m (")
+% U DKEPARAM_files/make_dkeparam_EC_RT.m (")
+% U DKEPARAM_files/make_dkeparam_UNIFORM10010020.m (")
+% U EXTERNAL_files/load_externaldata_JET.m (sign correction)
+% U EQUIL_files/make_equil_EARTH.m (EARTH equilibrium)
+% U EQUIL_files/equildipole_fxd.m (")
+%
+% ====> LUKE/Project_DKE/Display/
+%
+% U irunluke_jd.m (small correction)
+% U imake_struct_jd.m (")
+% U imake_wave_AMR_jd.m (ES disp)
+% U imake_wave_jd.m (saved info)
+%
+% ====> LUKE/Project_DKE/Modules/EFIT/
+%
+% A equil_magnetic_rz2pt_jd.m (function that transforms a magnetic equilibrium from RZ to PT form)
+% U equil_magnetic_EFIT_jd.m (small correction)
+%
+% ====> LUKE/Project_DKE/Modules/Cronos/
+%
+% U make_wavelaunchs_cronos_ec.m (correct angle calculation)
+%
+% ====> LUKE/Project_DKE/Modules/RT/
+%
+% U main_rayinit_launch_jd.m (saved info)
+% U main_C3PO_jd.m (saved info and treatment of non-coupled rays)
+% U kineticdisp_jd.m (externalization of Zplasmadisp)
+% U MEX/Source/erfcc_mex_jd.F (correction for ITM compilation)
+% U Doc/raytracing.lyx (addition of fluctuations)
+% U Examples/run_all.m (delete .mat)
+% A Examples/RFP/EQUIL/make_equil_RFP.m (RFP example)
+% A Examples/RFP/WAVE/make_wave_RFP.m (")
+% A Examples/RFP/WAVE/make_rayinit_RFP.m (")
+% A Examples/PLT/WAVE/make_wave_PLTtest.m (correction for parallel computing)
+% A Examples/JETlike/WAVE/make_wave_JETliketest.m (")
+% A Examples/JETlike/WAVE/make_wave_JETliketest_bis.m (")
+% A Examples/RTtest/WAVE/make_wave_RTtest.m (")
+%
+% ====> LUKE/Project_DKE/Modules/ALOHA/
+%
+% A proc_aloha_spec_jd.m (processes aloha information for LUKE)
+% A MEX/ (ALOHA code repository moved here) 
+%
+% ====> LUKE/Project_DKE/Modules/ITM/
+%
+% A make_equil_itm.m (functions for LUKE use in ITM)
+% A make_dkeparam_ITM.m (")
+% A test_read_equil_CPO.m (")
+% A write_equil_ITM.m (")
+% A CPO2LUKEstruct_yp.m (")
+% A ITM2LUKE.m (")
+% A itm_starwars.m (")
+% A LUKE2ITM.m (")
+% A LUKEITM.m (")
+% A which_MDSdatabase.m (")
+% A make_display_ITM.m (")
+% A test_itm_starwars.m (")
+% A equil_LUKE2ITM.m (")
+% A make_wavert_ITM.m (")
+% A read_equil_ITM.m (")
+% A loadCPO.m (")
+% A testmatlab.xml (")
+% A read_launchs_ITM.m (")
+% A test_write_launchs_CPO.m (")
+% A writeCPO.m (")
+% A write_launchs_ITM.m (")
+% A test_write_equil_CPO.m (")
+% A xml_io_tools/html/xml_tutorial_script.html (")
+% A xml_io_tools/gen_object_display.m (")
+% A xml_io_tools/xml_write.m (")
+% A xml_io_tools/MIT_Licence.txt (")
+% A xml_io_tools/xml_read.m (")
+% A xml_io_tools/xml_tutorial_script.m (")
+% A xml_io_tools/xmlwrite_xerces.m (")
+% A xml_io_tools/test_file.xml (")
+%
+% ====> LUKE/Project_DKE/Modules/MHDK/
+%
+% A proc_LUKE_forMHD.m (creates structure for MHD stability calculations)
+%
+% ====> LUKE/Packages/MDCE/dcluke/efda-itm/
+%
+% A dcluke_etat.sh (DC for ITM)
+% A dcluke.exe (")
+% A dcluke_batch.sh (")
+% A dcluke_kill.sh (")
+%
+% ====> LUKE/Tools
+%
+% U ES_ebw_disp_jd.m (ES disp)
+% U Zlasmadisp_jd.m (externalized Z plasma disp calc.)
+% U comp_struct_jd.m (absolute comp. added)
+% U execute_Mscript_dke_yp.m (execute script)
+% U graph_wave_jd.m (rho choice)
+% U proc_ES_ebw_jd.m (ES disp)
+% U mdce_luke.m (matrix indices)
+% U cleantempdir_yp.m (clean scratch)
+% U input_dke_yp.m (message management)
+%
