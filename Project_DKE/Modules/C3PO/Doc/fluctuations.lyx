@@ -1,0 +1,1029 @@
+#LyX 1.6.4.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Effect of density and magnetic field fluctuations on rf waves propagation
+\end_layout
+
+\begin_layout Author
+Yves Peysson, Lorenzo Morini and Joan Decker 
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+Low frequency fluctuations of the electron density or the magnetic field
+ can strongly affect the propagation of rf waves in a magnetized plasma.
+ This effect has been extensively investigated for the Lower Hybrid (LH)
+ wave by solving a wave kinetic equation in the weak turbulence approximation
+ 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "bon82,vah92"
+
+\end_inset
+
+.
+ In this approach, the flow of rf energy is described by a usual ray-tracing
+ between random scattering events where the initial wave vector 
+\begin_inset Formula $\mathbf{k}$
+\end_inset
+
+ can be modified both in amplitude and direction with the constraint to
+ remain solution of the local dispersion relation.
+ 
+\end_layout
+
+\begin_layout Standard
+This physical mechanism is a good candidate for explaining a possible strong
+ upshift of the power spectrum as the LH wave propagates in the plasma,
+ even if the toroidal mode coupling for bridging the spectral gap is very
+ weak.
+ Though primarily dedicated to the LH wave, the concept of wave scattering
+ by low frequency density or magnetic field fluctuations can be easily extended
+ to other types of rf waves provided that 
+\begin_inset Formula $\widetilde{k}_{\Vert}\ll k_{\Vert}$
+\end_inset
+
+ and 
+\begin_inset Formula $\widetilde{\omega}\ll\omega$
+\end_inset
+
+, where 
+\begin_inset Formula $k_{\Vert}=\mathbf{k}\cdot\mathbf{b}$
+\end_inset
+
+ and 
+\begin_inset Formula $\widetilde{k}_{\Vert}=\mathbf{\widetilde{k}}\cdot\mathbf{b}$
+\end_inset
+
+ are the projections of the rf and fluctuation wave vectors respectively
+ along the local direction of the magnetic field 
+\begin_inset Formula $\mathbf{b}=\mathbf{B}/\left\Vert \mathbf{B}\right\Vert $
+\end_inset
+
+, while 
+\begin_inset Formula $\omega$
+\end_inset
+
+ and 
+\begin_inset Formula $\widetilde{\omega}$
+\end_inset
+
+ are the rf and fluctuation frequencies respectively.
+ Consequently, the scattering process becomes a two dimensional problem
+ in the plane perpendicular to the local magnetic field direction, a reasonable
+ assumption regarding the large difference between the long wave length
+ of the low frequency fluctuations of the plasma and the short length of
+ the rf waves along 
+\begin_inset Formula $\mathbf{b}$
+\end_inset
+
+.
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+The parallel wave length 
+\begin_inset Formula $\lambda_{\Vert}$
+\end_inset
+
+ is related to the parallel refractive index 
+\begin_inset Formula $N_{\Vert}$
+\end_inset
+
+ of the rf wave by the simple relation 
+\begin_inset Formula $\lambda_{\Vert}=c/fN_{\Vert},$
+\end_inset
+
+where 
+\begin_inset Formula $f=\omega/2\pi$
+\end_inset
+
+ is the rf wave frequency.
+ With 
+\begin_inset Formula $f_{LH}=3.7GHz$
+\end_inset
+
+ and 
+\begin_inset Formula $N_{\Vert LH}$
+\end_inset
+
+
+\begin_inset Formula $\simeq2$
+\end_inset
+
+, 
+\begin_inset Formula $\lambda_{\Vert LH}$
+\end_inset
+
+
+\begin_inset Formula $\simeq2cm$
+\end_inset
+
+.
+ Since 
+\begin_inset Formula $\widetilde{\lambda}_{\Vert}$
+\end_inset
+
+ is of the order of 
+\begin_inset Formula $2\pi R_{p}$
+\end_inset
+
+, the assumption 
+\begin_inset Formula $\widetilde{k}_{\Vert}\ll k_{\Vert}$
+\end_inset
+
+ is always verified for the LH wave.
+ A similar ordering is found for the Electron Cyclotron (EC) wave with 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $f_{EC}=110GHz$
+\end_inset
+
+ and 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+
+\begin_inset Formula $N_{\Vert EC}$
+\end_inset
+
+
+\begin_inset Formula $\simeq0.2$
+\end_inset
+
+, since 
+\begin_inset Formula $\lambda_{\Vert EC}$
+\end_inset
+
+
+\begin_inset Formula $\simeq2cm$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Calculations are organized in three steps.
+ In the first section, the components of the scattered rf wave vector are
+ calculated, according to the curvilinear coordinate system chosen for describin
+g the magnetic equilibrium in C3PO 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "pey08"
+
+\end_inset
+
+.
+ The wave kinetic equation corresponding to the wave-wave interaction is
+ then derived from first principles in the second section.
+ Finally, in the third section, the wave kinetic equation is solved using
+ a Monte-Carlo method and the procedure for the numerical implementation
+ in the code is explicited.
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of the scattered wave vector
+\end_layout
+
+\begin_layout Standard
+When the rf wave vector 
+\begin_inset Formula $\mathbf{k}$
+\end_inset
+
+ is scattered by low density fluctuations, it may change both in module
+ and direction, with the conditions
+\begin_inset Formula \begin{equation}
+\mathbf{k}\cdot\mathbf{b}=\check{\mathbf{k}}\cdot\mathbf{b}=k_{\Vert}\label{eq:kparconservation}\end{equation}
+
+\end_inset
+
+where 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\check{\mathbf{k}}$
+\end_inset
+
+ is the scattered wave vector.
+ The three components of 
+\begin_inset Formula $\check{\mathbf{k}}$
+\end_inset
+
+ are determined by three independant equations,
+\end_layout
+
+\begin_layout Itemize
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+the dispersion relation must be satisfied by the scattered wave vector 
+\begin_inset Formula $\check{\mathbf{k}}$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\check{k}_{\Vert}=k_{\Vert}$
+\end_inset
+
+, since 
+\begin_inset Formula $\widetilde{k}_{\Vert}\ll k_{\Vert}$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\mathbf{k}_{\bot}\cdot\check{\mathbf{k}}_{\bot}=k_{\bot}\check{k}_{\bot}\cos\beta$
+\end_inset
+
+, 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+where 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+
+\begin_inset Formula $\check{\mathbf{k}}_{\bot}=\mathbf{\check{k}}\times\widehat{b}$
+\end_inset
+
+ and 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\beta$
+\end_inset
+
+ is the angle of rotation
+\begin_inset Formula $\mathcal{R}_{\beta}$
+\end_inset
+
+ of the wave vector around the magnetic field direction 
+\begin_inset Formula $\widehat{b}$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+Its perpendicular component 
+\begin_inset Formula $\check{k}_{\bot}=\left\Vert \check{\mathbf{k}}_{\bot}\right\Vert $
+\end_inset
+
+, where 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+
+\begin_inset Formula $\check{\mathbf{k}}_{\bot}=\mathbf{\check{k}}\times\mathbf{b}$
+\end_inset
+
+,
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+ is determined by solving the local dispersion relation at fixed 
+\begin_inset Formula $k_{\Vert}$
+\end_inset
+
+, and its direction results from a rotation 
+\begin_inset Formula $\mathcal{R}_{\beta}$
+\end_inset
+
+ of an angle 
+\begin_inset Formula $\beta$
+\end_inset
+
+ around the magnetic field direction 
+\begin_inset Formula $\widehat{b}$
+\end_inset
+
+ so that
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+
+\begin_inset Formula \begin{equation}
+\mathbf{k}_{\bot}\cdot\check{\mathbf{k}}_{\bot}=k_{\bot}\check{k}_{\bot}\cos\beta\label{eq:wskperprotation}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For unlike transitions, the scattered wave moves to a different branch of
+ propagation and 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\check{k}_{\bot}\neq k_{\bot}$
+\end_inset
+
+, otherwise 
+\begin_inset Formula $\check{k}_{\bot}=k_{\bot}$
+\end_inset
+
+ for like transitions.
+ From the relations (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "disprel"
+
+\end_inset
+
+), (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:kparconservation"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:wskperprotation"
+
+\end_inset
+
+), all the components 
+\begin_inset Formula $\left(k_{\rho}^{\prime},m^{\prime},n^{\prime}\right)$
+\end_inset
+
+ of 
+\begin_inset Formula $\mathbf{k}^{\prime}$
+\end_inset
+
+ can be deduced from those of 
+\begin_inset Formula $\mathbf{k}$
+\end_inset
+
+.
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+In Ref.
+ 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "bon82"
+
+\end_inset
+
+, the relation 
+\begin_inset Formula $\widehat{b}\cdot\left(\mathbf{k}_{\bot}\times\mathbf{\check{k}}\right)=k_{\bot}\check{k}_{\bot}\sin\beta$
+\end_inset
+
+ is also introduced in addition to (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:kparconservation"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:wskperprotation"
+
+\end_inset
+
+).
+ However, it is fully equivalent to (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:wskperprotation"
+
+\end_inset
+
+) and does not provide any additional information.
+ 
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+The wave scattering may be therefore described as a two steps process, and
+ the mode conversion 
+\begin_inset Formula $\mathcal{M}$
+\end_inset
+
+ and the rotation 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\mathcal{R}_{\beta}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Derivation of the wave kinetic equation
+\end_layout
+
+\begin_layout Subsubsection
+Solution of the wave kinetic equation
+\end_layout
+
+\begin_layout Standard
+Using the Rodrigues general formula for the rotation 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\mathcal{R}_{\beta}$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+ of a vector 
+\begin_inset Formula $\mathbf{k}$
+\end_inset
+
+, 
+\begin_inset Formula \begin{equation}
+\mathbf{\widetilde{k}}=\mathcal{R}_{\beta}\left(\mathbf{k}\right)=\cos\beta\mathbf{k}+\left(1-\cos\beta\right)\left(\mathbf{k}\cdot\mathbf{b}\right)\mathbf{b}+\sin\beta\left(\mathbf{b}\times\mathbf{k}\right)\label{eq:rodrigues}\end{equation}
+
+\end_inset
+
+it turns out that each components of 
+\begin_inset Formula $\mathbf{\widetilde{k}}$
+\end_inset
+
+ is given by the relations 
+\begin_inset Formula \begin{multline*}
+\mathbf{\widetilde{k}}\cdot\widehat{\rho}=\cos\beta\mathbf{k\cdot\widehat{\rho}}+\left(1-\cos\beta\right)\left(\mathbf{k}\cdot\mathbf{b}\right)\mathbf{b}\cdot\widehat{\rho}+\sin\beta\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\rho}\\
+\mathbf{\widetilde{k}}\cdot\widehat{\theta}=\cos\beta\mathbf{k\cdot\widehat{\theta}}+\left(1-\cos\beta\right)\left(\mathbf{k}\cdot\mathbf{b}\right)\mathbf{b}\cdot\widehat{\theta}+\sin\beta\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\theta}\\
+\mathbf{\widetilde{k}}\cdot\widehat{\phi}=\cos\beta\mathbf{k\cdot\widehat{\phi}}+\left(1-\cos\beta\right)\left(\mathbf{k}\cdot\mathbf{b}\right)\mathbf{b}\cdot\widehat{\phi}+\sin\beta\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\phi}\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the vectorial relations 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula \begin{multline*}
+\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\rho}=\left(\widehat{\rho}\times\mathbf{b}\right)\cdot\mathbf{k}\\
+\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\theta}=\left(\widehat{\theta}\times\mathbf{b}\right)\cdot\mathbf{k}\\
+\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\phi}=\left(\widehat{\phi}\times\mathbf{b}\right)\cdot\mathbf{k}\end{multline*}
+
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+and the expression on the magnetic field 
+\begin_inset Formula $\mathbf{b}=\sigma_{B}T\mathbf{\widehat{\phi}}+\sigma_{I}P\mathbf{\hat{s}}$
+\end_inset
+
+ according to the relation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Bfield"
+
+\end_inset
+
+), recalling that 
+\begin_inset Formula $T=B_{T}/B$
+\end_inset
+
+ and 
+\begin_inset Formula $P=B_{P}/B$
+\end_inset
+
+, one obtains
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula \begin{multline*}
+\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\rho}=\sigma_{B}T\left(\mathbf{\widehat{\rho}\times\widehat{\phi}}\right)\cdot\mathbf{k}+\sigma_{I}P\left(\mathbf{\widehat{\rho}\times\hat{s}}\right)\cdot\mathbf{k}\\
+\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\theta}=\sigma_{B}T\left(\mathbf{\widehat{\theta}\times\widehat{\phi}}\right)\cdot\mathbf{k}+\sigma_{I}P\left(\mathbf{\widehat{\theta}\times\hat{s}}\right)\cdot\mathbf{k}\\
+\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\phi}=\sigma_{B}T\left(\mathbf{\widehat{\phi}\times\widehat{\phi}}\right)\cdot\mathbf{k}+\sigma_{I}P\left(\mathbf{\widehat{\phi}\times\hat{s}}\right)\cdot\mathbf{k}\end{multline*}
+
+\end_inset
+
+which simplifies to
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula \begin{multline*}
+\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\rho}=-\sigma_{B}T\hat{\mathbf{s}}\cdot\mathbf{k}+\sigma_{I}P\widehat{\phi}\cdot\mathbf{k}\\
+\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\theta}=\sigma_{B}T\widehat{\mathbf{r}}\cdot\mathbf{k}-\sigma_{I}P\sin\alpha\widehat{\phi}\cdot\mathbf{k}\\
+\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\phi}=-\sigma_{I}P\widehat{\rho}\cdot\mathbf{k}\end{multline*}
+
+\end_inset
+
+since
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+ 
+\begin_inset Formula \begin{multline*}
+\widehat{\rho}\times\widehat{\phi}=-\widehat{\mathbf{s}}\\
+\mathbf{\widehat{\theta}\times\widehat{\phi}}=\widehat{\mathbf{r}}\end{multline*}
+
+\end_inset
+
+and 
+\begin_inset Formula \begin{multline*}
+\mathbf{\widehat{\rho}\times\hat{s}}=\widehat{\phi}\\
+\mathbf{\widehat{\theta}\times\hat{s}}=-\sin\alpha\widehat{\phi}\\
+\mathbf{\widehat{\phi}\times\hat{s}}=-\widehat{\rho}\end{multline*}
+
+\end_inset
+
+using the relations 
+\begin_inset Formula $\hat{\mathbf{s}}=\sin\alpha\widehat{\mathbf{r}}+\cos\alpha\widehat{\theta}$
+\end_inset
+
+ and 
+\begin_inset Formula $\widehat{\theta}=\mathbf{\widehat{\phi}\times\hat{r}}$
+\end_inset
+
+.
+ Using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:wavevector"
+
+\end_inset
+
+),
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula \begin{multline*}
+\hat{\mathbf{s}}\cdot\mathbf{k=}\dfrac{m}{r}\cos\alpha\\
+\widehat{\phi}\cdot\mathbf{k}=\frac{n}{R}\\
+\widehat{\mathbf{r}}\cdot\mathbf{k}=k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \cos\alpha\\
+\widehat{\rho}\cdot\mathbf{k}=k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert -\sin\alpha\dfrac{m}{r}\\
+\widehat{\theta}\cdot\mathbf{k}=-\sin\alpha k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert +\dfrac{m}{r}\end{multline*}
+
+\end_inset
+
+and
+\begin_inset Formula \begin{multline*}
+\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\rho}=-\sigma_{B}T\dfrac{m}{r}\cos\alpha+\sigma_{I}P\frac{n}{R}\\
+\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\theta}=\sigma_{B}Tk_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \cos\alpha-\sigma_{I}P\sin\alpha\frac{n}{R}\\
+\left(\mathbf{b}\times\mathbf{k}\right)\cdot\widehat{\phi}=-\sigma_{I}P\left(k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert -\sin\alpha\dfrac{m}{r}\right)\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Finally, since
+\begin_inset Formula \begin{multline*}
+\mathbf{b}\cdot\widehat{\rho}=0\\
+\mathbf{b}\cdot\widehat{\theta}=\sigma_{I}P\cos\alpha\\
+\mathbf{b}\cdot\widehat{\phi}=\sigma_{B}T\end{multline*}
+
+\end_inset
+
+one obtains 
+\begin_inset Formula \begin{multline*}
+\widetilde{k}_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert -\sin\alpha\dfrac{\widetilde{m}}{r}=\cos\beta\left(k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert -\sin\alpha\dfrac{m}{r}\right)+\sin\beta\left(-\sigma_{B}T\dfrac{m}{r}\cos\alpha+\sigma_{I}P\frac{n}{R}\right)\\
+-\sin\alpha\widetilde{k}_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert +\dfrac{\widetilde{m}}{r}=\cos\beta\left(-\sin\alpha k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert +\dfrac{m}{r}\right)+\left(1-\cos\beta\right)k_{\Vert}\sigma_{I}P\cos\alpha+\sin\beta\left(\sigma_{B}Tk_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \cos\alpha-\sigma_{I}P\sin\alpha\frac{n}{R}\right)\\
+\frac{\widetilde{n}}{R}=\cos\beta\frac{n}{R}+\left(1-\cos\beta\right)k_{\Vert}\sigma_{B}T-\sin\beta\sigma_{I}P\left(k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert -\sin\alpha\dfrac{m}{r}\right)\end{multline*}
+
+\end_inset
+
+or
+\begin_inset Formula \begin{multline}
+\widetilde{k}_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert =\cos\beta k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert +\left(1-\cos\beta\right)k_{\Vert}\sigma_{I}P\tan\alpha+\sin\beta\left(\frac{\sigma_{B}T}{\cos\alpha}\left(k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \sin\alpha-\frac{m}{r}\right)+\sigma_{I}P\frac{n}{R}\right)\\
+\dfrac{\widetilde{m}}{r}=\cos\beta\dfrac{m}{r}+\left(1-\cos\beta\right)k_{\Vert}\frac{\sigma_{I}P}{\cos\alpha}+\sin\beta\frac{\sigma_{B}T}{\cos\alpha}\left(k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert -\frac{m}{r}\sin\alpha\right)\\
+\frac{\widetilde{n}}{R}=\cos\beta\frac{n}{R}+\left(1-\cos\beta\right)k_{\Vert}\sigma_{B}T+\sin\beta\sigma_{I}P\left(-k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert +\sin\alpha\dfrac{m}{r}\right)\label{eq:kscattered}\end{multline}
+
+\end_inset
+
+where 
+\begin_inset Formula $\mathbf{k}\cdot\mathbf{b}=k_{\Vert}$
+\end_inset
+
+ and the scattered wave vector is 
+\begin_inset Formula \begin{equation}
+\widetilde{\mathbf{k}}=\widetilde{k}_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \widehat{\mathbf{\rho}}+\dfrac{\widetilde{m}}{r}\widehat{\mathbf{\theta}}+\dfrac{\widetilde{n}}{R}\widehat{\mathbf{\phi}}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If 
+\begin_inset Formula $\beta=0,$
+\end_inset
+
+ it is straightforward to demonstrate that 
+\begin_inset Formula $\widetilde{\mathbf{k}}=\mathbf{k}$
+\end_inset
+
+.
+ In addition, the relation 
+\begin_inset Formula $\mathbf{\widetilde{\mathbf{k}}\cdot\mathbf{b}}=\mathbf{\mathbf{k}\cdot\mathbf{b}}$
+\end_inset
+
+ or
+\begin_inset Formula \begin{equation}
+\sigma_{I}b_{P}\dfrac{\widetilde{m}}{r}\cos\alpha+\sigma_{B}b_{T}\dfrac{\widetilde{n}}{R}=\sigma_{I}b_{P}\dfrac{m}{r}\cos\alpha+\sigma_{B}b_{T}\dfrac{n}{R}\label{eq:ws1}\end{equation}
+
+\end_inset
+
+is also well satisfied whatever 
+\begin_inset Formula $\beta$
+\end_inset
+
+, as expected from the initial assumption on the invariance of 
+\begin_inset Formula $k_{\Vert}$
+\end_inset
+
+ with the rotation of angle 
+\begin_inset Formula $\beta$
+\end_inset
+
+, which is intrinsically considered in the Rodrigues formula (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:rodrigues"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+In the cold limit approximation, the plasma has bi-refringent optical properties
+ which means that for a given 
+\begin_inset Formula $k_{\Vert}$
+\end_inset
+
+, the dispersion relation cannot have more than two different roots in 
+\begin_inset Formula $k_{\bot}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+From the definitions 
+\begin_inset Formula $\mathbf{k}_{\bot}=\mathbf{k}\times\mathbf{b}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbf{k}_{\bot}^{\prime}=\mathbf{k}^{\prime}\times\mathbf{b}$
+\end_inset
+
+, the relation 
+\begin_inset Formula $\mathbf{k}_{\bot}\cdot\mathbf{k}_{\bot}^{\prime}=k_{\bot}k_{\bot}^{\prime}\cos\beta$
+\end_inset
+
+ becomes
+\begin_inset Formula \[
+\left(\mathbf{k}\times\mathbf{b}\right)\cdot\left(\mathbf{k}^{\prime}\times\mathbf{b}\right)=\left(\mathbf{k}\cdot\mathbf{k}^{\prime}\right)\left(\mathbf{b}\cdot\mathbf{b}\right)-\left(\mathbf{k}\cdot\mathbf{b}\right)\left(\mathbf{b\cdot}\mathbf{k}^{\prime}\right)=\mathbf{k}\cdot\mathbf{k}^{\prime}-k_{\Vert}^{2}\]
+
+\end_inset
+
+and 
+\begin_inset Formula \begin{equation}
+k_{\bot}k_{\bot}^{\prime}\cos\beta=k_{\rho}k_{\rho}^{\prime}\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2}+\dfrac{mm^{\prime}}{r^{2}}+\dfrac{nn^{\prime}}{R^{2}}-\frac{\left\Vert \mathbf{\nabla}\rho\right\Vert \sin\alpha}{r}\left(mk_{\rho}^{\prime}+m^{\prime}k_{\rho}\right)-k_{\Vert}^{2}\label{eq:ws2}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For like mode scattering, 
+\begin_inset Formula $k_{\bot}^{\prime}=k_{\bot}$
+\end_inset
+
+ and 
+\begin_inset Formula \begin{equation}
+k_{\bot}^{2}\cos\beta=k_{\rho}k_{\rho}^{\prime}\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2}+\dfrac{mm^{\prime}}{r^{2}}+\dfrac{nn^{\prime}}{R^{2}}-\frac{\left\Vert \mathbf{\nabla}\rho\right\Vert \sin\alpha}{r}\left(mk_{\rho}^{\prime}+m^{\prime}k_{\rho}\right)-k_{\Vert}^{2}\label{eq:ws2like}\end{equation}
+
+\end_inset
+
+a relation which can be well verified by replacing 
+\begin_inset Formula $\left(k_{\rho}^{\prime}\left\Vert \mathbf{\nabla}\rho\right\Vert ,\dfrac{m^{\prime}}{r},\dfrac{n^{\prime}}{R}\right)$
+\end_inset
+
+ from (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:kscattered"
+
+\end_inset
+
+) into (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:ws2like"
+
+\end_inset
+
+).
+ Therefore, for like mode scattering, 
+\begin_inset Formula $\left(k_{\rho}^{\prime},m^{\prime},n^{\prime}\right)$
+\end_inset
+
+ have just to be deduced from (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:kscattered"
+
+\end_inset
+
+) knowing 
+\begin_inset Formula $\left(k_{\rho},m,n\right)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+For unlike mode scattering, 
+\begin_inset Formula $k_{\bot}^{\prime}\neq k_{\bot}$
+\end_inset
+
+, 
+\end_layout
+
+\begin_layout Standard
+Therefore, The coordinates of 
+\begin_inset Formula $\mathbf{k}^{\prime}$
+\end_inset
+
+ are therefore determined by relations (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:wskparconservation"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:wskperprotation"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "krhoeq"
+
+\end_inset
+
+), 
+\begin_inset Formula \begin{equation}
+k_{\rho}^{\prime}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[\sin\alpha\dfrac{m^{\prime}}{r}+\sigma_{\rho}\sqrt{k_{\Vert}^{2}+k_{\bot}^{\prime2}-\cos^{2}\alpha\dfrac{m^{\prime2}}{r^{2}}-\dfrac{n^{\prime2}}{R^{2}}}\right]\label{eq:wskrho}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+By definition, the variation of the poloidal mode number 
+\begin_inset Formula $m$
+\end_inset
+
+ is made possible by the breaking of the toroidal symmetry resulting from
+ the fluctuations, so that the toroidal mode number 
+\begin_inset Formula $n$
+\end_inset
+
+ is no more conserved in the scattering process.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+bibliographystyle{unsrt}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "biblio"
+options "plain"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
