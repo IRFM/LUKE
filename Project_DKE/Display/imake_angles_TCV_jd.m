@@ -64,6 +64,19 @@ if ~isempty(data),
         angles.freq = freq_new;
     end
     %
+    % To confirm the injected wave power
+    %
+    if force_mode == 0,
+        P0_new = input(['Confirm injected power (kW)? [',num2str(angles.P0/1e3),']: '])*1e3;
+    else
+        P0_new = angles.P0;
+    end
+    %
+    if P0_new ~= angles.P0,
+        disp(['-----> WARNING: injected power has been changed from ',num2str(angles.P0/1e3),' kW to ',num2str(P0_new/1e3),' kW']);
+        angles.P0 = P0_new;
+    end
+    %
 else
     %
     if isnan(l_opt),
@@ -179,12 +192,10 @@ else
     %
 end
 %
-angles.w0 = 0.0188;%half width of the waist
-angles.z_L = 0.2755;%distance from last mirror to waist
+angles.w0 = 0.0188; %half width of the waist
+angles.z_L = 0.2756; %distance from last mirror to waist
 %
 id = ['L',num2str(l_opt)];
 %
 angles.id = id;
 %
-
-

@@ -1,4 +1,4 @@
-function make_equil_RZ_AMR_jd(equil,savepath,nprz,extfacR,extfacZ)
+function make_equil_RZ_AMR_jd(id,equil,savepath,nprz,extfacR,extfacZ)
 %
 % This function calculates and exports RZ equilibrium compatible with AMR
 % code
@@ -24,8 +24,6 @@ end
 method = 'cubic';
 %
 equil_RZ = pt2rz_jd(equil,extfacR,extfacZ,nprz,method);
-%
-id = equil_RZ.id(find(equil_RZ.id == '_',1,'first') + 1:end);
 %
 ptR = equil.ptx + equil_RZ.Rp;
 R = ptR(:,1);
