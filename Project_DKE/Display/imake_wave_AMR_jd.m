@@ -1,19 +1,37 @@
-function wave = imake_wave_AMR_jd(basestr,equil,workdir,opt_gui)
+function wave = imake_wave_AMR_jd(basestr,equil,launch,workdir,opt_gui)
 %
 % This function makes the WAVE file from ART ray-tracing output
+% 
+% by J. Decker (CEA-DRFC) <joan.decker@cea.fr>
 %
 wave = '';
 %
+% The following notations are necessary to write and read proper output files
+%
+% 6-digit shot number SSSSSS with leading zeros
+%
 shotnum = equil.info.shotnum;
-shotime = equil.info.shotime;
+shotnum = [repmat('0',[1,6-length(shotnum)]),shotnum];
 %
-l_opt = input_dke_yp('Do you want to load AMR results (0), run AMR (1), or cancel this operation (2): ',0,{0,1,2},'Invalid option');
+% Time in fixed format T.TTT
 %
-if l_opt == 0,
+shotime = num2str(str2num(equil.info.shotime),'%1.3f');
+%
+if isempty(launch),	% Read the existing data file
+    %
+    if isfield(equil.info,'datapath')
+		%
+		AMR_output_path = equil.info.datapath;
+		%
+    else
+    	%
+		AMR_simul_path = igetdir_jd(opt_gui,'Please select the AMR simulation folder',workdir);
+		%
+		AMR_output_path = [AMR_simul_path,'output/luke/'];
+		%
+    end
 	%
-	AMR_output_path = equil.info.datapath;
-	%
-elseif l_opt == 1,
+else	% Run AMR
     %
     AMR_script_path = getenv('AMR');
     if isempty(AMR_script_path),
@@ -30,11 +48,15 @@ elseif l_opt == 1,
 	AMR_input_path = [AMR_simul_path,'input/'];
 	%
 	if ~exist(AMR_input_path,'dir'),
+		%
 		mkdir(AMR_input_path)
+		%
 	end
 	%
-	make_equil_RZ_AMR_jd(equil,[AMR_simul_path,'input/'],nprz,extfacR,extfacZ);
-    AMRcfg_file = make_input_AMR(basestr,equil,AMR_script_path,AMR_simul_path,opt_gui);
+	equil_id = [num2str(shotnum),'_',shotime];
+	%
+	make_equil_RZ_AMR_jd(equil_id,equil,[AMR_simul_path,'input/'],nprz,extfacR,extfacZ);
+    [AMRcfg_file,launch] = make_input_AMR(basestr,equil,launch,AMR_script_path,AMR_simul_path,opt_gui);
     %
     sd = pwd;
     cd(AMR_simul_path)
@@ -43,9 +65,6 @@ elseif l_opt == 1,
     %
 	AMR_output_path = [AMR_simul_path,'output/luke/'];
 	%
-elseif l_opt == 2,
-    disp('-----> operation aborted.')
-    return
 end
 %
 filename_wavedata = ['luke_rays_*_',shotnum,'_',shotime,'.dat'];
@@ -153,4 +172,5 @@ waveparam.nd = nd;
 waveparam.nchi = nchi;
 %
 wave = proc_rays_AMR_jd(wavedata,waveparam,equil);
+wave.launch = launch;
 %
