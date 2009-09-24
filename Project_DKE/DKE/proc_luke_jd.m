@@ -596,7 +596,8 @@ if nr > 1,
                     disp(['Temperature Te: ',num2str(wTe(iw)),' keV'])
                     disp(['Density ne: ',num2str(wne(iw)/1e20),' *10^20 m^-3'])
                     disp(' ');
-                    disp(['RF power (P/2piRp): ',num2str(wp_rf_2piRp(iw)),' MW/m ---> ',num2str(100*wp_rf_2piRp(iw)/wp0_rf_2piRp(iw)),' %.'])
+                    disp(['Launched RF power (P/2piRp): ',num2str(wp0_rf_2piRp(iw)),'MW/m'])
+                    disp(['Deposited RF power (P/2piRp): ',num2str(wp_rf_2piRp(iw)),' MW/m ---> ',num2str(100*wp_rf_2piRp(iw)/wp0_rf_2piRp(iw)),' %.'])
                     for in_rf = 1:nn_rf,
                         disp(['RF power on harm. ',num2str(n_rf_list(in_rf)),' (P/2piRp): ',num2str(wnp_rf_2piRp(iw,in_rf)),' MW/m ---> ',num2str(100*wnp_rf_2piRp(iw,in_rf)/wp0_rf_2piRp(iw)),' %.'])
                     end
@@ -654,7 +655,8 @@ if nr > 1,
                     disp(['Temperature Te: ',num2str(wTe(iw)),' keV'])
                     disp(['Density ne: ',num2str(wne(iw)/1e20),' *10^20 m^-3'])
                     disp(' ');
-                    disp(['RF power (P): ',num2str(wp_rf_2piRp(iw)*(2*pi*equilDKE.Rp)),' MW ---> ',num2str(100*wp_rf_2piRp(iw)/wp0_rf_2piRp(iw)),' %.'])
+                    disp(['Launched RF power (P): ',num2str(wp0_rf_2piRp(iw)*(2*pi*equilDKE.Rp)),'MW'])
+                    disp(['Deposited RF power (P): ',num2str(wp_rf_2piRp(iw)*(2*pi*equilDKE.Rp)),' MW ---> ',num2str(100*wp_rf_2piRp(iw)/wp0_rf_2piRp(iw)),' %.'])
                     for in_rf = 1:nn_rf,
                         disp(['RF power on harm. ',num2str(n_rf_list(in_rf)),' (P): ',num2str(wnp_rf_2piRp(iw,in_rf)*(2*pi*equilDKE.Rp)),' MW ---> ',num2str(100*wnp_rf_2piRp(iw,in_rf)/wp0_rf_2piRp(iw)),' %.'])
                     end
