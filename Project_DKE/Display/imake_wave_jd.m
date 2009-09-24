@@ -34,9 +34,8 @@ else
     %
 end
 % 
-if i_opt == 0,% use data from from external database
+if i_opt == 0,% use data from external database
     %
-    w_opt = 0;% C3PO calculations
     d_opt = 0;% rayinit built from launching conditions
     %
     if isfield(equil.info,'shotnum');
@@ -60,8 +59,6 @@ if i_opt == 0,% use data from from external database
         end
         %
         launch = imake_launch_angles_TCV_jd(angles);
-        %
-        launch.angles = angles;
         %
     elseif strcmp(basestr,'TS'),
         %
@@ -108,13 +105,29 @@ if i_opt == 0,% use data from from external database
         %
     end
     %
+    % Select the ray tracing code to be launched from LUKE
+    %
+    w_opt = input_dke_yp('Which ray-tracing code do you want to run ? 0 (C3PO), 1 (TORAY), 2 (ART), 3 (AMR), ',0,0:3,'',[1,1]);
+    %
+	if w_opt == 1,% Run TORAY from LUKE interface
+        %
+        disp('-----> TORAY run from LUKE not implemented yet');
+        return
+        %
+    elseif w_opt == 2,% Run ART from LUKE interface
+        %
+        disp('-----> ART run from LUKE not implemented yet');
+        return
+        %
+    end
+    %
 elseif i_opt == 1,% use data from an existing file
     %
     w_opt = input_dke_yp('Code used to generate data : 1 (TORAY), 2 (ART), 3 (AMR)',1,1:3,'',[1,1]);
     %
+	launch = [];
+	%
 elseif i_opt == 2,% build the wave data locally
-    %
-    w_opt = 0;
     %
     d_opt = input_dke_yp(['Initial conditions :',...
         '\n0 (user-specified conditions)',...
@@ -165,8 +178,6 @@ elseif i_opt == 2,% build the wave data locally
                 %
                 launch = imake_launch_angles_TCV_jd(angles);
                 %
-                launch.angles = angles;
-                %
             elseif strcmp(basestr,'TS')
                 %
                 launch = imake_launch_TS_jd('');
@@ -199,9 +210,25 @@ elseif i_opt == 2,% build the wave data locally
         disp('-----> initial conditions from ART not implemented yet');
         return
         %
-    elseif d_opt == 4,% wave from ART calculations
+    elseif d_opt == 4,% wave from AMR calculations
         %
         disp('-----> initial conditions from AMR not implemented yet');
+        return
+        %
+    end
+    %
+    % Select the ray tracing code to be launched from LUKE
+    %
+    w_opt = input_dke_yp('Which ray-tracing code do you want to run ? 0 (C3PO), 1 (TORAY), 2 (ART), 3 (AMR), ',0,0:3,'',[1,1]);
+    %
+	if w_opt == 1,% Run TORAY from LUKE interface
+        %
+        disp('-----> TORAY run from LUKE not implemented yet');
+        return
+        %
+    elseif w_opt == 2,% Run ART from LUKE interface
+        %
+        disp('-----> ART run from LUKE not implemented yet');
         return
         %
     end
@@ -387,7 +414,7 @@ if w_opt == 0; % C3PO Calculation
         %
     end
     %
-    % C3P0 ray tracing
+    % C3PO ray tracing
     %
     waveparam.n_rf_list = n_rf_list;
     %
@@ -408,21 +435,21 @@ if w_opt == 0; % C3PO Calculation
         %
     end
     %
-elseif w_opt == 1,% wave from TORAY calculations
+elseif w_opt == 1,% TORAY calculations
     %
     wave = imake_wave_TORAY_jd(equil);
     %
     n_rf_list = NaN;
     %
-elseif w_opt == 2,% wave from ART calculations
+elseif w_opt == 2,% ART calculations
     %
     wave = imake_wave_ART_jd(workdir,equil,opt_gui);
     %
     n_rf_list = NaN;
     %
-elseif w_opt == 3,% wave from ART calculations
+elseif w_opt == 3, % AMR calculations
     %
-    wave = imake_wave_AMR_jd(basestr,equil,workdir,opt_gui);
+    wave = imake_wave_AMR_jd(basestr,equil,launch,workdir,opt_gui);
     %
     n_rf_list = 1:3;
     %
@@ -436,4 +463,3 @@ end
 %
 wave = wave_process_jd(equil,wave,n_rf_list);
 %
-    
