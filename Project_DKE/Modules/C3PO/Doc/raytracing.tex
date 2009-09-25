@@ -1,3 +1,5 @@
+%% LyX 1.6.4.1 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
 \documentclass[12pt,english,a4paper]{article}
 \usepackage[T1]{fontenc}
 \usepackage[latin1]{inputenc}
@@ -5,12 +7,25 @@
 \usepackage{graphicx}
 \usepackage{amssymb}
 \usepackage[authoryear]{natbib}
-\usepackage{epstopdf} 
-\usepackage{pdfsync}
-\usepackage{amsfonts}
 
 \makeatletter
-\newcommand{\lyxdot}{.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+
+
+
+
+
+
+
+\usepackage{epstopdf}
+ 
+\usepackage{pdfsync}
+
+\usepackage{amsfonts}
+
+
+\makeatletter
+
 
 
 
@@ -30,6 +45,8 @@
 \setlength{\oddsidemargin}{0 true cm}
 \setlength{\evensidemargin}{0 true cm}
 \setlength{\topmargin}{0 true cm}
+\makeatother
+
 \makeatother
 
 \makeatother
@@ -84,11 +101,11 @@ The new ray-tracing code developed here is designed for arbitrary
 wave frequencies (including the lower hybrid and electron cyclotron
 frequency ranges), provided the WKB approximation is valid. The structure
 of the code allows to choose from several dielectric tensor types:
-cold plasma, \char`\"{}warm\char`\"{} plasma \citet{bon86}, and kinetic
-plasma in the non-, weakly-, or fully relativistic regime. In addition
-to ray trajectories, the code calculates waves properties of interest
-for heating and current drive calculations such as the polarization,
-energy flow and linear absorption.
+cold plasma, \textquotedbl{}warm\textquotedbl{} plasma \citet{bon86},
+and kinetic plasma in the non-, weakly-, or fully relativistic regime.
+In addition to ray trajectories, the code calculates waves properties
+of interest for heating and current drive calculations such as the
+polarization, energy flow and linear absorption.
 
 Based on a standard $6^{th}$ order Runge-Kutta differential scheme
 \citet{pre92}, the ray-tracing code uses a spline-Fourier expansion
@@ -144,7 +161,7 @@ and $\mathbf{B}\left(\mathbf{X},t\right)$. The expression of $\mathbf{J}\left(\m
 as a function of $\mathbf{E}\left(\mathbf{X},t\right)$ is called
 the constitutive relation. For linearized fields, this relation can
 be expressed in general as\begin{equation}
-\mathbf{J}\left(\mathbf{X},t\right)={\iiint}d^{3}\mathbf{X}^{\prime}\int dt^{\prime}\;\mathbb{S}\left(\mathbf{X},\mathbf{X}^{\prime},t,t^{\prime}\right)\cdot\mathbf{E}\left(\mathbf{X}^{\prime},t^{\prime}\right)\label{constitutive}\end{equation}
+\mathbf{J}\left(\mathbf{X},t\right)=\iiint d^{3}\mathbf{X}^{\prime}\int dt^{\prime}\;\mathbb{S}\left(\mathbf{X},\mathbf{X}^{\prime},t,t^{\prime}\right)\cdot\mathbf{E}\left(\mathbf{X}^{\prime},t^{\prime}\right)\label{constitutive}\end{equation}
  where $\mathbb{S}\left(\mathbf{X},\mathbf{X}^{\prime},t,t^{\prime}\right)$
 is the conductivity tensor, which depends upon the plasma equilibrium.
 
@@ -155,7 +172,7 @@ In a infinite plasma with an homogeneous constant equilibrium that
 is invariant by translation in space and time, the conductivity tensor
 is only a function of the relative distance in space and time, and
 Eq. \ref{constitutive} may be rewritten as a convolution\begin{equation}
-\mathbf{J}\left(\mathbf{X},t\right)={\iiint}d^{3}\mathbf{X}^{\prime}\int dt^{\prime}\;\mathbb{S}\left(\mathbf{X}-\mathbf{X}^{\prime},t-t^{\prime}\right)\cdot\mathbf{E}\left(\mathbf{X}^{\prime},t^{\prime}\right)\label{constitutive2}\end{equation}
+\mathbf{J}\left(\mathbf{X},t\right)=\iiint d^{3}\mathbf{X}^{\prime}\int dt^{\prime}\;\mathbb{S}\left(\mathbf{X}-\mathbf{X}^{\prime},t-t^{\prime}\right)\cdot\mathbf{E}\left(\mathbf{X}^{\prime},t^{\prime}\right)\label{constitutive2}\end{equation}
  Applying the Fourier transform to the fields yields\begin{equation}
 \begin{array}{l}
 \mathbf{E}\left(\mathbf{X},t\right)={\displaystyle \int}d\omega{\displaystyle \iiint}d^{3}\mathbf{k\; E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)e^{i\left(\mathbf{k}\cdot\mathbf{X}-\omega t\right)}\\
@@ -361,7 +378,7 @@ flux coordinate $\psi$ defined by the following expression of the
 magnetic field \citet{dec04a} \begin{equation}
 \mathbf{B}=I\left(\psi\right)\mathbf{\nabla}\phi+\mathbf{\nabla}\phi\times\mathbf{\nabla}\psi\end{equation}
  which can be rewritten as\begin{equation}
-\mathbf{B}=\sigma_{B}B_{T}\mathbf{\hat{\phi}}+\sigma_{I}B_{P}\mathbf{\hat{s}}\end{equation}
+\mathbf{B}=\sigma_{B}B_{T}\mathbf{\hat{\phi}}+\sigma_{I}B_{P}\mathbf{\hat{s}}\label{eq:Bfield}\end{equation}
  where $\sigma_{B}$ is the sign of $B_{\phi}$ and $\sigma_{I}$
 is the sign of $I_{\phi}$. $B_{T}=\left\vert I\left(\psi\right)\right\vert /R$
 and $B_{P}=\left\Vert \mathbf{\nabla}\psi\right\Vert /R$ are definite
@@ -420,8 +437,8 @@ $\widehat{\mathbf{r}}$ such that\begin{equation}
 \mathbf{\hat{s}}\cdot\mathbf{\hat{\theta}}=\cos\alpha\end{array}\end{equation}
  Because $\mathbf{\hat{\rho}}$ is orientated outward we have $-\pi/2<\alpha<\pi/2$.
 Then (\ref{kparcalc}) yields \begin{equation}
-\fbox{$k_{\Vert}=\sigma_{I}\cos\alpha\dfrac{B_{P}}{B}\dfrac{m}{r}+\sigma_{B}\dfrac{B_{T}}{B}\dfrac{n}{R}$}\label{kpar}\end{equation}
-
+\fbox{\ensuremath{k_{\Vert}=\sigma_{I}\cos\alpha P\dfrac{m}{r}+\sigma_{B}T\dfrac{n}{R}}}\label{kpar}\end{equation}
+where $P=\dfrac{B_{P}}{B}$ and $T=\dfrac{B_{T}}{B}$. 
 
 
 \subsection{Perpendicular index of refraction}
@@ -429,12 +446,12 @@ Then (\ref{kparcalc}) yields \begin{equation}
 The squared norm of $\mathbf{k}$ is given by\begin{equation}
 k^{2}=g^{ij}k_{i}k_{j}\end{equation}
  which is explicitly\begin{equation}
-\fbox{$k^{2}=k_{\rho}^{2}\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2}-2k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \dfrac{m\sin\alpha}{r}+\dfrac{m^{2}}{r^{2}}+\dfrac{n^{2}}{R^{2}}$}\label{k2}\end{equation}
+\fbox{\ensuremath{k^{2}=k_{\rho}^{2}\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2}-2k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \dfrac{m\sin\alpha}{r}+\dfrac{m^{2}}{r^{2}}+\dfrac{n^{2}}{R^{2}}}}\label{k2}\end{equation}
  From $k^{2}$ and $k_{\Vert}$ the perpendicular wave vector is derived
 \begin{equation}
 k_{\bot}^{2}=k^{2}-k_{\Vert}^{2}\end{equation}
  Rearranging terms yields\begin{equation}
-k_{\bot}^{2}=\left(k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert -\sin\alpha\dfrac{m}{r}\right)^{2}+\left(\sigma_{B}\cos\alpha\dfrac{B_{T}}{B}\dfrac{m}{r}-\sigma_{I}\dfrac{B_{P}}{B}\dfrac{n}{R}\right)^{2}\label{kperp2}\end{equation}
+k_{\bot}^{2}=\left(k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert -\sin\alpha\dfrac{m}{r}\right)^{2}+\left(\sigma_{B}\cos\alpha T\dfrac{m}{r}-\sigma_{I}P\dfrac{n}{R}\right)^{2}\label{kperp2}\end{equation}
 
 
 
@@ -518,7 +535,7 @@ thus becomes,\begin{equation}
 such that (\ref{inward2}) reduces to\begin{equation}
 k_{\rho}\frac{\partial\mathcal{D}}{\partial N_{\bot}}<0\end{equation}
  or equivalently\begin{equation}
-\fbox{$k_{\rho}S_{\bot}<0$}\label{inwardcond}\end{equation}
+\fbox{\ensuremath{k_{\rho}S_{\bot}<0}}\label{inwardcond}\end{equation}
  where $S_{\bot}$ is the energy flow density in the perpendicular
 direction.
 
@@ -606,7 +623,7 @@ There are several algorithms for solving this initial value problem,
 minimizing propagation of the numerical error. One of the most popular
 is the Runge-Kutta algorithm which belongs to the Euler-Cauchy algorithm
 family%
-\footnote{There exists other methods used also for ray-tracing named \char`\"{}predictor-corrector\char`\"{}
+\footnote{There exists other methods used also for ray-tracing named \textquotedbl{}predictor-corrector\textquotedbl{}
 which belong to the general Adams algorithm family.%
 }. The procedure consists in solving the differential equations of
 the type $y^{\prime}\left(x\right)=f\left(x,y\left(x\right)\right)$
@@ -695,6 +712,7 @@ the beam size. It could also be extended to account for toroidal equilibrium
 inhomogeneities such as the magnetic ripple \citet{pey96,imb05}.
 
 \appendix
+%dummy comment inserted by tex2lyx to ensure that this paragraph is not empty
 %dummy comment inserted by tex2lyx to ensure that this paragraph is not empty
 %dummy comment inserted by tex2lyx to ensure that this paragraph is not empty
 %dummy comment inserted by tex2lyx to ensure that this paragraph is not empty
@@ -855,7 +873,7 @@ k_{\Vert}=\dfrac{1}{B}\left(k_{\psi},m,n\right)\left(\begin{array}{ccc}
  which gives\begin{equation}
 k_{\Vert}=\dfrac{1}{B}\left[\left(k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2}-\dfrac{m\left\Vert \mathbf{\nabla}\rho\right\Vert \sin\alpha}{r}\right)\sigma_{I}\dfrac{\sin\alpha B_{P}}{\left\Vert \mathbf{\nabla}\rho\right\Vert \cos\alpha}+\left(-\dfrac{\left\Vert \mathbf{\nabla}\rho\right\Vert \sin\alpha}{r}k_{\rho}+\dfrac{m}{r^{2}}\right)\sigma_{I}\dfrac{rB_{P}}{\cos\alpha}+\dfrac{n\sigma_{B}}{R^{2}}RB_{T}\right]\end{equation}
  and simplifies to\begin{equation}
-k_{\Vert}=\left[\sigma_{I}\cos\alpha\dfrac{B_{P}}{B}\dfrac{m}{r}+\sigma_{B}\dfrac{B_{T}}{B}\dfrac{n}{R}\right]\end{equation}
+k_{\Vert}=\left[\sigma_{I}\cos\alpha P\dfrac{m}{r}+\sigma_{B}T\dfrac{n}{R}\right]\end{equation}
 
 
 
@@ -869,8 +887,9 @@ and $k_{\bot}$. We have\begin{equation}
 k_{\bot}^{2}=k_{\rho}^{2}\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2}-2k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \dfrac{m\sin\alpha}{r}+\dfrac{m^{2}}{r^{2}}+\dfrac{n^{2}}{R^{2}}-k_{\Vert}^{2}\label{kperp}\end{equation}
  and\begin{equation}
 k_{\Vert}=\sigma_{I}P\cos\alpha\dfrac{m}{r}+\sigma_{B}T\dfrac{n}{R}\end{equation}
- where $P=\dfrac{B_{P}}{B}$ and $T=\dfrac{B_{T}}{B}$. We get an
-expression for $n$\begin{equation}
+ 
+
+We get an expression for $n$\begin{equation}
 n=\sigma_{B}\dfrac{R}{T}\left(k_{\Vert}-\sigma_{I}P\cos\alpha\dfrac{m}{r}\right)\label{toroidalwavenumberdef}\end{equation}
  which is inserted back in (\ref{kperp}) to get\begin{equation}
 k_{\bot}^{2}=k_{\rho}^{2}\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2}-2\sin\alpha\dfrac{m}{r}k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert +\dfrac{m^{2}}{r^{2}}+\dfrac{1}{T^{2}}\left(k_{\Vert}-\sigma_{I}P\cos\alpha\dfrac{m}{r}\right)^{2}-k_{\Vert}^{2}\label{kperp2def}\end{equation}
@@ -890,12 +909,12 @@ X=B\pm\sqrt{B^{2}-C}\end{equation}
  which gives\begin{equation}
 k_{\rho}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[\sin\alpha\dfrac{m}{r}\pm\sqrt{k_{\bot}^{2}-\dfrac{1}{T^{2}}\left(\cos\alpha\dfrac{m}{r}-\sigma_{I}Pk_{\Vert}\right)^{2}}\right]\end{equation}
  To sum up\begin{equation}
-\fbox{$\begin{array}{l}
+\fbox{\ensuremath{\begin{array}{l}
 n=\sigma_{B}\dfrac{R}{T}\left(k_{\Vert}-\sigma_{I}P\cos\alpha\dfrac{m}{r}\right)\\
 m=\sigma_{I}\dfrac{r}{P\cos\alpha}\left(k_{\Vert}-\sigma_{B}T\dfrac{n}{R}\right)\\
-k_{\rho}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[\sin\alpha\dfrac{m}{r}+\sigma_{\rho}\sqrt{k_{\bot}^{2}-\dfrac{1}{T^{2}}\left(\cos\alpha\dfrac{m}{r}-\sigma_{I}Pk_{\Vert}\right)^{2}}\right]\end{array}$}\label{eq:nmkrho}\end{equation}
+k_{\rho}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[\sin\alpha\dfrac{m}{r}+\sigma_{\rho}\sqrt{k_{\bot}^{2}-\dfrac{1}{T^{2}}\left(\cos\alpha\dfrac{m}{r}-\sigma_{I}Pk_{\Vert}\right)^{2}}\right]\end{array}}}\label{eq:nmkrho}\end{equation}
  where $\sigma_{\rho}=\pm1$. We can also express $k_{\rho}$ as \begin{equation}
-\fbox{$k_{\rho}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[\sin\alpha\dfrac{m}{r}+\sigma_{\rho}\sqrt{k^{2}-\cos^{2}\alpha\dfrac{m^{2}}{r^{2}}-\dfrac{n^{2}}{R^{2}}}\right]$}\label{krhoeq}\end{equation}
+\fbox{\ensuremath{k_{\rho}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[\sin\alpha\dfrac{m}{r}+\sigma_{\rho}\sqrt{k^{2}-\cos^{2}\alpha\dfrac{m^{2}}{r^{2}}-\dfrac{n^{2}}{R^{2}}}\right]}}\label{krhoeq}\end{equation}
  The correct solution for $k_{\rho}$ can be determined from (\ref{inwardcond}).
 
 
@@ -932,69 +951,6 @@ k_{\bot}=\sqrt{\left[\left(\mathbf{\hat{\rho}}\cdot\mathbf{k}\right)^{2}+\left(\
 
 
 
-\subsection{Wave scattering by fluctuations}
-
-The resolution of the wave kinetic equation for describing rf wave
-scattering by magnetic field or density fluctuations may be performed
-with a Monte-Carlo method \citep{bon82,vah92}. The wave vectors $\mathbf{k}$
-and $\mathbf{k}^{\prime}$ before and after the scattering event respectively
-are linked by the following vector relations\begin{equation}
-\mathbf{k}\cdot\mathbf{b}=\mathbf{k}^{\prime}\cdot\mathbf{b}=k_{\Vert}\label{eq:wskparconservation}\end{equation}
-and\begin{equation}
-\mathbf{k}_{\bot}\cdot\mathbf{k}_{\bot}^{\prime}=k_{\bot}k_{\bot}^{\prime}\cos\beta\label{eq:wskperprotation}\end{equation}
- where $\mathbf{k}_{\bot}=\mathbf{k}\times\mathbf{b}$ and $\mathbf{b}=\mathbf{B}/\left\Vert \mathbf{B}\right\Vert .$
-The scattering process consists in a rotation by an angle $\beta$
-of the component of the wave vector perpendicular to the wave field
-direction, the parallel component of $\mathbf{k}$ being unchanged.
-Indeed, the parallel wave number of the low-frequency fluctuations
-is considered to be negligible as compared to $k_{\Vert}$. The value
-of $k_{\bot}^{\prime}$ is deduced from the local dispersion relation.
-For like transitions, the scattered wave remains on the same branch
-of propagation, and therefore, $k_{\bot}^{\prime}=k_{\bot}$. Conversely,
-for unlike transitions, the scattering leads to a modification of
-the conditions of propagation and $k_{\bot}^{\prime}\neq k_{\bot}$.
-In Ref. \citet{bon82}, the relation $\mathbf{b}\cdot\left(\mathbf{k}_{\bot}\times\mathbf{k}_{\bot}^{\prime}\right)=k_{\bot}k_{\bot}^{\prime}\sin\beta$
-is added to (\ref{eq:wskparconservation}) and (\ref{eq:wskperprotation}).
-However, it is equivalent to (\ref{eq:wskperprotation}) and can be
-used to cross-check the consistency of the calculation of $k_{\rho}^{\prime}$,
-$m^{\prime}$ and $n^{\prime}$. The coordinates of $\mathbf{k}^{\prime}$
-are therefore determined by relations (\ref{eq:wskparconservation})
-and (\ref{eq:wskperprotation}) and (\ref{krhoeq}), \begin{equation}
-k_{\rho}^{\prime}=\dfrac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\left[\sin\alpha\dfrac{m^{\prime}}{r}+\sigma_{\rho}\sqrt{k_{\Vert}^{2}+k_{\bot}^{\prime2}-\cos^{2}\alpha\dfrac{m^{\prime2}}{r^{2}}-\dfrac{n^{\prime2}}{R^{2}}}\right]\label{eq:wskrho}\end{equation}
-
-
-By definition, the variation of the poloidal mode number $m$ is made
-possible by the breaking of the toroidal symmetry resulting from the
-fluctuations, so that the toroidal mode number $n$ is no more conserved
-in the scattering process.
-
-According to (\ref{eq:wavevector}), the scattered wave vector $\mathbf{k}^{\prime}$
-may be expressed as \[
-\mathbf{k}^{\prime}=k_{\rho}^{\prime}\left\Vert \mathbf{\nabla}\rho\right\Vert \widehat{\mathbf{\rho}}+\dfrac{m^{\prime}}{r}\widehat{\mathbf{\theta}}+\dfrac{n^{\prime}}{R}\widehat{\mathbf{\phi}}\]
-and since $\mathbf{b}=\sigma_{B}b_{T}\mathbf{\hat{\phi}}+\sigma_{I}b_{P}\mathbf{\hat{s}}$
-where $b_{T}=B_{T}/B$ and $b_{P}=B_{P}/B$
-
-\begin{equation}
-\mathbf{\mathbf{k}^{\prime}\cdot\mathbf{b}}=k_{\Vert}^{\prime}=k_{\Vert}=\sigma_{I}b_{P}\dfrac{m^{\prime}}{r}\cos\alpha+\sigma_{B}b_{T}\dfrac{n^{\prime}}{R}\label{eq:ws1}\end{equation}
-by conservation of $k_{\Vert}$, and using the relation $\cos\alpha=\widehat{\mathbf{\theta}}\cdot\mathbf{\hat{s}}$.
-Let define $\mathbf{k}_{\bot}=\mathbf{k}\times\mathbf{b}$ and $\mathbf{k}_{\bot}^{\prime}=\mathbf{k}^{\prime}\times\mathbf{b}$.
-By inserting the expressions of $\mathbf{k}_{\bot}$ and $\mathbf{k}_{\bot}^{\prime}$
-into the relation $\mathbf{k}_{\bot}\cdot\mathbf{k}_{\bot}^{\prime}=k_{\bot}k_{\bot}^{\prime}\cos\beta$,
-one obtains\[
-\left(\mathbf{k}\times\mathbf{b}\right)\cdot\left(\mathbf{k}^{\prime}\times\mathbf{b}\right)=\left(\mathbf{k}\cdot\mathbf{k}^{\prime}\right)\left(\mathbf{b}\cdot\mathbf{b}\right)-\left(\mathbf{k}\cdot\mathbf{b}\right)\left(\mathbf{b\cdot}\mathbf{k}^{\prime}\right)=\mathbf{k}\cdot\mathbf{k}^{\prime}-k_{\Vert}^{2}\]
-which leads to the second relation\begin{equation}
-k_{\bot}k_{\bot}^{\prime}\cos\beta=k_{\rho}k_{\rho}^{\prime}\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2}+\dfrac{mm^{\prime}}{r^{2}}+\dfrac{nn^{\prime}}{R^{2}}-\frac{\left\Vert \mathbf{\nabla}\rho\right\Vert \sin\alpha}{r}\left(mk_{\rho}^{\prime}+m^{\prime}k_{\rho}\right)-k_{\Vert}^{2}\label{eq:ws2}\end{equation}
-using the relation $-\sin\alpha=\widehat{\mathbf{\rho}}\cdot\widehat{\theta}$.
-In the case $\beta=0$ and $k_{\bot}^{\prime}=k_{\bot}$, the relation
-(\ref{k2}) is well recovered from (\ref{eq:ws2}).
-
-From (\ref{eq:wskrho}), (\ref{eq:ws1}) and (\ref{eq:ws2}), a second
-degree polynomial equation in $m^{\prime}$ must be solved, leading
-to the determination of $n^{\prime}$ and $k_{\rho}^{\prime}$. Owing
-to the complexity of the coefficients, it is solved with Maple software.
-({*}{*}{*}{*}{*}{*}problem of two solutions ?{*}{*}{*}{*}{*}{*})
-
-
 \subsection{Calculation of $\left\Vert \mathbf{\nabla}\rho\right\Vert $}
 
 So far the only restriction over the radial coordinate $\rho$ is
@@ -1004,7 +960,7 @@ where $r$ is defined as a function of $\left(\psi,\theta\right)$
 and $a_{p}=r\left(\psi_{a},0\right)$. Using \begin{equation}
 \mathbf{\nabla}\rho=\dfrac{d\rho}{d\psi}\left\Vert \mathbf{\nabla}\psi\right\Vert \mathbf{\hat{\psi}}\end{equation}
  we find\begin{equation}
-\fbox{$\left\Vert \mathbf{\nabla}\rho\right\Vert =\left.\dfrac{\partial r}{\partial\psi}\right\vert _{\theta=0}\dfrac{RB_{P}}{a_{p}}$}\end{equation}
+\fbox{\ensuremath{\left\Vert \mathbf{\nabla}\rho\right\Vert =\left.\dfrac{\partial r}{\partial\psi}\right\vert _{\theta=0}\dfrac{RB_{P}}{a_{p}}}}\end{equation}
 
 
 
@@ -1067,13 +1023,15 @@ function \citet{bra98}.
 \section{\label{sec:Benchmarking-of-C3PO}Benchmarking of C3PO}
 
 
-\subsection{JET-like plasma}
+\subsection{JET-like plasma\label{sub:JET-like-plasma}}
 
 
 \subsubsection{Equilibrium}
 
 %
 \begin{figure}[htb]
+ 
+
 \begin{centering}
 \includegraphics[clip,width=3.6in]{figs/JETliketest2p0_numeric_ray_1_RayPoloidal}\\
  \includegraphics[clip,width=3.6in]{figs/JETliketest2p0_analytic_ray_1_RayPoloidal}\\
@@ -1110,6 +1068,8 @@ $N_{\phi0}=-1.8$}
 
 %
 \begin{figure}[htb]
+ 
+
 \begin{centering}
 \includegraphics[clip,width=3.6in]{figs/Paper_Heikkinen_et_al} 
 \par\end{centering}
@@ -1123,6 +1083,8 @@ $N_{\phi0}=-1.8$}
 
 %
 \begin{figure}[htb]
+ 
+
 \begin{centering}
 \includegraphics[clip,width=3.6in]{figs/JETliketest2p0_numeric_ray_1_PoloidalMode} 
 \par\end{centering}
@@ -1137,6 +1099,8 @@ $N_{\phi0}=-2.0$.}
 
 %
 \begin{figure}[htb]
+ 
+
 \begin{centering}
 \includegraphics[clip,width=3.6in]{figs/JETliketest2p0_numeric_ray_1_Npar} 
 \par\end{centering}
@@ -1151,6 +1115,8 @@ $N_{\phi0}=-2.0$.}
 
 %
 \begin{figure}[htb]
+ 
+
 \begin{centering}
 \includegraphics[clip,width=3.6in]{figs/JETliketest2p0_numeric_ray_1_Disp} 
 \par\end{centering}
@@ -1169,10 +1135,10 @@ A circular concentric toroidal plasma is considered such that\begin{equation}
 \rho=\dfrac{r}{a_{p}}\end{equation}
  with the following equilibrium parameters\begin{equation}
 \begin{tabular}{|c|c|}
-\hline  $R_{p}$  &  $3.05\text{ m}$\\
-\hline $a_{p}$  &  $0.95\text{ m}$\\
-\hline $\hat{B}_{T}$  &  $3.2\text{ T}$\\
-\hline $I_{p}$  &  $3.5\text{ MA}$\\\hline \end{tabular}\end{equation}
+\hline  \ensuremath{R_{p}} &  \ensuremath{3.05\text{ m}}\\
+\hline \ensuremath{a_{p}} &  \ensuremath{0.95\text{ m}}\\
+\hline \ensuremath{\hat{B}_{T}} &  \ensuremath{3.2\text{ T}}\\
+\hline \ensuremath{I_{p}} &  \ensuremath{3.5\text{ MA}}\\\hline \end{tabular}\end{equation}
  and the following profiles\begin{equation}
 \begin{array}{l}
 n_{e}\left(\rho\right)=\left(n_{e0}-n_{ea}\right)\left(1-\rho^{2}\right)+n_{ea}\\
@@ -1212,16 +1178,16 @@ d\rho=\cos\theta d\theta\end{array}\]
 \psi & =R_{p}\dfrac{\mu_{0}I_{P}}{2\pi}\int_{0}^{\theta}\sin\theta\left[1+\cos^{2}\theta\right]\cos\theta d\theta\nonumber \\
  & =R_{p}\dfrac{\mu_{0}I_{P}}{2\pi}\rho^{2}\left[1-\dfrac{1}{4}\rho^{2}\right]\end{align}
  and finally for $\alpha=1$ we gather\[
-\fbox{$\begin{array}{l}
+\fbox{\ensuremath{\begin{array}{l}
 J_{z}=\dfrac{2I_{P}}{\pi a_{p}^{2}}\left(1-\rho^{2}\right)\\
 \hat{B}_{P}=\dfrac{\mu_{0}I_{P}}{2\pi a_{p}}\dfrac{1}{\rho}\left[1-\left(1-\rho^{2}\right)^{2}\right]\\
-\psi=R_{p}\dfrac{\mu_{0}I_{P}}{2\pi}\rho^{2}\left[1-\dfrac{1}{4}\rho^{2}\right]\end{array}$}\]
+\psi=R_{p}\dfrac{\mu_{0}I_{P}}{2\pi}\rho^{2}\left[1-\dfrac{1}{4}\rho^{2}\right]\end{array}}}\]
  Note that the $q$ profile is approximately (to order $\epsilon$)\begin{equation}
 q\simeq\dfrac{r}{R_{p}}\dfrac{B_{T}}{B_{P}}\simeq\dfrac{r}{R}\dfrac{\hat{B}_{T}}{B_{P}}\end{equation}
  which gives\begin{equation}
 q\simeq q_{\max}\dfrac{\rho^{2}}{1-\left(1-\rho^{2}\right)^{\alpha+1}}\end{equation}
  and for $\alpha=1$\begin{equation}
-\fbox{$q\simeq q_{\max}\dfrac{\rho^{2}}{1-\left(1-\rho^{2}\right)^{2}}$}\end{equation}
+\fbox{\ensuremath{q\simeq q_{\max}\dfrac{\rho^{2}}{1-\left(1-\rho^{2}\right)^{2}}}}\end{equation}
  where \begin{equation}
 q_{\max}=\dfrac{\hat{B}_{T}}{\hat{B}_{Pa}}\dfrac{a_{p}}{R_{p}}\end{equation}
  Note that $q\left(0\right)=q_{\max}/(1+\alpha)$ and $dq/d\rho\left(0\right)=0$.
@@ -1305,6 +1271,8 @@ simulations, which require several hundred ray trajectories calculations.
 
 %
 \begin{figure}[htb]
+ 
+
 \begin{centering}
 \includegraphics[clip,width=3.6in]{figs/VERSATOR2test_numeric_RayPoloidal}\\
  \includegraphics[clip,width=3.6in]{figs/VERSATOR2test_analytic_RayPoloidal}\\
@@ -1323,6 +1291,8 @@ VERSATOR II. $N_{\Vert0}=5.0$.}
 
 %
 \begin{figure}[htb]
+ 
+
 \begin{centering}
 \includegraphics[clip,width=3.6in]{figs/PLTtest_numeric_RayPoloidal}\\
  \includegraphics[clip,width=3.6in]{figs/PLTtest_analytic_RayPoloidal}\\
@@ -1341,6 +1311,8 @@ PLT, $N_{\Vert0}=1.33$.}
 
 %
 \begin{figure}[htb]
+ 
+
 \begin{centering}
 \includegraphics[clip,width=3.6in]{figs/PLTtest_analytic_RhoComp} 
 \par\end{centering}
@@ -1355,6 +1327,8 @@ angle (PLT). $N_{\Vert}=1.33$.}
 
 %
 \begin{figure}[htb]
+ 
+
 \begin{centering}
 \includegraphics[clip,width=3.6in]{figs/PLTtest_analytic_ThetaComp} 
 \par\end{centering}
@@ -1369,6 +1343,8 @@ angle (PLT). $N_{\Vert}=1.33$.}
 
 %
 \begin{figure}[htb]
+ 
+
 \begin{centering}
 \includegraphics[clip,width=3.6in]{figs/PLTtest_analytic_NparComp} 
 \par\end{centering}
@@ -1383,6 +1359,8 @@ function of the toroidal angle (PLT). $N_{\Vert}=1.33$.}
 
 %
 \begin{figure}[htb]
+ 
+
 \begin{centering}
 \includegraphics[clip,width=3.6in]{figs/PLTtest_analytic_NperpComp} 
 \par\end{centering}
@@ -1402,19 +1380,19 @@ of benchmarking, the Shafranov shift is neglected, and a plasma with
 exact circular concentric magnetic flux surfaces is considered with
 the following magnetic equilibrium parameters \begin{equation}
 \begin{tabular}{|c|c|c|}
-\hline   &  VERSATOR$\text{ II}$  &  PLT\\
-\hline $R_{p}$  &  $0.4\text{ m}$  &  $1.32\text{ m}$\\
-\hline $a_{p}$  &  $0.13\text{ m}$  &  $0.4\text{ m}$\\
-\hline $\hat{B}_{T}$  &  $1.4\text{ T}$  &  $3.1\text{ T}$\\
-\hline $I_{p}$  &  $0.05\text{ MA}$  &  $0.2\text{ MA}$\\\hline \end{tabular}\end{equation}
+\hline   &  VERSATOR\ensuremath{\text{ II}} &  PLT\\
+\hline \ensuremath{R_{p}} &  \ensuremath{0.4\text{ m}} &  \ensuremath{1.32\text{ m}}\\
+\hline \ensuremath{a_{p}} &  \ensuremath{0.13\text{ m}} &  \ensuremath{0.4\text{ m}}\\
+\hline \ensuremath{\hat{B}_{T}} &  \ensuremath{1.4\text{ T}} &  \ensuremath{3.1\text{ T}}\\
+\hline \ensuremath{I_{p}} &  \ensuremath{0.05\text{ MA}} &  \ensuremath{0.2\text{ MA}}\\\hline \end{tabular}\end{equation}
  and the following profiles \begin{equation}
 n_{e}\left(\rho\right)=\left(n_{e0}-n_{ea}\right)\frac{e^{\alpha_{n}}-e^{\alpha_{n}\rho^{2}}}{e^{\alpha_{n}}-1}+n_{ea}\end{equation}
  with\begin{equation}
 \begin{tabular}{|c|c|c|}
-\hline   &  VERSATOR$\text{ II}$  &  PLT\\
-\hline $n_{e0}$  &  $2.0\times10^{19}\text{ m}^{-3}$  &  $0.5625\times10^{19}\text{ m}^{-3}$\\
-\hline $n_{ea}$  &  $2.0\times10^{18}\text{ m}^{-3}$  &  $0.5625\times10^{18}\text{ m}^{-3}$\\
-\hline $\alpha_{n}$  &  $0.1$  &  $-0.571$\\\hline \end{tabular}\end{equation}
+\hline   &  VERSATOR\ensuremath{\text{ II}} &  PLT\\
+\hline \ensuremath{n_{e0}} &  \ensuremath{2.0\times10^{19}\text{ m}^{-3}} &  \ensuremath{0.5625\times10^{19}\text{ m}^{-3}}\\
+\hline \ensuremath{n_{ea}} &  \ensuremath{2.0\times10^{18}\text{ m}^{-3}} &  \ensuremath{0.5625\times10^{18}\text{ m}^{-3}}\\
+\hline \ensuremath{\alpha_{n}} &  \ensuremath{0.1} &  \ensuremath{-0.571}\\\hline \end{tabular}\end{equation}
 
 
 In the calculations, the scrape-off layer is not considered, since
@@ -1449,10 +1427,10 @@ For both tokamaks, the ray is launched in the slow mode from the position\begin{
 \phi_{0}=0\end{array}\end{equation}
  with the spectral properties\begin{equation}
 \begin{tabular}{|c|c|c|}
-\hline   &  VERSATOR$\text{ II}$  &  PLT\\
-\hline $\omega/\left(2\pi\right)$  &  $0.8\text{ GHz}$  &  $0.8\text{ GHz}$\\
-\hline $N_{\Vert0}$  &  $5.0$  &  $1.33$\\
-\hline $m_{0}$  &  $-25$  &  $+20$\\\hline \end{tabular}\end{equation}
+\hline   &  VERSATOR\ensuremath{\text{ II}} &  PLT\\
+\hline \ensuremath{\omega/\left(2\pi\right)} &  \ensuremath{0.8\text{ GHz}} &  \ensuremath{0.8\text{ GHz}}\\
+\hline \ensuremath{N_{\Vert0}} &  \ensuremath{5.0} &  \ensuremath{1.33}\\
+\hline \ensuremath{m_{0}} &  \ensuremath{-25} &  \ensuremath{+20}\\\hline \end{tabular}\end{equation}
 
 
 The non-zero $m_{0}$ arises from the fact that simulations in references
@@ -1481,6 +1459,8 @@ power and current deposition generally remains negligible.
 
 %
 \begin{figure}[htb]
+ 
+
 \begin{centering}
 \includegraphics[clip,width=3.6in]{figs/test_RT_straight_RayToroidal} 
 \par\end{centering}
@@ -1495,6 +1475,8 @@ in vacuum.}
 
 %
 \begin{figure}[htb]
+ 
+
 \begin{centering}
 \includegraphics[clip,width=3.6in]{figs/test_RT_straight_RayPoloidal} 
 \par\end{centering}
@@ -1514,9 +1496,9 @@ at $\psi=\psi_{a}$ the wave is reflected like in a mirror, so that
 the ray remains confined in the machine. Circular concentric poloidal
 magnetic flux surfaces are considered with\begin{equation}
 \begin{tabular}{|c|c|}
-\hline  $R_{p}$  &  $3.0\text{ m}$\\
-\hline $a_{p}$  &  $0.9\text{ m}$\\
-\hline $\hat{B}_{T}$  &  $3.0\text{ T}$\\\hline \end{tabular}\end{equation}
+\hline  \ensuremath{R_{p}} &  \ensuremath{3.0\text{ m}}\\
+\hline \ensuremath{a_{p}} &  \ensuremath{0.9\text{ m}}\\
+\hline \ensuremath{\hat{B}_{T}} &  \ensuremath{3.0\text{ T}}\\\hline \end{tabular}\end{equation}
  and the poloidal magnetic field is considered to be created by a
 virtual toroidal current $I_{p}$ of $1.0$ MA and a parabolic safety
 factor profile of the form\begin{equation}
@@ -1594,9 +1576,9 @@ In the example here given, the ray is launched from the position\begin{equation}
 \phi_{0}=0\end{array}\end{equation}
  with spectral properties\begin{equation}
 \begin{tabular}{|c|c|}
-\hline  $\omega/\left(2\pi\right)$  &  $530.15\text{ GHz}$\\
-\hline $N_{\Vert0}$  &  $0.5$\\
-\hline $m_{0}$  &  $-3000$\\\hline \end{tabular}\end{equation}
+\hline  \ensuremath{\omega/\left(2\pi\right)} &  \ensuremath{530.15\text{ GHz}}\\
+\hline \ensuremath{N_{\Vert0}} &  \ensuremath{0.5}\\
+\hline \ensuremath{m_{0}} &  \ensuremath{-3000}\\\hline \end{tabular}\end{equation}
  so that the wave can propagate into vacuum region.
 
 
@@ -1618,6 +1600,8 @@ geometrical optics is excellent.
 
 %
 \begin{figure}[htb]
+ 
+
 \begin{centering}
 \includegraphics[clip,width=3.6in]{figs/RFP_LH_ray_1_RayPoloidal} 
 \par\end{centering}
@@ -1631,6 +1615,8 @@ geometrical optics is excellent.
 
 %
 \begin{figure}[htb]
+ 
+
 \begin{centering}
 \includegraphics[clip,width=3.6in]{figs/RFP_LH_ray_1_RayToroidal} 
 \par\end{centering}
@@ -1644,6 +1630,8 @@ geometrical optics is excellent.
 
 %
 \begin{figure}[htb]
+ 
+
 \begin{centering}
 \includegraphics[clip,width=3.6in]{figs/RFP_LH_ray_1_Npar} 
 \par\end{centering}
@@ -1657,6 +1645,8 @@ geometrical optics is excellent.
 
 %
 \begin{figure}[htb]
+ 
+
 \begin{centering}
 \includegraphics[clip,width=3.6in]{figs/RFP_LH_ray_1_Disp} 
 \par\end{centering}
@@ -1683,10 +1673,10 @@ consider a circular concentric toroidal plasma such that\begin{equation}
 (USA)%
 } \begin{equation}
 \begin{tabular}{|c|c|}
-\hline  $R_{p}$  &  $1.5\text{ m}$\\
-\hline $a_{p}$  &  $0.5\text{ m}$\\
-\hline $\hat{B}_{T}$  &  $0.2\text{ T}$\\
-\hline $I_{p}$  &  $0.3\text{ MA}$\\\hline \end{tabular}\end{equation}
+\hline  \ensuremath{R_{p}} &  \ensuremath{1.5\text{ m}}\\
+\hline \ensuremath{a_{p}} &  \ensuremath{0.5\text{ m}}\\
+\hline \ensuremath{\hat{B}_{T}} &  \ensuremath{0.2\text{ T}}\\
+\hline \ensuremath{I_{p}} &  \ensuremath{0.3\text{ MA}}\\\hline \end{tabular}\end{equation}
 
 
 From Eq. \ref{RFPequilibrium}, considering a constant $\lambda$
@@ -1728,7 +1718,7 @@ therefore Eq.\ref{RFPequilibrium} is well satisfied.
 For the ray-tracing calculations, the magnetic equilibrium is chosen
 so that $\lambda a_{p}=\widetilde{\lambda}=2.2.$ From these definition,
 up to the same order, the safety factor is\begin{equation}
-\fbox{$q\simeq\dfrac{a_{p}}{R_{p}}\rho\dfrac{J_{0}\left(\widetilde{\lambda}\rho\right)}{J_{1}\left(\widetilde{\lambda}\rho\right)}$}\end{equation}
+\fbox{\ensuremath{q\simeq\dfrac{a_{p}}{R_{p}}\rho\dfrac{J_{0}\left(\widetilde{\lambda}\rho\right)}{J_{1}\left(\widetilde{\lambda}\rho\right)}}}\end{equation}
 
 
 For the cold plasma model, the electron density profile is \begin{equation}
@@ -1773,7 +1763,7 @@ the usual tokamak one, the dispersion relation is well fulfilled along
 the ray path.
 
 \newpage{} \bibliographystyle{unsrt} \bibliographystyle{unsrt}
-\bibliographystyle{unsrt}
+\bibliographystyle{unsrt} \bibliographystyle{unsrt}
 \bibliography{biblio}
 
 \end{document}
