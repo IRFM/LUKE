@@ -198,6 +198,7 @@ void metrictensor();
 double alphaphi_jd();
 void coldtensor();
 void dsolve();
+void fluctuation();
 void disprel();
 void interpequil();
 void interpequil_test();
@@ -887,6 +888,10 @@ Update the solution only if the error is acceptable
                     }
                 }
             }
+
+/* 
+ 			fluctuation(1,&krho1,y0,raymagnetic,rayprofiles,X,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag); 
+*/
                                     
             t1 = t2;
             rho1 = rho2;
@@ -1739,6 +1744,152 @@ double flag;
     /* krho[0] = -Y[3]; /* old method not accurate */ 
     
 }
+
+
+
+void fluctuation(mode,krho,Y,raymagnetic,rayprofiles,X,param,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag)
+int mode;
+double *krho;
+double Y[];
+raymagnetic_format raymagnetic;
+rayprofiles_format rayprofiles;
+susceptibilitytensor_format X;
+rayparam_format param;
+equilparam_format equilparam;
+pp_1D_format Te_fit;
+pp_1D_format ne_fit;
+pp_1D_format zTi_fit;
+pp_1D_format zni_fit;
+pp_2D_format x_fit;
+pp_2D_format y_fit;
+pp_2D_format Bx_fit;
+pp_2D_format By_fit;
+pp_2D_format BPHI_fit;
+pp_1D_format dxstardpsin_fit;
+double flag;
+{
+    double Npar,dNpardY[MC];
+    double complex Nperp,dNperpdY[MC];
+    double complex N2,dN2dY[MC];
+
+    double frac,fracmax,exp,tol;
+    double krho0,krho1,krho2,dkrho;
+    double complex cD0,cD1;
+    double D0,D1,D2;
+    int maxit;
+
+    double wcn[equilparam.ns[0]+1],wpn2[equilparam.ns[0]+1],betath[equilparam.ns[0]+1];
+
+    register int j;
+    
+    frac = 1 - 1e-4;
+    fracmax = 2;
+    exp = -1.5;
+    tol = 1e-12;
+    
+    maxit = 50;
+
+    /* Equilibrium interpolation at ray location */
+    if (flag == 0) {
+        interpequil(param,raymagnetic,rayprofiles,equilparam,Y,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit);
+    } else {
+        interpequil_test(raymagnetic,rayprofiles,equilparam,Y,flag);
+    }
+
+    krho0 = Y[3];
+    krho1 = frac*krho0;
+    
+    rayindex(&Nperp,dNperpdY,&N2,dN2dY,1,Y,raymagnetic,equilparam,&Npar,dNpardY);
+    if (mode > 0) {/* plasma case */
+        susceptibility(X,Nperp,dNperpdY,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Y[6]);
+    }
+        
+    disprel(&cD0,X,Nperp,N2,raymagnetic,Npar);
+    D0 = creal(cD0);/* to be changed if non-hermitian susceptibility tensors are used */
+/*  mexPrintf("krho0,D0:%g,%g\n",krho0,D0); */
+    
+    Y[3] = krho1;
+    rayindex(&Nperp,dNperpdY,&N2,dN2dY,1,Y,raymagnetic,equilparam,&Npar,dNpardY);
+    if (mode > 0) {/* plasma case */
+        susceptibility(X,Nperp,dNperpdY,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Y[6]);
+    }
+    disprel(&cD1,X,Nperp,N2,raymagnetic,Npar);
+    D1 = creal(cD1);/* to be changed if non-hermitian susceptibility tensors are used */
+/*  mexPrintf("krho1,D1:%g,%g\n",krho1,D1); */
+
+    /* Search for root bounding interval */
+
+    while ((D1*D0 > 0) && (fracmax < 100)){
+        
+        frac = pow(frac,exp);
+        krho1 = frac*krho0;
+       
+        Y[3] = krho1;
+        rayindex(&Nperp,dNperpdY,&N2,dN2dY,1,Y,raymagnetic,equilparam,&Npar,dNpardY);
+        if (mode > 0) {/* plasma case */
+            susceptibility(X,Nperp,dNperpdY,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Y[6]);
+        }
+        disprel(&cD1,X,Nperp,N2,raymagnetic,Npar);
+        D1 = creal(cD1);/* to be changed if non-hermitian susceptibility tensors are used */
+/*      mexPrintf("krho1,D1:%g,%g\n",krho1,D1); */
+    }
+    
+    if (D1*D0 > 0) {
+        krho[0] = krho0;  /* put error message */
+    }
+/*    else if (fabs(D0) < tol){
+       krho[0] = krho0;
+    }
+    else if (fabs(D1) < tol){
+        krho[0] = krho1;
+    }        
+*/
+    else {
+        if (fabs(D0) < fabs(D1)) { /*Closest root is set to latest value. */
+            krho2 = krho0; 
+            krho0 = krho1;
+            krho1 = krho2;
+            D2 = D0;
+            D0 = D1;
+            D1 = D2;
+        }       
+       
+        j = 0;
+        
+/*        mexPrintf("fabs(D1),tol,j,maxit:%g,%g,%d,%d\n",fabs(D1),tol,j,maxit); */
+         
+        while ((fabs(D1) > tol) && (j < maxit)) { /*Secant loop. */
+            
+/*          mexPrintf("krho0,D0,krho1,D1,frac,tol:%g,%g,%g,%g,%g,%g\n",krho0,D0,krho1,D1,frac,tol); */
+            
+            dkrho = (krho0 - krho1)*D1/(D1-D0); /*Increment with respect to latest value. */
+            krho0 = krho1;
+            D0 = D1;
+            krho1 += dkrho;
+
+            Y[3] = krho1;
+            rayindex(&Nperp,dNperpdY,&N2,dN2dY,1,Y,raymagnetic,equilparam,&Npar,dNpardY);
+            if (mode > 0) {/* plasma case */
+                susceptibility(X,Nperp,dNperpdY,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Y[6]);
+            }
+            disprel(&cD1,X,Nperp,N2,raymagnetic,Npar);
+            D1 = creal(cD1);/* to be changed if non-hermitian susceptibility tensor are used */
+/*          mexPrintf("krho1,D1:%g,%g\n",krho1,D1); */
+        }
+        
+        if (fabs(D1) <= tol) { /*Convergence. */
+            krho[0] = krho1;
+        }
+        else {
+            krho[0] = krho2; /* put error message */
+        }
+    }    
+    
+    
+    /* krho[0] = -Y[3]; /* old method not accurate */ 
+    
+}
+
 
 void disprel(Dtot,X,Nperp,N2,raymagnetic,Npar)
 double complex *Dtot;
