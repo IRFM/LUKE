@@ -1181,7 +1181,14 @@ reference "eq:ws1"
 \end_inset
 
 ) is well satisfied.
- In Appendix A, it is also demonstrated that using relations (
+ In Appendix 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Appendix"
+
+\end_inset
+
+, it is also demonstrated that using relations (
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:khatrho1"
@@ -1247,6 +1254,427 @@ options "plain"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Section
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Appendix"
+
+\end_inset
+
+Appendix 
+\end_layout
+
+\begin_layout Standard
+The two first components of 
+\begin_inset Formula $\check{\mathbf{k}}$
+\end_inset
+
+ may be expressed in a slightly modified form as compared to (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:khatrho1"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:khattheta1"
+
+\end_inset
+
+),
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\check{k}_{\rho}\Vert\nabla\rho\Vert=\sigma_{I}P\tan\alpha k_{\parallel}+\chi\sin\beta\left[\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}-k_{\rho}\Vert\nabla\rho\Vert\sin\alpha\right)-\sigma_{I}P\frac{n}{R}\right]-\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+-\chi\cos\beta\left(\sigma_{I}P\tan\alpha k_{\Vert}-k_{\rho}\Vert\nabla\rho\Vert\right)\label{eq:khatrho2}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\check{m}}{r}=\frac{\sigma_{I}P}{\cos\alpha}k_{\parallel}+\chi\sin\beta\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}\sin\alpha-k_{\rho}\Vert\nabla\rho\Vert\right)-\chi\cos\beta\left(\frac{\sigma_{I}P}{\cos\alpha}k_{\Vert}-\frac{m}{r}\right)\label{eq:khattheta2}\end{equation}
+
+\end_inset
+
+which is more convenient for verifying that the geometrical approach based
+ on the scattering operator 
+\begin_inset Formula $\mathcal{S_{\beta}^{\chi}}$
+\end_inset
+
+ defined by relation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:scatteringoperator"
+
+\end_inset
+
+) is well consistent with the physics of the scattering.
+ We have to check that these transformed components satisfy the conditions
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:kparconservation"
+
+\end_inset
+
+), (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:kperprotationbeta"
+
+\end_inset
+
+) and 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\check{k}_{\perp}^{2}=\check{k_{\rho}^{2}}\Vert\nabla\rho\Vert^{2}-2\check{k_{\rho}}\Vert\nabla\rho\Vert\frac{\check{m}\sin\alpha}{r}+\frac{\check{m}^{2}}{r^{2}}+\frac{\check{n}^{2}}{R^{2}}-k_{\parallel}^{2}\end{equation}
+
+\end_inset
+
+ Using the components of the wave vector 
+\begin_inset Formula $\mathbf{k}$
+\end_inset
+
+ and
+\begin_inset Formula $\check{\mathbf{k}}$
+\end_inset
+
+ before and after the scattering event, these conditions can be written
+ in the form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\sigma_{I}P\frac{\check{m}}{r}\cos\alpha+\sigma_{B}T\frac{\check{n}}{R}=\sigma_{I}P\frac{m}{r}\cos\alpha+\sigma_{B}T\frac{n}{R}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+k_{\rho}\check{k}_{\rho}\Vert\nabla\rho\Vert^{2}+\frac{m\check{m}}{r^{2}}+\frac{n\check{n}}{R^{2}}-\frac{\parallel\nabla\rho\Vert\sin\alpha}{r}\left(m\check{k}_{\rho}+\check{m}k_{\rho}\right)=k_{\perp}^{2}\chi\cos\beta\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\check{k}_{\rho}^{2}\Vert\nabla\rho\Vert^{2}-2\check{k}_{\rho}\Vert\nabla\rho\Vert\frac{\check{m}\sin\alpha}{r}+\frac{\check{m}^{2}}{r^{2}}+\frac{\check{n}^{2}}{R^{2}}-k_{\parallel}^{2}=\chi^{2}k_{\perp}^{2}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Conservation of 
+\begin_inset Formula $k_{\parallel}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\check{k}_{\parallel}=\sigma_{I}P\frac{\check{m}}{r}\cos\alpha+\sigma_{B}T\frac{\check{n}}{R}=\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+=\sigma_{I}P\cos\alpha\left[\frac{\sigma_{I}P}{\cos\alpha}k_{\parallel}+\chi\sin\beta\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}\sin\alpha-k_{\rho}\Vert\nabla\rho\Vert\right)-\chi\cos\beta\left(\frac{\sigma_{I}P}{\cos\alpha}k_{\parallel}-\frac{m}{r}\right)\right]+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
++\sigma_{B}T\left[\sigma_{B}Tk_{\parallel}+\chi\sin\beta\sigma_{I}P\left(k_{\rho}\Vert\nabla\rho\Vert-\frac{m}{r}\sin\alpha\right)-\chi\cos\beta\left(\sigma_{B}Tk_{\parallel}-\frac{n}{R}\right)\right]=\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+=k_{\Vert}\left(\sigma_{I}^{2}P^{2}+\sigma_{B}^{2}T^{2}\right)+\sigma_{I}P\sigma_{B}T\chi\sin\beta\left(\frac{m}{r}\sin\alpha-k_{\rho}\Vert\nabla\rho\Vert+k_{\rho}\Vert\nabla\rho\Vert-\frac{m}{r}\sin\alpha\right)-\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+-\chi\cos\beta\left[k_{\parallel}\left(\sigma_{I}^{2}P^{2}+\sigma_{B}^{2}T^{2}\right)-\left(\sigma_{I}P\frac{m}{r}\cos\alpha+\sigma_{B}T\frac{n}{R}\right)\right]=\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+=k_{\parallel}-\chi\cos\beta\left(k_{\parallel}-k_{\parallel}\right)=k_{\parallel}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Direction of 
+\begin_inset Formula $\check{\mathbf{k}}_{\perp}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{k}_{\perp}\cdot\check{\mathbf{k}}_{\perp}=k_{\rho}\check{k}_{\rho}\Vert\nabla\rho\Vert^{2}+\frac{m\check{m}}{r^{2}}+\frac{n\check{n}}{R^{2}}-\frac{\Vert\nabla\rho\Vert\sin\alpha}{r}\left(m\check{k}_{\rho}+\check{m}k_{\rho}\right)-k_{\parallel}^{2}=\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+=k_{\rho}\Vert\nabla\rho\Vert\left\{ \sigma_{I}P\tan\alpha k_{\parallel}+\chi\sin\beta\left[\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}-k_{\rho}\Vert\nabla\rho\Vert\sin\alpha\right)-\sigma_{I}P\frac{n}{R}\right]\right\} -\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+-k_{\rho}\Vert\nabla\rho\Vert\chi\cos\beta\left(\sigma_{I}P\tan\alpha k_{\parallel}-k_{\rho}\Vert\nabla\rho\Vert\right)+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
++\frac{m}{r}\left[\frac{\sigma_{I}P}{\cos\alpha}k_{\parallel}+\chi\sin\beta\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}\sin\alpha-k_{\rho}\Vert\nabla\rho\Vert\right)-\chi\cos\beta\left(\frac{\sigma_{I}P}{\cos\alpha}k_{\parallel}-\frac{m}{r}\right)\right]+\]
+
+\end_inset
+
+
+\begin_inset Formula \[
++\frac{n}{R}\left[\sigma_{B}Tk_{\parallel}+\chi\sin\beta\sigma_{I}P\left(k_{\rho}\Vert\nabla\rho\Vert-\frac{m}{r}\sin\alpha\right)-\chi\cos\beta\left(\sigma_{B}Tk_{\parallel}-\frac{n}{R}\right)\right]-\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+-\frac{m}{r}\sin\alpha\left\{ \sigma_{I}P\tan\alpha k_{\parallel}+\chi\sin\beta\left[\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}-k_{\rho}\Vert\nabla\rho\Vert\sin\alpha\right)-\sigma_{I}P\frac{n}{R}\right]\right\} +\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
++\frac{m}{r}\sin\alpha\chi\cos\beta\left(\sigma_{I}P\tan\alpha k_{\parallel}-k_{\rho}\Vert\nabla\rho\Vert\right)-\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+-k_{\rho}\Vert\nabla\rho\Vert\sin\alpha\left[\frac{\sigma_{I}P}{\cos\alpha}k_{\parallel}+\chi\sin\beta\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}\sin\alpha-k_{\rho}\Vert\nabla\rho\Vert\right)-\chi\cos\beta\left(\frac{\sigma_{I}P}{\cos\alpha}k_{\parallel}-\frac{m}{r}\right)\right]-k_{\parallel}^{2}=\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+=\left[\left(\sigma_{I}P\frac{m}{r}\cos\alpha+\sigma_{B}T\frac{n}{R}\right)k_{\parallel}-k_{\parallel}^{2}\right]+\chi\cos\beta\left[k_{\rho}^{2}\Vert\nabla\rho\Vert^{2}+\frac{m^{2}}{r^{2}}+\frac{n^{2}}{R^{2}}-2k_{\rho}\Vert\nabla\rho\Vert\sin\alpha\right]-\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+-\chi\cos\beta k_{\parallel}\left(\sigma_{I}P\frac{m}{r}\cos\alpha+\sigma T\frac{n}{R}\right)=\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+=\left(k_{\parallel}^{2}-k_{\parallel}^{2}\right)+\chi\cos\beta\left(k^{2}-k_{\parallel}^{2}\right)=k_{\perp}^{2}\chi\cos\beta\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Solution of the dispersion relation 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\check{k}_{\perp}^{2}=\check{k}_{\rho}^{2}\Vert\nabla\rho\Vert^{2}-2\check{k}_{\rho}\Vert\nabla\rho\Vert\frac{\check{m}\sin\alpha}{r}+\frac{\check{m}^{2}}{r^{2}}+\frac{\check{n}^{2}}{R^{2}}-k_{\parallel}^{2}=\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+=\left\{ \sigma_{I}P\tan\alpha k_{\parallel}+\chi\sin\beta\left[\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}-k_{\rho}\Vert\nabla\rho\Vert\sin\alpha\right)-\sigma_{I}P\frac{n}{R}\right]-\chi\cos\beta\left(\sigma_{I}P\tan\alpha k_{\parallel}-k_{\rho}\Vert\nabla\rho\Vert\right)\right\} ^{2}-\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+-2\sin\alpha\left[\frac{\sigma_{I}P}{\cos\alpha}k_{\parallel}+\chi\sin\beta\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}\sin\alpha-k_{\rho}\Vert\nabla\rho\Vert\right)-\chi\cos\beta\left(\frac{\sigma_{B}T}{\cos\alpha}k_{\parallel}-\frac{m}{r}\right)\right]\cdot\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\cdot\left\{ \sigma_{I}P\tan\alpha k_{\parallel}+\chi\sin\beta\left[\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}-k_{\rho}\Vert\nabla\rho\Vert\sin\alpha\right)-\sigma_{I}P\frac{n}{R}\right]-\chi\cos\beta\left(\sigma_{I}P\tan\alpha k_{\parallel}-k_{\rho}\Vert\nabla\rho\Vert\right)\right\} +\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
++\left[\frac{\sigma_{I}P}{\cos\alpha}k_{\parallel}+\chi\sin\beta\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}\sin\alpha-k_{\rho}\Vert\nabla\rho\Vert\right)-\chi\cos\beta\left(\frac{\sigma_{I}P}{\cos\alpha}-\frac{m}{r}\right)\right]^{2}+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
++\left[\sigma_{B}Tk_{\parallel}+\chi\sin\beta\sigma_{I}P\left(k_{\rho}\Vert\nabla\rho\Vert-\frac{m}{r}\sin\alpha\right)-\chi\cos\beta\left(\sigma_{B}Tk_{\parallel}-\frac{n}{R}\right)\right]^{2}-k_{\parallel}^{2}=\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+=\left[\left(\sigma_{I}^{2}P^{2}+\sigma_{B}^{2}T^{2}\right)k_{\parallel}^{2}-k_{\parallel}^{2}\right]+2\chi\sin\beta\sigma_{I}P\sigma_{B}Tk_{\parallel}\left(k_{\rho}\Vert\nabla\rho\Vert+\frac{m}{r}\sin\alpha-k_{\rho}\Vert\nabla\rho\Vert-\frac{m}{r}\sin\alpha\right)-\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+-2\chi\cos\beta\left[\left(\sigma_{I}^{2}P^{2}+\sigma_{B}^{2}T^{2}\right)k_{\parallel}^{2}-\left(\sigma_{I}P\frac{m}{r}\cos\alpha+\sigma_{B}T\frac{n}{R}\right)k_{\parallel}\right]-\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+-2\chi^{2}\sin\beta\cos\beta\left(\frac{m}{r}\sin\alpha-k_{\rho}\Vert\nabla\rho\Vert\right)\left[\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}-k_{\rho}\Vert\nabla\rho\Vert\sin\alpha\right)+\sigma_{I}P\left(\sigma_{B}Tk_{\parallel}-\frac{n}{R}\right)\right]+\]
+
+\end_inset
+
+ 
+\begin_inset Formula \[
++2\chi^{2}\sin\beta\cos\beta\left(\frac{m}{r}\sin\alpha-k_{\rho}\Vert\nabla\rho\Vert\right)\left[\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}-k_{\rho}\Vert\nabla\rho\Vert\sin\alpha\right)+\sigma_{I}P\left(\sigma_{B}Tk_{\parallel}-\frac{n}{R}\right)\right]+\]
+
+\end_inset
+
+
+\begin_inset Formula \[
++\chi^{2}\sin^{2}\beta\left[\left(k_{\rho}\Vert\nabla\rho\Vert-\frac{m}{r}\sin\alpha\right)^{2}+\left(\sigma_{B}T\frac{n}{R}\cos\alpha-\sigma_{I}P\frac{n}{R}\right)^{2}\right]+\]
+
+\end_inset
+
+
+\begin_inset Formula \[
++\chi^{2}\cos^{2}\beta\left(k_{\rho}^{2}\Vert\nabla\rho\Vert^{2}-2\frac{m}{r}k_{\rho}\Vert\nabla\rho\Vert\sin\alpha+\frac{m^{2}}{r^{2}}+\frac{n^{2}}{R^{2}}-k_{\parallel}^{2}\right)=\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+=\left(k_{\parallel}^{2}-k_{\parallel}^{2}\right)-2\chi\cos\beta\left(k_{\parallel}^{2}-k_{\parallel}^{2}\right)+\chi^{2}k_{\perp}^{2}\sin^{2}\beta+\chi^{2}\cos^{2}\beta\left(k^{2}-k_{\parallel}^{2}\right)=\]
+
+\end_inset
+
+ 
+\begin_inset Formula \[
+=\chi^{2}k_{\perp}^{2}\left(\sin^{2}\beta+\cos^{2}\beta\right)=\chi^{2}k_{\perp}^{2}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expressions for the component of the scattered wave vector derived using
+ the scattering operator satisfy the conservation of 
+\begin_inset Formula $k_{\parallel}$
+\end_inset
+
+, the relation between 
+\begin_inset Formula $\mathbf{k_{\perp}}$
+\end_inset
+
+and 
+\begin_inset Formula $\check{\mathbf{k}}_{\perp}$
+\end_inset
+
+and the dispersion relation.
 \end_layout
 
 \end_body
