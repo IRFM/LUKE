@@ -1,4 +1,4 @@
-#LyX 1.6.0 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.2 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -57,12 +57,12 @@ François-Xavier DUTHOIT
 
 \begin_layout Standard
 \begin_inset FormulaMacro
-\newcommand{\bhat}{\widehat{\mathsf{b}}}
+\renewcommand{\bhat}{\widehat{\mathsf{b}}}
 \end_inset
 
 
 \begin_inset FormulaMacro
-\newcommand{\extd}{\mathsf{d}}
+\renewcommand{\extd}{\mathsf{d}}
 \end_inset
 
 
@@ -96,7 +96,7 @@ where
 \begin_inset Formula $\xi_{0}$
 \end_inset
 
- is defined as a positive variable ; i.e.
+ is defined as a positive variable for trapped particles ; i.e.
  
 \begin_inset Formula $\xi_{0}=\sqrt{1-\Psi^{-1}\left(1-\xi^{2}\right)}$
 \end_inset
@@ -108,7 +108,7 @@ where
 
  the spatial gradient operator :
 \begin_inset Formula \begin{equation}
-\extd\xi_{0}\equiv\nabla\xi_{0}\cdot\extd\mathbf{X}+\frac{\partial\xi_{0}}{\partial\xi}\extd\xi=\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\nabla\ln\Psi\cdot\extd\mathbf{X}+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\extd\xi\end{equation}
+\extd\xi_{0}\equiv\nabla\xi_{0}\cdot\extd\mathbf{X}+\frac{\partial\xi_{0}}{\partial\xi}\extd\xi=\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\nabla\Psi\cdot\extd\mathbf{X}+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\extd\xi\end{equation}
 
 \end_inset
 
@@ -188,7 +188,7 @@ The expression for
  reads :
 \begin_inset Formula \begin{eqnarray}
 \mathcal{K}_{gc}^{\xi_{0}} & = & \nabla\xi_{0}\cdot\mathcal{K}_{gc}^{\mathbf{X}}+\frac{\partial\xi_{0}}{\partial\xi}\mathcal{K}_{gc}^{\xi}\nonumber \\
- & = & \boxed{\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\nabla\ln\Psi\cdot\mathcal{K}_{gc}^{\mathbf{X}}+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{K}_{gc}^{\xi}}\label{eq:-3}\end{eqnarray}
+ & = & \boxed{\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\nabla\Psi\cdot\mathcal{K}_{gc}^{\mathbf{X}}+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{K}_{gc}^{\xi}}\label{eq:-3}\end{eqnarray}
 
 \end_inset
 
@@ -211,7 +211,7 @@ The expression for
  reads :
 \begin_inset Formula \begin{eqnarray}
 \mathcal{D}_{gc}^{\xi_{0}\mathbf{X}} & = & \nabla\xi_{0}\cdot\mathcal{D}_{gc}^{\mathbf{XX}}+\frac{\partial\xi_{0}}{\partial\xi}\mathcal{D}_{gc}^{\xi\mathbf{X}}\nonumber \\
- & = & \boxed{\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\nabla\ln\Psi\cdot\mathcal{D}_{gc}^{\mathbf{XX}}+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\xi\mathbf{X}}}\label{eq:-5}\end{eqnarray}
+ & = & \boxed{\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\nabla\Psi\cdot\mathcal{D}_{gc}^{\mathbf{XX}}+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\xi\mathbf{X}}}\label{eq:-5}\end{eqnarray}
 
 \end_inset
 
@@ -234,7 +234,7 @@ The expression for
  reads :
 \begin_inset Formula \begin{eqnarray}
 \mathcal{D}_{gc}^{\xi_{0}p} & = & \nabla\xi_{0}\cdot\mathcal{D}_{gc}^{\mathbf{X}p}+\frac{\partial\xi_{0}}{\partial\xi}\mathcal{D}_{gc}^{\xi p}\nonumber \\
- & = & \boxed{\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\nabla\ln\Psi\cdot\mathcal{D}_{gc}^{\mathbf{X}p}+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\xi p}}\label{eq:}\end{eqnarray}
+ & = & \boxed{\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\nabla\Psi\cdot\mathcal{D}_{gc}^{\mathbf{X}p}+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\xi p}}\label{eq:}\end{eqnarray}
 
 \end_inset
 
@@ -262,7 +262,7 @@ The expression for
 \begin_inset Formula \begin{eqnarray}
 \mathcal{D}_{gc}^{\xi_{0}\xi_{0}} & = & \nabla\xi_{0}\cdot\mathcal{D}_{gc}^{\mathbf{XX}}\cdot\nabla\xi_{0}+\mathcal{D}_{gc}^{\xi\xi}\left(\frac{\partial\xi_{0}}{\partial\xi}\right)^{2}+2\frac{\partial\xi_{0}}{\partial\xi}\mathcal{D}_{gc}^{\xi\mathbf{X}}\cdot\nabla\xi_{0}\nonumber \\
  & \simeq & \mathcal{D}_{gc}^{\xi\xi}\left(\frac{\partial\xi_{0}}{\partial\xi}\right)^{2}+2\frac{\partial\xi_{0}}{\partial\xi}\mathcal{D}_{gc}^{\xi\mathbf{X}}\cdot\nabla\xi_{0}\nonumber \\
- & = & \boxed{\mathcal{D}_{gc}^{\xi\xi}\left(\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\right)^{2}+\frac{1-\xi_{0}^{2}}{\xi_{0}}\frac{1}{\Psi^{2}}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\xi\mathbf{X}}\cdot\nabla\ln\Psi}\label{eq:-1}\end{eqnarray}
+ & = & \boxed{\mathcal{D}_{gc}^{\xi\xi}\left(\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\right)^{2}+\frac{1-\xi_{0}^{2}}{\xi_{0}}\frac{1}{\Psi^{2}}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\xi\mathbf{X}}\cdot\nabla\Psi}\label{eq:-1}\end{eqnarray}
 
 \end_inset
 
@@ -281,10 +281,10 @@ The expression for the guiding-center collision operator in
  coordinates reads :
 \begin_inset Formula \begin{eqnarray}
 C_{gc}\left[\overline{F}\right] & = & -\frac{1}{\mathcal{V}\mathcal{J}_{gc}}\frac{\partial}{\partial z^{\alpha}}\left[\mathcal{V}\mathcal{J}_{gc}\left(\mathcal{K}_{gc}^{\alpha}\overline{F}-\mathcal{D}_{gc}^{\alpha\beta}\frac{\partial\overline{F}}{\partial z^{\beta}}\right)\right]\nonumber \\
- & = & -\frac{1}{p^{2}}\frac{\partial}{\partial p}\left[p^{2}\left(\mathcal{K}_{gc}^{p}\overline{F}-\mathcal{D}_{gc}^{p\mathbf{X}}\cdot\nabla\overline{F}-\mathcal{D}_{gc}^{pp}\frac{\partial\overline{F}}{\partial p}-\left[\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\mathcal{D}_{gc}^{p\mathbf{X}}\cdot\nabla\ln\Psi+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{p\xi}\right]\frac{\partial\overline{F}}{\partial\xi_{0}}\right)\right]\nonumber \\
- &  & -\frac{\left|\xi\right|}{\xi_{0}}\frac{\partial}{\partial\xi_{0}}\left[\frac{\xi_{0}}{\left|\xi\right|}\left(\left[-\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\nabla\ln\Psi\cdot\mathcal{K}_{gc}^{\mathbf{X}}+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{K}_{gc}^{\xi}\right]\overline{F}-\left[\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\nabla\ln\Psi\cdot\mathcal{D}_{gc}^{\mathbf{XX}}+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\xi\mathbf{X}}\right]\cdot\nabla\overline{F}\right.\right.\nonumber \\
- &  & \left.\left.-\left[-\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\nabla\ln\Psi\cdot\mathcal{D}_{gc}^{\mathbf{X}p}+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\xi p}\right]\frac{\partial\overline{F}}{\partial p}-\left[\frac{1}{\Psi^{2}}\frac{\xi^{2}}{\xi_{0}^{2}}\mathcal{D}_{gc}^{\xi\xi}+\frac{1-\xi_{0}^{2}}{\xi_{0}}\frac{1}{\Psi^{2}}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\xi\mathbf{X}}\cdot\nabla\ln\Psi\right]\frac{\partial\overline{F}}{\partial\xi_{0}}\right)\right]\nonumber \\
- &  & -\frac{1}{\Psi}\frac{\left|\xi\right|}{\xi_{0}}\nabla\cdot\left[\Psi\frac{\xi_{0}}{\left|\xi\right|}\left(\mathcal{K}_{gc}^{\mathbf{X}}\overline{F}-\mathcal{D}_{gc}^{\mathbf{XX}}\cdot\nabla\overline{F}-\mathcal{D}_{gc}^{\mathbf{X}p}\frac{\partial\overline{F}}{\partial p}-\left[\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\mathcal{D}_{gc}^{\mathbf{XX}}\cdot\nabla\ln\Psi+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\mathbf{X}\xi}\right]\frac{\partial\overline{F}}{\partial\xi_{0}}\right)\right]\label{eq:-2}\end{eqnarray}
+ & = & -\frac{1}{p^{2}}\frac{\partial}{\partial p}\left[p^{2}\left(\mathcal{K}_{gc}^{p}\overline{F}-\mathcal{D}_{gc}^{p\mathbf{X}}\cdot\nabla\overline{F}-\mathcal{D}_{gc}^{pp}\frac{\partial\overline{F}}{\partial p}-\left[\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\mathcal{D}_{gc}^{p\mathbf{X}}\cdot\nabla\Psi+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{p\xi}\right]\frac{\partial\overline{F}}{\partial\xi_{0}}\right)\right]\nonumber \\
+ &  & -\frac{\left|\xi\right|}{\xi_{0}}\frac{\partial}{\partial\xi_{0}}\left[\frac{\xi_{0}}{\left|\xi\right|}\left(\left[-\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\nabla\Psi\cdot\mathcal{K}_{gc}^{\mathbf{X}}+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{K}_{gc}^{\xi}\right]\overline{F}-\left[\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\nabla\Psi\cdot\mathcal{D}_{gc}^{\mathbf{XX}}+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\xi\mathbf{X}}\right]\cdot\nabla\overline{F}\right.\right.\nonumber \\
+ &  & \left.\left.-\left[-\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\nabla\Psi\cdot\mathcal{D}_{gc}^{\mathbf{X}p}+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\xi p}\right]\frac{\partial\overline{F}}{\partial p}-\left[\frac{1}{\Psi^{2}}\frac{\xi^{2}}{\xi_{0}^{2}}\mathcal{D}_{gc}^{\xi\xi}+\frac{1-\xi_{0}^{2}}{\xi_{0}}\frac{1}{\Psi^{2}}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\xi\mathbf{X}}\cdot\nabla\Psi\right]\frac{\partial\overline{F}}{\partial\xi_{0}}\right)\right]\nonumber \\
+ &  & -\frac{1}{\Psi}\frac{\left|\xi\right|}{\xi_{0}}\nabla\cdot\left[\Psi\frac{\xi_{0}}{\left|\xi\right|}\left(\mathcal{K}_{gc}^{\mathbf{X}}\overline{F}-\mathcal{D}_{gc}^{\mathbf{XX}}\cdot\nabla\overline{F}-\mathcal{D}_{gc}^{\mathbf{X}p}\frac{\partial\overline{F}}{\partial p}-\left[\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\mathcal{D}_{gc}^{\mathbf{XX}}\cdot\nabla\Psi+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\mathbf{X}\xi}\right]\frac{\partial\overline{F}}{\partial\xi_{0}}\right)\right]\label{eq:-2}\end{eqnarray}
 
 \end_inset
 
@@ -413,14 +413,14 @@ Momentum component
 \begin_layout Standard
 The momentum component of the collision operator reads :
 \begin_inset Formula \begin{equation}
-\mathcal{C}_{p}=-\frac{1}{p^{2}}\frac{\partial}{\partial p}\left[p^{2}\left(\mathcal{K}_{gc}^{p}\overline{F}-\mathcal{D}_{gc}^{p\mathbf{X}}\cdot\nabla\overline{F}-\mathcal{D}_{gc}^{pp}\frac{\partial\overline{F}}{\partial p}-\left[\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\mathcal{D}_{gc}^{p\mathbf{X}}\cdot\nabla\ln\Psi+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{p\xi}\right]\frac{\partial\overline{F}}{\partial\xi_{0}}\right)\right]\end{equation}
+\mathcal{C}_{p}=-\frac{1}{p^{2}}\frac{\partial}{\partial p}\left[p^{2}\left(\mathcal{K}_{gc}^{p}\overline{F}-\mathcal{D}_{gc}^{p\mathbf{X}}\cdot\nabla\overline{F}-\mathcal{D}_{gc}^{pp}\frac{\partial\overline{F}}{\partial p}-\left[\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\mathcal{D}_{gc}^{p\mathbf{X}}\cdot\nabla\Psi+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{p\xi}\right]\frac{\partial\overline{F}}{\partial\xi_{0}}\right)\right]\end{equation}
 
 \end_inset
 
 Averaging therefore gives :
 \begin_inset Formula \begin{eqnarray}
 \left\{ \mathcal{C}_{p}\right\}  & = & \frac{1}{p^{2}}\frac{\partial}{\partial p}\left[p^{2}\left(-\left\{ \mathcal{K}_{gc}^{p}\right\} \overline{F}+\left\{ \mathcal{D}_{gc}^{p\mathbf{X}}\cdot\nabla\psi\right\} \frac{\partial\overline{F}}{\partial\psi}+\left\{ \mathcal{D}_{gc}^{pp}\right\} \frac{\partial\overline{F}}{\partial p}\right.\right.\nonumber \\
- &  & \left.\left.+\left[\left\{ \frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{p\xi}\right\} +\frac{1-\xi_{0}^{2}}{2\xi_{0}}\left\{ \frac{1}{\Psi}\mathcal{D}_{gc}^{p\mathbf{X}}\cdot\nabla\ln\Psi\right\} \right]\frac{\partial\overline{F}}{\partial\xi_{0}}\right)\right]\label{eq:-10}\end{eqnarray}
+ &  & \left.\left.+\left[\left\{ \frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{p\xi}\right\} +\frac{1-\xi_{0}^{2}}{2\xi_{0}}\left\{ \frac{1}{\Psi}\mathcal{D}_{gc}^{p\mathbf{X}}\cdot\nabla\Psi\right\} \right]\frac{\partial\overline{F}}{\partial\xi_{0}}\right)\right]\label{eq:-10}\end{eqnarray}
 
 \end_inset
 
@@ -434,19 +434,19 @@ Pitch-angle component
 \begin_layout Standard
 The pitch-angle component of the collision operator reads :
 \begin_inset Formula \begin{eqnarray}
-\mathcal{C}_{\xi_{0}} & = & -\frac{\left|\xi\right|}{\xi_{0}}\frac{\partial}{\partial\xi_{0}}\left[\frac{\xi_{0}}{\left|\xi\right|}\left(\left[\frac{1-\xi_{0}^{2}}{2\xi_{0}}\nabla\ln\Psi\cdot\mathcal{K}_{gc}^{\mathbf{X}}+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{K}_{gc}^{\xi}\right]\overline{F}\right.\right.\nonumber \\
- &  & -\left[\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\nabla\ln\Psi\cdot\mathcal{D}_{gc}^{\mathbf{XX}}+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\xi\mathbf{X}}\right]\cdot\nabla\overline{F}\nonumber \\
- &  & -\left[\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\nabla\ln\Psi\cdot\mathcal{D}_{gc}^{\mathbf{X}p}+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\xi p}\right]\frac{\partial\overline{F}}{\partial p}\nonumber \\
- &  & \left.\left.-\left[\frac{1}{\Psi^{2}}\frac{\xi^{2}}{\xi_{0}^{2}}\mathcal{D}_{gc}^{\xi\xi}+\frac{1-\xi_{0}^{2}}{\xi_{0}}\frac{1}{\Psi^{2}}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\xi\mathbf{X}}\cdot\nabla\ln\Psi\right]\frac{\partial\overline{F}}{\partial\xi_{0}}\right)\right]\label{eq:-4}\end{eqnarray}
+\mathcal{C}_{\xi_{0}} & = & -\frac{\left|\xi\right|}{\xi_{0}}\frac{\partial}{\partial\xi_{0}}\left[\frac{\xi_{0}}{\left|\xi\right|}\left(\left[\frac{1-\xi_{0}^{2}}{2\xi_{0}}\nabla\Psi\cdot\mathcal{K}_{gc}^{\mathbf{X}}+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{K}_{gc}^{\xi}\right]\overline{F}\right.\right.\nonumber \\
+ &  & -\left[\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\nabla\Psi\cdot\mathcal{D}_{gc}^{\mathbf{XX}}+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\xi\mathbf{X}}\right]\cdot\nabla\overline{F}\nonumber \\
+ &  & -\left[\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\nabla\Psi\cdot\mathcal{D}_{gc}^{\mathbf{X}p}+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\xi p}\right]\frac{\partial\overline{F}}{\partial p}\nonumber \\
+ &  & \left.\left.-\left[\frac{1}{\Psi^{2}}\frac{\xi^{2}}{\xi_{0}^{2}}\mathcal{D}_{gc}^{\xi\xi}+\frac{1-\xi_{0}^{2}}{\xi_{0}}\frac{1}{\Psi^{2}}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\xi\mathbf{X}}\cdot\nabla\Psi\right]\frac{\partial\overline{F}}{\partial\xi_{0}}\right)\right]\label{eq:-4}\end{eqnarray}
 
 \end_inset
 
 Averaging therefore gives :
 \begin_inset Formula \begin{eqnarray}
-\left\{ \mathcal{C}_{\xi_{0}}\right\}  & = & \frac{1}{\lambda}\frac{\partial}{\partial\xi_{0}}\left[\lambda\left(\left[-\frac{1-\xi_{0}^{2}}{2\xi_{0}}\left\{ \frac{1}{\Psi}\nabla\ln\Psi\cdot\mathcal{K}_{gc}^{\mathbf{X}}\right\} -\left\{ \frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{K}_{gc}^{\xi}\right\} \right]\overline{F}\right.\right.\nonumber \\
- &  & +\left[\left\{ \frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\xi\mathbf{X}}\cdot\nabla\psi\right\} +\frac{1-\xi_{0}^{2}}{2\xi_{0}}\left\{ \frac{1}{\Psi}\nabla\ln\Psi\cdot\mathcal{D}_{gc}^{\mathbf{XX}}\cdot\nabla\psi\right\} \right]\frac{\partial\overline{F}}{\partial\psi}\nonumber \\
- &  & +\left[\left\{ \frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\xi p}\right\} +\frac{1-\xi_{0}^{2}}{2\xi_{0}}\left\{ \frac{1}{\Psi}\nabla\ln\Psi\cdot\mathcal{D}_{gc}^{\mathbf{X}p}\right\} \right]\frac{\partial\overline{F}}{\partial p}\nonumber \\
- &  & \left.\left.+\left[\left\{ \frac{1}{\Psi^{2}}\frac{\xi^{2}}{\xi_{0}^{2}}\mathcal{D}_{gc}^{\xi\xi}\right\} +\frac{1-\xi_{0}^{2}}{\xi_{0}}\left\{ \frac{1}{\Psi^{2}}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\xi\mathbf{X}}\cdot\nabla\ln\Psi\right\} \right]\frac{\partial\overline{F}}{\partial\xi_{0}}\right)\right]\label{eq:-6}\end{eqnarray}
+\left\{ \mathcal{C}_{\xi_{0}}\right\}  & = & \frac{1}{\lambda}\frac{\partial}{\partial\xi_{0}}\left[\lambda\left(\left[-\frac{1-\xi_{0}^{2}}{2\xi_{0}}\left\{ \frac{1}{\Psi}\nabla\Psi\cdot\mathcal{K}_{gc}^{\mathbf{X}}\right\} -\left\{ \frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{K}_{gc}^{\xi}\right\} \right]\overline{F}\right.\right.\nonumber \\
+ &  & +\left[\left\{ \frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\xi\mathbf{X}}\cdot\nabla\psi\right\} +\frac{1-\xi_{0}^{2}}{2\xi_{0}}\left\{ \frac{1}{\Psi}\nabla\Psi\cdot\mathcal{D}_{gc}^{\mathbf{XX}}\cdot\nabla\psi\right\} \right]\frac{\partial\overline{F}}{\partial\psi}\nonumber \\
+ &  & +\left[\left\{ \frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\xi p}\right\} +\frac{1-\xi_{0}^{2}}{2\xi_{0}}\left\{ \frac{1}{\Psi}\nabla\Psi\cdot\mathcal{D}_{gc}^{\mathbf{X}p}\right\} \right]\frac{\partial\overline{F}}{\partial p}\nonumber \\
+ &  & \left.\left.+\left[\left\{ \frac{1}{\Psi^{2}}\frac{\xi^{2}}{\xi_{0}^{2}}\mathcal{D}_{gc}^{\xi\xi}\right\} +\frac{1-\xi_{0}^{2}}{\xi_{0}}\left\{ \frac{1}{\Psi^{2}}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\xi\mathbf{X}}\cdot\nabla\Psi\right\} \right]\frac{\partial\overline{F}}{\partial\xi_{0}}\right)\right]\label{eq:-6}\end{eqnarray}
 
 \end_inset
 
@@ -466,16 +466,16 @@ The spatial component of the collision operator reads, inserting the spatial
  :
 \begin_inset Formula \begin{eqnarray}
 \mathcal{C}_{\mathbf{X}} & = & -B_{0}\frac{B_{P}}{B}\frac{\left|\xi\right|}{\xi_{0}}\frac{\partial}{\partial\psi}\left[\frac{1}{B_{0}}\frac{B}{B_{P}}\frac{\xi_{0}}{\left|\xi\right|}\left(\nabla\psi\cdot\mathcal{K}_{gc}^{\mathbf{X}}\overline{F}-\nabla\psi\cdot\mathcal{D}_{gc}^{\mathbf{XX}}\cdot\nabla\overline{F}-\nabla\psi\cdot\mathcal{D}_{gc}^{\mathbf{X}p}\frac{\partial\overline{F}}{\partial p}\right.\right.\nonumber \\
- &  & \left.\left.-\left[\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\nabla\psi\cdot\mathcal{D}_{gc}^{\mathbf{XX}}\cdot\nabla\ln\Psi+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\nabla\psi\cdot\mathcal{D}_{gc}^{\mathbf{X}\xi}\right]\frac{\partial\overline{F}}{\partial\xi_{0}}\right)\right]\nonumber \\
+ &  & \left.\left.-\left[\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\nabla\psi\cdot\mathcal{D}_{gc}^{\mathbf{XX}}\cdot\nabla\Psi+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\nabla\psi\cdot\mathcal{D}_{gc}^{\mathbf{X}\xi}\right]\frac{\partial\overline{F}}{\partial\xi_{0}}\right)\right]\nonumber \\
  &  & -\frac{B_{P}}{B}\frac{\left|\xi\right|}{\xi_{0}}\frac{\partial}{\partial s}\left[\frac{B}{B_{P}}\frac{\xi_{0}}{\left|\xi\right|}\left(\nabla s\cdot\mathcal{K}_{gc}^{\mathbf{X}}\overline{F}-\nabla s\cdot\mathcal{D}_{gc}^{\mathbf{XX}}\cdot\nabla\overline{F}-\nabla s\cdot\mathcal{D}_{gc}^{\mathbf{X}p}\frac{\partial\overline{F}}{\partial p}\right.\right.\nonumber \\
- &  & \left.\left.-\left[\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\nabla s\cdot\mathcal{D}_{gc}^{\mathbf{XX}}\cdot\nabla\ln\Psi+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\nabla s\cdot\mathcal{D}_{gc}^{\mathbf{X}\xi}\right]\frac{\partial\overline{F}}{\partial\xi_{0}}\right)\right]\label{eq:-8}\end{eqnarray}
+ &  & \left.\left.-\left[\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\nabla s\cdot\mathcal{D}_{gc}^{\mathbf{XX}}\cdot\nabla\Psi+\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\nabla s\cdot\mathcal{D}_{gc}^{\mathbf{X}\xi}\right]\frac{\partial\overline{F}}{\partial\xi_{0}}\right)\right]\label{eq:-8}\end{eqnarray}
 
 \end_inset
 
 Averaging therefore gives :
 \begin_inset Formula \begin{eqnarray}
 \left\{ \mathcal{C}_{\mathbf{X}}\right\}  & = & \frac{B_{0}}{\Lambda_{0}\lambda}\frac{\partial}{\partial\psi}\left[\frac{\Lambda_{0}\lambda}{B_{0}}\left(-\left\{ \nabla\psi\cdot\mathcal{K}_{gc}^{\mathbf{X}}\right\} \overline{F}+\left\{ \nabla\psi\cdot\mathcal{D}_{gc}^{\mathbf{XX}}\cdot\nabla\psi\right\} \frac{\partial\overline{F}}{\partial\psi}+\left\{ \nabla\psi\cdot\mathcal{D}_{gc}^{\mathbf{X}p}\right\} \frac{\partial\overline{F}}{\partial p}\right.\right.\nonumber \\
- &  & \left.\left.+\left[\frac{1-\xi_{0}^{2}}{2\xi_{0}}\left\{ \frac{1}{\Psi}\nabla\psi\cdot\mathcal{D}_{gc}^{\mathbf{XX}}\cdot\nabla\ln\Psi\right\} +\left\{ \frac{1}{\Psi}\frac{\xi}{\xi_{0}}\nabla\psi\cdot\mathcal{D}_{gc}^{\mathbf{X}\xi}\right\} \right]\frac{\partial\overline{F}}{\partial\xi_{0}}\right)\right]\label{eq:-9}\end{eqnarray}
+ &  & \left.\left.+\left[\frac{1-\xi_{0}^{2}}{2\xi_{0}}\left\{ \frac{1}{\Psi}\nabla\psi\cdot\mathcal{D}_{gc}^{\mathbf{XX}}\cdot\nabla\Psi\right\} +\left\{ \frac{1}{\Psi}\frac{\xi}{\xi_{0}}\nabla\psi\cdot\mathcal{D}_{gc}^{\mathbf{X}\xi}\right\} \right]\frac{\partial\overline{F}}{\partial\xi_{0}}\right)\right]\label{eq:-9}\end{eqnarray}
 
 \end_inset
 
@@ -556,7 +556,7 @@ We can therefore deduce the following expression for the drag vector components,
 \begin_inset Formula \begin{eqnarray}
 F_{\psi}^{\left(0\right)} & = & \frac{1}{\left|\nabla\psi\right|_{0}}\left\{ \nabla\psi\cdot\mathcal{K}_{gc}^{\mathbf{X}}\right\} \\
 F_{p}^{\left(0\right)} & = & \left\{ \mathcal{K}_{gc}^{p}\right\} \\
-F_{\xi}^{\left(0\right)} & = & -\frac{p}{\sqrt{1-\xi_{0}^{2}}}\left[\frac{1-\xi_{0}^{2}}{2\xi_{0}}\left\{ \frac{1}{\Psi}\nabla\ln\Psi\cdot\mathcal{K}_{gc}^{\mathbf{X}}\right\} +\left\{ \frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{K}_{gc}^{\xi}\right\} \right]\end{eqnarray}
+F_{\xi}^{\left(0\right)} & = & -\frac{p}{\sqrt{1-\xi_{0}^{2}}}\left[\frac{1-\xi_{0}^{2}}{2\xi_{0}}\left\{ \frac{1}{\Psi}\nabla\Psi\cdot\mathcal{K}_{gc}^{\mathbf{X}}\right\} +\left\{ \frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{K}_{gc}^{\xi}\right\} \right]\end{eqnarray}
 
 \end_inset
 
@@ -564,10 +564,10 @@ The diffusion tensor components read :
 \begin_inset Formula \begin{eqnarray}
 D_{\psi\psi}^{\left(0\right)} & = & \frac{1}{\left|\nabla\psi\right|_{0}^{2}}\left\{ \nabla\psi\cdot\mathcal{D}_{gc}^{\mathbf{XX}}\cdot\nabla\psi\right\} \\
 D_{\psi p}^{\left(0\right)} & = & \frac{1}{\left|\nabla\psi\right|_{0}}\left\{ \nabla\psi\cdot\mathcal{D}_{gc}^{\mathbf{X}p}\right\} \\
-D_{\psi\xi}^{\left(0\right)} & = & -\frac{p}{\sqrt{1-\xi_{0}^{2}}}\frac{1}{\left|\nabla\psi\right|_{0}}\left[\frac{1-\xi_{0}^{2}}{2\xi_{0}}\left\{ \frac{1}{\Psi}\nabla\psi\cdot\mathcal{D}_{gc}^{\mathbf{XX}}\cdot\nabla\ln\Psi\right\} +\left\{ \frac{1}{\Psi}\frac{\xi}{\xi_{0}}\nabla\psi\cdot\mathcal{D}_{gc}^{\mathbf{X}\xi}\right\} \right]\\
+D_{\psi\xi}^{\left(0\right)} & = & -\frac{p}{\sqrt{1-\xi_{0}^{2}}}\frac{1}{\left|\nabla\psi\right|_{0}}\left[\frac{1-\xi_{0}^{2}}{2\xi_{0}}\left\{ \frac{1}{\Psi}\nabla\psi\cdot\mathcal{D}_{gc}^{\mathbf{XX}}\cdot\nabla\Psi\right\} +\left\{ \frac{1}{\Psi}\frac{\xi}{\xi_{0}}\nabla\psi\cdot\mathcal{D}_{gc}^{\mathbf{X}\xi}\right\} \right]\\
 D_{pp}^{\left(0\right)} & = & \left\{ \mathcal{D}_{gc}^{pp}\right\} \\
-D_{p\xi}^{\left(0\right)} & = & -\frac{p}{\sqrt{1-\xi_{0}^{2}}}\left[\left\{ \frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{p\xi}\right\} +\frac{1-\xi_{0}^{2}}{2\xi_{0}}\left\{ \frac{1}{\Psi}\mathcal{D}_{gc}^{p\mathbf{X}}\cdot\nabla\ln\Psi\right\} \right]\\
-D_{\xi\xi}^{\left(0\right)} & = & \frac{p^{2}}{1-\xi_{0}^{2}}\left[\left\{ \frac{1}{\Psi^{2}}\frac{\xi^{2}}{\xi_{0}^{2}}\mathcal{D}_{gc}^{\xi\xi}\right\} +\frac{1-\xi_{0}^{2}}{\xi_{0}}\left\{ \frac{1}{\Psi^{2}}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\xi\mathbf{X}}\cdot\nabla\ln\Psi\right\} \right]\end{eqnarray}
+D_{p\xi}^{\left(0\right)} & = & -\frac{p}{\sqrt{1-\xi_{0}^{2}}}\left[\left\{ \frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{p\xi}\right\} +\frac{1-\xi_{0}^{2}}{2\xi_{0}}\left\{ \frac{1}{\Psi}\mathcal{D}_{gc}^{p\mathbf{X}}\cdot\nabla\Psi\right\} \right]\\
+D_{\xi\xi}^{\left(0\right)} & = & \frac{p^{2}}{1-\xi_{0}^{2}}\left[\left\{ \frac{1}{\Psi^{2}}\frac{\xi^{2}}{\xi_{0}^{2}}\mathcal{D}_{gc}^{\xi\xi}\right\} +\frac{1-\xi_{0}^{2}}{\xi_{0}}\left\{ \frac{1}{\Psi^{2}}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\xi\mathbf{X}}\cdot\nabla\Psi\right\} \right]\end{eqnarray}
 
 \end_inset
 
