@@ -89,8 +89,8 @@ dkepath.pcluke = pcluke;
 %
 dkepath.hostname.laptopyves = 'peysson';%WARNING: for laptop, may change with connection status.
 %
-laptopyves.luke_root = [getenv('HOME'),'/CEA/Projets/LUKE/'];
-laptopyves.local_root = [getenv('HOME'),'/CEA/Projets/'];
+laptopyves.luke_root = [getenv('HOME'),'/Travail/Projets/LUKE/'];
+laptopyves.local_root = [getenv('HOME'),'/Travail/Projets/'];
 laptopyves.computer = 'MAC';%machine type and supported OS
 laptopyves.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
