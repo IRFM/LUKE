@@ -18,7 +18,7 @@ double ran2;
 long int *reset;
 double *res;
 double pi = 3.141592653526;
-
+{
 static double ran2(idum)
 long int *idum;
 {
@@ -86,7 +86,7 @@ m_s3=-(raymagnetic.BPHIn[0]/raymagnetic.calpha[0])*Y[3]*raymagnetic.gradrhon[0];
 m_s4=(raymagnetic.Bsn[0]/raymagnetic.calpha[0])*(Npar/cnorm);
 m_s5=-Y[4]/raymagnetic.rn[0];
 
-m_scat[0]=(m_s1+((m_s2+m_s3)*sin(res[0]))-((m_s4+m_s5)*cos(res[0])))*raymagnetic.rn[0];
+m[0]=(m_s1+((m_s2+m_s3)*sin(res[0]))-((m_s4+m_s5)*cos(res[0])))*raymagnetic.rn[0];
 
 n_s1=raymagnetic.BPHIn[0]*(Npar/cnorm);
 n_s2=raymagnetic.Bsn[0]*Y[3]*raymagnetic.gradrhon[0];
@@ -94,4 +94,5 @@ n_s3=-raymagnetic.Bsn[0]*(Y[4]/raymagnetic.rn[0])*raymagnetic.salpha[0];
 n_s4=raymagnetic.BPHIn[0]*(Npar/cnorm);
 n_s5=-Y[5]/raymagnetic.Rn[0];
 
-n_scat[0]=(n_s1+((n_s2+n_s3)*sin(res[0]))-((n_s4+n_s5)*cos(res[0])))*raymagnetic.Rn[0];
+n[0]=(n_s1+((n_s2+n_s3)*sin(res[0]))-((n_s4+n_s5)*cos(res[0])))*raymagnetic.Rn[0];
+}
