@@ -104,15 +104,23 @@ tircauchylorentz(reset,halfmode,fwhm,res)
 long int *reset;
 double *halfmode,*fwhm,*res;
 {
+    long int test = 0;
     double pi = 3.141592653526;
-    
-    
-    res[0] = 1.0 + 1.0*tan(pi*(ran2(reset) - 0.5));
-      
-    
+    double rand1;
+        
+    while (test == 0) {
+        rand1 = ran2(reset);
+        if (halfmode[0] == 1.0) {
+            if (rand1 >= 0.5) {
+                res[0] = fwhm[0]*tan(pi*(rand1 - 0.5))/2;
+                test = 1;
+            }
+        } else {
+            res[0] = fwhm[0]*tan(pi*(rand1 - 0.5))/2;
+            test = 1;
+        }
+    }
 }
-
-
 
 
 static cauchylorentz(s0out,xn,halfmode,fwhm,xreset0)
