@@ -1,9 +1,8 @@
 /*
  
-	mcaziyp.C	MEX file for a test program describing the random azimuthal 
-					angle after Compton scattering.
+	mcaziyp.C	MEX file for a test program describing the random azimuthal angle (beta) around the magnetic field direction
 					
-	[s0] = mcaziyp(xn,xreset0)
+	[s0] = beta_gen(xn,xreset0)
 
 	INPUT:
 		- xn: number of trials [1,1]
@@ -11,17 +10,11 @@
 
 	OUTPUT:
 	
-		- phi : random azimuthal angle [xn,1]
+		- beta : random azimuthal angle (0:2*pi) [xn,1]
 
 
-   	COMPILATION DEC-STATION:
-   	
-   		- move to the directory of the source code xxx.c
-   		- execute the command /usr/local/matlab/bin/cmex xxx.c -lm
 
-by Y.PEYSSON CEA-DRFC 15/05/1991 <peysson@fedv09.cad.cea.fr>
-for MatLab 4.1 (02/09/1994) 
-modified for MatLab 5.2 by Philippe Chaumin 29/04/2002
+by Y.PEYSSON CEA-DRFC <yves.peysson@cea.fr>
 */
 
 #include <math.h>
