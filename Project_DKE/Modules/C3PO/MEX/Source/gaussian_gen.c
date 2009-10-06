@@ -1,16 +1,18 @@
 /*
  
-	gaussian_gen.C	MEX file for a test program describing a random variable with a Gaussian distribution function
+	gaussian_gen.C	MEX file for a test program describing a centered random variable with a Gaussian distribution function
 					
-	[s0] = gaussian_gen(xn,xreset0)
+	[s0] = gaussian_gen(xn,halfmode,fwmh,xreset0)
 
 	INPUT:
 		- xn: number of trials [1,1]
+        - halfmode: 0 -> x = (-inf:+Inf), 1 -> x = (0:+Inf)
+        - fwmh: full width at half maximum
 		- xreset0: initialization number for the random generator [1,1]  
 
 	OUTPUT:
 	
-		- beta : random azimuthal angle (0:2*pi) [xn,1]
+		- x : random value [xn,1]
 
 
 
@@ -103,22 +105,20 @@ long int *reset;
 double *halfmode,*fwhm,*res;
 {
     long int test = 0;
-    double res1,res2,res3,res4;
-    
-/* (fwhm[0]/(2.0*sqrt(2.0*log(2.0)))) */ 
-    
+    double rand1,rand2,rand3,rand4;
+        
     while (test == 0) {
-        res1 = -(fwhm[0]/(2.0*sqrt(2.0*log(2.0))))*(fwhm[0]/(2.0*sqrt(2.0*log(2.0))))*log(ran2(reset));
-        res2 = -(fwhm[0]/(2.0*sqrt(2.0*log(2.0))))*(fwhm[0]/(2.0*sqrt(2.0*log(2.0))))*log(ran2(reset)); 
-        res3 = 0.5*(res1-1.0)*(res1-1.0);
-        if (res3 <= res2) {
+        rand1 = -(fwhm[0]/(2.0*sqrt(2.0*log(2.0))))*(fwhm[0]/(2.0*sqrt(2.0*log(2.0))))*log(ran2(reset));
+        rand2 = -(fwhm[0]/(2.0*sqrt(2.0*log(2.0))))*(fwhm[0]/(2.0*sqrt(2.0*log(2.0))))*log(ran2(reset)); 
+        rand3 = 0.5*(rand1-1.0)*(rand1-1.0);
+        if (rand3 <= rand2) {
             if (halfmode[0] == 1) {
-                res[0] = res1;
+                res[0] = rand1;
             } else {
                 if (ran2(reset) < 0.5) {
-                    res[0] = res1;
+                    res[0] = rand1;
                 } else {
-                    res[0] = -res1;
+                    res[0] = -rand1;
                 }
             }
             test = 1;
