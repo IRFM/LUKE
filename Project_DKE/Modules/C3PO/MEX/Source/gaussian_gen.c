@@ -115,11 +115,7 @@ double *halfmode,*fwhm,*res;
             if (halfmode[0] == 1) {
                 res[0] = rand1;
             } else {
-                if (ran2(reset) < 0.5) {
-                    res[0] = rand1;
-                } else {
-                    res[0] = -rand1;
-                }
+                res[0] = rand1*(2.0*ran2(reset) - 1.0);
             }
             test = 1;
         }
