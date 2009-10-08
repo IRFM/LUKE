@@ -105,7 +105,7 @@ long int *reset;
 double *halfmode,*fwhm,*res;
 {
     long int test = 0;
-    double rand1,rand2,rand3,rand4;
+    double rand1,rand2,rand3;
         
     while (test == 0) {
         rand1 = -(fwhm[0]/(2.0*sqrt(2.0*log(2.0))))*(fwhm[0]/(2.0*sqrt(2.0*log(2.0))))*log(ran2(reset));
@@ -115,7 +115,11 @@ double *halfmode,*fwhm,*res;
             if (halfmode[0] == 1) {
                 res[0] = rand1;
             } else {
-                res[0] = rand1*(2.0*ran2(reset) - 1.0);
+                if (ran2(reset) < 0.5) {
+                    res[0] = rand1;
+                } else {
+                    res[0] = -rand1;
+                }
             }
             test = 1;
         }
