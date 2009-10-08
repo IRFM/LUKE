@@ -1232,7 +1232,20 @@ reference "ws3"
  
 \end_layout
 
+\begin_layout Section
+The wave kinetic equation
+\end_layout
+
+\begin_layout Section
+Numerical algorithm
+\end_layout
+
+\begin_layout Section
+Conclusions
+\end_layout
+
 \begin_layout Standard
+\start_of_appendix
 \begin_inset ERT
 status collapsed
 
@@ -1939,6 +1952,13 @@ with the usual constraint of acceptance for the coordinates
 \begin_inset Formula $\left(y,z\right)$
 \end_inset
 
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "pre92"
+
+\end_inset
+
 , 
 \begin_inset Formula \begin{equation}
 -\frac{z}{\sigma^{2}}<-\frac{\left(y-1\right)^{2}}{2\sigma^{2}}\label{eq:gaussianacceptance}\end{equation}
@@ -1955,11 +1975,29 @@ or
 \end_layout
 
 \begin_layout Standard
-The rejection process starts with the generation of two random numbers 
+It is important to note that the normalisation factors in front of (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:haldgaussianpdfbis"
+
+\end_inset
+
+) do not play a role in the shape of the distribution.
+ So they do not contribute to the generation of random numbers 
+\begin_inset Formula $y$
+\end_inset
+
+ with a Gaussian distribution.
+ 
+\end_layout
+
+\begin_layout Standard
+The rejection procedure starts with the generation of two random numbers
+ 
 \begin_inset Formula $y\left[z\right]$
 \end_inset
 
- whose pdf has the form 
+ whose pdf has the same form 
 \begin_inset Formula $\exp\left(-y\left[z\right]/\sigma^{2}\right)$
 \end_inset
 
@@ -1985,7 +2023,14 @@ where
 \begin_inset Formula $x_{y}\left[x_{z}\right]\in\left]0,1\right[$
 \end_inset
 
- .
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "pre92"
+
+\end_inset
+
+.
  Once 
 \begin_inset Formula $y\left[z\right]$
 \end_inset
@@ -2002,7 +2047,11 @@ reference "eq:gaussianacceptancebis"
 \end_inset
 
 ) is fullfiled.
- Otherwise the process is repeated until it is accepted.
+ Otherwise the whole procedure is repeated until the value 
+\begin_inset Formula $y$
+\end_inset
+
+ is accepted.
 \end_layout
 
 \begin_layout Standard
@@ -2076,7 +2125,7 @@ status collapsed
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename gaussian_gen_efficiency.eps
+	filename /Users/Yves/Travail/Projets/LUKE/Project_DKE/Modules/C3PO/Doc/figs/gaussian_gen_efficiency.eps
 	width 3.6in
 	clip
 
@@ -2122,7 +2171,7 @@ Finally, in order to get
 \begin_inset Formula $y\in\left]-\infty,+\infty\right[$
 \end_inset
 
-, it is just necessary to multiply the solution 
+, the solution 
 \begin_inset Formula $y$
 \end_inset
 
@@ -2133,7 +2182,7 @@ reference "eq:expgenerator"
 
 \end_inset
 
-) by the random number 
+) must be multiplied by the random number 
 \begin_inset Formula $s=sign(2x_{s}-1)$
 \end_inset
 
