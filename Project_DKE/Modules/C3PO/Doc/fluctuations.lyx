@@ -1263,7 +1263,7 @@ name "sec:Appendix"
 
 \end_inset
 
-Appendix 
+Appendix A
 \end_layout
 
 \begin_layout Standard
@@ -1675,6 +1675,477 @@ and
 \end_inset
 
 and the dispersion relation.
+\end_layout
+
+\begin_layout Section
+Appendix B
+\end_layout
+
+\begin_layout Standard
+Depending upon the plasma regime and the spatial localization, magnetic
+ or density fluctuation spectra may be well approximated by Gaussian or
+ Cauchy-Lorentz distributions.
+ For this purpose, appropriate random numbers must be generated with the
+ corresponding probability distribution function (pdf).
+ Let denotes the uniform pdf for a variable 
+\begin_inset Formula $x$
+\end_inset
+
+ as 
+\begin_inset Formula \begin{equation}
+p\left(x\right)=\begin{cases}
+1, & 0<x<1\\
+0, & otherwise\end{cases}\label{eq:uniformdeviate}\end{equation}
+
+\end_inset
+
+and a non-uniform pdf for the variable 
+\begin_inset Formula $y$
+\end_inset
+
+ denoted 
+\begin_inset Formula $p\left(y\right)dy$
+\end_inset
+
+ which related to 
+\begin_inset Formula $p\left(x\right)dx$
+\end_inset
+
+ by the fundamental transformation law of probabilities 
+\begin_inset Formula \begin{equation}
+\left|p\left(y\right)dy\right|=\left|p\left(x\right)dx\right|\label{eq:-1}\end{equation}
+
+\end_inset
+
+so that 
+\begin_inset Formula \begin{equation}
+p\left(y\right)=\left|\frac{dx}{dy}\right|p\left(x\right)\label{eq:py}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If the relation 
+\begin_inset Formula $y\left(x\right)$
+\end_inset
+
+ is explicitely known, then it is possible to generate a random numbers
+ with a pdf 
+\begin_inset Formula $p\left(y\right)$
+\end_inset
+
+ from a the uniform one 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $p\left(x\right)$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+ by applying the transformation 
+\begin_inset Formula \begin{equation}
+y=F^{-1}\left(x\right)\label{eq:invF}\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $F^{-1}\left(y\right)$
+\end_inset
+
+ is the inverse of the indefinite integral of the function 
+\begin_inset Formula $f\left(y\right)=dx/dy$
+\end_inset
+
+.
+ Wether (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:invF"
+
+\end_inset
+
+) is feasible to implement depends on wether the inverse function of the
+ integral of 
+\begin_inset Formula $f\left(y\right)$
+\end_inset
+
+is itself feasible to compute either analytically or numerically.
+ Here 
+\begin_inset Formula $F$
+\end_inset
+
+ is nothing but the cumulative distribution function (cdf) associated to
+ 
+\begin_inset Formula $p\left(y\right)$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsection
+Cauchy-Lorentz distribution
+\end_layout
+
+\begin_layout Standard
+For the Cauchy-Lorentz distribution centered around 
+\begin_inset Formula $y=0$
+\end_inset
+
+, the cdf takes the simple form 
+\begin_inset Formula \begin{equation}
+F\left(y\right)=\frac{1}{2}+\frac{1}{\pi}\tan^{-1}\left(\frac{2y}{\Delta}\right)\label{eq:cumcauchylorentzdist}\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\Delta$
+\end_inset
+
+ is the full width at half maximum (FWHM).
+ It's inverse value is then
+\begin_inset Formula \begin{equation}
+F^{-1}\left(x\right)=\frac{\Delta}{2}\tan\left(\pi\left(x-\frac{1}{2}\right)\right)\label{eq:invcumcauchylorentzdist}\end{equation}
+
+\end_inset
+
+and the calculation of random numbers with a Cauchy-Lorentz pdf from a uniform
+ random generator is straightforward.
+ 
+\end_layout
+
+\begin_layout Standard
+The resulting distribution is 
+\begin_inset Formula \begin{equation}
+p\left(y\right)=\frac{1}{\pi}\frac{\Delta/2}{y^{2}+\left(\Delta/2\right)^{2}}\label{eq:cauchylorentzdist}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Gaussian distribution
+\end_layout
+
+\begin_layout Standard
+For a one dimensional Gaussian or normal distribution, 
+\begin_inset Formula \begin{equation}
+p\left(y\right)=\frac{1}{\sigma\sqrt{2\pi}}\exp\left(-\frac{y^{2}}{2\sigma^{2}}\right)\label{eq:gaussiandist}\end{equation}
+
+\end_inset
+
+with 
+\begin_inset Formula $y\in\left]-\infty,+\infty\right[$
+\end_inset
+
+, the approach is more complex, since 
+\begin_inset Formula $F^{-1}$
+\end_inset
+
+ does not exist analytically.
+ In (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:gaussiandist"
+
+\end_inset
+
+), the variance 
+\begin_inset Formula $\sigma$
+\end_inset
+
+ is related to the full width at half maximum by the usual relation 
+\begin_inset Formula $\Delta=2\sqrt{2\ln2}\sigma$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Instead of considering the usual Box-Muller method for a two dimensional
+ problem 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "pre92"
+
+\end_inset
+
+, an efficient standard rejection technique is applied in a first step to
+ the normalized Gaussian distribution 
+\begin_inset Formula $p^{+}\left(y\right)$
+\end_inset
+
+ on the restricted domain 
+\begin_inset Formula $y\in\left[0,+\infty\right[$
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+p^{+}\left(y\right)=\frac{1}{\sigma}\sqrt{\frac{2}{\pi}}\exp\left(-\frac{y^{2}}{2\sigma^{2}}\right)\label{eq:halfgaussiandist}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Since the pdf (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:halfgaussiandist"
+
+\end_inset
+
+) may be expressed in the form
+\begin_inset Formula \begin{align}
+p^{+}\left(y\right) & =\frac{1}{\sigma}\sqrt{\frac{2}{\pi}}\exp\left(\frac{1}{2\sigma^{2}}\right)\exp\left(-\frac{y}{\sigma^{2}}\right)\exp\left(-\frac{\left(y-1\right)^{2}}{2\sigma^{2}}\right)\label{eq:haldgaussianpdfbis}\end{align}
+
+\end_inset
+
+it is possible to apply the rejection technique but for random numbers which
+ are non uniformly distributed.
+ Indeed, the pdf (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:haldgaussianpdfbis"
+
+\end_inset
+
+) may be interpreted as a two dimensional probability distribution
+\begin_inset Formula \begin{equation}
+\widetilde{p}^{+}\left(y,z\right)\equiv\exp\left(-\frac{y}{\sigma^{2}}\right)\exp\left(-\frac{z}{\sigma^{2}}\right)\label{eq:2dgaussiandist}\end{equation}
+
+\end_inset
+
+with the usual constraint of acceptance for the coordinates 
+\begin_inset Formula $\left(y,z\right)$
+\end_inset
+
+, 
+\begin_inset Formula \begin{equation}
+-\frac{z}{\sigma^{2}}<-\frac{\left(y-1\right)^{2}}{2\sigma^{2}}\label{eq:gaussianacceptance}\end{equation}
+
+\end_inset
+
+or
+\begin_inset Formula \begin{equation}
+\frac{\left(y-1\right)^{2}}{2}<z\label{eq:gaussianacceptancebis}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The rejection process starts with the generation of two random numbers 
+\begin_inset Formula $y\left[z\right]$
+\end_inset
+
+ whose pdf has the form 
+\begin_inset Formula $\exp\left(-y\left[z\right]/\sigma^{2}\right)$
+\end_inset
+
+in the interval 
+\begin_inset Formula $\left[y\left[z\right],y\left[z\right]+dy\left[dz\right]\right]$
+\end_inset
+
+, according to (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:2dgaussiandist"
+
+\end_inset
+
+).
+ This is achieved by the relation
+\begin_inset Formula \begin{equation}
+y\left[z\right]=-\sigma^{2}\ln\left(x_{y}\left[x_{z}\right]\right)\label{eq:expgenerator}\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $x_{y}\left[x_{z}\right]\in\left]0,1\right[$
+\end_inset
+
+ .
+ Once 
+\begin_inset Formula $y\left[z\right]$
+\end_inset
+
+ have been obtained, the value 
+\begin_inset Formula $y$
+\end_inset
+
+ is accepted if the condition (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:gaussianacceptancebis"
+
+\end_inset
+
+) is fullfiled.
+ Otherwise the process is repeated until it is accepted.
+\end_layout
+
+\begin_layout Standard
+The probability of obtaining a satisfactory random number 
+\begin_inset Formula $y$
+\end_inset
+
+ on the first trial, which called the efficiency 
+\begin_inset Formula $\mathcal{E}$
+\end_inset
+
+ of the random generator, is the sum of the probabilities of selecting a
+ value 
+\begin_inset Formula $y$
+\end_inset
+
+ in any one of the separate interval 
+\begin_inset Formula $dy$
+\end_inset
+
+,
+\begin_inset Formula \begin{align}
+\mathcal{E} & =\intop_{0}^{+\infty}\exp\left(-\frac{y}{\sigma^{2}}\right)\exp\left(-\frac{\left(y-1\right)^{2}}{2\sigma^{2}}\right)dy\nonumber \\
+ & =\sigma\sqrt{\frac{\pi}{2}}\exp\left(-\frac{1}{2\sigma^{2}}\right)\label{eq:efficiency}\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For 
+\begin_inset Formula $\sigma=1,$
+\end_inset
+
+ 
+\begin_inset Formula $\mathcal{E}\simeq0.76$
+\end_inset
+
+, which is a high number for a rejection method.
+ However, as shown in Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "FigGaussianGenEfficiency"
+
+\end_inset
+
+, the performances of the Gaussian random generator degradate rapidly when
+ the variance 
+\begin_inset Formula $\sigma$
+\end_inset
+
+ is less than unity, otherwise, 
+\begin_inset Formula $\mathcal{E}$
+\end_inset
+
+ scales almost linearly with 
+\begin_inset Formula $\sigma$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement htb
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename gaussian_gen_efficiency.eps
+	width 3.6in
+	clip
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Efficiency of the Gaussian random number generator as a function of the
+ variance
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "FigGaussianGenEfficiency"
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Finally, in order to get 
+\begin_inset Formula $p\left(y\right)$
+\end_inset
+
+ in the interval 
+\begin_inset Formula $y\in\left]-\infty,+\infty\right[$
+\end_inset
+
+, it is just necessary to multiply the solution 
+\begin_inset Formula $y$
+\end_inset
+
+ obtained with (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:expgenerator"
+
+\end_inset
+
+) by the random number 
+\begin_inset Formula $s=sign(2x_{s}-1)$
+\end_inset
+
+, where 
+\begin_inset Formula $x_{s}$
+\end_inset
+
+ is another uniform random number itself in the interval 
+\begin_inset Formula $x_{s}\in\left]0,1\right[$
+\end_inset
+
+.
 \end_layout
 
 \end_body
