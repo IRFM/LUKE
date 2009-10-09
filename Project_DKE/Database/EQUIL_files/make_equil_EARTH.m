@@ -12,7 +12,7 @@ RE = 6371e3;% earth radius (m)
 [qe,me,mp,mn,e0,mu0,re,mc2,clum] = pc_dke_yp;
 %
 npsi = 101;% number of points in psi grid
-ntheta = 321;%65;% number of points in theta grid
+ntheta = 161;%65;% number of points in theta grid
 %
 % Equilibrium parameters
 %
