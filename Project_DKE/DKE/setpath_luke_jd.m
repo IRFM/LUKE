@@ -37,7 +37,7 @@ addpath([luke_root,'Project_DKE/Modules/Helena']);
 addpath([luke_root,'Project_DKE/Modules/R2D2']);
 addpath([luke_root,'Project_DKE/Modules/R2D2/MEX/Bin']);
 addpath([luke_root,'Project_DKE/Modules/EFIT']);
-addpath([luke_root,'Project_DKE/Modules/RT']);
+addpath([luke_root,'Project_DKE/Modules/C3PO']);
 addpath([luke_root,'Project_DKE/Modules/Ripple/TS']);
 addpath([luke_root,'Project_DKE/Modules/Cronos']);
 addpath([luke_root,'Project_DKE/Modules/ITM']);
@@ -76,7 +76,7 @@ end
 [lukeversion,matver] = LUKEversion_jd;
 %
 sourcepath.DKE = [luke_root,'Project_DKE/MEX/Source/'];
-sourcepath.C3PO = [luke_root,'Project_DKE/Modules/RT/MEX/Source/'];
+sourcepath.C3PO = [luke_root,'Project_DKE/Modules/C3PO/MEX/Source/'];
 sourcepath.helmex = [luke_root,'Project_DKE/Modules/Helena/MEX/Source/'];
 %
 if nargin == 2, 
