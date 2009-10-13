@@ -87,6 +87,18 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C
         rayparam.kextra = 0;
     end
     %
+    if ~isfield(rayparam,'ns0'),% !!!! old rayparam, modify calling function
+        rayparam.ns0 = 0;
+    end
+    %
+    if ~isfield(rayparam,'xreset0'),% !!!! old rayparam, modify calling function
+        rayparam.xreset0 = 1;
+    end
+    %
+    if ~isfield(rayparam,'fmode'),% !!!! old rayparam, modify calling function
+        rayparam.fmode = 0;
+    end
+    %
     if ~isfield(rayinit,'yn0'),% !!!! old rayparam, modify calling function
         rayinit.yn0 = NaN*rayinit.ym0;
     end
