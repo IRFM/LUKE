@@ -79,17 +79,21 @@ fitparam.opt_load = 1;%Reload existing vectorial magnetic equilibrium (1) or ove
 rayparam.testmode = 0;
 rayparam.tensortype = waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
 rayparam.t0 = 0;
-rayparam.tfinal = 10000;
+rayparam.tfinal = 1000;
 rayparam.dt0 = 1.e-4;
 rayparam.dS = 1.e-4;
 rayparam.tol = 1e-12;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
-rayparam.kmax = 60000;
+rayparam.kmax = 100;
 rayparam.ncyclharm = 3;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
 rayparam.reflection = 0;%1:Enforce wave reflection at plasma boundary, 0: the code calculates itself if the ray must leave of not the plasma
 rayparam.rel_opt = 1;%option for (1) relativistic or (0) non-relativistic calculations
 rayparam.nperp = 1000;%number of points in pperp integration for damping calculations
 rayparam.pperpmax = 10;%maximum value of pperp in damping calculations
 rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considered absorbed
+rayparam.kextra = 10;
+rayparam.ns0 = 10000;
+rayparam.xreset0 = 17;
+rayparam.fmode = 1;
 %
 % -------------------------------------------------------------------------
 %
@@ -154,6 +158,7 @@ rayinit.yP0_2piRp = P0_2piRp;%Lineic initial power density initial power in the 
 % -------------------------------------------------------------------------
 %
 wave_numeric = main_C3PO_jd([id_wave,'_numeric'],equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);clear mex;clear functions
+return
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium)');
 %
