@@ -1,6 +1,6 @@
 /*
  
-	mcaziyp.C	MEX file for a test program describing the random azimuthal angle (beta) around the magnetic field direction
+	beta_gen.C	MEX file for a test program describing the random azimuthal angle (beta) around the magnetic field direction
 					
 	[s0] = beta_gen(xn,xreset0)
 
@@ -96,7 +96,7 @@ long int *idum;
 
 
 
-tirazi(reset,res)
+void tirbeta(reset,res)
 long int *reset;
 double *res;
 {
@@ -107,7 +107,7 @@ double *res;
 
 
 
-static azimuth(s0out,xn,xreset0)
+void beta(s0out,xn,xreset0)
 double s0out[];
 double *xn,*xreset0;
 {
@@ -122,7 +122,7 @@ double *xn,*xreset0;
 	n = (long int)xn[0];
 	
 	for (i=0L; i < n; i++) {
-		tirazi(&reset,&azi);
+		tirbeta(&reset,&azi);
 		s0out[i] = azi;
 	}
 }
@@ -159,7 +159,7 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
 
 	/* Do the actual computations in a subroutine */
 
-	azimuth(s0out,xn,xreset0);
+	beta(s0out,xn,xreset0);
 	
 	return;
 }

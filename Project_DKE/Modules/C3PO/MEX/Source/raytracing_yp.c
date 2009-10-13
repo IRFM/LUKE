@@ -117,6 +117,9 @@ struct rayparam {
     double *pperpmax;
     double *tau_lim;
     double *kextra;
+    double *ns0;
+    double *xreset0;
+    double *fmode;
 };
 
 struct equilparam {
@@ -198,7 +201,6 @@ void metrictensor();
 double alphaphi_jd();
 void coldtensor();
 void dsolve();
-void fluctuation();
 void disprel();
 void interpequil();
 void interpequil_test();
@@ -227,7 +229,11 @@ void Shka();
 void ImShka();
 void Fdnest();
 void ImFdnest();
-
+double fluctuation();
+static double ran2();
+void tirbeta();
+void tircauchylorentz();
+void tirgaussian();
 
 /* Input Arguments */
 
@@ -321,8 +327,6 @@ void mexFunction(   int     nlhs,
         flag_proc = 1;
     }
     
-    
-
 /*    double complex iBn,iBnp,iBnpp;   
     modBessel(-5.4,(double complex)(3.0 +1.2*I),&iBn,&iBnp,&iBnpp);
     mexPrintf("Bessel(-5.4,3.+1.2*i),Bp,Bpp:%g,%g,%g,%g,%g,%g\n",iBn,iBnp,iBnpp);
@@ -571,7 +575,7 @@ void mexFunction(   int     nlhs,
     
     double ydel[MC],ys[7];
     
-    double t1,t2,rho1,rho2,theta1,theta2,phi1,phi2,krho1,krho2,m1,m2,n1,n2,omega1,omega2;
+    double t1,t2,ts,rho1,rho2,theta1,theta2,phi1,phi2,krho1,krho2,m1,m2,n1,n2,omega1,omega2;
     
     double S1,S2,S_step,Sdot1,Sdot2,Sdot3,Sdot4,Sdot5,Sdot6;
     
@@ -579,7 +583,7 @@ void mexFunction(   int     nlhs,
     double dS,depth=0.0,alpha1=0.0,alpha2,absphi;     
     double clum=CLUM;   
     
-    
+    long int reset[5];
 
 /*
 Create arguments for calling user function
@@ -626,6 +630,11 @@ Create arguments for calling user function
 /*
 Create and Initialize Return Arguments
 */
+    if (rayparam.fmode[0] == 1.0) {
+        reset[0] = -(long int)rayparam.xreset0[0];
+        reset[1] = -(long int)rayparam.xreset0[0] - 1;
+        reset[2] = -(long int)rayparam.xreset0[0] - 2;
+    }
     
     y0[0] = y0_in[0];/* Necessary to separe data from mex and matlab */
     y0[1] = y0_in[1];
@@ -658,7 +667,12 @@ Create and Initialize Return Arguments
 /*
 Initialization
 */
-
+    if (rayparam.fmode[0] == 1.0) {
+        ts = t1 + rayparam.ns0[0]*rayparam.dt0[0];/* Time of the first scattering event in term of dt0 time step */
+    } else {
+        ts = 100.0*rayparam.tfinal[0];/* No fluctuations, ts is set weel beyond the integration time */
+    }
+        
     h = rayparam.dt0[0];
 
 /*
@@ -674,6 +688,14 @@ The main loop
             mexPrintf("iimax is reached");
             goto Endloop;
             flag1 = 2;
+        }
+        
+        if (t1 == ts) {/* wave vector scattering event */ 
+            mexPrintf("t1,ts:%g,%g\n",t1,ts);
+            ts =  fluctuation(reset,t1,y0,raymagnetic,rayprofiles,X,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag); 
+            krho1 = y0[3];
+            m1 = y0[4];
+            n1 = y0[5];
         }
         
         /*mexPrintf("S1:%g\n",S1);*/
@@ -745,6 +767,12 @@ The main loop
 /*
 Compute the slopes
 */
+            mexPrintf("h:%g\n",h);
+            if (t1 + h > ts) {
+                h = ts - t1;/* for not missing a scattering event */
+                mexPrintf("t1,ts,h:%g,%g,%g\n",t1,ts,h);
+            } 
+        
 
 /* ts = t  and  s0 = y */
 
@@ -827,6 +855,7 @@ Update the solution only if the error is acceptable
 */    
         
 /*      mexPrintf("t1,delta,ymax,h,rho1,theta1,phi1,krho1,m1:%g,%g,%g,%g,%g,%g,%g,%g,%g\n",t1,delta,ymax,h,rho1,theta1,phi1,krho1,m1); */
+        
 
         if (delta <= tau) {
             
@@ -888,10 +917,6 @@ Update the solution only if the error is acceptable
                     }
                 }
             }
-
-/* 
- 			fluctuation(1,&krho1,y0,raymagnetic,rayprofiles,X,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag); 
-*/
                                     
             t1 = t2;
             rho1 = rho2;
@@ -901,7 +926,7 @@ Update the solution only if the error is acceptable
             m1 = m2;
             n1 = n2;
             omega1 = omega2;
-        
+
             S1 = S2;
         }
     
@@ -914,7 +939,9 @@ Update the step size
                 h = SAFETY*h*pow(tau/delta,PGROW);   
             } else {
                 h = SAFETY*h*pow(tau/delta,PSHRINK);                
-            }       
+            } 
+      
+                   
 /*      mexPrintf("delta,tau,rho1,krho1,h:%g,%g,%g,%g,%g,%g\n",delta,tau,rho1,krho1,h);*/
             
         } else {       
@@ -1603,151 +1630,6 @@ pp_1D_format dxstardpsin_fit;
 
 
 void dsolve(mode,krho,Y,raymagnetic,rayprofiles,X,param,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag)
-int mode;
-double *krho;
-double Y[];
-raymagnetic_format raymagnetic;
-rayprofiles_format rayprofiles;
-susceptibilitytensor_format X;
-rayparam_format param;
-equilparam_format equilparam;
-pp_1D_format Te_fit;
-pp_1D_format ne_fit;
-pp_1D_format zTi_fit;
-pp_1D_format zni_fit;
-pp_2D_format x_fit;
-pp_2D_format y_fit;
-pp_2D_format Bx_fit;
-pp_2D_format By_fit;
-pp_2D_format BPHI_fit;
-pp_1D_format dxstardpsin_fit;
-double flag;
-{
-    double Npar,dNpardY[MC];
-    double complex Nperp,dNperpdY[MC];
-    double complex N2,dN2dY[MC];
-
-    double frac,fracmax,exp,tol;
-    double krho0,krho1,krho2,dkrho;
-    double complex cD0,cD1;
-    double D0,D1,D2;
-    int maxit;
-
-    double wcn[equilparam.ns[0]+1],wpn2[equilparam.ns[0]+1],betath[equilparam.ns[0]+1];
-
-    register int j;
-    
-    frac = 1 - 1e-4;
-    fracmax = 2;
-    exp = -1.5;
-    tol = 1e-12;
-    
-    maxit = 50;
-
-    /* Equilibrium interpolation at ray location */
-    if (flag == 0) {
-        interpequil(param,raymagnetic,rayprofiles,equilparam,Y,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit);
-    } else {
-        interpequil_test(raymagnetic,rayprofiles,equilparam,Y,flag);
-    }
-
-    krho0 = Y[3];
-    krho1 = frac*krho0;
-    
-    rayindex(&Nperp,dNperpdY,&N2,dN2dY,1,Y,raymagnetic,equilparam,&Npar,dNpardY);
-    if (mode > 0) {/* plasma case */
-        susceptibility(X,Nperp,dNperpdY,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Y[6]);
-    }
-        
-    disprel(&cD0,X,Nperp,N2,raymagnetic,Npar);
-    D0 = creal(cD0);/* to be changed if non-hermitian susceptibility tensors are used */
-/*  mexPrintf("krho0,D0:%g,%g\n",krho0,D0); */
-    
-    Y[3] = krho1;
-    rayindex(&Nperp,dNperpdY,&N2,dN2dY,1,Y,raymagnetic,equilparam,&Npar,dNpardY);
-    if (mode > 0) {/* plasma case */
-        susceptibility(X,Nperp,dNperpdY,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Y[6]);
-    }
-    disprel(&cD1,X,Nperp,N2,raymagnetic,Npar);
-    D1 = creal(cD1);/* to be changed if non-hermitian susceptibility tensors are used */
-/*  mexPrintf("krho1,D1:%g,%g\n",krho1,D1); */
-
-    /* Search for root bounding interval */
-
-    while ((D1*D0 > 0) && (fracmax < 100)){
-        
-        frac = pow(frac,exp);
-        krho1 = frac*krho0;
-       
-        Y[3] = krho1;
-        rayindex(&Nperp,dNperpdY,&N2,dN2dY,1,Y,raymagnetic,equilparam,&Npar,dNpardY);
-        if (mode > 0) {/* plasma case */
-            susceptibility(X,Nperp,dNperpdY,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Y[6]);
-        }
-        disprel(&cD1,X,Nperp,N2,raymagnetic,Npar);
-        D1 = creal(cD1);/* to be changed if non-hermitian susceptibility tensors are used */
-/*      mexPrintf("krho1,D1:%g,%g\n",krho1,D1); */
-    }
-    
-    if (D1*D0 > 0) {
-        krho[0] = krho0;  /* put error message */
-    }
-/*    else if (fabs(D0) < tol){
-       krho[0] = krho0;
-    }
-    else if (fabs(D1) < tol){
-        krho[0] = krho1;
-    }        
-*/
-    else {
-        if (fabs(D0) < fabs(D1)) { /*Closest root is set to latest value. */
-            krho2 = krho0; 
-            krho0 = krho1;
-            krho1 = krho2;
-            D2 = D0;
-            D0 = D1;
-            D1 = D2;
-        }       
-       
-        j = 0;
-        
-/*        mexPrintf("fabs(D1),tol,j,maxit:%g,%g,%d,%d\n",fabs(D1),tol,j,maxit); */
-         
-        while ((fabs(D1) > tol) && (j < maxit)) { /*Secant loop. */
-            
-/*          mexPrintf("krho0,D0,krho1,D1,frac,tol:%g,%g,%g,%g,%g,%g\n",krho0,D0,krho1,D1,frac,tol); */
-            
-            dkrho = (krho0 - krho1)*D1/(D1-D0); /*Increment with respect to latest value. */
-            krho0 = krho1;
-            D0 = D1;
-            krho1 += dkrho;
-
-            Y[3] = krho1;
-            rayindex(&Nperp,dNperpdY,&N2,dN2dY,1,Y,raymagnetic,equilparam,&Npar,dNpardY);
-            if (mode > 0) {/* plasma case */
-                susceptibility(X,Nperp,dNperpdY,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Y[6]);
-            }
-            disprel(&cD1,X,Nperp,N2,raymagnetic,Npar);
-            D1 = creal(cD1);/* to be changed if non-hermitian susceptibility tensor are used */
-/*          mexPrintf("krho1,D1:%g,%g\n",krho1,D1); */
-        }
-        
-        if (fabs(D1) <= tol) { /*Convergence. */
-            krho[0] = krho1;
-        }
-        else {
-            krho[0] = krho2; /* put error message */
-        }
-    }    
-    
-    
-    /* krho[0] = -Y[3]; /* old method not accurate */ 
-    
-}
-
-
-
-void fluctuation(mode,krho,Y,raymagnetic,rayprofiles,X,param,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag)
 int mode;
 double *krho;
 double Y[];
@@ -2950,4 +2832,206 @@ int *ns;
       eZeff[0] = 0.0;
     } 
 }
+
+
+/* routines for density and magnetic field fluctuations */
+
+static double ran2(idum)
+long int *idum;
+{
+
+	long int j;
+	long int k;
+ 	static long int idum2 = 123456789;
+ 	static long int iy = 0;
+ 	static long int iv[32];
+ 	double temp;
+ 
+ 	double eps = 1.2e-7,rnmx,am,ndiv;
+ 	long int im1 = 2147483563,im2 = 2147483399,imm1,ia1 = 40014,ia2 = 40692,iq1 = 53668,iq2 = 52774;
+ 	long int ir1 = 12211,ir2 = 3791,ntab = 32;
+ 
+ 	imm1 = im1 - 1L;
+ 	am = (double)1.0/(double)im1;
+ 	ndiv = (double)1.0+(double)imm1/(double)ntab;
+ 	rnmx = (double)1.0 - eps;
+ 
+ 	if (*idum <=0L) {
+ 		if(-(*idum) < 1L) *idum = 1L;
+ 		else *idum = -(*idum);
+ 		idum2 = (*idum);
+ 		for (j = ntab+7L;j>=0L;j--) {
+ 			k = (long int)(*idum)/iq1;
+ 			*idum = ia1*(*idum-k*iq1)-k*ir1;
+ 			if(*idum<0L) *idum += im1;
+ 			if (j < ntab) iv[j] = *idum;
+ 		}
+ 		iy = iv[0];
+ 	}
+ 	
+ 	k = (long int)(*idum)/iq1;
+ 	*idum = ia1*(*idum-k*iq1)-k*ir1;
+ 	if (*idum < 0L) *idum += im1;
+ 	k = (long int)(idum2/iq2);
+ 	idum2 = ia2*(idum2-k*iq2)-k*ir2;
+ 	if (idum2 < 0L) idum2 += im2;
+ 	j = (long)(iy/(long int)ndiv);
+ 	iy = iv[j]-idum2;
+ 	iv[j] = *idum;
+ 	if(iy < 1) iy += imm1;
+ 	if ((temp = am*(double)iy) > rnmx) return(rnmx);
+ 	else return(temp);
+}
+
+
+
+void tircauchylorentz(res,halfmode,fwhm,reset)
+double *res,*halfmode,*fwhm;
+long int *reset;
+{
+    long int test = 0;
+    double pi = PI;
+    double rand1;
+        
+    while (test == 0) {
+        rand1 = ran2(reset);
+        if (halfmode[0] == 1.0) {
+            if (rand1 >= 0.5) {
+                res[0] = fwhm[0]*tan(pi*(rand1 - 0.5))/2;
+                test = 1;
+            }
+        } else {
+            res[0] = fwhm[0]*tan(pi*(rand1 - 0.5))/2;
+            test = 1;
+        }
+    }
+}
+
+
+
+void tirbeta(res,reset)
+double *res;
+long int *reset;
+{
+    double pi = PI;
+	res[0] = (double)2.0*pi*ran2(reset);   
+}
+
+
+
+void tirgaussian(res,halfmode,fwhm,reset)
+double *res,*halfmode,*fwhm;
+long int *reset;
+{
+    long int test = 0;
+    double rand1,rand2,rand3;
+        
+    while (test == 0) {
+        rand1 = -(fwhm[0]/(2.0*sqrt(2.0*log(2.0))))*(fwhm[0]/(2.0*sqrt(2.0*log(2.0))))*log(ran2(reset));
+        rand2 = -(fwhm[0]/(2.0*sqrt(2.0*log(2.0))))*(fwhm[0]/(2.0*sqrt(2.0*log(2.0))))*log(ran2(reset)); 
+        rand3 = 0.5*(rand1-1.0)*(rand1-1.0);
+        if (rand3 <= rand2) {
+            if (halfmode[0] == 1) {
+                res[0] = rand1;
+            } else {
+                if (ran2(reset) < 0.5) {
+                    res[0] = rand1;
+                } else {
+                    res[0] = -rand1;
+                }
+            }
+            test = 1;
+        }
+    }
+}
+
+
+double fluctuation(reset,t1,Y,raymagnetic,rayprofiles,X,param,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag)
+long int reset[];
+double t1;
+double Y[];
+raymagnetic_format raymagnetic;
+rayprofiles_format rayprofiles;
+susceptibilitytensor_format X;
+rayparam_format param;
+equilparam_format equilparam;
+pp_1D_format Te_fit;
+pp_1D_format ne_fit;
+pp_1D_format zTi_fit;
+pp_1D_format zni_fit;
+pp_2D_format x_fit;
+pp_2D_format y_fit;
+pp_2D_format Bx_fit;
+pp_2D_format By_fit;
+pp_2D_format BPHI_fit;
+pp_1D_format dxstardpsin_fit;
+double flag;
+{
+    double Npar,dNpardY[MC];
+    double complex Nperp,dNperpdY[MC];
+    double complex N2,dN2dY[MC];
+
+    double frac,fracmax,exp,tol;
+    double krho0,krho1,krho2,dkrho;
+    double complex cD0,cD1;
+    double D0,D1,D2;
+    int maxit;
+
+    double wcn[equilparam.ns[0]+1],wpn2[equilparam.ns[0]+1],betath[equilparam.ns[0]+1];
+    
+    double beta_angle,cbeta,sbeta,ts = 0.0,kpar,krhos = 0.0,ms = 0.0,ns = 0.0,chi0 = 1.0;
+    
+    mexPrintf("t1,%g\n",t1);
+    ts = 2.0*t1 + 0.0*(double)param.dt0[0]*ran2(&reset[0]);/********to be modified, for test only******/
+    mexPrintf("ts,%g\n",ts);
+    
+    tirbeta(&beta_angle,&reset[1]);/********to be modified, for test only******/
+    mexPrintf("beta_angle:%g\n",beta_angle);
+    
+    /* tirgaussian(res,halfmode,fwhm,reset);/********to be modified, for test only******/
+    /* tircauchylorentz(res,halfmode,fwhm,reset);/********to be modified, for test only******/
+    
+    cbeta = cos(beta_angle);
+    sbeta = sin(beta_angle);
+    
+    
+    /* Equilibrium interpolation at ray location */
+    if (flag == 0) {
+        interpequil(param,raymagnetic,rayprofiles,equilparam,Y,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit);
+    } else {
+        interpequil_test(raymagnetic,rayprofiles,equilparam,Y,flag);
+    }
+
+    kpar = Y[4]*raymagnetic.calpha[0]*raymagnetic.Bsn[0]/raymagnetic.rn[0] + Y[5]*raymagnetic.BPHIn[0]/raymagnetic.Rn[0];
+    
+    krhos = krhos + chi0*sbeta*(Y[4]*raymagnetic.calpha[0]*raymagnetic.BPHIn[0]/raymagnetic.rn[0] - Y[5]*raymagnetic.Bsn[0]/raymagnetic.Rn[0]);
+    krhos = krhos + chi0*cbeta*Y[3]*raymagnetic.gradrhon[0] + kpar*raymagnetic.Bsn[0]*raymagnetic.calpha[0]*raymagnetic.salpha[0];
+    krhos = krhos + chi0*sbeta*(-raymagnetic.BPHIn[0]*raymagnetic.calpha[0]*Y[3]*raymagnetic.gradrhon[0] + raymagnetic.Bsn[0]*raymagnetic.salpha[0]*Y[5]/raymagnetic.Rn[0])*raymagnetic.salpha[0];
+    krhos = krhos + chi0*cbeta*(kpar*raymagnetic.Bsn[0]*raymagnetic.calpha[0] + raymagnetic.salpha[0]*Y[3]*raymagnetic.gradrhon[0])*raymagnetic.salpha[0];   
+    krhos = krhos/raymagnetic.calpha[0]/raymagnetic.calpha[0]/raymagnetic.gradrhon[0];
+   
+    ms = ms + kpar*raymagnetic.Bsn[0];
+    ms = ms + chi0*sbeta*raymagnetic.salpha[0]*Y[4]*raymagnetic.BPHIn[0]/raymagnetic.rn[0];
+    ms = ms + chi0*cbeta*raymagnetic.calpha[0]*Y[4]/raymagnetic.rn[0];
+    ms = ms - chi0*sbeta*raymagnetic.BPHIn[0]*Y[3]*raymagnetic.gradrhon[0];
+    ms = ms - chi0*cbeta*kpar*raymagnetic.Bsn[0];
+    ms = ms*raymagnetic.rn[0];
+    
+    ns = ns + kpar*raymagnetic.BPHIn[0];
+    ns = ns + chi0*sbeta*raymagnetic.Bsn[0]*(Y[3]*raymagnetic.gradrhon[0] - raymagnetic.salpha[0]*Y[4]/raymagnetic.rn[0]);
+    ns = ns - chi0*cbeta*(kpar*raymagnetic.BPHIn[0] - Y[5]/raymagnetic.Rn[0]);
+    ns = ns*raymagnetic.Rn[0];
+    
+    
+    /*mexPrintf("t1,krho1,m1,n1:%g,%g,%g,%g\n",t1,Y[3],Y[4],Y[5]);    */   
+
+    Y[3] = krhos;/* scattered wave vector */
+    Y[4] = ms;/* scattered wave vector */
+    Y[5] = ns;/* scattered wave vector */
+    
+    /*mexPrintf("ts,krho1,m1,n1:%g,%g,%g,%g\n",ts,Y[3],Y[4],Y[5]);   */  
+    
+    return(ts);
+}
+
 

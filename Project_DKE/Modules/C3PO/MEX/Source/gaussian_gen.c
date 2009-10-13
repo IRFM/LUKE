@@ -100,7 +100,7 @@ long int *idum;
 
 
 
-tirgaussian(reset,halfmode,fwhm,res)
+void tirgaussian(reset,halfmode,fwhm,res)
 long int *reset;
 double *halfmode,*fwhm,*res;
 {
@@ -129,7 +129,7 @@ double *halfmode,*fwhm,*res;
 
 
 
-static gaussian(s0out,xn,halfmode,fwhm,xreset0)
+void gaussian(s0out,xn,halfmode,fwhm,xreset0)
 double s0out[];
 double *xn,*xreset0,*halfmode,*fwhm;
 {

@@ -100,7 +100,7 @@ long int *idum;
 
 
 
-tircauchylorentz(reset,halfmode,fwhm,res)
+void tircauchylorentz(reset,halfmode,fwhm,res)
 long int *reset;
 double *halfmode,*fwhm,*res;
 {
@@ -123,7 +123,7 @@ double *halfmode,*fwhm,*res;
 }
 
 
-static cauchylorentz(s0out,xn,halfmode,fwhm,xreset0)
+void cauchylorentz(s0out,xn,halfmode,fwhm,xreset0)
 double s0out[];
 double *xn,*xreset0,*halfmode,*fwhm;
 {
