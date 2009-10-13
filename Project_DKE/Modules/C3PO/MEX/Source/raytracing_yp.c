@@ -767,10 +767,10 @@ The main loop
 /*
 Compute the slopes
 */
-            mexPrintf("h:%g\n",h);
+            /* mexPrintf("h:%g\n",h);*/
             if (t1 + h > ts) {
                 h = ts - t1;/* for not missing a scattering event */
-                mexPrintf("t1,ts,h:%g,%g,%g\n",t1,ts,h);
+                /* mexPrintf("t1,ts,h:%g,%g,%g\n",t1,ts,h);*/
             } 
         
 
@@ -2979,21 +2979,21 @@ double flag;
 
     double wcn[equilparam.ns[0]+1],wpn2[equilparam.ns[0]+1],betath[equilparam.ns[0]+1];
     
-    double beta_angle,cbeta,sbeta,ts = 0.0,kpar,krhos = 0.0,ms = 0.0,ns = 0.0,chi0 = 1.0;
+    double beta_angle,cbeta,sbeta,ts = 0.0,krhos = 0.0,ms = 0.0,ns = 0.0,chi0 = 1.0;
+    double kpar,kperp,k2,k21,k22,k23,k24;
     
-    mexPrintf("t1,%g\n",t1);
+    /* mexPrintf("t1,%g\n",t1);*/
     ts = 2.0*t1 + 0.0*(double)param.dt0[0]*ran2(&reset[0]);/********to be modified, for test only******/
-    mexPrintf("ts,%g\n",ts);
+    /* mexPrintf("ts,%g\n",ts);*/
     
     tirbeta(&beta_angle,&reset[1]);/********to be modified, for test only******/
-    mexPrintf("beta_angle:%g\n",beta_angle);
+    /* mexPrintf("beta_angle:%g\n",beta_angle);*/
     
     /* tirgaussian(res,halfmode,fwhm,reset);/********to be modified, for test only******/
     /* tircauchylorentz(res,halfmode,fwhm,reset);/********to be modified, for test only******/
     
     cbeta = cos(beta_angle);
     sbeta = sin(beta_angle);
-    
     
     /* Equilibrium interpolation at ray location */
     if (flag == 0) {
@@ -3003,33 +3003,45 @@ double flag;
     }
 
     kpar = Y[4]*raymagnetic.calpha[0]*raymagnetic.Bsn[0]/raymagnetic.rn[0] + Y[5]*raymagnetic.BPHIn[0]/raymagnetic.Rn[0];
-    
-    krhos = krhos + chi0*sbeta*(Y[4]*raymagnetic.calpha[0]*raymagnetic.BPHIn[0]/raymagnetic.rn[0] - Y[5]*raymagnetic.Bsn[0]/raymagnetic.Rn[0]);
-    krhos = krhos + chi0*cbeta*Y[3]*raymagnetic.gradrhon[0] + kpar*raymagnetic.Bsn[0]*raymagnetic.calpha[0]*raymagnetic.salpha[0];
-    krhos = krhos + chi0*sbeta*(-raymagnetic.BPHIn[0]*raymagnetic.calpha[0]*Y[3]*raymagnetic.gradrhon[0] + raymagnetic.Bsn[0]*raymagnetic.salpha[0]*Y[5]/raymagnetic.Rn[0])*raymagnetic.salpha[0];
-    krhos = krhos + chi0*cbeta*(kpar*raymagnetic.Bsn[0]*raymagnetic.calpha[0] + raymagnetic.salpha[0]*Y[3]*raymagnetic.gradrhon[0])*raymagnetic.salpha[0];   
-    krhos = krhos/raymagnetic.calpha[0]/raymagnetic.calpha[0]/raymagnetic.gradrhon[0];
+    k21 = raymagnetic.gradrhon[0]*raymagnetic.gradrhon[0]*Y[3]*Y[3];
+    k22 = -2.0*raymagnetic.gradrhon[0]*raymagnetic.salpha[0]*Y[4]*Y[3]/raymagnetic.rn[0];
+    k23 = Y[4]*Y[4]/raymagnetic.rn[0]/raymagnetic.rn[0];
+    k24 = Y[5]*Y[5]/raymagnetic.Rn[0]/raymagnetic.Rn[0]; 
+    k2 = k21 + k22 + k23 + k24;
+    kperp = sqrt(k2 - kpar*kpar);
+
+    krhos = krhos + chi0*sbeta*raymagnetic.BPHIn[0]*(Y[4]/raymagnetic.rn[0] - Y[3]*raymagnetic.gradrhon[0]*raymagnetic.salpha[0]);
+    krhos = krhos + kpar*raymagnetic.Bsn[0]*raymagnetic.salpha[0] - chi0*sbeta*raymagnetic.Bsn[0]*raymagnetic.calpha[0]*Y[5]/raymagnetic.Rn[0];
+    krhos = krhos - chi0*cbeta*(kpar*raymagnetic.Bsn[0]*raymagnetic.salpha[0] - raymagnetic.calpha[0]*Y[3]*raymagnetic.gradrhon[0]);
+    krhos = krhos/raymagnetic.calpha[0]/raymagnetic.gradrhon[0];
    
     ms = ms + kpar*raymagnetic.Bsn[0];
     ms = ms + chi0*sbeta*raymagnetic.salpha[0]*Y[4]*raymagnetic.BPHIn[0]/raymagnetic.rn[0];
     ms = ms + chi0*cbeta*raymagnetic.calpha[0]*Y[4]/raymagnetic.rn[0];
     ms = ms - chi0*sbeta*raymagnetic.BPHIn[0]*Y[3]*raymagnetic.gradrhon[0];
     ms = ms - chi0*cbeta*kpar*raymagnetic.Bsn[0];
-    ms = ms*raymagnetic.rn[0];
+    ms = ms*raymagnetic.rn[0]/raymagnetic.calpha[0];
     
     ns = ns + kpar*raymagnetic.BPHIn[0];
     ns = ns + chi0*sbeta*raymagnetic.Bsn[0]*(Y[3]*raymagnetic.gradrhon[0] - raymagnetic.salpha[0]*Y[4]/raymagnetic.rn[0]);
     ns = ns - chi0*cbeta*(kpar*raymagnetic.BPHIn[0] - Y[5]/raymagnetic.Rn[0]);
     ns = ns*raymagnetic.Rn[0];
     
-    
-    /*mexPrintf("t1,krho1,m1,n1:%g,%g,%g,%g\n",t1,Y[3],Y[4],Y[5]);    */   
+    mexPrintf("t1,krho1,m1,n1,kpar,kperp,k2:%g,%g,%g,%g,%g,%g,%g\n",t1,Y[3],Y[4],Y[5],kpar,kperp,k2);      
 
     Y[3] = krhos;/* scattered wave vector */
     Y[4] = ms;/* scattered wave vector */
     Y[5] = ns;/* scattered wave vector */
     
-    /*mexPrintf("ts,krho1,m1,n1:%g,%g,%g,%g\n",ts,Y[3],Y[4],Y[5]);   */  
+    kpar = Y[4]*raymagnetic.calpha[0]*raymagnetic.Bsn[0]/raymagnetic.rn[0] + Y[5]*raymagnetic.BPHIn[0]/raymagnetic.Rn[0];
+    k21 = raymagnetic.gradrhon[0]*raymagnetic.gradrhon[0]*Y[3]*Y[3];
+    k22 = -2.0*raymagnetic.gradrhon[0]*raymagnetic.salpha[0]*Y[4]*Y[3]/raymagnetic.rn[0];
+    k23 = Y[4]*Y[4]/raymagnetic.rn[0]/raymagnetic.rn[0];
+    k24 = Y[5]*Y[5]/raymagnetic.Rn[0]/raymagnetic.Rn[0]; 
+    k2 = k21 + k22 + k23 + k24;    
+    kperp = sqrt(k2 - kpar*kpar);
+
+    mexPrintf("ts,krho1,m1,n1,kpar,kperp,k2:%g,%g,%g,%g,%g,%g,%g\n",ts,Y[3],Y[4],Y[5],kpar,kperp,k2);      
     
     return(ts);
 }
