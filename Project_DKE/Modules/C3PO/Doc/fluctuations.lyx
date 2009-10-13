@@ -1145,6 +1145,14 @@ using the fact that
 
 \end_inset
 
+or
+\begin_inset Formula \begin{multline}
+\check{k}_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \cos\alpha=\chi\sin\beta\sigma_{B}T\left(\dfrac{m}{r}-k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \sin\alpha\right)\\
++k_{\Vert}\sigma_{I}P\sin\alpha-\chi\sin\beta\sigma_{I}P\cos\alpha\frac{n}{R}\\
+-\chi\cos\beta\left(k_{\Vert}\sigma_{I}P\sin\alpha-\cos\alpha k_{\rho}\left\Vert \mathbf{\nabla}\rho\right\Vert \right)\label{eq:khatrho1b}\end{multline}
+
+\end_inset
+
 
 \begin_inset Formula \begin{multline}
 \dfrac{\check{m}}{r}\cos\alpha=+k_{\Vert}\sigma_{I}P\\
@@ -1191,7 +1199,7 @@ reference "sec:Appendix"
 , it is also demonstrated that using relations (
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "eq:khatrho1"
+reference "eq:khatrho1b"
 
 \end_inset
 
@@ -1287,7 +1295,7 @@ The two first components of
  may be expressed in a slightly modified form as compared to (
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "eq:khatrho1"
+reference "eq:khatrho1b"
 
 \end_inset
 
@@ -1822,6 +1830,13 @@ For the Cauchy-Lorentz distribution centered around
 \end_inset
 
 , the cdf takes the simple form 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "pre92"
+
+\end_inset
+
+ 
 \begin_inset Formula \begin{equation}
 F\left(y\right)=\frac{1}{2}+\frac{1}{\pi}\tan^{-1}\left(\frac{2y}{\Delta}\right)\label{eq:cumcauchylorentzdist}\end{equation}
 
@@ -1934,7 +1949,14 @@ p^{+}\left(y\right) & =\frac{1}{\sigma}\sqrt{\frac{2}{\pi}}\exp\left(\frac{1}{2\
 \end_inset
 
 it is possible to apply the rejection technique but for random numbers which
- are non uniformly distributed.
+ are non uniformly distributed 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "kah54"
+
+\end_inset
+
+.
  Indeed, the pdf (
 \begin_inset CommandInset ref
 LatexCommand ref
