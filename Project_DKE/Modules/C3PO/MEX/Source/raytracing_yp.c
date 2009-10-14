@@ -668,7 +668,7 @@ Create and Initialize Return Arguments
 Initialization
 */
     if (rayparam.fmode[0] == 1.0) {
-        ts = t1 + rayparam.ns0[0]*rayparam.dt0[0];/* Time of the first scattering event in term of dt0 time step */
+        ts = t1+rayparam.ns0[0]*rayparam.dt0[0];/* Time of the first scattering event in term of dt0 time step */
     } else {
         ts = 100.0*rayparam.tfinal[0];/* No fluctuations, ts is set weel beyond the integration time */
     }
@@ -2989,7 +2989,7 @@ double flag;
 
     double wcn[equilparam.ns[0]+1],wpn2[equilparam.ns[0]+1],betath[equilparam.ns[0]+1];
     
-    double beta_angle,cbeta,sbeta,ts = 0.0,krhos = 0.0,ms = 0.0,ns = 0.0,chi0 = 1.0;
+    double beta_angle,cbeta,sbeta,ts = 0.0,krhos = 0.0,ms = 0.0,ns = 0.0,chi0 =1.0;
     double kpar,kperp,k2,k21,k22,k23,k24;
     double ap,cnorm;
     double clum=CLUM;
