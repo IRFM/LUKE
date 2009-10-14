@@ -690,14 +690,6 @@ The main loop
             flag1 = 2;
         }
         
-        if (t1 == ts) {/* wave vector scattering event */ 
-            mexPrintf("t1,ts:%g,%g\n",t1,ts);
-            ts =  fluctuation(reset,t1,y0,raymagnetic,rayprofiles,X,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag); 
-            krho1 = y0[3];
-            m1 = y0[4];
-            n1 = y0[5];
-        }
-        
         /*mexPrintf("S1:%g\n",S1);*/
         
         if (k == -1 || fabs(S1 - S_step) >= rayparam.dS[0]) {/*step stored in Matlab memory */
@@ -767,12 +759,6 @@ The main loop
 /*
 Compute the slopes
 */
-            /* mexPrintf("h:%g\n",h);*/
-            if (t1 + h > ts) {
-                h = ts - t1;/* for not missing a scattering event */
-                /* mexPrintf("t1,ts,h:%g,%g,%g\n",t1,ts,h);*/
-            } 
-        
 
 /* ts = t  and  s0 = y */
 
@@ -883,8 +869,7 @@ Update the solution only if the error is acceptable
                        + Sdot5*gama[4][0] + Sdot6*gama[5][0]);
 
 /*           mexPrintf("t1,rho2,theta2,phi2,krho2,m2:%g,%g,%g,%g,%g,%g\n",t1,rho2,theta2,phi2,krho2,m2); */
-                           
-           
+                        
             if (rho2 > 1.0) {/* Wave reflexion at rho = 1  */ 
                 if (rayparam.reflection[0] >=1.0) {/* The reflection is always enforced */
                     mexPrintf("********************************** Wave reflection is enforced at rho = %g**********************************\n",rho1);
@@ -926,6 +911,29 @@ Update the solution only if the error is acceptable
             m1 = m2;
             n1 = n2;
             omega1 = omega2;
+            
+            
+            if (t1 > ts) {/* wave vector scattering event */ 
+                y0[0] = rho1;
+                y0[1] = theta1;
+                y0[2] = phi1;
+                y0[3] = krho1;
+                y0[4] = m1;
+                y0[5] = n1;
+                y0[6] = omega1;
+                mexPrintf("t1,ts:%g,%g\n",t1,ts);
+                ts =  fluctuation(reset,t1,y0,raymagnetic,rayprofiles,X,rayparam,equilparam,Te_fit,ne_fit,zTi_fit,zni_fit,x_fit,y_fit,Bx_fit,By_fit,BPHI_fit,dxstardpsin_fit,flag); 
+                krho1 = y0[3];
+                m1 = y0[4];
+                n1 = y0[5];
+            }           
+            
+            
+            /*mexPrintf("h:%g\n",h);
+            if (t1 + h > ts) {
+                h = ts - t1;/* for not missing a scattering event */
+                /* mexPrintf("t1,ts,h:%g,%g,%g\n",t1,ts,h);
+            } */
 
             S1 = S2;
         }
@@ -1192,6 +1200,8 @@ double *flag;
     if (*flag < 0) {/* dipersion relation */
         disprel(&Dtot,X,Nperp,N2,raymagnetic,Npar);
     }
+    disprel(&Dtot,X,Nperp,N2,raymagnetic,Npar);
+     mexPrintf("Disprel:%g\n",creal(Dtot));
 
     /* Dispersion relation */
     Nperp1 = Nperp;
@@ -2981,6 +2991,13 @@ double flag;
     
     double beta_angle,cbeta,sbeta,ts = 0.0,krhos = 0.0,ms = 0.0,ns = 0.0,chi0 = 1.0;
     double kpar,kperp,k2,k21,k22,k23,k24;
+    double ap,cnorm;
+    double clum=CLUM;
+    
+    double complex Dtot;
+    
+    ap = equilparam.ap[0];
+    cnorm = clum/ap/Y[6];
     
     /* mexPrintf("t1,%g\n",t1);*/
     ts = 2.0*t1 + 0.0*(double)param.dt0[0]*ran2(&reset[0]);/********to be modified, for test only******/
@@ -3001,6 +3018,8 @@ double flag;
     } else {
         interpequil_test(raymagnetic,rayprofiles,equilparam,Y,flag);
     }
+    
+    susceptibility(X,Nperp,dNperpdY,wcn,wpn2,betath,param.tensortype[0],(int)param.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Y[6]);
 
     kpar = Y[4]*raymagnetic.calpha[0]*raymagnetic.Bsn[0]/raymagnetic.rn[0] + Y[5]*raymagnetic.BPHIn[0]/raymagnetic.Rn[0];
     k21 = raymagnetic.gradrhon[0]*raymagnetic.gradrhon[0]*Y[3]*Y[3];
@@ -3009,6 +3028,18 @@ double flag;
     k24 = Y[5]*Y[5]/raymagnetic.Rn[0]/raymagnetic.Rn[0]; 
     k2 = k21 + k22 + k23 + k24;
     kperp = sqrt(k2 - kpar*kpar);
+    
+    rayindex(&Nperp,dNperpdY,&N2,dN2dY,1,Y,raymagnetic,equilparam,&Npar,dNpardY);
+    disprel(&Dtot,X,Nperp,N2,raymagnetic,Npar);
+    mexPrintf("Npar,Nperp,N2,Dtot:%g,%g,%g,%g\n",Npar,creal(Nperp),creal(N2),creal(Dtot));
+    
+    
+    Npar = cnorm*kpar;
+    N2 = cnorm*cnorm*k2;
+    Nperp = cnorm*kperp;
+    disprel(&Dtot,X,Nperp,N2,raymagnetic,Npar);
+    mexPrintf("ts,krho1,m1,n1,kpar,kperp,k2,Npar,Nperp,N2,Dtot:%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n",ts,Y[3],Y[4],Y[5],kpar,kperp,k2,Npar,creal(Nperp),creal(N2),creal(Dtot));      
+
 
     krhos = krhos + chi0*sbeta*raymagnetic.BPHIn[0]*(Y[4]/raymagnetic.rn[0] - Y[3]*raymagnetic.gradrhon[0]*raymagnetic.salpha[0]);
     krhos = krhos + kpar*raymagnetic.Bsn[0]*raymagnetic.salpha[0] - chi0*sbeta*raymagnetic.Bsn[0]*raymagnetic.calpha[0]*Y[5]/raymagnetic.Rn[0];
@@ -3027,7 +3058,6 @@ double flag;
     ns = ns - chi0*cbeta*(kpar*raymagnetic.BPHIn[0] - Y[5]/raymagnetic.Rn[0]);
     ns = ns*raymagnetic.Rn[0];
     
-    mexPrintf("t1,krho1,m1,n1,kpar,kperp,k2:%g,%g,%g,%g,%g,%g,%g\n",t1,Y[3],Y[4],Y[5],kpar,kperp,k2);      
 
     Y[3] = krhos;/* scattered wave vector */
     Y[4] = ms;/* scattered wave vector */
@@ -3040,8 +3070,12 @@ double flag;
     k24 = Y[5]*Y[5]/raymagnetic.Rn[0]/raymagnetic.Rn[0]; 
     k2 = k21 + k22 + k23 + k24;    
     kperp = sqrt(k2 - kpar*kpar);
+    Npar = cnorm*kpar;
+    N2 = cnorm*cnorm*k2;
+    Nperp = cnorm*kperp;
+    disprel(&Dtot,X,Nperp,N2,raymagnetic,Npar);
 
-    mexPrintf("ts,krho1,m1,n1,kpar,kperp,k2:%g,%g,%g,%g,%g,%g,%g\n",ts,Y[3],Y[4],Y[5],kpar,kperp,k2);      
+    mexPrintf("ts,krho1,m1,n1,kpar,kperp,k2,Npar,Nperp,N2,Dtot:%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n",ts,Y[3],Y[4],Y[5],kpar,kperp,k2,Npar,creal(Nperp),creal(N2),creal(Dtot));      
     
     return(ts);
 }
