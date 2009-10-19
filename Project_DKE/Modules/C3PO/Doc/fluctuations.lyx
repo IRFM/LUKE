@@ -1244,6 +1244,81 @@ reference "ws3"
 The wave kinetic equation
 \end_layout
 
+\begin_layout Standard
+The description of the rf wave scattering by fluctuations starts from the
+ Maxwell equations
+\begin_inset Formula \begin{equation}
+\begin{array}{l}
+\mathbf{\nabla}\cdot\mathbf{E}=\dfrac{\rho}{\varepsilon_{0}}\\
+\mathbf{\nabla}\cdot\mathbf{B}=0\\
+\mathbf{\nabla}\times\mathbf{E}=-\dfrac{\partial\mathbf{B}}{\partial t}\\
+\mathbf{\nabla}\times\mathbf{B}=\mu_{0}\mathbf{J}+\varepsilon_{0}\mu_{0}\dfrac{\partial\mathbf{E}}{\partial t}\end{array}\label{maxwell}\end{equation}
+
+\end_inset
+
+together with the continuity equation
+\begin_inset Formula \begin{equation}
+\frac{\partial\rho}{\partial t}+\mathbf{\nabla}\cdot\mathbf{J}=0\label{continuity}\end{equation}
+
+\end_inset
+
+From (),
+\begin_inset Formula \[
+\mathbf{\nabla}\times\mathbf{\nabla}\times\mathbf{E}=-\mu_{0}\frac{\partial\mathbf{J}}{\partial t}-\varepsilon_{0}\mu_{0}\dfrac{\partial^{2}\mathbf{E}}{\partial t^{2}}\]
+
+\end_inset
+
+and using 
+\begin_inset Formula $\mathbf{J}=\sigma\cdot\mathbf{E}$
+\end_inset
+
+, 
+\begin_inset Formula \[
+\mathbf{\nabla}\times\mathbf{\nabla}\times\mathbf{E}=-\mu_{0}\sigma\frac{\partial\mathbf{E}}{\partial t}-\varepsilon_{0}\mu_{0}\dfrac{\partial^{2}\mathbf{E}}{\partial t^{2}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{\nabla}\times\mathbf{\nabla}\times\mathbf{E}=-\mu_{0}\sigma\frac{\partial\mathbf{E}}{\partial t}-\varepsilon_{0}\mu_{0}\dfrac{\partial^{2}\mathbf{E}}{\partial t^{2}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\partial/\partial t\rightarrow-i\omega$
+\end_inset
+
+ and 
+\begin_inset Formula $\partial^{2}/\partial t^{2}\rightarrow-\omega^{2}$
+\end_inset
+
+, 
+\begin_inset Formula \[
+\mathbf{\nabla}\times\mathbf{\nabla}\times\mathbf{E}=i\omega\mu_{0}\sigma\mathbf{E}+\frac{\omega^{2}}{c^{2}}\mathbf{E}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathbf{\nabla}\times\mathbf{\nabla}\times\mathbf{E}-\frac{\omega^{2}}{c^{2}}\mathbf{E}=\frac{\omega^{2}}{c^{2}}i\frac{\sigma}{\varepsilon_{0}\omega}\mathbf{E}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathbf{\nabla}\times\mathbf{\nabla}\times\mathbf{E}-\frac{\omega^{2}}{c^{2}}\mathbf{E}=\frac{\omega^{2}}{c^{2}}\left(1-\kappa\right)i\frac{\sigma}{\varepsilon_{0}\omega}\mathbf{E}\]
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Numerical algorithm
 \end_layout
