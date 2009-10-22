@@ -1,0 +1,843 @@
+#LyX 1.6.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+The Wave Kinetic Equation 
+\end_layout
+
+\begin_layout Author
+Yves Peysson, Lorenzo Morini and Joan Decker
+\end_layout
+
+\begin_layout Standard
+We now derive the kinetic equation for the wave in presence of scattering
+ by density and magnetic field fluctuations.
+ The incident wave is treated as a monochromatic wave, satisfying the wave
+ equation:
+\begin_inset Formula \begin{equation}
+\nabla\times\nabla\times\mathbf{E}+\varepsilon_{0}\mu_{0}\frac{\partial^{2}\mathbf{E}}{\partial\mathcal{\textrm{t}}^{2}}=-\mu_{0}\frac{\partial\mathbf{J}}{\partial\textrm{t}}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The current 
+\begin_inset Formula $\mathbf{J}$
+\end_inset
+
+, in absence of extern sources, considering the plasma as a linear medium,
+ is due to the linear response of the plasma to the incident wave field,
+ in the Fourier space the wave equation becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{k}\times\mathbf{k}\times\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)+\varepsilon_{0}\mu_{0}\omega^{2}\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)=-i\mu_{0}\omega\mathbf{J}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the linear theory we have 
+\begin_inset Formula $\mathbf{J}_{\mathbf{k}}\left(\mathbf{k},\omega\right)=\mathbb{S}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)$
+\end_inset
+
+, where 
+\begin_inset Formula $\mathbb{S}\left(\mathbf{k},\omega\right)$
+\end_inset
+
+is the conductivity tensor, so:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{k}\times\mathbf{k}\times\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)+\varepsilon_{0}\mu_{0}\omega^{2}\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)=-i\mu_{0}\omega\mathbb{S}\left(\mathbf{k,\omega}\right)\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Introducing the dielectric tensor 
+\begin_inset Formula $\mathbb{K}\left(\mathbf{k},\omega\right)=\mathbb{I}+\frac{i}{\varepsilon_{0}\omega}\mathbb{S}\left(\mathbf{k},\omega\right)$
+\end_inset
+
+ and remembering that 
+\begin_inset Formula $\textrm{c}=\frac{1}{\sqrt{\varepsilon_{0}\mu_{0}}}$
+\end_inset
+
+, we obtain:
+\begin_inset Formula \begin{equation}
+\mathbf{k}\times\mathbf{k}\times\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)+\frac{\omega^{2}}{\textrm{c }^{2}}\mathbb{K}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)=0\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is the homogeneous wave equation, that can be expressed in the form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbb{D}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)=0\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $\mathbb{D}\left(\mathbf{k},\omega\right)$
+\end_inset
+
+ is the dispersion tensor:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbb{D}\left(\mathbf{k},\omega\right)=\frac{\textrm{c }^{2}}{\omega^{2}}\left(\mathbf{k}\mathbf{k}-k^{2}\mathbb{I}\right)+\mathbb{K}\left(\mathbf{k},\omega\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If we have fluctuations of density and magnetic field, 
+\begin_inset Formula $\delta n\left(\widetilde{\mathbf{k}},\widetilde{\omega}\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $\delta\mathbf{B}\left(\widetilde{\mathbf{k}},\widetilde{\omega}\right),$
+\end_inset
+
+ from the conservation of momentum and energy, the wave vector and the frequency
+ of the scattered wave are given by the expressions:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\check{\mathbf{k}}=\mathbf{k}+\widetilde{\mathbf{k}},\quad\check{\omega}=\omega+\widetilde{\omega}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The field of the scattered wave, 
+\begin_inset Formula $\check{\mathbf{E}}\left(\check{\mathbf{k}},\check{\omega}\right)$
+\end_inset
+
+, satisfies the equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\nabla\times\nabla\times\check{\mathbf{E}}+\varepsilon_{0}\mu_{0}\frac{\partial^{2}\check{\mathbf{E}}}{\partial\textrm{t}^{2}}=-\mu_{0}\frac{\partial}{\partial\textrm{t}}\left(\check{\mathbf{J}}+\widetilde{\mathbf{J}}\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $\check{\mathbf{J}}$
+\end_inset
+
+ is the current due to the linear response of the plasma to the field of
+ the scattered wave, and 
+\begin_inset Formula $\widetilde{\mathbf{J}}$
+\end_inset
+
+ is the current due to the interaction of the incident wave with the fluctuation
+s.
+ In the Fourier space we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\check{\mathbf{k}}\times\check{\mathbf{k}}\times\check{\mathbf{E}}_{\check{\mathbf{k}}}\left(\check{\mathbf{k}},\check{\omega}\right)+\varepsilon_{0}\mu_{0}\check{\omega}^{2}\check{\mathbf{E}}_{\check{\mathbf{k}}}\left(\check{\mathbf{k}},\check{\omega}\right)=-i\mu_{0}\check{\omega}\left(\check{\mathbf{J}}_{\check{\mathbf{k}}}\left(\check{\mathbf{k}},\check{\omega}\right)+\widetilde{\mathbf{J}}_{\mathbf{k},\check{\mathbf{k}}}\left(\mathbf{k}.\check{\mathbf{k}},\omega,\check{\omega}\right)\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So, 
+\begin_inset Formula $\check{\mathbf{J}}_{\check{\mathbf{k}}}\left(\check{\mathbf{k}},\check{\omega}\right)$
+\end_inset
+
+ is given by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\check{\mathbf{J}}_{\check{\mathbf{k}}}\left(\check{\mathbf{k}},\check{\omega}\right)=\mathbb{S}\left(\check{\mathbf{k}},\check{\omega}\right)\cdot\check{\mathbf{E}}_{\check{\mathbf{k}}}\left(\check{\mathbf{k}},\check{\omega}\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Inserting this expression in the wave equation and introducing the dielectric
+ tensor, we obtain the non homogeneous equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\check{\mathbf{k}}\times\check{\mathbf{k}}\times\check{\mathbf{E}}_{\check{\mathbf{k}}}\left(\check{\mathbf{k}},\check{\omega}\right)+\frac{\check{\omega}^{2}}{\textrm{c }^{2}}\mathbb{K}\left(\check{\mathbf{k}},\check{\omega}\right)\cdot\check{\mathbf{E}}_{\check{\mathbf{k}}}\left(\check{\mathbf{k}},\check{\omega}\right)=-i\mu_{0}\check{\omega}\widetilde{\mathbf{J}}_{\mathbf{k},\check{\mathbf{k}}}\left(\mathbf{k},\check{\mathbf{k}},\omega,\check{\omega}\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the dispersion tensor the equation becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbb{D}\left(\check{\mathbf{k}},\check{\omega}\right)\cdot\check{\mathbf{E}}_{\check{\mathbf{k}}}\left(\check{\mathbf{k}},\check{\omega}\right)=-\frac{i}{\varepsilon_{0}\check{\omega}}\widetilde{\mathbf{J}}_{\mathbf{k},\check{\mathbf{k}}}\left(\mathbf{k},\check{\mathbf{k}},\omega,\check{\omega}\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+An explicit expression for the current 
+\begin_inset Formula $\widetilde{\mathbf{J}}_{\mathbf{k},\check{\mathbf{k}}}\left(\mathbf{k},\check{\mathbf{k}},\omega,\check{\omega}\right)$
+\end_inset
+
+ is obtained applying the Fourier trasform to the MHD equations, the derivation
+ of this expression using the linear theory in the cold plasma approximation
+ is discussed in details in appendix.
+ In the cold plasma limit, considering only the component of the current
+ due to the electrons, and several incident modes with wave vector 
+\begin_inset Formula $\mathbf{k}$
+\end_inset
+
+ and frequency 
+\begin_inset Formula $\omega$
+\end_inset
+
+, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\widetilde{\mathbf{J}}_{\mathbf{k},\check{\mathbf{k}}}\left(\mathbf{k},\check{\mathbf{k}},\omega,\check{\omega}\right)=i\varepsilon_{0}\underset{\mathbf{k},\omega}{\sum}\omega\left[\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\frac{\delta n\left(\check{\mathbf{k}}-\mathbf{k},\check{\omega}-\omega\right)}{n}+\right.\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\left.+i\frac{\omega_{ce}\check{\omega}}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}},\check{\omega}\right)\right)\cdot\left(\mathbb{E}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k},\check{\omega}-\omega\right)}{B_{\mathbf{k}}\left(\mathbf{k},\omega\right)}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\right]\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $\mathbb{E}^{LC}$
+\end_inset
+
+ is the Levi-Civita tensor of order 3, and 
+\begin_inset Formula $\mathbb{K}$
+\end_inset
+
+ is the cold plasma dielectric tensor.
+ Using this expression for the current due to the fluctuations, the wave
+ equation becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbb{D}\left(\check{\mathbf{k}},\check{\omega}\right)\cdot\check{\mathbf{E}}_{\check{\mathbf{k}}}\left(\check{\mathbf{k}}\check{\omega}\right)=\underset{\mathbf{k},\omega}{\sum}\left[\frac{\omega}{\check{\omega}}\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\frac{\delta n\left(\check{\mathbf{k}}-\mathbf{k},\check{\omega}-\omega\right)}{n}+\right.\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\left.+i\frac{\omega_{ce}\omega}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}},\check{\omega}\right)\right)\cdot\left(\mathbb{E}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k},\check{\omega}-\omega\right)}{B_{\mathbf{k}}\left(\mathbf{k},\omega\right)}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\right]\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Fluctuations are assumed to be slow, so we have 
+\begin_inset Formula $\widetilde{\omega}\ll\omega$
+\end_inset
+
+ and 
+\begin_inset Formula $\check{\omega}\approx\omega$
+\end_inset
+
+, as a consequence:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbb{D}\left(\check{\mathbf{k}},\check{\omega}\right)\cdot\check{\mathbf{E}}_{\check{\mathbf{k}}}\left(\check{\mathbf{k}},\check{\omega}\right)=\underset{\mathbf{k},\omega}{\sum}\left[\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\frac{\delta n\left(\check{\mathbf{k}}-\mathbf{k}\right)}{n}+\right.\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\left.+i\frac{\omega_{ce}\omega}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}},\check{\omega}\right)\right)\cdot\left(\mathbb{E}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{B_{\mathbf{k}}\left(\mathbf{k},\omega\right)}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\right]\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Now, we assume that fluctuations of the density and of the magnetic field
+ are sufficienly small to be treated with a perturbative approach, it means
+ that the effects of the fluctuations may be rapresented by a small variation
+ from the normal mode propagation that we can easily study by solving the
+ homogeneous wave equation.
+ If we use this perturbative approach, the frequency of the scattered wave
+ is given by the expression:
+\begin_inset Formula \begin{equation}
+\check{\omega}=\check{\omega}_{\check{k}}+i\frac{\partial}{\partial\textrm{t }}\qquad\textrm{with }\left|\frac{\partial}{\partial\textrm{t }}\right|\ll\check{\omega}_{\check{k}}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $\check{\omega}_{\check{k}}$
+\end_inset
+
+ is the frequency of the normal mode, that is decribed by the homogeneous
+ equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbb{D}\left(\check{\mathbf{k}},\check{\omega}_{\check{k}}\right)\cdot\check{\mathbf{E}}_{\check{\mathbf{k}}}\left(\check{\mathbf{k}},\check{\omega}_{\check{k}}\right)=0\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The fluctuations add a term to the imaginary part of the frequency, this
+ means that there is a term due to the fluctuations in the energy balance
+ equation (
+\begin_inset Formula $\delta n$
+\end_inset
+
+ and 
+\begin_inset Formula $\delta\mathbf{B}$
+\end_inset
+
+ give an additional contribution to the damping of the wave).
+ 
+\begin_inset Formula $\check{\omega}_{\check{k}}$
+\end_inset
+
+ can be easily determined by solving the dispersion relation associated
+ with the homogeneous equation.
+ Inserting the expression for 
+\begin_inset Formula $\check{\omega}$
+\end_inset
+
+ in the wave equation, and expressing the electric field in function of
+ the polarization vector 
+\begin_inset Formula $\mathbf{E}(\mathbf{k})=\mathbf{e}\left(\mathbf{k}\right)E\left(\mathbf{k}\right),$
+\end_inset
+
+ we obtain:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\left[\mathbb{D}\left(\check{\mathbf{k}},\check{\omega}_{\check{k}}\right)+i\frac{\partial\mathbb{D}}{\partial\check{\omega}}\frac{\partial}{\partial\textrm{t }}\right]\cdot\check{\mathbf{e}}\left(\check{\mathbf{k}}\right)\check{E}_{\check{\mathbf{k}}}\left(\check{\mathbf{k}}\right)=\underset{\mathbf{k}}{\sum}\left[\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k}\right)\right)\frac{\delta n\left(\check{\mathbf{k}}-\mathbf{k}\right)}{n}+\right.\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\left.+i\frac{\omega_{ce}\omega}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}}\right)\right)\cdot\left(\mathbb{E}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{B_{\mathbf{k}}\left(\mathbf{k}\right)}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k}\right)\right)\right]\cdot\mathbf{e}\left(\mathbf{k}\right)E_{\mathbf{k}}\left(\mathbf{k}\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this equation all the quantities are considered for 
+\begin_inset Formula $\omega=\check{\omega}_{\check{k}}$
+\end_inset
+
+.
+ Multiplying this equation for 
+\begin_inset Formula $\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)$
+\end_inset
+
+ and remembering that 
+\begin_inset Formula $\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\mathbb{D}\left(\check{\mathbf{k}},\check{\omega}_{\check{k}}\right)=0$
+\end_inset
+
+, the equation finally becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+i\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\frac{\partial\mathbb{D}}{\partial\check{\omega}}\cdot\check{\mathbf{e}}\left(\check{\mathbf{k}}\right)\frac{\partial\check{E}_{\check{\mathbf{k}}}\left(\mathbf{\check{k}}\right)}{\partial\textrm{t }}=\underset{\mathbf{k}}{\sum}\check{\mathbf{e}}^{\star}\left(\mathbf{\check{\mathbf{k}}}\right)\cdot\left[\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k}\right)\right)\frac{\delta n\left(\check{\mathbf{k}}-\mathbf{k}\right)}{n}+\right.\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\left.+i\frac{\omega_{ce}\omega}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}}\right)\right)\cdot\left(\mathbb{E}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{B_{\mathbf{k}}\left(\mathbf{k}\right)}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k}\right)\right)\right]\cdot\mathbf{e}\left(\mathbf{k}\right)E_{\mathbf{k}}\left(\mathbf{k}\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In order to study the coupling between the incident and the scattered wave,
+ and expecially the enegy exchange between the two modes, we introduce the
+ wave energy density:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+W\left(\mathbf{k}\right)=\varepsilon_{0}\frac{\check{\omega}_{\check{k}}}{2}\mathbf{e}^{\star}\left(\mathbf{k}\right)\cdot\frac{\partial\mathbb{D}}{\partial\omega}\cdot\mathbf{e}\left(\mathbf{k}\right)\left|\mathbf{E}\left(\mathbf{k}\right)\right|^{2}=\varepsilon_{0}\mathbf{e}^{\star}\left(\mathbf{k}\right)\cdot\mathbb{M}\cdot\mathbf{e}\left(\mathbf{k}\right)E\left(\mathbf{k}\right)^{2}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $\mathbb{M}=\frac{\check{\omega}_{\check{k}}}{2}\frac{\partial\mathbb{D}}{\partial\omega}$
+\end_inset
+
+.
+ The wave amplitude is given by:
+\begin_inset Formula \begin{equation}
+C\left(\mathbf{k}\right)=W\left(\mathbf{k}\right)^{\frac{1}{2}}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So we exprime the electric field in function of the wave amplitude, and
+ we obtain the mode coupling equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+i\frac{\partial C\left(\check{\mathbf{k}}\right)}{\partial\textrm{t }}=\underset{\mathbf{k}}{\sum}\frac{\check{\omega}_{\check{k}}}{2}\left[\frac{\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k}\right)\right)\cdot\mathbf{e}\left(\mathbf{k}\right)}{\left(\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\mathbb{M}\cdot\check{\mathbf{e}}\left(\check{\mathbf{k}}\right)\right)^{\frac{1}{2}}\left(\mathbf{e}^{\star}\left(\mathbf{k}\right)\cdot\mathbb{M}\cdot\mathbf{e}\left(\mathbf{k}\right)\right)^{\frac{1}{2}}}\frac{\delta n\left(\check{\mathbf{k}}-\mathbf{k}\right)}{n}+\right.\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\left.+i\frac{\omega_{ce}\check{\omega}_{\check{k}}}{\omega_{pe}^{2}}\frac{\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}}\right)\right)\cdot\left(\mathbb{E}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{B_{\mathbf{k}}\left(\mathbf{k}\right)}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k}\right)\right)\cdot\mathbf{e}\left(\mathbf{k}\right)}{\left(\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\mathbb{M}\cdot\check{\mathbf{e}}\left(\check{\mathbf{k}}\right)\right)^{\frac{1}{2}}\left(\mathbf{e}^{\star}\left(\mathbf{k}\right)\cdot\mathbb{M}\cdot\mathbf{e}\left(\mathbf{k}\right)\right)^{\frac{1}{2}}}\right]C\left(\mathbf{k}\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This equation describes the evolution of the wave amplitude, and so of the
+ wave energy, due to the scattering by fluctuations, it can be written in
+ the form:
+\begin_inset Formula \begin{equation}
+i\frac{\partial C\left(\check{\mathbf{k}}\right)}{\partial\textrm{t }}=\underset{\mathbf{k}}{\sum}\left[V^{n}\left(\mathbf{k},\check{\mathbf{k}},\check{\omega}_{\check{k}}\right)\frac{\delta n\left(\check{\mathbf{k}}-\mathbf{k}\right)}{n}+\mathbf{V}^{\mathbf{B}}\left(\mathbf{k},\check{\mathbf{k}},\check{\omega}_{\check{k}}\right)\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{B_{\mathbf{k}}}\right]C\left(\mathbf{k}\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $V^{n}\left(\mathbf{k},\check{\mathbf{k}},\omega_{k}\right)$
+\end_inset
+
+and 
+\begin_inset Formula $\mathbf{V}^{\mathbf{B}}\left(\mathbf{k},\check{\mathbf{k}},\omega_{k}\right)$
+\end_inset
+
+ are the coupling coefficients:
+\begin_inset Formula \begin{equation}
+V^{n}\left(\mathbf{k},\check{\mathbf{k}},\omega_{k}\right)=\frac{\check{\omega}_{\check{k}}}{2}\frac{\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k}\right)\right)\cdot\mathbf{e}\left(\mathbf{k}\right)}{\left(\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\mathbb{M}\cdot\check{\mathbf{e}}\left(\check{\mathbf{k}}\right)\right)^{\frac{1}{2}}\left(\mathbf{e}^{\star}\left(\mathbf{k}\right)\cdot\mathbb{M}\cdot\mathbf{e}\left(\mathbf{k}\right)\right)^{\frac{1}{2}}}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{V}^{\mathbf{B}}\left(\mathbf{k},\check{\mathbf{k}},\omega_{k}\right)=\frac{i\omega_{ce}\check{\omega}_{\check{k}}^{2}}{2\omega_{pe}^{2}}\frac{\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}}\right)\right)\cdot\mathbb{E}^{LC}\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbb{\mathbf{k}}\right)\right)\cdot\mathbf{e}\left(\mathbf{k}\right)}{\left(\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\mathbb{M}\cdot\check{\mathbf{e}}\left(\check{\mathbf{k}}\right)\right)^{\frac{1}{2}}\left(\mathbf{e}^{\star}\left(\mathbf{k}\right)\cdot\mathbb{M}\cdot\mathbf{e}\left(\mathbf{k}\right)\right)^{\frac{1}{2}}}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the component notation:
+\begin_inset Formula \begin{equation}
+V^{n}\left(\mathbf{k},\check{\mathbf{k}},\omega_{k}\right)=\frac{\check{\omega}_{\check{k}}}{2}\frac{\check{e}_{i}^{\star}\left(\check{\mathbf{k}}\right)\left(\delta_{ij}-K_{ij}\left(\mathbf{k}\right)\right)e_{j}\left(\mathbf{k}\right)}{\left(\check{e}_{i}^{\star}\left(\check{\mathbf{k}}\right)M_{ij}\check{e}_{j}\left(\check{\mathbf{k}}\right)\right)^{\frac{1}{2}}\left(e_{k}^{\star}\left(\mathbf{k}\right)M_{kl}e_{l}\left(\mathbf{k}\right)\right)^{\frac{1}{2}}}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+V_{m}^{\mathbf{B}}\left(\mathbf{k},\check{\mathbf{k}},\omega_{k}\right)=\frac{i\omega_{ce}\check{\omega}_{\check{k}}^{2}}{2\omega_{pe}^{2}}\frac{\check{e}_{i}^{\star}\left(\check{\mathbf{k}}\right)\left(\delta_{il}-K_{il}\left(\check{\mathbf{k}}\right)\right)\epsilon_{lkm}\left(\delta_{kj}-K_{kj}\left(\mathbf{k}\right)\right)e_{j}\left(\mathbf{k}\right)}{\left(\check{e}_{i}^{\star}\left(\check{\mathbf{k}}\right)M_{ij}\check{e}_{j}\left(\check{\mathbf{k}}\right)\right)^{\frac{1}{2}}\left(e_{k}^{\star}\left(\mathbf{k}\right)M_{kl}e_{l}\left(\mathbf{k}\right)\right)^{\frac{1}{2}}}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+\start_of_appendix
+Appendix A
+\end_layout
+
+\begin_layout Standard
+We now derive the explicit expression for the current 
+\begin_inset Formula $\widetilde{\mathbf{J}}_{\mathbf{k},\check{\mathbf{k}}}\left(\mathbf{k},\check{\mathbf{k}},\omega,\check{\omega}\right)$
+\end_inset
+
+ due to interaction between the field of the incident wave and the fluctuation
+ of the density and of the magnetic field, in the cold plasma approximation.
+ 
+\end_layout
+
+\begin_layout Standard
+We firstly assume to have only fluctuations of the density, with 
+\begin_inset Formula $\widetilde{\omega}\ll\omega$
+\end_inset
+
+, so 
+\begin_inset Formula $\check{\omega}=\omega$
+\end_inset
+
+.
+ In the cold plasma model, the effects of the thermal motion of the particles
+ and of the collisions are neglected, each species of particle is treated
+ as an indipendent fluid, so for studying wave propagation we need to solve
+ the Maxwell equations coupled with the equation of the motion for the various
+ species of particles:
+\begin_inset Formula \begin{equation}
+\nabla\times\mathbf{E}=-\frac{\partial\mathbf{B}}{\partial\textrm{t}}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\nabla\times\mathbf{B}=\varepsilon_{0}\mu_{0}\frac{\partial\mathbf{E}}{\partial\textrm{t}}+\mu_{0}\mathbf{J}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\textrm{m}_{s}\left(\frac{\partial\mathbf{v}_{s}}{\partial\textrm{t}}+\left(\mathbf{v}_{s}\nabla\right)\mathbf{v}_{s}\right)=\textrm{q}_{s}\left(\mathbf{E}+\frac{\mathbf{\mathbf{v}}_{s}}{\textrm{c}}\times\mathbf{B}\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where the current 
+\begin_inset Formula $\mathbf{J}$
+\end_inset
+
+ is given by the expression:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{J}=\underset{s}{\sum}\textrm{q}_{s}n_{s}\mathbf{v}_{s}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Since the difference between electron and ion masses is very large, and
+ 
+\begin_inset Formula $\mathbf{v}_{i}\ll\mathbf{v}_{e}$
+\end_inset
+
+, we consider only the component of the current due to the electrons, assuming
+ 
+\begin_inset Formula $n_{e}=n$
+\end_inset
+
+ and introducing the density fluctuations, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{J}=-e\left(n+\delta n\right)\mathbf{v}_{e}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Neglecting the convective term, the linearized equation of motion, in absence
+ of magnetic field and velocity fluctuation, is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\textrm{m}_{e}\frac{\partial\mathbf{v}_{e}}{\partial\textrm{t }}=-e\left(\mathbf{E}+\frac{\mathbf{v}_{e}}{\textrm{c }}\times\mathbf{B}\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the Fourier space we have:
+\begin_inset Formula \begin{equation}
+i\textrm{m}_{e}\omega\left[\mathbf{v}_{e\mathbf{k}}\left(\mathbf{k},\omega\right)+i\frac{\omega_{ce}}{\omega}\mathbf{v}_{e\mathbf{k}}\left(\mathbf{k},\omega\right)\times\mathbf{b}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\right]=e\mathbf{E}\left(\mathbf{k},\omega\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the tensorial notation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+i\textrm{m}_{e}\omega\left(\mathbb{I}+i\frac{\omega_{ce}}{\omega}\mathbb{E}^{LC}\cdot\mathbf{b}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\right)\cdot\mathbf{v}_{e\mathbf{k}}\left(\mathbf{k},\omega\right)=e\mathbf{E}\left(\mathbf{k},\omega\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So the electron velocity is given by the expression:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{v}_{e\mathbf{k}}\left(\mathbf{k},\omega\right)=-\frac{ie}{\textrm{m}_{e}\omega}\mathbb{T}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where the tensor 
+\begin_inset Formula $\mathbb{T}$
+\end_inset
+
+ is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbb{T}\left(\mathbf{k},\omega\right)=\frac{1}{\omega^{2}-\omega_{ce}^{2}}\left(\omega^{2}\mathbb{I}-\omega_{ce}^{2}\mathbf{b}_{\mathbf{k}}\mathbf{b}_{\mathbf{k}}-i\omega\omega_{ce}\mathbb{E}^{LC}\cdot\mathbf{b}_{\mathbf{k}}\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using (30) in (25), the current becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{J}_{\mathbf{k}}=\frac{ie^{2}n}{\textrm{m}_{e}\omega}\left(1+\frac{\delta n\left(\check{\mathbf{k}}-\mathbf{k}\right)}{n}\right)\mathbf{\mathbb{T}}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)=\frac{i\omega_{pe}^{2}\varepsilon_{0}}{\omega}\left(1+\frac{\delta n\left(\check{\mathbf{k}}-\mathbf{k}\right)}{n}\right)\mathbb{T}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So the component due to the interaction between the field of the incident
+ wave and the fluctuations is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\widetilde{\mathbf{J}}_{\mathbf{k},\check{\mathbf{k}}}\left(\mathbf{k},\check{\mathbf{k}},\omega,\check{\omega}\right)=\frac{i\omega_{pe}^{2}\varepsilon_{0}}{\omega}\frac{\delta n\left(\check{\mathbf{k}}-\mathbf{k}\right)}{n}\mathbb{T}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In absence of fluctuations, we have:
+\begin_inset Formula \begin{equation}
+\mathbf{J}_{\mathbf{k}}\left(\mathbf{k},\omega\right)=\mathbb{S}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)=i\omega\varepsilon_{0}\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)=\frac{i\omega_{pe}^{2}\varepsilon_{0}}{\omega}\mathbb{T}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $\mathbb{S}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbb{K}$
+\end_inset
+
+ are respectively the conductivity and the dielectric tensor of a cold plasma.
+ From last equation we can deduce an expression of 
+\begin_inset Formula $\mathbb{T}$
+\end_inset
+
+ in function of the cold plasma dielectric tensor:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbb{T}\left(\mathbf{k},\omega\right)=\frac{\omega^{2}}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So the current due to the fluctuation of the density can be finally expressed
+ in the form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\widetilde{\mathbf{J}}_{\mathbf{k},\check{\mathbf{k}}}\left(\mathbf{k},\check{\mathbf{k}},\omega,\check{\omega}\right)=i\omega\varepsilon_{0}\frac{\delta n\left(\check{\mathbf{k}}-\mathbf{k}\right)}{n}\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In components:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\widetilde{J}_{\mathbf{k},\check{\mathbf{k}},i}=i\omega\varepsilon_{0}\left(\delta_{ij}-K_{ij}\left(\mathbf{k},\omega\right)\right)\frac{\delta n\left(\check{\mathbf{k}}-\mathbf{k}\right)}{n}E_{\mathbf{k},j}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
