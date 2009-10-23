@@ -1,4 +1,4 @@
-#LyX 1.6.4.1 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.2 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -69,6 +69,163 @@ Yves Peysson, Joan Decker and François-Xavier Duthoit
 \end_layout
 
 \begin_layout Section
+Preliminary orderings
+\end_layout
+
+\begin_layout Subsection
+Thin banana width (TBW) approximation
+\end_layout
+
+\begin_layout Standard
+In the guiding-center transformation, we have introduced the small parameter
+ for magnetic nonuniformity over a gyro-orbit
+\begin_inset Formula $\epsilon_{B}$
+\end_inset
+
+ defined as follows:
+\begin_inset Formula \[
+\epsilon_{B}=\frac{\rho_{L}}{L_{B}}\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\rho_{L}$
+\end_inset
+
+ denotes the particle Larmor radius and 
+\begin_inset Formula $L_{B}$
+\end_inset
+
+ the magnetic field gradient characteristic length.
+ We may introduce a new parameter involving the banana width 
+\begin_inset Formula $\Lambda_{B}$
+\end_inset
+
+,
+\begin_inset Formula \[
+\epsilon_{\psi}=\frac{\Lambda_{B}}{L_{B}}\sim\epsilon_{B}\frac{B_{T}}{B_{p}}\]
+
+\end_inset
+
+In axissymetric magnetic equilibriums where the field toroidal component
+ outweighs the poloidal component (such as tokamaks), , we will have 
+\begin_inset Formula $B_{T}/B_{p}\simeq10-100$
+\end_inset
+
+, provided we stay away from the plasma center.
+ We therefore have the following ordering relation in the thin banana width
+ limit:
+\begin_inset Formula \[
+\epsilon_{B}\ll\epsilon_{\psi}\ll1\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Orderings of guiding-center coefficients in 
+\begin_inset Formula $\epsilon_{B}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The guiding-center coefficients in 
+\begin_inset Formula $\left(\mathbf{X},p,\xi\right)$
+\end_inset
+
+ space read (at first order in 
+\begin_inset Formula $\epsilon_{B}$
+\end_inset
+
+), according to previous work and using an isotropic field-particle distribution
+ 
+\begin_inset Formula $\mathbf{K}=-\nu\mathbf{p}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbb{D}=\mathcal{D}_{l}\mathbf{pp}+\mathcal{D}_{t}\left(\mathbb{I}-\mathbf{pp}\right)$
+\end_inset
+
+:
+\begin_inset Formula \begin{align*}
+\mathbf{K}_{gc}^{\mathbf{X}}= & \nu_{gc}\bar{\boldsymbol{\rho}}_{gc}\\
+\mathcal{K}_{gc}^{p}= & -\nu_{gc}p\\
+\mathcal{K}_{gc}^{\xi}= & -\nu_{gc}\frac{1-\xi^{2}}{2\xi}\lambda_{gc}\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula \begin{align*}
+\mathbb{D}_{gc}^{\mathbf{XX}}= & \frac{\mathbb{I}_{\perp}}{2m^{2}\Omega^{2}}\left[\left(1-\xi^{2}\right)\mathcal{D}_{l}+\left(1+\xi^{2}\right)\mathcal{D}_{t}\right]\\
+\mathbf{D}_{gc}^{\mathbf{X}p}= & -\frac{\mathcal{D}_{l}}{p}\bar{\boldsymbol{\rho}}_{gc}\\
+\mathbf{D}_{gc}^{\mathbf{X}\xi}= & \frac{\xi\left(1-\xi^{2}\right)}{2m^{2}\Omega^{2}}\left[\left(\mathcal{D}_{l}+\mathcal{D}_{t}\right)\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}-\mathcal{D}_{t}\nabla_{\perp}\ln B\right]\\
+\mathcal{D}_{gc}^{pp}= & \mathcal{D}_{l}\\
+\mathcal{D}_{gc}^{p\xi}= & \lambda_{gc}\frac{1-\xi^{2}}{2p\xi}\mathcal{D}_{l}\\
+\mathcal{D}_{gc}^{\xi\xi}= & \left(1-\lambda_{gc}\right)\frac{1-\xi^{2}}{p^{2}}\mathcal{D}_{t}\end{align*}
+
+\end_inset
+
+where
+\begin_inset Formula \[
+\bar{\boldsymbol{\rho}}_{gc}\equiv-\frac{1}{m\Omega^{2}}\left(\frac{p^{2}\left(1-\xi^{2}\right)}{2m}\nabla_{\perp}\ln B+\frac{p^{2}\xi^{2}}{m}\hat{\mathbf{b}}\cdot\nabla\hat{\mathbf{b}}\right)\]
+
+\end_inset
+
+ and 
+\begin_inset Formula \[
+\lambda_{gc}=\frac{p\xi}{m\Omega}\hat{\mathbf{b}}\cdot\left(\nabla\times\hat{\mathbf{b}}\right)\]
+
+\end_inset
+
+are first-order terms in 
+\begin_inset Formula $\epsilon_{B}$
+\end_inset
+
+.
+ Hence, labelling 
+\begin_inset Quotes eld
+\end_inset
+
+0
+\begin_inset Quotes erd
+\end_inset
+
+ zero-order terms and 
+\begin_inset Quotes eld
+\end_inset
+
+1
+\begin_inset Quotes erd
+\end_inset
+
+ first-order terms, we have the following orderings for the guiding-center
+ coefficients in 
+\begin_inset Formula $\left(\mathbf{X},p,\xi\right)$
+\end_inset
+
+ space:
+\begin_inset Formula \[
+\mathbf{K}_{gc}=\left(\begin{array}{c}
+1\\
+1\\
+1\\
+0\\
+1\end{array}\right),\quad\mathbb{D}_{gc}=\left(\begin{array}{ccccc}
+0 & 0 & 0 & 1 & 1\\
+0 & 0 & 0 & 1 & 1\\
+0 & 0 & 0 & 1 & 1\\
+1 & 1 & 1 & 0 & 1\\
+1 & 1 & 1 & 1 & 0+1\end{array}\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
 Coordinate transformation for the guiding-center collision operator
 \end_layout
 
@@ -78,7 +235,7 @@ This transformation corresponds to express the convection and diffusion
 \begin_inset Formula $\left(\widetilde{\psi},\theta,\phi,p,\xi\right)$
 \end_inset
 
- in terms of the new ones 
+ in terms of 
 \family roman
 \series medium
 \shape up
@@ -102,13 +259,29 @@ This transformation corresponds to express the convection and diffusion
 \color inherit
 
 \begin_inset Formula \begin{equation}
-\widetilde{\psi}=\overline{\psi}+\delta\psi\left(\overline{\psi},\theta,\phi,p,\xi\right)\label{eq:psitildevspsibar}\end{equation}
+\overline{\psi}=\widetilde{\psi}-\delta\psi\left(\widetilde{\psi},\theta,\phi,p,\xi\right)\label{eq:psitildevspsibar}\end{equation}
 
 \end_inset
 
-knowing the definition 
+In the thin banana width limit, we will have 
+\begin_inset Formula $\delta\psi/\overline{\psi}=\epsilon_{\psi}\ll1$
+\end_inset
+
+.
+ The orbit excursion reads:
 \begin_inset Formula \begin{equation}
-1-\xi^{2}=\Psi\left(1-\xi_{0}^{2}\right)\label{eq:xivsxi0}\end{equation}
+\delta\psi=\frac{c}{e}p\xi\frac{B_{\phi}\left(\widetilde{\psi},\theta\right)}{B\left(\widetilde{\psi},\theta\right)}\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $B_{\phi}=\mathbf{B}\cdot\frac{\partial\mathbf{X}}{\partial\phi}$
+\end_inset
+
+ is the covariant toroidal component of the magnetic field.
+ We also introduce the definition 
+\begin_inset Formula \begin{equation}
+1-\xi_{0}^{2}=\Psi^{-1}\left(1-\xi^{2}\right)\label{eq:xivsxi0}\end{equation}
 
 \end_inset
 
@@ -133,9 +306,15 @@ key "bri09"
 \begin_inset Formula $\xi=v_{\Vert}/v$
 \end_inset
 
-, but this dependence corresponds to first order corrections in the small
+, but spatial derivatives correspond to first order corrections in the small
  parameter 
-\begin_inset Formula $\epsilon_{B}$
+\begin_inset Formula $\epsilon_{\psi}$
+\end_inset
+
+.
+ In all cases, a guiding-center banana orbit will be defined by the three
+ parameters 
+\begin_inset Formula $\overline{\psi},p,\xi_{0}$
 \end_inset
 
 .
@@ -158,9 +337,9 @@ reference "eq:xivsxi0"
 
 \begin_layout Standard
 \begin_inset Formula \begin{align}
-\extd\xi_{0} & \equiv\frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\extd\widetilde{\psi}+\frac{\partial\xi_{0}}{\partial\theta}\extd\theta+\frac{\partial\xi_{0}}{\partial\phi}\extd\phi+\frac{\partial\xi_{0}}{\partial p}\extd p+\frac{\partial\xi_{0}}{\partial\xi}\extd\xi\\
- & =\frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\extd\widetilde{\psi}+\frac{\partial\xi_{0}}{\partial\theta}\extd\theta+\frac{\partial\xi_{0}}{\partial p}\extd p+\frac{\partial\xi_{0}}{\partial\xi}\extd\xi\\
- & =\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\widetilde{\psi}}\extd\widetilde{\psi}+\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\theta}\extd\theta+\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial p}\extd p+\frac{1}{\Psi}\left(\frac{\xi}{\xi_{0}}+\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\xi}\right)\extd\xi\end{align}
+\extd\xi_{0}\equiv & \frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\extd\widetilde{\psi}+\frac{\partial\xi_{0}}{\partial\theta}\extd\theta+\frac{\partial\xi_{0}}{\partial\phi}\extd\phi+\frac{\partial\xi_{0}}{\partial p}\extd p+\frac{\partial\xi_{0}}{\partial\xi}\extd\xi\\
+= & \frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\extd\widetilde{\psi}+\frac{\partial\xi_{0}}{\partial\theta}\extd\theta+\frac{\partial\xi_{0}}{\partial p}\extd p+\frac{\partial\xi_{0}}{\partial\xi}\extd\xi\\
+= & \frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\widetilde{\psi}}\extd\widetilde{\psi}+\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\theta}\extd\theta+\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial p}\extd p+\frac{1}{\Psi}\left(\frac{\xi}{\xi_{0}}+\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\xi}\right)\extd\xi\end{align}
 
 \end_inset
 
@@ -192,9 +371,9 @@ reference "eq:psitildevspsibar"
 
 ),
 \begin_inset Formula \begin{align}
-\extd\overline{\psi} & \equiv\frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\extd\widetilde{\psi}+\frac{\partial\overline{\psi}}{\partial\theta}\extd\theta+\frac{\partial\overline{\psi}}{\partial\phi}\extd\phi+\frac{\partial\overline{\psi}}{\partial p}\extd p+\frac{\partial\overline{\psi}}{\partial\xi}\extd\xi\\
- & =\frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\extd\widetilde{\psi}+\frac{\partial\overline{\psi}}{\partial\theta}\extd\theta+\frac{\partial\overline{\psi}}{\partial p}\extd p+\frac{\partial\overline{\psi}}{\partial\xi}\extd\xi\\
- & =\left(1-\frac{\partial\delta\psi}{\partial\widetilde{\psi}}\right)\extd\widetilde{\psi}-\frac{\partial\delta\psi}{\partial\theta}\extd\theta-\frac{\partial\delta\psi}{\partial p}\extd p-\frac{\partial\delta\psi}{\partial\xi}\extd\xi\end{align}
+\extd\overline{\psi}\equiv & \frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\extd\widetilde{\psi}+\frac{\partial\overline{\psi}}{\partial\theta}\extd\theta+\frac{\partial\overline{\psi}}{\partial\phi}\extd\phi+\frac{\partial\overline{\psi}}{\partial p}\extd p+\frac{\partial\overline{\psi}}{\partial\xi}\extd\xi\\
+= & \frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\extd\widetilde{\psi}+\frac{\partial\overline{\psi}}{\partial\theta}\extd\theta+\frac{\partial\overline{\psi}}{\partial p}\extd p+\frac{\partial\overline{\psi}}{\partial\xi}\extd\xi\\
+= & \left(1-\frac{\partial\delta\psi}{\partial\widetilde{\psi}}\right)\extd\widetilde{\psi}-\frac{\partial\delta\psi}{\partial\theta}\extd\theta-\frac{\partial\delta\psi}{\partial p}\extd p-\frac{\partial\delta\psi}{\partial\xi}\extd\xi\end{align}
 
 \end_inset
 
@@ -221,13 +400,19 @@ According to the coordinates transformation, the expression for
 
  reads, 
 \begin_inset Formula \begin{align}
-\mathcal{K}_{gc}^{\xi_{0}} & =\frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\mathcal{K}_{gc}^{\widetilde{\psi}}+\frac{\partial\xi_{0}}{\partial\theta}\mathcal{K}_{gc}^{\theta}+\frac{\partial\xi_{0}}{\partial p}\mathcal{K}_{gc}^{p}+\frac{\partial\xi_{0}}{\partial\xi}\mathcal{K}_{gc}^{\xi}\nonumber \\
- & =\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\widetilde{\psi}}\mathcal{K}_{gc}^{\widetilde{\psi}}+\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\theta}\mathcal{K}_{gc}^{\theta}\nonumber \\
+\mathcal{K}_{gc}^{\xi_{0}}= & \frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\mathcal{K}_{gc}^{\widetilde{\psi}}+\frac{\partial\xi_{0}}{\partial\theta}\mathcal{K}_{gc}^{\theta}+\frac{\partial\xi_{0}}{\partial p}\mathcal{K}_{gc}^{p}+\frac{\partial\xi_{0}}{\partial\xi}\mathcal{K}_{gc}^{\xi}\nonumber \\
+= & \frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\widetilde{\psi}}\mathcal{K}_{gc}^{\widetilde{\psi}}+\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\theta}\mathcal{K}_{gc}^{\theta}\nonumber \\
  & +\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial p}\mathcal{K}_{gc}^{p}+\frac{1}{\Psi}\left(\frac{\xi}{\xi_{0}}+\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\xi}\right)\mathcal{K}_{gc}^{\xi}\end{align}
 
 \end_inset
 
-while for 
+In the TBW limit, this simplifies to
+\begin_inset Formula \begin{equation}
+\mathcal{K}_{gc}^{\overline{\psi}}\simeq\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial p}\mathcal{K}_{gc}^{p}+\frac{1}{\Psi}\left(\frac{\xi}{\xi_{0}}+\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\xi}\right)\mathcal{K}_{gc}^{\xi}\end{equation}
+
+\end_inset
+
+For 
 \family roman
 \series medium
 \shape up
@@ -251,9 +436,14 @@ while for
 \color inherit
  
 \begin_inset Formula \begin{align}
-\mathcal{K}_{gc}^{\overline{\psi}} & =\frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\mathcal{K}_{gc}^{\widetilde{\psi}}+\frac{\partial\overline{\psi}}{\partial\theta}\mathcal{K}_{gc}^{\theta}+\frac{\partial\overline{\psi}}{\partial p}\mathcal{K}_{gc}^{p}+\frac{\partial\overline{\psi}}{\partial\xi}\mathcal{K}_{gc}^{\xi}\nonumber \\
- & =\left(1-\frac{\partial\delta\psi}{\partial\widetilde{\psi}}\right)\mathcal{K}_{gc}^{\widetilde{\psi}}-\frac{\partial\delta\psi}{\partial\theta}\mathcal{K}_{gc}^{\theta}\nonumber \\
- & -\frac{\partial\delta\psi}{\partial p}\mathcal{K}_{gc}^{p}-\frac{\partial\delta\psi}{\partial\xi}\mathcal{K}_{gc}^{\xi}\end{align}
+\mathcal{K}_{gc}^{\overline{\psi}}= & \frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\mathcal{K}_{gc}^{\widetilde{\psi}}+\frac{\partial\overline{\psi}}{\partial\theta}\mathcal{K}_{gc}^{\theta}+\frac{\partial\overline{\psi}}{\partial p}\mathcal{K}_{gc}^{p}+\frac{\partial\overline{\psi}}{\partial\xi}\mathcal{K}_{gc}^{\xi}\nonumber \\
+= & \left(1-\frac{\partial\delta\psi}{\partial\widetilde{\psi}}\right)\mathcal{K}_{gc}^{\widetilde{\psi}}-\frac{\partial\delta\psi}{\partial\theta}\mathcal{K}_{gc}^{\theta}-\frac{\partial\delta\psi}{\partial p}\mathcal{K}_{gc}^{p}-\frac{\partial\delta\psi}{\partial\xi}\mathcal{K}_{gc}^{\xi}\end{align}
+
+\end_inset
+
+In the TBW limit, this simplifies to
+\begin_inset Formula \begin{equation}
+\mathcal{K}_{gc}^{\overline{\psi}}\simeq\mathcal{K}_{gc}^{\widetilde{\psi}}-\frac{\partial\delta\psi}{\partial p}\mathcal{K}_{gc}^{p}-\frac{\partial\delta\psi}{\partial\xi}\mathcal{K}_{gc}^{\xi}\end{equation}
 
 \end_inset
 
@@ -261,13 +451,13 @@ while for
 \end_layout
 
 \begin_layout Standard
-Much in the same way, there are nine diffusion coefficients to evaluate,
+Much in the same way, there are twelve diffusion coefficients to evaluate,
  
-\begin_inset Formula $\mathcal{D}_{gc}^{\overline{\psi}\overline{\psi}},\mathcal{D}_{gc}^{\overline{\psi}p},\mathcal{D}_{gc}^{\overline{\psi}\xi_{0}},\mathcal{D}_{gc}^{\xi_{0}\overline{\psi}},\mathcal{D}_{gc}^{\xi_{0}p},\mathcal{D}_{gc}^{\xi_{0}\xi_{0}},\mathcal{D}_{gc}^{p\overline{\psi}},\mathcal{D}_{gc}^{pp},\mathcal{D}_{gc}^{p\xi_{0}}$
+\begin_inset Formula $\mathcal{D}_{gc}^{\overline{\psi}\overline{\psi}},\mathcal{D}_{gc}^{\overline{\psi}\theta},\mathcal{D}_{gc}^{\overline{\psi}p},\mathcal{D}_{gc}^{\overline{\psi}\xi_{0}},\mathcal{D}_{gc}^{\theta\overline{\psi}},\mathcal{D}_{gc}^{\theta\xi_{0}},\mathcal{D}_{gc}^{p\overline{\psi}},\mathcal{D}_{gc}^{p\xi_{0}},\mathcal{D}_{gc}^{\xi_{0}\overline{\psi}},\mathcal{D}_{gc}^{\xi_{0}\theta},\mathcal{D}_{gc}^{\xi_{0}p},\mathcal{D}_{gc}^{\xi_{0}\xi_{0}}$
 \end_inset
 
- which reduce to six independent, since 
-\begin_inset Formula $\mathcal{D}_{gc}^{\overline{\psi}p}=\mathcal{D}_{gc}^{p\overline{\psi}},\mathcal{D}_{gc}^{\overline{\psi}\xi_{0}}=\mathcal{D}_{gc}^{\xi_{0}\overline{\psi}}$
+ which reduce to seven independent, since 
+\begin_inset Formula $\mathcal{D}_{gc}^{\overline{\psi}p}=\mathcal{D}_{gc}^{p\overline{\psi}},\mathcal{D}_{gc}^{\overline{\psi}\xi_{0}}=\mathcal{D}_{gc}^{\xi_{0}\overline{\psi}},\mathcal{D}_{gc}^{\overline{\psi}\theta}=\mathcal{D}_{gc}^{\theta\overline{\psi}},\mathcal{D}_{gc}^{\theta\xi_{0}}=\mathcal{D}_{gc}^{\xi_{0}\theta}$
 \end_inset
 
  and 
@@ -289,41 +479,9 @@ Much in the same way, there are nine diffusion coefficients to evaluate,
 
 \end_layout
 
-\begin_layout Standard
-Therefore, 
-\begin_inset Formula \begin{align}
-\mathcal{D}_{gc}^{\overline{\psi}\overline{\psi}} & =\left(\frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\right)^{2}\mathcal{D}_{gc}^{\widetilde{\psi}\widetilde{\psi}}+2\frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\frac{\partial\overline{\psi}}{\partial\theta}\mathcal{D}_{gc}^{\widetilde{\psi}\theta}+2\frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\frac{\partial\overline{\psi}}{\partial p}\mathcal{D}_{gc}^{\widetilde{\psi}p}+2\frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\frac{\partial\overline{\psi}}{\partial\xi}\mathcal{D}_{gc}^{\widetilde{\psi}\xi}\nonumber \\
- & +\left(\frac{\partial\overline{\psi}}{\partial\theta}\right)^{2}\mathcal{D}_{gc}^{\theta\theta}+2\frac{\partial\overline{\psi}}{\partial\theta}\frac{\partial\overline{\psi}}{\partial p}\mathcal{D}_{gc}^{\theta p}+2\frac{\partial\overline{\psi}}{\partial\theta}\frac{\partial\overline{\psi}}{\partial\xi}\mathcal{D}_{gc}^{\theta\xi}\nonumber \\
- & +\left(\frac{\partial\overline{\psi}}{\partial p}\right)^{2}\mathcal{D}_{gc}^{pp}+2\frac{\partial\overline{\psi}}{\partial p}\frac{\partial\overline{\psi}}{\partial\xi}\mathcal{D}_{gc}^{p\xi}+\left(\frac{\partial\overline{\psi}}{\partial\xi}\right)^{2}\mathcal{D}_{gc}^{\xi\xi}\nonumber \\
- & =\left(1-2\frac{\partial\delta\psi}{\partial\widetilde{\psi}}\right)\mathcal{D}_{gc}^{\widetilde{\psi}\widetilde{\psi}}+2\left(1-\frac{\partial\delta\psi}{\partial\widetilde{\psi}}\right)\frac{\partial\delta\psi}{\partial\theta}\mathcal{D}_{gc}^{\widetilde{\psi}\theta}+2\left(1-\frac{\partial\delta\psi}{\partial\widetilde{\psi}}\right)\frac{\partial\delta\psi}{\partial p}\mathcal{D}_{gc}^{\widetilde{\psi}p}+2\left(1-\frac{\partial\delta\psi}{\partial\widetilde{\psi}}\right)\frac{\partial\delta\psi}{\partial\xi}\mathcal{D}_{gc}^{\widetilde{\psi}\xi}\nonumber \\
- & +\left(\frac{\partial\delta\psi}{\partial\theta}\right)^{2}\mathcal{D}_{gc}^{\theta\theta}+2\frac{\partial\delta\psi}{\partial\theta}\frac{\partial\delta\psi}{\partial p}\mathcal{D}_{gc}^{\theta p}+2\frac{\partial\delta\psi}{\partial\theta}\frac{\partial\delta\psi}{\partial\xi}\mathcal{D}_{gc}^{\theta\xi}\nonumber \\
- & +\left(\frac{\partial\delta\psi}{\partial p}\right)^{2}\mathcal{D}_{gc}^{pp}+2\frac{\partial\delta\psi}{\partial p}\frac{\partial\delta\psi}{\partial\xi}\mathcal{D}_{gc}^{p\xi}+\left(\frac{\partial\delta\psi}{\partial\xi}\right)^{2}\mathcal{D}_{gc}^{\xi\xi}\end{align}
-
-\end_inset
-
-
-\begin_inset Formula \begin{align}
-\mathcal{D}_{gc}^{\overline{\psi}p} & =\frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\frac{\partial p}{\partial\widetilde{\psi}}\mathcal{D}_{gc}^{\widetilde{\psi}\widetilde{\psi}}+2\frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\frac{\partial p}{\partial\theta}\mathcal{D}_{gc}^{\widetilde{\psi}\theta}+2\frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\frac{\partial p}{\partial p}\mathcal{D}_{gc}^{\widetilde{\psi}p}+2\frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\frac{\partial p}{\partial\xi}\mathcal{D}_{gc}^{\widetilde{\psi}\xi}\nonumber \\
- & +\frac{\partial\overline{\psi}}{\partial\theta}\frac{\partial p}{\partial\theta}\mathcal{D}_{gc}^{\theta\theta}+2\frac{\partial\overline{\psi}}{\partial\theta}\frac{\partial p}{\partial p}\mathcal{D}_{gc}^{\theta p}+2\frac{\partial\overline{\psi}}{\partial\theta}\frac{\partial p}{\partial\xi}\mathcal{D}_{gc}^{\theta\xi}\nonumber \\
- & +\frac{\partial\overline{\psi}}{\partial p}\frac{\partial p}{\partial p}\mathcal{D}_{gc}^{pp}+2\frac{\partial\overline{\psi}}{\partial p}\frac{\partial p}{\partial\xi}\mathcal{D}_{gc}^{p\xi}+\frac{\partial\overline{\psi}}{\partial\xi}\frac{\partial p}{\partial\xi}\mathcal{D}_{gc}^{\xi\xi}\nonumber \\
- & =2\left(1-\frac{\partial\delta\psi}{\partial\widetilde{\psi}}\right)\mathcal{D}_{gc}^{\widetilde{\psi}p}-2\frac{\partial\delta\psi}{\partial\theta}\mathcal{D}_{gc}^{\theta p}-\frac{\partial\delta\psi}{\partial p}\mathcal{D}_{gc}^{pp}\end{align}
-
-\end_inset
-
-
-\begin_inset Formula \begin{align}
-\mathcal{D}_{gc}^{\overline{\psi}\xi_{0}} & =\frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\mathcal{D}_{gc}^{\widetilde{\psi}\widetilde{\psi}}+2\frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\frac{\partial\xi_{0}}{\partial\theta}\mathcal{D}_{gc}^{\widetilde{\psi}\theta}+2\frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\frac{\partial\xi_{0}}{\partial p}\mathcal{D}_{gc}^{\widetilde{\psi}p}+2\frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\frac{\partial\xi_{0}}{\partial\xi}\mathcal{D}_{gc}^{\widetilde{\psi}\xi}\nonumber \\
- & +\frac{\partial\overline{\psi}}{\partial\theta}\frac{\partial\xi_{0}}{\partial\theta}\mathcal{D}_{gc}^{\theta\theta}+2\frac{\partial\overline{\psi}}{\partial\theta}\frac{\partial\xi_{0}}{\partial p}\mathcal{D}_{gc}^{\theta p}+2\frac{\partial\overline{\psi}}{\partial\theta}\frac{\partial\xi_{0}}{\partial\xi}\mathcal{D}_{gc}^{\theta\xi}\nonumber \\
- & +\frac{\partial\overline{\psi}}{\partial p}\frac{\partial\xi_{0}}{\partial p}\mathcal{D}_{gc}^{pp}+2\frac{\partial\overline{\psi}}{\partial p}\frac{\partial\xi_{0}}{\partial\xi}\mathcal{D}_{gc}^{p\xi}+\frac{\partial\overline{\psi}}{\partial\xi}\frac{\partial\xi_{0}}{\partial\xi}\mathcal{D}_{gc}^{\xi\xi}\nonumber \\
- & =\left(1-\frac{\partial\delta\psi}{\partial\widetilde{\psi}}\right)\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\widetilde{\psi}}\mathcal{D}_{gc}^{\widetilde{\psi}\widetilde{\psi}}+2\left(1-\frac{\partial\delta\psi}{\partial\widetilde{\psi}}\right)\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\theta}\mathcal{D}_{gc}^{\widetilde{\psi}\theta}\nonumber \\
- & +2\left(1-\frac{\partial\delta\psi}{\partial\widetilde{\psi}}\right)\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial p}\mathcal{D}_{gc}^{\widetilde{\psi}p}+2\left(1-\frac{\partial\delta\psi}{\partial\widetilde{\psi}}\right)\frac{1}{\Psi}\left(\frac{\xi}{\xi_{0}}+\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\xi}\right)\mathcal{D}_{gc}^{\widetilde{\psi}\xi}\nonumber \\
- & -\frac{\partial\delta\psi}{\partial\theta}\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\theta}\mathcal{D}_{gc}^{\theta\theta}-2\frac{\partial\delta\psi}{\partial\theta}\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial p}\mathcal{D}_{gc}^{\theta p}-2\frac{\partial\delta\psi}{\partial\theta}\frac{1}{\Psi}\left(\frac{\xi}{\xi_{0}}+\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\xi}\right)\mathcal{D}_{gc}^{\theta\xi}\nonumber \\
- & -\frac{\partial\delta\psi}{\partial p}\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial p}\mathcal{D}_{gc}^{pp}-2\frac{\partial\delta\psi}{\partial p}\frac{1}{\Psi}\left(\frac{\xi}{\xi_{0}}+\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\xi}\right)\mathcal{D}_{gc}^{p\xi}-\frac{\partial\delta\psi}{\partial\xi}\frac{1}{\Psi}\left(\frac{\xi}{\xi_{0}}+\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\xi}\right)\mathcal{D}_{gc}^{\xi\xi}\nonumber \\
- & =\left(1-\frac{\partial\delta\psi}{\partial\widetilde{\psi}}\right)\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\widetilde{\psi}}\mathcal{D}_{gc}^{\widetilde{\psi}\widetilde{\psi}}+2\left(1-\frac{\partial\delta\psi}{\partial\widetilde{\psi}}\right)\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\theta}\mathcal{D}_{gc}^{\widetilde{\psi}\theta}\nonumber \\
- & +\frac{2}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial p}\mathcal{D}_{gc}^{\widetilde{\psi}p}+\frac{2}{\Psi}\left(\frac{\xi}{\xi_{0}}+\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\xi}-\frac{\partial\delta\psi}{\partial\widetilde{\psi}}\frac{\xi}{\xi_{0}}\right)\mathcal{D}_{gc}^{\widetilde{\psi}\xi}\nonumber \\
- & -\frac{\partial\delta\psi}{\partial\theta}\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\theta}\mathcal{D}_{gc}^{\theta\theta}-\frac{\partial\delta\psi}{\partial\theta}\frac{2}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\theta\xi}\nonumber \\
- & -\frac{\partial\delta\psi}{\partial p}\frac{2}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{p\xi}-\frac{\partial\delta\psi}{\partial\xi}\frac{1}{\Psi}\frac{\xi}{\xi_{0}}\mathcal{D}_{gc}^{\xi\xi}\end{align}
-
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\mathcal{D}_{gc}^{\overline{\psi}\overline{\psi}}$
 \end_inset
 
 
@@ -331,31 +489,189 @@ Therefore,
 
 \begin_layout Standard
 \begin_inset Formula \begin{align}
-\mathcal{D}_{gc}^{\xi_{0}p} & =\frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\frac{\partial p}{\partial\widetilde{\psi}}\mathcal{D}_{gc}^{\widetilde{\psi}\widetilde{\psi}}+2\frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\frac{\partial p}{\partial\theta}\mathcal{D}_{gc}^{\widetilde{\psi}\theta}+2\frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\frac{\partial p}{\partial p}\mathcal{D}_{gc}^{\widetilde{\psi}p}+2\frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\frac{\partial p}{\partial\xi}\mathcal{D}_{gc}^{\widetilde{\psi}\xi}\nonumber \\
- & +\frac{\partial\xi_{0}}{\partial\theta}\frac{\partial p}{\partial\theta}\mathcal{D}_{gc}^{\theta\theta}+2\frac{\partial\xi_{0}}{\partial\theta}\frac{\partial p}{\partial p}\mathcal{D}_{gc}^{\theta p}+2\frac{\partial\xi_{0}}{\partial\theta}\frac{\partial p}{\partial\xi}\mathcal{D}_{gc}^{\theta\xi}\nonumber \\
- & +\frac{\partial\xi_{0}}{\partial p}\frac{\partial p}{\partial p}\mathcal{D}_{gc}^{pp}+2\frac{\partial\xi_{0}}{\partial p}\frac{\partial p}{\partial\xi}\mathcal{D}_{gc}^{p\xi}+\frac{\partial\xi_{0}}{\partial\xi}\frac{\partial p}{\partial\xi}\mathcal{D}_{gc}^{\xi\xi}\nonumber \\
- & =\frac{2}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\widetilde{\psi}}\mathcal{D}_{gc}^{\widetilde{\psi}p}+\frac{2}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\theta}\mathcal{D}_{gc}^{\theta p}+\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial p}\mathcal{D}_{gc}^{pp}\end{align}
+\mathcal{D}_{gc}^{\overline{\psi}\overline{\psi}}= & \left(\frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\right)^{2}\mathcal{D}_{gc}^{\widetilde{\psi}\widetilde{\psi}}+2\frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\frac{\partial\overline{\psi}}{\partial\theta}\mathcal{D}_{gc}^{\widetilde{\psi}\theta}+2\frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\frac{\partial\overline{\psi}}{\partial p}\mathcal{D}_{gc}^{\widetilde{\psi}p}+2\frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\frac{\partial\overline{\psi}}{\partial\xi}\mathcal{D}_{gc}^{\widetilde{\psi}\xi}\nonumber \\
+ & +\left(\frac{\partial\overline{\psi}}{\partial\theta}\right)^{2}\mathcal{D}_{gc}^{\theta\theta}+2\frac{\partial\overline{\psi}}{\partial\theta}\frac{\partial\overline{\psi}}{\partial p}\mathcal{D}_{gc}^{\theta p}+2\frac{\partial\overline{\psi}}{\partial\theta}\frac{\partial\overline{\psi}}{\partial\xi}\mathcal{D}_{gc}^{\theta\xi}\nonumber \\
+ & +\left(\frac{\partial\overline{\psi}}{\partial p}\right)^{2}\mathcal{D}_{gc}^{pp}+2\frac{\partial\overline{\psi}}{\partial p}\frac{\partial\overline{\psi}}{\partial\xi}\mathcal{D}_{gc}^{p\xi}+\left(\frac{\partial\overline{\psi}}{\partial\xi}\right)^{2}\mathcal{D}_{gc}^{\xi\xi}\nonumber \\
+= & \left(1-\frac{\partial\delta\psi}{\partial\widetilde{\psi}}\right)^{2}\mathcal{D}_{gc}^{\widetilde{\psi}\widetilde{\psi}}-2\left(1-\frac{\partial\delta\psi}{\partial\widetilde{\psi}}\right)\frac{\partial\delta\psi}{\partial\theta}\mathcal{D}_{gc}^{\widetilde{\psi}\theta}-2\left(1-\frac{\partial\delta\psi}{\partial\widetilde{\psi}}\right)\frac{\partial\delta\psi}{\partial p}\mathcal{D}_{gc}^{\widetilde{\psi}p}-2\left(1-\frac{\partial\delta\psi}{\partial\widetilde{\psi}}\right)\frac{\partial\delta\psi}{\partial\xi}\mathcal{D}_{gc}^{\widetilde{\psi}\xi}\nonumber \\
+ & +\left(\frac{\partial\delta\psi}{\partial\theta}\right)^{2}\mathcal{D}_{gc}^{\theta\theta}+2\frac{\partial\delta\psi}{\partial\theta}\frac{\partial\delta\psi}{\partial p}\mathcal{D}_{gc}^{\theta p}+2\frac{\partial\delta\psi}{\partial\theta}\frac{\partial\delta\psi}{\partial\xi}\mathcal{D}_{gc}^{\theta\xi}\nonumber \\
+ & +\left(\frac{\partial\delta\psi}{\partial p}\right)^{2}\mathcal{D}_{gc}^{pp}+2\frac{\partial\delta\psi}{\partial p}\frac{\partial\delta\psi}{\partial\xi}\mathcal{D}_{gc}^{p\xi}+\left(\frac{\partial\delta\psi}{\partial\xi}\right)^{2}\mathcal{D}_{gc}^{\xi\xi}\end{align}
+
+\end_inset
+
+In the TBW limit, this simplifies to
+\begin_inset Formula \begin{align}
+\mathcal{D}_{gc}^{\overline{\psi}\overline{\psi}}\simeq & \left(1-2\frac{\partial\delta\psi}{\partial\widetilde{\psi}}\right)\mathcal{D}_{gc}^{\widetilde{\psi}\widetilde{\psi}}-2\frac{\partial\delta\psi}{\partial\theta}\mathcal{D}_{gc}^{\widetilde{\psi}\theta}-2\frac{\partial\delta\psi}{\partial p}\mathcal{D}_{gc}^{\widetilde{\psi}p}-2\frac{\partial\delta\psi}{\partial\xi}\mathcal{D}_{gc}^{\widetilde{\psi}\xi}\nonumber \\
+ & +\left(\frac{\partial\delta\psi}{\partial p}\right)^{2}\mathcal{D}_{gc}^{pp}+2\frac{\partial\delta\psi}{\partial p}\frac{\partial\delta\psi}{\partial\xi}\mathcal{D}_{gc}^{p\xi}+\left(\frac{\partial\delta\psi}{\partial\xi}\right)^{2}\mathcal{D}_{gc}^{\xi\xi}\end{align}
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\mathcal{D}_{gc}^{\overline{\psi}\theta}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula \begin{align}
-\mathcal{D}_{gc}^{\xi_{0}\xi_{0}} & =\frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\mathcal{D}_{gc}^{\widetilde{\psi}\widetilde{\psi}}+2\frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\frac{\partial\xi_{0}}{\partial\theta}\mathcal{D}_{gc}^{\widetilde{\psi}\theta}+2\frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\frac{\partial\xi_{0}}{\partial p}\mathcal{D}_{gc}^{\widetilde{\psi}p}+2\frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\frac{\partial\xi_{0}}{\partial\xi}\mathcal{D}_{gc}^{\widetilde{\psi}\xi}\nonumber \\
- & +\frac{\partial\xi_{0}}{\partial\theta}\frac{\partial\xi_{0}}{\partial\theta}\mathcal{D}_{gc}^{\theta\theta}+2\frac{\partial\xi_{0}}{\partial\theta}\frac{\partial\xi_{0}}{\partial p}\mathcal{D}_{gc}^{\theta p}+2\frac{\partial\xi_{0}}{\partial\theta}\frac{\partial\xi_{0}}{\partial\xi}\mathcal{D}_{gc}^{\theta\xi}\nonumber \\
- & +\frac{\partial\xi_{0}}{\partial p}\frac{\partial\xi_{0}}{\partial p}\mathcal{D}_{gc}^{pp}+2\frac{\partial\xi_{0}}{\partial p}\frac{\partial p}{\partial\xi}\mathcal{D}_{gc}^{p\xi}+\frac{\partial\xi_{0}}{\partial\xi}\frac{\partial\xi_{0}}{\partial\xi}\mathcal{D}_{gc}^{\xi\xi}\nonumber \\
- & =\frac{1}{\Psi^{2}}\frac{\left(1-\xi_{0}^{2}\right)^{2}}{4\xi_{0}^{2}}\left(\frac{\partial\Psi}{\partial\widetilde{\psi}}\right)^{2}\mathcal{D}_{gc}^{\widetilde{\psi}\widetilde{\psi}}+\frac{1}{\Psi^{2}}\frac{\left(1-\xi_{0}^{2}\right)^{2}}{2\xi_{0}^{2}}\frac{\partial\Psi}{\partial\widetilde{\psi}}\frac{\partial\Psi}{\partial\theta}\mathcal{D}_{gc}^{\widetilde{\psi}\theta}\nonumber \\
- & +\frac{1}{\Psi^{2}}\frac{\left(1-\xi_{0}^{2}\right)^{2}}{2\xi_{0}^{2}}\frac{\partial\Psi}{\partial\widetilde{\psi}}\frac{\partial\Psi}{\partial p}\mathcal{D}_{gc}^{\widetilde{\psi}p}+\frac{1}{\Psi^{2}}\frac{1-\xi_{0}^{2}}{\xi_{0}}\frac{\partial\Psi}{\partial\widetilde{\psi}}\left(\frac{\xi}{\xi_{0}}+\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\xi}\right)\mathcal{D}_{gc}^{\widetilde{\psi}\xi}\nonumber \\
- & +\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\theta}\frac{2}{\Psi^{2}}\left(\frac{\xi}{\xi_{0}}+\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\xi}\right)\mathcal{D}_{gc}^{\theta\xi}\nonumber \\
- & +\frac{1}{\Psi^{2}}\frac{\left(1-\xi_{0}^{2}\right)^{2}}{4\xi_{0}^{2}}\left(\frac{\partial\Psi}{\partial p}\right)^{2}\mathcal{D}_{gc}^{pp}+\frac{1}{\Psi^{2}}\left(\left(\frac{\xi}{\xi_{0}}\right)^{2}+\frac{1-\xi_{0}^{2}}{\xi_{0}}\frac{\partial\Psi}{\partial\xi}\frac{\xi}{\xi_{0}}\right)\mathcal{D}_{gc}^{\xi\xi}\end{align}
+\mathcal{D}_{gc}^{\overline{\psi}\theta}= & \frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\frac{\partial\theta}{\partial\widetilde{\psi}}\mathcal{D}_{gc}^{\widetilde{\psi}\widetilde{\psi}}+\left(\frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\frac{\partial\theta}{\partial\theta}+\frac{\partial\overline{\psi}}{\partial\theta}\frac{\partial\theta}{\partial\widetilde{\psi}}\right)\mathcal{D}_{gc}^{\widetilde{\psi}\theta}\nonumber \\
+ & +\left(\frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\frac{\partial\theta}{\partial p}+\frac{\partial\overline{\psi}}{\partial p}\frac{\partial\theta}{\partial\widetilde{\psi}}\right)\mathcal{D}_{gc}^{\widetilde{\psi}p}+\left(\frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\frac{\partial\theta}{\partial\xi}+\frac{\partial\overline{\psi}}{\partial\xi}\frac{\partial\theta}{\partial\widetilde{\psi}}\right)\mathcal{D}_{gc}^{\widetilde{\psi}\xi}\nonumber \\
+ & +\frac{\partial\overline{\psi}}{\partial\theta}\frac{\partial\theta}{\partial\theta}\mathcal{D}_{gc}^{\theta\theta}+\left(\frac{\partial\overline{\psi}}{\partial\theta}\frac{\partial\theta}{\partial p}+\frac{\partial\overline{\psi}}{\partial p}\frac{\partial\theta}{\partial\theta}\right)\mathcal{D}_{gc}^{\theta p}\nonumber \\
+ & +\left(\frac{\partial\overline{\psi}}{\partial\theta}\frac{\partial\theta}{\partial\xi}+\frac{\partial\overline{\psi}}{\partial\xi}\frac{\partial\theta}{\partial\theta}\right)\mathcal{D}_{gc}^{\theta\xi}+\frac{\partial\overline{\psi}}{\partial p}\frac{\partial\theta}{\partial p}\mathcal{D}_{gc}^{pp}\nonumber \\
+ & +\left(\frac{\partial\overline{\psi}}{\partial p}\frac{\partial\theta}{\partial\xi}+\frac{\partial\overline{\psi}}{\partial\xi}\frac{\partial\theta}{\partial p}\right)\mathcal{D}_{gc}^{p\xi}+\frac{\partial\overline{\psi}}{\partial\xi}\frac{\partial\theta}{\partial\xi}\mathcal{D}_{gc}^{\xi\xi}\nonumber \\
+= & \left(1-\frac{\partial\delta\psi}{\partial\widetilde{\psi}}\right)\mathcal{D}_{gc}^{\widetilde{\psi}\theta}-\frac{\partial\delta\psi}{\partial\theta}\mathcal{D}_{gc}^{\theta\theta}-\frac{\partial\delta\psi}{\partial p}\mathcal{D}_{gc}^{\theta p}-\frac{\partial\delta\psi}{\partial\xi}\mathcal{D}_{gc}^{\theta\xi}\end{align}
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\mathcal{D}_{gc}^{\overline{\psi}p}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula \begin{align}
-\mathcal{D}_{gc}^{pp} & =\frac{\partial p}{\partial\widetilde{\psi}}\frac{\partial p}{\partial\widetilde{\psi}}\mathcal{D}_{gc}^{\widetilde{\psi}\widetilde{\psi}}+2\frac{\partial p}{\partial\widetilde{\psi}}\frac{\partial p}{\partial\theta}\mathcal{D}_{gc}^{\widetilde{\psi}\theta}+2\frac{\partial p}{\partial\widetilde{\psi}}\frac{\partial p}{\partial p}\mathcal{D}_{gc}^{\widetilde{\psi}p}+2\frac{\partial p}{\partial\widetilde{\psi}}\frac{\partial p}{\partial\xi}\mathcal{D}_{gc}^{\widetilde{\psi}\xi}\nonumber \\
- & +\frac{\partial p}{\partial\theta}\frac{\partial p}{\partial\theta}\mathcal{D}_{gc}^{\theta\theta}+2\frac{\partial p}{\partial\theta}\frac{\partial p}{\partial p}\mathcal{D}_{gc}^{\theta p}+2\frac{\partial p}{\partial\theta}\frac{\partial p}{\partial\xi}\mathcal{D}_{gc}^{\theta\xi}\nonumber \\
- & +\frac{\partial p}{\partial p}\frac{\partial p}{\partial p}\mathcal{D}_{gc}^{pp}+2\frac{\partial p}{\partial p}\frac{\partial p}{\partial\xi}\mathcal{D}_{gc}^{p\xi}+\frac{\partial p}{\partial\xi}\frac{\partial p}{\partial\xi}\mathcal{D}_{gc}^{\xi\xi}\nonumber \\
- & =\mathcal{D}_{gc}^{pp}\end{align}
+\mathcal{D}_{gc}^{\overline{\psi}p}= & \frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\frac{\partial p}{\partial\widetilde{\psi}}\mathcal{D}_{gc}^{\widetilde{\psi}\widetilde{\psi}}+\left(\frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\frac{\partial p}{\partial\theta}+\frac{\partial\overline{\psi}}{\partial\theta}\frac{\partial p}{\partial\widetilde{\psi}}\right)\mathcal{D}_{gc}^{\widetilde{\psi}\theta}\nonumber \\
+ & +\left(\frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\frac{\partial p}{\partial p}+\frac{\partial\overline{\psi}}{\partial p}\frac{\partial p}{\partial\widetilde{\psi}}\right)\mathcal{D}_{gc}^{\widetilde{\psi}p}+\left(\frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\frac{\partial p}{\partial\xi}+\frac{\partial\overline{\psi}}{\partial\xi}\frac{\partial p}{\partial\widetilde{\psi}}\right)\mathcal{D}_{gc}^{\widetilde{\psi}\xi}\nonumber \\
+ & +\frac{\partial\overline{\psi}}{\partial\theta}\frac{\partial p}{\partial\theta}\mathcal{D}_{gc}^{\theta\theta}+\left(\frac{\partial\overline{\psi}}{\partial\theta}\frac{\partial p}{\partial p}+\frac{\partial\overline{\psi}}{\partial p}\frac{\partial p}{\partial\theta}\right)\mathcal{D}_{gc}^{\theta p}\nonumber \\
+ & +\left(\frac{\partial\overline{\psi}}{\partial\theta}\frac{\partial p}{\partial\xi}+\frac{\partial\overline{\psi}}{\partial\xi}\frac{\partial p}{\partial\theta}\right)\mathcal{D}_{gc}^{\theta\xi}+\frac{\partial\overline{\psi}}{\partial p}\frac{\partial p}{\partial p}\mathcal{D}_{gc}^{pp}\nonumber \\
+ & +\left(\frac{\partial\overline{\psi}}{\partial p}\frac{\partial p}{\partial\xi}+\frac{\partial\overline{\psi}}{\partial\xi}\frac{\partial p}{\partial p}\right)\mathcal{D}_{gc}^{p\xi}+\frac{\partial\overline{\psi}}{\partial\xi}\frac{\partial p}{\partial\xi}\mathcal{D}_{gc}^{\xi\xi}\nonumber \\
+= & \left(1-\frac{\partial\delta\psi}{\partial\widetilde{\psi}}\right)\mathcal{D}_{gc}^{\widetilde{\psi}p}-\frac{\partial\delta\psi}{\partial\theta}\mathcal{D}_{gc}^{\theta p}-\frac{\partial\delta\psi}{\partial p}\mathcal{D}_{gc}^{pp}-\frac{\partial\delta\psi}{\partial\xi}\mathcal{D}_{gc}^{p\xi}\end{align}
+
+\end_inset
+
+In the TBW limit, this simplifies to
+\begin_inset Formula \begin{equation}
+\mathcal{D}_{gc}^{\overline{\psi}p}\simeq\mathcal{D}_{gc}^{\widetilde{\psi}p}-\frac{\partial\delta\psi}{\partial p}\mathcal{D}_{gc}^{pp}-\frac{\partial\delta\psi}{\partial\xi}\mathcal{D}_{gc}^{p\xi}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\mathcal{D}_{gc}^{\overline{\psi}\xi_{0}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{align}
+\mathcal{D}_{gc}^{\overline{\psi}\xi_{0}}= & \frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\mathcal{D}_{gc}^{\widetilde{\psi}\widetilde{\psi}}+\left(\frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\frac{\partial\xi_{0}}{\partial\theta}+\frac{\partial\overline{\psi}}{\partial\theta}\frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\right)\mathcal{D}_{gc}^{\widetilde{\psi}\theta}\nonumber \\
+ & +\left(\frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\frac{\partial\xi_{0}}{\partial p}+\frac{\partial\overline{\psi}}{\partial p}\frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\right)\mathcal{D}_{gc}^{\widetilde{\psi}p}+\left(\frac{\partial\overline{\psi}}{\partial\widetilde{\psi}}\frac{\partial\xi_{0}}{\partial\xi}+\frac{\partial\overline{\psi}}{\partial\xi}\frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\right)\mathcal{D}_{gc}^{\widetilde{\psi}\xi}\nonumber \\
+ & +\frac{\partial\overline{\psi}}{\partial\theta}\frac{\partial\xi_{0}}{\partial\theta}\mathcal{D}_{gc}^{\theta\theta}+\left(\frac{\partial\overline{\psi}}{\partial\theta}\frac{\partial\xi_{0}}{\partial p}+\frac{\partial\overline{\psi}}{\partial p}\frac{\partial\xi_{0}}{\partial\theta}\right)\mathcal{D}_{gc}^{\theta p}\nonumber \\
+ & +\left(\frac{\partial\overline{\psi}}{\partial\theta}\frac{\partial\xi_{0}}{\partial\xi}+\frac{\partial\overline{\psi}}{\partial\xi}\frac{\partial\xi_{0}}{\partial\theta}\right)\mathcal{D}_{gc}^{\theta\xi}+\frac{\partial\overline{\psi}}{\partial p}\frac{\partial\xi_{0}}{\partial p}\mathcal{D}_{gc}^{pp}\nonumber \\
+ & +\left(\frac{\partial\overline{\psi}}{\partial p}\frac{\partial\xi_{0}}{\partial\xi}+\frac{\partial\overline{\psi}}{\partial\xi}\frac{\partial\xi_{0}}{\partial p}\right)\mathcal{D}_{gc}^{p\xi}+\frac{\partial\overline{\psi}}{\partial\xi}\frac{\partial\xi_{0}}{\partial\xi}\mathcal{D}_{gc}^{\xi\xi}\nonumber \\
+= & \left(1-\frac{\partial\delta\psi}{\partial\widetilde{\psi}}\right)\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\widetilde{\psi}}\mathcal{D}_{gc}^{\widetilde{\psi}\widetilde{\psi}}\nonumber \\
+ & +\left[\left(1-\frac{\partial\delta\psi}{\partial\widetilde{\psi}}\right)\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\theta}-\frac{\partial\delta\psi}{\partial\theta}\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\widetilde{\psi}}\right]\mathcal{D}_{gc}^{\widetilde{\psi}\theta}\nonumber \\
+ & +\left[\left(1-\frac{\partial\delta\psi}{\partial\widetilde{\psi}}\right)\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial p}-\frac{\partial\delta\psi}{\partial p}\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\widetilde{\psi}}\right]\mathcal{D}_{gc}^{\widetilde{\psi}p}\nonumber \\
+ & +\left[\left(1-\frac{\partial\delta\psi}{\partial\widetilde{\psi}}\right)\frac{1}{\Psi}\left(\frac{\xi}{\xi_{0}}+\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\xi}\right)-\frac{\partial\delta\psi}{\partial\xi}\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\widetilde{\psi}}\right]\mathcal{D}_{gc}^{\widetilde{\psi}\xi}\nonumber \\
+ & -\frac{\partial\delta\psi}{\partial\theta}\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\theta}\mathcal{D}_{gc}^{\theta\theta}\nonumber \\
+ & +\left[-\frac{\partial\delta\psi}{\partial\theta}\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial p}-\frac{\partial\delta\psi}{\partial p}\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\theta}\right]\mathcal{D}_{gc}^{\theta p}\nonumber \\
+ & +\left[-\frac{\partial\delta\psi}{\partial\theta}\frac{1}{\Psi}\left(\frac{\xi}{\xi_{0}}+\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\xi}\right)-\frac{\partial\delta\psi}{\partial\xi}\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\theta}\right]\mathcal{D}_{gc}^{\theta\xi}\nonumber \\
+ & -\frac{\partial\delta\psi}{\partial p}\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial p}\mathcal{D}_{gc}^{pp}\nonumber \\
+ & +\left[-\frac{\partial\delta\psi}{\partial p}\frac{1}{\Psi}\left(\frac{\xi}{\xi_{0}}+\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\xi}\right)-\frac{\partial\delta\psi}{\partial\xi}\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial p}\right]\mathcal{D}_{gc}^{p\xi}\nonumber \\
+ & -\frac{\partial\delta\psi}{\partial\xi}\frac{1}{\Psi}\left(\frac{\xi}{\xi_{0}}+\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\xi}\right)\mathcal{D}_{gc}^{\xi\xi}\end{align}
+
+\end_inset
+
+In the TBW limit, this simplifies to
+\begin_inset Formula \begin{align}
+\mathcal{D}_{gc}^{\overline{\psi}\xi_{0}}\simeq & \frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\widetilde{\psi}}\mathcal{D}_{gc}^{\widetilde{\psi}\widetilde{\psi}}+\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\theta}\mathcal{D}_{gc}^{\widetilde{\psi}\theta}+\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial p}\mathcal{D}_{gc}^{\widetilde{\psi}p}+\frac{1}{\Psi}\left(\frac{\xi}{\xi_{0}}+\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\xi}\right)\mathcal{D}_{gc}^{\widetilde{\psi}\xi}\nonumber \\
+ & -\frac{\partial\delta\psi}{\partial p}\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial p}\mathcal{D}_{gc}^{pp}-\frac{\partial\delta\psi}{\partial p}\frac{1}{\Psi}\left(\frac{\xi}{\xi_{0}}+\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\xi}\right)\mathcal{D}_{gc}^{p\xi}-\frac{\partial\delta\psi}{\partial\xi}\frac{1}{\Psi}\left(\frac{\xi}{\xi_{0}}+\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\xi}\right)\mathcal{D}_{gc}^{\xi\xi}\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\mathcal{D}_{gc}^{\theta\xi_{0}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{align}
+\mathcal{D}_{gc}^{\theta\xi_{0}}= & \frac{\partial\theta}{\partial\widetilde{\psi}}\frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\mathcal{D}_{gc}^{\widetilde{\psi}\widetilde{\psi}}+\left(\frac{\partial\theta}{\partial\widetilde{\psi}}\frac{\partial\xi_{0}}{\partial\theta}+\frac{\partial\theta}{\partial\theta}\frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\right)\mathcal{D}_{gc}^{\widetilde{\psi}\theta}\nonumber \\
+ & +\left(\frac{\partial\theta}{\partial\widetilde{\psi}}\frac{\partial\xi_{0}}{\partial p}+\frac{\partial\theta}{\partial p}\frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\right)\mathcal{D}_{gc}^{\widetilde{\psi}p}+\left(\frac{\partial\theta}{\partial\widetilde{\psi}}\frac{\partial\xi_{0}}{\partial\xi}+\frac{\partial\theta}{\partial\xi}\frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\right)\mathcal{D}_{gc}^{\widetilde{\psi}\xi}\nonumber \\
+ & +\frac{\partial\theta}{\partial\theta}\frac{\partial\xi_{0}}{\partial\theta}\mathcal{D}_{gc}^{\theta\theta}+\left(\frac{\partial\theta}{\partial\theta}\frac{\partial\xi_{0}}{\partial p}+\frac{\partial\theta}{\partial p}\frac{\partial\xi_{0}}{\partial\theta}\right)\mathcal{D}_{gc}^{\theta p}\nonumber \\
+ & +\left(\frac{\partial\theta}{\partial\theta}\frac{\partial\xi_{0}}{\partial\xi}+\frac{\partial\theta}{\partial\xi}\frac{\partial\xi_{0}}{\partial\theta}\right)\mathcal{D}_{gc}^{\theta\xi}+\frac{\partial\theta}{\partial p}\frac{\partial\xi_{0}}{\partial p}\mathcal{D}_{gc}^{pp}\nonumber \\
+ & +\left(\frac{\partial\theta}{\partial p}\frac{\partial\xi_{0}}{\partial\xi}+\frac{\partial\theta}{\partial\xi}\frac{\partial\xi_{0}}{\partial p}\right)\mathcal{D}_{gc}^{p\xi}+\frac{\partial\theta}{\partial\xi}\frac{\partial\xi_{0}}{\partial\xi}\mathcal{D}_{gc}^{\xi\xi}\nonumber \\
+= & \frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\widetilde{\psi}}\mathcal{D}_{gc}^{\widetilde{\psi}\theta}+\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\theta}\mathcal{D}_{gc}^{\theta\theta}\nonumber \\
+ & +\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial p}\mathcal{D}_{gc}^{\theta p}+\frac{1}{\Psi}\left(\frac{\xi}{\xi_{0}}+\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\xi}\right)\mathcal{D}_{gc}^{\theta\xi}\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\mathcal{D}_{gc}^{\xi_{0}p}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{align}
+\mathcal{D}_{gc}^{\xi_{0}p}= & \frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\frac{\partial p}{\partial\widetilde{\psi}}\mathcal{D}_{gc}^{\widetilde{\psi}\widetilde{\psi}}+\left(\frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\frac{\partial p}{\partial\theta}+\frac{\partial\xi_{0}}{\partial\theta}\frac{\partial p}{\partial\widetilde{\psi}}\right)\mathcal{D}_{gc}^{\widetilde{\psi}\theta}\nonumber \\
+ & +\left(\frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\frac{\partial p}{\partial p}+\frac{\partial\xi_{0}}{\partial p}\frac{\partial p}{\partial\widetilde{\psi}}\right)\mathcal{D}_{gc}^{\widetilde{\psi}p}+\left(\frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\frac{\partial p}{\partial\xi}+\frac{\partial\xi_{0}}{\partial\xi}\frac{\partial p}{\partial\widetilde{\psi}}\right)\mathcal{D}_{gc}^{\widetilde{\psi}\xi}\nonumber \\
+ & +\frac{\partial\xi_{0}}{\partial\theta}\frac{\partial p}{\partial\theta}\mathcal{D}_{gc}^{\theta\theta}+\left(\frac{\partial\xi_{0}}{\partial\theta}\frac{\partial p}{\partial p}+\frac{\partial\xi_{0}}{\partial p}\frac{\partial p}{\partial\theta}\right)\mathcal{D}_{gc}^{\theta p}\nonumber \\
+ & +\left(\frac{\partial\xi_{0}}{\partial\theta}\frac{\partial p}{\partial\xi}+\frac{\partial\xi_{0}}{\partial\xi}\frac{\partial p}{\partial\theta}\right)\mathcal{D}_{gc}^{\theta\xi}+\frac{\partial\xi_{0}}{\partial p}\frac{\partial p}{\partial p}\mathcal{D}_{gc}^{pp}\nonumber \\
+ & +\left(\frac{\partial\xi_{0}}{\partial p}\frac{\partial p}{\partial\xi}+\frac{\partial\xi_{0}}{\partial\xi}\frac{\partial p}{\partial p}\right)\mathcal{D}_{gc}^{p\xi}+\frac{\partial\xi_{0}}{\partial\xi}\frac{\partial p}{\partial\xi}\mathcal{D}_{gc}^{\xi\xi}\nonumber \\
+= & \frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\widetilde{\psi}}\mathcal{D}_{gc}^{\widetilde{\psi}p}+\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\theta}\mathcal{D}_{gc}^{\theta p}\nonumber \\
+ & +\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial p}\mathcal{D}_{gc}^{pp}+\frac{1}{\Psi}\left(\frac{\xi}{\xi_{0}}+\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\xi}\right)\mathcal{D}_{gc}^{p\xi}\end{align}
+
+\end_inset
+
+In the TBW limit, this simplifies to
+\begin_inset Formula \begin{equation}
+\mathcal{D}_{gc}^{\xi_{0}p}\simeq\frac{1}{\Psi}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial p}\mathcal{D}_{gc}^{pp}+\frac{1}{\Psi}\left(\frac{\xi}{\xi_{0}}+\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\xi}\right)\mathcal{D}_{gc}^{p\xi}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\mathcal{D}_{gc}^{\xi_{0}\xi_{0}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{align}
+\mathcal{D}_{gc}^{\xi_{0}\xi_{0}}= & \left(\frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\right)^{2}\mathcal{D}_{gc}^{\widetilde{\psi}\widetilde{\psi}}+2\frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\frac{\partial\xi_{0}}{\partial\theta}\mathcal{D}_{gc}^{\widetilde{\psi}\theta}+2\frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\frac{\partial\xi_{0}}{\partial p}\mathcal{D}_{gc}^{\widetilde{\psi}p}+2\frac{\partial\xi_{0}}{\partial\widetilde{\psi}}\frac{\partial\xi_{0}}{\partial\xi}\mathcal{D}_{gc}^{\widetilde{\psi}\xi}\nonumber \\
+ & +\left(\frac{\partial\xi_{0}}{\partial\theta}\right)^{2}\mathcal{D}_{gc}^{\theta\theta}+2\frac{\partial\xi_{0}}{\partial\theta}\frac{\partial\xi_{0}}{\partial p}\mathcal{D}_{gc}^{\theta p}+2\frac{\partial\xi_{0}}{\partial\theta}\frac{\partial\xi_{0}}{\partial\xi}\mathcal{D}_{gc}^{\theta\xi}\nonumber \\
+ & +\left(\frac{\partial\xi_{0}}{\partial p}\right)^{2}\mathcal{D}_{gc}^{pp}+2\frac{\partial\xi_{0}}{\partial p}\frac{\partial p}{\partial\xi}\mathcal{D}_{gc}^{p\xi}+\left(\frac{\partial\xi_{0}}{\partial\xi}\right)^{2}\mathcal{D}_{gc}^{\xi\xi}\nonumber \\
+= & \frac{1}{\Psi^{2}}\frac{\left(1-\xi_{0}^{2}\right)^{2}}{4\xi_{0}^{2}}\left(\frac{\partial\Psi}{\partial\widetilde{\psi}}\right)^{2}\mathcal{D}_{gc}^{\widetilde{\psi}\widetilde{\psi}}+2\frac{1}{\Psi^{2}}\frac{\left(1-\xi_{0}^{2}\right)^{2}}{2\xi_{0}^{2}}\frac{\partial\Psi}{\partial\widetilde{\psi}}\frac{\partial\Psi}{\partial\theta}\mathcal{D}_{gc}^{\widetilde{\psi}\theta}\nonumber \\
+ & +2\frac{1}{\Psi^{2}}\frac{\left(1-\xi_{0}^{2}\right)^{2}}{4\xi_{0}^{2}}\frac{\partial\Psi}{\partial\widetilde{\psi}}\frac{\partial\Psi}{\partial p}\mathcal{D}_{gc}^{\widetilde{\psi}p}+2\frac{1}{\Psi^{2}}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\widetilde{\psi}}\left(\frac{\xi}{\xi_{0}}+\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\xi}\right)\mathcal{D}_{gc}^{\widetilde{\psi}\xi}\nonumber \\
+ & +2\frac{1}{\Psi^{2}}\frac{\left(1-\xi_{0}^{2}\right)^{2}}{4\xi_{0}^{2}}\left(\frac{\partial\Psi}{\partial\theta}\right)^{2}\mathcal{D}_{gc}^{\theta\theta}+2\frac{1}{\Psi^{2}}\frac{\left(1-\xi_{0}^{2}\right)^{2}}{4\xi_{0}^{2}}\frac{\partial\Psi}{\partial\theta}\frac{\partial\Psi}{\partial p}\mathcal{D}_{gc}^{\theta p}\nonumber \\
+ & +2\frac{1}{\Psi^{2}}\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\theta}\left(\frac{\xi}{\xi_{0}}+\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\xi}\right)\mathcal{D}_{gc}^{\theta\xi}+\frac{1}{\Psi^{2}}\frac{\left(1-\xi_{0}^{2}\right)^{2}}{4\xi_{0}^{2}}\left(\frac{\partial\Psi}{\partial p}\right)^{2}\mathcal{D}_{gc}^{pp}\nonumber \\
+ & +\frac{1}{\Psi^{2}}\left(\frac{\xi}{\xi_{0}}+\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\xi}\right)^{2}\mathcal{D}_{gc}^{\xi\xi}\end{align}
+
+\end_inset
+
+In the TBW limit, this simplifies to
+\begin_inset Formula \begin{equation}
+\mathcal{D}_{gc}^{\xi_{0}\xi_{0}}\simeq\frac{1}{\Psi^{2}}\frac{\left(1-\xi_{0}^{2}\right)^{2}}{4\xi_{0}^{2}}\left(\frac{\partial\Psi}{\partial p}\right)^{2}\mathcal{D}_{gc}^{pp}+\frac{1}{\Psi^{2}}\left(\frac{\xi}{\xi_{0}}+\frac{1-\xi_{0}^{2}}{2\xi_{0}}\frac{\partial\Psi}{\partial\xi}\right)^{2}\mathcal{D}_{gc}^{\xi\xi}\end{equation}
 
 \end_inset
 
@@ -377,7 +693,7 @@ key "bri09"
 
 ,
 \begin_inset Formula \begin{equation}
-\boxed{\mathcal{J}=\mathcal{J}_{gc0}\mathcal{V}=\frac{p^{2}}{B_{0}}\frac{B}{B^{\theta}}\left|\frac{\xi_{0}}{\xi}\right|}\end{equation}
+\boxed{\mathcal{J}=\mathcal{J}_{gc0}\mathcal{V}=\frac{p^{2}}{B_{0}}\frac{B}{B^{\theta}}\left|\frac{\xi_{0}}{\xi}\right|\equiv p^{2}\frac{\Psi}{B^{\theta}}\left|\frac{\xi_{0}}{\xi}\right|}\end{equation}
 
 \end_inset
 
@@ -417,7 +733,7 @@ Using the axisymmetry and low collisonality properties, we have
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\nabla\overline{F}\equiv\frac{\partial\overline{F}}{\partial\overline{\psi}}\nabla\overline{\psi}+\frac{\partial\overline{F}}{\partial\theta}d\theta+\frac{\partial\overline{F}}{\partial\phi}\nabla\phi=\frac{\partial\overline{F}}{\partial\overline{\psi}}\nabla\overline{\psi}\end{equation}
+\nabla\overline{F}\equiv\frac{\partial\overline{F}}{\partial\overline{\psi}}\nabla\overline{\psi}+\frac{\partial\overline{F}}{\partial\theta}\nabla\theta+\frac{\partial\overline{F}}{\partial\phi}\nabla\phi=\frac{\partial\overline{F}}{\partial\overline{\psi}}\nabla\overline{\psi}\end{equation}
 
 \end_inset
 
