@@ -668,7 +668,7 @@ Create and Initialize Return Arguments
 Initialization
 */
     if (rayparam.fmode[0] == 1.0) {
-        ts = t1+rayparam.ns0[0]*rayparam.dt0[0];/* Time of the first scattering event in term of dt0 time step */
+        ts = t1 + rayparam.ns0[0]*rayparam.dt0[0];/* Time of the first scattering event in term of dt0 time step */
     } else {
         ts = 100.0*rayparam.tfinal[0];/* No fluctuations, ts is set weel beyond the integration time */
     }
@@ -1794,7 +1794,6 @@ double Npar;
     double Npar4,Npar3,Npar2,Npar1;
     double complex Xxx,Xxy,Xxz,Xyy,Xyz,Xzz;
     double complex Xxx2,Xxy2,Xxz2,Xyy2,Xyz2,Xzz2;
-
     double complex D[43],N6;
     
     int i;
@@ -1895,6 +1894,8 @@ double Npar;
    /* mexPrintf("Dtot:%g\n",Dtot[0]);*/
 
 }
+
+
 
 void susceptibility(X,Nperp,dNperpdY,wcn,wpn2,betath,tensortype,ncyclharm,equilparam,raymagnetic,rayprofiles,Npar,dNpardY,omega)
 susceptibilitytensor_format X;
@@ -2989,7 +2990,7 @@ double flag;
 
     double wcn[equilparam.ns[0]+1],wpn2[equilparam.ns[0]+1],betath[equilparam.ns[0]+1];
     
-    double beta_angle,cbeta,sbeta,ts = 0.0,krhos = 0.0,ms = 0.0,ns = 0.0,chi0 =1.0;
+    double beta_angle,cbeta,sbeta,ts = 0.0,krhos = 0.0,ms = 0.0,ns = 0.0,chi0 = 1.0;
     double kpar,kperp,k2,k21,k22,k23,k24;
     double ap,cnorm;
     double clum=CLUM;
