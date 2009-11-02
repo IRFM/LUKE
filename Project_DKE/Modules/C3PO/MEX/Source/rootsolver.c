@@ -16,12 +16,13 @@ double x0,x1,y0,y1;
 double complex N2;
 double Npar;
 double Nperp[];
+double xmin, xmax;
 int nbb, j, n; 
 nbb=0;
 n=1000;
 dx=(xmax-xmin)/n;
   for(j=1 j<=n; j++){
-     x0=xmin+(j-1)*dx
+     x0=xmin+(j-1.0)*dx
      y0=x0*x0 + Npar*Npar;
      disprel(&cD0,X,x0,y0,raymagnetic,Npar);
      D0=creal(cD0);
