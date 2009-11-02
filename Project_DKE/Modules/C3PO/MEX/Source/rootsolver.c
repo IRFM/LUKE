@@ -1,7 +1,7 @@
 #include <math.h>
 #include "nrutil.h"
 #define  MAXIT 100
-#define  UNUSED -1.11e-30
+#define  UNUSED (-1.11e-30)
 #define  xacc=1.0e-8
 
 double rootsolver(cD0,cD1,D0,D1,X,x0,x1,y0,y1,Nperp,N2,param,raymagnetic,Npar)  
@@ -19,7 +19,7 @@ double Nperp[];
 double xmin, xmax;
 int nbb, j, n; 
 nbb=0;
-n=1000;
+n=100;
 dx=(xmax-xmin)/n;
   for(j=1 j<=n; j++){
      x0=xmin+(j-1.0)*dx
@@ -31,13 +31,13 @@ dx=(xmax-xmin)/n;
      disprel(&cD1,X,x1,y1,raymagnetic,Npar);
      D1=creal(cD1);  
      if (D0*D1 <= 0)
-     Nperp[nbb++]=solver(cD0,cD1,D0,D1,X,x0,x1,y0,y1,Npar,raymagnetic,xacc);
+     Nperp[nbb++]=root(cD0,cD1,D0,D1,X,x0,x1,y0,y1,Npar,raymagnetic,xacc);
   }
 return (Nperp[]);
 }
 
   
-double solver(cD0,cD1,D0,D1,X,x0,x1,y0,y1,Npar,raymagnetic,xacc)
+double root(cD0,cD1,D0,D1,X,x0,x1,y0,y1,Npar,raymagnetic,xacc)
 {
  raymagnetic_format raymagnetic;
  susceptibilitytensor_format X;
