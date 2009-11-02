@@ -1,7 +1,5 @@
 #include <math.h>
 #include "nrutil.h"
-#define  FACTOR 1.6
-#define  NTRY 100
 #define  MAXIT 100
 #define  UNUSED -1.11e-30
 #define  xacc=1.0e-8
@@ -16,32 +14,28 @@ double complex cD0, cD1,
 double D0, D1;
 double x0,x1,y0,y1;
 double complex N2;
-double Npar, Nperp;
-
-y0=x0*x0 + Npar*Npar;
-disprel(&cD0,X,x0,y0,raymagnetic,Npar);
-D0=creal(cD0);
-y1=x1*x1 + Npar*Npar;
-disprel(&cD1,X,x1,y1,raymagnetic,Npar);
-D1=creal(cD1);
-for (j+1;j<=NTRY; j++){
-  if (D0*D1 <= 0.0)
-     Nperp = solver(cD0,cD1,D0,D1,X,x0,x1,y0,y1,Npar,raymagnetic,xacc);
-     return (Nperp);
-  if (fabs(D0) < fabs(D1))
-     x0=x0+FACTOR*(x0-x1);
-     y0=x0*x0-Npar*Npar;
+double Npar;
+double Nperp[];
+int nbb, j, n; 
+nbb=0;
+n=1000;
+dx=(xmax-xmin)/n;
+  for(j=1 j<=n; j++){
+     x0=xmin+(j-1)*dx
+     y0=x0*x0 + Npar*Npar;
      disprel(&cD0,X,x0,y0,raymagnetic,Npar);
      D0=creal(cD0);
-  else
-     x1=x1+FACTOR*(x1-x0);
-     y1=x1*x1-Npar*Npar;
+     x1=xmin+j*dx;
+     y1=x1*x1 + Npar*Npar;
      disprel(&cD1,X,x1,y1,raymagnetic,Npar);
-     D1=creal(cD1);
-}
-return (0);
+     D1=creal(cD1);  
+     if (D0*D1 <= 0)
+     Nperp[nbb++]=solver(cD0,cD1,D0,D1,X,x0,x1,y0,y1,Npar,raymagnetic,xacc);
+  }
+return (Nperp[]);
 }
 
+  
 double solver(cD0,cD1,D0,D1,X,x0,x1,y0,y1,Npar,raymagnetic,xacc)
 {
  raymagnetic_format raymagnetic;
