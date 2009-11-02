@@ -4,7 +4,10 @@
 #define  NTRY 100
 #define  MAXIT 100
 #define  UNUSED -1.11e-30
-double rootsolver(cD0,cD1,D0,D1,X,x0,x1,y0,y1,Nperp,N2,param,raymagnetic,Npar)
+#define  xacc=1.0e-8
+
+double rootsolver(cD0,cD1,D0,D1,X,x0,x1,y0,y1,Nperp,N2,param,raymagnetic,Npar)  
+
 susceptibilitytensor_format X;
 raymagnetic_format raymagnetic;
 rayparam_format param
@@ -14,10 +17,7 @@ double D0, D1;
 double x0,x1,y0,y1;
 double complex N2;
 double Npar, Nperp;
- 
-void nerror(char error_text[]);
-int j;
-if (x0 == x1) nrerror 
+
 y0=x0*x0 + Npar*Npar;
 disprel(&cD0,X,x0,y0,raymagnetic,Npar);
 D0=creal(cD0);
@@ -25,8 +25,8 @@ y1=x1*x1 + Npar*Npar;
 disprel(&cD1,X,x1,y1,raymagnetic,Npar);
 D1=creal(cD1);
 for (j+1;j<=NTRY; j++){
-  if (D0*D1 <0.0)
-     Nperp = solver(cD0,cD1,D0,D1,D2,x0,x1,y0,y1,Npar,raymagnetic,xacc);
+  if (D0*D1 <= 0.0)
+     Nperp = solver(cD0,cD1,D0,D1,X,x0,x1,y0,y1,Npar,raymagnetic,xacc);
      return (Nperp);
   if (fabs(D0) < fabs(D1))
      x0=x0+FACTOR*(x0-x1);
@@ -42,8 +42,10 @@ for (j+1;j<=NTRY; j++){
 return (0);
 }
 
-double solver(cD0,cD1,D0,D1,x0,x1,y0,y1,Npar,raymagnetic,xacc)
+double solver(cD0,cD1,D0,D1,X,x0,x1,y0,y1,Npar,raymagnetic,xacc)
 {
+ raymagnetic_format raymagnetic;
+ susceptibilitytensor_format X;
  double complex cD0, cD1, cDm, cDnew;
  double D0, D1, Dl, Dh, Dm, Dnew;
  double x0,x1,y0,y1,xl,xh;
@@ -51,8 +53,7 @@ double solver(cD0,cD1,D0,D1,x0,x1,y0,y1,Npar,raymagnetic,xacc)
  double Npar;
  double xm,ym,s,xnew,ynew;
  double ans;
- int i;
- raymagnetic_format raymagnetic;
+ int i; 
 
  y0=x0*x0 + Npar*Npar;
  disprel(&cD0,X,x0,y0,raymagnetic,Npar);
@@ -92,15 +93,14 @@ double solver(cD0,cD1,D0,D1,x0,x1,y0,y1,Npar,raymagnetic,xacc)
        } else if (SIGN(Dh,Dnew) != Dh){
           xl=ans;
           Dl=ans;
-       } else nrerror
+       }
        if (fabs(xh-xl) <= xacc) return ans;
     }
  else {
     if(Dl == 0.0) return x0;
-    if(Dh == 0.0  return x1;
-    nerror
+    if(Dh == 0.0) return x1;
    }
-  return 0.0;
+  return (0);
 }
 
           
