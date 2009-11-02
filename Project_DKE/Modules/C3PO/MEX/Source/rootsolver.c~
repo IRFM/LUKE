@@ -1,6 +1,9 @@
 #include <math.h>
+#include "nrutil.h"
 #define  FACTOR 1.6
 #define  NTRY 100
+#define  MAXIT 100
+#define  UNUSED -1.11e-30
 double rootsolver(cD0,cD1,D0,D1,X,x0,x1,y0,y1,Nperp,N2,param,raymagnetic,Npar)
 susceptibilitytensor_format X;
 raymagnetic_format raymagnetic;
@@ -9,12 +12,12 @@ rayparam_format param
 double complex cD0, cD1,
 double D0, D1;
 double x0,x1,y0,y1;
-double complex Nperp[], N2;
-double Npar;
+double complex N2;
+double Npar, Nperp;
  
 void nerror(char error_text[]);
 int j;
-if (a0 == a1) nrerror 
+if (x0 == x1) nrerror 
 y0=x0*x0 + Npar*Npar;
 disprel(&cD0,X,x0,y0,raymagnetic,Npar);
 D0=creal(cD0);
@@ -23,7 +26,8 @@ disprel(&cD1,X,x1,y1,raymagnetic,Npar);
 D1=creal(cD1);
 for (j+1;j<=NTRY; j++){
   if (D0*D1 <0.0)
-     solver(cD0,cD1,D0,D1,x0,y1
+     Nperp = solver(cD0,cD1,D0,D1,D2,x0,x1,y0,y1,Npar,raymagnetic,tol);
+     return (Nperp);
   if (fabs(D0) < fabs(D1))
      x0=x0+FACTOR*(x0-x1);
      y0=x0*x0-Npar*Npar;
@@ -35,6 +39,75 @@ for (j+1;j<=NTRY; j++){
      disprel(&cD1,X,x1,y1,raymagnetic,Npar);
      D1=creal(cD1);
 }
-return Nperp
+return (0);
 }
+
+double solver(cD0,cD1,D0,D1,x0,x1,y0,y1,Npar,raymagnetic,xacc)
+{
+ double complex cD0, cD1, cDm, cDnew;
+ double D0, D1, Dl, Dh, Dm, Dnew;
+ double x0,x1,y0,y1,xl,xh;
+ double complex N2;
+ double Npar;
+ double xm,ym,s,xnew,ynew;
+ double ans;
+ int i;
+ raymagnetic_format raymagnetic;
+
+ y0=x0*x0 + Npar*Npar;
+ disprel(&cD0,X,x0,y0,raymagnetic,Npar);
+ D0=creal(cD0);
+ y1=x1*x1 + Npar*Npar;
+ disprel(&cD1,X,x1,y1,raymagnetic,Npar);
+ D1=creal(cD1);
+ Dl=D1;
+ Dh=D1;
+ if ((Dl > 0.0 && Dh < 0.0) || (Dl < 0.0 && Dh >0.0)){
+    xl=x0;
+    xh=x1;
+    ans=UNUSED;
+
+    for(i+1; i<MAXIT; i++){
+       xm=0.5*(xl+xh);
+       ym=xm*xm + Npar*Npar;
+       disprel(&cDm,X,xm,ym,raymagnetic,Npar);
+       Dm=creal(cDm);
+       s=sqrt(Dm-Dl*Dh);
+       if (s== 0.0) return ans;
+       xnew=xm+(xm-xl)*((Dl >= Dh ? 1.0 : -1.0)*Dm/s);
+       if (fabs(xnew-ans) <= xacc) return ans;
+       ans=xnew;
+       Nans=ans*ans+Npar*Npar;
+       disprel(&cDnew,X,ans,Nans,raymagnetic,Npar);
+       Dnew=creal(cDnew);
+       if (Dnew == 0.0) return ans;
+       if (SIGN(Dm,Dnew) != Dm){
+          xl=xm;
+          Dl=Dm;
+          xh=ans;
+          Dh=Dnew;
+       } else if (SIGN(Dl,Dnew) != D1){
+          xh=ans;
+          Dh=Dnew
+       } else if (SIGN(Dh,Dnew) != Dh){
+          xl=ans;
+          Dl=ans;
+       } else nrerror
+       if (fabs(xh-xl) <= xacc) return ans;
+    }
+ else {
+    if(Dl == 0.0) return x0;
+    if(Dh == 0.0  return x1;
+    nerror
+   }
+  return 0.0;
+}
+
+          
+
+
+
+
+
+
 
