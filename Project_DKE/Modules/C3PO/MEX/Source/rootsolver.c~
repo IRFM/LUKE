@@ -2,9 +2,9 @@
 #include "nrutil.h"
 #define  MAXIT 100
 #define  UNUSED (-1.11e-30)
-#define  xacc=1.0e-8
+#define  Nacc=1.0e-8
 
-double rootsolver(cD0,cD1,D0,D1,X,x0,x1,y0,y1,Nperp,N2,param,raymagnetic,Npar)  
+double rootsolver(cD0,cD1,D0,D1,X,Nperp0,Nperp1,N20,N21,Nperp,param,raymagnetic,Npar)  
 
 susceptibilitytensor_format X;
 raymagnetic_format raymagnetic;
@@ -12,88 +12,86 @@ rayparam_format param
 {
 double complex cD0, cD1,
 double D0, D1;
-double x0,x1,y0,y1;
-double complex N2;
+double Nperp0,Nperp1,N20,N21;
 double Npar;
 double Nperp[];
-double xmin, xmax;
+double Nperpmin, Nperpmax, dNperp;
 int nbb, j, n; 
 nbb=0;
 n=100;
-dx=(xmax-xmin)/n;
+dNperp=(Nperpmax-Nperpmin)/n;
   for(j=1 j<=n; j++){
-     x0=xmin+(j-1.0)*dx
-     y0=x0*x0 + Npar*Npar;
-     disprel(&cD0,X,x0,y0,raymagnetic,Npar);
+     Nperp0=Nperpmin+(j-1.0)*dx
+     N20=Nperp0*Nperp0 + Npar*Npar;
+     disprel(&cD0,X,Nperp0,N20,raymagnetic,Npar);
      D0=creal(cD0);
-     x1=xmin+j*dx;
-     y1=x1*x1 + Npar*Npar;
-     disprel(&cD1,X,x1,y1,raymagnetic,Npar);
+     Nperp1=Nperpmin+j*dx;
+     N21=Nperp1*Nperp1 + Npar*Npar;
+     disprel(&cD1,X,Nperp1,N21,raymagnetic,Npar);
      D1=creal(cD1);  
      if (D0*D1 <= 0)
-     Nperp[nbb++]=solver(cD0,cD1,D0,D1,X,x0,x1,y0,y1,Npar,raymagnetic,xacc);
+     Nperp[nbb++]=root(cD0,cD1,D0,D1,X,Nperp0,Nperp1,N20,N21,Npar,raymagnetic,dNacc);
   }
 return (Nperp[]);
 }
 
   
-double solver(cD0,cD1,D0,D1,X,x0,x1,y0,y1,Npar,raymagnetic,xacc)
+double root(cD0,cD1,D0,D1,X,Nperp0,Nperp1,N20,N21,Npar,raymagnetic,dNacc)
 {
  raymagnetic_format raymagnetic;
  susceptibilitytensor_format X;
  double complex cD0, cD1, cDm, cDnew;
  double D0, D1, Dl, Dh, Dm, Dnew;
- double x0,x1,y0,y1,xl,xh;
- double complex N2;
+ double Nperp0,Nperp1,N20,N21,Nperpl,Nperph;
  double Npar;
- double xm,ym,s,xnew,ynew;
+ double Nperpm,N2m,s,Nperpnew,N2new;
  double ans;
  int i; 
 
- y0=x0*x0 + Npar*Npar;
- disprel(&cD0,X,x0,y0,raymagnetic,Npar);
+ N20=Nperp0*Nperp0 + Npar*Npar;
+ disprel(&cD0,X,Nperp0,N20,raymagnetic,Npar);
  D0=creal(cD0);
- y1=x1*x1 + Npar*Npar;
- disprel(&cD1,X,x1,y1,raymagnetic,Npar);
+ N21=Nperp1*Nperp1 + Npar*Npar;
+ disprel(&cD1,X,Nperp1,N21,raymagnetic,Npar);
  D1=creal(cD1);
  Dl=D1;
  Dh=D1;
  if ((Dl > 0.0 && Dh < 0.0) || (Dl < 0.0 && Dh >0.0)){
-    xl=x0;
-    xh=x1;
+    Nperpl=Nperp0;
+    Nperph=Nperp1;
     ans=UNUSED;
 
     for(i+1; i<MAXIT; i++){
-       xm=0.5*(xl+xh);
-       ym=xm*xm + Npar*Npar;
-       disprel(&cDm,X,xm,ym,raymagnetic,Npar);
+       Nperpm=0.5*(Nperpl+Nperph);
+       N2m=Nperpm*Nperpm + Npar*Npar;
+       disprel(&cDm,X,Nperpm,N2m,raymagnetic,Npar);
        Dm=creal(cDm);
        s=sqrt(Dm-Dl*Dh);
        if (s== 0.0) return ans;
-       xnew=xm+(xm-xl)*((Dl >= Dh ? 1.0 : -1.0)*Dm/s);
-       if (fabs(xnew-ans) <= xacc) return ans;
-       ans=xnew;
-       Nans=ans*ans+Npar*Npar;
-       disprel(&cDnew,X,ans,Nans,raymagnetic,Npar);
+       Nperpnew=Nperpm+(Nperpm-Nperpl)*((Dl >= Dh ? 1.0 : -1.0)*Dm/s);
+       if (fabs(Nperpnew-ans) <= dNacc) return ans;
+       ans=Nperpnew;
+       N2ans=ans*ans+Npar*Npar;
+       disprel(&cDnew,X,ans,N2ans,raymagnetic,Npar);
        Dnew=creal(cDnew);
        if (Dnew == 0.0) return ans;
        if (SIGN(Dm,Dnew) != Dm){
-          xl=xm;
+          Nperpl=Nperpm;
           Dl=Dm;
-          xh=ans;
+          Nperph=ans;
           Dh=Dnew;
        } else if (SIGN(Dl,Dnew) != D1){
-          xh=ans;
+          Nperph=ans;
           Dh=Dnew
        } else if (SIGN(Dh,Dnew) != Dh){
-          xl=ans;
+          Nperpl=ans;
           Dl=ans;
        }
-       if (fabs(xh-xl) <= xacc) return ans;
+       if (fabs(Nperph-Nperpl) <= dNacc) return ans;
     }
  else {
-    if(Dl == 0.0) return x0;
-    if(Dh == 0.0) return x1;
+    if(Dl == 0.0) return Nperp0;
+    if(Dh == 0.0) return Nperp1;
    }
   return (0);
 }
