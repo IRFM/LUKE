@@ -76,8 +76,6 @@ void imagBessel();
 void dawson();
 void smith();
 void vacuumtensor();
-int reflection();
-void build_raymagnetic();
 void weakrelativistictensor();
 void Shka();
 void ImShka();
