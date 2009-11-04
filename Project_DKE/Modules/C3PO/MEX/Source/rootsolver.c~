@@ -2,7 +2,7 @@
 #include "nrutil.h"
 #define  MAXIT 100
 #define  UNUSED (-1.11e-30)
-#define  Nacc=1.0e-8
+#define  dNacc=1.0e-8
 
 double rootsolver(cD0,cD1,D0,D1,X,Nperp0,Nperp1,N20,N21,Nperp,param,raymagnetic,Npar)  
 
