@@ -130,30 +130,6 @@ typedef struct fluctspectrum fluctspectrum_format;
 typedef struct equilparam equilparam_format;
 typedef struct rayprofiles rayprofiles_format;
 
-rayparam_format load_ray_param(structure_name)
-mxArray *structure_name;
-{
-    rayparam_format data;
-       
-    data.testmode = mxGetData(mxGetField(structure_name, 0, "testmode"));
-    data.t0 = mxGetData(mxGetField(structure_name, 0, "t0"));
-    data.tfinal = mxGetData(mxGetField(structure_name, 0, "tfinal"));
-    data.dt0 = mxGetData(mxGetField(structure_name, 0, "dt0"));
-    data.dS = mxGetData(mxGetField(structure_name, 0, "dS"));
-    data.tol = mxGetData(mxGetField(structure_name, 0, "tol"));   
-    data.kmax = mxGetData(mxGetField(structure_name, 0, "kmax"));
-    data.tensortype = mxGetData(mxGetField(structure_name, 0, "tensortype")); 
-    data.ncyclharm = mxGetData(mxGetField(structure_name, 0, "ncyclharm")); 
-    data.reflection = mxGetData(mxGetField(structure_name, 0, "reflection")); 
-    data.rel_opt = mxGetData(mxGetField(structure_name, 0, "rel_opt")); 
-    data.nperp = mxGetData(mxGetField(structure_name, 0, "nperp")); 
-    data.pperpmax = mxGetData(mxGetField(structure_name, 0, "pperpmax")); 
-    data.tau_lim = mxGetData(mxGetField(structure_name, 0, "tau_lim")); 
-    data.kextra = mxGetData(mxGetField(structure_name, 0, "kextra"));
-    
-    return(data);
-}
-
 
 fluctparam_format load_fluct_param(structure_name)
 mxArray *structure_name;
@@ -183,6 +159,46 @@ mxArray *structure_name;
     return(data);
 } 
 
+rayparam_format load_ray_param(structure_name)
+mxArray *structure_name;
+{
+    rayparam_format data;
+       
+    data.testmode = mxGetData(mxGetField(structure_name, 0, "testmode"));
+    data.t0 = mxGetData(mxGetField(structure_name, 0, "t0"));
+    data.tfinal = mxGetData(mxGetField(structure_name, 0, "tfinal"));
+    data.dt0 = mxGetData(mxGetField(structure_name, 0, "dt0"));
+    data.dS = mxGetData(mxGetField(structure_name, 0, "dS"));
+    data.tol = mxGetData(mxGetField(structure_name, 0, "tol"));   
+    data.kmax = mxGetData(mxGetField(structure_name, 0, "kmax"));
+    data.tensortype = mxGetData(mxGetField(structure_name, 0, "tensortype")); 
+    data.ncyclharm = mxGetData(mxGetField(structure_name, 0, "ncyclharm")); 
+    data.reflection = mxGetData(mxGetField(structure_name, 0, "reflection")); 
+    data.rel_opt = mxGetData(mxGetField(structure_name, 0, "rel_opt")); 
+    data.nperp = mxGetData(mxGetField(structure_name, 0, "nperp")); 
+    data.pperpmax = mxGetData(mxGetField(structure_name, 0, "pperpmax")); 
+    data.tau_lim = mxGetData(mxGetField(structure_name, 0, "tau_lim")); 
+    data.kextra = mxGetData(mxGetField(structure_name, 0, "kextra"));
+    
+    return(data);
+}
+
+equilparam_format load_equil_param(structure_name)
+mxArray *structure_name;
+{
+    equilparam_format data;
+   
+    data.zZi= mxGetData(mxGetField(structure_name, 0, "zZi"));
+    data.zmi = mxGetData(mxGetField(structure_name, 0, "zmi"));
+    data.ns = mxCalloc(1,sizeof(int));
+    data.ns[0] = fmax(mxGetM(mxGetField(structure_name, 0, "zmi")),mxGetN(mxGetField(structure_name, 0, "zmi")));
+    data.ap = mxGetData(mxGetField(structure_name, 0, "ap"));
+    data.Rp = mxGetData(mxGetField(structure_name, 0, "Rp"));
+    data.Zp = mxGetData(mxGetField(structure_name, 0, "Zp"));
+    data.psia = mxGetData(mxGetField(structure_name, 0, "psia"));
+    
+    return(data);
+} 
 
 pp_1D_format load_profile_1D(structure_name,field_name)
 mxArray *structure_name;
