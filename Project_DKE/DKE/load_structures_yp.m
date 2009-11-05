@@ -5,7 +5,7 @@ function [varargout] = load_structures_yp(varargin);
 %
 % INPUTS: 
 %
-%   - type: 'dkepath','equil','dkeparam','display','ohm','waves','transpfaste','ripple' or 'hxr' (order not important)
+%   - type: 'dkepath','equil','dkeparam','display','ohm','waves','transpfaste','ripple', 'fluct' or 'hxr' (order not important)
 %   - id: id of the field type
 %   - path: path of the field type
 %
@@ -44,6 +44,8 @@ id_transpfaste = '';
 path_transpfaste = '';
 id_ripple = '';
 path_ripple = '';
+id_fluct = '';
+path_fluct = '';
 id_hxr = '';
 path_hxr = '';
 id_external = '';
@@ -95,6 +97,10 @@ for i=1:3:length(varargin),
        id_ripple = varargin{i+1};
        path_ripple = varargin{i+2};
        flag_ripple = j;
+    elseif strcmp(varargin{i},'fluct'),
+       id_fluct = varargin{i+1};
+       path_fluct = varargin{i+2};
+       flag_fluct = j;
     elseif strcmp(varargin{i},'hxr'),
        id_hxr = varargin{i+1};
        path_hxr = varargin{i+2};
@@ -353,6 +359,20 @@ if exist('flag_ripple','var'),
 	    info_dke_yp(2,['Structure ''ripple'': ',filename,' successfully loaded']);
     end
     varargout{flag_ripple} = ripple;
+end
+%
+if exist('flag_fluct','var'),
+    filename = [path_fluct,'FLUCT_',id_equil,'_',id_fluct,'.mat'];
+	fluct = '';
+    if isempty(id_fluct),
+        info_dke_yp(2,['Simulations are performed without density or magnetic field fluctuations']);
+    elseif exist(filename) == 0,
+	    info_dke_yp(2,['Warning : Structure ',filename,' could not be loaded']);
+    else
+	    load(filename);
+	    info_dke_yp(2,['Structure ''fluct'': ',filename,' successfully loaded']);
+    end
+    varargout{flag_fluct} = fluct;
 end
 %
 if exist('flag_hxr','var'),%HXR
