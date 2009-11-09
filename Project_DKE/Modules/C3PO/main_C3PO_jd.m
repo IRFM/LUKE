@@ -1,16 +1,23 @@
-function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,flag)
+function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,fluct,flag)
 %C3PO - Set ray initial characteristics and launches the C3PO ray-tracing code
 %
-% This function calculates the ray initial characteristics and launches the C3PO ray-tracing code
+% This function calculates the ray initial characteristics and launches the
+% C3PO ray-tracing code
 %
 % by J. Decker (CEA-IRFM) <joan.decker@cea.fr> and   Y. Peysson (CEA-IRFM) <yves.peysson@cea.fr>
 %
     if nargin < 8,
     	C3POparam = [];
+        fluct = [];
+        flag = 0;%numerical equilibrium used by default
+    end
+    %
+    if nargin < 9,
+        fluct = [];
         flag = 0;%numerical equilibrium used by default
     end
 	%
-    if nargin < 9,
+    if nargin < 10,
         flag = 0;%numerical equilibrium used by default
     end
     %
@@ -29,6 +36,12 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C
             save(['EQUILV_',equil_fit.id,'.mat'],'equil_fit');
             if C3POdisplay.equilibrium,info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil_fit.id,' is saved.']);end
        end
+    end
+    %
+    if ~isempty(fluct),
+        [fluct_fit] = fitfluct_yp(fluct,fitparam.mode_equil,fitparam.method,fitparam.ngridresample);%Build vectorized profile for plasma fluctuation
+    else
+        fluct_fit = [];
     end
     %
     if C3POdisplay.equilibrium,
@@ -87,18 +100,6 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C
         rayparam.kextra = 0;
     end
     %
-    if ~isfield(rayparam,'ns0'),% !!!! old rayparam, modify calling function
-        rayparam.ns0 = 0;
-    end
-    %
-    if ~isfield(rayparam,'xreset0'),% !!!! old rayparam, modify calling function
-        rayparam.xreset0 = 1;
-    end
-    %
-    if ~isfield(rayparam,'fmode'),% !!!! old rayparam, modify calling function
-        rayparam.fmode = 0;
-    end
-    %
     if ~isfield(rayinit,'yn0'),% !!!! old rayparam, modify calling function
         rayinit.yn0 = NaN*rayinit.ym0;
     end
@@ -108,6 +109,12 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C
     end
     if ~isfield(rayinit,'z0'),% waist position information
         rayinit.z0 = NaN;
+    end
+    if exist('fluct'),
+        if isstruct(fluct),
+            if (rayparam.tensortype == 0) && (fluct.nkperproots ~= 2), error('Inconsistent number of kperp roots involved in the plasma fluctuations model with the plasma dielectric tensor type');end
+            if (rayparam.tensortype == 1) && (fluct.nkperproots ~= 3), error('Inconsistent number of kperp roots involved in the plasma fluctuations model with the plasma dielectric tensor type');end        
+        end
     end
     %
     waveparam.cut_fac = rayparam.tau_lim/10;
@@ -121,7 +128,7 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C
             arg_range{iray} = iray;
         end
         [dkecluster] = clustermode_luke(C3POparam.clustermode,'main_C3PO_jd',C3POdisplay);
-        [flag,rays] = mdce_luke(@loop_main_C3PO_jd,{iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay},1,arg_range,dkecluster);
+        [flag,rays] = mdce_luke(@loop_main_C3PO_jd,{iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay,fluct_fit},1,arg_range,dkecluster);
 		rmdir(dkecluster.temppath,'s');
 		%
 		iray_wave = 1;
@@ -138,7 +145,7 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C
     else
     	iray_wave = 1;
         for iray = 1:Nrays,    
-            [ray] = loop_main_C3PO_jd(iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay);
+            [ray] = loop_main_C3PO_jd(iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay,fluct_fit);
             if isempty(ray),
                 disp(['kpsin has a non nul imaginary part for ray # ',int2str(iray),' !']);
                 info_dke_yp(2,['WARNING: Ray #',int2str(iray),' is not put in the wave structure.']);
