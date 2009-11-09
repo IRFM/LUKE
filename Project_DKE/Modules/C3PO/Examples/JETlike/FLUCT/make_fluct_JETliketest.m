@@ -23,10 +23,10 @@ path_equil = '../EQUIL/';%if nothing is specified, the working directory is firs
 % Magnetic field and electron density fluctuations kperp spectrum
 %
 dfcl = 1e-3;%Density fluctuation correlation length perpendicular to the magnetic field (m)
-fnkperpspec = 1;%Density fluctuation kperp spectrum : (1) Gaussian, (2) Cauchy-Lorentz
+fnkperpspec = 1;%Density fluctuation kperp spectrum : (1) Gaussian
 %
 mffcl = Inf;%Magnetic field fluctuation correlation length perpendicular to the magnetic field (m)
-fbkperpspec = 1;%Magnetic field fluctuation kperp spectrum : (1) Gaussian, (2) Cauchy-Lorentz
+fbkperpspec = 1;%Magnetic field fluctuation kperp spectrum : (1) Gaussian
 %
 % Magnetic field and electron density fluctuations profiles
 %
