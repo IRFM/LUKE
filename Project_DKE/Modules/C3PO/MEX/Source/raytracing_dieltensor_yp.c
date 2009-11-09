@@ -64,6 +64,8 @@ typedef struct susceptibilitytensor susceptibilitytensor_format;
 #define MAXCYCLHARM 101
 #define PI 3.14159265358979
 
+
+void vacuumtensor();
 void coldtensor();
 void calcY();
 void calcY1();
@@ -75,7 +77,6 @@ void modBessel();
 void imagBessel();
 void dawson();
 void smith();
-void vacuumtensor();
 void weakrelativistictensor();
 void Shka();
 void ImShka();
